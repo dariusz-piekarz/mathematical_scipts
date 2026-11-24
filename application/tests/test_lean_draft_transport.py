@@ -157,3 +157,35 @@ class DraftTransportTests(unittest.TestCase):
                      ["name=rootless","name=seccomp,profile=custom"]):
             with self.assertRaises(ValueError):
                 transport.validate_engine({**self.info, "SecurityOptions":opts})
+
+
+@unittest.skipUnless(__import__("sys").platform.startswith("linux"),
+                     "Real selector/pipe subprocess regression requires Linux")
+class DraftTransportProcessTests(unittest.TestCase):
+    """Real subprocess I/O on Linux, not a Docker or Lean execution test."""
+
+    def invoke(self, script):
+        import sys
+        return transport._command([sys.executable, "-I", "-c"], (script,),
+                                  {"PATH": "/usr/bin:/bin", "LANG": "C"})
+
+    def test_capture_real_stdout_and_stderr(self):
+        self.assertEqual(self.invoke("import sys; sys.stdout.write('abc'); "
+                                     "sys.stdout.flush(); sys.stderr.write('def')"),
+                         b"abcdef")
+
+    def test_real_nonzero_exit_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "command failed"):
+            self.invoke("raise SystemExit(7)")
+
+    def test_real_excess_output_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "exceeds limit"):
+            self.invoke("import sys; sys.stdout.buffer.write(b'x'*200000); sys.stdout.flush()")
+
+    def test_real_timeout_stops_child(self):
+        import time
+        with patch.object(transport, "COMMAND_TIMEOUT", 0.4):
+            start = time.monotonic()
+            with self.assertRaises(TimeoutError):
+                self.invoke("import time; time.sleep(30)")
+            self.assertLess(time.monotonic() - start, 5)
