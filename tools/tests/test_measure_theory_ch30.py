@@ -89,5 +89,41 @@ class Chapter30(unittest.TestCase):
         self.assertIn(r"2\delta+M\omega_\phi(m_n)",s)
 
 
+
+    def test_mt30_009_variation_and_uniqueness(self):
+        w = [Q(1,6), Q(0), Q(1,3), Q(1,2)]
+        g = [Q(3), Q(999), Q(-2), Q(4)]
+        h = [Q(-1), Q(-999), Q(5), Q(4)]
+        for bits in product((0,1), repeat=4):
+            vg = sum(b*m*abs(x) for b,m,x in zip(bits,w,g))
+            vh = sum(b*m*abs(x) for b,m,x in zip(bits,w,h))
+            vd = sum(b*m*abs(x-y) for b,m,x,y in zip(bits,w,g,h))
+            self.assertLessEqual(abs(vg-vh),vd)
+        same = [g[0], Q(-5), g[2], g[3]]
+        self.assertEqual(sum(m*abs(x-y) for m,x,y in zip(w,g,same)),0)
+
+    def test_mt30_010_hilbert_partition_energy(self):
+        w = [Q(1,6), Q(0), Q(1,3), Q(1,2)]
+        g = [(Q(1), Q(2)), (Q(99), Q(99)), (Q(-2), Q(1)), (Q(3), Q(-1))]
+        norm2 = lambda v: sum(x*x for x in v)
+        mean = lambda group: tuple(sum(w[i]*g[i][k] for i in group)/sum(w[i] for i in group) for k in range(2))
+        for groups in ([[0,1,2,3]], [[0,1],[2,3]], [[0,1],[2],[3]]):
+            coarse = sum(sum(w[i] for i in group)*norm2(mean(group)) for group in groups)
+            fine = sum(m*norm2(v) for m,v in zip(w,g))
+            diff = sum(w[i]*norm2(tuple(g[i][k]-mean(group)[k] for k in range(2))) for group in groups for i in group)
+            self.assertEqual(fine-coarse,diff)
+            self.assertLessEqual(coarse,fine)
+
+    def test_mt30_011_complex_curve_and_source_steps(self):
+        # F(t)=(2+3i)t: both real and imaginary scalar identities are needed.
+        for a,b in [(Q(0),Q(1)),(Q(1,7),Q(5,6)),(Q(1,3),Q(1,3))]:
+            self.assertEqual((2*b-2*a,3*b-3*a),(2*(b-a),3*(b-a)))
+        s = " ".join(SOURCE.read_text(encoding="utf-8").split())
+        for step in ("Nie potrzeba separowalności całego", "części rzeczywistej i urojonej",
+                     "własności podsieci", "bez założenia separowalności", 
+                     "Wszystkie odejmowane wariacje są skończone", "Równość dla funkcji prostych przechodzi"):
+            self.assertIn(step,s)
+
+
 if __name__ == "__main__":
     unittest.main()
