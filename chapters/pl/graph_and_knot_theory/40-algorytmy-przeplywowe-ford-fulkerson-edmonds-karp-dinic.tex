@@ -2,7 +2,7 @@
 \label{ch:tg-flow-algorithms}
 
 W rozdziale \ref{ch:tg-menger} wprowadziliśmy sieci przepływowe,
-pojemności resztowe, przekroje $s,t$ i udowodniliśmy twierdzenie
+przepustowości resztowe, przekroje oddzielające $s$ od $t$ i udowodniliśmy twierdzenie
 o maksymalnym przepływie i minimalnym przekroju dla
 przepustowości całkowitych (twierdzenie \ref{thm:tg-maxflow}).
 Obecnie zajmiemy się \emph{algorytmiczną} stroną zagadnienia:
@@ -57,11 +57,13 @@ wstecz daje przepływ dopuszczalny $f'$,
 dla którego $|f'|=|f|+\varepsilon$.
 \end{lemat}
 \begin{proof}
-Każdy krok w przód ma pojemność resztową
+Każdy krok w przód ma przepustowość resztową
 $c(a)-f(a)\geq\varepsilon$, więc po aktualizacji
-nadal $f'(a)\leq c(a)$. Krok wstecz istnieje tylko,
-gdy $f(a)\geq\varepsilon$, więc przepływ nie staje się
-ujemny. Prostota ścieżki gwarantuje, że żaden oryginalny łuk
+nadal $f'(a)\leq c(a)$. Na przejściu wstecz użytym przez $P$ mamy
+$f(a)\geq\varepsilon$, więc przepływ nie staje się
+ujemny. Aktualizacja w przód nie narusza dolnego
+ograniczenia, a aktualizacja wstecz nie narusza
+górnego ograniczenia przepustowości. Prostota ścieżki gwarantuje, że żaden oryginalny łuk
 nie jest aktualizowany dwukrotnie: użycie obu jego
 przejść resztowych wymagałoby powtórzenia wierzchołka.
 Niezależnie od tego, czy krok resztowy $u\to v$ jest
@@ -366,10 +368,17 @@ ograniczenie liczby operacji arytmetycznych.
 \end{proof}
 
 \begin{uwaga}[Pojemności wymierne i niewymierne]
-Wspólny mianownik dodatnich pojemności
-wymiernych pozwala sprowadzić schemat do
-przypadku całkowitoliczbowego po przeskalowaniu.
-Nie daje to silnie wielomianowego ograniczenia.
+Jeśli wszystkie przepustowości są wymierne,
+wybieramy dodatnią liczbę całkowitą $L$ będącą
+wspólną wielokrotnością ich mianowników.
+Zastąpienie $c$ przez $Lc$ i $f$ przez $Lf$
+mnoży wszystkie przepustowości resztowe oraz
+wąskie gardła przez $L$, nie zmieniając zbioru
+dodatnich przejść. Każdemu przebiegowi w sieci
+wyjściowej odpowiada zatem przebieg całkowitoliczbowy.
+Otrzymujemy zakończenie po co najwyżej $LC_s$
+powiększeniach, lecz nie jest to ograniczenie
+silnie wielomianowe.
 Przy rzeczywistych pojemnościach niewymiernych
 niektóre sposoby wybierania ścieżek
 mogą prowadzić do nieskończonego ciągu powiększeń.
@@ -454,8 +463,10 @@ nowej ścieżce do $v$. Wtedy
 $d_{f'}(u)=d_{f'}(v)-1$ oraz
 $d_{f'}(u)\geq d_f(u)$ na mocy
 minimalności wyboru $v$.
-Jeśli przejście $u\to v$ istniało
-już przed powiększeniem,
+Wierzchołek $v$ nie jest źródłem, a $d_f(u)$
+jest skończone, ponieważ $d_f(u)\leq d_{f'}(u)<+\infty$.
+Jeśli konkretne przejście $u\to v$ miało dodatnią
+przepustowość już przed powiększeniem,
 mamy $d_f(v)\leq d_f(u)+1
 \leq d_{f'}(u)+1=d_{f'}(v)$,
 sprzeczność (w tym gdy $d_f(v)=+\infty$).
@@ -516,9 +527,13 @@ Ponieważ przejść resztowych
 z przypisanym oryginalnym łukiem
 jest co najwyżej $2m$,
 liczba powiększeń wynosi $O(nm)$.
-Każde BFS oraz zmiana przepływu
-wzdłuż znalezionej ścieżki
-kosztują $O(n+m)$.
+Każde BFS kosztuje $O(n+m)$, a odtworzenie
+ścieżki z identyfikatorów przejść i aktualizacja
+przepływu kosztują $O(n)$. Uwzględniając ostatnie
+BFS bez ścieżki, otrzymujemy
+$O((nm+1)(n+m))$ operacji.
+Dla $m\geq n$ mamy $n+m\leq 2m$,
+co daje $O(nm^2)$.
 Algorytm kończy się więc
 także dla przepustowości rzeczywistych,
 a twierdzenie \ref{thm:tg-flow-certificate}
@@ -529,9 +544,8 @@ i przekrój minimalny.
 \section{Algorytm Dinica: sieć warstwowa i przepływ blokujący}
 \label{sec:tg-flow-dinic}
 
-Dinic ogranicza liczbę przebudów
-przeszukiwania resztowego przez
-jednoczesne wysyłanie wielu przepływów
+Algorytm Dinica ogranicza liczbę uruchomień BFS
+przez wykonywanie wielu powiększeń przepływu
 w obrębie jednej sieci warstwowej.
 
 \begin{definicja}[Sieć warstwowa]
@@ -553,15 +567,17 @@ Gdy $t$ jest nieosiągalny, algorytm kończy działanie.
 
 \begin{definicja}[Przepływ blokujący]
 \label{def:tg-flow-blocking}
-Powiększenie przepływu w obrębie
-ustalonej sieci warstwowej nazywamy
-\emph{blokującym}, jeśli po dokonanych
-powiększeniach żadna ścieżka od $s$
-do $t$ nie składa się wyłącznie
-z dodatnich przejść tej sieci warstwowej.
-Nie wymagamy, aby sam przepływ blokujący
-miał maksymalną wartość
-w całej oryginalnej sieci.
+Niech $f$ będzie przepływem dopuszczalnym,
+a $L$ jego siecią warstwową z przepustowościami
+resztowymi ustalonymi na początku fazy.
+Przepływ dopuszczalny $g$ od $s$ do $t$ w $L$
+nazywamy \emph{blokującym}, jeśli każda ścieżka
+od $s$ do $t$ w $L$ zawiera przejście nasycone
+przez $g$. Równoważnie: po zastosowaniu $g$
+do przepływu $f$ nie pozostaje żadna ścieżka
+od $s$ do $t$ złożona z dodatnich przejść
+pierwotnej sieci warstwowej. Nie wymagamy
+maksymalności $g$ w sieci warstwowej.
 \end{definicja}
 
 Jedna \emph{faza Dinica} tworzy sieć warstwową
@@ -671,9 +687,12 @@ na ścieżce. Otrzymujemy
 $O(nm+n+m)$ czasu
 na fazę oraz
 $O(n+m)$ pamięci.
-Pomnożenie przez
-co najwyżej $n-1$ faz
-daje wskazane oszacowanie.
+Pomnożenie przez co najwyżej $n-1$ faz i dodanie
+kosztu końcowego BFS daje
+$O(n(nm+n+m)+n+m)=O(n^2(m+1))$.
+Tablice poziomów i wskaźników oraz stos DFS
+zajmują $O(n)$ pamięci, a listy sprzężonych
+przejść $O(n+m)$.
 \end{proof}
 
 \section{Certyfikat, przykład liczbowy i uwagi implementacyjne}
@@ -770,8 +789,8 @@ otrzymaliśmy następujące rozróżnienie:
 \begin{itemize}[leftmargin=2em,itemsep=3pt]
 \item \textbf{Ford--Fulkerson}: prosta idea;
       dla przepustowości całkowitych
-      czas zależy od wartości maksymalnego
-      przepływu, a dla dowolnych
+      liczba powiększeń jest ograniczona przez wartość
+      maksymalnego przepływu, a dla dowolnych
       pojemności rzeczywistych bez
       ograniczenia wyboru ścieżek
       może nie kończyć działania.
