@@ -127,7 +127,21 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          export ATLAS_ROOTLESS_REPORT_PATH="$RUNNER_TEMP/atlas-rootless-report.json"
           python3 -m scripts.lean_rootless_ci_probe
+      - name: Revalidate persisted runtime report independently
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m scripts.lean_rootless_ci_probe --validate-report "$RUNNER_TEMP/atlas-rootless-report.json"
+      - name: Upload validated runtime report
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-rootless-report-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/atlas-rootless-report.json
+          if-no-files-found: error
+          retention-days: 30
       - name: Stop test daemon
         if: always()
         shell: bash
