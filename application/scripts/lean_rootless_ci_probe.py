@@ -3,11 +3,14 @@
 No Lean, untrusted payload, registry access or user-provided code. The fixture
 image is constructed from a system static BusyBox with a harmless entrypoint.
 The preflight remains configuration-only. A separate CI-only runtime probe
-starts the fixed harmless fixture to observe cgroup limits and security flags.
+starts the fixed harmless fixture to observe cgroup, security and network state.
 """
 from __future__ import annotations
 
+import base64
+import binascii
 import json
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -55,6 +58,19 @@ printf 'atlas-runtime-fixture' > /tmp/atlas-write-check || exit 25
 test "$(/bin/busybox cat /tmp/atlas-write-check)" = atlas-runtime-fixture || exit 26
 /bin/busybox rm /tmp/atlas-write-check || exit 27
 printf 'tmp.write=ok\\n'
+# Read kernel tables without opening a network connection. Encode raw tables
+# to preserve row boundaries and let the host validator check their structure.
+for key in dev route ipv6_route; do
+    data=$(/bin/busybox base64 -w 0 "/proc/net/$key") || exit 30
+    printf 'net.%s=%s\\n' "$key" "$data"
+done
+# No attempt to connect to a daemon. Check known paths and dangling links.
+for path in /var/run/docker.sock /run/docker.sock /run/user/*/docker.sock; do
+    if test -e "$path" || test -L "$path"; then
+        exit 31
+    fi
+done
+printf 'net.docker_socket=absent\\n'
 """
 
 
@@ -105,16 +121,100 @@ def validate_runtime_security(output: bytes) -> dict:
     return values
 
 
+
+_NET_KEYS = {b"net.dev", b"net.route", b"net.ipv6_route", b"net.docker_socket"}
+
+
+def _decode_network_table(value: str) -> list[str]:
+    if len(value) > 32768:
+        raise ValueError("Oversized network observation")
+    try:
+        raw = base64.b64decode(value, validate=True)
+        if base64.b64encode(raw).decode("ascii") != value:
+            raise ValueError("Noncanonical network observation")
+        return raw.decode("ascii").splitlines()
+    except (binascii.Error, UnicodeError) as exc:
+        raise ValueError("Malformed network observation encoding") from exc
+
+
+def _hex_field(value: str, width: int) -> bool:
+    return re.fullmatch("[0-9a-fA-F]{" + str(width) + "}", value) is not None
+
+
+def validate_runtime_network(output: bytes) -> dict:
+    """Verify observed kernel interface/route tables, not just NetworkMode."""
+    values = {}
+    for line in output.decode("ascii").splitlines():
+        key, sep, value = line.partition("=")
+        if not sep or key in values:
+            raise ValueError("Malformed or duplicate network observation")
+        values[key] = value
+    if set(values) != {key.decode("ascii") for key in _NET_KEYS}:
+        raise ValueError("Missing or unexpected network observation")
+    if values["net.docker_socket"] != "absent":
+        raise ValueError("Unexpected Docker socket path")
+    dev = _decode_network_table(values["net.dev"])
+    if (len(dev) != 3 or dev[0].split() != ["Inter-|", "Receive", "|", "Transmit"]
+            or dev[1].split("|")[0].strip() != "face"
+            or len(dev[1].split("|")) != 3):
+        raise ValueError("Expected exactly one network interface")
+    interface, sep, counters = dev[2].partition(":")
+    fields = counters.split()
+    if (not sep or interface.strip() != "lo" or len(fields) != 16
+            or any(not field.isdecimal() for field in fields)):
+        raise ValueError("Expected loopback interface only")
+    ipv4 = _decode_network_table(values["net.route"])
+    if not ipv4 or ipv4[0].split() != [
+        "Iface", "Destination", "Gateway", "Flags", "RefCnt", "Use",
+        "Metric", "Mask", "MTU", "Window", "IRTT"
+    ]:
+        raise ValueError("Malformed IPv4 routing table")
+    for line in ipv4[1:]:
+        f = line.split()
+        if (len(f) != 11 or any(not _hex_field(f[i], 8) for i in (1, 2, 7))
+                or not _hex_field(f[3], 4)
+                or any(not f[i].isdecimal() for i in (4, 5, 6, 8, 9, 10))):
+            raise ValueError("Malformed IPv4 route")
+        # A loopback-only namespace may have local routes, never a gateway.
+        if (f[0] != "lo" or f[2] != "00000000"
+                or (f[1] == "00000000" and f[7] == "00000000")):
+            raise ValueError("Unexpected IPv4 route")
+    ipv6 = _decode_network_table(values["net.ipv6_route"])
+    # The kernel may provide reject default routes on lo even without egress.
+    # A successful empty read is possible with IPv6 disabled; require actual
+    # kernel evidence rather than accepting an empty/omitted table.
+    if not ipv6:
+        raise ValueError("Empty IPv6 routing table is unconfirmed")
+    for line in ipv6:
+        f = line.split()
+        widths = (32, 2, 32, 2, 32, 8, 8, 8, 8)
+        if (len(f) != 10 or any(not _hex_field(v, n) for v, n in zip(f, widths))
+                or int(f[1], 16) > 128 or int(f[3], 16) > 128):
+            raise ValueError("Malformed IPv6 route")
+        if f[9] != "lo" or f[4] != "0" * 32:
+            raise ValueError("Unexpected IPv6 interface or gateway")
+        if f[0] == "0" * 32 and int(f[1], 16) == 0 and not int(f[8], 16) & 0x200:
+            raise ValueError("Usable IPv6 default route")
+    return {"net.interfaces": "lo", "net.ipv4_default": "absent",
+            "net.ipv6_usable_default": "absent", "net.docker_socket": "absent",
+            "net.ipv4_rows": len(ipv4) - 1, "net.ipv6_rows": len(ipv6)}
+
+
 def validate_runtime_observations(output: bytes) -> dict:
     cgroup = []
     security = []
+    network = []
     for line in output.splitlines():
-        if line.partition(b"=")[0] in {b"memory.max", b"memory.swap.max", b"pids.max", b"cpu.max"}:
+        key = line.partition(b"=")[0]
+        if key in {b"memory.max", b"memory.swap.max", b"pids.max", b"cpu.max"}:
             cgroup.append(line)
+        elif key in _NET_KEYS:
+            network.append(line)
         else:
             security.append(line)
     return {**validate_runtime_limits(b"\n".join(cgroup)),
-            **validate_runtime_security(b"\n".join(security))}
+            **validate_runtime_security(b"\n".join(security)),
+            **validate_runtime_network(b"\n".join(network))}
 
 
 
@@ -123,6 +223,7 @@ _FIXTURE_EXIT_STAGES = {
     20: "cgroup_read", 21: "process_status_read", 22: "mountinfo_read",
     23: "root_fixture_stat", 24: "root_fixture_mode", 25: "tmp_write",
     26: "tmp_readback", 27: "tmp_remove", 28: "tmp_stat", 29: "tmp_owner_mode",
+    30: "network_table_read", 31: "docker_socket_present",
 }
 
 
@@ -197,7 +298,7 @@ def check_runtime_limits(prefix: list[str], env: dict[str, str], image_id: str) 
         # Kill/remove by exact ID even if the local CLI timed out.
         # An unsuccessful removal is a failed test, never a success report.
         call("container", "rm", "--force", cid)
-    return {"status": "runtime_limits_and_security_checked", "observations": values,
+    return {"status": "runtime_limits_security_network_checked", "observations": values,
             "image_id": image_id, "cleanup_status": "removed",
             "execution_allowed": False, "proof_status": "not_run", "certificate": False}
 

@@ -280,6 +280,73 @@ class RuntimeCgroupObservationTests(unittest.TestCase):
                 self.validate(data)
 
 
+
+def network_fixture_observation(dev=None, ipv4=None, ipv6=None, socket=b"absent"):
+    import base64
+    if dev is None:
+        dev = (b"Inter-| Receive | Transmit\n"
+               b" face |bytes packets errs drop fifo frame compressed multicast"
+               b"|bytes packets errs drop fifo colls carrier compressed\n"
+               b" lo: " + b"0 " * 16 + b"\n")
+    if ipv4 is None:
+        ipv4 = b"Iface Destination Gateway Flags RefCnt Use Metric Mask MTU Window IRTT\n"
+    if ipv6 is None:
+        zero = b"0" * 32
+        ipv6 = (zero + b" 00 " + zero + b" 00 " + zero
+                + b" ffffffff 00000001 00000000 00200200 lo\n")
+    return (b"net.dev=" + base64.b64encode(dev) + b"\n"
+            b"net.route=" + base64.b64encode(ipv4) + b"\n"
+            b"net.ipv6_route=" + base64.b64encode(ipv6) + b"\n"
+            b"net.docker_socket=" + socket + b"\n")
+
+
+class RuntimeNetworkObservationTests(unittest.TestCase):
+    def setUp(self):
+        from scripts.lean_rootless_ci_probe import validate_runtime_network
+        self.validate = validate_runtime_network
+        self.valid = network_fixture_observation()
+
+    def test_accepts_loopback_and_ipv6_reject_default(self):
+        self.assertEqual(self.validate(self.valid)["net.interfaces"], "lo")
+
+    def test_rejects_extra_or_wrong_interface(self):
+        import base64
+        dev = base64.b64decode(self.valid.splitlines()[0].partition(b"=")[2])
+        for bad in (dev + b" eth0: " + b"0 " * 16 + b"\n",
+                    dev.replace(b"lo:", b"eth0:"), b"", dev.replace(b"0 ", b"x ", 1)):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                self.validate(network_fixture_observation(dev=bad))
+
+    def test_rejects_ipv4_default_gateway_and_other_interface(self):
+        header = b"Iface Destination Gateway Flags RefCnt Use Metric Mask MTU Window IRTT\n"
+        for row in (b"lo 00000000 00000000 0001 0 0 0 00000000 0 0 0\n",
+                    b"lo 0100007F 0100007F 0003 0 0 0 FFFFFFFF 0 0 0\n",
+                    b"eth0 0100007F 00000000 0001 0 0 0 FFFFFFFF 0 0 0\n",
+                    b"malformed\n"):
+            with self.subTest(row=row), self.assertRaises(ValueError):
+                self.validate(network_fixture_observation(ipv4=header + row))
+        with self.assertRaises(ValueError):
+            self.validate(network_fixture_observation(ipv4=b""))
+
+    def test_rejects_usable_ipv6_default_and_other_interface(self):
+        import base64
+        route = base64.b64decode(self.valid.splitlines()[2].partition(b"=")[2])
+        for bad in (route.replace(b"00200200", b"00000001"),
+                    route.replace(b" lo\n", b" eth0\n"),
+                    route.replace(b" 00 ", b" FF ", 1), b"", b"malformed\n"):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                self.validate(network_fixture_observation(ipv6=bad))
+
+    def test_rejects_socket_missing_duplicate_or_bad_encoding(self):
+        for bad in (network_fixture_observation(socket=b"present"),
+                    self.valid.replace(b"net.docker_socket=absent\n", b""),
+                    self.valid + b"net.docker_socket=absent\n",
+                    self.valid + b"unknown=1\n",
+                    self.valid.replace(b"net.dev=", b"net.dev=!")):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                self.validate(bad)
+
+
 class RuntimeSecurityObservationTests(unittest.TestCase):
     """Parser regression, not a substitute for the real container fixture."""
 
@@ -323,11 +390,14 @@ class RuntimeSecurityObservationTests(unittest.TestCase):
         from scripts.lean_rootless_ci_probe import validate_runtime_observations
         cgroup = (b"memory.max=2147483648\nmemory.swap.max=0\n"
                   b"pids.max=64\ncpu.max=100000 100000\n")
-        result = validate_runtime_observations(cgroup + self.valid)
-        self.assertEqual(len(result), 14)
-        for invalid in (cgroup + self.valid.replace(b"Seccomp=2", b"Seccomp=0"),
-                        cgroup.replace(b"pids.max=64", b"pids.max=max") + self.valid,
-                        cgroup + self.valid + b"cpu.max=100000 100000\n"):
+        network = network_fixture_observation()
+        result = validate_runtime_observations(cgroup + self.valid + network)
+        self.assertEqual(len(result), 20)
+        for invalid in (cgroup + self.valid.replace(b"Seccomp=2", b"Seccomp=0") + network,
+                        cgroup.replace(b"pids.max=64", b"pids.max=max") + self.valid + network,
+                        cgroup + self.valid + network + b"cpu.max=100000 100000\n",
+                        cgroup + self.valid,
+                        cgroup + self.valid + network.replace(b"net.docker_socket=absent", b"net.docker_socket=present")):
             with self.subTest(invalid=invalid), self.assertRaises(ValueError):
                 validate_runtime_observations(invalid)
 
