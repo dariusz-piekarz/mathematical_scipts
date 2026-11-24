@@ -129,3 +129,8 @@ Audyt IV wykrył pominiętą pochodną jednostki w rozkładzie nieunormowanego w
 **AA-50 STABILNY ponownie w jawnie ograniczonym zakresie.** Audyty IV–VIII zakończone; poprawiono dowód dla nieunormowanego F i lokalizację, przypadek q=0, dodano regresję oraz włączono ją do CI. Raport końcowy: `audits/abstract_algebra/ch50_iteration_08.md`.
 
 CI https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45292640958 (37ff2350053622c307a92d02c4776d7181b68750): 110/110 SUCCESS, 13+12+2 testów AA-50 PASS, 50 rozdziałów, 1042 etykiety, 564 odsyłacze, zero brakujących celów. Artefakt 14876255006: PDF 323 strony, AA-50 na stronach 317–323; wszystkie obejrzane, log bez błędów i ostrzeżeń. Aktualny blob rozdziału zgodny z CI. AA-51 nieotwarty; następny zakres należy określić osobno. Historyczne AA-01–AA-49 bez zmian.
+
+
+## Otwarcie AA-51 — 24 listopada 2026 r.
+
+AA-51: skończone podgrupy PGL2(C), klasyfikacja typów izomorfizmu, samodzielne dowody poprzez zliczanie orbit oraz identyfikację grup Sylowa, modele obrotów i związek z parametrami 4,6,12. Nie obejmuje klasyfikacji z dokładnością do sprzężenia ani dowodu kompletności lokalnych list Kovacica. Rozdział włączony do książki i katalogu; audyt I w audits/abstract_algebra/ch51_iteration_01.md. **AA-51 W AUDYCIE**, do niezależnego audytu, obu regresji, pełnego CI i oględzin PDF. AA-52 nieotwarty; AA-01–50 pozostają stabilne.
