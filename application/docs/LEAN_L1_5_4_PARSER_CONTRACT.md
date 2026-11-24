@@ -60,3 +60,22 @@ Wynik AST przekazać do istniejącego validate_ast; jakikolwiek błąd oznacza b
 Przed rekurencją i alokacją ograniczyć źródło do 32 KiB UTF-8; maks. 8192 tokenów, 64 poziomy zagnieżdżenia składni, maks. 2048 węzłów, 128 wiązań, 128 KiB serializacji AST. Kontrolować również prawostronne łańcuchy implikacji, zagnieżdżenia nawiasów, negacji i kwantyfikatorów, nie tylko finalny AST. Nie dopuścić do nieobsłużonego RecursionError, nieograniczonej ekspansji makr ani wykonywania kodu. Bez endpointu, sieci i zmian źródłowych.
 
 Testy pozytywne: P→Q→R, (P→Q)→R, \neg(P\land Q), kwantyfikatory z cieniowaniem nazw, typowane działania i nierówności, zamiana argumentów ≥, dwa identyczne założenia zachowane oddzielnie, dokładne zakresy znaków Unicode. Testy negatywne: nieznane polecenie, \landscape, komentarz, niejawne mnożenie, niejawny typ literału, niespójne typy, wolna zmienna, łańcuch relacji, niewłaściwa negacja, brak delimitera, dodatkowy nieprzetworzony ogon, luka w segmentach z prozą lub założeniem, złośliwie głęboka składnia i każde przekroczenie limitu. Testy porównują konkretne oczekiwane AST, a nie sam status sukcesu. Rozdzielić testy samodzielnego parsera od późniejszego adaptera środowisk twierdzeń. Nie uznawać powyższych testów za wykonane przed implementacją.
+
+
+## Audyt rzeczywistych twierdzeń pilota z rejestru
+
+Przegląd dziewięciu pozycji aktualnego application/lean/manifest.json i ich oryginalnych bloków twierdzeń (nie wykonywano parsera, którego jeszcze nie ma). Pliki źródłowe: chapters/pl/logic_and_set_theory/01-zdania-i-spojniki-logiczne.tex, blob 03f0971888288934e47c3453fd8f0de0a2c71469; 02-kwantyfikatory-i-podstawowe-metody-dowodzenia.tex, blob 000ad4c0185eb2296ad7af3523ad30b08dfeebaf. Przewidywany wynik pełnego adaptera v1: 0/9 obsługiwanych w całości; nie jest to pomiar działającego kodu.
+
+| Etykieta | Brakująca semantyka lub konstrukcja, której nie wolno pominąć |
+|---|---|
+| thm:de-morgan-logic | Formuły jako obiekty składniowe, równoważność pod każdym wartościowaniem (\equiv), dwie klauzule. |
+| thm:implication-laws | Dwie równoważności oraz dodatkowa tautologia modus ponens zapisana w prozie. |
+| thm:negated-implication-xli | Typ składniowy Formula, nie Prop; równoważność semantyczna. |
+| thm:equiv-test | Rozróżnienie metajęzykowej równoważności \equiv, spójnika \Leftrightarrow i predykatu tautologii. |
+| thm:logic-distributivity | Trzy klauzule w align*, semantyka formuł; nie redukować do pierwszej. |
+| thm:negation-quantifiers | Dowolna, także pusta dziedzina, predykat jednoargumentowy, założenie logiki klasycznej, dwie klauzule. |
+| thm:same-quantifier-order | Dwie dowolne dziedziny, predykat dwuargumentowy, dwie klauzule. |
+| thm:swap-mixed | Implikacja w jedną stronę oraz osobne stwierdzenie, że odwrotna nie zachodzi ogólnie. |
+| thm:unique-expansion-xli | Kwantyfikator jednoznacznego istnienia, dowolna (także pusta) dziedzina, predykat jednoargumentowy. |
+
+Sprawdzono również application/lean/src/LST01_SyntaxValuations.lean: istniejąca formalizacja rozróżnia induktywny typ LST01.Formula, Valuation = Nat → Bool, eval, equivalent i tautology. Nie wolno w adapterze zastąpić tego przez samo Prop i Iff, nawet jeśli otrzymany odpowiednik jest twierdzeniem Lean. Potrzebny będzie wersjonowany słownik i szerszy AST z kontekstem typów, predykatami i wieloma klauzulami. Nie oznacza to zgody na automatyczne rozszerzenie zakresu bieżącego podetapu ani zmianę kanonicznego źródła. Przykłady te stanowią przyszłe negatywne przypadki odbiorcze L1.5.4; właściwą obsługę planować dopiero w odpowiednio rozszerzonym kontrakcie L1.5.5 i kolejnych etapach.
