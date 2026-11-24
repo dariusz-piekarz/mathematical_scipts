@@ -26,3 +26,35 @@ function verma67(){
  return {rankOne,relations,singular,models,dimensions,weights,weylChecks,highest};
 }
 console.log('AA-67 highest weight quotients: PASS',verma67());
+
+// AA-67-QW-01: aa:lem:verma-integrable, weight projections descend to Q.
+// Finite supports in the rank-one Verma module; Q kills degrees > m.
+// Exact scaled Lagrange projectors, including singleton and zero quotients of weights.
+function quotientWeights67(){
+ let supports=0,projections=0,coordinates=0;
+ for(let m=0;m<=8;m++)for(let n=0;n<=8;n++){
+  const h=Array.from({length:n+1},(_,k)=>BigInt(m-2*k));
+  const v=h.map((_,k)=>BigInt((k+1)*(-1)**k));
+  const q=w=>w.slice(0,m+1);
+  let sum=v.map(()=>0n);
+  for(let j=0;j<h.length;j++){
+   let den=1n;
+   for(let k=0;k<h.length;k++)if(k!==j)den*=h[j]-h[k];
+   const p=w=>w.map((x,i)=>{
+    let num=x;
+    for(let k=0;k<h.length;k++)if(k!==j)num*=h[i]-h[k];
+    if(num%den!==0n)throw Error("nonintegral projection");
+    return num/den;
+   });
+   const w=p(v),left=q(w),right=p(q(v));
+   if(left.length!==right.length||left.some((x,i)=>x!==right[i]))throw Error("projection does not descend");
+   w.forEach((x,i)=>{if(x!==(i===j?v[i]:0n))throw Error("wrong weight component");sum[i]+=x;coordinates++;});
+   if(j>m&&left.some(x=>x!==0n))throw Error("discarded weight survives");
+   projections++;
+  }
+  if(sum.some((x,i)=>x!==v[i]))throw Error("weight components do not sum to original vector");
+  supports++;
+ }
+ return {supports,projections,coordinates};
+}
+console.log("AA-67-QW-01: PASS",quotientWeights67());
