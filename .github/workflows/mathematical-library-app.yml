@@ -61,6 +61,14 @@ jobs:
           if [[ "$result" != 0 && "$result" != 2 ]]; then
             exit "$result"
           fi
+      - name: Benchmark paired full Lean chapter reports on real index
+        run: python scripts/benchmark_lean_chapter_report.py --samples 6 --output data/lean_chapter_report_benchmark.json
+      - name: Upload chapter report benchmark
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-chapter-report-benchmark-${{ inputs.validation_pass || 'standalone' }}
+          path: application/data/lean_chapter_report_benchmark.json
+          if-no-files-found: error
       - name: Audit all unresolved references and label provenance
         run: |
           python scripts/audit_reference_provenance.py --db data/biblioteka.db --out data/reference_provenance_audit

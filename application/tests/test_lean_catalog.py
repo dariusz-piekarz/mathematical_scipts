@@ -314,6 +314,30 @@ class LeanCatalogTests(unittest.TestCase):
         self.assertEqual(conflict["items"][0]["index_status"], "ambiguous_label")
         self.assertFalse(conflict["certificate"])
 
+    def test_l143_benchmark_compares_real_reports(self):
+        from scripts.benchmark_lean_chapter_report import benchmark
+
+        self.set_l14_canonical_file()
+        self.item.update(source_document_sha256=self.digest,
+                         statement_status="approved")
+        self.save_manifest()
+        db = Path(self.temp.name) / "benchmark.db"
+        with sqlite3.connect(db) as target:
+            self.con.backup(target)
+        result = benchmark(db, lean_root=self.root, samples=2)
+        self.assertFalse(result["certificate"])
+        self.assertEqual(result["registry_entries"], 1)
+        self.assertEqual(result["indexed_chapters"], 1)
+        row = result["results"][0]
+        self.assertTrue(row["reports_equal"])
+        self.assertEqual(row["ready"], 1)
+        self.assertEqual(row["operation_counts"]["scoped"]["owner_checks"], 3)
+        self.assertEqual(row["operation_counts"]["scoped"]["canonical_checks"], 2)
+        self.assertEqual(len(row["samples_seconds"]["legacy"]), 2)
+        self.assertEqual(len(row["samples_seconds"]["scoped"]), 2)
+        with self.assertRaises(ValueError):
+            benchmark(db, lean_root=self.root, samples=0)
+
     def test_l14_chapter_report_ready_is_not_compilation(self):
         self.item.update(source_document_sha256=self.digest,
                          statement_status="approved")
