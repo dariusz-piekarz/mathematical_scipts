@@ -96,6 +96,35 @@ def main() -> None:
                 assert page.evaluate("state.leanFragment.statement_status") == "approved"
                 assert page.evaluate("state.leanFragment.certificate") is False
                 assert page.locator("#leanRun").is_disabled()
+                # L1.4: real read-only chapter report, separate from proof status.
+                page.locator("#leanChapterReportCurrent").click()
+                page.wait_for_function(
+                    "() => document.querySelector('#leanChapterReportSummary').textContent.includes('nie jest certyfikatem')",
+                    timeout=20000,
+                )
+                assert page.locator("#leanChapterModule").input_value() == "LST-01"
+                actual_report = page.request.get(URL + "/api/lean/chapter-report?module_id=LST-01")
+                assert actual_report.ok
+                report = actual_report.json()
+                assert report["certificate"] is False
+                assert report["proof_status_included"] is False
+                summary = page.locator("#leanChapterReportSummary").inner_text()
+                assert report["source_document_sha256"] in summary
+                assert str(report["total"]) + " rejestracji" in summary
+                assert page.locator("#leanChapterReportItems p").count() == report["total"]
+                page.locator("#leanChapterModule").fill("NONEXISTENT-999")
+                assert page.locator("#leanChapterReportItems p").count() == 0
+                page.locator("#leanChapterReportLoad").click()
+                page.wait_for_function(
+                    "() => document.querySelector('#leanChapterReportSummary').textContent.includes('Nie można wczytać raportu')",
+                    timeout=20000,
+                )
+                assert page.locator("#leanChapterReportItems p").count() == 0
+                page.locator("#leanChapterReportCurrent").click()
+                page.wait_for_function(
+                    "() => document.querySelector('#leanChapterReportSummary').textContent.includes('nie jest certyfikatem')",
+                    timeout=20000,
+                )
                 blocked = page.request.post(URL + "/api/lean/run",
                                             data={"formalization_id": "lst01-de-morgan"})
                 assert blocked.status == 200
