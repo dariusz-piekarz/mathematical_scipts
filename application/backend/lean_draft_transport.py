@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import re
 import selectors
+import signal
 import stat
 import subprocess
 import sys
@@ -148,10 +149,18 @@ def _command(prefix: list[str], args: tuple[str, ...], env: dict[str, str]) -> b
             if p.wait(timeout=max(0.01, end-time.monotonic())) != 0:
                 raise ValueError("Docker command failed")
             return bytes(out)
-        finally:
-            if p.poll() is None:
-                p.kill()
-                p.wait(timeout=5)
+        except BaseException:
+            # Kill the local CLI group before reaping its leader: a child
+            # can still hold the pipe after the leader exits.
+            # This is not Docker daemon/container cleanup or a sandbox.
+            if p.returncode is None:
+                try:
+                    os.killpg(p.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                finally:
+                    p.wait(timeout=5)
+            raise
 
 
 def _decode_metadata(data: bytes):
