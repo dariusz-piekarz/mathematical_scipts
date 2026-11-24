@@ -70,6 +70,10 @@ Kryteria semantyczne wymagają ponownej oceny po zmianie źródła; nie są auto
 | PDE-01-063 | ex:burgers-blowup | Rozwiązanie rzeczywiste w argumentacji charakterystyk na rzeczywistej osi. | semantyczna |
 | PDE-01-064 | thm:dalembert | Wypełnienie obszaru zależności nie zasłania osi czasowej; kolejność warstw TikZ. | kontrola wizualna po renderowaniu |
 | PDE-01-065 | thm:dalembert | Tekst w obszarze zależności pozostaje czytelny na tle osi. | kontrola wizualna po renderowaniu |
+| PDE-01-066 | cor:dirichlet-stability | Oszacowanie stabilności dotyczy zmiany wartości brzegowych przy ustalonej prawej stronie f. | semantyczna |
+| PDE-01-067 | eq:neumann-compatibility | Jeśli rozwiązanie istnieje, zbiór wszystkich rozwiązań to u+C; sprawdzony również kierunek dodawania stałej. | semantyczna |
+| PDE-01-068 | prop:heat-kernel | Normalizacja Gaussa z jakobianem i iloczynem całek jednowymiarowych, z uzasadnieniem Tonellego. | semantyczna |
+| PDE-01-069 | thm:dalembert | Jawne całkowanie F' na przedziale [η,ξ] i wykorzystanie F(η)+G(η)=u₀(η). | semantyczna |
 
 ## Pierwsze wykonanie — 2026-11-24
 Przejrzano kryteria 001–012 w poprawionym tekście (commit 6c55830d79679c70a164546a1f0ff953198e29f6). Kontrola strukturalna wykonana na treści przed zapisem: zachowano 35 etykiet, wszystkie 14 odsyłaczy wewnętrznych rozwiązywalne, środowiska begin/end poprawnie zagnieżdżone. Nie wykonano kompilacji LaTeX, renderowania rysunków ani Lean. Rozdział pozostaje otwarty; dalsze sekcje od sec:pde-models wymagają osobnego audytu.
@@ -90,3 +94,6 @@ Poprawki 049–058: commit d646625027396ec01feee4d3a77a2efea064ce55. Ponowna kon
 
 ## Szósta iteracja — 2026-11-24
 Poprawki 059–065: commit 193afa2c7da2d781a6bd486c464ba2caaf6650c3. Kontrola strukturalna zmienionego tekstu: 35 zachowanych unikalnych etykiet, 16 rozwiązywalnych odsyłaczy, poprawnie zagnieżdżone środowiska. Starszy [workflow 45404958762](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45404958762) zakończył się sukcesem, w tym testy, kompilacja, diagnostyka i renderowanie. Pobrano artefakt 14925920421 (14 stron PNG) i przeprowadzono oględziny układu stron oraz trzech rysunków (s. 6, 8, 11). Wnioski: zwiększyć odstęp napisów od osi, wyróżnić właściwą charakterystykę punktami, nie zasłaniać osi czasowej w stożku. Poprawiono źródło trzech rysunków; nowe renderowanie wymaga ponownej kontroli. Dla wersji po piątej iteracji potwierdzono sukces kroków testów i kontroli strukturalnej w przebiegu 45405221487; nie jest to wynik dla commitu szóstej iteracji. Lean nie uruchomiono. Rozdział nadal otwarty.
+
+## Siódma iteracja — 2026-11-24
+Poprawki 066–069: commit f2811c1705ad6c0f307da03fe02c9a0d4b9c5fb5. Ponowny przegląd definicji, symbolu, klasyfikacji, modeli i zakresu oszacowań; nowe kryteria sprawdzone semantycznie. Kontrola strukturalna: 35 niezmienionych etykiet, 16 rozwiązywalnych odsyłaczy, poprawne zagnieżdżenie środowisk. [Przebieg 45405221487](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45405221487) wersji po piątej iteracji zakończył się sukcesem wszystkich kroków, w tym testów, kompilacji i diagnostyki. Przebieg 45405581130 wersji po szóstej iteracji był w kolejce podczas kontroli; nie potwierdzono jeszcze wizualnie ostatnich zmian rysunków. Wyniki CI wcześniejszych wersji nie zastępują weryfikacji nowego źródła. Lean nie uruchomiono. Rozdział otwarty.
