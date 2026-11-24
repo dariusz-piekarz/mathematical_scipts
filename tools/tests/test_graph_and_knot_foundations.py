@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independent finite audit for original chapters 01--03 of graph and knot theory.
+"""Independent finite audit for chapters 01--04 of graph and knot theory.
 
 Checks graph conventions (including the empty graph), handshake, complements,
 odd-cycle/bipartite characterization, Havel--Hakimi, incidence rank and cycle
@@ -626,6 +626,102 @@ def test_chapter03_constructions():
     return graphs,dfs_runs,hier_runs,incidence_reads
 
 
+def test_chapter04_menger():
+    """Independent packing of simple paths versus enumerated separators."""
+    def reachable(n,edges,start,finish,removed=0):
+        adj=adj_of(n,edges)
+        seen={start}
+        q=[start]
+        for u in q:
+            for v in adj[u]:
+                if not (removed>>v&1) and v not in seen:
+                    seen.add(v)
+                    q.append(v)
+        return finish in seen
+
+    def parameters(n,edges):
+        k=n-1
+        for mask in range(1<<n):
+            size=mask.bit_count()
+            if size>=k:
+                continue
+            live=[v for v in range(n) if not (mask>>v&1)]
+            if any(not reachable(n,edges,live[0],v,mask) for v in live[1:]):
+                k=size
+        lam=min(sum(((mask>>u)&1)!=((mask>>v)&1) for u,v in edges)
+                for mask in range(1,(1<<n)-1))
+        delta=min(len(a) for a in adj_of(n,edges))
+        return k,lam,delta
+
+    def pack(masks):
+        # Each distinct simple path is considered exactly once, including st.
+        best={0:0}
+        for p in masks:
+            new=best.copy()
+            for used,count in best.items():
+                if not (used&p):
+                    new[used|p]=max(new.get(used|p,0),count+1)
+            best=new
+        return max(best.values())
+
+    graphs=pair_count=adjacent=0
+    for n in range(2,6):
+        es=pairs(n)
+        for mask in range(1<<len(es)):
+            edges=[e for i,e in enumerate(es) if mask>>i&1]
+            if component_count(n,edges)!=1:
+                continue
+            graphs+=1
+            k,lam,delta=parameters(n,edges)
+            assert k<=lam<=delta
+            adj=[[] for _ in range(n)]
+            for i,(u,v) in enumerate(edges):
+                adj[u].append((v,i))
+                adj[v].append((u,i))
+            vertex_min=edge_min=n
+            for start,finish in es:
+                pair_count+=1
+                vm=[]
+                em=[]
+                endpoints=(1<<start)|(1<<finish)
+
+                def dfs(u,seen,used):
+                    if u==finish:
+                        vm.append(seen&~endpoints)
+                        em.append(used)
+                        return
+                    for v,i in adj[u]:
+                        if not (seen>>v&1):
+                            dfs(v,seen|(1<<v),used|(1<<i))
+
+                dfs(start,1<<start,0)
+                rv,re=pack(vm),pack(em)
+                vertex_min=min(vertex_min,rv)
+                edge_min=min(edge_min,re)
+                ec=min(sum(((cut>>u)&1)!=((cut>>v)&1) for u,v in edges)
+                       for cut in range(1,(1<<n)-1)
+                       if (cut>>start&1) and not (cut>>finish&1))
+                assert re==ec, (n,edges,start,finish)
+                is_adjacent=(start,finish) in edges
+                h=[e for e in edges if e!=(start,finish)]
+                sep=min(cut.bit_count() for cut in range(1<<n)
+                        if not cut&endpoints and
+                        not reachable(n,h,start,finish,cut))
+                assert rv==sep+int(is_adjacent), (n,edges,start,finish)
+                adjacent+=int(is_adjacent)
+            assert (vertex_min,edge_min)==(k,lam)
+    examples=[
+        (9,pairs(4)+[(u+4,v+4) for u,v in pairs(4)]
+           +[(0,8),(1,8),(4,8),(5,8)],(1,2,3)),
+        (5,[(0,1),(0,2),(1,2),(0,3),(0,4),(3,4)],(1,2,2)),
+        (8,pairs(4)+[(u+4,v+4) for u,v in pairs(4)]+[(0,4)],(1,1,3)),
+    ]
+    for n,edges,expected in examples:
+        assert parameters(n,edges)==expected
+    assert (graphs,pair_count,adjacent)==(771,7521,4294)
+    return graphs,pair_count,adjacent,len(examples)
+
+
 def test_source_consistency():
     catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in catalog["books"] if x["id"]=="graph_and_knot_theory")
@@ -654,3 +750,6 @@ if __name__=="__main__":
 
     g,d,h,i=test_chapter03_constructions()
     print(f"PASS chapter 03 constructions: {g} graphs, {d} DFS orientations, {h} Hierholzer runs, {i} incidence reads")
+
+    g,p,a,e=test_chapter04_menger()
+    print(f"PASS chapter 04 Menger: {g} connected graphs, {p} endpoint pairs, {a} adjacent endpoint pairs, {e} strict Whitney examples")
