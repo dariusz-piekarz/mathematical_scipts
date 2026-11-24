@@ -6,6 +6,8 @@ on:
       - biblioteka-matematyczna-iteracja-6
     paths:
       - "application/lean/**"
+      - "application/backend/lean_concepts.py"
+      - "application/tests/test_lean_concept_fixture.py"
       - "application/scripts/lean_ci_audit.py"
       - "application/scripts/benchmark_lean_fingerprint.py"
       - "application/scripts/benchmark_lean_paths.py"
@@ -136,6 +138,32 @@ jobs:
           python ../scripts/lean_ci_audit.py \
             --manifest manifest.json --lean-root . \
             --logs-dir ci_lean_logs --report ci_lean_report.json
+
+      - name: Compile trusted concept dictionary signatures (when present)
+        working-directory: application/lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -f ../backend/lean_concepts.py && ! -f checks/ConceptSignatures.lean ]]; then
+            echo "Historical checkout without concept dictionary."
+            exit 0
+          fi
+          test -f ../backend/lean_concepts.py
+          test -f checks/ConceptSignatures.lean
+          (cd .. && python -m unittest tests.test_lean_concept_fixture -v)
+          mkdir -p ci_lean_logs
+          probe="$(mktemp --suffix=.lean ./ConceptSignaturesXXXXXX)"
+          trap 'rm -f "$probe"' EXIT
+          cat src/LST01_SyntaxValuations.lean > "$probe"
+          printf '\n' >> "$probe"
+          cat checks/ConceptSignatures.lean >> "$probe"
+          if ! lake env lean "$probe" > ci_lean_logs/concept-signatures.log 2>&1; then
+            cat ci_lean_logs/concept-signatures.log
+            exit 1
+          fi
+          cat ci_lean_logs/concept-signatures.log
+          (cd .. && python -c 'from backend.lean_concepts import dictionary_sha256; print("Dictionary SHA-256:", dictionary_sha256())')
+          echo "Trusted concept signature fixture compiled; semantic mappings remain unreviewed."
 
       - name: Install application dependencies for Lean introspection test
         working-directory: application
