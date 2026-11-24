@@ -300,6 +300,50 @@ def test_perturbation_gap():
     return boxes, count
 
 
+def test_dsu_height():
+    # TG39-DSU-01: inspect raw parent links before find can compress them.
+    class UncompressedDSU(DSU):
+        def find(self, x):
+            while self.parent[x] != x:
+                x = self.parent[x]
+            return x
+
+    cases = 0
+    for n in range(1, 65):
+        for kind in (DSU, UncompressedDSU):
+            dsu = kind(n)
+            groups = list(range(n))
+            while len(groups) > 1:
+                next_groups = []
+                for a, b in zip(groups[::2], groups[1::2]):
+                    assert dsu.union(a, b)
+                    assert not dsu.union(a, b)
+                    next_groups.append(a)
+                if len(groups) % 2:
+                    next_groups.append(groups[-1])
+                groups = next_groups
+                sizes = {}
+                for v in range(n):
+                    x, depth, seen = v, 0, set()
+                    while dsu.parent[x] != x:
+                        assert x not in seen
+                        seen.add(x)
+                        x = dsu.parent[x]
+                        depth += 1
+                    assert depth <= n.bit_length() - 1
+                    sizes[x] = sizes.get(x, 0) + 1
+                assert all(dsu.size[root] == size for root, size in sizes.items())
+                assert len(sizes) == len(groups)
+            if n & (n - 1) == 0 and kind is UncompressedDSU:
+                depth, x = 0, n - 1
+                while dsu.parent[x] != x:
+                    x = dsu.parent[x]
+                    depth += 1
+                assert depth == n.bit_length() - 1
+            cases += 1
+    return cases
+
+
 def special_cases():
     graph = [
         (0, 1, 1), (1, 2, 2), (2, 3, 3), (3, 4, 2),
@@ -348,5 +392,6 @@ if __name__ == "__main__":
     print(f"PASS exhaustive small graphs: {exhaustive_small()}")
     print(f"PASS seeded larger graphs: {seeded_larger()}")
     special_cases()
+    print('PASS TG39-DSU-01 balanced merge cases:', test_dsu_height())
     print('PASS TG39-GAP-01 boxes and vertices:', test_perturbation_gap())
     print("PASS TG39-CERT-01 path certificate, hand-calculated examples, DSU invariants, cut/cycle properties and book integration")
