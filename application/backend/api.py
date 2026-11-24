@@ -20,7 +20,7 @@ import networkx as nx
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictBool
 
 from backend.latex_parser import analyze_selection, get_stats, show_label
 from backend import workspaces
@@ -30,6 +30,7 @@ from backend import lean_chapter_report
 from backend import lean_dependencies
 from backend import lean_introspection
 from backend import lean_formalization
+from backend import lean_transcription
 
 ROOT = Path(__file__).resolve().parents[1]
 FRONTEND = ROOT / "frontend"
@@ -228,6 +229,25 @@ def lean_fragment(entity_id: str | None = None, module_id: str | None = None,
         return lean_formalization.fragment(
             con, entity_id=entity_id, module_id=module_id,
             start_line=start_line, end_line=end_line)
+
+
+class LeanTranscriptionPrepareRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    entity_id: str = Field(min_length=1, max_length=300)
+    expected_source_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    consent: StrictBool
+
+
+@app.post("/api/lean/transcription/prepare")
+def prepare_lean_transcription(request: LeanTranscriptionPrepareRequest):
+    """Prepare an offline experimental request, not a generated Lean proof."""
+    with db_connection() as con:
+        # All provenance reads use one SQLite read snapshot.
+        con.execute("BEGIN")
+        return lean_transcription.prepare(
+            con, entity_id=request.entity_id,
+            expected_source_sha256=request.expected_source_sha256,
+            consent=request.consent)
 
 
 class LeanRunRequest(BaseModel):
