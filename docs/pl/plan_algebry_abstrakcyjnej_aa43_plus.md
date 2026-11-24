@@ -287,3 +287,8 @@ AA-67: moduł Verma z konstrukcji AA-62, własność uniwersalna, największy w�
 ## Zamknięcie AA-67 — 24 listopada 2026 r.
 
 **AA-67 STABILNY w ustalonym zakresie; etapy D/P zaliczone.** Sześć dowodów, korekta rozkładu wagowego i oba trwałe zestawy regresji zweryfikowane; CI [45454620156](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45454620156) 145/145 success, źródło 991e3acb1c390cf37b43be2ee136515cb5b82d53. PDF 424 strony, artefakt 14950266271, oględziny stron fizycznych 420–424 udokumentowane w audycie IV. Raport zamknięcia `audits/abstract_algebra/ch67_iteration_05.md`. AA-01–67 stabilne. **AA-68 nieotwarty.** Kolejna iteracja D zgodnie z planem dalszej teorii reprezentacji; proponowany zakres: charaktery i przygotowanie do wzoru Weyla.
+
+
+## Otwarcie AA-68 — 24 listopada 2026 r.
+
+AA-68: charaktery formalne, pierścień grupowy kraty wag, działania na charakterach, trójkątność, baza pierścienia niezmienników grupy Weyla i rozkład iloczynu tensorowego w rzędzie jeden. **Etap D W AUDYCIE.** Bez wzoru charakterów i wzoru wymiarowego Weyla. Dwa zestawy regresji wykonane; pełny CI i PDF do potwierdzenia. AA-69 nieotwarty.
