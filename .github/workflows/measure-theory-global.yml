@@ -7,6 +7,7 @@ on:
       - "chapters/pl/measure_theory/**"
       - "books/pl/measure_theory.tex"
       - "tools/tests/test_measure_theory*.py"
+      - "tools/test_measure_theory*.py"
       - ".github/workflows/measure-theory-global.yml"
   workflow_dispatch:
 permissions:
@@ -25,3 +26,13 @@ jobs:
           python-version: '3.12'
       - name: Run all persistent measure theory regression suites
         run: python -m unittest discover -s tools/tests -p 'test_measure_theory*.py' -v
+      - name: Run earlier chapter standalone source and finite-model regressions
+        run: |
+          set -euo pipefail
+          for suite in tools/test_measure_theory*.py; do
+            case "$suite" in
+              *pdf_layout.py) echo "PDF-dependent suite: $suite (separate PDF gate)"; continue ;;
+            esac
+            echo "Running $suite"
+            python "$suite"
+          done
