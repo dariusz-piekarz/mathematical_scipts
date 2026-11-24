@@ -113,4 +113,19 @@ class Chapter17(TestCase):
                         self.assertTrue(a<x<b)
                         self.assertLess(abs(x-p),eps)
 
+    def test_exact_jump_and_right_continuity(self):
+        pts=[F(1,2),F(1,3),F(2,3),F(1,4),F(3,4)]
+        weights=[F(1,2**(k+1)) for k in range(len(pts))]
+        for k,p in enumerate(pts):
+            delta=min([p,1-p]+[abs(p-q) for q in pts if q!=p])/2
+            left=staircase(p-delta,pts,weights)
+            at=staircase(p,pts,weights)
+            right=staircase(p+delta,pts,weights)
+            self.assertEqual(at-left,weights[k])
+            self.assertEqual(right,at)
+            others=[q for i,q in enumerate(pts) if i!=k]
+            otherweights=[w for i,w in enumerate(weights) if i!=k]
+            self.assertEqual(staircase(p-delta,others,otherweights),staircase(p+delta,others,otherweights))
+        self.assertEqual(staircase(F(1),pts,weights)-staircase(F(0),pts,weights),sum(weights))
+
 if __name__ == "__main__": main()
