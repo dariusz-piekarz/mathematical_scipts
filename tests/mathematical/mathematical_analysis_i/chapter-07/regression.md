@@ -13,3 +13,5 @@ Testy skończone sprawdzają świadków i oszacowania, nie dowodzą ogólnej zup
 | MA1-07-009 | ma1:thm:complete-product, ma1:cor:euclidean-complete | Niepuste czynniki, obie implikacje, porównanie metryk, R^m i C | semantyczna + Python |
 | MA1-07-010 | ma1:lem:closed-sequential, ma1:thm:complete-closed | Kryterium ciągowe, jawne użycie wyboru, oba kierunki z odpowiednimi założeniami, zbiór pusty | semantyczna |
 | MA1-07-011 | ma1:thm:bounded-functions-complete | Istnienie supremum, granice punktowe, wspólny indeks, nieostra granica nierówności, ograniczoność granicy | semantyczna + Python |
+| MA1-07-012 | ma1:thm:bolzano-weierstrass | Ograniczoność rzutu w metryce euklidesowej oraz ścisły wzrost złożonych indeksów | semantyczna + Python (oszacowanie) |
+| MA1-07-013 | ma1:thm:bounded-functions-complete | Odległość różnych wektorów jednostkowych równa 1, brak podciągu Cauchy'ego | semantyczna + Python (skończone ograniczenia) |
