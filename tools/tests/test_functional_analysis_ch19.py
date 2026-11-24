@@ -96,5 +96,19 @@ class Chapter19(unittest.TestCase):
             value = 2/n*(2*k+1-cos(r))
             self.assertLessEqual(abs(value-4/pi), 4/n+1e-12)
 
+
+    def test_FA19_null_sets_and_edge_cases_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"2\|g\|_{L^1}\rho(z)",
+            r"A_n=\{x\in K_n:f(x)\ne0\}",
+            r"podaddytywności miary",
+            r"Przedłużmy $\eta$ zerem na $\R^d$",
+            r"$\mathcal D(U;\K)=\{0\}$ i $T|_U=0$",
+            r"m=0$, $C=0",
+            r"\sum_{j=1}^d(a_{n,j}-a_j)\partial_j\varphi",
+        ):
+            self.assertIn(fragment, s)
+
 if __name__ == "__main__":
     unittest.main()
