@@ -56,3 +56,48 @@ for(const [name,C,size,pos] of types){
  groups++;groupElements+=size;positiveRoots+=pos;coefficients+=D.size;
 }
 console.log("AA-69-DEN-01: PASS",{groups,groupElements,positiveRoots,coefficients,regularOrbits,singularOrbits,reflections});
+
+// AA-69-DEN-02: aa:lem:weyl-positive-permutation, aa:lem:weyl-regular-orbits.
+// BFS shortest words in root coordinates; test the deletion lemma directly.
+function checkExchange69(){
+ let elements=0,extensions=0,deletions=0,nonDominantRegular=0,positiveStabilizers=0;
+ for(const [name,C,size,pos] of types){
+  const r=C.length,unit=i=>Array.from({length:r},(_,j)=>+(i===j));
+  const I=Array.from({length:r},(_,i)=>unit(i));
+  const rootRefl=(v,i)=>{const w=[...v];w[i]-=C[i].reduce((s,c,j)=>s+c*v[j],0);return w};
+  const weightRefl=(v,i)=>v.map((x,j)=>x-v[i]*C[j][i]);
+  const apply=(m,v)=>Array.from({length:r},(_,i)=>m.reduce((s,col,j)=>s+col[i]*v[j],0));
+  const matrixKey=m=>m.map(key).join(";");
+  const wordMatrix=word=>{let m=I;for(let k=word.length-1;k>=0;k--)m=m.map(v=>rootRefl(v,word[k]));return m};
+  const queue=[{m:I,word:[]}],seen=new Map([[matrixKey(I),queue[0]]]);
+  for(let k=0;k<queue.length;k++)for(let i=0;i<r;i++){
+   const m=queue[k].m.map(v=>rootRefl(v,i)),s=matrixKey(m);
+   if(!seen.has(s)){const z={m,word:[i,...queue[k].word]};seen.set(s,z);queue.push(z)}
+  }
+  assert(queue.length===size,name+" order");
+  for(const {m,word} of queue){
+   assert(matrixKey(wordMatrix(word))===matrixKey(m),name+" word product");
+   if(m.every(v=>v.every(x=>x>=0))){assert(word.length===0,name+" chamber stabilizer");positiveStabilizers++}
+   let rho=Array(r).fill(1);for(let k=word.length-1;k>=0;k--)rho=weightRefl(rho,word[k]);
+   if(word.length){assert(rho.some(x=>x<0),name+" regular need not be dominant");nonDominantRegular++}
+   for(let j=0;j<r;j++){
+    const target=m.map((v,i)=>i===j?v.map(x=>-x):v.map((x,k)=>x-C[j][i]*m[j][k]));
+    // The j-th column above uses C[j][j]=2, so the special case agrees.
+    const z=seen.get(matrixKey(target));assert(z,name+" extension in group");
+    const negative=m[j].every(x=>x<=0);
+    assert(z.word.length===word.length+(negative?-1:1),name+" length change");
+    if(negative){
+     let v=unit(j),at=-1;
+     for(let k=word.length-1;k>=0;k--){const w=rootRefl(v,word[k]);if(v.every(x=>x>=0)&&w.every(x=>x<=0)){assert(key(v)===key(unit(word[k])),name+" sign crossing");at=k;break}v=w}
+     assert(at>=0,name+" missing crossing");
+     assert(matrixKey(wordMatrix(word.filter((_,k)=>k!==at)))===matrixKey(target),name+" deleted word");
+     deletions++;
+    }
+    extensions++;
+   }
+   elements++;
+  }
+ }
+ return {elements,extensions,deletions,nonDominantRegular,positiveStabilizers};
+}
+console.log("AA-69-DEN-02: PASS",checkExchange69());
