@@ -174,5 +174,53 @@ class Chapter26(unittest.TestCase):
                 self.assertLessEqual(sum(c*c for c in coeff[:n]), norm2)
             self.assertEqual(sum(c*c for c in coeff), norm2)
 
+    def test_FA26_uniform_convexity_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\delta_X(\varepsilon)",
+            r"\ref{prop:parallelogram13}",
+            r"\|(x+y)/2\|^2=1-\|x-y\|^2/4",
+            r"\delta_H(\varepsilon)=1-\sqrt{1-\varepsilon^2/4}>0",
+            r"\Phi/\|\Phi\|",
+            r"\operatorname{Re}\Phi(f)>1-\delta/2",
+            r"|f(x_\alpha)-\Phi(f)|<\delta/2",
+            r"1-\delta<\|x_\alpha\|\le1",
+            r"\|u_\alpha-u_\beta\|<\varepsilon/2",
+            r"\|x_\alpha-x_\beta\|<\varepsilon/2+2\delta<\varepsilon",
+            r"\|x_\alpha-x_{\alpha_n}\|<2^{-n}",
+            r"\Phi=J_Xx",
+            r"f(u_n)=f(x_n)/\|x_n\|",
+            r"\liminf_k\|(u_{n_k}+u)/2\|",
+            r"\|x_n-x\|\le\|x_n\|\|u_n-u\|",
+        ):
+            self.assertIn(fragment, s)
+        # Rational unit circle models; squared norms avoid roundoff.
+        def sq(v):
+            return sum(x*x for x in v)
+        def add(u, v):
+            return tuple(a+b for a,b in zip(u,v))
+        def sub(u, v):
+            return tuple(a-b for a,b in zip(u,v))
+        def scale(t, u):
+            return tuple(t*a for a in u)
+        V = [((1-t*t)/(1+t*t), 2*t/(1+t*t))
+             for t in (F(k,8) for k in range(-16,17))]
+        V.append((F(-1), F(0)))
+        for u,v in product(V, repeat=2):
+            self.assertEqual(sq(scale(F(1,2),add(u,v))), 1-sq(sub(u,v))/4)
+        for u in V:
+            x,y = u,(u[0],-u[1])
+            self.assertTrue(sq(x)==sq(y)==1 and sq(sub(x,y))==4*u[1]**2
+                            and sq(scale(F(1,2),add(x,y)))==u[0]**2)
+        for eps in (F(1,2),F(1),F(3,2),F(2)):
+            delta = eps*eps/64
+            rs = (1,1-delta/2,1-delta/4)
+            for u,v,r,s in product(V,V,rs,rs):
+                x,y = scale(r,u),scale(s,v)
+                if x[0]<=1-delta or y[0]<=1-delta:
+                    continue
+                self.assertLess(sq(sub(u,v)),(eps/2)**2)
+                self.assertLess(sq(sub(x,y)),eps**2)
+
 if __name__ == "__main__":
     unittest.main()
