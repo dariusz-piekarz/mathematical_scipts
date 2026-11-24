@@ -25,7 +25,7 @@ Przekształcić Atlas z przeglądarki matematycznych źródeł LaTeX, grafów i 
 
 ## Sekwencyjna kolejka — siedem etapów
 
-Wewnątrz każdego etapu są fragmenty wykonywane po kolei. Nie przechodź do następnej pozycji bez `stable` bieżącej.
+Wewnątrz każdego etapu są fragmenty wykonywane po kolei w cyklu A/B. Po czystym technicznym odbiorze B można przejść do kolejnego podetapu rozwojowego; osobna niezależna recenzja nadal warunkuje formalne `stable`. Nie przechodź do kolejnego głównego etapu przy otwartych istotnych defektach ani niespełnionych wymaganiach odbioru.
 
 ### 1. Lean 4 — stabilizacja i rozwój formalizacji
 
