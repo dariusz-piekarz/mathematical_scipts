@@ -157,5 +157,27 @@ class Chapter20(unittest.TestCase):
             self.assertEqual(sum(primitive),0)
             self.assertEqual(derivative(primitive),h)
 
+
+    def test_FA20_figure_and_product_domain_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"przyjmijmy $H(0)=0$",
+            r"\draw[fill=blue!60!black,draw=blue!60!black,thick] (0,0) circle",
+            r"\draw[fill=white,draw=blue!60!black,thick] (0,1.3) circle",
+            r"h(t,y)=\varphi(t,y)-\eta(t)A\varphi(y)",
+            r"\theta(t,y)=\int_{-\infty}^t h(s,y)",
+            r"A(\eta\otimes\psi)=\psi",
+            r"A(\partial_1\varphi)=0",
+        ):
+            self.assertIn(fragment, s)
+        # Finite polynomial models of integration in the first coordinate.
+        eta = [Fraction(3,4), 0, Fraction(-3,4)]
+        for p in ([1,0,-1], [0,1,0,-1], [1,2,-1,-2]):
+            self.assertEqual(integral(derivative(p),-1,1),0)
+            for q in ([1], [2,-3,1]):
+                mass = integral(p,-1,1)
+                self.assertEqual([integral(eta,-1,1)*mass*c for c in q],
+                                 [mass*c for c in q])
+
 if __name__ == "__main__":
     unittest.main()
