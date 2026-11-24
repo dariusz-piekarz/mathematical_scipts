@@ -14,7 +14,7 @@ i przy wszystkich rodzajach zapytań.
 \label{sec:tg-weighted-data}
 
 Niech $D=(V,A)$ będzie skończonym grafem skierowanym
-bez pętli, $n=|V|$, $m=|A|$ i niech
+bez pętli i łuków równoległych, $n=|V|$, $m=|A|$ i niech
 $w\colon A\to\mathbb R$ będzie funkcją wag.
 Wagę spaceru $P=(v_0,\ldots,v_k)$ definiujemy jako
 $w(P)=\sum_{i=0}^{k-1}w(v_i,v_{i+1})$.
@@ -38,8 +38,12 @@ to $\delta(s,t)$ jest kosztem pewnej
 ścieżki bez powtórzeń wierzchołków.
 \end{lemat}
 \begin{proof}
-Każdy zamknięty fragment spaceru ma wagę
-nieujemną, więc możemy go usunąć bez
+Jeżeli spacer ma powtórzony wierzchołek, wybieramy
+najkrótszy niepusty fragment między dwoma wystąpieniami
+tego samego wierzchołka. Jego wnętrze nie zawiera
+powtórzeń, więc fragment jest cyklem skierowanym.
+Jest osiągalny z $s$ i można z niego dojść do $t$,
+a zatem ma wagę nieujemną. Usuwamy go bez
 zwiększania kosztu. Po skończenie wielu
 usunięciach otrzymamy ścieżkę prostą.
 Ponieważ graf ma skończenie wiele ścieżek
@@ -86,7 +90,7 @@ wpisy nieaktualne i wierzchołki już ustalone.
 \begin{twierdzenie}[Poprawność Dijkstry]
 \label{thm:tg-weighted-dijkstra}
 Dla skończonego grafu skierowanego
-o nieujemnych wagach po ustaleniu
+o nieujemnych wagach i źródła $s\in V$ po ustaleniu
 wierzchołka $v$ zachodzi
 $d[v]=\delta(s,v)$. Po zakończeniu
 wszystkie odległości są prawidłowe,
@@ -173,6 +177,8 @@ a następnie wykonujemy dodatkową kontrolę.
 
 \begin{twierdzenie}[Bellman--Ford]
 \label{thm:tg-weighted-bellman}
+Niech $D=(V,A)$ będzie skończonym grafem skierowanym
+o rzeczywistych wagach, $s\in V$ i $n=|V|$, $m=|A|$.
 Jeżeli graf nie ma cyklu ujemnego
 osiągalnego z $s$, to po $n-1$
 pełnych przebiegach relaksacji
@@ -351,7 +357,9 @@ Dla łuków $s\to a$ o wadze $3$,
 $s\to b$ o wadze $7$, $a\to b$
 o wadze $-5$ i $b\to t$ o wadze $2$
 mamy $\delta(s,b)=-2$ i $\delta(s,t)=0$.
-Dijkstra nie spełnia tutaj swoich założeń.
+Dijkstra nie spełnia tutaj swoich założeń, choć w tym
+przykładzie może zwrócić poprawny wynik. Nie jest to
+kontrprzykład do poprawności algorytmu dla wag ujemnych.
 \end{przyklad}
 
 \section{Floyd--Warshall: wszystkie pary}
@@ -361,7 +369,6 @@ Przy numeracji wierzchołków $1,\ldots,n$
 ustawiamy $d^{(0)}_{ii}=0$ i
 $d^{(0)}_{ij}=w(i,j)$ dla istniejących łuków,
 a w pozostałych miejscach $+\infty$.
-Przy łukach równoległych bierzemy minimum.
 Dla $k=1,\ldots,n$ wykonujemy
 \[
 d^{(k)}_{ij}=
@@ -409,7 +416,9 @@ dla wszystkich $v$ mogących
 dojść do $t$. Jest \emph{spójna},
 gdy $h(u)\leq w(u,v)+h(v)$
 dla każdego łuku $u\to v$.
-Spójność implikuje dopuszczalność.
+Spójność implikuje dopuszczalność: sumując nierówności
+wzdłuż dowolnej ścieżki od $v$ do $t$, otrzymujemy
+$h(v)\leq w(P)+h(t)=w(P)$, a następnie bierzemy infimum.
 
 Algorytm A* wybiera wierzchołki
 z kolejki według
@@ -425,8 +434,8 @@ pobraniu z aktualnym kluczem.
 
 \begin{twierdzenie}[Poprawność A*]
 \label{thm:tg-weighted-astar}
-Niech graf skierowany ma
-nieujemne wagi, a $h$
+Niech $D=(V,A)$ będzie skończonym grafem skierowanym,
+$s,t\in V$, wagi będą nieujemne, a $h$
 będzie nieujemna i spójna,
 przy czym $h(t)=0$.
 Algorytm A* bez ponownego
@@ -507,12 +516,23 @@ f(v_i)=\delta(s,v_i)+h(v_i)
 \]
 Natomiast $f(t)=g(t)>\delta(s,t)$.
 Cel nie mógłby zatem zostać pobrany jako minimum
-kolejki, sprzeczność. Jeśli $t$ nie jest
-osiągalny, algorytm wyczerpie kolejkę,
-ponieważ wszystkie skuteczne poprawy kosztów
-pochodzą od spacerów, których cykle o nieujemnym
-koszcie można usuwać, a w grafie skończonym
-jest skończenie wiele istotnych ścieżek prostych.
+kolejki, sprzeczność. Każda skuteczna poprawa ma świadectwo w postaci
+ścieżki prostej. Istotnie, indukcyjnie przechowujmy
+w dowodzie ścieżkę świadczącą o każdej wartości $g(u)$,
+której wszystkie prefiksy były wcześniej wartościami
+odpowiednich etykiet. Jeśli przedłużenie do $v$ powtarza
+wierzchołek $v$, jego koszt jest nie mniejszy od kosztu
+wcześniejszego prefiksu do $v$, gdyż wagi są nieujemne.
+Bieżąca etykieta $g(v)$ jest nie większa od tamtej
+wartości, więc ścisła poprawa jest niemożliwa.
+Każda skuteczna relaksacja zachowuje zatem własność
+świadectwa. Skończona liczba ścieżek prostych i ścisłość
+popraw gwarantują zakończenie algorytmu. Gdy kolejka
+jest pusta, każdy osiągalny wierzchołek musiał zostać
+odkryty: w przeciwnym razie pierwszy nieodkryty
+wierzchołek na ścieżce od $s$ zostałby odkryty przy
+przetwarzaniu poprzednika. Jeśli cel nie został pobrany,
+nie jest więc osiągalny.
 \end{proof}
 
 \begin{przyklad}[Dlaczego należy ponownie otwierać wierzchołki]
@@ -852,7 +872,10 @@ więc prawa strona
 nie jest mniejsza
 od $\delta(s,t)$.
 
-Weźmy ścieżkę najkrótszą.
+Jeśli $t$ jest nieosiągalny z $s$, rozwijanie skrótów
+wyklucza istnienie skończonego kandydata, więc obie
+strony są równe $+\infty$. W przeciwnym razie
+weźmy ścieżkę najkrótszą.
 Jeśli jej ciąg rang
 ma lokalne minimum,
 to podczas kontrakcji
@@ -862,13 +885,18 @@ jego sąsiadami albo
 pozostawiono krawędź
 nie droższą.
 Zastąpmy ten fragment.
-Usuwając kolejno minima
-o najmniejszej randze,
-po skończonej liczbie
-kroków otrzymamy
-spacer, którego rangi
-najpierw rosną, a
-potem maleją.
+Wybieramy za każdym razem lokalne minimum o najmniejszej
+randze. Krawędzie używane w danym kroku były dostępne
+w chwili kontrakcji tego minimum: oryginalne krawędzie
+istniały od początku, a wcześniej użyte skróty powstały
+przy kontrakcjach o niższej randze. Istotnie, po usunięciu
+minimum nowe lokalne minima mogą powstać tylko przy jego
+sąsiadach, mających wyższe rangi. Każde zastąpienie usuwa
+jeden wierzchołek ze ścieżki i nie zwiększa kosztu.
+Po skończonej liczbie kroków otrzymujemy ścieżkę bez
+lokalnego minimum rang. Ponieważ rangi są różne,
+następstwo spadku i wzrostu jest niemożliwe; rangi
+najpierw rosną, a potem maleją (jedna część może być pusta).
 Obie połowy od końców
 do wierzchołka
 o największej randze
@@ -911,6 +939,8 @@ tej samej sieci drogowej.
       wyznaczanie odległości i wykrywanie osiągalnych cykli ujemnych.
 \item \textbf{Floyd--Warshall}: odległości między
       wszystkimi parami wierzchołków.
+\item \textbf{Johnson}: wszystkie pary, także wagi ujemne,
+      pod warunkiem braku cykli ujemnych.
 \item \textbf{A*}: jedno zapytanie do celu, nieujemne
       wagi i dopuszczalna heurystyka; przy heurystyce
       niespójnej konieczne jest ponowne otwieranie.
