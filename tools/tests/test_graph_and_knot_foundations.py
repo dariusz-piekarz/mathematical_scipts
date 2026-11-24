@@ -498,6 +498,134 @@ def test_chapter03_euler_multigraphs():
     return directed_count,undirected_count,closed,open_count,orientations
 
 
+def test_chapter03_constructions():
+    """Validate constructive DFS orientations and Hierholzer splicing."""
+    graphs=dfs_runs=hier_runs=incidence_reads=0
+    for n in range(2,6):
+        es=pairs(n)
+        for mask in range(1<<len(es)):
+            edges=[e for i,e in enumerate(es) if mask>>i&1]
+            if component_count(n,edges)!=1:
+                continue
+            graphs+=1
+            expected=all(component_count(n,edges[:i]+edges[i+1:])==1
+                         for i in range(len(edges)))
+            adj=adj_of(n,edges)
+            for root in range(n):
+                for reverse in (False,True):
+                    dfs_runs+=1
+                    parent=[None]*n
+                    depth=[-1]*n
+                    depth[root]=0
+
+                    def dfs(u):
+                        for v in sorted(adj[u],reverse=reverse):
+                            if depth[v]<0:
+                                parent[v]=u
+                                depth[v]=depth[u]+1
+                                dfs(v)
+
+                    dfs(root)
+                    assert all(d>=0 for d in depth)
+                    directed=[[] for _ in range(n)]
+                    for u,v in edges:
+                        if parent[v]==u:
+                            directed[u].append(v)
+                        elif parent[u]==v:
+                            directed[v].append(u)
+                        else:
+                            x,y=(u,v) if depth[u]>depth[v] else (v,u)
+                            z=x
+                            while z is not None and z!=y:
+                                z=parent[z]
+                            assert z==y, (edges,root,x,y)
+                            directed[x].append(y)
+                    strong=True
+                    for start in range(n):
+                        seen={start}
+                        q=[start]
+                        for u in q:
+                            for v in directed[u]:
+                                if v not in seen:
+                                    seen.add(v)
+                                    q.append(v)
+                        strong &= len(seen)==n
+                    assert strong==expected, (edges,root,reverse)
+    for n in range(1,4):
+        types=[(u,v) for u in range(n) for v in range(u,n)]
+        for counts in product(range(3),repeat=len(types)):
+            m=sum(counts)
+            if not 1<=m<=6:
+                continue
+            edges=[e for e,k in zip(types,counts) for _ in range(k)]
+            adj=[[] for _ in range(n)]
+            for i,(u,v) in enumerate(edges):
+                adj[u].append((v,i))
+                adj[v].append((u,i))
+            if any(len(a)%2 for a in adj):
+                continue
+            active={u for u in range(n) if adj[u]}
+            if component_count(n,edges)!=n-len(active)+1:
+                continue
+            for start in sorted(active):
+                for reverse in (False,True):
+                    hier_runs+=1
+                    lists=[list(reversed(a)) if reverse else a for a in adj]
+                    pos=[0]*n
+                    used=set()
+                    # Nodes are indices into arrays; splice by changing links.
+                    vertex=[start]
+                    incoming=[None]
+                    link=[None]
+                    q=deque([0])
+                    reads=0
+
+                    def next_edge(u):
+                        nonlocal reads
+                        while pos[u]<len(lists[u]):
+                            v,i=lists[u][pos[u]]
+                            pos[u]+=1
+                            reads+=1
+                            if i not in used:
+                                used.add(i)
+                                return v,i
+                        return None
+
+                    while q:
+                        node=q.popleft()
+                        u=vertex[node]
+                        tail=node
+                        old=link[node]
+                        while (step:=next_edge(u)) is not None:
+                            v,i=step
+                            fresh=len(vertex)
+                            vertex.append(v)
+                            incoming.append(i)
+                            link.append(None)
+                            link[tail]=fresh
+                            tail=fresh
+                            q.append(fresh)
+                            u=v
+                        assert u==vertex[node]
+                        link[tail]=old
+                    assert len(vertex)==m+1 and reads<=2*m
+                    ids=[]
+                    node=0
+                    while link[node] is not None:
+                        nxt=link[node]
+                        i=incoming[nxt]
+                        u,v=edges[i]
+                        assert (vertex[node],vertex[nxt]) in ((u,v),(v,u))
+                        ids.append(i)
+                        assert len(ids)<=m
+                        node=nxt
+                    assert vertex[node]==start
+                    assert sorted(ids)==list(range(m))
+                    incidence_reads+=reads
+    assert (graphs,dfs_runs,hier_runs,incidence_reads)==(771,7612,456,4320)
+    return graphs,dfs_runs,hier_runs,incidence_reads
+
+
 def test_source_consistency():
     catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in catalog["books"] if x["id"]=="graph_and_knot_theory")
@@ -523,3 +651,6 @@ if __name__=="__main__":
 
     d,u,c,o,b=test_chapter03_euler_multigraphs()
     print(f"PASS chapter 03 Euler: {d} directed, {u} undirected multigraphs, {c} closed endpoint pairs, {o} open endpoint pairs, {b} balanced orientation cases")
+
+    g,d,h,i=test_chapter03_constructions()
+    print(f"PASS chapter 03 constructions: {g} graphs, {d} DFS orientations, {h} Hierholzer runs, {i} incidence reads")
