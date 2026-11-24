@@ -77,3 +77,53 @@ for(let m=0;m<=4;m++)for(let a=0;a<=4;a++)for(let b=0;b<=4-a;b++){
  verify([m,a,b],F,Cmix,rootsMix,mixDot,Math.max(m,a+b)+2);mixedModels++;
 }
 console.log("AA-70-WCF-02: PASS",{adjointModels,mixedModels,models:models-before70.models,weightChecks:weightChecks-before70.weightChecks,absent:absent-before70.absent,traceChecks:traceChecks-before70.traceChecks,eigenChecks:eigenChecks-before70.eigenChecks});
+
+// AA-70-WCF-03: aa:lem:weyl-differential-product.
+// Arbitrary signed Laurent polynomials, not necessarily W-invariant.
+// Verify the lemma after clearing its denominator; no formal infinite series.
+function checkProduct70(){
+ const specs=[
+  ["A1",[[1]],[[2]]],
+  ["A2",[[2,1],[1,2]],[[2,-1],[-1,2],[1,1]]],
+  ["B2",[[1,1],[1,2]],[[2,-1],[-2,2],[0,1],[2,0]]],
+  ["A1xA2",[[9,0,0],[0,8,4],[0,4,8]],[[2,0,0],[0,2,-1],[0,-1,2],[0,1,1]]]
+ ];
+ let cases=0,coefficients=0,nonInvariant=0,zeroCases=0;
+ for(const [name,G,roots] of specs){
+  const rank=G.length,rho=Array(rank).fill(1),zero=Array(rank).fill(0);
+  const dot=(u,v)=>BigInt(u.reduce((s,x,i)=>s+x*G[i].reduce((t,g,j)=>t+g*v[j],0),0));
+  const sum=roots.reduce((v,a)=>v.map((x,i)=>x+a[i]),zero);
+  assert(key(sum)===key(rho.map(x=>2*x)),name+" rho");
+  const mon=(v,c=1n)=>new Map(c?[[key(v),c]]:[]);
+  const factor=a=>{const f=mon(zero);add(f,a.map(x=>-x),-1n);return f};
+  function productExcept(except=-1){let f=mon(rho);for(let i=0;i<roots.length;i++)if(i!==except)f=mult(f,factor(roots[i]));return f}
+  const D=productExcept();
+  const op=(f,fn)=>{const g=new Map();for(const [s,c] of f){const v=parse(s);add(g,v,c*fn(v))}return g};
+  const L=f=>op(f,v=>dot(v,v));
+  const der=(f,a)=>op(f,v=>dot(a,v));
+  assert(eq(L(D),op(D,()=>dot(rho,rho))),name+" denominator eigenvector");
+  for(let seed=0;seed<36;seed++){
+   const F=new Map();
+   if(seed)for(let j=0;j<12;j++){
+    const v=Array.from({length:rank},(_,i)=>((seed*(i+3)+j*(2*i+5)+j*j)%9)-4);
+    add(F,v,BigInt((seed*3+j*5)%11-5));
+   }
+   const main=op(F,v=>dot(v,v)+2n*dot(rho,v)+dot(rho,rho));
+   const right=mult(D,main);
+   for(let i=0;i<roots.length;i++){
+    const a=roots[i],term=mult(mult(productExcept(i),mon(a.map(x=>-x))),der(F,a));
+    for(const [s,c] of term)add(right,parse(s),2n*c);
+   }
+   const left=L(mult(D,F));
+   assert(eq(left,right),name+" cleared differential product");
+   // An arbitrary F need not have invariant coefficients even under -1;
+   // this is just a coverage check of signed/asymmetric inputs.
+   if([...F].some(([s,c])=>F.get(key(parse(s).map(x=>-x)))!==c))nonInvariant++;
+   if(!F.size)zeroCases++;
+   coefficients+=left.size;cases++;
+  }
+ }
+ assert(zeroCases===specs.length&&nonInvariant>0,"edge coverage");
+ return {systems:specs.length,cases,coefficients,asymmetricInputs:nonInvariant,zeroCases};
+}
+console.log("AA-70-WCF-03: PASS",checkProduct70());
