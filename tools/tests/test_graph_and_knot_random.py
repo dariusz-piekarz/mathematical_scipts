@@ -254,6 +254,42 @@ def test_fixed_subgraph_moments():
     return cases
 
 
+def test_monotone_coupling():
+    # TG42-COUP-01: enumerate joint edge states with exact probabilities.
+    from itertools import product
+    cases = 0
+    for n in range(1, 5):
+        edges = all_pairs(n)
+        triples = tuple(combinations(range(n), 3))
+        N = len(edges)
+        stats = [graph_statistics(n, mask, edges, triples)
+                 for mask in range(1 << N)]
+        for p, q in [(Fraction(0), Fraction(1)), (Fraction(1,3), Fraction(2,3)),
+                     (Fraction(1,2), Fraction(1,2)), (Fraction(0), Fraction(1,2)),
+                     (Fraction(1,2), Fraction(1))]:
+            marginal_p = [Fraction(0)] * (1 << N)
+            marginal_q = [Fraction(0)] * (1 << N)
+            weights = (1-q, q-p, p)
+            for states in product(range(3), repeat=N):
+                lo = sum(1 << i for i, state in enumerate(states) if state == 2)
+                hi = sum(1 << i for i, state in enumerate(states) if state >= 1)
+                weight = Fraction(1)
+                for state in states:
+                    weight *= weights[state]
+                assert lo & hi == lo
+                assert stats[lo][1] <= stats[hi][1]
+                assert stats[lo][3] <= stats[hi][3]
+                marginal_p[lo] += weight
+                marginal_q[hi] += weight
+                cases += 1
+            for mask in range(1 << N):
+                m = mask.bit_count()
+                assert marginal_p[mask] == p**m * (1-p)**(N-m)
+                assert marginal_q[mask] == q**m * (1-q)**(N-m)
+            assert sum(marginal_p) == sum(marginal_q) == 1
+    return cases
+
+
 def test_integrity():
     cat = json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book = next(b for b in cat["books"] if b["id"]=="graph_and_knot_theory")
@@ -287,5 +323,6 @@ if __name__ == "__main__":
     print("PASS exact monochromatic Ramsey first moments:",test_ramsey_first_moment())
     print("PASS TG42-GNM-01 fixed edge inclusion and conditional laws:", test_fixed_edge_model())
     print("PASS TG42-H-01 fixed subgraph embedding moment cases:", test_fixed_subgraph_moments())
+    print("PASS TG42-COUP-01 exact monotone joint edge states:", test_monotone_coupling())
     test_finite_examples()
     print("PASS exact connectivity recurrence, threshold sanity and 43-source integration")
