@@ -189,5 +189,104 @@ class LeanParserTests(unittest.TestCase):
         self.assert_shape(parser.parse_formula(" \r\n⊤\t"), "truth")
 
 
+    def test_independent_parenthesized_formula_oracle(self):
+        # Build the expected tree independently of the parser's precedence
+        # table. Explicit grouping removes any ambiguity in the generator.
+        operators = {"and": "∧", "or": "∨", "implies": "→",
+                     "iff": "↔", "eq": "="}
+        leaves = ("P", "Q", "⊤", "⊥")
+        names = {"P": "b1", "Q": "b2", "⊤": "truth", "⊥": "falsehood"}
+
+        def render(tree):
+            if isinstance(tree, str):
+                return tree
+            if tree[0] == "not":
+                return "¬(" + render(tree[1]) + ")"
+            op, left, right = tree
+            return "(" + render(left) + operators[op] + render(right) + ")"
+
+        def expected(tree):
+            if isinstance(tree, str):
+                return names[tree]
+            return (tree[0], *(expected(child) for child in tree[1:]))
+
+        trees = [(op, l, r) for op in operators for l in leaves for r in leaves]
+        trees += [(outer, (inner, "P", "Q"), "P")
+                  for outer in operators for inner in operators]
+        trees += [(outer, "P", (inner, "Q", "P"))
+                  for outer in operators for inner in operators]
+        trees += [("not", tree) for tree in trees[:80]]
+        self.assertEqual(len(trees), 210)
+        for tree in trees:
+            with self.subTest(tree=tree):
+                self.assert_shape(parse(["P:Prop", "Q:Prop"], conclusion=render(tree)),
+                                  expected(tree))
+
+    def test_exact_parser_resource_boundaries(self):
+        # Syntax depth and AST height differ for parentheses.
+        self.assert_shape(parser.parse_formula("("*63 + "⊤" + ")"*63), "truth")
+        self.assert_refused(parser.parse_formula("("*64 + "⊤" + ")"*64),
+                            "syntax_depth_limit")
+        r = parser.parse_formula("¬"*63+"⊤")
+        self.assertEqual(r["status"], "parsed_formula", r)
+        self.assertEqual(r["node_count"], 64)
+        self.assert_refused(parser.parse_formula("¬"*64+"⊤"), "syntax_depth_limit")
+        r = parser.parse_formula("⊤∧"*63+"⊤")
+        self.assertEqual(r["status"], "parsed_formula", r)
+        self.assertEqual(r["node_count"], 127)
+        self.assert_refused(parser.parse_formula("⊤∧"*64+"⊤"), "node_depth_limit")
+        # Separate assumptions may reuse a display name, but never an ID.
+        quantified = ["∀x:Real,x=x"]*128
+        r = parse(assumptions=quantified)
+        self.assertEqual(r["status"], "parsed_pilot_statement", r)
+        self.assertEqual(r["binding_count"], 128)
+        self.assertEqual([a["binding"]["id"] for a in r["ast"]["assumptions"]],
+                         [f"b{i}" for i in range(1, 129)])
+        self.assert_refused(parse(assumptions=quantified+quantified[:1]), "binding_limit")
+        r = parse(assumptions=["⊤"]*2047)
+        self.assertEqual(r["status"], "parsed_pilot_statement", r)
+        self.assertEqual(r["node_count"], 2048)
+        self.assert_refused(parse(assumptions=["⊤"]*2048), "node_limit")
+
+    def test_lexical_aliases_and_binder_identity(self):
+        r = parse([r"\alpha:Real"], conclusion="α=α")
+        self.assert_shape(r, ("eq", "b1", "b1"))
+        self.assert_refused(parse([r"\alpha:Real", "α:Real"], conclusion="α=α"),
+                            "duplicate_parameter")
+        self.assert_shape(parse([r"\phi:Real", r"\varphi:Real"], conclusion="ϕ=φ"),
+                          ("eq", "b1", "b2"))
+        r = parse(["x:Real", "y:Real"], conclusion="x>y")
+        self.assert_shape(r, ("lt", "b2", "b1"))
+        self.assertEqual(r["trace"]["rules"][0]["rule"], "GT_REVERSE")
+
+    def test_mixed_relations_and_explicit_grouping(self):
+        self.assert_shape(parse(["x:Real", "y:Real", "z:Real"],
+                                conclusion="x<y∧y≤z"),
+                          ("and", ("lt", "b1", "b2"), ("le", "b2", "b3")))
+        self.assert_refused(parse(["x:Real", "y:Real", "z:Real"],
+                                  conclusion="x<y≤z"), "nonassociative_chain")
+        self.assert_shape(parse(["P:Prop", "Q:Prop", "R:Prop"], conclusion="(P↔Q)↔R"),
+                          ("iff", ("iff", "b1", "b2"), "b3"))
+        self.assert_shape(parse(["P:Prop", "Q:Prop", "R:Prop"], conclusion="P↔(Q↔R)"),
+                          ("iff", "b1", ("iff", "b2", "b3")))
+        self.assert_refused(parse(["P:Prop", "Q:Prop", "R:Prop"], conclusion="P=Q=R"),
+                            "nonassociative_chain")
+
+    def test_actual_theorem_envelopes_are_not_formula_input(self):
+        # These resemble the existing LST source constructs; none is claimed
+        # to be a complete automatic transcription of a theorem.
+        for source in (
+            r"\begin{twierdzenie}Dla dowolnych formuł $p,q$ zachodzi "
+            r"\neg(p\land q)\equiv(\neg p\lor\neg q).\end{twierdzenie}",
+            r"\neg(p\land q)\equiv(\neg p\lor\neg q)",
+            r"\exists!x\in D,P(x)",
+            r"\forall x\in D,P(x)",
+            r"\begin{align*}P&\iff Q\\Q&\iff P\end{align*}",
+        ):
+            with self.subTest(source=source):
+                self.assert_refused(parser.parse_formula(source))
+
+
+
 if __name__ == "__main__":
     unittest.main()
