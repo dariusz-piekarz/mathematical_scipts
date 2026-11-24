@@ -129,5 +129,50 @@ class Chapter26(unittest.TestCase):
             j = next(i for i in range(2) if abs(p[i])==1)
             self.assertTrue(abs(q[j]) >= abs(p[j])-d > F(1, 2))
 
+    def test_FA26_schur_blocks_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"|x(j)|\le\|x\|_1",
+            r"m_0=n_0=0",
+            r"n_k>n_{k-1}",
+            r"m_k>m_{k-1}",
+            r"\sum_{j\notin I_k}|y_k(j)|<\varepsilon/4",
+            r"m_k\ge k",
+            r"a_jy_k(j)=|y_k(j)|",
+            r"\sum_j|a_jx(j)|\le\|x\|_1",
+            r"f(y_k)\to0",
+            r"\ref{thm:schur-l1-26}",
+            r"\ref{thm:orth-decomposition13}",
+            r"\sum_{n\ge1}|\langle e_n,x\rangle|^2\le\|x\|^2",
+            r"\ref{thm:riesz-hilbert13}",
+        ):
+            self.assertIn(fragment, s)
+        # Three disjoint singleton blocks, with small leakage.
+        # A single complex-linear functional must work for all rows.
+        phases = [(F(1), F(0)), (F(0), F(1)),
+                  (F(-1), F(0)), (F(3, 5), F(4, 5))]
+        for core in product(phases, repeat=3):
+            a = [(u, -v) for u, v in core]
+            for scale in (F(0), F(1, 32), F(1, 16)):
+                for k in range(3):
+                    y = [core[j] if j == k else
+                         (scale*core[j][0], -scale*core[j][1])
+                         for j in range(3)]
+                    norm = 1+2*scale
+                    re = sum(u*p-v*q for (u,v),(p,q) in zip(a,y))
+                    im = sum(u*q+v*p for (u,v),(p,q) in zip(a,y))
+                    self.assertGreaterEqual(re, 1-2*scale)
+                    self.assertGreater(re, F(1, 2))
+                    self.assertLessEqual(re*re+im*im, norm*norm)
+        # Bessel inequality for a rational orthonormal basis of R^3.
+        E = [(F(3,5),F(4,5),F(0)), (F(-4,5),F(3,5),F(0)),
+             (F(0),F(0),F(1))]
+        for x in product(range(-2,3),repeat=3):
+            coeff = [sum(a*b for a,b in zip(e,x)) for e in E]
+            norm2 = sum(a*a for a in x)
+            for n in range(1,4):
+                self.assertLessEqual(sum(c*c for c in coeff[:n]), norm2)
+            self.assertEqual(sum(c*c for c in coeff), norm2)
+
 if __name__ == "__main__":
     unittest.main()
