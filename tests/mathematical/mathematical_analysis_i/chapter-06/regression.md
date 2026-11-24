@@ -13,3 +13,6 @@ Testy skończone sprawdzają rachunki i przykłady, nie zastępują dowodów z k
 | MA1-06-009 | ma1:thm:limit-arithmetic | Suma, skalar, iloczyn, odwrotność tylko przy niezerowej granicy, zmiana skończonego początku | semantyczna + Python |
 | MA1-06-010 | ma1:thm:sequence-squeeze | Zachowanie nieostrych nierówności i twierdzenie o trzech ciągach, wyłącznie R | semantyczna + Python |
 | MA1-06-011 | ma1:fig:epsilon-sequence | epsilon=3/10, N=4, dokładne położenie punktów, czytelne podpisy | wizualna PDF |
+| MA1-06-012 | ma1:ex:vector-metrics | Metryka euklidesowa, tożsamość sumy kwadratów minorów, trójkąt i porównanie z d_infty | semantyczna + Python |
+| MA1-06-013 | ma1:thm:finite-coordinate-convergence | Kontrprzykład e_n w metryce supremum: wykluczenie każdej możliwej granicy | semantyczna |
+| MA1-06-014 | ma1:thm:limit-arithmetic | Przy zerowej granicy mianownika przykłady ilorazów o granicy 1, 0 i nieograniczonych | semantyczna + Python |
