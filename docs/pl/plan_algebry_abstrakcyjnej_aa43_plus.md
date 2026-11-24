@@ -21,6 +21,18 @@ To nie jest osobny zbiór gotowych do importu „AA-43–AA-74”. Stare numery 
 | **AA-46** | Automorfizmy różniczkowe, podstawy rozszerzeń Picarda–Vessiota, grupy Galois równań liniowych | AA-43–AA-45 | oddzielenie twierdzeń udowodnionych od głębszych cytowanych wyników; kompletna kontrola przykładów |
 | **AA-47 (warunkowo)** | Algorytmy Rischa i Kovacica, efektywna procedura i podstawy poprawności | AA-44–AA-46 | osobna decyzja o pełnym zakresie, zanim rozpocznie się wymagające opracowanie |
 
+## Obowiązująca procedura trzech iteracji stabilizacyjnych — 24 listopada 2026 r.
+
+Od AA-61 włącznie po przygotowaniu rozdziału przeprowadza się **trzy kolejne pełne iteracje stabilizacyjne**, a nie pojedyncze kontrole rozłożone na osobne iteracje. Niniejsza procedura ma pierwszeństwo przed wcześniejszymi zapisami o dwóch czystych audytach jako warunku wystarczającym do zamknięcia.
+
+1. **S1 — stabilizacja:** w jednej iteracji przeprowadź możliwie kompletny pakiet audytów matematycznych, językowych, redakcyjnych i technicznych; popraw wykryte usterki, sprawdź szczegółowość dowodów, przykłady, odsyłacze, rysunki, oba niezależne zestawy regresji, CI oraz PDF. 
+2. **S2 — niezależna stabilizacja potwierdzająca:** ponownie przeprowadź pełny pakiet kontroli, inną drogą rozumowania, ze szczególną uwagą na luki, przypadki brzegowe, skutki wcześniejszych poprawek i spójność z innymi rozdziałami.
+3. **S3 — końcowa stabilizacja:** trzeci pełny pakiet kontroli, ponownie niezależny; sprawdź ostateczną wersję, oba zestawy regresji, pełny zielony CI, końcowy log LaTeX i wszystkie strony rozdziału. Dopiero po zaliczeniu S1–S3 wolno nadać status STABILNY i w następnej iteracji otworzyć kolejny rozdział.
+
+Każda iteracja obejmuje wiele kontroli i rzeczywiste poprawki w miarę potrzeby, a nie tylko jedną kategorię audytu. Zapisuj w raporcie etap S1/S2/S3, audytowany blob, wykonane kontrole, wyniki, kompilację i blokery. Nie awansuj etapu, jeżeli istotna kontrola jest nieukończona lub wykryta usterka nie została usunięta. Jeśli późniejsza poprawka matematyczna podważa poprzednie kontrole, ponów odpowiednie etapy; zmiana wyłącznie typograficzna wymaga ponownego potwierdzenia technicznego. Nie czekaj bezczynnie na CI; wykonaj dostępne pozostałe kontrole, ale nie uznawaj nieukończonego CI za zaliczony. Nie dodawaj nowych zagadnień podczas stabilizacji bez odrębnej decyzji o zakresie.
+
+AA-01–60 zachowują historycznie nadany status STABILNY. AA-61 pozostaje w toku; dotychczasowe audyty i wyniki są dowodami pomocniczymi, nie zastępują trzech pełnych iteracji w nowej procedurze. Nie otwieraj AA-62 przed spełnieniem S1–S3.
+
 ## Globalny rygor audytu
 
 Dla każdego nowego rozdziału należy:
