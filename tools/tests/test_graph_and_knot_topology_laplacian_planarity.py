@@ -706,6 +706,90 @@ def audit_planarity():
     return count,connected_count,planar_count
 
 
+def audit_multigraph_faces():
+    """TG09-FACE-01: sphere rotations, loops, bridges and disconnected faces."""
+    graphs=rotations=planar=deletions=colorings=0
+    def facial_orbits(R):
+        successor={}
+        orbits=[]
+        for row in R:
+            if not row:
+                orbits.append(())  # disk around an isolated vertex
+            for k,d in enumerate(row):
+                successor[d^1]=row[(k+1)%len(row)]
+        remaining=set(successor)
+        while remaining:
+            d=min(remaining)
+            first=d
+            orbit=[]
+            while d in remaining:
+                remaining.remove(d)
+                orbit.append(d)
+                d=successor[d]
+            assert d==first
+            orbits.append(tuple(orbit))
+        return orbits
+
+    for n in range(1,4):
+        types=list(combinations(range(n),2))+[(v,v) for v in range(n)]
+        for multiplicities in product(range(3),repeat=len(types)):
+            E=[e for e,k in zip(types,multiplicities) for _ in range(k)]
+            m=len(E)
+            if m>4:
+                continue
+            C=components(n,E)
+            c=len(C)
+            darts=[[] for _ in range(n)]
+            for j,(u,v) in enumerate(E):
+                darts[u].append(2*j)
+                darts[v].append(2*j+1)
+            options=[[(row[0],)+p for p in permutations(row[1:])] if row else [()]
+                     for row in darts]
+            graphs+=1
+            for R in product(*options):
+                rotations+=1
+                orbits=facial_orbits(R)
+                # Capping the boundary circles gives a sphere per component
+                # exactly when the sum of the genera vanishes.
+                if n-m+len(orbits)!=2*c:
+                    continue
+                planar+=1
+                assert sum(map(len,orbits))==2*m
+                face_of={d:i for i,orbit in enumerate(orbits) for d in orbit}
+                # Put disconnected components in disjoint disks on one sphere.
+                # One outer orbit per component is identified with a common face.
+                outer=set()
+                for comp in C:
+                    ds={d for v in comp for d in R[v]}
+                    if ds:
+                        outer.add(face_of[min(ds)])
+                # Empty orbits are precisely the isolated components.
+                outer.update(i for i,orbit in enumerate(orbits) if not orbit)
+                assert len(outer)==c
+                face=lambda d: -1 if face_of[d] in outer else face_of[d]
+                F=1+len(orbits)-c
+                assert n-m+F==1+c
+                pairs=[(face(2*j),face(2*j+1)) for j in range(m)]
+                # Explicit binary assignments; independent of vertex parity.
+                faces=sorted(set([-1]+[v for pair in pairs for v in pair]))
+                assert len(faces)==F
+                can_color=any(all(col[faces.index(x)]!=col[faces.index(y)]
+                                  for x,y in pairs)
+                              for col in product((0,1),repeat=F))
+                assert can_color==all(len(row)%2==0 for row in R)
+                colorings+=1
+                for j,(x,y) in enumerate(pairs):
+                    c2=len(components(n,E[:j]+E[j+1:]))
+                    bridge=c2>c
+                    assert (x==y)==bridge
+                    R2=[tuple(d for d in row if d//2!=j) for row in R]
+                    f2=1+len(facial_orbits(R2))-c2
+                    assert n-(m-1)+f2==1+c2
+                    assert F-f2==int(not bridge)
+                    deletions+=1
+    return graphs,rotations,planar,deletions,colorings
+
+
 def source_integration():
     c=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in c["books"] if x["id"]=="graph_and_knot_theory")
@@ -748,4 +832,5 @@ if __name__=="__main__":
     print("PASS TG08-DIR-01 graphs, boundaries, singular, solutions:",audit_dirichlet_boundary())
     print("PASS TG08-SPEC-01 graphs, polynomial evaluations:",audit_hodge_spectra())
     print("PASS 09: exhaustive rotations, planar faces and coloring:",audit_planarity())
+    print("PASS TG09-FACE-01 graphs, rotations, sphere rotations, deletions, colorings:",audit_multigraph_faces())
     print("PASS source conventions, notation and 44-chapter catalog")
