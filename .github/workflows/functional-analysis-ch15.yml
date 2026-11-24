@@ -12,6 +12,10 @@ on:
       - 'chapters/pl/functional_analysis/13-*.tex'
       - 'chapters/pl/functional_analysis/14-*.tex'
       - 'chapters/pl/functional_analysis/15-*.tex'
+      - 'chapters/pl/functional_analysis/15A-*.tex'
+      - 'chapters/pl/functional_analysis/15B-*.tex'
+      - 'chapters/pl/functional_analysis/16-*.tex'
+      - 'chapters/pl/functional_analysis/17-*.tex'
       - 'books/pl/functional_analysis.tex'
       - 'tools/tests/test_functional_analysis_ch15.py'
       - 'audits/functional_analysis/15*'
@@ -29,7 +33,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check 15 higher derivatives and inverse/implicit function regressions
         run: python3 tools/tests/test_functional_analysis_ch15.py
-      - name: Prepare TeX wrapper with complete reference context 01-15
+      - name: Prepare TeX wrapper with complete reference context 01-17 (including 15A/15B)
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -41,17 +45,21 @@ jobs:
               r'\\input\{(\.\./\.\./chapters/pl/functional_analysis/[^}]+)\}',
               book
           )
-          assert len(inputs) >= 15
+          assert len(inputs) >= 19
           assert all(inputs[i].split('/')[-1].startswith(f'{i+1:02d}-')
                      for i in range(15))
+          assert inputs[15].split('/')[-1].startswith('15A-')
+          assert inputs[16].split('/')[-1].startswith('15B-')
+          assert inputs[17].split('/')[-1].startswith('16-')
+          assert inputs[18].split('/')[-1].startswith('17-')
           body = r'\begin{document}' + '\n'
-          body += '\n'.join(r'\input{' + name + '}' for name in inputs[:15])
+          body += '\n'.join(r'\input{' + name + '}' for name in inputs[:19])
           body += '\n' + r'\end{document}' + '\n'
           Path('books/pl/functional_analysis_ch15_context_ci.tex').write_text(
               pre + body, encoding='utf-8'
           )
           PY
-      - name: Compile chapter 15 with complete 01-15 reference context
+      - name: Compile chapter 15 with complete 01-17 (including 15A/15B) reference context
         uses: xu-cheng/latex-action@v3
         with:
           root_file: functional_analysis_ch15_context_ci.tex
@@ -65,7 +73,7 @@ jobs:
           fi
           test -s books/pl/functional_analysis_ch15_context_ci.pdf
           test -s books/pl/functional_analysis_ch15_context_ci.log
-          if grep -E 'Undefined control sequence|There were undefined references|LaTeX Warning: (Reference|Citation).*undefined|Overfull \\hbox|Missing character' books/pl/functional_analysis_ch15_context_ci.log; then
+          if grep -E 'Undefined control sequence|There were undefined references|LaTeX Warning: (Reference|Hyper reference|Citation).*undefined|Overfull \\hbox|Missing character' books/pl/functional_analysis_ch15_context_ci.log; then
             echo 'Chapter 15 LaTeX diagnostics failed.'
             exit 1
           fi
