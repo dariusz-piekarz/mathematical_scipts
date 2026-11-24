@@ -210,7 +210,7 @@ class ConstructibilityGenericGaloisInterface(unittest.TestCase):
     def test_source_references_hypotheses_and_chapter_count(self):
         folder = ROOT / "chapters/pl/abstract_algebra"
         paths = sorted(folder.glob("[0-9][0-9]-*.tex"))
-        self.assertEqual(len(paths), 53)
+        self.assertEqual(len(paths), 54)
         sources = {p.name: p.read_text(encoding="utf8") for p in paths}
         labels = [a for text in sources.values()
                   for a in re.findall(r"\\label\{([^{}]+)\}", text)]

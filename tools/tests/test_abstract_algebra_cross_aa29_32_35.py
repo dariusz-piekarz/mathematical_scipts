@@ -162,7 +162,7 @@ class FrobeniusReductionInterface(unittest.TestCase):
     def test_source_labels_references_and_required_assumptions(self):
         folder=ROOT/"chapters/pl/abstract_algebra"
         files=sorted(folder.glob("[0-9][0-9]-*.tex"))
-        self.assertEqual(len(files),53)
+        self.assertEqual(len(files),54)
         contents={p.name:p.read_text(encoding="utf8") for p in files}
         all_labels=[z for text in contents.values()
                     for z in re.findall(r"\\label\{([^{}]+)\}",text)]

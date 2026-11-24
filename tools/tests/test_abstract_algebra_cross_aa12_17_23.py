@@ -132,7 +132,7 @@ class TraceSmithLocalizationInterface(unittest.TestCase):
     def test_source_labels_and_references(self):
         folder=ROOT/"chapters/pl/abstract_algebra"
         all_files=sorted(folder.glob("[0-9][0-9]-*.tex"))
-        self.assertEqual(len(all_files),53)
+        self.assertEqual(len(all_files),54)
         sources={p.name:p.read_text(encoding="utf-8") for p in all_files}
         labels=[m for src in sources.values()
                 for m in re.findall(r"\\label\{([^{}]+)\}",src)]

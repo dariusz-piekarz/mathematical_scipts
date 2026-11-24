@@ -154,3 +154,8 @@ AA-52 STABILNY — audits/abstract_algebra/ch52_iteration_10.md, CI 45345253078,
 ## Zamknięcie AA-53 — 24 listopada 2026 r.
 
 **AA-53 STABILNY w ustalonym zakresie.** Audyty III–VI bez nowych usterek; kontrole VII–IX potwierdziły regresje, terminologię, integrację i kompilację. Raport: `audits/abstract_algebra/ch53_iteration_09.md`. CI https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45348236656 — 116/116 success, commit 3d9d4373b9a1c3e369394912a6dbdf27c752ee7d, aktualny blob 5675bf04c336a76e6424eeca337f24b5f211aeb5 zgodny. Artefakt 14898534119, PDF 340 stron, AA-53 strony fizyczne 337–340 (drukowane 326–329), wszystkie obejrzane, log bez ostrzeżeń i błędów. AA-01–52 stabilne. AA-54 nieotwarty. Dalszy zakres: proponowane pierścienie niezmienników grup wyjątkowych, osobna decyzja o zakresie kolejnego rozdziału. Status planu jest nadrzędny wobec historycznego opisu na stronie tytułowej.
+
+
+## Otwarcie AA-54 — 24 listopada 2026 r.
+
+AA-54: pierścienie niezmienników wyjątkowych grup 2T,2O,2I, zakres docs/pl/zakres_aa54_niezmienniki_wieloscienne.md. AA-53 stabilny; **AA-54 W AUDYCIE**, AA-55 nieotwarty. Odpowiedniość McKaya poza zakresem.
