@@ -14,3 +14,9 @@ Run 45363665637, job 138339753759, in_progress, kroki {"success":7,"in_progress"
 
 ## Werdykt
 Pierwszy czysty audyt po korektach III: 1/2. AA-57 W AUDYCIE. Następna iteracja: kontrola przykładów klasycznych, przypadków brzegowych i języka, pełne CI oraz PDF jeśli dostępny. AA-58 nieotwarty.
+
+## Dodatkowa niezależna kontrola równań derywacji i eksponenty
+
+Równolegle wykonana dodatkowa kontrola tego samego blobu a64577b1841a14ea92d6ed08de7db6248684be76; nie jest osobnym czystym audytem. Kod JavaScript BigInt i dokładna eliminacja nad Q dla układów D[e_i,e_j]-[De_i,e_j]-[e_i,De_j]=0 i [z,e_j]=0. Wyniki (wymiar algebry, Der, centrum, ad): abelowa 1 (1,1,1,0), abelowa 3 (3,9,3,0), aff(1) (2,2,0,2), Heisenberga (3,6,1,2), sl2 (3,3,0,3), sl2+K (4,4,1,3); dodatkowo algebry filiform z [e_0,e_i]=e_(i+1) dla 1<=i<=n-2, n=3,...,8: dla n=3 jak Heisenberg, dla n>=4 (n,2n-1,1,n-1). Łącznie 12 instancji (11 modeli). 
+
+Dla Heisenberga sześć derywacji bazowych i ich komutatory sprawdzono na parach bazowych; dodatkowo dla D=a E_21+b E_32, a,b=-3,...,3, sprawdzono D^3=0 i własność derywacji. Dla t=-3,...,3 obliczono F=2I+2tD+t²D² oraz G=2I-2tD+t²D². Zweryfikowano FG=4I oraz [Fu,Fv]=2F[u,v] na wszystkich parach wektorów bazowych. Łącznie 819/819 kontroli reguły derywacji, 18/18 tożsamości [D,ad_x]=ad_(Dx), 343/343 kontroli odwrotności, 3087/3087 kontroli nawiasu. Wszystkie obliczenia dokładne. Wyniki nie zastępują dowodów ogólnych ani nie poszerzają zakresu rozdziału. Zachowano istniejący raport IV i licznik 1/2; żadnych zmian źródła.
