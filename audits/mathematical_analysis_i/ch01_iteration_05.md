@@ -1,0 +1,2 @@
+# MA1-01 — audyt 05
+CI 45381214928 dla 703404b: sukces kompilacji i testów Python, w tym po dodaniu argumentu o niezupełności Q. Audyt semantyczny: doprecyzowano pełną indukcję w strukturach Peana i zapisano indukcję dla złożeń odwzorowań; wykazano ścisłość dodawania nierówności przez skracanie; wyprowadzono prawa znaków z rozdzielności, bez zakładania braku dzielników zera; przed użyciem supremum podano definicje. Dodano MA1-01-009 i 010. Nowa wersja wymaga CI i kontroli potwierdzającej; nie oznaczamy jako stabilnej. Lean nieuruchomiony.
