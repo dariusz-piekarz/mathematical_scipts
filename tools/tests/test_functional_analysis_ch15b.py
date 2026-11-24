@@ -735,8 +735,10 @@ class TestChapter15B(unittest.TestCase):
         for fragment in (
             "$R_\\tau\\le g$ prawie wszędzie",
             "$|D_A(z_\\tau)(x')|\\le\\int_A R_\\tau\\,\\mathrm d\\mu$",
-            "$\\|z/\\|z\\|-z_k\\|<\\varepsilon$",
-            "$|x_k'(z)|\\ge\\|z\\|(1-\\varepsilon)$",
+            "$\\|u_k-y/\\|y\\|\\|<\\varepsilon$",
+            "$|\\ell_k(y)|\\ge(1-\\varepsilon)\\|y\\|$",
+            "rodziny normującej w dowodzie Twierdzenia~\\ref{thm:pettis-meas15b}",
+            "$\\|z\\|=\\sup_k|x_k'(z)|$ dla każdego $z\\in Z$",
             "$W^{1,1}((a,b);X)$",
         ):
             self.assertIn(fragment, source)
