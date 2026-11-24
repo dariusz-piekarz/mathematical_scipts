@@ -13,3 +13,9 @@
 ## Granice i dalsza kolejność
 
 Preflight nie dowodzi skuteczności izolacji podczas wykonywania kodu. Zakończenie lokalnej grupy CLI nie gwarantuje zakończenia daemonu, kontenera ani procesów, które celowo opuściły grupę. Nie włączać wykonywania kandydatów na podstawie tych wyników. Najpierw potwierdzić 2+1 dla każdego kandydata i niezależny sceptyczny audyt, następnie osobno zaplanować rzeczywisty test ograniczeń z ustalonym nieszkodliwym payloadem. Bez zmian kanonicznych TeX, Lean, manifestu i bez przejścia do L1.5.7.
+
+## Druga kontrola stabilizacyjna (24.11.2026)
+
+- Próba 2 obydwu wskazanych workflow zakończona sukcesem na niezmienionych SHA. Pełne CI: 861 testów, 10 sklasyfikowanych pominięć, 0 błędów JavaScript, 529 rozdziałów; obydwie regresje rzeczywistych procesów Linux: ok. Realny preflight: configuration_checked, cleanup_status=removed, execution_allowed=false, proof_status=not_run, certificate=false.
+- Ponownie sprawdzono sześć blobów: transport, polityka runnera, test transportu, skrypt probe i dwa workflow. Ich treść nie zmieniła się względem raportu poprzedniej iteracji. Zlecono trzeci przebieg obydwu jobów (138549550505, 138549585636); wynik niepotwierdzony w chwili zapisu.
+- Przegląd granic kontraktu: prepare regeneruje kandydat z oczekiwanymi trzema digestami i wymaga osobnej zgody; nie wykonuje kodu. Preflight sprawdza lokalny silnik i konfigurację nieuruchomionego kontenera. Nie jest to dowód egzekwowania ograniczeń w trakcie działania, bezpieczeństwa zawartości obrazu ani izolacji od procesów, które opuszczają grupę CLI. Nie wolno odblokować wykonania na tej podstawie. Następny krok po zaliczeniu 2+1: osobny kontrolowany test działającego kontenera na stałym nieszkodliwym payloadzie, nadal bez uruchamiania kandydatów Lean. Nie zmieniać kanonicznych źródeł ani manifestu.
