@@ -33,7 +33,7 @@ Wewnątrz każdego etapu są fragmenty wykonywane po kolei. Nie przechodź do na
 - **L1.2** Przeanalizuj i ustabilizuj ścieżkę Czytnik → fragment Lean → runner → historia i migawka inspekcji; testy wyjątków, starych SHA, konfliktów etykiet, anulowania i procesów potomnych.
 - **L1.3** Ukończ pilotaż 20–30 rzeczywistych formalizacji począwszy od LST-01, LST-02, LA-01, w małych pakietach, wraz z rzeczywistą kompilacją i recenzją semantyczną. Odrębnie podawaj liczbę zarejestrowanych, skompilowanych i recenzowanych twierdzeń.
 - **L1.4** Udoskonal wersjonowanie, cache zależności i raporty rozdziałowe, nie tracąc integralności ani punktów kontrolnych; pomiar na rzeczywistym Mathlib przed uznaniem optymalizacji.
-- **L1.5** Przygotuj izolowany, tylko eksperymentalny proces automatycznej transkrypcji LaTeX → Lean (kandydaci `draft`, kontrola licencji, kosztów i semantyki, bez edycji kanonicznych `.tex`).
+- **L1.5** Zbuduj własny hybrydowy silnik automatycznej transkrypcji LaTeX → Lean: lokalny parser i reguły jako podstawa, opcjonalny lokalny model AI, Lean 4/Mathlib i ograniczona pętla napraw. Opcjonalne, domyślnie wyłączone adaptery zewnętrzne (np. OpenAI/Codex, Anthropic/Claude) wymagają konfiguracji, odrębnej zgody na transfer oraz limitu kosztów; silnik lokalny nigdy od nich nie zależy. Kandydaci `draft`/`needs_review`, osobna kontrola semantyki, bez automatycznej zmiany kanonicznych plików. Kolejność: [plan autoformalizacji](LEAN_LOCAL_AUTOFORMALIZATION_PLAN.md).
 
 ### 2. Inteligentny graf zależności i pojęć
 
