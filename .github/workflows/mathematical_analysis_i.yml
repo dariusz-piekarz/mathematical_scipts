@@ -13,7 +13,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Regression tests
-        run: python3 -m unittest discover -s tests/mathematical/mathematical_analysis_i/chapter-01 -p 'test_*.py' -v
+        run: |
+          set -e
+          for chapter in tests/mathematical/mathematical_analysis_i/chapter-*; do
+            python3 -m unittest discover -s "$chapter" -p 'test_*.py' -v
+          done
       - name: Install LaTeX
         run: sudo apt-get update && sudo apt-get install -y texlive-latex-extra texlive-lang-polish lmodern
       - name: Compile book
