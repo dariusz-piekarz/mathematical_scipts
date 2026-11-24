@@ -25,6 +25,14 @@ Refer to [the Polish terminology standard](docs/pl/standardy_terminologiczne.md)
 
 - Preserve existing stable `\label` names and corresponding `\ref` targets even if they contain an older word. Text, theorem titles, captions and prose should follow the current terminology.
 - State all assumptions and quantify all objects explicitly. Justify every substantive proof step and special case.
+
+### Mandatory proof-detail standard (all manuscripts and audits)
+
+- Write complete, detailed proofs, at the level of chapter 01 of the differential geometry manuscript. Every mathematically substantive implication, intermediate estimate, construction, change of variables, limit, case distinction and application of a theorem must be written out and justified. Do not leave essential intermediate steps as exercises or omit them on the grounds that they are standard, analogous, obvious, or straightforward.
+- When applying a previously established theorem, identify it, verify all hypotheses in the current setting, and explain exactly how its conclusion gives the desired step. Provide a stable cross-reference when available. Reuse proved results rather than unnecessarily repeating their entire proofs.
+- For nontrivial calculations, display intermediate equalities or inequalities, identify the objects and domains involved, and explain why the transitions are valid. For existence constructions, justify existence, well-definedness, and every property used subsequently.
+- Apply the same standard to examples and counterexamples. Explicitly handle exceptional, boundary, degenerate and zero-dimensional cases when relevant.
+- During every audit, treat missing or unjustified substantive steps as actual defects requiring correction, not optional enrichment. Do not mark a chapter as stabilized merely because its final conclusions are correct or its LaTeX compiles. A clean audit must also verify the completeness of the proofs. If a full detailed audit is too large, divide it into consecutive bounded portions and keep the chapter open until all portions have been checked.
 - Do not broaden an approved chapter's topical coverage merely to add material: focus audits on mathematical correctness, missing justifications, precise examples, language, reference integrity and build quality.
 - For LaTeX chapters under `chapters/pl/`, keep chapter files independent of external graphics or code when self-contained TikZ can be used.
 
