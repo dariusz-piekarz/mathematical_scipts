@@ -198,6 +198,35 @@ def test_negative():
             count += 1
     return count
 
+def test_negative_cycle_diagonal():
+    # TG38-FW-01: independent enumeration of simple cycles, not
+    # another shortest-path implementation as the reference.
+    count = 0
+    for n in range(1, 4):
+        arcs = [(u, v) for u in range(n) for v in range(n) if u != v]
+        for values in product((None, -1, 0, 2), repeat=len(arcs)):
+            graph = {u: {} for u in range(n)}
+            for (u, v), weight in zip(arcs, values):
+                if weight is not None:
+                    graph[u][v] = weight
+            negative = False
+            for k in range(2, n + 1):
+                for cycle in permutations(range(n), k):
+                    weights = [graph[u].get(v, inf)
+                               for u, v in zip(cycle, cycle[1:] + cycle[:1])]
+                    if sum(weights) < 0:
+                        negative = True
+            d = [[0 if i == j else graph[i].get(j, inf)
+                  for j in range(n)] for i in range(n)]
+            for k in range(n):
+                d = [[min(d[i][j], d[i][k] + d[k][j])
+                      for j in range(n)] for i in range(n)]
+            assert any(d[i][i] < 0 for i in range(n)) == negative, graph
+            inplace = floyd_warshall(graph)
+            assert any(inplace[i][i] < 0 for i in graph) == negative, graph
+            count += 1
+    return count
+
 def test_astar_reopen():
     rnd = random.Random(41033)
     count = 0
@@ -277,5 +306,6 @@ if __name__ == "__main__":
     test_integrity()
     print("PASS nonnegative directed exhaustive:", test_exhaustive_nonnegative())
     print("PASS seeded negative weighted directed:", test_negative())
+    print("PASS TG38-FW-01 independent simple-cycle oracle:", test_negative_cycle_diagonal())
     print("PASS A* admissible possibly inconsistent:", test_astar_reopen())
     print("PASS undirected CH all rank orders:", test_ch())
