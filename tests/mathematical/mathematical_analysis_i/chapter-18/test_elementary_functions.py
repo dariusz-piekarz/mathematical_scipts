@@ -95,4 +95,34 @@ class Chapter18(TestCase):
                 for k in range(n):
                     self.assertEqual((j-k)%n==0,j==k)
 
+    def test_trig_addition_coefficients(self):
+        # Homogeneous coefficients after substituting arguments x*t and y*t.
+        for x,y in [(F(1,3),F(-2,5)),(F(-3),F(2))]:
+            for n in range(15):
+                cc=ss=sc=cs=F(0)
+                for k in range(n+1):
+                    j=n-k
+                    a=x**k/factorial(k)
+                    b=y**j/factorial(j)
+                    if k%2==0 and j%2==0:
+                        cc+=(-1)**(k//2+j//2)*a*b
+                    elif k%2==1 and j%2==1:
+                        ss+=(-1)**(k//2+j//2)*a*b
+                    elif k%2==1:
+                        sc+=(-1)**(k//2+j//2)*a*b
+                    else:
+                        cs+=(-1)**(k//2+j//2)*a*b
+                expected=(-1)**(n//2)*(x+y)**n/factorial(n)
+                self.assertEqual(cc-ss,expected if n%2==0 else 0)
+                self.assertEqual(sc+cs,expected if n%2==1 else 0)
+
+    def test_rational_power_root_witness(self):
+        for root in [F(2,3),F(1),F(5,2)]:
+            for n in range(1,7):
+                a=root**n
+                for m in range(-5,6):
+                    candidate=root**m
+                    self.assertGreater(candidate,0)
+                    self.assertEqual(candidate**n,a**m)
+
 if __name__ == "__main__": main()
