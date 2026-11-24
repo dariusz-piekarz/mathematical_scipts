@@ -124,5 +124,42 @@ class Chapter31(unittest.TestCase):
         self.assertIn(r"\bigcap_{j\ge1}\bigcap_{q\ge1}",s)
         self.assertIn(r"\max_{|\alpha|\le k}\min(1,V_{\alpha,l})",s)
 
+
+    def test_mt31_012_contact_and_symbol_transformation(self):
+        # x'=a*x, u'=b*u+c*x: first contact form transforms by b.
+        for a,b,c,p,dx,du in product((-2,-1,1,2),repeat=6):
+            pt=Q(b*p+c,a)
+            self.assertEqual(b*du+c*dx-pt*a*dx,b*(du-p*dx))
+        # Second-order scalar symbol under a two-dimensional shear.
+        for t,xi,eta in product(range(-3,4),repeat=3):
+            self.assertEqual((xi+t*eta)**2+eta**2,
+                             xi**2+2*t*xi*eta+(t*t+1)*eta**2)
+
+    def test_mt31_013_bv_jump_and_localization(self):
+        # Distributional derivative of the half-line indicator:
+        # integral of derivative of a compactly supported piecewise linear test.
+        for v0,v1,v2 in product(range(-3,4),repeat=3):
+            self.assertEqual(-((v1-v0)+(v2-v1)+(0-v2)),v0)
+        # Partition a finite model of a weighted fibre into disjoint pieces.
+        weights=(Q(1,2),Q(3,2),Q(0),Q(2))
+        for owners in product(range(3),repeat=4):
+            self.assertEqual(sum(sum(w for w,o in zip(weights,owners) if o==i)
+                                 for i in range(3)),sum(weights))
+
+    def test_mt31_014_geometry_measure_source(self):
+        s = " ".join(SOURCE.read_text(encoding="utf-8").split())
+        for term in ("ich wspólne jądro jest niezależne od trywializacji",
+                     "Odwrotna zmiana współrzędnych",
+                     "konwencji bez czynnika",
+                     "stałą razy $\\chi_K$",
+                     "kolumny są granicami",
+                     "lokalnie skończoną miarą wektorową",
+                     "rozcinając pokrycie na rozłączne zbiory borelowskie",
+                     "kres górny sum po jego skończonych podzbiorach"):
+            self.assertIn(term,s)
+        for label in ("thm:rademacher-28","thm:BV-measure-29",
+                      "thm:lipschitz-area-coarea-28"):
+            self.assertIn(r"\ref{"+label+"}",s)
+
 if __name__ == "__main__":
     unittest.main()
