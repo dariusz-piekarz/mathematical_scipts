@@ -30,3 +30,27 @@ function moduleAudit62(){
  return {models:models.length,weights:3,words,basic,serre,preservation};
 }
 console.log('AA-62 highest weight module: PASS',moduleAudit62());
+
+// Additional exact quotient dimensions, independent of operator recursion.
+function quotient62(){
+ const assert=(v,m)=>{if(!v)throw Error(m)};
+ const gcd=(a,b)=>{a=a<0n?-a:a;b=b<0n?-b:b;while(b)[a,b]=[b,a%b];return a};
+ const words=n=>Array.from({length:2**n},(_,i)=>n?i.toString(2).padStart(n,"0"):"");
+ const choose=(n,k)=>{let c=1n;for(let j=1;j<=k;j++)c=c*BigInt(n-j+1)/BigInt(j);return c};
+ const models=[["A1+A1",0,0,[1,1]],["A2",-1,-1,[1,1,2]],["B2",-2,-1,[1,1,2,3]],["G2",-3,-1,[1,1,2,3,4,5]]];
+ const out=[];let rows=0;
+ for(const [name,a,b,heights] of models){
+  const rels=[[0,1,1-a],[1,0,1-b]].map(([i,j,m])=>Array.from({length:m+1},(_,k)=>[String(i).repeat(m-k)+j+String(i).repeat(k),choose(m,k)*(k%2?-1n:1n)]));
+  const max=7,expected=Array(max+1).fill(0n);expected[0]=1n;
+  for(const h of heights)for(let k=h;k<=max;k++)expected[k]+=expected[k-h];
+  const dimensions=[];
+  for(let n=0;n<=max;n++){
+   const W=words(n),idx=new Map(W.map((w,i)=>[w,i])),basis=[];
+   function insert(v){for(const [p,w] of basis){if(!v[p])continue;const a=w[p],b=v[p];v=v.map((x,i)=>a*x-b*w[i]);const d=v.reduce(gcd,0n);if(d)v=v.map(x=>x/d);}const p=v.findIndex(x=>x!==0n);if(p>=0)basis.push([p,v]);}
+   for(const R of rels){const len=R[0][0].length;for(let l=0;l<=n-len;l++)for(const u of words(l))for(const w of words(n-len-l)){let v=Array(W.length).fill(0n);for(const [s,c] of R)v[idx.get(u+s+w)]+=c;insert(v);rows++;}}
+   const dim=W.length-basis.length;assert(BigInt(dim)===expected[n],`${name}, degree ${n}: ${dim} != ${expected[n]}`);dimensions.push(dim);
+  }out.push({name,dimensions});
+ }
+ return {rows,models:out};
+}
+console.log('AA-62 associative quotient dimensions: PASS',quotient62());
