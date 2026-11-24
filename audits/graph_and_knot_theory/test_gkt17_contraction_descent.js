@@ -47,6 +47,7 @@ function run(){
   }
  }
  assert(overlap>0&&inside>0,"missing overlap or inside cases");
+ assert(outside===0,"separator outside C and original cut");
  return {graphs,edges,good,bad,triples,descents,overlap,inside,outside};
 }
 console.log(JSON.stringify(run()));
