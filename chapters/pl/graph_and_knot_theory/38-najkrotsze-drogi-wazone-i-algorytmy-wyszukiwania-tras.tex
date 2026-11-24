@@ -546,14 +546,22 @@ $P=(s=v_0,\ldots,v_r=t)$. Na tej ścieżce
 istnieje wówczas wierzchołek $v_i$ oczekujący
 na przetworzenie z optymalnym kosztem
 $g(v_i)=\delta(s,v_i)$.
-Istotnie, początkowo jest nim $s$; po przetworzeniu
-takiego wierzchołka relaksacja następnego łuku
-albo wpisuje $v_{i+1}$ do kolejki z jego
-optymalnym kosztem, albo ten wierzchołek
-został już przetworzony z optymalnym kosztem,
-co pozwala przejść dalej wzdłuż $P$.
-W razie poprawy zamkniętego wierzchołka
-ponowne otwieranie zachowuje ten niezmiennik.
+Rozważmy stan tuż przed pobraniem celu i wybierzmy
+pierwszy indeks $i$, dla którego $v_i$ nie został jeszcze
+przetworzony z optymalną etykietą. Indeks istnieje,
+gdyż etykiety nie rosną, a bieżąca etykieta celu jest
+większa od optymalnej. Jeśli $i=0$, źródło ma od
+inicjalizacji optymalną etykietę zero. Jeśli $i>0$,
+to przy przetwarzaniu $v_{i-1}$ z optymalną etykietą
+relaksacja łuku do $v_i$ zapewniła
+$g(v_i)\leq\delta(s,v_{i-1})+w(v_{i-1},v_i)=\delta(s,v_i)$.
+Ostatnia równość wynika z optymalności prefiksów $P$.
+Niezmiennik relaksacji daje nierówność przeciwną.
+Od chwili uzyskania optymalnej etykiety nie mogła już
+nastąpić jej ścisła poprawa. Odpowiadający jej wpis
+został dodany przy inicjalizacji lub poprawie i nadal
+znajduje się w kolejce, gdyż inaczej $v_i$ zostałby
+przetworzony z optymalną etykietą, wbrew wyborowi $i$.
 Dopuszczalność heurystyki daje
 \[
 f(v_i)=\delta(s,v_i)+h(v_i)
@@ -607,11 +615,12 @@ i $w(u,v)\geq\|x_u-x_v\|_2$,
 to $h(v)=\|x_v-x_t\|_2$
 jest spójna na mocy
 nierówności trójkąta.
-Przy koszcie czasu
-jazdy, a nie długości,
-potrzebne jest dodatkowe
-przeskalowanie uwzględniające
-górne ograniczenie prędkości.
+Jeśli wagi mierzą czas jazdy, wystarczy założyć,
+że dla pewnego $M>0$ każdy łuk spełnia
+$w(u,v)\geq\|x_u-x_v\|_2/M$ (na przykład $M$
+jest górnym ograniczeniem prędkości).
+Wtedy $h(v)=\|x_v-x_t\|_2/M$ jest spójna
+na mocy tej samej nierówności trójkąta.
 \end{przyklad}
 
 \section{Potencjały i algorytm Johnsona dla wszystkich par}
@@ -901,8 +910,14 @@ odległości są zerowe.
 W grafie rozszerzonym
 zachowujemy wszystkie
 oryginalne krawędzie
-i dodane skróty,
-ale wyszukiwanie
+i dodane skróty.
+W grafie aktywnym wystarczy przechowywać najtańszą
+krawędź dla każdej pary aktywnych końców: zastąpienie
+droższej krawędzi nie zwiększa kosztu żadnego spaceru.
+W grafie rozszerzonym można analogicznie używać
+najtańszej krawędzi dla każdej pary końców, zachowując
+jej świadectwo rozwinięcia oraz wszystkie rekordy,
+do których ono się odwołuje. Wyszukiwanie
 prowadzimy tylko
 po łukach o
 \emph{rosnącej} randze,
@@ -930,10 +945,12 @@ pozwalają obliczyć
 prawą stronę.
 \end{twierdzenie}
 \begin{proof}
-Połączenie obu ścieżek
-w górę w punkcie $x$
-daje spacer od $s$ do
-$t$ w grafie rozszerzonym.
+Dla każdego $x$ o skończonych obu odległościach
+wybieramy najkrótsze ścieżki w górę od $s$ i od $t$.
+Odwracamy drugą z nich, co jest dozwolone w grafie
+nieskierowanym, i łączymy obie w $x$.
+Otrzymujemy spacer od $s$ do $t$ w grafie rozszerzonym
+o wadze $d_\uparrow(s,x)+d_\uparrow(t,x)$.
 Rozwinięcie skrótów
 nie zmienia kosztu,
 więc prawa strona
