@@ -70,7 +70,7 @@ class LeanDraftGeneratorTests(unittest.TestCase):
         self.assertNotIn("α", r["lean_code"])
 
     def test_all_operator_templates(self):
-        s = r"\forall x:Int, \forall y:Int, \neg ((-x + y) * (2:Int) - y > x) \lor ((x \le y) \iff (x = y))"
+        s = r"\forall x:Int, \forall y:Int, \neg ((-x + y) \cdot (2:Int) - y > x) \lor ((x \le y) \iff (x = y))"
         r = generate(s, consent=True)
         self.assertEqual(r["status"], "generated", r)
         self.assertIn("¬", r["signature"])
