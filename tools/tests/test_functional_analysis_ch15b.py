@@ -353,5 +353,18 @@ class TestChapter15B(unittest.TestCase):
             minimum = 2**n
             self.assertEqual(length*minimum, Fraction(1, 2))
 
+
+    def test_audit18_common_exception_and_norm_measurability(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            "\\|h(s,t)\\|=\\sup_k|h(s,t)(y_k)|",
+            "\\|y_{k_j}-y/\\|y\\|\\|<1/j",
+            "h(s,t)(x')=x'(f(s,t))",
+            "$4\\varepsilon/3$",
+            "przedstawiciela klasy",
+            "mierzalnym zbiorze miary zero. Twierdzenie Tonellego",
+        ):
+            self.assertIn(fragment, source)
+
 if __name__ == "__main__":
     unittest.main()
