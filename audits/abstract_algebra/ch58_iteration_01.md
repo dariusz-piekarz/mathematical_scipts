@@ -1,0 +1,7 @@
+# AA-58 — otwarcie i audyt I
+
+24 listopada 2026 r. Gałąź biblioteka-matematyczna-iteracja-6. AA-57 stabilny po audycie VIII.
+
+Zakres zgodny z zaakceptowaną propozycją: rozwiązalność rozszerzenia, istnienie największego ideału rozwiązalnego, iloraz półprosty, prostota sl2, formy niezmiennicze i ortogonalne ideały, forma Killinga, kryteria Cartana (dowód macierzowy przez uogólnione przestrzenie własne, wielomian w ad_X i funkcjonały nad Q; zejście z domknięcia algebraicznego przez rozszerzenie skalarów), rozkład na komutujące ideały proste, derywacje wewnętrzne, wzory klasyczne gl,sl,so,sp z dowodem przez ślad operatora na tensorach i rzut symetryczny/antysymetryczny. Przykłady i diagram. Nie użyto klasyfikacji układów korzeni w dowodach, nie dodano twierdzenia Levi'ego ani pełnej redukowalności.
+
+Dodano dwa zestawy testów regresyjnych: dokładne macierze reprezentacji dołączonych, porównanie ich śladów z wyprowadzonymi wzorami oraz niezależna kontrola śladu operatora zamiany czynników. Na etapie otwarcia sprawdzono zrównoważenie środowisk i unikalność 18 etykiet. Testy CI niepotwierdzone. Rozdział włączono do książki, katalogu i workflow, uaktualniono asercje liczby rozdziałów w globalnym i 12 testach przekrojowych. W kolejnych audytach konieczna szczegółowa kontrola kryterium macierzowego, obliczeń form i rozszerzenia skalarów; dwa czyste audyty po poprawkach, pełne CI, PDF. AA-58 W AUDYCIE, AA-59 nieotwarty.
