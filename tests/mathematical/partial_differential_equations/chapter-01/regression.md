@@ -43,6 +43,16 @@ Kryteria semantyczne wymagają ponownej oceny po zmianie źródła; nie są auto
 | PDE-01-036 | sec:pde-scaling | Jawne dodatnie parametry i wspólna otwarta dziedzina Q. | semantyczna |
 | PDE-01-037 | sec:pde-scaling | Przeciwobrazy otwarte, zachowanie regularności, jawne czynniki λ² w obu równaniach. | semantyczna |
 | PDE-01-038 | sec:pde-scaling | Skale czasu wynikają z bezwymiarowych współczynników κτ/ℓ² i c²τ²/ℓ². | semantyczna |
+| PDE-01-039 | sec:pde-unknown | Dodanie stałej zachowuje równanie Poissona, jeśli istnieje rozwiązanie. | semantyczna |
+| PDE-01-040 | sec:pde-types | Jawna przestrzeń współrzędnych dżetu, dziedzina F i warunek przynależności dżetu. | semantyczna |
+| PDE-01-041 | sec:pde-types | Jawne ciało skalarów oraz przynależność danych i rozwiązań do przestrzeni. | semantyczna |
+| PDE-01-042 | sec:pde-types | Zgodność oznaczeń zmiennych z poszczególnymi przykładami. | semantyczna |
+| PDE-01-043 | sec:pde-symbol | W definicji eliptyczności wskazany symbol główny i jego konwencja. | semantyczna |
+| PDE-01-044 | sec:pde-symbol | Jawny znak części głównej w konwencji jednostajnej eliptyczności. | semantyczna |
+| PDE-01-045 | eq:neumann-compatibility | Dla funkcji zespolonych pole Greena ma postać conjugate(w)∇w; zastosowanie Gaussa do obu części. | semantyczna |
+| PDE-01-046 | eq:neumann-compatibility | Sprzężenie w obu całkach po prawej stronie tożsamości Greena. | semantyczna |
+| PDE-01-047 | prop:heat-kernel | Natychmiastowa ścisła dodatniość dotyczy nieujemnych, niezerowych danych, a nie dowolnych danych zmieniających znak. | semantyczna |
+| PDE-01-048 | prop:transport | Etykieta punktu na rysunku ma kolejność zgodną z osiami x,t. | kontrola źródła TikZ; renderowanie otwarte |
 
 ## Pierwsze wykonanie — 2026-11-24
 Przejrzano kryteria 001–012 w poprawionym tekście (commit 6c55830d79679c70a164546a1f0ff953198e29f6). Kontrola strukturalna wykonana na treści przed zapisem: zachowano 35 etykiet, wszystkie 14 odsyłaczy wewnętrznych rozwiązywalne, środowiska begin/end poprawnie zagnieżdżone. Nie wykonano kompilacji LaTeX, renderowania rysunków ani Lean. Rozdział pozostaje otwarty; dalsze sekcje od sec:pde-models wymagają osobnego audytu.
@@ -54,3 +64,6 @@ Przegląd semantyczny kryteriów 013–026 w ramach poprawek (commit 9eb95ea38bf
 Poprawki 027–038: commit 47eb7d7fd982665bb242cf58fd4a4319e342882d. Przegląd semantyczny zmienionych fragmentów wykonany; kontrola strukturalna: 35 niezmienionych unikalnych etykiet, 15 rozwiązywalnych odsyłaczy, zgodne zagnieżdżenie środowisk. Wykonano skończoną kontrolę rachunkową: 45 kombinacji całkowitych (c,p,q) dla obu tożsamości strumienia, 5 trybów k dla stosunku normy do asymptotyki i dyskretnej kontroli całki sin² na torusie. Wyniki pozytywne; nie zastępują dowodów. Pierwszy przebieg treści ukończony, niezależny audyt całości, kompilacja i renderowanie pozostają otwarte. Lean nie uruchomiono.
 
 Testy wykonywalne: [test_energy_hadamard.py](test_energy_hadamard.py), commit 3dc7d65094e81c280c3b3aa3d81c7963dbde3377. Uruchomiono lokalnie kopię o identycznym SHA blob 1d8609e78e4887cde7164a5a65d65d9d7db6cdd2: 3/3 testy unittest zaliczone. Polecenie: `python tests/mathematical/partial_differential_equations/chapter-01/test_energy_hadamard.py -v`.
+
+## Czwarta iteracja — 2026-11-24
+Niezależny audyt stabilizacyjny, poprawki 039–048: commit 49589c74363fbb591d9d0045493ec46d461be5bb. Kontrola strukturalna wykonana na zmienionym źródle: 35 etykiet zachowanych, 16 odsyłaczy rozwiązywalnych, środowiska zgodne. Ponownie wykonano plik test_energy_hadamard.py zgodny z SHA blob 1d8609e78e4887cde7164a5a65d65d9d7db6cdd2: 3/3 testy unittest zaliczone. Kontrola renderowania i kompilacji jeszcze otwarta. Zmiany wymagają ponownego audytu; rozdział nie jest ustabilizowany.
