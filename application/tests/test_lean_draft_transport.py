@@ -468,3 +468,59 @@ class RuntimeNetworkEncodingTests(unittest.TestCase):
             self.assertIn(f"{key}) read_code={code} ;;", _FIXTURE)
         self.assertIn('|| exit "$read_code"', _FIXTURE)
         self.assertIn("|| exit 38", _FIXTURE)
+
+
+class RuntimeLifecycleTests(unittest.TestCase):
+    cid = "a" * 64
+    image = "sha256:" + "b" * 64
+
+    def state(self, code=42, **changes):
+        return [{"Id": self.cid, "Image": self.image,
+                 "State": {"Status": "exited", "Running": False, "ExitCode": code,
+                           "OOMKilled": False, **changes}}]
+
+    def test_exact_exit_code_and_identity(self):
+        from scripts.lean_rootless_ci_probe import validate_exited_fixture
+        for code in (0, 42):
+            self.assertEqual(validate_exited_fixture(self.state(code), container_id=self.cid,
+                             image_id=self.image, expected_exit=code)["exit_code"], code)
+        for records in (self.state(0), self.state(True), self.state(Running=True),
+                        self.state(Status="running"), self.state(OOMKilled=True),
+                        [{"Id": "wrong", "Image": self.image, "State": self.state()[0]["State"]}],
+                        [{"Id": self.cid, "Image": "wrong", "State": self.state()[0]["State"]}]):
+            with self.subTest(records=records), self.assertRaises(ValueError):
+                validate_exited_fixture(records, container_id=self.cid,
+                                       image_id=self.image, expected_exit=42)
+
+    def test_cleanup_requires_independent_successful_empty_listing(self):
+        from scripts.lean_rootless_ci_probe import remove_and_confirm
+        calls = []
+        def call(*args):
+            calls.append(args)
+            return b""
+        remove_and_confirm(call, self.cid)
+        self.assertEqual(calls, [
+            ("container", "rm", "--force", self.cid),
+            ("container", "ls", "--all", "--no-trunc", "--filter", "id=" + self.cid,
+             "--format", "{{.ID}}")])
+
+    def test_cleanup_rejects_remaining_container_or_failed_daemon_query(self):
+        from scripts.lean_rootless_ci_probe import remove_and_confirm
+        for mode in ("remaining", "listing_error", "remove_error"):
+            def call(*args):
+                if args[1] == "rm":
+                    if mode == "remove_error":
+                        raise ValueError("remove failed")
+                    return b""
+                if mode == "listing_error":
+                    raise TimeoutError("daemon unavailable")
+                return self.cid.encode("ascii") + b"\n"
+            with self.subTest(mode=mode), self.assertRaises((ValueError, TimeoutError)):
+                remove_and_confirm(call, self.cid)
+
+    def test_invalid_id_never_issues_cleanup_command(self):
+        from scripts.lean_rootless_ci_probe import remove_and_confirm
+        def call(*args):
+            self.fail("invalid identity reached daemon")
+        with self.assertRaises(ValueError):
+            remove_and_confirm(call, "short")
