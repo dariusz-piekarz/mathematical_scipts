@@ -123,5 +123,49 @@ class Chapter24(unittest.TestCase):
             self.assertLessEqual(eps,pi)
             self.assertEqual(eps,pi) # rank-one quotient tensor
 
+    def test_FA24_functional_tensor_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\|Ju_N-Ju\|_{\ell^1(F)}\le\pi(u_N-u)",
+            r"\pi_{p\circ A,q\circ B}(u)",
+            r"w(i,j)\le(1+|i|)(1+|j|)",
+            r"P_m(Ju)\le\pi_{p_m,p_m}(u)",
+            r"M>2m+d_1+d_2",
+            r"a^{[N]}\otimes b^{[N]}",
+            r"R\widehat J=I",
+            r"\operatorname{int}K_{n+1}\setminus K_{n-2}",
+            r"\chi_i\in\mathcal D(V_i)",
+            r"K\cap\supp\chi_i\ne\varnothing",
+            r"L\cap\supp\psi_j\ne\varnothing",
+            r"2a>r+d_1",
+            r"2b>s+d_2",
+            r"\widehat J_{\mathcal E}T_{ij}(\Phi)=\Phi_{ij}",
+            r"T_{ij}(fg)=(\eta_i f)\otimes(\theta_j g)",
+            r"T\widehat J_{\mathcal E}=I",
+        ):
+            self.assertIn(fragment,s)
+        # Weighted coordinate models, exact integer arithmetic.
+        for i,j,m in product(range(13),range(13),range(7)):
+            self.assertLessEqual((1+i+j)**m,(1+i)**m*(1+j)**m)
+            self.assertLessEqual((1+i)**m*(1+j)**m,(1+i+j)**(2*m))
+        # Real trigonometric basis on a four-point periodic grid,
+        # unnormalized; rational orthogonal coefficients.
+        B=[(1,1,1,1),(1,0,-1,0),(0,1,0,-1),(1,-1,1,-1)]
+        norms=[sum(t*t for t in b) for b in B]
+        def coeff(x,k):
+            return F(sum(a*b for a,b in zip(x,B[k])),norms[k])
+        V=[(1,0,0,0),(0,1,0,0),(1,-2,3,-1),(0,0,1,2),(1,1,1,1)]
+        for x,y in product(V,repeat=2):
+            M=tuple(tuple(a*b for b in y) for a in x)
+            C=tuple(tuple(F(sum(M[i][j]*B[k][i]*B[l][j]
+                                for i,j in product(range(4),repeat=2)),
+                            norms[k]*norms[l])
+                          for l in range(4)) for k in range(4))
+            for k,l in product(range(4),repeat=2):
+                self.assertEqual(C[k][l],coeff(x,k)*coeff(y,l))
+            for i,j in product(range(4),repeat=2):
+                self.assertEqual(sum(C[k][l]*B[k][i]*B[l][j]
+                                     for k,l in product(range(4),repeat=2)),M[i][j])
+
 if __name__ == "__main__":
     unittest.main()
