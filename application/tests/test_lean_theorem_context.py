@@ -85,3 +85,22 @@ class LeanTheoremContextTests(unittest.TestCase):
         self.assertEqual(r["candidates"], [])
         self.assertIsNone(r["registered_mapping"])
         self.con.rollback()
+
+    def test_truncated_theorem_span_cannot_inherit_approval(self):
+        # Keep original source bytes, valid label and document digest; shrink
+        # the indexed theorem to a prefix and compute a matching caller hash.
+        label = "thm:equiv-test"
+        eid = "label:" + label
+        row = self.con.execute(
+            "SELECT d.content,e.end_offset,l.offset FROM documents d "
+            "JOIN entities e ON d.id=e.document_id JOIN labels l ON l.entity_id=e.id "
+            "WHERE e.id=?", (eid,)).fetchone()
+        label_end = row[0].index("}", row[2]) + 1
+        self.assertLess(label_end, row[1])
+        self.con.execute("UPDATE entities SET end_offset=?,end_line=? WHERE id=?",
+                         (label_end, row[0].count("\n", 0, label_end-1)+1, eid))
+        r = self.call(label)
+        self.assertEqual(r["status"], "invalid_theorem_binding", r)
+        self.assertIsNone(r["registered_mapping"])
+        self.assertEqual(r["candidates"], [])
+        self.con.rollback()

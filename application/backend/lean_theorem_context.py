@@ -10,7 +10,7 @@ import sqlite3
 
 from fastapi import HTTPException
 from backend import lean_concept_context, lean_concepts, lean_formalization
-from backend import lean_transcription
+from backend import lean_transcription, latex_parser, lean_source_provenance
 
 RULE_VERSION = "0.1.0"
 # Curated contextual dependencies, not claims that the source explicitly cites
@@ -58,6 +58,34 @@ def resolve_theorem(con: sqlite3.Connection, *, entity_id: str,
                 or not lean_formalization._source_file_current(
                     item, digest, lean_formalization.LEAN_ROOT)):
             return {**result, "status": "stale_mapping"}
+        # The indexed binding check validates a live label and offsets, but
+        # not whether the stored span still covers the entire theorem.
+        # Reparse the actual document before transferring registry metadata.
+        document = con.execute(
+            "SELECT path,content FROM documents WHERE id=? AND length(content)<=?",
+            (module, lean_concept_context.MAX_DOCUMENT_CHARS)).fetchone()
+        if document is None or not isinstance(document["content"], str):
+            return {**result, "status": "invalid_theorem_binding"}
+        if hashlib.sha256(document["content"].encode("utf-8")).hexdigest() != digest:
+            return {**result, "status": "invalid_theorem_binding"}
+        if "chapters/" + document["path"] != item["source_document_path"]:
+            return {**result, "status": "invalid_theorem_binding"}
+        reparsed_theorem = latex_parser.parse_document(document["content"], document["path"])
+        labels = [l for l in reparsed_theorem.labels if l.name == label]
+        owners = [e for e in reparsed_theorem.entities
+                  if len(labels) == 1 and e.id == labels[0].entity_id]
+        binding = lean_source_provenance.indexed_binding(con, module, label, entity_id)
+        if len(owners) != 1 or binding is None:
+            return {**result, "status": "invalid_theorem_binding"}
+        owner = owners[0]
+        if (reparsed_theorem.id != module or
+                (owner.kind, owner.title, owner.start_line, owner.end_line,
+                 owner.start, owner.end, labels[0].offset) != binding[1:] or
+                lean_source_provenance.binding_sha256(module, label, binding)
+                != prepared["source_binding_sha256"] or
+                hashlib.sha256(document["content"][owner.start:owner.end].encode("utf-8")).hexdigest()
+                != expected_source_sha256):
+            return {**result, "status": "invalid_theorem_binding"}
         candidates, trace = {}, []
         for definition_label in definition_labels:
             anchors = [a for a in lean_concept_context._ANCHORS
@@ -90,5 +118,5 @@ def resolve_theorem(con: sqlite3.Connection, *, entity_id: str,
     except HTTPException as exc:
         return {**result, "status": "source_or_registry_rejected",
                 "http_status": exc.status_code}
-    except (sqlite3.Error, OSError, ValueError, TypeError, UnicodeError):
+    except (sqlite3.Error, OSError, ValueError, TypeError, UnicodeError, RecursionError):
         return {**result, "status": "invalid_context"}
