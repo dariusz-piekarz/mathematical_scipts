@@ -52,3 +52,5 @@ Przegląd semantyczny kryteriów 013–026 w ramach poprawek (commit 9eb95ea38bf
 
 ## Trzecia iteracja — 2026-11-24
 Poprawki 027–038: commit 47eb7d7fd982665bb242cf58fd4a4319e342882d. Przegląd semantyczny zmienionych fragmentów wykonany; kontrola strukturalna: 35 niezmienionych unikalnych etykiet, 15 rozwiązywalnych odsyłaczy, zgodne zagnieżdżenie środowisk. Wykonano skończoną kontrolę rachunkową: 45 kombinacji całkowitych (c,p,q) dla obu tożsamości strumienia, 5 trybów k dla stosunku normy do asymptotyki i dyskretnej kontroli całki sin² na torusie. Wyniki pozytywne; nie zastępują dowodów. Pierwszy przebieg treści ukończony, niezależny audyt całości, kompilacja i renderowanie pozostają otwarte. Lean nie uruchomiono.
+
+Testy wykonywalne: [test_energy_hadamard.py](test_energy_hadamard.py), commit 3dc7d65094e81c280c3b3aa3d81c7963dbde3377. Uruchomiono lokalnie kopię o identycznym SHA blob 1d8609e78e4887cde7164a5a65d65d9d7db6cdd2: 3/3 testy unittest zaliczone. Polecenie: `python tests/mathematical/partial_differential_equations/chapter-01/test_energy_hadamard.py -v`.
