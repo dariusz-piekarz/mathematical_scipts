@@ -53,5 +53,34 @@ class Chapter18(unittest.TestCase):
                     self.assertGreater(factorial(n), 0)
                 self.assertLess(Fraction(1,8)**(n-m), Fraction(1,4)**(n-m))
 
+
+    def test_FA18_filter_completeness_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\mathcal G\subseteq\mathcal F",
+            r"(F+V)-(F+V)\subseteq V+V+V\subseteq U",
+            r"\{z\in E:p_W(z)<1\}\subseteq W",
+            r"\sum_j|c_j|\le1",
+            r"f+v=(f+w)-u\in E_n",
+            r"(G\cap E_n)-(G\cap E_n)\subseteq U\cap E_n",
+        ):
+            self.assertIn(fragment, s)
+
+    def test_FA18_support_and_operators_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\theta_n\in C_c^\infty(\Omega\setminus K_n;\R)",
+            r"n\ge M",
+            r"p_m(\partial^\alpha\varphi)\le p_{m+|\alpha|}(\varphi)",
+            r"p_m(a\varphi)\le 2^m p_{K,m}(a)p_m(\varphi)",
+            r"$\supp\psi_3$",
+        ):
+            self.assertIn(fragment, s)
+        # Finite model of the local-finiteness argument for K_n=[-n,n].
+        for m in range(1, 11):
+            for n in range(m, 21):
+                left = Fraction(n) + Fraction(1, 4)
+                self.assertGreater(left, m)
+
 if __name__ == "__main__":
     unittest.main()
