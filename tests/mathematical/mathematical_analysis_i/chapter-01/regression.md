@@ -9,3 +9,4 @@ Status: wymagają ponownej kontroli po zmianie treści. Test skończony nie zast
 | MA1-01-005 | ma1:thm:rational-field | Odwrotność liczby ujemnej ma dodatni mianownik | semantyczna + Python |
 | MA1-01-006 | ma1:thm:rational-order | Porządek przy dodatnich mianownikach; gęstość nie oznacza zupełności | semantyczna + Python |
 | MA1-01-007 | ma1:ex:sqrt-two | Minimalny dodatni mianownik; brak wcześniejszego użycia konstrukcji R | semantyczna |
+| MA1-01-008 | ma1:rem:rational-incomplete | Jawny zbiór ograniczony bez kresu w Q; obie tożsamości oraz oba przypadki znaku s²−2 | semantyczna |
