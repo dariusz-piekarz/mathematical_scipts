@@ -70,12 +70,15 @@ jobs:
           # The external reference is verified in the real target file and
           # book ordering above. Supply its number without a hyperlink:
           # this isolated PDF does not contain the target chapter or its page.
-          external_label = r"\newlabel{chap:pde-code}{{" + str(external_number) + r"}{}{Eksperymenty numeryczne}{}{}}"
+          external_label = (r"\makeatletter" + "\n"
+                            + r"\@namedef{r@chap:pde-code}{{" + str(external_number)
+                            + r"}{}{Eksperymenty numeryczne}{}{}}" + "\n"
+                            + r"\makeatother")
           print(f"Standalone chapter {chapter_number}; external target chapter {external_number} (number only)")
           Path("books/pl/partial_differential_equations_ch02_ci.tex").write_text(
-              preamble + "\n" + r"\begin{document}" + "\n"
+              preamble + "\n" + external_label + "\n"
+              + r"\begin{document}" + "\n"
               + r"\setcounter{chapter}{" + str(chapter_number-1) + "}\n"
-              + external_label + "\n"
               + r"\input{../../chapters/pl/partial_differential_equations/02-charakterystyki-i-pde-pierwszego-rzedu.tex}"
               + "\n" + r"\end{document}" + "\n",
               encoding="utf-8",
