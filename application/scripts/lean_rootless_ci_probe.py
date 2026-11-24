@@ -24,21 +24,22 @@ from backend import lean_draft_runner as policy
 _FIXTURE = """#!/bin/busybox sh
 set -eu
 for key in memory.max memory.swap.max pids.max cpu.max; do
-    value=$(/bin/busybox cat "/sys/fs/cgroup/$key")
+    value=$(/bin/busybox cat "/sys/fs/cgroup/$key") || exit 20
     printf '%s=%s\\n' "$key" "$value"
 done
 # Observe the actual credentials and kernel flags of the fixture shell.
 /bin/busybox awk '
     /^(Uid|Gid):/ {key=$1; sub(/:$/, "", key); printf "%s=%s %s %s %s\\n",key,$2,$3,$4,$5}
     /^(CapEff|NoNewPrivs|Seccomp):/ {key=$1; sub(/:$/, "", key); printf "%s=%s\\n",key,$2}
-' "/proc/$$/status"
+' "/proc/$$/status" || exit 21
 /bin/busybox awk '
     $5 == "/" {print "root.mountopts=" $6}
     $5 == "/tmp" {print "tmp.mountopts=" $6}
-' "/proc/$$/mountinfo"
+' "/proc/$$/mountinfo" || exit 22
 # The image file is world-writable by mode, so a permissions-only refusal
 # is not enough. Require the actual read-only filesystem error.
-test "$(/bin/busybox stat -c %a /opt/atlas/write-check)" = 666
+mode=$(/bin/busybox stat -c %a /opt/atlas/write-check) || exit 23
+test "$mode" = 666 || exit 24
 if err=$(LC_ALL=C /bin/busybox touch /opt/atlas/write-check 2>&1); then
     exit 11
 fi
@@ -46,9 +47,9 @@ case "$err" in
     *"Read-only file system"*) printf 'root.write=EROFS\\n' ;;
     *) exit 12 ;;
 esac
-printf 'atlas-runtime-fixture' > /tmp/atlas-write-check
-test "$(/bin/busybox cat /tmp/atlas-write-check)" = atlas-runtime-fixture
-/bin/busybox rm /tmp/atlas-write-check
+printf 'atlas-runtime-fixture' > /tmp/atlas-write-check || exit 25
+test "$(/bin/busybox cat /tmp/atlas-write-check)" = atlas-runtime-fixture || exit 26
+/bin/busybox rm /tmp/atlas-write-check || exit 27
 printf 'tmp.write=ok\\n'
 """
 
@@ -111,6 +112,34 @@ def validate_runtime_observations(output: bytes) -> dict:
             **validate_runtime_security(b"\n".join(security))}
 
 
+
+_FIXTURE_EXIT_STAGES = {
+    11: "root_write_unexpected_success", 12: "root_write_not_readonly_error",
+    20: "cgroup_read", 21: "process_status_read", 22: "mountinfo_read",
+    23: "root_fixture_stat", 24: "root_fixture_mode", 25: "tmp_write",
+    26: "tmp_readback", 27: "tmp_remove",
+}
+
+
+def runtime_failure_report(records: object, *, container_id: str, image_id: str) -> dict:
+    """Report only bounded, typed state of the fixed CI fixture; never declare success."""
+    report = {"status": "blocked", "execution_allowed": False,
+              "proof_status": "not_run", "certificate": False}
+    if (type(records) is not list or len(records) != 1 or type(records[0]) is not dict
+            or records[0].get("Id") != container_id or records[0].get("Image") != image_id):
+        return {**report, "stage": "state_identity_unconfirmed"}
+    state = records[0].get("State")
+    if type(state) is not dict or type(state.get("ExitCode")) is not int:
+        return {**report, "stage": "state_unconfirmed"}
+    code = state["ExitCode"]
+    status = state.get("Status")
+    if type(status) is not str or status not in ("created", "running", "exited", "dead", "paused", "restarting", "removing"):
+        status = "unknown"
+    return {**report, "container_state": status, "exit_code": code,
+            "stage": (_FIXTURE_EXIT_STAGES.get(code, "unclassified_fixture_failure")
+                      if status == "exited" else "container_not_exited")}
+
+
 def check_runtime_limits(prefix: list[str], env: dict[str, str], image_id: str) -> dict:
     """CI only; never pass source, accept commands or enable draft execution."""
     def call(*args):
@@ -127,7 +156,29 @@ def check_runtime_limits(prefix: list[str], env: dict[str, str], image_id: str) 
     try:
         transport.validate_container(transport._decode_metadata(call("container", "inspect", cid)),
                                      container_id=cid, image_id=image_id, name=name)
-        values = validate_runtime_observations(call("container", "start", "--attach", cid))
+        try:
+            output = call("container", "start", "--attach", cid)
+        except (OSError, ValueError, subprocess.SubprocessError):
+            # The production CLI helper intentionally suppresses failed output.
+            # Inspect the same fixed CI container before removing it, so a
+            # failure is diagnosable without exposing arbitrary process output.
+            try:
+                failed = transport._decode_metadata(call("container", "inspect", cid))
+                report = runtime_failure_report(failed, container_id=cid, image_id=image_id)
+            except (OSError, ValueError, RecursionError, subprocess.SubprocessError):
+                report = {"status": "blocked", "stage": "inspection_failed",
+                          "execution_allowed": False, "proof_status": "not_run", "certificate": False}
+            print("ATLAS_ROOTLESS_RUNTIME_FAILURE " + json.dumps(report, sort_keys=True), flush=True)
+            raise
+        try:
+            values = validate_runtime_observations(output)
+        except ValueError:
+            # Fixed local fixture only; JSON-escaped and bounded by _command.
+            print("ATLAS_ROOTLESS_RUNTIME_INVALID " + json.dumps({
+                "status": "blocked", "observations_raw": output.decode("ascii", errors="replace")[:4096],
+                "execution_allowed": False, "proof_status": "not_run", "certificate": False,
+            }, sort_keys=True), flush=True)
+            raise
         records = transport._decode_metadata(call("container", "inspect", cid))
         if (type(records) is not list or len(records) != 1 or type(records[0]) is not dict
                 or records[0].get("Id") != cid or records[0].get("Image") != image_id):
