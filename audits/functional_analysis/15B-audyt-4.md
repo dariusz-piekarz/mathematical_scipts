@@ -45,3 +45,11 @@ Weryfikacja dedykowanej bramki [#45304359300](https://github.com/dariusz-piekarz
 ## Decyzja i dalsze kroki
 
 **15B/04 — pierwszy niezależny czysty audyt matematyczny po poprawkowym 15B/03 (1/2).** Źródło `9739c713fd978e14623b96e3fea6c981fa81ca97` i test `a1d3dac82e31cf85ea7f5d5ece538a559f3425dc` pozostały niezmienione w tej iteracji. Do nadania statusu STABILNY wymagany jest jeszcze drugi czysty niezależny audyt 15B/05 oraz zakończony zielony workflow dla niezmienionych blobów z kontrolą rzeczywistego PDF. Dopiero wtedy można przejść do rozdziału 16.
+
+## Walidacja rzeczywistego PDF aktualnych blobów
+
+Pobrano artefakt `functional-analysis-ch15b-pdf` (ID **14880785447**) z zakończonego sukcesem workflow [#45304322170](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45304322170), uruchomionego na commicie `de80bf3f05c4125177128ece01f9b3ab4688b268`. Wprost ponownie pobrano bloby źródła i testu **z tego commitu**, a nie tylko z ruchomej gałęzi: są identyczne z bieżącymi blobami `9739c713fd978e14623b96e3fea6c981fa81ca97` i `a1d3dac82e31cf85ea7f5d5ece538a559f3425dc`. Nie porównywano z poprzednim PDF ze starej wersji 15B/02.
+
+Po rozpakowaniu rzeczywistego archiwum i odczytaniu `pdfinfo`: **110 stron, A4, dokument niezaszyfrowany, pdfTeX**. Wyrenderowano strony **95–100** i oceniono ich zbiorczy podgląd; cały moduł 15B jest czytelny, a zaktualizowany dowód Fubiniego i stwierdzenie o wariacji są obecne. Nie stwierdzono obciętych wzorów, nachodzących fragmentów tekstu ani widocznych uszkodzeń glifów. Sprawdzenie rzeczywistego logu: **0** wystąpień `Overfull \\hbox`, `Undefined control sequence`, `There were undefined references`, `Missing character` oraz `LaTeX Warning:`; **1** wystąpienie `Underfull \\hbox` (wiersze 336–342 rozdziału 16, poza 15B). Wersja CI po raporcie 15B/03, [#45304359300](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45304359300), również ma potwierdzony status **completed/success**.
+
+**Ocena 15B/04 nie zmienia się:** matematycznie/redakcyjnie **czysty (1/2)**; bramka PDF dla tych samych blobów **zielona**. Dedykowany nowy przebieg CI wywołany zapisem 15B/04 pozostaje do osobnego potwierdzenia i nie może być uznany za zakończony przed sprawdzeniem. Do stabilizacji wymagany jest jeszcze 15B/05, drugi czysty przegląd.
