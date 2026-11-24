@@ -257,6 +257,79 @@ def runtime_failure_report(records: object, *, container_id: str, image_id: str)
                       if status == "exited" else "container_not_exited")}
 
 
+
+def validate_exited_fixture(records: object, *, container_id: str, image_id: str,
+                            expected_exit: int) -> dict:
+    """A successful CLI exit alone is not evidence of container termination."""
+    if (type(records) is not list or len(records) != 1 or type(records[0]) is not dict
+            or records[0].get("Id") != container_id or records[0].get("Image") != image_id):
+        raise ValueError("Runtime fixture identity mismatch")
+    state = records[0].get("State")
+    if (type(state) is not dict or state.get("Status") != "exited"
+            or state.get("Running") is not False or type(state.get("ExitCode")) is not int
+            or state["ExitCode"] != expected_exit or state.get("OOMKilled") is not False):
+        raise ValueError("Runtime fixture did not exit as expected")
+    return {"container_state": "exited", "exit_code": state["ExitCode"]}
+
+
+def remove_and_confirm(call, cid: str) -> None:
+    """Use exact ID and a successful independent daemon listing, not failed inspect."""
+    if not transport._CONTAINER_ID.fullmatch(cid):
+        raise ValueError("Invalid cleanup identity")
+    call("container", "rm", "--force", cid)
+    remaining = call("container", "ls", "--all", "--no-trunc", "--filter",
+                     "id=" + cid, "--format", "{{.ID}}")
+    if remaining != b"":
+        raise ValueError("Container removal not confirmed")
+
+
+def cleanup_fixture(call, cid: str) -> None:
+    try:
+        remove_and_confirm(call, cid)
+    except (OSError, ValueError, subprocess.SubprocessError):
+        print("ATLAS_ROOTLESS_CLEANUP_FAILURE " + json.dumps({
+            "status": "blocked", "container_id": cid, "cleanup_status": "unconfirmed",
+            "execution_allowed": False, "proof_status": "not_run", "certificate": False,
+        }, sort_keys=True), flush=True)
+        raise
+
+
+# An independent local scratch image, no user input or scenario arguments.
+_FAILURE_FIXTURE = "#!/bin/busybox sh\nprintf 'atlas-controlled-failure\\n'\nexit 42\n"
+
+
+def check_controlled_failure(prefix: list[str], env: dict[str, str], image_id: str) -> dict:
+    def call(*args):
+        return transport._command(prefix, args, env)
+
+    transport.validate_engine(transport._decode_metadata(call("info", "--format", "{{json .}}")))
+    policy.validate_image_inspection(transport._decode_metadata(call("image", "inspect", image_id)),
+                                     approved_image_id=image_id)
+    name = "atlas-draft-" + uuid.uuid4().hex
+    cid = call(*policy.isolation_arguments(image_id=image_id, container_name=name)).decode("ascii").strip()
+    if not transport._CONTAINER_ID.fullmatch(cid):
+        raise ValueError("Ambiguous controlled failure creation: " + name)
+    try:
+        transport.validate_container(transport._decode_metadata(call("container", "inspect", cid)),
+                                     container_id=cid, image_id=image_id, name=name)
+        try:
+            call("container", "start", "--attach", cid)
+        except ValueError as exc:
+            # The current CLI helper maps nonzero return to this exact failure.
+            # Independently verify exit 42; timeout or oversized output is not success.
+            if str(exc) != "Docker command failed":
+                raise
+        else:
+            raise ValueError("Expected controlled nonzero exit")
+        state = validate_exited_fixture(transport._decode_metadata(call("container", "inspect", cid)),
+                                       container_id=cid, image_id=image_id, expected_exit=42)
+    finally:
+        cleanup_fixture(call, cid)
+    return {"status": "controlled_failure_checked", **state, "image_id": image_id,
+            "container_id": cid, "cleanup_status": "removed_verified",
+            "execution_allowed": False, "proof_status": "not_run", "certificate": False}
+
+
 def check_runtime_limits(prefix: list[str], env: dict[str, str], image_id: str) -> dict:
     """CI only; never pass source, accept commands or enable draft execution."""
     def call(*args):
@@ -296,21 +369,12 @@ def check_runtime_limits(prefix: list[str], env: dict[str, str], image_id: str) 
                 "execution_allowed": False, "proof_status": "not_run", "certificate": False,
             }, sort_keys=True), flush=True)
             raise
-        records = transport._decode_metadata(call("container", "inspect", cid))
-        if (type(records) is not list or len(records) != 1 or type(records[0]) is not dict
-                or records[0].get("Id") != cid or records[0].get("Image") != image_id):
-            raise ValueError("Runtime fixture identity mismatch")
-        state = records[0].get("State")
-        if (type(state) is not dict or state.get("Status") != "exited"
-                or state.get("Running") is not False or type(state.get("ExitCode")) is not int
-                or state["ExitCode"] != 0 or state.get("OOMKilled") is not False):
-            raise ValueError("Runtime fixture did not exit cleanly")
+        state = validate_exited_fixture(transport._decode_metadata(call("container", "inspect", cid)),
+                                       container_id=cid, image_id=image_id, expected_exit=0)
     finally:
-        # Kill/remove by exact ID even if the local CLI timed out.
-        # An unsuccessful removal is a failed test, never a success report.
-        call("container", "rm", "--force", cid)
+        cleanup_fixture(call, cid)
     return {"status": "runtime_limits_security_network_checked", "observations": values,
-            "image_id": image_id, "cleanup_status": "removed",
+            **state, "container_id": cid, "image_id": image_id, "cleanup_status": "removed_verified",
             "execution_allowed": False, "proof_status": "not_run", "certificate": False}
 
 
@@ -369,9 +433,24 @@ def main() -> int:
                 return 1
             runtime = check_runtime_limits(prefix, env, image_id)
             print("ATLAS_ROOTLESS_RUNTIME " + json.dumps(runtime, sort_keys=True), flush=True)
-            return 0
         finally:
             transport._command(prefix, ("image", "rm", image_id), env)
+        # Build a separate immutable local image for a controlled failure.
+        entry.write_text(_FAILURE_FIXTURE, encoding="utf-8")
+        iid.unlink()
+        subprocess.run(prefix + ["build", "--network=none", "--pull=false",
+                                 "--iidfile", str(iid), str(context)],
+                       env={**env, "DOCKER_BUILDKIT": "0"}, stdin=subprocess.DEVNULL,
+                       check=True, timeout=120)
+        failure_image = iid.read_text(encoding="ascii").strip()
+        if not policy._IMAGE.fullmatch(failure_image) or failure_image == image_id:
+            raise ValueError("Invalid controlled failure image identity")
+        try:
+            failure = check_controlled_failure(prefix, env, failure_image)
+            print("ATLAS_ROOTLESS_LIFECYCLE " + json.dumps(failure, sort_keys=True), flush=True)
+        finally:
+            transport._command(prefix, ("image", "rm", failure_image), env)
+        return 0
 
 
 if __name__ == "__main__":
