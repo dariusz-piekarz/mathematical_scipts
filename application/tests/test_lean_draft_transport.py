@@ -282,7 +282,6 @@ class RuntimeCgroupObservationTests(unittest.TestCase):
 
 
 def network_fixture_observation(dev=None, ipv4=None, ipv6=None, socket=b"absent"):
-    import base64
     if dev is None:
         dev = (b"Inter-| Receive | Transmit\n"
                b" face |bytes packets errs drop fifo frame compressed multicast"
@@ -294,9 +293,9 @@ def network_fixture_observation(dev=None, ipv4=None, ipv6=None, socket=b"absent"
         zero = b"0" * 32
         ipv6 = (zero + b" 00 " + zero + b" 00 " + zero
                 + b" ffffffff 00000001 00000000 00200200 lo\n")
-    return (b"net.dev=" + base64.b64encode(dev) + b"\n"
-            b"net.route=" + base64.b64encode(ipv4) + b"\n"
-            b"net.ipv6_route=" + base64.b64encode(ipv6) + b"\n"
+    return (b"net.dev=" + dev.replace(b"\n", b";") + b"\n"
+            b"net.route=" + ipv4.replace(b"\n", b";") + b"\n"
+            b"net.ipv6_route=" + ipv6.replace(b"\n", b";") + b"\n"
             b"net.docker_socket=" + socket + b"\n")
 
 
@@ -310,8 +309,7 @@ class RuntimeNetworkObservationTests(unittest.TestCase):
         self.assertEqual(self.validate(self.valid)["net.interfaces"], "lo")
 
     def test_rejects_extra_or_wrong_interface(self):
-        import base64
-        dev = base64.b64decode(self.valid.splitlines()[0].partition(b"=")[2])
+        dev = self.valid.splitlines()[0].partition(b"=")[2].replace(b";", b"\n")
         for bad in (dev + b" eth0: " + b"0 " * 16 + b"\n",
                     dev.replace(b"lo:", b"eth0:"), b"", dev.replace(b"0 ", b"x ", 1)):
             with self.subTest(bad=bad), self.assertRaises(ValueError):
@@ -329,8 +327,7 @@ class RuntimeNetworkObservationTests(unittest.TestCase):
             self.validate(network_fixture_observation(ipv4=b""))
 
     def test_rejects_usable_ipv6_default_and_other_interface(self):
-        import base64
-        route = base64.b64decode(self.valid.splitlines()[2].partition(b"=")[2])
+        route = self.valid.splitlines()[2].partition(b"=")[2].replace(b";", b"\n")
         for bad in (route.replace(b"00200200", b"00000001"),
                     route.replace(b" lo\n", b" eth0\n"),
                     route.replace(b" 00 ", b" FF ", 1), b"", b"malformed\n"):
@@ -416,7 +413,7 @@ class RuntimeFailureReportTests(unittest.TestCase):
                             (27, "tmp_remove"), (32, "network_dev_read"),
                             (33, "network_ipv4_read"), (34, "network_ipv6_read"),
                             (35, "network_base64_encode"), (36, "network_base64_unwrap"),
-                            (37, "network_temp_remove")):
+                            (37, "network_temp_remove"), (38, "network_row_serialize")):
             with self.subTest(code=code):
                 report = runtime_failure_report(
                     [{"Id": "c", "Image": "i", "State": {"Status": "exited", "ExitCode": code}}],
@@ -454,22 +451,20 @@ class RuntimeFailureReportTests(unittest.TestCase):
 
 
 class RuntimeNetworkEncodingTests(unittest.TestCase):
-    def test_wrapped_base64_preserves_raw_rows(self):
-        import base64
+    def test_row_serialization_preserves_raw_rows(self):
         from scripts.lean_rootless_ci_probe import _decode_network_table
-        raw = b"header\n" + b"row " * 40 + b"\nlast row\n"
-        wrapped = base64.encodebytes(raw)
-        self.assertIn(b"\n", wrapped.rstrip(b"\n"))
-        data = wrapped.replace(b"\n", b"").decode("ascii")
-        self.assertEqual(_decode_network_table(data), raw.decode("ascii").splitlines())
-        self.assertEqual(base64.b64decode(data, validate=True), raw)
+        raw = "header\n" + "row " * 40 + "\nlast row\n"
+        self.assertEqual(_decode_network_table(raw.replace("\n", ";")), raw.splitlines())
+        for invalid in ("header", "header;;", "header;\x00;", "header;\r;", "header; ;",
+                        "x" * 32769 + ";"):
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                _decode_network_table(invalid)
 
     def test_fixture_uses_portable_encoding_and_distinct_read_codes(self):
         from scripts.lean_rootless_ci_probe import _FIXTURE
-        self.assertNotIn("base64 -w", _FIXTURE)
-        self.assertIn('base64 < /tmp/atlas-net-table', _FIXTURE)
-        self.assertIn("tr -d '\\n'", _FIXTURE)
+        self.assertNotIn("/bin/busybox base64", _FIXTURE)
+        self.assertIn('awk \'{if (index($0, ";")) exit 1; printf "%s;", $0}\'', _FIXTURE)
         for key, code in (("dev", 32), ("route", 33), ("ipv6_route", 34)):
             self.assertIn(f"{key}) read_code={code} ;;", _FIXTURE)
         self.assertIn('|| exit "$read_code"', _FIXTURE)
-        self.assertIn("|| exit 35", _FIXTURE)
+        self.assertIn("|| exit 38", _FIXTURE)
