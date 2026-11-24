@@ -203,6 +203,57 @@ def test_finite_examples():
         assert expected_minus > expected_plus
 
 
+def test_fixed_edge_model():
+    # TG42-GNM-01: exact conditional laws and joint edge inclusion.
+    count = 0
+    for n in range(2, 6):
+        N = comb(n, 2)
+        for m in range(N+1):
+            graphs = [mask for mask in range(1 << N) if mask.bit_count() == m]
+            assert len(graphs) == comb(N, m)
+            for h in range(N+1):
+                F = (1 << h)-1
+                actual = Fraction(sum(mask & F == F for mask in graphs), len(graphs))
+                expected = Fraction(comb(N-h, m-h), comb(N, m)) if h <= m else 0
+                assert actual == expected
+                count += 1
+            for p in (Fraction(1,3), Fraction(2,3)):
+                weights = [p**mask.bit_count()*(1-p)**(N-mask.bit_count())
+                           for mask in graphs]
+                total = sum(weights)
+                assert all(w/total == Fraction(1,len(graphs)) for w in weights)
+    return count
+
+
+def test_fixed_subgraph_moments():
+    # TG42-H-01: independent enumeration of labelled embeddings and their overlaps.
+    from itertools import permutations
+    cases = 0
+    for v, H in [(3, [(0,1),(1,2)]), (3, [(0,1),(0,2),(1,2)]),
+                 (4, [(0,1),(0,2),(1,2),(2,3)]), (4, [(0,1),(2,3)])]:
+        n = 5
+        pairs = all_pairs(n)
+        bit = {e: 1 << i for i,e in enumerate(pairs)}
+        embeddings = [sum(bit[tuple(sorted((phi[u],phi[w])))] for u,w in H)
+                      for phi in permutations(range(n),v)]
+        rho = max(Fraction(sum(u in S and w in S for u,w in H),len(S))
+                  for j in range(1,v+1) for S in combinations(range(v),j))
+        for p in (Fraction(1,3), Fraction(1,2), Fraction(2,3)):
+            mean = second = Fraction(0)
+            for mask in range(1 << len(pairs)):
+                k = sum(mask & E == E for E in embeddings)
+                weight = p**mask.bit_count() * (1-p)**(len(pairs)-mask.bit_count())
+                mean += weight*k
+                second += weight*k*k
+            assert mean == len(embeddings)*p**len(H)
+            overlap_second = sum((p**((E|F).bit_count())
+                                  for E in embeddings for F in embeddings), Fraction(0))
+            assert second == overlap_second
+            assert rho >= Fraction(len(H),v)
+            cases += 1
+    return cases
+
+
 def test_integrity():
     cat = json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book = next(b for b in cat["books"] if b["id"]=="graph_and_knot_theory")
@@ -234,5 +285,7 @@ if __name__ == "__main__":
     test_integrity()
     print("PASS exact weighted enumeration G(n,p) and triangle/isolate/edge moments:",test_exhaustive())
     print("PASS exact monochromatic Ramsey first moments:",test_ramsey_first_moment())
+    print("PASS TG42-GNM-01 fixed edge inclusion and conditional laws:", test_fixed_edge_model())
+    print("PASS TG42-H-01 fixed subgraph embedding moment cases:", test_fixed_subgraph_moments())
     test_finite_examples()
     print("PASS exact connectivity recurrence, threshold sanity and 43-source integration")
