@@ -296,3 +296,7 @@ AA-68: charaktery formalne, pierścień grupowy kraty wag, działania na charakt
 ## Zamknięcie AA-68 — 24 listopada 2026 r.
 
 **AA-68 STABILNY w ustalonym zakresie; etapy D/P zaliczone.** Cztery dowody, przykład i cztery trwałe regresje zaliczone; CI [45475570053](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45475570053) 147/147 success, 4788 testów, źródło 3189372249d8768dc9ea731fa3518d8e8cb35800. PDF 428 stron, artefakt 14960255792, wszystkie strony AA-68 (fizyczne 425–428) obejrzane, log czysty. Raport `audits/abstract_algebra/ch68_iteration_05.md`. AA-01–68 stabilne. **AA-69 nieotwarty.** Kolejny etap D: wzór charakterów Weyla i niezbędne lematy, w razie potrzeby rozdzielenie zakresu na kolejne stabilizowane rozdziały.
+
+## Otwarcie AA-69 — 24 listopada 2026 r.
+
+AA-69: permutacja korzeni dodatnich przez odbicia proste, zasada skracania i trywialność stabilizatora regularnej wagi, waga rho, baza antyniezmienników i pełny dowód tożsamości mianownika Weyla, przykłady A1/A2. **Etap D W AUDYCIE.** Regresja AA-69-DEN-01 zaliczona dla dziewięciu układów; CI i PDF do potwierdzenia. Sam wzór charakterów Weyla wydzielono do AA-70, który pozostaje nieotwarty do stabilizacji AA-69.
