@@ -167,6 +167,35 @@ bez etapu wplatania cykli nie gwarantuje natychmiastowego
 wykorzystania wszystkich krawędzi.
 \end{uwaga}
 
+\begin{przyklad}[Wplatanie obiegów w multigrafie]
+\label{ex:tg-hierholzer-multigraf}
+Niech $G$ ma wierzchołki $a,b,c$ oraz pięć krawędzi:
+$e_1,e_2$ o końcach $a,b$, pętlę $e_3$ przy $b$
+oraz $e_4,e_5$ o końcach $b,c$. Stopnie wynoszą
+$d_G(a)=2$, $d_G(b)=6$ i $d_G(c)=2$, gdyż pętla
+wnosi dwa do stopnia $b$. Graf jest spójny, a wszystkie
+jego stopnie są parzyste.
+
+Rozpoczynamy w $a$ i wybieramy najpierw $e_1$, a następnie
+$e_2$. Otrzymujemy zamknięty szlak $C=(a,e_1,b,e_2,a)$.
+Nie można go już przedłużyć od jego końca $a$, chociaż
+trzy krawędzie pozostają niewykorzystane. Wybieramy
+wystąpienie $b$ w $C$. W multigrafie pozostałych krawędzi
+możemy zbudować zamknięty szlak
+$C'=(b,e_3,b,e_4,c,e_5,b)$.
+Wplatając $C'$ w miejsce wystąpienia $b$ w $C$,
+otrzymujemy
+\[
+(a,e_1,b,e_3,b,e_4,c,e_5,b,e_2,a).
+\]
+Szlak jest zamknięty, a lista jego krawędzi to
+$e_1,e_3,e_4,e_5,e_2$, czyli każda z pięciu krawędzi
+występuje dokładnie raz. Jest to cykl Eulera.
+Przykład pokazuje, dlaczego samo przedłużanie jednego
+szlaku aż do zatrzymania nie wystarcza oraz dlaczego
+należy odróżniać równoległe krawędzie.
+\end{przyklad}
+
 \begin{twierdzenie}[Euler: charakterystyka otwarta]
 \label{thm:tg-euler-trail}
 Niech $G$ będzie skończonym multigrafem nieskierowanym
@@ -185,9 +214,13 @@ stopień, dołączamy \emph{nową} krawędź $e_*$ o końcach $s,t$,
 nawet gdy były już połączone krawędzią. Otrzymany multigraf
 ma wszystkie stopnie parzyste oraz spójny nośnik krawędziowy.
 Na mocy twierdzenia \ref{thm:tg-euler-circuit} ma cykl Eulera.
-Usuwając z tego cyklu wystąpienie $e_*$ i rozpoczynając
-odpowiednio obieg, otrzymujemy szlak przechodzący po każdej
-oryginalnej krawędzi dokładnie raz, od $s$ do $t$.
+W razie potrzeby odwracamy kierunek obiegu tak, aby
+przejście przez $e_*$ prowadziło od $t$ do $s$.
+Przesuwamy cyklicznie początek zapisu obiegu do wystąpienia
+$s$ bezpośrednio po $e_*$. Wtedy $e_*$ jest ostatnią
+krawędzią zapisu. Usuwając ją i końcowe wystąpienie $s$,
+otrzymujemy szlak od $s$ do $t$, w którym każda
+oryginalna krawędź występuje dokładnie raz.
 \end{proof}
 
 \begin{przyklad}[Mosty królewieckie]
@@ -231,24 +264,37 @@ jest zbiorem łuków; łuk $(u,v)$ zapisujemy jako $u\to v$.
 \emph{Orientacja} grafu prostego nieskierowanego $G=(V,E)$
 powstaje przez zastąpienie każdej krawędzi $\{u,v\}\in E$
 dokładnie jednym z łuków $(u,v)$ lub $(v,u)$.
-Dla multigrafu zachowujemy odrębne identyfikatory krawędzi:
-orientacja przypisuje każdej krawędzi uporządkowaną parę
-jej końców. Pętla daje łuk od wierzchołka do niego samego;
-równoległe łuki pozostają odrębnymi obiektami.
+\emph{Multigraf skierowany} to układ $(V,A,\partial_-,\partial_+)$,
+gdzie $V,A$ są skończonymi zbiorami wierzchołków i łuków,
+a $\partial_-,\partial_+:A\to V$ przypisują łukowi
+odpowiednio jego początek i koniec. Różne łuki mogą
+mieć ten sam początek i koniec. Graf skierowany $(V,A)$
+jest szczególnym przypadkiem tego modelu, z odwzorowaniami
+będącymi rzutami na współrzędne pary.
+Dla multigrafu nieskierowanego orientacja zachowuje odrębne
+identyfikatory krawędzi i przypisuje każdej z nich
+uporządkowaną parę jej końców. Pętla daje łuk od
+wierzchołka do niego samego.
 Stopień wejściowy $d^-(v)$ jest liczbą łuków kończących się
 w $v$, a stopień wyjściowy $d^+(v)$ jest liczbą łuków
 zaczynających się w $v$, z uwzględnieniem krotności.
 Pętla wnosi po jednym do obu stopni.
 \end{definicja}
 
-Dla grafów skierowanych rozważamy spacer zgodny z kierunkami
-łuków. Graf skierowany nazywamy \emph{silnie spójnym}, gdy
+Dla multigrafów skierowanych rozważamy spacery zgodne
+z kierunkami łuków. Skierowany szlak Eulera to taki
+spacer, który wykorzystuje każdy łuk dokładnie raz.
+Dla zbioru pustego łuków przyjmujemy tę samą konwencję
+co w przypadku nieskierowanym: szlak długości zero istnieje
+dokładnie wtedy, gdy zbiór wierzchołków jest niepusty. Graf skierowany nazywamy \emph{silnie spójnym}, gdy
 ma niepusty zbiór wierzchołków i każde dwa wierzchołki
 można połączyć skierowanymi drogami w obie strony. Przez spójność \emph{słabą} rozumiemy spójność
 grafu otrzymanego po zapomnieniu kierunków łuków.
 
 \begin{twierdzenie}[Skierowane obiegi Eulera]
-Niech $D=(V,A)$ będzie skończonym grafem skierowanym
+\label{thm:tg-euler-directed-circuit}
+Niech $D=(V,A,\partial_-,\partial_+)$ będzie skończonym
+multigrafem skierowanym
 z co najmniej jednym łukiem. Wówczas ma on skierowany
 zamknięty szlak Eulera wtedy i tylko wtedy, gdy
 \begin{enumerate}[label=(\roman*)]
@@ -285,6 +331,52 @@ tego wierzchołka są równe, zatem oba są dodatnie.
 Z tego wierzchołka konstruujemy następny niepusty
 zamknięty szlak i wplatamy go do poprzedniego.
 Iteracja kończy się po wykorzystaniu wszystkich łuków.
+\end{proof}
+
+\begin{twierdzenie}[Otwarty skierowany szlak Eulera]
+\label{thm:tg-euler-directed-trail}
+Niech $D=(V,A,\partial_-,\partial_+)$ będzie skończonym
+multigrafem skierowanym z co najmniej jednym łukiem
+i niech $s,t\in V$ będą różnymi wierzchołkami.
+Istnieje skierowany szlak Eulera od $s$ do $t$
+wtedy i tylko wtedy, gdy zachodzą oba warunki:
+\begin{enumerate}[label=(\roman*)]
+\item wszystkie wierzchołki incydentne z łukami należą
+do jednej słabo spójnej składowej;
+\item $d^+(s)-d^-(s)=1$, $d^+(t)-d^-(t)=-1$ oraz
+$d^+(v)=d^-(v)$ dla każdego $v\in V\setminus\{s,t\}$.
+\end{enumerate}
+\end{twierdzenie}
+
+\begin{proof}
+Jeśli istnieje taki szlak, to po zapomnieniu kierunków
+łuków łączy on wszystkie wierzchołki incydentne z łukami,
+więc zachodzi (i). Każde wystąpienie wierzchołka jako
+punktu pośredniego szlaku odpowiada jednemu wejściu
+i jednemu wyjściu. Początkowe wyjście z $s$ i końcowe
+wejście do $t$ są jedynymi niesparowanymi wystąpieniami.
+Ponieważ szlak wykorzystuje każdy łuk dokładnie raz,
+otrzymujemy wszystkie równości z (ii).
+
+Załóżmy (i) i (ii). Dołączamy nowy łuk $a_*$ od $t$ do $s$,
+różny od wszystkich dotychczasowych łuków, także wtedy,
+gdy jeden z nich ma już początek $t$ i koniec $s$.
+Nowy łuk zwiększa o jeden stopień wyjściowy $t$
+oraz stopień wejściowy $s$, pozostawiając wszystkie
+pozostałe stopnie bez zmian. W otrzymanym multigrafie
+stopnie wejściowy i wyjściowy są więc równe przy każdym
+wierzchołku. Wierzchołki $s$ i $t$ już należały do nośnika
+krawędziowego na mocy (ii), więc (i) pozostaje spełniony.
+Z twierdzenia~\ref{thm:tg-euler-directed-circuit}
+otrzymujemy skierowany zamknięty szlak Eulera.
+
+Zapis tego szlaku przesuwamy cyklicznie tak, aby jego
+pierwszym wierzchołkiem było wystąpienie $s$ bezpośrednio
+po przejściu przez $a_*$. Wówczas ostatni łuk zapisu
+to $a_*$, prowadzący od $t$ do $s$. Po usunięciu tego
+łuku i końcowego wystąpienia $s$ otrzymujemy skierowany
+szlak od $s$ do $t$. Każdy pierwotny łuk występuje w nim
+dokładnie raz, co kończy dowód.
 \end{proof}
 
 \begin{stwierdzenie}[Orientacja eulerowska]
