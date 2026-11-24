@@ -332,22 +332,26 @@ def check_controlled_failure(prefix: list[str], env: dict[str, str], image_id: s
 _TIMEOUT_FIXTURE = "#!/bin/busybox sh\nexec /bin/busybox sleep 90\n"
 
 
-def stop_timed_out_fixture(call, cid: str, image_id: str) -> dict:
-    """Prove that CLI timeout left a running fixture, then stop that exact ID."""
+def _stop_interrupted_fixture(call, cid: str, image_id: str) -> dict:
+    """Prove the interrupted CLI left a running fixture, then stop that exact ID."""
     if not transport._CONTAINER_ID.fullmatch(cid) or not policy._IMAGE.fullmatch(image_id):
-        raise ValueError("Invalid timeout fixture identity")
+        raise ValueError("Invalid interrupted fixture identity")
     records = transport._decode_metadata(call("container", "inspect", cid))
     if (type(records) is not list or len(records) != 1 or type(records[0]) is not dict
             or records[0].get("Id") != cid or records[0].get("Image") != image_id):
-        raise ValueError("Timeout fixture identity mismatch")
+        raise ValueError("Interrupted fixture identity mismatch")
     state = records[0].get("State")
     if (type(state) is not dict or state.get("Status") != "running"
             or state.get("Running") is not True or state.get("OOMKilled") is not False):
-        raise ValueError("Running fixture after CLI timeout not confirmed")
+        raise ValueError("Running fixture after CLI interruption not confirmed")
     call("container", "kill", "--signal=KILL", cid)
     stopped = validate_exited_fixture(transport._decode_metadata(call("container", "inspect", cid)),
                                      container_id=cid, image_id=image_id, expected_exit=137)
-    return {"running_after_cli_timeout": True, **stopped}
+    return stopped
+
+
+def stop_timed_out_fixture(call, cid: str, image_id: str) -> dict:
+    return {"running_after_cli_timeout": True, **_stop_interrupted_fixture(call, cid, image_id)}
 
 
 def check_runtime_timeout(prefix: list[str], env: dict[str, str], image_id: str) -> dict:
@@ -383,6 +387,51 @@ def check_runtime_timeout(prefix: list[str], env: dict[str, str], image_id: str)
     return {"status": "timeout_checked", **state, "image_id": image_id,
             "container_id": cid, "cleanup_status": "removed_verified",
             "cli_timeout_seconds": transport.COMMAND_TIMEOUT,
+            "execution_allowed": False, "proof_status": "not_run", "certificate": False}
+
+
+
+# Finite 256 KiB of harmless ASCII (twice the capture limit), followed by sleep.
+# No /dev/zero, unbounded writer, persistent log or user-controlled content.
+_OUTPUT_FIXTURE = """#!/bin/busybox sh
+/bin/busybox awk 'BEGIN { for(i=0;i<262144;i++) printf "x" }' || exit 43
+exec /bin/busybox sleep 90
+"""
+
+
+def check_runtime_output_limit(prefix: list[str], env: dict[str, str], image_id: str) -> dict:
+    def call(*args):
+        return transport._command(prefix, args, env)
+
+    transport.validate_engine(transport._decode_metadata(call("info", "--format", "{{json .}}")))
+    policy.validate_image_inspection(transport._decode_metadata(call("image", "inspect", image_id)),
+                                     approved_image_id=image_id)
+    name = "atlas-draft-" + uuid.uuid4().hex
+    cid = call(*policy.isolation_arguments(image_id=image_id, container_name=name)).decode("ascii").strip()
+    if not transport._CONTAINER_ID.fullmatch(cid):
+        raise ValueError("Ambiguous output fixture creation: " + name)
+    try:
+        transport.validate_container(transport._decode_metadata(call("container", "inspect", cid)),
+                                     container_id=cid, image_id=image_id, name=name)
+        try:
+            call("container", "start", "--attach", cid)
+        except transport.DockerOutputLimit:
+            pass
+        else:
+            raise ValueError("Expected typed CLI output limit")
+        state = _stop_interrupted_fixture(call, cid, image_id)
+    except (OSError, ValueError, subprocess.SubprocessError):
+        print("ATLAS_ROOTLESS_OUTPUT_FAILURE " + json.dumps({
+            "status": "blocked", "container_id": cid, "image_id": image_id,
+            "execution_allowed": False, "proof_status": "not_run", "certificate": False,
+        }, sort_keys=True), flush=True)
+        raise
+    finally:
+        cleanup_fixture(call, cid)
+    return {"status": "output_limit_checked", **state, "image_id": image_id,
+            "container_id": cid, "cleanup_status": "removed_verified",
+            "running_after_cli_output_limit": True,
+            "capture_limit_bytes": transport.MAX_METADATA_BYTES,
             "execution_allowed": False, "proof_status": "not_run", "certificate": False}
 
 
@@ -520,6 +569,20 @@ def main() -> int:
             print("ATLAS_ROOTLESS_TIMEOUT " + json.dumps(timeout, sort_keys=True), flush=True)
         finally:
             transport._command(prefix, ("image", "rm", timeout_image), env)
+        entry.write_text(_OUTPUT_FIXTURE, encoding="utf-8")
+        iid.unlink()
+        subprocess.run(prefix + ["build", "--network=none", "--pull=false",
+                                 "--iidfile", str(iid), str(context)],
+                       env={**env, "DOCKER_BUILDKIT": "0"}, stdin=subprocess.DEVNULL,
+                       check=True, timeout=120)
+        output_image = iid.read_text(encoding="ascii").strip()
+        if not policy._IMAGE.fullmatch(output_image) or output_image in (image_id, failure_image, timeout_image):
+            raise ValueError("Invalid output fixture image identity")
+        try:
+            output = check_runtime_output_limit(prefix, env, output_image)
+            print("ATLAS_ROOTLESS_OUTPUT " + json.dumps(output, sort_keys=True), flush=True)
+        finally:
+            transport._command(prefix, ("image", "rm", output_image), env)
         return 0
 
 
