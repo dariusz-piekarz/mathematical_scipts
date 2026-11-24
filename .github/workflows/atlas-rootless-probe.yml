@@ -65,19 +65,37 @@ jobs:
           unit="user@$(id -u).service"
           sudo install -d -m 0755 "/run/systemd/system/$unit.d"
           printf '[Service]\nDelegate=cpu cpuset io memory pids\n' | sudo tee "/run/systemd/system/$unit.d/atlas-delegate.conf"
+          # Preserve diagnostics if a hosted runner cannot start its user manager.
+          runtime_unit="user-runtime-dir@$(id -u).service"
+          trap 'sudo systemctl status "$unit" "$runtime_unit" --no-pager || true; sudo journalctl -b -u "$unit" -u "$runtime_unit" -n 80 --no-pager || true' ERR
           sudo systemctl daemon-reload
-          # Do not restart a user manager that owns the current CI process.
-          if sudo systemctl is-active --quiet "$unit"; then
-            cg="$(systemctl show -p ControlGroup --value "$unit")"
-            test -n "$cg"
-            self_cg="$(awk -F: '$1 == "0" {print $3}' /proc/self/cgroup)"
-            case "$self_cg" in
-              "$cg"|"$cg/"*) echo "CI process is inside user manager; refusing restart"; exit 1 ;;
-            esac
-            sudo systemctl restart "$unit"
-          fi
+          # Establish the runtime directory and keep the manager alive across
+          # restart before touching an existing session.
           sudo loginctl enable-linger "$(id -un)"
-          sudo systemctl start "$unit"
+          sudo systemctl start "$runtime_unit"
+          has_required_controllers() {
+            local cg controller
+            cg="$(systemctl show -p ControlGroup --value "$unit")"
+            test -n "$cg" && test -r "/sys/fs/cgroup$cg/cgroup.controllers" || return 1
+            for controller in cpu memory pids; do
+              grep -qw "$controller" "/sys/fs/cgroup$cg/cgroup.controllers" || return 1
+            done
+          }
+          if sudo systemctl is-active --quiet "$unit"; then
+            if ! has_required_controllers; then
+              cg="$(systemctl show -p ControlGroup --value "$unit")"
+              test -n "$cg"
+              self_cg="$(awk -F: '$1 == "0" {print $3}' /proc/self/cgroup)"
+              case "$self_cg" in
+                "$cg"|"$cg/"*) echo "CI process is inside user manager; refusing restart"; exit 1 ;;
+              esac
+              sudo systemctl restart "$unit"
+            fi
+          else
+            sudo systemctl start "$unit"
+          fi
+          # The actual daemon capability check in Python remains mandatory.
+          test -S "/run/user/$(id -u)/bus"
           cg="$(systemctl show -p ControlGroup --value "$unit")"
           test -n "$cg"
           systemctl show -p Delegate -p ControlGroup "$unit"
