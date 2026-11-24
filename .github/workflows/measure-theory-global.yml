@@ -1,0 +1,27 @@
+name: Measure theory global regression gate
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/measure_theory/**"
+      - "books/pl/measure_theory.tex"
+      - "tools/tests/test_measure_theory*.py"
+      - ".github/workflows/measure-theory-global.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: measure-theory-global-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run all persistent measure theory regression suites
+        run: python -m unittest discover -s tools/tests -p 'test_measure_theory*.py' -v
