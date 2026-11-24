@@ -788,3 +788,25 @@ class RuntimeReportFileTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 write_success_report(path, report, expected_sha=fixture.sha)
             self.assertFalse(path.exists())
+
+
+    def test_report_reader_rejects_symlink_and_fifo(self):
+        import os
+        import sys
+        import tempfile
+        from pathlib import Path
+        from scripts.lean_rootless_ci_probe import read_success_report, write_success_report
+        if not sys.platform.startswith("linux"):
+            self.skipTest("Linux CI report file safety")
+        fixture = RuntimeReportTests()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            valid = root / "valid.json"
+            write_success_report(valid, fixture.report(), expected_sha=fixture.sha)
+            link = root / "link.json"
+            link.symlink_to(valid)
+            fifo = root / "fifo.json"
+            os.mkfifo(fifo)
+            for path in (link, fifo, root):
+                with self.subTest(path=path), self.assertRaises((OSError, ValueError)):
+                    read_success_report(path, expected_sha=fixture.sha)
