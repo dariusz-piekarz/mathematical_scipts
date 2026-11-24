@@ -96,5 +96,32 @@ class Chapter16(unittest.TestCase):
                     derivative = a*b/3-c*b/6
                     self.assertEqual(J(a+b)-J(a)-derivative,b*b/6)
 
+
+    def test_FA16_PROBABILITY_EXTREME_01(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\ref{thm:krein-milman}", r"\ref{cor:bauer9}",
+            r"\ref{cor:alaoglu-norm}", r"\mu(K\setminus S)=0",
+            r"\mu_B(B)=1", r"\mu_{K\setminus B}(B)=0",
+        ):
+            self.assertIn(fragment, source)
+        # All probability vectors on three atoms with denominator 8.
+        for i in range(9):
+            for j in range(9-i):
+                p = (F(i,8), F(j,8), F(8-i-j,8))
+                if max(p) == 1:
+                    self.assertEqual(sum(v != 0 for v in p), 1)
+                    continue
+                k = next(k for k,v in enumerate(p) if 0 < v < 1)
+                t = p[k]
+                q = tuple(F(int(l == k)) for l in range(3))
+                r = tuple(F(0) if l == k else p[l]/(1-t) for l in range(3))
+                self.assertEqual(sum(q), 1)
+                self.assertEqual(sum(r), 1)
+                self.assertNotEqual(q,r)
+                self.assertEqual(tuple(t*a+(1-t)*b for a,b in zip(q,r)),p)
+                phi = (F(-2),F(1),F(4))
+                self.assertLessEqual(sum(a*b for a,b in zip(phi,p)),max(phi))
+
 if __name__ == "__main__":
     unittest.main()
