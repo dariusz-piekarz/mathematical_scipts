@@ -93,5 +93,41 @@ class MeasureTheoryGlobal(unittest.TestCase):
                 print("MTG TITLE COLLISION",kind,title,locations)
         self.assertGreater(len(titles),300)
 
+
+    def test_mtg_006_complete_index(self):
+        sources=corpus()
+        kinds={"definicja":"Definicje","twierdzenie":"Twierdzenia",
+               "lemat":"Lematy","wniosek":"Wnioski"}
+        expected={}
+        for p,s in sources.items():
+            if not re.match(r"\d{2}-",p.name):
+                continue
+            for m in re.finditer(r"\\begin\{(definicja|twierdzenie|lemat|wniosek)\}(?:\[([^\]]*)\])?([\s\S]*?)\\end\{\1\}",s):
+                kind,title,body=m.groups()
+                label=re.search(r"\\label\{([^}]+)\}",body)
+                self.assertIsNotNone(label,(p.name,title))
+                self.assertNotIn(label.group(1),expected)
+                expected[label.group(1)]=(kinds[kind]," ".join((title or "").split()))
+        index=next(s for p,s in sources.items() if p.name=="indeks_definicji_i_twierdzen.tex")
+        actual={}
+        section=None
+        for line in index.splitlines():
+            h=re.match(r"\\section\*\{([^}]+)\}",line)
+            if h:
+                section=h.group(1)
+            m=re.match(r"\\hyperref\[([^\]]+)\]\{(.*?)\}\s*&\s*\\ref\*\{([^}]+)\}\s*&\s*\\pageref\*\{([^}]+)\}",line)
+            if m:
+                lab,title,num,page=m.groups()
+                self.assertEqual((lab,lab),(num,page))
+                self.assertNotIn(lab,actual)
+                actual[lab]=(section," ".join(title.split()))
+        self.assertEqual(set(expected),set(actual),
+                         (sorted(set(expected)-set(actual)),sorted(set(actual)-set(expected))))
+        for lab,(kind,title) in expected.items():
+            self.assertEqual(actual[lab][0],kind,lab)
+            if title:
+                self.assertEqual(actual[lab][1],title,lab)
+        self.assertEqual(len(actual),495)
+
 if __name__ == "__main__":
     unittest.main()
