@@ -224,5 +224,55 @@ class Chapter25(unittest.TestCase):
             self.assertLessEqual((1+abs(y))**N,
                                  (1+abs(x))**N*(1+abs(x+y))**N)
 
+    def test_FA25_restriction_nonextension_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\supp(j\varphi)=\supp\varphi",
+            r"\langle R_U T,\varphi\rangle=\langle T,j\varphi\rangle",
+            r"=\sup_{\eta\in j(B)}|\langle T,\eta\rangle|",
+            r"(T|_U)|_V=T|_V",
+            r"\supp(T|_U)=U\cap\supp T",
+            r"\supp T\subseteq\Omega\setminus U",
+            r"\widetilde T|_U=T_f",
+            r"r_n=1/(10n^2)",
+            r"10^m n^{2m}",
+            r"1/x^2\ge(100/121)n^2\ge n^2/2",
+            r"\frac{e^{n^2/2}}{10n^2}",
+            r"e^{n^2/2}\ge (n^2/2)^{m+2}/(m+2)!",
+        ):
+            self.assertIn(fragment,s)
+        # Exact support and lower-bound certificates; not a
+        # numerical test of extendibility of distributions.
+        from fractions import Fraction as F
+        from math import factorial
+        for n in range(3,101):
+            r=F(1,10*n*n)
+            lo,hi=F(1,n)-r,F(1,n)+r
+            self.assertTrue(0<lo<hi<F(1,2))
+            for k in range(-10,11):
+                x=F(1,n)+r*F(k,10)
+                self.assertTrue(lo<=x<=hi)
+                self.assertGreaterEqual(1/(x*x),F(100*n*n,121))
+                self.assertGreaterEqual(F(100*n*n,121),F(n*n,2))
+            for m in range(9):
+                self.assertEqual(r**(-m),10**m*n**(2*m))
+                term=F(n*n,2)**(m+2)/factorial(m+2)
+                self.assertEqual(term/n**(2*m+2),F(n*n,2**(m+2)*factorial(m+2)))
+        # Restriction composition and support intersection for finite
+        # models of sums of Dirac masses at distinct points.
+        from itertools import product
+        points=range(5)
+        for weights in product((-1,0,1),repeat=5):
+            support={i for i in points if weights[i]!=0}
+            for mask in range(32):
+                U={i for i in points if mask>>i&1}
+                restricted={i:weights[i] for i in U if weights[i]}
+                self.assertEqual(set(restricted),U&support)
+                self.assertEqual(not restricted,support.isdisjoint(U))
+                for sub in (0,5,10,31):
+                    V={i for i in U if sub>>i&1}
+                    self.assertEqual({i:w for i,w in restricted.items() if i in V},
+                                     {i:weights[i] for i in V if weights[i]})
+
 if __name__ == "__main__":
     unittest.main()
