@@ -27,7 +27,7 @@ nie zawiera cyklu.
 
 \begin{definicja}[Minimalne drzewo i minimalny las rozpinający]
 \label{def:tg-mst}
-Jeżeli $G$ jest spójny, \emph{minimalnym drzewem
+Jeżeli $G$ jest niepusty i spójny, \emph{minimalnym drzewem
 rozpinającym} (MST, od \emph{minimum spanning tree})
 nazywamy drzewo rozpinające $T$ o najmniejszej
 możliwej wartości $w(E(T))$.
@@ -61,8 +61,10 @@ Algorytmy Prima i Kruskala są poprawne również dla wag
 ujemnych. Nie stosują warunku nieujemności używanego
 w algorytmie Dijkstry. Nie należy również mylić MSF
 z minimalnym podgrafem spójnym o dowolnej liczbie krawędzi:
-w obecności cykli ujemnych ten drugi problem miałby
-inne rozwiązania.
+ujemne wagi mogą sprawić, że dodanie krawędzi
+tworzącej cykl obniży koszt. Na przykład w trójkącie
+z trzema wagami $-1$ każde drzewo rozpinające ma koszt
+$-2$, a cały trójkąt jest spójny i ma koszt $-3$.
 \end{uwaga}
 
 \section{Własność przekroju i własność cyklu}
@@ -87,13 +89,17 @@ do tej samej składowej spójnej $G$, zatem
 dodanie $e$ do drzewa $T$ tej składowej
 tworzy dokładnie jeden cykl $C$.
 Ponieważ $e$ przecina podział $(S,V\setminus S)$,
-cykl $C$ musi przechodzić przez przekrój
-jeszcze przynajmniej raz. Wybierzmy
+ścieżka w $T$ łącząca końce $e$ zaczyna się po jednej
+stronie przekroju, a kończy po drugiej. Musi zatem
+zawierać co najmniej jedną krawędź przekroju. Wybierzmy
 $f\in C\cap\delta_G(S)$, $f\ne e$.
 Z założenia $w(e)\leq w(f)$.
-Zbiór $(T\setminus\{f\})\cup\{e\}$ jest lasem
-rozpinającym te same składowe i ma wagę nie większą
-od $T$. Minimalność $T$ wymusza równość kosztów.
+Usunięcie $f$ z jedynego cyklu w $T\cup\{e\}$
+nie niszczy spójności odpowiedniej składowej,
+gdyż końce $f$ nadal łączy pozostała część cyklu.
+Usuwa zarazem jedyny cykl. Zatem
+$(T\setminus\{f\})\cup\{e\}$ jest lasem rozpinającym
+te same składowe, o wadze $w(T)-w(f)+w(e)\leq w(T)$. Minimalność $T$ wymusza równość kosztów.
 Ponadto $f\notin F$, ponieważ przekrój nie
 zawiera krawędzi $F$. Otrzymany MSF zawiera
 $F\cup\{e\}$.
@@ -144,7 +150,9 @@ jest drzewem rozpinającym.
 Dla każdej krawędzi $e=\{u,v\}\notin T$
 oznaczmy przez $P_T(u,v)$
 jedyną drogę łączącą jej końce
-w odpowiednim drzewie lasu $T$.
+w odpowiednim drzewie lasu $T$; dla $e=\{u,v\}$
+piszemy również $P_T(e):=P_T(u,v)$.
+Maksimum jest określone, gdyż $u\ne v$.
 Wówczas:
 \begin{enumerate}[label=(\roman*)]
 \item $T$ jest minimalnym lasem
@@ -178,18 +186,22 @@ Nierówności są więc konieczne.
 
 Odwrotnie, przypuśćmy,
 że wszystkie nierówności zachodzą.
-Wybierzmy dowolny MSF $S$
-o maksymalnej możliwej liczbie
-krawędzi wspólnych z $T$.
+Spośród wszystkich MSF (jest ich skończenie wiele
+i istnieje co najmniej jeden) wybierzmy $S$
+maksymalizujący liczbę krawędzi wspólnych z $T$.
 Jeżeli $S\ne T$, wybierzmy
 $f\in T\setminus S$.
 Usunięcie $f$ z $T$ rozdziela
 jedno z jego drzew na dwie części,
-co określa przekrój $(U,V\setminus U)$.
-Dodanie $f$ do $S$ tworzy cykl,
-zawierający pewną krawędź
-$e\in S\setminus T$
-przecinającą ten przekrój.
+i niech $U$ będzie zbiorem wierzchołków jednej z nich.
+Wówczas $\delta_G(U)\cap T=\{f\}$: pozostałe drzewa
+lasu $T$ leżą poza $U$, a w drzewie zawierającym $f$
+żadna inna krawędź nie łączy rozdzielonych części.
+Końce $f$ są połączone w $S$, więc jedyna ścieżka
+między nimi w $S$ przecina ten przekrój pewną
+krawędzią $e$. Ponieważ $f\notin S$, mamy
+$e\in S\setminus T$. Dodanie $f$ tworzy cykl
+zawierający $e$.
 Droga $P_T(e)$ musi
 zawierać $f$, a więc
 $w(e)\geq\max_{g\in P_T(e)}w(g)\geq w(f)$.
@@ -353,7 +365,7 @@ cykl w $T_1$. Z wyboru $e$ i różności wag
 mamy $w(e)<w(f)$, więc
 $(T_2\setminus\{f\})\cup\{e\}$
 ma koszt mniejszy niż $T_2$, sprzeczność.
-Dla przeciwwskazania do implikacji odwrotnej
+Jako kontrprzykład do implikacji odwrotnej
 wystarczy graf będący drzewem o dwóch
 krawędziach o tej samej wadze: samo to drzewo
 jest jedynym MST.
@@ -452,9 +464,13 @@ i opcjonalnie skracamy ścieżkę,
 przypisując wszystkim odwiedzonym
 wierzchołkom tego samego korzenia.
 Przy łączeniu dwóch różnych klas
-korzeń klasy mniejszej zostaje
-dzieckiem korzenia klasy większej
-(\emph{union by size}).
+korzeń klasy o mniejszym rozmiarze zostaje
+dzieckiem korzenia klasy o większym rozmiarze
+(\emph{union by size}); przy równości rozmiarów
+wybieramy dowolny z dwóch korzeni. W nowym korzeniu
+zapisujemy sumę rozmiarów obu klas. Początkowo
+$\mathrm{parent}[v]=v$ oraz $\mathrm{size}[v]=1$.
+Korzeń rozpoznajemy po warunku $\mathrm{parent}[v]=v$.
 
 \begin{stwierdzenie}[Poprawność i koszt DSU]
 \label{prop:tg-mst-dsu}
@@ -481,7 +497,11 @@ dokładnie żądane klasy.
 Kompresja ścieżek nie
 zmienia korzenia żadnego
 wierzchołka, zatem nie
-zmienia podziału.
+zmienia podziału. Początkowe rozmiary są poprawne,
+a przy scalaniu rozłącznych klas ich suma jest
+rozmiarem nowej klasy. Kompresja nie zmienia
+liczby elementów w żadnej klasie. Dane o rozmiarach
+są więc poprawne w każdym korzeniu.
 
 Jeśli głębokość danego wierzchołka
 zwiększa się o jeden podczas
@@ -590,11 +610,12 @@ puste. Każda wybierana
 krawędź łączy $S$ z
 $V\setminus S$, więc
 nie tworzy cyklu.
-Ponieważ kopiec zawiera
-wszystkie dotąd odkryte
-krawędzie przecinające
-ten podział, po usunięciu
-wpisów nieaktualnych
+Każda krawędź przekroju została wstawiona do kopca
+przy odwiedzeniu jej końca należącego do $S$.
+Nie mogła zostać wcześniej usunięta: pobranie aktualnej
+krawędzi dołącza jej drugi koniec do $S$, a odrzucenie
+nieaktualnej wymaga, aby oba końce już należały do $S$.
+Zatem po usunięciu wpisów nieaktualnych
 najtańszy jego element
 jest najlżejszą krawędzią
 przekroju $\delta_G(S)$.
@@ -606,15 +627,16 @@ więc twierdzenie
 krawędzi zachowuje
 możliwość przedłużenia
 $F$ do MSF.
-Gdy kopiec jest pusty,
-z $S$ nie wychodzi żadna
-krawędź, więc $S$
-jest całą aktualną
-składową spójną $G$.
-Po odwiedzeniu wszystkich
-składowych otrzymujemy
-las rozpinający
-o minimalnym koszcie.
+Gdy kopiec jest pusty, z $S$ nie wychodzi żadna
+krawędź. Gdyby w tej samej składowej istniał
+wierzchołek poza $S$, ścieżka od $r$ do niego
+musiałaby przeciąć przekrój $\delta_G(S)$.
+Zatem $S$ jest całą aktualną składową spójną.
+Drzewo $F$ rozpina tę składową i zawiera się
+w pewnym MSF, więc jest minimalnym drzewem
+rozpinającym tej składowej. Stosując argument
+do każdej składowej, otrzymujemy MSF; dla grafu
+pustego wynikiem jest pusty las.
 \end{proof}
 
 \begin{stwierdzenie}[Złożoność Prima]
