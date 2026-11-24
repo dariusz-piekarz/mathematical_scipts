@@ -84,4 +84,22 @@ class Chapter16(TestCase):
             self.assertTrue(0<x<1)
             self.assertLess(x,F(1,n))
 
+    def test_power_positive_bounds(self):
+        for n in range(1,10):
+            for m in range(n+1):
+                for a in [F(1,3),F(1),F(2)]:
+                    t=a**n
+                    self.assertLessEqual(min(t,1),a**m)
+                    self.assertLessEqual(a**m,max(t,1))
+                    self.assertGreater(a**m,0)
+                    self.assertEqual(a**m*(1/a)**m,1)
+
+    def test_extension_holder_distant_pairs(self):
+        # f(x)=sqrt(x); exact square-root values at rational squares.
+        for p,q in [(F(0),F(4)),(F(1),F(7)),(F(2),F(20))]:
+            for n in range(1,21):
+                a,b=p+F(1,n),q+F(1,2*n)
+                self.assertLessEqual((a-b)**2,abs(a*a-b*b))
+            self.assertLessEqual((p-q)**2,abs(p*p-q*q))
+
 if __name__ == "__main__": main()
