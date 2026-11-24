@@ -1,0 +1,217 @@
+\chapter{Pochodna}
+\label{ma1:ch:derivative}
+
+Rachunek różniczkowy opisuje lokalne zachowanie funkcji za pomocą funkcji afinicznej. Rozpatrujemy funkcje rzeczywiste jednej zmiennej rzeczywistej. W tym rozdziale wszystkie reguły wyprowadzamy z definicji granicy, bez twierdzeń o wartości średniej.
+
+\section{Definicja i interpretacja geometryczna}
+\begin{definicja}
+\label{ma1:def:derivative}
+Niech $I\subseteq\R$ będzie przedziałem i $a\in\operatorname{int}I$. Funkcja $f:I\to\R$ jest różniczkowalna w $a$, jeśli istnieje skończona granica
+\[
+ f'(a)=\lim_{h\to0}\frac{f(a+h)-f(a)}h.
+\]
+Wartość tę nazywamy pochodną funkcji $f$ w $a$. Pochodne prawostronną $f'_+(a)$ i lewostronną $f'_-(a)$ definiujemy analogicznie, biorąc granice odpowiednio przy $h\to0^+$ i $h\to0^-$, o ile dziedzina zawiera odpowiedni jednostronny przedział przy $a$.
+\end{definicja}
+W punkcie wewnętrznym różniczkowalność jest równoważna istnieniu obu skończonych pochodnych jednostronnych i ich równości. Wynika to z kryterium granicy dwustronnej: dla zadanej dokładności wybieramy minimum promieni działających po obu stronach. Na końcach przedziału rozpatrujemy wyłącznie odpowiednią pochodną jednostronną. Granice niewłaściwe ilorazu różnicowego nie oznaczają różniczkowalności w powyższym sensie.
+
+Iloraz różnicowy jest współczynnikiem kierunkowym siecznej przechodzącej przez $(a,f(a))$ i $(a+h,f(a+h))$. Jeżeli istnieje skończona pochodna, współczynniki siecznych dążą do $f'(a)$; prostą
+$y=f(a)+f'(a)(x-a)$ nazywamy styczną do wykresu w tym punkcie.
+\begin{center}
+\begin{tikzpicture}[x=1.6cm,y=1.35cm,>=Stealth]
+ \draw[->] (-.15,0)--(2.55,0) node[right] {$x$};
+ \draw[->] (0,-.15)--(0,3.4) node[above] {$y$};
+ \draw[blue!65!black,thick,domain=0:2.35,samples=80] plot (\x,{.5*\x*\x+.35});
+ \draw[orange!85!black,thick] (.1,.35+.5+1.3*(.1-1))--(2.35,.35+.5+1.3*(2.35-1));
+ \draw[green!40!black,dashed,thick] (.25,.85+.25-1)--(2.4,.85+2.4-1);
+ \draw[gray,dotted] (1,0)--(1,.85)--(1.6,.85)--(1.6,1.63);
+ \draw[gray,dotted] (1.6,0)--(1.6,.85);
+ \fill (1,.85) circle (1.4pt); \fill (1.6,1.63) circle (1.4pt);
+ \node[below] at (1,0) {$a$}; \node[below] at (1.6,0) {$a+h$};
+ \node[below] at (1.3,.85) {$h$};
+ \node[right,font=\small] at (1.6,1.22) {$f(a+h)-f(a)$};
+ \node[green!40!black,above left,font=\small] at (2.35,2.2) {styczna};
+ \node[orange!85!black,above left,font=\small] at (2.25,2.475) {sieczna};
+\end{tikzpicture}
+
+\small Rysunek: sieczna i styczna dla $f(x)=x^2/2+0{,}35$, $a=1$, $h=0{,}6$.
+\end{center}
+\begin{przyklad}
+\label{ma1:ex:derivative-basic}
+Dla funkcji stałej iloraz różnicowy jest zerowy, dla $f(x)=mx+b$ wynosi $m$, a dla $f(x)=x^2$ mamy $(f(a+h)-f(a))/h=2a+h$, więc $f'(a)=2a$.
+\end{przyklad}
+
+\section{Przybliżenie liniowe i ciągłość}
+\begin{twierdzenie}
+\label{ma1:thm:linear-approximation}
+Funkcja $f:I\to\R$ jest różniczkowalna w punkcie wewnętrznym $a$ wtedy i tylko wtedy, gdy istnieje $L\in\R$ i funkcja $r$ określona dla dostatecznie małych $h$ takie, że
+\[
+ f(a+h)=f(a)+Lh+r(h),\qquad r(0)=0,\qquad
+ \lim_{h\to0}\frac{r(h)}h=0.
+\]
+Wtedy $L=f'(a)$ jest jednoznacznie wyznaczone. W szczególności różniczkowalność w $a$ implikuje ciągłość w $a$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli istnieje pochodna, przyjmujemy $L=f'(a)$ i $r(h)=f(a+h)-f(a)-Lh$. Dla $h\ne0$ iloraz $r(h)/h$ jest różnicą ilorazu różnicowego i $L$, więc dąży do zera. Odwrotnie, dzieląc tożsamość przez $h\ne0$, otrzymujemy iloraz różnicowy równy $L+r(h)/h$, zatem jego granicą jest $L$. Jednoznaczność wynika z jednoznaczności granicy. Ponieważ $r(h)=h(r(h)/h)\to0$ i $Lh\to0$, mamy $f(a+h)\to f(a)$.
+\end{proof}
+W zapisie $r(h)=o(h)$ przy $h\to0$ chodzi właśnie o granicę $r(h)/h\to0$. To samo rozumowanie działa po jednej stronie punktu.
+
+\begin{przyklad}
+\label{ma1:ex:nondifferentiability}
+Funkcja $|x|$ jest ciągła w zerze, ale $f'_+(0)=1$, $f'_-(0)=-1$. Funkcja $x\mapsto\sqrt[3]x$ jest ciągła w zerze, ale dla $h\ne0$ iloraz różnicowy wynosi $1/(\sqrt[3]h)^2$ i dąży do $+\infty$. W pierwszym przypadku powstają dwie różne styczne jednostronne, w drugim sieczne mają graniczną prostą pionową, lecz pochodna skończona nie istnieje.
+\end{przyklad}
+\begin{przyklad}
+\label{ma1:ex:oscillating-derivative-at-zero}
+Niech $g_\alpha(0)=0$, $g_\alpha(x)=|x|^\alpha\sin(1/x)$ dla $x\ne0$, gdzie $\alpha>0$ (por. przykład \ref{ma1:ex:damped-oscillations}). Funkcja jest różniczkowalna w zerze dokładnie wtedy, gdy $\alpha>1$, i wtedy $g_\alpha'(0)=0$.
+\end{przyklad}
+\begin{proof}
+Dla $h\ne0$ moduł ilorazu różnicowego jest nie większy niż $|h|^{\alpha-1}$. Gdy $\alpha>1$, prawa strona dąży do zera. Gdy $0<\alpha\le1$, bierzemy $u_n=1/(\pi/2+2n\pi)$ i $v_n=1/(3\pi/2+2n\pi)$. Ilorazy różnicowe w tych punktach wynoszą odpowiednio $u_n^{\alpha-1}$ i $-v_n^{\alpha-1}$. Dla $\alpha=1$ są to $1$ i $-1$, a dla $\alpha<1$ dążą do przeciwnych nieskończoności. Nie istnieje wspólna skończona granica.
+\end{proof}
+
+\section{Reguły różniczkowania}
+\begin{twierdzenie}
+\label{ma1:thm:derivative-algebra}
+Niech $f,g$ będą różniczkowalne w punkcie wewnętrznym $a$, a $\lambda,\mu\in\R$. Wówczas
+\begin{align*}
+ (\lambda f+\mu g)'(a)&=\lambda f'(a)+\mu g'(a),\\
+ (fg)'(a)&=f'(a)g(a)+f(a)g'(a),\\
+ (f/g)'(a)&=\frac{f'(a)g(a)-f(a)g'(a)}{g(a)^2}
+ \quad\text{jeżeli }g(a)\ne0.
+\end{align*}
+\end{twierdzenie}
+\begin{proof}
+Dla sumy rozdzielamy iloraz różnicowy na kombinację liniową ilorazów funkcji $f,g$ i przechodzimy do granicy. Dla iloczynu dodajemy i odejmujemy $f(a)g(a+h)$ w liczniku, otrzymując
+\[
+ \frac{f(a+h)g(a+h)-f(a)g(a)}h
+ =\frac{f(a+h)-f(a)}h g(a+h)
+ +f(a)\frac{g(a+h)-g(a)}h.
+\]
+Ponieważ $g(a+h)\to g(a)$ z ciągłości, granica jest podanym wzorem. Jeśli $g(a)\ne0$, z ciągłości istnieje otoczenie $a$, w którym $|g(x)-g(a)|<|g(a)|/2$, a więc $g(x)\ne0$. Dla $h\ne0$ w tym otoczeniu
+\[
+ \frac{1/g(a+h)-1/g(a)}h
+ =-\frac{g(a+h)-g(a)}{h\,g(a+h)g(a)}
+ \longrightarrow-\frac{g'(a)}{g(a)^2}.
+\]
+Stosujemy regułę iloczynu do $f\cdot(1/g)$ i sprowadzamy do wspólnego mianownika.
+\end{proof}
+\begin{wniosek}
+\label{ma1:cor:integer-power-derivative}
+Dla całkowitego $n\ge1$ funkcja $x^n$ ma pochodną $nx^{n-1}$ na $\R$. Dla $n=0$ pochodna funkcji stałej $1$ jest zerowa; dla całkowitego $n<0$ wzór $nx^{n-1}$ obowiązuje na $\R\setminus\{0\}$. Wielomiany różniczkujemy wyraz po wyrazie, a funkcje wymierne w punktach, w których ich mianownik jest niezerowy.
+\end{wniosek}
+\begin{proof}
+Dla $n=1$ pochodna jest równa $1$. Jeśli wzór zachodzi dla $n\ge1$, reguła iloczynu daje $(x^{n+1})'=nx^{n-1}x+x^n=(n+1)x^n$, więc działa indukcja. Dla $n=-m<0$ stosujemy pochodną odwrotności multiplikatywnej do $x^m$ i otrzymujemy $-mx^{m-1}/x^{2m}=-mx^{-m-1}$. Wnioski dla wielomianów i funkcji wymiernych wynikają z reguł sumy i ilorazu.
+\end{proof}
+
+\section{Pochodna złożenia i funkcji odwrotnej}
+\begin{twierdzenie}[Reguła łańcuchowa]
+\label{ma1:thm:chain-rule}
+Niech $f:I\to\R$ będzie różniczkowalna w $a\in\operatorname{int}I$, a $g:J\to\R$ różniczkowalna w $b=f(a)\in\operatorname{int}J$. Wtedy złożenie $g\circ f$ jest określone w pewnym otoczeniu $a$ i
+$(g\circ f)'(a)=g'(f(a))f'(a)$.
+\end{twierdzenie}
+\begin{proof}
+Ciągłość $f$ zapewnia $f(a+h)\in J$ dla dostatecznie małych $h$. Oznaczmy $k=f(a+h)-b$, więc $k\to0$. Z twierdzenia \ref{ma1:thm:linear-approximation} możemy zapisać
+$g(b+k)-g(b)=g'(b)k+k\varepsilon(k)$,
+gdzie $\varepsilon(k)\to0$ przy $k\to0$ i przyjmujemy $\varepsilon(0)=0$. Dla $h\ne0$ otrzymujemy
+\[
+ \frac{g(f(a+h))-g(f(a))}{h}
+ =\bigl(g'(b)+\varepsilon(k)\bigr)
+   \frac{f(a+h)-f(a)}h.
+\]
+Tożsamość obowiązuje również, gdy $k=0$, ponieważ wtedy obie strony są zerowe. Pierwszy czynnik dąży do $g'(b)$, drugi do $f'(a)$, co kończy dowód.
+\end{proof}
+Nie wolno w ogólności dzielić przez $f(a+h)-f(a)$: funkcja wewnętrzna może przyjmować tę samą wartość dowolnie blisko $a$.
+
+\begin{twierdzenie}
+\label{ma1:thm:inverse-derivative}
+Niech $I$ będzie przedziałem, $f:I\to\R$ ciągła i ściśle monotoniczna, $a\in\operatorname{int}I$. Jeżeli istnieje $f'(a)\ne0$, to funkcja odwrotna $g:f(I)\to I$ jest różniczkowalna w $b=f(a)$ i $g'(b)=1/f'(a)$.
+\end{twierdzenie}
+\begin{proof}
+Z ciągłości i monotoniczności $f(I)$ jest przedziałem, a $b$ jest jego punktem wewnętrznym: wybieramy $u<a<v$ w $I$, wtedy $b$ leży ściśle między $f(u)$ i $f(v)$. Z twierdzenia \ref{ma1:thm:strict-monotone-inverse} funkcja $g$ jest ciągła. Dla $y\in f(I)\setminus\{b\}$ kładziemy $x=g(y)$; z iniektywności $x\ne a$, a przy $y\to b$ mamy $x\to a$. Wobec tego
+\[
+ \frac{g(y)-g(b)}{y-b}
+ =\frac{x-a}{f(x)-f(a)}
+ =\left(\frac{f(x)-f(a)}{x-a}\right)^{-1}
+ \longrightarrow\frac1{f'(a)}.
+\]
+Przejście do odwrotności jest uprawnione, ponieważ granica mianownika jest niezerowa.
+\end{proof}
+Jeśli $f'(a)=0$, powyższy wzór nie określa skończonej liczby. Przykład $f(x)=x^3$ i $g(x)=\sqrt[3]x$ pokazuje, że odwrotność nie musi być różniczkowalna w $f(a)$.
+
+\section{Pochodne funkcji elementarnych}
+Wykorzystujemy konstrukcje oraz granice z rozdziału \ref{ma1:ch:elementary-functions}, w szczególności twierdzenie \ref{ma1:thm:elementary-limits}.
+\begin{twierdzenie}
+\label{ma1:thm:exp-log-derivatives}
+Dla $x\in\R$ mamy $(\exp x)'=\exp x$. Dla $x>0$ zachodzi $(\log x)'=1/x$. Dla $a>0$ mamy $(a^x)'=a^x\log a$, a dla $x>0$, $\alpha\in\R$,
+$(x^\alpha)'=\alpha x^{\alpha-1}$. Jeżeli $a>0$, $a\ne1$, to $(\log_a x)'=1/(x\log a)$ dla $x>0$.
+\end{twierdzenie}
+\begin{proof}
+Prawo wykładnicze daje
+$(\exp(x+h)-\exp x)/h=\exp x(\exp h-1)/h\to\exp x$.
+Pochodna jest dodatnia, więc z twierdzenia \ref{ma1:thm:inverse-derivative} zastosowanego do $\exp$ i $a_0=\log x$ otrzymujemy $(\log x)'=1/\exp(\log x)=1/x$.
+Z definicji $a^x=\exp(x\log a)$ i reguły łańcuchowej mamy pochodną $\exp(x\log a)\log a$. Dla $x^\alpha=\exp(\alpha\log x)$ reguła łańcuchowa daje $\exp(\alpha\log x)\alpha/x=\alpha x^{\alpha-1}$. Wreszcie $\log_a x=\log x/\log a$, gdzie stały mianownik jest niezerowy.
+\end{proof}
+Dla $\alpha>0$ funkcja $x^\alpha$ z wartością $0$ w zerze ma prawostronny iloraz różnicowy $h^{\alpha-1}$ dla $h>0$. Jej pochodna prawostronna w zerze wynosi $0$ dla $\alpha>1$, $1$ dla $\alpha=1$, a dla $0<\alpha<1$ nie istnieje jako liczba skończona.
+
+\begin{twierdzenie}
+\label{ma1:thm:trig-derivatives}
+Na $\R$ zachodzą $(\sin x)'=\cos x$, $(\cos x)'=-\sin x$. Na odpowiednich dziedzinach
+$(\tan x)'=1/\cos^2x$ oraz $(\cot x)'=-1/\sin^2x$.
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia \ref{ma1:thm:elementary-limits} mamy $\sin h/h\to1$ oraz $(\cos h-1)/h=-h(1-\cos h)/h^2\to0$. Wzory dodawania argumentów dają
+\begin{align*}
+ \frac{\sin(x+h)-\sin x}{h}
+ &=\sin x\frac{\cos h-1}h+\cos x\frac{\sin h}h,\\
+ \frac{\cos(x+h)-\cos x}{h}
+ &=\cos x\frac{\cos h-1}h-\sin x\frac{\sin h}h.
+\end{align*}
+Przejście do granicy dowodzi dwóch pierwszych wzorów. Reguła ilorazu i tożsamość $\sin^2x+\cos^2x=1$ dają
+$(\tan x)'=(\cos^2x+\sin^2x)/\cos^2x$ oraz
+$(\cot x)'=(-\sin^2x-\cos^2x)/\sin^2x$.
+\end{proof}
+\begin{twierdzenie}
+\label{ma1:thm:inverse-trig-derivatives}
+Dla $|x|<1$ zachodzą
+$(\arcsin x)'=1/\sqrt{1-x^2}$ oraz
+$(\arccos x)'=-1/\sqrt{1-x^2}$.
+Dla $x\in\R$ mamy $(\arctan x)'=1/(1+x^2)$ oraz
+$(\operatorname{arccot}x)'=-1/(1+x^2)$.
+\end{twierdzenie}
+\begin{proof}
+Dla $|x|<1$ punkt $t=\arcsin x$ należy do $(-\pi/2,\pi/2)$, więc $\cos t>0$ i $\cos t=\sqrt{1-x^2}$. Twierdzenie o pochodnej odwrotności daje pierwszy wzór. Dla $t=\arccos x\in(0,\pi)$ mamy $\sin t>0$ i $\sin t=\sqrt{1-x^2}$; pochodna cosinusa jest równa $-\sin t$. Dla $t=\arctan x$ mamy $\cos t\ne0$ i $1/\cos^2t=1+\tan^2t=1+x^2$, więc po odwróceniu otrzymujemy trzeci wzór. Ostatni wynika z $\operatorname{arccot}x=\pi/2-\arctan x$.
+\end{proof}
+Na końcach $[-1,1]$ pochodne jednostronne $\arcsin$ i $\arccos$ nie istnieją jako liczby skończone. Istotnie, dla $x\to1^-$ i $t=\arcsin x\to\pi/2$ iloraz $(t-\pi/2)/(x-1)$ jest odwrotnością ilorazu różnicowego sinusa w $\pi/2$, który jest dodatni i dąży do zera. Daje to granicę $+\infty$. Nieparzystość $\arcsin$ daje ten sam wynik przy $-1$ z prawej, a tożsamość $\arccos x=\pi/2-\arcsin x$ daje w obu przypadkach $-\infty$.
+
+\begin{twierdzenie}
+\label{ma1:thm:hyperbolic-derivatives}
+Na $\R$ zachodzą $(\sinh x)'=\cosh x$, $(\cosh x)'=\sinh x$ i $(\tanh x)'=1/\cosh^2x$. Dla $x\ne0$ mamy $(\coth x)'=-1/\sinh^2x$. Dla funkcji odwrotnych:
+\begin{align*}
+ (\operatorname{arsinh}x)'&=1/\sqrt{1+x^2},&&x\in\R,\\
+ (\operatorname{arcosh}x)'&=1/\sqrt{x^2-1},&&x>1,\\
+ (\operatorname{artanh}x)'&=1/(1-x^2),&&|x|<1,\\
+ (\operatorname{arcoth}x)'&=1/(1-x^2),&&|x|>1.
+\end{align*}
+\end{twierdzenie}
+\begin{proof}
+Różniczkując definicje $\sinh$ i $\cosh$ przez regułę sumy i łańcuchową, otrzymujemy dwa pierwsze wzory. Reguła ilorazu wraz z $\cosh^2x-\sinh^2x=1$ daje pochodne $\tanh$ i $\coth$.
+
+Dla $t=\operatorname{arsinh}x$ mamy $\cosh t=\sqrt{1+x^2}>0$. Dla $t=\operatorname{arcosh}x$ i $x>1$ mamy $t>0$ i $\sinh t=\sqrt{x^2-1}>0$. Twierdzenie o odwrotności daje dwa pierwsze wzory dla funkcji odwrotnych. Dla $t=\operatorname{artanh}x$ zachodzi $1/\cosh^2t=1-\tanh^2t=1-x^2>0$. Dla $|x|>1$ stosujemy twierdzenie osobno na odpowiednim przedziale $(0,+\infty)$ lub $(-\infty,0)$, gdzie $t=\operatorname{arcoth}x$ i $-1/\sinh^2t=1-\coth^2t=1-x^2<0$. Odwrócenie tych niezerowych pochodnych daje ostatnie dwa wzory.
+\end{proof}
+W punkcie $1$ funkcja $\operatorname{arcosh}$ ma nieskończony prawostronny iloraz różnicowy: dla $x\to1^+$, $t=\operatorname{arcosh}x\to0^+$, iloraz $t/(x-1)$ jest odwrotnością $(\cosh t-1)/t>0$, dążącego do $\sinh0=0$.
+
+\section{Przykłady i pochodna jako funkcja}
+\begin{przyklad}
+\label{ma1:ex:derivative-composition}
+Dla $x>0$ funkcja $f(x)=x^x=\exp(x\log x)$ ma pochodną
+$f'(x)=x^x(\log x+1)$: najpierw różniczkujemy $x\log x$ regułą iloczynu, a następnie stosujemy regułę łańcuchową. Funkcja $g(x)=\log(1+x^2)$ jest różniczkowalna na całej $\R$, ponieważ $1+x^2>0$, i $g'(x)=2x/(1+x^2)$.
+\end{przyklad}
+Jeżeli $f$ jest różniczkowalna w każdym punkcie otwartego przedziału $I$, wartości $f'(x)$ określają nową funkcję $f':I\to\R$. Jej ciągłość jest dodatkową własnością.
+\begin{przyklad}
+\label{ma1:ex:discontinuous-derivative}
+Funkcja $f(0)=0$, $f(x)=x^2\sin(1/x)$ dla $x\ne0$ jest różniczkowalna na $\R$, ale jej pochodna nie jest ciągła w zerze.
+\end{przyklad}
+\begin{proof}
+Z przykładu \ref{ma1:ex:oscillating-derivative-at-zero} mamy $f'(0)=0$. Dla $x\ne0$ reguły iloczynu i łańcuchowa dają
+$f'(x)=2x\sin(1/x)-\cos(1/x)$.
+Dla $x_n=1/(2n\pi)$ mamy $f'(x_n)=-1$, a dla $y_n=1/((2n+1)\pi)$ mamy $f'(y_n)=1$, choć oba ciągi dążą do zera. Pochodna nie ma więc granicy w zerze.
+\end{proof}
+Dalsze własności pochodnych, w szczególności ich związek z monotonicznością i własnością Darboux, wymagają osobnych twierdzeń. Nie zakładamy ich na podstawie samych reguł różniczkowania.
