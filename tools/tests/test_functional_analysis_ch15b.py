@@ -653,5 +653,39 @@ class TestChapter15B(unittest.TestCase):
                              Fraction(1,2**n)*(1-Fraction(1,2**14)))
             self.assertEqual(Fraction(1,2**n)*2**n, 1)
 
+
+    def test_audit39_weak_fubini_and_completion_contracts(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            "S\\setminus(N_S\\cup N_y)",
+            "\\mu(N_S)=\\nu(N_T)=0",
+            "D_C(F_B)(x')=\\int_C x'(F_B(s))",
+            "\\{s:\\|v_i(s)-v_j(s)\\|\\le 1/k\\}",
+            "w_n\\chi_{\\{\\|w_n\\|\\le 2\\|w\\|\\}}",
+            "0=\\int_A v\\,\\mathrm d\\mu\\ge\\mu(A)/n",
+        ):
+            self.assertIn(fragment, source)
+
+    def test_audit39_rectangular_integrals_with_null_sections(self):
+        # Weighted atoms, including null atoms in both factors.
+        # Alter the representative arbitrarily on null rows/columns.
+        mu = [Fraction(1,3), Fraction(2,3), Fraction(0)]
+        nu = [Fraction(1,4), Fraction(3,4), Fraction(0)]
+        f = [[(i+j, i-2*j) for j in range(3)] for i in range(3)]
+        g = [[f[i][j] if mu[i]*nu[j] else (100+i, -200-j)
+              for j in range(3)] for i in range(3)]
+        for mask_a in range(8):
+            for mask_b in range(8):
+                A = [i for i in range(3) if mask_a & (1<<i)]
+                B = [j for j in range(3) if mask_b & (1<<j)]
+                for k in range(2):
+                    direct = sum(mu[i]*nu[j]*f[i][j][k] for i in A for j in B)
+                    self.assertEqual(direct, sum(mu[i]*nu[j]*g[i][j][k]
+                                                  for i in A for j in B))
+                    self.assertEqual(direct, sum(mu[i]*sum(nu[j]*g[i][j][k]
+                                                  for j in B) for i in A))
+                    self.assertEqual(direct, sum(nu[j]*sum(mu[i]*g[i][j][k]
+                                                  for i in A) for j in B))
+
 if __name__ == "__main__":
     unittest.main()
