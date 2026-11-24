@@ -90,7 +90,9 @@ zapewniające globalny przepływ; później będziemy je osłabiać.
 Niech $b\colon[0,T]\times\R^d\to\R^d$ będzie klasy $C^1$
 i niech istnieje $M>0$ takie, że
 $\|D_xb(t,x)\|\leq M$ i $|b(t,x)|\leq M(1+|x|)$
-dla wszystkich $(t,x)$. Niech $c,f\in C^1([0,T]\times\R^d)$
+dla wszystkich $(t,x)\in[0,T]\times\R^d$, gdzie
+$\|A\|=\sup_{|v|=1}|Av|$ oznacza normę operatorową
+indukowaną przez normę euklidesową. Niech $c,f\in C^1([0,T]\times\R^d)$
 oraz $u_0\in C^1(\R^d)$. Wówczas istnieje dokładnie jedno
 rozwiązanie $u\in C^1([0,T]\times\R^d)$ zagadnienia
 \eqref{eq:pde2-linear} z $u(0,x)=u_0(x)$.
@@ -224,17 +226,37 @@ $J(t;\xi)=\exp\!\bigl(\int_0^t
 (\diver_x b)(s,X(s;\xi))\,\mathrm ds\bigr)>0$.
 \end{stwierdzenie}
 \begin{proof}
-Różniczkując \eqref{eq:pde2-flow-ode} względem $\xi$,
-otrzymujemy dla $A(t)=D_\xi X(t;\xi)$
-$\dot A(t)=D_xb(t,X(t;\xi))A(t)$ i $A(0)=I$.
+Ustalmy $\xi\in\R^d$ i oznaczmy
+$A(t)=D_\xi X(t;\xi)$. Zapiszmy równanie
+\eqref{eq:pde2-flow-ode} w postaci całkowej:
+\[
+ X(t;\xi)=\xi+\int_0^t b(s,X(s;\xi))\,\mathrm d\lambda_1(s).
+\]
+Na iloczynie $[0,T]$ i dowolnego zwartego otoczenia $\xi$
+funkcja podcałkowa oraz jej pochodna względem $\xi$
+są ciągłe, a więc ograniczone. Można zatem różniczkować
+pod znakiem całki. Z reguły łańcuchowej wynika
+\[
+ A(t)=I_d+\int_0^t D_xb(s,X(s;\xi))A(s)\,\mathrm d\lambda_1(s),
+\]
+gdzie $I_d$ jest macierzą jednostkową rozmiaru $d$.
+Prawa strona jest klasy $C^1$ względem $t$, ponieważ
+funkcja podcałkowa jest ciągła. Twierdzenie o pochodnej
+całki o zmiennej górnej granicy daje
+$\dot A(t)=D_xb(t,X(t;\xi))A(t)$ oraz $A(0)=I_d$.
+W końcach przedziału pochodne rozumiemy jednostronnie.
 Macierz $A(t)$ jest odwracalna na mocy twierdzenia
 \ref{thm:pde2-linear}. Zatem wzór na pochodną wyznacznika
 daje $\frac{\mathrm d}{\mathrm dt}\det A
 =\det A\,\tr(A^{-1}\dot A)$.
 Cykliczność śladu i $\dot A=D_xb\,A$ prowadzą do
 $\tr(A^{-1}\dot A)=\tr(D_xb)=\diver_xb$.
-Równanie skalarne \eqref{eq:pde2-jacobian} rozwiązujemy
-przez całkowanie.
+Oznaczmy $h(t)=(\diver_xb)(t,X(t;\xi))$ oraz
+$H(t)=\int_0^t h(s)\,\mathrm d\lambda_1(s)$.
+Z równania \eqref{eq:pde2-jacobian} wynika
+$\frac{\mathrm d}{\mathrm dt}(e^{-H(t)}J(t;\xi))=0$.
+Ponieważ $J(0;\xi)=\det I_d=1$ oraz $H(0)=0$,
+otrzymujemy $J(t;\xi)=e^{H(t)}>0$.
 \end{proof}
 
 \begin{twierdzenie}[Transport gęstości i zachowanie masy]
@@ -260,15 +282,27 @@ Ponieważ $\diver_x(\rho b)=b\cdot\nabla\rho+
 (\diver_xb)\rho$, twierdzenie \ref{thm:pde2-linear}
 można zastosować z $c=\diver_xb$, $f=0$.
 Założenie $b\in C^2$ zapewnia, że $\diver_x b\in C^1$,
-więc wzór \eqref{eq:pde2-mass-flow} daje rozwiązanie
-klasy $C^1$. Można też bezpośrednio różniczkować
-iloczyn po trajektorii: z \eqref{eq:pde2-jacobian}
-wynika
+więc twierdzenie zapewnia istnienie i jednoznaczność
+rozwiązania klasy $C^1$. Wzdłuż charakterystyki zachodzi
+$\frac{\mathrm d}{\mathrm dt}\rho(t,X(t;\xi))
+=-(\diver_x b)(t,X(t;\xi))\rho(t,X(t;\xi))$.
+Po zastosowaniu reguły iloczynu i \eqref{eq:pde2-jacobian}
+otrzymujemy
 \[
  \frac{\mathrm d}{\mathrm dt}
  \bigl(\rho(t,X(t;\xi))J(t;\xi)\bigr)=0.
 \]
-Następnie stosujemy zmianę zmiennych $x=X(t;\xi)$.
+W chwili $t=0$ iloczyn wynosi $\rho_0(\xi)$,
+co dowodzi \eqref{eq:pde2-mass-flow}.
+Ponieważ $J(t;\xi)>0$, funkcja $\rho(t,X_t(\xi))$
+jest niezerowa wtedy i tylko wtedy, gdy $\rho_0(\xi)\ne0$.
+Homeomorfizm $X_t$ zachowuje domknięcia zbiorów,
+więc $\supp\rho(t,\cdot)=X_t(\supp\rho_0)$.
+Jest to zbiór zwarty jako ciągły obraz zbioru zwartego.
+Obie gęstości są ciągłe i mają zwarte nośniki,
+a zatem są całkowalne również wtedy, gdy zmieniają znak.
+Możemy więc zastosować twierdzenie o zmianie zmiennych
+dla dyfeomorfizmu $x=X_t(\xi)$.
 Dodatniość $J$ i \eqref{eq:pde2-mass-flow} dają
 \[
  \int_{\R^d}\rho(t,x)\,\mathrm d\lambda_d(x)
@@ -276,7 +310,6 @@ Dodatniość $J$ i \eqref{eq:pde2-mass-flow} dają
  \,\mathrm d\lambda_d(\xi)
  =\int_{\R^d}\rho_0(\xi)\,\mathrm d\lambda_d(\xi).
 \]
-Zwarty nośnik $\rho_0$ zapewnia, że całki są skończone.
 \end{proof}
 
 \begin{uwaga}[Warunki regularności]
@@ -310,10 +343,15 @@ Jeśli $\diver_xb=0$, to $J\equiv1$ i wszystkie wymienione
 normy $L^p$ są zachowane.
 \end{stwierdzenie}
 \begin{proof}
-Ponieważ każda wartość własna rzeczywistej macierzy
-$D_xb$ ma moduł co najwyżej $M$, mamy
-$|\tr D_xb|\le dM$ (można też użyć nierówności
-$|\tr A|\le d\|A\|$ bez odwoływania się do widma).
+Niech $(e_1,\ldots,e_d)$ będzie standardową bazą
+ortonormalną $\R^d$. Dla każdej rzeczywistej macierzy
+$A$ rozmiaru $d$, z nierówności Cauchy'ego--Schwarza,
+\[
+ |\tr A|\le\sum_{j=1}^d|\langle Ae_j,e_j\rangle|
+ \le\sum_{j=1}^d |Ae_j|\le d\|A\|.
+\]
+Stosując to oszacowanie do $A=D_xb(t,x)$, otrzymujemy
+$|(\diver_xb)(t,x)|\le dM$.
 Wzór~\eqref{eq:pde2-jacobian} i jego rozwiązanie dają
 pierwsze oszacowanie. Wzdłuż charakterystyk
 $u(t,X_t(\xi))=u_0(\xi)$. Ponieważ $X_t$ jest
@@ -323,9 +361,18 @@ dyfeomorfizmem, wzór na zmianę zmiennych daje
  =\int_{\R^d}|u_0(\xi)|^pJ(t;\xi)\,
    \mathrm d\lambda_d(\xi).
 \]
-Podstawiamy ograniczenia na $J$ i wyciągamy pierwiastek
-stopnia $p$. Dla normy supremum korzystamy z tego,
-że $X_t$ jest bijekcją. W przypadku zerowej dywergencji
+Z oszacowań na $J$ wynika
+$e^{-dMt}\|u_0\|_p^p\le\|u(t,\cdot)\|_p^p
+\le e^{dMt}\|u_0\|_p^p$. W szczególności całka jest
+skończona; wyciągnięcie pierwiastka stopnia $p$
+daje \eqref{eq:pde-v31-transport-lp}.
+Dla ograniczonej funkcji ciągłej supremum modułu jest
+równe supremum istotnemu względem miary Lebesgue'a:
+jeśli liczba jest mniejsza od supremum, zbiór punktów,
+w których moduł ją przekracza, jest niepusty i otwarty,
+a więc ma dodatnią miarę. Ponieważ $X_t$ jest bijekcją,
+$\sup_x|u(t,x)|=\sup_\xi|u_0(\xi)|$; stąd wynika równość
+norm $L^\infty$. W przypadku zerowej dywergencji
 równanie na $J$ ma rozwiązanie stałe równe $1$.
 \end{proof}
 
