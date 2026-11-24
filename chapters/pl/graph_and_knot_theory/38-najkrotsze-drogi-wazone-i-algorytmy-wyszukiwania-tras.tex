@@ -496,11 +496,18 @@ $w_h$ jest równy
 $g(v)+h(v)-h(s)$,
 czyli kluczowi A*
 pomniejszonemu o stałą $h(s)$.
-Algorytmy wybierają więc
-wierzchołki w tej samej
-kolejności, a poprawność
-wynika z twierdzenia
-\ref{thm:tg-weighted-dijkstra}.
+Również relaksacje są równoważne: jeśli
+$d_h(u)=g(u)+h(u)-h(s)$, to
+$d_h(u)+w_h(u,v)=g(u)+w(u,v)+h(v)-h(s)$.
+Zatem poprawa etykiety $d_h(v)$ zachodzi dokładnie
+wtedy, gdy poprawia się $g(v)$. Początkowe etykiety
+spełniają tę samą zależność. Przy jednakowej regule
+rozstrzygania remisów algorytmy wybierają więc
+wierzchołki w tej samej kolejności. Po ustaleniu $t$
+twierdzenie \ref{thm:tg-weighted-dijkstra} daje
+$d_h(t)=\delta(s,t)-h(s)$, a zatem $g(t)=\delta(s,t)$.
+Jeżeli kolejka opróżni się wcześniej, $t$ jest nieosiągalny,
+ponieważ redukcja nie zmienia zbioru łuków.
 \end{proof}
 
 \begin{uwaga}[Ponowne otwieranie]
@@ -754,27 +761,43 @@ skończone, koszt
 $d_F(v)+d_B(v)$
 jest górnym ograniczeniem
 odległości od $s$ do $t$.
-Przechowujemy minimum
-tych kandydatów i
-kandydatów przez łączące
-fronty łuki, oznaczone $\mu$.
+Początkowo $d_F(s)=d_B(t)=0$, pozostałe etykiety
+mają wartość $+\infty$. Ustawiamy $\mu=0$ dla $s=t$,
+a w przeciwnym razie $\mu=+\infty$.
+Przy każdej zmianie etykiety w dowolnym kierunku
+aktualizujemy $\mu$ minimum z sumą $d_F(v)+d_B(v)$
+dla zmienionego wierzchołka $v$. W szczególności przy
+przeglądaniu łuku $u\to v$ w przód lub wstecz uwzględniamy
+kandydata $d_F(u)+w(u,v)+d_B(v)$: relaksacja zapewnia,
+że odpowiednia suma etykiet po tej operacji nie jest
+większa od kosztu kandydata.
+W każdym kroku wykonujemy pełne przetworzenie jednego
+wierzchołka w jednym z kierunków, pomijając nieaktualne
+wpisy oraz wpisy wierzchołków już ustalonych.
+Minimum pustej kolejki oznaczamy przez $+\infty$.
 
 \begin{stwierdzenie}[Kryterium zakończenia]
 \label{prop:tg-weighted-bidir}
-Dla grafu o nieujemnych
-wagach, gdy minima aktualnych
-kluczy w dwóch kolejkach
-są równe $k_F,k_B$,
+Niech $D=(V,A)$ będzie skończonym grafem skierowanym
+o nieujemnych wagach i $s,t\in V$.
+Dla opisanego algorytmu, gdy po pełnym przetworzeniu
+wierzchołka (lub po inicjalizacji) minima aktualnych
+kluczy w dwóch kolejkach są równe $k_F,k_B$,
 warunek $k_F+k_B\geq\mu$
 pozwala bezpiecznie
 zakończyć wyszukiwanie
-i zwrócić $\mu$.
+i zwrócić $\mu=\delta(s,t)$ (wartość $+\infty$
+oznacza brak spaceru). Warunek obejmuje również
+opróżnienie którejkolwiek kolejki.
 Samo pierwsze spotkanie
 frontów nie jest wystarczające.
 \end{stwierdzenie}
 \begin{proof}
 Każda skończona wartość $\mu$ jest kosztem rzeczywistego
 spaceru z $s$ do $t$, więc $\delta(s,t)\leq\mu$.
+Jeżeli $t$ jest nieosiągalny z $s$, żadna taka wartość
+nie może powstać i $\mu=+\infty$. Dalej rozważamy
+przypadek skończonej odległości.
 Przypuśćmy, że $\delta(s,t)<\mu$ i wybierzmy
 ścieżkę najkrótszą $P=(v_0=s,\ldots,v_r=t)$.
 Niech $S_F$ i $S_B$ oznaczają zbiory wierzchołków
@@ -837,10 +860,14 @@ o wadze $w(u,v)+w(v,z)$,
 jeśli nie ma jeszcze
 krawędzi o wadze
 nie większej.
-Każdy skrót pamięta,
-jaką parę krawędzi
-zastąpił, co pozwala
-odtworzyć trasę.
+Każdy skrót pamięta dwie konkretne krawędzie,
+które zastąpił, wraz z ich wagami w chwili utworzenia.
+Jeżeli później powstaje tańszy skrót między tymi
+samymi końcami, wcześniejszego zapisu nie usuwamy
+z danych służących do rozwijania skrótów.
+Odwołania skrótu prowadzą wyłącznie do krawędzi
+oryginalnych lub wcześniej utworzonych skrótów;
+rekurencyjne rozwijanie kończy się więc i zachowuje wagę.
 
 \begin{lemat}[Zachowanie odległości]
 \label{lem:tg-weighted-ch}
@@ -854,18 +881,21 @@ w grafie oryginalnym.
 \end{lemat}
 \begin{proof}
 Indukcja po $k$.
-Po usunięciu $v$
-każdy fragment
-$u-v-z$ można zastąpić
-skrótem o nie większej
-wadze, więc odległości
-nie wzrastają.
-Każdy nowy skrót
-odpowiada zarazem
-spacerowi w poprzednim
-grafie tej samej wagi,
-więc odległości
-nie maleją.
+Dla dwóch różnych pozostałych wierzchołków o skończonej
+odległości wybieramy najkrótszą ścieżkę w grafie aktywnym
+przed kontrakcją. Dodatniość wag pozwala wybrać ją prostą.
+Jeśli zawiera $v$, to $v$ jest wierzchołkiem wewnętrznym
+i występuje dokładnie raz, a jego sąsiedzi $u,z$ są różni.
+Fragment $u-v-z$ zastępujemy skrótem lub istniejącą
+krawędzią o nie większej wadze. Jeśli ścieżka pomija $v$,
+pozostaje dostępna. Odległość po kontrakcji nie wzrasta.
+Odwrotnie, każdą nową krawędź można zastąpić spacerem
+w poprzednim grafie o tej samej wadze. Każdy spacer
+po kontrakcji ma więc odpowiednik przed kontrakcją
+o tej samej wadze. Odległość nie maleje; argument ten
+wyklucza również powstanie połączenia między wcześniej
+nieosiągalnymi wierzchołkami. Dla równych końców obie
+odległości są zerowe.
 \end{proof}
 
 W grafie rozszerzonym
