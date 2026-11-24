@@ -253,6 +253,67 @@ class LeanCatalogTests(unittest.TestCase):
         self.item["source_document_path"] = "chapters/pl/logic/01.tex"
         return tex
 
+    def test_l143_chapter_report_scopes_catalog_work(self):
+        self.item.update(source_document_sha256=self.digest,
+                         statement_status="approved")
+        self.set_l14_canonical_file()
+        other_source = SOURCE.replace("t:x", "t:y")
+        other_digest = hashlib.sha256(other_source.encode("utf-8")).hexdigest()
+        other_path = "chapters/pl/logic/02.tex"
+        (Path(self.temp.name) / other_path).write_text(other_source, encoding="utf-8")
+        other = dict(self.item, id="t-other", source_module="LST-02",
+                     source_label="t:y", source_document_sha256=other_digest,
+                     source_document_path=other_path)
+        (self.root / "manifest.json").write_text(
+            json.dumps({"schema_version": 1, "items": [other, self.item]}),
+            encoding="utf-8")
+        self.con.execute("INSERT INTO documents VALUES(?,?,?,?)",
+                         ("LST-02", "Other", other_digest, other_source))
+        self.con.execute("INSERT INTO entities VALUES(?,?,?,?,?,?,?,?)",
+                         ("theorem-other", "LST-02", "theorem", "Other",
+                          1, 3, 0, len(other_source)))
+        self.con.execute("INSERT INTO labels VALUES(?,?,?)",
+                         ("t:y", "theorem-other", other_source.index("\\label{")))
+        self.con.commit()
+
+        provenance = lean_catalog.lean_source_provenance
+        with patch.object(provenance, "owner_status",
+                          wraps=provenance.owner_status) as owners, \
+             patch.object(lean_catalog.lean, "_source_file_current",
+                          wraps=lean_catalog.lean._source_file_current) as files:
+            report = lean_chapter_report.chapter_report(
+                self.con, "LST-01", lean_root=self.root)
+        self.assertEqual((report["total"], report["ready"]), (1, 1))
+        self.assertEqual(report["items"][0]["source_entity_id"], "theorem-one")
+        self.assertFalse(report["certificate"])
+        # Preserve all three target owner checks and two physical TeX checks.
+        # No work on the unrelated chapter should be necessary.
+        self.assertEqual([call.args[1] for call in owners.call_args_list],
+                         ["LST-01"] * 3)
+        self.assertEqual([call.args[0]["source_module"] for call in files.call_args_list],
+                         ["LST-01"] * 2)
+
+        # The public unfiltered catalogue still covers the entire registry.
+        full = lean_catalog.list_formalizations(self.con, lean_root=self.root)
+        self.assertEqual((full["total"], full["ready"]), (2, 2))
+        self.assertEqual(report["items"], [item for item in full["items"]
+                                           if item["source_module"] == "LST-01"])
+
+        # Global manifest limit and global label conflicts still apply.
+        with patch.object(lean_catalog, "MAX_ENTRIES", 1):
+            with self.assertRaises(HTTPException) as err:
+                lean_chapter_report.chapter_report(self.con, "LST-01",
+                                                   lean_root=self.root)
+            self.assertEqual(err.exception.status_code, 503)
+        self.con.execute("CREATE TABLE label_conflicts(name TEXT)")
+        self.con.execute("INSERT INTO label_conflicts VALUES(?)", ("t:x",))
+        self.con.commit()
+        conflict = lean_chapter_report.chapter_report(
+            self.con, "LST-01", lean_root=self.root)
+        self.assertEqual((conflict["ready"], conflict["stale"]), (0, 1))
+        self.assertEqual(conflict["items"][0]["index_status"], "ambiguous_label")
+        self.assertFalse(conflict["certificate"])
+
     def test_l14_chapter_report_ready_is_not_compilation(self):
         self.item.update(source_document_sha256=self.digest,
                          statement_status="approved")
