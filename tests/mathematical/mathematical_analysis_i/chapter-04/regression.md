@@ -14,3 +14,4 @@ Testy skończone weryfikują rachunki i prawa zbiorów, nie istnienie ultrafiltr
 | MA1-04-010 | ma1:thm:standard-part | Istnienie przez supremum w R, ścisłe nierówności z obu stron i jednoznaczność | semantyczna + Python (oszacowanie jednoznaczności) |
 | MA1-04-011 | ma1:thm:standard-part-hom | Homomorfizm, monotoniczność nieostra, jądro, izomorfizm ilorazu | semantyczna + Python (rachunki) |
 | MA1-04-012 | ma1:thm:transfer, ma1:cor:elementary-embedding | Indukcja po termach i formułach, kwantyfikator egzystencjalny w obu kierunkach, wybór świadków, ograniczenia języka | semantyczna |
+| MA1-04-013 | ma1:thm:transfer | Każdy konstruktor termu, jawny zbiór E i świadkowie na E, brak aksjomatyzacji pierwszego rzędu zupełności i własności Archimedesa | semantyczna + Python (jedynie skończony model główny) |
