@@ -1,0 +1,9 @@
+# Rozdział 02 — audyt indywidualny 03
+
+2026-11-24. Zmiany źródła: c59eadb365ce0a24a244432dc54f3f211d545765 (blob 031a659871d0e29cf6d26c76920dec544de10dfe). Testy: c7f533c95de47f29f8004a6288ca21a8b512c1e6 (blob d9c78409ee0e75a447d988dc52b78fa47b3a3f80).
+
+Dodano jawne uzasadnienie tożsamości wektorów charakterystycznych dla różnicy symetrycznej oraz pełną równoważność przynależności do przestrzeni cykli i parzystości wszystkich stopni, z funkcjonałami liniowymi. W dowodzie bazy fundamentalnej użyto tej równoważności. Doprecyzowano dowód D_f∩E(T)={f} bez zbędnego argumentu cyklowego, przypadek grafu zerowego oraz sumę prostą przestrzeni cykli składowych przez rozszerzenie zerem i ograniczenie. Dodano wniosek o izomorfizmie ograniczenia na krawędzie spoza lasu rozpinającego oraz jawny wzór odwrotności; pełny dowód iniektywności i surjektywności, przypadki zerowe. Dodano etykiety i odsyłacze wewnętrzne.
+
+Rozszerzono istniejący test_graph_and_knot_foundations.py o trwałą enumerację grafów na 0–5 wierzchołkach, wszystkich podgrafów parzystych, lasów, lasów rozpinających, współrzędnych i cykli fundamentalnych oraz dualności przez niezależne wyszukiwanie drogi i osiągalność po usunięciu krawędzi. Oczekiwane liczby przypadków wyliczono niezależnie w JS: 1100 grafów, 40399 lasów, 8962 lasy rozpinające, 93986 wektorów dla poszczególnych wyborów lasu, 99636 par dualności. Wcześniejszy test JS dualności PASS (raport 73). Wynik wykonania nowego testu Python przez CI jeszcze niepotwierdzony. Poprzedni SHA 2be3a1b: terminologia success, inne przebiegi w toku przy odczycie.
+
+Status OTWARTY. Kolejny etap: sprawdzić logi nowych regresji, ponownie przeanalizować konstrukcję BFS i przypadki brzegowe, sprawdzić pełny PDF i rysunki. Nie rozpoczynać 03.
