@@ -18,3 +18,8 @@ Przegląd na kandydacie b13ee5d92af4f4fd4c57761eb530d60ca944cfc6: `loadLeanFragm
 - Wymagane testy Node: brak zgody, zaznaczenie zgody dla A i zmiana na B, spóźniony sukces i błąd A, podwójne kliknięcie, błędne flagi/SHA/identyfikator, odpowiedź 409, tekst zawierający HTML, wyzerowanie przy ponowieniu. Wymagane rzeczywiste Chromium + API na kanonicznym twierdzeniu LST-01: zgodność pakietu z wybranym źródłem, brak zmian kodu Lean, odróżnienie „przygotowano” od „wygenerowano”, brak POST do runnera, przejście do innego obiektu. Sprawdzić również brak gotowości runnera, brak istniejącej formalizacji i niepoprawny typ obiektu.
 
 Implementację oraz nową walidację 2+1 rozpocząć dopiero po rozliczeniu bieżącego podetapu. Żadna z powyższych kontroli UI nie jest jeszcze wykonana. Nie jest to niezależny odbiór L1.5.1.
+
+
+## Decyzja 24.11.2026 — silnik lokalny i opcjonalne adaptery zewnętrzne
+
+Użytkownik zatwierdził własny silnik translacji wspomagany opcjonalnie lokalną AI, a następnie rozszerzył plan o możliwość podłączenia zewnętrznego API (np. Codex, Claude). Tryb lokalny pozostaje domyślny i samodzielny; brak automatycznego fallbacku do chmury. Szczegóły i kolejność: [plan autoformalizacji](LEAN_LOCAL_AUTOFORMALIZATION_PLAN.md). Bieżący kontrakt offline oraz walidacja L1.5.2 pozostają nienaruszone. W lokalnym przygotowaniu koszt zewnętrzny wynosi 0; opcjonalne wywołania zewnętrzne otrzymają osobny kontrakt, zgodę i limity. Nie pobierać modeli, nie przesyłać źródeł ani nie uruchamiać kandydatów automatycznie.
