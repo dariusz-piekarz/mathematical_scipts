@@ -231,6 +231,30 @@ def test_negative_cycle_diagonal():
             count += 1
     return count
 
+def test_astar_zero_weight_frontier():
+    # TG38-ASTAR-02: zero arcs and all bounded integral admissible
+    # heuristics, including inconsistent ones and unreachable vertices.
+    graphs, queries = 0, 0
+    for n in range(1, 4):
+        arcs = [(u, v) for u in range(n) for v in range(n) if u != v]
+        for values in product((None, 0, 1, 3), repeat=len(arcs)):
+            graph = {v: {} for v in range(n)}
+            for (u, v), weight in zip(arcs, values):
+                if weight is not None:
+                    graph[u][v] = weight
+            expected = floyd_warshall(graph)
+            for t in graph:
+                admissible = [range(3 if expected[v][t] == inf
+                                    else min(2, expected[v][t]) + 1)
+                              for v in graph]
+                for values_h in product(*admissible):
+                    h = dict(zip(graph, values_h))
+                    for s in graph:
+                        assert a_star(graph, s, t, h) == expected[s][t], (graph, s, t, h)
+                        queries += 1
+            graphs += 1
+    return graphs, queries
+
 def test_astar_reopen():
     rnd = random.Random(41033)
     count = 0
@@ -312,4 +336,5 @@ if __name__ == "__main__":
     print("PASS seeded negative weighted directed:", test_negative())
     print("PASS TG38-FW-01 independent simple-cycle oracle:", test_negative_cycle_diagonal())
     print("PASS A* admissible possibly inconsistent:", test_astar_reopen())
+    print("PASS TG38-ASTAR-02 graphs and queries:", test_astar_zero_weight_frontier())
     print("PASS undirected CH all rank orders:", test_ch())
