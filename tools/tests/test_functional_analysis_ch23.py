@@ -128,5 +128,67 @@ class Chapter23(unittest.TestCase):
         for a,b,c,d in product(range(-2,3),repeat=4):
             self.assertEqual(((a+1j*b)*(c+1j*d)).real,a*c-b*d)
 
+    def test_FA23_hilbert_factorization_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"h(x)^2=b(x,x)",
+            r"\|J^*\|_{\mathrm{HS}}=\|J\|_{\mathrm{HS}}",
+            r"h(x)\le Aq(x)",
+            r"r=0",
+            r"x\in\ker r",
+            r"\Big\|\sum_j z_jVe_j\Big\|",
+            r"VU([x]_r)=\sum_j a_j\ell_j([x]_q)y_j=[x]_h",
+            r"\|VU\|_{\mathrm{HS}}^2\le\|V\|_{\mathrm{HS}}^2",
+        ):
+            self.assertIn(fragment,s)
+        # Exact rational models with A=1, weights 9/25,16/25.
+        vectors=[(1,0),(0,1),(F(1,2),F(-1,2))]
+        for l1,l2,y1,y2,x,sign in product(vectors,vectors,vectors,vectors,
+                                         [(1,0),(0,1),(2,-3)],[-1,1]):
+            z1=sum(a*b for a,b in zip(l1,x))
+            z2=sum(a*b for a,b in zip(l2,x))
+            u=(F(3,5)*z1,F(4,5)*z2)
+            v1=tuple(F(3,5)*a for a in y1)
+            v2=tuple(sign*F(4,5)*a for a in y2)
+            lhs=tuple(u[0]*a+u[1]*b for a,b in zip(v1,v2))
+            rhs=tuple(F(9,25)*z1*a+sign*F(16,25)*z2*b
+                      for a,b in zip(y1,y2))
+            self.assertEqual(lhs,rhs)
+            self.assertLessEqual(sum(v*v for v in lhs),sum(v*v for v in u))
+            self.assertLessEqual(sum(v*v for v in v1+v2),1)
+
+    def test_FA23_nuclear_permanence_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"P_{L^\perp}J|_{N^\perp}",
+            r"p_F(x)\le p_E(x)",
+            r"[x]_{t|_F}\mapsto[x]_t",
+            r"\operatorname{dist}([x]_t,N_t)",
+            r"\|P_{N_t^\perp}[x]_t\|",
+            r"[\pi x]_{\bar t}\mapsto [x]_t+N_t",
+            r"p_Q(\pi(x+m))=p_Q(\pi x)",
+            r"\ker q=\bigoplus_n\ker q_n",
+            r"z rzutem współrzędnym normy co najwyżej",
+            r"\sum_{n\ge1}2^{-n}<\infty",
+            r"K=\varnothing",
+            r"\ref{thm:D-stage18}",
+        ):
+            self.assertIn(fragment,s)
+        # Coordinate restrictions and compressions of finite matrices:
+        # squared Hilbert-Schmidt norm cannot increase.
+        matrices=[((1,2,3),(0,-1,4),(2,0,-2)),
+                  ((0,0,0),(1,0,0),(0,0,2)),
+                  ((1,0,0),(0,1,0),(0,0,1))]
+        masks=range(8)
+        for J,rows,cols in product(matrices,masks,masks):
+            full=sum(v*v for row in J for v in row)
+            compressed=sum(J[i][j]**2 for i in range(3) for j in range(3)
+                           if rows&(1<<i) and cols&(1<<j))
+            self.assertLessEqual(compressed,full)
+        # Finite models of rescaling a nuclear representation.
+        for n,cost in product(range(1,13),[F(0),F(1,3),F(2),F(7)]):
+            c=1+2**n*cost
+            self.assertLess(cost/c,F(1,2**n))
+
 if __name__ == "__main__":
     unittest.main()
