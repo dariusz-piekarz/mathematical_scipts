@@ -53,5 +53,41 @@ class Chapter30(unittest.TestCase):
         self.assertIn("thm:rnp-lipschitz-equiv-30",labels)
         self.assertNotRegex(s,r"\\(?:mathbf|mathbb)\{1\}_")
 
+
+    def test_mt30_006_atomic_decomposition(self):
+        weights = [Q(1,6), Q(0), Q(1,3), Q(1,2)]
+        nu = [Q(-1,6), Q(0), Q(1,6), Q(1,4)]
+        density = [v/w if w else Q(0) for v,w in zip(nu,weights)]
+        for bits in product((0,1), repeat=4):
+            self.assertEqual(sum(b*v for b,v in zip(bits,nu)),
+                             sum(b*w*d for b,w,d in zip(bits,weights,density)))
+        self.assertEqual(sum(w*abs(d) for w,d in zip(weights,density)),sum(map(abs,nu)))
+
+    def test_mt30_007_interval_coding_nonuniform_and_null_cells(self):
+        weights = [Q(1,8), Q(0), Q(3,8), Q(1,6), Q(1,3)]
+        values = [Q(1), Q(0), Q(-1), Q(1,2), Q(-1,2)]
+        groups = [[0,1,2], [3,4]]
+        parent = {i: sum(weights[j]*values[j] for j in group)/sum(weights[j] for j in group)
+                  for group in groups for i in group}
+        ends = [Q(0)]
+        for w in weights:
+            ends.append(ends[-1]+w)
+        jump = sum(w*abs(v-parent[i]) for i,(w,v) in enumerate(zip(weights,values)))
+        coded = sum((ends[i+1]-ends[i])*abs(v-parent[i]) for i,v in enumerate(values))
+        self.assertEqual(jump,coded)
+        self.assertEqual(ends[-1],1)
+        for a in range(len(weights)+1):
+            for b in range(a,len(weights)+1):
+                self.assertLessEqual(abs(sum(weights[i]*values[i] for i in range(a,b))),ends[b]-ends[a])
+
+    def test_mt30_008_maximal_and_partition_proof_steps(self):
+        s = " ".join(SOURCE.read_text(encoding="utf-8").split())
+        for step in ("ogona zbieżnego szeregu miar", "sumę wszystkich otrzymanych zbiorów zerowych",
+                     "porządek częściowy na klasach", "rzeczywiście rosnące zbiory",
+                     "zbieżności całej sieci", "atomem dla", "niezależną od wyboru ciągu"):
+            self.assertIn(step,s)
+        self.assertIn(r"2\delta+M\omega_\phi(m_n)",s)
+
+
 if __name__ == "__main__":
     unittest.main()
