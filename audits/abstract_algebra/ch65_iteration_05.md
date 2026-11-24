@@ -1,0 +1,7 @@
+# AA-65 — zamknięcie etapu D po korekcie składu
+
+24 listopada 2026 r. Gałąź biblioteka-matematyczna-iteracja-6. Źródło de5a75ddc4688815c350abde96e8b32923fcd2f5 (korekta składu f837d608b8c7ded8c3514d9c640f002664b3734a). CI 45428203616, job 138565913922, head d9034ca7ae2bf66a12298f716a478c0a0d71aec4: 141/141 kroków success, w tym kontrola zależności, bramka globalna, oba trwałe zestawy AA-65 wraz z rozszerzeniem typu C, pełna kompilacja, weryfikacja PDF oraz archiwizacja. Wcześniejszy CI 45428044131 nie powiódł się z powodu tymczasowo niezarejestrowanego rozdziału Analizy matematycznej I (09-szeregi-liczbowe.tex), niezwiązanego z AA-65. W późniejszym przebiegu bramka zależności zaliczona bez jej osłabiania.
+
+Bramka globalna PASS: 65 rozdziałów, 567 dowodów, 1232 unikatowe etykiety, 855 odsyłaczy, 469 unikatowych celów, zero powielonych i nierozwiązanych etykiet. Artefakt 14937697568, PDF 415 stron, SHA-256 f4f8dc5819837330f9fe69479e742623eac0e70faa52c7b2079d251cbbd57cba. Wyrenderowano fizyczne strony 411–415 (drukowane 398–402) w PyMuPDF w skali 1,5 i obejrzano ich zestawienie. Na stronie 402 przykład 65.9 znajduje się razem z diagramem i podpisem, bez obcięć i kolizji. Poprzednie cztery strony zachowują ciągłość tekstu. Końcowy log: 0 Overfull, 0 Underfull, 0 Warning:, 0 undefined references, 0 wierszy zaczynających się od !. Liczba stron bez zmian względem poprzedniego artefaktu.
+
+Etap D zaliczony. AA-65 pozostaje w audycie do odrębnego etapu P, AA-66 nieotwarty.
