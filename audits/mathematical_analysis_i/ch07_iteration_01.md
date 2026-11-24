@@ -1,0 +1,11 @@
+# MA1-07 — iteracja rozwojowo-stabilizacyjna 01
+MA1-06 certyfikat c8665ea. Utworzono rozdział MA1-07, włączono do tomu i katalogu. Treść 6f5a40f, blob 243e58d30b7292979885229884996f4c023eb768, 201 wierszy.
+## Przegląd matematyczny
+001–003: indukcja n_k>=k, kryterium skupienia przez nieskończenie wiele indeksów, rekurencyjny wybór najmniejszych indeksów i kontrapozycja kryterium podciągów. Dopisano wykluczenie pozostałych punktów skupienia w przykładzie ciągu z jedynym punktem skupienia, lecz rozbieżnego.
+004–005: monotoniczna zbieżność z kresu i przypadek nierosnący; podciąg monotoniczny przez skończoność/nieskończoność P; Bolzano–Weierstrass z indukcją po wymiarze oraz kontrprzykład dla metryki dyskretnej.
+006–008: warunek Cauchy'ego, wspólne indeksy epsilon/2, ograniczenie skończonego początku, podciąg zbieżny i pełna zbieżność, kontrprzykład sum harmonicznych. Zupełność R wynika z wcześniej udowodnionej zupełności porządkowej; Q niezupełna przez wymierne przybliżenia sqrt2.
+009–011: skończone produkty z niepustymi czynnikami, zupełność R^m i C, kryterium ciągowe domkniętości, jawny wybór przeliczalny, podprzestrzenie zupełne i domknięte, przypadek zbioru pustego. Przestrzeń funkcji ograniczonych: istnienie supremum, punktowe granice, wspólny indeks, przejście do granicy nieostrej, ograniczoność funkcji granicznej i zbieżność w supremum.
+## Kontrole
+20 etykiet, brak powtórzeń i nierozwiązanych ref, poprawne środowiska, zgodne preambuły i katalog. 11 kryteriów, 6 testów rozdziału, 48 testów tomu łącznie. Nowe CI 45424183156, Atlas 45424183291, terminologia 45424183127 w toku; wcześniejszy przebieg testów 45424122351 w toku. Lean nieuruchomiony, skład PDF niepotwierdzony.
+## Globalna korekta terminologiczna
+Polecenie użytkownika: liczby hiperrzeczywiste, wszystkie odmiany. Poprawiono MA1-04 f9b2fc7, MA1-03 06d1aab, plan ff92328. Dodano zasadę AGENTS.md b23a754, standardy 68bd717 i konwencje 2370d88 oraz kontrolę tools/check_terminology.py b87a5c1 (CI 45423544746 sukces). Ponownie pobrano wszystkie siedem rozdziałów tomu i plik główny: zero wystąpień niedozwolonej formy przymiotnika. Stabilne identyfikatory zachowane. Nie deklarujemy pełnego przeszukania wszystkich pozostałych skryptów ani przebudowy ich PDF. Status MA1-07: w stabilizacji.
