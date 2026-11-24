@@ -87,5 +87,63 @@ class Chapter22(unittest.TestCase):
         self.assertNotIn("równoodległościowość",s)
         self.assertNotIn("sekwencyjna",s)
 
+    def test_FA22_fourier_plancherel_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"T\circ\mathcal F",
+            r"\langle T,\mathcal F^{-1}\varphi\rangle",
+            r"\mathcal F(-i\xi_j\varphi)",
+            r"\mathcal F(-i\partial_{\xi_j}\varphi)",
+            r"\mathcal F^4T=T",
+            r"T_{e^{-ia\cdot\xi}}",
+            r"T_{(i\xi)^\alpha}",
+            r"\|f\|_1\|\varphi\|_1",
+            r"\mathcal F(\overline{\widehat g})(x)",
+            r"\|\widehat f_n-\widehat g_n\|_2",
+            r"P_B(T_{f_n}-T_f)",
+            r"\lim_nT_{\widehat f_n}=T_{\widehat f}",
+        ):
+            self.assertIn(fragment,s)
+        # Polynomial times exp(-x^2/2): exact Gaussian-integer
+        # coefficient arithmetic (small integers, exactly representable).
+        def trim(p):
+            while len(p)>1 and p[-1]==0:
+                p.pop()
+            return p
+        def add(p,q):
+            return trim([(p[i] if i<len(p) else 0)+(q[i] if i<len(q) else 0)
+                         for i in range(max(len(p),len(q)))])
+        def scale(p,c):
+            return trim([c*v for v in p])
+        def deriv(p):
+            return trim(add([i*p[i] for i in range(1,len(p))] or [0],
+                            scale([0]+p,-1)))
+        basis=[[1]]
+        for n in range(8):
+            basis.append(scale(deriv(basis[-1]),1j))
+        def fourier(p):
+            out=[0]
+            for n,c in enumerate(p):
+                out=add(out,scale(basis[n],c))
+            return out
+        def moment2(k):
+            # Integral x^k exp(-x^2) / sqrt(pi), scaled by 2^8.
+            if k%2: return 0
+            v=2**(8-k//2)
+            for j in range(1,k,2): v*=j
+            return v
+        def inner(p,q):
+            return sum(a*complex(b).conjugate()*moment2(i+j)
+                       for i,a in enumerate(p) for j,b in enumerate(q))
+        models=[[0]*n+[1] for n in range(7)]+[[1,2j,-3],[2-1j,0,1,0,-2j]]
+        for p in models:
+            fp=fourier(p)
+            self.assertEqual(fourier(deriv(p)),scale([0]+fp,1j))
+            self.assertEqual(fourier([0]+p),scale(deriv(fp),1j))
+            self.assertEqual(fourier(fp),[(-1)**n*c for n,c in enumerate(p)])
+            self.assertEqual(fourier(fourier(fourier(fp))),p)
+        for p,q in product(models,repeat=2):
+            self.assertEqual(inner(fourier(p),fourier(q)),inner(p,q))
+
 if __name__ == "__main__":
     unittest.main()
