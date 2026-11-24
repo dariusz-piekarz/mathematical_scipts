@@ -1,0 +1,9 @@
+# Globalny audyt 36 — przekroje, skojarzenia i przepływy
+
+2026-11-24. Baza 44f113d8f688b9016811c9725b7e5268794571d0. Przejrzano powiązania 04, 05, 11, 12 i 40. Najważniejsza korekta dotyczy dowodu rozkładu dowolnego przepływu całkowitoliczbowego (40), nie samego twierdzenia: w obecności cyrkulacji przez s,t minimum przepływu na ścieżce może przekroczyć wartość przepływu. Kontrprzykład: f(s,t)=2, f(t,s)=1, wartość 1. Stary krok odejmował 2, uzyskując wartość -1. Poprawny krok odejmuje minimum bieżącej wartości i minimum na ścieżce. Albo kończy fazę ścieżkową, albo zeruje co najmniej jeden łuk. Pozostałość o wartości zero jest cyrkulacją. Dodano przykład do tekstu.
+
+04: dopisano argument identyfikujący minimalny przekrój i separator krawędziowy s,t. Rozkład w dowodzie Mengera usuwa cykle przed odejmowaniem jednostek i nie ma powyższej luki. 05: cykl naprzemienny ma parzystą długość, lecz niekoniecznie parzystą liczbę krawędzi każdego typu (np. cykl długości 6); doprecyzowano. We wzorze deficytu Halla suma |N(S)|+d dotyczy wyłącznie niepustego S. 12: wyraźnie odróżniono cyrkulacje modulo q od przepływów z przepustowościami i powiązano q=2 z przestrzenią cykli. Dowód dualności kolorowań na sferze wykorzystuje zerowanie bilansu na przekrojach, nie twierdzenie o maksymalnym przepływie; przypadki mostów i krawędzi równoległych są uwzględnione. 
+
+Dodano niezależne regresje dokładne: wszystkie dopuszczalne przepływy na pełnych grafach skierowanych o 2–3 wierzchołkach z wartościami łuków 0–3 i nieujemną wartością netto (rekonstrukcja ścieżek i cykli); wszystkie grafy dwudzielne o obu częściach 0–3, porównanie skojarzeń, pokryć, deficytu i przekrojów sieci. Strażnik poprawionej formuły źródłowej. Włączono do CI.
+
+Status: korekty zapisane; nie deklarujemy sukcesu testów ani kompilacji przed odczytem przebiegów. Audyt 36 otwarty.
