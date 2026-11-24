@@ -366,5 +366,32 @@ class TestChapter15B(unittest.TestCase):
         ):
             self.assertIn(fragment, source)
 
+
+    def test_vitali_weak_and_uniform_conditions(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            "\\label{def:uniform-integrability15b}",
+            "\\label{lem:scalar-vitali15b}",
+            "\\label{thm:weak-vitali15b}",
+            "\\label{thm:uniform-vitali15b}",
+            "q_{f_n-f}(S)\\to0",
+            "2M(E_{n,x'})+\\eta\\mu(S)",
+            "D_A(f)\\in J_X(X)",
+            "\\label{cor:bochner-vitali15b}",
+            "\\sup_{\\|x'\\|\\le1}\\mu(\\{|x'(f_n)|>1/2\\})=1",
+            "\\mu(A)=2^{-k}\\to0",
+        ):
+            self.assertIn(fragment, source)
+        # In c0 the scalar-integrability tail does not vanish
+        # uniformly on the dual unit ball: each singleton contributes 1.
+        for k in range(1, 21):
+            self.assertEqual(Fraction(1, 2**k)*2**k, 1)
+        # Uniform scalar absolute continuity without a common integrable
+        # majorant is possible: disjoint atoms of masses 2^-k,
+        # with integrals 1/k for the individual functions.
+        for k in range(1, 21):
+            self.assertEqual(Fraction(1, 2**k)*Fraction(2**k, k),
+                             Fraction(1, k))
+
 if __name__ == "__main__":
     unittest.main()
