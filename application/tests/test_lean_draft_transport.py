@@ -413,7 +413,10 @@ class RuntimeFailureReportTests(unittest.TestCase):
         for code, stage in ((11, "root_write_unexpected_success"),
                             (12, "root_write_not_readonly_error"),
                             (24, "root_fixture_mode"), (25, "tmp_write"),
-                            (27, "tmp_remove")):
+                            (27, "tmp_remove"), (32, "network_dev_read"),
+                            (33, "network_ipv4_read"), (34, "network_ipv6_read"),
+                            (35, "network_base64_encode"), (36, "network_base64_unwrap"),
+                            (37, "network_temp_remove")):
             with self.subTest(code=code):
                 report = runtime_failure_report(
                     [{"Id": "c", "Image": "i", "State": {"Status": "exited", "ExitCode": code}}],
@@ -448,3 +451,25 @@ class RuntimeFailureReportTests(unittest.TestCase):
             container_id="c", image_id="i")
         self.assertEqual(result["stage"], "unclassified_fixture_failure")
         self.assertEqual(result["status"], "blocked")
+
+
+class RuntimeNetworkEncodingTests(unittest.TestCase):
+    def test_wrapped_base64_preserves_raw_rows(self):
+        import base64
+        from scripts.lean_rootless_ci_probe import _decode_network_table
+        raw = b"header\n" + b"row " * 40 + b"\nlast row\n"
+        wrapped = base64.encodebytes(raw)
+        self.assertIn(b"\n", wrapped.rstrip(b"\n"))
+        data = wrapped.replace(b"\n", b"").decode("ascii")
+        self.assertEqual(_decode_network_table(data), raw.decode("ascii").splitlines())
+        self.assertEqual(base64.b64decode(data, validate=True), raw)
+
+    def test_fixture_uses_portable_encoding_and_distinct_read_codes(self):
+        from scripts.lean_rootless_ci_probe import _FIXTURE
+        self.assertNotIn("base64 -w", _FIXTURE)
+        self.assertIn('base64 < /tmp/atlas-net-table', _FIXTURE)
+        self.assertIn("tr -d '\\n'", _FIXTURE)
+        for key, code in (("dev", 32), ("route", 33), ("ipv6_route", 34)):
+            self.assertIn(f"{key}) read_code={code} ;;", _FIXTURE)
+        self.assertIn('|| exit "$read_code"', _FIXTURE)
+        self.assertIn("|| exit 35", _FIXTURE)
