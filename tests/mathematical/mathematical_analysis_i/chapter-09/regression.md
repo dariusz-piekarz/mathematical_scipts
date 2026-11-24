@@ -13,3 +13,5 @@ Testy skończone sprawdzają tożsamości i oszacowania dokładną arytmetyką; 
 | MA1-09-009 | ma1:thm:ratio-test | Niezerowość od pewnego indeksu, limsup <1, liminf >1, indukcja geometryczna | semantyczna + Python |
 | MA1-09-010 | ma1:thm:root-test, ma1:ex:ratio-root-boundary | Istnienie pierwiastka, oba progi, przypadek L=1 i dowód bez exp, wyrazy zerowe | semantyczna + Python |
 | MA1-09-011 | ma1:ex:factorial-series | Oszacowanie ilorazu i reszty 1/(N N!) | semantyczna + Python |
+| MA1-09-012 | ma1:thm:condensation | Rozłączny podział wszystkich indeksów od 1 do 2^(m+1)-1 i oba oszacowania całych sum częściowych | semantyczna + Python |
+| MA1-09-013 | ma1:thm:geometric-series, ma1:thm:ratio-test | Błąd 1/1024 przy N=10 i dolne oszacowanie geometryczne w przypadku rozbieżności | semantyczna + Python |
