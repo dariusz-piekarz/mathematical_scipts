@@ -590,5 +590,36 @@ class TestChapter15B(unittest.TestCase):
                 C = [i for i in A if i not in B]
                 self.assertEqual(vf,variation(f,B)+variation(f,C))
 
+
+    def test_audit37_semivariation_contracts(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            "\\varphi_n=\\chi_{A_n}-\\chi_A",
+            "\\le q_f(A_n\\triangle A)\\longrightarrow0",
+            "\\varepsilon=\\eta/2",
+            "\\sum_j|D_{A_j}(f)(x')|",
+            "\\theta u=|u|",
+        ):
+            self.assertIn(fragment, source)
+
+    def test_audit37_sharp_symmetric_difference_bound(self):
+        # X=R^2 with max norm, dual l1 norm.
+        # On a finite set, sup over the dual l1 ball is attained
+        # at one of the signed coordinate vectors.
+        weights = [Fraction(1,2), Fraction(1,4), Fraction(1,8), Fraction(1,8)]
+        values = [(3,-2),(-1,5),(2,1),(-4,-3)]
+        def integral(mask):
+            return tuple(sum(weights[i]*values[i][k] for i in range(4)
+                             if mask & (1<<i)) for k in range(2))
+        def q(mask):
+            return max(sum(weights[i]*abs(values[i][k]) for i in range(4)
+                           if mask & (1<<i)) for k in range(2))
+        for a in range(16):
+            for b in range(16):
+                ia,ib=integral(a),integral(b)
+                self.assertLessEqual(max(abs(x-y) for x,y in zip(ia,ib)),q(a^b))
+        # Equality is possible, so coefficient one cannot be reduced.
+        self.assertEqual(max(map(abs,integral(1))),q(1))
+
 if __name__ == "__main__":
     unittest.main()
