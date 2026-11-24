@@ -65,3 +65,8 @@ W każdym audycie sprawdzamy konsekwentnie te terminy w treści, twierdzeniach, 
 - W **każdym** polskojęzycznym skrypcie, w tekście, definicjach, twierdzeniach, podpisach i audytach piszemy wyłącznie pełne **„liczba kardynalna”**, **„liczby kardynalne”** i odpowiednio odmienione formy. **Nie używamy** samodzielnego, skróconego rzeczownika „kardynał” ani jego odmian.
 - Przykłady obowiązkowe: **„liczba kardynalna Mahla”**, **„mierzalna liczba kardynalna”**, **„silnie nieosiągalna liczba kardynalna”**, **„słabo zwarta liczba kardynalna”**, **„liczby kardynalne nieosiągalne”**. Przymiotniki, zaimki, orzeczenia i imiesłowy uzgadniamy w rodzaju żeńskim.
 - Zachowujemy historyczne nazwy plików i stabilne etykiety LaTeX, aby nie zrywać odsyłaczy. Nowe tytuły, odsyłacze opisowe, treść i raporty audytowe muszą już stosować pełną nazwę.
+
+## 9. Liczby hiperrzeczywiste
+
+- Angielskie *hyperreal numbers* tłumaczymy wyłącznie jako **liczby hiperrzeczywiste**. Stosujemy formy „liczba hiperrzeczywista”, „liczb hiperrzeczywistych”, „ciało liczb hiperrzeczywistych”, „liczbami hiperrzeczywistymi”. Nie stosujemy form „hiperrealny”, „hiperrealne” ani ich odmian.
+- Zasada globalna, obowiązująca we wszystkich polskojęzycznych skryptach, planach, podpisach i audytach. Zachowujemy stabilne etykiety LaTeX i angielskie identyfikatory.
