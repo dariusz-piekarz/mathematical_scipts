@@ -1,0 +1,133 @@
+\chapter{Zbieżność warunkowa i zmiana kolejności wyrazów szeregu}
+\label{ma1:ch:conditional-series}
+
+Zbieżność szeregu nie zawsze wynika ze zbieżności szeregu jego modułów. Znoszenie się składników może zapewniać istnienie granicy sum częściowych, mimo że łączna wielkość składników jest nieskończona. Zbadamy mechanizm tego znoszenia się i ustalimy, kiedy zmiana kolejności wyrazów zachowuje sumę szeregu.
+
+\section{Szeregi naprzemienne}
+\begin{twierdzenie}[Kryterium Leibniza]
+\label{ma1:thm:leibniz-series}
+Niech $(b_n)_{n\ge1}$ będzie nierosnącym ciągiem nieujemnych liczb rzeczywistych takim, że $b_n\to0$. Wówczas szereg
+\[
+ \sum_{n=1}^\infty (-1)^{n-1}b_n
+\]
+jest zbieżny. Jeżeli $S$ oznacza jego sumę, $S_0=0$, a $S_N=\sum_{n=1}^N(-1)^{n-1}b_n$ dla $N\ge1$, to dla każdego całkowitego $N\ge0$ zachodzi
+\[
+ 0\le(-1)^N(S-S_N)\le b_{N+1}.
+\]
+W szczególności $|S-S_N|\le b_{N+1}$.
+\end{twierdzenie}
+\begin{proof}
+Dla $k\ge0$ mamy $S_{2k+2}-S_{2k}=b_{2k+1}-b_{2k+2}\ge0$, więc ciąg parzystych sum częściowych jest niemalejący. Dla $k\ge0$ mamy również $S_{2k+3}-S_{2k+1}=-b_{2k+2}+b_{2k+3}\le0$, czyli ciąg nieparzystych sum częściowych jest nierosnący. Ponadto $S_{2k+1}-S_{2k}=b_{2k+1}\ge0$. Dla każdego $k\ge0$ otrzymujemy
+\[
+ 0=S_0\le S_{2k}\le S_{2k+1}\le S_1=b_1.
+\]
+Z twierdzenia o zbieżności ciągów monotonicznych (twierdzenie \ref{ma1:thm:monotone-convergence}) istnieją skończone granice $E=\lim_k S_{2k}$ i $O=\lim_k S_{2k+1}$. Ponieważ $S_{2k+1}-S_{2k}=b_{2k+1}\to0$, rachunek granic daje $O-E=0$. Oznaczmy wspólną granicę przez $S$. Dla dowolnego $\varepsilon>0$ obie podrodziny sum częściowych leżą w przedziale $(S-\varepsilon,S+\varepsilon)$ dla wszystkich dostatecznie dużych indeksów. Każda suma częściowa ma indeks parzysty lub nieparzysty, zatem $S_N\to S$.
+
+Monotoniczność daje $S_{2k}\le S\le S_{2k+1}$ dla każdego $k\ge0$. Dla parzystego $N=2k$ wynika stąd $0\le S-S_N\le S_{2k+1}-S_{2k}=b_{N+1}$. Dla nieparzystego $N=2k+1$ korzystamy z $S_{2k+2}\le S\le S_{2k+1}$, więc $0\le S_N-S\le S_{2k+1}-S_{2k+2}=b_{N+1}$. Oba przypadki dają żądane oszacowanie.
+\end{proof}
+\begin{przyklad}
+\label{ma1:ex:alternating-harmonic}
+Szereg $\sum_{n=1}^\infty(-1)^{n-1}/n$ jest zbieżny, ponieważ $(1/n)$ jest nierosnący i zbiega do zera. Nie jest zbieżny bezwzględnie: szereg modułów jest szeregiem harmonicznym z przykładu \ref{ma1:ex:harmonic-series}. Dla jego sumy $S$ mamy
+$S_4=7/12\le S\le S_5=47/60$.
+Dla błędu mniejszego od $1/100$ wystarczy obliczyć $S_{100}$, ponieważ $|S-S_{100}|\le1/101<1/100$. Nie identyfikujemy jeszcze $S$ z wartością logarytmu; uczynimy to po skonstruowaniu logarytmu.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=.75cm,y=4.2cm,>=Stealth]
+\draw[->] (-.15,0)--(10.9,0) node[right] {$N$};
+\draw[->] (0,-.04)--(0,1.13) node[above] {$S_N$};
+\foreach \n in {1,...,10} {
+ \draw (\n,.012)--(\n,-.012) node[below] {\small $\n$};
+}
+\draw[dashed,gray] (0,1)--(10.5,1);
+\node[left] at (0,1) {$1$};
+\draw[blue!70!black,thick] (0,0)--(2,.5)--(4,.583333)--(6,.616667)--(8,.634524)--(10,.645635);
+\draw[orange!85!black,thick] (1,1)--(3,.833333)--(5,.783333)--(7,.759524)--(9,.745635);
+\foreach \n/\s in {0/0,2/.5,4/.583333,6/.616667,8/.634524,10/.645635}
+ \fill[blue!70!black] (\n,\s) circle (1.8pt);
+\foreach \n/\s in {1/1,3/.833333,5/.783333,7/.759524,9/.745635}
+ \fill[orange!85!black] (\n,\s) circle (1.8pt);
+\node[blue!70!black,below] at (8,.60) {$S_{2k}$};
+\node[orange!85!black,above] at (8,.81) {$S_{2k+1}$};
+\draw[<->,gray] (9.65,.645635)--(9.65,.745635);
+\node[right] at (9.8,.695635) {\small $1/10$};
+\end{tikzpicture}
+\caption{Parzyste i nieparzyste sumy częściowe szeregu naprzemiennego harmonicznego. Odcinki łączą punkty wyłącznie dla czytelności. Długość przedziału między $S_{10}$ a $S_9$ wynosi $1/10$.}
+\label{ma1:fig:leibniz-sums}
+\end{figure}
+\FloatBarrier
+
+\section{Część dodatnia i ujemna szeregu rzeczywistego}
+\begin{definicja}
+\label{ma1:def:conditional-series}
+Szereg liczb rzeczywistych lub zespolonych nazywamy zbieżnym warunkowo, jeżeli jest zbieżny, lecz nie jest zbieżny bezwzględnie.
+Dla liczby rzeczywistej $a$ określamy $a^+=\max(a,0)$ i $a^-=\max(-a,0)$. Obie liczby są nieujemne, a $a=a^+-a^-$ i $|a|=a^++a^-$.
+\end{definicja}
+\begin{twierdzenie}
+\label{ma1:thm:positive-negative-parts}
+Niech $(a_n)$ będzie ciągiem rzeczywistym. Szereg $\sum a_n$ jest zbieżny bezwzględnie wtedy i tylko wtedy, gdy oba szeregi $\sum a_n^+$ i $\sum a_n^-$ są zbieżne. Jeżeli $\sum a_n$ jest zbieżny warunkowo, to obie sumy częściowe tych szeregów dążą do $+\infty$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $\sum|a_n|$ jest zbieżny, z $0\le a_n^\pm\le |a_n|$ oraz kryterium porównawczego wynika zbieżność obu szeregów. Odwrotnie, jeśli oba są zbieżne, ich suma $\sum(a_n^++a_n^-)=\sum|a_n|$ jest zbieżna z liniowości.
+
+Załóżmy teraz zbieżność warunkową. Niech $P_N=\sum_{n=1}^N a_n^+$, $Q_N=\sum_{n=1}^N a_n^-$ oraz $S_N=\sum_{n=1}^N a_n$. Mamy $S_N=P_N-Q_N$. Gdyby $(P_N)$ miało skończoną granicę, to $Q_N=P_N-S_N$ również miałoby skończoną granicę, wbrew brakowi zbieżności bezwzględnej. Analogicznie $(Q_N)$ nie może mieć skończonej granicy. Oba ciągi są niemalejące, więc na mocy twierdzenia \ref{ma1:thm:positive-series} dążą do $+\infty$.
+\end{proof}
+
+\section{Grupowanie kolejnych wyrazów}
+\begin{twierdzenie}
+\label{ma1:thm:series-grouping}
+Niech $(a_n)$ będzie ciągiem w $\R$ lub $\C$, a $0=m_0<m_1<m_2<\cdots$ będzie ściśle rosnącym ciągiem nieujemnych indeksów. Dla $k\ge1$ określamy
+$b_k=\sum_{n=m_{k-1}+1}^{m_k}a_n$.
+Jeżeli $\sum a_n$ jest zbieżny, to $\sum b_k$ jest zbieżny do tej samej sumy.
+Odwrotnie, jeśli $\sum b_k$ jest zbieżny do $S$ i
+\[
+ \max_{m_{k-1}<j\le m_k}
+ \left|\sum_{n=m_{k-1}+1}^{j}a_n\right|
+ \longrightarrow 0\quad(k\to\infty),
+\]
+to $\sum a_n$ jest zbieżny do $S$.
+\end{twierdzenie}
+\begin{proof}
+Niech $S_N=\sum_{n=1}^N a_n$, $S_0=0$. Rozłączność kolejnych bloków daje $\sum_{k=1}^K b_k=S_{m_K}$. Jeśli $S_N\to S$, to podciąg $(S_{m_K})$ ma tę samą granicę.
+Odwrotnie, niech $S_{m_K}\to S$ i niech zachodzi dodatkowy warunek z tezy. Dla każdego $N\ge1$ istnieje dokładnie jeden $k$ z $m_{k-1}<N\le m_k$: ciąg indeksów jest nieograniczony, a bloki są rozłączne. Gdy $N\to\infty$, również $k\to\infty$, gdyż wszystkie bloki o indeksach co najwyżej $K$ kończą się najpóźniej w $m_K$. Mamy
+\[
+ |S_N-S|\le |S_{m_{k-1}}-S|+
+ \left|\sum_{n=m_{k-1}+1}^N a_n\right|.
+\]
+Dla dowolnego $\varepsilon>0$ oba składniki są mniejsze od $\varepsilon/2$ dla dostatecznie dużego $k$, drugi dzięki oszacowaniu przez maksimum z tezy. Stąd $S_N\to S$.
+\end{proof}
+\begin{przyklad}
+Grupowanie nie jest odwracalne bez dodatkowych założeń. Szereg $1-1+1-1+\cdots$ jest rozbieżny, ponieważ jego sumy częściowe są naprzemiennie równe $1$ i $0$. Po pogrupowaniu par otrzymujemy $(1-1)+(1-1)+\cdots$, czyli szereg samych zer. Maksimum wewnątrz każdego bloku jest równe $1$, więc warunek odwrotny twierdzenia nie zachodzi.
+\end{przyklad}
+\begin{wniosek}
+\label{ma1:cor:bounded-grouping}
+Przy oznaczeniach twierdzenia \ref{ma1:thm:series-grouping}, jeśli $a_n\to0$ oraz istnieje $M\in\N_+$ z $m_k-m_{k-1}\le M$ dla każdego $k$, to zbieżność szeregu pogrupowanego implikuje zbieżność szeregu wyjściowego do tej samej sumy.
+\end{wniosek}
+\begin{proof}
+Dla $\varepsilon>0$ wybieramy $N_0$ z $|a_n|<\varepsilon/M$ dla $n\ge N_0$. Gdy $m_{k-1}+1\ge N_0$, każdy początkowy fragment $k$-tego bloku ma co najwyżej $M$ składników o modułach mniejszych od $\varepsilon/M$. Z nierówności trójkąta jego moduł jest mniejszy od $\varepsilon$. Otrzymujemy warunek z twierdzenia \ref{ma1:thm:series-grouping}.
+\end{proof}
+
+\section{Przestawienia szeregów bezwzględnie zbieżnych}
+\begin{definicja}
+\label{ma1:def:series-rearrangement}
+Przestawieniem szeregu $\sum_{n=1}^\infty a_n$ nazywamy szereg $\sum_{k=1}^\infty a_{\pi(k)}$, gdzie $\pi:\N_+\to\N_+$ jest bijekcją. Indeksy, a nie wartości wyrazów, są obiektami przestawianymi.
+\end{definicja}
+\begin{twierdzenie}
+\label{ma1:thm:absolute-rearrangement}
+Niech $(a_n)$ będzie ciągiem w $\R$ lub $\C$ i niech $\sum a_n$ będzie zbieżny bezwzględnie do $S$. Dla każdej bijekcji $\pi:\N_+\to\N_+$ szereg $\sum a_{\pi(k)}$ jest zbieżny bezwzględnie i ma sumę $S$.
+\end{twierdzenie}
+\begin{proof}
+Niech $A=\sum_{n=1}^\infty |a_n|$. Dla każdego $K\ge1$ zbiór $F_K=\{\pi(1),\ldots,\pi(K)\}$ jest skończony, a jego elementy są różne. Biorąc $m=\max F_K$, otrzymujemy $\sum_{k=1}^K|a_{\pi(k)}|\le\sum_{n=1}^m|a_n|\le A$. Sumy częściowe modułów są niemalejące i ograniczone, więc przestawiony szereg jest zbieżny bezwzględnie.
+
+Niech $\varepsilon>0$. Wybieramy $N\ge1$ z $\sum_{n>N}|a_n|<\varepsilon/2$. Dzięki surjektywności $\pi$ istnieje
+$K_0=\max\{\pi^{-1}(1),\ldots,\pi^{-1}(N)\}$.
+Dla $K\ge K_0$ zbiór $F_K$ zawiera $\{1,\ldots,N\}$. Zatem
+\[
+ \left|\sum_{k=1}^K a_{\pi(k)}-S\right|
+ \le\left|\sum_{n\in F_K\setminus\{1,\ldots,N\}}a_n\right|
+       +|S_N-S|
+ \le 2\sum_{n>N}|a_n|<\varepsilon.
+\]
+Pierwsze oszacowanie korzysta z przemienności skończonych sum oraz iniektywności $\pi$; w drugim używamy nierówności trójkąta i oszacowania reszty z twierdzenia \ref{ma1:thm:absolute-series}. Otrzymujemy żądaną granicę.
+\end{proof}
