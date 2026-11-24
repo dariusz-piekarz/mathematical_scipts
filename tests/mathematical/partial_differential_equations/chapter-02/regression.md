@@ -13,6 +13,9 @@ Kryteria semantyczne nie są testami automatycznymi ani formalizacją Lean. Iden
 | PDE-02-006 | prop:pde-v31-transport-lp | Euklidesowa norma operatorowa, oszacowanie śladu w bazie ortonormalnej, obie nierówności L^p, skończoność normy, równość supremum z supremum istotnym dla funkcji ciągłej. | semantyczna |
 | PDE-02-007 | thm:pde2-cauchy | Regularna lokalna funkcja definiująca hiperpowierzchnię, wspólny przedział przepływu, niezerowa pochodna wzdłuż charakterystyk, prostokątne otoczenie i dokładna równość przekroju początkowego; regularność całek, weryfikacja PDE, jednoznaczność na wybranym otoczeniu oraz zarodka. | semantyczna |
 | PDE-02-008 | thm:pde2-quasilinear | Wspólny przedział istnienia dla danych z otoczenia, jawna blokowa macierz pochodnej o wyznaczniku 1 w chwili początkowej, dyfeomorfizm z iloczynu na otwarty zbiór Q, wspólny iloczyn dla charakterystyk innego rozwiązania, jednoznaczność na jego otwartym obrazie; terminologia odwzorowanie zamiast mapa. | semantyczna |
+| PDE-02-009 | thm:pde2-breaking | Warunek 0≤t<T*, surjektywność z granic w nieskończoności, wspólna odwrotność C¹ wraz z t=0, weryfikacja równania i danych, wzór na gradient oraz dojście charakterystyki do punktu osobliwego. | semantyczna |
+| PDE-02-010 | ex:pde2-rarefaction | Całkowanie na t≥ε, zerowe skoki, oszacowanie normy L¹ różnicy danych przez 2Mt(max(0,u_R)-min(0,u_L)), przejście do granicy w całce brzegowej i podwójnej. | semantyczna |
+| PDE-02-011 | prop:pde2-rh | Rozróżnienie równania dystrybucyjnego we wnętrzu od zagadnienia z danymi początkowymi; normalne zewnętrzne (-s',1) i (s',-1) po normalizacji, element długości krzywej, jawne znaki wkładów i oba kierunki równoważności. | semantyczna |
 
 ## Pierwszy właściwy przebieg — 2026-11-24
 
@@ -23,3 +26,6 @@ Poprawki 004–006 w commicie dfc0bce4f40e9f3123894b203820e60a62b255db. Sprawdzo
 
 ## Trzeci właściwy przebieg — 2026-11-24
 Poprawki 007–008 w commicie f375d519a2cd8898e96023bf3fcdaa92bb303f72. Sprawdzono semantycznie zmienione fragmenty, zachowano 51 etykiet, 57 wystąpień odsyłaczy (w tym cel zewnętrzny chap:pde-code), poprawne zagnieżdżenie środowisk. Nie wykonano kompilacji, renderowania, testów wykonywalnych ani Lean. Otwarte 009–010 i dalszy audyt części o układzie Charpita oraz równaniu Hamiltona–Jacobiego. Rozdział otwarty.
+
+## Czwarty właściwy przebieg — 2026-11-24
+Poprawki 009–011 w commicie ee18666407b25cfad07023e382d4013e1cafe5fa. Przejrzano semantycznie zmienione dowody, zachowano 51 etykiet, sprawdzono 59 odsyłaczy (w tym cel zewnętrzny chap:pde-code) oraz zagnieżdżenie środowisk. Poprawiono dwa dalsze użycia słowa mapa w znaczeniu odwzorowania. Nie uruchomiono kompilacji, renderowania, testów wykonywalnych ani Lean. Wszystkie dziesięć usterek przeglądu przygotowawczego poprawiono w źródle; pozostają dalszy audyt, kontrole techniczne i niezależna stabilizacja. Rozdział otwarty.
