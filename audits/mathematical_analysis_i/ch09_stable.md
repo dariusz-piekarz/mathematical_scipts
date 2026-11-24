@@ -1,0 +1,2 @@
+# MA1-09 — stabilny
+Blob 07e35f796d660d38b6c9ef649e59db936cbc53cb; 13 kryteriów z audytu 02. CI 45429662075: 69/69 testów (3+7+7+6+9+10+8+9+10), dwa przebiegi LaTeX, 61 stron, artefakt 14937622808. Brak ostrzeżeń Overfull/Underfull w sprawdzonym logu i nierozwiązanych odsyłaczy po drugim przebiegu. Atlas 45429609671 i terminologia 45429609590: sukces. Wyrenderowano i obejrzano miniatury stron fizycznych 55–61: brak widocznych kolizji i obcięć, ostatnia strona częściowo wypełniona. Lean nieuruchomiony. Stabilny w zakresie wykonanych kontroli.
