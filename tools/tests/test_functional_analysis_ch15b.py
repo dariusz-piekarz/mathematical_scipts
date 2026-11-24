@@ -95,5 +95,23 @@ class TestChapter15B(unittest.TestCase):
         self.assertIn("przekroje usuniętego", source)
         self.assertIn(r"\int_S\sum_{n=1}^\infty", source)
 
+
+    def test_dunford_and_gelfand_theorems_are_self_contained(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for label, symbols in (
+            ("thm:dunford-closedgraph15b", ("$f:S", "$x'\circ f", "$D_A(x')", "$X''$")),
+            ("thm:gelfand-exists15b", ("$f:S", "$g_A(y)", "$Y'$", r"\sigma(Y',Y)")),
+        ):
+            start = source.index(r"\label{" + label + "}")
+            end = source.index(r"\end{twierdzenie}", start)
+            statement = source[start:end]
+            self.assertIn(r"$(S,\Sigma,\mu)$", statement)
+            self.assertIn(r"$\K\in\{\R,\C\}$", statement)
+            for symbol in symbols:
+                self.assertIn(symbol, statement)
+        self.assertNotIn("Przy założeniach powyższej definicji", source)
+        self.assertNotIn("Przy założeniach definicji", source)
+        self.assertIn(r"Całka Dunforda w $X''$ poza $J_X(X)$", source)
+
 if __name__ == "__main__":
     unittest.main()
