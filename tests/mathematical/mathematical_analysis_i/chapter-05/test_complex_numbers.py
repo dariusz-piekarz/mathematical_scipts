@@ -84,4 +84,26 @@ class Chapter05(unittest.TestCase):
             self.assertEqual(inv(z),conj(z))
             self.assertEqual(mul(z,inv(z)),(1,0))
 
+    def test_orientation_and_rotation_converse(self):
+        units=[(F(1),F(0)),(F(0),F(1)),(F(-1),F(0)),(F(0),F(-1)),
+               (F(3,5),F(4,5)),(F(-5,13),F(12,13))]
+        for first,second in itertools.product(units,repeat=2):
+            a,b=first
+            c,d=second
+            if a*c+b*d!=0: continue
+            det=a*d-b*c
+            self.assertIn(det,(-1,1))
+            A=((a,c),(b,d))
+            self.assertEqual(A==matrix(first),det==1)
+            self.assertEqual(mm(tuple(zip(*A)),A),((1,0),(0,1)))
+
+    def test_worked_complex_examples(self):
+        z,w=(2,3),(1,-2)
+        self.assertEqual(add(z,w),(3,1))
+        self.assertEqual(mul(z,w),(8,-1))
+        self.assertEqual(mul(z,inv(w)),(F(-4,5),F(7,5)))
+        for root,target in [((2,1),(3,4)),((0,3),(-9,0)),((1,-2),(-3,-4))]:
+            self.assertEqual(mul(root,root),target)
+            self.assertEqual(mul(neg(root),neg(root)),target)
+
 if __name__=="__main__": unittest.main()
