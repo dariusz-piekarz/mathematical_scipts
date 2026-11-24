@@ -82,5 +82,17 @@ class Chapter18(unittest.TestCase):
                 left = Fraction(n) + Fraction(1, 4)
                 self.assertGreater(left, m)
 
+
+    def test_FA18_stage_neighbourhoods_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\bigcap_{j=1}^r\{x\in E:p_j(x)<\varepsilon_j\}",
+            r"p_W(z)=\inf\{t>0:z\in tW\}",
+            r"(\eta/2)(V_n\cap E_n)",
+            r"\mathcal D_K\to\mathcal D_K",
+            r"(-4,-1.7) rectangle (4.6,1.8)",
+        ):
+            self.assertIn(fragment, s)
+
 if __name__ == "__main__":
     unittest.main()
