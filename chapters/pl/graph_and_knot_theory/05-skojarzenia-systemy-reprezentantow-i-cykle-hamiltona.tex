@@ -239,6 +239,73 @@ Dostajemy skojarzenie doskonałe.
 \end{tikzpicture}
 \end{center}
 
+\begin{definicja}[System różnych reprezentantów]
+Niech $I$ będzie skończonym zbiorem indeksów, a
+$(A_i)_{i\in I}$ indeksowaną rodziną skończonych zbiorów.
+\emph{Systemem różnych reprezentantów} tej rodziny
+nazywamy iniekcję $r:I\to X$, gdzie
+$X=\bigcup_{i\in I}A_i$, spełniającą $r(i)\in A_i$
+dla każdego $i\in I$. Zbiory $A_i$ mogą się powtarzać:
+różne indeksy wymagają różnych reprezentantów także
+wtedy, gdy odpowiadają im identyczne zbiory.
+\end{definicja}
+
+\begin{wniosek}[Hall: system różnych reprezentantów]
+\label{cor:tg-hall-sdr}
+Niech $I$ będzie skończonym zbiorem indeksów,
+a $(A_i)_{i\in I}$ rodziną skończonych zbiorów.
+Istnieje system różnych reprezentantów tej rodziny
+wtedy i tylko wtedy, gdy dla każdego $J\subseteq I$
+zachodzi
+\[
+\left|\bigcup_{j\in J} A_j\right|\ge |J|.
+\]
+\end{wniosek}
+
+\begin{proof}
+Niech $X=\bigcup_{i\in I}A_i$. Budujemy graf dwudzielny
+o częściach $L=\{0\}\times I$ i $R=\{1\}\times X$;
+wprowadzamy krawędź między $(0,i)$ i $(1,x)$
+dokładnie wtedy, gdy $x\in A_i$. Dzięki oznaczeniom
+$0,1$ obie części są rozłączne nawet wówczas,
+gdy $I\cap X\ne\varnothing$.
+
+Jeśli $r$ jest systemem różnych reprezentantów,
+krawędzie łączące $(0,i)$ z $(1,r(i))$ dla $i\in I$
+tworzą skojarzenie: końce w $L$ są różne z konstrukcji,
+a końce w $R$ są różne dzięki iniektywności $r$.
+Skojarzenie pokrywa $L$. Odwrotnie, skojarzenie
+pokrywające $L$ wyznacza dla każdego $i$ dokładnie
+jednego partnera $(1,r(i))$. Istnienie krawędzi
+zapewnia $r(i)\in A_i$, a rozłączność końców
+krawędzi zapewnia iniektywność $r$.
+
+Dla dowolnego $J\subseteq I$ sąsiedztwem zbioru
+$\{0\}\times J$ jest dokładnie
+$\{1\}\times\bigcup_{j\in J}A_j$.
+Każdy podzbiór $L$ ma postać $\{0\}\times J$,
+więc warunek z tezy jest równoważny warunkowi Halla
+dla tego grafu. Twierdzenie~\ref{thm:tg-hall}
+kończy dowód. Dla $I=\varnothing$ otrzymujemy
+pustą iniekcję i warunek spełniony automatycznie.
+\end{proof}
+
+\begin{przyklad}[Powtarzające się zbiory]
+Niech $I=\{1,2,3\}$ oraz $A_1=A_2=\{a,b\}$,
+$A_3=\{b,c\}$. Dla pojedynczego indeksu moc
+odpowiedniego zbioru wynosi $2$. Dla par indeksów
+$\{1,2\},\{1,3\},\{2,3\}$ moce sum zbiorów
+wynoszą odpowiednio $2,3,3$, a dla wszystkich
+trzech indeksów moc sumy wynosi $3$.
+Warunek Halla jest więc spełniony; przykładowym
+systemem jest $r(1)=a$, $r(2)=b$, $r(3)=c$.
+
+Gdy zastąpimy $A_3$ zbiorem $\{a,b\}$, każda
+para indeksów nadal spełnia warunek Halla,
+lecz dla $J=I$ suma ma tylko dwa elementy.
+System trzech różnych reprezentantów nie istnieje.
+\end{przyklad}
+
 \begin{stwierdzenie}[Wzór na deficyt Halla]
 \label{prop:tg-hall-def}
 Niech $G=(A\sqcup B,E)$ będzie skończonym grafem
@@ -389,6 +456,57 @@ zawierającą wszystkie pozostałe wierzchołki.
    {Euler: tak. Hamilton: nie (wierzchołek rozcinający $c$).};
 \end{tikzpicture}
 \end{center}
+
+\begin{stwierdzenie}[Konieczny warunek hamiltonowskości]
+\label{prop:tg-hamilton-components}
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+z cyklem Hamiltona. Dla każdego niepustego
+$S\subseteq V$ zachodzi $c(G-S)\le |S|$, gdzie
+$c(H)$ oznacza liczbę składowych spójnych grafu $H$
+(i $c(H)=0$, gdy $H$ jest grafem zerowym).
+\end{stwierdzenie}
+
+\begin{proof}
+Niech $C$ będzie cyklem Hamiltona w $G$.
+Jeśli $S=V$, to $G-S$ jest grafem zerowym
+i nierówność jest oczywista. Niech więc
+$\varnothing\ne S\subsetneq V$.
+Ustalmy kierunek obiegu $C$ i rozpocznijmy go
+w dowolnym wierzchołku z $S$. Po usunięciu $S$
+pozostają niepuste bloki kolejnych wierzchołków
+cyklu spoza $S$. Każdy taki blok jest ścieżką
+(być może długości zero) i bezpośrednio poprzedza
+go w obiegu wierzchołek z $S$. Dwa różne bloki
+nie mogą mieć tego samego poprzednika, ponieważ
+każdy wierzchołek występuje w obiegu dokładnie raz.
+Składowe $C-S$ są właśnie tymi blokami, więc
+$c(C-S)\le |S|$.
+
+Graf $C-S$ jest podgrafem rozpinającym $G-S$:
+oba mają ten sam zbiór wierzchołków $V\setminus S$,
+a każda krawędź pierwszego należy do drugiego.
+Każda składowa $C-S$ zawiera się zatem w pewnej
+składowej $G-S$, a każda składowa $G-S$ zawiera
+co najmniej jedną składową $C-S$.
+Stąd $c(G-S)\le c(C-S)\le |S|$.
+\end{proof}
+
+\begin{przyklad}[Brak wierzchołków rozcinających nie wystarcza]
+Rozważmy graf pełny dwudzielny $G=K_{2,3}$,
+o częściach $A=\{a_1,a_2\}$ i $B=\{b_1,b_2,b_3\}$.
+Usunięcie dowolnego wierzchołka daje $K_{1,3}$
+lub $K_{2,2}$, a oba te grafy są spójne.
+Istotnie, w każdym z nich wierzchołki z różnych
+części są sąsiadami, a dwa wierzchołki z tej samej
+części łączy ścieżka długości dwa przez dowolny
+wierzchołek drugiej części. Graf $G$ nie ma więc
+wierzchołków rozcinających.
+Jednak dla $S=A$ graf $G-S$ składa się z trzech
+izolowanych wierzchołków, czyli
+$c(G-S)=3>2=|S|$.
+Na mocy stwierdzenia~\ref{prop:tg-hamilton-components}
+graf $G$ nie ma cyklu Hamiltona.
+\end{przyklad}
 
 \begin{twierdzenie}[Dirac]
 \label{thm:tg-dirac}
