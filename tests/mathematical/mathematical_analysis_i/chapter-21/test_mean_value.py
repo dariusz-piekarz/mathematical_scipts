@@ -113,6 +113,13 @@ class Chapter21(TestCase):
             self.assertEqual(y,F(145,100)-(x-1)**2)
         self.assertEqual(points[0][1],points[1][1])
         self.assertEqual(points[2][0],1)
+        tangent=re.findall(r"\\draw\[green!40!black[^\]]*\] \(([\d.]+),([\d.]+)\)--\(([\d.]+),([\d.]+)\);",pictures[0])
+        self.assertEqual(len(tangent),1)
+        x1,y1,x2,y2=map(F,tangent[0])
+        c,fc=points[2]
+        self.assertTrue(x1<c<x2)
+        self.assertEqual(y1,fc)
+        self.assertEqual(y2,fc)
 
     def test_lagrange_figure_coordinates(self):
         source=(Path(__file__).resolve().parents[4] /
@@ -126,7 +133,10 @@ class Chapter21(TestCase):
         (a,fa),(b,fb),(c,fc)=points
         m=(fb-fa)/(b-a)
         self.assertEqual(m,F(14,10)*c)
-        for color,x1,y1,x2,y2 in re.findall(r"\\draw\[(orange!85!black|green!40!black)[^\]]*\] \(([\d.]+),([\d.]+)\)--\(([\d.]+),([\d.]+)\);",picture):
+        lines=re.findall(r"\\draw\[(orange!85!black|green!40!black)[^\]]*\] \(([\d.]+),([\d.]+)\)--\(([\d.]+),([\d.]+)\);",picture)
+        self.assertEqual(len(lines),2)
+        self.assertEqual({line[0] for line in lines},{'orange!85!black','green!40!black'})
+        for color,x1,y1,x2,y2 in lines:
             x1,y1,x2,y2=map(F,(x1,y1,x2,y2))
             self.assertEqual((y2-y1)/(x2-x1),m)
             x,y=(a,fa) if color.startswith("orange") else (c,fc)
