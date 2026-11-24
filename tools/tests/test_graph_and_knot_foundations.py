@@ -891,6 +891,32 @@ def test_chapter05_constructions():
     return graphs,matchings,augmentations,comparisons,bipartite,covers
 
 
+def test_incidence_total_unimodularity():
+    """Exact determinant expansion, independent of the column proof."""
+    def determinant(matrix):
+        if not matrix:
+            return 1
+        return sum((-1)**j * x * determinant([
+            row[:j]+row[j+1:] for row in matrix[1:]])
+            for j,x in enumerate(matrix[0]) if x)
+
+    graphs=minors=0
+    for n in range(1,5):
+        es=pairs(n)
+        for mask in range(1<<len(es)):
+            graphs+=1
+            edges=[e for j,e in enumerate(es) if mask>>j&1]
+            for k in range(min(n,len(edges))+1):
+                for rows in combinations(range(n),k):
+                    for cols in combinations(edges,k):
+                        matrix=[[int(v==b)-int(v==a) for a,b in cols]
+                                for v in rows]
+                        assert abs(determinant(matrix))<=1
+                        minors+=1
+    assert (graphs,minors)==(75,3040)
+    return graphs,minors
+
+
 def test_source_consistency():
     catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in catalog["books"] if x["id"]=="graph_and_knot_theory")
@@ -928,3 +954,6 @@ if __name__=="__main__":
 
     g,m,a,d,b,c=test_chapter05_constructions()
     print(f"PASS chapter 05 constructions: {g} graphs, {m} matchings, {a} oriented augmenting paths, {d} symmetric differences, {b} bipartite graphs, {c} Konig covers")
+
+    g,m=test_incidence_total_unimodularity()
+    print(f"PASS TG06-TU-01: {g} graphs, {m} exact minors")
