@@ -1,0 +1,15 @@
+# AA-71 — audyt II, etap P otwarty
+
+24 listopada 2026 r. Kontynuacja audytu I wyłącznie na istniejącej gałęzi. Odczytano całe źródło 9e0dfdee6381f851e45a878218476c924ce42310.
+
+## Niezależna kontrola
+1. Specjalizacja jest homomorfizmem nad R, a charakter ma współczynniki całkowite; nie jest potrzebne włożenie K w R. Inwersja elementu W zachowuje znak i pozwala wymienić argumenty parowania. Tożsamość mianownika AA-69 daje postać iloczynową licznika.
+2. Ścisła dominacja zapewnia dodatnie parowanie z każdym dodatnim korzeniem. Każdy czynnik 1-exp(-tb) ma analityczny iloraz przez t o wartości b w zerze. Iloczyn ma dokładnie rząd N, także przy granicy dwustronnej; współczynnik Taylora N daje N! w tożsamości momentów.
+3. Dla t różnego od zera mianownik specjalizacji nie znika; dzielenie odbywa się w R i dopiero po specjalizacji tożsamości pierścieniowej. Ciągłość charakteru i niezerowa granica mianownika po podzieleniu przez t^N dają wymiar. Wersja z h_alpha wymaga identyfikacji wartości wymiernych, nie rozszerzenia funkcjonału K-wartościowego na E. Doprecyzowano tę kwestię w dowodzie, a także poprawiono zapis „dąży do 1”. Commit 42c4b66fb0846825b5a91f4d9c85415f0670467d, blob a3bc7d6e5da04f440b3a38ff837213d0d3c88f9a. Nie zmieniono tezy ani zakresu.
+4. Stopień wielomianu wymiaru: czynniki na ścianach są stałe 1, pozostałe mają dodatnie współczynniki wiodące. Waga zero daje stopień 0, ścisła dominacja N. Przykłady A1/A2/B2/G2 zweryfikowano z listami korzeni i długości; w B2/G2 alpha_1 krótki. Wzory oraz podane małe wymiary poprawne.
+
+## Regresje
+Ponownie wykonano DIM-01: PASS, 9 układów, 530 modeli, 5462 momenty, 57720 składników orbit, 50 porównań z wartościami niezależnymi. Nowa trwała regresja AA-71-DIM-02 (aa:cor:weyl-dimension-polynomial i przykłady B2/G2) w tools/tests/test_abstract_algebra_ch71.js, commit f11a9e9109ac3103a7b82e9a86861024aaa8a8ab, blob 057e6c737afe0a63f24ba63f3c7808dedcba0192. Wykonano rozszerzony skrypt: DIM-02 PASS, 201 promieni (134 niezerowe na ścianach, 58 ściśle dominujących, 9 zerowych), 2361 dokładnych wartości wymiaru, 201 kontroli stopnia przez różnice skończone, 162 porównania wzorów jawnych B2/G2. Nie jest to formalizacja Lean.
+
+## CI/PDF
+Run 45493712311, job 138798504856, head 8cd249fac6ea53e8b372f490325d4d6721c9f98c: 150/150 success, 4796 testów, globalna bramka PASS: 71 rozdziałów, 594 dowody, 311 twierdzeń, 180 lematów, 69 wniosków, 361 przykładów, 1280 etykiet, 927 wystąpień odsyłaczy, zero nierozwiązanych i duplikatów. Artefakt 14967593244: PDF 440 stron, 2962123 bajty, SHA-256 0c09de860c42aedc144fbc779c50ea704b0de138593070121c589cb4494dcb07. Wyrenderowano PyMuPDF 1.4 i obejrzano wszystkie 4 strony AA-71, fizyczne 437–440, drukowane 423–426. Tabele korzeni, wzory i odsyłacze czytelne, brak kolizji i obcięć. Log: 0 Overfull, 0 Underfull, 0 Warning:, 0 undefined references, 0 linii !. Dotyczy źródła przed doprecyzowaniem. Run 45502021833 dla korekty in_progress przy kontroli; pełny CI i oględziny po korekcie pozostają otwarte. AA-71 nadal w stabilizacji, AA-72 nieotwarty.
