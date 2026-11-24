@@ -413,6 +413,91 @@ def test_chapter02_bfs():
     return graphs,roots,runs,distances,edge_checks
 
 
+def test_chapter03_euler_multigraphs():
+    """Compare Euler criteria with exact enumeration of edge-identity trails."""
+    directed_count=undirected_count=closed=open_count=orientations=0
+    for directed in (False,True):
+        for n in range(1,4):
+            types=[(u,v) for u in range(n)
+                   for v in range(0 if directed else u,n)]
+            for multiplicities in product(range(3),repeat=len(types)):
+                m=sum(multiplicities)
+                if not 1<=m<=6:
+                    continue
+                edges=[e for e,k in zip(types,multiplicities) for _ in range(k)]
+                if directed:
+                    directed_count+=1
+                else:
+                    undirected_count+=1
+                deg=[0]*n
+                balance=[0]*n
+                for u,v in edges:
+                    deg[u]+=1
+                    deg[v]+=1
+                    balance[u]+=1
+                    balance[v]-=1
+                active={v for v in range(n) if deg[v]}
+                adj=adj_of(n,edges)
+                seen={min(active)}
+                q=list(seen)
+                for u in q:
+                    for v in adj[u]:
+                        if v not in seen:
+                            seen.add(v)
+                            q.append(v)
+                connected=active==seen
+                odd={v for v in range(n) if deg[v]%2}
+                full=(1<<m)-1
+
+                @lru_cache(None)
+                def endpoints(u,used):
+                    if used==full:
+                        return 1<<u
+                    result=0
+                    for i,(a,b) in enumerate(edges):
+                        if used>>i&1:
+                            continue
+                        if a==u:
+                            result |= endpoints(b,used|(1<<i))
+                        elif not directed and b==u:
+                            result |= endpoints(a,used|(1<<i))
+                    return result
+
+                for start in range(n):
+                    actual=endpoints(start,0)
+                    for finish in range(n):
+                        if start==finish:
+                            closed+=1
+                            expected=(connected and start in active and
+                                      (not any(balance) if directed else not odd))
+                        else:
+                            open_count+=1
+                            expected=(connected and
+                                      (all(balance[v]==(int(v==start)-int(v==finish))
+                                           for v in range(n))
+                                       if directed else odd=={start,finish}))
+                        assert bool(actual>>finish&1)==bool(expected), (
+                            directed,n,edges,start,finish,expected)
+                endpoints.cache_clear()
+                if not directed:
+                    orientations+=1
+                    balanced=False
+                    for mask in range(1<<m):
+                        b=[0]*n
+                        for i,(u,v) in enumerate(edges):
+                            if mask>>i&1:
+                                u,v=v,u
+                            b[u]+=1
+                            b[v]-=1
+                        if not any(b):
+                            balanced=True
+                            break
+                    assert balanced==(not odd), (n,edges)
+    assert (directed_count,undirected_count,closed,open_count,orientations)==(
+        3137,462,10688,21166,462)
+    return directed_count,undirected_count,closed,open_count,orientations
+
+
 def test_source_consistency():
     catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in catalog["books"] if x["id"]=="graph_and_knot_theory")
@@ -435,3 +520,6 @@ if __name__=="__main__":
     print(f"PASS chapter 02: {g} graphs, {f} forests, {t} spanning forests, {x} coordinates, {d} fundamental duality cases")
     g,r,b,d,e=test_chapter02_bfs()
     print(f"PASS chapter 02 BFS: {g} connected graphs, {r} roots, {b} runs, {d} distances, {e} edge checks")
+
+    d,u,c,o,b=test_chapter03_euler_multigraphs()
+    print(f"PASS chapter 03 Euler: {d} directed, {u} undirected multigraphs, {c} closed endpoint pairs, {o} open endpoint pairs, {b} balanced orientation cases")
