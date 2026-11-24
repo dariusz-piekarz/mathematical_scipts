@@ -60,5 +60,22 @@ class Chapter17(unittest.TestCase):
             for b in range(9):
                 self.assertEqual((1j)**(-a)*(-1j)**b, (-1j)**(a+b))
 
+
+    def test_compact_jets_and_empty_exhaustion(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"q_n=p_{K_n,n}",
+            r"p_{K,m}(f-g)=0",
+            r"T(f)-T(g)",
+            r"Q_{N+1}(f_j)\ge cj",
+        ):
+            self.assertIn(fragment, s)
+        # Polynomials f(x)=x and g(x)=0 coincide at 0, but their
+        # first derivatives differ; point values alone do not determine T.
+        f_at_zero, g_at_zero = 0, 0
+        f_derivative_at_zero, g_derivative_at_zero = 1, 0
+        self.assertEqual(f_at_zero, g_at_zero)
+        self.assertNotEqual(f_derivative_at_zero, g_derivative_at_zero)
+
 if __name__ == "__main__":
     unittest.main()
