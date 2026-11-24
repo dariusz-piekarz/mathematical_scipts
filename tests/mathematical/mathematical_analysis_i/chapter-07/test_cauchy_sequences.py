@@ -49,4 +49,19 @@ class Chapter07(unittest.TestCase):
         self.assertLess(max(abs(fn(t)-f(t)) for t in S),eps/2)
         self.assertLessEqual(max(abs(f(t)) for t in S),max(abs(fn(t)) for t in S)+1)
 
+    def test_euclidean_projection_bound(self):
+        for m in (2,3,4):
+            for x in itertools.product(range(-2,3),repeat=m):
+                for p in (tuple(0 for _ in range(m)),tuple(range(m))):
+                    terms=[(a-b)**2 for a,b in zip(x,p)]
+                    self.assertLessEqual(sum(terms[:-1]),sum(terms))
+                    self.assertLessEqual(terms[-1],sum(terms))
+
+    def test_unit_vectors_separated_in_supremum_metric(self):
+        # Finite restrictions of the infinite unit vectors.
+        e=[tuple(int(j==n) for j in range(12)) for n in range(12)]
+        for n,k in itertools.product(range(12),repeat=2):
+            self.assertEqual(max(abs(t) for t in e[n]),1)
+            self.assertEqual(max(abs(a-b) for a,b in zip(e[n],e[k])),int(n!=k))
+
 if __name__=="__main__": unittest.main()
