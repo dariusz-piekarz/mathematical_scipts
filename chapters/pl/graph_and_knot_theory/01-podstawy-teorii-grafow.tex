@@ -78,10 +78,9 @@ możliwych krawędziach. Graf \emph{bez krawędzi} na $n$
 wierzchołkach ma zbiór krawędzi równy $\varnothing$;
 można go oznaczyć przez $\overline{K_n}$.
 Od grafu bez krawędzi odróżniamy \emph{graf zerowy}
-$G_0=(\varnothing,\varnothing)$. W pierwszych rozdziałach,
-zgodnie z konwencją definicji grafu prostego, rozważamy
-grafy o niepustym zbiorze wierzchołków; $G_0$ pojawia się
-jedynie przy operacjach usuwania i w konwencjach brzegowych.
+$G_0=(\varnothing,\varnothing)$. Graf zerowy jest dopuszczalny zgodnie z definicją grafu prostego.
+Niektóre pojęcia, np. najmniejszy i największy stopień,
+będą jednak wymagały niepustego zbioru wierzchołków.
 \end{definicja}
 
 \begin{przyklad}[Liczenie krawędzi grafu pełnego]
@@ -102,18 +101,11 @@ $uv\in E\iff f(u)f(v)\in F$ dla wszystkich różnych $u,v\in V$.
 Piszemy wtedy $G\cong H$.
 \end{definicja}
 
-Izomorfizm zmienia jedynie nazwy wierzchołków. Liczba wierzchołków,
-liczba krawędzi, stopnie, cykle oraz liczba składowych spójnych
-muszą zatem zgadzać się w grafach izomorficznych. Zgodność tych
-wielkości nie wystarcza jednak zwykle do izomorfizmu.
-
-\begin{przyklad}[Niezgodność wykryta przez trójkąty]
-Graf graniastosłupa trójkątnego i graf pełny dwudzielny $K_{3,3}$
-mają po sześć wierzchołków, dziewięć krawędzi i wszystkie stopnie
-równe trzy. Pierwszy zawiera cykl długości trzy, natomiast drugi
-nie zawiera żadnego cyklu nieparzystego. Nie są więc izomorficzne.
-To przykład, dlaczego sam ciąg stopni nie klasyfikuje grafów.
-\end{przyklad}
+Izomorfizm zmienia jedynie nazwy wierzchołków. Wyznacza
+bijekcję między zbiorami krawędzi, gdyż zachowuje i odzwierciedla
+sąsiedztwo. W szczególności zachowuje liczby wierzchołków
+i krawędzi. Dalsze niezmienniki izomorfizmu poznamy po
+wprowadzeniu stopni, cykli i spójności.
 
 \begin{definicja}[Realizacja geometryczna]
 Dla grafu prostego $G=(V,E)$ rozważmy przestrzeń
@@ -123,7 +115,8 @@ należącymi do krawędzi $e$. Otrzymany iloraz
 $|G|$ nazywamy \emph{realizacją geometryczną} grafu.
 \end{definicja}
 
-Realizacja jest jednowymiarowym kompleksem CW. Jej definicja nie
+Realizacja jest kompleksem CW wymiaru co najwyżej jeden
+(jej własności topologiczne omówimy w dalszej części). Jej definicja nie
 zależy od tego, jak rysujemy graf na kartce. W szczególności
 samo przecinanie się krzywych na rysunku nie prowadzi do
 utożsamienia odpowiednich punktów w $|G|$.
@@ -147,7 +140,7 @@ $\delta(G)=\min_{v\in V}d_G(v)$ i
 $\Delta(G)=\max_{v\in V}d_G(v)$.
 
 \begin{twierdzenie}[Lemat o uściskach dłoni]
-Niech $G=(V,E)$ będzie skończonym multigrafem
+Niech $G=(V,E,\partial)$ będzie skończonym multigrafem
 nieskierowanym, z dopuszczeniem pętli, a $d_G(v)$
 niech liczy każdą pętlę dwukrotnie. Wówczas
 \[
@@ -221,7 +214,7 @@ $\sum_{v\in V}d(v)=nr=2|E|$.
 Niech $G=(V,E)$ będzie grafem prostym. Graf
 $H=(W,F)$ jest jego \emph{podgrafem}, jeśli
 $W\subseteq V$ i $F\subseteq E\cap\binom W2$.
-Dla $W\subseteq V$, $W\ne\varnothing$, graf
+Dla dowolnego $W\subseteq V$ graf
 $G[W]=(W,E\cap\binom W2)$ nazywamy
 \emph{podgrafem indukowanym przez $W$}.
 \end{definicja}
@@ -231,7 +224,17 @@ krawędzi pomiędzy pozostałymi wierzchołkami. W podgrafie
 indukowanym zachowujemy \emph{wszystkie} krawędzie między
 wybranymi wierzchołkami. Notacja $G-e$ oznacza usunięcie
 samej krawędzi $e$; notacja $G-v$ usuwa wierzchołek $v$
-wraz z wszystkimi jego krawędziami.
+wraz z wszystkimi jego krawędziami. W szczególności
+$G[\varnothing]=G_0$.
+
+\begin{przyklad}[Podgraf a podgraf indukowany]
+Niech $G=K_4$ na zbiorze $V=\{1,2,3,4\}$ i niech
+$W=\{1,2,3\}$. Graf $H=(W,\{12,23\})$ jest podgrafem $G$,
+ale nie jest podgrafem indukowanym przez $W$, gdyż pomija
+krawędź $13$ występującą w $G$. Natomiast
+$G[W]=(W,\{12,23,13\})$. Podgraf indukowany przez dany
+zbiór wierzchołków jest wyznaczony jednoznacznie.
+\end{przyklad}
 
 \begin{definicja}[Dopełnienie]
 Dla grafu prostego $G=(V,E)$ jego
@@ -340,9 +343,14 @@ lub kierunku obiegu wyznaczają ten sam cykl.
 Graf \emph{acykliczny} nie zawiera cyklu.
 \end{definicja}
 
-W multigrafach analogiczna definicja dopuszcza
-cykle długości jeden (pętle) i dwa (dwie równoległe
-krawędzie); te dwa przypadki zawsze podamy jawnie.
+W multigrafie spacer trzeba opisać naprzemiennym ciągiem
+$v_0,e_1,v_1,\ldots,e_k,v_k$, gdzie
+$\partial(e_i)=[(v_{i-1},v_i)]$. Sam ciąg wierzchołków
+nie rozróżnia krawędzi równoległych. Szlak nie powtarza
+krawędzi; cykl to zamknięty szlak dodatniej długości,
+w którym $v_0,\ldots,v_{k-1}$ są parami różne.
+Dopuszcza to cykle długości jeden (pętle) i dwa
+(dwie różne krawędzie równoległe).
 
 \begin{lemat}[Usuwanie zamkniętych fragmentów spaceru]
 Niech $G$ będzie grafem skończonym i niech
@@ -456,8 +464,9 @@ drogi daje symetrię. Dla $u,v,w$ w tej samej
 składowej wybieramy najkrótsze drogi od $u$ do $v$
 i od $v$ do $w$. Ich konkatenacja jest spacerem od
 $u$ do $w$ długości $d_G(u,v)+d_G(v,w)$.
-Na mocy lematu o usuwaniu powtórzeń istnieje droga
-prosta nie dłuższa niż ten spacer. Zatem
+Jeśli $u=w$, nierówność trójkąta wynika z nieujemności
+odległości. Jeśli $u\ne w$, na mocy lematu o usuwaniu
+powtórzeń istnieje droga prosta nie dłuższa niż ten spacer. Zatem
 $d_G(u,w)\le d_G(u,v)+d_G(v,w)$.
 \end{proof}
 
@@ -502,22 +511,24 @@ $\ell(v)=d_G(r,v)$ odległość od $r$. Ustalmy
 $V_0=\{v:\ell(v)\text{ jest parzyste}\}$
 oraz $V_1=\{v:\ell(v)\text{ jest nieparzyste}\}$.
 Przypuśćmy, że istnieje krawędź $uv$ z końcami
-o tej samej parzystości odległości. Wybierzmy
-drzewo najkrótszych dróg od $r$: dla każdego
-$v\ne r$ wybieramy poprzednika o odległości
-$\ell(v)-1$. Wszystkie takie krawędzie tworzą
-drzewo, gdyż odległość ściśle maleje w kierunku
-korzenia, co wyklucza cykle, oraz każdy wierzchołek
-dochodzi do $r$.
+o tej samej parzystości odległości. Wybierzmy najkrótsze drogi od $r$ do $u$ i od $r$ do $v$.
+Przejście pierwszą drogą, następnie krawędzią $uv$, a wreszcie
+drugą drogą w kierunku odwrotnym daje spacer zamknięty
+długości $\ell(u)+1+\ell(v)$, która jest nieparzysta.
 
-Niech $w$ będzie ostatnim wspólnym wierzchołkiem
-dwóch dróg w tym drzewie od $r$ do $u$ i od $r$
-do $v$. Jedyna droga drzewowa od $u$ do $v$
-ma długość $\ell(u)+\ell(v)-2\ell(w)$, a więc
-parzystą. Krawędź $uv$ nie należy do drzewa,
-bo w drzewie łączyłaby poziomy o różnicy jeden.
-Dodanie jej do drogi drzewowej daje cykl
-nieparzystej długości, sprzeczny z (ii).
+Istnienie takiego spaceru implikuje istnienie cyklu
+nieparzystej długości. Istotnie, wybierzmy spośród wszystkich
+nieparzystych spacerów zamkniętych spacer
+$x_0,\ldots,x_m=x_0$ o najmniejszej długości.
+Gdyby $x_i=x_j$ dla pewnych $0\le i<j<m$, można by
+rozdzielić spacer na dwa spacery zamknięte o dodatnich
+długościach $j-i$ i $m-(j-i)$. Ich suma jest nieparzysta,
+zatem dokładnie jedna z tych długości jest nieparzysta.
+Obie są mniejsze od $m$, wbrew minimalności.
+Wierzchołki $x_0,\ldots,x_{m-1}$ są więc parami różne.
+Ponieważ graf jest prosty, nie istnieje spacer zamknięty
+długości jeden, a $m$ jest nieparzyste, więc $m\ge3$.
+Otrzymaliśmy cykl nieparzystej długości, sprzecznie z (ii).
 Zatem każda krawędź łączy wierzchołki o
 różnych parzystościach, co dowodzi (i).
 \end{proof}
@@ -548,6 +559,17 @@ cyklu. Pełny graf $K_{r,s}$ jest dwudzielny bezpośrednio
 z definicji. Dla $n\ge3$ cykl $C_n$ jest dwudzielny
 dokładnie wtedy, gdy $n$ jest parzyste. W szczególności
 $K_3$ i $K_5$ nie są dwudzielne.
+\end{przyklad}
+
+\begin{przyklad}[Niezgodność wykryta przez trójkąty]
+Graf graniastosłupa trójkątnego (dwa rozłączne trójkąty
+połączone trzema krawędziami między odpowiadającymi sobie
+wierzchołkami) i graf pełny dwudzielny $K_{3,3}$ mają po sześć wierzchołków, dziewięć krawędzi i wszystkie stopnie
+równe trzy. Pierwszy zawiera cykl długości trzy, natomiast drugi
+nie zawiera żadnego cyklu nieparzystego. Nie są więc izomorficzne.
+Izomorfizm zachowuje stopnie (indukuje bijekcje sąsiedztw)
+i cykle (przenosi ciągi różnych wierzchołków z zachowaniem
+krawędzi). To przykład, dlaczego sam ciąg stopni nie klasyfikuje grafów.
 \end{przyklad}
 
 \section{Które ciągi liczb są ciągami stopni?}
@@ -581,6 +603,8 @@ wtedy, gdy ciąg
   d_{d_1+2},\ldots,d_n)
 \]
 jest grafowy (po ewentualnym przestawieniu elementów).
+Jeśli w ciągu zredukowanym pojawi się liczba ujemna,
+uznajemy, że nie jest grafowy.
 Dla $d_1=0$ otrzymujemy ciąg samych zer, który jest
 grafowy.
 \end{twierdzenie}
