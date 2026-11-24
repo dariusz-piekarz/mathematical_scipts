@@ -1095,6 +1095,97 @@ def test_integral_boundary_image():
     return graphs,orientations,loads,balanced
 
 
+def test_cut_cycle_orthogonality():
+    """TG06-ORT-01: independent enumeration of cuts and parity cycles."""
+    graphs=vectors=intersections=0
+    for n in range(1,6):
+        es=pairs(n)
+        for mask in range(1<<len(es)):
+            E=[e for i,e in enumerate(es) if mask>>i&1]
+            m=len(E)
+            c=component_count(n,E)
+            cuts={sum(1<<i for i,(u,v) in enumerate(E)
+                      if ((S>>u)&1)!=((S>>v)&1))
+                  for S in range(1<<n)}
+            cycles=set()
+            for x in range(1<<m):
+                parity=0
+                for i,(u,v) in enumerate(E):
+                    if x>>i&1:
+                        parity^=(1<<u)|(1<<v)
+                if not parity:
+                    cycles.add(x)
+            assert len(cuts)==1<<(n-c)
+            assert len(cycles)==1<<(m-n+c)
+            for x in range(1<<m):
+                assert (x in cycles)==all((x&y).bit_count()%2==0 for y in cuts)
+                assert (x in cuts)==all((x&y).bit_count()%2==0 for y in cycles)
+                vectors+=1
+            intersections+=int(len(cycles&cuts)>1)
+            graphs+=1
+    # C4 has a nonzero vector in both subspaces.
+    E=[(0,1),(1,2),(2,3),(0,3)]
+    assert all(sum(v in e for e in E)==2 for v in range(4))
+    assert all((u%2)!=(v%2) for u,v in E)
+    return graphs,vectors,intersections
+
+
+def test_hodge_projection():
+    """TG06-HD-01: exact rational orthogonal decomposition with pinned roots."""
+    from fractions import Fraction as F
+    graphs=chains=0
+    for n in range(1,5):
+        es=pairs(n)
+        for mask in range(1<<len(es)):
+            E=[e for i,e in enumerate(es) if mask>>i&1]
+            a=adj_of(n,E)
+            unseen=set(range(n))
+            roots=set()
+            while unseen:
+                root=min(unseen)
+                roots.add(root)
+                seen={root}
+                q=[root]
+                for u in q:
+                    for v in a[u]-seen:
+                        seen.add(v)
+                        q.append(v)
+                unseen-=seen
+            free=[v for v in range(n) if v not in roots]
+            L=[[F(len(a[u]) if u==v else -int(v in a[u]))
+                for v in free] for u in free]
+            def boundary(x):
+                b=[F(0)]*n
+                for (u,v),w in zip(E,x):
+                    b[u]-=w
+                    b[v]+=w
+                return b
+            for x in product((-1,0,1),repeat=len(E)):
+                b=boundary(x)
+                M=[row[:]+[b[u]] for row,u in zip(L,free)]
+                for j in range(len(free)):
+                    k=next(i for i in range(j,len(free)) if M[i][j])
+                    M[j],M[k]=M[k],M[j]
+                    pivot=M[j][j]
+                    M[j]=[w/pivot for w in M[j]]
+                    for i in range(len(free)):
+                        if i!=j:
+                            factor=M[i][j]
+                            M[i]=[w-factor*z for w,z in zip(M[i],M[j])]
+                f=[F(0)]*n
+                for j,v in enumerate(free):
+                    f[v]=M[j][-1]
+                g=[f[v]-f[u] for u,v in E]
+                h=[w-z for w,z in zip(x,g)]
+                assert not any(boundary(h))
+                assert sum(w*z for w,z in zip(g,h))==0
+                assert sum(w*w for w in x)==sum(w*w for w in g)+sum(w*w for w in h)
+                assert boundary(g)==b
+                chains+=1
+            graphs+=1
+    return graphs,chains
+
+
 def test_source_consistency():
     catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in catalog["books"] if x["id"]=="graph_and_knot_theory")
@@ -1138,3 +1229,5 @@ if __name__=="__main__":
     print("PASS TG06-ZB-01 graphs, orientations, integer cycles:", test_integral_cycle_bases())
     print("PASS TG06-FV-01 graphs, systems, vertices:", test_integral_flow_vertices())
     print("PASS TG06-IMG-01 graphs, orientations, loads, balanced:", test_integral_boundary_image())
+    print("PASS TG06-ORT-01 graphs, vectors, nontrivial intersections:", test_cut_cycle_orthogonality())
+    print("PASS TG06-HD-01 graphs, exact Hodge decompositions:", test_hodge_projection())
