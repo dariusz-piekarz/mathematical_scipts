@@ -269,3 +269,58 @@ class RuntimeCgroupObservationTests(unittest.TestCase):
                      self.valid + b"unexpected line\n"):
             with self.subTest(data=data), self.assertRaises(ValueError):
                 self.validate(data)
+
+
+class RuntimeSecurityObservationTests(unittest.TestCase):
+    """Parser regression, not a substitute for the real container fixture."""
+
+    def setUp(self):
+        from scripts.lean_rootless_ci_probe import validate_runtime_security
+        self.validate = validate_runtime_security
+        self.valid = (b"Uid=65534 65534 65534 65534\nGid=65534 65534 65534 65534\n"
+                      b"CapEff=0000000000000000\nNoNewPrivs=1\nSeccomp=2\n"
+                      b"root.mountopts=ro,relatime\ntmp.mountopts=rw,nodev,nosuid,noexec,relatime\n"
+                      b"root.write=EROFS\ntmp.write=ok\n")
+
+    def test_accepts_expected_runtime_security(self):
+        self.assertEqual(self.validate(self.valid)["root.write"], "EROFS")
+
+    def test_rejects_wrong_credentials_or_kernel_flags(self):
+        for old, new in ((b"Uid=65534", b"Uid=0"), (b"Gid=65534", b"Gid=0"),
+                         (b"CapEff=0000000000000000", b"CapEff=0000000000000001"),
+                         (b"NoNewPrivs=1", b"NoNewPrivs=0"), (b"Seccomp=2", b"Seccomp=0")):
+            with self.subTest(old=old), self.assertRaises(ValueError):
+                self.validate(self.valid.replace(old, new))
+
+    def test_rejects_unsafe_mounts_or_write_results(self):
+        for old, new in ((b"root.mountopts=ro", b"root.mountopts=rw"),
+                         (b"root.mountopts=ro", b"root.mountopts=ro,rw"),
+                         (b",noexec", b""), (b",nosuid", b""), (b",nodev", b""),
+                         (b",noexec", b",noexec,exec"),
+                         (b"root.write=EROFS", b"root.write=EACCES"),
+                         (b"tmp.write=ok", b"tmp.write=failed")):
+            with self.subTest(old=old), self.assertRaises(ValueError):
+                self.validate(self.valid.replace(old, new))
+
+    def test_rejects_missing_duplicate_or_unexpected_security(self):
+        for data in (self.valid.replace(b"Seccomp=2\n", b""), self.valid + b"Seccomp=2\n",
+                     self.valid + b"unknown=1\n", self.valid + b"invalid line\n"):
+            with self.subTest(data=data), self.assertRaises(ValueError):
+                self.validate(data)
+
+    def test_combined_parser_preserves_both_checks(self):
+        from scripts.lean_rootless_ci_probe import validate_runtime_observations
+        cgroup = (b"memory.max=2147483648\nmemory.swap.max=0\n"
+                  b"pids.max=64\ncpu.max=100000 100000\n")
+        result = validate_runtime_observations(cgroup + self.valid)
+        self.assertEqual(len(result), 13)
+        for invalid in (cgroup + self.valid.replace(b"Seccomp=2", b"Seccomp=0"),
+                        cgroup.replace(b"pids.max=64", b"pids.max=max") + self.valid,
+                        cgroup + self.valid + b"cpu.max=100000 100000\n"):
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                validate_runtime_observations(invalid)
+
+    def test_fixture_reads_its_own_process_status_and_mountinfo(self):
+        from scripts.lean_rootless_ci_probe import _FIXTURE
+        self.assertIn('"/proc/$$/status"', _FIXTURE)
+        self.assertIn('"/proc/$$/mountinfo"', _FIXTURE)
