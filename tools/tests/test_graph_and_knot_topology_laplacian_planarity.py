@@ -489,6 +489,52 @@ def audit_rooted_forests():
     return graphs,minors,polynomials,resistances
 
 
+def audit_rayleigh_equality():
+    """TG08-RAY-01: exact equality criteria for weight changes and added edges."""
+    graphs=terminal_pairs=changes=equal_changes=additions=equal_additions=0
+    def potential(n, E, weights, s, t):
+        L=laplacian(n,E,weights)
+        J=[v for v in range(n) if v!=t]
+        sol=solve([[L[u][v] for v in J] for u in J],
+                  [Fraction(int(u==s)) for u in J])
+        f=[Fraction(0)]*n
+        for u,x in zip(J,sol):
+            f[u]=x
+        return f
+    for n in range(2,5):
+        es=edge_pairs(n)
+        for mask in range(1<<len(es)):
+            E=[e for i,e in enumerate(es) if mask>>i&1]
+            if not is_connected(n,E):
+                continue
+            for weights in ([1]*len(E),[(i%3)+1 for i in range(len(E))]):
+                graphs+=1
+                for s,t in combinations(range(n),2):
+                    terminal_pairs+=1
+                    f=potential(n,E,weights,s,t)
+                    R=f[s]
+                    # Increase each nonempty subset of conductances.
+                    for subset in range(1,1<<len(E)):
+                        changed=[j for j in range(len(E)) if subset>>j&1]
+                        w2=[w+int(j in changed) for j,w in enumerate(weights)]
+                        R2=potential(n,E,w2,s,t)[s]
+                        assert R2<=R
+                        assert (R2==R)==all(f[E[j][0]]==f[E[j][1]] for j in changed)
+                        changes+=1
+                        equal_changes+=int(R2==R)
+                    for u,v in es:
+                        if (u,v) in E:
+                            continue
+                        R2=potential(n,E+[(u,v)],weights+[2],s,t)[s]
+                        assert R2<=R
+                        assert (R2==R)==(f[u]==f[v])
+                        additions+=1
+                        equal_additions+=int(R2==R)
+    assert equal_changes and equal_changes<changes
+    assert equal_additions and equal_additions<additions
+    return graphs,terminal_pairs,changes,equal_changes,additions,equal_additions
+
+
 def planar_rotation(n,edges):
     """Exhaustive oriented sphere-embedding search via cyclic edge orders.
 
@@ -629,5 +675,6 @@ if __name__=="__main__":
     print("PASS TG07-NORM-01 cases, connected, incidences:",audit_cover_tree_normalization())
     print("PASS 08: exact Kirchhoff/Dirichlet/Thomson models:",graph_count)
     print("PASS TG08-FOREST-01 weighted graphs, minors, polynomial values, resistances:",audit_rooted_forests())
+    print("PASS TG08-RAY-01 graphs, pairs, changes, equal, additions, equal:",audit_rayleigh_equality())
     print("PASS 09: exhaustive rotations, planar faces and coloring:",audit_planarity())
     print("PASS source conventions, notation and 44-chapter catalog")
