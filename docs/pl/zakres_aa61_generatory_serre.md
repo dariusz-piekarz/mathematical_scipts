@@ -1,0 +1,3 @@
+# AA-61 — zakres
+
+Rozkład trójkątny półprostej algebry Liego nad algebraicznie domkniętym ciałem charakterystyki zero, baza prostych korzeni, wysokości i odejmowanie korzenia prostego, nilpotentność dodatniej i ujemnej podalgebry, generowanie przez proste przestrzenie korzeniowe, relacje Serre'a i ich dokładne wykładniki, rozkład ideałów według składowych diagramu Dynkina i równoważność prostoty z nierozkładalnością układu korzeni, przykład sl3. Bez twierdzenia o prezentacji Serre'a, konstrukcji wszystkich algebr i klasyfikacji. Wymagane dwa czyste audyty, dwa niezależne zestawy regresji, pełny CI i kontrola PDF.
