@@ -201,9 +201,9 @@ takich krawędzi nie ma.
 \label{sec:tg-rozpinajace}
 
 \begin{definicja}[Drzewo rozpinające]
-Niech $G=(V,E)$ będzie grafem spójnym.
+Niech $G=(V,E)$ będzie skończonym grafem prostym.
 \emph{Drzewem rozpinającym} $G$ nazywamy
-drugi graf $T=(V,E_T)$, gdzie $E_T\subseteq E$
+podgraf $T=(V,E_T)$, gdzie $E_T\subseteq E$
 oraz $T$ jest drzewem. Innymi słowy:
 $T$ ma dokładnie te same wierzchołki co $G$
 i pewien podzbiór jego krawędzi.
@@ -213,7 +213,7 @@ i pewien podzbiór jego krawędzi.
 Każdy skończony spójny graf prosty ma drzewo
 rozpinające. Graf o $n$ wierzchołkach jest
 spójny wtedy i tylko wtedy, gdy zawiera
-dr łewo rozpinające. W szczególności każdy
+drzewo rozpinające. W szczególności każdy
 spójny graf ma co najmniej $n-1$ krawędzi.
 \end{twierdzenie}
 
@@ -283,7 +283,7 @@ $r\in V(T)$ jest wyróżnionym
 \emph{korzeniem}. Dla $v\ne r$ jedyna droga
 od $r$ do $v$ ma przedostatni wierzchołek
 $p(v)$, zwany \emph{rodzicem} $v$. Każdy
-wierzchołek $w$ o $p(w)=v$ jest \emph{dzieckiem}
+wierzchołek $w\ne r$ o $p(w)=v$ jest \emph{dzieckiem}
 $v$. \emph{Głębokością} $v$ nazywamy
 $h(v)=d_T(r,v)$.
 \end{definicja}
@@ -380,12 +380,16 @@ co najwyżej $\ell$, sprzecznie z przypisaniem
 poziomu $k$. Zatem $h(v)=d_G(r,v)$.
 
 Każdy $v\ne r$ ma dokładnie jedną wybraną
-krawędź rodzicielską. Wzdłuż tych krawędzi
-poziom ściśle maleje w kierunku korzenia,
-więc nie ma cykli. Możemy też dojść z
-każdego wierzchołka do $r$, a więc podgraf
-rodzicielski jest spójny i acykliczny.
-Jest zatem drzewem rozpinającym.
+krawędź rodzicielską. Wzdłuż kolejnych rodziców
+poziom maleje o jeden aż do korzenia, więc podgraf
+rodzicielski jest spójny. Jest też acykliczny:
+gdyby zawierał cykl, wybierzmy na nim wierzchołek
+o największym poziomie. Obaj jego sąsiedzi na cyklu
+mają niższy poziom, gdyż każda krawędź rodzicielska
+łączy poziomy różniące się o jeden. Obaj musieliby
+więc być rodzicami tego wierzchołka, wbrew
+jednoznaczności rodzica. Podgraf jest zatem
+drzewem rozpinającym.
 \end{proof}
 
 \begin{przyklad}[Rozbieżność między drzewem BFS a grafem]
@@ -409,8 +413,15 @@ niż $G$.
 \end{definicja}
 
 Usunięcie jednej krawędzi może zwiększyć liczbę składowych
-co najwyżej o jeden, ponieważ jedynie składowa zawierająca
-tę krawędź może ulec rozdzieleniu. W szczególności
+co najwyżej o jeden. Istotnie, niech $e=uv$.
+W składowej zawierającej $e$ każdy wierzchołek $w$
+można połączyć z $u$ drogą prostą. Jeżeli droga nie
+zawiera $e$, to łączy $w$ z $u$ również po usunięciu
+$e$. Jeżeli zawiera $e$, jej fragment od $w$ do $v$
+nie zawiera $e$. Zatem po usunięciu $e$ każdy wierzchołek
+tej składowej jest połączony z co najmniej jednym z $u,v$.
+Powstają najwyżej dwie składowe, a inne składowe grafu
+nie ulegają zmianie. W szczególności
 w drzewie każda krawędź jest mostem.
 
 \begin{twierdzenie}[Kryterium mostu]
@@ -584,10 +595,12 @@ krawędzią inną niż ta, którą właśnie weszliśmy.
 Nie możemy zakończyć ruchu w wierzchołku
 stopnia co najmniej dwa; ponieważ graf jest
 skończony, pewien wierzchołek zostanie
-powtórzony. Fragment od pierwszego do
-następnego wystąpienia powtarzającego się
-wierzchołka, po ewentualnym odrzuceniu
-wcześniejszego fragmentu, daje cykl prosty $C$.
+powtórzony. Niech $v_j$ będzie pierwszym wierzchołkiem spaceru,
+który pojawia się po raz drugi, i niech $v_j=v_i$,
+gdzie $i<j$. Wierzchołki $v_i,\ldots,v_{j-1}$ są
+parami różne. Brak pętli i zakaz natychmiastowego
+powrotu wykluczają odpowiednio $j-i=1$ oraz $j-i=2$.
+Fragment $v_i,\ldots,v_j$ jest zatem cyklem prostym $C$.
 
 Usuńmy wszystkie krawędzie $C$ z $F$.
 Każdy wierzchołek na cyklu traci dokładnie
@@ -635,9 +648,9 @@ Ponieważ cykl ma przy każdym wierzchołku
 stopień parzysty, a własność parzystych
 stopni zachowuje się przy różnicy symetrycznej,
 $F$ ma wszędzie parzyste stopnie.
-Ale niepusty las nie może mieć wszystkich
-stopni parzystych: dowolna jego niepusta
-składowa z krawędzią ma liść stopnia jeden.
+Ale las zawierający co najmniej jedną krawędź
+nie może mieć wszystkich stopni parzystych:
+składowa zawierająca tę krawędź ma liść stopnia jeden.
 Stąd $F=\varnothing$ i
 $\mathbf1_C=\sum_{e\in E(C)\setminus E(T)}\mathbf1_{C_e}$.
 W ten sposób każdy cykl leży w rozpiętości
@@ -699,7 +712,7 @@ $E(C)\cap\delta_G(S)$.
 
 \begin{stwierdzenie}[Dualność fundamentalna]
 Niech $G$ będzie spójnym grafem prostym,
-$T$ jego drzewem rozpinającym, $e\notin E(T)$,
+$T$ jego drzewem rozpinającym, $e\in E(G)\setminus E(T)$,
 a $f\in E(T)$. Wtedy
 \[
 e\in D_f\quad\Longleftrightarrow\quad f\in C_e.
@@ -749,9 +762,9 @@ $\beta(G)=m-n+c$ nazywamy
 \end{definicja}
 
 \begin{twierdzenie}
-Dla każdego skończonego grafu prostego $G$
-zachodzi
-$\dim_{\mathbb F_2}\mathcal C(G)=m-n+c$.
+Dla każdego skończonego grafu prostego $G$ o $n$
+wierzchołkach, $m$ krawędziach i $c$ składowych spójnych
+zachodzi $\dim_{\mathbb F_2}\mathcal C(G)=m-n+c$.
 W szczególności $\beta(G)\ge0$ i
 $\beta(G)=0$ wtedy i tylko wtedy, gdy
 $G$ jest lasem.
