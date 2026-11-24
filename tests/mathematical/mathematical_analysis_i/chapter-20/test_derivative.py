@@ -1,5 +1,7 @@
 from fractions import Fraction as F
 from math import comb
+from pathlib import Path
+import re
 from unittest import TestCase, main
 
 class Chapter20(TestCase):
@@ -105,5 +107,36 @@ class Chapter20(TestCase):
             self.assertEqual(y,f(a)+slope*(x-a))
         for x,y in [(F(25,100),F(10,100)),(F(24,10),F(225,100))]:
             self.assertEqual(y,f(a)+a*(x-a))
+
+    def test_differential_vs_finite_increment(self):
+        for a in [F(-2),F(0),F(1)]:
+            for h in [F(0),F(-1,7),F(3,5)]:
+                dx=h
+                dy=a*dx
+                delta_y=((a+h)**2-a*a)/2
+                self.assertEqual(delta_y-dy,h*h/2)
+                if h:
+                    self.assertEqual((delta_y-dy)/h,h/2)
+        self.assertEqual(F(85,100)+F(3,5),F(145,100))
+        self.assertEqual(F(163,100)-F(145,100),F(18,100))
+
+    def test_differential_diagram_source(self):
+        source=(Path(__file__).resolve().parents[4] /
+                "chapters/pl/mathematical_analysis_i/20-pochodna.tex").read_text(encoding="utf-8")
+        figure=source.split(r"\begin{tikzpicture}",1)[1].split(r"\end{tikzpicture}",1)[0]
+        self.assertIn(r"$\Delta x=dx=h$",figure)
+        self.assertIn(r"$\Delta y$",figure)
+        self.assertIn(r"$dy$",figure)
+        coords={name:(F(x),F(y)) for name,x,y in
+                re.findall(r"\\coordinate \(([ABT])\) at \(([\d.]+),([\d.]+)\);",figure)}
+        self.assertEqual(set(coords),{"A","B","T"})
+        a,fa=coords["A"]
+        b,fb=coords["B"]
+        t,ft=coords["T"]
+        self.assertEqual(b,t)
+        self.assertEqual(fa,a*a/2+F(7,20))
+        self.assertEqual(fb,b*b/2+F(7,20))
+        self.assertEqual(ft,fa+a*(b-a))
+        self.assertEqual(fb-ft,(b-a)**2/2)
 
 if __name__ == "__main__": main()
