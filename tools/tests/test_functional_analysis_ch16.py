@@ -140,5 +140,22 @@ class Chapter16(unittest.TestCase):
                     w = max(F(0),z/(1+lam))
                     self.assertLessEqual((u-w)**2,(y-z)*(u-w))
 
+
+    def test_FA16_DIRICHLET_CONVEXITY_01(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        self.assertIn(r"\tfrac12t(1-t)\|u-w\|_H^2", source)
+        self.assertIn(r"[u'v]_0^1", source)
+        # u=a*x*(1-x), w=b*x*(1-x), f=1.
+        def J(a):
+            return (a*a-a)/6
+        for a in map(F, range(-3,4)):
+            for b in map(F, range(-3,4)):
+                for t in (F(1,4), F(1,2), F(3,4)):
+                    self.assertEqual((1-t)*J(a)+t*J(b)-J((1-t)*a+t*b),
+                                     t*(1-t)*(a-b)**2/6)
+        for a in map(F, range(-3,4)):
+            # Integral u'*v' = a/6 = integral v, for u=x*(1-x)/2.
+            self.assertEqual(F(1,2)*a/3,a/6)
+
 if __name__ == "__main__":
     unittest.main()
