@@ -77,4 +77,24 @@ class Chapter14(TestCase):
             M=F(k*k); x=F(1,2*k)
             self.assertGreater(1/(x*x),M)
 
+    def test_discrete_domain_at_infinity(self):
+        # A=Z: no finite accumulation point, yet both infinite ends exist.
+        for n in range(1,101):
+            self.assertGreater(n+1,n)
+            self.assertLess(-n-1,-n)
+            self.assertLess(abs(F(1,n+1)),F(1,n))
+            self.assertLess(abs(F(1,-n-1)),F(1,n))
+            for z in [n,-n,0]:
+                for k in [-2,-1,1,2]:
+                    self.assertGreaterEqual(abs((z+k)-z),1)
+
+    def test_locally_one_sided_domain(self):
+        # A=[0,1] union {-2}: the negative part disappears near p=0.
+        for n in range(1,101):
+            delta=F(1,n)
+            self.assertGreaterEqual(abs(F(-2)),delta)
+            x=delta/2
+            self.assertTrue(0<x<delta and x<=1)
+            self.assertLess(abs((1+x)-1),delta)
+
 if __name__ == "__main__": main()
