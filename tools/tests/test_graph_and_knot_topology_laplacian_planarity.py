@@ -400,6 +400,45 @@ def audit_length_metric():
     return graphs,points,distances
 
 
+def audit_cover_tree_normalization():
+    """TG07-NORM-01: normalize arbitrary sheet labels along a spanning tree."""
+    # Two tree edges with opposite traversal signs, a chord and a loop.
+    E=[(0,1),(2,1),(0,2),(1,1)]
+    cases=connected=edges_checked=0
+    for d in range(1,4):
+        identity=tuple(range(d))
+        perms=list(permutations(identity))
+        for p in product(perms,repeat=len(E)):
+            # g[v][i] is the old label of new sheet i over v.
+            g=[identity,p[0],tuple(p[1].index(p[0][i]) for i in identity)]
+            q=[tuple(g[v].index(sigma[g[u][i]]) for i in identity)
+               for (u,v),sigma in zip(E,p)]
+            assert q[0]==q[1]==identity
+            original={(j,u*d+i,v*d+p[j][i])
+                      for j,(u,v) in enumerate(E) for i in identity}
+            normalized={(j,u*d+i,v*d+q[j][i])
+                        for j,(u,v) in enumerate(E) for i in identity}
+            transported={(j,u*d+g[u][i],v*d+g[v][q[j][i]])
+                         for j,(u,v) in enumerate(E) for i in identity}
+            assert transported==original
+            old_components=components(3*d,[(u,v) for _,u,v in original])
+            new_components=components(3*d,[(u,v) for _,u,v in normalized])
+            old_partition={frozenset(C) for C in old_components}
+            new_partition={frozenset((x//d)*d+g[x//d][x%d] for x in C)
+                           for C in new_components}
+            assert old_partition==new_partition
+            # For each named base edge, both directed incidences occur once
+            # above each of its ends, even if that edge is a loop.
+            for j,(u,v) in enumerate(E):
+                for i in identity:
+                    assert sum(k==j and x==u*d+i for k,x,y in original)==1
+                    assert sum(k==j and y==v*d+i for k,x,y in original)==1
+                    edges_checked+=2
+            cases+=1
+            connected+=int(len(old_components)==1)
+    return cases,connected,edges_checked
+
+
 def planar_rotation(n,edges):
     """Exhaustive oriented sphere-embedding search via cyclic edge orders.
 
@@ -537,6 +576,7 @@ if __name__=="__main__":
     print("PASS TG07-UC-01 graphs, roots, vertices, incidences:",audit_universal_cover_prefixes())
     print("PASS TG07-RAD-01 exact radial contraction checks:",audit_radial_contraction())
     print("PASS TG07-MET-01 graphs, points, distances:",audit_length_metric())
+    print("PASS TG07-NORM-01 cases, connected, incidences:",audit_cover_tree_normalization())
     print("PASS 08: exact Kirchhoff/Dirichlet/Thomson models:",graph_count)
     print("PASS 09: exhaustive rotations, planar faces and coloring:",audit_planarity())
     print("PASS source conventions, notation and 44-chapter catalog")
