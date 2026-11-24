@@ -91,5 +91,38 @@ class Chapter31(unittest.TestCase):
                      r"r^{k-|\beta|+|\gamma|}"):
             self.assertIn(expr,s)
 
+
+    def test_mt31_009_angular_moment_symmetries(self):
+        # Symmetric finite angular model: signed permutations of coordinate axes.
+        for n in range(1,9):
+            directions = [tuple(sign if i==j else 0 for i in range(n))
+                          for j in range(n) for sign in (-1,1)]
+            for i,j in product(range(n),repeat=2):
+                moment = sum(Q(v[i]*v[j],len(directions)) for v in directions)
+                self.assertEqual(moment,Q(int(i==j),n))
+
+    def test_mt31_010_whitney_lusin_overlap_and_remainder(self):
+        for n in range(1,21):
+            self.assertGreater(Q(3,2)**n,2*Q(1,4)**n)
+        for x,y,z,gx,gy,fx,fy,fz in product((-1,0,1),repeat=8):
+            rx=fz-fx-gx*(z-x)
+            ry=fz-fy-gy*(z-y)
+            self.assertEqual(fy-fx-gx*(y-x),rx-ry+(gx-gy)*(z-y))
+        for j in range(1,11):
+            self.assertLess(sum(Q(1,2**i) for i in range(1,j+1)),1)
+
+    def test_mt31_011_measurability_and_higher_jet_source(self):
+        s = " ".join(SOURCE.read_text(encoding="utf-8").split())
+        for term in ("Wartość $f(x)$ w punkcie bazowym pozostawiamy niezmienioną",
+                     "przesunięciem zbioru miary zero",
+                     "mierzalność samego zbioru $D$",
+                     "supremum po wszystkich promieniach",
+                     "do $A\\cap D_0$ zamiast $A$",
+                     "otwarty względnie w $K_0$",
+                     "dążą jednostajnie do zera również bez obcięcia"):
+            self.assertIn(term,s)
+        self.assertIn(r"\bigcap_{j\ge1}\bigcap_{q\ge1}",s)
+        self.assertIn(r"\max_{|\alpha|\le k}\min(1,V_{\alpha,l})",s)
+
 if __name__ == "__main__":
     unittest.main()
