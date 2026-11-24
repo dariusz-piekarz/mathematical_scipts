@@ -535,6 +535,46 @@ def audit_rayleigh_equality():
     return graphs,terminal_pairs,changes,equal_changes,additions,equal_additions
 
 
+def audit_dirichlet_boundary():
+    """TG08-DIR-01: all boundary sets, including missed components."""
+    graphs=boundaries=singular=solutions=0
+    for n in range(1,5):
+        es=edge_pairs(n)
+        for mask in range(1<<len(es)):
+            E=[e for i,e in enumerate(es) if mask>>i&1]
+            C=components(n,E)
+            for weights in ([1]*len(E),[(i%3)+1 for i in range(len(E))]):
+                L=laplacian(n,E,weights)
+                graphs+=1
+                for mask_s in range(1<<n):
+                    S={v for v in range(n) if mask_s>>v&1}
+                    I=[v for v in range(n) if v not in S]
+                    missed=[c for c in C if not c&S]
+                    A=[[L[u][v] for v in I] for u in I]
+                    assert (exact_determinant(A)==0)==bool(missed)
+                    boundaries+=1
+                    singular+=int(bool(missed))
+                    # Ground one extra vertex in every missed component.
+                    T=S|{min(c) for c in missed}
+                    J=[v for v in range(n) if v not in T]
+                    f=[Fraction(v-1) if v in S else Fraction(0) for v in range(n)]
+                    sol=solve([[L[u][v] for v in J] for u in J],
+                              [-sum(L[u][v]*f[v] for v in T) for u in J])
+                    for u,x in zip(J,sol):
+                        f[u]=x
+                    assert all(sum(L[u][v]*f[v] for v in range(n))==0 for u in I)
+                    assert all(f[v]==v-1 for v in S)
+                    for c in C:
+                        if c&S:
+                            assert all(min(f[v] for v in c&S)<=f[u]<=max(f[v] for v in c&S) for u in c)
+                    for c in missed:
+                        h=[f[v]+int(v in c) for v in range(n)]
+                        assert all(sum(L[u][v]*(h[v]-f[v]) for v in range(n))==0 for u in range(n))
+                        assert all(h[v]==f[v] for v in S)
+                    solutions+=1
+    return graphs,boundaries,singular,solutions
+
+
 def planar_rotation(n,edges):
     """Exhaustive oriented sphere-embedding search via cyclic edge orders.
 
@@ -676,5 +716,6 @@ if __name__=="__main__":
     print("PASS 08: exact Kirchhoff/Dirichlet/Thomson models:",graph_count)
     print("PASS TG08-FOREST-01 weighted graphs, minors, polynomial values, resistances:",audit_rooted_forests())
     print("PASS TG08-RAY-01 graphs, pairs, changes, equal, additions, equal:",audit_rayleigh_equality())
+    print("PASS TG08-DIR-01 graphs, boundaries, singular, solutions:",audit_dirichlet_boundary())
     print("PASS 09: exhaustive rotations, planar faces and coloring:",audit_planarity())
     print("PASS source conventions, notation and 44-chapter catalog")
