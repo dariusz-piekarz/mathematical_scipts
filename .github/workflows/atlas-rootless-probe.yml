@@ -9,6 +9,7 @@ on:
       - "application/scripts/lean_rootless_ci_probe.py"
       - "application/backend/lean_draft_transport.py"
       - "application/backend/lean_draft_runner.py"
+      - "application/tests/test_lean_draft_transport.py"
   workflow_dispatch:
 
 permissions:
@@ -58,8 +59,32 @@ jobs:
           test -f /sys/fs/cgroup/cgroup.controllers
           grep -q "^$(id -un):" /etc/subuid
           grep -q "^$(id -un):" /etc/subgid
+          # Rootless Docker needs delegated cgroup v2 controllers, not merely
+          # a cgroup v2 mount. Scope the runtime drop-in to this CI user.
+          # https://docs.docker.com/engine/security/rootless/tips/
+          unit="user@$(id -u).service"
+          sudo install -d -m 0755 "/run/systemd/system/$unit.d"
+          printf '[Service]\nDelegate=cpu cpuset io memory pids\n' | sudo tee "/run/systemd/system/$unit.d/atlas-delegate.conf"
+          sudo systemctl daemon-reload
+          # Do not restart a user manager that owns the current CI process.
+          if sudo systemctl is-active --quiet "$unit"; then
+            cg="$(systemctl show -p ControlGroup --value "$unit")"
+            test -n "$cg"
+            self_cg="$(awk -F: '$1 == "0" {print $3}' /proc/self/cgroup)"
+            case "$self_cg" in
+              "$cg"|"$cg/"*) echo "CI process is inside user manager; refusing restart"; exit 1 ;;
+            esac
+            sudo systemctl restart "$unit"
+          fi
           sudo loginctl enable-linger "$(id -un)"
-          sudo systemctl start "user@$(id -u).service"
+          sudo systemctl start "$unit"
+          cg="$(systemctl show -p ControlGroup --value "$unit")"
+          test -n "$cg"
+          systemctl show -p Delegate -p ControlGroup "$unit"
+          cat "/sys/fs/cgroup$cg/cgroup.controllers"
+          for controller in cpu memory pids; do
+            grep -qw "$controller" "/sys/fs/cgroup$cg/cgroup.controllers"
+          done
       - name: Start dedicated user-owned Docker daemon
         shell: bash
         run: |
