@@ -50,7 +50,7 @@ Do wyświetlenia certyfikatu **Zweryfikowane matematycznie** wymagane są jednoc
 
 ### Etap 3 — biblioteka zależności i automatyczna transkrypcja (eksperyment)
 - Zintegrować mapowanie `label ↔ theorem`, graf zależności i wyszukiwanie Mathlib.
-- Opcjonalnie przetestować PaperFormalizer/LeanAide/Aristotle; wymagana walidacja licencji, wersji i kosztów. Kandydaci nie mogą bezpośrednio nadpisywać źródeł `.tex`.
+- Decyzja użytkownika 24.11.2026: własny lokalny silnik reguł, opcjonalny lokalny model AI i dodatkowe, domyślnie wyłączone adaptery OpenAI/Codex, Anthropic/Claude i innych dostawców. Silnik lokalny działa bez kluczy, sieci i opłat. Zewnętrzne integracje wymagają aktualnej kontroli licencji, wersji, warunków transferu, jawnej zgody i limitów kosztów; brak automatycznego fallbacku do chmury. Kandydaci nie mogą nadpisywać źródeł `.tex`. Szczegóły: [plan autoformalizacji](LEAN_LOCAL_AUTOFORMALIZATION_PLAN.md).
 - Generacja transkrypcji trafia zawsze do stanu `draft`/`needs_review`; niezależne sprawdzenie semantyki i Lean.
 
 ### Etap 4 — skala i CI
