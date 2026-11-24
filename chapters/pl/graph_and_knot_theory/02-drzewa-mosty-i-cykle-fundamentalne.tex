@@ -645,9 +645,14 @@ funkcji $x:E\to\mathbb F_2=\{0,1\}$, ze
 zwykłym dodawaniem modulo $2$.
 Zbiór krawędzi $F\subseteq E$ utożsamiamy
 z funkcją charakterystyczną $\mathbf1_F$.
-Dla dwóch zbiorów krawędzi suma odpowiada
-\emph{różnicy symetrycznej}:
+Dla dwóch zbiorów krawędzi $F,H\subseteq E$ zachodzi
+$\mathbf1_F+\mathbf1_H=\mathbf1_{F\triangle H}$,
+gdzie \emph{różnica symetryczna} to
 $F\triangle H=(F\setminus H)\cup(H\setminus F)$.
+Istotnie, przy krawędzi należącej do obu zbiorów
+otrzymujemy $1+1=0$ w $\mathbb F_2$, przy krawędzi
+należącej dokładnie do jednego zbioru otrzymujemy $1$,
+a przy pozostałych krawędziach otrzymujemy $0$.
 \end{definicja}
 
 \begin{definicja}[Przestrzeń cykli]
@@ -698,7 +703,33 @@ indukcyjnego jest rozłączną sumą cykli.
 Dołączając $C$, otrzymujemy rozkład całego $F$.
 \end{proof}
 
+\begin{wniosek}[Charakteryzacja przestrzeni cykli]
+\label{cor:tg-przestrzen-cykli-parzystosc}
+Niech $G=(V,E)$ będzie skończonym grafem prostym.
+Dla $F\subseteq E$ zachodzi $\mathbf1_F\in\mathcal C(G)$
+wtedy i tylko wtedy, gdy każdy wierzchołek podgrafu
+$(V,F)$ ma parzysty stopień.
+\end{wniosek}
+
+\begin{proof}
+Dla każdego $v\in V$ rozważmy funkcjonał liniowy
+$\ell_v:\mathbb F_2^E\to\mathbb F_2$ dany wzorem
+$\ell_v(x)=\sum_{e\in E:\,v\in e}x(e)$.
+Dla każdego cyklu prostego $C$ mamy
+$\ell_v(\mathbf1_C)=0$, ponieważ liczba krawędzi
+cyklu incydentnych z $v$ wynosi zero lub dwa.
+Z liniowości $\ell_v$ wynika, że znika on również
+na każdej kombinacji liniowej wektorów cykli,
+czyli na całej $\mathcal C(G)$.
+Ponieważ $\ell_v(\mathbf1_F)$ jest resztą z dzielenia
+$d_{(V,F)}(v)$ przez dwa, otrzymujemy konieczność.
+Wystarczalność jest treścią poprzedniego lematu:
+rozkład $F$ na rozłączne krawędziowo cykle daje
+$\mathbf1_F$ jako sumę ich wektorów charakterystycznych.
+\end{proof}
+
 \begin{twierdzenie}[Cykle fundamentalne tworzą bazę]
+\label{thm:tg-baza-cykli-fundamentalnych}
 Niech $G=(V,E)$ będzie skończonym spójnym
 grafem prostym, $|V|=n$, $|E|=m$,
 a $T$ jego drzewem rozpinającym. Rodzina
@@ -730,12 +761,10 @@ pojawia się dokładnie dwa razy i znika w
 różnicy symetrycznej; krawędzie spoza
 drzewa nie należące do $C$ nie pojawiają się
 wcale. Zatem $F\subseteq E(T)$.
-Ponieważ cykl ma przy każdym wierzchołku
-stopień parzysty, a własność parzystych
-stopni zachowuje się przy różnicy symetrycznej
-(każda wspólna krawędź usuwa dwa wkłady do sumy
-stopni przy każdym ze swoich końców),
-$F$ ma wszędzie parzyste stopnie.
+Wektor $\mathbf1_F$ jest sumą wektorów cykli,
+więc należy do $\mathcal C(G)$. Na mocy
+wniosku~\ref{cor:tg-przestrzen-cykli-parzystosc}
+każdy wierzchołek podgrafu $(V,F)$ ma parzysty stopień.
 Ale las zawierający co najmniej jedną krawędź
 nie może mieć wszystkich stopni parzystych:
 składowa zawierająca tę krawędź ma liść stopnia jeden.
@@ -830,10 +859,10 @@ przez $f$ dokładnie wtedy, gdy końce
 $e$ leżą po przeciwnych stronach podziału.
 Pierwszy warunek oznacza $f\in C_e$,
 a drugi dokładnie $e\in D_f$.
-W drzewie $T$ jedyną krawędzią
-prowadzącą z $S_f$ do dopełnienia jest
-$f$, bo gdyby była druga, po jej
-dodaniu do $T-f$ powstałby cykl.
+Krawędź $f$ ma końce w różnych składowych $T-f$.
+Każda inna krawędź drzewa należy nadal do $T-f$,
+więc oba jej końce leżą w tej samej składowej.
+Jedyną krawędzią drzewa przecinającą podział jest $f$.
 Wobec tego $D_f\cap E(T)=\{f\}$.
 \end{proof}
 
@@ -884,7 +913,7 @@ W dalszej części wprowadzimy operator brzegowy
 $\partial_1:\mathbb F_2^E\to\mathbb F_2^V$.
 Warunek ,,każdy wierzchołek ma stopień
 parzysty'' będzie równoważny $\partial_1x=0$.
-Dzisiejsze twierdzenie o bazie cykli fundamentalnych
+Twierdzenie~\ref{thm:tg-baza-cykli-fundamentalnych} o bazie cykli fundamentalnych
 przyjmie więc postać obliczenia
 $\dim\ker\partial_1=m-n+1$ dla grafu spójnego.
 Po przejściu do realizacji $|G|$ otrzymamy
@@ -914,12 +943,19 @@ $G$ jest lasem.
 \end{twierdzenie}
 
 \begin{proof}
-Niech składowe spójne $G_1,\ldots,G_c$
-mają odpowiednio $n_i$ wierzchołków
-i $m_i$ krawędzi. Cykl nie może przebiegać
-przez więcej niż jedną składową, więc
-$\mathcal C(G)$ jest sumą prostą
-przestrzeni $\mathcal C(G_i)$. Z twierdzenia
+Jeśli $G$ jest grafem zerowym, to $n=m=c=0$,
+a $\mathcal C(G)=\{0\}$, więc teza zachodzi.
+Niech teraz składowe spójne $G_1,\ldots,G_c$
+mają odpowiednio $n_i$ wierzchołków i $m_i$ krawędzi.
+Utożsamiamy $\mathbb F_2^{E(G_i)}$ z podprzestrzenią
+$\mathbb F_2^E$ przez przedłużenie funkcji zerem
+na krawędziach pozostałych składowych.
+Każdy cykl leży w jednej składowej, więc
+$\mathcal C(G)$ jest sumą przestrzeni $\mathcal C(G_i)$.
+Suma jest prosta: jeżeli suma wektorów pochodzących
+z różnych składowych jest zerowa, to po ograniczeniu
+jej do $E(G_i)$ otrzymujemy zerowy wektor z $i$-tej
+składowej. Zatem wszystkie składniki sumy są zerowe. Z twierdzenia
 o bazie cykli fundamentalnych otrzymujemy
 $\dim\mathcal C(G_i)=m_i-n_i+1$.
 Sumując po $i$, dostajemy
@@ -928,6 +964,44 @@ Wymiar przestrzeni jest nieujemny.
 Jest równy zero dokładnie wtedy, gdy
 żadna składowa nie zawiera cyklu, czyli
 gdy cały graf jest lasem.
+\end{proof}
+
+\begin{wniosek}[Współrzędne względem lasu rozpinającego]
+\label{cor:tg-wspolrzedne-cykli-las}
+Niech $G=(V,E)$ będzie skończonym grafem prostym,
+a $F=(V,E_F)$ jego lasem rozpinającym.
+Dla każdej krawędzi $e\in E\setminus E_F$ niech $C_e$
+oznacza cykl fundamentalny względem drzewa rozpinającego
+tej składowej, do której należy $e$.
+Wówczas odwzorowanie liniowe
+$\rho:\mathcal C(G)\to\mathbb F_2^{E\setminus E_F}$
+określone przez $\rho(x)=x|_{E\setminus E_F}$
+jest izomorfizmem. Jego odwzorowanie odwrotne jest dane
+wzorem
+\[
+\rho^{-1}(a)=\sum_{e\in E\setminus E_F}a(e)\mathbf1_{C_e}.
+\]
+\end{wniosek}
+
+\begin{proof}
+Każdy $C_e$ zawiera dokładnie jedną krawędź spoza lasu,
+mianowicie $e$. Ograniczając wektor $\mathbf1_{C_e}$
+do $E\setminus E_F$, otrzymujemy więc wektor
+charakterystyczny zbioru jednoelementowego $\{e\}$.
+Wektory te tworzą bazę przestrzeni
+$\mathbb F_2^{E\setminus E_F}$, stąd $\rho$ jest surjekcją
+i podana suma daje przeciwobraz dowolnego $a$.
+
+Jeśli $\rho(x)=0$, nośnik $x$ jest podzbiorem $E_F$.
+Jako element $\mathcal C(G)$ wektor $x$ odpowiada
+podgrafowi o parzystych stopniach, na mocy
+wniosku~\ref{cor:tg-przestrzen-cykli-parzystosc}.
+Ten podgraf jest lasem, ponieważ zawiera wyłącznie
+krawędzie $F$. Gdyby zawierał krawędź, miałby liść,
+sprzecznie z parzystością stopni. Zatem $x=0$.
+Odwzorowanie $\rho$ jest iniekcją, co kończy dowód.
+Argument obejmuje także graf zerowy i przypadek $G=F$,
+gdy obie przestrzenie są zerowe.
 \end{proof}
 
 \begin{przyklad}[Co mierzy liczba $\beta$?]
