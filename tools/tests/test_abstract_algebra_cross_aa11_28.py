@@ -151,7 +151,7 @@ class EisensteinCyclotomicInterface(unittest.TestCase):
     def test_source_labels_refs_and_stable_chapter_contract(self):
         folder = ROOT / "chapters/pl/abstract_algebra"
         paths = sorted(folder.glob("[0-9][0-9]-*.tex"))
-        self.assertEqual(len(paths), 61)
+        self.assertEqual(len(paths), 62)
         all_sources = {p.name: p.read_text(encoding="utf-8")
                        for p in paths}
         labels = [m for s in all_sources.values()
