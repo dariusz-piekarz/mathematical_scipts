@@ -242,5 +242,54 @@ class Chapter23(unittest.TestCase):
             self.assertGreater(periodic(2*R,R),0)
             self.assertEqual(cutoff(2*R,R),0)
 
+    def test_FA23_hermite_basis_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"P_{n+1}=2xP_n-P_n'",
+            r"2^n n!\sqrt\pi",
+            r"|g(x)|e^{R|x|}",
+            r"\ref{thm:fourier-auto-tempered22}",
+            r"Przeliczalność rodziny $n$",
+            r"P_n'=2nP_{n-1}",
+            r"L=\sum_j a_j^*a_j+dI",
+            r"(2(|\nu|+l+1))^{l/2}",
+            r"2r\ge N+m+s",
+            r"\ref{thm:plancherel22}",
+            r"p_k(H(f))\le\|(1+L)^k f\|_2",
+            r"p_{r+t}(c)^2",
+            r"H(u)_\nu=c_\nu",
+            r"Q_{N,m}(H^{-1}c)\le C p_{r+t}(c)",
+            r"q=q'\circ H",
+        ):
+            self.assertIn(fragment,s)
+        from math import factorial
+        def trim(p):
+            while len(p)>1 and p[-1]==0: p.pop()
+            return p
+        def add(p,q):
+            return trim([(p[i] if i<len(p) else 0)+(q[i] if i<len(q) else 0)
+                         for i in range(max(len(p),len(q)))])
+        def scale(p,a): return trim([a*c for c in p])
+        def X(p): return [0]+p
+        def D(p): return [i*p[i] for i in range(1,len(p))] or [0]
+        P=[[1]]
+        for n in range(12):
+            P.append(add(scale(X(P[-1]),2),scale(D(P[-1]),-1)))
+        def moment(k):
+            if k%2: return F(0)
+            v=F(1)
+            for j in range(1,k,2): v*=F(j,2)
+            return v
+        for n,m in product(range(13),repeat=2):
+            integral=sum(a*b*moment(i+j) for i,a in enumerate(P[n])
+                         for j,b in enumerate(P[m]))
+            self.assertEqual(integral,2**n*factorial(n) if n==m else 0)
+        for n in range(12):
+            self.assertEqual(D(P[n]),scale(P[n-1],2*n) if n else [0])
+            self.assertEqual(add(scale(X(P[n]),2),scale(D(P[n]),-1)),P[n+1])
+            self.assertEqual(add(scale(D(D(P[n])),-1),
+                                 add(scale(X(D(P[n])),2),P[n])),
+                             scale(P[n],2*n+1))
+
 if __name__ == "__main__":
     unittest.main()
