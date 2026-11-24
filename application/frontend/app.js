@@ -6,7 +6,7 @@ const state = {
   domains:[], modules:[], outlines:new Map(), expandedDomains:new Set(), expandedModules:new Set(),
   currentModule:null, currentEntity:null, currentData:null, selected:new Map(),
   tab:"reader", granularity:"module", simplified:false, tooltipData:null, leanEpoch:0, leanFragment:null, leanRunner:null, leanCatalog:null, leanCatalogLoading:false, leanCatalogEpoch:0,
-  leanChapterReportEpoch:0,
+  leanChapterReportEpoch:0, leanTranscriptionEpoch:0, leanTranscriptionBusy:false,
   tooltipKey:0, graph:null, conceptGraph:null, conceptEpoch:0, renderEpoch:0, draftSession:null,
 };
 const titleOr = item => item.title || item.subtype || item.kind || item.id;
@@ -748,8 +748,77 @@ async function loadLeanChapterReport(){
     summary.textContent="Nie można wczytać raportu: "+err.message;
   }
 }
+function canPrepareLeanTranscription(item){
+  return !!item && item.source_linkage==="exact_entity" &&
+    typeof item.source_entity==="string" && !!item.source_entity &&
+    Array.isArray(item.source_labels) && item.source_labels.length===1 &&
+    /^[a-f0-9]{64}$/.test(item.source_sha256||"") &&
+    typeof item.source_latex==="string";
+}
+function resetLeanTranscription(item=null){
+  ++state.leanTranscriptionEpoch;
+  state.leanTranscriptionBusy=false;
+  $("leanTranscriptionConsent").checked=false;
+  $("leanTranscriptionConsent").disabled=!canPrepareLeanTranscription(item);
+  $("leanTranscriptionPrepare").disabled=true;
+  $("leanTranscriptionPackage").textContent="";
+  $("leanTranscriptionStatus").textContent=canPrepareLeanTranscription(item)?
+    "Wymagana zgoda na lokalne przygotowanie pełnego twierdzenia; typ i etykietę sprawdzi serwer.":
+    "Wybierz pojedynczy obiekt z jednoznaczną etykietą (pełne twierdzenie).";
+}
+function updateLeanTranscriptionConsent(){
+  $("leanTranscriptionPrepare").disabled=state.leanTranscriptionBusy||
+    !canPrepareLeanTranscription(state.leanFragment)||!$("leanTranscriptionConsent").checked;
+}
+function validLeanTranscription(p,item){
+  const digest=x=>typeof x==="string"&&/^[a-f0-9]{64}$/.test(x);
+  return !!p && p.schema_version===1 && p.status==="prepared" && p.experimental===true &&
+    p.source_scope==="indexed_snapshot_only" && p.source_module===item.source_module &&
+    p.source_entity===item.source_entity && p.source_label===item.source_labels[0] &&
+    p.start_line===item.start_line && p.end_line===item.end_line &&
+    p.source_sha256===item.source_sha256 && p.source_latex===item.source_latex &&
+    p.source_bytes===new TextEncoder().encode(item.source_latex).length &&
+    p.source_bytes<=32768 && digest(p.source_document_sha256) &&
+    digest(p.source_binding_sha256) && digest(p.request_id) &&
+    p.candidate_status==="not_generated" && p.lean_code===null &&
+    p.statement_status==="unreviewed" && p.proof_status==="not_run" &&
+    p.certificate===false && p.external_provider===null &&
+    p.external_transfer_allowed===false && p.license_status==="unreviewed" &&
+    p.external_budget_minor_units===0 && p.external_cost_minor_units===0 &&
+    p.registry_written===false && p.canonical_source_written===false;
+}
+async function prepareLeanTranscription(){
+  const item=state.leanFragment;
+  if(state.leanTranscriptionBusy||!canPrepareLeanTranscription(item)||!$("leanTranscriptionConsent").checked)return;
+  const epoch=++state.leanTranscriptionEpoch,fragmentEpoch=state.leanEpoch;
+  const current=()=>epoch===state.leanTranscriptionEpoch&&fragmentEpoch===state.leanEpoch&&item===state.leanFragment;
+  state.leanTranscriptionBusy=true;
+  $("leanTranscriptionConsent").checked=false;
+  $("leanTranscriptionConsent").disabled=true;
+  updateLeanTranscriptionConsent();
+  $("leanTranscriptionPackage").textContent="";
+  $("leanTranscriptionStatus").textContent="Przygotowywanie pakietu lokalnego…";
+  try{
+    const p=await api("/api/lean/transcription/prepare",{method:"POST",body:JSON.stringify({
+      entity_id:item.source_entity,expected_source_sha256:item.source_sha256,consent:true})});
+    if(!current())return;
+    if(!validLeanTranscription(p,item))throw new Error("Niezgodny format lub pochodzenie pakietu.");
+    $("leanTranscriptionStatus").textContent="Przygotowano pakiet lokalny. Nie wygenerowano kodu Lean; nie uruchomiono kompilacji. Licencja niezweryfikowana, transfer zewnętrzny zabroniony, koszt zewnętrzny 0.";
+    $("leanTranscriptionPackage").textContent=JSON.stringify(p,null,2);
+  }catch(err){
+    if(!current())return;
+    $("leanTranscriptionPackage").textContent="";
+    $("leanTranscriptionStatus").textContent="Nie można przygotować pakietu: "+err.message;
+  }finally{
+    if(current()){
+      state.leanTranscriptionBusy=false;
+      $("leanTranscriptionConsent").disabled=false;
+      updateLeanTranscriptionConsent();
+    }
+  }
+}
 async function loadLeanFragment(query){
-  const epoch=++state.leanEpoch;activateTab("lean");
+  const epoch=++state.leanEpoch;state.leanFragment=null;resetLeanTranscription();activateTab("lean");
   $("leanDependencies").classList.add("hidden");
   $("leanDependencyGraph").replaceChildren();
   $("leanInspect").disabled=true;
@@ -759,7 +828,7 @@ async function loadLeanFragment(query){
   try {
     const result=await api("/api/lean/fragment?"+new URLSearchParams(query));
     if(epoch!==state.leanEpoch)return;
-    state.leanFragment=result;state.leanRunner=null;
+    state.leanFragment=result;state.leanRunner=null;resetLeanTranscription(result);
     renderLeanFragment(result);
     if(result.formalization_id)loadLeanDependencies(result,epoch);
     try{
@@ -1024,6 +1093,8 @@ function listeners(){
   $("openLeanCurrent").addEventListener("click",openLeanCurrent);
   $("openLeanSelection").addEventListener("click",openLeanSelection);
   $("leanRun").addEventListener("click",runLeanFormalization);
+  $("leanTranscriptionConsent").addEventListener("change",updateLeanTranscriptionConsent);
+  $("leanTranscriptionPrepare").addEventListener("click",prepareLeanTranscription);
   $("leanInspect").addEventListener("click",inspectLeanConstants);
   $("leanCatalogRefresh").addEventListener("click",()=>{state.leanCatalog=null;loadLeanCatalog();});
   $("leanCatalogSearch").addEventListener("input",renderLeanCatalog);

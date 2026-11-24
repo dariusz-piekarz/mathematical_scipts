@@ -96,6 +96,35 @@ def main() -> None:
                 assert page.evaluate("state.leanFragment.statement_status") == "approved"
                 assert page.evaluate("state.leanFragment.certificate") is False
                 assert page.locator("#leanRun").is_disabled()
+                # L1.5.2: prepare an offline package even with runner disabled.
+                old_code = page.locator("#leanCode").text_content()
+                assert page.locator("#leanTranscriptionPrepare").is_disabled()
+                assert not page.locator("#leanTranscriptionConsent").is_checked()
+                page.locator("#leanTranscriptionConsent").check()
+                page.locator("#leanTranscriptionPrepare").click()
+                page.wait_for_function(
+                    "() => document.querySelector('#leanTranscriptionStatus').textContent.includes('Nie wygenerowano kodu Lean')",
+                    timeout=20000,
+                )
+                packet = page.evaluate("JSON.parse(document.querySelector('#leanTranscriptionPackage').textContent)")
+                assert packet["source_entity"] == entity_id
+                assert packet["source_latex"] == source[begin:finish]
+                assert packet["source_sha256"] == page.evaluate("state.leanFragment.source_sha256")
+                assert packet["candidate_status"] == "not_generated"
+                assert packet["certificate"] is False
+                assert packet["external_transfer_allowed"] is False
+                assert packet["external_cost_minor_units"] == 0
+                assert page.locator("#leanCode").text_content() == old_code
+                assert page.locator("#leanRun").is_disabled()
+                assert not page.locator("#leanTranscriptionConsent").is_checked()
+                assert page.locator("#leanTranscriptionPrepare").is_disabled()
+                page.evaluate("(entity) => loadLeanFragment({entity_id:entity})", entity_id)
+                page.wait_for_function(
+                    "() => state.leanFragment?.formalization_id==='lst01-de-morgan'",
+                    timeout=15000,
+                )
+                assert page.locator("#leanTranscriptionPackage").text_content() == ""
+                assert not page.locator("#leanTranscriptionConsent").is_checked()
                 # L1.4: real read-only chapter report, separate from proof status.
                 page.locator("#leanChapterReportCurrent").click()
                 page.wait_for_function(
