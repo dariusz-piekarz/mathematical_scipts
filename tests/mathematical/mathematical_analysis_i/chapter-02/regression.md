@@ -16,3 +16,4 @@ Testy skończone nie zastępują dowodu ogólnego.
 | MA1-02-012 | ma1:thm:real-isomorphism | Iniekcja, surjekcja, zachowanie działań i porządku, zgodność zanurzeń | semantyczna |
 | MA1-02-013 | ma1:thm:cut-ring, ma1:thm:cut-field | Rozszerzenie mnożenia na przekroje nieujemne, zero i jedynka; ujemne odwrotności i zgodność zanurzenia z prawami znaków | semantyczna |
 | MA1-02-014 | ma1:thm:cut-complete, ma1:thm:real-isomorphism | Kres przekrojów głównych należących do A jest równy A; klasy ciągów stałych odpowiadają D_r | semantyczna |
+| MA1-02-015 | ma1:thm:cauchy-inverse | Niezbieżność do zera i warunek Cauchy'ego dają jednostajne dodatnie ograniczenie modułu ogona; odwrotność jest Cauchy'ego i nie zależy od reprezentanta | semantyczna + Python |
