@@ -729,5 +729,54 @@ class TestChapter15B(unittest.TestCase):
             self.assertEqual(exact_jump,interval_jump)
             intervals = new
 
+
+    def test_audit41_parameter_sobolev_contracts(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            "$R_\\tau\\le g$ prawie wszędzie",
+            "$|D_A(z_\\tau)(x')|\\le\\int_A R_\\tau\\,\\mathrm d\\mu$",
+            "$\\|z/\\|z\\|-z_k\\|<\\varepsilon$",
+            "$|x_k'(z)|\\ge\\|z\\|(1-\\varepsilon)$",
+            "$W^{1,1}((a,b);X)$",
+        ):
+            self.assertIn(fragment, source)
+
+    def test_audit41_parameter_and_sobolev_exact_examples(self):
+        # f(s,v)=(v^2 s, v^3 s^2), finite weighted atoms:
+        # check the derivative error bound uniformly over every subset.
+        atoms = [Fraction(1,3), Fraction(-2,5), Fraction(2)]
+        weights = [Fraction(1,4), Fraction(1,4), Fraction(1,2)]
+        def value(s,v):
+            return (v*v*s,v**3*s*s)
+        def derivative(s,v):
+            return (2*v*s,3*v*v*s*s)
+        for u in (Fraction(-2),Fraction(0),Fraction(1,3)):
+            for tau in (Fraction(-1,10),Fraction(1,10),Fraction(1,100)):
+                residuals = [tuple((b-a)/tau-d for a,b,d in zip(
+                    value(s,u),value(s,u+tau),derivative(s,u))) for s in atoms]
+                bound = sum(w*sum(map(abs,r)) for w,r in zip(weights,residuals))
+                for mask in range(8):
+                    total = [sum(weights[i]*residuals[i][k] for i in range(3)
+                                 if mask & (1<<i)) for k in range(2)]
+                    self.assertLessEqual(sum(map(abs,total)),bound)
+        # Piecewise affine curve in R^2 with l1 norm; its Bochner
+        # derivative is piecewise constant, and the exact increment
+        # agrees with its integral even across the joining point.
+        knots = [Fraction(0),Fraction(1,3),Fraction(1)]
+        slopes = [(Fraction(2),Fraction(-1)),(Fraction(-3),Fraction(4))]
+        def primitive(t):
+            return tuple(sum(max(Fraction(0), min(t,knots[i+1])-knots[i])
+                             * slopes[i][k] for i in range(2)) for k in range(2))
+        for i in range(13):
+            for j in range(i,13):
+                u,v = Fraction(i,12),Fraction(j,12)
+                lengths = [max(Fraction(0),min(v,knots[k+1])-max(u,knots[k]))
+                           for k in range(2)]
+                delta = tuple(b-a for a,b in zip(primitive(u),primitive(v)))
+                self.assertEqual(delta,tuple(sum(lengths[k]*slopes[k][q]
+                                     for k in range(2)) for q in range(2)))
+                self.assertLessEqual(sum(map(abs,delta)),
+                                     sum(l*sum(map(abs,s)) for l,s in zip(lengths,slopes)))
+
 if __name__ == "__main__":
     unittest.main()
