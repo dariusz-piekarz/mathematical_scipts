@@ -73,5 +73,28 @@ class Chapter16(unittest.TestCase):
             self.assertEqual(t*t/(2*n)-t**3,-F(1,2*n**3))
             self.assertLess(t*t/(2*n)-t**3,0)
 
+
+    def test_FA16_SUBGRAD_ZERO_01(self):
+        # At p=0 the substitution v=p must still be defined.
+        source = SOURCE.read_text(encoding="utf-8")
+        self.assertIn(r"podstawiając $v=p$", source)
+        self.assertNotIn(r"v=tp/\|p\|", source)
+        for p in (F(0), F(1,2), F(1), F(3,2), F(-2)):
+            self.assertEqual(p*p <= abs(p), abs(p) <= 1)
+
+    def test_FA16_DIRICHLET_REMAINDER_01(self):
+        # u=a*x*(1-x), h=b*x*(1-x), f=c constant.
+        # Integral of (1-2*x)^2 = 1/3; integral of x*(1-x) = 1/6.
+        source = SOURCE.read_text(encoding="utf-8")
+        self.assertIn(r"+\tfrac12\|h\|_H^2", source)
+        self.assertIn(r"jej obraz jest zupełny", source)
+        for a in map(F, range(-3,4)):
+            for b in (F(0), F(1,2), F(-1,3), F(2)):
+                for c in map(F, range(-2,3)):
+                    def J(t):
+                        return t*t/6-c*t/6
+                    derivative = a*b/3-c*b/6
+                    self.assertEqual(J(a+b)-J(a)-derivative,b*b/6)
+
 if __name__ == "__main__":
     unittest.main()
