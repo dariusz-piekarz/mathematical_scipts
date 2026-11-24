@@ -1,5 +1,7 @@
 from fractions import Fraction as F
 from math import gcd
+from pathlib import Path
+import re
 from unittest import TestCase, main
 
 def cantor_intervals(n):
@@ -118,5 +120,28 @@ class Chapter19(TestCase):
             self.assertTrue(a<c<d<b)
             self.assertLessEqual(d-c,F(1,n))
             a,b=c,d
+
+    def test_cantor_figure_coordinates(self):
+        source = (Path(__file__).resolve().parents[4] /
+                  "chapters/pl/mathematical_analysis_i/19-funkcje-patologiczne.tex").read_text(encoding="utf-8")
+        pictures = re.findall(r"\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}", source, re.S)
+        self.assertEqual(len(pictures),4)
+        dots = re.findall(r"\\fill\[blue!65!black\] \(\{(\d+)/(\d+)\},\{1/(\d+)\}\)",pictures[0])
+        self.assertEqual(len(dots),sum(gcd(p,q)==1 for q in range(1,12) for p in range(q+1)))
+        self.assertEqual({(F(p,q),F(1,r)) for p,q,r in dots},
+                         {(F(p,q),F(1,q)) for q in range(1,12) for p in range(q+1) if gcd(p,q)==1})
+        segments = re.findall(r"\((\d+\.\d+),(-?\d+)\)--\((\d+\.\d+),(-?\d+)\)",pictures[2])
+        self.assertEqual(len(segments),31)
+        for n in range(5):
+            actual=[(F(a),F(b)) for a,y,b,z in segments if int(y)==int(z)==-n]
+            expected=cantor_intervals(n)
+            self.assertEqual(len(actual),len(expected))
+            for (a,b),(c,d) in zip(actual,expected):
+                self.assertLessEqual(abs(a-c),F(1,10**8))
+                self.assertLessEqual(abs(b-d),F(1,10**8))
+        curve = next(line for line in pictures[3].splitlines() if r"\draw[blue!65!black,thick]" in line)
+        vertices = [(F(a),F(b)) for a,b in re.findall(r"\(([\d/]+),([\d/]+)\)",curve)]
+        expected=[(x,cantor_approx(x,3)) for pair in cantor_intervals(3) for x in pair]
+        self.assertEqual(vertices,expected)
 
 if __name__ == "__main__": main()
