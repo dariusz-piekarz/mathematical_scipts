@@ -14,3 +14,6 @@ Skończone testy Python sprawdzają rachunki i świadków, nie zastępują dowod
 | MA1-03-010 | ma1:lem:power-bound, ma1:thm:positive-root | Potęgi dla n>=1, przypadek a=0, oba znaki perturbacji, bez ciągłości | semantyczna + Python |
 | MA1-03-011 | ma1:cor:irrational-density | Identyfikacja sqrt 2, przesunięcie wymiernej, niewymierność | semantyczna |
 | MA1-03-012 | ma1:thm:real-uniqueness | Przekroje, surjekcja przez sup, dodawanie i mnożenie, znaki, jednoznaczność | semantyczna + Python |
+| MA1-03-013 | ma1:thm:sup-arithmetic | Kontrprzykład dla iloczynu zbiorów bez nieujemności | semantyczna + Python |
+| MA1-03-014 | ma1:lem:power-bound, ma1:thm:positive-root | Jawna konwencja zerowej potęgi, teleskopowanie, przypadek n=1, uzasadnienie ograniczeń | semantyczna + Python |
+| MA1-03-015 | ma1:fig:nested-intervals | Rysunek trzech przedziałów o końcach ±1/n, bez nakładania napisów | wizualna kontrola PDF |
