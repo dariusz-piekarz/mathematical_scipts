@@ -1,0 +1,12 @@
+# Rozdział 20 — audyt 72 (5/5, pierwszy przegląd zakończony, 0/3 stabilizacji)
+
+24 listopada 2026. Wyłącznie istniejąca gałąź biblioteka-matematyczna-iteracja-6.
+
+## Zakres i poprawki
+Podsekcja 5. Uzasadniono istnienie znormalizowanej funkcji testowej na przedziale, nośnik pierwotnej funkcji o całce zero i jednoznaczność stałej. W konstrukcji pierwotnej dystrybucji podano konkretną stałą oszacowania seminorm operatora R, ciągłość przez włożenia etapów, znak minus i równość R(phi')=phi, oraz opis wszystkich pierwotnych. W równaniu pierwszego rzędu wykazano odwracalność mnożenia przez czynnik całkujący i obie implikacje; zapisano różnicę rozwiązań jako dystrybucję regularną. W przykładach sprawdzono założenia twierdzenia o skoku i wyprowadzono drugą pochodną x_+. W twierdzeniu o znikaniu gradientu jawnie ograniczono T do prostokąta, wykazano zachowanie gładkości i zwartego nośnika przez operatory P_j, przemienność z Fubiniego, skonstruowano funkcje theta_j, uzasadniono ich nośniki i kolejne zastosowania P_j. Globalny krok uproszczono przez lokalnie stałą funkcję współczynników, spójność i lemat o lokalności, bez nieuzasadnionego podziału jedności. Doprecyzowano znaczenie niezależności od pierwszej współrzędnej na I x V i ciągłość włożenia psi -> eta tensor psi oraz odróżniono konieczność warunków zgodności od globalnej wystarczalności. Są to uzasadnienia istniejących stwierdzeń, nie rozszerzenie zakresu.
+
+## Kontrole
+Źródło 9d7db71d8930da9cfca60f985839deb80725a029, blob 91a542a26a31f4e9e578304f2c86419f639eaa22. 938 wierszy, 24/24 unikatowych etykiet, 33/33 odsyłaczy ref i hyperref rozwiązanych w 17–20, poprawne zagnieżdżenie środowisk, 38/38 warunków tekstowych. Dodano metodę FA20_primitive_and_gradient_01 (716e68ea473260483a14de0658b2015d919cd990), razem sześć metod. Nowa metoda zawiera dokładny model wielomianowy pierwotnej funkcji o zerowej całce na przedziale i sprawdza oba końce oraz pochodną. Przy kontroli CI 70 (45406523968, 45406443951) w toku, CI 71 i 72 w kolejce (45406998829, 45406903006, 45406867754, 45407343815, 45407313941). Nie potwierdzono jeszcze wykonania pełnych testów ani kompilacji; oględziny rysunku i PDF pozostają otwarte. Nie wykonywano formalizacji Lean.
+
+## Decyzja
+Pierwszy przegląd 5/5 zakończony. Dalsze tematy splotu, dystrybucji temperowanych i syntezy topologicznej są już przewidziane w rozdziałach 21, 22 i 25; nie rekomenduję rozszerzania zakresu rozdziału 20. Następny audyt 73: pełna stabilizacja I, kontrola CI i PDF, następnie II i III. Licznik 0/3; poprawka resetuje licznik.
