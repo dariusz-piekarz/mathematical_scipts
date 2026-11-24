@@ -72,3 +72,69 @@ function triangularProduct68(){
  return {cases,steps,ties,oddHeights,negative,zero};
 }
 console.log("AA-68-CH-03: PASS",triangularProduct68());
+
+// AA-68-CH-04: aa:tw:lie-character-basis, A2 via independently enumerated
+// semistandard tableaux of shape (a+b,b). Exact integer weight multiplicities.
+function triangularA268(){
+ const key=(p,q)=>p+","+q, coord=s=>s.split(",").map(Number);
+ const ht=s=>coord(s).reduce((a,b)=>a+b,0);
+ const add=(f,s,c)=>{const v=(f.get(s)||0n)+c;if(v)f.set(s,v);else f.delete(s)};
+ const eq=(a,b)=>a.size===b.size&&[...a].every(([s,c])=>b.get(s)===c);
+ const reflect=s=>{const [p,q]=coord(s);return [key(-p,p+q),key(p+q,-q)]};
+ const orbit=s=>{const o=new Set([s]),q=[s];for(let i=0;i<q.length;i++)for(const t of reflect(q[i]))if(!o.has(t)){o.add(t);q.push(t)}return o};
+ function rows(n){const out=[];for(let i=0;i<=n;i++)for(let j=0;j<=n-i;j++)out.push([...Array(i).fill(1),...Array(j).fill(2),...Array(n-i-j).fill(3)]);return out}
+ const chars=new Map();
+ let models=0,tableaux=0,weights=0,reflections=0,cases=0,steps=0,ties=0,negatives=0;
+ for(let a=0;a<=6;a++)for(let b=0;b<=6-a;b++){
+  const c=new Map();
+  for(const top of rows(a+b))for(const bottom of rows(b)){
+   if(bottom.some((v,i)=>v<=top[i]))continue;
+   const n=[0,0,0];for(const v of [...top,...bottom])n[v-1]++;
+   add(c,key(n[0]-n[1],n[1]-n[2]),1n);tableaux++;
+  }
+  assert(c.get(key(a,b))===1n,"tableau highest coefficient");
+  assert([...c.values()].reduce((x,y)=>x+y,0n)===BigInt((a+1)*(b+1)*(a+b+2)/2),"tableau dimension");
+  for(const [s,v] of c){
+   const [p,q]=coord(s),u=a-p,z=b-q;
+   assert((2*u+z)%3===0&&(u+2*z)%3===0&&2*u+z>=0&&u+2*z>=0,"root order");
+   assert(s===key(a,b)||ht(s)<a+b,"strict height");
+   for(const t of reflect(s)){assert(c.get(t)===v,"tableau symmetry");reflections++}
+   weights++;
+  }
+  chars.set(key(a,b),c);models++;
+ }
+ function accumulate(f,c,m){for(const [s,v] of c)add(f,s,m*v)}
+ for(let n=0;n<=6;n++)for(let seed=0;seed<9;seed++){
+  const input=new Map();
+  for(let a=0;a<=n;a++)for(let b=0;b<=n-a;b++){
+   const c=BigInt((a*5+b*7+seed*3)%7-3);
+   for(const s of orbit(key(a,b)))add(input,s,c);
+  }
+  const f=new Map(input),out=new Map();
+  let oldH=Infinity,oldN=Infinity;
+  while(f.size){
+   const h=Math.max(...[...f.keys()].map(ht)),maxima=[...f.keys()].filter(s=>ht(s)===h);
+   assert(h>=0&&maxima.every(s=>coord(s).every(x=>x>=0)),"dominant maximum");
+   assert(h<oldH||(h===oldH&&maxima.length<oldN),"strict progress");
+   oldH=h;oldN=maxima.length;if(maxima.length>1)ties++;
+   const s=maxima[0],c=f.get(s),ch=chars.get(s);
+   assert(ch,"missing bounded highest weight");if(c<0n)negatives++;
+   add(out,s,c);accumulate(f,ch,-c);
+   for(const [t,v] of f)for(const u of reflect(t))assert(f.get(u)===v,"invariant remainder");
+   steps++;
+  }
+  const rebuilt=new Map();for(const [s,c] of out)accumulate(rebuilt,chars.get(s),c);
+  assert(eq(rebuilt,input),"reconstruction");
+  // Independently solve the triangular coefficient equations on dominant weights.
+  const expected=new Map();
+  for(let h=n;h>=0;h--)for(let a=0;a<=h;a++){
+   const s=key(a,h-a);let c=input.get(s)||0n;
+   for(const [t,v] of expected)c-=v*(chars.get(t).get(s)||0n);
+   add(expected,s,c);
+  }
+  assert(eq(out,expected),"dominant coefficient equations");cases++;
+ }
+ assert(ties>0&&negatives>0,"missing edge cases");
+ return {models,tableaux,weights,reflections,cases,steps,ties,negatives};
+}
+console.log("AA-68-CH-04: PASS",triangularA268());
