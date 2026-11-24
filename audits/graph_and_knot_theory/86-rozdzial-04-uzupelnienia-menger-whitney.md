@@ -1,0 +1,9 @@
+# Rozdział 04 — audyt indywidualny 02
+
+2026-11-24. Zrealizowano obie propozycje z raportu 85 na polecenie kontynuacji. Commit c0cd3358e02589d9c1fc519ae9fe6852bfb30333, blob daa3af5cc3a2202473d9da657544679ead675bf1. Dodano globalną wersję wierzchołkową Mengera z dowodem dla końców niesąsiadujących i sąsiadujących (usunięcie st, separator w H, rozpatrzenie trzeciego pozostałego wierzchołka), oraz dla grafów pełnych i niepełnych. Dodano trzy przykłady ostrości nierówności Whitneya z rachunkiem parametrów: (1,2,3), (1,2,2), (1,1,3).
+
+Niezależne testy JS: enumerowano wszystkie 771 spójnych etykietowanych grafów prostych na 2–5 wierzchołkach; dla 7521 nieuporządkowanych par końców wyznaczono maksymalną liczność rodziny wewnętrznie rozłącznych ścieżek przez enumerację prostych ścieżek i programowanie dynamiczne po maskach wnętrz. Porównano minimum po parach z niezależną enumeracją zbiorów usuwanych wierzchołków. Dla 4294 par sąsiadujących sprawdzono dodatkowo wzór ρ_V^G(s,t)=1+κ_{G-st}(s,t). Wszystko PASS. Trzy przykłady Whitneya niezależnie sprawdzono przez enumerację przekrojów i usuwanych zbiorów, otrzymano dokładnie (1,2,3), (1,2,2), (1,1,3). To testy niezależne, jeszcze nie trwałe regresje.
+
+CI poprzedniego źródła 560f7093de8db8b9699238e4b375335b0800fdf6: pełny audyt 45364563871, algorytmy 45364563929, terminologia 45364563830, aplikacja 45364563807 — completed/success. CI aktualnego źródła i kontrola wizualna jeszcze niepotwierdzone.
+
+Status OTWARTY. Zakres merytoryczny zamknięty. Dalej tylko stabilizacja: dowody, terminologia, odsyłacze, regresje, kompilacja i oględziny PDF. Nie proponować następnych rozszerzeń.
