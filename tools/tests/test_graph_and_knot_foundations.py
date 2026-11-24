@@ -917,6 +917,123 @@ def test_incidence_total_unimodularity():
     return graphs,minors
 
 
+def test_integral_cycle_bases():
+    """TG06-ZB-01: reconstruct signed integer cycles from chord coordinates."""
+    graphs=orientations=cycles=0
+    for n in range(1,5):
+        es=pairs(n)
+        for mask in range(1<<len(es)):
+            edges=[e for i,e in enumerate(es) if mask>>i&1]
+            m=len(edges)
+            graphs+=1
+            for reverse in (False,True):
+                directed=[(v,u) if reverse and i%2==0 else (u,v)
+                          for i,(u,v) in enumerate(edges)]
+                tree=[]
+                for i,e in enumerate(directed):
+                    chosen=[directed[j] for j in tree]
+                    if component_count(n,chosen+[e])<component_count(n,chosen):
+                        tree.append(i)
+                chords=[i for i in range(m) if i not in tree]
+                assert len(chords)==m-n+component_count(n,edges)
+                adj=[[] for _ in range(n)]
+                for i in tree:
+                    u,v=directed[i]
+                    adj[u].append((v,i,1))
+                    adj[v].append((u,i,-1))
+                basis=[]
+                def boundary(z):
+                    result=[0]*n
+                    for (u,v),a in zip(directed,z):
+                        result[u]-=a
+                        result[v]+=a
+                    return result
+                for i in chords:
+                    u,v=directed[i]
+                    stack=[(v,-1,[(i,1)])]
+                    while stack:
+                        w,prev,path=stack.pop()
+                        if w==u:
+                            break
+                        stack.extend((y,w,path+[(j,sign)])
+                                     for y,j,sign in adj[w] if y!=prev)
+                    else:
+                        raise AssertionError("forest path not found")
+                    z=[0]*m
+                    for j,sign in path:
+                        z[j]=sign
+                    assert not any(boundary(z))
+                    assert [z[j] for j in chords]==[int(i==j) for j in chords]
+                    basis.append(z)
+                for z in product(range(-2,3),repeat=m):
+                    if any(boundary(z)):
+                        continue
+                    reconstructed=tuple(sum(z[j]*b[i] for j,b in zip(chords,basis))
+                                        for i in range(m))
+                    assert reconstructed==z
+                    cycles+=1
+                orientations+=1
+    return graphs,orientations,cycles
+
+
+def test_integral_flow_vertices():
+    """TG06-FV-01: exact rational enumeration of vertices with unit box bounds."""
+    from fractions import Fraction
+    def solve(matrix,rhs,k):
+        # Solve all equations; return None for inconsistency or nonuniqueness.
+        a=[list(map(Fraction,row))+[Fraction(b)] for row,b in zip(matrix,rhs)]
+        pivots=[]
+        for j in range(k):
+            i=next((i for i in range(len(pivots),len(a)) if a[i][j]),None)
+            if i is None:
+                return None
+            r=len(pivots)
+            a[r],a[i]=a[i],a[r]
+            z=a[r][j]
+            a[r]=[x/z for x in a[r]]
+            for i in range(len(a)):
+                if i!=r and a[i][j]:
+                    z=a[i][j]
+                    a[i]=[x-z*y for x,y in zip(a[i],a[r])]
+            pivots.append(j)
+        if any(row[-1] for row in a[k:]):
+            return None
+        return tuple(a[i][-1] for i in range(k))
+    graphs=systems=vertices=0
+    for n in range(1,5):
+        es=pairs(n)
+        for mask in range(1<<len(es)):
+            edges=[e for i,e in enumerate(es) if mask>>i&1]
+            m=len(edges)
+            graphs+=1
+            B=[[int(v==b)-int(v==a) for a,b in edges] for v in range(n)]
+            for rhs in product((-1,0,1),repeat=n):
+                if sum(rhs):
+                    continue
+                actual=set()
+                for status in product((0,1,2),repeat=m):
+                    free=[j for j in range(m) if status[j]==2]
+                    fixed=[j for j in range(m) if status[j]!=2]
+                    reduced=[rhs[v]-sum(B[v][j]*status[j] for j in fixed)
+                             for v in range(n)]
+                    x=solve([[row[j] for j in free] for row in B],reduced,len(free))
+                    if x is None or not all(0<=a<=1 for a in x):
+                        continue
+                    assert all(a.denominator==1 for a in x)
+                    result=list(status)
+                    for j,a in zip(free,x):
+                        result[j]=int(a)
+                    actual.add(tuple(result))
+                expected={x for x in product((0,1),repeat=m)
+                          if all(sum(a*b for a,b in zip(row,x))==r
+                                 for row,r in zip(B,rhs))}
+                # Every feasible binary vector is extreme in the unit box.
+                assert actual==expected
+                systems+=1
+                vertices+=len(actual)
+    return graphs,systems,vertices
+
+
 def test_source_consistency():
     catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in catalog["books"] if x["id"]=="graph_and_knot_theory")
@@ -957,3 +1074,5 @@ if __name__=="__main__":
 
     g,m=test_incidence_total_unimodularity()
     print(f"PASS TG06-TU-01: {g} graphs, {m} exact minors")
+    print("PASS TG06-ZB-01 graphs, orientations, integer cycles:", test_integral_cycle_bases())
+    print("PASS TG06-FV-01 graphs, systems, vertices:", test_integral_flow_vertices())
