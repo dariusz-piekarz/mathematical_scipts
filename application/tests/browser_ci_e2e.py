@@ -330,12 +330,31 @@ def main() -> None:
                 page.locator("#searchResults .search-concept-action").wait_for(
                     state="visible", timeout=15000
                 )
-                page.locator("#searchResults .search-concept-action").click()
+                # The search action already invokes openConceptSearch(), which
+                # loads the graph. Do not start a redundant concurrent request.
+                # Observe the response from this actual user action and retain
+                # diagnostics if rendering fails (no retries or synthetic data).
+                with page.expect_response(
+                    lambda response: "/api/concepts/graph?" in response.url
+                    and response.request.method == "GET", timeout=60000,
+                ) as graph_response:
+                    page.locator("#searchResults .search-concept-action").click()
                 page.locator("#view-concepts").wait_for(state="visible", timeout=15000)
-                page.locator("#drawConceptGraph").click()
-                page.locator("#conceptEvidence .concept-occurrence").first.wait_for(
-                    state="visible", timeout=20000
-                )
+                response = graph_response.value
+                assert response.ok, (response.status, response.url, response.text()[:1000])
+                graph_payload = response.json()
+                assert graph_payload["occurrences_shown"] > 0, graph_payload
+                try:
+                    page.locator("#conceptEvidence .concept-occurrence").first.wait_for(
+                        state="visible", timeout=20000
+                    )
+                except Exception as exc:
+                    raise AssertionError(
+                        "Concept response not rendered: "
+                        f"summary={page.locator('#conceptSummary').text_content()!r}, "
+                        f"query={page.locator('#conceptSearch').input_value()!r}, "
+                        f"errors={errors!r}, response={response.url}"
+                    ) from exc
                 assert "Lemat Zorna" in page.locator("#conceptEvidence").inner_text()
                 assert "Równoważne nad ZF" in page.locator("#conceptRelations").inner_text()
                 assert page.locator("#conceptCanvas svg").count() == 1
