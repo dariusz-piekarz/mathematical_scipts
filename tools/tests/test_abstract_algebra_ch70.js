@@ -39,3 +39,41 @@ function verify(lambda,F,C,roots,dot,bound){
 for(let m=0;m<=20;m++){const F=new Map();for(let j=0;j<=m;j++)add(F,[m-2*j],1n);verify([m],F,[[2]],[[2]],(u,v)=>BigInt(u[0]*v[0]),m+2)}
 for(let a=0;a<=7;a++)for(let b=0;b<=7-a;b++){const F=tableaux(a,b);verify([a,b],F,[[2,-1],[-1,2]],[[2,-1],[-1,2],[1,1]],(u,v)=>BigInt(2*u[0]*v[0]+u[0]*v[1]+u[1]*v[0]+2*u[1]*v[1]),a+b+2)}
 console.log("AA-70-WCF-01: PASS",{models,weightChecks,absent,traceChecks,eigenChecks});
+
+// AA-70-WCF-02: aa:lem:weyl-casimir-eigenvalue, aa:lem:weyl-weight-trace,
+// aa:tw:weyl-character-formula. Adjoint models from root spaces and mixed
+// simple factors with their relative Killing scales (not Weyl-formula data).
+const before70={models,weightChecks,absent,traceChecks,eigenChecks};
+let adjointModels=0,mixedModels=0;
+for(const [name,C,G,expected] of [
+ ["B2",[[2,-2],[-1,2]],[[1,1],[1,2]],8],
+ ["G2",[[2,-3],[-1,2]],[[2,3],[3,6]],12]
+]){
+ const q=[[1,0],[0,1]],seen=new Set(q.map(key));
+ for(let k=0;k<q.length;k++)for(let i=0;i<2;i++){
+  const v=[...q[k]];v[i]-=C[i].reduce((s,c,j)=>s+c*v[j],0);
+  if(!seen.has(key(v))){seen.add(key(v));q.push(v)}
+ }
+ assert(q.length===expected,name+" root count");
+ const wt=v=>C.map(row=>row.reduce((s,c,j)=>s+c*v[j],0));
+ const pos=q.filter(v=>v.every(x=>x>=0));
+ const highest=pos.reduce((a,b)=>a[0]+a[1]>=b[0]+b[1]?a:b);
+ const lambda=wt(highest),F=new Map([[key([0,0]),2n]]);
+ assert(lambda.every(x=>x>=0),name+" highest root dominant");
+ for(const v of q)add(F,wt(v),1n);
+ assert([...F.values()].reduce((a,b)=>a+b,0n)===BigInt(expected+2),name+" adjoint dimension");
+ const dot=(u,v)=>BigInt(u.reduce((s,x,i)=>s+x*G[i].reduce((t,c,j)=>t+c*v[j],0),0));
+ const bound=Math.max(...q.flatMap(v=>wt(v).map(Math.abs)))+2;
+ verify(lambda,F,C,pos.map(wt),dot,bound);adjointModels++;
+}
+const Cmix=[[2,0,0],[0,2,-1],[0,-1,2]];
+const rootsMix=[[2,0,0],[0,2,-1],[0,-1,2],[0,1,1]];
+// Actual Killing dual Gram: A1 = 1/8; A2 = [[2,1],[1,2]]/18.
+// Multiply the entire direct sum form by 72, preserving relative scales.
+const mixDot=(u,v)=>BigInt(9*u[0]*v[0]+4*(2*u[1]*v[1]+u[1]*v[2]+u[2]*v[1]+2*u[2]*v[2]));
+for(let m=0;m<=4;m++)for(let a=0;a<=4;a++)for(let b=0;b<=4-a;b++){
+ const f=tableaux(a,b),F=new Map();
+ for(let j=0;j<=m;j++)for(const [k,c] of f)add(F,[m-2*j,...parse(k)],c);
+ verify([m,a,b],F,Cmix,rootsMix,mixDot,Math.max(m,a+b)+2);mixedModels++;
+}
+console.log("AA-70-WCF-02: PASS",{adjointModels,mixedModels,models:models-before70.models,weightChecks:weightChecks-before70.weightChecks,absent:absent-before70.absent,traceChecks:traceChecks-before70.traceChecks,eigenChecks:eigenChecks-before70.eigenChecks});
