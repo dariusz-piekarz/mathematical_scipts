@@ -125,5 +125,22 @@ class Chapter30(unittest.TestCase):
             self.assertIn(step,s)
 
 
+
+    def test_mt30_012_l1_difference_quotients(self):
+        for h in (Q(1,2), Q(1,17), Q(1,1000)):
+            self.assertEqual((h/2)*abs(2/h-1/h)+(h/2)*abs(0-1/h),1)
+        s = " ".join(SOURCE.read_text(encoding="utf-8").split())
+        self.assertIn(r"\|q_{h/2}-q_h\|_{L^1}",s)
+        self.assertIn("co daje równość wariacji",s)
+
+    def test_mt30_013_absolute_continuity_without_finite_variation(self):
+        s = " ".join(SOURCE.read_text(encoding="utf-8").split())
+        self.assertIn(r"Jeśli $\nu\ll\mu$, to $|\nu|\ll\mu$.",s)
+        self.assertIn(r"\|g\|_{L^\infty}\le\operatorname{Lip}(F)",s)
+        for a,b in ((Q(-2),Q(3)),(Q(1,7),Q(2,7)),(Q(-1),Q(0))):
+            for slope in (Q(-3),Q(0),Q(5,3)):
+                self.assertEqual((b-a)*slope/(b-a),slope)
+
+
 if __name__ == "__main__":
     unittest.main()
