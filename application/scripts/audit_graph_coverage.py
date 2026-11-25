@@ -19,8 +19,10 @@ def main():
     args.out.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result["summary"], ensure_ascii=False))
     catalog = result["catalog"]
-    # Missing index entries are errors; lack of mathematical links is a review queue.
-    return int(bool(catalog["missing"] or catalog["path_mismatches"] or catalog["duplicate_ids"]))
+    # Missing index entries and broken explicit reading links fail CI.
+    # Missing thematic edges remain a review queue, never invented relationships.
+    return int(bool(catalog["missing"] or catalog["path_mismatches"] or catalog["duplicate_ids"]
+                    or result["reading_audit"]["invalid"]))
 
 
 if __name__ == "__main__":
