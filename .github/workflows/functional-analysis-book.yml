@@ -1,0 +1,93 @@
+name: Functional analysis - full book audit
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/functional_analysis/**'
+      - 'books/pl/functional_analysis.tex'
+      - 'tools/tests/test_functional_analysis_*.py'
+      - '.github/workflows/functional-analysis-book.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  full-book:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Execute all chapter and book regression files
+        run: |
+          set -o pipefail
+          python3 - <<'PY' | tee fa-regressions.log
+          import subprocess, sys
+          from pathlib import Path
+          tests = sorted(Path('tools/tests').glob('test_functional_analysis_*.py'))
+          assert len(tests) == 36, tests
+          failed = []
+          for path in tests:
+              print(f'RUN {path}', flush=True)
+              result = subprocess.run([sys.executable, str(path)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+              print(result.stdout, flush=True)
+              if result.returncode:
+                  failed.append(str(path))
+          print(f'FA regression files: {len(tests)-len(failed)}/{len(tests)} passed', flush=True)
+          if failed:
+              print('Failed:', failed, flush=True)
+              sys.exit(1)
+          PY
+      - name: Compile actual master with title and table of contents
+        if: always()
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: functional_analysis.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Verify PDF and final diagnostics
+        if: always()
+        run: |
+          set -e
+          if ! command -v pdftotext >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq poppler-utils
+          fi
+          cd books/pl
+          test -s functional_analysis.pdf
+          test -s functional_analysis.log
+          test -s functional_analysis.toc
+          pdfinfo functional_analysis.pdf
+          pdftotext -layout functional_analysis.pdf functional_analysis.txt
+          grep -q 'Analiza funkcjonalna' functional_analysis.txt
+          grep -q 'Spis treści' functional_analysis.txt
+          grep -q 'Operatory nieograniczone na przestrzeniach Hilberta' functional_analysis.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          toc = Path('functional_analysis.toc').read_text()
+          ids = re.findall(r'\\contentsline\s*\{section\}\s*\{\\numberline\s*\{([^}]+)\}',toc)
+          expected = [str(i) for i in range(1,16)]+['15A','15B']+[str(i) for i in range(16,34)]
+          print('TOC sections:', ids)
+          assert ids == expected
+          PY
+          if grep -E 'Undefined control sequence|There were undefined references|There were multiply-defined labels|LaTeX Warning: (Reference|Citation).*undefined|Overfull \\hbox|Missing character|destination with the same identifier' functional_analysis.log; then
+            echo 'Final LaTeX diagnostics failed.'
+            exit 1
+          fi
+      - name: Upload actual book and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: functional-analysis-full-book
+          path: |
+            fa-regressions.log
+            books/pl/functional_analysis.pdf
+            books/pl/functional_analysis.log
+            books/pl/functional_analysis.toc
+            books/pl/functional_analysis.txt
+          if-no-files-found: warn
