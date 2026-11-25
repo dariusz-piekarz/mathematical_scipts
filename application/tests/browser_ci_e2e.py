@@ -78,6 +78,27 @@ def main() -> None:
                 page.evaluate(r"() => renderSimplified('$\\unknownAtlasMacro$ $x^2$')")
                 assert page.locator("#mathPreviewStatus").is_visible()
                 assert page.locator("#simplified .katex").count() == 1
+                # Check the reported PDE-02 drawings and the PDE-13 transmission figures.
+                for module in ("PDE-02", "PDE-13"):
+                    result = page.evaluate("""async module => {
+                        const response = await fetch('/api/modules/' + module + '?full=true');
+                        if (!response.ok) throw new Error('Chapter unavailable: ' + module);
+                        const data = await response.json();
+                        renderSimplified(data.latex, module);
+                        const box = document.getElementById('simplified');
+                        const imgs = Array.from(box.querySelectorAll('.atlas-tikz-preview img'));
+                        for (const img of imgs) { img.loading = 'eager'; await img.decode(); }
+                        return {count: imgs.length,
+                                loaded: imgs.every(img => img.naturalWidth > 0),
+                                formulas: box.querySelectorAll('.katex').length};
+                    }""", module)
+                    assert result["count"] == 2 and result["loaded"], (module, result)
+                    assert result["formulas"] > 0, (module, result)
+                page.evaluate(r"""() => renderSimplified('Text $x^2$ \\begin{tikzpicture}\\draw (0,0)--(1,1);\\end{tikzpicture}', 'PDE-02')""")
+                assert page.locator("#simplified .atlas-tikz-preview details").count() == 1
+                assert page.locator("#simplified .atlas-tikz-preview img").count() == 0
+                assert page.locator("#simplified .katex").count() == 1
+                assert "Brak podglądu SVG" in page.locator("#mathPreviewStatus").inner_text()
                 # Deterministic API response, real UI and real renderer.
                 page.route("**/api/labels/atlas-math-preview-test", lambda route: route.fulfill(json={"entity_title": "Test", "document_id": "TEST", "line": 1, "latex": r"Test $x^2$ and \[\frac{1}{2}\]"}))
                 page.evaluate("() => previewLabel('atlas-math-preview-test', document.getElementById('docTitle'))")
