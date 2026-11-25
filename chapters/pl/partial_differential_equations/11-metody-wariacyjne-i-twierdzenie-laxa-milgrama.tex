@@ -1596,11 +1596,16 @@ jako skończeniewymiarowa i z odziedziczonym iloczynem
 skalarnym jest przestrzenią Hilberta.
 Ograniczenie formy $a$ do $H_h\times H_h$ zachowuje
 ograniczoność i koercywność z tymi samymi stałymi,
-a $F|_{H_h}$ jest ciągłym funkcjonałem liniowym.
+a $F|_{H_h}$ jest ciągłym funkcjonałem liniowym
+o normie nie większej niż $\|F\|_{H^*}$.
 Z twierdzenia~\ref{thm:pde11-LM} na $H_h$ otrzymujemy
 dokładnie jedno $u_h$ (także gdy $H_h=\{0\}$).
 Odejmując równania, dostajemy \emph{ortogonalność Galerkina}:
 $a(u-u_h,v_h)=0$ dla wszystkich $v_h\in H_h$.
+Odwrotnie, jeśli $w_h\in H_h$ spełnia
+$a(u-w_h,v_h)=0$ dla wszystkich $v_h\in H_h$,
+to $a(w_h,v_h)=a(u,v_h)=F(v_h)$,
+więc $w_h=u_h$ z jednoznaczności.
 Niech $e=u-u_h$ i $w_h\in H_h$ będzie dowolny.
 Ponieważ $w_h-u_h\in H_h$, mamy
 \begin{align*}
@@ -1626,8 +1631,13 @@ otrzymujemy ponadto dokładniejsze oszacowanie
  \|u-u_h\|_H\le\sqrt{M/\alpha}
              \inf_{w_h\in H_h}\|u-w_h\|_H,
 \]
-ponieważ $\sqrt{\alpha}\|z\|_H\le\|z\|_a
-\le\sqrt M\|z\|_H$ dla każdego $z\in H$.
+Istotnie, dla każdego $w_h\in H_h$ zachodzi
+\[
+ \sqrt{\alpha}\|u-u_h\|_H
+ \le\|u-u_h\|_a\le\|u-w_h\|_a
+ \le\sqrt M\|u-w_h\|_H.
+\]
+Dzielimy przez $\sqrt{\alpha}>0$ i bierzemy infimum.
 \end{proof}
 
 \begin{wniosek}[Zbieżność przy zagęszczaniu przestrzeni]
@@ -1669,10 +1679,18 @@ a węzły oznaczamy $x_i=ih$, $i=0,\ldots,N$.
 Niech $V_h$ będzie przestrzenią funkcji ciągłych
 na $[0,1]$, odcinkami afinicznych na tej siatce,
 zerujących się na końcach.
-Każda z nich jest absolutnie ciągła: jest całką
-ze swojej odcinkami stałej pochodnej, powiększoną
-o wartość w zerze. Pochodna ta należy do $L^2(0,1)$
-i jest słabą pochodną. Z jednowymiarowej charakterystyki
+Dla takiej funkcji $v$ niech $q$ będzie funkcją
+równą nachyleniu $v$ na wnętrzu każdej komórki.
+W punktach siatki przyjmujemy dowolną wartość $q$.
+Ciągłość $v$ w węzłach daje
+$v(x)=v(0)+\int_0^x q(s)\,\mathrm d\lambda_1(s)$
+dla każdego $x\in[0,1]$, przez zsumowanie przyrostów
+na kolejnych komórkach. Ponieważ $q\in L^2(0,1)$,
+funkcja $v$ jest absolutnie ciągła i ma słabą
+pochodną $q$. Można to także sprawdzić, całkując
+przez części na każdej komórce: wyrazy w wewnętrznych
+węzłach znoszą się dzięki ciągłości $v$,
+a wyrazy na końcach znikają dla testów. Z jednowymiarowej charakterystyki
 przestrzeni Sobolewa i twierdzenia
 ~\ref{thm:pde10-trace-zero} wynika $V_h\subset H_0^1(0,1)$.
 Dla $i=1,\ldots,N-1$ definiujemy funkcję kapeluszową
@@ -1685,14 +1703,22 @@ Dla $i=1,\ldots,N-1$ definiujemy funkcję kapeluszową
  \end{cases}
 \]
 Zachodzi $\phi_i(x_j)=\delta_{ij}$.
-Funkcja odcinkami afiniczna jest jednoznacznie
-wyznaczona przez wartości węzłowe, zatem te funkcje
-tworzą bazę $V_h$: rozpinają przestrzeń, a ewaluacja
-w kolejnych węzłach dowodzi ich liniowej niezależności.
+Dla $v\in V_h$ funkcja
+$\sum_{i=1}^{N-1}v(x_i)\phi_i$ ma te same wartości
+co $v$ we wszystkich węzłach, także w końcach.
+Ich różnica jest afiniczna i znika w obu końcach
+każdej komórki, zatem znika na całym $[0,1]$.
+Jeśli $\sum_i Z_i\phi_i=0$, podstawienie $x_j$
+daje $Z_j=0$. Funkcje kapeluszowe tworzą więc
+bazę $V_h$ i $\dim V_h=N-1$.
 Przyjmując $u_h=\sum_{j=1}^{N-1}U_j\phi_j$,
 testujemy równanie Galerkina kolejno funkcjami $\phi_i$.
 Z liniowości otrzymujemy $\sum_j K_{ij}U_j=b_i$,
-czyli układ $KU=b$, gdzie
+czyli układ $KU=b$ z $K\in\R^{(N-1)\times(N-1)}$
+i $U,b\in\R^{N-1}$. Odwrotnie, jeśli układ jest
+spełniony, to z liniowości względem testu i własności
+bazy wynika równanie Galerkina dla każdego $v_h\in V_h$.
+Współczynniki układu to
 \[
 K_{ij}=\int_0^1\phi_i'\phi_j'\,\mathrm d\lambda_1,
 \qquad b_i=\int_0^1\phi_i\,\mathrm d\lambda_1.
@@ -1748,8 +1774,17 @@ Wstawiając kolejne węzły, dostajemy $Z_i=0$.
 Macierz $K$ jest więc dodatnio określona; jej jądro
 jest zerowe, stąd jest odwracalna i rozwiązanie
 układu jest jednoznaczne.
+Zachodzi też jawna tożsamość
+\[
+ Z^TKZ=\frac1h\sum_{i=0}^{N-1}(Z_{i+1}-Z_i)^2,
+ \qquad Z_0=Z_N=0,
+\]
+gdyż na każdej komórce $z_h'=(Z_{i+1}-Z_i)/h$.
+W szczególności zerowanie się tej sumy wymusza
+jednakowe współczynniki, równe zeru z warunku końcowego.
 
-Na komórce $I_i=[x_i,x_{i+1}]$ wielomian $u$
+Na komórce $I_i=[x_i,x_{i+1}]$, $0\le i<N$,
+wielomian $u$
 ma pochodną $u'(x)=1/2-x$, a pochodna interpolantu
 $u_h'$ jest stała w jej wnętrzu i wynosi
 $(u(x_{i+1})-u(x_i))/h=1/2-(x_i+x_{i+1})/2
@@ -1803,7 +1838,9 @@ Na przykład na $V=H_0^1(\Omega)$ forma
  a(u,v)=\int_\Omega\nabla u\cdot\nabla v\,\mathrm d\lambda_d
        -\lambda\int_\Omega uv\,\mathrm d\lambda_d
 \]
-dla $\lambda\in\R$ jest ograniczona. Ustalmy
+dla $\lambda\in\R$ jest ograniczona ze stałą
+$1+|\lambda|C_P^2$ w normie energetycznej, z nierówności
+Cauchy'ego--Schwarza i Poincarégo. Ustalmy
 niezerowe $w\in C_c^\infty(\Omega)$. Jeżeli
 $\lambda\ge\|\nabla w\|_2^2/\|w\|_2^2$, to
 $a(w,w)\le0$, więc forma nie jest koercywna.
@@ -1817,6 +1854,26 @@ W dowodzie słabego zagadnienia Dirichleta nie założyliśmy
 gładkości współczynników $A$ ani brzegu wyższej niż
 Lipschitzowska. To wystarcza do istnienia rozwiązania
 w $H_0^1$, ale nie gwarantuje jego regularności $H^2$.
+Już na odcinku $(0,1)$ można podać kontrprzykład:
+niech $A(x)=1$ dla $x<1/2$ i $A(x)=2$ dla $x>1/2$,
+$c=0$, $f=1$. Wartość $A$ w punkcie $1/2$
+jest nieistotna. Połóżmy
+\[
+ u(x)=\int_0^x\frac{5/12-s}{A(s)}\,\mathrm d\lambda_1(s).
+\]
+Funkcja jest absolutnie ciągła, ma ograniczoną słabą
+pochodną $(5/12-x)/A(x)$ i zerową wartość w zerze.
+Wartość w jedynce także jest zerowa, ponieważ
+$\int_0^1 A^{-1}\,\mathrm d\lambda_1=3/4$
+oraz $\int_0^1 sA^{-1}\,\mathrm d\lambda_1(s)=5/16$.
+Z charakterystyki jądra śladu wynika $u\in H_0^1(0,1)$.
+Strumień $Au'=5/12-x$ daje $-(Au')'=1$ w sensie
+dystrybucji, a z gęstości testów wynika słabe równanie.
+Jednostronne granice $u'$ w $1/2$ wynoszą
+$-1/12$ i $-1/24$. Gdyby $u\in H^2(0,1)$,
+to $u'\in H^1(0,1)$ miałaby reprezentanta absolutnie
+ciągłego, a więc ciągłego, co jest niemożliwe wobec
+różnych granic jednostronnych.
 W rozdziałach o regularności eliptycznej będziemy analizować,
 które dodatkowe założenia pozwalają odzyskać drugie
 pochodne i oszacowania wyższych rzędów.
