@@ -193,3 +193,24 @@ Następna iteracja 136: druga lektura 023–036 (wygładzanie lokalne, odcięcia
 Bilans: 14/14 kryteriów poddano ponownej lekturze źródła, 4 uściślono, 9 bez zmian, 1 kontrola źródła rysunku bez renderu. Źródło: commit 46b005597a6648b8f993f6c2a643333980b467cf, blob 3ce2b2528ea7865cc71231028088bc18f9f32545. Kontrola tekstowa w iteracji: 37 etykiet i 64 wystąpienia odsyłaczy zachowane w tej samej kolejności, stos środowisk poprawny. Nie wykonano kompilacji, testów wykonawczych ani Lean. Nie jest to jeszcze stabilizacja rozdziału.
 
 Następna iteracja 137: druga lektura kolejnych kryteriów od PDE-09-037, zaczynając od przestrzeni W_0 i przedłużenia przez zero; bez rozszerzania zakresu.
+
+## Iteracja 137 — 2026-11-25 — druga lektura, 037–048
+
+| Kryterium | Wynik ponownej lektury |
+| --- | --- |
+| 037 | Uściślenie: niezależność przedłużenia od reprezentanta przez zbiór miary zero i liniowość punktowa; poprawne przedłużenie gładkich testów. |
+| 038 | Uściślenie: pełny rachunek p-tych potęg norm wszystkich słabych pochodnych, także k=0; identyfikacja granic L^p poprawna. |
+| 039 | Uściślenie: jawna iniektywność z izometrii; dowód domkniętości obrazu przez zupełność bez zmian. |
+| 040 | Bez zmian: znak delta_0-delta_1, lokalizacja testów i odwołanie do nieregularności delty. |
+| 041 | Bez zmian: usunięty singleton nie zmienia klasy przedłużenia, restrykcja aproksymantów i sprzeczność z jednostronnym śladem. |
+| 042 | Uściślenie: czynnik L^(1-1/p) oraz osobne uzasadnienie p=1. |
+| 043 | Uściślenie: różniczkowanie pod całką przez ilorazy różnicowe z całkowalną stałą majorantą; j=1 osobno. Jensen, Fubini i teleskopowanie poprawne. |
+| 044 | Uściślenie: jawne oszacowanie różnicy funkcji z odjętymi średnimi przez dwukrotność błędu L^p. |
+| 045 | Bez zmian: granica średnich, norm i długości boku przez zmajoryzowanie, stała L zachowana. |
+| 046 | Bez zmian: przypadek p=infty przez skończone q, oba ograniczenia normy, M=0, równoważność stałości i zerowania pochodnych. |
+| 047 | Bez zmian: całka od końca przedziału, czynnik L^(p-1), Fubini, p=1 i d=1, granica aproksymantów. |
+| 048 | Bez zmian: dodatnia określoność, aksjomaty normy produktu i obie stałe równoważności. |
+
+Bilans: 12/12 kryteriów poddano ponownej lekturze, 6 kryteriów uściślono w 5 zmianach tekstu, 6 bez zmian. Źródło: commit 8050925e8b328734f7efc410f95d1ba0feeea301, blob 0b1100f9c1a7cf889f3dc132111fb8c76dff9fd1. Zachowano 37 etykiet i 64 wystąpienia odsyłaczy w tej samej kolejności, stos środowisk poprawny; tekst poza sekcjami 9.6–9.7 niezmieniony. Nie wykonywano kompilacji, testów wykonawczych ani Lean. Druga lektura obejmuje dotąd 48 z 81 kryteriów; nie jest to jeszcze stabilizacja rozdziału.
+
+Następna iteracja 138: druga lektura kryteriów od PDE-09-049 (reguły rachunkowe, iloczyny i złożenia), bez rozszerzania zakresu.
