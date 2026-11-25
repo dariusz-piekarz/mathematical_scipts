@@ -131,6 +131,39 @@ class CategoryTheoryCh25(unittest.TestCase):
             self.assertEqual(eps,sign(n*(n+1)//2))
             self.assertEqual(eps*sign(n*(n-1)//2),sign(n))
 
+    def test_CAT_25_006_fraction_localization(self):
+        # One-object preadditive category: Z/12, S = elements invertible mod 3.
+        # 4 in S is a zero divisor, so cancellation really requires refinement.
+        R=range(12)
+        S=[s for s in R if s%3]
+        mul=lambda a,b: a*b%12
+        value=lambda roof: roof[1]*pow(roof[0]%3,-1,3)%3
+        roofs=list(itertools.product(S,R))
+        def equivalent(x,y):
+            s,f=x
+            t,g=y
+            return any(mul(s,a)==mul(t,b) and mul(f,a)==mul(g,b)
+                       for a,b in itertools.product(S,repeat=2))
+        for a,b in itertools.product(R,repeat=2):
+            self.assertEqual(mul(a,b) in S,a in S and b in S)
+        for t,f,g in itertools.product(S,R,R):
+            if mul(t,f)==mul(t,g):
+                self.assertTrue(any(mul(f,a)==mul(g,a) for a in S))
+        for x,y in itertools.product(roofs,repeat=2):
+            self.assertEqual(equivalent(x,y),value(x)==value(y))
+            s,f=x
+            t,g=y
+            # Commutativity gives one Ore square; all other choices must agree.
+            target=mul(s,t),mul(g,f)
+            self.assertEqual(value(target),value(x)*value(y)%3)
+            self.assertEqual(value((mul(s,t),(mul(f,t)+mul(g,s))%12)),
+                             (value(x)+value(y))%3)
+            for a,b in itertools.product(S,R):
+                if mul(f,a)==mul(t,b):
+                    self.assertEqual(value((mul(s,a),mul(g,b))),value(target))
+        self.assertTrue(equivalent((1,3),(1,0)))
+        self.assertNotEqual(3,0)
+
     def test_CAT_25_005_structure(self):
         text=CHAPTER.read_text(encoding="utf-8")
         labels=re.findall(r"\\label\{([^}]+)\}",text)
