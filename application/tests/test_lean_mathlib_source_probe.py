@@ -35,6 +35,10 @@ class MathlibSourceClosureTests(unittest.TestCase):
         self.heads = {name: value["rev"] for name, value in self.expected.items()}
         self.checkout = SHA
         self.clean_error = None
+        self.committed_lock = copy.deepcopy(self.lock)
+        self.committed_upstream = copy.deepcopy(self.upstream)
+        self.clean_digest = probe.environment._digest({"state": "materialized", "packages": [
+            {"name": name, "commit": record["rev"]} for name, record in sorted(self.expected.items())]})
 
     @staticmethod
     def write(path, data):
@@ -49,11 +53,17 @@ class MathlibSourceClosureTests(unittest.TestCase):
 
     def inspect(self):
         def git(path, *args):
+            if args == ("show", SHA + ":application/lean/mathlib-source-lock.json"):
+                self.assertEqual(path, self.root)
+                return json.dumps(self.committed_lock)
+            if args == ("show", probe.PIN + ":lake-manifest.json"):
+                self.assertEqual(path, self.packages / "mathlib")
+                return json.dumps(self.committed_upstream)
             self.assertEqual(args, ("rev-parse", "HEAD"))
             return self.checkout if path == self.root else self.heads[path.name]
         with patch.object(probe.environment, "_git", side_effect=git), \
                 patch.object(probe.environment, "external_packages_sha256",
-                             return_value="b" * 64, side_effect=self.clean_error):
+                             return_value=self.clean_digest, side_effect=self.clean_error):
             return probe.inspect_sources(self.root, expected_sha=SHA)
 
     def test_valid_closure_never_claims_offline_or_artifact_verification(self):
@@ -111,7 +121,7 @@ class MathlibSourceClosureTests(unittest.TestCase):
         data = copy.deepcopy(self.upstream)
         data["packages"][0]["rev"] = "0" * 40
         self.write(self.packages / "mathlib" / "lake-manifest.json", data)
-        with self.assertRaisesRegex(ValueError, "upstream manifest"):
+        with self.assertRaisesRegex(ValueError, "Upstream manifest"):
             self.inspect()
         self.write(self.packages / "mathlib" / "lake-manifest.json", self.upstream)
         self.checkout = "c" * 40
@@ -131,3 +141,24 @@ class MathlibSourceClosureTests(unittest.TestCase):
         path.write_bytes(b"x" * (probe.MAX_JSON_BYTES + 1))
         with self.assertRaisesRegex(ValueError, "budget"):
             probe.read_json(path)
+
+
+    def test_lock_worktree_and_committed_object_must_match(self):
+        changed = copy.deepcopy(self.lock)
+        changed["packages"][0]["rev"] = "0" * 40
+        self.write(self.root / "mathlib-source-lock.json", changed)
+        with self.assertRaisesRegex(ValueError, "lock differs from committed"):
+            self.inspect()
+
+    def test_committed_upstream_is_checked_even_when_worktree_agrees(self):
+        changed = copy.deepcopy(self.upstream)
+        changed["packages"][0]["rev"] = "0" * 40
+        self.committed_upstream = changed
+        self.write(self.packages / "mathlib" / "lake-manifest.json", changed)
+        with self.assertRaisesRegex(ValueError, "Pinned upstream manifest"):
+            self.inspect()
+
+    def test_clean_checkout_digest_must_describe_same_revisions(self):
+        self.clean_digest = "b" * 64
+        with self.assertRaisesRegex(ValueError, "identity digest"):
+            self.inspect()
