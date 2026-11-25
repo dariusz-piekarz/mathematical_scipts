@@ -1,7 +1,7 @@
 \chapter{Kwadratury numeryczne}
 \label{ma1:ch:numerical-quadrature}
 
-Kwadratura numeryczna zastępuje całkę skończoną sumą wartości funkcji z odpowiednimi wagami. Rozróżniamy błąd metody (w arytmetyce dokładnej) od błędu zaokrągleń. Przyjmujemy $a<b$, $n\ge1$, $h=(b-a)/n$, $x_j=a+jh$. Niech $I(f)=\int_a^b f(x)\,\dd x$.
+Kwadratura numeryczna zastępuje całkę skończoną sumą wartości funkcji z odpowiednimi wagami. Rozróżniamy błąd metody (w arytmetyce dokładnej) od błędu zaokrągleń. Przyjmujemy $a<b$ oraz całkowite $n\ge1$, $h=(b-a)/n$, $x_j=a+jh$. Niech $I(f)=\int_a^b f(x)\,\dd x$.
 
 \section{Prostokąty i punkty środkowe}
 \begin{definicja}
@@ -14,7 +14,7 @@ Dla podziału równomiernego definiujemy
  R_n=h\sum_{j=1}^n f(x_j),\quad
  M_n=h\sum_{j=1}^n f((x_{j-1}+x_j)/2).
 \]
-Dla każdej funkcji Riemannowsko całkowalnej wszystkie trzy sumy dążą do $I(f)$ z twierdzenia \ref{ma1:thm:riemann-darboux-equivalence}.
+Dla każdej funkcji całkowalnej w sensie Riemanna wszystkie trzy sumy dążą do $I(f)$ z twierdzenia \ref{ma1:thm:riemann-darboux-equivalence}.
 \begin{twierdzenie}
 \label{ma1:thm:rectangle-error}
 Jeśli $f$ jest klasy $C^1$ na $[a,b]$, to
@@ -27,7 +27,7 @@ Jeśli $f$ jest klasy $C^2$, to
 \]
 \end{twierdzenie}
 \begin{proof}
-Niech $K=\max|f'|$. Na $[u,u+h]$ twierdzenie Lagrange'a daje $|f(x)-f(u)|\le K(x-u)$. Całkując, otrzymujemy lokalny błąd nie większy niż $Kh^2/2$. Dla prawego końca używamy $|f(x)-f(u+h)|\le K(u+h-x)$ i tego samego oszacowania. Sumowanie po $n$ przedziałach daje pierwszą tezę.
+Niech $K=\max|f'|$. Na $[u,u+h]$ twierdzenie Lagrange'a \ref{ma1:thm:lagrange} daje $|f(x)-f(u)|\le K(x-u)$. Całkując, otrzymujemy lokalny błąd nie większy niż $Kh^2/2$. Dla prawego końca używamy $|f(x)-f(u+h)|\le K(u+h-x)$ i tego samego oszacowania. Sumowanie po $n$ przedziałach daje pierwszą tezę.
 
 Dla $m=u+h/2$ twierdzenie Taylora z resztą Lagrange'a daje $|f(x)-f(m)-f'(m)(x-m)|\le K_2(x-m)^2/2$, gdzie $K_2=\max|f''|$. Całka składnika liniowego na $[u,u+h]$ jest zerowa. Ponieważ $\int_{-h/2}^{h/2}t^2\,\dd t=h^3/12$, błąd lokalny nie przekracza $K_2h^3/24$. Sumujemy po wszystkich przedziałach i korzystamy z $nh=b-a$.
 \end{proof}
@@ -50,12 +50,16 @@ Dla $f\in C^2[a,b]$ mamy
 Jeśli $f''\ge0$, to $M_n\le I(f)\le T_n$; dla $f''\le0$ nierówności są odwrócone.
 \end{twierdzenie}
 \begin{proof}
-Na $[u,v]$ o długości $h$ oznaczmy $w(x)=(x-u)(v-x)/2$. Mamy $w(u)=w(v)=0$, $w'(u)=h/2$, $w'(v)=-h/2$, $w''=-1$. Dwukrotne całkowanie przez części daje
+Na $[u,v]$ o długości $h$ oznaczmy $w(x)=(x-u)(v-x)/2$. Mamy $w(u)=w(v)=0$, $w'(u)=h/2$, $w'(v)=-h/2$, $w''=-1$. Dwukrotne całkowanie przez części (twierdzenie \ref{ma1:thm:integration-by-parts}) daje
+\[
+ \int_u^v wf''=[wf']_u^v-[w'f]_u^v+\int_u^v w''f.
+\]
+Po wstawieniu wartości brzegowych otrzymujemy
 \[
  \int_u^v w(x)f''(x)\,\dd x
  =\frac h2(f(u)+f(v))-\int_u^v f(x)\,\dd x.
 \]
-Ponieważ $w\ge0$ i $\int_u^v w=h^3/12$, moduł błędu jest nie większy niż $\max|f''|h^3/12$. Sumowanie daje tezę oraz znak błędu trapezów. Dla punktu środkowego, gdy $f''\ge0$, funkcja jest wypukła, więc $f(m)\le(f(m-t)+f(m+t))/2$ dla $0\le t\le h/2$. Całkując, dostajemy $hf(m)\le\int_u^v f$. Dla $f''\le0$ stosujemy wyniki do $-f$.
+Ponieważ $w\ge0$ oraz $\int_u^v w=\frac12\int_0^h t(h-t)\,\dd t=h^3/12$, moduł błędu jest nie większy niż $\max|f''|h^3/12$. Sumowanie daje tezę oraz znak błędu trapezów. Dla punktu środkowego, gdy $f''\ge0$, funkcja jest wypukła, więc $f(m)\le(f(m-t)+f(m+t))/2$ dla $0\le t\le h/2$. Całkując, dostajemy $hf(m)\le\int_u^v f$. Dla $f''\le0$ stosujemy wyniki do $-f$.
 \end{proof}
 \begin{center}
 \begin{tikzpicture}[x=5cm,y=3cm,>=Stealth]
@@ -99,7 +103,17 @@ Aby wyprowadzić stałą błędu, na $[-h,h]$ przyjmijmy
  (h-t)^3(h+3t)/72,&0\le t\le h.
  \end{cases}
 \]
-Funkcja $K$ jest nieujemna. Na obu połówkach $K^{(4)}=-1$; w punktach $\pm h$ wartości $K,K',K''$ znikają, zaś $K'''(-h)=h/3$, $K'''(h)=-h/3$. W zerze $K,K',K''$ są ciągłe, $K'''(0^- )=-2h/3$, $K'''(0^+)=2h/3$. Czterokrotne całkowanie przez części osobno na każdej połowie, z dodaniem wyrazów brzegowych, daje
+Funkcja $K$ jest nieujemna. Na dodatniej połowie
+\[
+ K(t)=h^4/72-h^2t^2/12+ht^3/9-t^4/24.
+\]
+Stąd $K'(t)=-h^2t/6+ht^2/3-t^3/6$, $K''(t)=-h^2/6+2ht/3-t^2/2$, $K'''(t)=2h/3-t$. Na ujemnej połowie korzystamy z parzystości $K$ i odpowiednich znaków pochodnych. Na obu połówkach $K^{(4)}=-1$; w punktach $\pm h$ wartości $K,K',K''$ znikają, zaś $K'''(-h)=h/3$, $K'''(h)=-h/3$. W zerze $K,K',K''$ są ciągłe, $K'''(0^- )=-2h/3$, $K'''(0^+)=2h/3$. Piszemy $G(t)=f(m+t)$. Na każdej połowie $[\alpha,\beta]$ czterokrotne całkowanie przez części daje
+\[
+ \int_\alpha^\beta KG^{(4)}
+ =[KG'''-K'G''+K''G'-K'''G]_\alpha^\beta
+ +\int_\alpha^\beta K^{(4)}G.
+\]
+Dodając obie tożsamości i wstawiając obliczone wartości brzegowe, otrzymujemy
 \[
  \int_{-h}^h K(t)f^{(4)}(m+t)\,\dd t
  =\frac h3(f(m-h)+4f(m)+f(m+h))
@@ -113,7 +127,7 @@ Istotnie, jedyne pozostające wyrazy brzegowe to $-K'''f$; wartości na obu stro
 \]
 W ostatniej równości podstawiamy $z=h-t$ i całkujemy $z^3(4h-3z)$. Lokalny błąd nie przekracza $h^5\max|f^{(4)}|/90$. Liczba bloków wynosi $n/2$, więc błąd globalny nie przekracza $(b-a)h^4\max|f^{(4)}|/180$. Sumując wagi na blokach, otrzymujemy podany wzór.
 \end{proof}
-Z tożsamości $S_{2n}=(4T_{2n}-T_n)/3$ wynika zbieżność Simpsona nawet dla funkcji Riemannowsko całkowalnych: węzły o nieparzystych indeksach mają wagę $4(h/2)/3$, wewnętrzne parzyste $2(h/2)/3$, a skrajne $(h/2)/3$.
+Dla podziału z $n$ podprzedziałami o kroku $h$ i jego dwukrotnego zagęszczenia (krok $h/2$) zachodzi $S_{2n}=(4T_{2n}-T_n)/3$. Istotnie, węzły o nieparzystych indeksach mają wagę $4(h/2)/3$, wewnętrzne parzyste $2(h/2)/3$, a skrajne $(h/2)/3$. Ponieważ $T_n,T_{2n}\to I(f)$, mamy $S_{2n}\to I(f)$ dla każdej funkcji całkowalnej w sensie Riemanna.
 
 \section{Dobór liczby podprzedziałów}
 \begin{przyklad}
@@ -140,7 +154,7 @@ jest dokładna dla wielomianów stopnia co najwyżej $3$, ale nie stopnia $4$. D
 \begin{proof}
 Szukając symetrycznego wzoru $w(f(-c)+f(c))$, z dokładności dla $1$ otrzymujemy $2w=2$, a dla $x^2$ mamy $2wc^2=2/3$. Stąd $w=1$, $c=1/\sqrt3$. Dla $x,x^3$ obie strony są zerowe. Dla $x^4$ kwadratura daje $2/9$, a całka $2/5$.
 
-Niech $p$ będzie wielomianem stopnia co najwyżej $3$ o wartościach i pochodnych zgodnych z $f$ w $\pm c$. Istnieje i jest jednoznaczny: liniowe odwzorowanie z czterowymiarowej przestrzeni wielomianów do $\R^4$ ma jądro zerowe, bo wielomian w jądrze jest podzielny przez $(x^2-c^2)^2$ stopnia $4$. Dla $x\ne\pm c$ dobieramy $A$ tak, aby $g(t)=f(t)-p(t)-A(t^2-c^2)^2$ znikała w $x$. Funkcja ma dwa zera podwójne i jedno dodatkowe zero. Z twierdzenia Rolle'a pomiędzy trzema różnymi zerami oraz z $g'(\pm c)=0$ wynika, że $g'$ ma co najmniej cztery różne zera, a następnie $g''$ co najmniej trzy, $g'''$ co najmniej dwa, $g^{(4)}$ co najmniej jedno. Zatem $A=f^{(4)}(\zeta)/24$ dla pewnego $\zeta\in(-1,1)$. W konsekwencji
+Niech $p$ będzie wielomianem stopnia co najwyżej $3$ o wartościach i pochodnych zgodnych z $f$ w $\pm c$. Istnieje i jest jednoznaczny: liniowe odwzorowanie z czterowymiarowej przestrzeni wielomianów do $\R^4$ ma jądro zerowe, bo wielomian w jądrze jest podzielny przez $(x^2-c^2)^2$ stopnia $4$. Dla $x\ne\pm c$ dobieramy $A$ tak, aby $g(t)=f(t)-p(t)-A(t^2-c^2)^2$ znikała w $x$. Mamy $g(-c)=g(c)=g'(-c)=g'(c)=g(x)=0$: trzy punkty zerowe są różne, a pochodna zeruje się w obu węzłach. Nie zakładamy istnienia wyższych pochodnych wielomianu interpolowanego poza klasą $C^4$. Z twierdzenia Rolle'a pomiędzy trzema różnymi zerami oraz z $g'(\pm c)=0$ wynika, że $g'$ ma co najmniej cztery różne zera, a następnie $g''$ co najmniej trzy, $g'''$ co najmniej dwa, $g^{(4)}$ co najmniej jedno. Zatem $A=f^{(4)}(\zeta)/24$ dla pewnego $\zeta\in(-1,1)$. W konsekwencji
 $|f(x)-p(x)|\le\max|f^{(4)}|(x^2-1/3)^2/24$, również w węzłach, gdzie obie strony są zerowe.
 Ponieważ $Q(f)=Q(p)=I(p)$,
 \[
@@ -149,14 +163,14 @@ Ponieważ $Q(f)=Q(p)=I(p)$,
 \]
 Całka wielomianu wynosi $2/5-4/9+2/9=8/45$.
 \end{proof}
-Na $[a,b]$ podstawienie afiniczne $x=m+ht$ z $m=(a+b)/2$, $h=(b-a)/2$ daje węzły $m\pm h/\sqrt3$ i wagi $h$. Błąd jest nie większy niż $h^5\max|f^{(4)}|/135$, ponieważ czwarta pochodna funkcji $t\mapsto f(m+ht)$ wynosi $h^4f^{(4)}(m+ht)$.
+Na $[a,b]$ podstawienie afiniczne $x=m+rt$ z $m=(a+b)/2$, $r=(b-a)/2$ daje węzły $m\pm r/\sqrt3$ i wagi $r$. Oznaczając $G(t)=f(m+rt)$, mamy $I(f)=rI_{[-1,1]}(G)$ oraz $G^{(4)}(t)=r^4 f^{(4)}(m+rt)$. Zatem błąd jest nie większy niż $r^5\max_{[a,b]}|f^{(4)}|/135$.
 
 \section{Zagęszczanie podziału i błędy zaokrągleń}
 Jeżeli metoda spełnia rozwinięcie $I-Q_h=c h^p+o(h^p)$ dla $h\to0^+$ i $p>0$, to
 \[
  I-Q_{h/2}=\frac{Q_{h/2}-Q_h}{2^p-1}+o(h^p).
 \]
-Istotnie, odejmujemy oba rozwinięcia: $Q_{h/2}-Q_h=c h^p(1-2^{-p})+o(h^p)$ i dzielimy przez $2^p-1$. Sama znajomość górnego oszacowania błędu rzędu $O(h^p)$ nie wystarcza do tej tożsamości asymptotycznej. Różnica dwóch obliczeń może przypadkowo być mała. Nie traktujemy jej jako gwarantowanego ograniczenia bez dodatkowych hipotez.
+Istotnie, odejmujemy oba rozwinięcia: $Q_{h/2}-Q_h=c h^p(1-2^{-p})+o(h^p)$ i dzielimy przez $2^p-1$. Sama znajomość górnego oszacowania błędu rzędu $O(h^p)$ nie wystarcza do tej tożsamości asymptotycznej. Różnica dwóch obliczeń może przypadkowo być mała. Na przykład na $[0,1]$ wielomian $p(x)=\prod_{j=0}^4(x-j/4)^2$ zeruje się we wszystkich węzłach obu wzorów $S_2,S_4$, więc $S_2(p)=S_4(p)=0$. Natomiast $p$ jest nieujemny i ściśle dodatni w punkcie $1/8$, zatem z ciągłości jego całka jest dodatnia. Nie traktujemy jej jako gwarantowanego ograniczenia bez dodatkowych hipotez.
 
 Jeżeli każda wartość $f(\xi_j)$ obarczona jest błędem $e_j$ z $|e_j|\le\eta$, to błąd kwadratury od tych danych nie przekracza $\eta\sum_j |w_j|$ przez nierówność trójkąta. Dla nieujemnych wag i kwadratury dokładnej dla stałych suma wag wynosi $b-a$. Pozostaje osobny błąd arytmetyki maszynowej w mnożeniu i sumowaniu. Zmniejszanie kroku nie usuwa automatycznie tego błędu.
 
