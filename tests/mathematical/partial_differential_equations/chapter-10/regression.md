@@ -121,3 +121,24 @@ Pierwsza lektura, iteracja 148. Kryteria semantyczne nie są wykonanymi testami 
 | PDE-10-011 | Jawna konwencja 1/infty=0; skalowanie zgodne z rozdziałem 09. |
 
 Druga lektura: 11/75; 8 kryteriów doprecyzowanych, 3 bez zmian, jedenaście zmian źródłowych. 32 etykiety zachowane w tej samej kolejności, 61 wystąpień odsyłaczy ma cele w rozdziałach 09 i 10, stos środowisk poprawny. Dalsza część od definicji obszaru Lipschitzowskiego bez zmian. Nie wykonywano testów Python, kompilacji, CI ani Lean. Następna iteracja: druga lektura 012–024, szczególnie dowód przedłużania i brak błędnego koła w przypadku p=infty.
+
+## Iteracja 155 — druga lektura 012–024
+Źródło przed 896d52cded37551a2734e356dee1999d326f22c5, po 07a6cd32e34ff2028b8b3b9e5ffc6bcdbe9ea5b8, commit 705d07a2f06d2e9cced318b64558e308dca46d9e. Odczytano całą sekcję przedłużania, gęstości i zanurzeń oraz zależności w rozdziale 09.
+
+| Kryterium | Wynik drugiej lektury |
+| --- | --- |
+| PDE-10-012 | Jawna definicja otoczenia wykresowego, strona wnętrza, konwencja R^0 i lambda_0 dla d=1, zwartość brzegu. |
+| PDE-10-013 | Jawne wzory odwrotności i stałe Lipschitza <=1+L; zachowanie miary przez Tonellego bez zmian. |
+| PDE-10-014 | Absolutna ciągłość ograniczeń phi, mierzalne ilorazy różnicowe, ograniczenie pochodnej, szczegóły absolutnej ciągłości złożenia. |
+| PDE-10-015 | Bez zmian: Meyers–Serrin, Cauchy, identyfikacja złożenia i pochodnych w L^p. |
+| PDE-10-016 | Rozpisano skończoność miary otoczeń i przejście od W^{1,infty} do W^{1,1}, potem odzyskanie oszacowań L^infty. |
+| PDE-10-017 | Jawny sens nośnika klasy L^p i lokalność pochodnych przez testowanie poza A. |
+| PDE-10-018 | Bez zmian: odbicie według twierdzenia rozdziału 09, p=infty przez p=1 i ograniczony nośnik. |
+| PDE-10-019 | Bez zmian: zwarty nośnik odbicia w Q, powrót przez Psi i przedłużenie przez zero z odcięciem. |
+| PDE-10-020 | Szczegóły normalizacji odcięć, suma równa jeden także na brzegu, słaba reguła łańcuchowa dla ruchu sztywnego i równoważność norm. |
+| PDE-10-021 | Uproszczenie gęstości: bez dodatkowego odcięcia, ponieważ Eu ma już zwarty nośnik. Jawny nośnik splotu i norma błędu restrykcji. |
+| PDE-10-022 | Rozpisano oszacowanie przez Eu, sprzężone wykładniki i osobny przypadek q=p*. |
+| PDE-10-023 | Dla q>d jawny p_0=dq/(d+q), p_0*=q; oszacowanie składowych na Omega i zastosowanie części (i), zamiast dodatkowego przedłużenia. |
+| PDE-10-024 | Zdefiniowano normę i półnormę Höldera, wskazano istniejący dowód we wniosku o Morreyu; brak zależności kołowej. Szczegóły dowodu Morreya będą objęte następną lekturą 025–036. |
+
+Druga lektura 24/75; w tej iteracji 10 kryteriów doprecyzowanych, 3 bez zmian, 11 zmian źródłowych. Zachowano 32 etykiety w tej samej kolejności; wszystkie 62 wystąpienia odsyłaczy mają cele w rozdziałach 09 i 10; stos środowisk poprawny; materiał przed i po kontrolowanym fragmencie bez zmian. Nie uruchamiano testów wykonywalnych, kompilacji, CI ani Lean. Następna iteracja: druga lektura 025–036, Morrey i reprezentanci wyższych rzędów.
