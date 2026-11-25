@@ -248,6 +248,29 @@ class CategoryTheoryCh25(unittest.TestCase):
             # Detect the opposite sign in odd characteristic.
             self.assertNotEqual(m%k,(-m)%k)
 
+    def test_CAT_25_010_truncation_triangle(self):
+        # Two-term cyclic complex with d = multiplication by b.
+        # X/tau_le X -> tau_ge X has kernel the identity complex im(d).
+        for k in range(2,21):
+            R=range(k)
+            for b in R:
+                Z={x for x in R if b*x%k==0}
+                B={b*x%k for x in R}
+                cosets={frozenset((x+z)%k for z in Z) for x in R}
+                induced={C:{b*x%k for x in C} for C in cosets}
+                self.assertTrue(all(len(v)==1 for v in induced.values()))
+                self.assertEqual(set().union(*induced.values()),B)
+                self.assertEqual(len(cosets),len(B))
+                # Kernel differential is bijective.
+                self.assertEqual(len({next(iter(v)) for v in induced.values()}),
+                                 len(cosets))
+                # Cone of inclusion Z -> X: d in degree -1 is z |-> z,
+                # and d in degree 0 is x |-> b*x.
+                self.assertEqual({x for x in R if b*x%k==0},Z)
+                self.assertEqual({z%k for z in Z},Z)
+                quotient={frozenset((x+y)%k for y in B) for x in R}
+                self.assertEqual(len(quotient)*len(B),k)
+
     def test_CAT_25_005_structure(self):
         text=CHAPTER.read_text(encoding="utf-8")
         labels=re.findall(r"\\label\{([^}]+)\}",text)
