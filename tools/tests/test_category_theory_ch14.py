@@ -74,6 +74,30 @@ class CategoryTheoryCh14(unittest.TestCase):
                         self.assertEqual(lin(tuple((u+v)%p for u,v in zip(a,b))),
                                          tuple((u+v)%p for u,v in zip(lin(a),lin(b))))
 
+    def test_CAT_14_006_exponential_unit_counit(self):
+        # F(X)=X times A, G(Y)=Y^A; including empty sets.
+        for a, x, y in itertools.product(range(3), repeat=3):
+            functions = tuple(maps(a, y))
+            index = {f: i for i, f in enumerate(functions)}
+            eta = tuple(tuple(i*a+j for j in range(a)) for i in range(x))
+            for i, j in itertools.product(range(x), range(a)):
+                self.assertEqual(eta[i][j], i*a+j)
+            evaluation = tuple(h[j] for h in functions for j in range(a))
+            for k, f in enumerate(functions):
+                lifted = tuple(k*a+j for j in range(a))
+                self.assertEqual(tuple(evaluation[i] for i in lifted), f)
+            for h in maps(x*a, y):
+                transpose = tuple(tuple(h[i*a+j] for j in range(a))
+                                  for i in range(x))
+                u = tuple(index[f] for f in transpose)
+                self.assertEqual(tuple(functions[k][j] for k in u
+                                       for j in range(a)), h)
+            for u in maps(x, len(functions)):
+                h = tuple(functions[k][j] for k in u for j in range(a))
+                recovered = tuple(index[tuple(h[i*a+j] for j in range(a))]
+                                  for i in range(x))
+                self.assertEqual(recovered, u)
+
     def test_CAT_14_005_structure(self):
         s = CHAPTER.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}", s)
