@@ -11,6 +11,8 @@ on:
       - "application/tests/test_lean_draft_generator.py"
       - "application/tests/test_lean_concept_fixture.py"
       - "application/scripts/lean_ci_audit.py"
+      - "application/scripts/lean_mathlib_source_probe.py"
+      - "application/tests/test_lean_mathlib_source_probe.py"
       - "application/scripts/benchmark_lean_fingerprint.py"
       - "application/scripts/benchmark_lean_paths.py"
       - "application/scripts/profile_lean_olean_cpu.py"
@@ -76,6 +78,7 @@ jobs:
         run: |
           python -m unittest \
             tests.test_lean_ci_audit \
+            tests.test_lean_mathlib_source_probe \
             tests.test_lean_fingerprint_benchmark \
             tests.test_lean_paths_benchmark \
             tests.test_lean_olean_cpu_profile \
@@ -117,6 +120,22 @@ jobs:
           test "$mathlib_sha" = "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67"
           lake env lean --version
           echo "Mathlib revision: $mathlib_sha"
+
+      - name: Verify pinned Mathlib source closure
+        working-directory: application
+        env:
+          EXPECTED_SHA: ${{ inputs.candidate_sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m scripts.lean_mathlib_source_probe "$EXPECTED_SHA" "$RUNNER_TEMP/atlas-mathlib-source-closure.json"
+      - name: Upload verified Mathlib source closure evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-mathlib-source-closure-${{ inputs.validation_pass || 'standalone' }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/atlas-mathlib-source-closure.json
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Compile registered Lean files and check axioms
         working-directory: application/lean
