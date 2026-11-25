@@ -70,6 +70,15 @@
 | PDE-09-060 | cor:pde9-truncation | T_M(u) zbiega do u w W^1,p dla p skończonego: oszacowania błędów funkcji i pochodnych przez ogony, zbieżność zmajoryzowana, skończona liczba składowych. Nie twierdzić tej zbieżności dla ogólnych nieskończonych wykładników przez ten argument. | semantyczna |
 | PDE-09-061 | sec:pde9-calculus | Rozróżnienie udowodnionej reguły dla C¹ oraz obcięć ze skończoną liczbą punktów załamania od ogólnej reguły dla funkcji lipschitzowskich; nie podstawiać dowolnego reprezentanta pochodnej bez uzasadnienia. | semantyczna |
 
+| PDE-09-062 | sec:pde9-extension | Przesunięcie do wnętrza, tożsamość testowa dla każdej pochodnej, osobne przedłużenia L^p bez założenia, że są pochodnymi przedłużenia u. | semantyczna |
+| PDE-09-063 | sec:pde9-extension | Splot z promieniem mniejszym od h/2; lokalna identyfikacja pochodnych i globalna zbieżność norm na półprzestrzeni, wybór ciągu diagonalnego. | semantyczna |
+| PDE-09-064 | thm:pde9-reflection | Odbicie dobrze określone na klasach, jawne zniesienie składników brzegowych, znaki pochodnych, przypadek d=1 i dokładny czynnik 2^(1/p). | semantyczna |
+| PDE-09-065 | thm:pde9-reflection | Przeniesienie na ogólne u przez zupełność i identyfikację granicy z jawnym odbiciem L^p, bez kołowości. | semantyczna |
+| PDE-09-066 | prop:pde9-highreflection | Odwracalność układu Vandermonde'a przez liczbę pierwiastków; dopasowanie pochodnych mieszanych do rzędu k-1 i indukcja całkowania przez części. | semantyczna |
+| PDE-09-067 | prop:pde9-highreflection | Czynnik j^(m-1/p) z jakobianem i regułą łańcuchową; jawna stała normy oraz identyfikacja granicy L^p. | semantyczna |
+| PDE-09-068 | lem:pde9-density-halfspace-slab | Rozkład warstwy dwoma odcięciami, test uzasadniający przedłużenie przez zero z dala od płaszczyzny sklejenia, zmiana s=1-t i odbicie, bez nieudowodnionego twierdzenia ACL. | semantyczna |
+| PDE-09-069 | lem:pde9-density-halfspace-slab | Ograniczoność przedłużenia warstwy, gęstość C_c^infty na R^d i kontrakcyjność restrykcji; nie utożsamiać aproksymacji z zerowym śladem. | semantyczna |
+
 ## Iteracja 128 — 2026-11-25
 
 Pierwsza lektura wprowadzenia i sekcji 9.1. Uszczegółowiono definicje, normy, lokalizację i sklejanie, wykorzystano sprawdzone wyniki rozdziałów 07–08. Dodano konsekwencję abs(x) nie należy do W^2,p i przypadek p=infty w istniejącym przykładzie potęgowym, bez rozbudowywania odrębnego działu. Rozpisano obie implikacje kryterium całkowalności słabego gradientu oraz normalizację normy H¹.
@@ -109,3 +118,7 @@ Pierwsza lektura sekcji 9.8. Poprawiono dowód mnożenia przez współczynnik C�
 Źródło commit a98262681a401f0c839a10a55482b4954dc3a1e2, blob 7f6dc5f21b28925d7abd1edb20ea849bc9c29dc6. Zachowano 37 unikatowych etykiet; 56 wystąpień odsyłaczy, 15 niezmienionych celów zewnętrznych; poprawny stos środowisk, tekst poza 9.8 identyczny. Dodano 13 kryteriów, łącznie 61. Nie wykonywano kompilacji, testów numerycznych ani Lean.
 
 Następna iteracja 133: pierwsza lektura sekcji 9.9 — przedłużanie z półprzestrzeni, odbicie wyższych rzędów i gęstość na półprzestrzeni i warstwie; zweryfikować współczynniki dopasowania pochodnych i brak kołowego rozumowania.
+
+## Iteracja 133 — 2026-11-25
+
+Pierwsza lektura sekcji 9.9. Rozpisano globalną aproksymację przez przesunięcie i splot niezależnie od przedłużania Sobolewa; całkowanie przez części w odbiciu pierwszego i wyższych rzędów, układ Vandermonde'a i oszacowanie norm. Zastąpiono nieuzasadnione odwołanie do absolutnej ciągłości na przekrojach warstwy konstrukcją z dwoma odcięciami i odbiciem. Źródło: commit 310737224e0de4f03f73481070ab1be91a6d3e98, blob 821e494780fd7f3de0f9fba86fbb1751aca53c4e. Zachowano wszystkie 37 etykiet; 58 wystąpień odsyłaczy, poprawny stos środowisk, tekst poza 9.9 identyczny. Dodano 8 kryteriów semantycznych (łącznie 69). Nie wykonywano kompilacji, testów wykonawczych ani Lean. Następna iteracja 134: pierwsza lektura sekcji 9.10–9.12 i podsumowania, ślad na warstwie, rozwiązanie Poissona oraz skalowanie.
