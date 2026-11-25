@@ -28,6 +28,21 @@
 | PDE-09-021 | sec:pde9-oneD | Dla p=1 absolutna ciągłość całki kontroluje moduł ciągłości, ale brak wspólnego dodatniego wykładnika Höldera: dla dowolnego gamma>0 przykład x^theta z 0<theta<min(1,gamma), całkowalna pochodna i rozbieżny iloraz. | semantyczna |
 | PDE-09-022 | sec:pde9-oneD | Funkcja Cantora: miara zbioru Cantora zero przez (2/3)^n, pochodna klasyczna zero poza nim, sprzeczność z reprezentacją absolutnie ciągłą i przyrostem 1; wykluczenie W^1,p dla wszystkich p przez włożenie w W^1,1. | semantyczna |
 
+| PDE-09-023 | thm:pde9-mollify | Lokalna definicja splotu na Omega_epsilon, również Omega=R^d; bez przedłużania u przez zero; gładkość i tożsamość pochodnych przez twierdzenie 07; każda pochodna w lokalnym L^p i zbieżność na K przez przybliżoną jedynkę. | semantyczna |
+| PDE-09-024 | thm:pde9-mollify | Skończona suma norm pochodnych ograniczonych do K, przypadek pustego K, zbieżność na relatywnie zwartym otwartym U; nie definiować przestrzeni Sobolewa na dowolnym zwartym K. | semantyczna |
+| PDE-09-025 | lem:pde9-compact-product | Przedłużenie iloczynu psi u przez zero: test psi phi na Omega, dokładna reguła Leibniza pierwszego rzędu i indukcja do wielowskaźników, wszystkie składowe z ustalonym zwartym nośnikiem w L^p, także p=infty i k=0, bez kołowego użycia W_0. | semantyczna |
+| PDE-09-026 | lem:pde9-compact-product | Splot funkcji o zwartym nośniku: wspólny zwarty nośnik wszystkich różnic pochodnych, zbieżność lokalna daje globalną dla p skończonego, nośnik wewnątrz V przy promieniu mniejszym od odległości do dopełnienia. | semantyczna |
+| PDE-09-027 | sec:pde9-mollify | Kontrprzykład dla p=infty: każda ciągła pochodna v' ma odległość co najmniej 1 od sgn na (-r,r), przez granice jednostronne; lokalne włożenie W^k,infty w W^k,q dla skończonego q i zbieżność wygładzania w tych normach. | semantyczna |
+| PDE-09-028 | sec:pde9-mollify | Rysunek lokalności: x w K, kula promienia epsilon zawarta w U, poprawny warunek odległości i nośnik jądra, zgodność podpisu z definicją. Kontrola wizualna przy kompilacji. | semantyczna |
+| PDE-09-029 | thm:pde9-MeyersSerrin | Wyczerpanie K_j zwarte, K_j zawarte we wnętrzu K_(j+1), każdy punkt i każdy zwarty podzbiór objęty; Omega=R^d i początkowe puste zbiory. | semantyczna |
+| PDE-09-030 | thm:pde9-MeyersSerrin | Jawna konstrukcja eta_j przez splot funkcji charakterystycznej zwartego otoczenia K_j; kontrola nośnika, wartości 0–1 i równość 1 w otoczeniu K_j; monotoniczność, teleskopowanie psi_j i suma 1. | semantyczna |
+| PDE-09-031 | thm:pde9-MeyersSerrin | V_j=int K_(j+2) minus K_(j-2), relatywna zwartość i zawieranie supp psi_j; lokalna skończoność przez wyczerpanie, w tym małe indeksy i puste zbiory. | semantyczna |
+| PDE-09-032 | thm:pde9-MeyersSerrin | Odcięte w_j, wybór promieni wygładzania i błędów delta*2^(-j) w globalnej normie, lokalnie skończona gładka suma g, bez przedwczesnego założenia g w W^k,p. | semantyczna |
+| PDE-09-033 | thm:pde9-MeyersSerrin | Zupełność W^k,p, zbieżność szeregu błędów przez oszacowanie ogona, identyfikacja granicy jako g-u przez testy i lokalną skończoność oraz iniektywność dystrybucji regularnych; globalny błąd i g w W^k,p. Nie wymagać zbieżności szeregu w_j w globalnej normie. | semantyczna |
+| PDE-09-034 | sec:pde9-density | Gęstość C_c^infty na całej R^d dla p skończonego: odcięcie psi_R, ogon każdej pochodnej i czynniki R^(-abs(beta)), następnie wygładzenie o zwartym nośniku, dwa niezależne błędy. | semantyczna |
+| PDE-09-035 | sec:pde9-density | Rozróżnienie C^infty i C_c^infty, brak ogólnej gęstości dla p=infty przez przykład abs(x), brak narzucenia warunku zerowego brzegu przez Meyersa–Serrina. | semantyczna |
+| PDE-09-036 | ex:pde9-constant | Stała 1 w W^1,p(0,1), ale nie w W_0^1,p; ciągłość śladu, jawne oszacowanie wartości w zerze i sprzeczność z zerowaniem funkcji testowych. | semantyczna |
+
 ## Iteracja 128 — 2026-11-25
 
 Pierwsza lektura wprowadzenia i sekcji 9.1. Uszczegółowiono definicje, normy, lokalizację i sklejanie, wykorzystano sprawdzone wyniki rozdziałów 07–08. Dodano konsekwencję abs(x) nie należy do W^2,p i przypadek p=infty w istniejącym przykładzie potęgowym, bez rozbudowywania odrębnego działu. Rozpisano obie implikacje kryterium całkowalności słabego gradientu oraz normalizację normy H¹.
@@ -43,3 +58,11 @@ Pierwsza lektura sekcji 9.2–9.3. Rozpisano pełne dowody zupełności i aksjom
 Źródło commit 1552d31d45037df0535e81c10847783905016caa, blob 927ddb6e50308f795b1798af5e796a0ab7dd6682; 36 zachowanych etykiet, 30 wystąpień odsyłaczy, 11 zewnętrznych celów (nowy odsyłacz thm:pde7-constant sprawdzony w rozdziale 07). Poprawny stos środowisk; pozostały tekst identyczny. Dodano 10 kryteriów, łącznie 22. Nie wykonano kompilacji, testów numerycznych ani Lean.
 
 Następna iteracja 130: pierwsza lektura sekcji 9.4–9.5, sploty i aproksymacja wewnętrzna oraz twierdzenie Meyersa–Serrina. Szczególnie sprawdzić lokalnie skończony rozkład jedynki, kontrolę błędów i odrębność p=infty.
+
+## Iteracja 130 — 2026-11-25
+
+Pierwsza lektura sekcji 9.4–9.5. Zastąpiono nieprecyzyjną normę W^k,p(K) na dowolnym zwartym zbiorze sumą norm ograniczeń pochodnych i wykorzystano sprawdzone twierdzenia 07 o wygładzaniu oraz przybliżonej jedynce. Dodano lemat o iloczynie z funkcją odcinającą i jego przedłużeniu przez zero z pełnym dowodem reguły Leibniza; z niego wynika globalna aproksymacja funkcji o zwartym nośniku. Rozpisano konstrukcję rozkładu jedynki z wyczerpania K_j, jawnie kontrolując lokalną skończoność rozszerzonych nośników i identyfikację granicy szeregu błędów w przestrzeni Banacha. Dodano dowód gęstości C_c^infty na całej R^d dla p skończonego oraz ilościowy kontrprzykład dla p=infty. Poprawiono istniejący rysunek lokalności splotu; nie sprawdzano jeszcze renderu.
+
+Źródło commit 1bd6861738b6e0d711d066764500b66bf84ff86e, blob 73e0f31b6407eb2c9ee084707d8ba6a5a48c0f50. Zachowano wszystkie 36 etykiet i dodano lem:pde9-compact-product, łącznie 37 unikatowych. 42 wystąpienia odsyłaczy, 15 różnych celów zewnętrznych sprawdzonych w rozdziałach 07, 08 i 10. Stos środowisk poprawny; tekst poza 9.4–9.5 identyczny. Dodano 14 kryteriów, łącznie 36. Nie wykonywano kompilacji, testów numerycznych ani Lean.
+
+Następna iteracja 131: pierwsza lektura sekcji 9.6–9.7, przestrzeń W_0 i przedłużenie przez zero oraz nierówność Poincarégo na kostce; wykorzystać już udowodniony lemat odcięcia.
