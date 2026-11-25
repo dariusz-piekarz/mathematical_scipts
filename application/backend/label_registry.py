@@ -7,6 +7,7 @@ identical label strings alone never establish semantic equivalence.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import re
 from typing import Mapping, Sequence
 
 VOLUMES = {"P1": "I", "P2": "II", "P3": "III", "P4": "IV"}
@@ -57,6 +58,16 @@ def resolve(
         if len(hits) == 1:
             return Decision("alias_resolved", hits[0], "curated_alias")
         return Decision("missing", None, "stale_alias")
+
+    # Qualified reading references use the stable occurrence identity directly.
+    # No fallback to another chapter is allowed, even when labels coincide.
+    target_doc, separator, target_name = target_label.partition("::")
+    if separator and re.fullmatch(r"[A-Z][A-Z0-9]*-[0-9]{2,}[A-Z]?", target_doc):
+        hits = [o for o in pool if o.document_id == target_doc and o.label == target_name]
+        if len(hits) == 1:
+            return Decision("external_resolved", hits[0], "qualified_occurrence")
+        return Decision("ambiguous" if len(hits) > 1 else "missing", None,
+                        "qualified_ambiguous" if len(hits) > 1 else "qualified_missing")
 
     scope = family(source_document)
     if scope in VOLUMES:
