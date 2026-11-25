@@ -137,7 +137,17 @@ class DockerOutputLimit(ValueError):
 
 
 class DockerCommandFailed(ValueError):
-    """Local CLI returned a nonzero exit code."""
+    """Local CLI returned a nonzero exit code.
+
+    Optional bounded evidence is internal to explicitly opted-in CI callers;
+    never include raw output in the exception message.
+    """
+
+    def __init__(self, message: str, *, returncode: int | None = None,
+                 output: bytes | None = None):
+        super().__init__(message)
+        self.returncode = returncode
+        self.output = output
 
 
 class DockerCleanupDeadline(TimeoutError):
@@ -180,7 +190,7 @@ def deferred_cleanup_command(prefix: list[str], env: dict[str, str]):
 
 
 def _command(prefix: list[str], args: tuple[str, ...], env: dict[str, str],
-             *, deadline: float | None = None) -> bytes:
+             *, deadline: float | None = None, capture_failure: bool = False) -> bytes:
     """Bound captured output and CLI waiting, with a shared optional deadline.
 
     Reserve local reap time within the shared budget. Process creation and OS
@@ -220,6 +230,9 @@ def _command(prefix: list[str], args: tuple[str, ...], env: dict[str, str],
         if deadline is not None:
             _remaining(deadline)
         if returncode != 0:
+            if capture_failure is True:
+                raise DockerCommandFailed("Docker command failed", returncode=returncode,
+                                          output=bytes(out))
             raise DockerCommandFailed("Docker command failed")
         return bytes(out)
     except BaseException:
