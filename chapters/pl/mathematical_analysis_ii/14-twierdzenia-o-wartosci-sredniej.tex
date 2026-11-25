@@ -15,8 +15,8 @@ nie zakładamy zwartości kul w przestrzeni Banacha.
 \label{ma2:thm:scalar-mvt}
 Niech $f:U\to\R$, $x,y\in U$, $x\ne y$, $[x,y]\subseteq U$.
 Załóżmy, że $f$ jest ciągła na odcinku i różniczkowalna
-w każdym jego punkcie wewnętrznym (tj. dla parametrów
-$t\in(0,1)$). Istnieje $\theta\in(0,1)$ takie, że
+w każdym punkcie odcinka poza jego końcami
+(tj. dla parametrów $t\in(0,1)$). Istnieje $\theta\in(0,1)$ takie, że
 \[
  f(y)-f(x)=Df(x+\theta(y-x))(y-x).
 \]
@@ -24,7 +24,9 @@ Jeśli $f(x)=f(y)$, prawa strona jest zerowa.
 \end{twierdzenie}
 \begin{proof}
 Funkcja $\gamma(t)=f(x+t(y-x))$ jest ciągła na $[0,1]$,
-a z twierdzenia \ref{ma2:thm:frechet-chain} ma
+a odwzorowanie $t\mapsto x+t(y-x)$ jest afiniczne
+i ma pochodną $s\mapsto s(y-x)$. Z twierdzenia
+\ref{ma2:thm:frechet-chain} funkcja $\gamma$ ma
 pochodną $\gamma'(t)=Df(x+t(y-x))(y-x)$ dla $0<t<1$.
 Twierdzenie Lagrange'a (AM I 21.3.1), zastosowane do
 $\gamma$, daje tezę. Jeśli wartości końcowe są równe,
@@ -62,7 +64,7 @@ na odcinku, których pochodne wyznacza reguła
 \begin{twierdzenie}[Oszacowanie przyrostu]
 \label{ma2:thm:mean-value-inequality}
 Niech $f:U\to F$ będzie ciągłe na $[x,y]\subseteq U$
-i różniczkowalne w punktach wewnętrznych tego odcinka.
+i różniczkowalne w punktach odcinka poza jego końcami.
 Jeżeli $x\ne y$ i $\|Df(x+t(y-x))\|\le M$ dla
 $t\in(0,1)$, gdzie $M\ge0$, to
 \[
@@ -76,7 +78,9 @@ Stosujemy lemat \ref{ma2:lem:vector-increment}
 na $[0,1]$. Dla $x=y$ analogiczna nierówność jest
 trywialna. Dowód działa także w przestrzeniach
 unormowanych, gdyż przywołany lemat nie wymaga
-zupełności.
+zupełności. Wystarczy nawet bezpośrednie oszacowanie
+$\|Df(x+t(y-x))(y-x)\|\le M\|y-x\|$:
+ograniczenie normy całego operatora nie jest konieczne.
 \end{proof}
 
 \begin{przyklad}[Brak wektorowej równości Lagrange'a]
@@ -103,13 +107,14 @@ Rolle'a z zerową pochodną.
  \fill (Q) circle (1.6pt);
  \draw[->,red!70!black,very thick] (Q)--++(-.7071,.7071);
  \node[anchor=west,xshift=5pt,yshift=1pt] at (Q) {$Q$};
- \node[red!70!black,anchor=east] at (-.06,1.39) {$\gamma'(\pi/4)$};
+ \node[red!70!black,anchor=east,xshift=-8pt] at (-.12,1.36) {$v$};
  \draw[->,blue!70!black,thick] ({cos(200)},{sin(200)})
   arc[start angle=200,end angle=245,radius=1];
 \end{tikzpicture}
 \caption{Krzywa jednostkowa wraca do punktu $P=\gamma(0)=
 \gamma(2\pi)$, lecz jej wektor styczny nigdy nie jest zerowy.
-W punkcie $Q=\gamma(\pi/4)$ zaznaczono wektor pochodnej.}
+W punkcie $Q=\gamma(\pi/4)$ zaznaczono wektor
+$v=\gamma'(\pi/4)$, styczny do okręgu.}
 \label{ma2:fig:vector-mvt-failure}
 \end{figure}
 \FloatBarrier
@@ -125,8 +130,16 @@ funkcję skalarną
  \varphi(t)=\left\langle f(x+t(y-x)),\frac{w}{\|w\|_2}
                          \right\rangle.
 \]
-Jest ona ciągła na $[0,1]$ i różniczkowalna wewnątrz
-z reguły łańcuchowej. Ponieważ
+Funkcjonał $u\mapsto\langle u,w/\|w\|_2\rangle$
+jest liniowy i ciągły z nierówności
+Cauchy'ego--Schwarza. Zatem $\varphi$ jest ciągła
+na $[0,1]$, a z reguły łańcuchowej
+\[
+ \varphi'(t)=
+ \left\langle Df(x+t(y-x))(y-x),w/\|w\|_2\right\rangle
+ \quad(0<t<1).
+\]
+Ponieważ
 $\varphi(1)-\varphi(0)=\|w\|_2$, twierdzenie Lagrange'a
 i nierówność Cauchy'ego--Schwarza dają dla pewnego
 $\theta\in(0,1)$
@@ -205,6 +218,10 @@ Dla $y=x+h$ wzór całkowy daje
  \end{aligned}
 \]
 Pochodna jest ciągła w normie operatorowej, ponieważ
+dla $\|k\|\le1$ podmultiplikatywność normy daje
+$\|(DP(x)-DP(y))k\|
+=\|(x-y)k+k(x-y)\|\le2\|x-y\|$.
+Po supremum po takich $k$ otrzymujemy
 $\|DP(x)-DP(y)\|\le2\|x-y\|$. W obliczeniu całki
 korzystamy z liniowości sum Riemanna, ciągłości
 mnożenia przez ustalony wektor i $\int_0^1t\,\mathrm dt=1/2$.
@@ -233,9 +250,41 @@ $\|Df(z)\|\le\|Df(p)\|+1$, więc stosujemy pierwszą tezę.
 Nie korzystamy ze zwartości kuli.
 \end{proof}
 
+\begin{stwierdzenie}[Oszacowanie pochodnej funkcji Lipschitza]
+\label{ma2:prop:lipschitz-derivative}
+Jeśli $f$ jest funkcją Lipschitza ze stałą $L$ na
+otoczeniu punktu $p\in U$ i ma w $p$ pochodną
+Frécheta, to $\|Df(p)\|\le L$.
+\end{stwierdzenie}
+\begin{proof}
+Dla $h\in E$ i niezerowego rzeczywistego $t$ o
+dostatecznie małym module punkty $p,p+th$ należą
+do tego otoczenia. Stąd
+\[
+ \left\|\frac{f(p+th)-f(p)}{t}\right\|\le L\|h\|.
+\]
+Na mocy twierdzenia \ref{ma2:thm:frechet-gateaux}
+iloraz wektorowy dąży do $Df(p)h$. Przechodząc
+do granicy norm i biorąc supremum po $\|h\|\le1$,
+otrzymujemy tezę.
+\end{proof}
+
+Założenia wypukłości w poprzednim wniosku nie można
+po prostu pominąć. Na zbiorze otwartym
+$U=(-1,0)\cup(0,1)\subseteq\R$ funkcja równa $0$
+na pierwszej składowej i $1$ na drugiej ma wszędzie
+pochodną zerową, ale nie jest funkcją Lipschitza na
+całym $U$: dla $x=-1/n$, $y=1/n$, $n\ge2$,
+iloraz $|f(y)-f(x)|/|y-x|$ wynosi $n/2$.
+W następnym wniosku spójność wystarczy do stałości,
+lecz sama spójność nie zastępuje wypukłości w dowodzie
+ogólnego oszacowania przyrostów.
+
 \begin{wniosek}
 \label{ma2:cor:zero-derivative}
-Jeżeli $U$ jest spójny i $Df=0$ na $U$, to $f$ jest stałe.
+Niech $f:U\to F$ będzie różniczkowalne na $U$.
+Jeżeli $U$ jest spójny i $Df=0$ na $U$, to
+$f(x)=f(y)$ dla wszystkich $x,y\in U$.
 \end{wniosek}
 \begin{proof}
 W każdej dostatecznie małej kuli zawartej w $U$
@@ -249,8 +298,8 @@ Ze spójności i niepustości tego zbioru wynika,
 
 \begin{twierdzenie}[Oszacowanie względem ustalonego operatora]
 \label{ma2:thm:linear-approximation-bound}
-Niech $V\subseteq U$ będzie wypukły, $f$ różniczkowalne
-na $V$ i $A\in\mathcal L(E,F)$. Jeżeli
+Niech $V\subseteq U$ będzie niepustym zbiorem wypukłym,
+$f:U\to F$ różniczkowalne na $V$ i $A\in\mathcal L(E,F)$. Jeżeli
 $\sup_{z\in V}\|Df(z)-A\|\le q$, $q\ge0$, to dla
 wszystkich $x,y\in V$ zachodzi
 \[
@@ -286,11 +335,14 @@ dodatnie, co daje różnowartościowość. Po podzieleniu
 przez $m-q$ otrzymujemy nierówność dla odwrotności.
 \end{proof}
 
-Jeżeli $Df(p)$ jest izomorfizmem przestrzeni Banacha,
-to dla $A=Df(p)$ mamy
-$\|Ah\|\ge\|A^{-1}\|^{-1}\|h\|$ (dla przestrzeni
-niezerowych). Ciągłość pochodnej pozwala wybrać
-kulę, na której $q<m$. Otrzymaliśmy lokalną
+Niech $p\in U$, $E,F\ne\{0\}$ i niech $f$ będzie
+różniczkowalne w otoczeniu $p$, a $Df$ ciągłe w $p$.
+Jeżeli $A=Df(p)$ jest izomorfizmem przestrzeni Banacha,
+to $\|h\|=\|A^{-1}Ah\|\le\|A^{-1}\|\|Ah\|$.
+Możemy zatem przyjąć $m=\|A^{-1}\|^{-1}>0$.
+Wybierając $q=m/2$ i dostatecznie małą kulę wokół
+$p$, z ciągłości $Df$ w $p$ zapewniamy
+$\|Df(z)-A\|\le q$ na tej kuli. Otrzymaliśmy lokalną
 różnowartościowość, ale nie udowodniliśmy jeszcze
 otwartości obrazu ani różniczkowalności odwrotności.
 Te kwestie rozstrzygniemy w twierdzeniu o funkcji
@@ -316,6 +368,34 @@ $1/2$. Dla $A=I$ mamy $m=1$, zatem
 W szczególności $f$ jest różnowartościowe na tej kuli.
 \end{przyklad}
 
+\begin{wniosek}[Kwadratowe oszacowanie reszty]
+\label{ma2:cor:quadratic-remainder}
+Niech $f\in C^1(U,F)$, $p,p+h\in U$ i
+$[p,p+h]\subseteq U$. Załóżmy, że $L\ge0$ oraz
+$\|Df(p+th)-Df(p)\|\le Lt\|h\|$ dla $0\le t\le1$.
+W szczególności warunek ten zachodzi, gdy $Df$ jest
+funkcją Lipschitza ze stałą $L$ na odcinku. Wtedy
+\[
+ \|f(p+h)-f(p)-Df(p)h\|
+ \le \frac L2\|h\|^2.
+\]
+\end{wniosek}
+\begin{proof}
+Wzór z twierdzenia \ref{ma2:thm:integral-increment}
+oraz liniowość całki dają
+\[
+ f(p+h)-f(p)-Df(p)h
+ =\int_0^1 (Df(p+th)-Df(p))h\,\mathrm dt.
+\]
+Norma funkcji podcałkowej jest oszacowana przez
+$Lt\|h\|^2$. Z nierówności dla normy całki i
+$\int_0^1 t\,\mathrm dt=1/2$ otrzymujemy tezę,
+również dla $h=0$.
+\end{proof}
+Stała $1/2$ jest optymalna: dla $f(s)=Ls^2/2$,
+$L>0$, $p=0$ na $\R$ pochodna jest funkcją Lipschitza
+ze stałą $L$, a w oszacowaniu zachodzi równość.
+
 \section{Ciągłość pochodnej Gâteaux}
 
 \begin{twierdzenie}[Ciągła pochodna Gâteaux]
@@ -336,7 +416,8 @@ daje różniczkowalność Frécheta.
 
 \begin{wniosek}[Wystarcza ciągłość w rozważanym punkcie]
 \label{ma2:cor:pointwise-gateaux}
-Jeżeli $D_Gf$ istnieje w otoczeniu $p\in U$ i jest
+Niech $f:U\to F$ i $p\in U$.
+Jeżeli $D_Gf$ istnieje w otoczeniu $p$ i jest
 ciągłe w $p$ w normie operatorowej, to $Df(p)$
 istnieje i $Df(p)=D_Gf(p)$.
 \end{wniosek}
@@ -360,8 +441,11 @@ Z dowolności $\varepsilon$ wynika teza. W tym
 dowodzie nie używamy całki ani zupełności.
 \end{proof}
 
-Ciągłość w normie operatorowej nie oznacza jedynie
-ciągłości każdego przekroju kierunkowego. Przykład
+Ciągłość $D_Gf$ w normie operatorowej oznacza
+jednostajną kontrolę względem $\|h\|\le1$:
+$\sup_{\|h\|\le1}\|(D_Gf(z)-D_Gf(p))h\|\to0$
+dla $z\to p$. Nie zastępujemy jej samą ciągłością
+przekrojów funkcji $f$ na prostych. Przykład
 \ref{ma2:ex:frechet-counterexample} przypomina, że
 samo istnienie pochodnej Gâteaux w punkcie i
 ciągłość funkcji nie zapewniają różniczkowalności
