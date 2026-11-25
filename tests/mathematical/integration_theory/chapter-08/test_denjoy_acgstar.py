@@ -87,5 +87,39 @@ class Denjoy08(unittest.TestCase):
         self.assertLessEqual(abs(fun(v)-fun(u)-slope*(v-u)),d*(v-u))
 
 
+
+    def test_local_derivative_bound_does_not_require_endpoint_derivative(self):
+        # F(x)=sqrt(x), x=1/4, F'(x)=1. Rational square witnesses.
+        x=F(1,4)
+        for r in (F(2,5),F(9,20),F(11,20),F(3,5)):
+            y=r*r
+            self.assertLessEqual(abs(r-F(1,2)),2*abs(y-x))
+        # A singleton contributes zero oscillation irrespective of derivative.
+        self.assertEqual(abs(F(0)-F(0)),0)
+
+    def test_variation_near_endpoint_replacement_bound(self):
+        # Finite variation sums with an almost maximizing partition.
+        G=lambda x:x*x-x
+        xs=[F(0),F(1,2),F(1)]
+        S=sum(abs(G(v)-G(u)) for u,v in zip(xs,xs[1:]))
+        for y in (F(1,100),F(1,10),F(1,4)):
+            ys=[y]+xs[1:]
+            T=sum(abs(G(v)-G(u)) for u,v in zip(ys,ys[1:]))
+            self.assertGreaterEqual(T,S-abs(G(y)-G(xs[0])))
+            self.assertLessEqual(abs(G(y)-G(xs[0])),S-T)
+
+    def test_disjoint_bump_supports_and_variation(self):
+        for n in range(1,20):
+            c=F(1,2**n)
+            r=c/8
+            cp=c/2
+            rp=cp/8
+            self.assertLess(cp+rp,c-r)
+            self.assertEqual(abs(F(1,n))+abs(-F(1,n)),F(2,n))
+        # Every dyadic block of the harmonic variation lower bound is >=1.
+        for k in range(1,8):
+            self.assertGreaterEqual(sum(F(2,n) for n in range(2**k,2**(k+1))),1)
+
+
 if __name__=="__main__":
     unittest.main()
