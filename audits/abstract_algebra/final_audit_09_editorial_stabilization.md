@@ -1,0 +1,9 @@
+# AA-01–72 — końcowy audyt IX: stabilizacja korekt terminologicznych
+
+Stan wejściowy afacbd9a1c78531c1b16a29e517468e4e485e913. Porównano trzy rozdziały z ostatnią zieloną wersją 17d3fdf94bc02fae4800c9bd5755697ecae60510. Przed korektą gramatyczną odwrócenie dokładnie pięciu zamian odtwarzało identyczne poprzednie źródła. Liczby dowodów: AA-21 10, AA-52 12, AA-65 5. Sekwencje label/ref/eqref/begin/end identyczne (100,119,61 wystąpień). Zmiany w matematyce inline ograniczają się do dwóch dodatkowych symboli L w prozie AA-21, bez zmian wzorów. Odczyt kontekstu potwierdził poprawność matematyczną korekt.
+
+W AA-52 wykryto usterkę uzgodnienia rodzaju po korekcie VIII: 'przekrój homomorficzny wysyłałaby'. Poprawiono na 'przekrój homomorficzny wysyłałby'. Commit 18e68f5b7e5fbcb46bebad7e3967bd71751a698e. Ponowny odczyt potwierdził poprawną postać i brak starej. Listy poleceń strukturalnych pozostają identyczne. Aktualne bloby AA-21 3ac9bf6461540d39c4d6327290b6cc2d64ac228a, AA-52 0578e83b2c50bc317028c9320a4632fabcf9f000, AA-65 0bacece131ffa3c9af9590425471bf3129d1a168.
+
+CI 45571520986, job 139059059111: 89 success, 1 aktywny (AA-52 independent exact quaternion models), 60 pending. Najnowszy run obejmujący również korektę gramatyczną: 45571843802, head 18e68f5b7e5fbcb46bebad7e3967bd71751a698e, in_progress. Nie wykonywano lokalnej kompilacji, nowych regresji ani Lean, nie oglądano nowego PDF. Pierwszy zapis raportu zakończył się konfliktem 409 wskutek zmiany HEAD; ponownie sprawdzono brak raportu, poprawkę AA-52 i aktualny HEAD f46e14b7154c318a28baee45b4d580b812a90e5f przed ponownym zapisem.
+
+Następna kontrola: najnowsze CI i artefakt; porównać z 15001342511 i obejrzeć zmienione strony. Następnie aktualizacja statusu tytułu, końcowa kompilacja i raport zamykający. Nie powtarzać zakończonego audytu matematycznego, nie otwierać AA-73.
