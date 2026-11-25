@@ -225,3 +225,10 @@ Druga lektura 59/75. Dziewięć kryteriów doprecyzowanych, jedno bez zmian, 13 
 | PDE-10-075 | Doprecyzowano opis ciągów ograniczonych oraz wyłączenie d=1 ze schematu. Kontrola wizualna nadal otwarta. |
 
 Druga lektura 75/75 (warstwa semantyczna): w tej iteracji 11 kryteriów doprecyzowano, 5 bez zmian, 16 zmian źródłowych. Łącznie w drugiej lekturze 56 kryteriów doprecyzowanych i 19 bez zmian (iteracje 154–159). Kontrola źródła: 32 etykiety w tej samej kolejności, 65/65 rozwiązanych wystąpień odsyłaczy w rozdziałach 09 i 10, stos środowisk poprawny; wcześniejszy materiał bez zmian. Nie uruchamiano testów wykonywalnych, kompilacji, CI ani Lean. Nie ogłaszamy stabilizacji rozdziału. Następny etap: trwałe wykonywalne testy regresyjne, kontrola strukturalna i dedykowane CI z kompilacją oraz renderem PDF, następnie niezależna trzecia lektura.
+
+## Iteracja 160 — testy wykonywalne i CI
+Po odświeżeniu gałęzi potwierdzono, że iteracje 157–159 już zakończyły drugą lekturę 75/75. Nie powtarzano audytu ani nie modyfikowano źródła rozdziału (blob odczytany: 0fafe67db377f216e923f6a241bddb0a10b5220c).
+
+Dodano testy w `test_embeddings.py` (commit 666c664e33efa35eb0db53fc5dd1cad8c15b619e): 009–011, 023/028, 037–039, 043, 051–052, 069 oraz 075. Są to skończone kontrole wzorów i zakresów, nie dowody twierdzeń analitycznych. Dodano workflow `.github/workflows/partial-differential-equations-ch10.yml` (commit 1884559084ee186ca9ed275b83ad5a85f9e2eb77): kontrola rejestru, odsyłaczy i środowisk, kolejności książki i manifestu, zgodności preambuły, kompilacja samodzielnego rozdziału z numerycznymi etykietami zewnętrznymi, diagnostyka i render PDF.
+
+Rzeczywisty przebieg CI: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45629813428, job 139259658303, head 1884559084ee186ca9ed275b83ad5a85f9e2eb77. W chwili odczytu API kroki testów wykonywalnych i kontroli strukturalnej zakończyły się sukcesem; kompilacja trwała, render i artefakty oczekiwały. Nie stwierdzono jeszcze sukcesu całego CI ani poprawności wizualnej PDF; Lean nie uruchamiano. Następny etap: odczyt zakończonego CI, kontrola wszystkich stron i niezależna trzecia lektura (001–075).
