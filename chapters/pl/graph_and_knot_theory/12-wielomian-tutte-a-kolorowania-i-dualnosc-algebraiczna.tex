@@ -6,7 +6,9 @@ kombinatorycznych. Wielomian Tutte'a jest niezmiennikiem, który
 łączy liczenie drzew rozpinających, kolorowania, przepływy
 i dualność grafów płaskich. Zaczniemy od definicji przez
 sumowanie po wszystkich podzbiorach krawędzi, a następnie
-wyprowadzimy efektywny algorytm obliczania tego wielomianu.
+wyprowadzimy rekurencyjny algorytm obliczania tego wielomianu.
+Bez dodatkowych uproszczeń liczba gałęzi rekurencji może
+rosnąć wykładniczo względem liczby krawędzi.
 
 \section{Usuwanie i kontrakcja krawędzi}
 \label{sec:tg-deletion-contraction}
@@ -22,13 +24,17 @@ zamieniają się w pętle. Przy liczeniu wierzchołków grafu $G/e$
 liczba wierzchołków maleje dokładnie o jeden.
 \end{definicja}
 
-\begin{definicja}[Rząd i zerowość cykliczna zbioru krawędzi]
+\begin{definicja}[Rząd i wymiar przestrzeni cykli zbioru krawędzi]
 Niech $G=(V,E)$ będzie skończonym multigrafem, a $A\subseteq E$.
 Przez $k_G(A)$ oznaczamy liczbę składowych grafu $(V,A)$,
 łącznie z izolowanymi wierzchołkami. Definiujemy
 $r_G(A):=|V|-k_G(A)$ oraz
 $\nu_G(A):=|A|-r_G(A)=|A|-|V|+k_G(A)$.
-Liczba $\nu_G(A)$ jest wymiarem przestrzeni cykli grafu $(V,A)$.
+Liczba $\nu_G(A)$ jest wymiarem przestrzeni cykli grafu $(V,A)$
+nad $\mathbb F_2$: macierz incydencji ma rząd $|V|-k_G(A)$
+na mocy twierdzenia \ref{thm:tg-rank}, a jej jądro
+jest przestrzenią cykli. W szczególności oba wykładniki
+w poniższej definicji są nieujemne.
 \end{definicja}
 
 \begin{definicja}[Wielomian Tutte'a]
@@ -104,13 +110,21 @@ z wielomianem $x^2$. Graf $C_3/e$ składa się z dwóch
 równoległych krawędzi; ich wielomian to $x+y$.
 Stąd
 $T_{C_3}=x^2+x+y$.
-Analogiczna rekurencja daje dla $n\ge2$
+Dla $n=2$ przyjmujemy, że $C_2$ jest multigrafem
+z dwiema równoległymi krawędziami. Usunięcie jednej
+pozostawia most, a kontrakcja pozostawia jedną pętlę,
+więc $T_{C_2}=x+y$. Dla $n\ge3$ usunięcie krawędzi
+cyklu daje drzewo z $n-1$ krawędziami, a kontrakcja
+daje $C_{n-1}$. Stąd $T_{C_n}=x^{n-1}+T_{C_{n-1}}$
+i przez indukcję
 \[
- T_{C_n}(x,y)=x^{n-1}+x^{n-2}+\cdots+x+y.
+ T_{C_n}(x,y)=\sum_{j=1}^{n-1}x^j+y,\qquad n\ge2.
 \]
 Dla grafu theta złożonego z dwóch wierzchołków
-i trzech równoległych krawędzi otrzymujemy
-$T_{\Theta}(x,y)=x+y+y^2$.
+i trzech równoległych krawędzi usunięcie jednej
+krawędzi daje $C_2$, a kontrakcja daje dwie pętle
+przy jednym wierzchołku, o wielomianie $y^2$.
+Zatem $T_{\Theta}=T_{C_2}+y^2=x+y+y^2$.
 \end{przyklad}
 
 \begin{center}
@@ -174,8 +188,14 @@ Twierdzenie Kirchhoffa daje tę samą liczbę z wyznacznika
 minora laplasjanu. Mamy zatem dwie niezależne metody
 obliczania $\tau(G)$: algebraiczną (wyznacznik) i
 kombinatoryczną (wielomian Tutte'a). Dla grafu niespójnego
-$T_G(1,1)$ liczy maksymalne lasy rozpinające, po jednym
-drzewie rozpinającym na każdą składową.
+warunki przetrwania składnika przy $(1,1)$ to
+$k_G(A)=k_G(E)$ i $\nu_G(A)=0$. Pierwszy oznacza,
+że podgraf $(V,A)$ jest spójny na każdej składowej
+$G$, ponieważ jego składowe nie mogą łączyć różnych
+składowych $G$. Drugi oznacza brak cykli.
+Zatem $T_G(1,1)$ liczy maksymalne lasy rozpinające,
+po jednym drzewie rozpinającym na każdą składową.
+Dla grafu zerowego jedynym takim lasem jest graf pusty.
 \end{uwaga}
 
 \begin{stwierdzenie}[Dwie dalsze specjalizacje]
@@ -274,9 +294,11 @@ Ponieważ $T_{C_3}(x,y)=x^2+x+y$, mamy
 P_{C_3}(q)=q\bigl((1-q)^2+(1-q)\bigr)
 =q(q-1)(q-2).
 \]
-Odpowiada to bezpośredniemu rachunkowi: pierwszy
-wierzchołek kolorujemy na $q$ sposobów, drugi
-na $q-1$, a trzeci na $q-2$ sposoby.
+Dla $q\ge2$ odpowiada to bezpośredniemu rachunkowi:
+pierwszy wierzchołek kolorujemy na $q$ sposobów,
+drugi na $q-1$, a trzeci na $q-2$ sposoby.
+Dla $q=1$ nie istnieje poprawne kolorowanie
+i otrzymany wielomian również ma wartość zero.
 W szczególności $\chi(C_3)=3$.
 \end{przyklad}
 
@@ -293,41 +315,51 @@ płaskim, a $G^*$ jego dualnym multigrafem. Wtedy
 \end{twierdzenie}
 
 \begin{proof}
-Dla grafu płaskiego dualność zamienia usuwanie i kontrakcję
-krawędzi, z zachowaniem naturalnego przyporządkowania
-pozostałych krawędzi: jeśli $e$ nie jest pętlą, to
-$(G/e)^*$ odpowiada $G^*\setminus e^*$, a jeśli $e$
-nie jest mostem, to $(G\setminus e)^*$ odpowiada
-$G^*/e^*$. Dla krawędzi będącej mostem $e^*$ jest
-pętlą, natomiast dla pętli $e^*$ jest mostem.
-Te tożsamości widać, śledząc dwie ściany po obu
-stronach krawędzi: ich scalenie w dualu odpowiada
-usunięciu krawędzi w grafie pierwotnym, zaś
-scalenie końców krawędzi pierwotnej odpowiada
-usunięciu jej krawędzi dualnej.
+Niech $n=|V(G)|$, $m=|E(G)|$, $f=|V(G^*)|$.
+Dla $A\subseteq E(G)$ oznaczmy
+$A^\perp=\{e^*:e\in E(G)\setminus A\}$.
+Zauważmy, że składowe podgrafu $(V(G^*),A^\perp)$
+odpowiadają ścianom grafu $(V(G),A)$ zanurzonego w sferze.
+Istotnie, usuwamy kolejno krawędzie spoza $A$, nie usuwając
+wierzchołków. Usunięcie wnętrza krawędzi łączy dokładnie
+dwie przyległe ściany, jeżeli są różne; jeśli już należą
+do tej samej ściany, nie zmienia liczby ścian.
+Jest to lokalny argument z dowodu wniosku
+\ref{cor:tg-bridge-face}, który działa również dla grafu
+niespójnego i dla pętli. W grafie dualnym w tym samym
+kroku dokładamy krawędź $e^*$, łącząc dokładnie składowe
+odpowiadające tym ścianom. Na początku każda ściana $G$
+odpowiada pojedynczemu wierzchołkowi dualnemu; indukcja
+po usuwanych krawędziach daje żądaną odpowiedniość.
 
-Stosujemy indukcję po liczbie krawędzi. Dla grafu
-bez krawędzi $G=K_1$, a obie strony są równe jeden.
-Jeśli $e$ jest zwykłą krawędzią (ani pętlą,
-ani mostem), zastosowanie rekurencji do $G$ i $G^*$,
-a następnie założenia indukcyjnego, daje
+Z twierdzenia \ref{thm:tg-euler-plane}, zastosowanego
+do $(V(G),A)$ (z uwzględnieniem izolowanych wierzchołków),
+wynika
+\[
+ k_{G^*}(A^\perp)=1+k_G(A)-n+|A|=1+\nu_G(A).
+\]
+Ponieważ $G$ i $G^*$ są spójne, a $f=m-n+2$,
+otrzymujemy również
 \[
 \begin{aligned}
-T_{G^*}(x,y)
- &=T_{G^*\setminus e^*}(x,y)+T_{G^*/e^*}(x,y)\\
- &=T_{(G/e)^*}(x,y)+T_{(G\setminus e)^*}(x,y)\\
- &=T_{G/e}(y,x)+T_{G\setminus e}(y,x)=T_G(y,x).
+ \nu_{G^*}(A^\perp)
+ &=m-|A|-f+k_{G^*}(A^\perp)\\
+ &=m-|A|-(m-n+2)+1+k_G(A)-n+|A|\\
+ &=k_G(A)-1.
 \end{aligned}
 \]
-Jeśli $e$ jest mostem, to $e^*$ jest pętlą i
-$T_G(y,x)=yT_{G/e}(y,x)$, a
-$T_{G^*}(x,y)=yT_{G^*\setminus e^*}(x,y)$.
-Indukcja oraz $(G/e)^*=G^*\setminus e^*$ dają równość.
-Przypadek pętli jest symetryczny. To kończy dowód.
+Zatem składnik sumy definiującej $T_{G^*}(x,y)$
+odpowiadający $A^\perp$ jest równy
+$(x-1)^{\nu_G(A)}(y-1)^{k_G(A)-1}$.
+Przyporządkowanie $A\mapsto A^\perp$ jest bijekcją
+między zbiorami wszystkich podzbiorów krawędzi obu grafów.
+Sumowanie daje $T_{G^*}(x,y)=T_G(y,x)$.
+Argument obejmuje także $m=0$: obydwa grafy mają po jednym
+wierzchołku, a jedyny składnik sumy jest równy jeden.
 \end{proof}
 
 \begin{przyklad}[Trójkąt i trzy krawędzie równoległe]
-Na sferze dualem trójkąta $C_3$ jest multigraf złożony
+Na sferze grafem dualnym trójkąta $C_3$ jest multigraf złożony
 z dwóch wierzchołków połączonych trzema równoległymi
 krawędziami. Zatem
 $T_{C_3}=x^2+x+y$ oraz
@@ -340,8 +372,11 @@ przekrojów krawędziowych.
 \label{sec:tg-flows-duality}
 
 \begin{definicja}[Przepływ nigdzie niezerowy modulo $q$]
-Niech $G=(V,E)$ będzie skończonym grafem z wybraną
+Niech $G=(V,E)$ będzie skończonym multigrafem z wybraną
 orientacją krawędzi, a $q\ge2$ liczbą całkowitą.
+Przez $B$ oznaczamy macierz incydencji wierzchołek--krawędź
+z rozdziału \ref{ch:tg-algebra}, z zerową kolumną dla pętli;
+jej współczynniki redukujemy modulo $q$.
 \emph{Przepływem o wartościach w $\mathbb Z/q\mathbb Z$}
 nazywamy wektor $j\in(\mathbb Z/q\mathbb Z)^E$
 spełniający $Bj=0$. Jest on \emph{nigdzie niezerowy}, jeżeli
@@ -371,45 +406,57 @@ a $G^*$ jego grafem dualnym. Dla każdego $q\ge2$ zachodzi
 Ustalmy orientację sfery i pomocniczą orientację każdej
 krawędzi $e$ grafu $G$. Niech $F_L(e)$ i $F_R(e)$ oznaczają
 ściany po lewej i prawej stronie zorientowanej krawędzi.
-Z kolorowania $c:F(G)\to\mathbb Z/q\mathbb Z$ tworzymy
-wektor $j_e=c(F_R(e))-c(F_L(e))$.
-Wokół każdego wierzchołka sumy przychodzących i wychodzących
-wartości $j_e$ teleskopowo się znoszą, a więc $Bj=0$.
-Ponadto $j_e\ne0$ dokładnie wtedy, gdy ściany po obu
-stronach $e$ mają różne kolory, czyli gdy $c$ jest
-poprawnym kolorowaniem grafu $G^*$.
+Niech $R=\mathbb Z/q\mathbb Z$. Z dowolnej funkcji
+$c:F(G)\to R$ tworzymy wektor
+\[
+ D(c)_e=c(F_R(e))-c(F_L(e)).
+\]
+Z definicji operatora brzegu dwukomórek w rozdziale
+\ref{ch:tg-powierzchnie} współczynnik $\partial_2 c$
+przy $e$ jest równy $c(F_L(e))-c(F_R(e))$.
+Zatem $D(c)=-\partial_2 c$, gdzie wszystkie współczynniki
+redukujemy modulo $q$. Ponieważ $\partial_1\partial_2=0$
+nad $\mathbb Z$, ta sama tożsamość zachodzi nad $R$,
+a więc $BD(c)=0$. Wartość $D(c)_e$ jest niezerowa
+dokładnie wtedy, gdy końce $e^*$ mają różne kolory.
 
-Wykażemy, że każdy przepływ $j$ pochodzi z takiego
-kolorowania. Wybieramy jedną ścianę i nadajemy jej
-arbitralny kolor. Przechodząc w grafie dualnym przez
-krawędź $e^*$, wyznaczamy kolor nowej ściany
-z różnicy równej $j_e$, z odpowiednim znakiem.
-Nie zależy to od wyboru drogi w grafie dualnym:
-dla każdej zamkniętej ścieżki w $G^*$ suma odpowiednich
-różnic jest zerowa. Rzeczywiście, prosty cykl dualny
-rozdziela sferę na dwie części, a jego krawędzie
-pierwotne tworzą przekrój w $G$. Sumując równania
-Kirchhoffa $Bj=0$ po wierzchołkach jednej strony
-tego przekroju, otrzymujemy dokładnie zerowanie
-algebraicznej sumy przepływu przez cykl dualny.
-Dowolny zamknięty spacer dualny rozkłada się na cykle
-proste, a przejście przez dwie przeciwne orientacje tej
-samej krawędzi wnosi sumę zero. Dla pętli dualnej,
-która odpowiada mostowi pierwotnemu, każde rozwiązanie
-$Bj=0$ ma na tym moście wartość zero (sumujemy równania
-równowagi po jednej składowej po jego usunięciu).
-Tym samym także w obecności mostów i krawędzi
-równoległych kolor ściany nie zależy od wybranej trasy.
+Wykażemy, że każdy wektor $j\in R^E$ spełniający $Bj=0$
+ma postać $D(c)$. Wybierzmy drzewo rozpinające $T$ grafu $G$.
+Na mocy twierdzenia \ref{thm:tg-dual-spanning} krawędzie
+dualne do krawędzi spoza $T$ tworzą drzewo rozpinające
+$T^*$ grafu $G^*$. Wybieramy korzeń $T^*$ i przypisujemy
+mu kolor $0$. Idąc wzdłuż drzewa od korzenia do kolejnych
+ścian, wyznaczamy kolor nowej ściany przez dodanie lub
+odjęcie $j_e$ tak, aby $D(c)_e=j_e$ na każdej krawędzi
+spoza $T$. Jedyność drogi w drzewie gwarantuje, że nie
+powstaną sprzeczne wymagania.
 
-Dla ustalonego $j$ wszystkie kolorowania różnią się
-o wspólną stałą dodaną do kolorów wszystkich ścian,
-ponieważ $G^*$ jest spójny. Takich stałych jest dokładnie
-$q$. Stąd $P_{G^*}(q)=qF_G(q)$.
+Wektor $w=j-D(c)$ spełnia $Bw=0$ i znika na wszystkich
+krawędziach spoza $T$. Jeżeli $T$ ma krawędź, wybieramy
+liść drzewa; równanie $Bw=0$ w tym wierzchołku ma postać
+$\pm w_e=0$, ponieważ wkłady wszystkich innych krawędzi
+są zerowe. Stąd $w_e=0$. Usuwamy liść i jego krawędź
+z drzewa i powtarzamy rozumowanie, aż nie pozostanie
+żadna krawędź. Gdy $T$ od początku nie ma krawędzi,
+$w=0$ bez tego kroku. Otrzymujemy $j=D(c)$.
+W dowodzie nie dzieliliśmy przez żadną liczbę w $R$,
+więc obejmuje on także złożone wartości $q$.
+
+Jeżeli $D(c)=D(c')$, różnica $c-c'$ jest stała wzdłuż
+każdej krawędzi grafu dualnego. Jego spójność oznacza,
+że różnica jest jedną stałą na wszystkich ścianach.
+Odwrotnie, dodanie dowolnej wspólnej stałej nie zmienia
+$D(c)$. Każdy przepływ ma więc dokładnie $q$ przeciwobrazów,
+a dla przepływu nigdzie niezerowego wszystkie te funkcje
+są poprawnymi kolorowaniami. Dla grafu bez krawędzi
+jedyny przepływ jest pustym wektorem, a graf dualny ma
+jeden wierzchołek i $q$ kolorowań, zgodnie ze wzorem.
+Stąd $P_{G^*}(q)=qF_G(q)$.
 \end{proof}
 
 \begin{przyklad}[Przepływy na grafie theta]
-Graf theta z trzema równoległymi krawędziami ma dualny
-trójkąt. Dlatego
+Graf theta z trzema równoległymi krawędziami, zanurzony
+komórkowo w sferze, ma jako graf dualny trójkąt. Dlatego
 \[
  F_{\Theta}(q)=\frac{P_{C_3}(q)}{q}=(q-1)(q-2).
 \]
