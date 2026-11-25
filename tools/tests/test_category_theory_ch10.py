@@ -76,6 +76,46 @@ class CategoryTheoryCh10(unittest.TestCase):
             self.assertEqual(h(comm(a,b)),comm(h(a),h(b)))
             self.assertEqual(h(e),e)
 
+    def test_CAT_10_009_enumerate_all_natural_families(self):
+        # Walking-arrow category: arbitrary Set-valued functors on it,
+        # not just families already obtained from the Yoneda formula.
+        for n,m in itertools.product(range(4),repeat=2):
+            for transition in maps(n,m):
+                # The opposite walking arrow is isomorphic by interchanging objects.
+                for represented in (0,1):
+                    H=(1,1) if represented==0 else (0,1)
+                    # H has the unique arrow H(0)->H(1).
+                    h=(0,) if H[0] else ()
+                    natural=[]
+                    for a,b in itertools.product(maps(H[0],n),maps(H[1],m)):
+                        if comp(transition,a)==comp(b,h):
+                            natural.append((a,b))
+                    expected=[((u,),(transition[u],)) for u in range(n)] if represented==0 else [((),(u,)) for u in range(m)]
+                    self.assertEqual(set(natural),set(expected))
+
+    def test_CAT_10_010_nonrepresentable_target_monoid(self):
+        # One-object category with monoid {1,z}, z^2=z.
+        # Every action on X is an idempotent map T.
+        # Enumerate *all* maps alpha from the two-element regular action.
+        for n in range(5):
+            for T in maps(n,n):
+                if comp(T,T)!=T:
+                continue
+                natural=[a for a in maps(2,n) if comp(T,a)==(a[1],a[1])]
+                self.assertEqual(set(natural),{(x,T[x]) for x in range(n)})
+                self.assertEqual(len(natural),n)
+
+    def test_CAT_10_011_all_tuple_operations(self):
+        # Enumerate every candidate at the two-element test object;
+        # naturality under all maps of 0,1,2 rules out nonprojections.
+        X=list(maps(2,2))
+        candidates=[]
+        for op in maps(4,2):
+            if all(op[X.index(comp(h,p))]==h[op[i]]
+                   for i,p in enumerate(X) for h in maps(2,2)):
+                candidates.append(op)
+        self.assertEqual(set(candidates),{tuple(p[i] for p in X) for i in range(2)})
+
     def test_CAT_10_008_structure(self):
         s=CHAPTER.read_text(encoding="utf-8")
         labels=re.findall(r"\\label\{([^}]+)\}",s)
