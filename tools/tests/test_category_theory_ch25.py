@@ -164,6 +164,37 @@ class CategoryTheoryCh25(unittest.TestCase):
         self.assertTrue(equivalent((1,3),(1,0)))
         self.assertNotEqual(3,0)
 
+    def test_CAT_25_007_canonical_truncations(self):
+        # Three consecutive terms Z/k with differentials a,b and ba=0.
+        # Test both truncations at the middle degree on actual cosets.
+        for k in range(2,17):
+            for a,b in itertools.product(range(k),repeat=2):
+                if a*b%k:
+                    continue
+                Z={x for x in range(k) if b*x%k==0}
+                B={a*x%k for x in range(k)}
+                self.assertLessEqual(B,Z)
+                coset=lambda x: frozenset((x+y)%k for y in B)
+                H={coset(x) for x in Z}
+                quotient={coset(x) for x in range(k)}
+                induced={C:{b*x%k for x in C} for C in quotient}
+                self.assertTrue(all(len(v)==1 for v in induced.values()))
+                self.assertEqual({C for C,v in induced.items() if v=={0}},H)
+                self.assertEqual(set().union(*induced.values()),{b*x%k for x in range(k)})
+                # Upper truncation: differential a with codomain Z, same image.
+                self.assertEqual({a*x%k for x in range(k) if a*x%k in Z},B)
+                self.assertEqual(len(H)*len(B),len(Z))
+
+    def test_CAT_25_008_unbounded_free_not_k_projective(self):
+        # Periodic complex over Z/4 with differential 2 is exact but not contractible.
+        R=range(4)
+        self.assertEqual({2*x%4 for x in R},{x for x in R if 2*x%4==0})
+        self.assertTrue(all(2*(a+b)%4!=1 for a,b in itertools.product(R,repeat=2)))
+        # Baer criterion: every map from 2R extends by scalar multiplication.
+        for b in R:
+            if 2*b%4==0:
+                self.assertTrue(any(2*a%4==b for a in R))
+
     def test_CAT_25_005_structure(self):
         text=CHAPTER.read_text(encoding="utf-8")
         labels=re.findall(r"\\label\{([^}]+)\}",text)

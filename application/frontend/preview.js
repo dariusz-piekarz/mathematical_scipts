@@ -53,7 +53,7 @@ function buildProsePreview(container, source, moduleId) {
         if(['tikzpicture','tikzcd','picture'].includes(env)){
           const closing='\\end{'+env+'}', end=text.indexOf(closing,i);
           i=end<0?text.length:end+closing.length;
-          const figure=document.createElement('figure');figure.className='preview-figure';
+          const figure=document.createElement('figure');figure.className='preview-figure atlas-tikz-preview';
           parent().append(figure);loadTikzFigure(figure,text.slice(commandStart,i),moduleId);continue;
         }
         if(['lstlisting','verbatim'].includes(env)){
@@ -87,7 +87,13 @@ function buildProsePreview(container, source, moduleId) {
   parse(source.replace(/\r\n/g,'\n'),container);
 }
 
-async function loadTikzFigure(figure,source,moduleId){
+async function loadTikzFigure(figure,source,moduleId,skipStatic=false){
+  const entry=!skipStatic&&typeof atlasTikzPreviews!=='undefined'?atlasTikzPreviews.get(source.replace(/\r\n/g,'\n')):null;
+  if(entry){
+    const image=document.createElement('img');image.src='/assets/figures/'+entry.file;image.alt=entry.alt;
+    image.onerror=()=>loadTikzFigure(figure,source,moduleId,true);
+    figure.replaceChildren(image);return;
+  }
   const status=document.createElement('figcaption');status.textContent='Składanie rysunku…';status.setAttribute('role','status');figure.replaceChildren(status);
   try{
     const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(source.replace(/\r\n/g,'\n')));
@@ -102,6 +108,8 @@ async function loadTikzFigure(figure,source,moduleId){
     image.src=objectUrl;figure.replaceChildren(image);
   }catch(error){
     status.textContent=error.message;
+    const details=document.createElement('details'),summary=document.createElement('summary'),code=document.createElement('pre');
+    summary.textContent='Pokaż źródło rysunku';code.textContent=source;details.append(summary,code);figure.append(details);
     const retry=document.createElement('button');retry.className='ghost-btn';retry.textContent='Ponów składanie rysunku';retry.onclick=()=>loadTikzFigure(figure,source,moduleId);figure.append(retry);
   }
 }
