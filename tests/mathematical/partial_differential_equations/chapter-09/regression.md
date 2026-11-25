@@ -43,6 +43,19 @@
 | PDE-09-035 | sec:pde9-density | Rozróżnienie C^infty i C_c^infty, brak ogólnej gęstości dla p=infty przez przykład abs(x), brak narzucenia warunku zerowego brzegu przez Meyersa–Serrina. | semantyczna |
 | PDE-09-036 | ex:pde9-constant | Stała 1 w W^1,p(0,1), ale nie w W_0^1,p; ciągłość śladu, jawne oszacowanie wartości w zerze i sprzeczność z zerowaniem funkcji testowych. | semantyczna |
 
+| PDE-09-037 | thm:pde9-zero-extension | Przedłużenie przez zero klas L^p jest dobrze określone i izometryczne; przedłużone testy są globalnie gładkie dzięki zwartemu nośnikowi wewnątrz Omega, pochodne komutują z przedłużeniem dla testów. | semantyczna |
+| PDE-09-038 | thm:pde9-zero-extension | Aproksymacja u przez testy, izometria różnic w normie Sobolewa, zupełność, identyfikacja granicy i każdej pochodnej przez jednoznaczność granic L^p; równość norm dla wszystkich k włącznie z k=0. | semantyczna |
+| PDE-09-039 | thm:pde9-zero-extension | Liniowość i izometryczne zanurzenie o domkniętym obrazie, dowód przez zupełność W_0^k,p i izometrię. | semantyczna |
+| PDE-09-040 | sec:pde9-zero | Przedłużenie stałej 1 z (0,1) daje dystrybucyjną pochodną delta_0-delta_1 przez tożsamość testową; lokalizacja przy zerze wyklucza reprezentację regularną. | semantyczna |
+| PDE-09-041 | sec:pde9-zero | Odwrotna implikacja bez dodatkowych założeń fałszywa: Omega=(-1,0) suma (0,1), ograniczenie zeta o wartości 1 w zerze, przedłużenie równe zeta a.e.; nieprzynależność W_0 przez ciągłość jednostronnego śladu po ograniczeniu aproksymantów. | semantyczna |
+| PDE-09-042 | thm:pde9-cube-Poincare | Średnia dobrze określona na kostce skończonej miary; jednowymiarowe oszacowanie odchylenia od średniej przez całkę z pochodnej, jawne czynniki L^(1/p) i L^(1-1/p). | semantyczna |
+| PDE-09-043 | thm:pde9-cube-Poincare | Jawna definicja A_j, Jensen dla znormalizowanej miary i Fubini dają kontrakcyjność; nierówność jednowymiarowa na przekrojach, komutowanie z pochodną innej zmiennej, teleskopowanie. | semantyczna |
+| PDE-09-044 | thm:pde9-cube-Poincare | Aproksymacja lokalna na wewnętrznej kostce Q_delta, kontrola różnicy średnich przez normę L^p, przejście do granicy w nierówności przy ustalonym delta. | semantyczna |
+| PDE-09-045 | thm:pde9-cube-Poincare | Przejście delta do zera: zbieżność średnich, oszacowanie różnic norm odjętych średnich, zbieżność norm przez zmajoryzowanie i stała L. | semantyczna |
+| PDE-09-046 | thm:pde9-cube-Poincare | Przypadek p=infty przez włożenie w W^1,q na zbiorze skończonej miary i dowód granicy norm L^q do istotnego supremum, także M=0; zerowy gradient równoważny stałości a.e. | semantyczna |
+| PDE-09-047 | cor:pde9-Poincare-zero | Wersja zerowego warunku brzegowego dla każdego kierunku j: całka od dolnego końca, Hölder z czynnikiem L^(p-1), Fubini i dodatkowe L, p=1 oraz d=1, granica w W^1,p. | semantyczna |
+| PDE-09-048 | cor:pde9-Poincare-zero | Norma gradientowa na W_0^1,p, dodatnia określoność z Poincarégo, trójkąt i jednorodność, równoważność z normą Sobolewa ze stałymi 1 i (1+L^p)^(1/p). | semantyczna |
+
 ## Iteracja 128 — 2026-11-25
 
 Pierwsza lektura wprowadzenia i sekcji 9.1. Uszczegółowiono definicje, normy, lokalizację i sklejanie, wykorzystano sprawdzone wyniki rozdziałów 07–08. Dodano konsekwencję abs(x) nie należy do W^2,p i przypadek p=infty w istniejącym przykładzie potęgowym, bez rozbudowywania odrębnego działu. Rozpisano obie implikacje kryterium całkowalności słabego gradientu oraz normalizację normy H¹.
@@ -66,3 +79,11 @@ Pierwsza lektura sekcji 9.4–9.5. Zastąpiono nieprecyzyjną normę W^k,p(K) na
 Źródło commit 1bd6861738b6e0d711d066764500b66bf84ff86e, blob 73e0f31b6407eb2c9ee084707d8ba6a5a48c0f50. Zachowano wszystkie 36 etykiet i dodano lem:pde9-compact-product, łącznie 37 unikatowych. 42 wystąpienia odsyłaczy, 15 różnych celów zewnętrznych sprawdzonych w rozdziałach 07, 08 i 10. Stos środowisk poprawny; tekst poza 9.4–9.5 identyczny. Dodano 14 kryteriów, łącznie 36. Nie wykonywano kompilacji, testów numerycznych ani Lean.
 
 Następna iteracja 131: pierwsza lektura sekcji 9.6–9.7, przestrzeń W_0 i przedłużenie przez zero oraz nierówność Poincarégo na kostce; wykorzystać już udowodniony lemat odcięcia.
+
+## Iteracja 131 — 2026-11-25
+
+Pierwsza lektura sekcji 9.6–9.7. Uściślono izometryczne przedłużenie przez zero oraz domkniętość obrazu. Rozpisano przykład skoku i dodano kontrprzykład do odwrotnej implikacji na dowolnym zbiorze otwartym (przedział z usuniętym punktem). Doprecyzowano tytuł sekcji, aby nie utożsamiać definicji W_0 z zerowym śladem bez hipotez geometrycznych. Rozpisano dowód Poincarégo–Wirtingera: jednowymiarowe oszacowanie, operatory uśredniania, Jensen i Fubini, dwie kolejne granice przy aproksymacji wewnętrznej. Dodano przypadek p=infty przez granicę norm L^q, bez nieuprawnionej gęstości w normie supremum. Rozszerzono wersję dla W_0 na każdy kierunek współrzędnej i wyprowadzono równoważność normy gradientowej, potrzebną w metodach wariacyjnych.
+
+Źródło commit 175a32a726a5845fd9fad7f9afa99c228b67a45a, blob f47307fde43516e321425b41c2da4078bc46c8ed. Zachowano 37 unikatowych etykiet, 46 wystąpień odsyłaczy, 15 niezmienionych celów zewnętrznych; poprawne zagnieżdżenie środowisk, tekst poza 9.6–9.7 identyczny. Dodano 12 kryteriów, łącznie 48. Nie wykonywano kompilacji, testów numerycznych ani Lean.
+
+Następna iteracja 132: pierwsza lektura sekcji 9.8, reguły rachunkowe, iloczyn, reguła łańcuchowa, obcinanie i zbiory poziomicowe; wykorzystać lemat odcięcia, sprawdzić hipotezy dla p=infty.
