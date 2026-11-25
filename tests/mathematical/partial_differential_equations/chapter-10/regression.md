@@ -162,3 +162,24 @@ Druga lektura 24/75; w tej iteracji 10 kryteriów doprecyzowanych, 3 bez zmian, 
 | PDE-10-036 | Uzasadniono pełną normę, liniowość i iniektywność zanurzenia oraz rozpisano kontrprzykład x^theta dla dowolnego beta>theta>0 (beta<=1) w wymiarze 1. |
 
 Druga lektura 36/75. W tej iteracji 8 kryteriów doprecyzowanych, 4 bez zmian, 11 zmian źródłowych. Kontrola źródeł 09 i 10: 32 unikatowe etykiety, 61/61 rozwiązanych odsyłaczy; stos środowisk poprawny, materiał przed i po sekcji bez zmian. Nie uruchamiano testów wykonywalnych, kompilacji, CI ani Lean. Następna iteracja: druga lektura 037–049, aproksymacja na kostkach, Rellich–Kondrachov, interpolacja i kontrprzykłady.
+
+## Iteracja 157 — druga lektura 037–049
+Źródło przed dffafe3cd6a585d7a8ea8aa32e9707e77202ae56, po 958cf2e404490f88b60dbd5729acfc1e2e0ebfe0, commit cee550d2c734346c3edc3a20fe2de7eed1ee7bf0. Odczytano pełną sekcję zwartości i odpowiednie twierdzenie Poincarégo–Wirtingera oraz skalowanie w rozdziale 09.
+
+| Kryterium | Wynik drugiej lektury |
+| --- | --- |
+| PDE-10-037 | Jawnie wskazano całkowitość N i niezależność średnich od reprezentanta. |
+| PDE-10-038 | Uzupełniono własność P_N^2=P_N; dowód kontrakcyjności poprawny. |
+| PDE-10-039 | Uzasadniono restrykcję słabych pochodnych przez funkcje testowe; dopuszczalna dokładniejsza stała h*d^max(1/2,1-1/p) przez porównanie norm wektorów dla p<2 oraz p>=2. Nie twierdzimy, że jest optymalna. |
+| PDE-10-040 | Jawny wybór kostki osiowej i długości L, normy na Q i znaczenie restrykcji Eu_n. |
+| PDE-10-041 | Rozpisano wymiar N^d, ograniczenie współczynników w normie l^p i konstrukcję sieci przez Heinego–Borela. |
+| PDE-10-042 | Bez zmian: zagnieżdżone zbiory indeksów, przekątna, oszacowanie odległości, zupełność i restrykcja, także p=1. |
+| PDE-10-043 | Jawny wzór na theta i jego jednoznaczność. |
+| PDE-10-044 | Bez zmian: interpolacja różnic i przypadki q<=p, ciągłość i zupełność. |
+| PDE-10-045 | Rozpisano interpolację różnic przy p=d wraz z parametrem i stałą oraz odwołanie do ciągłości. |
+| PDE-10-046 | Bez zmian: Arzelà–Ascoli, zachowanie półnormy granicy i przypadek p=infty. |
+| PDE-10-047 | Jawny wybór delta dla C>0, osobno C=0 i przejście do pełnej normy Höldera. |
+| PDE-10-048 | Jawne równości norm W^{1,p} i L^{p*} na Omega z nośnika i skalowania. |
+| PDE-10-049 | Rozszerzono kontrprzykład translacyjny na p=infty; odległość supremum stała i dodatnia. |
+
+Druga lektura 49/75. Dziesięć kryteriów doprecyzowanych, trzy bez zmian, 10 zmian źródłowych. 32 unikatowe etykiety zachowane w kolejności, 62/62 wystąpień odsyłaczy ma cele w rozdziałach 09 i 10; stos środowisk poprawny, poza kontrolowaną sekcją brak zmian. Nie wykonywano testów Python, kompilacji, CI ani Lean. Następna iteracja: druga lektura 050–059, przypadek krytyczny, ostrość Morreya i operator śladu.
