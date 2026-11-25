@@ -1,0 +1,3 @@
+# CAT-14 — iteracja 01
+
+Blob wejściowy 0acd98aada0c52f2a97fac013541f631d5d42a79. Uściślono lokalną małość i interpretację jednostki/kojednostki; rozpisano naturalność kojednostki przez injektywność bijekcji, oba trójkąty dla wolnej przestrzeni, puste włókna kwantyfikatorów, dowód zachowania kogranic i granic z istnieniem i jednoznacznością dla obu kierunków (również puste diagramy). Dodano kryterium pełnej wierności przez odwracalność jednostki i kojednostki z pełnym dowodem. Zachowano dotychczasowe etykiety, dodano jedną. Kontrola strukturalna JS PASS. Dodano 5 testów Python i rejestr; ich wykonanie, nowa kompilacja i kontrola PDF pozostają do potwierdzenia. Lean nie uruchamiano. Rozdział otwarty do stabilizacji.
