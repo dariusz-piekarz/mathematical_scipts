@@ -85,3 +85,14 @@ class GraphInventoryTest(unittest.TestCase):
                 self.assertEqual(audit["invalid"], 1)
                 self.assertEqual(audit["issues"][0]["reason"],
                                  "qualified_occurrence_ambiguous")
+                report = graph_coverage(con)
+                self.assertEqual(report["edges"], [])
+                self.assertEqual(report["summary"]["cross_linked_chapters"], 0)
+                self.assertEqual(report["summary"]["isolated_chapters"], 2)
+                self.assertEqual(report["summary"]["reading_references"], 0)
+                self.assertEqual(report["summary"]["all_reading_references"], 1)
+                self.assertEqual(report["summary"]["invalid_reading_references"], 1)
+                self.assertEqual(report["components"], [["AA-01"], ["LA-01"]])
+                self.assertEqual({c["id"]: c["unresolved"] for c in report["chapters"]},
+                                 {"AA-01": 0, "LA-01": 1})
+
