@@ -1,0 +1,3 @@
+# CAT-10 — audyt I
+
+Źródło 22271819c8520531787b94c491df82c832d4d148. CAT-09 zamknięty. Dodano bezpośredni dowód kontrawariantnej postaci Yonedy, naturalność bijekcji w obu zmiennych i wariancjach, uwagę o wielkości, kowariantny odpowiednik włożenia i klasyfikację operacji naturalnych na grupach. Rozpisano funktorialność włożenia i odzwierciedlanie izomorfizmów. Wykorzystano własność grupy wolnej z AA-07 (blob 931eb83323a543e55cc9e4c439ab864111d65264, aa:def:free-universal); bez kopiowania konstrukcji grupy, nie potwierdzano aktualnego CI AA-07. Zachowano wszystkie cztery etykiety wejściowe. Dodano osiem testów. CI i PDF po zmianach niepotwierdzone; Lean nie uruchamiano. Następny audyt stabilizacyjny, bez rozszerzania zakresu.

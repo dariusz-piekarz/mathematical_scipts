@@ -19,9 +19,53 @@ Załóżmy następnie, że $\alpha:\Hom(A,-)\Rightarrow F$ jest dowolna. Natural
 Zatem $\alpha$ jest jednoznacznie wyznaczona przez $a=\alpha_A(\id_A)$. Odwrotnie, dla transformacji $\alpha^a$ mamy $\alpha^a_A(\id_A)=F(\id_A)(a)=a$. Obie konstrukcje są więc wzajemnie odwrotne.
 \end{proof}
 
-\begin{uwaga}[Postać kontrawariantna]
-Dla funktora $G:\mathcal C^{\op}\to\Set$ istnieje analogiczna bijekcja $\Nat(\Hom_{\mathcal C}(-,A),G)\cong G(A)$. Jeśli $a\in G(A)$, odpowiadająca transformacja jest dana przez $\alpha^a_X(f)=G(f)(a)$ dla $f:X\to A$. Jest to dokładnie twierdzenie~\ref{tw:yoneda} zastosowane do kategorii przeciwnej.
+\begin{twierdzenie}[Lemat Yonedy, postać kontrawariantna]\label{cat:thm:yoneda-contra}
+Dla lokalnie małej kategorii $\mathcal C$, obiektu $A$ oraz $G:\mathcal C^{\op}\to\Set$ istnieje kanoniczna bijekcja
+\[
+\Nat(\Hom_{\mathcal C}(-,A),G)\cong G(A).
+\]
+Transformacji $\alpha$ odpowiada $\alpha_A(\id_A)$, a elementowi $a\in G(A)$ odpowiada rodzina $\alpha^a_X(f)=G(f)(a)$ dla $f:X\to A$.
+\end{twierdzenie}
+\begin{proof}
+Dla $v:Y\to X$ i $f:X\to A$ mamy
+\[
+G(v)(\alpha^a_X(f))=G(v)G(f)(a)
+=G(fv)(a)=\alpha^a_Y(fv).
+\]
+To jest naturalność, ponieważ $\Hom(-,A)$ działa na $v$ przez składanie z prawej strony. Dla dowolnej transformacji $\alpha$ naturalność względem $f:X\to A$ zastosowana do $\id_A$ daje
+$\alpha_X(f)=G(f)(\alpha_A(\id_A))$. Zatem po odczytaniu elementu $\alpha_A(\id_A)$ odzyskujemy całą transformację. W drugą stronę $\alpha^a_A(\id_A)=G(\id_A)(a)=a$. Obie konstrukcje są wzajemnie odwrotne.
+\end{proof}
+
+\begin{twierdzenie}[Naturalność bijekcji Yonedy]\label{cat:thm:yoneda-natural}
+W postaci kowariantnej bijekcja $\Theta_{A,F}:\Nat(\Hom(A,-),F)\to F(A)$ jest naturalna względem obiektu $A$ i funktora $F$. W postaci kontrawariantnej jest naturalna względem $A$ jako obiektu $\mathcal C^{\op}$ oraz względem $G$.
+\end{twierdzenie}
+\begin{proof}
+Piszmy $k_A=\Hom(A,-)$. Dla $r:A\to B$ prekompozycja z $r$ definiuje transformację $k_r:k_B\Rightarrow k_A$ o składowych $f\mapsto fr$. Naturalność tej transformacji wynika z $(gf)r=g(fr)$. Zatem $\alpha:k_A\Rightarrow F$ przechodzi na $\alpha k_r:k_B\Rightarrow F$. Obliczamy
+\[
+\Theta_{B,F}(\alpha k_r)=\alpha_B(r)
+=F(r)(\alpha_A(\id_A))=F(r)(\Theta_{A,F}(\alpha)).
+\]
+Środkowa równość wynika z naturalności $\alpha$. Dla transformacji $\eta:F\Rightarrow F'$ mamy
+\[
+\Theta_{A,F'}(\eta\alpha)=\eta_A(\alpha_A(\id_A))
+=\eta_A(\Theta_{A,F}(\alpha)).
+\]
+Te dwa równania dają naturalność w obu zmiennych; ich zgodność dla jednoczesnej zmiany wynika z naturalności $\eta$ względem $r$.
+
+W wersji kontrawariantnej oznaczmy $h_A=\Hom(-,A)$. Strzałka $r:A\to B$ wyznacza $h_r:h_A\Rightarrow h_B$, $f\mapsto rf$. Dla $\beta:h_B\Rightarrow G$ otrzymujemy
+\[
+\Theta_{A,G}(\beta h_r)=\beta_A(r)
+=G(r)(\beta_B(\id_B))=G(r)(\Theta_{B,G}(\beta)).
+\]
+Dla $\eta:G\Rightarrow G'$ mamy analogicznie
+$\Theta_{A,G'}(\eta\beta)=\eta_A(\Theta_{A,G}(\beta))$.
+Kierunek pierwszego równania odpowiada dokładnie strzałce $B\to A$ w $\mathcal C^{\op}$.
+\end{proof}
+
+\begin{uwaga}[Wielkość rodziny transformacji]
+W kategorii lokalnie małej, która nie musi być mała, rodzina składowych transformacji może być indeksowana klasą właściwą. Przy zwykłej konwencji klasowej (lub odpowiedniej hierarchii uniwersów) lemat Yonedy identyfikuje takie transformacje z elementami zbioru $F(A)$ albo $G(A)$, co daje ich małą parametryzację. Nie wynika stąd lokalna małość dowolnej kategorii funktorów o dużej dziedzinie. W twierdzeniu o włożeniu Yonedy przyjmujemy małość $\mathcal C$.
 \end{uwaga}
+
 
 \begin{przyklad}[Wszystkie naturalne wybory wartości funkcji]
 Ustalmy zbiór $A$ i rozważmy funktory na $\Set$. Lemat Yonedy daje $\Nat(\Hom_{\Set}(A,-),\id_{\Set})\cong A$. Rzeczywiście, każdy element $a\in A$ definiuje naturalną rodzinę \emph{ewaluacji} $\ev_a^X:\Hom(A,X)\to X$, $f\mapsto f(a)$. Yoneda mówi, że \emph{każda} naturalna rodzina funkcji o tej postaci pochodzi z wyboru jednego $a\in A$.
@@ -55,18 +99,34 @@ $h_0(0)=\{*\}$, $h_0(1)=\varnothing$, $h_1(0)=\{*\}$, $h_1(1)=\{*\}$. Istnieje d
 Niech $\mathcal C$ będzie małą kategorią. Przyporządkowanie $A\mapsto h_A=\Hom_{\mathcal C}(-,A)$, $f:A\to B\mapsto h_f:h_A\Rightarrow h_B$, gdzie $(h_f)_X(u)=f\circ u$, definiuje w pełni wierny funktor $y:\mathcal C\to[\mathcal C^{\op},\Set]$.
 \end{twierdzenie}
 \begin{proof}
-Przyporządkowanie $h_f$ jest naturalne, ponieważ dla $v:Y\to X$ w $\mathcal C$ mamy $(f\circ u)\circ v=f\circ(u\circ v)$. Zachowanie identyczności i składania wynika z łączności w $\mathcal C$. Lemat Yonedy w postaci kontrawariantnej daje dla każdych $A,B$ bijekcję $\Nat(h_A,h_B)\cong h_B(A)=\Hom_{\mathcal C}(A,B)$. Jej odwrotność jest dokładnie funkcją $f\mapsto h_f$. Stąd pełność i wierność.
+Przyporządkowanie $h_f$ jest naturalne, ponieważ dla $v:Y\to X$ w $\mathcal C$ mamy $(f\circ u)\circ v=f\circ(u\circ v)$. Dla $u:X\to A$ mamy $(h_{\id_A})_X(u)=u$. Dla $f:A\to B$, $g:B\to C$ otrzymujemy $(h_{gf})_X(u)=(gf)u=g(fu)=((h_g)_X\circ(h_f)_X)(u)$. Równość wszystkich składowych daje $h_{gf}=h_gh_f$. Lemat Yonedy w postaci kontrawariantnej daje dla każdych $A,B$ bijekcję $\Nat(h_A,h_B)\cong h_B(A)=\Hom_{\mathcal C}(A,B)$. Jej odwrotność jest dokładnie funkcją $f\mapsto h_f$. Stąd pełność i wierność.
 \end{proof}
 
 \begin{wniosek}[Obiekt jest wyznaczony przez swoje morfizmy]
 Dla małej kategorii $\mathcal C$ i jej obiektów $A,B$ zachodzi $h_A\cong h_B$ wtedy i tylko wtedy, gdy $A\cong B$.
 \end{wniosek}
 \begin{proof}
-Izomorfizm $A\to B$ daje izomorfizm naturalny $h_A\to h_B$. Odwrotnie, izomorfizm naturalny i jego naturalna odwrotność odpowiadają przez w pełni wierny funktor Yonedy morfizmom $f:A\to B$ i $g:B\to A$, których złożenia są identycznościami.
+Izomorfizm $A\to B$ daje izomorfizm naturalny $h_A\to h_B$. Odwrotnie, izomorfizm naturalny i jego naturalna odwrotność odpowiadają przez w pełni wierny funktor Yonedy morfizmom $f:A\to B$ i $g:B\to A$, z $h_f=\alpha$ oraz $h_g=\alpha^{-1}$. Wtedy $h_{gf}=h_gh_f=\id_{h_A}=h_{\id_A}$ i $h_{fg}=\id_{h_B}=h_{\id_B}$. Wierność daje $gf=\id_A$ oraz $fg=\id_B$, więc $f$ i $g$ są wzajemnie odwrotne.
 \end{proof}
 
 \begin{uwaga}[Na czym polega siła Yonedy?]
 Twierdzenie nie stwierdza, że obiekt można po prostu utożsamić z \emph{zbiorem} jego morfizmów. Istotna jest cała rodzina zbiorów $\Hom(X,A)$ dla różnych $X$ i ich zgodność ze składaniem. Inaczej sam zbiór morfizmów, bez informacji o dziedzinach i składaniu, byłby zbyt ubogim opisem.
 \end{uwaga}
 
+\begin{stwierdzenie}[Kowariantny odpowiednik włożenia Yonedy]\label{cat:prop:yoneda-cov-embedding}
+Dla małej kategorii $\mathcal C$ funktor $\mathcal C^{\op}\to[\mathcal C,\Set]$ zadany przez $A\mapsto k_A=\Hom(A,-)$ oraz $r:A\to B$ w $\mathcal C$ przez $k_r:k_B\Rightarrow k_A$, $(k_r)_X(f)=fr$, jest w pełni wierny.
+\end{stwierdzenie}
+\begin{proof}
+Naturalność $k_r$ sprawdzono w dowodzie twierdzenia~\ref{cat:thm:yoneda-natural}. Dla $r:A\to B$, $s:B\to C$ mamy $(k_r)_X((k_s)_X(f))=(fs)r=f(sr)=(k_{sr})_X(f)$ dla $f:C\to X$, więc $k_{sr}=k_rk_s$. Identyczności zachowują się, ponieważ $f\id_A=f$. Lemat Yonedy daje
+$\Nat(k_B,k_A)\cong k_A(B)=\Hom(A,B)$; odwrotność tej bijekcji wysyła $r$ na $k_r$. Jest to dokładnie bijekcja na zbiorach morfizmów w kategorii przeciwnej, co dowodzi pełności i wierności.
+\end{proof}
 
+\begin{przyklad}[Naturalne operacje na grupach]\label{cat:ex:yoneda-group-words}
+Niech $U:\Grp\to\Set$ będzie funktorem zapominania i $n\geq1$. Grupa wolna $F_n$ na generatorach $s_1,\ldots,s_n$ (konstrukcja i własność uniwersalna w AA-07) reprezentuje $U^n$: homomorfizm $f:F_n\to G$ odpowiada krotce $(f(s_1),\ldots,f(s_n))$. Własność uniwersalna daje istnienie i jednoznaczność $f$, a dla homomorfizmu $g:G\to H$ krotka odpowiadająca $gf$ jest obrazem krotki $f$ przez $U(g)^n$. Jest to więc naturalna bijekcja.
+
+Lemat Yonedy zastosowany do $U$ daje
+\[
+\Nat(U^n,U)\cong U(F_n).
+\]
+Dokładniej, element $w\in F_n$ wyznacza operację $t_G(x_1,\ldots,x_n)=f(w)$, gdzie $f(s_i)=x_i$. Homomorfizmy zachowują mnożenie, odwrotności i jedynkę, więc jest to podstawienie elementów $x_i$ do słowa $w$. Dla $g:G\to H$ własność uniwersalna zapewnia, że $gf$ jest homomorfizmem odpowiadającym krotce $(g(x_i))_i$; stąd naturalność. Odwrotnie, dowolna naturalna operacja $t$ ma wartość $w=t_{F_n}(s_1,\ldots,s_n)$ i naturalność względem $f$ wymusza $t_G(x_1,\ldots,x_n)=f(w)$. Dwa różne elementy $F_n$ dają różne operacje już na krotce generatorów. W przeciwieństwie do kategorii zbiorów pojawia się tu mnożenie, np. $xy$ i $yx$ są różnymi operacjami naturalnymi, gdyż $s_1s_2\ne s_2s_1$ w $F_2$.
+\end{przyklad}
