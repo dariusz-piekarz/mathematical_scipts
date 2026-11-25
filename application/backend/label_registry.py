@@ -37,6 +37,14 @@ def family(document_id: str) -> str:
     return document_id.split("-", 1)[0]
 
 
+def qualified_occurrence(target_label: str) -> tuple[str, str] | None:
+    """Return an explicit chapter/label pair, or None for legacy labels."""
+    doc, separator, name = target_label.partition("::")
+    if separator and re.fullmatch(r"[A-Z][A-Z0-9]*-[0-9]{2,}[A-Z]?", doc):
+        return doc, name
+    return None
+
+
 def resolve(
     source_document: str,
     target_label: str,
@@ -51,6 +59,17 @@ def resolve(
     must contain the original source-document and original target label.
     """
     pool = list(owners)
+    # Qualified reading references use the stable occurrence identity directly.
+    # No fallback to another chapter is allowed, even when labels coincide.
+    qualified = qualified_occurrence(target_label)
+    if qualified is not None:
+        target_doc, target_name = qualified
+        hits = [o for o in pool if o.document_id == target_doc and o.label == target_name]
+        if len(hits) == 1:
+            return Decision("external_resolved", hits[0], "qualified_occurrence")
+        return Decision("ambiguous" if len(hits) > 1 else "missing", None,
+                        "qualified_ambiguous" if len(hits) > 1 else "qualified_missing")
+
     alias = (aliases or {}).get((source_document, target_label))
     if alias is not None:
         target_doc, target_name = alias
@@ -58,16 +77,6 @@ def resolve(
         if len(hits) == 1:
             return Decision("alias_resolved", hits[0], "curated_alias")
         return Decision("missing", None, "stale_alias")
-
-    # Qualified reading references use the stable occurrence identity directly.
-    # No fallback to another chapter is allowed, even when labels coincide.
-    target_doc, separator, target_name = target_label.partition("::")
-    if separator and re.fullmatch(r"[A-Z][A-Z0-9]*-[0-9]{2,}[A-Z]?", target_doc):
-        hits = [o for o in pool if o.document_id == target_doc and o.label == target_name]
-        if len(hits) == 1:
-            return Decision("external_resolved", hits[0], "qualified_occurrence")
-        return Decision("ambiguous" if len(hits) > 1 else "missing", None,
-                        "qualified_ambiguous" if len(hits) > 1 else "qualified_missing")
 
     scope = family(source_document)
     if scope in VOLUMES:
