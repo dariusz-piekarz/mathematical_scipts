@@ -1,0 +1,5 @@
+# CAT-11 — audyt kontrolny III
+
+Ponownie przeczytano rozdział (wejściowy blob 61620f8d60423ac5640e18fed07c3fa65c9a0daa). Sprawdzono jednoznaczność wykładnika, naturalność transpozycji, obie wariancje, przykłady Set/Grp/posety, przeszkodę obiektu zerowego, ciągłość ewaluacji i transpozycji w Top oraz prawa wykładnicze. Uzupełniono dowód bifunktorialności: typy morfizmów, zgodność ze złożeniem i identycznościami (commit f16f443cf46deba6db13e61e5c72ec2de39a07ca). Zachowano wszystkie 9 etykiet, kontrola środowisk begin/end PASS. Poprawiono CAT-11-005 (przestrzeń zerowa ma jeden element), dodano CAT-11-010 (commit a9234fd10fd91fec914f55dafa86d9b36217f09c). Niezależna enumeracja JavaScript 4371 układów morfizmów zbiorów o liczności 0–2: PASS (złożenia i identyczności). Nie jest to uruchomienie testów Python ani dowód ogólny.
+
+Pełna suite Python, CI, kompilacja i wizualna kontrola aktualnego PDF pozostają do potwierdzenia. Po zmianach potrzebny ponowny audyt bez poprawek. Lean nie uruchamiano. CAT-11 pozostaje otwarty; CAT-12 nie rozpoczęto.
