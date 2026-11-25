@@ -271,6 +271,36 @@ class CategoryTheoryCh25(unittest.TestCase):
                 quotient={frozenset((x+y)%k for y in B) for x in R}
                 self.assertEqual(len(quotient)*len(B),k)
 
+    def test_CAT_25_011_derived_adjunction(self):
+        # Free rank-two tensor / Hom adjunction over Z/4:
+        # a 2x4 map F(P)->I corresponds to a 4x2 map P->G(I).
+        def mul(A,B):
+            return tuple(tuple(sum(a*b for a,b in zip(row,col))%4
+                               for col in zip(*B)) for row in A)
+        def add(A,B):
+            return tuple(tuple((a+b)%4 for a,b in zip(x,y))
+                         for x,y in zip(A,B))
+        def blockdiag(A):
+            return tuple(row+(0,0) for row in A)+tuple((0,0)+row for row in A)
+        def curry(U):
+            return tuple(row[:2] for row in U)+tuple(row[2:] for row in U)
+        P=((0,1),(0,0))
+        I=((0,0),(1,0))
+        Z=((0,0),(0,0))
+        self.assertEqual(mul(P,P),Z)
+        self.assertEqual(mul(I,I),Z)
+        for entries in itertools.product(range(4),repeat=8):
+            U=(entries[:4],entries[4:])
+            V=curry(U)
+            left=mul(I,U)
+            right=mul(U,blockdiag(P))
+            self.assertEqual(curry(left),mul(blockdiag(I),V))
+            self.assertEqual(curry(right),mul(V,P))
+            # Homotopy boundary for constant cochain complexes.
+            self.assertEqual(curry(add(left,right)),
+                             add(mul(blockdiag(I),V),mul(V,P)))
+            self.assertEqual(left==right,mul(blockdiag(I),V)==mul(V,P))
+
     def test_CAT_25_005_structure(self):
         text=CHAPTER.read_text(encoding="utf-8")
         labels=re.findall(r"\\label\{([^}]+)\}",text)
