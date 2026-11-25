@@ -69,7 +69,7 @@ def graph_coverage(con, catalog_path=None):
     pairs = defaultdict(Counter)
     module_pairs = defaultdict(Counter)
     neighbors = defaultdict(set)
-    all_neighbors = defaultdict(set)
+    cross_neighbors = defaultdict(set)
     for s, t, cmd, status in con.execute(
             "SELECT source_document,target_document,command,status FROM references_tex"):
         if status not in {"resolved", "external_resolved", "alias_resolved", "included_resolved"} or t not in docs:
@@ -77,12 +77,12 @@ def graph_coverage(con, catalog_path=None):
             continue
         if s not in docs or s == t:
             continue
-        all_neighbors[s].add(t)
-        all_neighbors[t].add(s)
         if docs[s]["domain"] == docs[t]["domain"]:
             internal[s] += 1
             internal[t] += 1
         else:
+            cross_neighbors[s].add(t)
+            cross_neighbors[t].add(s)
             outgoing[s] += 1
             incoming[t] += 1
             pairs[tuple(sorted((docs[s]["domain"], docs[t]["domain"])))][cmd] += 1
@@ -92,14 +92,14 @@ def graph_coverage(con, catalog_path=None):
     chapters = [{**d, "cross_outgoing": outgoing[m], "cross_incoming": incoming[m],
                  "within_domain": internal[m], "unresolved": unresolved[m],
                  "isolated": not neighbors[m],
-                 "isolated_all_chapters": not all_neighbors[m]}
+                 "cross_isolated": not cross_neighbors[m]}
                 for m, d in sorted(docs.items())]
     domain_coverage = [
         {"domain": domain, "chapters": len(group),
-         "cross_linked": sum(not c["isolated"] for c in group),
-         "cross_isolated": sum(c["isolated"] for c in group),
-         "isolated_all_chapters": sum(c["isolated_all_chapters"] for c in group),
-         "cross_isolated_ids": [c["id"] for c in group if c["isolated"]]}
+         "cross_linked": sum(not c["cross_isolated"] for c in group),
+         "cross_isolated": sum(c["cross_isolated"] for c in group),
+         "isolated_all_chapters": sum(c["isolated"] for c in group),
+         "cross_isolated_ids": [c["id"] for c in group if c["cross_isolated"]]}
         for domain in domains
         for group in [[c for c in chapters if c["domain"] == domain]]
     ]
@@ -146,7 +146,7 @@ def graph_coverage(con, catalog_path=None):
             "summary": {"indexed_chapters": len(docs), "domains": len(domains),
                         "cross_linked_chapters": sum(bool(c["cross_incoming"] or c["cross_outgoing"]) for c in chapters),
                         "isolated_chapters": sum(c["isolated"] for c in chapters),
-                        "isolated_all_chapters": sum(c["isolated_all_chapters"] for c in chapters),
+                        "cross_isolated_chapters": sum(c["cross_isolated"] for c in chapters),
                         "all_reading_references": reading_inventory["total"],
                         "qualified_reading_references": reading_inventory["qualified"],
                         "legacy_reading_references": reading_inventory["legacy"],
