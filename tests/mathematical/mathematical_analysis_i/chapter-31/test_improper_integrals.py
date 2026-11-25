@@ -41,6 +41,20 @@ class Chapter31(unittest.TestCase):
             self.assertEqual(H(R)-H(d),H(R)-H(c)-(H(d)-H(c)))
             self.assertEqual(H(c)-H(0)+H(R)-H(c),H(R)-H(0))
 
+    def test_reflection_preserves_tagged_sums(self):
+        p=[F(-3),F(-1),F(0),F(2,3),F(4)]
+        tags=[F(-2),F(0),F(1,3),F(4)]
+        # Discontinuous at zero, with a distinguished point value.
+        def f(x):
+            return F(7) if x==0 else x if x<0 else 2*x
+        q=[-x for x in reversed(p)]
+        reflected_tags=[-t for t in reversed(tags)]
+        self.assertEqual(max(b-a for a,b in zip(p,p[1:])),
+                         max(b-a for a,b in zip(q,q[1:])))
+        self.assertEqual(sum(f(t)*(b-a) for a,b,t in zip(p,p[1:],tags)),
+                         sum(f(-t)*(b-a) for a,b,t in zip(q,q[1:],reflected_tags)))
+        self.assertEqual([-t for t in reversed(reflected_tags)],tags)
+
     def test_cauchy_tails_at_both_types_of_endpoint(self):
         for n in (2,5,10,100):
             for u,v in ((F(n),F(2*n)),(F(n),F(n*n))):
@@ -98,6 +112,22 @@ class Chapter31(unittest.TestCase):
             derivative=1/(1-t)**2
             self.assertEqual(derivative/(1+x)**2,1)
             self.assertEqual(1-1/(1+x),t)
+
+    def test_substitution_with_flat_interval(self):
+        # phi(t)=0 on [0,1], (t-1)^2 on [1,infinity): C1, not injective.
+        for t in (F(0),F(1,2),F(1),F(2),F(3),F(10)):
+            x=max(F(0),t-1)**2
+            derivative=2*max(F(0),t-1)
+            # Exact derivative of 1-1/(1+phi(t)), including the flat branch.
+            expected=F(0) if t<=1 else 2*(t-1)/(t*t-2*t+2)**2
+            self.assertEqual(derivative/(1+x)**2,expected)
+            if t<=1:
+                self.assertEqual(1-1/(1+x),0)
+        for r in map(F,(1,4,9,16)):
+            from math import isqrt
+            T=1+F(isqrt(r.numerator))
+            self.assertEqual((T-1)**2,r)
+            self.assertEqual(1-1/(1+(T-1)**2),1-1/(1+r))
 
     def test_parts_exponential_truncation(self):
         for R in (.5,1.,2.,10.,20.):
