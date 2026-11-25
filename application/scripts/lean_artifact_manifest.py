@@ -72,7 +72,9 @@ def root_path(root: Path) -> Path:
     for path in reversed((root, *root.parents)):
         if not stat.S_ISDIR(checked_stat(path).st_mode):
             raise ValueError("Artifact root must be a real directory")
-    return root
+    # Normalize Windows 8.3 aliases only after checking lexical ancestors.
+    # Output containment must compare two canonical paths, not short vs long.
+    return root.resolve(strict=True)
 
 
 def inventory(root: Path, deadline: float) -> dict[str, tuple]:
