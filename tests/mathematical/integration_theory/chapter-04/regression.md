@@ -7,3 +7,7 @@
 | IT-04-004 | Hake dla funkcji dyadycznej: kontrola ostatniej niepełnej komórki | semantyczna + Python |
 | IT-04-005 | Jednostajna całkowalność: wspólne cechowanie, Cauchy i przejście do granicy na ustalonym podziale | semantyczna + Python |
 | IT-04-006 | Hake: lokalne cechowania przy wspólnym końcu, rozcięcie i suma błędów | semantyczna + Python |
+| IT-04-007 | Kryterium Cauchy'ego: malejące cechowania, wspólny podział dopełnienia i lokalność | semantyczna + Python |
+| IT-04-008 | Zmiana na zbiorze zerowym: cechowanie także dla punktów o wartości zero, sumowalny budżet | semantyczna + Python |
+| IT-04-009 | Różniczkowanie pierwotnej: dwa znaki przyrostu, mierzalne ilorazy, zupełność miary | semantyczna |
+| IT-04-010 | Pochodna x^2 cos(pi/x^2): poprawne podstawienie, dolne oszacowania okresów i rozbieżność modułu | semantyczna |
