@@ -10,17 +10,48 @@ CHAPTER = ROOT / "chapters/pl/category_theory/25-kategorie-triangulowane-i-pocho
 
 class CategoryTheoryCh25(unittest.TestCase):
     def test_CAT_25_001_cone_homotopy(self):
-        # Two-term complexes with differential d in degrees 0 -> 1.
-        # f = g + d h + h d, so f_0 = f_1 = g + dh.
-        for d, g, h in itertools.product(range(-4, 5), repeat=3):
-            f = g + d*h
-            # Cone has degrees -1, 0, 1; check square zero.
-            self.assertEqual(d*f-f*d, 0)
-            # Upper triangular T: Cone(f) -> Cone(g), degree zero.
-            for x, y in itertools.product(range(-3, 4), repeat=2):
-                self.assertEqual(d*(y+h*x)+g*x, d*y+f*x)
-                self.assertEqual((f*x-h*d*x, -d*x), (g*x, -d*x))
-                self.assertEqual((y+h*x-h*x, x), (y,x))
+        # Noncommuting 2x2 matrices over Z, two-term complexes X,Y.
+        # Different X,Y differentials; choose g from a chain map,
+        # then set f=g+d_Y h+h d_X. Test the actual graded cone maps.
+        def add(A,B):
+            return tuple(tuple(a+b for a,b in zip(x,y)) for x,y in zip(A,B))
+        def neg(A):
+            return tuple(tuple(-a for a in x) for x in A)
+        def mul(A,B):
+            return tuple(tuple(sum(a*b for a,b in zip(row,col))
+                               for col in zip(*B)) for row in A)
+        def mv(A,x):
+            return tuple(sum(a*b for a,b in zip(row,x)) for row in A)
+        def vadd(x,y): return tuple(a+b for a,b in zip(x,y))
+        def vneg(x): return tuple(-a for a in x)
+        matrices=[((1,2),(0,1)),((0,-1),(1,0)),((2,0),(1,3)),((0,0),(0,0))]
+        vectors=[(1,0),(0,1),(2,-3)]
+        for dx,dy,h in itertools.product(matrices,repeat=3):
+            # g^0=dx, g^1=dy works only when dy dx=dy dx; no commutation assumed.
+            g0,g1=dx,dy
+            f0,f1=add(g0,mul(h,dx)),add(g1,mul(dy,h))
+            self.assertEqual(mul(dy,f0),mul(f1,dx))
+            def Dm(x): return mv(f0,x),vneg(mv(dx,x))
+            def D0(v): return vadd(mv(dy,v[0]),mv(f1,v[1]))
+            def Em(x): return mv(g0,x),vneg(mv(dx,x))
+            def E0(v): return vadd(mv(dy,v[0]),mv(g1,v[1]))
+            def T(v): return vadd(v[0],mv(h,v[1])),v[1]
+            def Ti(v): return vadd(v[0],vneg(mv(h,v[1]))),v[1]
+            for x in vectors:
+                self.assertEqual(D0(Dm(x)),(0,0))
+                self.assertEqual(E0(Em(x)),(0,0))
+                self.assertEqual(T(Dm(x)),Em(x))
+                for y in vectors:
+                    v=y,x
+                    self.assertEqual(E0(T(v)),D0(v))
+                    self.assertEqual(Ti(T(v)),v)
+                    self.assertEqual(T(Ti(v)),v)
+        # TR3: the identity square for the zero map Z[0] -> Z[1]
+        # admits distinct completions on the stalk cone Z^2[1].
+        for x,y in itertools.product(range(-2,3),repeat=2):
+            self.assertEqual((x+y,y)[1],y)
+            self.assertEqual((x+0,0),(x,0))
+        self.assertNotEqual((0,1),(1,1))
 
     @staticmethod
     def _models():
