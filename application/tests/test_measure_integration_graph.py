@@ -1,5 +1,6 @@
 """Canonical measure and integration theory graph regression."""
 import json
+from contextlib import closing
 from pathlib import Path
 import sqlite3
 import tempfile
@@ -42,7 +43,10 @@ class MeasureIntegrationGraphTest(unittest.TestCase):
             ("CAL-12", "ME-03", "thm:caratheodory"),
             ("CAL-11", "ME-07", "ch:calkowanie-lebesgue"),
             ("CAL-14", "ME-23", "thm:haar-main-23"),
-            ("CAL-14", "ME-03", "thm:caratheodory"),
+            # CAL-14 now proves its measure construction locally and explicitly
+            # links the topological hypotheses used in its Haar argument.
+            ("CAL-14", "GT-24", "def:topog24-group"),
+            ("CAL-14", "GT-14", "def:topog-baire-lokalna-zwartosc"),
         )
         needed = {doc for source, target, _ in expected for doc in (source, target)}
         needed.update("ME-%02d" % n for n in range(1, 32))
@@ -65,7 +69,7 @@ class MeasureIntegrationGraphTest(unittest.TestCase):
                 dest.write_bytes(source_path.read_bytes())
             db = Path(tmp) / "index.db"
             build_database(root, db, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 edges = {(e["source"], e["target"]): e for e in graph_coverage(con)["edges"]}
                 for source, target, label in expected:
                     with self.subTest(source=source, target=target, label=label):
