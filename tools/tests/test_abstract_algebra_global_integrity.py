@@ -7,6 +7,7 @@ source consistency rather than claiming to prove theorems.
 from pathlib import Path
 from collections import Counter,defaultdict
 import re
+import json
 
 ROOT=Path(__file__).resolve().parents[2]
 CHDIR=ROOT/"chapters/pl/abstract_algebra"
@@ -51,6 +52,13 @@ def main():
                                  [str(p) for p in canonical-set(ins)],
                                  [str(p) for p in set(ins)-canonical])
     assert ins==chapters,("chapter order",list(zip(ins,chapters)))
+    catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
+    entries=[b for b in catalog["books"] if b["id"]=="abstract_algebra" and b["language"]=="pl"]
+    assert len(entries)==1,("catalog entry count",len(entries))
+    assert entries[0]["entrypoint"]==BOOK.relative_to(ROOT).as_posix(), "catalog entrypoint"
+    assert entries[0]["chapters"]==[p.relative_to(ROOT).as_posix() for p in chapters], "catalog chapter order"
+    label_positions={}
+    ref_positions=[]
     owners=defaultdict(list)
     references=defaultdict(list)
     counter=Counter()
@@ -66,15 +74,18 @@ def main():
                     "unmatched TeX environment",chapter.name,m.group(2),stack[-1] if stack else None)
                 stack.pop()
         assert not stack,("unterminated TeX environments",chapter.name,stack)
-        for lab in LABEL.findall(s):
+        for match in LABEL.finditer(s):
+            lab=match.group(1)
+            label_positions[lab]=(int(chapter.name[:2]),s.count("\n",0,match.start())+1,match.start())
             assert lab.strip(),("empty label",chapter.name)
             owners[lab].append(chapter.name)
             counter["label_occurrences"]+=1
-        for ref in REF.findall(s):
-            for r in ref.split(","):
+        for match in REF.finditer(s):
+            for r in match.group(1).split(","):
                 r=r.strip()
                 assert r,("empty reference",chapter.name)
                 references[r].append(chapter.name)
+                ref_positions.append((int(chapter.name[:2]),s.count("\n",0,match.start())+1,match.start(),r))
                 counter["reference_occurrences"]+=1
         counter["proofs"]+=len(re.findall(r"\\begin\s*\{proof\}",s))
         counter["examples"]+=len(re.findall(r"\\begin\s*\{przyklad\}",s))
@@ -85,6 +96,39 @@ def main():
     assert not dup,("duplicate labels",dup)
     missing={r:s for r,s in references.items() if r not in owners}
     assert not missing,("unresolved references",missing)
+    # Explicit reference graph is diagnostic: a forward reference may be an
+    # intentional preview, and a chapter-level cycle need not be a proof cycle.
+    graph={n:set() for n in ids}
+    forward=[]
+    for n,line,pos,target in ref_positions:
+        m,target_line,target_pos=label_positions[target]
+        if n!=m:
+            graph[n].add(m)
+        if m>n or (m==n and target_pos>pos):
+            forward.append((n,line,target,m,target_line))
+    def reachable(n):
+        seen=set()
+        todo=list(graph[n])
+        while todo:
+            v=todo.pop()
+            if v not in seen:
+                seen.add(v)
+                todo.extend(graph[v]-seen)
+        return seen
+    reach={n:reachable(n) for n in ids}
+    groups=[]
+    remaining=set(ids)
+    while remaining:
+        n=min(remaining)
+        group=sorted({n}|{m for m in reach[n] if n in reach[m]})
+        remaining.difference_update(group)
+        if len(group)>1:
+            groups.append(group)
+    print("AA GLOBAL explicit references: catalog=PASS",
+          {"chapter_edges":sum(map(len,graph.values())),
+           "forward_references":len(forward),"chapter_cycle_groups":groups})
+    for n,line,target,m,target_line in forward:
+        print(f"AA GLOBAL FORWARD: AA-{n:02d}:{line} -> AA-{m:02d}:{target_line} {target}")
     covered=defaultdict(list)
     for report, chapters_ in COVERAGE.items():
         file=AUD/report
