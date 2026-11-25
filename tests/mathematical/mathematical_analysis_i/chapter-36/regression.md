@@ -12,3 +12,8 @@ Testy Python sprawdzają skończone świadki i strukturę, nie zastępują dowod
 | MA1-36-008 | Pełna charakterystyka ACG_*, wszystkie lematy i oba kierunki | semantyczna |
 | MA1-36-009 | Podstawienie i części przy jawnych hipotezach | semantyczna |
 | MA1-36-010 | Twierdzenia graniczne i skończone wartości, zbiory wyjątkowe, kontrprzykłady | semantyczna |
+| MA1-36-011 | Odsyłacze do wcześniejszych rozdziałów MA1 mają istniejące etykiety | Python |
+| MA1-36-012 | Istnienie całki Stieltjesa ze wspólnego rozdrobnienia; sumowanie przez części; utożsamienie z całką Lebesgue'a dla AC | semantyczna + Python |
+| MA1-36-013 | Malejący dyfeomorfizm, znak przyrostu i odwrócenie orientacji | semantyczna + Python |
+| MA1-36-014 | Normę Alexiewicza identyfikować z normą supremum pierwotnych; gęstość i brak zupełności | semantyczna |
+| MA1-36-015 | Skończone reprezentanty i wspólny zbiór zerowy w twierdzeniach granicznych | semantyczna |
