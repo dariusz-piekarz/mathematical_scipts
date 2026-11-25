@@ -19,7 +19,10 @@ i transformaty na całej przestrzeni jest istotne także dla normalizacji.
 
 Przez $\mathbb T=\R/(2\pi\mathbb Z)$ rozumiemy okrąg z
 współrzędną $x\in[-\pi,\pi]$ i utożsamionymi końcami.
-Dla $f\in L^1(-\pi,\pi)$ definiujemy
+Funkcję z $L^1(-\pi,\pi)$ utożsamiamy z jej
+$2\pi$-okresowym przedłużeniem, określonym z dokładnością
+do zbioru miary zero; wartości na końcach przedziału
+nie wpływają na całki. Dla takiej funkcji definiujemy
 $\widehat f(k)=(2\pi)^{-1}\int_{-\pi}^{\pi}f(x)e^{-ikx}\,\mathrm d\lambda_1(x)$,
 $k\in\mathbb Z$, oraz sumę częściową
 $S_Nf(x)=\sum_{|k|\le N}\widehat f(k)e^{ikx}$.
@@ -33,21 +36,50 @@ pochodzi od miary $\mathrm d\lambda_1(x)/(2\pi)$.
 W dalszych rozdziałach o PDE na torusie stosujemy zwykle
 nieznormalizowaną miarę $\mathrm d\lambda_d(x)$; wzory
 na wartości własne i współczynniki Fouriera pozostają zgodne,
-ale normy $L^2$ różnią się odpowiednim czynnikiem.
+ale norma względem miary nieznormalizowanej w wymiarze $d$
+jest $(2\pi)^{d/2}$ razy większa od normy względem
+miary unormowanej do masy $1$ (na torusie
+o okresie $2\pi$ w każdej współrzędnej).
+Na odcinku $(0,L)$ używamy natomiast zwykłej
+miary Lebesgue'a. Ponieważ miara unormowana na
+$\mathbb T$ ma masę $1$, nierówność Cauchy'ego--Schwarza
+daje $(2\pi)^{-1}\|f\|_{L^1(-\pi,\pi)}\leq\|f\|_2$,
+więc współczynniki Fouriera są określone dla każdego
+$f\in L^2(\mathbb T)$.
 
 \begin{lemat}[Ortogonalność i nierówność Bessela]
 \label{lem:pde6-bessel}
-Niech $f\in L^2(\mathbb T)$ oraz $N\ge0$. Wówczas
+Niech $f\in L^2(\mathbb T)$ oraz $N\geq0$ będzie całkowite. Wówczas
 $\langle e^{ikx},e^{i\ell x}\rangle=\delta_{k\ell}$,
 $\|S_Nf\|_2^2=\sum_{|k|\le N}|\widehat f(k)|^2$ i
 $\sum_{|k|\le N}|\widehat f(k)|^2\le\|f\|_2^2$.
 \end{lemat}
 \begin{proof}
-Pierwsza równość wynika z całki z $e^{i(k-\ell)x}$.
-Reszta pierwszej tożsamości to twierdzenie Pitagorasa dla skończonego
-układu ortonormalnego. Ponadto $f-S_Nf$ jest prostopadłe do każdego
-$e^{ikx}$, $|k|\le N$, toteż
-$\|f\|_2^2=\|S_Nf\|_2^2+\|f-S_Nf\|_2^2$.
+Dla $k=\ell$ całka z jedynki względem miary
+unormowanej wynosi $1$. Jeśli $k\ne\ell$, to
+\[
+ \frac1{2\pi}\int_{-\pi}^{\pi}e^{i(k-\ell)x}\,
+ \mathrm d\lambda_1(x)
+ =\frac{e^{i(k-\ell)\pi}-e^{-i(k-\ell)\pi}}
+ {2\pi i(k-\ell)}=0,
+\]
+ponieważ $k-\ell$ jest całkowite. Otrzymujemy
+ortonormalność. Rozwijając kwadrat normy skończonej
+sumy $S_Nf$ i korzystając z tej ortonormalności,
+dostajemy $\|S_Nf\|_2^2=\sum_{|k|\le N}|\widehat f(k)|^2$.
+Ponadto dla $|\ell|\leq N$
+\[
+ \langle f-S_Nf,e^{i\ell x}\rangle
+ =\widehat f(\ell)-\sum_{|k|\leq N}
+ \widehat f(k)\delta_{k\ell}=0.
+\]
+Zatem $S_N$ jest rzutem ortogonalnym na przestrzeń
+rozpiętą przez te wykładniki. W szczególności
+$\langle f-S_Nf,S_Nf\rangle=0$, skąd
+\[
+ \|f\|_2^2=\|S_Nf\|_2^2+\|f-S_Nf\|_2^2.
+\]
+Nieujemność ostatniego składnika daje nierówność Bessela.
 \end{proof}
 
 Nie można jednak wywnioskować z ortogonalności, że $S_Nf\to f$.
@@ -55,23 +87,42 @@ Do tego potrzebujemy zupełności układu wykładniczego.
 
 \begin{lemat}[Jądro Fejéra]
 \label{lem:pde6-fejer}
-Dla $N\ge0$ niech
+Dla całkowitego $N\geq0$ niech
 \begin{equation}\label{eq:pde6-fejer}
  F_N(t)=\frac1{N+1}\left|\sum_{j=0}^Ne^{ijt}\right|^2
  =\frac1{N+1}\left(\frac{\sin((N+1)t/2)}{\sin(t/2)}\right)^2
 \end{equation}
-(z wartością $F_N(0)=N+1$). Wówczas $F_N\ge0$,
+(w punktach $t\in2\pi\mathbb Z$ przyjmujemy
+$F_N(t)=N+1$, zgodnie z pierwszą postacią wzoru). Wówczas $F_N\ge0$,
 $(2\pi)^{-1}\int_{-\pi}^{\pi}F_N(t)\,\mathrm d\lambda_1(t)=1$ oraz
 dla każdego $\delta\in(0,\pi)$
 $\int_{\delta\le|t|\le\pi}F_N(t)\,\mathrm d\lambda_1(t)\to0$.
 \end{lemat}
 \begin{proof}
-Rozwinięcie kwadratu modułu daje
-$F_N(t)=\sum_{|k|\le N}(1-|k|/(N+1))e^{ikt}$.
-Wyraz stały jest równy $1$, skąd normalizacja.
-Gdy $\delta\le|t|\le\pi$, mianownik drugiego wzoru
-jest ograniczony od zera, a licznik przez $1$;
-stąd $F_N(t)\le[(N+1)\sin^2(\delta/2)]^{-1}$.
+Nieujemność jest bezpośrednia z definicji.
+Dla $t\notin2\pi\mathbb Z$ z sumy geometrycznej
+$\sum_{j=0}^N e^{ijt}=(1-e^{i(N+1)t})/(1-e^{it})$
+i tożsamości $|1-e^{i\alpha}|=2|\sin(\alpha/2)|$
+otrzymujemy drugą postać~\eqref{eq:pde6-fejer}.
+Rozwijając kwadrat modułu, mamy
+\[
+ F_N(t)=\frac1{N+1}\sum_{j,\ell=0}^N e^{i(j-\ell)t}
+ =\sum_{|k|\leq N}\left(1-\frac{|k|}{N+1}\right)e^{ikt}.
+\]
+Dla ustalonego $|k|\leq N$ istnieje dokładnie
+$N+1-|k|$ par $(j,\ell)$ z różnicą $j-\ell=k$:
+dla $k\geq0$ wybieramy $\ell=0,\ldots,N-k$,
+a dla $k<0$ zamieniamy role indeksów.
+Wyraz stały jest równy $1$, a pozostałe
+wykładniki mają całkę zero na pełnym okresie,
+skąd normalizacja. Gdy $\delta\leq|t|\leq\pi$,
+mamy $|\sin(t/2)|\geq\sin(\delta/2)>0$.
+Dlatego
+\[
+ \int_{\delta\leq|t|\leq\pi}F_N(t)\,\mathrm d\lambda_1(t)
+ \leq\frac{2\pi}{(N+1)\sin^2(\delta/2)}
+ \longrightarrow0.
+\]
 \end{proof}
 
 \begin{twierdzenie}[Fejér i zupełność układu trygonometrycznego]
@@ -84,9 +135,27 @@ w $C(\mathbb T)$ w normie supremum i w $L^2(\mathbb T)$
 w normie $L^2$.
 \end{twierdzenie}
 \begin{proof}
-Z lematu~\ref{lem:pde6-fejer} wynika
-$\sigma_N f(x)=(2\pi)^{-1}\int_{-\pi}^{\pi}
-F_N(t)f(x-t)\,\mathrm d\lambda_1(t)$.
+W średniej z sum częściowych współczynnik
+przy $\widehat f(k)e^{ikx}$ wynosi
+$(N+1-|k|)/(N+1)$ dla $|k|\leq N$, ponieważ
+wyraz ten występuje dla $j=|k|,\ldots,N$.
+Z drugiej strony podstawienie $y=x-t$ daje
+\[
+ \frac1{2\pi}\int_{-\pi}^{\pi}e^{ikt}f(x-t)\,
+ \mathrm d\lambda_1(t)=e^{ikx}\widehat f(k).
+\]
+Po podstawieniu całkujemy po odcinku
+$[x-\pi,x+\pi]$, który możemy zastąpić
+$[-\pi,\pi]$, gdyż $f(y)e^{-iky}$ jest
+$2\pi$-okresowa i całka po pełnym okresie
+nie zależy od jego początku (przez podział
+odcinka i przesunięcie o wielokrotność okresu).
+Rozwinięcie skończone z lematu~\ref{lem:pde6-fejer}
+daje więc
+\[
+ \sigma_Nf(x)=\frac1{2\pi}\int_{-\pi}^{\pi}
+ F_N(t)f(x-t)\,\mathrm d\lambda_1(t).
+\]
 Odejmujemy $f(x)$ i dzielimy całkę na $|t|<\delta$
 oraz $\delta\le|t|\le\pi$. Z jednostajnej ciągłości $f$
 możemy dobrać $\delta$ tak, aby pierwszy składnik
@@ -94,11 +163,42 @@ miał moduł co najwyżej $\varepsilon$ dla wszystkich $x,N$.
 Drugi ma moduł nie większy niż
 $2\|f\|_\infty(2\pi)^{-1}\int_{|t|\ge\delta}F_N(t)
 \,\mathrm d\lambda_1(t)$, co dąży do zera.
-Gęstość w $L^2$ wynika dodatkowo z gęstości
-funkcji ciągłych w $L^2$ na zwartym przedziale,
-którą można udowodnić aproksymacją funkcji prostych
-przez funkcje ciągłe (dla zbiorów mierzalnych używamy
-regularności miary Lebesgue'a).
+Ponieważ $F_N$ ma unormowaną całkę $1$, pierwszy
+składnik jest rzeczywiście ograniczony przez
+$\varepsilon$, niezależnie od $N$. Zatem dla
+dostatecznie dużych $N$ norma supremum różnicy
+nie przekracza $2\varepsilon$. Dowodzi to
+jednostajnej zbieżności.
+
+Uzasadnijmy również gęstość w $L^2$ z uwzględnieniem
+okresowości. Funkcje proste są gęste w $L^2$
+na przedziale skończonej miary. Dla mierzalnego
+$A\subset(-\pi,\pi)$ oraz $\eta>0$ regularność
+miary Lebesgue'a daje zbiór zwarty $K\subset A$
+i otwarty $O\supset A$, $O\subset(-\pi,\pi)$,
+takie że $\lambda_1(O\setminus K)<\eta$.
+Gdy $K$ jest niepusty, wybieramy
+$0<r<\operatorname{dist}(K,\R\setminus O)$.
+Funkcja
+\[
+ \varphi(x)=\max\{0,1-\operatorname{dist}(x,K)/r\}
+\]
+jest ciągła, równa $1$ na $K$, ma zwarty nośnik
+zawarty w $O$ i wartości w $[0,1]$.
+Jeśli $K=\varnothing$, bierzemy $\varphi=0$.
+W obu przypadkach
+$\|\chi_A-\varphi\|_2^2\leq\eta/(2\pi)$.
+Przedłużenie $\varphi$ okresowo jest ciągłe,
+bo $\varphi$ znika w otoczeniu końców przedziału.
+Aproksymując w ten sposób każdy składnik
+funkcji prostej i stosując nierówność trójkąta,
+otrzymujemy gęstość $C(\mathbb T)$ w $L^2(\mathbb T)$.
+Dla $f\in L^2$ i $\varepsilon>0$ wybieramy
+$g\in C(\mathbb T)$ z $\|f-g\|_2<\varepsilon/2$,
+a następnie wielomian trygonometryczny $p$
+z $\|g-p\|_\infty<\varepsilon/2$.
+Ponieważ $\|g-p\|_2\leq\|g-p\|_\infty$,
+mamy $\|f-p\|_2<\varepsilon$.
 \end{proof}
 
 \begin{twierdzenie}[Zbieżność w $L^2$ i tożsamość Parsevala]
@@ -112,17 +212,29 @@ $S_Nf\to f$ w normie $L^2$ oraz
 \end{twierdzenie}
 \begin{proof}
 Dla $\varepsilon>0$ wybieramy wielomian trygonometryczny $p$
-z $\|f-p\|_2<\varepsilon$. Dla $N$ większych niż stopień
-$p$ mamy $S_Np=p$. Ponieważ $S_N$ jest rzutem ortogonalnym,
-$\|S_N(f-p)\|_2\le\|f-p\|_2$; zatem
-$\|f-S_Nf\|_2\le2\varepsilon$.
-Przechodząc do granicy w tożsamości Pitagorasa z
-lematu~\ref{lem:pde6-bessel}, otrzymujemy Parsevala.
+z $\|f-p\|_2<\varepsilon$. Dla $N$ nie mniejszych niż stopień
+$p$ mamy $S_Np=p$. Ponieważ $f-S_Nf$ jest
+prostopadła do przestrzeni, do której należy
+$S_Nf-p$, zachodzi
+\[
+ \|f-p\|_2^2=\|f-S_Nf\|_2^2+\|S_Nf-p\|_2^2.
+\]
+Zatem $\|f-S_Nf\|_2\leq\|f-p\|_2<\varepsilon$,
+co dowodzi zbieżności.
+W konsekwencji $\|S_Nf\|_2\to\|f\|_2$,
+a z tożsamości $\|S_Nf\|_2^2=
+\sum_{|k|\leq N}|\widehat f(k)|^2$
+w lemacie~\ref{lem:pde6-bessel} otrzymujemy
+\eqref{eq:pde6-parseval}, ponieważ sumy
+nieujemnych wyrazów rosną do pełnej sumy po $\mathbb Z$.
 \end{proof}
 
 \begin{uwaga}[Jakiego rodzaju zbieżność została udowodniona?]
-Zbieżność $L^2$ nie oznacza zbieżności jednostajnej ani
-punktowej. Dla funkcji ciągłych jednostajnie zbieżne są
+Sama zbieżność w normie $L^2$ nie pociąga
+za sobą zbieżności jednostajnej ani punktowej
+całego ciągu. Nie rozstrzygamy tutaj odrębnego
+zagadnienia zbieżności prawie wszędzie sum
+częściowych Fouriera. Dla funkcji ciągłych jednostajnie zbieżne są
 \emph{średnie Fejéra}, niekoniecznie zwykłe sumy $S_N$.
 W dalszej części do różniczkowania szeregów użyjemy
 gładkich danych, dla których zachodzi dodatkowe szybkie
@@ -131,19 +243,54 @@ zanikanie współczynników.
 
 \begin{lemat}[Zanikanie współczynników gładkiej funkcji]
 \label{lem:pde6-decay}
-Jeśli $f\in C^m(\mathbb T)$, $m\ge1$, to dla $k\ne0$
+Jeśli $f\in C^m(\mathbb T)$, $m\geq1$ całkowite, to dla $k\ne0$
 $|\widehat f(k)|\le\|f^{(m)}\|_{L^1(-\pi,\pi)}/(2\pi|k|^m)$.
 Jeśli $f\in C^\infty(\mathbb T)$, to szereg Fouriera wraz
 ze wszystkimi szeregami otrzymanymi przez różniczkowanie
 zbiega jednostajnie.
 \end{lemat}
 \begin{proof}
-$m$-krotnie całkujemy przez części; wyrazy brzegowe
-znikają dzięki zgodności pochodnych na końcach przedziału.
-Dla $f\in C^\infty$ i ustalonego $r\ge0$ wybieramy
-$m\ge r+2$ i szacujemy szereg
-$\sum_{k\ne0}|k|^r|\widehat f(k)|$ przez
-stałą pomnożoną przez $\sum_{k\ne0}|k|^{r-m}<\infty$.
+Dla $k\ne0$ całkowanie przez części daje
+\[
+ \widehat f(k)=\frac1{ik}\widehat{f'}(k),
+\]
+ponieważ $f(\pi)e^{-ik\pi}=f(-\pi)e^{ik\pi}$.
+Powtarzając ten rachunek $m$ razy (pochodne
+do rzędu $m-1$ mają zgodne wartości na końcach
+przedziału), dostajemy
+$\widehat f(k)=(ik)^{-m}\widehat{f^{(m)}}(k)$,
+co po oszacowaniu modułu całki daje żądaną nierówność.
+
+Dla $f\in C^\infty$ i ustalonego całkowitego
+$r\geq0$ wybieramy $m\geq r+2$. Wówczas
+\[
+ \sum_{k\ne0}|k|^r|\widehat f(k)|
+ \leq\frac{\|f^{(m)}\|_{L^1(-\pi,\pi)}}{2\pi}
+ \sum_{k\ne0}|k|^{r-m}<\infty.
+\]
+Kryterium Weierstrassa daje bezwzględną
+i jednostajną zbieżność szeregu
+$\sum_{k\in\mathbb Z}(ik)^r\widehat f(k)e^{ikx}$,
+przy czym dla $r=0$ wyraz $k=0$ oznacza
+$\widehat f(0)$, a dla $r>0$ wynosi zero.
+Oznaczmy jego ciągłą sumę przez $G_r$.
+Z całkowania przez części także dla $k=0$
+(jeśli $r>0$, całka z $f^{(r)}$ po okresie
+jest zerowa) współczynniki tego szeregu
+są dokładnie współczynnikami Fouriera $f^{(r)}$.
+Twierdzenie~\ref{thm:pde6-parseval} daje więc
+zbieżność tych samych sum częściowych do $f^{(r)}$
+w normie $L^2$. Z jednostajnej zbieżności
+mamy zarazem zbieżność w $L^2$ do $G_r$.
+Jednoznaczność granicy w $L^2$ daje
+$G_r=f^{(r)}$ prawie wszędzie, a ponieważ
+obie funkcje są ciągłe, równość zachodzi
+w każdym punkcie: niezerowa różnica
+w jednym punkcie byłaby niezerowa na
+pewnym otwartym łuku dodatniej miary.
+W szczególności $G_0=f$ i wszystkie
+różniczkowania wyraz po wyrazie prowadzą
+do właściwych pochodnych.
 \end{proof}
 
 \section{Zagadnienie własne laplasjanu na odcinku}
