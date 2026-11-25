@@ -81,5 +81,71 @@ class CrossVolumeReadingReferencesTest(unittest.TestCase):
                 self.assertNotIn("AA-20", chosen)
 
 
+    def test_real_alg_aa_section_and_object_graph(self):
+        expected_labels = {
+            "ALG-00": {"aa:ch:pierscienie": "AA-09", "aa:ch:wielomiany": "AA-11"},
+            "ALG-01": {"aa:tw:radical-intersection-primes": "AA-12",
+                       "aa:tw:hilbert-basis": "AA-13", "aa:def:algebraic-closure": "AA-21"},
+            "ALG-02": {"aa:ch:wielomiany": "AA-11"},
+            "ALG-03": {"aa:def:localization": "AA-12",
+                       "aa:tw:nakayama-minimal-generators": "AA-14",
+                       "aa:prz:integral-cusp-normalization": "AA-40"},
+            "ALG-04": {"aa:tw:localization-universal": "AA-12",
+                       "aa:ch:modules-introduction": "AA-16",
+                       "aa:ch:module-tensor-product": "AA-18",
+                       "aa:ch:integral-extensions": "AA-40",
+                       "aa:tw:noether-normalization": "AA-38",
+                       "aa:def:krull-dimension": "AA-39",
+                       "aa:tw:transcendence-degree": "AA-37"},
+        }
+        target_ids = {m[3:] for labels in expected_labels.values() for m in labels.values()}
+        alg_ids = {m[4:] for m in expected_labels}
+        books = json.loads((ROOT / "catalog/books.json").read_text(encoding="utf-8"))["books"]
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "pl"
+            for book in books:
+                if book["id"] not in {"algebraic_geometry", "abstract_algebra"}:
+                    continue
+                wanted = alg_ids if book["id"] == "algebraic_geometry" else target_ids
+                for path in book["chapters"]:
+                    p = Path(path)
+                    if p.name.split("-", 1)[0] not in wanted:
+                        continue
+                    dest = root / p.parent.name / p.name
+                    dest.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(ROOT / p, dest)
+            db = Path(temp) / "index.db"
+            build_database(root, db, recursive=True)
+            with sqlite3.connect(db) as con:
+                con.row_factory = sqlite3.Row
+                rows = con.execute(
+                    "SELECT r.source_document, r.target_label, r.target_document, r.status,"
+                    " s.kind AS source_kind, t.kind AS target_kind"
+                    " FROM references_tex r LEFT JOIN entities s ON r.source_entity=s.id"
+                    " LEFT JOIN entities t ON r.target_entity=t.id"
+                    " WHERE r.command='atlasref' AND r.source_document LIKE 'ALG-%'"
+                ).fetchall()
+                expected = {(s, lab, dst) for s, labels in expected_labels.items()
+                            for lab, dst in labels.items()}
+                found = {(r["source_document"], r["target_label"], r["target_document"])
+                         for r in rows}
+                self.assertTrue(expected <= found)
+                for row in rows:
+                    if (row["source_document"], row["target_label"], row["target_document"]) in expected:
+                        self.assertIn(row["status"], {"resolved", "external_resolved", "alias_resolved"})
+                        self.assertEqual(row["source_kind"], "section")
+                        self.assertIsNotNone(row["target_kind"])
+                pairs = {(s, dst) for s, _, dst in expected}
+                for left, right in [("geometria algebraiczna", "algebra abstrakcyjna"),
+                                    ("algebra abstrakcyjna", "geometria algebraiczna")]:
+                    for granularity in ("module", "section", "entity"):
+                        graph = bipartite_graph(con, left, right, granularity, 1, 250)
+                        nodes = {n["id"]: n["module"] for n in graph["nodes"]}
+                        actual = {(nodes[e["source"]], nodes[e["target"]]) for e in graph["edges"]}
+                        if left == "algebra abstrakcyjna":
+                            actual = {(b, a) for a, b in actual}
+                        self.assertTrue(pairs <= actual)
+
+
 if __name__ == "__main__":
     unittest.main()

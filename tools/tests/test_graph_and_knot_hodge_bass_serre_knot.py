@@ -153,6 +153,62 @@ def c2c3_tree_ball(depth=5):
     return len(vertices),len(edges)
 
 
+def check_bs12_cosets():
+    """GKT-24-BS12-PY-01: exact finite affine coset model; not a faithfulness proof."""
+    from fractions import Fraction as Q
+    from itertools import product
+    from collections import deque
+
+    def p(k): return Q(2)**k
+    def mul(g,h):
+        r,k=g; s,l=h
+        return r+p(k)*s,k+l
+    def cos(g,m=1):
+        r,k=g
+        return r%(m*p(k)),k
+    def edge(g,sgn):
+        return cos(g),cos(mul(g,(Q(0),-sgn)))
+    def rev(g,sgn):
+        return mul(g,(Q(0),-sgn)),-sgn
+
+    samples=[(Q(i,8),k) for i in range(-16,17) for k in range(-4,5)]
+    translations=[(Q(i,4),k) for i in range(-4,5) for k in range(-2,3)]
+    counts=dict(representatives=0,reversals=0,translations=0,incidences=0)
+    for g,sgn in product(samples,[1,-1]):
+        m=1 if sgn==1 else 2
+        a,b=edge(g,sgn)
+        for n in range(-5,6):
+            h=mul(g,(Q(m*n),0))
+            assert cos(h,m)==cos(g,m)
+            assert edge(h,sgn)==(a,b)
+            counts['representatives']+=1
+        h,t=rev(g,sgn)
+        assert edge(h,t)==(b,a)
+        assert rev(h,t)==(g,sgn)
+        counts['reversals']+=1
+        for u in translations:
+            assert edge(mul(u,g),sgn)==(cos(mul(u,a)),cos(mul(u,b)))
+            counts['translations']+=1
+
+    def nbr(v):
+        r,k=v
+        return {cos((r,k-1)),cos((r,k+1)),cos((r+p(k),k+1))}
+    root=(Q(0),0); d={root:0}; q=deque([root]); edges=set()
+    while q:
+        v=q.popleft(); ns=nbr(v)
+        assert len(ns)==3
+        for w in ns:
+            assert v in nbr(w)
+            counts['incidences']+=1
+            if d[v]<9 and w not in d:
+                d[w]=d[v]+1; q.append(w)
+            if w in d: edges.add(frozenset([v,w]))
+    assert len(d)==1+3*(2**9-1)
+    assert len(edges)==len(d)-1
+    assert counts == dict(representatives=6534, reversals=594, translations=26730, incidences=4602)
+    return counts, len(d), len(edges)
+
+
 def poly_add(a,b):
     out=dict(a)
     for k,v in b.items():out[k]=out.get(k,0)+v
@@ -422,6 +478,7 @@ if __name__=="__main__":
               {(0,1,2),(0,1,3),(0,2,3),(1,2,3)})])
     print("PASS Cayley free balls:",[(r,cayley_free_ball(r,3)) for r in (1,2,3)])
     print("PASS C2*C3 Bass--Serre truncated coset tree:",c2c3_tree_ball())
+    print("PASS GKT-24-BS12-PY-01:",check_bs12_cosets())
     print("PASS Seifert S-enlargement Laurent determinant identities:",
           check_seifert_alexander())
     print("PASS Fox trefoil coloring moduli:",check_fox_coloring())
