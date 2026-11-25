@@ -591,6 +591,43 @@ def check_jones_mixed_r3_skein():
     return orders, 25
 
 
+def check_torus_fox_polynomial():
+    """GKT-25-TORUS-FOX-01: exact polynomial division for coprime torus parameters."""
+    from math import gcd
+
+    def div(a, b):
+        a = list(a)
+        q = [0]*(len(a)-len(b)+1)
+        for k in range(len(q)-1,-1,-1):
+            q[k] = a[k+len(b)-1]
+            for j,v in enumerate(b):
+                a[k+j] -= q[k]*v
+        assert not any(a)
+        return q
+
+    def mul(a,b):
+        c = [0]*(len(a)+len(b)-1)
+        for i,x in enumerate(a):
+            for j,y in enumerate(b):
+                c[i+j] += x*y
+        return c
+
+    count = 0
+    for p in range(2,21):
+        for q in range(2,21):
+            if gcd(p,q) != 1:
+                continue
+            a = [int(i%q == 0) for i in range(q*(p-1)+1)]
+            b = [int(i%p == 0) for i in range(p*(q-1)+1)]
+            h = div(a,[1]*p)
+            assert mul(h,[1]*q) == b
+            assert len(h)-1 == (p-1)*(q-1)
+            assert h[0] == h[-1] == 1 and sum(h) == 1 and h == h[::-1]
+            count += 1
+    assert count == 216
+    return count
+
+
 def test_source():
     names=[
         "16-od-triangulacji-do-topologii-i-geometrii-rozmaitosci.tex",
@@ -615,6 +652,7 @@ def test_source():
 
 if __name__=="__main__":
     test_source()
+    print("PASS GKT-25-TORUS-FOX-01:",check_torus_fox_polynomial())
     print("PASS GKT-25-JONES-01:",check_jones_mixed_r3_skein())
     print("PASS GKT-25-ARF-MOD8-01:",check_arf_determinant_mod8())
     print("PASS GKT-25-FOX-PREFIX-01:",check_fox_prefix_cancellation())
