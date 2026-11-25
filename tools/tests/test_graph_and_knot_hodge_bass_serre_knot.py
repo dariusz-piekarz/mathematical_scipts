@@ -466,6 +466,21 @@ def check_crossing_orientation():
     return count
 
 
+def check_fox_dihedral_relation():
+    """GKT-25-FOX-01: reflection relation, including composite moduli and n=2."""
+    count = 0
+    for n in range(2, 17):
+        def mul(g, h):
+            return (g[0]*h[0], (g[0]*h[1]+g[1]) % n)
+        for a, b, c in product(range(n), repeat=3):
+            A, B, C = (-1, a), (-1, b), (-1, c)
+            assert (mul(mul(B, A), B) == C) == ((2*b-a-c) % n == 0)
+            assert mul(B, B) == (1, 0)
+            count += 1
+    assert count == 18495
+    return count
+
+
 def test_source():
     names=[
         "16-od-triangulacji-do-topologii-i-geometrii-rozmaitosci.tex",
@@ -490,6 +505,7 @@ def test_source():
 
 if __name__=="__main__":
     test_source()
+    print("PASS GKT-25-FOX-01:",check_fox_dihedral_relation())
     print("PASS GKT-25-LINK-SIGN-01:",check_crossing_orientation())
     print("PASS finite weighted Hodge cochain models:",
           [check_hodge(facets) for facets in (
