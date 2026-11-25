@@ -42,6 +42,7 @@ class MeasureIntegrationGraphTest(unittest.TestCase):
             ("CAL-12", "ME-03", "thm:caratheodory"),
             ("CAL-11", "ME-07", "ch:calkowanie-lebesgue"),
             ("CAL-14", "ME-23", "thm:haar-main-23"),
+            ("CAL-14", "ME-03", "thm:caratheodory"),
         )
         needed = {doc for source, target, _ in expected for doc in (source, target)}
         needed.update("ME-%02d" % n for n in range(1, 32))
