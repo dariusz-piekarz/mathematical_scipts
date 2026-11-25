@@ -108,7 +108,7 @@ def closure(con:sqlite3.Connection, chosen:dict[str,Any], known:dict[str,Any], d
         marks=','.join('?' for _ in frontier)
         rows=con.execute(
             f'SELECT source_document,target_document,offset FROM references_tex '
-            f'WHERE source_document IN ({marks}) AND target_document IS NOT NULL',
+            f"WHERE source_document IN ({marks}) AND target_document IS NOT NULL AND command != 'atlasref'",
             tuple(sorted(frontier)))
         new={
             r['target_document'] for r in rows
@@ -370,8 +370,11 @@ def project_files(con:sqlite3.Connection, modules:list[str], entities:list[str],
     globally_missing=[]
     for m,p in parts.items():
         for a,b in p['spans']:
-            for row in con.execute('SELECT target_label,target_document,status,offset,line FROM references_tex WHERE source_document=? AND offset>=? AND offset<?',(m,a,b)):
+            for row in con.execute('SELECT target_label,target_document,status,offset,line,command FROM references_tex WHERE source_document=? AND offset>=? AND offset<?',(m,a,b)):
                 label=row['target_label']; target=row['target_document']
+                if row['command'] == 'atlasref':
+                    references.append({'source':m,'target_label':label,'target_module':target,'status':'reading' if target else row['status']})
+                    continue
                 if label in output_labels:
                     status='internal'
                 elif target is not None:
