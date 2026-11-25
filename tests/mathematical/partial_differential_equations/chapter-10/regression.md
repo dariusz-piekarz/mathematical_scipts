@@ -183,3 +183,21 @@ Druga lektura 36/75. W tej iteracji 8 kryteriów doprecyzowanych, 4 bez zmian, 1
 | PDE-10-049 | Rozszerzono kontrprzykład translacyjny na p=infty; odległość supremum stała i dodatnia. |
 
 Druga lektura 49/75. Dziesięć kryteriów doprecyzowanych, trzy bez zmian, 10 zmian źródłowych. 32 unikatowe etykiety zachowane w kolejności, 62/62 wystąpień odsyłaczy ma cele w rozdziałach 09 i 10; stos środowisk poprawny, poza kontrolowaną sekcją brak zmian. Nie wykonywano testów Python, kompilacji, CI ani Lean. Następna iteracja: druga lektura 050–059, przypadek krytyczny, ostrość Morreya i operator śladu.
+
+## Iteracja 158 — druga lektura 050–059
+Źródło przed 958cf2e404490f88b60dbd5729acfc1e2e0ebfe0, po c9e0238c27f8cf7b8b836cf1a87ddb9ad3d9e1ec, commit b77769852319943c531881ce5cbbb3f11432ff64. Odczytano sekcję przypadku krytycznego, ostrość Morreya oraz definicję miary brzegowej i twierdzenie o śladzie.
+
+| Kryterium | Wynik drugiej lektury |
+| --- | --- |
+| PDE-10-050 | Rozpisano tożsamość testową z normalną zewnętrzną i znoszeniem całek po wspólnych sferach. |
+| PDE-10-051 | Jawna całka gradientu, wartość całki t^d exp(-dt) przez całkowanie przez części, zbieżność normy L^d do zera, istotne supremum na kuli dodatniej miary. |
+| PDE-10-052 | Rozpisano zanik wyrazu brzegowego przez podstawienie s=log(e/eta), zbieżność zmajoryzowaną w całkach testowych oraz jawny promień zbioru v>M. |
+| PDE-10-053 | Uzasadniono wybór punktów o różnych wartościach funkcji, zbieżność jednostajną i sprzeczność z dodatnią dolną granicą półnormy przy beta=alpha. |
+| PDE-10-054 | Jawna nierówność dla obciętych miar Hausdorffa H^s_{K delta}, przejście do granicy i niezmienniczość względem ruchów sztywnych. |
+| PDE-10-055 | Uzupełniono borelowskość wykresu, homeomorfizm podstawy i wykresu, przejście od funkcji charakterystycznych przez proste do nieujemnych mierzalnych. |
+| PDE-10-056 | Mierzalność wartości brzegowych przez średnie pionowe, mierzalny reprezentant pochodnej, skończoność norm przekrojów z Fubiniego; oszacowanie dla p=1 i d=1 bez zmian. |
+| PDE-10-057 | Jawna lokalna nierówność z czynnikiem (1+L_j^2)^((d-1)/2), wysokością h_j oraz kontrolą kierunkowej pochodnej przez euklidesowy gradient i regułę iloczynu. |
+| PDE-10-058 | Bez zmian: skończony rozkład jedynki na brzegu, część wewnętrzna zerowa, suma stałych. |
+| PDE-10-059 | Rozpisano liniowość przez kombinacje aproksymantów i ograniczoność przez ciągłość normy. |
+
+Druga lektura 59/75. Dziewięć kryteriów doprecyzowanych, jedno bez zmian, 13 zmian źródłowych. Zachowano wszystkie 32 etykiety w kolejności, 62/62 wystąpień odsyłaczy ma cele w rozdziałach 09 i 10; stos środowisk poprawny; poza kontrolowanym fragmentem brak zmian. Nie uruchamiano testów wykonywalnych, kompilacji, CI ani Lean. Następna iteracja: druga lektura 060–075 (przestrzeń śladów, jądro śladu, Poincare, przedłużenie przez zero i schemat), zamknięcie drugiej lektury.
