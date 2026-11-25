@@ -8,3 +8,8 @@
 | IT-08-005 | it:thm:acgstar-derivative-integrable | Pochodna poza zbiorem zerowym, wspólne cechowanie także poza zbiorem wyjątkowym, przyrosty i wartości funkcji na zbiorze wyjątkowym, teleskopowanie | semantyczna + Python |
 | IT-08-006 | it:lem:acstar-affine-extension | Przedłużenie afiniczne, ciągłość, suma całek modułów nachyleń, absolutna ciągłość | semantyczna + Python |
 | IT-08-007 | it:thm:acstar-ae-differentiable | Sumowalność oscylacji, pokrycia U_{k,m}, zerowy limsup, kontrola ilorazów różnicowych | semantyczna + Python |
+| IT-08-008 | it:lem:kh-null-variation | Minimum cechowań, Saksa–Henstocka i nieujemna funkcja zerowa prawie wszędzie | semantyczna |
+| IT-08-009 | it:lem:kh-bvstar-cover | Domknięcie A_n, rozdzielenie parzyste i nieparzyste, granica i jednolita stała | semantyczna + Python |
+| IT-08-010 | it:lem:bvstar-null-to-acstar | Ograniczona wariacja przedłużenia, zaniedbywalne wahanie, pochodna L1 i niezależność dowodu od charakterystyki | semantyczna |
+| IT-08-011 | it:lem:bvstar-null-to-acstar | Kontrola sum oscylacji przez AC przedłużenia i sumowalny ogon luk | semantyczna + Python |
+| IT-08-012 | it:thm:kh-acgstar-characterization | Oba kierunki i różniczkowalność prawie wszędzie bez błędnego koła | semantyczna |
