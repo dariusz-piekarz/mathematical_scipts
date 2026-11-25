@@ -1109,3 +1109,70 @@ class RuntimeSharedCleanupTests(unittest.TestCase):
         for name in ("check_runtime_timeout", "check_runtime_output_limit"):
             with self.subTest(name=name):
                 self.assertEqual(self.exercise(name, fail_at=5), ["inspect", "kill", "inspect", "rm", "ls"])
+
+
+    def exercise_completed_fixture(self, fixture_name, *, unexpected_failure=False,
+                                   exhaust_after_inspect=False):
+        from scripts import lean_rootless_ci_probe as probe
+        now = [100.0]
+        calls = []
+        controlled = fixture_name == "check_controlled_failure"
+        original = transport.DockerCommandFailed("fixture exit")
+        def command(prefix, args, env, *, deadline=None):
+            if args[0] == "create":
+                return self.cid.encode()
+            if args[:2] == ("container", "start"):
+                self.assertIsNone(deadline)
+                now[0] = 200.0
+                if controlled or unexpected_failure:
+                    raise original
+                return b"observations"
+            if args[:2] == ("container", "inspect") and now[0] >= 200.0:
+                calls.append((args[1], deadline))
+                self.assertEqual(deadline, 230.0)
+                if exhaust_after_inspect:
+                    now[0] = deadline
+                return json.dumps([{"Id": self.cid, "Image": self.image,
+                                    "State": {"Status": "exited", "Running": False,
+                                              "OOMKilled": False,
+                                              "ExitCode": 42 if controlled or unexpected_failure else 0}}]).encode()
+            if args[:2] in (("container", "rm"), ("container", "ls")):
+                calls.append((args[1], deadline))
+                return b""
+            return b"{}"
+        with patch.object(transport.time, "monotonic", side_effect=lambda: now[0]), \
+                patch.object(transport, "_command", side_effect=command), \
+                patch.object(transport, "validate_engine"), \
+                patch.object(probe.policy, "validate_image_inspection"), \
+                patch.object(transport, "validate_container"), \
+                patch.object(probe, "validate_runtime_observations", return_value={}):
+            if exhaust_after_inspect:
+                with self.assertRaises(transport.DockerCleanupDeadline):
+                    getattr(probe, fixture_name)([], {}, self.image)
+            elif unexpected_failure:
+                with self.assertRaises(transport.DockerCommandFailed) as caught:
+                    getattr(probe, fixture_name)([], {}, self.image)
+                self.assertIs(caught.exception, original)
+            else:
+                result = getattr(probe, fixture_name)([], {}, self.image)
+                self.assertEqual(result["cleanup_status"], "removed_verified")
+                self.assertEqual(result["exit_code"], 42 if controlled else 0)
+                self.assertFalse(result["certificate"])
+        expected = ["inspect"] if exhaust_after_inspect else ["inspect", "rm", "ls"]
+        self.assertEqual(calls, [(name, 230.0) for name in expected])
+
+    def test_completed_fixtures_share_budget_from_final_inspection(self):
+        for name in ("check_runtime_limits", "check_controlled_failure"):
+            with self.subTest(name=name):
+                self.exercise_completed_fixture(name)
+
+    def test_unexpected_start_failure_shares_diagnostic_and_removal_budget(self):
+        self.exercise_completed_fixture("check_runtime_limits", unexpected_failure=True)
+
+    def test_completed_fixture_inspection_exhaustion_blocks_finally_removal(self):
+        for name, unexpected in (("check_runtime_limits", False),
+                                 ("check_runtime_limits", True),
+                                 ("check_controlled_failure", False)):
+            with self.subTest(name=name, unexpected=unexpected):
+                self.exercise_completed_fixture(name, unexpected_failure=unexpected,
+                                                exhaust_after_inspect=True)
