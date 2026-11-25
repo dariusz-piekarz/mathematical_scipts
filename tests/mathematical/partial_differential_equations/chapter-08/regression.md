@@ -179,3 +179,13 @@ Druga lektura sekcji 8.5–8.6. Sprawdzono 19 kryteriów 034–052:
 - Łącznie druga lektura 52/92: 29 bez zmian i 23 po uściśleniu. Nie potwierdzono jeszcze CI najnowszego źródła ani formalizacji Lean.
 
 Następna iteracja 119: druga lektura 8.7–8.8, kryteria 053–068.
+
+## Iteracja 119 — 2026-11-25
+
+Druga lektura sekcji 8.7–8.8. Sprawdzono 16 kryteriów 053–068:
+- Bez zmian: 054, 057–058, 060, 065, 068 (6).
+- Uściślono: 053 — przejście od istotnego supremum do ograniczenia prawie wszędzie przez przeliczalną sumę zbiorów miary zero; 055 — jawne pokrycie zbioru nadpoziomowego zbiorami o ograniczonej mierze i ograniczonym symbolu; 056 — rachunek transformat wszystkich trzech kombinacji operatorów; 059 — brak ciągłego przedłużenia symbolu Riesza do zera i test z niezerową wartością w zerze; 061 — jawna majoranta silniowa wszystkich szeregów pochodnych na prostokątach, kryterium ilorazowe i Weierstrassa; 062 — dokładna tożsamość jednorodności pochodnych normy; 063 — punktowa reszta całkowa uzasadniająca oszacowanie ilorazu różnicowego w każdej półnormie; 064 — ciągłość różniczkowania i ewaluacji, dwuskładnikowe oszacowanie wspólnej ciągłości mieszanych pochodnych; 066 — jawne równanie dla czynnika całkującego w dowodzie jednoznaczności rozwiązania równania ciepła; 067 — pełne przeliczenie normalizacji odwrotnej transformaty Gaussa dla jądra cieplnego.
+- Commit źródła 554e38f21d36420928c1342dbf4155940fe3ea0f, blob 09cae408213c811c97d0098f35d98778953d0560; 39 etykiet, 89 wystąpień odsyłaczy, 10 niezmienionych celów zewnętrznych, poprawne zagnieżdżenie środowisk. Tekst poza 8.7–8.8 niezmieniony. Bez nowych tematów i ID.
+- Łącznie druga lektura 68/92: 35 bez zmian, 33 po uściśleniu. Nie potwierdzono CI nowego źródła ani formalizacji Lean.
+
+Następna iteracja 120: druga lektura sekcji 8.9–8.10, kryteria 069–085.
