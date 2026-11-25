@@ -170,3 +170,26 @@ Zakończono pierwszą lekturę sekcji 9.10–9.12 i podsumowania. Doprecyzowano 
 Bilans: 22/22 kryteriów poddano lekturze matematycznej, 13 bez zmian, 9 po uściśleniach; nie rozszerzano zakresu tematycznego. Źródło: commit 05846b39f611ecb181da8e4916e7be8b8a4273e6, blob ad55ea61d6296e2bfaaf2d66a1e2d7ee7360b006. Zachowano 37 etykiet, 64 wystąpienia odsyłaczy; poprawne zagnieżdżenie środowisk, tekst od sekcji 9.4 identyczny. Nie wykonywano kompilacji, testów numerycznych ani Lean. Nie jest to jeszcze stabilizacja rozdziału.
 
 Następna iteracja 136: druga lektura 023–036 (wygładzanie lokalne, odcięcia, Meyers–Serrin, gęstość), bez rozszerzania materiału.
+
+## Iteracja 136 — 2026-11-25 — druga lektura, 023–036
+
+| Kryterium | Wynik ponownej lektury |
+| --- | --- |
+| 023 | Bez zmian: splot lokalny, pochodne dystrybucyjne, osobne zastosowanie przybliżonej jedynki do każdej składowej. |
+| 024 | Bez zmian: normy ograniczeń do K, przypadek pusty i przejście do otwartego U. |
+| 025 | Uściślenie: pełny krok indukcji wielowskaźnikowej z przesunięciem indeksu i konwencją zerowych współczynników dwumianowych; brak zależności od twierdzenia o W_0. |
+| 026 | Bez zmian: wspólny zwarty nośnik, globalizacja zbieżności dla p skończonego, kontrola odległości od dopełnienia V. |
+| 027 | Bez zmian: jednostronne granice i dolna granica 1; lokalna zbieżność w skończonych normach. |
+| 028 | Kontrola źródła TikZ: środek w K, kula zawarta w U, podpis zgodny z warunkiem odległości. Kontrola renderu nadal wymagana. |
+| 029 | Bez zmian: zwarte wyczerpanie, ścisłe zawieranie we wnętrzach i przypadek całej przestrzeni. |
+| 030 | Uściślenie: zmiana zmiennej w splocie odcięcia, obie nierówności promieniowe, jawne uzasadnienie wartości 1 i nośnika; monotoniczność i teleskopowanie poprawne. |
+| 031 | Uściślenie: zawieranie K_N w K_(j-2) i jawny wybór zwartego otoczenia każdego punktu w dowodzie lokalnej skończoności. |
+| 032 | Bez zmian: wybór promieni z niezależnymi błędami, lokalna skończoność, bez założenia globalnej normy g. |
+| 033 | Bez zmian: szereg błędów w przestrzeni Banacha, identyfikacja dystrybucyjna, wybór delta i brak założenia globalnej zbieżności szeregu w_j. |
+| 034 | Uściślenie: jawna zbieżność ogonów L^p przez twierdzenie o zbieżności zmajoryzowanej, z całkowalną majorantą. |
+| 035 | Bez zmian: różnica C_c^infty i C^infty, kontrprzykład dla p=infty, brak warunku zerowego brzegu w twierdzeniu Meyersa–Serrina. |
+| 036 | Bez zmian: stała 1 i oszacowanie ciągłego śladu na końcu przedziału. |
+
+Bilans: 14/14 kryteriów poddano ponownej lekturze źródła, 4 uściślono, 9 bez zmian, 1 kontrola źródła rysunku bez renderu. Źródło: commit 46b005597a6648b8f993f6c2a643333980b467cf, blob 3ce2b2528ea7865cc71231028088bc18f9f32545. Kontrola tekstowa w iteracji: 37 etykiet i 64 wystąpienia odsyłaczy zachowane w tej samej kolejności, stos środowisk poprawny. Nie wykonano kompilacji, testów wykonawczych ani Lean. Nie jest to jeszcze stabilizacja rozdziału.
+
+Następna iteracja 137: druga lektura kolejnych kryteriów od PDE-09-037, zaczynając od przestrzeni W_0 i przedłużenia przez zero; bez rozszerzania zakresu.
