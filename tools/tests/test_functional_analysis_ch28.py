@@ -73,5 +73,20 @@ class Chapter28(unittest.TestCase):
         for a,b in itertools.combinations(itertools.product((0,1),repeat=5),2):
             self.assertEqual(max(abs(u-v) for u,v in zip(a,b)),1)
 
+    def test_FA28_transfer_tolerance_01(self):
+        for phrase in (r"\varepsilon/(1+\|Q\|)",
+                       r"\varepsilon/(1+\|U\|)",
+                       r"\|S\|\le\|U\|\|U^{-1}\|\lambda"):
+            self.assertIn(phrase, S)
+        for norm, eps in itertools.product((F(0), F(1), F(3,2), F(10)), (F(1,9), F(1), F(7,3))):
+            self.assertLess(norm*eps/(1+norm), eps)
+
+    def test_FA28_compact_cover_01(self):
+        self.assertIn(r"\|Tx-y_j\|\le\|(T-T_n)x\|+\|T_nx-y_j\|<2\varepsilon/3", S)
+        self.assertIn(r"T(X)$, która jest domknięta", S)
+        self.assertIn(r"p_K=0", S)
+        for eps in (F(1,7), F(1), F(5,2)):
+            self.assertLess(2*eps/3, eps)
+
 if __name__ == "__main__":
     unittest.main()
