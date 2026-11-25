@@ -85,6 +85,32 @@ def main() -> None:
                 assert page.locator("#tipBody .tip-code .katex").count() == 2
                 page.evaluate("() => closeTip()")
                 page.unroute("**/api/labels/atlas-math-preview-test")
+                # Ground performance measurements in actual indexed mathematical text.
+                samples = []
+                with sqlite3.connect(ROOT / "data" / "biblioteka.db") as math_db:
+                    for module, label in (
+                        ("DG-01", "def dyfeo"),
+                        ("KAT-03", "cat:ex:spec-functor"),
+                    ):
+                        row = math_db.execute(
+                            "SELECT d.content,e.start_offset,e.end_offset "
+                            "FROM label_occurrences l JOIN entities e ON e.id=l.entity_id "
+                            "JOIN documents d ON d.id=l.document_id "
+                            "WHERE l.document_id=? AND l.name=?", (module, label)
+                        ).fetchone()
+                        assert row is not None, (module, label)
+                        latex = row[0][row[1]:row[2]]
+                        result = page.evaluate("""([latex, module]) => {
+                            const start = performance.now();
+                            renderSimplified(latex, module);
+                            const box = document.getElementById('simplified');
+                            return {elapsed_ms: performance.now()-start,
+                                formulas: box.querySelectorAll('.katex').length,
+                                message: document.getElementById('mathPreviewStatus').textContent};
+                        }""", [latex, module])
+                        assert result["formulas"] > 0, (module, label, result)
+                        samples.append({"module": module, "label": label, "characters": len(latex), **result})
+                print(json.dumps({"math_preview_samples": samples}, ensure_ascii=False), flush=True)
                 page.locator("#togglePreview").click()
                 # Full browser-to-API Lean contract: exact indexed theorem,
                 # exact whole-line selection, missing partial span and safe runner.
