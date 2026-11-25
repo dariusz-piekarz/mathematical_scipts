@@ -139,3 +139,34 @@ Pierwsza lektura sekcji 9.9. Rozpisano globalną aproksymację przez przesunięc
 ## Iteracja 134 — 2026-11-25
 
 Zakończono pierwszą lekturę sekcji 9.10–9.12 i podsumowania. Doprecyzowano oszacowanie śladu na warstwie, konstrukcję operatora przez domknięcie oraz zakres zerowych śladów. Rozpisano istnienie słabego rozwiązania Poissona na przedziale, w tym dowód przynależności do H_0^1 bez odwołania do późniejszego twierdzenia o jądrze śladu, wzór Greena, jednoznaczność i oszacowanie energetyczne. Wyprowadzono prawa skalowania, warunek konieczny wykładnika krytycznego i lokalny kontrprzykład do ciągłego zanurzenia powyżej p*. Źródło: commit 2dc4348ee1fba8d4316c687fd6ece18245304dea, blob 948b996ec7b3b5932ce01cdc7a66e7c0811383f1. Zachowano 37 etykiet; 63 wystąpienia odsyłaczy; poprawny stos środowisk; tekst przed 9.10 identyczny. Dodano 12 kryteriów semantycznych, łącznie 81. Nie wykonywano kompilacji, testów wykonawczych ani Lean. Pierwsza lektura zakończona; następna iteracja 135: druga lektura stabilizacyjna od początku rozdziału, kryteria PDE-09-001 i kolejne, bez rozszerzania zakresu tematycznego. Przed stabilizacją konieczna kontrola techniczna, rzeczywiste testy i niezależna lektura kontrolna.
+
+## Iteracja 135 — 2026-11-25 — druga lektura, 001–022
+
+| Kryterium | Wynik ponownej lektury |
+| --- | --- |
+| 001 | Uściślenie: przykład jednowymiarowy, dokładna funkcja Heaviside'a zamiast dowolnej funkcji skokowej, odsyłacz do dowodu w 07. |
+| 002 | Bez zmian: lokalna całkowalność wraz z obydwoma końcami zakresu, znak i jednoznaczność dystrybucji regularnej. |
+| 003 | Uściślenie: jawna równość norm dla k=0; pozostałe aksjomaty poprawne. |
+| 004 | Bez zmian: przedłużenie testu przez zero, lokalność i kontrakcyjność restrykcji. |
+| 005 | Uściślenie: przeliczalna baza kul, rozłączny mierzalny rozkład, konstrukcja reprezentanta i kontrola przeliczalnej sumy zbiorów wyjątkowych; identyfikacja na U zawierającym nośnik testu. |
+| 006 | Bez zmian: domknięcie w normie, zakres p skończonego i brak twierdzenia o śladzie. |
+| 007 | Uściślenie: dowód nierówności skończonej sumy znormalizowanych składowych; sprawdzono zgodność norm Bessela z thm:pde8-Hs, współczynnik Plancherela i k=0,1. |
+| 008 | Bez zmian: przykłady abs(x), Heaviside'a i druga pochodna z czynnikiem 2, odsyłacze do 07. |
+| 009 | Uściślenie: jawna wartość obciętej całki radialnej i oba rodzaje rozbieżności. |
+| 010 | Uściślenie: bezpośrednie zastosowanie poprzedniego rachunku do a+1, poprawny gradient i warunek wszystkich składowych. |
+| 011 | Uściślenie: jawne majoranty całek objętościowych; poprawny znak normalnej i wykładnik d-1-a dodatni. |
+| 012 | Bez zmian: jednoznaczność pochodnych na zbiorze z usuniętym zerem i pomijalność singletonu. |
+| 013 | Bez zmian: granice w L^p każdej składowej i Hölder także dla p=1,infty. |
+| 014 | Bez zmian: skończona suma lub maksimum, zupełność i iloczyn skalarny o właściwej konwencji. |
+| 015 | Bez zmian: zamkniętość wykresu na naturalnej dziedzinie, bez kontroli innych pochodnych. |
+| 016 | Bez zmian: obliczenie działania pochodnej y, testy na zwężających się pasach, błąd gładkiego przybliżenia. |
+| 017 | Uściślenie: pierwotna U jest ograniczona na domkniętym przedziale, zatem u-U należy do L^p; poprawne użycie stałości dystrybucji. |
+| 018 | Bez zmian: obie implikacje przez absolutną ciągłość, iloczyn z testem, jednoznaczność także w punktach końcowych. |
+| 019 | Bez zmian: minimum modułu, stałe zależne od długości przedziału i równość supremum z istotnym supremum. |
+| 020 | Uściślenie: rozróżnienie x=y i x>y; argument Lipschitza poprawny w obie strony. |
+| 021 | Bez zmian: absolutna ciągłość całki i przykład potęgowy dla dowolnego gamma>0. |
+| 022 | Bez zmian: zbiór Cantora miary zero, klasyczna pochodna zero a.e. i sprzeczność z wzorem przyrostów. |
+
+Bilans: 22/22 kryteriów poddano lekturze matematycznej, 13 bez zmian, 9 po uściśleniach; nie rozszerzano zakresu tematycznego. Źródło: commit 05846b39f611ecb181da8e4916e7be8b8a4273e6, blob ad55ea61d6296e2bfaaf2d66a1e2d7ee7360b006. Zachowano 37 etykiet, 64 wystąpienia odsyłaczy; poprawne zagnieżdżenie środowisk, tekst od sekcji 9.4 identyczny. Nie wykonywano kompilacji, testów numerycznych ani Lean. Nie jest to jeszcze stabilizacja rozdziału.
+
+Następna iteracja 136: druga lektura 023–036 (wygładzanie lokalne, odcięcia, Meyers–Serrin, gęstość), bez rozszerzania materiału.
