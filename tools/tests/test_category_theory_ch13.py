@@ -58,6 +58,37 @@ class CategoryTheoryCh13(unittest.TestCase):
                     recovered = tuple(columns[j][i] for i in range(m) for j in range(n))
                     self.assertEqual(recovered, entries)
 
+    def test_CAT_13_006_noncommutative_quasi_inverse(self):
+        # Three-object groupoid with Hom sets labelled by S_3.
+        # Multiplication is composition, not commutative addition.
+        group = tuple(itertools.permutations(range(3)))
+        identity = tuple(range(3))
+
+        def mul(g, f):
+            return tuple(g[i] for i in f)
+
+        def inv(g):
+            return tuple(g.index(i) for i in range(3))
+
+        self.assertNotEqual(mul((1, 0, 2), (0, 2, 1)),
+                            mul((0, 2, 1), (1, 0, 2)))
+        for eps in itertools.product(group, repeat=3):
+            def lift(y, z, u):
+                return mul(inv(eps[z]), mul(u, eps[y]))
+
+            for y, z, w in itertools.product(range(3), repeat=3):
+                self.assertEqual(lift(y, y, identity), identity)
+                for u, v in itertools.product(group, repeat=2):
+                    self.assertEqual(lift(y, w, mul(v, u)),
+                                     mul(lift(z, w, v), lift(y, z, u)))
+                    self.assertEqual(mul(eps[z], lift(y, z, u)),
+                                     mul(u, eps[y]))
+            eta, theta = inv(eps[0]), eps[0]
+            self.assertEqual(mul(theta, eta), identity)
+            self.assertEqual(mul(eta, theta), identity)
+            for f in group:
+                self.assertEqual(mul(lift(0, 0, f), eta), mul(eta, f))
+
     def test_CAT_13_005_structure(self):
         s = CHAPTER.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}", s)
