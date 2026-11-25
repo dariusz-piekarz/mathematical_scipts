@@ -11,3 +11,9 @@ Doprecyzowano znaczenie zbieżności warunkowej, hipotezy przestawienia szeregu 
 Kontrola statyczna: 449 wierszy, 14 etykiet, 15 wystąpień odwołań, 7 dowodów, 3 przykłady, 1 rysunek. Brak duplikatów etykiet w obrębie AM II i brak lokalnych odsyłaczy bez celu, zbilansowane środowiska. Rejestracja rozdziału w entrypoincie i katalogu wykonana.
 
 Status OTWARTY; czyste audyty 0/2. Konieczny dalszy przegląd dowodów, kompilacja i kontrola wizualna PDF. Nie rozpoczynać rozdziału 04 przed stabilizacją.
+
+## Drugi audyt szczegółowy — 2841f196a0251ec117e2bd0e25b01eeee8834248
+
+Doprecyzowano dziedziny definicji i hipotezy, zależność progu k0 od N w dowodzie przestawień, oznaczenia granic w kryterium Leibniza i odsyłacz do rysunku, indeksy sum częściowych w konstrukcji permutacji oraz sformułowanie twierdzenia o częściach dodatniej i ujemnej. Dodano odwołanie do kontrprzykładu c00 z rozdziału 02 dla warunku sum skończonych bez zupełności. Rozpisano oszacowanie dla mnożników z [0,1], rozkład skalarów i oszacowania ze stałymi 2 dla ciała rzeczywistego i 4 dla zespolonego. Udowodniono równoważne kryterium zbieżności wszystkich szeregów ze znakami +/-1 oraz jednostajną zbieżność ogonów względem wszystkich mnożników o module co najwyżej 1. Sprecyzowano treść twierdzenia Dvoretzky'ego–Rogersa jako wynik niewykorzystywany, bez dowodu. Nie modyfikowano rozdziałów 01–02.
+
+Kontrola statyczna: 524 wiersze, 15 etykiet, 20 wystąpień odwołań, 8 dowodów, 3 przykłady i 1 rysunek; 0 duplikatów etykiet w AM II, 0 lokalnych odsyłaczy bez celu, zbilansowane środowiska. Zachowano wszystkie dotychczasowe etykiety. W chwili rozpoczęcia iteracji CI #45668099034 dla 41ec40c było w kolejce. CI nowej wersji i kontrola wizualna PDF jeszcze niepotwierdzone. Status OTWARTY; licznik czystych audytów 0/2. Następnie ponowny przegląd całego rozdziału bez rozszerzania zakresu, o ile nie zostaną wykryte rzeczywiste braki, i końcowa walidacja. Nie przechodzić do rozdziału 04.
