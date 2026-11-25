@@ -51,20 +51,39 @@ class CategoryTheoryCh08(unittest.TestCase):
                     self.assertEqual(q[i]==q[j],values[i]==values[j])
 
     def test_CAT_08_004_pointwise_naturality(self):
+        # Induced map of equalizers in every commuting pair of squares.
         for a,b,c,d in itertools.product(range(3),repeat=4):
-            for f,g,u,v in itertools.product(maps(a,b),maps(c,d),maps(a,c),maps(b,d)):
-                if comp(g,u)!=comp(v,f):
+            for f,g,F,G,u,v in itertools.product(
+                    maps(a,b),maps(a,b),maps(c,d),maps(c,d),maps(a,c),maps(b,d)):
+                if comp(F,u)!=comp(v,f) or comp(G,u)!=comp(v,g):
                     continue
-                for x in range(a):
-                    self.assertEqual(g[u[x]],v[f[x]])
+                E=tuple(x for x in range(a) if f[x]==g[x])
+                H=tuple(y for y in range(c) if F[y]==G[y])
+                mediators=[h for h in maps(len(E),len(H)) if comp(H,h)==comp(u,E)]
+                self.assertEqual(len(mediators),1)
 
     def test_CAT_08_005_filtered_equalizer(self):
+        # A two-stage filtered diagram; compute quotients independently.
         for a,b,c,d in itertools.product(range(3),repeat=4):
-            for f,g,u,v in itertools.product(maps(a,b),maps(a,b),maps(a,c),maps(b,d)):
-                if comp(v,f)!=comp(v,g):
+            for f,g,F,G,u,v in itertools.product(
+                    maps(a,b),maps(a,b),maps(c,d),maps(c,d),maps(a,c),maps(b,d)):
+                if comp(F,u)!=comp(v,f) or comp(G,u)!=comp(v,g):
                     continue
-                # Later equalizer of v f and v g contains all early elements.
-                self.assertTrue(all(v[f[x]]==v[g[x]] for x in range(a)))
+                qA=classes(a+c,((i,a+u[i]) for i in range(a)))
+                qB=classes(b+d,((i,b+v[i]) for i in range(b)))
+                E=tuple(i for i in range(a) if f[i]==g[i])
+                H=tuple(i for i in range(c) if F[i]==G[i])
+                qE=classes(len(E)+len(H),
+                           ((i,len(E)+H.index(u[x])) for i,x in enumerate(E)))
+                rhs={qA[i] for i,y,z in zip(range(a+c),
+                     tuple(f)+tuple(b+x for x in F),
+                     tuple(g)+tuple(b+x for x in G)) if qB[y]==qB[z]}
+                reps=tuple(qA[x] for x in E)+tuple(qA[a+x] for x in H)
+                induced={q: {reps[i] for i,k in enumerate(qE) if k==q}
+                         for q in set(qE)}
+                self.assertTrue(all(len(vs)==1 for vs in induced.values()))
+                self.assertEqual(set().union(*induced.values()),rhs)
+                self.assertEqual(len(induced),len(rhs))
 
     def test_CAT_08_006_inverse_binary(self):
         for n in range(1,9):
