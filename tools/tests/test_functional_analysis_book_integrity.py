@@ -55,7 +55,8 @@ class FunctionalAnalysisBook(unittest.TestCase):
                 for ref in re.findall(r"\\(?:ref|eqref|pageref|autoref)\{([^}]+)\}",s)
                 + re.findall(r"\\hyperref\[([^\]]+)\]",s)]
         self.assertFalse([(p,r) for p,r in refs if r not in labels])
-        print(f"FA inventory: units={len(paths)}, unique_labels={len(labels)}, reference_occurrences={len(refs)}, proofs={sum(s.count(r'\begin{proof}') for s in all_sources)}")
+        proofs = sum(s.count(r"\begin{proof}") for s in all_sources)
+        print(f"FA inventory: units={len(paths)}, unique_labels={len(labels)}, reference_occurrences={len(refs)}, proofs={proofs}")
 
     def test_FA_BOOK_environments_01(self):
         book, paths, texts = sources()
