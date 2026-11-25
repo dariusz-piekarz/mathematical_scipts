@@ -154,10 +154,77 @@ function previewMacros(moduleId){
   const prefix=String(moduleId||"").split("-")[0];
   return {...(window.atlasMathMacroProfiles?.[prefix]||{})};
 }
+// Curated static previews, matched against the entire TikZ source (not a chapter number).
+// Never execute TeX or trust HTML supplied by chapter content.
+const atlasTikzPreviews = new Map([
+  [
+    "\\begin{tikzpicture}[>=Stealth,scale=.92]\n \\draw[->] (-3.3,-1.35)--(3.8,-1.35) node[right] {$x_1$};\n \\draw[->] (-3.1,-1.55)--(-3.1,2.5) node[above] {$x_2$};\n \\draw[very thick] plot[domain=-2.55:2.9,samples=60]\n   (\\x,{-.48+.08*\\x+.025*\\x*\\x});\n \\node[below] at (2.75,-.15) {$\\Sigma$};\n \\foreach \\x in {-1.75,-.65,.55,1.65} {\n   \\pgfmathsetmacro{\\yy}{-.48+.08*\\x+.025*\\x*\\x}\n   \\draw[blue!65!black,thick,->]\n     ({\\x-.13},{\\yy-.50})--({\\x+.48},{\\yy+1.85});\n   \\fill (\\x,\\yy) circle (1.5pt);\n }\n \\pgfmathsetmacro{\\yyzero}{-.48+.08*.55+.025*.55*.55}\n \\fill[red!70!black] (.55,\\yyzero) circle (2.4pt);\n \\node[below right] at (.55,\\yyzero) {$x_0$};\n \\node[above] at (1.0,1.75) {charakterystyki};\n\\end{tikzpicture}",
+    {
+      "file": "pde02-characteristics.svg",
+      "alt": "Krzywa początkowa i charakterystyki"
+    }
+  ],
+  [
+    "\\begin{tikzpicture}[>=Stealth,scale=.86]\n \\draw[->] (-3.4,0)--(3.6,0) node[right] {$x$};\n \\draw[gray,->] (0,-.12)--(0,3.75) node[above,black] {$t$};\n \\draw[densely dashed] (-3.1,3.1)--(3.35,3.1)\n   node[right] {$t=T_*=1$};\n \\foreach \\xi in {-2.4,-1.6,-.8,-.4,.4,.8,1.6,2.4} {\n  \\pgfmathsetmacro{\\dd}{-(exp(2*\\xi)-1)/(exp(2*\\xi)+1)}\n  \\draw[blue!65!black,thick] (\\xi,0)--({\\xi+\\dd},3.1);\n }\n \\fill[red!70!black] (0,3.1) circle (2pt);\n \\node[below] at (0,0) {$0$};\n \\node[align=left,anchor=west] at (3.1,1.45)\n   {zbliżanie się\\\\charakterystyk};\n\\end{tikzpicture}",
+    {
+      "file": "pde02-burgers.svg",
+      "alt": "Zbliżanie się charakterystyk równania Burgersa"
+    }
+  ],
+  [
+    "\\begin{tikzpicture}[x=3.1cm,y=0.7cm,>=Stealth]\n  \\fill[blue!8] (-1,0) rectangle (0,1.35);\n  \\fill[orange!13] (0,0) rectangle (1,1.35);\n  \\draw[thick] (-1,0) rectangle (1,1.35);\n  \\draw[thick,dashed] (0,0)--(0,1.35);\n  \\node at (-.52,.87) {$a_-=1$};\n  \\node at (.52,.87) {$a_+=4$};\n  \\node at (-.52,.38) {ośrodek I};\n  \\node at (.52,.38) {ośrodek II};\n  \\draw[->] (-1.15,-.24)--(1.18,-.24) node[right] {$x$};\n  \\foreach \\x/\\lab in {-1/-1,0/0,1/1}{\n    \\draw (\\x,-.31)--(\\x,-.17);\\node[below] at (\\x,-.31) {$\\lab$};}\n  \\node[above] at (0,1.35) {interfejs};\n\\end{tikzpicture}",
+    {
+      "file": "pde13-interface.svg",
+      "alt": "Dwa ośrodki z różnymi współczynnikami"
+    }
+  ],
+  [
+    "\\begin{tikzpicture}[x=3.1cm,y=5cm,>=Stealth]\n \\draw[->] (-1.12,0)--(1.13,0) node[right] {$x$};\n \\draw[->] (0,-.035)--(0,.29) node[above] {$u(x)$};\n \\draw[dashed,gray] (-1,.2)--(0,.2);\n \\node[left] at (-1,.2) {$1/5$};\n \\draw[blue!75!black,very thick,domain=-1:0,samples=61]\n plot (\\x,{-\\x*\\x/2-3*\\x/10+1/5});\n \\draw[orange!85!black,very thick,domain=0:1,samples=61]\n plot (\\x,{-\\x*\\x/8-3*\\x/40+1/5});\n \\foreach \\x in {-1,1}{\\draw (\\x,.008)--(\\x,-.008);\n \\node[below] at (\\x,-.008) {$\\x$};}\n \\node[below right] at (0,0) {$0$};\n \\fill (0,.2) circle[radius=1.5pt];\n \\fill (-.3,.245) circle[radius=1.5pt];\n \\node[above left] at (-.3,.245) {$x=-3/10$};\n\\end{tikzpicture}",
+    {
+      "file": "pde13-solution.svg",
+      "alt": "Dokładne rozwiązanie zagadnienia transmisyjnego"
+    }
+  ]
+]);
+function populateMathPreview(box,latex){
+  box.textContent="";
+  const source=latex.replace(/\r\n/g,"\n");
+  const pattern=/\\begin\{tikzpicture\}[\s\S]*?\\end\{tikzpicture\}/g;
+  let last=0,missing=0;
+  for(const match of source.matchAll(pattern)){
+    box.append(document.createTextNode(simplifiedText(source.slice(last,match.index))));
+    const entry=atlasTikzPreviews.get(match[0]);
+    const figure=document.createElement("div");
+    figure.className="atlas-tikz-preview";
+    const fallback=()=>{
+      figure.textContent="";
+      const details=document.createElement("details");
+      const summary=document.createElement("summary");
+      summary.textContent="Rysunek TikZ — źródło (pełny rysunek w PDF)";
+      const pre=document.createElement("pre");
+      pre.textContent=match[0];
+      details.append(summary,pre);figure.append(details);
+    };
+    if(entry){
+      const img=document.createElement("img");
+      img.src="/assets/figures/"+entry.file;
+      img.alt=entry.alt;
+      img.loading="lazy";
+      img.style.cssText="display:block;max-width:100%;width:540px;height:auto;margin:12px auto;border-radius:4px";
+      img.addEventListener("error",fallback,{once:true});
+      figure.append(img);
+    }else{missing++;fallback();}
+    box.append(figure);
+    last=match.index+match[0].length;
+  }
+  box.append(document.createTextNode(simplifiedText(source.slice(last))));
+  return missing;
+}
 function renderMathPreview(box,latex,moduleId){
-  box.textContent=simplifiedText(latex);
+  const missingFigures=populateMathPreview(box,latex);
+  const figureMessage=missingFigures?"Brak podglądu SVG dla "+missingFigures+" rysunków TikZ; dostępne źródło i PDF.":"";
   if(typeof window.renderMathInElement!=="function"){
-    return "Renderer wzorów jest niedostępny. Uruchom scripts/install_math_renderer.py i odśwież stronę.";
+    return ["Renderer wzorów jest niedostępny. Uruchom scripts/install_math_renderer.py i odśwież stronę.",figureMessage].filter(Boolean).join(" ");
   }
   let errors=0;
   try{
@@ -174,11 +241,11 @@ function renderMathPreview(box,latex,moduleId){
       errorCallback:()=>{errors++;}
     });
   }catch(error){
-    box.textContent=simplifiedText(latex);
+    populateMathPreview(box,latex);
     console.warn("Math preview:",error);
-    return "Nie udało się złożyć podglądu wzorów. Wyświetlam źródło.";
+    return ["Nie udało się złożyć podglądu wzorów. Wyświetlam źródło.",figureMessage].filter(Boolean).join(" ");
   }
-  return errors?"Nie złożono "+errors+" fragmentów matematycznych; pozostawiono ich źródło.":"";
+  return [errors?"Nie złożono "+errors+" fragmentów matematycznych; pozostawiono ich źródło.":"",figureMessage].filter(Boolean).join(" ");
 }
 // Retain only the current rendered fragment; do not accumulate chapter DOMs.
 let lastMathPreview=null;
