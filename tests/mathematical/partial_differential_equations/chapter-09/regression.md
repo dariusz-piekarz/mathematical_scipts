@@ -79,6 +79,19 @@
 | PDE-09-068 | lem:pde9-density-halfspace-slab | Rozkład warstwy dwoma odcięciami, test uzasadniający przedłużenie przez zero z dala od płaszczyzny sklejenia, zmiana s=1-t i odbicie, bez nieudowodnionego twierdzenia ACL. | semantyczna |
 | PDE-09-069 | lem:pde9-density-halfspace-slab | Ograniczoność przedłużenia warstwy, gęstość C_c^infty na R^d i kontrakcyjność restrykcji; nie utożsamiać aproksymacji z zerowym śladem. | semantyczna |
 
+| PDE-09-070 | thm:pde9-trace-slab | Jednowymiarowe oszacowanie z podstawowego twierdzenia rachunku całkowego, Tonelli i Minkowski, stała 1 przed sumą norm, przypadek d=1. | semantyczna |
+| PDE-09-071 | thm:pde9-trace-slab | Ciąg Cauchy'ego śladów, niezależność od aproksymantów, liniowość, ograniczoność, zgodność z ograniczeniem klasycznym i jednoznaczność. | semantyczna |
+| PDE-09-072 | sec:pde9-traces | Ślad na t=1 przez zmianę zmiennej; zerowe ślady W_0 przez gęstość, bez nieuzasadnionej odwrotnej implikacji na dowolnym zbiorze otwartym. | semantyczna |
+| PDE-09-073 | ex:pde9-dirichlet | Ciągłość obu form całkowych; warunki brzegowe przez ciągłość śladów; jawna konstrukcja F, c i u, absolutna ciągłość oraz słaba druga pochodna -f. | semantyczna |
+| PDE-09-074 | ex:pde9-dirichlet | Przynależność do H_0^1 niezależnie od ogólnego twierdzenia o jądrze śladu: odcięcie, oszacowanie pochodnej odcięcia razy u, zbieżność pozostałych składników i wygładzanie z zachowaniem zwartego nośnika. | semantyczna |
+| PDE-09-075 | ex:pde9-dirichlet | Przejście od testów gładkich do H_0^1 z obustronnymi oszacowaniami Cauchy'ego--Schwarza. | semantyczna |
+| PDE-09-076 | ex:pde9-dirichlet | Wzór Greena przez Fubiniego i rozdzielenie całek, zerowe wartości brzegowe, skok pochodnej i poprawny znak delty Diraca; przykład f=1. | semantyczna |
+| PDE-09-077 | ex:pde9-dirichlet | Jednoznaczność przez różnicę rozwiązań i nierówność Poincarégo; oszacowanie energetyczne z rozróżnieniem zerowej normy pochodnej. | semantyczna |
+| PDE-09-078 | sec:pde9-scaling | Jakobian skalowania i reguła łańcuchowa; przypadki p lub q równe nieskończoności przez istotne supremum. | semantyczna |
+| PDE-09-079 | sec:pde9-scaling | Konieczność równości wykładników nierówności jednorodnej przez obie granice skali, bez utożsamiania konieczności z wystarczalnością. | semantyczna |
+| PDE-09-080 | sec:pde9-scaling | Kontrprzykład do ciągłego zanurzenia dla q>p*: lokalizacja w kuli, ograniczoność normy Sobolewa i rozbieżność normy L^q, także q=nieskończoność; rozróżnienie braku ciągłości od braku przynależności. | semantyczna |
+| PDE-09-081 | chap:pde-sobolev | Podsumowanie respektuje zakres wykładników, odróżnia W_0 od jądra śladu na dowolnym zbiorze otwartym, nie zapowiada jako udowodnionych ogólnych twierdzeń rozdziału 10. | semantyczna |
+
 ## Iteracja 128 — 2026-11-25
 
 Pierwsza lektura wprowadzenia i sekcji 9.1. Uszczegółowiono definicje, normy, lokalizację i sklejanie, wykorzystano sprawdzone wyniki rozdziałów 07–08. Dodano konsekwencję abs(x) nie należy do W^2,p i przypadek p=infty w istniejącym przykładzie potęgowym, bez rozbudowywania odrębnego działu. Rozpisano obie implikacje kryterium całkowalności słabego gradientu oraz normalizację normy H¹.
@@ -122,3 +135,7 @@ Następna iteracja 133: pierwsza lektura sekcji 9.9 — przedłużanie z półpr
 ## Iteracja 133 — 2026-11-25
 
 Pierwsza lektura sekcji 9.9. Rozpisano globalną aproksymację przez przesunięcie i splot niezależnie od przedłużania Sobolewa; całkowanie przez części w odbiciu pierwszego i wyższych rzędów, układ Vandermonde'a i oszacowanie norm. Zastąpiono nieuzasadnione odwołanie do absolutnej ciągłości na przekrojach warstwy konstrukcją z dwoma odcięciami i odbiciem. Źródło: commit 310737224e0de4f03f73481070ab1be91a6d3e98, blob 821e494780fd7f3de0f9fba86fbb1751aca53c4e. Zachowano wszystkie 37 etykiet; 58 wystąpień odsyłaczy, poprawny stos środowisk, tekst poza 9.9 identyczny. Dodano 8 kryteriów semantycznych (łącznie 69). Nie wykonywano kompilacji, testów wykonawczych ani Lean. Następna iteracja 134: pierwsza lektura sekcji 9.10–9.12 i podsumowania, ślad na warstwie, rozwiązanie Poissona oraz skalowanie.
+
+## Iteracja 134 — 2026-11-25
+
+Zakończono pierwszą lekturę sekcji 9.10–9.12 i podsumowania. Doprecyzowano oszacowanie śladu na warstwie, konstrukcję operatora przez domknięcie oraz zakres zerowych śladów. Rozpisano istnienie słabego rozwiązania Poissona na przedziale, w tym dowód przynależności do H_0^1 bez odwołania do późniejszego twierdzenia o jądrze śladu, wzór Greena, jednoznaczność i oszacowanie energetyczne. Wyprowadzono prawa skalowania, warunek konieczny wykładnika krytycznego i lokalny kontrprzykład do ciągłego zanurzenia powyżej p*. Źródło: commit 2dc4348ee1fba8d4316c687fd6ece18245304dea, blob 948b996ec7b3b5932ce01cdc7a66e7c0811383f1. Zachowano 37 etykiet; 63 wystąpienia odsyłaczy; poprawny stos środowisk; tekst przed 9.10 identyczny. Dodano 12 kryteriów semantycznych, łącznie 81. Nie wykonywano kompilacji, testów wykonawczych ani Lean. Pierwsza lektura zakończona; następna iteracja 135: druga lektura stabilizacyjna od początku rozdziału, kryteria PDE-09-001 i kolejne, bez rozszerzania zakresu tematycznego. Przed stabilizacją konieczna kontrola techniczna, rzeczywiste testy i niezależna lektura kontrolna.
