@@ -17,7 +17,7 @@ import os
 import sqlite3
 
 import networkx as nx
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field, StrictBool
@@ -26,6 +26,7 @@ from backend.latex_parser import analyze_selection, get_stats, show_label
 from backend.label_registry import qualified_occurrence
 from backend.graph_coverage import graph_coverage, reading_reference_issues
 from backend import workspaces
+from backend import figure_preview
 from backend.concept_graph import build_concept_graph
 from backend import lean_catalog
 from backend import lean_chapter_report
@@ -58,6 +59,32 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Biblioteka matematyczna — API", version="0.4.0", docs_url="/api/docs", redoc_url=None, lifespan=lifespan)
 app.mount("/assets", StaticFiles(directory=FRONTEND), name="assets")
+
+
+@app.websocket('/api/lifecycle/socket')
+async def desktop_connection(socket: WebSocket):
+    # A different website must not control the lifetime of this local process.
+    from urllib.parse import urlsplit
+    origin = urlsplit(socket.headers.get('origin', ''))
+    if (origin.scheme != 'http' or origin.hostname not in {'127.0.0.1', 'localhost', '::1'}
+            or origin.netloc != socket.headers.get('host')):
+        await socket.close(code=1008)
+        return
+    await socket.accept()
+    lifecycle = getattr(app.state, 'desktop_lifecycle', None)
+    if lifecycle is None:
+        await socket.send_json({'managed': False})
+        await socket.close()
+        return
+    token = lifecycle.connected()
+    try:
+        await socket.send_json({'managed': True})
+        while True:
+            await socket.receive_text()
+    except WebSocketDisconnect:
+        pass
+    finally:
+        lifecycle.disconnected(token)
 
 
 def database_path() -> Path:
@@ -270,80 +297,111 @@ def label_detail(label: str, source_document: str | None = None):
     if source_document is not None and len(source_document)>100:
         raise HTTPException(status_code=400,detail="Zbyt długi identyfikator źródła.")
     with db_connection() as con:
-        qualified = qualified_occurrence(label)
-        if qualified is not None:
-            target_document, canonical_label = qualified
-            result = show_label(con, canonical_label, max_chars=1700, document_id=target_document)
-            if result is None:
-                raise HTTPException(status_code=404, detail="Etykieta nie istnieje we wskazanym rozdziale.")
-            result.update(name=label, canonical_label=canonical_label,
-                          source_document=source_document, occurrence_id=label,
-                          resolution_status="external_resolved")
-            result["incoming_references"] = con.execute(
-                "SELECT count(*) FROM references_tex WHERE target_document=? AND target_label=?",
-                (target_document, label)).fetchone()[0]
-            return result
-        if source_document:
-            resolved = con.execute("""SELECT DISTINCT target_document,target_entity,status
-                FROM references_tex WHERE source_document=? AND target_label=?
-                  AND target_document IS NOT NULL
-                  AND status IN ('resolved','external_resolved','alias_resolved','included_resolved')""",
-                  (source_document,label)).fetchall()
-            targets = {(r["target_document"],r["target_entity"]) for r in resolved}
-            if len(targets) == 1:
-                target_document,target_entity = next(iter(targets))
-                actual = con.execute("""SELECT name FROM label_occurrences
-                    WHERE document_id=? AND (entity_id=? OR name=?)
-                    ORDER BY CASE WHEN name=? THEN 0 ELSE 1 END, line LIMIT 1""",
-                    (target_document,target_entity,label,label)).fetchone()
-                if not actual and resolved[0]["status"] == "included_resolved":
-                    provenance = con.execute("""SELECT origin_path,origin_line,origin_offset
-                        FROM included_label_origins WHERE document_id=? AND name=?
-                        ORDER BY origin_path,origin_line LIMIT 1""",
-                        (target_document,label)).fetchone()
-                    if provenance is not None:
-                        root = ROOT.parent.resolve()
-                        origin = (root / provenance["origin_path"]).resolve()
-                        if origin.is_relative_to(root) and origin.is_file():
-                            content = origin.read_text(encoding="utf-8-sig")
-                            position = provenance["origin_offset"]
-                            title = con.execute("SELECT title FROM documents WHERE id=?",
-                                                (target_document,)).fetchone()["title"]
-                            return {"name":label,"canonical_label":label,
-                                    "document_id":target_document,"entity_id":None,
-                                    "source_document":source_document,
-                                    "occurrence_id":f"{target_document}::included::{label}",
-                                    "resolution_status":"included_resolved",
-                                    "origin_path":provenance["origin_path"],
-                                    "origin_line":provenance["origin_line"],
-                                    "title":title,"line":provenance["origin_line"],
-                                    "latex":content[max(0,position-140):position+1560],
-                                    "incoming_references":len(resolved)}
-                if actual:
-                    result = show_label(con,actual["name"],max_chars=1700,document_id=target_document)
-                    if result is not None:
-                        result["canonical_label"] = actual["name"]
-                        result["name"] = label
-                        result["source_document"] = source_document
-                        result["occurrence_id"] = f"{target_document}::{actual['name']}"
-                        result["resolution_status"] = resolved[0]["status"]
-                        result["incoming_references"] = con.execute(
-                            "SELECT count(*) FROM references_tex WHERE target_label=? AND source_document=?",
-                            (label,source_document)).fetchone()[0]
-                        return result
-        options = con.execute("""SELECT c.document_id,c.line,c.entity_id,d.title,d.domain
-             FROM label_conflicts c JOIN documents d ON d.id=c.document_id
-             WHERE c.name=? ORDER BY c.document_id""", (label,)).fetchall()
-        if options:
-            count = con.execute("SELECT count(*) FROM references_tex WHERE target_label=?", (label,)).fetchone()[0]
-            return {"name":label,"ambiguous":True,"candidates":[dict(x) for x in options],
-                    "incoming_references":count}
-        result = show_label(con,label,max_chars=1700)
-        if not result:
-            raise HTTPException(status_code=404,detail="Etykieta nie istnieje.")
-        count = con.execute("SELECT count(*) FROM references_tex WHERE target_label=?",(label,)).fetchone()[0]
-        result["incoming_references"] = count
+        return resolve_label(con, label, source_document)
+
+
+def resolve_label(con, label, source_document=None):
+    qualified = qualified_occurrence(label)
+    if qualified is not None:
+        target_document, canonical_label = qualified
+        result = show_label(con, canonical_label, max_chars=1700, document_id=target_document)
+        if result is None:
+            raise HTTPException(status_code=404, detail="Etykieta nie istnieje we wskazanym rozdziale.")
+        result.update(name=label, canonical_label=canonical_label,
+                      source_document=source_document, occurrence_id=label,
+                      resolution_status="external_resolved")
+        result["incoming_references"] = con.execute(
+            "SELECT count(*) FROM references_tex WHERE target_document=? AND target_label=?",
+            (target_document, label)).fetchone()[0]
         return result
+    if source_document:
+        resolved = con.execute("""SELECT DISTINCT target_document,target_entity,status
+            FROM references_tex WHERE source_document=? AND target_label=?
+              AND target_document IS NOT NULL
+              AND status IN ('resolved','external_resolved','alias_resolved','included_resolved')""",
+              (source_document,label)).fetchall()
+        targets = {(r["target_document"],r["target_entity"]) for r in resolved}
+        if len(targets) == 1:
+            target_document,target_entity = next(iter(targets))
+            actual = con.execute("""SELECT name FROM label_occurrences
+                WHERE document_id=? AND (entity_id=? OR name=?)
+                ORDER BY CASE WHEN name=? THEN 0 ELSE 1 END, line LIMIT 1""",
+                (target_document,target_entity,label,label)).fetchone()
+            if not actual and resolved[0]["status"] == "included_resolved":
+                provenance = con.execute("""SELECT origin_path,origin_line,origin_offset
+                    FROM included_label_origins WHERE document_id=? AND name=?
+                    ORDER BY origin_path,origin_line LIMIT 1""",
+                    (target_document,label)).fetchone()
+                if provenance is not None:
+                    root = ROOT.parent.resolve()
+                    origin = (root / provenance["origin_path"]).resolve()
+                    if origin.is_relative_to(root) and origin.is_file():
+                        content = origin.read_text(encoding="utf-8-sig")
+                        position = provenance["origin_offset"]
+                        title = con.execute("SELECT title FROM documents WHERE id=?",
+                                            (target_document,)).fetchone()["title"]
+                        return {"name":label,"canonical_label":label,
+                                "document_id":target_document,"entity_id":None,
+                                "source_document":source_document,
+                                "occurrence_id":f"{target_document}::included::{label}",
+                                "resolution_status":"included_resolved",
+                                "origin_path":provenance["origin_path"],
+                                "origin_line":provenance["origin_line"],
+                                "title":title,"line":provenance["origin_line"],
+                                "latex":content[max(0,position-140):position+1560],
+                                "incoming_references":len(resolved)}
+            if actual:
+                result = show_label(con,actual["name"],max_chars=1700,document_id=target_document)
+                if result is not None:
+                    result["canonical_label"] = actual["name"]
+                    result["name"] = label
+                    result["source_document"] = source_document
+                    result["occurrence_id"] = f"{target_document}::{actual['name']}"
+                    result["resolution_status"] = resolved[0]["status"]
+                    result["incoming_references"] = con.execute(
+                        "SELECT count(*) FROM references_tex WHERE target_label=? AND source_document=?",
+                        (label,source_document)).fetchone()[0]
+                    return result
+    options = con.execute("""SELECT c.document_id,c.line,c.entity_id,d.title,d.domain
+         FROM label_conflicts c JOIN documents d ON d.id=c.document_id
+         WHERE c.name=? ORDER BY c.document_id""", (label,)).fetchall()
+    if options:
+        count = con.execute("SELECT count(*) FROM references_tex WHERE target_label=?", (label,)).fetchone()[0]
+        return {"name":label,"ambiguous":True,"candidates":[dict(x) for x in options],
+                "incoming_references":count}
+    result = show_label(con,label,max_chars=1700)
+    if not result:
+        raise HTTPException(status_code=404,detail="Etykieta nie istnieje.")
+    count = con.execute("SELECT count(*) FROM references_tex WHERE target_label=?",(label,)).fetchone()[0]
+    result["incoming_references"] = count
+    return result
+
+
+class ReferenceDescriptionsRequest(BaseModel):
+    source_document: str | None = Field(default=None, max_length=100)
+    labels: list[str] = Field(max_length=200)
+
+
+@app.post('/api/references/descriptions')
+def reference_descriptions(request: ReferenceDescriptionsRequest):
+    """Resolve a batch with exactly the same context rules as opening a reference."""
+    items = {}
+    with db_connection() as con:
+        for label in dict.fromkeys(request.labels):
+            if not label or len(label) > 300:
+                raise HTTPException(status_code=400, detail='Nieprawid?owa etykieta.')
+            try:
+                result = resolve_label(con, label, request.source_document)
+            except HTTPException as exc:
+                if exc.status_code != 404:
+                    raise
+                items[label] = {'name': label, 'missing': True}
+                continue
+            items[label] = {key: result[key] for key in (
+                'name', 'document_id', 'entity_id', 'entity_title', 'title', 'kind',
+                'subtype', 'line', 'ambiguous', 'candidates', 'occurrence_id',
+            ) if key in result}
+    return {'items': items}
 
 
 @app.get("/api/search")
@@ -621,6 +679,20 @@ def discard_draft(session_id: str):
 @app.get('/api/projects')
 def saved_projects():
     return {'items': workspaces.list_saved_projects()}
+
+
+@app.get('/api/modules/{module_id}/figures/{figure_id}.png')
+def preview_figure(module_id: str, figure_id: str):
+    with db_connection() as con:
+        require_document(con, module_id)
+        content = con.execute('SELECT content FROM documents WHERE id=?', (module_id,)).fetchone()['content']
+    try:
+        path = figure_preview.render(module_id, content, figure_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail='Nie znaleziono rysunku w rozdziale.') from exc
+    except figure_preview.FigureError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    return FileResponse(path, media_type='image/png')
 
 
 @app.get('/api/projects/{project_id}/download')

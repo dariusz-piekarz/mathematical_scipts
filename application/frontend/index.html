@@ -4,11 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Atlas matematyczny — Biblioteka</title>
+  <script>
+    try { document.documentElement.dataset.theme = localStorage.getItem('atlas-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
+    catch (_) { document.documentElement.dataset.theme = 'light'; }
+  </script>
   <link rel="stylesheet" href="/assets/styles.css">
   <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
   <script src="/assets/vendor/katex/katex.min.js" defer></script>
   <script src="/assets/vendor/katex/contrib/auto-render.min.js" defer></script>
   <script src="/assets/vendor/math-macro-profiles.js" defer></script>
+  <script src="/assets/preview.js" defer></script>
+  <script src="/assets/session.js" defer></script>
   <script src="/assets/app.js" defer></script>
 </head>
 <body>
@@ -18,7 +24,7 @@
       <div class="header-search"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" autocomplete="off" placeholder="Szukaj definicji, twierdzeń, tematów…" aria-label="Szukaj w bibliotece"><kbd>↵</kbd>
         <div id="searchResults" class="search-results hidden"></div>
       </div>
-      <div class="header-right"><span id="dbStatus" class="connection-status">Łączenie…</span><span id="statPill" class="stat-pill">— rozdziałów</span></div>
+      <div class="header-right"><button id="themeToggle" class="ghost-btn" type="button" aria-label="Włącz ciemny motyw" aria-pressed="false">Ciemny motyw</button><span id="dbStatus" class="connection-status">Łączenie…</span><span id="statPill" class="stat-pill">— rozdziałów</span></div>
     </header>
     <div class="workspace">
       <aside class="explorer" id="explorer">
@@ -30,7 +36,7 @@
       </aside>
       <div class="center-area">
         <nav class="tabs" aria-label="Widoki">
-          <button id="showExplorer" class="mobile-explorer-btn" aria-label="Pokaż Explorer">☰</button>
+          <button id="showExplorer" class="explorer-toggle" type="button" aria-controls="explorer" aria-expanded="true">Ukryj Explorer</button>
           <button class="tab active" data-tab="reader">Czytnik</button>
           <button class="tab" data-tab="lean">Lean 4</button>
           <button class="tab" data-tab="graph">Graf zależności</button>
@@ -42,8 +48,8 @@
           <div class="empty-state" id="readerEmpty"><div class="empty-icon">∫</div><h1>Twoja biblioteka matematyki</h1><p>Wybierz rozdział, sekcję lub twierdzenie z Explorera. Kliknij odsyłacz <code>\ref</code>, aby otworzyć treść cytowanego fragmentu.</p><div class="quick-actions"><button id="openFirst" class="primary-btn">Otwórz pierwszy rozdział</button><button id="openGraphQuick" class="secondary-btn">Przeglądaj graf</button></div></div>
           <section id="readerContent" class="hidden">
             <div class="doc-header"><div><div id="docBreadcrumb" class="breadcrumb"></div><h1 id="docTitle"></h1><p id="docMeta" class="doc-meta"></p></div><div class="reader-main-actions"><button id="openLeanCurrent" class="secondary-btn">Zobacz w Lean</button><button id="addCurrent" class="primary-btn">+ Do zestawu</button></div></div>
-            <div class="reader-toolbar"><span class="small-heading" id="readerKind">Źródło LaTeX</span><div class="toolbar-right"><span id="readSize"></span><button id="togglePreview" class="ghost-btn">Podgląd uproszczony</button><button id="showFull" class="ghost-btn hidden">Pokaż cały fragment</button></div></div>
-            <div class="fragment-toolbar" aria-label="Dodawanie dokładnego fragmentu">
+            <div class="reader-toolbar"><span class="small-heading" id="readerKind">Podgląd rozdziału</span><div class="toolbar-right"><span id="readSize"></span><div class="text-size-controls" role="group" aria-label="Wielkość tekstu"><button id="textSizeDown" class="ghost-btn" type="button" aria-label="Pomniejsz tekst" title="Pomniejsz tekst">A−</button><button id="textSizeReset" class="ghost-btn" type="button" aria-label="Przywróć domyślną wielkość tekstu" title="Przywróć 100%" aria-live="polite">100%</button><button id="textSizeUp" class="ghost-btn" type="button" aria-label="Powiększ tekst" title="Powiększ tekst">A+</button></div><button id="readingMode" class="ghost-btn" type="button" aria-pressed="false">&#x26F6; Pe&#x142;ny ekran</button><button id="readingTheme" class="ghost-btn hidden" type="button">Ciemny motyw</button><button id="togglePreview" class="ghost-btn" type="button" aria-pressed="false">Pokaż źródło LaTeX</button><button id="showFull" class="ghost-btn hidden">Pokaż cały fragment</button></div></div>
+            <div class="fragment-toolbar hidden" aria-label="Dodawanie dokładnego fragmentu">
               <span>Zaznacz tekst LaTeX, aby dodać obejmujące go pełne wiersze, lub wpisz zakres wierszy źródłowego rozdziału.</span>
               <button id="addExcerpt" class="secondary-btn">+ Zaznaczenie</button>
               <button id="openLeanSelection" class="secondary-btn">Zaznaczenie → Lean</button>
@@ -51,9 +57,9 @@
               <label>Do <input id="rangeEnd" type="number" min="1" step="1" aria-label="Ostatni wiersz"></label>
               <button id="addRange" class="secondary-btn">+ Wiersze</button>
             </div>
-            <div id="latexSource" class="latex-source" tabindex="0"></div>
+            <div id="latexSource" class="latex-source hidden" tabindex="0"></div>
             <div id="mathPreviewStatus" class="reader-note hidden" role="status"></div>
-            <div id="simplified" class="simplified hidden"></div>
+            <div id="simplified" class="simplified"></div>
             <div class="reader-note"><span>ⓘ</span><span>Widok tekstowy nie wykonuje makr LaTeX. Pełną wierność składu uzyskamy dopiero po kompilacji dokumentu.</span></div>
           </section>
         </main>

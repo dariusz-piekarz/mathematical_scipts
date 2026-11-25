@@ -22,15 +22,44 @@
 
 ## Uruchamianie (Windows 11)
 
-Rozpakuj cały plik `BIBLIOTEKA_MATEMATYCZNA_APP_03.zip` na dysk. Wejdź do jego katalogu w PowerShellu:
+W repozytorium otwórz katalog `application` i kliknij dwukrotnie **`start.cmd`**.
+Skrypt przygotuje lokalne środowisko `.venv`, zainstaluje zależności przez `uv`
+(albo `pip` w `.venv`, gdy `uv` nie jest dostępne), odświeży indeks i otworzy
+przeglądarkę. Wymagany jest `uv` lub Python 3.10+. Pierwsza instalacja wymaga
+internetu. Zamknięcie ostatniej karty aplikacji kończy pracę serwera po około
+5 sekundach. Odświeżenie strony i zamknięcie jednej z kilku kart nie kończą
+pracy. Można też zatrzymać aplikację przez **Ctrl+C** w oknie serwera.
+Ponowne uruchomienie otworzy działającą instancję bez przebudowy indeksu.
+Możesz również uruchomić z katalogu repozytorium:
 
 ```powershell
-python -m pip install -r requirements.txt
-python scripts/install_math_renderer.py
-python -m uvicorn backend.api:app --host 127.0.0.1 --port 8765
+.\application\start.ps1
+# Bez automatycznego otwierania przeglądarki:
+.\application\start.ps1 -NoBrowser
 ```
 
-Następnie otwórz **http://127.0.0.1:8765/** w przeglądarce. Możesz też uruchomić `./start.ps1`. Na Linux/macOS analogicznie `./start.sh` lub powyższe polecenie Python.
+Aplikacja jest dostępna pod **http://127.0.0.1:8765/**. `start.cmd` działa również,
+gdy polityka PowerShell blokuje bezpośrednie uruchamianie plików `.ps1`.
+W przenośnym archiwum uruchom `start.cmd` z katalogu aplikacji.
+Na Linux/macOS użyj `./start.sh`.
+
+Czytnik domyślnie otwiera podgląd tekstu i wzorów. Przycisk **Pokaż źródło LaTeX**
+udostępnia kod oraz narzędzia wyboru wierszy. Przyciski **A− / A+** zmieniają
+wielkość tekstu od 80% do 180%; kliknięcie wartości procentowej przywraca 100%.
+Wielkość tekstu i motyw są zapamiętywane w przeglądarce. Przełącznik jasnego
+i ciemnego motywu jest stale widoczny w górnym pasku, także na telefonie.
+
+**Ukryj Explorer / Pokaż Explorer** zwalnia miejsce na tekst i zapamiętuje wybór
+na komputerze. **Pełny ekran** ukrywa nawigację i wypełnia ekran czytnikiem;
+pozostawia regulację tekstu, motyw i przycisk wyjścia. Powrót: **Esc** albo
+**Zakończ pełny ekran**. Gdy przeglądarka odmawia pełnego ekranu, ten sam
+układ czytania wypełnia okno aplikacji.
+
+Podgląd składa wzory przez KaTeX, a rysunki `tikzpicture`, `tikzcd` i `picture`
+przez lokalne `pdflatex` oraz `pdftocairo` (MiKTeX/TeX Live i Poppler).
+Pierwsze wyświetlenie rysunku wymaga kompilacji; kolejne korzystają z obrazów
+w `data/.figure_cache/`. Rysunki zachowują oryginalne kolory na białym tle
+również w ciemnym motywie. Błędy kompilacji są widoczne przy danym rysunku.
 
 > Uwaga: pliki w Bibliotece ChatGPT nie są bezpośrednio folderem lokalnym. Do uruchomienia aplikacji trzeba pobrać i rozpakować archiwum. Zawiera ono komplet 233 rozdziałów i gotową bazę SQLite, więc nie trzeba pobierać ich osobno.
 
@@ -189,6 +218,15 @@ API: `POST /api/generate/manifest` zwraca dokładny plan fragmentów, a `POST /a
 ## Version 0.4 — ephemeral drafts and saved projects
 
 This is a **local browser application**, not an installed desktop application.
+The `start.cmd`, `start.ps1` and `start.sh` launchers now run `backend.desktop`:
+the server exits gracefully five seconds after the last live page disconnects.
+The delay permits page reloads; a second connected tab keeps the server alive.
+WebSocket disconnect detection also covers closure without an unload event.
+After a browser crash or lost connection, detection may take up to roughly
+30 seconds, followed by the five-second grace period. A server launched
+directly with `python -m uvicorn backend.api:app` keeps its developer behavior
+and does not exit with the browser. Before the first page connects, the desktop
+launcher waits for the user to open the application.
 Closing the browser tab using **X** sends a best-effort `sendBeacon` to delete
 that tab's unsaved generated draft. Browsers do **not guarantee** close events
 (e.g. power loss or forced termination), so the backend performs crash recovery:

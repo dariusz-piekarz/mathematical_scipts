@@ -5,7 +5,7 @@ const $ = id => document.getElementById(id);
 const state = {
   domains:[], modules:[], outlines:new Map(), expandedDomains:new Set(), expandedModules:new Set(),
   currentModule:null, currentEntity:null, currentData:null, selected:new Map(),
-  tab:"reader", granularity:"module", simplified:false, tooltipData:null, leanEpoch:0, leanFragment:null, leanRunner:null, leanCatalog:null, leanCatalogLoading:false, leanCatalogEpoch:0,
+  tab:"reader", granularity:"module", simplified:true, tooltipData:null, leanEpoch:0, leanFragment:null, leanRunner:null, leanCatalog:null, leanCatalogLoading:false, leanCatalogEpoch:0,
   leanChapterReportEpoch:0, leanTranscriptionEpoch:0, leanTranscriptionBusy:false,
   tooltipKey:0, graph:null, conceptGraph:null, conceptEpoch:0, renderEpoch:0, draftSession:null,
 };
@@ -84,7 +84,7 @@ async function openModule(id,full=false){
     if(epoch!==state.renderEpoch)return;
     state.currentModule=id;state.currentEntity=null;state.currentData=data;
     state.expandedDomains.add(data.module.domain);renderTree();renderReader();activateTab("reader");
-    $("explorer").classList.remove("visible");
+    if(explorerMedia.matches)setExplorerVisible(false);
   }catch(e){toast(e.message);}
 }
 async function openEntity(id,full=false){
@@ -93,24 +93,74 @@ async function openEntity(id,full=false){
     if(epoch!==state.renderEpoch)return;
     state.currentModule=data.entity.document_id;state.currentEntity=id;state.currentData=data;
     state.expandedDomains.add(data.domain);renderTree();renderReader();activateTab("reader");
-    $("explorer").classList.remove("visible");
+    if(explorerMedia.matches)setExplorerVisible(false);
   }catch(e){toast(e.message);}
 }
+const referenceDescriptions=new Map(), referenceBatches=new Map();
+function describeReference(label,sourceDocument){
+  const key=JSON.stringify([sourceDocument,label]);
+  if(referenceDescriptions.has(key))return referenceDescriptions.get(key);
+  const promise=new Promise(resolve=>{
+    let batch=referenceBatches.get(sourceDocument);
+    if(!batch){
+      batch=[];referenceBatches.set(sourceDocument,batch);
+      setTimeout(async()=>{
+        referenceBatches.delete(sourceDocument);
+        for(let start=0;start<batch.length;start+=200){
+          const part=batch.slice(start,start+200);
+          try{
+            const result=await api('/api/references/descriptions',{method:'POST',body:JSON.stringify({source_document:sourceDocument,labels:part.map(item=>item.label)})});
+            part.forEach(item=>item.resolve(result.items[item.label]));
+          }catch(_){part.forEach(item=>{referenceDescriptions.delete(item.key);item.resolve(null);});}
+        }
+      },0);
+    }
+    batch.push({label,key,resolve});
+  });
+  referenceDescriptions.set(key,promise);return promise;
+}
+function scheduleCloseTip(anchor){
+  const key=state.tooltipKey;
+  setTimeout(()=>{
+    if(key===state.tooltipKey && state.tooltipAnchor===anchor && !anchor.matches(':hover,:focus') && !$("referenceTip").matches(':hover,:focus-within'))closeTip();
+  },240);
+}
+function createReferenceLink(label,sourceDocument,{caption=null,command='ref',sourceView=false}={}){
+  const button=node('button',{className:'ref-link',type:'button',title:'Podgląd odsyłacza: '+label},caption||(sourceView?label:'Odsyłacz…'));
+  button.dataset.reference=label;
+  button.addEventListener('mouseenter',()=>previewLabel(label,button,sourceDocument));
+  button.addEventListener('focus',()=>previewLabel(label,button,sourceDocument));
+  button.addEventListener('mouseleave',()=>scheduleCloseTip(button));
+  button.addEventListener('blur',()=>scheduleCloseTip(button));
+  button.addEventListener('click',()=>openLabel(label,sourceDocument,button));
+  if(!sourceView)describeReference(label,sourceDocument).then(result=>{
+    if(!result)return;
+    button.classList.toggle('ref-missing',Boolean(result.missing));
+    button.classList.toggle('ref-ambiguous',Boolean(result.ambiguous));
+    const kinds={chapter:'rozdział',section:'sekcja',subsection:'podsekcja',theorem:'twierdzenie',lemma:'lemat',definition:'definicja',example:'przykład',equation:'równanie',figure:'rysunek',proof:'dowód',remark:'uwaga'};
+    const location=result.document_id+(result.line?' · wiersz '+result.line:'');
+    if(!caption){
+      const title=result.entity_title||((result.kind==='chapter'||!result.entity_id)?result.title:null);
+      button.textContent=result.missing?'Brak celu odsyłacza':result.ambiguous?'Wybierz cel odsyłacza':title?'„'+title+'”'+(result.document_id!==sourceDocument?' ('+result.document_id+')':''):(command==='eqref'?'równanie':kinds[result.kind]||'fragment')+' ('+location+')';
+    }
+    button.title=(result.missing?'Brak etykiety w indeksie':result.ambiguous?'Etykieta występuje w kilku rozdziałach':(result.entity_title||result.title||'Fragment')+' · '+location)+'\nEtykieta: '+label;
+    if(typeof window.renderMathInElement==='function')window.renderMathInElement(button,{delimiters:[{left:'$',right:'$',display:false},{left:'\\(',right:'\\)',display:false}],macros:previewMacros(result.document_id),trust:false,throwOnError:true,errorCallback:()=>{}});
+  });
+  return button;
+}
 function showRefs(container,latex){
-  container.replaceChildren();const regex=/\\(ref|eqref|pageref|autoref|nameref|cref|Cref|vref|Vref|atlasref)\s*\{([^{}]+)\}/g;
+  container.replaceChildren();const regex=/\\(ref|eqref|pageref|autoref|nameref|cref|Cref|vref|Vref|atlasref)\*?\s*\{([^{}]+)\}/g;
   let last=0, match;
   while((match=regex.exec(latex))){
     if(match.index>last)container.append(document.createTextNode(latex.slice(last,match.index)));
-    container.append(document.createTextNode("\\"+match[1]+"{"));
+    container.append(document.createTextNode(match[0].slice(0,match[0].indexOf('{')+1)));
     const refs=match[2].split(",");
     refs.forEach((raw,i)=>{
       if(i)container.append(document.createTextNode(","));
       const lab=raw.trim(), sourceDocument=state.currentModule;if(!lab){container.append(document.createTextNode(raw));return;}
-      const b=node("button",{className:"ref-link",title:"Podgląd etykiety: "+lab},lab);
-      b.addEventListener("mouseenter",()=>previewLabel(lab,b,sourceDocument));
-      b.addEventListener("focus",()=>previewLabel(lab,b,sourceDocument));
-      b.addEventListener("mouseleave",()=>{const key=state.tooltipKey;setTimeout(()=>{if(key===state.tooltipKey && state.tooltipAnchor===b && !$("referenceTip").matches(":hover"))closeTip();},240);});
-      b.addEventListener("click",()=>openLabel(lab,sourceDocument));container.append(b);
+      container.append(document.createTextNode(raw.slice(0,raw.length-raw.trimStart().length)));
+      container.append(createReferenceLink(lab,sourceDocument,{sourceView:true,command:match[1]}));
+      container.append(document.createTextNode(raw.slice(raw.trimEnd().length)));
     });
     container.append(document.createTextNode("}"));last=regex.lastIndex;
   }
@@ -123,7 +173,7 @@ function renderReader(){
   $("docBreadcrumb").textContent=(mod?.domain||data.domain||"")+" / "+state.currentModule+(entity?" / "+data.entity.kind:"");
   $("docTitle").textContent=entity?(data.entity.title||data.module_title||data.entity.kind):(data.module.title);
   $("docMeta").textContent=entity?`Wiersze ${data.entity.start_line}–${data.entity.end_line} · ${data.module_title}`:"Pełny moduł · "+data.module.path;
-  $("readerKind").textContent=entity?"Fragment · "+data.entity.kind:"Źródło LaTeX — rozdział";
+  $("readerKind").textContent=state.simplified?(entity?"Podgląd fragmentu":"Podgląd rozdziału"):"Źródło LaTeX";
   $("readSize").textContent=(data.full_length||0).toLocaleString("pl-PL")+" znaków";
   $("showFull").classList.toggle("hidden",!data.truncated);
   const firstLine=entity?data.entity.start_line:1;
@@ -138,24 +188,19 @@ function renderReader(){
   else $("mathPreviewStatus")?.classList.add("hidden");
   $("latexSource").classList.toggle("hidden",state.simplified);
   $("simplified").classList.toggle("hidden",!state.simplified);
-  $("togglePreview").textContent=state.simplified?"Pokaż LaTeX":"Podgląd uproszczony";
+  document.querySelector('.fragment-toolbar').classList.toggle('hidden',state.simplified);
+  $("togglePreview").textContent=state.simplified?"Pokaż źródło LaTeX":"Wróć do podglądu";
+  $("togglePreview").setAttribute('aria-pressed',String(!state.simplified));
 }
 // Render standard math without executing document preambles or HTML.
 const displayEnvironments = ["equation","equation*","align","align*","alignat","alignat*","gather","gather*","CD"];
 const mathEnvironments = new Set([...displayEnvironments,"aligned","alignedat","gathered","split","cases","dcases","matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix","smallmatrix","array","multline","multline*"]);
-function simplifiedText(latex){
-  return latex.replace(/\\label\s*\{[^}]*\}/g,"")
-    .replace(/\\(?:begin|end)\s*\{([^}]*)\}(?:\[[^\]]*\])?/g,(match,name)=>mathEnvironments.has(name)?match:"\n")
-    .replace(/\\(?:chapter|section|subsection|subsubsection|paragraph)\*?(?:\[[^\]]*\])?\s*\{([^{}]*)\}/g,"\n\n$1\n")
-    .replace(/\\(?:emph|textbf|textit)\s*\{([^{}]*)\}/g,"$1")
-    .replace(/\n{4,}/g,"\n\n");
-}
 function previewMacros(moduleId){
   const prefix=String(moduleId||"").split("-")[0];
   return {...(window.atlasMathMacroProfiles?.[prefix]||{})};
 }
 function renderMathPreview(box,latex,moduleId){
-  box.textContent=simplifiedText(latex);
+  buildProsePreview(box,latex,moduleId);
   if(typeof window.renderMathInElement!=="function"){
     return "Renderer wzorów jest niedostępny. Uruchom scripts/install_math_renderer.py i odśwież stronę.";
   }
@@ -174,7 +219,7 @@ function renderMathPreview(box,latex,moduleId){
       errorCallback:()=>{errors++;}
     });
   }catch(error){
-    box.textContent=simplifiedText(latex);
+    buildProsePreview(box,latex,moduleId);
     console.warn("Math preview:",error);
     return "Nie udało się złożyć podglądu wzorów. Wyświetlam źródło.";
   }
@@ -270,7 +315,7 @@ async function previewLabel(label,anchor,sourceDocument=null){
       body.append(node("p",{className:"tip-meta"},`${label} · wybierz właściwy rozdział`));
       for(const choice of result.candidates){
         const target=node("button",{className:"ref-choice"},`${choice.document_id}: ${choice.title} (wiersz ${choice.line})`);
-        target.addEventListener("click",()=>{closeTip();openModule(choice.document_id);});
+        target.addEventListener("click",()=>{closeTip();if(choice.entity_id)openEntity(choice.entity_id);else openLabel(choice.document_id+'::'+label);});
         body.append(target);
       }
     }else{
@@ -289,15 +334,16 @@ async function previewLabel(label,anchor,sourceDocument=null){
     body.replaceChildren();
     body.append(node("h3",{},"Nie znaleziono cytowanej etykiety"));
     body.append(node("p",{className:"tip-meta"},label));
-    body.append(node("p",{},"Cel odsyłacza nie jest dostępny w indeksie. Wymaga audytu źródła LaTeX."));
+    body.append(node("p",{},e.message));
     positionReferenceTip(anchor);
   }
 }
 function closeTip(){state.tooltipKey++;state.tooltipData=null;state.tooltipAnchor=null;$("referenceTip").classList.add("hidden");}
-async function openLabel(label,sourceDocument=null){
+async function openLabel(label,sourceDocument=null,anchor=null){
   try{
     const result=state.tooltipData?.name===label && (!sourceDocument || state.tooltipData.source_document===sourceDocument)?state.tooltipData:await api(`/api/labels/${encodeURIComponent(label)}`+(sourceDocument?`?source_document=${encodeURIComponent(sourceDocument)}`:""));
-    closeTip();if(result.ambiguous){toast("Etykieta jest niejednoznaczna. Wybierz rozdział w podglądzie odsyłacza.");return;}
+    if(result.ambiguous){await previewLabel(label,anchor||state.tooltipAnchor||$('docTitle'),sourceDocument);return;}
+    closeTip();
     if(result.entity_id)await openEntity(result.entity_id);else await openModule(result.document_id);
   }catch(e){toast(e.message);}
 }
@@ -1220,8 +1266,86 @@ function listeners(){
   window.addEventListener("beforeunload",closeUnsavedDraft);
   setInterval(()=>{if(state.draftSession)fetch("/api/drafts/"+encodeURIComponent(state.draftSession)+"/heartbeat",{method:"POST"}).catch(()=>{});},15*60*1000);
   $("clearSelection").addEventListener("click",()=>{state.selected.clear();renderSelection();if(state.currentData)renderReader();$("planResult").replaceChildren();});
-  $("showExplorer").addEventListener("click",()=>$("explorer").classList.add("visible"));
-  $("closeExplorer").addEventListener("click",()=>$("explorer").classList.remove("visible"));
+  $("showExplorer").addEventListener("click",()=>setExplorerVisible(!explorerIsVisible()));
+  $("closeExplorer").addEventListener("click",()=>setExplorerVisible(false));
   setupSearch();
 }
-listeners();init();
+function syncThemeButton(){
+  const dark=document.documentElement.dataset.theme==='dark';
+  for(const button of [$('themeToggle'),$('readingTheme')]){
+    button.textContent=dark?'☀ Jasny motyw':'☾ Ciemny motyw';
+    button.setAttribute('aria-pressed',String(dark));
+    button.setAttribute('aria-label',dark?'Włącz jasny motyw':'Włącz ciemny motyw');
+  }
+}
+function toggleTheme(){
+  const theme=document.documentElement.dataset.theme==='dark'?'light':'dark';
+  document.documentElement.dataset.theme=theme;
+  try{localStorage.setItem('atlas-theme',theme);}catch(_){}
+  syncThemeButton();
+}
+$('themeToggle').addEventListener('click',toggleTheme);
+$('readingTheme').addEventListener('click',toggleTheme);
+const explorerMedia=matchMedia('(max-width:780px)');
+let explorerHidden=false, readingMode=false, ownedFullscreen=false;
+try{explorerHidden=localStorage.getItem('atlas-explorer-hidden')==='true';}catch(_){}
+function explorerIsVisible(){return explorerMedia.matches?$('explorer').classList.contains('visible'):!explorerHidden;}
+function syncExplorer(){
+  document.documentElement.classList.toggle('explorer-hidden',explorerHidden);
+  const visible=explorerIsVisible();
+  $('showExplorer').textContent=visible?'Ukryj Explorer':'Pokaż Explorer';
+  $('showExplorer').setAttribute('aria-expanded',String(visible));
+  $('explorer').inert=!visible||readingMode;
+}
+function setExplorerVisible(visible){
+  if(explorerMedia.matches)$('explorer').classList.toggle('visible',visible);
+  else{
+    explorerHidden=!visible;
+    try{localStorage.setItem('atlas-explorer-hidden',String(explorerHidden));}catch(_){}
+  }
+  syncExplorer();
+  if(!visible)$('showExplorer').focus({preventScroll:true});
+}
+explorerMedia.addEventListener('change',()=>{$('explorer').classList.remove('visible');syncExplorer();});
+function setReadingMode(enabled){
+  readingMode=enabled;
+  document.documentElement.classList.toggle('reading-mode',enabled);
+  $('readingMode').textContent=enabled?'⛶ Zakończ pełny ekran':'⛶ Pełny ekran';
+  $('readingMode').setAttribute('aria-pressed',String(enabled));
+  $('readingTheme').classList.toggle('hidden',!enabled);
+  syncExplorer();closeTip();
+}
+async function leaveReadingMode(){
+  setReadingMode(false);
+  if(ownedFullscreen && document.fullscreenElement){ownedFullscreen=false;await document.exitFullscreen().catch(()=>{});}
+  $('readingMode').focus({preventScroll:true});
+}
+$('readingMode').addEventListener('click',async()=>{
+  if(readingMode){await leaveReadingMode();return;}
+  setReadingMode(true);
+  const shell=document.querySelector('.app-shell');
+  if(!document.fullscreenElement && shell.requestFullscreen){
+    try{await shell.requestFullscreen();ownedFullscreen=true;}catch(_){/* Reading layout also works without the Fullscreen API. */}
+  }
+});
+document.addEventListener('fullscreenchange',()=>{
+  if(ownedFullscreen&&!document.fullscreenElement){ownedFullscreen=false;setReadingMode(false);}
+});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&readingMode){event.preventDefault();leaveReadingMode();}});
+syncExplorer();
+let readerScale=100;
+function setReaderScale(value,persist=true){
+  readerScale=Math.max(80,Math.min(180,Number.isFinite(Number(value))?Math.round(Number(value)/10)*10:100));
+  document.documentElement.style.setProperty('--reader-scale',String(readerScale/100));
+  $('textSizeReset').textContent=readerScale+'%';
+  $('textSizeDown').disabled=readerScale===80;
+  $('textSizeUp').disabled=readerScale===180;
+  if(persist)try{localStorage.setItem('atlas-reader-scale',String(readerScale));}catch(_){}
+}
+$('textSizeDown').addEventListener('click',()=>setReaderScale(readerScale-10));
+$('textSizeUp').addEventListener('click',()=>setReaderScale(readerScale+10));
+$('textSizeReset').addEventListener('click',()=>setReaderScale(100));
+let savedReaderScale=100;
+try{savedReaderScale=Number(localStorage.getItem('atlas-reader-scale')||100);}catch(_){}
+setReaderScale(savedReaderScale,false);
+syncThemeButton();listeners();init();
