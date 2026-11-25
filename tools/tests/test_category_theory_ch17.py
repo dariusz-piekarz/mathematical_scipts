@@ -67,6 +67,31 @@ class CategoryTheoryCh17(unittest.TestCase):
                         self.assertEqual(f*(a*v+b*w)%p,(a*f*v+b*f*w)%p)
             self.assertEqual(len({(a,b) for a,b in itertools.product(range(p),repeat=2)}),p*p)
 
+    def test_CAT_17_005_natural_operations_classification(self):
+        # Linear functionals on k^2 and k^4; naturality along k -> k^2
+        # forces the functional's two output coordinates simultaneously.
+        for p in (2, 3):
+            vecs = tuple(itertools.product(range(p), repeat=2))
+            def dot(a, x):
+                return sum(u*v for u,v in zip(a,x)) % p
+            for a,b in itertools.product(range(p), repeat=2):
+                candidates = []
+                # Matrix rows of a map k^4 -> k^2.
+                rows = tuple(itertools.product(range(p), repeat=4))
+                # Naturality on (1,0) and (0,1) at every map t -> tv.
+                left = [r for r in rows
+                        if all(dot(r, v+(0,0)) == a*v[0]%p and
+                               dot(r, (0,0)+v) == b*v[0]%p for v in vecs)]
+                right = [r for r in rows
+                         if all(dot(r, v+(0,0)) == a*v[1]%p and
+                                dot(r, (0,0)+v) == b*v[1]%p for v in vecs)]
+                candidates = list(itertools.product(left,right))
+                self.assertEqual(candidates, [((a,0,b,0),(0,a,0,b))])
+                r1,r2 = candidates[0]
+                for v,w in itertools.product(vecs, repeat=2):
+                    self.assertEqual((dot(r1,v+w),dot(r2,v+w)),
+                                     tuple((a*x+b*y)%p for x,y in zip(v,w)))
+
     def test_CAT_17_004_structure(self):
         s = CHAPTER.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}",s)
