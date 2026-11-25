@@ -85,5 +85,30 @@ class Chapter27(unittest.TestCase):
         self.assertIn(r"\|s_N\|=\sup_{\|f\|\le1}|f(s_N)|\le K_e\|\Phi\|", S)
         self.assertIn(r"\|f-P_N'f\|\le(1+K_e)\|f|_{Y_N}\|", S)
 
+    def test_FA27_basic_sequence_extension_01(self):
+        for phrase in (r"\|P_N(y_k-z_k)\|\le K\|y_k-z_k\|\to0",
+                       r"(P_n-P_{n-1})x=f_n(x)e_n",
+                       r"|f_n(x)|\le2K\|x\|/\|e_n\|",
+                       r"f_n(e_m)=\delta_{nm}",
+                       r"P_Nx=\sum_{n=1}^Nf_n(x)e_n"):
+            self.assertIn(phrase, S)
+        weights = (2, 3, 5)
+        for a in itertools.product(range(-2, 3), repeat=3):
+            x = tuple(w*t for w,t in zip(weights,a))
+            for n in range(1, 4):
+                p = tuple(x[j] if j < n else 0 for j in range(3))
+                q = tuple(x[j] if j < n-1 else 0 for j in range(3))
+                self.assertEqual(tuple(u-v for u,v in zip(p,q)),
+                                 tuple(weights[j]*a[j] if j==n-1 else 0 for j in range(3)))
+                self.assertLessEqual(abs(a[n-1])*weights[n-1], 2*max(map(abs,x)))
+
+    def test_FA27_conditional_even_tail_01(self):
+        self.assertIn(r"a_{2k}\ge1/\sqrt{2k}\ge1/(2k)", S)
+        self.assertIn(r"\|\sum_{n\in F}a_ns_n\|_\infty\ge|\sum_{n\in F}a_n|\ge1", S)
+        self.assertIn(r"\varepsilon=1", S)
+        for m in (1, 3, 7, 16, 31):
+            tail = sum((F(1,2*k) for k in range(m+1,16*m+1)), F(0))
+            self.assertGreaterEqual(tail, 1)
+
 if __name__ == "__main__":
     unittest.main()
