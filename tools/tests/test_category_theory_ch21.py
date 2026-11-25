@@ -57,3 +57,54 @@ class CategoryTheoryCh21(unittest.TestCase):
             if cmd=="begin": stack.append(env)
             else: self.assertEqual(stack.pop(),env)
         self.assertFalse(stack)
+
+    def test_CAT_21_006_dual_functoriality(self):
+        # A map k^n -> k^m is represented by an m-by-n matrix.
+        def transpose(a, m, n):
+            return tuple(a[i*n+j] for j in range(n) for i in range(m))
+
+        def compose(g, f, l, m, n, p):
+            return tuple(sum(g[i*m+k]*f[k*n+j] for k in range(m)) % p
+                         for i in range(l) for j in range(n))
+
+        for p, n, m, l in ((2, 1, 2, 3), (3, 2, 1, 2),
+                            (2, 0, 2, 1), (2, 2, 0, 2)):
+            for f in itertools.product(range(p), repeat=m*n):
+                ft = transpose(f, m, n)
+                for g in itertools.product(range(p), repeat=l*m):
+                    gt = transpose(g, l, m)
+                    self.assertEqual(transpose(compose(g, f, l, m, n, p), l, n),
+                                     compose(ft, gt, n, m, l, p))
+                for v in itertools.product(range(p), repeat=n):
+                    for phi in itertools.product(range(p), repeat=m):
+                        fv = compose(f, v, m, n, 1, p)
+                        ftphi = compose(ft, phi, n, m, 1, p)
+                        self.assertEqual(sum(a*b for a, b in zip(phi, fv)) % p,
+                                         sum(a*b for a, b in zip(ftphi, v)) % p)
+            for d in (n, m, l):
+                identity = tuple(int(i == j) for i in range(d) for j in range(d))
+                self.assertEqual(transpose(identity, d, d), identity)
+
+    def test_CAT_21_007_rectangular_trace(self):
+        for p, m, n in ((2, 2, 3), (3, 1, 2), (2, 0, 3), (2, 3, 0)):
+            for f in itertools.product(range(p), repeat=m*n):
+                for g in itertools.product(range(p), repeat=n*m):
+                    gf = tuple(sum(g[i*m+k]*f[k*n+j] for k in range(m)) % p
+                               for i in range(n) for j in range(n))
+                    fg = tuple(sum(f[i*n+k]*g[k*m+j] for k in range(n)) % p
+                               for i in range(m) for j in range(m))
+                    self.assertEqual(sum(gf[i*n+i] for i in range(n)) % p,
+                                     sum(fg[i*m+i] for i in range(m)) % p)
+
+    def test_CAT_21_008_cross_book_reference(self):
+        root = CHAPTER.parents[3]
+        source = CHAPTER.read_text(encoding="utf-8")
+        target = (root / "chapters/pl/differential_geometry_and_topology/"
+                  "03-algebra-tensorowa-i-zewnetrzna.tex").read_text(encoding="utf-8")
+        book = (root / "books/pl/category_theory.tex").read_text(encoding="utf-8")
+        self.assertIn(r"\atlasref{DG-03::prop:kontrakcja-slad}", source)
+        self.assertEqual(target.count(r"\label{prop:kontrakcja-slad}"), 1)
+        self.assertIn(r"\providecommand{\atlasref}[2]{#2}", book)
+        for label in ("cat:prop:dual-functoriality", "cat:eq:dual-morphism-eval",
+                      "cat:eq:dual-morphism-coeval", "cat:prop:trace-cyclic"):
+            self.assertEqual(source.count(r"\label{" + label + "}"), 1)
