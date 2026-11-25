@@ -29,7 +29,11 @@ jobs:
       # Actual TOP-00..TOP-30 imports and nested shared modules are checked
       # by the preceding topology-scoped scan. Repository-wide checking is
       # independent: other books may be edited in parallel on this branch.
+      - name: Install application dependencies for graph regression
+        run: python3 -m pip install -r application/requirements.txt httpx
       - name: Regression tests for audited topology chapters
+        env:
+          PYTHONPATH: application
         run: |
           python3 -m unittest discover -s application/tests \
             -p 'test_topology*.py' -v
