@@ -19,16 +19,16 @@ Kurs inspirowany wykładami Marka Jarnickiego, Wykłady z Analizy Matematycznej 
 
 11. Funkcje wielu zmiennych: granice i ciągłość, kontrprzykłady; wykorzystać AM I 06, 14–16, TO 03, AM II 01 i 08–10, bez powtarzania ogólnej teorii metrycznej
 12. Pochodne cząstkowe i kierunkowe, gradient i pochodna Gâteaux; zależności i kontrprzykłady (AF 14)
-13. Pochodna Frécheta i różniczka zupełna: macierz Jacobiego, reguły różniczkowania, reguła łańcuchowa, interpretacja geometryczna (AF 14, AL)
-14. Twierdzenia o wartości średniej, nierówności dla odwzorowań wektorowych, oszacowania przyrostów i lokalne warunki Lipschitza (AF 14, AM I)
-15. Pochodne i różniczki wyższych rzędów: twierdzenie Schwarza, wielowskaźniki, symetryczne formy wieloliniowe, macierz Hessego (AF 15)
-16. Twierdzenie Taylora dla funkcji wielu zmiennych: wielomiany Taylora, reszty, oszacowania (AF 15, AM I 23)
-17. Ekstrema swobodne, wypukłość funkcji wielu zmiennych: warunki konieczne i dostateczne, macierz Hessego, przypadki zdegenerowane (AF 15, AL, AM I 25; brakujące przypadki)
-18. Twierdzenie o funkcji odwrotnej: pełny dowód, lokalna odwracalność, regularność odwrotności i jej pochodna (AF 15, DG 01)
-19. Twierdzenie o funkcji uwikłanej: pełny dowód, istnienie, jednoznaczność, regularność, pochodne, przykłady (AF 15, DG 01)
-20. Twierdzenia o rzędzie: stały rząd, lokalne postacie odwzorowań, immersje i submersje, poziomice regularne i osobliwe (DG 01, DG 16, AL)
+13. Pochodna Frécheta i różniczka zupełna w rzeczywistych przestrzeniach unormowanych: reguły różniczkowania, reguła łańcuchowa, klasa C¹, pochodne częściowe na iloczynach; w skończonym wymiarze macierz Jacobiego, kryterium ciągłych pochodnych cząstkowych i interpretacja geometryczna (AF 14, AL)
+14. Nierówności o wartości średniej w przestrzeniach unormowanych, wzór całkowy dla wartości w przestrzeni Banacha, oszacowania przyrostów, lokalne warunki Lipschitza i ciągła pochodna Gâteaux (AF 14, AM I)
+15. Pochodne i różniczki wyższych rzędów w przestrzeniach unormowanych: twierdzenie Schwarza, symetryczne odwzorowania wieloliniowe; w skończonym wymiarze wielowskaźniki i macierz Hessego (AF 15)
+16. Twierdzenie Taylora w przestrzeniach unormowanych, wielomiany i oszacowania reszty; reszta całkowa przy wartościach w przestrzeni Banacha; zapis wielowskaźnikowy (AF 15, AM I 23)
+17. Ekstrema swobodne i wypukłość w przestrzeniach unormowanych: warunki konieczne i dostateczne, jednostajna dodatnia określoność drugiej pochodnej; przypadek skończenie wymiarowy, macierz Hessego i przypadki zdegenerowane (AF 15, AL, AM I 25)
+18. Twierdzenie o funkcji odwrotnej w przestrzeniach Banacha (AF 15.16–17): pełna teza, odsyłacz do dowodu, lokalna odwracalność, regularność i pochodna odwrotności, kryterium wyznacznika w skończonym wymiarze (DG 01)
+19. Twierdzenie o funkcji uwikłanej w przestrzeniach Banacha (AF 15.19): pełna teza, odsyłacz do dowodu, istnienie, jednoznaczność, regularność, pochodne i przykłady operatorowe oraz euklidesowe (DG 01)
+20. Twierdzenia o rzędzie w skończonym wymiarze; wersje dla przestrzeni Banacha tylko przy uzasadnionych hipotezach o domkniętych dopełnieniach jądra i obrazu oraz lokalnej strukturze pochodnej; immersje, submersje i regularne poziomice (DG 01, DG 16, AL)
 21. Podrozmaitości przestrzeni euklidesowej: przestrzenie styczne i normalne, parametryzacje, zanurzenia, regularne poziomice (DG 01, DG 16)
-22. Ekstrema związane: mnożniki Lagrange'a, więzy regularne, warunki drugiego rzędu; więzy nierównościowe i warunki Karusha–Kuhna–Tuckera z kwalifikacją więzów (AF, AL, DG; uzupełnienia)
+22. Ekstrema związane: mnożniki Lagrange'a w przestrzeniach Banacha przy odpowiedniej regularności więzów i dopełnialności jądra; warunki drugiego rzędu; skończenie wymiarowe więzy nierównościowe i warunki Karusha–Kuhna–Tuckera z kwalifikacją więzów (AF, AL, DG; uzupełnienia)
 23. Rachunek różniczkowy na podrozmaitościach: różniczka odwzorowania, funkcje gładkie, ekstrema na podrozmaitościach (DG 01, DG 16); orientacja, lokalne postacie i przygotowanie do całkowania (DG 01, 10, 16)
 
 ## III. Rachunek całkowy
@@ -93,3 +93,7 @@ Dawny numer 11 → docelowy 36; dawny numer 12 → docelowy 37. Raporty historyc
 ## Aktualizacja zakresu
 
 Dawny rozdział 37 o zespolonych funkcjach elementarnych przeniesiono wraz z raportem do `docs/pl/complex_analysis_materials/`, bez zmiany treści i etykiet. Nie należy do aktywnego AM II ani katalogu. Dawne planowane 38–47 otrzymują numery 37–46; funkcje analityczne i szeregi Taylora dotyczą funkcji rzeczywistych. Szeregi potęgowe pozostają jako ogólny rachunek szeregów. Rozdziały 01–36 nie zmieniają numeracji. Wpisy powyżej o migracji do 37 dokumentują historię. Przy przyszłym włączeniu do analizy zespolonej rozwiązać zależności od AM II 36 i ponownie skompilować.
+
+## Zasada maksymalnej uzasadnionej ogólności rachunku różniczkowego
+
+Od rozdziału 13: twierdzenia formułujemy najpierw dla rzeczywistych przestrzeni unormowanych, jeśli dowód nie wymaga zupełności, dla przestrzeni Banacha, jeśli potrzebna jest zupełność (np. zasada kontrakcji lub całka wektorowa z gwarancją istnienia), oraz dla przestrzeni Hilberta, jeśli używamy reprezentacji Riesza i gradientu. Następnie podajemy specjalizację do R^n, macierze, interpretację geometryczną i przykłady. Korzystamy z pełnych tez i zweryfikowanych dowodów AF 14–15; jeżeli źródło zakłada zupełność, a dowód jej nie używa, wskazujemy dokładnie dlaczego założenie można osłabić. Nie przenosimy automatycznie kryteriów skończenie wymiarowych (zwłaszcza zwartości sfery, dodatniej określoności bez jednostajnego oszacowania, wyznaczników i twierdzeń o rzędzie) na dowolne przestrzenie Banacha. Przy twierdzeniach o podrozmaitościach i całkowaniu geometrycznym zachowujemy naturalny skończony wymiar. Rozdział 12 pozostaje wprowadzającą specjalizacją euklidesową; definicje ogólne i powiązanie z AF 14 przypominamy na początku 13. Nie powielamy dowodów bez potrzeby.
