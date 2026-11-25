@@ -167,3 +167,61 @@ class GraphCoverageTest(unittest.TestCase):
                             "WHERE document_id=? AND name=?", (target, label)
                         ).fetchall(), [(entity,)])
                         self.assertGreaterEqual(edges[(source, target)]["reading"], 1)
+
+    def test_canonical_vector_integral_reading_edges(self):
+        """Qualified links compare vector results and identify scalar foundations."""
+        canonical = Path(__file__).resolve().parents[2] / "chapters" / "pl"
+        if not canonical.is_dir():
+            self.skipTest("canonical repository chapters not available")
+        paths = (
+            "measure_theory/30-miary-wektorowe-calka-bochnera-i-wlasnosc-radona-nikodyma.tex",
+            "functional_analysis/15B-calki-bochnera-pettisa-dunforda-i-gelfanda-oraz-miary-wektorowe.tex",
+            "measure_theory/25-rozniczkowanie-calek-i-miar.tex",
+        )
+        expected = (
+            ("ME-30", "FA-15B", "thm:bochner-measure15b"),
+            ("ME-30", "FA-15B", "thm:bochner-lebesgue-differentiation15b"),
+            ("ME-30", "FA-15B", "thm:rnp-lipschitz15b"),
+            ("FA-15B", "ME-30", "thm:variation-density-30"),
+            ("FA-15B", "ME-30", "lem:bochner-differentiation-30"),
+            ("FA-15B", "ME-30", "thm:rnp-lipschitz-equiv-30"),
+            ("FA-15B", "ME-25", "thm:lebesgue-diff-25"),
+            # Existing reverse link to the vector generalization.
+            ("ME-25", "FA-15B", "thm:bochner-lebesgue-differentiation15b"),
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "pl"
+            for relative in paths:
+                dest = root / relative
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                dest.write_bytes((canonical / relative).read_bytes())
+            db = Path(tmp) / "index.db"
+            build_database(root, db, recursive=True)
+            with sqlite3.connect(db) as con:
+                report = graph_coverage(con)
+                edges = {(e["source"], e["target"]): e for e in report["edges"]}
+                for source, target, label in expected:
+                    with self.subTest(source=source, target=target, label=label):
+                        rows = con.execute(
+                            "SELECT status,target_document,target_entity "
+                            "FROM references_tex WHERE source_document=? "
+                            "AND command='atlasref' AND target_label=?",
+                            (source, target + "::" + label),
+                        ).fetchall()
+                        self.assertEqual(len(rows), 1)
+                        status, owner, entity = rows[0]
+                        self.assertEqual(status, "external_resolved")
+                        self.assertEqual(owner, target)
+                        self.assertIsNotNone(entity)
+                        self.assertEqual(con.execute(
+                            "SELECT entity_id FROM label_occurrences "
+                            "WHERE document_id=? AND name=?", (target, label)
+                        ).fetchall(), [(entity,)])
+                for source, target, minimum in (
+                    ("ME-30", "FA-15B", 5),
+                    ("FA-15B", "ME-30", 5),
+                    ("FA-15B", "ME-25", 1),
+                    ("ME-25", "FA-15B", 1),
+                ):
+                    with self.subTest(source=source, target=target):
+                        self.assertGreaterEqual(edges[(source, target)]["reading"], minimum)
