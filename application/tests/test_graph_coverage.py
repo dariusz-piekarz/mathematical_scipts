@@ -123,3 +123,47 @@ class GraphCoverageTest(unittest.TestCase):
                 self.assertEqual(audit["issues"][0]["reason"],
                                  "qualified_occurrence_mismatch")
 
+    def test_canonical_measure_topology_reading_edges(self):
+        """Regression: Radon/Riesz proofs link to exact topology results."""
+        canonical = Path(__file__).resolve().parents[2] / "chapters" / "pl"
+        if not canonical.is_dir():
+            self.skipTest("canonical repository chapters not available")
+        paths = (
+            "measure_theory/20-miary-borelowskie-regularnosc-i-miary-radona.tex",
+            "measure_theory/21-twierdzenie-riesza-markowa-kakutaniego.tex",
+            "general_topology/09-aksjomaty-przeliczalnosci.tex",
+            "general_topology/10-metryzowalnosc.tex",
+        )
+        expected = (
+            ("ME-20", "GT-09", "thm:topog-metryczne-trzy-warunki"),
+            ("ME-21", "GT-09", "thm:topog-metryczne-trzy-warunki"),
+            ("ME-21", "GT-10", "thm:topog-urysohn-metryzowalnosc"),
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "pl"
+            for relative in paths:
+                dest = root / relative
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                dest.write_bytes((canonical / relative).read_bytes())
+            db = Path(tmp) / "index.db"
+            build_database(root, db, recursive=True)
+            with sqlite3.connect(db) as con:
+                edges = {(e["source"], e["target"]): e
+                         for e in graph_coverage(con)["edges"]}
+                for source, target, label in expected:
+                    with self.subTest(source=source, target=target, label=label):
+                        rows = con.execute(
+                            "SELECT status,target_document,target_entity "
+                            "FROM references_tex WHERE source_document=? "
+                            "AND command='atlasref' AND target_label=?",
+                            (source, target + "::" + label),
+                        ).fetchall()
+                        self.assertEqual(len(rows), 1)
+                        status, owner, entity = rows[0]
+                        self.assertEqual(status, "external_resolved")
+                        self.assertEqual(owner, target)
+                        self.assertEqual(con.execute(
+                            "SELECT entity_id FROM label_occurrences "
+                            "WHERE document_id=? AND name=?", (target, label)
+                        ).fetchall(), [(entity,)])
+                        self.assertGreaterEqual(edges[(source, target)]["reading"], 1)
