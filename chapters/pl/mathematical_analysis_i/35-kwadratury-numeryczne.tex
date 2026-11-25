@@ -1,0 +1,182 @@
+\chapter{Kwadratury numeryczne}
+\label{ma1:ch:numerical-quadrature}
+
+Kwadratura numeryczna zastępuje całkę skończoną sumą wartości funkcji z odpowiednimi wagami. Rozróżniamy błąd metody (w arytmetyce dokładnej) od błędu zaokrągleń. Przyjmujemy $a<b$, $n\ge1$, $h=(b-a)/n$, $x_j=a+jh$. Niech $I(f)=\int_a^b f(x)\,\dd x$.
+
+\section{Prostokąty i punkty środkowe}
+\begin{definicja}
+\label{ma1:def:quadrature}
+Kwadraturą na $[a,b]$ nazywamy wyrażenie $Q(f)=\sum_{j=1}^m w_j f(\xi_j)$ z węzłami $\xi_j\in[a,b]$ i wagami $w_j\in\R$. Jest dokładna dla wielomianów stopnia co najwyżej $k$, jeśli $Q(p)=I(p)$ dla każdego takiego wielomianu.
+\end{definicja}
+Dla podziału równomiernego definiujemy
+\[
+ L_n=h\sum_{j=0}^{n-1} f(x_j),\quad
+ R_n=h\sum_{j=1}^n f(x_j),\quad
+ M_n=h\sum_{j=1}^n f((x_{j-1}+x_j)/2).
+\]
+Dla każdej funkcji Riemannowsko całkowalnej wszystkie trzy sumy dążą do $I(f)$ z twierdzenia \ref{ma1:thm:riemann-darboux-equivalence}.
+\begin{twierdzenie}
+\label{ma1:thm:rectangle-error}
+Jeśli $f$ jest klasy $C^1$ na $[a,b]$, to
+\[
+ |I(f)-L_n|,\ |I(f)-R_n|\le \frac{(b-a)h}{2}\max_{[a,b]}|f'|.
+\]
+Jeśli $f$ jest klasy $C^2$, to
+\[
+ |I(f)-M_n|\le\frac{(b-a)h^2}{24}\max_{[a,b]}|f''|.
+\]
+\end{twierdzenie}
+\begin{proof}
+Niech $K=\max|f'|$. Na $[u,u+h]$ twierdzenie Lagrange'a daje $|f(x)-f(u)|\le K(x-u)$. Całkując, otrzymujemy lokalny błąd nie większy niż $Kh^2/2$. Dla prawego końca używamy $|f(x)-f(u+h)|\le K(u+h-x)$ i tego samego oszacowania. Sumowanie po $n$ przedziałach daje pierwszą tezę.
+
+Dla $m=u+h/2$ twierdzenie Taylora z resztą Lagrange'a daje $|f(x)-f(m)-f'(m)(x-m)|\le K_2(x-m)^2/2$, gdzie $K_2=\max|f''|$. Całka składnika liniowego na $[u,u+h]$ jest zerowa. Ponieważ $\int_{-h/2}^{h/2}t^2\,\dd t=h^3/12$, błąd lokalny nie przekracza $K_2h^3/24$. Sumujemy po wszystkich przedziałach i korzystamy z $nh=b-a$.
+\end{proof}
+
+\section{Metoda trapezów}
+\begin{definicja}
+\label{ma1:def:trapezoid}
+Złożona kwadratura trapezów ma postać
+\[
+ T_n=h\left(\frac{f(a)+f(b)}2+\sum_{j=1}^{n-1}f(x_j)\right).
+\]
+\end{definicja}
+Jest to średnia $L_n$ i $R_n$, więc jest zbieżna dla każdej funkcji całkowalnej w sensie Riemanna.
+\begin{twierdzenie}
+\label{ma1:thm:trapezoid-error}
+Dla $f\in C^2[a,b]$ mamy
+\[
+ |I(f)-T_n|\le\frac{(b-a)h^2}{12}\max|f''|.
+\]
+Jeśli $f''\ge0$, to $M_n\le I(f)\le T_n$; dla $f''\le0$ nierówności są odwrócone.
+\end{twierdzenie}
+\begin{proof}
+Na $[u,v]$ o długości $h$ oznaczmy $w(x)=(x-u)(v-x)/2$. Mamy $w(u)=w(v)=0$, $w'(u)=h/2$, $w'(v)=-h/2$, $w''=-1$. Dwukrotne całkowanie przez części daje
+\[
+ \int_u^v w(x)f''(x)\,\dd x
+ =\frac h2(f(u)+f(v))-\int_u^v f(x)\,\dd x.
+\]
+Ponieważ $w\ge0$ i $\int_u^v w=h^3/12$, moduł błędu jest nie większy niż $\max|f''|h^3/12$. Sumowanie daje tezę oraz znak błędu trapezów. Dla punktu środkowego, gdy $f''\ge0$, funkcja jest wypukła, więc $f(m)\le(f(m-t)+f(m+t))/2$ dla $0\le t\le h/2$. Całkując, dostajemy $hf(m)\le\int_u^v f$. Dla $f''\le0$ stosujemy wyniki do $-f$.
+\end{proof}
+\begin{center}
+\begin{tikzpicture}[x=5cm,y=3cm,>=Stealth]
+ \draw[->] (-.08,0)--(1.15,0) node[right] {$x$};
+ \draw[->] (0,-.08)--(0,1.15) node[above] {$y$};
+ \fill[blue!12] (0,0)--(.5,.25)--(1,1)--(1,0)--cycle;
+ \draw[blue!70!black,thick] (0,0)--(.5,.25)--(1,1);
+ \draw[teal!70!black,thick,domain=0:1,samples=70] plot (\x,{\x*\x});
+ \draw[dashed] (.5,0)--(.5,.25);
+ \node[blue!70!black,above left] at (.77,.7) {sieczne};
+ \node[teal!70!black,right] at (.72,.5) {$y=x^2$};
+ \node[below] at (.5,0) {$1/2$};
+ \node[below] at (1,0) {$1$};
+\end{tikzpicture}
+
+\small Rysunek: dla funkcji wypukłej łamana interpolacyjna leży nad wykresem. Pole pod łamaną jest sumą pól trapezów.
+\end{center}
+
+\section{Kwadratura Simpsona}
+\begin{twierdzenie}
+\label{ma1:thm:simpson}
+Niech $n$ będzie parzyste. Złożona kwadratura Simpsona ma postać
+\[
+ S_n=\frac h3\left(f(x_0)+f(x_n)
+ +4\sum_{j=1}^{n/2} f(x_{2j-1})
+ +2\sum_{j=1}^{n/2-1} f(x_{2j})\right).
+\]
+Jest dokładna dla wielomianów stopnia co najwyżej $3$. Jeśli $f\in C^4[a,b]$, to
+\[
+ |I(f)-S_n|\le\frac{(b-a)h^4}{180}\max|f^{(4)}|.
+\]
+\end{twierdzenie}
+\begin{proof}
+Na bloku $[m-h,m+h]$ wzór ma postać $Q(f)=h(f(m-h)+4f(m)+f(m+h))/3$. W zmiennej $t=x-m$ sprawdzamy kolejno $1,t,t^2,t^3$: dla funkcji stałej całka i kwadratura wynoszą $2h$, dla nieparzystych $t,t^3$ obie są zerowe, a dla $t^2$ obie wynoszą $2h^3/3$. Liniowość daje dokładność.
+
+Aby wyprowadzić stałą błędu, na $[-h,h]$ przyjmijmy
+\[
+ K(t)=
+ \begin{cases}
+ (h+t)^3(h-3t)/72,&-h\le t\le0,\\
+ (h-t)^3(h+3t)/72,&0\le t\le h.
+ \end{cases}
+\]
+Funkcja $K$ jest nieujemna. Na obu połówkach $K^{(4)}=-1$; w punktach $\pm h$ wartości $K,K',K''$ znikają, zaś $K'''(-h)=h/3$, $K'''(h)=-h/3$. W zerze $K,K',K''$ są ciągłe, $K'''(0^- )=-2h/3$, $K'''(0^+)=2h/3$. Czterokrotne całkowanie przez części osobno na każdej połowie, z dodaniem wyrazów brzegowych, daje
+\[
+ \int_{-h}^h K(t)f^{(4)}(m+t)\,\dd t
+ =\frac h3(f(m-h)+4f(m)+f(m+h))
+ -\int_{-h}^h f(m+t)\,\dd t.
+\]
+Istotnie, jedyne pozostające wyrazy brzegowe to $-K'''f$; wartości na obu stronach zera dają $4hf(m)/3$. Bezpośrednio
+\[
+ \int_{-h}^h K(t)\,\dd t
+ =\frac{2}{72}\int_0^h (h-t)^3(h+3t)\,\dd t
+ =\frac{h^5}{90}.
+\]
+W ostatniej równości podstawiamy $z=h-t$ i całkujemy $z^3(4h-3z)$. Lokalny błąd nie przekracza $h^5\max|f^{(4)}|/90$. Liczba bloków wynosi $n/2$, więc błąd globalny nie przekracza $(b-a)h^4\max|f^{(4)}|/180$. Sumując wagi na blokach, otrzymujemy podany wzór.
+\end{proof}
+Z tożsamości $S_{2n}=(4T_{2n}-T_n)/3$ wynika zbieżność Simpsona nawet dla funkcji Riemannowsko całkowalnych: węzły o nieparzystych indeksach mają wagę $4(h/2)/3$, wewnętrzne parzyste $2(h/2)/3$, a skrajne $(h/2)/3$.
+
+\section{Dobór liczby podprzedziałów}
+\begin{przyklad}
+\label{ma1:ex:quadrature-exp}
+Dla $f(x)=e^x$ na $[0,1]$ wszystkie pochodne są równe $e^x$, więc
+\[
+ |I-M_n|\le e/(24n^2),\quad
+ |I-T_n|\le e/(12n^2),\quad
+ |I-S_n|\le e/(180n^4)
+\]
+dla parzystego $n$ w ostatnim oszacowaniu. Aby zapewnić błąd nie większy niż $\varepsilon>0$, wystarczy dla Simpsona wybrać najmniejszą dodatnią parzystą liczbę $n$ nie mniejszą niż $(e/(180\varepsilon))^{1/4}$. Dla $\varepsilon=10^{-6}$ możemy wziąć $n=12$, ponieważ $e<3$ i $3/(180\cdot12^4)<10^{-6}$. Dokładna wartość całki wynosi $e-1$.
+\end{przyklad}
+Oszacowania wymagają ograniczonych pochodnych odpowiednich rzędów. Dla funkcji $f(x)=\sqrt x$ na $[0,1]$ nie wolno stosować powyższego oszacowania opartego na maksimum $|f''|$, ale zbieżność samych sum nadal zachodzi.
+
+\section{Dwupunktowa kwadratura Gaussa}
+\begin{twierdzenie}
+\label{ma1:thm:gauss-two-point}
+Na $[-1,1]$ kwadratura
+\[
+ Q(f)=f(-1/\sqrt3)+f(1/\sqrt3)
+\]
+jest dokładna dla wielomianów stopnia co najwyżej $3$, ale nie stopnia $4$. Dla $f\in C^4[-1,1]$ zachodzi $|I(f)-Q(f)|\le\max|f^{(4)}|/135$.
+\end{twierdzenie}
+\begin{proof}
+Szukając symetrycznego wzoru $w(f(-c)+f(c))$, z dokładności dla $1$ otrzymujemy $2w=2$, a dla $x^2$ mamy $2wc^2=2/3$. Stąd $w=1$, $c=1/\sqrt3$. Dla $x,x^3$ obie strony są zerowe. Dla $x^4$ kwadratura daje $2/9$, a całka $2/5$.
+
+Niech $p$ będzie wielomianem stopnia co najwyżej $3$ o wartościach i pochodnych zgodnych z $f$ w $\pm c$. Istnieje i jest jednoznaczny: liniowe odwzorowanie z czterowymiarowej przestrzeni wielomianów do $\R^4$ ma jądro zerowe, bo wielomian w jądrze jest podzielny przez $(x^2-c^2)^2$ stopnia $4$. Dla $x\ne\pm c$ dobieramy $A$ tak, aby $g(t)=f(t)-p(t)-A(t^2-c^2)^2$ znikała w $x$. Funkcja ma dwa zera podwójne i jedno dodatkowe zero. Z twierdzenia Rolle'a pomiędzy trzema różnymi zerami oraz z $g'(\pm c)=0$ wynika, że $g'$ ma co najmniej cztery różne zera, a następnie $g''$ co najmniej trzy, $g'''$ co najmniej dwa, $g^{(4)}$ co najmniej jedno. Zatem $A=f^{(4)}(\zeta)/24$ dla pewnego $\zeta\in(-1,1)$. W konsekwencji
+$|f(x)-p(x)|\le\max|f^{(4)}|(x^2-1/3)^2/24$, również w węzłach, gdzie obie strony są zerowe.
+Ponieważ $Q(f)=Q(p)=I(p)$,
+\[
+ |I(f)-Q(f)|\le\frac{\max|f^{(4)}|}{24}
+ \int_{-1}^1(x^2-1/3)^2\,\dd x=\frac{\max|f^{(4)}|}{135}.
+\]
+Całka wielomianu wynosi $2/5-4/9+2/9=8/45$.
+\end{proof}
+Na $[a,b]$ podstawienie afiniczne $x=m+ht$ z $m=(a+b)/2$, $h=(b-a)/2$ daje węzły $m\pm h/\sqrt3$ i wagi $h$. Błąd jest nie większy niż $h^5\max|f^{(4)}|/135$, ponieważ czwarta pochodna funkcji $t\mapsto f(m+ht)$ wynosi $h^4f^{(4)}(m+ht)$.
+
+\section{Zagęszczanie podziału i błędy zaokrągleń}
+Jeżeli metoda spełnia rozwinięcie $I-Q_h=c h^p+o(h^p)$ dla $h\to0^+$ i $p>0$, to
+\[
+ I-Q_{h/2}=\frac{Q_{h/2}-Q_h}{2^p-1}+o(h^p).
+\]
+Istotnie, odejmujemy oba rozwinięcia: $Q_{h/2}-Q_h=c h^p(1-2^{-p})+o(h^p)$ i dzielimy przez $2^p-1$. Sama znajomość górnego oszacowania błędu rzędu $O(h^p)$ nie wystarcza do tej tożsamości asymptotycznej. Różnica dwóch obliczeń może przypadkowo być mała. Nie traktujemy jej jako gwarantowanego ograniczenia bez dodatkowych hipotez.
+
+Jeżeli każda wartość $f(\xi_j)$ obarczona jest błędem $e_j$ z $|e_j|\le\eta$, to błąd kwadratury od tych danych nie przekracza $\eta\sum_j |w_j|$ przez nierówność trójkąta. Dla nieujemnych wag i kwadratury dokładnej dla stałych suma wag wynosi $b-a$. Pozostaje osobny błąd arytmetyki maszynowej w mnożeniu i sumowaniu. Zmniejszanie kroku nie usuwa automatycznie tego błędu.
+
+\begin{przyklad}[Implementacja w Pythonie]
+\label{ma1:ex:quadrature-python}
+Poniższy kod wykorzystuje złożony wzór Simpsona; liczba podprzedziałów musi być dodatnia i parzysta. Nie jest to certyfikowana arytmetyka przedziałowa.
+\begin{lstlisting}[style=python]
+from math import exp, fsum
+
+def simpson(f, a, b, n):
+    if not isinstance(n, int) or n <= 0 or n % 2:
+        raise ValueError("n must be positive and even")
+    h = (b - a) / n
+    terms = ( (4 if j % 2 else 2) * f(a + j*h)
+              for j in range(1, n) )
+    return (h/3) * (f(a) + f(b) + fsum(terms))
+
+for n in (4, 8, 16, 32):
+    q = simpson(exp, 0, 1, n)
+    print(n, q, abs(q - (exp(1)-1)))
+\end{lstlisting}
+\end{przyklad}
+Dla całek niewłaściwych najpierw osobno kontrolujemy błąd obcięcia na podstawie rozdziału \ref{ma1:ch:improper-integrals}, a następnie stosujemy kwadraturę na skończonym przedziale. Błędy obcięcia, kwadratury i arytmetyki sumujemy za pomocą nierówności trójkąta.
