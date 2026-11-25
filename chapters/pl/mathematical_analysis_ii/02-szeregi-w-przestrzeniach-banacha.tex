@@ -7,7 +7,9 @@ $\K\in\{\R,\C\}$. Zupełność będziemy zakładać wyraźnie tam,
 gdzie jest potrzebna. Wykorzystujemy rachunek szeregów liczbowych
 z tomu I (rozdział 09) i wyniki rozdziału \ref{ma2:ch:normed}.
 W szczególności zbieżność będzie rozumiana w normie, a nie
-względem poszczególnych współrzędnych.
+jedynie względem poszczególnych współrzędnych. Zbieżność
+współrzędnościowa wystarczy w skończonym wymiarze, ale nie
+w dowolnej przestrzeni ciągowej.
 
 \section{Sumy częściowe i warunek Cauchy'ego}
 \begin{definicja}[Szereg wektorowy]
@@ -22,8 +24,10 @@ W przeciwnym razie szereg jest rozbieżny.
 Suma jest jednoznaczna: gdyby $\|S_N-S\|\to0$ i
 $\|S_N-T\|\to0$, nierówność
 $\|S-T\|\le\|S-S_N\|+\|S_N-T\|$ dawałaby $\|S-T\|=0$,
-czyli $S=T$. Dla szeregu od indeksu $m\ge0$ stosujemy
-analogiczną definicję, a sumę pustą przyjmujemy równą $0$.
+czyli $S=T$. Dla szeregu od całkowitego indeksu $m\ge0$ stosujemy
+analogiczną definicję, biorąc granicę sum
+$\sum_{n=m}^N x_n$ przy $N\to\infty$ (dla ciągu określonego
+od indeksu $m$). Sumę pustą przyjmujemy równą $0$.
 
 \begin{twierdzenie}[Warunek konieczny i kryterium Cauchy'ego]
 \label{ma2:thm:series-cauchy}
@@ -63,13 +67,16 @@ co jest definicją zbieżności szeregu.
 \label{ma2:ex:vector-harmonic}
 Jeżeli $v\in E$ i $v\ne0$, szereg $\sum_{n\ge1}v/n$
 jest rozbieżny, chociaż $\|v/n\|=\|v\|/n\to0$.
-Istotnie dla każdego $N\ge1$ mamy
+Istotnie dla każdego $N\ge1$, ponieważ blok od $N+1$ do $2N$
+zawiera $N$ wyrazów, z których każdy współczynnik $1/n$
+jest nie mniejszy niż $1/(2N)$, mamy
 \[
  \left\|\sum_{n=N+1}^{2N}\frac vn\right\|
  =\|v\|\sum_{n=N+1}^{2N}\frac1n\ge\frac{\|v\|}{2}.
 \]
 Wybierając $\varepsilon=\|v\|/2>0$, widzimy, że dla
-każdego proponowanego indeksu w kryterium Cauchy'ego istnieje
+każdego proponowanego indeksu $M\ge1$ w kryterium Cauchy'ego
+wystarczy wziąć $N=M$, $p=N+1$ i $q=2N$, aby otrzymać
 ogon skończony o normie co najmniej $\varepsilon$.
 Z twierdzenia \ref{ma2:thm:series-cauchy} szereg jest rozbieżny.
 \end{przyklad}
@@ -154,6 +161,24 @@ $\|S_N-\sum_j s_je_j\|<\varepsilon$.
 To dowodzi zbieżności i wzoru.
 \end{proof}
 
+\begin{przyklad}[Zbieżność współrzędnościowa nie wystarcza]
+\label{ma2:ex:coordinate-series-not-norm}
+W przestrzeni $\ell^2$ oznaczmy przez $e_j$ ciąg mający
+$1$ na $j$-tej współrzędnej i zera na pozostałych.
+Niech $x_1=e_1$ oraz $x_n=e_n-e_{n-1}$ dla $n\ge2$.
+Dla $N=1$ mamy $S_1=e_1$, a jeśli $S_N=e_N$, to
+$S_{N+1}=e_N+(e_{N+1}-e_N)=e_{N+1}$.
+Zatem $S_N=e_N$ dla każdego $N\ge1$.
+Dla ustalonego $j$ współrzędna $(S_N)_j$ jest zerowa
+dla każdego $N>j$, więc każdy szereg współrzędnych jest
+zbieżny i ma sumę $0$. Mimo to szereg wektorowy nie jest
+zbieżny: dla $N\ne M$ różnica $e_N-e_M$ ma dokładnie
+dwie niezerowe współrzędne, równe $1$ i $-1$, zatem
+$\|S_N-S_M\|_2=\sqrt{2}$. Ciąg sum częściowych nie jest
+ciągiem Cauchy'ego. Przykład zachodzi w przestrzeni Banacha,
+a nawet w przestrzeni Hilberta, i nie wynika z braku zupełności.
+\end{przyklad}
+
 \section{Szeregi geometryczne, teleskopowe i grupowanie}
 \begin{twierdzenie}[Szereg geometryczny pomnożony przez wektor]
 \label{ma2:thm:vector-geometric}
@@ -200,20 +225,34 @@ zatem $u_n\to u_1-S$.
 \label{ma2:thm:series-grouping}
 Niech $0=k_0<k_1<k_2<\cdots$ będą liczbami całkowitymi
 i niech $b_j=\sum_{n=k_{j-1}+1}^{k_j}x_n$ dla $j\ge1$.
-Jeżeli $\sum x_n=S$, to $\sum b_j=S$.
-Odwrotnie, jeśli $\sum b_j=S$ oraz
+Szereg $\sum x_n$ jest zbieżny do $S\in E$ wtedy i tylko
+wtedy, gdy $\sum b_j=S$ oraz
 \[
- \max_{k_{j-1}\le m\le k_j}
- \left\|\sum_{n=k_{j-1}+1}^{m}x_n\right\|\longrightarrow0,
+ d_j:=\max_{k_{j-1}\le m\le k_j}
+ \left\|\sum_{n=k_{j-1}+1}^{m}x_n\right\|\longrightarrow0.
 \]
-to $\sum x_n=S$.
+Maksimum bierzemy po całkowitych indeksach $m$; dla
+$m=k_{j-1}$ suma jest pusta i wynosi zero.
 \end{twierdzenie}
 \begin{proof}
 Z rozłączności kolejnych przedziałów indeksów
 $\sum_{j=1}^J b_j=\sum_{n=1}^{k_J}x_n=S_{k_J}$.
 Ponieważ $k_J\ge J$, jest to podciąg sum częściowych,
 a z $S_N\to S$ wynika $S_{k_J}\to S$.
-Dla implikacji odwrotnej oznaczmy maksimum z tezy przez $d_j$.
+Ponadto dla $\varepsilon>0$ istnieje $M$ takie, że
+$\|S_n-S\|<\varepsilon/2$ dla $n\ge M$. Jeżeli
+$k_{j-1}\ge M$, to dla wszystkich $k_{j-1}\le m\le k_j$
+mamy
+\[
+ \left\|\sum_{n=k_{j-1}+1}^m x_n\right\|
+ =\|S_m-S_{k_{j-1}}\|
+ \le\|S_m-S\|+\|S_{k_{j-1}}-S\|<\varepsilon.
+\]
+Ponieważ $k_{j-1}\ge j-1$, nierówność zachodzi dla każdego
+dostatecznie dużego $j$. Maksimum skończonej liczby wartości
+również jest mniejsze niż $\varepsilon$, zatem $d_j\to0$.
+Dla implikacji odwrotnej załóżmy zbieżność $\sum b_j=S$
+oraz $d_j\to0$.
 Dla każdego $N\ge1$ istnieje dokładnie jeden $j$ z
 $k_{j-1}<N\le k_j$, ponieważ $(k_j)$ jest ściśle rosnący
 i nieograniczony. Wtedy
@@ -240,6 +279,80 @@ a szereg zgrupowany jest zbieżny do $0$.
 Warunek maksimum w twierdzeniu \ref{ma2:thm:series-grouping}
 nie zachodzi, ponieważ w każdym bloku maksimum wynosi $\|v\|$.
 \end{przyklad}
+
+\begin{wniosek}[Bloki o ograniczonej długości]
+\label{ma2:cor:bounded-blocks}
+W oznaczeniach twierdzenia \ref{ma2:thm:series-grouping}
+załóżmy, że istnieje całkowite $B\ge1$ takie, że
+$k_j-k_{j-1}\le B$ dla wszystkich $j\ge1$.
+Jeżeli $x_n\to0$ i $\sum b_j=S$, to $\sum x_n=S$.
+\end{wniosek}
+\begin{proof}
+Dla $\varepsilon>0$ wybieramy $M$ z
+$\|x_n\|<\varepsilon/B$ dla $n\ge M$.
+Dla $j$ dostatecznie dużego, by $k_{j-1}+1\ge M$,
+oraz $k_{j-1}\le m\le k_j$ zachodzi
+\[
+ \left\|\sum_{n=k_{j-1}+1}^m x_n\right\|
+ \le\sum_{n=k_{j-1}+1}^m\|x_n\|<\varepsilon,
+\]
+ponieważ suma ma co najwyżej $B$ składników, a jeśli jest
+pusta, jej norma jest równa zeru i także jest mniejsza
+od $\varepsilon$. Nierówność dla maksimum daje $d_j\to0$,
+więc stosujemy twierdzenie \ref{ma2:thm:series-grouping}.
+\end{proof}
+
+\begin{przyklad}[Bloki o nieograniczonej długości]
+\label{ma2:ex:unbounded-blocks}
+Ustalmy $v\in E$ o normie $1$ (wystarczy niezerowa przestrzeń).
+Niech $k_0=0$, $k_j=j(j+1)$ dla $j\ge1$.
+W bloku o indeksie $j$, długości $2j$, określmy
+\[
+ x_{k_{j-1}+r}=
+ \begin{cases}
+ v/j,&1\le r\le j,\\
+ -v/j,&j<r\le 2j.
+ \end{cases}
+\]
+Ponieważ $k_j-k_{j-1}=2j$ i $k_j\to\infty$, bloki
+pokrywają wszystkie dodatnie indeksy bez powtórzeń.
+Dla $\varepsilon>0$ wybieramy $J$ z $1/J<\varepsilon$.
+Jeżeli $n>k_{J-1}$, należy on do bloku o indeksie $j\ge J$,
+więc $\|x_n\|=1/j\le1/J<\varepsilon$.
+Zatem $x_n\to0$. Każdy blok zawiera $j$ kopii $v/j$ i $j$
+kopii $-v/j$, więc $b_j=0$ oraz $S_{k_j}=0$.
+Jednak $S_{k_{j-1}+j}=v$ dla każdego $j\ge1$, gdyż
+poprzednie bloki mają sumę zero, a pierwsza połowa
+bieżącego bloku ma sumę $v$. Oba ciągi indeksów dążą
+do nieskończoności, a odpowiadające im sumy częściowe
+mają różne granice $0$ i $v$. Szereg wyjściowy jest
+rozbieżny, mimo że szereg zgrupowany jest zbieżny i $x_n\to0$.
+W każdym bloku $d_j=1$: norma przyrostu sumy częściowej
+rośnie od $0$ do $1$ w pierwszej połowie i maleje do $0$
+w drugiej.
+\end{przyklad}
+\begin{center}
+\begin{tikzpicture}[x=.48cm,y=1.65cm]
+ \draw[->] (-.4,0)--(12.9,0) node[right] {$N$};
+ \draw[->] (0,-.12)--(0,1.28) node[above] {$t_N$};
+ \draw[dashed,gray] (0,1)--(12,1);
+ \node[left] at (0,1) {$1$};
+ \foreach \n/\lab in {0/0,2/2,6/6,12/12}
+   {\draw (\n,.045)--(\n,-.045) node[below] {$\lab$};}
+ \draw[blue,thick] (0,0)--(1,1)--(2,0)--(4,1)--(6,0)--(9,1)--(12,0);
+ \foreach \n/\t in {0/0,1/1,2/0,3/.5,4/1,5/.5,6/0,7/.333333,8/.666667,9/1,10/.666667,11/.333333,12/0}
+   {\fill[blue] (\n,\t) circle[radius=1.25pt];}
+ \node[above] at (1,1) {$j=1$};
+ \node[above] at (4,1) {$j=2$};
+ \node[above] at (9,1) {$j=3$};
+\end{tikzpicture}
+
+\small W przykładzie \ref{ma2:ex:unbounded-blocks} sumy częściowe
+mają postać $S_N=t_Nv$. Punkty oznaczają wartości dla
+całkowitych $N$ w trzech pierwszych blokach; odcinki łączą
+punkty wyłącznie dla czytelności. Na końcu każdego bloku
+$t_N=0$, a w jego środku $t_N=1$.
+\end{center}
 
 \section{Zbieżność bezwzględna i oszacowania reszty}
 \begin{definicja}[Zbieżność bezwzględna]
@@ -330,9 +443,9 @@ ponieważ $x_j>0$ dla każdego $j$.
 \label{ma2:cor:series-majorant}
 Niech $E$ będzie przestrzenią Banacha. Jeśli $a_n\ge0$,
 $\sum a_n<\infty$ i od pewnego indeksu $\|x_n\|\le a_n$,
-to $\sum x_n$ jest bezwzględnie zbieżny i zbieżny.
-Jeśli dla całkowitego $N\ge0$ nierówność zachodzi dla wszystkich $n>N$, to
-$\|S-S_N\|\le\sum_{n>N}a_n$.
+to $\sum x_n$ jest bezwzględnie zbieżny i ma sumę $S\in E$.
+Jeśli dla całkowitego $N\ge0$ nierówność zachodzi dla wszystkich
+$n>N$, to $\|S-S_N\|\le\sum_{n>N}a_n$.
 \end{wniosek}
 \begin{proof}
 Wybierzmy $m\ge1$ tak, aby $\|x_n\|\le a_n$ dla $n\ge m$.
@@ -384,8 +497,9 @@ $\|x_{n+1}\|\le q\|x_n\|$ dla $n\ge m$.
 Indukcyjnie $\|x_{m+k}\|\le q^k\|x_m\|$ dla $k\ge0$:
 dla $k=0$ mamy równość, a przejście do $k+1$ wynika
 z powyższego oszacowania kolejnych norm.
-Majoranta geometryczna i wniosek \ref{ma2:cor:series-majorant}
-dają zbieżność.
+Ponieważ $\sum_{k=0}^\infty q^k\|x_m\|=\|x_m\|/(1-q)$
+jest skończona, wniosek \ref{ma2:cor:series-majorant}
+daje zbieżność bezwzględną i zbieżność szeregu.
 Jeśli $\liminf r_n>1$, wybieramy skończone $q>1$ mniejsze
 od granicy dolnej (również gdy jest nieskończona).
 Od pewnego $m$ mamy $r_n>q$ i $x_n\ne0$.
@@ -405,6 +519,21 @@ Dla każdego $M$ istnieje $n\ge M$ z $\|x_n\|^{1/n}>q$,
 stąd $\|x_n\|>q^n\ge1$. Wyrazy nie dążą do zera,
 więc szereg jest rozbieżny.
 \end{proof}
+\begin{przyklad}[Przypadek graniczny kryteriów]
+\label{ma2:ex:ratio-root-boundary}
+W przestrzeni zawierającej niezerowy wektor $v$ rozważmy
+$x_n=v/n$ i $y_n=v/n^2$. Ilorazy kolejnych norm to
+odpowiednio $n/(n+1)$ i $(n/(n+1))^2$; obie granice są równe
+$1$. Również granice pierwiastków stopnia $n$ z norm są równe
+$1$, ponieważ $\|v\|^{1/n}\to1$ oraz $n^{1/n}\to1$
+(rachunek granic z tomu I). Szereg $\sum x_n$ jest rozbieżny
+(przykład \ref{ma2:ex:vector-harmonic}), podczas gdy
+$\sum y_n$ jest bezwzględnie zbieżny i zbieżny: szereg
+liczbowy $\sum 1/n^2$ jest zbieżny, a mnożenie jego sum
+częściowych przez $v$ daje granicę w $E$. Graniczna wartość
+$1$ nie rozstrzyga więc o zbieżności.
+\end{przyklad}
+
 \begin{przyklad}[Kontrola błędu obcięcia]
 \label{ma2:ex:series-geometric-bound}
 Jeśli $C\ge0$, $0\le q<1$ i $\|x_n\|\le Cq^n$ dla $n\ge1$,
