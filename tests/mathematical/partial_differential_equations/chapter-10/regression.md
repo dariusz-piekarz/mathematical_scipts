@@ -142,3 +142,23 @@ Druga lektura: 11/75; 8 kryteriów doprecyzowanych, 3 bez zmian, jedenaście zmi
 | PDE-10-024 | Zdefiniowano normę i półnormę Höldera, wskazano istniejący dowód we wniosku o Morreyu; brak zależności kołowej. Szczegóły dowodu Morreya będą objęte następną lekturą 025–036. |
 
 Druga lektura 24/75; w tej iteracji 10 kryteriów doprecyzowanych, 3 bez zmian, 11 zmian źródłowych. Zachowano 32 etykiety w tej samej kolejności; wszystkie 62 wystąpienia odsyłaczy mają cele w rozdziałach 09 i 10; stos środowisk poprawny; materiał przed i po kontrolowanym fragmencie bez zmian. Nie uruchamiano testów wykonywalnych, kompilacji, CI ani Lean. Następna iteracja: druga lektura 025–036, Morrey i reprezentanci wyższych rzędów.
+
+## Iteracja 156 — druga lektura 025–036
+Źródło przed 07a6cd32e34ff2028b8b3b9e5ffc6bcdbe9ea5b8, po dffafe3cd6a585d7a8ea8aa32e9707e77202ae56, commit 59f83c50c4392f2ea19db3c335aef5598aee6fb5. Odczytano pełną sekcję Morreya oraz odpowiednie twierdzenia o wygładzaniu i reprezentantach jednowymiarowych z rozdziału 09.
+
+| Kryterium | Wynik drugiej lektury |
+| --- | --- |
+| PDE-10-025 | Doprecyzowano R>0, znaczenie C^1 na domknięciu i miarę kuli; poprawne uśrednianie. |
+| PDE-10-026 | Jawna całka po obrazie kuli, uzasadnienie zawierania i mierzalności zbioru par (t,z), Tonelli. |
+| PDE-10-027 | Bez zmian: całka t^(-d-1), stała, całkowalność jądra i pominięcie singletonu. |
+| PDE-10-028 | Rozpisano całkę biegunową z d*omega_d, promień, oszacowanie gradientu na całej przestrzeni i jawną dopuszczalną stałą. |
+| PDE-10-029 | Bez zmian: oszacowanie supremum na kuli jednostkowej i równoważność norm. |
+| PDE-10-030 | Uzupełniono zbieżność aproksymantów również w półnormie krytycznego wykładnika Höldera, przez przejście m do nieskończoności w oszacowaniu różnic. |
+| PDE-10-031 | Bez zmian: poprawne lokalne wygładzanie, nieujemne jądro i ograniczenie euklidesowego gradientu dla p=infty. |
+| PDE-10-032 | Rozpisano warunek Cauchy'ego i niezależność ciągów ze zbioru pełnej miary; identyfikację supremum z istotnym supremum. |
+| PDE-10-033 | Bez zmian: pełna norma przez przedłużenie, przypadek d=1 i jednoznaczność. |
+| PDE-10-034 | Jawna norma wyższego rzędu, ciągłość zanurzenia przez oszacowania każdej składowej normy także dla p=infty. |
+| PDE-10-035 | Uściślono zawieranie odcinka w mniejszej kuli i orientację całki dla t<0; identyfikacja pochodnych poprawna. |
+| PDE-10-036 | Uzasadniono pełną normę, liniowość i iniektywność zanurzenia oraz rozpisano kontrprzykład x^theta dla dowolnego beta>theta>0 (beta<=1) w wymiarze 1. |
+
+Druga lektura 36/75. W tej iteracji 8 kryteriów doprecyzowanych, 4 bez zmian, 11 zmian źródłowych. Kontrola źródeł 09 i 10: 32 unikatowe etykiety, 61/61 rozwiązanych odsyłaczy; stos środowisk poprawny, materiał przed i po sekcji bez zmian. Nie uruchamiano testów wykonywalnych, kompilacji, CI ani Lean. Następna iteracja: druga lektura 037–049, aproksymacja na kostkach, Rellich–Kondrachov, interpolacja i kontrprzykłady.
