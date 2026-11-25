@@ -521,6 +521,52 @@ def check_fox_prefix_cancellation():
     return count, words
 
 
+def check_arf_determinant_mod8():
+    """GKT-25-ARF-MOD8-01: exact determinant congruence on symplectic-mod-2 matrices."""
+    from random import Random
+
+    def determinant(m):
+        n = len(m)
+        # Leibniz formula, independent of Schur-complement proof.
+        result = 0
+        for p in permutations(range(n)):
+            v = (-1)**sum(p[i] > p[j] for i in range(n) for j in range(i+1,n))
+            for i, j in enumerate(p):
+                v *= m[i][j]
+            result += v
+        return result
+
+    def check(diag, pairs, cross):
+        n = len(diag)
+        m = [[0]*n for _ in range(n)]
+        for i, d in enumerate(diag):
+            m[i][i] = d
+        k = 0
+        for i in range(n):
+            for j in range(i+1,n):
+                if i//2 == j//2:
+                    m[i][j] = m[j][i] = pairs[i//2]
+                else:
+                    m[i][j] = m[j][i] = cross[k]
+                    k += 1
+        arf = sum((diag[i]//2)*(diag[i+1]//2) for i in range(0,n,2)) % 2
+        assert determinant(m) % 8 == ((-1)**(n//2)*(1-4*arf)) % 8
+
+    count = 0
+    for diag in product((0,2), repeat=4):
+        for pairs in product((1,3), repeat=2):
+            for cross in product((0,2,4,6), repeat=4):
+                check(diag,pairs,cross)
+                count += 1
+    rng = Random(230)
+    for _ in range(128):
+        check([2*rng.randrange(-4,5) for _ in range(6)],
+              [2*rng.randrange(-4,5)+1 for _ in range(3)],
+              [2*rng.randrange(-4,5) for _ in range(12)])
+    assert count == 16384
+    return count, 128
+
+
 def test_source():
     names=[
         "16-od-triangulacji-do-topologii-i-geometrii-rozmaitosci.tex",
@@ -545,6 +591,7 @@ def test_source():
 
 if __name__=="__main__":
     test_source()
+    print("PASS GKT-25-ARF-MOD8-01:",check_arf_determinant_mod8())
     print("PASS GKT-25-FOX-PREFIX-01:",check_fox_prefix_cancellation())
     print("PASS GKT-25-FOX-01:",check_fox_dihedral_relation())
     print("PASS GKT-25-LINK-SIGN-01:",check_crossing_orientation())
