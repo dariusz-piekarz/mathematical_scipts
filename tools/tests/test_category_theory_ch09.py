@@ -89,6 +89,40 @@ class CategoryTheoryCh09(unittest.TestCase):
         for n in range(5):
             self.assertEqual(len(list(maps(n,1))),1)
 
+    def test_CAT_09_009_unique_representing_pair(self):
+        # Two universal elements of Hom(B,-), or Hom(-,B), are bijections.
+        for n in range(5):
+            for u,v in itertools.product(itertools.permutations(range(n)),repeat=2):
+                cov=[a for a in maps(n,n) if comp(a,u)==v]
+                contra=[a for a in maps(n,n) if comp(v,a)==u]
+                for candidates in (cov,contra):
+                    self.assertEqual(len(candidates),1)
+                    self.assertEqual(len(set(candidates[0])),n)
+
+    def test_CAT_09_010_kahler_dual_numbers(self):
+        # A = F2[e]/(e^2). Enumerate F2-derivations into the regular module A.
+        # In characteristic 2, d(e) is arbitrary; d(0)=d(1)=0.
+        def mul(a,b):
+            return ((a&1)*(b&1)) | ((((a&1)*(b>>1)+(a>>1)*(b&1))%2)<<1)
+        actual=set()
+        for d in maps(4,4):
+            if d[0]!=0 or d[1]!=0:
+                continue
+            if all(d[a^b]==(d[a]^d[b]) and
+                   d[mul(a,b)]==(mul(a,d[b])^mul(b,d[a]))
+                   for a,b in itertools.product(range(4),repeat=2)):
+                actual.add(d)
+        self.assertEqual(actual,{(0,0,v,v) for v in range(4)})
+        # A-linear maps A -> A are precisely multiplication by v.
+        linear=set()
+        for f in maps(4,4):
+            if all(f[a^b]==(f[a]^f[b]) and f[mul(a,b)]==mul(a,f[b])
+                   for a,b in itertools.product(range(4),repeat=2)):
+                linear.add(f)
+        images=[(0,0,f[1],f[1]) for f in linear]
+        self.assertEqual(set(images),actual)
+        self.assertEqual(len(images),len(actual))
+
     def test_CAT_09_008_structure(self):
         s=CHAPTER.read_text(encoding="utf-8")
         labels=re.findall(r"\\label\{([^}]+)\}",s)
