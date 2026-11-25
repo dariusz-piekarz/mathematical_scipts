@@ -12,7 +12,7 @@ from .label_registry import qualified_occurrence
 def reading_reference_issues(con):
     """Validate all indexed atlasref rows, not just selected chapter fixtures."""
     rows = con.execute("""
-        SELECT r.source_document, r.target_label, r.line, r.status,
+        SELECT r.id, r.source_document, r.target_label, r.line, r.status,
                r.target_document, r.target_entity, e.document_id
         FROM references_tex r LEFT JOIN entities e ON e.id=r.target_entity
         WHERE r.command='atlasref'
@@ -23,7 +23,7 @@ def reading_reference_issues(con):
             "SELECT document_id,name,entity_id FROM label_occurrences"):
         occurrences[(doc, label)].append(entity)
     issues = []
-    for source, label, line, status, target, entity, entity_owner in rows:
+    for reference_id, source, label, line, status, target, entity, entity_owner in rows:
         qualified = qualified_occurrence(label)
         reason = None
         if status not in {"resolved", "external_resolved", "alias_resolved"}:
@@ -37,7 +37,7 @@ def reading_reference_issues(con):
             elif target != expected_doc or occurrences[qualified] != [entity]:
                 reason = "qualified_occurrence_mismatch"
         if reason:
-            issues.append({"source": source, "label": label, "line": line,
+            issues.append({"reference_id": reference_id, "source": source, "label": label, "line": line,
                            "status": status, "target": target, "reason": reason})
     return {"checked": len(rows), "invalid": len(issues), "issues": issues}
 
@@ -70,8 +70,13 @@ def graph_coverage(con, catalog_path=None):
     module_pairs = defaultdict(Counter)
     neighbors = defaultdict(set)
     cross_neighbors = defaultdict(set)
-    for s, t, cmd, status in con.execute(
-            "SELECT source_document,target_document,command,status FROM references_tex"):
+    reading_audit = reading_reference_issues(con)
+    invalid_reading_ids = {issue["reference_id"] for issue in reading_audit["issues"]}
+    for reference_id, s, t, cmd, status in con.execute(
+            "SELECT id,source_document,target_document,command,status FROM references_tex"):
+        if reference_id in invalid_reading_ids:
+            unresolved[s] += 1
+            continue
         if status not in {"resolved", "external_resolved", "alias_resolved", "included_resolved"} or t not in docs:
             unresolved[s] += 1
             continue
@@ -133,7 +138,6 @@ def graph_coverage(con, catalog_path=None):
                    "indexed_outside_catalog": [docs[m] for m in sorted(set(docs) - expected_ids)],
                    "path_mismatches": mismatched,
                    "duplicate_ids": sorted(m for m, n in Counter(m for m, _ in expected).items() if n > 1)}
-    reading_audit = reading_reference_issues(con)
     reading_inventory = reading_reference_inventory(con)
     return {"evidence": "explicit_tex_references", "catalog": catalog,
             "reading_audit": reading_audit,
