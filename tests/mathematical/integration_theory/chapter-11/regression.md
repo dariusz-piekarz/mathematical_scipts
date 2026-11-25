@@ -40,3 +40,17 @@ Audyt B: commit 6de8171519fa0981a05270f6ffe33b04d02e0523, blob 27c91e2739a4752bc
 | IT-11-024 | Łączność produktów, zgodność sigma-algebr i miar, niezależność i faktoryzacja całek zespolonych | semantyczna + Python |
 
 Audyt C: commit 4b0d89a303bd7305db92cc3ff2fd51d94ce5e871, blob 1c2e3bd3c4b57ef38788baa689064b75fd426abd. Przeczytano cały blok, zachowano 132/132 etykiet, sprawdzono parowanie środowisk; blok 32215 -> 36596 znaków, niezmieniony prefiks 81342 i sufiks 54353 znaków. Uzupełniono algebraiczne i miarowe kroki konstrukcji, przypadki nieskończonych wartości, jawny argument pokryciowy dla pasów zerowych, konstrukcję reprezentanta w uzupełnieniu, mierzalność całek przekrojowych, zgodność miar i łączność produktów. Twierdzenia o klasie monotonicznej i pi-lambda są jawnie przywołanymi wynikami teorii miary. Sześć nowych testów: f8fd2591fadddc12ffa18236cbb9fae219a0b31c (skończone świadectwa, nie dowody). CI B 45633244985: success. CI C oraz kontrola wizualna PDF i Lean niepotwierdzone. Następny blok D: zamiana zmiennych.
+
+## Blok D — zamiana zmiennych
+| ID | Kryterium | Metoda |
+|---|---|---|
+| IT-11-025 | Miara obrazowa, addytywność, całkowanie funkcji nieujemnych i zespolonych, gęstość obrazu kwadratowania | semantyczna |
+| IT-11-026 | Translacja, ścinanie i skalowanie, zgodność miar produktowych, wyznacznik macierzy elementarnych, rozszerzenie na zbiory Lebesgue'a-mierzalne | semantyczna + Python |
+| IT-11-027 | Lokalna własność Lipschitza i obrazy zbiorów zerowych, dobór średnic pokrycia i przypadek stałej zero | semantyczna |
+| IT-11-028 | Lokalny sześcian: oszacowanie reszty, zwężenie Banacha, mierzalność obrazu i jednostajny parametr na zbiorze zwartym | semantyczna + Python |
+| IT-11-029 | Wzór jakobianowy dla dyfeomorfizmu: dodatniość J, miary sigma-skończone, podział i oscylacje, jednoznaczność na sześcianach diadycznych | semantyczna + Python |
+| IT-11-030 | Uzupełnienie, mierzalność obrazów i przeciwobrazów, zgodność całek i ograniczanie dziedziny | semantyczna |
+| IT-11-031 | Biegunowe, walcowe i sferyczne: dziedziny dyfeomorfizmów, zbiory usunięte miary zero, wyznaczniki i iterowane całki w uzupełnieniu | semantyczna + Python |
+| IT-11-032 | Transformacja gęstości, brak iniektywności, konstrukcja osobliwego homeomorfizmu przez mieszaninę miar Cantora | semantyczna + Python |
+
+Audyt D: commit 99a974e9a7cbc9cff04af9bae262c2cc3958e648, blob 80aaca7a34c72daa208e05cb3f650f14adb16b4b. Przeczytano cały blok zamiany zmiennych (21901 -> 28195 znaków), zachowano 132/132 etykiet, środowiska sparowane; pozostały prefiks i sufiks niezmienione. Rozpisano dowody miary obrazowej, zerowości obrazów Lipschitzowskich, jednostajnego oszacowania lokalnej deformacji, przejścia od skończonych miar do całej sigma-algebry, mierzalności względem uzupełnienia; doprecyzowano zastosowania Fubiniego/Tonellego w układach współrzędnych. Dodano konstrukcję ściśle rosnącego osobliwego homeomorfizmu wykorzystującą miarę Cantora (IT-10) i twierdzenie o pochodnej dystrybuanty (następny blok IT-11). Siedem nowych regresji: 25118aa2e003226a187a059b49c8cabd66547c4b, skończone świadectwa, nie dowody. CI C 45633654407: success. CI D, kontrola PDF, formalizacja Lean oczekują. Następny blok E: różniczkowanie całek i miar, w tym weryfikacja zależności nowego przykładu od twierdzenia o pochodnej dystrybuanty.
