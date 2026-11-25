@@ -102,3 +102,22 @@ Pierwsza lektura, iteracja 148. Kryteria semantyczne nie są wykonanymi testami 
 
 ## Iteracja 153
 Źródło przed 920f2f484ed6beb87cb307fa7b27d4853baa3854, po dcfd5d9b5ee51864321624e0a5cf93bef4ace49b, commit e1af18fbdb61020e5f91cc56775ce88ba9342cd3. Jedenaście zmian: norma ilorazowa i rzut ortogonalny, pełny dowód jądra śladu przez tożsamości testowe na spłaszczonym wykresie oraz przesuwanie i splot w oryginalnych współrzędnych, dowód Poincarégo z łańcuchami kostek, przedłużanie przez zero, zakresy wykładników na schemacie. Nie dowodzimy identyfikacji normy śladu z normą Gagliarda. Pierwsza lektura kryteriów 060–075 oraz całego rozdziału zakończona. 32 unikatowe etykiety i 60 rozwiązanych odsyłaczy w źródłach 09 i 10, stos środowisk poprawny. Nie uruchamiano testów wykonywalnych, kompilacji, CI ani Lean; wizualna kontrola rysunku otwarta. Następny etap: druga lektura stabilizacyjna od kryterium 001 i trwałe testy wykonywalne tam, gdzie można określić automatyczną kontrolę.
+
+## Iteracja 154 — druga lektura 001–011
+Źródło przed dcfd5d9b5ee51864321624e0a5cf93bef4ace49b, po 896d52cded37551a2734e356dee1999d326f22c5, commit 186daf9112e748a6cf16a8640e8c851292145381. Ponownie odczytano cały zakres od wstępu do uwagi o krytycznym wykładniku i odpowiednie źródło rozdziału 09.
+
+| Kryterium | Wynik drugiej lektury |
+| --- | --- |
+| PDE-10-001 | Doprecyzowano iniektywne odwzorowanie i jawne stałe równoważności norm składowych z normą euklidesową, także p=infty. |
+| PDE-10-002 | Uzupełniono mierzalność złożeń z rzutem i zachowanie zbiorów zerowych przez przeciwobraz rzutu. |
+| PDE-10-003 | Poprawna baza d=2 i pierwszy Hölder; jawny wzór G_j, mierzalność, ograniczoność i zwarte nośniki. |
+| PDE-10-004 | Doprecyzowano tożsamość z H oraz podniesienie hipotezy indukcyjnej do właściwej potęgi. |
+| PDE-10-005 | Bez zmiany: poprawne monotoniczne obcięcia i przypadki zerowych lub nieskończonych całek. |
+| PDE-10-006 | Bez zmiany: całkowanie po prostych, potęgowanie i Tonelli. |
+| PDE-10-007 | Bez zmiany: średnie i Cauchy–Schwarz dają 1/sqrt(d) dla gradientu euklidesowego. |
+| PDE-10-008 | Jawnie oddzielono przypadek p=1 dla gładkich funkcji od wspólnego przejścia do W^{1,p}. |
+| PDE-10-009 | Dodatniość i skończoność normy przed dzieleniem; jawna dopuszczalna (niekoniecznie optymalna) stała p(d-1)/(sqrt(d)(d-p)). |
+| PDE-10-010 | Jawny zakres 1<=p<d, zachowanie tej samej stałej; rozpisano sumę zbiorów w oszacowaniu Czebyszewa i przeliczalne przejście do równości a.e. |
+| PDE-10-011 | Jawna konwencja 1/infty=0; skalowanie zgodne z rozdziałem 09. |
+
+Druga lektura: 11/75; 8 kryteriów doprecyzowanych, 3 bez zmian, jedenaście zmian źródłowych. 32 etykiety zachowane w tej samej kolejności, 61 wystąpień odsyłaczy ma cele w rozdziałach 09 i 10, stos środowisk poprawny. Dalsza część od definicji obszaru Lipschitzowskiego bez zmian. Nie wykonywano testów Python, kompilacji, CI ani Lean. Następna iteracja: druga lektura 012–024, szczególnie dowód przedłużania i brak błędnego koła w przypadku p=infty.
