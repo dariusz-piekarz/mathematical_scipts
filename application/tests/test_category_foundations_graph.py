@@ -33,6 +33,12 @@ class CategoryFoundationsGraphTest(unittest.TestCase):
             ("KAT-09", "AA-18", "aa:tw:tensor-commutative-module"),
             ("KAT-10", "AA-07", "aa:tw:free-exists"),
             ("KAT-11", "AA-18", "aa:tw:tensor-hom-adjunction"),
+            ("KAT-01", "TOP-04", "def:droga-petla"),
+            ("TOP-04", "KAT-01", "cat:ex:grupoid"),
+            ("KAT-02", "DG-01", "def dyfeo"),
+            ("DG-01", "KAT-02", "cat:ex:smooth-bijection-not-diffeo"),
+            ("KAT-03", "ALG-04", "ga:def:prime-spectrum"),
+            ("ALG-04", "KAT-03", "cat:ex:spec-functor"),
         )
         needed = {doc for source, target, _ in expected for doc in (source, target)}
         needed.update("KAT-%02d" % n for n in range(19))
