@@ -603,13 +603,15 @@ function renderConceptGraph(data){
     const isOccurrence=edge.type==="occurrence";
     const aWidth=a.x===690?392:244;
     const bWidth=b.x===690?392:244;
-    const x1=a.x+aWidth,x2=b.x,y1=a.y,y2=b.y;
+    const forward=a.x<=b.x;
+    const x1=forward?a.x+aWidth:a.x,x2=forward?b.x:b.x+bWidth,y1=a.y,y2=b.y;
     const mid=(x1+x2)/2;
     const path=svgEl("path",{d:"M "+x1+" "+y1+" C "+mid+" "+y1+", "+mid+" "+y2+", "+x2+" "+y2,
       fill:"none",stroke:isOccurrence?"#a6b4c7":"#278397",
       "stroke-width":isOccurrence?1.5:2.2,"stroke-dasharray":isOccurrence?"5 5":"none",
       opacity:isOccurrence?".65":".85"});
     if(!isOccurrence)path.setAttribute("marker-end","url(#concept-arrow)");
+    if(edge.type==="equivalent")path.setAttribute("marker-start","url(#concept-arrow)");
     path.append(svgEl("title",{},edge.label+(edge.explanation?": "+edge.explanation:"")));
     svg.append(path);
   }
