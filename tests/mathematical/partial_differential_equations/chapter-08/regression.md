@@ -157,3 +157,14 @@ Druga lektura wprowadzenia i sekcji 8.1–8.2. Sprawdzono wszystkie 16 kryterió
 - 16/92 kryteriów w drugiej lekturze: 10 bez zmian, 6 po uściśleniu. Nie potwierdzono jeszcze CI nowego źródła ani nie wykonano Lean.
 
 Następna iteracja 117: druga lektura 8.3–8.4, kryteria 017–033.
+
+## Iteracja 117 — 2026-11-25
+
+Druga lektura sekcji 8.3–8.4. Sprawdzono wszystkie 17 kryteriów 017–033:
+- Bez zmian: 017, 019, 021, 023–026, 028–029, 032 (10).
+- Uściślono: 018 — jawne podstawienie w całce radialnej Gaussa; 020 — obliczenie masy jądra i wzór całkowy na różnicę wartości funkcji wzdłuż odcinka z oszacowaniem zespolonego gradientu; 022 — reguła łańcuchowa dla odbicia, zachowanie półnorm i algebraiczne wyprowadzenie F²; 027 — pełny dowód liniowości i jednoznaczności przedłużenia izometrii przez ciągi aproksymujące; 030 — przeniesienie tożsamości F² na L² przez ciągłość i gęstość; 031 — jawny dobór błędów obcięcia i wygładzenia w obu normach; 033 — zbieżność obcięć w L² przez całkowalność i odwołanie do zgodności transformat.
+- Przeredagowano sformułowanie twierdzenia Plancherela, w szczególności wydzielono równość norm do osobnego wzoru, aby ograniczyć problem łamania wierszy zgłoszony przy pierwszej kompilacji. Weryfikacja typograficzna wymaga nowego przebiegu CI.
+- Commit źródła 51c9e3c019992e5424336e4aedcf2d24aa9b62ea, blob cf8ac17bd7a4cd30dacc86207ed3ebfe1c6599fa; 39 etykiet, 85 wystąpień odsyłaczy, 10 niezmienionych celów zewnętrznych, poprawne zagnieżdżenie środowisk. Sekcje poza 8.3–8.4 niezmienione. Bez nowych tematów i ID.
+- Łącznie druga lektura 33/92 kryteriów: 20 bez zmian, 13 po uściśleniu. Nowego CI i formalizacji Lean nie potwierdzono.
+
+Następna iteracja 118: druga lektura sekcji 8.5–8.6, kryteria 034–052.
