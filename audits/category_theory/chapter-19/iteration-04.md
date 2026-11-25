@@ -1,0 +1,9 @@
+# CAT-19 — niezależny audyt kontrolny IV
+
+Punkt odniesienia ac141f068ae3c058eb9262c2f656e3ca47648fe7: porównano 42 pliki zakresu CI z 61c3c8015c9bee8408f2bbd66a86311822e0bacb, bez różnic. Źródło 0a0341c00f78e107140a91e964795ed2d751deb3, testy 9da478793217f1c812f9a68828d141cf4410c869. Ponownie sprawdzono dowody koherencji przykładów, kierunki i typy ewaluacji i transpozycji, składanie wewnętrznego Hom oraz odwracalność i symetrię plecenia. Rejestr zawiera wszystkie 8 testów. W AA-18 (blob d8e1399b050990b2b3590e7df8f6cce6fa2571e2) wszystkie 5 różnych kwalifikowanych celów występuje dokładnie raz.
+
+Niezależna enumeracja JS: w Set dla mocy X,A od 0 do 3 i B od 0 do 2 sprawdzono 712 funkcji X×A→B; spośród 270786 kandydatów na transpozycje dokładnie jeden dla każdej funkcji spełniał warunek ewaluacji. Uwzględniono puste zbiory. W modelu jednorodnych tensorów nad F3,F5,F7,F11 sprawdzono obie drogi obu sześciokątów z rzeczywistym przestawieniem znakowanych czynników oraz współczynnikami q^(pr), dla wszystkich niezerowych q i stopni od -3 do 3: 15092 sprawdzenia PASS; 2688 przypadków podwójnej zamiany o współczynniku różnym od 1. To kontrole skończone, nie formalizacja dowodów.
+
+CI #45634825162 job 139277345108 SUCCESS, 132/132 testów, 8/8 CAT-19, kompilacja i odsyłacze. Wykorzystano rzeczywiste oględziny stron 75–79 artefaktu 15032288386 (79 stron) z III; nie powtarzano renderowania ani CI, gdyż zakres źródeł nie zmienił się. CI aplikacji #45634825290 i terminologii #45634825204 SUCCESS według ostatniej weryfikacji w III. Lean nie uruchamiano.
+
+Wynik: brak nowych istotnych błędów; CAT-19 zamknięty w aktualnym zakresie. Źródło i testy bez zmian. Następny CAT-20: koherencja Mac Lane'a, uściślanie i funktory monoidalne. Twierdzenia ogólnego o koherencji nie zaliczono jeszcze do zweryfikowanych wyników.
