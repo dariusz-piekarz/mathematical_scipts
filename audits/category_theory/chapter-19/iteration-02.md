@@ -1,0 +1,3 @@
+# CAT-19 — stabilizacja II
+
+Wejście f9ae7125e3e84445f2ac4386d8018f2602f3d2a4. Sprawdzono typy pięciokąta, trójkąta i sześciokątów. Rozpisano obiekty pośrednie pięciokąta i rozbito równanie. Dodano przykład plecenia q^{pr} na przestrzeniach stopniowanych (symetria wtedy i tylko wtedy, gdy q²=1), pełny dowód własności ewaluacji i transpozycji oraz bifunktorialności wewnętrznego Hom z kontrolą wariancji i jednoznaczności. Dodano CAT-19-007 i CAT-19-008. Kontrola środowisk i etykiet JS PASS, 17 etykiet. CI wersji I #45634170818 SUCCESS. CI nowych zmian, PDF i kontrola wizualna pozostają do potwierdzenia. Nie uruchamiano Lean. Nie zmieniano CAT-00–18.
