@@ -476,6 +476,12 @@ def check_fox_dihedral_relation():
             A, B, C = (-1, a), (-1, b), (-1, c)
             assert (mul(mul(B, A), B) == C) == ((2*b-a-c) % n == 0)
             assert mul(B, B) == (1, 0)
+            # GKT-25-FOX-MOVES-01: idempotence, involution and self-distributivity.
+            def R(x, y):
+                return (2*y-x) % n
+            assert R(a, a) == a
+            assert R(R(a, b), b) == a
+            assert R(R(a, b), c) == R(R(a, c), R(b, c))
             count += 1
     assert count == 18495
     return count
