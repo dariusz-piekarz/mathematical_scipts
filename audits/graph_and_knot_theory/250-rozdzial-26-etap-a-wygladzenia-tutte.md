@@ -1,0 +1,9 @@
+# Audyt 250 — rozdział drukowany 26, etap A (otwarty)
+
+Data 2026-11-25. Kontynuacja raportu 246 po kontroli zmian 247–249. Plik TG19, blob po zmianie d982b3c5a70c3c61c46543fe38e98077428c4441, commit 6e28c85e450a1cc98cc7a933822197fa6e6f5e84.
+
+Odczytano pełny rozdział i konwencję A/B z sec:kt-jones. Uzupełniono lem:tg-tait-alternating: lokalne reguły lewej/prawej strony dla wejścia i wyjścia pasma górnego/dolnego, propagacja koloru wzdłuż łuku, spójność diagramu i jednoznaczność zamiany kolorów. Dopisano jawne założenie co najmniej jednego skrzyżowania oraz osobny przypadek okręgu. Rozpisano lokalne sklejenie brzegu dysków i pasów z dwoma wygładzeniami, uzasadniono b(F)>=1 oraz wzór dla przeciwnego kolorowania przez Eulera i dualność Tutte'a. Zachowano wcześniejsze etykiety.
+
+GKT-26-TAIT-STATES-01: rzeczywiście wykonano funkcję JS enumerującą spójne sferyczne układy rotacji z 1–3 krawędziami. Niezależne sklejanie lokalnych wygładzeń przez DSU, porównanie liczby okręgów z 2k-v+|F|, dokładne współczynniki Laurenta (BigInt) sumy stanów i specjalizacji Tutte'a. 452 oznaczone układy, 3532 stany, 1786 porównań współczynników; 341 układów z pętlami, 246 z krawędziami równoległymi. Wszystkie asercje PASS. Zachowano funkcję w test_gkt26_tait_states.js (604adfe313bcef8ddc57e00bfba7401c2559d16a), dołączono krok istniejącego workflow (1f2d317e39acb902982c1968b2c2bb52a76e6e60). Nie uruchamiano osobno pliku w Node; to nie formalizacja Lean ani dowód ogólny.
+
+Kontrola struktury TG19: 0 błędów zagnieżdżenia. Trzy nowe/sprawdzane cele odsyłaczy istnieją. CI nowych zmian i oględziny PDF niepotwierdzone. Etap A otwarty. Następnie macierz Goeritza: konwencja znaków, zgodność wymiarów macierzy incydencji przy pętlach, pełny dowód Cauchy'ego–Bineta dla multigrafów, zakres i dokładny odsyłacz do klasycznego twierdzenia o nakryciu rozgałęzionym; potem audyt kontrolny. Nie przechodzić do rozdziału 27.
