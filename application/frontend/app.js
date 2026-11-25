@@ -427,6 +427,36 @@ async function loadGraph(){
     renderGraph(data);
   }catch(e){toast(e.message);}
 }
+async function loadGlobalGraphCoverage(){
+  try{
+    const data=await api("/api/graph/coverage");
+    const host=$("graphCanvas"),s=data.summary;
+    if(state.cy){state.cy.destroy();state.cy=null;}
+    host.replaceChildren();host.style.height="";
+    $("graphSummary").textContent=`${s.indexed_chapters} rozdziałów · ${s.domains} dziedzin · ${s.cross_linked_chapters} rozdziałów z odsyłaczami między dziedzinami · ${s.connected_domain_pairs}/${s.domain_pairs} bezpośrednio połączonych par dziedzin · ${s.isolated_chapters} izolowanych rozdziałów`;
+    if(data.catalog)host.append(node("p",{},`Katalog: ${data.catalog.expected} rozdziałów · brak w indeksie: ${data.catalog.missing.length} · rozbieżne ścieżki: ${data.catalog.path_mismatches.length}`));
+    host.append(node("h3",{},"Graf dziedzin — wybierz parę, aby zobaczyć rozdziały"));
+    const pairs=node("div",{className:"global-graph-pairs"});
+    for(const p of data.domain_pairs.filter(p=>p.references).sort((a,b)=>b.references-a.references)){
+      const button=node("button",{type:"button"},`${p.left} ↔ ${p.right} · ${p.references}`);
+      button.addEventListener("click",()=>{$("graphLeft").value=p.left;$("graphRight").value=p.right;loadGraph();});
+      pairs.append(button);
+    }
+    host.append(pairs);
+    const missing=node("details");missing.append(node("summary",{},`Pary bez bezpośrednich odsyłaczy (${s.domain_pairs-s.connected_domain_pairs})`));
+    for(const p of data.domain_pairs.filter(p=>!p.references))missing.append(node("div",{},`${p.left} ↔ ${p.right}`));
+    host.append(missing);
+    const queue=node("details");
+    const chapters=data.chapters.filter(c=>!c.cross_incoming&&!c.cross_outgoing);
+    queue.append(node("summary",{},`Rozdziały bez powiązań między dziedzinami (${chapters.length})`));
+    for(const c of chapters){
+      const b=node("button",{type:"button"},`${c.id} · ${c.title}${c.isolated?" · izolowany":""}`);
+      b.addEventListener("click",()=>openModule(c.id));
+      const line=node("div");line.append(b);queue.append(line);
+    }
+    host.append(queue);
+  }catch(e){toast(e.message);}
+}
 function openGraphNode(n){if(n.entity_id && n.entity_id!==n.module)openEntity(n.entity_id);else openModule(n.module);}
 function renderGraph(data){
   const host=$("graphCanvas");host.replaceChildren();
@@ -1114,7 +1144,7 @@ function listeners(){
   $("tipOpen").addEventListener("click",()=>{const x=state.tooltipData;if(x)openLabel(x.name,x.source_document||state.currentModule);});
   $("referenceTip").addEventListener("mouseleave",closeTip);
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeTip();});
-  $("drawGraph").addEventListener("click",loadGraph);$("findPath").addEventListener("click",findPath);
+  $("drawGraph").addEventListener("click",loadGraph);$("globalGraphCoverage").addEventListener("click",loadGlobalGraphCoverage);$("findPath").addEventListener("click",findPath);
   $("drawConceptGraph").addEventListener("click",loadConceptGraph);
   $("conceptSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();loadConceptGraph();}});
   $("conceptLimit").addEventListener("change",()=>{if(state.tab==="concepts")loadConceptGraph();});
