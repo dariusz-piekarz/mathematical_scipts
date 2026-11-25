@@ -1,0 +1,476 @@
+% Rozwinięcie TO-18 i AM II-01, przygotowanie do szeregów funkcyjnych.
+\chapter{Zbieżność punktowa i jednostajna}
+\label{ma2:ch:uniform-convergence}
+
+Niech $X$ będzie zbiorem, a $(Y,d)$ przestrzenią
+metryczną. Gdy $X$ jest przestrzenią topologiczną,
+przez $C(X,Y)$ oznaczamy zbiór wszystkich ciągłych
+odwzorowań $X\to Y$. Rozróżnimy sposoby zbieżności ciągów
+odwzorowań $X\to Y$. W przypadku przestrzeni
+unormowanych wykorzystamy wyniki rozdziału
+\ref{ma2:ch:normed}. Topologiczne ujęcie przestrzeni
+odwzorowań znajduje się w topologii ogólnej, rozdział 18.
+
+\section{Definicje i pierwsze kryteria}
+
+\begin{definicja}
+\label{ma2:def:pointwise-uniform}
+Ciąg $(f_n)_{n\ge1}$ odwzorowań $X\to Y$ jest
+zbieżny punktowo do $f:X\to Y$, gdy
+\[
+ \forall x\in X\ \forall\varepsilon>0\ \exists N\ge1\
+ \forall n\ge N:\quad d(f_n(x),f(x))<\varepsilon.
+\]
+Jest zbieżny jednostajnie do $f$ na $X$, gdy
+\[
+ \forall\varepsilon>0\ \exists N\ge1\
+ \forall n\ge N\ \forall x\in X:\quad
+ d(f_n(x),f(x))<\varepsilon.
+\]
+\end{definicja}
+Różnica polega na tym, że w drugim przypadku wybór
+$N$ jest niezależny od $x$. Zbieżność jednostajna
+implikuje zbieżność punktową. Granica jest jednoznaczna
+z jednoznaczności granicy ciągu w przestrzeni metrycznej
+(AM I, rozdział 06, twierdzenie o jednoznaczności
+granicy, etykieta \texttt{ma1:thm:unique-limit}).
+Istotnie, dwie granice punktowe muszą mieć tę samą
+wartość w każdym punkcie dziedziny. Na zbiorze pustym obie własności
+zachodzą automatycznie; istnieje dokładnie jedno
+odwzorowanie z tego zbioru do $Y$.
+
+\begin{twierdzenie}[Kryteria zbieżności jednostajnej]
+\label{ma2:thm:uniform-criteria}
+Niech $X\ne\varnothing$, a $f_n,f:X\to Y$
+będą odwzorowaniami. Następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $f_n\to f$ jednostajnie na $X$;
+\item $M_n:=\sup_{x\in X}d(f_n(x),f(x))\to0$,
+gdzie dopuszczamy $M_n=+\infty$;
+\item dla każdego ciągu $(x_n)$ w $X$ mamy
+$d(f_n(x_n),f(x_n))\to0$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Z (i), zastosowanego z dokładnością $\varepsilon/2$,
+mamy $M_n\le\varepsilon/2<\varepsilon$ od pewnego
+indeksu, co daje (ii). Z (ii) wynika (i), bo
+$d(f_n(x),f(x))\le M_n$ dla każdego $x$.
+Z (ii) otrzymujemy również (iii): dla dowolnego
+ciągu $(x_n)$ od pewnego indeksu mamy
+$0\le d(f_n(x_n),f(x_n))\le M_n$, a $M_n\to0$.
+Gdyby (i) nie zachodziło, istniałoby $\varepsilon>0$
+takie, że dla dowolnego $N$ można wybrać $n\ge N$
+i $x\in X$ z $d(f_n(x),f(x))\ge\varepsilon$.
+Wybieramy rekurencyjnie ściśle rosnące indeksy
+$n_k$ i punkty $x_{n_k}$ spełniające tę nierówność:
+najpierw stosujemy warunek z $N=1$, a po wyborze
+$n_k$ stosujemy go z $N=n_k+1$.
+Uzupełniamy pozostałe wyrazy ciągu $(x_n)$ dowolnym
+ustalonym punktem $X$. Wzdłuż podciągu $(n_k)$
+odległości są nie mniejsze niż $\varepsilon$,
+co przeczy (iii).
+\end{proof}
+
+\begin{przyklad}
+\label{ma2:ex:powers-pointwise}
+Na $[0,1]$ funkcje $f_n(x)=x^n$ zbiegają punktowo
+do funkcji $f$ równej $0$ na $[0,1)$ i $1$ w punkcie $1$.
+Dla $x<1$ wynika to ze zbieżności potęg liczby
+o module mniejszym od $1$ (AM I, rozdział 06, przykład ciągu geometrycznego,
+etykieta \texttt{ma1:ex:geometric-sequence}).
+Dla każdego $n$ mamy $\sup_{[0,1]}|f_n-f|=1$:
+na $[0,1)$ wartości $x^n$ są mniejsze od $1$,
+ale dążą do $1$ przy $x\to1^-$, a w punkcie $1$
+różnica wynosi $0$. Zatem zbieżność nie jest
+jednostajna. Na $[0,r]$, gdzie $0\le r<1$,
+supremum różnicy wynosi $r^n\to0$, więc tam
+zbieżność jest jednostajna. Rysunek
+\ref{ma2:fig:powers-uniform} ilustruje oba przypadki.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=8cm,y=3.8cm,>=Stealth]
+ \draw[->] (-.035,0)--(1.08,0) node[right]{$x$};
+ \draw[->] (0,-.06)--(0,1.14) node[above]{$y$};
+ \draw[gray!55,densely dotted] (0,1)--(1,1)--(1,0);
+ \foreach \n/\kol in {1/blue!75!black,2/teal!80!black,4/orange!90!black,12/red!70!black}{
+  \draw[\kol,thick,domain=0:1,samples=81] plot (\x,{pow(\x,\n)});
+ }
+ \draw[black,very thick] (0,0)--(.992,0);
+ \draw[black,fill=white] (1,0) circle[radius=1.8pt];
+ \fill (1,1) circle[radius=1.8pt];
+ \draw[gray,dashed] (.7,0)--(.7,.7);
+ \node[below] at (.7,0) {$r$};
+ \node[below] at (1,0) {$1$};
+ \node[left] at (0,1) {$1$};
+ \node[below left] at (0,0) {$0$};
+ \node[blue!75!black,anchor=west] at (.05,.87) {$n=1$};
+ \node[teal!80!black,anchor=west] at (.05,.73) {$n=2$};
+ \node[orange!90!black,anchor=west] at (.05,.59) {$n=4$};
+ \node[red!70!black,anchor=west] at (.05,.45) {$n=12$};
+\end{tikzpicture}
+\caption{Funkcje $x^n$ i ich granica punktowa (czarna).
+Na każdym $[0,r]$, $r<1$, błąd nie przekracza $r^n$,
+lecz na całym $[0,1]$ jego supremum wynosi $1$.}
+\label{ma2:fig:powers-uniform}
+\end{figure}
+\FloatBarrier
+
+\begin{przyklad}[Ciągła granica punktowa nie wystarcza]
+\label{ma2:ex:moving-peak}
+Na $[0,1]$ połóżmy
+$g_n(x)=\max\{1-n|x-1/n|,0\}$.
+Funkcje są ciągłe, $g_n(0)=0$, a dla ustalonego
+$x>0$ mamy $g_n(x)=0$ od chwili, gdy $2/n<x$.
+Zatem granicą punktową jest funkcja stale równa $0$.
+Jednak $g_n(1/n)=1$ i $0\le g_n\le1$, więc
+$\sup_{[0,1]}|g_n|=1$. Zbieżność nie jest jednostajna,
+mimo ciągłości granicy i zwartości dziedziny.
+\end{przyklad}
+
+\section{Jednostajne kryterium Cauchy'ego}
+
+\begin{twierdzenie}
+\label{ma2:thm:uniform-cauchy}
+Niech $(f_n)$ będzie ciągiem odwzorowań $X\to Y$.
+Jeśli $f_n\to f$ jednostajnie, to
+\[
+ \forall\varepsilon>0\ \exists N\ge1\
+ \forall m,n\ge N\ \forall x\in X:\quad
+ d(f_m(x),f_n(x))<\varepsilon.
+\]
+Jeżeli $Y$ jest zupełna, warunek ten jest także
+wystarczający do zbieżności jednostajnej do pewnej
+funkcji $f:X\to Y$.
+\end{twierdzenie}
+\begin{proof}
+Dla $\varepsilon>0$ wybieramy $N$ z definicji
+zbieżności jednostajnej dla dokładności $\varepsilon/2$.
+Dla $m,n\ge N$ i wszystkich $x\in X$ mamy
+\[
+ d(f_m(x),f_n(x))
+ \le d(f_m(x),f(x))+d(f(x),f_n(x))<\varepsilon.
+\]
+To daje warunek konieczny.
+Odwrotnie, dla każdego $x$ ciąg $(f_n(x))$ jest
+ciągiem Cauchy'ego, więc z zupełności $Y$ ma
+jednoznaczną granicę $f(x)$.
+Dla $\varepsilon>0$ wybieramy wspólny $N$
+w warunku Cauchy'ego z dokładnością $\varepsilon/2$.
+Dla $n\ge N$ i każdego $x$, przechodząc przy ustalonych
+$n,x$ do granicy $m\to\infty$, otrzymujemy
+\[
+ d(f_n(x),f(x))\le\varepsilon/2<\varepsilon.
+\]
+Przejście do granicy uzasadnia nierówność
+$|d(y,z)-d(y,w)|\le d(z,w)$.
+Indeks $N$ jest niezależny od $x$, co daje tezę.
+\end{proof}
+Jeżeli granica punktowa $f:X\to Y$ już istnieje,
+to jednostajny warunek Cauchy'ego daje zbieżność
+jednostajną do $f$ także bez zupełności $Y$:
+w powyższym dowodzie zupełność służyła wyłącznie
+do uzyskania granic punktowych. Wystarczy przejść
+do granicy po $m$ z tym samym wspólnym progiem $N$.
+
+Jeżeli $Y$ nie jest zupełna, wybierzmy w niej ciąg
+Cauchy'ego $(y_n)$ bez granicy. Funkcje stałe
+$f_n(x)=y_n$ na niepustym $X$ spełniają warunek
+jednostajny Cauchy'ego, ale nie mają nawet granicy
+punktowej. Zupełność jest zatem istotna.
+
+\begin{twierdzenie}[Metryka zbieżności jednostajnej]
+\label{ma2:thm:uniform-metric}
+Na zbiorze $Y^X$ wszystkich odwzorowań $X\to Y$
+wzór
+\[
+ D(f,g)=\sup_{x\in X}\min\{1,d(f(x),g(x))\}
+\]
+określa metrykę, przy konwencji $D=0$ dla $X=\varnothing$.
+Zbieżność w tej metryce jest zbieżnością jednostajną.
+Jeżeli $X\ne\varnothing$, metryka $D$ jest zupełna
+wtedy i tylko wtedy, gdy $Y$ jest zupełna.
+\end{twierdzenie}
+\begin{proof}
+Wartości $D$ należą do $[0,1]$. Symetria
+i nieujemność wynikają z aksjomatów metryki $d$.
+Jeśli $D(f,g)=0$, to dla każdego $x$ mamy
+$\min\{1,d(f(x),g(x))\}=0$, czyli $f(x)=g(x)$.
+Odwrotnie, $f=g$ daje $D(f,g)=0$.
+Dla $a,b\ge0$ zachodzi
+$\min\{1,a+b\}\le\min\{1,a\}+\min\{1,b\}$:
+jeśli któryś składnik jest co najmniej $1$, prawa
+strona jest co najmniej $1$, a w przeciwnym przypadku
+wynosi $a+b$. Stosując tę nierówność do nierówności
+trójkąta dla $d$ i biorąc supremum, otrzymujemy
+nierówność trójkąta dla $D$.
+Dla $0<\varepsilon<1$, jeśli $D(f_n,f)<\varepsilon$,
+to $d(f_n(x),f(x))<\varepsilon$ dla wszystkich $x$.
+Odwrotnie, jednostajna zbieżność z dokładnością
+$\varepsilon/2$ daje $D(f_n,f)\le\varepsilon/2$.
+Dla dowolnych $\varepsilon>0$ wystarczy w tych
+argumentach użyć dokładności mniejszej od
+$\min\{1,\varepsilon\}$, co obejmuje również
+$\varepsilon\ge1$.
+Te same oszacowania zastosowane do par $f_m,f_n$
+pokazują równoważność warunku Cauchy'ego w metryce
+$D$ i jednostajnego warunku Cauchy'ego.
+Z twierdzenia \ref{ma2:thm:uniform-cauchy}
+wynika zupełność, gdy $Y$ jest zupełna.
+Odwrotnie, dla ciągu Cauchy'ego $(y_n)$ w $Y$
+bierzemy funkcje stałe $f_n(x)=y_n$. Są ciągiem
+Cauchy'ego w $D$, zatem przy zupełności $D$ mają
+granicę $f$. Ewaluacja w dowolnym $x_0\in X$
+daje $y_n\to f(x_0)$, czyli zupełność $Y$.
+Dla pustego $X$ przestrzeń funkcji jest jednoelementowa.
+\end{proof}
+
+W przypadku przestrzeni unormowanej $E$ i funkcji
+ograniczonych na niepustym $X$ można używać normy supremum:
+\[
+ \|f_n-f\|_\infty=\sup_{x\in X}\|f_n(x)-f(x)\|.
+\]
+Zbieżność w tej normie jest zbieżnością jednostajną
+(z twierdzenia \ref{ma2:thm:uniform-criteria}).
+Jednostajna granica funkcji ograniczonych jest
+ograniczona: wybieramy $n$ z
+$\sup_x\|f_n(x)-f(x)\|\le1$, skąd
+$\|f(x)\|\le\|f_n\|_\infty+1$ dla każdego $x$.
+Dla $X=\varnothing$ przestrzeń funkcji ograniczonych
+jest przestrzenią zerową z normą $0$.
+Zupełność $B(X,E)$ dla niepustego $X$ jest równoważna
+zupełności $E$ na mocy twierdzenia \ref{ma2:thm:bounded}.
+Nie powtarzamy tego dowodu.
+
+\section{Ciągłość granicy jednostajnej}
+
+\begin{twierdzenie}
+\label{ma2:thm:uniform-continuous-limit}
+Niech $X$ będzie przestrzenią topologiczną,
+$(Y,d)$ przestrzenią metryczną i $f_n:X\to Y$
+ciągłymi odwzorowaniami. Jeżeli $f_n\to f$
+jednostajnie, to $f$ jest ciągła.
+Jeśli $X$ jest metryczna i wszystkie $f_n$ są
+jednostajnie ciągłe, to $f$ jest jednostajnie ciągła.
+\end{twierdzenie}
+\begin{proof}
+Pierwsza część uogólnia argument z dowodu
+twierdzenia \ref{ma2:thm:continuous} na dowolną
+dziedzinę topologiczną i przeciwdziedzinę metryczną.
+Ustalmy $x_0\in X$ i $\varepsilon>0$.
+Wybieramy $n$ tak, aby dla każdego $x\in X$
+$d(f_n(x),f(x))<\varepsilon/3$.
+Ciągłość $f_n$ zapewnia otwarte otoczenie $U$
+punktu $x_0$ z $d(f_n(x),f_n(x_0))<\varepsilon/3$
+dla $x\in U$. Dla tych $x$ mamy
+\[
+ d(f(x),f(x_0))
+ \le d(f(x),f_n(x))+d(f_n(x),f_n(x_0))
+       +d(f_n(x_0),f(x_0))<\varepsilon.
+\]
+To dowodzi ciągłości.
+W przypadku jednostajnej ciągłości wybieramy
+$n$ tak samo, po czym bierzemy $\delta>0$
+z jednostajnej ciągłości $f_n$ dla
+$\varepsilon/3$. Dla dowolnych $x,y\in X$
+o odległości mniejszej od $\delta$ to samo
+oszacowanie, z $y$ zamiast $x_0$, daje
+$d(f(x),f(y))<\varepsilon$.
+Wybór $\delta$ jest niezależny od $x,y$.
+\end{proof}
+Przykład \ref{ma2:ex:powers-pointwise} pokazuje,
+że granica punktowa funkcji ciągłych może
+być nieciągła.
+
+\begin{wniosek}
+\label{ma2:cor:uniform-complete-continuous}
+Jeśli $X$ jest przestrzenią topologiczną, a $Y$
+zupełną przestrzenią metryczną, to $C(X,Y)$
+jest zupełna w metryce $D$ z twierdzenia
+\ref{ma2:thm:uniform-metric}.
+\end{wniosek}
+\begin{proof}
+Ciąg Cauchy'ego w tej metryce ma granicę
+jednostajną w $Y^X$ z twierdzenia
+\ref{ma2:thm:uniform-metric}. Granica jest ciągła
+z twierdzenia \ref{ma2:thm:uniform-continuous-limit}.
+\end{proof}
+
+\section{Zbieżność jednostajna na zbiorach zwartych}
+
+\begin{definicja}
+\label{ma2:def:compact-uniform}
+Niech $X$ będzie przestrzenią topologiczną.
+Ciąg $(f_n)$ odwzorowań $X\to Y$ jest zbieżny
+jednostajnie na zbiorach zwartych do $f$,
+gdy dla każdego zwartego $K\subseteq X$
+ograniczenia $f_n|_K$ zbiegają jednostajnie do $f|_K$.
+\end{definicja}
+Zbieżność jednostajna na całym $X$ implikuje
+zbieżność jednostajną na zbiorach zwartych,
+a ta implikuje zbieżność punktową (zbiór
+jednoelementowy jest zwarty). Jeśli $X$ jest
+zwarta, pierwsze dwie własności są równoważne.
+Jeśli $X$ jest skończonym zbiorem, zbieżność
+punktowa implikuje zbieżność jednostajną:
+dla każdego punktu wybieramy próg dla ustalonej
+dokładności i bierzemy maksimum skończonej
+liczby progów; przypadek pusty jest automatyczny.
+
+\begin{przyklad}[Zbieżność na zbiorach zwartych nie jest globalnie jednostajna]
+\label{ex:topog-odwzorowania-gorki-uciekajace}
+Przytaczamy przykład z topologii ogólnej, rozdział 18,
+sekcja 2. Na $\R$ niech
+$f_n(x)=\max\{1-|x-n|,0\}$.
+Każda funkcja jest ciągła, $\sup_{\R}|f_n|=1$.
+Dla dowolnego zwartego $K\subseteq\R$ istnieje $M$
+z $K\subseteq[-M,M]$. Gdy $n>M+1$, funkcja
+$f_n$ znika na $K$. Stąd zbieżność jednostajna
+na zbiorach zwartych do zera, lecz nie na całej $\R$.
+\end{przyklad}
+Przykład \ref{ma2:ex:moving-peak} pokazuje natomiast,
+że zbieżność punktowa nie implikuje zbieżności
+jednostajnej na zbiorach zwartych, nawet przy
+ciągłej granicy.
+
+\begin{twierdzenie}
+\label{ma2:thm:compact-uniform-continuity}
+Niech $X,Y$ będą przestrzeniami metrycznymi.
+Jeżeli $(f_n)$ jest ciągiem ciągłych odwzorowań
+$X\to Y$ zbieżnym do $f$ jednostajnie na zbiorach
+zwartych, to $f$ jest ciągła.
+\end{twierdzenie}
+\begin{proof}
+Niech $x_j\to x$ w $X$. Zbiór
+$K=\{x\}\cup\{x_j:j\ge1\}$ jest zwarty:
+w dowolnym pokryciu otwartym element zawierający
+$x$ zawiera wszystkie $x_j$ od pewnego indeksu,
+a pozostałe punkty można pokryć skończoną liczbą
+elementów pokrycia. Na $K$ mamy zbieżność
+jednostajną funkcji ciągłych, więc
+twierdzenie \ref{ma2:thm:uniform-continuous-limit}
+daje ciągłość $f|_K$. W szczególności
+$f(x_j)\to f(x)$. Ponieważ ciąg był dowolny,
+kryterium ciągowe ciągłości (AM I, rozdział 15,
+twierdzenie o kryterium ciągowym, etykieta
+\texttt{ma1:thm:continuity-sequential}) daje ciągłość $f$.
+\end{proof}
+Na przestrzeniach lokalnie zwartych Hausdorffa
+można również wykorzystać zwarte otoczenia
+(topologia ogólna, rozdział 14). Dla każdego $x$
+wybieramy zwarty zbiór $K$ zawierający otwarte
+otoczenie $U$ punktu $x$. Granica $f|_K$ jest
+ciągła z twierdzenia \ref{ma2:thm:uniform-continuous-limit},
+a zatem $f|_U$ jest ciągła. Ponieważ $U$ jest
+otwarty w $X$, daje to ciągłość $f$ w $x$.
+
+Przypomnijmy, że topologia zwarto-otwarta na $C(X,Y)$
+ma podbazę zbiorów
+\[
+ [K,V]=\{g\in C(X,Y):g(K)\subseteq V\},
+\]
+gdzie $K\subseteq X$ jest zwarty, a $V\subseteq Y$
+otwarty. Topologia zbieżności jednostajnej na
+zbiorach zwartych ma w punkcie $f$ bazę otoczeń
+\[
+ B_K(f,\varepsilon)=
+ \{g\in C(X,Y):d(f(x),g(x))<\varepsilon
+                    \text{ dla wszystkich }x\in K\}.
+\]
+Są to definicje z topologii ogólnej, rozdział 18,
+sekcje 1 i 2. Dla niepustego $K$ odległość
+$d(f(x),g(x))$ osiąga maksimum na $K$, ponieważ
+jest ciągła; dlatego warunek punktowy z ustalonym
+$\varepsilon$ jest tu równoważny ostrej nierówności
+dla supremum. Dla $K=\varnothing$ otrzymujemy całe
+$C(X,Y)$.
+
+\begin{twierdzenie}[Równoważność dwóch topologii]
+\label{thm:topog-odwzorowania-zwarto-otwarta-jednostajna}
+Na $C(X,Y)$ dla dowolnej przestrzeni topologicznej
+$X$ i metrycznej $Y$ topologia zwarto-otwarta
+jest równa topologii zbieżności jednostajnej
+na zbiorach zwartych. W szczególności ciąg
+funkcji ciągłych zbiega w tej topologii do
+$f\in C(X,Y)$ dokładnie wtedy, gdy zbiega do
+$f$ jednostajnie na zbiorach zwartych.
+\end{twierdzenie}
+\emph{Dowód:} topologia ogólna, rozdział 18, sekcja 2,
+twierdzenie o równoważności dwóch topologii
+(z tą samą etykietą źródłową) i następujący po nim
+wniosek o zbieżności sieci.
+Dla lokalnie zwartej, $\sigma$-zwartej przestrzeni
+Hausdorffa metryzacja i zupełność tej topologii
+przy zupełnym $Y$ zostały udowodnione w sekcji 4
+tego samego rozdziału. Nie powtarzamy tych dowodów.
+
+\section{Twierdzenie Diniego}
+
+\begin{twierdzenie}[Twierdzenie Diniego]
+\label{ma2:thm:dini}
+Niech $X$ będzie zwartą przestrzenią topologiczną,
+a $(f_n)$ ciągiem ciągłych funkcji rzeczywistych
+na $X$ zbieżnym punktowo do ciągłej funkcji $f$.
+Jeżeli dla każdego $x\in X$ zachodzi
+$f_n(x)\le f_{n+1}(x)$ dla wszystkich $n$,
+albo dla każdego $x\in X$ zachodzi
+$f_n(x)\ge f_{n+1}(x)$ dla wszystkich $n$,
+to zbieżność jest jednostajna.
+\end{twierdzenie}
+\begin{proof}
+W przypadku rosnącym mamy $f_n(x)\le f(x)$
+dla każdego $n,x$, ponieważ ciąg rzeczywisty
+jest rosnący i zbieżny do $f(x)$.
+Dla $\varepsilon>0$ definiujemy otwarte zbiory
+\[
+ U_n=\{x\in X:f(x)-f_n(x)<\varepsilon\}.
+\]
+Są otwarte dzięki ciągłości różnicy,
+rosnące ze względu na inkluzję i pokrywają $X$
+z punktowej zbieżności. Jeżeli $X\ne\varnothing$,
+zwartość daje skończone podpokrycie
+$U_{n_1},\ldots,U_{n_s}$. Biorąc $N=\max_j n_j$,
+otrzymujemy $X=U_N$ dzięki rosnącemu układowi.
+Dla $n\ge N$ i wszystkich $x$ zachodzi więc
+$0\le f(x)-f_n(x)<\varepsilon$.
+Jest to zbieżność jednostajna.
+W przypadku malejącym stosujemy ten sam dowód
+do $-f_n$ i $-f$; przypadek pustej dziedziny
+wynika z definicji.
+\end{proof}
+
+\begin{uwaga}
+W istocie argument Diniego działa także dla
+odwzorowań ciągłych $f_n,f:X\to(Y,d)$, gdzie $X$
+jest zwarta, jeśli $f_n\to f$ punktowo i dla każdego
+$x$ ciąg $d(f_n(x),f(x))$ jest nierosnący.
+Zbiory $\{x:d(f_n(x),f(x))<\varepsilon\}$ są otwarte,
+gdyż nierówność
+\[
+ |d(y,z)-d(y',z')|\le d(y,y')+d(z,z')
+\]
+wynikająca z dwukrotnego zastosowania nierówności
+trójkąta daje ciągłość odległości względem obu
+argumentów. Zbiory są rosnące dzięki założeniu
+o nierosnących odległościach.
+Pokrywają $X$ z punktowej zbieżności, więc argument
+skończonego podpokrycia z dowodu twierdzenia
+\ref{ma2:thm:dini} daje zbieżność jednostajną.
+Dla funkcji rzeczywistych obejmuje to również
+przypadek, w którym kierunek monotoniczności
+ciągu $f_n(x)$ zależy od $x$.
+\end{uwaga}
+
+Założenia twierdzenia są istotne. Na niezwartym
+$[0,1)$ funkcje $x^n$ maleją punktowo do ciągłego
+zera, ale supremum $x^n$ nadal wynosi $1$.
+Na $[0,1]$ ten sam ciąg ma nieciągłą granicę
+(przykład \ref{ma2:ex:powers-pointwise}).
+Bez monotoniczności nawet na zwartym przedziale
+ciągłość granicy nie wystarcza, jak pokazuje
+przykład \ref{ma2:ex:moving-peak}.
+
+W następnym rozdziale zastosujemy kryteria
+zbieżności jednostajnej do szeregów funkcyjnych.

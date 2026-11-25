@@ -38,3 +38,7 @@ Kurs inspirowany wykładami Marka Jarnickiego, rozszerzony o całki powierzchnio
 34. Rozbieżność i zjawisko Gibbsa (AF, PDE)
 
 Przed całkami krzywoliniowymi, powierzchniowymi i po podrozmaitościach wprowadzić wszystkie potrzebne podstawy: różniczkowanie, parametryzacje, macierze Jacobiego i Grama, orientację, zamianę zmiennych. Nie zakładać nieudowodnionych wyników z przyszłych tomów. Zachować oryginalne etykiety importowanych wyników, nie zmieniać skryptów źródłowych bez potrzeby. Rozdział -> audyty do stabilizacji -> niezależny audyt kontrolny -> kontrola PDF i CI -> kolejny rozdział. W katalogu książek wyłącznie istniejące pliki.
+
+## Zasada ponownego wykorzystania wyników z tomu I
+
+Wynik udowodniony w AM I przytaczamy w AM II z pełnymi potrzebnymi hipotezami i tezą oraz dokładnym odsyłaczem do rozdziału i numeru twierdzenia/lematu/wniosku w tomie I; nie powielamy jego dowodu bez uzasadnionej potrzeby. Zachowujemy oryginalne etykiety importowanych wyników. Jeżeli zmieniono hipotezy, rozszerzono zakres lub sformułowano nowy wynik, podajemy szczegółowy dowód nowej części. Przed zastąpieniem dowodu sprawdzamy faktyczne istnienie i zgodność wyniku oraz dowodu w źródle. Zasadę stosujemy od rozdziału 05; wcześniej ustabilizowanych rozdziałów nie otwieramy ponownie wyłącznie w celu usuwania dowodów.
