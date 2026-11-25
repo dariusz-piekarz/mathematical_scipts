@@ -337,6 +337,42 @@ def test_weighted_energy_density():
     return graphs, functions, distributions
 
 
+def test_small_diameter_not_expansion():
+    # TG43-DIA-01; ex:tg-expander-small-diameter.
+    # Two full binary trees, leaf cycles and a single root bridge.
+    count = 0
+    for h in range(2, 7):
+        m = 2**(h+1)-1
+        n = 2*m
+        edges = {(0, m)}
+        for offset in (0, m):
+            for v in range(1, m):
+                edges.add((offset+(v-1)//2, offset+v))
+            leaves = list(range(offset+2**h-1, offset+m))
+            for u, v in zip(leaves, leaves[1:]+leaves[:1]):
+                edges.add(tuple(sorted((u,v))))
+        assert all(0 <= u < v < n for u, v in edges)
+        adj = adjacency(n, edges)
+        assert all(len(row) == 3 for row in adj)
+        assert components(adj) == 1
+        S = set(range(m))
+        cut = sum(len(adj[v]-S) for v in S)
+        assert cut == 1 and 2*len(S) == n
+        assert Fraction(cut,3*len(S)) == Fraction(2,3*n)
+        # Independent all-sources BFS, without an assumed tree metric.
+        for root in range(n):
+            distances = {root: 0}
+            queue = [root]
+            for u in queue:
+                for v in adj[u]:
+                    if v not in distances:
+                        distances[v] = distances[u]+1
+                        queue.append(v)
+            assert len(distances) == n and max(distances.values()) <= 2*h+1
+        count += 1
+    return count
+
+
 def integration():
     cat = json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book = next(b for b in cat["books"] if b["id"] == "graph_and_knot_theory")
@@ -353,7 +389,8 @@ def integration():
     for req in ("ch:tg-expanders","def:tg-expander-constants",
                 "def:tg-expander-laplacian","lem:tg-expander-coarea",
                 "thm:tg-expander-cheeger","thm:tg-expander-mixing",
-                "thm:tg-expander-diameter","fig:tg-expander-cycle-cut"):
+                "thm:tg-expander-diameter","fig:tg-expander-cycle-cut",
+                "ex:tg-expander-small-diameter"):
         assert req in labels
     for env in ("definicja","lemat","twierdzenie","stwierdzenie",
                 "wniosek","przyklad","uwaga","proof","figure","tikzpicture"):
@@ -369,4 +406,5 @@ if __name__ == "__main__":
     print("PASS TG43-EM-01 oriented edge count comparisons:", test_edge_mixing())
     print("PASS TG43-WGT-01 irregular graphs and exact walk steps:", test_weighted_cheeger_mixing())
     print("PASS TG43-ENE-01 graphs, functions, distributions:", test_weighted_energy_density())
+    print("PASS TG43-DIA-01 cubic counterexample models:", test_small_diameter_not_expansion())
     print("PASS Cheeger, boundary relations, lazy-walk mixing, diameter, energy, catalog")
