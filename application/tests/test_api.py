@@ -2,6 +2,7 @@
 import unittest
 from fastapi.testclient import TestClient
 from backend.api import app, db_connection
+from backend.graph_coverage import graph_coverage
 
 
 class APITests(unittest.TestCase):
@@ -145,40 +146,23 @@ class APITests(unittest.TestCase):
 
     @classmethod
     def _real_reference_domains(cls):
-        """Use a proven explicit cross-module TeX reference from the indexed corpus.
-
-        The old fixed pair stopped being related after chapter reorganization.
-        This keeps the HTTP graph contract tested without inventing links.
-        """
+        """Select a cross-domain pair from audited explicit references."""
         with db_connection() as con:
-            row = con.execute("""
-                SELECT s.domain AS left_domain, t.domain AS right_domain
-                FROM references_tex AS r
-                JOIN documents AS s ON s.id=r.source_document
-                JOIN documents AS t ON t.id=r.target_document
-                WHERE r.status='resolved' AND r.target_document IS NOT NULL
-                  AND r.source_document!=r.target_document
-                GROUP BY s.domain, t.domain
-                ORDER BY COUNT(*) DESC, s.domain, t.domain
-                LIMIT 1
-            """).fetchone()
-        if row is None:
-            raise AssertionError("Index has no resolved cross-module TeX references")
-        return {"left":row["left_domain"], "right":row["right_domain"]}
+            report = graph_coverage(con)
+        pairs = [p for p in report["domain_pairs"] if p["references"] > 0]
+        if not pairs:
+            raise AssertionError("Index has no audited cross-domain edges")
+        pair = min(pairs, key=lambda p: (-p["references"], p["left"], p["right"]))
+        return {"left": pair["left"], "right": pair["right"]}
 
     @classmethod
     def _real_dependency_edge(cls):
         with db_connection() as con:
-            row=con.execute("""
-                SELECT source_document, target_document
-                FROM dependency_edges
-                WHERE source_document!=target_document
-                ORDER BY references_count DESC, source_document, target_document
-                LIMIT 1
-            """).fetchone()
-        if row is None:
-            raise AssertionError("Index has no cross-module dependency edges")
-        return {"source":row["source_document"],"target":row["target_document"]}
+            report = graph_coverage(con)
+        if not report["edges"]:
+            raise AssertionError("Index has no audited cross-module edges")
+        edge = min(report["edges"], key=lambda e: (-e["weight"], e["source"], e["target"]))
+        return {"source": edge["source"], "target": edge["target"]}
 
     def test_graph_bipartite(self):
         params=self._real_reference_domains()
@@ -200,9 +184,24 @@ class APITests(unittest.TestCase):
         self.assertGreater(len(data["edges"]),0)
 
     def test_graph_missing_pair(self):
-        params={"left":"geometria algebraiczna","right":"topologia algebraiczna"}
-        data=self.client.get("/api/graph",params=params).json()
-        self.assertEqual(data["edges"],[])
+        with db_connection() as con:
+            report = graph_coverage(con)
+        pairs = [p for p in report["domain_pairs"] if p["references"] == 0]
+        if not pairs:
+            self.skipTest("All indexed domain pairs are connected; empty case is covered by fixture tests")
+        pair = pairs[0]
+        params = {"left": pair["left"], "right": pair["right"]}
+        response = self.client.get("/api/graph", params=params)
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(response.json()["edges"], [])
+
+    def test_graph_algebraic_geometry_topology_connected(self):
+        params = {"left": "geometria algebraiczna", "right": "topologia algebraiczna"}
+        response = self.client.get("/api/graph", params=params)
+        self.assertEqual(response.status_code, 200, response.text)
+        data = response.json()
+        self.assertTrue(data["edges"])
+        self.assertTrue(any(n["module"] == "TOP-28" for n in data["nodes"]))
 
     def test_graph_bad_domain(self):
         params={"left":"nonsense","right":"topologia algebraiczna"}
