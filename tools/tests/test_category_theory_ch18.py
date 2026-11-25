@@ -27,6 +27,15 @@ class CategoryTheoryCh18(unittest.TestCase):
         for label in refs:
             self.assertEqual(len(labels.get(label, [])), 1, label)
 
+    def test_CAT_18_004_extended_notation(self):
+        s = CHAPTER.read_text(encoding="utf-8")
+        for token in (r"\Top_*", r"\exists_f,\ \forall_f",
+                      r"\widetilde f", r"KJ=T", r"U_TF_T=T",
+                      r"cat:prop:yoneda-cov-embedding",
+                      r"cat:prop:adj-full-faithful",
+                      r"cat:thm:exp-top", r"cat:def:abelian-category"):
+            self.assertIn(token, s)
+
     def test_CAT_18_003_structure(self):
         s = CHAPTER.read_text(encoding="utf-8")
         stack = []
