@@ -1,0 +1,7 @@
+# CAT-18 — niezależny audyt kontrolny IV
+
+Źródło b5c62019db60442a53ae85c0c5e4b6803f18773d i testy b81f1935cecf4d540a10d0a90c2e00421ea62dd8 zgodne z e083a61626e4c5ec2ee664bcb6454c10a3be93ca. Ponowna kontrola semantyczna 52 pozycji słownika i podsumowania: konwencje Hom, kategorie przeciwne, kwantyfikatory obrazowe, kierunki włożeń Yonedy, granice i kogranice, równoważność, sprzężenia, obiekty wykładnicze, monady i kategorie abelowe. Brak nowych istotnych błędów w aktualnym zakresie.
+
+CI #45631354655 job 139265096471 SUCCESS: 124/124 testów Python, 4/4 CAT-18, kompilacja i odsyłacze. Artefakt 15031590528 (74 strony, 776141 bajtów), wyrenderowano i obejrzano strony 70–74 obejmujące cały CAT-18. Wszystkie sześć tabel czytelne, brak zauważonych kolizji i obcięć. Większe odstępy pod tabelami wynikają z zachowania tabel w całości; nie wymagają korekty blokującej. Końcowy log bez Overfull, undefined references, LaTeX Warning: Reference oraz ^!. Niezależna kontrola PyMuPDF: 33 adnotacje odsyłaczy na stronach CAT-18 (1+20+12 na stronach 72–74), żaden wewnętrzny cel poza zakresem stron dokumentu. Test CAT-18-002 potwierdza jednoznaczność etykiet w źródle. Nie jest to formalizacja Lean ani pełna kontrola całego PDF.
+
+Wynik: CAT-18 stabilny i zamknięty w zakresie skryptu. Źródło i testy bez zmian. Nie wykonywano nowego audytu aplikacji. Następny etap: globalna kontrola strukturalna, aktualnego CI i wizualna wszystkich stron, następnie niezależny audyt całego skryptu.
