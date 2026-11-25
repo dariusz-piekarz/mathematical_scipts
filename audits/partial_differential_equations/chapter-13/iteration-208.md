@@ -22,3 +22,10 @@
 10 zamian blokowych i 3 doprecyzowania w następnym commicie. Zachowano kolejność wszystkich 39 etykiet, w tym 38 pierwotnych. 78/78 wystąpień odsyłaczy (43 różne cele) rozwiązanych jednoznacznie w RRC 06,07,09,10,11,12,13. Stos środowisk poprawny. Odczytano tezy o Poincarém, śladzie, normie ilorazowej i prawym odwrotnym śladu z RRC 10. 72/72 pomocnicze skończone kontrole rozwiązania na odcinku z jednorodnym Robinem (36 par warunków brzegowych oraz 36 bilansów całkowych). Nie zastępują dowodów. Źródło 1095 wierszy.
 
 Pierwsza lektura: 54 kryteria, 7/9 sekcji. Następny etap: transmisja, wyprowadzenie wzoru na rozwiązanie, weryfikacja warunków brzegowych i skoku strumienia, obie implikacje równoważności, rysunek, podsumowanie. Nie wykonano kompilacji, dedykowanego CI, inspekcji PDF ani Lean. Stabilizacja niepotwierdzona.
+
+
+## Uzupełnienie po uzgodnieniu równoległych zmian
+
+Pierwsza próba zapisu w drugim przebiegu została odrzucona przez GitHub (409), ponieważ aktualizowano tę samą sekcję. Odczytano ponownie bieżące źródło i istniejący raport; zachowano wszystkie równoległe poprawki. W commicie cc1145bb02b235b722073659cfab6d123684170c (blob 3fa8b39ed9e7f7bff9f7e5e4dd8ca2550d325b40) dodano wniosek cor:pde13-robin-partial: dla nieujemnego ograniczonego współczynnika beta wystarcza dodatnia całka B_beta po brzegu. Udowodniono ważone oszacowanie normy pełnej H¹ przez gradient i ważoną normę śladu, wyprowadzono stałą koercywności min(lambda,1)/(D_beta²+r_beta²) oraz wskazano, że przy B_beta=0 wracamy do Neumanna. Jest to rozszerzenie kryterium 052, bez zmiany dotychczasowej numeracji kryteriów.
+
+Po rozszerzeniu: 1148 wierszy, 40 etykiet (39 zachowanych i 1 nowa), 82/82 wystąpienia odsyłaczy (44 różne cele) rozwiązane jednoznacznie w RRC 06,07,09,10,11,12,13. Stos środowisk poprawny. Dodatkowo 60/60 pomocniczych skończonych kontroli ważonej nierówności dla funkcji afinicznych na przedziale z dodatnią wagą tylko na jednym końcu. Kontrole nie są dowodem ani testami CI. Nie przeprowadzono kompilacji, kontroli PDF ani formalizacji. Następny zakres pozostaje bez zmian.
