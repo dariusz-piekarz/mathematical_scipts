@@ -30,3 +30,7 @@ Teoria miary (ME, 31 rozdziałów) wchodzi do grupy ustabilizowanych skryptów o
 ## Audyt kontrolny ME — pierwsze przejście
 
 Sprawdzono ponownie 67 zapisanych par (źródło, kwalifikowana etykieta) z trzech testów regresyjnych: 64 różne pliki, wszystkie 31 rozdziałów ME jako źródła. Każdy z 67 odsyłaczy występuje dokładnie raz w źródle; każda wskazana etykieta dokładnie raz w docelowym pliku. Nie dodano nowych krawędzi ani nie zmieniono dowodów. Globalny audyt indeksu odrzuca teraz nierozwiązane atlasref i błędne przypisanie właściciela etykiety. Pełne uruchomienie CI, indeksu oraz testów przeglądarkowych pozostaje niepotwierdzone; nie oznaczać grafu jako ustabilizowanego bez dowodu wykonania.
+
+## Audyt kontrolny FA
+
+Ponowny odczyt wszystkich 35 rozdziałów FA: 77 odsyłaczy atlasref, 69 różnych kwalifikowanych etykiet, 40 rozdziałów docelowych (łącznie 75 różnych plików). Wszystkie cele występują dokładnie raz w odpowiednim pliku; nie dodawano nowych odsyłaczy ani nie zmieniano dowodów. Zapisano katalogowy test test_functional_reference_coverage.py, obejmujący rzeczywisty parser, rozwiązywanie kwalifikowanych etykiet i minimalne pokrycie całego FA. Test oczekuje uruchomienia; pełne CI niepotwierdzone, lokalny git ls-remote blokowany przez DNS. Następny zakres: GT, po weryfikacji wykonawczej.
