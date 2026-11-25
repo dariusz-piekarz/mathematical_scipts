@@ -1,6 +1,8 @@
 """Exact finite checks of selected chapter 09 formulas, not proofs of density or traces."""
 from fractions import Fraction as F
 from math import comb
+from pathlib import Path
+import re
 import unittest
 
 
@@ -20,6 +22,35 @@ class SobolevChecks(unittest.TestCase):
                             gamma = (m, n)
                             lower = tuple(v - (i == j) for i, v in enumerate(gamma))
                             self.assertEqual(c(alpha, lower) + c(alpha, gamma), c(upper, gamma))
+
+    def test_PDE_09_028_mollifier_diagram_clearance(self):
+        # Check actual source coordinates rather than a duplicate drawing.
+        root = Path(__file__).resolve().parents[4]
+        source = (root / "chapters/pl/partial_differential_equations/"
+                  "09-przestrzenie-sobolewa.tex").read_text(encoding="utf-8")
+        diagram = source.split(r"\begin{tikzpicture}", 1)[1].split(
+            r"\end{tikzpicture}", 1)[0]
+        num = r"([-+]?(?:\d+(?:\.\d*)?|\.\d+))"
+        point = r"\(" + num + "," + num + r"\)"
+        def bounds(color):
+            m = re.search(r"fill=" + color + r"[^\]]*\]\s*" + point
+                          + r"\s+rectangle\s+" + point, diagram)
+            self.assertIsNotNone(m)
+            return tuple(map(F, m.groups()))
+        ux0, uy0, ux1, uy1 = bounds("green")
+        kx0, ky0, kx1, ky1 = bounds("orange")
+        m = re.search(r"\\coordinate \(x\) at " + point, diagram)
+        self.assertIsNotNone(m)
+        x, y = map(F, m.groups())
+        m = re.search(r"\(x\) circle \(" + num + r"\)", diagram)
+        self.assertIsNotNone(m)
+        radius = F(m.group(1))
+        self.assertGreater(radius, 0)
+        self.assertTrue(kx0 < x < kx1 and ky0 < y < ky1)
+        # K + closed ball lies in the central strip of U; reserve a
+        # conservative 0.4 coordinate units for its 10pt rounded corners.
+        self.assertGreater(min(kx0-ux0, ux1-kx1), radius + F(2, 5))
+        self.assertGreater(min(ky0-uy0, uy1-ky1), radius)
 
     def test_PDE_09_066_reflection_moments(self):
         # Lagrange basis at 1 with nodes -1,...,-k.
