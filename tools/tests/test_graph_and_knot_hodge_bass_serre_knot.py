@@ -567,6 +567,30 @@ def check_arf_determinant_mod8():
     return count, 128
 
 
+def check_jones_mixed_r3_skein():
+    """GKT-25-JONES-01: six height orders and normalized skein coefficients."""
+    def b(i, sign):
+        return {(): {sign: 1}, (i,): {-sign: 1}}
+
+    orders = 0
+    for h in permutations(range(3)):
+        p, q, r = [1 if h[i] > h[j] else -1
+                   for i, j in ((0, 1), (0, 2), (1, 2))]
+        assert tl_mul(tl_mul(b(1,p),b(2,q)),b(1,r)) == \
+            tl_mul(tl_mul(b(2,r),b(1,q)),b(2,p))
+        orders += 1
+    assert orders == 6
+
+    for w in range(-12,13):
+        C = {-3*w: -1 if w % 2 else 1}
+        fpS, fpB = poly_mul(C,{-2:-1}), poly_mul(C,{-4:-1})
+        fmS, fmB = poly_mul(C,{2:-1}), poly_mul(C,{4:-1})
+        assert poly_add(poly_mul({4:1},fpS),poly_mul({-4:-1},fmS)) == \
+            poly_mul(C,{-2:1,2:-1})
+        assert poly_add(poly_mul({4:1},fpB),poly_mul({-4:-1},fmB)) == {}
+    return orders, 25
+
+
 def test_source():
     names=[
         "16-od-triangulacji-do-topologii-i-geometrii-rozmaitosci.tex",
@@ -591,6 +615,7 @@ def test_source():
 
 if __name__=="__main__":
     test_source()
+    print("PASS GKT-25-JONES-01:",check_jones_mixed_r3_skein())
     print("PASS GKT-25-ARF-MOD8-01:",check_arf_determinant_mod8())
     print("PASS GKT-25-FOX-PREFIX-01:",check_fox_prefix_cancellation())
     print("PASS GKT-25-FOX-01:",check_fox_dihedral_relation())
