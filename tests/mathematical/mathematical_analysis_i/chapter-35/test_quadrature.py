@@ -51,6 +51,15 @@ class Chapter35(unittest.TestCase):
             self.assertEqual(d(h,3),-h/3)
             self.assertEqual(d(0,4),-1)
             self.assertEqual(2*sum(v*h**(j+1)/(j+1) for j,v in enumerate(c)),h**5/90)
+    def test_simpson_kernel_even_extension(self):
+        for h in (F(1),F(3,2),F(2)):
+            for j in range(11):
+                t=h*j/10
+                right=(h-t)**3*(h+3*t)/72
+                left=(h+(-t))**3*(h-3*(-t))/72
+                self.assertEqual(right,left)
+                self.assertGreaterEqual(right,0)
+                self.assertEqual(right,h**4/72-h*h*t*t/12+h*t**3/9-t**4/24)
     def test_trapezoid_identity(self):
         for n in (1,2,5):
             f=lambda x:x**5-2*x+3
@@ -79,6 +88,22 @@ class Chapter35(unittest.TestCase):
             q=simpson(lambda x:x**4,F(0),F(1),n)
             q2=simpson(lambda x:x**4,F(0),F(1),2*n)
             self.assertEqual(F(1,5)-q2,(q2-q)/15)
+    def test_false_zero_refinement_estimator(self):
+        from math import prod
+        p=lambda x:prod((x-F(j,4))**2 for j in range(5))
+        self.assertEqual(simpson(p,F(0),F(1),2),0)
+        self.assertEqual(simpson(p,F(0),F(1),4),0)
+        self.assertGreater(p(F(1,8)),0)
+        # Integrate the expanded polynomial in rational arithmetic.
+        c=[F(1)]
+        for j in range(5):
+            for _ in range(2):
+                d=[F(0)]*(len(c)+1)
+                for k,a in enumerate(c):
+                    d[k]-=F(j,4)*a
+                    d[k+1]+=a
+                c=d
+        self.assertGreater(sum(a/F(k+1) for k,a in enumerate(c)),0)
     def test_positive_weights(self):
         for n in (2,4,8):
             f=lambda x:x*x
