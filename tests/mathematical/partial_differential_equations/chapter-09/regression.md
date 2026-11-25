@@ -236,3 +236,20 @@ Następna iteracja 138: druga lektura kryteriów od PDE-09-049 (reguły rachunko
 Bilans: 13/13 kryteriów poddano ponownej lekturze, 5 uściślono, 8 bez zmian. Źródło: commit 2d4cac1b16f2ec5a94e661ec88a38dd57588e224, blob 8fcc93927c0dd60f5ea45fb3f4a4bd7af99afb8e. Zachowano 37 etykiet i 64 wystąpienia odsyłaczy w tej samej kolejności; stos środowisk poprawny, pozostałe sekcje niezmienione. Nie wykonywano kompilacji, testów wykonawczych ani Lean. Druga lektura obejmuje dotąd 61 z 81 kryteriów.
 
 Następna iteracja 139: druga lektura od PDE-09-062 (przedłużanie z półprzestrzeni, odbicie i przedłużenia z warstw), bez rozszerzania zakresu.
+
+## Iteracja 139 — 2026-11-25 — druga lektura, 062–069
+
+| Kryterium | Wynik ponownej lektury |
+| --- | --- |
+| 062 | Uściślenie: jawna tożsamość testowa po przesunięciu dla każdego wielowskaźnika, znak i zachowanie normy na przesuniętej półprzestrzeni; brak utożsamiania osobnych przedłużeń L^p z pochodnymi przedłużenia u. |
+| 063 | Uściślenie: przynależność gładkich restrykcji do W^{k,p} oraz jawne oszacowanie błędu diagonalnego przez nierówność trójkąta. |
+| 064 | Bez zmian: dobrze określone odbicie, przeciwne składniki brzegowe, pochodne styczne i normalne, czynnik 2^(1/p), przypadek d=1. |
+| 065 | Uściślenie: identyfikacja pochodnych ogólnego u przez ograniczone operatory odbicia na L^p i jednoznaczność granic, ciągłość norm. |
+| 066 | Uściślenie: pełny krok indukcyjny z tożsamością testową, różnicą wartości brzegowych i osobnym przypadkiem d=1; układ Vandermonde'a i dopasowanie do rzędu k-1 poprawne. |
+| 067 | Bez zmian: jakobian j^(-1), czynnik j^(m-1/p), stała normy, identyfikacja granicy w L^p i prawy odwrotny do restrykcji. |
+| 068 | Uściślenie: jawna konstrukcja testu z odcięciem, identyfikacja przedłużonych pochodnych na półprzestrzeni i zachowanie norm bez warunku zerowego śladu. |
+| 069 | Bez zmian: ograniczoność złożonego operatora, globalna gęstość i kontrakcyjność restrykcji, rozróżnienie od zerowego śladu. |
+
+Bilans: 8/8 kryteriów poddano ponownej lekturze, 5 uściślono, 3 bez zmian. Źródło: commit 35dd7064f14b6026bb932172c878875a74fd27aa, blob 45fc9e9d45e7fa8a2644c4c88f3abaa7824ebb65. Zachowano 37 etykiet i 64 wystąpienia odsyłaczy w tej samej kolejności; stos środowisk poprawny; tekst poza sekcją przedłużania niezmieniony. Nie wykonywano kompilacji, testów wykonawczych ani Lean. Druga lektura obejmuje dotąd 69 z 81 kryteriów.
+
+Następna iteracja 140: druga lektura kryteriów PDE-09-070–081 (ślady, słabe rozwiązanie problemu Poissona, funkcja Greena, skalowanie i podsumowanie), bez rozszerzania zakresu.
