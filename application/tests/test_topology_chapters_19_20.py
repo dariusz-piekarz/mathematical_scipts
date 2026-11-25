@@ -149,7 +149,7 @@ class TopologyNineteenTwentyAudit(unittest.TestCase):
             self.assertIn(r"\label{" + label + "}", tensor_source)
             self.assertIn(label, self.texts["19"])
         self.assertIn(r"\label{ch:teoria-morsea}", morse_source)
-        self.assertIn("18-teoria-morse-a-punkty-krytyczne-", self.texts["20"])
+        self.assertEqual(self.texts["20"].count(r"\atlasref{DG-18::ch:teoria-morsea}"), 1)
 
     def test_lefschetz_torus_two_fixed_points_and_indices(self):
         ch = self.texts["19"]
