@@ -71,5 +71,27 @@ class KHChapter04(unittest.TestCase):
                 self.assertLessEqual(abs(total),F(1,n))
                 self.assertLessEqual(abs(total-F(1,2*n)),F(1,2*n))
 
+
+    def test_endpoint_tags_without_finite_one_sided_derivative(self):
+        # F(x)=sqrt(x), F'(0+) is infinite; f(0)=7 is arbitrary.
+        # Rational squares ensure exact arithmetic for endpoint errors.
+        eps=F(1,10)
+        for n in (100,200,500):
+            y=F(1,n*n)
+            error=abs(F(1,n)-7*y)
+            self.assertLess(error,eps/4)
+        # Interior-tag errors sum with lengths, not with cell count.
+        lengths=[F(1,4),F(1,3),F(5,12)]
+        self.assertEqual(sum(eps*l/4 for l in lengths),eps/4)
+
+    def test_oscillatory_cauchy_tail_bound(self):
+        # beta=-1: A^beta+B^beta+|beta|*integral_A^B t^-2 dt.
+        for a in (1,10,100):
+            for b in (a+1,2*a,10*a):
+                boundary=F(1,a)+F(1,b)
+                remainder=F(1,a)-F(1,b)
+                self.assertEqual(boundary+remainder,F(2,a))
+
+
 if __name__=="__main__":
     unittest.main()
