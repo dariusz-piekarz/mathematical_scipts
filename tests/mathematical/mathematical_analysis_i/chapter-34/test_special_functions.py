@@ -61,6 +61,15 @@ class Chapter34(unittest.TestCase):
                 self.assertLess(val,exact)
                 self.assertLessEqual(exact-val,exact*F(p*(p+1),2*n))
 
+    def test_beta_scaling_log_error_uniform_bound(self):
+        for q in (.2,1.,3.):
+            for n in (10,100,1000):
+                R=4.
+                for u in (.1,1.,2.,R):
+                    error=abs((q+n-1)*log(1-u/n)+u)
+                    bound=abs(q-1)*R/n+(q+n-1)*R**2/n**2
+                    self.assertLessEqual(error,bound+1e-12)
+
     def test_beta_gamma_ratio_products(self):
         for p,q in ((F(1,2),F(1,3)),(F(3,2),F(2))):
             for n in (2,5,12):
@@ -109,6 +118,18 @@ class Chapter34(unittest.TestCase):
                 self.assertAlmostEqual(simpson(lambda x:exp(-a*x*x)*trig(b*x*x),0,12,12000),
                                        expected,places=8)
 
+    def test_fresnel_damped_uniform_tails_and_normalization(self):
+        for a in (0.,.01,.5,2.):
+            for r,s in ((1.,2.),(2.,4.),(4.,7.)):
+                for trig in (cos,sin):
+                    val=simpson(lambda t:exp(-a*t*t)*trig(t*t),r,s)
+                    self.assertLessEqual(abs(val),2/r)
+        for x in (-2.,-.5,.5,2.):
+            for trig in (cos,sin):
+                direct=simpson(lambda t:trig(pi*t*t/2),0,x)
+                scaled=sqrt(2/pi)*simpson(lambda t:trig(t*t),0,sqrt(pi/2)*x)
+                self.assertAlmostEqual(direct,scaled,places=10)
+
     def test_fresnel_tail_bound(self):
         L=sqrt(pi/8)
         for x in (2.,3.,5.):
@@ -126,6 +147,21 @@ class Chapter34(unittest.TestCase):
         for x in (2.,5.,10.,20.):
             val=simpson(lambda t:1 if t==0 else sin(t)/t,0,x)
             self.assertLessEqual(abs(val-pi/2+cos(x)/x),2/x**2)
+
+    def test_second_integration_by_parts_signed_remainders(self):
+        for x,R in ((1.,4.),(2.,8.),(4.,10.)):
+            C2=simpson(lambda t:cos(t)/t**2,x,R)
+            S2=simpson(lambda t:sin(t)/t**2,x,R)
+            self.assertAlmostEqual(C2,sin(R)/R**2-sin(x)/x**2+
+                                   2*simpson(lambda t:sin(t)/t**3,x,R),places=9)
+            self.assertAlmostEqual(S2,-cos(R)/R**2+cos(x)/x**2-
+                                   2*simpson(lambda t:cos(t)/t**3,x,R),places=9)
+            C=simpson(lambda t:cos(t*t)/(2*t*t),x,R)
+            S=simpson(lambda t:sin(t*t)/(2*t*t),x,R)
+            self.assertAlmostEqual(C,sin(R*R)/(4*R**3)-sin(x*x)/(4*x**3)+
+                                   .75*simpson(lambda t:sin(t*t)/t**4,x,R),places=9)
+            self.assertAlmostEqual(S,-cos(R*R)/(4*R**3)+cos(x*x)/(4*x**3)-
+                                   .75*simpson(lambda t:cos(t*t)/t**4,x,R),places=9)
 
     def test_ci_origin_remainder(self):
         # Ci(x)-log(x)-c0 equals the integral of (cos t-1)/t.
