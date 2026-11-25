@@ -48,6 +48,17 @@ class Chapter33(unittest.TestCase):
                     err=b*b-a*a-2*t*(b-a)
                     self.assertLessEqual(abs(err),(b-a)**2)
 
+    def test_reparametrization_with_stationary_endpoint(self):
+        # gamma(t)=(3t,4t), phi(s)=s^2 and 1-s^2.
+        # Integral of speed 10s is 5 in both orientations.
+        for n in (2,5,20):
+            p=[F(i,n) for i in range(n+1)]
+            for phi in (lambda s:s*s,lambda s:1-s*s):
+                length=sum(5*abs(phi(b)-phi(a)) for a,b in zip(p,p[1:]))
+                self.assertEqual(length,5)
+            speed_integral=sum(5*(b*b-a*a) for a,b in zip(p,p[1:]))
+            self.assertEqual(speed_integral,5)
+
     def test_length_repeated_traversal(self):
         for r in (1,2,5):
             self.assertAlmostEqual(r*4*pi,2*r*2*pi)
@@ -111,7 +122,22 @@ class Chapter33(unittest.TestCase):
         My=F(1,3)
         self.assertEqual((My/A,Mx/A),(F(2,3),F(1,3)))
         self.assertEqual(F(1,3)*F(1,4),F(1,12))
-        self.assertEqual(F(1,4),F(1,4))
+        Iy=lambda x:x**4/4
+        self.assertEqual(Iy(F(1))-Iy(F(0)),F(1,4))
+
+    def test_signed_moments_below_axis(self):
+        # u=-2, v=-1 on [0,1], unit density.
+        u,v=F(-2),F(-1)
+        A=v-u
+        Mx=(v*v-u*u)/2
+        Ix=(v**3-u**3)/3
+        self.assertEqual(Mx/A,F(-3,2))
+        self.assertEqual(Ix,F(7,3))
+        self.assertGreater(Ix,0)
+        # Exact midpoint quadrature error for y^2 on a uniform grid.
+        for n in (2,4,10,100):
+            estimate=sum((u+(v-u)*F(2*i+1,2*n))**2*(v-u)/n for i in range(n))
+            self.assertEqual(Ix-estimate,F(1,12*n*n))
 
     def test_pappus_volume_torus(self):
         for R,r in ((F(3),F(1)),(F(5),F(2))):
@@ -119,7 +145,7 @@ class Chapter33(unittest.TestCase):
                 u,v=R-w,R+w
                 self.assertEqual(v*v-u*u,2*R*(v-u))
             # V/pi^2 as inferred from centroid and disk area.
-            self.assertEqual(2*R*r*r,2*R*r**2)
+            self.assertEqual((2*R)*r**2,2*R*r*r)
 
     def test_torus_surface(self):
         R,r=3.,1.
