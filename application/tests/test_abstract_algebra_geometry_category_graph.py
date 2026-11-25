@@ -16,6 +16,8 @@ class AbstractAlgebraGeometryCategoryGraphTest(unittest.TestCase):
         if not canonical.is_dir():
             self.skipTest("canonical repository chapters not available")
         expected = (
+            ("DG-05", "AA-16", "aa:tw:modules-first-isomorphism"),
+            ("AA-16", "DG-05", "thm:modul-izomorfizm"),
             ("AA-12", "ALG-01", "tw:radical-correspondence"),
             ("AA-12", "KAT-09", "cat:ex:localization-rep"),
             ("AA-13", "ALG-01", "tw:hilbert-basis"),
