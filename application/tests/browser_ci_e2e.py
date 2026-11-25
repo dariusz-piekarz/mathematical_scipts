@@ -110,7 +110,34 @@ def main() -> None:
                         }""", [latex, module])
                         assert result["formulas"] > 0, (module, label, result)
                         samples.append({"module": module, "label": label, "characters": len(latex), **result})
-                print(json.dumps({"math_preview_samples": samples}, ensure_ascii=False), flush=True)
+                # A real complete chapter: repeat rendering must retain the current DOM.
+                with sqlite3.connect(ROOT / "data" / "biblioteka.db") as math_db:
+                    chapter = math_db.execute("SELECT content FROM documents WHERE id='KAT-03'").fetchone()[0]
+                long_sample = page.evaluate("""latex => {
+                    let start=performance.now();
+                    renderSimplified(latex,'KAT-03');
+                    const initial=performance.now()-start;
+                    const box=document.getElementById('simplified'), first=box.querySelector('.katex');
+                    start=performance.now();
+                    renderSimplified(latex,'KAT-03');
+                    return {characters:latex.length, initial_ms:initial,
+                        repeated_ms:performance.now()-start,
+                        reused:!!first && first===box.querySelector('.katex'),
+                        formulas:box.querySelectorAll('.katex').length};
+                }""", chapter)
+                assert long_sample["reused"] and long_sample["formulas"] > 0, long_sample
+                # A wide display equation must scroll locally instead of widening the reader.
+                wide = page.evaluate(r"""() => {
+                    renderSimplified('\\[' + Array(120).fill('x^2').join('+') + '\\]', 'DG-01');
+                    const box=document.getElementById('simplified');
+                    const equation=box.querySelector('.katex-display');
+                    const reader=document.getElementById('view-reader');
+                    return {equationWidth:equation.clientWidth, equationScroll:equation.scrollWidth,
+                        boxWidth:box.clientWidth, readerWidth:reader.clientWidth};
+                }""")
+                assert wide["equationScroll"] > wide["equationWidth"] > 0, wide
+                assert wide["boxWidth"] <= wide["readerWidth"], wide
+                print(json.dumps({"math_preview_samples": samples, "full_chapter": long_sample, "wide_formula": wide}, ensure_ascii=False), flush=True)
                 page.locator("#togglePreview").click()
                 # Full browser-to-API Lean contract: exact indexed theorem,
                 # exact whole-line selection, missing partial span and safe runner.
