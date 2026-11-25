@@ -39,10 +39,29 @@ class Chapter28(unittest.TestCase):
                 if a==b==0:
                     self.assertEqual(P,(c,0,0))
 
+    def test_linearity_family_constant_recovery(self):
+        for a,b in ((F(2),F(-3)),(F(0),F(2)),(F(-3),F(0))):
+            for c in (F(-7,3),F(0),F(5)):
+                c1,c2=(c/a,F(0)) if a else (F(0),c/b)
+                self.assertEqual(a*c1+b*c2,c)
+        self.assertNotEqual(F(0)*F(2)+F(0)*F(3),F(1))
+
+    def test_affine_preimage_and_independent_normalization(self):
+        for a,b in ((F(2),F(-1)),(F(-3),F(2))):
+            lo,hi=sorted(((F(-2)-b)/a,(F(3)-b)/a))
+            for x in (lo-1,lo,(lo+hi)/2,hi,hi+1):
+                self.assertEqual(lo<x<hi,-2<a*x+b<3)
+        for c_minus,c_plus in ((F(0),F(1)),(F(0),F(7)),(F(0),F(-3))):
+            # log|-1|=log|1|=0; fixing the negative branch does not fix the positive branch.
+            self.assertEqual(c_minus,0)
+            self.assertNotEqual(c_minus,c_plus)
+
     def test_integer_power_primitive(self):
         for r in (-5,-3,-2,0,1,3,8):
             for x in (F(-2),F(-1,2),F(1,2),F(3)):
                 self.assertEqual(F(1,r+1)*(r+1)*x**r,x**r)
+            if r>=0:
+                self.assertEqual(F(1,r+1)*(r+1)*F(0)**r,F(1) if r==0 else F(0))
 
     def test_elementary_primitive_table(self):
         # Numerical derivative witnesses only; the proof is in the text.
