@@ -1,0 +1,11 @@
+# Teoria kategorii — audyt globalny I
+
+Zakres: 19 rozdziałów CAT-00–18, główny plik books/pl/category_theory.tex, 19 plików testów i workflow (40 plików). Porównano bloby z commitem 5669553f0b33d9ef6b9854f57173c114b71a2138; zgodność 40 plików z gałęzią przy odczycie da47d3802439f386a7202465879c4d29730cbd13. Względem poprzednio zatwierdzonego e083a61626e4c5ec2ee664bcb6454c10a3be93ca zmieniono osiem rozdziałów CAT-01,02,03,04,05,06,07,09. Porównanie treści wykazało kwalifikowanie odsyłaczy, fallback atlasref i jedną nową etykietę przykładu; bez zmiany merytorycznej dowodów. Nie nadpisywano zmian równoległych.
+
+Kontrola strukturalna wszystkich 19 źródeł: 186 etykiet, 101 wystąpień ref/eqref/pageref, 38 kwalifikowanych atlasref, poprawne zagnieżdżenie środowisk. Główny plik włącza każdy rozdział w kolejności 00–18. Istnieją raporty rozdziałowe dla wszystkich 19 rozdziałów. Nie utożsamiamy obecności raportu z nowym audytem każdego dowodu. Kwalifikowane cele zewnętrzne wymagają osobnego sprawdzenia w kontekście aktualnych wersji innych skryptów.
+
+CI #45631970610 job 139267286255 SUCCESS: 124/124 testów, kompilacja i odsyłacze. Terminologia #45631970515 SUCCESS. Artefakt 15032465279: 74 strony, 775805 bajtów. Wyrenderowano wszystkie strony PyMuPDF i obejrzano 10 arkuszy kontaktowych (8 stron na arkusz, ostatni 2); brak widocznych błędów układu, kolizji lub obcięć. To przegląd układu wszystkich stron w pomniejszeniu, nie ponowna lektura każdego wzoru w pełnej rozdzielczości. Kontrola bloków tekstu: 0 poza stroną, 0 pustych stron. Log końcowy bez Overfull, undefined references, multiply defined, LaTeX Warning: Reference, ^!. Spis treści PDF: 80 wpisów, 19 głównych sekcji. Wszystkie 181 adnotacji odsyłaczy mają istniejący nazwany cel na stronie w zakresie dokumentu (466 nazwanych celów). Większe odstępy pod tabelami słownika nie są błędem blokującym.
+
+CI aplikacji #45631970553 job 139267289874: FAILURE na regresjach aplikacji, budowa indeksu i audyt grafu SUCCESS, kroki przeglądarkowe pominięte. Nie diagnozowano tych problemów. Lean nie uruchamiano.
+
+Wynik: końcowa kontrola strukturalna, CI i przegląd wizualny całego PDF zaliczone dla wskazanego zestawu plików. Pozostaje niezależny audyt globalny, w szczególności weryfikacja celów kwalifikowanych i dowodów przekrojowych oraz ewentualnych zmian równoległych. Źródło i testy bez zmian.
