@@ -27,3 +27,11 @@ Drugi ręczny przebieg kontrolny 608 wierszy, 8 sekcji, 13 dowodów i 5 przykła
 Kontrola statyczna PASS: 70 etykiet, 73 wystąpienia odwołań w czterech rozdziałach, 0 duplikatów wewnątrz tomu, 0 brakujących celów lokalnych, środowiska zbilansowane, katalog zgodny z entrypointem. Wszystkie cztery bloby rozdziałowe i entrypoint identyczne z commitem 3b43c7f; blob 04: 89ebb85ee2412b17b88a2ced4891120d961584aa; entrypoint: 36aec84609e0727a43cbedbd9580c9d5340b329e. CI poprzedniej wersji #45676204165 SUCCESS, ale CI dokładnej aktualnej wersji #45676705461 i #45676728019 w trakcie podczas kontroli. Brak potwierdzonej kontroli wizualnej aktualnego PDF. Nie testowano Atlasu ani Lean.
 
 Czyste audyty matematyczno-redakcyjne 2/2. Status OTWARTY TECHNICZNIE: pozostało potwierdzenie CI i rzeczywista kontrola PDF. Nie rozpoczynać rozdziału 05 przed domknięciem obu warunków.
+
+## Domknięcie walidacji technicznej — stabilizacja rozdziału 04
+
+CI #45676728019: completed/success, commit 3b43c7f542b4f4c3d7a79ebdd056fe1cbf729a59. Artefakt 15053025960 (mathematical-analysis-ii) pobrano i rozpakowano. Wyrenderowano wszystkie 32 strony PDF przez pdftoppm w 110 dpi i obejrzano osiem plansz po cztery strony. Rozdział 04 zajmuje strony numerowane 21–30; rysunek 4.1 na stronie 22 jest czytelny, oznaczenia obszarów indeksów i podpis są zgodne z treścią. Spis treści zawiera wszystkie cztery rozdziały i osiem sekcji rozdziału 04. Nie stwierdzono widocznych obcięć, kolizji ani nierozwiązanych odwołań w składzie. Kontrola wizualna PASS w zakresie układu.
+
+Ponownie porównano cztery pliki rozdziałowe i entrypoint z commitem CI: wszystkie pięć blobów identyczne. Blob 04: 89ebb85ee2412b17b88a2ced4891120d961584aa, entrypoint: 36aec84609e0727a43cbedbd9580c9d5340b329e. Katalog zgodny, 70 etykiet i 73 wystąpienia odwołań w czterech rozdziałach, bez duplikatów wewnątrz tomu i bez brakujących lokalnych celów. Treści nie zmieniono. Dwa czyste audyty matematyczno-redakcyjne pozostają ważne. Nie testowano interfejsu Atlasu ani Lean.
+
+Status USTABILIZOWANY: audyty 2/2, CI PASS, kontrola wizualna PDF PASS. Następny rozdział 05 — Iloczyny nieskończone.
