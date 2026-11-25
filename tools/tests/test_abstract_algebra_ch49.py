@@ -175,5 +175,31 @@ class AA49SymPyRegression(unittest.TestCase):
                        "aa:prz:kov2-positive-degree"):
             self.assertIn(r"\label{"+needed+"}",text)
         self.assertIn("cytujemy",text)
+    def test_14_finite_witness_and_square_class(self):
+        # AA-49-FINAL-01: aa:tw:kov2-algorithm. A zero initial
+        # discriminant need not mean every affine candidate is zero.
+        a,b=s.symbols('a b')
+        q=2/x**2; theta=-2/x; P=x**6+a*x**3+b
+        self.assertTrue(eq(auxiliary_operator(P,theta,q)))
+        phi=theta+s.diff(P,x)/P
+        H=s.factor((4*q-2*s.diff(phi,x)-phi**2)*P**2)
+        expected=(4*q-2*s.diff(theta,x)-theta**2)*P**2-2*theta*P*s.diff(P,x)-2*P*s.diff(P,x,2)+s.diff(P,x)**2
+        self.assertTrue(eq(H,expected))
+        self.assertTrue(eq(H,9*x**4*(a*a-4*b)))
+        self.assertTrue(eq(s.diff(H,x)+2*theta*H))
+        self.assertTrue(eq(H.subs({a:0,b:0})))
+        values=[s.factor(H.subs({a:i,b:j})) for i,j in product(range(3),repeat=2)]
+        self.assertEqual(sum(v!=0 for v in values),7)
+        for v in values:
+            if v!=0:
+                self.assertTrue(eq(s.diff(v/x**4,x)))
+                self.assertEqual(s.degree(v,x),4)
+        q=(4*x+5)/(16*x**2); theta=-1/(2*x); P=x-1
+        self.assertTrue(eq(auxiliary_operator(P,theta,q)))
+        phi=theta+s.diff(P,x)/P
+        H=s.factor((4*q-2*s.diff(phi,x)-phi**2)*P**2)
+        self.assertTrue(eq(H,x))
+        self.assertTrue(eq(s.diff(H,x)+2*theta*H))
+        self.assertEqual(s.degree(H,x),1)
 if __name__=="__main__":
     unittest.main()
