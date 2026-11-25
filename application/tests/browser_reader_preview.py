@@ -17,9 +17,9 @@ with sync_playwright() as pw:
     chapter = (ROOT.parent / 'chapters/pl/algebraic_geometry/08-geometria-biwymierna-i-modele-minimalne-powierzchni.tex').read_text(encoding='utf-8')
     page.evaluate("latex => renderSimplified(latex, 'ALG-08')", chapter)
     box = page.locator('#simplified')
-    page.wait_for_function("document.querySelectorAll('#simplified .preview-figure img').length === 4 && [...document.querySelectorAll('#simplified .preview-figure img')].every(img => img.complete && img.naturalWidth > 0)", timeout=90000)
+    page.wait_for_function("document.querySelectorAll('#simplified .preview-figure').length === 4 && [...document.querySelectorAll('#simplified .preview-figure')].every(box => box.querySelector('button') || (box.querySelector('img')?.complete && box.querySelector('img').naturalWidth > 0))", timeout=90000)
     assert box.locator('.preview-figure').count() == 4
-    assert box.locator('.preview-figure button').count() == 0
+    assert box.locator('.preview-figure button').count() == 0, box.locator('.preview-figure').all_inner_texts()
     text = box.inner_text()
     assert r'\providecommand' not in text and r'\noindent' not in text and r'\atlasref' not in text
     assert 'Dlaczego izomorfizm' in box.locator('h3').first.inner_text()

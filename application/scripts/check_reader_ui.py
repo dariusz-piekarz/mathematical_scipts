@@ -56,6 +56,9 @@ def main():
                     except subprocess.TimeoutExpired:
                         process.kill()
                         process.wait(timeout=5)
+                # Keep CI failures reviewable even when the temporary directory is removed.
+                if sys.exc_info()[0] is not None:
+                    print((Path(temp) / 'server.log').read_text(errors='replace')[-12000:], file=sys.stderr)
 
 
 if __name__ == '__main__':
