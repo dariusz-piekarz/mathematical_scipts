@@ -24,6 +24,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool
 
 from backend.latex_parser import analyze_selection, get_stats, show_label
 from backend.label_registry import qualified_occurrence
+from backend.graph_coverage import graph_coverage
 from backend import workspaces
 from backend.concept_graph import build_concept_graph
 from backend import lean_catalog
@@ -499,6 +500,14 @@ def graph(left: str, right: str, granularity: Literal["module","section","entity
           max_edges:Annotated[int,Query(ge=1,le=250)]=90):
     with db_connection() as con:
         return bipartite_graph(con,left,right,granularity,min_weight,max_edges)
+
+
+@app.get("/api/graph/coverage")
+def reference_graph_coverage():
+    """Global chapter inventory including isolated vertices and empty domain pairs."""
+    with db_connection() as con:
+        catalog = ROOT.parent / "catalog" / "books.json"
+        return graph_coverage(con, catalog if catalog.is_file() else None)
 
 
 @app.get("/api/graph/path")
