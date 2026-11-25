@@ -1,0 +1,7 @@
+# PDE-06 — iteracja 77: diagnostyka składu
+
+Data: 2026-11-25. Przebieg 45571597985, job 139059321992, commit 2ddae7a2476ebf76a639b1b84e415d31923a4796: failure. Rzeczywiste logi potwierdzają 10 testów unittest (0.239 s), zaliczoną kontrolę struktury i kompilację PDF (16 stron). Nie zaliczono końcowej diagnostyki: Overfull \\hbox (2.31137pt too wide) w akapicie 1258–1266. Ostrzeżenia o niezdefiniowanych odsyłaczach z pierwszej kompilacji nie są wykazane jako błąd końcowej diagnostyki. Artefakt 15002157409 został opublikowany; nie przeprowadzono jeszcze niezależnych oględzin jego zawartości.
+
+Naprawa w sekcji 6.7: przeniesiono oszacowanie Cauchy'ego–Schwarza dla F_m do bloku matematycznego i skrócono sąsiednie zdanie. Treść matematyczna, założenia i kryteria bez zmian. Commit e9c45024f3ccfc565f94ef6e713ddbb7d771eb99, nowy blob 4adf037b29fc0e09a95fb435557bde958b761d09. Odczyt źródła potwierdził 38 unikatowych etykiet i 52 wystąpienia odsyłaczy.
+
+Zapytanie według SHA poprawki zwróciło dwa uruchomione workflow: Polish mathematical terminology (45571887119), Mathematical library application checks (45571887251), jeszcze bez wyniku. Dedykowany przebieg PDE-06 nie został jeszcze potwierdzony. Nie deklarujemy usunięcia ostrzeżenia przed ponowną kompilacją ani końcowego PASS. Kontrola wizualna, druga pełna lektura oraz audyt kontrolny pozostają otwarte. Brak formalizacji Lean. Następna iteracja: zweryfikować dedykowane CI dla aktualnego źródła i PDF, bez rozszerzania materiału.
