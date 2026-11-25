@@ -74,6 +74,28 @@ class CategoryTheoryCh19(unittest.TestCase):
                 self.assertEqual(composed,tuple(v[curried[u[x]][a]]
                                                 for x,a in itertools.product(range(2),repeat=2)))
 
+    def test_CAT_19_007_nonsymmetric_braiding(self):
+        for prime in (3,5,7):
+            for q in range(1,prime):
+                for p,r,s in itertools.product(range(-3,4),repeat=3):
+                    power = lambda n: pow(q,n,prime)
+                    self.assertEqual(power(p*(r+s)),power(p*r)*power(p*s)%prime)
+                    self.assertEqual(power((p+r)*s),power(p*s)*power(r*s)%prime)
+                    self.assertEqual(power(p*r)*power(-p*r)%prime,1)
+                self.assertEqual(all(pow(q,2*p*r,prime)==1
+                                     for p,r in itertools.product(range(-3,4),repeat=2)),
+                                 q*q%prime==1)
+
+    def test_CAT_19_008_internal_hom_composition(self):
+        funcs = tuple(itertools.product(range(2),repeat=2))
+        def compose(g,f):
+            return tuple(g[i] for i in f)
+        def internal(a,b,f):
+            return compose(b,compose(f,a))
+        for a,aa,b,bb,f in itertools.product(funcs,repeat=5):
+            self.assertEqual(internal(aa,bb,internal(a,b,f)),
+                             internal(compose(a,aa),compose(bb,b),f))
+
     def test_CAT_19_006_structure(self):
         s = CHAPTER.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}",s)
