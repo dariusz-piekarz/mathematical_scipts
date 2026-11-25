@@ -79,5 +79,30 @@ class Chapter33(unittest.TestCase):
                       r"n^{-1}\eta'"):
             self.assertIn(token,S)
 
+    def test_FA33_truncation_02(self):
+        for token in (r"1(E)=I_H",r"\|h_n(E)x-h(E)x\|^2",
+                      r"f(E)g(E)=(fg)(E)",r"4|h|^2"):
+            self.assertIn(token,S)
+        for h,x in itertools.product(itertools.product(range(-2,3),repeat=3),
+                                     itertools.product(range(-1,2),repeat=3)):
+            prev = sum((a*b)**2 for a,b in zip(h,x))
+            for n in range(3):
+                hn = [a if abs(a)<=n else 0 for a in h]
+                error = sum(((a-b)*c)**2 for a,b,c in zip(hn,h,x))
+                self.assertLessEqual(error,prev)
+                prev = error
+            self.assertEqual(prev,0)
+
+    def test_FA33_defect_and_unitarity_02(self):
+        for token in (r"\langle iu,-ip\rangle=-\langle u,p\rangle",
+                      r"\sqrt2",r"U_t^*U_t=U_tU_t^*=1(E_A)=I_H"):
+            self.assertIn(token,S)
+        values = (0,1,-1,1j,-1j,1+1j)
+        for u,p in itertools.product(values,repeat=2):
+            self.assertEqual(u*p.conjugate()+(1j*u)*(-1j*p).conjugate(),0)
+            self.assertEqual(abs(u)**2+abs(1j*u)**2,2*abs(u)**2)
+        for z in (1,-1,1j,-1j):
+            self.assertEqual(z*z.conjugate(),1)
+
 if __name__ == "__main__":
     unittest.main()
