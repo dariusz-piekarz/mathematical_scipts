@@ -12,3 +12,9 @@
 | IT-04-009 | Różniczkowanie pierwotnej: dwa znaki przyrostu, mierzalne ilorazy, zupełność miary | semantyczna |
 | IT-04-010 | Pochodna x^2 cos(pi/x^2): poprawne podstawienie, dolne oszacowania okresów i rozbieżność modułu | semantyczna |
 | IT-04-011 | Dolne oszacowania półokresów przy beta>=0 oraz -1<=beta<0 i próg zbieżności modułu | semantyczna + Python |
+| IT-04-012 | Newton–Leibniz dla pochodnej we wnętrzu: ciągłość F wystarcza na końcach; dowolne skończone wartości f(a), f(b); osobny budżet błędów | semantyczna + Python |
+| IT-04-013 | Oscylacyjna całka dla beta<0: całkowanie przez części, oszacowanie ogona 2A^beta, kryterium Cauchy'ego | semantyczna + Python |
+| IT-04-014 | Zbieżność zmajoryzowana: wspólny zbiór wyjątkowy, mierzalność granicy przez zupełność, zgodność z HK | semantyczna |
+| IT-04-015 | Podstawienie: obrazy rozłącznych wnętrz, bi-lipschitzowskość, charakterystyka ACG_* i pochodna p.w.; mnożniki BV i AC | semantyczna |
+
+Audyt po migracji: commit 8ef0ada28df587a817668d19ea315b10b394b374, blob c13d123ecc187dd6ef8c951950b7ce8fd248d120, 36/36 etykiet zachowanych. Zmieniono dowód całkowalności pochodnych na końcach, rozpisano konieczność Hake'a i oszacowanie oscylacyjne, doprecyzowano mierzalność i zależności. Sprawdzono m.in. Cousina, kryterium Cauchy'ego, lokalność, Saks–Henstock, pokrycie 5r, podstawienie i mnożniki oraz jednostajną całkowalność. Nowe testy w febe58bba89cb991b61f4e38bbc28e3793bdebbc; nie potwierdzono jeszcze ich wykonania. Poprzedni CI 45621624236: 27/27, 130 stron; nie dotyczy nowych poprawek. Kontrola PDF i Lean nieprzeprowadzone.
