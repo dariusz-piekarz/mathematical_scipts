@@ -755,16 +755,20 @@ def analyze_selection(con: sqlite3.Connection, modules: list[str]) -> dict[str, 
     selected_set = set(selected) & known
     if not selected_set:
         return {"selected": selected, "unknown_modules": absent_modules,
-                "internal_references": 0, "external_references": 0,
+                "internal_references": 0, "external_references": 0, "reading_references": [],
                 "missing_global": [], "external_targets": []}
     placeholders = ",".join("?" for _ in selected_set)
-    rows = con.execute(f"SELECT source_document, target_document, target_label, status, line "
+    rows = con.execute(f"SELECT source_document, target_document, target_label, status, line, command "
                        f"FROM references_tex WHERE source_document IN ({placeholders}) ORDER BY source_document,line",
                        tuple(sorted(selected_set))).fetchall()
     internal, external, globally_missing = 0, 0, []
     dests: dict[str, dict[str, Any]] = {}
+    reading_references = []
     for r in rows:
         destination = r["target_document"]
+        if r["command"] == "atlasref":
+            reading_references.append(dict(r))
+            continue
         if destination is None:
             globally_missing.append({"source":r["source_document"], "label":r["target_label"], "line":r["line"]})
         elif destination in selected_set:
@@ -776,7 +780,7 @@ def analyze_selection(con: sqlite3.Connection, modules: list[str]) -> dict[str, 
             record["labels"].add(r["target_label"])
     external_targets = [{**x,"labels":sorted(x["labels"])} for x in sorted(dests.values(),key=lambda r:r["module"])]
     return {"selected":selected,"unknown_modules":absent_modules,
-            "internal_references":internal,"external_references":external,
+            "internal_references":internal,"external_references":external,"reading_references":reading_references,
             "missing_global":globally_missing,"external_targets":external_targets,
             "requires_xr_hyper":bool(external_targets)}
 
