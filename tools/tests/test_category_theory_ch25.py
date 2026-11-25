@@ -301,6 +301,30 @@ class CategoryTheoryCh25(unittest.TestCase):
                              add(mul(blockdiag(I),V),mul(V,P)))
             self.assertEqual(left==right,mul(blockdiag(I),V)==mul(V,P))
 
+    def test_CAT_25_012_yoneda_connecting(self):
+        # R=Z/l^2, k=R/lR, periodic free resolution with d=l.
+        # Extension 0 -> k -> R -> k -> 0 has injection multiplication by l.
+        # Nonzero odd-characteristic products detect the missing sign.
+        for l in (3,5,7,11):
+            R=range(l*l)
+            self.assertEqual({l*x%(l*l) for x in R},
+                             {x for x in R if l*x%(l*l)==0})
+            for n in range(21):
+                sign=(-1)**(n*(n-1)//2)
+                next_sign=(-1)**(n*(n+1)//2)
+                for a in range(l):
+                    for lift in range(a,l*l,l):
+                        boundary=(l*lift%(l*l))//l
+                        self.assertEqual(boundary,a)
+                        self.assertEqual(next_sign*boundary%l,
+                                         sign*(-1)**n*a%l)
+                for q in range(21):
+                    s_q=(-1)**(q*(q-1)//2)
+                    s_total=(-1)**((n+q)*(n+q-1)//2)
+                    self.assertEqual(s_total,sign*s_q*(-1)**(n*q))
+            self.assertNotEqual((-1)%l,1)
+            self.assertEqual((-1)*(-1)%l,1)
+
     def test_CAT_25_005_structure(self):
         text=CHAPTER.read_text(encoding="utf-8")
         labels=re.findall(r"\\label\{([^}]+)\}",text)
