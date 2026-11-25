@@ -71,6 +71,39 @@ class CategoryTheoryCh11(unittest.TestCase):
             for f, i in itertools.product(functions, range(a)):
                 self.assertIn(f[i], range(b))
 
+    def test_CAT_11_009_compact_open_non_discrete_target(self):
+        # A is discrete with two points, B is the Sierpinski space.
+        a = b = range(2)
+        functions = tuple(maps(2, 2))
+        opens_b = (frozenset(), frozenset({1}), frozenset(b))
+        compacts = ((), (0,), (1,), (0, 1))
+        subbasis = [frozenset(h for h in functions if all(h[i] in u for i in k))
+                    for k, u in itertools.product(compacts, opens_b)]
+        opens_e = {frozenset(), frozenset(functions), *subbasis}
+        while True:
+            closure = opens_e | {u & v for u, v in itertools.product(opens_e, repeat=2)}
+            closure |= {u | v for u, v in itertools.product(opens_e, repeat=2)}
+            if closure == opens_e:
+                break
+            opens_e = closure
+        for opens_x in (
+            (frozenset(), frozenset(a)),
+            (frozenset(), frozenset({0}), frozenset(a)),
+            (frozenset(), frozenset({1}), frozenset(a)),
+            (frozenset(), frozenset({0}), frozenset({1}), frozenset(a)),
+        ):
+            # Opens in X times discrete A are exactly arbitrary open slices.
+            for f in maps(4, 2):
+                product_cont = all(
+                    frozenset(i for i in a if f[2*i+j] in u) in opens_x
+                    for j, u in itertools.product(a, opens_b))
+                h = curry(f, 2, 2)
+                curry_cont = all(frozenset(i for i in a if h[i] in v) in opens_x
+                                 for v in opens_e)
+                self.assertEqual(product_cont, curry_cont)
+        for j, u in itertools.product(a, opens_b):
+            self.assertIn(frozenset(h for h in functions if h[j] in u), opens_e)
+
     def test_CAT_11_008_structure(self):
         s = CHAPTER.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}", s)
