@@ -200,3 +200,18 @@ Druga lektura sekcji 8.9–8.10. Sprawdzono 17 kryteriów 069–085:
 - Łącznie druga lektura 85/92: 42 bez zmian, 43 po uściśleniu. Nie potwierdzono jeszcze CI najnowszego źródła ani nie wykonano formalizacji Lean.
 
 Następna iteracja 121: druga lektura sekcji 8.11 i podsumowania, kryteria 086–092.
+
+## Iteracja 121 — 2026-11-25
+
+Druga lektura sekcji 8.11 i podsumowania. Sprawdzono 7 kryteriów 086–092; wszystkie wymagały drobnego uściślenia dowodu lub sformułowania:
+- 086 — jawna zbieżność zmajoryzowana na prawie każdym przekroju i oddzielny przypadek d=1.
+- 087 — rozpisanie przeliczenia norm w konwencji nieunitarnej.
+- 088 — dowód warunku równości Cauchy'ego–Schwarza przez obliczenie kwadratu normy różnicy od rzutu na jednowymiarową podprzestrzeń.
+- 089 — jawne oszacowanie półnorm ograniczenia do hiperpłaszczyzny, rozdzielenie półnorm iloczynu, uzasadnienie niezerowości oraz osobno d=1.
+- 090 — pełne podstawienie w całce Fouriera po przesunięciu i modulacji.
+- 091 — jawne oszacowania pierwszych momentów, dodatniość mianowników, unormowanie miar i skończoność drugich momentów.
+- 092 — precyzyjna równoważność kryterium mnożnika L² z hipotezą dziedziny naturalnej oraz wskazanie klasy danych i rozwiązań dla kryterium Poissona.
+- Commit źródła dc679dfb7ba335f15c1050734b731d6862a111fe, blob 7e35b139c158ab1a6230fa1c2a7778d14a2743c2; 39 etykiet, 92 wystąpienia odsyłaczy, 10 niezmienionych celów zewnętrznych, poprawne zagnieżdżenie środowisk. Tekst przed sekcją 8.11 identyczny. Nie dodano tematów ani ID.
+- Druga lektura zakończona: 92/92 kryteriów, 42 bez zmian, 50 po uściśleniu. Brak potwierdzenia CI najnowszej wersji; formalizacji Lean nie wykonano. Wymagana jeszcze kontrola techniczna i niezależna lektura kontrolna, zanim rozdział zostanie oznaczony jako stabilny.
+
+Następna iteracja 122: weryfikacja wyników CI dla aktualnych blobów, analiza diagnostyki kompilacji i usunięcie ewentualnych regresji.
