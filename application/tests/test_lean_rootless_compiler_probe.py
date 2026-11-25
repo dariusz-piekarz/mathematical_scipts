@@ -6,7 +6,7 @@ from unittest.mock import patch
 from backend import lean_draft_transport as transport
 from scripts import lean_rootless_compiler_probe as probe
 
-VERSION = b"Lean (version 4.26.0, x86_64-unknown-linux-gnu, commit abcdef123456, Release)\n"
+VERSION = b"Lean (version 4.26.0, x86_64-unknown-linux-gnu, commit d8204c9fd894, Release)\n"
 AXIOMS = b"'atlas_isolated_fixture' does not depend on any axioms\n"
 
 
@@ -14,6 +14,7 @@ class TrustedCoreFixtureTests(unittest.TestCase):
     def test_strict_compiler_output(self):
         self.assertEqual(probe.validate_output(VERSION + AXIOMS), VERSION.decode().strip())
         for output in (AXIOMS, VERSION, VERSION.replace(b"4.26.0", b"4.27.0") + AXIOMS,
+                       VERSION.replace(b"d8204c9fd894", b"abcdef123456") + AXIOMS,
                        VERSION + AXIOMS + b"warning\n", VERSION + b"'atlas_isolated_fixture' depends on axioms: [sorryAx]\n"):
             with self.subTest(output=output), self.assertRaises(ValueError):
                 probe.validate_output(output)
@@ -94,3 +95,51 @@ class TrustedCoreFixtureTests(unittest.TestCase):
                     with self.assertRaises(ValueError):
                         probe.stage_host_libraries(root / "toolchain", root / "rootfs")
                     copy.assert_not_called()
+
+
+    def valid_report(self):
+        import hashlib
+        return {"status": "trusted_core_fixture_compiled", "checkout_sha": "c" * 40,
+                "archive_sha256": probe.ARCHIVE_SHA256,
+                "source_sha256": hashlib.sha256(probe.SOURCE.encode()).hexdigest(),
+                "container_state": "exited", "exit_code": 0,
+                "cleanup_status": "removed_verified", "execution_allowed": False,
+                "proof_status": "not_run", "certificate": False,
+                "lean_version": VERSION.decode().strip(),
+                "compiler_output": (VERSION + AXIOMS).decode(),
+                "image_id": "sha256:" + "b" * 64, "container_id": "a" * 64}
+
+    def test_report_rejects_inconsistent_identity_and_false_success(self):
+        report = self.valid_report()
+        probe.validate_report(report, expected_sha="c" * 40)
+        for key, value in (("checkout_sha", "d" * 40), ("archive_sha256", "0" * 64),
+                           ("source_sha256", "0" * 64), ("exit_code", False),
+                           ("execution_allowed", True), ("certificate", True),
+                           ("cleanup_status", "unconfirmed"), ("proof_status", "compiled"),
+                           ("image_id", "latest"), ("container_id", "a"),
+                           ("compiler_output", VERSION.decode()),
+                           ("lean_version", "Lean 4.26.0")):
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                probe.validate_report({**report, key: value}, expected_sha="c" * 40)
+        for altered in ({**report, "extra": True},
+                        {k: v for k, v in report.items() if k != "compiler_output"}):
+            with self.assertRaises(ValueError):
+                probe.validate_report(altered, expected_sha="c" * 40)
+
+    def test_persisted_report_rejects_stale_duplicate_and_symlink(self):
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "report.json"
+            report = self.valid_report()
+            probe.write_report(path, report, expected_sha="c" * 40)
+            self.assertEqual(probe.read_report(path, expected_sha="c" * 40), report)
+            with self.assertRaises(FileExistsError):
+                probe.write_report(path, report, expected_sha="c" * 40)
+            path.write_text('{"certificate": false, "certificate": true}')
+            with self.assertRaises(ValueError):
+                probe.read_report(path, expected_sha="c" * 40)
+            path.unlink()
+            path.symlink_to(Path(directory) / "missing")
+            with self.assertRaises(OSError):
+                probe.read_report(path, expected_sha="c" * 40)
