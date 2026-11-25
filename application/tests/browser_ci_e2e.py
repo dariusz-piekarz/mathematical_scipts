@@ -324,6 +324,44 @@ def main() -> None:
                 page.locator("#view-graph").wait_for(state="visible", timeout=15000)
                 assert page.locator("#graphLeft option").count() > 0
                 assert page.locator("#graphRight option").count() > 0
+                # Full-index thematic coverage and real navigation into a pair.
+                with page.expect_response(
+                    lambda response: response.url.endswith("/api/graph/coverage"),
+                    timeout=60000,
+                ) as coverage_response:
+                    page.locator("#globalGraphCoverage").click()
+                coverage = coverage_response.value
+                assert coverage.ok, (coverage.status, coverage.text()[:1000])
+                payload = coverage.json()
+                assert payload["summary"]["indexed_chapters"] == stats["documents"]
+                assert payload["catalog"] is not None
+                assert not payload["catalog"]["missing"], payload["catalog"]["missing"]
+                assert not payload["catalog"]["path_mismatches"]
+                assert payload["reading_audit"]["checked"] >= 67
+                assert payload["reading_audit"]["invalid"] == 0, payload["reading_audit"]
+                page.locator("#globalReadingAudit").wait_for(state="visible", timeout=15000)
+                assert "błędne: 0" in page.locator("#globalReadingAudit").inner_text()
+                measure = next(p for p in payload["domain_pairs"]
+                               if {p["left"], p["right"]} == {"teoria miary", "analiza funkcjonalna"})
+                assert measure["reading"] > 0, measure
+                pair_button = page.locator(".global-graph-pairs button").filter(
+                    has_text=f'{measure["left"]} ↔ {measure["right"]} · {measure["references"]}'
+                )
+                page.locator("#graphMin").fill("1")
+                with page.expect_response(
+                    lambda response: "/api/graph?left=" in response.url,
+                    timeout=60000,
+                ) as pair_response:
+                    pair_button.click()
+                pair = pair_response.value
+                assert pair.ok, (pair.status, pair.text()[:1000])
+                pair_payload = pair.json()
+                assert pair_payload["edges"], pair_payload
+                assert {pair_payload["left"], pair_payload["right"]} == {
+                    "teoria miary", "analiza funkcjonalna"}
+                page.wait_for_function("() => !document.getElementById('globalReadingAudit')",
+                                       timeout=15000)
+                assert "par powiązanych" in page.locator("#graphSummary").inner_text()
                 # Concept graph must work in real Chromium without a graph CDN.
                 # Reuse the global search as a shortcut into the new graph view.
                 page.locator("#searchInput").fill("Zorn")
