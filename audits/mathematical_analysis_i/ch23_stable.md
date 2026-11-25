@@ -1,0 +1,8 @@
+# MA1-23 — stabilny (audyt 03)
+## Zgodność wersji
+CI dla e352f66c75f2c4239bd5f71da4b8da21a5e17600. Na gałęzi roboczej sprawdzono zgodność blobów: rozdział 7ae4f70d01a2e03c609d89a2497e64b87093d089, testy c1dec27b04870e687c141d2f8555d92c59d6b468, kryteria 83c06dbfe919a7038410e0f829ea22d286485650, tom 44586a59ee672417f82c51c71d14e8dc1b89e827, katalog 4e4e3143804a1657b4a3e49f72d7e1cb776af825.
+## Audyt potwierdzający
+Ponownie przejrzano pięć sekcji i 10 kryteriów: definicja na końcach i jednoznaczność współczynników; Peano z przypadkami n=0,1, indukcją i argumentem epsilon-delta; kasowanie sum w ogólnym wzorze reszty, niezerowość mianowników, również p>n+1 i x<a; oszacowanie Lagrange'a, oddzielny przypadek x=a; oszacowania exp, sin, cos, log na obu stronach zera; rekurencja i oszacowanie wszystkich potęg dla funkcji płaskiej. Nie wykryto nowych usterek matematycznych. Bez nowych tematów.
+## Kontrole
+CI 45567103169, job 139044469062 SUCCESS: 242/242 testów tomu, 13/13 rozdziału, w tym oba nowe testy. Dwie kompilacje 136 i 138 stron, ostrzeżenie odsyłaczy tylko po pierwszym przebiegu; końcowa bramka odsyłaczy zaliczona. Terminologia 45567103168 i aplikacja 45567103105 SUCCESS.
+Pobrano artefakt 15000153897, rozpakowano, pdfinfo 138 stron. Wyrenderowano strony fizyczne 134–138 (numeracja 130–134) przez pdftoppm 125 dpi. Obejrzano planszę pięciu stron i ostatnią stronę w pełnej rozdzielczości: czytelne wzory, brak widocznych kolizji i ucięć; wykres funkcji i wielomianu oraz odcinek reszty w x=1 zgodne z opisem. Rozdział stabilny w zakresie wykonanych kontroli. Lean nieuruchomiony. Następny rozdział 24 — przebieg zmienności funkcji.
