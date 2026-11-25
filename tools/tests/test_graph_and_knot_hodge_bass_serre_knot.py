@@ -447,6 +447,25 @@ def check_conway_arf_congruence():
     return tests
 
 
+def check_crossing_orientation():
+    """GKT-25-LINK-SIGN-01: finite exact determinant checks for oriented cylinder."""
+    vectors = list(product(range(-2, 3), repeat=2))
+    count = 0
+    for (a, b), (c, d) in product(vectors, repeat=2):
+        plane = a*d-b*c
+        if not plane:
+            continue
+        for height, k, l in product((1, 2, 5), (-2, 0, 3), (-3, 0, 2)):
+            # Columns (P_u, P_s, K2'), ambient basis negatively oriented.
+            det = 0*(b*l-d*k)-a*(0*l-d*height)+c*(0*k-b*height)
+            crossing = c*b-d*a
+            assert -det == height*crossing
+            assert (-det > 0) == (crossing > 0)
+            count += 1
+    assert count == 13392
+    return count
+
+
 def test_source():
     names=[
         "16-od-triangulacji-do-topologii-i-geometrii-rozmaitosci.tex",
@@ -471,6 +490,7 @@ def test_source():
 
 if __name__=="__main__":
     test_source()
+    print("PASS GKT-25-LINK-SIGN-01:",check_crossing_orientation())
     print("PASS finite weighted Hodge cochain models:",
           [check_hodge(facets) for facets in (
               {(0,1),(1,2),(0,2)},
