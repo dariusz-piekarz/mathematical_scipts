@@ -64,6 +64,16 @@ class Denjoy08(unittest.TestCase):
             self.assertLess(sum(F(1,4**k) for k in range(m+1,m+20)),tail)
             self.assertLess(2*tail,F(1,4**m))
 
+    def test_large_gap_gauge_excludes_far_endpoint(self):
+        for l,r in ((F(0),F(1,2)),(F(1,4),F(3,4))):
+            d=(r-l)/4
+            for t in (l,r):
+                other=r if t==l else l
+                self.assertGreater(abs(other-t),d)
+                y=t+d/2 if t==l else t-d/2
+                self.assertLess(abs(y-t),d)
+                self.assertTrue(l<=y<=r)
+
     def test_derivative_error_two_endpoints(self):
         # F(x)=x^2, exact local remainder (y-t)^2.
         eps=F(1,10)
