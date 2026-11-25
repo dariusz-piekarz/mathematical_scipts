@@ -909,7 +909,7 @@ przedstawień liczby jako sumy dwóch dodatnich kwadratów.
 
 \begin{definicja}[Zbiór rezolwenty i widmo]
 \label{def:pde12-spectrum}
-Dla domkniętego gęsto określonego operatora $T$ w
+Dla domkniętego gęsto określonego operatora liniowego $T$ w
 zespolonej przestrzeni Hilberta jego \emph{zbiorem rezolwenty}
 $\rho(T)$ nazywamy zbiór liczb $z\in\C$, dla których
 $T-zI:D(T)\to H$ jest bijekcją, a odwrotność
@@ -1021,15 +1021,18 @@ $\lambda_j\to\infty$, więc istnieje $N$ takie, że
 $|\lambda_j-\zeta|>|\lambda_1-\zeta|+1$ dla $j>N$.
 Minimum odległości jest zatem osiągane wśród pierwszych
 $N$ wyrazów i jest dodatnie. Definiujemy $u_j=f_j/(\lambda_j-\zeta)$.
-Z Parsevala
-$\|u\|_2^2=\sum_j|f_j|^2/|\lambda_j-\zeta|^2
+Mamy
+$\sum_j|u_j|^2=\sum_j|f_j|^2/|\lambda_j-\zeta|^2
 \le\delta^{-2}\|f\|_2^2$.
+Zatem szereg ortogonalny $\sum_j u_j\phi_j$ jest zbieżny
+w $H$ i definiuje wektor $u$, dla którego Parseval daje
+$\|u\|_2\le\delta^{-1}\|f\|_2$.
 Dodatkowo z nierówności trójkąta
 $\lambda_j\le|\lambda_j-\zeta|+|\zeta|$ otrzymujemy
 jednostajne oszacowanie
 $\lambda_j/|\lambda_j-\zeta|\le1+|\zeta|/\delta$.
-W szczególności $\sum_j|u_j|^2<\infty$ pozwala
-zdefiniować $u$ jako granicę szeregu ortogonalnego. Stąd $\sum\lambda_j^2|u_j|^2<\infty$,
+Stąd $\sum_j\lambda_j^2|u_j|^2
+\le(1+|\zeta|/\delta)^2\|f\|_2^2<\infty$,
 więc $u\in D(A)$ na mocy~\ref{thm:pde12-formdomain},
 i rzeczywiście rozwiązuje równanie. Każde inne rozwiązanie
 ma te same współczynniki, co dowodzi jednoznaczności.
@@ -1097,7 +1100,7 @@ zwartych omówiono również w \atlasref{FA-30::thm:fredholm-hilbert30}{FA-30: a
 \begin{twierdzenie}[Alternatywa Fredholma dla operatorów zwartych]
 \label{thm:pde12-general-fredholm}
 Niech $H$ będzie zespoloną przestrzenią Hilberta,
-a $K:H\to H$ operatorem zwartym. Wówczas
+a $K\in\mathcal L(H)$ operatorem zwartym. Wówczas
 $T=I-K$ ma domknięty obraz oraz skończeniewymiarowe
 jądra $\ker T$ i $\ker T^*$. Zachodzi
 $\dim\ker T=\dim\ker T^*$, a dla $f\in H$
@@ -1188,7 +1191,7 @@ $(I-E)^{-1}$. Nie zmienia zatem kowymiaru obrazu. Otrzymujemy
 $\dim\ker T=\operatorname{codim}\operatorname{Ran}T$.
 
 \textbf{Krok 4: warunek rozwiązywalności.}
-Dla dowolnego ograniczonego operatora w Hilbercie
+Dla dowolnego ograniczonego operatora na przestrzeni Hilberta
 $(\operatorname{Ran}T)^\perp=\ker T^*$,
 gdyż $(Tu,v)=0$ dla wszystkich $u$ jest dokładnie
 warunkiem $T^*v=0$. Obraz $T$ jest domknięty
@@ -1242,6 +1245,31 @@ To pokazuje, dlaczego sprzężenie w warunku zgodności
 jest niezbędne.
 \end{uwaga}
 
+\begin{uwaga}[Związek obu wersji alternatywy Fredholma]
+Niech $B=(A+I)^{-1}$ dla laplasjanu Dirichleta.
+Na $D(A)$ zachodzi
+\[
+ A-\zeta I=(I-(1+\zeta)B)(A+I).
+\]
+Istotnie, $B(A+I)u=u$ dla każdego $u\in D(A)$.
+Ponieważ $A+I:D(A)\to H$ jest bijekcją, podstawienie
+$v=(A+I)u$ sprowadza równanie $(A-\zeta I)u=f$
+do $(I-(1+\zeta)B)v=f$ z $u=Bv$.
+Operator $(1+\zeta)B$ jest zwarty.
+Dla rzeczywistej wartości własnej $\zeta$ operator
+$I-(1+\zeta)B$ jest samosprzężony, a jego jądro
+jest dokładnie $\ker(A-\zeta I)$: jeśli
+$v=(1+\zeta)Bv$, to $v\in D(A)$ i $Av=\zeta v$,
+a odwrotna implikacja wynika z równania dla $B$.
+Zatem ogólna alternatywa Fredholma daje ten sam
+warunek zgodności co twierdzenie~\ref{thm:pde12-fredholm}.
+Jeżeli $\zeta$ nie jest wartością własną, faktoryzacja
+pokazuje, że jądro $I-(1+\zeta)B$ jest zerowe;
+ogólna alternatywa daje bijektywność tego operatora.
+Dowód spektralny dostarcza ponadto dokładnej normy
+rezolwenty i opisu współczynników rozwiązania.
+\end{uwaga}
+
 
 \begin{kontrprzyklad}[Brak zwartości na całej przestrzeni]
 \label{ex:pde12-unbounded-domain}
@@ -1277,8 +1305,12 @@ i do $D(M_m)$. Wstawiając ten test, otrzymujemy
 $\|\chi_{B(0,R)}(mh-k)\|_2^2=0$ dla każdego $R>0$.
 Stąd $mh=k\in L^2$, czyli $h\in D(M_m)$.
 Wraz z symetrią daje to samosprzężoność $M_m$.
-Ponieważ $U$ jest unitarny, definicja sprzężenia daje
-$(U^{-1}M_mU)^*=U^{-1}M_m^*U$, z dziedziną
+Ponieważ $U$ jest unitarny, dla $h,k\in H$
+warunek $(Au,h)_H=(u,k)_H$ dla wszystkich $u\in D(A)$
+jest równoważny warunkowi
+$(M_m g,Uh)_H=(g,Uk)_H$ dla wszystkich $g\in D(M_m)$.
+Oznacza to $Uh\in D(M_m^*)$ i $M_m^*Uh=Uk$.
+Stąd $(U^{-1}M_mU)^*=U^{-1}M_m^*U$, z dziedziną
 $U^{-1}D(M_m^*)$. Zatem $A$ również jest samosprzężony,
 a oba operatory są domknięte.
 
@@ -1334,7 +1366,8 @@ nierówność Cauchy'ego--Schwarza daje
 \]
 gdyż zbiory $Q-nLe_1$ opuszczają każdą ustaloną kulę,
 a $|u|^2$ jest całkowalna. Dla ogólnego $v\in L^2$
-przybliżamy go testem $v_\varepsilon$ z błędem
+przybliżamy go testem $v_\varepsilon$ na mocy
+twierdzenia~\ref{thm:pde8-density}, z błędem
 $\|v-v_\varepsilon\|_2<\varepsilon$;
 $|(u_n,v-v_\varepsilon)|\le\|u\|_2\varepsilon$
 jednostajnie względem $n$. Otrzymujemy $u_n\rightharpoonup0$.
@@ -1489,9 +1522,11 @@ Dla $t>0$ można iterować ten argument: dla każdego
 całkowitego $k\ge1$ mamy $u^{(k)}(t)=(-A)^kS(t)u_0$,
 ponieważ na otoczeniu dowolnego $t_0>0$ początkowy
 wektor $S(t_0/2)u_0$ należy do wszystkich $D(A^k)$.
-Indukcyjnie różniczkujemy $S(t-t_0/2)A^kS(t_0/2)u_0$,
-korzystając z wykazanej komutacji i przynależności
-wektora po prawej stronie do $D(A)$.
+Indukcyjnie różniczkujemy
+$(-1)^kS(t-t_0/2)A^kS(t_0/2)u_0$,
+korzystając z komutacji (którą dla potęg uzyskujemy
+bezpośrednio na współczynnikach) i przynależności
+wektora $A^kS(t_0/2)u_0$ do $D(A)$.
 Jednoznaczność w klasie rozwiązań ciągłych w $H$
 od $t=0$ i klasycznych dla $t>0$ wynika z równań
 skalarnych: dla $v'(t)+Av(t)=0$ współczynniki
@@ -1665,7 +1700,8 @@ Dla $0\le s\le1$ określmy
  f(s)=\sum_{n\ge1}n^{-1/2}\eta(L_n(1-s))\phi_{j_n}.
 \]
 Niezerowe składniki mogą występować tylko na przedziałach
-$[1-2/L_n,1-1/L_n]$, które są parami rozłączne.
+$[1-2/L_n,1-1/L_n]$, które są parami rozłączne,
+ponieważ $2/L_{n+1}\le1/(2L_n)<1/L_n$.
 W każdej chwili co najwyżej jeden składnik jest niezerowy,
 a przedziały gromadzą się tylko przy $s=1$.
 Funkcja jest ciągła na $[0,1)$ dzięki ciągłości $\eta$,
