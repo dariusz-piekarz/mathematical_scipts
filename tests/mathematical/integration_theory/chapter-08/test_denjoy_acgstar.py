@@ -43,6 +43,27 @@ class Denjoy08(unittest.TestCase):
             y=l+F(1,100)
             self.assertLessEqual(d/(y-x),F(1,m))
 
+    def test_alternating_groups_preserve_separation(self):
+        intervals=[(F(j,8),F(j+1,8)) for j in range(8)]
+        n=3
+        for parity in (0,1):
+            group=intervals[parity::2]
+            approx=[(max(F(0),u-F(1,64)),v) for u,v in group]
+            for u,v in approx:
+                self.assertLess(v-u,F(1,n))
+            for (_,v),(u,_) in zip(approx,approx[1:]):
+                self.assertLess(v,u)
+            self.assertLessEqual(sum(v-u for u,v in approx),1)
+
+    def test_gap_oscillation_tail_control(self):
+        # Dyadic gaps of length 2^(-k-1), d_k=4^-k.
+        for m in (2,4,8):
+            eta=F(1,2**(m+1))
+            self.assertTrue(all(F(1,2**(k+1))>=eta for k in range(1,m+1)))
+            tail=F(1,4**(m+1))/F(3,4)
+            self.assertLess(sum(F(1,4**k) for k in range(m+1,m+20)),tail)
+            self.assertLess(2*tail,F(1,4**m))
+
     def test_derivative_error_two_endpoints(self):
         # F(x)=x^2, exact local remainder (y-t)^2.
         eps=F(1,10)
