@@ -481,6 +481,46 @@ def check_fox_dihedral_relation():
     return count
 
 
+def check_fox_prefix_cancellation():
+    """GKT-25-FOX-PREFIX-01: abelianized Fox derivatives and cancellations."""
+    def deriv(w):
+        out = {}
+        h = 0
+        for x in w:
+            if x < 0:
+                h -= 1
+            k = (abs(x), h)
+            out[k] = out.get(k, 0) + (1 if x > 0 else -1)
+            if x > 0:
+                h += 1
+        return {k: v for k, v in out.items() if v}
+
+    count = words = 0
+    letters = (-2, -1, 1, 2)
+    for n in range(6):
+        for w in product(letters, repeat=n):
+            words += 1
+            d = deriv(w)
+            for pos in range(n+1):
+                for x in letters:
+                    assert deriv(w[:pos]+(x, -x)+w[pos:]) == d
+                    count += 1
+            total = {}
+            for (_, h), v in d.items():
+                total[h+1] = total.get(h+1, 0)+v
+                total[h] = total.get(h, 0)-v
+            expected = {}
+            for h, v in ((sum(1 if x > 0 else -1 for x in w), 1), (0, -1)):
+                expected[h] = expected.get(h, 0)+v
+            assert {k: v for k, v in total.items() if v} == {k: v for k, v in expected.items() if v}
+    assert (count, words) == (30948, 1365)
+    assert deriv((1, 2, 1, -2, -1, -2)) == {
+        (1, 0): 1, (1, 2): 1, (1, 1): -1,
+        (2, 1): 1, (2, 2): -1, (2, 0): -1,
+    }
+    return count, words
+
+
 def test_source():
     names=[
         "16-od-triangulacji-do-topologii-i-geometrii-rozmaitosci.tex",
@@ -505,6 +545,7 @@ def test_source():
 
 if __name__=="__main__":
     test_source()
+    print("PASS GKT-25-FOX-PREFIX-01:",check_fox_prefix_cancellation())
     print("PASS GKT-25-FOX-01:",check_fox_dihedral_relation())
     print("PASS GKT-25-LINK-SIGN-01:",check_crossing_orientation())
     print("PASS finite weighted Hodge cochain models:",
