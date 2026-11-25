@@ -43,6 +43,16 @@ def read_json(path: Path):
     return json.loads(raw, object_pairs_hook=unique_object)
 
 
+def tracked_json(root: Path, revision: str, relative: str):
+    """Read the committed JSON independently of worktree/index flags."""
+    if not REV.fullmatch(revision):
+        raise ValueError("Invalid committed manifest revision")
+    raw = environment._git(root, "show", revision + ":" + relative)
+    if len(raw.encode("utf-8")) > MAX_JSON_BYTES:
+        raise ValueError("Committed source manifest exceeds byte budget")
+    return json.loads(raw, object_pairs_hook=unique_object)
+
+
 def package_map(records, *, lake: bool) -> dict:
     if type(records) is not list or not 1 <= len(records) <= environment.MAX_PACKAGES:
         raise ValueError("Invalid source package count")
@@ -97,6 +107,8 @@ def inspect_sources(root: Path, *, expected_sha: str) -> dict:
             {"name": "mathlib", "scope": "leanprover-community", "rev": PIN}]:
         raise ValueError("Project dependency pin mismatch")
     lock = read_json(root / "mathlib-source-lock.json")
+    if lock != tracked_json(root, expected_sha, "application/lean/mathlib-source-lock.json"):
+        raise ValueError("Source lock differs from committed checkout")
     expected = validate_lock(lock)
     actual = manifest_map(read_json(root / "lake-manifest.json"), name="AtlasFormalization")
     if actual != expected:
@@ -112,14 +124,23 @@ def inspect_sources(root: Path, *, expected_sha: str) -> dict:
     for name, record in expected.items():
         if environment._git(packages / name, "rev-parse", "HEAD") != record["rev"]:
             raise ValueError("Installed dependency revision mismatch: " + name)
-    upstream = manifest_map(read_json(packages / "mathlib" / "lake-manifest.json"), name="mathlib")
+    upstream_disk = read_json(packages / "mathlib" / "lake-manifest.json")
+    upstream_committed = tracked_json(packages / "mathlib", PIN, "lake-manifest.json")
+    if upstream_disk != upstream_committed:
+        raise ValueError("Upstream manifest differs from committed Mathlib")
+    upstream = manifest_map(upstream_committed, name="mathlib")
     if upstream != {k: v for k, v in expected.items() if k != "mathlib"}:
         raise ValueError("Pinned upstream manifest differs from reviewed closure")
+    expected_digest = environment._digest({"state": "materialized", "packages": [
+        {"name": name, "commit": record["rev"]} for name, record in sorted(expected.items())]})
+    if clean_digest != expected_digest:
+        raise ValueError("Clean checkout identity digest differs from pinned closure")
     return {"schema": 1, "status": "mathlib_source_closure_verified",
             "checkout_sha": expected_sha, "lean_toolchain": TOOLCHAIN,
             "mathlib_revision": PIN, "package_count": len(expected),
             "packages": [{"name": k, **v} for k, v in sorted(expected.items())],
             "lock_sha256": environment._digest(lock),
+            "upstream_manifest_sha256": environment._digest(upstream_committed),
             "clean_checkout_sha256": clean_digest,
             "artifact_bytes_verified": False, "offline_ready": False,
             "execution_allowed": False, "certificate": False}
