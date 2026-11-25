@@ -11,6 +11,21 @@ class Chapter24(unittest.TestCase):
             self.assertLess((-h)**3,0)
             self.assertGreater(h**3,0)
 
+    def test_all_four_derivative_sign_combinations(self):
+        # f(0)=0; linear pieces with slopes l and r, continuous at zero.
+        for l,r,expected in ((-1,1,(1,1)),(1,-1,(-1,-1)),
+                             (1,1,(-1,1)),(-1,-1,(1,-1))):
+            for h in (F(1,10),F(2,3)):
+                left,right=-l*h,r*h
+                self.assertEqual(((left>0)-(left<0),(right>0)-(right<0)),expected)
+
+    def test_asymptote_coefficients_both_directions(self):
+        for m,b in ((F(2),F(-3)),(F(0),F(5,7))):
+            for x in (F(-100),F(-10),F(10),F(100)):
+                y=m*x+b+1/x
+                self.assertEqual(y/x-m,b/x+1/x**2)
+                self.assertEqual(y-m*x-b,1/x)
+
     def test_continuity_assumption(self):
         for h in (F(1,10),F(1,2)):
             self.assertLess(abs(h),1)
