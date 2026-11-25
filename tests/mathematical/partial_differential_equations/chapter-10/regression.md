@@ -201,3 +201,27 @@ Druga lektura 49/75. Dziesięć kryteriów doprecyzowanych, trzy bez zmian, 10 z
 | PDE-10-059 | Rozpisano liniowość przez kombinacje aproksymantów i ograniczoność przez ciągłość normy. |
 
 Druga lektura 59/75. Dziewięć kryteriów doprecyzowanych, jedno bez zmian, 13 zmian źródłowych. Zachowano wszystkie 32 etykiety w kolejności, 62/62 wystąpień odsyłaczy ma cele w rozdziałach 09 i 10; stos środowisk poprawny; poza kontrolowanym fragmentem brak zmian. Nie uruchamiano testów wykonywalnych, kompilacji, CI ani Lean. Następna iteracja: druga lektura 060–075 (przestrzeń śladów, jądro śladu, Poincare, przedłużenie przez zero i schemat), zamknięcie drugiej lektury.
+
+## Iteracja 159 — druga lektura 060–075
+Źródło przed c9e0238c27f8cf7b8b836cf1a87ddb9ad3d9e1ec, po 0fafe67db377f216e923f6a241bddb0a10b5220c, commit 9edcd598db929c93a4cce9a32f16be9e522a2901. Odczytano cały końcowy fragment i zależności o zamkniętości pochodnych, zwartym iloczynie oraz Poincarém na kostce w rozdziale 09.
+
+| Kryterium | Wynik drugiej lektury |
+| --- | --- |
+| PDE-10-060 | Bez zmian: definicja przestrzeni śladów, bez identyfikacji z normą Gagliarda. |
+| PDE-10-061 | Jawny iloczyn skalarny H^1, uzasadnienie zupełności, środek ciągu minimalizującego i rozwinięcie wielomianu dla ortogonalności. |
+| PDE-10-062 | Bez zmian: niezależność reprezentanta, liniowość i unikalne minimum. |
+| PDE-10-063 | Korekta językowa iniektywności, izometria i zupełność poprawne. |
+| PDE-10-064 | Uzasadniono gładkość przedłużenia przez zero funkcji testowych i zastosowanie klasycznej restrykcji. |
+| PDE-10-065 | Bez zmian: zbieżność aproksymantów w Q_+ i zanikanie śladów, również d=1. |
+| PDE-10-066 | Jawne oszacowania błędów trzech całek przez Höldera także przy p=1 i końcowa tożsamość na Q. |
+| PDE-10-067 | Wskazano całkowalne majoranty i tożsamość testową dla pochodnej stycznej. |
+| PDE-10-068 | Bez zmian: powrót przez Psi i przedłużenie zwartego fragmentu bez błędnego koła. |
+| PDE-10-069 | Rozpisano kontrolę odległości od ścian i nierówność wysokości względem grafu, jawny nośnik splotu. |
+| PDE-10-070 | Rozpisano różnicę splotów, kontrakcyjność przez Jensena i Tonellego, komutację słabych pochodnych z przesunięciem i splotem. |
+| PDE-10-071 | Jawny kwantyfikator u, ponowne oznaczenie wybranego podciągu. |
+| PDE-10-072 | Bez zmian: argument łańcuchów kostek, spójność, przeliczalne pokrycie. |
+| PDE-10-073 | Uzupełniono równoważność normy gradientowej z normą Sobolewa na W_0^{1,p}. |
+| PDE-10-074 | Jawnie wskazano zachowanie pełnej normy W^{1,p}; identyfikacja słabych pochodnych poprawna. |
+| PDE-10-075 | Doprecyzowano opis ciągów ograniczonych oraz wyłączenie d=1 ze schematu. Kontrola wizualna nadal otwarta. |
+
+Druga lektura 75/75 (warstwa semantyczna): w tej iteracji 11 kryteriów doprecyzowano, 5 bez zmian, 16 zmian źródłowych. Łącznie w drugiej lekturze 56 kryteriów doprecyzowanych i 19 bez zmian (iteracje 154–159). Kontrola źródła: 32 etykiety w tej samej kolejności, 65/65 rozwiązanych wystąpień odsyłaczy w rozdziałach 09 i 10, stos środowisk poprawny; wcześniejszy materiał bez zmian. Nie uruchamiano testów wykonywalnych, kompilacji, CI ani Lean. Nie ogłaszamy stabilizacji rozdziału. Następny etap: trwałe wykonywalne testy regresyjne, kontrola strukturalna i dedykowane CI z kompilacją oraz renderem PDF, następnie niezależna trzecia lektura.
