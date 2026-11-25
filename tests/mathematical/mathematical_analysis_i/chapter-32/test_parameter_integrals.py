@@ -79,12 +79,16 @@ class Chapter32(unittest.TestCase):
                 self.assertEqual(q-5*t*t/2,F(5,6)*(3*t*h+h*h))
 
     def test_leibniz_both_moving_bounds(self):
-        # f(x,t)=x+t, alpha=-t, beta=t^2.
+        # f(x,t)=x+2t, alpha=-t, beta=t^2; lower term is nonzero.
+        G=lambda t:t**4/2+2*t**3+3*t*t/2
         for t in (F(-1,2),F(0),F(1,2)):
-            endpoint=(t*t+t)*2*t+(-t+t)
-            interior=t*t+t
-            derivative=2*t**3+3*t*t+t
+            endpoint=(t*t+2*t)*2*t+t
+            interior=2*(t*t+t)
+            derivative=2*t**3+6*t*t+3*t
             self.assertEqual(endpoint+interior,derivative)
+            for h in (F(-1,100),F(1,100)):
+                remainder=(3*t*t+6*t+F(3,2))*h+(2*t+2)*h*h+h**3/2
+                self.assertEqual((G(t+h)-G(t))/h-derivative,remainder)
 
     def test_uniform_cauchy_tails(self):
         for u,v in ((1.,2.),(5.,10.),(10.,30.)):
@@ -133,6 +137,25 @@ class Chapter32(unittest.TestCase):
             self.assertEqual(2*h/abs(h)-h*h*sign/abs(h)**2,sign)
             for x in (0.,1.,5.):
                 self.assertLessEqual(abs(float(h)*exp(-abs(float(h))*x)),abs(float(h)))
+
+    def test_derivative_tails_not_uniform(self):
+        for R in (2.,10.,100.,1000.):
+            t=1/(2*R)
+            H_R=1-exp(-t*R)+t*R*exp(-t*R)
+            self.assertAlmostEqual(1-H_R,exp(-.5)/2)
+            for s in (0.,t,1/R,2/R,1.):
+                self.assertLessEqual(s*exp(-s*R),1/(exp(1)*R)+1e-15)
+            self.assertAlmostEqual((1/R)*exp(-1),1/(exp(1)*R))
+
+    def test_base_point_outside_compact_interval(self):
+        # f(x,t)=exp(-x)*(t+1), t*=0, K=[2,3].
+        for R in (1.,5.,10.):
+            for t in (2.,2.5,3.):
+                base_error=exp(-R)
+                derivative_error=exp(-R)
+                self.assertAlmostEqual(abs((t+1)*(1-exp(-R))-(t+1)),
+                                       base_error+t*derivative_error)
+                self.assertLessEqual((t+1)*exp(-R),base_error+3*derivative_error)
 
     def test_figure_source(self):
         s=(Path(__file__).resolve().parents[4] /
