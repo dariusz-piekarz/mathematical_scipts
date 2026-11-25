@@ -322,7 +322,7 @@ def check_controlled_failure(prefix: list[str], env: dict[str, str], image_id: s
             pass
         else:
             raise ValueError("Expected controlled nonzero exit")
-        state = validate_exited_fixture(transport._decode_metadata(call("container", "inspect", cid)),
+        state = validate_exited_fixture(transport._decode_metadata(cleanup_call("container", "inspect", cid)),
                                        container_id=cid, image_id=image_id, expected_exit=42)
     finally:
         cleanup_fixture(cleanup_call, cid)
@@ -480,7 +480,7 @@ def check_runtime_limits(prefix: list[str], env: dict[str, str], image_id: str) 
                 "execution_allowed": False, "proof_status": "not_run", "certificate": False,
             }, sort_keys=True), flush=True)
             raise
-        state = validate_exited_fixture(transport._decode_metadata(call("container", "inspect", cid)),
+        state = validate_exited_fixture(transport._decode_metadata(cleanup_call("container", "inspect", cid)),
                                        container_id=cid, image_id=image_id, expected_exit=0)
     finally:
         cleanup_fixture(cleanup_call, cid)
