@@ -19,3 +19,4 @@ Testy Python sprawdzają skończone świadki i strukturę, nie zastępują dowod
 | MA1-36-015 | Skończone reprezentanty i wspólny zbiór zerowy w twierdzeniach granicznych | semantyczna |
 | MA1-36-016 | Jednokrotne włączenie rozdziału w książce po MA1-35 i katalogu | Python |
 | MA1-36-017 | McShane–Lebesgue: jawne sumowalne wagi pokrycia, kontrola miary i ważonego błędu | semantyczna + Python |
+| MA1-36-018 | Osobliwości oscylacyjne: dolne oszacowania na półokresach, progi p<q+1 i p<1 | semantyczna + Python |
