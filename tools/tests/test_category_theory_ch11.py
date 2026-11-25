@@ -41,6 +41,21 @@ class CategoryTheoryCh11(unittest.TestCase):
             for r, g, h in itertools.product(maps(ap, a), maps(b, c), maps(a, b)):
                 self.assertEqual(compose(g, compose(h, r)), compose(compose(g, h), r))
 
+    def test_CAT_11_010_bifunctor_composition(self):
+        def act(a, g, h):
+            return compose(g, compose(h, a))
+
+        for n, m, l, b, c, d in itertools.product(range(3), repeat=6):
+            for a, ap, g, k, h in itertools.product(
+                maps(m, n), maps(l, m), maps(b, c),
+                maps(c, d), maps(n, b)
+            ):
+                self.assertEqual(
+                    act(ap, k, act(a, g, h)),
+                    act(compose(a, ap), compose(k, g), h),
+                )
+                self.assertEqual(act(tuple(range(n)), tuple(range(b)), h), h)
+
     def test_CAT_11_004_boolean_poset(self):
         universe = set(range(4))
         subsets = [set(i for i in universe if mask & (1 << i)) for mask in range(16)]
@@ -51,7 +66,9 @@ class CategoryTheoryCh11(unittest.TestCase):
         for p in (2, 3, 5, 7):
             endos = [tuple(c*x % p for x in range(p)) for c in range(p)]
             self.assertGreater(len(set(endos)), 1)
-            self.assertEqual(len(list(maps(0, p))), 1)
+            # The zero vector space has one element, not zero elements.
+            zero_to_field = [f for f in maps(1, p) if f[0] == 0]
+            self.assertEqual(zero_to_field, [(0,)])
 
     def test_CAT_11_006_exponential_laws(self):
         for a, b, c, d in itertools.product(range(4), repeat=4):
