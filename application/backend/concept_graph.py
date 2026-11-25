@@ -14,7 +14,7 @@ import re
 import sqlite3
 from typing import Any
 
-from backend.latex_parser import masked_source
+from backend.latex_parser import is_escaped, masked_source, read_argument
 
 @dataclass(frozen=True)
 class Concept:
@@ -75,16 +75,33 @@ MAX_OCCURRENCES_PER_DOCUMENT_AND_CONCEPT = 3
 # offset unchanged so evidence links still point into the canonical source.
 INDEX_ONLY_COMMANDS = re.compile(
     r"\\(?:label|ref|eqref|pageref|autoref|nameref|cref|Cref|vref|Vref|"
-    r"cite|citep|citet)\s*\{[^{}]*\}"
+    r"atlasref|href|url|nolinkurl|cite|citep|citet)(?![A-Za-z@])\*?"
 )
 
 
 def searchable_source(content: str) -> str:
-    cleaned = list(masked_source(content))
-    for match in INDEX_ONLY_COMMANDS.finditer("".join(cleaned)):
-        for offset in range(match.start(), match.end()):
-            if cleaned[offset] != "\n":
-                cleaned[offset] = " "
+    surface = masked_source(content)
+    cleaned = list(surface)
+    for match in INDEX_ONLY_COMMANDS.finditer(surface):
+        if is_escaped(surface, match.start()):
+            continue
+        pos = match.end()
+        # Citation notes are visible; skip them when locating the key group.
+        if match.group(0).lstrip("\\").rstrip("*") in {"cite", "citep", "citet"}:
+            for _ in range(2):
+                optional = read_argument(surface, pos, "[")
+                if optional is None:
+                    break
+                pos = optional[1]
+        arg = read_argument(surface, pos)
+        if arg is None:
+            continue
+        # The first group of atlasref/href is an identifier, not visible text.
+        # Preserve the entire second group, including nested formatting.
+        for start, end in ((match.start(), match.end()), (pos, arg[1])):
+            for offset in range(start, end):
+                if cleaned[offset] != "\n":
+                    cleaned[offset] = " "
     return "".join(cleaned)
 
 
