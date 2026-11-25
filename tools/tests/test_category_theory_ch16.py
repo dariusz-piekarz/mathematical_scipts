@@ -63,13 +63,32 @@ class CategoryTheoryCh16(unittest.TestCase):
                                   for u, vals in zip(cover, local))]
                 self.assertEqual(len(matches), int(consistent))
 
+    def test_CAT_16_005_biproduct(self):
+        # All linear maps into/out of a two-dimensional biproduct of lines.
+        for p in (2, 3, 5):
+            for u, v, r, s in itertools.product(range(p), repeat=4):
+                for x in range(p):
+                    pair = (u*x % p, v*x % p)
+                    self.assertEqual(pair[0], u*x % p)
+                    self.assertEqual(pair[1], v*x % p)
+                    self.assertEqual((r*pair[0]+s*pair[1]) % p,
+                                     ((r*u+s*v)*x) % p)
+                for a, b in itertools.product(range(p), repeat=2):
+                    left = (a, 0)
+                    right = (0, b)
+                    self.assertEqual(tuple((x+y) % p for x,y in zip(left,right)),
+                                     (a,b))
+                    self.assertEqual((r*a+s*b) % p,
+                                     ((r*a) % p + (s*b) % p) % p)
+
     def test_CAT_16_004_structure(self):
         s = CHAPTER.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}", s)
         self.assertEqual(len(labels), len(set(labels)))
         for name in ("sec:powiazania", "cat:def:abelian-category",
                      "cat:prop:abelian-examples", "cat:ex:exact-sequence",
-                     "cat:ex:normed-quotient", "cat:ex:continuous-sheaf"):
+                     "cat:ex:normed-quotient", "cat:ex:continuous-sheaf",
+                     "cat:ex:normed-nonabelian"):
             self.assertIn(name, labels)
         stack = []
         for cmd, env in re.findall(r"\\(begin|end)\{([^}]+)\}", s):
