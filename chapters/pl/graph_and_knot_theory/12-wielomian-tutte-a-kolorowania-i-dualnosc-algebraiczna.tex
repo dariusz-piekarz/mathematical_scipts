@@ -15,6 +15,10 @@ rosnąć wykładniczo względem liczby krawędzi.
 
 \begin{definicja}[Dwie operacje na krawędzi]
 Niech $G=(V,E)$ będzie skończonym multigrafem, a $e\in E$.
+W tym rozdziale $E$ jest zbiorem rozróżnialnych krawędzi:
+równoległe krawędzie i pętle mają własne oznaczenia,
+nawet gdy mają te same końce. Cykl może mieć długość
+jeden (pętla) lub dwa (dwie równoległe krawędzie).
 Przez $G\setminus e$ oznaczamy graf po usunięciu krawędzi $e$
 bez usuwania jej końców. Jeśli $e$ nie jest pętlą,
 przez $G/e$ oznaczamy graf powstały przez kontrakcję $e$:
@@ -31,8 +35,13 @@ Przez $k_G(A)$ oznaczamy liczbę składowych grafu $(V,A)$,
 $r_G(A):=|V|-k_G(A)$ oraz
 $\nu_G(A):=|A|-r_G(A)=|A|-|V|+k_G(A)$.
 Liczba $\nu_G(A)$ jest wymiarem przestrzeni cykli grafu $(V,A)$
-nad $\mathbb F_2$. Istotnie, w każdej składowej wybieramy
-drzewo rozpinające i korzeń $r$. Kolumny macierzy
+nad $\mathbb F_2$. Istotnie, las rozpinający $(V,A)$
+otrzymujemy, usuwając pętle, zastępując każdą rodzinę
+krawędzi równoległych jedną krawędzią i wybierając las
+rozpinający uzyskanego grafu prostego na mocy twierdzenia
+\ref{thm:tg-las-rozpinajacy}. Każdą wybraną krawędź
+reprezentujemy przez jedną z jej pierwotnych kopii.
+W każdej składowej tak otrzymanego lasu wybieramy korzeń $r$. Kolumny macierzy
 incydencji nad $\mathbb F_2$ mają sumę współczynników
 zero w każdej składowej (dla pętli kolumna jest zerowa).
 Dla każdego wierzchołka $v$ różnego od korzenia suma
@@ -94,8 +103,9 @@ Gdy $e$ nie jest mostem ani pętlą, liczba składowych całego
 grafu nie zmienia się przy usunięciu ani przy kontrakcji $e$.
 Składniki nie zawierające $e$ są zatem dokładnie składnikami
 $T_{G\setminus e}$. Dla składników zawierających $e$ mamy
-$k_G(B\cup\{e\})=k_{G/e}(B)$, ponieważ kontrakcja
-nie zmienia liczby składowych. Zarazem
+$k_G(B\cup\{e\})=k_{G/e}(B)$: utożsamiamy końce
+krawędzi należącej do jednej składowej $(V,B\cup\{e\})$,
+co zachowuje wszystkie składowe i nie łączy różnych. Zarazem
 $|V(G/e)|=|V(G)|-1$, więc
 \[
 |B\cup\{e\}|-|V(G)|+k_G(B\cup\{e\})
@@ -104,7 +114,10 @@ $|V(G/e)|=|V(G)|-1$, więc
 Składniki z $e$ dają zatem dokładnie $T_{G/e}$.
 
 Jeśli $e$ jest mostem, każdy podzbiór $B\subseteq E\setminus\{e\}$
-ma o jedną składową więcej niż $B\cup\{e\}$.
+ma o jedną składową więcej niż $B\cup\{e\}$:
+końce mostu leżą w różnych składowych $(V,B)$,
+gdyż droga między nimi w $B$ przeczyłaby temu,
+że usunięcie $e$ rozspaja jego składową w $G$.
 Oznaczmy $k=k_G(B)$, $c=k_G(E)$ i $n=|V|$.
 Po kontrakcji $e$ mamy $k_{G/e}(B)=k-1$,
 $k_{G/e}(E\setminus\{e\})=c$ oraz $|V(G/e)|=n-1$.
@@ -288,6 +301,10 @@ liczby całkowitej $q\ge1$ zachodzi
 \]
 Prawa strona jest wielomianem w $q$ o współczynnikach
 całkowitych, wyznaczającym liczbę kolorowań dla każdego $q\ge1$.
+Jest to jedyny taki wielomian, ponieważ różnica dwóch
+wielomianów zgodnych dla wszystkich dodatnich liczb
+całkowitych ma nieskończenie wiele pierwiastków,
+a więc jest wielomianem zerowym.
 \end{twierdzenie}
 
 \begin{proof}
@@ -357,6 +374,13 @@ płaskim, a $G^*$ jego dualnym multigrafem. Wtedy
 
 \begin{proof}
 Niech $n=|V(G)|$, $m=|E(G)|$, $f=|V(G^*)|$.
+Spójne zanurzenie w sferze jest komórkowe:
+w dowodzie twierdzenia \ref{thm:tg-euler-plane}
+jego regularne otoczenie jest spójne, a każda składowa
+dopełnienia tego otoczenia jest dyskiem. Dołączenie
+półotwartego kołnierza daje otwarty dysk, czyli ścianę.
+Możemy zatem stosować konstrukcję grafu dualnego
+z rozdziału \ref{ch:tg-powierzchnie}.
 Dla $A\subseteq E(G)$ oznaczmy
 $A^\perp=\{e^*:e\in E(G)\setminus A\}$.
 Zauważmy, że składowe podgrafu $(V(G^*),A^\perp)$
@@ -443,7 +467,7 @@ z rozdziału \ref{ch:tg-algebra}.
 \begin{twierdzenie}[Dualność kolorowań i przepływów]
 \label{thm:tg-flow-color-dual}
 Niech $G\subset S^2$ będzie skończonym spójnym grafem płaskim,
-a $G^*$ jego grafem dualnym. Dla każdego $q\ge2$ zachodzi
+a $G^*$ jego grafem dualnym. Dla każdej liczby całkowitej $q\ge2$ zachodzi
 \[
  P_{G^*}(q)=q\,F_G(q).
 \]
@@ -453,7 +477,11 @@ a $G^*$ jego grafem dualnym. Dla każdego $q\ge2$ zachodzi
 Ustalmy orientację sfery i pomocniczą orientację każdej
 krawędzi $e$ grafu $G$. Niech $F_L(e)$ i $F_R(e)$ oznaczają
 ściany po lewej i prawej stronie zorientowanej krawędzi.
-Niech $R=\mathbb Z/q\mathbb Z$. Z dowolnej funkcji
+Niech $R=\mathbb Z/q\mathbb Z$. Zbiór $q$ kolorów
+utożsamiamy bijektywnie z $R$; warunek różnych kolorów
+nie zależy od wyboru tej bijekcji. Zanurzenie jest
+komórkowe, jak uzasadniono w dowodzie twierdzenia
+\ref{thm:tg-tutte-dual}. Z dowolnej funkcji
 $c:F(G)\to R$ tworzymy wektor
 \[
  D(c)_e=c(F_R(e))-c(F_L(e)).
