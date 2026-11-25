@@ -3,13 +3,85 @@
 Iloczyn pozwala zbudować parę elementów. Inną naturalną konstrukcją jest zbiór \emph{wszystkich odwzorowań} pomiędzy dwoma zbiorami. Poniżej zobaczymy, że również ona ma własność uniwersalną, lecz wymaga już posiadania iloczynów.
 
 \begin{definicja}[Obiekt wykładniczy]\label{def:exponential}
-Niech $\mathcal C$ będzie kategorią mającą iloczyny dwóch obiektów i niech $A,B\in\Ob(\mathcal C)$. \emph{Obiektem wykładniczym} $B^A$ nazywamy obiekt z morfizmem ewaluacji $\ev:B^A\times A\to B$ o własności: dla każdego $X\in\Ob(\mathcal C)$ i morfizmu $f:X\times A\to B$ istnieje dokładnie jeden morfizm $\widetilde f:X\to B^A$ taki, że $\ev\circ(\widetilde f\times\id_A)=f$. Operacja $(u,v)\mapsto u\times v$ na morfizmach iloczynów jest określona jednoznacznie przez warunki zgodności z rzutami.
+Niech $\mathcal C$ będzie lokalnie małą kategorią mającą wybrane iloczyny dwóch obiektów i niech $A,B\in\Ob(\mathcal C)$. \emph{Obiektem wykładniczym} $B^A$ nazywamy obiekt z morfizmem ewaluacji $\ev:B^A\times A\to B$ o własności: dla każdego $X\in\Ob(\mathcal C)$ i morfizmu $f:X\times A\to B$ istnieje dokładnie jeden morfizm $\widetilde f:X\to B^A$ taki, że $\ev\circ(\widetilde f\times\id_A)=f$. Operacja $(u,v)\mapsto u\times v$ na morfizmach iloczynów jest określona jednoznacznie przez warunki zgodności z rzutami.
 \end{definicja}
 
-W języku funktorów jest to naturalna bijekcja $\Hom_{\mathcal C}(X\times A,B)\cong\Hom_{\mathcal C}(X,B^A)$, a więc sprzężenie $(-)\times A\dashv(-)^A$, o ile obiekty wykładnicze istnieją dla wszystkich odpowiednich $B$. Odwzorowanie $f\mapsto\widetilde f$ nazywamy \emph{curryingiem} (od nazwiska Haskella Curry'ego).
+\subsection{Transpozycja i jej naturalność}
 
+\begin{twierdzenie}[Jednoznaczność obiektu wykładniczego]\label{cat:thm:exp-unique}
+Jeżeli $(E,e)$ i $(E',e')$ są obiektami wykładniczymi dla pary $(A,B)$, to istnieje dokładnie jeden izomorfizm $u:E\to E'$ taki, że $e'(u\times\id_A)=e$.
+\end{twierdzenie}
+\begin{proof}
+Własność uniwersalna $(E',e')$ zastosowana do $e:E\times A\to B$ daje jedyny morfizm $u:E\to E'$ z żądaną własnością. Analogicznie otrzymujemy $v:E'\to E$ z $e(v\times\id_A)=e'$. Ponieważ iloczyn morfizmów zachowuje złożenia, mamy
+\[
+e((vu)\times\id_A)
+=e(v\times\id_A)(u\times\id_A)=e.
+\]
+Również $\id_E$ spełnia to równanie. Jednoznaczność transpozycji $e$ daje $vu=\id_E$. Zamieniając role obu par, otrzymujemy $uv=\id_{E'}$. Zatem $u$ jest izomorfizmem, a jego jednoznaczność wynika z pierwszego zastosowania własności uniwersalnej.
+\end{proof}
+
+\begin{twierdzenie}[Naturalna bijekcja wykładnicza]\label{cat:thm:exp-naturality}
+Dla ustalonego $A$ i wybranych obiektów wykładniczych $B^A$ bijekcje
+\[
+\Hom_{\mathcal C}(X\times A,B)
+\cong\Hom_{\mathcal C}(X,B^A),\qquad
+f\longmapsto\widetilde f
+\]
+są naturalne w $X$ i $B$. Jeżeli obiekty $B^A$ istnieją dla wszystkich $B$, to przyporządkowanie $B\mapsto B^A$ jest funktorem i $(-)\times A\dashv(-)^A$.
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy ewaluację dla $B$ przez $e_B$. Odwzorowanie odwrotne wysyła $h:X\to B^A$ na $e_B(h\times\id_A)$. Definicja transpozycji daje $e_B(\widetilde f\times\id_A)=f$, natomiast jednoznaczność transpozycji daje $\widetilde{e_B(h\times\id_A)}=h$.
+
+Dla $r:Y\to X$ obliczamy
+\[
+e_B((\widetilde f r)\times\id_A)
+=e_B(\widetilde f\times\id_A)(r\times\id_A)
+=f(r\times\id_A).
+\]
+Stąd $\widetilde{f(r\times\id_A)}=\widetilde f r$. Jest to naturalność w zmiennej kontrawariantnej $X$.
+
+Dla $g:B\to C$ definiujemy $g^A:B^A\to C^A$ jako transpozycję $ge_B$. Zatem $e_C(g^A\times\id_A)=ge_B$. Dla $f:X\times A\to B$ otrzymujemy
+\[
+e_C((g^A\widetilde f)\times\id_A)
+=ge_B(\widetilde f\times\id_A)=gf,
+\]
+więc $\widetilde{gf}=g^A\widetilde f$. Jest to naturalność w zmiennej $B$. Obie reguły łącznie dają
+$\widetilde{gf(r\times\id_A)}=g^A\widetilde f r$.
+
+Ponieważ $e_B(\id_{B^A}\times\id_A)=e_B$, jednoznaczność daje $(\id_B)^A=\id_{B^A}$. Dla $g:B\to C$ i $k:C\to D$ mamy
+\[
+e_D((k^Ag^A)\times\id_A)
+=ke_C(g^A\times\id_A)=kge_B.
+\]
+Stąd $(kg)^A=k^Ag^A$, co dowodzi funktorialności. Otrzymana naturalna bijekcja jest dokładnie warunkiem sprzężenia; ogólną teorię sprzężeń rozwiniemy w sekcji~\ref{sec:adjunctions}.
+\end{proof}
+
+Operację $f\mapsto\widetilde f$ nazywamy transpozycją wykładniczą (ang. \emph{currying}, od nazwiska Haskella Curry'ego).
+
+\begin{stwierdzenie}[Zmiana wykładnika]\label{cat:prop:exp-argument}
+Jeśli istnieją $B^A$ i $B^{A'}$, to każda strzałka $a:A'\to A$ wyznacza morfizm $B^a:B^A\to B^{A'}$ przez równanie
+\[
+e_{A',B}(B^a\times\id_{A'})
+=e_{A,B}(\id_{B^A}\times a).
+\]
+Przyporządkowanie jest kontrawariantne względem $A$ i zgodne z kowariantnym działaniem na $B$.
+\end{stwierdzenie}
+\begin{proof}
+Prawa strona jest morfizmem $B^A\times A'\to B$, więc własność wykładnicza daje istnienie i jednoznaczność $B^a$. Dla $a':A''\to A'$ po zastosowaniu ewaluacji do $B^{a'}B^a$ i użyciu funktorialności iloczynu otrzymujemy
+\[
+\begin{aligned}
+e_{A'',B}((B^{a'}B^a)\times\id_{A''})
+&=e_{A',B}(\id\times a')(B^a\times\id_{A''})\\
+&=e_{A',B}(B^a\times\id_{A'})(\id\times a')\\
+&=e_{A,B}(\id\times(aa')).
+\end{aligned}
+\]
+Jednoznaczność daje $B^{aa'}=B^{a'}B^a$; dla identyczności daje $B^{\id_A}=\id_{B^A}$. Dla $g:B\to C$ obie strzałki $C^ag^A$ i $g^{A'}B^a$ z $B^A$ do $C^{A'}$, po pomnożeniu przez $\id_{A'}$ i złożeniu z $e_{A',C}$, dają $ge_{A,B}(\id\times a)$. Są więc równe. Gdy istnieją wszystkie wykładniki, mamy bifunktor $\mathcal C^{\op}\times\mathcal C\to\mathcal C$, $(A,B)\mapsto B^A$.
+\end{proof}
+
+\subsection{Przykłady i ograniczenia}
 \begin{przyklad}[Zbiór wszystkich funkcji]\label{przyklad:exponential-set}
-W $\Set$ obiekt $B^A$ jest po prostu zbiorem wszystkich funkcji $A\to B$. Ewaluacja ma wzór $\ev(\varphi,a)=\varphi(a)$. Dla $f:X\times A\to B$ określamy $\widetilde f(x)(a)=f(x,a)$. Odwrotnie, każda $h:X\to B^A$ daje funkcję $(x,a)\mapsto h(x)(a)$. Obie operacje są odwrotne, co dowodzi własności uniwersalnej.
+W $\Set$ obiekt $B^A$ jest po prostu zbiorem wszystkich funkcji $A\to B$. Ewaluacja ma wzór $\ev(\varphi,a)=\varphi(a)$. Dla $f:X\times A\to B$ określamy $\widetilde f(x)(a)=f(x,a)$. Odwrotnie, każda $h:X\to B^A$ daje funkcję $(x,a)\mapsto h(x)(a)$. Dla $f$ złożenie obu operacji daje w punkcie $(x,a)$ wartość $\widetilde f(x)(a)=f(x,a)$. Dla $h$ transpozycja funkcji $(x,a)\mapsto h(x)(a)$ w punkcie $x$ daje funkcję równą $h(x)$ na każdym $a\in A$. Zatem obie operacje są wzajemnie odwrotne, co dowodzi istnienia i jednoznaczności.
 
 Jeśli $A=\{0,1\}$, to $B^A\cong B\times B$: funkcja na zbiorze dwuelementowym jest opisana przez parę wartości. Jeśli $A=\varnothing$, to $B^A$ jest singletonem, nawet gdy $B=\varnothing$, bo istnieje dokładnie jedna funkcja $\varnothing\to B$.
 \end{przyklad}
@@ -17,7 +89,7 @@ Jeśli $A=\{0,1\}$, to $B^A\cong B\times B$: funkcja na zbiorze dwuelementowym j
 \begin{przyklad}[Implikacja logiczna jako obiekt wykładniczy]
 Niech $S$ będzie zbiorem i rozważmy poset $(\mathcal P(S),\subseteq)$ jako kategorię. Iloczynem obiektów jest przecięcie, a obiektem wykładniczym $B^A$ jest podzbiór $(S\setminus A)\cup B$. Istotnie, dla każdego $X\subseteq S$ mamy równoważność
 $X\cap A\subseteq B\ \Longleftrightarrow\ X\subseteq(S\setminus A)\cup B$.
-Jest to dokładnie bijekcja hom-zbiorów potrzebna w definicji~\ref{def:exponential}, ponieważ w posetach każdy niepusty hom-zbiór jest jednoelementowy. W algebrach Heytinga takie $B^A$ interpretuje się jako implikację $A\Rightarrow B$.
+Jeżeli $X\cap A\subseteq B$ i $x\in X$, to albo $x\notin A$, albo $x\in B$. Odwrotnie, jeśli $X\subseteq(S\setminus A)\cup B$ i $x\in X\cap A$, to $x$ nie należy do $S\setminus A$, więc należy do $B$. Ewaluacja jest inkluzją $((S\setminus A)\cup B)\cap A\subseteq B$. Jest to dokładnie bijekcja zbiorów morfizmów potrzebna w definicji~\ref{def:exponential}, ponieważ w posetach każdy niepusty zbiór morfizmów jest jednoelementowy. W algebrach Heytinga takie $B^A$ interpretuje się jako implikację $A\Rightarrow B$.
 \end{przyklad}
 
 \begin{przyklad}[Dlaczego $\Grp$ nie ma wszystkich obiektów wykładniczych]
@@ -30,3 +102,69 @@ Jednak lewy zbiór jest nieskończony: homomorfizm $\mathbb Z\to\mathbb Z$ może
 Kategorię nazywamy \emph{kartezjańsko domkniętą}, jeśli ma obiekt końcowy, iloczyny wszystkich par obiektów i obiekty wykładnicze $B^A$ dla wszystkich par $A,B$. Kategoria $\Set$ jest kartezjańsko domknięta, ale $\Grp$ nie jest.
 \end{definicja}
 
+\begin{przyklad}[Przeszkoda w kategoriach z obiektem zerowym]\label{cat:ex:exp-zero}
+Jeśli $\mathcal C$ jest lokalnie mała, ma obiekt zerowy $0$ i iloczyny, to istnienie $B^A$ wymusza, że $\Hom(A,B)$ jest jednoelementowy. Istotnie, $0$ jest końcowy, więc $0\times A\cong A$. Z własności wykładniczej
+\[
+\Hom(A,B)\cong\Hom(0\times A,B)\cong\Hom(0,B^A).
+\]
+Ostatni zbiór jest jednoelementowy, ponieważ $0$ jest też początkowy. W szczególności w kategorii przestrzeni wektorowych nad ciałem $k$ z iloczynem kartezjańskim nie istnieje $k^k$: identyczność i odwzorowanie zerowe są różnymi endomorfizmami $k$. To nie przeczy istnieniu sprzężenia tensor--Hom (AA-18), gdzie zamiast iloczynu kartezjańskiego występuje iloczyn tensorowy.
+\end{przyklad}
+
+\subsection{Prawo wykładnicze w topologii}
+
+\begin{twierdzenie}[Obiekt wykładniczy dla lokalnie zwartej przestrzeni Hausdorffa]\label{cat:thm:exp-top}
+Niech $A$ będzie lokalnie zwartą przestrzenią Hausdorffa, a $B$ dowolną przestrzenią topologiczną. Zbiór $C(A,B)$ odwzorowań ciągłych z topologią zwarto-otwartą, oznaczany $C_k(A,B)$, jest obiektem wykładniczym $B^A$ w kategorii $\Top$. Ewaluacja to $e(h,a)=h(a)$.
+\end{twierdzenie}
+\begin{proof}
+Przypomnijmy aparat z TO-18: podbazę topologii zwarto-otwartej tworzą zbiory
+\[
+[K,U]=\{h\in C(A,B):h(K)\subseteq U\},
+\]
+gdzie $K\subseteq A$ jest zwarty, a $U\subseteq B$ otwarty. Najpierw sprawdzamy ciągłość ewaluacji. Dla $(h,a)$ i otwartego $U$ zawierającego $h(a)$, lokalna zwartość i własność Hausdorffa dają otwarte $W$ oraz zwarty $K$ z $a\in W\subseteq K\subseteq h^{-1}(U)$ (lemat o zwartych domknięciach w TO-14, użyty w TO-18). Zatem $[K,U]\times W$ jest otwartym otoczeniem $(h,a)$, a dla $(g,x)$ w tym otoczeniu mamy $g(x)\in U$. To dowodzi ciągłości $e$.
+
+Niech $f:X\times A\to B$ będzie ciągłe. Każdy przekrój $f_x(a)=f(x,a)$ jest ciągły jako złożenie z odwzorowaniem $a\mapsto(x,a)$. Definiujemy $\widetilde f(x)=f_x$. Jeśli $x_0$ należy do przeciwobrazu $[K,U]$, to $\{x_0\}\times K\subseteq f^{-1}(U)$. Dla każdego $a\in K$ wybieramy otwarte $V_a\ni x_0$, $W_a\ni a$ z $V_a\times W_a\subseteq f^{-1}(U)$. Ze zwartości $K$ wybieramy skończone pokrycie przez $W_{a_1},\ldots,W_{a_m}$. Otwarte otoczenie $V=\bigcap_{i=1}^m V_{a_i}$ spełnia $V\times K\subseteq f^{-1}(U)$. Dla $K=\varnothing$ bierzemy $V=X$. Stąd $V\subseteq\widetilde f^{-1}([K,U])$, więc wszystkie przeciwobrazy zbiorów podbazowych są otwarte. To dowodzi ciągłości transpozycji.
+
+Odwrotnie, dla ciągłego $h:X\to C_k(A,B)$ funkcja $e(h\times\id_A)$ jest ciągła jako złożenie ciągłych odwzorowań. Obie operacje są wzajemnie odwrotne: równości sprawdzamy punktowo, tak jak w przykładzie~\ref{przyklad:exponential-set}. Otrzymujemy zatem własność uniwersalną w $\Top$, a nie tylko bijekcję zbiorów wszystkich funkcji.
+\end{proof}
+
+\begin{uwaga}
+Hipoteza lokalnej zwartości Hausdorffa jest wystarczająca, nie twierdzimy, że jest konieczna w dowolnej kategorii przestrzeni. Sama konstrukcja topologii zwarto-otwartej ma sens bez tych hipotez, ale ciągłość wspólnej ewaluacji może zawodzić. Przykład dla przestrzeni liczb wymiernych omówiono w TO-18. Nie wnioskujemy stąd, że $\Top$ jest kartezjańsko domknięta.
+\end{uwaga}
+
+\subsection{Rachunek obiektów wykładniczych}
+
+\begin{stwierdzenie}[Podstawowe izomorfizmy]\label{cat:prop:exp-laws}
+W lokalnie małej kategorii kartezjańsko domkniętej, dla obiektu końcowego $1$, zachodzą kanoniczne izomorfizmy
+\[
+B^1\cong B,\qquad 1^A\cong 1,\qquad
+(B\times C)^A\cong B^A\times C^A,\qquad
+(B^A)^D\cong B^{D\times A}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+W każdym przypadku pokażemy naturalną w $X$ bijekcję zbiorów morfizmów z $X$ do obu stron. Dla pierwszego izomorfizmu mamy
+$\Hom(X,B^1)\cong\Hom(X\times1,B)\cong\Hom(X,B)$, gdyż rzut $X\times1\to X$ jest naturalnym izomorfizmem, którego odwrotnością jest para identyczności i jedynej strzałki do $1$.
+Dla drugiego $\Hom(X,1^A)\cong\Hom(X\times A,1)$ jest singletonem dla każdego $X$, więc $1^A$ jest końcowy.
+Dla trzeciego korzystamy z kolejnych własności uniwersalnych:
+\[
+\begin{aligned}
+\Hom(X,(B\times C)^A)
+&\cong\Hom(X\times A,B\times C)\\
+&\cong\Hom(X\times A,B)\times\Hom(X\times A,C)\\
+&\cong\Hom(X,B^A)\times\Hom(X,C^A)\\
+&\cong\Hom(X,B^A\times C^A).
+\end{aligned}
+\]
+Środkowa bijekcja jest iloczynem bijekcji wykładniczych; naturalność każdej wynika z twierdzenia~\ref{cat:thm:exp-naturality} albo własności iloczynu.
+Wreszcie
+\[
+\begin{aligned}
+\Hom(X,(B^A)^D)
+&\cong\Hom(X\times D,B^A)\\
+&\cong\Hom((X\times D)\times A,B)\\
+&\cong\Hom(X\times(D\times A),B)\\
+&\cong\Hom(X,B^{D\times A}).
+\end{aligned}
+\]
+Trzecia bijekcja jest indukowana przez kanoniczny izomorfizm łączności iloczynu, naturalny w $X$ (sekcja~\ref{sec:produkty}). Pozostałe są naturalne na mocy twierdzenia~\ref{cat:thm:exp-naturality}. Zatem złożone bijekcje są izomorfizmami naturalnymi funktorów reprezentowalnych. Wniosek o jednoznaczności obiektów reprezentujących (sekcja~\ref{sec:yoneda}) daje żądane izomorfizmy.
+\end{proof}
