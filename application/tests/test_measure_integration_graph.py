@@ -34,6 +34,8 @@ class MeasureIntegrationGraphTest(unittest.TestCase):
             ("AM1-36", "CAL-08", "ma1:kh:thm:kh-acgstar-characterization"),
             ("CAL-09", "AM1-36", "tw:denjoy-szeroka-ftc"),
             ("AM1-36", "CAL-09", "tw:denjoy-szeroka-ftc"),
+            ("CAL-10", "ME-26", "thm:hausdorff-borel-26"),
+            ("ME-26", "CAL-10", "thm:hausdorff-borel-26"),
             ("ME-07", "CAL-11", "it:thm:mcshane-lebesgue"),
             ("ME-21", "CAL-12", "it:thm:daniell-stone"),
             ("ME-23", "CAL-14", "tw:haar-automorfizm"),
