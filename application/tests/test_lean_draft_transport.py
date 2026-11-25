@@ -77,9 +77,9 @@ class DraftTransportTests(unittest.TestCase):
             with self.subTest(key=key), self.assertRaises(ValueError):
                 self.validate({**self.record, key: value})
 
-    def fake_probe(self, bad_inspect=False, bad_cleanup=False, bad_create=False):
+    def fake_probe(self, bad_inspect=False, bad_cleanup=False, bad_create=False, remaining=False):
         calls = []
-        def command(prefix, args, env):
+        def command(prefix, args, env, *, deadline=None):
             calls.append(args)
             self.assertIn("unix:///run/user/1000/docker.sock", prefix)
             self.assertEqual(set(env), {"PATH", "HOME", "LANG"})
@@ -97,7 +97,11 @@ class DraftTransportTests(unittest.TestCase):
             if args[:2] == ("container","rm"):
                 if bad_cleanup:
                     raise ValueError("remove failed")
+                self.assertIsNotNone(deadline)
                 return b"removed"
+            if args[:2] == ("container", "ls"):
+                self.assertIsNotNone(deadline)
+                return self.cid.encode() + b"\n" if remaining else b""
             raise AssertionError("Unexpected command")
         with patch.object(transport, "_local_socket", return_value=Path("/run/user/1000/docker.sock")), \
              patch.object(transport.uuid, "uuid4") as uid, patch.object(transport, "_command", side_effect=command):
@@ -110,7 +114,9 @@ class DraftTransportTests(unittest.TestCase):
         self.assertEqual(result["status"], "configuration_checked")
         self.assertFalse(result["execution_allowed"])
         self.assertEqual(result["proof_status"], "not_run")
-        self.assertEqual(calls[-1], ("container","rm",self.cid))
+        self.assertEqual(calls[-2], ("container","rm",self.cid))
+        self.assertEqual(calls[-1], ("container","ls","--all","--no-trunc","--filter",
+                                     "id="+self.cid,"--format","{{.ID}}"))
         self.assertFalse(any("start" in args or "run" in args for args in calls))
 
     def test_probe_blocks_on_inspection_or_cleanup_failure(self):
@@ -118,7 +124,8 @@ class DraftTransportTests(unittest.TestCase):
             result, calls = self.fake_probe(inspect,cleanup)
             self.assertEqual(result["status"], "blocked")
             self.assertFalse(result["execution_allowed"])
-            self.assertEqual(calls[-1], ("container","rm",self.cid))
+            self.assertIn(("container","rm",self.cid), calls)
+            self.assertEqual(calls[-1][1], "rm" if cleanup else "ls")
 
     def test_invalid_image_never_touches_engine(self):
         with patch.object(transport, "_local_socket", side_effect=AssertionError):
@@ -136,6 +143,13 @@ class DraftTransportTests(unittest.TestCase):
         result, _ = self.fake_probe(bad_cleanup=True)
         self.assertEqual(result["cleanup_status"], "removal_unconfirmed")
         self.assertEqual(result["probe_name"], self.name)
+
+    def test_probe_removal_requires_empty_daemon_listing(self):
+        result, calls = self.fake_probe(remaining=True)
+        self.assertEqual(result["status"], "blocked")
+        self.assertEqual(result["cleanup_status"], "removal_unconfirmed")
+        self.assertEqual(calls[-1][1], "ls")
+        self.assertFalse(result["execution_allowed"])
 
     def test_rejects_host_namespaces_and_other_unsafe_defaults(self):
         for key, value in (("PidMode", "host"), ("UTSMode", "host"),
@@ -607,7 +621,7 @@ class RuntimeOutputLimitTests(unittest.TestCase):
         cid, image = "a" * 64, "sha256:" + "b" * 64
         for failure in (transport.DockerCommandTimeout("timeout"),
                         transport.DockerCommandFailed("nonzero"), ValueError("other"), None):
-            def command(prefix, args, env):
+            def command(prefix, args, env, *, deadline=None):
                 if args[0] == "create":
                     return cid.encode()
                 if args[:2] == ("container", "start") and failure is not None:
@@ -1000,7 +1014,7 @@ class SharedCleanupDeadlineTests(unittest.TestCase):
             self.assertTrue(issubclass(error, TimeoutError))
             for fixture in (probe.check_runtime_timeout, probe.check_runtime_output_limit):
                 failure = error("unconfirmed")
-                def command(prefix, args, env):
+                def command(prefix, args, env, *, deadline=None):
                     if args[0] == "create":
                         return b"a" * 64
                     if args[:2] == ("container", "start"):
@@ -1018,3 +1032,80 @@ class SharedCleanupDeadlineTests(unittest.TestCase):
                     self.assertIs(caught.exception, failure)
                     stop.assert_not_called()
                     cleanup.assert_called_once()
+
+
+class RuntimeSharedCleanupTests(unittest.TestCase):
+    """Exercise the entire fixed-fixture cleanup with the real budget closure."""
+
+    cid = "a" * 64
+    image = "sha256:" + "b" * 64
+
+    def exercise(self, fixture_name, *, exhaust_after=None, fail_at=None):
+        from scripts import lean_rootless_ci_probe as probe
+        now = [100.0]
+        cleanup_calls = []
+        start_calls = []
+        running = {"Status": "running", "Running": True, "OOMKilled": False, "ExitCode": 0}
+        stopped = {"Status": "exited", "Running": False, "OOMKilled": False, "ExitCode": 137}
+        failure = (transport.DockerCommandTimeout if fixture_name == "check_runtime_timeout"
+                   else transport.DockerOutputLimit)
+        def command(prefix, args, env, *, deadline=None):
+            if args[0] == "create":
+                return self.cid.encode()
+            if args[:2] == ("container", "start"):
+                start_calls.append(deadline)
+                now[0] = 200.0
+                raise failure("fixture interruption")
+            if deadline is None:
+                return b"{}"
+            cleanup_calls.append((args, deadline))
+            index = len(cleanup_calls)
+            if exhaust_after == index:
+                now[0] = deadline
+            if fail_at == index:
+                raise transport.DockerCommandFailed("controlled cleanup failure")
+            if args[:2] == ("container", "inspect"):
+                state = running if index == 1 else stopped
+                return json.dumps([{"Id": self.cid, "Image": self.image, "State": state}]).encode()
+            return b""
+        with patch.object(transport.time, "monotonic", side_effect=lambda: now[0]), \
+                patch.object(transport, "_command", side_effect=command), \
+                patch.object(transport, "validate_engine"), \
+                patch.object(probe.policy, "validate_image_inspection"), \
+                patch.object(transport, "validate_container"):
+            if exhaust_after is not None:
+                with self.assertRaises(transport.DockerCleanupDeadline):
+                    getattr(probe, fixture_name)([], {}, self.image)
+            elif fail_at is not None:
+                with self.assertRaises(transport.DockerCommandFailed):
+                    getattr(probe, fixture_name)([], {}, self.image)
+            else:
+                result = getattr(probe, fixture_name)([], {}, self.image)
+                self.assertEqual(result["cleanup_status"], "removed_verified")
+                self.assertFalse(result["execution_allowed"])
+                self.assertFalse(result["certificate"])
+        self.assertEqual(start_calls, [None])
+        self.assertTrue(cleanup_calls)
+        self.assertEqual({d for _, d in cleanup_calls}, {230.0})
+        return [args[1] for args, _ in cleanup_calls]
+
+    def test_interrupted_fixtures_share_one_deadline_through_finally(self):
+        for name in ("check_runtime_timeout", "check_runtime_output_limit"):
+            with self.subTest(name=name):
+                self.assertEqual(self.exercise(name), ["inspect", "kill", "inspect", "rm", "ls"])
+
+    def test_exhaustion_prevents_further_commands_even_in_finally(self):
+        for name in ("check_runtime_timeout", "check_runtime_output_limit"):
+            for n in (1, 2, 3, 4):
+                with self.subTest(name=name, n=n):
+                    self.assertEqual(len(self.exercise(name, exhaust_after=n)), n)
+
+    def test_failed_stop_still_attempts_bounded_removal(self):
+        for name in ("check_runtime_timeout", "check_runtime_output_limit"):
+            with self.subTest(name=name):
+                self.assertEqual(self.exercise(name, fail_at=2), ["inspect", "kill", "rm", "ls"])
+
+    def test_failed_listing_never_confirms_cleanup(self):
+        for name in ("check_runtime_timeout", "check_runtime_output_limit"):
+            with self.subTest(name=name):
+                self.assertEqual(self.exercise(name, fail_at=5), ["inspect", "kill", "inspect", "rm", "ls"])
