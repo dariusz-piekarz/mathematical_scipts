@@ -99,6 +99,18 @@ class Chapter36(unittest.TestCase):
         self.assertEqual(transformed,-original)
         self.assertEqual(original,F(1,3))
 
+    def test_oscillatory_threshold_witnesses(self):
+        # On [k*pi,(k+1)*pi], integral t*sin(t) equals
+        # (-1)^k (2*k+1)*pi, and the bound is 2*k*pi.
+        from math import pi
+        for k in range(1,12):
+            exact=abs((-1)**k*(2*k+1)*pi)
+            self.assertGreaterEqual(exact,2*k*pi)
+        # For -1 <= beta < 0, (k+1)^beta >= 1/(k+1).
+        for beta in (-1,-0.75,-0.5,-0.25):
+            for k in range(1,50):
+                self.assertGreaterEqual((k+1)**beta,1/(k+1))
+
     def test_derivative_remainder_telescope(self):
         endpoints=[F(0),F(1,5),F(1,2),F(1)]
         tags=[F(1,10),F(1,3),F(3,4)]
