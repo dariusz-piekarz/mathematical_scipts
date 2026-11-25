@@ -1,7 +1,7 @@
 # PDE-08 — trwałe kryteria regresyjne
 
 Rozdział 08: Transformata Fouriera, przestrzeń Schwartza i dystrybucje temperowane.
-Kryteria semantyczne wymagają ręcznej lektury matematycznej; nie są wykonanymi testami automatycznymi ani dowodami Lean. ID pozostają stałe. Testy wykonywalne będą przygotowane na etapie stabilizacji.
+Kryteria semantyczne wymagają ręcznej lektury matematycznej; nie są wykonanymi testami automatycznymi ani dowodami Lean. ID pozostają stałe. Testy wykonywalne znajdują się w `test_fourier.py` i sprawdzają wybrane skończone przykłady numeryczne, niezależnie od kryteriów semantycznych.
 
 | ID | Kotwica LaTeX | Kryterium i metoda weryfikacji | Rodzaj |
 |---|---|---|---|
@@ -141,3 +141,19 @@ Pierwsza lektura sekcji 8.10. Rozpisano dopuszczalność odwrotnego symbolu elip
 ## Iteracja 113 — 2026-11-25
 
 Pierwsza lektura sekcji 8.11 i podsumowania. Rozpisano całkowanie pochodnej na przekrojach, zanik składnika brzegowego, Fubiniego, Leibniza i Cauchy'ego–Schwarza. Dodano pełną charakterystykę równości i dowód optymalności stałej 1/2, nierówność z przesuniętymi środkami oraz wersję z odchyleniami standardowymi. Uściślono podsumowanie zgodnie z udowodnionymi wynikami i zakresem ich stosowalności. Commit źródła aa72b225c5864c958960bbac3d544a02d3305481, blob 4932d4f62e2813e57717d90f6161015187ceaac0. Zachowano 39 etykiet, 83 wystąpienia odsyłaczy (+12), 10 niezmienionych celów zewnętrznych i poprawne zagnieżdżenie środowisk. Dodano 7 kryteriów 086–092, łącznie 92. Pierwsza lektura zakończona: 11/11 sekcji merytorycznych i podsumowanie. Nie uruchomiono testów wykonywalnych, CI, kompilacji PDF ani Lean. Następna iteracja 114: stworzenie trwałych testów wykonywalnych i workflow kontroli rozdziału 08, a następnie druga lektura semantyczna do stabilizacji; bez rozszerzania zakresu tematycznego po pierwszej lekturze.
+
+
+## Iteracje 114–115 — 2026-11-25
+
+Testy wykonywalne: commit 9c7b290c5c59ef579df189ee8a3b37a53ae58e01. Workflow: e75499b8ec4461b0fc6d18fb2a88461b3f3de1d3. CI 45591751805: 12/12 OK (0,077 s), 92 kotwice, 39 etykiet, 83 odsyłacze, 26 stron PDF; kontrola diagnostyki zaliczona. Raport techniczny: audits/partial_differential_equations/chapter-08/ci-first-reading.md, commit f391c9dbdac6bb6be9f9477377a76c4201eda7de. Wynik dotyczy źródła 4932d4f62e2813e57717d90f6161015187ceaac0, nie późniejszych modyfikacji.
+
+## Iteracja 116 — 2026-11-25
+
+Druga lektura wprowadzenia i sekcji 8.1–8.2. Sprawdzono wszystkie 16 kryteriów 001–016:
+- Bez zmian: 003–005, 008, 010, 012–016 (10).
+- Uściślono: 001 — jawna bezwzględna zbieżność obu całek L¹; 002 — długość wielowskaźnika, wypukłość otoczeń i własność Hausdorffa; 006 — tożsamość na odcinku parametryzowanym przez [0,1] oraz jawna granica ilorazu różnicowego, także dla ujemnego parametru; 007 — zastosowanie twierdzenia o wygładzaniu do dystrybucji regularnej funkcji charakterystycznej; 009 — całkowalność obcięcia z Höldera i jawne zastosowanie twierdzenia o wygładzaniu; 011 — oszacowanie różnicy wykładniczej bez zorientowanej całki względem miary Lebesgue'a.
+- Sprawdzono treść twierdzeń 7.19 i 7.20 oraz ich hipotezy: aproksymacja lokalna jest udowodniona bez odwołania do gęstości funkcji gładkich, więc nie ma koła logicznego. Sprawdzono normalizację szeregu Fouriera w rozdziale 06.
+- Commit źródła 36bde06e32695f3f88fe2b9dfc2184ffe8f67db7, blob c5f5b7526cdbae7fba8f93aae27325b3ca35bd0f; 39 niezmienionych etykiet, 84 wystąpienia odsyłaczy, 10 celów zewnętrznych, poprawne zagnieżdżenie środowisk. Cały tekst od sekcji 8.3 pozostaje identyczny. Nie dodano nowych tematów ani ID.
+- 16/92 kryteriów w drugiej lekturze: 10 bez zmian, 6 po uściśleniu. Nie potwierdzono jeszcze CI nowego źródła ani nie wykonano Lean.
+
+Następna iteracja 117: druga lektura 8.3–8.4, kryteria 017–033.
