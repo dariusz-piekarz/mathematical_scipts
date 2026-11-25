@@ -32,6 +32,9 @@ SOURCE = """theorem atlas_isolated_fixture (p : Prop) : p → p := by
   exact h
 #print axioms atlas_isolated_fixture
 """
+REJECTED_SOURCE = """theorem atlas_isolated_rejected : False := by
+  exact True.intro
+"""
 ENTRY = """#!/bin/busybox sh
 set -eu
 /opt/lean/bin/lean --version
@@ -58,18 +61,36 @@ def verify_archive(path: Path) -> None:
         raise ValueError("Lean release digest mismatch")
 
 
-def validate_output(output: bytes) -> str:
-    lines = output.decode("ascii").splitlines()
+def validate_version(line: str) -> str:
     match = re.fullmatch(
         r"Lean \(version 4\.26\.0, x86_64-unknown-linux-gnu, commit ([0-9a-f]{7,40}), Release\)",
-        lines[0]) if len(lines) == 2 else None
-    if (not match or not LEAN_COMMIT.startswith(match.group(1))
-            or lines[1] != "'atlas_isolated_fixture' does not depend on any axioms"):
+        line)
+    if not match or not LEAN_COMMIT.startswith(match.group(1)):
+        raise ValueError("Unexpected fixed Lean compiler identity")
+    return line
+
+
+def validate_output(output: bytes) -> str:
+    lines = output.decode("ascii").splitlines()
+    if len(lines) != 2 or lines[1] != "'atlas_isolated_fixture' does not depend on any axioms":
         raise ValueError("Unexpected fixed Lean compiler evidence")
-    return lines[0]
+    return validate_version(lines[0])
 
 
-def check_compiler(prefix: list[str], env: dict[str, str], image_id: str) -> dict:
+def validate_rejected_output(output: bytes) -> str:
+    version, sep, diagnostic = output.decode("ascii").partition("\n")
+    # Fixed source, exactly one diagnostic: True.intro cannot prove False.
+    # Allow whitespace and the precise diagnostic column to vary, not the
+    # error location, error class or the two types.
+    if not sep or not re.fullmatch(
+            r"/opt/atlas/Fixture\.lean:2:[0-9]+: error: [Tt]ype mismatch"
+            r"\s+True\.intro\s+has type\s+True\s+but is expected to have type\s+False",
+            diagnostic.rstrip("\n")):
+        raise ValueError("Unexpected fixed Lean rejection diagnostic")
+    return validate_version(version)
+
+
+def check_compiler(prefix: list[str], env: dict[str, str], image_id: str, *, rejected: bool = False) -> dict:
     def call(*args):
         return transport._command(prefix, args, env)
 
@@ -84,27 +105,40 @@ def check_compiler(prefix: list[str], env: dict[str, str], image_id: str) -> dic
     try:
         transport.validate_container(transport._decode_metadata(call("container", "inspect", cid)),
                                      container_id=cid, image_id=image_id, name=name)
-        output = call("container", "start", "--attach", cid)
-        version = validate_output(output)
+        if rejected:
+            try:
+                transport._command(prefix, ("container", "start", "--attach", cid), env,
+                                   capture_failure=True)
+            except transport.DockerCommandFailed as exc:
+                if type(exc.returncode) is not int or exc.returncode != 1 or type(exc.output) is not bytes:
+                    raise ValueError("Expected bounded Lean rejection with CLI exit 1") from exc
+                output = exc.output
+                version = validate_rejected_output(output)
+            else:
+                raise ValueError("Invalid fixed Lean proof unexpectedly accepted")
+        else:
+            output = call("container", "start", "--attach", cid)
+            version = validate_output(output)
         state = validate_exited_fixture(
             transport._decode_metadata(cleanup_call("container", "inspect", cid)),
-            container_id=cid, image_id=image_id, expected_exit=0)
+            container_id=cid, image_id=image_id, expected_exit=1 if rejected else 0)
     finally:
         cleanup_fixture(cleanup_call, cid)
-    return {"status": "trusted_core_fixture_compiled", "lean_version": version,
+    return {"status": "trusted_core_fixture_rejected" if rejected else "trusted_core_fixture_compiled",
+            "lean_version": version,
             "compiler_output": output.decode("ascii"),
-            "archive_sha256": ARCHIVE_SHA256, "source_sha256": hashlib.sha256(SOURCE.encode()).hexdigest(),
+            "archive_sha256": ARCHIVE_SHA256, "source_sha256": hashlib.sha256((REJECTED_SOURCE if rejected else SOURCE).encode()).hexdigest(),
             "image_id": image_id, "container_id": cid, **state,
             "cleanup_status": "removed_verified", "execution_allowed": False,
             "proof_status": "not_run", "certificate": False}
 
 
-def validate_report(report: object, *, expected_sha: str) -> None:
+def validate_report(report: object, *, expected_sha: str, rejected: bool = False) -> None:
     """Validate the exact scoped evidence; never treat it as a draft certificate."""
-    fixed = {"status": "trusted_core_fixture_compiled",
+    fixed = {"status": "trusted_core_fixture_rejected" if rejected else "trusted_core_fixture_compiled",
              "checkout_sha": expected_sha, "archive_sha256": ARCHIVE_SHA256,
-             "source_sha256": hashlib.sha256(SOURCE.encode()).hexdigest(),
-             "container_state": "exited", "exit_code": 0,
+             "source_sha256": hashlib.sha256((REJECTED_SOURCE if rejected else SOURCE).encode()).hexdigest(),
+             "container_state": "exited", "exit_code": 1 if rejected else 0,
              "cleanup_status": "removed_verified", "execution_allowed": False,
              "proof_status": "not_run", "certificate": False}
     variable = {"lean_version", "compiler_output", "image_id", "container_id"}
@@ -116,24 +150,25 @@ def validate_report(report: object, *, expected_sha: str) -> None:
             or not transport._CONTAINER_ID.fullmatch(report["container_id"])):
         raise ValueError("Invalid fixed Lean fixture report")
     output = report["compiler_output"].encode("ascii")
-    if len(output) > transport.MAX_METADATA_BYTES or validate_output(output) != report["lean_version"]:
+    validator = validate_rejected_output if rejected else validate_output
+    if len(output) > transport.MAX_METADATA_BYTES or validator(output) != report["lean_version"]:
         raise ValueError("Inconsistent fixed Lean compiler evidence")
 
 
-def read_report(path: Path, *, expected_sha: str) -> dict:
+def read_report(path: Path, *, expected_sha: str, rejected: bool = False) -> dict:
     report = _read_report_json(path)
-    validate_report(report, expected_sha=expected_sha)
+    validate_report(report, expected_sha=expected_sha, rejected=rejected)
     return report
 
 
-def write_report(path: Path, report: dict, *, expected_sha: str) -> None:
-    validate_report(report, expected_sha=expected_sha)
+def write_report(path: Path, report: dict, *, expected_sha: str, rejected: bool = False) -> None:
+    validate_report(report, expected_sha=expected_sha, rejected=rejected)
     raw = (json.dumps(report, sort_keys=True, ensure_ascii=True, allow_nan=False) + "\n").encode("ascii")
     if len(raw) > MAX_REPORT_BYTES:
         raise ValueError("Fixed Lean report exceeds byte limit")
     with path.open("xb") as handle:
         handle.write(raw)
-    if read_report(path, expected_sha=expected_sha) != report:
+    if read_report(path, expected_sha=expected_sha, rejected=rejected) != report:
         raise ValueError("Fixed Lean report serialization mismatch")
 
 
@@ -190,7 +225,8 @@ def main() -> int:
         shutil.copy2("/bin/busybox", rootfs / "bin/busybox")
         atlas = rootfs / "opt/atlas"
         atlas.mkdir()
-        (atlas / "Fixture.lean").write_text(SOURCE, encoding="utf-8")
+        fixture = atlas / "Fixture.lean"
+        fixture.write_text(SOURCE, encoding="utf-8")
         entry = atlas / "run-draft"
         entry.write_text(ENTRY, encoding="utf-8")
         entry.chmod(0o755)
@@ -202,21 +238,31 @@ def main() -> int:
         env = {"PATH": "/usr/bin:/bin", "HOME": directory, "LANG": "C"}
         transport.validate_engine(transport._decode_metadata(transport._command(
             prefix, ("info", "--format", "{{json .}}"), env)))
-        iid = root / "image-id"
-        subprocess.run(prefix + ["build", "--network=none", "--pull=false", "--iidfile",
-                                 str(iid), str(context)], check=True, timeout=360,
-                       stdin=subprocess.DEVNULL, env={**env, "DOCKER_BUILDKIT": "0"})
-        image_id = iid.read_text(encoding="ascii").strip()
-        if not policy._IMAGE.fullmatch(image_id):
-            raise ValueError("Invalid immutable fixture image ID")
-        try:
-            result = check_compiler(prefix, env, image_id)
-        finally:
-            transport._command(prefix, ("image", "rm", image_id), env)
+        def run_case(*, rejected: bool) -> dict:
+            iid = root / ("rejected-image-id" if rejected else "image-id")
+            fixture.write_text(REJECTED_SOURCE if rejected else SOURCE, encoding="utf-8")
+            subprocess.run(prefix + ["build", "--network=none", "--pull=false", "--iidfile",
+                                     str(iid), str(context)], check=True, timeout=360,
+                           stdin=subprocess.DEVNULL, env={**env, "DOCKER_BUILDKIT": "0"})
+            image_id = iid.read_text(encoding="ascii").strip()
+            if not policy._IMAGE.fullmatch(image_id):
+                raise ValueError("Invalid immutable fixture image ID")
+            try:
+                return check_compiler(prefix, env, image_id, rejected=rejected)
+            finally:
+                transport._command(prefix, ("image", "rm", image_id), env)
+        result = run_case(rejected=False)
+        rejection = run_case(rejected=True)
+        if result["image_id"] == rejection["image_id"] or result["container_id"] == rejection["container_id"]:
+            raise ValueError("Positive and negative fixture identities must differ")
     report = {**result, "checkout_sha": sha}
+    rejected_report = {**rejection, "checkout_sha": sha}
     write_report(Path(os.environ["RUNNER_TEMP"]) / "atlas-rootless-lean-core.json",
                  report, expected_sha=sha)
+    write_report(Path(os.environ["RUNNER_TEMP"]) / "atlas-rootless-lean-rejected.json",
+                 rejected_report, expected_sha=sha, rejected=True)
     print("ATLAS_ROOTLESS_LEAN_CORE " + json.dumps(report, sort_keys=True), flush=True)
+    print("ATLAS_ROOTLESS_LEAN_REJECTED " + json.dumps(rejected_report, sort_keys=True), flush=True)
     return 0
 
 
@@ -224,6 +270,9 @@ if __name__ == "__main__":
     if len(sys.argv) == 3 and sys.argv[1] == "--validate-report":
         read_report(Path(sys.argv[2]), expected_sha=os.environ.get("GITHUB_SHA", ""))
         print("ATLAS_ROOTLESS_LEAN_CORE_REPORT_VALIDATED", flush=True)
+    elif len(sys.argv) == 3 and sys.argv[1] == "--validate-rejected-report":
+        read_report(Path(sys.argv[2]), expected_sha=os.environ.get("GITHUB_SHA", ""), rejected=True)
+        print("ATLAS_ROOTLESS_LEAN_REJECTED_REPORT_VALIDATED", flush=True)
     elif len(sys.argv) == 1:
         raise SystemExit(main())
     else:
