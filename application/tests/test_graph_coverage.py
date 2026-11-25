@@ -82,3 +82,44 @@ class GraphCoverageTest(unittest.TestCase):
                 self.assertEqual({i["reason"] for i in audit["issues"]},
                                  {"unresolved", "qualified_occurrence_mismatch"})
                 self.assertEqual(graph_coverage(con)["summary"]["invalid_reading_references"], 2)
+                # Wrong entity from a different chapter must be distinguished
+                # from a self-consistent but incorrectly selected occurrence.
+                con.execute(
+                    "UPDATE references_tex SET target_document='AA-01' "
+                    "WHERE target_label='AA-01::shared'")
+                audit = reading_reference_issues(con)
+                self.assertEqual({i["reason"] for i in audit["issues"]},
+                                 {"unresolved", "target_entity_owner_mismatch"})
+                self.assertEqual(audit["checked"], 3)
+
+    def test_reading_audit_rejects_wrong_entity_in_same_chapter(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "pl"
+            for relative, body in {
+                "measure_theory/01-a.tex": (
+                    "\\chapter{Miary}\n\\section{Pierwsza}\\label{first}\n"
+                    "\\section{Druga}\\label{second}\n"),
+                "functional_analysis/15B-b.tex": (
+                    "\\section{Całki}\\atlasref{ME-01::first}{Pierwsza}\n"
+                    "\\ref{ordinary-missing}\n"),
+            }.items():
+                dest = root / relative
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                dest.write_text(body, encoding="utf-8")
+            db = Path(tmp) / "index.db"
+            build_database(root, db, recursive=True)
+            with sqlite3.connect(db) as con:
+                self.assertEqual(reading_reference_issues(con),
+                                 {"checked": 1, "invalid": 0, "issues": []})
+                wrong = con.execute(
+                    "SELECT entity_id FROM label_occurrences "
+                    "WHERE document_id='ME-01' AND name='second'"
+                ).fetchone()[0]
+                con.execute(
+                    "UPDATE references_tex SET target_entity=? WHERE command='atlasref'",
+                    (wrong,))
+                audit = reading_reference_issues(con)
+                self.assertEqual(audit["invalid"], 1)
+                self.assertEqual(audit["issues"][0]["reason"],
+                                 "qualified_occurrence_mismatch")
+
