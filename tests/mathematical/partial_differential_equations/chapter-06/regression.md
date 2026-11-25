@@ -1,0 +1,17 @@
+# PDE-06 — trwały rejestr kryteriów regresyjnych
+
+Rozdział: Metody Fouriera i rozdzielenie zmiennych. Źródło: chapters/pl/partial_differential_equations/06-metody-fouriera-i-rozdzielenie-zmiennych.tex. Kryteria semantyczne są listą zobowiązań do ponownej kontroli matematycznej, nie testami automatycznymi ani dowodami Lean.
+
+| ID | Etykieta | Kryterium | Metoda |
+|---|---|---|---|
+| PDE-06-001 | sec:pde6-fourier | Utożsamienie funkcji z okresowym przedłużeniem prawie wszędzie, miara torusa o masie 1, czynnik (2pi)^(d/2) między normami, zwykła miara Lebesgue'a na odcinku, inkluzja L² w L¹ przez Cauchy–Schwarza. | semantyczna |
+| PDE-06-002 | lem:pde6-bessel | Bezpośrednia całka wykładników dla k=l oraz k≠l; S_N jest rzutem ortogonalnym, jawna ortogonalność reszty, tożsamość Pitagorasa i nierówność Bessela bez założenia zupełności. | semantyczna |
+| PDE-06-003 | lem:pde6-fejer | Suma geometryczna, ciągłe wartości N+1 w 2pi Z, nieujemność, N+1-|k| par indeksów, dokładna normalizacja i oszacowanie masy poza łukiem delta przez 2pi/((N+1) sin²(delta/2)). | semantyczna |
+| PDE-06-004 | thm:pde6-fejer | Współczynniki średnich Cesàra, splot przez podstawienie i niezmienniczość całki po okresie; rozkład całki różnicy, jednostajna ciągłość, normalizacja i zanik masy poza łukiem dają jednostajną zbieżność. | semantyczna |
+| PDE-06-005 | thm:pde6-fejer | Gęstość C(T) w L² bez pomijania warunku okresowości: aproksymacja funkcji prostych, regularność miary, K zwarty w A, O otwarty wewnątrz (-pi,pi), funkcja odległości ze zwartym nośnikiem i oszacowanie błędu chi_A; przypadek K pustego, okresowe przedłużenie ciągłe. Gęstość wielomianów trygonometrycznych z Fejéra i normy unormowanej. | semantyczna |
+| PDE-06-006 | thm:pde6-parseval | Aproksymacja przez wielomiany, własność najlepszego przybliżenia rzutu ortogonalnego, zbieżność S_N w L² i norm, rosnące sumy kwadratów współczynników, tożsamość Parsevala; brak nieuprawnionego wniosku o punktowej zbieżności z samej zbieżności L². | semantyczna |
+| PDE-06-007 | lem:pde6-decay | Całkowanie przez części z zanikiem wyrazów brzegowych, czynnik (ik)^(-m), poprawna normalizacja oszacowania; dla każdego r wybór m≥r+2 i kryterium Weierstrassa, przypadek k=0, identyfikacja sumy szeregu pochodnych z f^(r) przez Parsevala i ciągłość. | semantyczna |
+
+## Iteracja 67 — 2026-11-25
+Przeprowadzono preflight rozdziału: 9 sekcji, 38 unikatowych etykiet, początkowo 23 wystąpienia odsyłaczy. Cztery cele zewnętrzne chap:pde-heat, chap:pde-wave, chap:pde-distributions, chap:pde-fourier-Rd występują dokładnie raz w odpowiednich rozdziałach 04, 05, 07, 08.
+Rozbudowano wprowadzenie i sekcję 6.1 w commicie e45684a0bc81dd09bedbe43c829a930eb650e6f2, blob b1233781c841a115f24624ff25258680f2008135. Uzasadniono normalizację, ortogonalność i Bessela, rachunek jądra Fejéra oraz jego koncentrację, splot i zbieżność jednostajną. Usunięto skrót w dowodzie gęstości funkcji ciągłych, jawnie zapewniając okresowość aproksymacji. Rozpisano własność najlepszego przybliżenia i Parsevala oraz identyfikację wszystkich szeregów pochodnych z właściwymi funkcjami. Zachowano etykiety, 26 odsyłaczy i poprawne zagnieżdżenie środowisk. Dodano 7 kryteriów semantycznych. Pierwszy audyt 1/9 sekcji. Bez kompilacji, testów wykonywalnych, kontroli wizualnej i Lean. Następny zakres: 6.2 — zagadnienie Dirichleta, zupełność układu sinusów i optymalna nierówność Poincarégo. Pozostałą dawną formę terminologiczną zdominowanej w dalszym tekście poprawić przy audycie właściwej sekcji.
