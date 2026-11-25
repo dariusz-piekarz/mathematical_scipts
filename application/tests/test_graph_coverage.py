@@ -280,3 +280,66 @@ class GraphCoverageTest(unittest.TestCase):
                             "WHERE document_id=? AND name=?", (target, label)
                         ).fetchall(), [(entity,)])
                         self.assertGreaterEqual(edges[(source, target)]["reading"], 1)
+
+    def test_canonical_qualified_algebra_reading_edges(self):
+        """Keep algebra reading links independent of global label collisions."""
+        repository = Path(__file__).resolve().parents[2]
+        canonical = repository / "chapters" / "pl"
+        if not canonical.is_dir():
+            self.skipTest("canonical repository chapters not available")
+        from backend.latex_parser import module_id
+
+        expected = (
+            ("ALG-02", "AA-11", "aa:ch:wielomiany"),
+            ("ALG-04", "AA-12", "aa:tw:localization-universal"),
+            ("ALG-04", "AA-16", "aa:ch:modules-introduction"),
+            ("ALG-04", "AA-18", "aa:ch:module-tensor-product"),
+            ("ALG-04", "AA-40", "aa:ch:integral-extensions"),
+            ("ALG-04", "AA-38", "aa:tw:noether-normalization"),
+            ("ALG-04", "AA-39", "aa:def:krull-dimension"),
+            ("ALG-04", "AA-37", "aa:tw:transcendence-degree"),
+            ("ALG-02", "LA-11", "cor:lin11-wielomiany"),
+            ("AA-17", "LA-19", "thm:lin19-frobenius"),
+            ("AA-18", "LA-10", "thm:lin10-baza"),
+            ("AA-18", "ALG-04", "tw:lokalizacja-plaska"),
+            ("LA-29", "ALG-02", "def:projective-space"),
+        )
+        needed = {item for source, target, _ in expected for item in (source, target)}
+        catalog = json.loads((repository / "catalog" / "books.json").read_text(encoding="utf-8"))
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "pl"
+            found = set()
+            for book in catalog["books"]:
+                for relative in book["chapters"]:
+                    source_path = repository / relative
+                    chapter = module_id(source_path)
+                    if chapter not in needed:
+                        continue
+                    self.assertNotIn(chapter, found)
+                    found.add(chapter)
+                    dest = root / source_path.relative_to(canonical)
+                    dest.parent.mkdir(parents=True, exist_ok=True)
+                    dest.write_bytes(source_path.read_bytes())
+            self.assertEqual(found, needed)
+            db = Path(tmp) / "index.db"
+            build_database(root, db, recursive=True)
+            with sqlite3.connect(db) as con:
+                edges = {(e["source"], e["target"]): e for e in graph_coverage(con)["edges"]}
+                for source, target, label in expected:
+                    with self.subTest(source=source, target=target, label=label):
+                        rows = con.execute(
+                            "SELECT status,target_document,target_entity "
+                            "FROM references_tex WHERE source_document=? "
+                            "AND command='atlasref' AND target_label=?",
+                            (source, target + "::" + label),
+                        ).fetchall()
+                        self.assertEqual(len(rows), 1)
+                        status, owner, entity = rows[0]
+                        self.assertEqual(status, "external_resolved")
+                        self.assertEqual(owner, target)
+                        self.assertIsNotNone(entity)
+                        self.assertEqual(con.execute(
+                            "SELECT entity_id FROM label_occurrences "
+                            "WHERE document_id=? AND name=?", (target, label)
+                        ).fetchall(), [(entity,)])
+                        self.assertGreaterEqual(edges[(source, target)]["reading"], 1)
