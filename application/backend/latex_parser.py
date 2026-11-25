@@ -50,7 +50,7 @@ EQUATION_ENVS = {"equation", "align", "gather", "multline", "flalign", "alignat"
 FIGURE_ENVS = {"figure", "tikzpicture", "center"}
 CODE_ENVS = {"lstlisting", "minted", "verbatim", "Verbatim"}
 VERBATIM_ENVS = CODE_ENVS | {"comment", "filecontents", "filecontents*"}
-REF_COMMANDS = {"ref", "eqref", "pageref", "autoref", "nameref", "cref", "Cref", "vref", "Vref"}
+REF_COMMANDS = {"ref", "eqref", "pageref", "autoref", "nameref", "cref", "Cref", "vref", "Vref", "atlasref"}
 PREFIX_DOMAINS = {
     "AM1": "analiza matematyczna I",
     "AA": "algebra abstrakcyjna",
