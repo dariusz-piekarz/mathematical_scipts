@@ -16,6 +16,14 @@ class TopologyGeometryGraphTest(unittest.TestCase):
         if not canonical.is_dir():
             self.skipTest("canonical repository chapters not available")
         expected = (
+            ("DG-06", "TOP-03", "thm:les-homologia"),
+            ("TOP-03", "DG-06", "thm:les-homologia"),
+            ("DG-07", "TOP-04", "thm:van-kampen"),
+            ("TOP-04", "DG-07", "thm:van-kampen"),
+            ("DG-08", "TOP-05", "thm:homotopia-singularna"),
+            ("TOP-05", "DG-08", "thm:homotopia-singularna"),
+            ("DG-09", "TOP-06", "thm:whitehead"),
+            ("TOP-06", "DG-09", "thm:whitehead"),
             ("TOP-17", "DG-03", "thm:tensor-hom"),
             ("TOP-20", "DG-18", "ch:teoria-morsea"),
             ("TOP-23", "DG-03", "thm:tensor-istnienie"),
