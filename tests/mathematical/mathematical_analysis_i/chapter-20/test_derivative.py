@@ -120,6 +120,38 @@ class Chapter20(TestCase):
         self.assertEqual(F(85,100)+F(3,5),F(145,100))
         self.assertEqual(F(163,100)-F(145,100),F(18,100))
 
+    def test_differential_linearity_and_zero_derivative(self):
+        for a in (F(-2),F(0),F(3,2)):
+            h,k,lam,mu=F(-1,7),F(1,4),F(2),F(-3)
+            df=lambda v:a*v
+            self.assertEqual(df(lam*h+mu*k),lam*df(h)+mu*df(k))
+            self.assertEqual(df(1),a)
+        for h in (F(-1,10),F(1,100)):
+            self.assertEqual(abs(h*h)/abs(h),abs(h))
+
+    def test_differential_table_exact(self):
+        for h,dy,delta_y,r,ratio in (
+            (F(3,5),F(3,5),F(78,100),F(18,100),F(3,10)),
+            (F(1,10),F(1,10),F(105,1000),F(5,1000),F(5,100)),
+            (F(1,100),F(1,100),F(1005,100000),F(5,100000),F(5,1000)),
+            (F(-1,10),F(-1,10),F(-95,1000),F(5,1000),F(5,100)),
+        ):
+            self.assertEqual(dy,h)
+            self.assertEqual(delta_y,((1+h)**2-1)/2)
+            self.assertEqual(r,delta_y-dy)
+            self.assertEqual(r/abs(h),ratio)
+
+    def test_differential_position(self):
+        source=(Path(__file__).resolve().parents[4] /
+                "chapters/pl/mathematical_analysis_i/20-pochodna.tex").read_text(encoding="utf-8")
+        self.assertEqual(source.count(r"\label{ma1:def:differential}"),1)
+        self.assertLess(source.index(r"\label{ma1:def:derivative}"),
+                        source.index(r"\label{ma1:def:differential}"))
+        self.assertLess(source.index(r"\label{ma1:def:differential}"),
+                        source.index(r"\begin{tikzpicture}"))
+        self.assertLess(source.index(r"\label{ma1:def:differential}"),
+                        source.index(r"\section{Przybliżenie liniowe i ciągłość}"))
+
     def test_differential_diagram_source(self):
         source=(Path(__file__).resolve().parents[4] /
                 "chapters/pl/mathematical_analysis_i/20-pochodna.tex").read_text(encoding="utf-8")
@@ -127,12 +159,17 @@ class Chapter20(TestCase):
         self.assertIn(r"$\Delta x=dx=h$",figure)
         self.assertIn(r"$\Delta y$",figure)
         self.assertIn(r"$dy$",figure)
+        self.assertIn(r"$r(h)$",figure)
+        self.assertIn(r"(P)--(T)",figure)
+        self.assertIn(r"(T)--(B)",figure)
+        self.assertIn(r"(A)--(P)",figure)
         coords={name:(F(x),F(y)) for name,x,y in
-                re.findall(r"\\coordinate \(([ABT])\) at \(([\d.]+),([\d.]+)\);",figure)}
-        self.assertEqual(set(coords),{"A","B","T"})
+                re.findall(r"\\coordinate \(([ABTP])\) at \(([\d.]+),([\d.]+)\);",figure)}
+        self.assertEqual(set(coords),{"A","B","T","P"})
         a,fa=coords["A"]
         b,fb=coords["B"]
         t,ft=coords["T"]
+        self.assertEqual(coords["P"],(b,fa))
         self.assertEqual(b,t)
         self.assertEqual(fa,a*a/2+F(7,20))
         self.assertEqual(fb,b*b/2+F(7,20))
