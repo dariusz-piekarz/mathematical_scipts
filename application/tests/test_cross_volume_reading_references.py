@@ -8,6 +8,7 @@ import unittest
 
 from backend.api import bipartite_graph
 from backend.generator import closure
+from backend.label_registry import Owner, resolve
 from backend.latex_parser import build_database, parse_document
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -145,6 +146,101 @@ class CrossVolumeReadingReferencesTest(unittest.TestCase):
                         if left == "algebra abstrakcyjna":
                             actual = {(b, a) for a, b in actual}
                         self.assertTrue(pairs <= actual)
+
+
+    def test_qualified_reference_never_guesses_duplicate_owner(self):
+        owners = [Owner("TOP-11", "thm:example", "top"),
+                  Owner("DG-17", "thm:example", "dg")]
+        decision = resolve("ALG-10", "TOP-11::thm:example", owners)
+        self.assertEqual(decision.status, "external_resolved")
+        self.assertEqual(decision.owner.entity_id, "top")
+        missing = resolve("ALG-10", "TOP-12::thm:example", owners)
+        self.assertEqual(missing.status, "missing")
+        self.assertIsNone(missing.owner)
+        duplicate = resolve("ALG-10", "TOP-11::thm:example", owners + [owners[0]])
+        self.assertEqual(duplicate.status, "ambiguous")
+        self.assertIsNone(duplicate.owner)
+        self.assertEqual(resolve("ALG-10", "thm:example", owners).status, "ambiguous")
+
+    def test_real_advanced_alg_graph_qualified_targets(self):
+        expected = {
+            "ALG-05": {"AA-40::aa:prz:integral-cusp-normalization",
+                       "AA-18::aa:def:flat-module",
+                       "TOP-28::thm:xvii-blowup-general"},
+            "ALG-06": {"TOP-11::thm:przeciecie-kubek-16",
+                       "TOP-28::thm:xvii-canonical",
+                       "TOP-28::thm:xvii-hodge-index"},
+            "ALG-07": {"TOP-11::thm:przeciecie-kubek-16",
+                       "TOP-11::sec:klasy-char-16",
+                       "TOP-28::ch:xvii-topologia-odmian"},
+            "ALG-08": {"AA-37::aa:tw:transcendence-degree",
+                       "TOP-11::thm:forma-przeciecia-16",
+                       "TOP-28::thm:xvii-blowup-general"},
+            "ALG-09": {"TOP-23::def:sheaf-v12",
+                       "TOP-23::def:sheaf-cohom-v12",
+                       "TOP-25::thm:kahler-hodge-xiv"},
+            "ALG-10": {"TOP-09::thm:de-rham",
+                       "TOP-11::thm:poincare-dualnosc-16",
+                       "TOP-28::ch:xvii-topologia-odmian",
+                       "TOP-28::thm:xvii-blowup-general",
+                       "TOP-28::thm:xvii-hard-lefschetz",
+                       "TOP-25::def:nearby-vanishing-xiv",
+                       "TOP-25::thm:picard-lefschetz-xiv"},
+        }
+        modules = set(expected) | {lab.split("::", 1)[0]
+                                   for labels in expected.values() for lab in labels}
+        prefixes = {"algebraic_geometry": "ALG", "abstract_algebra": "AA",
+                    "algebraic_topology": "TOP"}
+        books = json.loads((ROOT / "catalog/books.json").read_text(encoding="utf-8"))["books"]
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "pl"
+            for book in books:
+                prefix = prefixes.get(book["id"])
+                if prefix is None:
+                    continue
+                for path in book["chapters"]:
+                    p = Path(path)
+                    if prefix + "-" + p.name.split("-", 1)[0] not in modules:
+                        continue
+                    dest = root / p.parent.name / p.name
+                    dest.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(ROOT / p, dest)
+            db = Path(temp) / "index.db"
+            build_database(root, db, recursive=True)
+            with sqlite3.connect(db) as con:
+                con.row_factory = sqlite3.Row
+                rows = con.execute(
+                    "SELECT r.source_document,r.target_label,r.target_document,r.status,"
+                    " s.kind AS source_kind,t.kind AS target_kind"
+                    " FROM references_tex r LEFT JOIN entities s ON r.source_entity=s.id"
+                    " LEFT JOIN entities t ON r.target_entity=t.id"
+                    " WHERE r.command='atlasref' AND r.source_document LIKE 'ALG-%'"
+                ).fetchall()
+                required = {(src, lab, lab.split("::", 1)[0])
+                            for src, labels in expected.items() for lab in labels}
+                actual = {(r["source_document"], r["target_label"], r["target_document"])
+                          for r in rows}
+                self.assertEqual(len(required), 22)
+                self.assertTrue(required <= actual)
+                for r in rows:
+                    if (r["source_document"], r["target_label"], r["target_document"]) in required:
+                        self.assertEqual(r["status"], "external_resolved")
+                        self.assertIn(r["source_kind"], {"section", "subsection"})
+                        self.assertIsNotNone(r["target_kind"])
+                for prefix, domain in [("AA", "algebra abstrakcyjna"),
+                                       ("TOP", "topologia algebraiczna")]:
+                    pairs = {(src, dst) for src, _, dst in required
+                             if dst.startswith(prefix + "-")}
+                    for left, right in [("geometria algebraiczna", domain),
+                                        (domain, "geometria algebraiczna")]:
+                        for granularity in ("module", "section", "entity"):
+                            graph = bipartite_graph(con, left, right, granularity, 1, 250)
+                            nodes = {n["id"]: n["module"] for n in graph["nodes"]}
+                            edges = {(nodes[e["source"]], nodes[e["target"]])
+                                     for e in graph["edges"]}
+                            if left == domain:
+                                edges = {(b, a) for a, b in edges}
+                            self.assertTrue(pairs <= edges)
 
 
 if __name__ == "__main__":
