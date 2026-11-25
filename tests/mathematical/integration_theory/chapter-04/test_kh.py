@@ -11,6 +11,20 @@ class KHChapter04(unittest.TestCase):
         self.assertLess(length,2*d)
         self.assertTrue(all(tag-d<u<=tag<=v<tag+d for u,v in intervals))
 
+    def test_hake_boundary_tag_split(self):
+        # c_n=2^-n, adjacent intervals, tag at their common endpoint.
+        for n in range(1,10):
+            c=F(1,2**n)
+            left=c/2
+            right=2*c
+            d=min(c-left,right-c)/2
+            u,v=c-d/2,c+d/2
+            self.assertTrue(left<u<c<v<right)
+            value=F(3)
+            self.assertEqual(value*(v-u),value*(c-u)+value*(v-c))
+            # local errors <= eps*2^(-n-2) sum to <= eps/4
+        self.assertLess(sum(F(1,2**(n+2)) for n in range(1,10)),F(1,4))
+
     def test_dyadic_tail_partial_interval(self):
         for n in range(2,10):
             a=F((-1)**(n+1),n)
