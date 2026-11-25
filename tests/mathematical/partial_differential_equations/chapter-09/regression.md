@@ -253,3 +253,26 @@ Następna iteracja 139: druga lektura od PDE-09-062 (przedłużanie z półprzes
 Bilans: 8/8 kryteriów poddano ponownej lekturze, 5 uściślono, 3 bez zmian. Źródło: commit 35dd7064f14b6026bb932172c878875a74fd27aa, blob 45fc9e9d45e7fa8a2644c4c88f3abaa7824ebb65. Zachowano 37 etykiet i 64 wystąpienia odsyłaczy w tej samej kolejności; stos środowisk poprawny; tekst poza sekcją przedłużania niezmieniony. Nie wykonywano kompilacji, testów wykonawczych ani Lean. Druga lektura obejmuje dotąd 69 z 81 kryteriów.
 
 Następna iteracja 140: druga lektura kryteriów PDE-09-070–081 (ślady, słabe rozwiązanie problemu Poissona, funkcja Greena, skalowanie i podsumowanie), bez rozszerzania zakresu.
+
+## Iteracja 140 — 2026-11-25 — druga lektura, 070–081
+
+| Kryterium | Wynik ponownej lektury |
+| --- | --- |
+| 070 | Bez zmian: oszacowanie jednowymiarowe, Hölder na przedziale miary jeden, Tonelli, Minkowski i przypadek d=1. |
+| 071 | Uściślenie: jawne oszacowanie Cauchy'ego dla śladów przez normę Sobolewa ze stałą 2^(1-1/p); niezależność od aproksymantów, liniowość i jednoznaczność poprawne. |
+| 072 | Uściślenie: jawne przejście do granicy śladów aproksymantów dla obu płaszczyzn, bez twierdzenia odwrotnego. |
+| 073 | Uściślenie: dwukrotne zastosowanie charakterystyki jednowymiarowej i całkowalność wszystkich składowych normy H²; konstrukcja i warunki brzegowe poprawne. |
+| 074 | Uściślenie: jawna konstrukcja odcięcia jako iloczynu dwóch skalowanych funkcji gładkich i stała ograniczenia pochodnej; rachunek błędu i wygładzanie poprawne. |
+| 075 | Bez zmian: obustronne oszacowania Cauchy'ego–Schwarza, gęstość testów i przejście do granicy. |
+| 076 | Uściślenie: algebraiczne rozdzielenie całek we wzorze Greena, identyfikacja pochodnej słabej przez absolutną ciągłość i jawna tożsamość testowa; znak delty i przykład f=1 poprawne. |
+| 077 | Bez zmian: test różnicą rozwiązań, Poincaré, oszacowanie energetyczne wraz z przypadkiem zerowej normy. |
+| 078 | Bez zmian: skalowanie przez jakobian, pochodne i istotne supremum dla nieskończonych wykładników. |
+| 079 | Bez zmian: konieczność warunku skalowania przy obu granicach parametru; brak twierdzenia o wystarczalności. |
+| 080 | Uściślenie: jawny jednolity górny kres norm Sobolewa; wykładnik ujemny, przypadek q=infty i zakres wniosku poprawne. |
+| 081 | Uściślenie: zakres p skończonego dla W_0 oraz rozróżnienie domknięcia i jądra śladu, który nie musi istnieć na dowolnym zbiorze otwartym. |
+
+Bilans: 12/12 kryteriów poddano ponownej lekturze, 7 uściślono w 8 zmianach tekstu, 5 bez zmian. Źródło: commit c6db5521f96c7121e51464a94a72e28213b3c12e, blob 30d48c49e6db0d013e8fff4cfc9960323e25342b. Zachowano 37 etykiet i 64 wystąpienia odsyłaczy w tej samej kolejności; stos środowisk poprawny, wcześniejsze sekcje niezmienione.
+
+Zakończono drugą lekturę wszystkich 81 kryteriów (iteracje 135–140). Łącznie 37 kryteriów uściślono, 43 nie wymagały zmian, jedno dotyczy kontroli źródła rysunku bez renderu. Są to wyniki lektury semantycznej, nie wykonania automatycznych testów. Nie wykonano w tej iteracji kompilacji, testów wykonawczych ani Lean.
+
+Następna iteracja 141: końcowa kontrola strukturalna, rzeczywisty przebieg CI i kontrola wizualna PDF (w jednej iteracji, o ile dostępne wykonanie i artefakty); następnie niezależny audyt kontrolny przed decyzją o stabilizacji.
