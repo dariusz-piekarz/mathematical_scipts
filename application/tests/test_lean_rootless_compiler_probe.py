@@ -143,3 +143,36 @@ class TrustedCoreFixtureTests(unittest.TestCase):
             path.symlink_to(Path(directory) / "missing")
             with self.assertRaises(OSError):
                 probe.read_report(path, expected_sha="c" * 40)
+
+
+    def test_interrupted_compiler_never_promotes_success_and_still_cleans_up(self):
+        cid, image = "a" * 64, "sha256:" + "b" * 64
+        for kind in (transport.DockerCommandTimeout, transport.DockerCLIReapUnconfirmed,
+                     transport.DockerOutputLimit, transport.DockerCommandFailed):
+            for listing_failed in (False, True):
+                failure = kind("controlled interruption")
+                calls = []
+                def command(prefix, args, env, *, deadline=None):
+                    if args[0] == "create":
+                        return cid.encode()
+                    if args[:2] == ("container", "start"):
+                        raise failure
+                    if deadline is not None:
+                        calls.append((args[1], deadline))
+                    if args[:2] == ("container", "ls") and listing_failed:
+                        return cid.encode()
+                    return b"{}" if deadline is None else b""
+                with self.subTest(kind=kind, listing_failed=listing_failed), \
+                        patch.object(transport, "_command", side_effect=command), \
+                        patch.object(transport, "validate_engine"), \
+                        patch.object(probe.policy, "validate_image_inspection"), \
+                        patch.object(transport, "validate_container"):
+                    if listing_failed:
+                        with self.assertRaisesRegex(ValueError, "removal not confirmed"):
+                            probe.check_compiler([], {}, image)
+                    else:
+                        with self.assertRaises(kind) as caught:
+                            probe.check_compiler([], {}, image)
+                        self.assertIs(caught.exception, failure)
+                self.assertEqual([name for name, _ in calls], ["rm", "ls"])
+                self.assertEqual(len({deadline for _, deadline in calls}), 1)
