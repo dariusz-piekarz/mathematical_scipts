@@ -89,6 +89,48 @@ class CategoryTheoryCh20(unittest.TestCase):
                     self.assertEqual(ten(ten(f,g,u),h,u+v)(pack(x)),
                                      ten(f,ten(g,h,v),u)(pack(x)))
 
+    def test_CAT_20_005_distinct_rule_occurrences(self):
+        # Keep rule names and addresses, even when the targets agree.
+        def moves(t, address=()):
+            if isinstance(t,str):
+                return []
+            a,b=t
+            out=[]
+            if isinstance(a,tuple):
+                out.append(("alpha",address,(a[0],(a[1],b))))
+            if a==I:
+                out.append(("lambda",address,b))
+            if b==I:
+                out.append(("rho",address,a))
+            out.extend((rule,pos,(u,b)) for rule,pos,u in moves(a,address+(0,)))
+            out.extend((rule,pos,(a,v)) for rule,pos,v in moves(b,address+(1,)))
+            return out
+        self.assertEqual({(rule,pos) for rule,pos,_ in moves((I,I))},
+                         {("lambda",()),("rho",())})
+        for n in range(1,6):
+            for w in itertools.product(("A","I"),repeat=n):
+                for t in trees(w):
+                    self.assertEqual({u for _,_,u in moves(t)},steps(t))
+                    for _,_,u in moves(t):
+                        self.assertLess(measure(u),measure(t))
+
+    def test_CAT_20_006_cartesian_comparisons(self):
+        # Powers X^n preserve finite products. Compare the two composites
+        # for consecutive power functors by evaluating every entry.
+        for n,m in itertools.product(range(4),repeat=2):
+            if n*m > 6:
+                continue
+            for a in itertools.product(range(2),repeat=n*m):
+                for b in itertools.product(range(2),repeat=n*m):
+                    nested=tuple(tuple((a[i*m+j],b[i*m+j])
+                                       for j in range(m)) for i in range(n))
+                    direct=(tuple(tuple(a[i*m+j] for j in range(m)) for i in range(n)),
+                            tuple(tuple(b[i*m+j] for j in range(m)) for i in range(n)))
+                    separated=tuple((tuple(x for x,y in row),tuple(y for x,y in row))
+                                    for row in nested)
+                    self.assertEqual(direct,(tuple(x for x,y in separated),
+                                             tuple(y for x,y in separated)))
+
     def test_CAT_20_004_structure(self):
         s=CHAPTER.read_text(encoding="utf-8")
         labels=re.findall(r"\\label\{([^}]+)\}",s)
