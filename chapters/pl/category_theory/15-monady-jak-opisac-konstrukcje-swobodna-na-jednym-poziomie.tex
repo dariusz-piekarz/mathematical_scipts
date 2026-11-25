@@ -2,29 +2,47 @@
 
 Monady pojawiają się naturalnie w teorii algebry, semantyce języków programowania i teorii obliczeń. Na poziomie podstawowym można je rozumieć jako funktory wyposażone w operację \emph{włożenia pojedynczego elementu} i operację \emph{spłaszczenia dwóch warstw tej samej konstrukcji}.
 
-\begin{definicja}[Monad]\label{def:monad}
+\begin{definicja}[Monada]\label{def:monad}
 \emph{Monadą} na kategorii $\mathcal C$ jest trójka $(T,\eta,\mu)$, gdzie $T:\mathcal C\to\mathcal C$ jest funktorem, $\eta:\id_{\mathcal C}\Rightarrow T$ i $\mu:T\circ T\Rightarrow T$ są transformacjami naturalnymi, a dla każdego obiektu $A$ zachodzą równości
 \[
 \mu_A\circ T(\mu_A)=\mu_A\circ\mu_{T(A)},\qquad\mu_A\circ T(\eta_A)=\id_{T(A)}=\mu_A\circ\eta_{T(A)}.
 \]
-Pierwsza to \emph{łączność spłaszczania}, a dwie pozostałe to \emph{prawa i lewa jednostka}.
+Pierwsza równość to \emph{łączność mnożenia}, a dwie pozostałe to prawa jednostki. Piszemy $T^2=T\circ T$ i $T^3=T\circ T\circ T$. Naturalność oznacza, że dla $f:A\to B$ zachodzą
+\[
+T(f)\circ\eta_A=\eta_B\circ f,\qquad
+T(f)\circ\mu_A=\mu_B\circ T^2(f).
+\]
+Łączność jest przemiennością kwadratu, a prawa jednostki przemiennością dwóch trójkątów w diagramach:
+\[
+\begin{CD}
+T^3(A) @>{T(\mu_A)}>> T^2(A)\\
+@V{\mu_{T(A)}}VV @VV{\mu_A}V\\
+T^2(A) @>>{\mu_A}> T(A).
+\end{CD}
+\qquad
+\begin{CD}
+T(A) @>{T(\eta_A)}>> T^2(A) @<{\eta_{T(A)}}<< T(A)\\
+@V{\id}VV @VV{\mu_A}V @VV{\id}V\\
+T(A) @= T(A) @= T(A).
+\end{CD}
+\]
 \end{definicja}
 
 \begin{przyklad}[Monada skończonych list]\label{przyklad:list-monad}
-Dla zbioru $X$ niech $T(X)$ oznacza zbiór wszystkich skończonych list elementów $X$, włącznie z listą pustą. Funkcja $f:X\to Y$ działa na listach przez zastosowanie $f$ do każdego elementu. Definiujemy $\eta_X(x)=[x]$ oraz $\mu_X([[x_1,x_2],[x_3],[],[x_4]])=[x_1,x_2,x_3,x_4]$. W ogólności $\mu_X$ skleja listę list w jedną listę. Dwie strony równania łączności dają ten sam wynik: usuwają oba poziomy nawiasów w liście list list. Równania jednostek mówią, że spłaszczenie $[[x_1,\ldots,x_n]]$ i spłaszczenie $[[x_1],\ldots,[x_n]]$ daje $[x_1,\ldots,x_n]$.
+Dla zbioru $X$ niech $T(X)$ oznacza zbiór wszystkich skończonych list elementów $X$, włącznie z listą pustą. Funkcja $f:X\to Y$ działa na listach przez zastosowanie $f$ do każdego elementu. Definiujemy $\eta_X(x)=[x]$ oraz $\mu_X([[x_1,x_2],[x_3],[],[x_4]])=[x_1,x_2,x_3,x_4]$. W ogólności $\mu_X$ skleja listę list w jedną listę. Funktorialność $T$ wynika z punktowego działania funkcji na listach. Dla $f:X\to Y$ mamy $T(f)([x])=[f(x)]$, co daje naturalność $\eta$. Zastosowanie $f$ do konkatenacji list daje konkatenację list otrzymanych przez zastosowanie $f$ do każdej z nich; zatem $T(f)\circ\mu_X=\mu_Y\circ T^2(f)$. Dla listy list list obie strony równania łączności wypisują elementy $x_{ijk}$ w kolejności leksykograficznej indeksów $(i,j,k)$, niezależnie od tego, który poziom konkatenacji usuwamy najpierw. Dotyczy to także pustych list na każdym poziomie. Równania jednostek mówią, że spłaszczenie $[[x_1,\ldots,x_n]]$ i spłaszczenie $[[x_1],\ldots,[x_n]]$ daje $[x_1,\ldots,x_n]$.
 \end{przyklad}
 
 \begin{przyklad}[Monada z wolnego monoidu]
-Skończone listy elementów zbioru $X$ tworzą \emph{monoid wolny} na $X$ z działaniem konkatenacji i pustą listą jako jednostką. Niech $F:\Set\to\Mon$ będzie funktorem wolnego monoidu, a $U:\Mon\to\Set$ funktorem zapominania. Mamy sprzężenie $F\dashv U$, a złożenie $T=UF$ jest dokładnie funktorem list z poprzedniego przykładu. Jednostka sprzężenia jest operacją $x\mapsto[x]$, a jej kojednostka indukuje spłaszczanie list list.
+Skończone listy elementów zbioru $X$ tworzą \emph{monoid wolny} na $X$ z działaniem konkatenacji i pustą listą jako jednostką. Niech $F:\Set\to\Mon$ będzie funktorem wolnego monoidu, a $U:\Mon\to\Set$ funktorem zapominania. Dla funkcji $f:X\to U(M)$ jej przedłużenie na listy ma postać $[x_1,\ldots,x_n]\mapsto f(x_1)\cdots f(x_n)$, z pustym iloczynem równym jednostce $M$. Zachowuje konkatenację, a każdy homomorfizm przedłużający $f$ musi mieć tę postać. Składanie z funkcją na generatorach lub homomorfizmem monoidów zachowuje tę własność przedłużenia, co dowodzi naturalności bijekcji. Mamy sprzężenie $F\dashv U$, a złożenie $T=UF$ jest dokładnie funktorem list z poprzedniego przykładu. Jednostka sprzężenia jest operacją $x\mapsto[x]$, a jej kojednostka indukuje spłaszczanie list list.
 \end{przyklad}
 
 
 \begin{przyklad}[Monada podzbiorów]\label{przyklad:powerset-monad}
-Na kategorii $\Set$ weźmy kowariantny funktor $T=\mathcal P_+$, który funkcji $f:X\to Y$ przypisuje obraz bezpośredni $A\mapsto f(A)$. Definiujemy $\eta_X(x)=\{x\}$ i $\mu_X:\mathcal P(\mathcal P(X))\to\mathcal P(X)$ przez $\mu_X(\mathscr A)=\bigcup_{A\in\mathscr A}A$. Naturalność $\eta$ pokazaliśmy wcześniej. Naturalność $\mu$ wynika z tożsamości $f(\bigcup_{A\in\mathscr A}A)=\bigcup_{A\in\mathscr A}f(A)$: obraz sumy jest sumą obrazów. Aksjomat łączności jest równością dwóch sposobów wykonania trzykrotnej sumy zbiorów; aksjomaty jednostki wynikają z $\bigcup\{A\}=A$ i $\bigcup_{x\in A}\{x\}=A$. Dla $X=\{1,2,3\}$ i $\mathscr A=\{\{1,2\},\{2,3\},\varnothing\}$ dostajemy $\mu_X(\mathscr A)=\{1,2,3\}$. Jest to inny przykład monady niż listy: \emph{kolejność i powtórzenia} nie mają tu znaczenia.
+Na kategorii $\Set$ weźmy kowariantny funktor $T=\mathcal P_+$, który funkcji $f:X\to Y$ przypisuje obraz bezpośredni $A\mapsto f(A)$. Definiujemy $\eta_X(x)=\{x\}$ i $\mu_X:\mathcal P(\mathcal P(X))\to\mathcal P(X)$ przez $\mu_X(\mathscr A)=\bigcup_{A\in\mathscr A}A$. Symbol $\mathcal P_+$ oznacza tutaj funktor kowariantny (nie ograniczamy się do podzbiorów niepustych). Naturalność $\eta$ wynika z $f(\{x\})=\{f(x)\}$. Naturalność $\mu$ wynika z tożsamości $f(\bigcup_{A\in\mathscr A}A)=\bigcup_{A\in\mathscr A}f(A)$: obraz sumy jest sumą obrazów. Dla $\mathfrak A\subseteq\mathcal P(\mathcal P(X))$ element $x$ należy do obu stron aksjomatu łączności wtedy i tylko wtedy, gdy istnieją $\mathscr A\in\mathfrak A$ oraz $A\in\mathscr A$ takie, że $x\in A$. Dowodzi to łączności również dla pustych rodzin; aksjomaty jednostki wynikają z $\bigcup\{A\}=A$ i $\bigcup_{x\in A}\{x\}=A$. Dla $X=\{1,2,3\}$ i $\mathscr A=\{\{1,2\},\{2,3\},\varnothing\}$ dostajemy $\mu_X(\mathscr A)=\{1,2,3\}$. Jest to inny przykład monady niż listy: \emph{kolejność i powtórzenia} nie mają tu znaczenia.
 \end{przyklad}
 
 \begin{przyklad}[Monada ``możliwego braku wyniku'']
-Dla zbioru $X$ zdefiniujmy $T(X)=X\sqcup\{\bot\}$; symbol $\bot$ oznacza nowy element, który nie należy do $X$. Dla funkcji $f:X\to Y$ określamy $T(f)(x)=f(x)$, gdy $x\in X$, oraz $T(f)(\bot)=\bot$. Jednostka $\eta_X:X\to T(X)$ jest włączeniem. Zbiór $T(T(X))$ zawiera zwykłe wyniki oraz dwa rodzaje symbolu braku wyniku (wewnętrzny i zewnętrzny); mnożenie $\mu_X:T(T(X))\to T(X)$ zachowuje zwykłe wyniki i wysyła oba symbole na $\bot$. Spłaszczenie trzech warstw zawsze daje pierwotny wynik, jeśli taki istnieje, albo jeden symbol $\bot$, niezależnie od kolejności spłaszczania. Naturalność wynika z tego, że funkcje $T(f)$ zachowują symbol $\bot$. Otrzymujemy monadę przydatną przy opisie obliczeń częściowych.
+Dla zbioru $X$ zdefiniujmy $T(X)=X\sqcup\{\bot\}$; symbol $\bot$ oznacza nowy element, który nie należy do $X$ (formalnie stosujemy oznakowaną sumę rozłączną, więc kolejne symbole braku wyniku są rozróżnialne). Dla funkcji $f:X\to Y$ określamy $T(f)(x)=f(x)$, gdy $x\in X$, oraz $T(f)(\bot)=\bot$. Jednostka $\eta_X:X\to T(X)$ jest włączeniem. Zbiór $T(T(X))$ zawiera zwykłe wyniki oraz dwa rodzaje symbolu braku wyniku (wewnętrzny i zewnętrzny); mnożenie $\mu_X:T(T(X))\to T(X)$ zachowuje zwykłe wyniki i wysyła oba symbole na $\bot$. Spłaszczenie trzech warstw zawsze daje pierwotny wynik, jeśli taki istnieje, albo jeden symbol $\bot$, niezależnie od kolejności spłaszczania. Oba prawa jednostki zachodzą, ponieważ każda z dwóch map $T(\eta_X)$ i $\eta_{T(X)}$ dodaje jedynie warstwę oznakowania, którą $\mu_X$ usuwa, a istniejący brak wyniku pozostaje brakiem wyniku. Funktorialność i naturalność obu transformacji sprawdzamy na zwykłych wynikach i symbolach braku wyniku: na zwykłym wyniku obie strony odpowiedniego równania stosują tę samą funkcję, a symbol braku wyniku pozostaje symbolem braku wyniku. Otrzymujemy monadę przydatną przy opisie obliczeń częściowych.
 \end{przyklad}
 
 \begin{przyklad}[Konkatenacja list i składanie Kleisliego]
@@ -34,11 +52,15 @@ Ich składanie w kategorii Kleisliego monady list ma wzór $(g\star f)(x)=\mu_Z(
 \end{przyklad}
 
 
-\begin{twierdzenie}[Monada z każdego sprzężenia]
+\begin{twierdzenie}[Monada z każdego sprzężenia]\label{cat:thm:adjunction-monad}
 Niech $F:\mathcal C\to\mathcal D$ i $G:\mathcal D\to\mathcal C$ spełniają $F\dashv G$, z jednostką $\eta:\id_{\mathcal C}\Rightarrow GF$ i kojednostką $\varepsilon:FG\Rightarrow\id_{\mathcal D}$. Wówczas $T=GF$ z jednostką $\eta$ i mnożeniem $\mu_A:=G(\varepsilon_{F(A)}):GFGF(A)\to GF(A)$ jest monadą na $\mathcal C$.
 \end{twierdzenie}
 \begin{proof}
-Naturalność $\mu$ wynika z naturalności $\varepsilon$. Najpierw dwie tożsamości jednostkowe z definicji~\ref{def:monad} wynikają z tożsamości trójkątnych:
+Dla $f:A\to B$ naturalność kojednostki (twierdzenie~\ref{tw:triangles}) względem $F(f)$ daje $F(f)\circ\varepsilon_{F(A)}=\varepsilon_{F(B)}\circ FG(F(f))$. Stosując $G$, otrzymujemy
+\[
+T(f)\circ\mu_A=\mu_B\circ T^2(f).
+\]
+Naturalność $\eta$ jest częścią danych sprzężenia. Najpierw dwie tożsamości jednostkowe z definicji~\ref{def:monad} wynikają z tożsamości trójkątnych:
 $\mu_A\circ T(\eta_A)=G(\varepsilon_{F(A)}\circ F(\eta_A))=\id_{GF(A)}$ oraz
 $\mu_A\circ\eta_{T(A)}=G(\varepsilon_{F(A)})\circ\eta_{GF(A)}=\id_{GF(A)}$.
 
@@ -46,7 +68,102 @@ Pozostaje łączność. Naturalność kojednostki $\varepsilon$ dla morfizmu $\v
 $\varepsilon_{F(A)}\circ FG(\varepsilon_{F(A)})=\varepsilon_{F(A)}\circ\varepsilon_{FGF(A)}$. Po zastosowaniu $G$ lewa strona jest równa $\mu_A\circ T(\mu_A)$, a prawa $\mu_A\circ\mu_{T(A)}$. Otrzymujemy trzeci aksjomat monady.
 \end{proof}
 
-\begin{uwaga}[Co jeszcze daje teoria monad?]
-Dla monady $(T,\eta,\mu)$ można budować kategorię Kleisliego: obiektami są obiekty $\mathcal C$, a morfizmem $A\to B$ jest zwykła strzałka $A\to T(B)$ w $\mathcal C$. Dwie strzałki $f:A\to T(B)$ i $g:B\to T(C)$ składamy jako $\mu_C\circ T(g)\circ f:A\to T(C)$. Jednostką w $A$ jest $\eta_A:A\to T(A)$. Aksjomaty monady gwarantują łączność i aksjomaty jednostki tego składania. W przypadku list składanie odpowiada mapowaniu elementów do list, a następnie ich konkatenacji.
-\end{uwaga}
+\subsection{Kategoria Kleisliego}
 
+\begin{definicja}[Kategoria Kleisliego]\label{cat:def:kleisli}
+Dla monady $(T,\eta,\mu)$ na $\mathcal C$ kategorię Kleisliego $\mathcal C_T$ określamy następująco. Obiekty są obiektami $\mathcal C$, a morfizmy $A\to B$ to morfizmy $f:A\to T(B)$ w $\mathcal C$. Składanie morfizmów $f:A\to T(B)$ i $g:B\to T(C)$ jest dane wzorem
+\[
+g\star f=\mu_C\circ T(g)\circ f:A\to T(C),
+\]
+a identycznością obiektu $A$ jest $\eta_A$.
+\end{definicja}
+
+\begin{stwierdzenie}
+Powyższe dane rzeczywiście określają kategorię.
+\end{stwierdzenie}
+\begin{proof}
+Dla $f:A\to T(B)$ naturalność jednostki i prawa jednostki monady dają
+\[
+\eta_B\star f=\mu_B\circ T(\eta_B)\circ f=f,
+\qquad
+f\star\eta_A=\mu_B\circ\eta_{T(B)}\circ f=f.
+\]
+Niech $h:C\to T(D)$ będzie trzecim morfizmem. Rozpisując składanie i stosując naturalność $\mu$ dla $h:C\to T(D)$, dostajemy
+\[
+\begin{aligned}
+h\star(g\star f)
+&=\mu_D\circ T(h)\circ\mu_C\circ T(g)\circ f\\
+&=\mu_D\circ\mu_{T(D)}\circ T^2(h)\circ T(g)\circ f\\
+&=\mu_D\circ T(\mu_D)\circ T^2(h)\circ T(g)\circ f\\
+&=\mu_D\circ T(\mu_D\circ T(h)\circ g)\circ f\\
+&=(h\star g)\star f.
+\end{aligned}
+\]
+Trzecia równość jest aksjomatem łączności monady, czwarta wynika z funktorialności $T$.
+\end{proof}
+
+\begin{stwierdzenie}[Sprzężenie Kleisliego]\label{cat:prop:kleisli-adj}
+Istnieje sprzężenie $J:\mathcal C\rightleftarrows\mathcal C_T:K$, którego monadą jest $(T,\eta,\mu)$.
+\end{stwierdzenie}
+\begin{proof}
+Definiujemy $J(A)=A$, $J(f)=\eta_B\circ f$ dla $f:A\to B$, oraz $K(A)=T(A)$, $K(g)=\mu_B\circ T(g)$ dla $g:A\to T(B)$. Funktor $J$ zachowuje identyczności z definicji, a dla $f:A\to B$ i $g:B\to C$ mamy
+\[
+J(g)\star J(f)
+=\mu_C\circ T(\eta_C)\circ T(g)\circ\eta_B\circ f
+=\eta_C\circ g\circ f=J(g\circ f).
+\]
+Użyliśmy prawa jednostki i naturalności $\eta$. Funktor $K$ zachowuje identyczności, gdyż $\mu_A\circ T(\eta_A)=\id_{T(A)}$. Dla morfizmów Kleisliego $f:A\to T(B)$, $g:B\to T(C)$ mamy
+\[
+\begin{aligned}
+K(g\star f)&=\mu_C\circ T(\mu_C)\circ T^2(g)\circ T(f)\\
+&=\mu_C\circ\mu_{T(C)}\circ T^2(g)\circ T(f)\\
+&=\mu_C\circ T(g)\circ\mu_B\circ T(f)=K(g)\circ K(f).
+\end{aligned}
+\]
+Kolejne kroki wykorzystują łączność monady i naturalność $\mu$.
+
+Z definicji $\Hom_{\mathcal C_T}(J(A),B)=\Hom_{\mathcal C}(A,K(B))$. Ta identyczność zbiorów jest naturalna: dla $u:A'\to A$ i morfizmu $v:B\to T(B')$ odpowiednie operacje na $g:A\to T(B)$ są $g\star J(u)=g\circ u$ (naturalność $\eta$ i prawo jednostki) oraz $v\star g=K(v)\circ g$. Jednostką sprzężenia jest więc $\eta_A$. Kojednostka w $B$ jest reprezentowana przez $\id_{T(B)}:T(B)\to T(B)$, wobec czego zastosowanie $K$ daje $\mu_B$. Ponadto $KJ(f)=\mu_B\circ T(\eta_B)\circ T(f)=T(f)$, a na obiektach $KJ=T$. Zatem indukowana monada jest dokładnie monadą wyjściową.
+\end{proof}
+
+\subsection{Kategoria Eilenberga--Moore'a}
+
+\begin{definicja}[Algebra monady]\label{cat:def:em-algebra}
+Algebrą monady $(T,\eta,\mu)$ jest para $(A,a)$, gdzie $a:T(A)\to A$ spełnia
+\[
+a\circ\eta_A=\id_A,\qquad a\circ T(a)=a\circ\mu_A.
+\]
+Morfizm algebr $f:(A,a)\to(B,b)$ to morfizm $f:A\to B$ taki, że $f\circ a=b\circ T(f)$. Kategorię tych algebr oznaczamy $\mathcal C^T$.
+\end{definicja}
+Rzeczywiście identyczność jest morfizmem algebr, a dla dwóch morfizmów $f:(A,a)\to(B,b)$ i $g:(B,b)\to(C,c)$ mamy
+\[
+(g\circ f)\circ a=g\circ b\circ T(f)
+=c\circ T(g)\circ T(f)=c\circ T(g\circ f).
+\]
+Składanie i identyczności dziedziczą zatem aksjomaty kategorii $\mathcal C$.
+
+\begin{stwierdzenie}[Sprzężenie Eilenberga--Moore'a]\label{cat:prop:em-adj}
+Funktor zapominający $U_T:\mathcal C^T\to\mathcal C$ ma lewe sprzężenie $F_T$, określone przez $F_T(A)=(T(A),\mu_A)$ i $F_T(f)=T(f)$. Indukowana monada jest równa $(T,\eta,\mu)$.
+\end{stwierdzenie}
+\begin{proof}
+Aksjomaty algebry $(T(A),\mu_A)$ to prawo jednostki i łączność monady. Naturalność $\mu$ daje warunek morfizmu algebr dla $T(f)$, a funktorialność wynika z funktorialności $T$.
+
+Dla $f:A\to B$ i algebry $(B,b)$ określamy $\widehat f=b\circ T(f):T(A)\to B$. Jest to morfizm algebr, gdyż
+\[
+\begin{aligned}
+\widehat f\circ\mu_A
+&=b\circ\mu_B\circ T^2(f)\\
+&=b\circ T(b)\circ T^2(f)=b\circ T(\widehat f).
+\end{aligned}
+\]
+Naturalność $\eta$ i prawo algebry dają $\widehat f\circ\eta_A=b\circ\eta_B\circ f=f$. Jeśli $h:(T(A),\mu_A)\to(B,b)$ jest morfizmem algebr, to
+\[
+b\circ T(h\circ\eta_A)=h\circ\mu_A\circ T(\eta_A)=h.
+\]
+Otrzymujemy więc wzajemnie odwrotne bijekcje $h\mapsto h\circ\eta_A$ i $f\mapsto\widehat f$. Naturalność pierwszej względem $u:A'\to A$ wynika z $h\circ T(u)\circ\eta_{A'}=h\circ\eta_A\circ u$, a względem morfizmu algebr $v:(B,b)\to(B',b')$ z łączności składania $(v\circ h)\circ\eta_A=v\circ(h\circ\eta_A)$. Jednostką sprzężenia jest $\eta$, a kojednostka w $(B,b)$ ma morfizm bazowy $b$ (odpowiada $\id_B$). Ponieważ $U_TF_T=T$ oraz $U_T(\varepsilon_{F_T(A)})=\mu_A$, indukowana monada jest wyjściową.
+\end{proof}
+
+\begin{przyklad}[Algebry monady list]\label{cat:ex:list-algebras}
+Algebry monady list w $\Set$ odpowiadają dokładnie monoidom. Jeśli $a:T(M)\to M$ jest algebrą, połóżmy $e=a([])$ i $x\cdot y=a([x,y])$. Z $a\circ\eta_M=\id_M$ mamy $a([x])=x$. Aksjomat $a\circ T(a)=a\circ\mu_M$ dla $[[],[x]]$ i $[[x],[]]$ daje $e\cdot x=x=x\cdot e$. Dla $[[x,y],[z]]$ i $[[x],[y,z]]$ daje $(x\cdot y)\cdot z=a([x,y,z])=x\cdot(y\cdot z)$. Dla listy niepustej, stosując aksjomat do $[[x_1,\ldots,x_{n-1}],[x_n]]$, otrzymujemy $a([x_1,\ldots,x_n])=a([x_1,\ldots,x_{n-1}])\cdot x_n$. Indukcja daje iloczyn wszystkich elementów, włącznie z pustym iloczynem $e$.
+
+Odwrotnie, w monoidzie funkcja mnożąca elementy listy w ich kolejności spełnia oba aksjomaty algebry: iloczyn listy jednoelementowej daje jej element, a iloczyn iloczynów kolejnych bloków jest iloczynem ich konkatenacji z łączności i praw jednostki monoidu. Morfizm algebr zachowuje $e$ i mnożenie przez zastosowanie warunku morfizmu do list pustych i dwuelementowych. Odwrotnie, homomorfizm monoidów zachowuje iloczyny wszystkich skończonych list przez indukcję, więc jest morfizmem algebr. Obie konstrukcje są wzajemnie odwrotne na obiektach i morfizmach.
+\end{przyklad}
