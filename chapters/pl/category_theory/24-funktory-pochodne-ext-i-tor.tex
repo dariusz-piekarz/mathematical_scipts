@@ -1,0 +1,63 @@
+\section{Funktory pochodne, Ext i Tor}\label{cat:sec:derived-functors}
+Pracujemy w lokalnie małych kategoriach abelowych. Wykorzystujemy konstrukcje z rozdziałów~\ref{cat:sec:abelian-categories} i~\ref{cat:sec:projective-injective}. Wersję modułową teorii homologii i kohomologii omówiono w \atlasref{TOP-03::def:homologia-algebraiczna}{TOP-03: homologia} oraz \atlasref{TOP-03::def:kohomologia-algebraiczna}{TOP-03: kohomologia}.
+
+\subsection{Homologia w kategorii abelowej}
+\begin{definicja}[Cykle, brzegi i homologia]\label{cat:def:abelian-homology}
+Niech $(C_\bullet,d)$ będzie kompleksem łańcuchowym, tj. rodziną obiektów $C_n$ i morfizmów $d_n:C_n\to C_{n-1}$ z $d_nd_{n+1}=0$. Dopuszczamy indeksy całkowite; dla kompleksu nieujemnie stopniowanego przyjmujemy $C_n=0$ dla $n<0$. Niech $z_n:Z_n\to C_n$ będzie jądrem $d_n$, a $b_n:B_n\to C_n$ obrazem $d_{n+1}$. Rozkład $d_{n+1}=b_ne_{n+1}$ z $e_{n+1}$ epi daje $d_nb_n=0$. Istnieje więc jedyny monomorfizm $j_n:B_n\to Z_n$ z $z_nj_n=b_n$; jest mono, ponieważ $b_n$ jest mono. Definiujemy
+\[
+ H_n(C_\bullet)=\operatorname{coker}(j_n)
+\]
+w sensie przeciwdziedziny kojądra $\pi_n:Z_n\to H_n(C_\bullet)$. Obiekty $Z_n,B_n$ nazywamy odpowiednio obiektami cykli i brzegów. Dla kompleksu kołańcuchowego stosujemy ten sam schemat z indeksami odwróconymi: $Z^n=\ker d^n$, $B^n=\operatorname{im}d^{n-1}$, $H^n=\operatorname{coker}(B^n\to Z^n)$, gdzie symbole oznaczają odpowiednie obiekty.
+\end{definicja}
+\begin{stwierdzenie}\label{cat:prop:homology-zero}
+Kompleks jest dokładny w stopniu $n$ wtedy i tylko wtedy, gdy $H_n=0$ jako obiekt.
+\end{stwierdzenie}
+\begin{proof}
+Kojądro $j_n$ jest zerowe dokładnie wtedy, gdy $j_n$ jest epi (stwierdzenie~\ref{cat:prop:mono-epi-zero-kernel}). Ponieważ $j_n$ jest mono, twierdzenie~\ref{cat:thm:abelian-factorization} daje równoważność z tym, że jest izomorfizmem, czyli że obraz i jądro określają ten sam podobiekt $C_n$. To jest dokładność.
+\end{proof}
+\begin{twierdzenie}[Funktorialność i niezmienniczość homotopijna]\label{cat:thm:abelian-homology-functor}
+Dla ustalonego wyboru jąder, obrazów i kojąder $H_n$ jest funktorem addytywnym z kategorii kompleksów łańcuchowych do kategorii abelowej. Morfizmy homotopijne indukują ten sam morfizm homologii. Analogiczne twierdzenie obowiązuje dla kohomologii.
+\end{twierdzenie}
+\begin{proof}
+Dla morfizmu kompleksów $f:C_\bullet\to D_\bullet$ mamy $d_n^D f_nz_n^C=f_{n-1}d_n^Cz_n^C=0$. Istnieje jedyny $f_Z:Z_n^C\to Z_n^D$ z $z_n^Df_Z=f_nz_n^C$. Ponadto
+\[
+ f_nb_n^Ce_{n+1}^C=f_nd_{n+1}^C=d_{n+1}^Df_{n+1}
+ =b_n^De_{n+1}^Df_{n+1}.
+\]
+Jeśli $q$ jest kojądrem $b_n^D$, to $q f_nb_n^Ce_{n+1}^C=0$, a $e_{n+1}^C$ jest epi, więc $qf_nb_n^C=0$. Ponieważ $b_n^D=\ker q$ (twierdzenie~\ref{cat:thm:abelian-factorization}), istnieje jedyny $f_B:B_n^C\to B_n^D$ z $b_n^Df_B=f_nb_n^C$. Z monomorficzności $z_n^D$ wynika $f_Zj_n^C=j_n^Df_B$. Zatem $\pi_n^Df_Zj_n^C=0$, co daje jedyny morfizm $H_n(f)$ z $H_n(f)\pi_n^C=\pi_n^Df_Z$. Jednoznaczność konstrukcji na jądrach i kojądrach daje zachowywanie identyczności i złożeń. Addytywność wynika z równości $(f+g)_Z=f_Z+g_Z$ (składamy z mono $z_n^D$) i $(H_n(f)+H_n(g))\pi_n^C=\pi_n^D(f_Z+g_Z)$; skracamy epi $\pi_n^C$.
+
+Jeżeli $f-g=d^Dh+hd^C$, to $(f_n-g_n)z_n^C=d_{n+1}^Dh_nz_n^C=b_n^De_{n+1}^Dh_nz_n^C$. Po skróceniu mono $z_n^D$ otrzymujemy $f_Z-g_Z=j_n^De_{n+1}^Dh_nz_n^C$. Składając z $\pi_n^D$, otrzymujemy zero, więc $(H_n(f)-H_n(g))\pi_n^C=0$. Epimorficzność $\pi_n^C$ kończy dowód. Dla kompleksów kołańcuchowych zamieniamy $C_n$ na $C^{-n}$ i stosujemy dowód bez zmian.
+\end{proof}
+
+\subsection{Lewe i prawe funktory pochodne}
+\begin{definicja}[Funktory pochodne]\label{cat:def:derived-functors}
+Niech $F:\mathcal A\to\mathcal B$ będzie funktorem addytywnym między kategoriami abelowymi. Jeżeli $\mathcal A$ ma dostatecznie wiele obiektów rzutowych, wybieramy rezolucję rzutową $P_\bullet(X)\to X$ i kładziemy
+\[
+ L_nF(X)=H_n(F(P_\bullet(X)))\quad(n\ge0).
+\]
+Jeżeli $\mathcal A$ ma dostatecznie wiele obiektów injektywnych, wybieramy rezolucję injektywną $X\to I^\bullet(X)$ i kładziemy
+\[
+ R^nF(X)=H^n(F(I^\bullet(X)))\quad(n\ge0).
+\]
+W obu wzorach pomijamy augmentację lub koaugmentację przed zastosowaniem homologii. Addytywność $F$ zapewnia zachowanie morfizmów zerowych, zatem obrazy kompleksów pozostają kompleksami. Przy wyborach dotyczących wszystkich obiektów pracujemy w ustalonym uniwersum, w którym można dokonać takich wyborów.
+\end{definicja}
+\begin{twierdzenie}[Dobrze określone funktory pochodne]\label{cat:thm:derived-well-defined}
+Powyższe konstrukcje wyznaczają funktory addytywne, niezależne od wyboru rezolucji z dokładnością do kanonicznych izomorfizmów naturalnych zgodnych z kolejną zmianą wyborów.
+\end{twierdzenie}
+\begin{proof}
+Dla $u:X\to Y$ wybieramy podniesienie $f:P_\bullet(X)\to P_\bullet(Y)$ z twierdzenia~\ref{cat:thm:resolution-comparison}. Definiujemy $L_nF(u)=H_n(Ff)$. Dwa podniesienia są homotopijne; zastosowanie addytywnego $F$ do równań homotopii zachowuje wszystkie sumy i złożenia, więc ich obrazy pozostają homotopijne. Twierdzenie~\ref{cat:thm:abelian-homology-functor} daje tę samą strzałkę homologii. Złożenie podniesień podnosi złożenie morfizmów, identyczność podnosi identyczność, a suma podniesień podnosi sumę; stąd funktorialność i addytywność.
+Dla drugiego wyboru rezolucji $Q_\bullet(X)$ podniesienie $\id_X$ daje morfizm $P_\bullet(X)\to Q_\bullet(X)$. Podniesienie w drugą stronę jest jego odwrotnością z dokładnością do homotopii na mocy wniosku~\ref{cat:cor:resolution-homotopy-equivalence}. Po zastosowaniu $F$ i $H_n$ otrzymujemy izomorfizm $\alpha_X$. Dla $u:X\to Y$ oba złożenia w kwadracie naturalności przed zastosowaniem $F$ i $H_n$ podnoszą $u$ z $P_\bullet(X)$ do $Q_\bullet(Y)$, więc są homotopijne. Stąd kwadrat jest przemienny. Przy trzecim wyborze rezolucji złożenie dwóch izomorfizmów odpowiada kolejnemu podniesieniu $\id_X$, więc jest równe bezpośredniemu izomorfizmowi. Dla $R^nF$ stosujemy wniosek~\ref{cat:cor:injective-comparison} i kohomologiczną wersję twierdzenia~\ref{cat:thm:abelian-homology-functor}; wszystkie argumenty o podniesieniach zastępujemy przedłużeniami.
+\end{proof}
+\begin{stwierdzenie}[Stopień zerowy i zanikanie]\label{cat:prop:derived-degree-zero}
+Jeżeli $F$ jest prawostronnie dokładny, to $L_0F\cong F$ naturalnie. Jeżeli jest lewostronnie dokładny, to $R^0F\cong F$ naturalnie. Dla obiektu rzutowego $P$ mamy $L_nF(P)=0$ dla $n>0$, a dla injektywnego $I$ mamy $R^nF(I)=0$ dla $n>0$. Jeśli $\operatorname{pd}X\le r$, to $L_nF(X)=0$ dla $n>r$; dualnie dla wymiaru injektywnego.
+\end{stwierdzenie}
+\begin{proof}
+W rezolucji rzutowej $P_1\xrightarrow{d_1}P_0\xrightarrow{\epsilon}X\to0$ augmentacja jest kojądrem $d_1$: ich obraz i jądro są równe, a $\epsilon$ jest epi, więc własność uniwersalna kojądra $\ker\epsilon$ jest także własnością kojądra $d_1$. Prawostronna dokładność oznacza zachowywanie kojąder (twierdzenie~\ref{cat:thm:exact-functor-kernels}); zatem $F\epsilon$ jest kojądrem $Fd_1$. Ponieważ w kompleksie bez augmentacji $Z_0=FP_0$, mamy $L_0F(X)\cong FX$. Dla podniesienia $f$ morfizmu $u$ zachodzi $F\epsilon_Y Ff_0=Fu F\epsilon_X$; własność kojądra daje naturalność. Dualnie $F\eta$ jest jądrem $Fd^0$ dla lewostronnie dokładnego $F$, co daje naturalne $R^0F\cong F$.
+Dla $P$ wybieramy rezolucję z identycznością w stopniu zerowym i zerami w dodatnich stopniach. Funktor addytywny zachowuje obiekty zerowe, więc wyższe homologie są zerowe. Dla skończonej rezolucji długości $r$ obiekty w stopniach $n>r$ są zerowe i otrzymujemy to samo zanikanie. Argument injektywny jest dualny.
+\end{proof}
+\begin{stwierdzenie}\label{cat:prop:exact-derived-zero}
+Jeżeli $F$ jest dokładny, wszystkie jego istniejące funktory pochodne dodatniego stopnia znikają.
+\end{stwierdzenie}
+\begin{proof}
+Funktor dokładny zachowuje dokładność ciągów, w szczególności rezolucji z augmentacją lub koaugmentacją. Po usunięciu tych strzałek dokładność w dodatnich stopniach pozostaje bez zmian. Stwierdzenie~\ref{cat:prop:homology-zero} daje tezę.
+\end{proof}
