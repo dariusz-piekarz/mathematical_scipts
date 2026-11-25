@@ -35,6 +35,13 @@ class DependencyTraceTests(unittest.TestCase):
         self.assertEqual(offline.parse_trace(raw, cwd=P('/work')),
                          {P('/lib/libc.so.6'), P('/work/Fixture.lean'), P('/tools/bin/lean')})
 
+    def test_annotated_working_directory_and_empty_thread_trace(self):
+        raw = b'openat(AT_FDCWD</tools/lib>, "../bin/lean", O_RDONLY|O_CLOEXEC) = 3</tools/bin/lean>\n'
+        self.assertEqual(offline.parse_trace(raw, cwd=P('/work')), {P('/tools/bin/lean')})
+        self.assertEqual(offline.parse_trace(b'', cwd=P('/work'), allow_empty=True), set())
+        with self.assertRaises(ValueError):
+            offline.parse_trace(b'openat(AT_FDCWD, "truncated', cwd=P('/work'), allow_empty=True)
+
     def test_malformed_truncated_write_and_deleted_descriptors_are_rejected(self):
         for raw in (b'', b'openat(AT_FDCWD, "/x", O_RDONLY <unfinished ...>',
                     b'openat(AT_FDCWD, "/x", O_RDWR|O_CREAT) = 3</x>',

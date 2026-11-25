@@ -37,8 +37,8 @@ MAX_TRACE_FILES = 128
 SYSTEM_ROOTS = tuple(map(PurePosixPath, ("/lib", "/lib64", "/usr/lib")))
 SYSTEM_FILES = set(map(PurePosixPath, ("/etc/ld.so.cache", "/etc/locale.alias", "/etc/localtime", "/bin/busybox", "/usr/bin/busybox", "/usr/share/zoneinfo/Etc/UTC")))
 KERNEL_ROOTS = tuple(map(PurePosixPath, ("/proc", "/sys", "/dev")))
-OPEN = re.compile(r'^(?:\d+\s+)?openat\((AT_FDCWD|\d+<(/[^>]*)>), '
-                  r'("(?:[^"\\]|\\.)*"), ([^\n]*)\)\s+=\s+(\d+)<(/[^>]+)>$')
+OPEN = re.compile(r'^(?:\d+\s+)?openat\((?P<directory>AT_FDCWD(?:<(?P<cwd>/[^>]*)>)?|\d+<(?P<base>/[^>]*)>), '
+                  r'(?P<quoted>"(?:[^"\\]|\\.)*"), (?P<flags>[^\n]*)\)\s+=\s+(?P<fd>\d+)<(?P<resolved>/[^>]+)>$')
 
 
 def normalized(path: str) -> PurePosixPath:
@@ -50,7 +50,7 @@ def normalized(path: str) -> PurePosixPath:
     return value
 
 
-def parse_trace(raw: bytes, *, cwd: Path) -> set[Path]:
+def parse_trace(raw: bytes, *, cwd: Path, allow_empty=False) -> set[Path]:
     """Accept only complete, decoded, read-only successful openat records."""
     if len(raw) > MAX_TRACE_BYTES:
         raise ValueError("Dependency trace byte budget exceeded")
@@ -64,21 +64,22 @@ def parse_trace(raw: bytes, *, cwd: Path) -> set[Path]:
             continue
         match = OPEN.fullmatch(line)
         if not match:
-            raise ValueError("Incomplete or unexpected dependency trace")
-        directory, base, quoted, flags, _, resolved = match.groups()
+            raise ValueError("Incomplete or unexpected dependency trace: " + repr(line[:240]))
+        directory, base = match['directory'], match['base'] or match['cwd']
+        quoted, flags, resolved = match['quoted'], match['flags'], match['resolved']
         if any(token in flags for token in ("O_WRONLY", "O_RDWR", "O_CREAT", "O_TRUNC")):
             raise ValueError("Unexpected write in dependency trace")
         requested = ast.literal_eval(quoted)
         if type(requested) is not str:
             raise ValueError("Invalid dependency path literal")
         if not requested.startswith("/"):
-            requested = str((PurePosixPath(cwd) if directory == "AT_FDCWD" else PurePosixPath(base)) / requested)
+            requested = str((PurePosixPath(base) if base else PurePosixPath(cwd)) / requested)
         requested_path = normalized(requested)
         normalized(resolved)  # Reject deleted descriptors and nonportable names.
         paths.add(requested_path)
         if len(paths) > artifacts.MAX_ENTRIES:
             raise ValueError("Dependency trace entry budget exceeded")
-    if not paths:
+    if not paths and not allow_empty:
         raise ValueError("Empty dependency trace")
     return paths
 
@@ -337,9 +338,13 @@ def main() -> int:
         if not 1 <= len(traces) <= MAX_TRACE_FILES or sum(p.stat().st_size for p in traces) > MAX_TRACE_BYTES:
             raise ValueError("Aggregate dependency trace budget exceeded")
         paths = {lean, lake, Path("/bin/busybox")}
+        observed = set()
         for trace in traces:
             with trace.open("rb") as handle:
-                paths.update(parse_trace(handle.read(MAX_TRACE_BYTES + 1), cwd=work))
+                observed.update(parse_trace(handle.read(MAX_TRACE_BYTES + 1), cwd=work, allow_empty=True))
+        if not observed:
+            raise ValueError('No successful dependency reads were observed')
+        paths.update(observed)
         for binary in (lean, lake):
             paths.update(elf_dependencies(subprocess.check_output(
                 ["/usr/bin/ldd", str(binary)], env=observe_env, timeout=15)))
