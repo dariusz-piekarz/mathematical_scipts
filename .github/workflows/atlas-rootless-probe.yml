@@ -262,12 +262,14 @@ jobs:
           set -euo pipefail
           python3 -m scripts.lean_rootless_compiler_probe | tee "$RUNNER_TEMP/atlas-rootless-lean-core.log"
           grep -q '^ATLAS_ROOTLESS_LEAN_CORE ' "$RUNNER_TEMP/atlas-rootless-lean-core.log"
+          grep -q '^ATLAS_ROOTLESS_LEAN_REJECTED ' "$RUNNER_TEMP/atlas-rootless-lean-core.log"
       - name: Independently validate persisted fixed Lean report
         working-directory: application
         shell: bash
         run: |
           set -euo pipefail
           python3 -m scripts.lean_rootless_compiler_probe --validate-report "$RUNNER_TEMP/atlas-rootless-lean-core.json"
+          python3 -m scripts.lean_rootless_compiler_probe --validate-rejected-report "$RUNNER_TEMP/atlas-rootless-lean-rejected.json"
       - name: Upload fixed Lean core fixture evidence
         uses: actions/upload-artifact@v4
         with:
@@ -275,6 +277,7 @@ jobs:
           path: |
             ${{ runner.temp }}/atlas-rootless-lean-core.log
             ${{ runner.temp }}/atlas-rootless-lean-core.json
+            ${{ runner.temp }}/atlas-rootless-lean-rejected.json
           if-no-files-found: error
           retention-days: 30
       - name: Stop test daemon
