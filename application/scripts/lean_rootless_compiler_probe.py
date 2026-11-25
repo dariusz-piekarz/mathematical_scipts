@@ -13,14 +13,18 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import uuid
 
 from backend import lean_draft_runner as policy
 from backend import lean_draft_transport as transport
-from scripts.lean_rootless_ci_probe import cleanup_fixture, validate_exited_fixture
+from scripts.lean_rootless_ci_probe import (
+    cleanup_fixture, validate_exited_fixture, _read_report_json, MAX_REPORT_BYTES,
+)
 
 LEAN_VERSION = "4.26.0"
+LEAN_COMMIT = "d8204c9fd894f91bbb2cdfec5912ec8196fd8562"
 ARCHIVE_SHA256 = "873c252b1c6b1392e5720ad8d5a137aabbe72c9f96a930fdb5a1dd1ddc5da454"
 ARCHIVE_SIZE = 502305727
 SOURCE = """theorem atlas_isolated_fixture (p : Prop) : p → p := by
@@ -56,8 +60,10 @@ def verify_archive(path: Path) -> None:
 
 def validate_output(output: bytes) -> str:
     lines = output.decode("ascii").splitlines()
-    if (len(lines) != 2 or not re.fullmatch(
-            r"Lean \(version 4\.26\.0, x86_64-unknown-linux-gnu, commit [0-9a-f]{7,40}, Release\)", lines[0])
+    match = re.fullmatch(
+        r"Lean \(version 4\.26\.0, x86_64-unknown-linux-gnu, commit ([0-9a-f]{7,40}), Release\)",
+        lines[0]) if len(lines) == 2 else None
+    if (not match or not LEAN_COMMIT.startswith(match.group(1))
             or lines[1] != "'atlas_isolated_fixture' does not depend on any axioms"):
         raise ValueError("Unexpected fixed Lean compiler evidence")
     return lines[0]
@@ -86,10 +92,49 @@ def check_compiler(prefix: list[str], env: dict[str, str], image_id: str) -> dic
     finally:
         cleanup_fixture(cleanup_call, cid)
     return {"status": "trusted_core_fixture_compiled", "lean_version": version,
+            "compiler_output": output.decode("ascii"),
             "archive_sha256": ARCHIVE_SHA256, "source_sha256": hashlib.sha256(SOURCE.encode()).hexdigest(),
             "image_id": image_id, "container_id": cid, **state,
             "cleanup_status": "removed_verified", "execution_allowed": False,
             "proof_status": "not_run", "certificate": False}
+
+
+def validate_report(report: object, *, expected_sha: str) -> None:
+    """Validate the exact scoped evidence; never treat it as a draft certificate."""
+    fixed = {"status": "trusted_core_fixture_compiled",
+             "checkout_sha": expected_sha, "archive_sha256": ARCHIVE_SHA256,
+             "source_sha256": hashlib.sha256(SOURCE.encode()).hexdigest(),
+             "container_state": "exited", "exit_code": 0,
+             "cleanup_status": "removed_verified", "execution_allowed": False,
+             "proof_status": "not_run", "certificate": False}
+    variable = {"lean_version", "compiler_output", "image_id", "container_id"}
+    if (type(expected_sha) is not str or not re.fullmatch(r"[0-9a-f]{40}", expected_sha)
+            or type(report) is not dict or set(report) != set(fixed) | variable
+            or any(type(report[k]) is not type(v) or report[k] != v for k, v in fixed.items())
+            or any(type(report[k]) is not str for k in variable)
+            or not policy._IMAGE.fullmatch(report["image_id"])
+            or not transport._CONTAINER_ID.fullmatch(report["container_id"])):
+        raise ValueError("Invalid fixed Lean fixture report")
+    output = report["compiler_output"].encode("ascii")
+    if len(output) > transport.MAX_METADATA_BYTES or validate_output(output) != report["lean_version"]:
+        raise ValueError("Inconsistent fixed Lean compiler evidence")
+
+
+def read_report(path: Path, *, expected_sha: str) -> dict:
+    report = _read_report_json(path)
+    validate_report(report, expected_sha=expected_sha)
+    return report
+
+
+def write_report(path: Path, report: dict, *, expected_sha: str) -> None:
+    validate_report(report, expected_sha=expected_sha)
+    raw = (json.dumps(report, sort_keys=True, ensure_ascii=True, allow_nan=False) + "\n").encode("ascii")
+    if len(raw) > MAX_REPORT_BYTES:
+        raise ValueError("Fixed Lean report exceeds byte limit")
+    with path.open("xb") as handle:
+        handle.write(raw)
+    if read_report(path, expected_sha=expected_sha) != report:
+        raise ValueError("Fixed Lean report serialization mismatch")
 
 
 def stage_host_libraries(toolchain: Path, rootfs: Path) -> None:
@@ -168,9 +213,18 @@ def main() -> int:
             result = check_compiler(prefix, env, image_id)
         finally:
             transport._command(prefix, ("image", "rm", image_id), env)
-    print("ATLAS_ROOTLESS_LEAN_CORE " + json.dumps({**result, "checkout_sha": sha}, sort_keys=True), flush=True)
+    report = {**result, "checkout_sha": sha}
+    write_report(Path(os.environ["RUNNER_TEMP"]) / "atlas-rootless-lean-core.json",
+                 report, expected_sha=sha)
+    print("ATLAS_ROOTLESS_LEAN_CORE " + json.dumps(report, sort_keys=True), flush=True)
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    if len(sys.argv) == 3 and sys.argv[1] == "--validate-report":
+        read_report(Path(sys.argv[2]), expected_sha=os.environ.get("GITHUB_SHA", ""))
+        print("ATLAS_ROOTLESS_LEAN_CORE_REPORT_VALIDATED", flush=True)
+    elif len(sys.argv) == 1:
+        raise SystemExit(main())
+    else:
+        raise SystemExit("Unexpected CI fixture arguments")
