@@ -41,6 +41,25 @@ class Chapter30(unittest.TestCase):
         for x in map(F,(-4,-2,0,2,3)):
             self.assertEqual((2*x+3)/((x-1)**2*(x+1)),A/(x-1)+B/(x-1)**2+C/(x+1))
 
+    def test_mixed_partial_fraction_basis_rank(self):
+        # Q=(x-1)^2*(x^2+1)^2, N=6. After multiplying by Q,
+        # evaluate six candidate basis polynomials at six distinct points.
+        rows=[]
+        for x in map(F,(-3,-2,-1,0,2,3)):
+            p,q=x-1,x*x+1
+            rows.append([p*q*q,q*q,x*p*p*q,p*p*q,x*p*p,p*p])
+        # Exact Gaussian elimination over Q (no floating point rank test).
+        for k in range(6):
+            pivot=next((i for i in range(k,6) if rows[i][k]),None)
+            self.assertIsNotNone(pivot)
+            rows[k],rows[pivot]=rows[pivot],rows[k]
+            v=rows[k][k]
+            rows[k]=[a/v for a in rows[k]]
+            for i in range(k+1,6):
+                v=rows[i][k]
+                rows[i]=[a-v*b for a,b in zip(rows[i],rows[k])]
+        self.assertTrue(all(rows[k][k]==1 for k in range(6)))
+
     def test_repeated_quadratic_numerator_split(self):
         for b,c,B,C in ((F(2),F(3),F(4),F(-1)),(F(-3),F(5),F(-2),F(7))):
             d2=c-b*b/4
@@ -78,6 +97,18 @@ class Chapter30(unittest.TestCase):
         for x in (-2.,-1.,0.,1.,2.):
             h=1e-5
             self.assertAlmostEqual((G(x+h)-G(x-h))/(2*h),1/(2+cos(x)),places=7)
+
+    def test_weierstrass_branch_gluing(self):
+        from math import floor
+        jump=2*pi/sqrt(3)
+        G=lambda x:2/sqrt(3)*atan(tan(x/2)/sqrt(3))+jump*floor((x+pi)/(2*pi))
+        for k in (-2,-1,0,1,2):
+            c=(2*k+1)*pi
+            value=(2*k+1)*pi/sqrt(3)
+            self.assertAlmostEqual(pi/sqrt(3)+k*jump,-pi/sqrt(3)+(k+1)*jump)
+            for h in (-1e-4,1e-4):
+                self.assertAlmostEqual((G(c+h)-value)/h,1,places=6)
+        self.assertAlmostEqual(G(2*pi)-G(0),jump)
 
     def test_trig_root(self):
         for a in (1.,2.,5.):
