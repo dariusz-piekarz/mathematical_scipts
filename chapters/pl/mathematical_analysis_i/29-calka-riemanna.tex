@@ -1,0 +1,308 @@
+\chapter{Całka Riemanna}
+\label{ma1:ch:riemann-integral}
+
+W rozdziale \ref{ma1:ch:primitives} szukaliśmy funkcji o zadanej pochodnej. Teraz niezależnie od tego zagadnienia skonstruujemy całkę oznaczoną funkcji ograniczonej na przedziale domkniętym. Dopiero po tej konstrukcji wykażemy jej związek z funkcjami pierwotnymi.
+
+\section{Podziały przedziału i sumy Darboux}
+\begin{definicja}
+\label{ma1:def:riemann-partition}
+Niech $a<b$. Podziałem przedziału $[a,b]$ nazywamy skończony ciąg $P=(x_0,\ldots,x_n)$, gdzie $a=x_0<x_1<\cdots<x_n=b$. Oznaczamy $\Delta x_i=x_i-x_{i-1}$ oraz
+\[
+ |P|=\max_{1\le i\le n}\Delta x_i.
+\]
+Liczbę $|P|$ nazywamy średnicą podziału. Podział $Q$ jest rozdrobnieniem $P$, jeśli zawiera wszystkie jego punkty. Suma zbiorów punktów dwóch podziałów, uporządkowana rosnąco, jest ich wspólnym rozdrobnieniem.
+\end{definicja}
+\begin{definicja}
+\label{ma1:def:darboux-sums}
+Niech $f:[a,b]\to\R$ będzie ograniczona. Dla $I_i=[x_{i-1},x_i]$ definiujemy
+\[
+ m_i=\inf_{I_i}f,\qquad M_i=\sup_{I_i}f,\qquad
+ L(f,P)=\sum_{i=1}^n m_i\Delta x_i,\qquad
+ U(f,P)=\sum_{i=1}^n M_i\Delta x_i.
+\]
+Są to odpowiednio suma dolna i suma górna Darboux. Ich różnica wynosi $\sum_i\omega_i\Delta x_i$, gdzie $\omega_i=M_i-m_i$ jest oscylacją $f$ na $I_i$.
+\end{definicja}
+Kresy istnieją dzięki ograniczoności $f$ i zupełności $\R$. Nie muszą być osiągane. Jeżeli $f$ jest nieujemna, sumy można interpretować jako pola prostokątów zawartych pod wykresem i pokrywających obszar pod wykresem. Dla funkcji zmieniających znak są to sumy ze znakiem.
+
+\begin{center}
+\begin{tikzpicture}[x=5.2cm,y=3.2cm,>=Stealth]
+ \draw[->] (-.07,0)--(1.12,0) node[right] {$x$};
+ \draw[->] (0,-.07)--(0,1.15) node[above] {$y$};
+ \foreach \i in {0,1,2,3}{
+   \pgfmathsetmacro{\l}{\i/4}
+   \pgfmathsetmacro{\r}{(\i+1)/4}
+   \pgfmathsetmacro{\lo}{\l*\l}
+   \pgfmathsetmacro{\hi}{\r*\r}
+   \fill[blue!18] (\l,0) rectangle (\r,\lo);
+   \fill[orange!30] (\l,\lo) rectangle (\r,\hi);
+   \draw[orange!80!black] (\l,0) rectangle (\r,\hi);
+   \draw[blue!65!black] (\l,\lo)--(\r,\lo);
+ }
+ \draw[very thick,black,domain=0:1,samples=100] plot (\x,{\x*\x});
+ \foreach \i in {1,2,3,4}{
+   \pgfmathsetmacro{\t}{\i/4}
+   \draw (\t,-.018)--(\t,.018);
+   \node[below] at (\t,-.02) {$x_{\i}$};
+ }
+ \node[below left] at (0,0) {$x_0$};
+ \node[above left] at (.88,.83) {$f(x)=x^2$};
+\end{tikzpicture}
+
+\small Rysunek: suma dolna (niebieska) i suma górna (niebieska wraz z pomarańczową częścią) dla $f(x)=x^2$ i czterech równych podprzedziałów $[0,1]$. Pomarańczowa część przedstawia różnicę sum.
+\end{center}
+
+\begin{lemat}
+\label{ma1:lem:darboux-refinement}
+Jeżeli $Q$ jest rozdrobnieniem $P$, to
+\[
+ L(f,P)\le L(f,Q)\le U(f,Q)\le U(f,P).
+\]
+Ponadto dla dowolnych podziałów $P,R$ zachodzi $L(f,P)\le U(f,R)$.
+\end{lemat}
+\begin{proof}
+Każdy podprzedział $P$ jest sumą kolejnych podprzedziałów $Q$. Kres dolny na każdym mniejszym przedziale jest nie mniejszy niż kres dolny na większym, a kres górny jest nie większy niż kres górny na większym. Mnożymy te nierówności przez dodatnie długości mniejszych przedziałów i sumujemy; suma ich długości jest długością większego przedziału. Otrzymujemy zewnętrzne nierówności. Środkowa wynika z $m_i\le M_i$. Dla dowolnych $P,R$ bierzemy wspólne rozdrobnienie $Q$; wtedy $L(f,P)\le L(f,Q)\le U(f,Q)\le U(f,R)$.
+\end{proof}
+\begin{definicja}
+\label{ma1:def:riemann-integral}
+Dla ograniczonej $f$ definiujemy całkę dolną i górną:
+\[
+ \underline{\mathcal I}(f)=\sup_P L(f,P),\qquad
+ \overline{\mathcal I}(f)=\inf_P U(f,P).
+\]
+Jeżeli te liczby są równe, mówimy, że $f$ jest całkowalna w sensie Riemanna na $[a,b]$, a wspólną wartość oznaczamy przez $\int_a^b f(x)\,\dd x$.
+\end{definicja}
+Jeśli $m\le f\le M$, to wszystkie sumy leżą w $[m(b-a),M(b-a)]$. Oba kresy są więc skończone. Z lematu \ref{ma1:lem:darboux-refinement}, najpierw biorąc supremum po $P$, a następnie infimum po $R$, dostajemy $\underline{\mathcal I}(f)\le\overline{\mathcal I}(f)$.
+
+\begin{twierdzenie}[Kryterium Darboux]
+\label{ma1:thm:darboux-criterion}
+Funkcja ograniczona $f$ jest całkowalna na $[a,b]$ wtedy i tylko wtedy, gdy dla każdego $\varepsilon>0$ istnieje podział $P$ taki, że $U(f,P)-L(f,P)<\varepsilon$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli obie całki są równe $A$, z definicji kresów wybieramy $P,R$ takie, że $L(f,P)>A-\varepsilon/2$ i $U(f,R)<A+\varepsilon/2$. Dla wspólnego rozdrobnienia $Q$ mamy $U(f,Q)-L(f,Q)\le U(f,R)-L(f,P)<\varepsilon$. Odwrotnie, dla każdego podziału $P$ mamy
+\[
+ 0\le\overline{\mathcal I}(f)-\underline{\mathcal I}(f)
+ \le U(f,P)-L(f,P).
+\]
+Jeżeli prawa strona może być mniejsza od dowolnego $\varepsilon>0$, różnica całek jest zerowa.
+\end{proof}
+
+\section{Sumy Riemanna i równoważność konstrukcji}
+\begin{definicja}
+\label{ma1:def:riemann-sum}
+Dla podziału $P$ i punktów wyróżnionych $\xi_i\in[x_{i-1},x_i]$ definiujemy sumę Riemanna
+\[
+ S(f,P,\xi)=\sum_{i=1}^n f(\xi_i)\Delta x_i.
+\]
+Granica sum Riemanna przy $|P|\to0$ wynosi $A$, jeżeli dla każdego $\varepsilon>0$ istnieje $\delta>0$ takie, że dla każdego podziału $P$ o $|P|<\delta$ i każdego wyboru $\xi_i$ mamy $|S(f,P,\xi)-A|<\varepsilon$.
+\end{definicja}
+Zawsze $L(f,P)\le S(f,P,\xi)\le U(f,P)$, ponieważ $m_i\le f(\xi_i)\le M_i$.
+
+\begin{twierdzenie}
+\label{ma1:thm:riemann-darboux-equivalence}
+Dla ograniczonej $f$ całkowalność z definicji \ref{ma1:def:riemann-integral} jest równoważna istnieniu skończonej granicy sum Riemanna przy $|P|\to0$. W obu przypadkach otrzymujemy tę samą wartość.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy całkowalność i oznaczmy całkę przez $A$. Ustalmy $\varepsilon>0$ i podział $P_0$ z $U(f,P_0)-L(f,P_0)<\varepsilon/2$. Niech $k$ oznacza liczbę jego punktów wewnętrznych, a $B>0$ będzie ograniczeniem $|f|$.
+
+Dla dowolnego podziału $P$ weźmy wspólne rozdrobnienie $Q$ podziałów $P,P_0$. Podprzedział $P$ zmienia się w tym rozdrobnieniu tylko wtedy, gdy zawiera w swoim wnętrzu punkt $P_0$. Takich podprzedziałów jest co najwyżej $k$, a suma ich długości jest nie większa niż $k|P|$. Na każdym z nich zarówno stary wkład do sumy górnej, jak i suma nowych wkładów należą do przedziału $[-B\Delta x_i,B\Delta x_i]$. Różnica jest więc nie większa niż $2B\Delta x_i$. Analogicznie dla sumy dolnej. Z lematu \ref{ma1:lem:darboux-refinement} wynika
+\[
+ \begin{split}
+ U(f,P)&\le U(f,Q)+2Bk|P|\le U(f,P_0)+2Bk|P|,\\
+ L(f,P)&\ge L(f,Q)-2Bk|P|\ge L(f,P_0)-2Bk|P|.
+ \end{split}
+\]
+Ponieważ $L(f,P_0)\le A\le U(f,P_0)$, każda suma Riemanna dla $P$ spełnia
+\[
+ |S(f,P,\xi)-A|<\varepsilon/2+2Bk|P|.
+\]
+Wybieramy $\delta=\varepsilon/(4B(k+1))$. Wtedy prawa strona jest mniejsza od $\varepsilon$ dla $|P|<\delta$, niezależnie od wyboru punktów wyróżnionych.
+
+Odwrotnie, załóżmy warunek graniczny dla sum Riemanna z granicą $A$. Dla $\varepsilon>0$ wybieramy $\delta$ odpowiadające dokładności $\varepsilon/4$ i podział $P$ o średnicy mniejszej od $\delta$ (na przykład podział na $n$ równych części dla $n>(b-a)/\delta$). Z definicji kresów dla każdego $i$ można wybrać $\xi_i^+,\xi_i^-\in I_i$ tak, aby
+\[
+ M_i-f(\xi_i^+)<\frac{\varepsilon}{4(b-a)},\qquad
+ f(\xi_i^-)-m_i<\frac{\varepsilon}{4(b-a)}.
+\]
+Po pomnożeniu przez długości i zsumowaniu otrzymujemy
+$U(f,P)<S(f,P,\xi^+)+\varepsilon/4<A+\varepsilon/2$
+oraz $L(f,P)>S(f,P,\xi^-)-\varepsilon/4>A-\varepsilon/2$.
+Zatem $U(f,P)-L(f,P)<\varepsilon$. Kryterium Darboux daje całkowalność. Ponadto zarówno całka, jak i $A$ leżą pomiędzy $A-\varepsilon/2$ i $A+\varepsilon/2$ (dla całki wynika to z oszacowań sum). Dowolność $\varepsilon$ daje równość wartości.
+\end{proof}
+Istotna jest dowolność podziałów i punktów wyróżnionych. Zbieżność sum dla jednego szczególnego ciągu podziałów i jednego wyboru punktów nie wystarcza.
+
+\section{Kryteria całkowalności i kontrprzykłady}
+\begin{twierdzenie}
+\label{ma1:thm:riemann-continuous}
+Każda funkcja ciągła $f:[a,b]\to\R$ jest całkowalna.
+\end{twierdzenie}
+\begin{proof}
+Funkcja jest ograniczona z twierdzenia \ref{ma1:cor:interval-extrema} i jednostajnie ciągła z twierdzenia \ref{ma1:cor:interval-uniform}. Dla $\varepsilon>0$ istnieje $\delta>0$ takie, że $|f(s)-f(t)|<\varepsilon/(2(b-a))$ dla $|s-t|<\delta$. Dla podziału o $|P|<\delta$ oscylacja na każdym $I_i$ jest nie większa niż $\varepsilon/(2(b-a))$ (możemy wziąć punkty osiągania maksimum i minimum). Stąd $U(f,P)-L(f,P)\le\varepsilon/2<\varepsilon$. Stosujemy kryterium Darboux.
+\end{proof}
+\begin{twierdzenie}
+\label{ma1:thm:riemann-monotone}
+Każda funkcja monotoniczna $f:[a,b]\to\R$ jest całkowalna.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $f$ jest niemalejąca, to $m_i=f(x_{i-1})$, $M_i=f(x_i)$, a wartości funkcji leżą pomiędzy $f(a)$ i $f(b)$. Zatem
+\[
+ U(f,P)-L(f,P)\le |P|\sum_i(f(x_i)-f(x_{i-1}))
+ =|P|(f(b)-f(a)).
+\]
+Podziały o dowolnie małej średnicy dają kryterium Darboux. Dla funkcji nierosnącej mamy $m_i=f(x_i)$ i $M_i=f(x_{i-1})$; ten sam rachunek daje oszacowanie $|P|(f(a)-f(b))$.
+\end{proof}
+\begin{twierdzenie}
+\label{ma1:thm:riemann-finite-discontinuities}
+Funkcja ograniczona na $[a,b]$ i ciągła poza skończonym zbiorem punktów jest całkowalna.
+\end{twierdzenie}
+\begin{proof}
+Niech $|f|\le B$ dla $B>0$, a zbiór możliwych nieciągłości ma $k$ punktów. Gdy $k=0$, stosujemy twierdzenie \ref{ma1:thm:riemann-continuous}. Gdy $k>0$, dla każdego z tych punktów wybieramy przedział domknięty w $[a,b]$ o dodatniej długości, zawierający ten punkt w swoim wnętrzu względem $[a,b]$. Wybieramy je parami rozłączne (można użyć promieni mniejszych od połowy najmniejszej dodatniej odległości między punktami, a dla pojedynczego punktu dowolnie małego promienia). Dobieramy ich długości tak, by ich suma była mniejsza od $\varepsilon/(4B)$. Włączamy końce tych przedziałów do podziału. Na nich łączny wkład do różnicy sum jest mniejszy od $2B\varepsilon/(4B)=\varepsilon/2$.
+
+Pozostałe odcinki o dodatniej długości pomiędzy tymi przedziałami są domknięte i nie zawierają punktów nieciągłości: końce wewnętrzne wybranych przedziałów nie są tymi punktami. Na każdym z tych odcinków funkcja jest ciągła. Jest ich skończenie wiele, powiedzmy $\ell$. Jeżeli $\ell>0$, wybieramy na każdym podział z różnicą sum mniejszą od $\varepsilon/(2\ell)$ na mocy twierdzenia \ref{ma1:thm:riemann-continuous} i kryterium Darboux. Łączymy wszystkie podziały. Wkłady na pozostałych odcinkach sumują się do mniej niż $\varepsilon/2$; gdy $\ell=0$, ich wkład wynosi zero. Cała różnica sum jest mniejsza od $\varepsilon$.
+\end{proof}
+\begin{przyklad}
+\label{ma1:ex:riemann-dirichlet}
+Funkcja $\chi_{\Q\cap[a,b]}$ nie jest całkowalna, gdy $a<b$. Każdy podprzedział dodatniej długości zawiera liczbę wymierną oraz niewymierną, więc jego kresy wynoszą $0$ i $1$. Dla przypomnienia: między $u<v$ wybieramy liczbę całkowitą $n$ z $n(v-u)>1$, a następnie całkowite $m$ z $nu<m<nv$; wtedy $m/n\in(u,v)$. Wybierając wymierną w $(u-\sqrt2,v-\sqrt2)$ i dodając $\sqrt2$, otrzymujemy liczbę niewymierną w $(u,v)$. Stąd dla każdego podziału $L=0$, $U=b-a$, co przeczy kryterium Darboux. Sumy z samymi punktami wymiernymi wynoszą $b-a$, a z samymi niewymiernymi zero, nawet dla dowolnie małych średnic.
+\end{przyklad}
+
+\section{Własności całki oznaczonej}
+\begin{twierdzenie}
+\label{ma1:thm:riemann-algebra}
+Jeżeli $f,g$ są całkowalne na $[a,b]$ oraz $\alpha,\beta\in\R$, to $\alpha f+\beta g$, $fg$ oraz $|f|$ są całkowalne. Ponadto
+\[
+ \int_a^b(\alpha f+\beta g)\,\dd x
+ =\alpha\int_a^b f\,\dd x+\beta\int_a^b g\,\dd x.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla każdego podziału z punktami wyróżnionymi suma Riemanna funkcji $\alpha f+\beta g$ jest sumą odpowiednich sum pomnożonych przez skalary. Jeżeli $A,C$ oznaczają całki $f,g$, to dla zadanej $\varepsilon>0$ wybieramy wspólną średnicę graniczną dla dokładności $\varepsilon/(1+|\alpha|+|\beta|)$ obu sum. Nierówność trójkąta daje błąd mniejszy od $\varepsilon$ względem $\alpha A+\beta C$. Twierdzenie \ref{ma1:thm:riemann-darboux-equivalence} dowodzi całkowalności i wzoru.
+
+Niech $|f|,|g|\le B$ dla $B>0$. Dla dowolnych $s,t$ w jednym podprzedziale
+\[
+ |f(s)g(s)-f(t)g(t)|\le B|g(s)-g(t)|+B|f(s)-f(t)|.
+\]
+Oscylacja ograniczonej funkcji $h$ na niepustym zbiorze jest równa $\sup_{s,t}|h(s)-h(t)|$: nierówność w jedną stronę wynika z kresów, a w drugą z przybliżania kresu górnego i dolnego dowolnie dokładnie. Zatem oscylacja iloczynu na podprzedziale jest nie większa niż $B$ razy suma oscylacji czynników. Wybieramy wspólne rozdrobnienie podziałów, dla których różnice sum $f$ i $g$ są mniejsze od $\varepsilon/(2B)$. Na nim różnice nadal spełniają te oszacowania, więc różnica sum iloczynu jest mniejsza od $\varepsilon$. Dla modułu korzystamy z $||f(s)|-|f(t)||\le |f(s)-f(t)|$, co daje nie większą oscylację niż dla $f$. Kryterium Darboux kończy dowód.
+\end{proof}
+
+\begin{twierdzenie}
+\label{ma1:thm:riemann-order}
+Dla całkowalnych $f,g$ na $[a,b]$ z $f\le g$ wynika $\int_a^b f\,\dd x\le\int_a^b g\,\dd x$. Jeżeli $m\le f\le M$, to
+\[
+ m(b-a)\le\int_a^b f\,\dd x\le M(b-a),\qquad
+ \left|\int_a^b f\,\dd x\right|\le\int_a^b |f|\,\dd x.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla każdego podziału $S(f,P,\xi)\le S(g,P,\xi)$, więc przejście do granicy zachowuje nieostrą nierówność. Całka funkcji stałej $c$ wynosi $c(b-a)$, gdyż każda jej suma Riemanna jest równa tej liczbie. Porównujemy $f$ z funkcjami stałymi $m,M$. Nierówności $-|f|\le f\le |f|$ wraz z liniowością i całkowalnością modułu dają ostatnią tezę.
+\end{proof}
+
+\begin{twierdzenie}[Addytywność względem przedziału]
+\label{ma1:thm:riemann-additivity}
+Niech $a<c<b$ i niech $f$ będzie ograniczona na $[a,b]$. Jest ona całkowalna na $[a,b]$ wtedy i tylko wtedy, gdy jej ograniczenia do $[a,c]$ i $[c,b]$ są całkowalne. Wówczas
+\[
+ \int_a^b f\,\dd x=\int_a^c f\,\dd x+\int_c^b f\,\dd x.
+\]
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $f$ jest całkowalna na całym przedziale, dla $\varepsilon>0$ wybieramy podział z różnicą sum mniejszą od $\varepsilon$ i dodajemy do niego punkt $c$. Różnica nie wzrasta. Jest ona sumą dwóch nieujemnych różnic dla podziałów ograniczonych do obu przedziałów, więc każda z nich jest mniejsza od $\varepsilon$. Kryterium Darboux daje całkowalność ograniczeń.
+
+Odwrotnie, dla obu ograniczeń wybieramy podziały z różnicą sum mniejszą od $\varepsilon/2$ i łączymy je. Różnica sum na całym przedziale jest sumą obu różnic, więc jest mniejsza od $\varepsilon$. Aby wyznaczyć wartość całki, oznaczmy całki na obu częściach przez $A_1,A_2$. Dla połączonego podziału $P$ liczba $A_1+A_2$ leży pomiędzy $L(f,P)$ i $U(f,P)$, podobnie jak całka na całym przedziale. Moduł różnicy tych dwóch liczb jest mniejszy od $\varepsilon$. Dowolność $\varepsilon$ daje wzór.
+\end{proof}
+Przyjmujemy $\int_a^a f\,\dd x=0$ oraz $\int_b^a f\,\dd x=-\int_a^b f\,\dd x$ dla $a<b$. Wówczas addytywność zachodzi dla dowolnego porządku trzech końców: porządkujemy je rosnąco, stosujemy dowiedziony wzór i w razie potrzeby przenosimy składniki na drugą stronę, używając zmiany znaku. Z twierdzenia \ref{ma1:thm:riemann-additivity} wynika też całkowalność na każdym domkniętym podprzedziale.
+
+\begin{wniosek}
+\label{ma1:cor:riemann-finite-changes}
+Zmiana wartości funkcji całkowalnej w skończonej liczbie punktów nie zmienia jej całkowalności ani wartości całki.
+\end{wniosek}
+\begin{proof}
+Niech $g$ różni się od $f$ jedynie w $k$ punktach. Różnica $h=g-f$ jest ograniczona, powiedzmy $|h|\le B$, oraz zerowa poza tymi punktami. Dla dowolnego podziału co najwyżej $2k$ jego podprzedziałów zawiera któryś z tych punktów (punkt może być wspólnym końcem dwóch). Zatem $|S(h,P,\xi)|\le 2kB|P|$. Sumy dążą do zera przy $|P|\to0$, więc $h$ jest całkowalna i jej całka wynosi zero. Liniowość dla $g=f+h$ daje tezę.
+\end{proof}
+
+\section{Twierdzenie o wartości średniej i przykłady}
+\begin{twierdzenie}[O wartości średniej dla całek]
+\label{ma1:thm:riemann-mean-value}
+Niech $f$ będzie ciągła na $[a,b]$ i niech $g$ będzie całkowalna oraz nieujemna. Istnieje $\xi\in[a,b]$ takie, że
+\[
+ \int_a^b fg\,\dd x=f(\xi)\int_a^b g\,\dd x.
+\]
+W szczególności $\int_a^b f\,\dd x=f(\xi)(b-a)$ dla pewnego $\xi\in[a,b]$.
+\end{twierdzenie}
+\begin{proof}
+Niech $m,M$ będą minimum i maksimum $f$, istniejące z twierdzenia \ref{ma1:cor:interval-extrema}. Z $g\ge0$ wynika $mg\le fg\le Mg$. Całkowalność iloczynu i porównanie całek dają
+$m\int g\le\int fg\le M\int g$, gdzie wszystkie całki są po $[a,b]$.
+Jeżeli $\int g=0$, to również $\int fg=0$, więc dowolne $\xi$ spełnia wzór. Jeżeli $\int g>0$, dzielimy przez tę liczbę i otrzymujemy iloraz leżący w $[m,M]$. Twierdzenie o wartości pośredniej \ref{ma1:thm:intermediate-value} daje punkt $\xi$ o tej wartości $f$. Wybór $g=1$ daje szczególny przypadek.
+\end{proof}
+\begin{przyklad}
+\label{ma1:ex:riemann-square}
+Obliczymy $\int_0^1 x^2\,\dd x$ bez użycia funkcji pierwotnej. Dla podziału na $n$ równych części i prawych końców jako punktów wyróżnionych otrzymujemy
+\[
+ S_n=\frac1{n^3}\sum_{i=1}^n i^2
+ =\frac{n(n+1)(2n+1)}{6n^3}.
+\]
+Tożsamość dla sumy kwadratów wynika z indukcji: dla $n=1$ jest oczywista, a po dodaniu $(n+1)^2$ do prawej strony dostajemy $(n+1)(n+2)(2n+3)/6$. Ponieważ $|P_n|=1/n\to0$ i $x^2$ jest ciągła, twierdzenie \ref{ma1:thm:riemann-darboux-equivalence} daje całkę równą $\lim S_n=1/3$.
+\end{przyklad}
+\begin{przyklad}
+\label{ma1:ex:riemann-step}
+Dla $a<c<b$ funkcja $\chi_{[c,b]}$ na $[a,b]$ jest całkowalna (ma tylko jedną nieciągłość). Na $[a,c]$ różni się od zera wyłącznie w $c$, więc jej całka na tym przedziale jest zerowa. Na $[c,b]$ jest stała równa $1$, więc całka wynosi $b-c$. Addytywność daje $\int_a^b\chi_{[c,b]}(x)\,\dd x=b-c$.
+\end{przyklad}
+
+\section{Podstawowe twierdzenie rachunku całkowego}
+\begin{twierdzenie}
+\label{ma1:thm:riemann-fundamental}
+Niech $f$ będzie całkowalna na $[a,b]$ i $x_0\in[a,b]$. Funkcja
+\[
+ F(x)=\int_{x_0}^x f(t)\,\dd t,\qquad x\in[a,b],
+\]
+jest ciągła na $[a,b]$. Jeżeli $f$ jest ciągła w $x\in(a,b)$, to $F$ jest różniczkowalna w $x$ i $F'(x)=f(x)$. Przy ciągłości jednostronnej $f$ na końcu analogiczna równość zachodzi dla pochodnej jednostronnej.
+\end{twierdzenie}
+\begin{proof}
+Niech $|f|\le B$ na $[a,b]$. Addytywność i oszacowanie całki dają dla $u<v$
+\[
+ |F(v)-F(u)|=\left|\int_u^v f(t)\,\dd t\right|\le B(v-u).
+\]
+A zatem $F$ jest Lipschitzowska (dla $B=0$ jest stała), w szczególności ciągła.
+
+Ustalmy punkt $x$ ciągłości $f$ i przyrost $h\ne0$ taki, że $x+h\in[a,b]$. Addytywność, liniowość i całka funkcji stałej dają
+\[
+ \frac{F(x+h)-F(x)}h-f(x)
+ =\frac1h\int_x^{x+h}(f(t)-f(x))\,\dd t.
+\]
+Dla $\varepsilon>0$ z ciągłości $f$ wybieramy $\delta>0$, aby $|f(t)-f(x)|<\varepsilon/2$, gdy $|t-x|<\delta$ i $t\in[a,b]$. Jeżeli $0<|h|<\delta$, każdy $t$ pomiędzy $x$ i $x+h$ spełnia ten warunek. Stosując oszacowanie całki na przedziale z końcami w kolejności rosnącej, otrzymujemy
+\[
+ \left|\frac{F(x+h)-F(x)}h-f(x)\right|
+ \le\frac{\varepsilon}{2|h|}|h|=\frac{\varepsilon}{2}<\varepsilon.
+\]
+Z definicji pochodnej dostajemy $F'(x)=f(x)$. Przy końcu przedziału używamy jedynie dopuszczalnych przyrostów i ciągłości z odpowiedniej strony.
+\end{proof}
+\begin{wniosek}
+\label{ma1:cor:continuous-primitive-existence}
+Każda funkcja ciągła $f$ na niepustym otwartym przedziale $I$ ma funkcję pierwotną. Dla $x_0\in I$ dokładnie jedna z nich spełnia warunek $F(x_0)=0$ i jest dana wzorem
+\[
+ F(x)=\int_{x_0}^x f(t)\,\dd t.
+\]
+\end{wniosek}
+\begin{proof}
+Dla każdego $x\in I$ domknięty odcinek o końcach $x_0,x$ zawiera się w $I$. Całka jest określona przez twierdzenie \ref{ma1:thm:riemann-continuous} i konwencję orientacji. Aby sprawdzić pochodną w ustalonym $x$, wybieramy domknięty przedział zawarty w $I$, zawierający $x_0$ oraz $x$ we wnętrzu. Na tym przedziale stosujemy twierdzenie \ref{ma1:thm:riemann-fundamental}; otrzymujemy $F'(x)=f(x)$. Całka od $x_0$ do $x_0$ wynosi zero. Jednoznaczność wynika z wniosku \ref{ma1:cor:primitive-normalization}.
+\end{proof}
+Tym samym udowodniliśmy zapowiedź z rozdziału \ref{ma1:ch:primitives}.
+
+\begin{twierdzenie}[Wzór Newtona--Leibniza]
+\label{ma1:thm:newton-leibniz}
+Niech $f$ będzie całkowalna na $[a,b]$. Jeżeli $G$ jest ciągła na $[a,b]$, różniczkowalna na $(a,b)$ i $G'=f$ w jego wnętrzu, to
+\[
+ \int_a^b f(x)\,\dd x=G(b)-G(a).
+\]
+Nie wymagamy istnienia pochodnych na końcach.
+\end{twierdzenie}
+\begin{proof}
+Na każdym podprzedziale $[x_{i-1},x_i]$ twierdzenie Lagrange'a \ref{ma1:thm:lagrange} daje $\xi_i\in(x_{i-1},x_i)$ takie, że $G(x_i)-G(x_{i-1})=G'(\xi_i)\Delta x_i=f(\xi_i)\Delta x_i$. Sumując, otrzymujemy dokładnie $G(b)-G(a)=S(f,P,\xi)$. Wybieramy podziały na $n$ równych części i odpowiadające im punkty z twierdzenia Lagrange'a. Ich średnice dążą do zera, a całkowalność $f$ i twierdzenie \ref{ma1:thm:riemann-darboux-equivalence} dają granicę sum równą całce. Lewa strona równości dla sum jest niezależna od podziału, więc otrzymujemy tezę.
+\end{proof}
+Dla funkcji ciągłej można także odjąć od $G$ funkcję $F$ z twierdzenia \ref{ma1:thm:riemann-fundamental}. Różnica ma zerową pochodną we wnętrzu i jest ciągła na końcach, więc jest stała z twierdzenia Lagrange'a. Powyższy dowód obejmuje jednak również całkowalne pochodne nieciągłe.
+
+\begin{przyklad}
+\label{ma1:ex:riemann-newton-leibniz}
+Z tablicy funkcji pierwotnych w rozdziale \ref{ma1:ch:primitives} i wzoru Newtona--Leibniza otrzymujemy
+\[
+ \int_0^1 x^2\,\dd x=\left[\frac{x^3}{3}\right]_0^1=\frac13,\qquad
+ \int_1^2\frac{\dd x}{x}=[\log x]_1^2=\log2.
+\]
+Zapis $[G(x)]_a^b$ oznacza $G(b)-G(a)$, a nie iloraz. Oba integrandy są ciągłe na wskazanych przedziałach, więc są całkowalne. Na przedziale przecinającym zero nie wolno stosować drugiego wzoru, gdyż $1/x$ nie jest tam określona i ograniczona. Całki niewłaściwe omówimy osobno.
+\end{przyklad}
