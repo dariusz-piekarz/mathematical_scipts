@@ -1,4 +1,4 @@
-# Analiza matematyczna II — 47 rozdziałów
+# Analiza matematyczna II — 46 rozdziałów
 
 Kurs inspirowany wykładami Marka Jarnickiego, Wykłady z Analizy Matematycznej I, II, III, IV, wersja 9 stycznia 2022, [PDF UJ](https://apps.usos.uj.edu.pl/apps/f/Q9qBncrH/analiza-19-20-21%20%281%29.pdf), spis treści s. 4–6. Kolejność dostosowana do dyspozycji użytkownika: po ciągłości rachunek różniczkowy, bezpośrednio po nim rachunek całkowy, następnie całkowanie wielowymiarowe i na podrozmaitościach, a pozostałe zagadnienia później. W oryginale Jarnickiego szeregi i całki jednowymiarowe są w AM II (§6–8), różniczkowanie i podrozmaitości w AM III (§9–11), miara, całkowanie na podrozmaitościach i Stokes w AM IV (§12–14). Nie kopiujemy podziału na semestry, lecz wykorzystujemy zależności merytoryczne.
 
@@ -49,23 +49,22 @@ Kurs inspirowany wykładami Marka Jarnickiego, Wykłady z Analizy Matematycznej 
 34. Całki powierzchniowe drugiego rodzaju i strumień (DG 10–11)
 35. Całkowanie po podrozmaitościach dowolnego wymiaru, formy, Green, Gauss–Ostrogradski i Stokes (DG 01, 10–11, ME 26–28); orientacja, miara indukowana, macierz Grama, forma objętości, całkowanie form, brzeg; ME 26–27, DG 10–11
 
-## V. Szeregi potęgowe, funkcje analityczne i aproksymacja
+## V. Szeregi potęgowe, rzeczywiste funkcje analityczne i aproksymacja
 
 36. Szeregi potęgowe (nowe)
-37. Zespolone funkcje elementarne (AM I 18)
-38. Funkcje analityczne (nowe, AF 31)
-39. Szeregi Taylora (AM I 23)
-40. Aproksymacja, Weierstrass i Stone–Weierstrass (AF)
+37. Rzeczywiste funkcje analityczne (lokalna reprezentacja szeregiem potęgowym; teoria holomorficzna w osobnym tomie)
+38. Szeregi Taylora funkcji rzeczywistych (AM I 23)
+39. Aproksymacja, Weierstrass i Stone–Weierstrass (AF)
 
 ## VI. Analiza Fouriera
 
-41. Układy ortogonalne w przestrzeniach Hilberta (AF 13)
-42. Trygonometryczne szeregi Fouriera (PDE 06)
-43. Jądro Dirichleta, Riemann–Lebesgue, Dini (nowe)
-44. Jądro Fejéra i średnie Cesàro (PDE 06, AM I 13)
-45. Zbieżność jednostajna szeregów Fouriera (nowe)
-46. Wahanie ograniczone i Dirichlet–Jordan (TC 03, ME 29)
-47. Rozbieżność i zjawisko Gibbsa (AF, PDE)
+40. Układy ortogonalne w przestrzeniach Hilberta (AF 13)
+41. Trygonometryczne szeregi Fouriera (PDE 06)
+42. Jądro Dirichleta, Riemann–Lebesgue, Dini (nowe)
+43. Jądro Fejéra i średnie Cesàro (PDE 06, AM I 13)
+44. Zbieżność jednostajna szeregów Fouriera (nowe)
+45. Wahanie ograniczone i Dirichlet–Jordan (TC 03, ME 29)
+46. Rozbieżność i zjawisko Gibbsa (AF, PDE)
 
 ## Ponowne wykorzystanie — obowiązkowy etap przed opracowaniem rozdziału
 
@@ -90,3 +89,7 @@ Wynik udowodniony w AM I lub innym skrypcie przytaczamy w AM II z pełnymi potrz
 ## Migracja numeracji
 
 Dawny numer 11 → docelowy 36; dawny numer 12 → docelowy 37. Raporty historyczne pozostają bez zmian merytorycznych; stare numery w ich treści oznaczają numerację w chwili audytu. Źródła LaTeX i etykiety ma2:* zachowane bajtowo. Tymczasowo entrypoint ustawia licznik rozdziału na 35 przed rozdziałem 36, dzięki czemu PDF i ścieżki mają zgodną numerację docelową; nie tworzy się pustych rozdziałów 11–35. Po uzupełnieniu luki usunąć tymczasowy setcounter. Migracja wymaga odrębnego CI oraz kontroli składu PDF.
+
+## Aktualizacja zakresu
+
+Dawny rozdział 37 o zespolonych funkcjach elementarnych przeniesiono wraz z raportem do `docs/pl/complex_analysis_materials/`, bez zmiany treści i etykiet. Nie należy do aktywnego AM II ani katalogu. Dawne planowane 38–47 otrzymują numery 37–46; funkcje analityczne i szeregi Taylora dotyczą funkcji rzeczywistych. Szeregi potęgowe pozostają jako ogólny rachunek szeregów. Rozdziały 01–36 nie zmieniają numeracji. Wpisy powyżej o migracji do 37 dokumentują historię. Przy przyszłym włączeniu do analizy zespolonej rozwiązać zależności od AM II 36 i ponownie skompilować.
