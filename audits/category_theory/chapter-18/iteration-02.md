@@ -1,0 +1,3 @@
+# CAT-18 — stabilizacja II
+
+Wejście b6e8590d307369186568cdede64190e22dcdca0b. Ponownie sprawdzono notację i podsumowanie. Uzupełniono Top_*, kwantyfikatory obrazowe, transpozycję wykładniczą, funktory obu sprzężeń monady. Doprecyzowano kierunki włożenia Yonedy, kryterium równoważności dla małych kategorii, związek pełnej wierności z jednostką/kojednostką, hipotezę wykładniczości w Top oraz warunki abelowości. Słownik 52 pozycji, 33 wystąpień odsyłaczy. Dodano CAT-18-004, zachowano etykiety, kontrola środowisk JS PASS. CI #45631003805 job 139263864957: etap testów Python SUCCESS, kompilacja w toku podczas kontroli. Nie zweryfikowano jeszcze aktualnego PDF ani nowych testów. Lean nie uruchamiano.
