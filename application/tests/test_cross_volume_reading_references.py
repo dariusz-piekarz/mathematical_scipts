@@ -130,11 +130,11 @@ class CrossVolumeReadingReferencesTest(unittest.TestCase):
                     " LEFT JOIN entities t ON r.target_entity=t.id"
                     " WHERE r.command='atlasref' AND r.source_document LIKE 'ALG-%'"
                 ).fetchall()
-                expected = {(s, lab, dst) for s, labels in expected_labels.items()
+                expected = {(s, dst + "::" + lab, dst) for s, labels in expected_labels.items()
                             for lab, dst in labels.items()}
                 found = {(r["source_document"], r["target_label"], r["target_document"])
                          for r in rows}
-                self.assertTrue(expected <= found)
+                self.assertFalse(expected - found, expected - found)
                 for row in rows:
                     if (row["source_document"], row["target_label"], row["target_document"]) in expected:
                         self.assertIn(row["status"], {"resolved", "external_resolved", "alias_resolved"})
