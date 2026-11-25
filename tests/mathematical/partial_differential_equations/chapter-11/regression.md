@@ -17,5 +17,23 @@ Kryteria semantyczne są punktami ręcznego audytu matematycznego, a nie formaln
 | PDE-11-011 | thm:pde11-riesz | F=0, domknięte właściwe jądro F niezerowego, rzut x na jądro i niezerowy wektor prostopadły, F(e) != 0. | semantyczna |
 | PDE-11-012 | thm:pde11-riesz | Konstrukcja reprezentanta przez odjęcie składowej e; jednoznaczność przez podstawienie różnicy, równość norm, liniowość i surjektywność izometrii. | semantyczna |
 
+| PDE-11-013 | def:pde11-coercivity | Definicje ograniczoności i koercywności; jawny niesymetryczny przykład i jego stałe. | semantyczna |
+| PDE-11-014 | thm:pde11-LM | Przestrzeń zerowa osobno; dla niezerowej przestrzeni 0<alpha<=M. | semantyczna |
+| PDE-11-015 | thm:pde11-LM | Reprezentacja formy przez Riesza, liniowość T, norma operatora, równoważność równania Tu=f. | semantyczna |
+| PDE-11-016 | thm:pde11-LM | Rozwinięcie kwadratu, zakres t, nieujemność podpierwiastkowa i minimum oszacowania q. | semantyczna |
+| PDE-11-017 | thm:pde11-LM | Przypadek q=0, indukcja dla kolejnych różnic i suma geometryczna. | semantyczna |
+| PDE-11-018 | thm:pde11-LM | Zupełność, ciągłość S_t, punkt stały, oszacowanie błędu iteracji. | semantyczna |
+| PDE-11-019 | thm:pde11-LM | Jednoznaczność z koercywności, oszacowanie rozwiązania, bijekcja T i ograniczoność odwrotności. | semantyczna |
+| PDE-11-020 | cor:pde11-stability | Stabilność różnicy rozwiązań względem funkcjonału; poprawność Hadamarda dla ustalonej formy. | semantyczna |
+| PDE-11-021 | thm:pde11-elliptic | Normy macierzy i wektorów, mierzalność i całkowalność składników, dwuliniowość. | semantyczna |
+| PDE-11-022 | thm:pde11-elliptic | Ograniczoność i koercywność z eliptyczności, c>=0, bez symetrii; oszacowanie rozwiązania. | semantyczna |
+| PDE-11-023 | thm:pde11-elliptic | Tożsamość dystrybucyjna i jej odwrotność przez gęstość testów; ogólny F. | semantyczna |
+| PDE-11-024 | ex:pde11-1d | Jawne rozwiązanie, pochodne, zerowy ślad, gęstość i jednoznaczność. | semantyczna |
+| PDE-11-025 | thm:pde11-lower-order | Wspólny zbiór pełnej miary przez wymierne wektory, ograniczoność wszystkich trzech składników, stała koercywności. | semantyczna |
+| PDE-11-026 | ex:pde11-divfree-drift | Zanik składnika dryftu przez test u², jawne oszacowanie różnicy przy aproksymacji, brak warunku małości. | semantyczna |
+
 ## Iteracja 167 — pierwsza lektura 001–012
 Odczytano aktualny rozdział 11 (966 wierszy przed zmianami), potwierdzono włączenie do książki na pozycji 11. Nie znaleziono dotychczasowego rejestru chapter-11/regression.md (404). Źródło przed b06d7b5554c8b06dc80c53dea0050681bc971f61, po f0e5cde93e447288a38ec2d86bc32a12968138cd, commit c9f1a3afb35242d756013126e8d7734e2cc86126. Czternaście dokładnych zmian w pierwszych dwóch sekcjach: norma energetyczna i jej zupełność, norma funkcjonału oraz konwencja H^{-1}, dystrybucje, przynależność klasycznego rozwiązania do H_0^1, przejście przez gęstość, znak dystrybucyjnego laplasjanu, pełna charakterystyka rzutu i dowód Riesza. Zachowano 36 etykiet (unikatowe) w tej samej kolejności, 24 wystąpienia odsyłaczy rozwiązane w 09, 10, 11, 13; odsyłacz thm:pde13-nonhom rzeczywiście istnieje, jego użycie merytoryczne będzie kontrolowane we właściwej sekcji. Stos środowisk poprawny, treść od sekcji Laxa–Milgrama bez zmian. Nie uruchamiano testów wykonywalnych, CI, kompilacji ani Lean. Następna iteracja: twierdzenie Laxa–Milgrama, przypadek H={0}, konstrukcja kontrakcji i oszacowanie stabilności, następnie formy eliptyczne. Rejestr 12 kryteriów pierwszej lektury; ostateczna liczba kryteriów rozdziału jeszcze nieustalona.
+
+## Iteracja 168 — pierwsza lektura 013–026
+Źródło przed f0e5cde93e447288a38ec2d86bc32a12968138cd, po eb0769dc945074810666048384195fb6e1228451, commit dd15f2bf1d3cfe791a20b372f89c5780752e93b8. Odczytano sekcje Laxa–Milgrama i równań eliptycznych. Czternaście zmian źródłowych: przypadek przestrzeni zerowej, niesymetryczna forma, liniowość i odwracalność T, zakres kroku i q=0, szczegóły iteracji i błędu, stabilność, mierzalność i normy współczynników, równoważność dystrybucyjna, przykład jednowymiarowy i zanik dryftu. Zachowano 36 unikatowych etykiet w tej samej kolejności; 28/28 wystąpień odsyłaczy rozwiązanych w 09,10,11,13; stos środowisk poprawny; wcześniejszy i późniejszy materiał bez zmian. Rejestr pierwszej lektury 26 kryteriów. Nie wykonywano testów, CI, kompilacji ani Lean. Następna iteracja: niezerowe dane Dirichleta i zagadnienie Neumanna (podnoszenie, warunek zgodności, jednoznaczność modulo stałe).
