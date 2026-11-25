@@ -168,3 +168,14 @@ Druga lektura sekcji 8.3–8.4. Sprawdzono wszystkie 17 kryteriów 017–033:
 - Łącznie druga lektura 33/92 kryteriów: 20 bez zmian, 13 po uściśleniu. Nowego CI i formalizacji Lean nie potwierdzono.
 
 Następna iteracja 118: druga lektura sekcji 8.5–8.6, kryteria 034–052.
+
+## Iteracja 118 — 2026-11-25
+
+Druga lektura sekcji 8.5–8.6. Sprawdzono 19 kryteriów 034–052:
+- Bez zmian: 035, 039–040, 042–043, 046, 048, 050, 052 (9).
+- Uściślono: 034 — półnormowa definicja topologii słabej*; 036 — wskazanie zupełnej metryki i jawny dowód liniowości granicy; 037 — znikanie pochodnych poza nośnikiem testu; 038 — punktowe oszacowanie całki przez wagę z wykładnikiem -L; 041 — dokładny odsyłacz do lokalnego oszacowania zastosowanego do K_1; 044 — jawne użycie Fubiniego i odsyłacz do gęstości; 045 — pełne oszacowanie Leibniza dla mnożnika o pochodnych wzrostu wielomianowego; 047 — jawna tożsamość różniczkowania transformaty testu ze znakiem -i; 049 — znak pochodnych względem y oraz ilościowe oszacowanie ciągłości przesunięć w każdej półnormie; 051 — całkowalna majoranta ilorazów różnicowych, wzór na pochodne B_R i oszacowanie ciągłości A_x przed przejściem do sum Riemanna.
+- Sprawdzono treść i hipotezy twierdzenia 7.4 oraz własność nośnika w sekcji 7.4 w aktualnym źródle rozdziału 07.
+- Commit źródła 65632e64e6b36f12afe966fe733608da5f23eb4c, blob 167382ecec894152d5b98e07803e54c07b6ca95a; 39 etykiet, 87 wystąpień odsyłaczy, 10 niezmienionych celów zewnętrznych, poprawne zagnieżdżenie środowisk. Tekst poza sekcjami 8.5–8.6 identyczny. Bez nowych tematów i ID.
+- Łącznie druga lektura 52/92: 29 bez zmian i 23 po uściśleniu. Nie potwierdzono jeszcze CI najnowszego źródła ani formalizacji Lean.
+
+Następna iteracja 119: druga lektura 8.7–8.8, kryteria 053–068.
