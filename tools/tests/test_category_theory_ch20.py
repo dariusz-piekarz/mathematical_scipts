@@ -65,7 +65,8 @@ class CategoryTheoryCh20(unittest.TestCase):
         for t in (("I","I"),(("I","A"),"B"),
                   (("A","I"),"B"),(("A","B"),"I"),
                   ((("A","B"),"C"),"D")):
-            self.assertEqual(len(steps(t)),2)
+            # At I⊗I, the two distinct rules have the same target.
+            self.assertEqual(len(steps(t)),1 if t==(I,I) else 2)
             self.assertEqual(normal_forms(t),frozenset((norm(word(t)),)))
 
     def test_CAT_20_003_list_strictification(self):
