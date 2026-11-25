@@ -72,5 +72,44 @@ class Chapter31(unittest.TestCase):
         self.assertIn(r"dla $\lambda=0$ daje $x=0$",S)
         self.assertIn(r"\chi\mapsto\chi(e_1)",S)
 
+    def test_FA31_contour_cycles_01(self):
+        self.assertIn("liczba wchodzących krawędzi",S)
+        self.assertIn("lokalnej stałości indeksu",S)
+        for mask in range(1,1<<9):
+            edges=set()
+            for i,j in itertools.product(range(3),repeat=2):
+                if not mask&(1<<(3*i+j)): continue
+                p=[(i,j),(i+1,j),(i+1,j+1),(i,j+1)]
+                for u,v in zip(p,p[1:]+p[:1]):
+                    if (v,u) in edges: edges.remove((v,u))
+                    else: edges.add((u,v))
+            for v in itertools.product(range(4),repeat=2):
+                self.assertEqual(sum(u==v for u,w in edges),
+                                 sum(w==v for u,w in edges))
+            remaining=set(edges)
+            while remaining:
+                start,cur=remaining.pop()
+                while cur!=start:
+                    edge=next((e for e in remaining if e[0]==cur),None)
+                    self.assertIsNotNone(edge)
+                    remaining.remove(edge)
+                    cur=edge[1]
+
+    def test_FA31_involution_01(self):
+        for phrase in (r"1_A^*=1_A",r"(a^m)^*=(a^*)^m",r"u_t^*=e^{-ith}",r"\|u_t\|^2=\|1_A\|=1"):
+            self.assertIn(phrase,S)
+        # Gaussian integer matrices: exact arithmetic with Python complex
+        # at bounded integer magnitudes (all operations here are exact).
+        entries=[complex(a,b) for a,b in itertools.product(range(-1,2),repeat=2)]
+        star=lambda a: tuple(tuple(a[j][i].conjugate() for j in range(2)) for i in range(2))
+        prod=lambda a,b: tuple(tuple(sum(a[i][k]*b[k][j] for k in range(2)) for j in range(2)) for i in range(2))
+        for a,b,c,d in itertools.product(entries,repeat=4):
+            A=((a,b),(c,d))
+            self.assertEqual(star(star(A)),A)
+            A2=prod(A,A)
+            self.assertEqual(star(A2),prod(star(A),star(A)))
+            if prod(A,star(A))==prod(star(A),A):
+                self.assertEqual(prod(A2,star(A2)),prod(star(A2),A2))
+
 if __name__=="__main__":
     unittest.main()
