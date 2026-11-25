@@ -17,3 +17,5 @@ Testy Python sprawdzają skończone świadki i strukturę, nie zastępują dowod
 | MA1-36-013 | Malejący dyfeomorfizm, znak przyrostu i odwrócenie orientacji | semantyczna + Python |
 | MA1-36-014 | Normę Alexiewicza identyfikować z normą supremum pierwotnych; gęstość i brak zupełności | semantyczna |
 | MA1-36-015 | Skończone reprezentanty i wspólny zbiór zerowy w twierdzeniach granicznych | semantyczna |
+| MA1-36-016 | Jednokrotne włączenie rozdziału w książce po MA1-35 i katalogu | Python |
+| MA1-36-017 | McShane–Lebesgue: jawne sumowalne wagi pokrycia, kontrola miary i ważonego błędu | semantyczna + Python |
