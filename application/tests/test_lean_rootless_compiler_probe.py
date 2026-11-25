@@ -299,3 +299,32 @@ class RejectedCoreFixtureTests(unittest.TestCase):
         with patch.object(transport, "MAX_METADATA_BYTES", 8):
             with self.assertRaises(transport.DockerOutputLimit):
                 transport._command(prefix, args, {}, capture_failure=True)
+
+
+    def test_rejection_requires_both_exact_container_and_image_identity(self):
+        cid, image = "a" * 64, "sha256:" + "b" * 64
+        for wrong_id, wrong_image in (("d" * 64, image), (cid, "sha256:" + "e" * 64)):
+            cleaned = []
+            def command(prefix, args, env, *, deadline=None, capture_failure=False):
+                if args[0] == "create":
+                    return cid.encode()
+                if args[:2] == ("container", "start"):
+                    raise transport.DockerCommandFailed("Docker command failed",
+                                                         returncode=1, output=REJECTION)
+                if deadline is not None:
+                    if args[:2] == ("container", "inspect"):
+                        return json.dumps([{"Id": wrong_id, "Image": wrong_image,
+                            "State": {"Status": "exited", "Running": False,
+                                      "OOMKilled": False, "ExitCode": 1}}]).encode()
+                    cleaned.append(args)
+                    return b""
+                return b"{}"
+            with self.subTest(wrong_id=wrong_id, wrong_image=wrong_image), \
+                    patch.object(transport, "_command", side_effect=command), \
+                    patch.object(transport, "validate_engine"), \
+                    patch.object(probe.policy, "validate_image_inspection"), \
+                    patch.object(transport, "validate_container"):
+                with self.assertRaisesRegex(ValueError, "identity mismatch"):
+                    probe.check_compiler([], {}, image, rejected=True)
+            self.assertEqual(cleaned[0], ("container", "rm", "--force", cid))
+            self.assertIn("id=" + cid, cleaned[1])
