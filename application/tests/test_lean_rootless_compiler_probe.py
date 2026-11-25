@@ -328,3 +328,34 @@ class RejectedCoreFixtureTests(unittest.TestCase):
                     probe.check_compiler([], {}, image, rejected=True)
             self.assertEqual(cleaned[0], ("container", "rm", "--force", cid))
             self.assertIn("id=" + cid, cleaned[1])
+
+
+    def test_persisted_pair_rejects_reused_identities_and_inconsistent_versions(self):
+        import hashlib
+        import tempfile
+        from pathlib import Path
+        positive = TrustedCoreFixtureTests().valid_report()
+        negative = {**positive, "status": "trusted_core_fixture_rejected", "exit_code": 1,
+                    "source_sha256": hashlib.sha256(probe.REJECTED_SOURCE.encode()).hexdigest(),
+                    "compiler_output": REJECTION.decode(),
+                    "image_id": "sha256:" + "e" * 64, "container_id": "d" * 64}
+        other_version = VERSION.decode().strip().replace("d8204c9fd894", probe.LEAN_COMMIT)
+        with tempfile.TemporaryDirectory() as directory:
+            first, second = Path(directory) / "positive.json", Path(directory) / "negative.json"
+            probe.write_report(first, positive, expected_sha="c" * 40)
+            probe.write_report(second, negative, expected_sha="c" * 40, rejected=True)
+            self.assertEqual(probe.read_report_pair(first, second, expected_sha="c" * 40),
+                             (positive, negative))
+            for altered in ({**negative, "image_id": positive["image_id"]},
+                            {**negative, "container_id": positive["container_id"]},
+                            {**negative, "lean_version": other_version,
+                             "compiler_output": REJECTION.decode().replace(
+                                 VERSION.decode().strip(), other_version)}):
+                with self.subTest(altered=altered):
+                    second.unlink()
+                    # Each individual report is valid; the pair must not be.
+                    probe.write_report(second, altered, expected_sha="c" * 40, rejected=True)
+                    with self.assertRaises(ValueError):
+                        probe.read_report_pair(first, second, expected_sha="c" * 40)
+            with self.assertRaises(ValueError):
+                probe.read_report_pair(first, first, expected_sha="c" * 40)
