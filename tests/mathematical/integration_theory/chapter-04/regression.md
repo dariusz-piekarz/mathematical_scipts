@@ -6,3 +6,4 @@
 | IT-04-003 | Ciągłość pierwotnej z jednej komórki częściowej, obie orientacje | semantyczna |
 | IT-04-004 | Hake dla funkcji dyadycznej: kontrola ostatniej niepełnej komórki | semantyczna + Python |
 | IT-04-005 | Jednostajna całkowalność: wspólne cechowanie, Cauchy i przejście do granicy na ustalonym podziale | semantyczna + Python |
+| IT-04-006 | Hake: lokalne cechowania przy wspólnym końcu, rozcięcie i suma błędów | semantyczna + Python |
