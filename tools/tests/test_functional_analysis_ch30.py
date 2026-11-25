@@ -73,5 +73,21 @@ class Chapter30(unittest.TestCase):
         self.assertIn(r"\|u_n-u_m\|\le c^{-1}\|Tu_n-Tu_m\|",S)
         self.assertIn(r"\dim(C/\operatorname{ran}M)",S)
 
+    def test_FA30_compact_perturbation_path_01(self):
+        for phrase in (r"\|(T+tK)-(T+sK)\|=|t-s|\|K\|",
+                       "funkcją lokalnie stałą",r"A^{-1}D=I_{X_1}+A^{-1}(D-A)"):
+            self.assertIn(phrase,S)
+        for t,s,k in itertools.product((F(0),F(1,3),F(1)),repeat=3):
+            self.assertEqual(abs(t*k-s*k),abs(t-s)*abs(k))
+
+    def test_FA30_spectral_endpoints_01(self):
+        for phrase in (r"A_0[I_X+(\lambda-\lambda_0)A_0^{-1}]",
+                       r"\bigcup_{m\ge1}N_m=N_{m_0}",
+                       r"0\in\sigma(V)",r"H/\operatorname{ran}T"):
+            self.assertIn(phrase,S)
+        for a,d in itertools.product(range(-3,4),repeat=2):
+            if a:
+                self.assertEqual(a*(1+F(d,a)),a+d)
+
 if __name__=="__main__":
     unittest.main()
