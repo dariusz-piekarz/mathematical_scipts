@@ -10,6 +10,9 @@ on:
       - "application/backend/lean_draft_transport.py"
       - "application/backend/lean_draft_runner.py"
       - "application/tests/test_lean_draft_transport.py"
+      - "application/scripts/lean_rootless_compiler_probe.py"
+      - "application/tests/test_lean_rootless_compiler_probe.py"
+      - "application/lean/lean-toolchain"
   workflow_dispatch:
 
 permissions:
@@ -22,7 +25,7 @@ concurrency:
 jobs:
   rootless-preflight:
     runs-on: ubuntu-22.04
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -36,7 +39,7 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends uidmap dbus-user-session slirp4netns fuse-overlayfs busybox-static ca-certificates curl gnupg
+          sudo apt-get install -y --no-install-recommends uidmap dbus-user-session slirp4netns fuse-overlayfs busybox-static ca-certificates curl gnupg zstd
           if ! command -v dockerd-rootless-setuptool.sh >/dev/null; then
             # The hosted image does not necessarily configure Docker's APT source.
             sudo install -m 0755 -d /etc/apt/keyrings
@@ -243,6 +246,29 @@ jobs:
             exit 1
           fi
           echo ATLAS_NEGATIVE_MISSING_CONFIRMED
+      - name: Fetch fixed official Lean release on CI host
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location --proto '=https' --max-time 300 \
+            https://github.com/leanprover/lean4/releases/download/v4.26.0/lean-4.26.0-linux.tar.zst \
+            -o "$RUNNER_TEMP/atlas-lean-4.26.0-linux.tar.zst"
+          printf '%s  %s\n' 873c252b1c6b1392e5720ad8d5a137aabbe72c9f96a930fdb5a1dd1ddc5da454 \
+            "$RUNNER_TEMP/atlas-lean-4.26.0-linux.tar.zst" | sha256sum --check
+      - name: Compile fixed trusted Lean core fixture through rootless transport
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m scripts.lean_rootless_compiler_probe | tee "$RUNNER_TEMP/atlas-rootless-lean-core.log"
+          grep -q '^ATLAS_ROOTLESS_LEAN_CORE ' "$RUNNER_TEMP/atlas-rootless-lean-core.log"
+      - name: Upload fixed Lean core fixture evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-rootless-lean-core-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/atlas-rootless-lean-core.log
+          if-no-files-found: error
+          retention-days: 30
       - name: Stop test daemon
         if: always()
         shell: bash
