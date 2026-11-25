@@ -435,6 +435,19 @@ async function loadGlobalGraphCoverage(){
     host.replaceChildren();host.style.height="";
     $("graphSummary").textContent=`${s.indexed_chapters} rozdziałów · ${s.domains} dziedzin · ${s.cross_linked_chapters} rozdziałów z odsyłaczami między dziedzinami · ${s.connected_domain_pairs}/${s.domain_pairs} bezpośrednio połączonych par dziedzin · ${s.isolated_chapters} izolowanych rozdziałów`;
     if(data.catalog)host.append(node("p",{},`Katalog: ${data.catalog.expected} rozdziałów · brak w indeksie: ${data.catalog.missing.length} · rozbieżne ścieżki: ${data.catalog.path_mismatches.length}`));
+    if(data.reading_audit){
+      const audit=data.reading_audit;
+      host.append(node("p",{id:"globalReadingAudit"},`Odsyłacze tematyczne: ${audit.checked} sprawdzonych · błędne: ${audit.invalid}`));
+      if(audit.invalid){
+        const issues=node("details");issues.append(node("summary",{},"Błędne odsyłacze tematyczne"));
+        for(const issue of audit.issues){
+          const b=node("button",{type:"button"},`${issue.source}:${issue.line} → ${issue.label} · ${issue.reason}`);
+          b.addEventListener("click",()=>openModule(issue.source));
+          const line=node("div");line.append(b);issues.append(line);
+        }
+        host.append(issues);
+      }
+    }
     host.append(node("h3",{},"Graf dziedzin — wybierz parę, aby zobaczyć rozdziały"));
     const pairs=node("div",{className:"global-graph-pairs"});
     for(const p of data.domain_pairs.filter(p=>p.references).sort((a,b)=>b.references-a.references)){
@@ -459,7 +472,8 @@ async function loadGlobalGraphCoverage(){
 }
 function openGraphNode(n){if(n.entity_id && n.entity_id!==n.module)openEntity(n.entity_id);else openModule(n.module);}
 function renderGraph(data){
-  const host=$("graphCanvas");host.replaceChildren();
+  if(state.cy){state.cy.destroy();state.cy=null;}
+  const host=$("graphCanvas");host.replaceChildren();host.style.height="";
   if(!data.edges.length){host.append(node("div",{className:"empty-sub"},"Brak bezpośrednich odsyłaczy między tymi dziedzinami. Nie oznacza to braku powiązań matematycznych."));return;}
   const left=data.nodes.filter(n=>n.side==="left"),right=data.nodes.filter(n=>n.side==="right");
   const nRows=Math.max(left.length,right.length,5);
