@@ -1,0 +1,8 @@
+# Audyt 240 — rozdział drukowany 25, kontrola C: Wirtinger, Fox, Seifert
+
+Data: 2026-11-25. Kontynuacja 239 bez rozszerzania zakresu.
+Odczytano sekcje o prezentacji Wirtingera, danych peryferyjnych, kolorowaniach Foxa i powierzchniach Seiferta. Blob wejściowy f37729155c6d281b0e310024192cbadd431ce601.
+Uzupełniono eliminację generatora c w przykładzie trójlistnika, jednoznaczność przedłużenia kolorowania w RII, propagację kolorów na trzech pasmach w RIII, założenie n>=1 w definicji minora i orientację powierzchni Seiferta przy sklejaniu pasm oraz termin uchwyt indeksu jeden. Zachowano przywołany geometryczny lemat Wirtingera. Commit 8f1a50666af7d5a9f97b66d00cf50d1b0b156cc3, blob c213994846552caf24e9f1b5d7b2543e5d538cb2.
+GKT-25-FOX-MOVES-01: lokalnie rzeczywiście wykonano samodzielny proces Python na 18495 trójkach kolorów dla n=2..16; wszystkie trzy tożsamości idempotencji, inwolucji i samorozdzielności PASS. Te same asercje dodano do istniejącej funkcji check_fox_dihedral_relation; commit 0a24e97a07afde56ed134b394995dfc31b4d1417, blob 0998e225c67d1863f0da48d8a6c3e8be5ebd8db2. Nie uruchamiano lokalnie pełnego pliku repozytoryjnego ani Lean.
+Kontrola struktury: 170 poprawnych par środowisk, 21 unikatowych etykiet, 9 odsyłaczy, brak brakujących celów lokalnych. Poprzedni run 45598871122: structural-audit queued, full-book-pdf in_progress. Przy odczycie listy przebiegów dla nowego SHA nie było jeszcze wpisów. Poprzednie wyniki PDF nie są aktualne dla zmienionego źródła.
+Etap C pozostaje otwarty; następny zakres niezależnej kontroli: pozostałe dowody Alexandera, Arfa, Jonesa i końcowych sekcji; ponowić globalne CI i oględziny PDF po zmianach. Postęp 24/44.
