@@ -1,67 +1,208 @@
 \section{Całka Darboux}
+% Import: Analiza matematyczna I, rozdział 29 i rozdział 19 (zachowane etykiety).
 \begin{definicja}
-Niech $f:[a,b]\to\R$ będzie ograniczona, a $P=\{x_0,\dots,x_n\}$ podziałem. Kładziemy $m_i=\inf_{[x_{i-1},x_i]}f$, $M_i=\sup_{[x_{i-1},x_i]}f$ oraz
+\label{ma1:def:riemann-partition}
+Niech $a<b$. Podziałem przedziału $[a,b]$ nazywamy skończony ciąg $P=(x_0,\ldots,x_n)$, gdzie $n\ge1$ oraz $a=x_0<x_1<\cdots<x_n=b$. Oznaczamy $\Delta x_i=x_i-x_{i-1}$ oraz
 \[
-L(f,P)=\sum_{i=1}^n m_i(x_i-x_{i-1}),\qquad
-U(f,P)=\sum_{i=1}^n M_i(x_i-x_{i-1}).
+ |P|=\max_{1\le i\le n}\Delta x_i.
 \]
-Całkami dolną i górną nazywamy $\underline{\int_a^b}f=\sup_P L(f,P)$ i $\overline{\int_a^b}f=\inf_P U(f,P)$. Funkcja jest całkowalna w sensie Darboux, gdy wartości te są równe; ich wspólną wartość oznaczamy $\int_a^b f(x)\,\mathrm dx$.
+Liczbę $|P|$ (oznaczaną też przez $\mesh P$) nazywamy średnicą podziału. Podział $Q$ jest rozdrobnieniem $P$, jeśli zawiera wszystkie jego punkty. Suma zbiorów punktów dwóch podziałów, uporządkowana rosnąco, jest ich wspólnym rozdrobnieniem.
 \end{definicja}
+\begin{definicja}
+\label{ma1:def:darboux-sums}
+Niech $f:[a,b]\to\R$ będzie ograniczona. Dla $I_i=[x_{i-1},x_i]$ definiujemy
+\[
+ m_i=\inf_{I_i}f,\qquad M_i=\sup_{I_i}f,\qquad
+ L(f,P)=\sum_{i=1}^n m_i\Delta x_i,\qquad
+ U(f,P)=\sum_{i=1}^n M_i\Delta x_i.
+\]
+Są to odpowiednio suma dolna i suma górna Darboux. Ich różnica wynosi $\sum_i\omega_i\Delta x_i$, gdzie $\omega_i=M_i-m_i$ jest oscylacją $f$ na $I_i$.
+\end{definicja}
+Kresy istnieją dzięki ograniczoności $f$ i zupełności $\R$. Nie muszą być osiągane. Na przykład funkcja $f(x)=x$ dla $0<x<1$, z wartościami $f(0)=f(1)=1/2$, ma na $[0,1]$ kres dolny $0$ i górny $1$: wartości $f(1/n)$ i $f(1-1/n)$ dla $n\ge2$ dążą odpowiednio do $0$ i $1$, lecz wszystkie wartości funkcji należą do $(0,1)$. Jeżeli $f$ jest nieujemna, sumy można interpretować jako pola prostokątów zawartych pod wykresem i pokrywających obszar pod wykresem. Dla funkcji zmieniających znak są to sumy ze znakiem.
+
+\begin{center}
+\begin{tikzpicture}[x=5.2cm,y=3.2cm,>=Stealth]
+ \draw[->] (-.07,0)--(1.12,0) node[right] {$x$};
+ \draw[->] (0,-.07)--(0,1.15) node[above] {$y$};
+ \foreach \i in {0,1,2,3}{
+   \pgfmathsetmacro{\l}{\i/4}
+   \pgfmathsetmacro{\r}{(\i+1)/4}
+   \pgfmathsetmacro{\lo}{\l*\l}
+   \pgfmathsetmacro{\hi}{\r*\r}
+   \fill[blue!18] (\l,0) rectangle (\r,\lo);
+   \fill[orange!30] (\l,\lo) rectangle (\r,\hi);
+   \draw[orange!80!black] (\l,0) rectangle (\r,\hi);
+   \draw[blue!65!black] (\l,\lo)--(\r,\lo);
+ }
+ \draw[very thick,black,domain=0:1,samples=100] plot (\x,{\x*\x});
+ \foreach \i in {1,2,3,4}{
+   \pgfmathsetmacro{\t}{\i/4}
+   \draw (\t,-.018)--(\t,.018);
+   \node[below] at (\t,-.02) {$x_{\i}$};
+ }
+ \node[below left] at (0,0) {$x_0$};
+ \node[above left] at (.88,.83) {$f(x)=x^2$};
+\end{tikzpicture}
+
+\small Rysunek: suma dolna (niebieska) i suma górna (niebieska wraz z pomarańczową częścią) dla $f(x)=x^2$ i czterech równych podprzedziałów $[0,1]$. Pomarańczowa część przedstawia różnicę sum.
+\end{center}
+
 \begin{lemat}
-Jeśli $P\subset P'$ (zagęszczenie), to $L(f,P)\le L(f,P')\le U(f,P')\le U(f,P)$. Dla dowolnych podziałów $P_1,P_2$ zachodzi $L(f,P_1)\le U(f,P_2)$.
+\label{ma1:lem:darboux-refinement}
+Jeżeli $Q$ jest rozdrobnieniem $P$, to
+\[
+ L(f,P)\le L(f,Q)\le U(f,Q)\le U(f,P).
+\]
+Ponadto dla dowolnych podziałów $P,R$ zachodzi $L(f,P)\le U(f,R)$.
 \end{lemat}
 \begin{proof}
-Wstawmy jeden punkt $y\in(x_{k-1},x_k)$. Niech $m_-,m_+$ oraz $M_-,M_+$ oznaczają odpowiednio infima i suprema funkcji na $[x_{k-1},y]$ i $[y,x_k]$. Ponieważ oba przedziały są zawarte w $[x_{k-1},x_k]$, mamy $m_k\le m_-,m_+$ oraz $M_-,M_+\le M_k$. Stąd
-\[
-m_k(x_k-x_{k-1})\le m_-(y-x_{k-1})+m_+(x_k-y)
-\]
-oraz
-\[
-M_-(y-x_{k-1})+M_+(x_k-y)\le M_k(x_k-x_{k-1}).
-\]
-Pozostałe składniki sum nie zmieniają się. Wstawiając kolejno wszystkie punkty $P'\setminus P$, otrzymujemy $L(f,P)\le L(f,P')$ i $U(f,P')\le U(f,P)$. Nierówność $L(f,P')\le U(f,P')$ wynika z porównania infimum z supremum na każdym podprzedziale. Dla $Q=P_1\cup P_2$ mamy zatem
-\[
-L(f,P_1)\le L(f,Q)\le U(f,Q)\le U(f,P_2).
-\]
-Jeżeli $|f|\le B$, wszystkie sumy należą do $[-B(b-a),B(b-a)]$. Biorąc supremum po $P_1$, a następnie infimum po $P_2$, otrzymujemy w szczególności skończone całki Darboux z nierównością całki dolnej i górnej.
+Niech $f$ będzie ograniczona na $[a,b]$. Każdy podprzedział $P$ jest sumą kolejnych podprzedziałów $Q$. Kres dolny na każdym mniejszym przedziale jest nie mniejszy niż kres dolny na większym, a kres górny jest nie większy niż kres górny na większym. Mnożymy te nierówności przez dodatnie długości mniejszych przedziałów i sumujemy; suma ich długości jest długością większego przedziału. Otrzymujemy zewnętrzne nierówności. Środkowa wynika z $m_i\le M_i$. Dla dowolnych $P,R$ bierzemy wspólne rozdrobnienie $Q$; wtedy $L(f,P)\le L(f,Q)\le U(f,Q)\le U(f,R)$.
 \end{proof}
-\begin{twierdzenie}[Kryterium Riemanna]
-Ograniczona funkcja $f:[a,b]\to\R$ jest całkowalna w sensie Darboux wtedy i tylko wtedy, gdy dla każdego $\varepsilon>0$ istnieje podział $P$ taki, że $U(f,P)-L(f,P)<\varepsilon$.
+\begin{definicja}
+\label{ma1:def:riemann-integral}
+Dla ograniczonej funkcji $f:[a,b]\to\R$ definiujemy całkę dolną i górną, biorąc kresy po wszystkich podziałach $[a,b]$:
+\[
+ \underline{\mathcal I}(f)=\sup_P L(f,P),\qquad
+ \overline{\mathcal I}(f)=\inf_P U(f,P).
+\]
+Jeżeli te liczby są równe, mówimy, że $f$ jest całkowalna w sensie Darboux na $[a,b]$, a wspólną wartość oznaczamy przez $\int_a^b f(x)\,\dd x$.
+\end{definicja}
+Jeśli $m\le f\le M$, to wszystkie sumy leżą w $[m(b-a),M(b-a)]$. Oba kresy są więc skończone. Z lematu \ref{ma1:lem:darboux-refinement}, najpierw biorąc supremum po $P$, a następnie infimum po $R$, dostajemy $\underline{\mathcal I}(f)\le\overline{\mathcal I}(f)$.
+
+\begin{twierdzenie}[Kryterium Darboux]
+\label{ma1:thm:darboux-criterion}
+Funkcja ograniczona $f$ jest całkowalna w sensie Darboux na $[a,b]$ wtedy i tylko wtedy, gdy dla każdego $\varepsilon>0$ istnieje podział $P$ taki, że $U(f,P)-L(f,P)<\varepsilon$.
 \end{twierdzenie}
 \begin{proof}
-Jeżeli obie całki Darboux wynoszą $I$, wybieramy $P_1,P_2$ z $L(f,P_1)>I-\varepsilon/2$ i $U(f,P_2)<I+\varepsilon/2$. Wspólne zagęszczenie ma żądaną własność. Odwrotnie, zawsze $0\le\overline{\int_a^b}f-\underline{\int_a^b}f\le U(f,P)-L(f,P)$. Prawa strona może być dowolnie mała, więc całki są równe.
+Jeżeli obie całki są równe $A$, z definicji kresów wybieramy $P,R$ takie, że $L(f,P)>A-\varepsilon/2$ i $U(f,R)<A+\varepsilon/2$. Dla wspólnego rozdrobnienia $Q$ mamy $U(f,Q)-L(f,Q)\le U(f,R)-L(f,P)<\varepsilon$. Odwrotnie, dla każdego podziału $P$ mamy
+\[
+ 0\le\overline{\mathcal I}(f)-\underline{\mathcal I}(f)
+ \le U(f,P)-L(f,P).
+\]
+Jeżeli prawa strona może być mniejsza od dowolnego $\varepsilon>0$, różnica całek jest zerowa.
 \end{proof}
-\begin{przyklad}[Funkcje ciągłe i monotoniczne]
-Niech $f$ będzie ciągła na $[a,b]$. Z twierdzeń o ograniczoności i jednostajnej ciągłości funkcji ciągłej na zbiorze zwartym wynika, że $f$ jest ograniczona i dla $\varepsilon>0$ istnieje $\delta>0$ takie, że $|f(s)-f(t)|<\varepsilon/(2(b-a))$, gdy $s,t\in[a,b]$ i $|s-t|<\delta$. Wybieramy podział $P$ o średnicy mniejszej od $\delta$ (np. równomierny o odpowiednio dużej liczbie podprzedziałów). Na każdym podprzedziale $M_i-m_i\le\varepsilon/(2(b-a))$, zatem
+
+\subsection{Kryteria całkowalności i przykłady}
+\begin{twierdzenie}
+\label{ma1:thm:riemann-continuous}
+Każda funkcja ciągła $f:[a,b]\to\R$ jest całkowalna.
+\end{twierdzenie}
+\begin{proof}
+Funkcja jest ograniczona z twierdzenia Weierstrassa i jednostajnie ciągła z twierdzenia Heinego--Cantora. Dla $\varepsilon>0$ istnieje $\delta>0$ takie, że $|f(s)-f(t)|<\varepsilon/(2(b-a))$ dla $|s-t|<\delta$. Dla podziału o $|P|<\delta$ oscylacja na każdym $I_i$ jest nie większa niż $\varepsilon/(2(b-a))$ (możemy wziąć punkty osiągania maksimum i minimum). Stąd $U(f,P)-L(f,P)\le\varepsilon/2<\varepsilon$. Stosujemy kryterium Darboux.
+\end{proof}
+\begin{twierdzenie}
+\label{ma1:thm:riemann-monotone}
+Każda funkcja monotoniczna $f:[a,b]\to\R$ jest całkowalna.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $f$ jest niemalejąca, to $m_i=f(x_{i-1})$, $M_i=f(x_i)$, a wartości funkcji leżą pomiędzy $f(a)$ i $f(b)$. Zatem
 \[
-U(f,P)-L(f,P)
-=\sum_{i=1}^n(M_i-m_i)(x_i-x_{i-1})
-\le\frac{\varepsilon}{2}<\varepsilon.
+ U(f,P)-L(f,P)\le |P|\sum_i(f(x_i)-f(x_{i-1}))
+ =|P|(f(b)-f(a)).
 \]
-Stosujemy kryterium Riemanna.
-
-Jeśli $f$ jest monotoniczna, jej wartości leżą pomiędzy $f(a)$ a $f(b)$, więc jest ograniczona. Dla podziału równomiernego o kroku $h=(b-a)/n$ mamy $M_i-m_i=|f(x_i)-f(x_{i-1})|$. Monotoniczność zapewnia jednakowy znak wszystkich przyrostów, dlatego
+Podziały o dowolnie małej średnicy dają kryterium Darboux. Dla funkcji nierosnącej mamy $m_i=f(x_i)$ i $M_i=f(x_{i-1})$; ten sam rachunek daje oszacowanie $|P|(f(a)-f(b))$.
+\end{proof}
+\begin{twierdzenie}
+\label{ma1:thm:riemann-finite-discontinuities}
+Funkcja ograniczona na $[a,b]$ i ciągła poza skończonym zbiorem punktów jest całkowalna.
+\end{twierdzenie}
+\begin{proof}
+Niech $|f|\le B$ dla $B>0$, a zbiór możliwych nieciągłości ma $k$ punktów. Gdy $k=0$, stosujemy twierdzenie \ref{ma1:thm:riemann-continuous}. Gdy $k>0$, oznaczamy te punkty przez $d_1,\ldots,d_k$. Wybieramy $\rho>0$ mniejsze od $(b-a)/2$ oraz $\varepsilon/(8Bk)$, a gdy $k\ge2$, także od połowy najmniejszej odległości między różnymi $d_j$. Dla każdego $j$ bierzemy
 \[
-U(f,P)-L(f,P)
-=h\sum_{i=1}^n |f(x_i)-f(x_{i-1})|
-=h|f(b)-f(a)|\longrightarrow 0.
+ J_j=[\max(a,d_j-\rho),\min(b,d_j+\rho)].
 \]
-Dotyczy to zarówno funkcji niemalejących, jak i nierosnących; ponownie stosujemy kryterium Riemanna.
-\end{przyklad}
-\begin{przyklad}[Funkcja Dirichleta]
-Dla $D=\chi_{\Q\cap[a,b]}$ na każdym niezdegenerowanym podprzedziale infimum wynosi $0$, a supremum $1$, ponieważ zarówno liczby wymierne, jak i niewymierne są gęste w $\R$. Dlatego $L(D,P)=0$ i $U(D,P)=b-a$ dla wszystkich podziałów. Funkcja nie jest całkowalna w sensie Darboux.
-\end{przyklad}
-\begin{przyklad}[Funkcja Thomaego]
-Niech $T(x)=1/q$, jeśli $x=p/q\in[0,1]\cap\Q$ jest zapisany w postaci nieskracalnej z $q\ge1$, a $T(x)=0$ dla niewymiernych $x$. Dla $N\ge1$ zbiór $E_N$ liczb wymiernych w $[0,1]$ o mianowniku nie większym niż $N$ w zapisie nieskracalnym jest skończony: dla każdego $1\le q\le N$ istnieje co najwyżej $q+1$ możliwych liczników $0\le p\le q$. Poza $E_N$ mamy $0\le T\le1/N$.
+Każdy $J_j$ ma dodatnią długość, zawiera $d_j$ we wnętrzu względem $[a,b]$ i nie przecina żadnego innego $J_i$. Suma długości jest nie większa niż $2k\rho<\varepsilon/(4B)$. Włączamy do podziału $a,b$ oraz wszystkie końce $J_j$. Na nich łączny wkład do różnicy sum jest mniejszy od $2B\varepsilon/(4B)=\varepsilon/2$.
 
-Jeżeli $x$ jest niewymierny i $\varepsilon>0$, wybieramy $N$ tak, aby $1/N<\varepsilon$. Ponieważ $x\notin E_N$ i $E_N$ jest skończony, pewne względne otoczenie $x$ w $[0,1]$ nie przecina $E_N$. W tym otoczeniu $|T(y)-T(x)|=T(y)\le1/N<\varepsilon$. Jeżeli natomiast $x=p/q$ jest wymierny, w każdym względnym otoczeniu $x$ (również dla $x=0,1$) leży liczba niewymierna $y$ i $|T(y)-T(x)|=1/q>0$. Biorąc $\varepsilon=1/(2q)$, widzimy, że $T$ nie jest ciągła w $x$.
+Pozostałe odcinki o dodatniej długości pomiędzy tymi przedziałami są domknięte i nie zawierają punktów nieciągłości: końce wewnętrzne wybranych przedziałów nie są tymi punktami. Na każdym z tych odcinków funkcja jest ciągła. Jest ich skończenie wiele, powiedzmy $\ell$. Jeżeli $\ell>0$, wybieramy na każdym podział z różnicą sum mniejszą od $\varepsilon/(2\ell)$ na mocy twierdzenia \ref{ma1:thm:riemann-continuous} i kryterium Darboux. Łączymy wszystkie podziały. Wkłady na pozostałych odcinkach sumują się do mniej niż $\varepsilon/2$; gdy $\ell=0$, ich wkład wynosi zero. Cała różnica sum jest mniejsza od $\varepsilon$.
+\end{proof}
+\begin{przyklad}
+\label{ma1:ex:riemann-dirichlet}
+Funkcja $\chi_{\Q\cap[a,b]}$ nie jest całkowalna, gdy $a<b$. Każdy podprzedział dodatniej długości zawiera liczbę wymierną oraz niewymierną, więc jego kresy wynoszą $0$ i $1$. Dla przypomnienia: między $u<v$ wybieramy liczbę całkowitą $n$ z $n(v-u)>1$, a następnie całkowite $m$ z $nu<m<nv$; wtedy $m/n\in(u,v)$. Wybierając wymierną w $(u-\sqrt2,v-\sqrt2)$ i dodając $\sqrt2$, otrzymujemy liczbę niewymierną w $(u,v)$. Stąd dla każdego podziału $L=0$, $U=b-a$, co przeczy kryterium Darboux. 
+\end{przyklad}
 
-Dla dowolnego podziału $P$ mamy $L(T,P)=0$, gdyż każdy podprzedział zawiera liczbę niewymierną, a $T\ge0$. Ustalmy $\varepsilon>0$ i wybierzmy $N$ z $1/N<\varepsilon/2$. Oznaczmy $k=|E_N|$; mamy $k\ge1$. Wybieramy podział $P$ o średnicy mniejszej niż $\varepsilon/(4k)$. Każdy punkt $E_N$ należy do co najwyżej dwóch domkniętych podprzedziałów, dlatego podprzedziałów przecinających $E_N$ jest co najwyżej $2k$, a suma ich długości nie przekracza $2k\mesh P$. Na nich $T\le1$, zaś na pozostałych $T\le1/N$. Otrzymujemy
+\begin{przyklad}[Funkcja Thomae'a]
+\label{ma1:ex:thomae}
+Definiujemy $T:\R\to[0,1]$ przez
+\[
+ T(x)=
+ \begin{cases}
+ 1/q,& x=p/q,\ p\in\Z,\ q\in\N,\ q\ge1,\ \gcd(|p|,q)=1,\\
+ 0,&x\notin\Q.
+ \end{cases}
+\]
+Ułamek nieskracalny o dodatnim mianowniku jest jednoznaczny; w szczególności $T(0)=1$. Dla każdego $a\in\R$ istnieje granica przekłuta $\lim_{x\to a}T(x)=0$. Zatem $T$ jest ciągła dokładnie w punktach niewymiernych.
+\end{przyklad}
+\begin{proof}
+Ustalmy $a\in\R$ i $\varepsilon>0$. Wybierzmy całkowite $N\ge1$ z $1/N<\varepsilon$. Zbiór
+$E_N=\{p/q\in[a-1,a+1]:p\in\Z,\ 1\le q\le N,\ \gcd(|p|,q)=1\}$
+jest skończony: dla każdego spośród skończenie wielu mianowników $q$ licznik należy do ograniczonego przedziału $[q(a-1),q(a+1)]$. Przyjmijmy $\delta$ jako minimum liczby $1$ i wszystkich dodatnich odległości $|r-a|$ dla $r\in E_N\setminus\{a\}$. Jeśli ten ostatni zbiór jest pusty, przyjmujemy $\delta=1$. Mamy $\delta>0$.
+
+Dla $0<|x-a|<\delta$ punkt $x$ należy do $[a-1,a+1]$, ale nie do $E_N$. Jeśli $x$ jest niewymierny, to $T(x)=0$; jeśli jest wymierny, jego nieskracalny mianownik jest większy od $N$, więc $0<T(x)<1/N<\varepsilon$. Dowodzi to granicy przekłutej. Ponieważ każdy punkt $\R$ jest punktem skupienia dziedziny, ciągłość jest równoważna $T(a)=0$, czyli $a\notin\Q$.
+\end{proof}
+\begin{center}
+\begin{tikzpicture}[x=9cm,y=2.7cm,>=Stealth]
+ \draw[->] (-.03,0)--(1.08,0) node[right] {$x$};
+ \draw[->] (0,-.08)--(0,1.15) node[above] {$y$};
+ \fill[blue!65!black] ({0/1},{1/1}) circle (.9pt);
+ \fill[blue!65!black] ({1/1},{1/1}) circle (.9pt);
+ \fill[blue!65!black] ({1/2},{1/2}) circle (.9pt);
+ \fill[blue!65!black] ({1/3},{1/3}) circle (.9pt);
+ \fill[blue!65!black] ({2/3},{1/3}) circle (.9pt);
+ \fill[blue!65!black] ({1/4},{1/4}) circle (.9pt);
+ \fill[blue!65!black] ({3/4},{1/4}) circle (.9pt);
+ \fill[blue!65!black] ({1/5},{1/5}) circle (.9pt);
+ \fill[blue!65!black] ({2/5},{1/5}) circle (.9pt);
+ \fill[blue!65!black] ({3/5},{1/5}) circle (.9pt);
+ \fill[blue!65!black] ({4/5},{1/5}) circle (.9pt);
+ \fill[blue!65!black] ({1/6},{1/6}) circle (.9pt);
+ \fill[blue!65!black] ({5/6},{1/6}) circle (.9pt);
+ \fill[blue!65!black] ({1/7},{1/7}) circle (.9pt);
+ \fill[blue!65!black] ({2/7},{1/7}) circle (.9pt);
+ \fill[blue!65!black] ({3/7},{1/7}) circle (.9pt);
+ \fill[blue!65!black] ({4/7},{1/7}) circle (.9pt);
+ \fill[blue!65!black] ({5/7},{1/7}) circle (.9pt);
+ \fill[blue!65!black] ({6/7},{1/7}) circle (.9pt);
+ \fill[blue!65!black] ({1/8},{1/8}) circle (.9pt);
+ \fill[blue!65!black] ({3/8},{1/8}) circle (.9pt);
+ \fill[blue!65!black] ({5/8},{1/8}) circle (.9pt);
+ \fill[blue!65!black] ({7/8},{1/8}) circle (.9pt);
+ \fill[blue!65!black] ({1/9},{1/9}) circle (.9pt);
+ \fill[blue!65!black] ({2/9},{1/9}) circle (.9pt);
+ \fill[blue!65!black] ({4/9},{1/9}) circle (.9pt);
+ \fill[blue!65!black] ({5/9},{1/9}) circle (.9pt);
+ \fill[blue!65!black] ({7/9},{1/9}) circle (.9pt);
+ \fill[blue!65!black] ({8/9},{1/9}) circle (.9pt);
+ \fill[blue!65!black] ({1/10},{1/10}) circle (.9pt);
+ \fill[blue!65!black] ({3/10},{1/10}) circle (.9pt);
+ \fill[blue!65!black] ({7/10},{1/10}) circle (.9pt);
+ \fill[blue!65!black] ({9/10},{1/10}) circle (.9pt);
+ \fill[blue!65!black] ({1/11},{1/11}) circle (.9pt);
+ \fill[blue!65!black] ({2/11},{1/11}) circle (.9pt);
+ \fill[blue!65!black] ({3/11},{1/11}) circle (.9pt);
+ \fill[blue!65!black] ({4/11},{1/11}) circle (.9pt);
+ \fill[blue!65!black] ({5/11},{1/11}) circle (.9pt);
+ \fill[blue!65!black] ({6/11},{1/11}) circle (.9pt);
+ \fill[blue!65!black] ({7/11},{1/11}) circle (.9pt);
+ \fill[blue!65!black] ({8/11},{1/11}) circle (.9pt);
+ \fill[blue!65!black] ({9/11},{1/11}) circle (.9pt);
+ \fill[blue!65!black] ({10/11},{1/11}) circle (.9pt);
+ \node[below] at (0,0) {$0$};
+ \node[below] at (1,0) {$1$};
+ \node[left] at (0,1) {$1$};
+ \node[blue!65!black,above] at (.5,.5) {$1/2$};
+\end{tikzpicture}
+
+\small Rysunek: wartości funkcji Thomae'a dla nieskracalnych mianowników nie większych niż $11$; pominięto wartości o większych mianownikach i wartości zerowe w punktach niewymiernych.
+\end{center}
+
+\begin{przyklad}[Całka Darboux funkcji Thomae'a]
+Rozważamy ograniczenie funkcji z przykładu \ref{ma1:ex:thomae} do $[0,1]$.
+Dla dowolnego podziału $P$ mamy $L(T,P)=0$, gdyż każdy podprzedział zawiera liczbę niewymierną, a $T\ge0$. Ustalmy $\varepsilon>0$ i wybierzmy $N$ z $1/N<\varepsilon/2$. Niech $E_N$ będzie zbiorem liczb wymiernych w $[0,1]$ o mianowniku nie większym niż $N$ w zapisie nieskracalnym; jest skończony z poprzedniego dowodu. Oznaczmy $k=|E_N|$; mamy $k\ge1$. Wybieramy podział $P$ o średnicy mniejszej niż $\varepsilon/(4k)$. Każdy punkt $E_N$ należy do co najwyżej dwóch domkniętych podprzedziałów, dlatego podprzedziałów przecinających $E_N$ jest co najwyżej $2k$, a suma ich długości nie przekracza $2k\mesh P$. Na nich $T\le1$, zaś na pozostałych $T\le1/N$. Otrzymujemy
 \[
 0\le U(T,P)-L(T,P)=U(T,P)
 \le 2k\mesh P+\frac1N<\varepsilon.
 \]
-Z kryterium Riemanna wynika całkowalność w sensie Darboux. Ponieważ każda suma dolna wynosi zero, wspólna wartość obu całek Darboux jest równa zeru.
+Z kryterium Darboux wynika całkowalność w sensie Darboux. Ponieważ każda suma dolna wynosi zero, wspólna wartość obu całek Darboux jest równa zeru.
 \end{przyklad}
 \begin{przyklad}[Obliczenie z definicji]
 Dla $f(x)=x^2$ na $[0,1]$ funkcja jest niemalejąca, zatem na $[(i-1)/n,i/n]$ infimum wynosi $((i-1)/n)^2$, a supremum $(i/n)^2$. Korzystamy ze wzoru $\sum_{i=1}^n i^2=n(n+1)(2n+1)/6$: prawa strona dla $n=0$ wynosi zero, a jej przyrost od $n-1$ do $n$ to
@@ -75,4 +216,3 @@ L(f,P_n)=\frac1{n^3}\sum_{i=0}^{n-1}i^2=\frac{(n-1)(2n-1)}{6n^2}.
 \]
 Dzieląc liczniki przez $n^2$, otrzymujemy, że obie sumy dążą do $1/3$. Dla każdego $n$ suma dolna nie przekracza całki dolnej, ta nie przekracza całki górnej, a całka górna nie przekracza sumy górnej. Z twierdzenia o trzech ciągach (lub bezpośrednio z tych nierówności) obie całki Darboux wynoszą $1/3$, czyli $\int_0^1x^2\,\mathrm dx=1/3$.
 \end{przyklad}
-
