@@ -266,9 +266,19 @@ Dla wybranego kolorowania szachownicowego diagramu $D$
 przypisujemy każdemu skrzyżowaniu wagę
 $\eta(c)\in\{-1,1\}$: znak dodatni oznacza,
 że lokalne wygładzenie A łączy czarne sektory,
-a ujemny, że łączy białe. Niech $G=G_B(D)$, a
-$B$ będzie dowolną macierzą incydencji grafu $G$,
-z pominięciem krawędzi pętlowych (ich kolumny są zerowe).
+a ujemny, że łączy białe. W lokalnym rysunku z sekcji
+\ref{sec:kt-jones}, gdy pasmo górne biegnie od lewego
+górnego do prawego dolnego końca, znak $+1$ odpowiada
+czarnym sektorom górnemu i dolnemu, a $-1$ sektorom
+lewemu i prawemu. Nie jest to znak zorientowanego skrzyżowania.
+
+Niech $G=G_B(D)$ ma $n$ wierzchołków i $m$ krawędzi.
+Ustalamy orientację pomocniczą i macierz incydencji
+$B\in M_{n\times m}(\mathbb Z)$, której kolumna dla
+krawędzi $u\to v$ jest równa $[v]-[u]$.
+Zachowujemy zerową kolumnę każdej pętli i osobną
+kolumnę każdej krawędzi równoległej. Macierz wag ma
+rozmiar $m\times m$ i tę samą kolejność krawędzi.
 Definiujemy macierz
 \[
 \mathcal G_D=B\,\operatorname{diag}(\eta(c))\,B^T.
@@ -276,15 +286,21 @@ Definiujemy macierz
 Jej elementy pozadiagonalne są ujemnymi sumami wag
 krawędzi łączących odpowiednie wierzchołki; przekątna
 jest sumą wag incydentnych krawędzi niebędących pętlami.
-Pętle nie wnoszą wkładu do żadnego elementu macierzy. \emph{Zredukowaną
+Pętle nie wnoszą wkładu do żadnego elementu macierzy.
+Odwrócenie orientacji pomocniczej zmienia znak kolumny
+$b_c$, ale nie składnika $\eta(c)b_cb_c^T$, zatem nie
+zmienia macierzy. \emph{Zredukowaną
 macierzą Goeritza} nazywamy macierz otrzymaną przez
 usunięcie jednego wiersza i odpowiadającej kolumny
 z $\mathcal G_D$.
 \end{definicja}
 
 \begin{stwierdzenie}[Suma drzew z wagami]
-Niech $G$ będzie spójnym grafem o wierzchołkach
-$1,\ldots,n$ i wagach $w_e\in\mathbb R$ na krawędziach.
+\label{prop:tg-tait-signed-tree}
+Niech $G$ będzie skończonym spójnym multigrafem
+o wierzchołkach $1,\ldots,n$, $n\geq1$, z dopuszczeniem
+pętli i wagami $w_e\in\mathbb R$. Niech $B$ będzie
+jego macierzą incydencji z osobną kolumną każdej krawędzi.
 Dla macierzy $L=B\operatorname{diag}(w_e)B^T$
 i dowolnego jej minora głównego $L^{(r)}$
 uzyskanego przez skreślenie wiersza i kolumny $r$
@@ -304,14 +320,31 @@ mamy
 =\sum_{F\subseteq E,\ |F|=n-1}
 \det(B_{r,F})^2\prod_{e\in F}w_e.
 \]
-Minor $B_{r,F}$ jest zerowy, jeżeli $F$ nie jest
-drzewem rozpinającym; gdy $F$ jest drzewem,
-jego wyznacznik wynosi $\pm1$, czego dowiedliśmy
-przy twierdzeniu Kirchhoffa przez rozwijanie
-względem liści. Stąd dokładnie wskazany wzór.
-Nie korzystaliśmy z dodatniości wag; ujemne wartości
-są dozwolone, a ewentualne znaki pojawiają się jedynie
-w iloczynach $\prod w_e$.
+Tutaj $B_{r,F}$ jest kwadratową podmacierzą $B_r$
+o kolumnach indeksowanych przez $F$. Drugi czynnik
+we wzorze Cauchy'ego--Bineta ma minor równy
+$\det(B_{r,F}^T)\prod_{e\in F}w_e$.
+
+Jeżeli $(V,F)$ nie jest spójny, suma wierszy
+$B_{r,F}$ należących do składowej niezawierającej $r$
+jest zerowa: obie incydencje krawędzi wewnętrznej
+znoszą się, a krawędzi wychodzących ze składowej
+nie ma. Jest to nietrywialna zależność liniowa.
+Jeżeli $(V,F)$ jest spójny, zawiera drzewo rozpinające:
+usuwamy pętle, utożsamiamy krawędzie równoległe,
+wybieramy drzewo grafu prostego i podnosimy jego
+krawędzie do $F$. Ponieważ $|F|=n-1$, drzewo
+wykorzystuje wszystkie krawędzie $F$.
+Dla $n>1$ wybieramy liść różny od $r$ i rozwijamy
+wyznacznik względem jego wiersza. Jedyny niezerowy
+element tego wiersza jest równy $\pm1$; pozostaje
+macierz drzewa z usuniętym liściem i jego krawędzią.
+Indukcja prowadzi do pustej macierzy o wyznaczniku $1$.
+Stąd $\det B_{r,F}=\pm1$. Dla $n=1$ jedyne drzewo
+ma pusty zbiór krawędzi i wagę $1$.
+Otrzymujemy rozszerzenie twierdzenia
+\ref{thm:tg-kirchhoff} na multigrafy i dowolne wagi,
+w tym zerowe. Wynik nie zależy od wyboru $r$.
 \end{proof}
 
 \begin{stwierdzenie}[Drzewa rozpinające planarnych grafów dualnych]
@@ -405,8 +438,8 @@ tylko jedno drzewo rozpinające.
 
 \begin{twierdzenie}[Goeritz; identyfikacja wyznacznika]
 Niech $K\subset S^3$ będzie węzłem, a $D$ jego
-spójnym regularnym diagramem. Niech
-$\mathcal G_D^{(r)}$ będzie dowolną zredukowaną
+spójnym regularnym diagramem z co najmniej jednym
+skrzyżowaniem. Niech $\mathcal G_D^{(r)}$ będzie dowolną zredukowaną
 macierzą Goeritza zdefiniowaną powyżej. Wtedy
 \[
 \det(K)=|\Delta_K(-1)|=|\det\mathcal G_D^{(r)}|.
@@ -421,19 +454,37 @@ gdzie $\tau(G)$ oznacza liczbę drzew rozpinających
 grafu $G$. Ostatnią równość uzasadnia
 Stwierdzenie~\ref{thm:tg-tait-dual-trees}.
 \end{twierdzenie}
-\begin{uwaga}[Co zostało udowodnione]
-Przed chwilą wykazaliśmy w pełni formułę wyznacznika
-podpisanego laplasjanu jako sumy po drzewach.
-Utożsamienie tego wyznacznika z $|\Delta_K(-1)|$
-jest osobnym, klasycznym twierdzeniem Goeritza,
-przy standardowej konwencji znaków skrzyżowań
-oraz po odpowiedniej redukcji macierzy,
-które można udowodnić przez prezentację homologii
-pierwszej dwukrotnego nakrycia $S^3$ rozgałęzionego
-wzdłuż $K$. Jego pełny dowód wymaga przygotowania
-teorii nakryć rozgałęzionych; przyjmujemy go tutaj
-z materiału o węzłach, nie utożsamiając go z
-kombinatoryczną częścią rachunku.
+\begin{proof}[Dowód z klasycznej prezentacji Goeritza]
+Korzystamy z zewnętrznego twierdzenia o prezentacji
+Goeritza: zredukowana macierz Goeritza spójnego
+diagramu prezentuje $H_1(\Sigma_2(K);\mathbb Z)$.
+Przy zmianie konwencji lokalnych liczb incydencji
+może pojawić się globalny znak $-1$, który nie
+zmienia obrazu macierzy nad $\mathbb Z$.
+Zatem $H_1(\Sigma_2(K);\mathbb Z)\cong
+\operatorname{coker}\mathcal G_D^{(r)}$.
+Z sekcji \ref{sec:kt-branched} grupa ta jest skończona
+i ma rząd $|\Delta_K(-1)|$. Postać normalna Smitha
+daje równość rzędu kokernu z modułem wyznacznika.
+Dla diagramu alternującego lemat
+\ref{lem:tg-tait-alternating} pozwala wybrać wszystkie
+wagi równe $+1$. Stwierdzenie
+\ref{prop:tg-tait-signed-tree} daje liczbę drzew
+grafu czarnego, a \ref{thm:tg-tait-dual-trees}
+liczbę drzew grafu białego.
+\end{proof}
+
+\begin{uwaga}[Zakres dowodu]
+Zewnętrznym składnikiem jest prezentacja Goeritza,
+nie wzór sumy po drzewach. Zob. W. B. R. Lickorish,
+\emph{An Introduction to Knot Theory}, Springer, 1997,
+rozdział \emph{Cyclic Branched Covers and the Goeritz Matrix},
+oraz C. McA. Gordon, R. A. Litherland,
+\emph{On the signature of a link}, Invent. Math. 47 (1978),
+53--69. Nie wyprowadzamy tutaj topologicznej konstrukcji
+prezentacji. Dla diagramu bez skrzyżowań mamy węzeł
+trywialny i $\Delta_U=1$; zredukowana macierz
+jednowierzchołkowego grafu jest pusta i ma wyznacznik $1$.
 \end{uwaga}
 
 \begin{przyklad}[Wyznacznik trójlistnika bez macierzy Seiferta]
