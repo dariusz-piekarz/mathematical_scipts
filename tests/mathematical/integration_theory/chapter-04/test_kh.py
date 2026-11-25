@@ -41,6 +41,18 @@ class KHChapter04(unittest.TestCase):
         total=sum(k*eps/F(k*2**(k+1)) for k in range(1,20))
         self.assertLess(total,eps/2)
 
+    def test_oscillatory_threshold_witnesses(self):
+        # On [k*pi,(k+1)*pi], integral t*sin(t) equals
+        # (-1)^k (2*k+1)*pi, and the bound is 2*k*pi.
+        from math import pi
+        for k in range(1,12):
+            exact=abs((-1)**k*(2*k+1)*pi)
+            self.assertGreaterEqual(exact,2*k*pi)
+        # For -1 <= beta < 0, (k+1)^beta >= 1/(k+1).
+        for beta in (-1,-0.75,-0.5,-0.25):
+            for k in range(1,50):
+                self.assertGreaterEqual((k+1)**beta,1/(k+1))
+
     def test_dyadic_tail_partial_interval(self):
         for n in range(2,10):
             a=F((-1)**(n+1),n)
