@@ -214,3 +214,25 @@ Następna iteracja 137: druga lektura kolejnych kryteriów od PDE-09-037, zaczyn
 Bilans: 12/12 kryteriów poddano ponownej lekturze, 6 kryteriów uściślono w 5 zmianach tekstu, 6 bez zmian. Źródło: commit 8050925e8b328734f7efc410f95d1ba0feeea301, blob 0b1100f9c1a7cf889f3dc132111fb8c76dff9fd1. Zachowano 37 etykiet i 64 wystąpienia odsyłaczy w tej samej kolejności, stos środowisk poprawny; tekst poza sekcjami 9.6–9.7 niezmieniony. Nie wykonywano kompilacji, testów wykonawczych ani Lean. Druga lektura obejmuje dotąd 48 z 81 kryteriów; nie jest to jeszcze stabilizacja rozdziału.
 
 Następna iteracja 138: druga lektura kryteriów od PDE-09-049 (reguły rachunkowe, iloczyny i złożenia), bez rozszerzania zakresu.
+
+## Iteracja 138 — 2026-11-25 — druga lektura, 049–061
+
+| Kryterium | Wynik ponownej lektury |
+| --- | --- |
+| 049 | Bez zmian: poprawne użycie klasycznego całkowania przez części dla mnożnika C¹, lokalne wygładzenia i globalne oszacowania. |
+| 050 | Uściślenie: wybór wspólnego ciągu także dla skończonych p,q, jawna tożsamość testowa, przejście do granicy i globalne nierówności Höldera. |
+| 051 | Uściślenie: sumowalne błędy wszystkich składowych, Tonelli i wspólny podciąg; ograniczenie supremum i majoranta poprawne. |
+| 052 | Bez zmian: lokalne zastosowanie przypadku 1,infty, identyfikacja pochodnych i globalna ograniczoność. |
+| 053 | Bez zmian: zakres hipotez, warunek F(0)=0, wyjątki i oszacowania globalne. |
+| 054 | Uściślenie: jawny wybór podciągu z sumowalnymi p-tymi potęgami błędów oraz pełny rachunek Tonellego; pozostałe przejścia poprawne. |
+| 055 | Bez zmian: lokalny przypadek p=1, globalne oszacowania supremum. |
+| 056 | Uściślenie: oszacowanie przez miarę przecięcia przedziału całkowania z przedziałem długości 4/n, również dla t ujemnego. |
+| 057 | Uściślenie: jednoczesne zerowanie wszystkich składowych gradientu na ustalonym zbiorze poziomicowym; zamkniętość pochodnej i lokalizacja poprawne. |
+| 058 | Bez zmian: normalizacja aproksymantów w zerze, błąd 2/n, pochodne i punkty załamania. |
+| 059 | Bez zmian: obie majoranty, zanik pochodnych na poziomicach, znaki, lokalizacja dla p=infty. |
+| 060 | Bez zmian: oba błędy obcięcia kontrolowane przez ogony całkowalnych funkcji. |
+| 061 | Bez zmian: zakres udowodnionej reguły i ostrzeżenie przed dowolnym reprezentantem pochodnej funkcji lipschitzowskiej. |
+
+Bilans: 13/13 kryteriów poddano ponownej lekturze, 5 uściślono, 8 bez zmian. Źródło: commit 2d4cac1b16f2ec5a94e661ec88a38dd57588e224, blob 8fcc93927c0dd60f5ea45fb3f4a4bd7af99afb8e. Zachowano 37 etykiet i 64 wystąpienia odsyłaczy w tej samej kolejności; stos środowisk poprawny, pozostałe sekcje niezmienione. Nie wykonywano kompilacji, testów wykonawczych ani Lean. Druga lektura obejmuje dotąd 61 z 81 kryteriów.
+
+Następna iteracja 139: druga lektura od PDE-09-062 (przedłużanie z półprzestrzeni, odbicie i przedłużenia z warstw), bez rozszerzania zakresu.
