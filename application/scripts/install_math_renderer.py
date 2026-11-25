@@ -4,6 +4,7 @@ import base64
 import hashlib
 import io
 import json
+import re
 import shutil
 import tarfile
 import tempfile
@@ -19,7 +20,33 @@ def ready(folder):
     return all((folder / p).is_file() for p in REQUIRED) and any((folder / "fonts").glob("*.woff2"))
 
 
+def write_macro_profiles():
+    """Read only literal, single-line math command definitions; never execute TeX."""
+    profiles = {}
+    preambles = DEST.parents[2] / "config" / "preambles"
+    command = re.compile(r"^\\newcommand\{(\\[A-Za-z]+)\}(?:\[(\d+)\])?\{(.*)\}\s*$")
+    operator = re.compile(r"^\\DeclareMathOperator(\*)?\{(\\[A-Za-z]+)\}\{(.*)\}\s*$")
+    for path in sorted(preambles.glob("*.tex")):
+        macros = {}
+        for line in path.read_text(encoding="utf-8-sig").splitlines():
+            match = command.fullmatch(line)
+            if match:
+                macros[match[1]] = match[3]
+                continue
+            match = operator.fullmatch(line)
+            if match:
+                macros[match[2]] = "\\operatorname" + (match[1] or "") + "{" + match[3] + "}"
+        profiles[path.stem] = macros
+    DEST.parent.mkdir(parents=True, exist_ok=True)
+    (DEST.parent / "math-macro-profiles.js").write_text(
+        "window.atlasMathMacroProfiles = " + json.dumps(profiles, ensure_ascii=True) + ";\n",
+        encoding="utf-8",
+    )
+
+
 def install():
+    write_macro_profiles()
+
     marker = DEST / ".version"
     if ready(DEST) and marker.is_file() and marker.read_text() == VERSION:
         return
