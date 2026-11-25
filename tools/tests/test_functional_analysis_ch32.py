@@ -78,5 +78,32 @@ class Chapter32(unittest.TestCase):
                        r"\chi_{a^{-1}(B)}",r"\{i:|x_i|\ge1/n\}"):
             self.assertIn(phrase,S)
 
+    def test_FA32_polarization_02(self):
+        self.assertIn(r"i^k\mu_{x+i^k y}(B)",S)
+        values=[complex(a,b) for a,b in itertools.product(range(-1,2),repeat=2)]
+        for x,y in itertools.product(itertools.product(values,repeat=2),repeat=2):
+            for mask in range(4):
+                q=lambda v: sum(abs(z.real)**2+abs(z.imag)**2
+                                for j,z in enumerate(v) if mask&(1<<j))
+                lhs=sum(x[j]*y[j].conjugate() for j in range(2) if mask&(1<<j))
+                rhs=sum((1j)**k*q([a+(1j)**k*b for a,b in zip(x,y)])
+                        for k in range(4))/4
+                self.assertEqual(lhs,rhs)
+
+    def test_FA32_norm_threshold_02(self):
+        self.assertIn(r"M\geq\|f(T)\|",S)
+        for f in itertools.product(range(-2,3),repeat=3):
+            for support in range(8):
+                norm=max([0]+[abs(v) for j,v in enumerate(f) if support&(1<<j)])
+                for m in range(4):
+                    is_null=not any(abs(v)>m and support&(1<<j) for j,v in enumerate(f))
+                    self.assertEqual(is_null,m>=norm)
+
+    def test_FA32_polar_final_space_02(self):
+        for phrase in (r"$H=\{0\}$",r"|u|^2=\chi_{K\setminus\{0\}}",
+                       r"u(T)|T|x=Tx",r"\overline{\operatorname{Ran}T}",
+                       r"E(K\setminus\{0\})"):
+            self.assertIn(phrase,S)
+
 if __name__=="__main__":
     unittest.main()
