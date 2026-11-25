@@ -56,6 +56,20 @@
 | PDE-09-047 | cor:pde9-Poincare-zero | Wersja zerowego warunku brzegowego dla każdego kierunku j: całka od dolnego końca, Hölder z czynnikiem L^(p-1), Fubini i dodatkowe L, p=1 oraz d=1, granica w W^1,p. | semantyczna |
 | PDE-09-048 | cor:pde9-Poincare-zero | Norma gradientowa na W_0^1,p, dodatnia określoność z Poincarégo, trójkąt i jednorodność, równoważność z normą Sobolewa ze stałymi 1 i (1+L^p)^(1/p). | semantyczna |
 
+| PDE-09-049 | thm:pde9-products | Mnożnik C¹ z ograniczoną funkcją i pochodnymi: nie podstawiać iloczynu C¹ jako testu C_c^infty; lokalne wygładzenie w W^1,1, klasyczne całkowanie przez części i globalne oszacowania L^p, także p=infty. | semantyczna |
+| PDE-09-050 | thm:pde9-products | Iloczyn dla sprzężonych skończonych p,q: zbieżność trzech iloczynów lokalnie w L¹ przez rozkład różnicy i Höldera, ograniczoność norm aproksymantów; globalna całkowalność i tożsamość testowa. | semantyczna |
+| PDE-09-051 | thm:pde9-products | Przypadki p=1,q=infty i odwrotny: jednostajne ograniczenie wygładzeń i ich pochodnych przez nieujemność i normalizację jądra, podciąg a.e. przez sumowalne błędy i Tonellego, majoranta 2 norm(b)_infty abs(a); brak założenia zbieżności L^infty. | semantyczna |
+| PDE-09-052 | thm:pde9-products | Algebra W^1,infty: lokalne zastosowanie przypadku sprzężonego 1,infty i globalna istotna ograniczoność funkcji oraz pochodnych iloczynu. | semantyczna |
+| PDE-09-053 | thm:pde9-chain | Zakres F klasy C¹ o ograniczonej pochodnej, rzeczywiste u; F(0)=0 dla skończonego p na nieskończonej mierze, wyjątki dla skończonej miary lub p=infty, jawne oszacowania norm funkcji i pochodnych. | semantyczna |
+| PDE-09-054 | thm:pde9-chain | Lokalna aproksymacja w W^1,p i podciąg a.e. z sumowalnych p-tych potęg błędów, zbieżność złożenia przez Lipschitza; rozkład różnicy pochodnych i majoranta (2L)^p abs(partial_j u)^p, przejście do granicy na testach. | semantyczna |
+| PDE-09-055 | thm:pde9-chain | Reguła łańcuchowa dla p=infty przez lokalny przypadek p=1 na U relatywnie zwartym i globalne ograniczenia; bez nieuprawnionej aproksymacji w normie supremum. | semantyczna |
+| PDE-09-056 | lem:pde9-levelsets | Jawna konstrukcja h_n przez odcięcie, F_n(0)=0, całka zorientowana dla t<0, oszacowanie błędu min(abs(t),4/n), majoranta abs(u)^p także dla nieskończonej miary. | semantyczna |
+| PDE-09-057 | lem:pde9-levelsets | Granica h_n(u) partial_j u w L^p przez zmajoryzowanie i zamkniętość pojedynczej pochodnej; gradient zerowy na każdym ustalonym zbiorze poziomicowym, p=infty przez przeliczalne pokrycie i przypadek lokalny p=1. | semantyczna |
+| PDE-09-058 | cor:pde9-truncation | Jawne gładkie aproksymanty G_n=eta_n*G-(eta_n*G)(0) dla dodatniej części i T_M; G_n(0)=0, 0<=G_n'<=1, błąd <=2/n, zgodność pochodnej poza skończonym zbiorem punktów załamania. | semantyczna |
+| PDE-09-059 | cor:pde9-truncation | Zbieżność złożeń i pochodnych w L^p z majorantami, zanik gradientu na przeciwobrazach punktów załamania, zamkniętość pochodnej; wzory dla dodatniej i ujemnej części, modułu i T_M, także p=infty przez lokalizację. | semantyczna |
+| PDE-09-060 | cor:pde9-truncation | T_M(u) zbiega do u w W^1,p dla p skończonego: oszacowania błędów funkcji i pochodnych przez ogony, zbieżność zmajoryzowana, skończona liczba składowych. Nie twierdzić tej zbieżności dla ogólnych nieskończonych wykładników przez ten argument. | semantyczna |
+| PDE-09-061 | sec:pde9-calculus | Rozróżnienie udowodnionej reguły dla C¹ oraz obcięć ze skończoną liczbą punktów załamania od ogólnej reguły dla funkcji lipschitzowskich; nie podstawiać dowolnego reprezentanta pochodnej bez uzasadnienia. | semantyczna |
+
 ## Iteracja 128 — 2026-11-25
 
 Pierwsza lektura wprowadzenia i sekcji 9.1. Uszczegółowiono definicje, normy, lokalizację i sklejanie, wykorzystano sprawdzone wyniki rozdziałów 07–08. Dodano konsekwencję abs(x) nie należy do W^2,p i przypadek p=infty w istniejącym przykładzie potęgowym, bez rozbudowywania odrębnego działu. Rozpisano obie implikacje kryterium całkowalności słabego gradientu oraz normalizację normy H¹.
@@ -87,3 +101,11 @@ Pierwsza lektura sekcji 9.6–9.7. Uściślono izometryczne przedłużenie przez
 Źródło commit 175a32a726a5845fd9fad7f9afa99c228b67a45a, blob f47307fde43516e321425b41c2da4078bc46c8ed. Zachowano 37 unikatowych etykiet, 46 wystąpień odsyłaczy, 15 niezmienionych celów zewnętrznych; poprawne zagnieżdżenie środowisk, tekst poza 9.6–9.7 identyczny. Dodano 12 kryteriów, łącznie 48. Nie wykonywano kompilacji, testów numerycznych ani Lean.
 
 Następna iteracja 132: pierwsza lektura sekcji 9.8, reguły rachunkowe, iloczyn, reguła łańcuchowa, obcinanie i zbiory poziomicowe; wykorzystać lemat odcięcia, sprawdzić hipotezy dla p=infty.
+
+## Iteracja 132 — 2026-11-25
+
+Pierwsza lektura sekcji 9.8. Poprawiono dowód mnożenia przez współczynnik C¹ (nie jest on automatycznie gładkim testem dystrybucyjnym) przez lokalne wygładzenia. Uzupełniono dowód iloczynu dla wykładników sprzężonych, osobno oba przypadki końcowe, oraz algebrę W^1,infty. Doprecyzowano zakres reguły łańcuchowej C¹ z ograniczoną pochodną, przypadki F(0) i p=infty. Rozpisano konstrukcję i majoranty w dowodzie lematu poziomicowego oraz wygładzenia obcięć z dokładnym warunkiem G_n(0)=0. Udowodniono wzory dla modułu, dodatniej i ujemnej części oraz gradientu T_M, a także zbieżność obcięć w W^1,p dla p skończonego. Ujednolicono termin zbieżność zmajoryzowana. Nie rozszerzano dowodu na dowolne funkcje lipschitzowskie, którego dodatkowe uzasadnienie wykracza poza podane przypadki.
+
+Źródło commit a98262681a401f0c839a10a55482b4954dc3a1e2, blob 7f6dc5f21b28925d7abd1edb20ea849bc9c29dc6. Zachowano 37 unikatowych etykiet; 56 wystąpień odsyłaczy, 15 niezmienionych celów zewnętrznych; poprawny stos środowisk, tekst poza 9.8 identyczny. Dodano 13 kryteriów, łącznie 61. Nie wykonywano kompilacji, testów numerycznych ani Lean.
+
+Następna iteracja 133: pierwsza lektura sekcji 9.9 — przedłużanie z półprzestrzeni, odbicie wyższych rzędów i gęstość na półprzestrzeni i warstwie; zweryfikować współczynniki dopasowania pochodnych i brak kołowego rozumowania.
