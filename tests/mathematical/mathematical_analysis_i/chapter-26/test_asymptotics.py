@@ -12,6 +12,29 @@ class Chapter26(unittest.TestCase):
             if g==0:
                 self.assertEqual(f,0)
 
+    def test_accumulating_zeros(self):
+        # D={1/n}; the comparison function has zeros accumulating at 0.
+        for n in range(2,100):
+            x=F(1,n)
+            g=F(0) if n%2==0 else x
+            f=x*g
+            self.assertLessEqual(abs(f),x*abs(g))
+            if n%2==0:
+                self.assertEqual(g,0)
+                self.assertEqual(f,0)
+
+    def test_divergent_asymptotic_series(self):
+        # x=1/k^2 makes floor(x^(-1/2)) exactly k.
+        for k in (4,8,16,32):
+            x=F(1,k*k)
+            terms=[factorial(j)*x**j for j in range(k+1)]
+            for n in range(k):
+                tail=sum(terms[n+1:])
+                self.assertGreaterEqual(tail,0)
+                self.assertLessEqual(tail,2*factorial(n+1)*x**(n+1))
+            j=2*k*k
+            self.assertGreater((j+1)*x,2)
+
     def test_equivalence_relative_error(self):
         for x in (F(-1,10),F(1,10)):
             g=x*x
