@@ -1,0 +1,10 @@
+# PDE-05 — iteracja 65: niezależna lektura 5.3–5.5
+
+Data: 2026-11-25. Raport uzupełniony w iteracji 66 po przekroczeniu limitu wywołań w iteracji 65. Źródło 97d5fa77fa7282ceee6fbf924e77b28d788975f8, rejestr dd58ee2123ea338f210476584868ede0a501efd6.
+
+- PDE-05-010–011: normalizacja 4pi, skalowanie miary przez r², regularność lokalna średnich, parzystość i zerowa pochodna w r=0. Strumień gradientu, współrzędne biegunowe i różniczkowanie prowadzą do równania Darboux. Tożsamość dla rM_r v obowiązuje na całej prostej przez nieparzystość i ciągłość.
+- PDE-05-012–014: W klasy C² również w zerze, redukcja jednowymiarowa bez osobliwości, nieparzyste A,B oraz parzyste A'. W_r(t,0)=A'(ct)+B(ct)/c. Obie pochodne czasowe V_v, laplasjan, przemienność pochodnych trzeciego rzędu V_g, V(0)=0, V_t(0)=v, V_tt(0)=0. Zależność od g,h i pochodnej normalnej g, zanik po przejściu czoła dla zwartych nośników.
+- PDE-05-015–018: translacje z zachowują równanie i dane, jednoznaczność bez kontroli wzrostu pozwala zredukować wymiar. Równik miary powierzchniowej zero, macierz Grama i jakobian r/sqrt(r²-rho²), całka wagi 2pi r, właściwa normalizacja. Podstawienie na dysk jednostkowy daje t/(2pi), stałą całkowalną wagę, regularność i oba dane początkowe. Dodatniość ogona oraz zależność od wnętrza dysku; ogólny wynik wymiarowy przytoczony, nie dowiedziony.
+- PDE-05-019–022: orientowana całka J, lokalna dominacja, pięć pochodnych do rzędu dwa, wartości na przekątnej, f(t,x) z końca całki v_t, brak takiego składnika w v_xt. Znaki i współczynniki, ciągłość i pochodne jednostronne, równanie v_tt-c²v_xx=f i zerowe dane, v_tt(0)=f(0). Zasada Duhamela i zależność stożkowa.
+
+Nie stwierdzono nowych istotnych luk w zakresie tej lektury. Łącznie 5/8 sekcji ponownego audytu po iteracji 65. CI 45567364891, job 139045324745, wszystkie kroki success. Artefakt 15000422877. W iteracji 66 ponowiono rzeczywiste oględziny renderu i zweryfikowano sumę kontrolną ZIP; szczegóły w stabilized.md. Brak nowych zmian źródła. Nie wykonywano Lean ani pełnej kompilacji tomu.
