@@ -1,0 +1,380 @@
+\chapter{Pochodna Frécheta i różniczka zupełna}
+\label{ma2:ch:frechet}
+
+Od tego rozdziału stosujemy ogólne twierdzenia rachunku
+różniczkowego w rzeczywistych przestrzeniach unormowanych.
+Zupełność zakładamy tylko tam, gdzie jest potrzebna.
+Podstawowe wyniki pochodzą z analizy funkcjonalnej,
+rozdział 14 (AF 14); wykorzystujemy ich dowody, a w razie
+osłabienia hipotez wskazujemy uzasadnienie.
+Przypadek euklidesowy pozostaje szczególnie ważny z uwagi
+na rachunek współrzędnych i geometrię.
+
+\section{Liniowe przybliżenie przyrostu}
+
+Niech $E,F$ będą rzeczywistymi przestrzeniami unormowanymi,
+$U\subseteq E$ otwarty i $p\in U$.
+Przestrzeń operatorów liniowych ciągłych
+$\mathcal L(E,F)$ wyposażamy w normę operatorową
+(stwierdzenie \ref{prop:operator-norm12}).
+
+\begin{definicja}[Pochodna Frécheta]
+\label{ma2:def:frechet}
+Odwzorowanie $f:U\to F$ nazywamy różniczkowalnym
+w sensie Frécheta w $p$, jeśli istnieje
+$A\in\mathcal L(E,F)$ takie, że
+\[
+ f(p+h)=f(p)+Ah+r(h),\qquad
+ \lim_{\substack{h\to0\\h\ne0}}
+ \frac{\|r(h)\|_F}{\|h\|_E}=0.
+\]
+Reszta jest określona dla $h$ z pewnej kuli wokół zera
+i $r(0)=0$. Piszemy $r(h)=o(\|h\|_E)$.
+Operator $A$ oznaczamy przez $Df(p)$, a także
+$\mathrm df_p$ (różniczka zupełna w $p$).
+Jest to definicja AF 14.3.
+\end{definicja}
+
+Dla $E=\{0\}$ warunek na resztę rozumiemy w sensie
+epsilon-delta (pusto dla $h\ne0$); jedyny operator
+liniowy jest wtedy zerowy.
+Dla $E=F=\R$ otrzymujemy definicję pochodnej i różniczki
+z AM I 20.1 i 20.2, gdyż każdy operator liniowy ma
+postać $h\mapsto ah$ i iloraz reszty przez $h$ dąży
+do zera dokładnie wtedy, gdy jej moduł podzielony
+przez $|h|$ dąży do zera.
+
+\begin{twierdzenie}[Ciągłość i pochodna Gâteaux]
+\label{ma2:thm:frechet-gateaux}
+Jeśli $f$ jest różniczkowalne w sensie Frécheta w $p$,
+to jest ciągłe w $p$. Dla każdego $v\in E$ istnieje
+dwustronna pochodna kierunkowa i
+$\partial_v f(p)=Df(p)v$.
+W szczególności pochodna Frécheta jest jednoznaczna
+i $D_Gf(p)=Df(p)$, gdzie pochodna Gâteaux oznacza
+ciągły operator liniowy reprezentujący wszystkie
+pochodne kierunkowe (AF 14.2).
+\end{twierdzenie}
+
+Jest to dokładnie twierdzenie AF 14.5
+(\texttt{thm:frechet-implies-gateaux14}); tam znajduje
+się dowód dla przestrzeni unormowanych. W szczególności
+nie wymaga on zupełności. Dla $E=\R^n$, $F=\R^m$
+zastosowanie stwierdzenia \ref{ma2:prop:gateaux-matrix}
+daje macierz $J_f(p)$ operatora $Df(p)$.
+
+\begin{stwierdzenie}[Jednostajność względem kierunku]
+\label{ma2:prop:frechet-uniform}
+Jeśli $E\ne\{0\}$ i $A\in\mathcal L(E,F)$, to
+$Df(p)=A$ wtedy i tylko wtedy, gdy
+\[
+ \lim_{t\to0,\ t\ne0}
+ \sup_{\|v\|_E=1}
+ \left\|\frac{f(p+tv)-f(p)}{t}-Av\right\|_F=0.
+\]
+Parametr $t$ jest rzeczywisty i ma moduł dostatecznie
+mały, aby $p+tv\in U$ dla wszystkich jednostkowych $v$.
+Supremum może a priori przyjąć wartość $+\infty$.
+\end{stwierdzenie}
+
+Stosujemy AF 14.6 (\texttt{prop:uniform-directions14}).
+W porównaniu z definicją pochodnej Gâteaux nie wystarcza
+granica dla każdego ustalonego $v$: potrzebna jest
+jedna kontrola błędu dla wszystkich jednostkowych
+kierunków (por. twierdzenie \ref{ma2:thm:radial-limit}).
+
+\begin{przyklad}[Ciągłość i pochodna Gâteaux nie wystarczają]
+\label{ma2:ex:frechet-counterexample}
+W przykładzie AF 14.9 funkcja $f:\R^2\to\R$ określona
+przez $f(0,0)=0$ oraz
+$f(x,y)=x^3y/(x^4+y^2)$ poza zerem jest ciągła w zerze
+i $D_Gf(0,0)=0$. Na paraboli $y=x^2$ mamy jednak
+\[
+ \frac{|f(x,x^2)|}{\|(x,x^2)\|_2}
+ =\frac{1}{2\sqrt{1+x^2}}\longrightarrow\frac12.
+\]
+Pochodna Frécheta, gdyby istniała, musiałaby być zerowa
+na mocy twierdzenia \ref{ma2:thm:frechet-gateaux},
+co przeczy warunkowi na resztę. Pełne obliczenia
+ciągłości i pochodnych kierunkowych są w AF 14.9.
+\end{przyklad}
+
+\section{Reguły różniczkowania}
+
+\begin{twierdzenie}[Kombinacje liniowe i reguła łańcuchowa]
+\label{ma2:thm:frechet-chain}
+Niech $E,F,G$ będą rzeczywistymi przestrzeniami
+unormowanymi, $U\subseteq E$, $V\subseteq F$ otwarte,
+$p\in U$. Jeżeli $f_1,f_2:U\to F$ są różniczkowalne
+w $p$, to dla $\alpha,\beta\in\R$ zachodzi
+\[
+ D(\alpha f_1+\beta f_2)(p)=
+ \alpha Df_1(p)+\beta Df_2(p).
+\]
+Jeżeli $f:U\to V$ jest różniczkowalne w $p$,
+a $g:V\to G$ w $f(p)$, to
+\[
+ D(g\circ f)(p)=Dg(f(p))\circ Df(p).
+\]
+Odwzorowanie afiniczne $x\mapsto Lx+b$ dla
+$L\in\mathcal L(E,F)$, $b\in F$ ma pochodną $L$.
+\end{twierdzenie}
+\begin{proof}
+Korzystamy ze stwierdzenia AF 14.14 oraz twierdzenia
+AF 14.15. W źródle założono zupełność przestrzeni,
+lecz dowody jej nie wykorzystują: w pierwszym
+sumuje się reszty i używa nierówności trójkąta,
+a w drugim dla $k=f(p+h)-f(p)$ oszacowanie
+$\|k\|\le(\|Df(p)\|+1)\|h\|$ zapewnia, że
+reszta zewnętrznego przybliżenia, będąca
+$o(\|k\|)$, jest $o(\|h\|)$ (dla $k=0$ jest zerowa).
+Wszystkie działania odbywają się na istniejących
+wektorach i ograniczonych operatorach, bez przejścia
+do granicy ciągu Cauchy'ego. W przypadku afinicznym
+reszta jest identycznie zerowa. Te same dowody
+obowiązują zatem dla przestrzeni unormowanych.
+\end{proof}
+
+\begin{twierdzenie}[Reguła dla odwzorowań dwuliniowych]
+\label{ma2:thm:frechet-bilinear}
+Niech $E,E_1,E_2,G$ będą rzeczywistymi przestrzeniami
+unormowanymi i $B:E_1\times E_2\to G$ dwuliniowym
+odwzorowaniem spełniającym
+$\|B(u,v)\|\le C\|u\|\|v\|$ dla pewnego $C\ge0$.
+Wówczas
+\[
+ DB(u,v)(h,k)=B(h,v)+B(u,k).
+\]
+Jeżeli $f:U\to E_1$ i $g:U\to E_2$ są różniczkowalne
+w $p$, gdzie $U\subseteq E$ jest otwarty, to
+$z\mapsto B(f(z),g(z))$ jest różniczkowalne w $p$ i
+\[
+ D(B(f,g))(p)h
+ =B(Df(p)h,g(p))+B(f(p),Dg(p)h).
+\]
+\end{twierdzenie}
+\begin{proof}
+Dowód AF 14.16 jest ważny bez założenia zupełności:
+w normie maksimum produktu reszta jest równa
+$B(h,k)$ i ma normę co najwyżej
+$C\max(\|h\|,\|k\|)^2$.
+W dowodzie drugiej części pochodna pary $(f,g)$
+jest parą operatorów $(Df,Dg)$, co wynika bezpośrednio
+z normy maksimum obu reszt. Stosujemy następnie
+twierdzenie \ref{ma2:thm:frechet-chain}.
+\end{proof}
+
+Dla $E_1=E_2=G=\R$ oraz $B(u,v)=uv$ otrzymujemy
+regułę iloczynu. Jeżeli $g(p)\ne0$ i $f,g$ są
+różniczkowalne w $p$, ciągłość $g$ w $p$ zapewnia,
+że mianownik nie znika w pewnej kuli wokół $p$.
+Stosując regułę łańcuchową do $s\mapsto1/s$
+(AM I 20.3.2), a następnie regułę iloczynu, dostajemy
+\[
+ D(f/g)(p)h
+ =\frac{g(p)Df(p)h-f(p)Dg(p)h}{g(p)^2}.
+\]
+
+\begin{przyklad}[Nieskończony wymiar]
+Niech $E=C([0,1],\R)$ z normą supremum
+(por. twierdzenie \ref{ma2:thm:continuous}).
+Odwzorowanie $P:E\to E$, $P(u)=u^2$, jest
+różniczkowalne, a $DP(u)h=2uh$.
+Istotnie, mnożenie punktowe jest dwuliniowe
+i $\|uv\|_\infty\le\|u\|_\infty\|v\|_\infty$.
+Twierdzenie \ref{ma2:thm:frechet-bilinear} zastosowane
+do $B(u,u)$ daje wskazany operator. Reszta $h^2$
+ma normę $\|h\|_\infty^2$.
+\end{przyklad}
+
+\section{Pochodne częściowe na iloczynach}
+
+Niech $E=E_1\times\cdots\times E_N$, gdzie $N\ge1$,
+a $E_j$ są rzeczywistymi przestrzeniami unormowanymi.
+Stosujemy normę $\|h\|=\max_j\|h_j\|$.
+Przez $i_j:E_j\to E$ oznaczamy włożenie wektora
+na $j$-tą pozycję, z zerami na pozostałych.
+Dla $f:U\to F$ i $p\in U$ definiujemy $D_jf(p)$
+jako pochodną Frécheta funkcji
+$z\mapsto f(p+i_jz)$ w $z=0$, jeśli istnieje.
+Jest to pochodna częściowa względem całego bloku
+zmiennych, a nie pojedynczej współrzędnej skalarnej.
+
+\begin{stwierdzenie}
+\label{ma2:prop:frechet-blocks}
+Jeżeli $Df(p)$ istnieje, to istnieją wszystkie
+$D_jf(p)\in\mathcal L(E_j,F)$ i
+\[
+ D_jf(p)=Df(p)\circ i_j,\qquad
+ Df(p)h=\sum_{j=1}^N D_jf(p)h_j.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Odwzorowanie $z\mapsto p+i_jz$ jest afiniczne
+i jego pochodną jest $i_j$ (operator ograniczony,
+gdyż $\|i_jz\|=\|z\|$). Reguła łańcuchowa daje
+pierwszą równość. Druga wynika z
+$h=\sum_j i_jh_j$ i liniowości $Df(p)$.
+\end{proof}
+
+\begin{twierdzenie}[Kryterium ciągłych pochodnych częściowych]
+\label{ma2:thm:continuous-block-partials}
+Niech $F$ będzie rzeczywistą przestrzenią unormowaną,
+$U\subseteq E$ zbiorem otwartym, $p\in U$.
+Jeżeli wszystkie pochodne częściowe $D_jf$ istnieją
+w pewnym otoczeniu $p$ i są ciągłe w $p$ w normach
+operatorowych, to $f$ jest różniczkowalne w sensie
+Frécheta w $p$ i
+\[
+ Df(p)h=\sum_{j=1}^N D_jf(p)h_j.
+\]
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy $A_j=D_jf(p)$ i
+$Ah=\sum_j A_jh_j$. Operator $A$ jest liniowy
+i ograniczony, bo $\|Ah\|\le(\sum_j\|A_j\|)\|h\|$.
+Dla $\varepsilon>0$ wybieramy $\delta>0$ takie,
+że kula $B(p,\delta)$ zawiera się w otoczeniu
+z założenia i dla $z$ w tej kuli oraz każdego $j$
+zachodzi $\|D_jf(z)-A_j\|<\varepsilon/N$.
+Można użyć wspólnego promienia, bo bloków jest skończenie wiele.
+
+Niech $\|h\|<\delta$, $p_0=p$ oraz
+$p_j=p+\sum_{k=1}^j i_k h_k$.
+Odcinek $p_{j-1}+t i_jh_j$, $0\le t\le1$,
+zawiera się w $B(p,\delta)$, ponieważ w normie
+maksimum odległość od $p$ nie przekracza $\|h\|$.
+Funkcja
+\[
+ \gamma_j(t)=f(p_{j-1}+t i_jh_j)-t A_jh_j
+\]
+jest różniczkowalna (włącznie z pochodnymi jednostronnymi
+na końcach): z definicji pochodnej częściowej,
+po przyroście parametru $s$ przyrost $j$-tego bloku
+wynosi $s h_j$. Zatem
+\[
+ \gamma_j'(t)=
+ (D_jf(p_{j-1}+t i_jh_j)-A_j)h_j,
+ \qquad
+ \|\gamma_j'(t)\|\le\frac{\varepsilon}{N}\|h_j\|.
+\]
+Różniczkowalność zapewnia ciągłość $\gamma_j$ na odcinku.
+Lemat \ref{ma2:lem:vector-increment}, który nie wymaga
+zupełności przestrzeni wartości, daje
+\[
+ \|f(p_j)-f(p_{j-1})-A_jh_j\|
+ \le\frac{\varepsilon}{N}\|h_j\|.
+\]
+Sumując po $j$ i używając sumy teleskopowej, mamy
+\[
+ \|f(p+h)-f(p)-Ah\|
+ \le\frac{\varepsilon}{N}\sum_{j=1}^N\|h_j\|
+ \le\varepsilon\|h\|.
+\]
+Ponieważ $\varepsilon$ było dowolne, jest to
+warunek różniczkowalności z pochodną $A$.
+\end{proof}
+
+\section{Klasa \texorpdfstring{$C^1$}{C1} i rachunek współrzędnych}
+
+\begin{definicja}
+\label{ma2:def:c1}
+Piszemy $f\in C^1(U,F)$, jeśli $f$ jest różniczkowalne
+w sensie Frécheta w każdym punkcie $U$ oraz
+$Df:U\to\mathcal L(E,F)$ jest ciągłe w normie operatorowej.
+Jest to definicja AF 14.18 rozszerzona na przestrzenie
+unormowane; zupełność nie jest konieczna do jej
+sformułowania.
+\end{definicja}
+
+\begin{wniosek}
+\label{ma2:cor:c1-blocks}
+Na skończonym iloczynie przestrzeni unormowanych
+$f$ jest klasy $C^1$ wtedy i tylko wtedy, gdy wszystkie
+$D_jf$ istnieją na $U$ i są ciągłe w normach operatorowych.
+\end{wniosek}
+\begin{proof}
+Z konieczności $D_jf(p)=Df(p)\circ i_j$ i
+$\|D_jf(p)-D_jf(q)\|\le\|Df(p)-Df(q)\|$.
+Odwrotnie, twierdzenie
+\ref{ma2:thm:continuous-block-partials} daje pochodną
+w każdym punkcie, a z jej wzoru wynika
+$\|Df(p)-Df(q)\|\le\sum_j\|D_jf(p)-D_jf(q)\|$.
+Skończona suma dąży do zera przy $q\to p$.
+\end{proof}
+
+W szczególności dla $E=\R^n$, $F=\R^m$
+ciągłość pochodnych cząstkowych wszystkich
+funkcji współrzędnych jest równoważna klasie $C^1$.
+Operator z twierdzenia
+\ref{ma2:thm:continuous-block-partials} ma macierz
+Jacobiego. Zmiana normy maksimum na normę euklidesową
+nie wpływa na różniczkowalność ani ciągłość pochodnej,
+gdyż normy te są równoważne
+(twierdzenie \ref{ma2:thm:equiv}): odpowiednie ilorazy
+norm są oszacowane przez stałe dodatnie, podobnie
+jak normy operatorowe.
+
+Dla $f:\R^n\supseteq U\to\R^m$ różniczkowalnego w $p$
+różniczka ma postać
+\[
+ \mathrm df_p=\sum_{j=1}^n\partial_j f(p)\,\mathrm dx_j,
+ \qquad \mathrm dx_j(h)=h_j.
+\]
+Iloczyn wektora i funkcjonału oznacza tu operator
+$h\mapsto h_j\partial_j f(p)$. Dla funkcji skalarnej
+otrzymujemy $\mathrm df_p(h)=\langle\nabla f(p),h\rangle$.
+W rzeczywistej przestrzeni Hilberta reprezentację
+$Df(p)h=\langle h,\nabla f(p)\rangle$ zapewnia
+twierdzenie Riesza (AF 14.24); w ogólnej przestrzeni
+unormowanej różniczka funkcji skalarnej jest funkcjonałem
+liniowym ciągłym, nie zaś kanonicznie wektorem.
+
+\begin{przyklad}
+Niech $f(x,y)=(x^2+y,xy)$ i $g(u,v)=u+v^2$.
+Wszystkie pochodne cząstkowe są ciągłe, więc
+$f,g$ są klasy $C^1$ na odpowiednich przestrzeniach.
+Z reguły łańcuchowej
+\[
+ J_{g\circ f}(x,y)
+ =\begin{pmatrix}1&2xy\end{pmatrix}
+  \begin{pmatrix}2x&1\\y&x\end{pmatrix}
+ =\begin{pmatrix}2x+2xy^2&1+2x^2y\end{pmatrix}.
+\]
+Jest to ten sam wynik, który otrzymujemy przez
+różniczkowanie funkcji $x^2+y+x^2y^2$.
+\end{przyklad}
+
+\section{Interpretacja geometryczna}
+
+Dla $f:U\subseteq\R^n\to\R$ różniczkowalnej
+w $p$ afiniczny wykres przybliżenia jest zbiorem
+\[
+ \{(p+h,f(p)+Df(p)h):h\in\R^n\}.
+\]
+Jego odchylenie pionowe od wykresu $f$ wynosi
+$r(h)=o(\|h\|)$ na mocy definicji
+\ref{ma2:def:frechet}. Dla $n=2$ jest to płaszczyzna
+styczna w punkcie $(p,f(p))$, a dla dowolnego $n$
+hiperpłaszczyzna styczna. Nie wnioskujemy jeszcze,
+że cały wykres jest gładką podrozmaitością:
+do tego potrzebna jest odpowiednia regularność w otoczeniu.
+
+\begin{przyklad}
+Dla $f(x,y)=x^2+2y^2$ w $(1,1)$ otrzymujemy
+$\mathrm df_{(1,1)}(h,k)=2h+4k$.
+Płaszczyzna styczna do wykresu ma równanie
+$z=3+2(x-1)+4(y-1)$.
+Po podstawieniu $x=1+h$, $y=1+k$ różnica wysokości
+wynosi $h^2+2k^2$, co nie przekracza $2(h^2+k^2)$.
+Po podzieleniu przez $\sqrt{h^2+k^2}$ iloraz dąży
+do zera. Jest to bezpośrednie sprawdzenie
+liniowego przybliżenia, a nie tylko obliczenie
+pochodnych cząstkowych.
+\end{przyklad}
+
+W następnym rozdziale wykorzystamy regułę łańcuchową
+i lemat o przyroście do ogólnych nierówności o wartości
+średniej. Wzór całkowy dla krzywych o wartościach
+w przestrzeni Banacha wymaga osobnego uzasadnienia
+istnienia całki.
