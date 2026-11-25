@@ -100,14 +100,14 @@ class CategoryTheoryCh10(unittest.TestCase):
         for n in range(5):
             for T in maps(n,n):
                 if comp(T,T)!=T:
-                continue
+                    continue
                 natural=[a for a in maps(2,n) if comp(T,a)==(a[1],a[1])]
                 self.assertEqual(set(natural),{(x,T[x]) for x in range(n)})
                 self.assertEqual(len(natural),n)
 
     def test_CAT_10_011_all_tuple_operations(self):
         # Enumerate every candidate at the two-element test object;
-        # naturality under all maps of 0,1,2 rules out nonprojections.
+        # naturality under all endomorphisms of the two-element set rules out nonprojections.
         X=list(maps(2,2))
         candidates=[]
         for op in maps(4,2):
