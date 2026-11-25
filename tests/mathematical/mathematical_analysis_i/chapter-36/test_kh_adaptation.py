@@ -18,6 +18,14 @@ class Chapter36(unittest.TestCase):
             if ref.startswith("ma1:kh:"):
                 self.assertIn(ref,labels)
 
+    def test_external_local_references(self):
+        source=SOURCE.read_text(encoding="utf8")
+        all_sources="\n".join(p.read_text(encoding="utf8") for p in
+            (ROOT/"chapters/pl/mathematical_analysis_i").glob("*.tex"))
+        labels=set(re.findall(r"\\label\{([^}]+)\}",all_sources))
+        for ref in re.findall(r"\\(?:ref|eqref)\{([^}]+)\}",source):
+            self.assertIn(ref,labels)
+
     def test_source_label_map(self):
         mapping=re.findall(r"^\| ([^| ]+) \| (ma1:kh:[^| ]+) \|$",MAP.read_text(encoding="utf8"),re.M)
         self.assertGreaterEqual(len(mapping),29)
@@ -51,6 +59,24 @@ class Chapter36(unittest.TestCase):
             for c in (u,(u+v)/2,v):
                 self.assertLessEqual(abs(2**n*a*(v-c)),abs(a))
             self.assertEqual(2**n*a*(v-u),a)
+
+    def test_stieltjes_summation_by_parts(self):
+        x=[F(0),F(1,4),F(1,2),F(1)]
+        fun=lambda t:t*t
+        g=lambda t:F(1) if t>=F(1,2) else F(0)
+        left=sum(g(u)*(fun(v)-fun(u)) for u,v in zip(x,x[1:]))
+        right=sum(fun(v)*(g(v)-g(u)) for u,v in zip(x,x[1:]))
+        self.assertEqual(left+right,fun(x[-1])*g(x[-1])-fun(x[0])*g(x[0]))
+
+    def test_decreasing_substitution_sign(self):
+        # Simpson is exact for the transformed polynomial - (1-t)^2.
+        f=lambda x:x*x
+        phi=lambda t:1-t
+        q=lambda t:-f(phi(t))
+        transformed=(q(F(0))+4*q(F(1,2))+q(F(1)))/6
+        original=(f(F(0))+4*f(F(1,2))+f(F(1)))/6
+        self.assertEqual(transformed,-original)
+        self.assertEqual(original,F(1,3))
 
     def test_derivative_remainder_telescope(self):
         endpoints=[F(0),F(1,5),F(1,2),F(1)]
