@@ -673,6 +673,39 @@ def check_alexander_normalization():
     return count
 
 
+def check_levine_tristram_enlargement():
+    """GKT-25-LT-01: Hermitian enlargement identity at scaled rational circle points."""
+    from random import Random
+    rng = Random(242)
+    count = 0
+    # All complex arithmetic below is on small Gaussian integers,
+    # hence exactly representable in binary64. Scaling by 5 is positive.
+    for c, mode, n in product((2,1+1j,1-1j,2+4j,2-4j,8+4j,8-4j),(0,1),(0,2,4)):
+        for _ in range(32):
+            V = [[rng.randrange(-3,4) for j in range(n)] for i in range(n)]
+            u = [rng.randrange(-3,4) for i in range(n)]
+            v = [rng.randrange(-3,4) for i in range(n)]
+            z = rng.randrange(-3,4)
+            E = enlarged(V,u,v,z,mode)
+            def herm(M):
+                return [[c*M[i][j]+c.conjugate()*M[j][i]
+                         for j in range(len(M))] for i in range(len(M))]
+            def form(M,x):
+                return sum(x[i].conjugate()*M[i][j]*x[j]
+                           for i in range(len(x)) for j in range(len(x)))
+            H, HE = herm(V), herm(E)
+            x = [complex(rng.randrange(-3,4),rng.randrange(-3,4)) for i in range(n)]
+            s,t = [complex(rng.randrange(-3,4),rng.randrange(-3,4)) for i in range(2)]
+            w = [c*a+c.conjugate()*b for a,b in zip(u,v)]
+            beta = c if mode else c.conjugate()
+            assert beta != 0
+            tp = beta*t+sum(a.conjugate()*b for a,b in zip(w,x))+c.real*z*s
+            assert form(HE,x+[s,t]) == form(H,x)+2*(s.conjugate()*tp).real
+            count += 1
+    assert count == 1344
+    return count
+
+
 def test_source():
     names=[
         "16-od-triangulacji-do-topologii-i-geometrii-rozmaitosci.tex",
@@ -697,6 +730,7 @@ def test_source():
 
 if __name__=="__main__":
     test_source()
+    print("PASS GKT-25-LT-01:",check_levine_tristram_enlargement())
     print("PASS GKT-25-ALEX-NORM-01:",check_alexander_normalization())
     print("PASS GKT-25-TORUS-FOX-01:",check_torus_fox_polynomial())
     print("PASS GKT-25-JONES-01:",check_jones_mixed_r3_skein())
