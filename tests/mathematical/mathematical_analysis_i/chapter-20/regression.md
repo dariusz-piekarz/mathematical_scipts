@@ -17,5 +17,6 @@ Testy w dokładnej arytmetyce sprawdzają skończone świadki i tożsamości alg
 | MA1-20-013 | ma1:thm:hyperbolic-derivatives | Tożsamość hiperboliczna, wszystkie odwrotności, dziedziny i znaki, brzeg arcosh | semantyczna + Python |
 | MA1-20-014 | ma1:ex:derivative-composition | Dziedzina x^x oraz log(1+x^2), reguły iloczynu i złożenia | semantyczna + Python |
 | MA1-20-015 | ma1:ex:discontinuous-derivative | Pochodna istnieje w zerze, dwa ciągi z wartościami pochodnej -1 i 1 | semantyczna |
-| MA1-20-016 | ma1:def:differential, ma1:thm:linear-approximation | Różniczka jako odwzorowanie liniowe, dx=Delta x, dy=f'(a)h, Delta y-dy=o(h), także h=0 i h<0 | semantyczna + Python (test_differential_vs_finite_increment) |
-| MA1-20-017 | ma1:def:differential | Rzeczywiste współrzędne A,B,T i oznaczenia dx, dy, Delta x, Delta y w TikZ; B i T mają tę samą odciętą, reszta dla paraboli h²/2 | Python (test_differential_diagram_source) + PDF |
+| MA1-20-016 | ma1:def:differential, ma1:thm:linear-approximation | Różniczka jako odwzorowanie liniowe, w sekcji 20.1 przed rysunkiem, dx=Delta x, dy=f'(a)h, Delta y-dy=o(h), także h=0, h<0 i f'(a)=0 | semantyczna + Python (test_differential_vs_finite_increment, test_differential_linearity_and_zero_derivative, test_differential_position) |
+| MA1-20-017 | ma1:def:differential | Rzeczywiste współrzędne A,B,T,P i oznaczenia dx, dy, Delta x, Delta y, r(h) w TikZ; P,T,B mają tę samą odciętą, reszta dla paraboli h²/2 | Python (test_differential_diagram_source) + PDF |
+| MA1-20-018 | ma1:ex:differential-quadratic | Tabela przyrostów i błędów, także h<0, dokładne wartości i stosunek błędu do modułu h | semantyczna + Python (test_differential_table_exact) |
