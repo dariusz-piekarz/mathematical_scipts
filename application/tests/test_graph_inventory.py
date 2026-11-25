@@ -43,13 +43,13 @@ class GraphInventoryTest(unittest.TestCase):
             legacy = inventory["legacy_references"][0]
             self.assertEqual((legacy["source"], legacy["label"], legacy["target"]),
                              ("LA-01", "shared", "AA-01"))
-            self.assertEqual(report["summary"]["isolated_chapters"], 2)
-            self.assertEqual(report["summary"]["isolated_all_chapters"], 1)
+            self.assertEqual(report["summary"]["cross_isolated_chapters"], 2)
+            self.assertEqual(report["summary"]["isolated_chapters"], 1)
             self.assertEqual(report["summary"]["legacy_reading_references"], 1)
             chapters = {c["id"]: c for c in report["chapters"]}
-            self.assertTrue(chapters["AA-02"]["isolated"])
-            self.assertFalse(chapters["AA-02"]["isolated_all_chapters"])
-            self.assertTrue(chapters["GT-01"]["isolated_all_chapters"])
+            self.assertTrue(chapters["AA-02"]["cross_isolated"])
+            self.assertFalse(chapters["AA-02"]["isolated"])
+            self.assertTrue(chapters["GT-01"]["isolated"])
             domains = {d["domain"]: d for d in report["domain_coverage"]}
             aa = domains[chapters["AA-01"]["domain"]]
             self.assertEqual(aa["cross_isolated_ids"], ["AA-02"])
