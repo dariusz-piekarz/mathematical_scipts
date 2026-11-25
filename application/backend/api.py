@@ -23,6 +23,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field, StrictBool
 
 from backend.latex_parser import analyze_selection, get_stats, show_label
+from backend.label_registry import qualified_occurrence
 from backend import workspaces
 from backend.concept_graph import build_concept_graph
 from backend import lean_catalog
@@ -268,6 +269,19 @@ def label_detail(label: str, source_document: str | None = None):
     if source_document is not None and len(source_document)>100:
         raise HTTPException(status_code=400,detail="Zbyt długi identyfikator źródła.")
     with db_connection() as con:
+        qualified = qualified_occurrence(label)
+        if qualified is not None:
+            target_document, canonical_label = qualified
+            result = show_label(con, canonical_label, max_chars=1700, document_id=target_document)
+            if result is None:
+                raise HTTPException(status_code=404, detail="Etykieta nie istnieje we wskazanym rozdziale.")
+            result.update(name=label, canonical_label=canonical_label,
+                          source_document=source_document, occurrence_id=label,
+                          resolution_status="external_resolved")
+            result["incoming_references"] = con.execute(
+                "SELECT count(*) FROM references_tex WHERE target_document=? AND target_label=?",
+                (target_document, label)).fetchone()[0]
+            return result
         if source_document:
             resolved = con.execute("""SELECT DISTINCT target_document,target_entity,status
                 FROM references_tex WHERE source_document=? AND target_label=?
