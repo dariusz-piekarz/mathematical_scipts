@@ -180,9 +180,20 @@ function renderMathPreview(box,latex,moduleId){
   }
   return errors?"Nie złożono "+errors+" fragmentów matematycznych; pozostawiono ich źródło.":"";
 }
+// Retain only the current rendered fragment; do not accumulate chapter DOMs.
+let lastMathPreview=null;
 function renderSimplified(latex,moduleId=state.currentModule){
-  const status=$("mathPreviewStatus");
-  const message=renderMathPreview($("simplified"),latex,moduleId);
+  const status=$("mathPreviewStatus"), box=$("simplified");
+  const renderer=window.renderMathInElement, profiles=window.atlasMathMacroProfiles;
+  const cached=lastMathPreview;
+  let message;
+  if(cached && cached.box===box && cached.latex===latex && cached.moduleId===moduleId &&
+      cached.renderer===renderer && cached.profiles===profiles){
+    message=cached.message;
+  }else{
+    message=renderMathPreview(box,latex,moduleId);
+    lastMathPreview={box,latex,moduleId,renderer,profiles,message};
+  }
   if(status){status.textContent=message;status.classList.toggle("hidden",!message);}
 }
 function addCurrent(){
