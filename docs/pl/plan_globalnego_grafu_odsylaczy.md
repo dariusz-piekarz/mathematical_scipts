@@ -5,7 +5,7 @@ Praca wyłącznie na istniejącej gałęzi roboczej. Nie zmieniać oryginalnych 
 
 ## Kolejność przeglądu
 
-Priorytet użytkownika: AA (algebra abstrakcyjna), GA (teoria Galois), TOP (topologia algebraiczna), FA (analiza funkcjonalna), LST (logika i teoria mnogości), GT (topologia ogólna), LA (algebra liniowa). ALG pozostaje w kolejce kontrolnej po wcześniejszych zmianach. Następnie pozostałe tomy, również nowo dopisane do katalogu.
+Priorytet użytkownika: AA (algebra abstrakcyjna), GA (teoria Galois), TOP (topologia algebraiczna), FA (analiza funkcjonalna), LST (logika i teoria mnogości), GT (topologia ogólna), LA (algebra liniowa), ME (teoria miary — ustabilizowana według użytkownika). ALG pozostaje w kolejce kontrolnej po wcześniejszych zmianach. Następnie pozostałe tomy, również nowo dopisane do katalogu.
 
 Każda iteracja:
 1. Przebudować indeks i odczytać raport graph_coverage.json; sprawdzić brakujące rozdziały, ścieżki, kolizje, izolowane węzły i brakujące krawędzie między dziedzinami.
@@ -22,3 +22,7 @@ Każda iteracja:
 - Raport globalny i API /api/graph/coverage: zapisane, CI do potwierdzenia.
 - Następny krok po stabilizacji: reszta LA i AA, następnie FA–GT–LST–TOP. W szczególności przegląd odsyłaczy do twierdzenia Zorna, baz Hamela, filtrów, sieci, zupełności, przestrzeni ilorazowych i tensorów.
 - Liczby oznaczają wykonane zmiany źródłowe, nie zakończenie audytu całych tomów.
+
+## Aktualizacja priorytetów
+
+Teoria miary (ME, 31 rozdziałów) wchodzi do grupy ustabilizowanych skryptów objętych pełnym audytem odsyłaczy. Pierwsza partia: ME-14, 15, 20, 21, 22, 23, 30 oraz powiązania z CAL-11, 13, 14 i FA-15B. Dalszy przegląd: konstrukcja miary, mierzalność, miary produktowe, Radon--Nikodym, różniczkowanie miar, miara Hausdorffa, geometria i prawdopodobieństwo. Nie zmieniać treści dowodów bez osobnego audytu.
