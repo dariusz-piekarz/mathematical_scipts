@@ -10,5 +10,6 @@
 | CAT-11-006 | Rachunek wykładników | Liczności skończone, także 0^0 |
 | CAT-11-007 | Topologia zwarto-otwarta | Skończone przestrzenie dyskretne |
 | CAT-11-008 | Struktura | Etykiety i środowiska |
+| CAT-11-009 | Ciągłość ewaluacji i równoważność ciągłości transpozycji | Dyskretny wykładnik dwupunktowy, przestrzeń Sierpińskiego jako przeciwdziedzina, cztery topologie na dziedzinie dwupunktowej |
 
 Uruchomienie: python3 -m unittest discover -s tools/tests -p 'test_category_theory_ch*.py' -v. Modele skończone nie zastępują dowodu.
