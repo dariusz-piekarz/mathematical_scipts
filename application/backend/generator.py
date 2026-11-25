@@ -450,6 +450,8 @@ def project_files(con:sqlite3.Connection, modules:list[str], entities:list[str],
                 template += "\n\\usepackage{" + package + "}\n"
         return template
     head=prepare_header(main_template)
+    # Cross-volume reading references remain meaningful without importing page numbers.
+    head += '\n' + r'\providecommand{\atlasref}[2]{#2}' + '\n'
     for addition in theorem_audit["additions"]:
         head += "\n\\theoremstyle{"+addition["style"]+"}\n"+addition["declaration"]+"\n"
     imports='\n'.join(f'\\externaldocument[ext-{m}-]{{aux/{m}}}' for m in sorted(external))
