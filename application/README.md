@@ -26,6 +26,7 @@ Rozpakuj cały plik `BIBLIOTEKA_MATEMATYCZNA_APP_03.zip` na dysk. Wejdź do jego
 
 ```powershell
 python -m pip install -r requirements.txt
+python scripts/install_math_renderer.py
 python -m uvicorn backend.api:app --host 127.0.0.1 --port 8765
 ```
 
@@ -226,3 +227,7 @@ and its supplements are maintained in the GitHub repository at
 
 A monolithic measure-theory+jets .tex and matching 256-page PDF are also
 available separately in the ChatGPT Library.
+
+### Renderowanie wzorów
+
+`start.ps1` i `start.sh` instalują lokalnie przypiętą wersję KaTeX. Jednorazowe pobranie wymaga dostępu do registry.npmjs.org; kolejne uruchomienia i renderowanie korzystają z lokalnych plików `frontend/vendor/katex`. Przy ręcznym uruchomieniu uvicorn najpierw wykonaj `python scripts/install_math_renderer.py`. Podgląd uproszczony i dymek odsyłacza składają standardowe wzory, bez wykonywania preambuły; nieobsługiwane makra pozostają w źródle. Widok źródłowy zachowuje oryginalny LaTeX.
