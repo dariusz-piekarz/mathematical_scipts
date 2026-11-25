@@ -166,6 +166,19 @@ def cleanup_command(prefix: list[str], env: dict[str, str]):
     return call
 
 
+def deferred_cleanup_command(prefix: list[str], env: dict[str, str]):
+    """Start one cleanup budget on its first use, never during normal execution."""
+    cleanup = None
+
+    def call(*args):
+        nonlocal cleanup
+        if cleanup is None:
+            cleanup = cleanup_command(prefix, env)
+        return cleanup(*args)
+
+    return call
+
+
 def _command(prefix: list[str], args: tuple[str, ...], env: dict[str, str],
              *, deadline: float | None = None) -> bytes:
     """Bound captured output and CLI waiting, with a shared optional deadline.
@@ -281,7 +294,12 @@ def probe(approved_image_id: str) -> dict:
             finally:
                 # Never start a probe. Failure to remove blocks success.
                 if cid is not None:
-                    call("container", "rm", cid)
+                    cleanup_call = cleanup_command(prefix, env)
+                    cleanup_call("container", "rm", cid)
+                    remaining = cleanup_call("container", "ls", "--all", "--no-trunc",
+                                             "--filter", "id=" + cid, "--format", "{{.ID}}")
+                    if remaining != b"":
+                        raise ValueError("Probe removal not confirmed")
                     cleanup = "removed"
     except (OSError, ValueError, RecursionError, subprocess.SubprocessError):
         return {**result, "error": "preflight_failed", "cleanup_status": cleanup,
