@@ -13,3 +13,6 @@
 | IT-08-010 | it:lem:bvstar-null-to-acstar | Ograniczona wariacja przedłużenia, zaniedbywalne wahanie, pochodna L1 i niezależność dowodu od charakterystyki | semantyczna |
 | IT-08-011 | it:lem:bvstar-null-to-acstar | Kontrola sum oscylacji przez AC przedłużenia i sumowalny ogon luk | semantyczna + Python |
 | IT-08-012 | it:thm:kh-acgstar-characterization | Oba kierunki i różniczkowalność prawie wszędzie bez błędnego koła | semantyczna |
+| IT-08-013 | it:lem:acstar-null-variation | Promień przy końcu wybranej luki mniejszy od połowy jej długości; znacznik jest końcem odcinka skrajnego | semantyczna + Python |
+| IT-08-014 | it:thm:kh-acgstar-characterization | Domkniętość zbiorów lokalnych oszacowań z użyciem ścisłego promienia; równoważność AC_* i AC na całym przedziale | semantyczna |
+| IT-08-015 | it:thm:ac-lebesgue-primitive (IT-11) | AC funkcji wariacji, rozkład Jordana, absolutna ciągłość miar i reprezentacja L1 niezależnie od charakterystyki ACG_* | semantyczna |
