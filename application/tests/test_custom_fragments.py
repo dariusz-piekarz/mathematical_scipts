@@ -150,6 +150,21 @@ class CustomScriptTests(unittest.TestCase):
                 name = PROJECT_TEMPLATE_KEYS[prefix]
                 self.assertTrue((ROOT / "config" / "preambles" / f"{name}.tex").is_file())
 
+    def test_am2_canonical_id_domain_and_generation(self):
+        row = self.con.execute(
+            "SELECT id,domain,path FROM documents WHERE id='AM2-01'").fetchone()
+        self.assertIsNotNone(row)
+        self.assertEqual(row["domain"], "analiza matematyczna II")
+        self.assertIn("mathematical_analysis_ii/", row["path"])
+        files, manifest = project_files(self.con, ["AM2-01"], [], "AM2")
+        self.assertEqual(manifest["modules"], ["AM2-01"])
+        self.assertIn("rozdzialy/AM2-01.tex", files)
+        files, manifest = self.build([
+            {"kind": "lines", "module": "AM2-01", "start_line": 1, "end_line": 1}
+        ])
+        self.assertEqual(manifest["modules"], ["AM2-01"])
+        self.assertIn("rozdzialy/AM2-01-001.tex", files)
+
     def test_new_subject_excerpts_and_lettered_chapter(self):
         for prefix in ("LA", "LST", "FA", "DG", "PDE", "ME"):
             row = self.con.execute(

@@ -1,0 +1,3 @@
+CAT-20 — stabilizacja III (rozszerzenie)
+
+CI II #45642374491 SUCCESS: 138/138 testów, 86 stron. Dodano dowody przeniesienia symetrii do uściślenia, relacji Coxetera, prezentacji S_n i koherencji symetrycznej. Kontrola strukturalna JS PASS, 19 etykiet. Źródło 2ec04b402900ac6279aa9e94c0c674006e0f1e26, testy e1a3892fadd3a4f675dde79fe272b402e89f2e2b (CAT-20-007–008), rejestr 49389f0a66d8ab08a401ac455be134932477494c. Zapis osobnymi commitami po timeoutach. CI #45651854997 w toku; PDF i kontrola wizualna niepotwierdzone. Lean nie uruchamiano. Wymagany audyt stabilizacyjny IV i niezależny kontrolny V przed zamknięciem CAT-20.

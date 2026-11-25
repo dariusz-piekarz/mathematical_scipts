@@ -1,0 +1,557 @@
+% Adaptacja merytoryczna AM I-09; nowe etykiety dla twierdzeń wektorowych.
+\chapter{Szeregi w przestrzeniach Banacha}
+\label{ma2:ch:banach-series}
+
+W tym rozdziale $E$ jest przestrzenią unormowaną nad
+$\K\in\{\R,\C\}$. Zupełność będziemy zakładać wyraźnie tam,
+gdzie jest potrzebna. Wykorzystujemy rachunek szeregów liczbowych
+z tomu I (rozdział 09) i wyniki rozdziału \ref{ma2:ch:normed}.
+W szczególności zbieżność będzie rozumiana w normie, a nie
+jedynie względem poszczególnych współrzędnych. Zbieżność
+współrzędnościowa wystarczy w skończonym wymiarze, ale nie
+w dowolnej przestrzeni ciągowej.
+
+\section{Sumy częściowe i warunek Cauchy'ego}
+\begin{definicja}[Szereg wektorowy]
+\label{ma2:def:vector-series}
+Dla ciągu $(x_n)_{n\ge1}$ w $E$ określamy sumy częściowe
+$S_0=0$ i $S_N=\sum_{n=1}^N x_n$ dla $N\ge1$.
+Szereg $\sum_{n=1}^\infty x_n$ nazywamy zbieżnym w $E$,
+jeżeli istnieje $S\in E$ takie, że $\|S_N-S\|\to0$.
+Piszemy wówczas $\sum_{n=1}^\infty x_n=S$.
+W przeciwnym razie szereg jest rozbieżny.
+\end{definicja}
+Suma jest jednoznaczna: gdyby $\|S_N-S\|\to0$ i
+$\|S_N-T\|\to0$, nierówność
+$\|S-T\|\le\|S-S_N\|+\|S_N-T\|$ dawałaby $\|S-T\|=0$,
+czyli $S=T$. Dla szeregu od całkowitego indeksu $m\ge0$ stosujemy
+analogiczną definicję, biorąc granicę sum
+$\sum_{n=m}^N x_n$ przy $N\to\infty$ (dla ciągu określonego
+od indeksu $m$). Sumę pustą przyjmujemy równą $0$.
+
+\begin{twierdzenie}[Warunek konieczny i kryterium Cauchy'ego]
+\label{ma2:thm:series-cauchy}
+Jeżeli szereg $\sum_{n\ge1}x_n$ jest zbieżny w $E$, to
+$x_n\to0$ i dla każdego $\varepsilon>0$ istnieje $N\ge1$
+takie, że
+\[
+ \left\|\sum_{n=p}^{q}x_n\right\|<\varepsilon
+ \quad\text{dla wszystkich całkowitych }q\ge p\ge N.
+\]
+Jeżeli $E$ jest przestrzenią Banacha, powyższy warunek
+dotyczący sum skończonych jest również wystarczający.
+\end{twierdzenie}
+\begin{proof}
+Niech $S_N\to S$. Dla $n\ge1$ mamy $x_n=S_n-S_{n-1}$,
+więc
+$\|x_n\|\le\|S_n-S\|+\|S_{n-1}-S\|\to0$.
+Dla $\varepsilon>0$ istnieje $M$ takie, że
+$\|S_j-S\|<\varepsilon/2$ dla $j\ge M$.
+Jeśli $q\ge p\ge M+1$, to
+\[
+ \left\|\sum_{n=p}^q x_n\right\|=\|S_q-S_{p-1}\|
+ \le\|S_q-S\|+\|S_{p-1}-S\|<\varepsilon.
+\]
+Odwrotnie, niech warunek sum skończonych zachodzi.
+Dla $\varepsilon>0$ wybieramy odpowiadające mu $N$.
+Jeśli $i>j\ge N$, to
+$\|S_i-S_j\|=\|\sum_{n=j+1}^i x_n\|<\varepsilon$,
+bo $i\ge j+1\ge N$. Dla $i<j$ korzystamy z symetrii
+normy różnicy, a dla $i=j$ różnica jest zerowa.
+Ciąg $(S_n)$ jest zatem ciągiem Cauchy'ego w $E$.
+Jeśli $E$ jest zupełna, istnieje $S\in E$ z $S_n\to S$,
+co jest definicją zbieżności szeregu.
+\end{proof}
+
+\begin{przyklad}[Wyrazy dążące do zera nie wystarczają]
+\label{ma2:ex:vector-harmonic}
+Jeżeli $v\in E$ i $v\ne0$, szereg $\sum_{n\ge1}v/n$
+jest rozbieżny, chociaż $\|v/n\|=\|v\|/n\to0$.
+Istotnie dla każdego $N\ge1$, ponieważ blok od $N+1$ do $2N$
+zawiera $N$ wyrazów, z których każdy współczynnik $1/n$
+jest nie mniejszy niż $1/(2N)$, mamy
+\[
+ \left\|\sum_{n=N+1}^{2N}\frac vn\right\|
+ =\|v\|\sum_{n=N+1}^{2N}\frac1n\ge\frac{\|v\|}{2}.
+\]
+Wybierając $\varepsilon=\|v\|/2>0$, widzimy, że dla
+każdego proponowanego indeksu $M\ge1$ w kryterium Cauchy'ego
+wystarczy wziąć $N=M$, $p=N+1$ i $q=2N$, aby otrzymać
+ogon skończony o normie co najmniej $\varepsilon$.
+Z twierdzenia \ref{ma2:thm:series-cauchy} szereg jest rozbieżny.
+\end{przyklad}
+
+\section{Rachunek sum i operatory ciągłe}
+\begin{twierdzenie}[Pominięcie skończonego początku i liniowość]
+\label{ma2:thm:series-linear-tail}
+Dla każdego całkowitego $m\ge1$ szereg $\sum_{n\ge1}x_n$
+jest zbieżny wtedy i tylko wtedy, gdy zbieżny jest
+$\sum_{n\ge m}x_n$. W przypadku zbieżności
+\[
+ \sum_{n=1}^\infty x_n=\sum_{n=1}^{m-1}x_n+
+                       \sum_{n=m}^\infty x_n.
+\]
+Jeśli szeregi $\sum x_n$ i $\sum y_n$ w $E$ są zbieżne
+oraz $\alpha,\beta\in\K$, to szereg $\sum(\alpha x_n+\beta y_n)$
+jest zbieżny i
+\[
+ \sum_{n=1}^\infty(\alpha x_n+\beta y_n)
+ =\alpha\sum_{n=1}^\infty x_n+\beta\sum_{n=1}^\infty y_n.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla $N\ge m$ suma od $m$ do $N$ jest równa $S_N-S_{m-1}$.
+Jeśli $S_N\to S$, to
+$\|(S_N-S_{m-1})-(S-S_{m-1})\|=\|S_N-S\|\to0$.
+Odwrotnie, jeśli sumy od $m$ do $N$ dążą do $A$, to
+$\|S_N-(A+S_{m-1})\|=\|(S_N-S_{m-1})-A\|\to0$.
+Daje to obie implikacje i wzór, również dla $m=1$,
+gdy $S_0=0$.
+Niech $S_N\to S$ i $T_N=\sum_{n=1}^N y_n\to T$.
+Suma częściowa kombinacji liniowej wynosi
+$\alpha S_N+\beta T_N$, a jej odległość od
+$\alpha S+\beta T$ jest nie większa niż
+$|\alpha|\|S_N-S\|+|\beta|\|T_N-T\|\to0$.
+Nie potrzeba tu zupełności $E$, ponieważ obie granice
+istnieją z założenia.
+\end{proof}
+
+\begin{twierdzenie}[Przenoszenie sumy przez operator]
+\label{ma2:thm:series-operator}
+Niech $F$ będzie przestrzenią unormowaną nad $\K$,
+a $T:E\to F$ ciągłym operatorem liniowym.
+Jeśli $\sum x_n=S$ w $E$, to $\sum Tx_n=TS$ w $F$.
+\end{twierdzenie}
+\begin{proof}
+Z liniowości $\sum_{n=1}^N Tx_n=TS_N$.
+Z twierdzenia \ref{prop:operator-norm12} mamy
+$\|TS_N-TS\|_F\le\|T\|\|S_N-S\|_E\to0$.
+Granica $TS$ należy do $F$ niezależnie od zupełności $F$.
+\end{proof}
+
+\begin{twierdzenie}[Współrzędne w skończonym wymiarze]
+\label{ma2:thm:series-coordinates}
+Niech $E$ będzie skończenie wymiarowa, z bazą
+$(e_j)_{j=1}^d$, gdzie $d\ge0$, i niech
+$x_n=\sum_{j=1}^d a_{nj}e_j$, $a_{nj}\in\K$.
+Szereg $\sum_n x_n$ jest zbieżny wtedy i tylko wtedy,
+gdy każdy z $d$ szeregów skalarnych $\sum_n a_{nj}$
+jest zbieżny. Wtedy
+\[
+ \sum_{n=1}^\infty x_n
+ =\sum_{j=1}^d\left(\sum_{n=1}^\infty a_{nj}\right)e_j.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla $d=0$ każdy wyraz i każda suma są zerowe, a warunek
+zbieżności szeregów współrzędnych jest spełniony w sposób pusty.
+Załóżmy więc $d\ge1$.
+Z dowodu twierdzenia \ref{ma2:thm:finite} istnieją $c,C>0$
+takie, że dla każdego $z\in\K^d$ zachodzi
+$c\max_j|z_j|\le\|\sum_j z_je_j\|\le C\max_j|z_j|$.
+Oznaczmy $s_{Nj}=\sum_{n=1}^N a_{nj}$.
+Z rozdzielności skończonych sum $S_N=\sum_j s_{Nj}e_j$.
+Jeśli $S_N\to S=\sum_j s_je_j$, dolne oszacowanie daje
+$|s_{Nj}-s_j|\le\|S_N-S\|/c\to0$ dla każdego $j$.
+Odwrotnie, jeśli $s_{Nj}\to s_j$ dla wszystkich $j$, to
+dla $\varepsilon>0$ dobieramy dla każdego $j$ indeks $N_j$
+z $|s_{Nj}-s_j|<\varepsilon/C$ dla $N\ge N_j$.
+Dla $N\ge\max_j N_j$ górne oszacowanie daje
+$\|S_N-\sum_j s_je_j\|<\varepsilon$.
+To dowodzi zbieżności i wzoru.
+\end{proof}
+
+\begin{przyklad}[Zbieżność współrzędnościowa nie wystarcza]
+\label{ma2:ex:coordinate-series-not-norm}
+W przestrzeni $\ell^2$ oznaczmy przez $e_j$ ciąg mający
+$1$ na $j$-tej współrzędnej i zera na pozostałych.
+Niech $x_1=e_1$ oraz $x_n=e_n-e_{n-1}$ dla $n\ge2$.
+Dla $N=1$ mamy $S_1=e_1$, a jeśli $S_N=e_N$, to
+$S_{N+1}=e_N+(e_{N+1}-e_N)=e_{N+1}$.
+Zatem $S_N=e_N$ dla każdego $N\ge1$.
+Dla ustalonego $j$ współrzędna $(S_N)_j$ jest zerowa
+dla każdego $N>j$, więc każdy szereg współrzędnych jest
+zbieżny i ma sumę $0$. Mimo to szereg wektorowy nie jest
+zbieżny: dla $N\ne M$ różnica $e_N-e_M$ ma dokładnie
+dwie niezerowe współrzędne, równe $1$ i $-1$, zatem
+$\|S_N-S_M\|_2=\sqrt{2}$. Ciąg sum częściowych nie jest
+ciągiem Cauchy'ego. Przykład zachodzi w przestrzeni Banacha,
+a nawet w przestrzeni Hilberta, i nie wynika z braku zupełności.
+\end{przyklad}
+
+\section{Szeregi geometryczne, teleskopowe i grupowanie}
+\begin{twierdzenie}[Szereg geometryczny pomnożony przez wektor]
+\label{ma2:thm:vector-geometric}
+Niech $v\in E$ i $q\in\K$, przy czym $q^0=1$ również dla $q=0$.
+Jeżeli $|q|<1$, to
+\[
+ \sum_{n=0}^{\infty}q^n v=\frac{1}{1-q}v.
+\]
+Jeśli $v\ne0$, warunek $|q|<1$ jest także konieczny.
+Dla $v=0$ szereg jest zbieżny dla każdego $q$.
+\end{twierdzenie}
+\begin{proof}
+Dla $|q|<1$ mamy $q\ne1$; tożsamość skończonego szeregu
+geometrycznego daje
+$\sum_{n=0}^N q^n v=(1-q^{N+1})v/(1-q)$.
+Odległość od $v/(1-q)$ wynosi
+$|q|^{N+1}\|v\|/|1-q|$, co dąży do zera, ponieważ
+$0\le |q|<1$. Nie używamy zupełności $E$.
+Jeśli $v\ne0$ i $|q|\ge1$, normy wyrazów
+$|q|^n\|v\|$ są nie mniejsze niż $\|v\|>0$.
+Warunek konieczny z twierdzenia \ref{ma2:thm:series-cauchy}
+(po pominięciu wyrazu o indeksie $0$) nie jest spełniony.
+Jeśli $v=0$, wszystkie sumy częściowe są zerowe.
+\end{proof}
+
+\begin{twierdzenie}[Szereg teleskopowy]
+\label{ma2:thm:vector-telescoping}
+Dla ciągu $(u_n)$ w $E$ szereg $\sum_{n\ge1}(u_n-u_{n+1})$
+jest zbieżny wtedy i tylko wtedy, gdy $(u_n)$ jest zbieżny.
+Jeśli $u_n\to u$, suma wynosi $u_1-u$.
+\end{twierdzenie}
+\begin{proof}
+Dla $N\ge1$ sumy pośrednich wyrazów znoszą się, więc
+$\sum_{n=1}^N(u_n-u_{n+1})=u_1-u_{N+1}$.
+Jeśli $u_n\to u$, norma różnicy tej sumy od $u_1-u$
+wynosi $\|u_{N+1}-u\|\to0$.
+Jeśli natomiast suma częściowa dąży do $S$, to
+$\|u_{N+1}-(u_1-S)\|=\|S-(u_1-u_{N+1})\|\to0$.
+Pominięcie pierwszego wyrazu nie zmienia granicy ciągu,
+zatem $u_n\to u_1-S$.
+\end{proof}
+
+\begin{twierdzenie}[Grupowanie kolejnych wyrazów]
+\label{ma2:thm:series-grouping}
+Niech $0=k_0<k_1<k_2<\cdots$ będą liczbami całkowitymi
+i niech $b_j=\sum_{n=k_{j-1}+1}^{k_j}x_n$ dla $j\ge1$.
+Szereg $\sum x_n$ jest zbieżny do $S\in E$ wtedy i tylko
+wtedy, gdy $\sum b_j=S$ oraz
+\[
+ d_j:=\max_{k_{j-1}\le m\le k_j}
+ \left\|\sum_{n=k_{j-1}+1}^{m}x_n\right\|\longrightarrow0.
+\]
+Maksimum bierzemy po całkowitych indeksach $m$; dla
+$m=k_{j-1}$ suma jest pusta i wynosi zero.
+\end{twierdzenie}
+\begin{proof}
+Z rozłączności kolejnych przedziałów indeksów
+$\sum_{j=1}^J b_j=\sum_{n=1}^{k_J}x_n=S_{k_J}$.
+Ponieważ $k_J\ge J$, jest to podciąg sum częściowych,
+a z $S_N\to S$ wynika $S_{k_J}\to S$.
+Ponadto dla $\varepsilon>0$ istnieje $M$ takie, że
+$\|S_n-S\|<\varepsilon/2$ dla $n\ge M$. Jeżeli
+$k_{j-1}\ge M$, to dla wszystkich $k_{j-1}\le m\le k_j$
+mamy
+\[
+ \left\|\sum_{n=k_{j-1}+1}^m x_n\right\|
+ =\|S_m-S_{k_{j-1}}\|
+ \le\|S_m-S\|+\|S_{k_{j-1}}-S\|<\varepsilon.
+\]
+Ponieważ $k_{j-1}\ge j-1$, nierówność zachodzi dla każdego
+dostatecznie dużego $j$. Maksimum skończonej liczby wartości
+również jest mniejsze niż $\varepsilon$, zatem $d_j\to0$.
+Dla implikacji odwrotnej załóżmy zbieżność $\sum b_j=S$
+oraz $d_j\to0$.
+Dla każdego $N\ge1$ istnieje dokładnie jeden $j$ z
+$k_{j-1}<N\le k_j$, ponieważ $(k_j)$ jest ściśle rosnący
+i nieograniczony. Wtedy
+\[
+ \|S_N-S\|\le\|S_{k_{j-1}}-S\|+
+              \|S_N-S_{k_{j-1}}\|
+ \le\|S_{k_{j-1}}-S\|+d_j.
+\]
+Dla $\varepsilon>0$ wybieramy $J$ tak duże, że dla $j\ge J$
+obie wielkości po prawej stronie są mniejsze niż
+$\varepsilon/2$ (pierwsza z założenia zbieżności szeregu
+zgrupowanego, druga z $d_j\to0$).
+Dla $N>k_{J-1}$ odpowiedni indeks $j$ jest co najmniej $J$,
+więc $\|S_N-S\|<\varepsilon$.
+\end{proof}
+\begin{przyklad}[Grupowanie nie musi zachowywać rozbieżności]
+\label{ma2:ex:grouping-divergence}
+Dla $v\ne0$ połóżmy $x_{2j-1}=v$, $x_{2j}=-v$.
+Sumy częściowe o indeksach parzystych wynoszą $0$,
+a o nieparzystych $v$. Ponieważ $v\ne0$, oba podciągi
+mają różne granice, więc szereg nie jest zbieżny.
+Przy $k_j=2j$ każdy wyraz $b_j$ jest zerowy,
+a szereg zgrupowany jest zbieżny do $0$.
+Warunek maksimum w twierdzeniu \ref{ma2:thm:series-grouping}
+nie zachodzi, ponieważ w każdym bloku maksimum wynosi $\|v\|$.
+\end{przyklad}
+
+\begin{wniosek}[Bloki o ograniczonej długości]
+\label{ma2:cor:bounded-blocks}
+W oznaczeniach twierdzenia \ref{ma2:thm:series-grouping}
+załóżmy, że istnieje całkowite $B\ge1$ takie, że
+$k_j-k_{j-1}\le B$ dla wszystkich $j\ge1$.
+Jeżeli $x_n\to0$ i $\sum b_j=S$, to $\sum x_n=S$.
+\end{wniosek}
+\begin{proof}
+Dla $\varepsilon>0$ wybieramy $M$ z
+$\|x_n\|<\varepsilon/B$ dla $n\ge M$.
+Dla $j$ dostatecznie dużego, by $k_{j-1}+1\ge M$,
+oraz $k_{j-1}\le m\le k_j$ zachodzi
+\[
+ \left\|\sum_{n=k_{j-1}+1}^m x_n\right\|
+ \le\sum_{n=k_{j-1}+1}^m\|x_n\|<\varepsilon,
+\]
+ponieważ suma ma co najwyżej $B$ składników, a jeśli jest
+pusta, jej norma jest równa zeru i także jest mniejsza
+od $\varepsilon$. Nierówność dla maksimum daje $d_j\to0$,
+więc stosujemy twierdzenie \ref{ma2:thm:series-grouping}.
+\end{proof}
+
+\begin{przyklad}[Bloki o nieograniczonej długości]
+\label{ma2:ex:unbounded-blocks}
+Ustalmy $v\in E$ o normie $1$ (wystarczy niezerowa przestrzeń).
+Niech $k_0=0$, $k_j=j(j+1)$ dla $j\ge1$.
+W bloku o indeksie $j$, długości $2j$, określmy
+\[
+ x_{k_{j-1}+r}=
+ \begin{cases}
+ v/j,&1\le r\le j,\\
+ -v/j,&j<r\le 2j.
+ \end{cases}
+\]
+Ponieważ $k_j-k_{j-1}=2j$ i $k_j\to\infty$, bloki
+pokrywają wszystkie dodatnie indeksy bez powtórzeń.
+Dla $\varepsilon>0$ wybieramy $J$ z $1/J<\varepsilon$.
+Jeżeli $n>k_{J-1}$, należy on do bloku o indeksie $j\ge J$,
+więc $\|x_n\|=1/j\le1/J<\varepsilon$.
+Zatem $x_n\to0$. Każdy blok zawiera $j$ kopii $v/j$ i $j$
+kopii $-v/j$, więc $b_j=0$ oraz $S_{k_j}=0$.
+Jednak $S_{k_{j-1}+j}=v$ dla każdego $j\ge1$, gdyż
+poprzednie bloki mają sumę zero, a pierwsza połowa
+bieżącego bloku ma sumę $v$. Oba ciągi indeksów dążą
+do nieskończoności, a odpowiadające im sumy częściowe
+mają różne granice $0$ i $v$. Szereg wyjściowy jest
+rozbieżny, mimo że szereg zgrupowany jest zbieżny i $x_n\to0$.
+W każdym bloku $d_j=1$: norma przyrostu sumy częściowej
+rośnie od $0$ do $1$ w pierwszej połowie i maleje do $0$
+w drugiej.
+\end{przyklad}
+\begin{center}
+\begin{tikzpicture}[x=.48cm,y=1.65cm]
+ \draw[->] (-.4,0)--(12.9,0) node[right] {$N$};
+ \draw[->] (0,-.12)--(0,1.28) node[above] {$t_N$};
+ \draw[dashed,gray] (0,1)--(12,1);
+ \node[left] at (0,1) {$1$};
+ \foreach \n/\lab in {0/0,2/2,6/6,12/12}
+   {\draw (\n,.045)--(\n,-.045) node[below] {$\lab$};}
+ \draw[blue,thick] (0,0)--(1,1)--(2,0)--(4,1)--(6,0)--(9,1)--(12,0);
+ \foreach \n/\t in {0/0,1/1,2/0,3/.5,4/1,5/.5,6/0,7/.333333,8/.666667,9/1,10/.666667,11/.333333,12/0}
+   {\fill[blue] (\n,\t) circle[radius=1.25pt];}
+ \node[above] at (1,1) {$j=1$};
+ \node[above] at (4,1) {$j=2$};
+ \node[above] at (9,1) {$j=3$};
+\end{tikzpicture}
+
+\small W przykładzie \ref{ma2:ex:unbounded-blocks} sumy częściowe
+mają postać $S_N=t_Nv$. Punkty oznaczają wartości dla
+całkowitych $N$ w trzech pierwszych blokach; odcinki łączą
+punkty wyłącznie dla czytelności. Na końcu każdego bloku
+$t_N=0$, a w jego środku $t_N=1$.
+\end{center}
+
+\section{Zbieżność bezwzględna i oszacowania reszty}
+\begin{definicja}[Zbieżność bezwzględna]
+\label{ma2:def:absolute-series}
+Szereg $\sum x_n$ nazywamy bezwzględnie zbieżnym, jeżeli
+zbieżny jest szereg liczbowy $\sum\|x_n\|$.
+Sama definicja nie wymaga zupełności $E$.
+\end{definicja}
+\begin{twierdzenie}
+\label{ma2:thm:absolute-series}
+Jeżeli $E$ jest przestrzenią Banacha i $\sum\|x_n\|<\infty$,
+to $\sum x_n$ jest zbieżny. Dla jego sumy $S$ i każdego
+$N\ge0$ zachodzi oszacowanie
+\[
+ \|S-S_N\|\le\sum_{n=N+1}^\infty\|x_n\|.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla $q\ge p$ nierówność
+$\|\sum_{n=p}^q x_n\|\le\sum_{n=p}^q\|x_n\|$
+wynika przez indukcję: dla jednego składnika mamy równość,
+a dołączenie następnego wyrazu zwiększa prawą stronę o jego normę
+na mocy nierówności trójkąta.
+Dla $\varepsilon>0$ kryterium Cauchy'ego dla zbieżnego
+szeregu liczbowego $\sum\|x_n\|$ daje $M$, dla którego
+$\sum_{n=p}^q\|x_n\|<\varepsilon$ przy $q\ge p\ge M$.
+Stąd spełniony jest warunek z twierdzenia
+\ref{ma2:thm:series-cauchy}. Zupełność $E$ daje istnienie $S$.
+Dla $L>N$ mamy
+$\|S_L-S_N\|\le\sum_{n=N+1}^L\|x_n\|$.
+Przy ustalonym $N$ lewa strona dąży do $\|S-S_N\|$
+z ciągłości normy (twierdzenie \ref{ma2:thm:metric}),
+a prawa do sumy ogona zbieżnego szeregu liczbowego.
+Przechodząc do granicy w nierówności nieostrej, dostajemy tezę.
+\end{proof}
+
+\begin{twierdzenie}[Charakteryzacja zupełności]
+\label{ma2:thm:series-completeness}
+Przestrzeń unormowana $E$ jest przestrzenią Banacha wtedy
+i tylko wtedy, gdy każdy szereg bezwzględnie zbieżny w $E$
+jest zbieżny w $E$.
+\end{twierdzenie}
+\begin{proof}
+Pierwsza implikacja wynika z twierdzenia \ref{ma2:thm:absolute-series}.
+Załóżmy własność zbieżności wszystkich takich szeregów
+i niech $(y_n)$ będzie dowolnym ciągiem Cauchy'ego w $E$.
+Dla każdego $j\ge1$ istnieje $M_j\ge1$ takie, że
+$\|y_n-y_m\|<2^{-j}$ dla $n,m\ge M_j$.
+Możemy wybrać $M_j$ jako najmniejszy dodatni indeks
+o podanej własności. Wybieramy $n_1=M_1$ i rekurencyjnie
+$n_{j+1}=\max\{n_j+1,M_{j+1},M_j\}$.
+Z definicji $n_{j+1}>n_j$ i $n_{j+1}\ge M_{j+1}$.
+Ponieważ $n_1=M_1$, indukcyjnie $n_j\ge M_j$ dla każdego $j$.
+Ponadto $n_{j+1}\ge M_j$, zatem $n_j,n_{j+1}\ge M_j$,
+więc dla $h_j=y_{n_{j+1}}-y_{n_j}$ mamy $\|h_j\|<2^{-j}$.
+Szereg $\sum\|h_j\|$ jest zbieżny przez porównanie
+z szeregiem geometrycznym. Z założenia istnieje
+$h=\sum_{j=1}^\infty h_j$ w $E$.
+Suma teleskopowa daje $y_{n_{J+1}}=y_{n_1}+\sum_{j=1}^J h_j$,
+a zatem $y_{n_{J+1}}\to y=y_{n_1}+h$.
+Ustalmy $\varepsilon>0$. Wybieramy $M$ z
+$\|y_n-y_m\|<\varepsilon/2$ dla $n,m\ge M$.
+Ponieważ $n_{J+1}\to\infty$ i $y_{n_{J+1}}\to y$,
+wybieramy $J$ z $n_{J+1}\ge M$ oraz
+$\|y_{n_{J+1}}-y\|<\varepsilon/2$.
+Dla każdego $n\ge M$ dostajemy
+$\|y_n-y\|\le\|y_n-y_{n_{J+1}}\|+\|y_{n_{J+1}}-y\|<\varepsilon$.
+Dowolny ciąg Cauchy'ego ma więc granicę w $E$.
+\end{proof}
+
+\begin{przyklad}[Konieczność zupełności]
+\label{ma2:ex:incomplete-series}
+W przestrzeni $c_{00}$ z normą supremum niech $e_n$
+oznacza ciąg mający $1$ na $n$-tej współrzędnej i zera na
+pozostałych. Wtedy $x_n=2^{-n}e_n$ należy do $c_{00}$ i
+$\sum\|x_n\|_\infty=\sum 2^{-n}=1$.
+Sumy częściowe $S_N$ mają w $\ell^\infty$ granicę
+$x=(2^{-j})_{j\ge1}$, ponieważ
+$\|S_N-x\|_\infty=\sup_{j>N}2^{-j}=2^{-(N+1)}\to0$.
+Gdyby szereg był zbieżny w $c_{00}$, granica byłaby
+również jego granicą w $\ell^\infty$, gdzie norma jest ta sama.
+Jednoznaczność dawałaby $x\in c_{00}$, co jest niemożliwe,
+ponieważ $x_j>0$ dla każdego $j$.
+\end{przyklad}
+
+\section{Kryteria porównawcze, ilorazowe i pierwiastkowe}
+\begin{wniosek}[Majoranta liczbowa]
+\label{ma2:cor:series-majorant}
+Niech $E$ będzie przestrzenią Banacha. Jeśli $a_n\ge0$,
+$\sum a_n<\infty$ i od pewnego indeksu $\|x_n\|\le a_n$,
+to $\sum x_n$ jest bezwzględnie zbieżny i ma sumę $S\in E$.
+Jeśli dla całkowitego $N\ge0$ nierówność zachodzi dla wszystkich
+$n>N$, to $\|S-S_N\|\le\sum_{n>N}a_n$.
+\end{wniosek}
+\begin{proof}
+Wybierzmy $m\ge1$ tak, aby $\|x_n\|\le a_n$ dla $n\ge m$.
+Dla $L\ge m$ mamy
+\[
+ \sum_{n=1}^L\|x_n\|\le
+ \sum_{n=1}^{m-1}\|x_n\|+\sum_{n=m}^L a_n
+ \le \sum_{n=1}^{m-1}\|x_n\|+\sum_{n=1}^\infty a_n.
+\]
+To samo skończone ograniczenie działa dla $L<m$,
+bo normy są nieujemne. Sumy częściowe szeregu norm są
+niemalejące i ograniczone z góry, więc są zbieżne
+na mocy twierdzenia o zbieżności ciągu monotonicznego
+z tomu I. Z twierdzenia \ref{ma2:thm:absolute-series}
+istnieje suma $S$ szeregu wektorowego.
+Jeżeli $\|x_n\|\le a_n$ dla wszystkich $n>N$, to dla $L>N$
+mamy $\sum_{n=N+1}^L\|x_n\|\le\sum_{n=N+1}^L a_n$.
+Obie strony mają skończone granice przy $L\to\infty$,
+więc oszacowanie reszty z twierdzenia
+\ref{ma2:thm:absolute-series} daje
+$\|S-S_N\|\le\sum_{n=N+1}^\infty\|x_n\|
+\le\sum_{n=N+1}^\infty a_n$.
+\end{proof}
+
+\begin{twierdzenie}[Kryteria d'Alemberta i Cauchy'ego]
+\label{ma2:thm:vector-ratio-root}
+Niech $E$ będzie przestrzenią Banacha.
+\begin{enumerate}[label=(\roman*)]
+\item Jeżeli od pewnego indeksu $x_n\ne0$, to dla
+$r_n=\|x_{n+1}\|/\|x_n\|$ warunek $\limsup r_n<1$
+daje zbieżność bezwzględną i zbieżność szeregu.
+Warunek $\liminf r_n>1$ daje rozbieżność.
+\item Dla $L=\limsup_{n\to\infty}\|x_n\|^{1/n}$
+warunek $L<1$ daje zbieżność bezwzględną i zbieżność,
+a $L>1$ daje rozbieżność. W tym przypadku dopuszczamy
+wyrazy zerowe.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Granice dolną i górną rozumiemy w rozszerzonej prostej
+rzeczywistej, zgodnie z tomem I (rozdział 08). Korzystamy
+z kryterium progowego: jeżeli $\limsup b_n<q$, to od
+pewnego indeksu $b_n<q$; jeżeli $q<\liminf b_n$, to od
+pewnego indeksu $q<b_n$; jeżeli $q<\limsup b_n$, to
+dla każdego $M$ istnieje $n\ge M$ z $q<b_n$.
+W części (i), jeśli $\limsup r_n<1$, wybieramy
+$0<q<1$ z $\limsup r_n<q$. Od pewnego $m$ mamy
+$\|x_{n+1}\|\le q\|x_n\|$ dla $n\ge m$.
+Indukcyjnie $\|x_{m+k}\|\le q^k\|x_m\|$ dla $k\ge0$:
+dla $k=0$ mamy równość, a przejście do $k+1$ wynika
+z powyższego oszacowania kolejnych norm.
+Ponieważ $\sum_{k=0}^\infty q^k\|x_m\|=\|x_m\|/(1-q)$
+jest skończona, wniosek \ref{ma2:cor:series-majorant}
+daje zbieżność bezwzględną i zbieżność szeregu.
+Jeśli $\liminf r_n>1$, wybieramy skończone $q>1$ mniejsze
+od granicy dolnej (również gdy jest nieskończona).
+Od pewnego $m$ mamy $r_n>q$ i $x_n\ne0$.
+Dla $k=0$ mamy równość $\|x_{m+k}\|=\|x_m\|$.
+Jeżeli $\|x_{m+k}\|\ge q^k\|x_m\|$, to
+$\|x_{m+k+1}\|>q\|x_{m+k}\|\ge q^{k+1}\|x_m\|$.
+Zatem indukcyjnie $\|x_{m+k}\|\ge q^k\|x_m\|\ge\|x_m\|>0$
+dla każdego $k\ge0$. Z twierdzenia \ref{ma2:thm:series-cauchy}
+szereg jest rozbieżny.
+W części (ii), jeśli $L<1$, wybieramy $0<q<1$ z $L<q$.
+Od pewnego $m$ mamy $\|x_n\|^{1/n}<q$, czyli
+$\|x_n\|<q^n$ dla $n\ge m$ (potęgowanie stopnia $n$ zachowuje
+porządek na liczbach nieujemnych).
+Stosujemy wniosek \ref{ma2:cor:series-majorant}.
+Jeśli $L>1$, wybieramy skończone $q>1$ z $q<L$.
+Dla każdego $M$ istnieje $n\ge M$ z $\|x_n\|^{1/n}>q$,
+stąd $\|x_n\|>q^n\ge1$. Wyrazy nie dążą do zera,
+więc szereg jest rozbieżny.
+\end{proof}
+\begin{przyklad}[Przypadek graniczny kryteriów]
+\label{ma2:ex:ratio-root-boundary}
+W przestrzeni zawierającej niezerowy wektor $v$ rozważmy
+$x_n=v/n$ i $y_n=v/n^2$. Ilorazy kolejnych norm to
+odpowiednio $n/(n+1)$ i $(n/(n+1))^2$; obie granice są równe
+$1$. Również granice pierwiastków stopnia $n$ z norm są równe
+$1$, ponieważ $\|v\|^{1/n}\to1$ oraz $n^{1/n}\to1$
+(rachunek granic z tomu I). Szereg $\sum x_n$ jest rozbieżny
+(przykład \ref{ma2:ex:vector-harmonic}), podczas gdy
+$\sum y_n$ jest bezwzględnie zbieżny i zbieżny: szereg
+liczbowy $\sum 1/n^2$ jest zbieżny, a mnożenie jego sum
+częściowych przez $v$ daje granicę w $E$. Graniczna wartość
+$1$ nie rozstrzyga więc o zbieżności.
+\end{przyklad}
+
+\begin{przyklad}[Kontrola błędu obcięcia]
+\label{ma2:ex:series-geometric-bound}
+Jeśli $C\ge0$, $0\le q<1$ i $\|x_n\|\le Cq^n$ dla $n\ge1$,
+to w przestrzeni Banacha z wniosku
+\ref{ma2:cor:series-majorant} istnieje suma $S$ i
+\[
+ \|S-S_N\|\le C\sum_{n=N+1}^\infty q^n
+              =\frac{Cq^{N+1}}{1-q}\qquad(N\ge0).
+\]
+Dla $q=0$ wszystkie $x_n$ są zerowe, więc oszacowanie
+nadal zachodzi. Dla $C=1$, $q=1/2$ i $N=10$ błąd jest
+nie większy niż $2^{-10}<1/1000$.
+\end{przyklad}
+
+\begin{uwaga}
+Rozbieżność wykazana przez warunek konieczny nie wymaga
+zupełności. W tym rozdziale nie utożsamiamy zbieżności
+bezwzględnej ze zbieżnością bezwarunkową i nie zmieniamy
+kolejności wyrazów. Przestawienia, szeregi warunkowo zbieżne
+i szeregi bezwarunkowo zbieżne będą tematem rozdziału 03.
+\end{uwaga}

@@ -1,0 +1,36 @@
+# AM II 02 — audyt otwarty
+
+## Zakres i źródła
+Rozdział 02 rozwija wyniki AM I 09 o szeregach liczbowych na przestrzenie unormowane i przestrzenie Banacha, korzystając z ustabilizowanego rozdziału AM II 01. Zachowano etykiety rozdziału 01; dla nowych, uogólnionych twierdzeń zastosowano odrębne etykiety ma2, nie kopiując etykiet twierdzeń skalarnych pod zmienione tezy. Skrypt źródłowy AM I pozostaje bez zmian.
+
+Zakres: sumy częściowe, warunek konieczny i kryterium Cauchy'ego, liniowość i ogony, operatory ciągłe, współrzędne w skończonym wymiarze, szeregi geometryczne i teleskopowe, grupowanie kolejnych wyrazów, zbieżność bezwzględna, oszacowanie reszty, charakteryzacja zupełności, kontrprzykład c00, majoranty oraz kryteria ilorazowe i pierwiastkowe. Przestawienia i zbieżność bezwarunkowa pozostają w rozdziale 03.
+
+## Pierwszy audyt szczegółowy
+Wersja początkowa: 6fd70d8321275d63aa0799f231238322aebee197 (400 wierszy).
+Wersja po poprawkach: ad562382a42cc01c46c35e1deedac21b383fc060 (429 wierszy).
+Doprecyzowano tezę o zbieżności kombinacji liniowej, przypadek wymiaru zerowego, dowód oszacowania przez majorantę z kontrolą skończonego początku i ogona, użycie kryterium progowego limsup/liminf, indukcję w dowodzie kryterium rozbieżności, wybór i własności indeksów podciągu w charakteryzacji zupełności oraz kwantyfikację oszacowania reszty. Zweryfikowano, że zupełność jest wymagana dla implikacji zbieżności bezwzględnej, ale nie przy warunku koniecznym ani przy przenoszeniu istniejącej sumy przez operator. Rozdział 01 bez zmian.
+
+Kontrola statyczna: 18 etykiet w rozdziale 02, 15 wystąpień odwołań, 11 dowodów, 4 przykłady; brak duplikatów w obrębie obu rozdziałów AM II, brak lokalnych odsyłaczy bez celu, zbilansowane środowiska. Rejestracja w entrypoincie i catalog/books.json wykonana.
+ 
+Status: OTWARTY. Licznik czystych audytów 0/2. Ponowne czytanie po poprawkach, CI aktualnej wersji, kontrola wizualna PDF i audyt kontrolny pozostają do wykonania. Nie przechodzić do rozdziału 03 przed stabilizacją.
+
+## Drugi audyt szczegółowy — wersja e4e551be4672ed4b5dfbe181d37c545743a1975b
+Poprzednia wersja ad562382 uzyskała SUCCESS w CI #45664976776. W aktualnej iteracji wzmocniono twierdzenie o grupowaniu do równoważności, dowodząc także konieczności zanikania maksymalnych przyrostów wewnątrz bloków. Dodano wniosek dla ograniczonej długości bloków i kontrprzykład dla nieograniczonej długości z wyrazami dążącymi do zera, sumami bloków równymi zero i sumami częściowymi oscylującymi między 0 i v. Dołączono rysunek TikZ pierwszych trzech bloków. Dodano kontrprzykład w l2 na zbieżność współrzędnościową bez zbieżności w normie oraz przykłady nierozstrzygalności kryteriów ilorazowego i pierwiastkowego przy wartości granicznej 1. Doprecyzowano definicję szeregu od dowolnego indeksu, argument harmoniczny, oznaczenie sumy w twierdzeniu o majorancie oraz geometryczne oszacowanie w kryterium ilorazowym. Rozdział 01 bez zmian; zachowano wszystkie dotychczasowe etykiety rozdziału 02.
+
+Kontrola strukturalna nowej wersji: 558 wierszy, 22 etykiety, 19 wystąpień odwołań, 12 dowodów i 7 przykładów; brak duplikatów w obu rozdziałach AM II i odwołań bez celu, zbilansowane środowiska. CI aktualnej wersji oraz wizualna kontrola PDF pozostają niepotwierdzone. Status OTWARTY, licznik czystych audytów 0/2. Kolejny krok: ponowna kontrola całej treści, w szczególności nowych wyników o grupowaniu, oraz kompilacja i kontrola ilustracji. Nie rozpoczynać rozdziału 03.
+
+## Pierwszy czysty audyt stabilizacyjny — wersja e4e551be4672ed4b5dfbe181d37c545743a1975b
+
+Przejrzano ponownie 558 wierszy, 5 sekcji, 12 dowodów i 7 przykładów: obie implikacje kryterium grupowania i jednolitość względem indeksów w bloku; konstrukcję bloków o nieograniczonej długości; charakteryzację zupełności przez podciąg; kontrprzykłady w l2 i c00; przypadki zerowe i graniczne kryteriów; oszacowania ogonów; liniowość, operatory i zbieżność współrzędnych. Nie stwierdzono nowych istotnych błędów ani luk. Treść pozostawiono bez zmian.
+
+Kontrola statyczna PASS: 22 etykiety, 19 wystąpień odwołań, 0 duplikatów w AM II, 0 brakujących celów, zbilansowane środowiska. Blob rozdziału 02 da90770a64fa28cfc5aaa9ac44a4d9e0255afd6c i entrypoint identyczne z wersją skompilowaną; rozdział 01 bez zmian. CI #45666401405 completed/success. Artefakt 15048056378 pobrano i rozpakowano, wyrenderowano przez pdftoppm wszystkie 14 stron PDF i obejrzano cztery plansze, w tym 6 stron rozdziału 02 (numerowane 7–12). Wykres na stronie numerowanej 10 czytelny i zgodny z konstrukcją, bez widocznych kolizji lub obcięć; spis treści obejmuje oba rozdziały. Kontrola wizualna PASS w zakresie układu stron. Nie testowano interfejsu Atlasu ani formalizacji Lean.
+
+Licznik czystych audytów 1/2. Status OTWARTY do drugiego audytu kontrolnego. Nie rozpoczynać rozdziału 03.
+
+## Końcowy audyt kontrolny — stabilizacja rozdziału 02
+
+Wersja treści: da90770a64fa28cfc5aaa9ac44a4d9e0255afd6c (558 wierszy). Drugi ręczny przebieg kontrolny wszystkich pięciu sekcji, 12 dowodów i 7 przykładów, bez nowych istotnych błędów matematycznych i luk. Kontrola od końca: w kryteriach ilorazowym i pierwiastkowym sprawdzono hipotezy, dodatniość mianownika, nierówności ścisłe, przypadki nieskończonych granic i wartości granicznej 1; w oszacowaniach reszt sprawdzono indeks N=0, skończony początek oraz granice sum nieujemnych; w charakterystyce zupełności sprawdzono rekurencyjny dobór indeksów i przejście od zbieżnego podciągu do całego ciągu Cauchy'ego bez zakładania zupełności. W grupowaniu sprawdzono pokrycie indeksów, obie implikacje, przypadek pustej sumy, jednolitość oszacowania maksimum oraz rozbieżność przy nieograniczonych blokach pomimo x_n -> 0. W części o operatorach i współrzędnych sprawdzono, że istniejąca granica należy do przeciwdziedziny i nie wymaga jej zupełności, przypadek wymiaru 0 oraz kontrprzykład l2. Sprawdzono też warunek konieczny, kryterium Cauchy'ego, liniowość, ogony i jednoznaczność sumy. Bez zmian źródła.
+
+Kontrola statyczna PASS: 22 etykiety, 19 wystąpień odwołań, 0 duplikatów w AM II, 0 brakujących celów, zbilansowane środowiska, zgodność entrypointu i katalogu. Blob rozdziału 02 nadal identyczny z wersją e4e551be; entrypoint identyczny z wersją z CI (6bd9ff02992c03ab4a46d044fe3d1f3d2725629b). Rozdział 01 nadal bez zmian. CI #45666401405 SUCCESS i uprzednia rzeczywista kontrola wizualna wszystkich 14 stron PDF zachowują ważność dla niezmienionego źródła. W tej iteracji nie wykonywano ponownie renderowania PDF, nie testowano interfejsu Atlasu ani formalizacji Lean.
+
+Licznik czystych audytów: 2/2. Status: USTABILIZOWANY w zakresie matematyczno-redakcyjnym, kompilacji i wizualnej kontroli PDF. Kolejny rozdział: 03 — Zbieżność bezwzględna, warunkowa i bezwarunkowa.

@@ -1,4 +1,5 @@
 \section{Szeroka całka Denjoya (Denjoya--Chinczyna)}
+\providecommand{\atlasref}[2]{#2}
 Zmieniamy dwa elementy definicji: oscylacje zastępujemy przyrostami między końcami przedziałów, a zwykłą pochodną --- pochodną aproksymatywną. Zachowujemy ciągłość funkcji pierwotnej.
 \begin{definicja}[Pochodna aproksymatywna]\label{it:def:approx-derivative}
 Mierzalny zbiór $E\subset\R$ ma gęstość jeden w punkcie $x$, jeśli $\lambda_1(E\cap(x-r,x+r))/(2r)\to1$ przy $r\downarrow0$. Gęstość zero definiujemy analogicznie, zastępując granicę przez zero. Pochodną aproksymatywną rozpatrujemy w punktach wnętrza przedziału; wartości na końcach nie wpływają na całkę. Dla ciągłej $F:[a,b]\to\R$ i $x\in(a,b)$ mówimy, że $F$ ma skończoną pochodną aproksymatywną $F'_{\mathrm{ap}}(x)=L$, jeżeli dla każdego $\varepsilon>0$ zbiór punktów $y\in[a,b]\setminus\{x\}$ spełniających
@@ -12,9 +13,160 @@ Gdyby dwie różne liczby $L_1,L_2$ były pochodnymi aproksymatywnymi tej samej 
 Dla kombinacji $\alpha F+\beta G$ wybieramy dla obu funkcji zbiory dobrych ilorazów z dokładnością $\varepsilon/(1+|\alpha|+|\beta|)$. Na ich przecięciu błąd ilorazu kombinacji jest mniejszy od $\varepsilon$, a przecięcie ma gęstość jeden. To daje tezę.
 \end{proof}
 
+\begin{lemat}[Iloczyn, iloraz i złożenie w rachunku aproksymatywnym]
+\label{it:lem:approx-derivative-calculus}
+Niech $F,G:[a,b]\to\R$ będą ciągłe i niech w punkcie
+$x\in(a,b)$ istnieją ich skończone pochodne aproksymatywne.
+Wówczas
+\[
+ (FG)'_{\mathrm{ap}}(x)
+ =F(x)G'_{\mathrm{ap}}(x)+G(x)F'_{\mathrm{ap}}(x).
+\]
+Jeżeli $G(x)\ne0$, to w pewnym otoczeniu $x$ istnieje
+iloraz $F/G$ i
+\[
+ (F/G)'_{\mathrm{ap}}(x)=
+ \frac{F'_{\mathrm{ap}}(x)G(x)-F(x)G'_{\mathrm{ap}}(x)}{G(x)^2}.
+\]
+Jeżeli funkcja $\psi$ jest określona na otoczeniu $F(x)$
+i różniczkowalna w $F(x)$, to
+\[
+ (\psi\circ F)'_{\mathrm{ap}}(x)=\psi'(F(x))F'_{\mathrm{ap}}(x).
+\]
+W ostatniej tezie zakładamy ponadto ciągłość $\psi$ na
+pewnym otoczeniu $F(x)$, aby złożenie było ciągłe lokalnie.
+\end{lemat}
+\begin{proof}
+Piszemy $Q_H(y)=(H(y)-H(x))/(y-x)$ dla $y\ne x$,
+$A=F'_{\mathrm{ap}}(x)$ i $B=G'_{\mathrm{ap}}(x)$.
+Z tożsamości $Q_{FG}(y)=F(y)Q_G(y)+G(x)Q_F(y)$ mamy
+\[
+ |Q_{FG}(y)-F(x)B-G(x)A|
+ \le |F(y)||Q_G(y)-B|+|G(x)||Q_F(y)-A|
+       +|B||F(y)-F(x)|.
+\]
+Dla $\varepsilon>0$ wybieramy
+$\eta=\varepsilon/(2(1+\|F\|_\infty+|G(x)|))$.
+Poza sumą dwóch zbiorów gęstości zero pierwsze dwa
+składniki łącznie są mniejsze od $\varepsilon/2$.
+Ostatni składnik jest mniejszy od $\varepsilon/2$
+w dostatecznie małym otoczeniu $x$ dzięki ciągłości $F$.
+Dowodzi to reguły iloczynu.
+
+Dla złożenia z definicji różniczkowalności mamy
+\[
+ Q_{\psi\circ F}(y)=(\psi'(F(x))+e(y))Q_F(y),
+ \qquad e(y)\longrightarrow0 \quad(y\to x).
+\]
+Gdy $F(y)=F(x)$, kładziemy $e(y)=0$; w pozostałych
+punktach jest to reszta ilorazu różnicowego $\psi$.
+Zbieżność reszty wynika z ciągłości $F$ i różniczkowalności
+$\psi$ w $F(x)$. Dla $0<\eta\le1$ poza zbiorem gęstości
+zero mamy $|Q_F(y)-A|<\eta$, a stąd
+\[
+ |Q_{\psi\circ F}(y)-\psi'(F(x))A|
+ \le |\psi'(F(x))|\eta+|e(y)|(|A|+1).
+\]
+Wybierając najpierw $\eta$, a następnie promień otoczenia,
+czynimy oba składniki dowolnie małymi.
+Dla ilorazu ciągłość $G$ i $G(x)\ne0$ zapewniają
+niezerowość $G$ w otoczeniu $x$. Stosujemy regułę
+złożenia do $\psi(t)=1/t$ i $G$, otrzymując
+$(1/G)'_{\mathrm{ap}}(x)=-B/G(x)^2$.
+Reguła iloczynu zastosowana lokalnie do $F$ i $1/G$
+daje wzór ilorazowy.
+\end{proof}
+
+\begin{przyklad}[Pochodna aproksymatywna bez zwykłej pochodnej]
+\label{it:ex:approx-not-ordinary}
+Na $[-1,1]$ połóżmy $c_n=2^{-n}$, $r_n=2^{-3n-2}$
+dla $n\ge1$, i wybierzmy $\psi\in C_c^1((-1,1))$
+taką, że $0\le\psi\le1$, $\psi(0)=1$.
+Przedłużamy $\psi$ przez zero i definiujemy
+\[
+ F(x)=\sum_{n\ge1}c_n\psi((x-c_n)/r_n).
+\]
+Przedziały nośników $J_n=[c_n-r_n,c_n+r_n]$
+są parami rozłączne: $r_n\le c_n/16$, zatem
+$c_{n+1}+r_{n+1}\le17c_n/32<15c_n/16\le c_n-r_n$.
+Szereg jest lokalnie skończony poza $0$, a w otoczeniu
+$0$ wartości niezerowe pochodzą od składników o
+dowolnie dużych indeksach i mają moduły co najwyżej
+$c_n\to0$. Stąd $F$ jest ciągła i $F(0)=0$.
+Ponieważ $F(c_n)/c_n=1$, a $F(x)/x=0$ dla $x<0$,
+zwykła pochodna w $0$ nie istnieje.
+
+Dla $0<\rho\le1/2$ wybieramy $N$ z
+$2^{-N-1}<\rho\le2^{-N}$. Gdy $n<N$, mamy
+$c_n-r_n\ge15c_n/16\ge(15/8)2^{-N}>\rho$.
+Zatem zbiór, na którym $F$ jest niezerowa w
+$(-\rho,\rho)$, ma miarę nie większą niż
+\[
+ \sum_{n\ge N}2r_n
+ =\frac47\,2^{-3N}
+ <\frac{32}{7}\rho^3.
+\]
+Po podzieleniu przez $2\rho$ dostajemy wielkość
+dążącą do zera. Dla każdego $\varepsilon>0$ zbiór
+punktów z $|F(y)/y|\ge\varepsilon$ zawiera się
+w zbiorze, na którym $F$ jest niezerowa. Dlatego
+$F'_{\mathrm{ap}}(0)=0$. Przykład rozróżnia oba
+pojęcia pochodnej nawet w klasie funkcji ciągłych.
+\end{przyklad}
+
 \begin{definicja}[Klasa $\AC G$ i szeroka całka Denjoya]\label{it:def:denjoy-broad}
 Dla ciągłej $F:[a,b]\to\R$ i $E\subset[a,b]$ piszemy $F\in\AC(E)$, jeśli dla każdego $\varepsilon>0$ istnieje $\eta>0$ takie, że dla każdej skończonej rodziny przedziałów $[u_j,v_j]$ o rozłącznych wnętrzach i końcach należących do $E$ warunek $\sum_j(v_j-u_j)<\eta$ pociąga $\sum_j|F(v_j)-F(u_j)|<\varepsilon$. Piszemy $F\in\AC G[a,b]$, gdy $[a,b]=\bigcup_{n\ge1}E_n$ dla zbiorów domkniętych $E_n$ z $F\in\AC(E_n)$. Funkcja $f:[a,b]\to\R$ o skończonych wartościach jest całkowalna w szerokim sensie Denjoya, jeżeli istnieje ciągła $F\in\AC G[a,b]$ z $F'_{\mathrm{ap}}=f$ prawie wszędzie. Definiujemy $(\mathrm D_{\mathrm{sz}})\int_a^b f=F(b)-F(a)$. Jednoznaczność tej definicji uzasadnimy w twierdzeniu \ref{it:thm:acg-uniqueness}. Na przedziale jednopunktowym przyjmujemy całkę zero.
 \end{definicja}
+\begin{twierdzenie}[Domknięcie zbioru i działania algebraiczne w klasie $ACG$]
+\label{it:thm:acg-closure-algebra}\label{ma1:kh:thm:acg-algebra}
+Dla ciągłej $F:[a,b]\to\R$ i dowolnego $E\subset[a,b]$
+zachodzi $F\in\AC(E)$ wtedy i tylko wtedy, gdy $F\in\AC(\overline E)$.
+W definicji $\AC G$ można zatem używać dowolnych przeliczalnych
+pokryć. Klasa $\AC G[a,b]$ jest algebrą rzeczywistą z jedynką,
+zamkniętą także na składanie z zewnętrzną funkcją lipschitzowską
+na zakresie $F$.
+\end{twierdzenie}
+\begin{proof}
+Kierunek od $\overline E$ do $E$ wynika z inkluzji.
+Odwrotnie, dla $\varepsilon>0$ wybieramy $\eta>0$ z warunku
+$\AC(E)$ dla błędu $\varepsilon/4$. Skończoną rodzinę
+przedziałów o końcach w $\overline E$, rozłącznych wnętrzach
+i sumie długości mniejszej od $\eta/2$ porządkujemy od lewej
+do prawej, pomijając przedziały jednopunktowe.
+Dzielimy ją na dwie grupy według parzystości indeksów.
+W każdej grupie różne przedziały oddziela dodatni odstęp,
+gdyż pomiędzy nimi leży przedział drugiej grupy o dodatniej
+długości. Przybliżamy wszystkie końce punktami z $E$.
+Dla dostatecznie dokładnych przybliżeń przedziały w każdej
+grupie nadal mają rozłączne wnętrza i sumę długości
+mniejszą od $\eta$. Suma modułów ich przyrostów jest
+mniejsza od $\varepsilon/4$. Z ciągłości $F$ przechodzimy
+do granicy w obu skończonych sumach, otrzymując łączne
+oszacowanie $\varepsilon/2<\varepsilon$. Domknięcia zbiorów
+pokrycia uzasadniają równoważność definicji.
+
+Dla $F,G\in\AC G$ bierzemy przecięcia zbiorów z ich
+domkniętych pokryć. Na każdym z nich obie funkcje spełniają
+warunek $\AC$. Dla $u<v$ mamy
+\[
+ |F(v)G(v)-F(u)G(u)|
+ \le \|F\|_\infty|G(v)-G(u)|+
+ \|G\|_\infty|F(v)-F(u)|.
+\]
+Normy są skończone z ciągłości na przedziale zwartym.
+Wybierając wspólny próg długości dla obu funkcji z błędem
+$\varepsilon/(2(1+\|F\|_\infty+\|G\|_\infty))$,
+otrzymujemy warunek $\AC$ dla iloczynu.
+Dla sumy stosujemy nierówność trójkąta, mnożenie przez
+skalar skaluje moduł przyrostu, a funkcje stałe mają zerowe
+przyrosty. Dla lipschitzowskiej $\psi$ ze stałą $L$ mamy
+$|\psi(F(v))-\psi(F(u))|\le L|F(v)-F(u)|$,
+co daje warunek $\AC$ na tym samym pokryciu.
+Wszystkie otrzymane funkcje są ciągłe.
+\end{proof}
+
+
+
 \begin{lemat}[Przedłużenie ze zbioru domkniętego]\label{it:lem:ac-affine-extension}
 Jeśli $E\subset[a,b]$ jest domknięty, $F:[a,b]\to\R$ jest ciągła i $F\in\AC(E)$, to $F|_E$ ma bezwzględnie ciągłe przedłużenie $u:[a,b]\to\R$. Ponadto dla każdego zbioru borelowskiego $B\subset E$ zachodzi
 \[
@@ -66,7 +218,7 @@ Każda funkcja całkowalna w sensie HK, Perrona lub wąskim sensie Denjoya jest 
 \begin{proof}
 Na mocy twierdzenia \ref{it:thm:kh-acgstar-characterization} pierwotna HK należy do $\AC G_*$ i jej zwykła pochodna jest równa funkcji podcałkowej prawie wszędzie. Dla dowolnego $E$ nierówność $|F(v)-F(u)|\le\osc_{[u,v]}F$ daje $\AC G_*\subset\AC G$, a zwykła pochodna jest pochodną aproksymatywną. Ta sama pierwotna realizuje więc całkę szeroką, z tym samym przyrostem. Dla całek Perrona i wąskiej Denjoya stosujemy odpowiednio twierdzenie \ref{it:thm:perron-hk} i wniosek \ref{it:cor:denjoy-hk}. Właściwość wykaże następny przykład.
 \end{proof}
-\begin{przyklad}[Oscylacje w lukach zbioru Cantora]\label{it:ex:broad-denjoy-strict}
+\begin{przyklad}[Oscylacje w lukach zbioru Cantora]\label{ma1:kh:ex:denjoy-strict}\label{it:ex:broad-denjoy-strict}
 Niech $K\subset[0,1]$ będzie klasycznym zbiorem Cantora. Na etapie $n\ge1$ usuwanych jest $2^{n-1}$ luk $I_{n,k}=(a_{n,k},b_{n,k})$ długości $3^{-n}$. Definiujemy
 \[
 F(x)=\begin{cases}
@@ -100,6 +252,8 @@ Niech $K$ będzie klasycznym zbiorem Cantora, a $F$ funkcją z przykładu \ref{i
 \]
 Dla każdego $\eta>0$ znajdziemy zatem rozłączne przedziały o końcach w $K$ i łącznej długości mniejszej niż $\eta$, na których suma oscylacji pozostaje równa $1/2$. To pokazuje, dlaczego w szerokiej teorii kontrolujemy jedynie przyrosty, a w wąskiej całe oscylacje.
 \end{przyklad}
+\noindent\emph{Porównanie w Bibliotece matematycznej:} \atlasref{AM1-36::tw:denjoy-szeroka-ftc}{AM1-36: wzór Newtona–Leibniza dla szerokiej całki Denjoya}.
+
 \begin{twierdzenie}[Wzór Newtona--Leibniza dla szerokiej całki Denjoya]\label{tw:denjoy-szeroka-ftc}
 Niech $F\in C[a,b]\cap\AC G[a,b]$. Wówczas $F'_{\mathrm{ap}}$ istnieje i jest skończona prawie wszędzie. Ustalmy dowolną funkcję $f:[a,b]\to\R$ o skończonych wartościach, równą $F'_{\mathrm{ap}}$ wszędzie tam, gdzie ta pochodna istnieje poza pewnym zbiorem miary zero. Wówczas dla dowolnych $a\le u\le v\le b$ funkcja $f$ jest całkowalna w szerokim sensie Denjoya na $[u,v]$ i
 \[
@@ -115,6 +269,56 @@ Jeśli $f,g$ są całkowalne w szerokim sensie Denjoya na $[a,b]$ i $\alpha,\bet
 \begin{proof}
 Dla pierwotnych $F,G$ bierzemy $H=\alpha F+\beta G$. Przez przecięcia domkniętych zbiorów pokrycia uzyskujemy $H\in\AC G$, a pochodna aproksymatywna jest liniowa wszędzie, gdzie obie pochodne istnieją. Dla lokalności ograniczamy pierwotną do podprzedziałów. Odwrotnie, dwie pierwotne na podprzedziałach można skleić, dodając jednej z nich stałą, aby wartości w $c$ się zgadzały. Dokładniej, dla pierwotnych $F_1$ na $[a,c]$ i $F_2$ na $[c,b]$ kładziemy $F=F_1$ na $[a,c]$ i $F=F_2+F_1(c)-F_2(c)$ na $[c,b]$. Wartości w $c$ są zgodne, więc $F$ jest ciągła. Zbiory z obu domkniętych pokryć pozostają domknięte w $[a,b]$, a przyrosty po dodaniu stałej nie zmieniają się. Połączenie obu rodzin świadczy o przynależności $F$ do $\AC G$. Pochodna aproksymatywna jest równa $f$ poza sumą lokalnych zbiorów wyjątkowych i zbioru $\{a,c,b\}$, ponieważ w punktach wnętrza każdej części zależy tylko od dostatecznie małego otoczenia. Zatem $F$ realizuje całkę na całości, a jej przyrost jest sumą przyrostów po obu częściach.
 \end{proof}
+\begin{twierdzenie}[Oszacowanie miary obrazu przez pochodną aproksymatywną]
+\label{it:thm:acg-image-bound}
+Niech $F\in\AC G[a,b]$ i niech $f$ będzie skończonym
+mierzalnym reprezentantem $F'_{\mathrm{ap}}$.
+Dla każdego zbioru $B\subset[a,b]$ mierzalnego w sensie
+Lebesgue'a zachodzi
+\[
+ \lambda_1^*(F(B))\le \int_B |f|\,\mathrm d\lambda_1,
+\]
+przy czym prawa strona może być nieskończona.
+W szczególności obraz zbioru, na którym $f=0$ prawie
+wszędzie, ma miarę zero, niezależnie od miary samego
+zbioru.
+\end{twierdzenie}
+\begin{proof}
+Niech $E_n$ będzie domkniętym pokryciem z definicji
+$\AC G$, a $u_n$ bezwzględnie ciągłym przedłużeniem
+$F|_{E_n}$ z lematu \ref{it:lem:ac-affine-extension}.
+Z dowodu twierdzenia \ref{it:thm:acg-uniqueness} mamy
+$u_n'=f$ prawie wszędzie na $E_n$.
+Wybieramy borelowski zbiór $D\supset B$ taki, że
+$\lambda_1(D\setminus B)=0$; istnieje on z regularności
+i zupełności miary Lebesgue'a. Definiujemy rozłączne
+zbiory borelowskie
+\[
+ D_n=D\cap\bigl(E_n\setminus\bigcup_{j<n}E_j\bigr).
+\]
+Ich suma jest równa $D$. Z lematu
+\ref{it:lem:ac-affine-extension}, ponieważ $D_n\subset E_n$,
+otrzymujemy
+\[
+ \lambda_1^*(F(D_n))
+ \le\int_{D_n}|u_n'|\,\mathrm d\lambda_1
+ =\int_{D_n}|f|\,\mathrm d\lambda_1.
+\]
+Zatem z monotoniczności i przeliczalnej podaddytywności
+miary zewnętrznej oraz przeliczalnej addytywności całki
+funkcji nieujemnej wynika
+\[
+ \lambda_1^*(F(B))
+ \le\sum_{n\ge1}\lambda_1^*(F(D_n))
+ \le\sum_{n\ge1}\int_{D_n}|f|\,\mathrm d\lambda_1
+ =\int_D|f|\,\mathrm d\lambda_1
+ =\int_B|f|\,\mathrm d\lambda_1.
+\]
+Ostatnia równość wynika z zerowej miary $D\setminus B$.
+Wniosek dla zbiorów, na których $f=0$ prawie wszędzie,
+jest bezpośredni.
+\end{proof}
+
 \begin{wniosek}[Własność Luzina i ograniczone wahanie]\label{it:cor:acg-bv}
 Każda funkcja $F\in\AC G[a,b]$ ma własność Luzina (N): obraz zbioru miary Lebesgue'a zero ma miarę zero. Ponadto
 \[
@@ -137,7 +341,179 @@ jest bezwzględnie ciągła, a więc należy do $\AC G$, i ma zwykłą pochodną
 Dla pierwotnej szerokiej całki Denjoya mamy $F'_{\mathrm{ap}}=f$ prawie wszędzie. Jeśli $F\in\BV$, pierwsza część daje $F\in\AC$, a zwykła pochodna $F'$ jest równa $f$ prawie wszędzie przez jednoznaczność pochodnej aproksymatywnej (lemat \ref{it:lem:approx-derivative}). Zatem $f\in\mathcal L^1$. Odwrotnie, jeśli $f\in\mathcal L^1$, jego pierwotna Lebesgue'a jest bezwzględnie ciągła i ma pochodną aproksymatywną równą $f$ prawie wszędzie. Jednoznaczność pierwotnych szerokiej całki Denjoya daje jej równość z $F$. Wzór na wahanie wynika teraz z twierdzenia \ref{it:thm:denjoy-bv-ac}, ponieważ $F$ jest bezwzględnie ciągła, a więc jest także pierwotną wąskiej całki Denjoya.
 \end{proof}
 
+% Uzupełnienia z AM1-36; zachowane etykiety źródłowe.
+\begin{twierdzenie}[Porządek i całkowalność bezwzględna w szerokim sensie Denjoya]\label{ma1:kh:thm:wide-denjoy-positive}
+Jeśli $f\ge0$ prawie wszędzie i $f$ jest całkowalna w szerokim sensie Denjoya, to $f\in\mathcal L^1[a,b]$. W konsekwencji szeroka całka Denjoya jest monotoniczna, a całkowalność w tym sensie zarówno $f$, jak i $|f|$ jest równoważna $f\in\mathcal L^1[a,b]$.
+\end{twierdzenie}
+\begin{proof}
+Niech $F\in\AC G$ będzie pierwotną $f$, a $E_n$ i $u_n$ odpowiednio domkniętym pokryciem i bezwzględnie ciągłymi przedłużeniami z lematu \ref{it:lem:ac-affine-extension}. Z dowodu twierdzenia \ref{it:thm:acg-uniqueness} istnieje borelowski zbiór zerowy $N$ zawierający końce przedziału i wszystkie wyjątki, poza którym $F'_{\mathrm{ap}}=f\ge0$ oraz $u_n'=F'_{\mathrm{ap}}$ na $E_n$. Obraz $F(N)$ ma miarę zewnętrzną zero z wniosku \ref{it:cor:acg-bv}. Dla każdego $n$ zbiór $B_n=\{x\in E_n\setminus N:u_n'(x)=0\}$ jest borelowski: można użyć borelowskiej wersji pochodnej, otrzymanej jako granica górna ilorazów różnicowych z krokiem $1/k$, po przedłużeniu $u_n$ przez stałe. Z lematu \ref{it:lem:ac-affine-extension} mamy $\lambda_1^*(F(B_n))=0$.
+
+Przypuśćmy, że $F(s)>F(t)$ dla $s<t$. Dla każdego $z\in(F(t),F(s))$ niech $x$ będzie pierwszym punktem $[s,t]$, w którym $F(x)=z$. Istnienie i minimum wynikają z ciągłości oraz zwartości. Mamy $s<x<t$ oraz $F(y)>z$ dla $s\le y<x$ (w przeciwnym razie twierdzenie o wartości pośredniej dałoby wcześniejsze trafienie w $z$). Zatem ilorazy $(F(y)-F(x))/(y-x)$ są ujemne po lewej stronie $x$. Jeśli $x\notin N$, pochodna aproksymatywna nie może być dodatnia, gdyż wtedy dla $\varepsilon=F'_{\mathrm{ap}}(x)/2$ zbiór złych ilorazów zawiera całe dostatecznie małe lewe półotoczenie, o gęstości co najmniej $1/2$. Ponieważ pochodna jest nieujemna poza $N$, musi być zerowa; dla pewnego $n$ mamy więc $x\in B_n$. Otrzymujemy
+\[
+ (F(t),F(s))\subseteq F(N)\cup\bigcup_{n\ge1}F(B_n),
+\]
+co przeczy dodatniej długości przedziału. Stąd $F$ jest niemalejąca, zatem ma ograniczone wahanie. Wniosek \ref{it:cor:acg-bv} daje $F\in\AC$ i $f\in\mathcal L^1$. Monotoniczność wynika z zastosowania tej części do różnicy dwóch funkcji całkowalnych. Dla $|f|$ nieujemnego dostajemy kryterium bezwzględnej całkowalności; implikacja odwrotna wynika ze zgodności z całką Lebesgue'a.
+\end{proof}
+\begin{wniosek}[Twierdzenia graniczne dla szerokiej całki Denjoya]\label{ma1:kh:cor:wide-denjoy-limits}
+Niech $f_n$ będą całkowalne w szerokim sensie Denjoya i $f_n\to f$ prawie wszędzie, gdzie $f$ ma skończone wartości. Jeśli $f_n\uparrow f$ prawie wszędzie i całki $f_n$ są ograniczone z góry, albo $g\le f_n\le h$ prawie wszędzie dla dwóch funkcji $g,h$ całkowalnych w szerokim sensie Denjoya, to $f$ jest całkowalna w tym sensie, a całki zbiegają do całki $f$. Ponadto w obu przypadkach
+\[
+ f_n-f\in\mathcal L^1[a,b],\qquad
+ \int_a^b|f_n-f|\,\mathrm d\lambda_1\longrightarrow0.
+\]
+Jeśli $F_n(x)=(\mathrm D_{\mathrm{sz}})\int_a^x f_n$
+oraz $F(x)=(\mathrm D_{\mathrm{sz}})\int_a^x f$, to
+\[
+ V_a^b(F_n-F)=\int_a^b|f_n-f|\,\mathrm d\lambda_1
+ \longrightarrow0.
+\]
+W szczególności $F_n\to F$ jednostajnie, a całki po
+wszystkich podprzedziałach zbiegają jednostajnie względem
+ich obu końców.
+\end{wniosek}
+\begin{proof}
+Wszystkie funkcje całkowalne w szerokim sensie Denjoya
+są mierzalne na mocy twierdzenia \ref{it:thm:acg-uniqueness}.
+Zupełność miary Lebesgue'a zapewnia mierzalność $f$:
+poza zbiorem zerowym jest ona granicą funkcji mierzalnych,
+a na zbiorze wyjątkowym przyjmuje dowolne skończone wartości.
+Wszystkie nierówności można rozpatrywać poza jednym
+zbiorem zerowym, będącym sumą przeliczalnie wielu wyjątków.
+
+W pierwszym przypadku $u_n=f_n-f_1$ są nieujemne
+prawie wszędzie i całkowalne w sensie Lebesgue'a na mocy
+twierdzenia \ref{ma1:kh:thm:wide-denjoy-positive}.
+Z liniowości oraz zgodności całek mamy
+\[
+ \int_a^b u_n\,\mathrm d\lambda_1
+ =(\mathrm D_{\mathrm{sz}})\int_a^b f_n
+ -(\mathrm D_{\mathrm{sz}})\int_a^b f_1.
+\]
+Lewa strona jest ograniczona z góry przez założenie.
+Ponieważ $u_n\uparrow u=f-f_1$ prawie wszędzie, twierdzenie
+\ref{thm:mct-ae} daje $u\in\mathcal L^1$ i
+$\int |u-u_n|\,\mathrm d\lambda_1
+=\int u\,\mathrm d\lambda_1-\int u_n\,\mathrm d\lambda_1\to0$.
+W drugim przypadku $u_n=f_n-g$ i $w=h-g$ są nieujemne
+prawie wszędzie i całkowalne w sensie Lebesgue'a przez to
+samo twierdzenie o funkcjach nieujemnych. Mamy
+$0\le u_n\le w$ prawie wszędzie oraz $u_n\to u=f-g$
+prawie wszędzie, więc $0\le u\le w$ prawie wszędzie.
+Twierdzenie \ref{thm:dct} zastosowane do $|u_n-u|\le w$
+daje $\int|u_n-u|\,\mathrm d\lambda_1\to0$ oraz
+$u\in\mathcal L^1$.
+
+W obu przypadkach $u$ jest całkowalna w szerokim sensie
+Denjoya, ponieważ jej bezwzględnie ciągła pierwotna
+Lebesgue'a należy do $\AC G$ i ma pochodną aproksymatywną
+równą $u$ prawie wszędzie (twierdzenie
+\ref{it:thm:ac-lebesgue-primitive}). Dodając odpowiednio
+$f_1$ lub $g$, dostajemy całkowalność $f$.
+Ponadto $f_n-f=u_n-u\in\mathcal L^1$ i zachodzi
+żądana zbieżność w normie $L^1$.
+Z liniowości, lokalności i zgodności całek,
+$F_n-F$ jest pierwotną Lebesgue'a funkcji $f_n-f$,
+zerującą się w $a$. Wniosek \ref{it:cor:acg-bv}
+daje dokładny wzór na jej wahanie.
+Dla $a\le s\le t\le b$ mamy
+\[
+ \left|(\mathrm D_{\mathrm{sz}})\int_s^t(f_n-f)\right|
+ =\left|(F_n-F)(t)-(F_n-F)(s)\right|
+ \le V_a^b(F_n-F).
+\]
+Prawa strona nie zależy od $s,t$ i dąży do zera,
+co daje wszystkie pozostałe tezy.
+\end{proof}
+\begin{twierdzenie}[Podstawienie w szerokiej całce Denjoya]\label{ma1:kh:thm:wide-denjoy-substitution}
+Niech $a<b$, $u<v$, a $\phi:[u,v]\to[a,b]$ będzie dyfeomorfizmem klasy $C^1$ z pochodną nigdzie niezerową. Jeżeli $f$ jest całkowalna w szerokim sensie Denjoya na $[a,b]$, to $(f\circ\phi)\phi'$ jest całkowalna w tym sensie na $[u,v]$ i
+\[
+ (\mathrm D_{\mathrm{sz}})\int_u^v f(\phi(t))\phi'(t)\,\mathrm dt
+ =(\mathrm D_{\mathrm{sz}})\int_{\phi(u)}^{\phi(v)}f(x)\,\mathrm dx.
+\]
+Całkę o odwróconych granicach rozumiemy ze znakiem minus.
+\end{twierdzenie}
+\begin{proof}
+Niech $F$ będzie pierwotną $f$ klasy $\AC G$ i niech $E_n$ będzie jej domkniętym pokryciem. Połóżmy $M=\max|\phi'|$, $m=\min|\phi'|>0$. Z twierdzenia Lagrange'a
+$m|s-t|\le|\phi(s)-\phi(t)|\le M|s-t|$.
+Zbiory $\phi^{-1}(E_n)$ są domknięte i pokrywają $[u,v]$. Obrazy przedziałów o rozłącznych wnętrzach mają rozłączne wnętrza, końce w $E_n$ i łączną długość nie większą niż $M$ razy suma długości przedziałów wyjściowych. Moduły przyrostów $F\circ\phi$ są dokładnie modułami przyrostów $F$ na obrazach (także gdy $\phi$ jest malejąca). Warunek $\AC(E_n)$ daje zatem $F\circ\phi\in\AC(\phi^{-1}(E_n))$, czyli $F\circ\phi\in\AC G$.
+
+Ustalmy $t\in(u,v)$, dla którego istnieje $F'_{\mathrm{ap}}(\phi(t))=L$. Dla każdego $\eta>0$ zbiór złych ilorazów $B_\eta$ funkcji $F$ z progiem $\eta$ ma gęstość zero w $x=\phi(t)$. Dla małego $r>0$ obraz $(t-r,t+r)$ zawiera się w $(x-Mr,x+Mr)$. Odwrotność $\phi^{-1}$ jest lipschitzowska ze stałą $1/m$; z pokrywania zbiorów przedziałami wynika, że zwiększa miarę zewnętrzną najwyżej $1/m$ razy. Stąd
+\[
+ \frac{\lambda_1(\phi^{-1}(B_\eta)\cap(t-r,t+r))}{2r}
+ \le \frac{M}{m}
+ \frac{\lambda_1(B_\eta\cap(x-Mr,x+Mr))}{2Mr}\longrightarrow0.
+\]
+Poza tym zbiorem iloraz różnicowy $F\circ\phi$ różni się od $L\phi'(t)$ o co najwyżej $M\eta+|L|\,|(\phi(s)-\phi(t))/(s-t)-\phi'(t)|$. Drugi składnik dąży do zera przy $s\to t$, a $\eta$ można wybrać dowolnie małe. To dowodzi reguły łańcuchowej dla pochodnej aproksymatywnej w rozważanych punktach. Przeciwobraz zbioru zerowego, na którym $F'_{\mathrm{ap}}=f$ może nie zachodzić, jest zerowy przez to samo oszacowanie lipschitzowskie. Zatem $(F\circ\phi)'_{\mathrm{ap}}=(f\circ\phi)\phi'$ prawie wszędzie. Twierdzenie \ref{tw:denjoy-szeroka-ftc} daje żądaną równość przyrostów.
+\end{proof}
+
+\begin{twierdzenie}[Mnożniki o ograniczonym wahaniu w szerokiej całce Denjoya]\label{ma1:kh:thm:wide-denjoy-multiplier}
+Niech $f$ będzie całkowalna w szerokim sensie Denjoya, $F\in\AC G[a,b]$ jej pierwotną, a $g\in\BV[a,b]$. Wówczas $fg$ jest całkowalna w szerokim sensie Denjoya oraz
+\[
+ (\mathrm D_{\mathrm{sz}})\int_a^b fg
+ =F(b)g(b)-F(a)g(a)-\int_a^b F\,\mathrm dg,
+\]
+gdzie ostatnia całka jest całką Riemanna--Stieltjesa.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $F$ jest ciągła, całki Riemanna--Stieltjesa z $F$ względem $g$ istnieją na wszystkich podprzedziałach (twierdzenie \ref{it:thm:rs-tools}). Definiujemy
+$H(x)=F(x)g(x)-\int_a^x F\,\mathrm dg$.
+Z addytywności i liniowości całki Riemanna--Stieltjesa oraz całkowania funkcji stałej, dla $u<v$ mamy
+\[
+ H(v)-H(u)=g(v)(F(v)-F(u))-\int_u^v(F(z)-F(u))\,\mathrm dg(z).
+\]
+Oznaczmy moduł ciągłości $F$ przez $\omega_F(s)=\sup\{|F(x)-F(y)|:x,y\in[a,b],\ |x-y|\le s\}$. Z jednostajnej ciągłości $F$ mamy $\omega_F(s)\to0$ przy $s\downarrow0$. Stąd
+\[
+ |H(v)-H(u)|\le \|g\|_\infty |F(v)-F(u)|
+   +\omega_F(v-u)\Var_{[u,v]}g.
+\]
+Dowodzi to ciągłości $H$ także w punktach skoków $g$. Jeśli $F\in\AC(E_n)$, dla rodziny przedziałów o końcach w $E_n$, rozłącznych wnętrzach i łącznej długości mniejszej od $\eta$ suma modułów przyrostów $H$ nie przekracza sumy modułów przyrostów $F$ pomnożonej przez $\|g\|_\infty$ oraz $\omega_F(\eta)\Var_{[a,b]}g$. W drugim składniku używamy addytywności wahania (lemat \ref{it:lem:rs-variation}). Dla $\varepsilon>0$ wybieramy $\eta$ z warunku $\AC(E_n)$ dla błędu $\varepsilon/(2(1+\|g\|_\infty))$ i zmniejszamy je tak, by $\omega_F(\eta)\Var_{[a,b]}g<\varepsilon/2$. Zatem $H\in\AC G[a,b]$.
+
+Niech $V(x)=\Var_{[a,x]}g$. Funkcja $V$ jest niemalejąca i ma skończoną pochodną prawie wszędzie (twierdzenie \ref{thm:cdf-derivative-25} o różniczkowaniu funkcji niemalejących). Funkcja $g$ jest ciągła poza zbiorem co najwyżej przeliczalnym, co wynika z rozkładu Jordana na różnicę funkcji niemalejących. W punkcie $x$, w którym $g$ jest ciągła, $V'$ istnieje i jest skończona oraz $F'_{\mathrm{ap}}(x)=f(x)$, dla $y\ne x$ (z konwencją całki o odwróconych granicach) mamy
+\[
+ \frac{H(y)-H(x)}{y-x}
+ =g(y)\frac{F(y)-F(x)}{y-x}
+ -\frac{1}{y-x}\int_x^y(F(z)-F(x))\,\mathrm dg(z).
+\]
+Moduł ostatniego składnika jest nie większy niż $\omega_F(|y-x|)|V(y)-V(x)|/|y-x|$, co dąży do zera. Pierwszy składnik ma granicę aproksymatywną $g(x)f(x)$. Istotnie, pisząc $Q(y)=(F(y)-F(x))/(y-x)$, mamy
+\[
+ |g(y)Q(y)-g(x)f(x)|
+ \le \|g\|_\infty|Q(y)-f(x)|+|f(x)|\,|g(y)-g(x)|.
+\]
+Dla $\varepsilon>0$ pierwszy składnik jest mniejszy od $\varepsilon/2$ poza zbiorem gęstości zero, z definicji pochodnej aproksymatywnej zastosowanej z progiem $\varepsilon/(2(1+\|g\|_\infty))$. Drugi jest mniejszy od $\varepsilon/2$ w dostatecznie małym otoczeniu $x$, z ciągłości $g$ w $x$. Zbiór, w którym łączny błąd jest co najmniej $\varepsilon$, ma więc gęstość zero w $x$. Zatem $H'_{\mathrm{ap}}=fg$ prawie wszędzie. Wzór wynika z twierdzenia \ref{tw:denjoy-szeroka-ftc}.
+\end{proof}
+
+\begin{wniosek}[Całkowanie przez części z mnożnikiem bezwzględnie ciągłym]\label{ma1:kh:cor:wide-denjoy-ibp-ac}
+W hipotezach twierdzenia \ref{ma1:kh:thm:wide-denjoy-multiplier}, jeśli $g\in\AC[a,b]$, to
+\[
+ (\mathrm D_{\mathrm{sz}})\int_a^b fg
+ =F(b)g(b)-F(a)g(a)-\int_a^b F(x)g'(x)\,\mathrm d\lambda_1(x).
+\]
+\end{wniosek}
+\begin{proof}
+Bezwzględna ciągłość daje ograniczone wahanie i reprezentację $g(v)-g(u)=\int_u^v g'\,\mathrm d\lambda_1$ z $g'\in L^1$ (twierdzenie \ref{it:thm:ac-lebesgue-primitive}). Dla podziału znaczonego różnica sumy Stieltjesa dla $F,g$ oraz całki Lebesgue'a $Fg'$ jest ograniczona przez $\omega_F(\mesh P)\int_a^b|g'|\,\mathrm d\lambda_1$, co dąży do zera. Stosujemy twierdzenie \ref{ma1:kh:thm:wide-denjoy-multiplier}.
+\end{proof}
+
+\begin{twierdzenie}[Dołączenie końca przedziału w szerokiej całce Denjoya]\label{ma1:kh:thm:wide-denjoy-hake}
+Niech $a<b$, a $f:[a,b]\to\R$ ma skończone wartości. Całka w szerokim sensie Denjoya na $[a,b]$ istnieje wtedy i tylko wtedy, gdy istnieje na każdym $[c,b]$, $a<c<b$, oraz istnieje skończona granica
+$L=\lim_{c\downarrow a}(\mathrm D_{\mathrm{sz}})\int_c^b f$.
+Wtedy całka na $[a,b]$ jest równa $L$.
+\end{twierdzenie}
+\begin{proof}
+Konieczność wynika z ciągłości pierwotnej i lokalności (stwierdzenie \ref{st:denjoy-szeroka-lokalnosc}). Odwrotnie, definiujemy $F(a)=0$ i $F(x)=L-(\mathrm D_{\mathrm{sz}})\int_x^b f$ dla $x>a$. Na każdym $[c,b]$ funkcja $F$ różni się od pierwotnej $f$ tylko o stałą, przez lokalność i addytywność. Jest tam więc ciągła i klasy $\AC G$. Ciągłość w $a$ wynika z definicji $L$. Wybieramy ciąg $c_n\downarrow a$ z $a<c_n<b$. Każdy $[c_n,b]$ ma przeliczalne pokrycie przez zbiory domknięte, na których $F$ spełnia $\AC$; są one również domknięte w $[a,b]$. Łącząc te pokrycia ze zbiorem $\{a\}$, otrzymujemy przeliczalne domknięte pokrycie całego $[a,b]$, a więc $F\in\AC G[a,b]$. Poza przeliczalną sumą zbiorów wyjątkowych i końcami mamy $F'_{\mathrm{ap}}=f$. Stąd całka istnieje z wartością $F(b)-F(a)=L$.
+\end{proof}
+
+\begin{wniosek}[Jednostajna granica w szerokim sensie Denjoya]\label{ma1:kh:cor:wide-denjoy-uniform}
+Jeżeli funkcje $f_n$ są całkowalne w szerokim sensie Denjoya na $[a,b]$ i $f_n\to f$ jednostajnie, to $f$ jest całkowalna w tym sensie i całki zbiegają. Nie zakładamy ograniczoności samych funkcji.
+\end{wniosek}
+\begin{proof}
+Wszystkie $f_n$ są mierzalne w sensie Lebesgue'a z dowodu twierdzenia \ref{it:thm:acg-uniqueness}, zatem $f$ również. Dla dostatecznie dużego $n$ funkcja $f-f_n$ jest ograniczona i mierzalna, więc należy do $\mathcal L^1$. Z twierdzenia \ref{it:thm:ac-lebesgue-primitive} funkcja $f-f_n$ ma bezwzględnie ciągłą pierwotną, która należy do $\AC G$ i ma pochodną aproksymatywną równą $f-f_n$ prawie wszędzie. Definicja \ref{it:def:denjoy-broad} i liniowość szerokiej całki Denjoya dają całkowalność $f$. Dla tych indeksów mamy
+\[
+ \left|(\mathrm D_{\mathrm{sz}})\int_a^b(f-f_n)\right|
+ \le (b-a)\|f-f_n\|_\infty\longrightarrow0,
+\]
+ponieważ różnica jest całkowalna w sensie Lebesgue'a.
+\end{proof}
+
 \begin{uwaga}[Nazewnictwo i oddzielne poziomy teorii]
-W terminologii historycznej szeroka całka Denjoya jest także nazywana całką Denjoya--Chinczyna. Jej opis wymaga $\AC G$ i pochodnej aproksymatywnej. Wąska całka Denjoya, równoważna HK i Perronowi, wymaga $\AC G_*$ oraz zwykłej pochodnej prawie wszędzie. Przyjęcie tylko $\AC G$ i zwykłej pochodnej bez dodatkowych warunków prowadzi do innego schematu definicyjnego; obu pojęć nie należy utożsamiać bez dowodu.
+W terminologii historycznej szeroka całka Denjoya jest także nazywana całką Denjoya--Chinczyna. Jej opis wymaga $\AC G$ i pochodnej aproksymatywnej. Wąska całka Denjoya, równoważna HK i Perronowi, wymaga $\AC G_*$ oraz zwykłej pochodnej prawie wszędzie. Istnienie zwykłej pochodnej prawie wszędzie dla funkcji klasy $\AC G$ jest warunkiem wystarczającym, ponieważ zwykła pochodna jest również aproksymatywna. Nie jest to definicja ogólnej szerokiej całki Denjoya. Przykład \ref{it:ex:broad-denjoy-strict} pokazuje, że nawet istnienie zwykłej pochodnej prawie wszędzie dla funkcji klasy $\AC G$ nie zapewnia przynależności jej pochodnej do $\HK$.
 \end{uwaga}
 

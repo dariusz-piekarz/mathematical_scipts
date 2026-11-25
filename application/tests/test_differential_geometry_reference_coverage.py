@@ -59,9 +59,28 @@ class DifferentialGeometryReferenceCoverageTest(unittest.TestCase):
                         count += 1
                         domains.add(target.split("-")[0])
         # Preserve the audited baseline without inventing links to meet a quota.
-        self.assertGreaterEqual(len(linked), 16)
-        self.assertGreaterEqual(count, 32)
-        self.assertTrue({"AA", "KAT", "LA", "ME", "TOP"} <= domains)
+        self.assertTrue({f"DG-{i:02d}" for i in range(1, 21)} <= linked)
+        self.assertGreaterEqual(count, 35)
+        self.assertTrue({"AA", "FA", "KAT", "LA", "ME", "TOP"} <= domains)
+
+        reciprocal = (
+            ("AA-57", "DG-02", "fakt:nawias-wlasnosci"),
+            ("FA-14", "DG-12", "def:pochodna-wzdluz-krzywej"),
+            ("FA-15", "DG-13", "thm:wspolrzedne-normalne"),
+            ("ME-27", "DG-14", "thm:bishop-gromov"),
+        )
+        for source, target, label in reciprocal:
+            with self.subTest(source=source, target=target, label=label):
+                ref = target + "::" + label
+                self.assertEqual(sum(r.command == "atlasref" and r.target == ref
+                                     for r in load(source).references), 1)
+                owners = [Owner(target, item.name, item.entity_id)
+                          for item in load(target).labels if item.name == label]
+                self.assertEqual(len(owners), 1)
+                decision = resolve(source, ref, owners)
+                self.assertEqual(decision.status, "external_resolved")
+                self.assertEqual(decision.owner, owners[0])
+                self.assertIsNotNone(decision.owner.entity_id)
 
 
 if __name__ == "__main__":

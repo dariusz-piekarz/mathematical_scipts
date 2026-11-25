@@ -1,0 +1,320 @@
+\section{Monoidy, komonoidy i dualność}\label{cat:sec:monoids-duality}
+Korzystamy z twierdzeń~\ref{cat:thm:mac-lane-coherence} i \ref{cat:thm:strictification}. Rachunki prowadzimy w zapisie ścisłym: w ogólnej kategorii należy wstawić kanoniczne izomorfizmy łączności i jednostek. Kolejności czynników nie wolno zmieniać bez odpowiedniego morfizmu.
+
+\subsection{Monoidy i komonoidy}
+\begin{definicja}[Monoid]\label{cat:def:monoid-object}
+Monoid w kategorii monoidalnej to obiekt $M$ z mnożeniem $m:M\otimes M\to M$ i jednostką $e:I\to M$, spełniającymi
+\[
+m(m\otimes\id_M)=m(\id_M\otimes m),\qquad
+m(e\otimes\id_M)=\id_M=m(\id_M\otimes e).
+\]
+W zapisie nieścisłym pierwsza równość ma po prawej dodatkowy czynnik $\alpha_{M,M,M}$, a dwie równości jednostkowe mają po prawej odpowiednio $\lambda_M,\rho_M$. Morfizm monoidów $f:M\to N$ spełnia $fm_M=m_N(f\otimes f)$, $fe_M=e_N$. Identyczności spełniają te warunki, a dla kolejnego morfizmu $g$ mamy $gfm_M=gm_N(f\otimes f)=m_P(gf\otimes gf)$ i $gfe_M=e_P$. W kategorii z pleceniem monoid jest przemienny, gdy $mc_{M,M}=m$.
+\end{definicja}
+\begin{przyklad}[Monoidy i algebry]\label{cat:ex:monoids-algebras}
+W $(\Set,\times,1)$ są to zwykłe monoidy. W $(\Vect_k,\otimes,k)$ własność uniwersalna iloczynu tensorowego daje odpowiednio dwuliniowe mnożenie i jednostkę $e(1)$. Aksjomaty sprawdzone na tensorach prostych dają dokładnie łączność i obie jednostki algebry; odwrotnie, równość na tensorach prostych daje równość liniowych morfizmów. Morfizmy monoidów są homomorfizmami algebr zachowującymi jedynkę.
+\end{przyklad}
+\begin{definicja}[Komonoid]\label{cat:def:comonoid-object}
+Komonoid to obiekt $C$ z morfizmami $\Delta:C\to C\otimes C$ i $\epsilon:C\to I$ takimi, że
+\[
+(\Delta\otimes\id_C)\Delta=(\id_C\otimes\Delta)\Delta,\qquad
+(\epsilon\otimes\id_C)\Delta=\id_C=(\id_C\otimes\epsilon)\Delta.
+\]
+W zapisie nieścisłym aksjomaty przyjmują postać
+\[
+\alpha_{C,C,C}(\Delta\otimes\id_C)\Delta=(\id_C\otimes\Delta)\Delta,\qquad
+\lambda_C(\epsilon\otimes\id_C)\Delta=\id_C=\rho_C(\id_C\otimes\epsilon)\Delta.
+\]
+Morfizm komonoidów $f:C\to D$ spełnia $\Delta_Df=(f\otimes f)\Delta_C$ i $\epsilon_Df=\epsilon_C$. Identyczności spełniają te równości. Jeśli $g:D\to E$ jest kolejnym morfizmem komonoidów, to
+\[
+\Delta_Egf=(g\otimes g)\Delta_Df=(g\otimes g)(f\otimes f)\Delta_C
+=(gf\otimes gf)\Delta_C,\qquad \epsilon_Egf=\epsilon_Df=\epsilon_C.
+\]
+W kategorii z pleceniem koprzemienność oznacza $c_{C,C}\Delta=\Delta$. Komonoid jest monoidem w kategorii przeciwnej z odwróconymi izomorfizmami strukturalnymi.
+\end{definicja}
+\begin{twierdzenie}[Komonoidy kartezjańskie]\label{cat:thm:cartesian-comonoid}
+W kategorii z wybranymi skończonymi iloczynami każdy obiekt $X$ ma dokładnie jedną strukturę komonoidu dla iloczynu kartezjańskiego. Jest ona koprzemienna i zachowywana przez wszystkie morfizmy.
+\end{twierdzenie}
+\begin{proof}
+Kojednostka jest wymuszona przez końcowość $1$. Dwie równości kojednostki, po wstawieniu izomorfizmów jednostkowych, dają $p_1\Delta=p_2\Delta=\id_X$. Własność uniwersalna iloczynu wymusza $\Delta=\langle\id_X,\id_X\rangle$. Obie drogi kołączności mają trzy składowe $\id_X$, a zamiana zachowuje obie składowe przekątnej. Dla $f:X\to Y$ oba morfizmy $\Delta_Y f,(f\times f)\Delta_X$ mają składowe $f,f$, a $\epsilon_Y f=\epsilon_X$ przez końcowość. To dowodzi istnienia, jednoznaczności i zachowania struktury.
+\end{proof}
+\begin{przyklad}
+Dla zbioru $S$ na przestrzeni $k^{(S)}$ o bazie $(e_s)$ określamy liniowo $\Delta(e_s)=e_s\otimes e_s$, $\epsilon(e_s)=1$. Obie drogi kołączności dają $e_s\otimes e_s\otimes e_s$, obie kojednostki dają $e_s$. Zamiana zachowuje $\Delta(e_s)$. Równość morfizmów liniowych na bazie daje wszystkie aksjomaty, także dla nieskończonego $S$.
+\end{przyklad}
+
+\subsection{Moduły i monady}
+\begin{definicja}[Moduł nad monoidem]\label{cat:def:monoid-module}
+Lewy moduł nad $(M,m,e)$ to obiekt $X$ z działaniem $a:M\otimes X\to X$ takim, że
+\[
+a(m\otimes\id_X)=a(\id_M\otimes a),\qquad a(e\otimes\id_X)=\id_X.
+\]
+Prawy moduł ma działanie $b:X\otimes M\to X$ z $b(b\otimes\id_M)=b(\id_X\otimes m)$ i $b(\id_X\otimes e)=\id_X$. Bez założenia ścisłości warunki te mają postać
+\[
+\begin{aligned}
+a(m\otimes\id_X)&=a(\id_M\otimes a)\alpha_{M,M,X},&
+a(e\otimes\id_X)&=\lambda_X,\\
+b(b\otimes\id_M)&=b(\id_X\otimes m)\alpha_{X,M,M},&
+b(\id_X\otimes e)&=\rho_X.
+\end{aligned}
+\]
+Morfizm lewych modułów $f:X\to Y$ spełnia $fa_X=a_Y(\id_M\otimes f)$, a prawych $fb_X=b_Y(f\otimes\id_M)$. Identyczności są morfizmami modułów. Dla lewych modułów z bifunktorialności mamy
+$gfa_X=ga_Y(\id_M\otimes f)=a_Z(\id_M\otimes g)(\id_M\otimes f)=a_Z(\id_M\otimes gf)$,
+a dla prawych analogicznie
+$gfb_X=gb_Y(f\otimes\id_M)=b_Z(g\otimes\id_M)(f\otimes\id_M)=b_Z(gf\otimes\id_M)$.
+Otrzymujemy więc kategorie lewych i prawych modułów. W kategorii zbiorów są to działania monoidu, w kategorii przestrzeni wektorowych moduły unitarne nad algebrą: dwuliniowość i aksjomaty na tensorach prostych dają dokładnie zwykłe aksjomaty.
+\end{definicja}
+\begin{stwierdzenie}[Monada działania]\label{cat:prop:monoid-module-monad}
+Monoid $M$ wyznacza monadę $T=M\otimes-$, której algebry Eilenberga--Moore'a są dokładnie lewymi modułami nad $M$.
+\end{stwierdzenie}
+\begin{proof}
+Na morfizmach $T(f)=\id_M\otimes f$. W zapisie ścisłym $\eta_X=e\otimes\id_X$, $\mu_X=m\otimes\id_X$. Naturalność wynika z bifunktorialności: dla $f:X\to Y$ obie drogi dają odpowiednio $e\otimes f$ i $m\otimes f$. Łączność monady redukuje się do
+\[
+(m(m\otimes\id_M))\otimes\id_X=(m(\id_M\otimes m))\otimes\id_X.
+\]
+Obie tożsamości jednostkowe monady sprawdzamy oddzielnie:
+\[
+\begin{aligned}
+\mu_X\eta_{TX}&=(m\otimes\id_X)(e\otimes\id_M\otimes\id_X)
+=[m(e\otimes\id_M)]\otimes\id_X=\id_{TX},\\
+\mu_XT(\eta_X)&=(m\otimes\id_X)(\id_M\otimes e\otimes\id_X)
+=[m(\id_M\otimes e)]\otimes\id_X=\id_{TX}.
+\end{aligned}
+\] W zapisie nieścisłym $\eta_X=(e\otimes\id_X)\lambda_X^{-1}$ oraz $\mu_X=(m\otimes\id_X)\alpha_{M,M,X}^{-1}$; koherencja uzasadnia rachunki. Aksjomaty algebry z definicji~\ref{cat:def:em-algebra}, $a\eta_X=\id_X$, $a\mu_X=aT(a)$, stają się dokładnie aksjomatami działania. Morfizmy algebr spełniają $fa_X=a_YT(f)$, czyli warunek morfizmu modułów, z tymi samymi identycznościami i składaniem.
+\end{proof}
+\begin{stwierdzenie}[Monady jako monoidy endofunktorów]\label{cat:prop:monads-as-monoids}
+Dla małej kategorii $\mathcal C$ monady są dokładnie monoidami w $[\mathcal C,\mathcal C]$ z iloczynem danym przez składanie.
+\end{stwierdzenie}
+\begin{proof}
+W przykładzie~\ref{cat:ex:endofunctor-monoidal} wykazano ścisłą monoidalność tej kategorii. Mnożenie to $\mu:T^2\Rightarrow T$, jednostka to $\eta:\id_{\mathcal C}\Rightarrow T$. Składowe iloczynów poziomych $\mu\ast\id_T$, $\id_T\ast\mu$ to $\mu_{TX},T(\mu_X)$; dla $\eta$ analogicznie $\eta_{TX},T(\eta_X)$. Aksjomaty monoidu są więc równościami
+\[
+\mu_X\mu_{TX}=\mu_XT(\mu_X),\qquad
+\mu_X\eta_{TX}=\id_{TX}=\mu_XT(\eta_X),
+\]
+czyli aksjomatami monady (definicja~\ref{def:monad}). Warunki morfizmu monoidów $\tau:T\Rightarrow S$ to
+$\tau_X\eta_X^T=\eta_X^S$ i $\tau_X\mu_X^T=\mu_X^S S(\tau_X)\tau_{TX}$.
+\end{proof}
+
+\subsection{Obiekty dualne}
+\begin{definicja}[Dualność]\label{cat:def:dual-object}
+Przyjmujemy konwencję: obiekt $D$ jest prawostronnie dualny do $A$, gdy istnieją koewaluacja $i_A:I\to A\otimes D$ i ewaluacja $e_A:D\otimes A\to I$ takie, że
+\begin{equation}\label{cat:eq:snake}
+(\id_A\otimes e_A)(i_A\otimes\id_A)=\id_A,\qquad
+(e_A\otimes\id_D)(\id_D\otimes i_A)=\id_D.
+\end{equation}
+Lewostronna dualność ma typy $I\to L\otimes A$, $A\otimes L\to I$ i odwrócone kolejności w tożsamościach. Nazwy stron bywają zamieniane w literaturze, więc rozstrzygające są typy.
+W zapisie nieścisłym tożsamości \eqref{cat:eq:snake} brzmią odpowiednio
+\[
+\begin{aligned}
+\rho_A(\id_A\otimes e_A)\alpha_{A,D,A}(i_A\otimes\id_A)\lambda_A^{-1}&=\id_A,\\
+\lambda_D(e_A\otimes\id_D)\alpha_{D,A,D}^{-1}(\id_D\otimes i_A)\rho_D^{-1}&=\id_D.
+\end{aligned}
+\]
+\end{definicja}
+\begin{twierdzenie}[Sprzężenie wynikające z dualności]\label{cat:thm:dual-adjunction}
+Jeśli $D$ jest prawostronnie dualny do $A$, to $D\otimes-\dashv A\otimes-$.
+\end{twierdzenie}
+\begin{proof}
+Dla $f:D\otimes X\to Y$ i $g:X\to A\otimes Y$ definiujemy
+\[
+\Phi(f)=(\id_A\otimes f)(i_A\otimes\id_X),\qquad
+\Psi(g)=(e_A\otimes\id_Y)(\id_D\otimes g).
+\]
+Bifunktorialność i druga tożsamość trójkątna dają
+\[
+\begin{aligned}
+\Psi\Phi(f)
+&=(e_A\otimes\id_Y)(\id_D\otimes\id_A\otimes f)(\id_D\otimes i_A\otimes\id_X)\\
+&=f(e_A\otimes\id_D\otimes\id_X)(\id_D\otimes i_A\otimes\id_X)=f.
+\end{aligned}
+\]
+Analogicznie, używając pierwszej tożsamości,
+\[
+\begin{aligned}
+\Phi\Psi(g)
+&=(\id_A\otimes e_A\otimes\id_Y)(\id_A\otimes\id_D\otimes g)(i_A\otimes\id_X)\\
+&=(\id_A\otimes e_A\otimes\id_Y)(i_A\otimes\id_A\otimes\id_Y)g=g.
+\end{aligned}
+\]
+Dla $u:X'\to X$, $v:Y\to Y'$ bifunktorialność daje
+$\Phi(vf(\id_D\otimes u))=(\id_A\otimes v)\Phi(f)u$.
+Jest to naturalność bijekcji w obu zmiennych.
+\end{proof}
+\begin{stwierdzenie}[Jednoznaczność dualności]\label{cat:prop:dual-unique}
+Dwie prawe dualności $(D,i,e)$ i $(D',i',e')$ dla $A$ są związane jedynym izomorfizmem $h:D\to D'$ spełniającym
+$e'(h\otimes\id_A)=e$ i $(\id_A\otimes h)i=i'$.
+\end{stwierdzenie}
+\begin{proof}
+Bijekcja $\Hom(X,D')\cong\Hom(X\otimes A,I)$ jest dana przez $h\mapsto e'(h\otimes\id_A)$, z odwrotnością $b\mapsto(b\otimes\id_{D'})(\id_X\otimes i')$. Złożenie w pierwszym kierunku upraszcza się do $(e'\otimes\id_{D'})(\id_{D'}\otimes i')h=h$; w drugim do $b(\id_X\otimes[(\id_A\otimes e')(i'\otimes\id_A)])=b$. Zatem jedyny kandydat to $h=(e\otimes\id_{D'})(\id_D\otimes i')$. Mamy
+\[
+\begin{aligned}
+(\id_A\otimes h)i
+&=(\id_A\otimes e\otimes\id_{D'})(i\otimes i')\\
+&=(\id_A\otimes e\otimes\id_{D'})(i\otimes\id_A\otimes\id_{D'})i'=i'.
+\end{aligned}
+\]
+Zamieniając dualności, otrzymujemy $k:D'\to D$ zachowujące ewaluację i koewaluację. Złożenia $kh,hk$ zachowują ewaluacje, więc przez jednoznaczność są identycznościami.
+\end{proof}
+\begin{stwierdzenie}[Kontrawariantna funktorialność dualności]\label{cat:prop:dual-functoriality}
+Wybierzmy prawe dualności $(D_A,i_A,e_A)$ dla rozpatrywanych obiektów. Każdemu morfizmowi $f:A\to B$ odpowiada jedyny morfizm $f^*:D_B\to D_A$ taki, że
+\begin{equation}\label{cat:eq:dual-morphism-eval}
+e_A(f^*\otimes\id_A)=e_B(\id_{D_B}\otimes f).
+\end{equation}
+Morfizm ten spełnia również
+\begin{equation}\label{cat:eq:dual-morphism-coeval}
+(f\otimes\id_{D_A})i_A=(\id_B\otimes f^*)i_B.
+\end{equation}
+Ponadto $(\id_A)^*=\id_{D_A}$ oraz $(gf)^*=f^*g^*$ dla $g:B\to C$. Zatem po wyborze dualności otrzymujemy funktor kontrawariantny z pełnej podkategorii obiektów mających prawe dualności do $\mathcal C$.
+\end{stwierdzenie}
+\begin{proof}
+Bijekcja z dowodu stwierdzenia~\ref{cat:prop:dual-unique}, zastosowana do $X=D_B$ i dualności obiektu $A$, daje istnienie i jednoznaczność oraz wzór
+\[
+f^*=(e_B\otimes\id_{D_A})(\id_{D_B}\otimes f\otimes\id_{D_A})(\id_{D_B}\otimes i_A).
+\]
+Aby wykazać \eqref{cat:eq:dual-morphism-coeval}, stosujemy bijekcję
+\[
+\Hom(I,B\otimes D_A)\longrightarrow\Hom(A,B),\qquad
+t\longmapsto(\id_B\otimes e_A)(t\otimes\id_A).
+\]
+Jej odwrotnością jest $u\mapsto(u\otimes\id_{D_A})i_A$: pierwsze złożenie upraszcza się do $u(\id_A\otimes e_A)(i_A\otimes\id_A)=u$, a drugie do
+\[
+(\id_B\otimes e_A\otimes\id_{D_A})(t\otimes i_A)
+=(\id_B\otimes[(e_A\otimes\id_{D_A})(\id_{D_A}\otimes i_A)])t=t.
+\]
+Obraz lewej strony \eqref{cat:eq:dual-morphism-coeval} to $f$. Obraz prawej strony obliczamy, stosując kolejno bifunktorialność, \eqref{cat:eq:dual-morphism-eval}, ponownie bifunktorialność oraz pierwszą tożsamość trójkątną dla $B$:
+\[
+\begin{aligned}
+&(\id_B\otimes e_A)(\id_B\otimes f^*\otimes\id_A)(i_B\otimes\id_A)\\
+&\quad=(\id_B\otimes e_B)(\id_B\otimes\id_{D_B}\otimes f)(i_B\otimes\id_A)\\
+&\quad=(\id_B\otimes e_B)(i_B\otimes\id_B)f=f.
+\end{aligned}
+\]
+Iniektywność bijekcji daje żądaną równość. Identyczność $\id_{D_A}$ spełnia \eqref{cat:eq:dual-morphism-eval} dla $f=\id_A$. Dla złożenia, korzystając dwukrotnie z \eqref{cat:eq:dual-morphism-eval} i z bifunktorialności, mamy
+\[
+\begin{aligned}
+e_A((f^*g^*)\otimes\id_A)
+&=e_B(\id_{D_B}\otimes f)(g^*\otimes\id_A)\\
+&=e_B(g^*\otimes\id_B)(\id_{D_C}\otimes f)\\
+&=e_C(\id_{D_C}\otimes g)(\id_{D_C}\otimes f)\\
+&=e_C(\id_{D_C}\otimes gf).
+\end{aligned}
+\]
+Jednoznaczność daje obie równości funktorialności. Nie potrzeba tu plecenia ani symetrii.
+\end{proof}
+
+\begin{stwierdzenie}[Dualność iloczynu]\label{cat:prop:dual-tensor}
+Jeśli $D_A,D_B$ są prawostronnie dualne do $A,B$, to $D_B\otimes D_A$ jest prawostronnie dualny do $A\otimes B$ dla
+\[
+i_{AB}=(\id_A\otimes i_B\otimes\id_{D_A})i_A,\quad
+e_{AB}=e_B(\id_{D_B}\otimes e_A\otimes\id_B).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Pierwsza tożsamość: od $AB$ przechodzimy przez $AD_AAB$, następnie $ABD_BD_AAB$, po kontrakcji $D_AA$ do $ABD_BB$, po kontrakcji $D_BB$ do $AB$. Dzięki bifunktorialności wstawienie $BD_B$ można wykonać po kontrakcji $D_AA$: operacje dotyczą rozłącznych czynników. Złożenie redukuje się zatem do
+\[
+(\id_A\otimes[(\id_B\otimes e_B)(i_B\otimes\id_B)])
+([(\id_A\otimes e_A)(i_A\otimes\id_A)]\otimes\id_B)=\id_{AB}.
+\]
+Druga tożsamość: od $D_BD_A$ przechodzimy przez $D_BD_AAD_A$, następnie $D_BD_AABD_BD_A$, po kontrakcji $D_AA$ do $D_BBD_BD_A$, po kontrakcji $D_BB$ do $D_BD_A$. Ponownie wstawienie $BD_B$ i pierwsza kontrakcja działają na rozłącznych czynnikach. Otrzymujemy
+\[
+([(e_B\otimes\id_{D_B})(\id_{D_B}\otimes i_B)]\otimes\id_{D_A})
+(\id_{D_B}\otimes[(e_A\otimes\id_{D_A})(\id_{D_A}\otimes i_A)])=\id_{D_BD_A}.
+\]
+W obu rachunkach zapis $AB$ oznacza $A\otimes B$.
+\end{proof}
+\begin{stwierdzenie}[Dualność w kategorii symetrycznej]\label{cat:prop:symmetric-left-dual}
+Prawa dualność $(D,i,e)$ dla $A$ daje lewą dualność $(D,c_{A,D}i,e c_{A,D})$.
+\end{stwierdzenie}
+\begin{proof}
+Niech $i'=c_{A,D}i$ i $e'=e c_{A,D}$. W zapisie ścisłym naturalność symetrii i $c_{A,I}=\id_A$ dają
+\[
+c_{A,A\otimes D}(\id_A\otimes i)=i\otimes\id_A,\qquad
+(e\otimes\id_A)c_{A,D\otimes A}=\id_A\otimes e.
+\]
+Z koherencji symetrycznej (twierdzenie~\ref{cat:thm:symmetric-coherence}) mamy
+\[
+(c_{A,D}\otimes\id_A)(\id_A\otimes c_{A,D})
+=c_{A,D\otimes A}c_{A,A\otimes D},
+\]
+gdyż obie drogi prowadzą z $A\otimes A\otimes D$ do $D\otimes A\otimes A$ z kolejnością pozycji $3,1,2$. Stąd
+\[
+(e'\otimes\id_A)(\id_A\otimes i')=(\id_A\otimes e)(i\otimes\id_A)=\id_A.
+\]
+Dla drugiej tożsamości stosujemy ten sam dowód w kategorii z odwróconą kolejnością iloczynu (jak w lemacie~\ref{cat:lem:unit-coherence}), z symetrią $c^\odot_{X,Y}=c_{Y,X}$. Tam $A$ jest prawostronnie dualny do $D$ dla $i,e$, bo ich typy są $I\to D\odot A$, $A\odot D\to I$, a tożsamości trójkątne są zamienione. Pierwsza dowiedziona tożsamość w tej kategorii jest dokładnie $(\id_D\otimes e')(i'\otimes\id_D)=\id_D$.
+\end{proof}
+\begin{definicja}[Sztywność i zwartość domknięta]\label{cat:def:rigid-compact}
+Kategoria monoidalna jest sztywna, jeśli każdy obiekt posiada dualność po obu stronach. Symetryczna kategoria monoidalna, w której każdy obiekt posiada prawą dualność, jest zwarta domknięta (ang.\ compact closed). Stwierdzenie~\ref{cat:prop:symmetric-left-dual} daje wtedy także lewą dualność. Nie utożsamiamy tego warunku z domkniętością monoidalną.
+\end{definicja}
+\begin{twierdzenie}[Dualność przestrzeni wektorowych]\label{cat:thm:vect-dualizable}
+W kategorii wszystkich przestrzeni wektorowych nad ciałem $k$ obiekt ma prawą dualność wtedy i tylko wtedy, gdy jest skończenie wymiarowy.
+\end{twierdzenie}
+\begin{proof}
+Dla skończenie wymiarowego $V$ bierzemy przestrzeń dualną $V^*=\Hom_k(V,k)$. Ewaluacja jest indukowana przez dwuliniowe odwzorowanie $(\varphi,v)\mapsto\varphi(v)$. Dla bazy $(v_j)$ i bazy dualnej $(v^j)$ określamy $i(1)=\sum_j v_j\otimes v^j$. Pierwsza tożsamość trójkątna wysyła $v$ na $\sum_jv^j(v)v_j=v$, druga wysyła $\varphi$ na $\sum_j\varphi(v_j)v^j=\varphi$. W wymiarze zero suma jest pusta, a identyczność przestrzeni zerowej jest morfizmem zerowym. Niezależność od bazy wynika ze stwierdzenia~\ref{cat:prop:dual-unique}: jedyny izomorfizm $V^*\to V^*$ zachowujący ewaluację jest identycznością, bo funkcjonały rozróżniamy przez wartości.
+Odwrotnie, dla dowolnej prawej dualności $(D,i,e)$ zapisujemy $i(1)=\sum_{j=1}^n v_j\otimes d_j$, co jest skończoną sumą z definicji algebraicznego iloczynu tensorowego. Pierwsza tożsamość trójkątna wymusza
+$v=\sum_j e(d_j\otimes v)v_j$ dla każdego $v$. Zatem $V$ jest skończenie wymiarowa. Nie zakładaliśmy $D=V^*$; kanoniczny izomorfizm wynika z jednoznaczności dualności.
+\end{proof}
+
+\subsection{Ślad kategorialny}
+\begin{definicja}[Ślad]\label{cat:def:categorical-trace}
+W kategorii symetrycznej monoidalnej dla endomorfizmu $f:A\to A$ obiektu z prawą dualnością $(D,i,e)$ określamy
+\[
+\operatorname{tr}_{\mathcal C}(f)=e c_{A,D}(f\otimes\id_D)i:I\to I.
+\]
+\end{definicja}
+\[
+\begin{CD}
+I @>{i}>> A\otimes D @>{f\otimes\id_D}>> A\otimes D\\
+@. @. @VV{c_{A,D}}V\\
+@. I @<<{e}< D\otimes A
+\end{CD}
+\]
+\begin{stwierdzenie}[Niezależność śladu od dualności]\label{cat:prop:trace-independent}
+Ślad nie zależy od wyboru prawej dualności.
+\end{stwierdzenie}
+\begin{proof}
+Dla drugiej dualności $(D',i',e')$ niech $h:D\to D'$ będzie izomorfizmem ze stwierdzenia~\ref{cat:prop:dual-unique}. Wtedy
+\[
+\begin{aligned}
+e'c_{A,D'}(f\otimes\id_{D'})i'
+&=e'c_{A,D'}(f\otimes h)i\\
+&=e'(h\otimes\id_A)c_{A,D}(f\otimes\id_D)i\\
+&=ec_{A,D}(f\otimes\id_D)i.
+\end{aligned}
+\]
+Druga równość wynika z naturalności symetrii i bifunktorialności.
+\end{proof}
+\begin{stwierdzenie}[Cykliczność śladu kategorialnego]\label{cat:prop:trace-cyclic}
+W kategorii symetrycznej monoidalnej niech $A,B$ mają prawe dualności. Dla $f:A\to B$ i $g:B\to A$ zachodzi
+\[
+\operatorname{tr}_{\mathcal C}(gf)=\operatorname{tr}_{\mathcal C}(fg).
+\]
+Obie strony są morfizmami $I\to I$, także gdy $A$ i $B$ nie są izomorficzne.
+\end{stwierdzenie}
+\begin{proof}
+Wybieramy dualności $(D_A,i_A,e_A)$ i $(D_B,i_B,e_B)$ oraz morfizm $f^*:D_B\to D_A$ ze stwierdzenia~\ref{cat:prop:dual-functoriality}. Kolejno stosujemy \eqref{cat:eq:dual-morphism-coeval}, bifunktorialność, naturalność symetrii dla pary $(g,f^*)$ oraz \eqref{cat:eq:dual-morphism-eval}:
+\[
+\begin{aligned}
+\operatorname{tr}_{\mathcal C}(gf)
+&=e_Ac_{A,D_A}(g\otimes\id_{D_A})(f\otimes\id_{D_A})i_A\\
+&=e_Ac_{A,D_A}(g\otimes\id_{D_A})(\id_B\otimes f^*)i_B\\
+&=e_Ac_{A,D_A}(g\otimes f^*)i_B\\
+&=e_A(f^*\otimes g)c_{B,D_B}i_B\\
+&=e_A(f^*\otimes\id_A)(\id_{D_B}\otimes g)c_{B,D_B}i_B\\
+&=e_B(\id_{D_B}\otimes f)(\id_{D_B}\otimes g)c_{B,D_B}i_B\\
+&=e_B(\id_{D_B}\otimes fg)c_{B,D_B}i_B\\
+&=e_Bc_{B,D_B}(fg\otimes\id_{D_B})i_B\\
+&=\operatorname{tr}_{\mathcal C}(fg).
+\end{aligned}
+\]
+Przedostatnia równość jest naturalnością symetrii dla pary $(fg,\id_{D_B})$. Niezależność wyniku od wyborów dualności zapewnia stwierdzenie~\ref{cat:prop:trace-independent}.
+\end{proof}
+\begin{przyklad}[Ślad iloczynów macierzy prostokątnych]\label{cat:ex:trace-rectangular}
+Niech $F=(F_{ij})$ będzie macierzą $m\times n$, a $G=(G_{ji})$ macierzą $n\times m$ nad ciałem $k$. Traktując je jako odwzorowania $k^n\to k^m$ oraz $k^m\to k^n$, otrzymujemy
+\[
+\operatorname{tr}(GF)=\sum_{j=1}^n\sum_{i=1}^m G_{ji}F_{ij}
+=\sum_{i=1}^m\sum_{j=1}^n F_{ij}G_{ji}=\operatorname{tr}(FG).
+\]
+Jest to szczególny przypadek cykliczności, potwierdzony bezpośrednim rachunkiem.
+\end{przyklad}
+
+\begin{przyklad}[Ślad liniowy]\label{cat:ex:trace-linear}
+Dla skończenie wymiarowego $V$ ślad kategorialny jest odwzorowaniem $k\to k$ mnożącym przez $\sum_jv^j(f(v_j))$. Jest to suma elementów przekątnej macierzy $f$, czyli zwykły ślad. Porównaj \atlasref{DG-03::prop:kontrakcja-slad}{DG-03: kontrakcja i ślad}. Dla identyczności otrzymujemy $\dim V$ jako element ciała $k$; w dodatniej charakterystyce może on być zerem mimo $V\neq0$.
+\end{przyklad}
