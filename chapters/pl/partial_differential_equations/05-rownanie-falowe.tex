@@ -1211,71 +1211,225 @@ brzegowych. Stąd $u=v$.
 \section{Dlaczego schemat numeryczny musi respektować stożek?}
 \label{sec:pde5-numerics}
 
-Na regularnej siatce $x_j=j\Delta x$, $t_m=m\Delta t$
-przybliżamy drugie pochodne różnicami centralnymi:
+Niech $\Delta x,\Delta t>0$. Na regularnej siatce
+$x_j=j\Delta x$, $t_m=m\Delta t$ ($j\in\mathbb Z$,
+$m\geq0$ całkowite) przybliżamy drugie pochodne
+różnicami centralnymi:
 \begin{equation}\label{eq:pde5-leapfrog}
  \frac{U_j^{m+1}-2U_j^m+U_j^{m-1}}{(\Delta t)^2}
- =c^2\frac{U_{j+1}^m-2U_j^m+U_{j-1}^m}{(\Delta x)^2}.
+ =c^2\frac{U_{j+1}^m-2U_j^m+U_{j-1}^m}{(\Delta x)^2},
+ \qquad m\geq1.
 \end{equation}
-Wprowadzamy liczbę Couranta $\lambda=c\Delta t/\Delta x$.
-Dla modu $U_j^m=e^{i(kj\Delta x-\omega m\Delta t)}$
-otrzymujemy relację dyspersji
+Jest to rekurencja jawna po zadaniu dwóch
+pierwszych warstw. Wprowadzamy liczbę Couranta
+$\lambda=c\Delta t/\Delta x>0$.
+W analizie modów dopuszczamy wartości zespolone;
+części rzeczywiste i urojone rozwiązań spełniają
+ten sam rzeczywisty schemat.
+
+Ustalmy $\theta=k\Delta x\in[-\pi,\pi]$.
+Podstawienie $U_j^m=A_m e^{ij\theta}$ daje
+\[
+ A_{m+1}-2A_m+A_{m-1}
+ =-4\lambda^2\sin^2(\theta/2)A_m,
+\]
+gdyż $e^{i\theta}-2+e^{-i\theta}=-4\sin^2(\theta/2)$.
+Oznaczając $q=\lambda^2\sin^2(\theta/2)$,
+otrzymujemy rekurencję
+\[
+ A_{m+1}-2(1-2q)A_m+A_{m-1}=0.
+\]
+Dla rozwiązania postaci $A_m=e^{-i\omega m\Delta t}$
+podstawienie i tożsamość
+$e^{i\alpha}+e^{-i\alpha}=2\cos\alpha$ dają
+$\cos(\omega\Delta t)=1-2q$, czyli relację
+dyspersji
 \begin{equation}\label{eq:pde5-cfl}
  \sin^2\!\left(\frac{\omega\Delta t}2\right)
  =\lambda^2\sin^2\!\left(\frac{k\Delta x}2\right).
 \end{equation}
-Jeżeli $\lambda\le1$, istnieją rzeczywiste
-częstotliwości $\omega$ dla wszystkich częstości
-siatkowych. Gdy $\lambda>1$, istnieją częstości,
-dla których prawa strona przekracza $1$, co
-prowadzi do wykładniczego wzrostu rozwiązań
-rekurencji. Jest to konieczny warunek stabilności
-metody centralnej; w tym konkretnym jednowymiarowym
-schemacie z prawidłowo zadanymi danymi
-$\lambda\le1$ jest również klasycznym warunkiem
-stabilności w odpowiedniej normie energetycznej
-(z dodatkową ostrożnością dla częstości granicznych
-przy $\lambda=1$). Pełny dowód numeryczny
-pozostawimy do działu metod różnicowych.
+
+Wielomian charakterystyczny rekurencji to
+$z^2-2(1-2q)z+1$, a iloczyn jego pierwiastków
+jest równy $1$.
+Dla $0<q<1$ wyróżnik wynosi $16q(q-1)<0$.
+Pierwiastki są różne, sprzężone i mają moduł $1$.
+Można je zapisać jako $e^{\pm i\alpha}$,
+gdzie $\alpha\in(0,\pi)$ i $\cos\alpha=1-2q$.
+Dla $q=0$ występuje podwójny pierwiastek $1$,
+a dla $q=1$ podwójny pierwiastek $-1$.
+Jeśli $q>1$, wyróżnik jest dodatni, suma
+pierwiastków wynosi $2(1-2q)<-2$, a ich
+iloczyn $1$. Oba są ujemne i jeden ma moduł
+większy od $1$, więc istnieje rozwiązanie
+rekurencji rosnące wykładniczo z liczbą kroków.
+Gdy $\lambda>1$, wystarczy wybrać $\theta=\pi$,
+dla którego $q=\lambda^2>1$.
+Na siatce okresowej o parzystej liczbie punktów
+jest to dopuszczalny mod $(-1)^j$.
+Dla ustalonej $\lambda>1$ wzrost jak $|z|^m$
+z $m\Delta t$ ustalonym dodatnim czasem
+nie jest jednostajnie ograniczony przy
+$\Delta t\downarrow0$.
+Stąd konieczność warunku CFL
+$\lambda\leq1$ w analizie stabilności
+obejmującej wszystkie częstości siatkowe.
+Samo położenie pierwiastków na okręgu
+jednostkowym nie wystarcza jednak do
+oszacowania wszystkich rozwiązań rekurencji.
 
 \begin{uwaga}[Granica stabilności przy $\lambda=1$]
-Dla częstotliwości siatkowej $k\Delta x=\pi$ amplituda
-modu spełnia rekurencję $A_{m+1}+2A_m+A_{m-1}=0$.
-Jej ogólne rozwiązanie to $(\alpha+\beta m)(-1)^m$:
-podwójny pierwiastek $-1$ dopuszcza więc liniowy wzrost
-przy dowolnie zadanych dwóch pierwszych warstwach.
-Dla prędkości początkowej równej zeru i poprawnego
-pierwszego kroku $A_1=-A_0$, skąd $\beta=0$.
-Analiza stabilności w przypadku granicznym musi uwzględniać
-przestrzeń danych i sposób inicjalizacji schematu;
-proste kryterium rzeczywistości $\omega$ nie wystarcza.
+Rozróżnijmy oba przypadki podwójnych pierwiastków.
+Dla $\theta=0$ mamy $q=0$ i
+$A_m=A_0+m(A_1-A_0)$.
+Liniowa zmiana w czasie odpowiada przestrzennie
+stałemu rozwiązaniu równania falowego,
+dla którego $u_{tt}=0$.
+Natomiast dla $\lambda=1$ i $\theta=\pi$
+mamy $q=1$ oraz
+\[
+ A_m=(A_0+\beta m)(-1)^m,\qquad
+ \beta=-A_1-A_0.
+\]
+Dowolnie zadane dwie warstwy mogą więc wzbudzić
+liniowy wzrost naprzemiennego modu.
+
+Dla danych przemieszczenia $G_j$ i prędkości
+$H_j$ naturalny pierwszy krok ma postać
+\[
+ U_j^0=G_j,\qquad
+ U_j^1=G_j+\Delta t\,H_j+
+ \frac{\lambda^2}{2}(G_{j+1}-2G_j+G_{j-1}).
+\]
+Otrzymujemy go, przybliżając prędkość początkową
+centralnie przez $(U_j^1-U_j^{-1})/(2\Delta t)$
+i eliminując pomocniczą warstwę $U^{-1}$
+za pomocą schematu w chwili $0$.
+Dla jednego modu o początkowych współczynnikach
+$A_0$ i $H$ daje to $A_1=(1-2q)A_0+\Delta t\,H$.
+Przy $0<q<1$ rozwiązanie rekurencji jest zatem
+\[
+ A_m=A_0\cos(m\alpha)
+      +\Delta t\,H\,\frac{\sin(m\alpha)}{\sin\alpha},
+ \qquad \cos\alpha=1-2q .
+\]
+Dla $m\geq1$ z tożsamości
+\[
+ \frac{\sin(m\alpha)}{\sin\alpha}
+ =\sum_{\ell=0}^{m-1}e^{i(m-1-2\ell)\alpha}
+\]
+(otrzymanej przez zsumowanie szeregu
+geometrycznego) wynika
+$|\sin(m\alpha)|\leq m|\sin\alpha|$.
+Stąd dla $0<q<1$ mamy
+$|A_m|\leq |A_0|+m\Delta t\,|H|$.
+Dla $q=0$ otrzymujemy bezpośrednio
+$A_m=A_0+m\Delta t\,H$,
+a dla $q=1$
+$A_m=(A_0-m\Delta t\,H)(-1)^m$.
+W obu przypadkach zachodzi to samo oszacowanie.
+W szczególności przy $q=1$ i $H=0$ pierwszy
+krok daje $A_1=-A_0$ i brak liniowego wzrostu.
+
+Dla $0<\lambda\leq1$ mamy więc jednolite
+względem częstości i kroku oszacowanie
+\[
+ |A_m|\leq |A_0|+t_m|H|.
+\]
+Na skończonej siatce okresowej o $N$ punktach
+możemy rozwinąć dane w mody
+$e^{2\pi i j\ell/N}$, $\ell=0,\ldots,N-1$.
+Ich ortogonalność wynika z sumy geometrycznej
+$\sum_{j=0}^{N-1}e^{2\pi i j(\ell-p)/N}$
+równej $N$ dla $\ell=p$ i $0$ w pozostałych
+przypadkach. Po podzieleniu przez $\sqrt N$
+tworzą bazę ortonormalną w $\mathbb C^N$.
+Zastosowanie powyższego oszacowania do
+każdego współczynnika i nierówności trójkąta
+w normie euklidesowej daje
+\[
+ \|U^m\|_{\ell^2_{\Delta x}}
+ \leq\|G\|_{\ell^2_{\Delta x}}
+       +t_m\|H\|_{\ell^2_{\Delta x}},
+ \qquad
+ \|V\|_{\ell^2_{\Delta x}}^2
+ =\Delta x\sum_{j=0}^{N-1}|V_j|^2 .
+\]
+Dla $t_m\leq T$ stała oszacowania nie zależy
+od siatki. Jest to kontrola stabilności
+względem danych początkowych na skończonym
+przedziale czasu, dla wskazanej inicjalizacji
+i okresowych warunków brzegowych.
+Nie jest to twierdzenie o jednostajnej
+ograniczoności wszystkich modów przez dowolnie
+długi czas ani pełny dowód zbieżności metody.
 \end{uwaga}
 
 \begin{uwaga}[Zasięg numeryczny a zasięg fizyczny]
-Schemat \eqref{eq:pde5-leapfrog} korzysta z
-sąsiadów $j-1,j,j+1$ w poprzedniej warstwie
-czasowej. Jeden krok może więc przenieść informację
-o odległość $\Delta x$, podczas gdy fizyczna fala
-przebywa $c\Delta t$. Warunek $c\Delta t\le\Delta x$
-pozwala fizycznemu stożkowi zmieścić się w
-numerycznym obszarze zależności. To tłumaczy
-geometrię warunku CFL, ale nie zastępuje
-dowodu stabilności.
+Rozpisując~\eqref{eq:pde5-leapfrog} jako
+\[
+ U_j^{m+1}=
+ \lambda^2(U_{j-1}^m+U_{j+1}^m)
+ +2(1-\lambda^2)U_j^m-U_j^{m-1},
+\]
+widzimy, że krok korzysta z trzech punktów
+warstwy $m$ i jednego punktu warstwy $m-1$.
+Dla $m\geq1$ wartość $U_j^m$ zależy najwyżej
+od wartości warstwy $0$ o indeksach
+$|p-j|\leq m$ i warstwy $1$ o indeksach
+$|p-j|\leq m-1$. Dla $m=1$ jest to oczywiste;
+przejście indukcyjne wynika z przesunięcia
+indeksu o co najwyżej jeden w rekurencji.
+Przy opisanej inicjalizacji warstwa $1$
+zależy od sąsiednich wartości $G$ oraz
+lokalnej wartości $H$.
+Numeryczny zasięg zależności od danych
+początkowych jest więc zawarty w odcinku
+o promieniu $m\Delta x$.
+Fizyczny obszar zależności ma promień
+$c m\Delta t$. Aby fizyczny stożek mieścił się
+w tym maksymalnym numerycznym obszarze,
+potrzeba $c\Delta t\leq\Delta x$.
+Jest to geometryczna interpretacja warunku CFL,
+nie samodzielny dowód stabilności.
 \end{uwaga}
 
 \section{Podsumowanie}
 \label{sec:pde5-summary}
 
-Dla równania falowego rozwiązanie w punkcie jest
-wyznaczone przez dane w skończonym obszarze
-początkowym; wynika to z kurczącej się energii
-stożkowej. Równania ciepła i falowe są pod tym
-względem fundamentalnie odmienne. Wzory d'Alemberta,
-Kirchhoffa i Poissona pokazują również, że w samym
-równaniu falowym silna zasada Huygensa zależy
-od parzystości wymiaru. Następny rozdział poświęcimy
-systematycznemu wykorzystaniu transformaty i
-szeregów Fouriera, łącząc otrzymane tu konstrukcje
-z metodami spektralnymi.
+Lokalny bilans energii na kurczących się kulach
+uzasadnia skończoną prędkość propagacji oraz
+jednoznaczność rozwiązań klasycznych równania
+falowego bez ograniczeń wzrostu w nieskończoności.
+Dla równania ciepła taka jednoznaczność
+bez kontroli wzrostu na ogół zawodzi.
+
+Wzory d'Alemberta, Kirchhoffa i Poissona
+dają jawne rozwiązania przy podanych założeniach
+regularności danych. W wymiarach jeden i dwa
+występuje zależność od wnętrza podstawy
+stożka, podczas gdy w wymiarze trzy zachodzi
+silna zasada Huygensa. Ogólny wynik o zależności
+silnej zasady Huygensa od wymiaru został
+przytoczony, nie udowodniony dla wszystkich
+wymiarów. Wzór Duhamela w wymiarze jeden
+uwzględnia wymuszenie wewnątrz stożka wstecznego.
+
+Dla struny z jednorodnymi warunkami Dirichleta
+wyprowadziliśmy rozwiązania o skończonych
+sumach modów oraz zachowanie energii
+i jednoznaczność w klasie $C^2$.
+Ogólne rozwinięcia w szereg Fouriera
+pozostają do uzasadnienia.
+W analizie schematu różnic centralnych
+otrzymaliśmy relację dyspersji, konieczność
+warunku CFL oraz oszacowanie na skończonym
+przedziale czasu dla opisanej inicjalizacji
+na siatce okresowej, z uwzględnieniem obu
+podwójnych pierwiastków. Nie dowodziliśmy
+pełnej zbieżności schematu.
+W następnym rozdziale przejdziemy do
+systematycznego wykorzystania transformaty
+i szeregów Fouriera oraz metod spektralnych.
 
 % ROZDZIAŁ 6: do wstawienia przed rozdziałem z kodem numerycznym.
