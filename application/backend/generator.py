@@ -494,6 +494,7 @@ pdflatex -interaction=nonstopmode -halt-on-error main.tex
               'references_total':len(references),
               'references_internal':sum(x['status']=='internal' for x in references),
               'references_external':sum(x['status']=='external' for x in references),
+              'references_reading':sum(x['status']=='reading' for x in references),
               'external_targets':{m:sorted(v) for m,v in sorted(external.items())},
               'source_sha256':{m:p['row']['sha256'] for m,p in parts.items()},
               'closure_depth':closure_depth,
