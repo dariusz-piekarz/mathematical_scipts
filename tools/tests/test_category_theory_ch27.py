@@ -130,6 +130,87 @@ class CategoryTheoryCh27(unittest.TestCase):
                     for z,w in itertools.product(Z,repeat=2):
                         self.assertEqual(root(z)==root(w),left(z)==left(w))
 
+    def test_CAT_27_007_twisted_arrow_parallel_arrows(self):
+        # A has two parallel arrows p,q:0->1 and the identities i0,i1.
+        # Tw(A) has exactly two incoming nonidentity arrows at each p,q.
+        arrows=[(0,0,"i0"),(1,1,"i1"),(0,1,"p"),(0,1,"q")]
+        identities={0:arrows[0],1:arrows[1]}
+        def compose(g,f):
+            assert f[1]==g[0]
+            if f[0]==f[1]:
+                return g
+            if g[0]==g[1]:
+                return f
+            raise AssertionError("unexpected composition")
+        morphisms=[]
+        for f,g,u,v in itertools.product(arrows,repeat=4):
+            if (u[0],u[1],v[0],v[1]) != (g[0],f[0],f[1],g[1]):
+                continue
+            if compose(v,compose(f,u))==g:
+                morphisms.append((f,g,u,v))
+        self.assertEqual(len(morphisms),8)
+        for n0,n1 in itertools.product(range(3),repeat=2):
+            for p,q in itertools.product(
+                    itertools.product(range(n1),repeat=n0),repeat=2):
+                # T(a,b)=F(b). Compare the end with the ordinary
+                # limit along Tw(A) including all morphisms.
+                F={arrows[0]:tuple(range(n0)),arrows[1]:tuple(range(n1)),
+                   arrows[2]:p,arrows[3]:q}
+                end={(x,y) for x,y in itertools.product(range(n0),range(n1))
+                     if p[x]==y==q[x]}
+                cones=set()
+                for xs in itertools.product(
+                        *(range((n0,n1)[f[1]]) for f in arrows)):
+                    if all(F[v][xs[arrows.index(f)]]==xs[arrows.index(g)]
+                           for f,g,u,v in morphisms):
+                        cones.add(xs)
+                self.assertEqual({(xs[0],xs[1]) for xs in cones},end)
+                self.assertEqual(len(cones),len(end))
+                # Coend: T(b,a)=F(a), diagram on Tw(A)^op.
+                nodes=[(f,x) for f in arrows for x in range((n0,n1)[f[0]])]
+                parent={z:z for z in nodes}
+                def root(z):
+                    while parent[z]!=z:
+                        z=parent[z]
+                    return z
+                for f,g,u,v in morphisms:
+                    for x in range((n0,n1)[g[0]]):
+                        parent[root((g,x))]=root((f,F[u][x]))
+                # Ordinary colimit of F: identify p(x) and q(x).
+                ordinary=list(range(n1))
+                def rr(x):
+                    while ordinary[x]!=x:
+                        x=ordinary[x]
+                    return x
+                for x in range(n0):
+                    ordinary[rr(p[x])]=rr(q[x])
+                self.assertEqual(len({root(z) for z in nodes}),
+                                 len({rr(y) for y in range(n1)}))
+                for y,z in itertools.product(range(n1),repeat=2):
+                    self.assertEqual(root((identities[1],y))==
+                                     root((identities[1],z)),rr(y)==rr(z))
+
+    def test_CAT_27_008_tensor_hom_group_actions(self):
+        # Right and left C2-actions on finite sets given by involutions.
+        # Compatible pairings into {0,1} are precisely orbit maps.
+        for m,n in itertools.product(range(3),repeat=2):
+            for r,l in itertools.product(itertools.permutations(range(m)),
+                                         itertools.permutations(range(n))):
+                if any(r[r[x]]!=x for x in range(m)):
+                    continue
+                if any(l[l[y]]!=y for y in range(n)):
+                    continue
+                pairs=list(itertools.product(range(m),range(n)))
+                def orbit(x,y):
+                    return min((x,y),(r[x],l[y]))
+                orbits={orbit(x,y) for x,y in pairs}
+                balanced=0
+                for z in itertools.product(range(2),repeat=len(pairs)):
+                    d=dict(zip(pairs,z))
+                    if all(d[r[x],y]==d[x,l[y]] for x,y in pairs):
+                        balanced+=1
+                self.assertEqual(balanced,2**len(orbits))
+
     def test_CAT_27_004_structure(self):
         source = CHAPTER.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}",source)
