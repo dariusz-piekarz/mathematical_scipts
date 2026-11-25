@@ -161,6 +161,24 @@ def read_report(path: Path, *, expected_sha: str, rejected: bool = False) -> dic
     return report
 
 
+def validate_report_pair(positive: object, negative: object, *, expected_sha: str) -> None:
+    """Both separately valid records must describe distinct executions."""
+    validate_report(positive, expected_sha=expected_sha)
+    validate_report(negative, expected_sha=expected_sha, rejected=True)
+    if (positive["image_id"] == negative["image_id"]
+            or positive["container_id"] == negative["container_id"]):
+        raise ValueError("Positive and negative fixture identities must differ")
+    if positive["lean_version"] != negative["lean_version"]:
+        raise ValueError("Positive and negative compiler identities must agree")
+
+
+def read_report_pair(positive_path: Path, negative_path: Path, *, expected_sha: str) -> tuple[dict, dict]:
+    positive = read_report(positive_path, expected_sha=expected_sha)
+    negative = read_report(negative_path, expected_sha=expected_sha, rejected=True)
+    validate_report_pair(positive, negative, expected_sha=expected_sha)
+    return positive, negative
+
+
 def write_report(path: Path, report: dict, *, expected_sha: str, rejected: bool = False) -> None:
     validate_report(report, expected_sha=expected_sha, rejected=rejected)
     raw = (json.dumps(report, sort_keys=True, ensure_ascii=True, allow_nan=False) + "\n").encode("ascii")
@@ -253,10 +271,9 @@ def main() -> int:
                 transport._command(prefix, ("image", "rm", image_id), env)
         result = run_case(rejected=False)
         rejection = run_case(rejected=True)
-        if result["image_id"] == rejection["image_id"] or result["container_id"] == rejection["container_id"]:
-            raise ValueError("Positive and negative fixture identities must differ")
     report = {**result, "checkout_sha": sha}
     rejected_report = {**rejection, "checkout_sha": sha}
+    validate_report_pair(report, rejected_report, expected_sha=sha)
     write_report(Path(os.environ["RUNNER_TEMP"]) / "atlas-rootless-lean-core.json",
                  report, expected_sha=sha)
     write_report(Path(os.environ["RUNNER_TEMP"]) / "atlas-rootless-lean-rejected.json",
@@ -273,6 +290,12 @@ if __name__ == "__main__":
     elif len(sys.argv) == 3 and sys.argv[1] == "--validate-rejected-report":
         read_report(Path(sys.argv[2]), expected_sha=os.environ.get("GITHUB_SHA", ""), rejected=True)
         print("ATLAS_ROOTLESS_LEAN_REJECTED_REPORT_VALIDATED", flush=True)
+    elif len(sys.argv) == 4 and sys.argv[1] == "--validate-report-pair":
+        read_report_pair(Path(sys.argv[2]), Path(sys.argv[3]),
+                         expected_sha=os.environ.get("GITHUB_SHA", ""))
+        print("ATLAS_ROOTLESS_LEAN_CORE_REPORT_VALIDATED", flush=True)
+        print("ATLAS_ROOTLESS_LEAN_REJECTED_REPORT_VALIDATED", flush=True)
+        print("ATLAS_ROOTLESS_LEAN_REPORT_PAIR_VALIDATED", flush=True)
     elif len(sys.argv) == 1:
         raise SystemExit(main())
     else:
