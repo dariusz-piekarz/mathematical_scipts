@@ -71,5 +71,45 @@ class RiemannStieltjes03(unittest.TestCase):
             self.assertEqual((left,right),(0,1))
 
 
+    def test_smooth_integrator_uniform_error(self):
+        # alpha=x^2-x, derivative=2x-1; f need not be continuous.
+        alpha=lambda x:x*x-x
+        f=lambda x:F(1) if x<F(1,3) else F(-2)
+        for n in (1,3,9,17,64):
+            grid=[F(i,n) for i in range(n+1)]
+            for tags in (grid[:-1],grid[1:],
+                         [(u+v)/2 for u,v in zip(grid,grid[1:])]):
+                rs=sum(f(t)*(alpha(v)-alpha(u))
+                       for u,v,t in zip(grid,grid[1:],tags))
+                ri=sum(f(t)*(2*t-1)*(v-u)
+                       for u,v,t in zip(grid,grid[1:],tags))
+                self.assertLessEqual(abs(rs-ri),F(4,n))
+
+    def test_variation_split_and_signed_scaling(self):
+        values=list(map(F,[1,-3,0,8,2,-1]))
+        for k in range(len(values)):
+            self.assertEqual(variation(values),
+                             variation(values[:k+1])+variation(values[k:]))
+        self.assertEqual(variation([-3*v for v in values]),3*variation(values))
+
+    def test_plateau_reparametrization_and_asymmetric_reverse_tags(self):
+        grid=[F(i,8) for i in range(9)]
+        tags=[(2*u+v)/3 for u,v in zip(grid,grid[1:])]
+        alpha=lambda x:x-2*int(x>=F(1,2))
+        f=lambda x:x*x
+        phi=lambda t:max(F(0),2*t-1)
+        def total(points,ts,g,a):
+            return sum(g(t)*(a(v)-a(u))
+                       for u,v,t in zip(points,points[1:],ts))
+        image=[(phi(u),phi(v),phi(t))
+               for u,v,t in zip(grid,grid[1:],tags) if phi(u)!=phi(v)]
+        expected=sum(f(t)*(alpha(v)-alpha(u)) for u,v,t in image)
+        self.assertEqual(total(grid,tags,lambda t:f(phi(t)),lambda t:alpha(phi(t))),expected)
+        rev_points=[1-x for x in reversed(grid)]
+        rev_tags=[1-t for t in reversed(tags)]
+        self.assertEqual(total(grid,tags,lambda t:f(1-t),lambda t:alpha(1-t)),
+                         -total(rev_points,rev_tags,f,alpha))
+
+
 if __name__=="__main__":
     unittest.main()
