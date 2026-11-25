@@ -396,6 +396,9 @@ def main() -> None:
                 assert "Lemat Zorna" in page.locator("#conceptEvidence").inner_text()
                 assert "Równoważne nad ZF" in page.locator("#conceptRelations").inner_text()
                 assert page.locator("#conceptCanvas svg").count() == 1
+                equivalent_count = sum(e["type"] == "equivalent" for e in graph_payload["edges"])
+                assert equivalent_count > 0
+                assert page.locator('#conceptCanvas path[marker-start="url(#concept-arrow)"][marker-end="url(#concept-arrow)"]').count() == equivalent_count
                 page.locator("#conceptEvidence .concept-occurrence").first.click()
                 page.locator("#view-reader").wait_for(state="visible", timeout=15000)
                 assert page.locator("#docTitle").inner_text().strip()
