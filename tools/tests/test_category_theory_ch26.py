@@ -155,6 +155,41 @@ class CategoryTheoryCh26(unittest.TestCase):
                 self.assertEqual(linear(cols,v),(a(v),a(swap(v))))
                 self.assertEqual(linear(cols,v)[0],a(v))
 
+    def test_CAT_26_008_nonabelian_group_action_order(self):
+        # C2 embedded in S3. X is the two-element regular C2-set.
+        # Test the actual left H-actions on induced classes and coinduced
+        # compatible functions, including order-sensitive compositions.
+        H = list(itertools.permutations(range(3)))
+        mul = lambda h, k: tuple(h[k[i]] for i in range(3))
+        e, s = (0,1,2), (1,0,2)
+        X = range(2)
+        def canonical(h,x):
+            return min((h,x),(mul(h,s),1-x))
+        classes = {canonical(h,x) for h,x in itertools.product(H,X)}
+        self.assertEqual(len(classes),6)
+        def ind(t,c):
+            h,x = c
+            return canonical(mul(t,h),x)
+        families = [f for f in itertools.product(X,repeat=len(H))
+                    if all(f[H.index(mul(s,h))] == 1-f[H.index(h)]
+                           for h in H)]
+        self.assertEqual(len(families),8)
+        def coind(t,f):
+            return tuple(f[H.index(mul(h,t))] for h in H)
+        for t,u in itertools.product(H,repeat=2):
+            for c in classes:
+                self.assertEqual(ind(t,ind(u,c)),ind(mul(t,u),c))
+                self.assertEqual(ind(e,c),c)
+            for f in families:
+                self.assertIn(coind(t,f),families)
+                self.assertEqual(coind(t,coind(u,f)),coind(mul(t,u),f))
+                self.assertEqual(coind(e,f),f)
+        self.assertTrue(any(coind(t,coind(u,f)) != coind(u,coind(t,f))
+                            for t,u,f in itertools.product(H,H,families)))
+        # Evaluation at the identity intertwines the restricted C2-action.
+        for f in families:
+            self.assertEqual(coind(s,f)[H.index(e)],1-f[H.index(e)])
+
     def test_CAT_26_002_structure(self):
         source = CHAPTER.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}", source)
