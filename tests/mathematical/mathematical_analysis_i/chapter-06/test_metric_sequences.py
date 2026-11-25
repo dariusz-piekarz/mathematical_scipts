@@ -84,3 +84,14 @@ class Chapter06(unittest.TestCase):
             self.assertEqual(a/b,n)
 
 if __name__=="__main__": unittest.main()
+
+
+class BernoulliNaturalRegression(unittest.TestCase):
+    def test_bernoulli_natural_boundary_and_equality(self):
+        from fractions import Fraction as F
+        for n in range(1, 12):
+            for x in (F(-1), F(-3,4), F(-1,10), F(0), F(1,3), F(2)):
+                gap=(1+x)**n-(1+n*x)
+                self.assertGreaterEqual(gap,0)
+                self.assertEqual(gap==0,n==1 or x==0)
+                self.assertEqual((1+x)**(n+1)-(1+(n+1)*x),(1+x)*gap+n*x*x)

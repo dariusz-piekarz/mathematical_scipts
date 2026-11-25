@@ -17,3 +17,5 @@ Testy Python sprawdzają skończone świadki i tożsamości, nie zastępują dow
 | MA1-25-013 | ma1:thm:inflection-second-derivative | Konwencja przegięcia, wystarczalność zmiany znaku, konieczność z hipotezami | semantyczna + Python |
 | MA1-25-014 | ma1:ex:inflection-counterexamples | x^3, x^4, x|x| i brak drugiej pochodnej | semantyczna + Python |
 | MA1-25-015 | ma1:ch:convexity | Dwa rysunki, zgodność współrzędnych | Python + PDF |
+| MA1-25-016 | ma1:thm:bernoulli-real | Trzy zakresy wykładnika, ścisłość, warunki równości, koniec x=-1 i potęgi nieokreślone | semantyczna + Python |
+| MA1-25-017 | ma1:thm:young | Dodatnie wagi sprzężone, zera argumentów, równość a^p=b^q | semantyczna + Python |

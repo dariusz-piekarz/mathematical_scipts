@@ -103,6 +103,33 @@ class Chapter25(unittest.TestCase):
             self.assertEqual(2*abs(h)/h,2)
             self.assertEqual(2*abs(-h)/(-h),-2)
 
+    def test_bernoulli_real(self):
+        # Positive rational square bases give exact half-integer powers.
+        for t in (F(1,4),F(1,2),F(1),F(3,2),F(3)):
+            x=t*t-1
+            for k in (-4,-2,-1,0,1,2,3,4):
+                r=F(k,2)
+                gap=t**k-(1+r*x)
+                if 0<r<1:
+                    self.assertLessEqual(gap,0)
+                else:
+                    self.assertGreaterEqual(gap,0)
+                self.assertEqual(gap==0,x==0 or r in (0,1))
+        for r in (F(1,2),F(1),F(2)):
+            self.assertEqual((0-(1-r))==0,r==1)
+
+    def test_young(self):
+        # p=3, q=3/2: b=t^2, so b^q=t^3 exactly.
+        for a in (F(0),F(1,2),F(1),F(2)):
+            for t in (F(0),F(1,2),F(1),F(3)):
+                b=t*t
+                gap=a**3/3+2*t**3/3-a*b
+                self.assertGreaterEqual(gap,0)
+                self.assertEqual(gap==0,a**3==t**3)
+                self.assertEqual(gap,(a-t)**2*(a+2*t)/3)
+        for a,b in ((F(0),F(0)),(F(0),F(2)),(F(2),F(2)),(F(1),F(3))):
+            self.assertEqual((a*a+b*b)/2-a*b,(a-b)**2/2)
+
     def test_figure_source(self):
         s=(Path(__file__).resolve().parents[4] /
            "chapters/pl/mathematical_analysis_i/25-wypuklosc-i-wkleslosc.tex").read_text(encoding="utf8")
