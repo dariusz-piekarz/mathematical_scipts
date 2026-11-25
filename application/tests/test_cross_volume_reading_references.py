@@ -253,5 +253,55 @@ class CrossVolumeReadingReferencesTest(unittest.TestCase):
                             self.assertTrue(pairs <= edges)
 
 
+    def test_real_la_aa_module_and_tensor_links(self):
+        expected = {
+            "LA-01": {"AA-16::aa:tw:modules-free-universal"},
+            "LA-02": {"AA-16::aa:def:modules-direct-sum",
+                      "AA-16::aa:tw:modules-first-isomorphism"},
+            "LA-03": {"AA-16::aa:tw:modules-first-isomorphism"},
+            "LA-10": {"AA-18::aa:tw:tensor-universal",
+                      "AA-18::aa:st:tensor-vspace-dimension",
+                      "AA-18::aa:tw:tensor-right-exact"},
+            "LA-19": {"AA-17::aa:tw:pid-structure",
+                      "AA-17::aa:tw:smith-normal-form"},
+            "LA-20": {"AA-17::aa:tw:pid-structure"},
+        }
+        modules = set(expected) | {lab.split("::", 1)[0]
+                                   for labels in expected.values() for lab in labels}
+        prefixes = {"linear_algebra": "LA", "abstract_algebra": "AA"}
+        books = json.loads((ROOT / "catalog/books.json").read_text(encoding="utf-8"))["books"]
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "pl"
+            for book in books:
+                prefix = prefixes.get(book["id"])
+                if prefix is None:
+                    continue
+                for path in book["chapters"]:
+                    p = Path(path)
+                    if prefix + "-" + p.name.split("-", 1)[0] not in modules:
+                        continue
+                    dest = root / p.parent.name / p.name
+                    dest.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(ROOT / p, dest)
+            db = Path(temp) / "index.db"
+            build_database(root, db, recursive=True)
+            with sqlite3.connect(db) as con:
+                con.row_factory = sqlite3.Row
+                required = {(src, lab, lab.split("::", 1)[0])
+                            for src, labels in expected.items() for lab in labels}
+                actual = {(r["source_document"], r["target_label"], r["target_document"])
+                          for r in con.execute(
+                              "SELECT source_document,target_label,target_document FROM references_tex "
+                              "WHERE command='atlasref' AND status='external_resolved'")}
+                self.assertEqual(len(required), 10)
+                self.assertTrue(required <= actual)
+                for granularity in ("module", "section", "entity"):
+                    graph = bipartite_graph(con, "algebra liniowa", "algebra abstrakcyjna",
+                                            granularity, 1, 250)
+                    nodes = {n["id"]: n["module"] for n in graph["nodes"]}
+                    edges = {(nodes[e["source"]], nodes[e["target"]]) for e in graph["edges"]}
+                    self.assertTrue({(src, dst) for src, _, dst in required} <= edges)
+
+
 if __name__ == "__main__":
     unittest.main()
