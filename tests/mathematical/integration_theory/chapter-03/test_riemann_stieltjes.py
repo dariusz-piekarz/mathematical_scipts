@@ -38,6 +38,28 @@ class RiemannStieltjes03(unittest.TestCase):
                 self.assertEqual(sf,6)
                 self.assertEqual(sa,0)
 
+    def test_gluing_failure_despite_local_integrability(self):
+        c=F(1,2)
+        f=lambda x:F(x>c)
+        alpha=lambda x:F(x>=c)
+        for n in (4,8,16):
+            x=[F(k,n) for k in range(n+1)]
+            # Both pieces are integrable: f=0 on the left,
+            # alpha is constant on the right.
+            self.assertEqual(sum(f(v)*(alpha(v)-alpha(u)) for u,v in zip(x,x[1:])),0)
+            u,v=c-F(1,n),c+F(1,n)
+            self.assertEqual(f(u)*(alpha(v)-alpha(u)),0)
+            self.assertEqual(f(v)*(alpha(v)-alpha(u)),1)
+
+    def test_cut_cell_error_identity(self):
+        u,c,v=F(1,4),F(1,2),F(3,4)
+        f=lambda x:x*x
+        alpha=lambda x:3*x-x*x
+        for t in (u,c,v):
+            before=f(t)*(alpha(v)-alpha(u))
+            after=f(c)*(alpha(c)-alpha(u))+f(c)*(alpha(v)-alpha(c))
+            self.assertEqual(before-after,(f(t)-f(c))*(alpha(v)-alpha(u)))
+
     def test_shared_jump_requires_care(self):
         c=F(1,2)
         f=lambda x:F(x>=c)
