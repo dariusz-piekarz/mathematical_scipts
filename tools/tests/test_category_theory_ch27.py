@@ -77,6 +77,59 @@ class CategoryTheoryCh27(unittest.TestCase):
         self.assertFalse(dinatural(S,U,tuple(compose(b,a)
                                             for a,b in zip(alpha,beta))))
 
+    def test_CAT_27_005_co_yoneda_parallel_arrows(self):
+        # A: 0 ==(p,q)==> 1. P contravariant, F covariant.
+        # Both co-Yoneda formulas reduce to evaluation on representatives.
+        for n0,n1 in itertools.product(range(3),repeat=2):
+            for p,q in itertools.product(
+                    itertools.product(range(n1),repeat=n0),repeat=2):
+                # Covariant F, b=1. The two arrows give separate summands.
+                Z=[(0,x,h) for x in range(n0) for h in (0,1)]
+                Z += [(1,y,2) for y in range(n1)]
+                parent={z:z for z in Z}
+                def root(z):
+                    while parent[z]!=z:
+                        z=parent[z]
+                    return z
+                for x,h in itertools.product(range(n0),range(2)):
+                    parent[root((0,x,h))]=root((1,(p,q)[h][x],2))
+                val=lambda z:z[1] if z[0]==1 else (p,q)[z[2]][z[1]]
+                self.assertEqual({val(z) for z in Z},set(range(n1)))
+                for z,w in itertools.product(Z,repeat=2):
+                    self.assertEqual(root(z)==root(w),val(z)==val(w))
+                # Contravariant P on the opposite arrow category,
+                # with b at its source, is the dual construction:
+                # classes (a,x,h:b->a) map to P(h)(x).
+                # Relabeling original objects exchanges 0 and 1.
+                for z in Z:
+                    self.assertEqual(root(z),root((1,val(z),2)))
+
+    def test_CAT_27_006_fubini_coends(self):
+        # Two arrow categories, separable diagram values indexed by a,b.
+        # Compute the quotient of all diagonal points and the iterated
+        # quotient; the relations act independently on the two indices.
+        for m,n,p,q in itertools.product(range(1,3),repeat=4):
+            for f in itertools.product(range(n),repeat=m):
+                for g in itertools.product(range(q),repeat=p):
+                    Z=[(a,x,b,y) for a,b in itertools.product(range(2),repeat=2)
+                       for x in range((m,n)[a]) for y in range((p,q)[b])]
+                    parent={z:z for z in Z}
+                    def root(z):
+                        while parent[z]!=z:
+                            z=parent[z]
+                        return z
+                    for a,x,b,y in Z:
+                        z=(a,x,b,y)
+                        if a==0:
+                            parent[root(z)]=root((1,f[x],b,y))
+                        if b==0:
+                            parent[root(z)]=root((a,x,1,g[y]))
+                    left=lambda z:(f[z[1]] if z[0]==0 else z[1],
+                                   g[z[3]] if z[2]==0 else z[3])
+                    self.assertEqual(len({root(z) for z in Z}),n*q)
+                    for z,w in itertools.product(Z,repeat=2):
+                        self.assertEqual(root(z)==root(w),left(z)==left(w))
+
     def test_CAT_27_004_structure(self):
         source = CHAPTER.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}",source)
