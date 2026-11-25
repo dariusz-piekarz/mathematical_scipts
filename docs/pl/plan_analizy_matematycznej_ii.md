@@ -85,3 +85,8 @@ Przed całkami krzywoliniowymi, powierzchniowymi i po podrozmaitościach wprowad
 ## Zasada ponownego wykorzystania wyników z tomu I i pozostałych skryptów
 
 Wynik udowodniony w AM I lub innym skrypcie przytaczamy w AM II z pełnymi potrzebnymi hipotezami i tezą oraz dokładnym odsyłaczem do rozdziału i numeru twierdzenia/lematu/wniosku w odpowiednim skrypcie; nie powielamy jego dowodu bez uzasadnionej potrzeby. Zachowujemy oryginalne etykiety importowanych wyników. Jeżeli zmieniono hipotezy, rozszerzono zakres lub sformułowano nowy wynik, podajemy szczegółowy dowód nowej części. Przed zastąpieniem dowodu sprawdzamy faktyczne istnienie i zgodność wyniku oraz dowodu w źródle. Zasadę stosujemy od rozdziału 05; wcześniej ustabilizowanych rozdziałów nie otwieramy ponownie wyłącznie w celu usuwania dowodów.
+
+
+## Migracja numeracji
+
+Dawny numer 11 → docelowy 36; dawny numer 12 → docelowy 37. Raporty historyczne pozostają bez zmian merytorycznych; stare numery w ich treści oznaczają numerację w chwili audytu. Źródła LaTeX i etykiety ma2:* zachowane bajtowo. Tymczasowo entrypoint ustawia licznik rozdziału na 35 przed rozdziałem 36, dzięki czemu PDF i ścieżki mają zgodną numerację docelową; nie tworzy się pustych rozdziałów 11–35. Po uzupełnieniu luki usunąć tymczasowy setcounter. Migracja wymaga odrębnego CI oraz kontroli składu PDF.
