@@ -20,6 +20,29 @@ class Denjoy08(unittest.TestCase):
         self.assertLess(middle+tail+head,eps)
         self.assertLess(sum(eps/F(2**(n+1)) for n in range(1,20)),eps)
 
+    def test_affine_extension_gap_integral(self):
+        l,r=F(1,4),F(3,4)
+        fl,fr=F(2),F(-1)
+        G=lambda x:fl+(x-l)/(r-l)*(fr-fl)
+        self.assertEqual(G(l),fl)
+        self.assertEqual(G(r),fr)
+        for u,v in ((l,r),(l,(l+r)/2),((l+r)/2,r)):
+            self.assertEqual(abs(G(v)-G(u)),abs(fr-fl)/(r-l)*(v-u))
+            self.assertTrue(min(fl,fr)<=G(u)<=max(fl,fr))
+
+    def test_gap_oscillation_exceptional_set(self):
+        # A summable family of oscillations, d_k=4^-k.
+        for m in (1,2,10):
+            for n in (1,3,8):
+                finite=sum(4*m*F(1,4**k) for k in range(n,n+10))
+                bound=4*m*F(1,4**n)/F(3,4)
+                self.assertLess(finite,bound)
+            d=F(1,1000)
+            x=F(0)
+            l=m*d
+            y=l+F(1,100)
+            self.assertLessEqual(d/(y-x),F(1,m))
+
     def test_derivative_error_two_endpoints(self):
         # F(x)=x^2, exact local remainder (y-t)^2.
         eps=F(1,10)
