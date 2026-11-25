@@ -225,3 +225,58 @@ class GraphCoverageTest(unittest.TestCase):
                 ):
                     with self.subTest(source=source, target=target):
                         self.assertGreaterEqual(edges[(source, target)]["reading"], minimum)
+
+    def test_canonical_measure_geometry_reading_edges(self):
+        """Cross-domain links resolve to the exact geometric or measure result."""
+        canonical = Path(__file__).resolve().parents[2] / "chapters" / "pl"
+        if not canonical.is_dir():
+            self.skipTest("canonical repository chapters not available")
+        paths = (
+            "differential_geometry_and_topology/01-rozmaitosci-rozniczkowe.tex",
+            "differential_geometry_and_topology/10-formy-rozniczkowe-orientacja-i-kohomologia-de-rhama.tex",
+            "differential_geometry_and_topology/11-tensor-metryczny-dlugosc-i-miara.tex",
+            "differential_geometry_and_topology/15-twierdzenie-sarda-i-transwersalnosc.tex",
+            "measure_theory/27-miary-na-rozmaitosciach-ujecie-miarowo-teoretyczne.tex",
+            "measure_theory/28-wzor-na-pole-powierzchni-krotnosci-i-koobszar.tex",
+            "measure_theory/31-dzety-od-geometrii-rozniczkowej-do-teorii-miary.tex",
+        )
+        expected = (
+            ("ME-27", "DG-10", "thm:stokes-formy"),
+            ("ME-27", "DG-01", "wn:immersja-lokalnie"),
+            ("ME-28", "DG-11", "def:metryka-indukowana"),
+            ("ME-31", "DG-01", "tw:rozniczka-odwzorowania-wspolrzedne"),
+            ("DG-15", "ME-28", "thm:coarea-manifolds-28"),
+            # Existing links that must survive the migration.
+            ("ME-28", "DG-15", "thm:sard"),
+            ("ME-31", "DG-01", "def:wiazka-wektorowa"),
+            ("DG-11", "ME-27", "thm:riemann-radon-27"),
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "pl"
+            for relative in paths:
+                dest = root / relative
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                dest.write_bytes((canonical / relative).read_bytes())
+            db = Path(tmp) / "index.db"
+            build_database(root, db, recursive=True)
+            with sqlite3.connect(db) as con:
+                edges = {(e["source"], e["target"]): e
+                         for e in graph_coverage(con)["edges"]}
+                for source, target, label in expected:
+                    with self.subTest(source=source, target=target, label=label):
+                        rows = con.execute(
+                            "SELECT status,target_document,target_entity "
+                            "FROM references_tex WHERE source_document=? "
+                            "AND command='atlasref' AND target_label=?",
+                            (source, target + "::" + label),
+                        ).fetchall()
+                        self.assertEqual(len(rows), 1)
+                        status, owner, entity = rows[0]
+                        self.assertEqual(status, "external_resolved")
+                        self.assertEqual(owner, target)
+                        self.assertIsNotNone(entity)
+                        self.assertEqual(con.execute(
+                            "SELECT entity_id FROM label_occurrences "
+                            "WHERE document_id=? AND name=?", (target, label)
+                        ).fetchall(), [(entity,)])
+                        self.assertGreaterEqual(edges[(source, target)]["reading"], 1)
