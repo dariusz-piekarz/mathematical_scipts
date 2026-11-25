@@ -70,5 +70,25 @@ class Chapter29(unittest.TestCase):
         self.assertIn(r"\|ST_nR-STR\|\le\|S\|\|T_n-T\|\|R\|", S)
         self.assertIn(r"\|I_X-K\|<1", S)
 
+    def test_FA29_compact_criteria_01(self):
+        for phrase in (r"(i) $\Rightarrow$ (ii)", r"(ii) $\Rightarrow$ (iii)",
+                       r"(iii) $\Rightarrow$ (i)", r"\|Tx_n-Tx_m\|\ge\varepsilon",
+                       "Domknięcie tego zbioru jest również"):
+            self.assertIn(phrase,S)
+        for eps in (F(1,7), F(1), F(5,2)):
+            pts=[i*eps for i in range(5)]
+            for a,b in itertools.combinations(pts,2):
+                self.assertGreaterEqual(abs(a-b),eps)
+
+    def test_FA29_finite_rank_kernel_01(self):
+        self.assertIn(r"(T_{k_n}f)(t)=\sum_{j=1}^{m_n}g_j(t)", S)
+        self.assertIn(r"\operatorname{span}\{g_1,\ldots,g_{m_n}\}", S)
+        V=list(itertools.product(range(-1,2),repeat=2))
+        for g,h,f in itertools.product(V,repeat=3):
+            kernel=[[a*b for b in h] for a in g]
+            out=[sum(a*b for a,b in zip(row,f)) for row in kernel]
+            coeff=sum(a*b for a,b in zip(h,f))
+            self.assertEqual(out,[a*coeff for a in g])
+
 if __name__ == "__main__":
     unittest.main()
