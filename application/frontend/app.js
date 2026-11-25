@@ -423,7 +423,7 @@ async function loadGraph(){
   const level=$("graphLevel").value;
   try{
     const data=await api(`/api/graph?left=${encodeURIComponent(left)}&right=${encodeURIComponent(right)}&granularity=${level}&min_weight=${Number($("graphMin").value)||1}&max_edges=65`);
-    state.graph=data;$("graphSummary").textContent=`${data.nodes.length} węzłów · ${data.edges.length} par powiązanych odsyłaczami${data.truncated?" · widok ograniczony do 65 par":""} · źródło: jawne odsyłacze LaTeX`;
+    state.graph=data;$("graphSummary").textContent=`${data.nodes.length} węzłów · ${data.edges.length} par powiązanych odsyłaczami${data.truncated?" · widok ograniczony do 65 par":""} · źródło: jawne odsyłacze LaTeX (bez rozróżniania kierunku)`;
     renderGraph(data);
   }catch(e){toast(e.message);}
 }
@@ -486,7 +486,7 @@ function renderGraph(data){
     const positions={};left.forEach((n,i)=>positions[n.id]={x:110,y:60+i*48});right.forEach((n,i)=>positions[n.id]={x:690,y:60+i*48});
     try{
       const cy=window.cytoscape({container:host,elements,layout:{name:"preset",positions,fit:true,padding:50},
-        style:[{selector:"node",style:{"shape":"round-rectangle","width":"label","height":36,"padding":"12px","background-color":"#d4edf0","border-color":"#66a4af","border-width":1,"label":"data(label)","color":"#17465a","font-size":12}},{selector:'node[side="right"]',style:{"background-color":"#e8ecf9","border-color":"#aaaed4"}},{selector:"edge",style:{"width":"mapData(weight,1,20,1,5)","line-color":"#a4bdc8","opacity":.64,"curve-style":"bezier","target-arrow-shape":"triangle","target-arrow-color":"#91aabb"}}],userZoomingEnabled:true,boxSelectionEnabled:false});
+        style:[{selector:"node",style:{"shape":"round-rectangle","width":"label","height":36,"padding":"12px","background-color":"#d4edf0","border-color":"#66a4af","border-width":1,"label":"data(label)","color":"#17465a","font-size":12}},{selector:'node[side="right"]',style:{"background-color":"#e8ecf9","border-color":"#aaaed4"}},{selector:"edge",style:{"width":"mapData(weight,1,20,1,5)","line-color":"#a4bdc8","opacity":.64,"curve-style":"bezier","target-arrow-shape":"none"}}],userZoomingEnabled:true,boxSelectionEnabled:false});
       cy.on("tap","node",event=>openGraphNode(event.target.data("original")));
       state.cy=cy;return;
     }catch(e){host.replaceChildren();}
