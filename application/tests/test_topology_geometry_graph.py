@@ -32,6 +32,8 @@ class TopologyGeometryGraphTest(unittest.TestCase):
             ("TOP-18", "DG-18", "thm:lemat-morsea-17"),
             ("DG-18", "TOP-18", "thm:morse-singular-v10"),
             ("TOP-18", "DG-18", "thm:homologia-morse-17"),
+            ("DG-17", "TOP-11", "thm:poincare-dualnosc-16"),
+            ("TOP-11", "DG-17", "thm:poincare-dualnosc-16"),
             ("TOP-17", "DG-03", "thm:tensor-hom"),
             ("TOP-20", "DG-18", "ch:teoria-morsea"),
             ("TOP-23", "DG-03", "thm:tensor-istnienie"),
