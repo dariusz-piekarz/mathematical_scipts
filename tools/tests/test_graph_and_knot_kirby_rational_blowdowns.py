@@ -137,9 +137,20 @@ def slam_dunk_primitive_slopes():
                 numerator=r*c-d
                 assert original==numerator
                 assert gcd(abs(numerator),abs(c))==1
+                # TG-25-SLAM-BASIS: after filling U, the meridian of
+                # the remaining solid torus is mu_V+r*lambda_V.
+                # New surgery coordinates (mu',lambda')=(-lambda_V,
+                # mu_V+r*lambda_V) have determinant +1.
+                basis=[[0,1],[-1,r]]
+                assert determinant(basis)==1
+                assert solve(basis,[1,r])==[0,1]
+                assert solve(basis,[c,d])==[numerator,c]
+                assert matmul(basis,[[numerator],[c]])==[[c],[d]]
+                # Includes zero numerator, e.g. r=c=d=1.
                 # H1 of n/c surgery on the unknot has order |n|.
                 assert abs(original)==abs(numerator)
                 count+=1
+    assert solve([[0,1],[-1,1]],[1,1])==[0,1]
     # r=1/2, s=4: Hopf surgery gives H1 order 2,
     # whereas naive slam-dunk slope 1/4 gives H1 order 1.
     hopf=determinant([[1,2],[1,4]])
