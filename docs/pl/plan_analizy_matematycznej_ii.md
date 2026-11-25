@@ -1,6 +1,6 @@
 # Analiza matematyczna II — 47 rozdziałów
 
-Kurs inspirowany wykładami Marka Jarnickiego, rozszerzony o pełny rachunek różniczkowy wielu zmiennych, całki powierzchniowe i całkowanie po podrozmaitościach. Blok rachunku różniczkowego następuje bezpośrednio po rozdziale 10 o ciągłości, różniczkowaniu i całkowaniu granic; rozpoczyna się od granic i ciągłości funkcji wielu zmiennych, a następnie przechodzi do pochodnych i różniczek.
+Kurs inspirowany wykładami Marka Jarnickiego, Wykłady z Analizy Matematycznej I, II, III, IV, wersja 9 stycznia 2022, [PDF UJ](https://apps.usos.uj.edu.pl/apps/f/Q9qBncrH/analiza-19-20-21%20%281%29.pdf), spis treści s. 4–6. Kolejność dostosowana do dyspozycji użytkownika: po ciągłości rachunek różniczkowy, bezpośrednio po nim rachunek całkowy, następnie całkowanie wielowymiarowe i na podrozmaitościach, a pozostałe zagadnienia później. W oryginale Jarnickiego szeregi i całki jednowymiarowe są w AM II (§6–8), różniczkowanie i podrozmaitości w AM III (§9–11), miara, całkowanie na podrozmaitościach i Stokes w AM IV (§12–14). Nie kopiujemy podziału na semestry, lecz wykorzystujemy zależności merytoryczne.
 
 ## I. Przestrzenie unormowane, szeregi i zbieżność funkcyjna
 
@@ -17,45 +17,45 @@ Kurs inspirowany wykładami Marka Jarnickiego, rozszerzony o pełny rachunek ró
 
 ## II. Rachunek różniczkowy funkcji wielu zmiennych
 
-11. Funkcje wielu zmiennych: granice i ciągłość, normy w przestrzeniach euklidesowych, granice wzdłuż krzywych, kontrprzykłady (AM I, TO, AF)
+11. Funkcje wielu zmiennych: granice i ciągłość, kontrprzykłady; wykorzystać AM I 06, 14–16, TO 03, AM II 01 i 08–10, bez powtarzania ogólnej teorii metrycznej
 12. Pochodne cząstkowe i kierunkowe, gradient i pochodna Gâteaux; zależności i kontrprzykłady (AF 14)
 13. Pochodna Frécheta i różniczka zupełna: macierz Jacobiego, reguły różniczkowania, reguła łańcuchowa, interpretacja geometryczna (AF 14, AL)
 14. Twierdzenia o wartości średniej, nierówności dla odwzorowań wektorowych, oszacowania przyrostów i lokalne warunki Lipschitza (AF 14, AM I)
 15. Pochodne i różniczki wyższych rzędów: twierdzenie Schwarza, wielowskaźniki, symetryczne formy wieloliniowe, macierz Hessego (AF 15)
 16. Twierdzenie Taylora dla funkcji wielu zmiennych: wielomiany Taylora, reszty, oszacowania (AF 15, AM I 23)
-17. Twierdzenie o funkcji odwrotnej: pełny dowód, lokalna odwracalność, regularność odwrotności i jej pochodna (AF 15, DG 01)
-18. Twierdzenie o funkcji uwikłanej: pełny dowód, istnienie, jednoznaczność, regularność, pochodne, przykłady (AF 15, DG 01)
-19. Twierdzenia o rzędzie: stały rząd, lokalne postacie odwzorowań, immersje i submersje, poziomice regularne i osobliwe (DG 01, DG 16, AL)
-20. Ekstrema swobodne: warunki konieczne i dostateczne, macierz Hessego, przypadki zdegenerowane (AF 15, AL)
-21. Ekstrema związane: mnożniki Lagrange'a, więzy regularne, warunki drugiego rzędu; więzy nierównościowe i warunki Karusha–Kuhna–Tuckera z kwalifikacją więzów (AF, AL, DG; uzupełnienia)
-22. Podrozmaitości przestrzeni euklidesowej: przestrzenie styczne i normalne, parametryzacje, zanurzenia, regularne poziomice (DG 01, DG 16)
-23. Rachunek różniczkowy na podrozmaitościach: różniczka odwzorowania, funkcje gładkie, ekstrema na podrozmaitościach (DG 01, DG 16)
+17. Ekstrema swobodne, wypukłość funkcji wielu zmiennych: warunki konieczne i dostateczne, macierz Hessego, przypadki zdegenerowane (AF 15, AL, AM I 25; brakujące przypadki)
+18. Twierdzenie o funkcji odwrotnej: pełny dowód, lokalna odwracalność, regularność odwrotności i jej pochodna (AF 15, DG 01)
+19. Twierdzenie o funkcji uwikłanej: pełny dowód, istnienie, jednoznaczność, regularność, pochodne, przykłady (AF 15, DG 01)
+20. Twierdzenia o rzędzie: stały rząd, lokalne postacie odwzorowań, immersje i submersje, poziomice regularne i osobliwe (DG 01, DG 16, AL)
+21. Podrozmaitości przestrzeni euklidesowej: przestrzenie styczne i normalne, parametryzacje, zanurzenia, regularne poziomice (DG 01, DG 16)
+22. Ekstrema związane: mnożniki Lagrange'a, więzy regularne, warunki drugiego rzędu; więzy nierównościowe i warunki Karusha–Kuhna–Tuckera z kwalifikacją więzów (AF, AL, DG; uzupełnienia)
+23. Rachunek różniczkowy na podrozmaitościach: różniczka odwzorowania, funkcje gładkie, ekstrema na podrozmaitościach (DG 01, DG 16); orientacja, lokalne postacie i przygotowanie do całkowania (DG 01, 10, 16)
 
-## III. Szeregi potęgowe, funkcje analityczne i aproksymacja
+## III. Rachunek całkowy
 
-24. Szeregi potęgowe (nowe)
-25. Zespolone funkcje elementarne (AM I 18)
-26. Funkcje analityczne (nowe, AF 31)
-27. Szeregi Taylora (AM I 23)
-28. Aproksymacja, Weierstrass i Stone–Weierstrass (AF)
+24. Całka Riemanna (AM I 29, TC 01–02)
+25. Funkcje pierwotne (AM I 28–30); podstawowe twierdzenie rachunku całkowego (AM I 28–30)
+26. Całki funkcji wektorowych (AF 15A)
+27. Całki niewłaściwe (AM I 31)
+28. Całki zależne od parametru (AM I 32, ME 11)
 
-## IV. Rachunek całkowy
+## IV. Całkowanie wielowymiarowe i na podrozmaitościach
 
-29. Całka Riemanna (AM I 29, TC 01–02)
-30. Funkcje pierwotne (AM I 28–30)
-31. Całki funkcji wektorowych (AF 15A)
-32. Całki niewłaściwe (AM I 31)
-33. Całki zależne od parametru (AM I 32, ME 11)
+29. Krzywe, długość i prostowalność (AM I 33, DG 11)
+30. Całki wielokrotne i zamiana zmiennych; zastosowania wcześniejszego rachunku różniczkowego (ME 12–13, AF 14–15); kostki, zbiory mierzalne w sensie Jordana, całki iterowane, Fubini, współrzędne biegunowe, walcowe i sferyczne; związek z całką Lebesgue'a (ME 04, 07, 12–13, TC 01–02)
+31. Całki krzywoliniowe obu rodzajów (DG 10–11); pola potencjalne, niezależność od drogi
+32. Zastosowania geometryczne i fizyczne (AM I 33)
+33. Całki powierzchniowe pierwszego rodzaju (DG 11, ME 28)
+34. Całki powierzchniowe drugiego rodzaju i strumień (DG 10–11)
+35. Całkowanie po podrozmaitościach dowolnego wymiaru, formy, Green, Gauss–Ostrogradski i Stokes (DG 01, 10–11, ME 26–28); orientacja, miara indukowana, macierz Grama, forma objętości, całkowanie form, brzeg; ME 26–27, DG 10–11
 
-## V. Całkowanie wielowymiarowe i na rozmaitościach
+## V. Szeregi potęgowe, funkcje analityczne i aproksymacja
 
-34. Krzywe, długość i prostowalność (AM I 33, DG 11)
-35. Całki krzywoliniowe obu rodzajów (DG 10–11)
-36. Zastosowania geometryczne i fizyczne (AM I 33)
-37. Całki wielokrotne i zamiana zmiennych; zastosowania wcześniejszego rachunku różniczkowego (ME 12–13, AF 14–15)
-38. Całki powierzchniowe pierwszego rodzaju (DG 11, ME 28)
-39. Całki powierzchniowe drugiego rodzaju i strumień (DG 10–11)
-40. Całkowanie po podrozmaitościach dowolnego wymiaru, formy, Green, Gauss–Ostrogradski i Stokes (DG 01, 10–11, ME 26–28)
+36. Szeregi potęgowe (nowe)
+37. Zespolone funkcje elementarne (AM I 18)
+38. Funkcje analityczne (nowe, AF 31)
+39. Szeregi Taylora (AM I 23)
+40. Aproksymacja, Weierstrass i Stone–Weierstrass (AF)
 
 ## VI. Analiza Fouriera
 
@@ -67,12 +67,21 @@ Kurs inspirowany wykładami Marka Jarnickiego, rozszerzony o pełny rachunek ró
 46. Wahanie ograniczone i Dirichlet–Jordan (TC 03, ME 29)
 47. Rozbieżność i zjawisko Gibbsa (AF, PDE)
 
+## Ponowne wykorzystanie — obowiązkowy etap przed opracowaniem rozdziału
+
+- Granice i ciągłość: AM I 06, 14–16, TO 03 i 07, AM II 01, 08–10. Przywołać gotowe ogólne wyniki; dopisać tylko specyfikę wielu zmiennych, brakujące przykłady i kontrprzykłady.
+- Różniczkowanie: AF 14 (pochodne Gâteaux i Frécheta), AF 15 (pochodne wyższych rzędów i lokalne twierdzenia), AM I 20–23 i 25, AL. Zweryfikować zakres twierdzeń o odwrotności, uwikłaniu, rzędzie i ekstremach; importować istniejące dowody lub przywołać pełne tezy z dokładnymi odsyłaczami, nie dowodzić ich drugi raz. DG 01 i 16: podrozmaitości, zanurzenia, przestrzenie styczne. DG 18: punkty krytyczne i twierdzenie Morse'a, w razie potrzeby wykorzystać w rozdziale o ekstremach.
+- Całki jednowymiarowe: AM I 28–36, TC 01–04 i dalsze rodzaje całek tylko jako odsyłacze, AF 15A–15B. Nie odtwarzać metod całkowania ani rozbudowanej teorii całek skalarowych. Skupić się na wektorowych, nowych zastosowaniach i zależnościach.
+- Całki wielowymiarowe: ME 04, 07–08, 11–13, 26–27; zweryfikować dokładny rozdział o zamianie zmiennych. Wykorzystać twierdzenia Fubiniego i Tonellego, całki zależne od parametru, miarę Hausdorffa i miarę indukowaną. Dodać tylko brakujący rachunek Riemanna na kostkach i zbiorach Jordana oraz most do teorii Lebesgue'a.
+- Całkowanie geometryczne: DG 01, 03, 10, 11, 16; ME 26–27, AM I 33. Wykorzystać formy, orientację, miarę riemannowską, wzory na długość i objętość, Stokesa i jego przypadki szczególne. Zasadniczy dowód w jednym miejscu, pozostałe ujęcia jako wnioski/odsyłacze. Nie powielać pełnej teorii rozmaitości.
+- Każde przejęcie musi mieć sprawdzony rzeczywisty wynik i dowód w źródle, oryginalną etykietę przy imporcie, dokładne odwołanie przy przytoczeniu, kontrolę zależności i numeracji. Audyt koncentrować na nowym materiale, zgodności importu, połączeniach i lukach, a nie na ponownym pisaniu zweryfikowanych dowodów. W razie rozbieżności z wcześniejszą treścią zachować pełne hipotezy i udowodnić tylko nową część.
+
 ## Migracja już opracowanych rozdziałów
 
-Numeracja powyżej jest docelowa. Rozdziały 01–10 zachowują numery; dotychczasowe 11 (Szeregi potęgowe) i 12 (Zespolone funkcje elementarne) otrzymają docelowo numery 24 i 25. Nie przepisywać zweryfikowanych dowodów ani nie zmieniać etykiet `ma2:*`. Najpierw domknąć otwartą kontrolę wizualną i CI obecnego rozdziału 12, następnie przed utworzeniem nowego rozdziału 11 przeprowadzić spójną migrację nazw plików, raportów audytowych, kolejności `\input`, katalogu, indeksu i odwołań/testów zależnych od numeracji. Nie pozostawiać podwójnych rozdziałów ani pustych zastępczych plików. Zmianę numeracji oddzielić od zmian matematycznych i zweryfikować CI oraz PDF; wyniki poprzednich audytów zachować z informacją o dawnych numerach. W okresie stopniowego uzupełniania bloku różniczkowego można zachować opracowane rozdziały 24–25 jako istniejące źródła bez włączania ich przedwcześnie do kolejności docelowej; sposób włączenia uzgodnić z mechanizmem walidacji katalogu i numeracji. Kolejny nowy rozdział merytoryczny: 11 — Funkcje wielu zmiennych: granice i ciągłość.
+Rozdziały 01–10 zachowują numerację. Dotychczasowe 11 (Szeregi potęgowe) i 12 (Zespolone funkcje elementarne) otrzymają docelowo numery 36 i 37. Zachować treść, etykiety ma2:* i historię audytów. Najpierw domknąć otwartą kontrolę wizualną i CI obecnego 12; następnie spójna migracja nazw plików, raportów, kolejności input, katalogu, indeksu i testów zależnych od numeracji. Oddzielić zmianę numeracji od zmian merytorycznych; zweryfikować CI i PDF. Nie tworzyć pustych plików zastępczych ani duplikatów. Kolejny nowy rozdział: 11 — granice i ciągłość funkcji wielu zmiennych; najpierw inwentaryzacja i wykorzystanie źródeł.
 
 Przed całkami krzywoliniowymi, powierzchniowymi i po podrozmaitościach wprowadzić wszystkie potrzebne podstawy: różniczkowanie, parametryzacje, macierze Jacobiego i Grama, orientację, zamianę zmiennych. Nie zakładać nieudowodnionych wyników z przyszłych tomów. Zachować oryginalne etykiety importowanych wyników, nie zmieniać skryptów źródłowych bez potrzeby. Rozdział -> audyty do stabilizacji -> niezależny audyt kontrolny -> kontrola PDF i CI -> kolejny rozdział. W katalogu książek wyłącznie istniejące pliki.
 
-## Zasada ponownego wykorzystania wyników z tomu I
+## Zasada ponownego wykorzystania wyników z tomu I i pozostałych skryptów
 
-Wynik udowodniony w AM I przytaczamy w AM II z pełnymi potrzebnymi hipotezami i tezą oraz dokładnym odsyłaczem do rozdziału i numeru twierdzenia/lematu/wniosku w tomie I; nie powielamy jego dowodu bez uzasadnionej potrzeby. Zachowujemy oryginalne etykiety importowanych wyników. Jeżeli zmieniono hipotezy, rozszerzono zakres lub sformułowano nowy wynik, podajemy szczegółowy dowód nowej części. Przed zastąpieniem dowodu sprawdzamy faktyczne istnienie i zgodność wyniku oraz dowodu w źródle. Zasadę stosujemy od rozdziału 05; wcześniej ustabilizowanych rozdziałów nie otwieramy ponownie wyłącznie w celu usuwania dowodów.
+Wynik udowodniony w AM I lub innym skrypcie przytaczamy w AM II z pełnymi potrzebnymi hipotezami i tezą oraz dokładnym odsyłaczem do rozdziału i numeru twierdzenia/lematu/wniosku w odpowiednim skrypcie; nie powielamy jego dowodu bez uzasadnionej potrzeby. Zachowujemy oryginalne etykiety importowanych wyników. Jeżeli zmieniono hipotezy, rozszerzono zakres lub sformułowano nowy wynik, podajemy szczegółowy dowód nowej części. Przed zastąpieniem dowodu sprawdzamy faktyczne istnienie i zgodność wyniku oraz dowodu w źródle. Zasadę stosujemy od rozdziału 05; wcześniej ustabilizowanych rozdziałów nie otwieramy ponownie wyłącznie w celu usuwania dowodów.
