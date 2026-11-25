@@ -1,0 +1,596 @@
+\chapter{Całka Kurzweila--Henstocka}
+\label{ma1:ch:kurzweil-henstock}
+\begingroup
+\providecommand{\osc}{\operatorname{osc}}
+\providecommand{\Var}{\operatorname{Var}}
+\providecommand{\mesh}{\operatorname{mesh}}
+\providecommand{\supp}{\operatorname{supp}}
+\providecommand{\AC}{\mathrm{AC}}
+\providecommand{\BV}{\mathrm{BV}}
+\providecommand{\HK}{\mathrm{KH}}
+\providecommand{\ind}[1]{\chi_{#1}}
+Materiał stanowi adaptację rozdziałów 04, 07, 08 i 11 skryptu \emph{Teoria całki}. Część elementarna wymaga jedynie całki Riemanna i rachunku różniczkowego. Od miejsca, w którym używamy miary Lebesgue'a, zakładamy znajomość podstaw teorii miary: regularności miary Lebesgue'a, twierdzeń granicznych dla całki Lebesgue'a, twierdzenia Radona--Nikodyma i różniczkowania całek oraz miar. Odpowiednie dowody znajdują się w skrypcie \emph{Teoria miary}, w szczególności w rozdziałach 07, 08, 24 i 25. Symbol $\lambda_1$ oznacza miarę Lebesgue'a na prostej. Dla funkcji ciągłej $F$ piszemy $\osc_I F=\max_I F-\min_I F$. Symbole $\AC$ i $\BV$ oznaczają klasy funkcji absolutnie ciągłych i o ograniczonej wariacji; $\Var_I F$ jest supremum sum modułów przyrostów po podziałach $I$.
+\section{Cechowania i definicja całki}
+\begin{definicja}
+\label{ma1:kh:def:kh-gauge}
+Dla $a<b$ podział znaczony to skończona rodzina komórek $[x_{i-1},x_i]$, gdzie $a=x_0<x_1<\cdots<x_m=b$, ze znacznikami $t_i\in[x_{i-1},x_i]$. Jego suma ma postać
+\[
+ S(f,\mathcal P)=\sum_{i=1}^m f(t_i)(x_i-x_{i-1}).
+\]
+Podział częściowy składa się z przedziałów o dodatnich długościach, parami rozłącznych wnętrzach i znacznikach należących do odpowiednich przedziałów. Na przedziale jednopunktowym przyjmujemy całkę zero.
+
+
+\emph{Cechowaniem} na $[a,b]$ nazywamy dowolną funkcję $\delta:[a,b]\to(0,\infty)$. Podział znaczony $\mathcal P=\{(t_i,[x_{i-1},x_i])\}$ jest $\delta$-drobny, jeśli $t_i\in[x_{i-1},x_i]\subset(t_i-\delta(t_i),t_i+\delta(t_i))$ dla każdego $i$.
+\end{definicja}
+\begin{lemat}[Cousina]\label{ma1:kh:lem:kh-cousin}
+Dla każdego cechowania $\delta$ na $[a,b]$ istnieje $\delta$-drobny podział znaczony tego przedziału.
+\end{lemat}
+\begin{proof}
+Przypuśćmy, że przedział nie ma takiego podziału. Dzielimy go na połowy; co najmniej jedna również nie ma drobnego podziału, bo dwa drobne podziały połówek można połączyć. Powtarzając, dostajemy zstępujący ciąg domkniętych przedziałów $J_n$ długości dążących do zera, z których żaden nie ma podziału drobnego. Ich przecięcie jest punktem $t$. Dla dostatecznie dużego $n$ mamy $J_n\subset(t-\delta(t),t+\delta(t))$, więc pojedynczy znaczony przedział $(t,J_n)$ jest drobny. Sprzeczność.
+\end{proof}
+\begin{definicja}
+\label{ma1:kh:def:kh-integral}
+Funkcja $f:[a,b]\to\R$ jest całkowalna w sensie Kurzweila--Henstocka z całką $I$, jeżeli dla każdego $\varepsilon>0$ istnieje cechowanie $\delta$ takie, że dla każdego $\delta$-drobnego podziału znaczonego $\mathcal P$ zachodzi $|S(f,\mathcal P)-I|<\varepsilon$.
+\end{definicja}
+\begin{stwierdzenie}[Jednoznaczność]
+\label{ma1:kh:prop:kh-unique}
+Wartość całki KH jest wyznaczona jednoznacznie.
+\end{stwierdzenie}
+\begin{proof}
+Jeśli $I,J$ spełniają definicję, dla $\varepsilon>0$ bierzemy minimum cechowań odpowiadających błędom $\varepsilon/2$ dla obu wartości. Lemat Cousina zapewnia istnienie podziału drobnego dla tego minimum. Dla jego sumy $S$ mamy $|I-J|\le |I-S|+|S-J|<\varepsilon$. Dowolność $\varepsilon$ daje $I=J$.
+\end{proof}
+\begin{twierdzenie}[Kryterium Cauchy'ego]\label{ma1:kh:thm:kh-cauchy}
+Funkcja $f$ jest całkowalna w sensie KH wtedy i tylko wtedy, gdy dla każdego $\varepsilon>0$ istnieje cechowanie $\delta$ takie, że $|S(f,\mathcal P)-S(f,\mathcal Q)|<\varepsilon$ dla wszystkich $\delta$-drobnych podziałów $\mathcal P,\mathcal Q$.
+\end{twierdzenie}
+\begin{proof}
+Konieczność wynika z nierówności trójkąta. Dla dostateczności wybieramy cechowania $\delta_n$ odpowiadające błędom $2^{-n}$, zastępujemy je kolejno minimami z poprzednimi i wybieramy $\delta_n$-drobne podziały $\mathcal P_n$ z lematu Cousina. Dla $m\ge n$ mamy $\delta_m\le\delta_n$, więc oba podziały $\mathcal P_n,\mathcal P_m$ są $\delta_n$-drobne i $|S(f,\mathcal P_n)-S(f,\mathcal P_m)|<2^{-n}$. Sumy tworzą zatem ciąg Cauchy'ego. Niech $I$ będzie jego granicą. Dla danego $n$ i dowolnego $\delta_n$-drobnego podziału $\mathcal P$ porównujemy jego sumę z sumami $S(f,\mathcal P_m)$, $m\ge n$, i przechodzimy z $m\to\infty$. Otrzymujemy $|S(f,\mathcal P)-I|\le2^{-n}$. Dla dowolnego $\varepsilon>0$ wybieramy $n$ z $2^{-n}<\varepsilon$; cechowanie $\delta_n$ spełnia definicję całki.
+\end{proof}
+\begin{twierdzenie}[Liniowość, porządek i lokalność]\label{ma1:kh:thm:kh-locality}
+Klasa funkcji KH-całkowalnych jest przestrzenią wektorową, całka jest liniowa i monotoniczna. Jeśli $a<c<b$, to $f$ jest całkowalna w sensie KH na $[a,b]$ wtedy i tylko wtedy, gdy jest całkowalna na obu $[a,c]$ i $[c,b]$; wówczas $\int_a^b f=\int_a^c f+\int_c^b f$.
+\end{twierdzenie}
+\begin{proof}
+Dla funkcji całkowalnych $f,g$ i liczb $\alpha,\beta\in\R$ wybieramy minimum cechowań dla $f,g$ z błędem $\varepsilon/(1+|\alpha|+|\beta|)$. Liniowość sum daje
+\[
+ |S(\alpha f+\beta g,\mathcal P)-(\alpha I_f+\beta I_g)|
+ <\varepsilon.
+\]
+Jeżeli $f\le g$, to dla każdego podziału $S(f,\mathcal P)\le S(g,\mathcal P)$. Wybierając wspólne cechowanie dla błędu $\varepsilon/2$ i podział z lematu Cousina, uzyskujemy $I_f\le I_g+\varepsilon$. Dowolność $\varepsilon$ daje monotoniczność.
+
+Jeżeli $f$ jest całkowalna na $[a,b]$, ustalamy cechowanie $\delta$ z kryterium Cauchy'ego dla błędu $\varepsilon$. Na $[a,c]$ wybieramy jeden $\delta$-drobny podział $\mathcal R$ z lematu Cousina. Dla dwóch dowolnych drobnych podziałów $\mathcal P,\mathcal Q$ przedziału $[c,b]$ ich połączenia z $\mathcal R$ są drobnymi podziałami $[a,b]$. Po odjęciu wspólnego składnika $S(f,\mathcal R)$ otrzymujemy $|S(f,\mathcal P)-S(f,\mathcal Q)|<\varepsilon$. Kryterium Cauchy'ego daje całkowalność na $[c,b]$; zamiana ról obu przedziałów daje całkowalność na $[a,c]$. Stosując ten argument dwukrotnie, otrzymujemy całkowalność na każdym podprzedziale. W drugą stronę wybieramy cechowania na obu podprzedziałach dla błędu $\varepsilon/2$, dla $t\ne c$ dodatkowo mniejsze od $|t-c|$, a w punkcie $c$ bierzemy minimum cechowań. Każdy przedział drobnego podziału przecinający $c$ ma znacznik $c$; rozcinamy go w $c$. Powstałe części dają drobne podziały z tą samą sumą, ponieważ przy rozcięciu zachowujemy znacznik $c$, a długości dodają się. Każda z dwóch sum różni się od odpowiedniej całki lokalnej o mniej niż $\varepsilon/2$. Nierówność trójkąta daje błąd mniejszy od $\varepsilon$ względem sumy całek lokalnych, co dowodzi całkowalności i addytywności. Jednoznaczność zapewnia tę samą równość także wtedy, gdy zaczynaliśmy od całkowalności na całym przedziale.
+\end{proof}
+\begin{stwierdzenie}
+$\mathcal R[a,b]\subset\HK[a,b]$ i obie całki są równe.
+\end{stwierdzenie}
+\begin{proof}
+Do cechowania HK wystarczy wziąć funkcję stałą $\delta(t)=\delta_0/2$, gdzie $\delta_0$ pochodzi z definicji całki Riemanna.
+\end{proof}
+\begin{przyklad}[Funkcja Dirichleta jest KH-całkowalna]
+Niech $\Q\cap[0,1]=\{q_1,q_2,\dots\}$ i $D=\chi_{\Q\cap[0,1]}$. Dla $\varepsilon>0$ kładziemy $\delta(q_k)=\varepsilon 2^{-k-3}$, a w punktach niewymiernych np. $\delta(t)=1$. Grupujemy wszystkie komórki o tym samym znaczniku $q_k$. Ich wnętrza są rozłączne, a wszystkie leżą w $(q_k-\delta(q_k),q_k+\delta(q_k))$, więc ich \emph{łączna} długość nie przekracza $2\delta(q_k)$, również gdy znacznik jest wspólnym końcem dwóch komórek. Stąd dla każdego drobnego podziału $0\le S(D,\mathcal P)\le\sum_k 2\delta(q_k)<\varepsilon$. Całka HK jest równa $0$.
+\end{przyklad}
+\begin{lemat}[Zmiany na zbiorze miary zero]\label{ma1:kh:lem:kh-null-modification}
+Jeśli $h:[a,b]\to\R$ ma skończone wartości i jest równa zeru poza zbiorem $N$ miary Lebesgue'a zero, to jej całka KH istnieje i wynosi $0$. To samo dotyczy całki McShane'a. Zmiana funkcji całkowalnej na zbiorze miary zero nie zmienia wartości żadnej z tych całek.
+\end{lemat}
+\begin{proof}
+Rozbijamy $N$ na zbiory $N_k=\{t\in N:k-1<|h(t)|\le k\}$, $k\ge1$. Dla ustalonego $\varepsilon>0$ wybieramy otwarte pokrycia $U_k\supset N_k$ z $\lambda_1(U_k)<\varepsilon2^{-k-1}/k$. Jeśli $t\in N_k$, dobieramy $\delta(t)>0$ tak, aby $(t-\delta(t),t+\delta(t))\subset U_k$; w pozostałych punktach, również w punktach $N$ o $h(t)=0$, cechowanie jest dowolne, gdyż ich wkład do sumy wynosi zero. W podziale drobnym, również wolnym w sensie McShane'a, komórki z oznaczonymi punktami należącymi do $N_k$ mają rozłączne wnętrza i leżą w $U_k$. Ich wkład do modułu sumy jest co najwyżej $k\lambda_1(U_k)$. Sumując po $k$, dostajemy błąd mniejszy od $\varepsilon$.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[x=1.25cm,y=1cm,>=Stealth]
+ \draw[->] (-.25,0)--(7.4,0);
+ \draw[very thick,blue!65!black] (0,0)--(2,0);
+ \draw[very thick,teal!70!black] (2,0)--(4.8,0);
+ \draw[very thick,blue!65!black] (4.8,0)--(7,0);
+ \foreach \x/\name in {0/{a=x_0},2/{x_1},4.8/{x_2},7/{x_3=b}}
+   {\draw (\x,.10)--(\x,-.1) node[below] {$\name$};}
+ \foreach \x/\name in {1/t_1,3.2/t_2,6/t_3}
+   {\fill (\x,0) circle (2pt) node[above] {$\name$};}
+ \draw[blue!65!black,<->] (-.2,.65)--(2.2,.65);
+ 
+ \draw[teal!70!black,<->] (1.5,1.2)--(4.9,1.2);
+ \draw[blue!65!black,<->] (4.6,.65)--(7.4,.65);
+ \node[above] at (3.2,1.25) {$t_2\pm\delta(t_2)$};
+\end{tikzpicture}
+
+\small Rysunek: komórki podziału i otoczenia cechowania; ich rozmiary zależą od znacznika. Każda komórka musi zawierać się w swoim otwartym otoczeniu.
+\end{center}
+\section{Pochodne i lemat Saksa--Henstocka}
+\begin{przyklad}[Wszystkie pochodne są całkowalne HK]
+Jeśli $F:[a,b]\to\R$ jest ciągła, różniczkowalna na $(a,b)$ i ma jednostronne pochodne skończone na końcach, to $F'$ (z tymi wartościami na końcach) jest KH-całkowalna i $\int_a^bF'(x)\,\mathrm dx=F(b)-F(a)$. Dla $\varepsilon>0$ przy każdym $t$ wybieramy $\delta(t)$ tak, aby $|F(y)-F(t)-F'(t)(y-t)|\le\varepsilon|y-t|/(b-a)$ dla bliskich $y$. Po oszacowaniu różnicy sumy i przyrostu $F$ na każdej komórce i zsumowaniu otrzymujemy błąd $\le\varepsilon$.
+\end{przyklad}
+\begin{przyklad}[Pochodna nieabsolutnie całkowalna]
+Niech $F(x)=x^2\cos(\pi/x^2)$ dla $x\in(0,1]$ i $F(0)=0$. Wtedy $F'(0)=0$ oraz $F'(x)=2x\cos(\pi/x^2)+(2\pi/x)\sin(\pi/x^2)$. Pochodna jest całkowalna HK i $\int_0^1F'(x)\,\mathrm dx=F(1)-F(0)=-1$. Natomiast $\int_0^1|F'(x)|\,\mathrm dx=\infty$: składnik $2x\cos(\pi/x^2)$ ma całkowalny moduł, ograniczony przez $2x$. Dla drugiego składnika podstawienie $u=\pi/x^2$ daje
+\[
+ \int_c^1\frac{2\pi}{x}|\sin(\pi/x^2)|\,\mathrm dx
+ =\pi\int_\pi^{\pi/c^2}\frac{|\sin u|}{u}\,\mathrm du.
+\]
+Na każdym przedziale $[k\pi,(k+1)\pi]$, $k\ge1$, całka po prawej bez czynnika $\pi$ jest nie mniejsza niż $2/((k+1)\pi)$. Szereg harmoniczny jest rozbieżny. Z nierówności $|A+B|\ge|B|-|A|$ wynika rozbieżność całki modułu całej pochodnej.
+\end{przyklad}
+\begin{lemat}[Saksa--Henstocka]\label{ma1:kh:lem:kh-saks-henstock}
+Niech $f\in\HK[a,b]$, $F(x)=\int_a^x f$, a $\delta$ niech zapewnia błąd $\varepsilon$ w definicji całki KH. Wówczas dla każdego skończonego $\delta$-drobnego \emph{częściowego} podziału znaczonego $\{(t_j,[u_j,v_j])\}$ o parami rozłącznych wnętrzach zachodzi
+\[
+\sum_j\left|f(t_j)(v_j-u_j)-(F(v_j)-F(u_j))\right|\le2\varepsilon.
+\]
+\end{lemat}
+\begin{proof}
+Uzupełniamy częściowy podział drobnymi podziałami luk; ich wkład jest dowolnie bliski całkom po lukach. Po dodaniu wkładów i użyciu addytywności $F$ otrzymujemy oszacowanie modułu sumy błędów przez $\varepsilon$ (z granicą po błędzie uzupełnienia). Dla dowolnego podzbioru przedziałów powtarzamy argument, zatem każda suma częściowa błędów jest ograniczona przez $\varepsilon$. Suma składników dodatnich i przeciwnych do ujemnych jest więc osobno $\le\varepsilon$, co daje oszacowanie $2\varepsilon$.
+\end{proof}
+\begin{twierdzenie}[Prawie wszędzie pochodna pierwotnej]\label{ma1:kh:thm:kh-primitive-derivative}
+Jeśli $f\in\HK[a,b]$, a $F(x)=\int_a^x f$, to $F$ jest ciągła, $F'(x)=f(x)$ prawie wszędzie oraz $f$ jest mierzalna w sensie Lebesgue'a.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $t\in[a,b]$ i $\eta>0$. Wybieramy cechowanie z lematu Saksa--Henstocka dla błędu $\eta/2$ i bierzemy $x$ z $|x-t|<\delta(t)$. Pojedyncza komórka o końcach $x,t$ ze znacznikiem $t$ jest drobnym podziałem częściowym. Oszacowanie modułu sumy błędów przez $\eta/2$ (z dowodu lematu) daje
+$|F(x)-F(t)-f(t)(x-t)|\le\eta/2$, niezależnie od kolejności $x,t$. Jeśli ponadto $|x-t|<\eta/(2(1+|f(t)|))$, to $|F(x)-F(t)|<\eta$. Dowodzi to ciągłości, także jednostronnej na końcach. Z lematu Saksa--Henstocka otrzymujemy następujące oszacowanie: dla ustalonego $r>0$ zbiór punktów, w których istnieją dowolnie małe przedziały $[u,v]$ zawierające $x$ i spełniające $|F(v)-F(u)-f(x)(v-u)|>r(v-u)$, ma miarę zewnętrzną zero. Istotnie, dla cechowania $\delta$ z lematu Saksa--Henstocka wybieramy tylko takie przedziały ze znacznikiem $x$, które leżą w $(x-\delta(x),x+\delta(x))$. Nadal istnieją dowolnie krótkie przedziały tego rodzaju przy każdym punkcie rozpatrywanego zbioru, więc tworzą drobne pokrycie Vitaliego. Z lematu pokryciowego wybieramy przedziały o rozłącznych wnętrzach, których pięciokrotne powiększenia pokrywają zbiór. Dla każdej skończonej podrodziny lemat Saksa--Henstocka daje $r\sum_j(v_j-u_j)<2\varepsilon$. Stąd miara zewnętrzna zbioru jest nie większa niż $10\varepsilon/r$, a $\varepsilon$ jest dowolne. Stosujemy ten argument do $r=1/n$, $n\ge1$, i wykluczamy przeliczalną sumę otrzymanych zbiorów zerowych oraz końce $a,b$. Dla każdego pozostałego $x$ i każdego $n$ istnieje promień, poniżej którego żaden przedział zawierający $x$ nie narusza oszacowania z $r=1/n$. W szczególności przedział o końcach $x,x+h$ daje
+\[
+ \left|\frac{F(x+h)-F(x)}h-f(x)\right|\le1/n
+\]
+dla dostatecznie małych niezerowych $h$ obu znaków. To dowodzi $F'=f$ prawie wszędzie. Przedłużamy $F$ przez stałe poza $[a,b]$. Ciągłe funkcje $n(F(x+1/n)-F(x))$ zbiegają do $f(x)$ prawie wszędzie; ich granica górna jest mierzalna, a po zastąpieniu nieskończonych wartości zerem otrzymujemy skończoną funkcję mierzalną równą $f$ prawie wszędzie. Zupełność miary Lebesgue'a daje mierzalność $f$.
+\end{proof}
+\begin{lemat}[Uzupełnianie podziału częściowego]\label{ma1:kh:lem:hk-uzupelnianie}
+Niech $f\in\HK[a,b]$, $F(x)=\int_a^x f$, a $\delta$ będzie cechowaniem, dla którego wszystkie $\delta$-drobne sumy na $[a,b]$ różnią się od $F(b)-F(a)$ o mniej niż $\varepsilon$. Jeśli $\mathcal Q=\{(t_j,[u_j,v_j])\}_{j=1}^m$ jest dowolnym $\delta$-drobnym podziałem częściowym z rozłącznymi wnętrzami, to
+\[
+\left|\sum_{j=1}^m\bigl(f(t_j)(v_j-u_j)-F(v_j)+F(u_j)\bigr)\right|\le\varepsilon.
+\]
+Ponadto suma modułów wyrazów w nawiasach jest nie większa niż $2\varepsilon$.
+\end{lemat}
+\begin{proof}
+Uporządkujmy przedziały częściowego podziału. Ich dopełnienie składa się ze skończenie wielu (być może pustych) przedziałów domkniętych $J_k$ o rozłącznych wnętrzach. Dla dowolnego $\eta>0$ lokalność całki KH i lemat Cousina pozwalają wybrać na każdym niepustym $J_k$ podział znaczony, drobny względem $\delta$ oraz względem cechowania dającego błąd $\eta/(m+1)$ dla lokalnej całki po $J_k$. Połączenie tych podziałów z $\mathcal Q$ daje pełny podział $\delta$-drobny. Przyrosty $F$ na wszystkich komórkach sumują się do $F(b)-F(a)$. Błąd na $J_k$ jest mniejszy od $\eta/(m+1)$, zatem suma błędów na $\mathcal Q$ ma moduł nie większy niż $\varepsilon+\eta$. Przechodzimy z $\eta\downarrow0$.
+
+Ten sam argument działa dla każdego podzbioru komórek $\mathcal Q$. Stosując go osobno do komórek o błędzie dodatnim i ujemnym, widzimy, że suma błędów dodatnich oraz modułów błędów ujemnych nie przekracza osobno $\varepsilon$. Ich suma jest więc nie większa niż $2\varepsilon$.
+\end{proof}
+\begin{uwaga}[Dlaczego ograniczamy każdą sumę częściową]
+Nie wystarcza samo oszacowanie modułu sumy wszystkich błędów: dodatnie i ujemne błędy mogą się znosić. Dopiero możliwość wybrania dowolnego podzbioru komórek w lemacie \ref{ma1:kh:lem:hk-uzupelnianie} pozwala otrzymać sumę modułów. Jest ona potrzebna w dowodzie całkowania przez części i przy własnościach funkcji pierwotnych.
+\end{uwaga}
+
+\section{Całki niewłaściwe i osobliwości}
+\begin{twierdzenie}[Hake'a: związek z całkami niewłaściwymi]\label{ma1:kh:thm:kh-hake}
+Niech $f:[a,b]\to\R$ ma skończone wartości. Wówczas $f\in\HK[a,b]$ wtedy i tylko wtedy, gdy $f\in\HK[c,b]$ dla każdego $c>a$ oraz istnieje skończona granica $L=\lim_{c\downarrow a}\int_c^b f$. W tym przypadku $\int_a^b f=L$, niezależnie od wartości $f(a)$.
+\end{twierdzenie}
+\begin{proof}
+Konieczność wynika z lokalności i ciągłości pierwotnej. Dla dostateczności definiujemy $F(a)=0$ i $F(x)=L-\int_x^b f$ dla $x>a$. Funkcja jest ciągła, a jej przyrosty na przedziałach oddalonych od $a$ są lokalnymi całkami. Wybieramy ciąg $b=c_0>c_1>\dots\downarrow a$. Na $J_n=[c_n,c_{n-1}]$ wybieramy cechowanie $\delta_n$ zapewniające błąd definicyjny mniejszy od $\varepsilon2^{-n-3}$. Lemat Saksa--Henstocka daje wówczas sumę modułów błędów na podziale częściowym nie większą niż $\varepsilon2^{-n-2}$. Dla $t\in(c_n,c_{n-1})$ bierzemy minimum $\delta_n(t)$ oraz połowy odległości od obu końców. W punkcie $c_n$, $n\ge1$, bierzemy minimum $\delta_n(c_n)$, $\delta_{n+1}(c_n)$ i połowy odległości od $c_{n-1},c_{n+1}$. W punkcie $b$ wystarczy minimum $\delta_1(b)$ i $(b-c_1)/2$. Komórka przecinająca $c_n$ musi mieć znacznik $c_n$ i nie może sięgać kolejnego punktu podziału; po rozcięciu obie części są drobne względem lokalnych cechowań. W $a$ wybieramy $\delta(a)>0$ z $|F(y)|+|f(a)|(y-a)<\varepsilon/2$ dla $a<y<a+\delta(a)$, a poza $a$ zmniejszamy cechowania tak, aby przedziały z innymi znacznikami nie zawierały $a$. Przedział początkowy dowolnego drobnego podziału ma znacznik $a$, pozostałe można pogrupować według $J_n$ (i ewentualnie rozciąć w $c_n$). Rozcięcie nie zmienia sumy Riemanna ani sumy przyrostów $F$. Na każdym $J_n$ otrzymujemy podział częściowy, więc suma modułów błędów nie przekracza $\varepsilon2^{-n-2}$. Komórka początkowa wnosi błąd mniejszy od $\varepsilon/2$. Ponieważ $\sum_{n\ge1}2^{-n-2}=1/4$, całkowity błąd jest mniejszy od $\varepsilon$. Suma przyrostów wynosi $F(b)-F(a)=L$.
+\end{proof}
+\begin{przyklad}[Szeregi i całkowalność]
+Dla $I_n=(2^{-n},2^{-n+1}]$ i ciągu $(a_n)_{n\ge1}$ kładziemy $f(x)=2^n a_n$ na $I_n$, a $f(0)=0$. Wówczas
+\[
+f\in\HK[0,1]\iff\sum_{n\ge1}a_n\ \text{jest zbieżny},\qquad
+f\in\mathcal L^1[0,1]\iff\sum_{n\ge1}|a_n|<\infty.
+\]
+Na każdym $[c,1]$, $c>0$, funkcja jest schodkowa z co najwyżej skończoną liczbą skoków. Dla $c\in I_n$ całka po $[c,1]$ jest równa $\sum_{k=1}^{n-1}a_k+2^na_n(2^{-n+1}-c)$, przy czym ostatni składnik ma moduł co najwyżej $|a_n|$. Gdy szereg jest zbieżny, $a_n\to0$, więc ta całka ma granicę równą sumie szeregu. Odwrotnie, biorąc $c=2^{-n}$ otrzymujemy sumy częściowe szeregu. Twierdzenie Hake'a daje pierwszą równoważność; druga z $\int_{I_n}|f|\,\mathrm d\lambda_1=|a_n|$. Ponadto $f$ jest całkowalna Riemanna dokładnie wtedy, gdy $\sup_n2^n|a_n|<\infty$. Dla $a_n=(-1)^{n+1}/n$ otrzymujemy $\int_0^1f=\log2$ w sensie KH, lecz $\int_0^1|f|\,\mathrm d\lambda_1=\infty$.
+\end{przyklad}
+\begin{przyklad}[Nie każda osobliwość jest całkowalna]
+Funkcja $f(x)=1/x$ na $(0,1]$, niezależnie od skończonej wartości w $0$, nie jest całkowalna HK na $[0,1]$, bo $\int_c^1\mathrm dx/x=-\log c\to\infty$. Na $[-1,1]$ funkcja $1/x$ z dowolną skończoną wartością w $0$ ma wartość główną Cauchy'ego równą $0$, ale nie ma całki KH, gdyż jej ograniczenie do $[0,1]$ nie jest KH-całkowalne.
+\end{przyklad}
+\begin{twierdzenie}[Rodzina całek oscylacyjnych]\label{ma1:kh:tw:hk-oscylacyjne}
+Niech $p\in\R$, $q>0$ i niech $f_{p,q}:[0,1]\to\R$ będzie określona wzorem $f_{p,q}(0)=0$ oraz $f_{p,q}(x)=x^{-p}\sin(x^{-q})$ dla $x\in(0,1]$. Wówczas
+\[
+ f_{p,q}\in\HK[0,1]\quad\Longleftrightarrow\quad p<q+1,
+ \qquad f_{p,q}\in L^1[0,1]\quad\Longleftrightarrow\quad p<1.
+\]
+W szczególności dla $1\le p<q+1$ całka KH istnieje, lecz nie jest bezwzględnie zbieżna.
+\end{twierdzenie}
+\begin{proof}
+Na $[\varepsilon,1]$ funkcja jest ciągła. Podstawiając $t=x^{-q}$, uzyskujemy
+\[
+\int_\varepsilon^1x^{-p}\sin(x^{-q})\,\mathrm dx
+=\frac1q\int_1^{\varepsilon^{-q}}t^{(p-1)/q-1}\sin t\,\mathrm dt.
+\]
+Oznaczmy wykładnik przez $\beta=(p-1)/q-1$. Gdy $\beta<0$, funkcja $t^\beta$ maleje do zera; kryterium Dirichleta daje zbieżność całki niewłaściwej. Gdy $\beta=0$, pierwotna $-\cos t$ nie ma granicy. Jeśli $\beta>0$, na kolejnych półokresach całki z $t^\beta\sin t$ nie dążą do zera; jest to sprzeczne z warunkiem Cauchy'ego dla całki niewłaściwej. Twierdzenie Hake'a daje pierwszą równoważność. Po zastąpieniu sinusa jego modułem i użyciu średniej $|\sin t|$ na okresach otrzymujemy zbieżność wtedy i tylko wtedy, gdy $\beta<-1$, co jest równoważne $p<1$.
+\end{proof}
+\begin{przyklad}[Dokładny próg przy całce $x^{-2}\sin(x^{-2})$]
+Dla $p=q=2$ mamy $2<3$, więc całka $\int_0^1x^{-2}\sin(x^{-2})\,\mathrm dx$ istnieje w sensie KH, ale nie w sensie Lebesgue'a. Podstawienie z dowodu daje użyteczną reprezentację obliczeniową
+$\int_0^1x^{-2}\sin(x^{-2})\,\mathrm dx=\tfrac12\int_1^\infty t^{-1/2}\sin t\,\mathrm dt$.
+\end{przyklad}
+
+\section{Całki McShane'a i Lebesgue'a}
+\begin{definicja}
+Podział znaczony $\mathcal P=\{(t_i,[x_{i-1},x_i])\}$ jest \emph{wolny $\delta$-drobny}, gdy $t_i\in[a,b]$ oraz $[x_{i-1},x_i]\subset(t_i-\delta(t_i),t_i+\delta(t_i))$, bez wymagania $t_i\in[x_{i-1},x_i]$. Funkcja $f$ jest całkowalna w sensie McShane'a, $f\in\mathcal M[a,b]$, jeśli w definicji całki KH zastąpimy podziały drobne podziałami wolnymi drobnymi.
+\end{definicja}
+\begin{stwierdzenie}
+$\mathcal R[a,b]\subset\mathcal M[a,b]\subset\HK[a,b]$, a wartości całek są zgodne.
+\end{stwierdzenie}
+\begin{proof}
+Druga inkluzja wynika z warunków na znaczniki. Dla pierwszej ustalmy $M=\|f\|_\infty$ oraz podział $P_0$ z $U(f,P_0)-L(f,P_0)<\varepsilon/2$. Niech $B$ będzie skończonym zbiorem punktów jego podziału. Dla $t\notin B$ wybieramy $\delta(t)<\operatorname{dist}(t,B)$, zaś w punktach $t\in B$ dobieramy dodatnie cechowania tak małe, aby $4M\sum_{t\in B}\delta(t)<\varepsilon/2$. Każdy przedział wolnego podziału ze znacznikiem poza $B$ leży w tej samej komórce $P_0$ co jego znacznik. Błąd takich przedziałów względem całki nie przekracza oscylacyjnej różnicy sum $U-L$. Przedziały ze znacznikiem $t\in B$ mają łączną długość nie większą niż $2\delta(t)$ i wnoszą błąd co najwyżej $4M\delta(t)$. Łącznie błąd jest mniejszy niż $\varepsilon$.
+\end{proof}
+\begin{twierdzenie}[Bezwzględna całkowalność]
+Jeżeli $f\in\mathcal M[a,b]$, to $|f|\in\mathcal M[a,b]$. Tak więc całka McShane'a jest bezwzględna, mimo że definiujemy ją przez sumy znaczonych przedziałów.
+\end{twierdzenie}
+\begin{proof}
+Niech $I=\int_a^b f$ w sensie McShane'a. Wybieramy cechowanie $\delta$ zapewniające błąd mniejszy niż $\varepsilon/3$. Dla dwóch dowolnych wolnych $\delta$-drobnych podziałów $\mathcal P=\{(t_i,I_i)\}$ i $\mathcal Q=\{(s_j,J_j)\}$ rozważamy wspólne rozdrobnienie $K_{ij}=I_i\cap J_j$, pomijając przecięcia zerowej długości. Każda komórka $K_{ij}$ leży w otoczeniach cechowania zarówno $t_i$, jak i $s_j$, więc obydwa znaczniki są legalne. Wybierając w jednej sumie znacznik z większą wartością $f$, a w drugiej z mniejszą, otrzymujemy dwie dopuszczalne sumy $S_+,S_-$, zatem
+\[
+\sum_{i,j}|f(t_i)-f(s_j)|\,|K_{ij}|=S_+-S_-<2\varepsilon/3.
+\]
+Ponieważ $|I_i|=\sum_j|K_{ij}|$, $|J_j|=\sum_i|K_{ij}|$ i $\bigl||u|-|v|\bigr|\le|u-v|$, mamy
+$|S(|f|,\mathcal P)-S(|f|,\mathcal Q)|\le\sum_{i,j}|f(t_i)-f(s_j)|\,|K_{ij}|<\varepsilon$.
+Dowód kryterium Cauchy'ego z twierdzenia \ref{ma1:kh:thm:kh-cauchy} działa również dla wolnych podziałów: istnieją one na mocy lematu Cousina, a minimum cechowań zachowuje drobność. Kryterium dowodzi więc istnienia całki McShane'a z $|f|$. Dla HK podobny argument nie działa: znaczniki nie muszą należeć do przeciętych komórek.
+\end{proof}
+\begin{lemat}[Absolutna ciągłość całki]
+Jeśli $f\in\mathcal L^1(\mu)$, to dla każdego $\varepsilon>0$ istnieje $\eta>0$ takie, że $\mu(A)<\eta$ pociąga $\int_A|f|\,\mathrm d\mu<\varepsilon$ dla każdego $A\in\Sigma$.
+\end{lemat}
+\begin{proof}
+Wybieramy $M>0$ z $\int_{\{|f|>M\}}|f|\,\mathrm d\mu<\varepsilon/2$ oraz $\eta=\varepsilon/(2M)$. Wtedy $\int_A|f|\,\mathrm d\mu\le M\mu(A)+\int_{\{|f|>M\}}|f|\,\mathrm d\mu<\varepsilon$. Istnienie $M$ wynika ze zbieżności monotonicznej obcięć.
+\end{proof}
+\begin{twierdzenie}[McShane = Lebesgue]
+$\mathcal M[a,b]=\mathcal L^1([a,b],\lambda_1)$ jako zbiory konkretnych funkcji o skończonych wartościach (z dowolnymi zmianami na zbiorach miary zero). Wartości obu całek są równe.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: Lebesgue $\Rightarrow$ McShane.} Niech $f\in\mathcal L^1$ i $\varepsilon>0$. Wybieramy $h>0$ z $h(b-a)<\varepsilon/3$ i rozbijamy dziedzinę na mierzalne zbiory $E_k=\{kh\le f<(k+1)h\}$, $k\in\mathbb Z$. Z absolutnej ciągłości całki i regularności miary wybieramy otwarte $G_k\supset E_k$ tak, aby dla $U=\bigcup_k(G_k\setminus E_k)$ było $\int_U|f|<\varepsilon/3$ oraz $\sum_k(|kh|+h)\lambda_1(G_k\setminus E_k)<\varepsilon/3$. Dla $t\in E_k$ wybieramy $\delta(t)>0$ z $(t-\delta(t),t+\delta(t))\cap[a,b]\subset G_k$.
+
+W dowolnym wolnym drobnym podziale, przy znaczniku $t_i\in E_k$ na części $I_i\cap E_k$ błąd między $f(t_i)$ i $f(x)$ jest co najwyżej $h$. Pozostałe części $I_i\setminus E_k$ leżą w $U$; ich wnętrza są rozłączne. Po rozdzieleniu sumy otrzymujemy
+\[
+\left|S(f,\mathcal P)-\int_a^b f\,\mathrm d\lambda_1\right|
+\le h(b-a)+\sum_k(|kh|+h)\lambda_1(G_k\setminus E_k)+\int_U|f|\,\mathrm d\lambda_1<\varepsilon.
+\]
+
+\emph{Krok 2: McShane $\Rightarrow$ Lebesgue.} Z całkowalności HK wynika mierzalność $f$. Z twierdzenia o bezwzględnej całkowalności McShane'a także $|f|\in\mathcal M$, z całką $J\ge0$. Obcięcia $h_n=\min(|f|,n)$ są ograniczone i mierzalne, zatem Lebesgue'a całkowalne, a na mocy kroku 1 także McShane'a całkowalne. Monotoniczność całki daje $\int h_n\,\mathrm d\lambda_1\le J$. Przez zbieżność monotoniczną $\int|f|\,\mathrm d\lambda_1\le J<\infty$. Krok 1 i jednoznaczność całki KH dowodzą zgodności wartości.
+\end{proof}
+\begin{twierdzenie}[Kryterium bezwzględnej całkowalności HK]
+Jeżeli $f\ge0$ jest KH-całkowalna, to $f\in\mathcal L^1$. Dla dowolnej funkcji o skończonych wartościach mamy
+\[
+f\in\mathcal L^1\quad\Longleftrightarrow\quad f\in\HK\ \text{i}\ |f|\in\HK.
+\]
+Każda ograniczona funkcja jest KH-całkowalna wtedy i tylko wtedy, gdy jest mierzalna w sensie Lebesgue'a. W przypadku Riemanna potrzebny jest dodatkowo warunek, aby zbiór punktów nieciągłości miał miarę zero.
+\end{twierdzenie}
+\begin{proof}
+Dla nieujemnej $f$ obcięcia $h_n=\min(f,n)$ są mierzalne, ograniczone i całkowalne Lebesgue'a, więc należą także do HK. Z monotoniczności HK mamy $\int h_n\,\mathrm d\lambda_1\le(\HK)\int f<\infty$. Zbieżność monotoniczna daje $f\in\mathcal L^1$. Zastosowanie pierwszej części do $|f|$ oraz inkluzja $\mathcal L^1\subset\HK$ dają równoważność. Ostatnia teza wynika z mierzalności funkcji HK i skończoności miary przedziału.
+\end{proof}
+\begin{twierdzenie}[Kryterium oparte na funkcji pierwotnej]\label{ma1:kh:thm:ac-lebesgue-primitive}
+Funkcja $F:[a,b]\to\R$ jest absolutnie ciągła wtedy i tylko wtedy, gdy istnieje $f\in\mathcal L^1([a,b],\lambda_1)$ taka, że $F(x)=F(a)+\int_a^x f\,\mathrm d\lambda_1$ dla wszystkich $x$. Wówczas $F'=f$ prawie wszędzie. W szczególności, jeśli $F(x)=F(a)+(\HK)\int_a^x g$, to
+$g\in\mathcal L^1\Longleftrightarrow F\in\AC[a,b]$.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $F(x)=F(a)+\int_a^x f$ z $f\in\mathcal L^1$, to dla skończonej rodziny przedziałów o rozłącznych wnętrzach zachodzi
+$\sum_j|F(v_j)-F(u_j)|\le\int_{\bigcup_j[u_j,v_j]}|f|\,\mathrm d\lambda_1$. Lemat o absolutnej ciągłości całki dowodzi $F\in\AC$. Twierdzenie Lebesgue'a o różniczkowaniu całki daje $F'=f$ prawie wszędzie.
+
+Odwrotnie, niech $F$ będzie absolutnie ciągła. Wybieramy $\eta>0$ z definicji dla błędu $1$ i dzielimy $[a,b]$ na skończenie wiele odcinków o długościach mniejszych od $\eta$. Na każdym z nich dowolna suma modułów przyrostów wzdłuż podziału jest mniejsza od $1$. Po wstawieniu końców odcinków do dowolnego podziału i zastosowaniu nierówności trójkąta uzyskujemy wspólne skończone ograniczenie wszystkich sum wariacyjnych. Zatem $V(x)=\Var_{[a,x]}F$ jest skończona. Addytywność wariacji daje $V(v)-V(u)=\Var_{[u,v]}F$.
+
+Wykażemy absolutną ciągłość $V$. Dla $\varepsilon>0$ wybieramy $\eta>0$ z warunku absolutnej ciągłości $F$ dla błędu $\varepsilon/2$. Jeżeli rodzina $[u_j,v_j]$, $1\le j\le m$, ma rozłączne wnętrza i sumę długości mniejszą od $\eta$, dla każdego $j$ wybieramy podział przybliżający wariację na tym przedziale z błędem mniejszym od $\varepsilon/(2m)$. Wszystkie komórki tych podziałów mają rozłączne wnętrza i łączną długość mniejszą od $\eta$. Suma ich modułów przyrostów $F$ jest mniejsza od $\varepsilon/2$. Dodając błędy przybliżeń, otrzymujemy $\sum_j(V(v_j)-V(u_j))<\varepsilon$. To dowodzi $V\in\AC[a,b]$.
+
+Funkcje $G_\pm=(V\pm(F-F(a)))/2$ są niemalejące, ponieważ $V(v)-V(u)\ge|F(v)-F(u)|$, i absolutnie ciągłe jako kombinacje liniowe funkcji absolutnie ciągłych. Przedłużamy je przez stałe poza $[a,b]$; przedłużenia są absolutnie ciągłe na każdym zwartym przedziale, gdyż komórki można rozciąć w $a,b$, a odcinki zewnętrzne nie wnoszą przyrostów. Obie funkcje wyznaczają skończone dodatnie miary Lebesgue'a--Stieltjesa $\nu_\pm$ o przyrostach $\nu_\pm((u,v])=G_\pm(v)-G_\pm(u)$. Z twierdzenia o funkcji rozkładu i absolutnej ciągłości miary (Teoria miary, rozdział 25, etykieta \texttt{thm:cdf-derivative-25}) wynika $\nu_\pm\ll\lambda_1$. Twierdzenie Radona--Nikodyma daje nieujemne gęstości $g_\pm\in L^1(\mathbb R,\lambda_1)$. Dla $f=(g_+-g_-)|_{[a,b]}$ mamy więc $F(x)-F(a)=\int_a^x f(t)\,\mathrm d\lambda_1(t)$, z $f\in L^1$. Różniczkowanie całki Lebesgue'a daje $F'=f$ prawie wszędzie.
+
+Dla pierwotnej KH funkcji $g$, jeśli $g\in L^1$, zgodność całek daje absolutną ciągłość $F$. W przeciwnym kierunku reprezentacja Lebesgue'a daje $f=F'$ prawie wszędzie, a twierdzenie o pochodnej pierwotnej KH daje również $g=F'$ prawie wszędzie. Zatem $g=f$ prawie wszędzie i $g\in L^1$.
+\end{proof}
+\begin{przyklad}[Funkcja Cantora nie jest absolutnie ciągła]
+Funkcja Cantora $C$ jest ciągła, niemalejąca, ma pochodną $0$ prawie wszędzie, ale $C(1)-C(0)=1$. Nie może być absolutnie ciągła: w takim przypadku poprzednie twierdzenie dawałoby $1=\int_0^1 C'\,\mathrm d\lambda_1=0$. W szczególności funkcja Cantora nie jest pierwotną HK funkcji zerowej.
+\end{przyklad}
+\section{Charakterystyka funkcji pierwotnych i wąska całka Denjoya}
+
+Absolutna ciągłość jest zbyt silna, aby obejmować funkcje pierwotne wszystkich pochodnych. Wprowadzamy warunek kontrolujący oscylacje na zbiorach, a następnie jego przeliczalną wersję.
+\begin{definicja}
+Niech $F:[a,b]\to\R$ będzie ciągła i $E\subset[a,b]$. Piszemy $F\in\AC_*(E)$, jeżeli dla każdego $\varepsilon>0$ istnieje $\eta>0$ takie, że dla każdej skończonej rodziny przedziałów $[u_j,v_j]$ o parami rozłącznych wnętrzach i końcach $u_j,v_j\in E$ spełniającej $\sum_j(v_j-u_j)<\eta$ mamy
+\[
+\sum_j\osc_{[u_j,v_j]}F<\varepsilon.
+\]
+Piszemy $F\in\AC G_*[a,b]$, jeżeli $[a,b]=\bigcup_{n\ge1}E_n$ dla domkniętych zbiorów $E_n$ takich, że $F\in\AC_*(E_n)$. Na całym przedziale $\AC_*([a,b])=\AC[a,b]$: moduł przyrostu nie przekracza oscylacji, a w drugą stronę dla każdego przedziału wybieramy punkty osiągania minimum i maksimum funkcji. Odcinki o tych końcach mają rozłączne wnętrza i sumę długości nie większą niż wyjściowa rodzina. Stosując definicję absolutnej ciągłości do tych odcinków, kontrolujemy sumę oscylacji. Natomiast na podzbiorze $E$ warunek oscylacyjny jest silniejszy od kontroli samych przyrostów między punktami $E$.
+\end{definicja}
+\begin{definicja}[Wąska całka Denjoya]
+Funkcja $f:[a,b]\to\R$ o skończonych wartościach jest całkowalna w wąskim sensie Denjoya, jeśli istnieje ciągła $F\in\AC G_*[a,b]$ taka, że $F'=f$ prawie wszędzie. Wówczas definiujemy $(\mathrm D_*)\int_a^b f=F(b)-F(a)$. Jednoznaczność uzasadnimy poniżej.
+\end{definicja}
+\begin{twierdzenie}[Każda różniczkowalna funkcja należy do $\AC G_*$]
+Jeśli $F:[a,b]\to\R$ jest ciągła i ma skończoną pochodną w każdym punkcie wnętrza oraz odpowiednie pochodne jednostronne na końcach, to $F\in\AC G_*[a,b]$.
+\end{twierdzenie}
+\begin{proof}
+Dla $n\in\N$ niech $E_n$ będzie zbiorem tych $x$, dla których $|F(y)-F(x)|\le n|y-x|$ dla wszystkich $y\in[a,b]$ z $|y-x|<1/n$. Różniczkowalność daje $\bigcup_nE_n=[a,b]$. Każdy $E_n$ jest domknięty: jeżeli $x_k\in E_n$ i $x_k\to x$, to dla każdego ustalonego $y$ z $|y-x|<1/n$ mamy $|y-x_k|<1/n$ dla dostatecznie dużych $k$. W nierówności $|F(y)-F(x_k)|\le n|y-x_k|$ przechodzimy do granicy, korzystając z ciągłości $F$. Tak otrzymujemy warunek definiujący $E_n$ dla każdego dopuszczalnego $y$. Jeśli $u,v\in E_n$ i $v-u<1/n$, to dla każdego $y\in[u,v]$ mamy $|F(y)-F(u)|\le n(v-u)$. Stąd $\osc_{[u,v]}F\le2n(v-u)$. Dla rodziny przedziałów z końcami w $E_n$ i $\sum_j(v_j-u_j)<\min\{1/n,\varepsilon/(2n)\}$ suma oscylacji jest mniejsza od $\varepsilon$.
+\end{proof}
+\subsection{Kontrola oscylacji na zbiorach zerowych}
+\begin{lemat}[Zaniedbywalne wahanie na zbiorze zerowym]
+\label{ma1:kh:lem:acstar-null-variation}
+Niech $F$ będzie ciągła na $[a,b]$, $E\subset[a,b]$ domknięty i $F\in\AC_*(E)$. Jeżeli $N\subset E$ ma miarę Lebesgue'a zero, to dla każdego $\varepsilon>0$ istnieje cechowanie na $N$, dla którego dowolny skończony drobny podział częściowy $\{(t_j,[u_j,v_j])\}$ ze znacznikami w $N$ spełnia
+\[
+ \sum_j|F(v_j)-F(u_j)|<\varepsilon.
+\]
+\end{lemat}
+\begin{proof}
+Dla pustego $E$ teza jest bezprzedmiotowa. Składowe przedziałowe dopełnienia $E$ w $[a,b]$ są co najwyżej przeliczalne (każda niepusta składowa zawiera liczbę wymierną). Niech $J_k$ oznaczają ich domknięcia. Co najwyżej dwie składowe brzegowe nie mają obu końców w $E$. Suma długości wszystkich $J_k$ nie przekracza $b-a$, ponieważ ich wnętrza są rozłączne.
+
+Twierdzimy, że $\sum_k\osc_{J_k}F<\infty$. Wybieramy $\eta_0>0$ z definicji $\AC_*(E)$ dla błędu $1$. Pomijając skończenie wiele składowych, w tym składowe brzegowe, możemy zapewnić, że suma długości pozostałych jest mniejsza niż $\eta_0$. Każda skończona podrodzina pozostałych ma końce w $E$ i spełnia warunek definicji, więc suma jej oscylacji jest mniejsza od $1$. Supremum po podrodzinach daje zbieżność sumy; skończenie wiele pominiętych oscylacji jest skończonych dzięki ciągłości $F$.
+
+Wybieramy skończoną rodzinę $\mathcal J_0$ składowych (w tym brzegowe) tak, by $\sum_{J_k\notin\mathcal J_0}\osc_{J_k}F<\varepsilon/8$. Niech $m$ oznacza jej liczność. Z definicji $\AC_*(E)$ wybieramy $\eta>0$ dla błędu $\varepsilon/4$. Ponieważ $N$ ma miarę zero, istnieje otwarty zbiór $O\supset N$ o mierze mniejszej od $\eta$. Dla $t\in N$ dobieramy $\delta(t)>0$ tak, by jego otoczenie o promieniu $\delta(t)$ leżało w $O$. Dla każdej składowej $J\in\mathcal J_0$, która nie zawiera $t$, dodatkowo wymagamy $\delta(t)<\operatorname{dist}(t,J)$. Jeżeli $t\in J$, jest jego końcem, gdyż $t\in E$; wymagamy wówczas także $\delta(t)<|J|/2$, gdzie $|J|$ oznacza długość tej składowej. Rozpatrujemy tylko składowe dodatniej długości. Z ciągłości $F$ zmniejszamy $\delta(t)$ tak, by $|F(y)-F(t)|<\varepsilon/(8(m+1))$ dla wszystkich $y\in[a,b]$ z $|y-t|<\delta(t)$. Warunki są skończone i wszystkie dopuszczają dodatni promień.
+
+Dla każdej komórki $I_j=[u_j,v_j]$ z rozpatrywanego podziału częściowego zbiór $E\cap I_j$ jest niepusty (zawiera $t_j$) i zwarty. Niech $p_j=\min(E\cap I_j)$, $q_j=\max(E\cap I_j)$. Rozkładamy przyrost:
+\[
+ |F(v_j)-F(u_j)|
+ \le |F(q_j)-F(p_j)|+|F(p_j)-F(u_j)|+|F(v_j)-F(q_j)|.
+\]
+Przedziały $[p_j,q_j]$ mają rozłączne wnętrza, końce w $E$ i sumę długości nie większą od $\lambda_1(O)<\eta$. Suma pierwszych składników jest więc mniejsza od $\varepsilon/4$. Jeśli któryś z pozostałych odcinków ma dodatnią długość, leży w domknięciu jednej składowej dopełnienia $E$ i przylega do jej końca w $E$. Dla ustalonej składowej mogą wystąpić najwyżej dwa takie odcinki o dodatniej długości, po jednym przy każdym końcu: dwa przy tym samym końcu miałyby wspólne wnętrze. Składowe brzegowe mają co najwyżej jeden taki odcinek.
+
+Dla składowych spoza $\mathcal J_0$ suma tych składników nie przekracza $2\sum_{J_k\notin\mathcal J_0}\osc_{J_k}F<\varepsilon/4$. Jeżeli komórka wchodzi w składową $J\in\mathcal J_0$, to jej znacznik musi należeć do $J$ (w przeciwnym przypadku warunek odległości wyklucza przecięcie). Znacznik jest więc końcem $J$ w $E$. Ponieważ $\delta(t)<|J|/2$, komórka nie może sięgać drugiego końca $J$. Odcinek skrajny w tej luce ma zatem jeden koniec równy znacznikowi i przyrost mniejszy od $\varepsilon/(8(m+1))$. Łącznie składniki z $\mathcal J_0$ wnoszą mniej niż $\varepsilon/4$. Dodanie trzech oszacowań kończy dowód.
+\end{proof}
+
+\begin{wniosek}
+\label{ma1:kh:cor:acgstar-null-variation}
+Jeśli $F\in\AC G_*[a,b]$ i $N\subset[a,b]$ ma miarę zero, to wniosek lematu \ref{ma1:kh:lem:acstar-null-variation} zachodzi dla całego $N$.
+\end{wniosek}
+\begin{proof}
+Niech $[a,b]=\bigcup_{n\ge1}E_n$ będzie domkniętym pokryciem z definicji. Dla $N\cap E_n$ stosujemy lemat z dokładnością $\varepsilon2^{-n-1}$, otrzymując cechowanie $\delta_n$. Każdemu $t\in N$ przypisujemy najmniejsze $n(t)$ z $t\in E_{n(t)}$ i przyjmujemy $\delta(t)=\delta_{n(t)}(t)$. W dowolnym skończonym podziale częściowym grupujemy komórki według $n(t_j)$. Każda grupa spełnia hipotezy odpowiedniego lematu, więc suma modułów przyrostów jest mniejsza od $\sum_{n\ge1}\varepsilon2^{-n-1}=\varepsilon/2$ (dla pustej rodziny suma jest zerowa). W szczególności jest mniejsza od $\varepsilon$.
+\end{proof}
+
+\begin{twierdzenie}[Całkowalność pochodnej prawie wszędzie funkcji $\AC G_*$]
+\label{ma1:kh:thm:acgstar-derivative-integrable}
+Niech $F\in\AC G_*[a,b]$ oraz niech $f:[a,b]\to\R$ ma skończone wartości i spełnia $F'=f$ prawie wszędzie. Wtedy $f\in\HK[a,b]$ i dla każdego $x\in[a,b]$
+\[
+ F(x)-F(a)=(\HK)\int_a^x f(t)\,\mathrm dt.
+\]
+\end{twierdzenie}
+\begin{proof}
+Zakładamy $a<b$; przypadek przedziału jednopunktowego daje całkę zero. Niech $N$ będzie zbiorem miary zero, poza którym istnieje skończona pochodna równa $f$; dołączamy do $N$ oba końce przedziału. Dla $\varepsilon>0$ wybieramy na $N$ cechowanie z wniosku \ref{ma1:kh:cor:acgstar-null-variation} dla błędu $\varepsilon/3$. Funkcja $h=f\chi_N$ jest równa zeru poza $N$ i ma skończone wartości. Lemat o zmianach na zbiorze miary zero z rozdziału o całce KH, zastosowany do $|h|$, daje cechowanie dla błędu $\varepsilon/3$. W punktach $N$ bierzemy minimum obu cechowań.
+
+Dla $t\notin N$ z definicji pochodnej dobieramy $\delta(t)>0$, nie większe od cechowania dla $|h|$, aby
+\[
+ |F(y)-F(t)-f(t)(y-t)|\le
+ \frac{\varepsilon}{3(b-a)}|y-t|
+ \qquad (|y-t|<\delta(t),\ y\in[a,b]).
+\]
+Niech $\mathcal P$ będzie dowolnym pełnym podziałem drobnym. Dla komórek ze znacznikami poza $N$ odejmujemy oszacowania dla $y=u_j$ i $y=v_j$; nierówność trójkąta daje błąd nie większy od $\varepsilon(v_j-u_j)/(3(b-a))$. Suma tych błędów nie przekracza $\varepsilon/3$. Dla komórek ze znacznikami w $N$ suma modułów przyrostów $F$ jest mniejsza od $\varepsilon/3$, a suma $|f(t_j)|(v_j-u_j)$ jest mniejsza od $\varepsilon/3$: pełna suma dla $|h|$ jest właśnie tą drugą sumą i ma błąd mniejszy od $\varepsilon/3$ względem całki zero. W konsekwencji
+\[
+ |S(f,\mathcal P)-F(b)+F(a)|<\varepsilon,
+\]
+ponieważ suma wszystkich przyrostów $F$ jest teleskopowa. Definicja daje całkowalność i wartość na $[a,b]$. Ten sam argument stosujemy na każdym $[a,x]$: przecięcia zbiorów $E_n$ z podprzedziałem są domkniętym pokryciem, warunek $\AC_*$ pozostaje prawdziwy, a zbiór wyjątkowy pozostaje zerowy po dołączeniu końców. To daje wzór dla wszystkich $x$.
+\end{proof}
+
+\subsection{Różniczkowalność prawie wszędzie}
+\begin{lemat}[Przedłużenie afiniczne przez luki]
+\label{ma1:kh:lem:acstar-affine-extension}
+Niech $E\subset[a,b]$ będzie niepustym zbiorem domkniętym, a $F:[a,b]\to\R$ funkcją ciągłą należącą do $\AC_*(E)$. Istnieje funkcja $G\in\AC[a,b]$, równa $F$ na $E$, afiniczna na każdej wewnętrznej składowej dopełnienia $E$ i stała na każdej składowej brzegowej dopełnienia.
+\end{lemat}
+\begin{proof}
+Niech $(l_k,r_k)$ będą wewnętrznymi składowymi dopełnienia $E$; obydwa ich końce należą do $E$. Na $E$ przyjmujemy $G=F$, na $[l_k,r_k]$ kładziemy
+\[
+ G(x)=F(l_k)+\frac{x-l_k}{r_k-l_k}(F(r_k)-F(l_k)).
+\]
+Na $[a,\min E]$ i $[\max E,b]$ przyjmujemy wartości stałe, odpowiednio $F(\min E)$ i $F(\max E)$. Definicje są zgodne na końcach. Funkcja $G$ jest ciągła: we wnętrzu luk jest afiniczna lub stała, a dla $x\in E$ rozważamy $y\to x$. Jeżeli $y\in E$, korzystamy z ciągłości $F$. Jeżeli $y$ należy do wewnętrznej luki długości mniejszej od $\eta$, jej oba końce są oddalone od $x$ o mniej niż $|x-y|+\eta$, a $G(y)$ jest kombinacją wypukłą ich wartości. Jednostajna ciągłość $F$ pozwala uczynić różnicę $|G(y)-F(x)|$ dowolnie małą przez wybór $\eta$ i $|x-y|$. Luk długości co najmniej $\eta$ jest skończenie wiele; przy $y\to x$ możemy spośród nich rozpatrywać tylko luki, których domknięcia zawierają $x$, i na nich ciągłość w końcu wynika bezpośrednio ze wzoru afinicznego. To samo dotyczy co najwyżej dwóch luk brzegowych.
+
+Z dowodu lematu \ref{ma1:kh:lem:acstar-null-variation} wiemy, że $\sum_k\osc_{[l_k,r_k]}F<\infty$. W szczególności funkcja
+\[
+ w(t)=\sum_k\frac{|F(r_k)-F(l_k)|}{r_k-l_k}
+             \chi_{(l_k,r_k)}(t)
+\]
+jest nieujemna, mierzalna i całkowalna w sensie Lebesgue'a: przez zbieżność monotoniczną jej całka jest sumą $|F(r_k)-F(l_k)|$, ograniczoną przez sumę oscylacji. Jeśli $[u,v]$ leży w domknięciu jednej luki, to $|G(v)-G(u)|=\int_u^v w\,\mathrm d\lambda_1$; w luce brzegowej obie strony są zerowe.
+
+Dla dowolnego $[u,v]$ przecinającego $E$ oznaczamy $p=\min(E\cap[u,v])$, $q=\max(E\cap[u,v])$. Przedziały skrajne $[u,p]$ i $[q,v]$ leżą w lukach lub są jednopunktowe. Zatem
+\[
+ |G(v)-G(u)|\le |F(q)-F(p)|
+       +\int_{[u,p]\cup[q,v]} w\,\mathrm d\lambda_1.
+\]
+Rozważmy teraz skończoną rodzinę przedziałów o rozłącznych wnętrzach. Dla tych przecinających $E$ środkowe przedziały $[p,q]$ także mają rozłączne wnętrza i końce w $E$. Przy dostatecznie małej łącznej długości całej rodziny suma $|F(q)-F(p)|$ jest mniejsza od $\varepsilon/2$ przez $\AC_*(E)$. Wszystkie odcinki skrajne i przedziały leżące w lukach mają rozłączne wnętrza, a ich suma długości nie przekracza sumy długości całej rodziny. Absolutna ciągłość całki Lebesgue'a funkcji $w\in L^1$ (rozdział o całce Lebesgue'a) daje dla dostatecznie małej tej sumy łączny wkład całek mniejszy od $\varepsilon/2$. Otrzymujemy warunek absolutnej ciągłości $G$.
+\end{proof}
+
+\begin{twierdzenie}[Różniczkowalność prawie wszędzie na zbiorach $\AC_*$]
+\label{ma1:kh:thm:acstar-ae-differentiable}
+Jeśli $F$ jest ciągła na $[a,b]$ i $F\in\AC_*(E)$ dla domkniętego $E\subset[a,b]$, to $F$ ma skończoną pochodną prawie wszędzie na $E\cap(a,b)$. W szczególności każda funkcja $F\in\AC G_*[a,b]$ jest różniczkowalna prawie wszędzie.
+\end{twierdzenie}
+\begin{proof}
+Dla pustego $E$ nie ma czego dowodzić. Niech $G$ będzie przedłużeniem z lematu \ref{ma1:kh:lem:acstar-affine-extension} i $H=F-G$. Na $E$ mamy $H=0$. Ponieważ $G$ jest absolutnie ciągła, istnieje $g\in L^1[a,b]$ z $G(x)=G(a)+\int_a^x g\,\mathrm d\lambda_1$ (twierdzenie \ref{ma1:kh:thm:ac-lebesgue-primitive}). Z twierdzenia o różniczkowaniu tej całki (skrypt \emph{Teoria miary}, rozdział 25, etykieta \texttt{thm:FTC-lebesgue-25}) wynika $G'=g$ prawie wszędzie. Wystarczy wykazać, że $H'=0$ prawie wszędzie na $E$.
+
+Dla wewnętrznej luki $(l_k,r_k)$ połóżmy $d_k=\osc_{[l_k,r_k]}F$. Z konstrukcji $G$ obie wartości $F(y),G(y)$ leżą pomiędzy minimum i maksimum $F$ na $[l_k,r_k]$. Wobec tego $|H(y)|\le d_k$ dla $y\in[l_k,r_k]$. Ponadto $\sum_k d_k<\infty$ z dowodu lematu \ref{ma1:kh:lem:acstar-null-variation}.
+
+Dla dodatniej liczby całkowitej $m$ rozważmy zbiory
+\[
+ U_{k,m}=(l_k-md_k,l_k+md_k)\cup(r_k-md_k,r_k+md_k).
+\]
+Ich miary nie przekraczają $4md_k$. Jeżeli luk jest nieskończenie wiele, zbiór
+\[
+ B_m=\bigcap_{n\ge1}\bigcup_{k\ge n}U_{k,m}
+\]
+ma miarę zero, gdyż dla każdego $n$ jego miara nie przekracza $4m\sum_{k\ge n}d_k$, a prawa strona dąży do zera. Przy skończonej liczbie luk przyjmujemy $B_m=\varnothing$. Wykluczamy z $E$ sumę zbiorów $B_m$, wszystkie końce luk (także brzegowych), oraz $a,b$. Jest to zbiór miary zero.
+
+Ustalmy pozostały punkt $x\in E$ i $m\ge1$. Dla wszystkich dostatecznie dużych $k$ punkt $x$ nie należy do $U_{k,m}$. Jeśli $y$ leży w takiej luce, to jeden z jej końców leży pomiędzy $x$ i $y$, ponieważ $x\in E$. Oznaczając go przez $z$, otrzymujemy $|x-y|\ge |x-z|\ge md_k$. Dla $d_k>0$ mamy więc $|H(y)|/|y-x|\le1/m$; dla $d_k=0$ iloraz jest zerowy. Skończenie wiele pozostałych luk, w tym brzegowe, ma domknięcia niezawierające $x$, zatem można wybrać otoczenie $x$, które nie przecina żadnej z nich. Dla $y\in E$ i $y\ne x$ iloraz jest zerowy. W konsekwencji
+\[
+ \limsup_{\substack{y\to x\\y\ne x}}
+ \frac{|H(y)-H(x)|}{|y-x|}\le\frac1m.
+\]
+Dowolność $m$ daje $H'(x)=0$. Poza zbiorem zerowym, na którym $G'$ nie istnieje, mamy więc $F'=G'$. Dla funkcji $\AC G_*$ stosujemy wynik do każdego domkniętego zbioru $E_n$ z definicji. Przeliczalna suma zbiorów wyjątkowych jest zbiorem miary zero, a zbiory $E_n$ pokrywają przedział.
+\end{proof}
+
+\subsection{Kierunek odwrotny: od pierwotnej KH do $\AC G_*$}
+\begin{lemat}[Zaniedbywalne wahanie pierwotnej KH]
+\label{ma1:kh:lem:kh-null-variation}
+Niech $F(x)=F(a)+(\HK)\int_a^x f$, gdzie $f\in\HK[a,b]$. Dla każdego zbioru zerowego $N$ i $\varepsilon>0$ istnieje cechowanie na $N$, dla którego suma modułów przyrostów $F$ na dowolnym drobnym podziale częściowym ze znacznikami w $N$ jest mniejsza od $\varepsilon$.
+\end{lemat}
+\begin{proof}
+Wybieramy cechowanie dla błędu $\varepsilon/4$ w definicji całki. Lemat Saksa--Henstocka ogranicza sumę modułów różnic $\Delta F_j-f(t_j)(v_j-u_j)$ przez $\varepsilon/2$. Funkcja $|f|\chi_N$ ma skończone wartości i jest zerowa prawie wszędzie, więc jej całka KH wynosi zero. Bierzemy minimum wcześniejszego cechowania oraz cechowania dla $|f|\chi_N$ z błędem $\varepsilon/2$. Podział częściowy uzupełniamy przez lemat Cousina na lukach. Z nieujemności funkcji wynika $\sum_j |f(t_j)|(v_j-u_j)<\varepsilon/2$ na pierwotnym podziale częściowym. Dodając oba oszacowania, otrzymujemy tezę.
+\end{proof}
+
+\begin{lemat}[Pokrycie z ograniczoną sumą oscylacji]
+\label{ma1:kh:lem:kh-bvstar-cover}
+Dla każdej pierwotnej KH $F$ istnieje przeliczalne pokrycie $[a,b]$ zbiorami domkniętymi $E_n$ oraz stałe $C_n<\infty$ takie, że dla każdej skończonej rodziny przedziałów $I_j$ o rozłącznych wnętrzach i końcach w $E_n$ zachodzi $\sum_j\osc_{I_j}F\le C_n$.
+\end{lemat}
+\begin{proof}
+Niech $f$ będzie funkcją podcałkową. Wybieramy cechowanie $\delta$ dla błędu $1$ w definicji całki i definiujemy
+\[
+ A_n=\{t:\delta(t)>1/n,\ |f(t)|\le n\},\qquad E_n=\overline{A_n}.
+\]
+Domknięcie bierzemy w $[a,b]$. Z dodatniości cechowania i skończoności $f(t)$ wynika, że zbiory $A_n$ pokrywają przedział. Nie zakładamy ich mierzalności.
+
+Rozważmy najpierw przedziały $[u_j,v_j]$ o długościach dodatnich i mniejszych od $1/(2n)$, z końcami w $E_n$. Wybieramy $z_j$ maksymalizujący $|F(z)-F(u_j)|$ na tym przedziale; $\osc_{[u_j,v_j]}F\le2|F(z_j)-F(u_j)|$. Pomijamy składniki o maksimum zero. Porządkujemy pozostałe przedziały od lewej do prawej i dzielimy na dwie grupy według parzystości indeksu. W każdej grupie różne przedziały oddziela dodatnia odległość, ponieważ pomiędzy nimi leży przedział drugiej grupy o dodatniej długości.
+
+Dla każdego $j$ wybieramy $t_{j,k}\in A_n$ dążące do $u_j$. Ponieważ $z_j>u_j$ oraz $z_j-u_j<1/(2n)$, dla dostatecznie dużego $k$ mamy $0<z_j-t_{j,k}<1/n$. W każdej skończonej grupie, dla wspólnego dostatecznie dużego $k$, przedziały $[t_{j,k},z_j]$ mają rozłączne wnętrza (korzystamy z dodatnich odstępów). Ze znacznikiem $t_{j,k}$ są $\delta$-drobne. Lemat Saksa--Henstocka daje dla każdej grupy
+\[
+ \sum_j |F(z_j)-F(t_{j,k})|
+ \le 2+n\sum_j(z_j-t_{j,k})\le2+n(b-a).
+\]
+Przechodzimy do granicy dzięki ciągłości $F$. Dodajemy oszacowania obu grup i uwzględniamy czynnik $2$ z nierówności dla oscylacji. Suma oscylacji krótkich przedziałów jest nie większa niż $4(2+n(b-a))$. Przedziałów długości co najmniej $1/(2n)$ jest najwyżej $2n(b-a)$, a każdy ma oscylację nie większą niż $\osc_{[a,b]}F$. Przedziały jednopunktowe nic nie wnoszą. Możemy zatem przyjąć $C_n=4(2+n(b-a))+2n(b-a)\osc_{[a,b]}F$.
+\end{proof}
+
+\begin{lemat}[Wzmocnienie kontroli oscylacji do $\AC_*$]
+\label{ma1:kh:lem:bvstar-null-to-acstar}
+Niech $F$ będzie ciągła, $E\subset[a,b]$ niepusty i domknięty, a sumy oscylacji po skończonych rodzinach przedziałów o rozłącznych wnętrzach i końcach w $E$ niech będą ograniczone wspólną stałą $C$. Jeśli $F$ ma zaniedbywalne wahanie na każdym zbiorze zerowym w sensie lematu \ref{ma1:kh:lem:kh-null-variation}, to $F\in\AC_*(E)$.
+\end{lemat}
+\begin{proof}
+Niech $(l_k,r_k)$ będą wewnętrznymi lukami $E$, a $d_k=\osc_{[l_k,r_k]}F$. Z założenia mamy $\sum_k d_k\le C$. Konstruujemy przedłużenie $G$ funkcji $F|_E$, afiniczne w lukach wewnętrznych i stałe w brzegowych, według wzoru z lematu \ref{ma1:kh:lem:acstar-affine-extension}. Dowód ciągłości tego przedłużenia korzystał tylko z ciągłości $F$ i domkniętości $E$. Funkcja
+\[
+ w(t)=\sum_k\frac{|F(r_k)-F(l_k)|}{r_k-l_k}\chi_{(l_k,r_k)}(t)
+\]
+jest nieujemna i całkowalna w sensie Lebesgue'a przez twierdzenie o zbieżności monotonicznej, gdyż jej całka nie przekracza $\sum_k d_k$. W każdej luce moduł przyrostu $G$ jest równy całce $w$ po odpowiednim przedziale. Dla przedziału $[u,v]$ przecinającego $E$ oznaczamy $p=\min(E\cap[u,v])$ i $q=\max(E\cap[u,v])$. Mamy
+\[
+ |G(v)-G(u)|\le |F(q)-F(p)|
+ +\int_{[u,p]\cup[q,v]}w\,\mathrm d\lambda_1.
+\]
+Dla skończonej rodziny przedziałów o rozłącznych wnętrzach środkowe przedziały mają rozłączne wnętrza i końce w $E$, a wszystkie pozostałe odcinki mają rozłączne wnętrza. Zatem suma modułów przyrostów $G$ nie przekracza $C+\int_a^b w\,\mathrm d\lambda_1$. W szczególności $G$ ma ograniczoną wariację.
+
+Wykażemy zaniedbywalne wahanie $G$ na dowolnym zbiorze zerowym $N$. Dla $\varepsilon>0$ wybieramy otwarty $O\supset N$ z $\int_{O\cap[a,b]}w\,\mathrm d\lambda_1<\varepsilon/2$, korzystając z absolutnej ciągłości całki $w$. Dla $t\in N$ dobieramy otoczenie cechowania zawarte w $O$. Gdy $t\notin E$, dodatkowo wymagamy, by nie przecinało $E$. Gdy $t\in N\cap E$, bierzemy minimum z cechowaniem zaniedbywalnego wahania $F$ na $N\cap E$ z błędem $\varepsilon/2$. W dowolnym drobnym podziale częściowym ze znacznikami w $N$ rozcinamy komórki przecinające $E$ jak wyżej. W każdym środkowym przedziale $[p,q]$ pozostaje jego znacznik $t\in N\cap E$, gdyż $p\le t\le q$, a przedział jest nadal drobny jako podprzedział pierwotnej komórki; odcinki jednopunktowe pomijamy. Suma modułów środkowych przyrostów jest mniejsza od $\varepsilon/2$ z zaniedbywalnego wahania $F$. Pozostałe odcinki leżą w $O$, mają rozłączne wnętrza i wnoszą nie więcej niż $\int_{O\cap[a,b]}w\,\mathrm d\lambda_1<\varepsilon/2$. Otrzymujemy żądane zaniedbywalne wahanie $G$.
+
+Z ograniczonej wariacji $G$ wynika istnienie skończonej pochodnej prawie wszędzie oraz jej całkowalność w sensie Lebesgue'a. Istotnie, z rozkładu Jordana funkcja $G$ jest różnicą dwóch niemalejących funkcji (na przykład z użyciem funkcji wariacji $V(x)=\Var_{[a,x]}G$). Ponieważ $G$ jest ciągła, $V$ jest ciągła: wariacja na przedziale malejącym do punktu dąży do zera, co wynika z addytywności wariacji, skończonej wariacji całkowitej i ciągłości $G$ w tym punkcie. Dokładniej, na $[x,b]$ wybieramy podział, którego suma różni się od wariacji o mniej niż $\eta$. Wstawiając $y\downarrow x$ przed pierwszym punktem tego podziału, otrzymujemy $\Var_{[x,y]}G\le\eta+|G(y)-G(x)|$ z addytywności i nierówności trójkąta; analogicznie z lewej. Przedłużamy obie niemalejące funkcje przez stałe poza $[a,b]$. Wyznaczają skończone dodatnie miary Lebesgue'a--Stieltjesa. Z twierdzenia o różniczkowaniu funkcji rozkładu (Teoria miary, rozdział 25, etykieta \texttt{thm:cdf-derivative-25}) ich pochodne istnieją prawie wszędzie i są gęstościami części absolutnie ciągłych tych miar, zatem należą do $L^1$. Niech $g=G'$ w punktach istnienia skończonej pochodnej, a $g=0$ poza nimi.
+
+Argument cechowaniowy z dowodu twierdzenia \ref{ma1:kh:thm:acgstar-derivative-integrable} wymaga wyłącznie zaniedbywalnego wahania na zbiorze wyjątkowym i skończonej pochodnej poza nim; obie własności właśnie udowodniliśmy dla $G$. Stosujemy ten argument do $G,g$ na każdym $[a,x]$ (zaniedbywalne wahanie jest dziedziczone przez podprzedziały). Otrzymujemy $G(x)-G(a)=(\HK)\int_a^x g$. Ponieważ $g\in L^1$, ta całka jest równa całce Lebesgue'a: wystarcza kierunek Lebesgue $\Rightarrow$ McShane z rozdziału o całce Lebesgue'a i inkluzja McShane $\subset\HK$, niezależne od charakterystyki $\AC G_*$. Absolutna ciągłość całki Lebesgue'a daje $G\in\AC[a,b]$.
+
+Pozostaje kontrola oscylacji $F$. Gdy $[u,v]$ ma końce w $E$, każda luka wewnętrzna przecinająca $(u,v)$ jest w nim zawarta wraz z końcami w $[u,v]$. Na $E$ mamy $F=G$, a na luce $|F-G|\le d_k$, zatem
+\[
+ \osc_{[u,v]}F\le\osc_{[u,v]}G+
+        2\sum_{[l_k,r_k]\subset[u,v]}d_k.
+\]
+Wybieramy skończoną rodzinę luk z ogonem $\sum d_k<\varepsilon/4$. Wybieramy $\eta>0$ mniejsze od długości każdej wybranej luki (warunek pomijamy dla pustej rodziny). Jeżeli suma długości rodziny przedziałów z końcami w $E$ jest mniejsza od $\eta$, żaden przedział nie zawiera wybranej luki. Pozostała luka o dodatniej długości może być zawarta w co najwyżej jednym przedziale rodziny, więc łączny drugi składnik jest mniejszy od $\varepsilon/2$. Zmniejszamy $\eta$ tak, by absolutna ciągłość $G$ dawała sumę oscylacji mniejszą od $\varepsilon/2$: w każdym przedziale wybieramy punkty minimum i maksimum, a odcinki między nimi mają rozłączne wnętrza i nie większą łączną długość. Dodanie oszacowań daje $\AC_*(E)$.
+\end{proof}
+
+\begin{twierdzenie}[Charakteryzacja funkcji pierwotnych KH]
+\label{ma1:kh:thm:kh-acgstar-characterization}
+Dla ciągłej $F:[a,b]\to\R$ równoważne są: (i) $F\in\AC G_*[a,b]$; (ii) istnieje $h\in\HK[a,b]$ takie, że $F(x)=F(a)+\int_a^x h$ dla każdego $x$. Wówczas $F'=h$ prawie wszędzie.
+\end{twierdzenie}
+\begin{proof}
+Z (i) twierdzenie \ref{ma1:kh:thm:acstar-ae-differentiable} daje istnienie skończonej pochodnej prawie wszędzie. Przyjmujemy $h=F'$ w punktach istnienia skończonej pochodnej i zero poza nimi, w tym na końcach. Twierdzenie \ref{ma1:kh:thm:acgstar-derivative-integrable} daje (ii).
+
+Z (ii) lemat \ref{ma1:kh:lem:kh-null-variation} daje zaniedbywalne wahanie na każdym zbiorze zerowym. Lemat \ref{ma1:kh:lem:kh-bvstar-cover} daje przeliczalne domknięte pokrycie $E_n$. Dla każdego niepustego $E_n$ lemat \ref{ma1:kh:lem:bvstar-null-to-acstar} daje $F\in\AC_*(E_n)$, a dla pustego warunek zachodzi automatycznie. Stąd (i). Równość $F'=h$ prawie wszędzie wynika z twierdzenia o różniczkowaniu pierwotnej KH \ref{ma1:kh:thm:kh-primitive-derivative}.
+\end{proof}
+
+\begin{wniosek}[Denjoy = KH]
+Wąska całka Denjoya i całka KH mają te same funkcje całkowalne oraz te same wartości. Jeśli $F\in\AC G_*[a,b]$ i $F'=0$ prawie wszędzie, to $F$ jest stała.
+\end{wniosek}
+\begin{proof}
+Dla funkcji KH-całkowalnej jej pierwotna należy do $\AC G_*$ na mocy poprzedniego twierdzenia i ma pochodną równą funkcji podcałkowej prawie wszędzie. Odwrotnie, jeśli $F\in\AC G_*$ oraz $F'=f$ prawie wszędzie, to $F-F(a)=\int_a^x h$ dla pewnego $h\in\HK$, z $h=f$ prawie wszędzie. Lemat o zmianie na zbiorze zerowym pozwala zastąpić $h$ przez $f$. Dla $f=0$ pierwotna jest stała, co zapewnia jednoznaczność. Kombinacje liniowe takich funkcji pierwotnych pozostają w $\AC G_*$.
+\end{proof}
+\begin{przyklad}[Całkowalność z definicji Denjoya]
+Dla $F(x)=x^2\cos(\pi/x^2)$, $x>0$, $F(0)=0$, bierzemy domknięte pokrycie $\{0\},[1/2,1],[1/3,1],\dots$ przedziału $[0,1]$. Na każdym $[1/n,1]$ funkcja $F$ jest klasy $C^1$, więc absolutnie ciągła, a na zbiorze jednopunktowym warunek $\AC_*$ jest automatyczny. Zatem $F\in\AC G_*$ i $F'$ jest całkowalna w sensie Denjoya z wartością $F(1)-F(0)=-1$. Pochodna nie jest jednak absolutnie całkowalna, co wynika z rozbieżności całki modułu jej oscylacyjnego składnika.
+\end{przyklad}
+\begin{uwaga}[Wąska i szeroka całka Denjoya]
+Wąska całka Denjoya ma tę samą klasę funkcji co HK. Szeroką całkę Denjoya opiszemy przez klasę $\AC G$ i pochodną aproksymatywną; jest to istotnie szersza teoria. Historyczna totalizacja Denjoya nie musi odpowiadać w każdym szczególe poniższej definicji opisowej.
+\end{uwaga}
+
+% ============================================================
+% UZUPELNIENIE MATEMATYCZNE: ROZDZIAL 8
+% ============================================================
+\subsection{Jak w praktyce rozpoznawać pierwotne wąskiej całki Denjoya}
+\begin{twierdzenie}[Przeliczalny zbiór punktów nieróżniczkowalności]\label{ma1:kh:tw:denjoy-countable}
+Niech $F:[a,b]\to\R$ będzie ciągła oraz różniczkowalna ze skończoną pochodną w każdym punkcie $(a,b)\setminus N$, gdzie $N\subset[a,b]$ jest zbiorem co najwyżej przeliczalnym. Wtedy $F\in\AC G_*[a,b]$. Jeśli funkcja $f:[a,b]\to\R$ ma skończone wartości i $f=F'$ na $(a,b)\setminus N$, to $f$ jest całkowalna w sensie KH oraz w wąskim sensie Denjoya, a obie całki są równe $F(b)-F(a)$.
+\end{twierdzenie}
+\begin{proof}
+Dla $n\ge1$ definiujemy
+\[
+ E_n=\left\{x\in[a,b]: |F(y)-F(x)|\le n|y-x|
+ \ \text{dla wszystkich}\ y\in[a,b]\ \text{z}\ |y-x|<1/n\right\}.
+\]
+Każdy $E_n$ jest domknięty na mocy argumentu z początku rozdziału: ścisła nierówność $|y-x|<1/n$ zapewnia, że po przybliżeniu $x$ przez punkty $E_n$ warunek odległości nadal obowiązuje. Każdy punkt, w którym istnieje skończona pochodna (jednostronna na brzegu), należy do któregoś $E_n$. Dla przedziału $[u,v]$ o końcach w $E_n$ i długości mniejszej niż $1/n$ mamy
+$\osc_{[u,v]}F\le2n(v-u)$, jak w dowodzie wcześniejszego twierdzenia. Stąd $F\in\AC_*(E_n)$. Zbiory jednopunktowe $\{x\}$, $x\in N\cup\{a,b\}$, są domknięte, a warunek $\AC_*$ zachodzi na nich trywialnie. Przeliczalna rodzina $E_n$ i tych singletonów pokrywa $[a,b]$, więc $F\in\AC G_*$. Ponieważ $N$ ma miarę Lebesgue'a zero, $F'=f$ prawie wszędzie; stosujemy charakteryzację pierwotnych KH i niezmienniczość całki przy zmianie na zbiorze zerowym.
+\end{proof}
+\begin{przyklad}[Funkcja o przeliczalnie wielu osobliwościach]
+Niech $c_n=2^{-n}$, $r_n=2^{-n-3}$ oraz niech $\psi\in C_c^1((-1,1))$ spełnia $\psi(0)=1$. Definiujemy
+$F(0)=0$ oraz $F(x)=\sum_{n\ge1}n^{-1}\psi((x-c_n)/r_n)$ dla $x\in(0,1]$. Nośniki składników są parami rozłączne, a amplitudy $1/n$ maleją do zera, więc $F$ jest ciągła na $[0,1]$ i klasy $C^1$ poza punktem $0$. Jej pochodna jest KH-całkowalna oraz $\int_0^1F'=F(1)-F(0)=0$. Ponieważ $\psi$ jest niezerowa i znika na brzegu nośnika, suma wariacji na rozłącznych nośnikach jest nie mniejsza niż $2\sum_{n\ge1}1/n=\infty$. W istocie $\int_0^1|F'(x)|\,\mathrm d\lambda_1(x)=\left(\int_{-1}^1|\psi'(t)|\,\mathrm dt\right)\sum_{n\ge1}1/n=\infty$. Stąd $F\notin\BV[0,1]$ i $F\notin\AC[0,1]$. Mimo to całka KH pochodnej istnieje.
+\end{przyklad}
+\begin{stwierdzenie}[Sklejanie pierwotnych]\label{ma1:kh:st:denjoy-sklejanie}
+Niech $a<c<b$ i niech $F:[a,b]\to\R$ będzie ciągła. Jeśli $F|_{[a,c]}\in\AC G_*[a,c]$ oraz $F|_{[c,b]}\in\AC G_*[c,b]$, to $F\in\AC G_*[a,b]$. Jeśli dodatkowo $F'=f$ prawie wszędzie na obu podprzedziałach, to $(\mathrm D_*)\int_a^b f=(\mathrm D_*)\int_a^c f+(\mathrm D_*)\int_c^b f$.
+\end{stwierdzenie}
+\begin{proof}
+Domknięte pokrycia obu przedziałów przez zbiory, na których obowiązuje $\AC_*$, są także pokryciami przez zbiory domknięte w $[a,b]$. Łącząc te dwie rodziny, otrzymujemy przeliczalne pokrycie $[a,b]$ bez konieczności kontrolowania przedziałów mających końce po różnych stronach $c$: definicja $\AC G_*$ wymaga kontroli osobno na każdym zbiorze pokrycia. Wzór całkowy jest tożsamością przyrostów $F$.
+\end{proof}
+\begin{uwaga}[Pochodna prawie wszędzie nie identyfikuje pierwotnej]
+Ciągłość i równość $F'=f$ prawie wszędzie nie wystarczają do wzoru Newtona--Leibniza. Przykładem jest funkcja Cantora $C$, dla której $C'=0$ prawie wszędzie, lecz $C(1)-C(0)=1$. Warunek $\AC G_*$ usuwa tę niejednoznaczność. Jest zatem warunkiem na \emph{pierwotną}, a nie tylko na zbiór punktów istnienia jej pochodnej.
+\end{uwaga}
+
+\section{Podstawienie oraz całkowanie przez części}
+\begin{twierdzenie}[Mnożniki o wahaniu ograniczonym]
+Niech $f\in\HK[a,b]$, $F(x)=\int_a^x f$, a $g:[a,b]\to\R$ ma wahanie ograniczone. Wtedy $fg\in\HK[a,b]$ oraz
+\[
+\int_a^b f(x)g(x)\,\mathrm dx=F(b)g(b)-F(a)g(a)-\int_a^b F\,\mathrm dg,
+\]
+gdzie ostatnia całka jest zwykłą całką Riemanna--Stieltjesa.
+\end{twierdzenie}
+\begin{proof}
+Całka $\int_a^b F\,\mathrm dg$ istnieje, ponieważ $F$ jest ciągła, a $g$ ma wahanie ograniczone. Dla $\delta$ z lematu Saksa--Henstocka i $\Delta F_i=F(x_i)-F(x_{i-1})$ mamy
+$|S(fg,\mathcal P)-\sum_i g(t_i)\Delta F_i|\le2\varepsilon\|g\|_\infty$.
+Ponieważ $\sum_i|g(t_i)-g(x_{i-1})|\le V_a^b(g)$ i $|\Delta F_i|\le\omega_F(\mesh P)$, różnica między $\sum_i g(t_i)\Delta F_i$ i $\sum_i g(x_{i-1})\Delta F_i$ nie przekracza $\omega_F(\mesh P)V_a^b(g)$. Dokładne sumowanie przez części daje
+$\sum_i g(x_{i-1})\Delta F_i=F(b)g(b)-F(a)g(a)-\sum_iF(x_i)(g(x_i)-g(x_{i-1}))$.
+Ostatnia suma dąży do $\int F\,\mathrm dg$. Bierzemy $\varepsilon$ małe i dodatkowo ograniczamy cechowanie stałą zapewniającą dostatecznie małą średnicę podziałów.
+\end{proof}
+\begin{uwaga}[Ograniczenia całki KH]
+Klasa $\HK[a,b]$ nie jest kratą: z całkowalności $f$ nie wynika całkowalność $|f|$ (przykład z pochodną nieabsolutnie całkowalną). Nie jest też algebrą, ponieważ $x^{-1/2}$ na $(0,1]$ po odpowiednim określeniu w zerze ma całkę KH, a jej kwadrat $1/x$ nie. Seminorma Alexiewicza $\|f\|_A=\sup_{x\in[a,b]}\left|\int_a^x f\right|$ jest normą po utożsamieniu funkcji równych prawie wszędzie, lecz otrzymana przestrzeń nie jest zupełna.
+\end{uwaga}
+\begin{twierdzenie}[Podstawienie przez dyfeomorfizm klasy $C^1$]\label{ma1:kh:tw:hk-podstawienie}
+Niech $a<b$, $u<v$, $f\in\HK[a,b]$ i niech $\phi:[u,v]\to[a,b]$ będzie rosnącym dyfeomorfizmem klasy $C^1$, to znaczy $\phi\in C^1[u,v]$, $\phi(u)=a$, $\phi(v)=b$ i $\phi'(t)>0$ dla $t\in[u,v]$. Wówczas $t\mapsto f(\phi(t))\phi'(t)$ jest KH-całkowalna na $[u,v]$ oraz
+\[
+\int_u^v f(\phi(t))\phi'(t)\,\mathrm dt=\int_a^b f(x)\,\mathrm dx.
+\]
+Dla malejącego dyfeomorfizmu z $\phi(u)=b$, $\phi(v)=a$ całka po prawej ma odwrócone granice.
+\end{twierdzenie}
+\begin{proof}
+Niech $F(x)=\int_a^x f$. Funkcja $F$ jest ciągła i $F'=f$ prawie wszędzie. Najpierw uzasadnimy, że $F\circ\phi$ należy do $\AC G_*[u,v]$. Z charakteryzacji pierwotnych KH w rozdziale o wąskiej całce Denjoya mamy $[a,b]=\bigcup_n E_n$, gdzie zbiory $E_n$ są domknięte i $F\in\AC_*(E_n)$. Zbiory $\phi^{-1}(E_n)$ są domknięte i pokrywają $[u,v]$. Ponieważ $\phi$ jest lipschitzowska, dla rozłącznych przedziałów o końcach w $\phi^{-1}(E_n)$ i o małej łącznej długości obrazy mają także małą sumę długości i rozłączne wnętrza. Równość
+$\osc_J(F\circ\phi)=\osc_{\phi(J)}F$ dowodzi $F\circ\phi\in\AC_*(\phi^{-1}(E_n))$.
+
+Dyfeomorfizm i jego odwrotność są lipschitzowskie na zwartych przedziałach, więc przeciwobraz zbioru miary zero ma miarę zero. W punktach, w których $F'(\phi(t))=f(\phi(t))$, zwykła reguła łańcuchowa daje $(F\circ\phi)'(t)=f(\phi(t))\phi'(t)$. Twierdzenie o pierwotnych $\AC G_*$ daje całkowalność HK tej pochodnej i wzór Newtona--Leibniza; ostatni przyrost wynosi $F(b)-F(a)$.
+\end{proof}
+\begin{uwaga}[Zakres twierdzenia]
+Warunek $\phi'(t)>0$ zabezpiecza przed trudnościami z przenoszeniem zbiorów wyjątkowych. Istnieją mocniejsze twierdzenia o podstawieniu dla mniej regularnych funkcji $\phi$, ale bez dodatkowych warunków na składanie pierwotnych i na zbiory wyjątkowe nie wolno automatycznie zastępować dyfeomorfizmu dowolną funkcją absolutnie ciągłą.
+\end{uwaga}
+\begin{wniosek}[Całkowanie przez części z mnożnikiem absolutnie ciągłym]\label{ma1:kh:wn:hk-ibp-ac}
+Niech $f\in\HK[a,b]$, $F(x)=\int_a^x f$, a $g\in\AC[a,b]$. Wtedy $fg\in\HK[a,b]$ i
+\[
+\int_a^b f(x)g(x)\,\mathrm dx=F(b)g(b)-F(a)g(a)-\int_a^b F(x)g'(x)\,\mathrm d\lambda_1(x).
+\]
+Ostatnia całka jest całką Lebesgue'a, ponieważ $F$ jest ograniczona i $g'\in L^1[a,b]$.
+\end{wniosek}
+\begin{proof}
+Funkcja $g$ ma wahanie ograniczone, gdyż $\Var(g)\le\int_a^b|g'|\,\mathrm d\lambda_1$. Stosujemy twierdzenie o mnożnikach BV z początku rozdziału i klasyczną identyfikację $\int F\,\mathrm dg=\int Fg'\,\mathrm d\lambda_1$ dla $F$ ciągłej i $g$ absolutnie ciągłej.
+\end{proof}
+\begin{przyklad}[Mnożnik i całka niewłaściwa]
+Niech $f(x)=\sin(1/x)/x$ dla $x\in(0,1]$ i $f(0)=0$. Podstawienie $t=1/x$ na $[\varepsilon,1]$ daje
+$\int_\varepsilon^1f(x)\,\mathrm dx=\int_1^{1/\varepsilon}(\sin t)/t\,\mathrm dt$.
+Całka po prawej jest zbieżna na mocy kryterium Dirichleta, zatem twierdzenie Hake'a daje
+$\int_0^1f(x)\,\mathrm dx=\int_1^\infty (\sin t)/t\,\mathrm dt$ w sensie KH. Nie zachodzi całkowalność Lebesgue'a wartości bezwzględnej, gdyż $\int_1^\infty|\sin t|/t\,\mathrm dt=\infty$.
+\end{przyklad}
+
+\section{Twierdzenia o zbieżności}
+\begin{twierdzenie}[Zbieżność z majorantą Lebesgue'a]\label{ma1:kh:tw:hk-zbieznosc-dct}
+Niech $f_n:[a,b]\to\R$ będą mierzalne i KH-całkowalne, $f_n\to f$ prawie wszędzie, a $g\in L^1[a,b]$ niech spełnia $|f_n|\le g$ prawie wszędzie dla każdego $n$. Wówczas $f,f_n\in L^1[a,b]$ i
+$\lim_{n\to\infty}\int_a^bf_n\,\mathrm dx=\int_a^bf\,\mathrm dx$, przy czym po obu stronach całkę można rozumieć zarówno w sensie Lebesgue'a, jak i HK.
+\end{twierdzenie}
+\begin{proof}
+Z oszacowania $|f_n|\le g$ wynika bezwzględna całkowalność Lebesgue'a każdej $f_n$; zbieżność prawie wszędzie i $|f|\le g$ dają to samo dla $f$. Stosujemy twierdzenie Lebesgue'a o zbieżności zmajoryzowanej oraz zgodność całek Lebesgue'a i HK. Nie jest to twierdzenie o dowolnej majorancie KH-całkowalnej.
+\end{proof}
+\begin{przyklad}[Dlaczego sama zbieżność punktowa nie wystarcza]
+Niech $f_n(0)=0$ i $f_n(x)=n\chi_{(0,1/n]}(x)$ na $[0,1]$. Każda $f_n$ jest Riemanna, a więc KH-całkowalna, oraz $f_n(x)\to0$ w każdym punkcie $[0,1]$. Mimo to $\int_0^1f_n\,\mathrm dx=1$ dla każdego $n$. Nie istnieje jedna całkowalna funkcja $g$ z $|f_n|\le g$ prawie wszędzie dla wszystkich $n$.
+\end{przyklad}
+\begin{stwierdzenie}[Jednostajna zbieżność]\label{ma1:kh:st:hk-zbieznosc-jednostajna}
+Jeśli $f_n\in\HK[a,b]$ i $f_n\to f$ jednostajnie, to $f\in\HK[a,b]$ oraz $\int_a^bf_n\to\int_a^bf$.
+\end{stwierdzenie}
+\begin{proof}
+Dla dwóch funkcji KH-całkowalnych $h,k$ zachodzi $|\int_a^b(h-k)|\le(b-a)\|h-k\|_\infty$, ponieważ nierówność dla sum przechodzi na granicę. Stąd całki $I_n=\int_a^bf_n$ tworzą ciąg Cauchy'ego. Dla ustalonego $\varepsilon>0$ wybieramy $n$ z $(b-a)\|f-f_n\|_\infty<\varepsilon/3$ oraz $|I-I_n|<\varepsilon/3$, gdzie $I=\lim I_n$. Następnie bierzemy cechowanie dla $f_n$ zapewniające błąd sumy mniejszy niż $\varepsilon/3$. Nierówność trójkąta kończy dowód bez wcześniejszego zakładania całkowalności $f$.
+\end{proof}
+
+
+\begin{twierdzenie}[Jednostajna całkowalność względem cechowania]
+\label{ma1:kh:thm:kh-equiintegrability}
+Niech $f_n\in\HK[a,b]$ i $f_n(t)\to f(t)\in\R$ dla każdego $t\in[a,b]$. Załóżmy, że dla każdego $\varepsilon>0$ istnieje jedno cechowanie $\delta$ takie, że
+\[
+ |S(f_n,\mathcal P)-I_n|<\varepsilon
+ \quad\text{dla wszystkich }n\ge1
+ \text{ i wszystkich }\delta\text{-drobnych }\mathcal P,
+ \qquad I_n=\int_a^b f_n.
+\]
+Wtedy $f\in\HK[a,b]$ oraz $I_n\to\int_a^b f$.
+\end{twierdzenie}
+\begin{proof}
+Dla $\varepsilon>0$ wybieramy wspólne cechowanie dla błędu $\varepsilon/3$ i ustalamy jeden drobny podział $\mathcal P$ z lematu Cousina. Ma on skończenie wiele znaczników, więc $S(f_n,\mathcal P)\to S(f,\mathcal P)$ dzięki zbieżności punktowej. Dla dostatecznie dużych $n,m$ różnica tych dwóch sum ma moduł mniejszy od $\varepsilon/3$. Nierówność trójkąta daje $|I_n-I_m|<\varepsilon$. Zupełność $\R$ zapewnia granicę $I$. Teraz dla dowolnej dokładności $\eta>0$ bierzemy wspólne cechowanie dla błędu $\eta/2$. Dla każdego jego drobnego podziału $\mathcal Q$ przechodzimy z $n$ do nieskończoności w nierówności $|S(f_n,\mathcal Q)-I_n|<\eta/2$. Otrzymujemy $|S(f,\mathcal Q)-I|\le\eta/2<\eta$, zatem $f$ jest całkowalna z całką $I$. Nie zakładaliśmy z góry istnienia całki z granicy.
+\end{proof}
+\begin{twierdzenie}[Twierdzenia graniczne dla HK]
+Niech $(f_n)$ będzie ciągiem funkcji KH-całkowalnych na $[a,b]$.
+\begin{enumerate}[label=(\alph*)]
+\item Jeśli $f_n\uparrow f$ prawie wszędzie, $f$ ma skończone wartości prawie wszędzie i $\sup_n(\HK)\int_a^b f_n<\infty$, to $f$ jest KH-całkowalna oraz $\int_a^b f_n\to\int_a^b f$.
+\item Jeśli $f_n\to f$ prawie wszędzie i istnieją $g,h\in\HK[a,b]$ takie, że $g\le f_n\le h$ prawie wszędzie dla wszystkich $n$, to $f\in\HK[a,b]$ i $\int_a^b f_n\to\int_a^b f$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+(a) Funkcje $u_n=f_n-f_1$ są nieujemne i KH-całkowalne, zatem należą do $\mathcal L^1$. Zbieżność monotoniczna Lebesgue'a oraz ograniczenie całek zapewniają, że $u=f-f_1\in\mathcal L^1$ i $\int u_n\to\int u$. Dodajemy $f_1$.
+
+(b) Funkcja $h-g$ jest nieujemna i KH-całkowalna, więc należy do $\mathcal L^1$. Także $u_n=f_n-g$ jest nieujemna, KH-całkowalna i ograniczona przez $h-g$. Zbieżność zmajoryzowana Lebesgue'a daje $u=f-g\in\mathcal L^1$ i $\int|u_n-u|\to0$. Dodajemy $g$.
+\end{proof}
+\begin{przyklad}[Konieczność założeń]
+Dla $f_n=n\chi_{(0,1/n)}$ mamy $f_n\to0$ punktowo na $[0,1]$, lecz $\int_0^1f_n=1$ dla wszystkich $n$; brak wspólnej całkowalnej majoranty. Z kolei $g_n(x)=\min\{n,1/x\}$ dla $x>0$, $g_n(0)=0$, rośnie punktowo do funkcji równej $1/x$ na $(0,1]$, a $0$ w zerze, i $\int_0^1g_n=1+\log n\to\infty$. Sama monotoniczność bez skończonej granicy całek nie wystarcza.
+\end{przyklad}
+
+\endgroup
