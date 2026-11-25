@@ -58,6 +58,41 @@ class Chapter29(unittest.TestCase):
             self.assertTrue(0<=u-uq<=2*k*mesh(p))
             self.assertTrue(0<=lq-l<=2*k*mesh(p))
 
+    def test_nonattained_extrema_and_approximate_tags(self):
+        def f(x):
+            return x if 0<x<1 else F(1,2)
+        for n in (2,4,8,32):
+            p=[F(i,n) for i in range(n+1)]
+            def extrema(a,b):
+                # At outer endpoints the changed value 1/2 may enlarge the range.
+                return (min(a,F(1,2)) if b==1 else a,
+                        max(b,F(1,2)) if a==0 else b)
+            l,u=sums(p,extrema)
+            eta=F(1,10*n)
+            # Interior tags can approach the unattained extrema of the full interval.
+            self.assertEqual(sums([F(0),F(1)],extrema),(F(0),F(1)))
+            self.assertEqual(f(eta),eta)
+            self.assertTrue(1-2*eta<f(1-eta)<1)
+            self.assertLessEqual(l,F(1,2))
+            self.assertLessEqual(F(1,2),u)
+        self.assertEqual(f(F(0)),F(1,2))
+        self.assertEqual(f(F(1)),F(1,2))
+
+    def test_isolating_discontinuities_including_endpoints(self):
+        a,b=F(0),F(1)
+        points=[a,F(1,3),F(2,3),b]
+        B,eps=F(3),F(1,10)
+        rho=eps/(16*B*len(points))
+        intervals=[(max(a,d-rho),min(b,d+rho)) for d in points]
+        self.assertTrue(all(u<v for u,v in intervals))
+        self.assertTrue(all(v<w for (_,v),(w,_) in zip(intervals,intervals[1:])))
+        total=sum(v-u for u,v in intervals)
+        self.assertLess(2*B*total,eps/2)
+        self.assertEqual(intervals[0][0],a)
+        self.assertEqual(intervals[-1][1],b)
+        for (u,v),(w,z) in zip(intervals,intervals[1:]):
+            self.assertTrue(all(not v<=d<=w for d in points))
+
     def test_tagged_sums_squeezed(self):
         p=[F(0),F(1,7),F(1,2),F(1)]
         l,u=sums(p,square_extrema)
