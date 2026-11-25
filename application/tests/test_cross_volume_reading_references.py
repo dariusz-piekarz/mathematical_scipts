@@ -5,8 +5,10 @@ import shutil
 import sqlite3
 import tempfile
 import unittest
+from unittest.mock import patch
 
-from backend.api import bipartite_graph
+from backend.api import bipartite_graph, label_detail
+from fastapi import HTTPException
 from backend.generator import closure
 from backend.label_registry import Owner, resolve
 from backend.latex_parser import build_database, parse_document
@@ -221,6 +223,14 @@ class CrossVolumeReadingReferencesTest(unittest.TestCase):
                 actual = {(r["source_document"], r["target_label"], r["target_document"])
                           for r in rows}
                 self.assertEqual(len(required), 22)
+                with patch("backend.api.db_connection", return_value=con):
+                    for source in (None, "ALG-10"):
+                        detail = label_detail("TOP-11::thm:poincare-dualnosc-16", source)
+                        self.assertEqual(detail["document_id"], "TOP-11")
+                        self.assertEqual(detail["canonical_label"], "thm:poincare-dualnosc-16")
+                    with self.assertRaises(HTTPException) as error:
+                        label_detail("TOP-12::thm:poincare-dualnosc-16", "ALG-10")
+                    self.assertEqual(error.exception.status_code, 404)
                 self.assertTrue(required <= actual)
                 for r in rows:
                     if (r["source_document"], r["target_label"], r["target_document"]) in required:
