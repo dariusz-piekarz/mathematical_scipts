@@ -12,6 +12,8 @@ on:
       - "application/tests/test_lean_concept_fixture.py"
       - "application/scripts/lean_ci_audit.py"
       - "application/scripts/lean_mathlib_source_probe.py"
+      - "application/scripts/lean_artifact_manifest.py"
+      - "application/tests/test_lean_artifact_manifest.py"
       - "application/tests/test_lean_mathlib_source_probe.py"
       - "application/scripts/benchmark_lean_fingerprint.py"
       - "application/scripts/benchmark_lean_paths.py"
@@ -79,6 +81,7 @@ jobs:
           python -m unittest \
             tests.test_lean_ci_audit \
             tests.test_lean_mathlib_source_probe \
+            tests.test_lean_artifact_manifest \
             tests.test_lean_fingerprint_benchmark \
             tests.test_lean_paths_benchmark \
             tests.test_lean_olean_cpu_profile \
@@ -134,6 +137,35 @@ jobs:
         with:
           name: atlas-mathlib-source-closure-${{ inputs.validation_pass || 'standalone' }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/atlas-mathlib-source-closure.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Hash and verify selected real Mathlib Logic artifacts
+        working-directory: application
+        env:
+          EXPECTED_SHA: ${{ inputs.candidate_sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          selected="lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Logic"
+          test -s "$selected/Basic.olean"
+          manifest="$RUNNER_TEMP/atlas-mathlib-logic-artifacts.json"
+          python -m scripts.lean_artifact_manifest create "$selected" "$manifest" \
+            --lean-root lean --checkout-sha "$EXPECTED_SHA"
+          expected_digest="$(sha256sum "$manifest" | cut -d ' ' -f 1)"
+          python -m scripts.lean_artifact_manifest verify "$selected" "$manifest" \
+            --lean-root lean --checkout-sha "$EXPECTED_SHA" \
+            --expected-sha256 "$expected_digest" \
+            | tee "$RUNNER_TEMP/atlas-mathlib-logic-verification.json"
+          echo "Selected Logic tree only: no complete offline closure or draft execution."
+
+      - name: Upload selected artifact integrity evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-selected-artifact-integrity-${{ inputs.validation_pass || 'standalone' }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/atlas-mathlib-logic-artifacts.json
+            ${{ runner.temp }}/atlas-mathlib-logic-verification.json
           if-no-files-found: error
           retention-days: 30
 

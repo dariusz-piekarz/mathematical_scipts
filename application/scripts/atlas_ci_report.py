@@ -16,6 +16,9 @@ import unittest
 # Suite-specific skips have to be covered by the separate native/pinned jobs.
 # Unknown test IDs or reasons are deliberately classified as 'unreviewed'.
 EXPECTED_SKIPS = (
+    ("tests.test_lean_artifact_manifest.", "Native Windows junction regression", "windows_native"),
+    ("tests.test_lean_artifact_manifest.", "Case-sensitive filesystem test; portable paths tested separately", "posix_native"),
+    ("tests.test_lean_artifact_manifest.", "Native junction regression covers Windows reparse paths", "posix_native"),
     ("tests.test_lean_windows_job.", "Native Windows Job Objects test", "windows_native"),
     ("tests.test_lean_run_lock.", "Native Windows file-sharing contract", "windows_native"),
     ("tests.test_lean_run_lock.", "Native Windows junction test", "windows_native"),
