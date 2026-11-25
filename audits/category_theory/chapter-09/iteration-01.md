@@ -1,0 +1,5 @@
+# CAT-09 — audyt I (rozszerzenie i poprawki)
+
+Źródło wejściowe d78bcdfd453c8fc7c050bae85bed4c48a4b91395. CAT-08 zamknięty. Zachowano trzy istniejące etykiety. Poprawiono wprowadzenie (obie wariancje), rozpisano naturalność, surjektywność, injektywność i naturalność odwrotności. Dodano wersję kontrawariantną, jednoznaczność pary, kategorię elementów i kryterium niereprezentowalności. Adaptacje AA-12, AA-16, AA-18 (bloby zgodne z mapą reuse) oraz ALG-04 (aktualny blob 3191aec2dd37bb84021416e587e3c144fa5712c0 różny od mapy; odczytano odpowiednie fragmenty, nie deklaruje się aktualnej stabilizacji ALG). Konstrukcje modułu wolnego, lokalizacji, tensora i różniczek pozostają w tomach kanonicznych; tutaj dowodzimy reprezentowalności i naturalności. Etykiety nowe CAT, nie przenoszono dosłownie źródeł.
+
+Dodano osiem testów regresyjnych w discovery CI. W chwili zapisu nie potwierdzono ich wyniku ani kompilacji; Lean nie uruchamiano. Kolejna iteracja: stabilizacja bez nowych tematów, kontrola szczegółowości i CI.
