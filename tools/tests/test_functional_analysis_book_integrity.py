@@ -58,6 +58,22 @@ class FunctionalAnalysisBook(unittest.TestCase):
         proofs = sum(s.count(r"\begin{proof}") for s in all_sources)
         print(f"FA inventory: units={len(paths)}, unique_labels={len(labels)}, reference_occurrences={len(refs)}, proofs={proofs}")
 
+    def test_FA_BOOK_terminology_02(self):
+        _, paths, texts = sources()
+        # Label and reference identifiers are intentionally preserved.
+        forbidden = re.compile(
+            r"zbieżnoś[ćc][^\n]{0,16}zdominowan|tensorowani|\bunia\b|"
+            r"\bdual(?:u|em|owi|e|ach|ów)?\b|\\mathrm d\^3x|"
+            r"przestrze(?:ń|ni|nie|nia|nią) (?:hilbertowsk|banachowsk)",
+            re.IGNORECASE,
+        )
+        hits = []
+        for path, source in zip(paths, texts):
+            text = without_comments_and_code(source)
+            text = re.sub(r"\\(?:label|ref|eqref|pageref|autoref)\{[^}]+\}|\\hyperref\[[^\]]+\]", "", text)
+            hits.extend((path.name, m.group()) for m in forbidden.finditer(text))
+        self.assertFalse(hits)
+
     def test_FA_BOOK_environments_01(self):
         book, paths, texts = sources()
         for path,s in zip([BOOK,*paths],[book,*texts]):
