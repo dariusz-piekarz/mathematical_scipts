@@ -31,5 +31,28 @@ class StieltjesTests(unittest.TestCase):
         self.assertEqual(integrals, fp*gp-fm*gm+correction)
 
 
+    def test_am136_reverse_orientation(self):
+        # Arbitrary discontinuous integrator values at tagged cells.
+        points = [Q(0), Q(1, 3), Q(2, 3), Q(1)]
+        tags = [Q(1, 6), Q(1, 2), Q(5, 6)]
+        g = lambda t: t*t + 2*(t >= Q(1, 3))
+        f = lambda t: 3*t-1
+        direct = sum(f(t)*(g(v)-g(u))
+                     for u,v,t in zip(points, points[1:], tags))
+        phi = lambda s: 1-s
+        rev_points = [phi(x) for x in reversed(points)]
+        rev_tags = [phi(t) for t in reversed(tags)]
+        reverse = sum(f(phi(t))*(g(phi(v))-g(phi(u)))
+                      for u,v,t in zip(rev_points, rev_points[1:], rev_tags))
+        self.assertEqual(reverse, -direct)
+
+    def test_am136_cantor_moments(self):
+        for n in range(1, 15):
+            mean = sum(Q(1, 3**k) for k in range(1, n+1))
+            variance = sum(Q(1, 9**k) for k in range(1, n+1))
+            self.assertEqual(mean + Q(1, 2*3**n), Q(1, 2))
+            self.assertEqual(variance + Q(1, 8*9**n) + Q(1, 4), Q(3, 8))
+
+
 if __name__ == '__main__':
     unittest.main()
