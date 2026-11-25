@@ -195,6 +195,28 @@ class CategoryTheoryCh25(unittest.TestCase):
             if 2*b%4==0:
                 self.assertTrue(any(2*a%4==b for a in R))
 
+    def test_CAT_25_009_connecting_triangle_sign(self):
+        # A in degree 1, C in degree 0; B differential t:C^0 -> A^1.
+        # Lift c to B^0; the cone cycle is (c,-t*c), so projection is -t*c.
+        for k in range(3,18):
+            for t,c in itertools.product(range(k),repeat=2):
+                classic=t*c%k
+                cycles=[a for a in range(k) if (t*c+a)%k==0]
+                self.assertEqual(cycles,[(-classic)%k])
+                self.assertEqual((cycles[0]+classic)%k,0)
+        # 0 -> Z/m -> Z/m^2 -> Z/m -> 0: injection a |-> m*a.
+        # I^0=Z/m^2, d_I^0 multiplication by m, t=id.
+        # d_{I[1]}h on E is -m*e; h d_cone on N is m*a.
+        for m in range(3,16):
+            k=m*m
+            for e in range(k):
+                b_r=m*(e%m)%k
+                self.assertEqual((-m*e)%k,(-b_r)%k)
+            for a in range(m):
+                self.assertEqual(m*a%k,m*a)
+            # Detect the opposite sign in odd characteristic.
+            self.assertNotEqual(m%k,(-m)%k)
+
     def test_CAT_25_005_structure(self):
         text=CHAPTER.read_text(encoding="utf-8")
         labels=re.findall(r"\\label\{([^}]+)\}",text)
