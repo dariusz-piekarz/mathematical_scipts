@@ -81,6 +81,21 @@ class CategoryTheoryCh16(unittest.TestCase):
                     self.assertEqual((r*a+s*b) % p,
                                      ((r*a) % p + (s*b) % p) % p)
 
+    def test_CAT_16_006_qualified_cross_references(self):
+        import json
+        root = CHAPTER.parents[3]
+        catalog = json.loads((root / "catalog/books.json").read_text(encoding="utf-8"))
+        paths = {p for book in catalog["books"] for p in book["chapters"]}
+        targets = [["TOP-03","def:ciag-dokladny","chapters/pl/algebraic_topology/03-algebra-homologiczna-moduly-kompleksy-i-ko-homologie.tex"],["TOP-05","prop:funktor-singularny","chapters/pl/algebraic_topology/05-homologia-przestrzeni.tex"],["FA-02","thm:quotient-norm","chapters/pl/functional_analysis/02-podprzestrzenie-produkty-ilorazy-i-topologie-uniwersalne.tex"],["FA-02","thm:quotient-universal","chapters/pl/functional_analysis/02-podprzestrzenie-produkty-ilorazy-i-topologie-uniwersalne.tex"],["ALG-04","def:snop","chapters/pl/algebraic_geometry/04-algebra-przemienna-snopy-i-krzywe-algebraiczne.tex"]]
+        source = CHAPTER.read_text(encoding="utf-8")
+        self.assertIn(r"\providecommand{\atlasref}[2]{#2}", source)
+        actual = set(re.findall(r"\\atlasref\{([^}]+::[^}]+)\}", source))
+        self.assertEqual(actual, {f"{doc}::{label}" for doc, label, _ in targets})
+        for doc, label, path in targets:
+            self.assertIn(path, paths)
+            content = (root / path).read_text(encoding="utf-8")
+            self.assertEqual(re.findall(r"\\label\{([^}]+)\}", content).count(label), 1)
+
     def test_CAT_16_004_structure(self):
         s = CHAPTER.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}", s)
