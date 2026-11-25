@@ -24,7 +24,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool
 
 from backend.latex_parser import analyze_selection, get_stats, show_label
 from backend.label_registry import qualified_occurrence
-from backend.graph_coverage import graph_coverage
+from backend.graph_coverage import graph_coverage, reading_reference_issues
 from backend import workspaces
 from backend.concept_graph import build_concept_graph
 from backend import lean_catalog
@@ -428,8 +428,9 @@ def bipartite_graph(con: sqlite3.Connection, left: str, right: str,
     docs = {r["id"]:dict(r) for r in con.execute("SELECT id,title,domain FROM documents")}
     if left not in {r["domain"] for r in docs.values()} or right not in {r["domain"] for r in docs.values()}:
         raise HTTPException(status_code=400,detail="Nieznana dziedzina.")
-    rows=con.execute("""SELECT source_document,source_entity,target_document,target_entity,target_label
-                        FROM references_tex WHERE status IN ('resolved','external_resolved','alias_resolved') AND target_document IS NOT NULL
+    invalid_ids = {issue["reference_id"] for issue in reading_reference_issues(con)["issues"]}
+    rows=con.execute("""SELECT id,source_document,source_entity,target_document,target_entity,target_label
+                        FROM references_tex WHERE status IN ('resolved','external_resolved','alias_resolved','included_resolved') AND target_document IS NOT NULL
                           AND source_document!=target_document""").fetchall()
     owners={}
     if granularity == "section":
@@ -462,6 +463,8 @@ def bipartite_graph(con: sqlite3.Connection, left: str, right: str,
     nodes: dict[str,dict[str,Any]]={}
     for r in rows:
         s,d=r["source_document"],r["target_document"]
+        if r["id"] in invalid_ids or s not in docs or d not in docs:
+            continue
         if docs[s]["domain"]==left and docs[d]["domain"]==right:
             leftdoc,rightdoc=s,d;le=r["source_entity"];re=r["target_entity"]
         elif docs[d]["domain"]==left and docs[s]["domain"]==right:
@@ -514,11 +517,14 @@ def reference_graph_coverage():
 def graph_path(source: str, target: str):
     with db_connection() as con:
         require_document(con,source);require_document(con,target)
+        # Use the audited edge set, not the unfiltered SQL dependency view.
+        coverage = graph_coverage(con)
         G=nx.Graph()
-        for r in con.execute("SELECT source_document,target_document,references_count FROM dependency_edges WHERE source_document!=target_document"):
-            a,b=r["source_document"],r["target_document"]
-            if G.has_edge(a,b):G[a][b]["weight"]+=r["references_count"]
-            else:G.add_edge(a,b,weight=r["references_count"])
+        G.add_nodes_from(c["id"] for c in coverage["chapters"])
+        for r in coverage["edges"]:
+            a,b=r["source"],r["target"]
+            if G.has_edge(a,b):G[a][b]["weight"]+=r["weight"]
+            else:G.add_edge(a,b,weight=r["weight"])
         try:
             path=nx.shortest_path(G,source,target)
         except (nx.NodeNotFound,nx.NetworkXNoPath):
