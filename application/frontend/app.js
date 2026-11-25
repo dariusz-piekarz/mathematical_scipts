@@ -150,7 +150,11 @@ function simplifiedText(latex){
     .replace(/\\(?:emph|textbf|textit)\s*\{([^{}]*)\}/g,"$1")
     .replace(/\n{4,}/g,"\n\n");
 }
-function renderMathPreview(box,latex){
+function previewMacros(moduleId){
+  const prefix=String(moduleId||"").split("-")[0];
+  return {...(window.atlasMathMacroProfiles?.[prefix]||{})};
+}
+function renderMathPreview(box,latex,moduleId){
   box.textContent=simplifiedText(latex);
   if(typeof window.renderMathInElement!=="function"){
     return "Renderer wzorów jest niedostępny. Uruchom scripts/install_math_renderer.py i odśwież stronę.";
@@ -165,7 +169,7 @@ function renderMathPreview(box,latex){
         ...displayEnvironments.map(name=>({left:"\\begin{"+name+"}",right:"\\end{"+name+"}",display:true})),
         {left:"$",right:"$",display:false}
       ],
-      macros:{"\\R":"\\mathbb{R}","\\C":"\\mathbb{C}","\\N":"\\mathbb{N}","\\Z":"\\mathbb{Z}","\\Q":"\\mathbb{Q}"},
+      macros:previewMacros(moduleId),
       trust:false,throwOnError:true,maxExpand:1000,maxSize:20,
       errorCallback:()=>{errors++;}
     });
@@ -176,9 +180,9 @@ function renderMathPreview(box,latex){
   }
   return errors?"Nie złożono "+errors+" fragmentów matematycznych; pozostawiono ich źródło.":"";
 }
-function renderSimplified(latex){
+function renderSimplified(latex,moduleId=state.currentModule){
   const status=$("mathPreviewStatus");
-  const message=renderMathPreview($("simplified"),latex);
+  const message=renderMathPreview($("simplified"),latex,moduleId);
   if(status){status.textContent=message;status.classList.toggle("hidden",!message);}
 }
 function addCurrent(){
@@ -263,7 +267,7 @@ async function previewLabel(label,anchor,sourceDocument=null){
       body.append(node("p",{className:"tip-meta"},`${label} · ${result.document_id} · wiersz ${result.line}`));
       const preview=node("div",{className:"tip-code"});
       body.append(preview);
-      const message=renderMathPreview(preview,result.latex||"");
+      const message=renderMathPreview(preview,result.latex||"",result.document_id);
       if(message)body.append(node("p",{className:"tip-meta"},message));
     }
     positionReferenceTip(anchor);
