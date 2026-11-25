@@ -179,7 +179,7 @@ class AlgebraicTopologyTwentyNineThirtyAudit(unittest.TestCase):
         ):
             text = next(DG.glob(f"{ch}-*.tex")).read_text(encoding="utf-8-sig")
             self.assertIn(r"\label{" + label + "}", text)
-            self.assertIn(r"\texttt{" + label + "}", src)
+            self.assertEqual(src.count(r"\atlasref{DG-" + ch + "::" + label + "}"), 1)
 
     def test_circle_regular_value_normal_and_tubular_inverse(self):
         src = self.texts["30"]
