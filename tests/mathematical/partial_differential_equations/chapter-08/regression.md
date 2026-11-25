@@ -189,3 +189,14 @@ Druga lektura sekcji 8.7–8.8. Sprawdzono 16 kryteriów 053–068:
 - Łącznie druga lektura 68/92: 35 bez zmian, 33 po uściśleniu. Nie potwierdzono CI nowego źródła ani formalizacji Lean.
 
 Następna iteracja 120: druga lektura sekcji 8.9–8.10, kryteria 069–085.
+
+## Iteracja 120 — 2026-11-25
+
+Druga lektura sekcji 8.9–8.10. Sprawdzono 17 kryteriów 069–085:
+- Bez zmian: 069, 072–073, 075, 078–080 (7).
+- Uściślono: 070 — liniowość przestrzeni H^s i bezwzględna całkowalność działania reprezentanta b_-s h na testach przez Cauchy'ego–Schwarza; 071 — jawne utożsamienie J^s u z odwrotną transformatą h w L² oraz aksjomaty iloczynu skalarnego; 074 — dokładne zastosowanie włożenia H^(m-|alpha|) w H^0; 076 — odsyłacz do gęstości i jawna surjektywność J^t; 077 — odsyłacz do dowodu nieregularności delty; 081 — iloraz norm i jawne testy dla optymalności stałej, osobno a=1; 082 — zgodność transformat w L² i S' w dowodzie wystarczalności; 083 — obustronne oszacowanie na przekłutej kuli oraz całkowalność na pozostałym pierścieniu; 084 — definicja kontrprzykładu przedziałami, w tym wartość w zerze, bez nieokreślonego iloczynu; 085 — jawne uzasadnienie dolnego ograniczenia n².
+- Sprawdzono w rozdziale 07 dowód nieregularności delty oraz konstrukcję rozwiązania fundamentalnego operatora -Delta i zastosowanie splotu dla danych C_c^infty.
+- Commit źródła 0be28a94498bf8031488914b2487c8c36cfafe5f, blob 010631d2bf11a29567ae1d30663c4a28cd2a2696; 39 niezmienionych etykiet, 92 wystąpienia odsyłaczy, 10 niezmienionych celów zewnętrznych, poprawne zagnieżdżenie środowisk. Tekst poza 8.9–8.10 identyczny. Konflikt 409 rozwiązany przez ponowne pobranie źródła i sprawdzenie niezmienionego SHA przed zapisem. Bez nowych tematów i ID.
+- Łącznie druga lektura 85/92: 42 bez zmian, 43 po uściśleniu. Nie potwierdzono jeszcze CI najnowszego źródła ani nie wykonano formalizacji Lean.
+
+Następna iteracja 121: druga lektura sekcji 8.11 i podsumowania, kryteria 086–092.
