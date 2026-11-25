@@ -1,0 +1,5 @@
+# CAT-16 — iteracja 01
+
+Wejście d160e7929ca67c5fbaa1240d368eb35a5e0b7e56. Poprawiono błędny tytuł krótkiego ciągu dokładnego (cztery obiekty między zerami), rozpisano dokładność i dwa krótkie ciągi. Dodano definicje kategorii preaddytywnej, addytywnej, abelowej oraz pełny dowód dla Vect i Ab. Uzupełniono dobre określenie i funktorialność grupy podstawowej i homologii singularnej. Rozróżniono zbiór Hom od dodatkowej struktury; dodano własność uniwersalną ilorazu unormowanego i równość norm oraz przykład presnopu/snopu funkcji ciągłych ze sklejaniem. Zachowano etykietę sec:powiazania; 5 nowych etykiet. Kontrola strukturalna JS PASS.
+
+Przeczytano fragmenty źródeł: algebraic_topology/03 (7f3bd97622a1d6730b9854872cb2f6f90a11a136), algebraic_topology/05 (b451d4afd0014af475419374fa15fe15c8671d6b), functional_analysis/02 (6096f06b8b6e4549b0639846c78a12570554e7e7), algebraic_geometry/04 (c2692e436837f3f6953d0e012e6e559906e8579a). Adaptacja do zakresu CAT, nie dosłowny import; wskazano skrypty w treści. Odsyłacze między skryptami na razie opisowe (samodzielna kompilacja). Dodano 4 testy i rejestr; Python, CI i kontrola PDF jeszcze niepotwierdzone. Lean nie uruchamiano.
