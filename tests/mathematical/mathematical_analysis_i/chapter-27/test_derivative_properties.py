@@ -58,6 +58,43 @@ class Chapter27(unittest.TestCase):
                 self.assertEqual(sign*x/(x*x),sign/x)
                 self.assertEqual(F(sign,1)/(2*x),sign/(2*x))
 
+    def test_all_four_endpoint_directions(self):
+        # t>0 tends to zero in each chart: x=t, -t, 1/t, -1/t.
+        for direction in ("finite_right","finite_left","plus_infty","minus_infty"):
+            for t in (F(1,4),F(1,20),F(1,100)):
+                x={"finite_right":t,"finite_left":-t,
+                   "plus_infty":1/t,"minus_infty":-1/t}[direction]
+                u={"finite_right":x,"finite_left":-x,
+                   "plus_infty":1/x,"minus_infty":-1/x}[direction]
+                du={"finite_right":F(1),"finite_left":F(-1),
+                    "plus_infty":-1/x**2,"minus_infty":1/x**2}[direction]
+                self.assertEqual(u,t)
+                self.assertNotEqual(du,0)
+                for sign in (-1,1):
+                    g=sign*u
+                    gp=sign*du
+                    f=3*g+u*u
+                    fp=3*gp+2*u*du
+                    self.assertEqual(f/g,3+sign*t)
+                    self.assertEqual(fp/gp,3+2*sign*t)
+                    G=sign/u
+                    Gp=-sign*du/u**2
+                    self.assertEqual((3*G+7)/G,3+7*sign*t)
+                    self.assertEqual((3*Gp)/Gp,3)
+                    for Lsign in (-1,1):
+                        self.assertEqual((Lsign*G**2)/G,Lsign*G)
+                        self.assertEqual(2*Lsign*G*Gp/Gp,2*Lsign*G)
+
+    def test_infinite_denominator_without_numerator_limit(self):
+        for n in (1,5,20,100):
+            x=pi/2+2*n*pi
+            y=3*pi/2+2*n*pi
+            self.assertAlmostEqual(sin(x),1,places=12)
+            self.assertAlmostEqual(sin(y),-1,places=12)
+            for t in (x,y,2*n*pi):
+                self.assertLessEqual(abs(cos(t)/(2*t)),1/(2*t))
+                self.assertLessEqual(abs(sin(t)/t**2),1/t**2)
+
     def test_nondeterminate_counterexample(self):
         for x in (F(-1,10),F(1,10)):
             self.assertEqual((1+x)/(2+x)-F(1,2),x/(2*(2+x)))
