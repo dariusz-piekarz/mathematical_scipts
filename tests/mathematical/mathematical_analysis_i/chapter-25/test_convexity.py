@@ -41,6 +41,27 @@ class Chapter25(unittest.TestCase):
                 self.assertGreaterEqual(abs(h),p*h)
                 self.assertGreaterEqual(abs(-h),-p*h)
 
+    def test_support_abs_outside_interval(self):
+        for h in (F(1,10),F(2,3)):
+            for p in (F(-2),F(-3,2),F(3,2),F(2)):
+                x=h if p>0 else -h
+                self.assertLess(abs(x),p*x)
+    
+    def test_jensen_induction_normalization(self):
+        for ws in ((F(1,6),F(1,3),F(1,2)),(F(1,7),F(2,7),F(4,7))):
+            for xs in ((F(-3),F(2),F(5)),(F(2),F(2),F(2))):
+                s=1-ws[-1]
+                z=sum(w*x/s for w,x in zip(ws[:-1],xs[:-1]))
+                self.assertEqual(sum(ws[:-1])/s,1)
+                mu=sum(w*x for w,x in zip(ws,xs))
+                self.assertEqual(s*z+ws[-1]*xs[-1],mu)
+                first=s*z*z+ws[-1]*xs[-1]**2-mu**2
+                second=sum(w*x*x for w,x in zip(ws[:-1],xs[:-1]))-s*z*z
+                self.assertGreaterEqual(first,0)
+                self.assertGreaterEqual(second,0)
+                self.assertEqual(first+second,sum(w*x*x for w,x in zip(ws,xs))-mu**2)
+                self.assertEqual(first+second==0,len(set(xs))==1)
+
     def test_support_quadratic(self):
         for a in (F(-2),F(0),F(3,2)):
             for x in (F(-3),a,F(4)):
