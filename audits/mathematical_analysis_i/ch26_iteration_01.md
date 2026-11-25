@@ -1,0 +1,3 @@
+# MA1-26 — iteracja 01
+Pięć sekcji: symbole Landaua i równoważność, reguły rachunku, hierarchia wzrostu, skale i rozwinięcia, granice przez rozwinięcia. Bez dublowania asymptot prostoliniowych z 24 i twierdzenia Taylora z 23.
+Pierwszy przegląd semantyczny: kwantyfikatory i zera funkcji porównawczej; wspólne otoczenia, niezerowe mianowniki i warunek znaku przy sumach; kontrprzykłady redukcji i różniczkowania; dowód hierarchii przez Taylor i iloraz silni; jednoznaczność współczynników i obniżanie rzędu; reszty geometryczne i odwrotności, współczynnik 1/3. Jeden wykres TikZ, 13 kryteriów i 13 metod unittest. CI, PDF i niezależna kontrola otwarte. Lean nieuruchomiony. Integracja zapisana oddzielnymi commitami po błędzie API.
