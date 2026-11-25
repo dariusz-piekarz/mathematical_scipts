@@ -1,30 +1,734 @@
-\section{Całka Radona}
-
-\noindent\emph{Powiązania tematyczne w Bibliotece matematycznej:} \atlasref{ME-20::def:radon-measure-20}{ME-20: miara Radona}; \atlasref{ME-21::thm:riesz-positive-21}{ME-21: twierdzenie Riesza--Markowa--Kakutaniego}.
-
-
 \providecommand{\atlasref}[2]{#2}
+\section{Całka Radona}
+\label{ch:radon-measures-20}
+% Import TM-20 i TM-21; zachowano etykiety źródłowe.
+\noindent\emph{Powiązania tematyczne w Bibliotece matematycznej:} \atlasref{ME-20::def:radon-measure-20}{ME-20: miara Radona}; \atlasref{ME-21::thm:riesz-positive-21}{ME-21: twierdzenie Riesza--Markowa--Kakutaniego}; \atlasref{FA-12::thm:riesz-markov12}{FA-12: reprezentacja funkcjonałów na przestrzeni funkcji ciągłych}.
 
-W podejściu Radona uwzględniamy topologię dziedziny. Na potrzeby tej sekcji niech $X$ będzie lokalnie zwartą przestrzenią Hausdorffa o przeliczalnej bazie, np. $\R^d$.
-\begin{definicja}[Miara Radona i dodatni funkcjonał]
-Miara Radona na $X$ to miara borelowska $\mu$ skończona na zbiorach zwartych, wewnętrznie regularna przez zbiory zwarte i zewnętrznie regularna przez zbiory otwarte:
-$\mu(A)=\sup\{\mu(K):K\subset A,\ K\ \text{zwarty}\}=\inf\{\mu(U):A\subset U,\ U\ \text{otwarty}\}$ dla borelowskiego $A$. Przestrzeń $C_c(X)$ składa się z ciągłych funkcji o zwartym nośniku. Dodatni liniowy funkcjonał $\Lambda:C_c(X)\to\R$ jest alternatywnym punktem wyjścia dla całkowania.
+W podejściu Radona uwzględniamy topologię dziedziny. W dowodach reprezentacji przyjmujemy, że $X$ jest lokalnie zwartą ośrodkową przestrzenią metryczną (w szczególności obejmuje to lokalnie zwarte przestrzenie Hausdorffa o przeliczalnej bazie, dzięki twierdzeniu o metryzacji Urysohna). Definicje miar pozostają sformułowane w ogólniejszym zakresie.
+
+\subsection{Miary borelowskie i regularność}
+\begin{definicja}[Miara borelowska i lokalna skończoność]
+\label{def:borel-locfinite-20}
+Niech $(X,\tau)$ będzie przestrzenią topologiczną,
+a $\mathcal B(X)$ jej $\sigma$-algebrą borelowską.
+\emph{Miarą borelowską} na $X$ nazywamy nieujemną miarę
+$\mu:\mathcal B(X)\to[0,\infty]$.
+Miara $\mu$ jest \emph{lokalnie skończona}, jeśli dla
+każdego $x\in X$ istnieje otwarte otoczenie $U_x$ punktu $x$
+takie, że $\mu(U_x)<\infty$.
 \end{definicja}
-\begin{twierdzenie}[Riesza--Markowa: reprezentacja Radona]
-Każdy dodatni liniowy funkcjonał $\Lambda:C_c(X)\to\R$ ma postać $\Lambda(\varphi)=\int_X\varphi\,\mathrm d\mu$ dla dokładnie jednej miary Radona $\mu$. Dla każdego otwartego $U\subset X$ zachodzi
+
+\begin{uwaga}[Skończoność na zbiorach zwartych]
+\label{rem:compact-finiteness-20}
+Na dowolnej przestrzeni topologicznej lokalna skończoność
+implikuje, że $\mu(K)<\infty$ dla każdego zwartego
+$K\subseteq X$: ze skończonego podpokrycia
+$K\subseteq U_{x_1}\cup\cdots\cup U_{x_m}$ dostajemy
+$\mu(K)\le\sum_i\mu(U_{x_i})<\infty$.
+Na przestrzeni lokalnie zwartej Hausdorffa zachodzi
+również implikacja odwrotna: każdy punkt posiada otwarte
+otoczenie o zwartym domknięciu, więc jego miara nie
+przekracza skończonej miary tego domknięcia.
+Bez lokalnej zwartości należy rozróżniać te dwa warunki;
+sama skończoność miary na zwartych zbiorach nie daje
+jeszcze bezpośrednio otoczeń o skończonej mierze.
+\end{uwaga}
+
+\begin{definicja}[Regularność względem topologii]
+\label{def:regularity-20}
+Niech $X$ będzie przestrzenią Hausdorffa, a $\mu$ miarą
+borelowską na $X$. Mówimy, że jest
+\emph{zewnętrznie regularna}, gdy dla każdego
+$E\in\mathcal B(X)$ zachodzi
+\begin{equation}\label{eq:outer-regular-20}
+ \mu(E)=\inf\{\mu(U):E\subseteq U,\ U\subseteq X
+ \text{ otwarty}\}.
+\end{equation}
+Mówimy, że jest \emph{wewnętrznie regularna względem
+zbiorów domkniętych}, gdy dla każdego $E\in\mathcal B(X)$
 \[
-\mu(U)=\sup\{\Lambda(\varphi):\varphi\in C_c(X),\ 0\le\varphi\le1,\ \supp\varphi\subset U\}.
+ \mu(E)=\sup\{\mu(F):F\subseteq E,\ F\subseteq X
+ \text{ domknięty}\}.
 \]
-\end{twierdzenie}
-Istnienie reprezentacji przyjmujemy jako wynik zewnętrzny (twierdzenie Riesza--Markowa). Nie zakładamy globalnej ograniczoności $\Lambda$ w normie supremum, gdyż $\mu(X)$ może być nieskończona.
-\begin{proof}[Lokalna kontrola i jednoznaczność]
-Dla zwartego $K$ istnieje $\chi\in C_c(X)$ z $\chi\ge0$ i $\chi=1$ na $K$. Jeśli $\supp\varphi\subset K$, to $|\Lambda(\varphi)|\le\Lambda(|\varphi|)\le\|\varphi\|_\infty\Lambda(\chi)$, co daje lokalne oszacowanie. Gdy istnieje miara reprezentująca, dla zwartego $K\subset U$, $U$ otwartego, wybieramy $\chi$ równą $1$ na $K$ i z nośnikiem w $U$; wtedy $\mu(K)\le\Lambda(\chi)\le\mu(U)$. Regularność wewnętrzna daje wzór z twierdzenia, a regularność zewnętrzna wyznacza wartości miary na wszystkich zbiorach borelowskich.
+Jest \emph{wewnętrznie regularna względem zbiorów zwartych},
+gdy dla każdego $E\in\mathcal B(X)$
+\begin{equation}\label{eq:inner-compact-20}
+ \mu(E)=\sup\{\mu(K):K\subseteq E,\ K\subseteq X
+ \text{ zwarty}\}.
+\end{equation}
+Przyjmujemy $\inf\varnothing=+\infty$ i
+$\sup\varnothing=0$ dla podanych rodzin miar nieujemnych.
+\end{definicja}
+
+\begin{definicja}[Miara Radona --- przyjęta konwencja]
+\label{def:radon-measure-20}
+Niech $X$ będzie lokalnie zwartą przestrzenią Hausdorffa.
+\emph{Miarą Radona} na $X$ nazywamy miarę borelowską $\mu$,
+która jest skończona na zbiorach zwartych, regularna
+zewnętrznie na wszystkich zbiorach borelowskich oraz
+\emph{regularna wewnętrznie na zbiorach otwartych}, to znaczy
+\[
+ \mu(U)=\sup\{\mu(K): K\subseteq U,\ K\text{ zwarty}\}
+ \qquad(U\subseteq X\text{ otwarty}).
+\]
+Skończoność na zbiorach zwartych jest na $X$ równoważna
+lokalnej skończoności (uwaga~\ref{rem:compact-finiteness-20}).
+\end{definicja}
+
+\begin{uwaga}[Dwie konwencje regularności]
+W definicji~\ref{def:radon-measure-20} regularność
+wewnętrzną wymagamy na zbiorach otwartych, a nie na wszystkich
+borelowskich. To rozróżnienie jest konieczne na ogólnych
+przestrzeniach lokalnie zwartych Hausdorffa. Silniejsza
+regularność na wszystkich zbiorach borelowskich zachodzi,
+jeśli przestrzeń jest $\sigma$-zwarta lub jeśli rozważany
+zbiór ma miarę $\sigma$-skończoną.
+Przykłady tego zjawiska występują w teorii miary Haara.
+Na lokalnie zwartych przestrzeniach metrycznych ośrodkowych
+obie konwencje są równoważne.
+\end{uwaga}
+
+\begin{lemat}[Regularność na zbiorach $\sigma$-skończonych]
+\label{lem:radon-sigmafinite-inner-20}
+Niech $X$ będzie lokalnie zwartą przestrzenią Hausdorffa,
+a $\mu$ miarą Radona według definicji
+\ref{def:radon-measure-20}. Jeżeli $E\in\mathcal B(X)$
+i $\mu(E)<\infty$, to
+\[
+ \mu(E)=\sup\{\mu(K):K\subseteq E,\ K\text{ zwarty}\}.
+\]
+Równość ta zachodzi także dla każdego borelowskiego
+$E$ o mierze $\sigma$-skończonej.
+\end{lemat}
+\begin{proof}
+Niech $\mu(E)<\infty$ i $\varepsilon>0$.
+Z regularności zewnętrznej wybieramy otwarty
+$U\supseteq E$ z $\mu(U)<\mu(E)+\varepsilon$.
+Mamy $\mu(U\setminus E)<\varepsilon$.
+Następnie wybieramy otwarty $W\supseteq U\setminus E$
+z $\mu(W)<\mu(U\setminus E)+\varepsilon<2\varepsilon$,
+a z regularności wewnętrznej na otwartym $U$ kompakt
+$F\subseteq U$ z $\mu(F)>\mu(U)-\varepsilon$.
+Wówczas $K=F\setminus W$ jest zwartym podzbiorem $E$ oraz
+$\mu(K)\ge\mu(F)-\mu(W)>\mu(E)-3\varepsilon$.
+Dla zbioru $\sigma$-skończonego przedstawiamy go jako
+rosnącą przeliczalną sumę borelowskich zbiorów
+$E_j$ o miarach skończonych, po czym stosujemy
+ciągłość miary z dołu i pierwszy przypadek.
 \end{proof}
+
+\subsection{Regularność miar skończonych i lokalnie skończonych}
+\begin{twierdzenie}[Aproksymacja zbiorów borelowskich]
+\label{thm:finite-metric-regular-20}
+Niech $(X,d)$ będzie dowolną przestrzenią metryczną,
+a $\mu$ skończoną miarą borelowską na $X$.
+Dla każdego $E\in\mathcal B(X)$ i $\varepsilon>0$
+istnieją zbiór domknięty $F$ i zbiór otwarty $U$ takie,
+że $F\subseteq E\subseteq U$ oraz
+\begin{equation}\label{eq:finite-regular-error-20}
+ \mu(U\setminus F)<\varepsilon.
+\end{equation}
+W szczególności $\mu$ jest zewnętrznie regularna
+i wewnętrznie regularna względem zbiorów domkniętych.
+Nie twierdzimy w tym miejscu, że $F$ można wybrać zwarty.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: zbiory otwarte.}
+Dla zbioru otwartego $U\neq X$ definiujemy
+$F_n=\{x\in X:d(x,X\setminus U)\ge1/n\}$.
+Funkcja $x\mapsto d(x,X\setminus U)$ jest
+$1$-lipschitzowska, więc $F_n$ jest domknięty.
+Z otwartości $U$ wynika, że każdy $x\in U$
+ma dodatnią odległość od $X\setminus U$;
+stąd $F_n\uparrow U$. Ponieważ $\mu(U)<\infty$,
+ciągłość miary z dołu daje
+$\mu(U\setminus F_n)\to0$. Jeżeli $U=X$,
+wystarczy przyjąć $F_n=X$. Zatem każdy zbiór otwarty
+spełnia warunek z tezy dla dowolnego $\varepsilon>0$.
+
+\emph{Krok 2: rodzina zbiorów aproksymowalnych.}
+Oznaczmy przez $\mathcal D$ rodzinę tych zbiorów
+$E\in\mathcal B(X)$, dla których warunek tezy zachodzi
+dla każdego $\varepsilon>0$. Rodzina ta zawiera wszystkie
+zbiory otwarte. Wykażemy, że jest $\sigma$-algebrą.
+Jeżeli $F\subseteq E\subseteq U$ i
+$\mu(U\setminus F)<\varepsilon$, to
+$X\setminus U\subseteq X\setminus E\subseteq X\setminus F$,
+a zbiór $X\setminus U$ jest domknięty,
+$X\setminus F$ zaś otwarty. Różnica między nimi
+jest równa $U\setminus F$, więc $X\setminus E\in\mathcal D$.
+
+Niech teraz $E=\bigcup_{n\ge1}E_n$, gdzie $E_n\in\mathcal D$.
+Dla danego $\varepsilon>0$ dobieramy
+$F_n\subseteq E_n\subseteq U_n$, z $F_n$ domkniętym,
+$U_n$ otwartym oraz
+$\mu(U_n\setminus F_n)<\varepsilon2^{-n-3}$.
+Ponieważ $\mu(E)<\infty$ i
+$\bigcup_{n\le N}E_n\uparrow E$, istnieje $N$ takie,
+że $\mu(E\setminus\bigcup_{n\le N}E_n)<\varepsilon/4$.
+Stawiamy $F=\bigcup_{n\le N}F_n$ i $U=\bigcup_{n\ge1}U_n$.
+Zbiór $F$ jest domknięty jako suma skończona,
+$U$ jest otwarty, a $F\subseteq E\subseteq U$.
+Ponieważ
+\[
+U\setminus F\subseteq
+(U\setminus E)\cup(E\setminus F),
+\quad
+U\setminus E\subseteq\bigcup_{n\ge1}(U_n\setminus E_n),
+\]
+oraz
+$E\setminus F\subseteq
+(E\setminus\bigcup_{n\le N}E_n)
+\cup\bigcup_{n\le N}(E_n\setminus F_n)$,
+subaddytywność daje
+$\mu(U\setminus F)<\varepsilon$.
+W konsekwencji $\mathcal D$ jest $\sigma$-algebrą.
+
+\emph{Krok 3: zakończenie.}
+Ponieważ $\mathcal D$ zawiera wszystkie zbiory otwarte,
+zawiera także $\sigma$-algebrę przez nie generowaną,
+czyli $\mathcal B(X)$. Równości w definicjach regularności
+wynikają z monotoniczności miary oraz
+$\mu(E\setminus F),\mu(U\setminus E)\le\mu(U\setminus F)$.
+\end{proof}
+
+\begin{uwaga}[Dlaczego nie można automatycznie zastąpić $F$ zbiorem zwartym?]
+W przestrzeni metrycznej, która nie jest lokalnie zwarta,
+zbiór domknięty i ograniczony nie musi być zwarty.
+Na przykład zamknięta kula jednostkowa w nieskończenie
+wymiarowej przestrzeni Hilberta nie jest zwarta.
+Aproksymacja przez zbiory zwarte wymaga osobnego argumentu.
+\end{uwaga}
+\begin{twierdzenie}[Lokalnie skończone miary borelowskie]
+\label{thm:lch-secondcountable-radon-20}
+Niech $X$ będzie lokalnie zwartą, ośrodkową
+przestrzenią metryczną, a $\mu$ lokalnie skończoną
+miarą borelowską na $X$. Wówczas $\mu$ jest miarą
+Radona w sensie definicji~\ref{def:radon-measure-20}.
+Ponadto $\mu$ jest $\sigma$-skończona.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: otwarte pokrycie skończonej miary.}
+Dla każdego $x\in X$ istnieje otwarte otoczenie $W_x$
+z $\mu(W_x)<\infty$. Lokalna zwartość i regularność
+przestrzeni metrycznej pozwalają wybrać otwarty zbiór
+$V_x$ taki, że $x\in V_x$, $\overline{V_x}$ jest zwarty
+oraz $\overline{V_x}\subseteq W_x$.
+W szczególności $\mu(\overline{V_x})<\infty$.
+Ponieważ przestrzeń metryczna ośrodkowa spełnia drugi
+aksjomat przeliczalności i ma własność Lindelöfa,
+z pokrycia $(V_x)_{x\in X}$ wybieramy przeliczalne
+podpokrycie $(V_n)_{n\ge1}$. Dla każdego $n$
+$\overline{V_n}$ jest zwarty i ma skończoną miarę.
+Już stąd wynika $\sigma$-skończoność $\mu$.
+
+\emph{Krok 2: regularność zewnętrzna.}
+Rozbijamy $X$ na parami rozłączne zbiory borelowskie
+$B_1=V_1$, $B_n=V_n\setminus\bigcup_{j<n}V_j$.
+Dla danego $E\in\mathcal B(X)$ i $\varepsilon>0$
+rozważamy skończoną miarę
+$\mu_n(A)=\mu(A\cap V_n)$ na przestrzeni metrycznej $X$.
+Z twierdzenia~\ref{thm:finite-metric-regular-20}
+wybieramy otwarty $U_n\supseteq E\cap B_n$ taki, że
+$\mu_n(U_n\setminus(E\cap B_n))<\varepsilon2^{-n-1}$.
+Niech $U=\bigcup_{n\ge1}(U_n\cap V_n)$.
+Wówczas $U$ jest otwarty, $E\subseteq U$, ponieważ
+$E\cap B_n\subseteq U_n\cap V_n$. Użycie zbiorów
+$B_n$ zamiast samych $V_n$ jest istotne: są one
+rozłączne i każde $E\cap B_n$ pokrywa dokładnie tę
+część $E$, która jest przypisana do indeksu $n$.
+Ponadto $(U_n\cap V_n)\setminus E\subseteq
+U_n\setminus(E\cap B_n)$, co daje
+\[
+\mu(U\setminus E)
+\le\sum_{n\ge1}\mu((U_n\cap V_n)\setminus(E\cap B_n))
+<\varepsilon.
+\]
+Jeżeli $\mu(E)<\infty$, daje to
+$\mu(U)<\mu(E)+\varepsilon$; jeżeli $\mu(E)=\infty$,
+regularność zewnętrzna jest natychmiastowa,
+ponieważ każdy otwarty nadzbiór ma miarę nieskończoną.
+
+\emph{Krok 3: regularność wewnętrzna względem zwartych.}
+Niech $E\in\mathcal B(X)$ i $\varepsilon>0$.
+Dla każdego $n$ rozważamy przestrzeń zwartą
+$\overline{V_n}$ z miarą skończoną
+$\mu|_{\overline{V_n}}$ i metryką indukowaną.
+Z twierdzenia~\ref{thm:finite-metric-regular-20}
+dla zbioru $E\cap V_n$ wybieramy zbiór
+$K_n$ domknięty w $\overline{V_n}$, zawarty w
+$E\cap V_n$, o własności
+$\mu((E\cap V_n)\setminus K_n)<\varepsilon2^{-n-1}$.
+Każdy $K_n$ jest zwarty w $X$.
+Dla $E$ o skończonej mierze wybieramy $N$ takie, że
+$\mu(E\setminus\bigcup_{n\le N}V_n)<\varepsilon/2$.
+Zbiór $K=\bigcup_{n\le N}K_n$ jest zwarty i zawiera się
+w $E$, a
+\[
+ \mu(E\setminus K)
+ \le\mu(E\setminus\bigcup_{n\le N}V_n)
+ +\sum_{n\le N}\mu((E\cap V_n)\setminus K_n)
+ <\varepsilon.
+\]
+Gdy $\mu(E)=\infty$, z ciągłości miary z dołu
+$\mu(E\cap\bigcup_{n\le N}V_n)\uparrow\infty$.
+Dla dowolnego $M>0$ wybieramy $N$ z miarą tej części
+większą niż $M+1$ i ponawiamy aproksymację przez
+$K_n$, z błędami sumującymi się do mniej niż $1$.
+Dostajemy zwarty $K\subseteq E$ z $\mu(K)>M$.
+To dowodzi \eqref{eq:inner-compact-20} także w przypadku
+nieskończonej masy. Razem z krokami 1--2 daje tezę.
+\end{proof}
+
+\begin{uwaga}[Na jakich przestrzeniach twierdzenie obowiązuje?]
+Założenie ośrodkowości i metryczności nie jest częścią
+definicji miary Radona; zostało wprowadzone w powyższym
+twierdzeniu, aby można było podać samodzielny dowód.
+Na ogólnych lokalnie zwartych przestrzeniach Hausdorffa
+regularność nie każdej miary borelowskiej jest automatyczna.
+Nie wystarczy również samo założenie lokalnej skończoności.
+\end{uwaga}
+
+\subsection{Funkcje ciągłe o zwartym nośniku}
+Dla lokalnie zwartej przestrzeni Hausdorffa $X$ oznaczamy
+przez $C_c(X)$ przestrzeń ciągłych funkcji
+$f:X\to\mathbb R$, których \emph{nośnik funkcji}
+$\operatorname{supp}f=\overline{\{x:f(x)\neq0\}}$
+jest zwarty. W analogiczny sposób definiuje się
+$C_c(X;\mathbb C)$. Nie należy mylić nośnika funkcji
+z nośnikiem topologicznym miary.
+
+\begin{lemat}[Funkcja odcinająca]
+\label{lem:cutoff-radon-20}
+Niech $X$ będzie lokalnie zwartą przestrzenią metryczną,
+$K\subseteq X$ zwartym zbiorem, a $U\subseteq X$
+otwartym zbiorem zawierającym $K$. Wtedy istnieje
+$f\in C_c(X)$ taka, że $0\le f\le1$, $f|_K=1$
+oraz $\operatorname{supp}f\subseteq U$.
+\end{lemat}
+\begin{proof}
+Jeśli $K=\varnothing$, wystarczy przyjąć $f=0$.
+W dalszej części zakładamy $K\neq\varnothing$.
+Dla każdego $x\in K$ wybieramy otwarte otoczenie
+$W_x$ takie, że $x\in W_x$, $\overline{W_x}$ jest
+zwarty i $\overline{W_x}\subseteq U$.
+Zwartość $K$ pozwala wybrać skończenie wiele takich
+zbiorów. Ich suma $V$ jest otwarta, zawiera $K$,
+a $\overline V$ jest zwartym podzbiorem $U$.
+Jeżeli $V=X$, przestrzeń $X$ jest zwarta
+i możemy przyjąć $f\equiv1$. W przeciwnym razie
+określamy
+\[
+ f(x)=\frac{d(x,X\setminus V)}
+ {d(x,X\setminus V)+d(x,K)}.
+\]
+Mianownik nie zeruje się nigdzie: dla $x\in K$
+pierwszy składnik jest dodatni, a poza $K$ drugi
+składnik jest dodatni (ponieważ $K$ jest domknięty).
+Obie funkcje odległości są ciągłe, stąd $f$ jest
+ciągła; na $K$ ma wartość $1$, poza $V$ jest zerowa,
+a $\operatorname{supp}f\subseteq\overline V\subseteq U$.
+\end{proof}
+\begin{twierdzenie}[Jednoznaczność miary Radona przez całki]
+\label{thm:uniqueness-cc-20}\label{tw:radon-unikalnosc}
+Niech $X$ będzie lokalnie zwartą przestrzenią metryczną,
+a $\mu,\nu$ miarami Radona na $X$. Jeżeli
+\[
+\int_X f(x)\,\mathrm d\mu(x)
+=\int_Xf(x)\,\mathrm d\nu(x)
+\qquad\text{dla każdego }f\in C_c(X),
+\]
+to $\mu=\nu$ na $\mathcal B(X)$.
+\end{twierdzenie}
+\begin{proof}
+Dla każdego otwartego $U\subseteq X$ i dowolnej
+miary Radona $\rho$ na $X$ zachodzi
+\begin{equation}\label{eq:cc-open-sup-20}
+\rho(U)=\sup\left\{\int_Xf\,\mathrm d\rho:
+ f\in C_c(X),\ 0\le f\le1,\
+ \operatorname{supp}f\subseteq U\right\}.
+\end{equation}
+Istotnie, każda z powyższych całek jest co najwyżej
+$\rho(U)$. Z drugiej strony dla każdego zwartego
+$K\subseteq U$ lemat~\ref{lem:cutoff-radon-20}
+daje $f$ równe $1$ na $K$, więc
+$\int_Xf\,\mathrm d\rho\ge\rho(K)$.
+Z regularności wewnętrznej miary $\rho$
+uzyskujemy \eqref{eq:cc-open-sup-20} także dla
+$\rho(U)=+\infty$. Przy założonej równości całek
+zbiory funkcji w supremum są te same dla obu miar,
+a więc $\mu(U)=\nu(U)$ dla wszystkich otwartych $U$.
+Wreszcie dla dowolnego zbioru borelowskiego
+$E\subseteq X$ z regularności zewnętrznej
+$\mu(E)=\inf_{U\supseteq E}\mu(U)
+=\inf_{U\supseteq E}\nu(U)=\nu(E)$.
+\end{proof}
+
+\label{ch:riesz-markov-21}
+\subsection{Sformułowanie i rola twierdzenia}
+Niech $X$ będzie lokalnie zwartą przestrzenią Hausdorffa,
+a $\mathbb K\in\{\mathbb R,\mathbb C\}$.
+Przestrzeń $C_c(X;\mathbb K)$ i pojęcie zwartego nośnika
+wprowadzono w rozdziale~\ref{ch:radon-measures-20}.
+Dla porównania przez $C_0(X;\mathbb K)$ oznaczamy przestrzeń funkcji ciągłych
+\emph{znikających w nieskończoności}, to znaczy takich, że
+dla każdego $\varepsilon>0$ zbiór
+$\{x:|f(x)|\ge\varepsilon\}$ jest zwarty.
+Przestrzeń $C_0(X;\mathbb K)$ z normą supremum jest przestrzenią
+Banacha. Rozróżnienie tych przestrzeni jest istotne dla funkcjonałów ograniczonych.
+
+\begin{twierdzenie}[Reprezentacja dodatnich funkcjonałów]
+\label{thm:riesz-positive-21}
+Niech $X$ będzie \emph{lokalnie zwartą, ośrodkową przestrzenią
+metryczną}, a $L:C_c(X;\mathbb R)\to\mathbb R$ funkcjonałem
+liniowym takim, że $L(f)\ge0$ dla $f\ge0$.
+Istnieje dokładnie jedna miara Radona $\mu$ na $X$ spełniająca
+\begin{equation}\label{eq:riesz-representation-21}
+ L(f)=\int_X f(x)\,\mathrm d\mu(x),\qquad f\in C_c(X;\mathbb R).
+\end{equation}
+Przy czym $L$ nie musi być ograniczony w normie supremum na
+całej przestrzeni $C_c(X)$.
+\end{twierdzenie}
+
+\begin{uwaga}[Zakres wersji twierdzenia]
+Klasyczne twierdzenie zachodzi na ogólnych lokalnie zwartych
+przestrzeniach Hausdorffa, przy właściwie określonej regularności
+miary. Aby wszystkie kroki dowodu, w tym konstrukcję i regularność,
+wyprowadzić tutaj z wcześniejszych rozdziałów bez ukrytych
+argumentów topologicznych, udowodnimy je dla lokalnie zwartych
+ośrodkowych przestrzeni metrycznych. Obejmuje to w szczególności
+$\mathbb R^d$, rozmaitości spełniające drugi aksjomat przeliczalności i przestrzenie
+polskie lokalnie zwarte. Wersja dla dowolnych lokalnie zwartych
+przestrzeni Hausdorffa wymaga dodatkowej pracy z regularnymi
+miarami zewnętrznymi; nie utożsamiamy tych dwóch zakresów.
+\end{uwaga}
+
+\subsection{Lemat o metrycznych miarach zewnętrznych}
+\begin{definicja}[Miara zewnętrzna metryczna]
+\label{def:metric-outer-21}
+Niech $(Z,d)$ będzie przestrzenią metryczną.
+Miara zewnętrzna $m^*:\mathcal P(Z)\to[0,\infty]$
+jest \emph{metryczna}, gdy dla dowolnych $A,B\subseteq Z$
+o dodatniej odległości $d(A,B)>0$ zachodzi
+$m^*(A\cup B)=m^*(A)+m^*(B)$.
+Dla zbioru pustego lub dowolnego niepustego przyjmujemy
+$d(\varnothing,B)=+\infty$.
+\end{definicja}
+
+\begin{lemat}[Borelowska mierzalność]
+\label{lem:metric-outer-borel-21}
+Jeżeli $m^*$ jest metryczną miarą zewnętrzną na $(Z,d)$,
+to każdy zbiór borelowski w $Z$ jest mierzalny w sensie
+Carathéodory'ego.
+\end{lemat}
+\begin{proof}
+Wystarczy wykazać mierzalność zbiorów domkniętych, gdyż
+rodzina zbiorów mierzalnych Carathéodory'ego jest
+$\sigma$-algebrą (twierdzenie Carathéodory'ego, Teoria miary, rozdział 03).
+Niech $F\subseteq Z$ będzie domknięty i $E\subseteq Z$.
+Musimy dowieść
+$m^*(E)\ge m^*(E\cap F)+m^*(E\setminus F)$;
+nierówność odwrotna wynika z podaddytywności.
+Jeśli $F=\varnothing$ lub $F=Z$, mierzalność jest oczywista.
+Jeśli $m^*(E)=+\infty$, teza jest oczywista. Załóżmy
+$m^*(E)<\infty$ i oznaczmy $r(x)=d(x,F)$.
+Dla każdego $n\ge1$ zbiory $E\cap F$ oraz
+$E\cap\{r>1/n\}$ mają dodatnią odległość, gdyż
+$r$ jest $1$-lipschitzowska. Zatem
+\begin{equation}\label{eq:metric-outer-sep-21}
+ m^*(E)\ge m^*(E\cap F)+m^*(E\cap\{r>1/n\}).
+\end{equation}
+Wykażemy, że drugi składnik po prawej zbiega do
+$m^*(E\setminus F)$; nie wolno tutaj korzystać z ciągłości
+z dołu, ponieważ $m^*$ jest dopiero miarą zewnętrzną.
+Niech $A_0=E\cap\{r>1\}$ oraz
+$A_j=E\cap\{1/(j+1)<r\le1/j\}$, $j\ge1$.
+Dla ustalonej parzystości indeksów dowolne dwa
+\emph{różne} zbiory $A_j$ mają dodatnią odległość.
+Dla każdej skończonej rodziny takich zbiorów metryczność
+i indukcja dają
+$\sum m^*(A_j)=m^*(\bigcup A_j)\le m^*(E)$.
+W konsekwencji obie serie, po indeksach parzystych
+i nieparzystych, są zbieżne; zatem
+$\sum_{j\ge1}m^*(A_j)<\infty$. Ponieważ
+\[
+ E\cap\{0<r\le1/n\}\subseteq\bigcup_{j\ge n}A_j,
+\]
+miara zewnętrzna części po lewej dąży do zera.
+Z podaddytywności
+\[
+ m^*(E\setminus F)\le
+ m^*(E\cap\{r>1/n\})+
+ m^*(E\cap\{0<r\le1/n\}),
+\]
+a z monotoniczności wynika przeciwna nierówność
+$m^*(E\cap\{r>1/n\})\le m^*(E\setminus F)$.
+Przechodząc do granicy w \eqref{eq:metric-outer-sep-21},
+otrzymujemy żądane kryterium Carathéodory'ego.
+\end{proof}
+
+\subsection{Przypadek zwarty: konstrukcja od podstaw}
+
+\noindent\emph{Powiązania tematyczne w Bibliotece matematycznej:} \atlasref{FA-12::thm:riesz-markov12}{FA-12: reprezentacja funkcjonałów na przestrzeni funkcji ciągłych}.
+
+\begin{twierdzenie}[Reprezentacja na zwartej przestrzeni metrycznej]
+\label{thm:compact-riesz-21}
+Niech $K$ będzie niepustą zwartą przestrzenią metryczną,
+a $L:C(K;\mathbb R)\to\mathbb R$ dodatnim funkcjonałem
+liniowym. Istnieje dokładnie jedna skończona regularna
+miara borelowska $\mu$ na $K$ taka, że
+$L(f)=\int_Kf\,\mathrm d\mu$ dla wszystkich $f\in C(K)$.
+Ponadto $\mu(K)=L(\chi_K)$ i
+$\|L\|=L(\chi_K)$.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: lokalne ograniczenie funkcjonału.}
+Z $-\|f\|_\infty\chi_K\le f\le\|f\|_\infty\chi_K$
+wynika $|L(f)|\le L(\chi_K)\|f\|_\infty$.
+Dla $f=\chi_K$ mamy równość w normie.
+
+\emph{Krok 2: przypisanie liczb zbiorom otwartym.}
+Dla zbioru otwartego $U\subseteq K$ definiujemy
+\begin{equation}\label{eq:open-content-21}
+ a(U)=\sup\{L(f): f\in C(K),\ 0\le f\le1,\
+          \operatorname{supp}f\subseteq U\}.
+\end{equation}
+W szczególności $a(\varnothing)=0$,
+$0\le a(U)\le L(\chi_K)$, $a(K)=L(\chi_K)$,
+a $a$ jest monotoniczna. Jeżeli $U,V$ są rozłączne
+i otwarte, to $a(U\cup V)\ge a(U)+a(V)$:
+wybieramy funkcje $f,g$ dopuszczalne odpowiednio dla
+$U,V$; ponieważ ich nośniki są rozłączne,
+$0\le f+g\le1$ i $L(f+g)=L(f)+L(g)$.
+
+\emph{Krok 3: przeliczalna podaddytywność na otwartych.}
+Jeżeli $U\subseteq\bigcup_{j\ge1}U_j$ i $f$ jest
+dopuszczalna w \eqref{eq:open-content-21}, to
+$\operatorname{supp}f$ ma skończone pokrycie
+$U_{j_1},\ldots,U_{j_N}$. Zbudujmy ciągłe funkcje
+$\theta_i\ge0$ o nośnikach zawartych w $U_{j_i}$,
+takie, że $\sum_i\theta_i=1$ na
+$H:=\operatorname{supp}f$. Dla każdego $x\in H$
+wybieramy otwarty zbiór $V_x$ zawierający $x$,
+którego domknięcie w $K$ mieści się w pewnym $U_{j_i}$.
+Ze zwartości $H$ wybieramy skończone pokrycie
+takimi $V_x$; po ewentualnym powtórzeniu indeksów
+oznaczmy je przez $V_i$, tak aby
+$\overline V_i\subseteq U_{j_i}$.
+Lemat~\ref{lem:cutoff-radon-20} daje funkcje
+$\psi_i\in C(K)$ spełniające
+$0\le\psi_i\le1$, $\psi_i=1$ na $\overline V_i$ i
+$\operatorname{supp}\psi_i\subseteq U_{j_i}$.
+Dla $\psi=\sum_i\psi_i$ mamy $\psi>0$ na $H$.
+Ponownie stosujemy lemat o funkcji odcinającej,
+uzyskując $\chi\in C(K)$ taką, że $0\le\chi\le1$,
+$\chi=1$ na $H$ oraz
+$\operatorname{supp}\chi\subseteq\{\psi>0\}$.
+Wówczas $\theta_i=\chi\psi_i/\psi$ na $\{\psi>0\}$
+i $\theta_i=0$ poza tym zbiorem. Funkcje
+$\theta_i$ są ciągłe również na brzegu $\{\psi>0\}$,
+ponieważ nośnik $\chi$ jest w nim zawarty,
+a ich suma jest równa $\chi=1$ na $H$. Każde $f\theta_i$ jest nieujemne,
+nie przekracza $1$ i ma nośnik w $U_{j_i}$.
+Jeżeli indeks $j_i$ występuje więcej niż raz, grupujemy odpowiadające mu funkcje: $h_j=\sum_{i:j_i=j}f\theta_i$. Mamy $0\le h_j\le f\le1$ (ponieważ suma wszystkich składników jest równa $f$), a jego nośnik zawiera się w $U_j$, jako skończona suma odpowiednich nośników. Wobec tego
+$L(f)=\sum_j L(h_j)\le\sum_{j\ge1}a(U_j)$.
+Po wzięciu supremum otrzymujemy
+$a(U)\le\sum_j a(U_j)$.
+
+\emph{Krok 4: miara zewnętrzna.}
+Dla dowolnego $A\subseteq K$ definiujemy
+\begin{equation}\label{eq:riesz-outer-21}
+ m^*(A)=\inf\{a(U):A\subseteq U,\ U\text{ otwarty}\}.
+\end{equation}
+Jeżeli $A\subseteq\bigcup_j A_j$, dobieramy otwarte
+$U_j\supseteq A_j$ z
+$a(U_j)\le m^*(A_j)+\varepsilon2^{-j}$ (przyjmujemy
+osobno trywialny przypadek nieskończonej sumy).
+Krok 3 daje
+$m^*(A)\le a(\bigcup_jU_j)\le\sum_jm^*(A_j)+\varepsilon$.
+Zatem $m^*$ jest miarą zewnętrzną.
+Dla zbioru otwartego $U$ mamy $m^*(U)=a(U)$, ponieważ
+$U\subseteq V$ implikuje $a(U)\le a(V)$.
+Jeśli $d(A,B)=\delta>0$, to dla każdego otwartego
+$W\supseteq A\cup B$ zbiory
+$W_A=W\cap\{x:d(x,A)<\delta/3\}$ i
+$W_B=W\cap\{x:d(x,B)<\delta/3\}$ są otwarte,
+rozłączne i zawierają odpowiednio $A,B$. Stąd
+$a(W)\ge a(W_A)+a(W_B)\ge m^*(A)+m^*(B)$.
+Biorąc infimum po $W$ otrzymujemy metryczność $m^*$.
+Lemat~\ref{lem:metric-outer-borel-21} zapewnia, że
+wszystkie zbiory borelowskie są mierzalne. Ograniczenie
+$\mu=m^*|_{\mathcal B(K)}$ jest więc miarą, a
+$\mu(K)=L(\chi_K)<\infty$.
+
+\emph{Krok 5: regularność.}
+Regularność zewnętrzna wynika z \eqref{eq:riesz-outer-21}.
+Dla otwartego $U$ i $\varepsilon>0$ dobieramy
+$0\le f\le1$ z $\operatorname{supp}f\subseteq U$ i
+$L(f)>\mu(U)-\varepsilon$. Przyjmijmy
+$H=\operatorname{supp}f$, który jest zwarty.
+Każdy otwarty $V\supseteq H$ spełnia
+$L(f)\le a(V)$, zatem
+$\mu(H)=\inf_{V\supseteq H}a(V)\ge L(f)$.
+To dowodzi regularności wewnętrznej dla otwartych.
+Dla dowolnego borelowskiego $E$ i $\varepsilon>0$
+wybieramy otwarty $U\supseteq E$ z
+$\mu(U\setminus E)<\varepsilon$.
+Następnie wybieramy zwarty $H\subseteq U$ z
+$\mu(U\setminus H)<\varepsilon$ oraz otwarty
+$W\supseteq U\setminus E$ z
+$\mu(W)<\mu(U\setminus E)+\varepsilon$.
+Zbiór $H\setminus W$ jest zwarty, zawiera się w $E$,
+a $\mu(E\setminus(H\setminus W))<3\varepsilon$.
+Otrzymujemy regularność wewnętrzną względem zwartych.
+
+\emph{Krok 6: identyfikacja całki z $L$.}
+Niech $f\in C(K)$, $f\ge0$. Dla $f=0$ równość jest natychmiastowa; w pozostałym przypadku $M=\|f\|_\infty>0$.
+Dla $N\ge1$ połóżmy $\delta=M/N$ i
+$U_i=\{f>i\delta\}$, $i=0,\ldots,N$.
+Dla $i=0,\ldots,N-1$ zbiór
+$H_i=\{f\ge(i+1)\delta\}$ jest zwarty i zawiera się
+w $U_i$. Istnieje $h_i\in C(K)$, $0\le h_i\le1$,
+$h_i=1$ na $H_i$, $\operatorname{supp}h_i\subseteq U_i$;
+wynika to z lematu o funkcji odcinającej
+\ref{lem:cutoff-radon-20}. Punktowo
+$f\le\delta\chi_K+\delta\sum_{i=0}^{N-1}h_i$.
+Z dodatniości $L$ dostajemy
+\begin{equation}\label{eq:riesz-upper-sum-21}
+ L(f)\le\delta L(\chi_K)+
+           \delta\sum_{i=0}^{N-1}\mu(U_i).
+\end{equation}
+Z drugiej strony dla dowolnych funkcji
+$g_i\in C(K)$, $0\le g_i\le1$,
+$\operatorname{supp}g_i\subseteq U_i$ ($1\le i\le N$),
+zachodzi $\delta\sum_{i=1}^{N}g_i\le f$ punktowo.
+Zatem, biorąc niezależnie supremum po $g_i$,
+\begin{equation}\label{eq:riesz-lower-sum-21}
+ \delta\sum_{i=1}^{N}\mu(U_i)\le L(f).
+\end{equation}
+Natomiast rozcięcie poziomów funkcji daje
+\[
+ \delta\sum_{i=1}^{N}\mu(U_i)
+ \le\int_Kf(x)\,\mathrm d\mu(x)
+ \le\delta\sum_{i=0}^{N-1}\mu(U_i).
+\]
+Różnica między lewą i prawą sumą wynosi
+$\delta\mu(U_0)\le\delta L(\chi_K)$.
+Z \eqref{eq:riesz-upper-sum-21} i
+\eqref{eq:riesz-lower-sum-21} wynika
+$|L(f)-\int_K f\,\mathrm d\mu|\le2\delta L(\chi_K)$.
+Wysyłając $N\to\infty$, otrzymujemy reprezentację
+$f\ge0$. Ogólny $f$ rozkładamy na części dodatnią
+i ujemną.
+
+\emph{Krok 7: jednoznaczność.}
+Dla dowolnej miary regularnej $\rho$ reprezentującej $L$
+i otwartego $U$ regularność oraz funkcje odcinające
+dają $\rho(U)=a(U)$ (por.
+\eqref{eq:cc-open-sup-20}). Stąd z regularności
+zewnętrznej $\rho=\mu$ na wszystkich zbiorach
+borelowskich.
+\end{proof}
+
+\subsection{Przestrzenie lokalnie zwarte: lokalizacja i sklejanie}
+\begin{lemat}[Wyczerpanie przez zbiory relatywnie zwarte]
+\label{lem:exhaustion-21}
+Niech $X$ będzie lokalnie zwartą ośrodkową przestrzenią
+metryczną. Istnieją otwarte zbiory $U_n$ takie, że
+$U_n\subseteq\overline U_n\subseteq U_{n+1}$,
+$\overline U_n$ jest zwarty i $\bigcup_nU_n=X$.
+Ponadto istnieją $\chi_n\in C_c(X)$ spełniające
+$0\le\chi_n\le1$, $\chi_n=1$ na $\overline U_n$
+oraz $\operatorname{supp}\chi_n\subseteq U_{n+1}$.
+\end{lemat}
+\begin{proof}
+Lokalna zwartość daje każdemu punktowi relatywnie zwarte
+otwarte otoczenie. Ośrodkowa przestrzeń metryczna spełnia
+drugi aksjomat przeliczalności, więc z tego pokrycia wybieramy
+przeliczalne podpokrycie $(V_j)_{j\ge1}$.
+Indukcyjnie dobieramy relatywnie zwarte otwarte $U_n$,
+obejmujące $\overline U_{n-1}\cup\overline V_1\cup\cdots
+\cup\overline V_n$: skończone pokrycie tego zwartego
+zbioru relatywnie zwartymi otoczeniami ma relatywnie
+zwartą sumę. Dobierając otwarte otoczenie o zwartej
+domkniętej powłoce, uzyskujemy żądane zawierania.
+Funkcje $\chi_n$ istnieją na mocy lematu
+\ref{lem:cutoff-radon-20}.
+\end{proof}
+
+\begin{proof}[Dowód twierdzenia~\ref{thm:riesz-positive-21}]
+\emph{Krok 1: dodatniość lokalna i zwartość.}
+Dla dowolnego zwartego $H\subseteq X$ wybieramy
+$\eta\in C_c(X)$, $\eta\ge0$, $\eta=1$ na $H$.
+Jeśli $\operatorname{supp}f\subseteq H$, to
+$-\|f\|_\infty\eta\le f\le\|f\|_\infty\eta$,
+więc $|L(f)|\le\|f\|_\infty L(\eta)$.
+Wybierzmy wyczerpanie i funkcje $\chi_n$ z lematu
+\ref{lem:exhaustion-21}; oznaczmy $K_n=\overline U_n$
+i $J_n=\overline U_{n+1}$.
+Dla $h\in C(J_n)$ funkcję $\chi_nh$ na $J_n$
+przedłużamy przez zero na $X\setminus J_n$.
+Jest ona ciągła, ponieważ
+$\operatorname{supp}\chi_n\subseteq U_{n+1}$.
+Definiujemy $L_n(h)=L(\chi_nh)$; jest to dodatni
+funkcjonał na $C(J_n)$.
+Z twierdzenia~\ref{thm:compact-riesz-21}
+istnieje skończona regularna miara $\rho_n$
+na $J_n$ reprezentująca $L_n$. Przedłużamy ją
+przez zero na dopełnienie $J_n$, otrzymując miarę
+borelowską na $X$ (także oznaczaną $\rho_n$).
+
+\emph{Krok 2: zgodność miar na wyczerpaniu.}
+Jeżeli $m\ge n$, to $\chi_m=\chi_n=1$ na $U_n$.
+Dla dowolnego $f\in C_c(U_n)$ zachodzi zatem
+\[
+ \int_Xf\,\mathrm d\rho_m=L(f)
+  =\int_Xf\,\mathrm d\rho_n.
+\]
+Ograniczenia $\rho_m|_{U_n}$ i $\rho_n|_{U_n}$
+są miarami Radona (na otwartej przestrzeni $U_n$).
+Jednoznaczność z twierdzenia~\ref{thm:uniqueness-cc-20}
+daje $\rho_m|_{U_n}=\rho_n|_{U_n}$.
+Uwaga: ograniczenie miary Radona do otwartego podzbioru
+jest Radona; regularność wewnętrzna oraz zewnętrzna
+wynika z regularności wyjściowej i przecięcia z podprzestrzenią.
+
+\emph{Krok 3: sklejenie.}
+Stawiamy $U_0=\varnothing$, $B_n=U_n\setminus U_{n-1}$.
+Dla borelowskiego $E\subseteq X$ określamy
+\begin{equation}\label{eq:gluing-measures-21}
+ \mu(E)=\sum_{n\ge1}\rho_n(E\cap B_n).
+\end{equation}
+Ponieważ $B_n$ są parami rozłączne, a suma miar jest
+miarą, $\mu$ jest miarą borelowską. Dla $E\subseteq U_m$
+przeliczalna addytywność i krok 2 dają
+$\mu(E)=\rho_m(E)$; dotyczy to również wszystkich
+$E\in\mathcal B(U_m)$. W szczególności
+$\mu(U_m)=\rho_m(U_m)<\infty$.
+Zatem $\mu$ jest lokalnie skończona. Rozdział
+\ref{ch:radon-measures-20} pokazuje, że na lokalnie
+zwartej ośrodkowej przestrzeni metrycznej jest ona
+miarą Radona.
+
+\emph{Krok 4: reprezentacja.}
+Jeśli $f\in C_c(X)$, jej nośnik mieści się w pewnym
+$U_m$ (ponieważ $(U_m)$ jest rosnącym pokryciem
+zwartego nośnika). Wtedy
+\[
+ \int_X f(x)\,\mathrm d\mu(x)
+ =\int_X f(x)\,\mathrm d\rho_m(x)
+ =L(\chi_m f)=L(f).
+\]
+Jednoznaczność wynika z twierdzenia
+\ref{thm:uniqueness-cc-20}.
+\end{proof}
+
+\subsection{Związek z całką Daniella i przykłady}
 \begin{stwierdzenie}[Związek z całkami Daniella i Lebesgue'a]
 Jeżeli $X$ jest zwarta, to $C_c(X)=C(X)$ i dodatni funkcjonał liniowy na $C(X)$ jest funkcjonałem Daniella. Dla lokalnie zwartej przestrzeni o przeliczalnej bazie reprezentację Radona można otrzymać również przez lokalne funkcjonały Daniella.
 \end{stwierdzenie}
 \begin{proof}
-Niech $h_n\in C(X)$ i $h_n\downarrow0$. Z twierdzenia Diniego wynika $\|h_n\|_\infty\to0$. Jeśli $\Lambda$ jest dodatnia, $0\le\Lambda(h_n)\le\|h_n\|_\infty\Lambda(1)\to0$, co daje ciągłość porządkową. Na przestrzeni lokalnie zwartej można zastosować podobny argument z funkcjami odcinającymi na zwartych zbiorach.
+Niech $h_n\in C(X)$ i $h_n\downarrow0$. Z twierdzenia Diniego wynika $\|h_n\|_\infty\to0$. Jeśli $\Lambda$ jest dodatnia, $0\le\Lambda(h_n)\le\|h_n\|_\infty\Lambda(1)\to0$, co daje ciągłość porządkową. Na przestrzeni lokalnie zwartej dla $h_n\in C_c(X)$ z $h_n\downarrow0$ wszystkie nośniki mieszczą się w zwartym nośniku $h_1$. Twierdzenie Diniego na tym zbiorze daje $\|h_n\|_\infty\to0$; z lokalnego ograniczenia funkcjonału wykazanego w dowodzie twierdzenia \ref{thm:riesz-positive-21} wynika $L(h_n)\to0$. Zatem również tu zachodzi warunek ciągłości porządkowej Daniella. Reprezentację na zbiorach borelowskich zapewnia powyższe twierdzenie Radona.
 \end{proof}
 \begin{przyklad}[Gęstość i atom w jednym funkcjonale]
 Na $C_c(\R)$ definiujemy $\Lambda(\varphi)=\int_0^1\varphi(x)\,\mathrm d\lambda(x)+2\varphi(0)$. Jest to dodatni funkcjonał liniowy, reprezentowany przez $\mu=\lambda|_{[0,1]}+2\delta_0$. Stąd $\int 1\,\mathrm d\mu=3$, $\int x^2\,\mathrm d\mu=1/3$, $\int\ind{\{0\}}\,\mathrm d\mu=2$. Ostatnią wartość obliczamy już z miary, ponieważ funkcja charakterystyczna punktu nie należy do $C_c(\R)$.
@@ -32,23 +736,6 @@ Na $C_c(\R)$ definiujemy $\Lambda(\varphi)=\int_0^1\varphi(x)\,\mathrm d\lambda(
 \begin{przyklad}[Całka skupiona na okręgu]
 Dla $\varphi\in C_c(\R^2)$ definiujemy $\Lambda(\varphi)=\int_0^{2\pi}\varphi(\cos t,\sin t)\,\mathrm dt$. Funkcjonał jest dodatni i liniowy. Reprezentująca go miara jest miarą długości łuku na jednostkowym okręgu $S^1$, skupioną na tym okręgu. Mamy $\mu(S^1)=2\pi$ i $\int_{S^1}x_1^2\,\mathrm d\mu=\pi$. Miarę tę należy odróżnić od dwuwymiarowej miary Lebesgue'a, dla której $\lambda_2(S^1)=0$.
 \end{przyklad}
-
-% ============================================================
-% UZUPELNIENIE MATEMATYCZNE: ROZDZIAL 13
-% ============================================================
-\subsection*{Jednoznaczność reprezentacji i obliczenia}
-\begin{twierdzenie}[Jednoznaczność miary Radona na podstawie $C_c$]\label{tw:radon-unikalnosc}
-Niech $X$ będzie lokalnie zwartą przestrzenią Hausdorffa, a $\mu,\nu$ lokalnie skończonymi regularnymi miarami borelowskimi na $X$. Jeśli
-$\int_X f\,\mathrm d\mu=\int_Xf\,\mathrm d\nu$ dla każdej $f\in C_c(X)$, to $\mu=\nu$ na wszystkich zbiorach borelowskich.
-\end{twierdzenie}
-\begin{proof}
-Dla dowolnego otwartego $U\subset X$ zachodzi
-\[
-\mu(U)=\sup\left\{\int_X f\,\mathrm d\mu: f\in C_c(X),\ 0\le f\le1,\ \supp f\subset U\right\}.
-\]
-Nierówność ``$\ge$'' jest oczywista. Dla nierówności przeciwnej wybieramy dowolny zwarty $K\subset U$. Lemat o funkcji odcinającej na przestrzeni lokalnie zwartej Hausdorffa daje $f\in C_c(X)$ z $0\le f\le1$, $f|_K=1$ i $\supp f\subset U$. Wtedy $\mu(K)\le\int f\,\mathrm d\mu$. Po wzięciu supremum po zwartych $K\subset U$ i zastosowaniu regularności wewnętrznej mamy wzór. Z równości całek dla funkcji z $C_c(X)$ wnioskujemy $\mu(U)=\nu(U)$ dla każdego otwartego $U$. Regularność zewnętrzna daje równość obu miar na wszystkich zbiorach borelowskich.
-\end{proof}
 \begin{przyklad}[Skończona suma ewaluacji punktowych]
 Dla punktów $x_1,\dots,x_m\in X$ oraz liczb $c_1,\dots,c_m>0$ funkcjonał $\Lambda(f)=\sum_{j=1}^m c_jf(x_j)$ na $C_c(X)$ jest dodatni i liniowy. Reprezentuje go miara Radona $\mu=\sum_{j=1}^m c_j\delta_{x_j}$. Twierdzenie \ref{tw:radon-unikalnosc} pokazuje, że żadna inna regularna miara borelowska nie daje tych samych wartości $\Lambda(f)$ dla wszystkich $f\in C_c(X)$.
 \end{przyklad}
-
