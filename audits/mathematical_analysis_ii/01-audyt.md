@@ -44,3 +44,13 @@ Ponownie przeczytano wszystkie pięć sekcji, dziewięć dowodów, definicje i o
 Kontrola statyczna aktualnego źródła: 12 unikalnych etykiet, 6 wystąpień odwołań lokalnych, 0 brakujących celów, zbilansowane środowiska; ścieżka w catalog/books.json zgodna z jedynym input w entrypoincie. Zachowano bez zmian treść rozdziału. CI #45663392153 dla 2b9f9be zakończone SUCCESS. CI #45663610468 dla 96f6139 w toku w chwili kontroli. Nie zaliczono kontroli wizualnej PDF ani działania indeksu Atlasu.
 
 Licznik czystych audytów: 1/2. Status: OTWARTY do audytu kontrolnego, potwierdzenia kompilacji aktualnego blobu i kontroli PDF. Nie przechodzić jeszcze do rozdziału 02.
+
+## Audyt kontrolny i stabilizacja rozdziału 01
+
+Wersja treści: blob 125dc13081f10c498308623bf77834f97ac2699e, 470 wierszy. Wykonano drugi ręczny przebieg kontrolny wszystkich pięciu sekcji (9 dowodów i 2 przykłady), bez nowych istotnych usterek. Sprawdzono osobno przypadek przestrzeni zerowej, dodatniość minimum na sferze, niezależność indeksu N od współrzędnej przy dowodach zupełności, przypadki p=1 i p=nieskończoność, domkniętość c0, kontrprzykład c00, niepustość S i K oraz zbieżność jednostajną funkcji ciągłych. Zastosowania wyników z AM I i AL nie wymagają teorii szeregów wektorowych. Nie zmieniano tekstu rozdziału.
+
+Kontrola strukturalna ponownie PASS: 12 etykiet, 6 wystąpień lokalnych odwołań, 0 braków, 0 duplikatów, zbilansowane środowiska. Porównano SHA blobu rozdziału i entrypointu na aktualnej gałęzi z wersją kompilowaną w CI — oba identyczne.
+
+CI #45663610468 dla 96f6139479f3c83369b06cd3cf43e6293684d689: completed/success. Artefakt 15045458709 pobrano i rozpakowano, wyrenderowano wszystkie 8 stron PDF (strona tytułowa, spis treści, 6 stron rozdziału) przez pdftoppm i obejrzano obrazy wszystkich stron. Układ, wzory, odsyłacze, numeracja i ilustracja trzech kul jednostkowych bez widocznych usterek; ostatnia strona jest krótsza, co jest naturalnym zakończeniem rozdziału. Nie weryfikowano działania interfejsu Atlasu w przeglądarce ani formalizacji Lean; nie są to zaliczone testy.
+
+Licznik czystych audytów: 2/2. Status rozdziału: USTABILIZOWANY w zakresie matematyczno-redakcyjnym oraz kompilacji i wizualnej kontroli PDF. Kolejny rozdział: 02 — Szeregi w przestrzeniach Banacha.
