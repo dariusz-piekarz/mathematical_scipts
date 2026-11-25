@@ -131,6 +131,58 @@ class CategoryTheoryCh20(unittest.TestCase):
                     self.assertEqual(direct,(tuple(x for x,y in separated),
                                              tuple(y for x,y in separated)))
 
+    def test_CAT_20_007_symmetric_presentation(self):
+        # Normalize h r_j by right multiplication; compare to permutations.
+        def perm(n, word):
+            p=list(range(n))
+            for i in word:
+                p[i-1],p[i]=p[i],p[i-1]
+            return tuple(p)
+        def r(n,j):
+            return tuple(range(n-1,j-1,-1))
+        for n in range(2,7):
+            reps=set()
+            # All permutations of the first n-1 letters in H.
+            for h in itertools.permutations(range(n-1)):
+                for j in range(1,n+1):
+                    p=list(h)+( [n-1] )
+                    for i in r(n,j):
+                        p[i-1],p[i]=p[i],p[i-1]
+                    reps.add(tuple(p))
+            self.assertEqual(reps,set(itertools.permutations(range(n))))
+            for j in range(1,n+1):
+                for i in range(1,n):
+                    if j==n:
+                        rhs=(i,) if i<n-1 else r(n,n-1)
+                    elif i<j-1:
+                        rhs=(i,)+r(n,j)
+                    elif i==j-1:
+                        rhs=r(n,j-1)
+                    elif i==j:
+                        rhs=r(n,j+1)
+                    else:
+                        rhs=(i-1,)+r(n,j)
+                    self.assertEqual(perm(n,r(n,j)+(i,)),perm(n,rhs))
+
+    def test_CAT_20_008_signed_adjacent_swaps(self):
+        # Adjacent graded swaps: compare signed permutations, not just endpoints.
+        def action(degrees, word):
+            p=list(enumerate(degrees))
+            sign=1
+            for i in word:
+                if p[i][1]*p[i+1][1]%2:
+                    sign=-sign
+                p[i],p[i+1]=p[i+1],p[i]
+            return tuple(p),sign
+        for n in range(2,7):
+            for d in itertools.product((-1,0,1),repeat=n):
+                for i in range(n-1):
+                    self.assertEqual(action(d,(i,i)),action(d,()))
+                    for j in range(i+2,n-1):
+                        self.assertEqual(action(d,(i,j)),action(d,(j,i)))
+                    if i+1<n-1:
+                        self.assertEqual(action(d,(i,i+1,i)),action(d,(i+1,i,i+1)))
+
     def test_CAT_20_004_structure(self):
         s=CHAPTER.read_text(encoding="utf-8")
         labels=re.findall(r"\\label\{([^}]+)\}",s)
