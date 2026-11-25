@@ -1,0 +1,9 @@
+# Uzupełnienie rejestru regresji rozdziału 11
+
+Raport awaryjny: zapis głównego regression.md nie powiódł się. Należy scalić przy następnej iteracji, nie powtarzać wykonanych audytów.
+
+## Iteracja 176 — druga lektura 038–048
+Commit 2cef5c4510e1bff0910608be2e629e82ba52f3f3, blob a91d8a3faa08b259bd55e7880aaf9b1112f19350. Osiem zmian: Hahn–Banach i jednoznaczność granicy, zbiory podpoziomowe, tytuł lematu, krok Grama–Schmidta, wybór indeksów, potęgi normy i kryterium silnej zbieżności, efektywna dziedzina minimizatorów, zbieżność szeregu i ciągłość kontrprzykładu w ell². Kryteria 038–041,044,047–048 doprecyzowane; 042–043,045–046 bez zmian. Zachowano 36 etykiet i 49 odsyłaczy w kolejności, stos środowisk poprawny. Druga lektura 48/75. Testów, CI, kompilacji i Lean nie uruchamiano.
+
+## Iteracja 177 — druga lektura 049–061
+Źródło przed a91d8a3faa08b259bd55e7880aaf9b1112f19350, po b1296c8e8d44ecc344bfdc65ad73e4dd42dcb588, commit 618c5df135ffb24b571abab824b671f1d4fac4a1. Odczytano pełne sekcje energii kwadratowej i p-laplasjanu. 049: poprawiona składnia hipotez i jawne uzupełnienie kwadratu. 050: poprawne normy i zupełność. 051: obie implikacje, dwustronne oszacowanie błędu, silna zbieżność ciągu minimalizującego. 052: ograniczoność i koercywność części symetrycznej. 053: jawna norma produktu, liniowość i iniektywność. 054: dokładny rachunek minimum skalarnego. 055–056: poprawny argument minimalizujący i słaba dolna półciągłość. 057–058: konwencja zerowego strumienia i normy euklidesowej już w tezie, dwustronna pochodna przez kryterium ciągowe. 059–060: ścisła wypukłość potęgi i jawna tożsamość całkowa różnicy rozwiązań. 061: poprawne oszacowanie oraz zakres p. Dziesięć zmian, 9 kryteriów doprecyzowanych, 4 bez zmian. Zachowano 36 etykiet i 49 odsyłaczy w tej samej kolejności, stos środowisk poprawny, pozostałe sekcje bez zmian. Druga lektura 61/75, pierwsza 75/75. Nie uruchamiano testów, kompilacji, CI ani Lean. Następnie 062–075.
