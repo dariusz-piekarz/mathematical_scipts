@@ -1,0 +1,12 @@
+# Audyt 247 — kontrola zmian w rozdziałach drukowanych 2, 4, 6
+
+Data: 2026-11-25. Powrót do audytu szczegółowego zgodnie z raportem 245, przed zamknięciem rozdziału drukowanego 26. Porównano pełne trzy źródła z wersją bazową ff96b359c1cd1aba88270b77d340c844f6efc9ec oraz ustalonym SHA a9447f9b5cf3e9b42148528da0479f6bce1e0106.
+
+- TG02: dokładny diff obejmuje wyłącznie dwie nowe etykiety; ponownie sprawdzono dowód niezmiennika kolejki, osiągalności, obu nierówności odległości, acykliczności krawędzi rodzicielskich oraz definicję i własności przekroju.
+- TG04: dokładny diff obejmuje zastąpienie powtórzonej definicji odsyłaczem do TG02 i wyodrębnienie separatora s,t. Sprawdzono założenie nietrywialności podziału, rozróżnienie przekroju i separatora, dowód minimalizacji i ograniczenia przez minimalny stopień. Nie zmieniono pozostałych dowodów.
+- TG37 (drukowany 6): dokładny diff obejmuje jedynie akapit wstępny i powiązanie z twierdzeniem w TG02. Sprawdzono zgodność hipotez i uogólnienie na grafy niespójne, niezmiennik kolejki, dowód indukcyjny względem odległości, rodziców i składową spójną.
+- 57/57 różnych etykiet w trzech źródłach, żadnej starej nie usunięto. Dwa nowe cele istnieją. Bez nowych istotnych uwag matematycznych.
+
+Rzeczywiście wykonano niezależny kod JS GKT-02-04-06-CUT-BFS-01: 1099 grafów prostych etykietowanych (n=1..5), w tym 772 spójne; 10810 uruchomień BFS w dwóch porządkach sąsiadów, 53410 porównań z Floydem-Warshallem wraz z kontrolą rodziców, 31668 przekrojów, 59809 podzbiorów usuwanych krawędzi i 10650 porównań minimalnych separatorów par. Wszystkie asercje PASS. Kod wykonanej funkcji zapisano w test_gkt_cut_bfs_control.js (f82d73ff9eaf699a755e6c52e853d9defd1ecdfe). Dodano krok do istniejącego workflow algorytmów (fbe3e1a5a5079585c5de68b903e3ddf47c01ef9e). Nie uruchamiano osobno zapisanego pliku przez Node; wykonano jego funkcję w środowisku JS. Nie jest to formalizacja Lean.
+
+Kontrola matematyczna zmian PASS. Nie jest to nowy pełny audyt wszystkich sekcji trzech rozdziałów: pozostałe źródło jest identyczne z bazą historycznej stabilizacji. Aktualne CI/PDF nadal otwarte; brak statusów kombinowanych dla commitu workflow, nie deklaruje się PASS GitHub Actions. Po kontroli TG43 (drukowany 12) i TG11 (drukowany 18) oraz bramkach technicznych wrócić do otwartego rozdziału 26 z raportu 246. Zachować numerację drukowaną, nie zwiększać licznika zamkniętych rozdziałów bez pełnej stabilizacji.
