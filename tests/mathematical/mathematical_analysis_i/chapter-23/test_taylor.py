@@ -45,6 +45,30 @@ class Chapter23(unittest.TestCase):
                 self.assertEqual(2*(h-xi)*h,h*h)
                 self.assertEqual(F(factorial(n+1),(n+1)*factorial(n))*h**(n+1),h**(n+1))
 
+    def test_auxiliary_derivative_cancellation(self):
+        # Exact check of the two differentiated sums, including n=0.
+        f=[F(1),F(-2),F(3,2),F(4),F(-1),F(3,7)]
+        for n in range(7):
+            for t,x in ((F(-1),F(2)),(F(2),F(-1)),(F(1,3),F(5,4))):
+                first=-sum(val(nth(f,k+1),t)*(x-t)**k/factorial(k)
+                           for k in range(n+1))
+                second=sum(val(nth(f,k),t)*(x-t)**(k-1)/factorial(k-1)
+                           for k in range(1,n+1))
+                self.assertEqual(first+second,-val(nth(f,n+1),t)*(x-t)**n/factorial(n))
+
+    def test_general_remainder_negative_exponent(self):
+        # n=0, p=2, f(t)=t, xi midpoint: exponent n+1-p=-1.
+        for a,x in ((F(-1),F(3)),(F(3),F(-1)),(F(2,3),F(-1,7))):
+            xi=(a+x)/2
+            self.assertTrue(min(a,x)<xi<max(a,x))
+            self.assertEqual(F(1,2)*(x-xi)**(-1)*(x-a)**2,x-a)
+        # n=1, p=4, f(t)=t^2-t^3/(2h), a=0, x=h.
+        for h in (F(-2),F(3,4)):
+            xi=h/2
+            f=[F(0),F(0),F(1),-1/(2*h)]
+            rhs=val(nth(f,2),xi)/4*(h-xi)**(-2)*h**4
+            self.assertEqual(rhs,val(f,h)-val(f,F(0))-val(nth(f,1),F(0))*h)
+
     def test_exp_bound(self):
         for x in (-1.0,0.0,0.5,1.0):
             for n in range(8):
