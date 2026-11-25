@@ -9,3 +9,7 @@ Uruchomiono kod JavaScript (node control.js), zapisany trwale w tests/mathematic
 ## Walidacja
 
 CI audytu II: 45592327738, commit f61dcab1bd2680510efe229a45158e6cf0ae804b, stan w chwili zapisu: in_progress, conclusion: null. Krok testów regresyjnych zakończony success według odczytu job 139129445260. Porównano 31 plików objętych CI z aktualną głową przed zapisem, identyczne. Kontrola wizualna PDF nie została wykonana; CAT-09 pozostaje otwarty do potwierdzenia finalnej kompilacji, odsyłaczy i PDF. 
+
+## Zamknięcie walidacji technicznej
+
+CI 45592327738: completed/success, 63/63 testów, wszystkie 8 kroków job 139129445260 success. Artefakt 15012041019: category_theory.pdf (57 stron) i końcowy log. Lokalnie sprawdzono brak Warning, Overfull oraz błędów ^! w końcowym logu. Render pdftoppm 115 dpi, obejrzano wszystkie strony 40–44 (CAT-09 jest w PDF sekcją 10; strony skrajne współdzielone z sąsiadami). Nie zauważono obcięć, kolizji ani problemów z odsyłaczami. Ponownie porównano 31 blobów objętych CI przed zapisem. CAT-09 zamknięty, następny CAT-10 (lemat Yonedy). Nie uruchamiano Lean.
