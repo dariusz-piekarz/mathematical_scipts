@@ -7,17 +7,22 @@ rozwiązań fundamentalnych. Transformata Fouriera realizuje komplementarny
 pomysł: zamienia pochodne na mnożenie przez wielomiany. Na całej
 $\R^d$ nie możemy jednak bez zastrzeżeń używać klasycznej transformaty
 całkowej dla wszystkich dystrybucji. Potrzebujemy więc przestrzeni
-Schwartza $\mathcal S(\R^d)$ i jej przestrzeni dualnej $\mathcal S'(\R^d)$.
+Schwartza $\mathcal S(\R^d)$ i jej przestrzeni sprzężonej $\mathcal S'(\R^d)$.
 
 W całym rozdziale $d\ge1$, całki na $\R^d$ są liczone względem
 miary Lebesgue'a $\lambda_d$, a wielowskaźniki należą do $\N_0^d$.
-Przyjmujemy \emph{nieunitarną} konwencję
+Dla funkcji całkowalnych przyjmujemy \emph{nieunitarną}
+konwencję
 \begin{equation}\label{eq:pde8-convention}
  \widehat f(\xi)=\mathcal F f(\xi)
  =\int_{\R^d}e^{-ix\cdot\xi}f(x)\,\mathrm d\lambda_d(x),\qquad
  \mathcal F^{-1}g(x)=(2\pi)^{-d}
  \int_{\R^d}e^{ix\cdot\xi}g(\xi)\,\mathrm d\lambda_d(\xi).
 \end{equation}
+Na razie symbol $\mathcal F^{-1}$ oznacza podaną całkę
+dla $g\in L^1(\R^d)$; fakt, że jest to odwzorowanie
+odwrotne do $\mathcal F$ na przestrzeni Schwartza,
+wykażemy później.
 Współczynniki $(2\pi)^{-d}$ zależą od konwencji i nie będą
 pomijane. W szczególności nie będziemy bez przeliczenia używać
 wzorów wyprowadzonych dla transformaty unitarnej.
@@ -31,41 +36,183 @@ przez czynnik $(2\pi)^{-d}$.
 
 \begin{definicja}[Przestrzeń Schwartza]
 \label{def:pde8-schwartz}
+Dla wielowskaźników $\alpha,\beta\in\N_0^d$ piszemy
+$x^\alpha=\prod_{j=1}^d x_j^{\alpha_j}$ oraz
+$\partial^\beta=\partial_1^{\beta_1}\cdots\partial_d^{\beta_d}$,
+przyjmując $x_j^0=1$ także dla $x_j=0$.
 Przestrzenią Schwartza na $\R^d$ nazywamy
 \[
  \mathcal S(\R^d)=\bigl\{f\in C^\infty(\R^d;\C):
- p_{\alpha,\beta}(f):=\sup_{x\in\R^d}
- |x^\alpha\partial^\beta f(x)|<\infty
- \ \text{dla wszystkich }\alpha,\beta\in\N_0^d\bigr\}.
+ p_{\alpha,\beta}(f)<\infty
+ \text{ dla wszystkich }\alpha,\beta\in\N_0^d\bigr\},
 \]
-Wyposażamy ją w topologię wyznaczoną przez przeliczalną rodzinę
-półnorm $p_{\alpha,\beta}$. Zbieżność $f_n\to f$ w $\mathcal S$
-oznacza zbieżność do zera wszystkich półnorm $p_{\alpha,\beta}(f_n-f)$.
+gdzie
+\[
+ p_{\alpha,\beta}(f)=\sup_{x\in\R^d}
+ |x^\alpha\partial^\beta f(x)|.
+\]
+Wyposażamy ją w topologię wyznaczoną przez przeliczalną
+rodzinę półnorm $p_{\alpha,\beta}$. Zbieżność $f_n\to f$
+w $\mathcal S$ oznacza zbieżność do zera wszystkich
+półnorm $p_{\alpha,\beta}(f_n-f)$.
 \end{definicja}
 
-Warunek ten mówi, że funkcja i wszystkie jej pochodne zanikają szybciej
-niż dowolna odwrotność wielomianu. Funkcja $e^{-|x|^2}$ należy do
-$\mathcal S$, podobnie każda funkcja z $C_c^\infty$; natomiast
-$(1+|x|^2)^{-1}$ na ogół nie należy do $\mathcal S$.
+Jest to zespolona przestrzeń wektorowa, ponieważ
+liniowość pochodnych i nierówność trójkąta dają
+$p_{\alpha,\beta}(af+bg)\le
+|a|p_{\alpha,\beta}(f)+|b|p_{\alpha,\beta}(g)$.
+Ta sama nierówność i jednorodność uzasadniają
+własności półnorm. Rodzina rozdziela punkty,
+gdyż $p_{0,0}(f)=0$ oznacza $f=0$.
 
 \begin{lemat}[Równoważne półnormy i operacje]
 \label{lem:pde8-seminorms}
 Dla $N,m\in\N_0$ połóżmy
-$q_{N,m}(f)=\max_{|\beta|\le m}\sup_x(1+|x|)^N|\partial^\beta f(x)|$.
-Rodzina $q_{N,m}$ określa tę samą topologię co $p_{\alpha,\beta}$.
-Operator $f\mapsto x_jf$ oraz $f\mapsto\partial_j f$ jest ciągły
-$\mathcal S\to\mathcal S$. Ponadto $\mathcal S(\R^d)\subset L^1\cap L^2$.
+\[
+ q_{N,m}(f)=\max_{|\beta|\le m}
+ \sup_{x\in\R^d}(1+|x|)^N|\partial^\beta f(x)|.
+\]
+Rodzina $q_{N,m}$ określa tę samą topologię co
+$p_{\alpha,\beta}$. Mnożenie przez $x_j$ oraz
+różniczkowanie $\partial_j$ są ciągłymi operatorami
+liniowymi $\mathcal S\to\mathcal S$.
+Ponadto $\mathcal S(\R^d)\subset L^1(\R^d)\cap L^2(\R^d)$,
+a oba włożenia są ciągłe.
 \end{lemat}
 \begin{proof}
-Każdy monomian $|x^\alpha|$ jest nie większy niż
-$(1+|x|)^{|\alpha|}$, a $(1+|x|)^N$ można oszacować sumą
-skończonej liczby $|x^\alpha|$ dla $|\alpha|\le N$, z odpowiednią
-stałą zależną od $N,d$. Stąd równoważność rodzin półnorm.
-Reguła Leibniza pokazuje, że półnorma pochodnej $x_jf$ jest
-kontrolowana przez skończoną sumę półnorm $f$; dla pochodnej
-$\partial_jf$ jest to natychmiastowe. Wybierając $N>d$, mamy
-$|f(x)|\le q_{N,0}(f)(1+|x|)^{-N}$, co daje całkowalność.
-Dla $L^2$ wystarcza $2N>d$.
+Ponieważ $|x^\alpha|\le(1+|x|)^{|\alpha|}$, mamy
+$p_{\alpha,\beta}(f)\le q_{|\alpha|,|\beta|}(f)$.
+Odwrotnie, z $|x|\le\sum_{j=1}^d|x_j|$ i wzoru
+wielomianowego dostajemy
+\[
+ (1+|x|)^N\le
+ \sum_{|\alpha|\le N}
+ \frac{N!}{(N-|\alpha|)!\alpha!}|x^\alpha|,
+ \qquad \alpha!=\prod_{j=1}^d\alpha_j!.
+\]
+Mnożąc przez $|\partial^\beta f(x)|$, biorąc
+supremum względem $x$ i maksimum po $|\beta|\le m$,
+ograniczamy $q_{N,m}$ przez skończoną sumę półnorm
+$p_{\alpha,\beta}$ z podanymi współczynnikami.
+Obie rodziny wyznaczają więc tę samą topologię.
+
+Z reguły Leibniza, dla wektora jednostkowego
+$e_j$, mamy
+\[
+ \partial^\beta(x_j f)
+ =x_j\partial^\beta f+\beta_j\partial^{\beta-e_j}f,
+\]
+gdzie drugi składnik pomijamy dla $\beta_j=0$.
+Stąd
+\[
+ \begin{aligned}
+ q_{N,m}(x_j f)&\le q_{N+1,m}(f)+m q_{N,m}(f),\\
+ q_{N,m}(\partial_j f)&\le q_{N,m+1}(f).
+ \end{aligned}
+\]
+Skończoność prawych stron zapewnia, że obrazy
+należą do $\mathcal S$, a oszacowania dla każdej
+półnormy dają ciągłość.
+
+Dla $p=1,2$ wybieramy $N$ tak, aby $Np>d$.
+Wtedy
+\[
+ \|f\|_{L^p}\le C_{d,N,p}q_{N,0}(f),
+ \qquad
+ C_{d,N,p}^p=\int_{\R^d}(1+|x|)^{-Np}
+ \,\mathrm d\lambda_d(x)<\infty.
+\]
+Istotnie, na kuli jednostkowej całka jest skończona,
+a poza nią całkowanie radialne sprowadza oszacowanie
+do stałej razy $\int_1^\infty r^{d-1-Np}\,
+\mathrm d\lambda_1(r)$, która jest skończona dla $Np>d$.
+W wymiarze jeden całkujemy osobno na obu półprostych.
+Daje to oba włożenia i ich ciągłość.
+\end{proof}
+
+Równoważne półnormy wyjaśniają szybki zanik:
+dla każdego $N,\beta$ mamy
+\[
+ (1+|x|)^N|\partial^\beta f(x)|
+ \le\frac{q_{N+1,|\beta|}(f)}{1+|x|}
+ \longrightarrow 0\qquad (|x|\to\infty).
+\]
+Funkcja $e^{-|x|^2}$ należy do $\mathcal S$:
+każda jej pochodna ma postać
+$P_\beta(x)e^{-|x|^2}$ z wielomianem $P_\beta$.
+Indukcja zaczyna się od $P_0=1$, a różniczkowanie
+daje $P_{\beta+e_j}=\partial_j P_\beta-2x_jP_\beta$.
+Dla każdej potęgi $k\ge0$ funkcja
+$r^k e^{-r^2}$ jest ograniczona na $[0,\infty)$
+i dąży do zera w nieskończoności (wykładnik
+dominuje potęgi, jak w konstrukcji funkcji
+testowej z sekcji~\ref{sec:pde7-tests}).
+Każda funkcja z $C_c^\infty(\R^d)$ również należy
+do $\mathcal S$, bo jej pochodne znikają poza
+wspólnym zwartym nośnikiem.
+Natomiast $(1+|x|^2)^{-1}$ nie należy do $\mathcal S$
+w żadnym wymiarze $d\ge1$: dla
+$x=te_1$ mamy $t^3/(1+t^2)\to+\infty$
+przy $t\to+\infty$, więc $p_{3e_1,0}$ jest nieskończona.
+
+\begin{stwierdzenie}[Zupełność przestrzeni Schwartza]
+Przestrzeń $\mathcal S(\R^d)$ jest przestrzenią Frécheta,
+czyli zupełną metryzowalną przestrzenią lokalnie wypukłą.
+\end{stwierdzenie}
+\begin{proof}
+Rosnąca rodzina $Q_n=q_{n,n}$, $n\in\N_0$, wyznacza
+tę samą topologię, ponieważ każda $q_{N,m}$ jest
+ograniczona przez $Q_{\max\{N,m\}}$.
+Metryka niezmiennicza względem przesunięć
+\[
+ D(f,g)=\sum_{n=0}^{\infty}2^{-n-1}
+ \min\{1,Q_n(f-g)\}
+\]
+wyznacza tę topologię. Istotnie, nierówność
+trójkąta wynika z półnorm i podaddytywności
+$\min\{1,t\}$, a $Q_0$ rozdziela punkty.
+Dla $0<\delta<1$ warunek
+$D(f,g)<2^{-n-1}\delta$ daje $Q_n(f-g)<\delta$.
+Odwrotnie, wybieramy $M$ z ogonem szeregu wag
+mniejszym niż $\delta/2$; gdy $Q_M(f-g)<\delta/2$,
+pierwsze $M+1$ składników mają sumę mniejszą
+niż $\delta/2$, więc $D(f,g)<\delta$.
+Te oszacowania charakteryzują również ciągi Cauchy'ego.
+
+Niech $(f_\ell)$ będzie ciągiem Cauchy'ego w tej
+metryce. Dla każdego $\beta$ ciąg
+$\partial^\beta f_\ell$ spełnia jednostajny
+warunek Cauchy'ego na $\R^d$ dzięki $Q_{|\beta|}$.
+Ma zatem jednostajną granicę $g_\beta$, ciągłą
+na $\R^d$. Dla każdego $x\in\R^d$, $t\in\R$
+i $j\in\{1,\ldots,d\}$ mamy
+\[
+ \partial^\beta f_\ell(x+te_j)-\partial^\beta f_\ell(x)
+ =\int_0^t\partial^{\beta+e_j}f_\ell(x+se_j)
+ \,\mathrm d\lambda_1(s).
+\]
+Przechodzimy do granicy dzięki jednostajnej zbieżności
+na odcinku (dla $t<0$ całka jest zorientowana).
+Ciągłość $g_{\beta+e_j}$ daje
+$\partial_j g_\beta=g_{\beta+e_j}$.
+Indukcyjnie $f:=g_0$ jest gładka i
+$\partial^\beta f=g_\beta$.
+
+Ustalmy $n$ i $\varepsilon>0$. Dla
+$\ell,k$ od pewnego indeksu mamy
+$Q_n(f_\ell-f_k)<\varepsilon$. Dla każdego
+$x$ i $|\beta|\le n$ przechodzimy z $k$
+do nieskończoności w nierówności
+\[
+ (1+|x|)^n|\partial^\beta f_\ell(x)
+              -\partial^\beta f_k(x)|<\varepsilon.
+\]
+Biorąc supremum i maksimum po przejściu do
+granicy, otrzymujemy $Q_n(f_\ell-f)\le\varepsilon$.
+W szczególności $Q_n(f)\le Q_n(f_\ell)+\varepsilon$
+jest skończona. Ponieważ $n$ było dowolne,
+$f\in\mathcal S$ i $f_\ell\to f$ we wszystkich
+półnormach, a więc i w metryce $D$.
 \end{proof}
 
 \begin{twierdzenie}[Gęstość funkcji o zwartym nośniku]
@@ -74,20 +221,76 @@ Przestrzeń $C_c^\infty(\R^d)$ jest gęsta w $\mathcal S(\R^d)$.
 Jest też gęsta w $L^p(\R^d)$ dla $1\le p<\infty$.
 \end{twierdzenie}
 \begin{proof}
-Weźmy $\chi\in C_c^\infty(\R^d)$ taką, że
-$\chi=1$ na $B_1(0)$ i $\chi=0$ poza $B_2(0)$.
-Dla $f\in\mathcal S$ definiujemy $f_R(x)=\chi(x/R)f(x)$.
-Różniczkując $(1-\chi(x/R))f(x)$, dostajemy wyrazy
-zawierające $R^{-|\gamma|}\partial^\gamma\chi(x/R)
-\partial^{\beta-\gamma}f(x)$, o nośnikach w $|x|\ge R$.
-Każdy taki wyraz, pomnożony przez $x^\alpha$, ma supremum
-dążące do zera: wybieramy półnormę $f$ z potęgą
-$(1+|x|)^{|\alpha|+1}$ (lub większą) i korzystamy z
-$|x|\ge R$. Zatem $f_R\to f$ w $\mathcal S$.
-Gęstość w $L^p$ uzyskujemy najpierw przez obcinanie funkcji
-$L^p$, potem wygładzanie przybliżoną jedynką z
-rozdziału~\ref{chap:pde-distributions}; obie aproksymacje
-są zbieżne w normie $L^p$.
+Wybierzmy funkcję odcinającą
+$\psi\in C_c^\infty(\R^d)$ z $0\le\psi\le1$,
+$\psi=1$ na $B_1(0)$ i $\psi=0$ poza $B_2(0)$.
+Można przyjąć $\psi=\chi_{B_{3/2}(0)}*\rho_{1/4}$,
+gdzie $\rho_\varepsilon$ jest przybliżoną jedynką
+z sekcji~\ref{sec:pde7-mollifiers}.
+Gładkość wynika z twierdzenia~\ref{thm:pde7-mollify}.
+Nieujemność jądra i jego całka $1$ dają
+$0\le\psi\le1$; dla $|x|\le1$ i $|y|\le1/4$
+mamy $|x-y|<3/2$, a dla $|x|\ge2$ mamy
+$|x-y|>3/2$. Stąd żądane wartości i zwarty nośnik.
+
+Dla $f\in\mathcal S$ i $R\ge1$ określamy
+$f_R(x)=\psi(x/R)f(x)\in C_c^\infty(\R^d)$.
+Niech $\psi_R(x)=\psi(x/R)$.
+Wszystkie pochodne $1-\psi_R$, włącznie z rzędem
+zero, znikają dla $|x|<R$. Dla $|\gamma|>0$
+ich moduły są ograniczone przez
+$R^{-|\gamma|}\|\partial^\gamma\psi\|_\infty$;
+dla $\gamma=0$ przez $1$.
+Stosujemy wielowskaźnikową regułę Leibniza:
+\[
+ \partial^\beta(f-f_R)
+ =\sum_{\gamma\le\beta}\binom{\beta}{\gamma}
+ \partial^\gamma(1-\psi_R)\partial^{\beta-\gamma}f,
+\]
+gdzie $\gamma\le\beta$ oznacza nierówności
+we wszystkich współrzędnych, a
+$\binom{\beta}{\gamma}=\prod_j\binom{\beta_j}{\gamma_j}$.
+Dla $|x|\ge R$ zachodzi
+$(1+|x|)^N\le (1+R)^{-1}(1+|x|)^{N+1}$.
+Zatem dla $|\beta|\le m$ każdy składnik po
+pomnożeniu przez $(1+|x|)^N$ jest ograniczony
+przez odpowiednią stałą zależną od $\psi,\beta,\gamma$
+razy $(1+R)^{-1}q_{N+1,m}(f)$.
+Sumując skończenie wiele składników, dostajemy
+\[
+ q_{N,m}(f-f_R)\le
+ \frac{C_{\psi,m}}{1+R}q_{N+1,m}(f)
+ \longrightarrow0.
+\]
+To daje gęstość w $\mathcal S$.
+
+Dla $u\in L^p(\R^d)$, $1\le p<\infty$,
+niech $v_R=u\chi_{B_R(0)}$. Z całkowalności
+$|u|^p$ wynika
+\[
+ \|u-v_R\|_{L^p}^p
+ =\int_{\R^d\setminus B_R(0)}|u(x)|^p
+ \,\mathrm d\lambda_d(x)\longrightarrow0.
+\]
+Dla ustalonego $R$ funkcja
+$v_R*\rho_\varepsilon$ jest gładka na $\R^d$
+i dla $0<\varepsilon<1$ znika poza
+$\overline{B_{R+1}(0)}$: jeśli $|x|>R+1$,
+to dla $|y|\le R$ mamy $|x-y|>1>\varepsilon$.
+Z twierdzenia~\ref{thm:pde7-approx-id}
+na zwartym zbiorze $\overline{B_{R+1}(0)}$
+wynika
+\[
+ \|v_R*\rho_\varepsilon-v_R\|_{L^p(\R^d)}
+ \longrightarrow0\qquad(\varepsilon\downarrow0),
+\]
+ponieważ obie funkcje znikają poza tym zbiorem.
+Dla dowolnego $\delta>0$ wybieramy najpierw
+$R$ z $\|u-v_R\|_p<\delta/2$, następnie
+$\varepsilon$ z błędem wygładzania mniejszym
+niż $\delta/2$. Nierówność trójkąta daje
+aproksymację $u$ z błędem mniejszym niż $\delta$
+przez funkcję gładką o zwartym nośniku.
 \end{proof}
 
 \section{Transformata Fouriera na przestrzeni Schwartza}
@@ -292,7 +495,7 @@ przechodzi w globalne oszacowanie \eqref{eq:pde8-growth}.
 \item Dystrybucja regularna wyznaczona przez $e^{|x|^2}$
 na $\R^d$ \emph{nie} jest temperowana. Gdyby przedłużała
 się do ciągłego funkcjonału na $\mathcal S$, testy
-$\chi(x/R)e^{-|x|^2/2}$ dążyłyby w $\mathcal S$ do
+$\psi(x/R)e^{-|x|^2/2}$ dążyłyby w $\mathcal S$ do
 $e^{-|x|^2/2}$, ale ich wartości na tym funkcjonale
 rosłyby do $+\infty$. Sprzeczność z ciągłością.
 \end{enumerate}
