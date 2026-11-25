@@ -92,6 +92,18 @@ class Chapter32(unittest.TestCase):
                 tail=(exp(-t*u)-exp(-t*v))/t
                 self.assertTrue(0<=tail<=2*exp(-u/2))
 
+    def test_improper_limit_with_parameter_outside_set(self):
+        # E=(1,2], t0=1; g=exp(-x), uniform tail exp(-R).
+        for R in (1.,3.,10.):
+            for n in (2,5,20,100):
+                t=1+1/n
+                truncated=(1-exp(-t*R))/t
+                limit_truncated=1-exp(-R)
+                self.assertLessEqual(exp(-t*R)/t,exp(-R))
+                self.assertLessEqual(abs(truncated-limit_truncated),R*R/(2*n)+1e-14)
+                self.assertLessEqual(abs(1/t-1),
+                                     exp(-t*R)/t+abs(truncated-limit_truncated)+exp(-R)+1e-14)
+
     def test_majorant_derivative(self):
         for x in (0.,.5,2.,10.):
             for t in (.5,1.,2.,4.):
