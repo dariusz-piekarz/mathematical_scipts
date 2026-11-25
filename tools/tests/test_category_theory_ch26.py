@@ -190,6 +190,64 @@ class CategoryTheoryCh26(unittest.TestCase):
         for f in families:
             self.assertEqual(coind(s,f)[H.index(e)],1-f[H.index(e)])
 
+    def test_CAT_26_009_yoneda_density_parallel_arrows(self):
+        # A is the category 0 ==(p,q)==> 1, with identities only otherwise.
+        # P is a presheaf with two maps P(1) -> P(0).
+        def models():
+            for n0,n1 in itertools.product(range(3),repeat=2):
+                for p,q in itertools.product(
+                        itertools.product(range(n0),repeat=n1),repeat=2):
+                    yield n0,n1,p,q
+
+        def triples(P,t):
+            n0,n1,p,q=P
+            if t==1:
+                return [(1,x,'id') for x in range(n1)]
+            return ([(0,x,'id') for x in range(n0)] +
+                    [(1,x,h) for x in range(n1) for h in ('p','q')])
+
+        def value(P,z):
+            a,x,h=z
+            return x if h=='id' else P[2 if h=='p' else 3][x]
+
+        def classes(P,t):
+            parent={z:z for z in triples(P,t)}
+            def root(z):
+                while parent[z]!=z:
+                    z=parent[z]
+                return z
+            if t==0:
+                for x in range(P[1]):
+                    for h in ('p','q'):
+                        z=(1,x,h)
+                        parent[root(z)]=root((0,value(P,z),'id'))
+            return root
+
+        all_models=list(models())
+        for P in all_models:
+            for t in (0,1):
+                root=classes(P,t)
+                Z=triples(P,t)
+                self.assertEqual({value(P,z) for z in Z},set(range(P[t])))
+                for z,w in itertools.product(Z,repeat=2):
+                    self.assertEqual(root(z)==root(w),value(P,z)==value(P,w))
+            for h in ('p','q'):
+                for x in range(P[1]):
+                    self.assertEqual(value(P,(1,x,h)),P[2 if h=='p' else 3][x])
+            for Q in all_models:
+                for u in itertools.product(range(Q[0]),repeat=P[0]):
+                    for v in itertools.product(range(Q[1]),repeat=P[1]):
+                        if any(u[P[j][x]]!=Q[j][v[x]]
+                               for j in (2,3) for x in range(P[1])):
+                            continue
+                        for t in (0,1):
+                            root=classes(Q,t)
+                            for z in triples(P,t):
+                                a,x,h=z
+                                image=(a,(u,v)[a][x],h)
+                                expected=(t,(u,v)[t][value(P,z)],'id')
+                                self.assertEqual(root(image),root(expected))
+
     def test_CAT_26_002_structure(self):
         source = CHAPTER.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}", source)
