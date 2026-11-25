@@ -4,7 +4,7 @@ from __future__ import annotations
 import sqlite3
 import unittest
 
-from backend.concept_graph import build_concept_graph, resolve_concept
+from backend.concept_graph import build_concept_graph, resolve_concept, searchable_source
 
 
 class ConceptGraphTests(unittest.TestCase):
@@ -79,6 +79,51 @@ class ConceptGraphTests(unittest.TestCase):
         self.assertTrue(all(e["type"] == "occurrence" for e in result["edges"]))
         malicious = build_concept_graph(self.db, r"(?P<token>.*)")
         self.assertEqual(malicious["matches_total"], 0)
+
+    def test_reference_identifiers_are_not_concept_occurrences(self):
+        content = (
+            "\\atlasref{AA-01::thm:zorn}{Inny wynik}\n"
+            "\\href{https://example.invalid/Zorn}{Dokument}\n"
+            "\\nolinkurl{thm:zorn}\n"
+            "\\url{https://example.invalid/Zorn}\n"
+            "\\citep[por.][s. 12]{Zorn1940}\n"
+        )
+        self.db.execute("INSERT INTO documents VALUES (?,?,?,?)",
+                        ("BT-02", "Odsyłacze", "teoria mnogości", content))
+        result = build_concept_graph(self.db, "Zorn")
+        self.assertFalse(any(n.get("module") == "BT-02" for n in result["nodes"]))
+
+    def test_reference_display_text_preserves_offsets_and_nested_formatting(self):
+        content = (
+            "\\atlasref{AA-01::thm:zorn}{Lemat \\emph{Zorna}}\n"
+            "\\href{https://example.invalid/Zorn}{Lemat Zorna}\n"
+            "\\cite[Zorn]{some-key}\n"
+        )
+        surface = searchable_source(content)
+        self.assertEqual(len(surface), len(content))
+        self.assertEqual([i for i, c in enumerate(surface) if c == "\n"],
+                         [i for i, c in enumerate(content) if c == "\n"])
+        self.assertEqual(surface[content.index("Zorna"):content.index("Zorna")+5], "Zorna")
+        self.assertNotIn("thm:zorn", surface)
+        self.assertNotIn("example.invalid", surface)
+        self.assertIn("Lemat Zorna", surface)
+        self.assertIn("[Zorn]", surface)
+        self.db.execute("INSERT INTO documents VALUES (?,?,?,?)",
+                        ("BT-03", "Odsyłacze", "teoria mnogości", content))
+        result = build_concept_graph(self.db, "Zorn")
+        locations = [n for n in result["nodes"] if n.get("module") == "BT-03"]
+        self.assertTrue(locations)
+        self.assertEqual(locations[0]["line"], 1)
+        self.assertEqual(locations[0]["matched"], "Zorna")
+
+    def test_multiline_reference_keeps_lines_and_escaped_command_is_not_masked(self):
+        content = "\\atlasref\n{AA-01::zorn}\n{Zorn}\n" + r"\\atlasref{Zorn}{text}"
+        surface = searchable_source(content)
+        self.assertEqual(len(surface), len(content))
+        self.assertEqual(surface.count("\n"), content.count("\n"))
+        self.assertNotIn("AA-01::zorn", surface)
+        self.assertIn("{Zorn}", surface)
+        self.assertTrue(surface.endswith(r"\\atlasref{Zorn}{text}"))
 
     def test_caps_and_no_result(self):
         self.assertEqual(build_concept_graph(self.db, "Zorn", max_occurrences=1)["occurrences_shown"], 1)
