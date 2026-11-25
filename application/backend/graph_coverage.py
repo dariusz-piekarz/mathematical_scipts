@@ -5,6 +5,37 @@ import json
 from pathlib import Path
 
 from .latex_parser import module_id
+from .label_registry import qualified_occurrence
+
+
+
+def reading_reference_issues(con):
+    """Validate all indexed atlasref rows, not just selected chapter fixtures."""
+    rows = con.execute("""
+        SELECT r.source_document, r.target_label, r.line, r.status,
+               r.target_document, r.target_entity, e.document_id
+        FROM references_tex r LEFT JOIN entities e ON e.id=r.target_entity
+        WHERE r.command='atlasref'
+        ORDER BY r.source_document,r.line,r.id
+    """).fetchall()
+    occurrences = {(doc, label): entity for doc, label, entity in con.execute(
+        "SELECT document_id,name,entity_id FROM label_occurrences")}
+    issues = []
+    for source, label, line, status, target, entity, entity_owner in rows:
+        qualified = qualified_occurrence(label)
+        reason = None
+        if status not in {"resolved", "external_resolved", "alias_resolved"}:
+            reason = "unresolved"
+        elif not target or not entity or entity_owner != target:
+            reason = "target_entity_owner_mismatch"
+        elif qualified is not None:
+            expected_doc, expected_label = qualified
+            if target != expected_doc or occurrences.get(qualified) != entity:
+                reason = "qualified_occurrence_mismatch"
+        if reason:
+            issues.append({"source": source, "label": label, "line": line,
+                           "status": status, "target": target, "reason": reason})
+    return {"checked": len(rows), "invalid": len(issues), "issues": issues}
 
 
 def graph_coverage(con, catalog_path=None):
@@ -64,7 +95,9 @@ def graph_coverage(con, catalog_path=None):
         catalog = {"expected": len(expected), "missing": missing,
                    "path_mismatches": mismatched,
                    "duplicate_ids": sorted(m for m, n in Counter(m for m, _ in expected).items() if n > 1)}
+    reading_audit = reading_reference_issues(con)
     return {"evidence": "explicit_tex_references", "catalog": catalog,
+            "reading_audit": reading_audit,
             "chapters": chapters, "domain_pairs": domain_pairs,
             "edges": [{"source": s, "target": t, "weight": sum(c.values()),
                        "reading": c["atlasref"]} for (s, t), c in sorted(module_pairs.items())],
@@ -74,4 +107,5 @@ def graph_coverage(con, catalog_path=None):
                         "isolated_chapters": sum(c["isolated"] for c in chapters),
                         "connected_domain_pairs": sum(p["references"] > 0 for p in domain_pairs),
                         "domain_pairs": len(domain_pairs),
-                        "reading_references": sum(c["atlasref"] for c in module_pairs.values())}}
+                        "reading_references": sum(c["atlasref"] for c in module_pairs.values()),
+                        "invalid_reading_references": reading_audit["invalid"]}}
