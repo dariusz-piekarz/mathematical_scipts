@@ -634,6 +634,45 @@ def check_torus_fox_polynomial():
     return count
 
 
+def check_alexander_normalization():
+    """GKT-25-ALEX-NORM-01: symmetric normalization and mirror determinant."""
+    from random import Random
+
+    def check(V):
+        g = len(V)//2
+        p = poly_det(alexander_matrix(V))
+        q = shifted(p, -g)
+        assert sum(q.values()) == 1
+        assert q == {-k:v for k,v in q.items()}
+        mirror = [[-V[j][i] for j in range(len(V))] for i in range(len(V))]
+        assert poly_det(alexander_matrix(mirror)) == p
+        for k in range(-3,4):
+            for sign in (-1,1):
+                r = {i+k:sign*v for i,v in q.items()}
+                if sum(r.values()) == 1 and r == {-i:v for i,v in r.items()}:
+                    assert k == 0 and sign == 1
+
+    count = 0
+    for a,b,c in product(range(-2,3),repeat=3):
+        for sign in (-1,1):
+            check([[a,b],[b-sign,c]])
+            count += 1
+    rng = Random(241)
+    for _ in range(128):
+        V = [[0]*4 for _ in range(4)]
+        for i in range(4):
+            V[i][i] = rng.randint(-3,3)
+            for j in range(i+1,4):
+                V[i][j] = rng.randint(-3,3)
+                V[j][i] = V[i][j]-int(i//2 == j//2)
+        check(V)
+        count += 1
+    check([])
+    count += 1
+    assert count == 379
+    return count
+
+
 def test_source():
     names=[
         "16-od-triangulacji-do-topologii-i-geometrii-rozmaitosci.tex",
@@ -658,6 +697,7 @@ def test_source():
 
 if __name__=="__main__":
     test_source()
+    print("PASS GKT-25-ALEX-NORM-01:",check_alexander_normalization())
     print("PASS GKT-25-TORUS-FOX-01:",check_torus_fox_polynomial())
     print("PASS GKT-25-JONES-01:",check_jones_mixed_r3_skein())
     print("PASS GKT-25-ARF-MOD8-01:",check_arf_determinant_mod8())
