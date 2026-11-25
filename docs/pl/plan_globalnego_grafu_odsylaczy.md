@@ -26,3 +26,7 @@ Każda iteracja:
 ## Aktualizacja priorytetów
 
 Teoria miary (ME, 31 rozdziałów) wchodzi do grupy ustabilizowanych skryptów objętych pełnym audytem odsyłaczy. Pierwsza partia: ME-14, 15, 20, 21, 22, 23, 30 oraz powiązania z CAL-11, 13, 14 i FA-15B. Dalszy przegląd: konstrukcja miary, mierzalność, miary produktowe, Radon--Nikodym, różniczkowanie miar, miara Hausdorffa, geometria i prawdopodobieństwo. Nie zmieniać treści dowodów bez osobnego audytu.
+
+## Audyt kontrolny ME — pierwsze przejście
+
+Sprawdzono ponownie 67 zapisanych par (źródło, kwalifikowana etykieta) z trzech testów regresyjnych: 64 różne pliki, wszystkie 31 rozdziałów ME jako źródła. Każdy z 67 odsyłaczy występuje dokładnie raz w źródle; każda wskazana etykieta dokładnie raz w docelowym pliku. Nie dodano nowych krawędzi ani nie zmieniono dowodów. Globalny audyt indeksu odrzuca teraz nierozwiązane atlasref i błędne przypisanie właściciela etykiety. Pełne uruchomienie CI, indeksu oraz testów przeglądarkowych pozostaje niepotwierdzone; nie oznaczać grafu jako ustabilizowanego bez dowodu wykonania.
