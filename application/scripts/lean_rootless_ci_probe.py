@@ -311,6 +311,7 @@ def check_controlled_failure(prefix: list[str], env: dict[str, str], image_id: s
     cid = call(*policy.isolation_arguments(image_id=image_id, container_name=name)).decode("ascii").strip()
     if not transport._CONTAINER_ID.fullmatch(cid):
         raise ValueError("Ambiguous controlled failure creation: " + name)
+    cleanup_call = transport.deferred_cleanup_command(prefix, env)
     try:
         transport.validate_container(transport._decode_metadata(call("container", "inspect", cid)),
                                      container_id=cid, image_id=image_id, name=name)
@@ -324,7 +325,7 @@ def check_controlled_failure(prefix: list[str], env: dict[str, str], image_id: s
         state = validate_exited_fixture(transport._decode_metadata(call("container", "inspect", cid)),
                                        container_id=cid, image_id=image_id, expected_exit=42)
     finally:
-        cleanup_fixture(call, cid)
+        cleanup_fixture(cleanup_call, cid)
     return {"status": "controlled_failure_checked", **state, "image_id": image_id,
             "container_id": cid, "cleanup_status": "removed_verified",
             "execution_allowed": False, "proof_status": "not_run", "certificate": False}
@@ -367,6 +368,7 @@ def check_runtime_timeout(prefix: list[str], env: dict[str, str], image_id: str)
     cid = call(*policy.isolation_arguments(image_id=image_id, container_name=name)).decode("ascii").strip()
     if not transport._CONTAINER_ID.fullmatch(cid):
         raise ValueError("Ambiguous timeout fixture creation: " + name)
+    cleanup_call = transport.deferred_cleanup_command(prefix, env)
     try:
         transport.validate_container(transport._decode_metadata(call("container", "inspect", cid)),
                                      container_id=cid, image_id=image_id, name=name)
@@ -376,8 +378,8 @@ def check_runtime_timeout(prefix: list[str], env: dict[str, str], image_id: str)
             pass
         else:
             raise ValueError("Expected typed CLI timeout")
-        # Each cleanup command has its own bounded transport budget.
-        state = stop_timed_out_fixture(call, cid, image_id)
+        # The stop and the finally removal share one absolute budget.
+        state = stop_timed_out_fixture(cleanup_call, cid, image_id)
     except (OSError, ValueError, subprocess.SubprocessError):
         print("ATLAS_ROOTLESS_TIMEOUT_FAILURE " + json.dumps({
             "status": "blocked", "container_id": cid, "image_id": image_id,
@@ -385,7 +387,7 @@ def check_runtime_timeout(prefix: list[str], env: dict[str, str], image_id: str)
         }, sort_keys=True), flush=True)
         raise
     finally:
-        cleanup_fixture(call, cid)
+        cleanup_fixture(cleanup_call, cid)
     return {"status": "timeout_checked", **state, "image_id": image_id,
             "container_id": cid, "cleanup_status": "removed_verified",
             "cli_timeout_seconds": transport.COMMAND_TIMEOUT,
@@ -412,6 +414,7 @@ def check_runtime_output_limit(prefix: list[str], env: dict[str, str], image_id:
     cid = call(*policy.isolation_arguments(image_id=image_id, container_name=name)).decode("ascii").strip()
     if not transport._CONTAINER_ID.fullmatch(cid):
         raise ValueError("Ambiguous output fixture creation: " + name)
+    cleanup_call = transport.deferred_cleanup_command(prefix, env)
     try:
         transport.validate_container(transport._decode_metadata(call("container", "inspect", cid)),
                                      container_id=cid, image_id=image_id, name=name)
@@ -421,7 +424,7 @@ def check_runtime_output_limit(prefix: list[str], env: dict[str, str], image_id:
             pass
         else:
             raise ValueError("Expected typed CLI output limit")
-        state = _stop_interrupted_fixture(call, cid, image_id)
+        state = _stop_interrupted_fixture(cleanup_call, cid, image_id)
     except (OSError, ValueError, subprocess.SubprocessError):
         print("ATLAS_ROOTLESS_OUTPUT_FAILURE " + json.dumps({
             "status": "blocked", "container_id": cid, "image_id": image_id,
@@ -429,7 +432,7 @@ def check_runtime_output_limit(prefix: list[str], env: dict[str, str], image_id:
         }, sort_keys=True), flush=True)
         raise
     finally:
-        cleanup_fixture(call, cid)
+        cleanup_fixture(cleanup_call, cid)
     return {"status": "output_limit_checked", **state, "image_id": image_id,
             "container_id": cid, "cleanup_status": "removed_verified",
             "running_after_cli_output_limit": True,
@@ -450,6 +453,7 @@ def check_runtime_limits(prefix: list[str], env: dict[str, str], image_id: str) 
     cid = raw_id.decode("ascii").strip()
     if not transport._CONTAINER_ID.fullmatch(cid):
         raise ValueError("Ambiguous runtime fixture creation: " + name)
+    cleanup_call = transport.deferred_cleanup_command(prefix, env)
     try:
         transport.validate_container(transport._decode_metadata(call("container", "inspect", cid)),
                                      container_id=cid, image_id=image_id, name=name)
@@ -460,7 +464,7 @@ def check_runtime_limits(prefix: list[str], env: dict[str, str], image_id: str) 
             # Inspect the same fixed CI container before removing it, so a
             # failure is diagnosable without exposing arbitrary process output.
             try:
-                failed = transport._decode_metadata(call("container", "inspect", cid))
+                failed = transport._decode_metadata(cleanup_call("container", "inspect", cid))
                 report = runtime_failure_report(failed, container_id=cid, image_id=image_id)
             except (OSError, ValueError, RecursionError, subprocess.SubprocessError):
                 report = {"status": "blocked", "stage": "inspection_failed",
@@ -479,7 +483,7 @@ def check_runtime_limits(prefix: list[str], env: dict[str, str], image_id: str) 
         state = validate_exited_fixture(transport._decode_metadata(call("container", "inspect", cid)),
                                        container_id=cid, image_id=image_id, expected_exit=0)
     finally:
-        cleanup_fixture(call, cid)
+        cleanup_fixture(cleanup_call, cid)
     return {"status": "runtime_limits_security_network_checked", "observations": values,
             **state, "container_id": cid, "image_id": image_id, "cleanup_status": "removed_verified",
             "execution_allowed": False, "proof_status": "not_run", "certificate": False}
