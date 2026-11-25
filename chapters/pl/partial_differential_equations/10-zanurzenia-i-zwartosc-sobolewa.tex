@@ -522,16 +522,24 @@ Stała $C_d$ zależy tylko od wymiaru.
 \end{lemat}
 \begin{proof}
 Z wypukłości kuli wynika, że odcinek od $x$ do każdego
-$y\in B$ leży w $B$. Podstawowe twierdzenie rachunku
-daje
+$y\in B$ leży w $B$. Stosujemy podstawowe twierdzenie
+rachunku całkowego do funkcji $t\mapsto f(x+t(y-x))$.
+Z reguły łańcuchowej i nierówności Cauchy'ego--Schwarza
+otrzymujemy
 $|f(x)-f(y)|\le|x-y|\int_0^1
 |\nabla f(x+t(y-x))|\,\mathrm d\lambda_1(t)$.
-Uśredniamy po $y\in B$ i zamieniamy całki nieujemne
-na mocy Tonellego. Przy ustalonym $t$ podstawiamy
+Ponieważ
+$|f(x)-f_B|\le |B|^{-1}\int_B|f(x)-f(y)|\,\mathrm d\lambda_d(y)$,
+uśredniamy prawą stronę i zamieniamy całki nieujemne
+na mocy Tonellego. Przy ustalonym $t\in(0,1]$ podstawiamy
 $z=x+t(y-x)$, zatem $\mathrm d\lambda_d(y)=
 t^{-d}\,\mathrm d\lambda_d(z)$ i
-$|x-y|=|x-z|/t$. Jeśli $y\in B$, to
-$z\in B$ oraz $|x-z|\le2Rt$. W konsekwencji
+$|x-y|=|x-z|/t$. Obrazem $B$ jest kula
+$x+t(B-x)\subset B$; każdy jej punkt spełnia
+$|x-z|\le 2Rt$. Dla ustalonego $z\ne x$ możemy więc
+powiększyć zbiór dopuszczalnych $t$ do przedziału
+$[|x-z|/(2R),1]$. Ponownie stosując Tonellego,
+otrzymujemy
 \begin{align*}
  |f(x)-f_B|
  &\le\frac1{|B|}\int_B|\nabla f(z)|\,|x-z|
@@ -541,8 +549,19 @@ $z\in B$ oraz $|x-z|\le2Rt$. W konsekwencji
  \int_B\frac{|\nabla f(z)|}{|x-z|^{d-1}}
  \,\mathrm d\lambda_d(z).
 \end{align*}
-Ponieważ $|B|=\omega_dR^d$, współczynnik jest zależny
-tylko od $d$. Ewentualny punkt $z=x$ nie wpływa na całkę.
+Druga nierówność wynika z obliczenia, dla $s=|x-z|>0$,
+\[
+ \int_{s/(2R)}^1 t^{-d-1}\,\mathrm d\lambda_1(t)
+ =\frac{(2R/s)^d-1}{d}\le\frac{(2R)^d}{ds^d}.
+\]
+Ponieważ $|B|=\omega_dR^d$, gdzie
+$\omega_d=\lambda_d(B_1(0))$, można przyjąć
+$C_d=2^d/(d\omega_d)$. Punkt $z=x$ pomijamy jako zbiór
+miary zero. Jądro $|x-z|^{1-d}$ jest lokalnie całkowalne:
+całkowanie w biegunowych na kuli o promieniu $2R$
+daje $d\omega_d\int_0^{2R}1\,\mathrm d\lambda_1(s)$.
+W szczególności prawa strona jest skończona
+dla rozważanej funkcji klasy $C^1$.
 \end{proof}
 
 \begin{twierdzenie}[Morrey na $\R^d$]
@@ -557,8 +576,10 @@ reprezentanta $\widetilde u$ i istnieje stała $C(d,p)$ taka, że
 \]
 Dodatkowo $\|\widetilde u\|_\infty\le
  C(d,p)\|u\|_{W^{1,p}(\R^d)}$.
-Dla $p=\infty$ istnieje reprezentant globalnie Lipschitzowski
-z $\operatorname{Lip}\widetilde u\le\|\nabla u\|_\infty$.
+Dla $p=\infty$ każda klasa $u\in W^{1,\infty}(\R^d)$
+ma jedyny ciągły reprezentant globalnie lipschitzowski
+z $\operatorname{Lip}\widetilde u\le\|\nabla u\|_\infty$
+oraz $\|\widetilde u\|_\infty=\|u\|_{L^\infty}$.
 \end{twierdzenie}
 \begin{proof}
 Najpierw rozważmy $u\in C_c^\infty(\R^d)$. Ustalmy
@@ -566,7 +587,8 @@ $x\ne y$ i oznaczmy $r=|x-y|$.
 Wybieramy kulę $B=B_{2r}(x)$, która zawiera oba punkty.
 Z lematu~\ref{lem:pde10-point-average} otrzymujemy
 $|u(x)-u(y)|\le|u(x)-u_B|+|u(y)-u_B|$.
-Każdy składnik szacujemy nierównością H\"oldera.
+Każdy składnik szacujemy nierównością Höldera
+z wykładnikami $p$ oraz $p'=p/(p-1)$.
 Dla $z_0=x$ lub $z_0=y$ liczymy
 \[
  \left(\int_B |z-z_0|^{-(d-1)p'}
@@ -576,30 +598,86 @@ Dla $z_0=x$ lub $z_0=y$ liczymy
 Istotnie, $B\subset B_{4r}(z_0)$, a w biegunowych
 całka jest ograniczona przez
 $C_d\int_0^{4r}s^{d-1-(d-1)p'}\,\mathrm d\lambda_1(s)$.
-Wykładnik przy zerze jest większy od $-1$ dokładnie
-gdy $p>d$. Otrzymujemy oszacowanie H\"olderowskie.
+Mamy
+\[
+ d-(d-1)p'=\frac{p-d}{p-1}>0,\qquad
+ \frac{d-(d-1)p'}{p'}=1-\frac dp.
+\]
+Całka potęgowa jest więc skończona i po wyciągnięciu
+$p'$-tego pierwiastka daje dokładnie czynnik
+$r^{1-d/p}$. Z lematu i Höldera otrzymujemy
+\[
+ |u(z_0)-u_B|\le C(d,p)r^{1-d/p}\|\nabla u\|_{L^p(B)}.
+\]
+Sumując dla $z_0=x,y$, dostajemy oszacowanie z tezy;
+dla $x=y$ obie strony są zerowe.
 
 Aby kontrolować wartość w jednym punkcie,
 uśredniamy $u$ na kuli jednostkowej $B_1(x)$.
-Z powyższego oszacowania przy $r\le2$ dostajemy
-$|u(x)-u_{B_1(x)}|\le C\|\nabla u\|_p$,
-a $|u_{B_1(x)}|\le |B_1|^{-1/p}\|u\|_p$.
-To zapewnia oszacowanie $\|u\|_\infty$.
+Stosujemy bezpośrednio lemat~\ref{lem:pde10-point-average}
+na $B_1(x)$ i Höldera. Rachunek całki jądra dla promienia
+$1$ daje $|u(x)-u_{B_1(x)}|\le C(d,p)\|\nabla u\|_p$,
+a z Höldera $|u_{B_1(x)}|\le\omega_d^{-1/p}\|u\|_p$.
+Dodając oszacowania i biorąc supremum po $x$, uzyskujemy
+$\|u\|_\infty\le C(d,p)\|u\|_{W^{1,p}}$,
+z uwzględnieniem równoważności norm gradientu.
 
 Dla ogólnego $u\in W^{1,p}(\R^d)$ wybieramy
-gładkie funkcje o zwartym nośniku $u_n\to u$ w $W^{1,p}$.
-Dwa udowodnione oszacowania zastosowane do $u_n-u_m$
-pokazują, że $(u_n)$ jest ciągiem Cauchy'ego w normie
-$C_b(\R^d)$ i w seminormie H\"oldera wykładnika
-$1-d/p$. Granica jednostajna jest ciągła i równa $u$
-prawie wszędzie, bo istnieje podciąg $u_n$ zbieżny do $u$
-prawie wszędzie. Przechodzimy do granicy w oszacowaniu.
+gładkie funkcje o zwartym nośniku $u_n\to u$ w $W^{1,p}$
+na mocy gęstości z sekcji~\ref{sec:pde9-density}.
+Oszacowanie supremum zastosowane do $u_n-u_m$ daje
+ciąg Cauchy'ego w normie jednostajnej. Jego granica
+$\widetilde u$ jest ograniczona i ciągła. Wybieramy
+podciąg z $\|u_{n_j}-u\|_p^p<2^{-j}$. Z Tonellego
+$\sum_j|u_{n_j}-u|^p<\infty$ prawie wszędzie, więc
+$u_{n_j}\to u$ prawie wszędzie. Jednostajna granica
+$\widetilde u$ reprezentuje zatem klasę $u$.
+Dwa ciągłe reprezentanty równe prawie wszędzie są równe
+wszędzie: niezerowa różnica w punkcie byłaby niezerowa
+na otwartej kuli dodatniej miary.
+W oszacowaniu przyrostów dla $u_n$ przechodzimy
+do granicy dla każdego $x,y$, ponieważ zbieżność w
+$W^{1,p}$ daje zbieżność norm gradientów. Analogicznie
+przechodzimy do granicy w oszacowaniu supremum.
+Jednoznaczność reprezentanta zapewnia liniowość
+przyporządkowania $u\mapsto\widetilde u$.
 
-Dla $p=\infty$ dowód dla funkcji gładkich wynika z całkowania
-$\nabla u$ po odcinku; przejście do funkcji $W^{1,\infty}$
-można wykonać przez splot lokalny i granicę jednostajną
-na kulach (oszacowanie Lipschitzowskie nie zależy od promienia
-splotu), następnie przez wyczerpanie $\R^d$.
+Dla $p=\infty$ niech $u_\varepsilon=\rho_\varepsilon*u$
+na $\R^d$, z nieujemnym jądrem o całce $1$ z rozdziału
+~\ref{chap:pde-sobolev}. Z twierdzenia
+~\ref{thm:pde9-mollify}, stosowanego lokalnie przy $p=1$,
+$\nabla u_\varepsilon=\rho_\varepsilon*(\nabla u)$.
+Nieujemność jądra i nierówność trójkąta dla normy
+euklidesowej dają w każdym punkcie
+\[
+ |u_\varepsilon(x)|\le\|u\|_\infty,\qquad
+ |\nabla u_\varepsilon(x)|\le\|\nabla u\|_\infty.
+\]
+Całkowanie po odcinku daje
+$|u_\varepsilon(x)-u_\varepsilon(y)|
+ \le\|\nabla u\|_\infty|x-y|$.
+Z lokalnej zbieżności w $L^1$ wybieramy
+$\varepsilon_n\downarrow0$ tak, aby
+$\|u_{\varepsilon_n}-u\|_{L^1(B_n(0))}<2^{-n}$.
+Dla ustalonego $m$ suma tych błędów na $B_m(0)$
+od $n=m$ jest skończona; Tonelli daje zbieżność
+punktową prawie wszędzie na $B_m(0)$.
+Po przeliczalnej sumie zbiorów wyjątkowych otrzymujemy
+zbiór $S\subset\R^d$ pełnej miary, na którym
+$u_{\varepsilon_n}\to u$. Zbiór $S$ jest gęsty,
+gdyż każda niepusta kula ma dodatnią miarę.
+Przejście do granicy dla $x,y\in S$ daje na $S$
+to samo oszacowanie lipschitzowskie i ograniczenie
+modułu przez $\|u\|_\infty$. Dla każdego $x\in\R^d$
+wybieramy $x_j\in S$, $x_j\to x$, i definiujemy
+$\widetilde u(x)=\lim_j u(x_j)$.
+Oszacowanie przyrostów daje istnienie granicy
+i jej niezależność od wyboru ciągu, a po przejściu
+do granicy również globalną stałą Lipschitza.
+Na $S$ reprezentant zgadza się z $u$.
+Jego supremum jest równe istotnemu supremum dzięki
+ciągłości, a jednoznaczność wynika jak wyżej.
+Nie korzystaliśmy ze zbieżności w $W^{1,\infty}$.
 \end{proof}
 
 \begin{wniosek}[Morrey na obszarze i wyższe rzędy]
@@ -613,22 +691,82 @@ mają ciągłe reprezentanty H\"olderowskie wykładnika
 $1-d/p$; stąd $u$ ma reprezentanta w $C^{k-1,1-d/p}$.
 \end{wniosek}
 \begin{proof}
-Dla $k=1$ wystarczy ograniczony operator przedłużania
-z lematu~\ref{lem:pde10-extension} oraz twierdzenie
-\ref{thm:pde10-Morrey}. Dla $k\ge2$ każdy słaby
-$\partial^\alpha u$, $|\alpha|\le k-1$, należy do
-$W^{1,p}(\Omega)$, więc stosujemy przypadek $k=1$.
-Aby utożsamić te ciągłe funkcje z pochodnymi klasycznymi,
-można użyć lokalnej tożsamości całkowania wzdłuż prostych
-dla przybliżeń gładkich i przejść do granicy jednostajnej.
+Dla $k=1$, $d\ge2$ bierzemy reprezentanta ciągłego
+$Eu$ z twierdzenia~\ref{thm:pde10-Morrey}, gdzie $E$
+jest operatorem z lematu~\ref{lem:pde10-extension}.
+Jego ograniczenie do $\overline\Omega$ reprezentuje $u$
+na $\Omega$. Norma supremum i półnorma Höldera
+na $\overline\Omega$ nie przekraczają odpowiednich norm
+na $\R^d$. Otrzymujemy, przy $\alpha=1-d/p$,
+\[
+ \|\widetilde u\|_{C^{0,\alpha}(\overline\Omega)}
+ \le C(d,p)\|Eu\|_{W^{1,p}(\R^d)}
+ \le C(\Omega,p)\|u\|_{W^{1,p}(\Omega)}.
+\]
+Dla $p=\infty$ używamy $\alpha=1$ i oszacowania
+Lipschitza wraz z normą supremum. Dla $d=1$ obszar
+jest ograniczonym przedziałem; stosujemy twierdzenie
+~\ref{thm:pde9-ac} i wniosek~\ref{cor:pde9-trace-oneD}
+oraz oszacowanie przyrostów z tego twierdzenia i Höldera
+(dla $p=\infty$ z normą supremum pochodnej).
+Jednoznaczność wynika z równości prawie wszędzie
+funkcji ciągłych na $\Omega$ i z gęstości $\Omega$
+w $\overline\Omega$. Liniowość wynika z jednoznaczności.
+
+Dla $k\ge2$ każdy $\partial^\beta u$, $|\beta|\le k-1$,
+należy do $W^{1,p}(\Omega)$, ponieważ jego słabe
+pochodne pierwszego rzędu są pochodnymi $u$ rzędu
+$|\beta|+1\le k$. Niech $v_\beta$ będzie jego ciągłym
+reprezentantem na $\overline\Omega$. Wszystkie te
+funkcje spełniają oszacowania Höldera i supremum
+przez stałą razy $\|u\|_{W^{k,p}(\Omega)}$.
+Dla $|\beta|\le k-2$ i $x\in\Omega$ wybieramy kulę
+$B_{2r}(x)\Subset\Omega$. Na $B_r(x)$ lokalne sploty
+$u_\varepsilon$ oraz ich pochodne do rzędu $k-1$
+są splotami odpowiednich $v_\gamma$ z jądrem, na mocy
+twierdzenia~\ref{thm:pde9-mollify} (dla $p=\infty$
+stosujemy lokalnie przypadek $p=1$).
+Z jednostajnej ciągłości $v_\gamma$ na
+$\overline{B_{2r}(x)}$ otrzymujemy dla $\varepsilon<r$
+\[
+ \sup_{z\in B_r(x)}
+ |\partial^\gamma u_\varepsilon(z)-v_\gamma(z)|
+ \le\sup_{\substack{z\in B_r(x)\\|h|\le\varepsilon}}
+ |v_\gamma(z-h)-v_\gamma(z)|\longrightarrow0.
+\]
+Dla $|t|<r$ podstawowe twierdzenie rachunku całkowego
+daje
+\[
+ \partial^\beta u_\varepsilon(x+te_i)
+ -\partial^\beta u_\varepsilon(x)
+ =\int_0^t\partial^{\beta+e_i}u_\varepsilon(x+se_i)
+             \,\mathrm d\lambda_1(s).
+\]
+Przechodząc do granicy jednostajnej po obu stronach,
+otrzymujemy tę samą tożsamość dla $v_\beta$ oraz
+$v_{\beta+e_i}$. Dzieląc przez $t\ne0$ i korzystając
+z ciągłości $v_{\beta+e_i}$ przy $t\to0$, mamy
+klasyczną pochodną $\partial_i v_\beta=v_{\beta+e_i}$.
+Wszystkie te pochodne są ciągłe, więc indukcyjnie
+$v_0\in C^{k-1}(\Omega)$, a jego klasyczne pochodne
+przedłużają się ciągle i hölderowsko na
+$\overline\Omega$. To właśnie oznacza tu
+$C^{k-1,\alpha}(\overline\Omega)$; nie wymaga
+istnienia klasycznego przedłużenia wyższego rzędu
+poza obszar.
 \end{proof}
 
 \begin{uwaga}[Wymiar $d=1$]
 Na ograniczonym przedziale wyniki są silniejsze:
-$W^{1,1}(a,b)$ ma reprezentant absolutnie ciągły,
-a dla $p>1$ nierówność H\"oldera i twierdzenie
-\ref{thm:pde9-ac} dają
+$W^{1,1}(a,b)$ ma reprezentanta absolutnie ciągłego,
+a dla $1<p<\infty$ nierówność Höldera i twierdzenie
+~\ref{thm:pde9-ac} dają
 $|u(x)-u(y)|\le |x-y|^{1-1/p}\|u'\|_{L^p(a,b)}$.
+Dla $p=\infty$ otrzymujemy oszacowanie lipschitzowskie
+z wykładnikiem $1$. Dla $p=1$ nie ma wspólnego
+dodatniego wykładnika Höldera (przykłady $u(x)=x^\theta$
+na $(0,1)$, $0<\theta<1$, omówione w rozdziale
+~\ref{chap:pde-sobolev}).
 Nie wolno utożsamiać tego przypadku z uogólnieniem wzoru
 $p^*=dp/(d-p)$ na $d=1$.
 \end{uwaga}
