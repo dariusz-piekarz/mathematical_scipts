@@ -360,6 +360,7 @@ def test_small_diameter_not_expansion():
         assert cut == 1 and 2*len(S) == n
         assert Fraction(cut,3*len(S)) == Fraction(2,3*n)
         # Independent all-sources BFS, without an assumed tree metric.
+        diameter = 0
         for root in range(n):
             distances = {root: 0}
             queue = [root]
@@ -368,7 +369,13 @@ def test_small_diameter_not_expansion():
                     if v not in distances:
                         distances[v] = distances[u]+1
                         queue.append(v)
-            assert len(distances) == n and max(distances.values()) <= 2*h+1
+            assert len(distances) == n
+            diameter = max(diameter, max(distances.values()))
+        assert diameter == 2*h+1
+        # Exhaustive independent cut oracle for the smallest model.
+        if h == 2:
+            phi, _, _ = exact_expansion(adj, 3)
+            assert phi == Fraction(2, 3*n)
         count += 1
     return count
 
