@@ -134,20 +134,52 @@ function renderReader(){
   $("rangeEnd").value=firstLine+Math.max(0,lineCount-1);
   $("addCurrent").textContent=state.selected.has((entity?"entity:":"module:")+(entity?data.entity.id:state.currentModule))?"✓ W zestawie":"+ Do zestawu";
   showRefs($("latexSource"),data.latex);
-  renderSimplified(data.latex);
+  if(state.simplified) renderSimplified(data.latex);
+  else $("mathPreviewStatus")?.classList.add("hidden");
   $("latexSource").classList.toggle("hidden",state.simplified);
   $("simplified").classList.toggle("hidden",!state.simplified);
   $("togglePreview").textContent=state.simplified?"Pokaż LaTeX":"Podgląd uproszczony";
 }
-function renderSimplified(latex){
-  // Deliberately not a full TeX renderer: strip document structure, retain math delimiters.
-  const stripped=latex.replace(/\\label\s*\{[^}]*\}/g,"")
-    .replace(/\\(?:begin|end)\s*\{[^}]*\}(?:\[[^\]]*\])?/g,"\n")
+// Render standard math without executing document preambles or HTML.
+const displayEnvironments = ["equation","equation*","align","align*","alignat","alignat*","gather","gather*","CD"];
+const mathEnvironments = new Set([...displayEnvironments,"aligned","alignedat","gathered","split","cases","dcases","matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix","smallmatrix","array","multline","multline*"]);
+function simplifiedText(latex){
+  return latex.replace(/\\label\s*\{[^}]*\}/g,"")
+    .replace(/\\(?:begin|end)\s*\{([^}]*)\}(?:\[[^\]]*\])?/g,(match,name)=>mathEnvironments.has(name)?match:"\n")
     .replace(/\\(?:chapter|section|subsection|subsubsection|paragraph)\*?(?:\[[^\]]*\])?\s*\{([^{}]*)\}/g,"\n\n$1\n")
     .replace(/\\(?:emph|textbf|textit)\s*\{([^{}]*)\}/g,"$1")
     .replace(/\n{4,}/g,"\n\n");
-  const box=$("simplified");box.textContent=stripped;
-  if(window.renderMathInElement){try{window.renderMathInElement(box,{delimiters:[{left:"$$",right:"$$",display:true},{left:"\\[",right:"\\]",display:true},{left:"$",right:"$",display:false},{left:"\\(",right:"\\)",display:false}],throwOnError:false});}catch(_){}}
+}
+function renderMathPreview(box,latex){
+  box.textContent=simplifiedText(latex);
+  if(typeof window.renderMathInElement!=="function"){
+    return "Renderer wzorów jest niedostępny. Uruchom scripts/install_math_renderer.py i odśwież stronę.";
+  }
+  let errors=0;
+  try{
+    window.renderMathInElement(box,{
+      delimiters:[
+        {left:"$$",right:"$$",display:true},
+        {left:"\\[",right:"\\]",display:true},
+        {left:"\\(",right:"\\)",display:false},
+        ...displayEnvironments.map(name=>({left:"\\begin{"+name+"}",right:"\\end{"+name+"}",display:true})),
+        {left:"$",right:"$",display:false}
+      ],
+      macros:{"\\R":"\\mathbb{R}","\\C":"\\mathbb{C}","\\N":"\\mathbb{N}","\\Z":"\\mathbb{Z}","\\Q":"\\mathbb{Q}"},
+      trust:false,throwOnError:true,maxExpand:1000,maxSize:20,
+      errorCallback:()=>{errors++;}
+    });
+  }catch(error){
+    box.textContent=simplifiedText(latex);
+    console.warn("Math preview:",error);
+    return "Nie udało się złożyć podglądu wzorów. Wyświetlam źródło.";
+  }
+  return errors?"Nie złożono "+errors+" fragmentów matematycznych; pozostawiono ich źródło.":"";
+}
+function renderSimplified(latex){
+  const status=$("mathPreviewStatus");
+  const message=renderMathPreview($("simplified"),latex);
+  if(status){status.textContent=message;status.classList.toggle("hidden",!message);}
 }
 function addCurrent(){
   const d=state.currentData;if(!d)return;
@@ -229,7 +261,10 @@ async function previewLabel(label,anchor,sourceDocument=null){
     }else{
       body.append(node("h3",{},result.entity_title || result.title || label));
       body.append(node("p",{className:"tip-meta"},`${label} · ${result.document_id} · wiersz ${result.line}`));
-      body.append(node("div",{className:"tip-code"},crop(result.latex,1100)));
+      const preview=node("div",{className:"tip-code"});
+      body.append(preview);
+      const message=renderMathPreview(preview,result.latex||"");
+      if(message)body.append(node("p",{className:"tip-meta"},message));
     }
     positionReferenceTip(anchor);
   }catch(e){
