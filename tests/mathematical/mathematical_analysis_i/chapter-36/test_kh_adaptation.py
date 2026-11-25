@@ -26,6 +26,27 @@ class Chapter36(unittest.TestCase):
         for ref in re.findall(r"\\(?:ref|eqref)\{([^}]+)\}",source):
             self.assertIn(ref,labels)
 
+    def test_book_and_catalog_integration(self):
+        import json
+        rel="chapters/pl/mathematical_analysis_i/36-calka-kurzweila-henstocka.tex"
+        book=(ROOT/"books/pl/mathematical_analysis_i.tex").read_text(encoding="utf8")
+        self.assertEqual(book.count("\\input{../../"+rel+"}"),1)
+        self.assertLess(book.index("35-kwadratury-numeryczne.tex"),book.index(rel))
+        catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf8"))
+        chapters=[c for b in catalog["books"] for c in b.get("chapters",[])]
+        self.assertEqual(chapters.count(rel),1)
+
+    def test_weighted_regularity_budget(self):
+        eps,eta,h=F(1,10),F(1,100),F(1,3)
+        for m in (1,5,20):
+            weights=[F(1,3*2**abs(k)) for k in range(-m,m+1)]
+            self.assertEqual(sum(weights),1-F(2,3*2**m))
+            errors=[w*min(eta/2,eps/(6*(1+abs(k*h)+h)))
+                    for k,w in zip(range(-m,m+1),weights)]
+            self.assertLess(sum(errors),eta/2)
+            self.assertLess(sum((abs(k*h)+h)*e for k,e in
+                                zip(range(-m,m+1),errors)),eps/6)
+
     def test_source_label_map(self):
         mapping=re.findall(r"^\| ([^| ]+) \| (ma1:kh:[^| ]+) \|$",MAP.read_text(encoding="utf8"),re.M)
         self.assertGreaterEqual(len(mapping),29)
