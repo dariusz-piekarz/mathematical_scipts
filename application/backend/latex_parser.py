@@ -53,6 +53,7 @@ VERBATIM_ENVS = CODE_ENVS | {"comment", "filecontents", "filecontents*"}
 REF_COMMANDS = {"ref", "eqref", "pageref", "autoref", "nameref", "cref", "Cref", "vref", "Vref", "atlasref"}
 PREFIX_DOMAINS = {
     "AM1": "analiza matematyczna I",
+    "AM2": "analiza matematyczna II",
     "AA": "algebra abstrakcyjna",
     "ALG": "geometria algebraiczna", "AT": "geometria algebraiczna / topologia",
     "TOP": "topologia algebraiczna", "GW": "teoria grafów i węzłów",
@@ -243,6 +244,7 @@ def plain_excerpt(source: str, limit: int = 360) -> str:
 
 REPOSITORY_CATEGORIES = {
     "mathematical_analysis_i": "AM1",
+    "mathematical_analysis_ii": "AM2",
     "abstract_algebra": "AA",
     "differential_geometry_and_topology": "DG",
     "functional_analysis": "FA",
