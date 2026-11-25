@@ -97,7 +97,7 @@ async function openEntity(id,full=false){
   }catch(e){toast(e.message);}
 }
 function showRefs(container,latex){
-  container.replaceChildren();const regex=/\\(ref|eqref|pageref|autoref|nameref|cref|Cref|vref|Vref)\s*\{([^{}]+)\}/g;
+  container.replaceChildren();const regex=/\\(ref|eqref|pageref|autoref|nameref|cref|Cref|vref|Vref|atlasref)\s*\{([^{}]+)\}/g;
   let last=0, match;
   while((match=regex.exec(latex))){
     if(match.index>last)container.append(document.createTextNode(latex.slice(last,match.index)));
@@ -108,7 +108,7 @@ function showRefs(container,latex){
       const lab=raw.trim(), sourceDocument=state.currentModule;if(!lab){container.append(document.createTextNode(raw));return;}
       const b=node("button",{className:"ref-link",title:"Podgląd etykiety: "+lab},lab);
       b.addEventListener("mouseenter",()=>previewLabel(lab,b,sourceDocument));
-      b.addEventListener("focus",()=>previewLabel(lab,b));
+      b.addEventListener("focus",()=>previewLabel(lab,b,sourceDocument));
       b.addEventListener("mouseleave",()=>{const key=state.tooltipKey;setTimeout(()=>{if(key===state.tooltipKey && state.tooltipAnchor===b && !$("referenceTip").matches(":hover"))closeTip();},240);});
       b.addEventListener("click",()=>openLabel(lab,sourceDocument));container.append(b);
     });
