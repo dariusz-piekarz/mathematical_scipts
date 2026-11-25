@@ -20,3 +20,4 @@ Testy Python sprawdzają skończone świadki i tożsamości; nie zastępują dow
 | MA1-32-016 | ma1:ex:improper-parameter-discontinuity | Ciągły integrand, nieciągła całka, supremum ogona | semantyczna + Python |
 | MA1-32-017 | ma1:ex:improper-parameter-nondifferentiability | Ciągła pochodna cząstkowa również przy t=0, całka abs(t), całka pochodnej sign(t) | semantyczna + Python |
 | MA1-32-018 | ma1:ch:parameter-integrals | Czytelność wykresów trójkątnych, zgodność wierzchołków i pól | Python + PDF |
+| MA1-32-019 | ma1:thm:improper-parameter-limit | Jednostajność na obcięciach i ogonach, istnienie całki z granicy, parametr graniczny nie musi należeć do E | semantyczna + Python |
