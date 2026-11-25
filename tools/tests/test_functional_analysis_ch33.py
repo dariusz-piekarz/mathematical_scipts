@@ -104,5 +104,20 @@ class Chapter33(unittest.TestCase):
         for z in (1,-1,1j,-1j):
             self.assertEqual(z*z.conjugate(),1)
 
+    def test_FA33_resolvent_convention_03(self):
+        earlier = next(DIR.glob("31-*.tex")).read_text(encoding="utf-8")
+        self.assertIn(r"R_a(z)=(z1_A-a)^{-1}", earlier)
+        for token in (r"\ref{def:spectrum31}", r"R_A(z)=(zI-A)^{-1}",
+                      r"(A-zI)^{-1}=-R_A(z)",
+                      r"R_A(z)=\int_\R(z-t)^{-1}\,\mathrm dE(t)"):
+            self.assertIn(token,S)
+        self.assertNotIn(r"R(z,A)=(A-zI)^{-1}", S)
+        for t,z,w in itertools.product(range(-4,5),repeat=3):
+            if t == z or t == w:
+                continue
+            rz,rw = F(1,z-t),F(1,w-t)
+            self.assertEqual(rz,-F(1,t-z))
+            self.assertEqual(rz-rw,(w-z)*rz*rw)
+
 if __name__ == "__main__":
     unittest.main()
