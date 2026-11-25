@@ -1,0 +1,10 @@
+# Rozdział 11 — testy wykonywalne i początek trzeciej lektury
+
+## Iteracja 179
+Źródło kontrolowane: blob 9efd013d7e396caffaf6540550d378beddab9fed, bez zmian w tej iteracji. Poprzednia dokumentacja: regression.md (167–175), iterations-176-177.md (176–177), iteration-178.md (178).
+
+Utworzono test_variational.py w commicie a8782f93291198d7e0aa6e6933cd77b8e057de85: dziewięć testów skończonych, w tym arytmetyka wymierna kontrakcji, znak Neumanna, energia kwadratowa, minimum skalarne p, monotoniczność skalarna dla całkowitych p, macierz MES, błędy całkowe, współrzędne rysunku i kontrprzykład H². Nie są to formalne dowody twierdzeń. Workflow .github/workflows/partial-differential-equations-ch11.yml w commicie f65a490e17a26c399abb1a2100a425a359ef05e7: kontrola 75 kotwic kryteriów, etykiet i odsyłaczy, manifestu, kanonicznej preambuły i numeracji zewnętrznych odsyłaczy w 09,10,13, kompilacja samodzielnego rozdziału, diagnostyka, render i archiwum.
+
+Rzeczywisty przebieg 45657910380, job 139359487441, head f65a490e17a26c399abb1a2100a425a359ef05e7; odczyt źródła przy tym head potwierdza powyższy blob. Kroki testów wykonywalnych i kontroli strukturalnej zakończone success. Przy ostatnim odczycie kompilacja in_progress; końcowy wynik, diagnostyka i PDF jeszcze niezweryfikowane.
+
+Trzecia lektura 001–012: ponownie odczytano całe dwie początkowe sekcje. 001–002: poprawna dodatnia określoność, równoważność norm i zupełność; 003–005: norma operatorowa, skalowanie kul, ciągłość dystrybucyjna, iniektywność i przedłużanie z gęstej podprzestrzeni; 006–008: wygładzanie i ślad, gęstość, oba kierunki równoważności dystrybucyjnej; 009–010: argument równoległoboku, istnienie i jednoznaczność rzutu oraz nierówność rzutowa; 011–012: konstrukcja Riesza, norma, liniowość, surjektywność i zupełność przestrzeni funkcjonałów. Wszystkie 12 kryteriów poprawne bez nowych zmian. Pierwsza i druga lektura 75/75, trzecia 12/75. Następnie zweryfikować zakończony CI i artefakt PDF oraz kontynuować trzecią lekturę 013–026. Nie uruchamiano Lean. Nie nadano statusu stabilizacji.
