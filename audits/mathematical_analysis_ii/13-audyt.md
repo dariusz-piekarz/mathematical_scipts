@@ -47,3 +47,7 @@ Porównano drzewa a20d668 i 2b8c806: w zakresie AM II zmieniły się wyłącznie
 ## Drugi czysty audyt merytoryczny po uzupełnieniu (26.11.2026)
 
 Blob rozdziału nadal d5391148b3a60185cbafb33c0e597a6e5e5b3669. Ponownie sprawdzono założenia twierdzenia ma2:thm:frechet-chain, w szczególności kontrolę reszty złożenia także przy zerowym przyroście wewnętrznym. W przykładzie ma2:ex:chain-curve rozwinięcie g' w bazie i ewaluacja D(f∘g) na 1 dają prawidłową sumę; rachunki sprawdzono niezależnie przez bezpośrednie różniczkowanie t⁵+sin t oraz stałej 1. Brak nowych usterek. Czyste audyty merytoryczne 2/2 dla tego samego bloba. Ostatni obejrzany PDF rozdziału dotyczy artefaktu 15096135514, nie najnowszego tomu po rozszerzeniu 15. Odbiór techniczny bieżącego tomu nadal otwarty.
+
+## Ponowne otwarcie: typ obiektu i rysunek 3D
+
+Dodano interpretację operatorową, dualną, tensorową, kanoniczne utożsamienie w skończonym wymiarze i ograniczenie w nieskończonym wymiarze, rysunek powierzchni i płaszczyzny stycznej. Po zmianie 0/2, kompilacja i kontrola wizualna niepotwierdzone.

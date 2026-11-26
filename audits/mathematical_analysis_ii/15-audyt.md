@@ -89,3 +89,7 @@ AM II #45777820206 zakończony success dla 2da3a31f78be8d3d2ab29e4875d595e810720
 ## Odbiór PDF po audycie Höldera (26.11.2026)
 
 CI AM II #45779367463: success dla e95445fa5d3124a09a9d0fe3150d341391eaa7ce. Pobrano artefakt 15098647169: 128 stron, 16 rozdziałów, zero wystąpień ?? w warstwie tekstowej. Obejrzano przegląd renderów wszystkich 26 stron rozdziału 15 (strony fizyczne 96–121). Brak widocznych obcięć i nakładania się elementów, tabele na fizycznej stronie 121. Ten PDF obejmuje wszystkie pięć bloków rozszerzenia oraz audyty 1–4, ale nie obejmuje ostatnich zmian audytu zwartych zanurzeń, C_0 i tabel z 2806dc3. Udostępniono wersję użytkownikowi. Stan CI ostatecznego bloba: #45779578614 queued; #45779589218 queued; #45780274866 queued. Audyty merytoryczne pozostają 2/2, odbiór najnowszej kompilacji nadal wymaga potwierdzenia. Bez zmian źródła rozdziału.
+
+## Ponowne otwarcie: pochodne jako tensory i wizualizacje 3D
+
+Dodano izomorfizmy z linearyzacją algebraiczną i symetrycznym iloczynem tensorowym w skończonym wymiarze, współczynniki i wymiar, ograniczenie w nieskończonym wymiarze oraz dowód izometrycznej linearyzacji przez uzupełniony rzutowy iloczyn tensorowy. Dodano dwa wykresy form kwadratowych. Po zmianie 0/2; wymagane audyty dowodów, kompilacja i wizualna kontrola rysunków. Przeniesienie bloku jednowymiarowego do AM I 22 pozostaje osobną następną iteracją.
