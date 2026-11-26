@@ -85,3 +85,7 @@ Bez zmian źródła rozdziału. Sprawdzono bilans klamer (0, bez przedwczesnego 
 ## Odbiór pośredniego PDF (26.11.2026)
 
 AM II #45777820206 zakończony success dla 2da3a31f78be8d3d2ab29e4875d595e81072075c. Pobrano artefakt 15097550362: PDF 123 strony, 16 rozdziałów, brak ciągu ?? w warstwie tekstowej. Wyrenderowano i obejrzano przegląd wszystkich 21 stron rozdziału 15 (fizyczne 96–116); brak widocznych obcięć i kolizji w przeglądzie. Jest to wersja zawierająca blok Höldera, przed blokiem zwartych zanurzeń i C_0 oraz późniejszymi poprawkami audytowymi. Nie potwierdza odbioru końcowego aktualnego bloba. CI #45778231450: in_progress. Udostępniono użytkownikowi pośredni PDF z jednoznacznym wskazaniem wersji. Bez zmian treści rozdziału.
+
+## Odbiór PDF po audycie Höldera (26.11.2026)
+
+CI AM II #45779367463: success dla e95445fa5d3124a09a9d0fe3150d341391eaa7ce. Pobrano artefakt 15098647169: 128 stron, 16 rozdziałów, zero wystąpień ?? w warstwie tekstowej. Obejrzano przegląd renderów wszystkich 26 stron rozdziału 15 (strony fizyczne 96–121). Brak widocznych obcięć i nakładania się elementów, tabele na fizycznej stronie 121. Ten PDF obejmuje wszystkie pięć bloków rozszerzenia oraz audyty 1–4, ale nie obejmuje ostatnich zmian audytu zwartych zanurzeń, C_0 i tabel z 2806dc3. Udostępniono wersję użytkownikowi. Stan CI ostatecznego bloba: #45779578614 queued; #45779589218 queued; #45780274866 queued. Audyty merytoryczne pozostają 2/2, odbiór najnowszej kompilacji nadal wymaga potwierdzenia. Bez zmian źródła rozdziału.
