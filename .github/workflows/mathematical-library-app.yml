@@ -111,6 +111,10 @@ jobs:
       - name: Track complete 36-chapter geometry import coverage
         run: python scripts/dg_import_coverage.py --db data/biblioteka.db --out data/dg_import_coverage.json
       - name: Audit repository-wide chapter and graph coverage
+        id: graph-coverage
+        # Preserve the failure at the final gate, while still collecting
+        # application and browser results when manuscript links are broken.
+        continue-on-error: true
         run: python -m scripts.audit_graph_coverage --db data/biblioteka.db --catalog ../catalog/books.json --out data/graph_coverage.json
       - name: Report coordinate chart terminology in all TeX sources
         run: python scripts/audit_chart_terminology.py --root .. --report data/chart_terminology.json --strict
@@ -163,3 +167,8 @@ jobs:
           name: library-index-report
           path: application/data/ci_index_report.json
           if-no-files-found: ignore
+      - name: Require successful chapter and graph coverage
+        if: ${{ always() && steps.graph-coverage.outcome == 'failure' }}
+        run: |
+          echo "::error::Chapter or graph coverage failed. See reference-provenance-audit; application test results are reported separately."
+          exit 1
