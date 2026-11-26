@@ -173,8 +173,10 @@ def _olean_tree(root: Path, *, label: str, budget: list[int],
         relative_directory: str | None = None
         for name in names:
             # Avoid allocating Path objects for unrelated build outputs.
-            # Path(".olean").suffix is empty; keep that legacy exclusion.
-            if not name.endswith(".olean") or name == ".olean":
+            # Hidden basenames have version-dependent pathlib suffix rules
+            # (notably '..olean' on Python 3.14). Preserve the original Path
+            # semantics for those rare names; ordinary files keep the fast path.
+            if not name.endswith(".olean") or (name.startswith(".") and Path(name).suffix != ".olean"):
                 continue
             artifact = base / name
             if artifact.is_symlink():

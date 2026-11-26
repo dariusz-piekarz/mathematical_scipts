@@ -42,6 +42,28 @@ class DependencyTraceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             offline.parse_trace(b'openat(AT_FDCWD, "truncated', cwd=P('/work'), allow_empty=True)
 
+    def test_device_descriptors_from_real_mathlib_trace(self):
+        # Exact descriptor format from rootless CI job 139518900286.
+        raw = (b'openat(AT_FDCWD</tmp/atlas-offline-ma5puqyz>, "/dev/urandom", '
+               b'O_RDONLY|O_CLOEXEC) = 11</dev/urandom<char 1:9>>\n'
+               b'openat(AT_FDCWD, "/dev/sda", O_RDONLY) = 4</dev/sda<block 8:0>>\n')
+        self.assertEqual(offline.parse_trace(raw, cwd=P('/work')),
+                         {P('/dev/urandom'), P('/dev/sda')})
+
+    def test_device_annotations_remain_strict_and_read_only(self):
+        for descriptor, requested, flags in (
+                ('/dev/urandom<char 1:9>', '/dev/urandom', 'O_RDWR'),
+                ('/dev/urandom<char 1:9>', '/dev/urandom', 'O_RDONLY|O_CREAT'),
+                ('/tools/lean<char 1:9>', '/tools/lean', 'O_RDONLY'),
+                ('/dev/urandom<char 1:9>', '/tools/lean', 'O_RDONLY'),
+                ('/dev/urandom<char 1:>', '/dev/urandom', 'O_RDONLY'),
+                ('/dev/urandom<socket 1:9>', '/dev/urandom', 'O_RDONLY'),
+                ('/dev/urandom<char 1:9> (deleted)', '/dev/urandom', 'O_RDONLY'),
+                ('/dev/urandom<char 1:9', '/dev/urandom', 'O_RDONLY')):
+            raw = f'openat(AT_FDCWD, "{requested}", {flags}) = 3<{descriptor}>\n'.encode()
+            with self.subTest(raw=raw), self.assertRaises(ValueError):
+                offline.parse_trace(raw, cwd=P('/work'))
+
     def test_malformed_truncated_write_and_deleted_descriptors_are_rejected(self):
         for raw in (b'', b'openat(AT_FDCWD, "/x", O_RDONLY <unfinished ...>',
                     b'openat(AT_FDCWD, "/x", O_RDWR|O_CREAT) = 3</x>',

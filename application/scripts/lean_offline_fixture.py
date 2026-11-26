@@ -38,7 +38,8 @@ SYSTEM_ROOTS = tuple(map(PurePosixPath, ("/lib", "/lib64", "/usr/lib")))
 SYSTEM_FILES = set(map(PurePosixPath, ("/etc/ld.so.cache", "/etc/locale.alias", "/etc/localtime", "/bin/busybox", "/usr/bin/busybox", "/usr/share/zoneinfo/Etc/UTC")))
 KERNEL_ROOTS = tuple(map(PurePosixPath, ("/proc", "/sys", "/dev")))
 OPEN = re.compile(r'^(?:\d+\s+)?openat\((?P<directory>AT_FDCWD(?:<(?P<cwd>/[^>]*)>)?|\d+<(?P<base>/[^>]*)>), '
-                  r'(?P<quoted>"(?:[^"\\]|\\.)*"), (?P<flags>[^\n]*)\)\s+=\s+(?P<fd>\d+)<(?P<resolved>/[^>]+)>$')
+                  r'(?P<quoted>"(?:[^"\\]|\\.)*"), (?P<flags>[^\n]*)\)\s+=\s+(?P<fd>\d+)'
+                  r'<(?P<resolved>/[^<>]+)(?:<(?P<device>char|block) \d+:\d+>)?>$')
 
 
 def normalized(path: str) -> PurePosixPath:
@@ -75,7 +76,14 @@ def parse_trace(raw: bytes, *, cwd: Path, allow_empty=False) -> set[Path]:
         if not requested.startswith("/"):
             requested = str((PurePosixPath(base) if base else PurePosixPath(cwd)) / requested)
         requested_path = normalized(requested)
-        normalized(resolved)  # Reject deleted descriptors and nonportable names.
+        resolved_path = normalized(resolved)  # Reject deleted descriptors and nonportable names.
+        # strace -yy annotates device descriptors, e.g. /dev/urandom<char 1:9>.
+        # These are provided by the container runtime, never copied into rootfs.
+        # Keep annotations restricted to /dev; other nested descriptor metadata
+        # must still fail rather than be silently stripped from a file path.
+        if match['device'] and not (requested_path.is_relative_to(PurePosixPath('/dev'))
+                                    and resolved_path.is_relative_to(PurePosixPath('/dev'))):
+            raise ValueError("Device descriptor outside /dev")
         paths.add(requested_path)
         if len(paths) > artifacts.MAX_ENTRIES:
             raise ValueError("Dependency trace entry budget exceeded")

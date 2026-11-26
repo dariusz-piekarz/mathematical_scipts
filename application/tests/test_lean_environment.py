@@ -255,7 +255,7 @@ class LeanEnvironmentTests(unittest.TestCase):
         """Unrelated build files are ignored; hidden suffix semantics stay intact."""
         root = self.root / ".lake" / "build" / "lib" / "lean"
         names = (
-            ".olean", "..olean", ".hidden.olean", "Ordinary.olean",
+            ".olean", "..olean", "...olean", ".hidden.olean", "Ordinary.olean",
             "Notes.olean.old", "Plain.txt", "other.olean.tmp",
             "nested/Unicode_ż.olean", "nested/Foo.olean",
             "nested/.olean", "nested/Readme.md",
