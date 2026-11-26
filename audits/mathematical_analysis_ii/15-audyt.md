@@ -43,3 +43,7 @@ Dodano definicję półnorm, zupełną metrykę C^k na otwartym zbiorze euklides
 ## Czwarty blok rozszerzenia: Lip, Hölder, małe przestrzenie Höldera
 
 Dodano dowody zupełności i ciągłości zanurzeń, oszacowanie interpolacyjne, nieośrodkowość pełnych przestrzeni Höldera i Lipschitza, charakterystykę małych przestrzeni Höldera przez aproksymację gładką na kostce, ośrodkowość, ścisłość i wyjątek alpha=1. Dodano również nieośrodkowość globalnego C_b^k na otwartej kostce. Przegląd źródła RRC 16 def:pde16-holder; zachowano normę równoważną opartą na pochodnych Frécheta. Poprzedni blok ae55893: AM II #45777235017 success, terminologia i globalny CI jeszcze queued przy odczycie. Nowy blok wymaga szczegółowego audytu, CI, PDF; 0/2. Następnie zwartość zanurzeń, C_0 i synteza.
+
+## Piąty blok rozszerzenia: zwarte zanurzenia, C_0 i synteza
+
+Dodano wersję metryczną Arzeli–Ascolego z dowodem w obu kierunkach, zwarte włożenia na kostce przy skończonym wymiarze wartości i dwa ograniczenia zakresu (brak straty regularności i nieskończony wymiar F). Dodano C_0, dowód domkniętości, aproksymację funkcjami o zwartym nośniku, ośrodkowość przez przeliczalną rodzinę interpolacji i gęstość gładkich przez splot. Zestawiono klasyczne przestrzenie, uzupełniono uzasadnienia ośrodkowości ciągowych i L^p na przedziale, z odesłaniem do AF 12 i teorii miary. Nie modyfikowano AM I 36 ani RRC. Konstrukcja bloku zakończona; wymagane audyty szczegółowe 0/2, CI i PDF. CI poprzedniego bloku 2da3a31 przy pierwszym odczycie jeszcze nieukończone. Nie przechodzić do 16 przed stabilizacją.
