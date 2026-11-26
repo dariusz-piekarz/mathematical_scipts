@@ -234,6 +234,55 @@ class OfflineReportTests(unittest.TestCase):
                   'compiler_output': self.report['lake_version'] + '\n' + MISSING_OUTPUT.decode()}
         return report, manifest, origins
 
+    def test_duplicate_manifest_entries_cannot_disappear_in_pair_comparison(self):
+        positive = self.report, self.manifest, self.origins
+        negative = self.rejected_evidence()
+        for kind in ('file', 'directory'):
+            for extra_field in (False, True):
+                changed = copy.deepcopy(negative)
+                duplicate = next(copy.deepcopy(e) for e in changed[1]['entries'] if e['kind'] == kind)
+                if extra_field:
+                    duplicate['unexpected'] = 'must not disappear'
+                changed[1]['entries'].insert(0, duplicate)
+                digest = hashlib.sha256(artifacts.encoded(changed[1])).hexdigest()
+                changed[0]['manifest_sha256'] = digest
+                with self.subTest(kind=kind, extra_field=extra_field), self.assertRaises(ValueError):
+                    offline.validate_report_pair(
+                        positive, changed, expected_sha=self.sha,
+                        expected_manifest_sha=self.digest, expected_rejected_manifest_sha=digest)
+
+    def test_persisted_manifest_structure_is_checked_even_with_matching_digest(self):
+        # A matching digest does not make malformed evidence acceptable.
+        for case in ('extra_top_field', 'claim', 'bool_schema', 'bool_count', 'bool_total',
+                     'not_a_list', 'not_a_record', 'extra_directory_field', 'extra_file_field',
+                     'unknown_kind', 'unsafe_path', 'missing_parent', 'case_collision',
+                     'bool_size', 'negative_size', 'oversized_file', 'bad_digest'):
+            manifest = copy.deepcopy(self.manifest)
+            directory = next(e for e in manifest['entries'] if e['kind'] == 'directory')
+            file = next(e for e in manifest['entries'] if e['kind'] == 'file')
+            if case == 'extra_top_field': manifest['unexpected'] = True
+            elif case == 'claim': manifest['offline_ready'] = True
+            elif case == 'bool_schema': manifest['schema'] = True
+            elif case == 'bool_count': manifest['file_count'] = True
+            elif case == 'bool_total': manifest['total_bytes'] = True
+            elif case == 'not_a_list': manifest['entries'] = {}
+            elif case == 'not_a_record': manifest['entries'].append(None)
+            elif case == 'extra_directory_field': directory['unexpected'] = True
+            elif case == 'extra_file_field': file['unexpected'] = True
+            elif case == 'unknown_kind': directory['kind'] = 'symlink'
+            elif case == 'unsafe_path': directory['path'] = '../outside'
+            elif case == 'missing_parent': manifest['entries'].remove(directory)
+            elif case == 'case_collision': manifest['entries'].append({**directory, 'path': directory['path'].upper()})
+            elif case == 'bool_size': file['size'] = True
+            elif case == 'negative_size': file['size'] = -1
+            elif case == 'oversized_file': file['size'] = artifacts.MAX_FILE_BYTES + 1
+            elif case == 'bad_digest': file['sha256'] = 'invalid'
+            digest = hashlib.sha256(artifacts.encoded(manifest)).hexdigest()
+            report = {**self.report, 'manifest_sha256': digest}
+            with self.subTest(case=case), self.assertRaises(ValueError):
+                offline.validate_report(report, manifest, self.origins,
+                                        expected_sha=self.sha, expected_manifest_sha=digest)
+
     def test_missing_import_reports_are_distinct_and_only_one_file_may_differ(self):
         positive = self.report, self.manifest, self.origins
         negative = self.rejected_evidence()

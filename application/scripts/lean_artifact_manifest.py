@@ -198,6 +198,56 @@ def create_manifest(root: Path, source_report: dict) -> dict:
     return manifest
 
 
+def validate_manifest_structure(manifest: dict) -> None:
+    """Check persisted structure and counts without authenticating tree bytes."""
+    fields = {"schema", "scope", "source_closure", "entries", "file_count", "total_bytes",
+              "offline_ready", "execution_allowed", "certificate"}
+    if (type(manifest) is not dict or set(manifest) != fields
+            or type(manifest["schema"]) is not int or manifest["schema"] != 1
+            or manifest["scope"] != "selected_artifact_tree"
+            or any(manifest[key] is not False for key in
+                   ("offline_ready", "execution_allowed", "certificate"))):
+        raise ValueError("Invalid artifact manifest structure")
+    records = manifest["entries"]
+    if type(records) is not list or not records or len(records) >= MAX_ENTRIES:
+        raise ValueError("Invalid artifact entry budget")
+    paths, portable_paths = {}, set()
+    count = total = 0
+    for record in records:
+        if type(record) is not dict:
+            raise ValueError("Invalid artifact entry")
+        kind, path = record.get("kind"), record.get("path")
+        if kind not in ("file", "directory") or type(path) is not str:
+            raise ValueError("Invalid artifact entry kind or path")
+        expected = {"path", "kind", "size", "sha256"} if kind == "file" else {"path", "kind"}
+        if set(record) != expected:
+            raise ValueError("Unexpected artifact entry fields")
+        parts = path.split("/")
+        if len(parts) > MAX_DEPTH + (kind == "file"):
+            raise ValueError("Artifact depth budget exceeded")
+        for part in parts:
+            component(part)
+        if path.casefold() in portable_paths:
+            raise ValueError("Duplicate or case-colliding artifact path")
+        paths[path] = kind
+        portable_paths.add(path.casefold())
+        if kind == "file":
+            size, sha = record["size"], record["sha256"]
+            if (type(size) is not int or not 0 <= size <= MAX_FILE_BYTES
+                    or type(sha) is not str or not HEX.fullmatch(sha)):
+                raise ValueError("Invalid artifact file size or digest")
+            count += 1
+            total += size
+    for path in paths:
+        parent = path.rpartition("/")[0]
+        if parent and paths.get(parent) != "directory":
+            raise ValueError("Missing artifact parent directory")
+    if (type(manifest["file_count"]) is not int or manifest["file_count"] != count or count < 1
+            or type(manifest["total_bytes"]) is not int or manifest["total_bytes"] != total
+            or total > MAX_TOTAL_BYTES or len(encoded(manifest)) > MAX_MANIFEST_BYTES):
+        raise ValueError("Invalid artifact manifest counts or byte budget")
+
+
 def verify_manifest(root: Path, raw: bytes, *, expected_sha256: str,
                     expected_source_report: dict) -> dict:
     if (type(expected_sha256) is not str or not HEX.fullmatch(expected_sha256)

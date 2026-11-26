@@ -216,6 +216,8 @@ def validate_report(report, manifest, origins, *, expected_sha, expected_manifes
     for name in ("file_count", "total_bytes", "observed_origin_count"):
         if type(report[name]) is not int or report[name] <= 0:
             raise ValueError("Invalid offline evidence counts")
+    # Validate the raw list before path-keyed maps can hide duplicate entries.
+    artifacts.validate_manifest_structure(manifest)
     if (type(manifest) is not dict or type(origins) is not dict
             or hashlib.sha256(artifacts.encoded(manifest)).hexdigest() != expected_manifest_sha
             or manifest.get('file_count') != report['file_count'] or manifest.get('total_bytes') != report['total_bytes']
