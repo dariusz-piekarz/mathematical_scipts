@@ -71,6 +71,8 @@ class FunctionalAnalysisBook(unittest.TestCase):
         for path, source in zip(paths, texts):
             text = without_comments_and_code(source)
             text = re.sub(r"\\(?:label|ref|eqref|pageref|autoref)\{[^}]+\}|\\hyperref\[[^\]]+\]", "", text)
+            # Atlas references also carry stable identifiers; retain their visible captions.
+            text = re.sub(r"\\atlasref\{[^{}]+\}", "", text)
             hits.extend((path.name, m.group()) for m in forbidden.finditer(text))
         self.assertFalse(hits)
 
