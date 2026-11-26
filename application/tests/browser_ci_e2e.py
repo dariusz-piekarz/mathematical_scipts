@@ -544,24 +544,22 @@ def main() -> None:
                 page.locator("#tipOpen").click()
                 page.locator("#docTitle").wait_for(state="visible", timeout=15000)
                 assert page.locator("#docTitle").inner_text().strip()
-                # Negative paths: use actual ambiguity and missing-label evidence
-                # from the freshly built canonical index; never invent owners.
+                # Use real duplicate owners for ambiguity. For the missing path,
+                # verify an absent test label instead of requiring a broken
+                # reference in the canonical mathematical corpus.
+                missing_label = "atlas:ci:deliberately-absent-label"
                 with sqlite3.connect(DB) as db:
                     ambiguous = db.execute("""
                         SELECT name FROM label_conflicts
                         GROUP BY name HAVING COUNT(DISTINCT document_id)>1
                         ORDER BY name LIMIT 1
                     """).fetchone()
-                    missing = db.execute("""
-                        SELECT r.target_label FROM references_tex AS r
-                        WHERE r.target_document IS NULL
-                          AND NOT EXISTS (SELECT 1 FROM labels l WHERE l.name=r.target_label)
-                          AND NOT EXISTS (SELECT 1 FROM label_conflicts c WHERE c.name=r.target_label)
-                        ORDER BY r.target_label LIMIT 1
-                    """).fetchone()
+                    assert db.execute(
+                        "SELECT 1 FROM label_occurrences WHERE name=? LIMIT 1",
+                        (missing_label,),
+                    ).fetchone() is None, "Missing-label test target must not exist"
                 assert ambiguous is not None, "No ambiguous labels in indexed corpus"
-                assert missing is not None, "No missing labels in indexed corpus"
-                ambiguous_label, missing_label = ambiguous[0], missing[0]
+                ambiguous_label = ambiguous[0]
                 # Allow the previous clicked ref to finish navigation and
                 # consume its pending hover/leave events before the next preview.
                 page.mouse.move(0, 0)
