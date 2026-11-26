@@ -1,0 +1,155 @@
+\section{Monady, komonady i twierdzenie Becka}\label{cat:sec:monadicity}
+W rozdziale~\ref{sec:monads} zdefiniowaliśmy monadę oraz skonstruowaliśmy kategorie Kleisliego i Eilenberga--Moore'a. W rozdziale~\ref{cat:sec:monoids-duality} zinterpretowaliśmy monady jako obiekty monoidalne w kategorii endofunktorów ze składaniem. Teraz badamy, na ile monada odtwarza kategorię występującą w dowolnym sprzężeniu, a także dualną teorię komonad. Pracujemy z lokalnie małymi kategoriami, a kategorie funktorów rozpatrujemy w odpowiednim większym uniwersum.
+
+\subsection{Komonady i ich koalgebry}
+Dla monady $(T,\eta,\mu)$ na $\mathcal C$ stosujemy definicję~\ref{def:monad}, oznaczenia $\mathcal C_T$ i $\mathcal C^T$ z definicji~\ref{cat:def:kleisli} i~\ref{cat:def:em-algebra} oraz sprzężenia $J\dashv K$ i $F_T\dashv U_T$ ze stwierdzeń~\ref{cat:prop:kleisli-adj} i~\ref{cat:prop:em-adj}. Oba sprzężenia odtwarzają monadę $T$.
+
+\begin{definicja}[Komonada]\label{cat:def:comonad}
+Komonada na $\mathcal C$ jest trójką $(S,\epsilon,\delta)$ z endofunktorem $S$, kojednostką $\epsilon:S\Rightarrow\id_{\mathcal C}$ i komnożeniem $\delta:S\Rightarrow S^2$, spełniającą
+\begin{align}
+ S(\delta_X)\delta_X&=\delta_{S(X)}\delta_X,\label{cat:eq:comonad-assoc}\\
+ S(\epsilon_X)\delta_X&=\id_{S(X)}=\epsilon_{S(X)}\delta_X.\label{cat:eq:comonad-unit}
+\end{align}
+Pierwsze równanie dotyczy morfizmów $S(X)\to S^3(X)$, drugie endomorfizmów $S(X)$. Naturalność oznacza dla $f:X\to Y$ równości
+\[
+ \epsilon_Y S(f)=f\epsilon_X,\qquad
+ \delta_Y S(f)=S^2(f)\delta_X.
+\]
+\end{definicja}
+Aksjomat kołączności przedstawia diagram
+\[
+ \begin{CD}
+ S(X) @>{\delta_X}>> S^2(X)\\
+ @V{\delta_X}VV @VV{S(\delta_X)}V\\
+ S^2(X) @>>{\delta_{S(X)}}> S^3(X).
+ \end{CD}
+\]
+Komonada jest dokładnie monadą w kategorii przeciwnej: na $\mathcal C^{\op}$ bierzemy $S^{\op}$, jednostkę $\epsilon^{\op}$ i mnożenie $\delta^{\op}$. Odwrócenie strzałek zachowuje funktorialność i naturalność, a równania~\eqref{cat:eq:comonad-assoc} i~\eqref{cat:eq:comonad-unit} przechodzą w aksjomaty monady. Ponowne odwrócenie odzyskuje dane wyjściowe.
+
+\begin{stwierdzenie}[Komonada ze sprzężenia]\label{cat:prop:adjunction-comonad}
+Jeżeli $F:\mathcal C\rightleftarrows\mathcal D:U$ jest sprzężeniem $F\dashv U$ z jednostką $\eta$ i kojednostką $\varepsilon$, to $S=FU$ z $\epsilon=\varepsilon$ i $\delta_Y=F(\eta_{U(Y)})$ jest komonadą na $\mathcal D$.
+\end{stwierdzenie}
+\begin{proof}
+Dla $g:Y\to Z$ naturalność $\eta$ względem $U(g)$ daje po zastosowaniu $F$ równość
+\[
+ FUFU(g)F(\eta_{U(Y)})=F(\eta_{U(Z)})FU(g).
+\]
+Jest to naturalność $\delta$. Naturalność $\epsilon$ jest częścią danych sprzężenia. Tożsamości trójkątne~\ref{tw:triangles} dają
+\begin{align*}
+ S(\epsilon_Y)\delta_Y&=F(U(\varepsilon_Y)\eta_{U(Y)})=\id_{FU(Y)},\\
+ \epsilon_{S(Y)}\delta_Y&=\varepsilon_{FU(Y)}F(\eta_{U(Y)})=\id_{FU(Y)}.
+\end{align*}
+Naturalność $\eta$ względem $\eta_{U(Y)}:U(Y)\to UFU(Y)$ daje
+\[
+ UF(\eta_{U(Y)})\eta_{U(Y)}=\eta_{UFU(Y)}\eta_{U(Y)}.
+\]
+Po zastosowaniu $F$ otrzymujemy~\eqref{cat:eq:comonad-assoc}.
+\end{proof}
+
+\begin{definicja}[Koalgebry komonady]\label{cat:def:comonad-coalgebra}
+Koalgebrą $(S,\epsilon,\delta)$ jest para $(X,c)$ z $c:X\to S(X)$ spełniającym
+\[
+ \epsilon_Xc=\id_X,\qquad \delta_Xc=S(c)c.
+\]
+Morfizmem koalgebr $(X,c)\to(Y,d)$ jest $f:X\to Y$ z $S(f)c=df$. Kategorię koalgebr oznaczamy $\mathcal C^S$ (gdy $S$ jest komonadą), a jej funktor zapominający przez $V_S$.
+\end{definicja}
+Identyczność spełnia warunek morfizmu. Dla kolejnego morfizmu $g:(Y,d)\to(Z,e)$ mamy $S(gf)c=S(g)S(f)c=S(g)df=egf$, więc składanie jest dobrze określone. Łączność i prawa identyczności dziedziczymy z $\mathcal C$. Zbiory morfizmów są podzbiorami zbiorów morfizmów $\mathcal C$.
+
+\begin{twierdzenie}[Koalgebra koswobodna]\label{cat:thm:cofree-coalgebra}
+Funktor $V_S:\mathcal C^S\to\mathcal C$ ma prawe sprzężenie $R_S$, dane przez $R_S(X)=(S(X),\delta_X)$ oraz $R_S(f)=S(f)$. Komonada sprzężenia $V_S\dashv R_S$ na $\mathcal C$ jest wyjściową komonadą.
+\end{twierdzenie}
+\begin{proof}
+Aksjomaty koalgebry $(S(X),\delta_X)$ to~\eqref{cat:eq:comonad-assoc} i jedno z praw~\eqref{cat:eq:comonad-unit}. Naturalność $\delta$ daje warunek morfizmu koalgebr dla $S(f)$, a identyczności i składanie wynikają z funktorialności $S$. Dla $(A,c)$ i $X$ odwzorowania
+\begin{align*}
+ \Hom_{\mathcal C^S}((A,c),R_S(X))
+ &\longrightarrow\Hom_{\mathcal C}(A,X),& h&\longmapsto\epsilon_Xh,\\
+ \Hom_{\mathcal C}(A,X)
+ &\longrightarrow\Hom_{\mathcal C^S}((A,c),R_S(X)),& f&\longmapsto S(f)c
+\end{align*}
+są wzajemnie odwrotne. Istotnie,
+\[
+ \delta_X S(f)c=S^2(f)\delta_Ac=S^2(f)S(c)c=S(S(f)c)c,
+\]
+więc $S(f)c$ jest morfizmem koalgebr. Mamy $\epsilon_X S(f)c=f\epsilon_Ac=f$ i dla morfizmu koalgebr $h$,
+\[
+ S(\epsilon_X h)c=S(\epsilon_X)S(h)c=S(\epsilon_X)\delta_Xh=h.
+\]
+Dla morfizmu koalgebr $u:(B,d)\to(A,c)$ mamy $\epsilon_Xhu=(\epsilon_Xh)u$, a dla $v:X\to Y$ naturalność $\epsilon$ daje $\epsilon_Y S(v)h=v\epsilon_Xh$. Bijekcja jest zatem naturalna. Jednostka w $(A,c)$ ma morfizm bazowy $c$, a kojednostka w $X$ jest $\epsilon_X$. Ponieważ $V_SR_S=S$ oraz morfizmem bazowym jednostki w $R_S(X)$ jest $\delta_X$, wzór ze stwierdzenia~\ref{cat:prop:adjunction-comonad} daje dokładnie komnożenie $\delta$.
+\end{proof}
+
+\begin{definicja}[Kategoria ko-Kleisliego]\label{cat:def:cokleisli}
+Obiektami $\mathcal C_S$ (dla komonady $S$) są obiekty $\mathcal C$, morfizmem $X\to Y$ jest morfizm $f:S(X)\to Y$ w $\mathcal C$, identycznością jest $\epsilon_X$, a składaniem
+\[
+ g\star f=g S(f)\delta_X:S(X)\to Z
+ \qquad(g:S(Y)\to Z).
+\]
+\end{definicja}
+\begin{stwierdzenie}\label{cat:prop:cokleisli-adj}
+Powyższe dane definiują kategorię i sprzężenie $L:\mathcal C_S\rightleftarrows\mathcal C:J_S$ z komonadą $S$.
+\end{stwierdzenie}
+\begin{proof}
+Kategoria $\mathcal C_S$ jest przeciwną do kategorii Kleisliego monady $(S^{\op},\epsilon^{\op},\delta^{\op})$ na $\mathcal C^{\op}$. Istotnie morfizm $Y\to X$ tej ostatniej to morfizm $Y\to S^{\op}(X)$ w $\mathcal C^{\op}$, czyli $S(X)\to Y$ w $\mathcal C$. Odwrócenie wzoru na składanie Kleisliego daje dokładnie $gS(f)\delta_X$, a odwrócenie identyczności daje $\epsilon_X$. Aksjomaty kategorii wynikają z dowodu po definicji~\ref{cat:def:kleisli}. Odwracając sprzężenie ze stwierdzenia~\ref{cat:prop:kleisli-adj} dla tej monady, otrzymujemy $L\dashv J_S$, gdzie
+\[
+ L(X)=S(X),\quad L(f)=S(f)\delta_X,\qquad
+ J_S(X)=X,\quad J_S(u)=u\epsilon_X
+\]
+dla $f:S(X)\to Y$ i $u:X\to Y$ w odpowiednich kategoriach. Bijekcja sprzężenia jest identycznością zbiorów
+\[
+ \Hom_{\mathcal C}(S(X),Y)=\Hom_{\mathcal C_S}(X,J_S(Y)).
+\]
+Jej naturalność wynika z odwrócenia naturalności bijekcji sprzężenia Kleisliego. Kojednostką jest $\epsilon$, a jednostka w $X$ kategorii ko-Kleisliego jest reprezentowana przez $\id_{S(X)}$. Mamy $LJ_S(u)=S(u)S(\epsilon_X)\delta_X=S(u)$ i obraz jednostki przez $L$ jest $\delta_X$. Stąd indukowana komonada jest dokładnie $S$.
+\end{proof}
+
+\begin{przyklad}[Komonada iloczynu]\label{cat:ex:product-comonad}
+Dla ustalonego zbioru $E$ funktor $S(X)=E\times X$ na $\Set$ ma kojednostkę $(e,x)\mapsto x$ oraz komnożenie $(e,x)\mapsto(e,(e,x))$. Naturalność sprawdzamy na parach: dla funkcji $f$ zmienia się tylko $x$ na $f(x)$. Obie drogi kołączności dają $(e,(e,(e,x)))$, a obie drogi z praw kojednostki dają $(e,x)$. Koalgebra $c:X\to E\times X$ musi z pierwszego aksjomatu mieć postać $c(x)=(p(x),x)$ dla funkcji $p:X\to E$; drugi aksjomat jest wówczas automatyczny, bo obie strony dają $(p(x),(p(x),x))$. Morfizm koalgebr jest dokładnie funkcją $f:X\to Y$ z $qf=p$. Otrzymujemy izomorfizm kategorii koalgebr z kategorią obiektów nad $E$. Także dla $E=\varnothing$ warunki są poprawne: jedyną możliwą dziedziną jest zbiór pusty.
+\end{przyklad}
+
+\subsection{Funktory porównawcze sprzężenia}
+Niech $F:\mathcal C\rightleftarrows\mathcal D:U$ spełniają $F\dashv U$, a $T=UF$ będzie indukowaną monadą, z $\mu_X=U(\varepsilon_{F(X)})$ jak w twierdzeniu~\ref{cat:thm:adjunction-monad}.
+
+\begin{twierdzenie}[Porównanie Eilenberga--Moore'a]\label{cat:thm:em-comparison}
+Istnieje funktor $Q:\mathcal D\to\mathcal C^T$ określony przez
+\[
+ Q(Y)=(U(Y),U(\varepsilon_Y)),\qquad Q(g)=U(g).
+\]
+Spełnia $U_T Q=U$ i $QF=F_T$. Jest jedynym funktorem o $U_T Q=U$, dla którego struktura algebry $Q(Y)$ jest dana przez $U(\varepsilon_Y)$.
+\end{twierdzenie}
+\begin{proof}
+Piszemy $a_Y=U(\varepsilon_Y)$. Prawo jednostki $a_Y\eta_{U(Y)}=\id_{U(Y)}$ wynika z tożsamości trójkątnej. Naturalność $\varepsilon$ względem $\varepsilon_Y:FU(Y)\to Y$ daje
+\[
+ \varepsilon_Y FU(\varepsilon_Y)=\varepsilon_Y\varepsilon_{FU(Y)}.
+\]
+Po zastosowaniu $U$ otrzymujemy $a_Y T(a_Y)=a_Y\mu_{U(Y)}$. Zatem $Q(Y)$ jest algebrą. Dla $g:Y\to Z$ naturalność $\varepsilon$ daje $U(g)a_Y=a_ZT(U(g))$, czyli $U(g)$ jest morfizmem algebr. Funktorialność wynika z funktorialności $U$. Równość $U_TQ=U$ jest definicyjna, a $QF(X)=(T(X),\mu_X)$ i $QF(f)=T(f)$ dają $QF=F_T$. Jednoznaczność wynika z wyznaczenia obiektów przez strukturę algebry i z tego, że morfizm algebry jest wyznaczony przez morfizm bazowy.
+\end{proof}
+
+\begin{twierdzenie}[Porównanie Kleisliego]\label{cat:thm:kleisli-comparison}
+Istnieje w pełni wierny funktor $I:\mathcal C_T\to\mathcal D$ dany przez $I(X)=F(X)$ i
+\[
+ I(f)=\varepsilon_{F(Y)}F(f):F(X)\to F(Y)
+ \qquad(f:X\to T(Y)).
+\]
+Spełnia $IJ=F$ oraz $UI=K$. Jego obraz istotny składa się z obiektów izomorficznych z $F(X)$ dla pewnego $X$.
+\end{twierdzenie}
+\begin{proof}
+Identyczność jest zachowana przez tożsamość trójkątną $\varepsilon_{F(X)}F(\eta_X)=\id_{F(X)}$. Dla $g:Y\to T(Z)$ obliczamy
+\begin{align*}
+ I(g)I(f)
+ &=\varepsilon_{F(Z)}F(g)\varepsilon_{F(Y)}F(f)\\
+ &=\varepsilon_{F(Z)}\varepsilon_{FT(Z)}FU(F(g))F(f)\\
+ &=\varepsilon_{F(Z)}FU(\varepsilon_{F(Z)})FU(F(g))F(f)\\
+ &=\varepsilon_{F(Z)}F(\mu_Z T(g)f)=I(g\star f).
+\end{align*}
+Druga i trzecia równość są naturalnością $\varepsilon$ odpowiednio dla $F(g)$ i $\varepsilon_{F(Z)}$. Pełność i wierność wynikają z bijekcji sprzężenia $\Hom_{\mathcal C}(X,UF(Y))\cong\Hom_{\mathcal D}(F(X),F(Y))$, której odwrotnością jest $h\mapsto U(h)\eta_X$. Dla $u:X\to Y$ mamy $IJ(u)=\varepsilon_{F(Y)}F(\eta_Y)F(u)=F(u)$, zaś $UI(f)=\mu_Y T(f)=K(f)$; równości na obiektach są definicyjne. Opis obrazu istotnego wynika z $I(X)=F(X)$.
+\end{proof}
+
+\begin{wniosek}\label{cat:cor:free-algebra-comparison}
+Złożenie $QI:\mathcal C_T\to\mathcal C^T$ jest w pełni wiernym funktorem, którego obraz istotny składa się z algebr izomorficznych z algebrami swobodnymi. Obiekt $X$ przechodzi na $(T(X),\mu_X)$, a morfizm $f:X\to T(Y)$ na $\mu_Y T(f)$.
+\end{wniosek}
+\begin{proof}
+Wzory wynikają z poprzednich twierdzeń oraz $U_TQ=U$. Dla dowolnych $X,Y$ bijekcja sprzężenia $F_T\dashv U_T$ ze stwierdzenia~\ref{cat:prop:em-adj} jest dokładnie bijekcją $f\mapsto\mu_YT(f)$, z odwrotnością $h\mapsto h\eta_X$. Stąd pełność i wierność oraz opis obrazu istotnego. Wniosek nie wymaga pełności ani wierności samego $Q$.
+\end{proof}
+
+\begin{definicja}[Monadyczność i komonadyczność]\label{cat:def:monadicity}
+Prawy funktor sprzężony $U:\mathcal D\to\mathcal C$ nazywamy monadycznym, jeśli funktor porównawczy $Q$ z twierdzenia~\ref{cat:thm:em-comparison} jest równoważnością kategorii. Lewy funktor sprzężony $F$ nazywamy komonadycznym, jeśli $F^{\op}$ jest monadyczny. Dla komonady $S=FU$ odpowiadający funktor porównawczy $\mathcal C\to\mathcal D^S$ wysyła $X$ na $(F(X),F(\eta_X))$, a morfizm $f$ na $F(f)$.
+\end{definicja}
+Ostatni wzór otrzymujemy przez zastosowanie twierdzenia~\ref{cat:thm:em-comparison} do sprzężenia $U^{\op}\dashv F^{\op}$ i odwrócenie strzałek: algebry monady na $\mathcal D^{\op}$ stają się koalgebrami na $\mathcal D$, a kojednostka przeciwnego sprzężenia to $\eta^{\op}$. Nie wymagamy, aby $Q$ był dosłownie izomorfizmem kategorii. Równoważność jest warunkiem niezależnym od wyborów reprezentantów.
