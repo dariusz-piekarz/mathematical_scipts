@@ -44,7 +44,8 @@ class ALGGlobalIntegration(unittest.TestCase):
             all_text,
         )
         self.assertEqual(len(labels), len(set(labels)))
-        self.assertEqual(len(labels), 406)
+        self.assertEqual(len(labels), 407)
+        self.assertIn("ga:def:prime-spectrum", labels)
         self.assertFalse(set(references) - set(labels))
 
     def test_shared_dependencies_and_labels_in_monolith(self):
