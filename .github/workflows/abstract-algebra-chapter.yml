@@ -186,7 +186,14 @@ on:
       - "audits/abstract_algebra/ch72_iteration_*.md"
       - "tools/tests/test_abstract_algebra_ch22_audit4.py"
       - "tools/tests/test_abstract_algebra_ch22_audit5.py"
-      # Shared repository suite: revalidate when the FA-14 structural checks change.
+      # Shared repository suite: revalidate changes to its validators and regressions.
+      - "tools/validate_repository.py"
+      - "tools/audit_chapter_dependencies.py"
+      - "tools/tests/test_validate_repository.py"
+      - "tools/tests/test_audit_chapter_dependencies.py"
+      - "tools/tests/test_functional_analysis_book_integrity.py"
+      - "tools/tests/test_algebraic_geometry_monolith_sync.py"
+      - "catalog/new_chapters.json"
       - "tools/tests/test_functional_analysis_ch14.py"
       - ".github/workflows/abstract-algebra-chapter.yml"
   workflow_dispatch:
@@ -206,8 +213,7 @@ jobs:
         run: python -m pip install sympy
       - name: Validate chapter dependencies
         run: python tools/audit_chapter_dependencies.py
-      - name: Report pre-existing global repository validation findings
-        continue-on-error: true
+      - name: Validate global repository integrity
         run: python tools/validate_repository.py
       - name: Run repository tool tests
         run: python -m unittest discover -s tools/tests -v
