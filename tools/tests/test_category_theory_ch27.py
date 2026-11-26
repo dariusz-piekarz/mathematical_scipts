@@ -211,6 +211,49 @@ class CategoryTheoryCh27(unittest.TestCase):
                         balanced+=1
                 self.assertEqual(balanced,2**len(orbits))
 
+    def test_CAT_27_009_twisted_arrow_general_bifunctors(self):
+        # A = 0 -> 1; A^op x A is a commuting square, not necessarily
+        # separable. L=T(1,0), A=T(0,0), B=T(1,1), U=T(0,1).
+        def maps(m,n):
+            return itertools.product(range(n),repeat=m)
+        def partitions(nodes,edges):
+            parent={z:z for z in nodes}
+            def root(z):
+                while parent[z]!=z:
+                    z=parent[z]
+                return z
+            for x,y in edges:
+                parent[root(x)]=root(y)
+            return {frozenset(z for z in nodes if root(z)==r)
+                    for r in {root(z) for z in nodes}}
+        models=0
+        for l,a,b,u in itertools.product(range(3),repeat=4):
+            for p,q,s,t in itertools.product(maps(l,a),maps(l,b),
+                                             maps(a,u),maps(b,u)):
+                if any(s[p[x]]!=t[q[x]] for x in range(l)):
+                    continue
+                models+=1
+                end={(x,y) for x,y in itertools.product(range(a),range(b))
+                     if s[x]==t[y]}
+                # Ordinary limit of Tw(A): id0 -> f <- id1.
+                cones={(x,y,z) for x,y,z in
+                       itertools.product(range(a),range(b),range(u))
+                       if s[x]==z and t[y]==z}
+                self.assertEqual({(x,y) for x,y,z in cones},end)
+                self.assertEqual(len(cones),len(end))
+                diagonal=[(0,x) for x in range(a)]+[(1,y) for y in range(b)]
+                coend=partitions(diagonal,[((0,p[z]),(1,q[z]))
+                                           for z in range(l)])
+                # Ordinary colimit of Tw(A)^op: id0 <- f -> id1,
+                # with T(1,0) at f, not T(0,1).
+                nodes=diagonal+[(2,z) for z in range(l)]
+                edges=[((2,z),(0,p[z])) for z in range(l)]
+                edges += [((2,z),(1,q[z])) for z in range(l)]
+                colimit=partitions(nodes,edges)
+                self.assertEqual({cls.intersection(diagonal)
+                                  for cls in colimit},coend)
+        self.assertGreater(models,100)
+
     def test_CAT_27_004_structure(self):
         source = CHAPTER.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}",source)
