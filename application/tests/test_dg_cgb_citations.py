@@ -1,7 +1,7 @@
 """Mathematical citation regression: closed S^2 versus boundary CGB.
 
-These assertions guard the three reviewed TS^2 applications while preserving
-the genuine boundary theorem reference in DG-14. No rewriting occurs here.
+These assertions guard the reviewed TS^2 applications and the local boundary
+argument in DG-14, which replaced the unavailable DG-26 theorem reference.
 """
 from pathlib import Path
 import re
@@ -31,9 +31,14 @@ class GaussBonnetCitationTests(unittest.TestCase):
                 self.assertEqual(text.count(BOUNDARY), 0)
                 self.assertGreaterEqual(text.count(CLOSED), expected_count)
 
-    def test_boundary_formula_still_cites_boundary_theorem(self):
+    def test_boundary_formula_uses_local_stokes_and_poincare_hopf_argument(self):
         text = next(DG.glob("14-*.tex")).read_text(encoding="utf-8-sig")
-        self.assertIn(BOUNDARY, text)
+        boundary = text.split(r"\subsection*{Brzeg, niezwartość i nieparzysty wymiar}", 1)[1]
+        self.assertNotIn(BOUNDARY, boundary)
+        self.assertIn(r"\mathcal B_g=\nu^*\Psi_\nabla", boundary)
+        self.assertIn(r"\mathrm d(s^*\Psi_\nabla)=-e_\nabla", boundary)
+        self.assertIn(r"\int_{M\setminus\bigcup_j B_j}e_\nabla", boundary)
+        self.assertIn(r"\atlasref{TOP-21::ch:poincare-hopf-v11}", boundary)
         self.assertIn(r"\label{eq:chern-gb-brzeg-idea}", text)
 
 

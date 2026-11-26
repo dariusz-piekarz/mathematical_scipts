@@ -247,6 +247,9 @@ function renderMathPreview(box,latex,moduleId){
         {left:"$",right:"$",display:false}
       ],
       macros:previewMacros(moduleId),
+      // Labels belong to the manuscript index; KaTeX does not implement \label.
+      // Remove them only from the renderer input, preserving canonical source.
+      preProcess:math=>math.replace(/\\label\s*\{[^{}]*\}/g,""),
       trust:false,throwOnError:true,maxExpand:1000,maxSize:20,
       errorCallback:()=>{errors++;}
     });

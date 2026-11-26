@@ -21,6 +21,7 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parents[1]
 PORT = int(os.environ.get("MATLIB_E2E_PORT", "18766"))
 URL = f"http://127.0.0.1:{PORT}"
+DB = Path(os.environ.get("MATLIB_DB", str(ROOT / "data" / "biblioteka.db"))).resolve()
 
 
 def wait_for_server(proc: subprocess.Popen, timeout: float = 30.0) -> dict:
@@ -74,6 +75,19 @@ def main() -> None:
                 assert page.locator("#simplified .katex").count() == 3
                 assert page.locator("#simplified .katex-display").count() == 2
                 assert page.locator("#mathPreviewStatus").is_hidden()
+                # Real manuscript equations carry labels, including within split
+                # and align environments. Labels are index metadata, not KaTeX.
+                for environment, body in (
+                    ("equation", r"\label{eq:atlas}x=1"),
+                    ("equation*", r"\label {eq:atlas-star}\begin{split}x&=1\\y&=2\end{split}"),
+                    ("align", r"\label{eq:first}x&=1\\y&=2\label{eq:second}\notag"),
+                    ("align*", r"x&=1\nonumber\\y&=2\label{eq:last}"),
+                ):
+                    source = r"\begin{" + environment + "}" + body + r"\end{" + environment + "}"
+                    page.evaluate("source => renderSimplified(source, 'DG-14')", source)
+                    assert page.locator("#simplified .katex-display").count() == 1, environment
+                    assert page.locator("#mathPreviewStatus").is_hidden(), environment
+                    assert "label" not in page.locator("#simplified").inner_text(), environment
                 page.evaluate(r"() => renderSimplified('$\\unknownAtlasMacro$ $x^2$')")
                 assert page.locator("#mathPreviewStatus").is_visible()
                 assert page.locator("#simplified .katex").count() == 1
@@ -107,7 +121,7 @@ def main() -> None:
                 page.unroute("**/api/labels/atlas-math-preview-test")
                 # Ground performance measurements in actual indexed mathematical text.
                 samples = []
-                with sqlite3.connect(ROOT / "data" / "biblioteka.db") as math_db:
+                with sqlite3.connect(DB) as math_db:
                     for module, label in (
                         ("DG-01", "def dyfeo"),
                         ("KAT-03", "cat:ex:spec-functor"),
@@ -131,7 +145,7 @@ def main() -> None:
                         assert result["formulas"] > 0, (module, label, result)
                         samples.append({"module": module, "label": label, "characters": len(latex), **result})
                 # A real complete chapter: repeat rendering must retain the current DOM.
-                with sqlite3.connect(ROOT / "data" / "biblioteka.db") as math_db:
+                with sqlite3.connect(DB) as math_db:
                     chapter = math_db.execute("SELECT content FROM documents WHERE id='KAT-03'").fetchone()[0]
                 long_sample = page.evaluate("""latex => {
                     let start=performance.now();
@@ -161,7 +175,7 @@ def main() -> None:
                 page.locator("#togglePreview").click()
                 # Full browser-to-API Lean contract: exact indexed theorem,
                 # exact whole-line selection, missing partial span and safe runner.
-                with sqlite3.connect(ROOT / "data" / "biblioteka.db") as db:
+                with sqlite3.connect(DB) as db:
                     theorem = db.execute("""
                         SELECT e.id,e.start_line,e.end_line,e.start_offset,e.end_offset,
                                d.content
@@ -220,7 +234,7 @@ def main() -> None:
                 assert page.locator("#leanTranscriptionPackage").text_content() == ""
                 assert not page.locator("#leanTranscriptionConsent").is_checked()
                 # L1.5.2 acceptance: unregistered theorem and labelled non-theorem.
-                with sqlite3.connect(ROOT / "data" / "biblioteka.db") as db:
+                with sqlite3.connect(DB) as db:
                     def labelled_candidates(kind):
                         return db.execute("""
                             SELECT e.id, e.start_offset, e.end_offset, d.content
@@ -498,7 +512,7 @@ def main() -> None:
                 assert page.locator("#docTitle").inner_text().strip()
                 # Choose an existing, unambiguous reference actually displayed
                 # in the first 32,000 characters of a canonical chapter.
-                with sqlite3.connect(ROOT / "data" / "biblioteka.db") as db:
+                with sqlite3.connect(DB) as db:
                     reference = db.execute("""
                         SELECT r.source_document, r.target_label
                         FROM references_tex AS r
@@ -532,7 +546,7 @@ def main() -> None:
                 assert page.locator("#docTitle").inner_text().strip()
                 # Negative paths: use actual ambiguity and missing-label evidence
                 # from the freshly built canonical index; never invent owners.
-                with sqlite3.connect(ROOT / "data" / "biblioteka.db") as db:
+                with sqlite3.connect(DB) as db:
                     ambiguous = db.execute("""
                         SELECT name FROM label_conflicts
                         GROUP BY name HAVING COUNT(DISTINCT document_id)>1
