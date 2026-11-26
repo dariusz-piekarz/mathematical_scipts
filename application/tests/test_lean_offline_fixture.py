@@ -1,6 +1,7 @@
 """RT-09c contracts use synthetic bytes; only Linux CI may establish real execution."""
 import copy
 import hashlib
+import json
 import os
 from pathlib import Path, PurePosixPath as P
 import subprocess
@@ -11,6 +12,10 @@ from unittest.mock import Mock, patch
 from scripts import lean_offline_fixture as offline
 from scripts import lean_artifact_manifest as artifacts
 from tests import test_lean_mathlib_source_probe as source_fixture
+
+VERSION = 'Lean (version 4.26.0, x86_64-unknown-linux-gnu, commit ' + offline.core.LEAN_COMMIT + ', Release)'
+MISSING_OUTPUT = (VERSION + "\n/opt/atlas/Fixture.lean:1:0: error: object file '/"
+                  + offline.MISSING_IMPORT + "' of module Mathlib.Logic.Basic does not exist\n").encode()
 
 
 class DependencyTraceTests(unittest.TestCase):
@@ -154,7 +159,9 @@ class OfflineReportTests(unittest.TestCase):
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)
         root = Path(temp.name)
-        data = {'opt/lean/bin/lean': b'synthetic-binary', 'opt/atlas/Fixture.lean': offline.SOURCE.encode(),
+        self.root = root
+        data = {'opt/lean/bin/lean': b'synthetic-binary', offline.MISSING_IMPORT: b'synthetic-import',
+                'opt/atlas/Fixture.lean': offline.SOURCE.encode(),
                 'opt/atlas/run-draft': offline.entry_script(p['name'] for p in source_report['packages']).encode()}
         for name, content in data.items():
             target = root / name
@@ -165,12 +172,15 @@ class OfflineReportTests(unittest.TestCase):
         self.digest = hashlib.sha256(artifacts.encoded(self.manifest)).hexdigest()
         self.origins = {'opt/lean/bin/lean': {'source': '/tools/bin/lean', 'resolved_source': '/tools/bin/lean',
                         'sha256': hashlib.sha256(data['opt/lean/bin/lean']).hexdigest(), 'size': len(data['opt/lean/bin/lean'])}}
+        self.origins[offline.MISSING_IMPORT] = {
+            'source': '/packages/mathlib/Basic.olean', 'resolved_source': '/packages/mathlib/Basic.olean',
+            'sha256': hashlib.sha256(data[offline.MISSING_IMPORT]).hexdigest(), 'size': len(data[offline.MISSING_IMPORT])}
         version = 'Lean (version 4.26.0, x86_64-unknown-linux-gnu, commit ' + offline.core.LEAN_COMMIT + ', Release)'
         self.report = {'schema': 1, 'status': 'trusted_mathlib_fixture_offline_compiled', 'checkout_sha': self.sha,
                        'source_sha256': hashlib.sha256(offline.SOURCE.encode()).hexdigest(),
                        'archive_sha256': offline.core.ARCHIVE_SHA256, 'manifest_sha256': self.digest,
                        'file_count': self.manifest['file_count'], 'total_bytes': self.manifest['total_bytes'],
-                       'observed_origin_count': 1, 'execution_allowed': False, 'offline_ready': False,
+                       'observed_origin_count': len(self.origins), 'execution_allowed': False, 'offline_ready': False,
                        'certificate': False, 'proof_status': 'not_run', 'container_state': 'exited', 'exit_code': 0,
                        'cleanup_status': 'removed_verified', 'image_id': 'sha256:' + 'a' * 64,
                        'container_id': 'b' * 64, 'lean_version': version, 'lake_version': 'Lake version 5.0.0',
@@ -210,6 +220,107 @@ class OfflineReportTests(unittest.TestCase):
         manifest['entries'][0]['path'] = 'elsewhere'
         with self.assertRaises(ValueError):
             self.validate(manifest=manifest)
+
+    def rejected_evidence(self):
+        (self.root / offline.MISSING_IMPORT).unlink()
+        manifest = artifacts.create_manifest(self.root, self.manifest['source_closure'])
+        origins = {p: o for p, o in self.origins.items() if p != offline.MISSING_IMPORT}
+        report = {**self.report, 'status': 'trusted_mathlib_fixture_missing_import_rejected',
+                  'missing_import': offline.MISSING_IMPORT, 'exit_code': 1,
+                  'image_id': 'sha256:' + 'c' * 64, 'container_id': 'd' * 64,
+                  'manifest_sha256': hashlib.sha256(artifacts.encoded(manifest)).hexdigest(),
+                  'file_count': manifest['file_count'], 'total_bytes': manifest['total_bytes'],
+                  'observed_origin_count': len(origins),
+                  'compiler_output': self.report['lake_version'] + '\n' + MISSING_OUTPUT.decode()}
+        return report, manifest, origins
+
+    def test_missing_import_reports_are_distinct_and_only_one_file_may_differ(self):
+        positive = self.report, self.manifest, self.origins
+        negative = self.rejected_evidence()
+        def validate(evidence):
+            offline.validate_report_pair(positive, evidence, expected_sha=self.sha,
+                                         expected_manifest_sha=self.digest,
+                                         expected_rejected_manifest_sha=evidence[0]['manifest_sha256'])
+        validate(negative)
+        with self.assertRaises(ValueError):
+            offline.validate_report(
+                *negative, expected_sha=self.sha, expected_manifest_sha=negative[0]['manifest_sha256'])
+        with self.assertRaises(ValueError):
+            offline.validate_report(*positive, expected_sha=self.sha,
+                                    expected_manifest_sha=self.digest, rejected=True)
+        for key, value in (('image_id', self.report['image_id']), ('container_id', self.report['container_id']),
+                           ('exit_code', 0), ('certificate', True), ('missing_import', 'Other.olean')):
+            changed = copy.deepcopy(negative)
+            changed[0][key] = value
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                validate(changed)
+        # Even an internally consistent negative manifest must preserve all
+        # other bytes of the successful bundle.
+        (self.root / 'opt/lean/bin/lean').write_bytes(b'changed-binary')
+        changed_manifest = artifacts.create_manifest(self.root, self.manifest['source_closure'])
+        changed_origins = copy.deepcopy(negative[2])
+        changed_origins['opt/lean/bin/lean'].update(sha256=hashlib.sha256(b'changed-binary').hexdigest(),
+                                                 size=len(b'changed-binary'))
+        changed_report = {**negative[0], 'total_bytes': changed_manifest['total_bytes'],
+                          'manifest_sha256': hashlib.sha256(artifacts.encoded(changed_manifest)).hexdigest()}
+        with self.assertRaisesRegex(ValueError, 'differ only'):
+            validate((changed_report, changed_manifest, changed_origins))
+
+
+class MissingImportRuntimeTests(unittest.TestCase):
+    def test_diagnostic_rejects_success_other_errors_and_wrong_versions(self):
+        self.assertEqual(offline.validate_missing_import_output(MISSING_OUTPUT), VERSION)
+        for output in (MISSING_OUTPUT.replace(b'Basic.olean', b'Other.olean'),
+                       MISSING_OUTPUT.replace(b':1:0:', b':2:0:'),
+                       MISSING_OUTPUT.replace(offline.core.LEAN_COMMIT.encode(), b'0' * 40),
+                       MISSING_OUTPUT + b'warning\n', b'daemon failure',
+                       (VERSION + "\n'atlas_isolated_fixture' does not depend on any axioms\n").encode()):
+            with self.subTest(output=output), self.assertRaises(ValueError):
+                offline.validate_missing_import_output(output)
+
+    def test_expected_rejection_requires_exit_diagnostic_identity_and_cleanup(self):
+        cid, image = 'a' * 64, 'sha256:' + 'b' * 64
+        lake = 'Lake version 5.0.0'
+        for case in ('valid', 'compiled', 'exit', 'diagnostic', 'container_exit', 'identity', 'oom',
+                     'timeout', 'output_limit', 'unreaped', 'cleanup'):
+            calls = []
+            def command(prefix, args, env, *, deadline=None, capture_failure=False):
+                if args[0] == 'create':
+                    return cid.encode()
+                if args[:2] == ('container', 'start'):
+                    self.assertTrue(capture_failure)
+                    if case == 'compiled':
+                        return b'unexpected success'
+                    if case in ('timeout', 'output_limit', 'unreaped'):
+                        error = {'timeout': offline.transport.DockerCommandTimeout,
+                                 'output_limit': offline.transport.DockerOutputLimit,
+                                 'unreaped': offline.transport.DockerCLIReapUnconfirmed}[case]
+                        raise error('interrupted')
+                    output = lake.encode() + b'\n' + MISSING_OUTPUT
+                    raise offline.transport.DockerCommandFailed('failed', returncode=2 if case == 'exit' else 1,
+                                                               output=b'other error' if case == 'diagnostic' else output)
+                if deadline is not None:
+                    calls.append((args, deadline))
+                    if args[:2] == ('container', 'inspect'):
+                        return json.dumps([{'Id': 'e' * 64 if case == 'identity' else cid, 'Image': image,
+                            'State': {'Status': 'exited', 'Running': False, 'OOMKilled': case == 'oom',
+                                      'ExitCode': 0 if case == 'container_exit' else 1}}]).encode()
+                    if args[:2] == ('container', 'ls'):
+                        return cid.encode() if case == 'cleanup' else b''
+                return b'{}'
+            with self.subTest(case=case), patch.object(offline.transport, '_command', side_effect=command), \
+                    patch.object(offline.transport, 'validate_engine'), \
+                    patch.object(offline.policy, 'validate_image_inspection'), \
+                    patch.object(offline.transport, 'validate_container'):
+                if case == 'valid':
+                    result = offline.check_image([], {}, image, lake, rejected=True)
+                    self.assertEqual(result['exit_code'], 1)
+                    self.assertEqual(result['cleanup_status'], 'removed_verified')
+                else:
+                    with self.assertRaises((ValueError, TimeoutError)):
+                        offline.check_image([], {}, image, lake, rejected=True)
+            self.assertIn(('container', 'rm', '--force', cid), [args for args, _ in calls])
+            self.assertEqual(len({deadline for _, deadline in calls}), 1)
 
 
 if __name__ == '__main__':

@@ -32,6 +32,7 @@ SOURCE = """import Mathlib.Logic.Basic
 theorem atlas_isolated_fixture (p q : Prop) : (p ∧ q) ↔ (q ∧ p) := and_comm
 #print axioms atlas_isolated_fixture
 """
+MISSING_IMPORT = 'opt/packages/mathlib/.lake/build/lib/lean/Mathlib/Logic/Basic.olean'
 MAX_TRACE_BYTES = 16 * 1024 * 1024
 MAX_TRACE_FILES = 128
 SYSTEM_ROOTS = tuple(map(PurePosixPath, ("/lib", "/lib64", "/usr/lib")))
@@ -186,13 +187,25 @@ def entry_script(package_names) -> str:
             "exec /opt/lean/bin/lean /opt/atlas/Fixture.lean\n")
 
 
-def validate_report(report, manifest, origins, *, expected_sha, expected_manifest_sha):
+def validate_missing_import_output(output: bytes) -> str:
+    lines = output.decode('ascii').splitlines()
+    diagnostic = ("/opt/atlas/Fixture.lean:1:0: error: object file '/" + MISSING_IMPORT
+                  + "' of module Mathlib.Logic.Basic does not exist")
+    if len(lines) != 2 or lines[1] != diagnostic:
+        raise ValueError('Unexpected missing-import compiler evidence')
+    return core.validate_version(lines[0])
+
+
+def validate_report(report, manifest, origins, *, expected_sha, expected_manifest_sha, rejected=False):
     """Check persisted consistency, not authenticity or general offline readiness."""
     fixed = {"schema": 1, "status": "trusted_mathlib_fixture_offline_compiled", "checkout_sha": expected_sha,
              "source_sha256": hashlib.sha256(SOURCE.encode()).hexdigest(), "archive_sha256": core.ARCHIVE_SHA256,
              "manifest_sha256": expected_manifest_sha, "execution_allowed": False, "offline_ready": False,
              "certificate": False, "proof_status": "not_run", "container_state": "exited", "exit_code": 0,
              "cleanup_status": "removed_verified"}
+    if rejected:
+        fixed.update(status='trusted_mathlib_fixture_missing_import_rejected', exit_code=1,
+                     missing_import=MISSING_IMPORT)
     variable = {"file_count", "total_bytes", "observed_origin_count", "image_id", "container_id",
                 "lean_version", "lake_version", "compiler_output"}
     if (not isinstance(expected_sha, str) or not sources.REV.fullmatch(expected_sha)
@@ -227,6 +240,8 @@ def validate_report(report, manifest, origins, *, expected_sha, expected_manifes
     for path, text in generated.items():
         if files[path]['sha256'] != hashlib.sha256(text.encode()).hexdigest() or files[path]['size'] != len(text.encode()):
             raise ValueError("Fixed fixture bytes differ")
+    if rejected and MISSING_IMPORT in files:
+        raise ValueError('Rejected fixture still contains the required import')
     if (not isinstance(report['image_id'], str) or not policy._IMAGE.fullmatch(report['image_id'])
             or not isinstance(report['container_id'], str) or not transport._CONTAINER_ID.fullmatch(report['container_id'])):
         raise ValueError("Invalid isolated execution identity")
@@ -234,9 +249,34 @@ def validate_report(report, manifest, origins, *, expected_sha, expected_manifes
     if type(output) is not str or len(output) > transport.MAX_METADATA_BYTES:
         raise ValueError("Invalid compiler evidence")
     lake, separator, rest = output.partition('\n')
+    validate_output = validate_missing_import_output if rejected else core.validate_output
     if (not separator or validate_lake(lake.encode()) != report['lake_version']
-            or core.validate_output(rest.encode()) != report['lean_version']):
+            or validate_output(rest.encode()) != report['lean_version']):
         raise ValueError("Inconsistent compiler evidence")
+
+
+def validate_report_pair(positive, negative, *, expected_sha, expected_manifest_sha,
+                         expected_rejected_manifest_sha):
+    for evidence, digest, rejected in ((positive, expected_manifest_sha, False),
+                                       (negative, expected_rejected_manifest_sha, True)):
+        validate_report(*evidence, expected_sha=expected_sha,
+                        expected_manifest_sha=digest, rejected=rejected)
+    success, manifest, origins = positive
+    failure, rejected_manifest, rejected_origins = negative
+    if (success['image_id'] == failure['image_id']
+            or success['container_id'] == failure['container_id']
+            or any(success[k] != failure[k] for k in ('lean_version', 'lake_version'))):
+        raise ValueError('Missing-import controls require distinct identities and identical tools')
+    files = {e['path']: e for e in manifest['entries'] if e['kind'] == 'file'}
+    rejected_files = {e['path']: e for e in rejected_manifest['entries'] if e['kind'] == 'file'}
+    entries = {e['path']: e for e in manifest['entries']}
+    rejected_entries = {e['path']: e for e in rejected_manifest['entries']}
+    if (MISSING_IMPORT not in files or set(rejected_files) != set(files) - {MISSING_IMPORT}
+            or any(files[path] != entry for path, entry in rejected_files.items())
+            or rejected_entries != {p: e for p, e in entries.items() if p != MISSING_IMPORT}
+            or rejected_origins != {p: o for p, o in origins.items() if p != MISSING_IMPORT}
+            or manifest['source_closure'] != rejected_manifest['source_closure']):
+        raise ValueError('Negative bundle must differ only by the required import')
 
 
 def read_evidence(path: Path):
@@ -261,7 +301,8 @@ def read_evidence(path: Path):
     return json.loads(raw, object_pairs_hook=sources.unique_object, parse_constant=reject_constant)
 
 
-def check_image(prefix: list[str], env: dict[str, str], image: str, lake_version: str) -> dict:
+def check_image(prefix: list[str], env: dict[str, str], image: str, lake_version: str,
+                *, rejected=False) -> dict:
     def call(*args):
         return transport._command(prefix, args, env)
     transport.validate_engine(transport._decode_metadata(call("info", "--format", "{{json .}}")))
@@ -275,14 +316,25 @@ def check_image(prefix: list[str], env: dict[str, str], image: str, lake_version
     try:
         transport.validate_container(transport._decode_metadata(call("container", "inspect", cid)),
                                      container_id=cid, image_id=image, name=name)
-        output = call("container", "start", "--attach", cid)
+        if rejected:
+            try:
+                transport._command(prefix, ("container", "start", "--attach", cid), env,
+                                   capture_failure=True)
+            except transport.DockerCommandFailed as exc:
+                if exc.returncode != 1 or type(exc.output) is not bytes:
+                    raise ValueError('Missing-import control requires CLI exit 1 and diagnostics') from exc
+                output = exc.output
+            else:
+                raise ValueError('Missing-import fixture unexpectedly compiled')
+        else:
+            output = call("container", "start", "--attach", cid)
         first, sep, rest = output.partition(b"\n")
         if not sep or first.decode("ascii") != lake_version:
             raise ValueError("Isolated Lake version differs from prepared tool")
-        version = core.validate_output(rest)
+        version = (validate_missing_import_output if rejected else core.validate_output)(rest)
         state = validate_exited_fixture(
             transport._decode_metadata(cleanup("container", "inspect", cid)),
-            container_id=cid, image_id=image, expected_exit=0)
+            container_id=cid, image_id=image, expected_exit=1 if rejected else 0)
     finally:
         cleanup_fixture(cleanup, cid)
     return {"image_id": image, "container_id": cid, "lean_version": version,
@@ -366,40 +418,57 @@ def main() -> int:
         (atlas / "run-draft").write_text(entry_script(packages), encoding="ascii")
         (atlas / "run-draft").chmod(0o755)
         (rootfs / "tmp").mkdir(mode=0o1777)
-        manifest = artifacts.create_manifest(rootfs, source_report)
-        raw = artifacts.encoded(manifest)
-        manifest_sha = hashlib.sha256(raw).hexdigest()
-        verification = artifacts.verify_manifest(rootfs, raw, expected_sha256=manifest_sha,
-                                                  expected_source_report=source_report)
         (context / "Dockerfile").write_text(core.DOCKERFILE, encoding="ascii")
         config = work / "docker-config"
         config.mkdir(mode=0o700)
         prefix = [str(transport._DOCKER), "--host", "unix://" + str(transport._local_socket()), "--config", str(config)]
         env = {"PATH": "/usr/bin:/bin", "HOME": directory, "LANG": "C"}
-        iid = work / "image-id"
-        subprocess.run(prefix + ["build", "--network=none", "--pull=false", "--iidfile", str(iid), str(context)],
-                       check=True, timeout=360, stdin=subprocess.DEVNULL, env={**env, "DOCKER_BUILDKIT": "0"})
-        image = iid.read_text(encoding="ascii").strip()
-        if not policy._IMAGE.fullmatch(image):
-            raise ValueError("Invalid offline fixture image ID")
-        try:
-            # Compare actual bytes immediately before container admission.
-            artifacts.verify_manifest(rootfs, raw, expected_sha256=manifest_sha, expected_source_report=source_report)
-            result = check_image(prefix, env, image, lake_version)
-        finally:
-            transport._command(prefix, ("image", "rm", image), env)
-        report = {"schema": 1, "status": "trusted_mathlib_fixture_offline_compiled", "checkout_sha": sha,
-                  "source_sha256": hashlib.sha256(SOURCE.encode()).hexdigest(),
-                  "archive_sha256": core.ARCHIVE_SHA256, "manifest_sha256": manifest_sha,
-                  "file_count": verification["file_count"], "total_bytes": verification["total_bytes"],
-                  "observed_origin_count": len(origins), "execution_allowed": False,
-                  "offline_ready": False, "proof_status": "not_run", "certificate": False, **result}
-        validate_report(report, manifest, origins, expected_sha=sha, expected_manifest_sha=manifest_sha)
-        for name, payload in (("manifest", manifest), ("origins", origins), ("report", report)):
-            target = Path(os.environ["RUNNER_TEMP"]) / ("atlas-mathlib-offline-" + name + ".json")
-            with target.open("xb") as handle:
-                handle.write(artifacts.encoded(payload))
-        print("ATLAS_MATHLIB_OFFLINE_FIXTURE " + json.dumps(report, sort_keys=True), flush=True)
+        def run_case(case_origins, *, rejected):
+            manifest = artifacts.create_manifest(rootfs, source_report)
+            raw = artifacts.encoded(manifest)
+            digest = hashlib.sha256(raw).hexdigest()
+            verification = artifacts.verify_manifest(rootfs, raw, expected_sha256=digest,
+                                                      expected_source_report=source_report)
+            iid = work / ('rejected-image-id' if rejected else 'image-id')
+            subprocess.run(prefix + ['build', '--network=none', '--pull=false', '--iidfile', str(iid), str(context)],
+                           check=True, timeout=360, stdin=subprocess.DEVNULL, env={**env, 'DOCKER_BUILDKIT': '0'})
+            image = iid.read_text(encoding='ascii').strip()
+            if not policy._IMAGE.fullmatch(image):
+                raise ValueError('Invalid offline fixture image ID')
+            try:
+                # Compare actual bytes immediately before container admission.
+                artifacts.verify_manifest(rootfs, raw, expected_sha256=digest, expected_source_report=source_report)
+                result = check_image(prefix, env, image, lake_version, rejected=rejected)
+            finally:
+                transport._command(prefix, ('image', 'rm', image), env)
+            report = {'schema': 1, 'status': 'trusted_mathlib_fixture_offline_compiled', 'checkout_sha': sha,
+                      'source_sha256': hashlib.sha256(SOURCE.encode()).hexdigest(),
+                      'archive_sha256': core.ARCHIVE_SHA256, 'manifest_sha256': digest,
+                      'file_count': verification['file_count'], 'total_bytes': verification['total_bytes'],
+                      'observed_origin_count': len(case_origins), 'execution_allowed': False,
+                      'offline_ready': False, 'proof_status': 'not_run', 'certificate': False, **result}
+            if rejected:
+                report.update(status='trusted_mathlib_fixture_missing_import_rejected', missing_import=MISSING_IMPORT)
+            validate_report(report, manifest, case_origins, expected_sha=sha,
+                            expected_manifest_sha=digest, rejected=rejected)
+            return report, manifest, case_origins
+
+        positive = run_case(origins, rejected=False)
+        if MISSING_IMPORT not in origins:
+            raise ValueError('Required import was not present in the successful observed bundle')
+        (rootfs / MISSING_IMPORT).unlink()
+        negative = run_case({p: o for p, o in origins.items() if p != MISSING_IMPORT}, rejected=True)
+        validate_report_pair(positive, negative, expected_sha=sha,
+                             expected_manifest_sha=positive[0]['manifest_sha256'],
+                             expected_rejected_manifest_sha=negative[0]['manifest_sha256'])
+        for evidence, prefix_name, marker in (
+                (positive, 'atlas-mathlib-offline-', 'ATLAS_MATHLIB_OFFLINE_FIXTURE'),
+                (negative, 'atlas-mathlib-offline-rejected-', 'ATLAS_MATHLIB_OFFLINE_REJECTED')):
+            for name, payload in zip(('report', 'manifest', 'origins'), evidence):
+                target = Path(os.environ['RUNNER_TEMP']) / (prefix_name + name + '.json')
+                with target.open('xb') as handle:
+                    handle.write(artifacts.encoded(payload))
+            print(marker + ' ' + json.dumps(evidence[0], sort_keys=True), flush=True)
     return 0
 
 
@@ -409,8 +478,22 @@ if __name__ == "__main__":
     parser.add_argument('--manifest', type=Path)
     parser.add_argument('--origins', type=Path)
     parser.add_argument('--expected-manifest-sha256')
+    parser.add_argument('--validate-report-pair', action='store_true')
+    parser.add_argument('--evidence-directory', type=Path)
+    parser.add_argument('--expected-rejected-manifest-sha256')
     args = parser.parse_args()
-    if args.validate_report:
+    if args.validate_report_pair:
+        if not all((args.evidence_directory, args.expected_manifest_sha256, args.expected_rejected_manifest_sha256)):
+            parser.error('Pair validation requires evidence directory and both independently captured digests')
+        def evidence(prefix):
+            return tuple(read_evidence(args.evidence_directory / (prefix + name + '.json'))
+                         for name in ('report', 'manifest', 'origins'))
+        validate_report_pair(evidence('atlas-mathlib-offline-'), evidence('atlas-mathlib-offline-rejected-'),
+                             expected_sha=os.environ.get('GITHUB_SHA', ''),
+                             expected_manifest_sha=args.expected_manifest_sha256,
+                             expected_rejected_manifest_sha=args.expected_rejected_manifest_sha256)
+        print('ATLAS_MATHLIB_OFFLINE_REPORT_PAIR_VALIDATED')
+    elif args.validate_report:
         if not all((args.manifest, args.origins, args.expected_manifest_sha256)):
             parser.error('Validation requires manifest, origins and independently captured manifest digest')
         raw = read_evidence(args.manifest)
