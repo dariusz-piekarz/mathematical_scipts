@@ -25,13 +25,15 @@ Rozważamy równanie w postaci dywergencyjnej
 \end{equation}
 gdzie $\Omega\subset\R^d$ jest obszarem, $A=(a_{ij})$ ma współczynniki
 rzeczywiste, a $f\in L^2_{\mathrm{loc}}(\Omega)$.
+W całym rozdziale funkcje $u,f$ i funkcje testowe są rzeczywiste.
 
 \begin{definicja}[Jednostajna eliptyczność i rozwiązanie słabe]
 \label{def:pde15-elliptic}
 Mówimy, że $A\in L^\infty_{\mathrm{loc}}(\Omega;\R^{d\times d})$
-jest jednostajnie eliptyczna na $U\subset\Omega$, jeżeli istnieją
-$\lambda,\Lambda>0$ takie, że dla prawie każdego $x\in U$ i
-każdego $\xi\in\R^d$ zachodzi
+jest jednostajnie eliptyczna i ograniczona na mierzalnym
+$U\subset\Omega$, jeżeli istnieją $\lambda,\Lambda>0$
+oraz zbiór $E\subset U$ pełnej miary w $U$ takie, że
+dla każdego $x\in E$ i każdego $\xi\in\R^d$ zachodzi
 $\xi^{\mathsf T}A(x)\xi\ge\lambda|\xi|^2$ oraz
 $|A(x)\xi|\le\Lambda|\xi|$. Nie wymagamy symetrii $A$.
 Funkcja $u\in H^1_{\mathrm{loc}}(\Omega)$ jest rozwiązaniem słabym
@@ -41,8 +43,26 @@ $\varphi\in C_c^\infty(\Omega)$ zachodzi
  \int_\Omega A\nabla u\cdot\nabla\varphi\,\mathrm d\lambda_d(x)
  =\int_\Omega f\varphi\,\mathrm d\lambda_d(x).
 \]
-Z gęstości funkcji testowych równość rozciąga się na funkcje
-$\varphi\in H^1(\Omega)$ o zwartym nośniku w $\Omega$.
+Równość rozciąga się na funkcje $\varphi\in H^1(\Omega)$
+o zwartym nośniku $K\subset\Omega$. Istotnie, wybieramy
+otwarty $W\Subset\Omega$ zawierający $K$ i funkcję
+$\psi\in C_c^\infty(W)$ równą $1$ w otoczeniu $K$.
+Z lematu~\ref{lem:pde9-compact-product} dla $\psi\varphi=\varphi$
+otrzymujemy ciąg $\varphi_n\in C_c^\infty(W)$ zbieżny do
+$\varphi$ w $H^1(W)$. Ponieważ $A$ jest ograniczona na $W$,
+a $\nabla u,f\in L^2(W)$, mamy
+\[
+ \left|\int_W A\nabla u\cdot\nabla(\varphi_n-\varphi)\,
+ \mathrm d\lambda_d(x)\right|
+ \le \|A\|_{\infty,W}\|\nabla u\|_{2,W}
+       \|\nabla(\varphi_n-\varphi)\|_{2,W},
+\]
+\[
+ \left|\int_W f(\varphi_n-\varphi)\,\mathrm d\lambda_d(x)\right|
+ \le \|f\|_{2,W}\|\varphi_n-\varphi\|_{2,W}.
+\]
+Obie prawe strony dążą do zera, co uzasadnia przejście
+do granicy w równaniu słabym.
 \end{definicja}
 
 \begin{uwaga}[Dlaczego samo $A\in L^\infty$ nie wystarcza?]
@@ -62,64 +82,133 @@ należą do zbioru, na którym określona jest $v$.
 
 \begin{lemat}[Oszacowania i całkowanie przez części]
 \label{lem:pde15-difference}
-Niech $U\subset\R^d$ będzie otwarty, $K\Subset U$ zwarty,
-a $|h|<\operatorname{dist}(K,\partial U)$.
-Jeżeli $v\in H^1(U)$, to
-$\|\delta_h^jv\|_{L^2(K)}\le\|\partial_jv\|_{L^2(U)}$.
-Jeżeli ponadto $v,w$ mają nośniki zwarte w $U$ i dla małych
-$|h|$ wszystkie przesunięte nośniki pozostają w $U$, to
+Niech $U\subset\R^d$ będzie otwarty. Dla $h\ne0$ i ustalonego
+$j$ oznaczamy $U_h=U\cap(U-he_j)$.
+Jeżeli $v\in H^1(U)$, $K\subset U$ jest niepusty i zwarty oraz
+$|h|<\operatorname{dist}(K,\R^d\setminus U)$
+(przy $U=\R^d$ przyjmujemy odległość równą $+\infty$),
+to $\|\delta_h^jv\|_{L^2(K)}\le\|\partial_jv\|_{L^2(U)}$.
+Jeżeli $v\in L^2_{\mathrm{loc}}(U)$, $w\in L^2(U)$ ma
+zwarty nośnik $K\subset U$ i $K+he_j\subset U$, to
 \[
- \int_U(\delta_h^jv)w\,\mathrm d\lambda_d
- =-\int_Uv(\delta_{-h}^jw)\,\mathrm d\lambda_d.
+ \int_{U_h}(\delta_h^jv)w\,\mathrm d\lambda_d(x)
+ =-\int_U v(\delta_{-h}^jw)\,\mathrm d\lambda_d(x),
 \]
-Dla $v\in H^1_{\mathrm{loc}}(U)$ zachodzi też
-$\delta_h^j(\partial_kv)=\partial_k(\delta_h^jv)$
-w części wspólnej odpowiednich otwartych zbiorów.
+gdzie po prawej $w$ przedłużamy przez zero poza $U$.
+Nie wymagamy zwartego nośnika $v$. Dla
+$v\in H^1_{\mathrm{loc}}(U)$ zachodzi ponadto
+$\delta_h^jv\in H^1_{\mathrm{loc}}(U_h)$ i
+$\partial_k(\delta_h^jv)=\delta_h^j(\partial_kv)$
+w $U_h$ dla $1\le k\le d$.
 \end{lemat}
 \begin{proof}
 Dla funkcji gładkiej podstawowe twierdzenie rachunku całkowego
-wzdłuż odcinka daje
-$\delta_h^jv(x)=\int_0^1\partial_jv(x+the_j)\,\mathrm dt$.
-Nierówność Jensena i całkowanie po $K$ prowadzą do
+wzdłuż odcinka (również dla $h<0$) daje
+$\delta_h^jv(x)=\int_0^1\partial_jv(x+the_j)\,
+\mathrm d\lambda_1(t)$. Każdy przesunięty zbiór
+$K+the_j$ jest zawarty w $U$. Z nierówności Cauchy'ego--Schwarza,
+twierdzenia Tonellego i niezmienniczości miary Lebesgue'a
+względem translacji otrzymujemy
 \[
- \int_K|\delta_h^jv|^2\,\mathrm d\lambda_d
- \le\int_0^1\int_K|\partial_jv(x+the_j)|^2
- \mathrm d\lambda_d(x)\,\mathrm dt
- \le\int_U|\partial_jv|^2\,\mathrm d\lambda_d.
+ \int_K|\delta_h^jv(x)|^2\,\mathrm d\lambda_d(x)
+ \le\int_0^1\int_{K+the_j}|\partial_jv(y)|^2\,
+ \mathrm d\lambda_d(y)\,\mathrm d\lambda_1(t)
+ \le\int_U|\partial_jv(y)|^2\,\mathrm d\lambda_d(y).
 \]
-Dla ogólnej funkcji Sobolewa aproksymujemy ją gładko
-na otoczeniu $K$ powiększonym o odcinki przesunięć;
-ciągłość translacji w $L^2$ pozwala przejść do granicy.
-Całkowanie przez części dla ilorazów różnicowych wynika
-wprost z podstawienia $y=x+he_j$ w pierwszym składniku.
-Tożsamość z pochodną słabą wynika z przemienności
-translacji z różniczkowaniem dystrybucyjnym.
+Dla ogólnej funkcji Sobolewa zbiór
+$S=\{x+the_j:x\in K,\ 0\le t\le1\}$ jest zwarty jako obraz
+$K\times[0,1]$ przez odwzorowanie ciągłe i zawarty w $U$.
+Wybieramy otwarty $W$ taki, że $S\subset W\Subset U$.
+Z twierdzenia~\ref{thm:pde9-mollify} otrzymujemy funkcje
+gładkie $v_n$ na $W$, zbieżne do $v$ w $H^1(W)$.
+Dla ustalonego $h$ mamy
+\[
+ \|\delta_h^j(v_n-v)\|_{2,K}
+ \le |h|^{-1}(\|v_n-v\|_{2,K+he_j}
+                  +\|v_n-v\|_{2,K})
+ \le 2|h|^{-1}\|v_n-v\|_{2,W}\longrightarrow0.
+\]
+Stosując poprzedni rachunek do $v_n$ na $W$, a następnie
+przechodząc do granicy, dostajemy
+$\|\delta_h^jv\|_{2,K}\le\|\partial_jv\|_{2,W}
+\le\|\partial_jv\|_{2,U}$.
+
+W drugiej tożsamości wszystkie całki istnieją z nierówności
+Cauchy'ego--Schwarza, ponieważ $v$ jest lokalnie kwadratowo
+całkowalna, a $K$ oraz $K+he_j$ są zwarte w $U$.
+Mamy $K\subset U_h$. Po przedłużeniu $w$ przez zero
+podstawienie $y=x+he_j$ daje
+\[
+ \int_{U_h}(\delta_h^jv)w\,\mathrm d\lambda_d(x)
+ =\frac1h\int_U v(y)\bigl(w(y-he_j)-w(y)\bigr)
+ \,\mathrm d\lambda_d(y)
+ =-\int_U v\,\delta_{-h}^jw\,\mathrm d\lambda_d.
+\]
+Wreszcie dla $\zeta\in C_c^\infty(U_h)$, po przedłużeniu
+jej przez zero, z tej samej tożsamości otrzymujemy
+\begin{align*}
+ \int_{U_h}\delta_h^jv\,\partial_k\zeta\,\mathrm d\lambda_d
+ &=-\int_U v\,\partial_k(\delta_{-h}^j\zeta)\,\mathrm d\lambda_d\\
+ &=\int_U \partial_kv\,\delta_{-h}^j\zeta\,\mathrm d\lambda_d\\
+ &=-\int_{U_h}\delta_h^j(\partial_kv)\zeta\,\mathrm d\lambda_d.
+\end{align*}
+Na każdym zwartym podzbiorze $U_h$ obie translacje
+$v$ i $\partial_kv$ są kwadratowo całkowalne.
+Ostatnia tożsamość daje więc postulowaną słabą pochodną.
 \end{proof}
 
 \begin{lemat}[Kryterium istnienia słabej pochodnej]
 \label{lem:pde15-criterion}
 Niech $U\subset\R^d$ będzie otwarty i $v\in L^2_{\mathrm{loc}}(U)$.
-Jeśli dla każdego $K\Subset U$ istnieją $C_K,h_K>0$ takie, że
+Jeśli dla każdego niepustego zwartego $K\subset U$ istnieją
+$C_K,h_K>0$ takie, że $K+he_j\subset U$ oraz
 $\|\delta_h^jv\|_{L^2(K)}\le C_K$ dla $0<|h|<h_K$, to
 $\partial_jv\in L^2_{\mathrm{loc}}(U)$ i
-$\|\partial_jv\|_{L^2(K)}\le C_{K'}$ dla $K\Subset\operatorname{int}K'\Subset U$.
+$\|\partial_jv\|_{L^2(K)}\le C_{K'}$ dla zwartych
+$K,K'\subset U$ spełniających $K\subset\operatorname{int}K'$.
 \end{lemat}
 \begin{proof}
-Wybierzmy otwarty $V$ z $K\Subset V\Subset U$ i zwartym
-$K'\Subset U$ zawierającym $\overline V$. Z ograniczoności w
-$L^2(V)$ wybieramy ciąg $h_n\to0$ taki, że
-$\delta_{h_n}^jv\rightharpoonup w$ słabo w $L^2(V)$.
-Dla $\varphi\in C_c^\infty(V)$ mamy na mocy poprzedniego lematu
+Ustalmy takie $K,K'$. Wybieramy otwarty $V$ z
+$K\subset V\subset\overline V\subset\operatorname{int}K'$;
+jest to możliwe dzięki zwartości $K$ i otwartości
+$\operatorname{int}K'$. Dla dowolnego ciągu niezerowych
+$h_n\to0$ z $|h_n|<h_{K'}$ mamy
+$\|\delta_{h_n}^jv\|_{2,V}\le C_{K'}$.
+Z twierdzenia o słabej ciągowej zwartości ograniczonych
+ciągów w przestrzeni Hilberta $L^2(V)$ wybieramy podciąg
+(oznaczany tak samo), dla którego
+$\delta_{h_n}^jv\rightharpoonup w$ w $L^2(V)$.
+Dla $\varphi\in C_c^\infty(V)$ stosujemy poprzedni lemat
+dla dostatecznie małych $|h_n|$:
 \[
  \int_V\delta_{h_n}^jv\,\varphi\,\mathrm d\lambda_d
- =-\int_Uv\,\delta_{-h_n}^j\varphi\,\mathrm d\lambda_d
- \longrightarrow-\int_Vv\,\partial_j\varphi\,\mathrm d\lambda_d.
+ =-\int_U v\,\delta_{-h_n}^j\varphi\,\mathrm d\lambda_d .
 \]
-Lewa strona zbiega do $\int_Vw\varphi\,\mathrm d\lambda_d$.
-Stąd $w=\partial_jv$ dystrybucyjnie w $V$.
-Półciągłość normy przy słabej zbieżności daje żądane
-oszacowanie. Jednoznaczność pochodnej dystrybucyjnej
-pozwala skleić reprezentanty otrzymane na różnych $V$.
+Nośniki $\delta_{-h_n}^j\varphi$ dla dużych $n$
+leżą w jednym zwartym podzbiorze $V$.
+Z podstawowego twierdzenia rachunku całkowego i jednostajnej
+ciągłości $\partial_j\varphi$ na $\R^d$ wynika jednostajna
+zbieżność $\delta_{-h_n}^j\varphi\to\partial_j\varphi$,
+a z ograniczenia nośników także zbieżność w $L^2(V)$.
+Z nierówności Cauchy'ego--Schwarza prawa strona zbiega do
+$-\int_V v\partial_j\varphi\,\mathrm d\lambda_d$;
+lewa zbiega do $\int_V w\varphi\,\mathrm d\lambda_d$
+na mocy słabej zbieżności. Stąd $w$ reprezentuje
+$\partial_jv$ na $V$. Półciągłość normy przy słabej zbieżności
+daje
+\[
+ \|w\|_{2,K}\le\|w\|_{2,V}
+ \le\liminf_n\|\delta_{h_n}^jv\|_{2,V}\le C_{K'}.
+\]
+Każdy punkt $U$ ma takie otoczenie $V$. Na przecięciach
+reprezentanty są równe prawie wszędzie z jednoznaczności
+dystrybucji regularnych (stwierdzenie~\ref{prop:pde7-injective}).
+Wybierając przeliczalne podpokrycie tych otoczeń (przestrzeń
+euklidesowa ma przeliczalną bazę), otrzymujemy jeden
+mierzalny reprezentant $\partial_jv$, lokalnie kwadratowo
+całkowalny. Istotnie, każdy zwarty podzbiór $U$ pokrywają
+skończenie liczne z tych otoczeń i na każdym z nich
+odpowiednia całka kwadratu jest skończona.
 \end{proof}
 
 \section[Wewnętrzna regularność Sobolewa drugiego rzędu]{Wewnętrzna regularność $H^2$}
