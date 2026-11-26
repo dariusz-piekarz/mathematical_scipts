@@ -41,7 +41,8 @@ def main():
                 # Keep the process alive between independent browser sessions.
                 with connect(f'ws://127.0.0.1:{args.port}/api/lifecycle/socket', origin=url) as keeper:
                     keeper.recv()
-                    scripts = ['browser_reading_preferences.py', 'browser_reading_focus.py', 'browser_references.py']
+                    scripts = ['browser_reading_preferences.py', 'browser_reading_focus.py',
+                               'browser_references.py', 'browser_reader_layout.py']
                     if args.figures:
                         scripts.append('browser_reader_preview.py')
                     for script in scripts:

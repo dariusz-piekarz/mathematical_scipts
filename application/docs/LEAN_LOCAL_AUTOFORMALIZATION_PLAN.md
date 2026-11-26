@@ -34,4 +34,13 @@ Każdy podetap: osobne regresje, 2+1 na niezmiennym SHA, sceptyczny audyt i niez
 - Testy atrap transportu: brak sieci w trybie lokalnym, brak klucza/zgody, zmiana źródła/modelu, przekroczenie budżetu, maskowanie sekretów, przekierowania, timeout, niejednoznaczne rozliczenie i błędna odpowiedź. CI nie wysyła płatnych żądań. Rzeczywisty test dostawcy wymaga osobnej zgody i limitu. Nie przedstawiać atrap jako rzeczywistej integracji.
 
 ## Stan
+
+Aktualizacja kierunku, 26.11.2026: użytkownik wskazał wykorzystanie gotowych
+rozwiązań z GitHuba zamiast budowy własnego modelu. Przed wdrożeniem
+generatora modelowego ocenić AutoformBot i LeanFlow oraz gotowe wagi
+formalizatora; zakres, źródła i kryteria pilotażu zapisano w
+[przeglądzie gotowych narzędzi](LATEX_TO_LEAN_EXISTING_TOOLS_REVIEW_2026-11-26.md).
+Obecny własny kod to parser, reguły i kontrola pochodzenia, nie trenowany
+model. Kolejność odbioru L1.5.6 pozostaje obowiązująca.
+
 L1.5.2: kandydat ac4c30c11378c6a74bbeaf4f57ef5fb09bbc65e3, workflow 45351518032. Ten dokument jest zatwierdzoną decyzją projektową, nie implementacją adapterów. 

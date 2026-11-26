@@ -40,6 +40,10 @@ function buildProsePreview(container, source, moduleId) {
       if(['newcommand','renewcommand','providecommand','DeclareMathOperator'].includes(command)) {group();while(true){whitespace();if(text[i]!=='[')break;group('[',']');}group();continue;}
       if(['label','index','bibliographystyle','bibliography'].includes(command)){group();continue;}
       if(['noindent','indent','smallskip','medskip','bigskip','newpage','clearpage','centering'].includes(command))continue;
+      if(command==='texorpdfstring') {
+        const visible=group()||'';group();
+        parse(visible,target(),true);continue;
+      }
       if(['chapter','section','subsection','subsubsection','paragraph'].includes(command)) {
         whitespace();if(text[i]==='[')group('[',']');const title=group()||'';
         if(inline){parse(title,root,true);continue;}
