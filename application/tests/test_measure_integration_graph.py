@@ -2,12 +2,13 @@
 import json
 from contextlib import closing
 from pathlib import Path
+import re
 import sqlite3
 import tempfile
 import unittest
 
 from backend.graph_coverage import graph_coverage
-from backend.latex_parser import build_database, module_id
+from backend.latex_parser import build_database, masked_source, module_id
 
 
 class MeasureIntegrationGraphTest(unittest.TestCase):
@@ -73,22 +74,30 @@ class MeasureIntegrationGraphTest(unittest.TestCase):
                 edges = {(e["source"], e["target"]): e for e in graph_coverage(con)["edges"]}
                 for source, target, label in expected:
                     with self.subTest(source=source, target=target, label=label):
+                        # Repeated reading links are legitimate. Verify every
+                        # source occurrence, including its line, rather than
+                        # assuming a chapter can cite a result only once.
+                        text = masked_source(sources[source].read_text(encoding="utf-8"))
+                        pattern = r"\\atlasref\s*\{\s*" + re.escape(target + "::" + label) + r"\s*\}"
+                        expected_lines = [text.count("\n", 0, match.start()) + 1
+                                          for match in re.finditer(pattern, text)]
+                        self.assertTrue(expected_lines, "Required reading link disappeared from source")
                         rows = con.execute(
-                            "SELECT status,target_document,target_entity "
+                            "SELECT status,target_document,target_entity,line "
                             "FROM references_tex WHERE source_document=? "
-                            "AND command='atlasref' AND target_label=?",
+                            "AND command='atlasref' AND target_label=? ORDER BY line,id",
                             (source, target + "::" + label),
                         ).fetchall()
-                        self.assertEqual(len(rows), 1)
-                        status, owner, entity = rows[0]
-                        self.assertEqual(status, "external_resolved")
-                        self.assertEqual(owner, target)
-                        self.assertIsNotNone(entity)
-                        self.assertEqual(con.execute(
-                            "SELECT entity_id FROM label_occurrences "
-                            "WHERE document_id=? AND name=?", (target, label)
-                        ).fetchall(), [(entity,)])
-                        self.assertGreaterEqual(edges[(source, target)]["reading"], 1)
+                        self.assertEqual([row[3] for row in rows], expected_lines)
+                        for status, owner, entity, _ in rows:
+                            self.assertEqual(status, "external_resolved")
+                            self.assertEqual(owner, target)
+                            self.assertIsNotNone(entity)
+                            self.assertEqual(con.execute(
+                                "SELECT entity_id FROM label_occurrences "
+                                "WHERE document_id=? AND name=?", (target, label)
+                            ).fetchall(), [(entity,)])
+                        self.assertGreaterEqual(edges[(source, target)]["reading"], len(rows))
                 legacy = con.execute(
                     "SELECT source_document,target_label FROM references_tex "
                     "WHERE command='atlasref' AND source_document LIKE 'ME-%' "

@@ -1,3 +1,4 @@
+from contextlib import closing
 import json
 from pathlib import Path
 import sqlite3
@@ -29,7 +30,7 @@ class GraphCoverageTest(unittest.TestCase):
             ] + ["chapters/pl/abstract_algebra/02-missing.tex"]}]}), encoding="utf-8")
             db = base / "test.db"
             build_database(root, db, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 report = graph_coverage(con, catalog)
             self.assertEqual(report["summary"]["indexed_chapters"], 4)
             self.assertEqual(report["summary"]["cross_linked_chapters"], 2)
@@ -65,7 +66,7 @@ class GraphCoverageTest(unittest.TestCase):
                 dest.write_text(body, encoding="utf-8")
             db = Path(tmp) / "index.db"
             build_database(root, db, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 audit = reading_reference_issues(con)
                 self.assertEqual(audit["checked"], 3)
                 self.assertEqual(audit["invalid"], 1)
@@ -108,7 +109,7 @@ class GraphCoverageTest(unittest.TestCase):
                 dest.write_text(body, encoding="utf-8")
             db = Path(tmp) / "index.db"
             build_database(root, db, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 self.assertEqual(reading_reference_issues(con),
                                  {"checked": 1, "invalid": 0, "issues": []})
                 wrong = con.execute(
@@ -147,7 +148,7 @@ class GraphCoverageTest(unittest.TestCase):
                 dest.write_bytes((canonical / relative).read_bytes())
             db = Path(tmp) / "index.db"
             build_database(root, db, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 edges = {(e["source"], e["target"]): e
                          for e in graph_coverage(con)["edges"]}
                 for source, target, label in expected:
@@ -197,7 +198,7 @@ class GraphCoverageTest(unittest.TestCase):
                 dest.write_bytes((canonical / relative).read_bytes())
             db = Path(tmp) / "index.db"
             build_database(root, db, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 report = graph_coverage(con)
                 edges = {(e["source"], e["target"]): e for e in report["edges"]}
                 for source, target, label in expected:
@@ -259,7 +260,7 @@ class GraphCoverageTest(unittest.TestCase):
                 dest.write_bytes((canonical / relative).read_bytes())
             db = Path(tmp) / "index.db"
             build_database(root, db, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 edges = {(e["source"], e["target"]): e
                          for e in graph_coverage(con)["edges"]}
                 for source, target, label in expected:
@@ -323,7 +324,7 @@ class GraphCoverageTest(unittest.TestCase):
             self.assertEqual(found, needed)
             db = Path(tmp) / "index.db"
             build_database(root, db, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 edges = {(e["source"], e["target"]): e for e in graph_coverage(con)["edges"]}
                 for source, target, label in expected:
                     with self.subTest(source=source, target=target, label=label):
@@ -382,7 +383,7 @@ class GraphCoverageTest(unittest.TestCase):
                 dest.write_bytes(source_path.read_bytes())
             db = Path(tmp) / "index.db"
             build_database(root, db, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 edges = {(e["source"], e["target"]): e for e in graph_coverage(con)["edges"]}
                 for source, target, label in expected:
                     with self.subTest(source=source, target=target, label=label):
