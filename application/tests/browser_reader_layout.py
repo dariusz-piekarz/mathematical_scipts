@@ -46,6 +46,17 @@ with sync_playwright() as pw:
         page.wait_for_function('window.scrollY === 0')
         assert_viewport_layout(page)
         assert page.locator('#view-reader').evaluate('el => el.scrollTop > 0')
+        # The toolbar stays at the reader scrollport, not at document top.
+        pinned = page.evaluate("""() => {
+            const view = document.querySelector('#view-reader');
+            const toolbar = view.querySelector('.reader-toolbar');
+            const v = view.getBoundingClientRect(), t = toolbar.getBoundingClientRect();
+            return {top: t.top, bottom: t.bottom, viewTop: v.top,
+                    viewBottom: v.bottom, position: getComputedStyle(toolbar).position};
+        }""")
+        assert pinned['position'] == 'sticky', pinned
+        assert abs(pinned['top'] - pinned['viewTop']) <= 2, pinned
+        assert pinned['bottom'] < pinned['viewBottom'], pinned
         if width == 1934:
             page.screenshot(path=str(Path(os.environ.get('TEMP', '/tmp')) / 'atlas-reader-am1-14-fixed.png'))
 
