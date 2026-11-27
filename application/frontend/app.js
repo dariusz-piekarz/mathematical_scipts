@@ -248,18 +248,26 @@ function describeReference(label,sourceDocument){
   });
   referencePending.set(key,promise);return promise;
 }
+let hoveredReferenceAnchor=null,referenceTipHovered=false;
 function scheduleCloseTip(anchor){
   const key=state.tooltipKey;
   setTimeout(()=>{
-    if(key===state.tooltipKey && state.tooltipAnchor===anchor && !anchor.matches(':hover,:focus') && !$("referenceTip").matches(':hover,:focus-within'))closeTip();
+    if(key===state.tooltipKey && state.tooltipAnchor===anchor &&
+       hoveredReferenceAnchor!==anchor && document.activeElement!==anchor &&
+       !referenceTipHovered && !$("referenceTip").contains(document.activeElement))closeTip();
   },240);
 }
 function createReferenceLink(label,sourceDocument,{caption=null,command='ref',sourceView=false}={}){
   const button=node('button',{className:'ref-link',type:'button',title:'Podgląd odsyłacza: '+label},caption||(sourceView?label:'Odsyłacz…'));
   button.dataset.reference=label;
-  button.addEventListener('mouseenter',()=>previewLabel(label,button,sourceDocument));
+  button.addEventListener('mouseenter',()=>{
+    hoveredReferenceAnchor=button;previewLabel(label,button,sourceDocument);
+  });
   button.addEventListener('focus',()=>previewLabel(label,button,sourceDocument));
-  button.addEventListener('mouseleave',()=>scheduleCloseTip(button));
+  button.addEventListener('mouseleave',()=>{
+    if(hoveredReferenceAnchor===button)hoveredReferenceAnchor=null;
+    scheduleCloseTip(button);
+  });
   button.addEventListener('blur',()=>scheduleCloseTip(button));
   button.addEventListener('click',()=>openLabel(label,sourceDocument,button));
   if(!sourceView)describeReference(label,sourceDocument).then(result=>{
@@ -556,7 +564,7 @@ async function previewLabel(label,anchor,sourceDocument=null){
     positionReferenceTip(anchor);
   }
 }
-function closeTip(){state.tooltipKey++;state.tooltipData=null;state.tooltipAnchor=null;tooltipAnchorRect=null;$("referenceTip").classList.add("hidden");}
+function closeTip(){state.tooltipKey++;state.tooltipData=null;state.tooltipAnchor=null;tooltipAnchorRect=null;referenceTipHovered=false;hoveredReferenceAnchor=null;$("referenceTip").classList.add("hidden");}
 async function openLabel(label,sourceDocument=null,anchor=null){
   const epoch=++state.renderEpoch;
   try{
@@ -1572,7 +1580,12 @@ function listeners(){
   $("showFull").addEventListener("click",()=>{if(state.currentEntity)openEntity(state.currentEntity,true);else if(state.currentModule)openModule(state.currentModule,true);});
   $("closeTip").addEventListener("click",closeTip);
   $("tipOpen").addEventListener("click",openPreviewedReference);
+  $("referenceTip").addEventListener("mouseenter",()=>{referenceTipHovered=true;});
   $("referenceTip").addEventListener("mouseleave",()=>{
+    referenceTipHovered=false;
+    if(state.tooltipAnchor)scheduleCloseTip(state.tooltipAnchor);
+  });
+  $("referenceTip").addEventListener("focusout",()=>{
     if(state.tooltipAnchor)scheduleCloseTip(state.tooltipAnchor);
   });
   $("view-reader").addEventListener("scroll",dismissTipOnReaderScroll,true);
