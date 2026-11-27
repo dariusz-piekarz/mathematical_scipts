@@ -8,8 +8,8 @@ Najprostszy pomysł: jeśli istnieje $N$ równie możliwych wyników,
 a zdarzenie sprzyjające zawiera $k$ z nich, przypisujemy mu
 szansę $k/N$. Jest to jednak \emph{warunkowe} zastosowanie
 symetrii: trzeba najpierw uzasadnić, dlaczego wybrane wyniki
-elementarne są równoprawdopodobne. Przy dwóch kostkach są nimi
-uporządkowane pary oczek, nie sumy oczek. Wzór Laplace'a jest
+elementarne są równoprawdopodobne. Przy dwóch niezależnych rzutach uczciwymi kostkami
+równoprawdopodobne są uporządkowane pary oczek, nie ich sumy. Wzór Laplace'a jest
 konsekwencją wcześniejszej konstrukcji miary jednostajnej,
 a nie dodatkowym aksjomatem.
 
@@ -18,15 +18,20 @@ Modelem Laplace'a nazywamy przestrzeń probabilistyczną
 $(\Omega,2^\Omega,\Prob)$, w której $\Omega$ jest niepustym zbiorem
 skończonym, a $\Prob(\{\omega\})=1/|\Omega|$ dla każdego
 $\omega\in\Omega$. Dla dowolnego $A\subseteq\Omega$ zachodzi wówczas
-$\Prob(A)=|A|/|\Omega|$.
+$\Prob(A)=|A|/|\Omega|$, ponieważ $A$ jest rozłączną sumą
+zbiorów jednoelementowych i z addytywności
+$\Prob(A)=\sum_{\omega\in A}1/|\Omega|=|A|/|\Omega|$.
 \end{definicja}
 
 \begin{uwaga}
 Warunek jednakowego prawdopodobieństwa wyników jest założeniem
 modelu, a nie wnioskiem z samej symetrii językowego opisu.
-Przykładowo podczas rzucania dwiema uczciwymi kostkami
-36 uporządkowanych par ma równe prawdopodobieństwa; 11 możliwych sum
-oczek nie ma rozkładu jednostajnego.
+Przykładowo podczas dwóch niezależnych rzutów uczciwymi kostkami
+każda z 36 uporządkowanych par ma prawdopodobieństwo $(1/6)(1/6)=1/36$.
+Jedenaście możliwych sum oczek nie ma rozkładu jednostajnego.
+Sama jednostajność obu rzutów nie wystarcza: jeśli wyniki obu
+rzutów są zawsze równe tej samej jednostajnie wylosowanej liczbie,
+tylko sześć par ma dodatnią masę.
 \end{uwaga}
 
 \begin{przyklad}[Dwie kostki]
@@ -37,16 +42,25 @@ składa się tylko z $(1,1)$, toteż jego prawdopodobieństwo wynosi $1/36$.
 \end{przyklad}
 
 \begin{przyklad}[Losowanie bez zwracania]
-W urnie znajduje się $N$ różnych kul, z których $K$ jest czerwonych.
+W urnie znajduje się $N\geq1$ różnych kul, z których $K$
+jest czerwonych, $0\leq K\leq N$. Liczby $N,K,n,k$ są całkowite.
 Losujemy jednocześnie $n$ kul, gdzie $0\leq n\leq N$, i zakładamy
 jednostajność wszystkich $n$-elementowych podzbiorów.
 Prawdopodobieństwo dokładnie $k$ czerwonych kul wynosi
 \[
 \frac{\binom Kk\binom{N-K}{n-k}}{\binom Nn}.
 \]
-W liczniku niezależnie \emph{zliczamy wybory} kul obu kolorów;
-nie należy mylić tej kombinatorycznej zasady iloczynu
-ze stochastyczną niezależnością kolejnych losowań.
+Każdy wynik sprzyjający jednoznacznie odpowiada parze:
+$k$-elementowemu podzbiorowi kul czerwonych i $(n-k)$-elementowemu
+podzbiorowi pozostałych kul. Odwrotnie, suma takiej pary podzbiorów
+jest wynikiem sprzyjającym. Z zasady iloczynu (rozdział~\ref{ch:combinatorics})
+liczba wyników sprzyjających jest iloczynem dwóch współczynników
+dwumianowych; liczba wszystkich wyników wynosi $\binom Nn>0$.
+Dopuszczalne wartości $k$ spełniają
+$\max(0,n-(N-K))\leq k\leq\min(n,K)$; poza tym zakresem
+prawdopodobieństwo wynosi zero zgodnie z konwencją zerowych
+współczynników dwumianowych. Nie należy mylić zasady iloczynu
+z probabilistyczną niezależnością kolejnych losowań.
 \end{przyklad}
 
 \section{Prawdopodobieństwo warunkowe}
@@ -57,8 +71,9 @@ możliwość miała prawdopodobieństwo jeden, normalizujemy
 wagi przez $\Prob(B)$. To intuicja ilorazu
 $\Prob(A\cap B)/\Prob(B)$.
 
-Warunek $\Prob(B)>0$ nie jest formalnością: dla zdarzeń
-zerowych dostalibyśmy iloraz $0/0$. Warunkowanie względem
+Warunek $\Prob(B)>0$ nie jest formalnością: jeśli $\Prob(B)=0$,
+to $0\leq\Prob(A\cap B)\leq\Prob(B)=0$ na mocy monotoniczności,
+więc otrzymalibyśmy nieokreślony iloraz $0/0$. Warunkowanie względem
 wartości ciągłej zmiennej losowej wymaga później innej konstrukcji.
 
 \begin{definicja}
@@ -189,16 +204,31 @@ i parami niezależnej ma znaczenie również dla skończonych rodzin.
 
 
 \begin{stwierdzenie}
-Niech $A,B\in\mathcal F$ i $\Prob(B)>0$.
-Wówczas $A$ i $B$ są niezależne wtedy i tylko wtedy, gdy
-$\Prob(A\mid B)=\Prob(A)$. Jeżeli $A$ i $B$ są niezależne,
-to niezależne są także pary $A^c,B$ oraz $A^c,B^c$.
+Niech $A,B\in\mathcal F$. Jeśli $\Prob(B)>0$, to
+$A$ i $B$ są niezależne wtedy i tylko wtedy, gdy
+$\Prob(A\mid B)=\Prob(A)$. Niezależnie od wartości $\Prob(B)$,
+jeżeli $A$ i $B$ są niezależne, to niezależne są także pary
+$A^c,B$, $A,B^c$ oraz $A^c,B^c$.
 \end{stwierdzenie}
 \begin{proof}
-Pierwsza równoważność wynika przez podstawienie do \eqref{eq:cond}.
-Ponadto $\Prob(A^c\cap B)=\Prob(B)-\Prob(A\cap B)
-=(1-\Prob(A))\Prob(B)$, a więc $A^c$ i $B$ są niezależne.
-Powtarzamy rozumowanie po zamianie $B$ na $B^c$.
+Przy $\Prob(B)>0$ z~\eqref{eq:cond} otrzymujemy
+$\Prob(A\mid B)=\Prob(A)$ wtedy i tylko wtedy, gdy
+$\Prob(A\cap B)=\Prob(A)\Prob(B)$, mnożąc obie strony
+przez $\Prob(B)$. Załóżmy teraz niezależność $A$ i $B$.
+Z rozłącznych rozkładów $B=(A\cap B)\mathbin{\dot\cup}(A^c\cap B)$
+oraz $A=(A\cap B)\mathbin{\dot\cup}(A\cap B^c)$ otrzymujemy
+\begin{align*}
+\Prob(A^c\cap B)&=\Prob(B)-\Prob(A)\Prob(B)
+=\Prob(A^c)\Prob(B),\\
+\Prob(A\cap B^c)&=\Prob(A)-\Prob(A)\Prob(B)
+=\Prob(A)\Prob(B^c).
+\end{align*}
+Z rozkładu $A^c=(A^c\cap B)\mathbin{\dot\cup}(A^c\cap B^c)$
+wynika $\Prob(A^c\cap B^c)=\Prob(A^c)-\Prob(A^c)\Prob(B)
+=\Prob(A^c)\Prob(B^c)$. Nie dzieliliśmy przez żadne
+prawdopodobieństwo, więc obejmuje to także zdarzenia zerowe.
+Por. lemat o dopełnieniach zdarzeń niezależnych
+w rozdziale~\ref{ch:probability}.
 \end{proof}
 
 \begin{przyklad}[Niezależność parami nie wystarcza]
@@ -304,7 +334,8 @@ jak i częstości choroby w rozpatrywanej populacji.
 
 \begin{przyklad}[Trzy drzwi --- problem Monty'ego Halla]
 Załóżmy, że nagroda znajduje się jednostajnie za jednymi z trzech drzwi.
-Gracz wybiera drzwi, nie znając położenia nagrody. Prowadzący zna jej
+Gracz wybiera drzwi niezależnie od położenia nagrody
+(może na przykład zawsze wybierać pierwsze drzwi). Prowadzący zna jej
 położenie, zawsze otwiera inne drzwi, za którymi nie ma nagrody,
 a gdy ma wybór, rozstrzyga go losowo i symetrycznie. Gracz może
 pozostać przy swoim wyborze albo zamienić go na jedne pozostałe
@@ -312,8 +343,10 @@ zamknięte drzwi. Początkowy wybór był prawidłowy z prawdopodobieństwem
 $1/3$; wtedy zamiana przegrywa. Był nieprawidłowy z prawdopodobieństwem
 $2/3$; wtedy prowadzący musi wskazać drugie puste drzwi, a zamiana
 wygrywa. Zatem strategia zamiany daje prawdopodobieństwo wygranej $2/3$.
-Warunki dotyczące zachowania prowadzącego są częścią modelu;
-po ich zmianie wynik może być inny.
+Do tego bezwarunkowego wyniku nie jest potrzebna symetria wyboru
+prowadzącego, gdy może otworzyć dwoje pustych drzwi. Istotne jest,
+że zawsze otwiera niewybrane puste drzwi i zawsze umożliwia zamianę.
+Po zmianie tych warunków wynik może być inny.
 \end{przyklad}
 
 \begin{przyklad}[Wybór urny po obserwacji koloru]
