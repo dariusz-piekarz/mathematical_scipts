@@ -80,6 +80,23 @@ class MathRendererInstallTest(unittest.TestCase):
         self.assertEqual(macros[r"\pct"], r"\%")
         self.assertNotIn(r"\optional", macros)
 
+    def test_macro_arguments_on_separate_lines(self):
+        source = "\n".join((
+            r"\providecommand% comment",
+            r"{\splitmacro}% another comment",
+            r"[1]",
+            r"{\mathcal{#1}}",
+            r"\newcommand{\other}{\mathbb C}",
+            r"Visible prose",
+        ))
+        lines = list(renderer.logical_macro_lines(source))
+        macros = {}
+        for line in lines:
+            renderer.add_literal_macro(line, macros)
+        self.assertEqual(macros[r"\splitmacro"], r"\mathcal{#1}")
+        self.assertEqual(macros[r"\other"], r"\mathbb C")
+        self.assertEqual(lines[-1], "Visible prose")
+
     def test_cached_install_refreshes_profiles_without_network(self):
         for name in renderer.REQUIRED + ("fonts/test.woff2",):
             target = self.dest / name

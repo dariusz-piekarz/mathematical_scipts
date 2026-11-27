@@ -65,18 +65,29 @@ def brace_balance(line):
 
 def logical_macro_lines(source):
     """Join literal macro bodies spanning lines; leave other TeX untouched."""
-    lines = iter(source.splitlines())
-    for raw in lines:
+    lines = source.splitlines()
+    i = 0
+    while i < len(lines):
+        raw = lines[i]
+        i += 1
         clean = without_tex_comment(raw).strip()
         if re.match(r"^\\(?:newcommand|providecommand|DeclareMathOperator)\*?(?![A-Za-z])", clean):
-            # A percent comment suppresses the end-of-line space in TeX.
-            # Ordinary newlines are spaces, unless a control word absorbs them.
-            while brace_balance(clean) > 0:
-                try:
-                    following = next(lines)
-                except StopIteration:
+            while i < len(lines):
+                balance = brace_balance(clean)
+                if balance < 0 or (balance == 0 and
+                        (COMMAND.fullmatch(clean) or OPERATOR.fullmatch(clean))):
                     break
+                following = lines[i]
                 part = without_tex_comment(following)
+                # With balanced braces, only continue through whitespace,
+                # comments and possible braced/optional arguments. Do not
+                # consume the next prose line or independent declaration.
+                if balance == 0 and part.strip() and not part.lstrip().startswith(("{", "[")):
+                    break
+                if balance == 0 and not part.strip():
+                    i += 1
+                    continue
+                i += 1
                 clean += ("" if len(without_tex_comment(raw)) < len(raw) else " ") + part.lstrip()
                 raw = following
         yield clean
