@@ -102,6 +102,39 @@ with sync_playwright() as pw:
         return count;
     }""")
     assert cases == 5
+    # Fallback label responses need not echo source_document. The preview
+    # must keep the original lookup context, including a global lookup.
+    context_cases = page.evaluate("""async () => {
+        const originalApi=api, originalOpenEntity=openEntity;
+        const anchor=document.getElementById('togglePreview');
+        let calls=[], opened=[], count=0;
+        try{
+            api=(url,options)=>{
+                if(url.startsWith('/api/labels/atlas-context-test')){
+                    calls.push(url);
+                    return Promise.resolve({name:'canonical-test',document_id:'ALG-05',
+                        entity_id:'context-target',title:'Test',latex:''});
+                }
+                return originalApi(url,options);
+            };
+            openEntity=async id=>{opened.push(id);};
+            for(const source of [null,'ALG-05','AM1-36']){
+                calls=[];opened=[];
+                await previewLabel('atlas-context-test',anchor,source);
+                if(state.tooltipData.name!=='atlas-context-test'||
+                   state.tooltipData.source_document!==source)
+                    throw Error('lookup context was not retained');
+                document.getElementById('tipOpen').click();
+                await Promise.resolve();
+                if(calls.length!==1||opened.length!==1||opened[0]!=='context-target')
+                    throw Error('preview opening re-resolved label in wrong context');
+                if(state.tooltipData)throw Error('preview did not close');
+                count++;
+            }
+        }finally{api=originalApi;openEntity=originalOpenEntity;closeTip();}
+        return count;
+    }""")
+    assert context_cases == 3
     # Search responses cannot reopen a dismissed dropdown or replace a
     # more recent query, including repeated submission of the same text.
     search_cases = page.evaluate("""async () => {
