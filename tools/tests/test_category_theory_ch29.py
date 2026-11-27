@@ -157,6 +157,32 @@ class CategoryTheoryCh29(unittest.TestCase):
                             r[fixed.index(p[x])] == q[x] for x in range(n))]
                         self.assertEqual(admissible, [tuple(q[x] for x in fixed)])
 
+    def test_CAT_29_008_unit_local_equality_and_lifting(self):
+        for sizes in itertools.product(range(3), repeat=3):
+            values = {0: (0,), 1: tuple(range(sizes[0])),
+                      2: tuple(range(sizes[1])), 3: tuple(range(sizes[2]))}
+            for r1 in itertools.product(values[1], repeat=sizes[2]):
+                for r2 in itertools.product(values[2], repeat=sizes[2]):
+                    def restrict(u, v, s):
+                        if u == v:
+                            return s
+                        if v == 0:
+                            return 0
+                        return (r1 if v == 1 else r2)[s]
+
+                    p, rp, unit = plus(values, restrict)
+                    pp, rpp, unitp = plus(p, rp)
+                    eta = lambda u, s: unitp(u, unit(u, s))
+                    for u in values:
+                        for s, t in itertools.product(values[u], repeat=2):
+                            local = any(all(restrict(u, v, s) == restrict(u, v, t)
+                                            for v in r) for r in covers(u, values))
+                            self.assertEqual(eta(u, s) == eta(u, t), local)
+                        for x in pp[u]:
+                            self.assertTrue(any(all(
+                                rpp(u, v, x) in {eta(v, y) for y in values[v]}
+                                for v in r) for r in covers(u, values)))
+
     def test_CAT_29_005_structure(self):
         s = CHAPTER.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}", s)
