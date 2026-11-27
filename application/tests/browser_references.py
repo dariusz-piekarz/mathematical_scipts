@@ -146,6 +146,46 @@ with sync_playwright() as pw:
         return count;
     }""")
     assert search_cases == 8
+    # Pending reference requests must not resurrect a detached anchor
+    # after the source pane or simplified preview is rebuilt.
+    detached_cases = page.evaluate("""async () => {
+        await openModule('ALG-08');
+        const originalApi=api, box=document.getElementById('simplified');
+        const requests=[];
+        const tip=document.getElementById('referenceTip');
+        const makeAnchor=()=>{const a=document.createElement('button');box.append(a);return a;};
+        let count=0;
+        try {
+            api=(url,options)=>url.startsWith('/api/labels/atlas-detached-')
+                ? new Promise((resolve,reject)=>requests.push({resolve,reject}))
+                : originalApi(url,options);
+            await previewLabel('atlas-detached-0',document.createElement('button'));
+            if(requests.length)throw Error('detached anchor requested');
+            count++;
+            for(const success of [true,false]){
+                const a=makeAnchor();
+                const pending=previewLabel('atlas-detached-1',a);
+                a.remove();
+                const request=requests.at(-1);
+                if(success)request.resolve({title:'obsolete',document_id:'ALG-08',latex:''});
+                else request.reject(new Error('obsolete error'));
+                await pending;
+                if(!tip.classList.contains('hidden')||state.tooltipData)
+                    throw Error('detached tooltip displayed');
+                count++;
+            }
+            const a=makeAnchor();
+            const pending=previewLabel('atlas-detached-2',a);
+            renderReader();
+            requests.at(-1).resolve({title:'obsolete',document_id:'ALG-08',latex:''});
+            await pending;
+            if(!tip.classList.contains('hidden')||state.tooltipData)
+                throw Error('reader rebuild left obsolete tooltip');
+            count++;
+        }finally{api=originalApi;closeTip();}
+        return count;
+    }""")
+    assert detached_cases == 4
     assert not errors,errors
     browser.close()
     print('Reference titles, hover, exact navigation, multiple targets, conflicts, missing labels and source preservation: OK')
