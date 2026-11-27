@@ -9,7 +9,8 @@ from scripts import install_math_renderer as renderer
 
 DECL = re.compile(r"^\\(?:newcommand|renewcommand|providecommand|DeclareMathOperator|def)\*?\s*(?:\{\s*)?(\\[A-Za-z@]+)")
 IGNORED = {r"\proofname", r"\headrulewidth", r"\lstlistingname",
-           r"\lstlistlistingname", r"\chaptermark", r"\atlasref"}
+           r"\lstlistlistingname", r"\chaptermark", r"\atlasref",
+           r"\thesection", r"\theHsection"}
 
 
 def audit(root, profiles):

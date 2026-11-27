@@ -96,6 +96,8 @@ function buildProsePreview(container, source, moduleId) {
       const command=match[0].replace(/\*$/,'');i+=match[0].length;
       if(['newcommand','renewcommand','providecommand','DeclareMathOperator'].includes(command)) {group();while(true){whitespace();if(text[i]!=='[')break;group('[',']');}group();continue;}
       if(['label','index','bibliographystyle','bibliography'].includes(command)){group();continue;}
+      if(['setcounter','addtocounter'].includes(command)){group();group();continue;}
+      if(['stepcounter','refstepcounter'].includes(command)){group();continue;}
       if(['noindent','indent','smallskip','medskip','bigskip','newpage','clearpage','centering','begingroup','endgroup'].includes(command))continue;
       if(command==='texorpdfstring') {
         const visible=group()||'';group();

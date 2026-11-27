@@ -140,6 +140,21 @@ with sync_playwright() as pw:
     assert box.locator('.katex').count() == 1
     assert page.locator('#mathPreviewStatus').is_hidden()
 
+    # Counter controls used by FA-15A/15B are source metadata, not prose.
+    counters = (r'\setcounter{section}{15}\begingroup'
+                r'\renewcommand{\thesection}{15A}'
+                r'\renewcommand{\theHsection}{15A}'
+                r'\section{Całkowanie}\addtocounter{section}{1}'
+                r'\stepcounter{equation}\refstepcounter{equation}'
+                r'Widoczny tekst: $x$.\endgroup')
+    page.evaluate("source => renderSimplified(source, 'FA-15A')", counters)
+    assert 'Widoczny tekst:' in box.inner_text()
+    assert box.locator('h3').inner_text() == 'Całkowanie'
+    for metadata in ('setcounter', 'addtocounter', 'stepcounter', 'refstepcounter',
+                     'thesection', 'theHsection', '15A', 'begingroup', 'endgroup'):
+        assert metadata not in box.inner_text(), metadata
+    assert box.locator('.katex').count() == 1
+
     # Keep wide equations and code independently scrollable, rather than
     # hiding document overflow and accidentally clipping their contents.
     wide = r'\[' + '+'.join(f'x_{{{i}}}' for i in range(100)) + r'\]'
