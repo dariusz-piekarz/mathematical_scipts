@@ -102,6 +102,50 @@ with sync_playwright() as pw:
         return count;
     }""")
     assert cases == 5
+    # Search responses cannot reopen a dismissed dropdown or replace a
+    # more recent query, including repeated submission of the same text.
+    search_cases = page.evaluate("""async () => {
+        const originalApi = api, input = document.getElementById('searchInput');
+        const list = document.getElementById('searchResults');
+        const toastBox = document.getElementById('toast');
+        const requests = [];
+        let count = 0;
+        try {
+            api = (url, options) => url.startsWith('/api/search?')
+                ? new Promise((resolve, reject) => requests.push({resolve, reject}))
+                : originalApi(url, options);
+            for (const mode of ['escape', 'outside', 'repeat', 'change']) {
+                for (const failure of [false, true]) {
+                    dismissSearch(); requests.length = 0;
+                    toastBox.textContent = ''; input.value = 'alpha';
+                    const old = performSearch('alpha');
+                    if (mode === 'escape') {
+                        input.dispatchEvent(new KeyboardEvent('keydown', {key:'Escape', bubbles:true}));
+                    } else if (mode === 'outside') {
+                        document.getElementById('docTitle').click();
+                    } else {
+                        input.value = mode === 'change' ? 'beta' : 'alpha';
+                        const current = performSearch(input.value);
+                        requests[1].resolve({items:[]}); await current;
+                    }
+                    const before = list.firstChild;
+                    if (failure) requests[0].reject(new Error('stale search'));
+                    else requests[0].resolve({items:[]});
+                    await old;
+                    const dismissed = mode === 'escape' || mode === 'outside';
+                    if (list.classList.contains('hidden') !== dismissed ||
+                        list.firstChild !== before || toastBox.textContent !== '')
+                        throw Error('stale search: ' + mode);
+                    count++;
+                }
+            }
+        } finally {
+            api = originalApi; input.value = ''; dismissSearch();
+            toastBox.textContent = ''; toastBox.classList.add('hidden');
+        }
+        return count;
+    }""")
+    assert search_cases == 8
     assert not errors,errors
     browser.close()
     print('Reference titles, hover, exact navigation, multiple targets, conflicts, missing labels and source preservation: OK')
