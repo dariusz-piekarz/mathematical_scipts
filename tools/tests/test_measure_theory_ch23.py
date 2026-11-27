@@ -264,7 +264,9 @@ class TestHaarChapter23(unittest.TestCase):
                       "tw:haar-automorfizm", "it:cor:haar-lie-automorphism"):
             self.assertIn(label, labels)
         self.assertIn(r"\widetilde\mu=c\mu", s)
-        self.assertIn(r"\int_Gh(x)\,\mathrm d\widetilde\mu(x)", s)
+        self.assertIn(r"$\nu(f)=c\mu(f)$", s)
+        self.assertIn(r"$\nu=\widetilde\mu=c\mu$", s)
+        self.assertIn(r"\ref{thm:uniqueness-cc-20}", s)
         self.assertIn(r"\mu(E(c,t))=\int_E\frac{t}{(at)^2}", s)
         self.assertIn(r"=t^{-1}\mu(E)", s)
         self.assertIn("odwrotną inkluzję", s)
