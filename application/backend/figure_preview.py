@@ -43,7 +43,22 @@ def declarations(source: str) -> str:
             result.append(declaration)
     return '\n'.join(result)
 
-def preamble(module: str, content: str) -> str:
+def preamble(module: str, content: str, figure_id: str | None = None) -> str:
+    content = content.replace('\r\n', '\n')
+    matches = list(PICTURE.finditer(content))
+    # Exclude earlier picture bodies: their local declarations must not
+    # become global definitions in the standalone compilation.
+    preceding = []
+    cursor = 0
+    for match in matches:
+        preceding.append(content[cursor:match.start()])
+        if figure_id is None or hashlib.sha256(match[0].encode('utf-8')).hexdigest() == figure_id:
+            break
+        cursor = match.end()
+    else:
+        preceding.append(content[cursor:])
+    declaration_source = '\n'.join(preceding)
+
     # Bundled preambles remain available in the portable distribution.
     prefix = module.split('-')[0]
     if not re.fullmatch(r'[A-Z0-9]+', prefix):
@@ -62,14 +77,14 @@ def preamble(module: str, content: str) -> str:
         r'\AtBeginDocument{\shorthandoff{"}}',
         r'\usetikzlibrary{' + ','.join(sorted(libraries)) + '}', packages,
         r'\usepackage{tikz-cd}' if r'\begin{tikzcd}' in content else '',
-        declarations(book.split(r'\begin{document}')[0]), declarations(content.split(r'\begin{tikzpicture}')[0]),
+        declarations(book.split(r'\begin{document}')[0]), declarations(declaration_source),
     ])
 
 def render(module: str, content: str, figure_id: str) -> Path:
     picture = figures(content).get(figure_id)
     if picture is None:
         raise KeyError(figure_id)
-    header = preamble(module, content)
+    header = preamble(module, content, figure_id)
     key = hashlib.sha256(('tikz-png-v1\n' + header + '\n' + picture).encode('utf-8')).hexdigest()
     target = CACHE / (key + '.png')
     with RENDER_LOCK:

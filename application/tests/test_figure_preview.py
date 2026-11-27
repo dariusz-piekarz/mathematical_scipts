@@ -25,6 +25,23 @@ class FigurePreviewTests(unittest.TestCase):
         self.assertIn(r'\newcommand{\Q}{\mathbb{Q}}', result)
         self.assertIn(r'\tikzset{a/.style={draw,fill=blue}}', result)
 
+    def test_later_figure_uses_preceding_declarations_only(self):
+        first = r'\begin{tikzpicture}\newcommand{\inside}{X}\end{tikzpicture}'
+        second = r'\begin{tikzcd}A\arrow[r]&\later\end{tikzcd}'
+        source = (r'\newcommand{\early}{E}' + '\n' + first + '\n'
+                  + r'\newcommand{\later}{L}' + '\n' + second + '\n'
+                  + r'\newcommand{\future}{F}')
+        first_id = hashlib.sha256(first.encode()).hexdigest()
+        second_id = hashlib.sha256(second.encode()).hexdigest()
+        first_header = renderer.preamble('AM1-36', source, first_id)
+        second_header = renderer.preamble('AM1-36', source, second_id)
+        self.assertIn(r'\newcommand{\early}{E}', first_header)
+        self.assertNotIn(r'\newcommand{\later}{L}', first_header)
+        self.assertIn(r'\newcommand{\early}{E}', second_header)
+        self.assertIn(r'\newcommand{\later}{L}', second_header)
+        self.assertNotIn(r'\newcommand{\inside}{X}', second_header)
+        self.assertNotIn(r'\newcommand{\future}{F}', second_header)
+
     def test_render_cache_and_failed_compilation(self):
         key = next(iter(renderer.figures(SOURCE)))
         with tempfile.TemporaryDirectory() as temp, patch.object(renderer, 'CACHE', Path(temp)), patch.object(renderer.shutil, 'which', side_effect=lambda name: name):
