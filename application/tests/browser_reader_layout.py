@@ -36,7 +36,7 @@ with sync_playwright() as pw:
     # Previously KaTeX's absolute MathML spans enlarged the document to over
     # 6000 px while the reader remained one viewport tall. Scrolling the outer
     # document exposed a large blank region below the application.
-    for width, height in ((1934, 877), (1547, 702), (967, 439), (390, 844), (390, 350)):
+    for width, height in ((1934, 877), (1547, 702), (967, 439), (390, 844), (390, 350), (320, 240)):
         page.set_viewport_size({'width': width, 'height': height})
         metrics = assert_viewport_layout(page)
         assert metrics['readerScroll'] > metrics['readerHeight'], metrics
@@ -56,7 +56,7 @@ with sync_playwright() as pw:
         }""")
         assert pinned['position'] == 'sticky', pinned
         assert abs(pinned['top'] - pinned['viewTop']) <= 2, pinned
-        assert pinned['bottom'] < pinned['viewBottom'], pinned
+        assert pinned['viewBottom'] - pinned['bottom'] >= 40, pinned
         if width == 1934:
             page.screenshot(path=str(Path(os.environ.get('TEMP', '/tmp')) / 'atlas-reader-am1-14-fixed.png'))
 
@@ -212,6 +212,15 @@ with sync_playwright() as pw:
     page.locator('#readingMode').click()
     page.wait_for_function('document.fullscreenElement !== null')
     assert_viewport_layout(page)
+    reader.evaluate('el => {el.scrollTop=el.scrollHeight}')
+    fullscreen_pinned = page.evaluate("""() => {
+        const view = document.getElementById('view-reader');
+        const toolbar = view.querySelector('.reader-toolbar');
+        return {offset:toolbar.getBoundingClientRect().top-view.getBoundingClientRect().top,
+                remaining:view.getBoundingClientRect().bottom-toolbar.getBoundingClientRect().bottom};
+    }""")
+    assert abs(fullscreen_pinned['offset']) <= 2, fullscreen_pinned
+    assert fullscreen_pinned['remaining'] >= 40, fullscreen_pinned
     page.keyboard.press('Escape')
     page.wait_for_function("!document.documentElement.classList.contains('reading-mode')")
     assert_viewport_layout(page)
