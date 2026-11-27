@@ -22,6 +22,32 @@ class LeanCgroupTests(unittest.TestCase):
         with patch.dict(os.environ, {"MATLIB_LEAN_TOTAL_MEMORY_MB": "8192"}):
             self.assertEqual(lean_cgroup.configured_total_memory_mb(), 8192)
 
+    def test_explicit_parent_is_only_immediate_nonroot_parent(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            parent = root / "delegated"
+            current = parent / "client"
+            current.mkdir(parents=True)
+            sibling = root / "other"
+            sibling.mkdir()
+            self.assertEqual(lean_cgroup._select_parent(root, current, None), current)
+            self.assertEqual(lean_cgroup._select_parent(root, current, str(parent)), parent)
+            for invalid in ("", "delegated", str(root), str(current), str(sibling)):
+                with self.subTest(invalid=invalid):
+                    with self.assertRaises(lean_cgroup.CgroupUnavailable):
+                        lean_cgroup._select_parent(root, current, invalid)
+            with self.assertRaises(lean_cgroup.CgroupUnavailable):
+                lean_cgroup._select_parent(root, root, str(root))
+
+    def test_missing_populated_event_does_not_claim_success(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp)
+            (path / "cgroup.events").write_text("frozen 0\n", encoding="ascii")
+            (path / "cgroup.kill").write_text("", encoding="ascii")
+            with patch.object(Path, "rmdir", return_value=None):
+                with self.assertRaises(lean_cgroup.CgroupUnavailable):
+                    lean_cgroup.ProcessGroup(path).kill_and_remove()
+
     def test_missing_delegation_refuses_request(self):
         with patch("backend.lean_cgroup._delegated_parent",
                    side_effect=lean_cgroup.CgroupUnavailable("not delegated")):

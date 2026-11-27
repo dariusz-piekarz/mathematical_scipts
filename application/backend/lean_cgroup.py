@@ -1,7 +1,9 @@
 """Opt-in Linux cgroup v2 aggregate-memory protection for local Lean runs.
 
 Requires a delegated writable cgroup v2 subtree with the memory controller
-already enabled. Never modifies the parent's controller configuration.
+already enabled. For non-root domain cgroups, the application must reside in
+an immediate child of the explicitly configured delegated parent.
+Never modifies the parent's controller configuration.
 """
 from __future__ import annotations
 
@@ -33,6 +35,21 @@ def configured_total_memory_mb() -> int | None:
     return limit
 
 
+def _select_parent(root: Path, current: Path, configured: str | None) -> Path:
+    """An explicit delegation may be only the current leaf's immediate parent."""
+    if not current.is_relative_to(root) or not current.is_dir():
+        raise CgroupUnavailable("Ścieżka cgroup wykracza poza punkt montowania.")
+    if configured is None:
+        return current
+    requested = Path(configured)
+    if not requested.is_absolute():
+        raise CgroupUnavailable("Delegowana cgroup wymaga bezwzględnej ścieżki.")
+    parent = requested.resolve()
+    if current == root or parent == root or parent != current.parent:
+        raise CgroupUnavailable("Delegowana cgroup musi być bezpośrednim rodzicem grupy aplikacji poza korzeniem.")
+    return parent
+
+
 def _delegated_parent() -> Path:
     if not sys.platform.startswith("linux") or not (CGROUP_MOUNT / "cgroup.controllers").is_file():
         raise CgroupUnavailable("Brak hierarchii Linux cgroup v2.")
@@ -42,9 +59,8 @@ def _delegated_parent() -> Path:
         if len(entries) != 1 or not entries[0].startswith("/"):
             raise CgroupUnavailable("Brak jednoznacznej ścieżki własnej cgroup v2.")
         root = CGROUP_MOUNT.resolve()
-        parent = (root / entries[0].lstrip("/")).resolve()
-        if not parent.is_relative_to(root) or not parent.is_dir():
-            raise CgroupUnavailable("Ścieżka cgroup wykracza poza punkt montowania.")
+        current = (root / entries[0].lstrip("/")).resolve()
+        parent = _select_parent(root, current, os.environ.get("MATLIB_LEAN_CGROUP_PARENT"))
         if "memory" not in (parent / "cgroup.subtree_control").read_text(encoding="ascii").split():
             raise CgroupUnavailable("Kontroler memory nie jest delegowany do podgrup.")
     except (OSError, UnicodeError) as exc:
@@ -80,8 +96,10 @@ class ProcessGroup:
             (path / "memory.max").write_text(str(limit_mb * 1024 * 1024), encoding="ascii")
             (path / "memory.oom.group").write_text("1", encoding="ascii")
             (path / "memory.swap.max").write_text("0", encoding="ascii")
-            if (path / "memory.max").read_text(encoding="ascii").strip() != str(limit_mb * 1024 * 1024):
-                raise CgroupUnavailable("Limit pamięci cgroup nie został przyjęty.")
+            for name, expected in (("memory.max", str(limit_mb * 1024 * 1024)),
+                                   ("memory.oom.group", "1"), ("memory.swap.max", "0")):
+                if (path / name).read_text(encoding="ascii").strip() != expected:
+                    raise CgroupUnavailable("Ograniczenia pamięci cgroup nie zostały przyjęte.")
         except (OSError, CgroupUnavailable) as exc:
             try:
                 path.rmdir()
@@ -96,7 +114,8 @@ class ProcessGroup:
         try:
             events = dict(line.split(maxsplit=1) for line in
                           (self.path / "cgroup.events").read_text(encoding="ascii").splitlines())
-            populated = events.get("populated") == "1"
+            if events.get("populated") in ("0", "1"):
+                populated = events["populated"] == "1"
         except (OSError, ValueError):
             pass
         try:
