@@ -183,57 +183,136 @@ prawie na pewno dla każdego $n$.
 \section{Przykłady zastosowania CTG}
 
 \begin{przyklad}[Przybliżenie de Moivre'a--Laplace'a]
-Niech $B_1,B_2,\ldots$ będą niezależnymi zmiennymi
-Bernoulliego z parametrem $p\in(0,1)$ oraz
+Niech $B_1,B_2,\ldots$ będą wzajemnie niezależnymi
+zmiennymi losowymi na jednej przestrzeni probabilistycznej,
+każda o rozkładzie $\operatorname{Bern}(p)$ dla ustalonego
+$p\in(0,1)$. Z twierdzenia o sumie prób Bernoulliego
+(rozdział~\ref{ch:distributions}) wynika
 $S_n=\sum_{k=1}^nB_k\sim\Bin(n,p)$.
-Ponieważ $\E B_1=p$ i $\Var(B_1)=p(1-p)$,
-CTG daje
+Ponieważ $\E B_1=p$ i $\Var(B_1)=p(1-p)>0$,
+wszystkie hipotezy klasycznego CTG są spełnione, więc
 \[
 \frac{S_n-np}{\sqrt{np(1-p)}}\xrightarrow d\Normal(0,1).
 \]
-Stąd dla $a<b$ prawdopodobieństwo
-$\Prob(np+a\sqrt{np(1-p)}<S_n\leq
-np+b\sqrt{np(1-p)})$ dąży do $\Phi(b)-\Phi(a)$.
-Dla przybliżania pojedynczych dyskretnych
-prawdopodobieństw stosuje się niekiedy poprawkę ciągłości,
-ale samo CTG jest twierdzeniem o dystrybuantach
-w punktach ciągłości granicznego rozkładu.
+Ponieważ mianownik $\sqrt{np(1-p)}$ jest dodatni,
+dla dowolnych ustalonych $a<b$ zachodzi
+\[
+\begin{aligned}
+&\Prob(np+a\sqrt{np(1-p)}<S_n\leq np+b\sqrt{np(1-p)})\\
+&\qquad=\Prob\left(a<\frac{S_n-np}{\sqrt{np(1-p)}}\leq b\right)
+\longrightarrow\Phi(b)-\Phi(a).
+\end{aligned}
+\]
+Przybliżanie prawdopodobieństw zdarzeń o całkowitych
+progach z poprawką ciągłości omówimy dalej.
+Samo CTG nie podaje asymptotycznego równoważnika
+prawdopodobieństwa pojedynczej wartości $S_n$.
+Przypadki $p=0$ i $p=1$ są zdegenerowane: odpowiednio
+$S_n=0$ lub $S_n=n$ prawie na pewno i standaryzacja
+przez $\sqrt{np(1-p)}$ nie jest określona.
 \end{przyklad}
 
 \begin{przyklad}[Normalna aproksymacja Poissona]
-Dla każdej liczby $\lambda>0$ niech
-$N_\lambda\sim\Poi(\lambda)$. Gdy $\lambda\to\infty$,
-zachodzi
+Dla każdej liczby rzeczywistej $\lambda>0$ niech
+$N_\lambda\sim\Poi(\lambda)$; zmienne te nie muszą
+być określone na wspólnej przestrzeni probabilistycznej.
+Z rozdziału~\ref{ch:distributions} mamy
+$\E N_\lambda=\Var(N_\lambda)=\lambda$.
+Pokażemy, że przy $\lambda\to\infty$ zachodzi
 $(N_\lambda-\lambda)/\sqrt\lambda\xrightarrow d\Normal(0,1)$.
-Nie trzeba tu sprowadzać sprawy do sum o całkowitej
-liczbie składników. Z funkcji charakterystycznej
-rozkładu Poissona otrzymujemy bezpośrednio
+Ze wzoru \eqref{eq:lotus} dla ograniczonej zespolonej
+funkcji borelowskiej $x\mapsto e^{itx}$ i wzoru
+na masy rozkładu Poissona otrzymujemy dla $t\in\R$
+\[
+\varphi_{N_\lambda}(t)=
+e^{-\lambda}\sum_{k=0}^\infty\frac{(\lambda e^{it})^k}{k!}
+=\exp(\lambda(e^{it}-1)).
+\]
+Szereg jest bezwzględnie zbieżny, gdyż suma modułów
+po uwzględnieniu czynnika $e^{-\lambda}$ wynosi jeden.
+Z własności funkcji charakterystycznej przekształcenia
+afinicznego (rozdział~\ref{ch:expectation}) otrzymujemy
 \[
 \varphi_{(N_\lambda-\lambda)/\sqrt\lambda}(t)
 =\exp\!\left(\lambda\left[e^{it/\sqrt\lambda}
 -1-\frac{it}{\sqrt\lambda}\right]\right).
 \]
-Dla ustalonego $t$ rozwinięcie wykładniczej daje
-$e^{it/\sqrt\lambda}=1+it/\sqrt\lambda
--t^2/(2\lambda)+o(1/\lambda)$.
-Wykładnik zbiega do $-t^2/2$, a więc
-funkcja charakterystyczna do $e^{-t^2/2}$.
-Z twierdzenia Lévy'ego wynika wskazana zbieżność.
+Z bezwzględnie zbieżnego szeregu wykładniczego
+i nierówności $1/j!\leq 1/(6(j-3)!)$ dla $j\geq3$
+wynika dla $z\in\mathbb C$
+\[
+|e^z-1-z-z^2/2|\leq |z|^3 e^{|z|}/6.
+\]
+Podstawiając $z=it/\sqrt\lambda$, dostajemy
+\[
+\left|\lambda\left(e^{it/\sqrt\lambda}-1-
+\frac{it}{\sqrt\lambda}\right)+\frac{t^2}{2}\right|
+\leq\frac{|t|^3}{6\sqrt\lambda}e^{|t|/\sqrt\lambda}
+\longrightarrow0
+\]
+dla każdego ustalonego $t\in\R$.
+Z ciągłości funkcji wykładniczej funkcje charakterystyczne
+standaryzowanych zmiennych dążą punktowo do
+$e^{-t^2/2}$, funkcji charakterystycznej $\Normal(0,1)$.
+Dla dowolnego ciągu $\lambda_j\to\infty$ twierdzenie
+Lévy'ego (rozdział~\ref{ch:convergence}) daje zbieżność
+dystrybuant standaryzowanych zmiennych w każdym
+$x\in\R$, ponieważ $\Phi$ jest ciągła.
+Gdyby dla pewnego $x$ granica dystrybuant przy
+rzeczywistym parametrze $\lambda\to\infty$ nie była
+równa $\Phi(x)$, istniałby ciąg $\lambda_j\geq j$
+i $\varepsilon>0$, dla których moduł różnicy byłby
+co najmniej $\varepsilon$. Przeczy to uzyskanej
+zbieżności dla każdego takiego ciągu.
 \end{przyklad}
 
-\begin{przyklad}[Od rozkładu t-Studenta do normalnego]
-Niech $Z\sim\Normal(0,1)$ oraz niech
-$W_1,W_2,\ldots$ będą niezależnymi standardowymi
-zmiennymi normalnymi, niezależnymi również od $Z$.
-Dla $n\in\N$ połóżmy
-$U_n=\sum_{k=1}^nW_k^2\sim\chi_n^2$ oraz
-$T_n=Z/\sqrt{U_n/n}\sim t_n$.
-Ponieważ $\E W_1^2=1$, MPWL zapewnia
-$U_n/n\to1$ prawie na pewno. Z ciągłości funkcji
-$x\mapsto1/\sqrt x$ dla $x>0$ oraz z twierdzenia
-Slutsky'ego dostajemy $T_n\xrightarrow d Z$.
-W ten sposób uzasadniamy wcześniej podaną granicę
-rozkładu Studenta przy rosnącej liczbie stopni swobody.
+\begin{przyklad}[Od rozkładu Studenta do normalnego]
+Niech $Z,W_1,W_2,\ldots$ będą wzajemnie niezależnymi
+zmiennymi o rozkładzie $\Normal(0,1)$ na wspólnej
+przestrzeni probabilistycznej.
+Dla całkowitego $n\geq1$ połóżmy $U_n=\sum_{k=1}^nW_k^2$.
+Z własności rozkładu chi-kwadrat
+(rozdział~\ref{ch:distributions}) mamy $U_n\sim\chi_n^2$.
+Ponieważ $\{U_n=0\}\subseteq\{W_1=0\}$, a rozkład
+$W_1$ ma gęstość, zachodzi $\Prob(U_n=0)=0$.
+Zmienna $Z$ jest niezależna od $U_n$: rozkład łączny
+$Z$ i wektora $(W_1,\ldots,W_n)$ jest iloczynem
+ich rozkładów, a suma kwadratów jest funkcją ciągłą
+tego wektora.
+Definiujemy
+\[
+T_n=\begin{cases}
+Z/\sqrt{U_n/n},&U_n>0,\\
+0,&U_n=0.
+\end{cases}
+\]
+Jest to mierzalna zmienna losowa i z definicji
+rozkładu Studenta (rozdział~\ref{ch:distributions})
+mamy $T_n\sim t_n$.
+Zmienne $W_k^2$ są wzajemnie niezależne, jednakowo
+rozłożone i całkowalne, gdyż $\E W_k^2=1$.
+Z MPWL Kołmogorowa (rozdział~\ref{ch:lln}) istnieje
+mierzalny zbiór $G$ o prawdopodobieństwie jeden,
+na którym $U_n/n\to1$.
+Po usunięciu z $G$ przeliczalnej sumy zdarzeń
+$\{U_n=0\}$ nadal mamy zbiór pełnej miary.
+Na tym zbiorze ciągłość funkcji
+$x\mapsto1/\sqrt x$ na $(0,\infty)$ daje
+\[
+T_n(\omega)=Z(\omega)(U_n(\omega)/n)^{-1/2}
+\longrightarrow Z(\omega).
+\]
+Otrzymujemy zatem zbieżność prawie na pewno w tej
+konstrukcji, a więc także według rozkładu
+(rozdział~\ref{ch:convergence}).
+Alternatywnie $\sqrt{U_n/n}\to1$ według
+prawdopodobieństwa i $Z\xrightarrow{d}Z$ dla stałego
+ciągu zmiennych, więc twierdzenie Slutskiego o ilorazie
+daje ten sam wniosek o rozkładach.
+W ten sposób uzasadniamy granicę rozkładu Studenta
+przy całkowitej liczbie stopni swobody dążącej
+do nieskończoności. W rozdziale~\ref{ch:distributions}
+rozważono także granicę dla rzeczywistego parametru.
 \end{przyklad}
 
 \section{Co rozróżniają prawa graniczne?}
