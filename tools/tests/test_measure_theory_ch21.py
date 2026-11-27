@@ -90,6 +90,42 @@ class TestMeasureTheoryChapter21(unittest.TestCase):
             self.assertAlmostEqual(distance, 1 / (n + 1))
         self.assertLess(1 / 1001, 0.001)
 
+    def test_radial_projection_exact(self):
+        from fractions import Fraction as Q
+        from itertools import product
+
+        directions = ((Q(1), Q(0)), (Q(0), Q(1)),
+                      (Q(3, 5), Q(4, 5)), (Q(-4, 5), Q(3, 5)))
+        targets = [(Q(a, 5), Q(b, 5))
+                   for a, b in product(range(-5, 6), repeat=2)
+                   if a*a + b*b <= 25]
+        for (u, v), r, (a, b) in product(
+                directions, (Q(0), Q(1, 2), Q(1), Q(3, 2), Q(2), Q(5)),
+                targets):
+            x, y = r*u, r*v
+            px, py = min(r, 1)*u, min(r, 1)*v
+            self.assertLessEqual(px*px + py*py, 1)
+            self.assertLessEqual((px-a)**2 + (py-b)**2,
+                                 (x-a)**2 + (y-b)**2)
+            if r > 1:
+                self.assertEqual((x-a)**2 + (y-b)**2
+                                 - (px-a)**2 - (py-b)**2,
+                                 (r-1)*(r+1-2*(u*a+v*b)))
+
+    def test_positive_part_functional_jordan_exact(self):
+        from itertools import product
+
+        for atoms in product(range(-2, 3), repeat=3):
+            for f in product(range(4), repeat=3):
+                candidates = product(*(range(v+1) for v in f))
+                pos = max(sum(a*g for a, g in zip(atoms, h))
+                          for h in candidates)
+                expected = sum(max(a, 0)*v for a, v in zip(atoms, f))
+                neg = pos - sum(a*v for a, v in zip(atoms, f))
+                self.assertEqual(pos, expected)
+                self.assertEqual(neg, sum(max(-a, 0)*v
+                                          for a, v in zip(atoms, f)))
+
     def test_complex_positive_envelope_additivity_exact(self):
         from fractions import Fraction as Q
         from itertools import product
