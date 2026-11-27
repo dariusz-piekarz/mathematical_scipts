@@ -1489,3 +1489,9 @@ Odczytany `atlas_validation_status.json`: `candidate_sha=02190e107a6305bc7b73334
 
 - `83949677839a4e29f663bb56631dfb26fb9e1814`: wydzielono aktualizację przycisku członkostwa w zestawie; dodanie/usunięcie bieżącego rozdziału lub obiektu, usunięcie elementu z listy i wyczyszczenie zestawu nie wywołują renderReader. Zachowano DOM źródła i wzorów, zakres wierszy, zaznaczenie oraz dotychczasowe renderowanie przy faktycznej zmianie treści. Nie zmieniano parsera ani profili makr. 9/9 izolowanych asercji JS PASS. `31d939614176bc938aa9c66b04a1cce4cc42802e`: 4 kontrole regresyjne tożsamości DOM i zakresu w istniejącym browser_reader_layout.py.
 - Przy odczycie #45998146784 i #45994651687 oraz walidacje AM I/IT na 928848a2 nadal queued. Nie wykonano pełnego Chromium ani pomiarów wydajności. Odbiór P3.5 2+1 pozostaje otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
+
+
+### 2026-11-27 — P3.5: przełączanie źródła i podglądu bez przebudowy fragmentu
+
+- `a0689a0545a71e742a0b65d626e06301d4c513f3`: wydzielono aktualizację trybu czytnika od pełnego renderowania danych. Przełączenie widoczności zachowuje DOM źródła, zakres wierszy i istniejący cache podglądu; nadal zamyka dymek odsyłacza, aktualizuje etykiety, aria-pressed i pasek fragmentu. Dotychczasowy cache KaTeX pozostaje zależny od tekstu, modułu, renderera i profili makr. Rzeczywista nawigacja nadal przebudowuje źródło. 10/10 izolowanych asercji JS PASS. `fa80f6c90794e85700af5daae26b4ad9dc2a955e`: 6 dodatkowych kontroli DOM i zakresu w browser_reader_layout.py.
+- Przy odczycie #45999772920 i #45994651687 oraz walidacje AM I/IT na 928848a2 nadal queued. Pełne Chromium i pomiary czasu CPU niewykonane. P3.5 testing/stabilizing, odbiór 2+1 otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
