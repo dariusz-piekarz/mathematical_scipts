@@ -61,6 +61,20 @@ class TestHausdorffChapter26(unittest.TestCase):
                     bn = mass + Fraction(1, n)
                     self.assertLessEqual(abs(bn*p - raw), Fraction(1, n))
 
+    def test_mass_allocation_arbitrary_child_capacities(self):
+        for caps in product(range(4), repeat=4):
+            for mass in range(sum(caps)+1):
+                remainder = mass
+                allocated = []
+                for i, cap in enumerate(caps):
+                    share = min(remainder, cap)
+                    allocated.append(share)
+                    remainder -= share
+                    self.assertEqual(remainder, max(0, mass-sum(caps[:i+1])))
+                    self.assertTrue(0 <= share <= cap)
+                self.assertEqual(remainder, 0)
+                self.assertEqual(sum(allocated), mass)
+
     def test_capacity_against_exhaustive_covers(self):
         # Binary depth-three tree with rational example costs (in quarters).
         # Independently enumerate all subfamilies of the 15 nodes.
