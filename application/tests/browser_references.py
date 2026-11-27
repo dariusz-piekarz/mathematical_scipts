@@ -345,6 +345,63 @@ with sync_playwright() as pw:
         return count;
     }""")
     assert description_cases == 9
+    # Bound settled cache entries without evicting or duplicating in-flight
+    # requests. Restore the original cache after the synthetic long session.
+    cache_cases = page.evaluate("""async () => {
+        const originalApi=api, source='ATLAS-CACHE-TEST';
+        const saved=new Map(referenceDescriptions);
+        const key=label=>JSON.stringify([source,label]);
+        let calls=[],count=0;
+        try{
+            referenceDescriptions.clear();
+            api=(url,options)=>{
+                if(url==='/api/references/descriptions'){
+                    const body=JSON.parse(options.body);
+                    if(body.source_document===source){
+                        calls.push(body.labels);
+                        return Promise.resolve({items:Object.fromEntries(body.labels.map(
+                            label=>[label,{document_id:'ALG-08'}]))});
+                    }
+                }
+                return originalApi(url,options);
+            };
+            const first=describeReference('first',source);
+            if(first!==describeReference('first',source))throw Error('pending duplicate');
+            await first;count++;
+            if(describeReference('first',source)!==first)throw Error('settled promise lost');
+            count++;
+            const entries=Array.from({length:REFERENCE_CACHE_LIMIT-1},
+                (_,i)=>describeReference('entry'+i,source));
+            await Promise.all(entries);
+            if(referenceDescriptions.size!==REFERENCE_CACHE_LIMIT)throw Error('cache capacity');
+            count++;
+            if(describeReference('first',source)!==first)throw Error('cache refresh');
+            count++;
+            const extra=describeReference('extra',source);
+            if(referenceDescriptions.size!==REFERENCE_CACHE_LIMIT||
+               extra!==describeReference('extra',source))throw Error('pending eviction');
+            count++;
+            await extra;
+            if(referenceDescriptions.size!==REFERENCE_CACHE_LIMIT||
+               referenceDescriptions.has(key('entry0'))||!referenceDescriptions.has(key('first')))
+                throw Error('incorrect LRU eviction');
+            count++;
+            const retry=describeReference('entry0',source);
+            if(retry===entries[0]||retry!==describeReference('entry0',source))
+                throw Error('evicted entry not refetched exactly once');
+            await retry;count++;
+            if(referenceDescriptions.size!==REFERENCE_CACHE_LIMIT||
+               [...referencePending.keys()].some(k=>k.startsWith('["'+source+'",')))
+                throw Error('pending cache not settled');
+            count++;
+            if(calls.some(batch=>batch.length>200))throw Error('batch limit exceeded');
+            return count+1;
+        }finally{
+            api=originalApi;referenceDescriptions.clear();
+            for(const [k,v] of saved)referenceDescriptions.set(k,v);
+        }
+    }""")
+    assert cache_cases == 9
     # Viewport-aware geometry must use the measured overlay size, and
     # scrolling the reader must invalidate even an outstanding lookup.
     position_cases = page.evaluate("""() => {
