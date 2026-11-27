@@ -180,10 +180,10 @@ class FrobeniusReductionInterface(unittest.TestCase):
             "35-redukcja-modulo-p-i-cykle-frobeniusa.tex",
         )
         self.assertEqual(sum(len(re.findall(r"\\label\{", contents[f]))
-                             for f in focus),32)
+                             for f in focus),34)
         refs=[z for f in focus for z in re.findall(
             r"\\(?:ref|pageref|eqref|autoref)\{([^{}]+)\}", contents[f])]
-        self.assertEqual(len(refs),24)
+        self.assertEqual(len(refs),25)
         self.assertFalse(set(refs)-set(all_labels),set(refs)-set(all_labels))
         for label in (
             "aa:tw:finite-frobenius-roots","aa:tw:finite-irreducible-count",

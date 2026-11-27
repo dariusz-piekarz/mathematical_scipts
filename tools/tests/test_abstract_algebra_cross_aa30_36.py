@@ -230,7 +230,7 @@ class ConstructibilityGenericGaloisInterface(unittest.TestCase):
                              for n in focus), 24)
         refs = [r for n in focus for r in re.findall(
             r"\\(?:ref|eqref|pageref|autoref)\{([^{}]+)\}", sources[n])]
-        self.assertEqual(len(refs), 20)
+        self.assertEqual(len(refs), 21)
         self.assertEqual(set(refs) - set(labels), set())
         for required in (
             "aa:lem:quadratic-tower-normal-closure",

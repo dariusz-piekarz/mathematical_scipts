@@ -218,11 +218,11 @@ class QuarticResolventFrobeniusInterface(unittest.TestCase):
           "35-redukcja-modulo-p-i-cykle-frobeniusa.tex",
         ]
         self.assertEqual(sum(len(re.findall(r"\\label\{", sources[f]))
-                             for f in focus), 35)
+                             for f in focus), 37)
         refs = [z for f in focus
                 for z in re.findall(r"\\(?:ref|eqref|pageref|autoref)\{([^{}]+)\}",
                                     sources[f])]
-        self.assertEqual(len(refs), 33)
+        self.assertEqual(len(refs), 34)
         self.assertEqual(set(refs) - set(labels), set())
         for label in (
             "aa:tw:quartic-resolvent-formula",

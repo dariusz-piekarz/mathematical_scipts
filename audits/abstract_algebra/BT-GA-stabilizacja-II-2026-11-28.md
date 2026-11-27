@@ -1,0 +1,3 @@
+# BT / GA → AA — stabilizacja II
+
+Stan af9a3be2949ee6d9fcc55b61adaabf1813280050. CI 46079781591 i 46079582949: po 5277 testów uruchomionych, trzy niepowodzenia wynikające z liczników nowych etykiet i odsyłaczy w testach przekrojowych AA-29/32/35, AA-30/36 i AA-32/34/35. Zaktualizowano liczby na podstawie rzeczywistych źródeł (34/25, 24/21, 37/34), bez usuwania kontroli jednoznaczności i istnienia celów. W starszym przebiegu 46079436007 kompilacja PDF przerwana w AA-07 przez makro equivG. W AA-07 zastąpiono pozostałe makra equivG, F, Fix bezpośrednimi poleceniami LaTeX, poprawiono terminologię podziałów i oznaczenia miary. Zachowano wszystkie etykiety i odsyłacze. Nowe CI niepotwierdzone.
