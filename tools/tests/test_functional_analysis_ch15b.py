@@ -780,5 +780,17 @@ class TestChapter15B(unittest.TestCase):
                 self.assertLessEqual(sum(map(abs,delta)),
                                      sum(l*sum(map(abs,s)) for l,s in zip(lengths,slopes)))
 
+    def test_birkhoff_measure_theory_cross_references(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        measure_source = (SOURCE.parent.parent / "measure_theory" /
+                          "30-miary-wektorowe-calka-bochnera-i-wlasnosc-radona-nikodyma.tex")
+        measure = measure_source.read_text(encoding="utf-8")
+        for label in ("sec:birkhoff-30", "thm:birkhoff-measure-30",
+                      "thm:birkhoff-seminorm-30"):
+            self.assertIn(r"\atlasref{ME-30::" + label + "}", source)
+            self.assertEqual(measure.count(r"\label{" + label + "}"), 1)
+        self.assertIn(r"\atlasref{FA-15B::sec:birkhoff15b}", measure)
+        self.assertIn(r"\label{sec:birkhoff15b}", source)
+
 if __name__ == "__main__":
     unittest.main()
