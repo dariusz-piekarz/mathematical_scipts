@@ -231,6 +231,8 @@ function showRefs(container,latex){
 }
 function renderReader(){
   const data=state.currentData;if(!data)return;
+  // Rebuilding the source/preview invalidates reference anchors in both panes.
+  closeTip();
   $("readerEmpty").classList.add("hidden");$("readerContent").classList.remove("hidden");
   const entity=Boolean(data.entity);const mod=state.modules.find(m=>m.id===state.currentModule);
   $("docBreadcrumb").textContent=(mod?.domain||data.domain||"")+" / "+state.currentModule+(entity?" / "+data.entity.kind:"");
@@ -396,6 +398,7 @@ function positionReferenceTip(anchor){
   tip.style.top=Math.max(8,Math.min(window.innerHeight-tip.offsetHeight-12,r.bottom+8))+"px";
 }
 async function previewLabel(label,anchor,sourceDocument=null){
+  if(!anchor?.isConnected)return;
   const request=++state.tooltipKey;
   state.tooltipAnchor=anchor;
   state.tooltipData=null;
@@ -407,6 +410,7 @@ async function previewLabel(label,anchor,sourceDocument=null){
   try{
     const result=await api(`/api/labels/${encodeURIComponent(label)}`+(sourceDocument?`?source_document=${encodeURIComponent(sourceDocument)}`:""));
     if(request!==state.tooltipKey)return;
+    if(!anchor.isConnected){closeTip();return;}
     state.tooltipData=result;
     $("tipOpen").disabled=Boolean(result.ambiguous);
     body.replaceChildren();
@@ -429,6 +433,7 @@ async function previewLabel(label,anchor,sourceDocument=null){
     positionReferenceTip(anchor);
   }catch(e){
     if(request!==state.tooltipKey)return;
+    if(!anchor.isConnected){closeTip();return;}
     state.tooltipData=null;
     $("tipOpen").disabled=true;
     body.replaceChildren();
