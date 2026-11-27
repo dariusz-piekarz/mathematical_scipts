@@ -32,13 +32,24 @@ function activateTab(name){
   closeTip();
 }
 function toggleDomain(domain){state.expandedDomains.has(domain)?state.expandedDomains.delete(domain):state.expandedDomains.add(domain);renderTree();}
+const outlineRequests=new Map();
 async function toggleModule(id){
   if(state.expandedModules.has(id)){state.expandedModules.delete(id);renderTree();return;}
   state.expandedModules.add(id);
-  if(!state.outlines.has(id)){
-    try{const data=await api(`/api/modules/${encodeURIComponent(id)}/outline`);state.outlines.set(id,data.entities);}catch(e){toast(e.message);}
-  }
   renderTree();
+  if(state.outlines.has(id))return;
+  let request=outlineRequests.get(id);
+  if(!request){
+    request=api(`/api/modules/${encodeURIComponent(id)}/outline`).then(data=>{
+      if(!Array.isArray(data.entities))throw new Error("Nieprawidłowa struktura rozdziału.");
+      state.outlines.set(id,data.entities);
+    }).catch(e=>{
+      // A failed load must be retryable with one click, not collapse+expand.
+      if(state.expandedModules.delete(id))toast(e.message);
+    }).finally(()=>{outlineRequests.delete(id);renderTree();});
+    outlineRequests.set(id,request);
+  }
+  await request;
 }
 function typeIcon(kind){return ({chapter:"C",section:"§",subsection:"§",subsubsection:"§",theorem:"T",definition:"D",proof:"P",example:"E",exercise:"Z",remark:"U",equation:"∑",figure:"▧"})[kind] || "·";}
 function renderTree(){
