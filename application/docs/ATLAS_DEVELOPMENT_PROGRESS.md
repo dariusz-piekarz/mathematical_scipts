@@ -1495,3 +1495,10 @@ Odczytany `atlas_validation_status.json`: `candidate_sha=02190e107a6305bc7b73334
 
 - `a0689a0545a71e742a0b65d626e06301d4c513f3`: wydzielono aktualizację trybu czytnika od pełnego renderowania danych. Przełączenie widoczności zachowuje DOM źródła, zakres wierszy i istniejący cache podglądu; nadal zamyka dymek odsyłacza, aktualizuje etykiety, aria-pressed i pasek fragmentu. Dotychczasowy cache KaTeX pozostaje zależny od tekstu, modułu, renderera i profili makr. Rzeczywista nawigacja nadal przebudowuje źródło. 10/10 izolowanych asercji JS PASS. `fa80f6c90794e85700af5daae26b4ad9dc2a955e`: 6 dodatkowych kontroli DOM i zakresu w browser_reader_layout.py.
 - Przy odczycie #45999772920 i #45994651687 oraz walidacje AM I/IT na 928848a2 nadal queued. Pełne Chromium i pomiary czasu CPU niewykonane. P3.5 testing/stabilizing, odbiór 2+1 otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
+
+
+### 2026-11-27 — P3.5: kontrola CI i naprawa odwołań AM I
+
+- Na 928848a2 potwierdzono sukces IT #45994651565, AM II #45994662712 i terminologii #45994651680. AM I #45994651889 i #45994662703 zakończone niepowodzeniem; log joba 140490896746 wskazuje test test_no_forward_integration_chapter_references, a nie wcześniejszy duplikat Thomae. Odczyt aktualnych AM I 36–43 ujawnił trzy odwołania do późniejszych rozdziałów (38 → 41 oraz 40 → 42).
+- `c2d8420e4e67cd4229bafa54fdea5b5382829284`: atomowa korekta dwóch uwag, odsyłacze wyprzedzające zastąpiono jednoznacznymi zapowiedziami tematycznymi. Zachowano etykiety, twierdzenia i dowody; testów nie zmieniano. Kontrola na dokładnym SHA: 8 rozdziałów, 205 unikalnych etykiet, 356 wewnętrznych odwołań, 0 duplikatów, 0 wyprzedzających odwołań według reguły testu. Pełny test AM I i kompilacja nadal niepotwierdzone; #46001961154 aplikacja i #46001961106 terminologia queued.
+- Audyt długich rozdziałów rozpoczęty od showRefs i renderMathPreview; optymalizacja DOM odłożona na następną iterację ze względu na rzeczywistą blokadę CI. P3.5 odbiór 2+1 otwarty. Bez zmian workflow, Lean i harmonogramu.
