@@ -124,3 +124,18 @@ class CategoryTheoryCh28(unittest.TestCase):
                      "application/config/preambles/KAT.tex"):
             self.assertIn(r"\usepackage{tikz}", (ROOT/path).read_text(encoding="utf-8"))
 
+    def test_CAT_28_007_category_diagram_geometry(self):
+        # The reader indexes TikZ pictures, not AMSCD display environments.
+        chapters = sorted(CHAPTER.parent.glob("*.tex"))
+        self.assertTrue(chapters)
+        for chapter in chapters:
+            source = chapter.read_text(encoding="utf-8")
+            self.assertNotRegex(source, r"\\begin\s*\{CD\}", chapter.name)
+        source = next(CHAPTER.parent.glob("19-*.tex")).read_text(encoding="utf-8")
+        pictures = re.findall(r"\\begin\{tikzpicture\}[\s\S]*?\\end\{tikzpicture\}", source)
+        sizes = [(len(re.findall(r"\\node\s*\(", p)),
+                  len(re.findall(r"\\draw\[", p))) for p in pictures]
+        self.assertIn((5, 5), sizes)
+        self.assertIn((3, 3), sizes)
+        self.assertGreaterEqual(sizes.count((6, 6)), 2)
+
