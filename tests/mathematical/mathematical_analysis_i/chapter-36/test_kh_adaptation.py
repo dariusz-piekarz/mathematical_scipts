@@ -64,6 +64,24 @@ class Chapter36(unittest.TestCase):
                 self.assertTrue(any({old,new} <= group for group in groups),
                                 "Aliases must refer to the same declaration")
 
+    def test_no_dependency_on_retired_cal(self):
+        import json
+        source=SOURCE.read_text(encoding="utf8")
+        catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf8"))
+        measure=next(b for b in catalog["books"]
+                     if b["id"]=="measure_theory" and b["language"]=="pl")
+        for code,label in re.findall(r"\\atlasref\{([^}]+)::([^}]+)\}",source):
+            with self.subTest(chapter=code,label=label):
+                self.assertFalse(code.startswith("CAL-"),
+                                 "migrated chapter must not depend on CAL")
+                if code.startswith("ME-"):
+                    number=code.split("-")[1]
+                    matches=[p for p in measure["chapters"]
+                             if Path(p).name.startswith(number+"-")]
+                    self.assertEqual(len(matches),1)
+                    target=(ROOT/matches[0]).read_text(encoding="utf8")
+                    self.assertIn("\\label{"+label+"}",target)
+
     def test_gauge_diagram_enclosure(self):
         # Coordinates of the three cells in the TikZ example.
         cells=[(F(0),F(2),F(1),F(6,5)),
