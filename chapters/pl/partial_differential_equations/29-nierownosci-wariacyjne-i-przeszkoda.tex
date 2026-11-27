@@ -880,6 +880,7 @@ układ punktów stałych
 $U_i=\max\{\Psi_i,(U_{i-1}+U_{i+1})/2\}$.
 
 \begin{twierdzenie}[Zbieżność iteracji Gaussa--Seidela z projekcją]
+\label{thm:pde29-projected-gs}
 Niech $N\ge2$ będzie ustalone. Począwszy od dowolnego
 wektora $U^{(0)}$ z zerowymi wartościami brzegowymi,
 wykonujemy pełne przebiegi dla $i=1,\dots,N-1$:
@@ -915,7 +916,32 @@ Po pełnym przebiegu otrzymujemy tezę.
 Dla $N=2$ rozwiązanie uzyskujemy w jednym kroku.
 \end{proof}
 
+\begin{uwaga}[Oszacowanie błędu iteracji a posteriori]
+Dla dowolnego wektora $U$ z zerowymi wartościami
+brzegowymi niech
+$(TU)_i=\max\{\Psi_i,(U_{i-1}+U_{i+1})/2\}$
+dla $1\le i<N$ i $(TU)_0=(TU)_N=0$.
+Jest to jednoczesna aktualizacja wszystkich węzłów.
+Z tożsamości $s_{i-1}+s_{i+1}=2s_i\cos(\pi/N)$
+wynika $\|TU-TW\|_s\le\rho\|U-W\|_s$,
+gdzie $\rho=\cos(\pi/N)<1$.
+Ponieważ $TU^*=U^*$, nierówność trójkąta daje
+$\|U-U^*\|_s\le\|U-TU\|_s+\rho\|U-U^*\|_s$.
+Otrzymujemy zatem certyfikat błędu
+\[
+ \|U-U^*\|_{\ell^\infty}
+ \le\|U-U^*\|_s
+ \le\frac{\|U-TU\|_s}{1-\cos(\pi/N)}.
+\]
+Oszacowanie obowiązuje także dla przybliżeń
+otrzymanych metodą Gaussa--Seidela.
+Przy dużym $N$ sam mały residuum nie wystarcza
+do zagwarantowania równie małego błędu:
+$1-\cos(\pi/N)$ jest rzędu $N^{-2}$.
+\end{uwaga}
+
 \begin{twierdzenie}[Zbieżność dyskretyzacji przestrzennej]
+\label{thm:pde29-discrete-convergence}
 Niech $U^h$ będzie minimizatorem $E_h$ i niech
 $u$ rozwiązuje zagadnienie ciągłe dla $A=I$, $f=0$.
 Wtedy $I_hU^h\to u$ silnie w $H_0^1(-1,1)$
@@ -959,6 +985,101 @@ siatek z $h\to0$, a więc zbiega cała rodzina.
 Z nierówności $|v_h(x)-u(x)|\le
 \sqrt2\|v_h'-u'\|_2$ wynika zbieżność jednostajna.
 \end{proof}
+
+\begin{twierdzenie}[Ilościowe oszacowanie błędu przestrzennego]
+\label{thm:pde29-discrete-error}
+W założeniach Twierdzenia~\ref{thm:pde29-discrete-convergence}
+niech dodatkowo $\psi\in W^{2,\infty}(-1,1)$.
+Oznaczmy $v_h=I_hU^h$, $M=\|\psi''\|_\infty$
+i $\mu=-u''$. Wówczas
+\[
+ 0\le u-v_h\le \tfrac18Mh^2,\qquad
+ \|(u-v_h)'\|_2^2\le\tfrac14Mh^2\|\mu\|_1.
+\]
+W szczególności błąd jednostajny jest rzędu
+co najwyżej $h^2$, a błąd w normie $V$ rzędu $h$.
+\end{twierdzenie}
+\begin{proof}
+Z Twierdzenia~\ref{thm:pde29-LS} mamy
+$u\in H^2(-1,1)$ i $\mu\in L^2(-1,1)$,
+$\mu\ge0$. Warunek $\psi\in W^{2,\infty}$
+implikuje $\psi\in H^2$ na ograniczonym przedziale.
+Ponieważ $u''\le0$ prawie wszędzie, pochodna $u'$
+ma nierosnący reprezentant absolutnie ciągły,
+więc $u$ jest wklęsła.
+Jej wartości węzłowe $Z_i=u(x_i)$ spełniają
+$Z_i\ge\Psi_i$ oraz $2Z_i\ge Z_{i-1}+Z_{i+1}$.
+Zatem dla odwzorowania $T$ z poprzedniej uwagi
+mamy $TZ\le Z$ współrzędna po współrzędnej.
+Odwzorowanie $T$ zachowuje porządek i jest
+kontrakcją w normie $\|\cdot\|_s$.
+Ciąg $T^kZ$ jest nierosnący i zbiega do
+jedynego punktu stałego $U^h$. Stąd $U^h\le Z$,
+a interpolacja oraz wklęsłość $u$ dają
+$v_h\le I_hu\le u$.
+
+Warunki dyskretne~\eqref{eq:pde29-discrete}
+oznaczają, że nachylenia kolejnych odcinków
+$v_h$ tworzą ciąg nierosnący, więc $v_h$ jest
+wklęsła. Ponadto $v_h\ge I_h\psi$, również na
+odcinkach przylegających do brzegu, gdzie
+$0\ge\psi(\pm1)$.
+Na przedziale $[a,b]$ siatki funkcja
+$e=\psi-I_h\psi$ znika na końcach, a
+$|e''|\le M$ prawie wszędzie.
+Funkcja $e(x)-M(x-a)(b-x)/2$ jest wypukła,
+bo jej druga pochodna wynosi $\psi''+M\ge0$.
+Z zerowych wartości końcowych wynika
+$e(x)\le M(x-a)(b-x)/2\le Mh^2/8$.
+Analogicznie dla $-e$ otrzymujemy
+$|e|\le Mh^2/8$.
+Niech $\delta=Mh^2/8$.
+Wówczas $v_h+\delta\ge\psi$ i
+$v_h+\delta\ge u$ na brzegu przedziału.
+
+Aby porównać wewnątrz, połóżmy
+$w=(u-v_h-\delta)^+\in H_0^1(-1,1)$.
+Test $u-w=\min(u,v_h+\delta)$ jest dopuszczalny,
+zatem $\int u'w'\,\mathrm d\lambda_1\le0$.
+Z wklęsłości $v_h$ mamy
+$\int v_h'w'\,\mathrm d\lambda_1\ge0$:
+całkując po odcinkach siatki, otrzymujemy
+sumę $(v_h'(x_i-)-v_h'(x_i+))w(x_i)$
+o nieujemnych składnikach, bez wyrazów brzegowych.
+Odejmując, dostajemy
+$\|w'\|_2^2=\int(u'-v_h')w'\,\mathrm d\lambda_1\le0$,
+a więc $w=0$. To dowodzi $0\le u-v_h\le\delta$.
+
+Z dowodu Twierdzenia~\ref{thm:pde29-discrete-convergence}
+wiemy, że $\|v_h'\|_2\le\|u'\|_2$.
+Rozwijając kwadrat i testując $-u''=\mu$
+przez $u-v_h\in V$, otrzymujemy
+\[
+ \begin{aligned}
+ \|(u-v_h)'\|_2^2
+ &=\|v_h'\|_2^2-\|u'\|_2^2
+   +2\int_{-1}^1\mu(u-v_h)\,\mathrm d\lambda_1\\
+ &\le2\delta\|\mu\|_1.
+ \end{aligned}
+\]
+Po podstawieniu $\delta$ kończymy dowód.
+\end{proof}
+
+\begin{uwaga}[Siatka zgodna ze swobodnym brzegiem]
+Dla Przykładu~\ref{ex:pde29-explicit} i $N$
+podzielnego przez $3$ punkty $\pm1/3$ są węzłami.
+Wektor $Z_i=u(x_i)$ spełnia wszystkie
+warunki~\eqref{eq:pde29-discrete}: nierówność
+drugich różnic wynika z wklęsłości, a gdy
+$Z_i>\Psi_i$, obaj sąsiedzi leżą w domknięciu
+tego samego odcinka afinicznego funkcji $u$.
+Wtedy druga różnica wynosi zero.
+Na pozostałych węzłach $Z_i=\Psi_i$.
+Z jednoznaczności $U^h=Z$.
+Dokładność w węzłach nie oznacza jednak
+dokładności interpolantu między węzłami
+na zakrzywionej części zbioru kontaktu.
+\end{uwaga}
 
 Sprawdzanie warunków~\eqref{eq:pde29-discrete}
 jest ważniejsze niż sam obraz krzywej:
