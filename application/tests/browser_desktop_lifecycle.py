@@ -48,7 +48,7 @@ def main():
                     second.wait_for_timeout(1200)
                     assert proc.poll() is None, 'reload must reconnect before shutdown'
                     # Stage an unsaved draft and save a second copy through the real API.
-                    draft = second.request.post(URL + '/api/drafts', data={'modules': ['BT-00'], 'title': 'Lifecycle test'})
+                    draft = second.request.post(URL + '/api/drafts', data={'modules': ['AA-01'], 'title': 'Lifecycle test'})
                     assert draft.ok, draft.text()
                     session = draft.json()['session_id']
                     stored = second.request.post(URL + f'/api/drafts/{session}/save')

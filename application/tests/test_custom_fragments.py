@@ -76,10 +76,10 @@ class CustomScriptTests(unittest.TestCase):
     def test_interleaved_excerpts_keep_exact_user_order(self):
         files, manifest = self.build([
             {"kind": "lines", "module": "ALG-09", "start_line": 1, "end_line": 2},
-            {"kind": "lines", "module": "BT-00", "start_line": 1, "end_line": 2},
+            {"kind": "lines", "module": "AA-01", "start_line": 1, "end_line": 2},
             {"kind": "lines", "module": "ALG-09", "start_line": 4, "end_line": 5},
         ])
-        expected = ["rozdzialy/ALG-09-001.tex", "rozdzialy/BT-00-001.tex",
+        expected = ["rozdzialy/ALG-09-001.tex", "rozdzialy/AA-01-001.tex",
                     "rozdzialy/ALG-09-002.tex"]
         self.assertEqual([x["output_file"] for x in manifest["ordered_items"]], expected)
         main = files["main.tex"].decode()
@@ -105,19 +105,19 @@ class CustomScriptTests(unittest.TestCase):
 
     def test_whole_module_wins_over_excerpts(self):
         files, report = self.build([
-            {"kind": "lines", "module": "BT-00", "start_line": 1, "end_line": 2},
-            {"kind": "module", "id": "BT-00"},
-            {"kind": "lines", "module": "BT-00", "start_line": 3, "end_line": 4},
+            {"kind": "lines", "module": "AA-01", "start_line": 1, "end_line": 2},
+            {"kind": "module", "id": "AA-01"},
+            {"kind": "lines", "module": "AA-01", "start_line": 3, "end_line": 4},
         ])
-        self.assertEqual(report["whole_modules"], ["BT-00"])
+        self.assertEqual(report["whole_modules"], ["AA-01"])
         self.assertEqual([x["kind"] for x in report["ordered_items"]], ["module"])
-        raw = self.con.execute("SELECT content FROM documents WHERE id='BT-00'").fetchone()[0]
-        self.assertIn(raw.splitlines()[0], files["rozdzialy/BT-00.tex"].decode())
+        raw = self.con.execute("SELECT content FROM documents WHERE id='AA-01'").fetchone()[0]
+        self.assertIn(raw.splitlines()[0], files["rozdzialy/AA-01.tex"].decode())
 
     def test_entity_and_lines_can_be_combined(self):
         files, manifest = self.build([
             {"kind": "entity", "id": "ALG-09/proof/0004"},
-            {"kind": "lines", "module": "BT-00", "start_line": 1, "end_line": 2},
+            {"kind": "lines", "module": "AA-01", "start_line": 1, "end_line": 2},
         ])
         self.assertEqual([x["kind"] for x in manifest["ordered_items"]], ["entity", "lines"])
         self.assertIn("ALG-09/proof/0004", manifest["fragments"]["ALG-09"])
@@ -137,7 +137,7 @@ class CustomScriptTests(unittest.TestCase):
             with self.subTest(item=item), self.assertRaises(GenerationError):
                 self.build([item])
         with self.assertRaises(GenerationError):
-            project_files(self.con, ["BT-00"], [], "Bad", items=[{"kind": "module", "id": "BT-00"}])
+            project_files(self.con, ["AA-01"], [], "Bad", items=[{"kind": "module", "id": "AA-01"}])
 
 
     def test_every_indexed_subject_has_generator_preamble(self):
@@ -188,14 +188,14 @@ class CustomScriptTests(unittest.TestCase):
         with self.assertRaisesRegex(GenerationError, "Wybierz od 1"):
             self.build([])
         with self.assertRaisesRegex(GenerationError, "Nie łącz"):
-            project_files(self.con, ["BT-00"], [], "Zestaw", items=[])
-        files, manifest = project_files(self.con, ["BT-00"], [], "Dawny klient")
-        self.assertEqual(manifest["modules"], ["BT-00"])
-        self.assertIn("rozdzialy/BT-00.tex", files)
+            project_files(self.con, ["AA-01"], [], "Zestaw", items=[])
+        files, manifest = project_files(self.con, ["AA-01"], [], "Dawny klient")
+        self.assertEqual(manifest["modules"], ["AA-01"])
+        self.assertIn("rozdzialy/AA-01.tex", files)
 
     def test_http_manifest_zip_and_draft_accept_custom_items(self):
         request = {"title": "Wybór fragmentu", "items": [
-            {"kind": "lines", "module": "BT-00", "start_line": 1, "end_line": 2},
+            {"kind": "lines", "module": "AA-01", "start_line": 1, "end_line": 2},
         ]}
         with TestClient(app) as client:
             response = client.post("/api/generate/manifest", json=request)
@@ -205,14 +205,14 @@ class CustomScriptTests(unittest.TestCase):
             self.assertEqual(archive.status_code, 200, archive.text)
             with zipfile.ZipFile(io.BytesIO(archive.content)) as z:
                 self.assertIsNone(z.testzip())
-                self.assertIn("rozdzialy/BT-00-001.tex", z.namelist())
+                self.assertIn("rozdzialy/AA-01-001.tex", z.namelist())
                 self.assertIn("manifest.json", z.namelist())
             invalid = client.post("/api/generate", json={
-                **request, "modules": ["BT-00"]})
+                **request, "modules": ["AA-01"]})
             self.assertEqual(invalid.status_code, 422)
-            legacy = client.post("/api/generate/manifest", json={"modules": ["BT-00"]})
+            legacy = client.post("/api/generate/manifest", json={"modules": ["AA-01"]})
             self.assertEqual(legacy.status_code, 200, legacy.text)
-            empty = client.post("/api/generate/manifest", json={"items": [], "modules": ["BT-00"]})
+            empty = client.post("/api/generate/manifest", json={"items": [], "modules": ["AA-01"]})
             self.assertEqual(empty.status_code, 422)
 
 

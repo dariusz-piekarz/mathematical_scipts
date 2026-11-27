@@ -453,9 +453,9 @@ def main() -> None:
                 assert page.locator("#leanRun").is_disabled()
                 # Last-line selection must not offer an inexistent line after
                 # a canonical TeX file ending with a terminal newline.
-                page.evaluate("() => openModule('BT-00', true)")
+                page.evaluate("() => openModule('AA-01', true)")
                 page.wait_for_function(
-                    "() => state.currentModule === 'BT-00' && state.currentData && !state.currentData.truncated",
+                    "() => state.currentModule === 'AA-01' && state.currentData && !state.currentData.truncated",
                     timeout=15000,
                 )
                 line_count = page.evaluate("""() => {

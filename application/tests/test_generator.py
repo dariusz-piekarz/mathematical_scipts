@@ -67,8 +67,16 @@ class GeneratorTests(unittest.TestCase):
         with self.assertRaises(GenerationError):project_files(self.con,[],['non-existent'],'Bad')
         with self.assertRaises(GenerationError):project_files(self.con,[],[],'Bad')
 
+    def test_retired_banach_tarski_labels_resolve_in_abstract_algebra(self):
+        for label in ('tw:banach-tarski', 'subsec:so3'):
+            with self.subTest(label=label):
+                response = self.client.get('/api/labels/'+label, params={'source_document':'AA-07'})
+                self.assertEqual(response.status_code, 200, response.text)
+                self.assertEqual(response.json()['document_id'], 'AA-07')
+        self.assertEqual(self.client.post('/api/generate/manifest', json={'modules':['BT-00']}).status_code,422)
+
     def test_title_escaped(self):
-        files,report=project_files(self.con,['BT-00'],[],r'Błąd $x_1$ & TeX')
+        files,report=project_files(self.con,['AA-01'],[],r'Błąd $x_1$ & TeX')
         self.assertIn(r'Błąd \$x\_1\$ \& TeX',files['main.tex'].decode())
 
     def test_zip_paths_safe(self):
@@ -97,17 +105,18 @@ class GeneratorTests(unittest.TestCase):
             self.assertEqual(archive.getinfo('ok.tex').file_size, MAX_ARCHIVE_UNCOMPRESSED_BYTES)
 
     def test_http_zip_and_manifest(self):
-        request={'title':'Test','modules':['BT-00'],'entities':[],'closure_depth':0}
+        request={'title':'Test','modules':['ALG-09'],'entities':[],'closure_depth':0}
         r=self.client.post('/api/generate/manifest',json=request)
         self.assertEqual(r.status_code,200)
-        self.assertEqual(r.json()['external_targets']['BT-04'],['subsec:so3'])
+        self.assertIn('ch:ga5-rozdmuchania',r.json()['external_targets']['ALG-05'])
         r=self.client.post('/api/generate',json=request)
         self.assertEqual(r.status_code,200)
         self.assertEqual(r.headers['content-type'],'application/zip')
         with zipfile.ZipFile(io.BytesIO(r.content)) as z:
             self.assertIsNone(z.testzip())
             self.assertIn('main.tex',z.namelist())
-            self.assertIn('aux/BT-04.tex',z.namelist())
+            self.assertIn('aux/ALG-05.tex',z.namelist())
+            self.assertIn('rozdzialy/ALG-09.tex',z.namelist())
         self.assertEqual(self.client.post('/api/generate',json={'title':'Test','modules':['UNKNOWN']}).status_code,422)
 
 
