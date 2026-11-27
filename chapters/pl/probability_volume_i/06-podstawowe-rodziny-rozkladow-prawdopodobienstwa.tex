@@ -7,7 +7,7 @@
 Pierwszym modelem losowym jest doświadczenie z dwiema
 możliwościami: sukces albo porażka. Nie ma potrzeby zakładać,
 że są równie prawdopodobne. Parametr $p$ określa szansę sukcesu,
-a wskaźnik sukcesu ma rozkład Bernoulliego. Licząc sukcesy
+a funkcja charakterystyczna zdarzenia sukcesu ma rozkład Bernoulliego. Licząc sukcesy
 w $n$ niezależnych próbach o tym samym parametrze, otrzymujemy
 rozkład dwumianowy. Współczynnik $\binom nk$ odpowiada
 liczbie różnych rozmieszczeń sukcesów, nie nowej losowości.
@@ -56,7 +56,7 @@ przestrzeni probabilistycznej. Wtedy
 $S_n:=X_1+\cdots+X_n\sim\Bin(n,p)$ oraz
 \[
 \E S_n=np,\qquad \Var(S_n)=np(1-p),\qquad
-M_{S_n}(t)=(1-p+pe^t)^n.
+M_{S_n}(t)=(1-p+pe^t)^n,\qquad t\in\R.
 \]
 \end{twierdzenie}
 \begin{proof}
@@ -81,10 +81,13 @@ Po zsumowaniu tego wyrażenia dla wszystkich $k$
 otrzymujemy przez dwumian Newtona
 $(p+(1-p))^n=1$, co stanowi dodatkową kontrolę normalizacji.
 
-Dla wskaźnika pojedynczej próby
+Dla każdej pojedynczej próby mamy
 $\E X_i=p$, $\Var(X_i)=p(1-p)$.
+Wszystkie zmienne $X_i$ mają skończone drugie momenty,
+ponieważ $|X_i|\leq1$ prawie na pewno. Suma również
+ma skończony drugi moment, gdyż $|S_n|\leq n$ prawie na pewno.
 Liniowość wartości oczekiwanej i addytywność
-wariancji niezależnych składników dają
+wariancji niezależnych składników (rozdział~\ref{ch:expectation}) dają
 $\E S_n=np$ i $\Var(S_n)=np(1-p)$.
 Wreszcie $M_{X_i}(t)=1-p+pe^t$ jest skończona dla każdego
 $t\in\R$. Stosując wzór na funkcję tworzącą momenty sumy
@@ -126,11 +129,17 @@ Dla $p=1$ rozkład jest skupiony w punkcie $1$.
 W modelu niezależnych prób Bernoulliego (którego istnienie
 wykazano w rozdziale~\ref{ch:probability}) niech $T$ będzie
 numerem pierwszej udanej próby, z wartością $\infty$,
-gdy sukces nigdy nie nastąpi. Zdarzenie $\{T=k\}$ jest
+gdy sukces nigdy nie nastąpi. Możemy przyjąć przestrzeń
+ciągów o współrzędnych w $\{0,1\}$ z miarą produktową,
+tak że każda próba ma dokładnie dwie możliwe wartości
+w każdym punkcie przestrzeni. Zdarzenie $\{T=k\}$ jest
 przekrojem zdarzeń $k-1$ porażek i jednego sukcesu,
 więc jest mierzalne i ma prawdopodobieństwo $q^{k-1}p$.
-Mamy $\Prob(T=\infty)=\lim_{k\to\infty}q^k=0$
-z ciągłości miary z góry. Zastąpienie wartości $\infty$
+Zdarzenie $\{T=\infty\}$ jest przekrojem malejącego
+ciągu zdarzeń $C_k$, że pierwszych $k$ prób zakończyło się
+porażkami. Z niezależności $\Prob(C_k)=q^k$, a z ciągłości
+miary z góry (rozdział~\ref{ch:probability}) wynika
+$\Prob(T=\infty)=\lim_{k\to\infty}q^k=0$. Zastąpienie wartości $\infty$
 przez $1$ na tym mierzalnym zbiorze zerowym daje rzeczywistą
 zmienną losową o rozkładzie $\Geom(p)$.
 \end{definicja}
@@ -221,7 +230,13 @@ $\E T_r=r/p$ i $\Var(T_r)=r(1-p)/p^2$.
 \end{stwierdzenie}
 \begin{proof}
 Najpierw definiujemy $T_r=\infty$, jeśli $r$-ty sukces
-nigdy nie nastąpi. Każde zdarzenie $\{T_r=n\}$ jest
+nigdy nie nastąpi. Możemy traktować próby jako zmienne
+przyjmujące wyłącznie wartości $0,1$: jeśli pierwotne
+zmienne mają te wartości jedynie prawie na pewno,
+modyfikujemy je na mierzalnej sumie przeliczalnie wielu
+zbiorów zerowych, przyjmując tam wartości $0$.
+Rozkłady wszystkich skończonych wektorów prób,
+a więc również ich niezależność, pozostają niezmienione. Każde zdarzenie $\{T_r=n\}$ jest
 mierzalne, ponieważ zależy od skończonej liczby prób.
 Zdarzenia sukcesu w kolejnych próbach są wzajemnie
 niezależne, a suma ich prawdopodobieństw jest nieskończona,
@@ -251,8 +266,11 @@ pomiędzy sukcesami numer $j-1$ i $j$, licząc próbę
 zakończoną sukcesem. Na mierzalnym zbiorze zerowym,
 na którym nie występuje $r$ sukcesów, definiujemy wszystkie
 $W_j=1$. Zdarzenia określające wartości $W_j$ są mierzalne:
-poza tym zbiorem można je zapisać jako przeliczalną sumę
-zdarzeń określających skończone ciągi prób.
+dla $j\geq2$, poza tym zbiorem, zdarzenie $\{W_j=k\}$
+jest sumą po $m\geq j-1$ zdarzeń
+$\{T_{j-1}=m,T_j=m+k\}$; dla $j=1$ korzystamy
+z mierzalności $\{T_1=k\}$. Uwzględnienie mierzalnego
+zbioru zerowego, na którym $W_j=1$, nie narusza mierzalności.
 Dla dowolnych całkowitych $k_1,\ldots,k_r\geq1$
 zdarzenie $\{W_1=k_1,\ldots,W_r=k_r\}$ oznacza, z dokładnością do zbioru zerowego,
 jednoznacznie określony ciąg
@@ -517,7 +535,10 @@ gdzie ostatnią równość daje dwumian Newtona.
 \begin{przyklad}[Oczekiwanie na zebranie wszystkich kuponów]
 Niech $N\geq1$ będzie liczbą całkowitą, a $U_1,U_2,\ldots$
 niech będą niezależnymi zmiennymi o rozkładzie jednostajnym
-na zbiorze $\{1,\ldots,N\}$. Niech $T_j$ oznacza pierwszy
+na zbiorze $\{1,\ldots,N\}$. Możemy przyjąć, że wszystkie
+zmienne mają wartości w tym zbiorze w każdym punkcie:
+ewentualne modyfikacje na mierzalnej sumie zbiorów
+zerowych nie zmieniają rozkładów łącznych prób. Niech $T_j$ oznacza pierwszy
 numer próby, po której widziano $j$ różnych etykiet,
 przy $T_0=0$ i konwencji $T_j=\infty$, gdy takiej próby nie ma.
 Dla każdej etykiety $a$ prawdopodobieństwo, że nie pojawiła
@@ -595,8 +616,8 @@ Gęstość $f(x)=(b-a)^{-1}\chi_{(a,b)}(x)$
 jest borelowska, nieujemna i ma całkę
 $(b-a)^{-1}\lambda_1((a,b))=1$, więc określa
 miarę probabilistyczną.
-Dla $x\leq a$ przedział $(-\infty,x]$ nie przecina
-nośnika gęstości z dodatnią miarą, więc $F_X(x)=0$.
+Dla $x\leq a$ przekrój $(-\infty,x]\cap(a,b)$ jest pusty,
+więc $F_X(x)=0$.
 Dla $a<x<b$ całkujemy stałą gęstość od $a$ do $x$,
 co daje $F_X(x)=(x-a)/(b-a)$.
 Dla $x\geq b$ całka obejmuje cały nośnik i wynosi jeden.
@@ -735,8 +756,17 @@ w sensie rozszerzonym. Odwzorowanie
 $(r,\varphi)\mapsto(r\cos\varphi,r\sin\varphi)$ jest
 dyfeomorfizmem klasy $C^1$ z $(0,\infty)\times(0,2\pi)$
 na płaszczyznę bez nieujemnej półosi poziomej;
-moduł jego jakobianu wynosi $r$. Pominięta półoś ma
-miarę Lebesgue'a $\lambda_2$ równą zero.
+jego macierz pochodnych ma postać
+\[
+\begin{pmatrix}
+\cos\varphi&-r\sin\varphi\\
+\sin\varphi&r\cos\varphi
+\end{pmatrix},
+\]
+a moduł wyznacznika wynosi $r(\cos^2\varphi+\sin^2\varphi)=r$.
+Pominięta półoś ma miarę Lebesgue'a $\lambda_2$ równą zero:
+jest sumą przeliczalnie wielu odcinków zawartych
+w prostokątach o dowolnie małej dodatniej wysokości.
 Stosując \atlasref{ME-13::thm:change-variables-13}{twierdzenie o zamianie zmiennych}
 do nieujemnej funkcji, otrzymujemy
 \[
@@ -779,7 +809,9 @@ Tożsamość
 $\sigma tz-z^2/2=-(z-\sigma t)^2/2+\sigma^2t^2/2$
 pozwala wyjąć z całki czynnik
 $e^{\sigma^2t^2/2}$. Pozostała całka z gęstości
-Gaussa przesuniętej o $\sigma t$ wynosi jeden.
+Gaussa przesuniętej o $\sigma t$ wynosi jeden,
+co wynika z podstawienia $w=z-\sigma t$ i lematu
+o całce Gaussa.
 Otrzymujemy więc
 $M_X(t)=\exp(\mu t+\sigma^2t^2/2)$
 dla wszystkich $t\in\R$.
@@ -829,8 +861,19 @@ Uzupełnienie kwadratu daje
 =\frac{v}{\sigma_1^2\sigma_2^2}(x-c(s))^2
 +\frac{(s-\mu_1-\mu_2)^2}{v}.
 \]
-Tożsamość można sprawdzić, porównując współczynniki
-przy $x^2$ i $x$ oraz wyrazy stałe po obu stronach.
+Istotnie, pisząc $A=\sigma_1^2$, $B=\sigma_2^2$,
+$m=\mu_1$ i $n=s-\mu_2$, otrzymujemy
+\[
+\frac{(x-m)^2}{A}+\frac{(x-n)^2}{B}
+=\frac{(A+B)x^2-2(Bm+An)x+Bm^2+An^2}{AB}.
+\]
+Po wydzieleniu kwadratu z $c=(Bm+An)/(A+B)$
+pozostaje wyraz stały
+\[
+\frac{(A+B)(Bm^2+An^2)-(Bm+An)^2}{AB(A+B)}
+=\frac{(m-n)^2}{A+B},
+\]
+co daje powyższą tożsamość.
 Po wyłączeniu czynnika niezależnego od $x$ stosujemy
 podstawienie $u=\sqrt v(x-c(s))/(\sigma_1\sigma_2)$.
 Całka po $\R$ z pozostałego czynnika wynosi
@@ -975,8 +1018,9 @@ Jeśli czas do jednego zdarzenia ma rozkład wykładniczy, to
 suma kilku niezależnych czasów oczekiwania prowadzi do rodziny
 gamma. Parametr kształtu opisuje m.in. liczbę składników
 w przypadkach całkowitych, a parametr intensywności reguluje
-skalę czasową. Funkcję gamma można traktować jako naturalne
-przedłużenie silni do argumentów dodatnich.
+skalę czasową. Funkcja gamma spełnia $\Gamma(n+1)=n!$ dla
+całkowitego $n\geq0$, więc funkcja $x\mapsto\Gamma(x+1)$
+przedłuża silnię na rzeczywiste argumenty $x\geq0$.
 
 \begin{definicja}
 Niech $\alpha,\lambda>0$. Rozkładem gamma $\Gam(\alpha,\lambda)$
@@ -1025,9 +1069,9 @@ oraz tego samego podstawienia otrzymujemy
 =\frac{\Gamma(\alpha+r)}{\lambda^r\Gamma(\alpha)}.
 \]
 Potęgę $X^r$ dla niecałkowitego $r$ rozumiemy jako
-funkcję określoną przez $x^r$ dla $x>0$ i dowolnie
-przedłużoną na zdarzeniu $\{X\leq0\}$ o prawdopodobieństwie
-zero. Dla $r=0$ przyjmujemy $X^0=1$.
+funkcję określoną przez $x^r$ dla $x>0$ i przedłużoną
+mierzalnie przez zero na zdarzeniu $\{X\leq0\}$
+o prawdopodobieństwie zero. Dla $r=0$ przyjmujemy $X^0=1$.
 Całka jest skończona, gdyż $\alpha+r>0$.
 Korzystając z rekurencji funkcji gamma dla $r=1,2$,
 mamy $\E X=\alpha/\lambda$ i
@@ -1378,9 +1422,10 @@ do nieujemnej funkcji $(z,u)\mapsto z^2/u$ dla $u>0$
 \]
 gdzie $\E Z^2=1$ z własności rozkładu normalnego.
 Stąd $\Var(T)=\nu/(\nu-2)$.
-Dla $1<\nu\leq2$ średnia wynosi zero, lecz wariancja
-nie jest skończona (w konwencji dopuszczającej
-wariancję rozszerzoną wynosi $+\infty$).
+Dla $1<\nu\leq2$ średnia wynosi zero, lecz drugi moment
+jest nieskończony. Nie definiujemy wtedy wariancji
+jako skończonej liczby w sensie definicji z rozdziału~\ref{ch:expectation};
+jeżeli dopuszczamy wariancję rozszerzoną, wynosi ona $+\infty$.
 Dla $0<\nu\leq1$ wariancja nie jest określona,
 gdyż nie istnieje średnia.
 \end{proof}
@@ -1398,10 +1443,16 @@ $\Var(U/\nu)=2/\nu$. Nierówność Czebyszewa daje
 \Prob(|U/\nu-1|\geq\varepsilon)\leq
 \frac{2}{\nu\varepsilon^2}.
 \]
-Z niezależności $Z$ i $U$ oraz twierdzenia Fubiniego
-dla ograniczonej funkcji charakterystycznej otrzymujemy
+Dla $u>0$ nierówność $z/\sqrt{u/\nu}\leq x$
+jest równoważna $z\leq x\sqrt{u/\nu}$.
+Z niezależności $Z$ i $U$ oraz twierdzenia Tonellego
+dla nieujemnej funkcji charakterystycznej zbioru
+$\{(z,u):u>0,\ z\leq x\sqrt{u/\nu}\}$ otrzymujemy
 \[
-F_{t_\nu}(x)=\E\Phi(x\sqrt{U/\nu}),
+F_{t_\nu}(x)=
+\int_{(0,\infty)}\int_{(-\infty,x\sqrt{u/\nu}]}
+\dd\mu_Z(z)\,\dd\mu_U(u)
+=\E\Phi(x\sqrt{U/\nu}),
 \qquad x\in\R,
 \]
 gdzie $\Phi$ jest dystrybuantą standardowego rozkładu
@@ -1544,7 +1595,7 @@ pierwszego bezwzględnego momentu.
 
 \section{Dalsze użyteczne rozkłady}
 Nie wszystkie użyteczne rodziny wymagają nowej konstrukcji od zera.
-Rozkład lognormalny powstaje przez wykładnicze przekształcenie
+Rozkład logarytmiczno-normalny powstaje przez wykładnicze przekształcenie
 rozkładu normalnego. Rozkład Fishera--Snedecora powstaje z ilorazu
 dwóch niezależnych odpowiednio unormowanych zmiennych chi-kwadrat.
 To przykłady ważnej zasady: z prostych rozkładów tworzymy
