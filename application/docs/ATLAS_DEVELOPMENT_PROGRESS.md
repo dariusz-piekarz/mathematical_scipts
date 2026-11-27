@@ -1452,3 +1452,9 @@ Odczytany `atlas_validation_status.json`: `candidate_sha=02190e107a6305bc7b73334
 
 - `3195f29dbb975091e449df5269bff6bc193eb67b`: świadomy wybór zakładki unieważnia oczekujące otwarcie rozdziału, obiektu lub odsyłacza, także przy powrocie do bieżącego czytnika. Wewnętrzna aktywacja czytnika po zakończonym aktualnym żądaniu zachowuje jego epokę. 20/20 izolowanych asercji na rzeczywistych zmienionych funkcjach PASS (18 przypadków sukcesu/błędu starszego żądania i 2 prawidłowe nawigacje). `633213b034a51cf908c45b40a7c17fe5b444079b`: 13 dodatkowych kontroli DOM w istniejącym browser_reader_layout.py; pełnego Chromium nie wykonano.
 - Przy odczycie CI #45995096365 i #45994651687 oraz AM I/IT na 928848a2 queued. Odbiór P3.5 2+1 nadal otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
+
+
+### 2026-11-27 — P3.5: współbieżność grafu dziedzin i wyszukiwania ścieżek
+
+- `100637c7daffd05446d274c6b00ae71dca32b783`: wspólna epoka żądań widoku pary dziedzin i pokrycia całej biblioteki, odrzucanie spóźnionych sukcesów i błędów; zachowanie ostatnio załadowanego widoku pokrycia przy zmianie zakładki, bez powielania oczekującego automatycznego ładowania. Niezależna epoka wyszukiwania ścieżek i weryfikacja aktualności obu pól. 10/10 izolowanych asercji JS na zmienionych funkcjach PASS. `bf97e7d5aa372f9c730612f8c5bfc7494e2dfb4e`: 10 kontroli regresyjnych w istniejącym browser_ci_e2e.py z rzeczywistymi danymi pary i pokrycia oraz kontrolowanym porządkiem odpowiedzi. Pełnego Chromium nie wykonano.
+- Przy odczycie #45995394261 (poprzednia regresja nawigacji), #45994651687 (naprawa odsyłaczy) oraz AM I/IT na 928848a2 nadal queued. Odbiór P3.5 2+1 pozostaje otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
