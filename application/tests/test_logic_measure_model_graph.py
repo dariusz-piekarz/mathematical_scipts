@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 import sqlite3
+from contextlib import closing
 import tempfile
 import unittest
 
@@ -48,7 +49,7 @@ class LogicMeasureModelGraphTest(unittest.TestCase):
                 dest.write_bytes(source_path.read_bytes())
             db = Path(tmp) / "index.db"
             build_database(root, db, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 edges = {(e["source"], e["target"]): e for e in graph_coverage(con)["edges"]}
                 for source, target, label in expected:
                     with self.subTest(source=source, target=target, label=label):

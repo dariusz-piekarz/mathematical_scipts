@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import shutil
 import sqlite3
+from contextlib import closing
 import tempfile
 import unittest
 
@@ -55,7 +56,7 @@ class FunctionalFoundationsCrossVolumeLinks(unittest.TestCase):
             self.assertEqual(copied, wanted)
             db = Path(temp) / "index.db"
             build_database(root, db, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 con.row_factory = sqlite3.Row
                 found = {(r["source_document"], r["target_label"], r["target_document"])
                          for r in con.execute(

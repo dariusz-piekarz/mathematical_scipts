@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import shutil
 import sqlite3
+from contextlib import closing
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -58,7 +59,7 @@ class CrossVolumeReadingReferencesTest(unittest.TestCase):
                     shutil.copyfile(ROOT / p, dest)
             db = Path(temp) / "index.db"
             build_database(root, db, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 con.row_factory = sqlite3.Row
                 rows = con.execute(
                     "SELECT source_document,target_document,status FROM references_tex "
@@ -121,7 +122,7 @@ class CrossVolumeReadingReferencesTest(unittest.TestCase):
                     shutil.copyfile(ROOT / p, dest)
             db = Path(temp) / "index.db"
             build_database(root, db, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 con.row_factory = sqlite3.Row
                 rows = con.execute(
                     "SELECT r.source_document, r.target_label, r.target_document, r.status,"
@@ -211,7 +212,7 @@ class CrossVolumeReadingReferencesTest(unittest.TestCase):
                     shutil.copyfile(ROOT / p, dest)
             db = Path(temp) / "index.db"
             build_database(root, db, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 con.row_factory = sqlite3.Row
                 rows = con.execute(
                     "SELECT r.source_document,r.target_label,r.target_document,r.status,"
@@ -287,7 +288,7 @@ class CrossVolumeReadingReferencesTest(unittest.TestCase):
                     shutil.copyfile(ROOT / p, dest)
             db = Path(temp) / "index.db"
             build_database(root, db, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 con.row_factory = sqlite3.Row
                 required = {(src, lab, lab.split("::", 1)[0])
                             for src, labels in expected.items() for lab in labels}

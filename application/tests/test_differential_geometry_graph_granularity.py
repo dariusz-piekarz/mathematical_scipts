@@ -3,6 +3,7 @@ from collections import Counter
 import json
 from pathlib import Path
 import sqlite3
+from contextlib import closing
 import tempfile
 import unittest
 
@@ -49,7 +50,7 @@ class DifferentialGeometryGraphGranularityTest(unittest.TestCase):
                 dest.write_bytes(source.read_bytes())
             db = Path(tmp) / "graph.db"
             build_database(root, db, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 con.row_factory = sqlite3.Row
                 documents = {r["id"]: r["domain"] for r in con.execute(
                     "SELECT id,domain FROM documents")}
