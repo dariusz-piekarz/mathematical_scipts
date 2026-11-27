@@ -299,6 +299,362 @@ Nie użyliśmy tu twierdzenia Fubiniego:
 rozkład sumy skończonej jest czysto algebraiczny.
 \end{przyklad}
 
-% Drugi blok: kryterium Lebesgue'a i zgodność całek
-% w wymiarze n, addytywność, zawartość Jordana i przykład
-% geometryczny. Dopiero potem audyty stabilizacyjne.
+\section{Addytywność i granice jednostajne}
+
+\begin{twierdzenie}[Addytywność względem podziału]
+\label{ma2:thm:riemann-box-additivity}
+Niech $P$ będzie podziałem prostokąta $Q$, a $f:Q\to\R$
+funkcją ograniczoną. Funkcja $f$ jest całkowalna na $Q$
+wtedy i tylko wtedy, gdy jej ograniczenia do wszystkich
+komórek $Q_\alpha$ są całkowalne. Wtedy
+\[
+ I_Q(f)=\sum_\alpha I_{Q_\alpha}(f|_{Q_\alpha}).
+\]
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $f$ jest całkowalna na $Q$, wybieramy podział
+o różnicy sum mniejszej od $\varepsilon$ i rozdrabniamy
+go wspólnie z $P$. Różnica sum na każdej komórce
+dla indukowanego podziału jest nieujemna i nie przekracza
+różnicy globalnej, będącej sumą tych różnic.
+Kryterium Darboux daje całkowalność każdego ograniczenia.
+
+Odwrotnie, niech $K$ będzie liczbą komórek $P$.
+W każdej wybieramy podział o różnicy sum mniejszej
+od $\varepsilon/K$. Do węzłów $P$ dodajemy wszystkie
+węzły tych podziałów w odpowiednich współrzędnych.
+Otrzymujemy globalny podział $R$, indukujący
+rozdrobnienie wybranego podziału na każdej komórce.
+Różnica sum dla $R$ jest mniejsza od $\varepsilon$,
+więc $f$ jest całkowalna.
+Zarówno $I_Q(f)$, jak i suma całek po komórkach
+należą do przedziału $[L(f,R),U(f,R)]$.
+Ich różnica bezwzględna nie przekracza $\varepsilon$;
+dowolność $\varepsilon$ daje równość.
+\end{proof}
+
+W szczególności ograniczenie funkcji całkowalnej
+do niedegenerowanego domkniętego podprostokąta
+jest całkowalne: wystarczy dodać jego końce
+współrzędnościowe do podziału $Q$. Prostokątom
+zdegenerowanym przypisujemy całkę zero dla każdej
+ograniczonej funkcji.
+
+\begin{twierdzenie}
+\label{ma2:thm:riemann-box-uniform}
+Przestrzeń $\mathcal R(Q)$ rzeczywistych funkcji
+całkowalnych w sensie Riemanna jest domkniętą
+podprzestrzenią przestrzeni Banacha funkcji
+ograniczonych z normą supremum.
+Funkcjonał $I_Q$ jest ciągły i ma normę $|Q|$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $f_m\in\mathcal R(Q)$ oraz
+$\|f_m-f\|_\infty\to0$, to dla każdej komórki $C$
+\[
+ \operatorname{osc}_C f
+ \le\operatorname{osc}_C f_m+2\|f-f_m\|_\infty.
+\]
+Wystarczy rozłożyć $f(x)-f(y)$ na $f_m(x)-f_m(y)$
+oraz dwie różnice między $f$ i $f_m$, zastosować
+nierówność trójkąta i wziąć supremum po $x,y\in C$.
+Dla $\varepsilon>0$ wybieramy $m$ z
+$2|Q|\|f-f_m\|_\infty<\varepsilon/2$, a następnie
+podział o różnicy sum dla $f_m$ mniejszej
+od $\varepsilon/2$. Sumując oszacowania oscylacji
+pomnożone przez objętości komórek, otrzymujemy
+kryterium Darboux dla $f$. Liniowość i oszacowanie
+$|I_Q(f)|\le |Q|\|f\|_\infty$ wynikają z twierdzenia
+\ref{ma2:thm:riemann-box-algebra}. Równość normy
+otrzymujemy na funkcji stałej $1$.
+\end{proof}
+
+\section{Kryterium Lebesgue'a w wymiarze $n$}
+
+W teorii miary dowiedziono jednowymiarowej wersji
+\atlasref{ME-08::thm:riemann-criterion}{kryterium Lebesgue'a}.
+Poniżej uzasadnimy wersję wielowymiarową.
+Korzystamy z istnienia i zupełności miary Lebesgue'a
+oraz jej wartości na półotwartych prostokątach
+(\atlasref{ME-04::thm:lebesgue-exists}{konstrukcja miary Lebesgue'a}).
+Brzeg ograniczonego prostokąta ma miarę zero:
+każdą jego ścianę można przykryć półotwartym
+prostokątem o dowolnie małej długości w kierunku
+prostopadłym i ustalonych skończonych długościach
+w pozostałych kierunkach. Skończona podaddytywność
+miary zewnętrznej daje tezę. W szczególności
+miara prostokąta domkniętego jest równa iloczynowi
+długości jego boków, gdyż różni się on od
+odpowiadającego prostokąta półotwartego o zbiór zerowy.
+
+\begin{definicja}
+\label{ma2:def:point-oscillation-box}
+Dla ograniczonej $f:Q\to\R$ i $x\in Q$ określamy
+oscylację punktową
+\[
+ \omega_f(x)=\inf_{r>0}\operatorname{osc}_{Q\cap B(x,r)}f.
+\]
+Ciągłość rozumiemy względem $Q$.
+\end{definicja}
+
+Funkcja jest ciągła w $x$ wtedy i tylko wtedy,
+gdy $\omega_f(x)=0$. Istotnie, ciągłość daje
+na dostatecznie małym względnym otoczeniu $x$
+nierówność $|f(y)-f(x)|<\varepsilon/3$,
+a stąd oscylację nie większą niż $2\varepsilon/3$.
+Odwrotnie, otoczenie zawierające $x$ o oscylacji
+mniejszej od $\varepsilon$ spełnia warunek ciągłości.
+Dla $t>0$ zbiór $D_t=\{x\in Q:\omega_f(x)\ge t\}$
+jest domknięty w $Q$: jeśli $\omega_f(x)<t$,
+wybieramy $r>0$ z oscylacją na $Q\cap B(x,r)$
+mniejszą od $t$. Dla każdego $y\in Q\cap B(x,r/2)$
+otoczenie $Q\cap B(y,r/2)$ jest zawarte w poprzednim,
+więc $\omega_f(y)<t$. Zatem $D_t$ jest zwarty,
+a zbiór wszystkich punktów nieciągłości $D(f)$
+jest borelowski, ponieważ
+\[
+ D(f)=\bigcup_{m=1}^\infty D_{1/m}.
+\]
+
+\begin{twierdzenie}[Kryterium Lebesgue'a]
+\label{ma2:thm:riemann-box-lebesgue-criterion}
+Funkcja ograniczona $f:Q\to\R$ jest całkowalna
+w sensie Riemanna wtedy i tylko wtedy, gdy
+$\lambda_n(D(f))=0$.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy całkowalność i ustalmy $t>0$.
+Niech $P$ będzie podziałem, a $H_P$ sumą brzegów
+jego komórek. Jeśli $x\in D_t\setminus H_P$,
+to pewne otoczenie $x$ jest zawarte w jedynej
+komórce $C$, do której wnętrza należy $x$.
+Wtedy $\operatorname{osc}_Cf\ge\omega_f(x)\ge t$.
+Ponieważ $\lambda_n(H_P)=0$, mamy
+\[
+ \lambda_n(D_t)\le
+ \sum_{C:\,\operatorname{osc}_Cf\ge t}|C|
+ \le\frac{U(f,P)-L(f,P)}{t}.
+\]
+Kryterium Darboux daje podziały o dowolnie
+małej prawej stronie, więc $\lambda_n(D_t)=0$.
+Przeliczalna podaddytywność daje $\lambda_n(D(f))=0$.
+
+Odwrotnie, niech $\lambda_n(D(f))=0$ i $|f|\le M$,
+gdzie $M>0$ (funkcja zerowa jest całkowalna).
+Dla $\varepsilon>0$ wybieramy $t=\varepsilon/(2|Q|)$.
+Zwarty $D_t$ ma miarę zero. Z regularności zewnętrznej
+(\atlasref{ME-04::thm:lebesgue-outer-regular}{regularność miary Lebesgue'a})
+istnieje otwarty $O\subset\R^n$ zawierający $D_t$
+z $\lambda_n(O)<\varepsilon/(4M)$.
+Dla każdego $x\in Q\setminus D_t$ wybieramy
+względnie otwarte otoczenie $V_x\subset Q$
+o oscylacji mniejszej od $t$.
+Zbiory $Q\cap O$ i wszystkie $V_x$ tworzą otwarte
+pokrycie zwartego $Q$. Wybieramy skończone podpokrycie.
+Ma ono liczbę Lebesgue'a $\ell>0$, czyli każdy
+podzbiór $Q$ o średnicy mniejszej od $\ell$
+jest zawarty w jednym z elementów podpokrycia.
+Istotnie, w przeciwnym razie istniałyby niepuste
+zbiory $A_m$ o średnicy mniejszej od $1/m$,
+niezawarte w żadnym elemencie podpokrycia.
+Wybór $x_m\in A_m$ i zbieżnego podciągu
+$x_{m_j}\to x\in Q$ prowadzi do sprzeczności:
+element podpokrycia zawierający $x$ zawiera
+jego względne otoczenie kuliste, a dla dużych $j$
+cały $A_{m_j}$ leży w tym otoczeniu.
+
+Wybieramy podział $P$ z $\sqrt n\,\delta(P)<\ell$.
+Komórki zawarte w $O$ mają łączną objętość
+nie większą niż $\lambda_n(O)$ (nakładanie się
+brzegów nie wpływa na miarę). Każda pozostała
+komórka jest zawarta w pewnym $V_x$ i ma
+oscylację mniejszą od $t$. Otrzymujemy
+\[
+ U(f,P)-L(f,P)\le 2M\lambda_n(O)+t|Q|<\varepsilon.
+\]
+Stosujemy kryterium Darboux.
+\end{proof}
+
+\begin{twierdzenie}[Zgodność całek]
+\label{ma2:thm:riemann-box-lebesgue}
+Jeżeli $f:Q\to\R$ jest całkowalna w sensie Riemanna,
+to jest mierzalna względem zupełnej miary Lebesgue'a
+i całkowalna w sensie Lebesgue'a. Ponadto
+\[
+ I_Q(f)=\int_Q f(x)\,\mathrm d\lambda_n(x).
+\]
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia \ref{ma2:thm:riemann-box-lebesgue-criterion}
+zbiór $D(f)$ jest borelowski i zerowy.
+Ograniczenie $f|_{Q\setminus D(f)}$ jest ciągłe
+w topologii podprzestrzeni. Dla dowolnego otwartego
+$V\subset\R$ jego przeciwobraz na $Q\setminus D(f)$
+jest przecięciem tego zbioru z otwartym podzbiorem $Q$,
+a więc jest borelowski w $Q$. Pozostała część
+$f^{-1}(V)$ jest podzbiorem $D(f)$ i jest mierzalna
+z zupełności. To daje mierzalność $f$.
+Ograniczoność i skończoność $\lambda_n(Q)$ dają
+całkowalność w sensie Lebesgue'a.
+
+Dla dowolnego podziału $P$ zastępujemy komórki
+rozłącznymi częściami półotwartymi, włączając
+prawy koniec ostatniego przedziału w każdej
+współrzędnej. Na tych częściach definiujemy
+funkcje proste $\ell_P,u_P$ o wartościach
+odpowiednio $m_\alpha,M_\alpha$ z domkniętych
+komórek. Wtedy $\ell_P\le f\le u_P$ na $Q$,
+a ich całki Lebesgue'a są równe sumom
+$L(f,P),U(f,P)$, gdyż brzegi są zerowe.
+Z monotoniczności całki
+\[
+ L(f,P)\le\int_Q f(x)\,\mathrm d\lambda_n(x)\le U(f,P).
+\]
+Biorąc kresy po $P$, otrzymujemy równość.
+\end{proof}
+
+Odwrotna implikacja nie zachodzi:
+$\chi_{\Q^n\cap Q}$ jest mierzalna i ma całkę
+Lebesgue'a zero, lecz w każdej komórce
+niedegenerowanej przyjmuje $0$ i $1$ (zarówno
+$\Q^n$, jak i jego dopełnienie są gęste).
+Jej dolna suma wynosi zero, a górna $|Q|$.
+
+\section{Zawartość Jordana}
+
+Jednowymiarowy przypadek opisano w
+\atlasref{AM1-29::it:thm:jordan-criterion}{AM I, rozdział 29}.
+Zbiorem elementarnym nazywamy skończoną sumę
+ograniczonych prostokątów (dopuszczamy przedziały
+otwarte, domknięte, półotwarte i jednopunktowe
+w poszczególnych współrzędnych).
+Taki zbiór $E$ jest borelowski, a jego brzeg
+ma miarę zero, ponieważ zawiera się w sumie
+brzegów składników. Jego objętość $|E|$ jest równa
+$\lambda_n(E)$. Można ją obliczyć przez wspólną
+siatkę wszystkich końców przedziałów: wnętrze
+każdej komórki jest zawarte w $E$ lub rozłączne
+z $E$, a pominięte brzegi mają miarę zero.
+
+\begin{definicja}
+\label{ma2:def:jordan-content}
+Zawartości wewnętrzna i zewnętrzna Jordana
+ograniczonego $A\subset\R^n$ to
+\[
+ c_*(A)=\sup_{E\subset A}|E|,\qquad
+ c^*(A)=\inf_{A\subset H}|H|,
+\]
+gdzie $E,H$ przebiegają zbiory elementarne
+(w tym pusty). Zbiór jest mierzalny w sensie
+Jordana, gdy $c_*(A)=c^*(A)$. Wspólną wartość
+oznaczamy $c(A)$.
+\end{definicja}
+
+\begin{twierdzenie}
+\label{ma2:thm:jordan-criterion}
+Niech $A\subset Q$. Równoważne są warunki:
+\begin{enumerate}[label=(\roman*)]
+\item $A$ jest mierzalny w sensie Jordana;
+\item $\chi_A$ jest całkowalna w sensie Riemanna na $Q$;
+\item $\lambda_n(\partial A)=0$, gdzie brzeg jest
+brany w $\R^n$.
+\end{enumerate}
+Wówczas $A$ jest mierzalny w sensie Lebesgue'a i
+$c(A)=I_Q(\chi_A)=\lambda_n(A)$.
+\end{twierdzenie}
+\begin{proof}
+Dla podziału $P$ suma domkniętych komórek
+zawartych w $A$ jest elementarnym podzbiorem $A$,
+a suma komórek przecinających $A$ jest elementarnym
+nadzbiorem $A$. Ich objętości są odpowiednio
+$L(\chi_A,P)$ i $U(\chi_A,P)$, ponieważ wnętrza
+komórek są rozłączne, a brzegi zerowe. Zatem
+\[
+ L(\chi_A,P)\le c_*(A)\le c^*(A)\le U(\chi_A,P).
+\]
+Jeżeli zachodzi (ii), branie kresów daje (i)
+i $c(A)=I_Q(\chi_A)$.
+
+Jeżeli zachodzi (i), dla każdego $\varepsilon>0$
+istnieją elementarne $E\subset A\subset H$ z
+$|H|-|E|<\varepsilon$. Zachodzi
+\[
+ \partial A\subset (H\setminus E)\cup\partial E\cup\partial H:
+\]
+poza prawą stroną punkt leży albo we wnętrzu $E$,
+albo poza domknięciem $H$, więc nie należy do
+brzegu $A$. Brzegi $E,H$ są zerowe, zatem
+$\lambda_n(\partial A)\le |H|-|E|<\varepsilon$.
+Dowolność $\varepsilon$ daje (iii).
+
+Punkty nieciągłości $\chi_A$ w $Q$ tworzą względny
+brzeg $A$ w $Q$, gdyż ciągłość funkcji o wartościach
+w $\{0,1\}$ oznacza lokalną stałość. Brzeg względny
+jest zawarty w brzegu w $\R^n$, a poza $\partial Q$
+oba brzegi się pokrywają. Jeśli zachodzi (iii),
+twierdzenie \ref{ma2:thm:riemann-box-lebesgue-criterion}
+daje (ii). Z twierdzenia
+\ref{ma2:thm:riemann-box-lebesgue} wynika mierzalność
+$A$ i równość z miarą Lebesgue'a.
+\end{proof}
+
+Zbiory mierzalne w sensie Jordana zawarte w $Q$
+tworzą algebrę: dla skończonej sumy i przecięcia
+brzeg jest zawarty w sumie brzegów, a dla dopełnienia
+względnego może pojawić się dodatkowo $\partial Q$.
+Wynika to z lokalnej stałości funkcji charakterystycznych
+poza wymienionymi brzegami. Zawartość jest skończenie
+addytywna na rozłącznych zbiorach dzięki równości
+z miarą Lebesgue'a. Nie jest to $\sigma$-algebra:
+każdy punkt ma zerowy brzeg, ale przeliczalny gęsty
+zbiór $\Q^n\cap Q$ ma brzeg równy $Q$.
+Jego zawartość zewnętrzna Jordana jest równa $|Q|$:
+dla elementarnego $H\supset\Q^n\cap Q$ mamy
+$Q\subset\overline H$ i $\lambda_n(\overline H)=|H|$,
+bo $\partial H$ jest zerowy. Zawartość wewnętrzna
+jest zerowa z monotoniczności miary Lebesgue'a.
+
+\begin{przyklad}[Trójkąt]
+\label{ma2:ex:jordan-triangle}
+Niech $A=\{(x,y)\in[0,1]^2:x+y\le1\}$.
+Brzeg składa się z trzech odcinków. Odcinki osiowe
+są zerowe jako ściany prostokąta. Odcinek ukośny
+pokrywamy $N$ kwadratami o boku $1/N$,
+wybierając po jednym nad każdym z $N$ przedziałów
+podziału osi $x$. Łączna powierzchnia wynosi $1/N$,
+więc odcinek jest zerowy.
+Kryterium Jordana daje mierzalność $A$.
+
+Dla siatki $N\times N$, $N\ge2$, komórka
+o indeksach $1\le i,j\le N$ jest zawarta w $A$
+wtedy i tylko wtedy, gdy $i+j\le N$, a przecina
+$A$ wtedy i tylko wtedy, gdy $i+j\le N+2$.
+Pierwszych komórek jest $N(N-1)/2$; w drugim
+przypadku wykluczone komórki spełniają
+$i+j\ge N+3$, czyli po podstawieniu
+$i'=N+1-i$, $j'=N+1-j$ spełniają
+$i'+j'\le N-1$. Stąd
+\[
+ L(\chi_A,P_N)=\frac{N-1}{2N},\qquad
+ U(\chi_A,P_N)=1-\frac{(N-1)(N-2)}{2N^2}.
+\]
+Obie sumy dążą do $1/2$, więc $c(A)=1/2$.
+\end{przyklad}
+
+\section{Geometryczna interpretacja sum Darboux}
+
+Na $[0,1]^2$ rozpatrzmy $f(x,y)=(1+x+y)/3$.
+Dla siatki $N\times N$ wysokości dolnych brył to
+$(1+(i-1)/N+(j-1)/N)/3$, a górnych
+$(1+i/N+j/N)/3$, ponieważ funkcja jest rosnąca
+w obu współrzędnych. Zatem
+\[
+ L(f,P_N)=\frac23-\frac{1}{3N},\qquad
+ U(f,P_N)=\frac23+\frac{1}{3N}.
+\]
+Równości wynikają z $\sum_{i=1}^N i=N(N+1)/2$
+i mnożenia wysokości każdej bryły przez $1/N^2$.
+Dla $N=2$ otrzymujemy odpowiednio $1/2$ i $5/6$,
+a granicą obu sum jest $2/3$, czyli całka Riemanna.
+
+% Do uzupełnienia: rysunek brył oraz wersja Plotly.
