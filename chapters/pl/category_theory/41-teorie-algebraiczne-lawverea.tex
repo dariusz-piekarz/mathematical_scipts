@@ -212,3 +212,238 @@ Ostatni symbol odpowiada interpretacji $v$. Przypadek stałej jest objęty równ
 Funktor $K$ jest identyczny na obiektach i bijektywny na zbiorach morfizmów, stąd ma ścisły funktor odwrotny. Zachowuje $j$, gdyż morfizmy pochodzące z $\mathsf{Fin}^{\mathrm{op}}$ są rodzinami projekcji, które $K$ zachowuje.
 \end{proof}
 
+\subsection{Algebry swobodne i monada teorii}
+
+Niech $\mathcal L$ będzie teorią Lawvere'a, a $U:\operatorname{Mod}(\mathcal L)\to\Set$ funktorem ewaluacji w obiekcie $1$. Przez algebry rozumiemy w tym podrozdziale modele w zbiorach; możemy korzystać z równoważności z algebrami prezentacji (twierdzenia~\ref{cat:thm:lawvere-equational-models} i~\ref{cat:thm:lawvere-presentation}).
+
+\begin{twierdzenie}[Algebra swobodna]\label{cat:thm:lawvere-free}
+Funktor $U$ ma lewe sprzężenie $F$. Dla skończonego zbioru $\underline n$ modelem swobodnym jest funktor $\Hom_{\mathcal L}(n,-)$, a jego zbiór bazowy jest równy $\Hom_{\mathcal L}(n,1)$. Zbiór bazowy modelu swobodnego na dowolnym zbiorze $X$ można opisać jako
+\[
+ UF(X)\cong\operatorname{colim}_{A\subseteq X,\ |A|<\aleph_0}UF(A).
+\]
+\end{twierdzenie}
+\begin{proof}
+Ustalmy prezentację $(\Sigma,E)$ teorii. Na $\operatorname{Term}_\Sigma(X)$ bierzemy najmniejszą kongruencję względem wszystkich operacji $\sigma$, zawierającą wszystkie podstawienia równań z $E$ przez termy w zmiennych z $X$. Istnienie tej kongruencji wynika z przecięcia wszystkich kongruencji zawierających podane pary. Iloraz jest algebrą: operacje na klasach są dobrze określone z definicji kongruencji. Spełnia każde równanie z $E$, ponieważ dowolnej wartości zmiennej w ilorazie można przyporządkować reprezentujący ją term, a podstawienie tych reprezentantów do równania należy do zbioru par generujących kongruencję. Gdy nie istnieje przyporządkowanie wartości zmiennym, warunek spełniania równania w tym kontekście zachodzi pusto.
+
+Dla algebry $M$ i funkcji $v:X\to UM$ interpretacja termów względem $v$ daje funkcję $\operatorname{Term}_\Sigma(X)\to UM$. Jej relacja jądrowa jest kongruencją i zawiera wszystkie podstawienia równań $E$, ponieważ $M$ je spełnia. Funkcja indukuje więc homomorfizm $F(X)\to M$ wysyłający klasę zmiennej $x$ na $v(x)$. Każdy homomorfizm o tym ograniczeniu musi na termie $\sigma(t_1,\ldots,t_k)$ przyjmować wartość otrzymaną przez zastosowanie $\sigma_M$ do wartości $t_i$. Indukcja po budowie termu, także dla stałych, dowodzi jednoznaczności. Otrzymujemy bijekcję
+\[
+ \Hom_{\operatorname{Mod}(\mathcal L)}(F(X),M)
+ \cong\Hom_{\Set}(X,UM).
+\]
+Dla funkcji $w:X\to X'$ morfizm $F(w)$ definiujemy jako jedyne przedłużenie funkcji $x\mapsto\eta_{X'}(w(x))$, gdzie $\eta_{X'}$ wysyła generator na jego klasę. Jednoznaczność daje $F(\id)=\id$ oraz $F(w'w)=F(w')F(w)$, a bijekcja jest naturalna w obu zmiennych przez sprawdzenie ograniczeń do generatorów.
+
+Dla $\underline n$ funktor $\Hom_{\mathcal L}(n,-)$ zachowuje produkty przez ich własność uniwersalną. Z kowariantnej postaci lematu Yonedy mamy
+\[
+ \Hom_{\operatorname{Mod}(\mathcal L)}(\Hom_{\mathcal L}(n,-),M)
+ \cong M(n)\cong M(1)^n\cong\Hom_{\Set}(\underline n,UM).
+\]
+Bijekcja jest naturalna w $M$. Otrzymujemy więc model swobodny, którego generatory odpowiadają projekcjom $\pi_i^n$. Istnieje jedyny izomorfizm z poprzednią konstrukcją zachowujący generatory: dwa uniwersalne modele dają wzajemnie odwrotne morfizmy przez jednoznaczność przedłużeń.
+
+Na koniec zbiór $X$ jest filtrowaną kogranicą swoich skończonych podzbiorów. Funktor $F$ jako lewe sprzężenie zachowuje tę kogranicę. Poniższe stwierdzenie dowodzi, niezależnie od tego argumentu, że $U$ zachowuje filtrowane kogranice; stosując je do diagramu $F(A)$, otrzymujemy ostatni wzór.
+\end{proof}
+
+\begin{stwierdzenie}[Kogranice filtrowane modeli]\label{cat:prop:lawvere-filtered}
+Małe filtrowane kogranice w $\operatorname{Mod}(\mathcal L)$ istnieją i są obliczane punktowo w $\Set^{\mathcal L}$. Funktor $U$ zachowuje je. To samo dotyczy wszystkich małych granic.
+\end{stwierdzenie}
+\begin{proof}
+Niech $D:I\to\operatorname{Mod}(\mathcal L)$ będzie małym filtrowanym diagramem i $M$ jego punktową kogranicą w kategorii funktorów (twierdzenie~\ref{cat:thm:pointwise-limits}). Dla każdego $n$ naturalność morfizmów modeli względem projekcji daje naturalną rodzinę izomorfizmów $D(i)(n)\cong D(i)(1)^n$. Stąd
+\[
+ M(n)=\operatorname{colim}_iD(i)(n)
+ \cong\operatorname{colim}_iD(i)(1)^n
+ \cong\left(\operatorname{colim}_iD(i)(1)\right)^n=M(1)^n.
+\]
+Ostatni izomorfizm jest porównaniem z twierdzenia~\ref{cat:thm:accessible-filtered-limits} dla $\kappa=\aleph_0$. Złożenie działa przez projekcje $M(\pi_j^n)$, zatem zachowuje właśnie wyróżnione produkty, również dla $n=0$. Jak w dowodzie twierdzenia~\ref{cat:thm:lawvere-term-category}, wynika stąd zachowanie wszystkich skończonych produktów. Ponieważ podkategoria modeli jest pełna, własność uniwersalna kogranicy w kategorii funktorów jest też własnością uniwersalną w podkategorii modeli. Ewaluacja w $1$ oblicza ją punktowo.
+
+Dla granicy dowolnego małego diagramu argument przebiega tak samo, z tym że stosujemy przemienność granic z produktami. Można ją sprawdzić wprost: element granicy produktów to rodzina zgodna względem diagramu, której każda współrzędna jest zgodną rodziną elementów odpowiedniego diagramu zbiorów. Zmiana kolejności indeksów daje wzajemnie odwrotne funkcje. Dla pustego diagramu granicą jest model o jednoelementowej wartości w każdym obiekcie. Pełność podkategorii kończy dowód.
+\end{proof}
+
+\begin{definicja}[Monada finitarna]\label{cat:def:lawvere-finitary}
+Monadę $(T,\eta,\mu)$ na $\Set$ nazywamy finitarną, gdy funktor $T$ zachowuje wszystkie małe filtrowane kogranice.
+\end{definicja}
+
+Sprzężenie $F\dashv U$ wyznacza monadę $T_{\mathcal L}=UF$ z jednostką $\eta$ i mnożeniem $\mu_X=U\varepsilon_{F(X)}$, zgodnie z twierdzeniem~\ref{cat:thm:adjunction-monad}. Jest finitarna, ponieważ $F$ zachowuje wszystkie kogranice zbiorów, a $U$ zachowuje kogranice filtrowane. Mnożenie monady ma interpretację podstawiania: element $UF(UF(X))$ to klasa termu, którego zmiennymi są klasy termów w $X$; $\mu_X$ interpretuje ten term w algebrze swobodnej $F(X)$, przypisując każdej takiej zmiennej odpowiadającą jej klasę. Jednoznaczność przedłużenia identyczności na $UF(X)$ zapewnia niezależność od reprezentantów.
+
+\begin{przyklad}[Trzy monady finitarne]\label{cat:ex:lawvere-finitary-monads}
+Dla teorii bez operacji $T(X)=X$. Dla teorii monoidów $T(X)=\coprod_{n\geq0}X^n$ jest zbiorem skończonych list z mnożeniem monady polegającym na spłaszczaniu list list. Istotnie, konkatenacja daje monoid swobodny, ponieważ funkcja z $X$ do monoidu przedłuża się jednoznacznie przez mnożenie kolejnych wyrazów, a pustą listę wysyła na jednostkę. Dla lewych $R$-modułów $T(X)=R^{(X)}$ jest zbiorem skończenie podpartych rodzin współczynników z $R$. Jednostka wysyła $x$ na wektor bazowy $e_x$, a mnożenie wysyła formalną kombinację $\sum_i r_i v_i$ wektorów $v_i\in R^{(X)}$ na tę samą kombinację obliczoną w module $R^{(X)}$. Działanie to wynika z własności uniwersalnej modułu swobodnego.
+\end{przyklad}
+
+\subsection{Teoria wyznaczona przez monadę finitarną}
+
+Niech $(T,\eta,\mu)$ będzie monadą na $\Set$. Dla funkcji $f:A\to TB$ piszemy $f^\sharp=\mu_B T(f):TA\to TB$. Aksjomaty monady dają
+\begin{equation}\label{cat:eq:lawvere-kleisli}
+ f^\sharp\eta_A=f,\qquad
+ (\eta_A)^\sharp=\id_{TA},\qquad
+ (g^\sharp f)^\sharp=g^\sharp f^\sharp
+\end{equation}
+dla $g:B\to TC$. Pierwsza równość wynika z naturalności $\eta$ i $\mu_B\eta_{TB}=\id_{TB}$, druga z $\mu_A T\eta_A=\id_{TA}$. Dla trzeciej obliczamy
+\[
+ \mu_C T(\mu_C)TT(g)T(f)
+ =\mu_C\mu_{TC}TT(g)T(f)
+ =\mu_C T(g)\mu_B T(f),
+\]
+gdzie pierwsza równość jest aksjomatem łączności monady, a druga naturalnością $\mu$ względem $g:B\to TC$.
+
+\begin{twierdzenie}[Teoria monady]\label{cat:thm:lawvere-from-monad}
+Dla monady $T$ na $\Set$ istnieje teoria Lawvere'a $\mathcal L_T$ z obiektami $n$ i morfizmami
+\[
+ \Hom_{\mathcal L_T}(n,m)=\Hom_{\Set}(\underline m,T\underline n).
+\]
+Jej składanie jest przeciwne do składania Kleisliego ograniczonego do skończonych zbiorów. Jeśli $T$ jest finitarna, to kategoria modeli $\operatorname{Mod}(\mathcal L_T)$ jest równoważna kategorii algebr Eilenberga--Moore'a monady $T$, nad $\Set$ z dokładnością do naturalnego izomorfizmu.
+\end{twierdzenie}
+\begin{proof}
+Dla morfizmu $f:n\to m$ odpowiadającego funkcji $\bar f:\underline m\to T\underline n$ oraz $g:m\to k$ odpowiadającego $\bar g:\underline k\to T\underline m$ definiujemy $\overline{gf}=\bar f^\sharp\bar g$. Identycznością $n\to n$ jest $\eta_{\underline n}$. Prawa kategorii wynikają z~\eqref{cat:eq:lawvere-kleisli}. Projekcja $\pi_i^n:n\to1$ odpowiada elementowi $\eta_{\underline n}(i)$. Dla dowolnego $f:k\to n$ składanie z $\pi_i^n$ odpowiada wartości $\bar f^\sharp\eta_{\underline n}(i)=\bar f(i)$. Wobec bijekcji między funkcjami $\underline n\to T\underline k$ a rodzinami $n$ elementów $T\underline k$ jest to produkt. Dla $n=0$ funkcja z pustego zbioru jest jedyna. Funktor strukturalny wysyła $u^{\mathrm{op}}:n\to m$ na $\eta_{\underline n}u$. Z naturalności $\eta$ i równań~\eqref{cat:eq:lawvere-kleisli} wynika zachowanie składania, a z opisu projekcji zachowanie produktów.
+
+Niech $(X,a:TX\to X)$ będzie algebrą monady, czyli $a\eta_X=\id_X$ i $a\mu_X=aT(a)$ (definicja~\ref{cat:def:em-algebra}). Dla operacji $t\in T\underline n$ interpretujemy ją jako funkcję
+\begin{equation}\label{cat:eq:lawvere-eval}
+ t_X(v)=aT(v)(t),\qquad v:\underline n\to X.
+\end{equation}
+Interpretacja projekcji daje $aT(v)\eta_{\underline n}(i)=a\eta_X(v(i))=v(i)$. Dla $s:\underline m\to T\underline n$ i $t\in T\underline m$ obliczamy
+\[
+ aT(v)s^\sharp
+ =aT(v)\mu_{\underline n}T(s)
+ =a\mu_X T(T(v))T(s)
+ =aT(aT(v)s).
+\]
+Po zastosowaniu do $t$ otrzymujemy zgodność interpretacji z podstawianiem. Funkcja $aT(v)s:\underline m\to X$ jest bowiem rodziną wartości interpretacji operacji $s(i)$. Zatem definiujemy model o wartości $X^n$ w $n$, działający na morfizmie przez rodzinę interpretacji jego współrzędnych. Identyczności i składanie są zachowane przez właśnie wykazane prawa, a produkty przez wybieranie bloków współrzędnych.
+
+Jeżeli $h:(X,a)\to(Y,b)$ jest morfizmem algebr, to $ha=bT(h)$, skąd $h aT(v)=bT(hv)$. Zatem $h$ zachowuje wszystkie operacje i wyznacza morfizm modeli przez stwierdzenie~\ref{cat:prop:lawvere-model-morphism}.
+
+Odwrotnie, niech $M$ będzie modelem $\mathcal L_T$ o zbiorze bazowym $X=M(1)$. Zapiszmy $\operatorname{ev}(t,v)$ dla wartości interpretacji $t\in T\underline n$ przy $v:\underline n\to X$. Zakładamy teraz finitarność $T$. Każdy $z\in TX$ ma postać $T(v)(t)$ dla pewnej skończonej arności $n$, ponieważ $X$ jest filtrowaną kogranicą swoich skończonych podzbiorów, a każdy z nich jest izomorficzny z pewnym $\underline n$. Definiujemy
+\[
+ a(T(v)(t))=\operatorname{ev}(t,v).
+\]
+Sprawdzimy niezależność od wyboru. Dla funkcji $u:\underline n\to\underline m$ i $w:\underline m\to X$ zachodzi
+\begin{equation}\label{cat:eq:lawvere-renaming}
+ \operatorname{ev}(T(u)(t),w)=\operatorname{ev}(t,wu).
+\end{equation}
+Istotnie, $T(u)(t)$ jest podstawieniem do $t$ rodziny projekcji $\eta_{\underline m}u$, gdyż $(\eta_{\underline m}u)^\sharp=T(u)$; model zachowuje podstawianie. Jeśli $T(v)(t)=T(v')(t')$, faktoryzujemy $v,v'$ przez skończone obrazy $A,A'\subseteq X$. Wybrane elementy $TA,TA'$ mają równe klasy w kogranicy $TX$. Lemat~\ref{cat:lem:filtered-equality} daje skończony $B\subseteq X$ zawierający $A,A'$, w którym ich obrazy są równe. Po wybraniu bijekcji $b:\underline m\to B$ i zapisaniu $v=w u$, $v'=w u'$ z $w:\underline m\to X$ indukowanym przez $b$ otrzymujemy $T(u)t=T(u')t'$. Równanie~\eqref{cat:eq:lawvere-renaming} daje równe wartości interpretacji. Obejmuje to $X=\varnothing$, ponieważ jego jedynym skończonym podzbiorem jest $\varnothing$.
+
+Dla $x\in X$ jednostka $\eta_X(x)$ jest obrazem $\eta_{\underline 1}(1)$ przez funkcję wybierającą $x$. Ponieważ jest to operacja identycznościowa, $a\eta_X(x)=x$. Aby sprawdzić łączność algebry, weźmy $z\in TTX$. Przez finitarność przedstawiamy $z=T(v)(t)$ z $t\in T\underline m$ i $v:\underline m\to TX$. Skończenie wiele elementów $v(i)$ można przedstawić we wspólnym skończonym podzbiorze $X$: wybieramy reprezentacje każdego z nich i sumę ich skończonych nośników, a następnie bijekcję tego podzbioru z $\underline n$. Dostajemy $w:\underline n\to X$ oraz $s:\underline m\to T\underline n$ z $v=T(w)s$. Jeśli $m=0$, możemy wziąć pusty podzbiór. Z naturalności $\mu$ wynika
+\[
+ \mu_X(z)=T(w)(s^\sharp(t)),
+\]
+natomiast $T(a)(z)=T(aT(w)s)(t)$. Zachowanie podstawiania przez model daje
+\[
+ a\mu_X(z)=\operatorname{ev}(s^\sharp(t),w)
+ =\operatorname{ev}(t,aT(w)s)=aT(a)(z).
+\]
+Zatem $(X,a)$ jest algebrą monady.
+
+Morfizm modeli o składowej $h:X\to Y$ spełnia $h\operatorname{ev}(t,v)=\operatorname{ev}(t,hv)$. Dla każdego $z=T(v)t$ otrzymujemy $ha(z)=bT(h)(z)$, czyli morfizm algebr. W obie strony działamy zatem na składowej w $1$ i zachowujemy składanie. Odtworzenie interpretacji z $a$ daje wyjściowe operacje z definicji $a$, a odtworzenie $a$ z interpretacji~\eqref{cat:eq:lawvere-eval} daje wyjściową strukturę na wszystkich reprezentacjach $T(v)t$. Kanoniczne izomorfizmy $M(n)\cong M(1)^n$ są zgodne z morfizmami przez stwierdzenie~\ref{cat:prop:lawvere-model-morphism}. Konstrukcje dają zatem wzajemnie odwrotne równoważności z zachowaniem zbiorów bazowych do kanonicznego izomorfizmu.
+\end{proof}
+
+\subsection{Równoważność teorii i monad finitarych}
+
+\begin{definicja}[Morfizmy teorii i monad]\label{cat:def:lawvere-morphisms}
+Morfizmem teorii Lawvere'a $(\mathcal L,j)\to(\mathcal L',j')$ jest funktor $H:\mathcal L\to\mathcal L'$ spełniający $Hj=j'$. Jest identyczny na obiektach i zachowuje wyróżnione projekcje, więc zachowuje skończone produkty. Morfizmem monad $T\to S$ na $\Set$ jest transformacja naturalna $\alpha:T\to S$ spełniająca
+\[
+ \alpha_X\eta^T_X=\eta^S_X,\qquad
+ \alpha_X\mu^T_X=\mu^S_X S(\alpha_X)\alpha_{TX}.
+\]
+\end{definicja}
+
+\begin{twierdzenie}[Równoważność Lawvere'a]\label{cat:thm:lawvere-equivalence}
+Kategoria jednosortowych teorii Lawvere'a jest równoważna kategorii monad finitarych na $\Set$. Przyporządkowania na obiektach są dane przez $\mathcal L\mapsto T_{\mathcal L}$ oraz $T\mapsto\mathcal L_T$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw dla teorii $\mathcal L$ identyfikujemy $\mathcal L_{T_{\mathcal L}}$ z $\mathcal L$. Z twierdzenia~\ref{cat:thm:lawvere-free} otrzymujemy bijekcję $T_{\mathcal L}\underline n\cong\Hom_{\mathcal L}(n,1)$, w której jednostka wysyła zmienne na projekcje. Dla rodziny $s:\underline m\to T_{\mathcal L}\underline n$ jej przedłużenie Kleisliego jest bazową funkcją jedynego homomorfizmu $F(\underline m)\to F(\underline n)$ o wartościach $s$ na generatorach. W modelach reprezentowalnych homomorfizm ten jest prekompozycją z morfizmem $\langle s_1,\ldots,s_m\rangle:n\to m$: na generatorze $\pi_i^m$ daje $s_i$. Stąd przedłużenie działa na $t:m\to1$ przez podstawienie $t\langle s_1,\ldots,s_m\rangle$. Bijekcje zachowują więc składanie i projekcje; na rodzinach operacji dają izomorfizm teorii, identyczny na obiektach.
+
+Dla finitarnej $T$ twierdzenie~\ref{cat:thm:lawvere-from-monad} daje równoważność modeli $\mathcal L_T$ z algebrami $T$, zgodną z funktorami zapominania. Sprzężenie Eilenberga--Moore'a (stwierdzenie~\ref{cat:prop:em-adj}) ma algebrę swobodną $(TX,\mu_X)$ z jednostką $\eta_X$. Przenosząc to sprzężenie przez równoważność, dostajemy sprzężenie swobodnego modelu z tym samym funktorem zapominania do zbiorów. Jedyność lewego sprzężenia z dokładnością do jedynego izomorfizmu zgodnego z jednostką daje izomorfizm $T_{\mathcal L_T}\cong T$ monad: zgodność z jednostką wynika z konstrukcji, a zgodność z mnożeniem z faktu, że kojednostki sprzężeń odpowiadają temu samemu przedłużeniu identyczności zbioru bazowego.
+
+Sprawdzimy zgodność na morfizmach, aby otrzymać równoważność kategorii, a nie tylko odpowiedniość obiektów. Morfizm monad $\alpha:T\to S$ definiuje morfizm teorii $\mathcal L_T\to\mathcal L_S$ przez funkcję $\bar f\mapsto\alpha_{\underline n}\bar f$ dla $f:n\to m$. Zachowuje projekcje przez zgodność z jednostką. Dla $s:\underline m\to T\underline n$ naturalność i zgodność z mnożeniem dają
+\begin{equation}\label{cat:eq:lawvere-monad-morphism-subst}
+ \alpha_{\underline n}\mu^T_{\underline n}T(s)
+ =\mu^S_{\underline n}S(\alpha_{\underline n})\alpha_{T\underline n}T(s)
+ =\mu^S_{\underline n}S(\alpha_{\underline n}s)\alpha_{\underline m}.
+\end{equation}
+Jest to dokładnie zgodność z podstawianiem. Identyczności i składanie morfizmów monad przechodzą na identyczności i składanie funktorów teorii.
+
+Odwrotnie, niech $T,S$ będą finitarne i $H:\mathcal L_T\to\mathcal L_S$ będzie morfizmem teorii. Na zbiorach operacji dostajemy funkcje $h_n:T\underline n\to S\underline n$, zachowujące projekcje i podstawianie. Dla każdej funkcji $u:\underline n\to\underline m$ podstawienie projekcji odpowiada działaniu $T(u)$ lub $S(u)$, więc
+\[
+ h_m T(u)=S(u)h_n.
+\]
+Dla dowolnego zbioru $X$ definiujemy $\alpha_X(T(v)t)=S(v)h_n(t)$, gdzie $v:\underline n\to X$, $t\in T\underline n$. Istnienie reprezentacji wynika z finitarności $T$. Niezależność od wyboru wynika tak jak w dowodzie twierdzenia~\ref{cat:thm:lawvere-from-monad}: dwie reprezentacje równe w $TX$ można porównać w pewnym wspólnym skończonym podzbiorze, a powyższa naturalność $h_n$ zapewnia równość obrazów w $SX$. Dla $p:X\to Y$ zastosowanie obu stron równania naturalności do $T(v)t$ daje $S(pv)h_n(t)$, więc $\alpha$ jest naturalna. Jej wartości na skończonych zbiorach są zadane przez $h_n$, a naturalność na funkcjach $v$ wymusza podany wzór, dowodząc jednoznaczności.
+
+Zachowanie projekcji daje $\alpha_X\eta_X^T=\eta_X^S$ po przedstawieniu każdego elementu $X$ przez funkcję $\underline 1\to X$. Dla $z\in TTX$ wybieramy, jak w poprzednim dowodzie, reprezentację $z=T(T(w)s)(t)$ z $w:\underline n\to X$, $s:\underline m\to T\underline n$, $t\in T\underline m$. Wtedy
+\[
+ \alpha_X\mu^T_X(z)=S(w)h_n(s^{\sharp_T}(t)).
+\]
+Z drugiej strony, z naturalności $\alpha$ oraz $\mu^S$ dostajemy
+\[
+ \mu_X^S S(\alpha_X)\alpha_{TX}(z)
+ =\mu_X^S S(S(w)h_n s)(h_m(t))
+ =S(w)(h_n s)^{\sharp_S}(h_m(t)).
+\]
+Równość obu wyrażeń wynika z zachowania podstawiania przez $H$. Otrzymujemy morfizm monad, a obie konstrukcje na morfizmach są wzajemnie odwrotne przez jednoznaczność rozszerzenia ze skończonych zbiorów. Funktor $T\mapsto\mathcal L_T$ jest więc w pełni wierny, a pierwsza część dowodu daje jego istotną surjektywność (monada $T_{\mathcal L}$ jest finitarna). Jest to żądana równoważność; przyporządkowanie $\mathcal L\mapsto T_{\mathcal L}$ daje quasi-odwrotność po wyborze algebr swobodnych.
+\end{proof}
+
+\subsection{Lokalna prezentowalność modeli}
+
+\begin{twierdzenie}[Kategorie modeli teorii Lawvere'a]\label{cat:thm:lawvere-lfp}
+Kategoria $\operatorname{Mod}(\mathcal L)$ jest lokalnie skończenie prezentowalna. Jej inkluzja do $\Set^{\mathcal L}$ ma lewe sprzężenie i zachowuje małe granice oraz filtrowane kogranice.
+\end{twierdzenie}
+\begin{proof}
+Dla $n\in\mathbb N_0$ oznaczmy $R_n=\Hom_{\mathcal L}(n,-)$. W kategorii funktorów $\Set^{\mathcal L}$ projekcja $\pi_i^n:n\to1$ indukuje przez prekompozycję transformację $R_1\to R_n$. Niech
+\[
+ q_n:\coprod_{i=1}^{n}R_1\longrightarrow R_n
+\]
+będzie morfizmem, którego ograniczenia są tymi transformacjami. Dla $n=0$ dziedziną jest presnop początkowy (traktujemy funktory kowariantne jako presnopy na $\mathcal L^{\mathrm{op}}$). Przez lemat Yonedy oraz własność koproduktu prekompozycja z $q_n$ identyfikuje się z funkcją
+\[
+ \Hom(R_n,M)\longrightarrow\Hom\left(\coprod_{i=1}^nR_1,M\right),
+ \qquad M(n)\longrightarrow M(1)^n,
+\]
+o współrzędnych $M(\pi_i^n)$. Jest ona bijekcją wtedy i tylko wtedy, gdy $M$ zachowuje produkt $n$ kopii $1$. Dla $n=0$ bijektywność oznacza, że $M(0)$ jest jednoelementowy. Ponieważ każdy skończony produkt w $\mathcal L$ jest izomorficzny z wyróżnionym produktem bloków potęg obiektu $1$, mamy
+\[
+ \operatorname{Mod}(\mathcal L)=\{q_n:n\in\mathbb N_0\}^{\perp}.
+\]
+
+Kategoria funktorów $\Set^{\mathcal L}$ jest lokalnie skończenie prezentowalna przez twierdzenie~\ref{cat:thm:accessible-presheaf-local} zastosowane do $\mathcal L^{\mathrm{op}}$. Każdy $R_n$ jest skończenie prezentowalny przez lemat Yonedy i punktowość kogranic; skończony koprodukt $R_1$ także ma tę własność przez stwierdzenie~\ref{cat:prop:accessible-presentable-closure}. W dowodzie twierdzenia~\ref{cat:thm:accessible-orthogonal-reflection} można więc wybrać $\lambda=\aleph_0$ dla zbioru $\{q_n\}$. Dostajemy refleksyjność i lokalną $\aleph_0$-prezentowalność, nie tylko lokalną prezentowalność dla nieokreślonej liczby kardynalnej. Zachowanie granic i filtrowanych kogranic przez inkluzję wykazano również bezpośrednio w stwierdzeniu~\ref{cat:prop:lawvere-filtered}.
+\end{proof}
+
+\begin{wniosek}[Skończone prezentacje modeli]\label{cat:cor:lawvere-finite-presentations}
+Każdy model jest filtrowaną kogranicą modeli zadanych przez skończenie wiele generatorów i relacji. Model $F(\underline n)$ jest skończenie prezentowalny, a model zadany przez skończenie wiele generatorów i relacji również jest skończenie prezentowalny.
+\end{wniosek}
+\begin{proof}
+Dla modelu $M$ bierzemy surjektywny homomorfizm $F(UM)\to M$ przedłużający identyczność $UM$. Jest on surjektywny, bo zawiera w obrazie wartości wszystkich generatorów. Relacja jądrowa tego homomorfizmu jest kongruencją; iloraz przez nią jest izomorficzny z $M$ przez bijekcję klas z ich obrazami, zachowującą operacje. Odwrotność bijektywnego homomorfizmu jest homomorfizmem: dla dowolnej rodziny argumentów w przeciwdziedzinie bierzemy ich jedyne przeciwobrazy i stosujemy zachowanie operacji.
+
+Pracujemy z prezentacją przez termy z twierdzenia~\ref{cat:thm:lawvere-free}. Niech $E_M$ będzie zbiorem par termów w zmiennych z $UM$, które mają równą wartość w $M$. Rozważamy poset par $(A,P)$, gdzie $A\subseteq UM$ jest skończony, $P$ jest skończonym podzbiorem $E_M$, a wszystkie zmienne występujące w termach par z $P$ należą do $A$. Poset jest filtrowany: suma współrzędnych skończonej rodziny par jest nadal dopuszczalną parą, a pusta para daje niepustość. Dla $(A,P)$ bierzemy model $Q_{A,P}$ będący ilorazem $F(A)$ przez najmniejszą kongruencję utożsamiającą pary z $P$. Taki iloraz jest modelem przez zgodność kongruencji z operacjami i fakt, że równania teorii są spełnione w $F(A)$. Inkluzje generatorów indukują morfizmy między ilorazami, ponieważ relacje z mniejszego stopnia są spełnione w większym. Jednoznaczność na generatorach daje zgodność ze składaniem. Wszystkie modele $Q_{A,P}$ mają zgodne morfizmy do $M$.
+
+Każdy element $M$ jest obrazem generatora w pewnym stopniu. Jeżeli elementy dwóch stopni mają ten sam obraz w $M$, wybieramy reprezentujące je termy i przechodzimy do wspólnego stopnia. Para tych termów należy do $E_M$; dodanie jej do $P$ daje stopień, w którym ich klasy są równe. Przez stwierdzenie~\ref{cat:prop:lawvere-filtered} i lemat~\ref{cat:lem:filtered-equality} morfizm z kogranicy do $M$ jest więc bijekcją zbiorów bazowych, a zatem izomorfizmem modeli.
+
+Dla skończonego $A$ funktor $\Hom(F(A),-)\cong\Hom_{\Set}(A,U-)$ zachowuje filtrowane kogranice przez prezentowalność zbioru skończonego i własności $U$. Jeżeli $P$ jest skończoną rodziną relacji, to model $Q_{A,P}$ jest koequalizatorem dwóch homomorfizmów $F(P)\rightrightarrows F(A)$ wysyłających generator odpowiadający parze termów na jej pierwszy i drugi term. Homomorfizm z $F(A)$ uzgadnia tę parę wtedy i tylko wtedy, gdy jego relacja jądrowa zawiera wszystkie pary z $P$, czyli gdy faktoryzuje się jednoznacznie przez iloraz $Q_{A,P}$. Przez domknięcie obiektów skończenie prezentowalnych na skończone kogranice (stwierdzenie~\ref{cat:prop:accessible-presentable-closure}) model $Q_{A,P}$ jest skończenie prezentowalny.
+\end{proof}
+
+\subsection{Zmiana teorii}
+
+\begin{stwierdzenie}[Ograniczenie i rozszerzenie struktury]\label{cat:prop:lawvere-change}
+Dla morfizmu teorii $H:\mathcal L\to\mathcal L'$ funktor ograniczenia
+\[
+ H^*:\operatorname{Mod}(\mathcal L')\longrightarrow\operatorname{Mod}(\mathcal L),
+ \qquad M\longmapsto M H
+\]
+zachowuje wszystkie małe granice i filtrowane kogranice oraz ma lewe sprzężenie $H_!$.
+\end{stwierdzenie}
+\begin{proof}
+Złożenie funktorów zachowujących produkty zachowuje produkty, a transformację naturalną ograniczamy przez prekompozycję z $H$. Ponieważ $H$ jest identyczny na obiektach, zbiory bazowe nie zmieniają się. Granice i filtrowane kogranice obu kategorii modeli obliczane są punktowo, więc $H^*$ je zachowuje.
+
+Dla modelu $M$ teorii $\mathcal L$ konstruujemy $H_! M$ jako iloraz modelu swobodnego $F'(UM)$ teorii $\mathcal L'$ przez najmniejszą kongruencję zawierającą relacje
+\[
+ H(t)([x_1],\ldots,[x_n])=[t_M(x_1,\ldots,x_n)]
+ \qquad(t:n\to1,\ x_i\in UM).
+\]
+Tutaj $[x]$ po prawej oznacza generator w $F'(UM)$ odpowiadający elementowi $x$, a lewa strona oznacza interpretację operacji $H(t)$ na tych generatorach. Dla $n=0$ jest to relacja dotycząca wartości stałej. Zbiór relacji jest mały, bo $\mathcal L$ jest mała, a każda rodzina argumentów jest skończona. Kongruencja istnieje jak w konstrukcji algebry swobodnej; możemy ją opisać jako zgodną ze wszystkimi operacjami $\mathcal L'$ przez jej prezentację kanoniczną. Niech $\eta_M:UM\to U'H_!M$ będzie funkcją wysyłającą element na klasę generatora. Nałożone relacje mówią dokładnie, że $\eta_M$ zachowuje wszystkie operacje $\mathcal L$ po ograniczeniu struktury.
+
+Dla modelu $N$ teorii $\mathcal L'$ dowolny homomorfizm $M\to H^*N$ daje funkcję $UM\to U'N$. Ta przedłuża się jednoznacznie do homomorfizmu $F'(UM)\to N$, który uzgadnia nałożone relacje przez zachowanie operacji $\mathcal L$. Faktoryzuje się jednoznacznie przez iloraz $H_!M$. Odwrotnie, każdy homomorfizm $H_!M\to N$ po złożeniu z $\eta_M$ daje homomorfizm $M\to H^*N$, a obie konstrukcje są wzajemnie odwrotne przez jednoznaczność na generatorach.
+
+Dla morfizmu $u:M\to M'$ definiujemy $H_!u$ jako jedyny morfizm odpowiadający złożeniu $M\xrightarrow{u}M'\xrightarrow{\eta_{M'}}H^*H_!M'$. Jednoznaczność daje prawa funktora oraz naturalność bijekcji w $M$, a w $N$ wynika ona z postkompozycji. W ten sposób otrzymujemy sprzężenie $H_!\dashv H^*$.
+\end{proof}
+
+\begin{przyklad}[Abelianizacja i zmiana pierścienia]\label{cat:ex:lawvere-change}
+Morfizm teorii grup do teorii grup abelowych wysyła operacje grupowe na operacje o tych samych nazwach, a relacja przemienności daje dalsze utożsamienia termów. Funktor ograniczenia jest inkluzją grup abelowych do grup. Jego lewe sprzężenie to abelianizacja $G\mapsto G/[G,G]$: każdy homomorfizm z $G$ do grupy abelowej wysyła wszystkie komutatory na element neutralny, więc faktoryzuje się jednoznacznie przez iloraz. Iloraz jest abelowy, gdyż obrazy każdych dwóch elementów komutują.
+
+Dla unitalnego homomorfizmu małych pierścieni $\varphi:R\to S$ mamy morfizm teorii lewych modułów wysyłający $\ell_r$ na $\ell_{\varphi(r)}$. Ograniczenie struktury to ograniczenie skalarów; lewe sprzężenie jest dane przez $M\mapsto S\otimes_R M$, gdzie $S$ jest prawym $R$-modułem przez $s\cdot r=s\varphi(r)$ i lewym $S$-modułem przez mnożenie. Dla $R$-liniowego $f:M\to H^*N$ funkcja $(s,m)\mapsto sf(m)$ jest addytywna w obu argumentach i zbalansowana, ponieważ $s\varphi(r)f(m)=sf(rm)$. Indukuje więc $S$-liniowe odwzorowanie $S\otimes_R M\to N$. Odwrotnie morfizm $g$ wyznacza $f(m)=g(1\otimes m)$, a równości $g(s\otimes m)=sg(1\otimes m)$ i $1f(m)=f(m)$ dowodzą, że konstrukcje są odwrotne. Jest to konkretna postać tego samego sprzężenia.
+\end{przyklad}
+
+\begin{uwaga}[Zakres i dalsze uogólnienia]\label{cat:rem:lawvere-scope}
+Finitarność jest ograniczeniem arności, nie liczby symboli operacji ani liczby równań. Teorie wielosortowe wymagają rodziny wyróżnionych obiektów zamiast pojedynczego $1$. Teorie nieskończonej arności, teorie z operacjami częściowymi oraz teorie wzbogacone wymagają odpowiednich modyfikacji zarówno pojęcia produktu, jak i związku z monadami. Nie są objęte udowodnioną tutaj równoważnością.
+\end{uwaga}
