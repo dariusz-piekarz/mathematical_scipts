@@ -1,6 +1,8 @@
 \chapter{Zmienne losowe i rozkłady prawdopodobieństwa}
 \label{ch:random-variables}
 
+\providecommand{\atlasref}[2]{#2}
+
 \section{Zmienna losowa i jej rozkład}
 Przestrzeń wyników może być bardzo złożona: pojedynczym wynikiem
 może być pięć kart, pełna trajektoria urządzenia albo nieskończony
@@ -22,25 +24,40 @@ dla każdego $B\in\mathcal B(\R)$. Jej rozkładem nazywamy miarę
 probabilistyczną $\mu_X$ na $\mathcal B(\R)$, zadaną wzorem
 $\mu_X(B):=\Prob(X\in B)=\Prob(X^{-1}(B))$.
 Stosujemy oznaczenie $\Law(X)=\mu_X$ oraz $X\sim\mu_X$.
+Zapis $\{X\in B\}$ oznacza zbiór $\{\omega\in\Omega:X(\omega)\in B\}$.
+Miara $\mu_X$ jest obrazem miary $\Prob$ przez $X$
+(\atlasref{ME-02::def:pushforward}{miara obrazowa w teorii miary i całki}):
+przeciwobrazy zachowują rozłączne sumy przeliczalne, a
+$X^{-1}(\R)=\Omega$, więc $\mu_X$ jest przeliczalnie addytywna
+i $\mu_X(\R)=1$.
 \end{definicja}
 
 \begin{stwierdzenie}[Kryterium mierzalności]
+Niech $(\Omega,\mathcal F,\Prob)$ będzie przestrzenią probabilistyczną.
 Funkcja $X:\Omega\to\R$ jest zmienną losową wtedy i tylko wtedy,
 gdy $\{X\leq x\}\in\mathcal F$ dla każdego $x\in\R$.
 \end{stwierdzenie}
 \begin{proof}
 Konieczność wynika z borelowskości przedziału $(-\infty,x]$.
 Dla dostateczności zauważamy, że przedziały $(-\infty,x]$ generują
-$\mathcal B(\R)$. Rodzina $\{B\subseteq\R:X^{-1}(B)\in\mathcal F\}$
-jest $\sigma$-ciałem, gdyż przeciwobrazy zachowują dopełnienia
-i sumy przeliczalne, a więc zawiera całe $\mathcal B(\R)$.
+$\mathcal B(\R)$
+(\atlasref{ME-01::thm:borel-generators-R}{generatory $\sigma$-ciała borelowskiego}).
+Rodzina $\{B\subseteq\R:X^{-1}(B)\in\mathcal F\}$
+jest $\sigma$-ciałem, gdyż zawiera $\R$ i przeciwobrazy
+zachowują dopełnienia i sumy przeliczalne. Z założenia zawiera
+każdą półprostą $(-\infty,x]$, a więc zawiera całe $\mathcal B(\R)$.
 \end{proof}
 
 \begin{przyklad}
-W modelu dwóch kostek funkcja $X(i,j)=i+j$ jest zmienną losową,
-której rozkład skupia się na $\{2,\ldots,12\}$.
-Na $([0,1],\mathcal B([0,1]),\lambda_1)$ zmienna $U(\omega)=\omega$
-ma rozkład jednostajny na $[0,1]$. Samo $\Omega$ nie przesądza więc
+W modelu dwóch kostek z pełnym $\sigma$-ciałem
+(rozdział~\ref{ch:conditioning}) funkcja $X(i,j)=i+j$ jest
+mierzalna, gdyż każdy przeciwobraz jest podzbiorem przestrzeni
+wyników. Jej rozkład jest skupiony na $\{2,\ldots,12\}$,
+ponieważ wszystkie wartości $X$ należą do tego zbioru.
+Na $([0,1],\mathcal B([0,1]),\lambda_1|_{\mathcal B([0,1])})$
+zmienna $U(\omega)=\omega$ jest ciągła, zatem borelowsko mierzalna,
+a $\mu_U(B)=\lambda_1(B\cap[0,1])$ dla $B\in\mathcal B(\R)$.
+Jest to rozkład jednostajny na $[0,1]$. Samo $\Omega$ nie przesądza więc
 o postaci rozkładu: ważna jest również zmienna losowa.
 \end{przyklad}
 
@@ -110,8 +127,11 @@ Dla $a<b$ mamy rozłączny rozkład
 $\{X\leq b\}=\{X\leq a\}\mathbin{\dot\cup}
 \{a<X\leq b\}$, więc
 $\Prob(a<X\leq b)=F(b)-F(a)$.
-Wreszcie dla dowolnego ciągu $x_n\uparrow a$
-zachodzi $\{X\leq x_n\}\uparrow\{X<a\}$.
+Wreszcie weźmy $x_n=a-1/n$, $n\geq1$. Wtedy $x_n<a$
+i $x_n\uparrow a$. Zachodzi
+$\{X\leq x_n\}\uparrow\{X<a\}$: każda wartość mniejsza od $a$
+jest nie większa od pewnego $x_n$, a żadna wartość równa $a$
+nie należy do tych zdarzeń.
 Z ciągłości miary z dołu dostajemy
 $F(a-)=\Prob(X<a)$. Ponieważ
 $\{X\leq a\}=\{X<a\}\mathbin{\dot\cup}\{X=a\}$,
@@ -120,9 +140,13 @@ otrzymujemy $\Prob(X=a)=F(a)-F(a-)$.
 
 \begin{wniosek}
 Dystrybuanta jest ciągła w punkcie $a$ wtedy i tylko wtedy,
-gdy $\Prob(X=a)=0$. Zmiana dystrybuanty w pojedynczym punkcie
-może zniszczyć jej prawostronną ciągłość i dlatego nie można
-modyfikować dystrybuanty dowolnie na zbiorze miary zero.
+gdy $\Prob(X=a)=0$. Wynika to z prawostronnej ciągłości oraz wzoru na skok.
+W przeciwieństwie do gęstości dystrybuanta nie jest określona
+jedynie prawie wszędzie: dwie prawostronnie ciągłe funkcje
+równe $\lambda_1$-prawie wszędzie są równe wszędzie.
+Istotnie, zbiór ich równości jest gęsty, a dla dowolnego $a$
+można wybrać z niego ciąg punktów większych od $a$ zbieżny do $a$,
+i zastosować prawostronną ciągłość.
 \end{wniosek}
 
 \begin{twierdzenie}[Charakteryzacja dystrybuant]
@@ -135,8 +159,10 @@ i granicę $1$ przy $+\infty$.
 Konieczność wszystkich warunków wynika z poprzedniego
 twierdzenia. Pokażemy, że są one także wystarczające,
 konstruując zmienną o zadanej dystrybuancie.
+Monotoniczność i obie granice zapewniają $0\leq F(x)\leq1$
+dla każdego $x\in\R$.
 Niech $\Omega=(0,1)$, $\mathcal F=\mathcal B((0,1))$,
-a $\Prob$ będzie miarą Lebesgue'a.
+a $\Prob=\lambda_1|_{\mathcal F}$.
 Dla $u\in(0,1)$ zdefiniujmy
 $Q(u)=\inf\{x\in\R:F(x)\geq u\}$.
 Z granic $F$ wynika, że dla każdego $u\in(0,1)$
@@ -147,21 +173,33 @@ w $(a,\infty)$; liczba $Q(u)$ jest skończona.
 Sprawdźmy kluczową równoważność. Jeżeli $u\leq F(x)$,
 to $x$ należy do zbioru w definicji i $Q(u)\leq x$.
 Odwrotnie, jeśli $Q(u)\leq x$, to z definicji infimum
-istnieje ciąg $x_n\downarrow Q(u)$ taki, że
-$F(x_n)\geq u$. Prawostronna ciągłość daje
+dla każdego $n$ istnieje $t_n$ spełniające
+$Q(u)\leq t_n<Q(u)+1/n$ oraz $F(t_n)\geq u$.
+Z monotoniczności $F$ mamy $F(Q(u)+1/n)\geq u$,
+więc możemy wziąć $x_n=Q(u)+1/n$. Prawostronna ciągłość daje
 $F(Q(u))\geq u$, a monotoniczność implikuje
 $F(x)\geq F(Q(u))\geq u$.
 Otrzymaliśmy zatem dla wszystkich $x\in\R$, $u\in(0,1)$
 \[
 Q(u)\leq x\quad\Longleftrightarrow\quad u\leq F(x).
 \]
-Funkcja $Q$ jest niemalejąca (większe $u$ wymaga
-większego kwantyla), a więc mierzalna.
+Ponieważ dla każdego $x$ zachodzi
+$\{u\in(0,1):Q(u)\leq x\}=(0,1)\cap(-\infty,F(x)]$,
+funkcja $Q$ jest mierzalna na mocy kryterium mierzalności.
+Jest również niemalejąca: dla $u<v$ zbiór $\{F\geq v\}$
+jest podzbiorem $\{F\geq u\}$, więc $Q(u)\leq Q(v)$.
 Dla $U(\omega)=\omega$ mamy
 $\Prob(Q(U)\leq x)=\Prob(U\leq F(x))=F(x)$,
 ponieważ $U$ jest jednostajna na $(0,1)$, a $0\leq F(x)\leq1$.
 Zmienna $X=Q(U)$ realizuje więc żądaną dystrybuantę.
 \end{proof}
+
+Dystrybuanta wyznacza rozkład jednoznacznie: półproste
+$(-\infty,x]$, $x\in\R$, tworzą układ $\pi$ generujący
+$\mathcal B(\R)$, a dwie miary probabilistyczne o tej samej
+dystrybuancie zgadzają się na tym układzie i mają tę samą
+masę całkowitą. Stosujemy
+\atlasref{ME-02::thm:uniqueness-finite}{twierdzenie o jednoznaczności miar skończonych}.
 
 \begin{definicja}
 Dla zmiennej losowej $X$ o dystrybuancie $F_X$ i $u\in(0,1)$
@@ -172,7 +210,13 @@ $\Prob(X\leq m)\geq1/2$ i $\Prob(X\geq m)\geq1/2$.
 \end{definicja}
 
 \begin{uwaga}
-Kwantyl $Q_X(1/2)$ jest medianą, ale mediana nie musi być jedyna.
+Kwantyl $q=Q_X(u)$ spełnia $F_X(q)\geq u$ oraz $F_X(q-)\leq u$.
+Pierwsza nierówność wynika z dowodu charakteryzacji dystrybuant;
+dla $x<q$ mamy $F_X(x)<u$, więc przejście do granicy z lewej
+daje drugą. W szczególności dla $u=1/2$ zachodzi
+$\Prob(X\leq q)\geq1/2$ oraz
+$\Prob(X\geq q)=1-F_X(q-)\geq1/2$.
+Kwantyl $Q_X(1/2)$ jest więc medianą, ale mediana nie musi być jedyna.
 Przykładowo zmienna przyjmująca $0$ i $2$ z prawdopodobieństwami
 po $1/2$ ma za medianę każdą liczbę z przedziału $[0,2]$.
 \end{uwaga}
