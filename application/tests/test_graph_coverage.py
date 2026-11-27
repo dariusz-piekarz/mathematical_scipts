@@ -133,12 +133,12 @@ class GraphCoverageTest(unittest.TestCase):
             "measure_theory/20-miary-borelowskie-regularnosc-i-miary-radona.tex",
             "measure_theory/21-twierdzenie-riesza-markowa-kakutaniego.tex",
             "general_topology/09-aksjomaty-przeliczalnosci.tex",
-            "general_topology/10-metryzowalnosc.tex",
+            "general_topology/14-zwartosc-lokalna.tex",
         )
         expected = (
             ("ME-20", "GT-09", "thm:topog-metryczne-trzy-warunki"),
             ("ME-21", "GT-09", "thm:topog-metryczne-trzy-warunki"),
-            ("ME-21", "GT-10", "thm:topog-urysohn-metryzowalnosc"),
+            ("ME-21", "GT-14", "lem:topog-baire-zwarte-domkniecie"),
         )
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "pl"
