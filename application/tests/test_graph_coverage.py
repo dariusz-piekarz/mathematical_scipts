@@ -6,7 +6,7 @@ import tempfile
 import unittest
 
 from backend.graph_coverage import graph_coverage, reading_reference_issues
-from backend.latex_parser import build_database
+from backend.latex_parser import build_database, module_id
 
 
 class GraphCoverageTest(unittest.TestCase):
@@ -159,15 +159,26 @@ class GraphCoverageTest(unittest.TestCase):
                             "AND command='atlasref' AND target_label=?",
                             (source, target + "::" + label),
                         ).fetchall()
-                        self.assertEqual(len(rows), 1)
-                        status, owner, entity = rows[0]
-                        self.assertEqual(status, "external_resolved")
-                        self.assertEqual(owner, target)
-                        self.assertEqual(con.execute(
-                            "SELECT entity_id FROM label_occurrences "
-                            "WHERE document_id=? AND name=?", (target, label)
-                        ).fetchall(), [(entity,)])
-                        self.assertGreaterEqual(edges[(source, target)]["reading"], 1)
+                        # Repeated references in separate proofs are valid.
+                        # Require every source occurrence, not merely one row.
+                        from backend.latex_parser import parse_document
+                        relative = next(p for p in paths
+                                        if module_id(Path("chapters/pl") / p) == source)
+                        doc = parse_document((canonical / relative).read_text(encoding="utf-8-sig"),
+                                             "chapters/pl/" + relative)
+                        count = sum(r.command == "atlasref" and
+                                    r.target == target + "::" + label for r in doc.references)
+                        self.assertGreater(count, 0)
+                        self.assertEqual(len(rows), count)
+                        for status, owner, entity in rows:
+                            self.assertEqual(status, "external_resolved")
+                            self.assertEqual(owner, target)
+                            self.assertIsNotNone(entity)
+                            self.assertEqual(con.execute(
+                                "SELECT entity_id FROM label_occurrences "
+                                "WHERE document_id=? AND name=?", (target, label)
+                            ).fetchall(), [(entity,)])
+                        self.assertGreaterEqual(edges[(source, target)]["reading"], count)
 
     def test_canonical_vector_integral_reading_edges(self):
         """Qualified links compare vector results and identify scalar foundations."""

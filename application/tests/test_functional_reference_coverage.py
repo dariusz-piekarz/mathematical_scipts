@@ -1,5 +1,4 @@
 """Catalog-wide FA coverage: test the actual parser and exact label resolver."""
-from collections import Counter
 import json
 from pathlib import Path
 import unittest
@@ -38,14 +37,13 @@ class FunctionalReferenceCoverageTest(unittest.TestCase):
             doc = load(mid)
             refs = [r for r in doc.references if r.command == "atlasref"]
             self.assertTrue(refs, f"{mid}: missing thematic reading link")
-            occurrences = Counter(r.target for r in refs)
+            cross_targets = set()
             cross_volume = 0
             for r in refs:
                 with self.subTest(source=mid, line=r.line, label=r.target):
                     qualified = qualified_occurrence(r.target)
                     self.assertIsNotNone(qualified, "FA links must have explicit chapter ownership")
                     target, label = qualified
-                    self.assertEqual(occurrences[r.target], 1)
                     target_doc = load(target)
                     owners = [Owner(target_doc.id, item.name, item.entity_id)
                               for item in target_doc.labels if item.name == label]
@@ -56,7 +54,8 @@ class FunctionalReferenceCoverageTest(unittest.TestCase):
                     self.assertIsNotNone(decision.owner.entity_id)
                     if not target.startswith("FA-"):
                         cross_volume += 1
-                        count += 1
+                        cross_targets.add(r.target)
             self.assertGreater(cross_volume, 0, f"{mid}: no cross-volume reading link")
+            count += len(cross_targets)
         # Coverage may grow; the audited baseline must not silently shrink.
         self.assertGreaterEqual(count, 77)
