@@ -18,3 +18,7 @@ Trzy środowiska TikZ z blobu `9fcb018a2db6f5cc31296b966e1f7596e2e0457a` skompil
 ## Uzupełnienie — lokalne wykonanie testów matematycznych
 
 W kontenerze uruchomiono odtworzoną z kodu testowego w commicie `113788b99c5ddfb04281a1a60ee85c83952a6885` kopię czterech metod unittest (001, 002, 003, 005) z tymi samymi funkcjami pomocniczymi i asercjami. Wynik: 4/4 OK (0,282 s). Piąty test struktury 004 wymaga pełnego drzewa repozytorium i nie został lokalnie wykonany jako unittest; odpowiadające mu kontrole struktury i etykiet wykonano wcześniej na plikach pobranych z GitHub. Próba pobrania repozytorium przez git z kontenera zakończyła się błędem DNS (Could not resolve host: github.com). Nie jest to wynik pełnej suity CI. Run #46055118274 nadal queued. Odbiór pełnego PDF i pełnego CI pozostaje otwarty.
+
+## Odbiór CI
+
+Run `46055118274`, head `113788b99c5ddfb04281a1a60ee85c83952a6885`, zakończył się SUCCESS. Job validate `140695612661`: testy regresyjne, kompilacja pełnej książki, weryfikacja PDF i odsyłaczy oraz upload artefaktu — wszystkie kroki SUCCESS. Kontrole matematyczne, strukturalne i samodzielna kompilacja diagramów zostały wcześniej zaliczone. Pozostaje wizualna kontrola rozmieszczenia diagramów w pełnym PDF (nie utożsamiamy jej z samodzielną kompilacją TikZ).
