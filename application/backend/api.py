@@ -690,6 +690,20 @@ def saved_projects():
     return {'items': workspaces.list_saved_projects()}
 
 
+@app.get('/api/plotly/bundle.js', include_in_schema=False)
+def plotly_bundle():
+    """Serve the installed package's local, fixed JavaScript asset."""
+    try:
+        import plotly
+        bundle = Path(plotly.__file__).resolve().parent / 'package_data' / 'plotly.min.js'
+    except ImportError as exc:
+        raise HTTPException(status_code=503, detail='Zainstaluj zależności aplikacji (Plotly).') from exc
+    if not bundle.is_file():
+        raise HTTPException(status_code=503, detail='Brak lokalnego pakietu JavaScript Plotly.')
+    return FileResponse(bundle, media_type='application/javascript',
+                        headers={'Cache-Control': 'no-cache'})
+
+
 @app.get('/api/modules/{module_id}/figures/{figure_id}.png')
 def preview_figure(module_id: str, figure_id: str):
     with db_connection() as con:
