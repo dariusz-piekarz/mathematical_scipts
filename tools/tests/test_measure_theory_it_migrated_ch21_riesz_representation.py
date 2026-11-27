@@ -61,5 +61,33 @@ class RieszRepresentation13(unittest.TestCase):
         self.assertEqual(part,f)
 
 
+    def test_jordan_positive_part_weighted_atoms(self):
+        weights=[Q(3),Q(-2),Q(0),Q(5,2)]
+        f=[Q(1,2),Q(1),Q(2),Q(3,4)]
+        T=lambda g:sum(a*b for a,b in zip(weights,g))
+        from itertools import product
+        admissible=product(*[(Q(0), x/2, x) for x in f])
+        self.assertEqual(max(T(g) for g in admissible),
+                         sum(max(w,0)*x for w,x in zip(weights,f)))
+
+    def test_complex_phase_and_modulus_measure(self):
+        weights=[3+4j,-2j,0j,-5+0j]
+        g=[0.5,1.0,2.0,0.25]
+        h=[x*w.conjugate()/abs(w) if w else 0j
+           for w,x in zip(weights,g)]
+        T=lambda z:sum(w*v for w,v in zip(weights,z))
+        expected=sum(abs(w)*x for w,x in zip(weights,g))
+        self.assertAlmostEqual(T(h).real, expected)
+        self.assertAlmostEqual(T(h).imag, 0)
+        self.assertTrue(all(abs(v)<=x+1e-12 for v,x in zip(h,g)))
+        self.assertAlmostEqual(sum(abs(w) for w in weights),12)
+
+    def test_radial_projection_does_not_increase_error(self):
+        for z in (0j,0.5+0.5j,3+4j,-2j,-2+1j):
+            p=z/max(1,abs(z))
+            for w in (0j,1j,-1j,1+0j,-1+0j,0.3+0.4j):
+                self.assertLessEqual(abs(p-w),abs(z-w)+1e-12)
+
+
 if __name__=="__main__":
     unittest.main()
