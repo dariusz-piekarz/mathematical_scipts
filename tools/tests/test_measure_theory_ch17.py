@@ -155,13 +155,30 @@ class TestMeasureTheoryChapter17(unittest.TestCase):
 
     def test_tex_structure_dependencies_and_no_rn_circularity(self):
         src = CH17.read_text(encoding="utf-8")
-        other = CH16.read_text(encoding="utf-8") + CH18.read_text(encoding="utf-8")
+        other = "\n".join(
+            path.read_text(encoding="utf-8")
+            for path in sorted(CH17.parent.glob("[0-9][0-9]-*.tex"))
+            if path != CH17
+        )
         labels = re.findall(r"\\label\{([^}]+)\}", src)
         self.assertEqual(len(labels), 17)
         self.assertEqual(len(set(labels)), len(labels))
         known = set(labels) | set(re.findall(r"\\label\{([^}]+)\}", other))
         refs = re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", src)
         self.assertFalse(set(refs) - known)
+        atlas_targets = {
+            "P3-08": "probability_volume_iii/08-*.tex",
+            "AM1-37": "mathematical_analysis_i/37-*.tex",
+            "AM1-40": "mathematical_analysis_i/40-*.tex",
+            "AM1-42": "mathematical_analysis_i/42-*.tex",
+            "ME-08": "measure_theory/08-*.tex",
+        }
+        for code, label in re.findall(r"\\atlasref\{([^{}:]+)::([^{}]+)\}", src):
+            with self.subTest(code=code, label=label):
+                self.assertIn(code, atlas_targets)
+                targets = list((ROOT / "chapters/pl").glob(atlas_targets[code]))
+                self.assertEqual(len(targets), 1)
+                self.assertIn(r"\label{" + label + "}", targets[0].read_text(encoding="utf-8"))
         stack = []
         for match in re.finditer(r"\\(begin|end)\{([^}]+)\}", src):
             if match[1] == "begin":
