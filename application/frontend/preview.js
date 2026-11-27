@@ -98,6 +98,10 @@ function buildProsePreview(container, source, moduleId) {
       const command=match[0].replace(/\*$/,'');i+=match[0].length;
       if(['newcommand','renewcommand','providecommand','DeclareMathOperator'].includes(command)) {group();while(true){whitespace();if(text[i]!=='[')break;group('[',']');}group();continue;}
       if(['label','index','bibliographystyle','bibliography'].includes(command)){group();continue;}
+      // Table-of-contents writes are metadata, not visible prose or headings.
+      if(command==='addcontentsline'){group();group();group();continue;}
+      if(command==='addtocontents'){group();group();continue;}
+      if(command==='phantomsection')continue;
       if(['setcounter','addtocounter'].includes(command)){group();group();continue;}
       if(['stepcounter','refstepcounter'].includes(command)){group();continue;}
       if(['noindent','indent','smallskip','medskip','bigskip','newpage','clearpage','centering','begingroup','endgroup'].includes(command))continue;

@@ -55,6 +55,15 @@ class FigurePreviewTests(unittest.TestCase):
         closed = renderer.declarations(source + r'\endgroup')
         self.assertEqual(closed, r'\newcommand{\outer}{O}')
 
+    def test_graph_and_knot_preamble_matches_book_and_has_styles(self):
+        book = (renderer.ROOT.parent / "books/pl/graph_and_knot_theory.tex").read_text(encoding="utf-8-sig")
+        template = (renderer.ROOT / "config/preambles/GW.tex").read_text(encoding="utf-8-sig")
+        self.assertEqual(template.strip(), book.split(r"\begin{document}", 1)[0].strip())
+        source = r"\begin{tikzpicture}\node[tgBlueVertex] (a) at (0,0) {}; \draw[tgEdge] (a)--(1,1);\end{tikzpicture}"
+        header = renderer.preamble("GW-01", source, next(iter(renderer.figures(source))))
+        for declaration in (r"\definecolor{tgBlue}", r"tgBlueVertex/.style", r"tgEdge/.style", r"\definecolor{ktInk}"):
+            self.assertIn(declaration, header)
+
     def test_mathscr_package_in_standalone_preamble(self):
         source = r'\begin{tikzpicture}\node {$\mathscr B$};\end{tikzpicture}'
         self.assertIn(r'\usepackage{mathrsfs}', renderer.preamble('AM2-15', source))

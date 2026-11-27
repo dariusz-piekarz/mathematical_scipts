@@ -123,6 +123,17 @@ with sync_playwright() as pw:
     assert box.locator('img').count() == 0
     assert 'komentarz' not in box.inner_text()
     assert box.locator('.katex').count() == 2
+    # A starred heading is visible once; its ToC metadata is not prose.
+    toc_source = (r"\chapter*{Wstęp do grafów}\phantomsection"
+                  r"\addcontentsline {toc}{chapter}{Wstęp \textbf{do grafów}}"
+                  r"\addtocontents{toc}{\protect\smallskip}"
+                  "\n\nDalszy tekst.")
+    page.evaluate("latex => renderSimplified(latex, 'GW-01')", toc_source)
+    assert box.locator('h2').count() == 1
+    assert box.locator('h2').inner_text() == 'Wstęp do grafów'
+    assert box.inner_text().count('Wstęp') == 1
+    assert 'Dalszy tekst.' in box.inner_text()
+    assert not any(token in box.inner_text() for token in ('addcontentsline', 'addtocontents', 'phantomsection', 'tocchapter'))
     page.locator('#themeToggle').click()
     assert page.locator('html').get_attribute('data-theme') == 'dark'
     dark = box.evaluate('el => ({background:getComputedStyle(el).backgroundColor,color:getComputedStyle(el).color})')
@@ -184,6 +195,21 @@ with sync_playwright() as pw:
         assert frame.locator('#plot .gl-container').count() > 0
         host.locator('button').click()
         assert host.locator('iframe').count() == 0
+    # Real graph chapters: every figure must decode, not merely insert a placeholder.
+    for module, filename, expected in (
+        ('GW-01', '01-podstawy-teorii-grafow.tex', 7),
+        ('GW-02', '02-drzewa-mosty-i-cykle-fundamentalne.tex', 6),
+    ):
+        source = (ROOT.parent / 'chapters/pl/graph_and_knot_theory' / filename).read_text(encoding='utf-8')
+        page.evaluate("([latex, code]) => renderSimplified(latex, code)", [source, module])
+        assert box.locator('.atlas-tikz-preview').count() >= expected, module
+        page.wait_for_function(
+            """() => {
+                const figures = [...document.querySelectorAll('#simplified .atlas-tikz-preview')];
+                return figures.length > 0 && figures.every(f => f.querySelector('button') ||
+                    (f.querySelector('img')?.complete && f.querySelector('img').naturalWidth > 0));
+            }""", timeout=180000)
+        assert box.locator('.atlas-tikz-preview button').count() == 0, (module, box.locator('.atlas-tikz-preview').all_inner_texts())
     assert not errors, errors
     browser.close()
     print('Reader prose, math, references, safe content, responsive layout and persistent themes, rendered TikZ and interactive Plotly figures: OK')
