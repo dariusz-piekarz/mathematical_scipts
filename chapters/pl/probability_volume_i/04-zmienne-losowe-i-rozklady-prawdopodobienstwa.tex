@@ -874,6 +874,10 @@ niepewność co do $X$.
 \section{Przekształcanie zmiennych i suma niezależnych zmiennych}
 Jeśli znamy rozkład $X$, to często chcemy poznać rozkład
 $g(X)$, na przykład kwadratu, logarytmu lub odwrotności.
+Dla borelowskiego $g:\R\to\R$ zmienna $Y=g\circ X$ jest
+mierzalna, a jej rozkład jest miarą obrazową:
+$\mu_Y(B)=\mu_X(g^{-1}(B))$ dla $B\in\mathcal B(\R)$.
+Wynika to z równości $\{Y\in B\}=\{X\in g^{-1}(B)\}$.
 Przy zmianie zmiennych gęstość musi być skorygowana o to,
 jak $g$ rozciąga albo ściska małe przedziały: stąd pochodna
 funkcji odwrotnej. Przy sumie niezależnych zmiennych na
@@ -881,9 +885,11 @@ ustaloną wartość $s$ składają się wszystkie pary $(x,s-x)$;
 „sumowanie” ich wkładów prowadzi do splotu.
 
 \begin{stwierdzenie}[Transformacja monotoniczna]
-Niech $X$ ma gęstość $f_X$, a $g:I\to J$ będzie dyfeomorfizmem
-przedziałów otwartych $I,J\subseteq\R$. Załóżmy, że
-$\Prob(X\in I)=1$. Wtedy $Y=g(X)$ ma gęstość
+Niech $X$ ma gęstość $f_X$, a $g:I\to J$ będzie
+dyfeomorfizmem klasy $C^1$ przedziałów otwartych
+$I,J\subseteq\R$. Załóżmy, że $\Prob(X\in I)=1$.
+Przedłużmy $g$ przez zero poza $I$; otrzymana funkcja
+jest borelowska. Wtedy $Y=g(X)$ ma gęstość
 $f_Y(y)=f_X(g^{-1}(y))\,|(g^{-1})'(y)|$ dla $y\in J$
 i gęstość zero poza $J$.
 \end{stwierdzenie}
@@ -894,10 +900,14 @@ rozpoczynamy od definicji rozkładu zmiennej $Y=g(X)$:
 \Prob(Y\in B)=\Prob(X\in g^{-1}(B\cap J))
 =\int_{g^{-1}(B\cap J)}f_X(x)\,\dd\lambda_1(x).
 \]
-Ostatnia równość wynika z założenia $\Prob(X\in I)=1$.
-Ponieważ $g:I\to J$ jest dyfeomorfizmem, stosujemy
-jednowymiarowe twierdzenie o zmianie zmiennych
-$y=g(x)$ i otrzymujemy
+Pierwsza równość zachodzi, ponieważ zdarzenia po obu
+stronach mogą różnić się tylko na $\{X\notin I\}$, którego
+prawdopodobieństwo jest zerowe. Druga wynika z definicji
+gęstości i borelowskości przeciwobrazu w $I$.
+Do dyfeomorfizmu $g^{-1}:J\to I$ oraz funkcji
+$x\mapsto f_X(x)\chi_{g^{-1}(B\cap J)}(x)$ stosujemy
+\atlasref{ME-13::thm:change-variables-13}{twierdzenie o zamianie zmiennych w całce Lebesgue'a}.
+Otrzymujemy
 \[
 \Prob(Y\in B)=\int_{B\cap J}
  f_X(g^{-1}(y))\,|(g^{-1})'(y)|\,\dd\lambda_1(y).
@@ -909,10 +919,15 @@ prowadzić do ujemnej gęstości.
 \end{proof}
 
 \begin{stwierdzenie}[Skończenie wiele gałęzi]
-Niech $X$ ma gęstość $f_X$ i niech rozłączne przedziały otwarte
-$I_1,\ldots,I_r$ spełniają $\Prob(X\in\bigcup_jI_j)=1$.
-Załóżmy, że dla każdego $j$ funkcja $g|_{I_j}$ jest
-$C^1$-dyfeomorfizmem na przedział $J_j$.
+Niech $X$ ma gęstość $f_X$ i niech $I_1,\ldots,I_r$,
+$r\geq1$, będą parami rozłącznymi przedziałami otwartymi
+spełniającymi $\Prob(X\in\bigcup_{j=1}^r I_j)=1$.
+Niech $g$ będzie funkcją na $\bigcup_{j=1}^r I_j$, której
+ograniczenie do każdego $I_j$ jest $C^1$-dyfeomorfizmem
+na otwarty przedział $J_j$.
+Przedłużamy $g$ przez zero poza sumą tych przedziałów.
+Tak określona funkcja jest borelowska, gdyż jest ciągła
+na każdym $I_j$ i stała na borelowskim dopełnieniu ich sumy.
 Wtedy $Y=g(X)$ ma gęstość
 \[
 f_Y(y)=\sum_{j:y\in J_j}
@@ -930,20 +945,28 @@ według gałęzi:
 \Prob(g(X)\in B)=\sum_{j=1}^r
 \int_{I_j\cap g^{-1}(B)} f_X(x)\,\dd\lambda_1(x).
 \]
-Na każdym $I_j$ funkcja $g$ jest dyfeomorfizmem
-na $J_j$, więc poprzednie twierdzenie pozwala
-przejść od $x$ do $y=g(x)$. Otrzymujemy
+Dla każdego $j$ oznaczmy $g_j=g|_{I_j}$.
+Stosujemy twierdzenie o zamianie zmiennych osobno do
+całki po $I_j\cap g^{-1}(B)$, bez normalizowania
+ograniczonej miary. Z reguły łańcuchowej
+$g_j'(g_j^{-1}(y))(g_j^{-1})'(y)=1$ dla $y\in J_j$,
+więc $g_j'$ nie znika i
+$|(g_j^{-1})'(y)|=1/|g_j'(g_j^{-1}(y))|$.
+Otrzymujemy
 \[
 \Prob(g(X)\in B)=\sum_{j=1}^r
 \int_{B\cap J_j}
 \frac{f_X((g|_{I_j})^{-1}(y))}
 {|g'((g|_{I_j})^{-1}(y))|}\,\dd\lambda_1(y).
 \]
-Przenosimy sumę skończoną pod całkę, uzyskując
-podany wzór. Wszystkie gałęzie prowadzące do tej samej
-wartości $y$ muszą zostać dodane: w przeciwieństwie
-do przypadku monotonicznego, pojedynczy wynik $Y=y$
-może mieć kilka wartości przeciwobrazu.
+Każdy składnik przedłużamy przez zero poza $J_j$;
+w szczególności nie obliczamy odwrotności gałęzi poza jej
+dziedziną. Suma skończona jest nieujemna i borelowska,
+a przeniesienie jej pod całkę daje podany wzór.
+Dla $B=\R$ całka z tej funkcji wynosi jeden.
+Wszystkie gałęzie prowadzące do tej samej wartości $y$
+muszą zostać uwzględnione, ponieważ równanie $g(x)=y$
+może mieć po jednym rozwiązaniu w kilku różnych $I_j$.
 \end{proof}
 
 \begin{twierdzenie}[Splot]
@@ -957,20 +980,28 @@ dla $\lambda_1$-prawie każdego $s$.
 \end{twierdzenie}
 \begin{proof}
 Z niezależności rozkład pary $(X,Y)$ jest iloczynem
-rozkładów brzegowych, a więc ma gęstość
-$f_{X,Y}(x,y)=f_X(x)f_Y(y)$.
+rozkładów brzegowych. Z dowodu kryterium iloczynowego
+gęstości (poprzednia sekcja o rozkładach łącznych) miara
+produktowa ma gęstość $f_{X,Y}(x,y)=f_X(x)f_Y(y)$:
+całka z iloczynu definiuje miarę probabilistyczną
+i na prostokątach ma te same wartości co
+$\mu_X\otimes\mu_Y$. Wybieramy wszędzie skończone
+borelowskie wersje obu gęstości.
 Niech $B\subseteq\R$ będzie dowolnym zbiorem borelowskim.
 Z definicji $S=X+Y$ i twierdzenia Tonellego
 \[
-\Prob(S\in B)=\int_{\R^2}\ind{\{x+y\in B\}}
+\Prob(S\in B)=\int_{\R^2}\chi_B(x+y)
  f_X(x)f_Y(y)\,\dd\lambda_2(x,y).
 \]
 Rozważmy liniową zmianę współrzędnych
-$(x,y)\mapsto (x,s=x+y)$, której macierz ma wyznacznik
-równy jeden. Jej odwrotność to $(x,s)\mapsto(x,s-x)$.
-Po zmianie zmiennych otrzymujemy
+$(x,y)\mapsto (x,s=x+y)$, której macierz
+$\left(\begin{smallmatrix}1&0\\1&1\end{smallmatrix}\right)$
+ma wyznacznik równy jeden. Jej odwrotność to
+$(x,s)\mapsto(x,s-x)$, również o wyznaczniku jeden.
+Stosując \atlasref{ME-13::thm:change-variables-13}{twierdzenie o zamianie zmiennych}
+do tej odwrotności, otrzymujemy
 \[
-\Prob(S\in B)=\int_{\R^2}\ind{\{s\in B\}}
+\Prob(S\in B)=\int_{\R^2}\chi_B(s)
  f_X(x)f_Y(s-x)\,\dd\lambda_2(x,s).
 \]
 Ponieważ funkcja podcałkowa jest nieujemna,
@@ -980,14 +1011,28 @@ możemy zmienić kolejność całkowania:
 \int_\R f_X(x)f_Y(s-x)\,\dd\lambda_1(x)
 \right)\dd\lambda_1(s).
 \]
-Z definicji gęstości wynika wzór na splot. W szczególności
-całka z prawej strony po całej $\R$ wynosi jeden,
-a splot nieujemnych gęstości jest znów gęstością.
+Wewnętrzna całka jest borelowską funkcją zmiennej $s$
+na mocy twierdzenia Tonellego, ponieważ $(x,s)\mapsto
+f_X(x)f_Y(s-x)$ jest nieujemna i borelowska.
+Dla $B=\R$ otrzymujemy, że całka z tej funkcji wynosi jeden.
+Jest ona zatem skończona $\lambda_1$-prawie wszędzie.
+Z definicji gęstości wynika \eqref{eq:convolution}.
+W razie potrzeby na zbiorze, na którym splot jest
+nieskończony, przyjmujemy wartość zero.
 \end{proof}
 
 \begin{przyklad}[Suma dwóch jednostajnych zmiennych]
 Jeśli $U,V$ są niezależne i jednostajne na $(0,1)$,
-to dla $S=U+V$ ze wzoru na splot otrzymujemy
+to $f_U=f_V=\chi_{(0,1)}$. Z \eqref{eq:convolution}
+dla $S=U+V$ otrzymujemy
+\[
+f_S(s)=\int_\R\chi_{(0,1)}(u)\chi_{(0,1)}(s-u)\,\dd\lambda_1(u)
+=\lambda_1((0,1)\cap(s-1,s)).
+\]
+Długość przecięcia wynosi
+$\max\{0,\min(1,s)-\max(0,s-1)\}$.
+Po rozpatrzeniu zakresów $s\leq0$, $0<s\leq1$,
+$1<s<2$ i $s\geq2$ dostajemy
 \[
 f_S(s)=\begin{cases}
 s,&0<s\leq1,\\
@@ -995,18 +1040,25 @@ s,&0<s\leq1,\\
 0,&\text{w pozostałych przypadkach}.
 \end{cases}
 \]
-Rozkład sumy nie jest jednostajny: dla $s$ bliskiego $1$
-istnieje więcej par $(u,v)$ o sumie $s$ niż dla $s$ bliskiego $0$.
+Gęstość jest trójkątna, a nie stała na $(0,2)$.
+Jej wartości odpowiadają długości zbioru dopuszczalnych
+wartości pierwszej współrzędnej $u$, gdy suma wynosi $s$.
+Całka z gęstości wynosi
+$\int_0^1 s\,\dd\lambda_1(s)+\int_1^2(2-s)\,\dd\lambda_1(s)=1$.
 \end{przyklad}
 
 \begin{przyklad}[Bez niezależności wzór na splot może zawieść]
 Niech $U\sim\Unif(0,1)$ oraz $V=1-U$.
-Wtedy również $V\sim\Unif(0,1)$, lecz $U+V=1$
-prawie na pewno. Rozkład sumy jest więc skupiony
+Przekształcenie $u\mapsto1-u$ jest $C^1$-dyfeomorfizmem
+$(0,1)$ na $(0,1)$, którego odwrotność ma pochodną $-1$.
+Z twierdzenia o transformacji monotonicznej wynika
+$V\sim\Unif(0,1)$. Tymczasem $U+V=1$ dla każdego wyniku. Rozkład sumy jest więc skupiony
 w jednym punkcie i nie ma gęstości względem miary
 Lebesgue'a, mimo że obie zmienne mają gęstości.
 Nie jest to sprzeczne z twierdzeniem o splocie,
-ponieważ $U$ i $V$ nie są niezależne.
+ponieważ $U$ i $V$ nie są niezależne:
+$\Prob(U<1/2)=\Prob(V<1/2)=1/2$, ale
+$\Prob(U<1/2,V<1/2)=0\neq1/4$.
 \end{przyklad}
 
 
