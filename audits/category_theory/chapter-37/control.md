@@ -10,3 +10,7 @@ Testy regresyjne: commit `113788b99c5ddfb04281a1a60ee85c83952a6885`.
 - CI: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/46055118274 — status queued, job validate 140695612661 bez wykonanych kroków w chwili kontroli.
 
 Status: część matematyczna i odsyłacze kontrolnie sprawdzone; odbiór końcowy WSTRZYMANY do rzeczywistego sukcesu CI, kompilacji PDF i kontroli wizualnej trzech diagramów. Nie deklarujemy zamknięcia rozdziału ani wykonania testów Python.
+
+## Uzupełnienie — niezależna kontrola diagramów
+
+Trzy środowiska TikZ z blobu `9fcb018a2db6f5cc31296b966e1f7596e2e0457a` skompilowano bez zmian w lokalnym dokumencie `article` (11 pt, A4, pakiety amsmath i tikz, biblioteki arrows.meta i babel), poleceniem `pdflatex -halt-on-error -interaction=nonstopmode`. Wynik: 1 strona, brak ostrzeżeń i błędów w logu. Render Poppler 150 dpi sprawdzono wizualnie: podstawienie operacji o arności 6, dwa drzewa binarne oraz podstawienie małych prostokątów są czytelne i nie nachodzą na siebie. Nie jest to kompilacja pełnego skryptu ani kontrola renderera aplikacji. CI #46055118274 nadal queued. Odbiór pełnego PDF pozostaje otwarty.
