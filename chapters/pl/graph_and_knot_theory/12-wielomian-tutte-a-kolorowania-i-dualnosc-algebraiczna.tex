@@ -155,6 +155,39 @@ a więc pozwala obliczyć wielomian po skończonej liczbie
 kroków; to również dowodzi jednoznaczności.
 \end{proof}
 
+\begin{wniosek}[Nieujemność współczynników i rozłączna suma grafów]
+\label{cor:tg-tutte-product}
+Współczynniki $T_G$ w bazie jednomianów $x^iy^j$
+są nieujemnymi liczbami całkowitymi.
+Jeśli $G=G_1\sqcup G_2$ jest rozłączną sumą grafów,
+to $T_G=T_{G_1}T_{G_2}$.
+Dodanie izolowanych wierzchołków nie zmienia $T_G$.
+\end{wniosek}
+\begin{proof}
+Nieujemność wynika przez indukcję względem liczby
+krawędzi z twierdzenia \ref{thm:tg-tutte-recursion}:
+w przypadku bazowym wielomian jest równy $1$,
+a w każdym kroku dodajemy dwa wielomiany o nieujemnych
+współczynnikach albo mnożymy taki wielomian przez $x$
+lub $y$.
+
+Każdy podzbiór $A\subseteq E(G)$ rozkłada się
+jednoznacznie na rozłączną sumę $A_1\sqcup A_2$,
+gdzie $A_i\subseteq E(G_i)$. Mamy
+\[
+k_G(A)=k_{G_1}(A_1)+k_{G_2}(A_2),\qquad
+\nu_G(A)=\nu_{G_1}(A_1)+\nu_{G_2}(A_2),
+\]
+ponieważ liczby składowych, wierzchołków i krawędzi
+sumują się dla rozłącznych grafów.
+Tak samo $k_G(E)=k_{G_1}(E(G_1))+k_{G_2}(E(G_2))$.
+Składnik definicji \ref{def:tg-tutte} jest zatem
+iloczynem odpowiednich składników dla $G_1,G_2$.
+Sumowanie niezależnie po $A_1$ i $A_2$ daje
+wzór na iloczyn. Graf bez krawędzi ma wielomian $1$,
+co dowodzi ostatniej tezy.
+\end{proof}
+
 \begin{przyklad}[Drzewo, cykl i trzy krawędzie równoległe]
 Jeżeli $G$ jest drzewem o $n\ge1$ wierzchołkach,
 każda krawędź jest mostem. Kontraktując je kolejno,
@@ -268,12 +301,19 @@ po jednym drzewie rozpinającym na każdą składową.
 Dla grafu zerowego jedynym takim lasem jest graf pusty.
 \end{uwaga}
 
-\begin{stwierdzenie}[Dwie dalsze specjalizacje]
+\begin{stwierdzenie}[Trzy dalsze specjalizacje]
+\label{prop:tg-tutte-specializations}
 Dla skończonego multigrafu $G=(V,E)$ zachodzą równości:
-$T_G(2,2)=2^{|E|}$,
-$T_G(2,1)=N_{\mathrm{las}}(G)$,
+\[
+T_G(2,2)=2^{|E|},\qquad
+T_G(2,1)=N_{\mathrm{las}}(G),\qquad
+T_G(1,2)=N_{\mathrm{rozp}}(G),
+\]
 gdzie $N_{\mathrm{las}}(G)$ oznacza liczbę podzbiorów
-krawędzi nie zawierających cyklu (w tym podzbiór pusty).
+krawędzi niezawierających cyklu (w tym podzbiór pusty),
+a $N_{\mathrm{rozp}}(G)$ liczbę podzbiorów $A\subseteq E$,
+dla których podgraf $(V,A)$ jest spójny na każdej
+składowej $G$.
 \end{stwierdzenie}
 
 \begin{proof}
@@ -283,6 +323,15 @@ pozostają dokładnie składniki z $\nu_G(A)=0$, czyli
 podgrafy $(V,A)$ będące lasami. Każdy taki składnik
 wnosi jeden. Pętle nigdy nie należą do lasu i słusznie
 nie pojawiają się w tej sumie.
+Przy $x=1$, $y=2$ pozostają dokładnie składniki
+z $k_G(A)=k_G(E)$. Podgraf $(V,A)$ nie może łączyć
+różnych składowych $G$, zatem równość liczb składowych
+zachodzi wtedy i tylko wtedy, gdy żadna składowa $G$
+nie została rozspójniona przez usunięcie krawędzi
+spoza $A$. Każdy taki składnik wnosi jeden,
+co daje $N_{\mathrm{rozp}}(G)$.
+W szczególności dla spójnego $G$ wartość $T_G(1,2)$
+liczy spójne podgrafy rozpinające, nie tylko drzewa.
 \end{proof}
 
 \section{Wielomian chromatyczny i jego wzór przez Tutte'a}
@@ -308,7 +357,7 @@ spełniających $c(u)\ne c(v)$ dla każdej krawędzi $uv$.
 Gdy $G$ ma pętlę, przyjmujemy $P_G(q)=0$.
 \end{definicja}
 
-\begin{twierdzenie}[Wzór inkluzji i ekskluzji]
+\begin{twierdzenie}[Wzór włączeń i wyłączeń]
 \label{thm:tg-chromatic-inclusion}
 Dla dowolnego skończonego multigrafu $G=(V,E)$ i każdej
 liczby całkowitej $q\ge1$ zachodzi
@@ -362,6 +411,32 @@ $(-1)^{|A|}q^{k_G(A)}$. Poprzednie twierdzenie
 identyfikuje sumę z $P_G(q)$.
 \end{proof}
 
+\begin{wniosek}[Rekurencja wielomianu chromatycznego]
+\label{cor:tg-chrom-recursion}
+Jeśli $e$ nie jest pętlą, to
+\[
+P_G(q)=P_{G\setminus e}(q)-P_{G/e}(q).
+\]
+Dla grafu bez krawędzi $P_G(q)=q^{|V|}$,
+a dla grafu z pętlą $P_G(q)=0$.
+\end{wniosek}
+\begin{proof}
+Dla każdej dodatniej liczby całkowitej $q$ dzielimy
+poprawne kolorowania $G\setminus e$ na dwie rozłączne
+rodziny według tego, czy końce $e$ mają różne kolory,
+czy ten sam kolor. Pierwszą rodzinę stanowią dokładnie
+poprawne kolorowania $G$. Drugą utożsamiamy bijektywnie
+z poprawnymi kolorowaniami $G/e$: końce $e$ otrzymują
+wspólny kolor i zostają utożsamione, a wszystkie
+pozostałe ograniczenia kolorowania są zachowane.
+Jeżeli po kontrakcji powstaje pętla, druga rodzina
+jest pusta, zgodnie z konwencją $P_{G/e}=0$.
+Zliczanie obu rodzin daje rekurencję dla każdego
+całkowitego $q\ge1$, a więc tożsamość wielomianów
+na mocy twierdzenia \ref{thm:tg-chromatic-inclusion}.
+Dwie wartości początkowe wynikają z definicji.
+\end{proof}
+
 \begin{przyklad}[Kolorowania trójkąta]
 Ponieważ $T_{C_3}(x,y)=x^2+x+y$, mamy
 \[
@@ -399,6 +474,9 @@ Możemy zatem stosować konstrukcję grafu dualnego
 z rozdziału \ref{ch:tg-powierzchnie}.
 Dla $A\subseteq E(G)$ oznaczmy
 $A^\perp=\{e^*:e\in E(G)\setminus A\}$.
+Symbol $A^\perp$ oznacza tu dopełnienie zbioru
+krawędzi przeniesione na graf dualny, a nie
+dopełnienie ortogonalne podprzestrzeni.
 Zauważmy, że składowe podgrafu $(V(G^*),A^\perp)$
 odpowiadają ścianom grafu $(V(G),A)$ zanurzonego w sferze.
 Istotnie, usuwamy kolejno krawędzie spoza $A$, nie usuwając
