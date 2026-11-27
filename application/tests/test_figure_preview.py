@@ -42,6 +42,23 @@ class FigurePreviewTests(unittest.TestCase):
         self.assertNotIn(r'\newcommand{\inside}{X}', second_header)
         self.assertNotIn(r'\newcommand{\future}{F}', second_header)
 
+    def test_explicit_groups_do_not_leak_declarations(self):
+        source = (r'\newcommand{\outer}{O}\begingroup'
+                  r'\newcommand{\local}{L}\begingroup'
+                  r'\newcommand{\nested}{N}\endgroup'
+                  r'\newcommand{\body}{\begingroup X\endgroup}')
+        active = renderer.declarations(source)
+        self.assertIn(r'\newcommand{\outer}{O}', active)
+        self.assertIn(r'\newcommand{\local}{L}', active)
+        self.assertNotIn(r'\newcommand{\nested}{N}', active)
+        self.assertIn(r'\newcommand{\body}{\begingroup X\endgroup}', active)
+        closed = renderer.declarations(source + r'\endgroup')
+        self.assertEqual(closed, r'\newcommand{\outer}{O}')
+
+    def test_mathscr_package_in_standalone_preamble(self):
+        source = r'\begin{tikzpicture}\node {$\mathscr B$};\end{tikzpicture}'
+        self.assertIn(r'\usepackage{mathrsfs}', renderer.preamble('AM2-15', source))
+
     def test_render_cache_and_failed_compilation(self):
         key = next(iter(renderer.figures(SOURCE)))
         with tempfile.TemporaryDirectory() as temp, patch.object(renderer, 'CACHE', Path(temp)), patch.object(renderer.shutil, 'which', side_effect=lambda name: name):

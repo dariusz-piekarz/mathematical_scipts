@@ -23,10 +23,22 @@ def figures(content: str) -> dict[str, str]:
 
 def declarations(source: str) -> str:
     """Copy only balanced literal macro/style declarations, never TeX includes."""
-    result = []
-    pattern = re.compile(r'\\(?:newcommand|renewcommand|providecommand|DeclareMathOperator)\*?\s*\{\\[A-Za-z]+\}(?:\[[0-9]+\])?\s*\{|\\(?:tikzset|pgfplotsset)\s*\{|\\definecolor\s*\{[^{}]+\}\s*\{[^{}]+\}\s*\{')
+    # Explicit TeX groups delimit local declarations. This is intentionally
+    # not a general TeX interpreter (implicit environment groups are not
+    # resolved here).
+    frames = [[]]
+    pattern = re.compile(r'\\(?:begingroup|endgroup)(?![A-Za-z])|\\(?:newcommand|renewcommand|providecommand|DeclareMathOperator)\*?\s*\{\\[A-Za-z]+\}\s*(?:\[[0-9]+\]\s*)?\{|\\(?:tikzset|pgfplotsset)\s*\{|\\definecolor\s*\{[^{}]+\}\s*\{[^{}]+\}\s*\{')
     source = re.sub(r'(?m)(?<!\\)%.*$', '', source)
-    for match in pattern.finditer(source):
+    cursor = 0
+    while match := pattern.search(source, cursor):
+        cursor = match.end()
+        if match[0] == r'\begingroup':
+            frames.append([])
+            continue
+        if match[0] == r'\endgroup':
+            if len(frames) > 1:
+                frames.pop()
+            continue
         depth, end = 1, match.end()
         while end < len(source) and depth:
             if source[end] == '\\':
@@ -40,8 +52,11 @@ def declarations(source: str) -> str:
             if declaration.startswith(r'\renewcommand'):
                 name = re.search(r'\{(\\[A-Za-z]+)\}', declaration)[1]
                 declaration = r'\providecommand{' + name + '}{}\n' + declaration
-            result.append(declaration)
-    return '\n'.join(result)
+            frames[-1].append(declaration)
+            # Do not interpret group tokens or declarations inside a macro body.
+            cursor = end
+    return '\n'.join(item for frame in frames for item in frame)
+
 
 def preamble(module: str, content: str, figure_id: str | None = None) -> str:
     content = content.replace('\r\n', '\n')
@@ -74,6 +89,7 @@ def preamble(module: str, content: str, figure_id: str | None = None) -> str:
         r'\usepackage[T1]{fontenc}\usepackage[utf8]{inputenc}\usepackage[polish]{babel}',
         r'\usepackage{lmodern}',
         r'\usepackage{amsmath,amssymb,mathtools}',
+        r'\usepackage{mathrsfs}' if r'\mathscr' in content or re.search(r'\\usepackage(?:\[[^]]*\])?\{[^}]*\bmathrsfs\b[^}]*\}', book) else '',
         r'\AtBeginDocument{\shorthandoff{"}}',
         r'\usetikzlibrary{' + ','.join(sorted(libraries)) + '}', packages,
         r'\usepackage{tikz-cd}' if r'\begin{tikzcd}' in content else '',
