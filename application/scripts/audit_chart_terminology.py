@@ -26,10 +26,39 @@ REFERENCE = re.compile(
 # Any new chart-like use in other TeX files is a terminology regression.
 # Caps intentionally prevent silently growing the exceptions.
 CARD_GAME_EXCEPTIONS = {
-    "chapters/pl/probability_volume_i/01-kombinatoryka-i-modele-skonczone.tex": 17,
+    "chapters/pl/probability_volume_i/01-kombinatoryka-i-modele-skonczone.tex": 22,
     "chapters/pl/probability_volume_i/04-zmienne-losowe-i-rozklady-prawdopodobienstwa.tex": 2,
     "sources/pl/rachunek_prawdopodobienstwa_tom_I.tex": 19,
 }
+
+
+# Exact reviewed contexts for the expanded poker example (line numbers may move).
+# Each occurrence consumes one entry; unrelated uses cannot borrow this allowance.
+POKER_PATH = "chapters/pl/probability_volume_i/01-kombinatoryka-i-modele-skonczone.tex"
+POKER_CONTEXTS = (
+    ("kart", "rozważamy. Przy rzutach kostką, losowaniu kart albo układaniu haseł"),
+    ("kart", "przestrzeń wyników. To zasadniczy etap rozwiązania: pięć kart"),
+    ("kart", "\\begin{przyklad}[Losowanie kart]"),
+    ("kart", "Z talii 52 różnych kart losujemy jednostajnie pięć kart bez"),
+    ("kart", "Z talii 52 różnych kart losujemy jednostajnie pięć kart bez"),
+    ("kartami", "Liczba układów z dokładnie dwiema kartami w ustalonym kolorze"),
+    ("kart", "(w znaczeniu jednego z czterech kolorów po 13 kart) wynosi"),
+    ("karty", "dwa razy, a trzy pozostałe karty mają parami różne rangi"),
+    ("karty", "dwie karty tej rangi, trzy inne różne rangi oraz po jednej z czterech"),
+    ("kart", "kart każdej z tych rang. Każdy taki układ jednoznacznie wyznacza rangę pary,"),
+    ("karty", "jej dwie karty, zbiór trzech pozostałych rang i przypisaną"),
+    ("kart", "każdej z nich kartę. W ten sposób każdy dopuszczalny układ"),
+    ("kart", "Losujemy jednostajnie pięć kart bez zwracania i bez uwzględniania"),
+    ("kart", "kolejności z talii 52 kart, w której występuje 13 rang"),
+    ("karty", "po cztery karty każdej rangi. Układ z dokładnie dwiema parami"),
+    ("kart", "sposobów, wybieramy po dwie z czterech kart każdej rangi"),
+    ("kart", "na $\\binom42^2$ sposobów, a ostatnią kartę spośród"),
+    ("kart", "$11\\cdot4$ kart o pozostałych rangach. Wynikowe"),
+    ("karta", "Wymóg, aby ostatnia karta miała inną rangę, wyklucza"),
+    ("kartami", "układ z trzema kartami jednej rangi. Każdy układ z dokładnie"),
+    ("kart", "dwóch rang par, dwa podzbiory kart odpowiadające tym rangom"),
+    ("kart", "oraz ostatnią kartę. Dzięki temu każdy dopuszczalny układ"),
+)
 
 
 def unexpected_matches(
@@ -42,7 +71,16 @@ def unexpected_matches(
     result: list[dict[str, object]] = []
     for path, items in grouped.items():
         allowance = CARD_GAME_EXCEPTIONS.get(path, 0)
-        result.extend(items[allowance:])
+        if path == POKER_PATH:
+            remaining = list(POKER_CONTEXTS)
+            for item in items:
+                identity = (item["word"], item["context"])
+                if identity in remaining:
+                    remaining.remove(identity)
+                else:
+                    result.append(item)
+        else:
+            result.extend(items[allowance:])
     return result
 
 
