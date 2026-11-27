@@ -35,9 +35,9 @@ Kurs inspirowany wykładami Marka Jarnickiego, Wykłady z Analizy Matematycznej 
 
 24. Całka Riemanna (AM I 29, AM I 29 (zawartość Jordana i całka Riemanna))
 25. Funkcje pierwotne (AM I 28–30); podstawowe twierdzenie rachunku całkowego (AM I 28–30)
-26. Całki funkcji wektorowych (AF 15A)
-27. Całki niewłaściwe (AM I 31)
-28. Całki zależne od parametru (AM I 32, ME 11)
+26. Całka Lebesgue'a w R^n: całkowanie na zbiorach mierzalnych, funkcje nieujemne i całkowalne, twierdzenia graniczne, zgodność z całką Riemanna; pełne tezy i odsyłacze do ME 04, 07–08; zastosowania rachunkowe
+27. Całki na zbiorach nieograniczonych i z osobliwościami w R^n: wyczerpanie, całkowalność bezwzględna, zależność granic niewłaściwych od wyczerpania (AM I 31, ME 07–08)
+28. Całki skalarne zależne od parametrów w R^m: ciągłość, różniczkowanie, reguła Leibniza (AM I 32, ME 11)
 
 ## IV. Całkowanie wielowymiarowe i na podrozmaitościach
 
@@ -48,7 +48,7 @@ Kurs inspirowany wykładami Marka Jarnickiego, Wykłady z Analizy Matematycznej 
 33. Całki powierzchniowe pierwszego rodzaju (DG 11, ME 28)
 34. Całki powierzchniowe drugiego rodzaju i strumień (DG 10–11)
 35. Całkowanie po podrozmaitościach dowolnego wymiaru, formy, Green, Gauss–Ostrogradski i Stokes (DG 01, 10–11, ME 26–28); orientacja, miara indukowana, macierz Grama, forma objętości, całkowanie form, brzeg; ME 26–27, DG 10–11
-   - Dodatkowe rozdziały po zakończeniu podstawowego programu AM II: wielowymiarowe całki cechowane i całka Pfeffera; opracowanie całki Mawhina wstrzymane do osobnej dyspozycji użytkownika. Twierdzenie Gaussa–Ostrogradskiego stanowi ich wcześniejszy punkt odniesienia; szczegóły w osobnym bloku planu poniżej.
+   - Podstawowy program obejmuje wyłącznie całki Riemanna i Lebesgue'a oraz ich geometryczne zastosowania. Dawne propozycje całek cechowanych, Pfeffera i Mawhina pozostają poza aktywnym programem, do ewentualnej osobnej dyspozycji.
 
 ## V. Szeregi potęgowe, rzeczywiste funkcje analityczne i aproksymacja
 
@@ -71,7 +71,7 @@ Kurs inspirowany wykładami Marka Jarnickiego, Wykłady z Analizy Matematycznej 
 
 - Granice i ciągłość: AM I 06, 14–16, TO 03 i 07, AM II 01, 08–10. Przywołać gotowe ogólne wyniki; dopisać tylko specyfikę wielu zmiennych, brakujące przykłady i kontrprzykłady.
 - Różniczkowanie: AF 14 (pochodne Gâteaux i Frécheta), AF 15 (pochodne wyższych rzędów i lokalne twierdzenia), AM I 20–23 i 25, AL. Zweryfikować zakres twierdzeń o odwrotności, uwikłaniu, rzędzie i ekstremach; importować istniejące dowody lub przywołać pełne tezy z dokładnymi odsyłaczami, nie dowodzić ich drugi raz. DG 01 i 16: podrozmaitości, zanurzenia, przestrzenie styczne. DG 18: punkty krytyczne i twierdzenie Morse'a, w razie potrzeby wykorzystać w rozdziale o ekstremach.
-- Całki jednowymiarowe: AM I 28–36, dalsze rodzaje całek z AM I i ME tylko jako odsyłacze, AF 15A–15B. Nie odtwarzać metod całkowania ani rozbudowanej teorii całek skalarowych. Skupić się na wektorowych, nowych zastosowaniach i zależnościach.
+- Całki jednowymiarowe: AM I 28–36, dalsze rodzaje całek z AM I i ME tylko jako odsyłacze, AF 15A–15B. Nie odtwarzać metod całkowania ani rozbudowanej teorii całek skalarowych. Od rozdziału 26 skupić się na całkach skalarnych w R^n i ich zastosowaniach geometrycznych. Ogólną teorię całek wektorowych pozostawić AF 15A–15B i ME 30.
 - Całki wielowymiarowe: ME 04, 07–08, 11–13, 26–27; zweryfikować dokładny rozdział o zamianie zmiennych. Wykorzystać twierdzenia Fubiniego i Tonellego, całki zależne od parametru, miarę Hausdorffa i miarę indukowaną. Dodać tylko brakujący rachunek Riemanna na kostkach i zbiorach Jordana oraz most do teorii Lebesgue'a.
 - Całkowanie geometryczne: DG 01, 03, 10, 11, 16; ME 26–27, AM I 33. Wykorzystać formy, orientację, miarę riemannowską, wzory na długość i objętość, Stokesa i jego przypadki szczególne. Zasadniczy dowód w jednym miejscu, pozostałe ujęcia jako wnioski/odsyłacze. Nie powielać pełnej teorii rozmaitości.
 - Każde przejęcie musi mieć sprawdzony rzeczywisty wynik i dowód w źródle, oryginalną etykietę przy imporcie, dokładne odwołanie przy przytoczeniu, kontrolę zależności i numeracji. Audyt koncentrować na nowym materiale, zgodności importu, połączeniach i lukach, a nie na ponownym pisaniu zweryfikowanych dowodów. W razie rozbieżności z wcześniejszą treścią zachować pełne hipotezy i udowodnić tylko nową część.
@@ -402,3 +402,8 @@ Skrypt `integration_theory` został wycofany z katalogu w 58abd7f i jego 18 plik
 ### Kontrola odsyłaczy po wycofaniu CAL (27.11.2026)
 
 W trzech przebiegach odczytano wszystkie 598 pozycji rozdziałów z katalogu (132 z AM I/II, ME i FA na migawce 0660115; 134 z tomów prawdopodobieństwa I–IV, PDE i DG na 7cc66d9; 332 z pozostałych jedenastu skryptów na 8dc9dda, w tym nowy rozdział CAT). Kontrola wystąpień identyfikatorów CAL-xx i ścieżek integration_theory nie wykazała aktywnych odsyłaczy ani importów do wycofanego skryptu; pozostawiono trzy komentarze historyczne w źródłach. Sprawdzono także 21 plików wejściowych książek, rejestr tematów, konfigurację aliasów i rejestr nierozwiązanych odsyłaczy. Wynik dotyczy wskazanych migawek plików, nie pełnego audytu matematycznego ani wszystkich rodzajów odsyłaczy. Katalog na c0f6166 ma nadal 598 rozdziałów i 21 książek. Przebiegi AM I/II dla eaf97e5 nadal queued, dla c0f6166 pending. Nie potwierdzono pełnego CI, kompilacji PDF i działania podglądu po usunięciu. Pozostały odbiór techniczny i kontrola kodu aplikacji/testów oraz konfiguracji budowania.
+
+
+## Zmiana kierunku części całkowej (28.11.2026)
+
+Dyspozycja użytkownika: od rozdziału 26 ograniczyć teorię do wielowymiarowych całek Riemanna i Lebesgue'a w R^n, z celem rachunkowym: całkowanie na zbiorach R^n i podrozmaitościach (całki krzywoliniowe obu rodzajów, powierzchniowe obu rodzajów, całkowanie form, twierdzenia Greena, Gaussa–Ostrogradskiego i Stokesa). Nie rozwijać tu całek w ogólnych przestrzeniach Banacha; wcześniejszy rachunek różniczkowy i ukończone rozdziały 01–25 pozostają, a całkowanie współrzędnych pól o wartościach w R^m można przywołać w zakresie potrzebnym geometrii. Całki wektorowe pozostają w AF 15A–15B i ME 30. Dotychczasowy rozdział 26 i raport zachowano historycznie w docs/pl/am2_materials/ (poza katalogiem); zastępuje go rozdział o całce Lebesgue'a w R^n. Numeracja 27–46 bez zmian. Rozdział 24 zawiera całkę Riemanna na kostkach i zawartość Jordana. Rozdział 30 ma przejść do rachunku na zbiorach, całek iterowanych, Fubiniego i Tonellego, podstawień i współrzędnych krzywoliniowych z licznymi przykładami i pełnymi rysunkami powierzchni. Rozdziały 31–35 opierać na parametryzacjach z 21–23, macierzy Grama, mierze indukowanej i orientacji. W całkach Lebesgue'a stosować dλ_n(x), a na rozmaitościach dμ_g; odróżniać całki względem miary od całkowania form. Dawne plany dalszych całek cechowanych mają status historyczny, nie aktywnego zadania, do osobnej decyzji. Niniejsza aktualizacja ma pierwszeństwo przed wcześniejszymi sprzecznymi zapisami.
