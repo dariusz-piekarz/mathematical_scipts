@@ -450,15 +450,18 @@ import plotly.graph_objects as go
 x = np.linspace(-1, 1, 61)
 X, Y = np.meshgrid(x, x)
 fig = go.Figure()
-palettes = [(-1, "#235b8c", "#d4e5f1"),
-            (0, "#377d55", "#dcecdf"),
-            (1, "#cd9123", "#faedcd")]
-for c, dark, light in palettes:
+for c in [-1, 0, 1]:
     fig.add_trace(go.Surface(x=X, y=Y, z=X**2+Y**2+c,
-        colorscale=[[0, dark], [1, light]], showscale=False,
+        colorscale="Viridis", cmin=-1, cmax=3,
+        showscale=False,
         opacity=0.8, name=f"c={c}", showlegend=True))
 fig.update_layout(scene=dict(xaxis_title="x",
     yaxis_title="y", zaxis_title="z"))
+axis_style = dict(showbackground=True,
+    backgroundcolor="#f5f6f7", gridcolor="#d5dbe0",
+    zerolinecolor="#b0b8bf", showspikes=False)
+fig.update_scenes(xaxis=axis_style, yaxis=axis_style,
+                  zaxis=axis_style)
 fig.write_html("am2_20_rank.html", include_plotlyjs=True)
 fig.show()
 \end{lstlisting}
