@@ -602,6 +602,77 @@ def main() -> None:
                 equivalent_count = sum(e["type"] == "equivalent" for e in graph_payload["edges"])
                 assert equivalent_count > 0
                 assert page.locator('#conceptCanvas path[marker-start="url(#concept-arrow)"][marker-end="url(#concept-arrow)"]').count() == equivalent_count
+                # Identical requests share an in-flight promise; edits and
+                # changes of the limit invalidate old responses and errors.
+                concept_races = page.evaluate("""async payload => {
+                    const originalApi=api, requests=[];
+                    const input=document.getElementById('conceptSearch');
+                    const limit=document.getElementById('conceptLimit');
+                    const toastBox=document.getElementById('toast');
+                    const oldLimit=limit.value,oldQuery=input.value;
+                    let count=0;
+                    try{
+                        api=(url,options)=>url.startsWith('/api/concepts/graph?')
+                            ? new Promise((resolve,reject)=>requests.push({resolve,reject,url}))
+                            : originalApi(url,options);
+                        invalidateConceptGraph();
+                        openConceptSearch(oldQuery);
+                        const a=loadConceptGraph(),b=loadConceptGraph();
+                        if(a!==b||requests.length!==1)
+                            throw Error('duplicate initial concept request');
+                        requests[0].resolve(payload);await a;
+                        if(!state.conceptGraph||state.conceptRequest)
+                            throw Error('current concept response not accepted');
+                        count+=2;
+                        for(const failure of [false,true]){
+                            toastBox.textContent='';
+                            const pending=loadConceptGraph(),req=requests.at(-1);
+                            input.value='edited term';
+                            input.dispatchEvent(new Event('input',{bubbles:true}));
+                            if(failure)req.reject(Error('obsolete concept error'));
+                            else req.resolve(payload);
+                            await pending;
+                            if(state.conceptGraph||state.conceptRequest||toastBox.textContent||
+                               document.getElementById('conceptCanvas').children.length||
+                               document.getElementById('conceptEvidence').children.length)
+                                throw Error('edited query retained obsolete graph');
+                            count++;input.value=oldQuery;
+                        }
+                        const p=loadConceptGraph(),old=requests.at(-1);
+                        limit.value=[...limit.options].find(o=>o.value!==oldLimit).value;
+                        const q=loadConceptGraph(),current=requests.at(-1);
+                        old.resolve(payload);await p;
+                        if(state.conceptGraph||!state.conceptRequest)
+                            throw Error('old limit response corrupted current request');
+                        count++;
+                        current.resolve(payload);await q;
+                        if(!state.conceptGraph||state.conceptRequest)
+                            throw Error('new limit response not rendered');
+                        count++;
+                        const short=loadConceptGraph(),req=requests.at(-1);
+                        input.value='x';loadConceptGraph();
+                        req.resolve(payload);await short;
+                        if(state.conceptGraph||state.conceptRequest)
+                            throw Error('short query resurrected graph');
+                        count++;
+                        input.value=oldQuery;
+                        const failed=loadConceptGraph();
+                        requests.at(-1).reject(Error('current failure'));await failed;
+                        if(state.conceptRequest||state.conceptGraph||
+                           !toastBox.textContent.includes('current failure'))
+                            throw Error('current failure not retryable');
+                        count++;
+                        const retry=loadConceptGraph();
+                        requests.at(-1).resolve(payload);await retry;
+                        if(!state.conceptGraph)throw Error('concept retry failed');
+                        return count+1;
+                    }finally{
+                        api=originalApi;input.value=oldQuery;limit.value=oldLimit;
+                        toastBox.textContent='';toastBox.classList.add('hidden');
+                        await loadConceptGraph();
+                    }
+                }""", graph_payload)
+                assert concept_races == 9
                 page.locator("#conceptEvidence .concept-occurrence").first.click()
                 page.locator("#view-reader").wait_for(state="visible", timeout=15000)
                 assert page.locator("#docTitle").inner_text().strip()
