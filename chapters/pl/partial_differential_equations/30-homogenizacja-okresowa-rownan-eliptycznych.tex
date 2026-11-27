@@ -304,6 +304,36 @@ do granicy z $\eps$, potem z $n$.
 Otrzymujemy tezę o słabej zbieżności.
 \end{proof}
 
+\begin{wniosek}[Uśrednianie okresowych funkcji całkowalnych]
+\label{cor:pde30-average-L1}
+Niech $D$ będzie ograniczonym zbiorem otwartym
+i $g\in L^1_{\mathrm{per}}(Y)$. Wtedy dla każdego
+$h\in L^\infty(D)$ zachodzi
+\[
+ \lim_{\eps\downarrow0}\int_D g(x/\eps)h(x)\,
+ \mathrm d\lambda_d(x)
+ =\left(\int_Yg\,\mathrm d\lambda_d\right)
+   \int_Dh\,\mathrm d\lambda_d .
+\]
+\end{wniosek}
+\begin{proof}
+Pokrycie komórkami z dowodu Lematu~\ref{lem:pde30-average}
+daje $\|g(\cdot/\eps)\|_{L^1(D)}
+\le (2R+2)^d\|g\|_{L^1(Y)}$ dla $0<\eps\le1$,
+gdzie $D\subset(-R,R)^d$ i $R\ge1$.
+Dla $g_m=\max(-m,\min(g,m))$ mamy
+$g_m\in L^2_{\mathrm{per}}(Y)$ i
+$\|g_m-g\|_{L^1(Y)}\to0$.
+Ponieważ $D$ ma skończoną miarę, $h\in L^2(D)$,
+więc dla $g_m$ teza wynika z Lematu~\ref{lem:pde30-average}.
+Błąd zastąpienia $g$ przez $g_m$ jest ograniczony
+przez $(2R+2)^d\|h\|_\infty\|g-g_m\|_1$,
+jednostajnie względem $\eps$. Również średnie
+$g_m$ zbiegają do średniej $g$.
+Najpierw przechodzimy do granicy z $\eps$,
+a potem z $m$.
+\end{proof}
+
 \section{Zadanie komórkowe i macierz efektywna}
 
 \begin{lemat}[Okresowa przestrzeń Sobolewa]
@@ -818,12 +848,30 @@ charakteryzacji minimizacyjnej całego operatora.
 \section{Warstwy w wymiarze dwa: anizotropia z izotropowych faz}
 \begin{przyklad}[Efektywna macierz materiału warstwowego]\label{ex:pde30-layer}
 Niech $d=2$, $A(y)=a(y_1)I_2$, gdzie $a$ jest okresowa,
-$0<\lambda\le a\le\Lambda$. Dla $j=1$ poprawka zależy
-tylko od $y_1$ i spełnia
-$1+\chi_1'(y_1)=a_{\mathrm{hom}}/a(y_1)$.
-Dla $j=2$ funkcja $\chi_2=0$ rozwiązuje zadanie komórkowe,
-ponieważ $\diver_y(Ae_2)=\partial_{y_2}a(y_1)=0$.
-Stąd
+$0<\lambda\le a\le\Lambda$ prawie wszędzie.
+Niech $a_{\mathrm{hom}}=(\int_0^1 a^{-1}
+\,\mathrm d\lambda_1)^{-1}$.
+Bierzemy jednowymiarową poprawkę $\chi$ ze
+Stwierdzenia~\ref{prop:pde30-corrector1d} i kładziemy
+$\chi_1(y)=\chi(y_1)$. Jest ona okresowa, należy
+do $H^1(Y)$ i ma średnią zero, a
+\[
+ A(y)(e_1+\nabla\chi_1(y))
+ =a(y_1)(1+\chi'(y_1))e_1=a_{\mathrm{hom}}e_1.
+\]
+Ten stały strumień jest ortogonalny do gradientów
+testów okresowych, których średnia znika na mocy
+Lematu~\ref{lem:pde30-periodic-H1}. Z jednoznaczności
+jest to poprawka komórkowa w pierwszym kierunku.
+Dla $j=2$ wybieramy $\chi_2=0$, a strumień
+wynosi $a(y_1)e_2$. Dla gładkiego okresowego
+testu $\varphi$ całka z $a(y_1)\partial_2\varphi$
+znika z Fubiniego i okresowości w $y_2$.
+Przez gęstość dotyczy to wszystkich testów w
+$H^1_{\mathrm{per}}(Y)$, także gdy $a$ jest
+tylko mierzalna. Z jednoznaczności otrzymujemy
+drugą poprawkę. Całkując oba strumienie po $Y$,
+dostajemy
 \begin{equation}\label{eq:pde30-layers}
  A^{\mathrm{hom}}=
  \begin{pmatrix}
@@ -835,7 +883,47 @@ Jeśli $a$ przyjmuje wartości $1$ i $4$ na dwóch równych
 połówkach komórki, to $A^{\mathrm{hom}}=\operatorname{diag}(8/5,5/2)$.
 W każdej fazie materiał jest lokalnie izotropowy,
 ale jego zachowanie efektywne jest anizotropowe.
+Dla jednostkowego gradientu makroskopowego $\xi=e_1$
+gradient mikroskopowy przyjmuje wartości $(8/5)e_1$
+i $(2/5)e_1$ w fazach o $a=1$ i $a=4$,
+a strumień w obu jest równy $(8/5)e_1$.
+Dla $\xi=e_2$ gradient jest stały $e_2$,
+a strumienie wynoszą $e_2$ i $4e_2$.
+Ich średnia daje $(5/2)e_2$.
 \end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
+ \foreach \s in {0,6.1}{
+  \foreach \k in {0,1,2}{
+   \fill[blue!13] ({\s+1.4*\k},0) rectangle ++(.7,2);
+   \fill[orange!25] ({\s+1.4*\k+.7},0) rectangle ++(.7,2);
+  }
+  \draw[gray] (\s,0) rectangle ++(4.2,2);
+  \node[below] at ({\s+.35},0) {$1$};
+  \node[below] at ({\s+1.05},0) {$4$};
+ }
+ \foreach \k in {0,1,2}{
+  \foreach \y in {.5,1.05,1.6}{
+   \draw[->,blue!70!black,thick] ({1.4*\k+.08},\y)--++(.53,0);
+   \draw[->,orange!85!black,thick] ({1.4*\k+.78},\y)--++(.53,0);
+  }
+  \draw[->,blue!70!black,very thick] ({6.45+1.4*\k},.25)--++(0,.35);
+  \draw[->,orange!85!black,very thick] ({7.15+1.4*\k},.25)--++(0,1.4);
+ }
+ \node[above] at (2.1,2.1) {w poprzek warstw: $\xi=e_1$};
+ \node[above] at (8.2,2.1) {wzdłuż warstw: $\xi=e_2$};
+ \draw[->] (0,-.55)--(.8,-.55) node[right] {$y_1$};
+ \draw[->] (0,-.55)--(0,-.05) node[left] {$y_2$};
+\end{tikzpicture}
+
+{\small Rysunek: strumienie komórkowe w materiale z fazami
+$a=1$ (niebieska) i $a=4$ (pomarańczowa).
+Po lewej strumień jest jednakowy w obu fazach,
+po prawej jego wartości mają stosunek $1:4$.
+Strzałki ilustrują kierunki i względne wartości
+w obrębie każdego panelu.}
+\end{center}
 
 \begin{stwierdzenie}[Granice średniej harmonicznej i arytmetycznej]
 \label{prop:pde30-bounds}
@@ -849,28 +937,125 @@ zachodzi wtedy i tylko wtedy, gdy $a$ jest stała prawie wszędzie.
 Pierwsza i ostatnia nierówność wynikają z oszacowań $a$.
 Nierówność Cauchy'ego--Schwarza zastosowana do
 $\sqrt a$ i $1/\sqrt a$ daje
-$1\le(\int_0^1a)(\int_0^1a^{-1})$.
+$1\le(\int_0^1a\,\mathrm d\lambda_1)
+(\int_0^1a^{-1}\,\mathrm d\lambda_1)$.
+Po podzieleniu przez dodatnią całkę z $a^{-1}$
+otrzymujemy żądaną nierówność.
 Równość zachodzi dokładnie, gdy $\sqrt a$ jest
-proporcjonalna do $1/\sqrt a$ prawie wszędzie.
+proporcjonalna do $1/\sqrt a$ prawie wszędzie,
+czyli gdy $a$ jest prawie wszędzie stała.
+Odwrotnie, dla stałej dodatniej $a$ obie średnie
+są równe tej stałej.
 \end{proof}
 
 \section{Pułapki zbieżności i poprawki pierwszego rzędu}
 \begin{kontrprzyklad}[Słaba zbieżność współczynników nie określa równania granicznego]
-Na $(0,1)$ niech $a(y)$ będzie niejednorodna i okresowa.
-Wtedy $a(x/\eps)\rightharpoonup\int_0^1 a$ w $L^2(0,1)$,
+Na $(0,1)$ niech $a(y)$ będzie niestała prawie
+wszędzie, okresowa i spełnia $0<\lambda\le a\le\Lambda$,
+a $f\in L^2(0,1)$ niech nie znika identycznie.
+Wtedy $a(x/\eps)\rightharpoonup\bar a
+=\int_0^1 a\,\mathrm d\lambda_1$ w $L^2(0,1)$
+na mocy Lematu~\ref{lem:pde30-average},
 lecz rozwiązania równań $-(a(x/\eps)u_\eps')'=f$
-zbiegną do rozwiązania równania z $a_{\mathrm{hom}}
-=(\int_0^1a^{-1})^{-1}$. Obie liczby różnią się,
-gdy $a$ nie jest stała. Niedozwolone jest więc przejście
-do granicy osobno w iloczynie dwóch słabo zbieżnych funkcji
-$a(x/\eps)$ i $u_\eps'$.
+zbiegają do rozwiązania równania z
+$a_{\mathrm{hom}}=(\int_0^1a^{-1}\,\mathrm d\lambda_1)^{-1}$.
+Obie liczby są różne na mocy Stwierdzenia
+~\ref{prop:pde30-bounds}. Ponieważ $f\ne0$,
+mamy $u_0'\ne0$ w $L^2$, więc iloczyn słabych
+granic $\bar a u_0'$ różni się od rzeczywistej
+granicy strumienia $a_{\mathrm{hom}}u_0'$.
+Niedozwolone jest zatem przejście do granicy
+osobno w iloczynie dwóch słabo zbieżnych funkcji.
 \end{kontrprzyklad}
+
+\begin{twierdzenie}[Silna zbieżność gradientów z poprawką]
+\label{thm:pde30-corrector-bounded-gradient}
+Przy założeniach Twierdzenia~\ref{thm:pde30-homogenization}
+niech dodatkowo $\nabla u_0\in L^\infty(\Omega;\R^d)$.
+Niech $P(y)$ będzie macierzą o kolumnach
+$P_i(y)=e_i+\nabla\chi_i(y)$. Wtedy
+\[
+ \lim_{\eps\downarrow0}
+ \|\nabla u_\eps-P(x/\eps)\nabla u_0\|_{L^2(\Omega)}=0 .
+\]
+Nie zakładamy ograniczoności $\nabla\chi_i$.
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy $A_\eps=A(x/\eps)$, $P_\eps=P(x/\eps)$,
+$g=\nabla u_0$ oraz $E=\int_\Omega
+ g^{\mathsf T}A^{\mathrm{hom}}g\,\mathrm d\lambda_d$.
+Macierz $P$ ma współczynniki w $L^2_{\mathrm{per}}(Y)$,
+zatem $P_\eps g\in L^2$ z ograniczoności $g$.
+Z Twierdzenia~\ref{thm:pde30-energy-convergence} mamy
+$\int_\Omega\nabla u_\eps^{\mathsf T}A_\eps
+\nabla u_\eps\,\mathrm d\lambda_d\to E$.
+
+Macierz $B(y)=P(y)^{\mathsf T}A(y)P(y)$
+ma współczynniki w $L^1_{\mathrm{per}}(Y)$.
+Z równań komórkowych oraz symetrii $A$ wynika
+$\int_Y B\,\mathrm d\lambda_d=A^{\mathrm{hom}}$
+(porównaj dowód Twierdzenia~\ref{thm:pde30-cell}).
+Stosując Wniosek~\ref{cor:pde30-average-L1}
+do każdego współczynnika $B_{ij}$ z ograniczoną
+wagą $g_i g_j$, dostajemy
+\[
+ \int_\Omega(P_\eps g)^{\mathsf T}A_\eps P_\eps g
+ \,\mathrm d\lambda_d\longrightarrow E.
+\]
+
+Pozostaje wyraz mieszany. W dowodzie Twierdzenia
+~\ref{thm:pde30-homogenization} wykazaliśmy
+dla każdego $\varphi\in C_c^\infty(\Omega)$, że
+\[
+ \int_\Omega\varphi q_\eps\cdot P_i(x/\eps)\,
+ \mathrm d\lambda_d
+ \longrightarrow
+ \int_\Omega\varphi(A^{\mathrm{hom}}g)_i\,
+ \mathrm d\lambda_d .
+\]
+Aby zastąpić $\varphi$ przez $g_i\in L^\infty$,
+wybierzmy $h_m\in C_c^\infty(\Omega)$
+zbiegające do $g_i$ w $L^2(\Omega)$.
+Dla ustalonego $m$ funkcja $|g_i-h_m|^2$
+jest ograniczona. Nierówność Cauchy'ego--Schwarza
+daje
+\[
+ \left|\int_\Omega(g_i-h_m)q_\eps\cdot
+ P_i(x/\eps)\,\mathrm d\lambda_d\right|
+ \le\|q_\eps\|_2
+ \left(\int_\Omega |g_i-h_m|^2|P_i(x/\eps)|^2
+ \,\mathrm d\lambda_d\right)^{1/2}.
+\]
+Z Wniosku~\ref{cor:pde30-average-L1} granica
+całki pod pierwiastkiem jest równa
+$\|g_i-h_m\|_2^2\|P_i\|_{L^2(Y)}^2$.
+Normy $q_\eps$ są jednostajnie ograniczone,
+więc po wzięciu granicy górnej z $\eps$
+błąd dąży do zera, gdy $m\to\infty$.
+Analogicznie kontrolujemy błąd w całce granicznej
+przez $\|A^{\mathrm{hom}}g\|_2\|g_i-h_m\|_2$.
+Sumując po $i$, otrzymujemy
+$\int_\Omega q_\eps\cdot P_\eps g\,\mathrm d\lambda_d\to E$.
+Rozwijając kwadrat i stosując eliptyczność,
+dostajemy
+\[
+ \begin{aligned}
+ \lambda\|\nabla u_\eps-P_\eps g\|_2^2
+ &\le\int_\Omega(\nabla u_\eps-P_\eps g)^{\mathsf T}
+ A_\eps(\nabla u_\eps-P_\eps g)\,\mathrm d\lambda_d\\
+ &\longrightarrow E-2E+E=0.
+ \end{aligned}
+\]
+To kończy dowód.
+\end{proof}
 
 \begin{uwaga}[Granica zakresu twierdzenia]
 Twierdzenie~\ref{thm:pde30-homogenization} dowodzi zbieżności
-bez oszacowania jej szybkości w wymiarach $d\ge2$. Nie
-implikuje samo z siebie globalnego szacowania
-$\|\nabla u_\eps-(I+\nabla\chi(x/\eps))\nabla u_0\|_2\le C\eps$:
+bez oszacowania jej szybkości w wymiarach $d\ge2$. Twierdzenie~\ref{thm:pde30-corrector-bounded-gradient}
+daje silną zbieżność z poprawką pod dodatkowym
+założeniem ograniczoności gradientu granicznego.
+Nie wynika z niego globalne oszacowanie
+$\|\nabla u_\eps-P(x/\eps)\nabla u_0\|_2\le C\eps$:
 takie oszacowanie wymaga dodatkowej regularności danych,
 współczynników i brzegu oraz analizy poprawek brzegowych.
 Nie wystarcza formalne podstawienie ansatzu
@@ -886,6 +1071,18 @@ Dla $\Omega=(0,1)$ wybieramy $a(y)=2+\sin(2\pi y)$ i $f=1$.
 Wtedy $\bar a=2$, podczas gdy
 $a_{\mathrm{hom}}=\bigl(\int_0^1(2+\sin(2\pi y))^{-1}
 \,\mathrm d\lambda_1(y)\bigr)^{-1}=\sqrt3$.
+Istotnie, podstawienie $\theta=2\pi y$ i przesunięcie
+kąta (z okresowości) zamienia sinus na cosinus.
+Całkując na $(-\pi,\pi)$ i podstawiając
+$t=\tan(\theta/2)$, dostajemy
+\[
+ \frac1{2\pi}\int_{-\pi}^{\pi}
+ \frac{\mathrm d\lambda_1(\theta)}{2+\cos\theta}
+ =\frac1\pi\int_{\R}\frac{\mathrm d\lambda_1(t)}{3+t^2}
+ =\frac1{\sqrt3},
+\]
+gdzie ostatnią całkę obliczamy za pomocą
+funkcji $\arctan(t/\sqrt3)$.
 Rozwiązanie graniczne jest równe
 $u_0(x)=x(1-x)/(2\sqrt3)$, a dokładne $u_\eps$ daje
 wzór~\eqref{eq:pde30-explicit-1d}. W każdym mikrośrodowisku
