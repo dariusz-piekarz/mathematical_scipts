@@ -51,6 +51,38 @@ with sync_playwright() as pw:
     sample=r'Tekst \cref* { ch:ga5-rozdmuchania, ch:ga6-powierzchnie }.'
     actual=page.evaluate("source => {const box=document.createElement('div');showRefs(box,source);return box.textContent;}",sample)
     assert actual==sample,(actual,sample)
+    # Build a long source outside the live DOM, then replace it atomically.
+    # Preserve whitespace and clickable reference context exactly.
+    source_batch_cases = page.evaluate(r"""() => {
+        const box=document.createElement('div');
+        document.body.append(box);
+        const observer=new MutationObserver(()=>{});
+        observer.observe(box,{childList:true});
+        let count=0;
+        try{
+            const samples=['','plain text','\\ref{a}','\\cref* { a , b }',
+                '\\ref{   }','\\atlasref{DG-14::a}{Opis}',
+                'A\\eqref{x}\nB\\nameref {y}','\\ref{a,,b}','\\ref{a}\r\nend\n'];
+            for(const source of samples){
+                showRefs(box,source);
+                if(box.textContent!==source||observer.takeRecords().length>1)
+                    throw Error('source text or atomic replacement mismatch');
+                const expected=source.length?source.split('\n').length-
+                    (source.endsWith('\n')?1:0):0;
+                if(sourceLineCount(source)!==expected)throw Error('source line count');
+                count++;
+            }
+            const long=Array.from({length:1000},(_,i)=>
+                'Wiersz '+i+' \\cref{ a'+i+', b'+i+' }.\n').join('');
+            showRefs(box,long);
+            if(box.textContent!==long||observer.takeRecords().length!==1||
+               box.querySelectorAll('button[data-reference]').length!==2000||
+               sourceLineCount(long)!==1000)
+                throw Error('long source batch mismatch');
+            return count+1;
+        }finally{observer.disconnect();box.remove();}
+    }""")
+    assert source_batch_cases == 10
     # Clicking an ambiguous reference keeps the chapter picker open.
     page.evaluate(r"label => renderSimplified('Zobacz \\ref{'+label+'}.','TEST')",conflict)
     page.locator('#simplified .ref-link').filter(has_text='Wybierz cel').wait_for()
