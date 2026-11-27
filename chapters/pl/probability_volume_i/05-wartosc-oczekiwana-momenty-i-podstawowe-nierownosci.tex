@@ -836,24 +836,31 @@ informację o całym rozkładzie, nie tylko o jego średniej.
 Funkcją charakterystyczną rzeczywistej zmiennej losowej $X$
 nazywamy $\varphi_X:\R\to\mathbb C$ zadaną wzorem
 $\varphi_X(t):=\E e^{itX}=\int_\R e^{itx}\,\dd\mu_X(x)$.
+Równość wynika z \eqref{eq:lotus}, ponieważ funkcja
+$x\mapsto e^{itx}$ jest ciągła i ma moduł jeden.
+Dla borelowskiej miary probabilistycznej $\mu$ piszemy
+analogicznie $\varphi_\mu(t)=\int_\R e^{itx}\,\dd\mu(x)$.
+Jest to transformata Fouriera miary z konwencją znaku
+dodatniego w wykładniku.
 \end{definicja}
 
 \begin{twierdzenie}[Własności funkcji charakterystycznej]
 Dla każdej rzeczywistej zmiennej losowej $X$ i
-$t,s,a,b\in\R$ zachodzą:
+$t,a,b\in\R$ zachodzą:
 \begin{enumerate}
 \item $\varphi_X(0)=1$, $|\varphi_X(t)|\leq1$
  i $\varphi_X(-t)=\overline{\varphi_X(t)}$;
 \item $\varphi_X$ jest jednostajnie ciągła na $\R$;
 \item $\varphi_{aX+b}(t)=e^{itb}\varphi_X(at)$;
-\item dla niezależnych $X,Y$ mamy
+\item dla niezależnych rzeczywistych zmiennych losowych
+ $X,Y$ na wspólnej przestrzeni probabilistycznej mamy
  $\varphi_{X+Y}(t)=\varphi_X(t)\varphi_Y(t)$;
 \item dla dowolnych $n\in\N$, $t_1,\ldots,t_n\in\R$,
  $c_1,\ldots,c_n\in\mathbb C$ zachodzi
  $\sum_{j,k=1}^n c_j\overline{c_k}\varphi_X(t_j-t_k)\geq0$.
 \end{enumerate}
-Jeżeli $\E|X|^r<\infty$ dla pewnego $r\in\N$,
-to $\varphi_X$ jest $r$ razy różniczkowalna i
+Jeżeli $\E|X|^r<\infty$ dla pewnego całkowitego $r\geq1$,
+to $\varphi_X$ jest klasy $C^r$ na $\R$ i
 $\varphi_X^{(k)}(t)=\E[(iX)^k e^{itX}]$
 dla $0\leq k\leq r$.
 \end{twierdzenie}
@@ -866,40 +873,76 @@ Dla ciągu $h_n\to0$ wyrażenie
 $|\varphi_X(t+h_n)-\varphi_X(t)|$
 jest nie większe niż $\E|e^{ih_nX}-1|$, niezależnie od $t$.
 Funkcja pod wartością oczekiwaną dąży punktowo do zera
-i nie przekracza $2$, więc zbieżność zdominowana daje
-jednostajną ciągłość. Punkt trzeci wynika z równości
+i nie przekracza $2$. Z
+\atlasref{ME-08::thm:dct}{twierdzenia o zbieżności zmajoryzowanej}
+wynika $\E|e^{ihX}-1|\to0$ przy $h\to0$.
+Ponieważ oszacowanie jest niezależne od $t$, otrzymujemy
+$\sup_{t\in\R}|\varphi_X(t+h)-\varphi_X(t)|\to0$,
+czyli jednostajną ciągłość. Punkt trzeci wynika z równości
 $e^{it(aX+b)}=e^{itb}e^{i(at)X}$.
-Dla czwartego korzystamy z niezależności i Fubiniego:
+Dla czwartego korzystamy z niezależności, dzięki której
+rozkład łączny jest miarą $\mu_X\otimes\mu_Y$.
+Funkcja $(x,y)\mapsto e^{itx}e^{ity}$ ma moduł jeden,
+jest więc całkowalna względem tej miary probabilistycznej.
+Z twierdzenia o mierze obrazowej i
+\atlasref{ME-12::thm:fubini-12}{twierdzenia Fubiniego}
+dla obu części zespolonych wynika
 $\E[e^{itX}e^{itY}]=\E e^{itX}\E e^{itY}$.
 Dla ostatniego punktu obliczamy
 \[
 \sum_{j,k}c_j\overline{c_k}\varphi_X(t_j-t_k)
 =\E\left|\sum_{j=1}^n c_je^{it_jX}\right|^2\geq0.
 \]
-Wreszcie $|(iX)^k e^{itX}|=|X|^k$ jest całkowalna
-przy $k\leq r$. Zbieżność zdominowana stosowana
-kolejno do ilorazów różnicowych uzasadnia różniczkowanie
-pod całką i podany wzór na pochodne.
+Wreszcie oznaczmy $H_k(t)=\E[(iX)^ke^{itX}]$,
+$0\leq k\leq r$, przy konwencji $X^0=1$.
+Z nierówności $|X|^k\leq1+|X|^r$ wynika całkowalność
+tych funkcji podcałkowych. Zbieżność zmajoryzowana
+daje ciągłość wszystkich $H_k$.
+Dla $0\leq k<r$ i rzeczywistego $h\ne0$ zachodzi
+\[
+\left|(ix)^k e^{itx}\frac{e^{ihx}-1}{h}\right|
+\leq |x|^{k+1},
+\]
+gdyż $e^{ihx}-1=ihx\int_0^1e^{ishx}\,\dd\lambda_1(s)$.
+Iloraz różnicowy dąży do $(ix)^{k+1}e^{itx}$,
+a majoranta $|X|^{k+1}$ jest całkowalna.
+Zbieżność zmajoryzowana zastosowana do obu części
+zespolonych daje $H_k'=H_{k+1}$.
+Indukcja od $H_0=\varphi_X$ oraz ciągłość $H_r$
+dowodzą tezy.
 \end{proof}
 
 \begin{lemat}[Całka Fouriera dla rozkładu Gaussa]
 Jeśli $Z\sim\Normal(0,1)$, to
 $\varphi_Z(t)=e^{-t^2/2}$ dla $t\in\R$.
-Jeśli $Y\sim\Normal(m,\sigma^2)$, to
+Jeśli $Y\sim\Normal(m,\sigma^2)$, gdzie $m\in\R$ i
+$\sigma>0$, to
 $\varphi_Y(t)=\exp(imt-\sigma^2t^2/2)$.
 \end{lemat}
 \begin{proof}
 Niech $g(x)=(2\pi)^{-1/2}e^{-x^2/2}$.
-Zdominowana zbieżność pozwala różniczkować
-$\varphi_Z(t)=\int_\R e^{itx}g(x)\,\dd\lambda_1(x)$.
-Ponieważ $g'(x)=-xg(x)$, całkowanie przez części daje
-$\int_\R xe^{itx}g(x)\,\dd\lambda_1(x)
-=it\int_\R e^{itx}g(x)\,\dd\lambda_1(x)$;
-wyrazy brzegowe znikają dzięki wykładniczemu zanikowi $g$.
-Stąd $\varphi_Z'(t)=i(it\varphi_Z(t))=-t\varphi_Z(t)$.
-Przy warunku początkowym $\varphi_Z(0)=1$ rozwiązanie tego
-równania to $e^{-t^2/2}$. Drugą równość otrzymujemy
-przez przekształcenie afiniczne $Y\stackrel d=m+\sigma Z$.
+Z definicji gęstości normalnej (rozdział~\ref{ch:distributions})
+oraz \eqref{eq:lotus} mamy
+$\E|Z|=2(2\pi)^{-1/2}\int_0^\infty xe^{-x^2/2}\,\dd\lambda_1(x)
+=\sqrt{2/\pi}<\infty$.
+Poprzednie twierdzenie daje więc
+$\varphi_Z'(t)=i\int_\R xe^{itx}g(x)\,\dd\lambda_1(x)$.
+Ponieważ $g'(x)=-xg(x)$, całkowanie przez części na
+$[-R,R]$ (osobno dla części rzeczywistej i urojonej) daje
+\[
+\int_{-R}^R xe^{itx}g(x)\,\dd\lambda_1(x)
+=-[e^{itx}g(x)]_{-R}^R+
+it\int_{-R}^R e^{itx}g(x)\,\dd\lambda_1(x).
+\]
+Obie całki przechodzą do całek po $\R$ przy $R\to\infty$,
+ponieważ odpowiednio $|x|g(x)$ i $g(x)$ są całkowalne.
+Wyraz brzegowy ma moduł nie większy od $2g(R)\to0$.
+Stąd $\varphi_Z'(t)=-t\varphi_Z(t)$, czyli
+$(e^{t^2/2}\varphi_Z(t))'=0$.
+Warunek $\varphi_Z(0)=1$ daje $\varphi_Z(t)=e^{-t^2/2}$.
+Z transformacji gęstości przez $x\mapsto m+\sigma x$
+wynika $\Law(Y)=\Law(m+\sigma Z)$.
+Własność afiniczna funkcji charakterystycznej daje drugą równość.
 \end{proof}
 
 \begin{twierdzenie}[Jednoznaczność funkcji charakterystycznej]
@@ -911,42 +954,70 @@ to $\Law(X)=\Law(Y)$.
 Oznaczmy rozkłady przez $\mu$ i $\nu$, a przez
 $g_\sigma(x)=(\sigma\sqrt{2\pi})^{-1}
 \exp(-x^2/(2\sigma^2))$ gęstość $\Normal(0,\sigma^2)$
-dla $\sigma>0$. Dzięki poprzedniemu lematowi i
-całkowalności funkcji $t\mapsto e^{-\sigma^2t^2/2}$
-możemy zastosować Fubiniego do wzoru Fouriera na gęstość
-Gaussa i otrzymać dla każdego $x\in\R$
+dla $\sigma>0$. Oznaczmy przez $\gamma_\sigma$ miarę
+$g_\sigma\lambda_1$ i przez $\mu*\gamma_\sigma$ obraz
+miary produktowej $\mu\otimes\gamma_\sigma$ przez dodawanie.
+Dla zbioru borelowskiego $B$, stosując Tonellego do
+nieujemnej funkcji charakterystycznej i podstawienie
+$x=y+u$, dostajemy
+\[
+(\mu*\gamma_\sigma)(B)
+=\int_\R\int_\R\chi_B(y+u)g_\sigma(u)\,
+\dd\lambda_1(u)\,\dd\mu(y)
+=\int_B\int_\R g_\sigma(x-y)\,\dd\mu(y)\,\dd\lambda_1(x).
+\]
+Zatem funkcja $x\mapsto\int_\R g_\sigma(x-y)\,\dd\mu(y)$
+jest gęstością splotu; jej mierzalność wynika z Tonellego.
+Z poprzedniego lematu, podstawiając $v=\sigma t$, otrzymujemy
+dla każdego $u\in\R$
+\[
+\frac1{2\pi}\int_\R e^{-itu}e^{-\sigma^2t^2/2}\,\dd\lambda_1(t)
+=\frac1{\sigma\sqrt{2\pi}}e^{-u^2/(2\sigma^2)}
+=g_\sigma(u).
+\]
+Całka z modułu funkcji podcałkowej po $\mu(y)$ i
+$\lambda_1(t)$ wynosi $\int_\R e^{-\sigma^2t^2/2}\,\dd\lambda_1(t)
+=\sqrt{2\pi}/\sigma<\infty$.
+Możemy więc zastosować Fubiniego i dla każdego $x\in\R$
+otrzymujemy
 \[
 \int_\R g_\sigma(x-y)\,\dd\mu(y)
 =\frac1{2\pi}\int_\R
  e^{-itx}\varphi_\mu(t)e^{-\sigma^2t^2/2}
 \,\dd\lambda_1(t).
 \]
-Tutaj użyliśmy elementarnej odwrotności transformaty
-Fouriera Gaussa, wynikającej z udowodnionego wzoru na
-$\varphi_Z$ (równoważnie z całki Gaussa po zamianie
-ról zmiennych). To samo zachodzi dla $\nu$.
+To samo zachodzi dla $\nu$.
 Równość funkcji charakterystycznych oznacza zatem,
-że sploty $\mu*g_\sigma$ i $\nu*g_\sigma$ mają
+że sploty $\mu*\gamma_\sigma$ i $\nu*\gamma_\sigma$ mają
 identyczne gęstości, a więc są równymi miarami.
 
 Dla dowolnej funkcji $h:\R\to\R$ ograniczonej i ciągłej
-oraz niezależnej zmiennej $Z\sim\Normal(0,1)$ zachodzi
+oraz zmiennej $Z\sim\Normal(0,1)$, określonej na dowolnej
+przestrzeni probabilistycznej, zachodzi
 \[
-\int_\R h(x)\,\dd(\mu*g_\sigma)(x)
-=\int_\R\E[h(x+\sigma Z)]\,\dd\mu(x).
+\int_\R h(x)\,\dd(\mu*\gamma_\sigma)(x)
+=\int_\R\E[h(y+\sigma Z)]\,\dd\mu(y).
 \]
+Jest to wzór na całkę względem miary obrazowej i Fubini
+dla funkcji ograniczonej na przestrzeni o mierze jeden;
+$\sigma Z$ ma rozkład $\gamma_\sigma$. Wewnętrzna
+wartość oczekiwana jest borelowską funkcją $y$.
 Gdy $\sigma\downarrow0$, dla każdego ustalonego $x$
 zmienna $h(x+\sigma Z)$ dąży prawie na pewno do $h(x)$,
 a jej moduł jest ograniczony przez $\|h\|_\infty$.
 Dwukrotne zastosowanie zbieżności zdominowanej daje
-$\int h\,\dd(\mu*g_\sigma)\to\int h\,\dd\mu$;
+$\int h\,\dd(\mu*\gamma_\sigma)\to\int h\,\dd\mu$;
 podobnie dla $\nu$. Ponieważ sploty były równe dla
 każdego $\sigma$, otrzymujemy
 $\int h\,\dd\mu=\int h\,\dd\nu$ dla każdej
-ograniczonej funkcji ciągłej $h$. Takie całki
-jednoznacznie wyznaczają borelowskie miary probabilistyczne
-na $\R$ (przez aproksymację wskaźników przedziałów
-funkcjami ciągłymi). Wobec tego $\mu=\nu$.
+ograniczonej funkcji ciągłej $h$. Dla ustalonego $a\in\R$ niech $h_n$ będzie równa $1$
+na $(-\infty,a]$, liniowo maleje od $1$ do $0$ na
+$[a,a+1/n]$ i wynosi $0$ na $[a+1/n,\infty)$.
+Funkcje te są ograniczone, ciągłe i dążą punktowo
+do $\chi_{(-\infty,a]}$. Zbieżność zmajoryzowana
+względem obu miar daje $\mu((-\infty,a])=\nu((-\infty,a])$.
+Z jednoznaczności miary wyznaczonej przez dystrybuantę
+(rozdział~\ref{ch:random-variables}) otrzymujemy $\mu=\nu$.
 \end{proof}
 
 \begin{stwierdzenie}[Odwracanie transformaty przy całkowalności]
@@ -959,24 +1030,43 @@ f_X(x)=\frac1{2\pi}\int_\R e^{-itx}\varphi_X(t)
 \]
 \end{stwierdzenie}
 \begin{proof}
-Niech $g_\sigma$ będzie gaussowską gęstością z
-poprzedniego dowodu. Splot $\mu_X*g_\sigma$ ma gęstość
-$f_\sigma(x)=(2\pi)^{-1}\int e^{-itx}\varphi_X(t)
+Niech $\gamma_\sigma=g_\sigma\lambda_1$ będzie miarą
+gaussowską z poprzedniego dowodu. Splot $\mu_X*\gamma_\sigma$
+ma gęstość
+$f_\sigma(x)=(2\pi)^{-1}\int_\R e^{-itx}\varphi_X(t)
  e^{-\sigma^2t^2/2}\,\dd\lambda_1(t)$.
-Ponieważ $|e^{-\sigma^2t^2/2}|\leq1$, zbieżność zdominowana
-względem $|\varphi_X(t)|\,\dd\lambda_1(t)$ daje
-$f_\sigma\to f$ jednostajnie na całej $\R$.
-Funkcja $f$ jest ciągła i ograniczona z dominacji
-oraz ciągłości fazy $e^{-itx}$.
+Oznaczmy przez $f$ funkcję z tezy. Dla każdego $x$
+\[
+|f_\sigma(x)-f(x)|\leq\frac1{2\pi}\int_\R
+|\varphi_X(t)|\,|e^{-\sigma^2t^2/2}-1|\,\dd\lambda_1(t).
+\]
+Prawa strona jest niezależna od $x$ i dąży do zera
+przez zbieżność zmajoryzowaną, z majorantą $|\varphi_X|$.
+Zatem $f_\sigma\to f$ jednostajnie na $\R$, a w szczególności
+$f$ jest rzeczywista i nieujemna, gdyż takie są $f_\sigma$.
+Z nierówności trójkąta mamy $|f(x)|\leq
+(2\pi)^{-1}\int_\R|\varphi_X(t)|\,\dd\lambda_1(t)$.
+Ciągłość $f$ wynika ze zbieżności zmajoryzowanej przy
+$x_n\to x$ w całce definiującej $f$.
 Dla nieujemnej funkcji ciągłej $h$ o zwartym nośniku
 mamy $\int h f_\sigma\,\dd\lambda_1\to
 \int h f\,\dd\lambda_1$ z jednostajnej zbieżności,
 a jednocześnie $\int h f_\sigma\,\dd\lambda_1\to\E h(X)$
 z argumentu z dowodu jednoznaczności.
-Zatem $\int h f\,\dd\lambda_1=\E h(X)$
-dla wszystkich takich $h$, co wyznacza miarę
-$\mu_X=f\lambda_1$. W szczególności $f\geq0$
-i $\int f\,\dd\lambda_1=1$.
+Zatem $\int_\R h(x)f(x)\,\dd\lambda_1(x)=\E h(X)$
+dla wszystkich takich $h$.
+Aby uzyskać normalizację, weźmy
+$h_n(x)=\min(1,\max(0,n+1-|x|))$, $n\geq1$.
+Są to nieujemne ciągłe funkcje o zwartym nośniku
+i $h_n\uparrow1$. Zbieżność monotoniczna po obu stronach
+daje $\int_\R f(x)\,\dd\lambda_1(x)=1$.
+Miara $\rho=f\lambda_1$ jest więc probabilistyczna.
+Dla dowolnej ograniczonej ciągłej funkcji $h\geq0$ stosujemy
+uzyskaną równość do $hh_n$ i przechodzimy do granicy
+przez zbieżność monotoniczną. Otrzymujemy
+$\int_\R h\,\dd\rho=\int_\R h\,\dd\mu_X$.
+Stosując ciągłą aproksymację półprostych z poprzedniego
+dowodu, wnioskujemy $\rho=\mu_X$.
 \end{proof}
 
 \begin{przyklad}[Ciężkie ogony a funkcja charakterystyczna]
@@ -985,10 +1075,16 @@ $\varphi_X(t)=e^{-|t|}$. Udowodnimy tę tożsamość
 bez odwoływania się do rachunku residuów.
 Niech $Z_1,Z_2$ będą niezależnymi zmiennymi standardowo
 normalnymi. Z przedstawienia rozkładu Studenta dla
-jednego stopnia swobody wiemy, że $C=Z_1/|Z_2|$
-ma rozkład Cauchy'ego. Korzystając z niezależności
-i funkcji charakterystycznej rozkładu normalnego,
-możemy całkować najpierw po $Z_1$:
+jednego stopnia swobody (rozdział~\ref{ch:distributions})
+wiemy, że $C=Z_1/|Z_2|$ ma rozkład Cauchy'ego;
+na zdarzeniu $\{Z_2=0\}$, którego prawdopodobieństwo
+wynosi zero, definiujemy $C=0$.
+Rozkład łączny $Z_1,Z_2$ jest miarą produktową.
+Funkcja $e^{itC}$ ma moduł jeden, więc Fubini pozwala
+całkować najpierw po $Z_1$ dla ustalonego $Z_2=z\ne0$.
+Wewnętrzna całka to $\varphi_{Z_1}(t/|z|)$, czyli
+$e^{-t^2/(2z^2)}$. Korzystając z symetrii gęstości $Z_2$,
+otrzymujemy (wartość wyrażenia w $z=0$ jest dowolna):
 \[
 \varphi_C(t)=\E\exp\!\left(-\frac{t^2}{2Z_2^2}\right)
 =\sqrt{\frac2\pi}\int_0^\infty
@@ -997,9 +1093,19 @@ możemy całkować najpierw po $Z_1$:
 \]
 Aby obliczyć tę całkę, dla $a>0$ i $b\geq0$ połóżmy
 $I(a,b)=\int_0^\infty e^{-az^2-b/z^2}\,\dd\lambda_1(z)$.
-Dla $b>0$ wolno różniczkować względem $b$ pod całką
-(zdominowanie na dowolnym zwartym podprzedziale
-$(0,\infty)$). Podstawienie $u=\sqrt{b/a}/z$ daje
+Całka jest dodatnia i skończona, ponieważ jej funkcja
+podcałkowa jest dodatnia i nie większa od $e^{-az^2}$.
+Dla $b>0$ ustalmy $0<b_0<b<b_1$. Z twierdzenia o wartości
+średniej ilorazy różnicowe względem $b$, dla przyrostów
+pozostających w $[b_0,b_1]$, są ograniczone przez
+$z^{-2}e^{-az^2-b_0/z^2}$.
+Na $(0,1]$ całkowalność tej majoranty wynika z podstawienia
+$v=1/z$, gdyż $\int_1^\infty e^{-b_0v^2}\,\dd\lambda_1(v)<\infty$;
+na $[1,\infty)$ majoranta nie przekracza $e^{-az^2}$.
+Zbieżność zmajoryzowana uzasadnia różniczkowanie.
+Podstawienie $u=\sqrt{b/a}/z$ w całce pochodnej daje
+$z^{-2}|\dd z/\dd u|=\sqrt{a/b}$ oraz
+$az^2+b/z^2=b/u^2+au^2$. Stąd
 \[
 \frac{\partial I}{\partial b}(a,b)
 =-\int_0^\infty z^{-2}e^{-az^2-b/z^2}\,\dd\lambda_1(z)
@@ -1007,8 +1113,11 @@ $(0,\infty)$). Podstawienie $u=\sqrt{b/a}/z$ daje
 \]
 Zatem $\partial_b\log I(a,b)=-\sqrt{a/b}$,
 czyli $I(a,b)=C(a)e^{-2\sqrt{ab}}$.
-Zdominowana zbieżność przy $b\downarrow0$ i całka
-Gaussa wyznaczają $C(a)=I(a,0)=\sqrt\pi/(2\sqrt a)$.
+Zbieżność zmajoryzowana przy $b\downarrow0$ z majorantą
+$e^{-az^2}$ daje $C(a)=I(a,0)$.
+Podstawiając $u=\sqrt{2a}\,z$ i korzystając z całki Gaussa
+(rozdział~\ref{ch:distributions}), otrzymujemy
+$I(a,0)=\sqrt\pi/(2\sqrt a)$.
 Podstawiając $a=1/2$ i $b=t^2/2$ do powyższego
 wzoru na $\varphi_C$, otrzymujemy
 $\varphi_C(t)=e^{-|t|}$ również dla $t=0$.
