@@ -568,6 +568,9 @@ F_G(q)=\sum_{A\subseteq E}(-1)^{|E|-|A|}q^{\nu_G(A)}
 \]
 W szczególności liczba przepływów nigdzie niezerowych
 jest wartością wielomianu o współczynnikach całkowitych.
+Wielomian ten jest jednoznaczny, ponieważ dwa wielomiany
+zgodne dla wszystkich liczb całkowitych $q\ge2$ mają
+różnicę z nieskończenie wieloma pierwiastkami.
 Wynik nie wymaga planarności ani spójności grafu.
 \end{twierdzenie}
 
@@ -655,6 +658,67 @@ przepływów na każdym podgrafie $(V,A)$.
 Ta sama zasada włączeń i wyłączeń daje $F_G(q)$.
 \end{proof}
 
+\begin{wniosek}[Rekurencja wielomianu przepływów]
+\label{cor:tg-flow-recursion}
+Dla krawędzi $e$ skończonego multigrafu $G$ zachodzi
+\[
+F_G(q)=
+\begin{cases}
+0,& e\text{ jest mostem},\\
+(q-1)F_{G\setminus e}(q),& e\text{ jest pętlą},\\
+F_{G/e}(q)-F_{G\setminus e}(q),&
+e\text{ nie jest mostem ani pętlą}.
+\end{cases}
+\]
+Wartością początkową jest $F_G(q)=1$ dla grafu bez krawędzi.
+\end{wniosek}
+\begin{proof}
+Dla mostu wzór wynika z twierdzeń
+\ref{thm:tg-flow-tutte} i \ref{thm:tg-tutte-recursion},
+ponieważ $T_G(0,y)=0$.
+Można to również uzasadnić bezpośrednio: sumujemy
+równania zachowania po wszystkich wierzchołkach jednej
+z dwóch składowych powstałych przez usunięcie mostu
+z jego pierwotnej składowej. Wkłady krawędzi
+wewnętrznych znoszą się, a jedynym pozostałym
+wkładem jest $\pm j_e$, więc $j_e=0$.
+
+Dla pętli kolumna macierzy incydencji jest zerowa,
+zatem każdy przepływ nigdzie niezerowy na
+$G\setminus e$ można przedłużyć niezależnie
+na $q-1$ sposobów przez wybór $j_e\ne0$.
+
+Niech teraz $e$ nie będzie ani mostem, ani pętlą.
+Oznaczmy $\nu=\nu_G(E(G))$.
+Usunięcie $e$ nie zmienia liczby składowych,
+a kontrakcja zmniejsza zarówno liczbę wierzchołków,
+jak i krawędzi o jeden, nie zmieniając liczby składowych.
+Dlatego
+\[
+\nu_{G\setminus e}(E(G\setminus e))=\nu-1,\qquad
+\nu_{G/e}(E(G/e))=\nu.
+\]
+Mnożymy rekurencję Tutte'a dla $(x,y)=(0,1-q)$
+przez $(-1)^\nu$ i stosujemy twierdzenie
+\ref{thm:tg-flow-tutte} do obu mniejszych grafów.
+Z uwagi na różnicę parzystości wykładników otrzymujemy
+$F_G=F_{G/e}-F_{G\setminus e}$.
+Wartość początkowa wynika z istnienia jedynego
+pustego przepływu.
+\end{proof}
+
+\begin{uwaga}[Przepływy modulo dwa]
+Nad $\mathbb Z/2\mathbb Z$ istnieje dokładnie jedna
+możliwa rodzina niezerowych współczynników:
+$j_e=1$ dla wszystkich $e\in E$.
+Jej brzeg jest zerowy wtedy i tylko wtedy, gdy
+każdy wierzchołek ma parzysty stopień, przy czym
+pętla wnosi do stopnia dwa.
+Zatem $F_G(2)$ jest równe jeden dla grafu o wszystkich
+stopniach parzystych i zero w przeciwnym przypadku.
+Nie zakładamy tutaj spójności grafu.
+\end{uwaga}
+
 \begin{twierdzenie}[Dualność kolorowań i przepływów]
 \label{thm:tg-flow-color-dual}
 Niech $G\subset S^2$ będzie skończonym spójnym grafem płaskim,
@@ -719,6 +783,24 @@ jedyny przepływ jest pustym wektorem, a graf dualny ma
 jeden wierzchołek i $q$ kolorowań, zgodnie ze wzorem.
 Stąd $P_{G^*}(q)=qF_G(q)$.
 \end{proof}
+
+Ten sam wzór otrzymujemy algebraicznie ze specjalizacji
+Tutte'a. Istotnie, dla spójnego grafu płaskiego o $n$
+wierzchołkach, $m$ krawędziach i $f$ ścianach mamy
+$\nu_G(E)=m-n+1=f-1$ na mocy wzoru Eulera.
+Z twierdzeń \ref{thm:tg-chrom-tutte},
+\ref{thm:tg-tutte-dual} i \ref{thm:tg-flow-tutte} wynika
+\[
+\begin{aligned}
+P_{G^*}(q)
+&=(-1)^{f-1}qT_{G^*}(1-q,0)\\
+&=q(-1)^{\nu_G(E)}T_G(0,1-q)
+=qF_G(q).
+\end{aligned}
+\]
+Dowód konstrukcyjny daje dodatkowo informację,
+które kolorowania odpowiadają danemu przepływowi:
+tworzą one jedną klasę względem dodawania wspólnej stałej.
 
 \begin{uwaga}[Ograniczenie dualności przepływów do sfery]
 Dla spójnego grafu komórkowo zanurzonego
