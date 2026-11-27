@@ -23,6 +23,12 @@ Przekształcić Atlas z przeglądarki matematycznych źródeł LaTeX, grafów i 
 9. Nie usuwać unikalnych definicji, wariantów dowodów, przykładów, kontrprzykładów, zadań, ilustracji ani kodu. Deduplikacja musi być bezstratna i mieć rejestr pochodzenia i odsyłaczy.
 10. Zasady terminologii, dokładność matematyczna, przykłady i kompilowalność podlegają ogólnemu standardowi audytu Biblioteki (wzorzec DG-01).
 
+## Bieżące zadanie użytkowe po stabilizacji (27.11.2026)
+
+- Najpierw zakończyć otwartą stabilizację poprawek Czytnika/Explorera: lokalne makra, grupowanie, liczniki, raport pokrycia, reset stanu sesji i kompletność stronicowania. Zweryfikować rzeczywiste CI i ustalenia raportu; nie uznawać oczekujących przebiegów za PASS.
+- Następny fragment użytkowy (P3.5, na bezpośrednie polecenie użytkownika): pasek „Podgląd rozdziału” wraz z kontrolkami ma być stale dostępny w normalnym trybie czytnika podczas przewijania treści. Zachować zachowanie pełnego ekranu, motywy, dostępność klawiaturą i niezależny scroll czytnika. Sprawdzić podgląd i źródło LaTeX, małe i duże okna, tekst 180%, brak zasłoniętych kontrolek lub poziomego przewijania powłoki; wykonać regresję rzeczywistym Chromium i cykl A/B zgodnie z zasadami odbioru.
+- Po zakończeniu tej poprawki wrócić do głównej kolejki rozbudowy od pierwszego nierozliczonego fragmentu Lean. W dzienniku i odpowiedzi dla użytkownika podać, co jest wdrożone i zweryfikowane, co jest w trakcie, co zablokowane oraz co pozostaje do realizacji. Nie zmieniać statusów formalnych ani harmonogramu na podstawie samego dopisania zadania.
+
 ## Sekwencyjna kolejka — siedem etapów
 
 Wewnątrz każdego etapu są fragmenty wykonywane po kolei w cyklu A/B. Po czystym technicznym odbiorze B można przejść do kolejnego podetapu rozwojowego; osobna niezależna recenzja nadal warunkuje formalne `stable`. Nie przechodź do kolejnego głównego etapu przy otwartych istotnych defektach ani niespełnionych wymaganiach odbioru.
