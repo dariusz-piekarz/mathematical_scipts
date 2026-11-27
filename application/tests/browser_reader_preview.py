@@ -167,6 +167,29 @@ with sync_playwright() as pw:
     assert iframe.count() == 0
     page.evaluate("latex => renderSimplified(latex, 'AM2-17')", chapter18)
     assert box.locator('.atlas-plot-host').count() == 0
+    # AM II 01: exact polyhedral faces, 12 true edges each, no diagonals.
+    source = (ROOT.parent / 'chapters/pl/mathematical_analysis_ii/01-przestrzenie-unormowane-i-banacha.tex').read_text(encoding='utf-8')
+    page.evaluate("latex => renderSimplified(latex, 'AM2-01')", source)
+    page.wait_for_function(
+        """() => {
+            const images = [...document.querySelectorAll('#simplified .atlas-tikz-preview img')];
+            return images.length === 2 && images.every(img => img.complete && img.naturalWidth > 0);
+        }""", timeout=180000)
+    host = box.locator('.atlas-plot-host')
+    assert host.count() == 1
+    host.locator('button').click()
+    frame = host.frame_locator('iframe')
+    plot = frame.locator('#plot[data-ready=true]')
+    plot.wait_for(timeout=60000)
+    geometry = plot.evaluate("""el => {
+        const d=el.data;
+        return {types:d.map(t=>t.type), edges:[d[1],d[4]].map(t=>t.x.filter(x=>x===null).length),
+                triangles:[d[0].i.length,d[3].i.length]};
+    }""")
+    assert geometry == {'types': ['mesh3d', 'scatter3d', 'surface', 'mesh3d', 'scatter3d'],
+                        'edges': [12, 12], 'triangles': [8, 12]}, geometry
+    host.locator('button').click()
+    assert host.locator('iframe').count() == 0
     # Static TikZ and interactive Plotly coexist in chapters 19–21.
     for module, filename in [
         ('AM2-19', '19-twierdzenie-o-funkcji-uwiklanej.tex'),
