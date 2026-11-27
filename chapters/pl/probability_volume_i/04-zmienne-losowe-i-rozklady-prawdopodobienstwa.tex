@@ -668,9 +668,10 @@ $\Prob(X>1/2,Y<1/2)=0\neq1/16$, ponieważ $\Prob(X<Y)=1$.
 \end{przyklad}
 
 \section{Rozkłady warunkowe przy istnieniu gęstości}
-Przy ciągłej zmiennej $Y$ zdarzenie $\{Y=y\}$ ma zwykle
-prawdopodobieństwo zero. Wyrażenia $\Prob(X\in A\mid Y=y)$
-nie można zatem bezpośrednio rozumieć jako ilorazu zdarzeń.
+Jeżeli rozkład $Y$ jest bezatomowy, to dla każdego $y\in\R$
+zdarzenie $\{Y=y\}$ ma prawdopodobieństwo zero.
+Wyrażenia $\Prob(X\in A\mid Y=y)$ nie można wówczas
+definiować przez iloraz prawdopodobieństw z rozdziału~\ref{ch:conditioning}.
 Gdy istnieje gęstość łączna, jej rozkład na czynniki
 „gęstość brzegowa razy gęstość warunkowa” stanowi
 naturalne rozszerzenie wzoru na warunkowanie. Na tym etapie
@@ -680,54 +681,98 @@ prawdopodobieństw warunkowych.
 \begin{stwierdzenie}[Warunkowa gęstość]
 Niech $(X,Y)$ będzie wektorem losowym o gęstości łącznej $f_{X,Y}$,
 a $f_Y$ niech oznacza gęstość brzegową $Y$.
-Wybierzmy borelowskie wersje $f_{X,Y}$ i $f_Y$; po ewentualnej
-zmianie na zbiorze wartości $y$ o zerowej mierze możemy przyjąć
-$f_Y(y)=\int_\R f_{X,Y}(x,y)\,\dd\lambda_1(x)$,
-gdy całka jest skończona. Dla $y$ z $0<f_Y(y)<\infty$
-połóżmy $f_{X\mid Y=y}(x)=f_{X,Y}(x,y)/f_Y(y)$.
-Dla pozostałych $y$ wybierzmy dowolną ustaloną gęstość,
-np. standardową normalną. Tak wybrana funkcja
-$x\mapsto f_{X\mid Y=y}(x)$ jest gęstością
-probabilistyczną dla każdego $y$, po zmianie wersji na zbiorze
-wyjątkowym o $\Law(Y)$-mierze zero.
+Wybierzmy nieujemną, wszędzie skończoną borelowską wersję
+$f_{X,Y}$. Połóżmy
+\[
+m(y)=\int_\R f_{X,Y}(x,y)\,\dd\lambda_1(x),\qquad
+D=\{y\in\R:0<m(y)<\infty\}.
+\]
+Jako wersję gęstości brzegowej przyjmijmy $f_Y(y)=m(y)$
+dla $m(y)<\infty$ oraz $f_Y(y)=0$ dla $m(y)=\infty$.
+Niech $r$ będzie ustaloną nieujemną, skończoną borelowską
+gęstością probabilistyczną, na przykład $r=\chi_{(0,1)}$.
+Definiujemy
+\[
+k(y,x):=f_{X\mid Y=y}(x)=
+\begin{cases}
+f_{X,Y}(x,y)/m(y),& y\in D,\\
+r(x),& y\notin D.
+\end{cases}
+\]
+Funkcja $k$ jest wspólnie borelowsko mierzalna, a dla każdego
+$y$ funkcja $x\mapsto k(y,x)$ jest gęstością probabilistyczną.
+Ponadto $\Law(Y)(\R\setminus D)=0$.
 Ponadto dla borelowskich $A,B\subseteq\R$
 \begin{equation}\label{eq:joint_cond}
 \Prob(X\in A,Y\in B)
 =\int_B\left(\int_A f_{X\mid Y=y}(x)\,\dd\lambda_1(x)\right)
  f_Y(y)\,\dd\lambda_1(y),
 \end{equation}
-przy dowolnym wyborze gęstości probabilistycznej dla tych wartości $y$,
-dla których iloraz nie jest określony.
+przy każdym ustalonym wyborze gęstości $r$ jak wyżej.
 \end{stwierdzenie}
 \begin{proof}
-Z twierdzenia Tonellego $f_Y(y)=\int_\R f_{X,Y}(x,y)\,
-\dd\lambda_1(x)$ dla prawie wszystkich $y$, więc dla
-$0<f_Y(y)<\infty$ całka z ilorazu po $x$ wynosi jeden.
-Wzór \eqref{eq:joint_cond} wynika z przemnożenia przez $f_Y(y)$
-i zastosowania twierdzenia Fubiniego--Tonellego.
+Twierdzenie Tonellego zapewnia borelowską mierzalność $m$ i
+$\int_\R m(y)\,\dd\lambda_1(y)=1$. Zatem
+$\lambda_1(\{m=\infty\})=0$, a $f_Y$ jest gęstością
+$\Law(Y)$ na mocy twierdzenia o gęstościach brzegowych.
+Zbiór $D$ jest borelowski. Na jego dopełnieniu $f_Y=0$,
+więc $\Law(Y)(\R\setminus D)=\int_{\R\setminus D}f_Y\,\dd\lambda_1=0$.
+
+Na $D\times\R$ iloraz definiujący $k$ jest borelowski
+jako iloraz funkcji borelowskich o dodatnim skończonym
+mianowniku. Na $(\R\setminus D)\times\R$ funkcja $k(y,x)=r(x)$
+jest również borelowska. Oba zbiory są borelowskie, co
+dowodzi wspólnej mierzalności. Dla $y\in D$ mamy
+$\int_\R k(y,x)\,\dd\lambda_1(x)=m(y)/m(y)=1$,
+a dla $y\notin D$ całka jest równa jeden z wyboru $r$.
+
+Dla borelowskiego $A$ funkcja
+$K(y,A):=\int_A k(y,x)\,\dd\lambda_1(x)$ jest borelowska
+na mocy twierdzenia Tonellego i przyjmuje wartości w $[0,1]$.
+Dla $y\in D$ zachodzi
+$K(y,A)f_Y(y)=\int_A f_{X,Y}(x,y)\,\dd\lambda_1(x)$.
+Ta równość zachodzi również dla $m(y)=0$, ponieważ obie
+strony są wtedy zerowe; zbiór $\{m=\infty\}$ jest
+$\lambda_1$-zerowy. Zatem po scałkowaniu po $B$ i zastosowaniu
+twierdzenia Tonellego otrzymujemy \eqref{eq:joint_cond}.
 \end{proof}
 
 \begin{uwaga}
 Symbol $\Prob(X\in A\mid Y=y)$, rozumiany przez powyższy wzór,
 nie jest zwykłym ilorazem $\Prob(X\in A,Y=y)/\Prob(Y=y)$,
-gdyż przy rozkładzie ciągłym obie wielkości często wynoszą zero.
-Wersje gęstości warunkowej mogą się różnić na zbiorze wartości $y$
-o zerowym prawdopodobieństwie.
+gdyż przy istnieniu gęstości rozkładu $Y$ licznik i mianownik
+są zerowe dla każdego $y$.
+Definiujemy ten symbol jako $K(y,A)$ dla wybranej wersji $k$.
+Jeżeli $k_1,k_2$ są dwiema wspólnie borelowskimi gęstościami
+warunkowymi spełniającymi \eqref{eq:joint_cond}, to dla każdego
+borelowskiego $A$ funkcje $K_1(\cdot,A)$ i $K_2(\cdot,A)$
+mają równe całki po wszystkich borelowskich $B$ względem
+$\Law(Y)$, stąd są równe $\Law(Y)$-prawie wszędzie.
+Stosując tę obserwację do przeliczalnej rodziny półprostych
+$(-\infty,q]$, $q\in\mathbb Q$, i sumując zbiory wyjątkowe,
+uzyskujemy jeden zbiór $\Law(Y)$-miary zero, poza którym
+obie miary warunkowe mają tę samą dystrybuantę (z prawostronnej
+ciągłości). Są więc równe na wszystkich zbiorach borelowskich.
+Ich gęstości są wtedy równe $\lambda_1$-prawie wszędzie
+w zmiennej $x$. W szczególności wartości warunkowania w
+ustalonym punkcie $y$ nie są wyznaczone jednoznacznie przez
+rozkład łączny, jeśli $\Law(Y)(\{y\})=0$.
 \end{uwaga}
 
 \begin{przyklad}[Warunkowanie na ustaloną wartość zmiennej ciągłej]
 Wróćmy do rozkładu jednostajnego na trójkącie
-$0<x<y<1$, o gęstości łącznej $f_{X,Y}(x,y)=2$.
+$T=\{(x,y):0<x<y<1\}$, o gęstości łącznej
+$f_{X,Y}(x,y)=2\chi_T(x,y)$.
 Wykazaliśmy, że $f_Y(y)=2y$ dla $0<y<1$.
 Zatem dla każdej takiej wartości $y$ możemy wybrać
 wersję gęstości warunkowej
-$f_{X\mid Y=y}(x)=y^{-1}\ind{\{0<x<y\}}$.
+$f_{X\mid Y=y}(x)=y^{-1}\chi_{(0,y)}(x)$.
 Jest ona unormowana, gdyż $\int_0^y y^{-1}\,\dd\lambda_1(x)=1$.
 Na przykład przy $0<a<y<1$ otrzymujemy
 $\Prob(X\leq a\mid Y=y)=a/y$ w sensie tej wersji
 rozkładu warunkowego. Wniosek ma prostą interpretację:
-jeśli obserwujemy wartość $Y=y$, to $X$ jest jednostajna
-na przedziale $(0,y)$. Nie obliczaliśmy tu ilorazu
+dla tej wersji, przy $Y=y$, rozkład warunkowy $X$ jest
+jednostajny na przedziale $(0,y)$. Nie obliczaliśmy tu ilorazu
 prawdopodobieństw zdarzeń o zerowej mierze;
 posłużyliśmy się rozkładem łącznym i jego faktoryzacją.
 \end{przyklad}
@@ -741,51 +786,86 @@ Niech $k(y,x)$ będzie gęstością warunkową
 $f_{X\mid Y=y}(x)$ z poprzedniego stwierdzenia,
 przy ustalonym borelowskim wyborze wersji.
 Jeśli $h:\R\to\R$ jest funkcją borelowską i
-$\E|h(X)|<\infty$, to funkcja
-$g(y)=\int_\R h(x)k(y,x)\,\dd\lambda_1(x)$,
-przy dowolnej wartości na zbiorze, gdzie całka nie jest
-bezwzględnie zbieżna, jest borelowska i spełnia
+$\E|h(X)|<\infty$, to zbiór
+\[
+N=\left\{y:\int_\R |h(x)|k(y,x)\,\dd\lambda_1(x)=\infty\right\}
+\]
+jest borelowski i $\Law(Y)(N)=0$. Funkcja
+\[
+g(y)=
+\begin{cases}
+\displaystyle\int_\R h(x)k(y,x)\,\dd\lambda_1(x),&y\notin N,\\
+0,&y\in N
+\end{cases}
+\]
+jest borelowska, a $g(Y)$ jest całkowalna i spełnia
 \[
 \E[h(X)\mid\sigma(Y)]=g(Y)\quad\text{p.n.}
 \]
 \end{twierdzenie}
 \begin{proof}
-Najpierw rozważmy $h\geq0$. Z mierzalności wspólnej
-funkcji $(y,x)\mapsto h(x)k(y,x)$ oraz twierdzenia
-Tonellego wynika borelowska mierzalność $g$.
-Dla dowolnego zbioru borelowskiego $B\subseteq\R$
-z poprzedniego wzoru na gęstość warunkową
-otrzymujemy
+Dla dowolnej nieujemnej funkcji borelowskiej $\varphi$
+niech $G_\varphi(y)=\int_\R \varphi(x)k(y,x)\,\dd\lambda_1(x)$.
+Z twierdzenia Tonellego jest to borelowska funkcja
+o wartościach w $[0,\infty]$. Dla każdego borelowskiego
+$B\subseteq\R$ zachodzi
 \[
-\E[h(X)\ind{\{Y\in B\}}]
-=\int_B\!\left(\int_\R h(x)k(y,x)\,\dd\lambda_1(x)\right)
-\dd\Law(Y)(y).
+\E[\varphi(X)\chi_{Y^{-1}(B)}]
+=\int_B G_\varphi(y)\,\dd\Law(Y)(y).
 \]
-Tożsamość dla funkcji nieujemnej można uzyskać przez
-aproksymację rosnącą funkcjami prostymi, a następnie
-zastosowanie zbieżności monotonicznej.
-Dla ogólnej całkowalnej $h$ stosujemy ten argument
-osobno do $h^+$ i $h^-$. Po scałkowaniu przy $B=\R$
-widzimy, że obie odpowiednie funkcje warunkowe są
-skończone dla $\Law(Y)$-prawie każdego $y$.
-Różnica jest zatem dobrze określona prawie wszędzie,
-a jej złożenie z $Y$ jest $\sigma(Y)$-mierzalne.
-Zdarzenia $\{Y\in B\}$, $B\in\mathcal B(\R)$,
-stanowią dokładnie $\sigma(Y)$, więc uzyskana
-równość całek jest definicją warunkowej wartości
-oczekiwanej. Jednoznaczność wersji kończy dowód.
+Dla $\varphi=\chi_A$ jest to \eqref{eq:joint_cond}, a dla
+nieujemnych funkcji prostych wynika z liniowości.
+Wybierając nieujemne funkcje proste $\varphi_n\uparrow\varphi$,
+stosujemy twierdzenie o zbieżności monotonicznej najpierw
+w całce po $x$, a następnie w całkach po $y$ i po $\omega$.
+Otrzymujemy wskazaną tożsamość dla każdej $\varphi\geq0$.
+
+W szczególności dla $\varphi=|h|$ i $B=\R$ mamy
+$\int_\R G_{|h|}\,\dd\Law(Y)=\E|h(X)|<\infty$.
+Zatem borelowski zbiór $N=\{G_{|h|}=\infty\}$ jest
+$\Law(Y)$-zerowy. Poza $N$ funkcje $G_{h^+}$ i $G_{h^-}$
+są skończone, a $g=G_{h^+}-G_{h^-}$. Przypisanie wartości
+zero na $N$ zachowuje borelowską mierzalność.
+Ponadto $|g|\leq G_{|h|}$, zatem
+\[
+\E|g(Y)|=\int_\R |g(y)|\,\dd\Law(Y)(y)
+\leq\E|h(X)|<\infty.
+\]
+Funkcja $g(Y)$ jest $\sigma(Y)$-mierzalna, gdyż $g$ jest
+borelowska. Odejmując tożsamości dla $h^+$ i $h^-$,
+otrzymujemy dla każdego borelowskiego $B$
+\[
+\int_{Y^{-1}(B)}h(X)\,\dd\Prob
+=\int_B g(y)\,\dd\Law(Y)(y)
+=\int_{Y^{-1}(B)}g(Y)\,\dd\Prob.
+\]
+Rodzina $\{Y^{-1}(B):B\in\mathcal B(\R)\}$ jest
+$\sigma$-ciałem i z definicji jest równa $\sigma(Y)$.
+Sprawdziliśmy zatem mierzalność, całkowalność oraz
+tożsamość całek wymaganą w definicji warunkowej wartości
+oczekiwanej; por. rozdział~\ref{ch:condexp} i
+\atlasref{ME-18::def:conditional-exp-18}{definicję w teorii miary i całki}.
+Jednoznaczność prawie na pewno
+(\atlasref{ME-18::thm:CE-existence-18}{twierdzenie o warunkowej wartości oczekiwanej})
+daje tezę.
 \end{proof}
 \begin{przyklad}[Obliczanie warunkowej średniej i wariancji]
 W modelu jednostajnym na trójkącie $0<x<y<1$
-mamy $k(y,x)=y^{-1}\ind{\{0<x<y\}}$ dla $0<y<1$.
+mamy $k(y,x)=y^{-1}\chi_{(0,y)}(x)$ dla $0<y<1$.
+Ponieważ $0<X<Y<1$ prawie na pewno, zarówno $X$, jak i $X^2$
+są całkowalne.
 Zatem
 $\E[X\mid Y=y]=y^{-1}\int_0^y x\,\dd\lambda_1(x)=y/2$
 oraz
 $\E[X^2\mid Y=y]=y^{-1}\int_0^y x^2\,\dd\lambda_1(x)=y^2/3$.
-Wariancja warunkowa jest równa $y^2/3-(y/2)^2=y^2/12$.
-Stąd, w sensie wersji warunkowej,
-$\E[X\mid\sigma(Y)]=Y/2$ i
-$\Var(X\mid\sigma(Y))=Y^2/12$.
+Wariancja rozkładu warunkowego przy $0<y<1$ jest równa
+$y^2/3-(y/2)^2=y^2/12$, na mocy tożsamości wariancji
+jako różnicy drugiego momentu i kwadratu pierwszego momentu.
+Ponieważ $\Prob(0<Y<1)=1$, z powyższego twierdzenia dla
+$h(x)=x$ oraz $h(x)=x^2$ i wzoru na wariancję warunkową
+(rozdział~\ref{ch:condexp}) otrzymujemy poniższe równości.
+Mianowicie $\E[X\mid\sigma(Y)]=Y/2$ i
+$\Var(X\mid\sigma(Y))=Y^2/12$ prawie na pewno.
 To przykład, w którym pojedyncza obserwacja $Y$
 zmienia nie tylko prognozę, lecz również pozostałą
 niepewność co do $X$.
