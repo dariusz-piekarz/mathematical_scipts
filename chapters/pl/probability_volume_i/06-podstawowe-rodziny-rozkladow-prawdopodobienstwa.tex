@@ -1551,66 +1551,137 @@ To przykłady ważnej zasady: z prostych rozkładów tworzymy
 bardziej złożone za pomocą działań na zmiennych losowych.
 
 \begin{definicja}
-Zmienna $X$ ma rozkład lognormalny z parametrami
-$\mu\in\R$, $\sigma>0$, jeżeli $\log X\sim\Normal(\mu,\sigma^2)$
-(prawie na pewno $X>0$). Ma wtedy gęstość
-$\ind{\{x>0\}}\exp(- (\log x-\mu)^2/(2\sigma^2))
-/[x\sigma\sqrt{2\pi}]$.
+Zmienna losowa $X$ ma rozkład logarytmiczno-normalny
+z parametrami $\mu\in\R$, $\sigma>0$, jeżeli $\Prob(X>0)=1$
+oraz $\log X\sim\Normal(\mu,\sigma^2)$, przy czym
+$\log X$ określamy dowolnie w sposób mierzalny na
+zdarzeniu $\{X\leq0\}$ o prawdopodobieństwie zero.
+Równoważnie jest to rozkład zmiennej $e^Y$, gdzie
+$Y\sim\Normal(\mu,\sigma^2)$: w pierwszym kierunku
+$X=e^{\log X}$ prawie na pewno, a w drugim
+$\log(e^Y)=Y$ punktowo.
+Z twierdzenia o transformacji monotonicznej
+(rozdział~\ref{ch:random-variables}), zastosowanego do
+dyfeomorfizmu $\exp:\R\to(0,\infty)$ o odwrotności
+$\log$ i pochodnej odwrotności $1/x$, wynika gęstość
+względem miary Lebesgue'a:
+\[
+f_X(x)=
+\begin{cases}
+\displaystyle\frac{\exp(-(\log x-\mu)^2/(2\sigma^2))}
+{x\sigma\sqrt{2\pi}},&x>0,\\
+0,&x\leq0.
+\end{cases}
+\]
+Jej całka wynosi jeden na mocy podstawienia $y=\log x$
+i normalizacji gęstości normalnej.
 \end{definicja}
 
 \begin{stwierdzenie}
-Jeżeli $X$ ma rozkład lognormalny z parametrami $\mu,\sigma$,
-to $\E X=e^{\mu+\sigma^2/2}$ oraz
+Jeżeli $X$ ma rozkład logarytmiczno-normalny
+z parametrami $\mu,\sigma$, to dla każdego $r\in\R$
+zachodzi $\E X^r=\exp(r\mu+r^2\sigma^2/2)$,
+gdzie potęgi określamy mierzalnie i nieujemnie
+na zbiorze zerowym $\{X\leq0\}$.
+W szczególności $\E X=e^{\mu+\sigma^2/2}$ oraz
 $\Var(X)=(e^{\sigma^2}-1)e^{2\mu+\sigma^2}$.
 \end{stwierdzenie}
+\begin{proof}
+Mamy $X=e^Y$ prawie na pewno dla
+$Y\sim\Normal(\mu,\sigma^2)$.
+Stąd $\E X^r=\E e^{rY}=M_Y(r)=\exp(r\mu+r^2\sigma^2/2)$
+dla dowolnego rzeczywistego $r$, ponieważ funkcja tworząca
+momenty rozkładu normalnego jest skończona na całej prostej.
+Dla $r=1,2$ daje to odpowiednio $e^{\mu+\sigma^2/2}$
+i $e^{2\mu+2\sigma^2}$, a więc
+\[
+\Var(X)=e^{2\mu+2\sigma^2}-e^{2\mu+\sigma^2}
+=(e^{\sigma^2}-1)e^{2\mu+\sigma^2}.
+\]
+\end{proof}
 \begin{uwaga}
 Nie należy stąd wnioskować, że funkcja tworząca momenty
 $M_X(t)=\E e^{tX}$ jest skończona w otoczeniu zera.
-Dla lognormalnej zmiennej losowej $M_X(t)=\infty$
-dla każdego $t>0$, choć wszystkie momenty
-$\E X^r$ są skończone. Rozbieżność wynika z tego,
-że dla $X=e^Y$, gdzie $Y$ jest normalna,
-wykładnik $te^y-(y-\mu)^2/(2\sigma^2)$
-rośnie do $+\infty$ przy $y\to+\infty$.
+Dla $t\leq0$ mamy $0<e^{tX}\leq1$ prawie na pewno,
+więc $M_X(t)<\infty$. Natomiast dla $t>0$, stosując
+\eqref{eq:lotus} do $Y$ i nieujemnej funkcji
+$y\mapsto e^{te^y}$, otrzymujemy
+\[
+M_X(t)=\frac{1}{\sigma\sqrt{2\pi}}
+\int_\R\exp\!\left(te^y-\frac{(y-\mu)^2}{2\sigma^2}\right)
+\,\dd\lambda_1(y).
+\]
+Wykładnik dąży do $+\infty$ przy $y\to+\infty$,
+więc funkcja podcałkowa jest od pewnego miejsca
+nie mniejsza niż $1$. Całka jest nieskończona.
+Dziedziną skończoności $M_X$ jest zatem $(-\infty,0]$,
+mimo istnienia wszystkich dodatnich momentów.
+Zob. również kontrprzykład dotyczący jednoznaczności
+rozkładu wyznaczonego przez momenty w rozdziale~\ref{ch:expectation}.
 \end{uwaga}
-\begin{proof}
-Zapisujemy $X=e^Y$, gdzie $Y\sim\Normal(\mu,\sigma^2)$.
-Wtedy $\E X=M_Y(1)$ i $\E X^2=M_Y(2)$,
-co daje odpowiednio $e^{\mu+\sigma^2/2}$ i
-$e^{2\mu+2\sigma^2}$. Odejmujemy kwadrat średniej.
-\end{proof}
 
 \begin{definicja}
-Niech $d_1,d_2\in\N$ i niech $U\sim\chi^2_{d_1}$ oraz
-$V\sim\chi^2_{d_2}$ będą niezależne. Rozkład zmiennej
-$F:=(U/d_1)/(V/d_2)$ nazywamy rozkładem Fishera--Snedecora
-i oznaczamy $F_{d_1,d_2}$.
+Niech $d_1,d_2\geq1$ będą liczbami całkowitymi, a
+$U\sim\chi^2_{d_1}$ oraz $V\sim\chi^2_{d_2}$ niezależnymi
+zmiennymi losowymi na wspólnej przestrzeni probabilistycznej.
+Ponieważ $\Prob(U>0,V>0)=1$, definiujemy
+\[
+F=\begin{cases}
+(U/d_1)/(V/d_2),&U>0,\ V>0,\\
+0,&\text{w przeciwnym przypadku}.
+\end{cases}
+\]
+Zmienna jest mierzalna, gdyż określająca ją funkcja
+jest ciągła na $(0,\infty)^2$ i przedłużona zerem
+poza tym obszarem. Jej rozkład zależy wyłącznie od
+$d_1,d_2$, ponieważ jest obrazem ustalonego produktowego
+rozkładu pary $(U,V)$. Nazywamy go rozkładem
+Fishera--Snedecora i oznaczamy $F_{d_1,d_2}$.
 \end{definicja}
 
 \begin{stwierdzenie}
 Rozkład $F_{d_1,d_2}$ ma gęstość
 \[
-f(x)=\frac{\Gamma((d_1+d_2)/2)}
+f(x)=
+\begin{cases}
+\displaystyle\frac{\Gamma((d_1+d_2)/2)}
 {\Gamma(d_1/2)\Gamma(d_2/2)}
 \left(\frac{d_1}{d_2}\right)^{d_1/2}
-\frac{x^{d_1/2-1}}{(1+d_1x/d_2)^{(d_1+d_2)/2}}
-\ind{\{x>0\}}.
+\frac{x^{d_1/2-1}}{(1+d_1x/d_2)^{(d_1+d_2)/2}},
+&x>0,\\
+0,&x\leq0.
+\end{cases}
 \]
-Jeżeli $T\sim t_\nu$ i $\nu\in\N$, to $T^2\sim F_{1,\nu}$.
+Jeżeli $T\sim t_\nu$ i $\nu\geq1$ jest liczbą całkowitą, to $T^2\sim F_{1,\nu}$.
 \end{stwierdzenie}
 \begin{proof}
 Oznaczmy $a=d_1/2$ oraz $b=d_2/2$.
-Z niezależności $U,V$ ich gęstość łączna na dodatnim
-kwadrancie jest równa
+Z niezależności $U,V$ oraz wzoru na gęstość rozkładu
+łącznego (rozdział~\ref{ch:random-variables}) ich gęstość
+łączna na $(0,\infty)^2$ jest równa
 \[
 f_{U,V}(u,v)=\frac{u^{a-1}v^{b-1}e^{-(u+v)/2}}
 {2^{a+b}\Gamma(a)\Gamma(b)}.
 \]
-Definicja $X=(U/d_1)/(V/d_2)$ prowadzi do zmiany
-$u=(d_1/d_2)xv$, przy której moduł jakobianu
-odwrotnej transformacji $(x,v)\mapsto(u,v)$ wynosi
-$d_1v/d_2$. Podstawiając do gęstości łącznej,
-a następnie całkując po $v>0$, dostajemy
+Oznaczmy $X=F$. Na dodatnim kwadrancie odwzorowanie
+$(u,v)\mapsto((d_2/d_1)u/v,v)$ jest dyfeomorfizmem
+klasy $C^1$ na siebie. Jego odwrotność ma postać
+$(x,v)\mapsto((d_1/d_2)xv,v)$, a macierz jej pochodnych
+wynosi
+\[
+\begin{pmatrix}
+(d_1/d_2)v&(d_1/d_2)x\\
+0&1
+\end{pmatrix}.
+\]
+Moduł wyznacznika jest równy $(d_1/d_2)v>0$.
+Para $(U,V)$ jest skupiona na dodatnim kwadrancie,
+więc \atlasref{ME-13::thm:change-variables-13}{twierdzenie o zamianie zmiennych}
+daje gęstość pary $(X,V)$ przez podstawienie do gęstości
+łącznej i pomnożenie przez moduł jakobianu.
+Stosując \atlasref{ME-12::thm:tonelli-12}{twierdzenie Tonellego}
+do nieujemnej gęstości, a następnie całkując po $v>0$,
+dostajemy
 \[
 f_X(x)=\frac{(d_1/d_2)^a x^{a-1}}
 {2^{a+b}\Gamma(a)\Gamma(b)}
@@ -1618,14 +1689,27 @@ f_X(x)=\frac{(d_1/d_2)^a x^{a-1}}
 \exp\!\left(-\frac{1+(d_1/d_2)x}{2}v\right)
 \,\dd\lambda_1(v),\quad x>0.
 \]
-Po podstawieniu $w=(1+(d_1/d_2)x)v/2$
-całka wynosi
-$\Gamma(a+b)\,[2/(1+(d_1/d_2)x)]^{a+b}$.
-Po uproszczeniu otrzymujemy podaną gęstość.
+Dla $x>0$ liczba $c=(1+(d_1/d_2)x)/2$ jest dodatnia.
+Po podstawieniu $w=cv$ całka wynosi
+$c^{-(a+b)}\Gamma(a+b)$, ponieważ $a+b>0$.
+Po uproszczeniu otrzymujemy podaną gęstość dla $x>0$;
+dla $x\leq0$ przyjmujemy gęstość równą zeru,
+gdyż $X>0$ prawie na pewno.
+Całka z uzyskanej gęstości jest równa jeden: jest to
+gęstość brzegowa rozkładu probabilistycznego $(X,V)$,
+a twierdzenie Tonellego pozwala zintegrować ją po $\R$.
 
-Dla $T\sim t_\nu$ mamy z definicji
-$T^2=(Z^2/1)/(V/\nu)$, gdzie
-$Z^2\sim\chi_1^2$, $V\sim\chi_\nu^2$ i są niezależne.
+Jeżeli $T\sim t_\nu$, to z definicji rozkładu
+$\Law(T)=\Law(Z/\sqrt{V/\nu})$, gdzie
+$Z\sim\Normal(0,1)$, $V\sim\chi_\nu^2$ są niezależne,
+a iloraz określamy zerem na $\{V\leq0\}$.
+Ponieważ rozkład mierzalnego przekształcenia zależy
+tylko od rozkładu jego argumentu, mamy
+$\Law(T^2)=\Law((Z^2/1)/(V/\nu))$, z dokładnością
+do modyfikacji ilorazu na zbiorze zerowym.
+Z poprzedniego twierdzenia o sumie kwadratów wynika
+$Z^2\sim\chi_1^2$, a $Z^2,V$ są niezależne jako
+mierzalne funkcje niezależnych zmiennych.
 Zatem $T^2\sim F_{1,\nu}$. Ten argument działa
 również dla dowolnego rzeczywistego $\nu>0$, jeśli
 rozszerzymy definicję $F_{d_1,d_2}$ na rzeczywiste
@@ -1648,17 +1732,20 @@ Rozkład & Parametry & Typowe zastosowanie \\
 \hline
 Bernoulliego & $p\in[0,1]$ & Wynik pojedynczej próby binarnej \\
 Dwumianowy & $n\in\N_0$, $p\in[0,1]$ & Liczba sukcesów w niezależnych próbach \\
-Hipergeometryczny & $0\leq K,n\leq N$ & Losowanie bez zwracania \\
-Poissona & $\lambda>0$ & Liczba rzadkich niezależnych zdarzeń \\
+Hipergeometryczny & $N\geq1$, $0\leq K,n\leq N$ (całkowite) & Liczba sukcesów przy losowaniu bez zwracania \\
+Poissona & $\lambda>0$ & Przybliżenie liczby sukcesów w wielu niezależnych próbach o małym prawdopodobieństwie sukcesu \\
 Geometryczny & $p\in(0,1]$ & Liczba prób do pierwszego sukcesu \\
+Ujemny dwumianowy & $r\geq1$ całkowite, $p\in(0,1]$ & Liczba prób do $r$-tego sukcesu \\
 Jednostajny & $a<b$ & Jednorodne losowanie punktu odcinka \\
 Wykładniczy & $\lambda>0$ & Niepamiętający czas oczekiwania \\
 Normalny & $\mu\in\R$, $\sigma>0$ & Błędy pomiaru, sumy licznych składników \\
 Gamma & $\alpha,\lambda>0$ & Dodatnie czasy i sumy czasów oczekiwania \\
-Chi-kwadrat & $\nu>0$ & Sumy kwadratów normalnych \\
+Chi-kwadrat & $\nu>0$ & Suma kwadratów niezależnych standardowych zmiennych normalnych dla całkowitego $\nu$ \\
 Beta & $a,b>0$ & Udziały, proporcje i zmienne o wartościach w $(0,1)$ \\
-t-Studenta & $\nu>0$ & Standaryzowane ilorazy normalnej i chi-kwadrat \\
+t-Studenta & $\nu>0$ & Iloraz standardowej zmiennej normalnej i pierwiastka z niezależnej unormowanej zmiennej chi-kwadrat \\
 Cauchy'ego & $x_0\in\R$, $\gamma>0$ & Model z ciężkimi ogonami, kontrprzykłady dla momentów \\
+Logarytmiczno-normalny & $\mu\in\R$, $\sigma>0$ & Dodatnia zmienna o normalnym logarytmie \\
+Fishera--Snedecora & $d_1,d_2\geq1$ całkowite & Iloraz niezależnych unormowanych zmiennych chi-kwadrat \\
 \hline
 \end{tabular}
 \end{center}
