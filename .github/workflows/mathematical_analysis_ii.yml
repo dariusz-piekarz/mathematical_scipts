@@ -8,6 +8,7 @@ on:
       - 'application/config/preambles/AM2.tex'
       - 'application/backend/figure_preview.py'
       - 'application/scripts/audit_graph_figure_previews.py'
+      - 'application/scripts/test_audit_figure_png.py'
       - '.github/workflows/mathematical_analysis_ii.yml'
   pull_request:
     paths:
@@ -17,6 +18,7 @@ on:
       - 'application/config/preambles/AM2.tex'
       - 'application/backend/figure_preview.py'
       - 'application/scripts/audit_graph_figure_previews.py'
+      - 'application/scripts/test_audit_figure_png.py'
       - '.github/workflows/mathematical_analysis_ii.yml'
   workflow_dispatch:
 jobs:
@@ -25,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install LaTeX
-        run: sudo apt-get update && sudo apt-get install -y texlive-latex-extra texlive-fonts-recommended texlive-lang-polish texlive-science lmodern poppler-utils
+        run: sudo apt-get update && sudo apt-get install -y texlive-latex-extra texlive-fonts-recommended texlive-lang-polish texlive-science lmodern poppler-utils python3-pil
       - name: Compile book
         working-directory: books/pl
         run: |
@@ -38,7 +40,9 @@ jobs:
           done
           if grep -E 'There were undefined references|There were multiply-defined labels|LaTeX Warning: Reference .* undefined|destination with the same identifier|Label\(s\) may have changed|Rerun to get cross-references right|Rerun to get outlines right' mathematical_analysis_ii.log; then exit 1; fi
       - name: Compile every AM2 TikZ figure with the Atlas reader renderer
-        run: python3 application/scripts/audit_graph_figure_previews.py --book mathematical_analysis_ii --report audit_output/am2_reader_figures.json
+        run: |
+          /usr/bin/python3 application/scripts/test_audit_figure_png.py
+          /usr/bin/python3 application/scripts/audit_graph_figure_previews.py --book mathematical_analysis_ii --report audit_output/am2_reader_figures.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:

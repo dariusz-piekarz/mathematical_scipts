@@ -7,10 +7,22 @@ from pathlib import Path
 import sys
 import tempfile
 
+from PIL import Image
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from backend import figure_preview as renderer
 from backend.latex_parser import module_id
+
+
+def verify_png(path: Path) -> None:
+    """Check PNG integrity and decode all pixels, not just its signature."""
+    with Image.open(path) as image:
+        if image.format != 'PNG':
+            raise ValueError('Expected PNG image')
+        image.verify()
+    with Image.open(path) as image:
+        image.load()
 
 
 def main():
@@ -34,11 +46,9 @@ def main():
             for key in figures:
                 try:
                     output = renderer.render(module, source, key)
-                    with output.open("rb") as png:
-                        if png.read(8) != b"\x89PNG\r\n\x1a\n":
-                            raise ValueError("Invalid PNG signature")
+                    verify_png(output)
                     report["passed"] += 1
-                except (renderer.FigureError, OSError, ValueError) as exc:
+                except (renderer.FigureError, OSError, ValueError, SyntaxError, Image.DecompressionBombError) as exc:
                     report["failures"].append({"module": module, "figure": key, "error": str(exc)})
             print(f"{module}: {len(figures)} figures checked", flush=True)
     args.report.parent.mkdir(parents=True, exist_ok=True)

@@ -10,6 +10,7 @@ on:
       - 'application/config/preambles/GW.tex'
       - 'application/backend/figure_preview.py'
       - 'application/scripts/audit_graph_figure_previews.py'
+      - 'application/scripts/test_audit_figure_png.py'
       - 'tools/tests/test_graph_and_knot_global.py'
       - 'tools/tests/test_graph_and_knot_advanced_foundations.py'
       - 'tools/tests/test_graph_and_knot_topology_laplacian_planarity.py'
@@ -123,7 +124,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             texlive-latex-base texlive-latex-recommended texlive-latex-extra \
-            texlive-lang-polish texlive-pictures lmodern poppler-utils
+            texlive-lang-polish texlive-pictures lmodern poppler-utils python3-pil
       - name: Compile the complete book (42 source files) three times
         run: |
           mkdir -p audit_output
@@ -154,7 +155,9 @@ jobs:
             exit 1
           fi
       - name: Render every graph and knot figure through the Atlas standalone renderer
-        run: python3 application/scripts/audit_graph_figure_previews.py --report audit_output/graph_and_knot_reader_figures.json
+        run: |
+          /usr/bin/python3 application/scripts/test_audit_figure_png.py
+          /usr/bin/python3 application/scripts/audit_graph_figure_previews.py --report audit_output/graph_and_knot_reader_figures.json
       - name: Upload full book PDF and validation logs, including failures
         if: always()
         uses: actions/upload-artifact@v4
