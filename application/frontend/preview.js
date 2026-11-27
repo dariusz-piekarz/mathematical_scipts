@@ -2,6 +2,50 @@
 function buildProsePreview(container, source, moduleId) {
   container.replaceChildren();
   const environmentNames = {definicja:'Definicja',definition:'Definicja',twierdzenie:'Twierdzenie',theorem:'Twierdzenie',lemat:'Lemat',lemma:'Lemat',stwierdzenie:'Stwierdzenie',proposition:'Stwierdzenie',wniosek:'Wniosek',corollary:'Wniosek',uwaga:'Uwaga',remark:'Uwaga',przyklad:'Przykład',example:'Przykład',proof:'Dowód',dowod:'Dowód'};
+  function tablePreview(source, root) {
+    const wrapper=document.createElement('div'), table=document.createElement('table');
+    wrapper.className='preview-table-scroll';table.className='preview-table';wrapper.append(table);root.append(wrapper);
+    let cells=[], cell='', depth=0, environmentDepth=0, lastRow=null;
+    const finishRow=()=>{
+      cells.push(cell);cell='';
+      if(cells.some(value=>value.trim())){
+        lastRow=table.insertRow();
+        for(const value of cells)parse(value,lastRow.insertCell(),true);
+      }
+      cells=[];
+    };
+    for(let i=0;i<source.length;){
+      if(source[i]==='%'){while(i<source.length&&source[i]!=='\n')i++;continue;}
+      const math=source.slice(i).match(/^(\$\$|\$|\\\[|\\\()/);
+      if(math){
+        const left=math[0], right=left==='\\['?'\\]':left==='\\('?'\\)':left;
+        const start=i;i+=left.length;
+        while(i<source.length&&!source.startsWith(right,i))i+=source[i]==='\\'?2:1;
+        if(i<source.length)i+=right.length;
+        cell+=source.slice(start,i);continue;
+      }
+      const env=source.slice(i).match(/^\\(begin|end)\{[^}]+\}/);
+      if(env){environmentDepth+=env[1]==='begin'?1:-1;cell+=env[0];i+=env[0].length;continue;}
+      if(depth===0&&environmentDepth===0){
+        const rule=source.slice(i).match(/^\\(?:hline|toprule|midrule|bottomrule)\b/);
+        if(rule){
+          if(cell.trim()||cells.length)finishRow();
+          (lastRow||table).classList.add(lastRow?'preview-rule-bottom':'preview-rule-top');
+          i+=rule[0].length;continue;
+        }
+        if(source.startsWith('\\\\',i)){
+          finishRow();i+=2;
+          const spacing=source.slice(i).match(/^\s*\[[^\]]*\]/);if(spacing)i+=spacing[0].length;
+          continue;
+        }
+        if(source[i]==='&'){cells.push(cell);cell='';i++;continue;}
+      }
+      if(source[i]==='\\'&&i+1<source.length){cell+=source.slice(i,i+2);i+=2;continue;}
+      if(source[i]==='{')depth++;else if(source[i]==='}')depth--;
+      cell+=source[i++];
+    }
+    finishRow();
+  }
   function parse(text, root, inline=false) {
     let i=0, paragraph=null;
     const parents=[root];
@@ -51,6 +95,17 @@ function buildProsePreview(container, source, moduleId) {
       }
       if(command==='begin'||command==='end') {
         const env=group()||'';whitespace();const title=text[i]==='['?group('[',']'):null;
+        if(command==='begin'&&['tabular','tabular*'].includes(env)){
+          if(env==='tabular*')group();
+          group(); // Column specifications are layout metadata, not cell text.
+          const token=/\\(begin|end)\{tabular\*?\}/g;token.lastIndex=i;
+          let nesting=1, end=text.length, after=text.length, next;
+          while((next=token.exec(text))){
+            nesting+=next[1]==='begin'?1:-1;
+            if(nesting===0){end=next.index;after=token.lastIndex;break;}
+          }
+          if(!inline)flush();tablePreview(text.slice(i,end),inline?root:parent());i=after;continue;
+        }
         if(inline)continue;
         flush();
         if(command==='end'){if(parents.length>1)parents.pop();continue;}

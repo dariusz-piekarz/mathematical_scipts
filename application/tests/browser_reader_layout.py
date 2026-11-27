@@ -30,7 +30,7 @@ with sync_playwright() as pw:
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
     page.goto(URL, wait_until='networkidle')
-    page.evaluate("() => openModule('AM1-14', true)")
+    page.evaluate("() => openModule('AM1-14')")
     page.locator('#simplified .katex').first.wait_for(state='attached')
 
     # Previously KaTeX's absolute MathML spans enlarged the document to over
@@ -65,6 +65,36 @@ with sync_playwright() as pw:
     page.wait_for_function("!document.documentElement.classList.contains('reading-mode')")
     assert_viewport_layout(page)
     page.locator('#textSizeReset').click()
+
+    # Switching between short previews, full chapters and other tabs must not
+    # leave an independently scrollable document underneath the app shell.
+    for module in ('DG-14', 'ALG-10', 'AM1-14'):
+        for full in (False, True):
+            page.evaluate('([module,full]) => openModule(module,full)', [module, full])
+            assert_viewport_layout(page)
+            page.evaluate('window.scrollTo(0,100000)')
+            assert_viewport_layout(page)
+
+    page.evaluate("() => openModule('ALG-10', true)")
+    tables = page.locator('#simplified .preview-table')
+    assert tables.count() > 0
+    assert tables.first.locator('tr').count() >= 2
+    assert tables.first.locator('.katex').count() > 0
+    assert r'\hline' not in tables.first.inner_text()
+    assert tables.first.locator('.preview-rule-bottom').count() > 0
+
+    table_source = (r'\begin{tabular}{cc}\hline '
+                    r'\textbf{A\&B}&$\begin{aligned}x&=1\\y&=2\end{aligned}$\\\hline '
+                    r'\textit{C}&D\\\hline\end{tabular}')
+    page.evaluate("source => renderSimplified(source, 'DG-14')", table_source)
+    table = page.locator('#simplified .preview-table')
+    assert table.locator('tr').count() == 2
+    assert table.locator('td').count() == 4
+    assert table.locator('strong').inner_text() == 'A&B'
+    assert table.locator('.katex').count() == 1
+    assert table.locator('.preview-rule-bottom').count() == 2
+    assert page.locator('#mathPreviewStatus').is_hidden()
+    assert_viewport_layout(page)
 
     source = (r'\chapter{Test \texorpdfstring{\emph{Visible $x^2$}}{PDF-ONLY}}'
               r'\section{\texorpdfstring{Second \texorpdfstring{$\alpha$}{INNER-PDF}}{OUTER-PDF}}'

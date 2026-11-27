@@ -1,5 +1,51 @@
 # Gotowe narzędzia LaTeX → Lean — przegląd z 26 listopada 2026
 
+## Aktualizacja 27.11.2026 — warunek braku opłat
+
+Użytkownik uzależnił integrację od braku opłat za inferencję. Licencje
+MIT/Apache-2.0 dotyczą programu lub wag, nie finansują wywołań dostawcy.
+Domyślne uruchomienie AutoformBot lub LeanFlow nie daje gwarancji darmowej
+inferencji. Aktualna decyzja: lokalne wagi, zero opłat zewnętrznych,
+bez wymaganego abonamentu i bez automatycznej zmiany dostawcy na chmurowego.
+Pozostają zużycie sprzętu i energii; nie obiecujemy zerowego kosztu prądu.
+
+Zweryfikowane źródła i ograniczenia:
+
+- [LeanFlow, przypięty kod dostawcy](https://github.com/epfl-lara/LeanFlow/blob/9a2b6b47ac0b54c2478088a4f6bfb44130f1d650/leanflow_cli/runtime/runtime_provider.py): obsługuje Codex, Claude i Lemex; niestandardowe endpointy kieruje do Lemex. Nie traktować domyślnego backendu jako darmowego modelu.
+- [Lemex, konfiguracja](https://github.com/Lemmy00/lemex/blob/2f0e12c10d0baf7404a83da3b8cb8f04b77822c9/docs/config.md): konfiguracja dostarczona z programem wskazuje zdalne EPFL RCP i wymaga klucza. [Kod lokalnego dostawcy](https://github.com/Lemmy00/lemex/blob/2f0e12c10d0baf7404a83da3b8cb8f04b77822c9/codex-rs/model-provider-info/src/lib.rs#L774) dopuszcza jednak własny lokalny serwer bez klucza/logowania. Potrzebny jawnie wybrany profil lokalny; sama zmiana nazwy backendu na Lemex nie zapewnia braku opłat.
+- [Format żądania Lemex](https://github.com/Lemmy00/lemex/blob/2f0e12c10d0baf7404a83da3b8cb8f04b77822c9/codex-rs/codex-api/src/common.rs#L279): wymagane Responses API; zwykły serwer Chat Completions nie wystarczy. HTTP przekazuje pełne wejście, bez wymogu `previous_response_id`. WebSockety trzeba wyłączyć w tym profilu.
+- [Dokumentacja Ollama](https://docs.ollama.com/api/openai-compatibility#responses-api) opisuje bezstanowe Responses API i wywoływanie funkcji. [Tryb lokalny](https://docs.ollama.com/faq#how-do-i-disable-ollamas-cloud-features) pozwala wyłączyć chmurę przez `OLLAMA_NO_CLOUD=1`. To zgodność protokołu na poziomie dokumentacji, nie wykonany test wszystkich narzędzi Lemex/LeanFlow.
+- AutoformBot pozostaje alternatywą. Dziedziczy model i rozliczenia agenta, w którym działa; w tym przeglądzie nie potwierdzono jego kompletnego darmowego lokalnego wykonania. Nadal wymaga osobnej oceny wersji Lean ≥4.27, podczas gdy Atlas zachowuje przypięcie 4.26.
+
+Odczytano lokalny sprzęt: 32 GB RAM, NVIDIA GeForce RTX 3060 Laptop GPU,
+6144 MiB VRAM według `nvidia-smi`. Nie ma lokalnego serwera Ollama/llama.cpp,
+Lean/Lake ani działającego WSL2. Wagi 8B BF16 nie zmieszczą się w całości
+w 6 GB VRAM. Kwantyzacja i częściowe użycie RAM są kandydatem do próby;
+nie zmierzono szybkości, zajętości pamięci ani skuteczności tłumaczenia.
+Nie pobrano wag i nie uruchomiono żadnego modelu.
+
+**Wniosek:** wariant bez opłat API jest technicznie możliwy, ale gotowość
+całego procesu na tym komputerze pozostaje niepotwierdzona. Najpierw
+izolowany pilot LeanFlow + Lemex + lokalny model; warunkiem wyboru są
+rzeczywiste testy narzędzi i formalizacji, a nie wyłącznie dostępność endpointu.
+Przed uznaniem trybu offline wyłączyć również zewnętrzne wyszukiwanie/MCP
+i sprawdzić brak ruchu poza loopback. Lokalny adres serwera sam w sobie
+nie dowodzi, że ten serwer nie przekazuje wywołań do chmury.
+
+Kontynuacja przygotowania pilota: utworzono wyłącznie lokalny pakiet
+czterech obiektów przez istniejące `lean_transcription.prepare`, sprawdzając
+bieżące kanoniczne źródła względem indeksu. LST-01: `thm:de-morgan-logic`;
+LST-02: `thm:negation-quantifiers`, `thm:same-quantifier-order`, `thm:swap-mixed`.
+Pakiet zawiera źródła i kontekst obu rozdziałów: 85806 bajtów,
+SHA-256 `0440ce23ca9ea3435b219b6d60982cf76459b77e821a63b02942ac52ab06a07c`.
+Plik roboczy `atlas-free-formalizer-pilot-20261127.json` zapisano w katalogu
+tymczasowym użytkownika, bez duplikowania rozdziałów w repozytorium.
+`prepared_only`, `model_called=false`, koszt zewnętrzny 0, bez transferu,
+wykonania i certyfikatu. To nie jest wynik tłumaczenia przez LLM.
+
+Poniżej zachowano wcześniejszą ocenę z 26.11; kolejność kandydatów i zakres
+płatnych integracji zastępuje powyższa aktualizacja.
+
 Na polecenie użytkownika sprawdzono gotowe rozwiązania, aby dalszy rozwój
 Atlasu wykorzystywał istniejące modele i narzędzia formalizacji. Obecny
 translator Atlasu jest parserem i generatorem regułowym; nie trenujemy

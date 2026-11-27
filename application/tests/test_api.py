@@ -19,6 +19,9 @@ class APITests(unittest.TestCase):
         r=self.client.get("/")
         self.assertEqual(r.status_code,200)
         self.assertIn("Explorer",r.text)
+        self.assertEqual(r.headers["cache-control"], "no-cache")
+        for name in ("app.js", "styles.css", "preview.js", "session.js"):
+            self.assertRegex(r.text, r'/assets/' + name.replace('.', r'\.') + r'\?v=[0-9a-f]{16}')
         for name in ("app.js","styles.css"):
             self.assertEqual(self.client.get("/assets/"+name).status_code,200)
 

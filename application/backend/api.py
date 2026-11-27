@@ -10,6 +10,7 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from contextlib import asynccontextmanager
 import asyncio
+import hashlib
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Annotated, Any, Literal
@@ -18,7 +19,7 @@ import sqlite3
 
 import networkx as nx
 from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field, StrictBool
 
@@ -129,7 +130,12 @@ def entity_payload(row: sqlite3.Row) -> dict[str, Any]:
 
 @app.get("/")
 def index():
-    return FileResponse(FRONTEND / "index.html")
+    html = (FRONTEND / "index.html").read_text(encoding="utf-8")
+    # Updated reader code must not be mixed with an older cached stylesheet.
+    for name in ("styles.css", "preview.js", "session.js", "app.js"):
+        revision = hashlib.sha256((FRONTEND / name).read_bytes()).hexdigest()[:16]
+        html = html.replace(f'"/assets/{name}"', f'"/assets/{name}?v={revision}"')
+    return HTMLResponse(html, headers={"Cache-Control": "no-cache"})
 
 
 @app.get("/api/health")
