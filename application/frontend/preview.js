@@ -53,7 +53,13 @@ function buildProsePreview(container, source, moduleId) {
     const flush=()=>{paragraph=null;};
     const target=()=>inline?root:(paragraph||(paragraph=document.createElement('p'),parent().append(paragraph),paragraph));
     const append=value=>target().append(typeof value==='string'?document.createTextNode(value):value);
-    function whitespace(){while(/\s/.test(text[i]||'') && i<text.length)i++;}
+    function whitespace(){
+      while(i<text.length){
+        if(/\s/.test(text[i])){i++;continue;}
+        if(text[i]==='%'){while(i<text.length&&text[i]!=='\n')i++;continue;}
+        break;
+      }
+    }
     function group(open='{',close='}') {
       whitespace(); if(text[i]!==open)return null;
       const start=++i;let depth=1;

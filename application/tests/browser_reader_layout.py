@@ -110,6 +110,13 @@ with sync_playwright() as pw:
 
     # Real chapter-local macros must also work in detached theorem fragments.
     page.evaluate("() => openModule('AM1-36')")
+    # Reproduce the report using the canonical chapter, not only a fixture.
+    assert page.evaluate(r"() => state.currentData.latex.includes('\\begingroup')")
+    assert 'Materiał stanowi adaptację' in box.inner_text()
+    assert r'\begingroup' not in box.inner_text()
+    assert r'\providecommand' not in box.inner_text()
+    # The source pane must remain lossless.
+    assert r'\begingroup' in page.locator('#latexSource').text_content()
     assert page.evaluate(r"() => previewMacros('AM1-36')['\\HK']") == r"\mathrm{KH}"
     fragment = r"$\R,\C,\K,\HK,\Var_I F,\osc_I F,\BV,\ind{A}$"
     page.evaluate("source => renderSimplified(source, 'AM1-36')", fragment)
@@ -121,7 +128,9 @@ with sync_playwright() as pw:
 
     # A closing brace inside a comment must not end a declaration early.
     # Grouping commands delimit scope but are not reader-visible prose.
-    commented = (r'\begingroup\providecommand{\testmacro}{\frac{1}{% }' + '\n'
+    commented = (r'\begingroup\providecommand% comment between arguments' + '\n'
+                 + r'{\testmacro}% comment before replacement' + '\n'
+                 + r'{\frac{1}{% }' + '\n'
                  + r'2}}' + '\n' + r'Widoczny tekst: $\R$.\endgroup')
     page.evaluate("source => renderSimplified(source, 'AM1-36')", commented)
     assert 'Widoczny tekst:' in box.inner_text()
