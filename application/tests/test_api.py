@@ -29,6 +29,16 @@ class APITests(unittest.TestCase):
         for name in ("app.js","styles.css"):
             self.assertEqual(self.client.get("/assets/"+name).status_code,200)
 
+    def test_reader_assets_revalidate_even_without_revision(self):
+        for name in ("styles.css", "preview.js", "app.js", "session.js"):
+            response = self.client.get("/assets/" + name)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.headers["cache-control"], "no-cache, must-revalidate")
+            conditional = self.client.get("/assets/" + name, headers={
+                "If-None-Match": response.headers["etag"]})
+            self.assertEqual(conditional.status_code, 304)
+            self.assertEqual(conditional.headers["cache-control"], "no-cache, must-revalidate")
+
     def test_macro_profile_cache_revision(self):
         from backend import api
         with tempfile.TemporaryDirectory() as tmp:

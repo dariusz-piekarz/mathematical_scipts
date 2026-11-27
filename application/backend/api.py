@@ -59,7 +59,17 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Biblioteka matematyczna — API", version="0.4.0", docs_url="/api/docs", redoc_url=None, lifespan=lifespan)
-app.mount("/assets", StaticFiles(directory=FRONTEND), name="assets")
+class ReaderStaticFiles(StaticFiles):
+    """Core reader assets are always revalidated, including old unversioned URLs."""
+
+    async def get_response(self, path, scope):
+        response = await super().get_response(path, scope)
+        if path in {"index.html", "styles.css", "preview.js", "app.js", "session.js"}:
+            response.headers["Cache-Control"] = "no-cache, must-revalidate"
+        return response
+
+
+app.mount("/assets", ReaderStaticFiles(directory=FRONTEND), name="assets")
 
 
 @app.websocket('/api/lifecycle/socket')

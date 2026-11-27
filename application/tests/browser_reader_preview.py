@@ -33,6 +33,19 @@ with sync_playwright() as pw:
         assert style['borderStyle'] == 'solid' and style['color'] == style['title'], style
     assert box.locator('[data-environment-kind="proof"].preview-statement').count() == 0
     count = frames.count()
+    assert page.locator('#readerFrameStatus').inner_text() == f'Ramki: {count}'
+    page.locator('#themeToggle').click()
+    assert page.locator('html').get_attribute('data-theme') == 'dark'
+    for frame in frames.all():
+        assert frame.evaluate("el => getComputedStyle(el).borderTopStyle === 'solid' && parseFloat(getComputedStyle(el).borderTopWidth) >= 2")
+    # Simulate a stylesheet mismatch and require a visible diagnostic.
+    page.add_style_tag(content='.preview-statement {border:0!important}')
+    page.evaluate("() => updateReaderFrameStatus()")
+    assert page.locator('#readerFrameStatus').inner_text() == 'Ramki: błąd stylów'
+    page.locator('style').last.evaluate('el => el.remove()')
+    page.evaluate("() => updateReaderFrameStatus()")
+    assert page.locator('#readerFrameStatus').inner_text() == f'Ramki: {count}'
+    page.locator('#themeToggle').click()
     page.locator('#togglePreview').click()
     assert box.is_hidden() and page.locator('#latexSource').is_visible()
     page.locator('#togglePreview').click()

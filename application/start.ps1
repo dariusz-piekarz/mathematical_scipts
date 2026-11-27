@@ -13,7 +13,25 @@ try {
         $existingApi = $null
         try { $existingApi = Invoke-RestMethod ($url + 'openapi.json') -TimeoutSec 5 } catch { }
         if ($existingApi.info.title -like 'Biblioteka*API') {
-            Write-Host "Atlas is already running: $url"
+            # Do not silently reopen a server from a different checkout.
+            # Compare actual response bytes, not timestamps or API version.
+            $client = New-Object System.Net.WebClient
+            $sha256 = [System.Security.Cryptography.SHA256]::Create()
+            try {
+                $client.Headers['Cache-Control'] = 'no-cache'
+                foreach ($name in @('styles.css', 'preview.js', 'app.js')) {
+                    $local = (Get-FileHash (Join-Path $PSScriptRoot "frontend\$name") -Algorithm SHA256).Hash
+                    $remoteBytes = $client.DownloadData($url + 'assets/' + $name + '?v=' + $local.Substring(0,16).ToLowerInvariant())
+                    $remote = [System.BitConverter]::ToString($sha256.ComputeHash($remoteBytes)).Replace('-', '')
+                    if ($local -ne $remote) {
+                        throw "The running Atlas serves different reader files ($name). Close all Atlas tabs and stop the old server, then run start.cmd from this checkout."
+                    }
+                }
+            } finally {
+                $sha256.Dispose()
+                $client.Dispose()
+            }
+            Write-Host "Atlas is already running (reader assets match this checkout): $url"
             if (-not $NoBrowser) { Start-Process $url }
             return
         }

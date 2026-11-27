@@ -347,9 +347,30 @@ function updateReaderMode(){
   else $("mathPreviewStatus")?.classList.add("hidden");
   $("latexSource").classList.toggle("hidden",state.simplified);
   $("simplified").classList.toggle("hidden",!state.simplified);
+  updateReaderFrameStatus();
   document.querySelector('.fragment-toolbar').classList.toggle('hidden',state.simplified);
   $("togglePreview").textContent=state.simplified?"Pokaż źródło LaTeX":"Wróć do podglądu";
   $("togglePreview").setAttribute('aria-pressed',String(!state.simplified));
+}
+// A visible count makes a stale renderer or missing stylesheet diagnosable
+// without asking readers to inspect the DOM or assume a successful update.
+function updateReaderFrameStatus(){
+  const status=$("readerFrameStatus");
+  if(!status)return;
+  status.classList.toggle("hidden",!state.simplified);
+  if(!state.simplified)return;
+  const box=$("simplified");
+  const frames=[...box.querySelectorAll(".preview-statement")];
+  const labelled=[...box.querySelectorAll(".preview-block-title")].filter(
+    el=>!/^Dowód(?:\s|$)/.test(el.textContent));
+  const rendered=frames.filter(el=>{
+    const css=getComputedStyle(el);
+    return css.borderTopStyle==="solid" && parseFloat(css.borderTopWidth)>=2 &&
+      parseFloat(css.borderTopLeftRadius)>=12;
+  }).length;
+  const mismatch=rendered!==frames.length || (labelled.length>0 && frames.length===0);
+  status.textContent=mismatch?"Ramki: błąd stylów":"Ramki: "+rendered;
+  status.title=mismatch?"Nieaktualne lub niezgodne pliki czytnika. Zamknij Atlas i uruchom go z aktualnego repozytorium.":"Liczba widocznie obramowanych obiektów w podglądzie";
 }
 function toggleReaderMode(){
   if(!state.currentData)return;
