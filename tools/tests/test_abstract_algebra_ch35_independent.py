@@ -193,4 +193,38 @@ class DelicateCases(unittest.TestCase):
         self.assertIn(r"\label{aa:lem:hensel-simple}", source)
         self.assertIn(r"\label{aa:prz:modp-cubic-two}", source)
 
+    def test_hensel_in_quadratic_residue_ring(self):
+        # A/(2^k) = (Z/2^k)[t]/(t^2+t+1).
+        # Lift the three simple roots of x^3-1 from F_4.
+        def add(x,y,m):
+            return ((x[0]+y[0])%m,(x[1]+y[1])%m)
+        def mul(x,y,m):
+            a,b=x;c,d=y
+            return ((a*c-b*d)%m,(a*d+b*c-b*d)%m)
+        def cube(x,m):
+            return mul(mul(x,x,m),x,m)
+        roots=[(1,0),(0,1),(1,1)]
+        for k in range(1,7):
+            m=2**k
+            lifts=[]
+            for a,b in roots:
+                candidates=[(a+i*m,b+j*m) for i,j in product(range(2),repeat=2)]
+                zeros=[v for v in candidates if cube(v,2*m)==(1,0)]
+                self.assertEqual(len(zeros),1)
+                lifts.extend(zeros)
+            roots=lifts
+            self.assertEqual(set(roots),{(1,0),(0,1),(2*m-1,2*m-1)})
+            # Substitution t -> t^2 = -1-t lifts Frobenius.
+            def sigma(v):
+                a,b=v
+                return ((a-b)%(2*m),(-b)%(2*m))
+            self.assertEqual(sigma(roots[0]),roots[0])
+            self.assertEqual(sigma(roots[1]),roots[2])
+            self.assertEqual(sigma(roots[2]),roots[1])
+            residues=list(product(range(4),repeat=2))
+            for v,w in product(residues,repeat=2):
+                self.assertEqual(sigma(sigma(v)),tuple(c%(2*m) for c in v))
+                self.assertEqual(sigma(add(v,w,2*m)),add(sigma(v),sigma(w),2*m))
+                self.assertEqual(sigma(mul(v,w,2*m)),mul(sigma(v),sigma(w),2*m))
+
 if __name__=='__main__':unittest.main()
