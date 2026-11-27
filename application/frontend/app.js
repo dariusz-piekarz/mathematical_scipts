@@ -163,10 +163,28 @@ async function openEntity(id,full=false){
     if(explorerMedia.matches)setExplorerVisible(false);
   }catch(e){if(epoch===state.renderEpoch)toast(e.message);}
 }
-const referenceDescriptions=new Map(), referenceBatches=new Map();
+// Bound completed descriptions independently of in-flight requests so an
+// eviction cannot duplicate a pending lookup or orphan its consumers.
+const REFERENCE_CACHE_LIMIT=2048;
+const referenceDescriptions=new Map(), referencePending=new Map(), referenceBatches=new Map();
+function settleReferenceDescription(item,value){
+  const promise=referencePending.get(item.key);
+  referencePending.delete(item.key);
+  if(value!==null && promise){
+    referenceDescriptions.set(item.key,promise);
+    while(referenceDescriptions.size>REFERENCE_CACHE_LIMIT)
+      referenceDescriptions.delete(referenceDescriptions.keys().next().value);
+  }
+  item.resolve(value);
+}
 function describeReference(label,sourceDocument){
   const key=JSON.stringify([sourceDocument,label]);
-  if(referenceDescriptions.has(key))return referenceDescriptions.get(key);
+  if(referencePending.has(key))return referencePending.get(key);
+  if(referenceDescriptions.has(key)){
+    const cached=referenceDescriptions.get(key);
+    referenceDescriptions.delete(key);referenceDescriptions.set(key,cached);
+    return cached;
+  }
   const promise=new Promise(resolve=>{
     let batch=referenceBatches.get(sourceDocument);
     if(!batch){
@@ -184,16 +202,16 @@ function describeReference(label,sourceDocument){
               if(!value || typeof value!=='object' || Array.isArray(value) ||
                 !(value.missing===true || value.ambiguous===true ||
                   (typeof value.document_id==='string' && value.document_id.length>0))){
-                referenceDescriptions.delete(item.key);item.resolve(null);
-              }else item.resolve(value);
+                settleReferenceDescription(item,null);
+              }else settleReferenceDescription(item,value);
             }
-          }catch(_){part.forEach(item=>{referenceDescriptions.delete(item.key);item.resolve(null);});}
+          }catch(_){part.forEach(item=>settleReferenceDescription(item,null));}
         }
       },0);
     }
     batch.push({label,key,resolve});
   });
-  referenceDescriptions.set(key,promise);return promise;
+  referencePending.set(key,promise);return promise;
 }
 function scheduleCloseTip(anchor){
   const key=state.tooltipKey;
@@ -210,7 +228,7 @@ function createReferenceLink(label,sourceDocument,{caption=null,command='ref',so
   button.addEventListener('blur',()=>scheduleCloseTip(button));
   button.addEventListener('click',()=>openLabel(label,sourceDocument,button));
   if(!sourceView)describeReference(label,sourceDocument).then(result=>{
-    if(!result)return;
+    if(!result||!button.isConnected)return;
     button.classList.toggle('ref-missing',Boolean(result.missing));
     button.classList.toggle('ref-ambiguous',Boolean(result.ambiguous));
     const kinds={chapter:'rozdział',section:'sekcja',subsection:'podsekcja',theorem:'twierdzenie',lemma:'lemat',definition:'definicja',example:'przykład',equation:'równanie',figure:'rysunek',proof:'dowód',remark:'uwaga'};
