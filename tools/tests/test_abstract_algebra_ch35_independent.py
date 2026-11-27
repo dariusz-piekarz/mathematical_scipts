@@ -91,7 +91,7 @@ class CitationAndStructure(unittest.TestCase):
     def test_unique_labels(self):
         s=CHAPTER.read_text(encoding='utf-8');ls=re.findall(r'\\label\{([^}]+)\}',s)
         self.assertEqual(len(ls),len(set(ls)))
-        self.assertEqual(len(ls),12)
+        self.assertEqual(len(ls),14)
     def test_every_local_ref_exists(self):
         s=CHAPTER.read_text(encoding='utf-8');ls=set(re.findall(r'\\label\{([^}]+)\}',s))
         ext={'aa:tw:fundamental-symmetric','aa:tw:disc-separable','aa:tw:finite-frobenius-roots','aa:tw:disc-alternating','aa:tw:cubic-disc'}
@@ -177,5 +177,20 @@ class DelicateCases(unittest.TestCase):
     def test_quadratic_bad_prime_two(self):
         self.assertEqual(irreducible_factor_degrees(F['quad'],2),(1,1))
         self.assertEqual(int(sp.discriminant(F['quad'],X))%2,0)
+
+
+    def test_hensel_lifting_simple_root(self):
+        # x^2-2, root 3 modulo 7. Unique lift at each successive level.
+        root = 3
+        for k in range(1, 6):
+            modulus = 7**k
+            lifts = [root + j*modulus for j in range(7)
+                     if ((root+j*modulus)**2-2) % (7*modulus) == 0]
+            self.assertEqual(len(lifts), 1)
+            root = lifts[0]
+        self.assertEqual((root*root-2) % (7**6), 0)
+        source = CHAPTER.read_text(encoding="utf-8")
+        self.assertIn(r"\label{aa:lem:hensel-simple}", source)
+        self.assertIn(r"\label{aa:prz:modp-cubic-two}", source)
 
 if __name__=='__main__':unittest.main()
