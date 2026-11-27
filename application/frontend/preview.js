@@ -166,6 +166,43 @@ function buildProsePreview(container, source, moduleId) {
   container.replaceChildren(fragment);
 }
 
+// Only explicitly registered repository figures can be opened.
+// TeX listings are inspected for a literal identifier, never evaluated.
+const ATLAS_AM2_PLOTS=Object.freeze({
+  'AM2-01':'am2_01_norm_balls.html','AM2-08':'am2_08_peaks.html',
+  'AM2-09':'am2_09_sums.html','AM2-11':'am2_11_paths.html',
+  'AM2-12':'am2_12_direction.html','AM2-13':'am2_13_frechet.html',
+  'AM2-14':'am2_14_remainder.html','AM2-15':'am2_15_mixed.html',
+  'AM2-16':'am2_16_taylor.html','AM2-17':'am2_17_saddle.html',
+  'AM2-18':'am2_18_inverse.html','AM2-36':'am2_36_geometric.html'
+});
+function addAtlasPlot(parent,source,moduleId){
+  if(!Object.hasOwn(ATLAS_AM2_PLOTS,moduleId))return;
+  const id=ATLAS_AM2_PLOTS[moduleId];
+  const matches=[...source.matchAll(/^\s*fig\.write_html\("([a-z0-9_]+\.html)",\s*include_plotlyjs=True\)\s*$/gm)];
+  if(!matches.some(m=>m[1]===id))return;
+  const host=document.createElement('div'),button=document.createElement('button');
+  host.className='atlas-plot-host';button.className='ghost-btn';
+  button.type='button';button.textContent='Otwórz wykres 3D (Plotly)';
+  button.setAttribute('aria-expanded','false');
+  let frame=null;
+  button.addEventListener('click',()=>{
+    if(frame){
+      frame.remove();frame=null;button.textContent='Otwórz wykres 3D (Plotly)';
+      button.setAttribute('aria-expanded','false');return;
+    }
+    frame=document.createElement('iframe');
+    frame.title='Interaktywny wykres 3D — '+moduleId;
+    frame.setAttribute('sandbox','allow-scripts');
+    frame.referrerPolicy='no-referrer';
+    frame.className='atlas-plot-frame';
+    frame.src='/assets/plots/viewer.html?id='+encodeURIComponent(id);
+    host.append(frame);button.textContent='Zamknij wykres 3D';
+    button.setAttribute('aria-expanded','true');
+  });
+  host.append(button);parent.append(host);
+}
+
 // Limit expensive dynamic figure requests, independently of static SVGs.
 const TIKZ_CONCURRENCY=3, tikzQueue=[], tikzActive=new Set();
 let tikzPumpScheduled=false,tikzObserver=null;
