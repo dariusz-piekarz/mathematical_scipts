@@ -1,0 +1,7 @@
+# GKT41 — drugi czysty audyt po korekcie
+
+Źródło: 34-od-grafow-plumbingowych-do-egzotycznych-struktur-gladkich-synt.tex, blob 2fe13403e015288b25238286e28a046691860e2e, 927 wierszy. Ponownie przejrzano twierdzenie o homologii brzegu, formę splecenia, obliczenie C_p, metabolizer, wymierny i całkowity bilans wymiany oraz argumenty klasyfikacyjne. Porównano twierdzenia o komorach SW i definicję standardowego sklejenia z rozdziałami źródłowymi 30 i 33; wzór wielomianu dla T(2,2n+1) ma uzasadnienie w thm:tg-ks-infinite. Nie stwierdzono nowych istotnych usterek w sprawdzonym zakresie. Bez zmian źródła.
+
+Niezależne rachunki: 155 ważonych ścieżek długości 1–3 (wagi -2..2), w tym 139 niezdegenerowanych; enumeracja jądra macierzy modulo moduł wyznacznika i kontrola jego liczności. 249 ułamków łańcuchowych C_p dla p=2..250 metodą iloczynu macierzy (rekurencja licznik/mianownik od końca). 257500 współczynników iloczynów dwóch wielomianów Alexandera T(2,2n+1) i T(2,2m+1), n,m=1..50, porównanych ze wzorem na liczność par wykładników. Wszystkie zaliczone. Nie są to dowody twierdzeń geometrycznych.
+
+Drugi czysty audyt matematyczno-źródłowy, 2/2; 41/41 numerowanych rozdziałów domkniętych na poziomie audytów rozdziałowych według dotychczasowych raportów. CI 45976430559, 45976430526 nadal queued przy odczycie. Brak nowej kontroli bibliograficznej i wizualnego odbioru PDF. Nie oznacza to pełnego odbioru GT: pozostaje globalny audyt źródeł, odsyłaczy i PDF oraz potwierdzenie CI.
