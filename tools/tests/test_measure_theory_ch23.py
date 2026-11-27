@@ -89,17 +89,39 @@ class TestHaarChapter23(unittest.TestCase):
                     B = {(i+t) % n for i in A}
                     self.assertEqual(Fraction(len(A), n), Fraction(len(B), n))
 
+    def test_convolution_finite_noncommutative_group(self):
+        def conv(f, g):
+            out = [0] * len(S3)
+            for x in S3:
+                for y in S3:
+                    out[IDX[mul(x, y)]] += f[IDX[x]] * g[IDX[y]]
+            return out
+        f = [1, -2, 0, 3, 1, -1]
+        g = [0, 1, 2, -1, 0, 3]
+        h = [2, 1, 0, 0, -2, 1]
+        self.assertEqual(conv(conv(f, g), h), conv(f, conv(g, h)))
+        self.assertEqual(sum(conv(f, g)), sum(f) * sum(g))
+        self.assertLessEqual(sum(map(abs, conv(f, g))),
+                             sum(map(abs, f)) * sum(map(abs, g)))
+        x, y = next((x, y) for x in S3 for y in S3 if mul(x, y) != mul(y, x))
+        delta_x = [int(z == x) for z in S3]
+        delta_y = [int(z == y) for z in S3]
+        self.assertNotEqual(conv(delta_x, delta_y), conv(delta_y, delta_x))
+
     def test_source_guards(self):
         s = SOURCE.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}", s)
         self.assertEqual(len(labels), len(set(labels)))
         for label in ("thm:haar-main-23", "lem:haar-cutoff-23",
                       "lem:haar-fubini-compact-23", "thm:haar-unique-23",
-                      "thm:haar-modular-23", "ex:haar-affine-23"):
+                      "thm:haar-modular-23", "ex:haar-affine-23",
+                      "eq:inwersja", "it:thm:haar-l1-convolution",
+                      "tw:haar-automorfizm", "it:cor:haar-lie-automorphism"):
             self.assertIn(label, labels)
         self.assertIn(r"\widetilde\mu=c\mu", s)
         self.assertIn(r"\int_Gh(x)\,\mathrm d\widetilde\mu(x)", s)
-        self.assertIn(r"\mu(E(c,t))=t^{-1}\mu(E)", s)
+        self.assertIn(r"\mu(E(c,t))=\int_E\frac{t}{(at)^2}", s)
+        self.assertIn(r"=t^{-1}\mu(E)", s)
         self.assertIn("odwrotną inkluzję", s)
         self.assertIn(r"\bigcup_{j=1}^n g_jKK^{-1}", s)
         self.assertIn(r"\mu(G)\ge\sum_{n\ge1}\mu(g_nK)=+\infty", s)
