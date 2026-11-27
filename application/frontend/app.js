@@ -90,25 +90,31 @@ function renderTree(){
             line.addEventListener("click",()=>openEntity(e.id));branch.append(line);
           }
           if(totalPages>1){
-            const controls=node("div",{className:"outline-pagination"});
-            const label=node("span",{"aria-live":"polite"},`${start+1}–${start+items.length} / ${total}`);
             function changePage(next,focusDirection){
               outlinePages.set(key,next);
-              const scroll=tree.scrollTop;
               renderTree();
-              tree.scrollTop=scroll;
+              // Start at the new page, rather than jumping past its first
+              // objects to the bottom pager. Keep the keyboard in the branch.
               const pager=[...tree.querySelectorAll(".outline-pagination")].find(el=>el.dataset.pageKey===key);
               const button=pager?.querySelector(`[data-direction="${focusDirection}"]:not(:disabled)`)||pager?.querySelector("button:not(:disabled)");
               button?.focus({preventScroll:true});
-              button?.scrollIntoView({block:"nearest"});
+              pager?.scrollIntoView({block:"start"});
             }
-            controls.dataset.pageKey=key;
-            const prev=node("button",{type:"button",className:"ghost-btn","data-direction":"prev","aria-label":"Poprzednia strona obiektów"},"←");
-            const next=node("button",{type:"button",className:"ghost-btn","data-direction":"next","aria-label":"Następna strona obiektów"},"→");
-            prev.disabled=page===0;next.disabled=page+1===totalPages;
-            prev.addEventListener("click",()=>changePage(page-1,"prev"));
-            next.addEventListener("click",()=>changePage(page+1,"next"));
-            controls.append(prev,label,next);branch.append(controls);
+            function makePager(position){
+              const controls=node("div",{className:"outline-pagination",role:"group","aria-label":position==="top"?"Strony struktury rozdziału (góra)":"Strony struktury rozdziału (dół)"});
+              controls.dataset.pageKey=key;
+              controls.dataset.position=position;
+              const label=node("span",position==="top"?{"aria-live":"polite"}:{},`${start+1}–${start+items.length} / ${total}`);
+              const prev=node("button",{type:"button",className:"ghost-btn","data-direction":"prev","aria-label":"Poprzednia strona obiektów"},"←");
+              const next=node("button",{type:"button",className:"ghost-btn","data-direction":"next","aria-label":"Następna strona obiektów"},"→");
+              prev.disabled=page===0;next.disabled=page+1===totalPages;
+              prev.addEventListener("click",()=>changePage(page-1,"prev"));
+              next.addEventListener("click",()=>changePage(page+1,"next"));
+              controls.append(prev,label,next);
+              return controls;
+            }
+            branch.prepend(makePager("top"));
+            branch.append(makePager("bottom"));
           }
           group.append(branch);
         }
