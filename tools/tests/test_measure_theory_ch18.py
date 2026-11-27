@@ -28,6 +28,62 @@ def mass(weights, E):
 
 
 class TestMeasureTheoryChapter18(unittest.TestCase):
+    def test_density_change_with_extended_weights(self):
+        # Extended nonnegative arithmetic must handle 0*infinity.
+        from itertools import product
+
+        def mul(a, b):
+            return 0 if a == 0 or b == 0 else a * b
+
+        values = (0, 1, 2, math.inf)
+        for base, density, integrand in product(values, repeat=3):
+            mass_after = mul(base, density)
+            self.assertEqual(mul(integrand, mass_after),
+                             mul(mul(integrand, density), base))
+            for E in (False, True):
+                self.assertEqual(mul(int(E), mass_after),
+                                 mul(mul(int(E), density), base))
+        # A nonzero finite integrand may meet infinite density only
+        # on a base-null set if its weighted integral is finite.
+        for base, density, value in product(values, values, (0, 1, 2)):
+            integral = mul(mul(value, density), base)
+            if math.isfinite(integral) and density == math.inf and value:
+                self.assertEqual(base, 0)
+
+    def test_conditional_expectation_null_blocks_and_tower(self):
+        from fractions import Fraction
+        from itertools import product
+
+        def cond(p, y, groups, null_value):
+            z = [Fraction(0)] * len(p)
+            for block in groups:
+                mass = sum(p[i] for i in block)
+                avg = (sum(p[i] * y[i] for i in block) / mass
+                       if mass else Fraction(null_value))
+                for i in block:
+                    z[i] = avg
+            return z
+
+        fine = ((0, 1), (2,), (3,))
+        coarse = ((0, 1, 2), (3,))
+        for p0 in product(range(3), repeat=4):
+            if not sum(p0):
+                continue
+            p = [Fraction(v, sum(p0)) for v in p0]
+            for y in product((-1, 0, 2), repeat=4):
+                z = cond(p, y, fine, 17)
+                other = cond(p, y, fine, -19)
+                self.assertEqual(sum(p[i] * abs(z[i] - other[i])
+                                     for i in range(4)), 0)
+                for block in fine:
+                    self.assertEqual(sum(p[i] * (y[i] - z[i])
+                                         for i in block), 0)
+                self.assertLessEqual(sum(p[i] * z[i] ** 2 for i in range(4)),
+                                     sum(p[i] * y[i] ** 2 for i in range(4)))
+                tower = cond(p, z, coarse, 0)
+                direct = cond(p, y, coarse, 0)
+                self.assertEqual(tower, direct)
+
     def test_finite_rn_via_hilbert_common_measure(self):
         rng = random.Random(18001)
         for _ in range(180):
