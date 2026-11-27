@@ -1,0 +1,13 @@
+# CAT-32 — końcowy audyt kontrolny po stabilizacji (27.11.2026)
+
+Kandydat: commit 97065bc90138b139e93bceaf6bbc23995fa21854, blob 1f4d81fd9e9b6b1c2282fc89dd793620312ce3e5, identyczny w obu czystych audytach. Niniejszy raport następuje po stabilization-01.md i stabilization-02.md; wcześniejszy control-01.md był kontrolą wstępną przed stabilizacją.
+
+Ponowny przegląd rachunków sprzężenia na kategoriach morfizmów: poprawność typów, kierunki jednostki i kojednostki, zastosowania prawa wymiany, wzajemna odwrotność i naturalność bijekcji. Nie znaleziono nowej usterki wymagającej edycji źródła.
+
+Niezależna kontrola JS w 2-kategorii posetów. Wyliczono 11 posetów o licznościach 0–3 z porządkiem zgodnym z ustaloną numeracją (bez utożsamiania wszystkich izomorficznych reprezentantów), 7386 par przeciwbieżnych funktorów monotonicznych. Porównano niezależnie warunek jednostki i kojednostki z równoważnością nierówności f(a)<=b iff a<=g(b). Otrzymano 94 sprzężenia, w tym 69, które nie są równoważnościami. Dla źródłowych posetów X o licznościach 0–2 sprawdzono 8040 par funktorów u,v i odpowiadających im zbiorów transformacji, w tym 4530 par pustych zbiorów Hom i 3510 par jednoelementowych; 15084 kontroli naturalności względem zmiany u i v. Wszystkie PASS.
+
+Niezależny model niebędący kategorią cienką: A jest jednoobiektową kategorią pełnego monoidu odwzorowań zbioru dwuelementowego, B=A x [1]. F jest włożeniem na poziomie 0, G rzutem na A, jednostka identycznością, kojednostka ma składowe identycznościowe w A i jedyny morfizm 0->j w [1]. Źródła X: kategoria jednej strzałki i jednoobiektowa kategoria grupy C2. Enumerowano 56 par funktorów u,v; niezależnie wyznaczono naturalne rodziny obu zbiorów Hom z równań przemienności. Dwa przypadki pustych zbiorów, 256 elementów bijekcji, w tym 200 nieodwracalnych transformacji. Sprawdzono składanie z jednostką i kojednostką oraz 5056 kontroli naturalności względem prekompozycji i 10080 względem postkompozycji. Wszystkie PASS. Testy są kontrolami modeli, nie dowodami ogólnymi ani formalizacją Lean.
+
+Struktura: 37 unikatowych etykiet, 10 dowodów, 7 diagramów TikZ, brak nierozwiązanych odsyłaczy, środowiska zrównoważone, książka i katalog zawierają rozdział. CI CAT-32 (45998297072), terminologia (45998297235), aplikacja (45998297178) nadal queued podczas odczytu. Nie przeprowadzono kompilacji lokalnej ani oględzin PDF. Twierdzenie o uściślaniu przytoczone jako wynik zewnętrzny.
+
+Decyzja: 2/2 czystych audytów stabilizacyjnych i 1/1 końcowych audytów kontrolnych merytorycznych. Źródło niezmienione. Odbiór techniczny i wizualny nadal otwarty.
