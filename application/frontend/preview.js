@@ -164,27 +164,93 @@ function buildProsePreview(container, source, moduleId) {
   container.replaceChildren(fragment);
 }
 
-async function loadTikzFigure(figure,source,moduleId,skipStatic=false){
+// Limit expensive dynamic figure requests, independently of static SVGs.
+const TIKZ_CONCURRENCY=3, tikzQueue=[], tikzActive=new Set();
+let tikzPumpScheduled=false,tikzObserver=null;
+function scheduleTikzPump(){
+  if(tikzPumpScheduled)return;
+  tikzPumpScheduled=true;
+  queueMicrotask(()=>{
+    tikzPumpScheduled=false;
+    pumpTikzQueue();
+  });
+}
+function pumpTikzQueue(){
+  while(tikzActive.size<TIKZ_CONCURRENCY && tikzQueue.length){
+    const job=tikzQueue.shift();
+    if(!job.figure.isConnected){job.resolve();continue;}
+    tikzActive.add(job);
+    if(!tikzObserver){
+      tikzObserver=new MutationObserver(()=>{
+        for(const active of tikzActive)
+          if(!active.figure.isConnected)active.controller.abort();
+      });
+      tikzObserver.observe(document.documentElement,{childList:true,subtree:true});
+    }
+    runTikzFigure(job).finally(()=>{
+      tikzActive.delete(job);job.resolve();scheduleTikzPump();
+    });
+  }
+  if(!tikzActive.size && !tikzQueue.length && tikzObserver){
+    tikzObserver.disconnect();tikzObserver=null;
+  }
+}
+function loadTikzFigure(figure,source,moduleId,skipStatic=false){
   const entry=!skipStatic&&typeof atlasTikzPreviews!=='undefined'?atlasTikzPreviews.get(source.replace(/\r\n/g,'\n')):null;
   if(entry){
     const image=document.createElement('img');image.src='/assets/figures/'+entry.file;image.alt=entry.alt;
-    image.onerror=()=>loadTikzFigure(figure,source,moduleId,true);
-    figure.replaceChildren(image);return;
+    image.onerror=()=>{
+      if(figure.isConnected && image.parentNode===figure)loadTikzFigure(figure,source,moduleId,true);
+    };
+    figure.replaceChildren(image);return Promise.resolve();
   }
   const status=document.createElement('figcaption');status.textContent='Składanie rysunku…';status.setAttribute('role','status');figure.replaceChildren(status);
+  // Parsing builds a detached fragment synchronously. Start only after it
+  // has been inserted; obsolete queued figures never reach the backend.
+  return new Promise(resolve=>{
+    tikzQueue.push({figure,source,moduleId,status,resolve,controller:new AbortController()});
+    scheduleTikzPump();
+  });
+}
+function displayTikzBlob(figure,blob,moduleId,signal){
+  const objectUrl=URL.createObjectURL(blob);
+  return new Promise((resolve,reject)=>{
+    const image=document.createElement('img');image.alt='Rysunek matematyczny z rozdziału '+moduleId;
+    let settled=false;
+    const finish=error=>{
+      if(settled)return;
+      settled=true;
+      image.onload=null;image.onerror=null;
+      signal.removeEventListener('abort',cancel);
+      URL.revokeObjectURL(objectUrl);
+      if(error)reject(error);else resolve();
+    };
+    const cancel=()=>{image.removeAttribute('src');finish();};
+    image.onload=()=>finish();
+    image.onerror=()=>finish(new Error('Nie udało się odczytać obrazu rysunku.'));
+    signal.addEventListener('abort',cancel,{once:true});
+    if(signal.aborted || !figure.isConnected){cancel();return;}
+    image.src=objectUrl;figure.replaceChildren(image);
+  });
+}
+async function runTikzFigure({figure,source,moduleId,status,controller}){
+  const signal=controller.signal;
+  const current=()=>!signal.aborted&&figure.isConnected;
   try{
     const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(source.replace(/\r\n/g,'\n')));
+    if(!current())return;
     const id=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
     const url='/api/modules/'+encodeURIComponent(moduleId)+'/figures/'+id+'.png';
-    const response=await fetch(url);
+    const response=await fetch(url,{signal});
+    if(!current())return;
     if(!response.ok){const error=await response.json();throw new Error(error.detail||'Nie udało się załadować rysunku.');}
-    const objectUrl=URL.createObjectURL(await response.blob());
-    const image=document.createElement('img');image.alt='Rysunek matematyczny z rozdziału '+moduleId;
-    image.onload=()=>URL.revokeObjectURL(objectUrl);
-    image.onerror=()=>{URL.revokeObjectURL(objectUrl);status.textContent='Nie udało się odczytać obrazu rysunku.';figure.replaceChildren(status);};
-    image.src=objectUrl;figure.replaceChildren(image);
+    const blob=await response.blob();
+    if(!current())return;
+    await displayTikzBlob(figure,blob,moduleId,signal);
   }catch(error){
+    if(!current())return;
     status.textContent=error.message;
+    figure.replaceChildren(status);
     const details=document.createElement('details'),summary=document.createElement('summary'),code=document.createElement('pre');
     summary.textContent='Pokaż źródło rysunku';code.textContent=source;details.append(summary,code);figure.append(details);
     const retry=document.createElement('button');retry.className='ghost-btn';retry.textContent='Ponów składanie rysunku';retry.onclick=()=>loadTikzFigure(figure,source,moduleId);figure.append(retry);
