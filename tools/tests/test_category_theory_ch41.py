@@ -63,6 +63,30 @@ class CategoryTheoryCh41(unittest.TestCase):
                                   if all(k[image.index(e[i])] == h[i] for i in range(n))]
                     self.assertEqual(extensions, [tuple(h[x] for x in image)])
 
+    def test_CAT_41_006_finite_powerset_merging(self):
+        # Finite direct images need not be injective. For a two-stage
+        # filtered diagram, equivalence is detected at the common stage.
+        def subsets(n):
+            return [frozenset(i for i in range(n) if mask & (1 << i))
+                    for mask in range(1 << n)]
+
+        for n, m in itertools.product(range(4), repeat=2):
+            for f in itertools.product(range(m), repeat=n):
+                early, late = subsets(n), subsets(m)
+                def image(a):
+                    return frozenset(f[i] for i in a)
+
+                classes = {b: {(1, b)} for b in late}
+                for a in early:
+                    classes[image(a)].add((0, a))
+                self.assertEqual(set(classes), set(late))
+                for a, b in itertools.product(early, repeat=2):
+                    self.assertEqual(any((0, a) in q and (0, b) in q
+                                         for q in classes.values()),
+                                     image(a) == image(b))
+                self.assertTrue(all(sum(stage == 1 for stage, _ in q) == 1
+                                    for q in classes.values()))
+
     def test_CAT_41_005_structure(self):
         s = CHAPTER.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}", s)
