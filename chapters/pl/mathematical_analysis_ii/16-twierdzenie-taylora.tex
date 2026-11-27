@@ -453,6 +453,33 @@ więc przybliżenie kwadratowe nie jest w otoczeniu zera
 ani oszacowaniem z góry, ani z dołu
 (rysunek \ref{ma2:fig:taylor-surfaces}).
 \end{przyklad}
+
+\paragraph{Rysunek 3D: funkcja i przybliżenie Taylora.}
+Porównujemy $f(x,y)=x^2+y^2+x^3/2$ i jej wielomian
+Taylora $T_{2,0}f=x^2+y^2$ z przykładu
+\ref{ma2:ex:taylor-surfaces}. Legenda pozwala niezależnie
+ukrywać powierzchnie, a reszta wynosi $x^3/2$.
+Poniższy kod wymaga bibliotek NumPy i Plotly. Zapisuje samodzielny
+plik HTML, w którym można obracać i powiększać wykres.
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+
+x = np.linspace(-1, 1, 81)
+X, Y = np.meshgrid(x, x)
+T = X**2 + Y**2
+fig = go.Figure()
+for name, z, col in [("f", T+X**3/2, "Blues"),
+                      ("T2", T, "Oranges")]:
+    fig.add_trace(go.Surface(x=X, y=Y, z=z,
+        name=name, colorscale=col, opacity=0.65,
+        showscale=False, showlegend=True))
+fig.update_layout(scene=dict(
+    xaxis_title="x", yaxis_title="y", zaxis_title="z"))
+fig.write_html("am2_16_taylor.html", include_plotlyjs=True)
+fig.show()
+\end{lstlisting}
+
 \begin{figure}[htbp]
 \centering
 \begin{tikzpicture}[x={(1cm,-.28cm)},y={(-.8cm,-.4cm)},z={(0cm,1.05cm)}]
