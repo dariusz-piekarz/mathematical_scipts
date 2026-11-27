@@ -8,14 +8,17 @@
 
 Prawa wielkich liczb opisują zbieżność średnich,
 ale nie określają \emph{kształtu rozkładu} ich fluktuacji.
-Dla parami niezależnych zmiennych o wspólnej średniej
-$m$ i wspólnej skończonej wariancji $\sigma^2$ wiemy
-z rozdziału~\ref{ch:lln}, że
+Dla parami niezależnych rzeczywistych zmiennych
+losowych $X_1,X_2,\ldots$ na jednej przestrzeni
+probabilistycznej, o wspólnej średniej $m$ i wspólnej
+skończonej wariancji $\sigma^2$, oznaczmy
+$\overline X_n=n^{-1}\sum_{k=1}^nX_k$.
+Z rozdziału~\ref{ch:lln} wiemy, że
 \[
 \E|\overline X_n-m|^2=\Var(\overline X_n)=\frac{\sigma^2}{n}.
 \]
-Zatem odchylenie w sensie normy $L^2$ jest równe
-$\sigma/\sqrt n$. Przy $\sigma>0$ naturalną skalą
+Zatem $\|\overline X_n-m\|_{L^2(\Prob)}=\sigma/\sqrt n$,
+gdzie $\sigma$ oznacza nieujemny pierwiastek z wariancji. Przy $\sigma>0$ naturalną skalą
 odchylenia jest $n^{-1/2}$. Centralne twierdzenie
 graniczne (CTG) wyjaśnia, pod jakimi dodatkowymi
 założeniami otrzymamy rozkład normalny jako granicę
@@ -28,6 +31,8 @@ Niech $X_1,X_2,\ldots$ będą wzajemnie niezależnymi
 rzeczywistymi zmiennymi losowymi na jednej przestrzeni
 probabilistycznej, o tym samym rozkładzie, oraz niech
 $\E X_1^2<\infty$ i $\Var(X_1)>0$.
+Pierwsze założenie zapewnia całkowalność $X_1$
+oraz skończoność wariancji (rozdział~\ref{ch:expectation}).
 Oznaczmy $m=\E X_1$, $\sigma=\sqrt{\Var(X_1)}>0$,
 $S_n=\sum_{k=1}^nX_k$ oraz $\overline X_n=S_n/n$
 dla $n\geq1$. Wówczas zachodzi
@@ -54,10 +59,19 @@ Zdefiniujmy $Z_k=(X_k-m)/\sigma$.
 Funkcja $g(x)=(x-m)/\sigma$ jest ciągła, więc
 $Z_k=g(X_k)$ są mierzalnymi zmiennymi losowymi.
 Mają ten sam rozkład, równy obrazowi wspólnego
-rozkładu $X_k$ przez $g$. Są wzajemnie niezależne:
-w definicji niezależności zdarzeń
-$\{Z_k\in B_k\}$ zastępujemy zbiory borelowskie $B_k$
-ich przeciwobrazami $g^{-1}(B_k)$.
+rozkładu $X_k$ przez $g$. Są wzajemnie niezależne,
+gdyż dla różnych indeksów $k_1,\ldots,k_r$
+i zbiorów borelowskich $B_1,\ldots,B_r$
+\[
+\begin{aligned}
+\Prob\left(\bigcap_{j=1}^r\{Z_{k_j}\in B_j\}\right)
+&=\Prob\left(\bigcap_{j=1}^r\{X_{k_j}\in g^{-1}(B_j)\}\right)\\
+&=\prod_{j=1}^r\Prob(X_{k_j}\in g^{-1}(B_j))
+=\prod_{j=1}^r\Prob(Z_{k_j}\in B_j).
+\end{aligned}
+\]
+Przeciwobrazy $g^{-1}(B_j)$ są borelowskie,
+więc można zastosować niezależność $X_{k_j}$.
 Z algebry momentów (rozdział~\ref{ch:expectation}) mamy
 \[
 \E Z_k=\frac{\E X_k-m}{\sigma}=0,\qquad
@@ -73,16 +87,24 @@ funkcji charakterystycznej (rozdział~\ref{ch:expectation})
 wynika $\varphi\in C^2(\R,\mathbb C)$ oraz
 $\varphi(0)=1$, $\varphi'(0)=i\E Z_1=0$,
 $\varphi''(0)=-\E Z_1^2=-1$.
-Stosując dwukrotnie podstawowe twierdzenie rachunku
-całkowego do części rzeczywistej i urojonej funkcji
-$s\mapsto\varphi(st)$ na $[0,1]$, otrzymujemy
+Dla ustalonego $t\in\R$ połóżmy $h(s)=\varphi(st)$,
+$s\in[0,1]$. Z reguły łańcuchowej mamy
+$h'(s)=t\varphi'(st)$ oraz $h''(s)=t^2\varphi''(st)$.
+Całkowanie przez części, zastosowane do części
+rzeczywistej i urojonej, daje
+\[
+\int_0^1(1-s)h''(s)\,\dd\lambda_1(s)
+=-h'(0)+h(1)-h(0).
+\]
+W ostatnim kroku używamy podstawowego twierdzenia
+rachunku całkowego dla $h'$. Po podstawieniu
+otrzymujemy
 \[
 \varphi(t)=\varphi(0)+t\varphi'(0)
 +t^2\int_0^1(1-s)\varphi''(st)\,\dd\lambda_1(s).
 \]
-Istotnie, jest to wzór Taylora z resztą całkową,
-otrzymany przez całkowanie przez części.
-Stąd
+Ponieważ $\int_0^1(1-s)\,\dd\lambda_1(s)=1/2$
+oraz $\varphi''(0)=-1$, stąd
 \[
 \begin{aligned}
 \left|\varphi(t)-1+\frac{t^2}{2}\right|
@@ -121,8 +143,9 @@ Dokładniej, dla ustalonego $t\ne0$ i
 $r(h)=\varphi(h)-1+h^2/2$ mamy
 $n r(t/\sqrt n)=t^2 r(t/\sqrt n)/(t/\sqrt n)^2\to0$.
 Dla $t=0$ funkcje charakterystyczne mają wartość $1$.
-Połóżmy $u_n=n(\varphi(t/\sqrt n)-1)$, wtedy
-$u_n\to-t^2/2$.
+Dla każdego ustalonego $t\in\R$ połóżmy
+$u_n=n(\varphi(t/\sqrt n)-1)$.
+W obu przypadkach mamy $u_n\to-t^2/2$.
 Uzasadnijmy granicę potęg również dla zespolonych $u_n$.
 Istnieje $M>0$ takie, że $|u_n|\leq M$ dla każdego $n$.
 Dla $z\in\mathbb C$ szereg wykładniczy daje
@@ -215,7 +238,7 @@ $S_n=0$ lub $S_n=n$ prawie na pewno i standaryzacja
 przez $\sqrt{np(1-p)}$ nie jest określona.
 \end{przyklad}
 
-\begin{przyklad}[Normalna aproksymacja Poissona]
+\begin{przyklad}[Przybliżenie normalne rozkładu Poissona]
 Dla każdej liczby rzeczywistej $\lambda>0$ niech
 $N_\lambda\sim\Poi(\lambda)$; zmienne te nie muszą
 być określone na wspólnej przestrzeni probabilistycznej.
@@ -276,6 +299,8 @@ przestrzeni probabilistycznej.
 Dla całkowitego $n\geq1$ połóżmy $U_n=\sum_{k=1}^nW_k^2$.
 Z własności rozkładu chi-kwadrat
 (rozdział~\ref{ch:distributions}) mamy $U_n\sim\chi_n^2$.
+Zmienna $U_n$ jest nieujemna i mierzalna jako
+skończona suma kwadratów zmiennych mierzalnych.
 Ponieważ $\{U_n=0\}\subseteq\{W_1=0\}$, a rozkład
 $W_1$ ma gęstość, zachodzi $\Prob(U_n=0)=0$.
 Zmienna $Z$ jest niezależna od $U_n$: rozkład łączny
@@ -292,8 +317,11 @@ Z/\sqrt{U_n/n},&U_n>0,\\
 Jest to mierzalna zmienna losowa i z definicji
 rozkładu Studenta (rozdział~\ref{ch:distributions})
 mamy $T_n\sim t_n$.
-Zmienne $W_k^2$ są wzajemnie niezależne, jednakowo
-rozłożone i całkowalne, gdyż $\E W_k^2=1$.
+Zmienne $W_k^2$ są wzajemnie niezależne i jednakowo
+rozłożone, ponieważ powstają przez zastosowanie
+tej samej ciągłej funkcji $x\mapsto x^2$ do
+niezależnych zmiennych o wspólnym rozkładzie.
+Są całkowalne, gdyż $\E W_k^2=1$.
 Z MPWL Kołmogorowa (rozdział~\ref{ch:lln}) istnieje
 mierzalny zbiór $G$ o prawdopodobieństwie jeden,
 na którym $U_n/n\to1$.
@@ -455,9 +483,10 @@ $\Var(\xi_k)=\E\xi_k^2=1$.
 Klasyczne CTG daje $S_n/\sqrt n\xrightarrow d\Normal(0,1)$.
 Dla $a>0$ zbiór $[-a,a]$ ma brzeg $\{-a,a\}$,
 który ma miarę zero względem standardowego rozkładu
-normalnego. Z twierdzenia Portmanteau
-(rozdział~\ref{ch:convergence}) i symetrii
-dystrybuanty normalnej wynika więc
+normalnego. Z \atlasref{ME-22::thm:portmanteau-22}{twierdzenia Portmanteau}
+w wersji dla zbiorów ciągłości miary granicznej
+(porównaj rozdział~\ref{ch:convergence}) oraz
+symetrii dystrybuanty normalnej wynika więc
 \[
 \Prob(|S_n|\leq a\sqrt n)
 \longrightarrow\Phi(a)-\Phi(-a)=2\Phi(a)-1.
@@ -514,7 +543,8 @@ Samo CTG nie określa szybkości zbieżności $d_n$.
 
 \begin{przyklad}[Gdy klasyczne CTG nie ma zastosowania]
 Niech $C_1,C_2,\ldots$ będą wzajemnie niezależnymi
-zmiennymi o standardowym rozkładzie Cauchy'ego.
+zmiennymi losowymi na jednej przestrzeni
+probabilistycznej, o standardowym rozkładzie Cauchy'ego.
 Jak wykazano w rozdziale~\ref{ch:lln}, korzystając
 z funkcji charakterystycznych, dla każdego $n\geq1$
 zachodzi
@@ -526,7 +556,8 @@ momentu bezwzględnego ani skończonego drugiego
 momentu (rozdział~\ref{ch:distributions}).
 Średnie mają stale ten sam niezdegenerowany
 rozkład, więc z jednoznaczności granicy według
-rozkładu nie mogą zbiegać według rozkładu do stałej.
+rozkładu (rozdział~\ref{ch:convergence}) nie mogą
+zbiegać według rozkładu do stałej.
 W szczególności nie są określone parametry $m$
 i $\sigma$ potrzebne do standaryzacji w klasycznym
 CTG. Przykład nie wyklucza innych twierdzeń
