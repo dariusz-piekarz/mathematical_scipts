@@ -21,7 +21,10 @@ async function api(path, options={}) {
   if(!response.ok){let desc="HTTP "+response.status;try{desc=(await response.json()).detail || desc;}catch(_){}throw new Error(desc);}
   return response.json();
 }
-function activateTab(name){
+function activateTab(name,{fromReaderNavigation=false}={}){
+  // A deliberate tab change supersedes an unfinished chapter/label lookup.
+  // Successful reader navigation itself must retain its own request epoch.
+  if(!fromReaderNavigation)++state.renderEpoch;
   dismissSearch();
   state.tab=name;
   document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
@@ -143,7 +146,7 @@ async function openModule(id,full=false){
     // current preview to its full text should not deliberately reset scroll.
     const resetScroll=!full||state.currentModule!==id||state.currentEntity!==null;
     state.currentModule=id;state.currentEntity=null;state.currentData=data;
-    state.expandedDomains.add(data.module.domain);renderTree();renderReader();activateTab("reader");
+    state.expandedDomains.add(data.module.domain);renderTree();renderReader();activateTab("reader",{fromReaderNavigation:true});
     if(resetScroll)$("view-reader").scrollTop=0;
     if(explorerMedia.matches)setExplorerVisible(false);
   }catch(e){if(epoch===state.renderEpoch)toast(e.message);}
@@ -155,7 +158,7 @@ async function openEntity(id,full=false){
     if(epoch!==state.renderEpoch)return;
     const resetScroll=!full||state.currentModule!==data.entity.document_id||state.currentEntity!==id;
     state.currentModule=data.entity.document_id;state.currentEntity=id;state.currentData=data;
-    state.expandedDomains.add(data.domain);renderTree();renderReader();activateTab("reader");
+    state.expandedDomains.add(data.domain);renderTree();renderReader();activateTab("reader",{fromReaderNavigation:true});
     if(resetScroll)$("view-reader").scrollTop=0;
     if(explorerMedia.matches)setExplorerVisible(false);
   }catch(e){if(epoch===state.renderEpoch)toast(e.message);}
