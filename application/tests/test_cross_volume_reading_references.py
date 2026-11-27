@@ -30,6 +30,58 @@ EXPECTED = {
 
 
 class CrossVolumeReadingReferencesTest(unittest.TestCase):
+    def test_real_birkhoff_fa_me_reading_links(self):
+        # Build a small real-source index rather than testing only TeX strings.
+        files = (
+            ROOT / "chapters/pl/functional_analysis/15B-calki-bochnera-pettisa-dunforda-i-gelfanda-oraz-miary-wektorowe.tex",
+            ROOT / "chapters/pl/measure_theory/30-miary-wektorowe-calka-bochnera-i-wlasnosc-radona-nikodyma.tex",
+        )
+        expected = {
+            ("FA-15B", "ME-30::sec:birkhoff-30"),
+            ("FA-15B", "ME-30::thm:birkhoff-measure-30"),
+            ("FA-15B", "ME-30::thm:birkhoff-seminorm-30"),
+            ("ME-30", "FA-15B::sec:birkhoff15b"),
+        }
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "pl"
+            for path in files:
+                dest = root / path.parent.name / path.name
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(path, dest)
+            db = Path(temp) / "index.db"
+            build_database(root, db, recursive=True)
+            with closing(sqlite3.connect(db)) as con, con:
+                con.row_factory = sqlite3.Row
+                rows = con.execute(
+                    "SELECT source_document,target_label,target_document,"
+                    "status,target_entity FROM references_tex "
+                    "WHERE command='atlasref'"
+                ).fetchall()
+                actual = set()
+                for row in rows:
+                    key = (row["source_document"], row["target_label"])
+                    if key not in expected:
+                        continue
+                    actual.add(key)
+                    self.assertEqual(row["target_document"], key[1].split("::")[0])
+                    self.assertIn(row["status"],
+                                  {"resolved", "external_resolved", "alias_resolved"})
+                    self.assertIsNotNone(row["target_entity"])
+                self.assertEqual(actual, expected)
+                with patch("backend.api.db_connection", return_value=con):
+                    for source, target in sorted(expected):
+                        owner, label = target.split("::", 1)
+                        detail = label_detail(target, source)
+                        self.assertEqual(detail["document_id"], owner)
+                        self.assertEqual(detail["canonical_label"], label)
+                # Reading links should remain navigation, not script dependencies.
+                known = {row["id"]: dict(row) for row in con.execute(
+                    "SELECT id,content FROM documents")}
+                for source, target in (("FA-15B", "ME-30"), ("ME-30", "FA-15B")):
+                    chosen = {source: {"spans": [(0, len(known[source]["content"]))]}}
+                    closure(con, chosen, known, 1)
+                    self.assertNotIn(target, chosen)
+
     def test_parser_ignores_comments_and_recognizes_real_link(self):
         source = r"""\chapter{Test}
 \providecommand{\atlasref}[2]{#2}
