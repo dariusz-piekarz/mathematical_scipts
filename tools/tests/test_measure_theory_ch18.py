@@ -142,7 +142,43 @@ class TestMeasureTheoryChapter18(unittest.TestCase):
         source = CHAPTER.read_text(encoding="utf-8")
         combined = source + "".join(path.read_text(encoding="utf-8") for path in DEPS)
         labels = re.findall(r"\\label\{([^}]+)\}", source)
-        self.assertEqual(len(labels), 28)
+        # Preserve every existing label, including migrated integration
+        # results, without rejecting legitimate future additions.
+        required_labels = {
+            "ch:radon-nikodym-18",
+            "eq:RN-question-18",
+            "def:RN-derivative-18",
+            "lem:integration-density-18",
+            "eq:integration-density-18",
+            "thm:RN-finite-18",
+            "eq:RN-finite-18",
+            "eq:RN-lambda-h-18",
+            "eq:RN-mu-nu-h-18",
+            "thm:RN-sigfin-18",
+            "eq:RN-general-18",
+            "eq:RN-integral-change-18",
+            "ex:RN-failure-nonsigma-18",
+            "thm:RN-complex-18",
+            "eq:RN-complex-18",
+            "cor:RN-lebesgue-sum-18",
+            "eq:RN-Lebesgue-decomp-18",
+            "thm:polar-complex-measure-18",
+            "eq:polar-complex-measure-18",
+            "thm:RN-chain-18",
+            "eq:RN-chain-18",
+            "thm:RN-inverse-18",
+            "eq:RN-inverse-18",
+            "cor:RN-linearity-18",
+            "def:conditional-exp-18",
+            "eq:CE-def-18",
+            "thm:CE-existence-18",
+            "thm:CE-orthogonal-18",
+            "it:thm:stieltjes-decomposition",
+            "it:thm:stieltjes-generator-decomposition",
+            "it:cor:stieltjes-signed-integrability",
+        }
+        self.assertFalse(required_labels - set(labels),
+                         f"Missing labels: {sorted(required_labels - set(labels))}")
         self.assertEqual(len(labels), len(set(labels)))
         known = set(re.findall(r"\\label\{([^}]+)\}", combined))
         refs = re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", source)
