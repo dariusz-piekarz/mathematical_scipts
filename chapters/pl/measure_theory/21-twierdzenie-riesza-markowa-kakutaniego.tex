@@ -204,8 +204,10 @@ Miara zewnętrzna $m^*:\mathcal P(Z)\to[0,\infty]$
 jest \emph{metryczna}, gdy dla dowolnych $A,B\subseteq Z$
 o dodatniej odległości $d(A,B)>0$ zachodzi
 $m^*(A\cup B)=m^*(A)+m^*(B)$.
-Dla zbioru pustego lub dowolnego niepustego przyjmujemy
-$d(\varnothing,B)=+\infty$.
+Dla niepustych zbiorów przyjmujemy
+$d(A,B)=\inf\{d(x,y):x\in A,\ y\in B\}$,
+a jeśli co najmniej jeden ze zbiorów jest pusty,
+przyjmujemy $d(A,B)=+\infty$.
 \end{definicja}
 
 \begin{lemat}[Borelowska mierzalność]
@@ -217,13 +219,13 @@ Carathéodory'ego.
 \begin{proof}
 Wystarczy wykazać mierzalność zbiorów domkniętych, gdyż
 rodzina zbiorów mierzalnych Carathéodory'ego jest
-$\sigma$-algebrą (rozdział~\ref{ch:caratheodory}).
+$\sigma$-algebrą (twierdzenie \atlasref{ME-03::thm:caratheodory}{ME-03: twierdzenie Carathéodory'ego}).
 Niech $F\subseteq Z$ będzie domknięty i $E\subseteq Z$.
 Musimy dowieść
 $m^*(E)\ge m^*(E\cap F)+m^*(E\setminus F)$;
 nierówność odwrotna wynika z podaddytywności.
 Jeśli $F=\varnothing$ lub $F=Z$, mierzalność jest oczywista.
-Jeśli $m^*(E)=+\infty$, teza jest oczywista. Załóżmy
+Jeśli $m^*(E)=+\infty$, podaddytywność wymusza nieskończoną sumę po prawej, więc kryterium zachodzi. Załóżmy
 $m^*(E)<\infty$ i oznaczmy $r(x)=d(x,F)$.
 Dla każdego $n\ge1$ zbiory $E\cap F$ oraz
 $E\cap\{r>1/n\}$ mają dodatnią odległość, gdyż
@@ -236,12 +238,21 @@ $m^*(E\setminus F)$; nie wolno tutaj korzystać z ciągłości
 z dołu, ponieważ $m^*$ jest dopiero miarą zewnętrzną.
 Niech $A_0=E\cap\{r>1\}$ oraz
 $A_j=E\cap\{1/(j+1)<r\le1/j\}$, $j\ge1$.
-Dla ustalonej parzystości indeksów dowolne dwa
-\emph{różne} zbiory $A_j$ mają dodatnią odległość.
-Dla każdej skończonej rodziny takich zbiorów metryczność
-i indukcja dają
+Dla $j\ge1$ i $k\ge j+2$, jeśli $x\in A_j$,
+$y\in A_k$, to z $1$-lipschitzowskości $r$ wynika
+\[
+ d(x,y)\ge r(x)-r(y)>
+ \frac1{j+1}-\frac1{j+2}>0.
+\]
+Zatem $d(A_j,A_k)\ge1/(j+1)-1/(j+2)>0$.
+Także $d(A_0,A_k)\ge1/2$ dla $k\ge2$.
+Dla skończonej rodziny warstw tej samej parzystości
+odległość każdej warstwy od sumy pozostałych
+jest nie mniejsza od minimum skończenie wielu
+dodatnich odległości (puste warstwy można pominąć).
+Metryczność i indukcja dają więc
 $\sum m^*(A_j)=m^*(\bigcup A_j)\le m^*(E)$.
-W konsekwencji obie serie, po indeksach parzystych
+W konsekwencji oba szeregi, po indeksach parzystych
 i nieparzystych, są zbieżne; zatem
 $\sum_{j\ge1}m^*(A_j)<\infty$. Ponieważ
 \[
@@ -296,8 +307,9 @@ $0\le f+g\le1$ i $L(f+g)=L(f)+L(g)$.
 
 \emph{Krok 3: przeliczalna podaddytywność na otwartych.}
 Jeżeli $U\subseteq\bigcup_{j\ge1}U_j$ i $f$ jest
-dopuszczalna w \eqref{eq:open-content-21}, to
-$\operatorname{supp}f$ ma skończone pokrycie
+dopuszczalna w \eqref{eq:open-content-21}, przypadek
+$f=0$ daje od razu $L(f)=0\le\sum_j a(U_j)$.
+W przeciwnym razie $\operatorname{supp}f$ ma skończone pokrycie
 $U_{j_1},\ldots,U_{j_N}$. Zbudujmy ciągłe funkcje
 $\theta_i\ge0$ o nośnikach zawartych w $U_{j_i}$,
 takie, że $\sum_i\theta_i=1$ na
@@ -323,8 +335,8 @@ $\theta_i$ są ciągłe również na brzegu $\{\psi>0\}$,
 ponieważ nośnik $\chi$ jest w nim zawarty,
 a ich suma jest równa $\chi=1$ na $H$. Każde $f\theta_i$ jest nieujemne,
 nie przekracza $1$ i ma nośnik w $U_{j_i}$.
-Wobec tego
-$L(f)=\sum_i L(f\theta_i)\le\sum_{j\ge1}a(U_j)$.
+Jeżeli indeks $j_i$ występuje więcej niż raz, grupujemy odpowiadające mu funkcje: $h_j=\sum_{i:j_i=j}f\theta_i$. Mamy $0\le h_j\le f\le1$ (ponieważ suma wszystkich składników jest równa $f$), a jego nośnik zawiera się w $U_j$, jako skończona suma odpowiednich nośników. Wobec tego
+$L(f)=\sum_j L(h_j)\le\sum_{j\ge1}a(U_j)$.
 Po wzięciu supremum otrzymujemy
 $a(U)\le\sum_j a(U_j)$.
 
@@ -339,16 +351,29 @@ $a(U_j)\le m^*(A_j)+\varepsilon2^{-j}$ (przyjmujemy
 osobno trywialny przypadek nieskończonej sumy).
 Krok 3 daje
 $m^*(A)\le a(\bigcup_jU_j)\le\sum_jm^*(A_j)+\varepsilon$.
-Zatem $m^*$ jest miarą zewnętrzną.
+Przechodząc z $\varepsilon\downarrow0$ otrzymujemy
+przeliczalną podaddytywność. Ponadto
+$m^*(\varnothing)=0$ z $a(\varnothing)=0$,
+a monotoniczność wynika z zawierania się rodzin
+dopuszczalnych otwartych nadzbiorów. Zatem $m^*$
+jest miarą zewnętrzną.
 Dla zbioru otwartego $U$ mamy $m^*(U)=a(U)$, ponieważ
 $U\subseteq V$ implikuje $a(U)\le a(V)$.
-Jeśli $d(A,B)=\delta>0$, to dla każdego otwartego
+Jeśli $A$ lub $B$ jest pusty, metryczna addytywność zachodzi wprost. W przeciwnym razie, jeśli $d(A,B)=\delta>0$, to dla każdego otwartego
 $W\supseteq A\cup B$ zbiory
 $W_A=W\cap\{x:d(x,A)<\delta/3\}$ i
 $W_B=W\cap\{x:d(x,B)<\delta/3\}$ są otwarte,
 rozłączne i zawierają odpowiednio $A,B$. Stąd
 $a(W)\ge a(W_A)+a(W_B)\ge m^*(A)+m^*(B)$.
-Biorąc infimum po $W$ otrzymujemy metryczność $m^*$.
+Rozłączność $W_A,W_B$ wynika z nierówności
+$d(A,B)\le d(x,A)+d(x,B)$, która zachodzi dla
+każdego $x$ na mocy nierówności trójkąta i wzięcia
+infimum po punktach obu zbiorów. Gdyby $x$ należał
+do obu otoczeń, otrzymalibyśmy $\delta<2\delta/3$.
+Biorąc infimum po $W$ otrzymujemy
+$m^*(A\cup B)\ge m^*(A)+m^*(B)$; nierówność
+przeciwna wynika z podaddytywności. To dowodzi
+metryczności $m^*$.
 Lemat~\ref{lem:metric-outer-borel-21} zapewnia, że
 wszystkie zbiory borelowskie są mierzalne. Ograniczenie
 $\mu=m^*|_{\mathcal B(K)}$ jest więc miarą, a
@@ -376,7 +401,7 @@ a $\mu(E\setminus(H\setminus W))<3\varepsilon$.
 Otrzymujemy regularność wewnętrzną względem zwartych.
 
 \emph{Krok 6: identyfikacja całki z $L$.}
-Niech $f\in C(K)$, $f\ge0$, $M=\|f\|_\infty>0$.
+Niech $f\in C(K)$, $f\ge0$. Dla $f=0$ równość jest natychmiastowa; w pozostałym przypadku $M=\|f\|_\infty>0$.
 Dla $N\ge1$ połóżmy $\delta=M/N$ i
 $U_i=\{f>i\delta\}$, $i=0,\ldots,N$.
 Dla $i=0,\ldots,N-1$ zbiór
@@ -399,7 +424,14 @@ Zatem, biorąc niezależnie supremum po $g_i$,
 \begin{equation}\label{eq:riesz-lower-sum-21}
  \delta\sum_{i=1}^{N}\mu(U_i)\le L(f).
 \end{equation}
-Natomiast rozcięcie poziomów funkcji daje
+Natomiast dla $y=f(x)$ równego zero obie sumy
+progowe są zerowe. Jeżeli $j\delta<y\le(j+1)\delta$
+dla $0\le j<N$, to dokładnie $j$ progów spośród
+$\delta,2\delta,\ldots,N\delta$ i dokładnie $j+1$
+progów spośród $0,\delta,\ldots,(N-1)\delta$
+jest mniejszych od $y$. Otrzymujemy punktowe
+oszacowanie przez dolną i górną sumę progową;
+po całkowaniu względem $\mu$ daje ono
 \[
  \delta\sum_{i=1}^{N}\mu(U_i)
  \le\int_Kf(x)\,\mathrm d\mu(x)
@@ -410,7 +442,7 @@ $\delta\mu(U_0)\le\delta L(\chi_K)$.
 Z \eqref{eq:riesz-upper-sum-21} i
 \eqref{eq:riesz-lower-sum-21} wynika
 $|L(f)-\int_K f\,\mathrm d\mu|\le2\delta L(\chi_K)$.
-Wysyłając $N\to\infty$, otrzymujemy reprezentację
+Przechodząc do granicy przy $N\to\infty$, otrzymujemy reprezentację
 $f\ge0$. Ogólny $f$ rozkładamy na części dodatnią
 i ujemną.
 
@@ -426,8 +458,7 @@ borelowskich.
 \section{Przestrzenie lokalnie zwarte: lokalizacja i sklejanie}
 \begin{lemat}[Wyczerpanie przez zbiory relatywnie zwarte]
 \label{lem:exhaustion-21}
-Niech $X$ będzie lokalnie zwartą ośrodkową przestrzenią
-metryczną. Istnieją otwarte zbiory $U_n$ takie, że
+Niech $X$ będzie lokalnie zwartą, $\sigma$-zwartą przestrzenią Hausdorffa. Istnieją otwarte zbiory $U_n$ takie, że
 $U_n\subseteq\overline U_n\subseteq U_{n+1}$,
 $\overline U_n$ jest zwarty i $\bigcup_nU_n=X$.
 Ponadto istnieją $\chi_n\in C_c(X)$ spełniające
@@ -435,18 +466,7 @@ $0\le\chi_n\le1$, $\chi_n=1$ na $\overline U_n$
 oraz $\operatorname{supp}\chi_n\subseteq U_{n+1}$.
 \end{lemat}
 \begin{proof}
-Lokalna zwartość daje każdemu punktowi relatywnie zwarte
-otwarte otoczenie. Ośrodkowa przestrzeń metryczna spełnia
-drugi aksjomat przeliczalności i ma własność Lindelöfa
-(por. \atlasref{GT-09::thm:topog-metryczne-trzy-warunki}{GT-09: własność Lindelöfa przestrzeni metrycznej ośrodkowej}),
-więc z tego pokrycia wybieramy
-przeliczalne podpokrycie $(V_j)_{j\ge1}$.
-Indukcyjnie dobieramy relatywnie zwarte otwarte $U_n$,
-obejmujące $\overline U_{n-1}\cup\overline V_1\cup\cdots
-\cup\overline V_n$: skończone pokrycie tego zwartego
-zbioru relatywnie zwartymi otoczeniami ma relatywnie
-zwartą sumę. Dobierając otwarte otoczenie o zwartej
-domkniętej powłoce, uzyskujemy żądane zawierania.
+Z $\sigma$-zwartości wybieramy zwarte zbiory $D_n$ pokrywające $X$. Kładziemy $U_0=\varnothing$. Jeśli $U_{n-1}$ ma zwarte domknięcie, to $H_n=\overline U_{n-1}\cup D_n$ jest zwarty. Wybieramy skończone pokrycie $H_n$ otwartymi otoczeniami o zwartych domknięciach i za $U_n$ przyjmujemy ich sumę (dla pustego $H_n$ przyjmujemy $U_n=\varnothing$). Domknięcie skończonej sumy jest sumą domknięć, więc $\overline U_n$ jest zwarte. Ponadto $\overline U_{n-1}\subset U_n$ i $D_n\subset U_n$, skąd $\bigcup_n U_n=X$. W szczególności każda lokalnie zwarta ośrodkowa przestrzeń metryczna jest $\sigma$-zwarta: własność Lindelöfa (por. \atlasref{GT-09::thm:topog-metryczne-trzy-warunki}{GT-09: własność Lindelöfa przestrzeni metrycznej ośrodkowej}) daje przeliczalne pokrycie relatywnie zwartymi otoczeniami, a ich domknięcia tworzą pokrycie zwarte.
 Funkcje $\chi_n$ istnieją na mocy lematu
 \ref{lem:cutoff-radon-20}.
 \end{proof}
