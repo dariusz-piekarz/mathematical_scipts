@@ -466,6 +466,44 @@ with sync_playwright() as pw:
         }finally{api=originalApi;resetToast();activateTab('reader');}
     }""")
     assert tab_races == 13
+    # Changes to the generated collection update only the membership
+    # indicator, not the source/KaTeX DOM or the user's selected line range.
+    page.evaluate("() => openModule('AM1-14', true)")
+    selection_reuse = page.evaluate("""() => {
+        const saved=new Map(state.selected);
+        const source=document.getElementById('latexSource');
+        const preview=document.getElementById('simplified');
+        const start=document.getElementById('rangeStart');
+        const end=document.getElementById('rangeEnd');
+        const button=document.getElementById('addCurrent');
+        const reader=document.getElementById('view-reader');
+        const oldRange=[start.value,end.value],oldScroll=reader.scrollTop;
+        let count=0;
+        try{
+            state.selected.clear();renderSelection();updateCurrentSelectionButton();
+            const first=source.firstChild,math=preview.firstChild;
+            if(!first||!math)throw Error('missing reader fixture');
+            start.value='2';end.value='4';
+            const check=selected=>{
+                if(source.firstChild!==first||preview.firstChild!==math||
+                   start.value!=='2'||end.value!=='4'||
+                   button.textContent!==(selected?'✓ W zestawie':'+ Do zestawu'))
+                    throw Error('selection change rebuilt reader or reset range');
+                count++;
+            };
+            button.click();check(true);
+            button.click();check(false);
+            button.click();
+            document.querySelector('#selectionList .selection-controls button:last-child').click();
+            check(false);
+            button.click();document.getElementById('clearSelection').click();check(false);
+            return count;
+        }finally{
+            state.selected=saved;renderSelection();updateCurrentSelectionButton();
+            start.value=oldRange[0];end.value=oldRange[1];reader.scrollTop=oldScroll;
+        }
+    }""")
+    assert selection_reuse == 4
 
     # Source mode and keyboard interaction must also work at 180% text.
     page.evaluate("() => openModule('AM1-14', true)")
