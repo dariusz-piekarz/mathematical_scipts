@@ -151,6 +151,13 @@ class TestMeasureTheoryChapter21(unittest.TestCase):
         self.assertNotIn("jest\ndrugiej przeliczalności", src)
         self.assertNotRegex(src, r"\\(?:mathbf|mathbb)\{1\}_")
 
+    def test_real_number_notation_uses_book_supported_commands(self):
+        src = CHAPTER.read_text(encoding="utf-8")
+        # The measure-theory preamble has no \\R alias. A migrated example
+        # previously stopped full-book compilation with Undefined control sequence.
+        self.assertNotRegex(src, r"\\R(?![A-Za-z])", "Use \\mathbb R, not the donor's \\R macro")
+
+
 
 if __name__ == "__main__":
     unittest.main()
