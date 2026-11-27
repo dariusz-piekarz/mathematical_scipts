@@ -1,0 +1,213 @@
+\section{Operady i algebry nad operadami}\label{cat:sec:operads}
+
+W kategorii zwykłej składamy morfizmy mające po jednym wejściu i jednym wyjściu. Operady opisują składanie operacji mających dowolną skończoną liczbę uporządkowanych wejść i jedno wyjście. Będziemy dopuszczali także operacje bezargumentowe; pozwalają one uwzględnić stałe, np. jednostkę mnożenia. Podstawowe konstrukcje przeprowadzimy najpierw w kategorii zbiorów, następnie w kategoriach monoidalnych. Por. J.-L.~Loday, B.~Vallette, \emph{Algebraic Operads}, rozdział 5.
+
+\subsection{Operady niesymetryczne}
+
+\begin{definicja}[Operada niesymetryczna zbiorów]\label{cat:def:ns-operad}
+Operadą niesymetryczną $P$ nazywamy rodzinę zbiorów $(P(n))_{n\geq0}$, wyróżniony element $1_P\in P(1)$ oraz funkcje podstawienia
+\[
+ P(k)\times P(n_1)\times\cdots\times P(n_k)
+ \longrightarrow P(n_1+\cdots+n_k),
+ \quad (p,q_1,\ldots,q_k)\longmapsto p(q_1,\ldots,q_k)
+\]
+dla $k,n_1,\ldots,n_k\geq0$, spełniające następujące warunki.
+\begin{enumerate}
+\item Dla $p\in P(k)$, $q_i\in P(n_i)$ i $r_{ij}\in P(m_{ij})$ zachodzi
+\[
+\begin{aligned}
+ &(p(q_1,\ldots,q_k))(r_{11},\ldots,r_{kn_k})\\
+ &=p(q_1(r_{11},\ldots,r_{1n_1}),\ldots,
+       q_k(r_{k1},\ldots,r_{kn_k})).
+\end{aligned}
+\]
+Po lewej stronie lista argumentów jest uporządkowana najpierw według $i$, potem według $j$; puste bloki są pomijane.
+\item Dla $p\in P(k)$ zachodzi $1_P(p)=p$ i $p(1_P,\ldots,1_P)=p$.
+\end{enumerate}
+W szczególności dla $k=0$ drugie równanie oznacza $p()=p$.
+Morfizmem operad jest rodzina funkcji $P(n)\to Q(n)$ zachowująca jednostkę i wszystkie podstawienia.
+\end{definicja}
+
+Liczbę $n$ nazywamy arnością elementu $p\in P(n)$. Jednostka operady jest operacją jednoargumentową, a nie bezargumentową. Aksjomaty dają monoid $P(1)$ z mnożeniem $p(q)$ i jednostką $1_P$. Odwrotnie, dla monoidu $M$ rodzina $P(1)=M$, $P(n)=\varnothing$ dla $n\ne1$, z podstawieniem danym mnożeniem, jest operadą: każde zadanie podstawienia z niepustą dziedziną redukuje się do mnożenia w $M$. Morfizmy takich operad są dokładnie homomorfizmami monoidów.
+
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node[circle,draw] (p) at (0,0) {$p$};
+ \node[circle,draw] (q1) at (-2,1.5) {$q_1$};
+ \node[circle,draw] (q2) at (0,1.5) {$q_2$};
+ \node[circle,draw] (q3) at (2,1.5) {$q_3$};
+ \draw[->] (q1)--(p); \draw[->] (q2)--(p); \draw[->] (q3)--(p);
+ \draw[->] (p)--(0,-.8);
+ \draw[->] (-2.6,2.4)--(q1); \draw[->] (-1.4,2.4)--(q1);
+ \draw[->] (0,2.4)--(q2);
+ \draw[->] (1.4,2.4)--(q3); \draw[->] (2,2.4)--(q3);
+ \draw[->] (2.6,2.4)--(q3);
+ \node at (0,-1.2) {$p(q_1,q_2,q_3)\in P(6)$};
+\end{tikzpicture}
+\end{center}
+
+Dla $p\in P(k)$, $q\in P(n)$ i $1\leq i\leq k$ definiujemy podstawienie częściowe
+\[
+ p\circ_i q=p(1_P,\ldots,1_P,q,1_P,\ldots,1_P)
+ \in P(k+n-1),
+\]
+gdzie $q$ znajduje się na miejscu $i$.
+
+\begin{stwierdzenie}[Równania podstawień częściowych]\label{cat:prop:operad-partial-composition}
+Niech $p\in P(k)$, $q\in P(n)$, $r\in P(m)$. Dla dopuszczalnych indeksów zachodzą
+\[
+\begin{aligned}
+ (p\circ_i q)\circ_{i+j-1}r&=p\circ_i(q\circ_j r)
+       &&(1\leq j\leq n),\\
+ (p\circ_i q)\circ_{\ell+n-1}r&=(p\circ_\ell r)\circ_i q
+       &&(i<\ell\leq k),\\
+ p\circ_i1_P&=p,\qquad 1_P\circ_1p=p.
+\end{aligned}
+\]
+Pełne podstawienie można odzyskać ze wzoru
+\[
+ p(q_1,\ldots,q_k)
+ =(\cdots((p\circ_k q_k)\circ_{k-1}q_{k-1})\cdots)
+       \circ_1 q_1
+\]
+dla $k\geq1$; dla $k=0$ ma ono wartość $p$.
+\end{stwierdzenie}
+\begin{proof}
+Dla pierwszej równości stosujemy łączność podstawienia do listy, w której na miejscu $i$ podstawiono $q$, a na pozostałych miejscach jednostki. W drugim podstawieniu wszystkie operacje są jednostkami oprócz $r$ na miejscu $i+j-1$. W bloku odpowiadającym $q$ otrzymujemy więc $q\circ_jr$, a w innych blokach jednostki. Aksjomat łączności daje wskazaną równość.
+
+W drugiej równości $\ell+n-1$ jest numerem wejścia pierwotnie zajmowanego przez $\ell$: zastąpienie jednego wejścia $n$ wejściami zmienia numery dalszych wejść o $n-1$. Po obu stronach pełne podstawienie ma $q$ na miejscu $i$, $r$ na miejscu $\ell$, a jednostki na pozostałych miejscach. Dotyczy to również $n=0$, kiedy wejście znika. Równania jednostkowe wynikają z definicji.
+
+Aby odzyskać pełne podstawienie, podstawiamy operacje od ostatniego miejsca do pierwszego. Po wykonaniu podstawień na miejscach $k,k-1,\ldots,j$ łączność i równania jednostki pokazują, że wynik jest pełnym podstawieniem do $p$ operacji $q_j,\ldots,q_k$ na tych miejscach i jednostek na wcześniejszych miejscach. Indukcja malejąca po $j$ daje tezę. Podstawienia w tej kolejności nie przesuwają numerów jeszcze niewykorzystanych wejść.
+\end{proof}
+
+\subsection{Operada endomorfizmów i jej algebry}
+
+\begin{definicja}[Operada endomorfizmów zbioru]\label{cat:def:set-endomorphism-operad}
+Dla zbioru $A$ kładziemy
+\[
+ \operatorname{End}_A(n)=\Hom_{\Set}(A^n,A),\qquad A^0=\{*\}.
+\]
+Jednostką jest $\id_A$, a podstawienie funkcji $p,q_i$ to funkcja
+\[
+ (a_{ij})_{i,j}\longmapsto
+ p(q_1(a_{11},\ldots,a_{1n_1}),\ldots,
+   q_k(a_{k1},\ldots,a_{kn_k})).
+\]
+\end{definicja}
+Jest to operada: dla dowolnych trzech poziomów operacji oba sposoby podstawienia obliczają tę samą wartość przez zastosowanie kolejno funkcji najniższego, środkowego i najwyższego poziomu. W przypadku bloku pustego funkcja $q_i:A^0\to A$ ma wartość $q_i(*)$, niezależną od argumentów. Jednostka działa przez podstawienie argumentu bez zmiany. Stwierdzenia pozostają prawdziwe dla $A=\varnothing$, ponieważ równania funkcji sprawdzamy na ich dziedzinach, które mogą być puste.
+
+\begin{definicja}[Algebra nad operadą]\label{cat:def:operad-algebra}
+Algebrą nad operadą niesymetryczną $P$ w zbiorach nazywamy zbiór $A$ wraz z morfizmem operad $P\to\operatorname{End}_A$. Równoważnie mamy funkcje
+\[
+ \alpha_n:P(n)\times A^n\to A,\qquad
+ \alpha_n(p;\mathbf a)=p_A(\mathbf a),
+\]
+zachowujące jednostkę i podstawienia. Morfizmem algebr $h:A\to B$ jest funkcja spełniająca
+\[
+ h(p_A(a_1,\ldots,a_n))
+ =p_B(h(a_1),\ldots,h(a_n))
+\]
+dla wszystkich $p\in P(n)$ i wszystkich argumentów, także dla $n=0$.
+\end{definicja}
+Równoważność dwóch opisów wynika z bijekcji między funkcjami $P(n)\to\Hom_{\Set}(A^n,A)$ i funkcjami $P(n)\times A^n\to A$: przyporządkowania to ewaluacja i ustalenie pierwszego argumentu, wzajemnie odwrotne. Identyczność zachowuje wszystkie operacje; jeśli $h:A\to B$ i $g:B\to C$ zachowują operacje, to $(gh)(p_A(\mathbf a))=g(p_B(h(\mathbf a)))=p_C(gh(\mathbf a))$. Otrzymujemy kategorię $\operatorname{Alg}_P$.
+
+\begin{przyklad}[Operada monoidów]\label{cat:ex:ns-associative-operad}
+Niech $\mathrm{As}_{\mathrm{ns}}(n)=\{a_n\}$ dla każdego $n\geq0$, z jedynymi możliwymi podstawieniami i jednostką $a_1$. Algebry nad tą operadą są dokładnie monoidami.
+\end{przyklad}
+\begin{proof}
+Aksjomaty operady zachodzą, gdyż obie strony każdego równania należą do tego samego zbioru jednopunktowego. Dla algebry $A$ definiujemy $xy=(a_2)_A(x,y)$ i $e=(a_0)_A(*)$. Ponieważ $a_2(a_2,a_1)=a_3=a_2(a_1,a_2)$, mamy $(xy)z=x(yz)$. Równania $a_2(a_0,a_1)=a_1=a_2(a_1,a_0)$ dają $ex=x=xe$.
+
+Odwrotnie, w monoidzie definiujemy $(a_n)_A$ jako uporządkowany iloczyn $n$ elementów, przy czym pusty iloczyn to $e$. Iloczyn sklejonych list jest iloczynem iloczynów obu list: dowodzimy tego indukcją po długości drugiej listy, korzystając z prawej jednostki dla listy pustej i łączności przy dopisaniu kolejnego elementu. Stosując tę własność kolejno do wszystkich bloków argumentów, otrzymujemy zgodność z pełnym podstawieniem. Jednostka $a_1$ działa identycznościowo. Ponadto $a_{n+1}=a_2(a_n,a_1)$ dla $n\geq1$, więc struktura algebry jest jednoznacznie wyznaczona przez mnożenie i $e$. Funkcja zachowuje wszystkie operacje dokładnie wtedy, gdy zachowuje operacje arności $0$ i $2$, czyli jest homomorfizmem monoidów.
+\end{proof}
+
+Jeśli zamiast tego przyjmiemy $P(0)=\varnothing$ i $P(n)=\{a_n\}$ dla $n\geq1$, analogiczny dowód bez operacji bezargumentowej daje kategorię zbiorów z łącznym mnożeniem (dopuszczamy zbiór pusty), a nie koniecznie monoidy.
+
+\subsection{Drzewa i operady swobodne}
+
+\begin{definicja}[Rodzina generatorów]\label{cat:def:operad-graded-generators}
+Rodziną generatorów jest rodzina zbiorów $G(n)$ dla $n\geq0$. Generator z $G(n)$ ma dokładnie $n$ uporządkowanych wejść.
+\end{definicja}
+
+\begin{twierdzenie}[Swobodna operada niesymetryczna]\label{cat:thm:free-ns-operad}
+Dla każdej rodziny $G$ istnieje operada $\mathcal T(G)$ i funkcje $i_n:G(n)\to\mathcal T(G)(n)$ o następującej własności: każda rodzina funkcji $\varphi_n:G(n)\to P(n)$ przedłuża się do dokładnie jednego morfizmu operad $\mathcal T(G)\to P$.
+\end{twierdzenie}
+\begin{proof}
+Konstruujemy skończone wyrażenia drzewiaste rekurencyjnie. Symbol $\vert$ jest drzewem z jednym wolnym wejściem, bez wierzchołków operacyjnych. Jeżeli $g\in G(k)$, a $t_1,\ldots,t_k$ są już skonstruowanymi drzewami, to $g[t_1,\ldots,t_k]$ jest drzewem z korzeniem oznaczonym przez $g$ i uporządkowanymi poddrzewami. Jego arność jest sumą arności poddrzew. Dla $k=0$ wyrażenie $g[]$ ma arność zero, nie jest symbolem $\vert$. Bierzemy wyłącznie drzewa otrzymane po skończenie wielu zastosowaniach reguły. Jest to zbiór, np. suma po skończonych wysokościach zbiorów wyrażeń zbudowanych na poprzednim etapie.
+
+Niech $\mathcal T(G)(n)$ będzie zbiorem drzew o $n$ wolnych wejściach. Podstawienie $t(s_1,\ldots,s_n)$ zastępuje kolejno wolne wejścia drzewa $t$ drzewami $s_j$. Formalnie dla $t=\vert$ wynikiem jest $s_1$. Dla $t=g[t_1,\ldots,t_k]$ rozdzielamy listę $(s_j)$ na kolejne bloki o długościach równych arnościom $t_i$, stosujemy podstawienie rekurencyjnie do każdego $t_i$ i zachowujemy korzeń $g$. Arność wyniku to suma arności wszystkich $s_j$, co wynika indukcyjnie z reguły konstrukcji.
+
+Łączność podstawienia dowodzimy indukcją po budowie $t$. Dla $\vert$ obie strony redukują się do podstawienia w jedynym drzewie $s_1$. Dla $g[t_1,\ldots,t_k]$ oba sposoby podstawienia zachowują korzeń $g$ i przypisują każdemu poddrzewu $t_i$ ten sam kolejny blok drzew oraz odpowiadające mu dalsze bloki. Hipoteza indukcyjna daje równość wyników dla każdego poddrzewa, a więc całych wyrażeń. Dotyczy to również $k=0$, gdy obie strony pozostawiają $g[]$. Podstawienie symboli $\vert$ nie zmienia drzewa, co wynika z tej samej indukcji; podstawienie do $\vert$ jest identycznością z definicji. Jednostką jest zatem $\vert$.
+
+Definiujemy $i_k(g)=g[\vert,\ldots,\vert]$. Dla danych $\varphi_n$ definiujemy rekurencyjnie
+\[
+ \widehat\varphi(\vert)=1_P,\qquad
+ \widehat\varphi(g[t_1,\ldots,t_k])
+ =\varphi_k(g)(\widehat\varphi(t_1),\ldots,\widehat\varphi(t_k)).
+\]
+Wartość ma właściwą arność przez indukcję. Zgodność z podstawieniem dowodzimy ponownie indukcją po drzewie zewnętrznym: dla $\vert$ używamy lewej jednostki, a dla $g[t_1,\ldots,t_k]$ stosujemy hipotezę do poddrzew i łączność w $P$ do operacji $\varphi_k(g)$ oraz otrzymanych wartości. Dla drzewa bez wejść podstawienie pustej listy zachowuje wartość. Równanie prawej jednostki daje $\widehat\varphi(i_k(g))=\varphi_k(g)$. Każdy morfizm przedłużający $\varphi$ musi wysłać $\vert$ na $1_P$ oraz $g[t_1,\ldots,t_k]=i_k(g)(t_1,\ldots,t_k)$ na podaną wartość. Indukcja po drzewie dowodzi jednoznaczności.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node[circle,draw] (m1) at (-2.4,0) {$m$};
+ \node[circle,draw] (l) at (-3.3,1.2) {$m$};
+ \draw[->] (l)--(m1); \draw[->] (-1.5,2.3)--(m1);
+ \draw[->] (-3.9,2.3)--(l); \draw[->] (-2.7,2.3)--(l);
+ \draw[->] (m1)--(-2.4,-.7);
+ \node at (-2.4,-1.1) {$m\circ_1m$};
+ \node[circle,draw] (m2) at (2.4,0) {$m$};
+ \node[circle,draw] (r) at (3.3,1.2) {$m$};
+ \draw[->] (r)--(m2); \draw[->] (1.5,2.3)--(m2);
+ \draw[->] (2.7,2.3)--(r); \draw[->] (3.9,2.3)--(r);
+ \draw[->] (m2)--(2.4,-.7);
+ \node at (2.4,-1.1) {$m\circ_2m$};
+\end{tikzpicture}
+\end{center}
+Dla jednego generatora dwuargumentowego $m$ i braku pozostałych generatorów operacje arności trzy to właśnie dwa powyższe drzewa. Istotnie, indukcja po drzewie pokazuje, że liczba wolnych wejść jest o jeden większa od liczby wierzchołków dwuargumentowych. Dwa takie wierzchołki mogą wystąpić tylko jako korzeń i jego lewe lub prawe poddrzewo. Nie są to równe operacje w operadzie swobodnej: rekurencyjne wyrażenia mają różne uporządkowane poddrzewa. Narzucenie relacji $m\circ_1m=m\circ_2m$ odpowiada wymaganiu łączności mnożenia.
+
+\begin{stwierdzenie}[Iloraz przez kongruencję]\label{cat:prop:operad-quotient}
+Niech $\sim_n$ będą relacjami równoważności na $P(n)$, zgodnymi z podstawieniami w tym sensie, że zastąpienie każdego argumentu przez równoważny daje równoważny wynik. Wówczas rodzina $P(n)/{\sim_n}$ z jednostką $[1_P]$ i podstawieniem klas jest operadą. Każdy morfizm z $P$ stały na klasach faktoryzuje się jednoznacznie przez rzut na iloraz.
+\end{stwierdzenie}
+\begin{proof}
+Zgodność relacji zapewnia niezależność podstawienia klas od reprezentantów. Aksjomaty operady na klasach wynikają z zastosowania rzutów do równań w $P$. Dla morfizmu $F:P\to Q$ stałego na klasach definiujemy $\overline F([p])=F(p)$. Jest to dobrze określona rodzina funkcji i zachowuje podstawienia oraz jednostkę, bo zachowuje je $F$. Jednoznaczność wynika z surjektywności rzutów. Dla dowolnej rodziny relacji pomiędzy operacjami tej samej arności istnieje najmniejsza kongruencja je zawierająca: przecinamy wszystkie takie kongruencje, których rodzina jest niepusta (relacje pełne są kongruencją). Przecięcie jest relacją równoważności w każdej arności i zachowuje podstawienia, ponieważ zachowuje je każda z przecinanych relacji.
+\end{proof}
+
+\subsection{Algebra swobodna i monada operady}
+
+\begin{twierdzenie}[Swobodna algebra nad operadą niesymetryczną]\label{cat:thm:free-operad-algebra}
+Dla zbioru $X$ algebra swobodna nad $P$ na $X$ ma zbiór nośny
+\[
+ T_P(X)=\coprod_{n\geq0}P(n)\times X^n.
+\]
+Jednostka konstrukcji swobodnej wysyła $x$ na $(1_P,x)$.
+\end{twierdzenie}
+\begin{proof}
+Piszemy elementy jako $(p;\mathbf x)$, pamiętając o arności $p$. Dla $p\in P(k)$ i elementów $(q_i;\mathbf x_i)$ określamy działanie
+\[
+ p_{T_P(X)}((q_1;\mathbf x_1),\ldots,(q_k;\mathbf x_k))
+ =(p(q_1,\ldots,q_k);\mathbf x_1\cdots\mathbf x_k),
+\]
+gdzie ostatni zapis oznacza konkatenację uporządkowanych list, także pustych. Wynik należy do składnika o arności będącej sumą długości list. Aksjomat jednostki wynika z jednostki w $P$ i niezmienności listy przy konkatenacji jednego bloku. Aksjomat podstawienia wynika z łączności w $P$ oraz łączności konkatenacji: w obu przypadkach elementy list są wypisywane w tym samym porządku, według numerów bloków, a wewnątrz bloków według numerów wejść.
+
+Niech $A$ będzie $P$-algebrą i $f:X\to A$ dowolną funkcją. Definiujemy
+\[
+ \widehat f(p;x_1,\ldots,x_n)=p_A(f(x_1),\ldots,f(x_n)).
+\]
+Dla $n=0$ prawa strona oznacza wyróżnioną przez $p$ stałą algebry $A$. Funkcja jest dobrze określona na każdym składniku sumy rozłącznej. Aksjomat podstawienia algebry $A$ pokazuje, że obraz operacji na $(q_i;\mathbf x_i)$ jest operacją $p_A$ zastosowaną do obrazów tych elementów. Jednostka daje $\widehat f(1_P;x)=f(x)$. Wreszcie każdy $(p;x_1,\ldots,x_n)$ jest wynikiem operacji $p$ na $(1_P;x_1),\ldots,(1_P;x_n)$, także dla $n=0$. Morfizm przedłużający $f$ musi zatem przyjmować dokładnie wartość $\widehat f$.
+\end{proof}
+
+W szczególności dla $\mathrm{As}_{\mathrm{ns}}$ otrzymujemy monoid skończonych list (łącznie z listą pustą). Dla ogólnej operady funktor zapominania $\operatorname{Alg}_P\to\Set$ ma lewy funktor sprzężony na mocy wykazanej własności uniwersalnej: dla funkcji $h:X\to Y$ morfizm swobodnych algebr działa przez $(p;x_1,\ldots,x_n)\mapsto(p;h(x_1),\ldots,h(x_n))$, co zachowuje podstawienia oraz identyczności i składanie.
+
+\begin{stwierdzenie}[Monada podstawienia]\label{cat:prop:operad-monad}
+Funktor $T_P$ jest monadą na $\Set$ z jednostką $\eta_X(x)=(1_P;x)$ i mnożeniem
+\[
+ \mu_X(p;(q_1;\mathbf x_1),\ldots,(q_k;\mathbf x_k))
+ =(p(q_1,\ldots,q_k);\mathbf x_1\cdots\mathbf x_k).
+\]
+Kategoria algebr Eilenberga--Moore'a tej monady jest izomorficzna z $\operatorname{Alg}_P$.
+\end{stwierdzenie}
+\begin{proof}
+Naturalność $\eta$ i $\mu$ wynika z tego, że zastosowanie funkcji do elementów listy komutuje z konkatenacją i nie zmienia etykiet operacji. Równania jednostki $\mu_X\eta_{T_P(X)}=\id_{T_P(X)}$ i $\mu_XT_P(\eta_X)=\id_{T_P(X)}$ odpowiadają odpowiednio podstawieniu operacji do $1_P$ i podstawieniu $1_P$ do wszystkich wejść. Łączność $\mu_XT_P(\mu_X)=\mu_X\mu_{T_P(X)}$ wynika z aksjomatu łączności podstawień: na elemencie z trzema poziomami operacji oba złożenia dają to samo podstawienie w $P$ i tę samą konkatenację najniższego poziomu list. Puste bloki nie wnoszą żadnych elementów list.
+
+Struktura algebry monady jest funkcją $a:T_P(A)\to A$. Definiując $p_A(\mathbf x)=a(p;\mathbf x)$ otrzymujemy operacje, których aksjomat jednostki jest równaniem $a\eta_A=\id_A$. Na elemencie $(p;(q_1;\mathbf x_1),\ldots,(q_k;\mathbf x_k))$ równanie $a\mu_A=aT_P(a)$ jest dokładnie zgodnością z podstawieniem operacji $q_i$ do $p$. Obejmuje ono wszystkie arności. Odwrotnie, operacje algebry $P$ określają jedną funkcję $a$ na sumie rozłącznej i spełniają te same równania. Obie konstrukcje są wzajemnie odwrotne. Równanie morfizmu algebr monady $ha=bT_P(h)$ jest punktowo warunkiem zachowania każdej operacji $p$, więc identyfikacja zachowuje morfizmy, identyczności i składanie.
+\end{proof}
