@@ -309,7 +309,6 @@ function renderReader(){
   $("docBreadcrumb").textContent=(mod?.domain||data.domain||"")+" / "+state.currentModule+(entity?" / "+data.entity.kind:"");
   $("docTitle").textContent=entity?(data.entity.title||data.module_title||data.entity.kind):(data.module.title);
   $("docMeta").textContent=entity?`Wiersze ${data.entity.start_line}–${data.entity.end_line} · ${data.module_title}`:"Pełny moduł · "+data.module.path;
-  $("readerKind").textContent=state.simplified?(entity?"Podgląd fragmentu":"Podgląd rozdziału"):"Źródło LaTeX";
   $("readSize").textContent=(data.full_length||0).toLocaleString("pl-PL")+" znaków";
   $("showFull").classList.toggle("hidden",!data.truncated);
   const firstLine=entity?data.entity.start_line:1;
@@ -320,6 +319,14 @@ function renderReader(){
   $("rangeEnd").value=firstLine+Math.max(0,lineCount-1);
   updateCurrentSelectionButton();
   showRefs($("latexSource"),data.latex);
+  updateReaderMode();
+}
+// Both panes belong to the same current fragment. Switching visibility
+// must not rebuild its source, reset line fields or discard selection.
+function updateReaderMode(){
+  const data=state.currentData;if(!data)return;
+  closeTip();
+  $("readerKind").textContent=state.simplified?(data.entity?"Podgląd fragmentu":"Podgląd rozdziału"):"Źródło LaTeX";
   if(state.simplified) renderSimplified(data.latex);
   else $("mathPreviewStatus")?.classList.add("hidden");
   $("latexSource").classList.toggle("hidden",state.simplified);
@@ -327,6 +334,10 @@ function renderReader(){
   document.querySelector('.fragment-toolbar').classList.toggle('hidden',state.simplified);
   $("togglePreview").textContent=state.simplified?"Pokaż źródło LaTeX":"Wróć do podglądu";
   $("togglePreview").setAttribute('aria-pressed',String(!state.simplified));
+}
+function toggleReaderMode(){
+  if(!state.currentData)return;
+  state.simplified=!state.simplified;updateReaderMode();
 }
 // Render standard math without executing document preambles or HTML.
 const displayEnvironments = ["equation","equation*","align","align*","alignat","alignat*","gather","gather*","CD"];
@@ -1544,7 +1555,7 @@ function listeners(){
   $("addRange").addEventListener("click",addRange);
   $("openFirst").addEventListener("click",()=>{if(state.modules.length)openModule(state.modules[0].id);});
   $("openGraphQuick").addEventListener("click",()=>activateTab("graph"));
-  $("togglePreview").addEventListener("click",()=>{state.simplified=!state.simplified;renderReader();});
+  $("togglePreview").addEventListener("click",toggleReaderMode);
   $("showFull").addEventListener("click",()=>{if(state.currentEntity)openEntity(state.currentEntity,true);else if(state.currentModule)openModule(state.currentModule,true);});
   $("closeTip").addEventListener("click",closeTip);
   $("tipOpen").addEventListener("click",openPreviewedReference);
