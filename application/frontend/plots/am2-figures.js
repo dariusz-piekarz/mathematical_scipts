@@ -76,6 +76,10 @@
       const x=lin(-1,1,61);
       return base([-1,0,1].map((c,i)=>surface(x,x,grid(x,x,(u,v)=>u*u+v*v+c),{colorscale:["Blues","Greens","Oranges"][i],opacity:.8,name:"c="+c,showlegend:true})),"Poziomice submersji");
     },
+    "am2_21_tangent.html":()=>{
+      const x=lin(-1,1,61);
+      return base([surface(x,x,grid(x,x,(u,v)=>u*u+v*v),{colorscale:"Blues",name:"S",showlegend:true}),surface(x,x,grid(x,x,()=>0),{colorscale:"Oranges",opacity:.45,name:"T₀S",showlegend:true}),line([0,0],[0,0],[0,1],"n","black")],"Przestrzeń styczna i normalna",{scene:{...scene(),aspectmode:"data"}});
+    },
     "am2_36_geometric.html":()=>{
       const r=lin(0,.97,61),t=lin(0,2*Math.PI,121),X=t.map(a=>r.map(v=>v*Math.cos(a))),Y=t.map(a=>r.map(v=>v*Math.sin(a)));
       const norm=(a,v,n)=>n===null?1/Math.hypot(1-v*Math.cos(a),v*Math.sin(a)):Math.hypot(1-v**(n+1)*Math.cos((n+1)*a),v**(n+1)*Math.sin((n+1)*a))/Math.hypot(1-v*Math.cos(a),v*Math.sin(a));

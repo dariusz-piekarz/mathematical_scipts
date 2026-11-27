@@ -1,0 +1,3 @@
+# AM II 21 — Podrozmaitości przestrzeni euklidesowej
+
+27.11.2026. Pierwsza wersja według planu: trzy równoważne opisy lokalne klasy C^s, parametryzacje, przestrzenie styczne i normalne, immersja i zanurzenie, przykłady paraboloidy, samoprzecięcia i regularnego poziomu kowymiaru dwa. Odczytano rzeczywiste deklaracje i dowody DG-01 stw:podrozm-struktura, stw:styczna-podrozmaitosci, stw:styczna-normalne-euklidesowe oraz deklarację DG-16 prop:proper-immersja. Dodano statyczny TikZ i repozytoryjną definicję Plotly, listing i rejestrację AM2-21. 11 unikalnych etykiet, poprawny stos środowisk, pojedynczy wpis w książce i katalogu. Audyty szczegółowe 0, stabilizacja 0/2. Kompilacja PDF, renderowanie TikZ i test przeglądarkowy niepotwierdzone.
