@@ -164,8 +164,16 @@ with sync_playwright() as pw:
     ]:
         source = (ROOT.parent / 'chapters/pl/mathematical_analysis_ii' / filename).read_text(encoding='utf-8')
         page.evaluate("([latex, code]) => renderSimplified(latex, code)", [source, module])
-        assert box.locator('.preview-figure img').count() == 1
-        page.wait_for_function("[...document.querySelectorAll('#simplified .preview-figure img')].some(img => img.complete && img.naturalWidth > 0)", timeout=90000)
+        # Dynamic TikZ first inserts a placeholder and loads the image asynchronously.
+        # Wait for the actual decoded image, not just for an immediate DOM snapshot.
+        assert box.locator('.atlas-tikz-preview').count() == 1, module
+        page.wait_for_function(
+            """() => {
+                const images = document.querySelectorAll('#simplified .atlas-tikz-preview img');
+                return images.length === 1 && images[0].complete && images[0].naturalWidth > 0;
+            }""", timeout=90000
+        )
+        assert box.locator('.atlas-tikz-preview img').count() == 1, module
         host = box.locator('.atlas-plot-host')
         assert host.count() == 1
         assert host.locator('iframe').count() == 0
@@ -178,4 +186,4 @@ with sync_playwright() as pw:
         assert host.locator('iframe').count() == 0
     assert not errors, errors
     browser.close()
-    print('Reader prose, math, references, safe content, responsive layout and persistent themes and four rendered TikZ figures: OK')
+    print('Reader prose, math, references, safe content, responsive layout and persistent themes, rendered TikZ and interactive Plotly figures: OK')
