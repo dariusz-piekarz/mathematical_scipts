@@ -1,0 +1,141 @@
+\section{Teoria zstępowania i stosy}\label{cat:sec:descent-stacks}
+
+Warunek snopu z rozdziału~\ref{cat:sec:grothendieck-topologies} pozwala sklejać lokalne sekcje, które są równe na przecięciach. Gdy lokalne dane są obiektami kategorii, np. przestrzeniami wektorowymi, wiązkami lub modułami, zamiast równości obiektów na przecięciach naturalnie pojawiają się izomorfizmy. Izomorfizmy te muszą spełniać warunek zgodności na potrójnych przecięciach. Teoria zstępowania (ang. \emph{descent theory}) bada, kiedy takie dane pochodzą od jednego obiektu globalnego i w jakim sensie obiekt ten jest jednoznaczny.
+
+Korzystamy z języka fibracji Grothendiecka i pseudofunktorów z rozdziału~\ref{cat:sec:cartesian-fibrations}. Najpierw przedstawimy konstrukcję dla ścisłych funktorów kontrawariantnych; następnie uwzględnimy izomorfizmy koherencji i warunek stosu na miejscu Grothendiecka.
+
+\subsection{Dane zstępowania dla rodziny morfizmów}
+
+Niech $\mathcal B$ będzie kategorią mającą skończone iloczyny włókniste i niech $F:\mathcal B^{\mathrm{op}}\to\cat{Cat}$ będzie funktorem. Dla $f:V\to U$ piszemy $f^*=F(f):F(U)\to F(V)$. W tym podrozdziale mamy ścisłe równości $\id_U^*=\id_{F(U)}$ i $(fg)^*=g^*f^*$; nie zakładamy ich dla ogólnych pseudofunktorów.
+
+Ustalmy rodzinę $\mathcal U=(u_i:U_i\to U)_{i\in I}$ indeksowaną zbiorem $I$. Kładziemy $U_{ij}=U_i\times_U U_j$ oraz $U_{ijk}=U_i\times_U U_j\times_U U_k$, z wybranymi iloczynami włóknistymi i ich rzutami. Symbole $\pi_i,\pi_j$ oznaczają rzuty z $U_{ij}$ do odpowiednich czynników, rozróżniając pozycje nawet wtedy, gdy $i=j$. Na $U_{ijk}$ symbole $\pi_{12},\pi_{23},\pi_{13}$ oznaczają rzuty do odpowiednich podwójnych iloczynów, a $\pi_1,\pi_2,\pi_3$ rzuty do pojedynczych czynników. Równości między złożeniami tych rzutów wynikają z ich własności uniwersalnych.
+
+\begin{definicja}[Dane zstępowania]\label{cat:def:descent-datum}
+Danymi zstępowania dla $F$ względem rodziny $\mathcal U$ nazywamy rodzinę obiektów $x_i\in F(U_i)$ oraz izomorfizmów
+\[
+ \theta_{ij}:\pi_2^*x_j\longrightarrow\pi_1^*x_i
+ \qquad\text{w } F(U_{ij}),
+\]
+spełniających warunek diagonalny $\delta_i^*\theta_{ii}=\id_{x_i}$, gdzie $\delta_i:U_i\to U_{ii}$ jest diagonalą, oraz warunek kocyklu
+\[
+ \pi_{12}^*\theta_{ij}\circ\pi_{23}^*\theta_{jk}
+ =\pi_{13}^*\theta_{ik}\qquad\text{w }F(U_{ijk}).
+\]
+Morfizm między danymi $(x_i,\theta_{ij})$ i $(y_i,\psi_{ij})$ jest rodziną $h_i:x_i\to y_i$, dla której
+\[
+ \psi_{ij}\circ\pi_2^*h_j=\pi_1^*h_i\circ\theta_{ij}
+ \qquad\text{w }F(U_{ij}).
+\]
+\end{definicja}
+
+Warunek kocyklu jest dobrze określony: po użyciu równości złożeń rzutów mamy diagram w $F(U_{ijk})$
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (z) at (0,0) {$\pi_3^*x_k$};
+ \node (y) at (5,0) {$\pi_2^*x_j$};
+ \node (x) at (2.5,-2) {$\pi_1^*x_i$};
+ \draw[->] (z)--node[above] {$\pi_{23}^*\theta_{jk}$}(y);
+ \draw[->] (y)--node[right] {$\pi_{12}^*\theta_{ij}$}(x);
+ \draw[->] (z)--node[left] {$\pi_{13}^*\theta_{ik}$}(x);
+\end{tikzpicture}
+\end{center}
+Wymagamy jego przemienności. Dla przejścia z $U_{ij}$ do $U_{ji}$ oznaczmy przez $s_{ij}$ izomorfizm zamieniający czynniki.
+
+\begin{stwierdzenie}[Odwrócenie izomorfizmu przejścia]\label{cat:prop:descent-inverse}
+Z warunków diagonalnego i kocyklu wynika
+\[
+ s_{ij}^*\theta_{ji}=\theta_{ij}^{-1}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Niech $a:U_{ij}\to U_{iji}$ będzie morfizmem o składowych $(\pi_1,\pi_2,\pi_1)$. Istnieje i jest jednoznaczny przez własność uniwersalną iloczynu włóknistego, gdyż wszystkie składowe mają to samo złożenie do $U$. Mamy $\pi_{12}a=\id_{U_{ij}}$, $\pi_{23}a=s_{ij}$ i $\pi_{13}a=\delta_i\pi_1$. Stosując $a^*$ do warunku kocyklu dla $(i,j,i)$, otrzymujemy
+\[
+ \theta_{ij}\circ s_{ij}^*\theta_{ji}
+ =\pi_1^*\delta_i^*\theta_{ii}
+ =\id_{\pi_1^*x_i}.
+\]
+Ponieważ $\theta_{ij}$ jest izomorfizmem, złożenie z jego odwrotnością daje tezę.
+\end{proof}
+
+Dane zstępowania wraz z powyższymi morfizmami tworzą kategorię, którą oznaczamy $\operatorname{Desc}_F(\mathcal U)$. Identyczności spełniają warunek morfizmu. Dla dwóch kolejnych morfizmów $h:(x,\theta)\to(y,\psi)$ i $g:(y,\psi)\to(z,\omega)$ mamy
+\[
+ \omega_{ij}\pi_2^*(g_jh_j)
+ =\pi_1^*g_i\,\psi_{ij}\pi_2^*h_j
+ =\pi_1^*(g_ih_i)\theta_{ij},
+\]
+więc złożenie składowe jest morfizmem danych zstępowania. Aksjomaty kategorii wynikają z aksjomatów w kategoriach $F(U_i)$.
+
+\begin{stwierdzenie}[Funktor porównawczy]\label{cat:prop:descent-comparison}
+Istnieje funktor
+\[
+ D_{\mathcal U}:F(U)\longrightarrow\operatorname{Desc}_F(\mathcal U),
+\]
+przypisujący obiektowi $x$ rodzinę $(u_i^*x)_i$ z identycznościowymi izomorfizmami przejścia, a morfizmowi $h$ rodzinę $(u_i^*h)_i$.
+\end{stwierdzenie}
+\begin{proof}
+Równość $u_i\pi_1=u_j\pi_2$ daje ścisłą równość $\pi_1^*u_i^*x=\pi_2^*u_j^*x$, więc wskazane identyczności są poprawnie określone. Warunki diagonalny i kocyklu stają się równaniami identyczności. Dla $h:x\to y$ mamy $\pi_1^*u_i^*h=\pi_2^*u_j^*h$, co daje warunek morfizmu danych zstępowania. Zachowywanie identyczności i składania wynika z funktorialności wszystkich $u_i^*$.
+\end{proof}
+
+\begin{definicja}[Zstępowanie i efektywne zstępowanie]\label{cat:def:effective-descent}
+Rodzinę $\mathcal U$ nazywamy rodziną zstępowania dla $F$, gdy $D_{\mathcal U}$ jest pełny i wierny, a rodziną efektywnego zstępowania, gdy $D_{\mathcal U}$ jest równoważnością kategorii. Dane zstępowania nazywamy efektywnymi, gdy są izomorficzne z obrazem pewnego obiektu $F(U)$.
+\end{definicja}
+
+Pełność i wierność wyrażają jednoznaczne sklejanie morfizmów; istotna surjektywność wyraża możliwość sklejenia obiektów. Jeżeli $D_{\mathcal U}$ jest pełny i wierny, to dla dwóch obiektów globalnych $x,y$ oraz ustalonego izomorfizmu $\varphi:D_{\mathcal U}x\to D_{\mathcal U}y$ istnieje dokładnie jeden izomorfizm $h:x\to y$ indukujący $\varphi$. Istnienie i jednoznaczność morfizmu wynikają z pełności i wierności. Stosując pełność do $\varphi^{-1}$, otrzymujemy $g:y\to x$; wierność daje $gh=\id_x$ i $hg=\id_y$. Nie twierdzimy, że $x,y$ są dosłownie tym samym obiektem.
+
+\subsection{Związek z warunkiem snopu}
+
+Dla zbioru $S$ oznaczamy przez $\operatorname{Disc}(S)$ kategorię dyskretną, której obiektami są elementy $S$, a jedynymi morfizmami są identyczności.
+
+\begin{stwierdzenie}[Snop jako przypadek dyskretny]\label{cat:prop:descent-discrete-sheaf}
+Niech $H:\mathcal B^{\mathrm{op}}\to\Set$ będzie presnopem i $F=\operatorname{Disc}\circ H$. Wówczas $D_{\mathcal U}$ jest równoważnością dokładnie wtedy, gdy funkcja
+\[
+ H(U)\longrightarrow
+ \left\{(x_i)_i\in\prod_i H(U_i):
+            \pi_1^*x_i=\pi_2^*x_j\text{ dla wszystkich }i,j\right\},
+ \qquad x\longmapsto(u_i^*x)_i
+\]
+jest bijekcją.
+\end{stwierdzenie}
+\begin{proof}
+W kategorii dyskretnej izomorfizm między dwoma obiektami istnieje dokładnie wtedy, gdy są one równe, i jest wówczas jedyny. Dlatego izomorfizmy $\theta_{ij}$ istnieją dokładnie dla rodzin spełniających wskazane równania; warunki diagonalny i kocyklu są wtedy automatyczne. Podobnie morfizm danych zstępowania istnieje tylko pomiędzy równymi rodzinami i jest identycznością. Kategoria danych zstępowania jest zatem dyskretną kategorią zgodnych rodzin. Funktor między kategoriami dyskretnymi jest pełny i wierny dokładnie wtedy, gdy funkcja na obiektach jest injekcją, oraz istotnie surjektywny dokładnie wtedy, gdy jest surjekcją. Zastosowanie tych kryteriów do $D_{\mathcal U}$ daje tezę.
+\end{proof}
+
+Jeżeli rodzina $\mathcal U$ generuje sito pokrywające $S$ na $U$, zgodne rodziny w powyższym wzorze odpowiadają naturalnym transformacjom $S\to H$. Istotnie, dla morfizmu $f:V\to U$ w $S$ wybieramy faktoryzację $f=u_i g$ i przypisujemy mu $g^*x_i$. Jeśli również $f=u_jh$, to istnieje morfizm $(g,h):V\to U_{ij}$; zastosowanie jego transportu do równania zgodności daje $g^*x_i=h^*x_j$. Przypisanie jest niezależne od faktoryzacji i naturalne względem prekompozycji, ponieważ $H$ jest funktorem. Odwrotnie, naturalna transformacja przypisuje $u_i$ element $x_i$; jej naturalność dla obu rzutów z $U_{ij}$ daje równanie zgodności. Obie konstrukcje są wzajemnie odwrotne. Jest to dokładnie warunek snopu z definicji~\ref{cat:def:site-sheaf}.
+
+\subsection{Efektywne zstępowanie zbiorów wzdłuż surjekcji}
+
+Rozważmy funkcję $u:V\to U$ i kategorię $\Set/U$ obiektów nad $U$. Jej obiekt $A\to U$ ma włókna $A_t$ dla $t\in U$, a morfizmy są funkcjami zachowującymi włókna. Równoważnie korzystamy z kategorii rodzin zbiorów $\Set^U$, gdzie $U$ jest kategorią dyskretną. Funktor $F$ przypisuje zbiorowi $U$ kategorię $\Set^U$, a funkcji $u:V\to U$ funktor prekompozycji, czyli $(u^*A)_v=A_{u(v)}$. W tym modelu transporty są ścisłe. Identyfikację z kategorią przekrojową otrzymujemy przez sumę rozłączną rodziny i przez branie włókien; obie konstrukcje są wzajemnie odwrotne z dokładnością do naturalnych izomorfizmów.
+
+Dane zstępowania dla rodziny złożonej z $u$ to zbiory $A_v$ oraz bijekcje
+\[
+ \theta_{vw}:A_w\longrightarrow A_v
+ \qquad(u(v)=u(w)),
+\]
+takie że $\theta_{vv}=\id$ i $\theta_{vw}\theta_{wz}=\theta_{vz}$, gdy $u(v)=u(w)=u(z)$.
+
+\begin{twierdzenie}[Efektywne zstępowanie zbiorów]\label{cat:thm:set-effective-descent}
+Dla funkcji $u:V\to U$ funktor porównawczy dla powyższego funktora $F$ jest równoważnością kategorii wtedy i tylko wtedy, gdy $u$ jest surjekcją.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy, że $u$ jest surjekcją. Dla danych zstępowania tworzymy zbiór $E=\coprod_{v\in V}A_v$, którego elementy zapisujemy jako $(v,a)$, $a\in A_v$. Definiujemy relację
+\[
+ (v,a)\sim(w,b)\quad\Longleftrightarrow\quad
+ u(v)=u(w)\ \text{ i }\ a=\theta_{vw}(b).
+\]
+Relacja jest zwrotna przez warunek diagonalny. Jeżeli $(v,a)\sim(w,b)$, to $b=\theta_{wv}(a)$, ponieważ warunek kocyklu daje $\theta_{wv}\theta_{vw}=\theta_{ww}=\id$. Jeżeli ponadto $(w,b)\sim(z,c)$, to $a=\theta_{vw}\theta_{wz}(c)=\theta_{vz}(c)$ i wszystkie trzy elementy mają ten sam obraz w $U$. Otrzymujemy symetrię i przechodniość.
+
+Niech $B=E/{\sim}$ z funkcją $B\to U$ daną przez $[(v,a)]\mapsto u(v)$, dobrze określoną z definicji relacji. Dla $v\in V$ definiujemy
+\[
+ \beta_v:A_v\longrightarrow B_{u(v)},\qquad
+ a\longmapsto[(v,a)].
+\]
+Funkcja jest injektywna, ponieważ $[(v,a)]=[(v,b)]$ implikuje $a=\theta_{vv}(b)=b$. Jest też surjektywna: jeżeli $[(w,b)]\in B_{u(v)}$, to $u(w)=u(v)$ i $[(w,b)]=[(v,\theta_{vw}(b))]$. Wreszcie $\beta_v\theta_{vw}=\beta_w$, więc rodzina $\beta_v$ jest morfizmem danych zstępowania do $D_u(B)$. Każda składowa jest bijekcją, a składowe odwrotne również spełniają warunek morfizmu (otrzymujemy go przez złożenie równania zgodności z odwrotnościami). Stąd istotna surjektywność $D_u$.
+
+Aby wykazać pełność i wierność, niech $B,C$ będą rodzinami na $U$. Morfizm $D_u(B)\to D_u(C)$ jest rodziną funkcji $h_v:B_{u(v)}\to C_{u(v)}$ spełniających $h_v=h_w$ dla $u(v)=u(w)$. Dla każdego $t\in U$ istnieje $v$ z $u(v)=t$. Definiujemy $h_t$ jako jedyną funkcję występującą w niepustej rodzinie $\{h_v:u(v)=t\}$; jej jednoznaczność wynika z warunku zgodności. Otrzymana rodzina $h=(h_t)_t$ jest morfizmem $B\to C$, którego obraz to rodzina $(h_v)_v$. Każda inna rodzina o tym obrazie ma te same składowe, ponieważ $u$ jest surjektywna. To daje pełność i wierność.
+
+Odwrotnie, jeśli $u$ nie jest surjekcją, wybierzmy $t_0\in U\setminus u(V)$. Niech $B_t=\{*\}$ dla wszystkich $t$, $C_{t_0}=\{0,1\}$, a $C_t=\{*\}$ dla pozostałych $t$. Istnieją dwa różne morfizmy $B\to C$, różniące się wartością w składowej $t_0$. Ich obrazy przez $D_u$ są równe, bo żadna składowa nad $V$ nie widzi $t_0$. Funktor $D_u$ nie jest wierny, a zatem nie jest równoważnością.
+\end{proof}
+
+\begin{przyklad}[Sklejenie dwóch kopii zbioru]\label{cat:ex:set-descent-two-copies}
+Niech $U=\{*\}$, $V=\{1,2\}$, a $u$ będzie jedyną funkcją. Dane zstępowania składają się z dwóch zbiorów $A_1,A_2$ i bijekcji $\theta:A_2\to A_1$; pozostałe izomorfizmy to identyczności i $\theta^{-1}$. Iloraz z dowodu twierdzenia~\ref{cat:thm:set-effective-descent} utożsamia $(2,b)$ z $(1,\theta(b))$. Zbiór globalny jest więc kanonicznie izomorficzny z $A_1$ (i z $A_2$ za pomocą $\theta$). Nawet gdy $A_1,A_2$ są rozłącznymi zbiorami, dane mogą być efektywne: wymagana jest zgodność przez izomorfizm, a nie równość lokalnych obiektów.
+\end{przyklad}
