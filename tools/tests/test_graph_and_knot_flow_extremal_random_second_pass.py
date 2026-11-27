@@ -115,7 +115,15 @@ def verify_extremal():
             alpha = independence_number(n, edges)
             degrees = [sum(v in edge for edge in edges) for v in range(n)]
             caro = sum((Fraction(1, d + 1) for d in degrees), Fraction(0))
-            assert alpha >= caro >= Fraction(n * n, n + 2 * len(edges))
+            average_bound = Fraction(n * n, n + 2 * len(edges))
+            assert alpha >= caro >= average_bound
+            # A graph is a disjoint union of cliques iff it has no induced P3.
+            has_induced_p3 = any(
+                sum(edge in edges for edge in combinations(S, 2)) == 2
+                for S in combinations(range(n), 3)
+            )
+            assert (alpha == caro) == (not has_induced_p3)
+            assert (caro == average_bound) == (len(set(degrees)) == 1)
             for r in max_without:
                 if not any(is_clique(edges, S) for S in combinations(range(n), r + 1)):
                     max_without[r] = max(max_without[r], len(edges))
