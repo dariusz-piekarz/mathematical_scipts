@@ -47,17 +47,17 @@ POKER_CONTEXTS = (
     ("karty", "dwie karty tej rangi, trzy inne różne rangi oraz po jednej z czterech"),
     ("kart", "kart każdej z tych rang. Każdy taki układ jednoznacznie wyznacza rangę pary,"),
     ("karty", "jej dwie karty, zbiór trzech pozostałych rang i przypisaną"),
-    ("kart", "każdej z nich kartę. W ten sposób każdy dopuszczalny układ"),
+    ("kartę", "każdej z nich kartę. W ten sposób każdy dopuszczalny układ"),
     ("kart", "Losujemy jednostajnie pięć kart bez zwracania i bez uwzględniania"),
     ("kart", "kolejności z talii 52 kart, w której występuje 13 rang"),
     ("karty", "po cztery karty każdej rangi. Układ z dokładnie dwiema parami"),
     ("kart", "sposobów, wybieramy po dwie z czterech kart każdej rangi"),
-    ("kart", "na $\\binom42^2$ sposobów, a ostatnią kartę spośród"),
+    ("kartę", "na $\\binom42^2$ sposobów, a ostatnią kartę spośród"),
     ("kart", "$11\\cdot4$ kart o pozostałych rangach. Wynikowe"),
     ("karta", "Wymóg, aby ostatnia karta miała inną rangę, wyklucza"),
     ("kartami", "układ z trzema kartami jednej rangi. Każdy układ z dokładnie"),
     ("kart", "dwóch rang par, dwa podzbiory kart odpowiadające tym rangom"),
-    ("kart", "oraz ostatnią kartę. Dzięki temu każdy dopuszczalny układ"),
+    ("kartę", "oraz ostatnią kartę. Dzięki temu każdy dopuszczalny układ"),
 )
 
 
