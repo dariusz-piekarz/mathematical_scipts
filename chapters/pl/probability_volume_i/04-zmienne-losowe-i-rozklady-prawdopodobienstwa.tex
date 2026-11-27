@@ -221,14 +221,19 @@ Przykładowo zmienna przyjmująca $0$ i $2$ z prawdopodobieństwami
 po $1/2$ ma za medianę każdą liczbę z przedziału $[0,2]$.
 \end{uwaga}
 
-\section{Rozkłady dyskretne, ciągłe i singularne}
+\section{Rozkłady dyskretne, bezwzględnie ciągłe i osobliwe}
 W przypadku dyskretnym przypisujemy masy poszczególnym punktom.
 W przypadku rozkładu mającego gęstość zamiast mas punktowych
 opisujemy prawdopodobieństwa \emph{przedziałów} przez całkę.
 Wartość $f(x)$ nie jest prawdopodobieństwem, że $X=x$:
 może przekraczać jeden, podczas gdy $\Prob(X=x)=0$.
-Gęstość ma znaczenie lokalne: $f(x)h$ przy małym $h$
-przybliża masę krótkiego odcinka tam, gdzie $f$ jest regularna.
+Gęstość ma znaczenie lokalne: w punkcie ciągłości skończonej
+wersji $f$ zachodzi $\Prob(x<X\leq x+h)=hf(x)+o(h)$
+dla $h\downarrow0$, ponieważ
+\[
+\left|\frac{1}{h}\int_{(x,x+h]}f(t)\,\dd\lambda_1(t)-f(x)\right|
+\leq\sup_{x<t\leq x+h}|f(t)-f(x)|\longrightarrow0.
+\]
 Nie każda ciągła dystrybuanta posiada gęstość. Rozkład Cantora
 wykaże, dlaczego to rozróżnienie jest ważne.
 
@@ -239,18 +244,29 @@ Dla $x\in\R$ piszemy wtedy $p(x):=\mu(\{x\})$, a funkcję $p$
 nazywamy funkcją masy prawdopodobieństwa.
 \end{definicja}
 
-Jeżeli $\mu$ jest dyskretna i $D$ jest zbiorem jej atomów o dodatnich
-masach, to $\sum_{x\in D}p(x)=1$ i
-$\mu(B)=\sum_{x\in B\cap D}p(x)$ dla każdego $B\in\mathcal B(\R)$.
-Z kolei dowolne nieujemne masy o sumie jeden definiują w ten sposób
-rozkład dyskretny.
+Jeżeli $\mu$ jest dyskretna, niech $D_0$ będzie co najwyżej
+przeliczalnym zbiorem o pełnej mierze. Zbiór
+$D=\{x:\mu(\{x\})>0\}$ zawiera się w $D_0$, ponieważ
+$\mu(\R\setminus D_0)=0$. Ponadto $D_0\setminus D$
+jest przeliczalną sumą zbiorów jednoelementowych o mierze zero.
+Stąd $\mu(D)=1$. Przeliczalna addytywność daje
+\[
+\sum_{x\in D}p(x)=1,\qquad
+\mu(B)=\sum_{x\in B\cap D}p(x)\quad(B\in\mathcal B(\R)).
+\]
+Odwrotnie, dla co najwyżej przeliczalnego $D$ i nieujemnych
+mas $p(x)$ o sumie jeden powyższy wzór definiuje rozkład
+dyskretny, jako miarę ważoną punktową
+(\atlasref{ME-02::ex:weighted-discrete}{teoria miary i całki}).
 
 \begin{definicja}
 Borelowską miarę probabilistyczną $\mu$ na $\R$ nazywamy
-absolutnie ciągłą względem miary Lebesgue'a $\lambda_1$,
-gdy $\lambda_1(B)=0$ implikuje $\mu(B)=0$ dla każdego
-$B\in\mathcal B(\R)$. Wówczas na mocy twierdzenia Radona--Nikodyma
-istnieje mierzalna funkcja $f:\R\to[0,\infty]$ taka, że
+bezwzględnie ciągłą względem miary Lebesgue'a $\lambda_1$
+(zapis $\mu\ll\lambda_1$), gdy $\lambda_1(B)=0$ implikuje $\mu(B)=0$ dla każdego
+$B\in\mathcal B(\R)$. Miara $\mu$ jest skończona, a
+$\lambda_1$ jest $\sigma$-skończona na tym samym $\sigma$-ciele.
+Na mocy \atlasref{ME-18::thm:RN-sigfin-18}{twierdzenia Radona--Nikodyma}
+istnieje borelowsko mierzalna funkcja $f:\R\to[0,\infty]$ taka, że
 \begin{equation}\label{eq:density}
 \mu(B)=\int_B f(x)\,\dd\lambda_1(x)
 \quad(B\in\mathcal B(\R)),\qquad
@@ -258,7 +274,12 @@ istnieje mierzalna funkcja $f:\R\to[0,\infty]$ taka, że
 \end{equation}
 Funkcję $f$ nazywamy gęstością prawdopodobieństwa; jest ona
 wyznaczona jednoznacznie z dokładnością do równości
-$\lambda_1$-prawie wszędzie.
+$\lambda_1$-prawie wszędzie. Możemy przyjąć wersję skończoną
+wszędzie, zastępując wartość nieskończoną przez zero na zbiorze
+miary Lebesgue'a zero. Odwrotnie, każda nieujemna borelowsko
+mierzalna funkcja o całce jeden definiuje przez \eqref{eq:density}
+bezwzględnie ciągłą miarę probabilistyczną
+(\atlasref{ME-17::ex:ac-density-17}{miara określona gęstością}).
 \end{definicja}
 
 \begin{stwierdzenie}
@@ -274,7 +295,7 @@ F_X(x)=\mu_X((\!-\infty,x])
 =\int_{(-\infty,x]}f(t)\,\dd\lambda_1(t).
 \]
 Pojedynczy punkt $\{x\}$ ma miarę Lebesgue'a zero,
-więc z absolutnej ciągłości rozkładu
+więc z bezwzględnej ciągłości rozkładu
 $\Prob(X=x)=\mu_X(\{x\})=0$.
 Z twierdzenia o skokach dystrybuanty wiemy,
 że $F_X(x)-F_X(x-)=\Prob(X=x)=0$.
@@ -285,27 +306,28 @@ Funkcja $f$ jest całkowalna na $\R$, a więc lokalnie
 całkowalna. Dla każdego $a\in\R$ możemy zapisać
 $F_X(x)=F_X(a)+\int_a^x f(t)\,\dd\lambda_1(t)$,
 przyjmując odpowiedni znak całki dla $x<a$.
-Twierdzenie o różniczkowaniu całek Lebesgue'a
-(fakt z analizy, którego tutaj nie dowodzimy) zapewnia,
-że dla $\lambda_1$-prawie każdego $x$ pochodna ostatniej
-całki jest równa $f(x)$. Stąd $F_X'(x)=f(x)$ prawie wszędzie.
+Stosując na każdym przedziale $[-n,n]$, $n\geq1$,
+\atlasref{ME-25::thm:FTC-lebesgue-25}{podstawowe twierdzenie rachunku całkowego dla całki Lebesgue'a},
+otrzymujemy $F_X'(x)=f(x)$ poza zbiorem miary zero
+w $(-n,n)$. Przeliczalna suma tych zbiorów wyjątkowych ma
+miarę zero, więc równość zachodzi prawie wszędzie na $\R$. Stąd $F_X'(x)=f(x)$ prawie wszędzie.
 Nie wolno jednak odwracać tego wniosku bez dodatkowej
-absolutnej ciągłości: sama pochodna istniejąca prawie
-wszędzie nie odzyskuje rozkładu singularnego.
+bezwzględnej ciągłości: sama pochodna istniejąca prawie
+wszędzie nie odzyskuje rozkładu osobliwego.
 \end{proof}
 
 \begin{uwaga}
 Sama ciągłość dystrybuanty nie oznacza istnienia gęstości.
-Istnieją \emph{rozkłady singularne ciągłe}, na przykład rozkład
+Istnieją \emph{rozkłady osobliwe bezatomowe}, na przykład rozkład
 Cantora: jest skupiony na zbiorze Cantora o mierze Lebesgue'a zero,
 a jednocześnie nie ma atomów. Jego dystrybuanta jest ciągła,
-ale nie jest absolutnie ciągła. Ogólna miara probabilistyczna na $\R$
-może zawierać jednocześnie część dyskretną, absolutnie ciągłą
-i singularną ciągłą.
+ale nie jest bezwzględnie ciągła. Ogólna miara probabilistyczna na $\R$
+może zawierać jednocześnie część dyskretną, bezwzględnie ciągłą
+i osobliwą bezatomową.
 \end{uwaga}
 
 
-\begin{twierdzenie}[Rozkład miary na część dyskretną, absolutnie ciągłą i singularną ciągłą]
+\begin{twierdzenie}[Rozkład miary na część dyskretną, bezwzględnie ciągłą i osobliwą bezatomową]
 Niech $\mu$ będzie borelowską miarą probabilistyczną na $\R$.
 Wówczas istnieją jednoznaczne miary skończone
 $\mu_{\mathrm d},\mu_{\mathrm{ac}},\mu_{\mathrm{sc}}$
@@ -314,6 +336,9 @@ takie, że $\mu=\mu_{\mathrm d}+\mu_{\mathrm{ac}}+
 na zbiorze co najwyżej przeliczalnym,
 $\mu_{\mathrm{ac}}\ll\lambda_1$,
 a $\mu_{\mathrm{sc}}\perp\lambda_1$ i nie ma atomów.
+Zapis $\eta\perp\lambda_1$ oznacza, że istnieje borelowski
+zbiór $S$ taki, że $\lambda_1(S)=0$ i $\eta(\R\setminus S)=0$.
+Por. \atlasref{ME-17::thm:atomic-cont-singular-17}{rozkład części osobliwej w teorii miary i całki}.
 Każda z trzech miar może mieć masę mniejszą od jedności,
 a nawet być miarą zerową.
 \end{twierdzenie}
@@ -323,32 +348,51 @@ $D=\{x\in\R:\mu(\{x\})>0\}$ jest co najwyżej
 przeliczalny: dla każdego $m\geq1$ istnieje najwyżej
 $m$ punktów o masie większej niż $1/m$, a
 $D$ jest sumą tych skończonych zbiorów.
-Definiujemy $\mu_{\mathrm d}(B)=\mu(B\cap D)$
-oraz $\rho(B)=\mu(B\setminus D)$. Miara $\rho$
-nie ma atomów punktowych.
+Zbiór $D$ jest borelowski jako co najwyżej przeliczalny.
+Definiujemy dla $B\in\mathcal B(\R)$ miary ograniczone
+$\mu_{\mathrm d}(B)=\mu(B\cap D)$
+oraz $\rho(B)=\mu(B\setminus D)$.
+Mamy $\mu=\mu_{\mathrm d}+\rho$ oraz $\rho(\{x\})=0$ dla
+każdego $x\in\R$. Na prostej skończona miara borelowska
+bez dodatnich mas punktowych jest bezatomowa
+(\atlasref{ME-17::thm:atomic-cont-singular-17}{twierdzenie o rozkładzie na część atomową i bezatomową}).
 
 Wyprowadzimy teraz potrzebny rozkład na część absolutnie
-ciągłą i singularną z przyjętego twierdzenia
+ciągłą i osobliwą z przyjętego twierdzenia
 Radona--Nikodyma. Połóżmy $\nu=\rho+\lambda_1$.
 Miara $\nu$ jest $\sigma$-skończona, ponieważ
 $\rho$ jest skończona, a $\lambda_1$ jest
-$\sigma$-skończona. Istnieją więc funkcje
-$h=\dd\rho/\dd\nu$ i $g=\dd\lambda_1/\dd\nu$.
-Dla $S=\{x:g(x)=0\}$ mamy $\lambda_1(S)=0$.
-Definiujemy $\mu_{\mathrm{sc}}=\ind{S}\rho$ oraz
-$\mu_{\mathrm{ac}}=\ind{\R\setminus S}\rho$.
-Pierwsza miara jest singularna, bo skupia się na $S$.
-Druga jest absolutnie ciągła względem $\lambda_1$:
+$\sigma$-skończona (każdy przedział $[-n,n]$ ma skończoną
+miarę $\nu$). Ponieważ $\lambda_1\leq\nu$ i $\rho\leq\nu$,
+obie miary są bezwzględnie ciągłe względem $\nu$.
+Wystarczy użyć borelowskiej pochodnej
+$g=\dd\lambda_1/\dd\nu$, której istnienie wynika z twierdzenia
+Radona--Nikodyma. Dla $S=\{x:g(x)=0\}$ mamy
+$\lambda_1(S)=\int_Sg\,\dd\nu=0$.
+Definiujemy dla $B\in\mathcal B(\R)$
+\[
+\mu_{\mathrm{sc}}(B)=\rho(B\cap S),\qquad
+\mu_{\mathrm{ac}}(B)=\rho(B\setminus S).
+\]
+Są to nieujemne miary skończone, a ich suma jest równa $\rho$.
+Pierwsza miara jest osobliwa, bo skupia się na $S$.
+Druga jest bezwzględnie ciągła względem $\lambda_1$:
 jeśli $\lambda_1(B)=0$, to
 $\int_B g\,\dd\nu=0$, a więc $g=0$
 $\nu$-prawie wszędzie na $B$. Stąd
-$\nu(B\cap\{g>0\})=0$ i
-$\mu_{\mathrm{ac}}(B)=0$.
-Obie części dziedziczą brak atomów od $\rho$.
+$\nu(B\cap\{g>0\})=0$, a z $\rho\leq\nu$ wynika
+$\mu_{\mathrm{ac}}(B)=\rho(B\cap\{g>0\})=0$.
+Obie części mają zerowe masy punktowe, gdyż są zdominowane
+przez $\rho$, a z przywołanego twierdzenia o miarach
+na prostej wynika ich bezatomowość.
 
 Dla jednoznaczności zauważmy najpierw, że cała
 masa punktowa musi należeć do $\mu_{\mathrm d}$,
-gdyż dwie pozostałe części nie mają atomów.
+gdyż dwie pozostałe części mają zerowe masy punktowe.
+Każda dopuszczalna część dyskretna ma więc masę
+$\mu(\{x\})$ w punkcie $x$ i jest skupiona na $D$,
+zatem dla każdego borelowskiego $B$ ma wartość
+$\sum_{x\in B\cap D}\mu(\{x\})$. Wyznacza to ją jednoznacznie.
 Przypuśćmy następnie, że
 $\rho=\alpha_1+\beta_1=\alpha_2+\beta_2$,
 gdzie $\alpha_i\ll\lambda_1$, a $\beta_i$
@@ -356,37 +400,58 @@ są skupione na zbiorach $S_i$ o miarze Lebesgue'a zero.
 Dla $S=S_1\cup S_2$ obie miary $\beta_i$
 zanikają poza $S$, więc $\alpha_1$ i $\alpha_2$
 są tam równe $\rho$. Na samym $S$ obie zanikają
-z absolutnej ciągłości względem $\lambda_1$.
+z bezwzględnej ciągłości względem $\lambda_1$.
 Zatem $\alpha_1=\alpha_2$ oraz
 $\beta_1=\beta_2$. To kończy dowód jednoznaczności.
 \end{proof}
 
 \begin{przyklad}[Gęstość większa niż jeden i zerowa masa punktu]
 Niech $X$ będzie jednostajna na $(0,1/4)$. Jej gęstość
-to $f_X(x)=4\ind{\{0<x<1/4\}}$. Mamy $f_X(1/8)=4$,
+to $f_X(x)=4\chi_{(0,1/4)}(x)$. Mamy $f_X(1/8)=4$,
 co nie przeczy aksjomatom, ponieważ gęstość nie jest
 prawdopodobieństwem zdarzenia $\{X=1/8\}$.
 W rzeczywistości $\Prob(X=1/8)=0$, zaś
 $\Prob(0<X<1/8)=\int_0^{1/8}4\,\dd\lambda_1(x)=1/2$.
-Parametr gęstości ma jednostkę odwrotną do jednostki $x$;
-liczbą z przedziału $[0,1]$ jest całka po zdarzeniu.
+Jeśli wartości $X$ mają jednostkę fizyczną, gęstość ma
+jednostkę odwrotną. Prawdopodobieństwem jest całka gęstości
+po zbiorze wartości, nie wartość gęstości w punkcie.
 \end{przyklad}
 
 \begin{przyklad}[Rozkład Cantora i brak gęstości]
-Niech $(B_n)_{n\geq1}$ będą niezależne i
-$\Prob(B_n=0)=\Prob(B_n=1)=1/2$. Szereg
-$X=\sum_{n=1}^\infty 2B_n/3^n$ zbiega bezwzględnie,
-a jego wartość należy do zbioru Cantora $C\subset[0,1]$.
-Ponieważ $\lambda_1(C)=0$ oraz $\Prob(X\in C)=1$,
-rozkład $X$ nie może mieć gęstości względem $\lambda_1$.
+Na przestrzeni ciągów Bernoulliego z parametrem $1/2$
+(rozdział~\ref{ch:probability}) niech $B_n$ oznacza $n$-tą
+współrzędną. Zmienne $B_n$ są niezależne, przyjmują wartości
+w $\{0,1\}$ i $\Prob(B_n=0)=\Prob(B_n=1)=1/2$.
+Szereg $X=\sum_{n=1}^\infty 2B_n/3^n$ zbiega bezwzględnie
+dla każdego wyniku, gdyż $\sum_{n=1}^\infty 2/3^n=1$.
+Zmienna $X$ jest mierzalna jako granica mierzalnych sum częściowych
+(\atlasref{ME-06::thm:pointwise-limits}{twierdzenie o granicach funkcji mierzalnych}).
+Dla każdego $m\geq1$ i ustalonego słowa
+$b=(b_1,\ldots,b_m)\in\{0,1\}^m$ połóżmy
+\[
+a_b=\sum_{n=1}^m\frac{2b_n}{3^n},\qquad
+I_b=[a_b,a_b+3^{-m}].
+\]
+Na zdarzeniu $\{B_1=b_1,\ldots,B_m=b_m\}$ mamy $X\in I_b$,
+gdyż ogon szeregu należy do $[0,3^{-m}]$.
+Przedziały $I_b$ są dokładnie przedziałami $m$-tego etapu
+konstrukcji zbioru Cantora: przejście do następnego etapu
+zastępuje każdy przedział jego lewą i prawą trzecią częścią.
+Na każdym ustalonym etapie przedziały są parami rozłączne,
+oddzielone przerwami o dodatniej długości.
+Ich suma $C_m$ ma miarę $(2/3)^m$.
+Zatem $C=\bigcap_{m\geq1}C_m$ zawiera wszystkie wartości $X$,
+a $\lambda_1(C)=0$ z ciągłości miary z góry.
+Mamy $\Prob(X\in C)=1$, więc rozkład $X$ nie może mieć
+gęstości względem $\lambda_1$.
 
-Pokażemy również, że nie ma atomów. Każde $m$ pierwszych
-cyfr trójkowych $2B_1,\ldots,2B_m$ wyznacza przedział
-konstrukcyjny długości $3^{-m}$ o masie $2^{-m}$.
-Wartość $x\in C$ należy na każdym etapie do co najwyżej
-dwóch takich domkniętych przedziałów (ewentualnie styka się
-z ich końcami). Zatem $\Prob(X=x)\leq2\cdot2^{-m}$
-dla każdego $m$, co po przejściu do granicy daje zero.
+Jeśli $x\in C$, to na każdym etapie należy do dokładnie
+jednego $I_b$. Zdarzenie $\{X=x\}$ jest podzbiorem
+$\{B_1=b_1,\ldots,B_m=b_m\}$, którego prawdopodobieństwo
+z niezależności wynosi $2^{-m}$. Stąd
+$\Prob(X=x)\leq2^{-m}$ dla każdego $m$ i w granicy
+$\Prob(X=x)=0$. Poza $C$ również wszystkie masy punktowe
+są zerowe.
 Dystrybuanta $X$ jest więc ciągła, choć jej rozkład
 jest osobliwy względem miary Lebesgue'a.
 \end{przyklad}
@@ -394,8 +459,13 @@ jest osobliwy względem miary Lebesgue'a.
 \begin{przyklad}[Rozkład mieszany]
 Niech $B$ przyjmuje wartości $0$ i $1$ z prawdopodobieństwami po $1/2$,
 a $U$ jest od niego niezależna i jednostajna na $(0,1)$.
-Definiujemy $X=BU$. Wtedy $\Prob(X=0)=1/2$, a dla $0<x<1$
-zachodzi $F_X(x)=1/2+x/2$. Łącznie
+Definiujemy $X=BU$. Zdarzenie $\{U\in(0,1)\}$ ma pełną
+miarę, więc $\Prob(X=0)=\Prob(B=0)=1/2$.
+Dla $0<x<1$ z rozkładu na zdarzenia $\{B=0\}$ i $\{B=1\}$
+oraz niezależności otrzymujemy
+\[
+F_X(x)=\Prob(B=0)+\Prob(B=1,U\leq x)=\frac12+\frac{x}{2}.
+\] Łącznie
 \[
 F_X(x)=\begin{cases}
 0,&x<0,\\
@@ -405,7 +475,11 @@ F_X(x)=\begin{cases}
 \end{cases}
 \]
 Rozkład nie ma gęstości względem $\lambda_1$, gdyż ma atom w zerze,
-ale jego część na $(0,1)$ ma gęstość $1/2$.
+ale jego część bezwzględnie ciągła ma gęstość
+$\frac12\chi_{(0,1)}$. Dokładniej, dla borelowskiego $A$
+z niezależności i rozbicia według $B$ mamy
+$\mu_X(A)=\frac12\delta_0(A)+\frac12\lambda_1(A\cap(0,1))$,
+gdzie $\delta_0$ jest miarą Diraca w zerze.
 \end{przyklad}
 
 \section{Wektory losowe i rozkłady łączne}
