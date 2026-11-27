@@ -156,10 +156,11 @@ with sync_playwright() as pw:
     assert iframe.count() == 0
     page.evaluate("latex => renderSimplified(latex, 'AM2-17')", chapter18)
     assert box.locator('.atlas-plot-host').count() == 0
-    # Static TikZ and interactive Plotly coexist in chapters 19 and 20.
+    # Static TikZ and interactive Plotly coexist in chapters 19–21.
     for module, filename in [
         ('AM2-19', '19-twierdzenie-o-funkcji-uwiklanej.tex'),
         ('AM2-20', '20-twierdzenia-o-rzedzie.tex'),
+        ('AM2-21', '21-podrozmaitosci-przestrzeni-euklidesowej.tex'),
     ]:
         source = (ROOT.parent / 'chapters/pl/mathematical_analysis_ii' / filename).read_text(encoding='utf-8')
         page.evaluate("([latex, code]) => renderSimplified(latex, code)", [source, module])
