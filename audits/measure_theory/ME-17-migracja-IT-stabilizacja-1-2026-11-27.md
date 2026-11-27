@@ -1,0 +1,11 @@
+# ME-17 — pierwszy czysty przebieg stabilizacyjny po migracji IT
+
+27.11.2026. Blob rozdziału 1acd91a40cf69b7250d5008a76c18da57f815f5f (674 wiersze); test regresyjny 6a5d79051b0da58a572fc03554e6c3be8fefe785.
+
+Ponownie odczytano rozdział w całości. Sprawdzono równoważność definicji bezwzględnej ciągłości miary zespolonej przez wariację, kryterium epsilon–delta (skończoność miary zależnej, nie bazowej), rozkład Hahna dla skończonych miar oraz sklejenie rozkładów na rozłącznych zbiorach skończonej masy. W szczególności jednoznaczność w przypadku sigma-skończonym wynika z ograniczenia do wspólnego zbioru skupiającego i jego dopełnienia, bez odejmowania nieskończoności. Rozkład zespolony wynika z rozkładu wariacji. W przykładzie Cantora sprawdzono konstrukcję cyfr, przedziały podstawowe, brak atomów, ciągłość dystrybuanty i identyfikację miar Stieltjesa. Rekurencja momentów daje 1/2, 3/8, 5/16; wzór całkowania przez części daje całkę funkcji Cantora względem niej samej równą 1/2. Dowód braku atomów przez zstępujące przedziały poprawnie używa skończoności miary. Współrzędne rysunku C_3 odpowiadają ośmiu przedziałom poziomu trzeciego; odbiór wizualny PDF pozostaje otwarty.
+
+Niezależna kontrola skończonych modeli w JavaScript: wszystkie 20736 par wektorów mas na czterech punktach (mu w {0,1,2}^4, nu w {0,1,2,3}^4); 103680 konfiguracji progów Hahna (k=1,...,5), dla każdej sprawdzono nierówności na wszystkich podzbiorach; 28561 dopuszczalnych zbiorów skupiających dało identyczne składowe rozkładu. Dodatkowo sprawdzono całkowitoliczbowe współrzędne i rozłączność wszystkich 8190 przedziałów podstawowych Cantora poziomów 1–12. Bez niezgodności. Nie jest to uruchomienie oryginalnego testu Python ani dowód ogólnych twierdzeń.
+
+17 unikatowych etykiet, 8 środowisk proof, stos środowisk bez usterek. Zweryfikowany wcześniej na identycznym blobie komplet 17 ref/eqref i 6 atlasref. Ponownie odczytano zmieniony test zależności: cele lokalne sprawdzane we wszystkich rozdziałach ME, cele kwalifikowane w odpowiednich plikach. Nie zmieniano źródła rozdziału.
+
+CI na 822419c: ME-17 #45994705116 pending, globalny ME #45994705091 queued. Nie potwierdzono aktualnej kompilacji PDF ani pełnego wykonania Python. Pierwszy czysty przebieg; następny: drugi niezależny przebieg, następnie audyt kontrolny.
