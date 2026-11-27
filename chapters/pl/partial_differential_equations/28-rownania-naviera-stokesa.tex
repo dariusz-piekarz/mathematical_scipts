@@ -1128,6 +1128,38 @@ równań Naviera--Stokesa, lecz przykład braku
 odpowiedniego wniosku funkcjonalno-analitycznego.
 \end{kontrprzyklad}
 
+\begin{uwaga}[Skalowanie na całej przestrzeni i na torusie]
+Dla $\ell>0$ połóżmy
+\[
+ u_\ell(t,x)=\ell u(\ell^2t,\ell x),\qquad
+ p_\ell(t,x)=\ell^2p(\ell^2t,\ell x).
+\]
+Pochodna czasowa, człon konwekcyjny, człon lepkościowy
+i gradient ciśnienia otrzymują wspólny czynnik $\ell^3$,
+a dywergencja czynnik $\ell^2$.
+Dlatego przeskalowane pole spełnia równanie
+Naviera--Stokesa z tą samą lepkością $\nu$.
+Na $\R^d$ zmiana zmiennych daje
+\[
+ \|u_\ell(t)\|_{L^p(\R^d)}
+ =\ell^{1-d/p}\|u(\ell^2t)\|_{L^p(\R^d)}
+ \quad(1\le p\le\infty),
+\]
+gdzie $d/\infty=0$. Dla normy mieszanej na
+odpowiednio przeskalowanym przedziale czasu
+czynnik wynosi $\ell^{1-d/p-2/q}$, również
+dla $q=\infty$ z konwencją $2/\infty=0$.
+W wymiarze trzy warunek $2/q+3/p=1$
+jest więc warunkiem niezmienniczości tej normy.
+Norma $L^2$ skaluje się z czynnikiem
+$\ell^{1-d/2}$: jest niezmiennicza w wymiarze dwa,
+ale nie w wymiarze trzy.
+Na torusie o okresie $2\pi$ powyższa transformacja
+prowadzi naturalnie do torusa o okresie $2\pi/\ell$;
+nie jest dowolnym ciągłym skalowaniem
+zagadnienia na ustalonym torusie.
+\end{uwaga}
+
 \section{Dokładne rozwiązanie: wir Taylora--Greena}
 \begin{przyklad}[Wir Taylora--Greena na torusie dwuwymiarowym]
 \label{ex:pde28-TG}
@@ -1136,17 +1168,79 @@ Niech $\nu>0$ i $(x,y)\in\T^2$. Funkcje
  u(t,x,y)&=e^{-2\nu t}(\sin x\cos y,-\cos x\sin y),\\
  p(t,x,y)&=\tfrac14e^{-4\nu t}(\cos 2x+\cos 2y)
 \end{align*}
-rozwiązują~\eqref{eq:pde28-ns}. Rzeczywiście,
-$\diver u=0$, $\Delta u=-2u$, a
-$(u\cdot\nabla)u=\tfrac12e^{-4\nu t}(\sin2x,\sin2y)
-=-\nabla p$. Ponadto
+rozwiązują~\eqref{eq:pde28-ns} z danymi
+$u_0=(\sin x\cos y,-\cos x\sin y)$.
+Oznaczmy $a=e^{-2\nu t}$. Bezpośrednio
+$\partial_xu_1=a\cos x\cos y=-\partial_yu_2$,
+$\Delta u=-2u$ i $u_t=-2\nu u$.
+Rozpisując konwekcję, otrzymujemy
+\[
+ \begin{aligned}
+ ((u\cdot\nabla)u)_1
+ &=a^2\sin x\cos x(\cos^2y+\sin^2y),\\
+ ((u\cdot\nabla)u)_2
+ &=a^2\sin y\cos y(\sin^2x+\cos^2x).
+ \end{aligned}
+\]
+Jest to $\frac12a^2(\sin2x,\sin2y)=-\nabla p$.
+Średnie $u$ i $p$ są zerowe. Ponieważ
+$\int_0^{2\pi}\sin^2x\,\mathrm d\lambda_1(x)
+=\int_0^{2\pi}\cos^2x\,\mathrm d\lambda_1(x)=\pi$,
+mamy $\|u\|_2^2=2\pi^2a^2$.
+Z całkowania przez części
+$\|\nabla u\|_2^2=(u,-\Delta u)_H=2\|u\|_2^2$,
+a różniczkowanie daje $\omega=2a\sin x\sin y$.
+Ponadto
 \[
  \frac12\|u(t)\|_2^2=\pi^2e^{-4\nu t},\qquad
  \|\nabla u(t)\|_2^2=4\pi^2e^{-4\nu t},\qquad
  \omega(t,x,y)=2e^{-2\nu t}\sin x\sin y.
 \]
-Stąd tożsamość energii jest dokładna i pozwala
-sprawdzić schematy numeryczne niezależnie od siatki.
+Różniczkowanie energii daje
+$-4\nu\pi^2e^{-4\nu t}=-\nu\|\nabla u(t)\|_2^2$.
+Jawny wzór pozwala porównać obliczenia numeryczne
+z rozwiązaniem dokładnym na dowolnej siatce
+i badać błąd oraz rząd zbieżności schematu.
+
+\begin{center}
+\begin{tikzpicture}[x=1.5cm,y=1.5cm,>=Stealth,font=\footnotesize]
+ \foreach \i in {0,...,15}{
+  \foreach \j in {0,...,15}{
+   \pgfmathsetmacro{\xx}{360*(\i+.5)/16}
+   \pgfmathsetmacro{\yy}{360*(\j+.5)/16}
+   \pgfmathsetmacro{\ww}{sin(\xx)*sin(\yy)}
+   \pgfmathsetmacro{\opa}{.65*abs(\ww)}
+   \ifdim\ww pt>0pt
+    \fill[red,opacity=\opa] ({\i/4},{\j/4})
+       rectangle ({(\i+1)/4},{(\j+1)/4});
+   \else
+    \fill[blue,opacity=\opa] ({\i/4},{\j/4})
+       rectangle ({(\i+1)/4},{(\j+1)/4});
+   \fi
+  }
+ }
+ \foreach \i in {0,...,7}{
+  \foreach \j in {0,...,7}{
+   \pgfmathsetmacro{\xx}{360*(\i+.5)/8}
+   \pgfmathsetmacro{\yy}{360*(\j+.5)/8}
+   \draw[-{Stealth[length=2.5pt]},black!85]
+   ({(\i+.5)/2},{(\j+.5)/2})
+   --++({.23*sin(\xx)*cos(\yy)},{-.23*cos(\xx)*sin(\yy)});
+  }
+ }
+ \draw[->] (0,0)--(4.3,0) node[right] {$x$};
+ \draw[->] (0,0)--(0,4.3) node[above] {$y$};
+ \draw[black!60] (0,0) rectangle (4,4);
+ \foreach \p/\lab in {0/0,2/\pi,4/{2\pi}}{
+  \node[below] at (\p,0) {$\lab$};
+  \node[left] at (0,\p) {$\lab$};
+ }
+\end{tikzpicture}
+
+{\small Rysunek: pole prędkości i wirowość w chwili $t=0$.
+Czerwony kolor oznacza dodatnią, niebieski ujemną wirowość;
+strzałki są obliczone z jawnego wzoru.}
+\end{center}
 \end{przyklad}
 
 
@@ -1157,7 +1251,9 @@ bezdywergencyjne pole początkowe
 \[
  u_0(x,y,z)=(\sin x\cos y\cos z,\,-\cos x\sin y\cos z,\,0).
 \]
-Istotnie, $\partial_x u_{0,1}+\partial_y u_{0,2}=0$.
+Istotnie, $\partial_x u_{0,1}+\partial_y u_{0,2}=0$,
+a $\partial_z u_{0,3}=0$. Wszystkie składowe
+mają średnią zero, więc $u_0\in H\cap C^\infty$.
 Jego wirowość jest \emph{wektorem}
 \[
  \nabla\times u_0=(-\cos x\sin y\sin z,\,
@@ -1170,18 +1266,48 @@ względem miary Lebesgue'a na sześcianie okresowym wynosi
  E(0)=\frac12\int_{[0,2\pi]^3}|u_0(x,y,z)|^2
  \,\mathrm d\lambda_3(x,y,z)=\pi^3.
 \]
+Istotnie, całka z kwadratu każdej z dwóch
+niezerowych składowych jest równa $\pi^3$.
+Ponadto $\Delta u_0=-3u_0$ i
+$\|\nabla u_0\|_2^2=6\pi^3$.
+Dla gładkiej ewolucji z tymi danymi
+początkowa pochodna energii wynosi więc $-6\nu\pi^3$.
+
 Ponieważ $u_{0,3}=0$, \emph{linie prądu pola początkowego}
 leżą w płaszczyznach $z=\mathrm{const}$. Dla ustalonego
-$z$ są liniami poziomicowymi funkcji prądu
-$\psi_z(x,y)=\sin x\sin y\cos z$. Nie twierdzimy,
-że trzecia składowa pozostanie zerowa podczas ewolucji
-trójwymiarowych równań Naviera--Stokesa: jest to warunek
-początkowy, nie jawny wzór rozwiązania w czasie.
+$z$ regularne linie poziomicowe funkcji prądu
+$\psi_z(x,y)=\sin x\sin y\cos z$ są liniami prądu,
+ponieważ $(u_{0,1},u_{0,2})=(\partial_y\psi_z,
+-\partial_x\psi_z)$, skąd $u_0\cdot\nabla\psi_z=0$
+przy ustalonym $z$. W punktach stagnacji
+trajektorie są stałe; dla $\cos z=0$ całe pole zanika.
+
+Dane początkowe nie są jawnym rozwiązaniem
+trójwymiarowego zagadnienia w czasie.
+W istocie bezpośrednio
+\[
+ (u_0\cdot\nabla)u_0
+ =\tfrac12\cos^2z(\sin2x,\sin2y,0).
+\]
+Równanie Poissona na ciśnienie w chwili początkowej
+ma prawą stronę
+$(\cos2x+\cos2y)\cos^2z$.
+Jedynym rozwiązaniem o średniej zero jest
+\[
+ p_0=\tfrac1{16}(\cos2x+\cos2y)(2+\cos2z),
+\]
+co sprawdzamy, stosując $-\Delta$ do obu składników
+i używając $2\cos^2z=1+\cos2z$.
+W konsekwencji dla gładkiego rozwiązania
+$\partial_t u_3(0)= -\partial_zp_0
+=\tfrac18(\cos2x+\cos2y)\sin2z$,
+co nie znika tożsamościowo. Trzecia składowa
+prędkości nie pozostaje zatem zerowa.
 
 \begin{center}
-\begin{tikzpicture}[x=.86cm,y=.86cm,>=Stealth,font=\footnotesize]
+\begin{tikzpicture}[x=.80cm,y=.80cm,>=Stealth,font=\footnotesize]
 \foreach \shift/\az/\zlabel in
- {0/45/{\pi/4},5.25/135/{3\pi/4},10.5/225/{5\pi/4}} {
+ {0/0/{0},5.25/90/{\pi/2},10.5/180/{\pi}} {
   \begin{scope}[shift={(\shift,0)}]
   \fill[gray!5] (0,0) rectangle (4.6,4.6);
   \foreach \i in {0,...,7} {
@@ -1234,42 +1360,58 @@ Rysunek powstaje w TikZ bez zewnętrznych obrazów i skryptów.}
 \end{center}
 
 \begin{center}
-\begin{tikzpicture}[x=.88cm,y=.88cm,>=Stealth,font=\footnotesize]
-\draw[->,line width=.8pt] (.35,.3)--(.35,6.2) node[above] {$z$};
-\draw[->,line width=.8pt] (.35,.3)--(7.4,.3) node[right] {$x$};
-\draw[->,line width=.8pt] (.35,.3)--(1.65,1.4) node[right] {$y$};
-\begin{scope}[shift={(1,1.0)}]
- \fill[red!12] (0,0)--(4.8,0)--(5.9,1.2)--(1.1,1.2)--cycle;
- \draw[black!60] (0,0)--(4.8,0)--(5.9,1.2)--(1.1,1.2)--cycle;
- \draw[red!70!black,very thick,->] (2.3,.58) ++(0:.48)
-   arc[start angle=0,end angle=280,x radius=.48,y radius=.30];
- \draw[red!70!black,very thick,->] (4.25,.58) ++(0:.48)
-   arc[start angle=0,end angle=280,x radius=.48,y radius=.30];
- \node[anchor=west] at (6.1,.5) {$z=0$: $\cos z=1$};
-\end{scope}
-\begin{scope}[shift={(1,2.85)}]
- \fill[gray!13] (0,0)--(4.8,0)--(5.9,1.2)--(1.1,1.2)--cycle;
- \draw[black!55] (0,0)--(4.8,0)--(5.9,1.2)--(1.1,1.2)--cycle;
- \node at (3.05,.57) {$u_0=0$};
- \node[anchor=west] at (6.1,.5) {$z=\pi/2$: $\cos z=0$};
-\end{scope}
-\begin{scope}[shift={(1,4.7)}]
- \fill[blue!12] (0,0)--(4.8,0)--(5.9,1.2)--(1.1,1.2)--cycle;
- \draw[black!60] (0,0)--(4.8,0)--(5.9,1.2)--(1.1,1.2)--cycle;
- \draw[blue!70!black,very thick,->] (2.3,.58) ++(0:.48)
-   arc[start angle=0,end angle=-280,x radius=.48,y radius=.30];
- \draw[blue!70!black,very thick,->] (4.25,.58) ++(0:.48)
-   arc[start angle=0,end angle=-280,x radius=.48,y radius=.30];
- \node[anchor=west] at (6.1,.5) {$z=\pi$: $\cos z=-1$};
-\end{scope}
+\begin{tikzpicture}[x={(.82cm,0cm)},y={(.33cm,.28cm)},
+ z={(0cm,1.65cm)},>=Stealth,font=\footnotesize]
+ \foreach \h/\az/\lab in {0/0/0,1/90/{\pi/2},2/180/\pi}{
+  \fill[gray!5] (0,0,\h)--(6,0,\h)--(6,6,\h)--(0,6,\h)--cycle;
+  \foreach \i in {0,...,7}{
+   \foreach \j in {0,...,7}{
+    \pgfmathsetmacro{\xx}{360*(\i+.5)/8}
+    \pgfmathsetmacro{\yy}{360*(\j+.5)/8}
+    \pgfmathsetmacro{\ww}{sin(\xx)*sin(\yy)*cos(\az)}
+    \pgfmathsetmacro{\opa}{.68*abs(\ww)}
+    \pgfmathsetmacro{\lo}{.75*\i}
+    \pgfmathsetmacro{\hi}{.75*(\i+1)}
+    \pgfmathsetmacro{\bot}{.75*\j}
+    \pgfmathsetmacro{\topc}{.75*(\j+1)}
+    \ifdim\ww pt>0pt
+      \fill[red,opacity=\opa] (\lo,\bot,\h)--(\hi,\bot,\h)
+        --(\hi,\topc,\h)--(\lo,\topc,\h)--cycle;
+    \else
+      \fill[blue,opacity=\opa] (\lo,\bot,\h)--(\hi,\bot,\h)
+        --(\hi,\topc,\h)--(\lo,\topc,\h)--cycle;
+    \fi
+   }
+  }
+  \foreach \i in {0,...,5}{
+   \foreach \j in {0,...,5}{
+    \pgfmathsetmacro{\xx}{360*(\i+.5)/6}
+    \pgfmathsetmacro{\yy}{360*(\j+.5)/6}
+    \pgfmathsetmacro{\ux}{sin(\xx)*cos(\yy)*cos(\az)}
+    \pgfmathsetmacro{\uy}{-cos(\xx)*sin(\yy)*cos(\az)}
+    \ifnum\az=90\relax
+    \else
+      \draw[-{Stealth[length=2pt]},black!85,line width=.4pt]
+        ({\i+.5},{\j+.5},\h)--++({.42*\ux},{.42*\uy},0);
+    \fi
+   }
+  }
+  \draw[black!65] (0,0,\h)--(6,0,\h)--(6,6,\h)--(0,6,\h)--cycle;
+  \node[anchor=west] at (6,6,\h) {$z=\lab$};
+ }
+ \draw[->] (0,0,0)--(6.6,0,0) node[right] {$x$};
+ \draw[->] (0,0,0)--(0,6.6,0) node[above] {$y$};
+ \draw[->] (0,0,0)--(0,0,2.4) node[above] {$z$};
+ \node[below] at (6,0,0) {$2\pi$};
+ \node[left] at (0,6,0) {$2\pi$};
 \end{tikzpicture}
 
-{\small\emph{Ilustracja schematyczna:} Zmiana zwrotu
-poziomego pola $u_0$ pod wpływem czynnika $\cos z$.
-Na środkowej płaszczyźnie pole zanika, a pomiędzy
-$z=0$ i $z=\pi$ kierunek przepływu odwraca się.
-Szkic nie przedstawia całkowania trajektorii
-trójwymiarowych ani ewolucji w czasie.}
+{\small\emph{Rysunek:} Perspektywiczny widok trzech przekrojów
+pola początkowego. Barwy i strzałki wynikają z rzeczywistych
+wzorów na $\omega_{0,z}$ i prędkość, a nie ze schematycznych
+okręgów. Na $z=\pi/2$ pole zanika; na $z=\pi$ zwroty
+prędkości i znaki pionowej składowej wirowości odwracają się
+względem $z=0$. Nie jest to wizualizacja ewolucji w czasie.}
 \end{center}
 \end{przyklad}
 
@@ -1277,7 +1419,10 @@ trójwymiarowych ani ewolucji w czasie.}
 Na ograniczonym obszarze Lipschitzowskim $\Omega\subset\R^d$
 z warunkiem przylegania $u|_{\partial\Omega}=0$
 przestrzenie $H,V$ tworzy się przez domknięcie
-gładkich bezdywergencyjnych pól o zwartym nośniku.
+gładkich bezdywergencyjnych pól o zwartym nośniku
+odpowiednio w $L^2(\Omega;\R^d)$ i
+$H^1_0(\Omega;\R^d)$ (w drugim przypadku
+równoważnie w normie gradientu).
 Odzyskiwanie ciśnienia wymaga wówczas analizy warunków
 brzegowych, a operator Stokesa nie sprowadza się do
 prostego mnożnika Fouriera. Dlatego powyższe dowody
