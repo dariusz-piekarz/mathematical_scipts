@@ -1,0 +1,7 @@
+# ME-08 — drugi czysty przebieg stabilizacyjny po 3adacb4
+
+27.11.2026. Blob f3b6b0a687891c507585dabd9738ef8acad83c7b, 1183 wiersze. W kolejnym przebiegu sprawdzono 38 bloków deklaracji, przykładów i uwag oraz 27 środowisk dowodowych; przeanalizowano zależności wskazanych twierdzeń, w tym przypadki nieskończonej miary, mierzalnych zbiorów wyjątkowych i nieujemnych całek o nieskończonej wartości. Nie stwierdzono nowych usterek wymagających edycji.
+
+Odtworzono w JavaScript cztery rodziny modeli z tools/test_measure_theory_ch08.py: Beppo Levi 3600, Fatou 36864, DCT 1800 (dokładne przeskalowanie do rachunku całkowitoliczbowego), wzór warstwowy 256; razem 42520/42520. To niezależne odtworzenie modeli, nie uruchomienie oryginalnego skryptu Python. Testy liczbowe nie zastępują dowodów. Na odczytanych źródłach ME-01–08 odtworzono także kontrolę struktury: 198 unikatowych etykiet, wszystkie 56 wystąpień ref/eqref/pageref w ME-08 rozwiązane, brak zakazanych fraz i wszystkie wymagane hipotezy tekstowe obecne. Dwa różne cele atlasref do AM1-29 zweryfikowano w poprzednim przebiegu na identycznym blobie.
+
+CI #45990916338 (ME-08) i #45990916354 (globalny ME) nadal queued przy odczycie. Brak aktualnego potwierdzenia PDF. Źródło pozostawiono niezmienione. Stabilizacja merytoryczna: dwa czyste przebiegi ukierunkowane na materiał po korektach; następnie niezależny audyt kontrolny. Odbiór techniczny pozostaje otwarty.
