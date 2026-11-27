@@ -50,6 +50,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.candidate_sha || github.sha }}
+      - name: Require exact pinned checkout identity in reader
+        env:
+          EXPECTED_SHA: ${{ inputs.candidate_sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
@@ -63,6 +67,19 @@ jobs:
             test -n "$(kpsewhich "$package")" || { echo "Missing TeX package: $package"; exit 1; }
           done
           python scripts/install_math_renderer.py
+      # The index-and-test job does not install TeX. Execute the exact
+      # classified tex_host regression here and reject any skip.
+      - name: Compile local theorem environment with real pdfLaTeX
+        run: |
+          python - <<'PY'
+          import sys
+          import unittest
+          suite = unittest.defaultTestLoader.loadTestsFromName(
+              "tests.test_local_theorem_compilation.LocalTheoremCompilationTests.test_local_environment_compiles_without_import"
+          )
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          sys.exit(0 if result.wasSuccessful() and result.testsRun == 1 and not result.skipped else 1)
+          PY
       - name: Index canonical chapters for real reader tests
         shell: bash
         run: |
