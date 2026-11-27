@@ -17,6 +17,43 @@ $\|x+y\|\le\|x\|+\|y\|$. Przestrzeń unormowaną nazywamy
 $d(x,y)=\|x-y\|$.
 \end{definicja}
 
+\paragraph{Rysunek 3D: Kule jednostkowe różnych norm.}
+Brzegi kul jednostkowych w $\R^3$ dla norm
+$\|x\|_1=\sum_{i=1}^3|x_i|$, $\|x\|_2=(\sum_{i=1}^3x_i^2)^{1/2}$
+oraz $\|x\|_\infty=\max_i|x_i|$ to odpowiednio ośmiościan,
+sfera i brzeg sześcianu. Dla wektora jednostkowego $d$
+w normie euklidesowej punkt $d/\|d\|_p$ należy do brzegu
+kuli normy $p$ na mocy jednorodności. Używamy tej
+parametryzacji do porównania kształtów.
+Kod wymaga bibliotek NumPy i Plotly; zapisuje samodzielny
+interaktywny plik HTML.
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+t, a = np.meshgrid(np.linspace(0, 2*np.pi, 121),
+                   np.linspace(0, np.pi, 61))
+D = np.array([np.sin(a)*np.cos(t),
+              np.sin(a)*np.sin(t), np.cos(a)])
+norms = [np.sum(np.abs(D), axis=0),
+         np.sqrt(np.sum(D**2, axis=0)),
+         np.max(np.abs(D), axis=0)]
+fig = make_subplots(rows=1, cols=3,
+    specs=[[{"type": "surface"}]*3],
+    subplot_titles=["l1", "l2", "l-infinity"])
+for i, norm in enumerate(norms, 1):
+    X, Y, Z = D/norm
+    fig.add_trace(go.Surface(x=X, y=Y, z=Z,
+        showscale=False), row=1, col=i)
+fig.update_scenes(aspectmode="cube",
+    xaxis=dict(range=[-1.1, 1.1], title="x"),
+    yaxis=dict(range=[-1.1, 1.1], title="y"),
+    zaxis=dict(range=[-1.1, 1.1], title="z"))
+fig.write_html("am2_01_norm_balls.html", include_plotlyjs=True)
+fig.show()
+\end{lstlisting}
+
 \section{Metryka, równoważność norm i zupełność}
 \begin{twierdzenie}
 \label{ma2:thm:metric}
