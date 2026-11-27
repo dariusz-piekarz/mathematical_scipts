@@ -173,7 +173,11 @@ class Chapter34(unittest.TestCase):
         import re
         src=(Path(__file__).resolve().parents[4] /
              "chapters/pl/mathematical_analysis_i/34-funkcje-specjalne.tex").read_text(encoding="utf8")
-        points=re.search(r"plot coordinates \{([^}]+)\}",src)
+        # Select the labelled erf picture, not the first plot in the chapter.
+        pictures=re.findall(r"\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}",src,re.S)
+        erf_pictures=[pic for pic in pictures if r"$\operatorname{erf}(x)$" in pic]
+        self.assertEqual(len(erf_pictures),1)
+        points=re.search(r"plot coordinates \{([^}]+)\}",erf_pictures[0])
         self.assertIsNotNone(points)
         pairs=re.findall(r"\(([-.\d]+),([-.\d]+)\)",points.group(1))
         self.assertGreaterEqual(len(pairs),15)
