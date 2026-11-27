@@ -1,0 +1,214 @@
+\section{Teorie algebraiczne Lawvere'a}\label{cat:sec:lawvere-theories}
+
+Grupy, monoidy i moduły opisujemy zwykle przez operacje o skończonej liczbie argumentów oraz równania między wyrażeniami zbudowanymi z tych operacji. Teoria algebraiczna Lawvere'a zapisuje zarówno operacje, jak i wszystkie konsekwencje równań w postaci morfizmów jednej małej kategorii. Model takiej teorii jest funktorem zachowującym skończone produkty. Związek z monadami z rozdziałów~\ref{sec:monads} i~\ref{cat:sec:monadicity} polega na tym, że operacje można również odczytywać z elementów algebr swobodnych na skończonych zbiorach generatorów.
+
+Pracujemy z kategoriami zwykłymi, z ustalonym uniwersum małych zbiorów oraz z aksjomatem wyboru. Ograniczamy się do teorii jednosortowych i operacji o skończonej arności; operacja o arności zero jest stałą.
+
+\subsection{Skończone produkty i zmienne}
+
+Niech $\mathsf{Fin}$ będzie szkieletem kategorii skończonych zbiorów, z obiektami $\underline n=\{1,\ldots,n\}$ dla $n\in\mathbb N_0$ (w szczególności $\underline 0=\varnothing$) oraz wszystkimi funkcjami między nimi. W $\mathsf{Fin}^{\mathrm{op}}$ obiekt $\underline n$ jest produktem $n$ kopii $\underline 1$: projekcji $\underline n\to\underline 1$ w kategorii przeciwnej odpowiada funkcja $\underline 1\to\underline n$ wybierająca jeden element.
+
+\begin{definicja}[Teoria algebraiczna Lawvere'a]\label{cat:def:lawvere-theory}
+Jednosortową teorią Lawvere'a nazywamy małą kategorię $\mathcal L$ o obiektach oznaczonych przez $n\in\mathbb N_0$ oraz funktor
+\[
+ j:\mathsf{Fin}^{\mathrm{op}}\longrightarrow\mathcal L,
+ \qquad j(\underline n)=n,
+\]
+który zachowuje skończone produkty. W szczególności $0$ jest obiektem końcowym, a morfizmy $\pi_i^n:n\to1$ będące obrazami projekcji z $\mathsf{Fin}^{\mathrm{op}}$ przedstawiają $n$ jako produkt $n$ kopii obiektu $1$.
+\end{definicja}
+
+Nie wymagamy wierności $j$: równania teorii mogą utożsamić różne projekcje. Nie wymagamy też, aby obiekty o różnych numerach nie były izomorficzne. Przez $\langle f_1,\ldots,f_m\rangle:n\to m$ oznaczamy jedyny morfizm z $\pi_i^m\langle f_1,\ldots,f_m\rangle=f_i$ dla wszystkich $i$; dla $m=0$ jest to jedyny morfizm $n\to0$. Własność uniwersalna produktu daje bijekcję
+\begin{equation}\label{cat:eq:lawvere-tuple}
+ \Hom_{\mathcal L}(n,m)\longrightarrow
+ \Hom_{\mathcal L}(n,1)^m,\qquad
+ f\longmapsto(\pi_i^m f)_{i=1}^m.
+\end{equation}
+W szczególności morfizm $n\to1$ reprezentuje operację $n$-argumentową, a morfizm $n\to m$ reprezentuje uporządkowaną rodzinę $m$ takich operacji.
+
+Dla funkcji $u:\underline m\to\underline n$ morfizm $j(u^{\mathrm{op}}):n\to m$ jest dany przez rodzinę $\langle\pi^n_{u(1)},\ldots,\pi^n_{u(m)}\rangle$. Wynika to ze złożenia $u$ z funkcjami $\underline 1\to\underline m$ wybierającymi współrzędne, a następnie z funktorialności $j$ i jednoznaczności morfizmu do produktu. Powtórzenie zmiennej, zmiana kolejności i pominięcie zmiennej nie są zatem dodatkowymi operacjami algebraicznymi: wynikają z samej struktury produktów.
+
+\begin{stwierdzenie}[Składanie jako podstawianie]\label{cat:prop:lawvere-substitution}
+Dla $t:m\to1$ oraz $s_1,\ldots,s_m:n\to1$ podstawienie określamy wzorem
+\[
+ t(s_1,\ldots,s_m)=t\langle s_1,\ldots,s_m\rangle:n\to1.
+\]
+Operacja ta spełnia prawa projekcji, identyczności i łączności podstawiania.
+\end{stwierdzenie}
+\begin{proof}
+Prawo projekcji ma postać $\pi_i^m\langle s_1,\ldots,s_m\rangle=s_i$ i jest definicją morfizmu do produktu. Ponieważ $\langle\pi_1^n,\ldots,\pi_n^n\rangle=\id_n$ przez jednoznaczność w tej samej własności uniwersalnej, podstawienie projekcji do dowolnego $s:n\to1$ daje $s$.
+
+Niech teraz $r_1,\ldots,r_n:k\to1$ i $r=\langle r_1,\ldots,r_n\rangle:k\to n$. Dla każdego $i$ zachodzi
+\[
+ \pi_i^m(\langle s_1,\ldots,s_m\rangle r)=s_i r,
+\]
+więc $\langle s_1,\ldots,s_m\rangle r=\langle s_1r,\ldots,s_mr\rangle$. Po złożeniu z $t$ dostajemy
+\[
+ (t\langle s_1,\ldots,s_m\rangle)r
+ =t\langle s_1r,\ldots,s_mr\rangle.
+\]
+Jest to łączność podstawiania. W przypadku pustych rodzin te same równości wynikają z jednoznaczności morfizmu do obiektu końcowego.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (n) at (0,0) {$n$};
+ \node (m) at (5,0) {$m$};
+ \node (one) at (5,-2) {$1$};
+ \draw[->] (n)--node[above] {$\langle s_1,\ldots,s_m\rangle$}(m);
+ \draw[->] (m)--node[right] {$\pi_i^m$}(one);
+ \draw[->] (n)--node[below left] {$s_i$}(one);
+\end{tikzpicture}
+\end{center}
+Trójkąt jest przemienny dla każdej współrzędnej $i$. Złożenie morfizmu do produktu z operacją $t:m\to1$ realizuje jednoczesne podstawienie wszystkich $s_i$.
+
+\subsection{Sygnatury, termy i równania}
+
+\begin{definicja}[Sygnatura finitarna]\label{cat:def:lawvere-signature}
+Sygnatura jednosortowa jest małym zbiorem symboli $\Sigma$ wraz z funkcją arności $a:\Sigma\to\mathbb N_0$. Dla zbioru zmiennych $V$ zbiór termów $\operatorname{Term}_\Sigma(V)$ definiujemy indukcyjnie:
+\begin{enumerate}
+ \item każda zmienna $v\in V$ jest termem;
+ \item jeśli $\sigma\in\Sigma$ ma arność $k$, a $t_1,\ldots,t_k$ są termami, to $\sigma(t_1,\ldots,t_k)$ jest termem.
+\end{enumerate}
+Nie ma innych termów. Dla $k=0$ wyrażenie $\sigma()$ jest termem bez argumentów. Równanie jest parą termów w ustalonym skończonym kontekście zmiennych. Prezentacją teorii jest para $(\Sigma,E)$, gdzie $E$ jest małym zbiorem takich równań.
+\end{definicja}
+
+Termy są skończonymi drzewami syntaktycznymi, także dla nieskończonej sygnatury, ponieważ konstrukcja indukcyjna używa wyłącznie operacji skończonej arności. Dla zmiennych $x_1,\ldots,x_m$ i termów $s_1,\ldots,s_m$ w kontekście $n$ definiujemy $t[s_1,\ldots,s_m]$ przez zastąpienie $x_i$ termem $s_i$ i rekurencyjne zastosowanie tej reguły we wszystkich argumentach symboli operacji. Indukcja po budowie $t$ daje prawa
+\[
+ x_i[s_1,\ldots,s_m]=s_i,\qquad
+ t[x_1,\ldots,x_m]=t,
+\]
+oraz
+\[
+ (t[s_1,\ldots,s_m])[r_1,\ldots,r_n]
+ =t[s_1[r_1,\ldots,r_n],\ldots,s_m[r_1,\ldots,r_n]].
+\]
+W przypadku zmiennej ostatnia równość redukuje się do tego samego termu $s_i[r_1,\ldots,r_n]$ po obu stronach. Dla termu $\sigma(t_1,\ldots,t_k)$ obie strony mają ten sam symbol zewnętrzny $\sigma$, a odpowiadające sobie argumenty są równe przez hipotezę indukcyjną. Obejmuje to stałe, dla których nie ma argumentów.
+
+\begin{definicja}[Kongruencja równań]\label{cat:def:lawvere-congruence}
+Przez $\equiv_E$ rozumiemy najmniejszą rodzinę relacji równoważności na zbiorach termów w każdym skończonym kontekście, zawierającą równania z $E$ i zgodną z podstawianiem: jeśli $t\equiv_E t'$ w kontekście $m$ oraz $s_i\equiv_E s_i'$ w kontekście $n$ dla wszystkich $i$, to
+\[
+ t[s_1,\ldots,s_m]\equiv_E t'[s_1',\ldots,s_m'].
+\]
+\end{definicja}
+Rodzina taka istnieje: rodzina relacji pełnych ma te własności, a przecięcie dowolnej niepustej rodziny relacji o tych własnościach również je ma. Bierzemy więc przecięcie wszystkich dopuszczalnych rodzin. Zgodność z podstawianiem obejmuje zgodność z każdą operacją $\sigma$, stosując ją do termu $\sigma(x_1,\ldots,x_{a(\sigma)})$.
+
+\begin{twierdzenie}[Kategoria termów]\label{cat:thm:lawvere-term-category}
+Każda prezentacja $(\Sigma,E)$ wyznacza teorię Lawvere'a $\mathcal L_{\Sigma,E}$, w której
+\[
+ \Hom_{\mathcal L_{\Sigma,E}}(n,m)
+ =\bigl(\operatorname{Term}_\Sigma(\{x_1,\ldots,x_n\})/\equiv_E\bigr)^m.
+\]
+Składanie jest indukowane przez jednoczesne podstawianie termów.
+\end{twierdzenie}
+\begin{proof}
+Niech $f:n\to m$ ma reprezentanty $(s_1,\ldots,s_m)$, a $g:m\to k$ reprezentanty $(t_1,\ldots,t_k)$. Definiujemy $gf$ przez rodzinę klas termów $(t_j[s_1,\ldots,s_m])_{j=1}^k$. Zgodność kongruencji z podstawianiem dowodzi niezależności od wszystkich reprezentantów. Łączność wynika współrzędnie z prawa iterowanego podstawiania; identyczność $n\to n$ reprezentowana jest przez $(x_1,\ldots,x_n)$, co daje obie równości z identycznością. Dla $n=0$ identyczność jest pustą rodziną. Zbiory termów są małe, a zbiór obiektów jest przeliczalny, więc otrzymujemy małą kategorię.
+
+Projekcje $n\to1$ reprezentujemy przez zmienne $x_i$. Dla dowolnego $k$ morfizm $k\to n$ jest z definicji rodziną $n$ morfizmów $k\to1$, a jego złożenia z projekcjami są dokładnie jej współrzędnymi. Dowodzi to własności uniwersalnej produktu $n$ kopii $1$. Dla $n=0$ pusty produkt jest obiektem końcowym, ponieważ istnieje dokładnie jedna pusta rodzina.
+
+Dla $u:\underline m\to\underline n$ określamy $j(u^{\mathrm{op}}):n\to m$ jako rodzinę $(x_{u(i)})_{i=1}^m$. Podstawienie zmiennych odpowiada składaniu funkcji w odwrotnej kolejności, a funkcja identycznościowa daje rodzinę wszystkich zmiennych. Funktor $j$ zachowuje wybrane produkty potęg obiektu $1$. Produkt dowolnej skończonej rodziny obiektów $n_1,\ldots,n_l$ to ich suma numerów $N=\sum_i n_i$, z projekcjami wybierającymi odpowiednie bloki zmiennych: morfizm do $N$ jest jednoznacznie zadany przez wszystkie rodziny współrzędnych w tych blokach. Stąd $j$ zachowuje wszystkie skończone produkty i spełnia warunki definicji.
+\end{proof}
+
+\subsection{Modele i ich morfizmy}
+
+\begin{definicja}[Model teorii Lawvere'a]\label{cat:def:lawvere-model}
+Dla kategorii $\mathcal C$ ze skończonymi produktami modelem teorii $\mathcal L$ w $\mathcal C$ nazywamy funktor $M:\mathcal L\to\mathcal C$ zachowujący skończone produkty. Morfizm modeli jest transformacją naturalną. Pełną podkategorię takich funktorów w kategorii funktorów oznaczamy przez $\operatorname{Mod}_{\mathcal L}(\mathcal C)$. Gdy $\mathcal C=\Set$, piszemy $\operatorname{Mod}(\mathcal L)$.
+\end{definicja}
+
+Dla $X=M(1)$ istnieją kanoniczne izomorfizmy $\theta_n:M(n)\to X^n$ zadane przez rodzinę $M(\pi_i^n)$ (dla $n=0$ przez własność obiektu końcowego). Operacji $t:n\to1$ odpowiada morfizm
+\[
+ t_X=M(t)\theta_n^{-1}:X^n\to X.
+\]
+Zachowanie składania przez $M$ oraz przemienność diagramu definiującego $\theta_n$ implikują
+\[
+ (t\langle s_1,\ldots,s_m\rangle)_X
+ =t_X\langle (s_1)_X,\ldots,(s_m)_X\rangle,
+\]
+ponieważ obie strzałki do $X^m$ mają te same współrzędne. W szczególności $(\pi_i^n)_X$ jest projekcją produktu w $\mathcal C$.
+
+\begin{stwierdzenie}[Morfizmy modeli]\label{cat:prop:lawvere-model-morphism}
+Transformacja naturalna $\alpha:M\to N$ jest jednoznacznie wyznaczona przez $\alpha_1:X\to Y$, gdzie $X=M(1)$ i $Y=N(1)$. Morfizm $h:X\to Y$ jest składową pewnej transformacji naturalnej wtedy i tylko wtedy, gdy dla każdej operacji $t:n\to1$ zachodzi
+\[
+ h t_X=t_Y h^n.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Naturalność względem każdej projekcji daje $N(\pi_i^n)\alpha_n=\alpha_1M(\pi_i^n)$. Jeżeli $\theta_n^M,\theta_n^N$ są kanonicznymi izomorfizmami z produktami, wynika stąd
+\[
+ \alpha_n=(\theta_n^N)^{-1}(\alpha_1)^n\theta_n^M.
+\]
+Dla $n=0$ ten sam wzór opisuje jedyny morfizm między obiektami końcowymi. Naturalność względem $t:n\to1$, po skorzystaniu z tego wzoru, daje podane równanie.
+
+Odwrotnie, dla $h$ spełniającego wszystkie równania definiujemy $\alpha_n$ powyższym wzorem z $h$ zamiast $\alpha_1$. Dla morfizmu $f:n\to m$ warunek naturalności po przeniesieniu przez izomorfizmy produktów sprawdzamy po złożeniu z każdą projekcją $Y^m\to Y$. Otrzymujemy dokładnie równanie dla operacji $\pi_i^m f$. Ponieważ morfizmy do produktu są wyznaczone przez współrzędne, kwadrat naturalności komutuje. Dla $m=0$ oba morfizmy do obiektu końcowego są równe. Składowa w $1$ jest $h$ przy kanonicznym utożsamieniu jednoelementowej potęgi z obiektem. To dowodzi istnienia i jednoznaczności transformacji.
+\end{proof}
+
+\begin{twierdzenie}[Modele prezentacji i algebry]\label{cat:thm:lawvere-equational-models}
+Kategoria $\operatorname{Mod}(\mathcal L_{\Sigma,E})$ jest równoważna kategorii zbiorów $X$ wyposażonych w funkcje $\sigma_X:X^{a(\sigma)}\to X$ spełniające równania z $E$, z morfizmami zachowującymi wszystkie operacje.
+\end{twierdzenie}
+\begin{proof}
+Każdy model daje funkcje odpowiadające klasom termów $\sigma(x_1,\ldots,x_{a(\sigma)})$. Indukcja po budowie termu, z użyciem prawa podstawiania dla modeli, pokazuje, że interpretacja dowolnego termu jest właśnie funkcją zadaną przez morfizm odpowiadający jego klasie. Równe klasy dają równe funkcje, zatem równania z $E$ są spełnione.
+
+Odwrotnie, niech $X$ będzie algebrą sygnatury spełniającą $E$. Dla termu $t$ w kontekście $n$ rekurencyjnie definiujemy funkcję $t_X:X^n\to X$, interpretując zmienne jako projekcje, a symbol $\sigma$ przez $\sigma_X$. Z indukcji po budowie termu wynika, że interpretacja podstawienia jest złożeniem funkcji: dla zmiennej jest to odpowiednia projekcja z rodziny funkcji, a dla operacji wynika ze złożenia interpretacji jej argumentów z $\sigma_X$. Relacje równości funkcji interpretujących termy w każdym kontekście tworzą więc rodzinę kongruencji zgodną z podstawianiem. Zawierają $E$, więc przez minimalność zawierają $\equiv_E$.
+
+Możemy zatem zdefiniować funktor $M_X(n)=X^n$ oraz $M_X(f)=( (t_1)_X,\ldots,(t_m)_X)$ dla morfizmu $f:n\to m$ reprezentowanego przez termy $t_i$. Jest dobrze określony; prawa składania i identyczności wynikają z interpretacji podstawienia i projekcji. Zachowuje skończone produkty, ponieważ odwzorowania wybierające bloki współrzędnych identyfikują $X^{n_1+\cdots+n_k}$ z produktem $X^{n_1}\times\cdots\times X^{n_k}$. Obejmuje to pusty produkt $X^0$.
+
+Funkcja zachowująca symbole operacji zachowuje interpretacje wszystkich termów przez indukcję: zachowuje projekcje współrzędnie i komutuje z interpretacją każdego symbolu po zastosowaniu hipotezy do jego argumentów. Stwierdzenie~\ref{cat:prop:lawvere-model-morphism} daje dokładnie jeden morfizm modeli o takiej składowej w $1$. Każdy morfizm modeli zachowuje symbole, ponieważ symbole reprezentują morfizmy teorii. Otrzymujemy pełność i wierność funktora od modeli do algebr.
+
+Dla danej algebry konstrukcja $M_X$ odtwarza tę algebrę z dokładnością do kanonicznego utożsamienia $X^1\cong X$. Funktor od modeli do algebr jest więc istotnie surjektywny, a tym samym jest równoważnością.
+\end{proof}
+
+\begin{przyklad}[Monoidy i grupy]\label{cat:ex:lawvere-monoids-groups}
+Dla monoidów bierzemy symbol $m$ arności dwa i symbol $e$ arności zero oraz równania
+\[
+ m(m(x_1,x_2),x_3)=m(x_1,m(x_2,x_3)),\quad
+ m(e,x)=x,\quad m(x,e)=x.
+\]
+W modelu morfizm $m:2\to1$ staje się mnożeniem, a $e:0\to1$ wybiera element jednostkowy. Równania są dokładnie aksjomatami monoidu. Dla grup dodajemy symbol $i$ arności jeden oraz równania $m(x,i(x))=e=m(i(x),x)$. Te same konstrukcje w kategorii ze skończonymi produktami opisują obiekty monoidalne i grupowe w sensie struktury kartezjańskiej, nie zaś dowolnej struktury monoidalnej.
+\end{przyklad}
+
+\begin{przyklad}[Moduły nad ustalonym pierścieniem]\label{cat:ex:lawvere-modules}
+Dla lewych modułów nad małym pierścieniem $R$ z jedynką bierzemy symbole $+$, $-$, $0$ o arnościach odpowiednio $2,1,0$ oraz dla każdego $r\in R$ symbol $\ell_r$ arności jeden. Nakładamy aksjomaty grupy abelowej oraz
+\[
+\begin{aligned}
+ \ell_r(x+y)&=\ell_r(x)+\ell_r(y),&
+ \ell_{r+s}(x)&=\ell_r(x)+\ell_s(x),\\
+ \ell_{rs}(x)&=\ell_r(\ell_s(x)),&
+ \ell_1(x)&=x.
+\end{aligned}
+\]
+Równość $\ell_0(x)=0$ wynika z $\ell_0(x)=\ell_0(x)+\ell_0(x)$ przez dodanie elementu przeciwnego. Podobnie $\ell_r(0)=0$ wynika z addytywności $\ell_r$. Modele w zbiorach są zatem dokładnie lewymi $R$-modułami, a morfizmy modeli odpowiadają morfizmom liniowym. Sygnatura może mieć nieskończenie wiele symboli $\ell_r$, ale każda operacja ma skończoną arność.
+\end{przyklad}
+
+\begin{przyklad}[Teoria bez symboli operacji]\label{cat:ex:lawvere-empty-signature}
+Dla $\Sigma=E=\varnothing$ jedynymi termami w kontekście $n$ są zmienne $x_i$. Morfizmy $n\to m$ odpowiadają zatem funkcjom $\underline m\to\underline n$, także dla $m=0$ (jedyna pusta rodzina) i $n=0<m$ (brak termów). Otrzymujemy $\mathcal L_{\varnothing,\varnothing}\cong\mathsf{Fin}^{\mathrm{op}}$. Modele w $\Set$ odpowiadają wszystkim zbiorom, w tym zbiorowi pustemu. Inaczej jest w teorii monoidów, w której istnienie morfizmu $0\to1$ wymusza istnienie elementu w zbiorze bazowym modelu.
+\end{przyklad}
+
+\subsection{Każda teoria ma prezentację przez operacje i równania}
+
+\begin{twierdzenie}[Prezentacja teorii Lawvere'a]\label{cat:thm:lawvere-presentation}
+Każda teoria Lawvere'a $\mathcal L$ jest izomorficzna z kategorią termów pewnej małej prezentacji $(\Sigma,E)$, z zachowaniem obiektów i wybranego funktora ze $\mathsf{Fin}^{\mathrm{op}}$.
+\end{twierdzenie}
+\begin{proof}
+Dla każdego morfizmu $t:n\to1$ w $\mathcal L$ wprowadzamy symbol $[t]$ arności $n$, rozróżniając symbole po ich morfizmach i arnościach. Zbiór symboli jest mały. Na termach nakładamy równania projekcji
+\[
+ [\pi_i^n](x_1,\ldots,x_n)=x_i
+\]
+oraz równania składania, dla dowolnych $t:m\to1$ i $s_1,\ldots,s_m:n\to1$,
+\[
+ [t]([s_1](\mathbf x),\ldots,[s_m](\mathbf x))
+ =[t\langle s_1,\ldots,s_m\rangle](\mathbf x),
+ \qquad \mathbf x=(x_1,\ldots,x_n).
+\]
+Przy $m=0$ lewa strona jest stałą $[t]()$, a prawa jest symbolem złożenia $n\to0\xrightarrow{t}1$ zastosowanym do $\mathbf x$. Wszystkie równania tworzą mały zbiór, ponieważ są indeksowane przez skończone rodziny morfizmów małej kategorii.
+
+Interpretujemy termy w kontekście $n$ jako morfizmy $n\to1$: zmienną jako projekcję, a symbol $[t]$ zastosowany do termów jako złożenie $t$ z morfizmem do produktu odpowiadającym ich interpretacjom. Prawo podstawiania z poprzedniego stwierdzenia, zastosowane indukcyjnie do termów, daje zgodność interpretacji z podstawianiem. Wszystkie nałożone równania są spełnione, więc interpretacja faktoryzuje się przez kongruencję. Rozszerzamy ją na rodziny termów, korzystając z bijekcji~\eqref{cat:eq:lawvere-tuple}; otrzymujemy funktor $K:\mathcal L_{\Sigma,E}\to\mathcal L$ identyczny na obiektach, zachowujący projekcje i składanie.
+
+Dla dowolnego termu $v$ o interpretacji $t:n\to1$ dowodzimy indukcyjnie, że $v\equiv_E[t](\mathbf x)$. Dla zmiennej jest to równanie projekcji. Jeśli $v=[q](v_1,\ldots,v_m)$, a interpretacjami argumentów są $s_i:n\to1$, to przez hipotezę indukcyjną i zgodność kongruencji z podstawianiem
+\[
+ v\equiv_E[q]([s_1](\mathbf x),\ldots,[s_m](\mathbf x))
+ \equiv_E[q\langle s_1,\ldots,s_m\rangle](\mathbf x).
+\]
+Ostatni symbol odpowiada interpretacji $v$. Przypadek stałej jest objęty równaniem dla $m=0$. Stąd dwa termy o tej samej interpretacji mają równe klasy. Każdy morfizm $t:n\to1$ jest interpretacją termu $[t](\mathbf x)$. Interpretacja jest więc bijekcją na morfizmach do $1$, a przez opis produktów również na morfizmach do dowolnego $m$, także $0$.
+
+Funktor $K$ jest identyczny na obiektach i bijektywny na zbiorach morfizmów, stąd ma ścisły funktor odwrotny. Zachowuje $j$, gdyż morfizmy pochodzące z $\mathsf{Fin}^{\mathrm{op}}$ są rodzinami projekcji, które $K$ zachowuje.
+\end{proof}
+
