@@ -157,7 +157,7 @@ class TestMeasureTheoryChapter17(unittest.TestCase):
         src = CH17.read_text(encoding="utf-8")
         other = CH16.read_text(encoding="utf-8") + CH18.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}", src)
-        self.assertEqual(len(labels), 14)
+        self.assertEqual(len(labels), 17)
         self.assertEqual(len(set(labels)), len(labels))
         known = set(labels) | set(re.findall(r"\\label\{([^}]+)\}", other))
         refs = re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", src)
