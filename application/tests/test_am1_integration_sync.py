@@ -1,8 +1,4 @@
-"""Protect the audited AM1-36 → CAL migration baseline.
-
-New AM1 results may be developed independently; this regression protects the
-128 source labels that have already been synchronized.
-"""
+"""Protect all 128 audited source labels after CAL redistribution into AM1 36–43."""
 from collections import Counter
 import json
 from pathlib import Path
@@ -147,20 +143,21 @@ BASELINE = frozenset((
 class AM1IntegrationSyncTest(unittest.TestCase):
     def test_synchronized_source_labels_and_local_dependencies(self):
         catalog = json.loads((ROOT / "catalog/books.json").read_text(encoding="utf-8"))
-        book = next(b for b in catalog["books"] if b["id"] == "integration_theory")
-        source = ROOT / "chapters/pl/mathematical_analysis_i/36-calka-kurzweila-henstocka.tex"
+        book = next(b for b in catalog["books"]
+                    if b["id"] == "mathematical_analysis_i" and b["language"] == "pl")
+        chapters = [path for path in book["chapters"]
+                    if re.match(r"(?:3[6-9]|4[0-3])-", Path(path).name)]
+        self.assertEqual(len(chapters), 8)
         self.assertEqual(len(BASELINE), 128)
-        source_labels = set(LABEL.findall(source.read_text(encoding="utf-8-sig")))
-        self.assertFalse(BASELINE - source_labels, "removed original AM1-36 labels")
         counts = Counter()
         refs = set()
-        for path in book["chapters"]:
+        for path in chapters:
             content = (ROOT / path).read_text(encoding="utf-8-sig")
             counts.update(LABEL.findall(content))
             refs.update(REF.findall(content))
-        self.assertFalse(BASELINE - counts.keys(), "missing migrated AM1-36 labels")
+        self.assertFalse(BASELINE - counts.keys(), "missing migrated AM1 integration labels")
         self.assertEqual({label: n for label, n in counts.items() if n > 1}, {})
-        self.assertFalse(refs - counts.keys(), "unresolved local AM1-36 dependencies in CAL")
+        self.assertFalse(refs - counts.keys(), "unresolved local AM1 integration dependencies")
 
 
 if __name__ == "__main__":
