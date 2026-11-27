@@ -19,11 +19,12 @@ ale nie wolno ich utożsamiać.
 Dla liczby naturalnej $n\geq 0$ definiujemy $n!:=\prod_{j=1}^n j$, przyjmując $0!:=1$.
 Dla liczb całkowitych $n\geq0$ i $0\leq k\leq n$ definiujemy
 $\binom nk:=n!/[k!(n-k)!]$; dla pozostałych całkowitych $k$ przyjmujemy
-$\binom nk:=0$.
+$\binom nk:=0$. W rachunkach kombinatorycznych przyjmujemy też
+$a^0=1$, również dla $a=0$, zgodnie z konwencją pustego iloczynu.
 \end{definicja}
 
 \begin{stwierdzenie}[Zasady sumy i iloczynu]
-Niech $A_1,\dots,A_m$ będą skończonymi zbiorami.
+Niech $m\geq1$ i niech $A_1,\dots,A_m$ będą skończonymi zbiorami.
 Jeżeli są parami rozłączne, to $|\bigcup_{i=1}^m A_i|=\sum_{i=1}^m|A_i|$.
 Bez żadnego założenia o rozłączności zachodzi
 $|A_1\times\cdots\times A_m|=\prod_{i=1}^m|A_i|$.
@@ -49,6 +50,25 @@ Ważne, że jest to dowód czysto zbiorowy i w ogóle
 nie korzysta z pojęcia prawdopodobieństwa.
 \end{proof}
 
+\begin{stwierdzenie}[Zasada iloczynu dla kolejnych wyborów]
+Niech $T_0=\{()\}$, a dla $j=1,\ldots,k$ niech $T_j$ będzie
+zbiorem dopuszczalnych ciągów długości $j$ powstających przez
+przedłużenie ciągów z $T_{j-1}$. Jeżeli każdy ciąg z $T_{j-1}$
+ma dokładnie $b_j$ dopuszczalnych przedłużeń o jeden wyraz,
+gdzie $b_j$ jest nieujemną liczbą całkowitą, to
+$|T_k|=\prod_{j=1}^k b_j$.
+\end{stwierdzenie}
+\begin{proof}
+Dla ustalonego $j$ odwzorowanie $T_j\to T_{j-1}$ usuwające
+ostatni wyraz ma włókna o liczności $b_j$ (dopuszczamy włókna
+puste, gdy $b_j=0$). Włókna są parami rozłączne i ich suma
+jest równa $T_j$, zatem $|T_j|=b_j|T_{j-1}|$.
+Ponieważ $|T_0|=1$, iterowanie tej równości daje żądany wzór,
+również dla $k=0$. Zbiory dopuszczalnych przedłużeń mogą zależeć
+od wcześniejszych wyborów; stała musi być jedynie ich liczność
+na danym etapie.
+\end{proof}
+
 \begin{twierdzenie}[Permutacje, wariacje i kombinacje]
 Niech $S$ będzie zbiorem $n$ różnych elementów i niech $0\leq k\leq n$.
 Wówczas liczba bijekcji $S\to S$ wynosi $n!$, liczba uporządkowanych
@@ -65,7 +85,10 @@ $n-j+1$ wartości dla $s_j$. Z zasady iloczynu liczba
 ciągów jest równa
 $n(n-1)\cdots(n-k+1)=n!/(n-k)!$.
 Przy $k=0$ otrzymujemy jeden ciąg pusty,
-a przy $k=n$ wszystkie bijekcje, czyli permutacje.
+a przy $k=n$ wszystkie bijekcje, czyli permutacje:
+po ustaleniu uporządkowania $S=\{t_1,\ldots,t_n\}$ ciąg
+$(s_1,\ldots,s_n)$ odpowiada bijekcji $t_j\mapsto s_j$.
+Dla $n=0$ jest to jedyna funkcja ze zbioru pustego w siebie.
 
 Niech $\mathcal V_k$ będzie zbiorem tych ciągów, a
 $\mathcal C_k$ zbiorem $k$-elementowych podzbiorów $S$.
@@ -78,7 +101,8 @@ $|\mathcal V_k|=k!|\mathcal C_k|$ i
 $|\mathcal C_k|=\binom nk$.
 Dla ciągów z powtórzeniami każde miejsce ma $n$
 możliwych wartości bez względu na wcześniejsze wybory,
-więc ich liczba to $n^k$.
+więc ich liczba to $n^k$. Ten ostatni rachunek działa dla
+każdego całkowitego $k\geq0$, nie tylko dla $k\leq n$.
 \end{proof}
 
 \begin{przyklad}[Kod dostępu]
@@ -116,8 +140,9 @@ obejmuje wszystkie dopuszczalne ciągi.
 
 Ustalmy jeden taki ciąg. Etykiety symbolu $i$
 można przypisać jego $n_i$ wystąpieniom na $n_i!$
-sposobów. Te operacje dla różnych symboli są niezależnymi
-operacjami zliczania, więc łącznie dostajemy
+sposobów. Wybór przypisania etykiet dla jednego symbolu nie ogranicza
+wyboru przypisania dla innych symboli. Z zasady iloczynu
+łącznie dostajemy
 $\prod_{i=1}^r n_i!$ oznakowanych ciągów.
 Każdy ciąg nieoznakowany ma tyle samo reprezentacji.
 Dzieląc $n!$ przez rozmiar jednego włókna, otrzymujemy
@@ -130,6 +155,7 @@ Dla liczb całkowitych $n\geq0$ i $r\geq1$ liczba rozwiązań
 $(x_1,\ldots,x_r)\in\Z_{\geq0}^r$ równania $x_1+\cdots+x_r=n$ wynosi
 $\binom{n+r-1}{r-1}$. Jeżeli dodatkowo $x_i\geq1$ dla każdego $i$,
 a $n\geq r$, liczba rozwiązań wynosi $\binom{n-1}{r-1}$.
+Dla $n<r$ nie ma rozwiązań o wszystkich współrzędnych dodatnich.
 \end{twierdzenie}
 \begin{proof}
 Dla rozwiązania $(x_1,\ldots,x_r)$ z $x_i\geq0$
@@ -237,7 +263,15 @@ D_n=\sum_{k=0}^{n}(-1)^k\binom nk(n-k)!
 =n!\sum_{k=0}^{n}\frac{(-1)^k}{k!}.
 \]
 Dla losowej jednostajnej permutacji prawdopodobieństwo braku punktów
-stałych wynosi $D_n/n!$ i zmierza do $e^{-1}$.
+stałych wynosi $D_n/n!$. Z definicji funkcji wykładniczej za pomocą
+szeregu (por. \emph{Analiza matematyczna I}, rozdział
+„Funkcje elementarne”, definicja funkcji wykładniczej) otrzymujemy
+\[
+\lim_{n\to\infty}\frac{D_n}{n!}
+=\sum_{k=0}^{\infty}\frac{(-1)^k}{k!}=\exp(-1)=e^{-1}.
+\]
+Szereg jest bezwzględnie zbieżny, więc granica jego sum
+częściowych istnieje.
 \end{przyklad}
 
 \begin{przyklad}[Dokładnie jedna własność]
@@ -257,9 +291,20 @@ Jeśli każdy ciąg jest jednakowo prawdopodobny, odpowiednio opisane
 zdarzenie może mieć w obu modelach tę samą szansę; nie oznacza to
 jednak, że wolno zmieniać mianownik bez odpowiedniej zmiany licznika.
 
+W niepustej skończonej przestrzeni wyników $\Omega$ model
+jednostajny przypisuje zdarzeniu $A\subseteq\Omega$ wartość
+$\Prob(A)=|A|/|\Omega|$. Jest to szczególny przypadek miary
+probabilistycznej z rozdziału~\ref{ch:probability}.
+Gdy $k$ różnych obiektów losujemy kolejno bez zwracania,
+jednostajny wybór na każdym etapie daje tę samą szansę
+każdemu dopuszczalnemu uporządkowanemu ciągowi. Po zapomnieniu
+kolejności każdy $k$-elementowy podzbiór ma dokładnie $k!$
+takich reprezentacji. Suma ich jednakowych prawdopodobieństw
+jest więc jednakowa dla wszystkich podzbiorów.
+
 \begin{przyklad}[Losowanie kart]
-Z talii 52 różnych kart losujemy pięć kart bez zwracania i nie
-uwzględniamy kolejności. Przestrzeń wyników ma $\binom{52}5$ elementów.
+Z talii 52 różnych kart losujemy jednostajnie pięć kart bez
+zwracania i nie uwzględniamy kolejności. Przestrzeń wyników ma $\binom{52}5$ elementów.
 Liczba układów z dokładnie dwiema kartami w ustalonym kolorze
 (w znaczeniu jednego z czterech kolorów po 13 kart) wynosi
 $\binom{13}2\binom{39}3$. Liczba układów zawierających dokładnie
@@ -272,12 +317,34 @@ dwóch par ani trójki.
 
 \begin{przyklad}[Problem urodzin]
 Zakładamy, że daty urodzin $n$ osób są niezależne i jednostajne na
-zbiorze 365 dni, bez uwzględniania lat przestępnych. Dla $n\leq365$
+zbiorze 365 dni, bez uwzględniania lat przestępnych. Dla całkowitego $0\leq n\leq365$ istnieje $365^n$
+jednakowo prawdopodobnych uporządkowanych ciągów dat, ponieważ
+daty są niezależne i każda ma prawdopodobieństwo $1/365$.
+Spośród nich $(365)_n$ ma wszystkie wyrazy różne, zatem
 prawdopodobieństwo, że wszystkie daty są różne, jest równe
-$\prod_{j=0}^{n-1}(1-j/365)$. Zatem prawdopodobieństwo przynajmniej
+\[
+\frac{(365)_n}{365^n}=\prod_{j=0}^{n-1}(1-j/365).
+\] Zatem prawdopodobieństwo przynajmniej
 jednej zgodności wynosi
 $1-\prod_{j=0}^{n-1}(1-j/365)$.
-Dla $n=23$ przekracza ono $1/2$. Jest to wniosek z modelu,
+Dla $n>365$ wynosi ono $1$, gdyż nie istnieje ciąg $n$ różnych
+dat spośród 365 możliwości. Dla $n=0$ pusty iloczyn wynosi $1$,
+więc prawdopodobieństwo zgodności wynosi $0$.
+Dla $n=22$ i $n=23$ bezpośrednie porównanie całkowitych
+liczników i mianowników daje odpowiednio
+\[
+\frac{475}{1000}
+<\frac{365^{22}-(365)_{22}}{365^{22}}
+<\frac{476}{1000},\qquad
+\frac{507}{1000}
+<\frac{365^{23}-(365)_{23}}{365^{23}}
+<\frac{508}{1000}.
+\]
+Prawdopodobieństwo jest niemalejące względem $n$, ponieważ
+każda kolejna osoba mnoży prawdopodobieństwo braku zgodności
+przez czynnik z przedziału $[0,1]$ aż do $n=366$.
+Stąd $23$ jest najmniejszą liczbą osób, dla której szansa
+zgodności przekracza $1/2$. Jest to wniosek z modelu,
 nie twierdzenie o rzeczywistym rozkładzie dat urodzin.
 \end{przyklad}
 
@@ -285,8 +352,12 @@ nie twierdzenie o rzeczywistym rozkładzie dat urodzin.
 Rozważmy drogę z $(0,0)$ do $(a,b)$, złożoną z kroków $(1,0)$ i $(0,1)$,
 gdzie $a,b\in\N\cup\{0\}$. Każda droga składa się z $a+b$ kroków,
 w tym $a$ poziomych. Dróg jest więc $\binom{a+b}{a}$.
-Po narzuceniu przejścia przez $(c,d)$, gdzie $0\leq c\leq a$,
-$0\leq d\leq b$, liczba dróg jest iloczynem
+Po narzuceniu przejścia przez punkt kratowy $(c,d)$, gdzie
+$c,d\in\Z$, $0\leq c\leq a$, $0\leq d\leq b$, każda droga
+rozkłada się jednoznacznie na część od $(0,0)$ do $(c,d)$
+i część od $(c,d)$ do $(a,b)$. Odwrotnie, dowolna para takich
+części daje przez złączenie dokładnie jedną dopuszczalną drogę.
+Z zasady iloczynu oraz poprzedniego rachunku liczba dróg wynosi
 $\binom{c+d}c\binom{a+b-c-d}{a-c}$.
 \end{przyklad}
 
@@ -348,11 +419,14 @@ Ta sama liczba, policzona zasadą włączeń i wyłączeń, wynosi
 Gdy wszystkie $m^n$ przydziałów są jednakowo prawdopodobne,
 prawdopodobieństwo obsadzenia wszystkich pudełek wynosi
 $m!S(n,m)/m^n$. Przykładowo dla $n=4$ i $m=3$
-mamy $S(4,3)=6$, więc prawdopodobieństwo wynosi $36/81=4/9$.
+mamy $S(4,3)=\binom42=6$, gdyż dokładnie jeden blok zawiera
+dwa elementy, a pozostałe są singletonami. Zatem prawdopodobieństwo
+wynosi $3!\cdot6/3^4=36/81=4/9$.
 \end{przyklad}
 
 \begin{przyklad}[Dokładnie dwie pary w pokerze]
-Losujemy pięć kart z talii 52 kart, w której występuje 13 rang
+Losujemy jednostajnie pięć kart bez zwracania i bez uwzględniania
+kolejności z talii 52 kart, w której występuje 13 rang
 po cztery karty każdej rangi. Układ z dokładnie dwiema parami
 otrzymujemy następująco: wybieramy dwie rangi par na $\binom{13}2$
 sposobów, wybieramy po dwie z czterech kart każdej rangi
