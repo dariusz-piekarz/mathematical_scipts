@@ -1,0 +1,7 @@
+# GKT41 — pierwszy czysty audyt po korekcie odsyłacza
+
+Źródło 34-od-grafow-plumbingowych-do-egzotycznych-struktur-gladkich-synt.tex, blob 2fe13403e015288b25238286e28a046691860e2e, 927 wierszy. Ponownie odczytano dowody bilansu nad Q i Z, indeksów krat, chirurgii wzdłuż węzła i prostej spójności. Poprawione odwołania do konstrukcji Parka i jego twierdzenia o prostej spójności są zgodne z zakresem wcześniejszych dowodów. Nie znaleziono nowych istotnych usterek w sprawdzonym zakresie. Źródło niezmienione.
+
+Niezależne dokładne modele całkowitych krat: dla p=2..35 skonstruowano macierz Grama rozszerzenia Q_Cp ⊥ (-Q_Cp) przez (v,v)/p², v=(p-1,...,1), oraz rozszerzenia -Q_Cp przez v/p. Eliminacja Bareissa potwierdziła unimodularność wszystkich 68 macierzy. Modele mają indeks odpowiednio p² i p; są ilustracją algebraiczną, nie realizacją geometryczną. Ponadto 26460 przypadków bilansu liczb Betti'ego z b1=0..5, p=2..50, b2+=0..8, b2-=p-1..p+8. Wszystkie zaliczone.
+
+Kontrola źródłowa: 22 różne cele odsyłaczy rozstrzygnięte jednoznacznie w źródłach 23–34, 37 poprawnie zagnieżdżonych środowisk, 42 pliki GT (41 rozdziałów numerowanych plus wstęp), dokładna zgodność katalogu z kolejnością input i zawartością katalogu plików. CI 45976430559 i 45976430526 nadal queued przy odczycie. Nie powtarzano kontroli publikacji zewnętrznych ani oględzin PDF. Stabilizacja matematyczna/źródłowa 1/2, odbiór techniczny otwarty.
