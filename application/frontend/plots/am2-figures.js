@@ -3,9 +3,10 @@
   "use strict";
   const lin=(a,b,n)=>Array.from({length:n},(_,i)=>a+(b-a)*i/(n-1));
   const grid=(x,y,f)=>y.map(v=>x.map(u=>f(u,v)));
-  const surface=(x,y,z,extra={})=>({type:"surface",x,y,z,showscale:false,...extra});
+  const surface=(x,y,z,extra={})=>({type:"surface",x,y,z,showscale:false,colorscale:"Viridis",...extra});
   const line=(x,y,z,name,color)=>({type:"scatter3d",mode:"lines",x,y,z,name,line:{color,width:5}});
-  const scene=(x="x",y="y",z="z")=>({xaxis:{title:x},yaxis:{title:y},zaxis:{title:z},aspectmode:"auto"});
+  const axis=title=>({title,showbackground:true,backgroundcolor:"#f5f6f7",gridcolor:"#d5dbe0",zerolinecolor:"#b0b8bf",showspikes:false});
+  const scene=(x="x",y="y",z="z")=>({xaxis:axis(x),yaxis:axis(y),zaxis:axis(z),aspectmode:"auto"});
   const base=(data,title,layout={})=>({data,layout:{title:{text:title,font:{size:16}},autosize:true,margin:{l:0,r:0,b:0,t:55},scene:scene(),...layout}});
   const figures={
     "am2_01_norm_balls.html":()=>{
@@ -19,7 +20,7 @@
         return surface(coord(0),coord(1),coord(2),{scene:i?"scene"+(i+1):"scene",name:["l1","l2","l∞"][i],showlegend:true});
       });
       const layout={};
-      for(let i=0;i<3;i++)layout[i?"scene"+(i+1):"scene"]={domain:{x:[i/3,(i+1)/3],y:[0,1]},aspectmode:"cube",...Object.fromEntries(["x","y","z"].map(k=>[k+"axis",{title:k,range:[-1.1,1.1]}]))};
+      for(let i=0;i<3;i++)layout[i?"scene"+(i+1):"scene"]={domain:{x:[i/3,(i+1)/3],y:[0,1]},aspectmode:"cube",...Object.fromEntries(["x","y","z"].map(k=>[k+"axis",{...axis(k),range:[-1.1,1.1]}]))};
       return base(data,"Brzegi kul jednostkowych",layout);
     },
     "am2_08_peaks.html":()=>{
@@ -31,14 +32,14 @@
       return base([1,2,4,8,16,32,64].map(n=>line(x,x.map(()=>n),x.map(v=>v-v**(n+1)),"N="+n,"#2469a0")),"Sumy częściowe",{scene:scene("x","N","Sₙ(x)")});
     },
     "am2_11_paths.html":()=>{
-      const x=lin(-1,1,161),data=[surface(x,x,grid(x,x,(u,v)=>u===0&&v===0?null:u*u*v/(u**4+v*v)),{colorscale:"RdBu",cmin:-.5,cmax:.5,connectgaps:false})];
+      const x=lin(-1,1,161),data=[surface(x,x,grid(x,x,(u,v)=>u===0&&v===0?null:u*u*v/(u**4+v*v)),{colorscale:"Viridis",cmin:-.5,cmax:.5,connectgaps:false})];
       for(const t of [lin(-1,-.001,301),lin(.001,1,301)])data.push(line(t,t.map(v=>v*v),t.map(()=>.5),"y=x²","black"));
       data.push({type:"scatter3d",mode:"markers",x:[0],y:[0],z:[0],name:"f(0,0)=0"});
       return base(data,"Granice wzdłuż krzywych");
     },
     "am2_12_direction.html":()=>{
       const x=lin(-1,1,81),t=lin(-1,1,201),u=t.map(v=>v/Math.sqrt(2));
-      return base([surface(x,x,grid(x,x,(a,b)=>a*a+2*b*b+a+b),{opacity:.65,colorscale:"Blues"}),line(u,u,t.map(v=>1.5*v*v+Math.sqrt(2)*v),"przekrój","black"),line(u,u,t.map(v=>Math.sqrt(2)*v),"styczna","red")],"Przekrój kierunkowy");
+      return base([surface(x,x,grid(x,x,(a,b)=>a*a+2*b*b+a+b),{opacity:.65,colorscale:"Viridis"}),line(u,u,t.map(v=>1.5*v*v+Math.sqrt(2)*v),"przekrój","black"),line(u,u,t.map(v=>Math.sqrt(2)*v),"styczna","red")],"Przekrój kierunkowy");
     },
     "am2_13_frechet.html":()=>{
       const x=lin(-1,1,161),data=[surface(x,x,grid(x,x,(u,v)=>u===0&&v===0?null:Math.abs(u**3*v)/((u**4+v*v)*Math.hypot(u,v))),{connectgaps:false,colorscale:"Viridis"})];
@@ -47,38 +48,38 @@
     },
     "am2_14_remainder.html":()=>{
       const x=lin(-1,1,81);
-      return base([surface(x,x,grid(x,x,(u,v)=>u*u+2*v*v),{name:"reszta",showlegend:true,opacity:.65,colorscale:"Blues"}),surface(x,x,grid(x,x,(u,v)=>2*(u*u+v*v)),{name:"ograniczenie",showlegend:true,opacity:.65,colorscale:"Oranges"})],"Kwadratowe oszacowanie reszty");
+      return base([surface(x,x,grid(x,x,(u,v)=>u*u+2*v*v),{name:"reszta",showlegend:true,opacity:.65,colorscale:"Viridis",cmin:0,cmax:4}),surface(x,x,grid(x,x,(u,v)=>2*(u*u+v*v)),{name:"ograniczenie",showlegend:true,opacity:.65,colorscale:"Viridis",cmin:0,cmax:4})],"Kwadratowe oszacowanie reszty");
     },
     "am2_15_mixed.html":()=>{
       const x=lin(-1,1,121);
-      return base([surface(x,x,grid(x,x,(u,v)=>u===0&&v===0?0:u*v*(u*u-v*v)/(u*u+v*v)),{colorscale:"RdBu",cmid:0})],"Pochodne mieszane");
+      return base([surface(x,x,grid(x,x,(u,v)=>u===0&&v===0?0:u*v*(u*u-v*v)/(u*u+v*v)),{colorscale:"Viridis",cmid:0})],"Pochodne mieszane");
     },
     "am2_16_taylor.html":()=>{
       const x=lin(-1,1,81);
-      return base([surface(x,x,grid(x,x,(u,v)=>u*u+v*v+u**3/2),{name:"f",showlegend:true,opacity:.65,colorscale:"Blues"}),surface(x,x,grid(x,x,(u,v)=>u*u+v*v),{name:"T₂",showlegend:true,opacity:.65,colorscale:"Oranges"})],"Funkcja i wielomian Taylora");
+      return base([surface(x,x,grid(x,x,(u,v)=>u*u+v*v+u**3/2),{name:"f",showlegend:true,opacity:.65,colorscale:"Viridis",cmin:0,cmax:2.5}),surface(x,x,grid(x,x,(u,v)=>u*u+v*v),{name:"T₂",showlegend:true,opacity:.65,colorscale:"Viridis",cmin:0,cmax:2.5})],"Funkcja i wielomian Taylora");
     },
     "am2_17_saddle.html":()=>{
-      const x=lin(-1,1,121),y=lin(-.5,2,151),data=[surface(x,y,grid(x,y,(u,v)=>(v-u*u)*(v-2*u*u)),{opacity:.8,colorscale:"RdBu",cmid:0})];
+      const x=lin(-1,1,121),y=lin(-.5,2,151),data=[surface(x,y,grid(x,y,(u,v)=>(v-u*u)*(v-2*u*u)),{opacity:.8,colorscale:"Viridis",cmid:0})];
       for(const c of [1,1.5,2])data.push(line(x,x.map(v=>c*v*v),x.map(v=>(c-1)*(c-2)*v**4),"y="+c+"x²","black"));
       return base(data,"Punkt siodłowy");
     },
     "am2_18_inverse.html":()=>{
       const x=lin(-1,1,81);
-      return base([surface(x,x,grid(x,x,(u,v)=>v+u*u),{colorscale:"Blues",scene:"scene"}),surface(x,x,grid(x,x,(u,v)=>v-u*u),{colorscale:"Oranges",scene:"scene2"})],"Składowe funkcji i odwrotności",{scene:{...scene("x","y","f₂"),domain:{x:[0,.48],y:[0,1]}},scene2:{...scene("u","v","g₂"),domain:{x:[.52,1],y:[0,1]}}});
+      return base([surface(x,x,grid(x,x,(u,v)=>v+u*u),{colorscale:"Viridis",cmin:-2,cmax:2,scene:"scene"}),surface(x,x,grid(x,x,(u,v)=>v-u*u),{colorscale:"Viridis",cmin:-2,cmax:2,scene:"scene2"})],"Składowe funkcji i odwrotności",{scene:{...scene("x","y","f₂"),domain:{x:[0,.48],y:[0,1]}},scene2:{...scene("u","v","g₂"),domain:{x:[.52,1],y:[0,1]}}});
     },
     "am2_19_implicit.html":()=>{
       const a=lin(Math.asin(.65),Math.PI,61),t=lin(0,2*Math.PI,121),r=lin(0,.65,41);
       const X=t.map(u=>a.map(v=>Math.sin(v)*Math.cos(u))),Y=t.map(u=>a.map(v=>Math.sin(v)*Math.sin(u))),Z=t.map(()=>a.map(Math.cos));
       const U=t.map(u=>r.map(v=>v*Math.cos(u))),V=t.map(u=>r.map(v=>v*Math.sin(u)));
-      return base([surface(X,Y,Z,{opacity:.38,colorscale:[[0,"#a4bacd"],[1,"#e9f1f7"]],name:"sfera",showlegend:true}),surface(U,V,t.map(()=>r.map(v=>Math.sqrt(1-v*v))),{colorscale:[[0,"#235b8c"],[1,"#a7c8e0"]],name:"lokalny wykres",showlegend:true}),surface(U,V,t.map(()=>r.map(()=>1)),{opacity:.45,colorscale:[[0,"#cd9123"],[1,"#f5dfac"]],name:"płaszczyzna styczna",showlegend:true}),{type:"scatter3d",mode:"markers",x:[0],y:[0],z:[1],name:"p",marker:{color:"#aa4137",size:5}}],"Sfera i lokalny wykres",{scene:{...scene("x₁","x₂","y"),aspectmode:"data"}});
+      return base([surface(X,Y,Z,{opacity:.38,colorscale:[[0,"#a4bacd"],[1,"#e9f1f7"]],name:"sfera",showlegend:true}),surface(U,V,t.map(()=>r.map(v=>Math.sqrt(1-v*v))),{colorscale:"Viridis",cmin:Math.sqrt(1-.65**2),cmax:1,name:"lokalny wykres",showlegend:true}),surface(U,V,t.map(()=>r.map(()=>1)),{opacity:.45,colorscale:[[0,"#cd9123"],[1,"#f5dfac"]],name:"płaszczyzna styczna",showlegend:true}),{type:"scatter3d",mode:"markers",x:[0],y:[0],z:[1],name:"p",marker:{color:"#aa4137",size:5}}],"Sfera i lokalny wykres",{scene:{...scene("x₁","x₂","y"),aspectmode:"data"}});
     },
     "am2_20_rank.html":()=>{
       const x=lin(-1,1,61);
-      return base([-1,0,1].map((c,i)=>surface(x,x,grid(x,x,(u,v)=>u*u+v*v+c),{colorscale:[[[0,"#235b8c"],[1,"#d4e5f1"]],[[0,"#377d55"],[1,"#dcecdf"]],[[0,"#cd9123"],[1,"#faedcd"]]][i],opacity:.8,name:"c="+c,showlegend:true})),"Poziomice submersji");
+      return base([-1,0,1].map((c,i)=>surface(x,x,grid(x,x,(u,v)=>u*u+v*v+c),{colorscale:"Viridis",cmin:-1,cmax:3,opacity:.8,name:"c="+c,showlegend:true})),"Poziomice submersji");
     },
     "am2_21_tangent.html":()=>{
       const x=lin(-1,1,61);
-      return base([surface(x,x,grid(x,x,(u,v)=>u*u+v*v),{colorscale:[[0,"#235b8c"],[1,"#d4e5f1"]],name:"S",showlegend:true}),surface(x,x,grid(x,x,()=>0),{colorscale:[[0,"#cd9123"],[1,"#f5dfac"]],opacity:.45,name:"T₀S",showlegend:true}),line([0,0],[0,0],[0,1],"n","#aa4137"),{type:"scatter3d",mode:"markers",x:[0],y:[0],z:[0],name:"p",marker:{color:"#aa4137",size:5}}],"Przestrzeń styczna i normalna",{scene:{...scene(),aspectmode:"data"}});
+      return base([surface(x,x,grid(x,x,(u,v)=>u*u+v*v),{colorscale:"Viridis",name:"S",showlegend:true}),surface(x,x,grid(x,x,()=>0),{colorscale:[[0,"#cd9123"],[1,"#f5dfac"]],opacity:.45,name:"T₀S",showlegend:true}),line([0,0],[0,0],[0,1],"n","#aa4137"),{type:"scatter3d",mode:"markers",x:[0],y:[0],z:[0],name:"p",marker:{color:"#aa4137",size:5}}],"Przestrzeń styczna i normalna",{scene:{...scene(),aspectmode:"data"}});
     },
     "am2_36_geometric.html":()=>{
       const r=lin(0,.97,61),t=lin(0,2*Math.PI,121),X=t.map(a=>r.map(v=>v*Math.cos(a))),Y=t.map(a=>r.map(v=>v*Math.sin(a)));
