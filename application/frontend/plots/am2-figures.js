@@ -95,6 +95,21 @@
       const x=lin(-1,1,61);
       return base([surface(x,x,grid(x,x,(u,v)=>u*u+v*v),{colorscale:"Viridis",name:"S",showlegend:true}),surface(x,x,grid(x,x,()=>0),{colorscale:[[0,"#cd9123"],[1,"#f5dfac"]],opacity:.45,name:"T₀S",showlegend:true}),line([0,0],[0,0],[0,1],"n","#aa4137"),{type:"scatter3d",mode:"markers",x:[0],y:[0],z:[0],name:"p",marker:{color:"#aa4137",size:5}}],"Przestrzeń styczna i normalna",{scene:{...scene(),aspectmode:"data"}});
     },
+    "am2_22_constrained.html":()=>{
+      const x=lin(-1.2,2.2,81),y=lin(-1.2,1.2,61),t=lin(0,2*Math.PI,121),r=lin(0,1,41);
+      const U=r.map(v=>t.map(a=>v*Math.cos(a))),V=r.map(v=>t.map(a=>v*Math.sin(a)));
+      const f=(u,v)=>(u-2)**2+v*v;
+      const data=[surface(x,y,grid(x,y,f),{scene:"scene",colorscale:"Viridis",cmin:0,cmax:12,name:"pełny wykres"}),
+        surface(U,V,U.map((row,i)=>row.map((u,j)=>f(u,V[i][j]))),{scene:"scene2",colorscale:"Viridis",cmin:0,cmax:12,name:"część dopuszczalna"})];
+      const a=lin(0,2*Math.PI,241);
+      for(const sc of ["scene","scene2"]){
+        data.push({...line(a.map(Math.cos),a.map(Math.sin),a.map(v=>5-4*Math.cos(v)),"brzeg koła","#222222"),scene:sc,showlegend:false});
+        data.push({type:"scatter3d",mode:"markers",x:[1],y:[0],z:[1],scene:sc,name:"minimum związane",marker:{color:"red",size:5},showlegend:false});
+      }
+      data.push({type:"scatter3d",mode:"markers",x:[2],y:[0],z:[0],scene:"scene",name:"minimum swobodne",marker:{color:"blue",size:5},showlegend:false});
+      const panel=(domain)=>({...scene("x","y","f"),domain:{x:domain,y:[0,1]},aspectmode:"manual",aspectratio:{x:1.4,y:1,z:1.2},xaxis:{...axis("x"),range:[-1.2,2.2]},yaxis:{...axis("y"),range:[-1.2,1.2]},zaxis:{...axis("f"),range:[0,12]}});
+      return base(data,"Minimum na kole jednostkowym",{scene:panel([0,.48]),scene2:panel([.52,1]),annotations:[{text:"Pełny wykres",xref:"paper",yref:"paper",x:.24,y:1,showarrow:false},{text:"Część dopuszczalna",xref:"paper",yref:"paper",x:.76,y:1,showarrow:false}]});
+    },
     "am2_36_geometric.html":()=>{
       const r=lin(0,.97,61),t=lin(0,2*Math.PI,121),X=t.map(a=>r.map(v=>v*Math.cos(a))),Y=t.map(a=>r.map(v=>v*Math.sin(a)));
       const norm=(a,v,n)=>n===null?1/Math.hypot(1-v*Math.cos(a),v*Math.sin(a)):Math.hypot(1-v**(n+1)*Math.cos((n+1)*a),v**(n+1)*Math.sin((n+1)*a))/Math.hypot(1-v*Math.cos(a),v*Math.sin(a));
