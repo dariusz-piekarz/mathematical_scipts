@@ -6,7 +6,7 @@
 - chapters/pl/integration_theory/08-calka-denjoya-w-wersji-waskiej.tex: `882e4c97b544e7d03b57438bc067ea3914ca1f34`
 - chapters/pl/integration_theory/11-calka-lebesgue-a.tex: `1a79d98bd134c1e4e5375bf300a283b13429c3f8`
 
-Etykiety w źródłach pozostają niezmienione; etykiety adaptacji otrzymały osobną przestrzeń nazw, aby nie powielać identyfikatorów w Atlasie.
+Powyższe bloby dokumentują historyczne pochodzenie adaptacji. Po decyzji o redystrybucji teorii całki każda z poniższych etykiet źródłowych pozostaje w AM I jako alias przy tej samej deklaracji co etykieta adaptacji. Obie etykiety mają występować dokładnie raz w rozdziale. Dalsza redystrybucja lub usunięcie skryptu źródłowego nie może usuwać tych aliasów.
 
 | Etykieta źródłowa | Etykieta MA1 |
 |---|---|
@@ -40,4 +40,4 @@ Etykiety w źródłach pozostają niezmienione; etykiety adaptacji otrzymały os
 | st:hk-zbieznosc-jednostajna | ma1:kh:st:hk-zbieznosc-jednostajna |
 | it:thm:kh-equiintegrability | ma1:kh:thm:kh-equiintegrability |
 
-Adaptacja porządkuje materiał od definicji do twierdzeń granicznych i zawiera pełną charakterystykę ACG_*. Część miarowa wymaga jawnie wskazanych wyników Teorii miary. Wersja robocza nie jest jeszcze włączona do książki ani katalogu; CI źródła oczekuje. Potrzebne audyty zgodności, kompilacja, regresje i PDF.
+Adaptacja porządkuje materiał od definicji do twierdzeń granicznych i zawiera pełną charakterystykę ACG_*. Część miarowa wymaga jawnie wskazanych wyników Teorii miary. Rozdział jest włączony do książki i katalogu. Zmiana kontraktu etykiet z 27.11.2026 wymaga ponownego CI; nie przesądza o matematycznej stabilizacji rozdziału.

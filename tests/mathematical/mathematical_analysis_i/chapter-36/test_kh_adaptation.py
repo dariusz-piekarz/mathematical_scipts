@@ -51,12 +51,18 @@ class Chapter36(unittest.TestCase):
         mapping=re.findall(r"^\| ([^| ]+) \| (ma1:kh:[^| ]+) \|$",MAP.read_text(encoding="utf8"),re.M)
         self.assertGreaterEqual(len(mapping),29)
         source=SOURCE.read_text(encoding="utf8")
-        originals="\n".join(p.read_text(encoding="utf8") for p in
-            (ROOT/"chapters/pl/integration_theory").glob("*.tex"))
+        # The migration retains the original labels as aliases at the same
+        # declaration. Historical provenance is recorded in MAP; the donor
+        # script may be redistributed or removed without breaking AM1.
+        labels=re.findall(r"\\label\{([^}]+)\}",source)
+        groups=[set(re.findall(r"\\label\{([^}]+)\}",match.group()))
+                for match in re.finditer(r"(?:\\label\{[^}]+\}\s*)+",source)]
         for old,new in mapping:
-            self.assertIn("\\label{"+old+"}",originals)
-            self.assertIn("\\label{"+new+"}",source)
-            self.assertNotIn("\\label{"+old+"}",source)
+            with self.subTest(old=old,new=new):
+                self.assertEqual(labels.count(old),1)
+                self.assertEqual(labels.count(new),1)
+                self.assertTrue(any({old,new} <= group for group in groups),
+                                "Aliases must refer to the same declaration")
 
     def test_gauge_diagram_enclosure(self):
         # Coordinates of the three cells in the TikZ example.
