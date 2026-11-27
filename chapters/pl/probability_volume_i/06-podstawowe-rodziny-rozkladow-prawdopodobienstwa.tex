@@ -874,7 +874,11 @@ Dla $a,b>0$ definiujemy funkcję gamma i funkcję beta Eulera wzorami
 \qquad
 \mathrm B(a,b):=\int_0^1 t^{a-1}(1-t)^{b-1}\,\dd\lambda_1(t).
 \]
-Obie całki są skończone i dodatnie dla podanych parametrów.
+Całki rozumiemy jako całki Lebesgue'a po odpowiednio
+$(0,\infty)$ i $(0,1)$, bez potrzeby określania wartości
+funkcji podcałkowych w punktach końcowych.
+Obie całki są skończone i dodatnie dla podanych parametrów,
+co uzasadnimy w następnym dowodzie.
 \end{definicja}
 
 \begin{lemat}[Podstawowe tożsamości]
@@ -886,18 +890,34 @@ i $\Gamma(n+1)=n!$ dla $n\in\N\cup\{0\}$.
 \end{lemat}
 \begin{proof}
 Najpierw uzasadnijmy zbieżność całki definiującej
-$\Gamma(a)$. Przy zerze funkcja $t^{a-1}e^{-t}$
-zachowuje się jak $t^{a-1}$, a ta jest całkowalna
-na $(0,1)$ wtedy i tylko wtedy, gdy $a>0$.
-Na $(1,\infty)$ czynnik wykładniczy zapewnia
-całkowalność każdego wielomianowego czynnika.
-Podobnie całka beta jest zbieżna, ponieważ
-przy końcach przedziału czynniki zachowują się
-jak $t^{a-1}$ i $(1-t)^{b-1}$.
+$\Gamma(a)$. Na $(0,1)$ mamy $0<t^{a-1}e^{-t}\leq t^{a-1}$,
+a $\int_0^1t^{a-1}\,\dd\lambda_1(t)=1/a<\infty$.
+Na $[1,\infty)$ funkcja $t^{a-1}e^{-t/2}$ jest
+ciągła i ograniczona: jej granica w nieskończoności
+jest zerowa, gdyż $(a-1)\log t-t/2\to-\infty$.
+Zatem $t^{a-1}e^{-t}\leq C_a e^{-t/2}$ dla pewnej
+skończonej stałej $C_a$; prawa strona jest całkowalna.
+W przypadku funkcji beta na $(0,1/2]$ czynnik
+$(1-t)^{b-1}$ jest ograniczony przez $\max(1,2^{1-b})$,
+a $\int_0^{1/2}t^{a-1}\,\dd\lambda_1(t)=2^{-a}/a$.
+Na $[1/2,1)$ czynnik $t^{a-1}$ jest ograniczony przez
+$\max(1,2^{1-a})$, a całka z $(1-t)^{b-1}$
+wynosi $2^{-b}/b$. Otrzymujemy skończoność obu całek.
+Ich ścisła dodatniość wynika z dodatniości funkcji
+podcałkowych na przedziałach dodatniej miary.
 
-Całkując przez części i wykorzystując znikanie
-wyrazów brzegowych $t^a e^{-t}$ dla $t\to0+$
-i $t\to\infty$, otrzymujemy
+Całkując przez części na $[\varepsilon,R]$,
+gdzie $0<\varepsilon<R$, otrzymujemy
+\[
+\int_\varepsilon^R t^ae^{-t}\,\dd\lambda_1(t)
+=-R^ae^{-R}+\varepsilon^ae^{-\varepsilon}
++a\int_\varepsilon^R t^{a-1}e^{-t}\,\dd\lambda_1(t).
+\]
+Przy $\varepsilon\downarrow0$ i $R\uparrow\infty$
+wyrazy brzegowe dążą do zera (ponieważ $a>0$
+i wykładnicza dominuje potęgę w nieskończoności).
+Zbieżność monotoniczna dla nieujemnych funkcji
+podcałkowych pozwala przejść do granicy. Otrzymujemy
 \[
 \Gamma(a+1)=\int_0^\infty t^ae^{-t}\,\dd\lambda_1(t)
 =a\int_0^\infty t^{a-1}e^{-t}\,\dd\lambda_1(t)
@@ -905,24 +925,42 @@ i $t\to\infty$, otrzymujemy
 \]
 Ponieważ $\Gamma(1)=\int_0^\infty e^{-t}\,\dd\lambda_1(t)=1$,
 indukcja daje $\Gamma(n+1)=n!$.
-Podstawienie $t=u^2$ i symetria całki Gaussa dają
-$\Gamma(1/2)=2\int_0^\infty e^{-u^2}\,\dd\lambda_1(u)
-=\sqrt\pi$.
+Podstawienie $t=u^2$ jest zmianą zmiennych na
+$(0,\infty)$ o jakobianie $2u$, więc
+$\Gamma(1/2)=2\int_0^\infty e^{-u^2}\,\dd\lambda_1(u)$.
+Z symetrii i podstawienia $v=\sqrt2\,u$ oraz
+wcześniejszego lematu o całce Gaussa wynika
+\[
+2\int_0^\infty e^{-u^2}\,\dd\lambda_1(u)
+=\frac1{\sqrt2}\int_\R e^{-v^2/2}\,\dd\lambda_1(v)=\sqrt\pi.
+\]
 
-Aby wyprowadzić relację z funkcją beta, zapiszmy
-przez Tonellego iloczyn dwóch dodatnich całek:
+Aby wyprowadzić relację z funkcją beta, stosujemy
+\atlasref{ME-12::thm:tonelli-12}{twierdzenie Tonellego}
+do nieujemnej borelowskiej funkcji na $(0,\infty)^2$
+względem miary produktowej Lebesgue'a:
 \[
 \Gamma(a)\Gamma(b)
 =\int_{(0,\infty)^2}u^{a-1}v^{b-1}e^{-u-v}
 \,\dd\lambda_2(u,v).
 \]
 Wprowadzamy $r=u+v>0$ i $w=u/(u+v)\in(0,1)$.
-Odwrotnie, $u=rw$, $v=r(1-w)$; wyznacznik macierzy
-pochodnych odwzorowania $(r,w)\mapsto(u,v)$
-ma moduł $r$. Funkcja podcałkowa wraz z jakobianem
+Odwrotnie, $u=rw$, $v=r(1-w)$.
+Oba odwzorowania są klasy $C^1$ na odpowiednich
+otwartych obszarach, więc jest to dyfeomorfizm
+$(0,\infty)\times(0,1)$ na $(0,\infty)^2$.
+Wyznacznik macierzy pochodnych odwzorowania
+$(r,w)\mapsto(u,v)$ wynosi
+\[
+\det\begin{pmatrix}w&r\\1-w&-r\end{pmatrix}=-r.
+\]
+Z \atlasref{ME-13::thm:change-variables-13}{twierdzenia o zamianie zmiennych}
+funkcja podcałkowa pomnożona przez moduł jakobianu
 przyjmuje postać
 $r^{a+b-1}e^{-r}w^{a-1}(1-w)^{b-1}$.
-Możemy więc ponownie rozdzielić całkę:
+Oba czynniki są nieujemne i borelowskie.
+Ponowne zastosowanie twierdzenia Tonellego pozwala
+rozdzielić całkę:
 \[
 \Gamma(a)\Gamma(b)
 =\left(\int_0^\infty r^{a+b-1}e^{-r}\,\dd\lambda_1(r)\right)
@@ -945,8 +983,12 @@ Niech $\alpha,\lambda>0$. Rozkładem gamma $\Gam(\alpha,\lambda)$
 o parametrze kształtu $\alpha$ i \emph{intensywności} $\lambda$
 nazywamy rozkład o gęstości
 \begin{equation}\label{eq:gamma}
-f(x)=\frac{\lambda^\alpha}{\Gamma(\alpha)}
- x^{\alpha-1}e^{-\lambda x}\ind{\{x>0\}}.
+f(x)=
+\begin{cases}
+\displaystyle\frac{\lambda^\alpha}{\Gamma(\alpha)}
+ x^{\alpha-1}e^{-\lambda x},&x>0,\\
+0,&x\leq0.
+\end{cases}
 \end{equation}
 \end{definicja}
 
@@ -957,21 +999,36 @@ Dla $X\sim\Gam(\alpha,\lambda)$ zachodzi
 \Var(X)=\frac\alpha{\lambda^2},\qquad
 M_X(t)=\left(\frac\lambda{\lambda-t}\right)^\alpha\quad(t<\lambda).
 \]
+Dla $t\geq\lambda$ zachodzi $M_X(t)=\infty$.
 Jeżeli $X\sim\Gam(\alpha,\lambda)$ i
-$Y\sim\Gam(\beta,\lambda)$ są niezależne, to
+$Y\sim\Gam(\beta,\lambda)$, gdzie $\beta>0$, są niezależne
+na wspólnej przestrzeni probabilistycznej, to
 $X+Y\sim\Gam(\alpha+\beta,\lambda)$.
 \end{stwierdzenie}
 \begin{proof}
-Najpierw sprawdźmy normalizację gęstości. Dla
-$\alpha,\lambda>0$, po podstawieniu $u=\lambda x$,
+Najpierw sprawdźmy normalizację gęstości, która
+jest borelowska i nieujemna (również przy $\alpha<1$,
+ponieważ potęga jest obliczana tylko dla $x>0$).
+Dla $\alpha,\lambda>0$, po podstawieniu $u=\lambda x$,
 \[
 \int_0^\infty\frac{\lambda^\alpha}{\Gamma(\alpha)}
  x^{\alpha-1}e^{-\lambda x}\,\dd\lambda_1(x)
 =\frac1{\Gamma(\alpha)}\int_0^\infty
 u^{\alpha-1}e^{-u}\,\dd\lambda_1(u)=1.
 \]
-Dla $r\geq0$ ten sam rachunek daje
-$\E X^r=\Gamma(\alpha+r)/(\lambda^r\Gamma(\alpha))$.
+Dla rzeczywistego $r\geq0$ ze wzoru \eqref{eq:lotus}
+oraz tego samego podstawienia otrzymujemy
+\[
+\E X^r
+=\frac{\lambda^\alpha}{\Gamma(\alpha)}
+\int_0^\infty x^{\alpha+r-1}e^{-\lambda x}\,\dd\lambda_1(x)
+=\frac{\Gamma(\alpha+r)}{\lambda^r\Gamma(\alpha)}.
+\]
+Potęgę $X^r$ dla niecałkowitego $r$ rozumiemy jako
+funkcję określoną przez $x^r$ dla $x>0$ i dowolnie
+przedłużoną na zdarzeniu $\{X\leq0\}$ o prawdopodobieństwie
+zero. Dla $r=0$ przyjmujemy $X^0=1$.
+Całka jest skończona, gdyż $\alpha+r>0$.
 Korzystając z rekurencji funkcji gamma dla $r=1,2$,
 mamy $\E X=\alpha/\lambda$ i
 $\E X^2=\alpha(\alpha+1)/\lambda^2$.
@@ -986,23 +1043,47 @@ M_X(t)=\frac{\lambda^\alpha}{\Gamma(\alpha)}
 =\left(\frac{\lambda}{\lambda-t}\right)^\alpha,
 \]
 gdzie użyliśmy kolejno zmiany $u=(\lambda-t)x$
-i definicji funkcji gamma.
+i definicji funkcji gamma (argument $\alpha$ jest dodatni).
+Dla $t\geq\lambda$ mamy $e^{-(\lambda-t)x}\geq1$ na
+$[1,\infty)$, a $\int_1^\infty x^{\alpha-1}\,\dd\lambda_1(x)
+=\infty$ dla $\alpha>0$. Wobec tego funkcja tworząca
+momenty ma dziedzinę skończoności dokładnie $(-\infty,\lambda)$.
 
 Dla sumy niezależnych zmiennych gamma z tą samą
-intensywnością korzystamy ze splotu:
+intensywnością korzystamy ze wzoru na splot
+(rozdział~\ref{ch:random-variables}).
+Dla $s>0$ obie gęstości są dodatnie jedynie wtedy,
+gdy jednocześnie $x>0$ i $s-x>0$, czyli $x\in(0,s)$.
+Dla $s\leq0$ taki $x$ nie istnieje i splot jest zerowy.
+Dla $s>0$ otrzymujemy:
 \[
 f_{X+Y}(s)=\frac{\lambda^{\alpha+\beta}e^{-\lambda s}}
 {\Gamma(\alpha)\Gamma(\beta)}
 \int_0^s x^{\alpha-1}(s-x)^{\beta-1}\,\dd\lambda_1(x),
 \quad s>0.
 \]
-Podstawiamy $x=sw$, co daje czynnik
-$s^{\alpha+\beta-1}$ i całkę $\mathrm B(\alpha,\beta)$.
-Tożsamość beta--gamma redukuje współczynnik do
-$1/\Gamma(\alpha+\beta)$. Otrzymujemy dokładnie
+Podstawiamy $x=sw$ dla $0<w<1$; moduł jakobianu
+wynosi $s$. Stąd
+\[
+\int_0^s x^{\alpha-1}(s-x)^{\beta-1}\,\dd\lambda_1(x)
+=s^{\alpha+\beta-1}\mathrm B(\alpha,\beta).
+\]
+Całka jest skończona, gdyż oba parametry są dodatnie.
+Po zastosowaniu tożsamości beta--gamma otrzymujemy
+$f_{X+Y}(s)=\lambda^{\alpha+\beta}s^{\alpha+\beta-1}
+e^{-\lambda s}/\Gamma(\alpha+\beta)$ dla $s>0$,
+a dla $s\leq0$ gęstość jest zerowa. Jest to dokładnie
 gęstość $\Gam(\alpha+\beta,\lambda)$.
 Wspólna intensywność jest istotna: dla różnych
-intensywności ten prosty wzór na sumę nie obowiązuje.
+intensywności ten wzór na sumę nie obowiązuje.
+Na przykład dla dwóch niezależnych zmiennych wykładniczych
+o intensywnościach $\lambda_1\ne\lambda_2$ średnia sumy
+wynosi $1/\lambda_1+1/\lambda_2$, a wariancja
+$1/\lambda_1^2+1/\lambda_2^2$.
+Gdyby suma miała rozkład gamma o kształcie $2$,
+jej wariancja musiałaby być równa połowie kwadratu średniej.
+Różnica między rzeczywistą wariancją i tą wartością wynosi
+$\tfrac12(1/\lambda_1-1/\lambda_2)^2>0$.
 \end{proof}
 
 \begin{uwaga}
@@ -1027,16 +1108,22 @@ Niech $\nu>0$. Rozkładem chi-kwadrat z $\nu$ stopniami swobody,
 oznaczanym $\chi^2_\nu$, nazywamy rozkład
 $\Gam(\nu/2,1/2)$, a więc rozkład o gęstości
 \begin{equation}\label{eq:chisq}
-f_\nu(x)=\frac{1}{2^{\nu/2}\Gamma(\nu/2)}
- x^{\nu/2-1}e^{-x/2}\ind{\{x>0\}}.
+f_\nu(x)=
+\begin{cases}
+\displaystyle\frac{1}{2^{\nu/2}\Gamma(\nu/2)}
+ x^{\nu/2-1}e^{-x/2},&x>0,\\
+0,&x\leq0.
+\end{cases}
 \end{equation}
 Dla naturalnego $\nu$ liczba $\nu$ jest liczbą stopni swobody
 w poniższej reprezentacji za pomocą zmiennych normalnych.
 \end{definicja}
 
 \begin{twierdzenie}[Suma kwadratów zmiennych normalnych]
-Niech $\nu\in\N$ i niech $Z_1,\ldots,Z_\nu$ będą niezależne
-i mają rozkład $\Normal(0,1)$. Wówczas
+Niech $\nu\geq1$ będzie liczbą całkowitą i niech
+$Z_1,\ldots,Z_\nu$ będą niezależnymi zmiennymi losowymi
+na wspólnej przestrzeni probabilistycznej, o rozkładzie
+$\Normal(0,1)$. Wówczas
 $U:=\sum_{j=1}^\nu Z_j^2\sim\chi^2_\nu$.
 Dla dowolnego rzeczywistego $\nu>0$, jeżeli $U\sim\chi^2_\nu$,
 to $\E U=\nu$ oraz $\Var(U)=2\nu$.
@@ -1044,11 +1131,15 @@ to $\E U=\nu$ oraz $\Var(U)=2\nu$.
 \begin{proof}
 Wystarczy najpierw obliczyć rozkład $Z^2$ dla jednej
 standardowej zmiennej normalnej $Z$.
-Funkcja $g(z)=z^2$ jest różnowartościowa na
-$(-\infty,0)$ i $(0,\infty)$, a dla $u>0$ ma
-przeciwobrazy $z_\pm=\pm\sqrt u$. Pochodna ma
-moduł $|g'(z_\pm)|=2\sqrt u$. Ze wzoru
-na transformację o dwóch gałęziach
+Niech $\varphi(z)=(2\pi)^{-1/2}e^{-z^2/2}$ oznacza
+gęstość $Z$. Funkcja $g(z)=z^2$ jest dyfeomorfizmem
+klasy $C^1$ z każdego z przedziałów $(-\infty,0)$
+i $(0,\infty)$ na $(0,\infty)$.
+Pominięty punkt $0$ ma prawdopodobieństwo zero,
+ponieważ $Z$ ma gęstość. Dla $u>0$ przeciwobrazy to
+$z_\pm=\pm\sqrt u$, a $|g'(z_\pm)|=2\sqrt u>0$.
+Ze wzoru na transformację o dwóch gałęziach
+(rozdział~\ref{ch:random-variables})
 \[
 f_{Z^2}(u)=\frac{\varphi(\sqrt u)}{2\sqrt u}
 +\frac{\varphi(-\sqrt u)}{2\sqrt u}
@@ -1057,11 +1148,19 @@ f_{Z^2}(u)=\frac{\varphi(\sqrt u)}{2\sqrt u}
 \]
 Ponieważ $\Gamma(1/2)=\sqrt\pi$, wzór ten jest równy
 $u^{-1/2}e^{-u/2}/(2^{1/2}\Gamma(1/2))$.
+Dla $u\leq0$ przyjmujemy gęstość równą zeru,
+co jest dopuszczalne, ponieważ $Z^2>0$ prawie na pewno.
 Jest to gęstość $\Gam(1/2,1/2)$.
 
 Każda zmienna $Z_j^2$ ma więc taki sam rozkład gamma.
-Z niezależności $Z_j$ wynika niezależność mierzalnych
-funkcji $Z_j^2$. Własność dodawania niezależnych
+Dla dowolnych borelowskich $B_j\subseteq\R$
+zdarzenie $\{Z_j^2\in B_j\}$ jest zdarzeniem
+$\{Z_j\in g^{-1}(B_j)\}$, gdzie przeciwobraz jest
+borelowski. Z niezależności $Z_j$ wynika zatem
+niezależność $Z_j^2$. Kolejne sumy tych zmiennych
+są niezależne od następnego składnika, ponieważ
+rozkład łączny jest miarą produktową.
+Indukcyjne zastosowanie własności dodawania niezależnych
 rozkładów gamma o wspólnej intensywności daje
 $\sum_{j=1}^\nu Z_j^2\sim\Gam(\nu/2,1/2)=\chi^2_\nu$.
 Niezależnie od tego, czy $\nu$ jest całkowite,
