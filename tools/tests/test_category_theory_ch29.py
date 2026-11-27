@@ -9,19 +9,19 @@ ROOT = Path(__file__).resolve().parents[2]
 CHAPTER = ROOT / "chapters/pl/category_theory/29-presnopy-snopy-i-topologie-grothendiecka.tex"
 
 
-def below(u):
-    return tuple(v for v in range(4) if v & u == v)
+def below(u, opens=range(4)):
+    return tuple(v for v in opens if v & u == v)
 
 
-def covers(u):
-    """Covering sieves on the two-point discrete space, including empty."""
-    opens = below(u)
+def covers(u, space=range(4)):
+    """Covering sieves on a finite topology, including the empty sieve."""
+    opens = below(u, space)
     for bits in itertools.product((False, True), repeat=len(opens)):
         r = frozenset(v for v, bit in zip(opens, bits) if bit)
         union = 0
         for v in r:
             union |= v
-        if union == u and all(set(below(v)) <= r for v in r):
+        if union == u and all(set(below(v, space)) <= r for v in r):
             yield r
 
 
@@ -29,26 +29,26 @@ def families(values, restrict, r):
     opens = sorted(r)
     for items in itertools.product(*(values[v] for v in opens)):
         x = dict(zip(opens, items))
-        if all(restrict(v, w, x[v]) == x[w] for v in r for w in below(v)):
+        if all(restrict(v, w, x[v]) == x[w] for v in r for w in below(v, values)):
             yield tuple(zip(opens, items))
 
 
 def plus(values, restrict):
     representatives = {
-        u: tuple((r, x) for r in covers(u) for x in families(values, restrict, r))
-        for u in range(4)
+        u: tuple((r, x) for r in covers(u, values) for x in families(values, restrict, r))
+        for u in values
     }
 
     def equivalent(u, p, q):
         r, x = p
         s, y = q
         return any(t <= r & s and all(dict(x)[v] == dict(y)[v] for v in t)
-                   for t in covers(u))
+                   for t in covers(u, values))
 
     classes = {
         u: frozenset(frozenset(q for q in representatives[u] if equivalent(u, p, q))
                      for p in representatives[u])
-        for u in range(4)
+        for u in values
     }
 
     def locate(u, p):
@@ -56,19 +56,19 @@ def plus(values, restrict):
 
     def restriction(u, v, c):
         r, x = next(iter(c))
-        rr = r & frozenset(below(v))
+        rr = r & frozenset(below(v, values))
         return locate(v, (rr, tuple((w, s) for w, s in x if w in rr)))
 
     def unit(u, s):
-        r = frozenset(below(u))
+        r = frozenset(below(u, values))
         return locate(u, (r, tuple((v, restrict(u, v, s)) for v in sorted(r))))
 
     return classes, restriction, unit
 
 
 def sheaf_condition(values, restrict, injective_only=False):
-    for u in range(4):
-        for r in covers(u):
+    for u in values:
+        for r in covers(u, values):
             images = [tuple((v, restrict(u, v, s)) for v in sorted(r))
                       for s in values[u]]
             if len(set(images)) != len(images):
@@ -113,6 +113,32 @@ class CategoryTheoryCh29(unittest.TestCase):
         for a in range(4):
             values = {u: (0,) if u & a == u else () for u in range(4)}
             self.assertTrue(sheaf_condition(values, lambda u, v, s: s))
+
+    def test_CAT_29_006_two_plus_steps_really_needed(self):
+        # Opens of the four-point example: c=4, d=8, A=13, B=14.
+        values = {0: (0,), 4: (0,), 8: (0,), 12: (0, 1),
+                  13: (0,), 14: (0,), 15: ()}
+
+        def restrict(u, v, s):
+            if u == v:
+                return s
+            if u == 14 and v == 12:
+                return 1
+            return 0
+
+        for u in values:
+            for v in below(u, values):
+                for w in below(v, values):
+                    for x in values[u]:
+                        self.assertEqual(restrict(v, w, restrict(u, v, x)),
+                                         restrict(u, w, x))
+        p, rp, _ = plus(values, restrict)
+        self.assertEqual([len(p[u]) for u in (12, 13, 14, 15)], [1, 1, 1, 0])
+        self.assertTrue(sheaf_condition(p, rp, True))
+        self.assertFalse(sheaf_condition(p, rp))
+        pp, rpp, _ = plus(p, rp)
+        self.assertEqual(len(pp[15]), 1)
+        self.assertTrue(sheaf_condition(pp, rpp))
 
     def test_CAT_29_005_structure(self):
         s = CHAPTER.read_text(encoding="utf-8")
