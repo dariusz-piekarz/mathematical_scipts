@@ -129,6 +129,36 @@ def verify_extremal():
     print(f"PASS chapter 41: {checked} exhaustive graphs; Caro--Wei, Turan, and equality cases")
 
 
+def verify_turan_equality():
+    """Check all equality cases, including empty parts, through n=6."""
+    checked = 0
+    for n in range(7):
+        pool = list(combinations(range(n), 2))
+        for mask in range(1 << len(pool)):
+            adj = [set() for _ in range(n)]
+            for i, (u, v) in enumerate(pool):
+                if mask >> i & 1:
+                    adj[u].add(v)
+                    adj[v].add(u)
+            omega = max((len(S) for k in range(n + 1)
+                         for S in combinations(range(n), k)
+                         if all(v in adj[u] for u, v in combinations(S, 2))), default=0)
+            for r in range(max(1, omega), n + 2):
+                q, s = divmod(n, r)
+                bound = (n*n - (r-s)*q*q - s*(q+1)**2)//2
+                assert mask.bit_count() <= bound
+                if mask.bit_count() != bound:
+                    continue
+                # Nonadjacency, including equality, must be an equivalence relation.
+                parts = {frozenset(set(range(n)) - adj[v]) for v in range(n)}
+                assert sum(map(len, parts)) == n
+                assert all(not (a & b) for a, b in combinations(parts, 2))
+                sizes = sorted([len(a) for a in parts] + [0]*(r-len(parts)))
+                assert sizes == [q]*(r-s) + [q+1]*s
+                checked += 1
+    return checked
+
+
 def connected(n, edges):
     reached = {0}
     while True:
@@ -194,6 +224,8 @@ def verify_source_hypotheses():
         assert fragment in theorem, f"missing key hypothesis: {fragment}"
     assert "Nie można w tym wniosku liczyć dróg" in proof
     assert "przepustowości $0$" in proof
+    turan = (root / "chapters/pl/graph_and_knot_theory/41-twierdzenia-mantela-turana-i-ramseya.tex").read_text(encoding="utf-8")
+    assert turan.count(r"\label{prop:tg-turan-unique}") == 1
     print("PASS chapter 40: repaired TeX hypotheses and conclusion explicitly guarded")
 
 
@@ -201,5 +233,6 @@ if __name__ == "__main__":
     verify_packing()
     verify_source_hypotheses()
     verify_extremal()
+    print("PASS Turan equality cases:", verify_turan_equality())
     verify_random_moments()
     print("PASS audit 31 independent finite tests (not a substitute for mathematical proofs)")
