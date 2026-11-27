@@ -3,7 +3,19 @@ function buildProsePreview(container, source, moduleId) {
   const fragment=document.createDocumentFragment();
   // Sticky matching avoids allocating the unconsumed suffix at every token.
   const at=(pattern,text,offset)=>{pattern.lastIndex=offset;return pattern.exec(text);};
-  const environmentNames = {definicja:'Definicja',definition:'Definicja',twierdzenie:'Twierdzenie',theorem:'Twierdzenie',lemat:'Lemat',lemma:'Lemat',stwierdzenie:'Stwierdzenie',proposition:'Stwierdzenie',wniosek:'Wniosek',corollary:'Wniosek',uwaga:'Uwaga',remark:'Uwaga',przyklad:'Przykład',example:'Przykład',proof:'Dowód',dowod:'Dowód'};
+  // Match the indexer's semantic environment families (including starred aliases).
+  const environmentGroups = {
+    result:{twierdzenie:'Twierdzenie',theorem:'Twierdzenie',lemat:'Lemat',lemma:'Lemat',
+      stwierdzenie:'Stwierdzenie',proposition:'Stwierdzenie',wniosek:'Wniosek',corollary:'Wniosek',
+      fakt:'Fakt',fact:'Fakt',claim:'Teza',teza:'Teza','tezа':'Teza'},
+    definition:{definicja:'Definicja',definition:'Definicja',oznaczenie:'Oznaczenie',notation:'Oznaczenie'},
+    example:{przyklad:'Przykład',example:'Przykład',kontrprzyklad:'Kontrprzykład',counterexample:'Kontrprzykład'},
+    remark:{uwaga:'Uwaga',remark:'Uwaga',remarks:'Uwagi',obserwacja:'Obserwacja',observation:'Obserwacja'},
+    exercise:{zadanie:'Zadanie',exercise:'Zadanie',problem:'Zadanie',cwiczenie:'Ćwiczenie','ćwiczenie':'Ćwiczenie'},
+    proof:{proof:'Dowód',dowod:'Dowód','dowód':'Dowód'}
+  };
+  const environments=new Map(Object.entries(environmentGroups).flatMap(([kind,names])=>
+    Object.entries(names).map(([name,label])=>[name,{kind,label}])));
   function tablePreview(source, root) {
     const wrapper=document.createElement('div'), table=document.createElement('table');
     wrapper.className='preview-table-scroll';table.className='preview-table';wrapper.append(table);root.append(wrapper);
@@ -144,7 +156,15 @@ function buildProsePreview(container, source, moduleId) {
           parent().append(code);continue;
         }
         const block=document.createElement('div');block.className='preview-block';
-        if(environmentNames[env]){const label=document.createElement('strong');label.className='preview-block-title';label.textContent=environmentNames[env]+(title?' — ':'');if(title)parse(title,label,true);block.append(label);}
+        const semantic=environments.get(env.replace(/\*$/,''));
+        if(semantic){
+          block.dataset.environmentKind=semantic.kind;
+          if(semantic.kind!=='proof')block.classList.add('preview-statement');
+          const label=document.createElement('strong');label.className='preview-block-title';
+          label.textContent=semantic.label+(title?' — ':'');
+          if(title)parse(title,label,true);
+          block.append(label);
+        }
         parent().append(block);parents.push(block);continue;
       }
       if(command==='item'){if(!inline)flush();whitespace();const label=text[i]==='['?group('[',']'):'•';append((label||'•')+' ');continue;}

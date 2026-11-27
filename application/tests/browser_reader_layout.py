@@ -809,6 +809,49 @@ with sync_playwright() as pw:
         assert box.locator(selector).evaluate('el => el.scrollWidth > el.clientWidth'), selector
     assert_viewport_layout(page)
     page.screenshot(path=str(Path(os.environ.get('TEMP', '/tmp')) / 'atlas-reader-layout-fixed.png'))
+    # Global semantic frames, including aliases and starred environments;
+    # proof/structural blocks stay unframed. Check actual CSS in both themes.
+    statements = (
+        r'\begin{definicja}[Przestrzeń]\label{fixture:def}$X=\mathbb R$.\end{definicja}'
+        r'\begin{theorem*}[Teza]$x=x$.\end{theorem*}'
+        r'\begin{lemat}Lemat.\end{lemat}'
+        r'\begin{wniosek}Wniosek.\end{wniosek}'
+        r'\begin{counterexample}Kontrprzykład.\end{counterexample}'
+        r'\begin{uwaga}Uwaga.\end{uwaga}'
+        r'\begin{exercise}Zadanie.\end{exercise}'
+        r'\begin{proof}Dowód.\end{proof}'
+        r'\begin{itemize}\item Tekst.\end{itemize}'
+    )
+    page.evaluate("source => renderSimplified(source, 'FA-15B')", statements)
+    frames = box.locator('.preview-statement')
+    assert frames.count() == 7
+    assert frames.evaluate_all("els => els.map(el => el.dataset.environmentKind)") == [
+        'definition', 'result', 'result', 'result', 'example', 'remark', 'exercise']
+    assert box.locator('[data-environment-kind="proof"].preview-statement').count() == 0
+    assert box.locator('.preview-block:not(.preview-statement)').count() == 2
+    assert box.locator('.katex').count() == 2
+    styles = """els => els.map(el => {
+        const s=getComputedStyle(el);
+        return {radius:parseFloat(s.borderTopLeftRadius), border:parseFloat(s.borderInlineStartWidth),
+                bg:s.backgroundColor, width:el.getBoundingClientRect().width,
+                parentWidth:el.parentElement.clientWidth, overflow:s.overflowX};
+    })"""
+    light = frames.evaluate_all(styles)
+    page.locator('#themeToggle').click()
+    dark = frames.evaluate_all(styles)
+    assert all(x['bg'] != y['bg'] for x,y in zip(light,dark))
+    for mode in (light,dark):
+        assert all(x['radius'] > 0 and x['border'] >= 1 and x['width'] <= x['parentWidth']
+                   and x['overflow'] != 'hidden' for x in mode), mode
+    page.locator('#themeToggle').click()
+    page.set_viewport_size({'width':390,'height':844})
+    assert_viewport_layout(page)
+    # A formula wider than the frame remains independently scrollable.
+    page.evaluate("source => renderSimplified(source, 'FA-15B')",
+                  r'\begin{twierdzenie}' + wide + r'\end{twierdzenie}')
+    assert box.locator('.preview-statement .katex-display').evaluate(
+        'el => el.scrollWidth > el.clientWidth')
+    assert_viewport_layout(page)
     assert not errors, errors
     browser.close()
     print('TeX/PDF headings, viewport fill, one reader scroll owner, small viewport, large text, fullscreen and local wide content: OK')
