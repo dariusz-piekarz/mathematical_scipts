@@ -1,13 +1,16 @@
 \chapter{Wartość oczekiwana, momenty i podstawowe nierówności}
 \label{ch:expectation}
 
+\providecommand{\atlasref}[2]{#2}
+
 \section{Całka względem rozkładu}
 Prawdopodobieństwo odpowiada na pytanie, jak często wydarza się
 zdarzenie. Wartość oczekiwana odpowiada na inne pytanie:
 jaka jest przeciętna wielkość liczbowego wyniku, jeśli ważymy
 możliwości ich prawdopodobieństwami? W modelu skończonym jest
 to ważona suma. Całka względem miary probabilistycznej jest
-jej konsekwentnym uogólnieniem na dowolne zmienne losowe.
+jej konsekwentnym uogólnieniem na zmienne losowe, dla których
+całka jest określona.
 Nazwa „oczekiwana” nie oznacza wartości najbardziej prawdopodobnej;
 może to być wartość, której zmienna nigdy nie przyjmuje.
 
@@ -17,49 +20,80 @@ $(\Omega,\mathcal F,\Prob)$. Jeśli $X\geq0$, definiujemy
 $\E X:=\int_\Omega X(\omega)\,\dd\Prob(\omega)\in[0,\infty]$.
 Jeśli $\E|X|<\infty$, nazywamy $X$ całkowalną i definiujemy
 $\E X:=\int_\Omega X(\omega)\,\dd\Prob(\omega)\in\R$.
-W przypadku ogólnym, gdy przynajmniej jedna z liczb
-$\E X^+,\E X^-$ jest skończona, dopuszczamy rozszerzoną
-wartość oczekiwaną $\E X=\E X^+-\E X^-$.
+W przypadku ogólnym piszemy $X^+=\max(X,0)$ oraz
+$X^-=\max(-X,0)$, tak że $X=X^+-X^-$ i $|X|=X^++X^-$.
+Jeśli przynajmniej jedna z liczb $\E X^+,\E X^-$ jest
+skończona, dopuszczamy rozszerzoną wartość oczekiwaną
+$\E X=\E X^+-\E X^-$. Gdy obie są nieskończone,
+wartość oczekiwana nie jest określona.
+Jest to definicja całki Lebesgue'a względem $\Prob$;
+por. \atlasref{ME-07::thm:integrability-criterion}{kryterium całkowalności}.
 \end{definicja}
 
 \begin{twierdzenie}[Przenoszenie całkowania na rozkład]
 Niech $X$ będzie rzeczywistą zmienną losową o rozkładzie $\mu_X$,
 a $h:\R\to\R$ mierzalną funkcją borelowską.
-Jeżeli $h\geq0$ albo $\int_\R|h(x)|\,\dd\mu_X(x)<\infty$, to
+Jeżeli $h\geq0$ albo $\int_\R|h(x)|\,\dd\mu_X(x)<\infty$,
+to $h(X)$ jest odpowiednio nieujemna albo całkowalna i
 \begin{equation}\label{eq:lotus}
 \E[h(X)]=\int_\R h(x)\,\dd\mu_X(x).
 \end{equation}
 W szczególności, dla dyskretnego $X$ o masach $p(x)$ prawa strona
-jest sumą $\sum_xh(x)p(x)$, a dla $X$ o gęstości $f_X$
-jest całką $\int_\R h(x)f_X(x)\,\dd\lambda_1(x)$.
+jest sumą $\sum_{x\in D}h(x)p(x)$, gdzie
+$D=\{x:p(x)>0\}$ jest co najwyżej przeliczalny.
+Dla $X$ o gęstości $f_X$ prawa strona jest całką
+$\int_\R h(x)f_X(x)\,\dd\lambda_1(x)$.
+W przypadku funkcji ze znakiem obowiązuje założenie
+całkowalności; w przypadku nieujemnym dopuszczamy
+wartość nieskończoną.
 \end{twierdzenie}
 \begin{proof}
-Dowód polega na przejściu od funkcji najprostszych
-do ogólnych; wyjaśnia on zarazem, dlaczego rozkład
-$\mu_X$ pozwala obliczać wartości oczekiwane funkcji $X$.
+Jest to szczególny przypadek
+\atlasref{ME-13::thm:pushforward-integral-13}{twierdzenia o całkowaniu względem miary obrazowej}.
+Podamy dowód w notacji probabilistycznej. Złożenie $h\circ X$
+jest mierzalne, ponieważ $X$ i $h$ są mierzalne.
 
-Dla funkcji wskaźnikowej $h=\ind B$, gdzie
-$B\in\mathcal B(\R)$, mamy
+Dla funkcji charakterystycznej $h=\chi_B$, gdzie
+$B\in\mathcal B(\R)$, mamy $h(X)=\chi_{X^{-1}(B)}$ oraz
 $\E[h(X)]=\Prob(X\in B)=\mu_X(B)
-=\int_\R\ind B(x)\,\dd\mu_X(x)$.
+=\int_\R\chi_B(x)\,\dd\mu_X(x)$.
 Dla nieujemnej funkcji prostej
-$h=\sum_{j=1}^r a_j\ind{B_j}$, gdzie $a_j\geq0$,
+$h=\sum_{j=1}^r a_j\chi_{B_j}$, gdzie $a_j\geq0$,
+a $B_j$ są zbiorami borelowskimi,
 równość wynika z liniowości całki i poprzedniego przypadku.
 
 Dla dowolnej nieujemnej funkcji mierzalnej $h$
-wybieramy ciąg nieujemnych funkcji prostych $h_n\uparrow h$.
+wybieramy ciąg nieujemnych borelowskich funkcji prostych
+$h_n\uparrow h$
+(\atlasref{ME-06::thm:simple-up}{aproksymacja funkcjami prostymi}).
 Wówczas $h_n(X)\uparrow h(X)$ na $\Omega$.
-Stosując twierdzenie o zbieżności monotonicznej
+Stosując \atlasref{ME-08::thm:mct}{twierdzenie o zbieżności monotonicznej}
 po obu stronach już udowodnionych równości, dostajemy
 \[
 \E[h(X)]=\lim_n\E[h_n(X)]
-=\lim_n\int_\R h_n\,\dd\mu_X
-=\int_\R h\,\dd\mu_X.
+=\lim_n\int_\R h_n(x)\,\dd\mu_X(x)
+=\int_\R h(x)\,\dd\mu_X(x).
 \]
 Jeśli $h$ jest całkowalna względem $\mu_X$,
 rozkładamy $h=h^+-h^-$ i stosujemy pierwszy przypadek
-do obu nieujemnych części. Obie odpowiadające całki
-są skończone, więc ich różnica jest dobrze określona.
+do obu nieujemnych części. Stosując również przypadek
+nieujemny do $|h|$, otrzymujemy
+$\E|h(X)|=\int_\R|h(x)|\,\dd\mu_X(x)<\infty$.
+Obie odpowiadające całki są zatem skończone i można
+odjąć uzyskane równości.
+
+Dla rozkładu dyskretnego $\mu_X(D)=1$. Dla $h\geq0$
+rozkładamy całkę na sumę po singletonach $\{x\}$,
+$x\in D$, stosując
+\atlasref{ME-08::cor:integral-countable-partition}{addytywność całki względem zbioru całkowania}.
+Całka po singletonie wynosi $h(x)p(x)$, a po
+$\R\setminus D$ jest zerowa. Dla całkowalnego $h$
+stosujemy to do $h^+$ i $h^-$; szereg jest bezwzględnie
+zbieżny, bo $\sum_{x\in D}|h(x)|p(x)<\infty$.
+W przypadku gęstości stosujemy
+\atlasref{ME-18::lem:integration-density-18}{wzór na całkę względem miary określonej gęstością}
+do $\mu_X=f_X\lambda_1$, przyjmując $0\cdot\infty=0$
+w całkach nieujemnych.
 \end{proof}
 
 
@@ -73,16 +107,27 @@ może ona znajdować się daleko od większości realizacji.
 
 \begin{definicja}
 Dla całkowalnej zmiennej losowej $X$ definiujemy średnią
-$m_X:=\E X$. Jeżeli $\E X^2<\infty$, definiujemy
-wariancję $\Var(X):=\E[(X-\E X)^2]$.
+$m_X:=\E X$. Jeżeli $\E X^2<\infty$, to z nierówności
+Cauchy'ego--Schwarza dla $X$ i funkcji stałej $1$ mamy
+$\E|X|\leq(\E X^2)^{1/2}$, gdyż $\Prob(\Omega)=1$.
+Definiujemy wariancję $\Var(X):=\E[(X-\E X)^2]$.
+Jest ona skończona, ponieważ
+$(X-\E X)^2\leq 2X^2+2(\E X)^2$.
 Odchyleniem standardowym nazywamy $\sqrt{\Var(X)}$.
-Dla zmiennych $X,Y$ o skończonych drugich momentach definiujemy
+Dla zmiennych $X,Y$ na tej samej przestrzeni probabilistycznej
+o skończonych drugich momentach definiujemy
 kowariancję $\Cov(X,Y):=\E[(X-\E X)(Y-\E Y)]$.
+Z nierówności Cauchy'ego--Schwarza wynika
+$\E|(X-\E X)(Y-\E Y)|\leq
+\sqrt{\Var(X)\Var(Y)}<\infty$, więc kowariancja jest
+dobrze określona. Użyta nierówność to przypadek $p=q=2$
+\atlasref{ME-14::thm:holder-14}{nierówności Höldera}.
 \end{definicja}
 
 \begin{stwierdzenie}[Algebra momentów]
-Dla rzeczywistych zmiennych losowych $X,Y$ o skończonych
-drugich momentach oraz $a,b\in\R$ zachodzą
+Dla rzeczywistych zmiennych losowych $X,Y$ na wspólnej
+przestrzeni probabilistycznej, o skończonych drugich
+momentach, oraz $a,b\in\R$ zachodzą
 \begin{align*}
 \Var(X)&=\E X^2-(\E X)^2, &
 \Var(aX+b)&=a^2\Var(X),\\
@@ -96,7 +141,11 @@ a zatem $\Cov(X,Y)=0$ i $\Var(X+Y)=\Var(X)+\Var(Y)$.
 Wszystkie podane wyrażenia są skończone,
 ponieważ nierówność Cauchy'ego--Schwarza zapewnia
 $\E|XY|\leq(\E X^2)^{1/2}(\E Y^2)^{1/2}<\infty$.
-Dzięki temu możemy swobodnie korzystać z liniowości całki.
+Ponadto $(aX+b)^2\leq2a^2X^2+2b^2$ i
+$(X+Y)^2\leq2X^2+2Y^2$, więc również przekształcenia
+w tezie mają skończone drugie momenty.
+Możemy zatem korzystać z
+\atlasref{ME-08::thm:integral-linear-real}{liniowości całki funkcji całkowalnych}.
 Oznaczając $m=\E X$, rozwijamy
 $\E(X-m)^2=\E X^2-2m\E X+m^2=\E X^2-m^2$.
 Ponadto $\E(aX+b)=a\E X+b$, więc
@@ -112,8 +161,11 @@ rozwinięcie kwadratu i całkowanie daje
 $\Var(X+Y)=\Var(X)+\Var(Y)+2\Cov(X,Y)$.
 
 Jeśli $X,Y$ są niezależne, ich rozkład łączny to
-$\mu_X\otimes\mu_Y$. Przez Fubiniego, którego
-stosowanie usprawiedliwia całkowalność iloczynu,
+$\mu_X\otimes\mu_Y$ (rozdział~\ref{ch:random-variables}).
+Całkowanie względem miary obrazowej dla $(X,Y)$ przenosi
+całkowalność $XY$ na funkcję $(x,y)\mapsto xy$
+względem tej miary. Z \atlasref{ME-12::thm:fubini-12}{twierdzenia Fubiniego}
+i wzoru na całkę względem miary obrazowej otrzymujemy
 \[
 \E[XY]=\int_{\R^2}xy\,\dd(\mu_X\otimes\mu_Y)(x,y)
 =\left(\int_\R x\,\dd\mu_X(x)\right)
@@ -129,20 +181,32 @@ jej wykorzystywać bez dodatkowych założeń.
 Zerowa kowariancja nie oznacza na ogół niezależności.
 Jeśli $X$ jest jednostajna na $[-1,1]$, a $Y=X^2$, to
 $\Cov(X,Y)=\E X^3-\E X\,\E X^2=0$,
-ale $Y$ jest funkcją $X$, a więc zmienne nie są niezależne.
+ponieważ $\E X=\frac12\int_{-1}^1 x\,\dd\lambda_1(x)=0$
+oraz $\E X^3=\frac12\int_{-1}^1 x^3\,\dd\lambda_1(x)=0$
+z nieparzystości funkcji podcałkowych.
+Jednak dla $A=\{|X|\leq1/2\}$ i $B=\{Y\leq1/4\}$
+mamy $A=B$, a z rozkładu jednostajnego
+$\Prob(A)=\Prob(B)=1/2$ i $\Prob(A\cap B)=1/2\neq1/4$.
+Zatem zmienne nie są niezależne.
 \end{uwaga}
 
-\begin{stwierdzenie}[Momenty zmiennej wskaźnikowej]
-Jeżeli $A\in\mathcal F$ i $I=\ind{A}$, to
+\begin{stwierdzenie}[Momenty funkcji charakterystycznej zdarzenia]
+Jeżeli $A\in\mathcal F$ i $I=\chi_A$, to
 $\E I=\Prob(A)$ oraz
 $\Var(I)=\Prob(A)(1-\Prob(A))$.
-Dla dowolnych zdarzeń $A,B$ zachodzi
-$\Cov(\ind{A},\ind{B})=\Prob(A\cap B)-\Prob(A)\Prob(B)$.
+Dla dowolnych zdarzeń $A,B\in\mathcal F$ zachodzi
+$\Cov(\chi_A,\chi_B)=\Prob(A\cap B)-\Prob(A)\Prob(B)$.
 \end{stwierdzenie}
 \begin{proof}
-Zmienna $I$ przyjmuje wartości zero i jeden, a $I^2=I$.
-Ponadto $\ind{A}\ind{B}=\ind{A\cap B}$.
-Wstawiamy te równości do definicji momentów.
+Funkcja $I$ jest mierzalna, ograniczona i spełnia $I^2=I$.
+Z definicji całki funkcji charakterystycznej
+$\E I=\int_\Omega\chi_A(\omega)\,\dd\Prob(\omega)=\Prob(A)$.
+Ze wzoru na wariancję otrzymujemy
+$\Var(I)=\E I^2-(\E I)^2=\Prob(A)-\Prob(A)^2$.
+Ponadto $\chi_A\chi_B=\chi_{A\cap B}$, więc ze wzoru
+na kowariancję wynika
+$\Cov(\chi_A,\chi_B)=\E\chi_{A\cap B}-\E\chi_A\,\E\chi_B
+=\Prob(A\cap B)-\Prob(A)\Prob(B)$.
 \end{proof}
 
 \section{Nierówności Markowa i Czebyszewa}
