@@ -207,7 +207,12 @@ Na $[\varepsilon,1]$ funkcja jest ciągła. Podstawiając $t=x^{-q}$, uzyskujemy
 \int_\varepsilon^1x^{-p}\sin(x^{-q})\,\mathrm dx
 =\frac1q\int_1^{\varepsilon^{-q}}t^{(p-1)/q-1}\sin t\,\mathrm dt.
 \]
-Oznaczmy wykładnik przez $\beta=(p-1)/q-1$. Gdy $\beta<0$, funkcja $t^\beta$ maleje do zera; kryterium Dirichleta daje zbieżność całki niewłaściwej. Gdy $\beta=0$, pierwotna $-\cos t$ nie ma granicy. Jeśli $\beta>0$, na półokresie $[k\pi,(k+1)\pi]$, $k\ge1$, sinus ma stały znak. Stąd
+Oznaczmy wykładnik przez $\beta=(p-1)/q-1$. Gdy $\beta<0$, funkcja $t^\beta$ maleje do zera. Dla $1\le A<B$ całkowanie przez części daje
+\[
+\int_A^B t^\beta\sin t\,\mathrm dt
+=[-t^\beta\cos t]_A^B+\beta\int_A^B t^{\beta-1}\cos t\,\mathrm dt.
+\]
+Moduł prawej strony jest nie większy niż $A^\beta+B^\beta+|\beta|\int_A^B t^{\beta-1}\,\mathrm dt=2A^\beta$. Zatem kryterium Cauchy'ego daje zbieżność całki niewłaściwej. Gdy $\beta=0$, pierwotna $-\cos t$ nie ma granicy. Jeśli $\beta>0$, na półokresie $[k\pi,(k+1)\pi]$, $k\ge1$, sinus ma stały znak. Stąd
 \[
  \left|\int_{k\pi}^{(k+1)\pi}t^\beta\sin t\,\mathrm dt\right|
  \ge 2(k\pi)^\beta,
@@ -2156,7 +2161,15 @@ Dla dowolnego podziału zachodzi dokładna tożsamość
  +\sum_i\alpha(x_i)(f(x_i)-f(x_{i-1}))
  =f(b)\alpha(b)-f(a)\alpha(a).
 \]
-Wynika ona z rozpisania każdego składnika jako różnicy kolejnych iloczynów i teleskopowania. Przechodząc do granicy przy średnicy dążącej do zera, otrzymujemy wzór całkowania przez części. W (c) twierdzenie Lagrange'a daje $\alpha(x_i)-\alpha(x_{i-1})=\alpha'(\xi_i)(x_i-x_{i-1})$; różnica sumy Stieltjesa i sumy Riemanna dla $f\alpha'$ z tymi samymi znacznikami jest ograniczona przez $\|f\|_\infty(b-a)\omega_{\alpha'}(\mesh P)$. Prawa strona dąży do zera. Iloczyn $f\alpha'$ jest całkowalny w sensie Riemanna, ponieważ obie funkcje są całkowalne w tym sensie (ciągłość $\alpha'$ zapewnia jej całkowalność). Przechodząc do granicy w sumach, otrzymujemy (c). Liniowość w (d) wynika z liniowości sum i wyboru wspólnej dopuszczalnej średnicy; jeśli $\alpha$ jest niemalejąca, porządek sum przechodzi na porządek całek.
+Wynika ona z rozpisania każdego składnika jako różnicy kolejnych iloczynów i teleskopowania. Przechodząc do granicy przy średnicy dążącej do zera, otrzymujemy wzór całkowania przez części. Dla (c) twierdzenie Lagrange'a daje na każdej komórce punkt $\xi_i\in(x_{i-1},x_i)$ taki, że $\alpha(x_i)-\alpha(x_{i-1})=\alpha'(\xi_i)\Delta x_i$. Jeżeli $h=\mesh P$, to
+\[
+\left|S(f,\alpha;\mathcal P)-S(f\alpha',P,t)\right|
+\le \|f\|_\infty(b-a)\omega_{\alpha'}(h).
+\]
+Tutaj $S(f\alpha',P,t)$ jest zwykłą sumą Riemanna. Prawa strona dąży do zera niezależnie od znaczników, gdyż $\alpha'$ jest jednostajnie ciągła. Iloczyn $f\alpha'$ jest całkowalny w sensie Riemanna na mocy twierdzenia \ref{ma1:thm:riemann-algebra}, dlatego jego sumy dążą do odpowiedniej całki. Nierówność trójkąta daje (c).
+
+Dla (d) przy ustalonym podziale znaczonym suma jest liniowa zarówno względem $f$, jak i względem $\alpha$: na przykład
+$S(pf+qg,\alpha;\mathcal P)=pS(f,\alpha;\mathcal P)+qS(g,\alpha;\mathcal P)$, a dla $S(f,p\alpha+q\beta;\mathcal P)$ analogiczny wzór wynika z liniowości przyrostu. Jeśli całki po prawej stronie istnieją, wybieramy wspólną średnicę dla dokładności $\varepsilon/(1+|p|+|q|)$ każdej z sum; błąd ich kombinacji jest mniejszy od $\varepsilon$. To dowodzi istnienia i wartości całki po lewej. Gdy $\alpha$ jest niemalejąca, jej przyrosty są nieujemne. Z $f\le g$ wynika więc $S(f,\alpha;\mathcal P)\le S(g,\alpha;\mathcal P)$, a przejście do granicy daje monotoniczność. Dodatniość otrzymujemy, biorąc $f=0$ i $g\ge0$.
 \end{proof}
 \begin{twierdzenie}[Lokalność i warunek sklejania]\label{it:thm:rs-locality}
 Niech $f:[a,b]\to\R$ będzie ograniczona, a $\alpha\in\BV[a,b]$. Jeśli całka Riemanna--Stieltjesa istnieje na $[a,b]$, istnieje na każdym podprzedziale. Dla $a<c<b$ zachodzi wtedy
@@ -3402,11 +3415,11 @@ dla którego $|F(a)|\le\|F\|_\infty$. Jest więc zupełna. Obraz jest gęsty, le
 
 \section{Twierdzenia o zbieżności}
 \begin{twierdzenie}[Zbieżność z majorantą Lebesgue'a]\label{ma1:kh:tw:hk-zbieznosc-dct}
-Niech $f_n:[a,b]\to\R$ będą mierzalne i KH-całkowalne, $f_n\to f$ prawie wszędzie dla $f:[a,b]\to\R$, a $g\in L^1[a,b]$ niech spełnia $|f_n|\le g$ prawie wszędzie dla każdego $n$. Wówczas $f,f_n\in\mathcal L^1[a,b]$ i
+Niech $f_n:[a,b]\to\R$ będą mierzalne i KH-całkowalne, $f_n\to f$ prawie wszędzie dla $f:[a,b]\to\R$, a $g\in\mathcal L^1[a,b]$ niech spełnia $|f_n|\le g$ prawie wszędzie dla każdego $n$. Wówczas $f,f_n\in\mathcal L^1[a,b]$ i
 $\lim_{n\to\infty}\int_a^bf_n\,\mathrm dx=\int_a^bf\,\mathrm dx$, przy czym po obu stronach całkę można rozumieć zarówno w sensie Lebesgue'a, jak i KH.
 \end{twierdzenie}
 \begin{proof}
-Przeliczalna suma zbiorów wyjątkowych dla nierówności i zbieżności jest zbiorem zerowym. Poza nim $f$ jest granicą funkcji mierzalnych, a więc z zupełności miary Lebesgue'a także $f$ jest mierzalna. Z oszacowania $|f_n|\le g$ wynika całkowalność w sensie Lebesgue'a każdej $f_n$; zbieżność prawie wszędzie i $|f|\le g$ dają to samo dla $f$. Stosujemy twierdzenie Lebesgue'a o zbieżności zmajoryzowanej oraz zgodność całek Lebesgue'a i KH. Nieujemna majoranta KH-całkowalna jest automatycznie całkowalna w sensie Lebesgue'a na mocy kryterium bezwzględnej całkowalności. W dalszej części sekcji rozważymy również dwustronne ograniczenie przez funkcje KH-całkowalne, które same nie muszą należeć do $L^1$.
+Przeliczalna suma zbiorów wyjątkowych dla nierówności i zbieżności jest zbiorem zerowym. Poza nim $f$ jest granicą funkcji mierzalnych, a więc z zupełności miary Lebesgue'a także $f$ jest mierzalna. Z oszacowania $|f_n|\le g$ wynika całkowalność w sensie Lebesgue'a każdej $f_n$; zbieżność prawie wszędzie i $|f|\le g$ dają to samo dla $f$. Stosujemy twierdzenie \atlasref{ME-08::thm:dct}{ME-08: twierdzenie o zbieżności zmajoryzowanej} oraz zgodność całek Lebesgue'a i KH (twierdzenie \ref{it:thm:mcshane-lebesgue} i inkluzja całki McShane'a w KH). Nieujemna majoranta KH-całkowalna jest automatycznie całkowalna w sensie Lebesgue'a na mocy kryterium bezwzględnej całkowalności. W dalszej części sekcji rozważymy również dwustronne ograniczenie przez funkcje KH-całkowalne, które same nie muszą należeć do $L^1$.
 \end{proof}
 \begin{przyklad}[Dlaczego sama zbieżność punktowa nie wystarcza]
 Niech $f_n(0)=0$ i $f_n(x)=n\chi_{(0,1/n]}(x)$ na $[0,1]$. Każda $f_n$ jest całkowalna w sensie Riemanna, a więc KH-całkowalna, oraz $f_n(x)\to0$ w każdym punkcie $[0,1]$. Mimo to $\int_0^1f_n\,\mathrm dx=1$ dla każdego $n$. Nie istnieje jedna całkowalna w sensie Lebesgue'a funkcja $g$ z $|f_n|\le g$ prawie wszędzie dla wszystkich $n$: w przeciwnym razie twierdzenie o zbieżności zmajoryzowanej wymuszałoby granicę całek równą zeru.
