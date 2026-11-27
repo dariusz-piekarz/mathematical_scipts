@@ -1189,7 +1189,8 @@ def test_hodge_projection():
 def test_source_consistency():
     catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in catalog["books"] if x["id"]=="graph_and_knot_theory")
-    assert len(book["chapters"])==44
+    # The final applications and index chapters were intentionally removed.
+    assert len(book["chapters"])==42
     intro=(ROOT/"chapters/pl/graph_and_knot_theory/01-podstawy-teorii-grafow.tex").read_text(encoding="utf-8")
     assert "dopuszczamy także $V=\\varnothing$" in intro
     assert "jeśli $V\\ne\\varnothing$ oraz każda para" in intro

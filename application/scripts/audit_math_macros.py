@@ -6,17 +6,22 @@ from pathlib import Path
 import re
 
 from scripts import install_math_renderer as renderer
+from backend.figure_preview import PICTURE
 
 DECL = re.compile(r"^\\(?:newcommand|renewcommand|providecommand|DeclareMathOperator|def)\*?\s*(?:\{\s*)?(\\[A-Za-z@]+)")
 IGNORED = {r"\proofname", r"\headrulewidth", r"\lstlistingname",
            r"\lstlistlistingname", r"\chaptermark", r"\atlasref",
-           r"\thesection", r"\theHsection"}
+           r"\thesection", r"\theHsection", r"\arraystretch"}
 
 
 def audit(root, profiles):
     findings = []
     counts = Counter()
-    paths = sorted((root / "chapters/pl").rglob("*.tex"))
+    chapter_root = root / "chapters/pl"
+    sources = sorted(chapter_root.rglob("*.tex"))
+    # Match the canonical recursive reader index: supplements are book-only.
+    paths = [path for path in sources if "supplements" not in path.relative_to(chapter_root).parts]
+    counts["excluded_supplements"] = len(sources) - len(paths)
     preambles = sorted((root / "application/config/preambles").glob("*.tex"))
     for path in preambles + paths:
         book = path in preambles
@@ -24,12 +29,23 @@ def audit(root, profiles):
         base = doc.split("-", 1)[0]
         counts["preambles" if book else "chapters"] += 1
         if base not in profiles:
+            counts["missing_book_profile"] += 1
             findings.append({"module": doc, "path": str(path.relative_to(root)),
                              "status": "missing_book_profile"})
         effective = {**profiles.get(base, {}), **profiles.get(doc, {})}
         header = True
         declared = dict(profiles.get(base, {})) if not book else {}
-        for line in renderer.logical_macro_lines(path.read_text(encoding="utf-8-sig")):
+        source = path.read_text(encoding="utf-8-sig")
+        if not book:
+            # Figure bodies are compiled separately by TeX, not KaTeX.
+            # Count their declarations but do not flag them as prose macros.
+            for picture in PICTURE.finditer(source):
+                counts["figure_local_declaration"] += sum(
+                    bool(DECL.match(line))
+                    for line in renderer.logical_macro_lines(picture[0])
+                )
+            source = PICTURE.sub(lambda match: "\nFIGURE\n", source)
+        for line in renderer.logical_macro_lines(source):
             if not line:
                 continue
             if not book and renderer.is_header_metadata(line):
@@ -61,7 +77,7 @@ def audit(root, profiles):
             if not book and not literal:
                 header = False
     return {"counts": dict(counts), "findings": findings,
-            "limitations": "Line-leading declarations only; not TeX expansion, scope proof or actual KaTeX rendering. Review items are not confirmed rendering errors."}
+            "limitations": "Line-leading declarations only; indexed chapters exclude supplements; figure-local declarations are counted separately, not validated. Not TeX expansion, scope proof or actual KaTeX rendering. Review items are not confirmed rendering errors."}
 
 
 def main():
