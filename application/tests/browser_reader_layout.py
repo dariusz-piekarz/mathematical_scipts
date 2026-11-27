@@ -70,6 +70,41 @@ with sync_playwright() as pw:
     assert page.locator('#explorer').is_visible()
     assert page.locator('#tree').evaluate('el => el.scrollHeight > el.clientHeight')
 
+    # A new target must start at its beginning, even if the previous
+    # chapter had been scrolled far down. Test both chapter and entity routes.
+    page.evaluate("() => openModule('AM1-14', true)")
+    reader = page.locator('#view-reader')
+    reader.evaluate('el => {el.scrollTop=el.scrollHeight}')
+    assert reader.evaluate('el => el.scrollTop > 0')
+    page.evaluate("() => openModule('DG-14')")
+    assert page.evaluate("state.currentModule === 'DG-14'")
+    assert reader.evaluate('el => el.scrollTop === 0')
+    outline = page.evaluate("() => api('/api/modules/DG-14/outline')")
+    entity = next(item['id'] for item in outline['entities'] if item['kind'] == 'section')
+    reader.evaluate('el => {el.scrollTop=el.scrollHeight}')
+    assert reader.evaluate('el => el.scrollTop > 0')
+    page.evaluate('id => openEntity(id)', entity)
+    assert page.evaluate('id => state.currentEntity === id', entity)
+    assert reader.evaluate('el => el.scrollTop === 0')
+
+    # Source mode and keyboard interaction must also work at 180% text.
+    page.evaluate("() => openModule('AM1-14', true)")
+    page.set_viewport_size({'width': 390, 'height': 350})
+    reader.evaluate('el => {el.scrollTop=el.scrollHeight / 2}')
+    toggle = page.locator('#togglePreview')
+    toggle.focus()
+    toggle.press('Enter')
+    assert page.locator('#latexSource').is_visible()
+    assert toggle.get_attribute('aria-pressed') == 'true'
+    reader.evaluate('el => {el.scrollTop=el.scrollHeight / 2}')
+    assert_viewport_layout(page)
+    toggle.focus()
+    toggle.press('Enter')
+    assert page.locator('#simplified').is_visible()
+    assert toggle.get_attribute('aria-pressed') == 'false'
+    page.set_viewport_size({'width': 1360, 'height': 900})
+    reader.evaluate('el => {el.scrollTop=0}')
+
     # Fullscreen retains the same single reader scroll owner with large text.
     page.locator('#readingMode').click()
     page.wait_for_function('document.fullscreenElement !== null')
