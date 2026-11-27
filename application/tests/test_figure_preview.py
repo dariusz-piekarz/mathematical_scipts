@@ -79,5 +79,101 @@ class FigurePreviewTests(unittest.TestCase):
                 with self.assertRaisesRegex(renderer.FigureError, 'Broken drawing'):
                     renderer.render('ALG-08', SOURCE.replace('(1,1)', '(2,2)'), next(iter(renderer.figures(SOURCE.replace('(1,1)', '(2,2)')))))
 
+    def test_worker_limit_is_conservative_and_bounded(self):
+        for raw, expected in [('0', 1), ('1', 1), ('2', 2), ('3', 3), ('100', 3), ('bad', 1)]:
+            with self.subTest(raw=raw), patch.dict(renderer.os.environ, {'ATLAS_TIKZ_WORKERS': raw}):
+                self.assertEqual(renderer._render_limit(), expected)
+
+    def test_cached_hit_does_not_wait_for_compilation_slot(self):
+        from concurrent.futures import ThreadPoolExecutor
+        import threading
+        key = next(iter(renderer.figures(SOURCE)))
+        with tempfile.TemporaryDirectory() as temp, patch.object(renderer, 'CACHE', Path(temp)), patch.object(renderer, 'RENDER_SLOTS', threading.BoundedSemaphore(1)):
+            def compile_image(header, picture, target):
+                target.write_bytes(b'cached')
+                return target
+            with patch.object(renderer, '_compile_figure', side_effect=compile_image) as compile_mock:
+                expected = renderer.render('ALG-08', SOURCE, key)
+                with ThreadPoolExecutor(max_workers=1) as pool:
+                    renderer.RENDER_SLOTS.acquire()
+                    try:
+                        future = pool.submit(renderer.render, 'ALG-08', SOURCE, key)
+                        self.assertEqual(future.result(timeout=3), expected)
+                    finally:
+                        renderer.RENDER_SLOTS.release()
+                self.assertEqual(compile_mock.call_count, 1)
+
+    def test_identical_concurrent_requests_compile_once(self):
+        from concurrent.futures import ThreadPoolExecutor
+        import threading
+        key = next(iter(renderer.figures(SOURCE)))
+        started, release = threading.Event(), threading.Event()
+        with tempfile.TemporaryDirectory() as temp, patch.object(renderer, 'CACHE', Path(temp)), patch.object(renderer, 'RENDER_SLOTS', threading.BoundedSemaphore(2)):
+            def compile_image(header, picture, target):
+                started.set()
+                if not release.wait(5):
+                    raise AssertionError('test compilation release timed out')
+                target.write_bytes(b'complete')
+                return target
+            with patch.object(renderer, '_compile_figure', side_effect=compile_image) as compile_mock, ThreadPoolExecutor(max_workers=6) as pool:
+                futures = [pool.submit(renderer.render, 'ALG-08', SOURCE, key) for _ in range(6)]
+                try:
+                    self.assertTrue(started.wait(3))
+                finally:
+                    release.set()
+                results = [f.result(timeout=5) for f in futures]
+                self.assertEqual(len(set(results)), 1)
+                self.assertEqual(compile_mock.call_count, 1)
+                self.assertEqual(results[0].read_bytes(), b'complete')
+
+    def test_distinct_compilations_respect_slots_and_retry_failure(self):
+        from concurrent.futures import ThreadPoolExecutor
+        import threading
+        sources = [SOURCE.replace('(1,1)', f'({i},{i})') for i in range(1, 200)]
+        distinct = {}
+        for source in sources:
+            key = next(iter(renderer.figures(source)))
+            header = renderer.preamble('ALG-08', source, key)
+            digest = hashlib.sha256(('tikz-png-v1\n' + header + '\n' + source).encode()).hexdigest()
+            distinct.setdefault(int(digest[:8], 16) % len(renderer.RENDER_KEY_LOCKS), (source, key))
+            if len(distinct) == 4:
+                break
+        pairs = list(distinct.values())
+        self.assertEqual(len(pairs), 4)
+        guard, release, two_started = threading.Lock(), threading.Event(), threading.Event()
+        active = peak = 0
+        with tempfile.TemporaryDirectory() as temp, patch.object(renderer, 'CACHE', Path(temp)), patch.object(renderer, 'RENDER_SLOTS', threading.BoundedSemaphore(2)):
+            def compile_image(header, picture, target):
+                nonlocal active, peak
+                with guard:
+                    active += 1
+                    peak = max(peak, active)
+                    if active == 2:
+                        two_started.set()
+                try:
+                    if not release.wait(5):
+                        raise AssertionError('test compilation release timed out')
+                    target.write_bytes(b'complete')
+                    return target
+                finally:
+                    with guard:
+                        active -= 1
+            with patch.object(renderer, '_compile_figure', side_effect=compile_image), ThreadPoolExecutor(max_workers=4) as pool:
+                futures = [pool.submit(renderer.render, 'ALG-08', source, key) for source, key in pairs]
+                try:
+                    self.assertTrue(two_started.wait(3))
+                finally:
+                    release.set()
+                self.assertEqual(len({f.result(timeout=5) for f in futures}), 4)
+                self.assertEqual(peak, 2)
+            source, key = pairs[0]
+            for image in Path(temp).glob('*.png'):
+                image.unlink()
+            with patch.object(renderer, '_compile_figure', side_effect=renderer.FigureError('fixture')):
+                with self.assertRaisesRegex(renderer.FigureError, 'fixture'):
+                    renderer.render('ALG-08', source, key)
+            with patch.object(renderer, '_compile_figure', side_effect=compile_image):
+                self.assertTrue(renderer.render('ALG-08', source, key).is_file())
+
 if __name__ == '__main__':
     unittest.main()
