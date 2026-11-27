@@ -1477,3 +1477,9 @@ Odczytany `atlas_validation_status.json`: `candidate_sha=02190e107a6305bc7b73334
 
 - `567e0692d5c1729a9fc4142ee502a5ae6f60f3b0`: LRU maksymalnie 32 zwiniętych rozdziałów, z zachowaniem struktur wszystkich rozwiniętych rozdziałów, również w chwilowo ukrytych dziedzinach. Eksmisja usuwa także nieaktualny stan paginacji danego rozdziału. Oczekujące żądania nadal mają niezależną mapę i współdzielą obietnice; spóźniona odpowiedź po zwinięciu również podlega limitowi. 9/9 izolowanych asercji JS PASS (4 kontrolowane żądania API). Limit dotyczy liczby zwiniętych struktur, nie całkowitego RAM ani liczby świadomie rozwiniętych gałęzi.
 - `ec390c395398dc456e19dfb890b2aabcfa746483`: 8 dodatkowych kontroli w istniejącym browser_reader_layout.py. Pełnego Chromium nie wykonano. Przy odczycie #45997327088 oraz #45994651687 i walidacje AM I/IT na 928848a2 nadal queued. Odbiór P3.5 2+1 pozostaje otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
+
+
+### 2026-11-27 — P3.5: ograniczenie przebudów DOM Explorera
+
+- `932b422675cb0190d20aeb443cd29ac6839faecf`: otwarcie rozdziału lub obiektu w już rozwiniętej dziedzinie aktualizuje klasy aktywnych wierszy bez wymiany drzewa. Otwarcie nowej dziedziny nadal przebudowuje drzewo. Zakończenie żądania struktury niewidocznej (zwinięty rozdział lub ukryta dziedzina) nie wymaga przebudowy DOM; widoczne powodzenie/błąd odświeża strukturę. 8/8 izolowanych asercji JS PASS. `e6ffa26c1efba27e818dcf648d0bcd29fa503255`: 5 kontroli regresyjnych tożsamości węzłów DOM, fokusu, podświetlenia i odpowiedzi ukrytych struktur w istniejącym browser_reader_layout.py.
+- Nie wykonano pełnego Chromium ani pomiarów czasu CPU na słabszym komputerze. Przy odczycie #45997989714 i #45994651687 oraz walidacje AM I/IT na 928848a2 nadal queued. Odbiór P3.5 2+1 pozostaje otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
