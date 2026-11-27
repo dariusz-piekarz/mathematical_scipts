@@ -52,6 +52,14 @@ class GlobalChartTerminologyAudit(unittest.TestCase):
         }]
         self.assertEqual(unexpected_matches(fake), fake)
 
+    def test_poker_allowance_is_context_specific_and_counts_duplicates(self):
+        path = "chapters/pl/probability_volume_i/01-kombinatoryka-i-modele-skonczone.tex"
+        valid = {"path": path, "line": 1, "word": "kartę",
+                 "context": "oraz ostatnią kartę. Dzięki temu każdy dopuszczalny układ"}
+        invalid = {"path": path, "line": 2, "word": "karcie",
+                   "context": "W karcie współrzędnych..."}
+        self.assertEqual(unexpected_matches([valid, invalid, valid]), [invalid, valid])
+
     def test_editorial_standard_records_both_translation_distinctions(self):
         standard = (ROOT / "docs/pl/standardy_terminologiczne.md").read_text(
             encoding="utf-8"
