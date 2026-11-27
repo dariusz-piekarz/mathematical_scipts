@@ -11,14 +11,18 @@
   const figures={
     "am2_01_norm_balls.html":()=>{
       const a=lin(0,Math.PI,61),t=lin(0,2*Math.PI,121);
-      const data=[1,2,Infinity].map((p,i)=>{
-        const coord=k=>a.map(v=>t.map(u=>{
-          const d=[Math.sin(v)*Math.cos(u),Math.sin(v)*Math.sin(u),Math.cos(v)];
-          const n=p===Infinity?Math.max(...d.map(Math.abs)):Math.pow(d.reduce((s,x)=>s+Math.abs(x)**p,0),1/p);
-          return d[k]/n;
-        }));
-        return surface(coord(0),coord(1),coord(2),{scene:i?"scene"+(i+1):"scene",name:["l1","l2","l∞"][i],showlegend:true});
-      });
+      // Exact planar faces; show only geometric edges, never face diagonals.
+      const oct=[[-1,0,0],[1,0,0],[0,-1,0],[0,1,0],[0,0,-1],[0,0,1]],octFaces=[[0,4,2],[0,2,5],[0,3,4],[0,5,3],[1,2,4],[1,5,2],[1,4,3],[1,3,5]],octEdges=[[0,2],[0,3],[0,4],[0,5],[1,2],[1,3],[1,4],[1,5],[2,4],[2,5],[3,4],[3,5]];
+      const cube=[[-1,-1,-1],[-1,-1,1],[-1,1,-1],[-1,1,1],[1,-1,-1],[1,-1,1],[1,1,-1],[1,1,1]],cubeFaces=[[0,1,3],[0,3,2],[4,6,7],[4,7,5],[0,4,5],[0,5,1],[2,3,7],[2,7,6],[0,2,6],[0,6,4],[1,5,7],[1,7,3]],cubeEdges=[[0,1],[0,2],[0,4],[1,3],[1,5],[2,3],[2,6],[3,7],[4,5],[4,6],[5,7],[6,7]];
+      const poly=(v,f,e,sc,name)=>{
+        const coord=k=>v.map(p=>p[k]),idx=k=>f.map(p=>p[k]),edgeCoord=k=>e.flatMap(([a,b])=>[v[a][k],v[b][k],null]);
+        return [{type:"mesh3d",scene:sc,name,x:coord(0),y:coord(1),z:coord(2),i:idx(0),j:idx(1),k:idx(2),intensity:coord(2),colorscale:"Viridis",cmin:-1,cmax:1,flatshading:true,showscale:false,showlegend:false},
+          {type:"scatter3d",scene:sc,mode:"lines",x:edgeCoord(0),y:edgeCoord(1),z:edgeCoord(2),line:{color:"#222222",width:5},hoverinfo:"skip",showlegend:false}];
+      };
+      const coord=k=>a.map(v=>t.map(u=>[Math.sin(v)*Math.cos(u),Math.sin(v)*Math.sin(u),Math.cos(v)][k]));
+      const data=[...poly(oct,octFaces,octEdges,"scene","l1"),
+        surface(coord(0),coord(1),coord(2),{scene:"scene2",name:"l2",cmin:-1,cmax:1,showlegend:false}),
+        ...poly(cube,cubeFaces,cubeEdges,"scene3","l∞")];
       const layout={};
       for(let i=0;i<3;i++)layout[i?"scene"+(i+1):"scene"]={domain:{x:[i/3,(i+1)/3],y:[0,1]},aspectmode:"cube",...Object.fromEntries(["x","y","z"].map(k=>[k+"axis",{...axis(k),range:[-1.1,1.1]}]))};
       return base(data,"Brzegi kul jednostkowych",layout);
