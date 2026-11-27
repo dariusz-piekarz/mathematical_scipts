@@ -12,7 +12,9 @@ Pojęcia te opisują \emph{warunkową tendencję},
 a nie monotoniczność wyników pojedynczego losowania.
 
 \begin{przyklad}[Proces z ujemnym dryfem może rosnąć]
-Niech $\xi_k$ będą niezależne i przyjmują
+Niech $\xi_k$ będą niezależne, niech
+$\mathcal F_n=\sigma(\xi_1,\ldots,\xi_n)$ (z trywialnym
+$\mathcal F_0$) i niech $\xi_k$ przyjmują
 $+2$ z prawdopodobieństwem $1/4$ oraz $-1$
 z prawdopodobieństwem $3/4$. Wtedy
 $\E\xi_k=-1/4$, więc
@@ -40,8 +42,15 @@ na mocy założeń.
 \end{proof}
 
 \begin{przyklad}[Konweksość nie ratuje braku całkowalności]
-Dla martyngału $M$ z samym pierwszym momentem
-$M_n^2$ może mieć nieskończoną wartość oczekiwaną,
+Niech $Y$ ma symetryczny rozkład zadany przez
+$\Prob(Y=k)=\Prob(Y=-k)=c/k^3$, $k\geq1$,
+gdzie $c=(2\sum_{k=1}^\infty k^{-3})^{-1}$.
+Wówczas $\E|Y|=2c\sum_{k\geq1}k^{-2}<\infty$,
+$\E Y=0$, lecz $\E Y^2=2c\sum_{k\geq1}k^{-1}=\infty$.
+Proces $M_0=0$, $M_n=Y$ dla $n\geq1$, względem
+trywialnego $\mathcal F_0$ i $\mathcal F_n=\sigma(Y)$
+dla $n\geq1$, jest martyngałem. Jednak
+$M_n^2$ ma dla $n\geq1$ nieskończoną wartość oczekiwaną,
 a więc nie jest podmartyngałem w definicji
 przyjmującej całkowalność. Dlatego przy procesach
 $M_n^2$ zakładamy $M_n\in L^2$.
@@ -109,10 +118,19 @@ w definicji przekroczenia. Są czasami zatrzymania:
 po każdej obserwacji wiadomo, czy nastąpiło
 rozpoczęcie lub zakończenie kolejnego przekroczenia,
 ponieważ obie decyzje zależą wyłącznie od historii
-do tej chwili. Można to sformalizować indukcyjnie
-za pomocą warunków $\{\sigma_r\leq n\}$ i
-$\{\tau_r\leq n\}$, będących skończonymi sumami
-przecięć zdarzeń z $\mathcal F_n$.
+do tej chwili. Dokładniej, przyjmując $\tau_0=-1$, mamy dla $r\geq1$
+\begin{align*}
+\{\sigma_r\leq n\}&=\bigcup_{j=0}^n
+ (\{\tau_{r-1}<j\}\cap\{X_j\leq a\}),\\
+\{\tau_r\leq n\}&=\bigcup_{j=0}^n
+ (\{\sigma_r<j\}\cap\{X_j\geq b\}).
+\end{align*}
+W pierwszej równości dla $r=1$ zdarzenie
+$\{\tau_0<j\}$ jest całym $\Omega$.
+W pozostałych przypadkach warunek $\{T<j\}$
+dla czasu zatrzymania $T$ jest $\mathcal F_j$-mierzalny
+(gdy $j=0$, jest pusty). Indukcja po $r$
+dowodzi więc wymaganej mierzalności.
 
 Przed wykonaniem kroku $k$ określmy
 \[
@@ -190,7 +208,7 @@ $\sup_n\E|M_n|<\infty$ zbiega p.n.
 \end{twierdzenie}
 \begin{proof}
 Ustalmy wymierne $a<b$. Z nierówności przekroczeń
-oraz tożsamości
+oraz nierówności
 $(X_n-a)^+\leq X_n^++|a|$
 wynika
 \[
@@ -223,7 +241,11 @@ $\E X_n^-=\E X_n^+-\E X_n
 \leq\sup_k\E X_k^+-\E X_0$.
 Fatou zastosowany do $X_n^-$ wyklucza
 $X_\infty=-\infty$ z dodatnim prawdopodobieństwem.
-To daje skończoną granicę.
+To daje skończoną granicę prawie na pewno.
+Na mierzalnym zbiorze wyjątkowym definiujemy ją jako zero.
+Ponadto oba oszacowania Fatou pokazują, że
+$\E X_\infty^+ + \E X_\infty^-<\infty$,
+a więc $X_\infty\in L^1(\Prob)$.
 
 Dla nieujemnego nadmartyngału $Z_n$ proces
 $X_n=-Z_n$ jest podmartyngałem oraz
@@ -238,8 +260,11 @@ Niech $Z_k$ będą niezależnymi symetrycznymi znakami,
 a $M_n=\sum_{k=1}^n2^{-k}Z_k$.
 Jest to martyngał, a szereg
 $\sum_k2^{-k}Z_k$ zbiega nawet bezwzględnie
-na każdej trajektorii. Wiele przyrostów jest
-naprzemiennie dodatnich i ujemnych.
+na każdej trajektorii. Zdarzenia $\{Z_{2k-1}=1,Z_{2k}=-1\}$ są niezależne
+i mają prawdopodobieństwo $1/4$. Z drugiego lematu
+Borela--Cantellego zachodzą nieskończenie często p.n.,
+więc dodatnie i ujemne przyrosty występują p.n.
+nieskończenie wiele razy.
 Zbieżność martyngału nie wymaga monotoniczności.
 \end{przyklad}
 
@@ -286,7 +311,7 @@ Zastosowaliśmy tu definiującą własność
 warunkowej wartości oczekiwanej przy zdarzeniu
 $A\in\mathcal G$. Po prawej znajduje się
 wyrażenie niezależne od wyboru $\mathcal G$.
-Ponieważ $Y\in L^1$, zbieżność zdominowana daje
+Ponieważ $Y\in L^1$, zbieżność zmajoryzowana daje
 $\E[|Y|\ind{\{|Y|>K/2\}}]\to0$.
 Przechodząc z $K\to\infty$ otrzymujemy dokładnie
 definicję jednostajnej całkowalności.
@@ -311,8 +336,8 @@ dla dowolnego ustalonego $K$ mamy
 $\E|M_n|\leq K+\E[|M_n|\ind{\{|M_n|>K\}}]$.
 Twierdzenie o zbieżności martyngałów daje więc
 $M_n\to M_\infty$ p.n. i $M_\infty\in L^1$
-na mocy Fatou. Z kryterium Vitaliego
-(zbieżność według prawdopodobieństwa plus
+na mocy Fatou. Z kryterium Vitaliego (rozdział~\ref{ch:convergence};
+zbieżność według prawdopodobieństwa plus
 jednostajna całkowalność) otrzymujemy zbieżność
 w $L^1$. To daje (2).
 
@@ -378,7 +403,7 @@ Ta rodzina jest algebrą zbiorów, ponieważ
 filtracja jest rosnąca. Klasa zbiorów
 $A\in\mathcal F_\infty$ spełniających powyższą
 równość jest klasą monotoniczną (wynika to
-z zdominowanej zbieżności dla
+z zbieżności zmajoryzowanej dla
 $M_\infty,Y\in L^1$), więc twierdzenie
 o klasie monotonicznej rozszerza równość
 na całe $\mathcal F_\infty$.
@@ -420,7 +445,8 @@ Ponadto
 \]
 \end{twierdzenie}
 \begin{proof}
-Z ortogonalności przyrostów
+Dla $k\geq1$ połóżmy $D_k=M_k-M_{k-1}$.
+Z ortogonalności przyrostów (rozdział~\ref{ch:martyngaly})
 $\sum_{k=1}^n\E D_k^2
 =\E M_n^2-\E M_0^2$.
 Ponieważ prawa strona jest niemalejąca
@@ -483,7 +509,7 @@ Z monotonicznej zbieżności przy $N\to\infty$
 $M^*:=\sup_{k\geq0}|M_k|$ należy do $L^p$.
 Ponieważ $|M_n-M_\infty|^p\leq (2M^*)^p$
 prawie na pewno i $M_n\to M_\infty$ p.n.,
-zbieżność zdominowana daje
+zbieżność zmajoryzowana daje
 $\E|M_n-M_\infty|^p\to0$.
 \end{proof}
 
@@ -542,7 +568,7 @@ dzięki zbieżności $M_{\tau_n}\to M_\tau$ w $L^1$
 i oszacowaniu
 $|\E[M_\tau(\ind{A_n}-\ind A)]|
 \leq\E[|M_\tau|\ind{\{\tau>n\}}]\to0$.
-Prawa strona zbiega przez zdominowaną zbieżność,
+Prawa strona zbiega przez zbieżność zmajoryzowaną,
 gdyż $Y\in L^1$. Ostatecznie
 $\E[M_\tau\ind A]=\E[Y\ind A]$
 dla każdego $A\in\mathcal F_\tau$.
@@ -580,8 +606,9 @@ $\E Z_\tau\leq\E Z_0$, co kończy dowód.
 \end{proof}
 
 \begin{przyklad}[Ryzyko przekroczenia progu przed czasem $N$]
-Dla martyngału o ograniczonych przyrostach
-$|D_k|\leq c_k$ można uzyskać silniejsze
+Dla martyngału o przyrostach $D_k=M_k-M_{k-1}$
+ograniczonych przez deterministyczne stałe $|D_k|\leq c_k$,
+$c_k\geq0$, można uzyskać silniejsze
 oszacowanie \emph{maksimum} niż przez
 sumowanie nierówności dla każdej chwili.
 Dla $t>0$ z dowodu Azumy wynika, że
@@ -601,11 +628,15 @@ $\Prob(\max_{k\leq N}Z_k\geq a)\leq\E Z_0/a=1/a$.
 Wynika ona z ograniczonego zatrzymania przy
 pierwszym przekroczeniu $a$ i nieujemności
 $Z_N$.
-Minimalizując po $t=u/V_N$ dostajemy
+Dla $u>0$ i $V_N>0$ minimalizujemy wykładnik
+$-tu+t^2V_N/2$ po $t>0$: minimum przy $t=u/V_N$ daje
 \[
 \Prob\left(\max_{k\leq N}(M_k-M_0)\geq u\right)
 \leq e^{-u^2/(2V_N)}.
 \]
+Jeżeli $V_N=0$, wszystkie przyrosty do chwili $N$
+są zerowe p.n. i dla $u>0$ prawdopodobieństwo po lewej
+stronie wynosi zero (bez dzielenia przez $V_N$).
 Oszacowanie dotyczy \emph{całej trajektorii do $N$},
 a nie tylko wartości końcowej.
 \end{przyklad}
@@ -666,13 +697,18 @@ Wykazana wcześniej geometryczna kontrola ogona
 $\tau$ daje $\E\tau<\infty$.
 Przy $p=q=1/2$ zatrzymany proces $X_{n\wedge\tau}$
 jest ograniczonym martyngałem. Zatem przez
-zbieżność zdominowaną
+zbieżność zmajoryzowaną
 $\E_iX_\tau=i$. Ponieważ $X_\tau\in\{0,N\}$,
 $N\Prob_i(X_\tau=N)=i$, czyli $h_i=i/N$.
 Aby obliczyć średni czas, zauważmy, że
 $X_{n\wedge\tau}^2-(n\wedge\tau)$ jest
-martyngałem, bo warunkowo przy stanie wewnętrznym
+martyngałem: na $\{\tau>n\}$ mamy
+$\E[X_{n+1}-X_n\mid\mathcal F_n]=0$ oraz
 $\E[(X_{n+1}-X_n)^2\mid\mathcal F_n]=1$.
+Po rozwinięciu różnicy kwadratów jej warunkowa
+średnia wynosi zatem $1$ na $\{\tau>n\}$ i $0$
+na $\{\tau\leq n\}$, dokładnie tyle samo co przyrost
+$(n+1)\wedge\tau-n\wedge\tau$.
 Biorąc wartości oczekiwane i przechodząc z
 $n\to\infty$, dostajemy
 $\E_i X_\tau^2-\E_i\tau=i^2$;
