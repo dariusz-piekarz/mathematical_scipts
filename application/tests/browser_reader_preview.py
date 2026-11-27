@@ -156,6 +156,25 @@ with sync_playwright() as pw:
     assert iframe.count() == 0
     page.evaluate("latex => renderSimplified(latex, 'AM2-17')", chapter18)
     assert box.locator('.atlas-plot-host').count() == 0
+    # Static TikZ and interactive Plotly coexist in chapters 19 and 20.
+    for module, filename in [
+        ('AM2-19', '19-twierdzenie-o-funkcji-uwiklanej.tex'),
+        ('AM2-20', '20-twierdzenia-o-rzedzie.tex'),
+    ]:
+        source = (ROOT.parent / 'chapters/pl/mathematical_analysis_ii' / filename).read_text(encoding='utf-8')
+        page.evaluate("([latex, code]) => renderSimplified(latex, code)", [source, module])
+        assert box.locator('.preview-figure img').count() == 1
+        page.wait_for_function("[...document.querySelectorAll('#simplified .preview-figure img')].some(img => img.complete && img.naturalWidth > 0)", timeout=90000)
+        host = box.locator('.atlas-plot-host')
+        assert host.count() == 1
+        assert host.locator('iframe').count() == 0
+        host.locator('button').click()
+        assert host.locator('iframe').get_attribute('sandbox') == 'allow-scripts'
+        frame = host.frame_locator('iframe')
+        frame.locator('#plot[data-ready=true]').wait_for(timeout=60000)
+        assert frame.locator('#plot .gl-container').count() > 0
+        host.locator('button').click()
+        assert host.locator('iframe').count() == 0
     assert not errors, errors
     browser.close()
     print('Reader prose, math, references, safe content, responsive layout and persistent themes and four rendered TikZ figures: OK')
