@@ -143,6 +143,38 @@ class TestMeasureTheoryChapter17(unittest.TestCase):
             self.assertEqual(2 ** (-n), 1.0 / (2 ** n))
         self.assertLess(2 ** (-12), .001)  # Cylinder bound on point masses.
 
+    def test_cantor_moments_exact(self):
+        # The self-similarity identity yields an exact rational recurrence.
+        from fractions import Fraction
+        from math import comb
+
+        moments = [Fraction(1)]
+        for n in range(1, 9):
+            numerator = sum(comb(n, k) * 2 ** (n-k) * moments[k]
+                            for k in range(n))
+            moments.append(numerator / (2 * (3 ** n - 1)))
+        self.assertEqual(moments[:4],
+                         [Fraction(1), Fraction(1, 2),
+                          Fraction(3, 8), Fraction(5, 16)])
+        # Reflection x -> 1-x leaves the distribution invariant.
+        for n in range(9):
+            reflected = sum((-1) ** k * comb(n, k) * moments[k]
+                            for k in range(n+1))
+            self.assertEqual(reflected, moments[n])
+        # Each level-n interval carries mass 2^-n. Its two endpoint
+        # sums bound the integral of each increasing monomial.
+        left = [0]
+        for level in range(1, 7):
+            left = [3*a + digit for a in left for digit in (0, 2)]
+            denominator = 3 ** level
+            for n in range(1, 9):
+                lower = Fraction(sum(a ** n for a in left),
+                                 2 ** level * denominator ** n)
+                upper = Fraction(sum((a+1) ** n for a in left),
+                                 2 ** level * denominator ** n)
+                self.assertLessEqual(lower, moments[n])
+                self.assertLessEqual(moments[n], upper)
+
     def test_atomic_continuous_singular_split(self):
         atoms = {1 / 3: 3.0, 2 / 3: 2.0}
         density_mass = 1.5  # integral_0^1 (1+x) dx
