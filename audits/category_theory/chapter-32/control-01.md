@@ -2,8 +2,8 @@
 
 Data: 27.11.2026  
 Źródło: `chapters/pl/category_theory/32-2-kategorie-i-bikategorie.tex`  
-Blob źródła: `a6a0d5afb1e80ea2d5fd7d376385f39e2fae21fa`  
-Commit ostatniej zmiany źródła: `42b1f25ed854260bf520fb0320c87424d0cc1f89`  
+Blob źródła: `1f4d81fd9e9b6b1c2282fc89dd793620312ce3e5`  
+Commit ostatniej zmiany źródła: `97065bc90138b139e93bceaf6bbc23995fa21854`  
 Gałąź: `biblioteka-matematyczna-iteracja-6`
 
 ## Zakres audytu
@@ -38,7 +38,7 @@ Testy są regresją na skończonych modelach. Nie zastępują dowodów ogólnych
 
 ## CI i ograniczenia odbioru
 
-Dla commitu źródłowego `42b1f25` trzy workflowy GitHub Actions — CAT-00 validation, Polish mathematical terminology i Mathematical library application checks — były w stanie `queued` podczas odczytu. Nie oznaczono ich jako PASS. Późniejszy commit gałęzi `027b40f` zmieniał wyłącznie `application/tests/browser_references.py`; blob CAT-32 pozostał niezmieniony.
+Dla commitu źródłowego `42b1f25` trzy workflowy GitHub Actions — CAT-00 validation, Polish mathematical terminology i Mathematical library application checks — były w stanie `queued` podczas odczytu. Nie oznaczono ich jako PASS. Późniejszy commit `97065bc` zmienił wyłącznie dokładność opisu bibliograficznego twierdzenia o uściślaniu (§1.1 Lacka); część matematyczna i wyniki testów pozostały niezmienione.
 
 Nie wykonano lokalnej kompilacji TeX/PDF ani oględzin renderowanych diagramów. Z tego powodu odbiór techniczny i wizualny pozostaje otwarty.
 
