@@ -385,12 +385,14 @@ async function previewLabel(label,anchor,sourceDocument=null){
 }
 function closeTip(){state.tooltipKey++;state.tooltipData=null;state.tooltipAnchor=null;$("referenceTip").classList.add("hidden");}
 async function openLabel(label,sourceDocument=null,anchor=null){
+  const epoch=++state.renderEpoch;
   try{
-    const result=state.tooltipData?.name===label && (!sourceDocument || state.tooltipData.source_document===sourceDocument)?state.tooltipData:await api(`/api/labels/${encodeURIComponent(label)}`+(sourceDocument?`?source_document=${encodeURIComponent(sourceDocument)}`:""));
+    const result=state.tooltipData?.name===label && ((state.tooltipData.source_document??null)===(sourceDocument??null))?state.tooltipData:await api(`/api/labels/${encodeURIComponent(label)}`+(sourceDocument?`?source_document=${encodeURIComponent(sourceDocument)}`:""));
+    if(epoch!==state.renderEpoch)return;
     if(result.ambiguous){await previewLabel(label,anchor||state.tooltipAnchor||$('docTitle'),sourceDocument);return;}
     closeTip();
     if(result.entity_id)await openEntity(result.entity_id);else await openModule(result.document_id);
-  }catch(e){toast(e.message);}
+  }catch(e){if(epoch===state.renderEpoch)toast(e.message);}
 }
 function setupSearch(){
   const input=$("searchInput");let task;
