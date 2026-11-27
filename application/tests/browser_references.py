@@ -179,6 +179,39 @@ with sync_playwright() as pw:
         return count;
     }""")
     assert search_cases == 8
+    # Search result buttons are navigable without a mouse. Escape from
+    # a focused result dismisses the dropdown and returns focus to input.
+    keyboard_cases = page.evaluate("""async () => {
+        const originalApi=api, input=document.getElementById('searchInput');
+        const list=document.getElementById('searchResults');
+        let count=0;
+        const press=(key,expected,prevent=true)=>{
+            const event=new KeyboardEvent('keydown',{key,bubbles:true,cancelable:true});
+            document.activeElement.dispatchEvent(event);
+            if(document.activeElement!==expected||event.defaultPrevented!==prevent)
+                throw Error('search keyboard: '+key);
+            count++;
+        };
+        try{
+            api=(url,options)=>url.startsWith('/api/search?')
+                ? Promise.resolve({items:[
+                    {id:'a',title:'A',kind:'module',document_id:'ALG-05',start_line:1},
+                    {id:'b',title:'B',kind:'module',document_id:'ALG-08',start_line:1}
+                ]}) : originalApi(url,options);
+            input.value='atlas';input.focus();await performSearch('atlas');
+            const buttons=[...list.querySelectorAll('button')];
+            if(buttons.length!==3)throw Error('missing search results');
+            press('ArrowDown',buttons[0]);press('ArrowDown',buttons[1]);
+            press('End',buttons[2]);press('ArrowDown',buttons[2]);
+            press('Home',buttons[0]);press('ArrowUp',input);
+            press('ArrowUp',buttons[2]);press('ArrowUp',buttons[1]);
+            press('Escape',input);
+            if(!list.classList.contains('hidden'))throw Error('Escape did not dismiss search');
+            press('ArrowDown',input,false);
+            return count;
+        }finally{api=originalApi;input.value='';dismissSearch();input.blur();}
+    }""")
+    assert keyboard_cases == 10
     # Pending reference requests must not resurrect a detached anchor
     # after the source pane or simplified preview is rebuilt.
     detached_cases = page.evaluate("""async () => {
