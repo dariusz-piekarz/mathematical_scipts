@@ -75,6 +75,23 @@ class TestHaarChapter23(unittest.TestCase):
                 if not a & b:
                     self.assertEqual(n[a | b], n[a] + n[b])
 
+    def test_haar_uniqueness_double_integral_identity(self):
+        # Exhaust nonempty 0/1 kernels and signed test functions on S3.
+        # Avoid division by the normalizing mass by cross multiplication.
+        inv = {g: next(h for h in S3 if mul(g, h) == E) for g in S3}
+        left = [[IDX[mul(inv[y], x)] for y in S3] for x in S3]
+        right = [[IDX[mul(y, z)] for z in S3] for y in S3]
+        for mask in range(1, 64):
+            phi = [(mask >> i) & 1 for i in range(6)]
+            for fmask in range(64):
+                f = [1 if fmask & (1 << i) else -1 for i in range(6)]
+                direct = sum(f[i]*phi[left[i][j]]
+                             for i in range(6) for j in range(6))
+                substituted = sum(f[right[j][k]]*phi[k]
+                                  for j in range(6) for k in range(6))
+                self.assertEqual(direct, substituted)
+                self.assertEqual(direct, sum(phi)*sum(f))
+
     def test_uniqueness_requires_normalizing_factor(self):
         for a in range(1, 5):
             for b in range(1, 5):
