@@ -50,18 +50,70 @@ def coh(dims, diffs, p):
             for q, n in dims.items()}
 
 
-def truncation_dimensions(dims, diffs, r, upper, p):
-    # Smart cohomological truncations, expressed via rank-nullity.
-    if upper:
-        return {q: (n-rank(diffs.get(q, ()), p) if q == r else n)
-                for q, n in dims.items() if q <= r}
-    return {q: (n-rank(diffs.get(q-1, ()), p) if q == r else n)
-            for q, n in dims.items() if q >= r}
+def finite_complex(p, d0, d1):
+    """Finite cochain complex, with each additive group indexed from zero."""
+    vs = tuple(itertools.product(range(p), repeat=2))
+    index = {v: i for i, v in enumerate(vs)}
+    spaces = {q: vs if -1 <= q <= 1 else ((0, 0),)
+              for q in range(-3, 4)}
+    plus = {q: tuple(tuple(spaces[q].index(tuple((x+y) % p for x, y in zip(v, w)))
+                           for w in spaces[q]) for v in spaces[q])
+            for q in spaces}
+    diffs = {q: tuple(index[mv(d, v, p)] for v in vs)
+             for q, d in ((-1, d0), (0, d1))}
+    for q in spaces:
+        diffs.setdefault(q, (0,) * len(spaces[q]))
+    return plus, diffs
+
+
+def smart_truncate(complex_, r, upper):
+    """Construct the kernel or quotient at the boundary, not just ranks."""
+    plus, ds = complex_
+    groups, maps = {}, {}
+    inclusions, projections = {}, {}
+    for q, table in plus.items():
+        n = len(table)
+        if upper and q == r:
+            reps = tuple(i for i, x in enumerate(ds[q]) if x == 0)
+            proj = {i: j for j, i in enumerate(reps)}
+        elif not upper and q == r:
+            image = set(ds.get(q-1, (0,)))
+            reps, proj = [], {}
+            for i in range(n):
+                if i not in proj:
+                    j = len(reps)
+                    reps.append(i)
+                    for x in image:
+                        proj[table[i][x]] = j
+            reps = tuple(reps)
+        elif (upper and q > r) or (not upper and q < r):
+            reps, proj = (0,), dict.fromkeys(range(n), 0)
+        else:
+            reps, proj = tuple(range(n)), {i: i for i in range(n)}
+        inclusions[q], projections[q] = reps, proj
+        groups[q] = tuple(tuple(proj[table[i][j]] for j in reps) for i in reps)
+    for q, reps in inclusions.items():
+        target = projections.get(q+1, {0: 0})
+        if upper and q >= r or not upper and q < r:
+            maps[q] = (0,) * len(reps)
+        else:
+            maps[q] = tuple(target[ds[q][i]] for i in reps)
+    return groups, maps
+
+
+def cohomology_sizes(complex_):
+    plus, ds = complex_
+    result = {}
+    for q in plus:
+        kernel = sum(x == 0 for x in ds[q])
+        image = len(set(ds.get(q-1, (0,))))
+        assert kernel % image == 0
+        result[q] = kernel // image
+    return result
 
 
 class CategoryTheoryCh39(unittest.TestCase):
     def test_CAT_39_001_truncation_indexing(self):
-        # Explicit three-term complexes over finite fields.
         for p in (2, 3):
             ms = list(matrices(p, 2))
             zero = ((0, 0), (0, 0))
@@ -71,23 +123,20 @@ class CategoryTheoryCh39(unittest.TestCase):
                     continue
                 ds = {-1: d0, 0: d1}
                 h = coh(dims, ds, p)
+                complex_ = finite_complex(p, d0, d1)
+                expected = {q: p**h.get(q, 0) for q in range(-3, 4)}
+                self.assertEqual(cohomology_sizes(complex_), expected)
+                ups = {a: smart_truncate(complex_, -a, True)
+                       for a in range(-2, 3)}
+                lows = {b: smart_truncate(complex_, -b, False)
+                        for b in range(-2, 3)}
                 for a, b in itertools.product(range(-2, 3), repeat=2):
-                    # tau_{>=a} tau_{<=b}: retained cohomological
-                    # degrees are precisely -b <= q <= -a.
-                    for q in dims:
-                        first = h[q] if q <= -a else 0
-                        first = first if q >= -b else 0
-                        second = h[q] if q >= -b else 0
-                        second = second if q <= -a else 0
-                        self.assertEqual(first, second)
-                        if a > b:
-                            self.assertEqual(first, 0)
-                    r = -a
-                    up = truncation_dimensions(dims, ds, r, True, p)
-                    low = truncation_dimensions(dims, ds, r, False, p)
-                    if r in dims:
-                        self.assertEqual(up[r] - rank(ds.get(r-1, ()), p), h[r])
-                        self.assertEqual(low[r] - rank(ds.get(r, ()), p), h[r])
+                    first = smart_truncate(lows[b], -a, True)
+                    second = smart_truncate(ups[a], -b, False)
+                    want = {q: n if -b <= q <= -a else 1
+                            for q, n in expected.items()}
+                    self.assertEqual(cohomology_sizes(first), want)
+                    self.assertEqual(cohomology_sizes(second), want)
 
     def test_CAT_39_002_cone_composite(self):
         # For maps of vector spaces in degree 0, the cofiber triangle
