@@ -190,12 +190,13 @@ with sync_playwright() as pw:
                         'edges': [12, 12], 'triangles': [8, 12]}, geometry
     host.locator('button').click()
     assert host.locator('iframe').count() == 0
-    # Static TikZ and interactive Plotly coexist in chapters 19–22.
+    # Static TikZ and interactive Plotly coexist in chapters 19–23.
     for module, filename in [
         ('AM2-19', '19-twierdzenie-o-funkcji-uwiklanej.tex'),
         ('AM2-20', '20-twierdzenia-o-rzedzie.tex'),
         ('AM2-21', '21-podrozmaitosci-przestrzeni-euklidesowej.tex'),
         ('AM2-22', '22-ekstrema-zwiazane.tex'),
+        ('AM2-23', '23-rachunek-rozniczkowy-na-podrozmaitosciach.tex'),
     ]:
         source = (ROOT.parent / 'chapters/pl/mathematical_analysis_ii' / filename).read_text(encoding='utf-8')
         page.evaluate("([latex, code]) => renderSimplified(latex, code)", [source, module])
@@ -217,6 +218,18 @@ with sync_playwright() as pw:
         frame = host.frame_locator('iframe')
         frame.locator('#plot[data-ready=true]').wait_for(timeout=60000)
         assert frame.locator('#plot .gl-container').count() > 0
+        if module == 'AM2-23':
+            check = frame.locator('#plot').evaluate("""el => {
+                const d=el.data, vec=t=>['x','y','z'].map(k=>t[k][1]-t[k][0]);
+                const [g,w,e]=d.slice(2).map(vec);
+                let error=0;
+                for(let i=0;i<d[0].z.length;i++)for(let j=0;j<d[0].z[i].length;j++)
+                    error=Math.max(error,Math.abs(d[0].x[i][j]**2+d[0].y[i][j]**2+d[0].z[i][j]**2-1));
+                return {types:d.map(t=>t.type), error, dot:.6*g[0]+.8*g[2],
+                    sum:Math.max(...g.map((v,i)=>Math.abs(v+w[i]-e[i])))};
+            }""")
+            assert check['types'] == ['surface', 'scatter3d', 'scatter3d', 'scatter3d', 'scatter3d']
+            assert max(check['error'], abs(check['dot']), check['sum']) < 1e-12
         host.locator('button').click()
         assert host.locator('iframe').count() == 0
     # Real graph chapters: every figure must decode, not merely insert a placeholder.

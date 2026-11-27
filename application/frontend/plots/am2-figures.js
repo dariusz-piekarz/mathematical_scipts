@@ -110,6 +110,20 @@
       const panel=(domain)=>({...scene("x","y","f"),domain:{x:domain,y:[0,1]},aspectmode:"manual",aspectratio:{x:1.4,y:1,z:1.2},xaxis:{...axis("x"),range:[-1.2,2.2]},yaxis:{...axis("y"),range:[-1.2,1.2]},zaxis:{...axis("f"),range:[0,12]}});
       return base(data,"Minimum na kole jednostkowym",{scene:panel([0,.48]),scene2:panel([.52,1]),annotations:[{text:"Pełny wykres",xref:"paper",yref:"paper",x:.24,y:1,showarrow:false},{text:"Część dopuszczalna",xref:"paper",yref:"paper",x:.76,y:1,showarrow:false}]});
     },
+    "am2_23_gradient.html":()=>{
+      const theta=lin(0,Math.PI,61),phi=lin(0,2*Math.PI,121);
+      const X=theta.map(t=>phi.map(a=>Math.sin(t)*Math.cos(a))),Y=theta.map(t=>phi.map(a=>Math.sin(t)*Math.sin(a))),Z=theta.map(t=>phi.map(()=>Math.cos(t)));
+      const p=[.6,0,.8],e=[0,0,1],w=p.map(v=>.8*v),g=e.map((v,i)=>v-w[i]);
+      const data=[surface(X,Y,Z,{cmin:-1,cmax:1}),{type:"scatter3d",mode:"markers",x:[p[0]],y:[p[1]],z:[p[2]],marker:{color:"black",size:5},name:"p"}];
+      const arrow=(v,name,color)=>{
+        const tip=p.map((a,i)=>a+v[i]),side=[-v[2],0,v[0]];
+        const left=tip.map((a,i)=>a-.18*v[i]+.09*side[i]),right=tip.map((a,i)=>a-.18*v[i]-.09*side[i]);
+        const points=[p,tip,null,tip,left,null,tip,right],coord=i=>points.map(a=>a===null?null:a[i]);
+        return {type:"scatter3d",mode:"lines",x:coord(0),y:coord(1),z:coord(2),name,line:{color,width:6}};
+      };
+      data.push(arrow(g,"gradient styczny","#b52332"),arrow(w,"składowa normalna","#c87900"),arrow(e,"gradient otoczenia","#234ab5"));
+      return base(data,"Gradient styczny na sferze",{scene:{...scene(),aspectmode:"data",camera:{eye:{x:1.6,y:1.6,z:.8}},xaxis:{...axis("x"),range:[-1.2,1.35]},yaxis:{...axis("y"),range:[-1.2,1.2]},zaxis:{...axis("z"),range:[-1.15,1.95]}}});
+    },
     "am2_36_geometric.html":()=>{
       const r=lin(0,.97,61),t=lin(0,2*Math.PI,121),X=t.map(a=>r.map(v=>v*Math.cos(a))),Y=t.map(a=>r.map(v=>v*Math.sin(a)));
       const norm=(a,v,n)=>n===null?1/Math.hypot(1-v*Math.cos(a),v*Math.sin(a)):Math.hypot(1-v**(n+1)*Math.cos((n+1)*a),v**(n+1)*Math.sin((n+1)*a))/Math.hypot(1-v*Math.cos(a),v*Math.sin(a));
