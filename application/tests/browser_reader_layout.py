@@ -298,6 +298,55 @@ with sync_playwright() as pw:
         return count;
     }""")
     assert races == 8
+    # A slow chapter, entity or reference lookup must not override an
+    # explicitly selected tab, including a return to the existing reader.
+    tab_races = page.evaluate("""async () => {
+        const originalApi=api;
+        const moduleData=await api('/api/modules/DG-14');
+        const outline=await api('/api/modules/DG-14/outline');
+        const id=outline.entities.find(item=>item.kind==='section').id;
+        const entityData=await api('/api/entities/'+encodeURIComponent(id));
+        const routes=[
+            [()=>openModule('DG-14'),moduleData],
+            [()=>openEntity(id),entityData],
+            [()=>openLabel('atlas-tab-race','DG-14'),{document_id:'DG-14'}]
+        ];
+        const toastBox=document.getElementById('toast');
+        const resetToast=()=>{toastBox.textContent='';toastBox.classList.add('hidden');};
+        let pending,count=0;
+        await openModule('AM1-14');
+        try {
+            api=(url,options)=>{
+                if(url==='/api/modules/DG-14'||
+                   url==='/api/entities/'+encodeURIComponent(id)||
+                   url.startsWith('/api/labels/atlas-tab-race'))
+                    return new Promise((resolve,reject)=>pending={resolve,reject});
+                return originalApi(url,options);
+            };
+            for(const [open,data] of routes){
+                for(const tab of ['selection','reader']){
+                    for(const failure of [false,true]){
+                        activateTab('selection');resetToast();
+                        const old=open();
+                        activateTab(tab);
+                        if(failure)pending.reject(Error('obsolete navigation'));
+                        else pending.resolve(data);
+                        await old;
+                        if(state.tab!==tab||state.currentModule!=='AM1-14'||
+                           state.currentEntity!==null||toastBox.textContent)
+                            throw Error('stale navigation changed selected tab or reader');
+                        count++;
+                    }
+                }
+            }
+            const current=openModule('DG-14');
+            pending.resolve(moduleData);await current;
+            if(state.tab!=='reader'||state.currentModule!=='DG-14')
+                throw Error('current navigation did not open reader');
+            return count+1;
+        }finally{api=originalApi;resetToast();activateTab('reader');}
+    }""")
+    assert tab_races == 13
 
     # Source mode and keyboard interaction must also work at 180% text.
     page.evaluate("() => openModule('AM1-14', true)")
