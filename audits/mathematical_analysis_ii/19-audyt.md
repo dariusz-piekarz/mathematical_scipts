@@ -33,3 +33,7 @@ Ponowny odczyt całego rozdziału (blob 96f4abb83541005740f3b9d1f2275dbaa238c5d5
 Kontrola pobranych źródeł: 8 unikalnych etykiet, 9/9 lokalnych i 2/2 zewnętrznych różnych celów odsyłaczy występują dokładnie raz w sprawdzonych rozdziałach; poprawny stos środowisk; pojedynczy wpis w książce i katalogu; definicja oraz rejestracja Plotly obecne. Dodatkowo porównano trzy niezależne składowe macierzy Hessego dodatniej gałęzi sfery w punkcie (0.21,-0.32) z centralnymi różnicami skończonymi o kroku 10^-4; maksymalna różnica 6.361e-9. Jest to pomocnicza kontrola numeryczna, nie dowód.
 
 Stabilizacja merytoryczna 2/2 + audyt kontrolny zaliczony. Odbiór techniczny pozostaje otwarty: przebiegi AM II 46038430372, terminologia 46038430325 i aplikacja 46038430552 nadal queued; nie potwierdzono aktualnej kompilacji PDF ani renderowania przeglądarkowego. Kolejny etap merytoryczny: AM II 20.
+
+## Uzupełnienie ilustracji statycznej — 27.11.2026
+
+Commit 16326936efe8f79e7b0c46d6bbcdc6695da87f89. Dodano rysunek wektorowy TikZ sfery, dodatniej lokalnej gałęzi nad dyskiem o promieniu 0,65 i fragmentu płaszczyzny stycznej na wysokości 1. Próbna kompilacja samego rysunku przez pdfLaTeX i odczyt renderu: poprawne. Porównanie całego źródła z blobem audytu kontrolnego potwierdza wyłącznie wstawienie rysunku i odsyłacza; bez usunięć i zmian matematyki. 9 unikalnych etykiet, poprawny stos środowisk. Zachowano stabilizację merytoryczną i audyt kontrolny. Odbiór pełnego PDF po zmianie oraz test przeglądarkowy (rozszerzony w d7a3af3) otwarty.
