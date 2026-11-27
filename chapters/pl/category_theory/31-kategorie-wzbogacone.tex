@@ -1,0 +1,189 @@
+\section{Kategorie wzbogacone}\label{cat:sec:enriched}
+
+Zamiast zbioru morfizmów pomiędzy dwoma obiektami rozważymy obiekt ustalonej kategorii monoidalnej. W ten sposób składanie może zachowywać strukturę liniową, porządek lub strukturę kategorii. Korzystamy z rozdziałów~\ref{cat:sec:monoidal} i~\ref{cat:sec:coherence}.
+
+\subsection{Aksjomaty wzbogacenia}
+
+Ustalmy lokalnie małą kategorię monoidalną $(\mathcal V,\otimes,I,\alpha,\lambda,\rho)$ (definicja~\ref{cat:def:monoidal}). Nie zakładamy symetrii.
+
+\begin{definicja}[Kategoria wzbogacona]\label{cat:def:enriched-category}
+$\mathcal V$-kategoria $\mathcal A$ składa się z klasy obiektów, obiektów $\mathcal A(X,Y)$ kategorii $\mathcal V$ dla każdej pary $X,Y$, morfizmów
+\[
+ m_{X,Y,Z}:\mathcal A(Y,Z)\otimes\mathcal A(X,Y)\to\mathcal A(X,Z)
+\]
+oraz jednostek $j_X:I\to\mathcal A(X,X)$. Pisząc $H_{XY}=\mathcal A(X,Y)$, wymagamy
+\begin{equation}\label{cat:eq:enriched-assoc}
+\begin{aligned}
+&m_{W,X,Z}(m_{X,Y,Z}\otimes\id_{H_{WX}})\\
+&=m_{W,Y,Z}(\id_{H_{YZ}}\otimes m_{W,X,Y})
+  \alpha_{H_{YZ},H_{XY},H_{WX}},
+\end{aligned}
+\end{equation}
+gdzie obie strony prowadzą z $(H_{YZ}\otimes H_{XY})\otimes H_{WX}$ do $H_{WZ}$, oraz
+\begin{equation}\label{cat:eq:enriched-unit}
+\begin{aligned}
+ m_{X,Y,Y}(j_Y\otimes\id_{H_{XY}})&=\lambda_{H_{XY}},\\
+ m_{X,X,Y}(\id_{H_{XY}}\otimes j_X)&=\rho_{H_{XY}}.
+\end{aligned}
+\end{equation}
+Kategorię nazywamy małą, gdy jej obiekty tworzą zbiór.
+\end{definicja}
+
+Aksjomat łączności przedstawia diagram (pomijamy indeksy $m$):
+\begin{center}
+\begin{tikzpicture}[>=stealth,every node/.style={font=\small}]
+ \node (a) at (0,3.8) {$(H_{YZ}\otimes H_{XY})\otimes H_{WX}$};
+ \node (b) at (7.2,3.8) {$H_{YZ}\otimes(H_{XY}\otimes H_{WX})$};
+ \node (c) at (0,1.9) {$H_{XZ}\otimes H_{WX}$};
+ \node (d) at (7.2,1.9) {$H_{YZ}\otimes H_{WY}$};
+ \node (e) at (3.6,0) {$H_{WZ}$};
+ \draw[->] (a)--node[above] {$\alpha$} (b);
+ \draw[->] (a)--node[left] {$m\otimes\id$} (c);
+ \draw[->] (b)--node[right] {$\id\otimes m$} (d);
+ \draw[->] (c)--node[below left] {$m$} (e);
+ \draw[->] (d)--node[below right] {$m$} (e);
+\end{tikzpicture}
+\end{center}
+
+\begin{twierdzenie}[Kategoria zwykła związana z kategorią wzbogaconą]\label{cat:thm:enriched-underlying}
+$\mathcal V$-kategoria $\mathcal A$ wyznacza lokalnie małą kategorię zwykłą $\mathcal A_0$ o tych samych obiektach, w której
+\[
+ \Hom_{\mathcal A_0}(X,Y)=\Hom_{\mathcal V}(I,\mathcal A(X,Y)).
+\]
+Identyczności to $j_X$, a składanie dane jest wzorem
+\[
+ g\circ f=m_{X,Y,Z}(g\otimes f)\delta,\qquad
+ \delta=\lambda_I^{-1}:I\to I\otimes I.
+\]
+\end{twierdzenie}
+\begin{proof}
+Lokalna małość $\mathcal V$ zapewnia istnienie wskazanych zbiorów morfizmów. Z lematu~\ref{cat:lem:unit-coherence} mamy $\lambda_I=\rho_I$. Z koherencji (twierdzenie~\ref{cat:thm:mac-lane-coherence}) wynika
+\[
+ \alpha_{I,I,I}(\delta\otimes\id_I)\delta
+ =(\id_I\otimes\delta)\delta,
+\]
+gdyż obie strony są kanonicznymi morfizmami $I\to I\otimes(I\otimes I)$ zbudowanymi z izomorfizmów jednostkowych i łączności.
+
+Dla $f:I\to\mathcal A(X,Y)$, $g:I\to\mathcal A(Y,Z)$, $h:I\to\mathcal A(Z,T)$ bifunktorialność daje
+\[
+ (h\circ g)\circ f
+ =m_{X,Y,T}(m_{Y,Z,T}\otimes\id)
+ ((h\otimes g)\otimes f)(\delta\otimes\id_I)\delta.
+\]
+Stosując~\eqref{cat:eq:enriched-assoc}, naturalność $\alpha$ i równość dla $\delta$, dostajemy
+\[
+ \begin{aligned}
+ (h\circ g)\circ f
+ &=m_{X,Z,T}(\id\otimes m_{X,Y,Z})
+ (h\otimes(g\otimes f))(\id_I\otimes\delta)\delta\\
+ &=h\circ(g\circ f).
+ \end{aligned}
+\]
+Ostatnia równość wynika z bifunktorialności i definicji składania. Ponadto z~\eqref{cat:eq:enriched-unit} i naturalności izomorfizmów jednostkowych:
+\[
+\begin{aligned}
+ j_Y\circ f&=\lambda_{\mathcal A(X,Y)}(\id_I\otimes f)\delta
+ =f\lambda_I\delta=f,\\
+ f\circ j_X&=\rho_{\mathcal A(X,Y)}(f\otimes\id_I)\delta
+ =f\rho_I\delta=f.
+\end{aligned}
+\]
+Otrzymujemy wszystkie aksjomaty kategorii.
+\end{proof}
+
+\subsection{Przykłady}
+
+\begin{przyklad}[Zbiory]\label{cat:ex:enriched-set}
+Dla $(\Set,\times,\{*\})$ wzbogacenie jest równoważne strukturze lokalnie małej kategorii zwykłej. Jednostki wskazują identyczności, a diagramy aksjomatów sprawdzone na elementach są dokładnie prawami zwykłego składania. Odwrotnie, zwykła kategoria wyznacza wszystkie wymagane dane, a funkcje zbiorów są wyznaczone przez wartości na elementach.
+\end{przyklad}
+
+\begin{przyklad}[Kategorie liniowe]\label{cat:ex:enriched-modules}
+Dla przemiennego pierścienia $R$ z jedynką rozważamy kategorię unitarnych $R$-modułów z $\otimes_R$ i jednostką $R$ (twierdzenie~\ref{cat:thm:module-monoidal}). Własność uniwersalna iloczynu tensorowego identyfikuje morfizm składania z odwzorowaniem $R$-dwuliniowym na iloczynie kartezjańskim modułów. Jednostkę $j_X$ wyznacza $j_X(1)$, ponieważ $j_X(r)=rj_X(1)$. Na tensorach prostych aksjomaty są zwykłymi prawami łączności i jednostki. Odwrotnie, jeśli składanie dwuliniowe i identyczności spełniają te prawa, to liniowe morfizmy w diagramach są równe na generatorach (iterowanych tensorach prostych), więc są równe wszędzie. Dla $R=\mathbb Z$ otrzymujemy kategorie preaddytywne; nie wymaga się istnienia biproduktów ani obiektu zerowego.
+
+Kategoria zwykła odzyskuje pierwotne morfizmy dzięki bijekcji $\Hom_R(R,M)\to M$, $f\mapsto f(1)$, której odwrotnością jest $x\mapsto(r\mapsto rx)$. Wzór składania obliczony na $1$ daje pierwotne składanie.
+\end{przyklad}
+
+\begin{przyklad}[Odległości Lawvere'a]\label{cat:ex:lawvere-metric}
+Niech $\mathcal V$ będzie kategorią uporządkowaną $[0,\infty]$ z odwróconym porządkiem: morfizm $a\to b$ istnieje dokładnie wtedy, gdy $a\geq b$, i jest wtedy jedyny. Przyjmujemy $a\otimes b=a+b$ (z $a+\infty=\infty+a=\infty$), $I=0$. Dodawanie jest monotoniczne w obu argumentach, więc daje bifunktor; łączność i jednostkowość są ścisłe.
+
+Wzbogacenie zbioru $X$ jest równoważne funkcji $d:X\times X\to[0,\infty]$ spełniającej
+\[
+ d(x,x)=0,\qquad d(x,z)\leq d(y,z)+d(x,y).
+\]
+Istnienie jednostki oznacza $0\geq d(x,x)$, a istnienie składania jest równoważne nierówności trójkąta. Równości morfizmów zachodzą automatycznie, bo pomiędzy ustalonymi obiektami istnieje co najwyżej jeden morfizm. Nie wymagamy symetrii, rozdzielania punktów ani skończoności odległości. W $\mathcal A_0$ istnieje morfizm $x\to y$ dokładnie wtedy, gdy $d(x,y)=0$. Dla zwykłej przestrzeni metrycznej $\mathcal A_0$ jest więc kategorią dyskretną i nie odzyskuje dodatnich odległości.
+\end{przyklad}
+
+\subsection{Funktory i transformacje naturalne wzbogacone}
+
+\begin{definicja}[Funktor wzbogacony]\label{cat:def:enriched-functor}
+Funktor wzbogacony $F:\mathcal A\to\mathcal B$ przypisuje obiektom obiekty, a parom $X,Y$ morfizmy
+\[
+ F_{XY}:\mathcal A(X,Y)\to\mathcal B(FX,FY)
+\]
+w $\mathcal V$ spełniające
+\[
+ F_{XX}j_X^{\mathcal A}=j_{FX}^{\mathcal B},\qquad
+ F_{XZ}m^{\mathcal A}_{X,Y,Z}
+ =m^{\mathcal B}_{FX,FY,FZ}(F_{YZ}\otimes F_{XY}).
+\]
+\end{definicja}
+
+\begin{stwierdzenie}\label{cat:prop:enriched-functor-underlying}
+Funktor wzbogacony wyznacza funktor $F_0:\mathcal A_0\to\mathcal B_0$ przez $F_0(f)=F_{XY}f$. Identyczności i składanie funktorów wzbogaconych definiujemy obiektowo i na składowych, a przyporządkowanie $F\mapsto F_0$ je zachowuje.
+\end{stwierdzenie}
+\begin{proof}
+Aksjomat jednostki daje $F_0(j_X^{\mathcal A})=j_{FX}^{\mathcal B}$. Dla $f:I\to\mathcal A(X,Y)$ i $g:I\to\mathcal A(Y,Z)$
+\[
+ \begin{aligned}
+ F_0(g\circ f)&=F_{XZ}m^{\mathcal A}_{X,Y,Z}(g\otimes f)\delta\\
+ &=m^{\mathcal B}_{FX,FY,FZ}(F_{YZ}g\otimes F_{XY}f)\delta
+ =F_0(g)\circ F_0(f).
+ \end{aligned}
+\]
+Druga równość wynika z aksjomatu składania i bifunktorialności.
+
+Dla $G:\mathcal B\to\mathcal D$ definiujemy $(GF)_{XY}=G_{FX,FY}F_{XY}$. Aksjomat jednostki dla złożenia wynika z $G_{FX,FX}F_{XX}j_X^{\mathcal A}=G_{FX,FX}j_{FX}^{\mathcal B}=j_{GFX}^{\mathcal D}$. Aksjomat składania wynika z kolejnych zastosowań aksjomatów $F,G$ i bifunktorialności:
+\[
+ (GF)_{XZ}m^{\mathcal A}
+ =G_{FX,FZ}m^{\mathcal B}(F_{YZ}\otimes F_{XY})
+ =m^{\mathcal D}((GF)_{YZ}\otimes(GF)_{XY}).
+\]
+Identyczności spełniają oba aksjomaty, ponieważ ich składowe są identycznościami w $\mathcal V$. Łączność i prawa jednostki wynikają z odpowiednich praw składania morfizmów w $\mathcal V$ oraz odwzorowań obiektów. Wreszcie $(GF)_0(f)=G_{FX,FY}F_{XY}f=G_0(F_0(f))$ i $(\id_{\mathcal A})_0=\id_{\mathcal A_0}$.
+\end{proof}
+
+\begin{przyklad}\label{cat:ex:enriched-functors}
+W przypadku modułów funktory wzbogacone są funktorami liniowymi na zbiorach morfizmów: warunek składania można sprawdzać na tensorach prostych, a warunek jednostki na $1\in R$. Dla odległości Lawvere'a funktor wzbogacony istnieje dla zadanej funkcji $F$ dokładnie wtedy, gdy
+\[
+ d_{\mathcal B}(Fx,Fy)\leq d_{\mathcal A}(x,y)
+\]
+dla wszystkich $x,y$. Istnienie składowych jest równoważne tym nierównościom, a ich zgodność jest automatyczna z jednoznaczności morfizmów w kategorii uporządkowanej.
+\end{przyklad}
+
+\begin{definicja}[Transformacja naturalna wzbogacona]\label{cat:def:enriched-natural}
+Dla funktorów wzbogaconych $F,G:\mathcal A\to\mathcal B$ transformacja naturalna wzbogacona $\eta:F\Rightarrow G$ to rodzina morfizmów $\eta_X:I\to\mathcal B(FX,GX)$ spełniająca
+\begin{equation}\label{cat:eq:enriched-natural}
+\begin{aligned}
+ &m^{\mathcal B}_{FX,FY,GY}(\eta_Y\otimes F_{XY})
+ \lambda_{\mathcal A(X,Y)}^{-1}\\
+ &=m^{\mathcal B}_{FX,GX,GY}(G_{XY}\otimes\eta_X)
+ \rho_{\mathcal A(X,Y)}^{-1}.
+\end{aligned}
+\end{equation}
+Obie strony mają dziedzinę $\mathcal A(X,Y)$ i przeciwdziedzinę $\mathcal B(FX,GY)$.
+\end{definicja}
+
+\begin{stwierdzenie}\label{cat:prop:enriched-natural-underlying}
+Transformacja naturalna wzbogacona $\eta$ wyznacza transformację naturalną zwykłą $F_0\Rightarrow G_0$ o składowych $\eta_X$.
+\end{stwierdzenie}
+\begin{proof}
+Dla $f:I\to\mathcal A(X,Y)$ naturalność izomorfizmów jednostkowych daje
+\[
+ \lambda_{\mathcal A(X,Y)}^{-1}f=(\id_I\otimes f)\delta,\quad
+ \rho_{\mathcal A(X,Y)}^{-1}f=(f\otimes\id_I)\delta.
+\]
+Składamy obie strony~\eqref{cat:eq:enriched-natural} z $f$. Bifunktorialność zamienia lewą stronę w $\eta_Y\circ F_0(f)$, a prawą w $G_0(f)\circ\eta_X$, na mocy wzoru składania w kategorii zwykłej. Otrzymujemy naturalność.
+\end{proof}
+
+\begin{uwaga}
+Odwrotna implikacja wymaga dodatkowego założenia. Jeżeli $\Hom_{\mathcal V}(I,-)$ jest wierny, to zwykła naturalność danej rodziny $\eta_X$ implikuje wzbogaconą: dwa morfizmy w~\eqref{cat:eq:enriched-natural} są równe po złożeniu z każdym $f:I\to\mathcal A(X,Y)$, a z wierności wynika ich równość. Nie można zakładać tej wierności dla dowolnej kategorii monoidalnej.
+\end{uwaga}
