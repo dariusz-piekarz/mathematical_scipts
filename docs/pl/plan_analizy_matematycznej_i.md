@@ -85,11 +85,14 @@ Stan źródła po c4f93eb: 4086 wierszy, 197 etykiet. Po zakończeniu bieżącyc
 | 37 | Całka McShane'a, całkowalność bezwzględna, BV/AC i związek z Lebesgue'em, twierdzenia graniczne | 563 |
 | 38 | Wąska całka Denjoya: AC*, ACG*, charakterystyka pierwotnych | 406 |
 | 39 | Całka Perrona i równoważność z KH | 237 |
-| 40 | Szeroka całka Denjoya–Chinczyna, pochodna aproksymatywna, przykłady i rachunek | 843 |
-| 41 | Całka Riemanna–Stieltjesa, kryteria, podstawienie i granice | 353 |
+| 40 | Całka Riemanna–Stieltjesa, kryteria, podstawienie i granice | 353 |
+| 41 | Szeroka całka Denjoya–Chinczyna, pochodna aproksymatywna, przykłady i rachunek | 843 |
 | 42 | Całka Kurzweila–Stieltjesa, regulowanie, skoki, miary i rachunek | 1174 |
 | 43 | Rachunek całek cechowanych: mnożniki BV, podstawienie, całkowanie przez części, norma Alexiewicza i zbieżność; hierarchia jako sekcja końcowa | 254 |
 
 Kolejność Perrona przed szeroką całką Denjoya usuwa odsyłacz wprzód (it:thm:perron-hk). Przed podziałem: rozdzielić lemat o modyfikacji na zbiorze zerowym (36→37) na dowód KH i dopowiedzenie McShane po jego liniowości; kryterium oscylacyjne Riemanna–Stieltjesa w przykładach McShane zastąpić kryterium Riemanna z ME-08, jeśli integrator to identyczność; w szerokim Denjoyu dowód mnożników korzysta z twierdzenia RS, więc przenieść potrzebną tezę/dowód przed zastosowanie albo odpowiednio przesunąć sekcję rachunkową; porównania RS/KS umieścić po konstrukcji KS. Weryfikować zależności po rozcięciu.
 
 Zachować ścieżkę i etykietę rozdziału 36, wszystkie etykiety źródłowe (w tym aliasy współlokowane przy deklaracji), notację i rysunki. Każdy nowy rozdział otrzyma własny nagłówek i etykietę, lokalne makra potrzebne do podglądu; nie przenosić grupowania TeX przez granice plików. Zaktualizować entrypoint, katalog, odsyłacze kwalifikowane do dawnych CAL i AM I-36 według rzeczywistej mapy etykieta→rozdział (nie przez globalną zamianę samego numeru); zachować odsyłacze w całym tomie i podglądzie aplikacji. Test chapter-36/test_kh_adaptation.py ma obecnie założenia jednoplikowe: po podziale zachować kontrolę całego zakresu 36–43, współlokacji aliasów, istnienia celów, kolejności inputów i katalogu. Nie usuwać CAL przed zakończeniem przekierowań i odbiorem. Następnie audyty rozdział po rozdziale do dwóch czystych przebiegów, niezależna kontrola, rzeczywiste CI, PDF i podgląd odsyłaczy. To plan, nie wykonany podział.
+
+
+Przygotowanie zależności wykonane w 0baf4f6: rozdzielono lemat KH o zmianach na zbiorze zerowym od jego odpowiednika McShane'a, użyto kryterium Lebesgue'a z ME-08, przesunięto Perrona oraz Riemanna–Stieltjesa przed szeroką całkę Denjoya (stąd zamiana docelowych numerów 40 i 41), przeniesiono porównanie konwencji RS/KS do części KS. Kontrola projektowanych ośmiu bloków: brak odsyłaczy ref/eqref do późniejszych bloków w obrębie 36–43, wszystkie wcześniejsze etykiety zachowane, 198 etykiet łącznie. Nie jest to jeszcze podział plików ani odbiór techniczny. Przed rozcięciem konieczna kontrola użyć lematów po zmianie zakresu oraz odsyłaczy atlasref do dawnych numerów.
