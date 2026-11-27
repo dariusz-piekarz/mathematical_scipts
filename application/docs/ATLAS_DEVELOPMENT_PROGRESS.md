@@ -1446,3 +1446,9 @@ Odczytany `atlas_validation_status.json`: `candidate_sha=02190e107a6305bc7b73334
 
 - `aad0c12003995e85c86ae88cd7e1f70fc718d1be`: nawigacja klawiaturą poza nagłówek, aktywacja zakładki i wejście w układ czytania unieważniają aktywne żądanie wyszukiwania oraz zamykają listę. Przeniesienie fokusu wewnątrz nagłówka (pole → wynik) nie anuluje wyszukiwania. Obsługa dotychczasowego kliknięcia poza nagłówkiem zachowana. 20/20 izolowanych asercji JS PASS (kontrolowane odpowiedzi i odrzucenia). `b6c99b45a560aaac49f6a52785098cb25bd2c94b`: 8 dodatkowych kontroli DOM w istniejącym browser_references.py; pełnego Chromium nie wykonano.
 - Przy odczycie CI poprzednie przebiegi aplikacji #45994904398 i #45994651687 oraz walidacje AM I i IT na 928848a2 nadal queued. Nie przypisano im wyniku. P3.5 testing/stabilizing; odbiór 2+1 otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
+
+
+### 2026-11-27 — P3.5: unieważnianie nawigacji po wyborze zakładki
+
+- `3195f29dbb975091e449df5269bff6bc193eb67b`: świadomy wybór zakładki unieważnia oczekujące otwarcie rozdziału, obiektu lub odsyłacza, także przy powrocie do bieżącego czytnika. Wewnętrzna aktywacja czytnika po zakończonym aktualnym żądaniu zachowuje jego epokę. 20/20 izolowanych asercji na rzeczywistych zmienionych funkcjach PASS (18 przypadków sukcesu/błędu starszego żądania i 2 prawidłowe nawigacje). `633213b034a51cf908c45b40a7c17fe5b444079b`: 13 dodatkowych kontroli DOM w istniejącym browser_reader_layout.py; pełnego Chromium nie wykonano.
+- Przy odczycie CI #45995096365 i #45994651687 oraz AM I/IT na 928848a2 queued. Odbiór P3.5 2+1 nadal otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
