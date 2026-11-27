@@ -51,6 +51,15 @@ async function toggleModule(id){
   }
   await request;
 }
+function expandOutlineFromCaret(id){
+  // The caret must reveal structure even in the default chapter-only mode.
+  if(state.granularity==="module"){
+    state.granularity="section";
+    $("granularity").value="section";
+    if(state.expandedModules.has(id)){renderTree();return;}
+  }
+  return toggleModule(id);
+}
 function typeIcon(kind){return ({chapter:"C",section:"§",subsection:"§",subsubsection:"§",theorem:"T",definition:"D",proof:"P",example:"E",exercise:"Z",remark:"U",equation:"∑",figure:"▧"})[kind] || "·";}
 const outlinePages=new Map(), OUTLINE_PAGE_SIZE=300;
 const outlineHeadings=new Set(["part","chapter","section","subsection","subsubsection","paragraph","subparagraph"]);
@@ -72,9 +81,10 @@ function renderTree(){
     if(expanded){
       for(const m of state.modules.filter(x=>x.domain===domain.name)){
         const line=node("div",{className:"module-line"+(state.currentModule===m.id?" active":"")});
-        const caret=node("button",{className:"chev",title:"Rozwiń strukturę rozdziału","aria-label":"Rozwiń "+m.id},state.expandedModules.has(m.id)?"▾":"▸");
+        const isExpanded=state.granularity!=="module"&&state.expandedModules.has(m.id);
+        const caret=node("button",{className:"chev",title:(isExpanded?"Zwiń":"Rozwiń")+" strukturę rozdziału","aria-label":(isExpanded?"Zwiń ":"Rozwiń ")+m.id,"aria-expanded":String(isExpanded)},isExpanded?"▾":"▸");
         caret.style.border="0";caret.style.background="transparent";caret.style.padding="0";
-        caret.addEventListener("click",e=>{e.stopPropagation();toggleModule(m.id);});
+        caret.addEventListener("click",e=>{e.stopPropagation();expandOutlineFromCaret(m.id);});
         const trigger=node("button",{className:"module-name",title:m.title},crop(m.title,72));
         trigger.style.cssText="border:0;background:none;text-align:left;padding:0;color:inherit;cursor:pointer";
         trigger.addEventListener("click",()=>{openModule(m.id);if(state.granularity!=="module"&&!state.expandedModules.has(m.id))toggleModule(m.id);});
