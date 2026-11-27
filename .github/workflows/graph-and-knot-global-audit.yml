@@ -7,6 +7,9 @@ on:
     paths:
       - 'chapters/pl/graph_and_knot_theory/**'
       - 'books/pl/graph_and_knot_theory.tex'
+      - 'application/config/preambles/GW.tex'
+      - 'application/backend/figure_preview.py'
+      - 'application/scripts/audit_graph_figure_previews.py'
       - 'tools/tests/test_graph_and_knot_global.py'
       - 'tools/tests/test_graph_and_knot_advanced_foundations.py'
       - 'tools/tests/test_graph_and_knot_topology_laplacian_planarity.py'
@@ -150,6 +153,8 @@ jobs:
             cat ../../audit_output/graph_and_knot_full_warnings.txt
             exit 1
           fi
+      - name: Render every graph and knot figure through the Atlas standalone renderer
+        run: python3 application/scripts/audit_graph_figure_previews.py --report audit_output/graph_and_knot_reader_figures.json
       - name: Upload full book PDF and validation logs, including failures
         if: always()
         uses: actions/upload-artifact@v4
@@ -160,3 +165,4 @@ jobs:
             books/pl/graph_and_knot_theory.pdf
             audit_output/graph_and_knot_full_*.txt
             audit_output/graph_and_knot_full_*.log
+            audit_output/graph_and_knot_reader_figures.json

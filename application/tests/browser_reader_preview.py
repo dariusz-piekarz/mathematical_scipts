@@ -202,7 +202,7 @@ with sync_playwright() as pw:
     ):
         source = (ROOT.parent / 'chapters/pl/graph_and_knot_theory' / filename).read_text(encoding='utf-8')
         page.evaluate("([latex, code]) => renderSimplified(latex, code)", [source, module])
-        assert box.locator('.atlas-tikz-preview').count() >= expected, module
+        assert box.locator('.atlas-tikz-preview').count() == expected, module
         page.wait_for_function(
             """() => {
                 const figures = [...document.querySelectorAll('#simplified .atlas-tikz-preview')];
