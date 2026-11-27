@@ -683,19 +683,37 @@ do każdej z trzech różnic, otrzymujemy tezę.
 
 Zbieżność rozkładów i zbieżność według prawdopodobieństwa
 nie muszą powodować zbieżności wartości oczekiwanych.
-Przykład $X_n=n\ind{\{U\leq1/n\}}$ pokazuje mechanizm:
-masa ucieka w ogony coraz rzadszych, ale coraz
-większych wartości. Odpowiednim warunkiem wykluczającym
+Wcześniejszy przykład $X_n=n\chi_{\{U\leq1/n\}}$,
+gdzie $U\sim\Unif(0,1)$, pokazuje mechanizm:
+wkład do pierwszego momentu pochodzi z coraz rzadszych,
+ale coraz większych wartości. Dla każdego $K>0$
+i całkowitego $n>K$ mamy
+$\E[|X_n|\chi_{\{|X_n|>K\}}]=1$.
+Zatem jednostajne ograniczenie pierwszych momentów
+(nawet $\E|X_n|=1$ dla wszystkich $n$) nie zapewnia
+zanikania ogonów tych momentów. Odpowiednim warunkiem wykluczającym
 taką sytuację jest jednostajna całkowalność.
 
 \begin{definicja}
-Rodzinę całkowalnych rzeczywistych zmiennych losowych
-$\mathcal H$ na wspólnej przestrzeni probabilistycznej
-nazywamy \emph{jednostajnie całkowalną}, gdy
+Niepustą rodzinę całkowalnych rzeczywistych zmiennych
+losowych $\mathcal H$ (niekoniecznie określonych na tej
+samej przestrzeni probabilistycznej) nazywamy
+\emph{jednostajnie całkowalną}, gdy
 \[
 \lim_{K\to\infty}\sup_{Y\in\mathcal H}
-\E[|Y|\ind{\{|Y|>K\}}]=0.
+\E[|Y|\chi_{\{|Y|>K\}}]=0.
 \]
+Każdą wartość oczekiwaną obliczamy względem miary
+probabilistycznej właściwej danej zmiennej. Ze wzoru
+\eqref{eq:lotus} dla funkcji nieujemnej wynika
+\[
+\E[|Y|\chi_{\{|Y|>K\}}]
+=\int_\R |y|\chi_{\{|y|>K\}}(y)\,\dd\mu_Y(y),
+\qquad \mu_Y=\Law(Y).
+\]
+Warunek zależy zatem wyłącznie od rodziny rozkładów.
+Supremum jest nierosnącą funkcją $K>0$, więc granica
+istnieje w $[0,\infty]$.
 \end{definicja}
 
 \begin{stwierdzenie}[Kryterium momentowe]
@@ -704,11 +722,18 @@ $\sup_{Y\in\mathcal H}\E|Y|^p<\infty$,
 to jest jednostajnie całkowalna.
 \end{stwierdzenie}
 \begin{proof}
-Na zdarzeniu $\{|Y|>K\}$ zachodzi
-$|Y|\leq |Y|^p/K^{p-1}$. Zatem
-$\E[|Y|\ind{\{|Y|>K\}}]
-\leq K^{1-p}\E|Y|^p$, a prawa strona dąży
-jednostajnie do zera, gdy $K\to\infty$.
+Oznaczmy $C=\sup_{Y\in\mathcal H}\E|Y|^p<\infty$.
+Każda zmienna jest całkowalna, ponieważ
+$|Y|\leq1+|Y|^p$ i miara przestrzeni wynosi jeden.
+Dla $K>0$ na zdarzeniu $\{|Y|>K\}$ mamy
+$|Y|^{p-1}>K^{p-1}$. Stąd na całej przestrzeni
+$|Y|\chi_{\{|Y|>K\}}\leq K^{1-p}|Y|^p$.
+Całkując i biorąc supremum, otrzymujemy
+\[
+0\leq\sup_{Y\in\mathcal H}\E[|Y|\chi_{\{|Y|>K\}}]
+\leq CK^{1-p}\longrightarrow0,
+\]
+gdyż $1-p<0$.
 \end{proof}
 
 \begin{twierdzenie}[Zbieżność Vitaliego w $L^1$]
@@ -720,42 +745,72 @@ to $X\in L^1$ oraz $\E|X_n-X|\to0$.
 W szczególności $\E X_n\to\E X$.
 \end{twierdzenie}
 \begin{proof}
-Wprowadzamy funkcję obcięcia
+Dla $K>0$ wprowadzamy funkcję obcięcia
 $\tau_K(x)=\max(-K,\min(x,K))$.
-Jednostajna całkowalność zapewnia
-$\sup_n\E|X_n|<\infty$: po rozdzieleniu wartości
-oczekiwanej na $\{|X_n|\leq K\}$ i dopełnienie
-pierwsza część jest nie większa niż $K$, a druga
-jest jednostajnie mała dla dużych $K$.
-Z kryterium podciągowego wybieramy podciąg
-$X_{n_j}\to X$ prawie na pewno. Lemat Fatou
-zapewnia $\E|X|\leq\liminf_j\E|X_{n_j}|<\infty$.
-Dla $K>0$
-mamy $\E|X_n-\tau_K(X_n)|\leq
-\E[|X_n|\ind{\{|X_n|>K\}}]$, więc
-po prawej stronie otrzymujemy wielkość zbieżną do
-zera jednostajnie w $n$. Ponadto
-$\E|\tau_K(X_n)-\tau_K(X)|\to0$:
-różnica jest ograniczona przez $2K$ i zbiega do zera
-według prawdopodobieństwa, zatem jej średnia dąży
-do zera z oszacowania
-$\E W\leq\varepsilon+2K\Prob(W>\varepsilon)$
-dla $0\leq W\leq2K$.
-Z całkowalności $X$ wynika również
-$\E|X-\tau_K(X)|\to0$ przez zbieżność zdominowaną.
-Rozkładamy różnicę $X_n-X$ na trzy składniki
-$X_n-\tau_K(X_n)$,
-$\tau_K(X_n)-\tau_K(X)$ i
-$\tau_K(X)-X$. Dla dowolnego $\varepsilon>0$
-wybieramy najpierw duże $K$ zmniejszające pierwszy
-i trzeci składnik, a następnie dostatecznie duże $n$
-zmniejszające drugi. Otrzymujemy $\E|X_n-X|\to0$.
+Jest ona ciągła, ograniczona przez $K$ co do modułu
+i spełnia $|\tau_K(x)-\tau_K(y)|\leq|x-y|$,
+ponieważ każde z odwzorowań $x\mapsto\min(x,K)$
+i $x\mapsto\max(x,-K)$ ma stałą Lipschitza $1$.
+Oznaczmy
+$u(K)=\sup_n\E[|X_n|\chi_{\{|X_n|>K\}}]$.
+Z jednostajnej całkowalności istnieje $K_0>0$
+takie, że $u(K_0)\leq1$. Rozdzielając całkę, mamy
+\[
+\E|X_n|
+=\E[|X_n|\chi_{\{|X_n|\leq K_0\}}]
+ +\E[|X_n|\chi_{\{|X_n|>K_0\}}]
+\leq K_0+u(K_0)\leq K_0+1.
+\]
+W szczególności $M:=\sup_n\E|X_n|<\infty$.
+Z kryterium podciągowego, zastosowanego do całego
+ciągu, wybieramy podciąg $X_{n_j}\to X$ prawie na pewno.
+Z ciągłości modułu mamy $|X_{n_j}|\to|X|$ prawie na pewno.
+Wszystkie te funkcje są mierzalne i nieujemne, więc
+\atlasref{ME-08::thm:fatou}{lemat Fatou} daje
+\[
+\E|X|\leq\liminf_j\E|X_{n_j}|\leq M<\infty.
+\]
+Zatem $X\in L^1$.
+Dla każdego $x\in\R$ zachodzi
+$|x-\tau_K(x)|=\max(|x|-K,0)\leq
+|x|\chi_{\{|x|>K\}}(x)$.
+Zatem $\sup_n\E|X_n-\tau_K(X_n)|\leq u(K)\to0$.
+Dla ustalonego $K>0$ niech
+$W_n=|\tau_K(X_n)-\tau_K(X)|$.
+Mamy $0\leq W_n\leq2K$ oraz $W_n\leq|X_n-X|$
+z własności Lipschitza, więc $W_n\xrightarrow{\Prob}0$.
+Dla dowolnego $\varepsilon>0$ rozdzielamy całkę:
+\[
+\E W_n=\E[W_n\chi_{\{W_n\leq\varepsilon\}}]
++\E[W_n\chi_{\{W_n>\varepsilon\}}]
+\leq\varepsilon+2K\Prob(W_n>\varepsilon).
+\]
+Stąd $\limsup_n\E W_n\leq\varepsilon$ dla każdego
+$\varepsilon>0$, a więc $\E W_n\to0$.
+Ponadto $|X-\tau_K(X)|\leq |X|$ oraz
+$|X-\tau_K(X)|\to0$ punktowo przy $K\to\infty$.
+Z twierdzenia o zbieżności zmajoryzowanej zastosowanego
+do całkowitych $K\to\infty$ otrzymujemy
+$\E|X-\tau_K(X)|\to0$; dla dowolnych rzeczywistych
+$K\to\infty$ wniosek wynika z monotoniczności
+$K\mapsto\max(|X|-K,0)$.
+Z nierówności trójkąta otrzymujemy
+\[
+\E|X_n-X|\leq u(K)+\E W_n+\E|X-\tau_K(X)|.
+\]
+Dla ustalonego $K$ przechodzimy do granicy górnej
+po $n$, co daje
+$\limsup_n\E|X_n-X|\leq u(K)+\E|X-\tau_K(X)|$.
+Następnie przechodzimy z $K\to\infty$; prawa strona
+dąży do zera. Otrzymujemy zbieżność w $L^1$.
+Wreszcie z liniowości wartości oczekiwanej i nierówności
+$|\E X_n-\E X|\leq\E|X_n-X|$ wynika zbieżność średnich.
 \end{proof}
 
 \begin{uwaga}
 Implikacje między rodzajami zbieżności mają postać
-$L^p\Rightarrow\Prob$ i p.n.$\Rightarrow\Prob$
-$\Rightarrow d$. Brak strzałki między zbieżnością
+$L^p\Rightarrow\Prob$ dla $1\leq p<\infty$
+i p.n.$\Rightarrow\Prob\Rightarrow d$. Brak strzałki między zbieżnością
 prawie na pewno a zbieżnością w $L^p$ bez dodatkowych
 założeń. Zbieżność w rozkładzie do \emph{stałej}
 implikuje jednak zbieżność według prawdopodobieństwa
@@ -766,10 +821,13 @@ do tej stałej.
 
 \begin{przyklad}[Ta sama granica rozkładów, różne granice średnich]
 Niech $U\sim\Unif(0,1)$ i
-$X_n=n\ind{\{U<1/n\}}$. Wtedy $X_n\to0$
-prawie na pewno (dla każdego $U>0$ od pewnego
-indeksu $1/n<U$), a zatem również według rozkładu.
-Mimo to $\E X_n=1$ dla wszystkich $n$.
+$X_n=n\chi_{\{U<1/n\}}$. Wtedy na zdarzeniu
+$\{U>0\}$ o prawdopodobieństwie jeden dla każdego
+$\omega$ od pewnego indeksu $1/n<U(\omega)$.
+Zatem $X_n\to0$ prawie na pewno, a z poprzednich
+twierdzeń również według rozkładu.
+Mimo to $\E X_n=n\Prob(U<1/n)=1$ dla wszystkich $n$,
+ponieważ rozkład jednostajny nie ma mas punktowych.
 Różnica nie przeczy zbieżności słabej: funkcja
 $x\mapsto x$ jest nieograniczona, więc nie jest
 jedną z funkcji testowych w charakteryzacji przez
