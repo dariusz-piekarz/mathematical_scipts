@@ -94,12 +94,25 @@ with sync_playwright() as pw:
                 const seen=[];
                 while(true) {
                     const pager=getPager(), branch=pager.parentElement;
+                    const pagers=branch.querySelectorAll('.outline-pagination');
+                    if(pagers.length!==2 || pagers[0].dataset.position!=='top' ||
+                       pagers[1].dataset.position!=='bottom' ||
+                       branch.firstElementChild!==pagers[0] || branch.lastElementChild!==pagers[1])
+                        throw Error('missing top or bottom pagination controls');
                     const actual=[...branch.querySelectorAll('.outline-name')].map(e=>e.textContent);
                     if(actual.length>300)throw Error('unbounded outline page');
                     seen.push(...actual);
                     const next=pager.querySelector('[data-direction="next"]');
                     if(next.disabled)break;
-                    next.click();
+                    // Advance from the bottom controls as a reader would.
+                    pagers[1].querySelector('[data-direction="next"]').click();
+                    const top=getPager();
+                    if(!top.contains(document.activeElement))
+                        throw Error('focus not returned to start of new page');
+                    const viewport=document.getElementById('tree').getBoundingClientRect();
+                    const bounds=top.getBoundingClientRect();
+                    if(bounds.top < viewport.top-2 || bounds.bottom > viewport.bottom+2)
+                        throw Error('new page start not visible');
                 }
                 if(JSON.stringify(seen)!==JSON.stringify(expected))
                     throw Error('missing or duplicated outline objects');
