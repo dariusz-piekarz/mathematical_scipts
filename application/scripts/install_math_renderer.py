@@ -30,7 +30,7 @@ def ready(folder):
 # arbitrary TeX execution, and mid-chapter scopes are not supported.
 COMMAND = re.compile(r"^\\(newcommand|providecommand)\*?\s*\{(\\[A-Za-z]+)\}\s*(?:\[(\d+)\])?\s*\{(.*)\}\s*$")
 OPERATOR = re.compile(r"^\\DeclareMathOperator(\*)?\s*\{(\\[A-Za-z]+)\}\s*\{(.*)\}\s*$")
-HEADER = re.compile(r"^\\(?:chapter\*?\{.*\}|label\{[^{}]*\}|begingroup)\s*$")
+HEADER_COMMAND = re.compile(r"\\(?:chapter|section|label|index)\*?\s*(?=\{)")
 
 
 
@@ -61,6 +61,35 @@ def brace_balance(line):
             depth -= 1
         i += 1
     return depth
+
+
+def is_header_metadata(line):
+    """Recognize only complete title/label/index commands, including nested braces."""
+    if line == r"\begingroup":
+        return True
+    cursor = 0
+    while cursor < len(line):
+        match = HEADER_COMMAND.match(line, cursor)
+        if not match:
+            return False
+        end = match.end()
+        depth = 1
+        end += 1
+        while end < len(line) and depth:
+            if line[end] == "\\":
+                end += 2
+                continue
+            if line[end] == "{":
+                depth += 1
+            elif line[end] == "}":
+                depth -= 1
+            end += 1
+        if depth:
+            return False
+        cursor = end
+        while cursor < len(line) and line[cursor].isspace():
+            cursor += 1
+    return bool(line)
 
 
 def logical_macro_lines(source):
@@ -131,7 +160,7 @@ def write_macro_profiles():
             continue
         macros = dict(base)
         for line in logical_macro_lines(path.read_text(encoding="utf-8-sig")):
-            if not line or line.startswith("%") or HEADER.fullmatch(line):
+            if not line or line.startswith("%") or is_header_metadata(line):
                 continue
             if not add_literal_macro(line, macros):
                 break

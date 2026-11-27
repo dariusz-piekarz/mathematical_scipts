@@ -97,6 +97,24 @@ class MathRendererInstallTest(unittest.TestCase):
         self.assertEqual(macros[r"\other"], r"\mathbb C")
         self.assertEqual(lines[-1], "Visible prose")
 
+    def test_section_header_with_inline_label_and_nested_title(self):
+        target = self.root.parent / "chapters/pl/category_theory/99-test.tex"
+        target.parent.mkdir(parents=True)
+        target.write_text("\n".join((
+            r"\section{Title $\mathcal{A}$}\label{test:section}",
+            r"\index{example}",
+            r"\providecommand{\chapterlocal}{\mathbb X}",
+            "Visible prose",
+            r"\providecommand{\late}{NO}",
+        )), encoding="utf-8")
+        renderer.write_macro_profiles()
+        profile = self.profiles()["KAT-99"]
+        self.assertEqual(profile[r"\chapterlocal"], r"\mathbb X")
+        self.assertNotIn(r"\late", profile)
+        self.assertFalse(renderer.is_header_metadata(r"\section{Title} text {more}"))
+        self.assertFalse(renderer.is_header_metadata(r"\section{Title"))
+        self.assertFalse(renderer.is_header_metadata(r"\section{Title}\newcommand{\x}{X}"))
+
     def test_cached_install_refreshes_profiles_without_network(self):
         for name in renderer.REQUIRED + ("fonts/test.woff2",):
             target = self.dest / name
