@@ -350,4 +350,8 @@ Dalsze istniejące rozdziały: 01 (kule jednostkowe różnych norm w R^3), 02–
 
 Nowe rozdziały: 19–23 (poziomice, uwikłanie, rząd, powierzchnie, przestrzenie styczne, ekstrema z więzami); 24–28 (sumy Riemanna i całki zależne od parametru); 29–35 (krzywe przestrzenne, obszary całkowania, zamiana zmiennych, pola wektorowe, powierzchnie, strumień, orientacja, Stokes); 37–39 (aproksymacja funkcji wielu zmiennych, reszty); 40–46 (rodziny sum Fouriera, jądra i zjawisko Gibbsa, dyskretne indeksy). Uwzględniać podczas konstrukcji kolejnych rozdziałów.
 
-Oddzielne zadanie aplikacji: bezpieczne osadzanie gotowych wykresów HTML/Plotly w czytniku, bez automatycznego wykonywania kodu z listingów; weryfikacja rzeczywistego renderowania, pracy offline oraz testów przeglądarkowych. Aktualny czytnik obsługuje podgląd statyczny i listingi; nie utożsamiać zapisu HTML przez skrypt z działającym osadzeniem w czytniku.
+### Obowiązkowy odbiór rysunków w Atlasie
+
+Każdy dodany wykres Plotly musi mieć rzeczywistą wersję w repozytorium, przypisaną do konkretnego rozdziału i otwieraną z podglądu czytnika bez ręcznego uruchamiania Pythona. Obowiązuje również przy kolejnych rozdziałach. Nie uznawać samego listingu lub lokalnego pliku ZIP za zakończony etap.
+
+Pierwsza integracja obejmuje 12 rysunków z rozdziałów 01, 08, 09, 11–18 i 36. Definicje w application/frontend/plots/am2-figures.js, wspólny viewer.html i viewer.js, lokalna biblioteka Plotly dostarczana przez zależność Python aplikacji, przycisk w preview.js. Ładowanie na żądanie w izolowanej ramce sandbox bez allow-same-origin; brak wykonywania listingów. Zachować zgodność definicji z listingami i istniejącymi rysunkami statycznymi. Przy nowych wykresach rozszerzać rejestr oraz testy. Do odbioru: CI, testy przeglądarkowe, otwieranie i zamykanie wykresu, poprawność danych i działanie bez CDN. Nie uznawać wdrożenia za potwierdzone przed rzeczywistym testem.
