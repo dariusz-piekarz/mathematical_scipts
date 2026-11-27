@@ -140,7 +140,11 @@ class TestMeasureTheoryChapter18(unittest.TestCase):
 
     def test_source_references_and_rn_independence(self):
         source = CHAPTER.read_text(encoding="utf-8")
-        combined = source + "".join(path.read_text(encoding="utf-8") for path in DEPS)
+        combined = source + "\n".join(
+            path.read_text(encoding="utf-8")
+            for path in sorted(CHAPTER.parent.glob("[0-9][0-9]-*.tex"))
+            if path != CHAPTER
+        )
         labels = re.findall(r"\\label\{([^}]+)\}", source)
         # Preserve every existing label, including migrated integration
         # results, without rejecting legitimate future additions.
@@ -183,6 +187,22 @@ class TestMeasureTheoryChapter18(unittest.TestCase):
         known = set(re.findall(r"\\label\{([^}]+)\}", combined))
         refs = re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", source)
         self.assertFalse(set(refs) - known)
+        atlas_targets = {
+            "P1-10": "probability_volume_i/10-*.tex",
+            "ME-04": "measure_theory/04-*.tex",
+            "ME-08": "measure_theory/08-*.tex",
+            "ME-16": "measure_theory/16-*.tex",
+            "ME-17": "measure_theory/17-*.tex",
+            "ME-25": "measure_theory/25-*.tex",
+        }
+        for code, label in re.findall(r"\\atlasref\{([^{}:]+)::([^{}]+)\}", source):
+            with self.subTest(code=code, label=label):
+                self.assertIn(code, atlas_targets)
+                targets = list((ROOT / "chapters/pl").glob(atlas_targets[code]))
+                self.assertEqual(len(targets), 1)
+                self.assertIn(r"\label{" + label + "}", targets[0].read_text(encoding="utf-8"))
+        self.assertNotRegex(source, r"\\inL\b")
+
         stack = []
         for match in re.finditer(r"\\(begin|end)\{([^}]+)\}", source):
             if match[1] == "begin":
