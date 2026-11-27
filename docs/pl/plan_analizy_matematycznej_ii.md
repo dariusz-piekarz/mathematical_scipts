@@ -350,6 +350,12 @@ Dalsze istniejące rozdziały: 01 (kule jednostkowe różnych norm w R^3), 02–
 
 Nowe rozdziały: 19–23 (poziomice, uwikłanie, rząd, powierzchnie, przestrzenie styczne, ekstrema z więzami); 24–28 (sumy Riemanna i całki zależne od parametru); 29–35 (krzywe przestrzenne, obszary całkowania, zamiana zmiennych, pola wektorowe, powierzchnie, strumień, orientacja, Stokes); 37–39 (aproksymacja funkcji wielu zmiennych, reszty); 40–46 (rodziny sum Fouriera, jądra i zjawisko Gibbsa, dyskretne indeksy). Uwzględniać podczas konstrukcji kolejnych rozdziałów.
 
+### Standard pełnych powierzchni 3D — dyspozycja użytkownika 27.11.2026
+
+Powierzchnie przedstawiać jako wypełnione, cieniowane obiekty, a nie siatki szkieletowe. Stosować czytelne perspektywy i paletę spójną z geometrią różniczkową; inspiracją może być również styl RRC. Do PDF preferować PGFPlots (surf, shader=interp, bez widocznych krawędzi siatki), do aplikacji Plotly Surface; płaszczyzny, punkty i wektory wyróżniać kontrastowo. Krzywe i dyskretne rodziny krzywych pozostawiać krzywymi. Przy porównaniach zachowywać wspólne zakresy osi. Przebudowa istniejących ilustracji ma pierwszeństwo przed dalszym rozszerzaniem materiału.
+
+Pierwsza partia pełnych powierzchni: AM II 13, 15, 16, 17, 20, 21. Dodano PGFPlots w preambule tomu i szablonie AM2, wykorzystując istniejącą obsługę axis w figure_preview.py. Próbna kompilacja sześciu ilustracji i kontrola wizualna wszystkich trzech stron zestawu zaliczone; perspektywę AM II 13 poprawiono w 8f90525. Zachowano etykiety, tekst dowodów i listingi Plotly. Pełny PDF tomu i podgląd w przeglądarce po tej zmianie wymagają potwierdzenia. Pozostałe ilustracje, w szczególności statyczne odpowiedniki wykresów 01, 11, 12, 14, 18, 36, należy jeszcze sprawdzić i uzupełnić.
+
 ### Obowiązkowy odbiór rysunków w Atlasie
 
 Każdy dodany wykres Plotly musi mieć rzeczywistą wersję w repozytorium, przypisaną do konkretnego rozdziału i otwieraną z podglądu czytnika bez ręcznego uruchamiania Pythona. Obowiązuje również przy kolejnych rozdziałach. Nie uznawać samego listingu lub lokalnego pliku ZIP za zakończony etap.
