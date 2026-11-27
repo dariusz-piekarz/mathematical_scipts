@@ -87,6 +87,56 @@ with sync_playwright() as pw:
     assert page.evaluate('id => state.currentEntity === id', entity)
     assert reader.evaluate('el => el.scrollTop === 0')
 
+    # A rejected superseded API request must not display an error for the
+    # currently open chapter. Test both routes and both completion orders.
+    races = page.evaluate("""async () => {
+        const originalApi = api;
+        const requests = [];
+        const moduleData = await api('/api/modules/DG-14');
+        const outline = await api('/api/modules/DG-14/outline');
+        const entityId = outline.entities.find(item => item.kind === 'section').id;
+        const entityData = await api('/api/entities/' + encodeURIComponent(entityId));
+        const open = kind => kind === 'module' ? openModule('DG-14') : openEntity(entityId);
+        const data = kind => kind === 'module' ? moduleData : entityData;
+        const isCurrent = kind => state.currentModule === 'DG-14' &&
+            state.currentEntity === (kind === 'module' ? null : entityId);
+        const intercept = (url, options) => {
+            if (url === '/api/modules/DG-14' ||
+                url === '/api/entities/' + encodeURIComponent(entityId)) {
+                return new Promise((resolve, reject) => requests.push({resolve, reject}));
+            }
+            return originalApi(url, options);
+        };
+        // toast is a const; observe its real DOM output instead of replacing it.
+        const toastBox = document.getElementById('toast');
+        const resetToast = () => {toastBox.textContent = ''; toastBox.classList.add('hidden');};
+        let count = 0;
+        try {
+            api = intercept;
+            for (const oldKind of ['module', 'entity']) {
+                for (const newKind of ['module', 'entity']) {
+                    requests.length = 0; resetToast();
+                    const old = open(oldKind), current = open(newKind);
+                    requests[1].resolve(data(newKind)); await current;
+                    requests[0].reject(new Error('superseded navigation error')); await old;
+                    if (!isCurrent(newKind) || toastBox.textContent !== '') throw Error('obsolete error');
+                    count++;
+                    requests.length = 0; resetToast();
+                    const stale = open(oldKind), failing = open(newKind);
+                    requests[1].reject(new Error('current navigation error')); await failing;
+                    requests[0].resolve(data(oldKind)); await stale;
+                    if (!isCurrent(newKind) || toastBox.textContent !== 'current navigation error')
+                        throw Error('current error or stale success mishandled');
+                    count++;
+                }
+            }
+        } finally {
+            api = originalApi; resetToast();
+        }
+        return count;
+    }""")
+    assert races == 8
+
     # Source mode and keyboard interaction must also work at 180% text.
     page.evaluate("() => openModule('AM1-14', true)")
     page.set_viewport_size({'width': 390, 'height': 350})
