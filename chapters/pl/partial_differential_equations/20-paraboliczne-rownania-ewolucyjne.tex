@@ -18,6 +18,9 @@ od czasu, ale nie zakładamy istnienia pochodnej $u_t$ o wartościach w $L^2(\Om
 \begin{definicja}[Dane i eliptyczność paraboliczna]\label{def:pde20-data}
 Niech $\Omega\subset\R^d$ będzie ograniczonym obszarem Lipschitzowskim,
 $0<T<\infty$, $H=L^2(\Omega)$, $V=H_0^1(\Omega)$, $V^*=H^{-1}(\Omega)$.
+W całym rozdziale rozpatrujemy rzeczywiste przestrzenie
+Hilberta, a $V^*$ oznacza przestrzeń ciągłych
+funkcjonałów liniowych na $V$.
 Rozpatrujemy rzeczywistą macierz $A=(a_{ij})\in
 L^\infty((0,T)\times\Omega;\R^{d\times d})$ taką, że dla pewnych
 $0<\lambda\le\Lambda<\infty$, dla prawie wszystkich $(t,x)$ i każdego
@@ -37,7 +40,9 @@ $\langle\cdot,\cdot\rangle$.
 \begin{center}
 \begin{tikzpicture}[scale=0.9,>=Latex]
   \fill[blue!4] (0,0) rectangle (6,3.4);
-  \draw[very thick,blue!45!black] (0,0) -- (0,3.4) -- (6,3.4) -- (6,0);
+  \draw[very thick,blue!45!black] (0,0) -- (0,3.4);
+  \draw[very thick,blue!45!black] (6,3.4) -- (6,0);
+  \draw[dashed,gray] (0,3.4) -- (6,3.4);
   \draw[very thick,teal!65!black] (0,0)--(6,0);
   \draw[->] (-0.4,0)--(6.8,0) node[right] {$x$};
   \draw[->] (0,-0.25)--(0,4.1) node[above] {$t$};
@@ -55,9 +60,52 @@ Dane początkowe i warunek Dirichleta określa się na różnych częściach brz
 \end{center}
 
 Normę w $V$ ustalamy jako $\|v\|_V=\|\nabla v\|_{L^2(\Omega)}$.
-Dzięki nierówności Poincarégo jest ona równoważna zwykłej normie $H^1$.
-Mamy ciągłe, gęste zanurzenia $V\hookrightarrow H\cong H^*\hookrightarrow V^*$.
-W szczególności $\|h\|_{V^*}\le C_P\|h\|_H$ dla $h\in H$.
+Dzięki nierówności Poincarégo (por. sekcję~\ref{sec:pde18-intro})
+jest ona równoważna zwykłej normie $H^1$. Oznaczamy przez
+$C_P$ stałą w nierówności $\|v\|_H\le C_P\|v\|_V$.
+Mamy trójkę Gelfanda
+\[
+ V\hookrightarrow H\cong H^*\hookrightarrow V^*,
+ \qquad h\longmapsto[v\mapsto(h,v)_H].
+\]
+Pierwsze zanurzenie jest ciągłe i ma gęsty obraz,
+bo zawiera $C_c^\infty(\Omega)$. Drugie jest iniekcją
+dzięki tej gęstości, a nierówność Cauchy'ego--Schwarza
+daje $\|h\|_{V^*}\le C_P\|h\|_H$.
+Jego obraz jest gęsty w $V^*$: gdyby nie był, istniałby
+niezerowy ciągły funkcjonał na $V^*$ zerujący się na $H$.
+Z refleksywności przestrzeni Hilberta $V$ taki funkcjonał
+miałby postać $g\mapsto\langle g,v\rangle$ dla pewnego
+$v\in V$. Warunek $(h,v)_H=0$ dla wszystkich $h\in H$
+dawałby jednak $v=0$.
+
+Dla prawie każdego $t$ forma $a(t;\cdot,\cdot)$ spełnia
+\[
+ |a(t;v,w)|\le\Lambda\|v\|_V\|w\|_V,\qquad
+ a(t;v,v)\ge\lambda\|v\|_V^2.
+\]
+Pierwsze oszacowanie wynika z nierówności
+Cauchy'ego--Schwarza i ograniczenia macierzy, drugie
+z eliptyczności. Niech $\mathcal A(t):V\to V^*$ będzie
+operatorem określonym przez
+$\langle\mathcal A(t)v,w\rangle=a(t;v,w)$.
+Dla ustalonych $v,w\in V$ mierzalność tej funkcji czasu
+wynika z twierdzenia Fubiniego, ponieważ całkowany
+iloczyn jest zmajoryzowany przez
+$\Lambda|\nabla v||\nabla w|\in L^1(\Omega)$.
+Przestrzeń $V$ jest ośrodkową przestrzenią Hilberta
+(jako domknięta podprzestrzeń przestrzeni izometrycznie
+zanurzonej w $L^2(\Omega)^{d+1}$); również $V^*$
+jest ośrodkowa. Mierzalność skalarna $\mathcal A(t)v$
+pociąga więc silną mierzalność, na przykład przez
+rozwinięcie w przeliczalnej bazie ortonormalnej $V^*$.
+Aproksymacja $u(t)$ funkcjami prostymi i jednolite
+ograniczenie $\|\mathcal A(t)\|\le\Lambda$ pokazują,
+że $\mathcal A(\cdot)u(\cdot)$ jest silnie mierzalna
+dla $u\in L^2(0,T;V)$ oraz
+$\|\mathcal A(\cdot)u(\cdot)\|_{L^2(0,T;V^*)}
+\le\Lambda\|u\|_{L^2(0,T;V)}$. Wszystkie przestrzenie
+$L^2(0,T;X)$ rozumiemy w sensie Bochnera.
 
 \begin{uwaga}[Trzy odrębne narzędzia: forma, baza i zwartość]
 \label{rem:pde-v43-parabolic-basis}
@@ -82,10 +130,24 @@ Rozwiązaniem słabym zagadnienia~\eqref{eq:pde20-eq} nazywamy funkcję
 \[
  u\in L^2(0,T;V),\qquad u'\in L^2(0,T;V^*),
 \]
-której pochodną rozumiemy dystrybucyjnie w czasie oraz która spełnia
+której pochodną rozumiemy dystrybucyjnie w czasie:
+dla każdej $\eta\in C_c^\infty(0,T)$ zachodzi tożsamość
+w $V^*$
+\[
+ \int_0^T u(t)\eta'(t)\,\mathrm d\lambda_1(t)
+ =-\int_0^T u'(t)\eta(t)\,\mathrm d\lambda_1(t).
+\]
+Tutaj $u$ po lewej stronie utożsamiamy z jego obrazem
+w $V^*$. Ponadto rozwiązanie spełnia
 $\langle u'(t),v\rangle+a(t;u(t),v)=\langle f(t),v\rangle$
 dla każdego $v\in V$ i prawie każdego $t\in(0,T)$, przy czym zbiór
 wyjątkowy można wybrać niezależnie od $v$.
+Równoważnie mamy $u'(t)+\mathcal A(t)u(t)=f(t)$
+w $V^*$ dla prawie każdego $t$. Gdyby równanie
+skalarne sformułowano z osobnym zbiorem wyjątkowym
+dla każdego $v$, wystarczyłoby wziąć przeliczalny
+gęsty podzbiór $V$, zsumować jego zbiory wyjątkowe
+i zastosować ciągłość obu stron względem $v$.
 Warunek $u(0)=u_0$ dotyczy ciągłego reprezentanta $H$-wartościowego,
 którego istnienie wykażemy poniżej.
 \end{definicja}
@@ -105,16 +167,39 @@ $C([0,T];H)$ i dla wszystkich $0\le s\le t\le T$ zachodzi
 Niech $\{e_j\}_{j\ge1}$ będzie ortonormalną bazą $H$ złożoną
 z funkcji własnych dodatniego laplasjanu Dirichleta,
 $-\Delta_D e_j=\mu_j e_j$, $\mu_j>0$.
-Z twierdzenia spektralnego dla jego formy wynika, że
+Z rozwinięcia formy energii w dowodzie twierdzenia
+~\ref{thm:pde18-minmax} wynika, że
 $\|v\|_V^2=\sum_{j\ge1}\mu_j|(v,e_j)_H|^2$ dla $v\in V$.
-Rzut $P_n$ na $\operatorname{span}\{e_1,\ldots,e_n\}$ ma normę
-co najwyżej $1$ zarówno w $V$, jak i w $V^*$ (w drugiej przestrzeni
-stosujemy rozwinięcie z wagami $\mu_j^{-1}$).
-Co więcej, $P_nu\to u$ w $L^2(0,T;V)$ i
+Układ $(\mu_j^{-1/2}e_j)$ jest bazą ortonormalną $V$.
+Rzut ortogonalny $P_n$ w $H$ na
+$\operatorname{span}\{e_1,\ldots,e_n\}$ jest więc
+również rzutem ortogonalnym w $V$.
+Na $V^*$ definiujemy zgodne rozszerzenie przez
+$\langle P_ng,v\rangle=\langle g,P_nv\rangle$,
+czyli $P_ng=\sum_{j=1}^n\langle g,e_j\rangle e_j$
+przy utożsamieniu elementów $H$ z funkcjonałami na $V$.
+Z twierdzenia Riesza i tożsamości Parsevala w $V$
+wynika
+\[
+ \|g\|_{V^*}^2=\sum_{j\ge1}\mu_j^{-1}
+ |\langle g,e_j\rangle|^2.
+\]
+Zatem $P_n$ jest kontrakcją we wszystkich trzech
+przestrzeniach i zbiega silnie do identyczności:
+kwadraty norm różnic są ogonami odpowiednich szeregów.
+Twierdzenie o zbieżności zmajoryzowanej zastosowane
+do kwadratów norm różnic daje
+$P_nu\to u$ w $L^2(0,T;V)$ oraz
 $P_nu'\to u'$ w $L^2(0,T;V^*)$.
 
 Współczynniki $t\mapsto (u(t),e_j)_H$ należą do $H^1(0,T)$,
-ponieważ ich pochodnymi są $\langle u'(t),e_j\rangle$.
+ponieważ testując definicję pochodnej czasowej
+funkcją $\eta$ i funkcjonałem ewaluacji na $e_j$,
+otrzymujemy ich słabe pochodne
+$\langle u'(t),e_j\rangle\in L^2(0,T)$.
+Wybieramy ich absolutnie ciągłe reprezentanty
+(twierdzenie~\ref{thm:pde9-ac}); wtedy $P_nu$
+jest ciągłe na $[0,T]$ i jego pochodna to $P_nu'$.
 Dla skończonego $n$ zwykła reguła różniczkowania daje
 \[
  \|P_nu(t)\|_H^2-\|P_nu(s)\|_H^2
@@ -133,11 +218,25 @@ i nierówność Cauchy'ego--Schwarza, otrzymujemy
 \end{equation}
 Oba składniki po prawej dążą do zera dla $m,n\to\infty$.
 Granica jest więc $H$-wartościowo ciągła i równa $u$
-prawie wszędzie. Przechodząc do granicy w skończeniewymiarowej
+prawie wszędzie. Przechodząc do granicy w skończenie wymiarowej
 tożsamości energii, korzystamy z jednostajnej zbieżności
-wartości końcowych oraz zbieżności obu czynników w przestrzeniach
-$L^2(V^*)$ i $L^2(V)$. To daje~\eqref{eq:pde20-energy-identity}.
-Jednoznaczność reprezentanta wynika z ciągłości w $H$.
+wartości końcowych oraz oszacowania
+\[
+ \begin{split}
+ \int_0^T|\langle P_nu',P_nu\rangle-\langle u',u\rangle|
+ \,\mathrm d\lambda_1
+ &\le \|P_nu'-u'\|_{L^2(0,T;V^*)}\|P_nu\|_{L^2(0,T;V)}\\
+ &\quad+\|u'\|_{L^2(0,T;V^*)}\|P_nu-u\|_{L^2(0,T;V)}.
+ \end{split}
+\]
+Prawa strona dąży do zera. To daje~\eqref{eq:pde20-energy-identity}.
+Jednoznaczność reprezentanta wynika z ciągłości w $H$:
+dwa ciągłe reprezentanty równe prawie wszędzie muszą
+być równe w każdym punkcie $[0,T]$.
+W szczególności funkcja $t\mapsto\frac12\|u(t)\|_H^2$
+jest absolutnie ciągła, a jej pochodną prawie wszędzie
+jest $\langle u'(t),u(t)\rangle$, która jest całkowalna
+z nierówności Cauchy'ego--Schwarza.
 \end{proof}
 
 \section{Istnienie i jednoznaczność: pełna konstrukcja Galerkina}
