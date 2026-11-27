@@ -1,5 +1,5 @@
 \section{Monady, komonady i twierdzenie Becka}\label{cat:sec:monadicity}
-W rozdziale~\ref{sec:monads} zdefiniowaliśmy monadę oraz skonstruowaliśmy kategorie Kleisliego i Eilenberga--Moore'a. W rozdziale~\ref{cat:sec:monoids-duality} zinterpretowaliśmy monady jako obiekty monoidalne w kategorii endofunktorów ze składaniem. Teraz badamy, na ile monada odtwarza kategorię występującą w dowolnym sprzężeniu, a także dualną teorię komonad. Pracujemy z lokalnie małymi kategoriami, a kategorie funktorów rozpatrujemy w odpowiednim większym uniwersum.
+W rozdziale~\ref{sec:monads} zdefiniowaliśmy monadę oraz skonstruowaliśmy kategorie Kleisliego i Eilenberga--Moore'a. W rozdziale~\ref{cat:sec:monoids-duality} zinterpretowaliśmy monady jako monoidy w kategorii endofunktorów ze składaniem. Teraz badamy, na ile monada odtwarza kategorię występującą w dowolnym sprzężeniu, a także dualną teorię komonad. Pracujemy z lokalnie małymi kategoriami, a kategorie funktorów rozpatrujemy w odpowiednim większym uniwersum.
 
 \subsection{Komonady i ich koalgebry}
 Dla monady $(T,\eta,\mu)$ na $\mathcal C$ stosujemy definicję~\ref{def:monad}, oznaczenia $\mathcal C_T$ i $\mathcal C^T$ z definicji~\ref{cat:def:kleisli} i~\ref{cat:def:em-algebra} oraz sprzężenia $J\dashv K$ i $F_T\dashv U_T$ ze stwierdzeń~\ref{cat:prop:kleisli-adj} i~\ref{cat:prop:em-adj}. Oba sprzężenia odtwarzają monadę $T$.
@@ -275,4 +275,66 @@ Stosujemy twierdzenie~\ref{cat:thm:beck-monadicity} do sprzężenia $U^{\op}\das
 
 \begin{przyklad}[Sprzężenie, które nie jest monadyczne]\label{cat:ex:nonmonadic-top}
 Funktor dyskretnej topologii $\Set\to\Top$ jest lewym sprzężeniem funktora zapominającego $U:\Top\to\Set$: każda funkcja z przestrzeni dyskretnej do dowolnej przestrzeni topologicznej jest ciągła. Jednak $U$ nie odzwierciedla izomorfizmów. Dla zbioru dwuelementowego identyczność z topologii dyskretnej do antydyskretnej jest ciągłą bijekcją, ale odwrotność nie jest ciągła, gdyż jednoelementowy zbiór otwarty w topologii dyskretnej nie jest otwarty w antydyskretnej. Warunek 1 twierdzenia~\ref{cat:thm:beck-monadicity} nie zachodzi. Indukowana monada jest identycznościowa, więc jej kategorią algebr jest $\Set$ z jedynymi możliwymi strukturami; funktor porównawczy jest w tych oznaczeniach dokładnie funktorem zapominającym.
+\end{przyklad}
+
+
+\subsection{Zastosowania twierdzenia Becka}
+
+\begin{stwierdzenie}[Grupy jako algebry monady]\label{cat:prop:beck-groups}
+Funktor zapominający $U:\Grp\to\Set$ jest monadyczny dla sprzężenia z funktorem grupy wolnej.
+\end{stwierdzenie}
+\begin{proof}
+Istnienie sprzężenia wynika z własności uniwersalnej grupy wolnej: funkcja ze zbioru generatorów do grupy przedłuża się jednoznacznie do homomorfizmu. Bijektywny homomorfizm ma odwrotność będącą homomorfizmem, gdyż dla $y_i=h(x_i)$ mamy $h^{-1}(y_1y_2)=x_1x_2$. Zatem $U$ odzwierciedla izomorfizmy.
+
+Niech $f,g:A\rightrightarrows B$ będą homomorfizmami, których obrazy mają rozszczepiony koequalizator $p:U(B)\to C$ z rozszczepieniami $s,t$ jak w definicji~\ref{cat:def:split-coequalizer}. Piszemy $f,g$ również dla funkcji bazowych. Dla $b,b'\in B$, wykorzystując homomorfizmy $f,g$, otrzymujemy
+\begin{align*}
+ p(bb')&=pf(t(b)t(b'))\\
+ &=pg(t(b)t(b'))=p(s(p(b))s(p(b'))),\\
+ p(b^{-1})&=pf(t(b)^{-1})=pg(t(b)^{-1})
+ =p(s(p(b))^{-1}).
+\end{align*}
+Stąd definiujemy na $C$
+\[
+ xy=p(s(x)s(y)),\qquad x^{-1}=p(s(x)^{-1}),
+ \qquad 1_C=p(1_B).
+\]
+Obliczenia pokazują, że $p$ zachowuje działanie i odwrotności. Ponieważ $ps=\id_C$, każdy element $C$ ma przeciwobraz. Dla $x=p(b),y=p(b'),z=p(b'')$ mamy
+\[
+ (xy)z=p((bb')b'')=p(b(b'b''))=x(yz),
+\]
+a także $1_Cx=p(1_Bb)=x=p(b1_B)=x1_C$ oraz
+$x^{-1}x=xx^{-1}=1_C$. Jest to struktura grupy. Surjektywność $p$ zapewnia jej jednoznaczność wśród struktur, dla których $p$ jest homomorfizmem.
+
+Jeżeli homomorfizm $h:B\to H$ spełnia $hf=hg$, to lemat~\ref{cat:lem:split-coequalizer-absolute} daje jedyną funkcję $k:C\to U(H)$ z $kp=h$. Dla $x=p(b),y=p(b')$ zachodzi
+\[
+ k(xy)=kp(bb')=h(bb')=h(b)h(b')=k(x)k(y),
+ \qquad k(1_C)=h(1_B)=1_H.
+\]
+Zatem $k$ jest homomorfizmem, więc $p$ jest koequalizatorem również w $\Grp$. Wykazaliśmy istnienie koequalizatorów $U$-rozszczepionych par i ich zachowywanie przez $U$. Twierdzenie~\ref{cat:thm:beck-monadicity} kończy dowód.
+\end{proof}
+Nie twierdzimy, że $U:\Grp\to\Set$ zachowuje wszystkie koequalizatory. Dla dwóch homomorfizmów z grupy addytywnej $\mathbb Z$ do niej samej, $f(n)=2n$ i $g(n)=0$, koequalizatorem w grupach jest redukcja modulo $2$: homomorfizm zerujący $2\mathbb Z$ faktoryzuje jednoznacznie przez grupę ilorazową. W zbiorach identyfikujemy wszystkie liczby parzyste ze sobą, ale każda liczba nieparzysta pozostaje osobną klasą. Istotnie, ta relacja równoważności zawiera wszystkie pary $(2n,0)$ i jest zawarta w każdej relacji równoważności zawierającej te pary. Zatem redukcja modulo $2$ nie jest koequalizatorem w zbiorach.
+
+\begin{stwierdzenie}[Ograniczenie skalarów]\label{cat:prop:beck-restriction}
+Dla homomorfizmu pierścieni z jedynką $\varphi:R\to S$ funktor ograniczenia skalarów $U:S\text{-}\cat{Mod}\to R\text{-}\cat{Mod}$ na lewych modułach unitarnych jest monadyczny.
+\end{stwierdzenie}
+\begin{proof}
+Lewe sprzężenie to $F(M)=S\otimes_R M$, gdzie prawe działanie $R$ na $S$ dane jest przez $sr=s\varphi(r)$. Bijekcja
+\[
+ \Hom_S(S\otimes_R M,N)\cong\Hom_R(M,U(N))
+\]
+wysyła $h$ na $m\mapsto h(1\otimes m)$; odwrotnie, dla $u:M\to U(N)$ przyjmujemy $s\otimes m\mapsto su(m)$. Wzór jest zrównoważony nad $R$, ponieważ $s\varphi(r)u(m)=su(rm)$, i wyznacza odwzorowanie $S$-liniowe. Obie operacje są odwrotne na mocy liniowości i faktu, że tensory proste generują iloczyn tensorowy. Naturalność wynika ze składania odwzorowań na generatorach $1\otimes m$.
+
+Funktor $U$ odzwierciedla izomorfizmy: odwrotność bijektywnego odwzorowania $S$-liniowego jest $S$-liniowa. Dla $f,g:A\rightrightarrows B$ w kategorii $S$-modułów koequalizatorem jest rzut
+\[
+ B\longrightarrow B/\operatorname{im}(f-g).
+\]
+Istotnie, obraz różnicy jest podmodułem, a odwzorowanie zerujące ten obraz faktoryzuje jednoznacznie przez iloraz. Po ograniczeniu skalarów obraz różnicy i grupy addytywne ilorazu pozostają te same; własność uniwersalna ilorazu nad $R$ daje więc koequalizator również w kategorii $R$-modułów. Tutaj $U$ zachowuje wszystkie koequalizatory. Z twierdzenia~\ref{cat:thm:beck-monadicity} wynika monadyczność.
+\end{proof}
+
+Indukowana monada ma postać $T(M)=U(S\otimes_R M)$; jednostkę $\eta_M(m)=1\otimes m$ i mnożenie $\mu_M(s\otimes(t\otimes m))=st\otimes m$ otrzymujemy z powyższej bijekcji sprzężenia, ponieważ kojednostką w $N$ jest $s\otimes n\mapsto sn$. Funktor porównawczy przypisuje modułowi $N$ algebrę $(U(N),a_N)$ z $a_N(s\otimes n)=sn$.
+
+\begin{przyklad}[Komonadyczność funktora z kategorii obiektów nad zbiorem]\label{cat:ex:beck-slice}
+Dla ustalonego $E$ funktor $V:\Set/E\to\Set$, $(p:X\to E)\mapsto X$, ma prawe sprzężenie $R(Y)=(E\times Y\to E)$ z pierwszą projekcją. Funkcje $f:X\to Y$ odpowiadają dokładnie morfizmom nad $E$ postaci $x\mapsto(p(x),f(x))$; naturalność wynika ze składania funkcji. Indukowana komonada jest komonadą iloczynu z przykładu~\ref{cat:ex:product-comonad}. Funktor porównawczy wysyła $p$ na koalgebrę $x\mapsto(p(x),x)$ i jest izomorfizmem kategorii w przyjętych modelach, także dla $E=\varnothing$.
+
+Można to również uzyskać z dualnego twierdzenia Becka. Funkcja bijektywna nad $E$ ma odwrotność nad $E$, a equalizator dwóch morfizmów nad $E$ jest podzbiorem punktów, w których funkcje są równe, wyposażonym w ograniczone odwzorowanie do $E$. Faktoryzacja funkcji przez ten podzbiór automatycznie jest morfizmem nad $E$. Zatem $V$ odzwierciedla izomorfizmy i zachowuje wszystkie equalizatory.
 \end{przyklad}
