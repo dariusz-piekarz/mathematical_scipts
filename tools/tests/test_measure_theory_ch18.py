@@ -84,6 +84,33 @@ class TestMeasureTheoryChapter18(unittest.TestCase):
                 direct = cond(p, y, coarse, 0)
                 self.assertEqual(tower, direct)
 
+    def test_signed_stieltjes_cantor_and_endpoint_jump(self):
+        from fractions import Fraction as Q
+
+        # g(t) = t - 2*C(t) + 3*chi_[1/2,1](t) - chi_{1}(t).
+        # The three mutually singular components have variations 1, 2, 4.
+        # Exact partition sums use actual endpoint values of C, not a
+        # numerical approximation to the derivative of the Cantor function.
+        left = [0]
+        previous = Q(0)
+        for n in range(1, 11):
+            left = [3*a + digit for a in left for digit in (0, 2)]
+            points = {Q(1, 2): Q(1, 2)}
+            for k, a in enumerate(left):
+                points[Q(a, 3**n)] = Q(k, 2**n)
+                points[Q(a+1, 3**n)] = Q(k+1, 2**n)
+            values = [t - 2*points[t] + 3*(t >= Q(1, 2)) - (t == 1)
+                      for t in sorted(points)]
+            variation = sum(abs(v-u) for u, v in zip(values, values[1:]))
+            self.assertEqual(variation, 7 - 2*Q(2, 3)**n)
+            self.assertGreater(variation, previous)
+            self.assertLess(variation, 7)
+            previous = variation
+        # The endpoint jump contributes to (0,1] and not to (0,1).
+        self.assertEqual(values[-1] - values[0], 1)
+        # Integrate t against the three components, using E_C[t] = 1/2.
+        self.assertEqual(Q(1, 2) - 2*Q(1, 2) + 3*Q(1, 2) - 1, 0)
+
     def test_finite_rn_via_hilbert_common_measure(self):
         rng = random.Random(18001)
         for _ in range(180):
