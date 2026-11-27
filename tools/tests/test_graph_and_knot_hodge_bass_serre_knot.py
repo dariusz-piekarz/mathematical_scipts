@@ -725,7 +725,16 @@ def test_source():
     assert r"\label{def:kt-peripheral}" in c
     assert r"\label{thm:kt-peripheral-homology}" in c
     assert r"t'=t+(u+v)^Tx+zs" in c
-    assert "Jawna przerwa na dolnym fragmencie" in c
+    # Verify both actual crossing diagrams, not an obsolete caption.
+    # The lower strand is split on each side of the crossing; the upper
+    # strand runs through the crossing without interruption.
+    crossing = c.split(r"\begin{tikzpicture}[scale=.88,line cap=round,line join=round,>=Stealth]", 1)[1].split(r"\end{tikzpicture}", 1)[0]
+    assert r"\draw[ktCoral,line width=2.8pt] (-1.0,1.0)--(-.14,.14);" in crossing
+    assert r"\draw[ktCoral,line width=2.8pt] (.14,-.14)--(1,-1);" in crossing
+    assert r"\draw[ktBlue,line width=3.2pt,-{Stealth[length=3mm]}] (-1,-1)--(1,1);" in crossing
+    assert r"\draw[ktBlue,line width=2.8pt] (-1,-1)--(-.14,-.14);" in crossing
+    assert r"\draw[ktBlue,line width=2.8pt] (.14,.14)--(1,1);" in crossing
+    assert r"\draw[ktCoral,line width=3.2pt,-{Stealth[length=3mm]}] (-1,1)--(1,-1);" in crossing
 
 
 if __name__=="__main__":
