@@ -145,9 +145,21 @@ class TestMeasureTheoryChapter21(unittest.TestCase):
         for snippet in (
             r"\theta_i=\chi\psi_i/\psi", r"\operatorname{supp}\chi\subseteq\{\psi>0\}",
             r"Jeśli $F=\varnothing$ lub $F=Z$",
-            "spełnia", "drugi aksjomat przeliczalności",
+            "spełnia", r"\atlasref{GT-09::thm:topog-metryczne-trzy-warunki}",
         ):
             self.assertIn(snippet, src)
+        known = set(labels)
+        for path in CHAPTER.parent.glob("[0-9][0-9]-*.tex"):
+            known.update(re.findall(r"\\label\{([^}]+)\}", path.read_text(encoding="utf-8")))
+        refs = set(re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", src))
+        self.assertFalse(refs - known, f"Missing references: {sorted(refs - known)}")
+        folders = {"ME": "measure_theory", "FA": "functional_analysis", "GT": "general_topology"}
+        for code, label in re.findall(r"\\atlasref\{([^{}:]+)::([^{}]+)\}", src):
+            with self.subTest(code=code, label=label):
+                prefix, chapter = code.split("-")
+                targets = list((ROOT / "chapters/pl" / folders[prefix]).glob(chapter + "-*.tex"))
+                self.assertEqual(len(targets), 1)
+                self.assertIn(r"\label{" + label + "}", targets[0].read_text(encoding="utf-8"))
         self.assertNotIn("jest\ndrugiej przeliczalności", src)
         self.assertNotRegex(src, r"\\(?:mathbf|mathbb)\{1\}_")
 
