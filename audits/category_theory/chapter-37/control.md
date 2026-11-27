@@ -22,3 +22,7 @@ W kontenerze uruchomiono odtworzoną z kodu testowego w commicie `113788b99c5ddf
 ## Odbiór CI
 
 Run `46055118274`, head `113788b99c5ddfb04281a1a60ee85c83952a6885`, zakończył się SUCCESS. Job validate `140695612661`: testy regresyjne, kompilacja pełnej książki, weryfikacja PDF i odsyłaczy oraz upload artefaktu — wszystkie kroki SUCCESS. Kontrole matematyczne, strukturalne i samodzielna kompilacja diagramów zostały wcześniej zaliczone. Pozostaje wizualna kontrola rozmieszczenia diagramów w pełnym PDF (nie utożsamiamy jej z samodzielną kompilacją TikZ).
+
+## Odbiór wizualny — zamknięcie
+
+W pełnym PDF z zaliczonego przebiegu CAT-38 #46058308185 (artefakt 15227114544, 343 strony) potwierdzono identyczny blob CAT-37 `9fcb018a2db6f5cc31296b966e1f7596e2e0457a`. Wyrenderowano i obejrzano trzy diagramy na stronach 310, 312 i 325: poprawne rozmieszczenie, bez obcięcia i kolizji. Wcześniejszy dedykowany przebieg CI #46055118274 również SUCCESS. CAT-37 ZAMKNIĘTY. Ostrzeżenia hyperref dotyczące zakładki matematycznego tytułu pozostają nieblokujące.
