@@ -436,7 +436,9 @@ async function previewLabel(label,anchor,sourceDocument=null){
     const result=await api(`/api/labels/${encodeURIComponent(label)}`+(sourceDocument?`?source_document=${encodeURIComponent(sourceDocument)}`:""));
     if(request!==state.tooltipKey)return;
     if(!anchor.isConnected){closeTip();return;}
-    state.tooltipData=result;
+    // The request context is authoritative even when the fallback API
+    // response omits source_document (e.g. a globally unique label).
+    state.tooltipData={...result,name:label,source_document:sourceDocument??null};
     $("tipOpen").disabled=Boolean(result.ambiguous);
     body.replaceChildren();
     if(result.ambiguous){
@@ -478,6 +480,13 @@ async function openLabel(label,sourceDocument=null,anchor=null){
     closeTip();
     if(result.entity_id)await openEntity(result.entity_id);else await openModule(result.document_id);
   }catch(e){if(epoch===state.renderEpoch)toast(e.message);}
+}
+function openPreviewedReference(){
+  const target=state.tooltipData;
+  if(!target||target.ambiguous)return;
+  // Never substitute the chapter currently in the reader for a global
+  // lookup or a reference opened from a different chapter's preview.
+  return openLabel(target.name,target.source_document??null,state.tooltipAnchor);
 }
 let searchEpoch=0, searchTask;
 function dismissSearch(){
@@ -1424,7 +1433,7 @@ function listeners(){
   $("togglePreview").addEventListener("click",()=>{state.simplified=!state.simplified;renderReader();});
   $("showFull").addEventListener("click",()=>{if(state.currentEntity)openEntity(state.currentEntity,true);else if(state.currentModule)openModule(state.currentModule,true);});
   $("closeTip").addEventListener("click",closeTip);
-  $("tipOpen").addEventListener("click",()=>{const x=state.tooltipData;if(x)openLabel(x.name,x.source_document||state.currentModule);});
+  $("tipOpen").addEventListener("click",openPreviewedReference);
   $("referenceTip").addEventListener("mouseleave",closeTip);
   $("view-reader").addEventListener("scroll",dismissTipOnReaderScroll,true);
   window.addEventListener("resize",()=>{if(state.tooltipAnchor)closeTip();});
