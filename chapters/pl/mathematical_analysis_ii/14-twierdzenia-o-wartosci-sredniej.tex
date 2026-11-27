@@ -444,6 +444,34 @@ Stała $1/2$ jest optymalna: dla $f(s)=Ls^2/2$,
 $L>0$, $p=0$ na $\R$ pochodna jest funkcją Lipschitza
 ze stałą $L$, a w oszacowaniu zachodzi równość.
 
+\paragraph{Rysunek 3D: Kwadratowe oszacowanie reszty.}
+Dla $f(x,y)=x^2+2y^2$ mamy $Df(0)=0$ oraz
+$\|Df(h)-Df(k)\|_2\le4\|h-k\|_2$, ponieważ
+gradient przyrostu ma współrzędne $2(h_1-k_1)$
+i $4(h_2-k_2)$. Wniosek \ref{ma2:cor:quadratic-remainder}
+daje $0\le f(x,y)\le2(x^2+y^2)$. Porównujemy resztę
+z jej górnym ograniczeniem; na osi $y$ zachodzi równość.
+Kod wymaga bibliotek NumPy i Plotly; zapisuje samodzielny
+interaktywny plik HTML.
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+
+x = np.linspace(-1, 1, 81)
+X, Y = np.meshgrid(x, x)
+fig = go.Figure()
+for z, name, color in [(X**2+2*Y**2, "reszta", "Blues"),
+                      (2*(X**2+Y**2), "ograniczenie",
+                       "Oranges")]:
+    fig.add_trace(go.Surface(x=X, y=Y, z=z,
+        opacity=0.65, name=name, colorscale=color,
+        showscale=False, showlegend=True))
+fig.update_layout(scene=dict(xaxis_title="x",
+    yaxis_title="y", zaxis_title="z"))
+fig.write_html("am2_14_remainder.html", include_plotlyjs=True)
+fig.show()
+\end{lstlisting}
+
 \section{Ciągłość pochodnej Gâteaux}
 
 \begin{twierdzenie}[Ciągła pochodna Gâteaux]
