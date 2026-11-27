@@ -42,15 +42,35 @@ class CategoryTheoryCh37(unittest.TestCase):
                                    for i, n in enumerate(lengths))
                     source = flatten(blocks)
                     target = flatten(permute(blocks, sigma))
-                    # D maps an index in the reordered list to its
-                    # original index; D^{-1} acts on the original tensor.
-                    D = tuple(source.index(x) for x in target)
+                    # Compute D independently from the block lengths:
+                    # block j of the reordered family goes to block
+                    # sigma^{-1}(j) of the original family.
+                    offsets = tuple(sum(lengths[:i]) for i in range(k))
+                    D = tuple(offsets[i] + j for i in inverse(sigma)
+                              for j in range(lengths[i]))
+                    self.assertEqual(tuple(sorted(D)), tuple(range(len(source))))
                     self.assertEqual(permute(source, inverse(D)), target)
-                    # Verify the right-action composition convention.
+                    # Check the corresponding left action on tensors.
                     for tau in itertools.permutations(range(k)):
                         composite = tuple(sigma[tau[i]] for i in range(k))
                         self.assertEqual(permute(permute(blocks, tau), sigma),
                                          permute(blocks, composite))
+
+    def test_CAT_37_005_internal_block_permutations(self):
+        for k in range(4):
+            for lengths in itertools.product(range(4), repeat=k):
+                blocks = tuple(tuple((i, j) for j in range(n))
+                               for i, n in enumerate(lengths))
+                source = flatten(blocks)
+                offsets = tuple(sum(lengths[:i]) for i in range(k))
+                for sigmas in itertools.product(
+                        *(itertools.permutations(range(n)) for n in lengths)):
+                    direct_sum = tuple(offsets[i] + sigmas[i][j]
+                                       for i, n in enumerate(lengths)
+                                       for j in range(n))
+                    self.assertEqual(permute(source, direct_sum),
+                                     flatten(tuple(permute(b, s)
+                                                   for b, s in zip(blocks, sigmas))))
 
     def test_CAT_37_002_little_intervals_homotopy(self):
         p = ((Fraction(0), Fraction(1, 2)),
