@@ -18,6 +18,9 @@ class PngAuditTests(unittest.TestCase):
                 ("signature only", valid[:8]),
                 ("truncated", valid[:len(valid) // 2]),
                 ("bad CRC", valid[:29] + bytes([valid[29] ^ 1]) + valid[30:]),
+                ("missing IEND CRC", valid[:-4]),
+                ("bad IEND CRC", valid[:-1] + bytes([valid[-1] ^ 1])),
+                ("trailing data", valid + b"garbage"),
             ):
                 with self.subTest(name=name):
                     path.write_bytes(data)

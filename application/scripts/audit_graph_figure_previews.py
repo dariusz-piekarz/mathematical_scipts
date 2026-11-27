@@ -16,11 +16,16 @@ from backend.latex_parser import module_id
 
 
 def verify_png(path: Path) -> None:
-    """Check PNG integrity and decode all pixels, not just its signature."""
+    """Check PNG integrity, terminal IEND chunk and decode all pixels."""
     with Image.open(path) as image:
         if image.format != 'PNG':
             raise ValueError('Expected PNG image')
         image.verify()
+    # Pillow's verify() stops at IEND without checking its CRC or EOF.
+    with path.open('rb') as stream:
+        stream.seek(-12, 2)
+        if stream.read(12) != b'\x00\x00\x00\x00IEND\xaeB`\x82':
+            raise ValueError('Missing or invalid terminal PNG IEND chunk')
     with Image.open(path) as image:
         image.load()
 
