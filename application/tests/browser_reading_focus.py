@@ -9,6 +9,14 @@ with sync_playwright() as pw:
     page = browser.new_page(viewport={'width': 1360, 'height': 900})
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
+    # The initial markup must already be collapsed before app.js executes.
+    # Abort only the application script; normal styles still load.
+    page.route("**/assets/app.js*", lambda route: route.abort())
+    page.goto(URL, wait_until='networkidle')
+    assert page.locator('#explorer').is_hidden(), 'no pre-initialization flash'
+    assert page.locator('#explorer').evaluate('el => el.inert')
+    assert page.locator('#showExplorer').get_attribute('aria-expanded') == 'false'
+    page.unroute("**/assets/app.js*")
     page.goto(URL, wait_until='networkidle')
     # Ignore the old persisted setting even when it requested an open panel.
     page.evaluate("localStorage.setItem('atlas-explorer-hidden','false')")
