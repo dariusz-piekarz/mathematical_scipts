@@ -293,9 +293,41 @@ Wykorzystujemy antysymetrię w dwóch ostatnich zmiennych:
 $|b(u,u,\varphi)|=|b(u,\varphi,u)|
 \le\|u\|_4^2\|\nabla\varphi\|_2$.
 W wymiarze $2$ stosujemy nierówność Ladyżenskiej
-na torusie:
-$\|u\|_4^2\le C\|u\|_2\|u\|_{H^1}$,
-a następnie równoważność normy $H^1$ i normy $V$.
+na torusie. Dla gładkiego pola $v$ (niekoniecznie
+o zerowej średniej) i ustalonego $y$ wybieramy
+punkt $x_0$ taki, że $|v(x_0,y)|^2$ nie przekracza
+średniej kwadratowej po zmiennej $x$.
+Z twierdzenia Newtona--Leibniza wynika
+\[
+ |v(x,y)|^2\le F(y):=
+ \frac1{2\pi}\int_0^{2\pi}|v(s,y)|^2\,\mathrm d\lambda_1(s)
+ +2\int_0^{2\pi}|v(s,y)||\partial_1v(s,y)|
+ \,\mathrm d\lambda_1(s).
+\]
+Analogicznie $|v(x,y)|^2\le G(x)$, gdzie $G$
+jest otrzymane przez zamianę ról współrzędnych
+i zastąpienie $\partial_1$ przez $\partial_2$.
+Mnożąc obie nierówności i całkując, z twierdzenia
+Fubiniego oraz nierówności Cauchy'ego--Schwarza
+otrzymujemy
+\[
+ \begin{aligned}
+ \|v\|_4^4
+ &\le \left(\tfrac1{2\pi}\|v\|_2^2
+       +2\|v\|_2\|\partial_1v\|_2\right)\\
+ &\quad\cdot\left(\tfrac1{2\pi}\|v\|_2^2
+       +2\|v\|_2\|\partial_2v\|_2\right)
+ \le C\|v\|_2^2\|v\|_{H^1}^2.
+ \end{aligned}
+\]
+Dla $v\in H^1$ wybieramy gładkie przybliżenia
+w normie $H^1$; powyższa nierówność zastosowana
+do różnic czyni je ciągiem Cauchy'ego w $L^4$.
+Granica w $L^4$ jest równa $v$ dzięki zbieżności
+w $L^2$. Przechodząc do granicy, dostajemy
+$\|v\|_4^2\le C\|v\|_2\|v\|_{H^1}$.
+Dla $u\in V$ stosujemy następnie równoważność
+normy $H^1$ i normy $V$.
 W wymiarze $3$ interpolujemy między $L^2$ i $L^6$:
 $\|u\|_4\le\|u\|_2^{1/4}\|u\|_6^{3/4}$, ponieważ
 $1/4=(1/4)/2+(3/4)/6$.
@@ -1345,10 +1377,16 @@ Na $\R^d$ zmiana zmiennych daje
  =\ell^{1-d/p}\|u(\ell^2t)\|_{L^p(\R^d)}
  \quad(1\le p\le\infty),
 \]
-gdzie $d/\infty=0$. Dla normy mieszanej na
-odpowiednio przeskalowanym przedziale czasu
-czynnik wynosi $\ell^{1-d/p-2/q}$, również
-dla $q=\infty$ z konwencją $2/\infty=0$.
+gdzie $d/\infty=0$. Dla $1\le q<\infty$ na przedziale
+$(0,T/\ell^2)$ całkujemy $q$-tą potęgę
+tej równości i podstawiamy $s=\ell^2t$.
+Po wyciągnięciu pierwiastka stopnia $q$ dostajemy
+\[
+ \|u_\ell\|_{L^q(0,T/\ell^2;L^p)}
+ =\ell^{1-d/p-2/q}\|u\|_{L^q(0,T;L^p)}.
+\]
+Dla $q=\infty$ stosujemy supremum istotne,
+co daje ten sam wzór z konwencją $2/q=0$.
 W wymiarze trzy warunek $2/q+3/p=1$
 jest więc warunkiem niezmienniczości tej normy.
 Norma $L^2$ skaluje się z czynnikiem
@@ -1535,12 +1573,18 @@ prędkości nie pozostaje zatem zerowa.
     \pgfmathsetmacro{\uy}{-cos(\xx)*sin(\yy)*cos(\az)}
     \pgfmathsetmacro{\px}{4.6*(\i-.5)/8}
     \pgfmathsetmacro{\py}{4.6*(\j-.5)/8}
-    \draw[-{Stealth[length=2pt]},black!85,line width=.4pt]
-      (\px,\py)--++({.36*\ux},{.36*\uy});
+    \ifnum\az=90\relax
+    \else
+      \draw[-{Stealth[length=2pt]},black!85,line width=.4pt]
+        (\px,\py)--++({.36*\ux},{.36*\uy});
+    \fi
    }
   }
   \draw[black!60] (0,0) rectangle (4.6,4.6);
   \node[anchor=south] at (2.3,4.68) {$z=\zlabel$};
+  \ifnum\az=90\relax
+    \node[fill=gray!5,inner sep=2pt] at (2.3,2.3) {$u_0=0$};
+  \fi
   \node[anchor=north] at (0,0) {$0$};
   \node[anchor=north] at (4.6,0) {$2\pi$};
   \end{scope}
@@ -1561,7 +1605,7 @@ Rysunek powstaje w TikZ bez zewnętrznych obrazów i skryptów.}
 
 \begin{center}
 \begin{tikzpicture}[x={(.82cm,0cm)},y={(.33cm,.28cm)},
- z={(0cm,1.65cm)},>=Stealth,font=\footnotesize]
+ z={(0cm,2.10cm)},>=Stealth,font=\footnotesize]
  \foreach \h/\az/\lab in {0/0/0,1/90/{\pi/2},2/180/\pi}{
   \fill[gray!5] (0,0,\h)--(6,0,\h)--(6,6,\h)--(0,6,\h)--cycle;
   \foreach \i in {0,...,7}{
@@ -1601,7 +1645,7 @@ Rysunek powstaje w TikZ bez zewnętrznych obrazów i skryptów.}
  }
  \draw[->] (0,0,0)--(6.6,0,0) node[right] {$x$};
  \draw[->] (0,0,0)--(0,6.6,0) node[above] {$y$};
- \draw[->] (0,0,0)--(0,0,2.4) node[above] {$z$};
+ \draw[->] (0,0,0)--(0,0,2.35) node[above] {$z$};
  \node[below] at (6,0,0) {$2\pi$};
  \node[left] at (0,6,0) {$2\pi$};
 \end{tikzpicture}
