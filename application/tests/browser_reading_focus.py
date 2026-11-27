@@ -10,15 +10,32 @@ with sync_playwright() as pw:
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
     page.goto(URL, wait_until='networkidle')
+    # Ignore the old persisted setting even when it requested an open panel.
+    page.evaluate("localStorage.setItem('atlas-explorer-hidden','false')")
+    page.reload(wait_until='networkidle')
+    assert page.locator('#explorer').is_hidden()
+    assert page.locator('#showExplorer').get_attribute('aria-expanded') == 'false'
+    assert page.locator('#tree .domain-header[aria-expanded=true]').count() == 0
+    assert page.evaluate("localStorage.getItem('atlas-explorer-hidden') === null")
     page.locator('#openFirst').click()
     page.locator('#simplified').wait_for(state='visible')
+    page.locator('#showExplorer').click()
+    assert page.locator('#explorer').is_visible()
     initial_width = page.locator('#view-reader').bounding_box()['width']
     page.locator('#showExplorer').click()
     assert page.locator('#explorer').is_hidden()
     assert page.locator('#showExplorer').get_attribute('aria-expanded') == 'false'
     assert page.locator('#view-reader').bounding_box()['width'] > initial_width + 200
+    page.locator('#showExplorer').click()
+    assert page.locator('#explorer').is_visible()
+    # Leave an expanded branch and the panel open, then start a new page.
+    if page.locator('#tree .domain-header[aria-expanded=true]').count() == 0:
+        page.locator('#tree .domain-header').first.click()
+    assert page.locator('#tree .domain-header[aria-expanded=true]').count() > 0
+    assert page.evaluate("localStorage.getItem('atlas-explorer-hidden') === null")
     page.reload(wait_until='networkidle')
-    assert page.locator('#explorer').is_hidden(), 'desktop preference must persist'
+    assert page.locator('#explorer').is_hidden(), 'new session starts closed'
+    assert page.locator('#tree .domain-header[aria-expanded=true]').count() == 0
     page.locator('#showExplorer').click()
     assert page.locator('#explorer').is_visible()
     page.locator('#closeExplorer').click()
@@ -54,4 +71,4 @@ with sync_playwright() as pw:
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
     assert not errors, errors
     browser.close()
-    print('Explorer preference, desktop/mobile toggles, native fullscreen, Escape, fallback and reading controls: OK')
+    print('Explorer session reset, desktop/mobile toggles, native fullscreen, Escape, fallback and reading controls: OK')

@@ -1261,7 +1261,7 @@ async function init(){
     for(const n of ["graphLeft","graphRight"])setSelect($(n),domains);
     const a=domains.find(d=>d.name==="geometria algebraiczna"),b=domains.find(d=>d.name==="geometria algebraiczna / topologia");
     $("graphLeft").value=(a||domains[0]).name;$("graphRight").value=(b||domains.at(-1)).name;
-    state.expandedDomains.add($("graphLeft").value);
+    // A new page starts with every Explorer branch collapsed.
     renderTree();renderSelection();await showSavedProjects();
   }catch(e){$("dbStatus").textContent="Brak indeksu";toast(e.message);}
 }
@@ -1324,8 +1324,9 @@ function toggleTheme(){
 $('themeToggle').addEventListener('click',toggleTheme);
 $('readingTheme').addEventListener('click',toggleTheme);
 const explorerMedia=matchMedia('(max-width:780px)');
-let explorerHidden=false, readingMode=false, ownedFullscreen=false;
-try{explorerHidden=localStorage.getItem('atlas-explorer-hidden')==='true';}catch(_){}
+// Explorer visibility is page-local, never a saved reading preference.
+let explorerHidden=true, readingMode=false, ownedFullscreen=false;
+try{localStorage.removeItem('atlas-explorer-hidden');}catch(_){}
 function explorerIsVisible(){return explorerMedia.matches?$('explorer').classList.contains('visible'):!explorerHidden;}
 function syncExplorer(){
   document.documentElement.classList.toggle('explorer-hidden',explorerHidden);
@@ -1338,7 +1339,6 @@ function setExplorerVisible(visible){
   if(explorerMedia.matches)$('explorer').classList.toggle('visible',visible);
   else{
     explorerHidden=!visible;
-    try{localStorage.setItem('atlas-explorer-hidden',String(explorerHidden));}catch(_){}
   }
   syncExplorer();
   if(!visible)$('showExplorer').focus({preventScroll:true});

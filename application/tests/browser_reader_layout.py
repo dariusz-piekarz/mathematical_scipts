@@ -55,6 +55,8 @@ with sync_playwright() as pw:
         page.locator('#textSizeUp').click()
     assert page.locator('#textSizeUp').is_disabled()
     assert_viewport_layout(page)
+    page.locator('#showExplorer').click()
+    assert page.locator('#explorer').is_visible()
     assert page.locator('#tree').evaluate('el => el.scrollHeight > el.clientHeight')
 
     # Fullscreen retains the same single reader scroll owner with large text.
