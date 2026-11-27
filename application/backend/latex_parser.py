@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 from bisect import bisect_right
 from collections import Counter
+from contextlib import closing
 from dataclasses import dataclass
 import hashlib
 import json
@@ -485,8 +486,12 @@ def connect(db: Path) -> sqlite3.Connection:
     if not db.is_file():
         raise FileNotFoundError(f"Baza nie istnieje: {db}. Uruchom komendę 'index'.")
     con = sqlite3.connect(db)
-    con.row_factory = sqlite3.Row
-    con.execute("PRAGMA foreign_keys = ON")
+    try:
+        con.row_factory = sqlite3.Row
+        con.execute("PRAGMA foreign_keys = ON")
+    except BaseException:
+        con.close()
+        raise
     return con
 
 
@@ -535,7 +540,23 @@ def build_database(source_dir: Path, db_path: Path, alias_file: Path | None = No
     db_path.parent.mkdir(parents=True, exist_ok=True)
     tmp = db_path.with_suffix(db_path.suffix + ".tmp")
     if tmp.exists(): tmp.unlink()
-    con = sqlite3.connect(tmp)
+    try:
+        with closing(sqlite3.connect(tmp)) as con:
+            report = _populate_database(con, files, source_dir, db_path, alias_file)
+        # Replace only after a successful build and close. Do not delete the
+        # previous index first: a failed replacement must preserve it.
+        tmp.replace(db_path)
+    except BaseException:
+        try:
+            tmp.unlink(missing_ok=True)
+        except OSError:
+            pass  # Preserve the original build/replacement error.
+        raise
+    return report
+
+
+def _populate_database(con: sqlite3.Connection, files: list[Path], source_dir: Path,
+                       db_path: Path, alias_file: Path | None) -> dict[str, Any]:
     con.row_factory = sqlite3.Row
     con.execute("PRAGMA foreign_keys = ON")
     con.executescript(SCHEMA)
@@ -554,7 +575,6 @@ def build_database(source_dir: Path, db_path: Path, alias_file: Path | None = No
         path = file.relative_to(source_dir.parent).as_posix()
         doc = parse_document(file.read_text(encoding="utf-8-sig"), path)
         if doc.id in seen_ids:
-            con.close(); tmp.unlink(missing_ok=True)
             raise ValueError(f"Powielony identyfikator modułu {doc.id} w pliku {path}")
         seen_ids.add(doc.id)
         # Multiple books can intentionally reuse mathematical labels. Entity IDs
@@ -671,9 +691,6 @@ def build_database(source_dir: Path, db_path: Path, alias_file: Path | None = No
     # row_factory needs to be set for mapping.
     con.commit()
     con.execute("PRAGMA wal_checkpoint(TRUNCATE)")
-    con.close()
-    if db_path.exists(): db_path.unlink()
-    tmp.replace(db_path)
     return report
 
 
@@ -815,28 +832,28 @@ def main(argv: list[str] | None = None) -> int:
             a.report.parent.mkdir(parents=True,exist_ok=True)
             a.report.write_text(json.dumps(report,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
         return 2 if report["missing_references"] or report["duplicate_labels"] else 0
-    con = connect(a.db)
-    if a.action=="stats": value = get_stats(con)
-    elif a.action=="search": value = search(con,a.query,a.limit)
-    elif a.action=="show": value = show_label(con,a.label,a.max_chars)
-    elif a.action=="graph":
-        edges=graph_edges(con,a.source)
-        if a.format=="tsv":
-            print("source\ttarget\treferences_count")
-            for e in edges: print(f"{e['source_document']}\t{e['target_document']}\t{e['references_count']}")
-            return 0
-        value = {"directed":True,"edges":edges}
-    elif a.action=="audit":
-        missing = [dict(x) for x in con.execute("SELECT source_document, target_label, line FROM references_tex WHERE status='missing'").fetchall()]
-        value={"passed":not missing,"missing_count":len(missing),"missing":missing}
-    elif a.action=="plan":
-        value = analyze_selection(con, a.modules)
-    else: raise AssertionError
-    print(json.dumps(value,indent=2,ensure_ascii=False))
-    if a.action=="audit" and not value["passed"]: return 2
-    if a.action=="plan" and (value["unknown_modules"] or value["missing_global"]): return 2
-    if a.action=="show" and value is None: return 1
-    return 0
+    with closing(connect(a.db)) as con:
+        if a.action=="stats": value = get_stats(con)
+        elif a.action=="search": value = search(con,a.query,a.limit)
+        elif a.action=="show": value = show_label(con,a.label,a.max_chars)
+        elif a.action=="graph":
+            edges=graph_edges(con,a.source)
+            if a.format=="tsv":
+                print("source\ttarget\treferences_count")
+                for e in edges: print(f"{e['source_document']}\t{e['target_document']}\t{e['references_count']}")
+                return 0
+            value = {"directed":True,"edges":edges}
+        elif a.action=="audit":
+            missing = [dict(x) for x in con.execute("SELECT source_document, target_label, line FROM references_tex WHERE status='missing'").fetchall()]
+            value={"passed":not missing,"missing_count":len(missing),"missing":missing}
+        elif a.action=="plan":
+            value = analyze_selection(con, a.modules)
+        else: raise AssertionError
+        print(json.dumps(value,indent=2,ensure_ascii=False))
+        if a.action=="audit" and not value["passed"]: return 2
+        if a.action=="plan" and (value["unknown_modules"] or value["missing_global"]): return 2
+        if a.action=="show" and value is None: return 1
+        return 0
 
 if __name__=="__main__":
     sys.exit(main())

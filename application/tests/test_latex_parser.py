@@ -1,6 +1,9 @@
 """Testy funkcjonalne parsera i bazy. Uruchom: python -m unittest discover -s tests -v"""
 from pathlib import Path
-from contextlib import closing
+from contextlib import closing, redirect_stdout
+import io
+import sqlite3
+from unittest.mock import patch
 import sys
 import tempfile
 import unittest
@@ -8,7 +11,7 @@ import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from backend.latex_parser import (
     analyze_selection, build_database, connect, graph_edges, grouped, masked_source, parse_document,
-    search, show_label,
+    main, search, show_label,
 )
 
 
@@ -132,6 +135,60 @@ class DatabaseTests(unittest.TestCase):
         report=build_database(self.folder,self.path)
         self.assertEqual(report["duplicate_labels"],1)
         self.assertEqual(report["duplicate_labels_detail"][0]["label"],"ch:alg")
+
+    def test_failed_rebuild_closes_connection_and_preserves_index(self):
+        build_database(self.folder, self.path)
+        before = self.path.read_bytes()
+        (self.folder / "TOP-00--top.tex").write_bytes(b"\xff")
+        opened = []
+        real_connect = sqlite3.connect
+
+        def track(*args, **kwargs):
+            con = real_connect(*args, **kwargs)
+            opened.append(con)
+            return con
+
+        with patch("backend.latex_parser.sqlite3.connect", side_effect=track):
+            with self.assertRaises(UnicodeDecodeError):
+                build_database(self.folder, self.path)
+        self.assertEqual(len(opened), 1)
+        with self.assertRaises(sqlite3.ProgrammingError):
+            opened[0].execute("SELECT 1")
+        self.assertFalse(self.path.with_suffix(".db.tmp").exists())
+        self.assertEqual(self.path.read_bytes(), before)
+        with closing(connect(self.path)) as con:
+            self.assertEqual(con.execute("SELECT count(*) FROM documents").fetchone()[0], 2)
+
+    def test_replacement_failure_preserves_previous_index(self):
+        build_database(self.folder, self.path)
+        before = self.path.read_bytes()
+        with patch.object(Path, "replace", side_effect=PermissionError("fixture")):
+            with self.assertRaises(PermissionError):
+                build_database(self.folder, self.path)
+        self.assertEqual(self.path.read_bytes(), before)
+        self.assertFalse(self.path.with_suffix(".db.tmp").exists())
+
+    def test_cli_closes_connection_on_normal_and_early_return(self):
+        build_database(self.folder, self.path)
+        for args in (["stats"], ["graph", "--format", "tsv"],
+                     ["show", "--label", "missing"]):
+            with self.subTest(args=args):
+                con = connect(self.path)
+                with patch("backend.latex_parser.connect", return_value=con):
+                    with redirect_stdout(io.StringIO()):
+                        main([*args, "--db", str(self.path)])
+                with self.assertRaises(sqlite3.ProgrammingError):
+                    con.execute("SELECT 1")
+
+    def test_cli_closes_connection_on_exception(self):
+        build_database(self.folder, self.path)
+        con = connect(self.path)
+        with patch("backend.latex_parser.connect", return_value=con):
+            with patch("backend.latex_parser.get_stats", side_effect=RuntimeError("fixture")):
+                with self.assertRaises(RuntimeError):
+                    main(["stats", "--db", str(self.path)])
+        with self.assertRaises(sqlite3.ProgrammingError):
+            con.execute("SELECT 1")
 
     def test_reproducibility(self):
         r1=build_database(self.folder,self.path)
