@@ -127,7 +127,7 @@ class MeasureTheoryGlobal(unittest.TestCase):
             self.assertEqual(actual[lab][0],kind,lab)
             if title:
                 self.assertEqual(actual[lab][1],title,lab)
-        self.assertEqual(len(actual),516)
+        self.assertEqual(len(actual),519)
 
 if __name__ == "__main__":
     unittest.main()
