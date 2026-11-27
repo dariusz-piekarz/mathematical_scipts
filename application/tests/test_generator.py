@@ -75,6 +75,24 @@ class GeneratorTests(unittest.TestCase):
                 self.assertEqual(response.json()['document_id'], 'AA-07')
         self.assertEqual(self.client.post('/api/generate/manifest', json={'modules':['BT-00']}).status_code,422)
 
+    def test_retired_galois_labels_resolve_in_abstract_algebra(self):
+        targets = {
+            'eq:trace-norm':'AA-43',
+            'eq:liouville':'AA-44',
+            'eq:hyperexp':'AA-45',
+            'eq:elliptic-liouville':'AA-45',
+            'eq:airy-riccati':'AA-46',
+        }
+        for label, module in targets.items():
+            with self.subTest(label=label):
+                response = self.client.get('/api/labels/'+label, params={'source_document':module})
+                self.assertEqual(response.status_code, 200, response.text)
+                self.assertEqual(response.json()['document_id'], module)
+        for module in ('GA-00', 'GA-09'):
+            with self.subTest(module=module):
+                response = self.client.post('/api/generate/manifest', json={'modules':[module]})
+                self.assertEqual(response.status_code, 422, response.text)
+
     def test_title_escaped(self):
         files,report=project_files(self.con,['AA-01'],[],r'Błąd $x_1$ & TeX')
         self.assertIn(r'Błąd \$x\_1\$ \& TeX',files['main.tex'].decode())

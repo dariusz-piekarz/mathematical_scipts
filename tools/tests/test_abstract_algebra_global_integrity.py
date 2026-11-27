@@ -96,6 +96,38 @@ def main():
     assert not dup,("duplicate labels",dup)
     missing={r:s for r,s in references.items() if r not in owners}
     assert not missing,("unresolved references",missing)
+    # Retired standalone volumes: preserve original labels at their
+    # canonical AA locations, not just the current internal references.
+    retired = {"banach_tarski", "galois_theory"}
+    assert retired.isdisjoint(b["id"] for b in catalog["books"])
+    registry = json.loads((ROOT/"catalog/topic_registry.json").read_text(encoding="utf-8"))
+    def strings(value):
+        if isinstance(value, dict):
+            for key, item in value.items():
+                yield key
+                yield from strings(item)
+        elif isinstance(value, list):
+            for item in value:
+                yield from strings(item)
+        elif isinstance(value, str):
+            yield value
+    assert not any(part in value for value in strings(registry) for part in retired), "retired registry reference"
+    for volume in retired:
+        assert not (ROOT/"chapters/pl"/volume).exists(), ("retired chapters",volume)
+        assert not (ROOT/"books/pl"/(volume+".tex")).exists(), ("retired master",volume)
+    bt = LABEL.findall(text(ROOT/"sources/pl/banach_tarski(1).tex"))
+    ga = LABEL.findall(text(ROOT/"sources/pl/galois(2).tex"))
+    assert len(bt)==len(set(bt))==50
+    assert len(ga)==len(set(ga))==5
+    ga_locations = {
+        "eq:trace-norm":43, "eq:liouville":44, "eq:hyperexp":45,
+        "eq:elliptic-liouville":45, "eq:airy-riccati":46,
+    }
+    assert set(ga)==set(ga_locations)
+    for label, number in [(label,7) for label in bt]+list(ga_locations.items()):
+        assert label in label_positions, ("lost historical label",label)
+        assert label_positions[label][0]==number, ("wrong historical label owner",label)
+    print("AA RETIRED BT/GA: PASS", {"BT_labels":len(bt), "GA_labels":len(ga)})
     # Explicit reference graph is diagnostic: a forward reference may be an
     # intentional preview, and a chapter-level cycle need not be a proof cycle.
     graph={n:set() for n in ids}
