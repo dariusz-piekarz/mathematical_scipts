@@ -30,7 +30,7 @@ permissions:
 
 jobs:
   audit-ch14:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
@@ -135,8 +135,10 @@ jobs:
           args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
       - name: Inspect diagnostics and render pages
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq poppler-utils
+          if ! command -v pdftoppm >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq poppler-utils
+          fi
           stem=books/pl/partial_differential_equations_ch14_ci
           test -s "$stem.pdf"
           test -s "$stem.log"
@@ -161,7 +163,7 @@ jobs:
           if-no-files-found: warn
 
   audit-figures:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
