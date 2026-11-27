@@ -19,3 +19,11 @@ Kontrola pobranych źródeł: 13 unikalnych etykiet, 6/6 lokalnych i 4/4 zewnęt
 CI dla ab9abd6: AM II #46048991750 i #46048982835 completed/success, terminologia #46048982837 completed/success, AM I #46048991764 completed/success; aplikacja #46048982838 cancelled. Przebieg aplikacji dla zmiany testu eb3b991 #46048865703 również cancelled. Aktualna walidacja AM II zaliczona; nie pobrano ani nie obejrzano artefaktu PDF, wykonanie testu przeglądarkowego AM2-21 nadal niepotwierdzone.
 
 Stabilizacja merytoryczna 1/2. Kolejny etap: drugi audyt stabilizacyjny i odbiór wizualny PDF.
+
+## Drugi audyt stabilizacyjny i odbiór PDF — 27.11.2026
+
+Ponowny niezależny odczyt całości rozdziału na niezmienionym blobie 0eddd2e2548ee80618db80f1557de6118884f659. Sprawdzono konstrukcję atlasu z map plasterkowych, równoważność lokalnego opisu przez równania regularne i wykres, dobór minorów i przypadki k=0,m. W szczególności sprawdzono, że obraz zanurzenia jest lokalnie dokładnie obrazem jednej gałęzi (względna otwartość i homeomorfizm), oraz rozróżnienie immersji różnowartościowej i zanurzenia. Zweryfikowano inkluzje i argument wymiarowy dla przestrzeni stycznej, wzór na normalną jako dopełnienie ortogonalne, znak sprzężenia, niezależność gradientów, ciąg t_j=pi-1/j i wyznacznik 4 przy samoprzecięciu, rachunki dla paraboloidy i okręgu. Bez nowych usterek wymagających zmian.
+
+Kontrola źródłowa: 13 unikalnych etykiet, 6/6 lokalnych i 4/4 zewnętrznych różnych celów odsyłaczy występują dokładnie raz w sprawdzonych rozdziałach; poprawny stos środowisk, pojedynczy wpis w książce i katalogu, rejestracja Plotly obecna. Pobrano rzeczywisty artefakt 15223324891 z zaliczonego CI AM II #46048991750 (ab9abd6, identyczny blob rozdziału). PDF całego tomu ma 183 strony. Wyrenderowano i obejrzano wszystkie pięć stron rozdziału 21 (PDF 172–176, drukowane 168–172), dodatkowo rysunek paraboloidy w powiększeniu. Bez zauważonych obcięć i istotnych kolizji; widoczna ilustracja wektorowa oraz listing. Wszystkie 11 adnotacji odsyłaczy wewnętrznych prowadzą do istniejących stron; brak ?? i znaków zastępczych w wyciągniętym tekście. Odbiór PDF tej wersji zaliczony. Nie wykonano testu przeglądarkowego AM2-21; wynik aplikacyjnego CI nadal niepotwierdzony.
+
+Stabilizacja merytoryczna 2/2. Kolejny etap: audyt kontrolny.
