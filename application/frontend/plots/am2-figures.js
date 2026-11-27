@@ -28,12 +28,22 @@
       return base(data,"Brzegi kul jednostkowych",layout);
     },
     "am2_08_peaks.html":()=>{
-      const data=Array.from({length:20},(_,i)=>{const n=i+1,x=[...new Set([...lin(0,1,301),1/n])].sort((a,b)=>a-b);return line(x,x.map(()=>n),x.map(v=>Math.max(1-n*Math.abs(v-1/n),0)),"n="+n,"#2469a0");});
+      const colors=["#440154","#443983","#31688E","#21918C","#35B779","#90D743","#B8DE29"],indices=[1,2,3,5,8,13,20];
+      const data=Array.from({length:20},(_,i)=>{
+        const n=i+1,x=[...new Set([0,1/n,Math.min(1,2/n),1])].sort((a,b)=>a-b);
+        const j=indices.reduce((best,k,j)=>Math.abs(k-n)<Math.abs(indices[best]-n)?j:best,0);
+        return line(x,x.map(()=>n),x.map(v=>Math.max(1-n*Math.abs(v-1/n),0)),"n="+n,colors[j]);
+      });
+      data.push({type:"scatter3d",mode:"markers",x:lin(1,20,20).map(n=>1/n),y:lin(1,20,20),z:Array(20).fill(1),name:"maksima",marker:{size:4,color:"#c87900"}});
       return base(data,"Wędrujące maksima",{scene:scene("x","n","gₙ(x)")});
     },
     "am2_09_sums.html":()=>{
-      const x=lin(0,1,501);
-      return base([1,2,4,8,16,32,64].map(n=>line(x,x.map(()=>n),x.map(v=>v-v**(n+1)),"N="+n,"#2469a0")),"Sumy częściowe",{scene:scene("x","N","Sₙ(x)")});
+      const x=lin(0,1,501),indices=[1,2,4,8,16,32,64],colors=["#440154","#443983","#31688E","#21918C","#35B779","#90D743","#B8DE29"];
+      const axes=scene("x","N (log₂)","Sₙ(x)");
+      axes.yaxis={...axes.yaxis,type:"log",tickmode:"array",tickvals:indices,ticktext:indices.map(String)};
+      const data=indices.map((n,i)=>line(x,x.map(()=>n),x.map(v=>v-v**(n+1)),"N="+n,colors[i]));
+      data.push({type:"scatter3d",mode:"markers",x:indices.map(()=>1),y:indices,z:indices.map(()=>0),marker:{size:3,color:colors},name:"S_N(1)=0",showlegend:false});
+      return base(data,"Sumy częściowe",{scene:axes});
     },
     "am2_11_paths.html":()=>{
       const x=lin(-1,1,161),data=[surface(x,x,grid(x,x,(u,v)=>u===0&&v===0?null:u*u*v/(u**4+v*v)),{colorscale:"Viridis",cmin:-.5,cmax:.5,connectgaps:false})];
