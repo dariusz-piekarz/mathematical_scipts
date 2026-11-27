@@ -17,3 +17,11 @@ Pełny ponowny odczyt rozdziału (blob 96f4abb83541005740f3b9d1f2275dbaa238c5d5)
 Kontrola źródłowa: 9/9 różnych lokalnych celów odsyłaczy oraz 2/2 celów FA-15 występuje dokładnie raz w sprawdzonych rozdziałach; 8 unikalnych etykiet, stos środowisk bez błędów, pojedynczy wpis w książce i katalogu, rejestracja AM2-19 obecna. Dodatkowa kontrola numeryczna przez odtworzenie wzorów i rozdzielczości siatek z definicji JS: maksymalna odchyłka równania sfery na 7381 punktach 4.441e-16, na 4961 punktach lokalnego wykresu 2.220e-16, rozbieżność wspólnego brzegu 0.000e+0. Nie jest to test wykonania całego modułu ani renderowania.
 
 Stabilizacja merytoryczna 1/2. CI dla 5d0cf5f: AM II 46038430372, terminologia 46038430325, aplikacja 46038430552 — wszystkie queued przy odczycie. Brak potwierdzenia aktualnej kompilacji PDF i renderowania w przeglądarce.
+
+## Drugi audyt stabilizacyjny — 27.11.2026
+
+Ponowny przegląd pełnego źródła, blob 96f4abb83541005740f3b9d1f2275dbaa238c5d5. Bez nowych usterek wymagających zmian. Sprawdzono cztery sekcje, w tym: typy operatorów A:Y→Z, B:X→Z, L:X×Z→X×Y i obie kompozycje; ważność oszacowań także dla przestrzeni zerowych; zastosowanie twierdzenia o funkcji odwrotnej na zupełnym produkcie; istnienie i jednoznaczność rozwiązania z FA-15; znak pochodnej względem prawej strony oraz obie implikacje równoważności. Sprawdzono ponownie regułę drugiej pochodnej złożenia, oszacowanie w normie maksimum i współczynnik 2 w przypadku skalarnym. W przykładzie sfery: dodatniość mianowników, współczynnik 1/2 we wzorze Taylora, obraz pochodnej parametryzacji, obie gałęzie przy równiku i dobór współrzędnej. W przykładach zdegenerowanych i operatorowym: dobór parametrów, resztę Frécheta, symetrię drugiej pochodnej, współczynnik 2 przy K²b, przypadki K=0 i E={0} oraz zbieżność szeregu w normie operatorowej.
+
+Ponowna kontrola pobranych źródeł: 8 unikalnych etykiet, 9/9 lokalnych i 2/2 zewnętrznych różnych celów odsyłaczy występują dokładnie raz w sprawdzonych rozdziałach, poprawny stos środowisk, po jednym wpisie w książce i katalogu. Rejestracja i definicja Plotly AM2-19 obecne. CI dla 5d0cf5f: trzy przebiegi nadal queued. Nie wykonano kompilacji PDF ani testu przeglądarkowego.
+
+Stabilizacja merytoryczna 2/2. Kolejny etap: audyt kontrolny.
