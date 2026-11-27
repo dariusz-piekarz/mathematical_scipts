@@ -67,6 +67,106 @@ class GeneratorTests(unittest.TestCase):
         with self.assertRaises(GenerationError):project_files(self.con,[],['non-existent'],'Bad')
         with self.assertRaises(GenerationError):project_files(self.con,[],[],'Bad')
 
+    def test_retired_volume_references_in_full_index(self):
+        # All original BT labels are frozen independently of the AA source.
+        bt = (
+            "tw:banach-tarski",
+            "def:grupa-wolna",
+            "lem:stos",
+            "tw:redukcja",
+            "wn:redukcja-iloczyn",
+            "st:grupa-slow",
+            "tw:uniwersalnosc",
+            "st:przeliczalnosc-f2",
+            "def:rownorozklad",
+            "lem:skladanie",
+            "eq:3-1",
+            "def:paradoksalny",
+            "wn:przenoszenie",
+            "lem:lancuch",
+            "eq:4-1",
+            "lem:pierwsza-litera",
+            "eq:4-2",
+            "tw:cztery-kawalki",
+            "eq:4-3",
+            "eq:4-4",
+            "subsec:so3",
+            "lem:os-obrotu",
+            "eq:5-1",
+            "eq:5-2",
+            "eq:5-3",
+            "eq:5-4",
+            "eq:5-5",
+            "eq:5-6",
+            "lem:liczniki",
+            "eq:5-7",
+            "tw:wolne-obroty",
+            "eq:6-1",
+            "lem:wyjatkowy",
+            "lem:wspolrzedne-orbitowe",
+            "eq:6-2",
+            "tw:paradoksalnosc-x",
+            "lem:nieprzeliczalnosc",
+            "lem:obrot-rozdzielajacy",
+            "eq:7-1",
+            "tw:pelna-sfera",
+            "eq:7-2",
+            "eq:7-3",
+            "lem:stozki",
+            "wn:kula-bez-srodka",
+            "eq:8-1",
+            "lem:wchloniecie-srodka",
+            "eq:8-2",
+            "eq:8-3",
+            "wn:dowolna-kula",
+            "st:niemierzalnosc",
+        )
+        expected = dict.fromkeys(bt, 'AA-07')
+        expected.update({
+            "eq:trace-norm": "AA-43",
+            "eq:liouville": "AA-44",
+            "eq:hyperexp": "AA-45",
+            "eq:elliptic-liouville": "AA-45",
+            "eq:airy-riccati": "AA-46",
+        })
+        self.assertEqual(len(expected), 55)
+        self.assertFalse(self.con.execute(
+            "SELECT id FROM documents WHERE id GLOB 'BT-*' OR id GLOB 'GA-*'"
+        ).fetchall())
+        stale = self.con.execute(
+            "SELECT source_document,line,target_label FROM references_tex "
+            "WHERE target_label GLOB 'BT-[0-9][0-9]::*' "
+            "OR target_label GLOB 'GA-[0-9][0-9]::*' "
+            "OR target_document GLOB 'BT-*' OR target_document GLOB 'GA-*'"
+        ).fetchall()
+        self.assertEqual([tuple(row) for row in stale], [])
+        good = {'resolved', 'external_resolved', 'alias_resolved', 'included_resolved'}
+        for label, owner in expected.items():
+            with self.subTest(label=label, owner=owner):
+                rows = self.con.execute(
+                    "SELECT document_id FROM label_occurrences "
+                    "WHERE name=? AND document_id=?", (label, owner)
+                ).fetchall()
+                self.assertEqual([row[0] for row in rows], [owner])
+                # A bare generic label can also belong to a different book.
+                # Require the canonical owner for qualified and AA-local links;
+                # for globally unique names also check all external bare links.
+                owners = self.con.execute(
+                    "SELECT document_id FROM label_occurrences WHERE name=? "
+                    "UNION SELECT document_id FROM included_label_origins WHERE name=?",
+                    (label, label)
+                ).fetchall()
+                unique = {row[0] for row in owners} == {owner}
+                refs = self.con.execute(
+                    "SELECT source_document,line,target_label,target_document,status "
+                    "FROM references_tex WHERE target_label=? OR target_label=?",
+                    (label, owner + '::' + label)
+                ).fetchall()
+                for source, line, target, resolved, status in refs:
+                    if unique or source == owner or target == owner + '::' + label:
+                        self.assertIn(status, good, (source, line, target))
+                        self.assertEqual(resolved, owner, (source, line, target))
+
     def test_retired_volume_preambles_are_not_available(self):
         from backend.generator import PROJECT_TEMPLATE_KEYS
         for key in ('BT', 'GA'):
