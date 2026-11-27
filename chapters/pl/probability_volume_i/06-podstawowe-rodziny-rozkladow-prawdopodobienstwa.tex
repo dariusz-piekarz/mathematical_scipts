@@ -45,9 +45,9 @@ Dla $n=0$ rozkład jest skupiony w zerze, niezależnie od $p$.
 Dla $p=0$ jest skupiony w zerze, a dla $p=1$ w punkcie $n$.
 Dla $n\geq1$ istnienie niezależnych prób o tym parametrze
 wynika z konstrukcji miary produktowej w rozdziale~\ref{ch:probability}.
-Wzory na średnią, wariancję i funkcję tworzącą momenty
-z następnego twierdzenia obowiązują również dla $n=0$,
-co wynika bezpośrednio z tego przypadku.
+Dla $n=0$ mamy $\E X=\Var(X)=0$ oraz $M_X(t)=1$
+dla każdego $t\in\R$, zgodnie z wzorami z następnego
+twierdzenia.
 \end{definicja}
 
 \begin{twierdzenie}[Suma prób Bernoulliego]
@@ -347,7 +347,9 @@ podzbiorów według liczby wyróżnionych elementów daje
 \]
 Otrzymujemy zatem rozkład prawdopodobieństwa i jego
 interpretację jako liczby wyróżnionych obiektów w próbie
-losowanej jednostajnie bez zwracania.
+losowanej jednostajnie bez zwracania. Ponadto $0\leq X\leq n$
+prawie na pewno, więc wszystkie jego dodatnie momenty
+bezwzględne są skończone.
 \end{definicja}
 
 \begin{twierdzenie}
@@ -399,11 +401,9 @@ uporządkowanych par różnych indeksów. Otrzymujemy
 \Var(X)=np(1-p)-\frac{n(n-1)}{N-1}p(1-p)
 =np(1-p)\frac{N-n}{N-1}.
 \]
-Dla $N=1$ dopuszczalne $n$ to $0$ lub $1$:
-przy $n=0$ zmienna $X$ jest zerowa prawie na pewno,
-a przy $n=1$ jest równa $K$ prawie na pewno.
-W obu przypadkach średnia wynosi $nK/N$,
-a wariancja zero.
+Jeżeli $N=1$, to albo $n=0$ (przypadek już rozpatrzony),
+albo $n=1$, gdy $X=K$ prawie na pewno, więc
+$\Var(X)=0$ i $\E X=K=nK/N$.
 \end{proof}
 
 \begin{uwaga}
@@ -630,7 +630,8 @@ przedziału zawartego w $(a,b)$ jest proporcjonalne do jego
 długości. Rozkład wykładniczy odpowiada innej intuicji:
 jeśli wydarzenie nie zaszło przez czas $s$, dodatkowy czas
 oczekiwania ma mieć tę samą regułę co na początku.
-Ta własność braku pamięci prowadzi do wykładniczego kształtu ogona.
+Poniżej sprawdzimy, że rozkład wykładniczy ma właśnie
+taką własność braku pamięci.
 
 \begin{definicja}
 Dla $a,b\in\R$ z $a<b$ rozkładem jednostajnym
@@ -675,9 +676,12 @@ bezwzględnych. Stosując \eqref{eq:lotus}, obliczamy:
 \E X^2=\frac1{b-a}\int_a^b x^2\,\dd\lambda_1(x)
 =\frac{b^3-a^3}{3(b-a)}=\frac{a^2+ab+b^2}3.
 \]
-Po odjęciu $((a+b)/2)^2$ od drugiego momentu
-i uproszczeniu otrzymujemy
-$\Var(X)=(b-a)^2/12$.
+Korzystając ze wzoru na wariancję, otrzymujemy
+\[
+\Var(X)=\frac{a^2+ab+b^2}{3}-\frac{(a+b)^2}{4}
+=\frac{4(a^2+ab+b^2)-3(a^2+2ab+b^2)}{12}
+=\frac{(b-a)^2}{12}.
+\]
 \end{proof}
 
 \begin{definicja}
@@ -856,10 +860,13 @@ M_X(t)=\frac{e^{\mu t}}{\sqrt{2\pi}}\int_\R
 Tożsamość
 $\sigma tz-z^2/2=-(z-\sigma t)^2/2+\sigma^2t^2/2$
 pozwala wyjąć z całki czynnik
-$e^{\sigma^2t^2/2}$. Pozostała całka z gęstości
-Gaussa przesuniętej o $\sigma t$ wynosi jeden,
-co wynika z podstawienia $w=z-\sigma t$ i lematu
-o całce Gaussa.
+$e^{\sigma^2t^2/2}$. Pozostały czynnik wynosi jeden:
+\[
+\frac1{\sqrt{2\pi}}\int_\R e^{-(z-\sigma t)^2/2}\,
+\dd\lambda_1(z)
+=\frac1{\sqrt{2\pi}}\int_\R e^{-w^2/2}\,\dd\lambda_1(w)=1
+\]
+na mocy podstawienia $w=z-\sigma t$ i lematu o całce Gaussa.
 Otrzymujemy więc
 $M_X(t)=\exp(\mu t+\sigma^2t^2/2)$
 dla wszystkich $t\in\R$.
@@ -1219,8 +1226,9 @@ f_\nu(x)=
 0,&x\leq0.
 \end{cases}
 \end{equation}
-Dla naturalnego $\nu$ liczba $\nu$ jest liczbą stopni swobody
-w poniższej reprezentacji za pomocą zmiennych normalnych.
+Dla całkowitego $\nu\geq1$ parametr $\nu$ oznacza liczbę
+niezależnych standardowych zmiennych normalnych
+w poniższej reprezentacji.
 \end{definicja}
 
 \begin{twierdzenie}[Suma kwadratów zmiennych normalnych]
@@ -1390,6 +1398,9 @@ oczekiwaną są nieskończone, więc wartość oczekiwana nie
 istnieje. Dla $0<\nu\leq2$ drugi moment jest nieskończony.
 \end{twierdzenie}
 \begin{proof}
+Wystarczy rozpatrzyć zmienną $T$ skonstruowaną z niezależnych
+$Z\sim\Normal(0,1)$ i $U\sim\chi_\nu^2$ w definicji,
+gdyż gęstość i momenty zależą wyłącznie od rozkładu.
 Niech $\varphi(z)=(2\pi)^{-1/2}e^{-z^2/2}$ oznacza
 gęstość standardowego rozkładu normalnego.
 Z niezależności i wzoru na gęstość rozkładu łącznego
@@ -1414,8 +1425,11 @@ zatem \atlasref{ME-13::thm:change-variables-13}{twierdzenie o zamianie zmiennych
 daje gęstość pary $(T,U)$ równą
 $\varphi(t\sqrt{u/\nu})f_U(u)\sqrt{u/\nu}$ dla $u>0$
 i zeru poza tym obszarem.
-Stosując Tonellego do nieujemnej gęstości, uzyskujemy
+Stosując \atlasref{ME-12::thm:tonelli-12}{twierdzenie Tonellego}
+do nieujemnej gęstości rozkładu łącznego, uzyskujemy
 gęstość brzegową $T$ przez całkowanie po $u$.
+Jej całka jest równa jeden, ponieważ całka gęstości
+rozkładu łącznego $(T,U)$ wynosi jeden.
 Po zebraniu potęg otrzymujemy
 \[
 f_T(t)=\frac1{\sqrt{2\pi\nu}\,2^{\nu/2}\Gamma(\nu/2)}
@@ -1484,8 +1498,10 @@ gdzie $\E Z^2=1$ z własności rozkładu normalnego.
 Stąd $\Var(T)=\nu/(\nu-2)$.
 Dla $1<\nu\leq2$ średnia wynosi zero, lecz drugi moment
 jest nieskończony. Nie definiujemy wtedy wariancji
-jako skończonej liczby w sensie definicji z rozdziału~\ref{ch:expectation};
-jeżeli dopuszczamy wariancję rozszerzoną, wynosi ona $+\infty$.
+w sensie definicji z rozdziału~\ref{ch:expectation},
+która wymaga skończonego drugiego momentu.
+Jeżeli dopuścimy wariancję rozszerzoną
+$\E[(T-\E T)^2]$, wynosi ona $+\infty$.
 Dla $0<\nu\leq1$ wariancja nie jest określona,
 gdyż nie istnieje średnia.
 \end{proof}
@@ -1633,8 +1649,9 @@ rozkładu Cauchy'ego.
 
 \begin{przyklad}[Porównanie ogonów rozkładu normalnego i Cauchy'ego]
 Niech $Z\sim\Normal(0,1)$, $C$ ma standardowy rozkład
-Cauchy'ego i niech $t>0$. Z nierówności Markowa
-dla $Z^2$ wynika $\Prob(|Z|\geq t)\leq1/t^2$.
+Cauchy'ego i niech $t>0$. Ponieważ $\{|Z|\geq t\}=\{Z^2\geq t^2\}$,
+z nierówności Markowa dla $Z^2$ oraz $\E Z^2=1$
+wynika $\Prob(|Z|\geq t)\leq1/t^2$.
 W rzeczywistości ogon normalny maleje znacznie szybciej:
 dla każdego $u>0$, korzystając z
 $M_Z(u)=e^{u^2/2}$ i stosując nierówność Markowa
@@ -1652,9 +1669,14 @@ a z różniczkowalności funkcji $\arctan$ w zerze
 wynika $\arctan v/v\to1$ przy $v\downarrow0$.
 W konsekwencji $\Prob(|C|\geq t)\sim 2/(\pi t)$
 przy $t\to\infty$.
-Różnica między zanikiem wykładniczym a potęgowym
-wyjaśnia, dlaczego w rozkładzie Cauchy'ego brak nawet
-pierwszego bezwzględnego momentu.
+Dla nieujemnej zmiennej $Y$ mamy
+$\E Y=\int_0^\infty\Prob(Y>t)\,\dd\lambda_1(t)$:
+wynika to z tożsamości
+$Y(\omega)=\int_0^\infty\chi_{\{t<Y(\omega)\}}\,\dd\lambda_1(t)$
+i twierdzenia Tonellego.
+Oszacowanie ogona $|C|$ od dołu przez dodatnią stałą
+razy $1/t$ dla dużych $t$ daje $\E|C|=\infty$,
+zgodnie z wcześniejszym rachunkiem momentów.
 \end{przyklad}
 
 \section{Dalsze użyteczne rozkłady}
@@ -1774,6 +1796,8 @@ f(x)=
 Jeżeli $T\sim t_\nu$ i $\nu\geq1$ jest liczbą całkowitą, to $T^2\sim F_{1,\nu}$.
 \end{stwierdzenie}
 \begin{proof}
+Rozpatrzmy niezależne $U,V$ o rozkładach chi-kwadrat
+z definicji $F_{d_1,d_2}$.
 Oznaczmy $a=d_1/2$ oraz $b=d_2/2$.
 Z niezależności $U,V$ oraz wzoru na gęstość rozkładu
 łącznego (rozdział~\ref{ch:random-variables}) ich gęstość
