@@ -508,6 +508,63 @@ def main() -> None:
                 page.wait_for_function("() => !document.getElementById('globalReadingAudit')",
                                        timeout=15000)
                 assert "par powiązanych" in page.locator("#graphSummary").inner_text()
+                # Pair and global coverage share a canvas: only the most
+                # recent request may replace it or report an error.
+                graph_races = page.evaluate("""async ([pair,coverage]) => {
+                    const originalApi=api, requests=[];
+                    const toastBox=document.getElementById('toast');
+                    const summary=document.getElementById('graphSummary');
+                    let count=0;
+                    try{
+                        api=(url,options)=>url.startsWith('/api/graph')
+                            ? new Promise((resolve,reject)=>requests.push({url,resolve,reject}))
+                            : originalApi(url,options);
+                        const data=req=>req.url.endsWith('/coverage')?coverage:pair;
+                        for(const [old,current] of [
+                            [loadGraph,loadGlobalGraphCoverage],
+                            [loadGlobalGraphCoverage,loadGraph],
+                            [loadGraph,loadGraph],
+                            [loadGlobalGraphCoverage,loadGlobalGraphCoverage]
+                        ]){
+                            for(const failure of [false,true]){
+                                toastBox.textContent='';
+                                const p=old(),a=requests.at(-1),q=current(),b=requests.at(-1);
+                                b.resolve(data(b));await q;
+                                const expected=summary.textContent;
+                                if(failure)a.reject(Error('obsolete graph error'));
+                                else a.resolve(data(a));
+                                await p;
+                                const global=b.url.endsWith('/coverage');
+                                if(summary.textContent!==expected||toastBox.textContent||
+                                   state.graphLoading||Boolean(state.graphCoverage)!==global||
+                                   Boolean(document.getElementById('globalReadingAudit'))!==global)
+                                    throw Error('obsolete graph result replaced current canvas');
+                                count++;
+                            }
+                        }
+                        const from=document.getElementById('pathFrom'),to=document.getElementById('pathTo');
+                        const path=document.getElementById('pathResult');
+                        const previous=[from.value,to.value,path.textContent];
+                        try{
+                            from.value='A';to.value='B';const p=findPath(),a=requests.at(-1);
+                            to.value='C';const q=findPath(),b=requests.at(-1);
+                            b.resolve({found:false});await q;const expected=path.textContent;
+                            a.reject(Error('obsolete path'));await p;
+                            if(path.textContent!==expected||toastBox.textContent)
+                                throw Error('obsolete path error');
+                            count++;
+                            const edited=findPath(),req=requests.at(-1);to.value='D';
+                            req.resolve({found:true,steps:[],modules:[]});await edited;
+                            if(path.textContent!==expected)throw Error('edited path accepted');
+                            count++;
+                        }finally{from.value=previous[0];to.value=previous[1];path.textContent=previous[2];}
+                        return count;
+                    }finally{
+                        api=originalApi;toastBox.textContent='';toastBox.classList.add('hidden');
+                        await loadGraph();
+                    }
+                }""", [pair_payload, payload])
+                assert graph_races == 10
                 # Concept graph must work in real Chromium without a graph CDN.
                 # Reuse the global search as a shortcut into the new graph view.
                 page.locator("#searchInput").fill("Zorn")
