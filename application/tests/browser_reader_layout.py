@@ -357,6 +357,75 @@ with sync_playwright() as pw:
     assert_viewport_layout(page)
     page.locator('#textSizeReset').click()
 
+    # Real browser DOM with controlled Fullscreen API promises, so delayed
+    # native transitions and refusals are deterministic rather than timed.
+    page.wait_for_function('document.fullscreenElement === null')
+    fullscreen_races = page.evaluate("""async () => {
+        const shell=document.querySelector('.app-shell');
+        const saved=[ [document,'fullscreenElement'],[document,'exitFullscreen'],
+                      [shell,'requestFullscreen'] ].map(([obj,key])=>
+                      [obj,key,Object.getOwnPropertyDescriptor(obj,key)]);
+        let active=null, entry, exit, entries=0, exits=0, count=0;
+        const change=()=>document.dispatchEvent(new Event('fullscreenchange'));
+        const completeEntry=()=>{active=shell;change();entry.resolve();};
+        const completeExit=()=>{active=null;change();exit.resolve();};
+        const tick=async()=>{await Promise.resolve();await Promise.resolve();};
+        try {
+            Object.defineProperty(document,'fullscreenElement',{configurable:true,get:()=>active});
+            Object.defineProperty(shell,'requestFullscreen',{configurable:true,value:()=>{
+                entries++;return new Promise((resolve,reject)=>{entry={resolve,reject};});
+            }});
+            Object.defineProperty(document,'exitFullscreen',{configurable:true,value:()=>{
+                exits++;return new Promise((resolve,reject)=>{exit={resolve,reject};});
+            }});
+            let pending=enterReadingMode();
+            document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',cancelable:true}));
+            if(readingMode)throw Error('Escape did not leave pending entry');
+            completeEntry();await tick();
+            if(exits!==1)throw Error('late entry was not exited');
+            completeExit();await pending;
+            if(readingMode||ownedFullscreen||active)throw Error('late entry leaked');
+            count++;
+            pending=enterReadingMode();await leaveReadingMode();await enterReadingMode();
+            if(entries!==2)throw Error('duplicated native entry');
+            completeEntry();await pending;
+            if(!readingMode||!ownedFullscreen)throw Error('latest entry intent lost');
+            active=null;change();
+            if(readingMode||ownedFullscreen)throw Error('native exit not reconciled');
+            count++;
+            pending=enterReadingMode();entry.reject(Error('denied'));await pending;
+            if(!readingMode||ownedFullscreen)throw Error('layout fallback lost');
+            await leaveReadingMode();
+            if(exits!==1)throw Error('fallback attempted native exit');
+            count++;
+            active=document.createElement('div');
+            await enterReadingMode();await leaveReadingMode();
+            if(entries!==3||exits!==1||!active)throw Error('foreign fullscreen disturbed');
+            active=null;count++;
+            pending=enterReadingMode();completeEntry();await pending;
+            let leaving=leaveReadingMode();exit.reject(Error('denied'));await leaving;
+            if(!readingMode||!ownedFullscreen)throw Error('exit refusal stranded user');
+            leaving=leaveReadingMode();completeExit();await leaving;
+            if(readingMode||ownedFullscreen)throw Error('exit retry failed');
+            count++;
+            pending=enterReadingMode();completeEntry();await pending;
+            leaving=leaveReadingMode();await enterReadingMode();
+            completeExit();await leaving;
+            if(!readingMode||ownedFullscreen||entries!==5)
+                throw Error('reentry during exit did not retain layout fallback');
+            await leaveReadingMode();count++;
+            return count;
+        } finally {
+            for(const [obj,key,descriptor] of saved){
+                if(descriptor)Object.defineProperty(obj,key,descriptor);
+                else delete obj[key];
+            }
+            ownedFullscreen=false;fullscreenEntryPending=false;fullscreenExitPending=false;
+            setReadingMode(false);
+        }
+    }""")
+    assert fullscreen_races == 6
+
     # Switching between short previews, full chapters and other tabs must not
     # leave an independently scrollable document underneath the app shell.
     for module in ('DG-14', 'ALG-10', 'AM1-14'):
