@@ -69,7 +69,13 @@ async function toggleModule(id){
     }).catch(e=>{
       // A failed load must be retryable with one click, not collapse+expand.
       if(state.expandedModules.delete(id))toast(e.message);
-    }).finally(()=>{outlineRequests.delete(id);renderTree();});
+    }).finally(()=>{
+      outlineRequests.delete(id);
+      // A collapsed or hidden branch does not need a DOM rebuild.
+      const module=state.modules.find(m=>m.id===id);
+      if(module && state.expandedDomains.has(module.domain) &&
+         state.granularity!=="module" && (state.expandedModules.has(id)||!state.outlines.has(id)))renderTree();
+    });
     outlineRequests.set(id,request);
   }
   await request;
@@ -93,6 +99,16 @@ function outlinePage(rows,granularity,requested=0){
   const start=page*OUTLINE_PAGE_SIZE;
   return {items:visible.slice(start,start+OUTLINE_PAGE_SIZE),page,totalPages,total,start};
 }
+function refreshTreeSelection(domain){
+  if(!state.expandedDomains.has(domain)){
+    state.expandedDomains.add(domain);renderTree();return;
+  }
+  // Selection changes alone must not replace the tree or lose its focus.
+  for(const line of $("tree").querySelectorAll("[data-tree-module]"))
+    line.classList.toggle("active",line.dataset.treeModule===state.currentModule);
+  for(const line of $("tree").querySelectorAll("[data-tree-entity]"))
+    line.classList.toggle("active",line.dataset.treeEntity===state.currentEntity);
+}
 function renderTree(){
   const tree=$("tree");tree.replaceChildren();
   for(const domain of state.domains){
@@ -103,7 +119,7 @@ function renderTree(){
     head.addEventListener("click",()=>toggleDomain(domain.name));group.append(head);
     if(expanded){
       for(const m of state.modules.filter(x=>x.domain===domain.name)){
-        const line=node("div",{className:"module-line"+(state.currentModule===m.id?" active":"")});
+        const line=node("div",{className:"module-line"+(state.currentModule===m.id?" active":""),"data-tree-module":m.id});
         const isExpanded=state.granularity!=="module"&&state.expandedModules.has(m.id);
         const caret=node("button",{className:"chev",title:(isExpanded?"Zwiń":"Rozwiń")+" strukturę rozdziału","aria-label":(isExpanded?"Zwiń ":"Rozwiń ")+m.id,"aria-expanded":String(isExpanded)},isExpanded?"▾":"▸");
         caret.style.border="0";caret.style.background="transparent";caret.style.padding="0";
@@ -118,7 +134,7 @@ function renderTree(){
           const key=JSON.stringify([m.id,state.granularity]);
           const {items,page,totalPages,total,start}=outlinePage(rows,state.granularity,outlinePages.get(key));
           for(const e of items){
-            const line=node("button",{className:"outline-row"+(state.currentEntity===e.id?" active":""),role:"treeitem",title:e.title||e.excerpt});
+            const line=node("button",{className:"outline-row"+(state.currentEntity===e.id?" active":""),role:"treeitem",title:e.title||e.excerpt,"data-tree-entity":e.id});
             line.append(node("span",{className:"outline-type"},typeIcon(e.kind)),node("span",{className:"outline-name"},crop(e.title || e.excerpt || e.kind,73)));
             line.addEventListener("click",()=>openEntity(e.id));branch.append(line);
           }
@@ -165,7 +181,7 @@ async function openModule(id,full=false){
     // current preview to its full text should not deliberately reset scroll.
     const resetScroll=!full||state.currentModule!==id||state.currentEntity!==null;
     state.currentModule=id;state.currentEntity=null;state.currentData=data;
-    state.expandedDomains.add(data.module.domain);renderTree();renderReader();activateTab("reader",{fromReaderNavigation:true});
+    refreshTreeSelection(data.module.domain);renderReader();activateTab("reader",{fromReaderNavigation:true});
     if(resetScroll)$("view-reader").scrollTop=0;
     if(explorerMedia.matches)setExplorerVisible(false);
   }catch(e){if(epoch===state.renderEpoch)toast(e.message);}
@@ -177,7 +193,7 @@ async function openEntity(id,full=false){
     if(epoch!==state.renderEpoch)return;
     const resetScroll=!full||state.currentModule!==data.entity.document_id||state.currentEntity!==id;
     state.currentModule=data.entity.document_id;state.currentEntity=id;state.currentData=data;
-    state.expandedDomains.add(data.domain);renderTree();renderReader();activateTab("reader",{fromReaderNavigation:true});
+    refreshTreeSelection(data.domain);renderReader();activateTab("reader",{fromReaderNavigation:true});
     if(resetScroll)$("view-reader").scrollTop=0;
     if(explorerMedia.matches)setExplorerVisible(false);
   }catch(e){if(epoch===state.renderEpoch)toast(e.message);}
