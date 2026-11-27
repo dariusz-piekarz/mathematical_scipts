@@ -61,6 +61,47 @@ with sync_playwright() as pw:
     # Missing explicit targets must not quietly redirect to a different chapter.
     page.evaluate(r"() => renderSimplified('Zobacz \\ref{ALG-08::ch:ga5-rozdmuchania}.','ALG-08')")
     page.locator('#simplified .ref-missing').filter(has_text='Brak celu').wait_for()
+    # A slow label lookup must not override a more recent chapter selection.
+    # A source-specific cached preview must not answer an unqualified lookup.
+    cases = page.evaluate("""async () => {
+        const originalApi = api;
+        let pending, count = 0;
+        const toastBox = document.getElementById('toast');
+        const resetToast = () => {toastBox.textContent = ''; toastBox.classList.add('hidden');};
+        try {
+            api = (url, options) => url.startsWith('/api/labels/atlas-race-test')
+                ? new Promise((resolve, reject) => {pending = {resolve, reject};})
+                : originalApi(url, options);
+            for (const result of [{entity_id:'invalid'}, {document_id:'invalid'},
+                                  {ambiguous:true}, null]) {
+                closeTip(); resetToast(); pending = null;
+                const old = openLabel('atlas-race-test','ALG-08');
+                await openModule('ALG-08');
+                if (!pending) throw Error('lookup not intercepted');
+                if (result === null) pending.reject(new Error('obsolete error'));
+                else pending.resolve(result);
+                await old;
+                if (state.currentModule !== 'ALG-08' || state.currentEntity !== null ||
+                    toastBox.textContent || !document.getElementById('referenceTip').classList.contains('hidden'))
+                    throw Error('obsolete lookup changed current view');
+                count++;
+            }
+            closeTip(); pending = null;
+            state.tooltipData = {name:'atlas-race-test', source_document:'ALG-05',
+                                 entity_id:'invalid'};
+            const current = openLabel('atlas-race-test');
+            if (!pending) throw Error('wrong source cache reused');
+            pending.resolve({document_id:'ALG-08'});
+            await current;
+            if (state.currentModule !== 'ALG-08' || state.currentEntity !== null)
+                throw Error('uncached target not opened');
+            count++;
+        } finally {
+            api = originalApi; closeTip(); resetToast();
+        }
+        return count;
+    }""")
+    assert cases == 5
     assert not errors,errors
     browser.close()
     print('Reference titles, hover, exact navigation, multiple targets, conflicts, missing labels and source preservation: OK')
