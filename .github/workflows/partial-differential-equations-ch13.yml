@@ -139,8 +139,10 @@ jobs:
       - name: Inspect diagnostics and render pages
         run: |
           if ! command -v pdftoppm >/dev/null 2>&1; then
-            sudo apt-get update -qq
-            sudo apt-get install -y -qq poppler-utils
+            # Use signed Ubuntu repositories only; unrelated third-party mirrors may fail.
+            test -f /etc/apt/sources.list.d/ubuntu.sources
+            sudo apt-get -o Dir::Etc::sourcelist=/etc/apt/sources.list.d/ubuntu.sources -o Dir::Etc::sourceparts=- update -qq
+            sudo apt-get -o Dir::Etc::sourcelist=/etc/apt/sources.list.d/ubuntu.sources -o Dir::Etc::sourceparts=- install -y -qq poppler-utils
           fi
           stem=books/pl/partial_differential_equations_ch13_ci
           test -s "$stem.pdf"
@@ -172,8 +174,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install actual TikZ compiler and PNG converter
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq texlive-latex-extra texlive-pictures texlive-lang-polish texlive-fonts-recommended lmodern poppler-utils
+          # Use signed Ubuntu repositories only; unrelated third-party mirrors may fail.
+          test -f /etc/apt/sources.list.d/ubuntu.sources
+          sudo apt-get -o Dir::Etc::sourcelist=/etc/apt/sources.list.d/ubuntu.sources -o Dir::Etc::sourceparts=- update -qq
+          sudo apt-get -o Dir::Etc::sourcelist=/etc/apt/sources.list.d/ubuntu.sources -o Dir::Etc::sourceparts=- install -y -qq texlive-latex-extra texlive-pictures texlive-lang-polish texlive-fonts-recommended lmodern poppler-utils
       - name: Render all indexed PDE figures with Atlas backend
         run: python3 tests/mathematical/partial_differential_equations/chapter-13/audit_figures.py
       - name: Upload individual rendered images and report
