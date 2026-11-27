@@ -1,0 +1,3 @@
+# ME-30 — stabilizacja I całki Birkhoffa
+
+CI audytu IV: chapter 30 (46066355315), globalna bramka (46066355079), migracja IT i terminologia PASS. Kontrola aplikacji anulowana. W 1021-wierszowej sekcji przejrzano ciąg definicja–miara–skalaryzacja–kryterium wypukłe–granice–Pettis–mnożniki–półnorma. Uporządkowano zależność półnorma przed mnożnikami, jawnie wskazano wcześniejszy dowód wariacji miary z gęstością, doprecyzowano warunek Pettisa, podział pusty, wybór błędu oraz powiązanie z wcześniejszym przykładem. Rozszerzono tytuł pełny i spis oznaczeń. Zachowano wszystkie etykiety, ścieżki i wpisy indeksu. Dodano test kolejności zależności. Nowe CI niepotwierdzone. Kolejny etap: ponowna stabilizacja po poprawkach, następnie audyt kontrolny.

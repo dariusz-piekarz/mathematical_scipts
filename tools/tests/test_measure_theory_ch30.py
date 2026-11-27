@@ -231,5 +231,15 @@ class Chapter30(unittest.TestCase):
                       "ex:birkhoff-q-incomplete-30"):
             self.assertIn(r"\label{" + label + "}", s)
 
+
+    def test_mt30_019_birkhoff_dependency_order(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        self.assertLess(s.index(r"\label{thm:birkhoff-seminorm-30}"),
+                        s.index(r"\label{thm:birkhoff-multipliers-30}"))
+        self.assertLess(s.index("Przypomnijmy warunek całkowalności Pettisa"),
+                        s.index(r"\label{thm:birkhoff-pettis-30}"))
+        self.assertIn(r"Twierdzenia~\ref{thm:variation-density-30}", s)
+        self.assertIn(r"Sekcji~\ref{sec:birkhoff-30}", s)
+
 if __name__ == "__main__":
     unittest.main()
