@@ -73,3 +73,23 @@ AM I 22: wprowadzono D_p(I), D(I), D_b^1(I), ścisłą hierarchię z C^1 i C(I),
 ## Odroczone rozszerzenia biblioteki — po ukończeniu podstawowych tomów
 
 Najpierw ukończyć podstawowe tomy i ich audyty oraz wcześniej zatwierdzone kierunki. Dopiero potem rozważyć nowe skrypty: analiza zespolona jednej i wielu zmiennych, teoria liczb, analiza p-adyczna, geometria analityczna zespolona (z zachowaniem wcześniej zatwierdzonego harmonogramu podstawowych tomów), algebry operatorowe, układy dynamiczne i ergodyka, geometria symplektyczna i kontaktowa, geometria zespolona i Kählerowska, analiza numeryczna, kombinatoryka, transport optymalny. Rozszerzenia istniejących skryptów: AF — harmoniczna, operatory i Schatten; AA — przemienna, nieprzemienna, reprezentacje, Hopf; CAT — wyższe kategorie, toposy, homologiczna; AT — stabilna homotopia, spektra, K; GTD — riemannowska, metryczna, indeks; TM — prądy i geometryczna teoria miary; PDE — mikrolokalna, nieliniowa, wariacyjna; logika — zaawansowana teoria modeli, dowodu i typów; probabilistyka III — Malliavin i SPDE; IV — informacja i uczenie statystyczne. Przed każdym rozszerzeniem sprawdzić pokrycie na poziomie sekcji i korzystać z kanonicznych rozdziałów przez odsyłacze/input. Nie rozpoczynać odroczonych rozszerzeń przed ukończeniem podstawowych tomów. To plan, nie deklaracja wykonania.
+
+
+## Podział AM I-36 po redystrybucji CAL (27.11.2026)
+
+Stan źródła po c4f93eb: 4086 wierszy, 197 etykiet. Po zakończeniu bieżących audytów i kontroli migracji podzielić monolit na rozdziały merytoryczne, bez usuwania twierdzeń i powielania dowodów. Proponowana numeracja na końcu tomu (nie zmienia numerów 1–35):
+
+| Rozdział | Zakres | Obecna objętość wierszy (przybliżona) |
+|---|---|---:|
+| 36 | Całka Kurzweila–Henstocka: cechowania, Cousin, Cauchy, lokalność, Saksa–Henstocka, pochodne, Hake, osobliwości | 256 |
+| 37 | Całka McShane'a, całkowalność bezwzględna, BV/AC i związek z Lebesgue'em, twierdzenia graniczne | 563 |
+| 38 | Wąska całka Denjoya: AC*, ACG*, charakterystyka pierwotnych | 406 |
+| 39 | Całka Perrona i równoważność z KH | 237 |
+| 40 | Szeroka całka Denjoya–Chinczyna, pochodna aproksymatywna, przykłady i rachunek | 843 |
+| 41 | Całka Riemanna–Stieltjesa, kryteria, podstawienie i granice | 353 |
+| 42 | Całka Kurzweila–Stieltjesa, regulowanie, skoki, miary i rachunek | 1174 |
+| 43 | Rachunek całek cechowanych: mnożniki BV, podstawienie, całkowanie przez części, norma Alexiewicza i zbieżność; hierarchia jako sekcja końcowa | 254 |
+
+Kolejność Perrona przed szeroką całką Denjoya usuwa odsyłacz wprzód (it:thm:perron-hk). Przed podziałem: rozdzielić lemat o modyfikacji na zbiorze zerowym (36→37) na dowód KH i dopowiedzenie McShane po jego liniowości; kryterium oscylacyjne Riemanna–Stieltjesa w przykładach McShane zastąpić kryterium Riemanna z ME-08, jeśli integrator to identyczność; w szerokim Denjoyu dowód mnożników korzysta z twierdzenia RS, więc przenieść potrzebną tezę/dowód przed zastosowanie albo odpowiednio przesunąć sekcję rachunkową; porównania RS/KS umieścić po konstrukcji KS. Weryfikować zależności po rozcięciu.
+
+Zachować ścieżkę i etykietę rozdziału 36, wszystkie etykiety źródłowe (w tym aliasy współlokowane przy deklaracji), notację i rysunki. Każdy nowy rozdział otrzyma własny nagłówek i etykietę, lokalne makra potrzebne do podglądu; nie przenosić grupowania TeX przez granice plików. Zaktualizować entrypoint, katalog, odsyłacze kwalifikowane do dawnych CAL i AM I-36 według rzeczywistej mapy etykieta→rozdział (nie przez globalną zamianę samego numeru); zachować odsyłacze w całym tomie i podglądzie aplikacji. Test chapter-36/test_kh_adaptation.py ma obecnie założenia jednoplikowe: po podziale zachować kontrolę całego zakresu 36–43, współlokacji aliasów, istnienia celów, kolejności inputów i katalogu. Nie usuwać CAL przed zakończeniem przekierowań i odbiorem. Następnie audyty rozdział po rozdziale do dwóch czystych przebiegów, niezależna kontrola, rzeczywiste CI, PDF i podgląd odsyłaczy. To plan, nie wykonany podział.
