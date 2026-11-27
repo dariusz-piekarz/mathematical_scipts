@@ -54,6 +54,15 @@ class APITests(unittest.TestCase):
                         api.index().body)
                 self.assertNotEqual(*versions)
 
+    def test_repository_plotly_assets(self):
+        for path in ('/assets/plots/viewer.html',
+                     '/assets/plots/am2-figures.js',
+                     '/assets/plots/viewer.js',
+                     '/api/plotly/bundle.js'):
+            response = self.client.get(path)
+            self.assertEqual(response.status_code, 200, path)
+        self.assertIn('Plotly', self.client.get('/api/plotly/bundle.js').text[:5000])
+
     def test_health(self):
         self.assertTrue(self.client.get("/api/health").json()["readonly"])
 
