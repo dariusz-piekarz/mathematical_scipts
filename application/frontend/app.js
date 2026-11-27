@@ -295,6 +295,11 @@ function showRefs(container,latex){
   }
   if(last<latex.length)container.append(document.createTextNode(latex.slice(last)));
 }
+function updateCurrentSelectionButton(){
+  const data=state.currentData;if(!data)return;
+  const key=data.entity?"entity:"+data.entity.id:"module:"+state.currentModule;
+  $("addCurrent").textContent=state.selected.has(key)?"✓ W zestawie":"+ Do zestawu";
+}
 function renderReader(){
   const data=state.currentData;if(!data)return;
   // Rebuilding the source/preview invalidates reference anchors in both panes.
@@ -313,7 +318,7 @@ function renderReader(){
   const lineCount=data.latex.length
     ? data.latex.split("\n").length-(data.latex.endsWith("\n")?1:0) : 0;
   $("rangeEnd").value=firstLine+Math.max(0,lineCount-1);
-  $("addCurrent").textContent=state.selected.has((entity?"entity:":"module:")+(entity?data.entity.id:state.currentModule))?"✓ W zestawie":"+ Do zestawu";
+  updateCurrentSelectionButton();
   showRefs($("latexSource"),data.latex);
   if(state.simplified) renderSimplified(data.latex);
   else $("mathPreviewStatus")?.classList.add("hidden");
@@ -415,7 +420,7 @@ function addCurrent(){
   const key=(isEntity?"entity:":"module:")+id;
   if(state.selected.has(key)){state.selected.delete(key);toast("Usunięto z zestawu.");}
   else{state.selected.set(key,{id,kind:isEntity?"entity":"module",title:isEntity?(d.entity.title||d.entity.kind):d.module.title,module:state.currentModule});toast("Dodano do zestawu.");}
-  renderReader();renderSelection();
+  updateCurrentSelectionButton();renderSelection();
 }
 function addLineRange(startLine,endLine){
   const module=state.currentModule;
@@ -635,7 +640,7 @@ function renderSelection(){
     const down=node("button",{title:"Przesuń niżej","aria-label":"Przesuń niżej"},"↓");
     down.disabled=index===keys.length-1;down.addEventListener("click",()=>moveSelected(key,1));
     const del=node("button",{title:"Usuń z zestawu","aria-label":"Usuń z zestawu"},"×");
-    del.addEventListener("click",()=>{state.selected.delete(key);renderSelection();if(state.currentData)renderReader();});
+    del.addEventListener("click",()=>{state.selected.delete(key);renderSelection();updateCurrentSelectionButton();});
     controls.append(up,down,del);line.append(info,controls);list.append(line);
   }
 }
@@ -1557,7 +1562,7 @@ function listeners(){
   // Some browsers do not dispatch pagehide when a tab is closed; keep an idempotent fallback.
   window.addEventListener("beforeunload",closeUnsavedDraft);
   setInterval(()=>{if(state.draftSession)fetch("/api/drafts/"+encodeURIComponent(state.draftSession)+"/heartbeat",{method:"POST"}).catch(()=>{});},15*60*1000);
-  $("clearSelection").addEventListener("click",()=>{state.selected.clear();renderSelection();if(state.currentData)renderReader();$("planResult").replaceChildren();});
+  $("clearSelection").addEventListener("click",()=>{state.selected.clear();renderSelection();updateCurrentSelectionButton();$("planResult").replaceChildren();});
   $("showExplorer").addEventListener("click",()=>setExplorerVisible(!explorerIsVisible()));
   $("closeExplorer").addEventListener("click",()=>setExplorerVisible(false));
   setupSearch();
