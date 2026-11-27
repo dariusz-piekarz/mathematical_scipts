@@ -25,3 +25,11 @@ Ponowny przegląd pełnego źródła, blob 96f4abb83541005740f3b9d1f2275dbaa238c
 Ponowna kontrola pobranych źródeł: 8 unikalnych etykiet, 9/9 lokalnych i 2/2 zewnętrznych różnych celów odsyłaczy występują dokładnie raz w sprawdzonych rozdziałach, poprawny stos środowisk, po jednym wpisie w książce i katalogu. Rejestracja i definicja Plotly AM2-19 obecne. CI dla 5d0cf5f: trzy przebiegi nadal queued. Nie wykonano kompilacji PDF ani testu przeglądarkowego.
 
 Stabilizacja merytoryczna 2/2. Kolejny etap: audyt kontrolny.
+
+## Audyt kontrolny — 27.11.2026
+
+Ponowny odczyt całego rozdziału (blob 96f4abb83541005740f3b9d1f2275dbaa238c5d5). Kontrola od definicji po ostatni przykład: zupełność produktu i rozkład pochodnej na operatory częściowe, odwracalność operatora blokowego i ograniczoność odwrotności, zgodność odesłania do pełnego dowodu FA-15, jednoznaczność rozwiązania lokalnego, znaki i dziedziny pierwszej i drugiej pochodnej, regularność wyższych rzędów, równanie z prawą stroną, współczynnik mieszany w przypadku skalarnym, płaszczyzna styczna i brak lokalnego wykresu wzdłuż ustalonej projekcji nad równikiem, przykłady zdegenerowane oraz równanie operatorowe i jego szereg Neumanna. Nie stwierdzono nowych usterek wymagających zmian.
+
+Kontrola pobranych źródeł: 8 unikalnych etykiet, 9/9 lokalnych i 2/2 zewnętrznych różnych celów odsyłaczy występują dokładnie raz w sprawdzonych rozdziałach; poprawny stos środowisk; pojedynczy wpis w książce i katalogu; definicja oraz rejestracja Plotly obecne. Dodatkowo porównano trzy niezależne składowe macierzy Hessego dodatniej gałęzi sfery w punkcie (0.21,-0.32) z centralnymi różnicami skończonymi o kroku 10^-4; maksymalna różnica 6.361e-9. Jest to pomocnicza kontrola numeryczna, nie dowód.
+
+Stabilizacja merytoryczna 2/2 + audyt kontrolny zaliczony. Odbiór techniczny pozostaje otwarty: przebiegi AM II 46038430372, terminologia 46038430325 i aplikacja 46038430552 nadal queued; nie potwierdzono aktualnej kompilacji PDF ani renderowania przeglądarkowego. Kolejny etap merytoryczny: AM II 20.
