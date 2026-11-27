@@ -2,6 +2,8 @@
 from pathlib import Path
 from contextlib import closing, redirect_stdout
 import io
+from concurrent.futures import ThreadPoolExecutor
+from threading import Barrier, Event
 import sqlite3
 from unittest.mock import patch
 import sys
@@ -154,7 +156,7 @@ class DatabaseTests(unittest.TestCase):
         self.assertEqual(len(opened), 1)
         with self.assertRaises(sqlite3.ProgrammingError):
             opened[0].execute("SELECT 1")
-        self.assertFalse(self.path.with_suffix(".db.tmp").exists())
+        self.assertEqual(list(self.path.parent.glob(f".{self.path.name}.build-*")), [])
         self.assertEqual(self.path.read_bytes(), before)
         with closing(connect(self.path)) as con:
             self.assertEqual(con.execute("SELECT count(*) FROM documents").fetchone()[0], 2)
@@ -166,7 +168,69 @@ class DatabaseTests(unittest.TestCase):
             with self.assertRaises(PermissionError):
                 build_database(self.folder, self.path)
         self.assertEqual(self.path.read_bytes(), before)
-        self.assertFalse(self.path.with_suffix(".db.tmp").exists())
+        self.assertEqual(list(self.path.parent.glob(f".{self.path.name}.build-*")), [])
+
+    def test_parallel_builds_publish_only_complete_private_databases(self):
+        from backend import latex_parser
+        other = self.root / "other"
+        other.mkdir()
+        (other / "TOP-01--other.tex").write_text(r"\chapter{Other}", encoding="utf-8")
+        populate = latex_parser._populate_database
+        barrier = Barrier(2, timeout=15)
+        staged = []
+
+        def overlap(con, *args):
+            staged.append(Path(con.execute("PRAGMA database_list").fetchone()[2]))
+            barrier.wait()
+            return populate(con, *args)
+
+        with patch.object(latex_parser, "_populate_database", side_effect=overlap):
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                a = pool.submit(build_database, self.folder, self.path)
+                b = pool.submit(build_database, other, self.path)
+                self.assertEqual(a.result(timeout=30)["documents"], 2)
+                self.assertEqual(b.result(timeout=30)["documents"], 1)
+        self.assertEqual(len(set(staged)), 2)
+        self.assertEqual(list(self.path.parent.glob(f".{self.path.name}.build-*")), [])
+        with closing(connect(self.path)) as con:
+            self.assertEqual(con.execute("PRAGMA integrity_check").fetchone()[0], "ok")
+            ids = {row[0] for row in con.execute("SELECT id FROM documents")}
+            self.assertIn(ids, ({"ALG-00", "TOP-00"}, {"TOP-01"}))
+
+    def test_failed_parallel_build_does_not_remove_other_staging(self):
+        from backend import latex_parser
+        build_database(self.folder, self.path)
+        broken = self.root / "broken"
+        broken.mkdir()
+        (broken / "TOP-02--broken.tex").write_bytes(b"\xff")
+        populate = latex_parser._populate_database
+        barrier = Barrier(2, timeout=15)
+        failed = Event()
+
+        def overlap(con, files, source_dir, *args):
+            barrier.wait()
+            if source_dir == self.folder:
+                if not failed.wait(timeout=15):
+                    raise AssertionError("failed build did not finish")
+            return populate(con, files, source_dir, *args)
+
+        def fail_build():
+            try:
+                build_database(broken, self.path)
+            finally:
+                failed.set()
+
+        with patch.object(latex_parser, "_populate_database", side_effect=overlap):
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                bad = pool.submit(fail_build)
+                good = pool.submit(build_database, self.folder, self.path)
+                with self.assertRaises(UnicodeDecodeError):
+                    bad.result(timeout=30)
+                self.assertEqual(good.result(timeout=30)["documents"], 2)
+        self.assertEqual(list(self.path.parent.glob(f".{self.path.name}.build-*")), [])
+        with closing(connect(self.path)) as con:
+            self.assertEqual(con.execute("PRAGMA integrity_check").fetchone()[0], "ok")
+            self.assertEqual(con.execute("SELECT count(*) FROM documents").fetchone()[0], 2)
 
     def test_cli_closes_connection_on_normal_and_early_return(self):
         build_database(self.folder, self.path)

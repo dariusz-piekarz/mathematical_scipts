@@ -22,8 +22,10 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import shutil
 import sqlite3
 import sys
+import tempfile
 from typing import Any
 
 try:
@@ -538,21 +540,20 @@ def build_database(source_dir: Path, db_path: Path, alias_file: Path | None = No
     if not files:
         raise ValueError(f"Brak plików .tex w katalogu {source_dir}")
     db_path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = db_path.with_suffix(db_path.suffix + ".tmp")
-    if tmp.exists(): tmp.unlink()
+    # Give every builder private staging on the target filesystem. SQLite
+    # journals/sidecars remain in that directory, never in another build's.
+    staging = Path(tempfile.mkdtemp(prefix=f".{db_path.name}.build-", dir=db_path.parent))
+    tmp = staging / db_path.name
     try:
         with closing(sqlite3.connect(tmp)) as con:
             report = _populate_database(con, files, source_dir, db_path, alias_file)
-        # Replace only after a successful build and close. Do not delete the
-        # previous index first: a failed replacement must preserve it.
+        # Publish only a complete closed database. Concurrent successful
+        # builds use last-successful-publication semantics, not freshness order.
         tmp.replace(db_path)
-    except BaseException:
-        try:
-            tmp.unlink(missing_ok=True)
-        except OSError:
-            pass  # Preserve the original build/replacement error.
-        raise
-    return report
+        return report
+    finally:
+        # Cleanup must not mask a build or publication error.
+        shutil.rmtree(staging, ignore_errors=True)
 
 
 def _populate_database(con: sqlite3.Connection, files: list[Path], source_dir: Path,
