@@ -40,6 +40,43 @@ class TestMeasureTheoryChapter20(unittest.TestCase):
             # The same E is the inner and outer approximant.
             self.assertEqual(set(E).difference(E), set())
 
+    def test_regular_localization_overlapping_covers(self):
+        # Exhaust all two-set covers of four points, all target sets,
+        # and all choices of local outer approximants.
+        weights = (0, 1, 3, 7)
+        universe = 15
+        mass = lambda mask: sum(w for i, w in enumerate(weights)
+                                if mask & (1 << i))
+        for v1, v2 in itertools.product(range(16), repeat=2):
+            if (v1 | v2) != universe:
+                continue
+            b1, b2 = v1, v2 & ~v1
+            for e in range(16):
+                e1, e2 = e & b1, e & b2
+                for u1, u2 in itertools.product(range(16), repeat=2):
+                    if (e1 & ~u1) or (e2 & ~u2):
+                        continue
+                    u = (u1 & v1) | (u2 & v2)
+                    self.assertEqual(e & ~u, 0)
+                    self.assertLessEqual(mass(u & ~e),
+                                         mass(u1 & v1 & ~e1)
+                                         + mass(u2 & v2 & ~e2))
+
+    def test_dominated_measure_error_transfer(self):
+        # For nested K,E,U, error estimates transfer to any smaller
+        # nonnegative measure, even with zero masses.
+        sigma = (0, 1, 2, 3)
+        mass = lambda weights, mask: sum(w for i, w in enumerate(weights)
+                                         if mask & (1 << i))
+        for tau in itertools.product(*(range(w + 1) for w in sigma)):
+            for states in itertools.product(range(4), repeat=4):
+                k = sum(1 << i for i, s in enumerate(states) if s == 3)
+                e = sum(1 << i for i, s in enumerate(states) if s >= 2)
+                u = sum(1 << i for i, s in enumerate(states) if s >= 1)
+                error = mass(sigma, u & ~k)
+                self.assertLessEqual(mass(tau, e) - mass(tau, k), error)
+                self.assertLessEqual(mass(tau, u) - mass(tau, e), error)
+
     def test_polish_tight_geometric_atomic_distribution(self):
         # A probability supported on a countable dense subset of R is tight:
         # its first n atoms form a compact set with tail mass 2^(-n).
