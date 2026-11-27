@@ -204,3 +204,292 @@ tworzą monoid przemienny. Składanie pionowe i poziome na $S$ są równe. Odwra
 \begin{proof}
 Składanie pionowe ma jednostkę $\id_{1_A}$. Ponieważ $1_A1_A=1_A$, składanie poziome jest również operacją na $S$ i ma tę samą jednostkę przez ścisłe prawa jednostki 2-kategorii. Łączność obu operacji wynika z aksjomatów, a prawo wymiany ze stwierdzenia~\ref{cat:prop:two-interchange}. Twierdzenie~\ref{cat:thm:eckmann-hilton} daje równość i przemienność. Elementy odwracalne monoidu tworzą grupę: odwrotność złożenia jest złożeniem odwrotności w odwrotnej kolejności, a jednostka jest odwracalna. Przemienność całego monoidu przechodzi na tę grupę.
 \end{proof}
+
+
+\subsection{Bikategorie i ich aksjomaty koherencji}
+
+W 2-kategorii ścisłej wymagamy równości $h(gf)=(hg)f$. W wielu konstrukcjach obie strony są jedynie kanonicznie izomorficzne. Zamiast utożsamiać je, zachowujemy izomorfizm jako część struktury.
+
+\begin{definicja}[Bikategoria]\label{cat:def:bicategory}
+Bikategoria $\mathcal K$ ma obiekty, lokalnie małe kategorie morfizmów $\mathcal K(A,B)$, funktory składania $M_{A,B,C}$ i 1-morfizmy jednostkowe $1_A$ jak w definicji~\ref{cat:def:strict-two-category}. Zamiast ścisłej łączności i jednostkowości wybieramy odwracalne 2-morfizmy
+\[
+ a_{h,g,f}:(hg)f\Rightarrow h(gf),\quad
+ \ell_f:1_Bf\Rightarrow f,\quad r_f:f1_A\Rightarrow f.
+\]
+Mają one być naturalne względem wszystkich argumentów będących 1-morfizmami. Na przykład dla $\alpha:f\Rightarrow f'$, $\beta:g\Rightarrow g'$, $\gamma:h\Rightarrow h'$ naturalność łączności oznacza
+\[
+ a_{h',g',f'}\circ((\gamma\ast\beta)\ast\alpha)
+ =(\gamma\ast(\beta\ast\alpha))\circ a_{h,g,f}.
+\]
+Naturalność jednostek oznacza
+\[
+ \ell_{f'}\circ(\id_{1_B}\ast\alpha)=\alpha\circ\ell_f,\quad
+ r_{f'}\circ(\alpha\ast\id_{1_A})=\alpha\circ r_f.
+\]
+
+Wymagamy aksjomatu pięciokąta dla każdej czwórki składanych 1-morfizmów $f,g,h,k$:
+\begin{equation}\label{cat:eq:bicat-pentagon}
+\begin{aligned}
+ a_{k,h,gf}\circ a_{kh,g,f}
+ &=(\id_k\ast a_{h,g,f})\circ a_{k,hg,f}\\
+ &\qquad\circ(a_{k,h,g}\ast\id_f).
+\end{aligned}
+\end{equation}
+Obie strony prowadzą od $((kh)g)f$ do $k(h(gf))$.
+Dla $f:A\to B$ i $g:B\to C$ wymagamy aksjomatu trójkąta:
+\begin{equation}\label{cat:eq:bicat-triangle}
+ (\id_g\ast\ell_f)\circ a_{g,1_B,f}=r_g\ast\id_f.
+\end{equation}
+Obie strony są 2-morfizmami $(g1_B)f\Rightarrow gf$.
+\end{definicja}
+
+Prawo wymiany ze stwierdzenia~\ref{cat:prop:two-interchange} nadal zachodzi, gdyż składanie poziome pozostaje funktorem. Analogicznie zachowujemy wzory na składanie z 1-morfizmami i oba rozkłady składania poziomego ze stwierdzenia~\ref{cat:prop:two-whiskering}; ich dowody nie wymagały ścisłej łączności ani ścisłych praw jednostki.
+
+Pięciokąt i trójkąt są diagramami w odpowiednich kategoriach morfizmów:
+\begin{center}
+\begin{tikzpicture}[>=stealth,every node/.style={font=\small}]
+ \node (s) at (0,4) {$((kh)g)f$};
+ \node (l) at (-3,2.4) {$(k(hg))f$};
+ \node (r) at (3,2.4) {$(kh)(gf)$};
+ \node (m) at (-2.5,0) {$k((hg)f)$};
+ \node (e) at (2.5,0) {$k(h(gf))$};
+ \draw[->] (s)--node[above left] {$a_{k,h,g}\ast\id_f$}(l);
+ \draw[->] (s)--node[above right] {$a_{kh,g,f}$}(r);
+ \draw[->] (l)--node[left] {$a_{k,hg,f}$}(m);
+ \draw[->] (m)--node[below] {$\id_k\ast a_{h,g,f}$}(e);
+ \draw[->] (r)--node[right] {$a_{k,h,gf}$}(e);
+\end{tikzpicture}
+
+\begin{tikzpicture}[>=stealth,every node/.style={font=\small}]
+ \node (a) at (0,2.4) {$(g1_B)f$};
+ \node (b) at (6,2.4) {$g(1_Bf)$};
+ \node (c) at (3,0) {$gf$};
+ \draw[->] (a)--node[above] {$a_{g,1_B,f}$}(b);
+ \draw[->] (a)--node[below left] {$r_g\ast\id_f$}(c);
+ \draw[->] (b)--node[below right] {$\id_g\ast\ell_f$}(c);
+\end{tikzpicture}
+\end{center}
+
+\begin{przyklad}[Jednoobiektowa bikategoria]\label{cat:ex:one-object-bicategory}
+Każda kategoria monoidalna $(\mathcal M,\otimes,I,\alpha,\lambda,\rho)$ wyznacza bikategorię o jednym obiekcie, z kategorią morfizmów $\mathcal M$, składaniem $\otimes$, jednostką $I$ oraz izomorfizmami $a=\alpha$, $\ell=\lambda$, $r=\rho$. Przy zapisie $gf=g\otimes f$ aksjomaty naturalności, pięciokąta i trójkąta są dokładnie aksjomatami kategorii monoidalnej z definicji~\ref{cat:def:monoidal}. Odwrotnie, z bikategorii o jednym obiekcie odzyskujemy kategorię monoidalną, przyjmując powyższe dane w odwrotnej kolejności. Ścisłe kategorie monoidalne odpowiadają ścisłym 2-kategoriom jednoobiektowym, jak w przykładzie~\ref{cat:ex:two-one-object}.
+\end{przyklad}
+
+\begin{uwaga}
+Ścisła 2-kategoria jest bikategorią, w której $a,\ell,r$ są identycznościami. Odwrotnie, jeśli wszystkie te izomorfizmy są identycznościami, to ich dziedziny i przeciwdziedziny są równe, więc składanie 1-morfizmów jest ścisłe. Naturalność tych identyczności daje ścisłe prawa łączności i jednostki również na 2-morfizmach. Nie można natomiast w ogólnej bikategorii usuwać nawiasów bez określenia izomorfizmów koherencji.
+\end{uwaga}
+
+\subsection{Pseudofunktory}
+
+\begin{definicja}[Pseudofunktor]\label{cat:def:pseudofunctor}
+Pseudofunktor $F:\mathcal K\to\mathcal L$ pomiędzy bikategoriami przypisuje obiektom obiekty, a każdej parze obiektów funktor
+\[
+ F_{A,B}:\mathcal K(A,B)\to\mathcal L(FA,FB).
+\]
+Ponadto ma odwracalne 2-morfizmy strukturalne
+\[
+ \phi^F_{g,f}:F(g)F(f)\Rightarrow F(gf),\qquad
+ \phi^F_A:1_{FA}\Rightarrow F(1_A).
+\]
+Izomorfizm $\phi^F_{g,f}$ jest naturalny w $g,f$, czyli dla $\alpha:f\Rightarrow f'$, $\beta:g\Rightarrow g'$:
+\begin{equation}\label{cat:eq:pseudofunctor-natural}
+ F(\beta\ast\alpha)\circ\phi^F_{g,f}
+ =\phi^F_{g',f'}\circ(F\beta\ast F\alpha).
+\end{equation}
+Wymagamy ponadto trzech równości:
+\begin{equation}\label{cat:eq:pseudofunctor-assoc}
+\begin{aligned}
+ F(a_{h,g,f})\circ\phi^F_{hg,f}\circ
+       (\phi^F_{h,g}\ast\id_{Ff})
+ &=\phi^F_{h,gf}\circ(\id_{Fh}\ast\phi^F_{g,f})\\
+ &\qquad\circ a_{Fh,Fg,Ff},
+\end{aligned}
+\end{equation}
+\begin{equation}\label{cat:eq:pseudofunctor-unit}
+\begin{aligned}
+ F(\ell_f)\circ\phi^F_{1_B,f}
+       \circ(\phi^F_B\ast\id_{Ff})&=\ell_{Ff},\\
+ F(r_f)\circ\phi^F_{f,1_A}
+       \circ(\id_{Ff}\ast\phi^F_A)&=r_{Ff}.
+\end{aligned}
+\end{equation}
+W pierwszym równaniu dziedziną jest $(Fh\,Fg)Ff$, a przeciwdziedziną $F(h(gf))$. W dwóch ostatnich dziedzinami są odpowiednio $1_{FB}Ff$ i $Ff1_{FA}$, a przeciwdziedziną $Ff$. Izomorfizmy bez zastosowania $F$ po prawej stronie równań należą do $\mathcal L$.
+\end{definicja}
+
+Jeżeli nie wymagamy odwracalności morfizmów strukturalnych, przy zachowaniu tych samych równań otrzymujemy funktor luźny (ang.\ \emph{lax functor}). Przy odwróceniu kierunków morfizmów strukturalnych i odpowiednich diagramów otrzymuje się funktor typu \emph{oplax}. W przypadku jednoobiektowych bikategorii definicja pseudofunktora jest dokładnie definicją silnego funktora monoidalnego z odsyłacza~\ref{cat:def:lax-monoidal}: funktor na jedynej kategorii morfizmów ma odwracalne porównania iloczynu i jednostki, a równania są jego aksjomatami koherencji.
+
+\begin{stwierdzenie}[Złożenie pseudofunktorów]\label{cat:prop:pseudofunctor-composition}
+Pseudofunktory $F:\mathcal K\to\mathcal L$, $G:\mathcal L\to\mathcal M$ można złożyć do pseudofunktora $GF$, którego funktory na kategoriach morfizmów są złożeniami funktorów. Porównania strukturalne mają postać
+\[
+ \phi^{GF}_{g,f}=G(\phi^F_{g,f})\circ\phi^G_{Fg,Ff},
+ \qquad
+ \phi^{GF}_A=G(\phi^F_A)\circ\phi^G_{FA}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Porównania są dobrze określone, ponieważ
+$\phi^G_{Fg,Ff}:GFg\,GFf\Rightarrow G(Fg\,Ff)$ i
+$G(\phi^F_{g,f}):G(Fg\,Ff)\Rightarrow GF(gf)$; dla jednostki typy są analogiczne. Są odwracalne, gdyż funktory zachowują izomorfizmy.
+
+Naturalność dla $\alpha:f\Rightarrow f'$ i $\beta:g\Rightarrow g'$ wynika z rachunku
+\[
+\begin{aligned}
+ GF(\beta\ast\alpha)\circ\phi^{GF}_{g,f}
+ &=G(F(\beta\ast\alpha)\circ\phi^F_{g,f})\circ\phi^G_{Fg,Ff}\\
+ &=G(\phi^F_{g',f'})\circ G(F\beta\ast F\alpha)
+       \circ\phi^G_{Fg,Ff}\\
+ &=\phi^{GF}_{g',f'}\circ(GF\beta\ast GF\alpha).
+\end{aligned}
+\]
+Korzystamy kolejno z funktorialności $G$ oraz naturalności porównań $F$ i $G$.
+
+Dla łączności oznaczmy $u=Fh$, $v=Fg$, $w=Ff$. Rozwijamy lewą stronę~\eqref{cat:eq:pseudofunctor-assoc} dla $GF$. Z prawa wymiany oraz naturalności $\phi^G$ dla pary $(\phi^F_{h,g},\id_{Ff})$ jest ona równa
+\[
+\begin{aligned}
+ &G\bigl(F(a_{h,g,f})\circ\phi^F_{hg,f}
+      \circ(\phi^F_{h,g}\ast\id_w)\bigr)\\
+ &\quad\circ\phi^G_{uv,w}\circ(\phi^G_{u,v}\ast\id_{Gw}).
+\end{aligned}
+\]
+Aksjomat łączności $F$ zastępuje wnętrze nawiasu przez
+$\phi^F_{h,gf}\circ(\id_u\ast\phi^F_{g,f})\circ a_{u,v,w}$.
+Aksjomat łączności $G$ dla $u,v,w$ pozwala zastąpić fragment
+\[
+ G(a_{u,v,w})\circ\phi^G_{uv,w}
+       \circ(\phi^G_{u,v}\ast\id_{Gw})
+\]
+przez
+$\phi^G_{u,vw}\circ(\id_{Gu}\ast\phi^G_{v,w})\circ a_{Gu,Gv,Gw}$.
+Następnie naturalność $\phi^G$ dla $(\id_u,\phi^F_{g,f})$ przenosi $G(\id_u\ast\phi^F_{g,f})$ za porównanie. Prawo wymiany i definicja $\phi^{GF}$ dają
+\[
+ \phi^{GF}_{h,gf}\circ(\id_{GFh}\ast\phi^{GF}_{g,f})
+ \circ a_{GFh,GFg,GFf}.
+\]
+Jest to prawa strona aksjomatu łączności.
+
+Dla lewej jednostki, rozwijając porównania i stosując naturalność $\phi^G$ dla $(\phi^F_B,\id_{Ff})$, otrzymujemy
+\[
+\begin{aligned}
+ &GF(\ell_f)\circ\phi^{GF}_{1_B,f}
+       \circ(\phi^{GF}_B\ast\id_{GFf})\\
+ &=G\bigl(F(\ell_f)\circ\phi^F_{1_B,f}
+       \circ(\phi^F_B\ast\id_{Ff})\bigr)\\
+ &\quad\circ\phi^G_{1_{FB},Ff}\circ(\phi^G_{FB}\ast\id_{GFf})\\
+ &=G(\ell_{Ff})\circ\phi^G_{1_{FB},Ff}
+       \circ(\phi^G_{FB}\ast\id_{GFf})
+ =\ell_{GFf}.
+\end{aligned}
+\]
+Dla prawej jednostki naturalność dla $(\id_{Ff},\phi^F_A)$ daje
+\[
+\begin{aligned}
+ &GF(r_f)\circ\phi^{GF}_{f,1_A}
+       \circ(\id_{GFf}\ast\phi^{GF}_A)\\
+ &=G\bigl(F(r_f)\circ\phi^F_{f,1_A}
+       \circ(\id_{Ff}\ast\phi^F_A)\bigr)\\
+ &\quad\circ\phi^G_{Ff,1_{FA}}\circ(\id_{GFf}\ast\phi^G_{FA})\\
+ &=G(r_{Ff})\circ\phi^G_{Ff,1_{FA}}
+       \circ(\id_{GFf}\ast\phi^G_{FA})
+ =r_{GFf}.
+\end{aligned}
+\]
+W obu rachunkach dwie ostatnie równości są aksjomatami jednostki $F$ i $G$.
+\end{proof}
+
+\subsection{Transformacje pseudonaturalne i modyfikacje}
+
+\begin{definicja}[Transformacja pseudonaturalna]\label{cat:def:pseudonatural}
+Niech $F,G:\mathcal K\to\mathcal L$ będą pseudofunktorami. Transformacja pseudonaturalna $\eta:F\Rightarrow G$ ma składowe będące 1-morfizmami $\eta_A:FA\to GA$ oraz odwracalne 2-morfizmy
+\[
+ \eta_f:Gf\,\eta_A\Rightarrow\eta_B Ff
+ \qquad(f:A\to B).
+\]
+Dla $\alpha:f\Rightarrow f'$ wymagamy naturalności
+\begin{equation}\label{cat:eq:pseudonatural-two-cell}
+ (\id_{\eta_B}\ast F\alpha)\circ\eta_f
+ =\eta_{f'}\circ(G\alpha\ast\id_{\eta_A}).
+\end{equation}
+Dla pary $f:A\to B$, $g:B\to C$ wymagamy równości dwóch dróg od $(Gg\,Gf)\eta_A$ do $\eta_C F(gf)$:
+\begin{equation}\label{cat:eq:pseudonatural-composition}
+\begin{aligned}
+ \eta_{gf}\circ(\phi^G_{g,f}\ast\id_{\eta_A})
+ &= (\id_{\eta_C}\ast\phi^F_{g,f})
+    \circ a_{\eta_C,Fg,Ff}\\
+ &\quad\circ(\eta_g\ast\id_{Ff})
+    \circ a_{Gg,\eta_B,Ff}^{-1}\\
+ &\quad\circ(\id_{Gg}\ast\eta_f)
+    \circ a_{Gg,Gf,\eta_A}.
+\end{aligned}
+\end{equation}
+Aksjomat jednostki jest równością 2-morfizmów
+$1_{GA}\eta_A\Rightarrow\eta_A F(1_A)$:
+\begin{equation}\label{cat:eq:pseudonatural-unit}
+ \eta_{1_A}\circ(\phi^G_A\ast\id_{\eta_A})
+ =(\id_{\eta_A}\ast\phi^F_A)\circ r_{\eta_A}^{-1}
+       \circ\ell_{\eta_A}.
+\end{equation}
+\end{definicja}
+
+Równanie~\eqref{cat:eq:pseudonatural-composition} można odczytać z następujących dwóch dróg:
+\[
+\begin{aligned}
+ (Gg\,Gf)\eta_A
+ &\xRightarrow{\phi^G_{g,f}\ast\id}G(gf)\eta_A
+ \xRightarrow{\eta_{gf}}\eta_C F(gf),
+\end{aligned}
+\]
+oraz
+\[
+\begin{aligned}
+ (Gg\,Gf)\eta_A
+ &\xRightarrow{a}Gg(Gf\,\eta_A)
+ \xRightarrow{\id\ast\eta_f}Gg(\eta_B Ff)\\
+ &\xRightarrow{a^{-1}}(Gg\,\eta_B)Ff
+ \xRightarrow{\eta_g\ast\id}(\eta_C Fg)Ff\\
+ &\xRightarrow{a}\eta_C(Fg\,Ff)
+ \xRightarrow{\id\ast\phi^F_{g,f}}\eta_C F(gf).
+\end{aligned}
+\]
+W szczególności nie wystarcza odwracalność pojedynczych kwadratów naturalności: trzeba sprawdzić ich zgodność ze składaniem i jednostkami.
+
+\begin{definicja}[Modyfikacja]\label{cat:def:modification}
+Dla transformacji pseudonaturalnych $\eta,\theta:F\Rightarrow G$ modyfikacja $m:\eta\Rightarrow\theta$ jest rodziną 2-morfizmów $m_A:\eta_A\Rightarrow\theta_A$ spełniających dla $f:A\to B$
+\begin{equation}\label{cat:eq:modification}
+ (m_B\ast\id_{Ff})\circ\eta_f
+ =\theta_f\circ(\id_{Gf}\ast m_A).
+\end{equation}
+Obie strony są 2-morfizmami $Gf\,\eta_A\Rightarrow\theta_B Ff$.
+\end{definicja}
+\begin{center}
+\begin{tikzpicture}[>=stealth,every node/.style={font=\small}]
+ \node (a) at (0,2.8) {$Gf\,\eta_A$};
+ \node (b) at (6,2.8) {$\eta_B Ff$};
+ \node (c) at (0,0) {$Gf\,\theta_A$};
+ \node (d) at (6,0) {$\theta_B Ff$};
+ \draw[->] (a)--node[above] {$\eta_f$}(b);
+ \draw[->] (a)--node[left] {$\id_{Gf}\ast m_A$}(c);
+ \draw[->] (b)--node[right] {$m_B\ast\id_{Ff}$}(d);
+ \draw[->] (c)--node[below] {$\theta_f$}(d);
+\end{tikzpicture}
+\end{center}
+
+\begin{stwierdzenie}\label{cat:prop:modification-category}
+Dla ustalonych pseudofunktorów $F,G$ transformacje pseudonaturalne $F\Rightarrow G$ oraz modyfikacje tworzą kategorię. Składanie modyfikacji i identyczności są składowe. Jeżeli klasa obiektów $\mathcal K$ jest zbiorem, kategoria ta jest lokalnie mała.
+\end{stwierdzenie}
+\begin{proof}
+Dla modyfikacji $m:\eta\Rightarrow\theta$, $n:\theta\Rightarrow\xi$ definiujemy $(n\circ m)_A=n_A\circ m_A$. Dzięki funktorialności składania poziomego mamy
+\[
+\begin{aligned}
+ ((n_B\circ m_B)\ast\id_{Ff})\circ\eta_f
+ &=(n_B\ast\id_{Ff})\circ(m_B\ast\id_{Ff})\circ\eta_f\\
+ &=(n_B\ast\id_{Ff})\circ\theta_f
+      \circ(\id_{Gf}\ast m_A)\\
+ &=\xi_f\circ(\id_{Gf}\ast n_A)\circ(\id_{Gf}\ast m_A)\\
+ &=\xi_f\circ(\id_{Gf}\ast(n_A\circ m_A)).
+\end{aligned}
+\]
+Druga i trzecia równość wykorzystują kolejno warunki modyfikacji $m,n$. Otrzymaliśmy warunek dla ich złożenia. Rodzina $(\id_{\eta_A})_A$ spełnia warunek modyfikacji, ponieważ obie strony redukują się do $\eta_f$. Łączność i prawa jednostki zachodzą składowo w kategoriach morfizmów $\mathcal L(FA,GA)$. Przy zbiorze obiektów $\mathcal K$ zbiór modyfikacji jest podzbiorem iloczynu zbiorów $\Hom_{\mathcal L(FA,GA)}(\eta_A,\theta_A)$, a więc jest zbiorem.
+\end{proof}
+
+\begin{przyklad}[Redukcja do kategorii zwykłych]\label{cat:ex:pseudonatural-discrete}
+Traktujmy zwykłe lokalnie małe kategorie jako lokalnie dyskretne 2-kategorie z przykładu~\ref{cat:ex:two-locally-discrete}. Pseudofunktor pomiędzy nimi jest zwykłym funktorem: istnienie porównań $\phi$ wymusza równości odpowiednich 1-morfizmów, a porównania są wówczas jedynymi identycznościami. Transformacja pseudonaturalna redukuje się do rodziny $\eta_A$ spełniającej $Gf\,\eta_A=\eta_B Ff$, gdyż tylko wtedy istnieje $\eta_f$. Jest więc zwykłą transformacją naturalną. Wszystkie pozostałe aksjomaty 2-morfizmów zachodzą z jednoznaczności. Modyfikacja między dwiema takimi transformacjami istnieje tylko wtedy, gdy wszystkie ich składowe są równe, i jest wówczas identycznością.
+\end{przyklad}
