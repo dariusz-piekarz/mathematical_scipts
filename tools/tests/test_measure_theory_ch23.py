@@ -91,6 +91,23 @@ class TestHaarChapter23(unittest.TestCase):
                 # Inversion (b,a) -> (-b/a,1/a) has abs Jacobian a^(-3).
                 self.assertEqual(1/a**3 / (1/a)**2, 1/a)
 
+    def test_affine_inner_automorphism_module_and_inversion(self):
+        for a in map(Fraction, (1, 2, 3, 5)):
+            for b in map(Fraction, (-2, 0, 3)):
+                for t in (Fraction(1, 3), Fraction(1), Fraction(2), Fraction(5)):
+                    for c in map(Fraction, (-3, 0, 2)):
+                        # (c,t)(b,a)(c,t)^(-1) = (tb+c(1-a), a).
+                        bp, ap = c + t*b - a*c, a
+                        self.assertEqual((bp-c*(1-ap))/t, b)
+                        self.assertEqual(t/ap**2, t/a**2)
+                        self.assertEqual(t, 1/(1/t))
+                        # Inversion takes the left density to the right one.
+                        bi, ai = -b/a, 1/a
+                        self.assertEqual((-bi/ai, 1/ai), (b, a))
+                        self.assertEqual((1/a**3)/ai**2, 1/a)
+                        # Modularity is unchanged by conjugation.
+                        self.assertEqual(1/ap, 1/a)
+
     def test_disjoint_translates_and_torus_invariance(self):
         # Z is noncompact; translates of a finite interval can be disjoint.
         K = set(range(-3, 4))
@@ -141,6 +158,7 @@ class TestHaarChapter23(unittest.TestCase):
         self.assertIn(r"\bigcup_{j=1}^n g_jKK^{-1}", s)
         self.assertIn(r"\mu(G)\ge\sum_{n\ge1}\mu(g_nK)=+\infty", s)
         self.assertIn(r"m^*(\varnothing)=t(\varnothing)=0", s)
+        self.assertNotRegex(s, r"\\R(?![A-Za-z])", "Use the supported mathbb R notation")
         stack = []
         for m in re.finditer(r"\\(begin|end)\{([^}]+)\}", s):
             if m[1] == "begin":
