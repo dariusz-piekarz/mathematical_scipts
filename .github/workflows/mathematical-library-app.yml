@@ -58,8 +58,10 @@ jobs:
           python -m pip install -r requirements.txt playwright
           python -m playwright install --with-deps chromium
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends texlive-latex-extra texlive-fonts-recommended texlive-lang-polish lmodern poppler-utils
-          test -n "$(kpsewhich lmodern.sty)"
+          sudo apt-get install -y --no-install-recommends texlive-latex-extra texlive-fonts-recommended texlive-lang-polish texlive-science lmodern poppler-utils
+          for package in lmodern.sty mathrsfs.sty stmaryrd.sty; do
+            test -n "$(kpsewhich "$package")" || { echo "Missing TeX package: $package"; exit 1; }
+          done
           python scripts/install_math_renderer.py
       - name: Index canonical chapters for real reader tests
         shell: bash
