@@ -233,6 +233,64 @@ with sync_playwright() as pw:
         return count;
     }""")
     assert description_cases == 9
+    # Viewport-aware geometry must use the measured overlay size, and
+    # scrolling the reader must invalidate even an outstanding lookup.
+    position_cases = page.evaluate("""() => {
+        let count=0;
+        for(const [w,h] of [[320,240],[390,844],[768,500],[1360,900]]){
+            const width=Math.min(430,w*.92),height=Math.min(300,h-24);
+            for(const anchor of [{left:0,top:0,bottom:15},
+                  {left:w-20,top:h-30,bottom:h-10},
+                  {left:w/2,top:h/2,bottom:h/2+20}]){
+                const p=referenceTipPosition(anchor,width,height,w,h);
+                if(p.left<8||p.top<8||p.left+width>w-8+.01||p.top+height>h-8+.01)
+                    throw Error('reference overlay outside viewport');
+                count++;
+            }
+        }
+        if(referenceTipPosition({left:20,top:500,bottom:520},250,200,600,600).top!==292)
+            throw Error('overlay did not prefer space above anchor');
+        if(referenceTipPosition({left:20,top:30,bottom:50},250,200,600,600).top!==58)
+            throw Error('overlay did not prefer space below anchor');
+        if(referenceTipPosition({left:280,top:30,bottom:50},150,100,390,844).left!==232)
+            throw Error('overlay did not use measured width');
+        return count+3;
+    }""")
+    assert position_cases == 15
+    for width,height in [(320,240),(390,844),(1360,900)]:
+        page.set_viewport_size({'width':width,'height':height})
+        page.evaluate("""async () => {
+            const reader=document.getElementById('view-reader');
+            reader.scrollTop=0;
+            await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+            await previewLabel('ch:ga5-rozdmuchania',
+                               document.getElementById('togglePreview'),'ALG-08');
+        }""")
+        bounds=page.locator('#referenceTip').bounding_box()
+        assert bounds is not None
+        assert bounds['x']>=7 and bounds['y']>=7,bounds
+        assert bounds['x']+bounds['width']<=width-7,bounds
+        assert bounds['y']+bounds['height']<=height-7,bounds
+        page.evaluate("""() => {
+            const tip=document.getElementById('referenceTip');
+            tip.dispatchEvent(new Event('scroll'));
+        }""")
+        assert page.locator('#referenceTip').is_visible()
+        page.evaluate("() => document.getElementById('view-reader').dispatchEvent(new Event('scroll'))")
+        assert page.locator('#referenceTip').is_hidden()
+    page.evaluate("""async () => {
+        const originalApi=api;
+        let resolve;
+        try{
+            api=()=>new Promise(r=>{resolve=r;});
+            const pending=previewLabel('atlas-scroll-test',document.getElementById('togglePreview'));
+            document.getElementById('view-reader').dispatchEvent(new Event('scroll'));
+            resolve({title:'obsolete',document_id:'ALG-08',latex:''});
+            await pending;
+            if(state.tooltipData||!document.getElementById('referenceTip').classList.contains('hidden'))
+                throw Error('late response reopened scrolled tooltip');
+        }finally{api=originalApi;closeTip();}
+    }""")
     assert not errors,errors
     browser.close()
     print('Reference titles, hover, exact navigation, multiple targets, conflicts, missing labels and source preservation: OK')
