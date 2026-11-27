@@ -120,21 +120,25 @@ class CategoryTheoryCh39(unittest.TestCase):
             self.assertEqual({coset(next(iter(c)), img) for c in ch}, cg)
 
     def test_CAT_39_003_suspension_cone_sign(self):
-        # Cone(f)^q = Y^q + X^{q+1}; d(y,x)=(dy+fx,-dx).
-        # Test d^2=0 and the negative sign with nonzero differentials.
+        # X,Y are two-term complexes in degrees 0,1.
+        # Cone(f) in degrees -1,0,1 has actual consecutive
+        # differentials x -> (f0 x,-dX x), (y,x) -> dY y+f1 x.
         p = 3
-        ds = ((1, 0), (0, 0))
-        f = ((1, 0), (0, 1))
-        for y, x in itertools.product(itertools.product(range(p), repeat=2), repeat=2):
-            dy, fx, dx = mv(ds, y, p), mv(f, x, p), mv(ds, x, p)
-            # d_X and d_Y are ds in degree 0, zero in other degrees.
-            first = tuple((u+v) % p for u, v in zip(dy, fx))
-            second = tuple(-u % p for u in dx)
-            d2first = tuple((u+v) % p for u, v in zip(mv(ds, first, p), mv(f, second, p)))
-            # Remove d_Y^2 y, which is zero in the graded complex.
-            d2first = tuple((u-v) % p for u, v in zip(d2first, mv(ds, dy, p)))
-            self.assertEqual(d2first, (0, 0))
-            self.assertEqual(tuple((-u+u) % p for u in dx), (0, 0))
+        dx = ((1, 0), (0, 0))
+        dy = ((0, 1), (0, 0))
+        bad_sign_detected = False
+        for f0, f1 in itertools.product(matrices(p, 2), repeat=2):
+            if multiply(dy, f0, p) != multiply(f1, dx, p):
+                continue
+            for x in itertools.product(range(p), repeat=2):
+                y = mv(f0, x, p)
+                z = mv(dx, x, p)
+                lhs = mv(dy, y, p)
+                rhs = mv(f1, z, p)
+                self.assertEqual(tuple((u-v) % p for u, v in zip(lhs, rhs)), (0, 0))
+                if any((u+v) % p for u, v in zip(lhs, rhs)):
+                    bad_sign_detected = True
+        self.assertTrue(bad_sign_detected)
 
     def test_CAT_39_004_structure(self):
         s = CHAPTER.read_text(encoding="utf-8")
