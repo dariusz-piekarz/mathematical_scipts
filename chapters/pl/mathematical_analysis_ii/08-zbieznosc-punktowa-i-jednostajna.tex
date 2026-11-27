@@ -136,6 +136,30 @@ Uwzględniamy punkt $x=1/n$ w siatce, aby nie zgubić maksimum.
 Oś indeksu jest dyskretna; nie interpolujemy pomiędzy indeksami.
 Poniższy kod wymaga bibliotek NumPy i Plotly. Zapisuje samodzielny
 plik HTML, w którym można obracać i powiększać wykres.
+Na rysunku \ref{ma2:fig:wandering-peaks} pokazujemy wybrane
+indeksy, z zachowaniem ich rzeczywistych położeń na osi $n$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(8cm,0cm)},y={(.22cm,.14cm)},z={(0cm,3.2cm)},>=Stealth,font=\small]
+\draw[->] (0,0,0)--(1.09,0,0) node[right] {$x$};
+\draw[->] (0,0,0)--(0,22,0) node[above right] {$n$};
+\draw[->] (0,0,0)--(0,0,1.14) node[above] {$g_n(x)$};
+\foreach \n in {20,13,8,5,3,2,1}{
+  \draw[gray!25] (0,\n,0)--(1,\n,0);
+  \pgfmathsetmacro{\peak}{1/\n}
+  \pgfmathsetmacro{\rightend}{min(1,2/\n)}
+  \draw[blue!70!black,thick] (0,\n,0)--(\peak,\n,1)--(\rightend,\n,{max(1-\n*abs(\rightend-\peak),0)})--(1,\n,{max(1-\n*abs(1-\peak),0)});
+  \fill[orange!90!black] (\peak,\n,1) circle[radius=1.1pt];
+}
+\foreach \n in {1,5,10,15,20}{\node[left,font=\scriptsize] at (0,\n,0) {$\n$};}
+\foreach \a in {0,.5,1}{\node[below] at (\a,0,0) {$\a$};}
+\node[left] at (0,0,1) {$1$};
+\end{tikzpicture}
+\caption{Wędrujące maksima dla $n=1,2,3,5,8,13,20$. Każdy pomarańczowy punkt odpowiada wartości $g_n(1/n)=1$. Krzywych nie łączymy w powierzchnię.}
+\label{ma2:fig:wandering-peaks}
+\end{figure}
+
 \begin{lstlisting}[language=Python]
 import numpy as np
 import plotly.graph_objects as go
