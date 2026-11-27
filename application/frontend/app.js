@@ -144,7 +144,7 @@ function createReferenceLink(label,sourceDocument,{caption=null,command='ref',so
       button.textContent=result.missing?'Brak celu odsyłacza':result.ambiguous?'Wybierz cel odsyłacza':title?'„'+title+'”'+(result.document_id!==sourceDocument?' ('+result.document_id+')':''):(command==='eqref'?'równanie':kinds[result.kind]||'fragment')+' ('+location+')';
     }
     button.title=(result.missing?'Brak etykiety w indeksie':result.ambiguous?'Etykieta występuje w kilku rozdziałach':(result.entity_title||result.title||'Fragment')+' · '+location)+'\nEtykieta: '+label;
-    if(typeof window.renderMathInElement==='function')window.renderMathInElement(button,{delimiters:[{left:'$',right:'$',display:false},{left:'\\(',right:'\\)',display:false}],macros:previewMacros(result.document_id),trust:false,throwOnError:true,errorCallback:()=>{}});
+    if(typeof window.renderMathInElement==='function')window.renderMathInElement(button,{delimiters:[{left:'$',right:'$',display:false},{left:'\\(',right:'\\)',display:false}],macros:previewMacros(caption?sourceDocument:result.document_id),trust:false,throwOnError:true,errorCallback:()=>{}});
   });
   return button;
 }

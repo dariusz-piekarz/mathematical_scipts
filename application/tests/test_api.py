@@ -1,5 +1,9 @@
 """End-to-end HTTP tests against the bundled library snapshot, no network required."""
 import unittest
+import hashlib
+from pathlib import Path
+import tempfile
+from unittest.mock import patch
 from fastapi.testclient import TestClient
 from backend.api import app, db_connection
 from backend.graph_coverage import graph_coverage
@@ -24,6 +28,31 @@ class APITests(unittest.TestCase):
             self.assertRegex(r.text, r'/assets/' + name.replace('.', r'\.') + r'\?v=[0-9a-f]{16}')
         for name in ("app.js","styles.css"):
             self.assertEqual(self.client.get("/assets/"+name).status_code,200)
+
+    def test_macro_profile_cache_revision(self):
+        from backend import api
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "index.html").write_text(
+                '<script src="/assets/vendor/math-macro-profiles.js"></script>',
+                encoding="utf-8")
+            for name in ("app.js", "styles.css", "preview.js", "session.js"):
+                (root / name).write_bytes(b"fixture")
+            with patch.object(api, "FRONTEND", root):
+                missing = api.index()
+                self.assertIn(b'/assets/vendor/math-macro-profiles.js"', missing.body)
+                self.assertEqual(missing.headers["cache-control"], "no-cache")
+                profile = root / "vendor/math-macro-profiles.js"
+                profile.parent.mkdir()
+                versions = []
+                for content in (b"first profile", b"second profile"):
+                    profile.write_bytes(content)
+                    version = hashlib.sha256(content).hexdigest()[:16]
+                    versions.append(version)
+                    self.assertIn(
+                        ('/assets/vendor/math-macro-profiles.js?v=' + version).encode(),
+                        api.index().body)
+                self.assertNotEqual(*versions)
 
     def test_health(self):
         self.assertTrue(self.client.get("/api/health").json()["readonly"])

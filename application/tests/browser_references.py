@@ -28,6 +28,43 @@ with sync_playwright() as pw:
     page.screenshot(path=str(Path(os.environ['TEMP'])/'atlas-reference-preview.png'))
     page.locator('#tipOpen').click()
     page.wait_for_function("state.currentModule==='ALG-05' && !!state.currentEntity")
+    # Explicit captions use the source's macros, while tooltip content uses
+    # the destination chapter's macros, even when detached from its header.
+    page.evaluate(r"""() => {
+        const box=document.getElementById('simplified');
+        box.replaceChildren(createReferenceLink('ch:ga5-rozdmuchania','AM1-36',
+            {caption:'$\\HK
+    page.evaluate(r"() => renderSimplified('Zobacz \\cref{ch:ga5-rozdmuchania,ch:ga6-powierzchnie}.', 'ALG-08')")
+    assert page.locator('#simplified .ref-link').count()==2
+    page.locator('#simplified .ref-link').first.filter(has_text='Rozdmuchania').wait_for()
+    # Original source text, spaces and starred commands must stay byte-for-byte intact.
+    sample=r'Tekst \cref* { ch:ga5-rozdmuchania, ch:ga6-powierzchnie }.'
+    actual=page.evaluate("source => {const box=document.createElement('div');showRefs(box,source);return box.textContent;}",sample)
+    assert actual==sample,(actual,sample)
+    # Clicking an ambiguous reference keeps the chapter picker open.
+    page.evaluate(r"label => renderSimplified('Zobacz \\ref{'+label+'}.','TEST')",conflict)
+    page.locator('#simplified .ref-link').filter(has_text='Wybierz cel').wait_for()
+    page.locator('#simplified .ref-link').click()
+    page.locator('#tipBody .ref-choice').first.wait_for()
+    page.locator('#tipBody .ref-choice').first.click()
+    page.wait_for_function('target => state.currentModule===target[0] && state.currentEntity===target[1]',arg=[target_module,target_entity])
+    # Missing explicit targets must not quietly redirect to a different chapter.
+    page.evaluate(r"() => renderSimplified('Zobacz \\ref{ALG-08::ch:ga5-rozdmuchania}.','ALG-08')")
+    page.locator('#simplified .ref-missing').filter(has_text='Brak celu').wait_for()
+    assert not errors,errors
+    browser.close()
+    print('Reference titles, hover, exact navigation, multiple targets, conflicts, missing labels and source preservation: OK')
+}));
+    }""")
+    page.locator('#simplified .ref-link .katex').wait_for()
+    assert page.locator('#simplified .ref-link .katex-html').inner_text() == 'KH'
+    page.evaluate(r"() => renderSimplified('Zobacz \\ref{AM1-36::ma1:kh:lem:variation-additivity}.','ALG-08')")
+    link=page.locator('#simplified .ref-link')
+    link.hover()
+    page.locator('#tipBody .tip-code .katex').first.wait_for()
+    assert page.locator('#tipBody .tip-code .katex-html').filter(has_text='BV').count() > 0
+    assert 'Nie złożono' not in page.locator('#tipBody').inner_text()
+    page.evaluate("() => closeTip()")
     # Each label in a multi-reference must be separately clickable.
     page.evaluate(r"() => renderSimplified('Zobacz \\cref{ch:ga5-rozdmuchania,ch:ga6-powierzchnie}.', 'ALG-08')")
     assert page.locator('#simplified .ref-link').count()==2
