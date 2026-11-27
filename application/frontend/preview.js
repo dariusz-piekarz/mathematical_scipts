@@ -1,6 +1,8 @@
 /* Safe, deliberately limited TeX prose reader. Math is passed unchanged to KaTeX. */
 function buildProsePreview(container, source, moduleId) {
-  container.replaceChildren();
+  const fragment=document.createDocumentFragment();
+  // Sticky matching avoids allocating the unconsumed suffix at every token.
+  const at=(pattern,text,offset)=>{pattern.lastIndex=offset;return pattern.exec(text);};
   const environmentNames = {definicja:'Definicja',definition:'Definicja',twierdzenie:'Twierdzenie',theorem:'Twierdzenie',lemat:'Lemat',lemma:'Lemat',stwierdzenie:'Stwierdzenie',proposition:'Stwierdzenie',wniosek:'Wniosek',corollary:'Wniosek',uwaga:'Uwaga',remark:'Uwaga',przyklad:'Przykład',example:'Przykład',proof:'Dowód',dowod:'Dowód'};
   function tablePreview(source, root) {
     const wrapper=document.createElement('div'), table=document.createElement('table');
@@ -16,7 +18,7 @@ function buildProsePreview(container, source, moduleId) {
     };
     for(let i=0;i<source.length;){
       if(source[i]==='%'){while(i<source.length&&source[i]!=='\n')i++;continue;}
-      const math=source.slice(i).match(/^(\$\$|\$|\\\[|\\\()/);
+      const math=at(/(\$\$|\$|\\\[|\\\()/y,source,i);
       if(math){
         const left=math[0], right=left==='\\['?'\\]':left==='\\('?'\\)':left;
         const start=i;i+=left.length;
@@ -24,10 +26,10 @@ function buildProsePreview(container, source, moduleId) {
         if(i<source.length)i+=right.length;
         cell+=source.slice(start,i);continue;
       }
-      const env=source.slice(i).match(/^\\(begin|end)\{[^}]+\}/);
+      const env=at(/\\(begin|end)\{[^}]+\}/y,source,i);
       if(env){environmentDepth+=env[1]==='begin'?1:-1;cell+=env[0];i+=env[0].length;continue;}
       if(depth===0&&environmentDepth===0){
-        const rule=source.slice(i).match(/^\\(?:hline|toprule|midrule|bottomrule)\b/);
+        const rule=at(/\\(?:hline|toprule|midrule|bottomrule)\b/y,source,i);
         if(rule){
           if(cell.trim()||cells.length)finishRow();
           (lastRow||table).classList.add(lastRow?'preview-rule-bottom':'preview-rule-top');
@@ -35,7 +37,7 @@ function buildProsePreview(container, source, moduleId) {
         }
         if(source.startsWith('\\\\',i)){
           finishRow();i+=2;
-          const spacing=source.slice(i).match(/^\s*\[[^\]]*\]/);if(spacing)i+=spacing[0].length;
+          const spacing=at(/\s*\[[^\]]*\]/y,source,i);if(spacing)i+=spacing[0].length;
           continue;
         }
         if(source[i]==='&'){cells.push(cell);cell='';i++;continue;}
@@ -75,11 +77,11 @@ function buildProsePreview(container, source, moduleId) {
     }
     while(i<text.length) {
       if(text[i]==='%'){while(i<text.length && text[i]!=='\n')i++;continue;}
-      if(text[i]==='$' || text.startsWith('\\[',i) || text.startsWith('\\(',i) || /^\\begin\{(?:equation\*?|align\*?|alignat\*?|gather\*?|multline\*?|CD)\}/.test(text.slice(i))) {
+      if(text[i]==='$' || text.startsWith('\\[',i) || text.startsWith('\\(',i) || (text[i]==='\\' && at(/\\begin\{(?:equation\*?|align\*?|alignat\*?|gather\*?|multline\*?|CD)\}/y,text,i))) {
         const start=i;
         let left=text[i]==='$'?(text[i+1]==='$'?'$$':'$'):text.slice(i,i+2), right=left;
         if(left==='\\[')right='\\]';else if(left==='\\(')right='\\)';
-        if(text.startsWith('\\begin',i)){left=text.slice(i).match(/^\\begin\{[^}]+\}/)[0];right=left.replace('begin','end');}
+        if(text.startsWith('\\begin',i)){left=at(/\\begin\{[^}]+\}/y,text,i)[0];right=left.replace('begin','end');}
         i+=left.length;
         while(i<text.length && !text.startsWith(right,i)){if(text[i]==='\\' && !text.startsWith(right,i))i+=2;else i++;}
         if(i<text.length)i+=right.length;
@@ -91,7 +93,7 @@ function buildProsePreview(container, source, moduleId) {
       if(text[i]!=='\\'){const start=i;while(i<text.length && !/[\\$%\n{}]/.test(text[i]))i++;append(text.slice(start,i).replace(/~/g,'\u00a0').replace(/---/g,'—').replace(/--/g,'–'));continue;}
       i++;
       const commandStart=i-1;
-      const match=text.slice(i).match(/^[a-zA-Z]+\*?/);
+      const match=at(/[a-zA-Z]+\*?/y,text,i);
       if(!match){const symbol=text[i++];append(symbol==='\\'?' ':symbol==='%'?'%':symbol==='&'?'&':symbol==='$'?'$':symbol||'');continue;}
       const command=match[0].replace(/\*$/,'');i+=match[0].length;
       if(['newcommand','renewcommand','providecommand','DeclareMathOperator'].includes(command)) {group();while(true){whitespace();if(text[i]!=='[')break;group('[',']');}group();continue;}
@@ -158,7 +160,8 @@ function buildProsePreview(container, source, moduleId) {
       append('\\'+match[0]);
     }
   }
-  parse(source.replace(/\r\n/g,'\n'),container);
+  parse(source.replace(/\r\n/g,'\n'),fragment);
+  container.replaceChildren(fragment);
 }
 
 async function loadTikzFigure(figure,source,moduleId,skipStatic=false){
