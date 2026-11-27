@@ -36,7 +36,11 @@ D=\{(\omega,t)\in\Omega\times(0,\infty):t<Y(\omega)\}
 jest mierzalny w produktowej $\sigma$-algebrze.
 Równość wynika z gęstości liczb wymiernych.
 Przekrój przy ustalonym $\omega$ to $(0,Y(\omega))$,
-o mierze Lebesgue'a równej $Y(\omega)$.
+o mierze Lebesgue'a równej $Y(\omega)$ (dla
+$Y(\omega)=0$ jest pusty). Przekrój przy ustalonym
+$t>0$ to zdarzenie $\{Y>t\}$.
+Punkt $t=0$ nie ma wpływu na całkę względem
+miary Lebesgue'a.
 Obie miary $\Prob$ i $\lambda_1|_{(0,\infty)}$ są
 $\sigma$-skończone. Z \atlasref{ME-12::thm:tonelli-12}{twierdzenia Tonellego}
 dla nieujemnej funkcji $\chi_D$ otrzymujemy
@@ -111,22 +115,26 @@ $n\geq N$.
 \begin{twierdzenie}[SPWL z kontroli wariancji]
 Niech $(X_n)_{n\geq1}$ będzie ciągiem rzeczywistych zmiennych
 losowych na wspólnej przestrzeni probabilistycznej,
-o skończonych drugich momentach. Jeśli
+o skończonych drugich momentach. Jeśli dla pewnego $m\in\R$
 \[
 \frac1n\sum_{k=1}^n\E X_k\longrightarrow m,
 \qquad
 \frac1{n^2}\Var\!\left(\sum_{k=1}^nX_k\right)\longrightarrow0,
 \]
-to $n^{-1}\sum_{k=1}^nX_k\xrightarrow{\Prob}m$.
+to $\overline X_n\to m$ w $L^2$, a w szczególności
+$\overline X_n\xrightarrow{\Prob}m$.
 W szczególności wystarcza, by $X_k$ były parami
 nieskorelowane, miały wspólną średnią $m$ i
 $\sum_{k=1}^n\Var(X_k)=o(n^2)$.
 \end{twierdzenie}
 \begin{proof}
-Ze skończoności drugich momentów oraz nierówności
-Cauchy'ego--Schwarza wynika całkowalność wszystkich $X_k$.
-Skończone sumy także należą do $L^2$, na mocy
-nierówności trójkąta w tej przestrzeni.
+Z nierówności Cauchy'ego--Schwarza dla $|X_k|$ i
+funkcji stałej $1$ wynika
+$\E|X_k|\leq(\E X_k^2)^{1/2}<\infty$.
+Skończone sumy także należą do $L^2$, ponieważ
+punktowo $(\sum_{k=1}^n X_k)^2\leq n\sum_{k=1}^n X_k^2$
+z nierówności Cauchy'ego--Schwarza w $\R^n$.
+Po scałkowaniu prawa strona jest skończona.
 Oznaczmy $a_n=n^{-1}\sum_{k=1}^n\E X_k$.
 Z liniowości wartości oczekiwanej
 $\E\overline X_n=a_n$, zaś z definicji wariancji
@@ -221,8 +229,15 @@ $\{X_j\in g_K^{-1}(A)\}$ i $\{X_k\in g_K^{-1}(B)\}$,
 a więc są niezależne. Zmienne obcięte mają wspólny
 rozkład jako obrazy tego samego rozkładu przez $g_K$.
 Ponieważ $|Y_k^{(K)}|\leq K$, ich drugie momenty są
-nie większe niż $K^2$. Poprzedni wniosek daje $n^{-1}\sum_{k\leq n}Y_k^{(K)}
-\xrightarrow{\Prob}\E Y_1^{(K)}$.
+nie większe niż $K^2$. Poprzedni wniosek ma więc zastosowanie z
+$m_K=\E Y_1^{(K)}$ i $\sigma_K^2=\Var(Y_1^{(K)})$.
+Dla ustalonego $K$ otrzymujemy
+\[
+\E\left|\frac1n\sum_{k=1}^nY_k^{(K)}-m_K\right|^2
+=\frac{\sigma_K^2}{n}\leq\frac{K^2}{n}.
+\]
+W szczególności $n^{-1}\sum_{k=1}^nY_k^{(K)}
+\xrightarrow{\Prob}m_K$.
 
 Kontrolujemy teraz błąd obcięcia, bez zakładania
 skończonej wariancji $X_1$. Każda zmienna $X_k$ jest
@@ -328,11 +343,21 @@ Zatem
 =\left\{\max_{1\leq j\leq n}|S_j|\geq a\right\}.
 \]
 
-Dla $k<n$ rozkład łączny wektorów $(Z_1,\ldots,Z_k)$
-i $(Z_{k+1},\ldots,Z_n)$ jest iloczynem ich rozkładów:
-wynika to z charakteryzacji wzajemnej niezależności
-przez iloczynowy rozkład łączny
-(rozdział~\ref{ch:random-variables}).
+Dla $k<n$ oznaczmy $U=(Z_1,\ldots,Z_k)$ oraz
+$V=(Z_{k+1},\ldots,Z_n)$.
+Jeżeli $\mu_i=\Law(Z_i)$, to z charakteryzacji wzajemnej
+niezależności przez iloczynowy rozkład łączny
+(rozdział~\ref{ch:random-variables}) i łączności miar
+produktowych wynika
+\[
+\Law(U,V)
+=\bigotimes_{i=1}^n\mu_i
+=\left(\bigotimes_{i=1}^k\mu_i\right)
+ \otimes\left(\bigotimes_{i=k+1}^n\mu_i\right)
+=\Law(U)\otimes\Law(V).
+\]
+Przyjmujemy tu naturalne utożsamienie
+$\R^k\times\R^{n-k}$ z $\R^n$.
 Zmienna $S_k\chi_{A_k}$ jest borelowską funkcją
 pierwszego wektora, ponieważ warunki definiujące
 $A_k$ są przeciwobrazami przedziałów przez ciągłe
@@ -485,7 +510,8 @@ to
 \frac1n\sum_{k=1}^n(X_k-\E X_k)\longrightarrow0
 \quad\text{prawie na pewno}.
 \]
-Jeżeli ponadto $n^{-1}\sum_{k=1}^n\E X_k\to m$,
+Jeżeli ponadto dla pewnego $m\in\R$ zachodzi
+$n^{-1}\sum_{k=1}^n\E X_k\to m$,
 to $\overline X_n\to m$ prawie na pewno.
 \end{twierdzenie}
 \begin{proof}
@@ -603,9 +629,11 @@ Ostatnia równość wynika z
 \atlasref{ME-08::thm:mct}{twierdzenia o zbieżności monotonicznej};
 na tym etapie dopuszczamy wartość nieskończoną.
 Dla każdej liczby $x\geq0$ połóżmy
-$m=\max(1,\lceil x\rceil)$.
-Wtedy $\{k\in\N:k\geq1,\ x\leq k\}$ składa się
-dokładnie z indeksów $k\geq m$.
+$m=\max(1,\lceil x\rceil)$, gdzie $\lceil x\rceil$
+jest najmniejszą liczbą całkowitą nie mniejszą od $x$.
+Wtedy zbiór dodatnich indeksów całkowitych $k$,
+dla których $x\leq k$, składa się dokładnie
+z indeksów $k\geq m$.
 Ponieważ funkcja $t\mapsto t^{-2}$ jest malejąca
 na $(0,\infty)$, mamy
 \[
@@ -820,9 +848,12 @@ Jest to nieujemna funkcja borelowska, a
 $\int_1^\infty\alpha x^{-\alpha-1}\,\dd\lambda_1(x)=1$,
 ponieważ całka na $[1,R]$ wynosi $1-R^{-\alpha}$.
 Zatem $f$ jest gęstością probabilistyczną.
-Ponieważ $X_1\geq1$ prawie na pewno, ze wzoru
-\eqref{eq:lotus} oraz przejścia do granicy w całkach
-funkcji nieujemnych otrzymujemy
+Ponieważ rozkład jest skupiony na $[1,\infty)$,
+mamy $X_1\geq1$ prawie na pewno. Ze wzoru
+\eqref{eq:lotus} dla funkcji nieujemnych oraz
+\atlasref{ME-08::thm:mct}{twierdzenia o zbieżności monotonicznej}
+dla całek obciętych do $[1,R]$ (najpierw dla
+całkowitych $R\to\infty$) otrzymujemy
 \[
 \begin{aligned}
 \E|X_1|=\E X_1
@@ -842,8 +873,13 @@ Jeśli $m=\E X_1$, to dla $x\geq 2m$ mamy
 $(x-m)^2\geq x^2/4$; całka drugiego momentu na
 $[2m,\infty)$ jest nieskończona. Zatem również
 $\E(X_1-m)^2=+\infty$.
+W tym sensie mówimy o nieskończonej wariancji:
+całkę definiującą wariancję dopuszczamy tutaj
+w rozszerzonym przedziale $[0,\infty]$, mimo że
+w algebrze momentów rozważaliśmy wariancje skończone
+(rozdział~\ref{ch:expectation}).
 Wariant MPWL wykorzystujący sumowalne wariancje
-nie ma tu zastosowania, ale MPWL Kołmogorowa
+ważone nie ma tu zastosowania, ale MPWL Kołmogorowa
 zapewnia $\overline X_n\to\alpha/(\alpha-1)$ p.n.
 \end{przyklad}
 
