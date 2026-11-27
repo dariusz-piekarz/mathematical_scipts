@@ -362,6 +362,10 @@ Wariant C (Matplotlib naukowy) zastępuje wcześniejszą paletę DG jako standar
 
 W d37fb926 przestylizowano 10 istniejących ilustracji (11–18, 20–21), naprawiono błędy składni ilustracji 11 i 12. W 7c07c709 przebudowano sferę 19, w 00e37e50 dodano statyczny wykres sumy geometrycznej 36. Próbna kompilacja 12 samodzielnych ilustracji i kontrola renderów zaliczone. W 14dce73f zaktualizowano 15 generatorów Plotly: wykonano pobrany moduł przed i po zmianie, sprawdzono identyczność wszystkich tablic współrzędnych; w 218809b7 zsynchronizowano 15 listingów Python. Pełny PDF, wykonanie listingów i testy przeglądarkowe nadal wymagają potwierdzenia. Pozostałe prace ilustracyjne przed rozdziałem 22: kule jednostkowe 01 w stylistyce C; statyczne odpowiedniki właściwych wykresów ilorazu reszty 13, nierównych pochodnych mieszanych 15, siodła niewidocznego na prostych 17; kontrola 2D i rodzin krzywych 08–09 oraz wybranych sum częściowych 36. Nie unieważniać audytów matematycznych wyłącznie z powodu zmiany stylu.
 
+### Pełny widok i zbliżenie — doprecyzowanie stylistyki C
+
+Jeżeli lokalna parametryzacja pokazuje jedynie wąski fragment powierzchni, zawsze zapewnić także widok całego wykresu nad reprezentatywną prostokątną dziedziną. Zbliżenie ma być osobnym, jednoznacznie podpisanym panelem, z podanym zakresem i ewentualnie zmienioną skalą pionową. Nie wypełniać sztucznie otoczeń punktów osobliwych. AM II 13 (ad858cf) i 17 (ecbe41b) przebudowano na pary widoków: pełny wykres nad określonym kwadratem/prostokątem oraz powiększenie istotnego fragmentu. Próbna kompilacja obu ilustracji pdfLaTeX i kontrola wizualna zaliczone; zachowano etykiety, listingi i dowody. Pełny PDF i test aplikacji pozostają do potwierdzenia. Pozostałe prace 01, 08, 09, 36 nadal otwarte.
+
 ### Obowiązkowy odbiór rysunków w Atlasie
 
 Każdy dodany wykres Plotly musi mieć rzeczywistą wersję w repozytorium, przypisaną do konkretnego rozdziału i otwieraną z podglądu czytnika bez ręcznego uruchamiania Pythona. Obowiązuje również przy kolejnych rozdziałach. Nie uznawać samego listingu lub lokalnego pliku ZIP za zakończony etap.
