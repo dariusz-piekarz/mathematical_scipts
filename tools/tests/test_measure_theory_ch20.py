@@ -135,10 +135,25 @@ class TestMeasureTheoryChapter20(unittest.TestCase):
             "cor:support-test-20",
         }
         self.assertTrue(required.issubset(set(labels)))
-        other = CH17.read_text(encoding="utf-8") + CH23.read_text(encoding="utf-8")
+        other = "\n".join(
+            path.read_text(encoding="utf-8")
+            for path in sorted(CHAPTER.parent.glob("[0-9][0-9]-*.tex"))
+            if path != CHAPTER
+        )
         all_labels = set(labels) | set(re.findall(r"\\label\{([^}]+)\}", other))
         refs = re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", src)
         self.assertFalse(set(refs) - all_labels)
+        atlas_targets = {
+            "GT-09": "09-*.tex",
+            "GT-14": "14-*.tex",
+            "GT-19": "19-*.tex",
+        }
+        for code, label in re.findall(r"\\atlasref\{([^{}:]+)::([^{}]+)\}", src):
+            with self.subTest(code=code, label=label):
+                self.assertIn(code, atlas_targets)
+                targets = list((ROOT / "chapters/pl/general_topology").glob(atlas_targets[code]))
+                self.assertEqual(len(targets), 1)
+                self.assertIn(r"\label{" + label + "}", targets[0].read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
