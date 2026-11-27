@@ -137,3 +137,9 @@ AM II 13 i 15: odróżnić Df jako funkcję operatorową od Df(p), kowektor od g
 ## Aktualizacja podziału funkcji jednej zmiennej (27.11.2026)
 
 Przeniesiono pełny jednowymiarowy blok D_p, D, D_b^1, C^k wraz z dowodami z AM II 15 do AM I 22, zachowując sześć etykiet ma2:* i zastępując zależności od AM II samodzielnymi dowodami skalarnymi przez twierdzenie Lagrange'a. AM II zachowuje uogólnienia wielowymiarowe i odesłania opisowe do AM I. Wspólne wyniki Lip/Hölder, lokalne topologie i zwarte zanurzenia pozostają w AM II w wersji ogólnej; BV/AC w AM I 36 pozostają do uzupełnienia w ujęciu przestrzeni unormowanych. Oba rozdziały otwarte do ponownych audytów, CI i PDF.
+
+### Domknięcie konstrukcji przestrzeni jednowymiarowych i funkcji specjalnych (27.11.2026)
+
+AM I 22 zawiera przeniesione dowody dla D_p, D, D_b^1, C^k i tabelę porównawczą; AM I 36 zawiera BV z normą wahania (Banacha, nieośrodkowa), AC z izometrycznym utożsamieniem z R×L^1 (Banacha, ośrodkowa), domkniętość w BV i porównanie W^{1,p}. AM II 15 zawiera odsyłacze i wersje ogólne. Konstrukcja tych bloków zakończona, audyty otwarte 0/2 po zmianach.
+
+AM I 34: zachowano Gamma, Beta, Wallisa, Gaussa, erf/erfc, Fresnela, Si/Ci. Dodano niezupełne Gamma/Beta, E1, Dawsona, W Lamberta, Bessela J_n, K/E eliptyczne, digamma/poligamma, Ei/li, dzeta/eta, polilogarytmy, funkcje Jacobiego, Ai/Bi, wielomiany Legendre'a/Czebyszewa/Hermite'a/Laguerre'a i funkcje hipergeometryczne Gaussa/Kummera. Wszystkie argumenty i parametry w rozważanych zakresach są rzeczywiste. Rozdział zawiera 23 wykresy TikZ. Rozbudowę matematyczną traktujemy jako pierwszy przebieg konstrukcyjny, nie jako pełną teorię wszystkich rodzin. Pozostałe dodatkowe rodziny (m.in. Struve'a, Mittag-Lefflera, Mathieu) nie są częścią tego podstawowego zakresu. Wymagane niezależne audyty 22, 34, 36 i AM II 15 oraz kompilacja, PDF i sprawdzenie podglądu aplikacji.
