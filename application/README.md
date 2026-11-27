@@ -20,6 +20,10 @@
 **Źródła:** 233 wspólne moduły `.tex` w `rozdzialy/` (migawka z 19.11.2026).  
 **Architektura:** Python / FastAPI / SQLite, HTML / CSS / JavaScript (bez frameworka frontendowego), NetworkX do wyznaczania ścieżek. Frontend ma własną wizualizację grafu w SVG; działa offline.
 
+## Podgląd rozdziałów — ramki
+
+Definicje, twierdzenia, lematy, wnioski, przykłady, uwagi i zadania mają kolorowe, zaokrąglone ramki w **Podglądzie rozdziału**, nie w surowym źródle LaTeX. Szybka kontrola: otwórz AA-01, znajdź „Definicja — Grupa”. Jeżeli po aktualizacji nie ma ramek, sprawdź, czy uruchamiasz aktualny checkout gałęzi `biblioteka-matematyczna-iteracja-6` (a nie dawny ZIP), zamknij wszystkie karty Atlasu i uruchom `application/start.cmd` ponownie. Skrypt startowy może otworzyć już działający serwer zamiast uruchomić nowy. W przeglądarce użyj Ctrl+F5. Nie nadpisuj lokalnych zmian przy aktualizacji repozytorium.
+
 ## Uruchamianie (Windows 11)
 
 W repozytorium otwórz katalog `application` i kliknij dwukrotnie **`start.cmd`**.

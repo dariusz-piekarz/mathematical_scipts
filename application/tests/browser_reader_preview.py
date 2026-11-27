@@ -12,6 +12,33 @@ with sync_playwright() as pw:
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
     page.goto(URL, wait_until='networkidle')
+    # Test the normal chapter route with the server's actual indexed LaTeX,
+    # not a synthetic renderer fixture or a manual renderSimplified call.
+    page.evaluate("() => openModule('AA-01')")
+    box = page.locator('#simplified')
+    frames = box.locator('.preview-statement')
+    definition = frames.filter(has=page.locator('.preview-block-title').filter(has_text='Definicja — Grupa')).first
+    definition.wait_for(state='visible')
+    for kind in ('definition', 'result', 'example'):
+        # Match the frame itself, not just nested descendants.
+        first = box.locator(f'.preview-statement[data-environment-kind="{kind}"]').first
+        assert first.is_visible(), kind
+        style = first.evaluate("""el => {
+            const s=getComputedStyle(el);
+            return {top:parseFloat(s.borderTopWidth), left:parseFloat(s.borderInlineStartWidth),
+                    radius:parseFloat(s.borderTopLeftRadius), borderStyle:s.borderTopStyle,
+                    color:s.borderTopColor, title:getComputedStyle(el.firstElementChild).color};
+        }""")
+        assert style['top'] >= 2 and style['left'] >= 4 and style['radius'] >= 12, style
+        assert style['borderStyle'] == 'solid' and style['color'] == style['title'], style
+    assert box.locator('[data-environment-kind="proof"].preview-statement').count() == 0
+    count = frames.count()
+    page.locator('#togglePreview').click()
+    assert box.is_hidden() and page.locator('#latexSource').is_visible()
+    page.locator('#togglePreview').click()
+    assert box.is_visible() and frames.count() == count
+    definition.scroll_into_view_if_needed()
+    page.screenshot(path=str(Path(os.environ.get('TEMP', '/tmp')) / 'atlas-real-chapter-frames.png'))
     page.evaluate("() => openModule('ALG-08')")
     page.locator('#docTitle').filter(has_text='Geometria biwymierna').wait_for()
     chapter = (ROOT.parent / 'chapters/pl/algebraic_geometry/08-geometria-biwymierna-i-modele-minimalne-powierzchni.tex').read_text(encoding='utf-8')
