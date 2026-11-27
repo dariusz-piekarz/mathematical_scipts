@@ -272,7 +272,17 @@ with sync_playwright() as pw:
     page.evaluate("() => openModule('AM1-36')")
     # Reproduce the report using the canonical chapter, not only a fixture.
     assert page.evaluate(r"() => state.currentData.latex.includes('\\begingroup')")
-    assert 'Materiał stanowi adaptację' in box.inner_text()
+    # Verify a real prose anchor from the currently fetched chapter instead
+    # of tying renderer correctness to a historical editorial introduction.
+    prose = page.evaluate(r"""() => {
+        const source = state.currentData.latex;
+        const line = source.split('\n').find(line =>
+            line.trim() && !line.trim().startsWith('\\') &&
+            /^[A-ZĄĆĘŁŃÓŚŹŻ][^\\$%{}]{20,}/.test(line));
+        return line?.match(/^[^\\$%{}]{20,}/)?.[0].trim().slice(0, 60) || '';
+    }""")
+    assert len(prose) >= 20, prose
+    assert prose in box.inner_text(), prose
     assert r'\begingroup' not in box.inner_text()
     assert r'\providecommand' not in box.inner_text()
     # The source pane must remain lossless.
