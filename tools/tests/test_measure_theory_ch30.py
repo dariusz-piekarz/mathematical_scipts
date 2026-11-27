@@ -163,5 +163,21 @@ class Chapter30(unittest.TestCase):
         for n in range(1, 25):
             self.assertEqual(Q(1, 2**n)*Q(2**n, n), Q(1, n))
 
+
+    def test_mt30_015_birkhoff_orthogonal_tagged_sums(self):
+        # A finite analogue of disjoint tagged cells, including null cells.
+        for m in range(1, 13):
+            weights = [Q(1, 3*m), Q(2, 3*m), Q(0)] * m
+            self.assertEqual(sum(weights), 1)
+            for k in range(len(weights)+1):
+                tail = weights[k:]
+                self.assertLessEqual(sum(w*w for w in tail),
+                                     Q(1, m)*sum(tail))
+            self.assertLessEqual(sum(w*w for w in weights), Q(1, m))
+        s = SOURCE.read_text(encoding="utf-8")
+        self.assertIn(r"\label{ex:birkhoff-not-strong-30}", s)
+        self.assertIn(r"\lambda_1(J)=0", s)
+        self.assertIn(r"F\subseteq I\setminus H", s)
+
 if __name__ == "__main__":
     unittest.main()
