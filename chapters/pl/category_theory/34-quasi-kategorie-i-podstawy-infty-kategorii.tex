@@ -1,0 +1,154 @@
+\section{Quasi-kategorie i podstawy $\infty$-kategorii}\label{cat:sec:quasicategories}
+
+W nerwie kategorii zwykłej para składanych krawędzi wyznacza dokładnie jeden $2$-sympleks, a wyższe sympleksy kodują zgodność składania. W tym rozdziale osłabimy jednoznaczność wypełnień, zachowując ich istnienie. Będziemy korzystać z kategorii sympleksów, operatorów $d_i,s_i$, rogów i lematu Yonedy z rozdziału~\ref{cat:sec:simplicial-sets}.
+
+\subsection{Quasi-kategorie i słabe składanie}
+
+\begin{definicja}[Quasi-kategoria]\label{cat:def:quasicategory}
+Quasi-kategorią (w tym rozdziale również $\infty$-kategorią w sensie $(\infty,1)$) nazywamy zbiór symplicjalny $X$, w którym każdy morfizm
+\[
+ \Lambda^k[n]\longrightarrow X,\qquad n\geq2,\quad 0<k<n,
+\]
+ma wypełnienie $\Delta[n]\to X$. Funktorem quasi-kategorii nazywamy morfizm zbiorów symplicjalnych pomiędzy nimi. Obiektami są elementy $X_0$, a krawędź $f\in X_1$ o $d_1f=x$, $d_0f=y$ nazywamy morfizmem $f:x\to y$. Krawędzią identycznościową obiektu $x$ jest $s_0x$.
+\end{definicja}
+Nie żądamy wypełnialności rogów zewnętrznych. Kompleks Kana jest quasi-kategorią, lecz nie odwrotnie: nerw $N([1])$ jest kontrprzykładem (przykład~\ref{cat:ex:nerve-not-kan}). Nerwy wszystkich małych kategorii są quasi-kategoriami na mocy twierdzenia~\ref{cat:thm:nerve-inner-horns}; w nich wypełnienia rogów wewnętrznych są jedyne.
+
+Dla krawędzi $f:x\to y$, $g:y\to z$ róg $\Lambda^1[2]\to X$ o ścianach $d_2=f$, $d_0=g$ istnieje dzięki równości $d_0f=d_1g$ (stwierdzenie~\ref{cat:prop:simplicial-compatible-faces}). Wypełnienie $u\in X_2$ ma trzecią krawędź $h=d_1u:x\to z$. Typ $h$ wynika z relacji $d_1d_1u=d_1d_2u$ i $d_0d_1u=d_0d_0u$. Nazywamy $h$ jednym ze złożeń $g$ z $f$. Nie jest to z góry jednoznaczna operacja na zbiorze krawędzi.
+
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (x) at (0,0) {$x$};
+ \node (y) at (4,0) {$y$};
+ \node (z) at (2,2.7) {$z$};
+ \draw[->,thick] (x)--node[below] {$f$}(y);
+ \draw[->,thick] (y)--node[right] {$g$}(z);
+ \draw[->,dashed] (x)--node[left] {$h$}(z);
+ \node at (2,.85) {$u$};
+\end{tikzpicture}
+\end{center}
+Linie ciągłe przedstawiają dane rogu, linia przerywana i oznaczenie $u$ -- dane uzyskane przez wybór wypełnienia. W quasi-kategorii sam trójkąt jest daną; nie utożsamiamy jego istnienia z równaniem dwóch wcześniej określonych złożeń.
+
+\subsection{Homotopia krawędzi}
+
+W dalszych dowodach będziemy zapisywać $x_{ijk}$ na oznaczenie $2$-sympleksu przypisanego trójce wierzchołków $i<j<k$ w rogu wymiaru $3$, a $x_{ij}$ na oznaczenie jego krawędzi. Wybór tych oznaczeń nie zakłada istnienia całego $3$-sympleksu. Zgodność trzech ścian oznacza, zgodnie ze stwierdzeniem~\ref{cat:prop:simplicial-compatible-faces}, że na każdej wspólnej krawędzi mają tę samą wartość. Jeżeli $u$ jest wypełnieniem, brakującą ścianę otrzymujemy jako $d_ku$ dla brakującego indeksu $k$; jej krawędzie na przecięciach są wyznaczone przez pozostałe ściany.
+
+\begin{definicja}[Prawa i lewa homotopia krawędzi]\label{cat:def:edge-homotopies}
+Dla dwóch krawędzi $f,g:x\to y$ piszemy $f\sim_R g$, jeśli istnieje $u\in X_2$ taki, że
+\[
+ d_2u=f,\qquad d_1u=g,\qquad d_0u=s_0y.
+\]
+Piszemy $f\sim_L g$, jeśli istnieje $v\in X_2$ taki, że
+\[
+ d_2v=s_0x,\qquad d_0v=f,\qquad d_1v=g.
+\]
+W obu przypadkach chodzi o homotopię przy ustalonych końcach, wyrażoną za pomocą zdegenerowanej krawędzi; nie jest to definicja homotopii ciągłych odwzorowań przestrzeni topologicznych.
+\end{definicja}
+
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (a) at (0,0) {$x$};
+ \node (b) at (3.4,0) {$y$};
+ \node (c) at (1.7,2.5) {$y$};
+ \draw[->] (a)--node[below] {$f$}(b);
+ \draw[->] (a)--node[left] {$g$}(c);
+ \draw[->] (b)--node[right] {$s_0y$}(c);
+ \node at (1.7,-.85) {prawa};
+ \begin{scope}[xshift=6cm]
+ \node (a) at (0,0) {$x$};
+ \node (b) at (3.4,0) {$x$};
+ \node (c) at (1.7,2.5) {$y$};
+ \draw[->] (a)--node[below] {$s_0x$}(b);
+ \draw[->] (a)--node[left] {$g$}(c);
+ \draw[->] (b)--node[right] {$f$}(c);
+ \node at (1.7,-.85) {lewa};
+ \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\begin{lemat}[Relacja prawej homotopii]\label{cat:lem:right-homotopy-equivalence}
+W quasi-kategorii $X$ relacja $\sim_R$ na zbiorze krawędzi o ustalonych końcach $x,y$ jest relacją równoważności.
+\end{lemat}
+\begin{proof}
+Zwrotność: $s_1f$ ma ściany $d_2s_1f=f$, $d_1s_1f=f$, $d_0s_1f=s_0d_0f=s_0y$, przez tożsamości~\eqref{cat:eq:simplicial-identities}.
+
+Symetria: niech $u$ świadczy o $f\sim_R g$. Ustalamy wierzchołki $0,1,2,3$ o wartościach $x,y,y,y$. Na trójkach $012,013,123$ zadajemy odpowiednio $u$, $s_1f$ i stały $2$-sympleks w $y$ (obraz $y$ przez operator odpowiadający jedynej surjekcji $[2]\to[0]$). Wspólne krawędzie to $01=f$, $12=s_0y$ i $13=s_0y$. Ściany są zgodne, zatem definiują róg $\Lambda^1[3]\to X$. Brakująca ściana $023$ dowolnego wypełnienia ma krawędzie $02=g$, $03=f$, $23=s_0y$. Świadczy więc o $g\sim_R f$.
+
+Przechodniość: niech $u$ świadczy o $f\sim_R g$, a $v$ o $g\sim_R h$. Dla wierzchołków $x,y,y,y$ zadajemy na trójkach $012,023,123$ odpowiednio $u,v$ i stały $2$-sympleks w $y$. Wspólne krawędzie to $02=g$, $12=s_0y$ i $23=s_0y$. Otrzymujemy róg $\Lambda^2[3]$. Brakująca ściana $013$ ma krawędzie $01=f$, $03=h$, $13=s_0y$, więc świadczy o $f\sim_R h$.
+\end{proof}
+
+\begin{stwierdzenie}[Zgodność lewej i prawej homotopii]\label{cat:prop:left-right-homotopy}
+W quasi-kategorii $f\sim_R g$ wtedy i tylko wtedy, gdy $f\sim_L g$.
+\end{stwierdzenie}
+\begin{proof}
+Załóżmy $f\sim_R g$. Zadajemy wierzchołki $x,x,y,y$ oraz ściany $012=s_0f$, $023$ jako świadka $f\sim_R g$ i $123=s_1f$. Wówczas $012=s_0f$ ma krawędzie $01=s_0x$, $12=f$, $02=f$; $023$ ma $02=f$, $03=g$, $23=s_0y$; $123$ ma $12=f$, $13=f$, $23=s_0y$. Zgodność na krawędziach $02,12,23$ daje róg $\Lambda^2[3]$. Wypełnienie dostarcza ściany $013$ o krawędziach $01=s_0x$, $13=f$, $03=g$, czyli lewej homotopii $f\sim_L g$.
+
+Odwrotnie, dla świadka $v$ relacji $f\sim_L g$ bierzemy wierzchołki $x,x,y,y$. Zadajemy $013=v$, $012=s_0f$, $123=s_1f$. Wspólne krawędzie $01,13,12$ mają wartości odpowiednio $s_0x,f,f$, więc definiujemy róg $\Lambda^1[3]$. Brakująca ściana $023$ ma krawędzie $02=f$, $03=g$, $23=s_0y$, czyli świadczy o $f\sim_R g$.
+\end{proof}
+
+Odtąd piszemy $\sim$ na oznaczenie wspólnej relacji. W nerwie zwykłej kategorii $f\sim_R g$ oznacza $g=\id_y f=f$, a zdegenerowany trójkąt istnieje, gdy $f=g$. Nie tracimy więc informacji o morfizmach zwykłej kategorii przez przejście do tych klas.
+
+\subsection{Kategoria homotopii}
+
+\begin{twierdzenie}[Kategoria homotopii quasi-kategorii]\label{cat:thm:homotopy-category}
+Dla quasi-kategorii $X$ istnieje mała kategoria $hX$, której obiekty to $X_0$, a morfizmy mają postać
+\[
+ \Hom_{hX}(x,y)=
+ \{f\in X_1:d_1f=x,\ d_0f=y\}/{\sim}.
+\]
+Jeżeli $u$ wypełnia róg o kolejnych krawędziach $f,g$, to
+\[
+ [g]\circ[f]=[d_1u].
+\]
+Formuła nie zależy od wyboru wypełnienia ani od reprezentantów. Identycznością obiektu $x$ jest $[s_0x]$.
+\end{twierdzenie}
+\begin{proof}
+Z lematu~\ref{cat:lem:right-homotopy-equivalence} istnieją zbiory klas równoważności. Istnienie wypełnienia rogu $\Lambda^1[2]$ pozwala określić proponowane złożenie. Sprawdzimy niezależność wyborów za pomocą rogów wymiaru $3$.
+
+\emph{Niezależność wypełnienia.} Niech dwa $2$-sympleksy o kolejnych krawędziach $f:x\to y$, $g:y\to z$ mają krawędzie złożone $h,h':x\to z$. Ustalamy wierzchołki $x,y,z,z$. Zadajemy $012$ jako pierwszy sympleks, $013$ jako drugi oraz $123=s_1g$. Wspólne krawędzie $01,12,13$ mają wartości $f,g,g$. Jest to róg $\Lambda^1[3]$. Brakująca ściana $023$ ma krawędzie $02=h$, $03=h'$, $23=s_0z$, skąd $h\sim_R h'$.
+
+\emph{Zmiana pierwszego czynnika.} Niech $f\sim_R f'$ i niech $h$ będzie złożeniem $g$ z $f$ wybranym przez pewien $2$-sympleks. Bierzemy wierzchołki $x,y,y,z$. Zadajemy $012$ jako świadka $f\sim_R f'$, $013$ jako wybrane wypełnienie dla $f,g$ oraz $123=s_0g$. Wspólne krawędzie $01,12,13$ mają wartości $f,s_0y,g$. Otrzymujemy róg $\Lambda^1[3]$. Brakująca ściana $023$ ma krawędzie $02=f'$, $23=g$, $03=h$. Zatem $h$ jest również jednym ze złożeń $g$ z $f'$, a wszystkie inne takie złożenia są mu równoważne na mocy poprzedniego akapitu.
+
+\emph{Zmiana drugiego czynnika.} Niech $g\sim_R g'$ i niech $h$ pochodzi z wypełnienia dla $f,g$. Bierzemy wierzchołki $x,y,z,z$. Zadajemy $012$ jako to wypełnienie, $123$ jako świadka $g\sim_R g'$ oraz $023=s_1h$. Wspólne krawędzie $12,02,23$ mają wartości $g,h,s_0z$. Jest to róg $\Lambda^2[3]$. Brakująca ściana $013$ ma krawędzie $01=f$, $13=g'$, $03=h$, więc $h$ jest jednym ze złożeń $g'$ z $f$. Ponownie korzystamy z niezależności wypełnienia. Zmieniając oba czynniki kolejno i stosując przechodniość $\sim$, otrzymujemy niezależność obu reprezentantów.
+
+\emph{Jednostki.} Dla $f:x\to y$ degeneracja $s_0f$ jest wypełnieniem rogu o kolejnych krawędziach $s_0x,f$ i środkowej ścianie $f$. Degeneracja $s_1f$ analogicznie ma kolejne krawędzie $f,s_0y$ i środkową ścianę $f$. Stąd
+\[
+ [f]\circ[s_0x]=[f]=[s_0y]\circ[f].
+\]
+
+\emph{Łączność.} Dla trzech kolejnych krawędzi $f:x\to y$, $g:y\to z$, $h:z\to w$ wybieramy $012$ jako wypełnienie dla $(f,g)$, oznaczając $02=a$, i $123$ jako wypełnienie dla $(g,h)$, oznaczając $13=b$. Wybieramy $013$ jako wypełnienie dla $(f,b)$, oznaczając $03=c$. Ściany $012,123,013$ zgadzają się na $12=g$, $01=f$, $13=b$, a zatem tworzą róg $\Lambda^1[3]$. Brakująca ściana $023$ wypełnienia ma krawędzie $02=a$, $23=h$, $03=c$. Otrzymujemy
+\[
+ ([h]\circ[g])\circ[f]=[b]\circ[f]=[c]
+ =[h]\circ[a]=[h]\circ([g]\circ[f]).
+\]
+Prawa kategorii są spełnione, a małość wynika z tego, że obiekty tworzą zbiór $X_0$, natomiast morfizmy są klasami elementów zbioru $X_1$.
+\end{proof}
+
+\begin{stwierdzenie}[Funktorialność kategorii homotopii]\label{cat:prop:homotopy-category-functor}
+Dla funktora quasi-kategorii $F:X\to Y$ wzory
+\[
+ hF(x)=F_0(x),\qquad hF([f])=[F_1(f)]
+\]
+określają funktor $hF:hX\to hY$. Przyporządkowanie $X\mapsto hX$ jest funktorem z kategorii quasi-kategorii do kategorii małych kategorii.
+\end{stwierdzenie}
+\begin{proof}
+Naturalność $F$ względem operatorów ścian zapewnia zachowanie końców. Jeżeli $u$ świadczy o $f\sim_R g$, to $F_2(u)$ ma ściany $F_1(f),F_1(g),s_0F_0(y)$, w odpowiedniej kolejności, ponieważ $F$ komutuje z $d_i,s_0$. Jest świadkiem homotopii obrazów, więc $hF$ jest dobrze określony. Identyczności przechodzą na identyczności przez komutowanie z $s_0$. Jeżeli $u$ koduje złożenie $g$ z $f$, to $F_2(u)$ koduje złożenie $F_1(g)$ z $F_1(f)$, a jego środkowa ściana jest $F_1(d_1u)$. Stąd $hF$ zachowuje składanie. Zachowywanie identycznych funktorów i składania funktorów wynika bezpośrednio ze wzoru na $hF$.
+\end{proof}
+
+\begin{wniosek}[Odtwarzanie kategorii zwykłej]\label{cat:cor:homotopy-nerve}
+Dla małej kategorii $\mathcal C$ istnieje naturalny izomorfizm $hN(\mathcal C)\cong\mathcal C$.
+\end{wniosek}
+\begin{proof}
+Obiekty nerwu są obiektami $\mathcal C$, krawędzie są jej morfizmami, a homotopia krawędzi jest równością. Wypełnienie rogu wewnętrznego w wymiarze $2$ w nerwie ma środkową ścianę równą zwykłemu złożeniu (stwierdzenie~\ref{cat:prop:nerve-strings}). Izomorfizm jest więc identycznością na obiektach i przyporządkowaniem $[f]\mapsto f$ na morfizmach. Dla funktora $H:\mathcal C\to\mathcal D$ mamy $hN(H)([f])=[H(f)]$, co dowodzi naturalności.
+\end{proof}
+
+\begin{definicja}[Równoważność krawędzi]\label{cat:def:quasicat-equivalence}
+Krawędź $f:x\to y$ quasi-kategorii $X$ nazywamy równoważnością, jeśli jej klasa $[f]$ jest izomorfizmem w $hX$. Obiekty $x,y$ nazywamy równoważnymi, jeśli istnieje taka krawędź.
+\end{definicja}
+
+\begin{stwierdzenie}[Kryterium równoważności]\label{cat:prop:quasicat-equivalence-inverse}
+Krawędź $f:x\to y$ jest równoważnością wtedy i tylko wtedy, gdy istnieje krawędź $g:y\to x$ oraz wypełnienia rogów dla $(f,g)$ i $(g,f)$, których krawędzie złożone są homotopijne odpowiednio z $s_0x$ i $s_0y$.
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $[f]$ jest izomorfizmem, wybieramy reprezentanta $g$ jego odwrotności w zbiorze $\Hom_{hX}(y,x)$. Wypełnienia obu rogów istnieją. Ich środkowe ściany reprezentują $[g]\circ[f]=[s_0x]$ i $[f]\circ[g]=[s_0y]$, co jest żądaną homotopią. Odwrotnie, jeśli istnieją takie wypełnienia, definicja składania w $hX$ daje te same dwie równości, a zatem $[g]$ jest odwrotnością $[f]$.
+\end{proof}
+Funktory quasi-kategorii zachowują równoważności, ponieważ indukowane funktory kategorii homotopii zachowują izomorfizmy. W przypadku nerwu zwykłej kategorii równoważnościami są dokładnie jej izomorfizmy.
