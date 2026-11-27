@@ -75,7 +75,11 @@ Dla dowolnego zbioru $\Omega$ przykładem $\sigma$-ciała jest $2^\Omega$.
 Dla dowolnego $\Omega$ przykładem jest $\{\varnothing,\Omega\}$.
 Jeżeli $A$ jest niepustym właściwym podzbiorem $\Omega$, to
 $\{\varnothing,A,\Omega\setminus A,\Omega\}$ jest $\sigma$-ciałem:
-pozwala rozstrzygać jedynie, w której z dwóch grup leży wynik.
+jest to rodzina wszystkich sum dwóch rozłącznych bloków
+$A$ i $A^c$, włącznie z sumą pustą. Dopełnienie wybiera
+pozostałe bloki, a przeliczalna suma te bloki, które pojawiły
+się co najmniej raz. Pozwala rozstrzygać jedynie, w której
+z dwóch grup leży wynik.
 Na $\R$ najczęściej używamy $\mathcal B(\R)$, a nie całego $2^\R$.
 \end{przyklad}
 
@@ -100,6 +104,10 @@ zachodzi
 =\sum_{n=1}^\infty\Prob(A_n).
 \end{equation}
 Trójkę $(\Omega,\mathcal F,\Prob)$ nazywamy przestrzenią probabilistyczną.
+Po wykazaniu $\Prob(\varnothing)=0$ (poniżej) jest to dokładnie
+przestrzeń z miarą o masie całkowitej $1$, w rozumieniu
+\atlasref{ME-02::def:measure-finiteness}{definicji miary probabilistycznej w teorii miary i całki}.
+W szczególności $\Omega\ne\varnothing$.
 \end{definicja}
 
 \begin{twierdzenie}[Podstawowe własności miary probabilistycznej]
@@ -150,7 +158,7 @@ oraz $B_n\cap A_j=\varnothing$, więc $B_n\cap B_j=\varnothing$.
 Każdy punkt sumy $\bigcup_n A_n$ należy do $B_n$ dla najmniejszego
 indeksu $n$, dla którego należy do $A_n$. Odwrotna inkluzja
 wynika z $B_n\subseteq A_n$. Zatem $\bigcup_n B_n=\bigcup_n A_n$.
-Zatem dzięki monotoniczności i przeliczalnej addytywności
+Dzięki monotoniczności i przeliczalnej addytywności
 \[
 \Prob\left(\bigcup_n A_n\right)
 =\sum_n\Prob(B_n)\leq\sum_n\Prob(A_n).
@@ -170,11 +178,17 @@ $A_{n+1}\subseteq A_n$ i $A=\bigcap_{n\geq1}A_n$.
 Załóżmy najpierw, że $A_n\uparrow A$.
 Wprowadźmy rozłączne zdarzenia
 $D_1=A_1$ i $D_n=A_n\setminus A_{n-1}$ dla $n\geq2$.
-Ponieważ ciąg jest rosnący, $A_k$ jest dokładnie sumą
-$D_1,\ldots,D_k$, a $A$ jest sumą wszystkich $D_n$.
+Wszystkie $D_n$ są mierzalne. Dla $j<n$ zachodzi
+$D_j\subseteq A_j\subseteq A_{n-1}$, a $D_n$ jest rozłączne
+z $A_{n-1}$, więc $D_j\cap D_n=\varnothing$.
+Każdy punkt $A_k$ należy do $D_j$ dla najmniejszego indeksu
+$j\leq k$, dla którego należy do $A_j$. Ponieważ $D_j\subseteq A_k$
+dla $j\leq k$, mamy $A_k=\bigcup_{j=1}^k D_j$,
+a biorąc sumę po $k$, otrzymujemy $A=\bigcup_{j\geq1}D_j$.
 Z addytywności
 $\Prob(A_k)=\sum_{n=1}^k\Prob(D_n)$ oraz
 $\Prob(A)=\sum_{n=1}^\infty\Prob(D_n)$.
+Ciąg $\Prob(A_k)$ jest niemalejący z monotoniczności miary.
 Granice sum częściowych nieujemnego szeregu dają
 $\lim_{k\to\infty}\Prob(A_k)=\Prob(A)$.
 
@@ -226,7 +240,7 @@ ponieważ
 $U\cap A_m=\bigcup_{i=1}^{m-1}(A_i\cap A_m)$.
 Po odjęciu tej drugiej sumy każdy przekrój indeksowany
 zbiorem $I$ bez $m$ ma znak $(-1)^{|I|+1}$,
-a każdy przekrój zawierający $m$ otrzymuje znak
+a każdy przekrój zawierający $m$ i co najmniej jeden inny indeks otrzymuje znak
 $-(-1)^{|I\setminus\{m\}|+1}=(-1)^{|I|+1}$.
 Pozostaje jeszcze $\Prob(A_m)$ odpowiadające $I=\{m\}$.
 Są to wszystkie niepuste zbiory indeksów, co kończy indukcję.
@@ -325,8 +339,8 @@ Tę sytuację formalizuje niezależność. Ponieważ nie chcemy
 opierać definicji wyłącznie na warunkowaniu (które wymaga dodatniego
 prawdopodobieństwa warunku), jako definicję podstawową przyjmujemy
 równość dotyczącą przecięcia. Dla trzech i więcej zdarzeń
-niezależność par nie wystarcza: zależność może być widoczna
-dopiero po jednoczesnym uwzględnieniu wszystkich zdarzeń.
+niezależność par nie wystarcza do wzajemnej niezależności.
+Przykład podamy w rozdziale~\ref{ch:conditioning}.
 
 \begin{definicja}
 Zdarzenia $A,B\in\mathcal F$ nazywamy niezależnymi, jeśli
@@ -490,8 +504,10 @@ W kolejnych niezależnych próbach zdarzenie sukcesu ma w próbie $n$
 prawdopodobieństwo $p_n$. Jeśli $p_n=1/n^2$ dla $n\geq1$,
 sukces następuje tylko skończenie wiele razy z prawdopodobieństwem jeden.
 Jeśli $p_n=1/n$, sukces następuje nieskończenie wiele razy
-z prawdopodobieństwem jeden. Pierwszy wniosek nie wymaga niezależności;
-drugi wynika tu z drugiego lematu Borela--Cantellego.
+z prawdopodobieństwem jeden. Pierwszy wniosek wynika z pierwszego lematu Borela--Cantellego
+i zbieżności szeregu $\sum_{n\geq1}1/n^2$; nie wymaga niezależności.
+Drugi wynika z drugiego lematu Borela--Cantellego i rozbieżności
+szeregu harmonicznego $\sum_{n\geq1}1/n$.
 Bez dodatkowych założeń o zależnościach nie wynika on
 z samej rozbieżności szeregu (zob. następny przykład).
 \end{przyklad}
@@ -500,7 +516,9 @@ z samej rozbieżności szeregu (zob. następny przykład).
 Niech $A\in\mathcal F$ spełnia $\Prob(A)=1/2$ i niech $A_n=A$
 dla wszystkich $n$. Wtedy $\sum_n\Prob(A_n)=\infty$,
 lecz $\limsup A_n=A$, więc $\Prob(\limsup A_n)=1/2$.
-Dla zdarzeń tych brak niezależności.
+Dla $i\ne j$ mamy $\Prob(A_i\cap A_j)=1/2$,
+natomiast $\Prob(A_i)\Prob(A_j)=1/4$, więc zdarzenia
+te nie są nawet parami niezależne.
 \end{przyklad}
 
 \section{Konstrukcje przestrzeni probabilistycznych}
@@ -659,12 +677,15 @@ tu stosować.
 
 \begin{przyklad}[Rzut monetą nieskończenie wiele razy]
 Dla ustalonego $p\in[0,1]$ rozważamy $\Omega=\{0,1\}^{\N}$.
-Zdarzenia cylindryczne określają skończoną liczbę współrzędnych.
-Wymagamy, aby dla różnych indeksów $i_1,\ldots,i_m$ i
-$a_j\in\{0,1\}$ zachodziło
+Przyjmujemy $\N=\{1,2,\ldots\}$ w indeksowaniu współrzędnych.
+Niech $\mathcal F$ będzie $\sigma$-ciałem generowanym przez
+cylindry, czyli zbiory ciągów o ustalonych wartościach skończenie
+wielu współrzędnych. Cylinder bez żadnych ograniczeń jest
+równy $\Omega$. Wymagamy, aby dla różnych indeksów
+$i_1,\ldots,i_m\in\N$, $m\geq1$, i $a_j\in\{0,1\}$ zachodziło
 \[
 \Prob\{\omega:\omega_{i_j}=a_j,\ 1\leq j\leq m\}
-=\prod_{j=1}^m p^{a_j}(1-p)^{1-a_j}.
+=\prod_{j=1}^m q_{a_j},\qquad q_0=1-p,\quad q_1=p.
 \]
 Skonstruujemy tę miarę bez zakładania twierdzenia o istnieniu
 przeliczalnego produktu miar. Dla każdego skończonego słowa
@@ -691,19 +712,29 @@ ustalającego pierwszych $N$ współrzędnych na słowo $s$
 jest równy $I_s$. Cylindry ustalające dowolne skończone
 zbiory współrzędnych są skończonymi sumami takich cylindrów
 (na poziomie $N$ równym największemu ustalonemu indeksowi).
-Ich przeciwobrazy są więc borelowskie, a z własności
-przeciwobrazów wynika mierzalność $T$ względem $\sigma$-ciała
-generowanego przez cylindry. Definiujemy miarę obrazową
-$\Prob(A)=\lambda_1(T^{-1}(A))$. Przeliczalna addytywność
+Ich przeciwobrazy są więc borelowskie. Rodzina
+$\mathcal G=\{A\subseteq\Omega:T^{-1}(A)\in\mathcal B([0,1))\}$
+jest $\sigma$-ciałem, gdyż przeciwobrazy zachowują dopełnienia
+i przeliczalne sumy, a $T^{-1}(\Omega)=[0,1)$. Zawiera ona
+wszystkie cylindry, więc $\mathcal F\subseteq\mathcal G$.
+To dowodzi mierzalności $T$. Definiujemy miarę obrazową
+$\Prob(A)=\lambda_1(T^{-1}(A))$ dla $A\in\mathcal F$. Przeliczalna addytywność
 wynika z zachowywania rozłącznych sum przez przeciwobrazy,
 a normalizacja z $\lambda_1([0,1))=1$.
 
 Dla cylindra ustalającego współrzędne $i_1,\ldots,i_m$
 sumujemy długości odpowiednich przedziałów poziomu $N$.
-Każda swobodna współrzędna daje czynnik $q_0+q_1=1$,
-więc otrzymujemy $\prod_{j=1}^m q_{a_j}$, zgodnie
-z żądanym wzorem (potęgi o wykładniku zero interpretujemy
-jako $1$, również przy podstawie zero).
+Niech $J=\{i_1,\ldots,i_m\}$. Przedziały poziomu $N$
+są rozłączne, więc przez skończoną addytywność i rozdzielność
+mnożenia względem dodawania otrzymujemy
+\[
+\sum_{\substack{s\in\{0,1\}^N\\s_{i_j}=a_j,\ 1\leq j\leq m}}
+\prod_{\ell=1}^N q_{s_\ell}
+=\left(\prod_{j=1}^m q_{a_j}\right)
+ \prod_{\ell\in\{1,\ldots,N\}\setminus J}(q_0+q_1)
+=\prod_{j=1}^m q_{a_j}.
+\]
+Wzór ten obowiązuje również dla $p=0$ i $p=1$.
 
 Jednoznaczność wynika z twierdzenia o jednoznaczności miar
 skończonych na generującym układzie $\pi$
@@ -713,8 +744,11 @@ przecięcie dwóch zgodnych warunków cylindrycznych jest cylindrem,
 a przecięcie sprzecznych warunków jest puste. Wszystkie rozważane
 miary mają masę całkowitą $1$ i są zgodne na cylindrach.
 Otrzymana miara jest przeliczalnym produktem miar Bernoulliego.
-Jej własności skończeniewymiarowe opisują niezależne rzuty monetą,
-lecz pojedynczym wynikiem jest cały nieskończony ciąg.
+W szczególności zdarzenia $E_i=\{\omega:\omega_i=1\}$ mają
+prawdopodobieństwo $p$ i są wzajemnie niezależne, ponieważ
+dla każdej skończonej rodziny różnych indeksów ich przecięcie
+ma prawdopodobieństwo $p^m=\prod_{j=1}^m\Prob(E_{i_j})$.
+Pojedynczym wynikiem jest jednak cały nieskończony ciąg.
 \end{przyklad}
 
 \begin{uwaga}
