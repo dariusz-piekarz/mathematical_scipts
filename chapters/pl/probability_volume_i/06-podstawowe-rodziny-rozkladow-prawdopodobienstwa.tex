@@ -1179,10 +1179,11 @@ jako rozkład chi.
 \end{przyklad}
 
 \section{Rozkład beta}
-W przeciwieństwie do rozkładu gamma, który żyje na dodatniej
-półprostej, rozkład beta jest skupiony na odcinku $(0,1)$.
-Dzięki dwóm parametrom może być symetryczny, skupiony bliżej
-jednego końca albo silnie wygięty w środku przedziału.
+W przeciwieństwie do rozkładu gamma, skupionego na dodatniej
+półprostej, rozkład beta jest skupiony na przedziale $(0,1)$.
+Dzięki dwóm parametrom jego gęstość może być symetryczna,
+mieć maksimum wewnątrz przedziału lub rosnąć przy jednym
+bądź obu końcach.
 Jest więc użyteczny do modelowania proporcji i udziałów.
 Jego normalizacja pochodzi wprost z funkcji beta Eulera.
 
@@ -1190,8 +1191,11 @@ Jego normalizacja pochodzi wprost z funkcji beta Eulera.
 Niech $a,b>0$. Rozkładem beta $\Betad(a,b)$ na $(0,1)$
 nazywamy rozkład o gęstości
 \begin{equation}\label{eq:beta}
-f(x)=\frac{x^{a-1}(1-x)^{b-1}}{\mathrm B(a,b)}
-\ind{\{0<x<1\}}.
+f(x)=
+\begin{cases}
+\displaystyle\frac{x^{a-1}(1-x)^{b-1}}{\mathrm B(a,b)},&0<x<1,\\
+0,&x\notin(0,1).
+\end{cases}
 \end{equation}
 \end{definicja}
 
@@ -1205,10 +1209,15 @@ Rozkład $\Betad(1,1)$ jest jednostajny na $(0,1)$.
 \end{stwierdzenie}
 \begin{proof}
 Najpierw sprawdzamy normalizację: gęstość jest
-nieujemna, a jej całka po $(0,1)$ równa
-$\mathrm B(a,b)/\mathrm B(a,b)=1$.
-Dla $r\geq0$ mnożenie gęstości przez $x^r$
-i wykorzystanie definicji funkcji beta daje
+borelowska i nieujemna, a jej całka po $\R$ równa
+$\mathrm B(a,b)/\mathrm B(a,b)=1$, gdyż $a,b>0$.
+Zatem $\Prob(0<X<1)=1$, co zapewnia skończoność
+wszystkich momentów bezwzględnych dodatnich rzędów.
+Dla rzeczywistego $r\geq0$ stosujemy \eqref{eq:lotus}
+do funkcji $x\mapsto x^r$ na $(0,1)$, przedłużonej
+mierzalnie przez zero poza tym przedziałem.
+Dla $r=0$ przyjmujemy $X^0=1$ prawie na pewno.
+Z definicji funkcji beta i tożsamości beta--gamma wynika
 \[
 \E X^r=\frac{\mathrm B(a+r,b)}{\mathrm B(a,b)}
 =\frac{\Gamma(a+r)\Gamma(a+b)}
@@ -1239,10 +1248,25 @@ steruje częstością takich odchyleń i decyduje, które momenty
 w ogóle istnieją.
 
 \begin{definicja}
-Niech $\nu>0$, $Z\sim\Normal(0,1)$ oraz
-$U\sim\chi^2_\nu$ będą niezależne. Zmienną
-$T:=Z/\sqrt{U/\nu}$ nazywamy zmienną o rozkładzie
-t-Studenta z $\nu$ stopniami swobody i zapisujemy $T\sim t_\nu$.
+Niech $\nu>0$, a $Z\sim\Normal(0,1)$ oraz
+$U\sim\chi^2_\nu$ będą niezależnymi zmiennymi na wspólnej
+przestrzeni probabilistycznej (takie zmienne można
+skonstruować na iloczynie przestrzeni z tymi rozkładami).
+Ponieważ $\Prob(U>0)=1$, definiujemy
+\[
+T=\begin{cases}
+Z/\sqrt{U/\nu},&U>0,\\
+0,&U\leq0.
+\end{cases}
+\]
+Jest to zmienna mierzalna: funkcja dwóch zmiennych
+użyta w definicji jest ciągła na $\R\times(0,\infty)$
+i przedłużona zerem na dopełnieniu tego zbioru.
+Jej rozkład zależy wyłącznie od $\nu$, gdyż rozkład
+łączny $(Z,U)$ jest iloczynem ustalonych rozkładów,
+a rozkład $T$ jest jego obrazem.
+Nazywamy go rozkładem t-Studenta z $\nu$ stopniami swobody
+i zapisujemy $T\sim t_\nu$.
 \end{definicja}
 
 \begin{twierdzenie}[Gęstość rozkładu Studenta]
@@ -1255,21 +1279,40 @@ f_\nu(t)=
 \end{equation}
 Gęstość jest parzysta. Dla $\nu>1$ wartość oczekiwana
 jest równa zero, a dla $\nu>2$ wariancja wynosi $\nu/(\nu-2)$.
-Dla $0<\nu\leq1$ wartość oczekiwana nie istnieje,
-a dla $0<\nu\leq2$ drugi moment jest nieskończony.
+Dla dowolnego rzeczywistego $r>0$ moment bezwzględny
+$\E|T|^r$ jest skończony wtedy i tylko wtedy, gdy $r<\nu$.
+Dla $0<\nu\leq1$ obie części całki definiującej wartość
+oczekiwaną są nieskończone, więc wartość oczekiwana nie
+istnieje. Dla $0<\nu\leq2$ drugi moment jest nieskończony.
 \end{twierdzenie}
 \begin{proof}
 Niech $\varphi(z)=(2\pi)^{-1/2}e^{-z^2/2}$ oznacza
 gęstość standardowego rozkładu normalnego.
-Z niezależności $(Z,U)$ ma na $\R\times(0,\infty)$
-gęstość $\varphi(z)f_U(u)$, gdzie
-$f_U(u)=u^{\nu/2-1}e^{-u/2}/(2^{\nu/2}\Gamma(\nu/2))$.
-Dla ustalonego $u>0$ przechodzimy od
-$(z,u)$ do $(t,u)$ przez $z=t\sqrt{u/\nu}$.
-Moduł jakobianu odwrotnej zmiany jest
-$\sqrt{u/\nu}$. Stąd gęstość pary $(T,U)$
-wynosi $\varphi(t\sqrt{u/\nu})f_U(u)\sqrt{u/\nu}$.
-Całkując po $u$ i grupując potęgi, otrzymujemy
+Z niezależności i wzoru na gęstość rozkładu łącznego
+(rozdział~\ref{ch:random-variables}) para $(Z,U)$
+ma gęstość $\varphi(z)f_U(u)$, gdzie dla $u>0$
+$f_U(u)=u^{\nu/2-1}e^{-u/2}/(2^{\nu/2}\Gamma(\nu/2))$,
+a dla $u\leq0$ gęstość jest zerowa.
+Odwzorowanie $(z,u)\mapsto(z\sqrt{\nu/u},u)$
+jest dyfeomorfizmem klasy $C^1$ obszaru
+$\R\times(0,\infty)$ na siebie, z odwrotnością
+$(t,u)\mapsto(t\sqrt{u/\nu},u)$.
+Macierz pochodnych odwrotności jest równa
+\[
+\begin{pmatrix}
+\sqrt{u/\nu}&t/(2\sqrt{\nu u})\\
+0&1
+\end{pmatrix},
+\]
+więc moduł jej wyznacznika wynosi $\sqrt{u/\nu}$.
+Rozkład $(Z,U)$ jest skupiony w tym obszarze,
+zatem \atlasref{ME-13::thm:change-variables-13}{twierdzenie o zamianie zmiennych}
+daje gęstość pary $(T,U)$ równą
+$\varphi(t\sqrt{u/\nu})f_U(u)\sqrt{u/\nu}$ dla $u>0$
+i zeru poza tym obszarem.
+Stosując Tonellego do nieujemnej gęstości, uzyskujemy
+gęstość brzegową $T$ przez całkowanie po $u$.
+Po zebraniu potęg otrzymujemy
 \[
 f_T(t)=\frac1{\sqrt{2\pi\nu}\,2^{\nu/2}\Gamma(\nu/2)}
 \int_0^\infty u^{(\nu+1)/2-1}
@@ -1287,28 +1330,59 @@ f_T(t)=\frac{\Gamma((\nu+1)/2)}
 {\sqrt{\nu\pi}\,\Gamma(\nu/2)}
 \left(1+\frac{t^2}{\nu}\right)^{-(\nu+1)/2}.
 \]
-Gęstość jest parzysta, ale symetria sama w sobie
-nie gwarantuje istnienia wartości oczekiwanej.
-Dla $|t|\geq1$ istnieją stałe dodatnie $c_1,c_2$
-(zależne od $\nu$) takie, że
-$c_1|t|^{-\nu-1}\leq f_T(t)
+Gęstość jest ciągła, dodatnia i parzysta, ale symetria
+sama w sobie nie gwarantuje istnienia wartości oczekiwanej.
+Na $[-1,1]$ funkcja $|t|^rf_T(t)$ dla $r\geq0$
+jest ograniczona (dla $r=0$ przyjmujemy $|t|^0=1$).
+Dla $|t|\geq1$ zachodzi
+\[
+\frac{t^2}{\nu}\leq1+\frac{t^2}{\nu}
+\leq(1+1/\nu)t^2.
+\]
+Podnosząc strony do potęgi $-(\nu+1)/2$ i mnożąc
+przez dodatni współczynnik z \eqref{eq:student},
+otrzymujemy stałe $c_1,c_2>0$ zależne wyłącznie od $\nu$
+takie, że $c_1|t|^{-\nu-1}\leq f_T(t)
 \leq c_2|t|^{-\nu-1}$. Zatem dla $r\geq0$
 całka $\int_{|t|\geq1}|t|^rf_T(t)\,\dd\lambda_1(t)$
 zachowuje się pod względem zbieżności jak
 $\int_1^\infty t^{r-\nu-1}\,\dd\lambda_1(t)$,
 a ta jest skończona dokładnie dla $r<\nu$.
 W konsekwencji $\E|T|<\infty$ wtedy i tylko wtedy,
-gdy $\nu>1$; w tym przypadku $\E T=0$ przez parzystość.
-Dla $\nu>2$ drugi moment istnieje i
+gdy $\nu>1$; w tym przypadku $\E T=0$ przez
+nieparzystość całkowalnej funkcji $t\mapsto tf_T(t)$.
+Dla $0<\nu\leq1$ całki
+$\int_0^\infty tf_T(t)\,\dd\lambda_1(t)$ oraz
+$\int_{-\infty}^0(-t)f_T(t)\,\dd\lambda_1(t)$
+są równe z parzystości gęstości, a ich suma jest
+nieskończona, więc obie są nieskończone.
+
+Dla $\nu>2$ obliczamy odwrotny moment $U$, przyjmując
+$U^{-1}=0$ na $\{U\leq0\}$. Podstawienie $v=u/2$
+i rekurencja funkcji gamma dają
+\[
+\E(U^{-1})=
+\frac{1}{2^{\nu/2}\Gamma(\nu/2)}
+\int_0^\infty u^{\nu/2-2}e^{-u/2}\,\dd\lambda_1(u)
+=\frac{\Gamma(\nu/2-1)}{2\Gamma(\nu/2)}
+=\frac1{\nu-2}.
+\]
+Argument $\nu/2-1$ funkcji gamma jest dodatni,
+więc całka jest skończona. Ponieważ $Z,U$ są niezależne,
+rozkład łączny jest produktowy; Tonelli zastosowany
+do nieujemnej funkcji $(z,u)\mapsto z^2/u$ dla $u>0$
+(zerowej dla $u\leq0$) daje
 \[
 \E T^2=\nu\E Z^2\,\E(U^{-1})
-=\nu\frac{1}{\nu-2},
+=\frac{\nu}{\nu-2},
 \]
-ponieważ $\E Z^2=1$ oraz, z całki gamma,
-$\E(U^{-1})=1/(\nu-2)$. Zatem
-$\Var(T)=\nu/(\nu-2)$. Przy $\nu\leq2$ drugi
-moment jest nieskończony, więc wariancja nie jest
-skończoną liczbą; dla $\nu\leq1$ średnia nie istnieje.
+gdzie $\E Z^2=1$ z własności rozkładu normalnego.
+Stąd $\Var(T)=\nu/(\nu-2)$.
+Dla $1<\nu\leq2$ średnia wynosi zero, lecz wariancja
+nie jest skończona (w konwencji dopuszczającej
+wariancję rozszerzoną wynosi $+\infty$).
+Dla $0<\nu\leq1$ wariancja nie jest określona,
+gdyż nie istnieje średnia.
 \end{proof}
 
 \begin{uwaga}
@@ -1316,9 +1390,39 @@ Parametr $\nu$ w definicji rozkładu Studenta może być dowolną
 dodatnią liczbą rzeczywistą. W klasycznych zadaniach o estymacji
 wariancji na podstawie próby normalnej występują zwykle całkowite
 liczby stopni swobody, często $n-1$.
-Dla $\nu\to\infty$ rozkład $t_\nu$ zbiega według rozkładu
-do $\Normal(0,1)$; dowód znajdzie się w rozdziale
-o centralnym twierdzeniu granicznym.
+Dla $\nu\to\infty$ rozkłady $t_\nu$ zbiegają według
+rozkładu do $\Normal(0,1)$. Istotnie, dla
+$U\sim\chi^2_\nu$ mamy $\E(U/\nu)=1$ i
+$\Var(U/\nu)=2/\nu$. Nierówność Czebyszewa daje
+\[
+\Prob(|U/\nu-1|\geq\varepsilon)\leq
+\frac{2}{\nu\varepsilon^2}.
+\]
+Z niezależności $Z$ i $U$ oraz twierdzenia Fubiniego
+dla ograniczonej funkcji charakterystycznej otrzymujemy
+\[
+F_{t_\nu}(x)=\E\Phi(x\sqrt{U/\nu}),
+\qquad x\in\R,
+\]
+gdzie $\Phi$ jest dystrybuantą standardowego rozkładu
+normalnego, a wartość podcałkową na $\{U\leq0\}$
+można określić dowolnie w $[0,1]$.
+Dla ustalonego $x\in\R$ i $\eta>0$ z ciągłości funkcji
+$v\mapsto\Phi(x\sqrt v)$ w $1$ wybieramy
+$\varepsilon\in(0,1)$ tak, by dla $|v-1|<\varepsilon$
+różnica $|\Phi(x\sqrt v)-\Phi(x)|$ była mniejsza od $\eta$.
+Rozdzielając całkę na zdarzenia
+$\{|U/\nu-1|<\varepsilon\}$ i jego dopełnienie, mamy
+\[
+|F_{t_\nu}(x)-\Phi(x)|
+\leq\eta+\frac{2}{\nu\varepsilon^2}.
+\]
+Najpierw przechodzimy do granicy górnej przy
+$\nu\to\infty$, a następnie do granicy $\eta\downarrow0$.
+Otrzymujemy zbieżność dystrybuant w każdym punkcie,
+czyli zbieżność według rozkładu
+(rozdział~\ref{ch:convergence}). Dowód nie wymaga
+całkowitości liczby stopni swobody.
 \end{uwaga}
 
 \section{Rozkład Cauchy'ego}
@@ -1345,21 +1449,42 @@ Jeżeli $X$ ma powyższy rozkład, to
 F_X(x)=\frac12+\frac1\pi
 \arctan\!\left(\frac{x-x_0}{\gamma}\right).
 \]
-Dla każdego $r\geq1$ zachodzi $\E|X-x_0|^r=\infty$.
+Dla każdego rzeczywistego $r>0$ zachodzi
+$\E|X-x_0|^r<\infty$ wtedy i tylko wtedy, gdy $r<1$.
 W szczególności wartość oczekiwana $\E X$ nie istnieje,
 a wariancja nie jest zdefiniowana.
 Rozkład standardowy Cauchy'ego ($x_0=0$, $\gamma=1$)
 jest równy rozkładowi $t_1$.
 \end{stwierdzenie}
 \begin{proof}
-Całka z gęstości \eqref{eq:cauchy} po $(-\infty,x]$
-daje wskazaną dystrybuantę.
-Dla dużych $|x|$ funkcja $|x-x_0|^r f(x)$
-zachowuje się jak dodatnia stała razy $|x|^{r-2}$,
-której całka po półprostej jest rozbieżna dla $r\geq1$.
-W szczególności dodatnia i ujemna część
-$X-x_0$ mają nieskończone wartości oczekiwane,
-więc nie można definiować średniej jako ich różnicy.
+Gęstość \eqref{eq:cauchy} jest ciągła i nieujemna.
+Podstawiając $v=(u-x_0)/\gamma$, otrzymujemy
+\[
+\int_{-\infty}^x f(u)\,\dd\lambda_1(u)
+=\frac1\pi\int_{-\infty}^{(x-x_0)/\gamma}
+\frac{1}{1+v^2}\,\dd\lambda_1(v)
+=\frac12+\frac1\pi\arctan\!\left(\frac{x-x_0}{\gamma}\right).
+\]
+Przy $x\to\infty$ prawa strona dąży do $1$, co
+uzasadnia normalizację gęstości i wzór na dystrybuantę.
+Dla $r>0$, stosując \eqref{eq:lotus} i to samo
+podstawienie, mamy
+\[
+\E|X-x_0|^r=\frac{2\gamma^r}{\pi}
+\int_0^\infty\frac{v^r}{1+v^2}\,\dd\lambda_1(v).
+\]
+Całka na $(0,1)$ jest skończona, gdyż funkcja
+podcałkowa jest ograniczona. Dla $v\geq1$ zachodzi
+$\tfrac12 v^{r-2}\leq v^r/(1+v^2)\leq v^{r-2}$.
+Całka jest więc skończona dokładnie wtedy, gdy $r<1$.
+W szczególności z symetrii rozkładu $X-x_0$ obie części
+$(X-x_0)^+$ i $(X-x_0)^-$ mają nieskończone wartości
+oczekiwane. Funkcje $x\mapsto x^+$ i $x\mapsto x^-$
+są lipschitzowskie ze stałą $1$, stąd
+$(X-x_0)^\pm\leq X^\pm+|x_0|$.
+Z monotoniczności całki nieujemnej obie wartości
+$\E X^+$ i $\E X^-$ również są nieskończone.
+Nie istnieje więc $\E X$, także w sensie rozszerzonym.
 Podstawienie $\nu=1$ do \eqref{eq:student} i tożsamości
 $\Gamma(1)=1$, $\Gamma(1/2)=\sqrt\pi$ daje gęstość
 $1/[\pi(1+x^2)]$ rozkładu standardowego Cauchy'ego.
@@ -1377,12 +1502,17 @@ wartości oczekiwanej.
 \end{przyklad}
 
 \begin{przyklad}[Tangens kąta jednostajnego]
-Jeśli $U\sim\Unif(-\pi/2,\pi/2)$ i $X=\tan U$,
-to $X$ ma standardowy rozkład Cauchy'ego. Rzeczywiście,
-$\tan$ jest dyfeomorfizmem tego przedziału na $\R$,
+Niech $U\sim\Unif(-\pi/2,\pi/2)$. Definiujemy
+$X=\tan U$ na zdarzeniu $\{-\pi/2<U<\pi/2\}$,
+a poza nim $X=0$. Dopełnienie tego zdarzenia jest
+mierzalnym zbiorem zerowym, a tak określona zmienna
+jest mierzalna. Funkcja $\tan$ jest dyfeomorfizmem
+klasy $C^1$ przedziału $(-\pi/2,\pi/2)$ na $\R$,
 a pochodna funkcji odwrotnej wynosi
-$(\arctan x)'=1/(1+x^2)$.
-Wzór na transformację gęstości daje $f_X(x)=1/[\pi(1+x^2)]$.
+$(\arctan x)'=1/(1+x^2)>0$.
+Wzór na transformację gęstości z rozdziału~\ref{ch:random-variables}
+daje $f_X(x)=1/[\pi(1+x^2)]$, czyli gęstość standardowego
+rozkładu Cauchy'ego.
 \end{przyklad}
 
 
@@ -1392,16 +1522,21 @@ Cauchy'ego i niech $t>0$. Z nierówności Markowa
 dla $Z^2$ wynika $\Prob(|Z|\geq t)\leq1/t^2$.
 W rzeczywistości ogon normalny maleje znacznie szybciej:
 dla każdego $u>0$, korzystając z
-$M_Z(u)=e^{u^2/2}$, mamy
+$M_Z(u)=e^{u^2/2}$ i stosując nierówność Markowa
+do nieujemnej zmiennej $e^{uZ}$ z progiem $e^{ut}>0$, mamy
 $\Prob(Z\geq t)=\Prob(e^{uZ}\geq e^{ut})
 \leq e^{-ut+u^2/2}$.
 Wybór $u=t$ daje $\Prob(Z\geq t)\leq e^{-t^2/2}$,
 a przez symetrię $\Prob(|Z|\geq t)\leq2e^{-t^2/2}$.
 
 Tymczasem dla $C$ zachodzi
-$\Prob(|C|\geq t)=1-(2/\pi)\arctan t$.
-Z asymptotyki $\pi/2-\arctan t\sim1/t$
-otrzymujemy $\Prob(|C|\geq t)\sim 2/(\pi t)$.
+$\Prob(|C|\geq t)=1-(2/\pi)\arctan t$,
+gdyż rozkład jest symetryczny i nie ma mas punktowych.
+Dla $t>0$ mamy $\pi/2-\arctan t=\arctan(1/t)$,
+a z różniczkowalności funkcji $\arctan$ w zerze
+wynika $\arctan v/v\to1$ przy $v\downarrow0$.
+W konsekwencji $\Prob(|C|\geq t)\sim 2/(\pi t)$
+przy $t\to\infty$.
 Różnica między zanikiem wykładniczym a potęgowym
 wyjaśnia, dlaczego w rozkładzie Cauchy'ego brak nawet
 pierwszego bezwzględnego momentu.
