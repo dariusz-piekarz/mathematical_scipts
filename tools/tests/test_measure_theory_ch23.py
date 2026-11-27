@@ -157,6 +157,39 @@ class TestHaarChapter23(unittest.TestCase):
         delta_y = [int(z == y) for z in S3]
         self.assertNotEqual(conv(delta_x, delta_y), conv(delta_y, delta_x))
 
+    def test_affine_inversion_integrability_counterexample(self):
+        # On [0,1] x [2**k, 2**(k+1)] the left Haar mass is
+        # 2**(-k-1), while the inversion-weighted mass is log(2).
+        # The latter has a uniform positive lower bound 1/2.
+        for n in (1, 4, 16, 64):
+            masses = []
+            weighted_lower_bounds = []
+            for k in range(n):
+                a, b = 2**k, 2**(k+1)
+                masses.append(Fraction(1, a) - Fraction(1, b))
+                weighted_lower_bounds.append(Fraction(b-a, b))
+            self.assertEqual(sum(masses), 1-Fraction(1, 2**n))
+            self.assertEqual(sum(weighted_lower_bounds), Fraction(n, 2))
+
+    def test_convolution_with_rescaled_counting_measure(self):
+        f = [Fraction(x) for x in (1, -2, 0, 3, 1, -1)]
+        g = [Fraction(x) for x in (0, 1, 2, -1, 0, 3)]
+
+        def conv(scale):
+            out = [Fraction(0)] * len(S3)
+            for x in S3:
+                for y in S3:
+                    out[IDX[mul(x, y)]] += scale*f[IDX[x]]*g[IDX[y]]
+            return out
+
+        base = conv(Fraction(1))
+        for c in (Fraction(1, 6), Fraction(2), Fraction(5, 3)):
+            scaled = conv(c)
+            self.assertEqual(scaled, [c*x for x in base])
+            self.assertEqual(c*sum(scaled), (c*sum(f))*(c*sum(g)))
+            self.assertLessEqual(c*sum(map(abs, scaled)),
+                                 (c*sum(map(abs, f)))*(c*sum(map(abs, g))))
+
     def test_source_guards(self):
         s = SOURCE.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}", s)
