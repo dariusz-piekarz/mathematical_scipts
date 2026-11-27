@@ -68,6 +68,28 @@ class FigurePreviewTests(unittest.TestCase):
         source = r'\begin{tikzpicture}\node {$\mathscr B$};\end{tikzpicture}'
         self.assertIn(r'\usepackage{mathrsfs}', renderer.preamble('AM2-15', source))
 
+    def test_stmaryrd_for_boolean_brackets_and_canonical_template(self):
+        source = r'\begin{tikzpicture}\node {$\llbracket p\rrbracket$};\end{tikzpicture}'
+        self.assertIn(r'\usepackage{stmaryrd}', renderer.preamble('ALG-08', source))
+        self.assertIn(r'\usepackage{stmaryrd}', renderer.preamble('LST-35', SOURCE))
+        self.assertNotIn(r'\usepackage{stmaryrd}', renderer.preamble('GW-01', SOURCE))
+
+    def test_math_package_imports_are_allowlisted(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            preambles = root / 'config' / 'preambles'
+            preambles.mkdir(parents=True)
+            (preambles / 'TEST.tex').write_text(
+                r'% \usepackage{mathrsfs}' + '\n'
+                + r'\usepackage[foo]{stmaryrd,unrelatedpackage}',
+                encoding='utf-8')
+            with patch.object(renderer, 'ROOT', root):
+                header = renderer.preamble('TEST-01', SOURCE + r'\usepackage{anotherpackage}')
+            self.assertIn(r'\usepackage{stmaryrd}', header)
+            self.assertNotIn(r'\usepackage{mathrsfs}', header)
+            self.assertNotIn('unrelatedpackage', header)
+            self.assertNotIn('anotherpackage', header)
+
     def test_render_cache_and_failed_compilation(self):
         key = next(iter(renderer.figures(SOURCE)))
         with tempfile.TemporaryDirectory() as temp, patch.object(renderer, 'CACHE', Path(temp)), patch.object(renderer.shutil, 'which', side_effect=lambda name: name):

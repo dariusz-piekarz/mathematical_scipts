@@ -94,12 +94,30 @@ def preamble(module: str, content: str, figure_id: str | None = None) -> str:
     for value in re.findall(r'\\usetikzlibrary\{([^{}]+)\}', book + '\n' + content):
         libraries.update(x.strip() for x in value.split(',') if re.fullmatch(r'[a-zA-Z0-9.]+', x.strip()))
     packages = r'\usepackage{pgfplots}\pgfplotsset{compat=1.18}' if '\\begin{axis}' in content or '\\pgfplots' in book else ''
+    # Only import explicitly supported math packages, never arbitrary package
+    # names from a chapter. Ignore commented-out package declarations.
+    book_code = re.sub(r'(?m)(?<!\\)%.*$', '', book)
+    book_packages = {
+        name.strip()
+        for value in re.findall(r'\\usepackage(?:\[[^]]*\])?\{([^}]+)\}', book_code)
+        for name in value.split(',')
+    }
+    math_packages = '\n'.join(
+        r'\usepackage{' + name + '}'
+        for name, commands in (
+            ('mathrsfs', ('mathscr',)),
+            ('stmaryrd', ('llbracket', 'rrbracket')),
+        )
+        if name in book_packages or any(
+            re.search(r'\\' + command + r'(?![A-Za-z])', content) for command in commands
+        )
+    )
     return '\n'.join([
         r'\documentclass[tikz,border=8pt]{standalone}',
         r'\usepackage[T1]{fontenc}\usepackage[utf8]{inputenc}\usepackage[polish]{babel}',
         r'\usepackage{lmodern}',
         r'\usepackage{amsmath,amssymb,mathtools}',
-        r'\usepackage{mathrsfs}' if r'\mathscr' in content or re.search(r'\\usepackage(?:\[[^]]*\])?\{[^}]*\bmathrsfs\b[^}]*\}', book) else '',
+        math_packages,
         r'\AtBeginDocument{\shorthandoff{"}}',
         r'\usetikzlibrary{' + ','.join(sorted(libraries)) + '}', packages,
         r'\usepackage{tikz-cd}' if r'\begin{tikzcd}' in content else '',
