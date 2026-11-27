@@ -66,17 +66,23 @@ class Chapter36(unittest.TestCase):
 
     def test_no_dependency_on_retired_cal(self):
         import json
-        source=SOURCE.read_text(encoding="utf8")
         catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf8"))
-        measure=next(b for b in catalog["books"]
-                     if b["id"]=="measure_theory" and b["language"]=="pl")
-        for code,label in re.findall(r"\\atlasref\{([^}]+)::([^}]+)\}",source):
-            with self.subTest(chapter=code,label=label):
-                self.assertFalse(code.startswith("CAL-"),
-                                 "migrated chapter must not depend on CAL")
-                if code.startswith("ME-"):
-                    number=code.split("-")[1]
-                    matches=[p for p in measure["chapters"]
+        book_ids={"ME":"measure_theory",
+                  "FA":"functional_analysis",
+                  "PDE":"partial_differential_equations",
+                  "AM2":"mathematical_analysis_ii"}
+        chapters=[SOURCE, ROOT/"chapters/pl/mathematical_analysis_i/22-pochodne-wyzsze.tex"]
+        for chapter in chapters:
+            chapter_source=chapter.read_text(encoding="utf8")
+            for code,label in re.findall(r"\\atlasref\{([^}]+)::([^}]+)\}",chapter_source):
+                with self.subTest(source=chapter.name,chapter=code,label=label):
+                    prefix,number=code.split("-",1)
+                    self.assertNotEqual(prefix,"CAL",
+                                        "migrated chapter must not depend on CAL")
+                    self.assertIn(prefix,book_ids)
+                    book=next(b for b in catalog["books"]
+                              if b["id"]==book_ids[prefix] and b["language"]=="pl")
+                    matches=[p for p in book["chapters"]
                              if Path(p).name.startswith(number+"-")]
                     self.assertEqual(len(matches),1)
                     target=(ROOT/matches[0]).read_text(encoding="utf8")
