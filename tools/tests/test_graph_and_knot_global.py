@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Global structural audit for the entire 44-source graph-and-knot textbook.
+"""Global structural audit for the entire graph-and-knot textbook (all catalogued sources).
 
 This is a *structural* and duplicate-risk audit, not a mathematical proof.
 Writes a machine-readable report for independently inspecting the findings.
