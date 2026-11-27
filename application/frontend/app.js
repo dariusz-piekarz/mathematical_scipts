@@ -22,6 +22,7 @@ async function api(path, options={}) {
   return response.json();
 }
 function activateTab(name){
+  dismissSearch();
   state.tab=name;
   document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
   for(const k of ["reader","lean","graph","concepts","selection"])$("view-"+k).classList.toggle("hidden",k!==name);
@@ -512,6 +513,9 @@ function handleSearchResultKey(event){
   event.preventDefault();
   if(next<0)input.focus();else buttons[next].focus();
 }
+function dismissSearchOutside(event){
+  if(!event.target.closest?.(".header-search"))dismissSearch();
+}
 function setupSearch(){
   const input=$("searchInput");
   input.addEventListener("input",()=>{
@@ -525,7 +529,10 @@ function setupSearch(){
     else handleSearchResultKey(e);
   });
   $("searchResults").addEventListener("keydown",handleSearchResultKey);
-  document.addEventListener("click",e=>{if(!e.target.closest(".header-search"))dismissSearch();});
+  document.addEventListener("click",dismissSearchOutside);
+  // Tab and programmatic focus changes must cancel outstanding searches
+  // too; focus moving between the input and result buttons stays inside.
+  document.addEventListener("focusin",dismissSearchOutside);
 }
 async function performSearch(q){
   if(!q||$("searchInput").value.trim()!==q)return;
@@ -1510,6 +1517,7 @@ function setExplorerVisible(visible){
 }
 explorerMedia.addEventListener('change',()=>{$('explorer').classList.remove('visible');syncExplorer();});
 function setReadingMode(enabled){
+  if(enabled)dismissSearch();
   readingMode=enabled;
   document.documentElement.classList.toggle('reading-mode',enabled);
   $('readingMode').textContent=enabled?'⛶ Zakończ pełny ekran':'⛶ Pełny ekran';
