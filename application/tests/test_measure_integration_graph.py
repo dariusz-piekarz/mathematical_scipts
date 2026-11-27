@@ -18,8 +18,8 @@ class MeasureIntegrationGraphTest(unittest.TestCase):
         if not canonical.is_dir():
             self.skipTest("canonical repository chapters not available")
         # CAL is a donor script during redistribution. Retain its exact
-        # outgoing links while requiring the current canonical AM1 owners,
-        # not obsolete backlinks into the donor script.
+        # redirect links while requiring current canonical AM1 and ME owners,
+        # not obsolete dependencies on retired donor bodies.
         expected = (
             ("CAL-01", "AM1-29", "ma1:thm:darboux-criterion"),
             ("CAL-02", "AM1-29", "ma1:thm:riemann-darboux-equivalence"),
@@ -38,11 +38,15 @@ class MeasureIntegrationGraphTest(unittest.TestCase):
             ("ME-21", "ME-32", "it:thm:daniell-stone-general"),
             ("ME-21", "ME-32", "it:ex:daniell-cc"),
             ("ME-21", "ME-32", "it:thm:daniell-radon-comparison"),
-            ("CAL-12", "ME-03", "thm:caratheodory"),
+            # CAL-12 is now a redirect; the canonical dependency lives in ME-32.
+            ("CAL-12", "ME-32", "ch:daniell-stone-32"),
+            ("CAL-12", "ME-32", "it:thm:daniell-stone"),
+            ("ME-32", "ME-03", "thm:caratheodory"),
             ("CAL-11", "ME-07", "ch:calkowanie-lebesgue"),
             ("CAL-14", "ME-23", "thm:haar-main-23"),
-            ("CAL-14", "GT-24", "def:topog24-group"),
-            ("CAL-14", "GT-14", "def:topog-baire-lokalna-zwartosc"),
+            # The canonical Haar chapter retains both topology dependencies.
+            ("CAL-14", "ME-23", "ch:haar-23"),
+            ("CAL-14", "ME-23", "cor:haar-finiteness-23"),
             ("ME-23", "GT-24", "def:topog24-group"),
             ("ME-23", "GT-14", "def:topog-baire-lokalna-zwartosc"),
         )
