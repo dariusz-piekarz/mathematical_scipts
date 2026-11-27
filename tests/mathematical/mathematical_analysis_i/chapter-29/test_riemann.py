@@ -183,6 +183,21 @@ class Chapter29(unittest.TestCase):
         s=sum(2*t*(b-a) for a,b,t in zip(p,p[1:],tags))
         self.assertEqual(s,G(p[-1])-G(p[0]))
 
+    def test_thomae_labels_preserve_original_and_distinguish_riemann_example(self):
+        root = Path(__file__).resolve().parents[4]
+        chapters = root / "chapters/pl/mathematical_analysis_i"
+        original = r"\label{ma1:ex:thomae}"
+        riemann = r"\label{ma1:ex:thomae-riemann}"
+        owners = {original: [], riemann: []}
+        for path in sorted(chapters.glob("*.tex")):
+            source = path.read_text(encoding="utf8")
+            for label in owners:
+                owners[label].extend([path.name] * source.count(label))
+        self.assertEqual(owners[original], ["19-funkcje-patologiczne.tex"])
+        self.assertEqual(owners[riemann], ["29-calka-riemanna.tex"])
+        source = (chapters / owners[riemann][0]).read_text(encoding="utf8")
+        self.assertIn(r"\ref{ma1:ex:thomae-riemann}", source)
+
     def test_figure_source(self):
         s=(Path(__file__).resolve().parents[4] /
            "chapters/pl/mathematical_analysis_i/29-calka-riemanna.tex").read_text(encoding="utf8")
