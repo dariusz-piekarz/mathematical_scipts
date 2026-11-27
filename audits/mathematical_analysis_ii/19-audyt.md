@@ -1,0 +1,3 @@
+# AM II 19 — Twierdzenie o funkcji uwikłanej
+
+27.11.2026. Pierwsza wersja rozdziału: twierdzenie i redukcja do FA-15, równania z parametrami i prawą stroną, druga pochodna i oszacowanie normy, przypadek skalarny, sfera, dwa kontrprzykłady i równanie operatorowe. Dodano listing Plotly, definicję repozytoryjną oraz rejestrację AM2-19 w podglądzie. Włączono rozdział do książki i katalogu. Kontrola podczas tworzenia: 8 unikalnych etykiet, stos środowisk bez błędów, katalog poprawny składniowo. Nie uruchomiono kompilacji, testu przeglądarkowego ani audytów stabilizacyjnych. Rozdział pozostaje otwarty do szczegółowego audytu.

@@ -174,7 +174,8 @@ const ATLAS_AM2_PLOTS=Object.freeze({
   'AM2-12':'am2_12_direction.html','AM2-13':'am2_13_frechet.html',
   'AM2-14':'am2_14_remainder.html','AM2-15':'am2_15_mixed.html',
   'AM2-16':'am2_16_taylor.html','AM2-17':'am2_17_saddle.html',
-  'AM2-18':'am2_18_inverse.html','AM2-36':'am2_36_geometric.html'
+  'AM2-18':'am2_18_inverse.html','AM2-19':'am2_19_implicit.html',
+  'AM2-36':'am2_36_geometric.html'
 });
 function addAtlasPlot(parent,source,moduleId){
   if(!Object.hasOwn(ATLAS_AM2_PLOTS,moduleId))return;
