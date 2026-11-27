@@ -57,7 +57,14 @@ function buildProsePreview(container, source, moduleId) {
     function group(open='{',close='}') {
       whitespace(); if(text[i]!==open)return null;
       const start=++i;let depth=1;
-      while(i<text.length){if(text[i]==='\\'){i+=2;continue;}if(text[i]===open)depth++;if(text[i]===close && --depth===0){const value=text.slice(start,i);i++;return value;}i++;}
+      while(i<text.length){
+        if(text[i]==='\\'){i+=2;continue;}
+        // Braces in TeX comments do not belong to the argument.
+        if(text[i]==='%'){while(i<text.length&&text[i]!=='\n')i++;continue;}
+        if(text[i]===open)depth++;
+        if(text[i]===close && --depth===0){const value=text.slice(start,i);i++;return value;}
+        i++;
+      }
       return text.slice(start);
     }
     while(i<text.length) {
@@ -83,7 +90,7 @@ function buildProsePreview(container, source, moduleId) {
       const command=match[0].replace(/\*$/,'');i+=match[0].length;
       if(['newcommand','renewcommand','providecommand','DeclareMathOperator'].includes(command)) {group();while(true){whitespace();if(text[i]!=='[')break;group('[',']');}group();continue;}
       if(['label','index','bibliographystyle','bibliography'].includes(command)){group();continue;}
-      if(['noindent','indent','smallskip','medskip','bigskip','newpage','clearpage','centering'].includes(command))continue;
+      if(['noindent','indent','smallskip','medskip','bigskip','newpage','clearpage','centering','begingroup','endgroup'].includes(command))continue;
       if(command==='texorpdfstring') {
         const visible=group()||'';group();
         parse(visible,target(),true);continue;

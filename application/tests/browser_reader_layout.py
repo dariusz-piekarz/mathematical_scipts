@@ -119,6 +119,18 @@ with sync_playwright() as pw:
     assert page.evaluate(r"() => previewMacros('AM1-14')['\\HK'] === undefined")
     assert page.evaluate(r"() => previewMacros('MOD')['\\Q']") == r"\mathrm Q"
 
+    # A closing brace inside a comment must not end a declaration early.
+    # Grouping commands delimit scope but are not reader-visible prose.
+    commented = (r'\begingroup\providecommand{\testmacro}{\frac{1}{% }' + '\n'
+                 + r'2}}' + '\n' + r'Widoczny tekst: $\R$.\endgroup')
+    page.evaluate("source => renderSimplified(source, 'AM1-36')", commented)
+    assert 'Widoczny tekst:' in box.inner_text()
+    assert '2}' not in box.inner_text()
+    assert r'\begingroup' not in box.inner_text()
+    assert r'\endgroup' not in box.inner_text()
+    assert box.locator('.katex').count() == 1
+    assert page.locator('#mathPreviewStatus').is_hidden()
+
     # Keep wide equations and code independently scrollable, rather than
     # hiding document overflow and accidentally clipping their contents.
     wide = r'\[' + '+'.join(f'x_{{{i}}}' for i in range(100)) + r'\]'
