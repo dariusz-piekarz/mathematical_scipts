@@ -144,6 +144,8 @@ class TestMeasureTheoryChapter20(unittest.TestCase):
         refs = re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", src)
         self.assertFalse(set(refs) - all_labels)
         atlas_targets = {
+            "GT-05": "05-*.tex",
+            "GT-07": "07-*.tex",
             "GT-09": "09-*.tex",
             "GT-14": "14-*.tex",
             "GT-19": "19-*.tex",
