@@ -400,11 +400,27 @@ function addExcerpt(){
 function addRange(){
   addLineRange(Number($("rangeStart").value),Number($("rangeEnd").value));
 }
+function referenceTipPosition(anchor,width,height,viewportWidth,viewportHeight){
+  const margin=8,gap=8;
+  const maxLeft=Math.max(margin,viewportWidth-width-margin);
+  const maxTop=Math.max(margin,viewportHeight-height-margin);
+  const below=anchor.bottom+gap,above=anchor.top-gap-height;
+  const preferred=below+height<=viewportHeight-margin?below:
+    above>=margin?above:
+    viewportHeight-anchor.bottom>=anchor.top?below:above;
+  return {left:Math.max(margin,Math.min(maxLeft,anchor.left)),
+          top:Math.max(margin,Math.min(maxTop,preferred))};
+}
 function positionReferenceTip(anchor){
   const r=anchor.getBoundingClientRect(), tip=$("referenceTip");
   tip.classList.remove("hidden");
-  tip.style.left=Math.max(8,Math.min(window.innerWidth-448,r.left))+"px";
-  tip.style.top=Math.max(8,Math.min(window.innerHeight-tip.offsetHeight-12,r.bottom+8))+"px";
+  const bounds=tip.getBoundingClientRect();
+  const p=referenceTipPosition(r,bounds.width,bounds.height,window.innerWidth,window.innerHeight);
+  tip.style.left=p.left+"px";tip.style.top=p.top+"px";
+}
+function dismissTipOnReaderScroll(event){
+  // Scrolling an equation or a long list inside the overlay must not dismiss it.
+  if(state.tooltipAnchor && !$("referenceTip").contains(event.target))closeTip();
 }
 async function previewLabel(label,anchor,sourceDocument=null){
   if(!anchor?.isConnected)return;
@@ -1410,6 +1426,8 @@ function listeners(){
   $("closeTip").addEventListener("click",closeTip);
   $("tipOpen").addEventListener("click",()=>{const x=state.tooltipData;if(x)openLabel(x.name,x.source_document||state.currentModule);});
   $("referenceTip").addEventListener("mouseleave",closeTip);
+  $("view-reader").addEventListener("scroll",dismissTipOnReaderScroll,true);
+  window.addEventListener("resize",()=>{if(state.tooltipAnchor)closeTip();});
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeTip();});
   $("drawGraph").addEventListener("click",loadGraph);$("globalGraphCoverage").addEventListener("click",loadGlobalGraphCoverage);$("findPath").addEventListener("click",findPath);
   $("drawConceptGraph").addEventListener("click",loadConceptGraph);
