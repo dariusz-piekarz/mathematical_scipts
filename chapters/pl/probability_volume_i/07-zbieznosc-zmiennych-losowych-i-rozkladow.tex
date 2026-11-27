@@ -836,67 +836,142 @@ Jednostajna całkowalność zapobiega dokładnie temu
 rodzajowi ucieczki masy pierwszych momentów.
 \end{przyklad}
 
-\section{Kiedy zbieżność prawdopodobieństw wystarcza do zbieżności trajektorii?}
+\section{Kryteria zbieżności prawie na pewno}
 
 \begin{twierdzenie}[Kryterium sumowalnych odchyleń]
-Niech $X,X_1,X_2,\ldots$ będą zmiennymi losowymi na jednej
-przestrzeni probabilistycznej. Załóżmy, że dla każdego
+Niech $X,X_1,X_2,\ldots$ będą rzeczywistymi zmiennymi
+losowymi na jednej przestrzeni probabilistycznej.
+Załóżmy, że dla każdego
 $\varepsilon>0$ zachodzi
 $\sum_{n=1}^\infty\Prob(|X_n-X|>\varepsilon)<\infty$.
 Wówczas $X_n\to X$ prawie na pewno.
 \end{twierdzenie}
 \begin{proof}
-Dla każdego $r\in\N$ połóżmy
-$A_{n,r}=\{|X_n-X|>1/r\}$. Z pierwszego lematu
-Borela--Cantellego otrzymujemy $\Prob(\limsup_n A_{n,r})=0$.
-Przecięcie zbiorów
-$\Omega\setminus\limsup_n A_{n,r}$ po $r\in\N$
-ma prawdopodobieństwo jeden: korzystamy tu z przeliczalności
-zbioru progów $1/r$. Dla ustalonego $\omega$ z tego
-przecięcia i każdego $r$ nierówność
-$|X_n(\omega)-X(\omega)|\leq1/r$ zachodzi od pewnego
-indeksu, zależnego od $\omega$ i $r$. To jest dokładnie
-definicja zbieżności liczbowej $X_n(\omega)\to X(\omega)$.
+Dla każdej liczby całkowitej $r\geq1$ połóżmy
+$A_{n,r}=\{|X_n-X|>1/r\}$. Z mierzalności zmiennych
+wynika mierzalność tych zdarzeń, a z założenia
+$\sum_n\Prob(A_{n,r})<\infty$.
+Z pierwszego lematu Borela--Cantellego
+(rozdział~\ref{ch:probability}) otrzymujemy
+$\Prob(\limsup_n A_{n,r})=0$.
+Zbiór
+\[
+N=\bigcup_{r=1}^\infty\limsup_{n\to\infty} A_{n,r}
+\]
+jest mierzalny i ma prawdopodobieństwo zero
+z przeliczalnej podaddytywności miary.
+Jeżeli $\omega\in\Omega\setminus N$, to dla każdego
+$r\geq1$ istnieje $m=m(\omega,r)$ takie, że
+$\omega\notin A_{n,r}$ dla wszystkich $n\geq m$,
+czyli $|X_n(\omega)-X(\omega)|\leq1/r$.
+Dla dowolnego $\varepsilon>0$ wybieramy $r$ tak,
+aby $1/r<\varepsilon$; wtedy dla $n\geq m(\omega,r)$
+mamy $|X_n(\omega)-X(\omega)|<\varepsilon$.
+Zatem $X_n(\omega)\to X(\omega)$ dla wszystkich
+$\omega\in\Omega\setminus N$, co dowodzi tezy.
+Wystarczyło w istocie założyć sumowalność prawdopodobieństw
+dla przeliczalnej rodziny progów $1/r$; niezależność
+zdarzeń nie jest potrzebna.
 \end{proof}
 
 \begin{uwaga}
 Z kryterium wynika również, że
-$\sum_n\E|X_n-X|^p<\infty$ dla pewnego $p>0$
-implikuje zbieżność prawie na pewno: wystarczy
-nierówność Markowa z progiem $\varepsilon^p$.
-Odwrotność nie zachodzi. Zbieżność p.n. mówi,
-że dla każdej prawie każdej trajektorii dużych odchyleń
-jest skończenie wiele; nie mówi, że \emph{suma}
-ich prawdopodobieństw musi być skończona.
+$\sum_{n=1}^\infty\E|X_n-X|^p<\infty$ dla pewnego
+rzeczywistego $p>0$ implikuje zbieżność prawie na pewno.
+Istotnie, dla każdego $\varepsilon>0$ nierówność Markowa
+z progiem $\varepsilon^p$ daje
+\[
+\sum_{n=1}^\infty\Prob(|X_n-X|>\varepsilon)
+\leq\varepsilon^{-p}\sum_{n=1}^\infty\E|X_n-X|^p
+<\infty.
+\]
+Nie trzeba zakładać $p\geq1$, gdyż stosujemy nierówność
+do nieujemnej zmiennej $|X_n-X|^p$, a nie korzystamy
+z własności normy w $L^p$.
+
+Odwrotność kryterium sumowalnych odchyleń nie zachodzi.
+Niech $U\sim\Unif(0,1)$, $Y_n=\chi_{\{U\leq1/n\}}$
+i $Y=0$. Na zdarzeniu $\{U>0\}$ o prawdopodobieństwie
+jeden każda trajektoria $Y_n$ jest od pewnego miejsca
+zerowa. Mimo to dla $0<\varepsilon<1$ mamy
+$\Prob(|Y_n|>\varepsilon)=1/n$, a szereg harmoniczny
+jest rozbieżny. Również dla każdego $p>0$ zachodzi
+$\E|Y_n|^p=1/n$, więc warunek sumowalności momentów
+nie jest konieczny do zbieżności prawie na pewno.
+W tym przykładzie zdarzenia odchyleń są malejące
+i nie można zastosować drugiego lematu Borela--Cantellego
+bez sprawdzenia niezależności.
 \end{uwaga}
 
 \begin{przyklad}[Zbieżność p.n. bez zbieżności w $L^1$]
-Niech $U\sim\Unif(0,1)$ i $X_n=n\ind{\{U\leq1/n\}}$.
-Dla każdego $U(\omega)>0$ od pewnego $n$ wskaźnik
-jest zerowy. Zatem $X_n\to0$ p.n., chociaż
-$\E|X_n|=1$ dla wszystkich $n$. Wcześniej ten sam
-ciąg pokazał brak zbieżności w $L^1$ mimo zbieżności
-według prawdopodobieństwa: tutaj widzimy mocniejszy fakt.
+Wróćmy do zmiennych $X_n=n\chi_{\{U\leq1/n\}}$,
+gdzie $U\sim\Unif(0,1)$.
+Na zdarzeniu $\{U>0\}$ każda trajektoria jest
+od pewnego miejsca zerowa, więc $X_n\to0$ p.n.
+Jednak dla $1\leq p<\infty$
+\[
+\|X_n\|_p=(n^p\Prob(U\leq1/n))^{1/p}
+=n^{1-1/p}.
+\]
+W szczególności norma w $L^1$ jest stale równa jeden,
+a dla $p>1$ normy rosną do nieskończoności.
+Zbieżność prawie na pewno nie daje zatem zbieżności
+w żadnym z tych $L^p$, nawet gdy każdy wyraz i granica
+należą do wszystkich rozważanych przestrzeni.
 \end{przyklad}
 
 \begin{przyklad}[Zbieżność w każdym $L^p$, lecz nie p.n.]
-Dla ciągu wskaźników przedziałów diadycznych
-z przykładu z \emph{ciągiem piszącym na maszynie}
-mamy $\E|X_{2^m+j}|^p=2^{-m}$ dla każdego $p\geq1$.
-Wszystkie te normy dążą do zera, mimo że trajektorie
-oscylują między zerem i jedynką nieskończenie często.
-Zatem nawet zbieżność w każdym ustalonym $L^p$
-nie implikuje zbieżności p.n.
+Dla ciągu funkcji charakterystycznych przedziałów
+diadycznych z przykładu z \emph{ciągiem piszącym na maszynie}
+mamy $|X_{2^m+j}|^p=X_{2^m+j}$ dla każdego $p>0$.
+Dla każdego ustalonego $1\leq p<\infty$ otrzymujemy
+\[
+\|X_{2^m+j}\|_p
+=(\lambda_1(I_{m,j}))^{1/p}=2^{-m/p}\longrightarrow0
+\qquad (m\to\infty),
+\]
+jednostajnie względem $0\leq j<2^m$.
+Ponieważ każdy indeks $n\geq1$ ma tę postać,
+$X_n\to0$ w $L^p$ dla każdego takiego $p$.
+Jednocześnie, jak wcześniej wykazano, każda trajektoria
+przyjmuje wartości zero i jeden nieskończenie wiele razy.
+Zatem nawet zbieżność we wszystkich $L^p$ o skończonym
+wykładniku nie implikuje zbieżności prawie na pewno.
 \end{przyklad}
 
-\begin{przyklad}[Zbieżność w rozkładzie do zmiennej, ale nie do tej samej realizacji]
+\begin{przyklad}[Zbieżność według rozkładu bez zbieżności w $L^1$ mimo jednostajnej całkowalności]
 Niech $U\sim\Unif(0,1)$ i $X_n=1-U$, $X=U$.
-Każda zmienna $X_n$ ma ten sam rozkład co $X$,
-więc $X_n\xrightarrow{d}X$. Jednak
-$\Prob(|X_n-X|>1/4)=\Prob(|1-2U|>1/4)=3/4$
-dla każdego $n$. To ilustruje, że zbieżność
-rozkładów porównuje rozkłady, a nie pary wyników
-na wspólnej przestrzeni.
+Dla $0<x<1$ mamy
+\[
+\Prob(X_n\leq x)=\Prob(U\geq1-x)=x,
+\]
+ponieważ rozkład jednostajny nie ma mas punktowych.
+Dla $x\leq0$ dystrybuanta $X_n$ jest zerowa,
+a dla $x\geq1$ równa jeden. Zatem
+$\Law(X_n)=\Law(X)$ i $X_n\xrightarrow{d}X$.
+Jednak
+\[
+\begin{aligned}
+\Prob(|X_n-X|>1/4)
+&=\Prob(U<3/8)+\Prob(U>5/8)\\
+&=3/8+3/8=3/4.
+\end{aligned}
+\]
+Zbieżność według prawdopodobieństwa nie zachodzi.
+Ponadto $|X_n|\leq1$ prawie na pewno, więc rodzina
+$\{X_n:n\geq1\}$ jest jednostajnie całkowalna
+(jej całki ogonowe są zerowe dla $K\geq1$).
+Z wzoru \eqref{eq:lotus} otrzymujemy
+\[
+\E|X_n-X|
+=\int_0^1|1-2u|\,\dd\lambda_1(u)
+=\int_0^{1/2}(1-2u)\,\dd\lambda_1(u)
++\int_{1/2}^1(2u-1)\,\dd\lambda_1(u)=\frac12.
+\]
+Przykład pokazuje, dlaczego w twierdzeniu Vitaliego
+nie można zastąpić zbieżności według prawdopodobieństwa
+zbieżnością według rozkładu, nawet przy ograniczonych
+zmiennych na wspólnej przestrzeni.
 \end{przyklad}
 
 \section{Dokładna charakteryzacja słabej zbieżności}
