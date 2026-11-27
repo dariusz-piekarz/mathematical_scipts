@@ -261,12 +261,15 @@ class TestMeasureTheoryChapter18(unittest.TestCase):
             "thm:CE-existence-18",
             "thm:CE-orthogonal-18",
             "it:thm:stieltjes-decomposition",
-            "it:thm:stieltjes-generator-decomposition",
-            "it:cor:stieltjes-signed-integrability",
         }
         self.assertFalse(required_labels - set(labels),
                          f"Missing labels: {sorted(required_labels - set(labels))}")
         self.assertEqual(len(labels), len(set(labels)))
+        for label in ("it:thm:stieltjes-generator-decomposition",
+                      "it:cor:stieltjes-signed-integrability"):
+            self.assertNotIn(label, labels)
+            self.assertIn(r"\atlasref{ME-25::" + label + "}", source)
+
         known = set(re.findall(r"\\label\{([^}]+)\}", combined))
         refs = re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", source)
         self.assertFalse(set(refs) - known)
