@@ -135,7 +135,9 @@ function buildProsePreview(container, source, moduleId) {
         if(['lstlisting','verbatim'].includes(env)){
           const end=text.indexOf('\\end{'+env+'}',i);
           const code=document.createElement('pre');code.className='preview-listing';code.textContent=text.slice(i,end<0?text.length:end);
-          i=end<0?text.length:end+env.length+6;parent().append(code);continue;
+          i=end<0?text.length:end+env.length+6;
+          if(env==='lstlisting')addAtlasPlot(parent(),code.textContent,moduleId);
+          parent().append(code);continue;
         }
         const block=document.createElement('div');block.className='preview-block';
         if(environmentNames[env]){const label=document.createElement('strong');label.className='preview-block-title';label.textContent=environmentNames[env]+(title?' — ':'');if(title)parse(title,label,true);block.append(label);}
