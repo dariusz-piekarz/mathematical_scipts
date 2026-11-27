@@ -82,8 +82,12 @@ async function openModule(id,full=false){
   try{
     const epoch=++state.renderEpoch;const data=await api(`/api/modules/${encodeURIComponent(id)}${full?'?full=true':''}`);
     if(epoch!==state.renderEpoch)return;
+    // Opening a different chapter starts at its beginning. Expanding the
+    // current preview to its full text should not deliberately reset scroll.
+    const resetScroll=!full||state.currentModule!==id||state.currentEntity!==null;
     state.currentModule=id;state.currentEntity=null;state.currentData=data;
     state.expandedDomains.add(data.module.domain);renderTree();renderReader();activateTab("reader");
+    if(resetScroll)$("view-reader").scrollTop=0;
     if(explorerMedia.matches)setExplorerVisible(false);
   }catch(e){toast(e.message);}
 }
@@ -91,8 +95,10 @@ async function openEntity(id,full=false){
   try{
     const epoch=++state.renderEpoch;const data=await api(`/api/entities/${encodeURIComponent(id)}${full?'?full=true':''}`);
     if(epoch!==state.renderEpoch)return;
+    const resetScroll=!full||state.currentModule!==data.entity.document_id||state.currentEntity!==id;
     state.currentModule=data.entity.document_id;state.currentEntity=id;state.currentData=data;
     state.expandedDomains.add(data.domain);renderTree();renderReader();activateTab("reader");
+    if(resetScroll)$("view-reader").scrollTop=0;
     if(explorerMedia.matches)setExplorerVisible(false);
   }catch(e){toast(e.message);}
 }
