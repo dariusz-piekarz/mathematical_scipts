@@ -287,6 +287,69 @@ with sync_playwright() as pw:
         }
     }""")
     assert outline_cache_cases == 8
+    # Selecting another object in an expanded domain must preserve existing
+    # DOM nodes and keyboard focus rather than rebuild the entire tree.
+    tree_reuse_cases = page.evaluate("""async () => {
+        const originalApi=api, id='DG-14';
+        const module=state.modules.find(m=>m.id===id);
+        const saved={domains:new Set(state.expandedDomains),expanded:new Set(state.expandedModules),
+            outlines:new Map(state.outlines),pages:new Map(outlinePages),
+            module:state.currentModule,entity:state.currentEntity,mode:state.granularity};
+        const tree=document.getElementById('tree');
+        let count=0,pending;
+        try{
+            state.expandedDomains.add(module.domain);state.expandedModules.add(id);
+            state.granularity='object';
+            state.outlines.set(id,[{id:'reuse-a',kind:'section',title:'A'},
+                                  {id:'reuse-b',kind:'section',title:'B'}]);
+            state.currentModule=id;state.currentEntity='reuse-a';renderTree();
+            const row=tree.querySelector('[data-tree-entity="reuse-a"]');
+            const next=tree.querySelector('[data-tree-entity="reuse-b"]');
+            const chapter=tree.querySelector('[data-tree-module="DG-14"]');
+            const focus=chapter.querySelector('.module-name');
+            focus.focus();
+            state.currentEntity='reuse-b';refreshTreeSelection(module.domain);
+            if(tree.querySelector('[data-tree-entity="reuse-a"]')!==row||
+               tree.querySelector('[data-tree-entity="reuse-b"]')!==next||
+               document.activeElement!==focus||row.classList.contains('active')||
+               !next.classList.contains('active')||!chapter.classList.contains('active'))
+                throw Error('selection rebuilt tree or lost focus');
+            count++;
+            state.currentEntity=null;refreshTreeSelection(module.domain);
+            if(next.classList.contains('active')||document.activeElement!==focus)
+                throw Error('module selection retained entity or lost focus');
+            count++;
+            api=(url,options)=>url==='/api/modules/DG-14/outline'
+                ?new Promise((resolve,reject)=>pending={resolve,reject}):originalApi(url,options);
+            await toggleModule(id);state.outlines.delete(id);
+            const first=toggleModule(id);await toggleModule(id);
+            const before=tree.firstElementChild;
+            pending.resolve({entities:[]});await first;
+            if(tree.firstElementChild!==before)throw Error('collapsed response rebuilt tree');
+            count++;
+            state.outlines.delete(id);
+            const second=toggleModule(id);
+            toggleDomain(module.domain);
+            const hidden=tree.firstElementChild;
+            pending.resolve({entities:[]});await second;
+            if(tree.firstElementChild!==hidden)throw Error('hidden domain response rebuilt tree');
+            count++;
+            refreshTreeSelection(module.domain);
+            if(!state.expandedDomains.has(module.domain)||
+               !tree.querySelector('[data-tree-module="DG-14"]'))
+                throw Error('selection did not reveal new domain');
+            count++;
+            return count;
+        }finally{
+            api=originalApi;
+            state.expandedDomains=saved.domains;state.expandedModules=saved.expanded;
+            state.outlines=saved.outlines;
+            outlinePages.clear();for(const [k,v] of saved.pages)outlinePages.set(k,v);
+            state.currentModule=saved.module;state.currentEntity=saved.entity;
+            state.granularity=saved.mode;renderTree();
+        }
+    }""")
+    assert tree_reuse_cases == 5
 
     # A new target must start at its beginning, even if the previous
     # chapter had been scrolled far down. Test both chapter and entity routes.
