@@ -1470,21 +1470,46 @@ function setReadingMode(enabled){
   $('readingTheme').classList.toggle('hidden',!enabled);
   syncExplorer();closeTip();
 }
+let fullscreenEntryPending=false, fullscreenExitPending=false;
 async function leaveReadingMode(){
   setReadingMode(false);
-  if(ownedFullscreen && document.fullscreenElement){ownedFullscreen=false;await document.exitFullscreen().catch(()=>{});}
+  const shell=document.querySelector('.app-shell');
+  if(ownedFullscreen && document.fullscreenElement===shell && !fullscreenExitPending){
+    fullscreenExitPending=true;
+    try{
+      await document.exitFullscreen();
+      ownedFullscreen=false;
+    }catch(_){
+      // A refused exit must not leave the reader in an inaccessible state.
+      ownedFullscreen=document.fullscreenElement===shell;
+      if(ownedFullscreen)setReadingMode(true);
+    }finally{fullscreenExitPending=false;}
+  }
   $('readingMode').focus({preventScroll:true});
 }
-$('readingMode').addEventListener('click',async()=>{
-  if(readingMode){await leaveReadingMode();return;}
+async function enterReadingMode(){
   setReadingMode(true);
   const shell=document.querySelector('.app-shell');
-  if(!document.fullscreenElement && shell.requestFullscreen){
-    try{await shell.requestFullscreen();ownedFullscreen=true;}catch(_){/* Reading layout also works without the Fullscreen API. */}
-  }
+  if(fullscreenEntryPending||fullscreenExitPending||document.fullscreenElement||!shell.requestFullscreen)return;
+  fullscreenEntryPending=true;
+  try{
+    await shell.requestFullscreen();
+    ownedFullscreen=document.fullscreenElement===shell;
+    // Escape or the toggle may have been used while entry was pending.
+    if(ownedFullscreen&&!readingMode)await leaveReadingMode();
+  }catch(_){/* Reading layout also works without the Fullscreen API. */}
+  finally{fullscreenEntryPending=false;}
+}
+$('readingMode').addEventListener('click',()=>{
+  if(readingMode)return leaveReadingMode();
+  return enterReadingMode();
 });
 document.addEventListener('fullscreenchange',()=>{
-  if(ownedFullscreen&&!document.fullscreenElement){ownedFullscreen=false;setReadingMode(false);}
+  if(ownedFullscreen&&document.fullscreenElement!==document.querySelector('.app-shell')){
+    ownedFullscreen=false;
+    // An exit we initiated already applied the requested layout.
+    if(!fullscreenExitPending)setReadingMode(false);
+  }
 });
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&readingMode){event.preventDefault();leaveReadingMode();}});
 syncExplorer();
