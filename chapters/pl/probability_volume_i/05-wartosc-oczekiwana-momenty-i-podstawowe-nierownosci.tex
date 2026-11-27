@@ -265,28 +265,37 @@ $\Cov(\chi_A,\chi_B)=\E\chi_{A\cap B}-\E\chi_A\,\E\chi_B
 Nie zawsze umiemy wyznaczyć cały rozkład, ale czasem znamy
 średnią albo wariancję. Czy można na tej podstawie oszacować
 prawdopodobieństwo dużego wyniku lub dużego odchylenia od średniej?
-Nierówność Markowa opiera się tylko na dodatniości, a nierówność
+Nierówność Markowa opiera się tylko na nieujemności, a nierówność
 Czebyszewa stosuje tę samą ideę do kwadratu odchylenia.
 Ich siła tkwi w uniwersalności: nie wymagają normalności,
 jednostajności ani nawet znajomości gęstości.
 
 \begin{twierdzenie}[Nierówność Markowa]
-Jeżeli $X\geq0$ prawie na pewno i $a>0$, to
+Niech $X$ będzie rzeczywistą zmienną losową na przestrzeni
+probabilistycznej $(\Omega,\mathcal F,\Prob)$. Jeżeli
+$X\geq0$ prawie na pewno i $a>0$, to
 $\Prob(X\geq a)\leq\E X/a$, gdzie dopuszczamy $\E X=\infty$.
 \end{twierdzenie}
 \begin{proof}
-Na zdarzeniu $A=\{X\geq a\}$ zachodzi $X\geq a$,
-a poza nim $a\ind A=0\leq X$.
-Możemy więc zapisać punktową nierówność
-$a\ind A\leq X$ dla każdego wyniku poza ewentualnym
-zbiorem zerowym z założenia $X\geq0$ prawie na pewno.
-Z monotoniczności całki mamy
-$a\Prob(A)=\E[a\ind A]\leq\E X$.
+Zdarzenie $A=\{X\geq a\}$ jest mierzalne. Na $A$ zachodzi
+$X\geq a$, a na $\Omega\setminus A$ mamy $a\chi_A=0$.
+Zatem $a\chi_A\leq X^+$ na całej przestrzeni.
+Ponieważ $X^-=0$ prawie na pewno, zachodzi $\E X=\E X^+$.
+Z monotoniczności całki nieujemnej otrzymujemy
+$a\Prob(A)=\E[a\chi_A]\leq\E X^+=\E X$.
+Jest to probabilistyczna postać
+\atlasref{ME-07::thm:markov-nonnegative}{nierówności Markowa dla całki nieujemnej}.
 Dzielenie przez $a>0$ daje tezę. Nierówność pozostaje
 prawdziwa, choć może być bezużyteczna, gdy $\E X=\infty$.
-Dowód pokazuje również, kiedy stała jest optymalna:
-gdy $X$ przyjmuje wyłącznie wartości $0$ i $a$,
-zachodzi równość.
+Jeżeli $\E X<\infty$, równość zachodzi wtedy i tylko wtedy,
+gdy $X\in\{0,a\}$ prawie na pewno. Istotnie, różnica
+$X^+-a\chi_A$ jest nieujemna, a jej całka jest zerowa
+dokładnie wtedy, gdy różnica znika prawie wszędzie.
+Na $A$ oznacza to $X=a$, a poza $A$ oznacza $X^+=0$,
+czyli $X=0$ poza zbiorem zerowym. Odwrotna implikacja
+wynika przez podstawienie. Biorąc $X=a$ z prawdopodobieństwem
+jeden, otrzymujemy równość z dodatnią prawą stroną;
+stałej $1$ w nierówności nie można więc zmniejszyć.
 \end{proof}
 
 \begin{twierdzenie}[Nierówność Czebyszewa]
@@ -298,8 +307,10 @@ drugim momencie. Wtedy dla każdego $\varepsilon>0$ zachodzi
 \]
 \end{twierdzenie}
 \begin{proof}
+Z założenia o drugim momencie wynika całkowalność $X$,
+więc $m=\E X$ jest skończoną liczbą rzeczywistą.
 Wprowadźmy nieujemną zmienną
-$Y=(X-\E X)^2$. Jej wartość oczekiwana jest równa
+$Y=(X-m)^2$, mierzalną jako złożenie $X$ z funkcją ciągłą. Jej wartość oczekiwana jest równa
 $\E Y=\Var(X)<\infty$. Ponadto dla $\varepsilon>0$
 zdarzenia
 $\{Y\geq\varepsilon^2\}$ oraz
@@ -313,18 +324,39 @@ do zmiennej $Y$ i progu $\varepsilon^2$, otrzymujemy
 =\frac{\Var(X)}{\varepsilon^2}.
 \]
 Nie używaliśmy żadnych informacji o kształcie rozkładu $X$.
+Z warunku równości w nierówności Markowa wynika, że
+równość zachodzi dokładnie wtedy, gdy
+$|X-\E X|\in\{0,\varepsilon\}$ prawie na pewno.
+W szczególności zmienna przyjmująca wartości
+$-\varepsilon$ i $\varepsilon$ z prawdopodobieństwami
+po $1/2$ ma średnią zero, wariancję $\varepsilon^2$
+i osiąga równość. Stała $1$ jest optymalna.
 \end{proof}
 
 \begin{przyklad}[Kontrola odchylenia sumy]
-Niech $X_1,\ldots,X_n$ będą niezależnymi zmiennymi losowymi
+Niech $X_1,\ldots,X_n$ będą niezależnymi rzeczywistymi
+zmiennymi losowymi na wspólnej przestrzeni probabilistycznej,
 o wspólnej średniej $m$ i wariancji $\sigma^2<\infty$,
-gdzie $n\geq1$. Dla średniej $\overline X_n:=n^{-1}\sum_{i=1}^nX_i$
-mamy $\E\overline X_n=m$ i $\Var(\overline X_n)=\sigma^2/n$.
-Z nierówności Czebyszewa wynika
+gdzie $n\geq1$ jest liczbą całkowitą.
+Dla średniej $\overline X_n:=n^{-1}\sum_{i=1}^nX_i$
+liniowość wartości oczekiwanej daje
+$\E\overline X_n=n^{-1}\sum_{i=1}^n m=m$.
+Skończoność drugiego momentu sumy wynika z nierówności
+$(\sum_i X_i)^2\leq n\sum_i X_i^2$.
+Rozwijając kwadrat wycentrowanej sumy, otrzymujemy
+\[
+\Var(\overline X_n)=\frac{1}{n^2}
+\left(\sum_{i=1}^n\Var(X_i)+
+2\sum_{1\leq i<j\leq n}\Cov(X_i,X_j)\right).
+\]
+Kowariancje dla $i\ne j$ są zerowe z niezależności
+i poprzedniego stwierdzenia o algebrze momentów.
+Stąd $\Var(\overline X_n)=n^{-2}n\sigma^2=\sigma^2/n$.
+Z nierówności Czebyszewa dla każdego $\varepsilon>0$ wynika
 $\Prob(|\overline X_n-m|\geq\varepsilon)
 \leq\sigma^2/(n\varepsilon^2)$.
 Jest to zalążek słabego prawa wielkich liczb, którego
-pełne sformułowania i uogólnienia pojawią się w dalszej części tomu.
+pełne sformułowania i uogólnienia pojawią się w rozdziale~\ref{ch:lln}.
 \end{przyklad}
 
 \section{Momenty wyższych rzędów i sens funkcji tworzących}
@@ -335,27 +367,46 @@ a jednocześnie zupełnie inny kształt ogonów. Chcielibyśmy zatem
 przechowywać informacje o całej rodzinie momentów, a najlepiej
 w jednej funkcji, na której można wykonywać zwykłe operacje
 analityczne. Dwa użyteczne pomysły polegają na obliczaniu
-$\E z^X$ dla zmiennych całkowitoliczbowych i $\E e^{tX}$
+$\E z^X$ dla zmiennych o wartościach w $\N_0$ i $\E e^{tX}$
 dla zmiennych rzeczywistych. Trzeci --- wykorzystujący
 $e^{itX}$ --- pozwala uniknąć problemu rozbieżności.
 
 \begin{definicja}
-Niech $X$ będzie rzeczywistą zmienną losową i $r\in\N$.
-Jeśli $\E|X|^r<\infty$, to $m_r(X):=\E X^r$
-nazywamy momentem zwykłym rzędu $r$. Jeśli $\E X$
-istnieje i $\E|X|^r<\infty$, to
-$\mu_r(X):=\E(X-\E X)^r$ nazywamy momentem centralnym.
-Momentami absolutnymi nazywamy $\E|X|^r$.
+Niech $X$ będzie rzeczywistą zmienną losową, a $r\geq1$
+liczbą całkowitą. Jeśli $\E|X|^r<\infty$, to
+$m_r(X):=\E X^r$ nazywamy momentem zwykłym rzędu $r$.
+Ponieważ $|x|\leq1+|x|^r$, założenie to zapewnia
+całkowalność $X$. Ponadto z wypukłości funkcji
+$t\mapsto t^r$ na $[0,\infty)$ wynika
+\[
+|X-\E X|^r\leq 2^{r-1}(|X|^r+|\E X|^r),
+\]
+więc $\mu_r(X):=\E[(X-\E X)^r]$ jest skończona.
+Nazywamy ją momentem centralnym rzędu $r$.
+Dla dowolnego rzeczywistego $s>0$ wielkość
+$\E|X|^s\in[0,\infty]$ nazywamy momentem bezwzględnym
+rzędu $s$.
 \end{definicja}
 
 \begin{uwaga}
 Dla nieparzystego $r$ całka $\E X^r$ może nie istnieć,
 nawet gdy symetria rozkładu formalnie sugeruje zero.
-Istnienie momentu jako skończonej liczby wymaga
-$\E|X|^r<\infty$. Gdy $r>s>0$, z nierówności
-$|x|^s\leq 1+|x|^r$ wynika, że istnienie momentu
-absolutnego rzędu $r$ zapewnia istnienie wszystkich momentów
-absolutnych mniejszych rzędów.
+Istnienie momentu zwykłego jako skończonej liczby
+w sensie całki Lebesgue'a jest równoważne warunkowi
+$\E|X|^r<\infty$, ponieważ $|X^r|=|X|^r$.
+Na przykład dla standardowego rozkładu Cauchy'ego
+(por. \eqref{eq:cauchy} w rozdziale~\ref{ch:distributions})
+obie części całki definiującej średnią są nieskończone:
+dla części dodatniej
+$\int_0^R x/(\pi(1+x^2))\,\dd\lambda_1(x)
+=\log(1+R^2)/(2\pi)\to\infty$, a część ujemna
+ma tę samą całkę z symetrii gęstości.
+Gdy $r>s>0$, dla $|x|\leq1$ mamy $|x|^s\leq1$,
+a dla $|x|>1$ mamy $|x|^s\leq|x|^r$.
+W konsekwencji $\E|X|^s\leq1+\E|X|^r$,
+więc skończoność momentu bezwzględnego rzędu $r$
+zapewnia skończoność wszystkich momentów bezwzględnych
+dodatnich rzędów mniejszych od $r$.
 \end{uwaga}
 
 \section{Funkcja tworząca prawdopodobieństwa}
