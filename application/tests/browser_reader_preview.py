@@ -139,6 +139,23 @@ with sync_playwright() as pw:
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
     page.locator('#themeToggle').click()
     assert page.locator('html').get_attribute('data-theme') == 'light'
+    # Repository-backed Plotly figures are lazy, sandboxed and scoped to their chapter.
+    chapter18 = (ROOT.parent / 'chapters/pl/mathematical_analysis_ii/18-twierdzenie-o-funkcji-odwrotnej.tex').read_text(encoding='utf-8')
+    page.set_viewport_size({'width': 1520, 'height': 900})
+    page.evaluate("latex => renderSimplified(latex, 'AM2-18')", chapter18)
+    host = box.locator('.atlas-plot-host')
+    assert host.count() == 1
+    assert host.locator('iframe').count() == 0
+    host.locator('button').click()
+    iframe = host.locator('iframe')
+    assert iframe.get_attribute('sandbox') == 'allow-scripts'
+    frame = host.frame_locator('iframe')
+    frame.locator('#plot[data-ready=true]').wait_for(timeout=60000)
+    assert frame.locator('#plot .gl-container').count() > 0
+    host.locator('button').click()
+    assert iframe.count() == 0
+    page.evaluate("latex => renderSimplified(latex, 'AM2-17')", chapter18)
+    assert box.locator('.atlas-plot-host').count() == 0
     assert not errors, errors
     browser.close()
     print('Reader prose, math, references, safe content, responsive layout and persistent themes and four rendered TikZ figures: OK')
