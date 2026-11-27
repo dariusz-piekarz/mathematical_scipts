@@ -44,7 +44,7 @@ with sync_playwright() as pw:
                 if(!url.includes('/ATLAS-TIKZ-QUEUE/'))return originalFetch(url,options);
                 return new Promise((resolve,reject)=>{
                     const signal=options.signal;
-                    requests.push({resolve,signal});
+                    requests.push({url,resolve,signal});
                     signal.addEventListener('abort',()=>reject(new Error('aborted')),{once:true});
                 });
             };
@@ -53,6 +53,11 @@ with sync_playwright() as pw:
             const figures=Array.from({length:6},()=>{
                 const figure=document.createElement('figure');host.append(figure);return figure;
             });
+            const hashes=await Promise.all(figures.map(async (_,i)=>{
+                const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('fixture'+i));
+                return Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
+            }));
+            const request=i=>requests.find(r=>r.url.endsWith('/'+hashes[i]+'.png'));
             const jobs=figures.map((figure,i)=>loadTikzFigure(figure,'fixture'+i,'ATLAS-TIKZ-QUEUE',true));
             figures[5].remove();
             await wait(()=>requests.length===3);
@@ -60,15 +65,15 @@ with sync_playwright() as pw:
             count++;
             figures[0].remove();
             await wait(()=>requests.length===4);
-            if(!requests[0].signal.aborted)throw Error('detached fetch not aborted');
+            if(!request(0).signal.aborted)throw Error('detached fetch not aborted');
             count++;
-            requests[1].resolve(good());await wait(()=>requests.length===5);
+            request(1).resolve(good());await wait(()=>requests.length===5);
             if(!figures[1].querySelector('img')?.naturalWidth||revoked.length!==1)
                 throw Error('image did not release slot and Blob URL');
             count++;
-            requests[2].resolve(new Response(JSON.stringify({detail:'fixture failure'}),{status:500}));
-            requests[3].resolve(new Response(new Blob(['invalid image'],{type:'image/png'})));
-            requests[4].resolve(good());
+            request(2).resolve(new Response(JSON.stringify({detail:'fixture failure'}),{status:500}));
+            request(3).resolve(new Response(new Blob(['invalid image'],{type:'image/png'})));
+            request(4).resolve(good());
             await Promise.all(jobs);
             if(requests.length!==5||tikzActive.size||tikzQueue.length)
                 throw Error('queue retained detached work');
