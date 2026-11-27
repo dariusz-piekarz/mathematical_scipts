@@ -1,0 +1,175 @@
+\section{Fibracje symplicjalne i kategorie modelowe}\label{cat:sec:simplicial-model-categories}
+
+W rozdziale~\ref{cat:sec:simplicial-sets} rozważaliśmy przedłużanie morfizmów z rogów sympleksów, a w rozdziale~\ref{cat:sec:quasicategories} zastosowaliśmy tę własność do quasi-kategorii. Teraz przejdziemy od własności obiektów do własności morfizmów, a następnie do abstrakcyjnej teorii kategorii modelowych. Fibracje topologiczne i ich długie ciągi dokładne należą do topologii algebraicznej; nie powtarzamy tutaj ich konstrukcji.
+
+\subsection{Własności podnoszenia w dowolnej kategorii}
+
+\begin{definicja}[Własność podnoszenia]\label{cat:def:lifting-property}
+Niech $i:A\to B$ i $p:E\to Y$ będą morfizmami w kategorii $\mathcal C$. Piszemy $i\pitchfork p$, jeżeli dla każdej pary $a:A\to E$, $b:B\to Y$ spełniającej $pa=bi$ istnieje $l:B\to E$ taki, że
+\[
+ li=a,\qquad pl=b.
+\]
+Mówimy, że $i$ ma lewą własność podnoszenia względem $p$, albo równoważnie, że $p$ ma prawą własność podnoszenia względem $i$. Nie wymagamy jednoznaczności $l$.
+\end{definicja}
+
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (A) at (0,2.6) {$A$};
+ \node (E) at (4.4,2.6) {$E$};
+ \node (B) at (0,0) {$B$};
+ \node (Y) at (4.4,0) {$Y$};
+ \draw[->] (A)--node[above] {$a$}(E);
+ \draw[->] (A)--node[left] {$i$}(B);
+ \draw[->] (E)--node[right] {$p$}(Y);
+ \draw[->] (B)--node[below] {$b$}(Y);
+ \draw[->,dashed] (B)--node[above,sloped] {$l$}(E);
+\end{tikzpicture}
+\end{center}
+
+Dla klas morfizmów $\mathcal L,\mathcal R$ oznaczamy
+\[
+ {}^\pitchfork\mathcal R=\{i:\ \forall p\in\mathcal R\quad i\pitchfork p\},
+ \qquad
+ \mathcal L^\pitchfork=\{p:\ \forall i\in\mathcal L\quad i\pitchfork p\}.
+\]
+W szczególności $\mathcal L\subseteq{}^\pitchfork(\mathcal L^\pitchfork)$ oraz $\mathcal R\subseteq({}^\pitchfork\mathcal R)^\pitchfork$. Obie operacje odwracają inkluzje klas, ponieważ zwiększenie klasy morfizmów, względem których wymagamy podnoszenia, zwiększa liczbę warunków do spełnienia.
+
+\begin{stwierdzenie}[Składanie morfizmów z własnością podnoszenia]\label{cat:prop:lifting-composition}
+Klasy $\mathcal L^\pitchfork$ i $\vphantom{R}^\pitchfork\mathcal R$ zawierają wszystkie izomorfizmy i są domknięte względem składania.
+\end{stwierdzenie}
+\begin{proof}
+Dla izomorfizmu $i$ w kwadracie z definicji~\ref{cat:def:lifting-property} bierzemy $l=ai^{-1}$: mamy $li=a$ oraz $pl=pai^{-1}=bii^{-1}=b$. Dla izomorfizmu $p$ bierzemy $l=p^{-1}b$, co daje $pl=b$ i $li=p^{-1}bi=p^{-1}pa=a$.
+
+Niech $i:A\to B$, $j:B\to C$ mają lewą własność podnoszenia względem $p:E\to Y$. Dany kwadrat z $ji$ ma dane $a:A\to E$ i $b:C\to Y$ oraz $pa=bji$. Najpierw stosujemy $i\pitchfork p$ do $a,bj$, otrzymując $u:B\to E$ z $ui=a$, $pu=bj$. Następnie $j\pitchfork p$ daje $l:C\to E$ z $lj=u$, $pl=b$. Stąd $lji=ui=a$.
+
+Dla $p:E\to Y$, $q:Y\to Z$ mających prawą własność podnoszenia względem $i:A\to B$ i danych $a:A\to E$, $b:B\to Z$ z $qpa=bi$ najpierw stosujemy $i\pitchfork q$ do $pa,b$. Otrzymujemy $v:B\to Y$ z $vi=pa$, $qv=b$. Stosując $i\pitchfork p$ do $a,v$, uzyskujemy $l:B\to E$ z $li=a$, $pl=v$, a więc $qpl=b$. Dowody działają dla każdego morfizmu z ustalonej klasy.
+\end{proof}
+
+\begin{stwierdzenie}[Zmiana bazy i kobazy]\label{cat:prop:lifting-base-change}
+Klasa $\mathcal L^\pitchfork$ jest domknięta względem istniejących zmian bazy (iloczynów włóknistych), a klasa $\vphantom{R}^\pitchfork\mathcal R$ względem istniejących zmian kobazy (sum amalgamowanych).
+\end{stwierdzenie}
+\begin{proof}
+Niech $p:E\to Y$ ma prawą własność podnoszenia względem $i:A\to B$, a $f:Y'\to Y$ będzie dowolnym morfizmem. Piszemy $E'=Y'\times_Y E$ z projekcjami $p':E'\to Y'$ i $r:E'\to E$. Dla kwadratu $p'a=bi$ z $a:A\to E'$ i $b:B\to Y'$ mamy $p(ra)=fp'a=fbi$. Z $i\pitchfork p$ dostajemy $t:B\to E$ z $ti=ra$, $pt=fb$. Własność uniwersalna iloczynu włóknistego daje $l:B\to E'$ z $p'l=b$ i $rl=t$. Ponieważ $p'li=bi=p'a$ oraz $rli=ti=ra$, jednoznaczność w tej własności uniwersalnej daje $li=a$.
+
+Dla drugiej tezy niech $i:A\to B$ ma lewą własność podnoszenia względem $p:E\to Y$. Weźmy sumę amalgamowaną $B'=B\amalg_A A'$ względem $f:A\to A'$ z morfizmami $r:B\to B'$ i $i':A'\to B'$. Dla $a:A'\to E$, $b:B'\to Y$ takich, że $pa=bi'$, mamy $paf=bi'f=bri$. Istnieje więc $t:B\to E$ z $ti=af$ i $pt=br$. Z własności uniwersalnej sumy amalgamowanej dostajemy $l:B'\to E$ z $li'=a$ i $lr=t$. Morfizmy $pl,b$ zgadzają się po prekompozycji z $r$ i $i'$, zatem $pl=b$.
+\end{proof}
+
+\begin{definicja}[Retrakt morfizmu]\label{cat:def:arrow-retract}
+Morfizm $i:A\to B$ jest retraktem morfizmu $j:C\to D$, jeśli istnieją morfizmy $u:A\to C$, $v:B\to D$, $r:C\to A$, $s:D\to B$ takie, że
+\[
+ ju=vi,\qquad ir=sj,\qquad ru=\id_A,\qquad sv=\id_B.
+\]
+Jest to zwykły retrakt obiektu w kategorii morfizmów $\operatorname{Fun}([1],\mathcal C)$.
+\end{definicja}
+
+\begin{stwierdzenie}[Domknięcie względem retraktów]\label{cat:prop:lifting-retract}
+Obie klasy $\mathcal L^\pitchfork$ oraz $\vphantom{R}^\pitchfork\mathcal R$ są domknięte względem retraktów morfizmów.
+\end{stwierdzenie}
+\begin{proof}
+Niech $i$ będzie retraktem $j$ jak w definicji~\ref{cat:def:arrow-retract} i niech $j\pitchfork p$. Dla kwadratu $pa=bi$ mamy $par=bir=bsj$. Istnieje $t:D\to E$ z $tj=ar$, $pt=bs$. Definiujemy $l=tv$. Wtedy
+\[
+ li=tvi=tju=aru=a,\qquad pl=ptv=bsv=b.
+\]
+Zatem $i\pitchfork p$.
+
+Dla prawej własności niech $p:E\to Y$ będzie retraktem $q:E'\to Y'$ z morfizmami $u:E\to E'$, $v:Y\to Y'$, $r:E'\to E$, $s:Y'\to Y$ spełniającymi $qu=vp$, $pr=sq$, $ru=\id_E$, $sv=\id_Y$. Jeżeli $i\pitchfork q$ i $pa=bi$, to $qua=vbi$. Istnieje $t:B\to E'$ z $ti=ua$ i $qt=vb$. Dla $l=rt$ mamy $li=rua=a$ oraz $pl=sqt=svb=b$. Zatem $i\pitchfork p$.
+\end{proof}
+
+\subsection{Fibracje zbiorów symplicjalnych}
+
+W dalszej części oznaczamy przez $\mathbf{sSet}$ kategorię zbiorów symplicjalnych. Jej obiekty i morfizmy opisano w rozdziale~\ref{cat:sec:simplicial-sets}. Granice i kogranice małych diagramów w tej kategorii obliczamy stopniowo w $\Set$: operatory symplicjalne powstają z własności uniwersalnych odpowiednich granic lub kogranic zbiorów. Tożsamości operatorów wynikają z jednoznaczności w tych własnościach uniwersalnych. W szczególności morfizm $X\to Y$ jest monomorfizmem wtedy i tylko wtedy, gdy wszystkie jego składowe $X_n\to Y_n$ są injekcjami. Wystarczalność wynika ze stopniowej równości morfizmów, a konieczność z testowania monomorfizmu na morfizmach $\Delta[n]\to X$, odpowiadających elementom $X_n$ przez lemat Yonedy (stwierdzenie~\ref{cat:prop:simplicial-yoneda}).
+
+\begin{definicja}[Fibracje symplicjalne]\label{cat:def:simplicial-fibrations}
+Morfizm $p:X\to Y$ zbiorów symplicjalnych nazywamy:
+\begin{enumerate}
+ \item fibracją Kana, jeśli ma prawą własność podnoszenia względem wszystkich włożeń $\Lambda^k[n]\to\Delta[n]$ dla $n\geq1$, $0\leq k\leq n$;
+ \item fibracją wewnętrzną, jeśli ma tę własność dla $n\geq2$, $0<k<n$;
+ \item lewą fibracją, jeśli ma tę własność dla $n\geq1$, $0\leq k<n$;
+ \item prawą fibracją, jeśli ma tę własność dla $n\geq1$, $0<k\leq n$.
+\end{enumerate}
+\end{definicja}
+Każda fibracja Kana jest lewą i prawą fibracją, a każda lewa lub prawa fibracja jest fibracją wewnętrzną. Morfizm jest fibracją Kana wtedy i tylko wtedy, gdy jest zarazem lewą i prawą fibracją, ponieważ sumą obu rodzin indeksów jest rodzina wszystkich rogów.
+
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (A) at (0,2.8) {$\Lambda^k[n]$};
+ \node (E) at (4.8,2.8) {$X$};
+ \node (B) at (0,0) {$\Delta[n]$};
+ \node (Y) at (4.8,0) {$Y$};
+ \draw[->] (A)--node[above] {$a$}(E);
+ \draw[->,hook] (A)--(B);
+ \draw[->] (E)--node[right] {$p$}(Y);
+ \draw[->] (B)--node[below] {$b$}(Y);
+ \draw[->,dashed] (B)--node[above,sloped] {$l$}(E);
+\end{tikzpicture}
+\end{center}
+Różnica względem warunku na obiekt polega na tym, że nie wybieramy dowolnego wypełnienia rogu w $X$, lecz takie, którego obraz przez $p$ jest zadanym sympleksem $b$.
+
+\begin{stwierdzenie}[Postać stopniowa warunku podnoszenia]\label{cat:prop:relative-horn-condition}
+Prawa własność podnoszenia $p:X\to Y$ względem $\Lambda^k[n]\to\Delta[n]$ jest równoważna następującemu warunkowi: dla każdego $y\in Y_n$ i każdej rodziny $x_i\in X_{n-1}$, $i\ne k$, spełniającej
+\[
+ d_i x_j=d_{j-1}x_i\quad(i<j,\ i,j\ne k),\qquad
+ p_{n-1}(x_i)=d_i y\quad(i\ne k),
+\]
+istnieje $x\in X_n$ z $d_i x=x_i$ dla $i\ne k$ i $p_n(x)=y$. Dla $n=1$ pierwszy warunek jest pusty.
+\end{stwierdzenie}
+\begin{proof}
+Morfizm $\Delta[n]\to Y$ odpowiada $y\in Y_n$. Morfizm $\Lambda^k[n]\to X$ odpowiada rodzinie zgodnych ścian na mocy stwierdzenia~\ref{cat:prop:simplicial-compatible-faces}. Przemienność kwadratu podnoszenia oznacza, że dwa morfizmy z rogu do $Y$ są równe. Ponieważ róg jest sumą zadanych ścian, wystarczy i trzeba sprawdzić równość ich ograniczeń, czyli $p_{n-1}(x_i)=d_i y$. Morfizm podnoszący odpowiada $x\in X_n$. Przemienność dwóch trójkątów oznacza dokładnie pozostałe równości.
+\end{proof}
+
+\begin{stwierdzenie}[Włókna i obiekty]\label{cat:prop:simplicial-fibration-fibers}
+Niech $y\in Y_0$. Włókno $X_y=X\times_Y\{y\}$ fibracji Kana jest kompleksem Kana, a włókno fibracji wewnętrznej jest quasi-kategorią. Morfizm $X\to\Delta[0]$ jest fibracją Kana wtedy i tylko wtedy, gdy $X$ jest kompleksem Kana, oraz fibracją wewnętrzną wtedy i tylko wtedy, gdy $X$ jest quasi-kategorią. Jeżeli $p:X\to Y$ jest fibracją wewnętrzną i $Y$ jest quasi-kategorią, to $X$ jest quasi-kategorią; analogicznie dla fibracji i kompleksów Kana.
+\end{stwierdzenie}
+\begin{proof}
+Morfizm do $\Delta[0]$ jest jedyny, ponieważ w każdym stopniu $\Delta[0]$ ma dokładnie jeden element. Każdy kwadrat podnoszenia dla $X\to\Delta[0]$ jest więc po prostu morfizmem z rogu do $X$, a morfizm podnoszący jest jego wypełnieniem. Daje to obie charakteryzacje.
+
+Projekcja $X_y\to\{y\}$ ma odpowiednią własność podnoszenia przez stwierdzenie~\ref{cat:prop:lifting-base-change}. Ponieważ $\{y\}\cong\Delta[0]$, stosujemy powyższe charakteryzacje. Ostatnie zdania wynikają z domknięcia względem składania (stwierdzenie~\ref{cat:prop:lifting-composition}), zastosowanego do $X\to Y\to\Delta[0]$.
+\end{proof}
+
+\begin{przyklad}[Rzuty]\label{cat:ex:simplicial-product-fibration}
+Jeżeli $K$ jest kompleksem Kana, to dla dowolnego $Y$ rzut $Y\times K\to Y$ jest fibracją Kana. Jest to zmiana bazy morfizmu $K\to\Delta[0]$ przez $Y\to\Delta[0]$. Gdy $K$ jest quasi-kategorią, ten sam argument daje fibrację wewnętrzną. W szczególności dowolny iloczyn małej rodziny kompleksów Kana jest kompleksem Kana: dla rogu w iloczynie wybieramy wypełnienie każdej składowej i bierzemy odpowiadający im sympleks iloczynu. Korzystamy tu z aksjomatu wyboru.
+\end{przyklad}
+
+\subsection{Fibracje na nerwach kategorii}
+
+\begin{stwierdzenie}\label{cat:prop:nerve-inner-fibration}
+Dla dowolnego funktora $F:\mathcal C\to\mathcal D$ małych kategorii morfizm $N(F)$ jest fibracją wewnętrzną.
+\end{stwierdzenie}
+\begin{proof}
+Rozważmy kwadrat podnoszenia dla rogu wewnętrznego. Na mocy twierdzenia~\ref{cat:thm:nerve-inner-horns} róg w $N(\mathcal C)$ ma jednoznaczne wypełnienie $u$. Jego obraz $N(F)(u)$ w $N(\mathcal D)$ ma te same ściany rogu co zadany sympleks $v$ w $N(\mathcal D)$, gdyż kwadrat jest przemienny. Twierdzenie o jednoznaczności wypełnień w $N(\mathcal D)$ daje $N(F)(u)=v$. Zatem $u$ jest wymaganym względnym wypełnieniem.
+\end{proof}
+
+\begin{definicja}[Izofibracja kategorii zwykłych]\label{cat:def:ordinary-isofibration}
+Funktor $F:\mathcal C\to\mathcal D$ jest izofibracją, jeśli dla każdego obiektu $c\in\mathcal C$ i każdego izomorfizmu $\alpha:F(c)\to d$ w $\mathcal D$ istnieją obiekt $c'\in\mathcal C$ i izomorfizm $a:c\to c'$ z $F(c')=d$ oraz $F(a)=\alpha$.
+\end{definicja}
+Równoważnie możemy wymagać podnoszenia izomorfizmu $\alpha:d\to F(c)$ z zadanym celem $c$: wystarczy podnieść $\alpha^{-1}$ z zadanym źródłem i wziąć odwrotność otrzymanego izomorfizmu.
+
+\begin{twierdzenie}[Fibracje Kana na nerwach grupoidów]\label{cat:thm:nerve-groupoid-isofibration}
+Niech $\mathcal G,\mathcal H$ będą małymi grupoidami i $F:\mathcal G\to\mathcal H$ funktorem. Wtedy $N(F)$ jest fibracją Kana wtedy i tylko wtedy, gdy $F$ jest izofibracją.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $N(F)$ jest fibracją Kana, to dla $c\in\mathcal G$ i izomorfizmu $\alpha:F(c)\to d$ rozważamy kwadrat z lewym morfizmem $\Lambda^0[1]\to\Delta[1]$. Róg $\Lambda^0[1]$ to wierzchołek $0$, którego obrazem jest $c$, a dolnym sympleksem jest $\alpha$. Podniesienie daje morfizm $a:c\to c'$ z $F(a)=\alpha$ i $F(c')=d$. Morfizm $a$ jest izomorfizmem, gdyż $\mathcal G$ jest grupoidem.
+
+Odwrotnie, załóżmy, że $F$ jest izofibracją. W wymiarze $1$ róg z zadanym źródłem podnosimy bezpośrednio przez definicję izofibracji; róg z zadanym celem podnosimy, stosując ją do odwrotności dolnej krawędzi i odwracając otrzymany morfizm.
+
+Dla $n\geq2$ róg w $N(\mathcal G)$ ma jednoznaczne wypełnienie: dla rogów wewnętrznych wynika to z twierdzenia~\ref{cat:thm:nerve-inner-horns}, a dla zewnętrznych z twierdzenia~\ref{cat:thm:nerve-kan-groupoid} i jego dowodu jednoznaczności w wymiarach co najmniej $2$. Obraz wypełnienia i zadany dolny sympleks w $N(\mathcal H)$ wypełniają ten sam róg, więc są równe przez tę samą jednoznaczność w grupoidzie $\mathcal H$. Otrzymujemy względne wypełnienie dla każdego rogu.
+\end{proof}
+
+\begin{przyklad}\label{cat:ex:inner-not-kan-fibration}
+Morfizm $N([1])\to\Delta[0]$ jest fibracją wewnętrzną, ale nie jest fibracją Kana, gdyż $N([1])$ nie jest kompleksem Kana (przykład~\ref{cat:ex:nerve-not-kan}). Co więcej, inkluzja grupoidu jednoobiektowego z jedynym morfizmem do grupoidu o dwóch obiektach i dokładnie jednym morfizmie dla każdej uporządkowanej pary obiektów nie jest izofibracją: izomorfizm od obiektu należącego do obrazu do drugiego obiektu nie może zostać podniesiony. Oba nerwy są kompleksami Kana, lecz morfizm między nimi nie jest fibracją Kana.
+\end{przyklad}
+
+\subsection{Podnoszenie względem brzegów}
+
+\begin{definicja}[Morfizm z własnością podnoszenia względem brzegów]\label{cat:def:boundary-injective}
+Powiemy, że $p:X\to Y$ ma prawą własność podnoszenia względem brzegów, jeśli $\partial\Delta[n]\to\Delta[n]\pitchfork p$ dla wszystkich $n\geq0$. W wymiarze zero brzeg jest pusty, więc warunek wymusza surjektywność $p_0$.
+\end{definicja}
+
+\begin{stwierdzenie}\label{cat:prop:boundary-lifting-kan}
+Każdy morfizm z prawą własnością podnoszenia względem brzegów jest fibracją Kana.
+\end{stwierdzenie}
+\begin{proof}
+Niech będzie zadany kwadrat podnoszenia dla rogu $\Lambda^k[n]$, $n\geq1$. Oznaczmy górny morfizm przez $a$, dolny przez $b:\Delta[n]\to Y$. Brakująca ściana $\delta^k:\Delta[n-1]\to\Delta[n]$ przecina róg dokładnie w swoim brzegu: dla każdego sympleksu tej ściany jego obraz pomija pewien wierzchołek różny od $k$ wtedy i tylko wtedy, gdy odpowiadający mu morfizm do $[n-1]$ nie jest surjekcją. Dla $n=1$ przecięcie jest puste.
+
+Mamy więc kwadrat podnoszenia z $\partial\Delta[n-1]\to\Delta[n-1]$, którego górnym morfizmem jest ograniczenie $a$ do przecięcia, a dolnym $b\delta^k$. Wybieramy podniesienie $c:\Delta[n-1]\to X$. Zgodność $c$ i $a$ na przecięciu pozwala skleić je w morfizm $a':\partial\Delta[n]\to X$: w każdym stopniu brzeg jest sumą podzbiorów odpowiadających rogowi i brakującej ścianie, zaś naturalność sklejonego morfizmu wynika z naturalności obu ograniczeń. Mamy $pa'=b|_{\partial\Delta[n]}$, ponieważ ta równość zachodzi na obu podzbiorach. Drugi raz stosujemy własność podnoszenia względem brzegu, teraz w wymiarze $n$, uzyskując $l:\Delta[n]\to X$ z $pl=b$ i $l|_{\partial\Delta[n]}=a'$. W szczególności $l|_{\Lambda^k[n]}=a$.
+\end{proof}
