@@ -126,8 +126,12 @@ jobs:
       - name: Inspect diagnostics and render pages
         run: |
           if ! command -v pdftoppm >/dev/null 2>&1; then
-            sudo apt-get update -qq
-            sudo apt-get install -y -qq poppler-utils
+            # Only Ubuntu's signed archive is needed for Poppler.
+            # Unrelated third-party repositories must not block this audit.
+            test -s /etc/apt/sources.list.d/ubuntu.sources
+            apt_sources=(-o Dir::Etc::sourcelist=/etc/apt/sources.list.d/ubuntu.sources -o Dir::Etc::sourceparts=-)
+            sudo apt-get "${apt_sources[@]}" update -qq
+            sudo apt-get "${apt_sources[@]}" install -y -qq poppler-utils
           fi
           stem=books/pl/partial_differential_equations_ch23_ci
           test -s "$stem.pdf"
