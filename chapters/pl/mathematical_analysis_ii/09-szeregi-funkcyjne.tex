@@ -282,6 +282,29 @@ dla $x<1$ różnica wynosi $x^{N+1}$, a w punkcie
 $1$ wynosi zero. Zbieżność nie jest jednostajna.
 \end{przyklad}
 
+\paragraph{Rysunek 3D: sumy częściowe szeregu.}
+Krzywe przedstawiają sumy częściowe $S_N(x)=x-x^{N+1}$.
+Dla każdego $N$ wartość w $x=1$ wynosi zero;
+przekroje uwidaczniają brak zbieżności jednostajnej.
+Poniższy kod wymaga bibliotek NumPy i Plotly. Zapisuje samodzielny
+plik HTML, w którym można obracać i powiększać wykres.
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+
+x = np.linspace(0, 1, 501)
+fig = go.Figure()
+for n in [1, 2, 4, 8, 16, 32, 64]:
+    fig.add_trace(go.Scatter3d(
+        x=x, y=np.full_like(x, n), z=x-x**(n+1),
+        mode="lines", name=f"N={n}"))
+fig.update_layout(scene=dict(
+    xaxis_title="x", yaxis_title="N", zaxis_title="S_N(x)"))
+fig.write_html("am2_09_sums.html", include_plotlyjs=True)
+fig.show()
+\end{lstlisting}
+
+
 \begin{przyklad}[Dwie własności łącznie nie wystarczają]
 \label{ma2:ex:uniform-pointwise-absolute}
 Jednostajna zbieżność szeregu i jego punktowa
