@@ -212,6 +212,52 @@ with sync_playwright() as pw:
         }finally{api=originalApi;input.value='';dismissSearch();input.blur();}
     }""")
     assert keyboard_cases == 10
+    # A pending result must not reopen the dropdown after keyboard focus
+    # leaves the header or a programmatic tab/reading-mode transition.
+    search_focus_cases = page.evaluate("""async () => {
+        const originalApi=api, input=document.getElementById('searchInput');
+        const list=document.getElementById('searchResults');
+        const toastBox=document.getElementById('toast');
+        const oldTab=state.tab;
+        let requests=[],count=0;
+        try{
+            api=(url,options)=>url.startsWith('/api/search?')
+                ? new Promise((resolve,reject)=>requests.push({resolve,reject}))
+                : originalApi(url,options);
+            for(const cancel of [
+                ()=>document.getElementById('togglePreview').focus(),
+                ()=>activateTab('reader'),
+                ()=>setReadingMode(true)
+            ]){
+                for(const failure of [false,true]){
+                    input.value='atlas';input.focus();
+                    toastBox.textContent='';
+                    const pending=performSearch('atlas');
+                    cancel();
+                    const req=requests.at(-1);
+                    if(failure)req.reject(Error('obsolete search'));
+                    else req.resolve({items:[]});
+                    await pending;
+                    if(!list.classList.contains('hidden')||toastBox.textContent)
+                        throw Error('obsolete search response after focus/view change');
+                    setReadingMode(false);count++;
+                }
+            }
+            input.focus();const pending=performSearch('atlas');
+            requests.at(-1).resolve({items:[]});await pending;
+            const button=list.querySelector('button');
+            button.focus();
+            if(list.classList.contains('hidden'))throw Error('internal focus dismissed search');
+            document.getElementById('togglePreview').focus();
+            if(!list.classList.contains('hidden'))throw Error('outside focus retained search');
+            return count+2;
+        }finally{
+            api=originalApi;input.value='';dismissSearch();
+            setReadingMode(false);activateTab(oldTab);
+            toastBox.textContent='';toastBox.classList.add('hidden');
+        }
+    }""")
+    assert search_focus_cases == 8
     # Pending reference requests must not resurrect a detached anchor
     # after the source pane or simplified preview is rebuilt.
     detached_cases = page.evaluate("""async () => {
