@@ -197,5 +197,22 @@ class Chapter30(unittest.TestCase):
                       "thm:birkhoff-limit-30", "cor:birkhoff-dct-30"):
             self.assertIn(r"\label{" + label + "}", s)
 
+
+    def test_mt30_017_birkhoff_scalar_multipliers(self):
+        for v in product(range(-2,3), repeat=3):
+            d = max(abs(sum(x*m for x,m in zip(v,mask)))
+                    for mask in product((0,1), repeat=3))
+            for a in product((Q(-1), Q(-1,2), Q(0), Q(1,2), Q(1)), repeat=3):
+                self.assertLessEqual(abs(sum(x*y for x,y in zip(v,a))), 2*d)
+            a = (Q(1,3), Q(1,2), Q(2,3))
+            weights = [(mask, __import__("math").prod(x if m else 1-x
+                        for x,m in zip(a,mask))) for mask in product((0,1), repeat=3)]
+            self.assertEqual(sum(w for _,w in weights),1)
+            self.assertEqual(sum(w*sum(x*m for x,m in zip(v,mask))
+                                 for mask,w in weights),sum(x*y for x,y in zip(v,a)))
+        s = SOURCE.read_text(encoding="utf-8")
+        for label in ("thm:birkhoff-strong-pettis-30", "thm:birkhoff-multipliers-30"):
+            self.assertIn(r"\label{" + label + "}", s)
+
 if __name__ == "__main__":
     unittest.main()
