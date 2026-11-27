@@ -1,3 +1,7 @@
 # AM II 19 — Twierdzenie o funkcji uwikłanej
 
 27.11.2026. Pierwsza wersja rozdziału: twierdzenie i redukcja do FA-15, równania z parametrami i prawą stroną, druga pochodna i oszacowanie normy, przypadek skalarny, sfera, dwa kontrprzykłady i równanie operatorowe. Dodano listing Plotly, definicję repozytoryjną oraz rejestrację AM2-19 w podglądzie. Włączono rozdział do książki i katalogu. Kontrola podczas tworzenia: 8 unikalnych etykiet, stos środowisk bez błędów, katalog poprawny składniowo. Nie uruchomiono kompilacji, testu przeglądarkowego ani audytów stabilizacyjnych. Rozdział pozostaje otwarty do szczegółowego audytu.
+
+## Pierwszy audyt szczegółowy — 27.11.2026
+
+Wprowadzono 18 korekt źródłowych w czterech sekcjach, w tym: ograniczoność i obie kompozycje operatora blokowego; jawne otwartości i odwracalność pochodnej częściowej w równaniu z prawą stroną; oszacowanie normy drugiej pochodnej; odsyłacz do twierdzenia Schwarza; gładkość i lokalne zastosowania twierdzenia na całym dysku, płaszczyzna styczna i rachunek drugiej pochodnej sfery; uzasadnienie kontrprzykładu; ograniczoność, różniczkowalność operatorowa, reguła iloczynu i przypadek przestrzeni zerowej. Poprawiono zarówno listing, jak i repozytoryjną definicję Plotly, aby powierzchnia wyróżnionego wykresu nie była nałożona na tę samą część sfery. Zachowano wszystkie 8 etykiet; stos środowisk bez błędów. Stabilizacja 0/2. Nie uruchomiono kompilacji PDF ani przeglądarki.
