@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Second independent audit of source chapters 34--36.
+"""Second independent audit of source chapter 34 and standalone algebra models.
 
 C_p linking forms and metabolizers, Khovanov state gradings,
 cube signs, graded Euler coefficients including Reidemeister-I
-examples, and bibliographic source/anchor checks. All arithmetic
+examples, and synthesis source anchor checks. All arithmetic
 is exact. Does not certify external geometric results.
 """
 from collections import defaultdict
@@ -169,23 +169,10 @@ def khovanov_euler():
 
 
 def anchors_and_sources():
-    files=[
-        "34-od-grafow-plumbingowych-do-egzotycznych-struktur-gladkich-synt.tex",
-        "35-nowoczesne-niezmienniki-i-zastosowania-teorii-wezlow.tex",
-        "36-literatura-i-podsumowanie.tex",
-    ]
-    a,b,c=[(BASE/name).read_text(encoding="utf-8") for name in files]
+    a=(BASE/"34-od-grafow-plumbingowych-do-egzotycznych-struktur-gladkich-synt.tex").read_text(encoding="utf-8")
     for needle in (r"\label{lem:tg-syn-cp-metabolizer}",
                    r"$M_p=M_p^\perp$",r"\gcd(p-1,p^2)=1"):
         assert needle in a,needle
-    for needle in (r"\label{prop:kt-kh-graded-euler}",
-                   r"$d:C^{i,j}(D)\to C^{i+1,j}(D)$"):
-        assert needle in b,needle
-    for doi in ("10.1016/j.aim.2004.10.015",
-                "10.1007/s00222-007-0075-9",
-                "10.4310/jdg/1214424968",
-                "10.1007/s00222-010-0275-6"):
-        assert doi in c,doi
 
 
 if __name__=="__main__":
@@ -194,4 +181,4 @@ if __name__=="__main__":
     print("PASS independent Khovanov bidegree all merges/splits:",khovanov_bidegree())
     print("PASS ordered cube signed-square cancellations:",cube_sign_cancellation())
     print("PASS graded Euler, positive/negative R-I and chain ranks:",khovanov_euler())
-    print("PASS audit27 checked bibliographic DOIs and cross-source anchors")
+    print("PASS synthesis source anchors")

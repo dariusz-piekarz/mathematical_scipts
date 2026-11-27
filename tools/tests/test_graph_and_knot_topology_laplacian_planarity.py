@@ -906,7 +906,7 @@ def audit_nested_faces():
 def source_integration():
     c=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in c["books"] if x["id"]=="graph_and_knot_theory")
-    assert len(book["chapters"])==44
+    assert len(book["chapters"])==42
     source={
         i:(ROOT/next(p for p in book["chapters"] if Path(p).name.startswith(i+"-")))
         .read_text(encoding="utf-8")
@@ -948,4 +948,4 @@ if __name__=="__main__":
     print("PASS TG09-FACE-01 graphs, rotations, sphere rotations, deletions, colorings:",audit_multigraph_faces())
     print("PASS TG09-GIRTH-01 cases, cyclic, faces, equal, tree equal:",audit_planar_girth())
     print("PASS TG09-NEST-01 arrangements, edge-removal models:",audit_nested_faces())
-    print("PASS source conventions, notation and 44-chapter catalog")
+    print("PASS source conventions, notation and 42-file chapter catalog")

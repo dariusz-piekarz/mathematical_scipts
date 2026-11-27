@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Independent exact regressions for graph/knot source chapters 34--36.
+"""Independent exact regressions for graph/knot source chapter 34 and standalone algebra models.
 
 Verifies C_p surgery matrix, rational Betti/signature bookkeeping,
 Khovanov Frobenius and reduced basepoint algebra, explicit TL3 braid
-algebra, and that audited source definitions/references are present.
+algebra, and source chapter 34 anchors.
 Finite tests are not formal certificates for external geometric theorems.
 """
 from fractions import Fraction
@@ -211,22 +211,9 @@ def tl3_representations():
 
 
 def source_checks():
-    files=[
-        "34-od-grafow-plumbingowych-do-egzotycznych-struktur-gladkich-synt.tex",
-        "35-nowoczesne-niezmienniki-i-zastosowania-teorii-wezlow.tex",
-        "36-literatura-i-podsumowanie.tex",
-    ]
-    a,b,c=[(BASE/name).read_text(encoding="utf-8") for name in files]
+    a=(BASE/"34-od-grafow-plumbingowych-do-egzotycznych-struktur-gladkich-synt.tex").read_text(encoding="utf-8")
     assert r"\label{cor:tg-syn-rational-homological}" in a
     assert "kowymiar" in a
-    assert r"\label{lem:kt-khovanov-frobenius}" in b
-    assert r"$n_z(\phi)=0$" in b
-    assert r"$XA\subset A$" in b
-    assert r"\label{sec:kt-bibliografia-mapa}" in c
-    for doi in ("10.1016/j.aim.2003.05.001",
-                "10.1215/S0012-7094-00-10131-7",
-                "10.1007/s10240-010-0030-y"):
-        assert doi in c
 
 
 if __name__=="__main__":
@@ -234,4 +221,4 @@ if __name__=="__main__":
     print("PASS C_p boundary fraction and unconditional rational blowdown:",cp_boundary_rational_blowdown())
     print("PASS Khovanov Frobenius, coassociativity and basepoint ideal:",khovanov_frobenius_and_reduction())
     print("PASS TL3 inversion and Artin braid relations:",tl3_representations())
-    print("PASS verified modern invariants bibliography and anchors")
+    print("PASS verified synthesis chapter anchors")
