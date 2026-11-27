@@ -115,6 +115,42 @@ $f(t,t^2)=1/2$, podczas gdy $f(t,0)=0$.
 Granica w $(0,0)$ nie istnieje, a $f$ nie jest tam ciągła.
 \end{przyklad}
 
+\paragraph{Rysunek 3D: granice wzdłuż krzywych.}
+Powierzchnia przedstawia funkcję z przykładu
+\ref{ma2:ex:multivariable-paths}. Na paraboli $y=x^2$
+dla $x\ne0$ wartość wynosi $1/2$, a w początku zero.
+W siatce powierzchni pomijamy punkt osobliwy, pokazując go
+oddzielnym znacznikiem. Krzywe nie są łączone przez początek.
+Poniższy kod wymaga bibliotek NumPy i Plotly. Zapisuje samodzielny
+plik HTML, w którym można obracać i powiększać wykres.
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+
+x = np.linspace(-1, 1, 161)
+y = np.linspace(-1, 1, 161)
+X, Y = np.meshgrid(x, y)
+d = X**4 + Y**2
+Z = np.full_like(X, np.nan)
+np.divide(X**2*Y, d, out=Z, where=d > 0)
+fig = go.Figure(go.Surface(x=X, y=Y, z=Z,
+    colorscale="RdBu", cmin=-0.5, cmax=0.5,
+    connectgaps=False))
+for t in [np.linspace(-1, -0.001, 301),
+          np.linspace(0.001, 1, 301)]:
+    fig.add_trace(go.Scatter3d(
+        x=t, y=t**2, z=np.full_like(t, 0.5),
+        mode="lines", line=dict(color="black", width=6),
+        name="y=x^2"))
+fig.add_trace(go.Scatter3d(x=[0], y=[0], z=[0],
+    mode="markers", marker=dict(size=5), name="f(0,0)=0"))
+fig.update_layout(scene=dict(
+    xaxis_title="x", yaxis_title="y", zaxis_title="f(x,y)"))
+fig.write_html("am2_11_paths.html", include_plotlyjs=True)
+fig.show()
+\end{lstlisting}
+
+
 \begin{figure}[htbp]
 \centering
 \begin{tikzpicture}[>=Stealth,scale=1.25]
