@@ -276,6 +276,43 @@ def van_kampen_surjective_boundary_models():
     return count
 
 
+def verify_integral_h1_pushouts():
+    """Test the explicit quotient map on two-generator finite abelian W."""
+    checked = 0
+    for m, n, p in product(range(1, 9), range(1, 9), range(2, 8)):
+        for a, b in product(range(m), range(n)):
+            if p*p*a % m or p*p*b % n:
+                continue
+            W = list(product(range(m), range(n)))
+            order = 1
+            while order*a % m or order*b % n:
+                order += 1
+            pa = {(k*p*a % m, k*p*b % n) for k in range(order)}
+            A = {(k*a % m, k*b % n) for k in range(order)}
+            assert len(A)//len(pa) == gcd(p, order)
+            def canonical(x, y):
+                return min(((x+u) % m, (y+v) % n) for u, v in pa)
+            seen = set()
+            images = set()
+            for x, y in W:
+                for k in range(p):
+                    if (x, y, k) in seen:
+                        continue
+                    image = canonical(x+k*a, y+k*b)
+                    assert image not in images
+                    images.add(image)
+                    u, v, j = x, y, k
+                    while (u, v, j) not in seen:
+                        seen.add((u, v, j))
+                        assert canonical(u+j*a, v+j*b) == image
+                        u, v, j = (u+a)%m, (v+b)%n, (j-1)%p
+                    assert (u, v, j) == (x, y, k)
+            assert len(images) == m*n//len(pa)
+            assert len(images) == (m*n//len(A))*gcd(p, order)
+            checked += 1
+    return checked
+
+
 def lens_linking_vs_oriented_diffeomorphism():
     """The two C_(5,q) linking forms are isometric despite different lenses."""
     modulus=25
@@ -305,6 +342,8 @@ def source_labels():
     ]
     a,b,c=[(ROOT/n).read_text(encoding="utf-8") for n in names]
     assert r"\label{ex:tg-kirby-positive-blowdown}" in a
+    assert b.count(r"\label{prop:tg-rb-integral-h1}") == 1
+    assert r"\ref{prop:tg-rb-integral-h1}" in c
     assert r"\label{st:tg-rb-boundary-kernel}" in b
     assert r"\label{prop:tg-rb-pi1-general}" in b
     assert r"\label{ex:tg-general-C73}" in c
@@ -320,4 +359,5 @@ if __name__=="__main__":
     print("PASS integer-r slam-dunk and rational-r counterexample:",slam_dunk_primitive_slopes())
     print("PASS rational ball boundary kernel and metabolizer:",casson_harer_boundary_kernel())
     print("PASS van Kampen surjective-boundary cyclic pushouts:",van_kampen_surjective_boundary_models())
+    print("PASS integral H1 pushouts on two-generator groups:",verify_integral_h1_pushouts())
     print("PASS equal lens linking forms despite distinct lens classes:",lens_linking_vs_oriented_diffeomorphism())
