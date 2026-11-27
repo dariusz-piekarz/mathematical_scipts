@@ -140,6 +140,23 @@ class CategoryTheoryCh29(unittest.TestCase):
         self.assertEqual(len(pp[15]), 1)
         self.assertTrue(sheaf_condition(pp, rpp))
 
+    def test_CAT_29_007_idempotent_site_universal_property(self):
+        for n in range(5):
+            for p in itertools.product(range(n), repeat=n):
+                if any(p[p[x]] != p[x] for x in range(n)):
+                    continue
+                fixed = tuple(x for x in range(n) if p[x] == x)
+                self.assertEqual(set(p), set(fixed))
+                self.assertEqual(len(fixed) == n, p == tuple(range(n)))
+                for m in range(3):
+                    factors = tuple(itertools.product(range(m), repeat=len(fixed)))
+                    for q in itertools.product(range(m), repeat=n):
+                        if any(q[p[x]] != q[x] for x in range(n)):
+                            continue
+                        admissible = [r for r in factors if all(
+                            r[fixed.index(p[x])] == q[x] for x in range(n))]
+                        self.assertEqual(admissible, [tuple(q[x] for x in fixed)])
+
     def test_CAT_29_005_structure(self):
         s = CHAPTER.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}", s)
