@@ -106,6 +106,9 @@ def validate_container(records: object, *, container_id: str, image_id: str, nam
         raise ValueError("Unexpected user or directory")
     if cfg.get("OpenStdin") is not True or cfg.get("Tty") is not False:
         raise ValueError("Unexpected input mode")
+    # Check the effective container configuration, not just the image.
+    if cfg.get("Healthcheck") not in (None, {"Test": ["NONE"]}):
+        raise ValueError("Container healthcheck forbidden")
     env = cfg.get("Env")
     if (type(env) is not list or any(type(x) is not str for x in env)
             or len(env) != len(set(env)) or set(env) != policy._IMAGE_ENV):
