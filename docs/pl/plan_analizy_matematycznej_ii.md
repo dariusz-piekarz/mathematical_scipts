@@ -48,7 +48,7 @@ Kurs inspirowany wykładami Marka Jarnickiego, Wykłady z Analizy Matematycznej 
 33. Całki powierzchniowe pierwszego rodzaju (DG 11, ME 28)
 34. Całki powierzchniowe drugiego rodzaju i strumień (DG 10–11)
 35. Całkowanie po podrozmaitościach dowolnego wymiaru, formy, Green, Gauss–Ostrogradski i Stokes (DG 01, 10–11, ME 26–28); orientacja, miara indukowana, macierz Grama, forma objętości, całkowanie form, brzeg; ME 26–27, DG 10–11
-   - Dodatkowe rozdziały po zakończeniu podstawowego programu AM II: wielowymiarowe całki cechowane, całka Mawhina oraz całka Pfeffera. Twierdzenie Gaussa–Ostrogradskiego stanowi ich wcześniejszy punkt odniesienia; szczegóły w osobnym bloku planu poniżej.
+   - Dodatkowe rozdziały po zakończeniu podstawowego programu AM II: wielowymiarowe całki cechowane i całka Pfeffera; opracowanie całki Mawhina wstrzymane do osobnej dyspozycji użytkownika. Twierdzenie Gaussa–Ostrogradskiego stanowi ich wcześniejszy punkt odniesienia; szczegóły w osobnym bloku planu poniżej.
 
 ## V. Szeregi potęgowe, rzeczywiste funkcje analityczne i aproksymacja
 
@@ -355,3 +355,8 @@ Nowe rozdziały: 19–23 (poziomice, uwikłanie, rząd, powierzchnie, przestrzen
 Każdy dodany wykres Plotly musi mieć rzeczywistą wersję w repozytorium, przypisaną do konkretnego rozdziału i otwieraną z podglądu czytnika bez ręcznego uruchamiania Pythona. Obowiązuje również przy kolejnych rozdziałach. Nie uznawać samego listingu lub lokalnego pliku ZIP za zakończony etap.
 
 Pierwsza integracja obejmuje 12 rysunków z rozdziałów 01, 08, 09, 11–18 i 36. Definicje w application/frontend/plots/am2-figures.js, wspólny viewer.html i viewer.js, lokalna biblioteka Plotly dostarczana przez zależność Python aplikacji, przycisk w preview.js. Ładowanie na żądanie w izolowanej ramce sandbox bez allow-same-origin; brak wykonywania listingów. Zachować zgodność definicji z listingami i istniejącymi rysunkami statycznymi. Przy nowych wykresach rozszerzać rejestr oraz testy. Do odbioru: CI, testy przeglądarkowe, otwieranie i zamykanie wykresu, poprawność danych i działanie bez CDN. Nie uznawać wdrożenia za potwierdzone przed rzeczywistym testem.
+
+
+## Aktualizacja decyzji — całka Mawhina (27.11.2026)
+
+Wstrzymano opracowanie całki Mawhina do wyraźnej osobnej dyspozycji użytkownika, który wskaże odpowiedni moment i miejsce. CAL-15 zawierał wyłącznie zapowiedź; nie rozpoczęto pisania definicji ani twierdzeń w AM II. Nie tworzyć rozdziału ani nie traktować całki Mawhina jako warunku wycofania CAL. Wcześniejszy opis zakresu zachowano historycznie, ale nie jest aktywnym zadaniem. Plan całki Pfeffera pozostaje; nie uzależniać jej automatycznie od wcześniejszej realizacji całki Mawhina.
