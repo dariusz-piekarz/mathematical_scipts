@@ -554,33 +554,49 @@ ze znakiem współczynnika chirurgii $-49/6$.
 \end{przyklad}
 
 \begin{center}
-\begin{tikzpicture}[x=1.08cm,y=.95cm,>=Stealth,line cap=round]
+\begin{tikzpicture}[>=Stealth,line cap=round]
+  \def\krad{.65}
+  \def\kstep{1.12}
+  \pgfmathsetmacro{\kang}{acos(\kstep/(2*\krad))}
   \foreach \i in {0,...,5}{
+    \pgfmathsetmacro{\kx}{\kstep*\i}
     \ifnum\i=0
-      \draw[tgCoral,line width=1.9pt] (\i,0) circle (.32);
-      \node[tgCoral,font=\scriptsize] at (\i,-.68) {$-9$};
+      \def\kcol{tgCoral}\def\kw{-9}
     \else
-      \draw[tgBlue,line width=1.9pt] (\i,0) circle (.32);
-      \node[tgBlue,font=\scriptsize] at (\i,-.68) {$-2$};
+      \def\kcol{tgBlue}\def\kw{-2}
     \fi
+    \draw[\kcol,line width=1.9pt] (\kx,0) circle (\krad);
+    \draw[\kcol,line width=1.9pt,-{Stealth[length=2mm]}]
+      ({\kx+\krad*cos(78)},{\krad*sin(78)})
+      arc[start angle=78,end angle=102,radius=\krad];
+    \node[text=\kcol,font=\small] at (\kx,-.94) {$\kw$};
   }
-  \foreach \i [evaluate=\i as \j using int(\i+1)] in {0,...,4}{
-    \draw[tgTeal,line width=1.65pt] (\i+.32,.23)
-          .. controls (\i+.52,.74) and (\j-.52,.74) .. (\j-.32,.23);
-    \draw[tgTeal,line width=1.65pt] (\i+.32,-.23)
-          .. controls (\i+.52,-.74) and (\j-.52,-.74) .. (\j-.32,-.23);
+  % Górą przechodzi prawy okrąg, dołem lewy.
+  % Przy wspólnej orientacji CCW oba znaki skrzyżowań są dodatnie.
+  \foreach \i in {0,...,4}{
+    \pgfmathsetmacro{\kx}{\kstep*\i}
+    \pgfmathsetmacro{\ky}{\kstep*(\i+1)}
+    \pgfmathsetmacro{\ktop}{180-\kang-13}
+    \pgfmathsetmacro{\kbottom}{360-\kang-13}
+    \ifnum\i=0 \def\kcol{tgCoral}\else\def\kcol{tgBlue}\fi
+    \draw[tgBlue,line width=1.9pt,preaction={draw=white,line width=6pt}]
+       ({\ky+\krad*cos(\ktop)},{\krad*sin(\ktop)})
+       arc[start angle=\ktop,delta angle=26,radius=\krad];
+    \draw[\kcol,line width=1.9pt,preaction={draw=white,line width=6pt}]
+       ({\kx+\krad*cos(\kbottom)},{\krad*sin(\kbottom)})
+       arc[start angle=\kbottom,delta angle=26,radius=\krad];
   }
-  \node[font=\footnotesize,text=tgNavy] at (2.5,1.28)
-       {Schemat przyległości składowych ramowania};
-  \node[font=\footnotesize,text=tgNavy] at (2.5,-1.14)
-       {Współczynnik ramowania jest podany pod składową};
+  \node[text=tgNavy,font=\footnotesize] at (2.8,1.13)
+    {Ramowany splot konfiguracji $C_7$};
 \end{tikzpicture}
 
-{\footnotesize Poglądowy schemat ramowań i sprzężeń: liczby pod okręgami
-mają oznaczać ramowania, a połączenie sąsiadów ma
-reprezentować liczbę splecenia $1$. Nie jest to regularny
-diagram węzłowy z określonymi przejściami nad i pod;
-ścisły diagram Kirby'ego wymaga narysowania tych skrzyżowań.}
+{\footnotesize Diagram Kirby'ego: sześć niezawiązanych okręgów,
+ramowania $-9,-2,-2,-2,-2,-2$.
+Każda para sąsiednich składowych tworzy splot Hopfa
+o liczbie splecenia $+1$: przy zaznaczonych orientacjach
+oba skrzyżowania mają znak dodatni w konwencji
+rozdziału \ref{ch:teoria-wezlow}. Pozostałe pary nie mają
+skrzyżowań. Macierz ramowań i liczb splecenia to $Q_7$.}
 \end{center}
 
 \begin{lemat}[Metabolizer formy splecenia brzegu Parka]
