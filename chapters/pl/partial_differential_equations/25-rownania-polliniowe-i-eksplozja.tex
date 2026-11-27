@@ -125,7 +125,8 @@ ciągłość całki Bochnera względem górnej granicy:
 dla $t_n\to t$ rozpatrujemy całki na wspólnym
 przedziale i stosujemy zbieżność zmajoryzowaną w normie,
 a całkę po różnicy przedziałów ograniczamy przez
-$|t_n-t|M_R$. Zatem $\Phi$ rzeczywiście przyjmuje
+$|t_n-t|\sup_{s\in[0,T]}\|f(v(s))\|_\infty$
+(dla $v\in B_R$ jest to co najwyżej $|t_n-t|M_R$). Zatem $\Phi$ rzeczywiście przyjmuje
 wartości w $Z_T$.
 Lemat~\ref{lem:pde25-heat} daje
 $\|\Phi(v)(t)\|_\infty\le\|u_0\|_\infty+TM_R$.
@@ -304,17 +305,24 @@ $T_{\max}\ge\tau_M$ oraz
 $\|u(t)\|_\infty\le y(t)$ dla $0\le t<\tau_M$.
 Ponadto
 \begin{equation}\label{eq:pde25-osgood}
- \tau_M=\int_M^\infty\frac{\mathrm ds}{h(s)},
+ \tau_M=\int_M^\infty\frac{\mathrm d\lambda_1(s)}{h(s)},
 \end{equation}
 gdzie dopuszczamy wartość $+\infty$.
 W szczególności rozbieżność całki w~\eqref{eq:pde25-osgood}
 gwarantuje globalne istnienie rozwiązania $u$.
 \end{twierdzenie}
 \begin{proof}
-Ponieważ $h>0$ i jest lokalnie lipschitzowska,
-rozwiązanie $y$ jest ściśle rosnące. Rozdzielenie zmiennych
-daje $t=\int_M^{y(t)}h(s)^{-1}\,\mathrm d\lambda_1(s)$; standardowe
-kryterium przedłużania ODE dowodzi~\eqref{eq:pde25-osgood}.
+Funkcja $H(r)=\int_M^r h(s)^{-1}\,\mathrm d\lambda_1(s)$,
+$r\ge M$, jest klasy $C^1$ i ma ściśle dodatnią
+pochodną. Jej obrazem jest przedział $[0,\tau_M)$,
+gdzie $\tau_M$ jest prawą stroną~\eqref{eq:pde25-osgood}.
+Odwrotność $y=H^{-1}$ spełnia $y(0)=M$ oraz
+$y'=1/H'(y)=h(y)$. Każde rozwiązanie ma tę postać
+przez regułę łańcuchową stosowaną do $H(y(t))$.
+Jeżeli $\tau_M<\infty$, to $y(t)\to\infty$ przy
+$t\uparrow\tau_M$, więc przedłużenie nie istnieje.
+Jeżeli $\tau_M=\infty$, odwrotność jest określona
+dla wszystkich nieujemnych czasów.
 
 Ustalmy $T<\min\{T_{\max},\tau_M\}$. Funkcje stałe
 w przestrzeni $\overline y(t,x)=y(t)$ oraz
@@ -342,7 +350,11 @@ Wobec tego $T_{\max}\ge\tau_M$.
 
 \begin{przyklad}[Wzrost szybszy niż liniowy bez eksplozji z tego kryterium]
 Dla $h(s)=(1+s)\log(e+s)$ całka
-$\int_M^\infty h(s)^{-1}\,\mathrm d\lambda_1(s)$ jest rozbieżna.
+$\int_M^\infty h(s)^{-1}\,\mathrm d\lambda_1(s)$ jest rozbieżna,
+gdyż dla $s\ge e$ zachodzi $1+s\le2s$ i
+$\log(e+s)\le\log(2s)\le2\log s$, a całka
+$\int_e^\infty (s\log s)^{-1}\,\mathrm d\lambda_1(s)$
+jest rozbieżna po podstawieniu $r=\log s$.
 Każda nieliniowość $f\in C^1(\R)$ spełniająca
 $|f(s)|\le(1+|s|)\log(e+|s|)$ daje więc globalne
 rozwiązania na torusie dla dowolnych danych ciągłych.
@@ -433,8 +445,13 @@ $y'=-\lambda_1y+\int_\Omega u^p\phi_1\,
 \mathrm d\lambda_d$.
 Miara $\phi_1\,\mathrm d\lambda_d$ ma masę $1$,
 więc Jensen zapewnia $y'\ge-\lambda_1y+y^p$.
-Dla $y\ge y_0$ prawa strona jest dodatnia; stąd $y$
-rośnie. Ustalmy $K>\max\{y_0,(2\lambda_1)^{1/(p-1)}\}$.
+Ponieważ $y_0>\lambda_1^{1/(p-1)}$, prawa strona
+jest dodatnia w otoczeniu $y_0$. Funkcja $y$ nie może
+spaść poniżej $y_0$: przy pierwszym powrocie do
+tej wartości z góry jej pochodna byłaby niedodatnia,
+podczas gdy nierówność różniczkowa daje pochodną
+ściśle dodatnią. Stąd $y$ jest ściśle rosnąca.
+Ustalmy $K>\max\{y_0,(2\lambda_1)^{1/(p-1)}\}$.
 Jeżeli rozwiązanie przestaje istnieć przed osiągnięciem
 $K$, jego maksymalny czas już jest skończony.
 W przeciwnym razie, dopóki $y\in[y_0,K]$, pochodna
@@ -465,32 +482,161 @@ z Twierdzenia~\ref{thm:pde25-local} daje
 $\|u(t)\|_\infty\to\infty$ przy $t\uparrow T_{\max}$.
 \end{proof}
 
+\begin{twierdzenie}[Regularność rozwiązania łagodnego dla dodatnich czasów]
+\label{thm:pde25-parabolic-regularity}
+Niech $f\in C^1(\R)$ i niech $u$ będzie rozwiązaniem
+łagodnym z Twierdzenia~\ref{thm:pde25-local}.
+Dla $0<a<T<T_{\max}$ zachodzi
+\[
+ u\in C([a,T];C^2(\T^d))\cap C^1([a,T];C(\T^d)),
+ \qquad u_t-\Delta u=f(u).
+\]
+Jeżeli ponadto $u_0\in H^1(\T^d)$, to
+$u\in C([0,T];H^1(\T^d))$.
+\end{twierdzenie}
+\begin{proof}
+Dla periodyzowanego jądra cieplnego z Lematu
+~\ref{lem:pde25-heat} zachodzi dla $t>0$
+\[
+ \|\partial_j K_t\|_{L^1(\T^d)}
+ \le\|\partial_j G_t\|_{L^1(\R^d)}
+ =c_d t^{-1/2},
+\]
+gdzie $G_t$ jest jądrem Gaussa na $\R^d$.
+Nierówność wynika z nierówności trójkąta i sumowania
+po przesuniętych kostkach; równość z podstawienia
+$z=\sqrt t\,w$ w całce z modułu pochodnej Gaussa.
+Stąd $\|\partial_j S(t)v\|_\infty
+\le c_dt^{-1/2}\|v\|_\infty$.
+
+Ustalmy $0<r<a<T<T_{\max}$. Ze wzoru Duhamela
+i ograniczoności $f(u)$ otrzymujemy na $[r,T]$
+\[
+ \partial_j u(t)=\partial_j S(t)u_0+
+ \int_0^t\partial_j S(t-s)f(u(s))\,
+ \mathrm d\lambda_1(s).
+\]
+Aby uzasadnić różniczkowanie, najpierw obcinamy
+całkę do $[0,t-\delta]$. Zarówno całki, jak i ich
+pochodne przestrzenne zbiegają jednostajnie na
+$[r,T]\times\T^d$, gdyż ogon całki z pochodną ma
+normę co najwyżej $2c_d\sqrt\delta
+\sup_s\|f(u(s))\|_\infty$. Całki obcięte są ciągłe
+w czasie i przestrzeni. Twierdzenie o jednostajnej
+zbieżności funkcji i pochodnych daje zatem
+$u\in C([r,T];C^1(\T^d))$.
+
+Teraz rozpoczynamy wzór Duhamela w chwili $r$.
+Ponieważ $\partial_j f(u)=f'(u)\partial_j u$
+jest ciągła w czasie i przestrzeni na $[r,T]$,
+możemy przenieść jedną pochodną na funkcję
+pod splotem (przez periodyczne całkowanie przez części).
+Dostajemy dla $t\ge a$
+\[
+ \partial_i\partial_j u(t)=\partial_i\partial_j S(t-r)u(r)
+ +\int_r^t\partial_i S(t-s)
+       \bigl(f'(u(s))\partial_j u(s)\bigr)\,
+       \mathrm d\lambda_1(s).
+\]
+To samo oszacowanie ogona i jednostajna zbieżność
+pochodnych uzasadniają wzór oraz ciągłość drugich
+pochodnych. W szczególności $\Delta u+f(u)$ jest
+ciągła na $[a,T]\times\T^d$.
+
+Wzór Duhamela spełnia równanie dystrybucyjne:
+w każdym modzie Fouriera $k\in\mathbb Z^d$ otrzymujemy
+\[
+ \widehat u_k'(t)=-|k|^2\widehat u_k(t)
+                  +\widehat{f(u)}_k(t).
+\]
+Wynika to z mnożnika $e^{-t|k|^2}$ półgrupy
+(otrzymanego przez całkowanie periodyzowanego jądra)
+i twierdzenia Newtona--Leibniza. Całkując ten wzór
+od $a$ do $t$, otrzymujemy równość wszystkich
+współczynników Fouriera obu stron tożsamości
+\[
+ u(t)=u(a)+\int_a^t(\Delta u(s)+f(u(s)))\,
+                      \mathrm d\lambda_1(s).
+\]
+Jednoznaczność współczynników Fouriera dla funkcji
+ciągłych wynika z gęstości wielomianów trygonometrycznych.
+Tożsamość w $C(\T^d)$ daje żądaną ciągłą pochodną
+czasową.
+
+Na koniec, dla $u_0\in H^1$, półgrupa jest silnie
+ciągła w $H^1$ (komutuje ze słabymi pochodnymi
+i jest silnie ciągła w $L^2$, co wynika z ciągłości
+translacji i aproksymacji Gaussa).
+Nierówność Younga i oszacowanie pochodnych jądra
+dają
+\[
+ \left\|\int_0^t S(t-s)f(u(s))\,
+              \mathrm d\lambda_1(s)\right\|_{H^1}
+ \le C_d(t+\sqrt t)\sup_{0\le s\le t}\|f(u(s))\|_2.
+\]
+Całka Bochnera w $H^1$ istnieje dzięki tej całkowalnej
+majorancie. Prawa strona dąży do zera przy $t\downarrow0$,
+co wraz z ciągłością dla dodatnich czasów dowodzi
+ciągłości w $H^1$ na $[0,T]$.
+\end{proof}
+
 \section{Funkcjonał energii i równanie Allena--Cahna}
 \begin{twierdzenie}[Dyssypacja energii]
 \label{thm:pde25-energy}
-Niech $V\in C^2(\R)$ i niech
-$u\in C^1([0,T];C^1(\T^d))\cap C([0,T];C^2(\T^d))$ będzie rzeczywistym
-rozwiązaniem $u_t=\Delta u-V'(u)$.
+Niech $V\in C^2(\R)$ i niech $u$ będzie rozwiązaniem
+łagodnym $u_t=\Delta u-V'(u)$ na $[0,T]$, z danymi
+$u_0\in C(\T^d)$. Dla dodatnich czasów, zgodnie
+z Twierdzeniem~\ref{thm:pde25-parabolic-regularity},
+rozwiązanie jest klasyczne.
 Definiujemy
 \[
  E(u)=\int_{\T^d}\left(
  \frac12|\nabla u(x)|^2+V(u(x))\right)
  \,\mathrm d\lambda_d(x).
 \]
-Wtedy $t\mapsto E(u(t))$ jest różniczkowalna i
+Wtedy $t\mapsto E(u(t))$ jest różniczkowalna dla
+$t>0$ i
 \begin{equation}\label{eq:pde25-energy}
  \frac{\mathrm d}{\mathrm dt}E(u(t))
  =-\int_{\T^d}|u_t(t,x)|^2\,\mathrm d\lambda_d(x)\le0.
 \end{equation}
+Jeżeli dodatkowo $u_0\in H^1(\T^d)$, to dla
+$0\le t\le T$ zachodzi
+\[
+ E(u(t))+\int_0^t\|u_t(s)\|_2^2\,
+                  \mathrm d\lambda_1(s)=E(u_0).
+\]
 \end{twierdzenie}
 \begin{proof}
-Przy przyjętej regularności wolno różniczkować gradient w czasie i pod znakiem całki. Periodyczność i
-całkowanie przez części dają
-$\frac{\mathrm d}{\mathrm dt}E(u(t))
-=\int_{\T^d}(-\Delta u+V'(u))u_t
-\,\mathrm d\lambda_d$.
-Z równania mamy $-\Delta u+V'(u)=-u_t$,
-więc otrzymujemy~\eqref{eq:pde25-energy}.
+Nie zakładamy istnienia mieszanej pochodnej
+$\partial_t\nabla u$. Dla $t,t+h>0$ z tożsamości
+różnicy kwadratów i periodycznego całkowania przez
+części otrzymujemy
+\[
+ \begin{aligned}
+ &\frac{1}{2h}\bigl(\|\nabla u(t+h)\|_2^2-
+                       \|\nabla u(t)\|_2^2\bigr)\\
+ &\quad=-\frac12\int_{\T^d}
+    (\Delta u(t+h)+\Delta u(t))
+    \frac{u(t+h)-u(t)}h\,\mathrm d\lambda_d .
+ \end{aligned}
+\]
+Ciągłość $\Delta u$ i różniczkowalność $u$ w normie
+supremum dają granicę $-\int_{\T^d}\Delta u\,u_t\,
+\mathrm d\lambda_d$. Dla części potencjalnej
+twierdzenie o wartości średniej w postaci całkowej
+i jednostajna ciągłość $V'$ na wspólnym ograniczonym
+zakresie wartości dają pochodną
+$\int_{\T^d}V'(u)u_t\,\mathrm d\lambda_d$.
+Z równania wynika $-\Delta u+V'(u)=-u_t$,
+co dowodzi~\eqref{eq:pde25-energy}.
+Pochodna jest ciągła dla dodatnich czasów.
+Całkujemy od $a>0$ do $t$. Jeśli $u_0\in H^1$,
+to $u(a)\to u_0$ w $H^1$ oraz w normie supremum
+przy $a\downarrow0$, zatem $E(u(a))\to E(u_0)$.
+Twierdzenie o zbieżności monotonicznej dla całki
+z nieujemnej funkcji $\|u_t\|_2^2$ daje tożsamość
+od chwili $0$, a także skończoność tej całki.
 \end{proof}
 
 \begin{przyklad}[Równanie Allena--Cahna]
@@ -512,10 +658,11 @@ są rzeczywistymi rozwiązaniami równania półliniowego
 Twierdzenie~\ref{thm:pde25-comparison} daje
 $-M\le-m(t)\le u(t,x)\le m(t)\le M$,
 a alternatywa eksplozji zapewnia globalność.
-Dla rozwiązań o regularności z Twierdzenia
-~\ref{thm:pde25-energy} energia maleje zgodnie
-z~\eqref{eq:pde25-energy};
-sama monotoniczność energii nie oznacza jednak,
+Dla dodatnich czasów energia maleje zgodnie
+z~\eqref{eq:pde25-energy}; dla danych należących
+również do $H^1$ zachodzi tożsamość energetyczna
+od chwili początkowej.
+Sama monotoniczność energii nie oznacza jednak,
 że rozwiązanie musi zbiegać do konkretnego stanu
 stałego bez dalszych argumentów zwartości.
 \end{przyklad}
