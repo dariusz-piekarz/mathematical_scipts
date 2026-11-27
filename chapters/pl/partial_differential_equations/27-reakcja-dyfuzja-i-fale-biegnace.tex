@@ -650,15 +650,31 @@ $G_{Dt}(x)=(4\pi Dt)^{-1/2}\exp(-x^2/(4Dt))$,
 a $S_D(0)=I$. Jądro jest nieujemne i ma całkę $1$.
 Z tożsamości splotowej jąder Gaussa wynika własność
 półgrupy; całkowanie daje kontraktywność, dodatniość
-i zachowanie stałych. Splot zachowuje jednostajną
+i zachowanie stałych. Rozwiązanie łagodne na $[0,T]$
+oznacza tutaj funkcję $u\in C([0,T];\operatorname{BUC}(\R))$
+spełniającą
+\[
+ u(t)=S_D(t)u_0+\int_0^t S_D(t-s)f(u(s))\,
+ \mathrm d\lambda_1(s),\qquad f(s)=rs(1-s).
+\]
+Całka jest całką Bochnera w $\operatorname{BUC}(\R)$. Splot zachowuje jednostajną
 ciągłość, ponieważ
 $\|S_D(t)v(\cdot+h)-S_D(t)v\|_\infty
 \le\|v(\cdot+h)-v\|_\infty$.
 Silna ciągłość przy $t=0$ wynika z rozdzielenia
 całki z $G_{Dt}(y)(v(x-y)-v(x))$ na $|y|<\eta$
-i $|y|\ge\eta$: na pierwszym zbiorze stosujemy
-jednostajną ciągłość $v$, a na drugim zanik masy
-ogona Gaussa przy $t\downarrow0$.
+i $|y|\ge\eta$. Jeśli
+$\omega_v(\eta)=\sup_{|h|\le\eta}\|v(\cdot+h)-v\|_\infty$,
+to
+\[
+ \|S_D(t)v-v\|_\infty
+ \le\omega_v(\eta)+2\|v\|_\infty
+ \int_{|y|\ge\eta}G_{Dt}(y)\,\mathrm d\lambda_1(y).
+\]
+Dla ustalonego $\eta>0$ ostatnia całka dąży do zera
+przez podstawienie $y=\sqrt{Dt}\,z$ i całkowalność
+jądra Gaussa. Następnie przechodzimy z $\eta\downarrow0$,
+korzystając z jednostajnej ciągłości $v$.
 Silna ciągłość w pozostałych chwilach wynika
 z własności półgrupy i kontraktywności.
 
@@ -685,8 +701,16 @@ ponieważ $0\le u_0\le1$, $g(0)=g(1)=0$
 i $S_D(t)$ zachowuje stałe.
 Iteracje Picarda rozpoczęte od zera pozostają
 w przedziale $[0,1]$; ich granica również.
-Powtarzając konstrukcję na kolejnych przedziałach
-tej samej długości, otrzymujemy rozwiązanie globalne.
+Powtarzamy konstrukcję na kolejnych przedziałach
+tej samej długości $\tau$, gdzie $2r\tau<1$.
+Na każdym kroku danymi początkowymi są wartości
+rozwiązania z końca poprzedniego przedziału, nadal
+należące do przedziału $[0,1]$.
+Sklejenie spełnia wzór całkowy z półgrupą
+$e^{-rt}S_D(t)$ od chwili $0$: rozdzielamy całkę
+w chwili sklejenia, a składnik z wcześniejszego
+przedziału przenosimy przez półgrupę.
+Indukcja daje rozwiązanie globalne.
 
 W przedziale $[0,1]$ funkcja $g$ jest równa
 $f(s)=rs(1-s)$. Wzór z $\mathcal P$ jest równoważny
@@ -724,8 +748,17 @@ rachunku z półgrupą $T_a$ w roli wyjściowej
 i stałą $-a$, ponieważ $e^{-at}T_a(t)=S_D(t)$.
 Jednoznaczność w całej klasie rozwiązań łagodnych
 dla $f$ wynika z oszacowania Gronwalla na każdym
-skończonym przedziale, na którym oba rozwiązania
-mają ograniczone normy supremum.
+skończonym przedziale $[0,T]$. Istotnie, ciągłość
+w normie $\operatorname{BUC}$ daje wspólną granicę
+$M$ norm obu rozwiązań na tym przedziale.
+Odejmując zwykłe wzory Duhamela, otrzymujemy
+\[
+ \|u(t)-v(t)\|_\infty\le\|u_0-v_0\|_\infty+
+ r(1+2M)\int_0^t\|u(s)-v(s)\|_\infty\,
+ \mathrm d\lambda_1(s).
+\]
+Dla równych danych początkowych prawa strona
+po zastosowaniu lematu Gronwalla daje zero.
 
 \textbf{Oszacowanie gaussowskie.}
 Stosujemy powyższą transformację z $a=r$.
@@ -792,9 +825,11 @@ założeń o zbieżności całej trajektorii do jednego
 stanu stacjonarnego.
 \end{twierdzenie}
 \begin{proof}
+Z Twierdzenia~\ref{thm:pde27-local} istnieje
+jednoznaczne maksymalne rozwiązanie łagodne.
 Wybieramy $M\ge\max\{1,\|u_0\|_\infty\}$.
-Stałe $-M$ i $M$ są odpowiednio pod- i
-nadrozwiązaniem, gdyż $f(-M)=-M+M^3\ge0$
+Stałe $-M$ i $M$ są odpowiednio podrozwiązaniem
+i nadrozwiązaniem, gdyż $f(-M)=-M+M^3\ge0$
 i $f(M)=M-M^3\le0$. Z zasady porównania
 otrzymujemy $|u(t,x)|\le M$ i globalność.
 Aby uzasadnić tożsamość energii bez dodatkowych
@@ -840,7 +875,22 @@ $H^1(\T_L^d)\hookrightarrow L^2(\T_L^d)$
 pozwalają po przejściu do podciągu założyć
 $u(t_n)\rightharpoonup u_\infty$ w $H^1$ i
 $u(t_n)\to u_\infty$ w $L^2$.
-Z silnej zbieżności w $L^2$ możemy wybrać dalszy
+Zwartość tego zanurzenia można uzasadnić bezpośrednio
+za pomocą bazy Fouriera na torusie: dla
+$e_k(x)=L^{-d/2}\exp(2\pi i k\cdot x/L)$
+i $\mu_k=(2\pi/L)^2|k|^2$ tożsamość Parsevala daje
+\[
+ \sum_{|k|>N}|\langle v,e_k\rangle_{L^2}|^2
+ \le \frac{\|\nabla v\|_2^2}{(2\pi/L)^2N^2}
+ \qquad(N\ge1).
+\]
+Ogon jest więc jednostajnie mały na zbiorach
+ograniczonych w $H^1$, a projekcja na skończenie
+wiele częstotliwości ma względnie zwarty obraz.
+Stąd względna zwartość w $L^2$; granica silna
+musi być równa granicy słabej w $H^1$ dzięki
+ciągłości zanurzenia. Z silnej zbieżności w $L^2$
+możemy wybrać dalszy
 podciąg zbieżny prawie wszędzie; stąd $|u_\infty|\le M$
 prawie wszędzie. Funkcja $f(s)=s-s^3$ jest
 lipschitzowska na $[-M,M]$ ze stałą co najwyżej
@@ -873,6 +923,14 @@ $(\|f(u(t_n))-f(u_\infty)\|_2+\|u_t(t_n)\|_2)
 \|w_n\|_2$, a więc dąży do zera. Ponieważ $D>0$,
 mamy $\|\nabla w_n\|_2\to0$. Wraz z wcześniejszą
 zbieżnością w $L^2$ daje to silną zbieżność w $H^1$.
+Ponadto $E(u(t_n))\to E(u_\infty)$:
+część gradientowa zbiega dzięki silnej zbieżności
+w $H^1$, a część potencjalna dzięki ograniczeniu
+wartości przez $M$ i lipschitzowskości potencjału
+na $[-M,M]$ (na torusie zbieżność w $L^2$
+implikuje zbieżność w $L^1$).
+Ponieważ $E(u(t))$ jest nierosnąca i nieujemna,
+otrzymujemy także $E(u_\infty)=\lim_{t\to\infty}E(u(t))$.
 \end{proof}
 
 \section{Układy i niestabilność Turinga}
