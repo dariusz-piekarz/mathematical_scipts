@@ -1,0 +1,10 @@
+# GT — audyt kontrolny 322
+
+GT14: ponownie sprawdzono konstrukcję grafu Reeba (regularne składowe poziomu krytycznego) oraz rachunek pierwszej liczby Bettiego. Dodano dowód surjektywności pi1(M) -> pi1(R_f) i H1(M;Z) -> H1(R_f;Z): domknięte rzutowanie o spójnych włóknach, spójność drogowa przeciwobrazów spójnych otwartych zbiorów, podział pętli na odcinki w kontraktowalnych gwiazdach i sklejanie homotopii względnych końców. Commit 5ceb6e9d53123a29154227c7ad0749fbb4bc636e.
+GT15: sprawdzono eliminację pojedynczej pary, zachowanie jednostek na przekątnej macierzy par, wpływ na sąsiednie różniczki oraz teleskopowanie silnych nierówności Morse'a. Rozpisano składanie redukcji: i=i1 i2, pi=pi2 pi1, h=h1+i1 h2 pi1 i obie tożsamości. Commit b40dc1f48bf87fa213f7b4c261f04e9228268691.
+GT16: sprawdzono sprzężenie względem macierzy Grama, dodatniość, rozkład Hodge'a i jednoznaczność reprezentanta minimalnej normy; w sprawdzonych dowodach bez nowych luk, źródło bez zmian.
+GT17: sprawdzono dowód wolności grupy działającej swobodnie na drzewie, w tym nieskończone stopnie, identyfikację grupy przekształceń pokładowych z pi1 oraz argument skończonych podkompleksów. Rozdzielono rolę braku inwersji od swobody na wierzchołkach. Sprawdzono także wzór indeksowy na stopnie w drzewie Bassa–Serre'a, przyjmujący fundamentalne twierdzenie Bassa–Serre'a jako wynik zewnętrzny. Commit 390f1b86110576b5f7dfceb3f784ea31518d93af.
+
+Walidacja: 512/512 przykładów macierzowych składania dwóch redukcji w dwuwyrazowym kompleksie o odwracalnej różniczce (całkowite trójkątne zmiany bazy), kontrola tożsamości homotopii w obu stopniach. To test formuły, nie dowód dla dowolnego parowania. 2/2 sprawdzonych celów etykiet unikatowych, zagnieżdżenie środowisk LaTeX poprawne w trzech zmienionych rozdziałach, bloby potwierdzone ponownym odczytem.
+
+CI pełne 45985419064, algorytmy 45985419053, aplikacja 45985419466, terminologia 45985419126 — queued przy odczycie. Brak kontroli wizualnej PDF i odbioru wszystkich twierdzeń. Następny etap: GT18–22, teoria węzłów, grafy Taita, chirurgia Dehna, JSJ i czterorozmaitości.
