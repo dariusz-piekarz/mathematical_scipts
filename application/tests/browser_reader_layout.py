@@ -70,6 +70,50 @@ with sync_playwright() as pw:
     assert page.locator('#explorer').is_visible()
     assert page.locator('#tree').evaluate('el => el.scrollHeight > el.clientHeight')
 
+    # Clicking the chapter caret in the default chapter-only mode must
+    # actually reveal sections and accurately announce expansion.
+    caret_cases = page.evaluate("""async () => {
+        const id='DG-14', module=state.modules.find(m=>m.id===id);
+        const oldMode=state.granularity, oldOutline=state.outlines.get(id);
+        const oldDomain=state.expandedDomains.has(module.domain);
+        const oldExpanded=state.expandedModules.has(id);
+        const select=document.getElementById('granularity');
+        const caret=()=>[...document.querySelectorAll('.module-line .chev')]
+            .find(el=>el.getAttribute('aria-label')==='Rozwiń '+id ||
+                      el.getAttribute('aria-label')==='Zwiń '+id);
+        try {
+            state.expandedDomains.add(module.domain);
+            state.expandedModules.delete(id);
+            state.outlines.set(id,[{id:'caret-fixture',kind:'section',title:'Sekcja testowa'}]);
+            state.granularity='module'; select.value='module'; renderTree();
+            if(caret().getAttribute('aria-expanded')!=='false')throw Error('initial expansion');
+            caret().click();
+            if(state.granularity!=='section'||select.value!=='section'||
+               caret().getAttribute('aria-expanded')!=='true'||
+               ![...document.querySelectorAll('.outline-name')].some(el=>el.textContent==='Sekcja testowa'))
+                throw Error('caret did not reveal sections');
+            caret().click();
+            if(caret().getAttribute('aria-expanded')!=='false')throw Error('collapse');
+            state.expandedModules.add(id); state.granularity='module';
+            select.value='module'; renderTree();
+            caret().click();
+            if(caret().getAttribute('aria-expanded')!=='true'||select.value!=='section')
+                throw Error('previously expanded hidden branch collapsed');
+            state.granularity='object'; select.value='object'; renderTree();
+            caret().click(); caret().click();
+            if(select.value!=='object'||caret().getAttribute('aria-expanded')!=='true')
+                throw Error('object mode lost');
+            return 4;
+        } finally {
+            state.granularity=oldMode; select.value=oldMode;
+            if(oldOutline===undefined)state.outlines.delete(id);else state.outlines.set(id,oldOutline);
+            if(!oldDomain)state.expandedDomains.delete(module.domain);
+            if(oldExpanded)state.expandedModules.add(id);else state.expandedModules.delete(id);
+            renderTree();
+        }
+    }""")
+    assert caret_cases == 4
+
     # A long outline must expose every object without creating an unbounded
     # DOM list. Pagination is independent for sections and all objects.
     pagination = page.evaluate("""() => {
