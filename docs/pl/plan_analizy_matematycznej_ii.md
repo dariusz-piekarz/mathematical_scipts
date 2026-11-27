@@ -33,7 +33,7 @@ Kurs inspirowany wykładami Marka Jarnickiego, Wykłady z Analizy Matematycznej 
 
 ## III. Rachunek całkowy
 
-24. Całka Riemanna (AM I 29, TC 01–02)
+24. Całka Riemanna (AM I 29, AM I 29 (zawartość Jordana i całka Riemanna))
 25. Funkcje pierwotne (AM I 28–30); podstawowe twierdzenie rachunku całkowego (AM I 28–30)
 26. Całki funkcji wektorowych (AF 15A)
 27. Całki niewłaściwe (AM I 31)
@@ -48,6 +48,7 @@ Kurs inspirowany wykładami Marka Jarnickiego, Wykłady z Analizy Matematycznej 
 33. Całki powierzchniowe pierwszego rodzaju (DG 11, ME 28)
 34. Całki powierzchniowe drugiego rodzaju i strumień (DG 10–11)
 35. Całkowanie po podrozmaitościach dowolnego wymiaru, formy, Green, Gauss–Ostrogradski i Stokes (DG 01, 10–11, ME 26–28); orientacja, miara indukowana, macierz Grama, forma objętości, całkowanie form, brzeg; ME 26–27, DG 10–11
+   - Po twierdzeniu Gaussa–Ostrogradskiego: całka Mawhina i wielowymiarowe całki cechowane z kontrolą regularności podziałów. Szczegóły w osobnym bloku planu poniżej.
 
 ## V. Szeregi potęgowe, rzeczywiste funkcje analityczne i aproksymacja
 
@@ -70,7 +71,7 @@ Kurs inspirowany wykładami Marka Jarnickiego, Wykłady z Analizy Matematycznej 
 
 - Granice i ciągłość: AM I 06, 14–16, TO 03 i 07, AM II 01, 08–10. Przywołać gotowe ogólne wyniki; dopisać tylko specyfikę wielu zmiennych, brakujące przykłady i kontrprzykłady.
 - Różniczkowanie: AF 14 (pochodne Gâteaux i Frécheta), AF 15 (pochodne wyższych rzędów i lokalne twierdzenia), AM I 20–23 i 25, AL. Zweryfikować zakres twierdzeń o odwrotności, uwikłaniu, rzędzie i ekstremach; importować istniejące dowody lub przywołać pełne tezy z dokładnymi odsyłaczami, nie dowodzić ich drugi raz. DG 01 i 16: podrozmaitości, zanurzenia, przestrzenie styczne. DG 18: punkty krytyczne i twierdzenie Morse'a, w razie potrzeby wykorzystać w rozdziale o ekstremach.
-- Całki jednowymiarowe: AM I 28–36, TC 01–04 i dalsze rodzaje całek tylko jako odsyłacze, AF 15A–15B. Nie odtwarzać metod całkowania ani rozbudowanej teorii całek skalarowych. Skupić się na wektorowych, nowych zastosowaniach i zależnościach.
+- Całki jednowymiarowe: AM I 28–36, dalsze rodzaje całek z AM I i ME tylko jako odsyłacze, AF 15A–15B. Nie odtwarzać metod całkowania ani rozbudowanej teorii całek skalarowych. Skupić się na wektorowych, nowych zastosowaniach i zależnościach.
 - Całki wielowymiarowe: ME 04, 07–08, 11–13, 26–27; zweryfikować dokładny rozdział o zamianie zmiennych. Wykorzystać twierdzenia Fubiniego i Tonellego, całki zależne od parametru, miarę Hausdorffa i miarę indukowaną. Dodać tylko brakujący rachunek Riemanna na kostkach i zbiorach Jordana oraz most do teorii Lebesgue'a.
 - Całkowanie geometryczne: DG 01, 03, 10, 11, 16; ME 26–27, AM I 33. Wykorzystać formy, orientację, miarę riemannowską, wzory na długość i objętość, Stokesa i jego przypadki szczególne. Zasadniczy dowód w jednym miejscu, pozostałe ujęcia jako wnioski/odsyłacze. Nie powielać pełnej teorii rozmaitości.
 - Każde przejęcie musi mieć sprawdzony rzeczywisty wynik i dowód w źródle, oryginalną etykietę przy imporcie, dokładne odwołanie przy przytoczeniu, kontrolę zależności i numeracji. Audyt koncentrować na nowym materiale, zgodności importu, połączeniach i lukach, a nie na ponownym pisaniu zweryfikowanych dowodów. W razie rozbieżności z wcześniejszą treścią zachować pełne hipotezy i udowodnić tylko nową część.
@@ -307,3 +308,10 @@ Na ec86922 odczytano AM I 36 wiersze 2091–3862 do końca (blob 263b6d6ec4ecfdb
 Po dwóch czystych przebiegach skontrolowano zależności AM I 36 względem planowanego usunięcia CAL. W f35e470 usunięto 7 zbędnych porównań z CAL, których deklaracje są już w tym samym rozdziale, i przekierowano 4 wystąpienia CAL-10 na istniejące deklaracje ME-04 (it:thm:stieltjes-construction) oraz ME-17 (ex:cantor-measure-17); wszystkie 192 etykiety zachowane, bez zmiany matematyki. W 2760c19 dodano test_no_dependency_on_retired_cal sprawdzający brak odsyłaczy CAL i istnienie celów ME według katalogu. Test odtworzono logicznie przez odczyt katalogu i plików; uruchomienia Python nowego testu jeszcze nie potwierdzono. Równolegle 7cd9114 dodał 186 wierszy (3611–3796) o prawostronnej normalizacji integratora, atomach końcowych i przykładach Cantora. Odczytano cały ten nowy fragment, sprawdzając rozkład miary, oszacowanie wahania, warunki na nieograniczoną funkcję oraz rachunki i kontrprzykłady; nie stwierdzono nowych istotnych luk. Aktualny AM I 36: blob b02526accf03632cc9a34ad8a4927ca93b2965e2, 4034 wiersze, 195 etykiet, 329 ref/eqref, 23 różne cele atlasref do 9 rozdziałów ME, wszystkie istnieją; zero CAL, duplikatów etykiet i usterek stosu środowisk. Dwa czyste przebiegi dotyczą wcześniejszego materiału; nowy fragment ma pierwszy czysty odczyt, wymaga drugiego niezależnego odczytu oraz kontroli po zakończeniu migracji. AM II 15 pozostaje na blobie be5bf57ee5ac5e0cdffaf70c0ad69ac31a6bd52e (3215 wierszy, 53 etykiety, 72 ref/eqref), bez duplikatów i usterek stosu środowisk.
 
 CI na 7e9c0c9: #45981137089 AM I oraz #45981137079 AM II completed/success. Na 2760c19 #45982954766 i #45982954849 queued, na 7cd9114 #45983134837 i #45983121235 queued. Pobrano rzeczywisty artefakt 15188164765 z poprawnego CI AM II #45978151081 (9d41060, identyczny blob rozdziału 15). PDF całego tomu ma 134 strony. Wyrenderowano i obejrzano wszystkie 31 stron rozdziału 15 (strony pliku 97–127, drukowane 93–123), w powiększeniu rysunki Hessego i tabele. Bez widocznego obcięcia i kolizji; 72 adnotacje odsyłaczy nazwanych, wszystkie mają istniejący cel w drzewie nazw PDF, brak ?? i znaków zastępczych w wyciągniętym tekście. To odbiór wizualny tej wersji rozdziału, nie test klikalności w aplikacji ani odbiór najnowszego PDF AM I. W PDF AM II pozostają opisowe odwołania texttt (cele zweryfikowane wcześniej, nie są klikalnymi odsyłaczami); następnie ujednolicić je z atlasref zgodnie z konwencją repo i ponownie sprawdzić PDF. Odbiór techniczny całej migracji nadal otwarty. Kolejny etap: drugi niezależny odczyt nowego bloku AM I 36, kontrola odsyłaczy i najnowszych CI oraz PDF AM I, następnie domknięcie audytu kontrolnego AM II (odsyłacze opisowe i hipotezy).
+
+
+### Migracja CAL-15 — całka Mawhina (27.11.2026)
+
+CAL-15 zawiera wyłącznie zapowiedź (bez definicji, twierdzeń, dowodów i etykiet). Przeniesienie do AM II 35 po klasycznym twierdzeniu Gaussa–Ostrogradskiego, z odwołaniem do AM II 30 i do jednowymiarowej teorii całek cechowanych w AM I. Nie dodawać pustego rozdziału do katalogu i nie zmieniać numeracji 36–37.
+
+Zakres przyszłego opracowania: prostokąty i podziały znaczone, cechowanie oraz precyzyjnie zdefiniowana kontrola regularności; istnienie dopuszczalnych podziałów; definicja wybranego wariantu całki Mawhina (rozróżnić warianty i sprawdzić źródła); jednoznaczność, liniowość, zgodność z klasycznymi całkami w uzasadnionym zakresie; twierdzenie o całkowaniu dywergencji pola różniczkowalnego z odpowiednimi hipotezami i pełnym dowodem; porównanie z klasycznym twierdzeniem Gaussa i wielowymiarową całką Henstocka–Kurzweila; przykłady, kontrprzykłady i rysunek ilustrujący rolę kształtu komórek. Nie zakładać równości różnych wariantów bez dowodu. Zachować ideę CAL-15: cienkie komórki mogą mieć niekontrolowany stosunek miary brzegu do objętości. Wykonać dopiero po ustabilizowaniu poprzednich rozdziałów AM II; audyty matematyczne, PDF i CI. Status: plan, nie gotowa teoria.
