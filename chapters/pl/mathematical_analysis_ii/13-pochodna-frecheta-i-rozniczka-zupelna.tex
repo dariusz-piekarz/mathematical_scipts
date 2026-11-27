@@ -128,6 +128,37 @@ co przeczy warunkowi na resztę. Pełne obliczenia
 ciągłości i pochodnych kierunkowych są w AF 14.9.
 \end{przyklad}
 
+\paragraph{Rysunek 3D: błąd przybliżenia liniowego.}
+Dla funkcji z przykładu \ref{ma2:ex:frechet-counterexample}
+rysujemy iloraz $|f(x,y)|/\sqrt{x^2+y^2}$ poza początkiem.
+Na paraboli $y=x^2$ zbliża się on do $1/2$, mimo że
+pochodna Gâteaux w zerze jest zerowa. W początku iloraz
+nie jest określony.
+Poniższy kod wymaga bibliotek NumPy i Plotly. Zapisuje samodzielny
+plik HTML, w którym można obracać i powiększać wykres.
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+
+x = np.linspace(-1, 1, 161)
+X, Y = np.meshgrid(x, x)
+d = (X**4 + Y**2)*np.hypot(X, Y)
+Z = np.full_like(X, np.nan)
+np.divide(np.abs(X**3*Y), d, out=Z, where=d > 0)
+fig = go.Figure(go.Surface(x=X, y=Y, z=Z,
+    colorscale="Viridis", connectgaps=False))
+for t in [np.linspace(-1, -0.001, 301),
+          np.linspace(0.001, 1, 301)]:
+    fig.add_trace(go.Scatter3d(x=t, y=t**2,
+        z=1/(2*np.sqrt(1+t**2)), mode="lines",
+        line=dict(color="red", width=6), name="y=x^2"))
+fig.update_layout(scene=dict(xaxis_title="x",
+    yaxis_title="y", zaxis_title="|f(x,y)|/||(x,y)||"))
+fig.write_html("am2_13_frechet.html", include_plotlyjs=True)
+fig.show()
+\end{lstlisting}
+
+
 \begin{uwaga}[Przestrzeń wartości a jej uzupełnienie]
 \label{ma2:rem:frechet-completion}
 Pochodną Frécheta można zdefiniować w dowolnych
