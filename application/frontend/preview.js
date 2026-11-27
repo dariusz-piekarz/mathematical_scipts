@@ -159,6 +159,17 @@ function buildProsePreview(container, source, moduleId) {
         const labels=command==='atlasref'?[label]:label.split(',').map(value=>value.trim()).filter(Boolean);
         labels.forEach((value,index)=>{if(index)append(', ');append(createReferenceLink(value,moduleId,{caption:title,command}));});continue;
       }
+      // hyperref uses one optional label and a mandatory, formatted caption.
+      if(command==='hyperref'){
+        const checkpoint=i, label=group('[',']'), caption=label===null?null:group();
+        if(label!==null&&label.trim()&&caption!==null){
+          const link=createReferenceLink(label.trim(),moduleId,{caption:caption||null,command});
+          if(caption){link.replaceChildren();parse(caption,link,true);}
+          append(link);continue;
+        }
+        // Preserve unsupported/malformed forms instead of swallowing prose.
+        i=checkpoint;
+      }
       if(command==='href'){group();const value=group()||'';parse(value,target(),true);continue;}
       if(command==='url'){append(group()||'');continue;}
       if(['LaTeX','TeX','ldots','dots','quad','qquad','hfill','par'].includes(command)){if(command==='par'&&!inline)flush();else append(command==='LaTeX'?'LaTeX':command==='TeX'?'TeX':command==='dots'||command==='ldots'?'…':' ');continue;}

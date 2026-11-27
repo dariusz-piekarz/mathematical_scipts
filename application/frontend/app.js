@@ -286,20 +286,22 @@ function createReferenceLink(label,sourceDocument,{caption=null,command='ref',so
   return button;
 }
 function showRefs(container,latex){
-  const fragment=document.createDocumentFragment();const regex=/\\(ref|eqref|pageref|autoref|nameref|cref|Cref|vref|Vref|atlasref)\*?\s*\{([^{}]+)\}/g;
+  const fragment=document.createDocumentFragment();const regex=/\\(ref|eqref|pageref|autoref|nameref|cref|Cref|vref|Vref|atlasref)\*?\s*\{([^{}]+)\}|\\(hyperref)\s*\[([^\[\]]+)\]/g;
   let last=0, match;
   while((match=regex.exec(latex))){
     if(match.index>last)fragment.append(document.createTextNode(latex.slice(last,match.index)));
-    fragment.append(document.createTextNode(match[0].slice(0,match[0].indexOf('{')+1)));
-    const refs=match[2].split(",");
+    const command=match[1]||match[3], square=command==='hyperref';
+    const rawLabels=square?match[4]:match[2];
+    fragment.append(document.createTextNode(match[0].slice(0,match[0].indexOf(square?'[':'{')+1)));
+    const refs=square||command==='atlasref'?[rawLabels]:rawLabels.split(",");
     refs.forEach((raw,i)=>{
       if(i)fragment.append(document.createTextNode(","));
       const lab=raw.trim(), sourceDocument=state.currentModule;if(!lab){fragment.append(document.createTextNode(raw));return;}
       fragment.append(document.createTextNode(raw.slice(0,raw.length-raw.trimStart().length)));
-      fragment.append(createReferenceLink(lab,sourceDocument,{sourceView:true,command:match[1]}));
+      fragment.append(createReferenceLink(lab,sourceDocument,{sourceView:true,command}));
       fragment.append(document.createTextNode(raw.slice(raw.trimEnd().length)));
     });
-    fragment.append(document.createTextNode("}"));last=regex.lastIndex;
+    fragment.append(document.createTextNode(square?"]":"}"));last=regex.lastIndex;
   }
   if(last<latex.length)fragment.append(document.createTextNode(latex.slice(last)));
   container.replaceChildren(fragment);

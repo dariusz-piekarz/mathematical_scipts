@@ -51,6 +51,35 @@ with sync_playwright() as pw:
     page.evaluate(r"() => renderSimplified('Zobacz \\cref{ch:ga5-rozdmuchania,ch:ga6-powierzchnie}.', 'ALG-08')")
     assert page.locator('#simplified .ref-link').count()==2
     page.locator('#simplified .ref-link').first.filter(has_text='Rozdmuchania').wait_for()
+    # Real FA-15B label: preserve the caption, render its math and open the
+    # actual example, not merely the chapter or an unresolved placeholder.
+    hyperref = r'Zobacz \hyperref[ex:dunford-not-pettis15b]{\emph{przykład z} $c_0$}.'
+    page.evaluate("latex => renderSimplified(latex, 'FA-15B')", hyperref)
+    link = page.locator('#simplified [data-reference="ex:dunford-not-pettis15b"]')
+    assert link.count() == 1
+    assert link.locator('em').inner_text() == 'przykład z'
+    assert link.locator('.katex').count() == 1
+    assert r'\hyperref' not in page.locator('#simplified').inner_text()
+    link.hover()
+    page.locator('#tipBody').filter(has_text='Całka Dunforda').wait_for()
+    link.click()
+    page.wait_for_function("state.currentModule==='FA-15B' && !!state.currentEntity")
+    assert 'Całka Dunforda' in page.locator('#docTitle').inner_text()
+    page.evaluate("() => closeTip()")
+    # Explicit captions remain visible even for a missing target.
+    page.evaluate(r"() => renderSimplified('Zobacz \\hyperref[FA-15B::atlas-missing-fixture]{opis celu}.', 'FA-15B')")
+    missing = page.locator('#simplified .ref-link.ref-missing')
+    missing.wait_for()
+    assert missing.inner_text() == 'opis celu'
+    # Source view must preserve all characters, including the optional argument.
+    source = r'\hyperref [ ex:dunford-not-pettis15b ]{\textbf{przykład} $c_0$}'
+    assert page.evaluate("""source => {
+        const box=document.createElement('div');showRefs(box,source);
+        const link=box.querySelector('button[data-reference]');
+        return box.textContent===source &&
+            box.querySelectorAll('button[data-reference]').length===1 &&
+            link.dataset.reference==='ex:dunford-not-pettis15b';
+    }""", source)
     # Original source text, spaces and starred commands must stay byte-for-byte intact.
     sample=r'Tekst \cref* { ch:ga5-rozdmuchania, ch:ga6-powierzchnie }.'
     actual=page.evaluate("source => {const box=document.createElement('div');showRefs(box,source);return box.textContent;}",sample)
