@@ -1,5 +1,8 @@
 """Finite regression witnesses for Daniell--Stone constructions with and without a unit."""
 from fractions import Fraction as Q
+import json
+from pathlib import Path
+import re
 import unittest
 
 
@@ -107,6 +110,71 @@ class DaniellStone12(unittest.TestCase):
         for t in (Q(1,4),Q(1),Q(2),Q(4)):
             mass=sum(a for a,x in zip(w,h) if x>t)
             self.assertLessEqual(t*mass,ih)
+
+
+
+class DaniellStoneMigration(unittest.TestCase):
+    ROOT = Path(__file__).resolve().parents[2]
+    CANONICAL = "chapters/pl/measure_theory/32-calka-daniella-stone-a.tex"
+    LEGACY = "12-calka-daniella-stone-a.tex"
+    # Freeze the original labels independently of the retired CAL source.
+    LEGACY_LABELS = {
+        "it:def:daniell-lattice",
+        "it:def:daniell-functional",
+        "it:lem:daniell-monotone-extension",
+        "it:lem:daniell-cover-domination",
+        "it:def:daniell-outer",
+        "it:eq:daniell-outer",
+        "it:lem:daniell-outer",
+        "it:lem:daniell-separated",
+        "it:lem:daniell-measurability",
+        "it:lem:daniell-level",
+        "it:thm:daniell-stone",
+        "it:cor:daniell-completion",
+        "it:cor:daniell-necessity",
+        "it:thm:daniell-l1-density",
+        "it:cor:daniell-continuous-extension",
+        "it:thm:daniell-unbounded-unit",
+        "it:thm:daniell-stone-general",
+        "it:cor:daniell-general-density",
+        "it:ex:daniell-nonunique",
+        "it:ex:daniell-without-stone",
+        "it:ex:daniell-cc",
+        "prz:daniel-koniecznosc",
+        "prz:daniell-atoms",
+    }
+
+    def test_original_labels_survive_in_me32(self):
+        source = (self.ROOT / self.CANONICAL).read_text(encoding="utf-8")
+        labels = re.findall(r"\\label\{([^}]+)\}", source)
+        self.assertTrue(self.LEGACY_LABELS <= set(labels),
+                        self.LEGACY_LABELS - set(labels))
+        self.assertEqual(len(labels), len(set(labels)))
+
+    def test_me32_in_book_and_catalog(self):
+        catalog = json.loads((self.ROOT / "catalog/books.json").read_text(
+            encoding="utf-8"))
+        book = next(b for b in catalog["books"] if b["id"] == "measure_theory")
+        self.assertEqual(book["chapters"].count(self.CANONICAL), 1)
+        entry = self.ROOT / book["entrypoint"]
+        text = entry.read_text(encoding="utf-8")
+        includes = re.findall(r"\\input\{([^}]+)\}", text)
+        resolved = [(entry.parent / name).resolve() for name in includes]
+        self.assertEqual(resolved.count((self.ROOT / self.CANONICAL).resolve()), 1)
+
+    def test_remaining_cal_references_use_canonical_target(self):
+        canonical = (self.ROOT / self.CANONICAL).read_text(encoding="utf-8")
+        labels = set(re.findall(r"\\label\{([^}]+)\}", canonical))
+        # The old book may disappear entirely after migration.
+        for path in (self.ROOT / "chapters/pl/integration_theory").glob("*.tex"):
+            if path.name == self.LEGACY:
+                continue
+            text = path.read_text(encoding="utf-8")
+            local_refs = set(re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", text))
+            self.assertFalse(local_refs & self.LEGACY_LABELS, path.name)
+            for target in re.findall(r"\\atlasref\{ME-32::([^}]+)\}", text):
+                self.assertIn(target, labels, path.name)
+
 
 
 if __name__=="__main__":
