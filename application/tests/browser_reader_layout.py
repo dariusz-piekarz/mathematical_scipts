@@ -330,6 +330,28 @@ with sync_playwright() as pw:
     }""")
     assert abs(fullscreen_pinned['offset']) <= 2, fullscreen_pinned
     assert fullscreen_pinned['remaining'] >= 40, fullscreen_pinned
+    # A fixed-position overlay outside the fullscreen element can have a
+    # nonempty bounding box yet be absent from the painted/hit-tested UI.
+    reader.evaluate('el => {el.scrollTop=0}')
+    page.evaluate("""async () => {
+        await previewLabel('ch:ga5-rozdmuchania',
+                           document.getElementById('togglePreview'), 'ALG-08');
+        toast('Kontrola powiadomienia w pełnym ekranie');
+    }""")
+    page.locator('#tipBody h3').filter(has_text='Rozdmuchania').wait_for()
+    overlay_check = """() => {
+        const ids=['tipOpen','toast'];
+        return ids.map(id=>{
+            const el=document.getElementById(id), r=el.getBoundingClientRect();
+            const hit=document.elementFromPoint(r.left+r.width/2,r.top+r.height/2);
+            return {id,inside:document.querySelector('.app-shell').contains(el),
+                    fullscreen:!document.fullscreenElement||document.fullscreenElement.contains(el),
+                    hit:el.contains(hit)};
+        });
+    }"""
+    overlays=page.evaluate(overlay_check)
+    assert all(x['inside'] and x['fullscreen'] and x['hit'] for x in overlays), overlays
+    page.evaluate("() => {closeTip();document.getElementById('toast').classList.add('hidden');}")
     page.keyboard.press('Escape')
     page.wait_for_function("!document.documentElement.classList.contains('reading-mode')")
     assert_viewport_layout(page)
