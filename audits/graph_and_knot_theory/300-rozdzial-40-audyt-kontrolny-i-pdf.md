@@ -9,3 +9,7 @@ W Pythonie w dokładnej arytmetyce całkowitej, dla n=1,...,100, porównano wsp�
 ## PDF i CI
 
 Pobrano artefakt 15183454036 dla run 45968400261, pełny PDF 402 strony, plik ostrzeżeń 0 bajtów. W PyMuPDF wyrenderowano i obejrzano wszystkie 10 stron rozdziału (PDF 374–383, drukowane 364–373), w tym trzy schematy; brak istotnych usterek składu. Full-book-pdf success. Structural-audit, zadania finite-models i chapter-pdf (45968400010), changed-latex (45968400019) oraz oba zadania aplikacji (45968400130) nadal queued przy ostatnim odczycie. Drugi audyt kontrolny nie wykazał nowych istotnych usterek; formalny odbiór GT pozostaje otwarty do potwierdzenia pozostałych dedykowanych kontroli CI.
+
+## Domknięcie dedykowanego CI
+
+Run 45968400261: structural-audit i full-book-pdf success. Run 45968400010: finite-models i chapter-pdf success. Run 45968400019: changed-latex success. Odbiór GKT40 w zakresie GT domknięty. Globalna walidacja aplikacji jest odrębnym zadaniem.
