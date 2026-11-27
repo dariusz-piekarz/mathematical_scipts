@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CHAPTERS = ROOT / "chapters/pl/functional_analysis"
 SOURCE = CHAPTERS / "12-klasyczne-przestrzenie-banacha-i-ich-duale.tex"
+RIESZ_SOURCE = ROOT / "chapters/pl/measure_theory/21-twierdzenie-riesza-markowa-kakutaniego.tex"
 
 
 class Chapter12Audit(unittest.TestCase):
@@ -51,7 +52,7 @@ class Chapter12Audit(unittest.TestCase):
         self.assertIn(r"\nu(A)=F(\chi_A)", self.source)
         self.assertIn(r"\nu(A)=F(\chi_A)", self.source)
         self.assertIn(r"\Phi(\chi_{A_n})=0", self.source)
-        self.assertIn(r"T(\chi_K)", self.source)
+        self.assertIn(r"L(\chi_K)", RIESZ_SOURCE.read_text(encoding="utf-8"))
 
     def test_inline_math_balanced_by_paragraph(self):
         # Inline math may span lines, but no paragraph may end in math mode.
@@ -138,9 +139,14 @@ class Chapter12Audit(unittest.TestCase):
         self.assertIn(r"\sum_n\Phi(\chi_{A_n})=0", self.source)
 
     def test_riesz_outer_measure_matches_open_content(self):
-        self.assertIn(r"\mu^*(U)=m(U)", self.source)
-        self.assertIn(r"\mu^*(K)=m(K)=T(\chi_K)", self.source)
-        self.assertIn(r"\mu_T=\mu^*|_{\mathcal B(K)}", self.source)
+        # The canonical proof was moved to ME-21; FA-12 retains the statement.
+        self.assertIn(r"\atlasref{ME-21::thm:compact-riesz-21}", self.source)
+        self.assertIn(r"T(f)=\int_Kf(x)\,\mathrm d\mu_T(x)", self.source)
+        proof = RIESZ_SOURCE.read_text(encoding="utf-8")
+        self.assertIn(r"\label{thm:compact-riesz-21}", proof)
+        self.assertIn(r"m^*(U)=a(U)", proof)
+        self.assertIn(r"a(K)=L(\chi_K)", proof)
+        self.assertIn(r"\mu=m^*|_{\mathcal B(K)}", proof)
 
     def test_layer_cake_partition_of_unity_identity(self):
         # h_j = clip((f-j*delta)/delta, 0, 1): f=delta*sum_j h_j.
@@ -157,7 +163,10 @@ class Chapter12Audit(unittest.TestCase):
         value = sum(w*x for w, x in zip(mu, values))
         self.assertLessEqual(abs(value), sum(mu)*max(abs(v) for v in values))
         self.assertAlmostEqual(sum(mu), 1.0)
-        self.assertIn(r"m(K)=T(\chi_K)", self.source)
+        self.assertIn(r"\atlasref{ME-21::thm:compact-riesz-21}", self.source)
+        proof = RIESZ_SOURCE.read_text(encoding="utf-8")
+        self.assertIn(r"\mu(K)=L(\chi_K)", proof)
+        self.assertIn(r"\|L\|=L(\chi_K)", proof)
 
     def test_complex_variation_norm_discrete_model(self):
         mu = (complex(1, 2), complex(-2, -1), complex(1, 0))
