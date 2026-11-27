@@ -34,7 +34,7 @@ Rysunek \ref{ma2:fig:norm-balls-3d} przedstawia wersję statyczną.
 \begin{tikzpicture}
 \begin{scope}[xshift=0cm]
 \begin{axis}[width=4.7cm,height=5.1cm,view={135}{27},axis equal image,axis lines=box,grid=major,major grid style={draw=gray!22},axis line style={gray!65},tick style={gray!65},xmin=-1.1,xmax=1.1,ymin=-1.1,ymax=1.1,zmin=-1.1,zmax=1.1,xtick={-1,0,1},ytick={-1,0,1},ztick={-1,0,1},tick label style={font=\scriptsize},label style={font=\scriptsize},xlabel=$x$,ylabel=$y$,zlabel=$z$,title={$\|\cdot\|_1$},colormap name=viridis,point meta min=-1,point meta max=1]
-\addplot3[patch,patch type=triangle,shader=interp,draw=none,z buffer=sort] coordinates {(-1,0,0) (0,-1,0) (0,0,-1) (-1,0,0) (0,-1,0) (0,0,1) (-1,0,0) (0,1,0) (0,0,-1) (-1,0,0) (0,1,0) (0,0,1) (1,0,0) (0,-1,0) (0,0,-1) (1,0,0) (0,-1,0) (0,0,1) (1,0,0) (0,1,0) (0,0,-1) (1,0,0) (0,1,0) (0,0,1)};
+\addplot3[patch,patch type=triangle,shader=flat,draw=black!80,line width=.65pt,z buffer=sort] coordinates {(-1,0,0) (0,-1,0) (0,0,-1) (-1,0,0) (0,-1,0) (0,0,1) (-1,0,0) (0,1,0) (0,0,-1) (-1,0,0) (0,1,0) (0,0,1) (1,0,0) (0,-1,0) (0,0,-1) (1,0,0) (0,-1,0) (0,0,1) (1,0,0) (0,1,0) (0,0,-1) (1,0,0) (0,1,0) (0,0,1)};
 \end{axis}
 \end{scope}
 \begin{scope}[xshift=4.7cm]
@@ -44,11 +44,11 @@ Rysunek \ref{ma2:fig:norm-balls-3d} przedstawia wersję statyczną.
 \end{scope}
 \begin{scope}[xshift=9.4cm]
 \begin{axis}[width=4.7cm,height=5.1cm,view={135}{27},axis equal image,axis lines=box,grid=major,major grid style={draw=gray!22},axis line style={gray!65},tick style={gray!65},xmin=-1.1,xmax=1.1,ymin=-1.1,ymax=1.1,zmin=-1.1,zmax=1.1,xtick={-1,0,1},ytick={-1,0,1},ztick={-1,0,1},tick label style={font=\scriptsize},label style={font=\scriptsize},xlabel=$x$,ylabel=$y$,zlabel=$z$,title={$\|\cdot\|_\infty$},colormap name=viridis,point meta min=-1,point meta max=1]
-\addplot3[patch,patch type=triangle,shader=interp,draw=none,z buffer=sort] coordinates {(-1,-1,-1) (-1,1,-1) (-1,1,1) (-1,-1,-1) (-1,1,1) (-1,-1,1) (1,-1,-1) (1,1,-1) (1,1,1) (1,-1,-1) (1,1,1) (1,-1,1) (-1,-1,-1) (1,-1,-1) (1,-1,1) (-1,-1,-1) (1,-1,1) (-1,-1,1) (-1,1,-1) (1,1,-1) (1,1,1) (-1,1,-1) (1,1,1) (-1,1,1) (-1,-1,-1) (1,-1,-1) (1,1,-1) (-1,-1,-1) (1,1,-1) (-1,1,-1) (-1,-1,1) (1,-1,1) (1,1,1) (-1,-1,1) (1,1,1) (-1,1,1)};
+\addplot3[patch,patch type=rectangle,shader=flat,draw=black!80,line width=.65pt,z buffer=sort] coordinates {(-1,-1,-1) (-1,1,-1) (-1,1,1) (-1,-1,1) (1,-1,-1) (1,1,-1) (1,1,1) (1,-1,1) (-1,-1,-1) (1,-1,-1) (1,-1,1) (-1,-1,1) (-1,1,-1) (1,1,-1) (1,1,1) (-1,1,1) (-1,-1,-1) (1,-1,-1) (1,1,-1) (-1,1,-1) (-1,-1,1) (1,-1,1) (1,1,1) (-1,1,1)};
 \end{axis}
 \end{scope}
 \end{tikzpicture}
-\caption{Brzegi kul jednostkowych trzech norm: ośmiościan, sfera i sześcian. Rzut ortograficzny we wspólnej skali.}
+\caption{Brzegi kul jednostkowych trzech norm: ośmiościan, sfera i sześcian. Rzut ortograficzny we wspólnej skali. Ciemne linie wyróżniają rzeczywiste krawędzie wielościanów; sfera nie ma krawędzi.}
 \label{ma2:fig:norm-balls-3d}
 \end{figure}
 
@@ -61,16 +61,40 @@ t, a = np.meshgrid(np.linspace(0, 2*np.pi, 121),
                    np.linspace(0, np.pi, 61))
 D = np.array([np.sin(a)*np.cos(t),
               np.sin(a)*np.sin(t), np.cos(a)])
-norms = [np.sum(np.abs(D), axis=0),
-         np.sqrt(np.sum(D**2, axis=0)),
-         np.max(np.abs(D), axis=0)]
+# Dokladne sciany i krawedzie wieloscianow.
+oct_v = np.array([[-1,0,0],[1,0,0],[0,-1,0],[0,1,0],[0,0,-1],[0,0,1]])
+oct_f = np.array([[0,4,2],[0,2,5],[0,3,4],[0,5,3],[1,2,4],[1,5,2],[1,4,3],[1,3,5]])
+cube_v = np.array([[-1,-1,-1],[-1,-1,1],[-1,1,-1],[-1,1,1],[1,-1,-1],[1,-1,1],[1,1,-1],[1,1,1]])
+cube_f = np.array([[0,1,3],[0,3,2],[4,6,7],[4,7,5],[0,4,5],[0,5,1],[2,3,7],[2,7,6],[0,2,6],[0,6,4],[1,5,7],[1,7,3]])
+oct_e = [[0,2],[0,3],[0,4],[0,5],[1,2],[1,3],[1,4],[1,5],[2,4],[2,5],[3,4],[3,5]]
+cube_e = [[0,1],[0,2],[0,4],[1,3],[1,5],[2,3],[2,6],[3,7],[4,5],[4,6],[5,7],[6,7]]
 fig = make_subplots(rows=1, cols=3,
-    specs=[[{"type": "surface"}]*3],
+    specs=[[{"type": "scene"}]*3],
     subplot_titles=["l1", "l2", "l-infinity"])
-for i, norm in enumerate(norms, 1):
-    X, Y, Z = D/norm
-    fig.add_trace(go.Surface(x=X, y=Y, z=Z,
-        colorscale="Viridis", showscale=False), row=1, col=i)
+
+def add_poly(v, f, edges, col):
+    fig.add_trace(go.Mesh3d(
+        x=v[:, 0], y=v[:, 1], z=v[:, 2],
+        i=f[:, 0], j=f[:, 1], k=f[:, 2],
+        intensity=v[:, 2], colorscale="Viridis",
+        cmin=-1, cmax=1, flatshading=True,
+        showscale=False, showlegend=False),
+        row=1, col=col)
+    xyz = [[q for a, b in edges
+            for q in (v[a, k], v[b, k], None)]
+           for k in range(3)]
+    fig.add_trace(go.Scatter3d(
+        x=xyz[0], y=xyz[1], z=xyz[2], mode="lines",
+        line=dict(color="#222222", width=5),
+        hoverinfo="skip", showlegend=False),
+        row=1, col=col)
+
+add_poly(oct_v, oct_f, oct_e, 1)
+X, Y, Z = D/np.sqrt(np.sum(D**2, axis=0))
+fig.add_trace(go.Surface(x=X, y=Y, z=Z,
+    colorscale="Viridis", cmin=-1, cmax=1,
+    showscale=False), row=1, col=2)
+add_poly(cube_v, cube_f, cube_e, 3)
 fig.update_scenes(aspectmode="cube",
     xaxis=dict(range=[-1.1, 1.1], title="x"),
     yaxis=dict(range=[-1.1, 1.1], title="y"),
