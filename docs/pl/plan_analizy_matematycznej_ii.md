@@ -374,6 +374,10 @@ AM II 01 (4d042cd): trzy brzegi kul jednostkowych w wspólnym układzie osi, z d
 
 AM II 01: rzeczywiste krawędzie wielościanów wyróżnione, bez przekątnych ścian sześcianu; w Atlasie dokładne Mesh3d (aee4264). AM II 08 i 09: zsynchronizowano paletę Viridis PDF, listingów i generatorów; dla g_n wykorzystano wszystkie wierzchołki wykresu odcinkami liniowego, zaznaczono 20 maksimów; dla sum częściowych zastosowano logarytmiczną oś N i zaznaczono wartości zerowe w x=1. Rzeczywiste wykonanie modułu JS: sprawdzono 20 maksimów, wierzchołki i stałe indeksy oraz 7 sum i ich końce; wszystkie kontrole zaliczone. Zapis 84414ba, d50df4b, 4cb5344. Test przeglądarkowy rozszerzono o AM2-01: dwa zdekodowane rysunki statyczne, pięć śladów Plotly, 12 krawędzi każdego wielościanu oraz 8 i 12 trójkątów siatki (f8d6ffd). Test dodano, lecz nie potwierdzono jego uruchomienia. Pełny odbiór PDF i CI nadal otwarty.
 
+### Kontrola ilustracji 2D (AM II 01–12)
+
+Przejrzano wszystkie istniejące ilustracje 2D rozdziałów 01–12. W 01, 02, 03, 08, 10, 11 zastąpiono wcześniejsze rysunki układami PGFPlots z czytelnymi osiami, siatką, wyraźnymi punktami i legendami. Kule w R² są wypełnione z ciemnymi brzegami; sumy częściowe zachowują dyskretne indeksy; w 08 odróżniono pusty i pełny punkt końcowy granicy punktowej; w 11 trzy drogi mają kolory zgodne z nowym wykresem 3D i wartości podane dla punktów poza początkiem. Wszystkie sześć ilustracji złożono samodzielnie w próbce A4 i sprawdzono wizualnie. 93/93 etykiet w dotkniętych plikach zachowano. Dowodów nie modyfikowano. Pozostałe diagramy w 04, 06, 09, 12 sprawdzono źródłowo; do dalszego odbioru wizualnego wraz z ilustracjami 14, 16, 18, 36. Nadal wymagane pełny PDF oraz testy aplikacji; następnie powrót do AM II 22.
+
 ### Obowiązkowy odbiór rysunków w Atlasie
 
 Każdy dodany wykres Plotly musi mieć rzeczywistą wersję w repozytorium, przypisaną do konkretnego rozdziału i otwieraną z podglądu czytnika bez ręcznego uruchamiania Pythona. Obowiązuje również przy kolejnych rozdziałach. Nie uznawać samego listingu lub lokalnego pliku ZIP za zakończony etap.
