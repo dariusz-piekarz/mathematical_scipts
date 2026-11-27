@@ -1458,3 +1458,9 @@ Odczytany `atlas_validation_status.json`: `candidate_sha=02190e107a6305bc7b73334
 
 - `100637c7daffd05446d274c6b00ae71dca32b783`: wspólna epoka żądań widoku pary dziedzin i pokrycia całej biblioteki, odrzucanie spóźnionych sukcesów i błędów; zachowanie ostatnio załadowanego widoku pokrycia przy zmianie zakładki, bez powielania oczekującego automatycznego ładowania. Niezależna epoka wyszukiwania ścieżek i weryfikacja aktualności obu pól. 10/10 izolowanych asercji JS na zmienionych funkcjach PASS. `bf97e7d5aa372f9c730612f8c5bfc7494e2dfb4e`: 10 kontroli regresyjnych w istniejącym browser_ci_e2e.py z rzeczywistymi danymi pary i pokrycia oraz kontrolowanym porządkiem odpowiedzi. Pełnego Chromium nie wykonano.
 - Przy odczycie #45995394261 (poprzednia regresja nawigacji), #45994651687 (naprawa odsyłaczy) oraz AM I/IT na 928848a2 nadal queued. Odbiór P3.5 2+1 pozostaje otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
+
+
+### 2026-11-27 — P3.5: stabilizacja zapytań grafu pojęć
+
+- `9eff58d34f168897ea2facbbc3cef10e666efaac`: identyczne oczekujące zapytania (termin i limit) współdzielą obietnicę; wejście do grafu z wyszukiwarki nie wysyła dwóch zapytań. Edycja terminu usuwa nieaktualny graf i unieważnia odpowiedź, limit jest częścią kontroli aktualności, za krótki termin unieważnia żądanie, aktualny błąd pozwala ponowić próbę. 9/9 izolowanych asercji JS PASS. `1b3965b0111ef8bf4f38f313a938714ccd25fb44`: 9 kontroli regresyjnych w istniejącym browser_ci_e2e.py z rzeczywistym payloadem grafu i kontrolowanymi obietnicami. Pełne Chromium niewykonane.
+- Poprzednie przebiegi aplikacji #45995936499 i grafu pojęć #45995936461 oraz aplikacji na poprawce odsyłaczy #45994651687 nadal queued przy odczycie. P3.5 testing/stabilizing, odbiór 2+1 otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
