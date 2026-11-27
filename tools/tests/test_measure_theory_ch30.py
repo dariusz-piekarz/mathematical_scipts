@@ -214,5 +214,22 @@ class Chapter30(unittest.TestCase):
         for label in ("thm:birkhoff-strong-pettis-30", "thm:birkhoff-multipliers-30"):
             self.assertIn(r"\label{" + label + "}", s)
 
+
+    def test_mt30_018_birkhoff_rademacher_and_seminorm(self):
+        for m in range(1,8):
+            signs = [[(-1)**(j//2**(m-k)) for j in range(2**m)]
+                     for k in range(1,m+1)]
+            for k,l in product(range(m), repeat=2):
+                self.assertEqual(Q(sum(x*y for x,y in zip(signs[k],signs[l])),2**m),
+                                 Q(int(k==l)))
+            for n in range(m):
+                a = [Q(1,m)]*m
+                self.assertLessEqual(sum(a[k]**2/Q(k+1) for k in range(n,m)),
+                                     sum(x*x for x in a)/Q(n+1))
+        s = SOURCE.read_text(encoding="utf-8")
+        for label in ("ex:pettis-not-birkhoff-30", "thm:birkhoff-seminorm-30",
+                      "ex:birkhoff-q-incomplete-30"):
+            self.assertIn(r"\label{" + label + "}", s)
+
 if __name__ == "__main__":
     unittest.main()
