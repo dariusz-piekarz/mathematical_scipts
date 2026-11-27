@@ -2521,7 +2521,7 @@ materiału dwuwarstwowego; jest ilustracją prawa
 \begin{lstlisting}[style=pythonpde,caption={Homogenizacja okresowa i macierz efektywna (Plotly)},label={code:pde30-plotly}]
 """PDE, rozdzial 30: 1D homogenizacja okresowa i srednie efektywne.
 
-Wymagania: pip install numpy plotly
+Wymagania: pip install 'numpy>=2' plotly
 Uruchomienie: python demo_homogenizacja_plotly.py
 Pliki wynikowe: pde30_profile.html, pde30_gradient_strumien.html,
                 pde30_zbieznosc.html, pde30_anizotropia.html
@@ -2576,6 +2576,8 @@ def main():
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=x, y=grad, name="gradient u'eps"))
     fig.add_trace(go.Scatter(x=x, y=grad0, name="gradient u'0", line=dict(dash="dot")))
+    corrected = A_HOM * grad0 / (2 + np.sin(2*np.pi*24*x))
+    fig.add_trace(go.Scatter(x=x, y=corrected, name="gradient z poprawka", line=dict(dash="dash"), visible="legendonly"))
     fig.add_trace(go.Scatter(x=x, y=flux, name="strumien aepsu'eps", line=dict(width=3)))
     fig.add_trace(go.Scatter(x=x, y=0.5-x, name="strumien graniczny", line=dict(dash="dash")))
     fig.update_layout(title="Silna zbieznosc strumienia, oscylacje gradientu",
@@ -2603,11 +2605,28 @@ def main():
                              y=np.sqrt(2.5)*np.sin(t),
                              name="bledna srednia arytmetyczna", line=dict(dash="dash")))
     fig.update_yaxes(scaleanchor="x", scaleratio=1)
-    fig.update_layout(title="Izotropowe fazy -> anizotropowa macierz efektywna",
+    fig.update_layout(title="Elipsa q^T A_hom^(-1) q = 1",
                       xaxis_title="kierunek prostopadly do warstw (y1)",
                       yaxis_title="kierunek wzdluz warstw (y2)")
     export(fig, "pde30_anizotropia.html")
-    assert abs(A_HOM - 1.7320508075688772) < 1e-12
+    y = np.linspace(0.0, 1.0, 4097)
+    harmonic = 1.0 / np.trapezoid(1.0 / (2 + np.sin(2*np.pi*y)), y)
+    assert abs(A_HOM - harmonic) < 1e-10
+    corrector_errors = []
+    raw_errors = []
+    for n in ns:
+        xx, uu, dd, qq, vv, gg, _ = micro_solution(int(n))
+        aa = 2 + np.sin(2*np.pi*n*xx)
+        corrector_errors.append(np.sqrt(np.trapezoid((dd - A_HOM*gg/aa)**2, xx)))
+        raw_errors.append(np.sqrt(np.trapezoid((dd - gg)**2, xx)))
+        assert np.max(np.abs(aa*dd - qq)) < 1e-12
+        assert abs(uu[0]) + abs(uu[-1]) < 5e-12
+    assert np.all(np.diff(corrector_errors) < 0)
+    corrector_order = np.polyfit(np.log(1.0/ns), np.log(corrector_errors), 1)[0]
+    assert 0.9 < corrector_order < 1.1, corrector_order
+    assert raw_errors[-1] > 0.05
+    print("Bledy gradientu z poprawka:", corrector_errors)
+    print("Bledy gradientu bez poprawki:", raw_errors)
     assert all(np.diff(errors) < 0), errors
     assert 0.8 < order < 1.2, order
     assert abs(flux[-1] - flux[0] + 1.0) < 1e-12
