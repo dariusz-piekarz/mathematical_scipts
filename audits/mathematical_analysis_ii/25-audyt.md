@@ -1,0 +1,5 @@
+# AM II 25 — funkcje pierwotne i podstawowe twierdzenie rachunku całkowego
+
+## Konstrukcja 1/2 (28.11.2026)
+
+Inwentaryzacja AM I 28–30, AM II 10, 14, 24 oraz FA 15A: teoria skalarna i metody rachunkowe już istnieją; AM II 14 podaje Newtona–Leibniza dla C^1, FA 15A uogólnia go na przestrzenie lokalnie wypukłe. Tutaj uzupełniono przypadek funkcji wektorowej całkowalnej Riemanna (niekoniecznie ciągłej), bez powielania teorii całek Bochnera, Pettisa i innych. Dodano definicję funkcji pierwotnej i kanoniczny opis różniczki, jednoznaczność, kryterium Cauchy'ego, całkowalność na podprzedziałach, addytywność, oszacowanie normy, zgodność z operatorem liniowym, pochodną całki w punktach ciągłości oraz przykład skoku. Sprawdzono rzeczywiste etykiety AM I i AM II; 8 etykiet, 9 odsyłaczy lokalnych (w tym do wcześniejszych rozdziałów), środowiska zrównoważone, książka i katalog zaktualizowane. Pełnej kompilacji nie wykonano. Następny blok: Newton–Leibniz dla pochodnej całkowalnej Riemanna, operator całkowania i reguły rachunkowe wektorowe.
