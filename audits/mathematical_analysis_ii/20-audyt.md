@@ -1,0 +1,3 @@
+# AM II 20 — Twierdzenia o rzędzie
+
+27.11.2026. Pierwsza wersja według planu AM II 20: rząd, jego lokalna dolna półciągłość, twierdzenie o rzędzie stałym, postać blokowa w przestrzeniach Banacha z hipotezą zerowego dopełnienia Schura, immersje, submersje, wartości regularne, poziomice i przykłady. Sprawdzono rzeczywiste twierdzenie i dowód DG-01 tw:rzad-staly oraz wnioski o immersji i submersji; wersja C^s i blokowa stanowią uzupełnienie. Włączono do książki i katalogu, dodano listing i definicję Plotly AM2-20. 10 unikalnych etykiet, poprawny stos środowisk. Audyty szczegółowe i stabilizacyjne jeszcze niewykonane. Brak odbioru PDF i testu przeglądarkowego.

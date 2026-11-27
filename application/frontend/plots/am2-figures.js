@@ -72,6 +72,10 @@
       const U=t.map(u=>r.map(v=>v*Math.cos(u))),V=t.map(u=>r.map(v=>v*Math.sin(u)));
       return base([surface(X,Y,Z,{opacity:.25,colorscale:"Greys",name:"sfera",showlegend:true}),surface(U,V,t.map(()=>r.map(v=>Math.sqrt(1-v*v))),{colorscale:"Blues",name:"lokalny wykres",showlegend:true}),surface(U,V,t.map(()=>r.map(()=>1)),{opacity:.45,colorscale:"Oranges",name:"płaszczyzna styczna",showlegend:true})],"Sfera i lokalny wykres",{scene:{...scene("x₁","x₂","y"),aspectmode:"data"}});
     },
+    "am2_20_rank.html":()=>{
+      const x=lin(-1,1,61);
+      return base([-1,0,1].map((c,i)=>surface(x,x,grid(x,x,(u,v)=>u*u+v*v+c),{colorscale:["Blues","Greens","Oranges"][i],opacity:.8,name:"c="+c,showlegend:true})),"Poziomice submersji");
+    },
     "am2_36_geometric.html":()=>{
       const r=lin(0,.97,61),t=lin(0,2*Math.PI,121),X=t.map(a=>r.map(v=>v*Math.cos(a))),Y=t.map(a=>r.map(v=>v*Math.sin(a)));
       const norm=(a,v,n)=>n===null?1/Math.hypot(1-v*Math.cos(a),v*Math.sin(a)):Math.hypot(1-v**(n+1)*Math.cos((n+1)*a),v**(n+1)*Math.sin((n+1)*a))/Math.hypot(1-v*Math.cos(a),v*Math.sin(a));
