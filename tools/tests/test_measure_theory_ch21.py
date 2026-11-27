@@ -90,6 +90,29 @@ class TestMeasureTheoryChapter21(unittest.TestCase):
             self.assertAlmostEqual(distance, 1 / (n + 1))
         self.assertLess(1 / 1001, 0.001)
 
+    def test_complex_positive_envelope_additivity_exact(self):
+        from fractions import Fraction as Q
+        from itertools import product
+
+        # Rational complex coefficients of known modulus.
+        coeffs = ((0, 0, 0), (3, 4, 5), (-4, 3, 5), (0, -2, 2))
+        for atoms in product(coeffs, repeat=3):
+            def envelope(g):
+                real = imag = Q(0)
+                for (a, b, mod), weight in zip(atoms, g):
+                    # Align each phase with the conjugated atom.
+                    u = Q(a, mod) * weight if mod else Q(0)
+                    v = -Q(b, mod) * weight if mod else Q(0)
+                    self.assertLessEqual(u*u + v*v, weight*weight)
+                    real += a*u - b*v
+                    imag += a*v + b*u
+                self.assertEqual(imag, 0)
+                self.assertEqual(real, sum(m*g0 for (_, _, m), g0 in zip(atoms, g)))
+                return real
+            for g1, g2 in product(product(range(3), repeat=3), repeat=2):
+                g = tuple(a+b for a, b in zip(g1, g2))
+                self.assertEqual(envelope(g), envelope(g1)+envelope(g2))
+
     def test_complex_variation_and_operator_norm(self):
         rng = random.Random(2106)
         for _ in range(160):
