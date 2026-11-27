@@ -278,22 +278,29 @@ function createReferenceLink(label,sourceDocument,{caption=null,command='ref',so
   return button;
 }
 function showRefs(container,latex){
-  container.replaceChildren();const regex=/\\(ref|eqref|pageref|autoref|nameref|cref|Cref|vref|Vref|atlasref)\*?\s*\{([^{}]+)\}/g;
+  const fragment=document.createDocumentFragment();const regex=/\\(ref|eqref|pageref|autoref|nameref|cref|Cref|vref|Vref|atlasref)\*?\s*\{([^{}]+)\}/g;
   let last=0, match;
   while((match=regex.exec(latex))){
-    if(match.index>last)container.append(document.createTextNode(latex.slice(last,match.index)));
-    container.append(document.createTextNode(match[0].slice(0,match[0].indexOf('{')+1)));
+    if(match.index>last)fragment.append(document.createTextNode(latex.slice(last,match.index)));
+    fragment.append(document.createTextNode(match[0].slice(0,match[0].indexOf('{')+1)));
     const refs=match[2].split(",");
     refs.forEach((raw,i)=>{
-      if(i)container.append(document.createTextNode(","));
-      const lab=raw.trim(), sourceDocument=state.currentModule;if(!lab){container.append(document.createTextNode(raw));return;}
-      container.append(document.createTextNode(raw.slice(0,raw.length-raw.trimStart().length)));
-      container.append(createReferenceLink(lab,sourceDocument,{sourceView:true,command:match[1]}));
-      container.append(document.createTextNode(raw.slice(raw.trimEnd().length)));
+      if(i)fragment.append(document.createTextNode(","));
+      const lab=raw.trim(), sourceDocument=state.currentModule;if(!lab){fragment.append(document.createTextNode(raw));return;}
+      fragment.append(document.createTextNode(raw.slice(0,raw.length-raw.trimStart().length)));
+      fragment.append(createReferenceLink(lab,sourceDocument,{sourceView:true,command:match[1]}));
+      fragment.append(document.createTextNode(raw.slice(raw.trimEnd().length)));
     });
-    container.append(document.createTextNode("}"));last=regex.lastIndex;
+    fragment.append(document.createTextNode("}"));last=regex.lastIndex;
   }
-  if(last<latex.length)container.append(document.createTextNode(latex.slice(last)));
+  if(last<latex.length)fragment.append(document.createTextNode(latex.slice(last)));
+  container.replaceChildren(fragment);
+}
+function sourceLineCount(latex){
+  if(!latex.length)return 0;
+  let count=latex.endsWith("\n")?0:1;
+  for(let i=latex.indexOf("\n");i!==-1;i=latex.indexOf("\n",i+1))count++;
+  return count;
 }
 function updateCurrentSelectionButton(){
   const data=state.currentData;if(!data)return;
@@ -314,8 +321,7 @@ function renderReader(){
   const firstLine=entity?data.entity.start_line:1;
   $("rangeStart").value=firstLine;
   // A terminal newline ends the last source line; it is not an extra line.
-  const lineCount=data.latex.length
-    ? data.latex.split("\n").length-(data.latex.endsWith("\n")?1:0) : 0;
+  const lineCount=sourceLineCount(data.latex);
   $("rangeEnd").value=firstLine+Math.max(0,lineCount-1);
   updateCurrentSelectionButton();
   showRefs($("latexSource"),data.latex);
