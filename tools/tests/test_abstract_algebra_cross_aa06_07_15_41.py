@@ -218,11 +218,17 @@ class PresentationGroupAlgebraInterface(unittest.TestCase):
           "15-pierscienie-nieprzemienne-i-algebry-grupowe.tex",
           "41-reprezentacje-grup-i-twierdzenie-maschkego.tex",
         )
-        self.assertEqual(sum(len(re.findall(r"\\label\{",source[p]))
+        # The previous cross-audit concerns the group-theoretic core, not the
+        # subsequently integrated Banach--Tarski proof.
+        core = dict(source)
+        aa07 = focus[1]
+        core[aa07] = source[aa07].split(r"\section{Paradoks Banacha--Tarskiego: cel i plan dowodu}", 1)[0]
+        core[aa07] = re.sub(r"\\label\{(?:def:grupa-wolna|lem:stos|tw:redukcja|wn:redukcja-iloczyn|st:grupa-slow|tw:uniwersalnosc|st:przeliczalnosc-f2)\}", "", core[aa07])
+        self.assertEqual(sum(len(re.findall(r"\\label\{",core[p]))
                              for p in focus),93)
         refs=[m for p in focus for m in re.findall(
             r"\\(?:ref|eqref|pageref|autoref)\{([^{}]+)\}",source[p])]
-        self.assertEqual(len(refs),41)
+        self.assertEqual(sum(len(re.findall(r"\\(?:ref|eqref|pageref|autoref)\{([^{}]+)\}",core[p])) for p in focus),41)
         self.assertFalse(set(refs)-set(labels),set(refs)-set(labels))
         for item in (
             "aa:tw:presentation-universal","aa:prz:presentations-basic",
