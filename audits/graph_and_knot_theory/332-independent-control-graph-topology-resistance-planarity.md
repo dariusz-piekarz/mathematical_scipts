@@ -1,0 +1,11 @@
+# GT — audyt szczegółowy 332
+
+GT07: sprawdzono dowody równoważności homotopijnej przy zwijaniu podkompleksu CW, bukietu okręgów, grupy fundamentalnej, charakterystyki Eulera nakrycia oraz zgodności metryki długości z topologią CW i metryką grafową. Uzupełniono uzasadnienie istnienia drzewa rozpinającego w multigrafie przez uproszczenie grafu i wybór reprezentantów krawędzi. Commit af7c7c0a05e0357cc2cf0ce90e6d479868d26df6.
+
+GT08: sprawdzono tożsamość energii, zasadę maksimum, zagadnienie Dirichleta, reprezentanty harmoniczne, zgodność dodatnich widm, wielomian lasów ukorzenionych, spektralny wzór Kirchhoffa, dodatniość rezystancji, iloraz minorów, zasadę Thomsona, monotoniczność Rayleigha i jej przypadek równości, dodawanie krawędzi oraz iloraz Rayleigha. Uzupełniono rachunek widm C4 i K4 bez jednej krawędzi przez podanie macierzy, ortogonalnej bazy wektorów własnych i zmianę macierzy rzędu jeden po dodaniu przekątnej. Commit 1aa5710d315ff4e314f8ec70c24ebeee5777f9a0.
+
+GT09: sprawdzono kryterium mostu przez ściany, dolne ograniczenia długości obchodów, oszacowania planarne z girth i dwukolorowalność ścian także dla grafów niespójnych. Doprecyzowano przypadek równości m=2n-4 dla grafu dwudzielnego z cyklem: z długości obchodów równej cztery i istnienia cyklu w każdym nośniku wynika g=4; dopiero wtedy stosuje się kryterium równości twierdzenia o girth. Przypadek drzewa P3 pozostaje oddzielny. Commit d533b71ef2720823305ec91507513440ab18a652.
+
+Walidacja: 51105/51105 spójnych multigrafów na 1..4 wierzchołkach z krotnościami każdej nieuporządkowanej pary (w tym pętli) od 0 do 2 — kontrola liczby krawędzi drzewa uzyskanego przez łączenie składowych, z pominięciem pętli i nadmiarowych krawędzi. 8/8 dokładnych tożsamości wektorów własnych obu macierzy laplasjanu i 6/6 kontroli ortogonalności bazy; niezależna enumeracja drzew daje 4 i 8. Trzy końcowe bloby potwierdzone odczytem; zagnieżdżenie środowisk poprawne 3/3; cel odsyłacza thm:tg-planar-girth występuje dokładnie raz w GT09. Kontrole skończonych modeli nie zastępują dowodów.
+
+Pełne CI 45989798906, algorytmy 45989798847, terminologia 45989798790, aplikacja 45989798825 — queued przy odczycie. Brak pełnego wykonania suity, kompilacji i odbioru wizualnego PDF. Następny etap: GT10–13, pozostałe dowody o planarności, kolorowaniach, powierzchniach, wielomianie Tutte'a i triangulacjach.
