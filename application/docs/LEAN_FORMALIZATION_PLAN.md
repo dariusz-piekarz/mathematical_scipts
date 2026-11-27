@@ -150,6 +150,38 @@ Do wyświetlenia certyfikatu **Zweryfikowane matematycznie** wymagane są jednoc
 - Uzupełniono regresję o rzeczywisty proces potomny (`test_linux_memory_ceiling_is_inherited_by_descendants`), który odczytuje własny `RLIMIT_AS` po uruchomieniu przez proces nadrzędny. Próba lokalna Linux przeszła; commit `2da1ef7f`, CI https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45014252809 — wynik niepotwierdzony w chwili zapisu.
 
 ### Strumień A — agregowany limit pamięci cgroup v2 (22.11.2026)
+
+**Aktualizacja 27.11.2026 — rzeczywista delegacja na Linux.** Dla
+niekorzeniowej grupy domenowej cgroup v2 kontroler pamięci wymaga braku
+procesów bezpośrednio w grupie delegującej. Proces aplikacji powinien
+działać w jej osobnym dziecku (np. `client`), a tworzone grupy kompilacji
+są jego rodzeństwem. Administrator przygotowuje delegację przed startem;
+Atlas nie włącza kontrolerów i nie modyfikuje praw nadrzędnej grupy.
+
+- `MATLIB_LEAN_CGROUP_PARENT` wskazuje bezwzględną ścieżkę istniejącego,
+  delegowanego bezpośredniego rodzica grupy aplikacji, poza korzeniem.
+  Nie jest to dowolny katalog ani automatyczny wybór przodka.
+  Przykładowa topologia: `/sys/fs/cgroup/<delegacja>/client` dla procesu
+  aplikacji, `/sys/fs/cgroup/<delegacja>` jako wartość zmiennej.
+  Ustawienie ma znaczenie dla Linux przy żądanym limicie agregowanym
+  `MATLIB_LEAN_TOTAL_MEMORY_MB`.
+- Brak delegacji, błędna ścieżka, nieprzyjęte wartości limitów lub
+  nieweryfikowalny stan zakończenia blokują wykonanie lub jego sukces.
+  Odczytywane są `memory.max`, `memory.swap.max` i `memory.oom.group`.
+- [CI #46065980748](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/46065980748/job/140731270868)
+  na `4d944a331705acffec7d2bad616d723cfd484067`: rzeczywista delegacja
+  systemd, użytkownik nieuprzywilejowany, odczyt limitu 512 MiB z procesu
+  potomnego, cleanup, 1/1 test bez pominięcia. Osobny skrypt CI
+  `application/scripts/lean_native_cgroup_ci.sh` nie jest instalatorem
+  produkcyjnym. Nie testowano celowego wyczerpania pamięci, nie udowodniono
+  działania na każdym hoście ani izolacji niezaufanych draftów.
+- Pełny CI aplikacji po tej zmianie
+  [#46066074731](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/46066074731)
+  zakończył się sukcesem (1085 testów, 11 sklasyfikowanych pominięć).
+  Natywne wykonanie jest odrębnym dowodem, a nie retroaktywną zmianą
+  statusu pominiętego testu w zwykłym jobie. Nowa seria 2+1 i niezależna
+  recenzja pozostają osobnymi wymaganiami.
+
 - Dodano opcjonalny `MATLIB_LEAN_TOTAL_MEMORY_MB` (512–65536 MiB) **niezależnie** od `MATLIB_LEAN_MEMORY_MB`. Linux cgroup v2 wymaga, by bieżący proces miał już delegowany kontroler `memory` i uprawnienia do utworzenia dziecka w swoim poddrzewie. Brak wartości zachowuje kompatybilność wsteczną, ale nie ustanawia limitu agregowanego.
 - `backend/lean_cgroup.py` tworzy osobną losową cgroup na kompilację, ustawia `memory.max`, `memory.oom.group=1`, `memory.swap.max=0` i wymaga `cgroup.kill`. `backend/lean_cgroup_exec.py` najpierw zapisuje swój PID do `cgroup.procs`, a dopiero potem wykonuje zaufany program `lake`. Nie zmieniamy uprawnień ani `cgroup.subtree_control` rodzica.
 - `lean_process.execute_registered` sprząta grupę w bloku `finally` (także przy błędach i timeout), nie pokazuje sukcesu, gdy pozostały uruchomione procesy, i blokuje wynik przy niemożności egzekwowania limitu. `lean_formalization.run` zwraca `blocked` i `certificate=false` dla niewłaściwej konfiguracji, braku delegacji lub błędów cgroup. `availability` raportuje `total_memory_limit_mb`, `total_memory_limit_supported` oraz `total_memory_limit_error`. Zgłoszona dostępność oznacza tylko wstępne rozpoznanie; rzeczywiste uprawnienia weryfikuje utworzenie grupy.
