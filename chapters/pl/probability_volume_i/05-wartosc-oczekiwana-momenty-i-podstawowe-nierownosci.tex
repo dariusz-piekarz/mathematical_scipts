@@ -18,6 +18,8 @@ może to być wartość, której zmienna nigdy nie przyjmuje.
 Niech $X$ będzie rzeczywistą zmienną losową na
 $(\Omega,\mathcal F,\Prob)$. Jeśli $X\geq0$, definiujemy
 $\E X:=\int_\Omega X(\omega)\,\dd\Prob(\omega)\in[0,\infty]$.
+Jeżeli $X\geq0$ tylko prawie na pewno, to $\E X=\E X^+$,
+gdyż $X^-=\max(-X,0)$ jest wtedy zerowa prawie na pewno.
 Jeśli $\E|X|<\infty$, nazywamy $X$ całkowalną i definiujemy
 $\E X:=\int_\Omega X(\omega)\,\dd\Prob(\omega)\in\R$.
 W przypadku ogólnym piszemy $X^+=\max(X,0)$ oraz
@@ -28,13 +30,36 @@ $\E X=\E X^+-\E X^-$. Gdy obie są nieskończone,
 wartość oczekiwana nie jest określona.
 Jest to definicja całki Lebesgue'a względem $\Prob$;
 por. \atlasref{ME-07::thm:integrability-criterion}{kryterium całkowalności}.
+Dla zmiennej zespolonej $Z$ o $\E|Z|<\infty$ definiujemy
+$\E Z=\E\operatorname{Re}Z+i\E\operatorname{Im}Z$.
+Obie części są całkowalne, ponieważ ich moduły nie przekraczają
+$|Z|$; por. \atlasref{ME-08::def:complex-integral}{definicję całki zespolonej}.
 \end{definicja}
+
+Dla całkowalnych zmiennych losowych $X,Y$ na tej samej
+przestrzeni probabilistycznej oraz $a,b\in\R$ zmienna $aX+bY$
+jest całkowalna, gdyż $|aX+bY|\leq |a||X|+|b||Y|$.
+Z \atlasref{ME-08::thm:integral-linear-real}{liniowości całki}
+wynika $\E(aX+bY)=a\E X+b\E Y$.
+Ponadto dla stałej $c\in\R$ mamy $\E c=c\Prob(\Omega)=c$,
+a z monotoniczności całki, jeśli $X\leq Y$ prawie na pewno,
+to $\E X\leq\E Y$. W szczególności
+$|\E X|\leq\E|X|$, ponieważ $-|X|\leq X\leq |X|$.
+W przypadku zespolonym liniowość całki obowiązuje dla
+współczynników zespolonych
+(\atlasref{ME-08::thm:integral-complex-linear}{liniowość całki zespolonej}).
 
 \begin{twierdzenie}[Przenoszenie całkowania na rozkład]
 Niech $X$ będzie rzeczywistą zmienną losową o rozkładzie $\mu_X$,
-a $h:\R\to\R$ mierzalną funkcją borelowską.
-Jeżeli $h\geq0$ albo $\int_\R|h(x)|\,\dd\mu_X(x)<\infty$,
-to $h(X)$ jest odpowiednio nieujemna albo całkowalna i
+a $h:\R\to\R$ funkcją borelowską. Jeżeli $h\geq0$,
+to $h(X)$ jest nieujemna. Dla dowolnej rzeczywistej lub
+zespolonej funkcji borelowskiej $h$ zachodzi
+\[
+\E|h(X)|=\int_\R|h(x)|\,\dd\mu_X(x)\in[0,\infty].
+\]
+W szczególności $h(X)$ jest całkowalna wtedy i tylko wtedy,
+gdy $h$ jest całkowalna względem $\mu_X$.
+Jeżeli $h\geq0$ lub $h$ jest całkowalna, to
 \begin{equation}\label{eq:lotus}
 \E[h(X)]=\int_\R h(x)\,\dd\mu_X(x).
 \end{equation}
@@ -43,9 +68,9 @@ jest sumą $\sum_{x\in D}h(x)p(x)$, gdzie
 $D=\{x:p(x)>0\}$ jest co najwyżej przeliczalny.
 Dla $X$ o gęstości $f_X$ prawa strona jest całką
 $\int_\R h(x)f_X(x)\,\dd\lambda_1(x)$.
-W przypadku funkcji ze znakiem obowiązuje założenie
-całkowalności; w przypadku nieujemnym dopuszczamy
-wartość nieskończoną.
+W przypadku funkcji rzeczywistych ze znakiem lub zespolonych
+obowiązuje tu założenie całkowalności; w przypadku nieujemnym
+dopuszczamy wartość nieskończoną.
 \end{twierdzenie}
 \begin{proof}
 Jest to szczególny przypadek
@@ -82,6 +107,12 @@ $\E|h(X)|=\int_\R|h(x)|\,\dd\mu_X(x)<\infty$.
 Obie odpowiadające całki są zatem skończone i można
 odjąć uzyskane równości.
 
+Dla zespolonej funkcji całkowalnej $h$ stosujemy wynik
+do $\operatorname{Re}h$ i $\operatorname{Im}h$, które są
+całkowalne, a następnie korzystamy z definicji całki zespolonej.
+Równość dla $|h|$ została już udowodniona w przypadku
+nieujemnym, również wtedy, gdy obie strony są nieskończone.
+
 Dla rozkładu dyskretnego $\mu_X(D)=1$. Dla $h\geq0$
 rozkładamy całkę na sumę po singletonach $\{x\}$,
 $x\in D$, stosując
@@ -90,6 +121,8 @@ Całka po singletonie wynosi $h(x)p(x)$, a po
 $\R\setminus D$ jest zerowa. Dla całkowalnego $h$
 stosujemy to do $h^+$ i $h^-$; szereg jest bezwzględnie
 zbieżny, bo $\sum_{x\in D}|h(x)|p(x)<\infty$.
+Dla funkcji zespolonej stosujemy wzór do obu części,
+a bezwzględna zbieżność wynika z tego samego oszacowania.
 W przypadku gęstości stosujemy
 \atlasref{ME-18::lem:integration-density-18}{wzór na całkę względem miary określonej gęstością}
 do $\mu_X=f_X\lambda_1$, przyjmując $0\cdot\infty=0$
@@ -107,13 +140,18 @@ może ona znajdować się daleko od większości realizacji.
 
 \begin{definicja}
 Dla całkowalnej zmiennej losowej $X$ definiujemy średnią
-$m_X:=\E X$. Jeżeli $\E X^2<\infty$, to z nierówności
-Cauchy'ego--Schwarza dla $X$ i funkcji stałej $1$ mamy
+$m_X:=\E X$. Jeżeli $\E X^2<\infty$, to $X$ i funkcja stała $1$
+należą do $L^2(\Prob)$. Z nierówności
+Cauchy'ego--Schwarza dla tych funkcji mamy
 $\E|X|\leq(\E X^2)^{1/2}$, gdyż $\Prob(\Omega)=1$.
 Definiujemy wariancję $\Var(X):=\E[(X-\E X)^2]$.
 Jest ona skończona, ponieważ
 $(X-\E X)^2\leq 2X^2+2(\E X)^2$.
 Odchyleniem standardowym nazywamy $\sqrt{\Var(X)}$.
+Wariancja jest nieujemna. Jest równa zero wtedy i tylko wtedy,
+gdy $X=\E X$ prawie na pewno: całka nieujemnej funkcji
+$(X-\E X)^2$ jest zerowa wtedy i tylko wtedy, gdy ta funkcja
+znika prawie wszędzie.
 Dla zmiennych $X,Y$ na tej samej przestrzeni probabilistycznej
 o skończonych drugich momentach definiujemy
 kowariancję $\Cov(X,Y):=\E[(X-\E X)(Y-\E Y)]$.
@@ -153,8 +191,14 @@ $aX+b-\E(aX+b)=a(X-\E X)$,
 a stąd $\Var(aX+b)=a^2\Var(X)$.
 
 Dla $m_X=\E X$, $m_Y=\E Y$ mamy
-$\Cov(X,Y)=\E[(X-m_X)(Y-m_Y)]
-=\E[XY]-m_Xm_Y$.
+\[
+\begin{aligned}
+\Cov(X,Y)
+&=\E[(X-m_X)(Y-m_Y)]\\
+&=\E[XY]-m_Y\E X-m_X\E Y+m_Xm_Y\\
+&=\E[XY]-m_Xm_Y.
+\end{aligned}
+\]
 Ponieważ
 $X+Y-\E(X+Y)=(X-m_X)+(Y-m_Y)$,
 rozwinięcie kwadratu i całkowanie daje
@@ -162,9 +206,11 @@ $\Var(X+Y)=\Var(X)+\Var(Y)+2\Cov(X,Y)$.
 
 Jeśli $X,Y$ są niezależne, ich rozkład łączny to
 $\mu_X\otimes\mu_Y$ (rozdział~\ref{ch:random-variables}).
-Całkowanie względem miary obrazowej dla $(X,Y)$ przenosi
-całkowalność $XY$ na funkcję $(x,y)\mapsto xy$
-względem tej miary. Z \atlasref{ME-12::thm:fubini-12}{twierdzenia Fubiniego}
+Stosując \atlasref{ME-13::thm:pushforward-integral-13}{wzór na całkę względem miary obrazowej}
+do nieujemnej funkcji $(x,y)\mapsto|xy|$, otrzymujemy
+$\int_{\R^2}|xy|\,\dd(\mu_X\otimes\mu_Y)(x,y)
+=\E|XY|<\infty$. Spełniona jest zatem hipoteza całkowalności
+funkcji $(x,y)\mapsto xy$ w twierdzeniu Fubiniego. Z \atlasref{ME-12::thm:fubini-12}{twierdzenia Fubiniego}
 i wzoru na całkę względem miary obrazowej otrzymujemy
 \[
 \E[XY]=\int_{\R^2}xy\,\dd(\mu_X\otimes\mu_Y)(x,y)
@@ -180,6 +226,8 @@ jej wykorzystywać bez dodatkowych założeń.
 \begin{uwaga}
 Zerowa kowariancja nie oznacza na ogół niezależności.
 Jeśli $X$ jest jednostajna na $[-1,1]$, a $Y=X^2$, to
+obie zmienne są ograniczone prawie na pewno, zatem mają
+skończone drugie momenty. Stąd
 $\Cov(X,Y)=\E X^3-\E X\,\E X^2=0$,
 ponieważ $\E X=\frac12\int_{-1}^1 x\,\dd\lambda_1(x)=0$
 oraz $\E X^3=\frac12\int_{-1}^1 x^3\,\dd\lambda_1(x)=0$
@@ -191,7 +239,8 @@ Zatem zmienne nie są niezależne.
 \end{uwaga}
 
 \begin{stwierdzenie}[Momenty funkcji charakterystycznej zdarzenia]
-Jeżeli $A\in\mathcal F$ i $I=\chi_A$, to
+Niech $(\Omega,\mathcal F,\Prob)$ będzie przestrzenią
+probabilistyczną. Jeżeli $A\in\mathcal F$ i $I=\chi_A$, to
 $\E I=\Prob(A)$ oraz
 $\Var(I)=\Prob(A)(1-\Prob(A))$.
 Dla dowolnych zdarzeń $A,B\in\mathcal F$ zachodzi
