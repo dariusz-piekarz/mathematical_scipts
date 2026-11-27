@@ -15,3 +15,11 @@ Porównanie GitHub od d7e2f71806f39514ea2f3ba6590c5ae2ed0e6725 do gałęzi w chw
 Następnie: niezależny audyt kontrolny zmienionych fragmentów GT14, audyt przekrojowy zależności, terminologii i notacji, pełna kompilacja PDF, odbiór wizualny rysunków i CI. Nie powtarzać automatycznie GT15–34 tylko ze względu na kolejność numeracji. Kontrolować konkretne rozbieżności lub późniejsze zmiany.
 
 Nie przeprowadzono kompilacji PDF, kontroli wizualnej ani pełnego CI w tym przebiegu. Nie certyfikowano wcześniejszych raportów bez identyfikatorów wersji.
+
+## Audyt kontrolny GT14 i pierwsza kontrola przekrojowa
+
+GT14, blob 0718c6837140a6389f75ecccfab64072c653fa5e: ponownie sprawdzono dowód wzoru dla powierzchni nieorientowalnych oraz rachunek homologii szkieletu. Brak nowych usterek w tych fragmentach; źródło bez zmian.
+
+Pobrano wszystkie 42 pliki rozdziałów z listy wejść książki (blob listy fa90ea1b3c9fc9ab09061ca77448a5d1b735bc4d), łącznie 40179 wierszy. Sprawdzenie zagnieżdżenia środowisk LaTeX po usunięciu komentarzy: 42/42 pliki bez błędów. W czterech partiach wyodrębniono etykiety oraz cele ref, eqref, pageref, autoref, cref i Cref; przy przeglądzie zestawień nie zauważono brakujących celów ani powtórzonych etykiet. Nie wykonano jeszcze jednego maszynowego porównania wszystkich partii: zbiorcze wywołanie przekroczyło limit liczby operacji konektora. To ograniczenie nie dotyczy kontroli zagnieżdżenia, wykonanej dla każdego pliku.
+
+Dalsze prace: mechaniczna kontrola globalnej unikatowości i rozwiązywalności odsyłaczy, terminologia, notacja, PDF i odbiór wizualny oraz CI. Bez powtarzania audytów szczegółowych wyłącznie na podstawie numeru rozdziału.
