@@ -24,7 +24,11 @@ with sync_playwright() as pw:
     link.hover()
     page.locator('#tipBody h3').filter(has_text='Rozdmuchania').wait_for()
     page.locator('#tipOpen').hover()
+    # The pointer entered the overlay; it must survive the delayed close
+    # scheduled when leaving the source link, even without CSS :hover.
+    page.wait_for_timeout(350)
     assert page.locator('#referenceTip').is_visible()
+    assert page.evaluate("() => referenceTipHovered")
     page.screenshot(path=str(Path(os.environ['TEMP'])/'atlas-reference-preview.png'))
     page.locator('#tipOpen').click()
     page.wait_for_function("state.currentModule==='ALG-05' && !!state.currentEntity")
