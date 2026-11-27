@@ -1,0 +1,9 @@
+# RRC 18 — iteracja 311: kontrola korekt i pierwszy odbiór wizualny
+
+Źródło aktualne: commit ebd4442f2ff1f92c1cd42851954615d5504c0912, blob e21b6dfba78d200607d94eb8695241bc24ca25aa, 1243 wiersze. Porównanie z gałęzią roboczą nie wykazało zmian rozdziału ani jego zależności kompilacyjnych od tego commitu. Zweryfikowano cztery doprecyzowania z 310: konwencje miary, normy i wyjątków od spójności, zwartą rezolwentę w treści twierdzenia, skróty funkcji zliczających (w zakresie operatorów z dyskretnym widmem), dziedzinę formową w oszacowaniu perturbacji. Nie wykryto usterek wymagających dalszej edycji w tych korektach. Nie zmieniano źródła. Nie jest to nowa pełna niezależna lektura wszystkich dowodów; pełne lektury udokumentowano w 308–310.
+
+Kontrola strukturalna aktualnej wersji: 42 unikatowe etykiety, 58 odsyłaczy, 13 różnych celów zewnętrznych. Wszystkie cele istnieją jednoznacznie w źródle i sześciu rozdziałach zależnych. Brak błędów zagnieżdżenia środowisk.
+
+Odbiór wizualny wersji po 307: run 45984455701, artefakt 15191427409, pobrany ZIP zweryfikowany SHA256 2274ed5855815cdc2b3e6a782c9f89a7492357e9c6a90ee2c91d07c7b6affe96. PDF 12 stron A4, 396303 bajty. Obejrzano wszystkie 12 stron na trzech arkuszach kontaktowych po cztery strony; bez zauważonych ucięć, nakładania tekstu lub nieczytelnych wzorów. Log bez niezdefiniowanych odsyłaczy i makr, overfull hbox oraz brakujących znaków; 12 ostrzeżeń hyperref o pustym celu odsyłacza (oczekiwane w izolowanej kompilacji, w której zewnętrzne etykiety przenoszone są bez celów hiperłączy). Nie jest to potwierdzenie działania hiperłączy pełnego tomu.
+
+Runy 45984997926, 45985450719 i 45985977450 nadal queued w czasie iteracji. Ostatni z nich sprawdzono ponownie przed zapisem raportu. Odbiór wizualny dotyczy wersji starszej, nie aktualnej; globalne CI niepotwierdzone. Następny etap: aktualny PDF, pełny audyt kontrolny bez zmian, a po akceptacji rozdział 19.
