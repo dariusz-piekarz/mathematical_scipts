@@ -1255,10 +1255,14 @@ async function runLeanFormalization(){
 async function loadAllModules(){
   const items=[], ids=new Set();
   const limit=500;
+  let expectedTotal=null;
   for(let offset=0;;){
     const page=await api(`/api/modules?limit=${limit}&offset=${offset}`);
     if(!Array.isArray(page.items)||!Number.isSafeInteger(page.total)||page.total<0)
       throw new Error("Nieprawidłowa odpowiedź indeksu rozdziałów.");
+    if(expectedTotal===null)expectedTotal=page.total;
+    if(page.total!==expectedTotal)
+      throw new Error("Indeks rozdziałów zmienił się podczas pobierania. Odśwież aplikację.");
     for(const item of page.items){
       if(ids.has(item.id))throw new Error("Niespójny indeks rozdziałów: powtórzony identyfikator "+item.id);
       ids.add(item.id);items.push(item);
@@ -1272,6 +1276,8 @@ async function loadAllModules(){
 async function init(){
   try{
     const [domains,modules,stats]=await Promise.all([api("/api/domains"),loadAllModules(),api("/api/stats")]);
+    if(modules.length!==stats.documents||domains.reduce((sum,d)=>sum+d.modules,0)!==modules.length)
+      throw new Error("Niespójna liczba rozdziałów w indeksie. Odśwież aplikację.");
     state.domains=domains;state.modules=modules;
     $("leanChapterModuleOptions").replaceChildren();
     for(const m of state.modules)$("leanChapterModuleOptions").append(node("option",{value:m.id}));

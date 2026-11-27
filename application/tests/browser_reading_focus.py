@@ -32,10 +32,14 @@ with sync_playwright() as pw:
     if page.locator('#tree .domain-header[aria-expanded=true]').count() == 0:
         page.locator('#tree .domain-header').first.click()
     assert page.locator('#tree .domain-header[aria-expanded=true]').count() > 0
+    page.locator('#granularity').select_option('section')
+    page.locator('#tree .module-line .chev').first.click()
+    page.wait_for_function('state.expandedModules.size === 1 && state.outlines.size >= 1')
     assert page.evaluate("localStorage.getItem('atlas-explorer-hidden') === null")
     page.reload(wait_until='networkidle')
     assert page.locator('#explorer').is_hidden(), 'new session starts closed'
     assert page.locator('#tree .domain-header[aria-expanded=true]').count() == 0
+    assert page.evaluate('state.expandedModules.size === 0 && state.outlines.size === 0')
     page.locator('#showExplorer').click()
     assert page.locator('#explorer').is_visible()
     page.locator('#closeExplorer').click()

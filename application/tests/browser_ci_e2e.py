@@ -72,6 +72,24 @@ def main() -> None:
                 assert inventory == {"count": stats["documents"], "unique": stats["documents"],
                                      "domains": True}, inventory
                 assert page.locator("#leanChapterModuleOptions option").count() == stats["documents"]
+                # A changing total during pagination must not silently return
+                # a partial or mixed inventory after an index rebuild.
+                changed_total = page.evaluate("""async () => {
+                    const original=api;
+                    let calls=0;
+                    try {
+                        api=async () => ++calls===1
+                            ? {total:2,items:[{id:'one'}]}
+                            : {total:3,items:[{id:'two'},{id:'three'}]};
+                        await loadAllModules();
+                        return false;
+                    } catch(error) {
+                        return calls===2 && error.message.includes('zmienił się');
+                    } finally {
+                        api=original;
+                    }
+                }""")
+                assert changed_total, "pagination must reject an inconsistent snapshot"
                 assert page.locator("#tree .domain-header[aria-expanded=true]").count() == 0
                 # The final domain must be navigable even when its modules
                 # are beyond the first 500 results.
