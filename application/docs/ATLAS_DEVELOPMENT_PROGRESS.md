@@ -1483,3 +1483,9 @@ Odczytany `atlas_validation_status.json`: `candidate_sha=02190e107a6305bc7b73334
 
 - `932b422675cb0190d20aeb443cd29ac6839faecf`: otwarcie rozdziału lub obiektu w już rozwiniętej dziedzinie aktualizuje klasy aktywnych wierszy bez wymiany drzewa. Otwarcie nowej dziedziny nadal przebudowuje drzewo. Zakończenie żądania struktury niewidocznej (zwinięty rozdział lub ukryta dziedzina) nie wymaga przebudowy DOM; widoczne powodzenie/błąd odświeża strukturę. 8/8 izolowanych asercji JS PASS. `e6ffa26c1efba27e818dcf648d0bcd29fa503255`: 5 kontroli regresyjnych tożsamości węzłów DOM, fokusu, podświetlenia i odpowiedzi ukrytych struktur w istniejącym browser_reader_layout.py.
 - Nie wykonano pełnego Chromium ani pomiarów czasu CPU na słabszym komputerze. Przy odczycie #45997989714 i #45994651687 oraz walidacje AM I/IT na 928848a2 nadal queued. Odbiór P3.5 2+1 pozostaje otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
+
+
+### 2026-11-27 — P3.5: eliminacja przebudowy czytnika przy zmianie zestawu
+
+- `83949677839a4e29f663bb56631dfb26fb9e1814`: wydzielono aktualizację przycisku członkostwa w zestawie; dodanie/usunięcie bieżącego rozdziału lub obiektu, usunięcie elementu z listy i wyczyszczenie zestawu nie wywołują renderReader. Zachowano DOM źródła i wzorów, zakres wierszy, zaznaczenie oraz dotychczasowe renderowanie przy faktycznej zmianie treści. Nie zmieniano parsera ani profili makr. 9/9 izolowanych asercji JS PASS. `31d939614176bc938aa9c66b04a1cce4cc42802e`: 4 kontrole regresyjne tożsamości DOM i zakresu w istniejącym browser_reader_layout.py.
+- Przy odczycie #45998146784 i #45994651687 oraz walidacje AM I/IT na 928848a2 nadal queued. Nie wykonano pełnego Chromium ani pomiarów wydajności. Odbiór P3.5 2+1 pozostaje otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
