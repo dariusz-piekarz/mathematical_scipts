@@ -504,6 +504,37 @@ with sync_playwright() as pw:
         }
     }""")
     assert selection_reuse == 4
+    # Switching source/preview retains both DOM trees and the chosen range.
+    mode_reuse = page.evaluate("""() => {
+        const source=document.getElementById('latexSource');
+        const preview=document.getElementById('simplified');
+        const button=document.getElementById('togglePreview');
+        const start=document.getElementById('rangeStart');
+        const end=document.getElementById('rangeEnd');
+        const oldMode=state.simplified,oldRange=[start.value,end.value];
+        let count=0;
+        try{
+            if(!state.simplified)button.click();
+            const first=source.firstChild,math=preview.firstChild;
+            if(!first||!math)throw Error('missing current reader content');
+            start.value='2';end.value='4';
+            for(let i=0;i<6;i++){
+                button.click();
+                if(source.firstChild!==first||preview.firstChild!==math||
+                   start.value!=='2'||end.value!=='4'||
+                   source.classList.contains('hidden')!==state.simplified||
+                   preview.classList.contains('hidden')===state.simplified||
+                   button.getAttribute('aria-pressed')!==String(!state.simplified))
+                    throw Error('mode toggle rebuilt panes or reset range');
+                count++;
+            }
+            return count;
+        }finally{
+            if(state.simplified!==oldMode)button.click();
+            start.value=oldRange[0];end.value=oldRange[1];
+        }
+    }""")
+    assert mode_reuse == 6
 
     # Source mode and keyboard interaction must also work at 180% text.
     page.evaluate("() => openModule('AM1-14', true)")
