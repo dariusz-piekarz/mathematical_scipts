@@ -142,5 +142,26 @@ class Chapter30(unittest.TestCase):
                 self.assertEqual((b-a)*slope/(b-a),slope)
 
 
+
+    def test_mt30_014_birkhoff_source_and_atomic_variation(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for label in ("def:birkhoff-30", "thm:birkhoff-basic-30",
+                      "thm:birkhoff-measure-30", "thm:bochner-birkhoff-30",
+                      "thm:birkhoff-pettis-30", "ex:birkhoff-infinite-variation-30"):
+            self.assertIn(r"\label{" + label + "}", s)
+        self.assertLess(s.index(r"\label{sec:bochner-30}"),
+                        s.index(r"\label{sec:birkhoff-30}"))
+        self.assertLess(s.index(r"\label{sec:birkhoff-30}"),
+                        s.index(r"\label{sec:rnp-30}"))
+        for n in range(2, 20):
+            for m in range(n, 30):
+                tail = sum((Q(1, k*k) for k in range(n, m+1)), Q(0))
+                self.assertLessEqual(tail, Q(1, n-1)-Q(1, m))
+        for j in range(1, 10):
+            block = sum((Q(1, k) for k in range(2**j, 2**(j+1))), Q(0))
+            self.assertGreaterEqual(block, Q(1, 2))
+        for n in range(1, 25):
+            self.assertEqual(Q(1, 2**n)*Q(2**n, n), Q(1, n))
+
 if __name__ == "__main__":
     unittest.main()
