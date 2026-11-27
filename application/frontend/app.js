@@ -7,7 +7,7 @@ const state = {
   currentModule:null, currentEntity:null, currentData:null, selected:new Map(),
   tab:"reader", granularity:"module", simplified:true, tooltipData:null, leanEpoch:0, leanFragment:null, leanRunner:null, leanCatalog:null, leanCatalogLoading:false, leanCatalogEpoch:0,
   leanChapterReportEpoch:0, leanTranscriptionEpoch:0, leanTranscriptionBusy:false,
-  tooltipKey:0, graph:null, conceptGraph:null, conceptEpoch:0, renderEpoch:0, draftSession:null,
+  tooltipKey:0, graph:null, graphCoverage:null, graphEpoch:0, graphLoading:false, pathEpoch:0, conceptGraph:null, conceptEpoch:0, renderEpoch:0, draftSession:null,
 };
 const titleOr = item => item.title || item.subtype || item.kind || item.id;
 const tr = s => String(s ?? "");
@@ -31,7 +31,7 @@ function activateTab(name,{fromReaderNavigation=false}={}){
   for(const k of ["reader","lean","graph","concepts","selection"])$("view-"+k).classList.toggle("hidden",k!==name);
   if(name==="selection")renderSelection();
   if(name==="lean" && !state.leanCatalog && !state.leanCatalogLoading)loadLeanCatalog();
-  if(name==="graph" && !state.graph)loadGraph();
+  if(name==="graph" && !state.graph && !state.graphCoverage && !state.graphLoading)loadGraph();
   if(name==="concepts" && !state.conceptGraph)loadConceptGraph();
   closeTip();
 }
@@ -702,15 +702,21 @@ async function loadGraph(){
   if(!state.domains.length)return;
   const left=$("graphLeft").value,right=$("graphRight").value;
   const level=$("graphLevel").value;
+  const epoch=++state.graphEpoch;state.graphLoading=true;
   try{
     const data=await api(`/api/graph?left=${encodeURIComponent(left)}&right=${encodeURIComponent(right)}&granularity=${level}&min_weight=${Number($("graphMin").value)||1}&max_edges=65`);
-    state.graph=data;$("graphSummary").textContent=`${data.nodes.length} węzłów · ${data.edges.length} par powiązanych odsyłaczami${data.truncated?" · widok ograniczony do 65 par":""} · źródło: jawne odsyłacze LaTeX (bez rozróżniania kierunku)`;
+    if(epoch!==state.graphEpoch)return;
+    state.graph=data;state.graphCoverage=null;$("graphSummary").textContent=`${data.nodes.length} węzłów · ${data.edges.length} par powiązanych odsyłaczami${data.truncated?" · widok ograniczony do 65 par":""} · źródło: jawne odsyłacze LaTeX (bez rozróżniania kierunku)`;
     renderGraph(data);
-  }catch(e){toast(e.message);}
+  }catch(e){if(epoch===state.graphEpoch)toast(e.message);}
+  finally{if(epoch===state.graphEpoch)state.graphLoading=false;}
 }
 async function loadGlobalGraphCoverage(){
+  const epoch=++state.graphEpoch;state.graphLoading=true;
   try{
     const data=await api("/api/graph/coverage");
+    if(epoch!==state.graphEpoch)return;
+    state.graphCoverage=data;state.graph=null;
     const host=$("graphCanvas"),s=data.summary;
     if(state.cy){state.cy.destroy();state.cy=null;}
     host.replaceChildren();host.style.height="";
@@ -749,7 +755,8 @@ async function loadGlobalGraphCoverage(){
       const line=node("div");line.append(b);queue.append(line);
     }
     host.append(queue);
-  }catch(e){toast(e.message);}
+  }catch(e){if(epoch===state.graphEpoch)toast(e.message);}
+  finally{if(epoch===state.graphEpoch)state.graphLoading=false;}
 }
 function openGraphNode(n){if(n.entity_id && n.entity_id!==n.module)openEntity(n.entity_id);else openModule(n.module);}
 function renderGraph(data){
@@ -791,15 +798,17 @@ function renderGraph(data){
   host.append(svg);
 }
 async function findPath(){
+  const epoch=++state.pathEpoch;
   const source=$("pathFrom").value.trim(),target=$("pathTo").value.trim();
   if(!source||!target){toast("Wpisz dwa identyfikatory modułów.");return;}
   try{
     const data=await api(`/api/graph/path?source=${encodeURIComponent(source)}&target=${encodeURIComponent(target)}`);
+    if(epoch!==state.pathEpoch || $("pathFrom").value.trim()!==source || $("pathTo").value.trim()!==target)return;
     const box=$("pathResult");box.replaceChildren();
     if(!data.found){box.textContent="Nie istnieje ścieżka złożona z jawnych odsyłaczy między tymi modułami.";return;}
     box.append(document.createTextNode("Ścieżka o długości "+data.steps.length+": "));
     data.modules.forEach((m,i)=>{if(i)box.append(document.createTextNode(" → "));const btn=node("button",{title:m.title},m.id);btn.addEventListener("click",()=>openModule(m.id));box.append(btn);});
-  }catch(e){toast(e.message);}
+  }catch(e){if(epoch===state.pathEpoch && $("pathFrom").value.trim()===source && $("pathTo").value.trim()===target)toast(e.message);}
 }
 
 function openConceptSearch(term){
