@@ -1440,3 +1440,9 @@ Odczytany `atlas_validation_status.json`: `candidate_sha=02190e107a6305bc7b73334
 
 - `81abe23d8aba37d432cd75f806038a84f51ecc41`: wyniki wyszukiwania dostępne przez strzałki góra/dół, Home/End w liście, Escape zamyka listę i oddaje fokus polu wyszukiwania; Enter zachowuje natywne działanie przycisku. Ukryta lista nie przechwytuje klawiszy nawigacyjnych. 12/12 izolowanych asercji JS na zmienionej funkcji PASS. `0b9717c5199b71f22bcaa386bdfac48d15610465`: 10 kontroli regresyjnych w istniejącym browser_references.py; pełnego Chromium nie wykonano.
 - Kontrola aktualnych źródeł: testowy cel AM1-36::ma1:kh:lem:variation-additivity nadal istnieje w AM1-36. Przejrzano odwołania AM1-36 i CAL w 11 plikach testów aplikacji. Najnowsze zgłoszone FAIL AM I dotyczą starszych SHA; nie stanowią dowodu niepowodzenia poprawki 928848a2, której sześć workflow pozostaje queued. P3.5 testing/stabilizing; odbiór 2+1 otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
+
+
+### 2026-11-27 — P3.5: unieważnianie wyszukiwania po zmianie fokusu i widoku
+
+- `aad0c12003995e85c86ae88cd7e1f70fc718d1be`: nawigacja klawiaturą poza nagłówek, aktywacja zakładki i wejście w układ czytania unieważniają aktywne żądanie wyszukiwania oraz zamykają listę. Przeniesienie fokusu wewnątrz nagłówka (pole → wynik) nie anuluje wyszukiwania. Obsługa dotychczasowego kliknięcia poza nagłówkiem zachowana. 20/20 izolowanych asercji JS PASS (kontrolowane odpowiedzi i odrzucenia). `b6c99b45a560aaac49f6a52785098cb25bd2c94b`: 8 dodatkowych kontroli DOM w istniejącym browser_references.py; pełnego Chromium nie wykonano.
+- Przy odczycie CI poprzednie przebiegi aplikacji #45994904398 i #45994651687 oraz walidacje AM I i IT na 928848a2 nadal queued. Nie przypisano im wyniku. P3.5 testing/stabilizing; odbiór 2+1 otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
