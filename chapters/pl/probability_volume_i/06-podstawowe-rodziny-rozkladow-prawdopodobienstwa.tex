@@ -17,10 +17,16 @@ $\Prob(X=1)=p$ i $\Prob(X=0)=1-p$.
 Piszemy $X\sim\operatorname{Bern}(p)$.
 \end{definicja}
 
-Zmienna o rozkładzie Bernoulliego jest wskaźnikiem zdarzenia
-o prawdopodobieństwie $p$, toteż
-$\E X=p$, $\Var(X)=p(1-p)$, a
-$M_X(t)=1-p+pe^t$ dla $t\in\R$.
+Zmienna o rozkładzie Bernoulliego jest prawie na pewno
+równa funkcji charakterystycznej $\chi_A$, gdzie $A=\{X=1\}$:
+zdarzenia $\{X=0\}$ i $\{X=1\}$ są rozłączne, a suma ich
+prawdopodobieństw wynosi jeden. Z własności momentów
+funkcji charakterystycznej zdarzenia (rozdział~\ref{ch:expectation})
+wynika $\E X=p$ i $\Var(X)=p(1-p)$.
+Dla każdego $t\in\R$ ze wzoru \eqref{eq:lotus} dostajemy
+$M_X(t)=e^{t\cdot0}(1-p)+e^tp=1-p+pe^t$.
+Przy $p=0$ zmienna jest prawie na pewno równa zeru,
+a przy $p=1$ --- jedności.
 
 \begin{definicja}
 Niech $n\in\N\cup\{0\}$ i $p\in[0,1]$.
@@ -29,14 +35,22 @@ gdy dla $k=0,\ldots,n$ zachodzi
 \begin{equation}\label{eq:binomial}
 \Prob(X=k)=\binom nk p^k(1-p)^{n-k},
 \end{equation}
-a poza tym zakresem $\Prob(X=k)=0$. Przy $p=0$ lub $p=1$
-przyjmujemy standardową interpretację iloczynów z potęgą zerową,
-w tym $0^0=1$ w tym wzorze.
+oraz $\Prob(X\in\{0,\ldots,n\})=1$.
+Przyjmujemy konwencję $0^0=1$ we wzorze na masy.
+Wszystkie masy są nieujemne, a ich suma jest równa
+$(p+(1-p))^n=1$ z dwumianu Newtona (również dla $n=0$).
+Dla $n=0$ rozkład jest skupiony w zerze, dla $p=0$
+także w zerze, a dla $p=1$ w punkcie $n$.
+Wzory na średnią, wariancję i funkcję tworzącą momenty
+z następnego twierdzenia obowiązują również dla $n=0$,
+co wynika bezpośrednio z tego przypadku.
 \end{definicja}
 
 \begin{twierdzenie}[Suma prób Bernoulliego]
-Niech $X_1,\ldots,X_n$ będą niezależnymi zmiennymi o rozkładzie
-$\operatorname{Bern}(p)$, gdzie $n\geq1$. Wtedy
+Niech $n\geq1$ będzie liczbą całkowitą, $p\in[0,1]$,
+a $X_1,\ldots,X_n$ niezależnymi zmiennymi losowymi
+o rozkładzie $\operatorname{Bern}(p)$ na wspólnej
+przestrzeni probabilistycznej. Wtedy
 $S_n:=X_1+\cdots+X_n\sim\Bin(n,p)$ oraz
 \[
 \E S_n=np,\qquad \Var(S_n)=np(1-p),\qquad
@@ -54,7 +68,10 @@ Z niezależności jego prawdopodobieństwo jest równe
 $p^k(1-p)^{n-k}$.
 
 Różne zbiory $I$ opisują rozłączne zdarzenia,
-a zdarzenie $\{S_n=k\}$ jest ich sumą. Ponieważ
+a ich suma różni się od zdarzenia $\{S_n=k\}$ co najwyżej
+o podzbiór mierzalnego zbioru zerowego
+$\bigcup_{i=1}^n\{X_i\notin\{0,1\}\}$.
+W konsekwencji mają to samo prawdopodobieństwo. Ponieważ
 liczba $k$-elementowych podzbiorów indeksów wynosi
 $\binom nk$, z addytywności dostajemy
 $\Prob(S_n=k)=\binom nk p^k(1-p)^{n-k}$.
@@ -67,7 +84,12 @@ $\E X_i=p$, $\Var(X_i)=p(1-p)$.
 Liniowość wartości oczekiwanej i addytywność
 wariancji niezależnych składników dają
 $\E S_n=np$ i $\Var(S_n)=np(1-p)$.
-Wreszcie $M_{X_i}(t)=1-p+pe^t$, więc niezależność daje
+Wreszcie $M_{X_i}(t)=1-p+pe^t$ jest skończona dla każdego
+$t\in\R$. Stosując wzór na funkcję tworzącą momenty sumy
+niezależnych zmiennych z rozdziału~\ref{ch:expectation}
+kolejno do sum częściowych (każda suma poprzednich zmiennych
+jest niezależna od następnej na mocy produktowości rozkładu
+łącznego), otrzymujemy
 $M_{S_n}(t)=\prod_{i=1}^nM_{X_i}(t)
 =(1-p+pe^t)^n$.
 \end{proof}
@@ -93,37 +115,61 @@ dwumianowego. Ich postać odzwierciedla zdarzenie
 \begin{definicja}
 Niech $p\in(0,1]$. Rozkładem geometrycznym $\Geom(p)$
 na $\{1,2,\ldots\}$ nazywamy rozkład o funkcji masy
-$\Prob(T=k)=(1-p)^{k-1}p$, $k\geq1$.
-Zmienna $T$ opisuje numer pierwszej udanej próby
-w ciągu niezależnych prób Bernoulliego z prawdopodobieństwem sukcesu $p$.
+$\Prob(T=k)=(1-p)^{k-1}p$, $k\geq1$ całkowity,
+przy konwencji $0^0=1$.
+Masy sumują się do jedności: przy $q=1-p\in[0,1)$
+mamy $\sum_{k=1}^\infty pq^{k-1}=p/(1-q)=1$.
+Dla $p=1$ rozkład jest skupiony w punkcie $1$.
+
+W modelu niezależnych prób Bernoulliego (którego istnienie
+wykazano w rozdziale~\ref{ch:probability}) niech $T$ będzie
+numerem pierwszej udanej próby, z wartością $\infty$,
+gdy sukces nigdy nie nastąpi. Zdarzenie $\{T=k\}$ jest
+przekrojem zdarzeń $k-1$ porażek i jednego sukcesu,
+więc jest mierzalne i ma prawdopodobieństwo $q^{k-1}p$.
+Mamy $\Prob(T=\infty)=\lim_{k\to\infty}q^k=0$
+z ciągłości miary z góry. Zastąpienie wartości $\infty$
+przez $1$ na tym mierzalnym zbiorze zerowym daje rzeczywistą
+zmienną losową o rozkładzie $\Geom(p)$.
 \end{definicja}
 
 \begin{stwierdzenie}
 Dla $T\sim\Geom(p)$ zachodzi $\Prob(T>k)=(1-p)^k$ dla
 $k\in\N\cup\{0\}$, a także
 $\E T=1/p$ i $\Var(T)=(1-p)/p^2$.
-Jeśli $p\in(0,1)$, to dla $m,n\geq0$
+Jeśli $p\in(0,1)$, to dla całkowitych $m,n\geq0$
 $\Prob(T>m+n\mid T>m)=\Prob(T>n)$.
 \end{stwierdzenie}
 \begin{proof}
-Zdarzenie $\{T>k\}$ oznacza, że w pierwszych $k$
-próbach nie wystąpił sukces. Każda próba kończy się
-niepowodzeniem z prawdopodobieństwem $q=1-p$;
-przez niezależność otrzymujemy
-$\Prob(T>k)=q^k$.
+Z definicji rozkładu dla całkowitego $k\geq0$ mamy
+$\Prob(T>k)=\sum_{j=k+1}^\infty pq^{j-1}=q^k$,
+gdzie $q=1-p$ (dla $q=0$ i $k=0$ stosujemy $0^0=1$).
+Wzór obowiązuje dla każdej zmiennej o tym rozkładzie,
+nie tylko dla zmiennej skonstruowanej z prób.
 
 Dla $q<1$ szereg geometryczny
 $\sum_{k=0}^\infty q^k=1/(1-q)$ jest zbieżny
 jednostajnie na każdym przedziale $[0,q_0]$ z $q_0<1$.
 Również szeregi pochodnych, począwszy od
 $\sum_{k=1}^\infty kq^{k-1}$, są jednostajnie zbieżne
-na takich przedziałach (ich wyrazy można ograniczyć przez
-$kq_0^{k-1}$). Pozwala to różniczkować wyraz po wyrazie.
-Otrzymujemy
-$\sum_{k=1}^\infty kq^{k-1}=1/(1-q)^2$.
-Różniczkując jeszcze raz lub wykorzystując tożsamość
-$k^2=k(k-1)+k$, dostajemy
-$\sum_{k=1}^\infty k^2q^{k-1}=(1+q)/(1-q)^3$.
+na takich przedziałach dla $0<q_0<1$.
+Dla pierwszej pochodnej stosujemy majorantę $kq_0^{k-1}$,
+a dla drugiej $k(k-1)q_0^{k-2}$, $k\geq2$;
+oba szeregi majorant są zbieżne z kryterium d'Alemberta.
+Twierdzenie o różniczkowaniu szeregów potęgowych
+pozwala różniczkować wyraz po wyrazie:
+\[
+\sum_{k=1}^\infty kq^{k-1}=\frac1{(1-q)^2},
+\qquad
+\sum_{k=2}^\infty k(k-1)q^{k-2}=\frac2{(1-q)^3}.
+\]
+Z tożsamości $k^2=k(k-1)+k$ wynika więc
+\[
+\sum_{k=1}^\infty k^2q^{k-1}
+=\frac{2q}{(1-q)^3}+\frac1{(1-q)^2}
+=\frac{1+q}{(1-q)^3}.
+\]
+Wzory obowiązują również dla $q=0$.
 Stąd
 $\E T=p/(1-q)^2=1/p$,
 $\E T^2=p(1+q)/(1-q)^3=(1+q)/p^2$
@@ -138,54 +184,92 @@ Ponieważ $\{T>m+n\}\subseteq\{T>m\}$,
 \]
 Przy $p=1$ zdarzenie $\{T>m\}$ dla $m\geq1$
 ma masę zero i powyższe warunkowanie nie ma sensu,
-co wyjaśnia ograniczenie w tezie.
+co wyjaśnia ograniczenie w tezie. Dla $p=1$ i $m=0$
+warunkowanie jest określone, ponieważ $\Prob(T>0)=1$,
+a podana równość zachodzi bezpośrednio.
 \end{proof}
 
 \begin{uwaga}
 Spotyka się także rozkład geometryczny na $\{0,1,\ldots\}$,
 gdzie zmienna oznacza liczbę niepowodzeń \emph{przed} pierwszym sukcesem.
-Jest to rozkład $T-1$, a jego średnia wynosi $(1-p)/p$.
+Jest to rozkład $T-1$, o masach $pq^k$, $k\geq0$,
+gdzie $q=1-p$. Z algebry momentów wynika, że jego średnia
+wynosi $1/p-1=(1-p)/p$, a wariancja pozostaje równa $q/p^2$.
 Dlatego zawsze należy podać konwencję numerowania.
 \end{uwaga}
 
 \begin{definicja}
-Dla $r\in\N$ i $p\in(0,1]$ rozkładem ujemnym dwumianowym
-(w konwencji liczby prób do $r$-tego sukcesu) nazywamy rozkład
-zmiennej $T_r$ określonej przez
-$\Prob(T_r=n)=\binom{n-1}{r-1}p^r(1-p)^{n-r}$, $n\geq r$.
+Dla całkowitego $r\geq1$ i $p\in(0,1]$ rozkładem ujemnym
+dwumianowym (w konwencji liczby prób do $r$-tego sukcesu)
+nazywamy rozkład na $\{r,r+1,\ldots\}$ o masach
+$\Prob(T_r=n)=\binom{n-1}{r-1}p^r(1-p)^{n-r}$.
+Przy $p=1$ przyjmujemy $0^0=1$, więc rozkład jest
+skupiony w $r$. Normalizację dla wszystkich parametrów
+uzasadnia konstrukcja w następnym dowodzie.
 \end{definicja}
 
 \begin{stwierdzenie}
 Jeżeli $T_r$ jest numerem próby, w której następuje $r$-ty sukces
-w ciągu niezależnych prób Bernoulliego z parametrem $p>0$,
-to ma powyższy rozkład, a ponadto
+w ciągu niezależnych prób Bernoulliego z parametrem
+$p\in(0,1]$, przy całkowitym $r\geq1$, to jest skończony
+prawie na pewno i ma powyższy rozkład (po dowolnym
+skończonym mierzalnym przedłużeniu na zbiorze zerowym),
+a ponadto
 $\E T_r=r/p$ i $\Var(T_r)=r(1-p)/p^2$.
 \end{stwierdzenie}
 \begin{proof}
+Najpierw definiujemy $T_r=\infty$, jeśli $r$-ty sukces
+nigdy nie nastąpi. Każde zdarzenie $\{T_r=n\}$ jest
+mierzalne, ponieważ zależy od skończonej liczby prób.
+Zdarzenia sukcesu w kolejnych próbach są wzajemnie
+niezależne, a suma ich prawdopodobieństw jest nieskończona,
+gdyż $p>0$. Z drugiego lematu Borela--Cantellego
+(rozdział~\ref{ch:probability}) prawie na pewno występuje
+nieskończenie wiele sukcesów. W szczególności $T_r$ jest
+skończony prawie na pewno i można przyjąć $T_r=r$ na
+mierzalnym zdarzeniu $\{T_r=\infty\}$.
+
 Aby $r$-ty sukces nastąpił dokładnie w próbie numer $n$,
 próba $n$ musi zakończyć się sukcesem, a wśród pierwszych
 $n-1$ prób musi znaleźć się dokładnie $r-1$ sukcesów.
 Dla każdej konkretnej konfiguracji tych prób, przez
 niezależność, prawdopodobieństwo wynosi
 $p^r(1-p)^{n-r}$. Konfiguracji jest
-$\binom{n-1}{r-1}$; są rozłączne, co daje wzór na masę.
+$\binom{n-1}{r-1}$ (rozdział~\ref{ch:combinatorics});
+są rozłączne, co daje wzór na masę. Ewentualna modyfikacja
+na zbiorze zerowym nie zmienia tych prawdopodobieństw.
+Ponieważ $T_r$ jest skończony prawie na pewno i przyjmuje
+wartości co najmniej $r$, suma obliczonych mas wynosi jeden.
 
 Wykażmy starannie niezależność czasów oczekiwania,
 której nie wolno wywnioskować wyłącznie z intuicji.
 Niech $W_1$ będzie liczbą prób do pierwszego sukcesu,
 a dla $j\geq2$ niech $W_j$ oznacza liczbę kolejnych prób
 pomiędzy sukcesami numer $j-1$ i $j$, licząc próbę
-zakończoną sukcesem. Dla dowolnych $k_1,\ldots,k_r\geq1$
-zdarzenie $\{W_1=k_1,\ldots,W_r=k_r\}$ oznacza
+zakończoną sukcesem. Na mierzalnym zbiorze zerowym,
+na którym nie występuje $r$ sukcesów, definiujemy wszystkie
+$W_j=1$. Zdarzenia określające wartości $W_j$ są mierzalne:
+poza tym zbiorem można je zapisać jako przeliczalną sumę
+zdarzeń określających skończone ciągi prób.
+Dla dowolnych całkowitych $k_1,\ldots,k_r\geq1$
+zdarzenie $\{W_1=k_1,\ldots,W_r=k_r\}$ oznacza, z dokładnością do zbioru zerowego,
 jednoznacznie określony ciąg
 $k_1+\cdots+k_r$ wyników: w każdym bloku $k_j-1$
 niepowodzeń, po których następuje sukces.
 Przez niezależność pojedynczych prób jego
 prawdopodobieństwo jest równe
 $\prod_{j=1}^r p(1-p)^{k_j-1}$.
-Jest to iloczyn mas rozkładów $\Geom(p)$;
-zatem $W_1,\ldots,W_r$ są niezależne i jednakowo
-rozłożone. Ponieważ $T_r=W_1+\cdots+W_r$,
+Jest to iloczyn mas rozkładów $\Geom(p)$.
+Sumując tę równość po dowolnych zbiorach wartości
+$k_j\in A_j\subseteq\{1,2,\ldots\}$, otrzymujemy
+\[
+\Prob(W_j\in A_j,\ j=1,\ldots,r)
+=\prod_{j=1}^r\sum_{k\in A_j}p(1-p)^{k-1}.
+\]
+Rozdzielenie sum jest uprawnione przez nieujemność wyrazów.
+Biorąc pozostałe $A_j$ równe całej przestrzeni wartości,
+otrzymujemy rozkłady brzegowe $\Geom(p)$, a następnie
+niezależność. Ponieważ $T_r=W_1+\cdots+W_r$ prawie na pewno,
 z liniowości wartości oczekiwanej i addytywności
 wariancji otrzymujemy
 $\E T_r=r/p$ i $\Var(T_r)=r(1-p)/p^2$.
