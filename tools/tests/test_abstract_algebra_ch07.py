@@ -172,4 +172,55 @@ class AA07Regression(unittest.TestCase):
                       "st:przeliczalnosc-f2"):
             self.assertEqual(SRC.count(r"\label{" + label + "}"),1)
 
+    def test_23_banach_tarski_rank_one_modulo_three(self):
+        # Letter order a,b,a^{-1},b^{-1}, as in red().
+        matrices = (
+            ((3,0,0),(0,1,-2),(0,4,1)),
+            ((1,-4,0),(2,1,0),(0,0,3)),
+            ((3,0,0),(0,1,2),(0,-4,1)),
+            ((1,4,0),(-2,1,0),(0,0,3)),
+        )
+        vectors = ((0,1,1),(1,-1,0),(0,1,-1),(1,1,0))
+        def mul(A,B):
+            return tuple(tuple(sum(A[i][k]*B[k][j] for k in range(3)) % 3
+                               for j in range(3)) for i in range(3))
+        identity = ((1,0,0),(0,1,0),(0,0,1))
+        zero = ((0,0,0),)*3
+        for i,v in enumerate(vectors):
+            self.assertEqual(tuple(tuple(x % 3 for x in row) for row in matrices[i]),
+                             tuple(tuple((a*b) % 3 for b in v) for a in v))
+            for j,w in enumerate(vectors):
+                self.assertEqual(sum(a*b for a,b in zip(v,w)) % 3 == 0,
+                                 j == opp(i))
+        for word in words(6):
+            if not word or word != red(word):
+                continue
+            result = identity
+            for i in word:
+                result = mul(result, matrices[i])
+            self.assertNotEqual(result, zero, word)
+
+    def test_24_banach_tarski_free_group_partition(self):
+        def piece(w):
+            if not w or all(i == 0 for i in w):
+                return 1
+            return {0:0, 2:1, 1:2, 3:3}[w[0]]
+        def move(w):
+            i = piece(w)
+            return (0 if i < 2 else 1,
+                    red(((0,) if i == 1 else (1,) if i == 3 else ()) + w))
+        for w in words(6):
+            if w != red(w):
+                continue
+            for copy in (0,1):
+                candidates = (w, red(((2,) if copy == 0 else (3,)) + w))
+                allowed = (0,1) if copy == 0 else (2,3)
+                preimages = [v for i,v in zip(allowed,candidates)
+                             if piece(v) == i]
+                self.assertEqual(len(preimages),1,(copy,w))
+                self.assertEqual(move(preimages[0]),(copy,w))
+
+    def test_25_migrated_macros_do_not_depend_on_retired_preamble(self):
+        self.assertIsNone(re.search(r"\\(?:equivG|F|Fix)(?![A-Za-z])",SRC))
+
 if __name__=="__main__":unittest.main()
