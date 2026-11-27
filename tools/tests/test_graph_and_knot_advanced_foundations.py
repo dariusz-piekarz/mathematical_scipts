@@ -352,7 +352,7 @@ def test_bipartite():
 def test_integrity():
     cat=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     bk=next(x for x in cat["books"] if x["id"]=="graph_and_knot_theory")
-    assert len(bk["chapters"])==44
+    assert len(bk["chapters"])==42
     targets=("04-spojnosc-przekroje-i-twierdzenie-mengera.tex",
              "05-skojarzenia-systemy-reprezentantow-i-cykle-hamiltona.tex",
              "06-macierze-incydencji-cykle-i-przekroje.tex")

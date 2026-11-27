@@ -340,7 +340,7 @@ def test_outerplanar_and_five_color():
 def source_integration():
     cat=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     bk=next(b for b in cat["books"] if b["id"]=="graph_and_knot_theory")
-    assert len(bk["chapters"])==44
+    assert len(bk["chapters"])==42
     paths={Path(p).name[:2]:ROOT/p for p in bk["chapters"]}
     for c in ("10","11","12"):
         s=paths[c].read_text(encoding="utf-8")

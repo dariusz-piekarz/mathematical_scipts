@@ -275,7 +275,7 @@ def audit_outerplanar_minors():
 def source_integration():
     cat=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(b for b in cat["books"] if b["id"]=="graph_and_knot_theory")
-    assert len(book["chapters"])==44
+    assert len(book["chapters"])==42
     source=(ROOT/next(p for p in book["chapters"] if
                  p.endswith("10-kryteria-planarnosci-podzialy-krawedzi-i-kolorowanie.tex")))
     txt=source.read_text(encoding="utf-8")

@@ -387,7 +387,7 @@ def integration():
         r"\\input\{../../(chapters/pl/graph_and_knot_theory/[^}]+)\}",
         (ROOT/book["entrypoint"]).read_text(encoding="utf-8"),
     )
-    assert included == book["chapters"] and len(included) == 44
+    assert included == book["chapters"] and len(included) == 42
     assert included[12] == CHAPTER
     assert all((ROOT/path).is_file() for path in included)
     source = (ROOT/CHAPTER).read_text(encoding="utf-8")
