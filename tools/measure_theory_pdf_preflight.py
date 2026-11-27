@@ -55,8 +55,8 @@ def audit(filename):
         for _, title, page in outline:
             if not 1 <= page <= len(doc):
                 errors.append(f"Invalid bookmark target: {title} -> {page}")
-        if len(seen_index) != 538:
-            errors.append(f"Expected 538 indexed statements, got {len(seen_index)}")
+        if len(seen_index) != 540:
+            errors.append(f"Expected 540 indexed statements, got {len(seen_index)}")
         print(f"Pages: {len(doc)}; words: {words_count}; links: {links}; bookmarks: {len(outline)}; index destinations: {len(seen_index)}")
     return errors
 
