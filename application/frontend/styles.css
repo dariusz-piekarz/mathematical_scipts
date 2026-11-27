@@ -186,9 +186,17 @@ html,body{height:100%;overflow:hidden}
 .reading-mode .tab-view{padding:20px clamp(16px,4vw,70px) 45px}
 .reading-mode .doc-header,.reading-mode .fragment-toolbar,.reading-mode .reader-note{display:none!important}
 .reading-mode #readerContent{width:100%}
+/* Keep the initial reader inset on its contents, not the scrollport:
+   Chromium otherwise pins the toolbar below the top padding. */
+.reader-view{--reader-top-inset:37px;padding-top:0}
+@media(max-width:1100px){.reader-view{--reader-top-inset:26px}}
+@media(max-width:780px){.reader-view{--reader-top-inset:20px}}
+.reading-mode .reader-view{--reader-top-inset:20px;padding-top:0}
+.reader-view #readerContent{padding-top:var(--reader-top-inset)}
+.reader-view #readerEmpty{margin-top:calc(14vh + var(--reader-top-inset))}
 /* Pin reader controls to the reader's own scrollport, in both reading modes. */
 .reader-view .reader-toolbar{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--theme-border,#e2e7ed);box-shadow:0 4px 12px #00000012}
-/* Keep usable reading space even when controls wrap in a short viewport. */
-@media(max-height:500px){.reader-view .reader-toolbar{max-height:45dvh;overflow-y:auto;overscroll-behavior:contain}}
+/* Reserve reading space after accounting for the header and tabs. */
+@media(max-height:500px){.reader-view .reader-toolbar{max-height:min(45dvh,max(48px,calc(100dvh - 180px)));overflow-y:auto;overscroll-behavior:contain}.reading-mode .reader-view .reader-toolbar{max-height:45dvh}}
 .reading-mode #readSize{display:none}
 .app-shell:fullscreen{width:100%;height:100dvh;background:var(--theme-panel,#f6f8fb)}
