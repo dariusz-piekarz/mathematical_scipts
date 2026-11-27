@@ -132,7 +132,8 @@ mimo ciągłości granicy i zwartości dziedziny.
 
 \paragraph{Rysunek 3D: wędrujące maksima.}
 Każda krzywa odpowiada jednej wartości całkowitego indeksu $n$.
-Uwzględniamy punkt $x=1/n$ w siatce, aby nie zgubić maksimum.
+Uwzględniamy wszystkie wierzchołki wykresu odcinkami liniowego,
+w szczególności maksimum w punkcie $x=1/n$.
 Oś indeksu jest dyskretna; nie interpolujemy pomiędzy indeksami.
 Poniższy kod wymaga bibliotek NumPy i Plotly. Zapisuje samodzielny
 plik HTML, w którym można obracać i powiększać wykres.
@@ -175,12 +176,21 @@ import numpy as np
 import plotly.graph_objects as go
 
 fig = go.Figure()
+indices = np.array([1,2,3,5,8,13,20])
+colors = ["#440154","#443983","#31688E","#21918C","#35B779","#90D743","#B8DE29"]
 for n in range(1, 21):
-    x = np.unique(np.r_[np.linspace(0, 1, 301), 1/n])
+    x = np.unique([0, 1/n, min(1, 2/n), 1])
     z = np.maximum(1 - n*np.abs(x - 1/n), 0)
+    color = colors[np.argmin(np.abs(indices-n))]
     fig.add_trace(go.Scatter3d(
         x=x, y=np.full_like(x, n), z=z,
-        mode="lines", name=f"n={n}"))
+        mode="lines", name=f"n={n}",
+        line=dict(color=color, width=5)))
+n = np.arange(1, 21)
+fig.add_trace(go.Scatter3d(x=1/n, y=n,
+    z=np.ones_like(n), mode="markers",
+    marker=dict(size=4, color="#c87900"),
+    name="maksima"))
 fig.update_layout(scene=dict(
     xaxis_title="x", yaxis_title="n", zaxis_title="g_n(x)"))
 axis_style = dict(showbackground=True,
