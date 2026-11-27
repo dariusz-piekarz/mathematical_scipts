@@ -1,0 +1,198 @@
+\section{Zbiory symplicjalne i nerw kategorii}\label{cat:sec:simplicial-sets}
+
+Zbiory symplicjalne opisują obiekty za pomocą sympleksów wszystkich wymiarów, ich ścian i degeneracji. W odróżnieniu od abstrakcyjnego kompleksu symplicjalnego dopuszczają różne sympleksy o tych samych wierzchołkach. Są presnopami na pewnej szczególnej małej kategorii (por. definicja~\ref{cat:def:presheaf}). Konstrukcja nerwu pozwala zakodować w takim presnopie obiekty, morfizmy i składanie kategorii zwykłej.
+
+\subsection{Kategoria sympleksów}
+
+\begin{definicja}[Kategoria sympleksów]\label{cat:def:simplex-category}
+Kategorię $\Delta$ tworzą niepuste skończone zbiory liniowo uporządkowane
+\[
+ [n]=\{0,1,\ldots,n\},\qquad n\geq 0,
+\]
+oraz wszystkie odwzorowania niemalejące między nimi. Składanie i identyczności są zwykłymi złożeniami i identycznościami funkcji. Zbiór $[n]$ traktujemy również jako kategorię, w której istnieje dokładnie jeden morfizm $i\to j$ dla $i\leq j$ i nie ma go dla $i>j$.
+\end{definicja}
+Funktory pomiędzy takimi kategoriami są dokładnie odwzorowaniami niemalejącymi: konieczność wynika z istnienia obrazu morfizmu $i\to j$, wystarczalność z jednoznaczności morfizmów o zadanych końcach.
+
+\begin{definicja}[Koface i kodegeneracje]\label{cat:def:delta-generators}
+Dla $n\geq1$ i $0\leq i\leq n$ niech $\delta^i:[n-1]\to[n]$ będzie rosnącą injekcją pomijającą $i$:
+\[
+ \delta^i(t)=
+ \begin{cases}t&t<i,\\t+1&t\geq i.\end{cases}
+\]
+Dla $n\geq0$ i $0\leq i\leq n$ niech $\sigma^i:[n+1]\to[n]$ będzie surjekcją sklejącą $i$ oraz $i+1$:
+\[
+ \sigma^i(t)=
+ \begin{cases}t&t\leq i,\\t-1&t>i.\end{cases}
+\]
+Wymiar dziedziny i przeciwdziedziny jest każdorazowo wyznaczony przez kontekst.
+\end{definicja}
+
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \foreach \i in {0,1,2} {
+  \node (a\i) at (1.35*\i,2.4) {$\i$};
+  \node (b\i) at (1.35*\i,0) {$\i$};
+ }
+ \node (b3) at (4.05,0) {$3$};
+ \draw[->] (a0)--(b0);
+ \draw[->] (a1)--(b2);
+ \draw[->] (a2)--(b3);
+ \node at (2,-.8) {$\delta^1:[2]\to[3]$};
+ \begin{scope}[xshift=6cm]
+ \foreach \i in {0,1,2,3} \node (c\i) at (1.35*\i,2.4) {$\i$};
+ \foreach \i in {0,1,2} \node (d\i) at (1.35*\i,0) {$\i$};
+ \draw[->] (c0)--(d0);
+ \draw[->] (c1)--(d1);
+ \draw[->] (c2)--(d1);
+ \draw[->] (c3)--(d2);
+ \node at (2,-.8) {$\sigma^1:[3]\to[2]$};
+ \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\begin{twierdzenie}[Rozkład morfizmu w $\Delta$]\label{cat:thm:delta-factorization}
+Każde odwzorowanie niemalejące $\theta:[m]\to[n]$ ma jedyny rozkład $\theta=\iota\pi$, gdzie $\pi:[m]\to[r]$ jest surjekcją niemalejącą, a $\iota:[r]\to[n]$ rosnącą injekcją. Każda taka injekcja jest złożeniem kofac, a każda taka surjekcja złożeniem kodegeneracji (dopuszczamy puste złożenie).
+\end{twierdzenie}
+\begin{proof}
+Niech obraz $\theta$ składa się z elementów $y_0<\cdots<y_r$. Jest niepusty, gdyż $[m]$ jest niepusty. Definiujemy $\iota(j)=y_j$ i $\pi(t)=j$ wtedy i tylko wtedy, gdy $\theta(t)=y_j$. Surjektywność $\pi$ wynika z definicji obrazu, a monotoniczność z monotoniczności $\theta$ i ścisłej monotoniczności $\iota$. Mamy $\theta(t)=\iota(\pi(t))$. W każdym rozkładzie tego rodzaju obraz injekcji jest obrazem $\theta$, ponieważ pierwszy czynnik jest surjekcją. Rosnąca enumeracja obrazu jest jedyna, zatem jedyne są $r$ i $\iota$. Injektywność $\iota$ wymusza jednoznaczność $\pi$.
+
+Jeśli $\iota:[r]\to[n]$ nie jest surjekcją, wybieramy pominięty element $i$. Obraz $\delta^i:[n-1]\to[n]$ zawiera obraz $\iota$, więc istnieje jedyna rosnąca injekcja $\iota':[r]\to[n-1]$ z $\delta^i\iota'=\iota$: przypisujemy każdemu elementowi jego jedyny przeciwobraz przez $\delta^i$. Indukujemy względem $n-r$, przy czym dla $n=r$ rosnąca bijekcja jest identycznością.
+
+Jeśli surjekcja $\pi:[m]\to[r]$ nie jest injekcją, istnieje $i<m$ z $\pi(i)=\pi(i+1)$: każde włókno odwzorowania niemalejącego jest przedziałem w porządku, więc włókno zawierające co najmniej dwa elementy zawiera dwa kolejne. Funkcja $\pi$ jest stała na włóknach $\sigma^i:[m]\to[m-1]$. Definiujemy $\pi'(j)=\pi(t)$ dla dowolnego $t$ spełniającego $\sigma^i(t)=j$; niezależność wyboru wynika ze stałości na włóknach. Funkcja $\pi'$ jest surjekcją i jest niemalejąca, ponieważ włókna $\sigma^i$ są uporządkowane zgodnie z ich wartościami. Mamy $\pi=\pi'\sigma^i$. Indukujemy względem $m-r$, z identycznością jako przypadkiem $m=r$.
+\end{proof}
+
+\subsection{Zbiory symplicjalne}
+
+\begin{definicja}[Zbiór symplicjalny]\label{cat:def:simplicial-set}
+Zbiór symplicjalny jest funktorem $X:\Delta^{\mathrm{op}}\to\Set$. Zapisujemy $X_n=X([n])$. Dla $\theta:[m]\to[n]$ piszemy $\theta^*=X(\theta):X_n\to X_m$; w tym zapisie argument $X$ jest morfizmem w kategorii przeciwnej odpowiadającym $\theta$. Elementy $X_n$ nazywamy $n$-sympleksami. Operatory ścian i degeneracji to odpowiednio
+\[
+ d_i=(\delta^i)^*:X_n\to X_{n-1},\qquad
+ s_i=(\sigma^i)^*:X_n\to X_{n+1}.
+\]
+Morfizmem zbiorów symplicjalnych jest transformacja naturalna. Otrzymujemy kategorię $\mathbf{sSet}=[\Delta^{\mathrm{op}},\Set]$.
+\end{definicja}
+
+Z kontrawariancji wynika $(\theta\psi)^*=\psi^*\theta^*$. W szczególności nie wolno zamieniać kolejności operatorów przy odczytywaniu relacji w $\Delta$.
+
+\begin{stwierdzenie}[Tożsamości symplicjalne]\label{cat:prop:simplicial-identities}
+Dla wszystkich dopuszczalnych indeksów i wymiarów zachodzą
+\begin{equation}\label{cat:eq:simplicial-identities}
+\begin{aligned}
+ d_i d_j&=d_{j-1}d_i &&(i<j),\\
+ s_i s_j&=s_{j+1}s_i &&(i\leq j),\\
+ d_i s_j&=
+ \begin{cases}
+ s_{j-1}d_i&i<j,\\
+ \id&i=j\ \text{lub}\ i=j+1,\\
+ s_j d_{i-1}&i>j+1.
+ \end{cases}
+\end{aligned}
+\end{equation}
+\end{stwierdzenie}
+\begin{proof}
+Pierwsza relacja wynika z $\delta^j\delta^i=\delta^i\delta^{j-1}$ dla $i<j$: obie strony są rosnącymi injekcjami o obrazie pomijającym dokładnie $i,j$ w końcowym zbiorze. Na lewej stronie druga injekcja pomija $j$ i wysyła $i$ na $i$, na prawej pomija $i$ i wysyła $j-1$ na $j$. Rosnąca enumeracja tego samego obrazu jest jedyna.
+
+Dla drugiej relacji porównujemy $\sigma^j\sigma^i$ oraz $\sigma^i\sigma^{j+1}$, dla $i\leq j$. Surjekcja niemalejąca jest wyznaczona przez indeksy $t$, dla których jej wartości w $t,t+1$ są równe: zaczyna się od zera, a na pozostałych indeksach zwiększa wartość o jeden, gdyż jest surjekcją. Dla $i<j$ pierwsze złożenie ma takie indeksy $i,j+1$, ponieważ $\sigma^i$ skleja $i,i+1$, a para sklejona przez $\sigma^j$ odpowiada pierwotnej parze $j+1,j+2$. Drugie złożenie skleja tę samą parę $j+1,j+2$ oraz $i,i+1$. Dla $i=j$ obie strony sklejają trójkę $i,i+1,i+2$, więc mają te same indeksy $i,i+1$. Otrzymujemy równość.
+
+W relacji mieszanej rozważamy $\sigma^j\delta^i$. Gdy $i=j$ lub $i=j+1$, injekcja usuwa jeden z dwóch elementów sklejanych przez $\sigma^j$, więc złożenie jest niemalejącą bijekcją tego samego zbioru, czyli identycznością. Dla pozostałych przypadków złożenie pomija wartość $\sigma^j(i)$ i skleja jedną parę kolejnych elementów dziedziny. Dla $i<j$ pominięta wartość to $i$, a sklejane indeksy to $j-1,j$; takie same dane ma $\delta^i\sigma^{j-1}$. Dla $i>j+1$ pominięta wartość to $i-1$, a sklejane indeksy to $j,j+1$; takie same dane ma $\delta^{i-1}\sigma^j$. W obu przypadkach obraz i sklejane indeksy jednoznacznie wyznaczają odwzorowanie, przez rozkład z twierdzenia~\ref{cat:thm:delta-factorization}. Stosując kontrawariantny funktor $X$ do wszystkich uzyskanych równości, odwracamy kolejność składania i dostajemy~\eqref{cat:eq:simplicial-identities}.
+\end{proof}
+
+\begin{definicja}[Sympleks zdegenerowany]\label{cat:def:degenerate-simplex}
+Sympleks $x\in X_n$ jest zdegenerowany, jeśli dla pewnego $i$ i $y\in X_{n-1}$ mamy $x=s_i y$. W przeciwnym razie jest niezdegenerowany. Wszystkie $0$-sympleksy są niezdegenerowane.
+\end{definicja}
+Z tożsamości $d_i s_i=\id=d_{i+1}s_i$ wynika injektywność $s_i$ oraz surjektywność tych dwóch operatorów ścian. Nie wynika stąd, że wszystkie ściany sympleksu niezdegenerowanego są niezdegenerowane.
+
+\subsection{Sympleksy standardowe}
+
+\begin{definicja}[Standardowy zbiór symplicjalny]\label{cat:def:standard-simplicial-simplex}
+Dla $n\geq0$ definiujemy presnop reprezentowalny
+\[
+ \Delta[n]_m=\Hom_\Delta([m],[n]),\qquad
+ \theta^*(u)=u\theta.
+\]
+Morfizm $\Delta[n]\to\Delta[k]$ indukowany przez $\varphi:[n]\to[k]$ działa przez składanie z $\varphi$ z lewej strony.
+\end{definicja}
+
+\begin{stwierdzenie}[Symplicjalna postać lematu Yonedy]\label{cat:prop:simplicial-yoneda}
+Dla dowolnego zbioru symplicjalnego $X$ istnieje naturalna bijekcja
+\[
+ \Hom_{\mathbf{sSet}}(\Delta[n],X)\longrightarrow X_n,
+ \qquad t\longmapsto t_n(\id_{[n]}).
+\]
+Sympleksy niezdegenerowane w $\Delta[n]_m$ to dokładnie rosnące injekcje $[m]\to[n]$.
+\end{stwierdzenie}
+\begin{proof}
+Pierwsza teza jest szczególnym przypadkiem lematu Yonedy~\ref{cat:thm:yoneda-contra}. Jawnie, do $x\in X_n$ przypisujemy transformację o składowych $u\mapsto u^*x$. Naturalność wynika z $(u\theta)^*x=\theta^*u^*x$. Dla transformacji $t$ jej naturalność względem $u:[m]\to[n]$ daje $t_m(u)=u^*(t_n(\id_{[n]}))$, więc podane przyporządkowania są odwrotne. Naturalność względem $X$ i $[n]$ wynika z naturalności $t$ oraz ze wzoru na odwrotność.
+
+Jeżeli $u:[m]\to[n]$ nie jest injekcją, to w rozkładzie z twierdzenia~\ref{cat:thm:delta-factorization} czynnik surjektywny nie jest identycznością. W jego rozkładzie można wyodrębnić pierwszą stosowaną kodegenerację, otrzymując $u=v\sigma^i$. Zatem $u=s_i v$ jest zdegenerowany. Odwrotnie, każde $s_i v=v\sigma^i$ przyjmuje tę samą wartość na $i,i+1$, więc nie jest injekcją.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (a) at (0,0) {$0$};
+ \node (b) at (4,0) {$1$};
+ \node (c) at (2,3) {$2$};
+ \draw[->] (a)--node[below] {$[0,1]$}(b);
+ \draw[->] (b)--node[right] {$[1,2]$}(c);
+ \draw[->] (a)--node[left] {$[0,2]$}(c);
+ \node at (2,1) {$[0,1,2]$};
+\end{tikzpicture}
+\end{center}
+Rysunek przedstawia niezdegenerowane sympleksy $\Delta[2]$: trzy wierzchołki, trzy krawędzie i jeden $2$-sympleks. Pozostałe sympleksy są degeneracjami tych sympleksów.
+
+\subsection{Nerw kategorii}
+
+\begin{definicja}[Nerw]\label{cat:def:category-nerve}
+Dla małej kategorii $\mathcal C$ jej nerw to zbiór symplicjalny
+\[
+ N(\mathcal C)_n=\operatorname{Fun}([n],\mathcal C),
+ \qquad \theta^*(F)=F\circ\theta.
+\]
+Złożenie z funktorem $H:\mathcal C\to\mathcal D$ daje morfizm symplicjalny $N(H):N(\mathcal C)\to N(\mathcal D)$.
+\end{definicja}
+
+\begin{stwierdzenie}[Opis sympleksów nerwu]\label{cat:prop:nerve-strings}
+$n$-sympleks nerwu odpowiada jednoznacznie ciągowi $n$ składanych morfizmów
+\[
+ A_0\xrightarrow{f_1}A_1\xrightarrow{f_2}\cdots
+ \xrightarrow{f_n}A_n.
+\]
+Dla $n\geq1$ operator $d_0$ usuwa pierwszy obiekt i pierwszy morfizm, a $d_n$ ostatni obiekt i ostatni morfizm. Dla $0<i<n$ operator $d_i$ usuwa obiekt $A_i$ i zastępuje dwa sąsiednie morfizmy przez $f_{i+1}f_i$. Operator $s_i$ powtarza $A_i$, wstawiając pomiędzy kopie morfizm $\id_{A_i}$.
+\end{stwierdzenie}
+\begin{proof}
+Dla funktora $F:[n]\to\mathcal C$ bierzemy $A_i=F(i)$ i $f_i=F(i-1\to i)$. Każdy morfizm $i\to j$ dla $i<j$ jest złożeniem kolejnych strzałek w $[n]$, więc musi mieć obraz $f_j\cdots f_{i+1}$. Odwrotnie, ta formuła wraz z $F(i\to i)=\id_{A_i}$ określa funktor, ponieważ dla $i\leq j\leq k$ łączność i jednostkowość składania w $\mathcal C$ dają $F(j\to k)F(i\to j)=F(i\to k)$. Dla $n=0$ ciąg oznacza pojedynczy obiekt.
+
+Prekompozycja z $\delta^i$ usuwa $i$ z ciągu obiektów. Gdy $0<i<n$, strzałka przekraczająca pominięty indeks ma obraz $F(i-1\to i+1)=f_{i+1}f_i$; w pozostałych miejscach obrazy strzałek się nie zmieniają. Dla skrajnych indeksów nie ma strzałki przekraczającej pominięty obiekt. Prekompozycja z $\sigma^i$ powtarza obiekt, a strzałkę $i\to i+1$ wysyła na identyczność w $i$, więc wstawia $\id_{A_i}$. Pozostałe strzałki są odpowiednimi strzałkami pierwotnego ciągu.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (a) at (0,0) {$A$};
+ \node (b) at (5,0) {$B$};
+ \node (c) at (2.5,3) {$C$};
+ \draw[->] (a)--node[below] {$f=d_2x$}(b);
+ \draw[->] (b)--node[right] {$g=d_0x$}(c);
+ \draw[->] (a)--node[left] {$gf=d_1x$}(c);
+ \node at (2.5,1) {$x$};
+\end{tikzpicture}
+\end{center}
+W nerwie $2$-sympleks jest trójkątem przemiennym, a jego środkowa ściana koduje składanie.
+
+\begin{twierdzenie}[Pełność i wierność nerwu]\label{cat:thm:nerve-fully-faithful}
+Funktor $N:\mathbf{Cat}\to\mathbf{sSet}$ z kategorii małych kategorii jest pełny i wierny.
+\end{twierdzenie}
+\begin{proof}
+Postkompozycja z funktorem $H$ komutuje z prekompozycją z dowolnym $\theta$ z $\Delta$, więc $N(H)$ jest transformacją naturalną; zachowywanie identyczności i składania wynika ze składania funktorów. Niech $t:N(\mathcal C)\to N(\mathcal D)$ będzie morfizmem symplicjalnym. Definiujemy $H$ na obiektach przez $t_0$ i na morfizmach przez $t_1$. Dla $f:A\to B$ mamy $d_1f=A$ i $d_0f=B$. Komutowanie $t$ z tymi ścianami pokazuje, że $Hf:HA\to HB$. Ponieważ $s_0A=\id_A$, komutowanie z $s_0$ daje $H(\id_A)=\id_{HA}$.
+
+Dla $f:A\to B$, $g:B\to C$ niech $x\in N(\mathcal C)_2$ będzie ciągiem $(f,g)$. Ściany $d_2t_2(x)$ i $d_0t_2(x)$ to odpowiednio $Hf,Hg$. Na mocy stwierdzenia~\ref{cat:prop:nerve-strings} sympleks $t_2(x)$ jest więc ciągiem $(Hf,Hg)$. Jego środkowa ściana daje
+\[
+ H(gf)=t_1(d_1x)=d_1t_2(x)=Hg\,Hf.
+\]
+Otrzymujemy funktor $H$. Dla dowolnego $n$-sympleksu $x$ jego kolejne krawędzie otrzymujemy przez prekompozycję z injekcjami $[1]\to[n]$ wysyłającymi $0,1$ na $i-1,i$. Naturalność $t$ względem tych injekcji oznacza, że kolejnymi krawędziami $t_n(x)$ są obrazy przez $H$ kolejnych krawędzi $x$. Dla $n\geq1$ ciąg tych krawędzi wyznacza sympleks jednoznacznie; dla $n=0$ równość wynika z definicji $H$. Zatem $t=N(H)$. Jednoznaczność $H$ wynika z jego składowych na obiektach i morfizmach, wymuszonych przez $t_0,t_1$.
+\end{proof}
+
+\begin{przyklad}[Nerw porządku i nerw grupy]\label{cat:ex:nerve-poset-group}
+Dla zbioru częściowo uporządkowanego $P$ traktowanego jako kategoria $N(P)_n$ jest zbiorem niemalejących ciągów $p_0\leq\cdots\leq p_n$. Degeneracja powtarza element; ciąg jest niezdegenerowany dokładnie wtedy, gdy wszystkie kolejne nierówności są ostre.
+
+Dla grupy $G$ traktowanej jako kategoria o jednym obiekcie, z morfizmami $G$ i składaniem zgodnym z mnożeniem, $N(G)_n=G^n$ (dla $n=0$ singleton). Ściany skrajne usuwają skrajny czynnik, ściana wewnętrzna mnoży $g_{i+1}g_i$, a degeneracja wstawia jednostkę grupy. Jeśli $G$ jest nietrywialna, nerw ma wiele krawędzi o tych samych końcach, co pokazuje różnicę między zbiorami symplicjalnymi i abstrakcyjnymi kompleksami symplicjalnymi. Oba opisy wynikają ze stwierdzenia~\ref{cat:prop:nerve-strings}.
+\end{przyklad}
