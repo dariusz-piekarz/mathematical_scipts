@@ -36,17 +36,36 @@ function activateTab(name,{fromReaderNavigation=false}={}){
   closeTip();
 }
 function toggleDomain(domain){state.expandedDomains.has(domain)?state.expandedDomains.delete(domain):state.expandedDomains.add(domain);renderTree();}
-const outlineRequests=new Map();
+const outlineRequests=new Map(), COLLAPSED_OUTLINE_LIMIT=32;
+function touchOutline(id){
+  if(!state.outlines.has(id))return false;
+  const rows=state.outlines.get(id);
+  state.outlines.delete(id);state.outlines.set(id,rows);
+  return true;
+}
+function pruneCollapsedOutlines(){
+  // Expanded chapters retain their structure, even when their domain is
+  // temporarily hidden. Pending requests have a separate lifetime.
+  const collapsed=[...state.outlines.keys()].filter(id=>!state.expandedModules.has(id));
+  for(let i=0;i<collapsed.length-COLLAPSED_OUTLINE_LIMIT;i++){
+    const id=collapsed[i];
+    state.outlines.delete(id);
+    for(const mode of ["section","object"])outlinePages.delete(JSON.stringify([id,mode]));
+  }
+}
 async function toggleModule(id){
-  if(state.expandedModules.has(id)){state.expandedModules.delete(id);renderTree();return;}
+  if(state.expandedModules.has(id)){
+    state.expandedModules.delete(id);touchOutline(id);pruneCollapsedOutlines();renderTree();return;
+  }
   state.expandedModules.add(id);
   renderTree();
-  if(state.outlines.has(id))return;
+  if(touchOutline(id))return;
   let request=outlineRequests.get(id);
   if(!request){
     request=api(`/api/modules/${encodeURIComponent(id)}/outline`).then(data=>{
       if(!Array.isArray(data.entities))throw new Error("Nieprawidłowa struktura rozdziału.");
       state.outlines.set(id,data.entities);
+      pruneCollapsedOutlines();
     }).catch(e=>{
       // A failed load must be retryable with one click, not collapse+expand.
       if(state.expandedModules.delete(id))toast(e.message);
