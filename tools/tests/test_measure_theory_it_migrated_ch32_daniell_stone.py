@@ -1,4 +1,4 @@
-"""Finite regression witnesses for the finite Daniell--Stone construction."""
+"""Finite regression witnesses for Daniell--Stone constructions with and without a unit."""
 from fractions import Fraction as Q
 import unittest
 
@@ -67,6 +67,46 @@ class DaniellStone12(unittest.TestCase):
             self.assertEqual(seq[-1],0)
             self.assertEqual(seq,sorted(seq,reverse=True))
         self.assertTrue(all(max(1-n*0,0)==1 for n in range(1,15)))
+
+
+    def test_split_first_increment_without_unit(self):
+        # The zero-level set may have infinite mass in the general proof.
+        for delta in (Q(1,3), Q(1,7)):
+            m=12
+            for j in range(3*m+1):
+                x=j*delta/3
+                lower=delta*sum(x>k*delta for k in range(1,m+1))
+                first=min(x,delta)
+                rest=delta*sum(min(1,max(x-k*delta,0)/delta)
+                               for k in range(1,m))
+                self.assertEqual(first+rest,x)
+                self.assertLessEqual(rest,lower)
+                self.assertLessEqual(lower,x)
+
+    def test_cover_truncation_l1_error(self):
+        w=[Q(2),Q(3),Q(1),Q(4)]
+        indicator=[Q(1),Q(0),Q(1),Q(0)]
+        hs=[[Q(1,3),Q(1,100),Q(1,2),Q(0)],
+            [Q(2,3),Q(0),Q(1,2),Q(1,200)]]
+        integral=lambda f:sum(a*b for a,b in zip(w,f))
+        total=[sum(row) for row in zip(*hs)]
+        v=[min(1,x) for x in total]
+        self.assertTrue(all(a<=b<=c for a,b,c in zip(indicator,v,total)))
+        error=integral([abs(a-b) for a,b in zip(v,indicator)])
+        budget=sum(integral(h) for h in hs)-integral(indicator)
+        self.assertLessEqual(error,budget)
+        partial=[min(1,x) for x in hs[0]]
+        self.assertLessEqual(
+            integral([abs(a-b) for a,b in zip(partial,indicator)]),
+            integral([a-b for a,b in zip(v,partial)])+error)
+
+    def test_positive_threshold_cover(self):
+        h=[Q(0),Q(1,4),Q(2),Q(3)]
+        w=[Q(3),Q(1),Q(5),Q(2)]
+        ih=sum(a*b for a,b in zip(h,w))
+        for t in (Q(1,4),Q(1),Q(2),Q(4)):
+            mass=sum(a for a,x in zip(w,h) if x>t)
+            self.assertLessEqual(t*mass,ih)
 
 
 if __name__=="__main__":
