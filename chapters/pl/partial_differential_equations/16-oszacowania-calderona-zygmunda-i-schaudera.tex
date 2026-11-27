@@ -561,30 +561,78 @@ prowadziłoby zatem do sprzeczności.
 \end{uwaga}
 
 \section[Lokalna regularność Sobolewa i zamrażanie współczynników]{Lokalna regularność $W^{2,p}$ i zamrażanie współczynników}
+W tej sekcji kule $B_r,B_R$ o promieniach $0<r<R$
+są współśrodkowe. Normę macierzy drugich pochodnych
+liczymy za pomocą normy Frobeniusa.
+
 \begin{lemat}[Lokalizacja oszacowania dla laplasjanu]
 \label{lem:pde16-localization}
 Niech $1<p<\infty$, $B_r\Subset B_R\subset\R^d$ i
 $u\in W^{2,p}(B_R)$. Wówczas
 \[
- \|D^2u\|_{L^p(B_r)}\le C\bigl(
+ \|D^2u\|_{L^p(B_r)}\le C_{d,p}\bigl(
  \|\Delta u\|_{L^p(B_R)}+
  (R-r)^{-2}\|u\|_{L^p(B_R)}+
  (R-r)^{-1}\|\nabla u\|_{L^p(B_R)}\bigr).
 \]
 \end{lemat}
 \begin{proof}
-Wybieramy $\eta\in C_c^\infty(B_R)$ równą jeden na $B_r$,
-$|D^k\eta|\le C_k(R-r)^{-k}$ dla $k=1,2$, a następnie
-przedłużamy $v=\eta u$ przez zero na $\R^d$.
-Z równości $\Delta v=\eta\Delta u+2\nabla\eta\cdot\nabla u
-+u\Delta\eta$ i~\eqref{eq:pde16-cz} dla $v$
-wynika teza (przez aproksymację $W^{2,p}$ funkcjami gładkimi).
+Najpierw wyprowadzimy z twierdzenia~\ref{thm:pde16-cz}
+oszacowanie
+\[
+ \|D^2v\|_{L^p(\R^d)}\le C_{d,p}\|\Delta v\|_{L^p(\R^d)}
+ \quad(v\in W^{2,p}(\R^d),\ \operatorname{supp}v
+ \text{ zwarty}).
+\]
+Dla $v\in C_c^\infty(\R^d)$ z lematu
+~\ref{lem:pde7-convolution-derivatives} i tożsamości
+$-\Delta\Gamma=\delta_0$ mamy
+$\Gamma*(-\Delta v)=(-\Delta\Gamma)*v=v$.
+Stosując~\eqref{eq:pde16-cz} do $f=-\Delta v$,
+otrzymujemy żądane oszacowanie dla testów.
+Dla $v$ o zwartej podporze wygładzenia
+$v*\rho_\varepsilon$ są testami o wspólnym zwartym
+nośniku i zbiegają do $v$ w $W^{2,p}(\R^d)$
+na mocy twierdzenia~\ref{thm:pde9-mollify}
+(zbieżność lokalna wystarcza dzięki wspólnemu nośnikowi).
+W obu normach przechodzimy do granicy.
+
+Niech $\sigma=(R-r)/4$ i $\rho_\sigma$ będzie
+nieujemnym standardowym jądrem wygładzającym
+o całce $1$ i nośniku w $B_\sigma(0)$.
+Kładziemy $\eta=\chi_{B_{(r+R)/2}}*\rho_\sigma$.
+Wówczas $0\le\eta\le1$, $\eta=1$ w otoczeniu
+$\overline{B_r}$, a nośnik $\eta$ mieści się
+w $\overline{B_{(r+R)/2+\sigma}}\subset B_R$.
+Dla $|\beta|=1,2$ z różniczkowania splotu mamy
+$\|\partial^\beta\eta\|_\infty\le
+\|\partial^\beta\rho_\sigma\|_1
+=\sigma^{-|\beta|}\|\partial^\beta\rho_1\|_1$.
+Zatem $|D^k\eta|\le C_d(R-r)^{-k}$ dla $k=1,2$.
+Z lematu~\ref{lem:pde9-compact-product} przedłużenie
+$v$ funkcji $\eta u$ przez zero należy do
+$W^{2,p}(\R^d)$ i ma zwarty nośnik. Reguła Leibniza
+daje w $B_R$
+\[
+ \Delta v=\eta\Delta u+2\nabla\eta\cdot\nabla u+u\Delta\eta,
+\]
+a poza $B_R$ wszystkie składniki są zerowe
+(po przedłużeniu przez zero).
+Ponieważ $D^2v=D^2u$ na $B_r$, poprzednie oszacowanie,
+nierówność trójkąta i ograniczenia pochodnych $\eta$
+dają tezę.
 \end{proof}
 
 \begin{lemat}[Interpolacja pierwszych pochodnych]
 \label{lem:pde16-gradinterp}
 Niech $1<p<\infty$, $B_r\Subset B_R$, $u\in W^{2,p}(B_R)$.
-Dla każdego $\varepsilon>0$ zachodzi
+Dla każdego $0<h<R-r$ zachodzi
+\[
+ \|\nabla u\|_{L^p(B_r)}
+ \le \frac{2d}{h}\|u\|_{L^p(B_R)}
+ +\frac{dh}{2}\|D^2u\|_{L^p(B_R)}.
+\]
+W szczególności dla każdego $\varepsilon>0$ mamy
 \[
  \|\nabla u\|_{L^p(B_r)}\le
  \varepsilon\|D^2u\|_{L^p(B_R)}
@@ -592,39 +640,55 @@ Dla każdego $\varepsilon>0$ zachodzi
 \]
 \end{lemat}
 \begin{proof}
-Na $\R^d$ dla $v\in C_c^\infty$ i dowolnego $h>0$
-podstawowe twierdzenie rachunku całkowego zastosowane
-do $t\mapsto v(x+te_j)$, a następnie do pochodnej tej
-funkcji daje (po całkowaniu z odpowiednią wagą)
+Dla funkcji gładkiej i $x\in B_r$ cały odcinek
+$x+[0,h]e_j$ mieści się w $B_R$.
+Dwukrotne użycie podstawowego twierdzenia rachunku
+całkowego i zamiana kolejności całkowania dają
 \[
- \partial_jv(x)=\frac{v(x+he_j)-v(x)}h
- -\frac1h\int_0^h(h-t)\partial_{jj}v(x+te_j)\,\mathrm dt.
+ \begin{aligned}
+ u(x+he_j)-u(x)
+ &=\int_0^h\partial_ju(x+se_j)\,\mathrm d\lambda_1(s)\\
+ &=h\partial_ju(x)+\int_0^h(h-t)
+       \partial_{jj}u(x+te_j)\,\mathrm d\lambda_1(t).
+ \end{aligned}
 \]
-Nierówność Minkowskiego daje
-$\|\partial_jv\|_p\le 2h^{-1}\|v\|_p+(h/2)\|\partial_{jj}v\|_p$.
-Stosujemy teraz tę samą punktową tożsamość bezpośrednio
-do $u$ dla $x\in B_r$ i $0<h<(R-r)/2$.
-Wówczas cały odcinek $x+[0,h]e_j$ leży w $B_R$.
-Po scałkowaniu nierówności na $B_r$ i zastosowaniu
-Minkowskiego otrzymujemy
-$\|\partial_ju\|_{L^p(B_r)}\le
-2h^{-1}\|u\|_{L^p(B_R)}+(h/2)\|\partial_{jj}u\|_{L^p(B_R)}$.
-Wybierając $h$ tak małe, aby $h/2\le\varepsilon/d$,
-i sumując po $j$, uzyskujemy tezę.
-Aproksymacja w $W^{2,p}$ usprawiedliwia użyty wzór
-również dla funkcji niegładkich.
+Po podzieleniu przez $h$ i przeniesieniu drugiego
+składnika otrzymujemy wzór na $\partial_ju(x)$.
+Nierówność Minkowskiego dla całki i translacja zmiennych
+dają
+\[
+ \|\partial_ju\|_{L^p(B_r)}
+ \le \frac2h\|u\|_{L^p(B_{r+h})}
+ +\frac1h\int_0^h(h-t)\,\mathrm d\lambda_1(t)
+       \|\partial_{jj}u\|_{L^p(B_{r+h})}.
+\]
+Ponieważ całka z wagi wynosi $h^2/2$, po zsumowaniu
+po $j$ mamy pierwsze oszacowanie, nawet z normami
+na $B_{r+h}$ po prawej stronie. Dla dowolnego
+$u\in W^{2,p}(B_R)$ wybieramy $R'$ z $r+h<R'<R$.
+Z twierdzenia~\ref{thm:pde9-mollify} wygładzenia
+$u_\varepsilon$ są gładkie na $B_{R'}$ dla małych
+parametrów i zbiegają tam w $W^{2,p}$.
+Stosujemy oszacowanie z prawą stroną na $B_{r+h}$
+do wygładzeń i przechodzimy w normach do granicy.
+Powiększenie prawej strony do $B_R$ daje żądany wzór.
+Wybór $h=\min\{(R-r)/2,2\varepsilon/d\}$
+daje drugie oszacowanie z $C_{\varepsilon,r,R}=2d/h$.
 \end{proof}
 
 \begin{twierdzenie}[Wewnętrzne oszacowanie dla współczynników ciągłych]
 \label{thm:pde16-variable}
 Niech $\Omega\subset\R^d$ będzie obszarem, $1<p<\infty$,
 $a_{ij}\in C(\Omega)$ i niech symetryczna macierz
-$A(x)=(a_{ij}(x))$ spełnia na każdym zbiorze względnie
-zwartym warunki $\lambda|\xi|^2\le\xi^{\mathsf T}A(x)\xi
-\le\Lambda|\xi|^2$.
+$A(x)=(a_{ij}(x))$ będzie lokalnie jednostajnie eliptyczna:
+na każdym zwartym podzbiorze $\Omega$ istnieją
+$0<\lambda\le\Lambda$ takie, że
+$\lambda|\xi|^2\le\xi^{\mathsf T}A(x)\xi\le\Lambda|\xi|^2$
+dla wszystkich $\xi\in\R^d$.
+Piszemy $A:D^2u=\sum_{i,j=1}^d a_{ij}\partial_{ij}u$.
 Jeżeli $u\in W^{2,p}_{\mathrm{loc}}(\Omega)$ i
-$a_{ij}\partial_{ij}u=f\in L^p_{\mathrm{loc}}(\Omega)$ prawie wszędzie,
-to dla $U\Subset V\Subset\Omega$
+$A:D^2u=f\in L^p_{\mathrm{loc}}(\Omega)$ prawie wszędzie,
+to dla niepustych otwartych zbiorów $U\Subset V\Subset\Omega$
 \begin{equation}\label{eq:pde16-variable}
  \|u\|_{W^{2,p}(U)}\le C\bigl(
  \|f\|_{L^p(V)}+\|u\|_{L^p(V)}\bigr).
@@ -634,42 +698,157 @@ na $V$. Twierdzenie jest tu \emph{oszacowaniem a priori}: samo
 w sobie nie konstruuje rozwiązania $W^{2,p}$.
 \end{twierdzenie}
 \begin{proof}
-Ustalmy $x_0\in V$ i zamroźmy współczynniki w $A_0=A(x_0)$.
-Po liniowej zamianie zmiennych $z=A_0^{-1/2}(x-x_0)$
-operator $a_{ij}(x_0)\partial_{ij}$ przechodzi w laplasjan.
-Stałe tej zamiany są kontrolowane przez $\lambda,\Lambda$.
-Dla $v\in W^{2,p}$ o zwartym nośniku w dostatecznie małej
-kuli wokół $x_0$ z oszacowania Calderóna--Zygmunda
-otrzymujemy
+\emph{Krok 1: operator o stałych współczynnikach.}
+Niech $A_0=A(x_0)$, $S=A_0^{1/2}$ i
+$w(z)=v(x_0+Sz)$ dla $v\in C_c^\infty(\R^d)$.
+Symetria i dodatnia określoność dają
+$\|S\|_{\mathrm{op}}\le\sqrt\Lambda$ oraz
+$\|S^{-1}\|_{\mathrm{op}}\le\lambda^{-1/2}$.
+Klasyczna reguła łańcuchowa daje
+$D_z^2w=S^{\mathsf T}(D_x^2v)(x_0+Sz)S$,
+więc $\Delta_z w=(A_0:D_x^2v)(x_0+Sz)$.
+Z oszacowania globalnego udowodnionego w lemacie
+~\ref{lem:pde16-localization} i zmiany zmiennych
+$x=x_0+Sz$ mamy
 \[
- \|D^2v\|_p\le C\|A_0:D^2v\|_p
- \le C\|A(x):D^2v\|_p+C\|A-A_0\|_{\infty}\|D^2v\|_p.
+ \begin{aligned}
+ \|D_x^2v\|_p
+ &\le\lambda^{-1}|\det S|^{1/p}\|D_z^2w\|_p\\
+ &\le\lambda^{-1}C_{d,p}|\det S|^{1/p}\|\Delta_z w\|_p\\
+ &=\lambda^{-1}C_{d,p}\|A_0:D_x^2v\|_p.
+ \end{aligned}
 \]
-Z ciągłości $A$ możemy zmniejszyć promień kuli tak, aby
-ostatni współczynnik nie przekraczał $1/2$ i pochłonąć
-ten wyraz do lewej strony. Dla $v=\eta u$ obliczamy
-$A:D^2(\eta u)=\eta f+2A\nabla\eta\cdot\nabla u
-+u\,A:D^2\eta$.
-Otrzymujemy więc lokalne oszacowanie $D^2u$ przez
-$f$, $u$ i $\nabla u$ na trochę większej kuli. Stosujemy
-lemat~\ref{lem:pde16-gradinterp}, wybierając $\varepsilon$
-tak, by pochłonąć składnik z $D^2u$; aby uniknąć
-błędnego koła, przeprowadzamy to najpierw na zagnieżdżonej
-rodzinie kul i sumujemy oszacowania z geometrycznie
-malejącymi wagami. Skończone pokrycie $\overline U$ przez
-otwarte kule zawarte w $V$ oraz partycja jedności
-kończą dowód~\eqref{eq:pde16-variable}.
+Wyznacznik się skraca. Przez wygładzanie jak
+w dowodzie lematu~\ref{lem:pde16-localization}
+oszacowanie obowiązuje także dla $v\in W^{2,p}(\R^d)$
+o zwartym nośniku. Oznaczmy jego stałą przez $C_0$.
+
+\emph{Krok 2: zamrażanie i lokalizacja.}
+Wybieramy $L>0$ takie, że dla każdego
+$x_0\in\overline U$ mamy $\overline{B_L(x_0)}\subset V$,
+a ponadto
+$\sup_{B_L(x_0)}|A(x)-A(x_0)|_{\mathrm F}\le1/(2C_0)$.
+Taki wspólny promień istnieje z dodatniej odległości
+$\overline U$ od dopełnienia $V$ i jednostajnej
+ciągłości $A$ na $\overline V$.
+Dla $v\in W^{2,p}(\R^d)$ o zwartym nośniku
+w $B_L(x_0)$, z nierówności Cauchy'ego--Schwarza
+dla iloczynu Frobeniusa, dostajemy
+\[
+ \begin{aligned}
+ \|D^2v\|_p
+ &\le C_0\|A:D^2v\|_{p,B_L}
+      +C_0\|(A_0-A):D^2v\|_{p,B_L}\\
+ &\le C_0\|A:D^2v\|_{p,B_L}+\tfrac12\|D^2v\|_p.
+ \end{aligned}
+\]
+Po pochłonięciu mamy $\|D^2v\|_p\le
+2C_0\|A:D^2v\|_{p,B_L}$.
+Ustalmy środek $x_0$ i pomijajmy go w oznaczeniach kul.
+Dla $0<s<t<L$ używamy odcięcia równego $1$ na $B_s$
+i o zwartym nośniku w $B_t$, skonstruowanego w lemacie
+~\ref{lem:pde16-localization}. Dla $v=\eta u$
+przedłużonego przez zero reguła Leibniza daje,
+dzięki symetrii $A$,
+\[
+ A:D^2v=\eta f+2(A\nabla\eta)\cdot\nabla u+u\,A:D^2\eta.
+\]
+Stąd, używając $\|A\|_{\mathrm{op}}\le\Lambda$
+i $|A|_{\mathrm F}\le\sqrt d\,\Lambda$, otrzymujemy
+\[
+ \|D^2u\|_{p,B_s}\le C_1\bigl(
+ \|f\|_{p,B_t}+(t-s)^{-1}\|\nabla u\|_{p,B_t}
+ +(t-s)^{-2}\|u\|_{p,B_t}\bigr),
+\]
+gdzie $C_1$ jest niezależna od $s,t,x_0,u,f$.
+
+\emph{Krok 3: pochłanianie na zagnieżdżonych kulach.}
+Niech $H(s)=\|D^2u\|_{p,B_s}$,
+$F=\|f\|_{p,B_L}$ i $Y=\|u\|_{p,B_L}$.
+Dla $0<s<t<L$ stosujemy poprzednie oszacowanie
+z promieniem pośrednim $m=(s+t)/2$.
+Z lematu~\ref{lem:pde16-gradinterp}, dla
+$h=\kappa(t-s)$, gdzie $0<\kappa<1/2$, mamy
+\[
+ \|\nabla u\|_{p,B_m}
+ \le \frac{2d}{\kappa(t-s)}Y
+       +\frac{d\kappa(t-s)}2 H(t).
+\]
+W konsekwencji
+\[
+ H(s)\le C_1 d\kappa H(t)+C_1 F
+       +C_1(4+4d/\kappa)(t-s)^{-2}Y .
+\]
+Ustalamy $\kappa=\min\{1/4,1/(8dC_1)\}$,
+tak że współczynnik przy $H(t)$ jest nie większy
+niż $\theta=1/8$. Zatem z pewną stałą $C_2$,
+\[
+ H(s)\le\theta H(t)+C_2\bigl(F+(t-s)^{-2}Y\bigr).
+\]
+Bierzemy $s_n=L(1-2^{-n-1})$, $n\ge0$,
+więc $s_0=L/2$ i $s_{n+1}-s_n=L2^{-n-2}$.
+Iterując nierówność od $n=0$ do $N-1$, dostajemy
+\[
+ H(L/2)\le\theta^N H(s_N)
+ +C_2 F\sum_{n=0}^{N-1}\theta^n
+ +16C_2 L^{-2}Y\sum_{n=0}^{N-1}(4\theta)^n.
+\]
+Ponieważ $u\in W^{2,p}(B_L)$, mamy $H(s_N)\le H(L)<\infty$,
+więc pierwszy składnik dąży do zera.
+Oba szeregi geometryczne są zbieżne, gdyż $4\theta=1/2$.
+Otrzymujemy
+$H(L/2)\le C_3(F+L^{-2}Y)$.
+Stosując lemat~\ref{lem:pde16-gradinterp}
+do $B_{L/4}\Subset B_{L/2}$ z $h=L/8$, dostajemy
+także $\|\nabla u\|_{p,B_{L/4}}\le
+C_d(L^{-1}Y+L H(L/2))$.
+Łącznie
+\[
+ \|u\|_{W^{2,p}(B_{L/4})}
+ \le C_{d,p,\lambda,\Lambda,L}(F+Y).
+\]
+
+\emph{Krok 4: skończone pokrycie.}
+Kule $B_{L/4}(x_0)$, $x_0\in\overline U$,
+pokrywają zwarty zbiór $\overline U$; wybieramy
+skończone podpokrycie. Na każdej kuli prawe strony
+powyższych oszacowań są ograniczone przez wspólną
+stałą razy $\|f\|_{p,V}+\|u\|_{p,V}$.
+Całka po $U$ modułu do potęgi $p$ każdej pochodnej
+rzędu co najwyżej dwa jest nie większa od sumy
+analogicznych całek po kulach pokrycia.
+Po zsumowaniu i wyciągnięciu pierwiastka stopnia $p$
+otrzymujemy~\eqref{eq:pde16-variable}.
+Pokrycie oraz $L$ wybrano niezależnie od $u,f$,
+co daje deklarowaną zależność stałej.
 \end{proof}
 
 \begin{uwaga}[Postać dywergencyjna a niedywergencyjna]
-Jeżeli $A\in W^{1,\infty}_{\mathrm{loc}}$ i
-$-\diver(A\nabla u)=f$, to dopiero \emph{po} wykazaniu
-$u\in H^2_{\mathrm{loc}}$ wolno napisać prawie wszędzie
-$-a_{ij}\partial_{ij}u=f+(\partial_i a_{ij})\partial_ju$.
-Aby przejść do $W^{2,p}$ trzeba niezależnie sprawdzić,
-że prawa strona należy do $L^p$; samo $f\in L^p$
-bez dostatecznej kontroli $\nabla u$ nie uzasadnia takiego
-wniosku.
+Niech $A\in W^{1,\infty}_{\mathrm{loc}}$ będzie lokalnie
+jednostajnie eliptyczna, $f\in L^2_{\mathrm{loc}}$ i
+$u\in H^1_{\mathrm{loc}}$ niech spełnia
+$-\diver(A\nabla u)=f$ słabo. Z twierdzenia
+~\ref{thm:pde15-h2} mamy $u\in H^2_{\mathrm{loc}}$.
+Reguła iloczynu dla mnożnika $W^{1,\infty}$,
+uzasadniona w dowodzie twierdzenia
+~\ref{thm:pde15-bootstrap}, daje wtedy prawie wszędzie
+\[
+ -\sum_{i,j=1}^d a_{ij}\partial_{ij}u
+ =f+\sum_{i,j=1}^d(\partial_i a_{ij})\partial_j u .
+\]
+Obie strony należą lokalnie do $L^2$. Dla wykładnika
+$p>2$ sama informacja $f\in L^p_{\mathrm{loc}}$
+nie uzasadnia przynależności całej prawej strony
+do $L^p_{\mathrm{loc}}$ na podstawie znanej jedynie
+lokalnej regularności $H^2$. Ponadto nawet gdy
+prawa strona należy do $L^p_{\mathrm{loc}}$, twierdzenie
+~\ref{thm:pde16-variable} jest oszacowaniem a priori
+dla funkcji już należących do $W^{2,p}_{\mathrm{loc}}$.
+Do wykazania nowej regularności potrzebny jest odrębny
+argument; nie można zakładać jej w dowodzie samej siebie.
+Jeżeli $A$ nie jest symetryczna, w członie drugiego
+rzędu można zastąpić ją przez $(A+A^{\mathsf T})/2$,
+gdyż Hessian jest symetryczny prawie wszędzie.
 \end{uwaga}
 
 \section{Przestrzenie Höldera i regularność w przestrzeniach Höldera}
