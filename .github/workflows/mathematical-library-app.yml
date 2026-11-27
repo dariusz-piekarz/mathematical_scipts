@@ -23,6 +23,14 @@ on:
         required: true
         type: string
 
+
+# Coalesce obsolete queued push checks on the same branch. Never share the
+# group with pinned 2+1 passes or separately requested manual validation.
+# Running checks finish; only superseded pending standalone pushes coalesce.
+concurrency:
+  group: atlas-app-${{ !inputs.candidate_sha && github.event_name == 'push' && github.ref || format('{0}-{1}', github.run_id, inputs.validation_pass || 'manual') }}
+  cancel-in-progress: false
+
 jobs:
   reader-ui:
     runs-on: ubuntu-latest
