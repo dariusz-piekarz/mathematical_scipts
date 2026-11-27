@@ -179,5 +179,23 @@ class Chapter30(unittest.TestCase):
         self.assertIn(r"\lambda_1(J)=0", s)
         self.assertIn(r"F\subseteq I\setminus H", s)
 
+
+    def test_mt30_016_birkhoff_convex_refinement_and_majorants(self):
+        for a,b,c in product(range(-2,3), repeat=3):
+            values = [Q(a), Q(b), Q(c)]
+            weights = [Q(1,6), Q(1,3), Q(1,2)]
+            refined = sum(w*v for w,v in zip(weights,values))
+            self.assertLessEqual(min(values), refined)
+            self.assertLessEqual(refined, max(values))
+            for n in range(1,8):
+                majorants = [abs(v)/n for v in values]
+                for mask in product((0,1), repeat=3):
+                    err = abs(sum(w*v*m/n for w,v,m in zip(weights,values,mask)))
+                    self.assertLessEqual(err, sum(w*q for w,q in zip(weights,majorants)))
+        s = SOURCE.read_text(encoding="utf-8")
+        for label in ("lem:birkhoff-refinement-30", "thm:birkhoff-convex-30",
+                      "thm:birkhoff-limit-30", "cor:birkhoff-dct-30"):
+            self.assertIn(r"\label{" + label + "}", s)
+
 if __name__ == "__main__":
     unittest.main()
