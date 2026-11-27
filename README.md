@@ -59,7 +59,6 @@ Poniższa lista pochodzi z `catalog/books.json`. Liczba rozdziałów oznacza poz
 | [Teoria Galois](books/pl/galois_theory.tex) | 10 |
 | [Topologia ogólna](books/pl/general_topology.tex) | 26 (01–26 stabilne) |
 | [Teoria grafów i węzłów](books/pl/graph_and_knot_theory.tex) | 37 |
-| [Teoria całki](books/pl/integration_theory.tex) | 17 |
 | [Algebra liniowa](books/pl/linear_algebra.tex) | 27 (01–27 stabilne) |
 
 **Dalszy plan algebry liniowej:** [rozdziały 28–32: realizacje minimalne, grassmanniany, algebry Clifforda, grupy Pin/Spin, spinory i twistory](docs/pl/plan_algebry_liniowej.md). Materiał o Pin/Spin i spinorach przenosimy z DG-04, natomiast twistory opracujemy od podstaw.
@@ -73,6 +72,8 @@ Poniższa lista pochodzi z `catalog/books.json`. Liczba rozdziałów oznacza poz
 | [Rachunek prawdopodobieństwa — tom IV](books/pl/probability_volume_iv.tex) | 33 |
 
 Książki w `books/pl/` zawierają preambuły, kolejność i `\input`; rozdziały są w `chapters/pl/<subject>/`. Suplementy wymieniane są osobno w katalogu.
+
+**Teoria całki:** samodzielny skrypt wycofano z katalogu. Materiał skalarnego rachunku całkowego znajduje się w analizie matematycznej I, teoria miar (w tym całki Daniella–Stone'a, Radona i miara Haara) w teorii miary, a całki wektorowe w analizie funkcjonalnej (15A–15B). Całka Mawhina pozostaje wstrzymana do odrębnej decyzji; całkę Pfeffera przewidziano w planie analizy matematycznej II.
 
 ## Uruchamianie Atlasu
 
