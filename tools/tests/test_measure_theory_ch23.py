@@ -190,6 +190,69 @@ class TestHaarChapter23(unittest.TestCase):
             self.assertLessEqual(c*sum(map(abs, scaled)),
                                  (c*sum(map(abs, f)))*(c*sum(map(abs, g))))
 
+    def test_cal14_migration_coverage(self):
+        # Freeze the original labels independently of the retired CAL source.
+        legacy = {
+            "ch:haar-23",
+            "def:topological-group-23",
+            "def:haar-23",
+            "thm:haar-main-23",
+            "lem:haar-neigh-23",
+            "lem:haar-cutoff-23",
+            "lem:haar-product-compact-23",
+            "eq:haar-cover-number-23",
+            "lem:haar-ratio-23",
+            "lem:haar-content-23",
+            "lem:haar-content-to-measure-23",
+            "eq:haar-from-content-23",
+            "cor:haar-open-positive-23",
+            "lem:haar-uniform-23",
+            "lem:haar-fubini-compact-23",
+            "thm:haar-unique-23",
+            "eq:haar-uniqueness-23",
+            "ex:haar-non-sigma-compact-23",
+            "thm:haar-modular-23",
+            "eq:haar-modular-23",
+            "eq:modularna",
+            "eq:inwersja",
+            "it:cor:haar-unimodular",
+            "it:lem:haar-lie-volume",
+            "cor:haar-adjoint-23",
+            "ex:haar-compact-discrete-23",
+            "ex:haar-standard-23",
+            "ex:haar-affine-23",
+            "it:def:haar-convolution",
+            "it:prop:haar-convolution",
+            "it:cor:haar-convolution-change",
+            "it:thm:haar-l1-convolution",
+            "it:ex:haar-ell2",
+            "tw:haar-automorfizm",
+            "it:eq:haar-automorphism-integral",
+            "it:cor:haar-inner-module",
+            "it:cor:haar-lie-automorphism",
+        }
+        actual = set(re.findall(r"\\label\{([^}]+)\}", SOURCE.read_text(encoding="utf-8")))
+        self.assertEqual(len(legacy), 37)
+        self.assertTrue(legacy <= actual, sorted(legacy - actual))
+        for path in (ROOT / "chapters/pl/integration_theory").glob("*.tex"):
+            if path.name == "14-calka-na-grupie-topologicznej-miara-haara.tex":
+                continue
+            content = path.read_text(encoding="utf-8")
+            refs = set(re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", content))
+            self.assertFalse(refs & legacy, path.name)
+            for chapter, label in re.findall(r"\\atlasref\{([^}:]+)::([^}]+)\}", content):
+                if label in legacy:
+                    self.assertEqual(chapter, "ME-23", path.name)
+
+    def test_cal14_canonical_catalog_entry(self):
+        import json
+        catalog = json.loads((ROOT / "catalog/books.json").read_text(encoding="utf-8"))
+        book = next(b for b in catalog["books"] if b["id"] == "measure_theory")
+        self.assertEqual(book["chapters"].count(SOURCE.relative_to(ROOT).as_posix()), 1)
+        entry = ROOT / book["entrypoint"]
+        includes = re.findall(r"\\input\{([^}]+)\}", entry.read_text(encoding="utf-8"))
+        self.assertEqual([(entry.parent / name).resolve() for name in includes].count(SOURCE.resolve()), 1)
+
     def test_source_guards(self):
         s = SOURCE.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}", s)
