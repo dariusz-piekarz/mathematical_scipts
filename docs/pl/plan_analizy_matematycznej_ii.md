@@ -48,7 +48,7 @@ Kurs inspirowany wykładami Marka Jarnickiego, Wykłady z Analizy Matematycznej 
 33. Całki powierzchniowe pierwszego rodzaju (DG 11, ME 28)
 34. Całki powierzchniowe drugiego rodzaju i strumień (DG 10–11)
 35. Całkowanie po podrozmaitościach dowolnego wymiaru, formy, Green, Gauss–Ostrogradski i Stokes (DG 01, 10–11, ME 26–28); orientacja, miara indukowana, macierz Grama, forma objętości, całkowanie form, brzeg; ME 26–27, DG 10–11
-   - Po twierdzeniu Gaussa–Ostrogradskiego: całka Mawhina i wielowymiarowe całki cechowane z kontrolą regularności podziałów. Szczegóły w osobnym bloku planu poniżej.
+   - Dodatkowe rozdziały po zakończeniu podstawowego programu AM II: wielowymiarowe całki cechowane oraz całka Mawhina. Twierdzenie Gaussa–Ostrogradskiego stanowi ich wcześniejszy punkt odniesienia; szczegóły w osobnym bloku planu poniżej.
 
 ## V. Szeregi potęgowe, rzeczywiste funkcje analityczne i aproksymacja
 
@@ -312,9 +312,9 @@ CI na 7e9c0c9: #45981137089 AM I oraz #45981137079 AM II completed/success. Na 2
 
 ### Migracja CAL-15 — całka Mawhina (27.11.2026)
 
-CAL-15 zawiera wyłącznie zapowiedź (bez definicji, twierdzeń, dowodów i etykiet). Przeniesienie do AM II 35 po klasycznym twierdzeniu Gaussa–Ostrogradskiego, z odwołaniem do AM II 30 i do jednowymiarowej teorii całek cechowanych w AM I. Nie dodawać pustego rozdziału do katalogu i nie zmieniać numeracji 36–37.
+CAL-15 zawiera wyłącznie zapowiedź (bez definicji, twierdzeń, dowodów i etykiet). Zgodnie z aktualną decyzją: osobne dodatkowe rozdziały AM II po zakończeniu i ustabilizowaniu podstawowego programu, nie część AM I ani rozdziału 35. Zachować istniejącą numerację; numery dodatków ustalić po zamknięciu programu podstawowego. Klasyczne twierdzenie Gaussa–Ostrogradskiego oraz jednowymiarowe całki cechowane AM I będą wcześniejszymi punktami odniesienia. Nie dodawać pustych rozdziałów do katalogu.
 
-Zakres przyszłego opracowania: prostokąty i podziały znaczone, cechowanie oraz precyzyjnie zdefiniowana kontrola regularności; istnienie dopuszczalnych podziałów; definicja wybranego wariantu całki Mawhina (rozróżnić warianty i sprawdzić źródła); jednoznaczność, liniowość, zgodność z klasycznymi całkami w uzasadnionym zakresie; twierdzenie o całkowaniu dywergencji pola różniczkowalnego z odpowiednimi hipotezami i pełnym dowodem; porównanie z klasycznym twierdzeniem Gaussa i wielowymiarową całką Henstocka–Kurzweila; przykłady, kontrprzykłady i rysunek ilustrujący rolę kształtu komórek. Nie zakładać równości różnych wariantów bez dowodu. Zachować ideę CAL-15: cienkie komórki mogą mieć niekontrolowany stosunek miary brzegu do objętości. Wykonać dopiero po ustabilizowaniu poprzednich rozdziałów AM II; audyty matematyczne, PDF i CI. Status: plan, nie gotowa teoria.
+Podział przyszłego opracowania na co najmniej dwa dodatkowe rozdziały: (1) wielowymiarowe całki cechowane i regularność podziałów; (2) całka Mawhina oraz całkowanie dywergencji. Zakres: prostokąty i podziały znaczone, cechowanie oraz precyzyjnie zdefiniowana kontrola regularności; istnienie dopuszczalnych podziałów; definicja wybranego wariantu całki Mawhina (rozróżnić warianty i sprawdzić źródła); jednoznaczność, liniowość, zgodność z klasycznymi całkami w uzasadnionym zakresie; twierdzenie o całkowaniu dywergencji pola różniczkowalnego z odpowiednimi hipotezami i pełnym dowodem; porównanie z klasycznym twierdzeniem Gaussa i wielowymiarową całką Henstocka–Kurzweila; przykłady, kontrprzykłady i rysunek ilustrujący rolę kształtu komórek. Nie zakładać równości różnych wariantów bez dowodu. Zachować ideę CAL-15: cienkie komórki mogą mieć niekontrolowany stosunek miary brzegu do objętości. Wykonać dopiero po ustabilizowaniu poprzednich rozdziałów AM II; audyty matematyczne, PDF i CI. Status: plan, nie gotowa teoria.
 
 ### AM I 36 i AM II 15 — kontrola nowego bloku, aktywne odsyłacze i PDF AM I (27.11.2026)
 
