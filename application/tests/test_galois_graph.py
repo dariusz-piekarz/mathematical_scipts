@@ -1,5 +1,6 @@
 """Canonical Galois coverage after retirement of the standalone book."""
 import json
+import re
 from pathlib import Path
 import sqlite3
 from contextlib import closing
@@ -10,6 +11,31 @@ from backend.latex_parser import build_database, module_id
 
 
 class GaloisGraphTest(unittest.TestCase):
+    def test_migrated_equation_labels_do_not_conflict_in_amsmath(self):
+        repository = Path(__file__).resolve().parents[2]
+        folder = repository / "chapters/pl/abstract_algebra"
+        aliases = {
+            "44": (("aa:eq:liouville-form", "eq:liouville"),),
+            "45": (("aa:eq:hyperexp-ode", "eq:hyperexp"),
+                   ("aa:eq:elliptic-liouville-form", "eq:elliptic-liouville")),
+        }
+        for chapter, pairs in aliases.items():
+            source = next(folder.glob(chapter + "-*.tex")).read_text(encoding="utf-8")
+            equations = re.findall(r"\\begin\{equation\}(.*?)\\end\{equation\}",
+                                   source, re.S)
+            for equation in equations:
+                self.assertLessEqual(len(re.findall(r"\\label\{", equation)), 1)
+            for canonical, historical in pairs:
+                self.assertEqual(source.count(r"\label{" + canonical + "}"), 1)
+                self.assertEqual(source.count(r"\label{" + historical + "}"), 1)
+                equation = next(e for e in equations if
+                                r"\label{" + canonical + "}" in e)
+                tail = source.split(equation + r"\end{equation}", 1)[1]
+                self.assertIn(r"\label{" + historical + "}",
+                              tail.split(r"\endgroup", 1)[0])
+                self.assertIn(r"\protected@edef\@currentlabel{\p@equation\theequation}",
+                              tail.split(r"\endgroup", 1)[0])
+
     def test_retired_galois_book_and_canonical_targets(self):
         repository = Path(__file__).resolve().parents[2]
         canonical = repository / "chapters" / "pl"
