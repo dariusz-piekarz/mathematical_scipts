@@ -52,6 +52,21 @@ class TestHaarChapter23(unittest.TestCase):
                     if a & b == a:
                         self.assertLessEqual(n[a], n[b])
 
+    def test_normalized_covering_number_bounds(self):
+        neighborhoods = [v for v in range(64) if v & (1 << IDX[E])]
+        counts = {v: covering_numbers(v) for v in neighborhoods}
+        for v0 in neighborhoods:
+            base = counts[v0]
+            for k0 in neighborhoods:
+                if v0 & k0 != v0:
+                    continue
+                for v in neighborhoods:
+                    denom = counts[v][k0]
+                    self.assertGreater(denom, 0)
+                    self.assertEqual(Fraction(counts[v][k0], denom), 1)
+                    for k in range(64):
+                        self.assertLessEqual(counts[v][k], base[k]*denom)
+
     def test_disjoint_additivity_for_singleton_neighborhood(self):
         n = covering_numbers(1 << IDX[E])
         for a in range(64):
@@ -134,6 +149,19 @@ class TestHaarChapter23(unittest.TestCase):
                 self.assertTrue(stack)
                 self.assertEqual(stack.pop(), m[2])
         self.assertFalse(stack)
+        known = set(labels)
+        for path in SOURCE.parent.glob("[0-9][0-9]-*.tex"):
+            known.update(re.findall(r"\\label\{([^}]+)\}", path.read_text(encoding="utf-8")))
+        refs = set(re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", s))
+        self.assertFalse(refs - known, f"Missing references: {sorted(refs - known)}")
+        folders = {"ME": "measure_theory", "GT": "general_topology"}
+        for code, label in re.findall(r"\\atlasref\{([^{}:]+)::([^{}]+)\}", s):
+            with self.subTest(code=code, label=label):
+                prefix, chapter = code.split("-")
+                targets = list((ROOT / "chapters/pl" / folders[prefix]).glob(chapter + "-*.tex"))
+                self.assertEqual(len(targets), 1)
+                self.assertIn(r"\label{" + label + "}", targets[0].read_text(encoding="utf-8"))
+
 
 
 if __name__ == "__main__":
