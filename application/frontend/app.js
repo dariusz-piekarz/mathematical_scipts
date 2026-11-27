@@ -173,7 +173,16 @@ function describeReference(label,sourceDocument){
           const part=batch.slice(start,start+200);
           try{
             const result=await api('/api/references/descriptions',{method:'POST',body:JSON.stringify({source_document:sourceDocument,labels:part.map(item=>item.label)})});
-            part.forEach(item=>item.resolve(result.items[item.label]));
+            const items=result?.items;
+            for(const item of part){
+              const value=items && typeof items==='object' && !Array.isArray(items) &&
+                Object.prototype.hasOwnProperty.call(items,item.label)?items[item.label]:null;
+              if(!value || typeof value!=='object' || Array.isArray(value) ||
+                !(value.missing===true || value.ambiguous===true ||
+                  (typeof value.document_id==='string' && value.document_id.length>0))){
+                referenceDescriptions.delete(item.key);item.resolve(null);
+              }else item.resolve(value);
+            }
           }catch(_){part.forEach(item=>{referenceDescriptions.delete(item.key);item.resolve(null);});}
         }
       },0);
