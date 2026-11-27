@@ -44,6 +44,12 @@ on:
 permissions:
   contents: read
 
+# Coalesce superseded pending automatic runs, but let running audits finish.
+# Keep push/PR refs separate; manual runs retain their own independent group.
+concurrency:
+  group: atlas-gw-${{ github.event_name == 'workflow_dispatch' && format('manual-{0}', github.run_id) || format('{0}-{1}', github.event_name, github.ref) }}
+  cancel-in-progress: false
+
 jobs:
   structural-audit:
     runs-on: ubuntu-latest

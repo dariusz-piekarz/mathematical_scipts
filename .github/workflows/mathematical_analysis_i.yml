@@ -15,6 +15,12 @@ on:
       - 'tools/tests/test_am1_36_*.py'
       - '.github/workflows/mathematical_analysis_i.yml'
   workflow_dispatch:
+# Coalesce superseded pending automatic runs, but let running audits finish.
+# Keep push/PR refs separate; manual runs retain their own independent group.
+concurrency:
+  group: atlas-am1-${{ github.event_name == 'workflow_dispatch' && format('manual-{0}', github.run_id) || format('{0}-{1}', github.event_name, github.ref) }}
+  cancel-in-progress: false
+
 jobs:
   validate:
     runs-on: ubuntu-latest
