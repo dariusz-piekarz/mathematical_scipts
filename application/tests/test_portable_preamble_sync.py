@@ -12,7 +12,6 @@ class PortablePreambleSyncTests(unittest.TestCase):
         # must follow the canonical book, not a stale hand-maintained subset.
         pairs = {
             "AM2": "mathematical_analysis_ii",
-            "CAL": "integration_theory",
             "GT": "general_topology",
             "GW": "graph_and_knot_theory",
             "KAT": "category_theory",

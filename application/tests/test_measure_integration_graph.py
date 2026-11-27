@@ -17,20 +17,27 @@ class MeasureIntegrationGraphTest(unittest.TestCase):
         canonical = repository / "chapters" / "pl"
         if not canonical.is_dir():
             self.skipTest("canonical repository chapters not available")
-        # CAL is a donor script during redistribution. Retain its exact
-        # redirect links while requiring current canonical AM1 and ME owners,
-        # not obsolete dependencies on retired donor bodies.
+        # Retired CAL redirects no longer occur in the active graph.
+        # Preserve their canonical targets as independent ownership checks.
+        migrated_targets = (
+            ("AM1-29", "ma1:thm:darboux-criterion"),
+            ("AM1-29", "ma1:thm:riemann-darboux-equivalence"),
+            ("AM1-40", "it:thm:rs-integrator-substitution"),
+            ("AM1-36", "ma1:kh:thm:kh-hake"),
+            ("AM1-39", "it:thm:perron-hk"),
+            ("AM1-42", "tw:ks-cauchy"),
+            ("AM1-37", "it:thm:mcshane-absolute"),
+            ("AM1-38", "ma1:kh:thm:kh-acgstar-characterization"),
+            ("AM1-41", "tw:denjoy-szeroka-ftc"),
+            ("ME-26", "thm:hausdorff-borel-26"),
+            ("ME-32", "ch:daniell-stone-32"),
+            ("ME-32", "it:thm:daniell-stone"),
+            ("ME-07", "ch:calkowanie-lebesgue"),
+            ("ME-23", "thm:haar-main-23"),
+            ("ME-23", "ch:haar-23"),
+            ("ME-23", "cor:haar-finiteness-23"),
+        )
         expected = (
-            ("CAL-01", "AM1-29", "ma1:thm:darboux-criterion"),
-            ("CAL-02", "AM1-29", "ma1:thm:riemann-darboux-equivalence"),
-            ("CAL-03", "AM1-40", "it:thm:rs-integrator-substitution"),
-            ("CAL-04", "AM1-36", "ma1:kh:thm:kh-hake"),
-            ("CAL-05", "AM1-39", "it:thm:perron-hk"),
-            ("CAL-06", "AM1-42", "tw:ks-cauchy"),
-            ("CAL-07", "AM1-37", "it:thm:mcshane-absolute"),
-            ("CAL-08", "AM1-38", "ma1:kh:thm:kh-acgstar-characterization"),
-            ("CAL-09", "AM1-41", "tw:denjoy-szeroka-ftc"),
-            ("CAL-10", "ME-26", "thm:hausdorff-borel-26"),
             ("ME-07", "AM1-37", "it:thm:mcshane-lebesgue"),
             ("AM1-37", "ME-07", "thm:ae-integral-invariance"),
             ("ME-32", "ME-21", "thm:riesz-positive-21"),
@@ -38,19 +45,12 @@ class MeasureIntegrationGraphTest(unittest.TestCase):
             ("ME-21", "ME-32", "it:thm:daniell-stone-general"),
             ("ME-21", "ME-32", "it:ex:daniell-cc"),
             ("ME-21", "ME-32", "it:thm:daniell-radon-comparison"),
-            # CAL-12 is now a redirect; the canonical dependency lives in ME-32.
-            ("CAL-12", "ME-32", "ch:daniell-stone-32"),
-            ("CAL-12", "ME-32", "it:thm:daniell-stone"),
             ("ME-32", "ME-03", "thm:caratheodory"),
-            ("CAL-11", "ME-07", "ch:calkowanie-lebesgue"),
-            ("CAL-14", "ME-23", "thm:haar-main-23"),
-            # The canonical Haar chapter retains both topology dependencies.
-            ("CAL-14", "ME-23", "ch:haar-23"),
-            ("CAL-14", "ME-23", "cor:haar-finiteness-23"),
             ("ME-23", "GT-24", "def:topog24-group"),
             ("ME-23", "GT-14", "def:topog-baire-lokalna-zwartosc"),
         )
         needed = {doc for source, target, _ in expected for doc in (source, target)}
+        needed.update(doc for doc, _ in migrated_targets)
         needed.update("ME-%02d" % n for n in range(1, 33))
         catalog = json.loads((repository / "catalog" / "books.json").read_text(encoding="utf-8"))
         sources = {}
@@ -72,6 +72,14 @@ class MeasureIntegrationGraphTest(unittest.TestCase):
             db = Path(tmp) / "index.db"
             build_database(root, db, recursive=True)
             with closing(sqlite3.connect(db)) as con, con:
+                for owner, label in migrated_targets:
+                    with self.subTest(migrated_owner=owner, label=label):
+                        rows = con.execute(
+                            "SELECT document_id,entity_id FROM label_occurrences "
+                            "WHERE document_id=? AND name=?", (owner, label)
+                        ).fetchall()
+                        self.assertEqual(len(rows), 1)
+                        self.assertIsNotNone(rows[0][1])
                 edges = {(e["source"], e["target"]): e for e in graph_coverage(con)["edges"]}
                 for source, target, label in expected:
                     with self.subTest(source=source, target=target, label=label):

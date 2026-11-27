@@ -21,9 +21,6 @@ EXPECTED = {
     "ME-22": {"FA-08::def:slaba-gwiazdka", "GT-19::def:topog-polskie"},
     "ME-23": {"GT-24::def:topog24-group", "GT-14::def:topog-baire-lokalna-zwartosc"},
     "ME-30": {"FA-15B::thm:bochner-criterion15b", "FA-15B::def:rnp15b"},
-    "CAL-11": {"ME-07::ch:calkowanie-lebesgue", "ME-08::thm:dct", "ME-12::thm:fubini-12"},
-    "CAL-13": {"ME-20::def:radon-measure-20", "ME-21::thm:riesz-positive-21"},
-    "CAL-14": {"ME-23::thm:haar-main-23"},
     "FA-15B": {"ME-30::def:bochner-30", "ME-08::thm:vitali-l1",
                "ME-12::thm:fubini-12", "ME-30::def:RNP-30"},
 }
@@ -33,7 +30,7 @@ class MeasureCrossVolumeLinks(unittest.TestCase):
     def test_canonical_references_and_graph(self):
         required = {(src, lab, lab.split("::", 1)[0])
                     for src, labels in EXPECTED.items() for lab in labels}
-        self.assertEqual(len(required), 24)
+        self.assertEqual(len(required), 18)
         wanted = set(EXPECTED) | {dst for _, _, dst in required}
         catalog = json.loads((ROOT / "catalog/books.json").read_text(encoding="utf-8"))
         with tempfile.TemporaryDirectory() as temp:
