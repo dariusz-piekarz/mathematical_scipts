@@ -33,3 +33,11 @@ Ponowny przegląd wszystkich czterech sekcji niezmienionego źródła (blob 979c
 Kontrola strukturalna ponowiona: 15 unikalnych etykiet, 4 sekcje, poprawny stos środowisk. Odczytano dodatkowo viewer.html, trasę /api/plotly/bundle.js w backendzie i rzeczywisty test browser_reader_preview.py (wiersze 142–158): test obejmuje leniwe otwieranie, sandbox, data-ready, obecność kontenera WebGL, zamykanie i brak figury dla niewłaściwego rozdziału. Sam test nie został w tej iteracji uruchomiony; potwierdzono wyłącznie obecność i zakres testu w repozytorium.
 
 Stabilizacja merytoryczna 2/2; wymagany audyt kontrolny. CI dla 795b033 nadal queued przy ostatnim odczycie; brak potwierdzenia aktualnego PDF i renderowania interaktywnego.
+
+## Audyt kontrolny — 27.11.2026
+
+Odczytano ponownie pełny rozdział, blob 979ce760caa3040d2d0026bf7421553bf94b331c. Zweryfikowano niezależnie od historii zmian: definicję dyfeomorfizmu, twierdzenie i oszacowania lokalne (w tym otwartość obrazu, istnienie i jednoznaczność punktu stałego), konieczność odwracalności pochodnej, wzór na drugą pochodną i jej normę, kryterium Jacobiego, przykład Taylora, obraz siatki przy ścinaniu, sklejanie odwrotności, przykład wykładniczo-biegunowy i jego gałąź odwrotną, pierwiastek sześcienny, kontrprzykład z nieciągłą pochodną i przykład Hilberta. Nie znaleziono nowych błędów merytorycznych ani luk wymagających zmiany źródła.
+
+Automatyczna kontrola tekstowa na rzeczywiście pobranych plikach AM II 01, 07, 13–16, 18 i FA-15: każdy z 13 wewnętrznych oraz 3 zewnętrznych różnych celów odsyłaczy występuje dokładnie raz w sprawdzonych źródłach. 15 etykiet rozdziału, poprawne zagnieżdżenie środowisk, pojedynczy wpis w książce i katalogu. Nie zmieniano źródła ani definicji Plotly.
+
+Stabilizacja merytoryczna 2/2 + audyt kontrolny: zaliczone. Odbiór techniczny pozostaje otwarty: pięć przebiegów dla 795b033 nadal queued przy ostatnim odczycie, brak aktualnego artefaktu PDF i wyniku testu przeglądarkowego. Nie jest to pełny odbiór rozdziału. Kolejny etap merytoryczny: AM II 19, twierdzenie o funkcji uwikłanej, z wykorzystaniem FA-15 i AM II 18 oraz repozytoryjną wizualizacją Plotly 3D.
