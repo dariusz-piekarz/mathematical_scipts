@@ -56,8 +56,8 @@ def at0(word,ps):
 class AA07Regression(unittest.TestCase):
     def test_01_source_structure(self):
         ls=re.findall(r"\\label\{([^}]+)\}",SRC)
-        self.assertEqual((len(ls),len(set(ls))), (28,28))
-        self.assertEqual((SRC.count(r"\begin{proof}"),SRC.count(r"\end{proof}")),(15,15))
+        self.assertEqual((len(ls),len(set(ls))), (79,79))
+        self.assertEqual((SRC.count(r"\begin{proof}"),SRC.count(r"\end{proof}")),(35,35))
     def test_02_internal_references(self):
         ls=set(re.findall(r"\\label\{([^}]+)\}",SRC))
         rs=set(re.findall(r"\\(?:ref|eqref|autoref|pageref|nameref)\{([^}]+)\}",SRC))
@@ -160,5 +160,16 @@ class AA07Regression(unittest.TestCase):
         for i,j,k in product((-8,-3,0,2,7),repeat=3):
             if i==j or j==k:continue
             self.assertNotEqual(red(g[i]+inverse(g[j])+g[k]),())
+
+    def test_22_banach_tarski_proof_stages(self):
+        for label in ("tw:banach-tarski","def:rownorozklad","tw:cztery-kawalki",
+                      "tw:wolne-obroty","lem:wyjatkowy","tw:paradoksalnosc-x",
+                      "lem:obrot-rozdzielajacy","tw:pelna-sfera","lem:stozki",
+                      "lem:wchloniecie-srodka","st:niemierzalnosc"):
+            self.assertIn(r"\label{" + label + "}", SRC)
+        for label in ("def:grupa-wolna","lem:stos","tw:redukcja",
+                      "wn:redukcja-iloczyn","st:grupa-slow","tw:uniwersalnosc",
+                      "st:przeliczalnosc-f2"):
+            self.assertEqual(SRC.count(r"\label{" + label + "}"),1)
 
 if __name__=="__main__":unittest.main()
