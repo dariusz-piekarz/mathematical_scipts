@@ -1,0 +1,942 @@
+% Materiał przeniesiony z CAL-12; zachowano oryginalne etykiety.
+\providecommand{\atlasref}[2]{#2}
+\chapter{Całka Daniella--Stone'a}
+\label{ch:daniell-stone-32}
+
+Korzystamy z \atlasref{ME-03::thm:caratheodory}{ME-03: twierdzenie Carathéodory'ego}
+oraz \atlasref{ME-02::thm:uniqueness-finite}{ME-02: jednoznaczność miar skończonych}.
+Nie powtarzamy ich dowodów. Szczegółowo wykażemy natomiast,
+że funkcjonał Daniella pozwala skonstruować miarę zewnętrzną,
+że jej ograniczenie reprezentuje funkcjonał i kiedy
+reprezentująca miara jest jednoznaczna.
+Dla porównania reprezentację dodatnich funkcjonałów
+na przestrzeniach funkcji ciągłych omawia
+\atlasref{ME-21::thm:riesz-positive-21}{ME-21: twierdzenie Riesza--Markowa--Kakutaniego}.
+
+W tej konstrukcji zaczynamy od funkcjonału całkowego na kracie funkcji, a dopiero potem odzyskujemy miarę. Nie jest to kolejne rozszerzenie całki niebezwzględnej, lecz abstrakcyjny sposób konstruowania całki Lebesgue'a.
+\section{Krata funkcji i ciągłość porządkowa}
+\begin{definicja}[Krata i krata wektorowa]\label{it:def:daniell-lattice}
+Kratą jest zbiór częściowo uporządkowany $E$, w którym każda para $u,v$ ma w $E$ supremum i infimum, oznaczane $u\vee v$ i $u\wedge v$. Jeżeli ponadto $E$ jest rzeczywistą przestrzenią wektorową, a porządek jest zgodny z dodawaniem i mnożeniem przez skalary nieujemne, to $E$ jest \emph{kratą wektorową} (przestrzenią Riesza). Dla zbioru $\Omega$ kratą funkcji nazywamy podprzestrzeń liniową $H\subset\mathbb{R}^\Omega$ zamkniętą na punktowe maksimum i minimum. Równoważnie: $f\in H\Rightarrow|f|\in H$.
+\end{definicja}
+Istotnie, $f\vee g=\tfrac12(f+g+|f-g|)$, $f\wedge g=\tfrac12(f+g-|f-g|)$, $f^+=f\vee0$, $f^-=(-f)\vee0$. W przeciwnym kierunku $|f|=f\vee(-f)$, więc zamkniętość na operacje kratowe implikuje zamkniętość na moduł. Nie wymagamy, aby każde dwa elementy kraty były porównywalne.
+\begin{przyklad}[Funkcje ciągłe i wielomiany]
+Przestrzeń $C[a,b]$ jest kratą wektorową: maksimum, minimum i moduł funkcji ciągłej są ciągłe. Natomiast wielomiany na $[-1,1]$ tworzą przestrzeń liniową, ale nie kratę: dla $f(x)=x$ funkcja $|f(x)|=|x|$ nie jest wielomianem, ponieważ nie jest różniczkowalna w zerze.
+\end{przyklad}
+\begin{uwaga}[Rola warunku kraty]
+Zamkniętość na operacje kratowe pozwala obcinać funkcje i porównywać je bez opuszczania dziedziny funkcjonału. Obecność funkcji stałej $1$ jest osobnym założeniem. Warunek kraty nie oznacza zamkniętości na granice ciągów monotonicznych.
+\end{uwaga}
+\begin{definicja}[Funkcjonał Daniella]
+\label{it:def:daniell-functional}
+Niech $\Omega\ne\varnothing$ i niech $H$ będzie kratą wektorową ograniczonych funkcji rzeczywistych na $\Omega$, zawierającą $\chi_\Omega=1$. Liniowy funkcjonał $I_0:H\to\mathbb{R}$ nazywamy funkcjonałem Daniella, jeśli jest dodatni ($h\ge0\Rightarrow I_0(h)\ge0$) i ciągły porządkowo z góry ($h_n\in H$, $h_n\downarrow0$ punktowo $\Rightarrow I_0(h_n)\downarrow0$). Symbolem $\sigma(H)$ oznaczamy najmniejszą $\sigma$-algebrę, względem której wszystkie funkcje z $H$ są mierzalne. Dodatniość i liniowość implikują monotoniczność: jeśli $f,g\in H$ i $f\le g$, to $I_0(g)-I_0(f)=I_0(g-f)\ge0$. Warunek ciągłości porządkowej dotyczy ciągów malejących do zera punktowo na całej dziedzinie, nie tylko do zera w porządku wewnętrznym kraty. Na początku zakładamy ograniczoność i obecność jedynki; dalej rozpatrzymy także przypadki bez tych założeń.
+\end{definicja}
+\begin{lemat}[Pierwszy krok przedłużenia]\label{it:lem:daniell-monotone-extension}
+Jeśli $0\le h_n\uparrow f$ punktowo, $h_n\in H$, to wartość $\lim_n I_0(h_n)\in[0,\infty]$ zależy tylko od $f$, a nie od wybranego ciągu przybliżającego.
+\end{lemat}
+\begin{proof}
+Niech również $0\le g_n\uparrow f$. Dla ustalonego $k$ mamy $(h_k-g_n)^+\downarrow0$, przy czym te funkcje należą do $H$ dzięki własności kraty. Z ciągłości porządkowej $I_0((h_k-g_n)^+)\downarrow0$. Ponieważ $h_k\le g_n+(h_k-g_n)^+$, dostajemy $I_0(h_k)\le I_0(g_n)+I_0((h_k-g_n)^+)$. Przechodząc z $n\to\infty$, a następnie biorąc supremum po $k$, uzyskujemy $\lim_kI_0(h_k)\le\lim_nI_0(g_n)$. Zamiana ról daje nierówność przeciwną. Argument działa również dla wspólnej wartości $+\infty$.
+\end{proof}
+\section{Konstrukcja miary zewnętrznej i reprezentacja}
+\begin{lemat}[Oszacowanie przez przeliczalne pokrycie]\label{it:lem:daniell-cover-domination}
+Niech $u\in H$, $u\ge0$, oraz $h_n\in H$, $h_n\ge0$. Jeżeli $u\le\sum_{n\ge1}h_n$ punktowo (dopuszczamy nieskończoną sumę), to
+\[
+ I_0(u)\le\sum_{n\ge1}I_0(h_n).
+\]
+\end{lemat}
+\begin{proof}
+Funkcje $r_N=(u-\sum_{n=1}^N h_n)^+$ należą do $H$ i maleją punktowo do zera. Z ciągłości porządkowej $I_0(r_N)\to0$. Ponieważ $u\le\sum_{n=1}^N h_n+r_N$, dodatniość i liniowość dają
+$I_0(u)\le\sum_{n=1}^N I_0(h_n)+I_0(r_N)$. Granica po $N$ daje tezę również wtedy, gdy szereg kosztów jest rozbieżny do $+\infty$.
+\end{proof}
+
+\begin{definicja}[Miara zewnętrzna Daniella]\label{it:def:daniell-outer}
+Dla $A\subset\Omega$ określamy
+\begin{equation}\label{it:eq:daniell-outer}
+ \mu^*(A)=\inf\left\{\sum_{n=1}^\infty I_0(h_n):
+ h_n\in H,\ h_n\ge0,\ \chi_A\le\sum_{n=1}^\infty h_n\right\}.
+\end{equation}
+Pokrycia skończone traktujemy jako ciągi uzupełnione funkcjami zerowymi. Przyjmujemy $\inf\varnothing=+\infty$, co będzie istotne w wersji bez jedynki.
+\end{definicja}
+\begin{lemat}[Własności miary zewnętrznej]\label{it:lem:daniell-outer}
+Funkcja $\mu^*$ jest miarą zewnętrzną, a $\mu^*(\Omega)=I_0(1)<\infty$. Dla $u\in H$ z $0\le u\le\chi_A$ mamy $I_0(u)\le\mu^*(A)$.
+\end{lemat}
+\begin{proof}
+Pokrycie funkcją $1$ daje $0\le\mu^*(A)\le I_0(1)$; pokrycie zerowe daje $\mu^*(\varnothing)=0$. Monotoniczność wynika z inkluzji rodzin dopuszczalnych pokryć. Jeśli $A=\bigcup_{j\ge1}A_j$, dla $\varepsilon>0$ wybieramy pokrycie $(h_{j,n})_{n\ge1}$ każdego $A_j$ o koszcie nie większym niż $\mu^*(A_j)+\varepsilon 2^{-j}$. Przenumerowany ciąg wszystkich $h_{j,n}$ pokrywa $A$. Ponieważ wszystkie koszty są nieujemne, jego koszt jest równy sumie kosztów pokryć, więc
+$\mu^*(A)\le\sum_j\mu^*(A_j)+\varepsilon$. Przejście z $\varepsilon\downarrow0$ daje podaddytywność przeliczalną. Jeśli $0\le u\le\chi_A$, każde pokrycie $A$ dominuje $u$, więc lemat \ref{it:lem:daniell-cover-domination} daje $I_0(u)\le\mu^*(A)$ po wzięciu infimum. Dla $A=\Omega$ i $u=1$ otrzymujemy nierówność odwrotną do oszacowania z pokrycia funkcją $1$.
+\end{proof}
+
+\begin{lemat}[Addytywność przy rozdzieleniu wartościami funkcji]\label{it:lem:daniell-separated}
+Jeżeli $h\in H$, $s<t$, $A\subset\{h\le s\}$ i $B\subset\{h\ge t\}$, to $\mu^*(A\cup B)=\mu^*(A)+\mu^*(B)$.
+\end{lemat}
+\begin{proof}
+Funkcja $v=1\wedge((h-s)^+/(t-s))$ należy do $H$
+i spełnia $0\le v\le1$, $v|_A=0$, $v|_B=1$.
+Weźmy dowolne pokrycie $(h_n)$ zbioru $A\cup B$
+z definicji \ref{it:def:daniell-outer}.
+Kładziemy $k_n=h_n\wedge1$. Jest to nadal pokrycie:
+w każdym punkcie $A\cup B$ albo pewien składnik $h_n$
+jest co najmniej równy $1$, albo żaden składnik
+nie zmienia się przy obcięciu. Ponadto
+$I_0(k_n)\le I_0(h_n)$.
+Określamy
+\[
+ b_n=k_n\wedge v,\qquad a_n=k_n-b_n.
+\]
+Obie funkcje należą do $H$ i są nieujemne.
+Na $A$ mamy $a_n=k_n$, na $B$ mamy $b_n=k_n$,
+więc $(a_n)$ pokrywa $A$, a $(b_n)$ pokrywa $B$.
+Z liniowości wynika
+\[
+ \mu^*(A)+\mu^*(B)\le
+ \sum_n\bigl(I_0(a_n)+I_0(b_n)\bigr)
+ =\sum_n I_0(k_n)\le\sum_n I_0(h_n).
+\]
+Bierzemy infimum po pokryciach. Nierówność odwrotna
+wynika z podaddytywności.
+Użyliśmy tylko działań liniowych i kratowych,
+bez mnożenia funkcji. Ten argument wykorzystamy
+także w wersji z warunkiem Stone'a, bez jedynki.
+\end{proof}
+
+\begin{lemat}[Mierzalność zbiorów wyznaczonych przez kratę]\label{it:lem:daniell-measurability}
+Każdy zbiór $\{h>t\}$, $h\in H$, $t\in\mathbb{R}$, jest $\mu^*$-mierzalny w sensie Carathéodory'ego. W konsekwencji $\sigma(H)$ zawiera się w $\sigma$-algebrze zbiorów $\mu^*$-mierzalnych.
+\end{lemat}
+\begin{proof}
+Ustalmy $E\subset\Omega$ i połóżmy $B=E\cap\{h\le t\}$, $C=E\cap\{h>t\}$ oraz $C_n=E\cap\{h>t+2^{-n}\}$ dla $n\ge0$. Z lematu \ref{it:lem:daniell-separated} i monotoniczności mamy
+\[
+ \mu^*(E)\ge\mu^*(B)+\mu^*(C_n).
+\]
+Nie wolno jeszcze stosować ciągłości miary z dołu do $C_n$, ponieważ ich mierzalności dopiero dowodzimy. Rozważmy warstwy
+\[
+ S_k=E\cap\{t+2^{-(k+1)}<h\le t+2^{-k}\},\quad k\ge0.
+\]
+Dwie warstwy o indeksach różniących się co najmniej o dwa są rozdzielone dodatnią przerwą między zakresami wartości $h$. Dla skończonej rodziny warstw parzystych numerujemy indeksy rosnąco. Gdy dołączamy warstwę $S_k$, $k\ge2$, mamy $h\le t+2^{-k}$ na $S_k$, natomiast na sumie wcześniej dołączonych warstw zachodzi $h>t+2^{-(k-1)}$. Progi są różne, ponieważ $2^{-k}<2^{-(k-1)}$. Lemat \ref{it:lem:daniell-separated} pozwala więc dodać miarę zewnętrzną nowej warstwy do miary zewnętrznej sumy wcześniejszych. Indukcja daje addytywność dla każdej skończonej rodziny warstw parzystych; dokładnie to samo rozumowanie działa dla nieparzystych. Monotoniczność daje
+$\sum_{k\ge0}\mu^*(S_{2k})\le\mu^*(E)$ oraz
+$\sum_{k\ge0}\mu^*(S_{2k+1})\le\mu^*(E)$.
+Obie sumy są skończone na mocy lematu \ref{it:lem:daniell-outer}. Ponieważ $C\setminus C_n=\bigcup_{k\ge n}S_k$, mamy
+\[
+ \mu^*(C_n)\le\mu^*(C)\le
+ \mu^*(C_n)+\sum_{k\ge n}\mu^*(S_k).
+\]
+Ogon dąży do zera, zatem $\mu^*(C_n)\to\mu^*(C)$. W oszacowaniu $\mu^*(E)\ge\mu^*(B)+\mu^*(C_n)$ przechodzimy do granicy i otrzymujemy $\mu^*(E)\ge\mu^*(B)+\mu^*(C)$. Odwrotna nierówność jest podaddytywnością. Jest to kryterium Carathéodory'ego dla $\{h>t\}$. Rodzina zbiorów spełniających to kryterium jest $\sigma$-algebrą na mocy lematu \ref{lem:hausdorff-caratheodory-selfcontained-26}; zawiera wszystkie generatory $\sigma(H)$, ponieważ półproste $(t,\infty)$ generują $\mathcal B(\mathbb{R})$.
+\end{proof}
+
+\begin{lemat}[Odzyskanie masy zbioru poziomicowego]\label{it:lem:daniell-level}
+Niech $h\in H$, $t\in\mathbb{R}$ i $u_n=1\wedge n(h-t)^+$. Wówczas
+\[
+ \mu^*(\{h>t\})=\lim_{n\to\infty}I_0(u_n).
+\]
+\end{lemat}
+\begin{proof}
+Mamy $u_n\in H$ oraz $0\le u_n\uparrow\chi_{\{h>t\}}$ punktowo. Lemat \ref{it:lem:daniell-outer} daje $I_0(u_n)\le\mu^*(\{h>t\})$. Odwrotnie, funkcje $u_1,u_2-u_1,u_3-u_2,\ldots$ należą do $H$, są nieujemne, a ich punktowa suma jest równa $\chi_{\{h>t\}}$. Tworzą więc pokrycie o koszcie $\lim_n I_0(u_n)$ dzięki teleskopowaniu skończonych sum. Definicja \ref{it:def:daniell-outer} daje nierówność przeciwną.
+\end{proof}
+
+\begin{twierdzenie}[Daniella--Stone'a: istnienie i jednoznaczność miary]
+\label{it:thm:daniell-stone}
+Dla funkcjonału $I_0$ z definicji \ref{it:def:daniell-functional} istnieje dokładnie jedna skończona miara $\mu$ na $\sigma(H)$ taka, że $I_0(h)=\int_\Omega h\,\mathrm d\mu$ dla wszystkich $h\in H$. Ponadto $\mu(\Omega)=I_0(1)$. Po uzupełnieniu miary całkę rozszerzamy na nieujemne funkcje mierzalne i następnie na funkcje z $\mathcal L^1(\mu)$.
+\end{twierdzenie}
+\begin{proof}[Dowód istnienia i reprezentacji]
+Niech $\mathcal M_{\mu^*}$ będzie $\sigma$-algebrą zbiorów $\mu^*$-mierzalnych w sensie Carathéodory'ego. Z lematu \ref{lem:hausdorff-caratheodory-selfcontained-26} i lematu \ref{it:lem:daniell-measurability} wynika, że $\mu=\mu^*|_{\sigma(H)}$ jest miarą skończoną, o masie $\mu(\Omega)=I_0(1)$.
+
+Ustalmy $h\in H$, $h\ge0$. Dla dowolnego $\delta>0$ wybieramy liczbę naturalną $m\ge1$ tak, aby $h\le m\delta$. Niech
+\[
+ L_\delta=\delta\sum_{k=1}^{m}\chi_{\{h>k\delta\}},\qquad
+ U_\delta=\delta\sum_{k=0}^{m-1}\chi_{\{h>k\delta\}}.
+\]
+Zliczając progi mniejsze od wartości $h(\omega)$, także gdy $h(\omega)$ jest równa progowi, otrzymujemy
+$L_\delta\le h\le U_\delta$ oraz
+$0\le U_\delta-L_\delta\le\delta$.
+Dla każdego $n\ge1$ zachodzi
+$\delta\sum_{k=1}^{m}(1\wedge n(h-k\delta)^+)\le L_\delta\le h$.
+Stosujemy $I_0$ do pierwszej i ostatniej funkcji (obie należą do $H$). Liniowość, dodatniość i lemat \ref{it:lem:daniell-level} po przejściu z $n\to\infty$ dają
+\[
+ \int_\Omega L_\delta\,\mathrm d\mu\le I_0(h).
+\]
+W drugą stronę korzystamy z dokładnego rozkładu na obcięte przyrosty
+\[
+ h=\delta\sum_{k=0}^{m-1}
+ \left(1\wedge\frac{(h-k\delta)^+}{\delta}\right).
+\]
+Istotnie, dla wartości $h(\omega)\in[j\delta,(j+1)\delta]$ z $0\le j<m$ pierwszych $j$ składników w nawiasach jest równych $1$, następny wynosi $(h(\omega)-j\delta)/\delta$, a pozostałe są zerowe; wzór obejmuje także $h(\omega)=m\delta$. Każdy składnik w nawiasie należy do $H$ i nie przekracza $\chi_{\{h>k\delta\}}$. Z lematu \ref{it:lem:daniell-outer} wynika zatem
+$I_0(h)\le\delta\sum_{k=0}^{m-1}\mu(\{h>k\delta\})=\int_\Omega U_\delta\,\mathrm d\mu$.
+Całka $h$ również leży między tymi dwiema całkami, które różnią się najwyżej o $\delta\mu(\Omega)$. Dowolność $\delta>0$ daje $I_0(h)=\int_\Omega h\,\mathrm d\mu$. Dla dowolnego $h\in H$ stosujemy wynik do $h^+$ i $h^-$, które należą do $H$, i odejmujemy skończone wartości. Otrzymaliśmy reprezentację.
+
+Miara $\mu$ może nie być zupełna na $\sigma(H)$.
+Stosujemy \atlasref{ME-02::thm:completion}{ME-02: uzupełnienie miary}.
+Uzupełnienie nie zmienia masy całkowitej ani całek
+funkcji mierzalnych względem pierwotnej $\sigma$-algebry:
+najpierw dla funkcji prostych, następnie przez
+twierdzenie \ref{thm:mct} i rozkład na części
+dodatnią i ujemną. Całkę na uzupełnieniu definiujemy
+zgodnie z \atlasref{ME-07::ch:calkowanie-lebesgue}{Teorią miary, rozdział 7: konstrukcja całki Lebesgue'a}.
+\end{proof}
+\begin{proof}[Dowód jednoznaczności]
+Niech $\mu,\nu$ reprezentują $I_0$. Dla $h\in H$, $t\in\mathbb{R}$, funkcje $u_n=1\wedge n(h-t)^+$ należą do $H$ i rosną do $\chi_{\{h>t\}}$. Stąd $\mu(\{h>t\})=\lim_nI_0(u_n)=\nu(\{h>t\})$. Aby odzyskać skończone przecięcia zbiorów tego rodzaju, stosujemy funkcje $v_n=1\wedge n\bigwedge_{j=1}^m(h_j-t_j)^+$, które również należą do $H$ i rosną do $\chi_{\bigcap_{j=1}^m\{h_j>t_j\}}$. Zbieżność całek w obu przypadkach wynika z twierdzenia \ref{thm:mct}. Zatem miary zgadzają się na układzie $\pi$ skończonych przecięć tych zbiorów (wraz z $\Omega$, odpowiadającym pustemu przecięciu), generującym $\sigma(H)$, a obie są skończone i mają masę $I_0(1)$. Z \atlasref{ME-02::thm:uniqueness-finite}{ME-02: jednoznaczność miar skończonych}
+otrzymujemy $\mu=\nu$ na $\sigma(H)$.
+\end{proof}
+\begin{wniosek}[Otoczka mierzalna i uzupełnienie miary Daniella]
+\label{it:cor:daniell-completion}
+Niech $\mu^*$ i $\mu$ będą określone odpowiednio
+w definicji \ref{it:def:daniell-outer} i twierdzeniu
+\ref{it:thm:daniell-stone}. Dla każdego $A\subseteq\Omega$
+istnieje $B\in\sigma(H)$ takie, że
+\[
+ A\subseteq B,\qquad \mu(B)=\mu^*(A).
+\]
+W szczególności $\mu^*$ jest miarą zewnętrzną indukowaną
+przez $\mu$, a $\sigma$-algebra zbiorów
+$\mu^*$-mierzalnych w sensie Carathéodory'ego
+jest dokładnie uzupełnieniem $\sigma(H)$ względem $\mu$.
+\end{wniosek}
+\begin{proof}
+Dla każdego $k\ge1$ wybieramy pokrycie
+$(h_{k,n})_{n\ge1}$ z definicji miary zewnętrznej
+o koszcie mniejszym od $\mu^*(A)+2^{-k}$.
+Wybór jest możliwy, ponieważ $\mu^*(A)$ jest
+skończona i rodzina pokryć jest niepusta.
+Funkcja
+$g_k=\sum_{n\ge1}h_{k,n}:\Omega\to[0,\infty]$
+jest $\sigma(H)$-mierzalna jako granica rosnąca
+mierzalnych sum częściowych. Nie musi należeć do $H$.
+Zbiór $B_k=\{g_k\ge1\}$ jest mierzalny i zawiera $A$.
+Z reprezentacji $I_0$ oraz twierdzenia
+\ref{thm:sum-nonnegative-integrals} wynika
+\[
+ \mu(B_k)\le \int_\Omega g_k\,\mathrm d\mu
+ =\sum_{n\ge1}I_0(h_{k,n})<\mu^*(A)+2^{-k}.
+\]
+Kładziemy $B=\bigcap_{k\ge1}B_k$.
+Z monotoniczności oraz zgodności $\mu$ z $\mu^*$
+na $\sigma(H)$ mamy
+$\mu^*(A)\le\mu(B)\le\mu(B_k)<\mu^*(A)+2^{-k}$
+dla każdego $k$, więc $\mu(B)=\mu^*(A)$.
+Dowodzi to także wzoru
+$\mu^*(A)=\inf\{\mu(D):A\subseteq D,\ D\in\sigma(H)\}$,
+czyli równości z miarą zewnętrzną indukowaną przez
+$\mu$ (każde przeliczalne pokrycie mierzalne można
+zastąpić jego sumą, nie zwiększając kosztu).
+
+Jeżeli $A$ jest mierzalny w sensie Carathéodory'ego,
+to stosując kryterium do otoczki $B$ otrzymujemy
+$\mu^*(B)=\mu^*(A)+\mu^*(B\setminus A)$.
+Wszystkie wartości są skończone i
+$\mu^*(B)=\mu^*(A)$, zatem $\mu^*(B\setminus A)=0$.
+Pierwsza część dowodu daje $N\in\sigma(H)$
+z $B\setminus A\subseteq N$ i $\mu(N)=0$.
+Wówczas $B\setminus N\subseteq A\subseteq B$,
+a $\mu(B\setminus(B\setminus N))=0$.
+Z definicji uzupełnienia miary wynika, że $A$
+należy do uzupełnionej $\sigma$-algebry.
+Odwrotnie, na mocy
+\atlasref{ME-03::thm:caratheodory}{ME-03: twierdzenie Carathéodory'ego}
+miara na $\mathcal M_{\mu^*}$ jest zupełna.
+Ponieważ $\sigma(H)\subseteq\mathcal M_{\mu^*}$
+i obie miary zgadzają się na $\sigma(H)$,
+każdy podzbiór $\mu$-zerowego zbioru z $\sigma(H)$
+należy do $\mathcal M_{\mu^*}$.
+Z charakterystyki uzupełnienia
+(\atlasref{ME-02::thm:completion}{ME-02: uzupełnienie miary})
+otrzymujemy przeciwną inkluzję.
+\end{proof}
+
+\begin{wniosek}[Konieczność ciągłości porządkowej]\label{it:cor:daniell-necessity}
+Jeżeli dodatni liniowy funkcjonał $I_0:H\to\mathbb{R}$ na kracie
+rzeczywistych funkcji jest reprezentowany przez miarę
+na $\sigma(H)$, względem której wszystkie funkcje z $H$
+są bezwzględnie całkowalne, to $I_0$ jest ciągły
+porządkowo z góry. Nie wymagamy tu $1\in H$ ani
+skończoności miary.
+\end{wniosek}
+\begin{proof}
+Jeśli $h_n\downarrow0$ punktowo, to $0\le h_n\le h_1$,
+a $h_1$ jest całkowalna na mocy założenia o reprezentacji.
+Twierdzenie \ref{thm:dct} daje $\int_\Omega h_n\,\mathrm d\mu\to0$,
+czyli $I_0(h_n)\to0$. Ponadto z dodatniości
+$I_0(h_n-h_{n+1})\ge0$, więc wartości maleją.
+W szczególności dla kraty ograniczonych funkcji
+zawierającej $1$ całkowalność wynika ze skończoności
+$\mu(\Omega)=I_0(1)$.
+\end{proof}
+
+\section{Gęstość kraty i jednoznaczność rozszerzenia}
+
+\begin{twierdzenie}[Gęstość początkowej kraty w przestrzeni $L^1$]
+\label{it:thm:daniell-l1-density}
+Niech $H,I_0,\mu$ spełniają założenia i tezę
+twierdzenia \ref{it:thm:daniell-stone}.
+Obraz $H$ w rzeczywistej przestrzeni $L^1(\mu)$
+jest gęsty, zarówno dla $\sigma(H)$, jak i dla jej
+uzupełnienia. Ponadto dla każdego zbioru mierzalnego
+$A$ w jednej z tych $\sigma$-algebr istnieje ciąg
+$(h_n)\subset H$ taki, że
+\[
+ 0\le h_n\le1,\qquad
+ \int_\Omega|h_n-\chi_A|\,\mathrm d\mu\longrightarrow0.
+\]
+\end{twierdzenie}
+\begin{proof}
+Najpierw pracujemy na $\sigma(H)$.
+Niech $\mathcal C$ będzie rodziną zbiorów $A\in\sigma(H)$
+spełniających drugą tezę. Rodzina ta zawiera
+$\varnothing$ i $\Omega$, gdyż $0,1\in H$.
+Jeżeli $h_n$ przybliża $\chi_A$, to $1-h_n\in H$
+przybliża $\chi_{\Omega\setminus A}$ z tym samym błędem.
+Jeżeli $h_n,k_n$ przybliżają odpowiednio
+$\chi_A,\chi_B$, to $h_n\vee k_n\in H$, przyjmuje
+wartości w $[0,1]$, a z nierówności
+\[
+ |\max(u,v)-\max(u',v')|\le |u-u'|+|v-v'|
+\]
+wynika
+\[
+ \|h_n\vee k_n-\chi_{A\cup B}\|_1
+ \le\|h_n-\chi_A\|_1+\|k_n-\chi_B\|_1\to0.
+\]
+Nierówność dla maksimum wynika stąd, że jeśli
+$e=\max(|u-u'|,|v-v'|)$, to
+$\max(u',v')-e\le\max(u,v)\le\max(u',v')+e$.
+Zatem $\mathcal C$ jest zamknięta na skończone sumy.
+
+Dla $A_j\in\mathcal C$ połóżmy
+$B_n=\bigcup_{j=1}^n A_j$ oraz $B=\bigcup_{j\ge1}A_j$.
+Z ciągłości miary z dołu i skończoności $\mu$ mamy
+$\|\chi_B-\chi_{B_n}\|_1=\mu(B\setminus B_n)\to0$.
+Dla każdego $n$ wybieramy $h_n\in H$ z $0\le h_n\le1$
+i $\|h_n-\chi_{B_n}\|_1<1/n$.
+Nierówność trójkąta dowodzi, że $B\in\mathcal C$.
+Rodzina $\mathcal C$ jest więc $\sigma$-algebrą.
+
+Dla $h\in H$ i $t\in\mathbb{R}$ funkcje
+$u_n=1\wedge n(h-t)^+$ należą do $H$, przyjmują
+wartości w $[0,1]$ i rosną do $\chi_{\{h>t\}}$.
+Z lematu \ref{it:lem:daniell-level} i reprezentacji
+$I_0$ otrzymujemy ponadto dokładny błąd:
+\[
+ \|u_n-\chi_{\{h>t\}}\|_1
+ =\mu(\{h>t\})-I_0(u_n)\longrightarrow0.
+\]
+Wszystkie składniki są skończone, gdyż $\mu(\Omega)<\infty$.
+Stąd $\{h>t\}\in\mathcal C$, a te zbiory generują
+$\sigma(H)$. Otrzymujemy $\mathcal C=\sigma(H)$.
+
+Jeżeli $s=\sum_{j=1}^m a_j\chi_{A_j}$ jest rzeczywistą
+mierzalną funkcją prostą, wybieramy przybliżenia
+$h_{j,n}$ dla $\chi_{A_j}$ jak wyżej. Z liniowości
+kraty $\sum_j a_j h_{j,n}\in H$, a błąd w $L^1$
+jest nie większy niż $\sum_j |a_j|\|h_{j,n}-\chi_{A_j}\|_1$,
+co dąży do zera. Funkcje proste są gęste w $L^1$ na mocy
+twierdzenia \atlasref{ME-14::thm:simple-dense-lp-14}{ME-14: gęstość funkcji prostych}
+(por. \atlasref{ME-14::thm:simple-dense-lp-14}{ME-14: gęstość funkcji prostych}).
+Dla $f\in L^1$ wybieramy funkcje proste $s_n$
+z $\|f-s_n\|_1<1/n$, a następnie $h_n\in H$
+z $\|s_n-h_n\|_1<1/n$.
+Stąd $\|f-h_n\|_1<2/n$.
+
+Na uzupełnieniu miary każdy mierzalny zbiór $A$
+różni się od pewnego $B\in\sigma(H)$ tylko na podzbiorze
+mierzalnego zbioru zerowego. Przybliżenia funkcji
+$\chi_B$ przybliżają też $\chi_A$ z tym samym błędem,
+ponieważ $\chi_A=\chi_B$ prawie wszędzie. Argument dla funkcji prostych
+i całkowalnych powtarzamy już na uzupełnieniu.
+\end{proof}
+
+\begin{wniosek}[Rozszerzenie ciągłe funkcjonału Daniella]
+\label{it:cor:daniell-continuous-extension}
+Przy założeniach twierdzenia \ref{it:thm:daniell-stone}
+na $H$ określmy półnormę $p(h)=I_0(|h|)$.
+Niech $N=\{h\in H:p(h)=0\}$. Uzupełnienie przestrzeni
+normowanej $H/N$ względem normy indukowanej przez $p$
+jest izometrycznie izomorficzne z rzeczywistą
+przestrzenią $L^1(\mu)$.
+Funkcjonał $I_0$ ma dokładnie jedno ciągłe liniowe
+rozszerzenie na to uzupełnienie, dane wzorem
+$I(f)=\int_\Omega f\,\mathrm d\mu$.
+Jeżeli $\mu(\Omega)>0$, norma tego funkcjonału wynosi $1$;
+jeśli $\mu(\Omega)=0$, przestrzeń i funkcjonał są zerowe.
+\end{wniosek}
+\begin{proof}
+Z reprezentacji \ref{it:thm:daniell-stone} mamy
+$p(h)=\int_\Omega |h|\,\mathrm d\mu=\|[h]\|_1$.
+Własności półnormy i podprzestrzeni $N$ wynikają więc
+z definicji \atlasref{ME-14::def:lp-14}{ME-14: definicja przestrzeni $L^1$}. Przyporządkowanie
+$h+N\mapsto[h]$ jest dobrze określoną liniową izometrią:
+$h-k\in N$ wtedy i tylko wtedy, gdy $h=k$ prawie
+wszędzie. Jej obraz jest gęsty na mocy twierdzenia
+\ref{it:thm:daniell-l1-density}, a $L^1$ jest zupełna na mocy twierdzenia
+\atlasref{ME-14::thm:riesz-fischer-14}{ME-14: zupełność przestrzeni $L^1$}.
+Stosujemy
+\atlasref{FA-03::prop:completion-criterion}{FA-03: kryterium uzupełnienia}.
+Ponieważ zanurzenie jest izometrią, utożsamienie
+uzupełnienia również zachowuje normę: dla dowolnego
+elementu uzupełnienia wybieramy zbieżny do niego
+ciąg elementów $H/N$ i przechodzimy do granicy
+w równości norm ich obrazów.
+
+Z $- |h|\le h\le|h|$ i dodatniości wynika
+$|I_0(h)|\le p(h)$, zatem $I_0$ znika na $N$.
+Całka Lebesgue'a jest liniowa i ciągła na mocy
+twierdzenia \atlasref{ME-08::thm:integral-linear-real}{ME-08: liniowość całki}, z normą
+nie większą od $1$ i na obrazie $H$ jest równa $I_0$.
+Jednoznaczność wynika z gęstości obrazu $H/N$
+w $L^1$: dla dowolnego $f\in L^1$ i dowolnego ciągu
+$h_n\in H$ spełniającego $\|[h_n]-f\|_1\to0$
+każde ciągłe rozszerzenie musi przyjąć wartość
+\[
+ I(f)=\lim_{n\to\infty}I_0(h_n),
+ \qquad
+ |I(f)-I_0(h_n)|\le\|f-[h_n]\|_1.
+\]
+Oszacowanie wynika z ograniczenia modułu całki
+przez całkę modułu. W szczególności dla $f\ge0$
+można zastąpić $h_n$ przez $h_n^+$, gdyż
+$|h_n^+-f|\le |h_n-f|$ prawie wszędzie.
+Wówczas $I_0(h_n^+)\ge0$, co daje dodatniość
+rozszerzenia również bez odwoływania się do jego
+jawnego wzoru.
+Gdy $\mu(\Omega)>0$, element
+$[1]/\mu(\Omega)$ ma normę $1$ i całkę $1$.
+Gdy $\mu(\Omega)=0$, każda funkcja całkowalna
+jest zerowa prawie wszędzie, co daje ostatnią tezę.
+\end{proof}
+
+\section{Krata funkcji nieograniczonych zawierająca jedynkę}
+
+\begin{twierdzenie}[Reprezentacja Daniella dla kraty z jedynką]
+\label{it:thm:daniell-unbounded-unit}
+Niech $H\subseteq\mathbb{R}^\Omega$ będzie kratą wektorową
+funkcji o skończonych wartościach (niekoniecznie
+ograniczonych) i niech $1\in H$. Niech $I_0:H\to\mathbb{R}$
+będzie dodatnim liniowym funkcjonałem, ciągłym
+porządkowo z góry w sensie definicji
+\ref{it:def:daniell-functional}.
+Wtedy istnieje dokładnie jedna skończona miara $\mu$
+na $\sigma(H)$ taka, że wszystkie $h\in H$ są
+bezwzględnie całkowalne i
+\[
+ I_0(h)=\int_\Omega h\,\mathrm d\mu,\qquad
+ \mu(\Omega)=I_0(1).
+\]
+Miara zewnętrzna z definicji \ref{it:def:daniell-outer},
+obliczona z użyciem całej kraty $H$, jest taka sama
+jak miara zewnętrzna obliczona z użyciem jej
+podkraty funkcji ograniczonych $H_b$.
+W szczególności wniosek \ref{it:cor:daniell-completion}
+pozostaje prawdziwy. Obraz $H$ jest gęsty w $L^1(\mu)$,
+także po uzupełnieniu miary, a wniosek
+\ref{it:cor:daniell-continuous-extension}
+pozostaje prawdziwy.
+\end{twierdzenie}
+\begin{proof}
+Niech $H_b=\{h\in H:\sup_{\omega\in\Omega}|h(\omega)|<\infty\}$.
+Jest to krata wektorowa ograniczonych funkcji, zawierająca
+$1$. Ograniczenie $I_b=I_0|_{H_b}$ jest dodatnie,
+liniowe i ciągłe porządkowo z góry: każdy ciąg
+występujący w warunku dla $H_b$ jest też ciągiem w $H$.
+Twierdzenie \ref{it:thm:daniell-stone} daje więc
+skończoną miarę $\mu$ na $\sigma(H_b)$.
+
+Wykażemy $\sigma(H_b)=\sigma(H)$.
+Jedna inkluzja wynika z $H_b\subseteq H$.
+Dla każdego $h\in H$ i $n\ge1$ funkcja
+$h^{(n)}=(-n)\vee(h\wedge n)$ należy do $H_b$.
+Ponieważ $h$ ma skończone wartości, $h^{(n)}\to h$
+punktowo. Stąd $h$ jest $\sigma(H_b)$-mierzalna,
+co daje drugą inkluzję.
+
+Dla $h\in H$, $h\ge0$, mamy $h\wedge n\in H_b$,
+$h\wedge n\uparrow h$ oraz
+$h-h\wedge n=(h-n)^+\downarrow0$.
+Z ciągłości porządkowej i liniowości otrzymujemy
+\[
+ I_0(h\wedge n)=I_0(h)-I_0((h-n)^+)\uparrow I_0(h).
+\]
+Z twierdzenia \ref{thm:mct} oraz reprezentacji na $H_b$
+wynika
+\[
+ \int_\Omega h\,\mathrm d\mu
+ =\lim_n\int_\Omega(h\wedge n)\,\mathrm d\mu
+ =\lim_n I_b(h\wedge n)=I_0(h)<\infty.
+\]
+Dla ogólnego $h\in H$ stosujemy wynik do $|h|,h^+,h^-$,
+które należą do $H$, i odejmujemy skończone całki.
+Jednoznaczność wynika z jednoznaczności reprezentacji
+na $H_b$, ponieważ obie $\sigma$-algebry są równe.
+
+Niech $\mu_H^*$ oraz $\mu_{H_b}^*$ oznaczają
+miary zewnętrzne określone wzorem
+\eqref{it:eq:daniell-outer} odpowiednio dla $H$ i $H_b$.
+Z $H_b\subseteq H$ mamy $\mu_H^*(A)\le\mu_{H_b}^*(A)$
+dla każdego $A\subseteq\Omega$.
+Odwrotnie, każde pokrycie $\chi_A\le\sum_n h_n$
+z $h_n\in H$, $h_n\ge0$, można zastąpić pokryciem
+$\chi_A\le\sum_n(h_n\wedge1)$, jak w dowodzie lematu
+\ref{it:lem:daniell-separated}. Wszystkie obcięte
+funkcje należą do $H_b$, a monotoniczność $I_0$
+zapewnia, że koszt nie wzrasta. Biorąc infimum
+otrzymujemy $\mu_{H_b}^*(A)\le\mu_H^*(A)$.
+Wobec równości obu miar zewnętrznych i
+$\sigma(H_b)=\sigma(H)$ stosuje się wniosek
+\ref{it:cor:daniell-completion}.
+
+Gęstość obrazu $H_b$ wynika z twierdzenia
+\ref{it:thm:daniell-l1-density}, zarówno dla
+$\sigma(H)$, jak i jej uzupełnienia; obraz większej
+kraty $H$ jest zatem również gęsty.
+Ponadto każde $h\in H$ można przybliżyć jego
+obcięciami $h^{(n)}\in H_b$ w półnormie Daniella:
+z tożsamości $|h-h^{(n)}|=(|h|-n)^+$ wynika
+\[
+ p(h-h^{(n)})=I_0((|h|-n)^+)\downarrow0
+\]
+na mocy ciągłości porządkowej. W szczególności
+$I_0(h^{(n)})\to I_0(h)$, gdyż
+$|I_0(h)-I_0(h^{(n)})|\le p(h-h^{(n)})$.
+Dowód wniosku \ref{it:cor:daniell-continuous-extension}
+korzysta wyłącznie z reprezentacji, gęstości,
+obecności jedynki i zupełności $L^1$, więc
+działa bez zmian.
+\end{proof}
+
+\begin{uwaga}[Zakres wersji z jedynką]
+Obecność $1$ i skończoność $I_0(1)$ wymuszają
+skończoność miary reprezentującej. Nie obejmuje to
+na przykład całki Lebesgue'a na całej $\mathbb{R}$ dla kraty
+$C_c(\mathbb{R})$, która nie zawiera $1$. Wersja bez jedynki
+wymaga osobnych założeń i osobnego dowodu.
+\end{uwaga}
+
+\section{Warunek Stone'a i reprezentacja bez jedynki}
+
+\begin{twierdzenie}[Twierdzenie Daniella--Stone'a bez założenia skończoności miary]
+\label{it:thm:daniell-stone-general}
+Niech $H\subseteq\mathbb{R}^\Omega$ będzie kratą wektorową
+funkcji o skończonych wartościach, spełniającą
+\emph{warunek Stone'a}: $h\wedge1\in H$ dla $h\in H$,
+$h\ge0$. Niech $I_0:H\to\mathbb{R}$ będzie dodatnim
+liniowym funkcjonałem ciągłym porządkowo z góry.
+Wówczas istnieje miara $\mu$ na $\sigma(H)$ taka, że
+każda funkcja z $H$ jest bezwzględnie całkowalna i
+\[
+ I_0(h)=\int_\Omega h\,\mathrm d\mu,\qquad h\in H.
+\]
+Można wybrać $\mu$ jako ograniczenie miary zewnętrznej
+\eqref{it:eq:daniell-outer}, przyjmując $\inf\varnothing=\infty$.
+Tak wybrana miara jest największą miarą reprezentującą
+na $\sigma(H)$ w porządku punktowym na zbiorach.
+Jeśli ponadto istnieje ciąg $e_j\in H$, $e_j\ge0$, taki, że
+\[
+ \Omega=\bigcup_{j\ge1}\{e_j>0\},
+\]
+to miara jest $\sigma$-skończona i jednoznaczna.
+Odwrotnie, $\sigma$-skończoność największej miary
+reprezentującej wymusza istnienie takiego pokrycia.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1. Obcięcia i miara zewnętrzna.}
+Dla $h\in H$, $h\ge0$ i $c>0$ mamy
+$h\wedge c=c((h/c)\wedge1)\in H$, a więc również
+$(h-c)^+=h-h\wedge c\in H$; dla $c=0$ ostatnia
+funkcja to $h$. Dowód lematu
+\ref{it:lem:daniell-cover-domination} nie wymaga
+jedynki ani ograniczoności funkcji: reszty
+$(u-\sum_{n=1}^N h_n)^+$ nadal maleją do zera.
+Dlatego dla $\mu^*$ określonej przez
+\eqref{it:eq:daniell-outer} mamy
+$I_0(u)\le\mu^*(A)$, jeśli $u\in H$ i
+$0\le u\le\chi_A$.
+Dowód własności miary zewnętrznej z lematu
+\ref{it:lem:daniell-outer} działa z następującą
+zmianą: przy podaddytywności wystarczy rozważać
+rodziny $(A_j)$ z $\sum_j\mu^*(A_j)<\infty$,
+gdyż w przeciwnym razie nierówność jest automatyczna.
+W przypadku skończonej sumy wybieramy pokrycia
+o kosztach mniejszych od $\mu^*(A_j)+\varepsilon2^{-j}$,
+co jest możliwe nawet bez jedynki. Pokrycie zerowe
+i monotoniczność pozostają bez zmian.
+
+\emph{Krok 2. Rozdzielenie poziomów.}
+Dla $h\in H$, $h\ge0$, $0\le s<t$ oraz
+$A\subseteq\{h\le s\}$, $B\subseteq\{h\ge t\}$
+pokażemy $\mu^*(A\cup B)=\mu^*(A)+\mu^*(B)$.
+Wystarczy przypadek $\mu^*(A\cup B)<\infty$;
+w przeciwnym przypadku podaddytywność daje,
+że również suma po prawej jest nieskończona.
+Stosujemy dowód lematu \ref{it:lem:daniell-separated}
+z $v=1\wedge((h-s)^+/(t-s))$, obciętymi funkcjami
+$k_n=h_n\wedge1$ i rozkładem
+$k_n=(k_n-k_n\wedge v)+(k_n\wedge v)$.
+Wszystkie te funkcje należą do $H$ dzięki krokowi 1,
+warunkowi Stone'a i własności kraty. Dowód nie wymaga
+ani obecności jedynki w $H$, ani ograniczoności
+pierwotnych funkcji pokrywających.
+
+\emph{Krok 3. Mierzalność.}
+Dla $h\in H$, $h\ge0$ i $t\ge0$ stosujemy argument
+warstw z lematu \ref{it:lem:daniell-measurability}
+do dowolnego $E\subseteq\Omega$ o $\mu^*(E)<\infty$.
+Wszystkie progi w tym argumencie są nieujemne,
+więc krok 2 zapewnia wymagane rozdzielenie.
+Sumy miar zewnętrznych warstw parzystych
+i nieparzystych są ograniczone przez $\mu^*(E)$,
+a ich ogony dążą do zera; otrzymujemy kryterium
+Carathéodory'ego dla $\{h>t\}$.
+Jeśli $\mu^*(E)=\infty$, nierówność
+$\mu^*(E)\ge\mu^*(E\cap\{h>t\})+
+\mu^*(E\setminus\{h>t\})$ jest automatyczna,
+a przeciwna wynika z podaddytywności.
+Zatem wszystkie zbiory $\{h>t\}$ dla $h\ge0$,
+$t\ge0$, są mierzalne w sensie Carathéodory'ego.
+Generują one $\sigma(H)$: każda nieujemna funkcja
+z $H$ jest względem nich mierzalna, a dowolne
+$h=h^+-h^-$ jest różnicą dwóch takich funkcji.
+Z lematu \ref{lem:hausdorff-caratheodory-selfcontained-26}
+wynika, że $\mu=\mu^*|_{\sigma(H)}$ jest miarą.
+
+\emph{Krok 4. Reprezentacja.}
+Dla $h\ge0$ w $H$ i $t\ge0$ funkcje
+$u_n=1\wedge n(h-t)^+$ należą do $H$.
+Dowód lematu \ref{it:lem:daniell-level} działa bez
+zmian, bo opiera się jedynie na obcięciach,
+oszacowaniu przez pokrycie i teleskopowaniu.
+Otrzymujemy $\mu(\{h>t\})=\lim_n I_0(u_n)$,
+także gdy granica jest nieskończona.
+Dla $t>0$ miara ta jest skończona, ponieważ
+$t^{-1}h\ge\chi_{\{h>t\}}$ stanowi dopuszczalne
+pokrycie, a więc $\mu(\{h>t\})\le I_0(h)/t$.
+
+Jeśli $h$ jest ograniczona, wybieramy $\delta>0$
+oraz $m\in\mathbb{N}$, $h\le m\delta$ i definiujemy
+$L_\delta=\delta\sum_{k=1}^m\chi_{\{h>k\delta\}}$.
+Jak w dowodzie twierdzenia
+\ref{it:thm:daniell-stone}, przybliżając każdy
+składnik od dołu przez obcięcia z $H$, otrzymujemy
+$\int_\Omega L_\delta\,\mathrm d\mu\le I_0(h)$.
+Ponadto $0\le h-L_\delta\le\delta$.
+Dla $\delta=1/n$ lemat Fatou
+\ref{thm:fatou} daje $\int_\Omega h\,\mathrm d\mu
+\le I_0(h)$, bez założenia skończoności $\mu(\Omega)$.
+
+W drugą stronę rozkładamy $h$ na obcięte przyrosty,
+wydzielając pierwszy składnik:
+\[
+ h=(h\wedge\delta)+
+ \delta\sum_{k=1}^{m-1}
+ \left(1\wedge\frac{(h-k\delta)^+}{\delta}\right).
+\]
+Każda funkcja w nawiasie nie przekracza
+$\chi_{\{h>k\delta\}}$, więc oszacowanie z kroku 1
+i liniowość dają
+\[
+ I_0(h)\le I_0(h\wedge\delta)+
+ \int_\Omega L_\delta\,\mathrm d\mu
+ \le I_0(h\wedge\delta)+\int_\Omega h\,\mathrm d\mu.
+\]
+Przy $\delta=1/n\downarrow0$ funkcje $h\wedge\delta$
+maleją do zera w $H$, więc ich całki Daniella
+dążą do zera. Otrzymujemy równość dla ograniczonych
+$h\ge0$. Dla dowolnego $h\ge0$ stosujemy ją do
+$h\wedge n$; reszty $h-h\wedge n$ maleją do zera,
+a twierdzenie \ref{thm:mct} daje
+$\int_\Omega h\,\mathrm d\mu=I_0(h)<\infty$.
+Rozkład na $h^+,h^-$ daje reprezentację i bezwzględną
+całkowalność każdej funkcji z $H$.
+
+\emph{Krok 5. Maksymalność i jednoznaczność.}
+Jeśli $\nu$ jest inną miarą reprezentującą na
+$\sigma(H)$, dla każdego mierzalnego $A$ i każdego
+pokrycia $\chi_A\le\sum_n h_n$ mamy
+$\nu(A)\le\sum_n\int_\Omega h_n\,\mathrm d\nu
+=\sum_n I_0(h_n)$ na mocy twierdzenia
+\ref{thm:sum-nonnegative-integrals}.
+Infimum daje $\nu(A)\le\mu(A)$.
+
+Przy założeniu o $(e_j)$ zbiory
+$D_{j,k}=\{e_j>1/k\}$, $j,k\ge1$, pokrywają $\Omega$,
+a $\mu(D_{j,k})\le k I_0(e_j)<\infty$.
+Niech $\mathcal P$ będzie rodziną skończonych przecięć
+zbiorów $\{h>t\}$, $h\in H$, $h\ge0$, $t\ge0$,
+z dołączonym $\Omega$. Jest to układ typu $\pi$
+generujący $\sigma(H)$.
+Dla przecięcia $P=\bigcap_{i=1}^m\{h_i>t_i\}$
+co najmniej jednego generatora ($m\ge1$), także gdy
+$P=\varnothing$, funkcje
+\[
+ v_n=1\wedge n\bigwedge_{i=1}^m(h_i-t_i)^+
+\]
+rosną do $\chi_P$, należą do $H$ i są nieujemne.
+Dla $t_i>0$ mamy $(h_i-t_i)^+=h_i-h_i\wedge t_i$,
+a dla $t_i=0$ otrzymujemy $h_i$. Skończone minimum
+tych funkcji jest dodatnie dokładnie na $P$ i należy
+do kraty; ostatnie obcięcie zapewnia warunek Stone'a.
+Twierdzenie \ref{thm:mct} zastosowane do obu miar
+daje $\mu(P)=\lim_n I_0(v_n)=\nu(P)$.
+Nie potrzebujemy równości masy $\Omega$ na tym etapie.
+Dla ustalonego $D=D_{j,k}$ miary
+$A\mapsto\mu(A\cap D)$ i $A\mapsto\nu(A\cap D)$
+są skończone i zgodne na $\mathcal P$, włącznie
+z $A=\Omega$, ponieważ $A\cap D$ jest niepustym
+skończonym przecięciem generatorów w sensie liczby
+czynników (sam zbiór może być pusty).
+Twierdzenie
+\atlasref{ME-02::thm:uniqueness-finite}{ME-02: jednoznaczność miar skończonych}
+daje zgodność tych ograniczeń na całej $\sigma(H)$.
+Numerując zbiory $D_{j,k}$ i rozłączając je przez
+odejmowanie sum wcześniejszych zbiorów, otrzymujemy
+mierzalny podział $\Omega$ na zbiory zawarte
+w odpowiednich $D_{j,k}$. Sumowanie równości
+ograniczeń obu miar po tym podziale daje
+$\mu=\nu$.
+
+Odwrotnie, jeżeli największa miara $\mu$ jest
+$\sigma$-skończona, wybieramy pokrycie
+$\Omega=\bigcup_j A_j$, $A_j\in\sigma(H)$,
+$\mu(A_j)<\infty$. Z definicji $\mu^*$ dla każdego
+$j$ istnieje pokrycie $\chi_{A_j}\le\sum_n h_{j,n}$
+funkcjami nieujemnymi z $H$ o skończonym koszcie.
+Każdy punkt $A_j$ należy do pewnego
+$\{h_{j,n}>0\}$, więc przeliczalna rodzina
+$(h_{j,n})_{j,n\ge1}$ daje żądane pokrycie.
+\end{proof}
+
+\begin{wniosek}[Gęstość kraty bez jedynki i uzupełnienie miary]
+\label{it:cor:daniell-general-density}
+Niech $\mu$ będzie największą miarą reprezentującą
+z twierdzenia \ref{it:thm:daniell-stone-general}.
+Wówczas obraz $H$ jest gęsty w rzeczywistej
+przestrzeni $L^1(\mu)$, także po uzupełnieniu miary,
+bez założenia $\sigma$-skończoności.
+Jeżeli $\mu$ jest $\sigma$-skończona, to
+$\mathcal M_{\mu^*}$ jest dokładnie uzupełnieniem
+$\sigma(H)$ względem $\mu$.
+\end{wniosek}
+\begin{proof}
+Dla $A\in\sigma(H)$ z $\mu(A)<\infty$ i $\varepsilon>0$
+wybieramy pokrycie $\chi_A\le\sum_n h_n$, gdzie
+$0\le h_n\in H$ i $\sum_n I_0(h_n)<\mu(A)+\varepsilon$.
+Funkcje $v_N=1\wedge\sum_{n=1}^N h_n$ należą do $H$
+dzięki warunkowi Stone'a i rosną do mierzalnej funkcji $v$.
+Mamy $\chi_A\le v\le\sum_n h_n$, zatem z reprezentacji
+i twierdzenia \ref{thm:sum-nonnegative-integrals}
+\[
+ \|v-\chi_A\|_1=\int_\Omega v\,\mathrm d\mu-\mu(A)
+ <\varepsilon.
+\]
+Ponieważ $\int v\,\mathrm d\mu<\infty$, z twierdzenia
+\ref{thm:mct} i liniowości całki otrzymujemy
+$\|v-v_N\|_1=\int(v-v_N)\,\mathrm d\mu\to0$.
+Dla dostatecznie dużego $N$ mamy więc
+$\|v_N-\chi_A\|_1<2\varepsilon$.
+Liniowość $H$ oraz twierdzenie
+\atlasref{ME-14::thm:simple-dense-lp-14}{ME-14: gęstość funkcji prostych} o gęstości funkcji prostych
+o zbiorze niezerowości skończonej miary dają gęstość $H$.
+Na uzupełnieniu korzystamy z tego, że każdy zbiór
+mierzalny skończonej miary jest równy prawie wszędzie
+zbiorowi z $\sigma(H)$ o tej samej mierze.
+
+Dla dowolnego $A\subseteq\Omega$ o $\mu^*(A)<\infty$
+argument z wniosku \ref{it:cor:daniell-completion}
+daje otoczkę $B\in\sigma(H)$ z
+$A\subseteq B$ i $\mu(B)=\mu^*(A)$:
+wybieramy pokrycia z błędami $2^{-k}$,
+a następnie przecinamy zbiory, na których ich sumy
+są co najmniej równe $1$. Nie wymaga to skończoności
+$\mu(\Omega)$, lecz jedynie skończoności $\mu^*(A)$.
+Jeżeli dodatkowo $A$ jest mierzalny w sensie
+Carathéodory'ego, to $\mu^*(B\setminus A)=0$,
+a więc $A$ należy do uzupełnienia, jak w cytowanym
+wniosku. Przy $\sigma$-skończoności wybieramy
+mierzalne pokrycie $\Omega=\bigcup_j E_j$ o
+$\mu(E_j)<\infty$. Dla $A\in\mathcal M_{\mu^*}$
+stosujemy właśnie wykazany wynik do $A\cap E_j$
+i bierzemy ich przeliczalną sumę.
+Przeciwna inkluzja wynika z zupełności miary
+Carathéodory'ego.
+\end{proof}
+
+\begin{uwaga}[Rozszerzenie funkcjonału bez jedynki]
+Dla największej miary reprezentującej $\mu$ wniosek
+\ref{it:cor:daniell-continuous-extension} o
+utożsamieniu uzupełnienia $H/\ker p$ z $L^1(\mu)$
+oraz jednoznacznym ciągłym rozszerzeniu $I_0$
+obowiązuje również bez jedynki, z $p(h)=I_0(|h|)$.
+Dowód korzysta z gęstości wykazanej powyżej.
+Norma rozszerzenia jest równa $1$, jeśli
+$L^1(\mu)\ne\{0\}$: wybieramy niezerowy element
+$f\in L^1$ i stosujemy funkcjonał do
+$|f|/\|f\|_1$. W przeciwnym przypadku norma
+wynosi zero. Bez $\sigma$-skończoności nie wolno
+zastępować warunku $L^1(\mu)\ne\{0\}$ samym
+$\mu\ne0$, co ilustruje poniższy przykład.
+\end{uwaga}
+
+\begin{przyklad}[Bez przeliczalnego pokrycia jednoznaczność może zawodzić]
+\label{it:ex:daniell-nonunique}
+Niech $\Omega$ będzie nieprzeliczalny, a $H$ niech
+składa się ze wszystkich rzeczywistych funkcji
+o skończonym nośniku. Warunek Stone'a jest spełniony.
+Funkcjonał $I_0(h)=0$ jest dodatni, liniowy i ciągły
+porządkowo z góry. $\sigma(H)$ jest $\sigma$-algebrą
+zbiorów przeliczalnych i dopełnień zbiorów przeliczalnych:
+funkcje z $H$ są względem niej mierzalne, a funkcje
+charakterystyczne singletonów generują tę $\sigma$-algebrę.
+Zarówno miara zerowa, jak i miara $\nu$ przypisująca
+zbiorom przeliczalnym masę zero, a ich dopełnieniom
+masę jeden, reprezentują $I_0$.
+Istotnie, w rozłącznej przeliczalnej rodzinie
+zbiorów mierzalnych najwyżej jeden może mieć
+przeliczalne dopełnienie; jeśli żaden go nie ma,
+suma zbiorów jest przeliczalna, w przeciwnym razie
+jej dopełnienie jest przeliczalne.
+To dowodzi przeliczalnej addytywności $\nu$.
+Każda funkcja z $H$ znika $\nu$-prawie wszędzie.
+W konstrukcji przez pokrycia $\mu^*(A)=0$ dla
+$A$ przeliczalnego: wystarczy pokrycie funkcjami
+charakterystycznymi jego singletonów, każda o koszcie
+zero (dla zbioru pustego używamy pokrycia zerowego).
+Dla $A$ nieprzeliczalnego nie istnieje dopuszczalne
+pokrycie, ponieważ przeliczalna suma skończonych
+nośników jest przeliczalna. Stąd $\mu^*(A)=\infty$.
+Jest to inna, największa miara reprezentująca.
+Jej przestrzeń $L^1(\mu)$ jest zerowa mimo $\mu\ne0$:
+dla całkowalnej $f$ każdy zbiór $\{|f|>1/k\}$
+ma skończoną miarę, a zatem jest przeliczalny
+i ma miarę zero. Ich przeliczalna suma to zbiór
+niezerowości $f$, więc $f=0$ prawie wszędzie.
+Nie jest ona $\sigma$-skończona: każdy zbiór jej
+skończonej miary jest przeliczalny, więc przeliczalna
+suma takich zbiorów nie pokrywa $\Omega$.
+Obie pozostałe miary reprezentujące są jednak skończone.
+Sama $\sigma$-skończoność pewnej miary reprezentującej
+nie zastępuje zatem warunku przeliczalnego pokrycia
+z twierdzenia \ref{it:thm:daniell-stone-general}.
+Gęstość z wniosku \ref{it:cor:daniell-general-density}
+również zależy od wyboru miary: dla miary $\nu$
+obraz $H$ w $L^1(\nu)$ jest zerowy, podczas gdy
+$\|[1]\|_1=1$. Nie można więc zastąpić największej
+miary dowolną miarą reprezentującą w tym wniosku.
+\end{przyklad}
+
+\begin{przyklad}[Znaczenie warunku Stone'a dla jednoznaczności]
+\label{it:ex:daniell-without-stone}
+Niech $\Omega=(0,1]$, $e(x)=x$ i
+$H=\{ae:a\in\mathbb{R}\}$. Jest to krata wektorowa,
+a $I_0(ae)=a$ jest dodatnim liniowym funkcjonałem
+ciągłym porządkowo z góry: jeśli $a_ne\downarrow0$
+punktowo, to $a_n\downarrow0$ przez ewaluację w $1$.
+Mamy $\{e>0\}=\Omega$ i $\sigma(H)=\mathcal B(\Omega)$,
+ale $H$ nie spełnia warunku Stone'a, ponieważ
+$(2e)\wedge1$ nie jest wielokrotnością $e$.
+Dla każdego $t\in(0,1]$ miara $t^{-1}\delta_t$
+reprezentuje $I_0$, gdyż
+$\int_\Omega ax\,\mathrm d(t^{-1}\delta_t)(x)=a$.
+Miary te są skończone i parami różne. Samo pokrycie
+przez zbiór niezerowości nie wystarcza zatem do
+jednoznaczności bez warunku Stone'a.
+\end{przyklad}
+
+\begin{przyklad}[Zastosowanie do $C_c(X)$]
+\label{it:ex:daniell-cc}
+Niech $X$ będzie lokalnie zwartą, $\sigma$-zwartą
+przestrzenią metryczną, a $H=C_c(X;\mathbb{R})$.
+Krata spełnia warunek Stone'a, gdyż dla $h\ge0$
+obcięcie $h\wedge1$ jest ciągłe i znika poza nośnikiem $h$.
+Każdy dodatni liniowy funkcjonał $I_0$ na $H$
+jest ciągły porządkowo z góry. Jeśli $h_n\downarrow0$,
+wszystkie $h_n$ znikają poza zwartym nośnikiem $K$
+funkcji $h_1$. Z twierdzenia Diniego na $K$ wynika
+$\|h_n\|_\infty\to0$. Istotnie, dla $\varepsilon>0$
+względnie domknięte zbiory
+$K_n=\{x\in K:h_n(x)\ge\varepsilon\}$ maleją
+i mają puste przecięcie. Zwartość $K$ daje
+$K_n=\varnothing$ dla pewnego $n$. Od tego indeksu
+$h_n<\varepsilon$ na $K$, a poza $K$ funkcje są zerowe. Wybieramy funkcję odcinającą
+$e\in C_c(X)$ równą $1$ na $K$ i nieujemną
+(por. lemat \ref{lem:cutoff-radon-20}); wtedy
+$0\le h_n\le\|h_n\|_\infty e$, więc
+$0\le I_0(h_n)\le\|h_n\|_\infty I_0(e)\to0$.
+Jeśli $K$ jest pusty, wszystkie $h_n$ są zerowe.
+
+Dla wyczerpania $X$ przeliczalną rodziną zbiorów
+zwartych wybieramy analogiczne funkcje odcinające
+$e_j$; zbiory $\{e_j>0\}$ pokrywają $X$.
+Ponadto $\sigma(C_c(X))=\mathcal B(X)$:
+jedna inkluzja wynika z ciągłości. Przestrzeń
+$\sigma$-zwarta metryczna jest ośrodkowa, bo każdy
+zwarty zbiór metryczny ma przeliczalny zbiór gęsty.
+Jest więc drugiej przeliczalności i każdy jej otwarty
+podzbiór jest przestrzenią Lindelöfa.
+Dla każdego otwartego $U$ i każdego $x\in U$
+wybieramy $e_x\in C_c(X)$ o wartościach w $[0,1]$,
+równą $1$ w $x$ i z nośnikiem zawartym w $U$
+(z tego samego lematu o funkcji odcinającej).
+Zbiory $\{e_x>0\}$ tworzą otwarte pokrycie $U$,
+z którego wybieramy przeliczalne podpokrycie.
+Zatem $U\in\sigma(C_c(X))$.
+Twierdzenie \ref{it:thm:daniell-stone-general}
+daje jednoznaczną $\sigma$-skończoną miarę borelowską
+reprezentującą $I_0$. Dla każdego zwartego $K$
+jej masa jest nie większa od $I_0(e)$ dla funkcji
+odcinającej równej $1$ na $K$, czyli jest skończona.
+Miara jest lokalnie skończona, ponieważ każdy punkt
+ma otoczenie o zwartym domknięciu. Z
+\atlasref{ME-20::thm:lch-secondcountable-radon-20}{ME-20: lokalnie skończone miary borelowskie}
+wynika, że jest miarą Radona. Otrzymujemy w ten sposób
+reprezentację z \atlasref{ME-21::thm:riesz-positive-21}{ME-21: twierdzenie Riesza--Markowa--Kakutaniego}.
+Założenia lokalnej zwartości i ośrodkowości w wersji
+metrycznej są równoważne lokalnej zwartości i
+$\sigma$-zwartości: ośrodkowa przestrzeń metryczna
+jest przestrzenią Lindelöfa, więc z pokrycia otwartymi
+otoczeniami o zwartych domknięciach wybieramy
+przeliczalne podpokrycie. Odwrotną implikację wykazano
+wyżej. Nie powtarzamy dowodu regularności miary
+z ME-20; dalsze własności całki Radona omawiamy
+w rozdziale \ref{ch:radon-measures-20}.
+\end{przyklad}
+
+\section{Przykłady i konieczność założeń}
+\begin{przyklad}[Od całki Riemanna do miary Lebesgue'a]
+Niech $\Omega=[0,1]$, $H=C[0,1]$ i $I_0(h)=\int_0^1h(x)\,\mathrm dx$ w sensie Riemanna. Jeśli $h_n\downarrow0$ i $h_n\in H$, z twierdzenia Diniego wynika zbieżność jednostajna, więc $I_0(h_n)\downarrow0$. Mamy $\sigma(H)=\mathcal B([0,1])$: wszystkie funkcje ciągłe są borelowskie, a funkcja identycznościowa należy do $H$ i generuje $\mathcal B([0,1])$. Ograniczenie $\lambda_1$ do zbiorów borelowskich reprezentuje $I_0$ dzięki twierdzeniu \atlasref{ME-08::thm:riemann-to-lebesgue}{ME-08: zgodność całek Riemanna i Lebesgue'a}. Jednoznaczność z twierdzenia \ref{it:thm:daniell-stone} daje równość otrzymanej miary z tym ograniczeniem. Po uzupełnieniu jest zwykłą miarą Lebesgue'a.
+\end{przyklad}
+\begin{przyklad}[Dodatniość nie zastępuje ciągłości porządkowej]
+Niech $\Omega=\mathbb{N}$, $H=c$ będzie kratą ciągów zbieżnych, a $I_0(h)=\lim_{k\to\infty}h(k)$. Jest to dodatni funkcjonał liniowy. Dla $h_n(k)=\chi_{\{j\in\mathbb{N}:j>n\}}(k)$ mamy $h_n\downarrow0$ punktowo, ale $I_0(h_n)=1$ dla wszystkich $n$. Ponieważ funkcje $\chi_{\{k\}}$ należą do $c$, mamy $\sigma(H)=2^\mathbb{N}$. Nie ma reprezentującej miary przeliczalnie addytywnej na $\mathbb{N}$: musiałaby przypisywać zerową masę każdemu punktowi, a jednocześnie całej $\mathbb{N}$ masę $1$.
+\end{przyklad}
+
+% ============================================================
+% UZUPELNIENIE MATEMATYCZNE: ROZDZIAL 12
+% ============================================================
+\subsection{Dlaczego ciągłość porządkowa jest konieczna}
+\begin{przyklad}[Funkcjonał dodatni niepochodzący od miary na dziedzinie]\label{prz:daniel-koniecznosc}
+Niech $X=(0,1]$, a $H$ będzie kratą funkcji na $X$ będących ograniczeniami funkcji z $C[0,1]$. Każda $h\in H$ ma jednoznaczne ciągłe przedłużenie $\widetilde h$ do $[0,1]$. Definiujemy dodatni funkcjonał liniowy $I(h)=\widetilde h(0)$. Dla $h_n(t)=\max\{1-nt,0\}$, $t\in X$, zachodzi $h_n\downarrow0$ punktowo na $X$, lecz $I(h_n)=1$ dla każdego $n$. Funkcjonał nie jest zatem ciągły porządkowo.
+
+Gdyby istniała miara $\mu$ na $X$ reprezentująca $I$ dla wszystkich $h\in H$, mielibyśmy $\mu(X)=I(1)=1$. Z twierdzenia o zbieżności monotonicznej zastosowanego do $1-h_n\uparrow1$ wynikałoby $\int_Xh_n\,\mathrm d\mu\downarrow0$, sprzecznie z $I(h_n)=1$. Zatem dodatniość i liniowość bez ciągłości porządkowej nie wystarczają do reprezentacji przez miarę na danej przestrzeni.
+
+Po dołączeniu punktu $0$ funkcjonał na $C[0,1]$
+jest reprezentowany przez $\delta_0$. Te same
+funkcje $h_n(t)=\max(1-nt,0)$ nie maleją wtedy
+punktowo do zera, lecz do $\chi_{\{0\}}$.
+Ich infimum w porządku wewnętrznym kraty $C[0,1]$
+jest jednak zerem: każda ciągła funkcja będąca
+ograniczeniem dolnym jest niedodatnia na $(0,1]$,
+a przez ciągłość również w $0$. To pokazuje, dlaczego
+w definicji \ref{it:def:daniell-functional} wymagamy
+zbieżności punktowej, a nie istnienia zerowego
+infimum w samej kracie.
+\end{przyklad}
+\begin{przyklad}[Jawna konstrukcja miary z funkcjonału Daniella]\label{prz:daniell-atoms}
+Na $\Omega=[0,1]$ weźmy kratę $H=C[0,1]$ zawierającą funkcję stałą $1$ oraz funkcjonał
+$I(h)=\sum_{n=1}^\infty 2^{-n}h(1/n)$. Szereg jest bezwzględnie zbieżny dla każdego $h\in H$, ponieważ $|I(h)|\le\|h\|_\infty\sum_{n\ge1}2^{-n}=\|h\|_\infty$. Funkcjonał $I$ jest dodatni i liniowy. Jeśli $h_k\downarrow0$ punktowo w $H$, to twierdzenie Diniego daje $\|h_k\|_\infty\to0$, a więc $0\le I(h_k)\le\|h_k\|_\infty\to0$. Funkcjonał jest zatem ciągły porządkowo.
+
+Miara reprezentująca $I$ ma postać $\mu=\sum_{n=1}^\infty 2^{-n}\delta_{1/n}$. Przeliczalna addytywność $\mu$ wynika z możliwości zamiany dwóch szeregów nieujemnych. Dla funkcji nieujemnej wzór na całkę względem $\mu$ otrzymujemy najpierw dla funkcji prostych, a następnie z twierdzeń \atlasref{ME-06::thm:simple-up}{ME-06: aproksymacja funkcjami prostymi} i \ref{thm:mct}, zamieniając rosnącą granicę z sumą nieujemną. Dla ograniczonej $h$ stosujemy wzór do $h^+$ i $h^-$; oba szeregi mają skończoną sumę. Stąd $I(h)=\int_{[0,1]}h\,\mathrm d\mu$, zaś $\mu([0,1])=\sum_n2^{-n}=1$. Jednoznaczność wynika z twierdzenia
+\ref{it:thm:daniell-stone}, ponieważ
+$\sigma(C[0,1])=\mathcal B([0,1])$.
+Chociaż punkty $1/n$ gromadzą się w $0$, mamy
+$\mu(\{0\})=0$. Punkt $0$ należy jednak do nośnika
+topologicznego miary: każde jego względne otoczenie
+zawiera pewien punkt $1/n$ o dodatniej masie.
+Dokładnie $\operatorname{supp}\mu=\{0\}\cup\{1/n:n\ge1\}$,
+gdyż dopełnienie tego domkniętego zbioru jest otwarte
+i ma miarę zero (por.
+\atlasref{ME-20::def:support-radon-20}{ME-20: nośnik miary}). Przykład pokazuje, że konstrukcja Daniella--Stone'a obejmuje miary czysto atomowe bez rozpoczynania od miary zewnętrznej na przedziałach.
+\end{przyklad}
+\begin{uwaga}[Trzy różne poziomy konstrukcji]
+Trzeba oddzielić: (i) sprawdzenie dodatniości i liniowości $I$ na kracie, (ii) ciągłość porządkową $h_n\downarrow0\Rightarrow I(h_n)\downarrow0$ oraz (iii) rozszerzenie funkcjonału i konstrukcję miary na odpowiedniej $\sigma$-algebrze. Punkt (ii) jest warunkiem umożliwiającym przeliczalną addytywność. Samo zdefiniowanie $\mu(A)=I(\chi_A)$ nie wystarcza, jeżeli funkcje charakterystyczne zbiorów $A$ nie należą do początkowej kraty $H$.
+\end{uwaga}
+
