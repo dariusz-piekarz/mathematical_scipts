@@ -15,3 +15,7 @@ Status CI w chwili tej kontroli: full-book-pdf: success; structural-audit: queue
 ## Odbiór końcowy 2026-11-27
 
 CI źródła: 45781123628 full-book-pdf i structural-audit success; 45781123692 finite-models i chapter-pdf success; 45781123604 changed-latex success. 45781123644 reader-ui success, index-and-test failure (Run application regression tests and classify every skip; Require successful chapter and graph coverage). Rozdział domknięty merytorycznie, redakcyjnie i w zakresie CI książki; pełne CI aplikacji niezaliczone. Stan 38/43 rozdziałów. Kolejny GKT39.
+
+## Domknięcie kontroli CI
+
+Ponowne odczytanie zadań: 45781123628 full-book-pdf i structural-audit — success; 45781123692 finite-models i chapter-pdf — success; 45781123604 changed-latex — success. Aplikacja 45781123644: reader-ui success, index-and-test failure (Run application regression tests and classify every skip; Require successful chapter and graph coverage). Odbiór GKT38 w zakresie matematyki, składu i dedykowanego CI GT zamknięty. Nie oznacza to pełnego PASS CI repozytorium. Źródło niezmienione. Następny GKT39.
