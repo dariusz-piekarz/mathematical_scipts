@@ -85,6 +85,29 @@ class CategoryTheoryCh38(unittest.TestCase):
         for y in range(3):
             self.assertEqual(sum(a[y] == y for a in group), 2)
 
+    def test_CAT_38_005_descent_morphisms(self):
+        # Exhaust all local functions for small constant fibers.
+        for n in range(4):
+            for m in range(3):
+                for u in itertools.product(range(m), repeat=n):
+                    for a, b in itertools.product(range(3), repeat=2):
+                        maps = tuple(itertools.product(range(b), repeat=a))
+                        global_maps = tuple(itertools.product(maps, repeat=m))
+                        compatible = {
+                            local for local in itertools.product(maps, repeat=n)
+                            if all(local[v] == local[w]
+                                   for v in range(n) for w in range(n)
+                                   if u[v] == u[w])
+                        }
+                        images = {tuple(h[t] for t in u) for h in global_maps}
+                        if set(u) == set(range(m)):
+                            self.assertEqual(images, compatible)
+                            self.assertEqual(len(images), len(global_maps))
+                        # Singleton source, two-element target: missing points
+                        # yield distinct global morphisms with identical images.
+                        elif (a, b) == (1, 2):
+                            self.assertLess(len(images), len(global_maps))
+
     def test_CAT_38_004_structure(self):
         s = CHAPTER.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}", s)
