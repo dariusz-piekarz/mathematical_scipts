@@ -180,6 +180,37 @@ przy $t\to0$.}
 \end{figure}
 \FloatBarrier
 
+\paragraph{Rysunek 3D: Przekrój kierunkowy powierzchni.}
+Dla $f(x,y)=x^2+2y^2+x+y$ i kierunku jednostkowego
+$u=(1,1)/\sqrt2$ przekrój przez początek ma postać
+$g(t)=\frac32t^2+\sqrt2\,t$. Jego styczna w $t=0$
+ma równanie $z=\sqrt2\,t$. Na wykresie zaznaczamy
+przekrój oraz styczną, ilustrując rysunek
+\ref{ma2:fig:directional-section} w przestrzeni.
+Kod wymaga bibliotek NumPy i Plotly; zapisuje samodzielny
+interaktywny plik HTML.
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+
+x = np.linspace(-1, 1, 81)
+X, Y = np.meshgrid(x, x)
+fig = go.Figure(go.Surface(x=X, y=Y,
+    z=X**2+2*Y**2+X+Y, opacity=0.65,
+    colorscale="Blues", showscale=False))
+t = np.linspace(-1, 1, 201)
+for z, name, color in [(1.5*t**2+np.sqrt(2)*t,
+                       "przekroj", "black"),
+                      (np.sqrt(2)*t, "styczna", "red")]:
+    fig.add_trace(go.Scatter3d(x=t/np.sqrt(2),
+        y=t/np.sqrt(2), z=z, mode="lines",
+        name=name, line=dict(color=color, width=6)))
+fig.update_layout(scene=dict(xaxis_title="x",
+    yaxis_title="y", zaxis_title="z"))
+fig.write_html("am2_12_direction.html", include_plotlyjs=True)
+fig.show()
+\end{lstlisting}
+
 \section{Reguły rachunkowe}
 
 \begin{twierdzenie}
