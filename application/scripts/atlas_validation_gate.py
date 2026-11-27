@@ -48,6 +48,7 @@ REQUIRED_L15_TESTS = frozenset((
     "test_lean_theorem_context.LeanTheoremContextTests.test_unreviewed_and_duplicate_mappings_are_refused",
     "test_lean_theorem_context.LeanTheoremContextTests.test_definition_collision_blocks_entire_context",
     "test_lean_theorem_context.LeanTheoremContextTests.test_truncated_theorem_span_cannot_inherit_approval",
+    "test_lean_draft_transport.DraftTransportTests.test_rt10_container_healthcheck_disabled_before_start",
 ))
 
 

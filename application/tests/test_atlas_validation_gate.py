@@ -109,7 +109,7 @@ class GateTests(unittest.TestCase):
         def run():
             return evaluate(SHA, "L1.5", self.root, application="success",
                             native="success", lean="success", skeptic="success")
-        self.assertEqual(len(REQUIRED_L15_TESTS), 22)
+        self.assertEqual(len(REQUIRED_L15_TESTS), 23)
         for pass_id in ("1", "2", "3"):
             (self.root / ("atlas-unittest-" + pass_id) / "report.json").write_text(
                 json.dumps(make(pass_id)), encoding="utf-8")
@@ -133,6 +133,40 @@ class GateTests(unittest.TestCase):
         doc["executed"] = doc["outcome_count"] = len(doc["outcomes"])
         self.assertIn("mandatory L1.5 regression not passed: " + target,
                       validate_unit_report(doc, SHA, "1", fragment="L1.5"))
+
+    def test_l15_healthcheck_regression_is_independently_mandatory(self):
+        target = (
+            "test_lean_draft_transport.DraftTransportTests."
+            "test_rt10_container_healthcheck_disabled_before_start"
+        )
+        self.assertIn(target, REQUIRED_L15_TESTS)
+        for pass_id in ("1", "2", "3"):
+            doc = evidence(pass_id)
+            doc["outcomes"].extend(
+                {"id": name, "status": "passed"}
+                for name in sorted(REQUIRED_L15_TESTS - {target})
+            )
+            for false_evidence in ([], [
+                {"id": "unrelated." + target, "status": "passed"},
+            ], [
+                {"id": "tests." + target, "status": "expected_failure"},
+            ]):
+                with self.subTest(pass_id=pass_id, false_evidence=false_evidence):
+                    bad = {**doc, "outcomes": doc["outcomes"] + false_evidence}
+                    bad["executed"] = bad["outcome_count"] = len(bad["outcomes"])
+                    self.assertIn(
+                        "mandatory L1.5 regression not passed: " + target,
+                        validate_unit_report(bad, SHA, pass_id, fragment="L1.5"),
+                    )
+            for name in (target, "tests." + target):
+                with self.subTest(pass_id=pass_id, name=name):
+                    good = {**doc, "outcomes": doc["outcomes"] + [
+                        {"id": name, "status": "passed"},
+                    ]}
+                    good["executed"] = good["outcome_count"] = len(good["outcomes"])
+                    self.assertEqual(
+                        validate_unit_report(good, SHA, pass_id, fragment="L1.5"), []
+                    )
 
     def test_reject_short_sha(self):
         with self.assertRaises(ValueError):
