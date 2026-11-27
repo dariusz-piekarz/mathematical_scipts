@@ -17,7 +17,7 @@ FORBIDDEN = re.compile(
 class MeasureTheoryGlobal(unittest.TestCase):
     def test_mtg_001_terminology_and_characteristic_functions(self):
         sources = corpus()
-        self.assertEqual(len(sources), 33)
+        self.assertEqual(len(sources), 34)
         for path, body in sources.items():
             visible = IDENTIFIER.sub("", body)
             with self.subTest(file=path.name):
@@ -77,7 +77,7 @@ class MeasureTheoryGlobal(unittest.TestCase):
         for row in sorted(forward):
             print("MTG FORWARD",row)
         # Reviewed in CLII: the single proof-context forward link explicitly\n        # rejects using the later additivity theorem; it is not a dependency.\n        self.assertEqual({(ch,target,label) for ch,target,in_proof,line,label,context in forward if in_proof},\n                         {(7,8,"ch:twierdzenia-graniczne")})
-        self.assertEqual(len(sources),31)
+        self.assertEqual(len(sources),32)
 
     def test_mtg_005_title_collision_inventory(self):
         # Equal headings may be deliberate variants; report rather than merge.
@@ -127,7 +127,7 @@ class MeasureTheoryGlobal(unittest.TestCase):
             self.assertEqual(actual[lab][0],kind,lab)
             if title:
                 self.assertEqual(actual[lab][1],title,lab)
-        self.assertEqual(len(actual),495)
+        self.assertEqual(len(actual),512)
 
 if __name__ == "__main__":
     unittest.main()
