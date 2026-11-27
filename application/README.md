@@ -117,7 +117,7 @@ Nowy format dla `POST /api/generate`, `POST /api/generate/manifest` i `POST /api
   "closure_depth": 0,
   "items": [
     {"kind": "entity", "id": "ALG-09/proof/0004"},
-    {"kind": "lines", "module": "BT-00", "start_line": 10, "end_line": 20},
+    {"kind": "lines", "module": "AA-07", "start_line": 10, "end_line": 20},
     {"kind": "module", "id": "ALG-09"}
   ]
 }
@@ -206,7 +206,7 @@ Wybór pojedynczego obiektu używa dokładnych offsetów parsera SQLite. Nadmiar
 Przykład działania lokalnego bez serwera (w katalogu aplikacji):
 
 ```powershell
-python -m backend.generator --modules BT-00 --title "Przykładowy skrypt" --output przyklad.zip
+python -m backend.generator --modules AA-01 --title "Przykładowy skrypt" --output przyklad.zip
 python -m backend.generator --entities ALG-09/proof/0004 --title "Wybrany dowód" --output dowod.zip
 ```
 

@@ -115,8 +115,68 @@ def main():
     for volume in retired:
         assert not (ROOT/"chapters/pl"/volume).exists(), ("retired chapters",volume)
         assert not (ROOT/"books/pl"/(volume+".tex")).exists(), ("retired master",volume)
-    bt = LABEL.findall(text(ROOT/"sources/pl/banach_tarski(1).tex"))
-    ga = LABEL.findall(text(ROOT/"sources/pl/galois(2).tex"))
+    # Frozen inventory extracted from the two original source blobs at
+    # 3a8e276d9e7edab24b617e21b405fcc6b33bdc68 (before archive cleanup).
+    # Do not regenerate from AA: losing a migrated label must fail this gate.
+    bt = (
+        "tw:banach-tarski",
+        "def:grupa-wolna",
+        "lem:stos",
+        "tw:redukcja",
+        "wn:redukcja-iloczyn",
+        "st:grupa-slow",
+        "tw:uniwersalnosc",
+        "st:przeliczalnosc-f2",
+        "def:rownorozklad",
+        "lem:skladanie",
+        "eq:3-1",
+        "def:paradoksalny",
+        "wn:przenoszenie",
+        "lem:lancuch",
+        "eq:4-1",
+        "lem:pierwsza-litera",
+        "eq:4-2",
+        "tw:cztery-kawalki",
+        "eq:4-3",
+        "eq:4-4",
+        "subsec:so3",
+        "lem:os-obrotu",
+        "eq:5-1",
+        "eq:5-2",
+        "eq:5-3",
+        "eq:5-4",
+        "eq:5-5",
+        "eq:5-6",
+        "lem:liczniki",
+        "eq:5-7",
+        "tw:wolne-obroty",
+        "eq:6-1",
+        "lem:wyjatkowy",
+        "lem:wspolrzedne-orbitowe",
+        "eq:6-2",
+        "tw:paradoksalnosc-x",
+        "lem:nieprzeliczalnosc",
+        "lem:obrot-rozdzielajacy",
+        "eq:7-1",
+        "tw:pelna-sfera",
+        "eq:7-2",
+        "eq:7-3",
+        "lem:stozki",
+        "wn:kula-bez-srodka",
+        "eq:8-1",
+        "lem:wchloniecie-srodka",
+        "eq:8-2",
+        "eq:8-3",
+        "wn:dowolna-kula",
+        "st:niemierzalnosc",
+    )
+    ga = (
+        "eq:trace-norm",
+        "eq:liouville",
+        "eq:hyperexp",
+        "eq:elliptic-liouville",
+        "eq:airy-riccati",
+    )
     assert len(bt)==len(set(bt))==50
     assert len(ga)==len(set(ga))==5
     ga_locations = {

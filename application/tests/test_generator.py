@@ -67,6 +67,14 @@ class GeneratorTests(unittest.TestCase):
         with self.assertRaises(GenerationError):project_files(self.con,[],['non-existent'],'Bad')
         with self.assertRaises(GenerationError):project_files(self.con,[],[],'Bad')
 
+    def test_retired_volume_preambles_are_not_available(self):
+        from backend.generator import PROJECT_TEMPLATE_KEYS
+        for key in ('BT', 'GA'):
+            with self.subTest(key=key):
+                self.assertNotIn(key, PROJECT_TEMPLATE_KEYS)
+                self.assertNotIn(key, PROJECT_TEMPLATE_KEYS.values())
+                self.assertFalse((ROOT / 'config' / 'preambles' / (key + '.tex')).exists())
+
     def test_retired_banach_tarski_labels_resolve_in_abstract_algebra(self):
         for label in ('tw:banach-tarski', 'subsec:so3'):
             with self.subTest(label=label):
