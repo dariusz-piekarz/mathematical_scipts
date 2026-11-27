@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 import sqlite3
+from contextlib import closing
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -322,7 +323,7 @@ class LeanCatalogTests(unittest.TestCase):
                          statement_status="approved")
         self.save_manifest()
         db = Path(self.temp.name) / "benchmark.db"
-        with sqlite3.connect(db) as target:
+        with closing(sqlite3.connect(db)) as target, target:
             self.con.backup(target)
         result = benchmark(db, lean_root=self.root, samples=2)
         self.assertFalse(result["certificate"])
