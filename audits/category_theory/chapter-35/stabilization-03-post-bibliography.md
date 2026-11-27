@@ -1,0 +1,11 @@
+# CAT-35 — pierwszy audyt stabilizacyjny po korekcie bibliografii (27.11.2026)
+
+Kandydat: bccc033bf5ffae8d37f9ab98af42c82e6b11026b, blob 8e0b1f4fa7640af4aec6b1ecd363c4cb051eb24e. Porównano całe źródło ze stabilizowanym wcześniej blobem 475a42fb2feeefba85ae5c3220d0aa1f6c3fc41d z commitu a204f2f9cfaa3b313b4fd7518a27ca939b69f055. Obie wersje mają 533 wiersze. Różnią się wyłącznie wiersze 446, 499, 513, 520, 525: aktualizacja odsyłaczy bibliograficznych, w tym dopisanie propozycji Luriego o homotopiach. Wszystkie środowiska dowodów, definicji, twierdzeń i rysunków niezmienione. Nie wykryto nowej usterki w kontrolowanym zakresie.
+
+Niezależna kontrola JS konstrukcji dopełniania rogu do brzegu: dla n=1–6, każdego k=0,…,n (27 par n,k), stopni m=0–5, enumerowano wszystkie niemalejące funkcje [m]→[n]. Niezależnie zbudowano obraz brakującej ściany przez injekcję δ^k, obraz jej brzegu przez niesurjektywne funkcje do [n−1], oraz róg przez pomijanie co najmniej jednego wierzchołka innego niż k. 20987 przypadków przecięcia, 20987 sum rogu i ściany, 20987 kontroli etykietowania elementów sumy amalgamowanej. Dla każdej funkcji niemalejącej [l]→[m], l=0–3, sprawdzono domknięcie podzbiorów względem operatorów: 3190278 kontroli. 40514 dodatkowych sprawdzeń zgodności operatorów na nowych elementach dołączanej ściany (także przejść do starego rogu), 20987 kontroli identyczności. PASS. Testy są skończone i nie zastępują dowodu ogólnego.
+
+Kontrola statyczna: 46 unikatowych etykiet, 23 dowody, 5 diagramów TikZ, brak nierozwiązanych odsyłaczy w sprawdzanych plikach, środowiska zrównoważone, książka i katalog zawierają rozdział.
+
+CI dokładnego commitu: Polish mathematical terminology (46036900860): queued/brak wyniku; Category theory CAT-00 validation (46036900878): queued/brak wyniku; Mathematical library application checks (46036900954): queued/brak wyniku. Nie wykonano oględzin PDF ani niezależnej ponownej weryfikacji publikacji w tej iteracji. 
+
+Decyzja: 1/2 czystych audytów po korekcie bibliografii, 0/1 końcowych kontroli. Źródło niezmienione. Pełny odbiór techniczny i wizualny nadal otwarty.
