@@ -7,7 +7,7 @@
 
 
 Prawa wielkich liczb formalizują stabilizację częstości
-obserwowanych w długiej serii doświadczeń. W rzucie monetą
+obserwowanych w długiej serii doświadczeń. W serii rzutów symetryczną monetą
 względna liczba orłów nie musi być bliska $1/2$ po
 kilkunastu próbach, lecz przy dużej liczbie niezależnych
 rzutów odchylenia stają się rzadkie. Zależnie od tego,
@@ -66,12 +66,15 @@ dla szeregu.
 \section{Sformułowania i wersja wariancyjna}
 
 \begin{definicja}
-Niech $(X_n)_{n\geq1}$ będzie ciągiem całkowalnych
-rzeczywistych zmiennych losowych na jednej przestrzeni
+Niech $(X_n)_{n\geq1}$ będzie ciągiem rzeczywistych
+zmiennych losowych na jednej przestrzeni
 probabilistycznej i niech
 $\overline X_n=n^{-1}\sum_{k=1}^nX_k$ dla $n\geq1$.
-Każda średnia jest mierzalna i całkowalna, ponieważ
-jest skończoną kombinacją liniową zmiennych całkowalnych.
+Każda średnia jest mierzalna jako skończona kombinacja
+liniowa zmiennych mierzalnych. Jeżeli wszystkie $X_k$
+są całkowalne, to także każda średnia jest całkowalna.
+Sama definicja zbieżności średnich nie wymaga jednak
+istnienia ich wartości oczekiwanych.
 Dla $m\in\R$ mówimy, że zachodzi \emph{słabe prawo
 wielkich liczb} (SPWL) z granicą $m$, jeśli
 $\overline X_n\xrightarrow{\Prob}m$.
@@ -96,9 +99,14 @@ a sumowanie teleskopowe daje
 \overline X_n=\frac1n\sum_{k=1}^n
 (kA_k-(k-1)A_{k-1})=A_n.
 \]
-Dla tego ciągu zachodzi SPWL z granicą zero, ale nie MPWL. Nawet przy zbieżności prawie na pewno
-nie twierdzimy, że średnia od pewnego momentu \emph{zawsze}
-jest równa $m$: tylko że jej odchylenie dąży do zera.
+Dla tego ciągu zachodzi SPWL z granicą zero, ale nie MPWL.
+Nawet przy zbieżności prawie na pewno nie twierdzimy,
+że średnia od pewnego momentu jest równa $m$.
+Twierdzimy, że poza pewnym mierzalnym zbiorem zerowym
+dla każdego $\varepsilon>0$ istnieje indeks
+$N=N(\omega,\varepsilon)$, po którym
+$|\overline X_n(\omega)-m|<\varepsilon$ dla wszystkich
+$n\geq N$.
 
 \begin{twierdzenie}[SPWL z kontroli wariancji]
 Niech $(X_n)_{n\geq1}$ będzie ciągiem rzeczywistych zmiennych
@@ -127,6 +135,13 @@ $\E\overline X_n=a_n$, zaś z definicji wariancji
 =\E\left|\frac1n\sum_{k=1}^n(X_k-\E X_k)\right|^2
 =\frac1{n^2}\Var\left(\sum_{k=1}^nX_k\right).
 \]
+W szczególności z obu założeń twierdzenia wynika
+\[
+\E|\overline X_n-m|^2
+=\Var(\overline X_n)+|a_n-m|^2\longrightarrow0,
+\]
+gdyż po rozwinięciu kwadratu wyraz mieszany znika
+na mocy $\E(\overline X_n-a_n)=0$.
 Dla ustalonego $\varepsilon>0$ i dostatecznie
 dużego $n$ mamy $|a_n-m|<\varepsilon/2$.
 Z nierówności trójkąta
@@ -179,12 +194,13 @@ a zatem według prawdopodobieństwa
 
 \section{SPWL przy samym istnieniu wartości oczekiwanej}
 
-Nierówność Czebyszewa wymaga skończonej wariancji.
-Istnieją jednak rozkłady o skończonej średniej i
-nieskończonej wariancji, np. odpowiednio ciężkoogonowe
-rozkłady potęgowe. Czy empiryczna średnia nadal się
-stabilizuje? Dla niezależnych prób o tym samym rozkładzie
-wystarcza sama całkowalność.
+Oszacowanie za pomocą wariancji w dowodzie SPWL
+wymaga skończonego drugiego momentu, aby dało
+niebanalne ograniczenie. Istnieją jednak rozkłady
+o skończonej średniej i nieskończonej wariancji,
+np. rozważany dalej rozkład Pareto z parametrem
+$1<\alpha<2$. Dla parami niezależnych prób o tym
+samym rozkładzie wystarcza sama całkowalność.
 
 \begin{twierdzenie}[Słabe prawo wielkich liczb w wersji całkowalnej]
 Niech $X_1,X_2,\ldots$ będą rzeczywistymi zmiennymi
@@ -230,10 +246,17 @@ Ponadto
 $|\E Y_1^{(K)}-m|\leq\E|Y_1^{(K)}-X_1|=u(K)$.
 Ustalmy $\varepsilon>0$ i wybierzmy $K$ takie,
 że $u(K)<\varepsilon/3$.
-Rozkładamy $\overline X_n-m$ na średni błąd obcięcia,
-średnią zmiennych obciętych pomniejszoną o jej wartość
-oczekiwaną oraz deterministyczny błąd średniej.
-Dla pierwszego składnika nierówność Markowa daje
+Oznaczmy $\overline Y_n^{(K)}=n^{-1}\sum_{k=1}^nY_k^{(K)}$.
+Mamy dokładną tożsamość
+\[
+\overline X_n-m
+=(\overline X_n-\overline Y_n^{(K)})
++(\overline Y_n^{(K)}-\E Y_1^{(K)})
++(\E Y_1^{(K)}-m).
+\]
+Dla modułu pierwszego składnika stosujemy
+nierówność Markowa (rozdział~\ref{ch:expectation})
+oraz wcześniej uzyskane oszacowanie wartości oczekiwanej:
 \[
 \Prob\!\left(\left|\frac1n\sum_{k\leq n}
 (X_k-Y_k^{(K)})\right|>\varepsilon/3\right)
@@ -263,17 +286,19 @@ Przechodząc z $K\to\infty$, otrzymujemy tezę.
 
 \section{Nierówność maksymalna Kołmogorowa}
 
-Do mocnego prawa nie wystarczy kontrolować odchylenia
-$\overline X_n$ dla pojedynczego indeksu $n$: trzeba
-jednocześnie opanować nieskończenie wiele częściowych sum.
+W dowodzie mocnego prawa sama zbieżność do zera
+prawdopodobieństw odchyleń dla pojedynczych indeksów
+nie wystarcza. Potrzebna jest dodatkowa kontrola
+zdarzeń odchyleń na całym ogonie ciągu.
 Nierówność maksymalna pozwala przejść od sumy wariancji
 do prawdopodobieństwa, że \emph{któraś} suma częściowa
 przekroczy próg.
 
 \begin{twierdzenie}[Nierówność maksymalna Kołmogorowa]
 Niech $n\geq1$ będzie liczbą całkowitą, a
-$Z_1,\ldots,Z_n$ wzajemnie niezależnymi rzeczywistymi
-zmiennymi losowymi na jednej przestrzeni probabilistycznej,
+$Z_1,\ldots,Z_n$ będą wzajemnie niezależnymi rzeczywistymi
+zmiennymi losowymi na jednej przestrzeni probabilistycznej
+$(\Omega,\mathcal F,\Prob)$,
 o $\E Z_k=0$ i $\E Z_k^2<\infty$.
 Dla $S_j=\sum_{k=1}^j Z_k$ oraz $a>0$ zachodzi
 \[
@@ -286,7 +311,8 @@ Wszystkie sumy częściowe należą do $L^2$, a ich
 średnie wynoszą zero z liniowości wartości oczekiwanej.
 Dla $1\leq k\leq n$ niech
 \[
-A_k=\bigcap_{j=1}^{k-1}\{|S_j|<a\}\cap\{|S_k|\geq a\},
+A_k=\left(\bigcap_{j=1}^{k-1}\{|S_j|<a\}\right)
+\cap\{|S_k|\geq a\},
 \]
 przy czym dla $k=1$ puste przecięcie oznacza całą
 przestrzeń $\Omega$. Są to mierzalne zdarzenia pierwszego
@@ -308,9 +334,15 @@ wynika to z charakteryzacji wzajemnej niezależności
 przez iloczynowy rozkład łączny
 (rozdział~\ref{ch:random-variables}).
 Zmienna $S_k\chi_{A_k}$ jest borelowską funkcją
-pierwszego wektora, a $S_n-S_k$ ciągłą funkcją drugiego.
-Przeciwobrazy zbiorów borelowskich przez te funkcje
-pokazują, że obie zmienne są niezależne.
+pierwszego wektora, ponieważ warunki definiujące
+$A_k$ są przeciwobrazami przedziałów przez ciągłe
+funkcje sum częściowych. Zmienna $S_n-S_k$ jest
+ciągłą funkcją drugiego wektora. Dla zbiorów
+borelowskich $B,C\subseteq\R$ zdarzenie
+$\{S_k\chi_{A_k}\in B,\ S_n-S_k\in C\}$ odpowiada
+prostokątowi będącemu iloczynem odpowiednich
+przeciwobrazów. Miara tego prostokąta jest iloczynem
+miar brzegowych, co dowodzi niezależności obu zmiennych.
 Dla $k=n$ druga zmienna jest identycznie zerowa,
 więc niezależność zachodzi także w tym przypadku.
 Ponadto $\E(S_n-S_k)=0$.
@@ -391,8 +423,13 @@ i każdego $r>n_j$ zachodzi
 $|S_r(\omega)-S_{n_j}(\omega)|\leq2^{-j}$.
 Dla dowolnych $r,s\geq n_j$ nierówność trójkąta daje
 $|S_r(\omega)-S_s(\omega)|\leq2^{1-j}$.
-Wobec dowolności dużego $j$ sumy częściowe są ciągiem
-Cauchy'ego dla każdej takiej $\omega$. Zupełność $\R$
+W przypadku indeksu równego $n_j$ odpowiadające
+odchylenie od $S_{n_j}$ jest zerowe, więc oszacowanie
+obejmuje również ten przypadek.
+Dla dowolnego $\eta>0$ wybieramy $j\geq J(\omega)$
+takie, że $2^{1-j}<\eta$, i przyjmujemy $n_j$ jako
+indeks w warunku Cauchy'ego. Sumy częściowe są więc
+ciągiem Cauchy'ego dla każdej takiej $\omega$. Zupełność $\R$
 zapewnia ich zbieżność do skończonej granicy.
 Granica określona na tym mierzalnym zbiorze pełnej
 miary i przedłużona przez zero na jego dopełnieniu
@@ -437,7 +474,7 @@ dąży do $s$, co dowodzi tezy. Jest to zastosowanie
 twierdzenia Cesàra o średnich ciągu zbieżnego.
 \end{proof}
 
-\begin{twierdzenie}[MPWL przy sumowalnych wariancjach]
+\begin{twierdzenie}[MPWL przy sumowalnych wariancjach ważonych]
 Niech $X_1,X_2,\ldots$ będą wzajemnie niezależnymi
 rzeczywistymi zmiennymi losowymi na jednej przestrzeni
 probabilistycznej, o skończonych drugich momentach.
@@ -635,8 +672,9 @@ Ponieważ $\E B_1=p$ i $\E|B_1|\leq1$,
 MPWL daje $\overline B_n\to p$ prawie na pewno.
 Twierdzenie nie stwierdza, że po dużej liczbie prób
 kolejne sukcesy i porażki muszą się \emph{wyrównywać}:
-dla $0<p<1$ każde ustalone skończone pasmo samych
-sukcesów ma dodatnie prawdopodobieństwo.
+dla $0<p<1$ prawdopodobieństwo samych sukcesów
+w ustalonym bloku $r$ kolejnych prób wynosi $p^r>0$
+z wzajemnej niezależności zmiennych.
 Jeżeli do $n$ obserwacji dopiszemy $r$ kolejnych,
 to
 \[
@@ -754,7 +792,7 @@ Przy zachowaniu wzajemnej niezależności założenie
 jednakowego rozkładu nie jest tu potrzebne: wystarczy
 wspólna średnia i jednostajne ograniczenie wariancji.
 Twierdzenie jest szczególnym przypadkiem wcześniejszego
-MPWL przy sumowalnych wariancjach, ponieważ
+MPWL przy sumowalnych wariancjach ważonych, ponieważ
 $\sum_{n=1}^\infty\Var(X_n)/n^2
 \leq C\sum_{n=1}^\infty n^{-2}<\infty$.
 Natomiast w przypadku jednakowych rozkładów MPWL
