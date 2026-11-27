@@ -70,6 +70,59 @@ with sync_playwright() as pw:
     assert page.locator('#explorer').is_visible()
     assert page.locator('#tree').evaluate('el => el.scrollHeight > el.clientHeight')
 
+    # Collapsing/reopening a pending outline shares one request, and a
+    # failed outline is immediately retryable without an extra collapse.
+    outline_cases = page.evaluate("""async () => {
+        const originalApi = api, id = 'DG-14';
+        const data = await api('/api/modules/DG-14/outline');
+        const requests = [];
+        const toastBox = document.getElementById('toast');
+        const clearToast = () => {toastBox.textContent = ''; toastBox.classList.add('hidden');};
+        let count = 0;
+        try {
+            state.expandedModules.delete(id); state.outlines.delete(id); clearToast();
+            api = (url, options) => url === '/api/modules/DG-14/outline'
+                ? new Promise((resolve, reject) => requests.push({resolve, reject}))
+                : originalApi(url, options);
+            const first = toggleModule(id);
+            await toggleModule(id);
+            const second = toggleModule(id);
+            if (requests.length !== 1) throw Error('duplicate outline request');
+            requests[0].resolve(data); await Promise.all([first, second]);
+            if (!state.expandedModules.has(id) || state.outlines.get(id) !== data.entities)
+                throw Error('outline not populated');
+            count++;
+            await toggleModule(id); await toggleModule(id);
+            if (requests.length !== 1) throw Error('cached outline refetched');
+            count++;
+            await toggleModule(id); state.outlines.delete(id);
+            const failed = toggleModule(id);
+            requests[1].reject(new Error('outline failure')); await failed;
+            if (state.expandedModules.has(id) || toastBox.textContent !== 'outline failure')
+                throw Error('failed outline not retryable');
+            const retry = toggleModule(id);
+            requests[2].resolve(data); await retry;
+            if (!state.expandedModules.has(id)) throw Error('retry failed');
+            count++;
+            await toggleModule(id); state.outlines.delete(id); clearToast();
+            const closed = toggleModule(id); await toggleModule(id);
+            requests[3].reject(new Error('closed outline')); await closed;
+            if (state.expandedModules.has(id) || toastBox.textContent)
+                throw Error('closed outline reported error');
+            count++;
+            const malformed = toggleModule(id);
+            requests[4].resolve({entities:null}); await malformed;
+            if (state.expandedModules.has(id) || state.outlines.has(id))
+                throw Error('malformed outline cached');
+            count++;
+        } finally {
+            api = originalApi; state.expandedModules.delete(id);
+            state.outlines.delete(id); clearToast(); renderTree();
+        }
+        return count;
+    }""")
+    assert outline_cases == 5
+
     # A new target must start at its beginning, even if the previous
     # chapter had been scrolled far down. Test both chapter and entity routes.
     page.evaluate("() => openModule('AM1-14', true)")
