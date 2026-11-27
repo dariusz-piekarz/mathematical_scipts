@@ -123,6 +123,29 @@ W siatce powierzchni pomijamy punkt osobliwy, pokazując go
 oddzielnym znacznikiem. Krzywe nie są łączone przez początek.
 Poniższy kod wymaga bibliotek NumPy i Plotly. Zapisuje samodzielny
 plik HTML, w którym można obracać i powiększać wykres.
+Rysunek \ref{ma2:fig:paths-surface} przedstawia wersję statyczną.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=11cm,height=7.6cm,view={130}{32},axis lines=left,
+xmin=-1,xmax=1,ymin=-1,ymax=1,zmin=-.55,zmax=.55,
+xlabel=$x$,ylabel=$y$,zlabel=$f(x,y)$,
+colormap={signed}{rgb255(0cm)=(170,65,55);rgb255(.5cm)=(249,246,240);rgb255(1cm)=(35,91,140)}]
+\addplot3[surf,shader=interp,draw=none,z buffer=sort,domain=-1:-.035,domain y=-1:1,samples=33,samples y=33,point meta min=-.5,point meta max=.5] {x^2*y/(x^4+y^2)};
+\addplot3[surf,shader=interp,draw=none,z buffer=sort,domain=.035:1,domain y=-1:1,samples=33,samples y=33,point meta min=-.5,point meta max=.5] {x^2*y/(x^4+y^2)};
+\addplot3[surf,shader=interp,draw=none,z buffer=sort,domain=-.035:.035,domain y=-1:-.035,samples=33,samples y=33,point meta min=-.5,point meta max=.5] {x^2*y/(x^4+y^2)};
+\addplot3[surf,shader=interp,draw=none,z buffer=sort,domain=-.035:.035,domain y=.035:1,samples=33,samples y=33,point meta min=-.5,point meta max=.5] {x^2*y/(x^4+y^2)};
+\addplot3[very thick,black,domain=-1:-.035,samples=60,samples y=1] (x,x^2,.5);
+\addplot3[very thick,black,domain=.035:1,samples=60,samples y=1] (x,x^2,.5);
+\addplot3[only marks,mark=o,mark size=2pt,black] coordinates {(0,0,.5)};
+\addplot3[only marks,mark=*,mark size=2pt,red!70!black] coordinates {(0,0,0)};
+\end{axis}
+\end{tikzpicture}
+\caption{Wykres $f(x,y)=x^2y/(x^4+y^2)$. Pominięto mały kwadrat wokół początku (o boku $0.07$), aby nie interpolować powierzchni przez punkt nieciągłości. Czarne krzywe leżą na wysokości $1/2$; pusty znacznik oznacza ich punkt graniczny, czerwony oznacza rzeczywistą wartość $f(0,0)=0$.}
+\label{ma2:fig:paths-surface}
+\end{figure}
+
 \begin{lstlisting}[language=Python]
 import numpy as np
 import plotly.graph_objects as go
