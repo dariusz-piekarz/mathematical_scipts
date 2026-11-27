@@ -47,12 +47,12 @@ def corpus():
 
 
 class TestMeasureTheoryBookIntegrity(unittest.TestCase):
-    def test_book_imports_exactly_31_ordered_chapters_and_two_supplements(self):
+    def test_book_imports_exactly_32_ordered_chapters_and_two_supplements(self):
         paths = imported_sources()
-        self.assertEqual(len(paths), 33)
+        self.assertEqual(len(paths), 34)
         chapters = [path for path in paths if re.match(r"\d{2}-", path.name)]
-        self.assertEqual(len(chapters), 31)
-        self.assertEqual([path.name[:2] for path in chapters], [f"{n:02}" for n in range(1, 32)])
+        self.assertEqual(len(chapters), 32)
+        self.assertEqual([path.name[:2] for path in chapters], [f"{n:02}" for n in range(1, 33)])
         self.assertEqual(len(set(paths)), len(paths))
         for path in paths:
             self.assertTrue(path.is_file(), f"Missing imported TeX source: {path}")
