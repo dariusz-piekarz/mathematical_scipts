@@ -51,6 +51,18 @@ class DraftTransportTests(unittest.TestCase):
     def test_container_exact_configuration(self):
         self.validate(self.record)
 
+    def test_rt10_container_healthcheck_disabled_before_start(self):
+        for value in (None, {"Test": ["NONE"]}):
+            with self.subTest(value=value):
+                self.validate({**self.record, "Config": {**self.record["Config"],
+                                                         "Healthcheck": value}})
+        for value in ({"Test": ["CMD", "unexpected"]},
+                      {"Test": ["CMD-SHELL", "unexpected"]},
+                      {"Test": ["NONE"], "Interval": 1}, {}, [], "NONE"):
+            with self.subTest(value=value), self.assertRaisesRegex(ValueError, "healthcheck"):
+                self.validate({**self.record, "Config": {**self.record["Config"],
+                                                         "Healthcheck": value}})
+
     def test_container_rejects_missing_or_unsafe_limits(self):
         for key, value in (("NetworkMode","host"),("Memory",0),("MemorySwap",-1),
                            ("NanoCpus",0),("PidsLimit",0),("ReadonlyRootfs",False),
