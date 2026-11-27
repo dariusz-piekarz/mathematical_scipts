@@ -124,6 +124,19 @@
       data.push(arrow(g,"gradient styczny","#b52332"),arrow(w,"składowa normalna","#c87900"),arrow(e,"gradient otoczenia","#234ab5"));
       return base(data,"Gradient styczny na sferze",{scene:{...scene(),aspectmode:"data",camera:{eye:{x:1.6,y:1.6,z:.8}},xaxis:{...axis("x"),range:[-1.2,1.35]},yaxis:{...axis("y"),range:[-1.2,1.2]},zaxis:{...axis("z"),range:[-1.15,1.95]}}});
     },
+    "am2_24_darboux.html":()=>{
+      const data=[],tri=[[0,2,1],[0,3,2],[4,5,6],[4,6,7],[0,1,5],[0,5,4],[1,2,6],[1,6,5],[2,3,7],[2,7,6],[3,0,4],[3,4,7]];
+      const edges=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+      for(let panel=0;panel<2;panel++)for(let i=0;i<2;i++)for(let j=0;j<2;j++){
+        const x=i/2,y=j/2,X=x+.5,Y=y+.5,z=(1+x+y+panel)/3,sc=panel?"scene2":"scene";
+        const pts=[[x,y,0],[X,y,0],[X,Y,0],[x,Y,0],[x,y,z],[X,y,z],[X,Y,z],[x,Y,z]];
+        data.push({type:"mesh3d",scene:sc,x:pts.map(p=>p[0]),y:pts.map(p=>p[1]),z:pts.map(p=>p[2]),i:tri.map(t=>t[0]),j:tri.map(t=>t[1]),k:tri.map(t=>t[2]),intensity:pts.map(p=>p[2]),colorscale:"Viridis",cmin:0,cmax:1,showscale:false,flatshading:true,showlegend:false});
+        const xyz=edges.flatMap(([u,v])=>[pts[u],pts[v],[null,null,null]]);
+        data.push({type:"scatter3d",scene:sc,mode:"lines",x:xyz.map(p=>p[0]),y:xyz.map(p=>p[1]),z:xyz.map(p=>p[2]),line:{color:"#333",width:3},showlegend:false});
+      }
+      const panel=d=>({...scene("x","y","z"),domain:{x:d,y:[0,1]},aspectmode:"data",xaxis:{...axis("x"),range:[0,1]},yaxis:{...axis("y"),range:[0,1]},zaxis:{...axis("z"),range:[0,1.05]}});
+      return base(data,"Sumy Darboux",{scene:panel([0,.48]),scene2:panel([.52,1]),annotations:[{text:"Suma dolna",xref:"paper",yref:"paper",x:.24,y:1,showarrow:false},{text:"Suma górna",xref:"paper",yref:"paper",x:.76,y:1,showarrow:false}]});
+    },
     "am2_36_geometric.html":()=>{
       const r=lin(0,.97,61),t=lin(0,2*Math.PI,121),X=t.map(a=>r.map(v=>v*Math.cos(a))),Y=t.map(a=>r.map(v=>v*Math.sin(a)));
       const norm=(a,v,n)=>n===null?1/Math.hypot(1-v*Math.cos(a),v*Math.sin(a)):Math.hypot(1-v**(n+1)*Math.cos((n+1)*a),v**(n+1)*Math.sin((n+1)*a))/Math.hypot(1-v*Math.cos(a),v*Math.sin(a));

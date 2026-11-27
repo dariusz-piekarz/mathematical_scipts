@@ -217,13 +217,14 @@ with sync_playwright() as pw:
                         'edges': [12, 12], 'triangles': [8, 12]}, geometry
     host.locator('button').click()
     assert host.locator('iframe').count() == 0
-    # Static TikZ and interactive Plotly coexist in chapters 19–23.
+    # Static TikZ and interactive Plotly coexist in chapters 19–24.
     for module, filename in [
         ('AM2-19', '19-twierdzenie-o-funkcji-uwiklanej.tex'),
         ('AM2-20', '20-twierdzenia-o-rzedzie.tex'),
         ('AM2-21', '21-podrozmaitosci-przestrzeni-euklidesowej.tex'),
         ('AM2-22', '22-ekstrema-zwiazane.tex'),
         ('AM2-23', '23-rachunek-rozniczkowy-na-podrozmaitosciach.tex'),
+        ('AM2-24', '24-calka-riemanna.tex'),
     ]:
         source = (ROOT.parent / 'chapters/pl/mathematical_analysis_ii' / filename).read_text(encoding='utf-8')
         page.evaluate("([latex, code]) => renderSimplified(latex, code)", [source, module])
@@ -257,6 +258,15 @@ with sync_playwright() as pw:
             }""")
             assert check['types'] == ['surface', 'scatter3d', 'scatter3d', 'scatter3d', 'scatter3d']
             assert max(check['error'], abs(check['dot']), check['sum']) < 1e-12
+        if module == 'AM2-24':
+            check = frame.locator('#plot').evaluate("""el => {
+                const meshes=el.data.filter(t=>t.type==='mesh3d');
+                const volumes=['scene','scene2'].map(sc=>meshes.filter(t=>t.scene===sc).reduce((a,t)=>a+Math.max(...t.z)/4,0));
+                return {meshes:meshes.length, volumes, edges:el.data.filter(t=>t.type==='scatter3d').length};
+            }""")
+            assert check['meshes'] == 8 and check['edges'] == 8, check
+            assert abs(check['volumes'][0]-.5) < 1e-12, check
+            assert abs(check['volumes'][1]-5/6) < 1e-12, check
         host.locator('button').click()
         assert host.locator('iframe').count() == 0
     # Real graph chapters: every figure must decode, not merely insert a placeholder.
