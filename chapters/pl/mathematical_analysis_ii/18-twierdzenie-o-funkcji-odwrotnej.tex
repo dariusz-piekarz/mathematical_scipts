@@ -287,6 +287,37 @@ Rysunek \ref{ma2:fig:inverse-shear} ilustruje
 obraz kwadratu $[-1,1]^2$.
 \end{przyklad}
 
+\paragraph{Rysunek 3D: składowa odwzorowania i odwrotności.}
+Dla odwzorowania z przykładu \ref{ma2:ex:inverse-shear}
+rysujemy drugą składową $f_2(x,y)=y+x^2$ oraz drugą
+składową odwrotności $g_2(u,v)=v-u^2$ na dwóch
+oddzielnych układach współrzędnych. Są to wykresy
+składowych, nie wykres całego odwzorowania $\R^2\to\R^2$.
+Poniższy kod wymaga bibliotek NumPy i Plotly. Zapisuje samodzielny
+plik HTML, w którym można obracać i powiększać wykres.
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+x = np.linspace(-1, 1, 81)
+X, Y = np.meshgrid(x, x)
+fig = make_subplots(rows=1, cols=2,
+    specs=[[{"type": "surface"}, {"type": "surface"}]],
+    subplot_titles=["f2(x,y)", "g2(u,v)"])
+fig.add_trace(go.Surface(x=X, y=Y, z=Y+X**2,
+    colorscale="Blues", showscale=False), row=1, col=1)
+fig.add_trace(go.Surface(x=X, y=Y, z=Y-X**2,
+    colorscale="Oranges", showscale=False), row=1, col=2)
+fig.update_layout(scene=dict(xaxis_title="x",
+    yaxis_title="y", zaxis_title="f2"),
+    scene2=dict(xaxis_title="u", yaxis_title="v",
+    zaxis_title="g2"))
+fig.write_html("am2_18_inverse.html", include_plotlyjs=True)
+fig.show()
+\end{lstlisting}
+
+
 \begin{figure}[htbp]
 \centering
 \begin{tikzpicture}[scale=1.65,>=Stealth]
