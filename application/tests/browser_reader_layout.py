@@ -231,6 +231,62 @@ with sync_playwright() as pw:
         return count;
     }""")
     assert outline_cases == 5
+    # Retain expanded branches and only a bounded LRU of collapsed ones.
+    outline_cache_cases = page.evaluate("""async () => {
+        const originalApi=api, prefix='ATLAS-OUTLINE-CACHE-';
+        const saved={outlines:new Map(state.outlines),expanded:new Set(state.expandedModules),
+                     pages:new Map(outlinePages)};
+        const pinned=prefix+'pinned', ids=Array.from({length:COLLAPSED_OUTLINE_LIMIT},
+            (_,i)=>prefix+i), fresh=prefix+'new', late=prefix+'late';
+        const requests=[];
+        const key=id=>JSON.stringify([id,'object']);
+        let count=0;
+        try{
+            state.outlines.clear();state.expandedModules.clear();outlinePages.clear();
+            state.expandedModules.add(pinned);state.outlines.set(pinned,[]);
+            for(const id of ids){state.outlines.set(id,[]);outlinePages.set(key(id),3);}
+            api=(url,options)=>url.includes(prefix)
+                ? new Promise((resolve,reject)=>requests.push({resolve,reject}))
+                : originalApi(url,options);
+            await toggleModule(ids[0]);await toggleModule(ids[0]);
+            if(requests.length)throw Error('warm outline refetched');
+            count++;
+            let p=toggleModule(fresh);requests.at(-1).resolve({entities:[]});await p;
+            if(state.outlines.size!==COLLAPSED_OUTLINE_LIMIT+2)
+                throw Error('expanded branch counted toward collapsed cap');
+            count++;
+            await toggleModule(fresh);
+            if(state.outlines.size!==COLLAPSED_OUTLINE_LIMIT+1)throw Error('collapsed cap');
+            count++;
+            if(!state.outlines.has(pinned)||!state.outlines.has(ids[0])||state.outlines.has(ids[1]))
+                throw Error('incorrect outline LRU eviction');
+            count++;
+            if(outlinePages.has(key(ids[1])))throw Error('orphan pagination state');
+            count++;
+            p=toggleModule(ids[1]);const req=requests.at(-1);
+            await toggleModule(ids[1]);const q=toggleModule(ids[1]);
+            if(requests.at(-1)!==req)throw Error('pending outline duplicated');
+            count++;
+            req.resolve({entities:[{id:'fixture'}]});await Promise.all([p,q]);
+            if(!state.expandedModules.has(ids[1])||state.outlines.get(ids[1]).length!==1)
+                throw Error('evicted outline not restored');
+            count++;
+            p=toggleModule(late);await toggleModule(late);
+            requests.at(-1).resolve({entities:[]});await p;
+            if(!state.outlines.has(late)||[...state.outlines.keys()].filter(
+                id=>!state.expandedModules.has(id)).length!==COLLAPSED_OUTLINE_LIMIT)
+                throw Error('late collapsed response exceeded cache cap');
+            count++;
+            return count;
+        }finally{
+            api=originalApi;
+            state.outlines.clear();for(const [k,v] of saved.outlines)state.outlines.set(k,v);
+            state.expandedModules.clear();for(const id of saved.expanded)state.expandedModules.add(id);
+            outlinePages.clear();for(const [k,v] of saved.pages)outlinePages.set(k,v);
+            renderTree();
+        }
+    }""")
+    assert outline_cache_cases == 8
 
     # A new target must start at its beginning, even if the previous
     # chapter had been scrolled far down. Test both chapter and entity routes.
