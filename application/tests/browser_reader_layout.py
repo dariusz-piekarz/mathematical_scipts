@@ -830,19 +830,34 @@ with sync_playwright() as pw:
     assert box.locator('[data-environment-kind="proof"].preview-statement').count() == 0
     assert box.locator('.preview-block:not(.preview-statement)').count() == 2
     assert box.locator('.katex').count() == 2
-    styles = """els => els.map(el => {
-        const s=getComputedStyle(el);
-        return {radius:parseFloat(s.borderTopLeftRadius), border:parseFloat(s.borderInlineStartWidth),
-                bg:s.backgroundColor, width:el.getBoundingClientRect().width,
-                parentWidth:el.parentElement.clientWidth, overflow:s.overflowX};
-    })"""
+    styles = """els => {
+        const ctx=document.createElement('canvas').getContext('2d',{willReadFrequently:true});
+        // Convert computed CSS colors (including color-mix) to sRGB pixels.
+        const luminance=color=>{
+            ctx.clearRect(0,0,1,1);
+            ctx.fillStyle=color;ctx.fillRect(0,0,1,1);
+            const rgb=[...ctx.getImageData(0,0,1,1).data].slice(0,3).map(v=>{
+                v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;
+            });
+            return .2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2];
+        };
+        return els.map(el => {
+            const s=getComputedStyle(el), fg=getComputedStyle(el.querySelector('.preview-block-title')).color;
+            const a=luminance(s.backgroundColor), b=luminance(fg);
+            return {radius:parseFloat(s.borderTopLeftRadius), border:parseFloat(s.borderInlineStartWidth),
+                    bg:s.backgroundColor, width:el.getBoundingClientRect().width,
+                    parentWidth:el.parentElement.clientWidth, overflow:s.overflowX,
+                    contrast:(Math.max(a,b)+.05)/(Math.min(a,b)+.05)};
+        });
+    }"""
     light = frames.evaluate_all(styles)
     page.locator('#themeToggle').click()
     dark = frames.evaluate_all(styles)
     assert all(x['bg'] != y['bg'] for x,y in zip(light,dark))
     for mode in (light,dark):
         assert all(x['radius'] > 0 and x['border'] >= 1 and x['width'] <= x['parentWidth']
-                   and x['overflow'] != 'hidden' for x in mode), mode
+                   and x['overflow'] != 'hidden' and x['contrast'] >= 4.5
+                   for x in mode), mode
     page.locator('#themeToggle').click()
     page.set_viewport_size({'width':390,'height':844})
     assert_viewport_layout(page)
