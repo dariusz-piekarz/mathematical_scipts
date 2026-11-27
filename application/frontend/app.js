@@ -1250,10 +1250,29 @@ async function runLeanFormalization(){
   }
 }
 
+// The API deliberately caps each page at 500. Fetch the complete inventory,
+// not merely the first page, so Explorer and Lean selectors agree with the index.
+async function loadAllModules(){
+  const items=[], ids=new Set();
+  const limit=500;
+  for(let offset=0;;){
+    const page=await api(`/api/modules?limit=${limit}&offset=${offset}`);
+    if(!Array.isArray(page.items)||!Number.isSafeInteger(page.total)||page.total<0)
+      throw new Error("Nieprawidłowa odpowiedź indeksu rozdziałów.");
+    for(const item of page.items){
+      if(ids.has(item.id))throw new Error("Niespójny indeks rozdziałów: powtórzony identyfikator "+item.id);
+      ids.add(item.id);items.push(item);
+    }
+    if(items.length===page.total)return items;
+    if(items.length>page.total||page.items.length===0)
+      throw new Error("Niepełny indeks rozdziałów. Odśwież aplikację.");
+    offset+=page.items.length;
+  }
+}
 async function init(){
   try{
-    const [domains,mods,stats]=await Promise.all([api("/api/domains"),api("/api/modules?limit=500"),api("/api/stats")]);
-    state.domains=domains;state.modules=mods.items;
+    const [domains,modules,stats]=await Promise.all([api("/api/domains"),loadAllModules(),api("/api/stats")]);
+    state.domains=domains;state.modules=modules;
     $("leanChapterModuleOptions").replaceChildren();
     for(const m of state.modules)$("leanChapterModuleOptions").append(node("option",{value:m.id}));
     $("dbStatus").textContent="Baza połączona";$("dbStatus").classList.add("connected");

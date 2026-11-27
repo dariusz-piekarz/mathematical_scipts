@@ -61,6 +61,26 @@ def main() -> None:
                 ).wait_for(timeout=20000)
                 displayed = page.locator("#statPill").inner_text()
                 assert displayed == f"{stats['documents']} rozdziałów", displayed
+                # The canonical library is larger than one API page. The
+                # Explorer and Lean module picker must contain every document.
+                inventory = page.evaluate("""() => ({
+                    count: state.modules.length,
+                    unique: new Set(state.modules.map(m => m.id)).size,
+                    domains: state.domains.every(d =>
+                        state.modules.filter(m => m.domain === d.name).length === d.modules)
+                })""")
+                assert inventory == {"count": stats["documents"], "unique": stats["documents"],
+                                     "domains": True}, inventory
+                assert page.locator("#leanChapterModuleOptions option").count() == stats["documents"]
+                assert page.locator("#tree .domain-header[aria-expanded=true]").count() == 0
+                # The final domain must be navigable even when its modules
+                # are beyond the first 500 results.
+                page.locator("#showExplorer").click()
+                final_domain = page.locator("#tree .domain-group").last
+                final_domain.locator(".domain-header").click()
+                expected_last = page.evaluate("state.domains.at(-1).modules")
+                assert final_domain.locator(".module-line").count() == expected_last
+                page.locator("#showExplorer").click()
                 page.locator("#openFirst").click()
                 page.locator("#docTitle").wait_for(state="visible", timeout=20000)
                 chapter_title = page.locator("#docTitle").inner_text()
