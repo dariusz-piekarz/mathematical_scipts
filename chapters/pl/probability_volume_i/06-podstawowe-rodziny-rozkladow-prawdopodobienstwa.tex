@@ -1,6 +1,8 @@
 \chapter{Podstawowe rodziny rozkładów prawdopodobieństwa}
 \label{ch:distributions}
 
+\providecommand{\atlasref}[2]{#2}
+
 \section{Rozkład Bernoulliego i dwumianowy}
 Pierwszym modelem losowym jest doświadczenie z dwiema
 możliwościami: sukces albo porażka. Nie ma potrzeby zakładać,
@@ -557,18 +559,22 @@ wystarcza liniowość wartości oczekiwanej.
 \end{przyklad}
 
 \section{Rozkład jednostajny ciągły i wykładniczy}
-W przestrzeni ciągłej nie da się przypisać jednakowej dodatniej
-masy wszystkim punktom odcinka. Jednostajność oznacza więc,
-że prawdopodobieństwo przedziału jest proporcjonalne do jego
+Nie można przypisać jednakowej dodatniej masy wszystkim
+punktom niejednopunktowego odcinka: już suma mas dostatecznie
+wielu różnych punktów przekroczyłaby jeden.
+Dla rozkładu jednostajnego na $(a,b)$ prawdopodobieństwo
+przedziału zawartego w $(a,b)$ jest proporcjonalne do jego
 długości. Rozkład wykładniczy odpowiada innej intuicji:
 jeśli wydarzenie nie zaszło przez czas $s$, dodatkowy czas
 oczekiwania ma mieć tę samą regułę co na początku.
-Ta własność braku pamięci wyznacza wykładniczy kształt ogona.
+Ta własność braku pamięci prowadzi do wykładniczego kształtu ogona.
 
 \begin{definicja}
 Dla $a,b\in\R$ z $a<b$ rozkładem jednostajnym
 $\Unif(a,b)$ nazywamy rozkład o gęstości
-$f(x)=\ind{\{a<x<b\}}/(b-a)$.
+$f(x)=\chi_{(a,b)}(x)/(b-a)$ względem miary Lebesgue'a
+$\lambda_1$. Wybór wartości gęstości w punktach $a,b$
+nie zmienia rozkładu.
 \end{definicja}
 
 \begin{stwierdzenie}
@@ -585,15 +591,19 @@ F_X(x)=\begin{cases}
 \]
 \end{stwierdzenie}
 \begin{proof}
-Gęstość $f(x)=(b-a)^{-1}\ind{\{a<x<b\}}$
-jest nieujemna i ma całkę równą jeden.
+Gęstość $f(x)=(b-a)^{-1}\chi_{(a,b)}(x)$
+jest borelowska, nieujemna i ma całkę
+$(b-a)^{-1}\lambda_1((a,b))=1$, więc określa
+miarę probabilistyczną.
 Dla $x\leq a$ przedział $(-\infty,x]$ nie przecina
 nośnika gęstości z dodatnią miarą, więc $F_X(x)=0$.
 Dla $a<x<b$ całkujemy stałą gęstość od $a$ do $x$,
 co daje $F_X(x)=(x-a)/(b-a)$.
 Dla $x\geq b$ całka obejmuje cały nośnik i wynosi jeden.
 
-Momenty obliczamy z definicji:
+Z faktu, że $\Prob(a<X<b)=1$, wynika ograniczoność $X$
+prawie na pewno i skończoność wszystkich dodatnich momentów
+bezwzględnych. Stosując \eqref{eq:lotus}, obliczamy:
 \[
 \E X=\frac1{b-a}\int_a^b x\,\dd\lambda_1(x)
 =\frac{b^2-a^2}{2(b-a)}=\frac{a+b}2,
@@ -610,7 +620,15 @@ $\Var(X)=(b-a)^2/12$.
 \begin{definicja}
 Dla $\lambda>0$ rozkładem wykładniczym $\operatorname{Exp}(\lambda)$
 z parametrem intensywności $\lambda$ nazywamy rozkład
-o gęstości $f(x)=\lambda e^{-\lambda x}\ind{\{x\geq0\}}$.
+o gęstości $f(x)=\lambda e^{-\lambda x}\chi_{[0,\infty)}(x)$
+względem miary Lebesgue'a $\lambda_1$.
+Jest to nieujemna funkcja borelowska, a jej całka wynosi
+\[
+\lim_{R\to\infty}\int_0^R\lambda e^{-\lambda x}\,
+\dd\lambda_1(x)=\lim_{R\to\infty}(1-e^{-\lambda R})=1
+\]
+na mocy zbieżności monotonicznej, więc rzeczywiście definiuje
+rozkład prawdopodobieństwa.
 \end{definicja}
 
 \begin{stwierdzenie}
@@ -628,14 +646,22 @@ $F_X(x)=\int_0^x\lambda e^{-\lambda t}\,\dd\lambda_1(t)
 Zatem ogon ma postać
 $\Prob(X>x)=e^{-\lambda x}$.
 
-Aby obliczyć momenty, wykonujemy zmianę zmiennych
-$u=\lambda x$ i używamy rekurencji całki gamma
-(albo dwukrotnego całkowania przez części):
+Aby obliczyć momenty, stosujemy \eqref{eq:lotus}
+do funkcji nieujemnej $x\mapsto |x|^k$ i podstawiamy
+$u=\lambda x$. Dla całkowitego $k\geq1$ mamy
 \[
-\E X^k=\int_0^\infty x^k\lambda e^{-\lambda x}
-\,\dd\lambda_1(x)=\frac{k!}{\lambda^k}
-\qquad(k=1,2).
+\E X^k=\E|X|^k
+=\frac1{\lambda^k}\int_0^\infty u^ke^{-u}\,\dd\lambda_1(u).
 \]
+Całkowanie przez części na $[0,R]$ daje
+\[
+\int_0^R u^ke^{-u}\,\dd\lambda_1(u)
+=-R^ke^{-R}+k\int_0^R u^{k-1}e^{-u}\,\dd\lambda_1(u).
+\]
+Ponieważ $R^ke^{-R}\to0$ i
+$\int_0^\infty e^{-u}\,\dd\lambda_1(u)=1$,
+indukcja i zbieżność monotoniczna dowodzą, że całka
+jest skończona i równa $k!$. Stąd $\E X^k=k!/\lambda^k$.
 Otrzymujemy $\E X=1/\lambda$ i
 $\Var(X)=2/\lambda^2-1/\lambda^2=1/\lambda^2$.
 
@@ -659,12 +685,20 @@ oczekiwania w procesie Poissona.
 \end{uwaga}
 
 \begin{przyklad}[Generowanie zmiennej wykładniczej z jednostajnej]
-Niech $U\sim\Unif(0,1)$ i $\lambda>0$. Zmienna
-$X=-\log(1-U)/\lambda$ ma rozkład $\operatorname{Exp}(\lambda)$,
-ponieważ dla $x\geq0$ zachodzi
+Niech $U\sim\Unif(0,1)$ i $\lambda>0$. Definiujemy
+$X=-\log(1-U)/\lambda$ na mierzalnym zdarzeniu $\{0<U<1\}$,
+a na jego dopełnieniu przyjmujemy $X=0$.
+Zmienna $X$ jest mierzalna, gdyż funkcja użyta w definicji
+jest ciągła na $(0,1)$, a jej przedłużenie zerem jest borelowskie.
+Ponieważ $\Prob(0<U<1)=1$, dla $x\geq0$ nierówność
+$X\leq x$ jest równoważna $U\leq1-e^{-\lambda x}$
+poza zbiorem zerowym. Zatem
 $\Prob(X\leq x)=\Prob(U\leq1-e^{-\lambda x})=1-e^{-\lambda x}$.
+Dla $x<0$ mamy $\Prob(X\leq x)=0$. Dystrybuanta jest
+więc dystrybuantą $\operatorname{Exp}(\lambda)$, co
+jednoznacznie wyznacza rozkład.
 Jest to szczególny przypadek metody odwrotnej dystrybuanty,
-opartej na kwantylu uogólnionym. Pozwala ona przejść od
+opartej na kwantylu uogólnionym (rozdział~\ref{ch:random-variables}). Pozwala ona przejść od
 jednostajnej liczby pseudolosowej do zadanej rodziny rozkładów.
 \end{przyklad}
 
@@ -693,15 +727,31 @@ Jego dystrybuantę oznaczamy przez $\Phi$.
 Zachodzi $\int_\R e^{-x^2/2}\,\dd\lambda_1(x)=\sqrt{2\pi}$.
 \end{lemat}
 \begin{proof}
-Niech $I=\int_\R e^{-x^2/2}\,\dd\lambda_1(x)$.
-Z twierdzenia Tonellego i przejścia do współrzędnych biegunowych
-otrzymujemy
+Niech $I=\int_\R e^{-x^2/2}\,\dd\lambda_1(x)\in(0,\infty]$.
+Funkcja podcałkowa jest dodatnia i borelowska.
+Z \atlasref{ME-12::thm:tonelli-12}{twierdzenia Tonellego}
+otrzymujemy równość $I^2$ z całką na $\R^2$, początkowo
+w sensie rozszerzonym. Odwzorowanie
+$(r,\varphi)\mapsto(r\cos\varphi,r\sin\varphi)$ jest
+dyfeomorfizmem klasy $C^1$ z $(0,\infty)\times(0,2\pi)$
+na płaszczyznę bez nieujemnej półosi poziomej;
+moduł jego jakobianu wynosi $r$. Pominięta półoś ma
+miarę Lebesgue'a $\lambda_2$ równą zero.
+Stosując \atlasref{ME-13::thm:change-variables-13}{twierdzenie o zamianie zmiennych}
+do nieujemnej funkcji, otrzymujemy
 \[
 I^2=\int_{\R^2}e^{-(x^2+y^2)/2}\,\dd\lambda_2(x,y)
 =\int_0^{2\pi}\!\int_0^\infty e^{-r^2/2}r\,
 \dd\lambda_1(r)\,\dd\lambda_1(\varphi)=2\pi.
 \]
-Ponieważ $I>0$, mamy $I=\sqrt{2\pi}$.
+W ostatnim kroku podstawiono $u=r^2/2$, co daje
+$\int_0^\infty e^{-r^2/2}r\,\dd\lambda_1(r)
+=\int_0^\infty e^{-u}\,\dd\lambda_1(u)=1$.
+Ponieważ $I^2=2\pi$, całka $I$ jest skończona,
+a z dodatniości wynika $I=\sqrt{2\pi}$.
+W konsekwencji funkcja z \eqref{eq:normal} jest nieujemna,
+borelowska i po podstawieniu $z=(x-\mu)/\sigma$
+ma całkę $I/\sqrt{2\pi}=1$, więc definiuje rozkład.
 \end{proof}
 
 \begin{stwierdzenie}[Momenty i funkcja tworząca]
@@ -714,8 +764,11 @@ w punkcie $b$.
 \end{stwierdzenie}
 \begin{proof}
 Niech $Z=(X-\mu)/\sigma$. Z twierdzenia o
-przekształceniach zmiennych wynika, że $Z$ ma gęstość
-$g(z)=(2\pi)^{-1/2}e^{-z^2/2}$.
+przekształceniach zmiennych (rozdział~\ref{ch:random-variables})
+wynika, że $Z$ ma gęstość
+$g(z)=\sigma f_X(\mu+\sigma z)=(2\pi)^{-1/2}e^{-z^2/2}$.
+Korzystamy z dodatniości $\sigma$ oraz z faktu,
+że odwrotność przekształcenia afinicznego ma pochodną $\sigma$.
 Dla $t\in\R$ obliczamy
 \[
 M_X(t)=\frac{e^{\mu t}}{\sqrt{2\pi}}\int_\R
@@ -731,23 +784,37 @@ Otrzymujemy więc
 $M_X(t)=\exp(\mu t+\sigma^2t^2/2)$
 dla wszystkich $t\in\R$.
 Ponieważ funkcja ta jest skończona na całej prostej,
-możemy różniczkować pod całką. Z równości
-$M_X'(0)=\mu$ i $M_X''(0)=\mu^2+\sigma^2$
-wynikają wzory na średnią i wariancję.
-Dla $a\ne0$ transformacja gęstości przez funkcję
-$x\mapsto ax+b$ daje rozkład
-$\Normal(a\mu+b,a^2\sigma^2)$;
+z twierdzenia o odzyskiwaniu momentów
+(rozdział~\ref{ch:expectation}) wynika skończoność
+wszystkich momentów bezwzględnych rzędów całkowitych oraz
+$\E X=M_X'(0)$ i $\E X^2=M_X''(0)$.
+Różniczkując otrzymany wzór, dostajemy
+$M_X'(t)=(\mu+\sigma^2t)M_X(t)$ i
+$M_X''(t)=[\sigma^2+(\mu+\sigma^2t)^2]M_X(t)$.
+Ponieważ $M_X(0)=1$, mamy $\E X=\mu$ i
+$\E X^2=\mu^2+\sigma^2$, zatem $\Var(X)=\sigma^2$.
+Dla rzeczywistego $a\ne0$ transformacja gęstości
+przez funkcję $x\mapsto ax+b$ daje
+\[
+f_{aX+b}(y)=\frac1{|a|}f_X\!\left(\frac{y-b}{a}\right)
+=\frac1{|a|\sigma\sqrt{2\pi}}
+\exp\!\left(-\frac{(y-a\mu-b)^2}{2a^2\sigma^2}\right).
+\]
+Jest to gęstość $\Normal(a\mu+b,a^2\sigma^2)$;
 gdy $a=0$, zmienna $aX+b$ jest stale równa $b$.
 \end{proof}
 
 \begin{stwierdzenie}[Suma niezależnych zmiennych normalnych]
 Jeżeli $X\sim\Normal(\mu_1,\sigma_1^2)$ i
-$Y\sim\Normal(\mu_2,\sigma_2^2)$ są niezależne,
-gdzie $\sigma_1,\sigma_2>0$, to
+$Y\sim\Normal(\mu_2,\sigma_2^2)$ są niezależne na
+wspólnej przestrzeni probabilistycznej, gdzie
+$\mu_1,\mu_2\in\R$ i $\sigma_1,\sigma_2>0$, to
 $X+Y\sim\Normal(\mu_1+\mu_2,\sigma_1^2+\sigma_2^2)$.
 \end{stwierdzenie}
 \begin{proof}
-Z niezależności i wzoru na splot wynika dla $s\in\R$
+Z niezależności i wzoru na splot gęstości
+(rozdział~\ref{ch:random-variables}) wynika, że następująca
+funkcja jest wersją gęstości sumy dla $s\in\R$:
 \[
 f_{X+Y}(s)=\frac1{2\pi\sigma_1\sigma_2}
 \int_\R\exp\!\left(-\frac{(x-\mu_1)^2}{2\sigma_1^2}
@@ -762,7 +829,13 @@ Uzupełnienie kwadratu daje
 =\frac{v}{\sigma_1^2\sigma_2^2}(x-c(s))^2
 +\frac{(s-\mu_1-\mu_2)^2}{v}.
 \]
-Całkując pierwszy czynnik za pomocą całki Gaussa, otrzymujemy
+Tożsamość można sprawdzić, porównując współczynniki
+przy $x^2$ i $x$ oraz wyrazy stałe po obu stronach.
+Po wyłączeniu czynnika niezależnego od $x$ stosujemy
+podstawienie $u=\sqrt v(x-c(s))/(\sigma_1\sigma_2)$.
+Całka po $\R$ z pozostałego czynnika wynosi
+$\sigma_1\sigma_2\sqrt{2\pi}/\sqrt v$ na mocy lematu
+o całce Gaussa. W konsekwencji otrzymujemy
 \[
 f_{X+Y}(s)=\frac{1}{\sqrt{2\pi v}}
 \exp\!\left(-\frac{(s-\mu_1-\mu_2)^2}{2v}\right),
@@ -774,10 +847,15 @@ czyli żądaną gęstość.
 Jeżeli $X\sim\Normal(\mu,\sigma^2)$, to
 $Z:=(X-\mu)/\sigma\sim\Normal(0,1)$.
 W konsekwencji dla $a<b$
-$\Prob(a<X\leq b)=\Phi((b-\mu)/\sigma)-\Phi((a-\mu)/\sigma)$.
-Dystrybuanta $\Phi$ nie ma pierwotnej wyrażalnej przez skończone
-kombinacje standardowych funkcji elementarnych; jej wartości
-wyznacza się numerycznie lub za pomocą funkcji błędu.
+$\{a<X\leq b\}=\{(a-\mu)/\sigma<Z\leq(b-\mu)/\sigma\}$,
+gdyż $\sigma>0$. Z definicji dystrybuanty
+\[
+\Prob(a<X\leq b)=\Phi((b-\mu)/\sigma)-\Phi((a-\mu)/\sigma).
+\]
+Funkcja $\Phi(x)=(2\pi)^{-1/2}\int_{-\infty}^x
+e^{-u^2/2}\,\dd\lambda_1(u)$ jest funkcją pierwotną
+standardowej gęstości normalnej. Jej wartości wyznacza
+się numerycznie lub za pomocą funkcji błędu.
 \end{przyklad}
 
 \section{Funkcja gamma i funkcja beta}
