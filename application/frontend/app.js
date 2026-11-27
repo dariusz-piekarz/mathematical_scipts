@@ -494,6 +494,24 @@ function dismissSearch(){
   ++searchEpoch;
   $("searchResults").classList.add("hidden");
 }
+function handleSearchResultKey(event){
+  const list=$("searchResults"), input=$("searchInput");
+  if(list.classList.contains("hidden"))return;
+  const buttons=[...list.querySelectorAll("button:not(:disabled)")];
+  const index=buttons.indexOf(document.activeElement);
+  if(event.key==="Escape"){
+    event.preventDefault();dismissSearch();input.focus();return;
+  }
+  if(!buttons.length)return;
+  let next;
+  if(event.key==="ArrowDown")next=index<0?0:Math.min(index+1,buttons.length-1);
+  else if(event.key==="ArrowUp")next=index<0?buttons.length-1:index-1;
+  else if(index>=0&&event.key==="Home")next=0;
+  else if(index>=0&&event.key==="End")next=buttons.length-1;
+  else return;
+  event.preventDefault();
+  if(next<0)input.focus();else buttons[next].focus();
+}
 function setupSearch(){
   const input=$("searchInput");
   input.addEventListener("input",()=>{
@@ -503,8 +521,10 @@ function setupSearch(){
   });
   input.addEventListener("keydown",e=>{
     if(e.key==="Enter"){e.preventDefault();dismissSearch();performSearch(input.value.trim());}
-    if(e.key==="Escape")dismissSearch();
+    if(e.key==="Escape"&&$("searchResults").classList.contains("hidden"))dismissSearch();
+    else handleSearchResultKey(e);
   });
+  $("searchResults").addEventListener("keydown",handleSearchResultKey);
   document.addEventListener("click",e=>{if(!e.target.closest(".header-search"))dismissSearch();});
 }
 async function performSearch(q){
