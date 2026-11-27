@@ -190,11 +190,12 @@ with sync_playwright() as pw:
                         'edges': [12, 12], 'triangles': [8, 12]}, geometry
     host.locator('button').click()
     assert host.locator('iframe').count() == 0
-    # Static TikZ and interactive Plotly coexist in chapters 19–21.
+    # Static TikZ and interactive Plotly coexist in chapters 19–22.
     for module, filename in [
         ('AM2-19', '19-twierdzenie-o-funkcji-uwiklanej.tex'),
         ('AM2-20', '20-twierdzenia-o-rzedzie.tex'),
         ('AM2-21', '21-podrozmaitosci-przestrzeni-euklidesowej.tex'),
+        ('AM2-22', '22-ekstrema-zwiazane.tex'),
     ]:
         source = (ROOT.parent / 'chapters/pl/mathematical_analysis_ii' / filename).read_text(encoding='utf-8')
         page.evaluate("([latex, code]) => renderSimplified(latex, code)", [source, module])
