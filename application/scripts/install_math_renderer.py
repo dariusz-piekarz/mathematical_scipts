@@ -8,7 +8,13 @@ import re
 import shutil
 import tarfile
 import tempfile
+import sys
 from urllib.request import urlopen
+
+# The launcher runs this file directly as well as importing it in tests.
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from backend.latex_parser import module_id
 
 VERSION = "0.16.22"
 REGISTRY = "https://registry.npmjs.org/katex/"
@@ -20,23 +26,57 @@ def ready(folder):
     return all((folder / p).is_file() for p in REQUIRED) and any((folder / "fonts").glob("*.woff2"))
 
 
+# Deliberately limited to literal, single-line definitions. Optional default
+# arguments, arbitrary TeX execution, and mid-chapter scopes are not supported.
+COMMAND = re.compile(r"^\\(newcommand|providecommand)\*?\s*\{(\\[A-Za-z]+)\}\s*(?:\[(\d+)\])?\s*\{(.*)\}\s*$")
+OPERATOR = re.compile(r"^\\DeclareMathOperator(\*)?\s*\{(\\[A-Za-z]+)\}\s*\{(.*)\}\s*$")
+HEADER = re.compile(r"^\\(?:chapter\*?\{.*\}|label\{[^{}]*\}|begingroup)\s*$")
+
+
+def add_literal_macro(line, macros):
+    match = COMMAND.fullmatch(line)
+    if match:
+        if match[1] == "providecommand":
+            macros.setdefault(match[2], match[4])
+        else:
+            macros[match[2]] = match[4]
+        return True
+    match = OPERATOR.fullmatch(line)
+    if match:
+        macros[match[2]] = "\\operatorname" + (match[1] or "") + "{" + match[3] + "}"
+        return True
+    return False
+
+
 def write_macro_profiles():
-    """Read only literal, single-line math command definitions; never execute TeX."""
+    """Generate book profiles and chapter-header deltas, without executing TeX."""
     profiles = {}
     preambles = DEST.parents[2] / "config" / "preambles"
-    command = re.compile(r"^\\newcommand\{(\\[A-Za-z]+)\}(?:\[(\d+)\])?\{(.*)\}\s*$")
-    operator = re.compile(r"^\\DeclareMathOperator(\*)?\{(\\[A-Za-z]+)\}\{(.*)\}\s*$")
     for path in sorted(preambles.glob("*.tex")):
         macros = {}
         for line in path.read_text(encoding="utf-8-sig").splitlines():
-            match = command.fullmatch(line)
-            if match:
-                macros[match[1]] = match[3]
-                continue
-            match = operator.fullmatch(line)
-            if match:
-                macros[match[2]] = "\\operatorname" + (match[1] or "") + "{" + match[3] + "}"
+            add_literal_macro(line.strip(), macros)
         profiles[path.stem] = macros
+
+    # Only declarations before the first substantive chapter content are
+    # available to all its fragments. Do not leak later scoped declarations
+    # into preceding equations or another chapter/book.
+    chapters = DEST.parents[3] / "chapters" / "pl"
+    for path in sorted(chapters.rglob("*.tex")):
+        doc_id = module_id(path)
+        base = profiles.get(doc_id.split("-", 1)[0])
+        if base is None or "-" not in doc_id:
+            continue
+        macros = dict(base)
+        for line in path.read_text(encoding="utf-8-sig").splitlines():
+            line = line.strip()
+            if not line or line.startswith("%") or HEADER.fullmatch(line):
+                continue
+            if not add_literal_macro(line, macros):
+                break
+        delta = {key: value for key, value in macros.items() if base.get(key) != value}
+        if delta:
+            profiles[doc_id] = delta
     DEST.parent.mkdir(parents=True, exist_ok=True)
     (DEST.parent / "math-macro-profiles.js").write_text(
         "window.atlasMathMacroProfiles = " + json.dumps(profiles, ensure_ascii=True) + ";\n",

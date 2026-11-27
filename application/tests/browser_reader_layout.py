@@ -108,6 +108,17 @@ with sync_playwright() as pw:
     assert 'PDF' not in box.inner_text()
     assert page.locator('#mathPreviewStatus').is_hidden()
 
+    # Real chapter-local macros must also work in detached theorem fragments.
+    page.evaluate("() => openModule('AM1-36')")
+    assert page.evaluate(r"() => previewMacros('AM1-36')['\\HK']") == r"\mathrm{KH}"
+    fragment = r"$\R,\C,\K,\HK,\Var_I F,\osc_I F,\BV,\ind{A}$"
+    page.evaluate("source => renderSimplified(source, 'AM1-36')", fragment)
+    assert box.locator('.katex').count() == 1
+    assert box.locator('.katex-error').count() == 0
+    assert page.locator('#mathPreviewStatus').is_hidden()
+    assert page.evaluate(r"() => previewMacros('AM1-14')['\\HK'] === undefined")
+    assert page.evaluate(r"() => previewMacros('MOD')['\\Q']") == r"\mathrm Q"
+
     # Keep wide equations and code independently scrollable, rather than
     # hiding document overflow and accidentally clipping their contents.
     wide = r'\[' + '+'.join(f'x_{{{i}}}' for i in range(100)) + r'\]'

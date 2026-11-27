@@ -196,8 +196,10 @@ function renderReader(){
 const displayEnvironments = ["equation","equation*","align","align*","alignat","alignat*","gather","gather*","CD"];
 const mathEnvironments = new Set([...displayEnvironments,"aligned","alignedat","gathered","split","cases","dcases","matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix","smallmatrix","array","multline","multline*"]);
 function previewMacros(moduleId){
-  const prefix=String(moduleId||"").split("-")[0];
-  return {...(window.atlasMathMacroProfiles?.[prefix]||{})};
+  const id=String(moduleId||"");
+  const prefix=id.split("-")[0];
+  const profiles=window.atlasMathMacroProfiles;
+  return {...(profiles?.[prefix]||{}),...(id!==prefix?profiles?.[id]||{}:{})};
 }
 // Curated static previews, matched against the entire TikZ source (not a chapter number).
 // Never execute TeX or trust HTML supplied by chapter content.

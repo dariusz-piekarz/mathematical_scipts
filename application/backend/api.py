@@ -132,8 +132,11 @@ def entity_payload(row: sqlite3.Row) -> dict[str, Any]:
 def index():
     html = (FRONTEND / "index.html").read_text(encoding="utf-8")
     # Updated reader code must not be mixed with an older cached stylesheet.
-    for name in ("styles.css", "preview.js", "session.js", "app.js"):
-        revision = hashlib.sha256((FRONTEND / name).read_bytes()).hexdigest()[:16]
+    for name in ("styles.css", "preview.js", "session.js", "app.js", "vendor/math-macro-profiles.js"):
+        asset = FRONTEND / name
+        if name.startswith("vendor/") and not asset.is_file():
+            continue  # Source view remains available without optional KaTeX assets.
+        revision = hashlib.sha256(asset.read_bytes()).hexdigest()[:16]
         html = html.replace(f'"/assets/{name}"', f'"/assets/{name}?v={revision}"')
     return HTMLResponse(html, headers={"Cache-Control": "no-cache"})
 
