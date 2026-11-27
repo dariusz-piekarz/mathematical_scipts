@@ -7,7 +7,7 @@ const state = {
   currentModule:null, currentEntity:null, currentData:null, selected:new Map(),
   tab:"reader", granularity:"module", simplified:true, tooltipData:null, leanEpoch:0, leanFragment:null, leanRunner:null, leanCatalog:null, leanCatalogLoading:false, leanCatalogEpoch:0,
   leanChapterReportEpoch:0, leanTranscriptionEpoch:0, leanTranscriptionBusy:false,
-  tooltipKey:0, graph:null, graphCoverage:null, graphEpoch:0, graphLoading:false, pathEpoch:0, conceptGraph:null, conceptEpoch:0, renderEpoch:0, draftSession:null,
+  tooltipKey:0, graph:null, graphCoverage:null, graphEpoch:0, graphLoading:false, pathEpoch:0, conceptGraph:null, conceptEpoch:0, conceptRequest:null, renderEpoch:0, draftSession:null,
 };
 const titleOr = item => item.title || item.subtype || item.kind || item.id;
 const tr = s => String(s ?? "");
@@ -32,7 +32,7 @@ function activateTab(name,{fromReaderNavigation=false}={}){
   if(name==="selection")renderSelection();
   if(name==="lean" && !state.leanCatalog && !state.leanCatalogLoading)loadLeanCatalog();
   if(name==="graph" && !state.graph && !state.graphCoverage && !state.graphLoading)loadGraph();
-  if(name==="concepts" && !state.conceptGraph)loadConceptGraph();
+  if(name==="concepts" && !state.conceptGraph && !state.conceptRequest)loadConceptGraph();
   closeTip();
 }
 function toggleDomain(domain){state.expandedDomains.has(domain)?state.expandedDomains.delete(domain):state.expandedDomains.add(domain);renderTree();}
@@ -816,27 +816,44 @@ function openConceptSearch(term){
   activateTab("concepts");
   loadConceptGraph();
 }
-async function loadConceptGraph(){
-  const q=$("conceptSearch").value.trim();
-  if(q.length<2){toast("Wpisz co najmniej dwa znaki.");return;}
-  const epoch=++state.conceptEpoch;
-  $("conceptSummary").textContent="Wyszukiwanie wystąpień pojęcia: "+q+"…";
-  try{
-    const count=Number($("conceptLimit").value);
-    const data=await api("/api/concepts/graph?q="+encodeURIComponent(q)+"&max_occurrences="+count);
-    if(epoch!==state.conceptEpoch || $("conceptSearch").value.trim()!==q)return;
-    state.conceptGraph=data;
-    $("conceptSummary").textContent=data.matches_total+" dopasowań tekstowych · "+
-      data.occurrences_shown+" widocznych wystąpień · "+
-      data.relationships+" zweryfikowanych relacji katalogowych"+
-      (data.truncated?" · ograniczono liczbę wyników":"");
-    renderConceptGraph(data);
-    renderConceptEvidence(data);
-  }catch(e){
-    if(epoch!==state.conceptEpoch)return;
-    $("conceptSummary").textContent="Nie można zbudować grafu.";
-    toast(e.message);
+function invalidateConceptGraph(message="Zmieniono zapytanie. Utwórz graf."){
+  ++state.conceptEpoch;state.conceptRequest=null;state.conceptGraph=null;
+  for(const id of ["conceptCanvas","conceptRelations","conceptEvidence"])$(id).replaceChildren();
+  $("conceptSummary").textContent=message;
+}
+function loadConceptGraph(){
+  const q=$("conceptSearch").value.trim(),count=Number($("conceptLimit").value);
+  if(q.length<2){
+    invalidateConceptGraph("Wpisz co najmniej dwa znaki.");
+    toast("Wpisz co najmniej dwa znaki.");return;
   }
+  const key=JSON.stringify([q,count]);
+  if(state.conceptRequest?.key===key)return state.conceptRequest.promise;
+  invalidateConceptGraph("Wyszukiwanie wystąpień pojęcia: "+q+"…");
+  const epoch=state.conceptEpoch,request={key,promise:null};
+  state.conceptRequest=request;
+  const isCurrent=()=>epoch===state.conceptEpoch &&
+    $("conceptSearch").value.trim()===q && Number($("conceptLimit").value)===count;
+  request.promise=(async()=>{
+    try{
+      const data=await api("/api/concepts/graph?q="+encodeURIComponent(q)+"&max_occurrences="+count);
+      if(!isCurrent())return;
+      renderConceptGraph(data);
+      renderConceptEvidence(data);
+      state.conceptGraph=data;
+      $("conceptSummary").textContent=data.matches_total+" dopasowań tekstowych · "+
+        data.occurrences_shown+" widocznych wystąpień · "+
+        data.relationships+" zweryfikowanych relacji katalogowych"+
+        (data.truncated?" · ograniczono liczbę wyników":"");
+    }catch(e){
+      if(!isCurrent())return;
+      invalidateConceptGraph("Nie można zbudować grafu.");
+      toast(e.message);
+    }finally{
+      if(state.conceptRequest===request)state.conceptRequest=null;
+    }
+  })();
+  return request.promise;
 }
 function openConceptNode(n){
   if(n.type==="concept"){
@@ -1479,6 +1496,7 @@ function listeners(){
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeTip();});
   $("drawGraph").addEventListener("click",loadGraph);$("globalGraphCoverage").addEventListener("click",loadGlobalGraphCoverage);$("findPath").addEventListener("click",findPath);
   $("drawConceptGraph").addEventListener("click",loadConceptGraph);
+  $("conceptSearch").addEventListener("input",()=>invalidateConceptGraph());
   $("conceptSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();loadConceptGraph();}});
   $("conceptLimit").addEventListener("change",()=>{if(state.tab==="concepts")loadConceptGraph();});
   $("checkSelection").addEventListener("click",checkSelection);$("generateZip").addEventListener("click",generateZip);$("createDraft").addEventListener("click",createDraft);$("saveManifest").addEventListener("click",downloadManifest);
