@@ -186,6 +186,53 @@ with sync_playwright() as pw:
         return count;
     }""")
     assert detached_cases == 4
+    # A partial or malformed batch must not permanently cache an absent label.
+    description_cases = page.evaluate("""async () => {
+        const originalApi=api;
+        const source='ATLAS-DESCRIPTION-TEST';
+        let count=0, calls=0, reply;
+        const key=label=>JSON.stringify([source,label]);
+        const clear=label=>referenceDescriptions.delete(key(label));
+        try {
+            api=async (url,options)=>{
+                if(url==='/api/references/descriptions'){
+                    const body=JSON.parse(options.body);
+                    if(body.source_document===source){calls++;return reply;}
+                }
+                return originalApi(url,options);
+            };
+            for(const malformed of [{items:{}},{items:{bad:null}},{items:{bad:[]}},
+                                    {items:{bad:{}}},{items:[]},null,
+                                    {items:{bad:{document_id:42}}}]){
+                clear('bad');reply=malformed;const before=calls;
+                if(await describeReference('bad',source)!==null)
+                    throw Error('invalid description accepted');
+                reply={items:{bad:{document_id:'ALG-08'}}};
+                if((await describeReference('bad',source)).document_id!=='ALG-08'||
+                    calls!==before+2)throw Error('description retry failed');
+                count++;
+            }
+            clear('ok');clear('bad');
+            reply={items:{ok:{missing:true}}};const before=calls;
+            const good=describeReference('ok',source),bad=describeReference('bad',source);
+            if(!(await good).missing||await bad!==null||calls!==before+1)
+                throw Error('partial batch did not settle independently');
+            if(describeReference('ok',source)!==good)throw Error('valid cache discarded');
+            reply={items:{bad:{ambiguous:true}}};
+            if(!(await describeReference('bad',source)).ambiguous||calls!==before+2)
+                throw Error('partial batch retry failed');
+            count++;
+            reply={items:{}};
+            if(await describeReference('constructor',source)!==null)
+                throw Error('inherited property treated as description');
+            count++;
+        }finally{
+            api=originalApi;
+            for(const label of ['ok','bad','constructor'])clear(label);
+        }
+        return count;
+    }""")
+    assert description_cases == 9
     assert not errors,errors
     browser.close()
     print('Reference titles, hover, exact navigation, multiple targets, conflicts, missing labels and source preservation: OK')
