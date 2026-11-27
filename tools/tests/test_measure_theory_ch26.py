@@ -44,6 +44,23 @@ class TestHausdorffChapter26(unittest.TestCase):
             r = m/(2*C)
             self.assertGreater(m,C*r)
 
+    def test_normalized_frostman_approximants(self):
+        # Finite models: separate convergence of positive total mass
+        # and of probability measures before reconstructing the measure.
+        for weights in product(range(4), repeat=4):
+            mass = sum(weights)
+            if not mass:
+                continue
+            prob = [Fraction(w, mass) for w in weights]
+            self.assertEqual(sum(prob), 1)
+            for mask in range(16):
+                p = sum(prob[i] for i in range(4) if mask & (1 << i))
+                raw = sum(weights[i] for i in range(4) if mask & (1 << i))
+                self.assertEqual(mass*p, raw)
+                for n in (1, 2, 8, 32):
+                    bn = mass + Fraction(1, n)
+                    self.assertLessEqual(abs(bn*p - raw), Fraction(1, n))
+
     def test_capacity_against_exhaustive_covers(self):
         # Binary depth-three tree with rational example costs (in quarters).
         # Independently enumerate all subfamilies of the 15 nodes.
@@ -92,6 +109,15 @@ class TestHausdorffChapter26(unittest.TestCase):
             else:
                 self.assertEqual(stack.pop(),m[2])
         self.assertFalse(stack)
+        known = set(labels)
+        for path in SOURCE.parent.glob("[0-9][0-9]-*.tex"):
+            known.update(re.findall(r"\\label\{([^}]+)\}", path.read_text(encoding="utf-8")))
+        refs = set(re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", s))
+        self.assertFalse(refs - known, f"Missing references: {sorted(refs - known)}")
+        self.assertNotIn(r"\atlasref{CAL-", s)
+        self.assertIn(r"\ref{lem:compact-prob-22}", s)
+        self.assertIn(r"\eta_n=\mu_n/b_n", s)
+
 
 if __name__=="__main__":
     unittest.main()
