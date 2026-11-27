@@ -76,6 +76,31 @@ class LeanDraftRepairTests(unittest.TestCase):
         for exit_code in (0, 124, -9, True):
             self.assertIsNone(self.plan([self.record(self.initial, exit_code=exit_code)])["lean_code"])
 
+    def test_diagnostic_location_must_be_inside_proof(self):
+        for diagnostic in (
+            b"Draft.lean:1:0: error: unsolved goals",
+            b"Draft.lean:6:0: error: unsolved goals",
+            b"Draft.lean:99:2: error: unsolved goals",
+            b"Draft.lean:8:999: error: unsolved goals",
+            b"Other.lean:8:2: error: unsolved goals",
+            b"Draft.lean:8:2: error: tactic 'unknown' failed",
+            b"Draft.lean:8:2: error: tactic 'omega' timeout failed",
+            FAILURE + b"Draft.lean:1:0: error: unsolved goals",
+        ):
+            with self.subTest(diagnostic=diagnostic):
+                self.assertIsNone(self.plan([self.record(self.initial, diagnostic)])["lean_code"])
+        prefix = self.initial["lean_code"].split(" := by\n", 1)[0] + " := "
+        row = prefix.count("\n")+1
+        col = len(prefix.rsplit("\n", 1)[-1])
+        for offset, expected in ((-1, "blocked"), (0, "repair_planned")):
+            data = f"Draft.lean:{row}:{col+offset}: error: unsolved goals".encode()
+            self.assertEqual(self.plan([self.record(self.initial, data)])["status"], expected)
+
+    def test_known_tactic_diagnostic(self):
+        for message in ("tactic 'omega' failed", "tactic \x60rfl\x60 failed"):
+            data = f"Draft.lean:8:2: error: {message}".encode()
+            self.assertEqual(self.plan([self.record(self.initial, data)])["status"], "repair_planned")
+
     def test_replay_rejects_wrong_hash_and_history_shape(self):
         first = self.record(self.initial)
         for history in ([], [first]*4, [first, first], [None],

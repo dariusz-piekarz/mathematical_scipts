@@ -13,21 +13,26 @@ from backend import lean_draft_generator as generator
 
 MAX_ATTEMPTS = 3  # Includes the original candidate.
 MAX_DIAGNOSTIC_BYTES = 16000
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 # Fixed, reviewed tactic text only. Never interpolate diagnostics.
 _REPAIRS = (
     "by\n  repeat' intro\n  first\n  | solve_by_elim\n  | simp_all\n  | omega\n",
     "by\n  repeat' intro\n  first\n  | aesop\n  | omega\n  | ring\n",
 )
-_ERROR = re.compile(r"^(?:/tmp/)?Draft\.lean:\d{1,6}:\d{1,6}: error: (.+)$")
-_RETRYABLE = ("unsolved goals", "tactic '", "tactic \x60")
+_ERROR = re.compile(r"^(?:/tmp/)?Draft\.lean:([0-9]{1,6}):([0-9]{1,6}): error: (.+)$")
+# Deliberately narrow: a diagnostic about an unknown tactic, elaboration,
+# resource exhaustion or the statement itself cannot authorize a repair.
+_TACTIC_FAILED = re.compile(
+    r"tactic (?:'(assumption|rfl|tauto|omega|solve_by_elim|simp_all|aesop|ring)'"
+    r"|\x60(assumption|rfl|tauto|omega|solve_by_elim|simp_all|aesop|ring)\x60) failed"
+)
 
 
 def _sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def _failure_kind(record, expected_hash):
+def _failure_kind(record, expected_hash, code, prefix):
     if (type(record) is not dict or set(record) !=
             {"code_sha256", "exit_code", "diagnostic"}
             or type(record["code_sha256"]) is not str
@@ -48,11 +53,20 @@ def _failure_kind(record, expected_hash):
     errors = [line for line in log.splitlines() if "error:" in line.lower()]
     if not errors:
         return "non_repairable_failure"
+    # Lean uses one-based line numbers and zero-based columns.
+    proof_line = prefix.count("\n") + 1
+    proof_column = len(prefix.rsplit("\n", 1)[-1])
+    lines = code.splitlines()
     for line in errors:
         match = _ERROR.fullmatch(line)
-        if match is None or not match[1].startswith(_RETRYABLE):
+        if match is None:
             return "non_repairable_failure"
-        if match[1] != "unsolved goals" and not match[1].endswith("failed"):
+        row, col, message = int(match[1]), int(match[2]), match[3]
+        if (row < proof_line or row > len(lines)
+                or (row == proof_line and col < proof_column)
+                or col > len(lines[row-1])):
+            return "non_repairable_failure"
+        if message != "unsolved goals" and not _TACTIC_FAILED.fullmatch(message):
             return "non_repairable_failure"
     # No claim about authenticity of this diagnostic is made here.
     return "reported_proof_failure"
@@ -100,7 +114,7 @@ def plan_next(source: str, *, segments: list | None = None,
     trace = []
     for i, record in enumerate(observations):
         digest = _sha(code.encode("utf-8"))
-        kind = _failure_kind(record, digest)
+        kind = _failure_kind(record, digest, code, prefix)
         if kind != "reported_proof_failure":
             return {**base, **identity, "error": kind, "attempts": trace}
         trace.append({"attempt": i+1, "code_sha256": digest,
