@@ -60,6 +60,26 @@ class MathRendererInstallTest(unittest.TestCase):
         self.assertNotIn(r"\late", profiles["AM1-99"])
         self.assertEqual(profiles["AM1-99"][r"\localtest"], r"\mathcal{#1}")
 
+    def test_multiline_literal_macros_and_comments(self):
+        macros = {}
+        source = "\n".join((
+            r"\newcommand{\first}{\mathbb{R}} % comment",
+            r"\providecommand{\first}{WRONG}",
+            r"\newcommand{\multi}[1]{\frac{#1}{%",
+            r"  2}} % another comment",
+            r"\DeclareMathOperator{\op}{",
+            r"  rank}",
+            r"\newcommand{\pct}{\%}",
+            r"\newcommand{\optional}[1][x]{#1}",
+        ))
+        for line in renderer.logical_macro_lines(source):
+            renderer.add_literal_macro(line, macros)
+        self.assertEqual(macros[r"\first"], r"\mathbb{R}")
+        self.assertEqual(macros[r"\multi"], r"\frac{#1}{2}")
+        self.assertEqual(macros[r"\op"], r"\operatorname{ rank}")
+        self.assertEqual(macros[r"\pct"], r"\%")
+        self.assertNotIn(r"\optional", macros)
+
     def test_cached_install_refreshes_profiles_without_network(self):
         for name in renderer.REQUIRED + ("fonts/test.woff2",):
             target = self.dest / name

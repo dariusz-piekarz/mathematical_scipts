@@ -26,14 +26,65 @@ def ready(folder):
     return all((folder / p).is_file() for p in REQUIRED) and any((folder / "fonts").glob("*.woff2"))
 
 
-# Deliberately limited to literal, single-line definitions. Optional default
-# arguments, arbitrary TeX execution, and mid-chapter scopes are not supported.
+# Deliberately limited to literal definitions. Optional default arguments,
+# arbitrary TeX execution, and mid-chapter scopes are not supported.
 COMMAND = re.compile(r"^\\(newcommand|providecommand)\*?\s*\{(\\[A-Za-z]+)\}\s*(?:\[(\d+)\])?\s*\{(.*)\}\s*$")
 OPERATOR = re.compile(r"^\\DeclareMathOperator(\*)?\s*\{(\\[A-Za-z]+)\}\s*\{(.*)\}\s*$")
 HEADER = re.compile(r"^\\(?:chapter\*?\{.*\}|label\{[^{}]*\}|begingroup)\s*$")
 
 
+
+def without_tex_comment(line):
+    """Remove unescaped percent comments, preserving escaped percent signs."""
+    i = 0
+    while i < len(line):
+        if line[i] == "\\":
+            i += 2
+        elif line[i] == "%":
+            return line[:i]
+        else:
+            i += 1
+    return line
+
+
+def brace_balance(line):
+    """Count only unescaped grouping braces."""
+    depth = 0
+    i = 0
+    while i < len(line):
+        if line[i] == "\\":
+            i += 2
+            continue
+        if line[i] == "{":
+            depth += 1
+        elif line[i] == "}":
+            depth -= 1
+        i += 1
+    return depth
+
+
+def logical_macro_lines(source):
+    """Join literal macro bodies spanning lines; leave other TeX untouched."""
+    lines = iter(source.splitlines())
+    for raw in lines:
+        clean = without_tex_comment(raw).strip()
+        if re.match(r"^\\(?:newcommand|providecommand|DeclareMathOperator)\*?(?![A-Za-z])", clean):
+            # A percent comment suppresses the end-of-line space in TeX.
+            # Ordinary newlines are spaces, unless a control word absorbs them.
+            while brace_balance(clean) > 0:
+                try:
+                    following = next(lines)
+                except StopIteration:
+                    break
+                part = without_tex_comment(following)
+                clean += ("" if len(without_tex_comment(raw)) < len(raw) else " ") + part.lstrip()
+                raw = following
+        yield clean
+
+
 def add_literal_macro(line, macros):
+    if brace_balance(line) != 0:
+        return False
     match = COMMAND.fullmatch(line)
     if match:
         if match[1] == "providecommand":
@@ -54,8 +105,8 @@ def write_macro_profiles():
     preambles = DEST.parents[2] / "config" / "preambles"
     for path in sorted(preambles.glob("*.tex")):
         macros = {}
-        for line in path.read_text(encoding="utf-8-sig").splitlines():
-            add_literal_macro(line.strip(), macros)
+        for line in logical_macro_lines(path.read_text(encoding="utf-8-sig")):
+            add_literal_macro(line, macros)
         profiles[path.stem] = macros
 
     # Only declarations before the first substantive chapter content are
@@ -68,8 +119,7 @@ def write_macro_profiles():
         if base is None or "-" not in doc_id:
             continue
         macros = dict(base)
-        for line in path.read_text(encoding="utf-8-sig").splitlines():
-            line = line.strip()
+        for line in logical_macro_lines(path.read_text(encoding="utf-8-sig")):
             if not line or line.startswith("%") or HEADER.fullmatch(line):
                 continue
             if not add_literal_macro(line, macros):
