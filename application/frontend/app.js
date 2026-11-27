@@ -490,16 +490,23 @@ function referenceTipPosition(anchor,width,height,viewportWidth,viewportHeight){
   return {left:Math.max(margin,Math.min(maxLeft,anchor.left)),
           top:Math.max(margin,Math.min(maxTop,preferred))};
 }
+let tooltipAnchorRect=null;
 function positionReferenceTip(anchor){
   const r=anchor.getBoundingClientRect(), tip=$("referenceTip");
+  tooltipAnchorRect={left:r.left,top:r.top,right:r.right,bottom:r.bottom};
   tip.classList.remove("hidden");
   const bounds=tip.getBoundingClientRect();
   const p=referenceTipPosition(r,bounds.width,bounds.height,window.innerWidth,window.innerHeight);
   tip.style.left=p.left+"px";tip.style.top=p.top+"px";
 }
 function dismissTipOnReaderScroll(event){
-  // Scrolling an equation or a long list inside the overlay must not dismiss it.
-  if(state.tooltipAnchor && !$("referenceTip").contains(event.target))closeTip();
+  // A scroll event may arrive after hover (e.g. scrollIntoView), even
+  // though the anchor was already measured at its final position.
+  const anchor=state.tooltipAnchor;
+  if(!anchor||$("referenceTip").contains(event.target))return;
+  if(!anchor.isConnected||!tooltipAnchorRect){closeTip();return;}
+  const rect=anchor.getBoundingClientRect();
+  if(["left","top","right","bottom"].some(k=>Math.abs(rect[k]-tooltipAnchorRect[k])>0.5))closeTip();
 }
 async function previewLabel(label,anchor,sourceDocument=null){
   if(!anchor?.isConnected)return;
@@ -549,7 +556,7 @@ async function previewLabel(label,anchor,sourceDocument=null){
     positionReferenceTip(anchor);
   }
 }
-function closeTip(){state.tooltipKey++;state.tooltipData=null;state.tooltipAnchor=null;$("referenceTip").classList.add("hidden");}
+function closeTip(){state.tooltipKey++;state.tooltipData=null;state.tooltipAnchor=null;tooltipAnchorRect=null;$("referenceTip").classList.add("hidden");}
 async function openLabel(label,sourceDocument=null,anchor=null){
   const epoch=++state.renderEpoch;
   try{
@@ -1565,7 +1572,9 @@ function listeners(){
   $("showFull").addEventListener("click",()=>{if(state.currentEntity)openEntity(state.currentEntity,true);else if(state.currentModule)openModule(state.currentModule,true);});
   $("closeTip").addEventListener("click",closeTip);
   $("tipOpen").addEventListener("click",openPreviewedReference);
-  $("referenceTip").addEventListener("mouseleave",closeTip);
+  $("referenceTip").addEventListener("mouseleave",()=>{
+    if(state.tooltipAnchor)scheduleCloseTip(state.tooltipAnchor);
+  });
   $("view-reader").addEventListener("scroll",dismissTipOnReaderScroll,true);
   window.addEventListener("resize",()=>{if(state.tooltipAnchor)closeTip();});
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeTip();});
