@@ -329,12 +329,22 @@ import plotly.graph_objects as go
 
 x = np.linspace(0, 1, 501)
 fig = go.Figure()
-for n in [1, 2, 4, 8, 16, 32, 64]:
+indices = [1,2,4,8,16,32,64]
+colors = ["#440154","#443983","#31688E","#21918C","#35B779","#90D743","#B8DE29"]
+for n, color in zip(indices, colors):
     fig.add_trace(go.Scatter3d(
         x=x, y=np.full_like(x, n), z=x-x**(n+1),
-        mode="lines", name=f"N={n}"))
+        mode="lines", name=f"N={n}",
+        line=dict(color=color, width=5)))
+fig.add_trace(go.Scatter3d(x=[1]*len(indices),
+    y=indices, z=[0]*len(indices), mode="markers",
+    marker=dict(size=3, color=colors),
+    name="S_N(1)=0", showlegend=False))
 fig.update_layout(scene=dict(
-    xaxis_title="x", yaxis_title="N", zaxis_title="S_N(x)"))
+    xaxis_title="x", zaxis_title="S_N(x)",
+    yaxis=dict(title="N (log2)", type="log",
+        tickmode="array", tickvals=indices,
+        ticktext=list(map(str, indices)))))
 axis_style = dict(showbackground=True,
     backgroundcolor="#f5f6f7", gridcolor="#d5dbe0",
     zerolinecolor="#b0b8bf", showspikes=False)
