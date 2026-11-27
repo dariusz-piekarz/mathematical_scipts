@@ -112,3 +112,15 @@ class CategoryTheoryCh28(unittest.TestCase):
         self.assertNotEqual(set_classes, group_classes)
         self.assertEqual({frozenset((x+y)%4 for y in (0,2))
                           for x in range(4)}, group_classes)
+
+    def test_CAT_28_006_diagrams_use_actual_triangles(self):
+        source = CHAPTER.read_text(encoding="utf-8")
+        self.assertNotIn(r"\begin{CD}", source)
+        pictures = re.findall(r"\\begin\{tikzpicture\}[\s\S]*?\\end\{tikzpicture\}", source)
+        self.assertEqual(len(pictures), 5)
+        for picture in pictures:
+            self.assertNotIn("@=", picture)
+        for path in ("books/pl/category_theory.tex",
+                     "application/config/preambles/KAT.tex"):
+            self.assertIn(r"\usepackage{tikz}", (ROOT/path).read_text(encoding="utf-8"))
+
