@@ -1,5 +1,8 @@
 \chapter{Prawa wielkich liczb}
 \label{ch:lln}
+
+\providecommand{\atlasref}[2]{#2}
+
 \paragraph{Odsyłacze międzytomowe.} Zastosowania MPWL do zgodności estymatorów i metod Monte Carlo przedstawiono w tomie IV, rozdziałach~\ref{IV-ch:estimators} i~\ref{IV-ch:monte-carlo}.
 
 
@@ -22,17 +25,42 @@ W szczególności, gdy $\E Y<\infty$, to
 $\sum_{k=1}^\infty\Prob(Y>k)\leq\E Y$.
 \end{lemat}
 \begin{proof}
-Dla każdej liczby $y\geq0$ mamy tożsamość
-$y=\int_0^\infty\ind{\{y>t\}}\,\dd\lambda_1(t)$.
-Podstawiając $y=Y(\omega)$ i stosując twierdzenie
-Tonellego do nieujemnej funkcji
-$(\omega,t)\mapsto\ind{\{Y(\omega)>t\}}$,
-otrzymujemy
-$\E Y=\int_0^\infty \E\ind{\{Y>t\}}\,\dd\lambda_1(t)$,
-a więc żądaną tożsamość. Ponieważ dla każdego $k\geq1$
-i $t\in[k-1,k)$ zachodzi
-$\Prob(Y>t)\geq\Prob(Y>k)$, suma całek po
-kolejnych jednostkowych przedziałach daje nierówność.
+Niech $(\Omega,\mathcal F,\Prob)$ będzie przestrzenią,
+na której określono $Y$. Jak w dowodzie tożsamości
+ogonowej w rozdziale~\ref{ch:distributions}, zbiór
+\[
+D=\{(\omega,t)\in\Omega\times(0,\infty):t<Y(\omega)\}
+=\bigcup_{\substack{q\in\mathbb Q\\q>0}}
+\bigl(\{Y>q\}\times(0,q)\bigr)
+\]
+jest mierzalny w produktowej $\sigma$-algebrze.
+Równość wynika z gęstości liczb wymiernych.
+Przekrój przy ustalonym $\omega$ to $(0,Y(\omega))$,
+o mierze Lebesgue'a równej $Y(\omega)$.
+Obie miary $\Prob$ i $\lambda_1|_{(0,\infty)}$ są
+$\sigma$-skończone. Z \atlasref{ME-12::thm:tonelli-12}{twierdzenia Tonellego}
+dla nieujemnej funkcji $\chi_D$ otrzymujemy
+\[
+\begin{aligned}
+\E Y
+&=\int_\Omega\int_0^\infty\chi_D(\omega,t)\,
+\dd\lambda_1(t)\,\dd\Prob(\omega)\\
+&=\int_0^\infty\int_\Omega\chi_D(\omega,t)\,
+\dd\Prob(\omega)\,\dd\lambda_1(t)
+=\int_0^\infty\Prob(Y>t)\,\dd\lambda_1(t).
+\end{aligned}
+\]
+Funkcja ogonowa jest mierzalna, gdyż jest nierosnąca.
+Dla każdego całkowitego $k\geq1$ i $t\in[k-1,k)$
+z inkluzji $\{Y>k\}\subseteq\{Y>t\}$ wynika
+$\Prob(Y>t)\geq\Prob(Y>k)$, zatem
+\[
+\sum_{k=1}^N\Prob(Y>k)
+\leq\sum_{k=1}^N\int_{k-1}^k\Prob(Y>t)\,\dd\lambda_1(t)
+\leq\E Y.
+\]
+Przejście z $N\to\infty$ dowodzi nierówności
+dla szeregu.
 \end{proof}
 
 \section{Sformułowania i wersja wariancyjna}
@@ -41,7 +69,9 @@ kolejnych jednostkowych przedziałach daje nierówność.
 Niech $(X_n)_{n\geq1}$ będzie ciągiem całkowalnych
 rzeczywistych zmiennych losowych na jednej przestrzeni
 probabilistycznej i niech
-$\overline X_n=n^{-1}\sum_{k=1}^nX_k$.
+$\overline X_n=n^{-1}\sum_{k=1}^nX_k$ dla $n\geq1$.
+Każda średnia jest mierzalna i całkowalna, ponieważ
+jest skończoną kombinacją liniową zmiennych całkowalnych.
 Dla $m\in\R$ mówimy, że zachodzi \emph{słabe prawo
 wielkich liczb} (SPWL) z granicą $m$, jeśli
 $\overline X_n\xrightarrow{\Prob}m$.
@@ -51,14 +81,28 @@ $\overline X_n\to m$ prawie na pewno.
 \end{definicja}
 
 Mocne prawo pociąga słabe, ponieważ zbieżność prawie na
-pewno implikuje zbieżność według prawdopodobieństwa.
+pewno implikuje zbieżność według prawdopodobieństwa
+(rozdział~\ref{ch:convergence}).
 W drugą stronę implikacja nie zachodzi dla dowolnych ciągów
-zmiennych losowych. Nawet przy zbieżności prawie na pewno
+zmiennych losowych. Istotnie, niech $(A_n)_{n\geq1}$
+będzie ciągiem funkcji charakterystycznych przedziałów
+diadycznych z przykładu w rozdziale~\ref{ch:convergence},
+zbieżnym do zera według prawdopodobieństwa, lecz
+niezbieżnym punktowo w żadnym punkcie $[0,1)$.
+Połóżmy $A_0=0$ i $X_n=nA_n-(n-1)A_{n-1}$.
+Każda zmienna $X_n$ jest mierzalna i ograniczona,
+a sumowanie teleskopowe daje
+\[
+\overline X_n=\frac1n\sum_{k=1}^n
+(kA_k-(k-1)A_{k-1})=A_n.
+\]
+Dla tego ciągu zachodzi SPWL z granicą zero, ale nie MPWL. Nawet przy zbieżności prawie na pewno
 nie twierdzimy, że średnia od pewnego momentu \emph{zawsze}
 jest równa $m$: tylko że jej odchylenie dąży do zera.
 
 \begin{twierdzenie}[SPWL z kontroli wariancji]
-Niech $(X_n)_{n\geq1}$ będą rzeczywistymi zmiennymi losowymi
+Niech $(X_n)_{n\geq1}$ będzie ciągiem rzeczywistych zmiennych
+losowych na wspólnej przestrzeni probabilistycznej,
 o skończonych drugich momentach. Jeśli
 \[
 \frac1n\sum_{k=1}^n\E X_k\longrightarrow m,
@@ -71,39 +115,66 @@ nieskorelowane, miały wspólną średnią $m$ i
 $\sum_{k=1}^n\Var(X_k)=o(n^2)$.
 \end{twierdzenie}
 \begin{proof}
+Ze skończoności drugich momentów oraz nierówności
+Cauchy'ego--Schwarza wynika całkowalność wszystkich $X_k$.
+Skończone sumy także należą do $L^2$, na mocy
+nierówności trójkąta w tej przestrzeni.
 Oznaczmy $a_n=n^{-1}\sum_{k=1}^n\E X_k$.
 Z liniowości wartości oczekiwanej
-$\E\overline X_n=a_n$, a z jednorodności wariancji
-$\Var(\overline X_n)=n^{-2}\Var(\sum_{k\leq n}X_k)$.
+$\E\overline X_n=a_n$, zaś z definicji wariancji
+\[
+\Var(\overline X_n)
+=\E\left|\frac1n\sum_{k=1}^n(X_k-\E X_k)\right|^2
+=\frac1{n^2}\Var\left(\sum_{k=1}^nX_k\right).
+\]
 Dla ustalonego $\varepsilon>0$ i dostatecznie
 dużego $n$ mamy $|a_n-m|<\varepsilon/2$.
-Jeżeli $|\overline X_n-m|>\varepsilon$, to
-$|\overline X_n-a_n|>\varepsilon/2$. Czebyszew daje
+Z nierówności trójkąta
+$|\overline X_n-m|\leq|\overline X_n-a_n|+|a_n-m|$
+wynika inkluzja zdarzeń
+$\{|\overline X_n-m|>\varepsilon\}\subseteq
+\{|\overline X_n-a_n|>\varepsilon/2\}$.
+Z nierówności Czebyszewa (rozdział~\ref{ch:expectation}) otrzymujemy
 \[
 \Prob(|\overline X_n-m|>\varepsilon)
 \leq\frac{4}{\varepsilon^2}\Var(\overline X_n)
 \longrightarrow0.
 \]
-Dla parami nieskorelowanych zmiennych kowariancje
-między różnymi składnikami znikają, toteż wariancja
-sumy jest sumą wariancji. To prowadzi do drugiej części.
+Rozwijając kwadrat sumy zmiennych scentrowanych
+i korzystając z liniowości wartości oczekiwanej, mamy
+\[
+\Var\left(\sum_{k=1}^n X_k\right)
+=\sum_{k=1}^n\Var(X_k)
++2\sum_{1\leq j<k\leq n}\operatorname{Cov}(X_j,X_k).
+\]
+Iloczyny zmiennych scentrowanych są całkowalne
+z nierówności Cauchy'ego--Schwarza.
+Dla zmiennych parami nieskorelowanych wszystkie
+kowariancje w drugiej sumie są zerowe. Przy wspólnej
+średniej $a_n=m$ oraz $\sum_{k=1}^n\Var(X_k)=o(n^2)$
+obie hipotezy twierdzenia są zatem spełnione.
 \end{proof}
 
 \begin{wniosek}[SPWL dla niezależnych zmiennych o skończonej wariancji]
-Jeśli $X_1,X_2,\ldots$ są niezależne, mają wspólną
-średnią $m$ i wspólną skończoną wariancję $\sigma^2$,
+Jeśli rzeczywiste zmienne $X_1,X_2,\ldots$ na jednej
+przestrzeni probabilistycznej są parami niezależne,
+mają wspólną średnią $m$ i wspólną skończoną wariancję $\sigma^2$,
 to $\overline X_n\xrightarrow{\Prob}m$ oraz
 $\E|\overline X_n-m|^2=\sigma^2/n\to0$.
 \end{wniosek}
 \begin{proof}
-Z niezależności wynika
+Z niezależności parami wynika
+$\E[(X_j-m)(X_k-m)]=\E(X_j-m)\E(X_k-m)=0$ dla $j\ne k$
+(rozdział~\ref{ch:expectation}). Zatem ze wzoru
+na wariancję sumy w poprzednim dowodzie mamy
 $\Var(\sum_{k=1}^nX_k)=n\sigma^2$.
 Po podzieleniu przez $n^2$ dostajemy
 $\Var(\overline X_n)=\sigma^2/n$.
 Ponieważ $\E\overline X_n=m$, ostatnia wielkość
 jest równa $\E|\overline X_n-m|^2$.
-Zbieżność w $L^2$ implikuje zbieżność według
-prawdopodobieństwa.
+Oznacza to zbieżność średnich do stałej $m$ w $L^2$,
+a zatem według prawdopodobieństwa
+(rozdział~\ref{ch:convergence}).
 \end{proof}
 
 \section{SPWL przy samym istnieniu wartości oczekiwanej}
@@ -116,34 +187,49 @@ stabilizuje? Dla niezależnych prób o tym samym rozkładzie
 wystarcza sama całkowalność.
 
 \begin{twierdzenie}[Słabe prawo wielkich liczb w wersji całkowalnej]
-Niech $X_1,X_2,\ldots$ będą niezależnymi zmiennymi
-losowymi o tym samym rozkładzie oraz
-$\E|X_1|<\infty$. Wówczas, oznaczając $m=\E X_1$,
+Niech $X_1,X_2,\ldots$ będą rzeczywistymi zmiennymi
+losowymi na jednej przestrzeni probabilistycznej,
+parami niezależnymi, o tym samym rozkładzie, oraz
+niech $\E|X_1|<\infty$. Wówczas, oznaczając $m=\E X_1$,
 mamy $\overline X_n\xrightarrow{\Prob}m$.
 \end{twierdzenie}
 \begin{proof}
 Dla $K>0$ obetnijmy duże wartości:
-$Y_k^{(K)}=X_k\ind{\{|X_k|\leq K\}}$.
-Dla ustalonego $K$ zmienne $Y_k^{(K)}$ są niezależne,
-o tym samym rozkładzie i ograniczone modułem przez $K$,
-a więc mają skończoną wariancję. Poprzednie twierdzenie
-daje $n^{-1}\sum_{k\leq n}Y_k^{(K)}
+$Y_k^{(K)}=X_k\chi_{\{|X_k|\leq K\}}$.
+Funkcja $g_K(x)=x\chi_{[-K,K]}(x)$ jest borelowska,
+więc $Y_k^{(K)}=g_K(X_k)$ są mierzalnymi zmiennymi
+losowymi. Dla $j\ne k$ i borelowskich $A,B\subseteq\R$
+zdarzenia $\{Y_j^{(K)}\in A\}$ i $\{Y_k^{(K)}\in B\}$
+są odpowiednio zdarzeniami
+$\{X_j\in g_K^{-1}(A)\}$ i $\{X_k\in g_K^{-1}(B)\}$,
+a więc są niezależne. Zmienne obcięte mają wspólny
+rozkład jako obrazy tego samego rozkładu przez $g_K$.
+Ponieważ $|Y_k^{(K)}|\leq K$, ich drugie momenty są
+nie większe niż $K^2$. Poprzedni wniosek daje $n^{-1}\sum_{k\leq n}Y_k^{(K)}
 \xrightarrow{\Prob}\E Y_1^{(K)}$.
 
 Kontrolujemy teraz błąd obcięcia, bez zakładania
-skończonej wariancji $X_1$. Liniowość wartości
-oczekiwanej i nierówność trójkąta dają
+skończonej wariancji $X_1$. Każda zmienna $X_k$ jest
+całkowalna ze wzoru \eqref{eq:lotus} i jednakowości
+rozkładów. Ponieważ
+$|X_k-Y_k^{(K)}|=|X_k|\chi_{\{|X_k|>K\}}$,
+liniowość wartości oczekiwanej, nierówność trójkąta
+oraz jednakowość rozkładów dają
 \[
 \E\left|\frac1n\sum_{k=1}^n(X_k-Y_k^{(K)})\right|
 \leq\frac1n\sum_{k=1}^n\E|X_k-Y_k^{(K)}|
-=\E[|X_1|\ind{\{|X_1|>K\}}].
+=\E[|X_1|\chi_{\{|X_1|>K\}}]=:u(K).
 \]
-Ostatnie wyrażenie dąży do zera przy $K\to\infty$
-z twierdzenia o zbieżności zdominowanej.
-Ponadto $|\E Y_1^{(K)}-m|$ jest nie większe od tej
-samej wielkości. Ustalmy $\varepsilon>0$. Wybieramy
-$K$ tak duże, by $|\E Y_1^{(K)}-m|<\varepsilon/3$
-oraz $\E|X_1-Y_1^{(K)}|$ było dowolnie małe.
+Dla całkowitych $K\to\infty$ funkcje
+$|X_1|\chi_{\{|X_1|>K\}}$ zbiegają punktowo do zera
+i są zmajoryzowane przez całkowalną funkcję $|X_1|$.
+Z \atlasref{ME-08::thm:dct}{twierdzenia o zbieżności zmajoryzowanej}
+wynika $u(K)\to0$; dla dowolnych rzeczywistych $K\to\infty$
+wniosek wynika z monotoniczności $u$.
+Ponadto
+$|\E Y_1^{(K)}-m|\leq\E|Y_1^{(K)}-X_1|=u(K)$.
+Ustalmy $\varepsilon>0$ i wybierzmy $K$ takie,
+że $u(K)<\varepsilon/3$.
 Rozkładamy $\overline X_n-m$ na średni błąd obcięcia,
 średnią zmiennych obciętych pomniejszoną o jej wartość
 oczekiwaną oraz deterministyczny błąd średniej.
@@ -153,10 +239,26 @@ Dla pierwszego składnika nierówność Markowa daje
 (X_k-Y_k^{(K)})\right|>\varepsilon/3\right)
 \leq\frac3\varepsilon\E|X_1-Y_1^{(K)}|.
 \]
-Drugi składnik dąży do zera według prawdopodobieństwa
-dla ustalonego $K$. Po przejściu z $n\to\infty$,
-a następnie z $K\to\infty$, prawdopodobieństwo
-$|\overline X_n-m|>\varepsilon$ dąży do zera.
+Trzeci składnik ma moduł mniejszy niż $\varepsilon/3$.
+Z nierówności trójkąta i podaddytywności prawdopodobieństwa
+otrzymujemy
+\[
+\begin{aligned}
+\Prob(|\overline X_n-m|>\varepsilon)
+&\leq\frac{3u(K)}{\varepsilon}
++\Prob\left(\left|\frac1n\sum_{k=1}^nY_k^{(K)}
+-\E Y_1^{(K)}\right|>\frac{\varepsilon}{3}\right).
+\end{aligned}
+\]
+Dla ustalonego $K$ drugi składnik dąży do zera
+na mocy wersji wariancyjnej SPWL.
+Zatem dla wszystkich dostatecznie dużych $K$
+\[
+0\leq\limsup_{n\to\infty}
+\Prob(|\overline X_n-m|>\varepsilon)
+\leq\frac{3u(K)}{\varepsilon}.
+\]
+Przechodząc z $K\to\infty$, otrzymujemy tezę.
 \end{proof}
 
 \section{Nierówność maksymalna Kołmogorowa}
