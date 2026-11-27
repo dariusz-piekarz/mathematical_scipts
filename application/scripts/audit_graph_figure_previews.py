@@ -1,4 +1,4 @@
-"""Compile every canonical GW figure with the same renderer used by Atlas."""
+"""Compile every canonical figure in a selected book with the Atlas renderer."""
 from __future__ import annotations
 
 import argparse
@@ -15,13 +15,15 @@ from backend.latex_parser import module_id
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--book", default="graph_and_knot_theory",
+                        choices=("graph_and_knot_theory", "mathematical_analysis_ii"))
     parser.add_argument("--report", type=Path, required=True)
     args = parser.parse_args()
     catalog = json.loads((ROOT.parent / "catalog/books.json").read_text(encoding="utf-8"))
-    book = next(b for b in catalog["books"] if b["id"] == "graph_and_knot_theory")
-    report = {"chapters": len(book["chapters"]), "figures": 0, "passed": 0, "failures": []}
+    book = next(b for b in catalog["books"] if b["id"] == args.book)
+    report = {"book": args.book, "chapters": len(book["chapters"]), "figures": 0, "passed": 0, "failures": []}
     # Fresh isolated cache: do not count previously compiled images as evidence.
-    with tempfile.TemporaryDirectory(prefix="atlas-gw-figures-") as temp:
+    with tempfile.TemporaryDirectory(prefix="atlas-book-figures-") as temp:
         renderer.CACHE = Path(temp)
         for relative in book["chapters"]:
             path = ROOT.parent / relative
