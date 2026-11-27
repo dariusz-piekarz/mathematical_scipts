@@ -1508,3 +1508,10 @@ Odczytany `atlas_validation_status.json`: `candidate_sha=02190e107a6305bc7b73334
 
 - `77ef565b4857d95b2dc82e5ef6528c4b9cfa8e24`: showRefs buduje drzewo w DocumentFragment i jednorazowo zastępuje zawartość aktywnego kontenera. Zachowano wszystkie znaki źródła, kolejność i kontekst odsyłaczy. Liczba wierszy obliczana jest bez tworzenia tablicy split. 19/19 izolowanych asercji JS PASS; syntetyczne źródło 346670 znaków, 10000 wierszy i 20000 odsyłaczy, jedno zastąpienie kontenera w modelu DOM. Nie jest to pomiar czasu ani pamięci w Chromium. `1e386a388cd016e9602de0de18d00f80f88a6e96`: 10 kontroli regresyjnych w istniejącym browser_references.py, w tym MutationObserver i rzeczywiste 2000 przycisków odsyłaczy.
 - Przy odczycie #46001961154 (aplikacja), #46001961129 (AM I po poprawce) i #46001343191 nadal queued. Pełne Chromium niewykonane. Odbiór P3.5 2+1 pozostaje otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
+
+
+### 2026-11-27 — P3.5: optymalizacja parsera podglądu matematycznego
+
+- `8eb623382eefa8d2dbbdd27ef7b7385fbd583362`: parser prozy buduje DocumentFragment poza aktywnym kontenerem i zastępuje jego zawartość jednorazowo. Dopasowania poleceń, środowisk matematycznych i tokenów tabel wykorzystują wyrażenia sticky z pozycją lastIndex zamiast tworzenia końcówki tekstu przy każdym dopasowaniu. Zachowano reguły parsera i przekazywanie matematyki do KaTeX.
+- 14/14 porównań starej i nowej implementacji na modelu DOM PASS, w tym dokument syntetyczny 116670 znaków, 2500 sekcji, wzorów i odsyłaczy. Porównano strukturę, tekst, klasy, kontekst odsyłaczy i rysunków, oraz jedno zastąpienie kontenera. `34c572b3b500c0c0fc67000a0c30410ed0444d1d`: 5 dodatkowych kontroli przeglądarkowych w browser_reader_layout.py, w tym MutationObserver, tabela, matematyka i 1000 sekcji.
+- Przy odczycie #46003106992 i #46001961154 (aplikacja), #46001961129 (AM I) nadal queued. Pełne Chromium i pomiary czasu CPU/RAM niewykonane. Odbiór P3.5 2+1 pozostaje otwarty. Bez zmian manuskryptów, workflow, Lean i harmonogramu.
