@@ -25,3 +25,11 @@ Ponowny pełny odczyt źródła, blob 979ce760caa3040d2d0026bf7421553bf94b331c. 
 - Rozdział występuje dokładnie raz w books/pl/mathematical_analysis_ii.tex i catalog/books.json. Definicja dwóch powierzchni oraz powiązanie AM2-18 w preview.js nadal obecne. Geometria TikZ zgodna z obrazem kwadratu; bez kontroli składu PDF.
 
 Stabilizacja merytoryczna 1/2. Pięć przebiegów CI wymienionych powyżej nadal queued w chwili odczytu. Nie deklaruje się odbioru technicznego ani wykonania testu renderowania.
+
+## Audyt stabilizacyjny II — 27.11.2026
+
+Ponowny przegląd wszystkich czterech sekcji niezmienionego źródła (blob 979ce760caa3040d2d0026bf7421553bf94b331c). Kontrola niezależnie od poprzedniego raportu: w oszacowaniu przyrostów sprawdzono znak obu nierówności i przypadek x=z, ostrą nierówność dla V_r i domkniętą kulę, działanie A i A^{-1} pomiędzy różnymi przestrzeniami, odwracalność I_E+(A^{-1}Df(x)-I_E), stałą Lipschitza i normę odwrotnej pochodnej. W przestrzeni zerowej wykluczono dzielenie przez normę zerową. W części o drugiej pochodnej zweryfikowano dziedziny wszystkich operatorów, znak oraz czynnik 1/2 w rozwinięciu Taylora. Kryterium euklidesowe i obie kompozycje w przykładach są poprawne. W kontrprzykładzie monotoniczności sprawdzono przypadki x<y<a, a<x<y, x<=a<=y oraz ciągi o pochodnych -1 i 3. W przykładzie Hilberta sprawdzono oszacowanie na brzegu kuli, 2r||v||=1/2, promień obrazu r/2, normę identyczności dla H != {0} i niezerowy punkt o obrazie 0. Nie stwierdzono nowych usterek wymagających zmian.
+
+Kontrola strukturalna ponowiona: 15 unikalnych etykiet, 4 sekcje, poprawny stos środowisk. Odczytano dodatkowo viewer.html, trasę /api/plotly/bundle.js w backendzie i rzeczywisty test browser_reader_preview.py (wiersze 142–158): test obejmuje leniwe otwieranie, sandbox, data-ready, obecność kontenera WebGL, zamykanie i brak figury dla niewłaściwego rozdziału. Sam test nie został w tej iteracji uruchomiony; potwierdzono wyłącznie obecność i zakres testu w repozytorium.
+
+Stabilizacja merytoryczna 2/2; wymagany audyt kontrolny. CI dla 795b033 nadal queued przy ostatnim odczycie; brak potwierdzenia aktualnego PDF i renderowania interaktywnego.
