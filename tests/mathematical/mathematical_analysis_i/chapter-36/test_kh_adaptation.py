@@ -5,13 +5,26 @@ import unittest
 
 
 ROOT = Path(__file__).resolve().parents[4]
-SOURCE = ROOT / "chapters/pl/mathematical_analysis_i/36-calka-kurzweila-henstocka.tex"
+SOURCES = tuple(ROOT / path for path in (
+    "chapters/pl/mathematical_analysis_i/36-calka-kurzweila-henstocka.tex",
+    "chapters/pl/mathematical_analysis_i/37-calka-mcshane-a-i-przestrzenie-bv-ac.tex",
+    "chapters/pl/mathematical_analysis_i/38-waska-calka-denjoya.tex",
+    "chapters/pl/mathematical_analysis_i/39-calka-perrona.tex",
+    "chapters/pl/mathematical_analysis_i/40-calka-riemanna-stieltjesa.tex",
+    "chapters/pl/mathematical_analysis_i/41-szeroka-calka-denjoya.tex",
+    "chapters/pl/mathematical_analysis_i/42-calka-kurzweila-stieltjesa.tex",
+    "chapters/pl/mathematical_analysis_i/43-rachunek-calek-cechowanych.tex",
+))
+
+
+def integration_source():
+    return "\n".join(path.read_text(encoding="utf8") for path in SOURCES)
 MAP = ROOT / "audits/mathematical_analysis_i/ch36_source_map.md"
 
 
 class Chapter36(unittest.TestCase):
     def test_label_uniqueness_and_local_references(self):
-        source=SOURCE.read_text(encoding="utf8")
+        source=integration_source()
         labels=re.findall(r"\\label\{([^}]+)\}",source)
         self.assertEqual(len(labels),len(set(labels)))
         for ref in re.findall(r"\\(?:ref|eqref)\{([^}]+)\}",source):
@@ -19,7 +32,7 @@ class Chapter36(unittest.TestCase):
                 self.assertIn(ref,labels)
 
     def test_external_local_references(self):
-        source=SOURCE.read_text(encoding="utf8")
+        source=integration_source()
         all_sources="\n".join(p.read_text(encoding="utf8") for p in
             (ROOT/"chapters/pl/mathematical_analysis_i").glob("*.tex"))
         labels=set(re.findall(r"\\label\{([^}]+)\}",all_sources))
@@ -28,13 +41,27 @@ class Chapter36(unittest.TestCase):
 
     def test_book_and_catalog_integration(self):
         import json
-        rel="chapters/pl/mathematical_analysis_i/36-calka-kurzweila-henstocka.tex"
         book=(ROOT/"books/pl/mathematical_analysis_i.tex").read_text(encoding="utf8")
-        self.assertEqual(book.count("\\input{../../"+rel+"}"),1)
-        self.assertLess(book.index("35-kwadratury-numeryczne.tex"),book.index(rel))
         catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf8"))
-        chapters=[c for b in catalog["books"] for c in b.get("chapters",[])]
-        self.assertEqual(chapters.count(rel),1)
+        chapters=next(b["chapters"] for b in catalog["books"]
+                      if b["id"]=="mathematical_analysis_i" and b["language"]=="pl")
+        rels=[p.relative_to(ROOT).as_posix() for p in SOURCES]
+        self.assertEqual(chapters[-len(rels):],rels)
+        self.assertEqual(len(chapters),43)
+        positions=[book.index("\\input{../../"+rel+"}") for rel in rels]
+        self.assertEqual(positions,sorted(positions))
+        for rel in rels:
+            self.assertEqual(book.count("\\input{../../"+rel+"}"),1)
+            self.assertEqual(chapters.count(rel),1)
+
+    def test_no_forward_integration_chapter_references(self):
+        sources=[p.read_text(encoding="utf8") for p in SOURCES]
+        owners={label:i for i,source in enumerate(sources)
+                for label in re.findall(r"\\label\{([^}]+)\}",source)}
+        for i,source in enumerate(sources):
+            for ref in re.findall(r"\\(?:ref|eqref)\{([^}]+)\}",source):
+                if ref in owners:
+                    self.assertLessEqual(owners[ref],i,ref)
 
     def test_weighted_regularity_budget(self):
         eps,eta,h=F(1,10),F(1,100),F(1,3)
@@ -50,7 +77,7 @@ class Chapter36(unittest.TestCase):
     def test_source_label_map(self):
         mapping=re.findall(r"^\| ([^| ]+) \| (ma1:kh:[^| ]+) \|$",MAP.read_text(encoding="utf8"),re.M)
         self.assertGreaterEqual(len(mapping),29)
-        source=SOURCE.read_text(encoding="utf8")
+        source=integration_source()
         # The migration retains the original labels as aliases at the same
         # declaration. Historical provenance is recorded in MAP; the donor
         # script may be redistributed or removed without breaking AM1.
@@ -71,7 +98,7 @@ class Chapter36(unittest.TestCase):
                   "FA":"functional_analysis",
                   "PDE":"partial_differential_equations",
                   "AM2":"mathematical_analysis_ii"}
-        chapters=[SOURCE, ROOT/"chapters/pl/mathematical_analysis_i/22-pochodne-wyzsze.tex"]
+        chapters=[*SOURCES, ROOT/"chapters/pl/mathematical_analysis_i/22-pochodne-wyzsze.tex"]
         for chapter in chapters:
             chapter_source=chapter.read_text(encoding="utf8")
             for code,label in re.findall(r"\\atlasref\{([^}]+)::([^}]+)\}",chapter_source):
