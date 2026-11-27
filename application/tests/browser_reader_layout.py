@@ -70,6 +70,58 @@ with sync_playwright() as pw:
     assert page.locator('#explorer').is_visible()
     assert page.locator('#tree').evaluate('el => el.scrollHeight > el.clientHeight')
 
+    # A long outline must expose every object without creating an unbounded
+    # DOM list. Pagination is independent for sections and all objects.
+    pagination = page.evaluate("""() => {
+        const id='DG-14', module=state.modules.find(m=>m.id===id);
+        const oldMode=state.granularity, oldOutline=state.outlines.get(id);
+        const oldDomain=state.expandedDomains.has(module.domain);
+        const oldExpanded=state.expandedModules.has(id);
+        const rows=Array.from({length:1201}, (_,i)=>({
+            id:'pagination-fixture-'+i, kind:i%2?'section':'theorem', title:'Fixture '+i
+        }));
+        const key=mode=>JSON.stringify([id,mode]);
+        const oldPages=['section','object'].map(mode=>[key(mode),outlinePages.get(key(mode))]);
+        try {
+            state.expandedDomains.add(module.domain); state.expandedModules.add(id);
+            state.outlines.set(id,rows);
+            let count=0;
+            for (const mode of ['object','section']) {
+                state.granularity=mode; outlinePages.delete(key(mode)); renderTree();
+                const expected=rows.filter(e=>mode==='object'||e.kind==='section').map(e=>e.title);
+                const getPager=()=>[...document.querySelectorAll('.outline-pagination')]
+                    .find(el=>el.dataset.pageKey===key(mode));
+                const seen=[];
+                while(true) {
+                    const pager=getPager(), branch=pager.parentElement;
+                    const actual=[...branch.querySelectorAll('.outline-name')].map(e=>e.textContent);
+                    if(actual.length>300)throw Error('unbounded outline page');
+                    seen.push(...actual);
+                    const next=pager.querySelector('[data-direction="next"]');
+                    if(next.disabled)break;
+                    next.click();
+                }
+                if(JSON.stringify(seen)!==JSON.stringify(expected))
+                    throw Error('missing or duplicated outline objects');
+                if(!getPager().querySelector('[data-direction="prev"]').disabled) {
+                    getPager().querySelector('[data-direction="prev"]').click();
+                    if(!getPager().contains(document.activeElement))
+                        throw Error('pagination keyboard focus lost');
+                }
+                count++;
+            }
+            return count;
+        } finally {
+            state.granularity=oldMode;
+            if(oldOutline===undefined)state.outlines.delete(id);else state.outlines.set(id,oldOutline);
+            if(!oldDomain)state.expandedDomains.delete(module.domain);
+            if(!oldExpanded)state.expandedModules.delete(id);
+            for(const [k,v] of oldPages)if(v===undefined)outlinePages.delete(k);else outlinePages.set(k,v);
+            renderTree();
+        }
+    }""")
+    assert pagination == 2
+
     # Collapsing/reopening a pending outline shares one request, and a
     # failed outline is immediately retryable without an extra collapse.
     outline_cases = page.evaluate("""async () => {
