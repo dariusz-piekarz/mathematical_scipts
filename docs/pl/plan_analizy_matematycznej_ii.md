@@ -372,3 +372,7 @@ Pierwsza integracja obejmuje 12 rysunków z rozdziałów 01, 08, 09, 11–18 i 3
 ## Aktualizacja decyzji — całka Mawhina (27.11.2026)
 
 Wstrzymano opracowanie całki Mawhina do wyraźnej osobnej dyspozycji użytkownika, który wskaże odpowiedni moment i miejsce. CAL-15 zawierał wyłącznie zapowiedź; nie rozpoczęto pisania definicji ani twierdzeń w AM II. Nie tworzyć rozdziału ani nie traktować całki Mawhina jako warunku wycofania CAL. Wcześniejszy opis zakresu zachowano historycznie, ale nie jest aktywnym zadaniem. Plan całki Pfeffera pozostaje; nie uzależniać jej automatycznie od wcześniejszej realizacji całki Mawhina.
+
+## Wycofanie samodzielnego skryptu teorii całki (27.11.2026)
+
+Skrypt `integration_theory` został wycofany z katalogu w 58abd7f i jego 18 plików źródłowych usunięto w eaf97e5. Nie odtwarzać CAL ani nie kontynuować dawnych instrukcji synchronizacji AM I ↔ CAL: poprzednie zapisy audytów pozostają wyłącznie dokumentacją historyczną. Kanoniczne źródła: AM I 29, 36–43, ME (w szczególności 04, 07–08, 16–18, 20–21, 23, 25–26 i 32), FA 15A–15B. Dalsze korekty stosować w tych rozdziałach, zachowując przeniesione etykiety; stare odsyłacze kwalifikowane CAL-xx zastępować celami kanonicznymi, nie tworzyć pustych modułów zastępczych. Całka Mawhina pozostaje wstrzymana, plan Pfeffera bez zmian. Wycofanie plików nie jest równoznaczne z potwierdzeniem pełnego CI ani kompilacji PDF.
