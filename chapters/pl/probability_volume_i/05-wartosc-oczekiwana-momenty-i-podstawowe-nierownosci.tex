@@ -39,8 +39,8 @@ Obie części są całkowalne, ponieważ ich moduły nie przekraczają
 $|Z|$; por. \atlasref{ME-08::def:complex-integral}{definicję całki zespolonej}.
 \end{definicja}
 
-Dla całkowalnych zmiennych losowych $X,Y$ na tej samej
-przestrzeni probabilistycznej oraz $a,b\in\R$ zmienna $aX+bY$
+Dla całkowalnych rzeczywistych zmiennych losowych $X,Y$
+na tej samej przestrzeni probabilistycznej oraz $a,b\in\R$ zmienna $aX+bY$
 jest całkowalna, gdyż $|aX+bY|\leq |a||X|+|b||Y|$.
 Z \atlasref{ME-08::thm:integral-linear-real}{liniowości całki}
 wynika $\E(aX+bY)=a\E X+b\E Y$.
@@ -74,7 +74,8 @@ całkowalna względem $\mu_X$, to
 W szczególności, dla dyskretnego $X$ o masach $p(x)$ prawa strona
 jest sumą $\sum_{x\in D}h(x)p(x)$, gdzie
 $D=\{x:p(x)>0\}$ jest co najwyżej przeliczalny.
-Dla $X$ o gęstości $f_X$ prawa strona jest całką
+Dla $X$ o gęstości $f_X$ (wybieramy wersję wszędzie
+skończoną) prawa strona jest całką
 $\int_\R h(x)f_X(x)\,\dd\lambda_1(x)$.
 W przypadku funkcji rzeczywistych ze znakiem lub zespolonych
 obowiązuje tu założenie całkowalności; w przypadku nieujemnym
@@ -441,7 +442,7 @@ dla $z\in\mathbb C$, $|z|\leq1$, z konwencją $0^0=1$.
 Funkcja $\omega\mapsto z^{N(\omega)}$ jest mierzalna:
 przeciwobraz dowolnego zbioru borelowskiego w $\mathbb C$
 jest przeliczalną sumą odpowiednich zdarzeń $\{N=k\}$. Jej moduł
-nie przekracza jedności, jest więc całkowalna.
+nie przekracza jedności, więc funkcja $z^N$ jest całkowalna.
 Równość z szeregiem wynika z \eqref{eq:lotus}.
 Szereg jest bezwzględnie i jednostajnie zbieżny na domkniętym
 kole jednostkowym, ponieważ $|p_kz^k|\leq p_k$ i
@@ -583,13 +584,16 @@ G_N(z)=p\sum_{k=0}^\infty(qz)^k=\frac{p}{1-qz}.
 \]
 W szczególności przy $p=1$ funkcja tworząca jest równa $1$.
 
-Dla liczby porażek $L$ przed $r$-tym sukcesem, $r\geq1$
-całkowitego, w ciągu niezależnych prób Bernoulliego
+Dla liczby porażek $L$ przed $r$-tym sukcesem, gdzie
+$r\geq1$ jest liczbą całkowitą, w ciągu niezależnych prób Bernoulliego
 z parametrem $p\in(0,1]$, niech $W_j$ oznacza liczbę prób
 od poprzedniego sukcesu do następnego, wliczając sukces
 (dla $j=1$ liczymy od początku). W rozdziale~\ref{ch:distributions}
 wykazano, że $W_1,\ldots,W_r$ są niezależne i mają rozkład
-$\Geom(p)$. Zatem $L=\sum_{j=1}^r(W_j-1)$ prawie na pewno
+$\Geom(p)$. Zmienne $W_j-1$ również są niezależne:
+przeciwobraz zdarzenia $\{W_j-1\in A_j\}$ to zdarzenie
+$\{W_j\in 1+A_j\}$, więc stosuje się definicja niezależności.
+Zatem $L=\sum_{j=1}^r(W_j-1)$ prawie na pewno
 i przez wielokrotne zastosowanie wzoru dla sumy
 \[
 G_L(z)=\left(\frac{p}{1-qz}\right)^r.
@@ -655,8 +659,10 @@ dla $|t|\leq\eta$:
 \[
 |X|^re^{tX}\leq C_{r,\eta,\delta}e^{\delta|X|}.
 \]
-W szczególności wszystkie momenty bezwzględne są skończone
-(weźmy $t=0$). Oznaczmy $H_r(t)=\E[X^re^{tX}]$,
+W szczególności wszystkie momenty bezwzględne rzędów
+całkowitych są skończone (weźmy $t=0$), a skończoność
+momentów pozostałych dodatnich rzędów wynika z oszacowania
+momentów niższych rzędów z poprzedniej sekcji. Oznaczmy $H_r(t)=\E[X^re^{tX}]$,
 przyjmując $X^0=1$. Funkcja $H_r$ jest ciągła na
 $(-\delta,\delta)$ przez
 \atlasref{ME-08::thm:dct}{twierdzenie o zbieżności zmajoryzowanej}
@@ -793,7 +799,8 @@ udowodnione w następnej sekcji, daje $\Law(X)=\Law(Y)$.
 
 \begin{przyklad}[Wszystkie momenty nie muszą wyznaczać rozkładu]
 Niech $Z\sim\Normal(0,1)$ oraz $X=e^Z$.
-Z wzoru na funkcję tworzącą standardowego rozkładu normalnego
+Ze wzoru na funkcję tworzącą standardowego rozkładu normalnego
+(rozdział~\ref{ch:distributions})
 otrzymujemy $\E X^n=\E e^{nZ}=e^{n^2/2}$ dla każdego
 całkowitego $n\geq0$. Jednak dla $t>0$
 \[
@@ -912,11 +919,18 @@ Z twierdzenia o mierze obrazowej i
 \atlasref{ME-12::thm:fubini-12}{twierdzenia Fubiniego}
 dla obu części zespolonych wynika
 $\E[e^{itX}e^{itY}]=\E e^{itX}\E e^{itY}$.
-Dla ostatniego punktu obliczamy
+Dla ostatniego punktu korzystamy z liniowości całki
+zespolonej dla skończonej sumy:
 \[
-\sum_{j,k}c_j\overline{c_k}\varphi_X(t_j-t_k)
-=\E\left|\sum_{j=1}^n c_je^{it_jX}\right|^2\geq0.
+\begin{aligned}
+\sum_{j,k=1}^n c_j\overline{c_k}\varphi_X(t_j-t_k)
+&=\E\left[\sum_{j,k=1}^n
+c_je^{it_jX}\overline{c_ke^{it_kX}}\right]\\
+&=\E\left|\sum_{j=1}^n c_je^{it_jX}\right|^2\geq0.
+\end{aligned}
 \]
+Ostatnia funkcja jest nieujemna i ograniczona przez
+$(\sum_{j=1}^n|c_j|)^2$, a więc całkowalna.
 Wreszcie oznaczmy $H_k(t)=\E[(iX)^ke^{itX}]$,
 $0\leq k\leq r$, przy konwencji $X^0=1$.
 Z nierówności $|X|^k\leq1+|X|^r$ wynika całkowalność
@@ -948,7 +962,8 @@ Niech $g(x)=(2\pi)^{-1/2}e^{-x^2/2}$.
 Z definicji gęstości normalnej (rozdział~\ref{ch:distributions})
 oraz \eqref{eq:lotus} mamy
 $\E|Z|=2(2\pi)^{-1/2}\int_0^\infty xe^{-x^2/2}\,\dd\lambda_1(x)
-=\sqrt{2/\pi}<\infty$.
+=\sqrt{2/\pi}<\infty$, gdyż podstawienie $u=x^2/2$
+daje $\int_0^\infty e^{-u}\,\dd\lambda_1(u)=1$.
 Poprzednie twierdzenie daje więc
 $\varphi_Z'(t)=i\int_\R xe^{itx}g(x)\,\dd\lambda_1(x)$.
 Ponieważ $g'(x)=-xg(x)$, całkowanie przez części na
@@ -981,9 +996,11 @@ $g_\sigma(x)=(\sigma\sqrt{2\pi})^{-1}
 dla $\sigma>0$. Oznaczmy przez $\gamma_\sigma$ miarę
 $g_\sigma\lambda_1$ i przez $\mu*\gamma_\sigma$ obraz
 miary produktowej $\mu\otimes\gamma_\sigma$ przez dodawanie.
-Dla zbioru borelowskiego $B$, stosując Tonellego do
-nieujemnej funkcji charakterystycznej i podstawienie
-$x=y+u$, dostajemy
+Dla zbioru borelowskiego $B$ korzystamy z definicji
+miary obrazowej, podstawienia $x=y+u$ (przesunięcie
+zachowuje miarę Lebesgue'a) i twierdzenia Tonellego
+dla nieujemnej borelowskiej funkcji
+$(y,u)\mapsto\chi_B(y+u)g_\sigma(u)$. Dostajemy
 \[
 (\mu*\gamma_\sigma)(B)
 =\int_\R\int_\R\chi_B(y+u)g_\sigma(u)\,
@@ -1025,9 +1042,12 @@ przestrzeni probabilistycznej, zachodzi
 Jest to wzór na całkę względem miary obrazowej i Fubini
 dla funkcji ograniczonej na przestrzeni o mierze jeden;
 $\sigma Z$ ma rozkład $\gamma_\sigma$. Wewnętrzna
-wartość oczekiwana jest borelowską funkcją $y$.
-Gdy $\sigma\downarrow0$, dla każdego ustalonego $x$
-zmienna $h(x+\sigma Z)$ dąży prawie na pewno do $h(x)$,
+wartość oczekiwana jest borelowską funkcją $y$,
+co wynika z mierzalności całki względem parametru
+w twierdzeniu Fubiniego (lub z ciągłości i zbieżności
+zmajoryzowanej).
+Gdy $\sigma\downarrow0$, dla każdego ustalonego $y$
+zmienna $h(y+\sigma Z)$ dąży punktowo do $h(y)$,
 a jej moduł jest ograniczony przez $\|h\|_\infty$.
 Dwukrotne zastosowanie zbieżności zmajoryzowanej daje
 $\int h\,\dd(\mu*\gamma_\sigma)\to\int h\,\dd\mu$;
@@ -1073,9 +1093,15 @@ Z nierówności trójkąta mamy $|f(x)|\leq
 Ciągłość $f$ wynika ze zbieżności zmajoryzowanej przy
 $x_n\to x$ w całce definiującej $f$.
 Dla nieujemnej funkcji ciągłej $h$ o zwartym nośniku
-mamy $\int h f_\sigma\,\dd\lambda_1\to
-\int h f\,\dd\lambda_1$ z jednostajnej zbieżności,
-a jednocześnie $\int h f_\sigma\,\dd\lambda_1\to\E h(X)$
+mamy
+\[
+\left|\int_\R h(x)(f_\sigma(x)-f(x))\,\dd\lambda_1(x)\right|
+\leq \|f_\sigma-f\|_\infty\int_\R h(x)\,\dd\lambda_1(x)
+\longrightarrow0,
+\]
+gdyż $h$ jest ograniczona i ma zwarty nośnik,
+a jednocześnie $\int_\R h(x)f_\sigma(x)\,\dd\lambda_1(x)
+\to\E h(X)$
 z argumentu z dowodu jednoznaczności.
 Zatem $\int_\R h(x)f(x)\,\dd\lambda_1(x)=\E h(X)$
 dla wszystkich takich $h$.
@@ -1135,8 +1161,10 @@ $az^2+b/z^2=b/u^2+au^2$. Stąd
 =-\int_0^\infty z^{-2}e^{-az^2-b/z^2}\,\dd\lambda_1(z)
 =-\sqrt{\frac ab}\,I(a,b).
 \]
-Zatem $\partial_b\log I(a,b)=-\sqrt{a/b}$,
-czyli $I(a,b)=C(a)e^{-2\sqrt{ab}}$.
+Zatem dla $b>0$ mamy $\partial_b\log I(a,b)=-\sqrt{a/b}$.
+Pochodna funkcji $b\mapsto\log I(a,b)+2\sqrt{ab}$
+jest zerowa, więc funkcja ta jest stała na $(0,\infty)$.
+Po potęgowaniu otrzymujemy $I(a,b)=C(a)e^{-2\sqrt{ab}}$.
 Zbieżność zmajoryzowana przy $b\downarrow0$ z majorantą
 $e^{-az^2}$ daje $C(a)=I(a,0)$.
 Podstawiając $u=\sqrt{2a}\,z$ i korzystając z całki Gaussa
