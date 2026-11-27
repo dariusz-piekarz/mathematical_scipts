@@ -477,7 +477,20 @@ with sync_playwright() as pw:
             tip.dispatchEvent(new Event('scroll'));
         }""")
         assert page.locator('#referenceTip').is_visible()
+        # An already-delivered scroll geometry must not dismiss a new hover.
         page.evaluate("() => document.getElementById('view-reader').dispatchEvent(new Event('scroll'))")
+        assert page.locator('#referenceTip').is_visible()
+        page.evaluate("""() => {
+            const anchor=state.tooltipAnchor;
+            const original=anchor.getBoundingClientRect;
+            try{
+                anchor.getBoundingClientRect=()=> {
+                    const r=original.call(anchor);
+                    return {left:r.left, right:r.right, top:r.top+20, bottom:r.bottom+20};
+                };
+                document.getElementById('view-reader').dispatchEvent(new Event('scroll'));
+            }finally{anchor.getBoundingClientRect=original;}
+        }""")
         assert page.locator('#referenceTip').is_hidden()
     page.evaluate("""async () => {
         const originalApi=api;
@@ -485,7 +498,14 @@ with sync_playwright() as pw:
         try{
             api=()=>new Promise(r=>{resolve=r;});
             const pending=previewLabel('atlas-scroll-test',document.getElementById('togglePreview'));
-            document.getElementById('view-reader').dispatchEvent(new Event('scroll'));
+            const anchor=state.tooltipAnchor, original=anchor.getBoundingClientRect;
+            try{
+                anchor.getBoundingClientRect=()=>{
+                    const r=original.call(anchor);
+                    return {left:r.left,right:r.right,top:r.top+20,bottom:r.bottom+20};
+                };
+                document.getElementById('view-reader').dispatchEvent(new Event('scroll'));
+            }finally{anchor.getBoundingClientRect=original;}
             resolve({title:'obsolete',document_id:'ALG-08',latex:''});
             await pending;
             if(state.tooltipData||!document.getElementById('referenceTip').classList.contains('hidden'))
