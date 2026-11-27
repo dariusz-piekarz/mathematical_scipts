@@ -71,6 +71,8 @@ $\bigcap_{i\in I}\{X_i=1\}\cap
 Z niezależności jego prawdopodobieństwo jest równe
 $p^k(1-p)^{n-k}$.
 
+Przekrój po pustym zbiorze indeksów oznacza całą
+przestrzeń probabilistyczną, a pusty iloczyn wynosi jeden.
 Różne zbiory $I$ opisują rozłączne zdarzenia,
 a ich suma różni się od zdarzenia $\{S_n=k\}$ co najwyżej
 o podzbiór mierzalnego zbioru zerowego
@@ -143,7 +145,10 @@ porażkami. Z niezależności $\Prob(C_k)=q^k$, a z ciągłości
 miary z góry (rozdział~\ref{ch:probability}) wynika
 $\Prob(T=\infty)=\lim_{k\to\infty}q^k=0$. Zastąpienie wartości $\infty$
 przez $1$ na tym mierzalnym zbiorze zerowym daje rzeczywistą
-zmienną losową o rozkładzie $\Geom(p)$.
+zmienną losową o rozkładzie $\Geom(p)$: przeciwobrazy
+pojedynczych wartości są mierzalne, a przeciwobraz
+dowolnego zbioru borelowskiego jest przeliczalną sumą
+takich przeciwobrazów.
 \end{definicja}
 
 \begin{stwierdzenie}
@@ -263,8 +268,11 @@ na zbiorze zerowym nie zmienia tych prawdopodobieństw.
 Ponieważ $T_r$ jest skończony prawie na pewno i przyjmuje
 wartości co najmniej $r$, suma obliczonych mas wynosi jeden.
 
-Wykażmy starannie niezależność czasów oczekiwania,
-której nie wolno wywnioskować wyłącznie z intuicji.
+Wykażmy niezależność czasów oczekiwania.
+Dla $1\leq j\leq r$ niech $T_j$ oznacza numer próby
+$j$-tego sukcesu, określony analogicznie do $T_r$.
+Poza zdarzeniem, na którym nie występuje $r$ sukcesów,
+wszystkie te liczby są skończone.
 Niech $W_1$ będzie liczbą prób do pierwszego sukcesu,
 a dla $j\geq2$ niech $W_j$ oznacza liczbę kolejnych prób
 pomiędzy sukcesami numer $j-1$ i $j$, licząc próbę
@@ -292,11 +300,15 @@ $k_j\in A_j\subseteq\{1,2,\ldots\}$, otrzymujemy
 =\prod_{j=1}^r\sum_{k\in A_j}p(1-p)^{k-1}.
 \]
 Rozdzielenie sum jest uprawnione przez nieujemność wyrazów.
-Biorąc pozostałe $A_j$ równe całej przestrzeni wartości,
-otrzymujemy rozkłady brzegowe $\Geom(p)$, a następnie
-niezależność. Ponieważ $T_r=W_1+\cdots+W_r$ prawie na pewno,
-z liniowości wartości oczekiwanej i addytywności
-wariancji otrzymujemy
+Ustalając jeden zbiór $A_j$ i biorąc wszystkie pozostałe
+równe $\{1,2,\ldots\}$, otrzymujemy rozkłady brzegowe
+$\Geom(p)$, a następnie z powyższej faktoryzacji
+niezależność. Wszystkie $W_j$ mają skończone drugie
+momenty, zatem $T_r=W_1+\cdots+W_r$ prawie na pewno
+również ma skończony drugi moment, na mocy nierówności
+$(\sum_{j=1}^r W_j)^2\leq r\sum_{j=1}^r W_j^2$.
+Z liniowości wartości oczekiwanej i addytywności
+wariancji niezależnych składników otrzymujemy
 $\E T_r=r/p$ i $\Var(T_r)=r(1-p)/p^2$.
 \end{proof}
 
@@ -358,8 +370,9 @@ $1/\binom Nn$. Dla $j=1,\ldots,n$ niech $A_j$ będzie
 zdarzeniem, że na pozycji $j$ znajduje się obiekt wyróżniony,
 oraz $I_j=\chi_{A_j}$. Liczba wyróżnionych elementów
 $X=\sum_{j=1}^n I_j$ ma zatem żądany rozkład.
-Dla $n=0$ suma jest pusta i równa zeru.
-Każdy z $N$ elementów występuje na ustalonej pozycji
+Dla $n=0$ suma jest pusta i równa zeru, zatem oba
+wzory na momenty zachodzą bezpośrednio. Dalej przyjmijmy
+$n\geq1$. Każdy z $N$ elementów występuje na ustalonej pozycji
 w $(N-1)!$ permutacjach, toteż
 $\Prob(I_j=1)=K/N=:p$ i $\E I_j=p$.
 Liniowość wartości oczekiwanej daje $\E X=np$.
@@ -505,9 +518,13 @@ Ciągłość funkcji wykładniczej daje żądaną granicę.
 Dla $k=0$ pierwszy iloczyn jest pusty i wynosi jeden.
 Ostatni czynnik zmierza do jedności.
 Iloczyn granic daje $e^{-\lambda}\lambda^k/k!$.
-Twierdzenie stwierdza na tym etapie zbieżność
-każdej ustalonej masy punktowej; przejście do
-języka zbieżności według rozkładu omówimy osobno.
+Dla dowolnego $x\geq0$ dystrybuanta $X_n$ jest
+skończoną sumą mas dla $k=0,\ldots,\lfloor x\rfloor$,
+więc zbiega do analogicznej sumy mas rozkładu Poissona.
+Dla $x<0$ obie dystrybuanty są zerowe.
+Otrzymujemy zbieżność dystrybuant w każdym punkcie,
+a tym samym zbieżność według rozkładu w sensie
+definicji z rozdziału~\ref{ch:convergence}.
 \end{proof}
 
 \begin{przyklad}[Zliczanie defektów]
@@ -689,8 +706,9 @@ Dla $x<0$ mamy $F_X(x)=0$. Dla $x\geq0$ całkowanie
 gęstości daje
 $F_X(x)=\int_0^x\lambda e^{-\lambda t}\,\dd\lambda_1(t)
 =1-e^{-\lambda x}$.
-Zatem ogon ma postać
-$\Prob(X>x)=e^{-\lambda x}$.
+Zatem dla $x\geq0$ ogon ma postać
+$\Prob(X>x)=e^{-\lambda x}$, a dla $x<0$
+prawdopodobieństwo to wynosi jeden.
 
 Aby obliczyć momenty, stosujemy \eqref{eq:lotus}
 do funkcji nieujemnej $x\mapsto |x|^k$ i podstawiamy
@@ -777,7 +795,8 @@ Niech $I=\int_\R e^{-x^2/2}\,\dd\lambda_1(x)\in(0,\infty]$.
 Funkcja podcałkowa jest dodatnia i borelowska.
 Miara $\lambda_1$ jest $\sigma$-skończona, a
 $\lambda_2=\lambda_1\otimes\lambda_1$
-na zbiorach borelowskich płaszczyzny.
+na zbiorach borelowskich płaszczyzny
+(por. \atlasref{ME-12::thm:lebesgue-products-12}{twierdzenie o produktach miar Lebesgue'a}).
 Z \atlasref{ME-12::thm:tonelli-12}{twierdzenia Tonellego}
 otrzymujemy równość $I^2$ z całką na $\R^2$, początkowo
 w sensie rozszerzonym. Odwzorowanie
@@ -827,7 +846,8 @@ wynika, że $Z$ ma gęstość
 $g(z)=\sigma f_X(\mu+\sigma z)=(2\pi)^{-1/2}e^{-z^2/2}$.
 Korzystamy z dodatniości $\sigma$ oraz z faktu,
 że odwrotność przekształcenia afinicznego ma pochodną $\sigma$.
-Dla $t\in\R$ obliczamy
+Dla $t\in\R$, stosując \eqref{eq:lotus} do nieujemnej
+funkcji $z\mapsto e^{t(\mu+\sigma z)}$, obliczamy
 \[
 M_X(t)=\frac{e^{\mu t}}{\sqrt{2\pi}}\int_\R
 \exp\!\left(\sigma tz-\frac{z^2}2\right)
@@ -925,7 +945,9 @@ gdyż $\sigma>0$. Z definicji dystrybuanty
 \]
 Funkcja $\Phi(x)=(2\pi)^{-1/2}\int_{-\infty}^x
 e^{-u^2/2}\,\dd\lambda_1(u)$ jest funkcją pierwotną
-standardowej gęstości normalnej. Jej wartości wyznacza
+standardowej gęstości normalnej na mocy twierdzenia
+podstawowego rachunku całkowego dla funkcji ciągłych
+(po odjęciu stałej $\Phi(0)$ całkujemy od $0$ do $x$). Jej wartości wyznacza
 się numerycznie lub za pomocą funkcji błędu.
 \end{przyklad}
 
@@ -1149,13 +1171,14 @@ gęstość $\Gam(\alpha+\beta,\lambda)$.
 Wspólna intensywność jest istotna: dla różnych
 intensywności ten wzór na sumę nie obowiązuje.
 Na przykład dla dwóch niezależnych zmiennych wykładniczych
-o intensywnościach $\lambda_1\ne\lambda_2$ średnia sumy
-wynosi $1/\lambda_1+1/\lambda_2$, a wariancja
-$1/\lambda_1^2+1/\lambda_2^2$.
+o intensywnościach $a\ne b$, $a,b>0$, średnia sumy
+wynosi $1/a+1/b$, a wariancja $1/a^2+1/b^2$.
+Używamy oznaczeń $a,b$, aby nie mylić parametrów
+z oznaczeniami miar Lebesgue'a.
 Gdyby suma miała rozkład gamma o kształcie $2$,
 jej wariancja musiałaby być równa połowie kwadratu średniej.
 Różnica między rzeczywistą wariancją i tą wartością wynosi
-$\tfrac12(1/\lambda_1-1/\lambda_2)^2>0$.
+$\tfrac12(1/a-1/b)^2>0$.
 \end{proof}
 
 \begin{uwaga}
@@ -1703,8 +1726,12 @@ M_X(t)=\frac{1}{\sigma\sqrt{2\pi}}
 \int_\R\exp\!\left(te^y-\frac{(y-\mu)^2}{2\sigma^2}\right)
 \,\dd\lambda_1(y).
 \]
-Wykładnik dąży do $+\infty$ przy $y\to+\infty$,
-więc funkcja podcałkowa jest od pewnego miejsca
+Ponieważ $(y-\mu)^2e^{-y}\to0$ przy $y\to+\infty$,
+wykładnik można zapisać jako
+$e^y(t-(y-\mu)^2e^{-y}/(2\sigma^2))$;
+dla dostatecznie dużego $y$ jest on nie mniejszy
+niż $(t/2)e^y$ i dąży do $+\infty$.
+Zatem funkcja podcałkowa jest od pewnego miejsca
 nie mniejsza niż $1$. Całka jest nieskończona.
 Dziedziną skończoności $M_X$ jest zatem $(-\infty,0]$,
 mimo istnienia wszystkich dodatnich momentów.
