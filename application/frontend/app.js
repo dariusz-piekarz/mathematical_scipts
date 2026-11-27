@@ -394,28 +394,42 @@ async function openLabel(label,sourceDocument=null,anchor=null){
     if(result.entity_id)await openEntity(result.entity_id);else await openModule(result.document_id);
   }catch(e){if(epoch===state.renderEpoch)toast(e.message);}
 }
+let searchEpoch=0, searchTask;
+function dismissSearch(){
+  clearTimeout(searchTask);
+  ++searchEpoch;
+  $("searchResults").classList.add("hidden");
+}
 function setupSearch(){
-  const input=$("searchInput");let task;
-  input.addEventListener("input",()=>{clearTimeout(task);const q=input.value.trim();if(q.length<2){$("searchResults").classList.add("hidden");return;}task=setTimeout(()=>performSearch(q),240);});
-  input.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();clearTimeout(task);performSearch(input.value.trim());}if(e.key==="Escape")$("searchResults").classList.add("hidden");});
-  document.addEventListener("click",e=>{if(!e.target.closest(".header-search"))$("searchResults").classList.add("hidden");});
+  const input=$("searchInput");
+  input.addEventListener("input",()=>{
+    dismissSearch();
+    const q=input.value.trim();
+    if(q.length>=2)searchTask=setTimeout(()=>performSearch(q),240);
+  });
+  input.addEventListener("keydown",e=>{
+    if(e.key==="Enter"){e.preventDefault();dismissSearch();performSearch(input.value.trim());}
+    if(e.key==="Escape")dismissSearch();
+  });
+  document.addEventListener("click",e=>{if(!e.target.closest(".header-search"))dismissSearch();});
 }
 async function performSearch(q){
-  if(!q)return;
+  if(!q||$("searchInput").value.trim()!==q)return;
+  const epoch=++searchEpoch;
   try{
     const result=await api(`/api/search?q=${encodeURIComponent(q)}&limit=25`);
-    if($("searchInput").value.trim()!==q)return;
+    if(epoch!==searchEpoch||$("searchInput").value.trim()!==q)return;
     const list=$("searchResults");list.replaceChildren();
     const graphButton=node("button",{className:"search-hit search-concept-action"},"Zbuduj graf pojęcia: "+q);
-    graphButton.addEventListener("click",()=>{list.classList.add("hidden");openConceptSearch(q);});
+    graphButton.addEventListener("click",()=>{dismissSearch();openConceptSearch(q);});
     list.append(graphButton);
     if(!result.items.length)list.append(node("p",{className:"empty-sub"},"Nie znaleziono dopasowań."));
     for(const e of result.items){
       const b=node("button",{className:"search-hit"});b.append(node("strong",{},crop(e.title||e.excerpt,95)),node("small",{},`${e.document_id} · ${e.kind} · wiersz ${e.start_line}`));
-      b.addEventListener("click",()=>{if(e.kind==="module")openModule(e.id);else openEntity(e.id);list.classList.add("hidden");});list.append(b);
+      b.addEventListener("click",()=>{if(e.kind==="module")openModule(e.id);else openEntity(e.id);dismissSearch();});list.append(b);
     }
     list.classList.remove("hidden");
-  }catch(e){toast(e.message);}
+  }catch(e){if(epoch===searchEpoch&&$("searchInput").value.trim()===q)toast(e.message);}
 }
 function moveSelected(key,step){
   const entries=[...state.selected.entries()];
