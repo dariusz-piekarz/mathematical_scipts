@@ -52,6 +52,15 @@ async function toggleModule(id){
   await request;
 }
 function typeIcon(kind){return ({chapter:"C",section:"§",subsection:"§",subsubsection:"§",theorem:"T",definition:"D",proof:"P",example:"E",exercise:"Z",remark:"U",equation:"∑",figure:"▧"})[kind] || "·";}
+const outlinePages=new Map(), OUTLINE_PAGE_SIZE=300;
+const outlineHeadings=new Set(["part","chapter","section","subsection","subsubsection","paragraph","subparagraph"]);
+function outlinePage(rows,granularity,requested=0){
+  const visible=granularity==="section"?rows.filter(e=>outlineHeadings.has(e.kind)):rows;
+  const total=visible.length,totalPages=Math.max(1,Math.ceil(total/OUTLINE_PAGE_SIZE));
+  const page=Math.min(totalPages-1,Math.max(0,Number.isSafeInteger(requested)?requested:0));
+  const start=page*OUTLINE_PAGE_SIZE;
+  return {items:visible.slice(start,start+OUTLINE_PAGE_SIZE),page,totalPages,total,start};
+}
 function renderTree(){
   const tree=$("tree");tree.replaceChildren();
   for(const domain of state.domains){
@@ -73,14 +82,33 @@ function renderTree(){
         if(state.expandedModules.has(m.id)&&state.granularity!=="module"){
           const branch=node("div",{className:"outline-list"});
           const rows=state.outlines.get(m.id)||[];
-          let shown=0;
-          for(const e of rows){
-            const heading=["part","chapter","section","subsection","subsubsection","paragraph","subparagraph"].includes(e.kind);
-            if(state.granularity==="section"&&!heading)continue;
-            if(shown++>300){branch.append(node("div",{className:"explorer-description"},"Dalsze obiekty: użyj wyszukiwarki."));break;}
+          const key=JSON.stringify([m.id,state.granularity]);
+          const {items,page,totalPages,total,start}=outlinePage(rows,state.granularity,outlinePages.get(key));
+          for(const e of items){
             const line=node("button",{className:"outline-row"+(state.currentEntity===e.id?" active":""),role:"treeitem",title:e.title||e.excerpt});
             line.append(node("span",{className:"outline-type"},typeIcon(e.kind)),node("span",{className:"outline-name"},crop(e.title || e.excerpt || e.kind,73)));
             line.addEventListener("click",()=>openEntity(e.id));branch.append(line);
+          }
+          if(totalPages>1){
+            const controls=node("div",{className:"outline-pagination"});
+            const label=node("span",{"aria-live":"polite"},`${start+1}–${start+items.length} / ${total}`);
+            function changePage(next,focusDirection){
+              outlinePages.set(key,next);
+              const scroll=tree.scrollTop;
+              renderTree();
+              tree.scrollTop=scroll;
+              const pager=[...tree.querySelectorAll(".outline-pagination")].find(el=>el.dataset.pageKey===key);
+              const button=pager?.querySelector(`[data-direction="${focusDirection}"]:not(:disabled)`)||pager?.querySelector("button:not(:disabled)");
+              button?.focus({preventScroll:true});
+              button?.scrollIntoView({block:"nearest"});
+            }
+            controls.dataset.pageKey=key;
+            const prev=node("button",{type:"button",className:"ghost-btn","data-direction":"prev","aria-label":"Poprzednia strona obiektów"},"←");
+            const next=node("button",{type:"button",className:"ghost-btn","data-direction":"next","aria-label":"Następna strona obiektów"},"→");
+            prev.disabled=page===0;next.disabled=page+1===totalPages;
+            prev.addEventListener("click",()=>changePage(page-1,"prev"));
+            next.addEventListener("click",()=>changePage(page+1,"next"));
+            controls.append(prev,label,next);branch.append(controls);
           }
           group.append(branch);
         }
