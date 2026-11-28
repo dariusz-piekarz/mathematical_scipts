@@ -4,9 +4,9 @@ from pathlib import Path
 from math import prod
 from itertools import product
 
-ROOT = Path(__file__).resolve().parents[2]
-DIR = ROOT / "chapters/pl/functional_analysis"
-SOURCE = next(DIR.glob("21-*.tex"))
+from distribution_migration_sources import source_for, reference_context
+
+SOURCE = source_for(21)
 
 def falling(n, k):
     return prod(range(n-k+1, n+1)) if k <= n else 0
@@ -24,8 +24,7 @@ class Chapter21(unittest.TestCase):
                 self.assertTrue(stack)
                 self.assertEqual(stack.pop(), env)
         self.assertFalse(stack)
-        context = "\n".join(p.read_text(encoding="utf-8") for p in DIR.glob("*.tex")
-                            if p.name[:2].isdigit() and int(p.name[:2]) <= 21)
+        context = reference_context(21, legacy_all=True)
         for a, b in re.findall(r"\\ref\{([^}]+)\}|\\hyperref\[([^\]]+)\]", s):
             self.assertIn(r"\label{" + (a or b) + "}", context)
 

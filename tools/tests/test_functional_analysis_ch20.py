@@ -3,9 +3,9 @@ import unittest
 from pathlib import Path
 from fractions import Fraction
 
-ROOT = Path(__file__).resolve().parents[2]
-DIR = ROOT / "chapters/pl/functional_analysis"
-SOURCE = next(DIR.glob("20-*.tex"))
+from distribution_migration_sources import source_for, reference_context
+
+SOURCE = source_for(20)
 
 def integral(poly, a, b):
     return sum(c * (Fraction(b)**(i+1) - Fraction(a)**(i+1)) / (i+1)
@@ -34,7 +34,7 @@ class Chapter20(unittest.TestCase):
                 self.assertTrue(stack)
                 self.assertEqual(stack.pop(), env)
         self.assertFalse(stack)
-        context = "\n".join(p.read_text(encoding="utf-8") for p in DIR.glob("*.tex") if p.name[:2].isdigit() and int(p.name[:2]) <= 20)
+        context = reference_context(20)
         for label in re.findall(r"\\ref\{([^}]+)\}|\\hyperref\[([^\]]+)\]", s):
             self.assertIn(r"\label{" + (label[0] or label[1]) + "}", context)
 

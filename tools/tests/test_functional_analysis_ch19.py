@@ -4,9 +4,9 @@ from pathlib import Path
 from fractions import Fraction
 from math import factorial
 
-ROOT = Path(__file__).resolve().parents[2]
-DIR = ROOT / "chapters/pl/functional_analysis"
-SOURCE = next(DIR.glob("19-*.tex"))
+from distribution_migration_sources import source_for, reference_context
+
+SOURCE = source_for(19)
 
 class Chapter19(unittest.TestCase):
     def test_structure_and_references(self):
@@ -21,7 +21,7 @@ class Chapter19(unittest.TestCase):
                 self.assertTrue(stack)
                 self.assertEqual(stack.pop(), env)
         self.assertFalse(stack)
-        context = "\n".join(p.read_text(encoding="utf-8") for p in DIR.glob("*.tex") if p.name[:2].isdigit() and int(p.name[:2]) <= 19)
+        context = reference_context(19)
         refs = re.findall(r"\\ref\{([^}]+)\}", s)
         refs += re.findall(r"\\hyperref\[([^\]]+)\]", s)
         for label in refs:
