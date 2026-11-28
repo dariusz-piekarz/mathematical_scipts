@@ -144,6 +144,155 @@ implikacji daje odpowiednio $\min(a,b)=b$, $a(b/a)=b$ i
 $\max(0,a+1-a+b-1)=b$. Dla Łukasiewicza $\neg a=1-a$.
 \end{proof}
 
+\section{Rachunek MTL i poprawność semantyczna}
+Rozważmy język zdaniowy ze spójnikami $\mathbin{\&}$, $\wedge$,
+$\to$ i stałą $\bot$. Definiujemy $\neg p=p\to\bot$ oraz
+$p\vee q=((p\to q)\to q)\wedge((q\to p)\to p)$.
+W liniowo uporządkowanej kracie rezyduowanej drugi z tych wzorów
+daje maksimum: gdy $a\leq b$, pierwszy czynnik ma wartość $b$,
+a drugi ma wartość co najmniej $b$, ponieważ
+$b\mathbin{\&}(b\to a)\leq a$. Przypadek odwrotny jest symetryczny.
+
+\begin{definicja}[Rachunek MTL]\label{def:lst-fuzzy-mtl-calculus}
+Aksjomatami są wszystkie podstawienia formuł za $p,q,r$ w schematach
+\begin{align*}
+ & (p\to q)\to((q\to r)\to(p\to r)),\\
+ & (p\mathbin{\&}q)\to p, \qquad
+ (p\mathbin{\&}q)\to(q\mathbin{\&}p),\\
+ & (p\wedge q)\to p, \qquad
+ (p\wedge q)\to(q\wedge p),\\
+ & (p\mathbin{\&}(p\to q))\to(p\wedge q),\\
+ & (p\to(q\to r))\to((p\mathbin{\&}q)\to r),\\
+ & ((p\mathbin{\&}q)\to r)\to(p\to(q\to r)),\\
+ & ((p\to q)\to r)\to(((q\to p)\to r)\to r),\\
+ & \bot\to p.
+\end{align*}
+Jedyna reguła wnioskowania to modus ponens. Dowód z $\Gamma$ jest
+skończonym ciągiem formuł, z których każda należy do $\Gamma$,
+jest aksjomatem lub powstaje przez modus ponens z wcześniejszych
+formuł. Piszemy $\Gamma\vdash_{\mathrm{MTL}}p$, jeżeli taki dowód
+kończy się formułą $p$.
+\end{definicja}
+
+\begin{twierdzenie}[Poprawność MTL względem łańcuchów]\label{thm:lst-fuzzy-mtl-soundness}
+Jeśli $\Gamma\vdash_{\mathrm{MTL}}p$, to każde wartościowanie w liniowo
+uporządkowanej ograniczonej przemiennej całkowitej kracie
+rezyduowanej, które nadaje przesłankom wartość $1$, nadaje także
+formule $p$ wartość $1$.
+\end{twierdzenie}
+\begin{proof}
+Piszemy $a*b$ dla operacji monoidalnej. Wartość implikacji jest
+równa $1$ dokładnie wtedy, gdy jej lewy argument jest nie większy
+od prawego; jest to konsekwencja residuacji z elementem $1$.
+Dla pierwszego schematu wystarczy dowieść
+\[
+(a\to b)*(b\to c)\leq a\to c.
+\]
+Mnożąc lewą stronę przez $a$, otrzymujemy element nie większy od
+$b*(b\to c)$, a ten jest nie większy od $c$. Stosujemy łączność,
+monotoniczność i residuację. Kolejne cztery schematy wynikają
+z nierówności $a*b\leq a$, $a\wedge b\leq a$ i przemienności.
+Szósty schemat wynika z nierówności $a*(a\to b)\leq b$ oraz
+$a*(a\to b)\leq a$. Dwa następne wynikają z tożsamości
+\[
+ (a*b)\to c=a\to(b\to c).
+\]
+Istotnie, porównanie dowolnego $d$ z lewą stroną jest równoważne
+$(a*b)*d\leq c$, a przez łączność, przemienność i dwukrotną
+residuację jest to równoważne $d\leq a\to(b\to c)$.
+W przedostatnim schemacie, gdy $a\leq b$, mamy $a\to b=1$,
+więc wystarczy $c*((b\to a)\to c)\leq c$, co wynika z całkowitości.
+Gdy $b\leq a$, mamy $b\to a=1$ i wewnętrzna implikacja ma wartość
+$c\to c=1$. Ostatni schemat wynika z $0\leq a$.
+Modus ponens zachowuje wartość $1$, gdyż $a=1$ oraz $a\to b=1$
+pociągają $1=a\leq b$. Indukcja po długości dowodu kończy argument.
+\end{proof}
+Dodatkowy schemat $(p\wedge q)\to(p\mathbin{\&}(p\to q))$
+prowadzi do logiki BL; szósty schemat MTL daje odwrotną nierówność.
+Dołączenie do BL schematu $\neg\neg p\to p$ daje logikę
+Łukasiewicza, a dołączenie $p\to(p\mathbin{\&}p)$ daje logikę
+Gödla. W obu przypadkach odpowiednie przeciwne nierówności
+zachodzą już w każdej ograniczonej przemiennej całkowitej kracie
+rezyduowanej: $a\leq\neg\neg a$ wynika z $a*\neg a\leq0$,
+a $a*a\leq a$ z całkowitości.
+
+\section{Pełność i ograniczenia zwartości}
+W klasycznej logice pierwszego rzędu pełność pozwala przejść od
+konsekwencji semantycznej do skończonego dowodu. W logice rozmytej
+trzeba odróżniać pełność względem wszystkich algebr, pełność
+względem algebr standardowych na $[0,1]$ oraz przypadki skończonego
+i dowolnego zbioru przesłanek. Standardowa pełność zdaniowej logiki
+Łukasiewicza dla skończonego zbioru przesłanek jest twierdzeniem
+algebraicznym (por. Petr Hájek, \emph{Metamathematics of Fuzzy Logic},
+1998; przegląd \emph{Fuzzy Logic}, Stanford Encyclopedia of Philosophy).
+Nie daje ona pełności standardowej dla dowolnych przesłanek, co
+pokazuje następujący przykład z pełnym dowodem.
+
+\begin{twierdzenie}[Niezachodzenie zwartości dla standardowej konsekwencji Łukasiewicza]
+\label{thm:lst-fuzzy-noncompactness}
+Istnieje $\Gamma$ i formuła $u$, dla których
+$\Gamma\models_L u$, lecz żaden skończony podzbiór $\Gamma$
+nie pociąga $u$ w semantyce standardowej logiki Łukasiewicza.
+\end{twierdzenie}
+\begin{proof}
+Niech $q^n$ oznacza $n$-krotną koniunkcję monoidalną $q$ z samą sobą
+($q^1=q$). Dla $v(q)=t$ indukcja przy użyciu wzoru na $T_L$ daje
+\[
+v(q^n)=\max(0,nt-(n-1)).
+\]
+Krok indukcyjny wynika z $t-1\leq0$ po zagnieżdżeniu maksimum.
+Weźmy $\Gamma=\{p\to q^n:n\geq1\}$ i $u=q\vee\neg p$.
+Jeżeli wszystkie przesłanki mają wartość $1$ i $v(q)<1$, to dla
+dostatecznie dużego $n$ mamy $v(q^n)=0$, a zatem $v(p)=0$.
+Wówczas $v(u)=1$. Gdy $v(q)=1$, ten sam wniosek jest natychmiastowy.
+
+Niech teraz $\Gamma_0\subseteq\Gamma$ będzie skończony.
+Wybierzmy $N\geq1$ nie mniejsze od wszystkich wykładników
+w $\Gamma_0$ (dla zbioru pustego wystarczy $N=1$).
+Dla $v(p)=1/2$, $v(q)=1-1/(2N)$ i każdego $1\leq n\leq N$
+mamy $v(q^n)=1-n/(2N)\geq1/2$. Wszystkie przesłanki z $\Gamma_0$
+mają wartość $1$, lecz
+$v(u)=\max(1-1/(2N),1/2)<1$.
+\end{proof}
+\begin{wniosek}
+Żaden poprawny system o skończonych dowodach z przesłanek, z których
+każdy używa tylko skończenie wielu elementów $\Gamma$, nie jest
+pełny względem standardowej konsekwencji Łukasiewicza dla wszystkich
+zbiorów $\Gamma$.
+\end{wniosek}
+\begin{proof}
+Gdyby dowód $u$ z $\Gamma$ istniał, wykorzystywałby skończony
+podzbiór $\Gamma_0$. Poprawność dawałaby $\Gamma_0\models_L u$,
+wbrew poprzedniemu twierdzeniu.
+\end{proof}
+
+\section{Funkcje określane przez formuły Łukasiewicza}
+\begin{stwierdzenie}\label{prop:lst-fuzzy-mcnaughton-forward}
+Każda formuła zdaniowa logiki Łukasiewicza o $n$ zmiennych wyznacza
+ciągłą funkcję $[0,1]^n\to[0,1]$, która na skończenie wielu
+wielościennych częściach kostki jest afiniczna ze współczynnikami
+całkowitymi.
+\end{stwierdzenie}
+\begin{proof}
+Zmienne dają rzuty współrzędnych, a $\bot$ funkcję stałą zero.
+Przyjmijmy, że dwie funkcje mają takie rozkłady. Ich wspólne
+rozdrobnienie otrzymujemy przez przecięcia części. Na każdej części
+obie są afiniczne. Minimum i maksimum wybierają jedną z dwóch
+funkcji po rozcięciu części hiperpłaszczyzną ich równości.
+Wzory $T_L(a,b)=\max(0,a+b-1)$ oraz
+$a\Rightarrow_L b=\min(1,1-a+b)$ dają analogiczne skończone
+rozdrobnienia przez porównanie funkcji afinicznej ze stałą.
+Ciągłość i całkowitość współczynników zachowują się we wszystkich
+tych operacjach. Indukcja po budowie formuły daje tezę.
+\end{proof}
+Odwrotna implikacja jest treścią twierdzenia McNaughtona (1951):
+każda taka funkcja jest reprezentowana przez formułę Łukasiewicza.
+Pełny dowód kierunku odwrotnego wymaga konstrukcji funkcji
+całkowitoliczbowych kawałkami afinicznych za pomocą operacji
+MV-algebry; nie wynika z samej indukcji. Wymaga osobnego
+uzupełnienia. Por. R. McNaughton, \emph{A theorem about infinite-valued
+sentential logic}, Journal of Symbolic Logic 16 (1951), 1--13.
+
 \section{Logika pierwszego rzędu}
 W niepustym uniwersum $M$ interpretujemy symbole funkcyjne klasycznie,
 a predykaty $n$-argumentowe jako funkcje $M^n\to[0,1]$.
@@ -158,8 +307,11 @@ Jeżeli $M=\N$ oraz $P(n)=1-1/(n+1)$, to $\|\exists xP(x)\|=1$,
 ale żadna wartość $P(n)$ nie jest równa jeden.
 
 \section{Relacje rozmyte}
-Dla $R:X\times Y\to[0,1]$ i $S:Y\times Z\to[0,1]$ definiujemy
-$(S\circ_T R)(x,z)=\sup_{y\in Y}T(R(x,y),S(y,z))$,
+Dla relacji rozmytych $R:X\times Y\to[0,1]$ i
+$S:Y\times Z\to[0,1]$ definiujemy
+\[
+(S\circ_T R)(x,z)=\sup_{y\in Y}T(R(x,y),S(y,z)),
+\]
 gdzie $\sup\varnothing=0$.
 \begin{stwierdzenie}
 Dla lewostronnie ciągłej $T$ składanie jest łączne.
