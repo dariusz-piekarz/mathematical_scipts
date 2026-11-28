@@ -321,30 +321,44 @@ z definicją~\ref{def:propositional-grammar-xli} i niech
 $v$ przypisuje każdej literze występującej w $\varphi$
 wartość $0$ albo $1$. Wówczas z tablic spójników można
 wyznaczyć \emph{dokładnie jedną} wartość $v(\varphi)$.
+Ponadto jeśli dwa wartościowania $v,w$ są zgodne na wszystkich
+literach występujących w $\varphi$, to $v(\varphi)=w(\varphi)$,
+niezależnie od wartości przypisywanych pozostałym literom.
 \end{twierdzenie}
 \begin{proof}
-Rozpatrujemy kolejne etapy budowy formuły. W etapie
-początkowym formuła jest pojedynczą literą; ma wartość
-przyznaną jej przez $v$. Załóżmy, że wartości wszystkich
-formuł powstałych w pierwszych $m$ etapach są jednoznaczne.
-Jeśli w kolejnym etapie utworzono negację $\neg\alpha$,
-to wartość $\alpha$ jest już znana, a tabela negacji
-wskazuje dokładnie jedną wartość nowej formuły.
-Jeżeli utworzono $(\alpha\circ\beta)$, gdzie $\circ$
-jest jednym z czterech spójników dwuargumentowych,
-to obie wartości $v(\alpha),v(\beta)$ są znane;
-odpowiednia tabela wskazuje dokładnie jedną wartość wyniku.
-Budowa $\varphi$ jest skończona, więc po skończonej
-liczbie takich kroków otrzymamy jej wartość.
-W pełnym zapisie pojedyncza litera jest rozpoznawana
-jednoznacznie. Każda inna formuła zaczyna się od $\neg$
-albo od nawiasu otwierającego. W pierwszym przypadku reszta
-napisu stanowi argument negacji. W drugim spójnik dwuargumentowy
-znajduje się wewnątrz zewnętrznej pary nawiasów, poza wszystkimi
-wewnętrznymi parami; położenie tego spójnika wyznacza obie
-podformuły. Stąd rozbiór formuły jest jednoznaczny.
-Powtarzając to rozumowanie dla podformuł, widzimy, że żaden
-krok obliczania wartości nie pozostawia dowolności.
+Najpierw uzasadnimy jednoznaczność rozbioru pełnego napisu.
+Indukcja po jego budowie pokazuje, że nawiasy są zrównoważone:
+w całym napisie jest tyle samo nawiasów otwierających co
+zamykających, a w żadnym początkowym fragmencie nie ma więcej
+zamykających niż otwierających. Ponadto każdy spójnik
+dwuargumentowy leży wewnątrz pewnej pary nawiasów.
+Dla litery oba stwierdzenia są oczywiste; negacja nie zmienia
+nawiasów, a utworzenie $(\alpha\circ\beta)$ dodaje jedną
+zewnętrzną parę nawiasów i umieszcza nowy spójnik wewnątrz niej.
+
+Pierwszy symbol formuły rozstrzyga, czy jest ona literą,
+negacją czy formułą złożoną ze spójnikiem dwuargumentowym.
+W przypadku negacji pozostały napis jest jej argumentem.
+W przypadku $(\alpha\circ\beta)$ liczymy, czytając od lewej,
+różnicę liczby otwartych i zamkniętych nawiasów.
+Na głębokości dokładnie $1$ znajduje się dokładnie jeden
+spójnik dwuargumentowy: spójnik $\circ$. Wszystkie spójniki
+dwuargumentowe wewnątrz $\alpha$ i $\beta$ mają głębokość
+co najmniej $2$, na mocy ustalonej własności nawiasowania.
+Położenie $\circ$ wyznacza więc oba argumenty jednoznacznie.
+
+Teraz stosujemy indukcję względem liczby symboli w formule.
+Litera ma dokładnie wartość przypisaną jej przez $v$.
+Każdy argument spójnika jest krótszą formułą, ma więc
+jednoznacznie wyznaczoną wartość z założenia indukcyjnego.
+Tablica danego spójnika przypisuje tym wartościom dokładnie
+jeden wynik. Dowodzi to istnienia i jednoznaczności wartości.
+
+Tą samą indukcją wykazujemy ostatnią tezę. Dla litery jest
+ona założeniem; dla negacji oba wartościowania dają tę samą
+wartość argumentu, a dla spójnika dwuargumentowego dają
+te same wartości obu argumentów. Zastosowanie tej samej
+tablicy prawdy daje zatem ten sam wynik dla całej formuły.
 \end{proof}
 
 \begin{przyklad}[Obliczenie od wewnątrz]
@@ -674,6 +688,12 @@ liczby spójników.
 
 \begin{definicja}[Zupełność funkcyjna spójników]
 \label{def:lst-functional-completeness}
+Dla dowolnej rozważanej rodziny spójników przyjmujemy
+analogiczną składnię indukcyjną: z $k$ formuł wolno utworzyć
+nową formułę za pomocą spójnika $k$-argumentowego należącego
+do tej rodziny. Jeśli rodzina zawiera stałą logiczną, jest
+ona spójnikiem zeroargumentowym. Wartość nowego spójnika
+określamy przez jego funkcję prawdziwościową.
 Rodzinę spójników nazywamy funkcyjnie zupełną, jeżeli
 dla każdego $n\geq1$ i każdej funkcji
 $f:\{0,1\}^n\to\{0,1\}$ istnieje formuła w literach
@@ -721,9 +741,14 @@ Dla NOR zachodzi
  \neg p\equiv p\downarrow p,\qquad
  p\lor q\equiv(p\downarrow q)\downarrow(p\downarrow q).
 \]
-Wzory wynikają bezpośrednio z idempotentności
-koniunkcji i alternatywy oraz prawa podwójnej negacji;
-można też sprawdzić cztery wiersze tablicy.
+Dla każdej wartości $a\in\{0,1\}$ mamy
+$a\land a=a\lor a=a$, stąd oba wzory na negację.
+Zastosowanie tej samej operacji do dwóch kopii
+$p\uparrow q$ daje negację $p\uparrow q$, czyli
+$\neg\neg(p\land q)\equiv p\land q$.
+Analogicznie dla NOR otrzymujemy
+$\neg\neg(p\lor q)\equiv p\lor q$.
+Ostatnie równoważności wynikają z prawa podwójnej negacji.
 Twierdzenie~\ref{thm:lst-complete-connectives}
 daje zupełność obu rodzin.
 \end{proof}
@@ -732,8 +757,11 @@ daje zupełność obu rodzin.
 \label{prop:lst-incomplete-connectives}
 Rodzina $\{\land,\lor\}$ nie jest funkcyjnie zupełna,
 nawet po dołączeniu obu stałych logicznych.
-Sama implikacja bez stałej fałszu również nie jest
-funkcyjnie zupełna.
+Rodzina złożona z samej implikacji (nawet po dołączeniu
+stałej prawdy) również nie jest funkcyjnie zupełna,
+natomiast rodzina $\{\Rightarrow,\bot\}$, gdzie $\bot$
+jest tutaj rzeczywiście dopuszczonym spójnikiem
+zeroargumentowym, jest funkcyjnie zupełna.
 \end{stwierdzenie}
 \begin{proof}
 Na $\{0,1\}^n$ przyjmujemy porządek współrzędny,
@@ -749,6 +777,14 @@ wartościowaniu wszystkich liter przez $1$ każda
 formuła ma wartość $1$: w kroku indukcyjnym
 korzystamy z $1\Rightarrow1=1$. Nie można więc
 zbudować negacji ani funkcji stale równej $0$.
+Dołączenie stałej prawdy nie zmienia tego argumentu,
+ponieważ ona także przyjmuje wartość $1$.
+Jeżeli jednak dopuszczamy stałą fałszu $\bot$, to
+$p\Rightarrow\bot\equiv\neg p$: przy $p=0$ obie strony
+są prawdziwe, a przy $p=1$ obie są fałszywe.
+Możemy więc zbudować negację, a wraz z implikacją
+stanowi ona rodzinę funkcyjnie zupełną, co wykazano
+w poprzednim twierdzeniu o rodzinach spójników.
 \end{proof}
 
 \begin{wniosek}[Ile istnieje funkcji prawdziwościowych?]
