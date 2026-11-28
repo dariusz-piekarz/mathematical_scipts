@@ -424,8 +424,9 @@ with sync_playwright() as pw:
     # AM II 29: two parametrizations of the same helix.
     source = (ROOT.parent / 'chapters/pl/mathematical_analysis_ii/29-krzywe-dlugosc-i-prostowalnosc.tex').read_text(encoding='utf-8')
     page.evaluate("latex => renderSimplified(latex, 'AM2-29')", source)
-    host = box.locator('.atlas-plot-host')
-    assert host.count() == 1
+    hosts = box.locator('.atlas-plot-host')
+    assert hosts.count() == 3
+    host = hosts.nth(0)
     host.locator('button').click()
     iframe = host.locator('iframe')
     assert iframe.get_attribute('sandbox') == 'allow-scripts'
@@ -448,6 +449,42 @@ with sync_playwright() as pw:
     assert check['error'] < 1e-12 and check['steps'] == 21 and check['active'] == 10, check
     host.locator('button').click()
     assert iframe.count() == 0
+    for i, identifier in enumerate(('am2_29_oscillations.html', 'am2_29_cantor.html'),1):
+        host = hosts.nth(i)
+        host.locator('button').click()
+        iframe = host.locator('iframe')
+        assert iframe.get_attribute('sandbox') == 'allow-scripts'
+        assert iframe.get_attribute('src').endswith(identifier)
+        plot = host.frame_locator('iframe').locator('#plot[data-ready=true]')
+        plot.wait_for(timeout=60000)
+        if i == 1:
+            check = plot.evaluate("""el => {
+                let error=0;
+                for(let j=0;j<12;j++){
+                    const d=el.data[3*j], a=(j+1)/4;
+                    d.x.forEach((x,k)=>error=Math.max(error,Math.abs(d.y[k]-x**a*Math.sin(1/x))));
+                }
+                return {error,steps:el.layout.sliders[0].steps.length};
+            }""")
+            assert check['error'] < 1e-12 and check['steps'] == 12, check
+        else:
+            check = plot.evaluate("""el => {
+                let error=0;
+                for(let n=0;n<9;n++){
+                    const d=el.data[2*n+1];
+                    let mass=0,support=0;
+                    for(let k=0;k<d.x.length;k+=3){
+                        const w=d.x[k+1]-d.x[k];
+                        mass+=w*d.y[k];
+                        if(d.y[k]>0)support+=w;
+                    }
+                    error=Math.max(error,Math.abs(mass-1),Math.abs(support-(2/3)**n));
+                }
+                return {error,steps:el.layout.sliders[0].steps.length};
+            }""")
+            assert check['error'] < 1e-12 and check['steps'] == 9, check
+        host.locator('button').click()
+        assert iframe.count() == 0
     # Real graph chapters: every figure must decode, not merely insert a placeholder.
     for module, filename, expected in (
         ('GW-01', '01-podstawy-teorii-grafow.tex', 7),
