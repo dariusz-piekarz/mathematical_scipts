@@ -1,4 +1,4 @@
-# Analiza matematyczna II — 46 rozdziałów
+# Analiza matematyczna II — 39 rozdziałów programu podstawowego
 
 Kurs inspirowany wykładami Marka Jarnickiego, Wykłady z Analizy Matematycznej I, II, III, IV, wersja 9 stycznia 2022, [PDF UJ](https://apps.usos.uj.edu.pl/apps/f/Q9qBncrH/analiza-19-20-21%20%281%29.pdf), spis treści s. 4–6. Kolejność dostosowana do dyspozycji użytkownika: po ciągłości rachunek różniczkowy, bezpośrednio po nim rachunek całkowy, następnie całkowanie wielowymiarowe i na podrozmaitościach, a pozostałe zagadnienia później. W oryginale Jarnickiego szeregi i całki jednowymiarowe są w AM II (§6–8), różniczkowanie i podrozmaitości w AM III (§9–11), miara, całkowanie na podrozmaitościach i Stokes w AM IV (§12–14). Nie kopiujemy podziału na semestry, lecz wykorzystujemy zależności merytoryczne.
 
@@ -45,9 +45,9 @@ Kurs inspirowany wykładami Marka Jarnickiego, Wykłady z Analizy Matematycznej 
 30. Całki wielokrotne i zamiana zmiennych; zastosowania wcześniejszego rachunku różniczkowego (ME 12–13, AF 14–15); kostki, zbiory mierzalne w sensie Jordana, całki iterowane, Fubini, współrzędne biegunowe, walcowe i sferyczne; związek z całką Lebesgue'a (ME 04, 07, 12–13, TC 01–02)
 31. Całki krzywoliniowe obu rodzajów (DG 10–11); pola potencjalne, niezależność od drogi
 32. Zastosowania geometryczne i fizyczne (AM I 33)
-33. Całki powierzchniowe pierwszego rodzaju (DG 11, ME 28)
-34. Całki powierzchniowe drugiego rodzaju i strumień (DG 10–11)
-35. Całkowanie po podrozmaitościach przestrzeni euklidesowej dowolnego wymiaru, formy, Green, Gauss–Ostrogradski i Stokes (DG 01, 10–11, ME 26–28); orientacja, miara Hausdorffa, macierz Grama, całkowanie form, brzeg; bez ogólnej geometrii riemannowskiej
+33. Całki powierzchniowe pierwszego rodzaju: definicja jako całka względem H², parametryzacje, macierz Grama, wykresy, powierzchnie obrotowe, krotność i przykłady (DG 11, ME 26–28)
+34. Całki powierzchniowe drugiego rodzaju: orientacja, normalna jednostkowa, strumień, 2-formy, zmiana orientacji i parametryzacji (DG 10–11)
+35. Całkowanie po podrozmaitościach euklidesowych dowolnego wymiaru: całka względem H^k, formy różniczkowe, orientacja i brzeg; ogólne twierdzenie Stokesa dla zorientowanych podrozmaitości z brzegiem, dowód lokalny i globalny; pełne wyprowadzenie twierdzeń Greena, Gaussa–Ostrogradskiego, klasycznego Stokesa o rotacji i twierdzenia Newtona–Leibniza (DG 01, 10–11, ME 26–28). Bez ogólnej geometrii riemannowskiej.
    - Podstawowy program obejmuje wyłącznie całki Riemanna i Lebesgue'a oraz ich geometryczne zastosowania. Po jego zakończeniu i ustabilizowaniu opracować rozszerzenia: wielowymiarowe całki cechowane, całkę Mawhina i całkę Pfeffera (decyzja 28.11.2026).
 
 ## V. Szeregi potęgowe, rzeczywiste funkcje analityczne i aproksymacja
@@ -57,15 +57,9 @@ Kurs inspirowany wykładami Marka Jarnickiego, Wykłady z Analizy Matematycznej 
 38. Szeregi Taylora funkcji rzeczywistych (AM I 23)
 39. Aproksymacja, Weierstrass i Stone–Weierstrass (AF)
 
-## VI. Analiza Fouriera
+## VI. Rozszerzenia po programie podstawowym
 
-40. Układy ortogonalne w przestrzeniach Hilberta (AF 13)
-41. Trygonometryczne szeregi Fouriera (PDE 06)
-42. Jądro Dirichleta, Riemann–Lebesgue, Dini (nowe)
-43. Jądro Fejéra i średnie Cesàro (PDE 06, AM I 13)
-44. Zbieżność jednostajna szeregów Fouriera (nowe)
-45. Wahanie ograniczone i Dirichlet–Jordan (TC 03, ME 29)
-46. Rozbieżność i zjawisko Gibbsa (AF, PDE)
+Po zakończeniu audytów rozdziałów 01–39: wielowymiarowe całki cechowane, całka Mawhina i całka Pfeffera, następnie wielowymiarowy rachunek ułamkowy i potencjały Riesza. Numerację rozszerzeń ustalić po dopracowaniu zakresu. Analiza Fouriera została przeniesiona do teorii dystrybucji (decyzja 28.11.2026); nie tworzyć rozdziałów AM II 40–46 według dawnego planu.
 
 ## Ponowne wykorzystanie — obowiązkowy etap przed opracowaniem rozdziału
 
@@ -433,3 +427,30 @@ Na wyraźną dyspozycję użytkownika odłożyć rozmaitości riemannowskie. W r
 ## Zatwierdzony podział rachunku ułamkowego (28.11.2026)
 
 Decyzja użytkownika: jednowymiarowy rachunek ułamkowy przenieść z propozycji AM II do planu rozszerzeń AM I. Po obecnym rozdziale 43 przewidzieć 44 — całki rzędu ułamkowego (Cauchy, Riemann–Liouville, Weyl, półgrupa z hipotezami, obliczenia), 45 — pochodne rzędu ułamkowego (Riemann–Liouville, Caputo, Grünwald–Letnikov, Marchaud, dziedziny, zależności, kompozycje, twierdzenia podstawowe, przykłady i kontrprzykłady). AM I 34 uzupełnić o funkcje Mittag-Lefflera i Wrighta. AM II: jedynie wielowymiarowy rachunek ułamkowy i potencjały Riesza jako rozszerzenie po programie podstawowym. AF: potęgi ułamkowe operatorów i rachunek funkcyjny. RRC: laplasjan ułamkowy, ułamkowe przestrzenie Sobolewa, równania rzędu ułamkowego i nielokalne. Niniejsza decyzja zastępuje wcześniejszą propozycję umieszczania jednowymiarowej teorii w AM II. Całki Mawhina i Pfeffera pozostają zatwierdzonymi rozszerzeniami AM II. Nie tworzyć teraz pustych modułów i nie przerywać bieżącej pracy nad AM II; wrócić do stabilizacji rozdziału 27. Reorganizacja Fouriera nadal do osobnej decyzji.
+
+
+## Obowiązująca aktualizacja programu (28.11.2026): intuicja, Hausdorff, Stokes, Fourier
+
+Decyzja użytkownika: przed dalszym rozwijaniem rozdziału 33 wrócić do 24–32 i uzupełnić intuicję geometryczną, interpretacje, rysunki 2D i 3D, sumy przybliżające oraz powiązania między definicjami; nie przepisywać bez potrzeby poprawnych dowodów. Następnie ukończyć 33–35 w tym standardzie. Kontynuować audyty do stabilizacji, audyt kontrolny, kompilację i weryfikację ilustracji w Atlasie. Wykresy Plotly rzeczywiście rejestrować w aplikacji, z testami. Nie uruchamiać dodatkowych przebiegów CI bez potrzeby.
+
+### Warstwa intuicyjna i miara Hausdorffa
+
+- 24: sumy Riemanna i Darboux, dzielenie dziedziny, wypełnione bryły pod wykresami, funkcje zmieniające znak.
+- 25: funkcja pierwotna i akumulacja, odróżnienie całki oznaczonej od nieoznaczonej. 26: konstrukcja przez funkcje proste i miarę zbiorów, grupowanie według wartości, zgodność z Riemannem i interpretacja przez objętość pod wykresem. Dodać most do H^k: całka Lebesgue'a względem dowolnej miary, w szczególności H^k ograniczonej do podrozmaitości; normalizacja H^n=λ_n. Wyjaśnić, dlaczego gładka krzywa/powierzchnia niższego wymiaru ma zerową n-wymiarową miarę Lebesgue'a, lecz może mieć dodatnią H^k. Pełne twierdzenia i odsyłacze do ME 26–28. Nie powielać całej teorii konstrukcji miary.
+- 27: wyczerpanie, zbieżność bezwzględna, osobliwości i zależność granic. 28: parametry jako rodzina obszarów/funkcji, warunki zamiany granicy lub pochodnej z całką. 29: cięciwy, długość, łuk, krotność, H¹. 30: przekroje, jakobian jako lokalny mnożnik objętości i transformacja małego równoległościanu. 31: całka pierwszego rodzaju jako masa drutu i ważona długość, kurtyna nad prostą krzywą płaską dla f≥0 (z krotnością przy powtórzeniach), druga jako skierowana praca i rzut pola na styczną; porównać całkę po obrazie względem H¹ i całkę po drodze. 32: gęstość, centroid, przekroje i momenty.
+- W 33: jawnie zdefiniować całkę powierzchniową pierwszego rodzaju jako całkę względem H²; wyprowadzić J₂φ=√det(DφᵀDφ)=||∂uφ×∂vφ|| w R³, wzór dla wykresu, przypadki innych kowymiarów i pokrywanie powierzchni. W 34: strumień ∫_S ⟨F,ν⟩ dH² oraz równoważne całkowanie 2-formy. Rozróżnić powierzchnie orientowalne, nieorientowalne i całki bez orientacji. W 35: wspólne ujęcie dla dowolnego k, różnowartościowe regularne parametryzacje, mierzalne podzbiory, k-jakobian √det(DφᵀDφ), wzór z krotnością dla nieiniektywnych parametryzacji. Pokazać jawnie przypadki k=1, k=2, k=n; całka skalarna względem dodatniej miary i całka formy to różne konstrukcje. Uwzględnić wzór koobszaru jako powiązanie z przekrojami, bez dublowania dowodu ME 28.
+
+### Ogólne twierdzenie Stokesa — nie tylko wersja wektorowa w R³
+
+Rozdział 35: dla zwartej zorientowanej gładkiej k-wymiarowej podrozmaitości M⊂R^n z gładkim brzegiem i formy ω stopnia k−1 klasy C¹ (lub dla gładkiej formy o zwartym nośniku na niekoniecznie zwartej M) sformułować ∫_M dω=∫_{∂M}ω, z ograniczeniem/pullbackiem na brzeg. Ustalić konwencję „zewnętrzny wektor najpierw”, w tym orientację punktów brzegowych k=1. Wyjaśnić konstrukcję całki formy przez mapy, niezależność od zgodnych z orientacją parametryzacji i podział jedności. Dowód w półprzestrzeni przez podstawowe twierdzenie rachunku całkowego i Fubiniego, przeniesienie przez mapy, globalizacja podziałem jedności, anulowanie członów wewnętrznych. Przywołać zweryfikowany dowód DG-10::thm:stokes-formy, ale w AM II rozpisać specjalizację i jej argumenty, a nie ograniczyć się do samego odsyłacza. Nie zakładać geometrii riemannowskiej. Dla obszarów z narożami (np. prostokąt, wielościan) podać oddzielne uzasadnienie odpowiedniej wersji lub wskazać dokładne ograniczenie hipotez; nie stosować wersji o gładkim brzegu bez uzasadnienia.
+
+Wyprowadzić jawnie:
+- Newtona–Leibniza i twierdzenie o funkcji pierwotnej (k=1, ω=f);
+- Greena, postać cyrkulacyjna (ω=P dx+Q dy, dω=(∂xQ−∂yP) dx∧dy) i strumieniowa (ω=P dy−Q dx, dω=(∂xP+∂yQ) dx∧dy), z dodatnią orientacją brzegu, także omówieniem brzegów wewnętrznych;
+- klasyczne twierdzenie Stokesa o rotacji w R³: ω=F₁ dx+F₂ dy+F₃ dz, identyfikacja dω z 2-formą strumienia rot F i zgodność orientacji brzegu;
+- Gaussa–Ostrogradskiego w R^n: ω=ι_F(dx₁∧…∧dx_n)=Σ_i(−1)^{i−1}F_i dx₁∧…∧pominięte dx_i∧…∧dx_n; dω=(div F) dx₁∧…∧dx_n; ograniczenie do brzegu daje ⟨F,ν⟩ względem H^{n−1}; w R³ wyraźnie zapisać klasyczny wzór. Dopuszczalne dodatkowe dowody elementarne, ale każdy przypadek koniecznie wyprowadzić z ogólnego Stokesa.
+- Wnioski: całka formy dokładnej po podrozmaitości bez brzegu, d²=0, pierwsza i druga tożsamość Greena (z twierdzenia o dywergencji, właściwe hipotezy), rachunki porównujące obie strony twierdzeń. Ilustracje orientacji, lokalnego przepływu i kasowania się wewnętrznych brzegów.
+
+### Fourier — decyzja końcowa
+
+Usunięto z aktywnego spisu AM II dawne planowane rozdziały 40–46. Nie istniały w katalogu, więc nie usuwać żadnych rzeczywistych plików. Kanonicznym miejscem klasycznej i dystrybucyjnej analizy Fouriera jest rozwijany skrypt Teoria dystrybucji. Sprawdzono rzeczywiste pliki DT 07 (dystrybucje temperowane i transformacja Fouriera), DT 13 (szeregi Fouriera, Bessel, Fejér, Parseval, zanik współczynników), DT 14 (mnożniki Fouriera L²). W DT uzupełnić po audycie pokrycia: jądro Dirichleta, okresowy lemat Riemanna–Lebesgue'a, lokalizacja Riemanna, kryterium Diniego, twierdzenie Dirichleta–Jordana, zbieżność jednostajna, rozbieżność i zjawisko Gibbsa, rysunki; nie powielać istniejącego Fejéra, Parsevala ani AF/RRC bez potrzeby. Osobno uzupełnić plan DT. Dotychczasowe propozycje reorganizacji Fouriera w AM II są wyłącznie historyczne, nieaktywne. Rozdziały 36–39 pozostają w planie, po nich rozszerzenia całkowe i wielowymiarowy rachunek ułamkowy. Niniejsza aktualizacja ma pierwszeństwo przed wcześniejszymi sprzecznymi zapisami.
