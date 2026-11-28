@@ -1,0 +1,279 @@
+\chapter{Całki powierzchniowe i miara Hausdorffa}
+\label{ma2:ch:surface-integrals}
+
+Całka po krzywej z rozdziału \ref{ma2:ch:line-integrals}
+wykorzystuje długość, a całka po zbiorze w $\R^n$
+z rozdziału \ref{ma2:ch:multiple-integrals} wykorzystuje
+$n$-wymiarową objętość. Teraz rozważymy całkowanie
+względem $k$-wymiarowej objętości podrozmaitości
+w $\R^n$, gdzie $1\le k\le n$.
+Nie potrzebujemy ogólnej teorii rozmaitości
+riemannowskich. Metrykę przestrzeni otaczającej
+stanowi zwykła metryka euklidesowa.
+
+\section{Intuicja: pole fragmentu a pole jego rzutu}
+
+Mały prostokąt w dziedzinie parametryzacji
+$\sigma:U\subseteq\R^k\to\R^n$ przechodzi w mały
+fragment podrozmaitości. W pierwszym przybliżeniu
+jest to równoległościan rozpięty przez kolumny
+$D\sigma(u)$ pomnożone przez długości boków
+prostokąta. Z rozdziału \ref{ma2:ch:manifold-calculus}
+znamy $k$-wymiarowy jakobian
+\[
+ J_k\sigma(u)=\sqrt{\det(D\sigma(u)^{\mathsf T}D\sigma(u))}.
+\]
+Jest on czynnikiem zmiany lokalnej objętości,
+a nie wyznacznikiem prostokątnej macierzy pochodnej.
+Dla $k=1$ otrzymujemy normę prędkości, a dla $k=n$
+moduł zwykłego wyznacznika. Gdy $k<n$, miara
+$\lambda_n$ nie mierzy pola podrozmaitości:
+potrzebujemy miary odpowiedniego wymiaru.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(1.1cm,-.35cm)},y={(-.7cm,-.4cm)},z={(0cm,1.05cm)}]
+\fill[blue!15] (0,0,0)--(2,0,0)--(2,2,0)--(0,2,0)--cycle;
+\draw[blue!65!black] (0,0,0)--(2,0,0)--(2,2,0)--(0,2,0)--cycle;
+\fill[orange!45] (0,0,1)--(2,0,2)--(2,2,2.7)--(0,2,1.7)--cycle;
+\draw[orange!80!black,thick] (0,0,1)--(2,0,2)--(2,2,2.7)--(0,2,1.7)--cycle;
+\foreach \x/\y/\z in {0/0/1,2/0/2,2/2/2.7,0/2/1.7}
+ \draw[gray,dashed] (\x,\y,0)--(\x,\y,\z);
+\node[blue!70!black,below] at (1,1,0) {dziedzina};
+\node[orange!75!black,above] at (1,1,1.85) {fragment styczny};
+\end{tikzpicture}
+\caption{Pole fragmentu stycznego może być większe
+od pola rzutu na płaszczyznę parametrów.}
+\label{ma2:fig:surface-projection}
+\end{figure}
+
+\section{Miara Hausdorffa i liniowa zmiana pola}
+
+Stosujemy miarę $\mathcal H^k$ unormowaną tak, by
+na $\R^k$ pokrywała się na zbiorach borelowskich
+z $\lambda_k$. Konstrukcję, borelowską mierzalność,
+normalizację oraz nierówność Lipschitzowską
+udowodniono w
+\atlasref{ME-26::thm:hausdorff-borel-26}{ME 26},
+\atlasref{ME-26::thm:hausdorff-calibration-26}{twierdzeniu o kalibracji}
+i \atlasref{ME-26::thm:hausdorff-lipschitz-26}{twierdzeniu o skalowaniu}.
+W szczególności izometrie zachowują $\mathcal H^k$,
+a dla odwzorowania $L$-Lipschitzowskiego $F$
+mamy $\mathcal H^k(F(A))\le L^k\mathcal H^k(A)$.
+Miara obliczona w podprzestrzeni metrycznej jest
+taka sama jak w przestrzeni otaczającej: pokrycia
+w przestrzeni otaczającej można przeciąć z podprzestrzenią,
+nie zwiększając średnic; pokrycia w podprzestrzeni
+są zarazem pokryciami w przestrzeni otaczającej.
+
+\begin{lemat}[Liniowy wzór na pole]
+\label{ma2:lem:surface-linear-area}
+Niech $A:\R^k\to\R^n$ będzie różnowartościowym
+odwzorowaniem liniowym. Dla borelowskiego
+$B\subseteq\R^k$ zachodzi
+\[
+ \mathcal H^k(A(B))=\sqrt{\det(A^{\mathsf T}A)}\lambda_k(B).
+\]
+\end{lemat}
+\begin{proof}
+Wybierzmy izometrię liniową $Q:\R^k\to A(\R^k)$
+za pomocą bazy ortonormalnej obrazu.
+Wówczas $A=QR$ z odwracalną macierzą $R=Q^{\mathsf T}A$.
+Z niezmienniczości izometrycznej i kalibracji
+$\mathcal H^k(A(B))=\lambda_k(R(B))$.
+Z afinicznego wzoru \ref{ma2:ex:multiple-affine}
+jest to $|\det R|\lambda_k(B)$.
+Ponieważ $A^{\mathsf T}A=R^{\mathsf T}R$, otrzymujemy tezę.
+\end{proof}
+
+\section{Wzór na pole dla parametryzacji klasy C1}
+
+\begin{twierdzenie}[Wzór na pole dla zanurzenia]
+\label{ma2:thm:surface-area}
+Niech $U\subseteq\R^k$ będzie otwarty i
+$\sigma:U\to\R^n$ zanurzeniem klasy $C^1$,
+to znaczy różnowartościową immersją będącą
+homeomorfizmem na obraz. Dla borelowskiego $B\subseteq U$
+\[
+ \mathcal H^k(\sigma(B))=\int_B J_k\sigma(u)\,
+ \mathrm d\lambda_k(u).
+\]
+\end{twierdzenie}
+\begin{proof}
+Obraz $U$ jest przeliczalną sumą zbiorów zwartych:
+$U$ ma wyczerpanie zbiorami zwartymi, a $\sigma$
+jest ciągła. Jest więc borelowski w $\R^n$.
+Homeomorfizm na obraz zapewnia borelowską
+mierzalność $\sigma(B)$.
+
+Ustalmy $0<\varepsilon<1$ i $u_0\in U$.
+Niech $A=D\sigma(u_0)$. Ponieważ $A$ jest
+różnowartościowe, istnieje $m>0$ takie, że
+$\|Ah\|_2\ge m\|h\|_2$ dla każdego $h$;
+można wziąć minimum $\|Ah\|_2$ na sferze jednostkowej.
+Z ciągłości pochodnej i dodatniości jakobianu
+wybieramy otwartą kulę $V$ o środku $u_0$,
+z domknięciem w $U$, na której
+\[
+ \|D\sigma(u)-A\|\le\varepsilon m,\qquad
+ (1-\varepsilon)J_k\sigma(u_0)\le J_k\sigma(u)
+ \le(1+\varepsilon)J_k\sigma(u_0).
+\]
+Dla $u,v\in V$ odcinek łączący te punkty należy do $V$.
+Jednowymiarowe twierdzenie o wartości średniej
+w postaci nierówności normy, zastosowane do
+$\sigma-A$, daje
+\[
+ \|\sigma(u)-\sigma(v)-A(u-v)\|_2
+ \le\varepsilon m\|u-v\|_2
+ \le\varepsilon\|A(u-v)\|_2.
+\]
+Stąd
+\[
+ (1-\varepsilon)\|A(u-v)\|_2
+ \le\|\sigma(u)-\sigma(v)\|_2
+ \le(1+\varepsilon)\|A(u-v)\|_2.
+\]
+Odwzorowanie $Au\mapsto\sigma(u)$ i jego odwrotność
+są Lipschitzowskie na odpowiednich obrazach.
+Nierówność dla miary Hausdorffa i
+lemat \ref{ma2:lem:surface-linear-area} dają
+dla każdego borelowskiego $C\subseteq V$
+\[
+ (1-\varepsilon)^kJ_k\sigma(u_0)\lambda_k(C)
+ \le\mathcal H^k(\sigma(C))
+ \le(1+\varepsilon)^kJ_k\sigma(u_0)\lambda_k(C).
+\]
+Porównując z oszacowaniem jakobianu, otrzymujemy
+\[
+ \frac{(1-\varepsilon)^k}{1+\varepsilon}
+ \int_C J_k\sigma\,\mathrm d\lambda_k
+ \le\mathcal H^k(\sigma(C))
+ \le\frac{(1+\varepsilon)^k}{1-\varepsilon}
+ \int_C J_k\sigma\,\mathrm d\lambda_k.
+\]
+Kule $V$ tworzą pokrycie otwarte $U$.
+Z drugiego aksjomatu przeliczalności wybieramy
+podpokrycie przeliczalne $(V_j)_{j\ge1}$.
+Zbiory $C_j=B\cap(V_j\setminus\bigcup_{i<j}V_i)$
+są borelowskie, parami rozłączne i pokrywają $B$.
+Różnowartościowość $\sigma$ zapewnia rozłączność
+ich obrazów. Sumujemy ostatnie nierówności dzięki
+przeliczalnej addytywności obu miar. Jeżeli całka
+jest nieskończona, dolne oszacowanie daje od razu
+nieskończoną miarę obrazu. W przeciwnym razie
+przechodzimy z $\varepsilon$ do zera.
+\end{proof}
+
+\begin{wniosek}[Ważony wzór na pole]
+\label{ma2:cor:surface-weighted-area}
+Przy założeniach twierdzenia \ref{ma2:thm:surface-area}
+dla funkcji borelowskiej $f:\sigma(B)\to[0,\infty]$
+lub rzeczywistej całkowalnej względem $\mathcal H^k$
+\[
+ \int_{\sigma(B)} f(x)\,\mathrm d\mathcal H^k(x)
+ =\int_B f(\sigma(u))J_k\sigma(u)\,\mathrm d\lambda_k(u).
+\]
+\end{wniosek}
+\begin{proof}
+Dla funkcji charakterystycznych zbiorów borelowskich
+jest to twierdzenie \ref{ma2:thm:surface-area} zastosowane
+do ich przeciwobrazów. Liniowość daje wzór dla
+nieujemnych funkcji prostych, a twierdzenie o zbieżności
+monotonicznej dla dowolnych funkcji nieujemnych.
+W przypadku funkcji ze znakiem stosujemy wynik
+do części dodatniej i ujemnej; obie całki są skończone.
+\end{proof}
+
+\section{Całka na podrozmaitości i niezależność od map}
+
+\begin{definicja}[Całka powierzchniowa pierwszego rodzaju]
+\label{ma2:def:surface-integral}
+Niech $M\subseteq\R^n$ będzie $k$-wymiarową
+podrozmaitością klasy $C^1$ bez brzegu,
+a $E\subseteq M$ zbiorem borelowskim.
+Dla funkcji borelowskiej nieujemnej lub całkowalnej
+względem $\mathcal H^k$ definiujemy całkę skalarną
+po $E$ jako $\int_E f\,\mathrm d\mathcal H^k$.
+Dla $k=2$ jest to klasyczna całka powierzchniowa
+pierwszego rodzaju.
+\end{definicja}
+Każda podrozmaitość ma przeliczalne pokrycie
+lokalnymi parametryzacjami $\sigma_j:U_j\to M$,
+gdyż jako podprzestrzeń $\R^n$ spełnia drugi
+aksjomat przeliczalności. Ich obrazy $M_j$
+są borelowskie jak w dowodzie
+\ref{ma2:thm:surface-area}, więc $M$ jest borelowski.
+Dzieląc $E$ na rozłączne zbiory
+$E_j=E\cap(M_j\setminus\bigcup_{i<j}M_i)$
+otrzymujemy ze wzoru ważonego
+\[
+ \int_E f\,\mathrm d\mathcal H^k
+ =\sum_j\int_{\sigma_j^{-1}(E_j)}
+ f(\sigma_j(u))J_k\sigma_j(u)\,\mathrm d\lambda_k(u).
+\]
+Dla funkcji ze znakiem szereg jest bezwzględnie
+zbieżny, bo suma modułów jego składników
+nie przekracza całki z $|f|$.
+Wynik nie zależy od pokrycia ani kolejności,
+ponieważ jest równy jednej całce względem $\mathcal H^k$.
+Lokalnie niezależność wynika również z reguły
+\ref{ma2:prop:gram-change} i twierdzenia
+\ref{ma2:thm:multiple-change} o zamianie zmiennych.
+Orientacja nie wpływa na wartość całki skalarnej.
+
+\section{Przykłady obliczeniowe}
+
+\begin{przyklad}[Wykres funkcji skalarnej]
+\label{ma2:ex:surface-graph}
+Dla $\sigma(u)=(u,g(u))$, gdzie $g:U\to\R$
+jest klasy $C^1$, mamy z
+\ref{ma2:ex:graph-area-factor}
+$J_k\sigma=\sqrt{1+\|\nabla g\|_2^2}$.
+Stąd
+\[
+ \int_{\sigma(B)} f\,\mathrm d\mathcal H^k
+ =\int_B f(u,g(u))\sqrt{1+\|\nabla g(u)\|_2^2}
+ \,\mathrm d\lambda_k(u).
+\]
+Jeżeli $g$ jest stała, jakobian jest równy jeden;
+nachylenie wykresu zwiększa jego pole.
+\end{przyklad}
+
+\begin{przyklad}[Pole fragmentu paraboloidy]
+\label{ma2:ex:surface-paraboloid}
+Niech $g(x,y)=x^2+y^2$ oraz $B=\{(x,y):x^2+y^2\le R^2\}$,
+$R>0$. Z poprzedniego przykładu
+i współrzędnych biegunowych z rozdziału
+\ref{ma2:ch:multiple-integrals}
+\[
+ \begin{aligned}
+ \mathcal H^2(\sigma(B))
+ &=2\pi\int_0^R r\sqrt{1+4r^2}\,\mathrm d\lambda_1(r)\\
+ &=\frac{\pi}{6}\big((1+4R^2)^{3/2}-1\big).
+ \end{aligned}
+\]
+Różnica między tym wynikiem a polem rzutu $\pi R^2$
+jest dodatnia, ponieważ czynnik pod pierwiastkiem
+jest większy od jedności poza środkiem koła.
+\end{przyklad}
+
+\begin{przyklad}[Płaszczyzna w przestrzeni czterowymiarowej]
+\label{ma2:ex:surface-codimension-two}
+Dla $\sigma(s,t)=(s,t,s+t,s-t)$ na $\R^2$
+macierz Grama ma postać $3I_2$, a $J_2\sigma=3$.
+Zatem obraz kwadratu jednostkowego ma miarę
+$\mathcal H^2$ równą $3$, chociaż leży w $\R^4$.
+Wzór na pole nie wymaga iloczynu wektorowego,
+który w zwykłej postaci jest szczególnym
+narzędziem przestrzeni trójwymiarowej.
+\end{przyklad}
+
+Dla $k=1$ jakobian Grama jest długością wektora
+pochodnej. Wzór ważony jest więc zgodny z
+\ref{ma2:cor:line-first-speed} dla krzywych
+różnowartościowych i regularnych.
+W wymiarze $k=n$ odzyskujemy klasyczną zamianę
+zmiennych, gdyż $\mathcal H^n=\lambda_n$
+na zbiorach borelowskich i
+$J_n\sigma=|\det D\sigma|$.
