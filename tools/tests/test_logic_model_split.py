@@ -71,6 +71,9 @@ class TestLogicModelSplit(unittest.TestCase):
         self.assertIn(r"\label{thm:lst-fuzzy-residuation}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-extension-cuts}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-mcnaughton}", src)
+        self.assertIn(r"\label{thm:lst-fuzzy-filter-quotient}", src)
+        self.assertIn(r"\label{thm:lst-fuzzy-prime-separation}", src)
+        self.assertIn(r"\label{thm:lst-fuzzy-strong-chain-completeness}", src)
         self.assertIn(r"\label{lem:lst-fuzzy-clipped-affine}", src)
         self.assertIn(r"\label{lem:lst-fuzzy-lattice-representation}", src)
         stack = []
@@ -123,6 +126,38 @@ class TestFuzzyOperations(unittest.TestCase):
         for x in self.grid:
             self.assertEqual(min(min(F(1), 2*x), min(F(1), 2*(1-x))),
                              min(2*x, 2-2*x))
+
+    def test_filter_quotient_finite_chains(self):
+        for star, implication in (self.norms[0], self.norms[2]):
+            grid = self.grid
+            for threshold in grid:
+                filt = {x for x in grid if x >= threshold}
+                if any(star(x, y) not in filt for x in filt for y in filt):
+                    continue
+                eq = lambda a, b: implication(a, b) in filt and implication(b, a) in filt
+                for a, b, c in itertools.product(grid, repeat=3):
+                    self.assertEqual(eq(a, F(1)), a in filt)
+                    self.assertEqual(eq(min(a, b), a), implication(a, b) in filt)
+                    if eq(a, b):
+                        for op in (min, max, star, implication):
+                            self.assertTrue(eq(op(a, c), op(b, c)))
+                            self.assertTrue(eq(op(c, a), op(c, b)))
+
+    def test_filter_separation_product_of_boolean_chains(self):
+        a = frozenset({0})
+        b = frozenset({1})
+        top = a | b
+        grid = (frozenset(), a, b, top)
+        filters = [{x for x in grid if g <= x} for g in grid]
+        for filt in filters:
+            for c in set(grid) - filt:
+                candidates = [p for p in filters if filt <= p and c not in p]
+                maximal = [p for p in candidates if not any(p < q for q in candidates)]
+                self.assertTrue(maximal)
+                for p in maximal:
+                    for x, y in itertools.product(grid, repeat=2):
+                        if x | y in p:
+                            self.assertTrue(x in p or y in p)
 
     def test_sugeno_zero_order(self):
         self.assertEqual(F(1, 4)*2 + F(3, 4)*6, 5)

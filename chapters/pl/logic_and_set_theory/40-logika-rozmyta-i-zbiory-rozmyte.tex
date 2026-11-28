@@ -216,6 +216,245 @@ zachodzą już w każdej ograniczonej przemiennej całkowitej kracie
 rezyduowanej: $a\leq\neg\neg a$ wynika z $a*\neg a\leq0$,
 a $a*a\leq a$ z całkowitości.
 
+\section{Filtry, ilorazy i pełność algebraiczna}
+Piszemy $a*b=a\mathbin{\&}b$. Rozważamy algebry MTL z
+Definicji~\ref{def:lst-fuzzy-residuated-lattice}, także takie,
+których porządek nie jest liniowy. Z residuacji wynika monotoniczność
+mnożenia: jeśli $b\leq c$, to $c\leq a\to(a*c)$, więc
+$b\leq a\to(a*c)$ i $a*b\leq a*c$. Przemienność daje
+monotoniczność w drugim argumencie. Stąd $a*b\leq a,b$.
+Mnożenie zachowuje skończone sumy kratowe:
+\[
+ a*(b\vee c)=(a*b)\vee(a*c).
+\]
+Obie strony są bowiem nie większe od $d$ dokładnie wtedy, gdy
+$b,c\leq a\to d$. Ponadto $a*0=0$ przez residuację.
+Tożsamość $(a*b)\to c=a\to(b\to c)$ zachodzi również tutaj,
+na mocy argumentu z dowodu Twierdzenia~\ref{thm:lst-fuzzy-mtl-soundness}.
+
+\begin{definicja}[Filtr monoidalny]\label{def:lst-fuzzy-filter}
+Filtr $F$ w algebrze MTL jest niepustym podzbiorem domkniętym
+ku górze i ze względu na $*$. W szczególności $1\in F$.
+Filtr nazywamy pierwszym, gdy jest właściwy oraz
+$a\vee b\in F$ pociąga $a\in F$ lub $b\in F$.
+\end{definicja}
+Każdy filtr monoidalny jest filtrem kratowym, gdyż
+$a*b\leq a\wedge b$. Odwrotna implikacja nie zachodzi:
+w standardowej algebrze Łukasiewicza przedział $[1/2,1]$
+jest filtrem kratowym, lecz $(1/2)*(1/2)=0$.
+
+\begin{lemat}[Filtr generowany przez jeden dodatkowy element]
+\label{lem:lst-fuzzy-generated-filter}
+Jeżeli $F$ jest filtrem i $u\in A$, to najmniejszy filtr
+zawierający $F\cup\{u\}$ jest równy
+\[
+ F[u]=\{x:\exists f\in F\ \exists n\geq0\quad f*u^n\leq x\},
+\]
+gdzie $n$ jest całkowite, $u^0=1$, $u^{n+1}=u^n*u$.
+\end{lemat}
+\begin{proof}
+Prawa strona jest domknięta ku górze i zawiera $F$ oraz $u$.
+Jeżeli $f*u^m\leq x$ i $g*u^n\leq y$, to
+$(f*g)*u^{m+n}\leq x*y$ i $f*g\in F$.
+Jest to więc filtr. Każdy filtr zawierający $F$ i $u$ musi
+zawierać wszystkie $f*u^n$ oraz elementy większe od nich.
+\end{proof}
+
+\begin{twierdzenie}[Iloraz przez filtr]\label{thm:lst-fuzzy-filter-quotient}
+Dla filtru $F$ w algebrze MTL relacja
+\[
+ a\sim_F b\iff a\to b\in F\ \text{ i }\ b\to a\in F
+\]
+jest kongruencją. Algebra ilorazowa $A/F$ jest algebrą MTL, a
+\[
+ [a]\leq[b]\iff a\to b\in F,\qquad
+ [a]=[1]\iff a\in F.
+\]
+Jeżeli $A$ jest algebrą BL albo MV, to $A/F$ również.
+\end{twierdzenie}
+\begin{proof}
+Zwrotność wynika z $a\to a=1$, symetria z definicji, a przechodniość
+z nierówności
+$(a\to b)*(b\to c)\leq a\to c$ i domknięcia filtru.
+Nierówność tę wykazano w dowodzie poprawności MTL, bez użycia
+liniowości porządku.
+
+Niech $a\sim_F b$ oraz $c\sim_F d$. Dla
+$e=(a\to b)*(c\to d)\in F$ mamy $e*a\leq b$ i $e*c\leq d$.
+Stąd
+\[
+ e*(a\wedge c)\leq b\wedge d,\qquad
+ e*(a\vee c)\leq b\vee d.
+\]
+W drugiej nierówności użyliśmy zachowywania sum kratowych.
+Residuacja i domknięcie ku górze dają odpowiednie implikacje
+w $F$. Dla mnożenia mamy
+$e*(a*c)\leq b*d$ przez przemienność i łączność.
+Dla implikacji bierzemy natomiast
+$h=(b\to a)*(c\to d)\in F$. Wtedy
+\[
+ h*(a\to c)*b\leq(c\to d)*c\leq d.
+\]
+Dwukrotna residuacja daje
+$h\leq(a\to c)\to(b\to d)$. Zamiana par $(a,c)$ z $(b,d)$
+daje nierówności w odwrotnym kierunku. Zatem wszystkie operacje
+przechodzą na klasy równoważności.
+
+Porządek ilorazu jest określony przez $[a]\wedge[b]=[a]$.
+Jeśli $a\to b\in F$, to $a*(a\to b)\leq a\wedge b$, zatem
+$a\to(a\wedge b)\in F$; implikacja $(a\wedge b)\to a$
+jest równa $1$. Odwrotnie, z $a\sim_F a\wedge b$ otrzymujemy
+$a\to(a\wedge b)\in F$, a monotoniczność residuum w prawym
+argumencie (bezpośredni skutek residuacji) daje $a\to b\in F$.
+Ponieważ $1\to a=a$ i $a\to1=1$, dostajemy drugą równoważność.
+
+Aksjomaty ograniczonej kraty i przemiennego monoidu są
+tożsamościami, więc przechodzą na iloraz. Residuację sprawdzamy
+za pomocą udowodnionej charakterystyki porządku:
+\[
+\begin{split}
+ [a]*[b]\leq[c]
+ &\iff (a*b)\to c\in F\\
+ &\iff a\to(b\to c)\in F\\
+ &\iff [a]\leq[b]\to[c].
+\end{split}
+\]
+Prelinearność, podzielność BL oraz inwolucja negacji MV są
+tożsamościami, dlatego również przechodzą na iloraz.
+\end{proof}
+
+\begin{twierdzenie}[Oddzielanie przez filtry pierwsze]
+\label{thm:lst-fuzzy-prime-separation}
+Jeśli $F$ jest filtrem w algebrze MTL i $c\notin F$, to istnieje
+filtr pierwszy $P$ zawierający $F$, dla którego $c\notin P$.
+\end{twierdzenie}
+\begin{proof}
+Rozważamy filtry zawierające $F$ i niezawierające $c$, uporządkowane
+przez inkluzję. Suma niepustego łańcucha takich filtrów ma te same
+własności, ponieważ dowolne dwa jej elementy leżą we wspólnym
+filtrze z łańcucha. Z lematu Zorna istnieje element maksymalny $P$.
+
+Załóżmy, że $u\vee v\in P$, lecz $u,v\notin P$.
+Maksymalność $P$ oraz Lemat~\ref{lem:lst-fuzzy-generated-filter}
+dają $f,g\in P$ i $m,n\geq1$ takie, że
+$f*u^m\leq c$ oraz $g*v^n\leq c$. Wykładniki nie mogą być
+zerowe, gdyż wtedy $c$ należałby do $P$.
+Z rozdzielności mnożenia względem sum kratowych przez indukcję
+otrzymujemy
+\[
+ (u\vee v)^{m+n}=\bigvee_{k=0}^{m+n} u^k*v^{m+n-k}.
+\]
+W każdym składniku zachodzi $k\geq m$ lub $m+n-k\geq n$.
+W pierwszym przypadku
+$f*g*u^k*v^{m+n-k}\leq f*u^m\leq c$, w drugim jest on
+nie większy od $g*v^n\leq c$; używamy całkowitości algebry.
+Po ponownym rozdzieleniu mnożenia przez sumę otrzymujemy
+\[
+ f*g*(u\vee v)^{m+n}\leq c.
+\]
+Lewa strona należy do $P$, więc $c\in P$, sprzeczność.
+Filtr jest właściwy i pierwszy.
+\end{proof}
+
+\begin{wniosek}[Ilorazy liniowo uporządkowane]
+\label{cor:lst-fuzzy-chain-quotient}
+Jeżeli $P$ jest filtrem pierwszym w algebrze MTL, to $A/P$
+jest łańcuchem. Każda nietrywialna algebra MTL zanurza się
+w iloczynie swoich ilorazów przez filtry pierwsze.
+\end{wniosek}
+\begin{proof}
+Z prelinearności $(a\to b)\vee(b\to a)=1\in P$ wynika
+$a\to b\in P$ lub $b\to a\in P$.
+Twierdzenie~\ref{thm:lst-fuzzy-filter-quotient} daje porównywalność klas.
+Jeżeli $a\ne b$, to przynajmniej jedna z implikacji $a\to b$
+i $b\to a$ jest różna od $1$. Oddzielamy tę implikację
+od filtru $\{1\}$ przy użyciu
+Twierdzenia~\ref{thm:lst-fuzzy-prime-separation}.
+W odpowiednim ilorazie klasy $a,b$ są różne. Homomorfizm
+$a\mapsto([a]_P)_P$ do iloczynu wszystkich ilorazów pierwszych
+jest zatem różnowartościowy, a jego rzuty na czynniki są
+surjektywne. Jest to reprezentacja przez podprosty iloczyn
+łańcuchów.
+\end{proof}
+W szczególności prawdziwość tożsamości w łańcuchach MTL
+pociąga jej prawdziwość we wszystkich algebrach MTL:
+wystarczy sprawdzić współrzędne obrazu przez powyższy homomorfizm
+(algebra trywialna spełnia każdą tożsamość).
+Stąd także poprawność MTL względem wszystkich algebr wynika
+z poprawności względem łańcuchów.
+
+\begin{twierdzenie}[Ogólna pełność MTL -- Esteva i Godo]
+\label{thm:lst-fuzzy-mtl-general-completeness}
+Dla dowolnego zbioru formuł zdaniowych $\Gamma$ i formuły $p$
+zachodzi równoważność: $\Gamma\vdash_{\mathrm{MTL}}p$ wtedy
+i tylko wtedy, gdy każde wartościowanie w każdej algebrze
+MTL, które nadaje wszystkim elementom $\Gamma$ wartość $1$,
+nadaje $p$ wartość $1$.
+\end{twierdzenie}
+Jako zewnętrzny wynik wykorzystujemy tutaj twierdzenie
+o algebraizacji rachunku MTL z dokładnie tymi schematami
+aksjomatów i modus ponens. Por. F. Esteva, L. Godo,
+\emph{Monoidal t-norm based logic: Towards a logic for
+left-continuous t-norms}, Fuzzy Sets and Systems 124 (2001),
+271--288 (DOI: 10.1016/S0165-0114(01)00098-7).
+W szczególności w konstrukcji algebry Lindenbauma--Tarskiego
+względem $\Gamma$ utożsamia się formuły $p,q$, gdy obie
+implikacje $p\to q$ i $q\to p$ są dowodliwe z $\Gamma$.
+Wynik algebraizacji zapewnia, że jest to kongruencja,
+iloraz jest algebrą MTL, a $[p]=[1]$ dokładnie dla
+$\Gamma\vdash_{\mathrm{MTL}}p$. Nie wyprowadzamy tutaj
+tych własności bezpośrednio ze schematów Hilberta;
+poniżej dowodzimy redukcji do łańcuchów i rozszerzeń
+aksjomatycznych niezależnie od dowodu tej algebraizacji.
+
+\begin{twierdzenie}[Silna pełność względem łańcuchów]
+\label{thm:lst-fuzzy-strong-chain-completeness}
+Niech $\mathsf L$ będzie MTL albo jego rozszerzeniem przez
+dodatkowe schematy aksjomatów w tym samym języku.
+Niech $\mathcal K_{\mathsf L}$ oznacza klasę algebr MTL,
+w których każdy dodatkowy schemat ma zawsze wartość $1$.
+Wówczas dla dowolnych $\Gamma,p$ równoważne są warunki:
+\begin{enumerate}
+\item $\Gamma\vdash_{\mathsf L}p$;
+\item każde wartościowanie w każdej algebrze z
+      $\mathcal K_{\mathsf L}$ zachowujące wartość $1$ przesłanek
+      nadaje $p$ wartość $1$;
+\item ten sam warunek ograniczony do łańcuchów z
+      $\mathcal K_{\mathsf L}$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Poprawność podstawowego rachunku i dodatkowych aksjomatów
+daje implikację pierwszą, a ograniczenie klasy daje drugą.
+Jeśli $\Gamma\nvdash_{\mathsf L}p$, niech $\Sigma$ będzie
+zbiorem wszystkich instancji nowych schematów.
+Wówczas $\Gamma\cup\Sigma\nvdash_{\mathrm{MTL}}p$,
+ponieważ dowody w obu zapisach używają tych samych formuł.
+Twierdzenie~\ref{thm:lst-fuzzy-mtl-general-completeness}
+daje algebrę $A$ i wartościowanie $e$ takie, że
+$e(\Gamma\cup\Sigma)\subseteq\{1\}$, ale $e(p)\ne1$.
+Przechodzimy do podalgebry $B$ generowanej przez wartości
+zmiennych: każdy jej element jest wartością pewnej formuły.
+Dlatego dowolna krotka elementów $B$ podstawiona do dodatkowego
+schematu odpowiada instancji z $\Sigma$ i daje wartość $1$.
+Zatem $B\in\mathcal K_{\mathsf L}$.
+
+Oddzielamy $e(p)$ od $\{1\}$ w $B$ za pomocą
+Twierdzenia~\ref{thm:lst-fuzzy-prime-separation}. Iloraz $B/P$
+jest łańcuchem i spełnia dodatkowe aksjomaty: są to
+tożsamości postaci $t=1$, zachowywane przez homomorfizm
+surjektywny. Złożenie wartościowania z homomorfizmem
+ilorazowym zachowuje wartość $1$ wszystkich przesłanek,
+ale wartość $p$ jest różna od $1$. To przeczy trzeciemu
+warunkowi.
+\end{proof}
+Dla BL dodatkowy schemat wyraża podzielność, dla logiki
+Łukasiewicza dodatkowo inwolucję negacji. Dostajemy zatem
+silną pełność odpowiednio względem łańcuchów BL i MV,
+a także względem wszystkich właściwych im algebr.
+Silna pełność dotyczy dowolnych, nie tylko skończonych
+zbiorów przesłanek. Nie oznacza ograniczenia do $[0,1]$.
+
 \section{Pełność i ograniczenia zwartości}
 W klasycznej logice pierwszego rzędu pełność pozwala przejść od
 konsekwencji semantycznej do skończonego dowodu. W logice rozmytej
