@@ -1,6 +1,6 @@
 # PLAN GLOBALNY BIBLIOTEKI MATEMATYCZNEJ
 
-**Wersja 1.2 — 28.11.2026.** Nadrzędny dokument roboczy. Migawka katalogu: [8e104a7](https://github.com/dariusz-piekarz/mathematical_scipts/commit/8e104a732fb4293b1f23f06774f01f8d6e17d96c). Gałąź robocza: biblioteka-matematyczna-iteracja-6. **22 aktywne skrypty, 607 rozdziałów.** Pełny indeks ścieżek, blobów i kandydatów na raporty: [catalog/global_library_inventory.json](../../catalog/global_library_inventory.json).
+**Wersja 1.3 — 28.11.2026.** Nadrzędny dokument roboczy. Migawka katalogu: [8e104a7](https://github.com/dariusz-piekarz/mathematical_scipts/commit/8e104a732fb4293b1f23f06774f01f8d6e17d96c). Gałąź robocza: biblioteka-matematyczna-iteracja-6. **22 aktywne skrypty, 607 rozdziałów.** Pełny indeks ścieżek, blobów i kandydatów na raporty: [catalog/global_library_inventory.json](../../catalog/global_library_inventory.json).
 
 To plan żywy, nie certyfikat ukończenia całej biblioteki. Inwentaryzacja obejmuje katalog i nazwy wszystkich aktywnych rozdziałów oraz wybrane raporty i plany. Nie przeczytano ponownie wszystkich dowodów ani wszystkich raportów; propozycje uzupełnień są zadaniami sprawdzenia pokrycia, a nie stwierdzeniem braku. Statusy historyczne dotyczą wersji wskazanych w raportach. Brak raportu w standardowym katalogu nie oznacza braku przeprowadzonego audytu.
 
@@ -247,14 +247,33 @@ Kierunki zatwierdzone przez użytkownika; poniższe szczegółowe programy i rob
 6. Interpolacja Nevanlinny–Picka, zagadnienia ekstremalne, funkcje wewnętrzne, związki z teorią operatorów (AF).
 7. Zależności: AZ I, AM II, ME, AF, DG; algebra lokalna i snopy analityczne rozwijane w GAZ, nie powielać ich pełnej teorii.
 
-#### GK — Geometria klasyczna: geometrie modelowe, rzutowe i program Kleina
-1. Aksjomatyka geometrii, incydencja, porządek, przystawanie, podobieństwo; modele i izomorfizmy.
-2. Geometria afiniczna i euklidesowa, grupy izometrii, podobieństwa, konstrukcje, klasyczne twierdzenia; geometria sferyczna i eliptyczna.
-3. Geometria hiperboliczna: modele Poincarégo (dysk i półprzestrzeń), Kleina i hiperboloidy, metryki, geodezyjne, izometrie, trójkąty, przejścia między modelami.
-4. Geometria rzutowa nad ciałem: współrzędne jednorodne, incydencja, dualność, dwustosunek, twierdzenia Desargues'a i Pappusa, przekroje stożkowe, biegunowość, kolineacje, geometrie rzutowe nad ciałami skończonymi.
-5. Program erlangeński Kleina: geometria jako działanie grupy, niezmienniki, przestrzenie jednorodne G/H, hierarchia geometrii; geometria Möbiusa, konforemna, inwersyjna, Cayleya–Kleina, geometria Minkowskiego i Lorentza, geometrie Galileusza.
-6. Dodatkowe modele: geometria symplektyczna liniowa, geometria skończona, geometrie modelowe wymiaru 3 (osiem geometrii Thurstona jako pomost do TD, bez powielania dowodu geometryzacji); ocenić przydatność geometrii Finslera jako mostu do DG.
-7. LA zachowuje algebrę liniową, formy i grupy macierzowe; AA teorię działań i grup; GK klasyczne konstrukcje, modele i niezmienniki; DG lokalną i globalną geometrię różniczkową, ALG schematy. Wiele czytelnych rysunków, porównań modeli i przekształceń.
+#### GK — Geometria klasyczna: planimetria, stereometria, geometrie modelowe i rzutowe, program Kleina
+
+Doprecyzowanie użytkownika z 28.11.2026: klasyczna geometria euklidesowa, jej twierdzenia, konstrukcje i obliczenia mają stanowić znaczną, samodzielną część skryptu, a nie krótki wstęp do geometrii abstrakcyjnych. Rozwijać od elementarnych pojęć do zaawansowanych twierdzeń geometrii syntetycznej; prowadzić pełne dowody, liczne zadania i czytelne rysunki z oznaczeniami. Poniższe części są roboczym programem, bez deklaracji istniejącego pokrycia.
+
+**Blok A — klasyczna geometria euklidesowa (główny trzon):**
+1. Podstawy aksjomatyczne: punkty, proste, płaszczyzny, odcinki, półproste, kąty, incydencja, porządek, przystawanie, proste równoległe i prostopadłe, postulat Euklidesa.
+2. Trójkąty: klasyfikacja, suma kątów, nierówność trójkąta, cechy przystawania i podobieństwa, twierdzenia Talesa i Pitagorasa (z twierdzeniami odwrotnymi), twierdzenia o wysokości i przyprostokątnych, dwusieczne, środkowe i symetralne.
+3. Szczególne punkty i proste trójkąta: środek ciężkości, ortocentrum, środki okręgów wpisanego i opisanego, okręgi dopisane, prosta Eulera, okrąg dziewięciu punktów; twierdzenia Cevy, Menelaosa, Stewarta, Simsona, Morleya i Napoleona.
+4. Czworokąty i wielokąty: równoległoboki, trapezy, romby, prostokąty, deltoidy, wielokąty foremne, wypukłość, przekątne, kąty i triangulacje.
+5. Okręgi i koła: kąty środkowe i wpisane, cięciwy, sieczne, styczne, potęga punktu, oś i środek potęgowy, czworokąty wpisane i opisane, twierdzenia Ptolemeusza, Pitota (z poprawnym zakresem), Miquela, styczność okręgów.
+6. Pola figur: pojęcie pola, addytywność i niezmienniczość, rozkłady na figury, pola trójkątów i wielokątów, wzory Herona i Brahmagupty (z hipotezami), pola koła, wycinków i odcinków kołowych, skala podobieństwa, obwody, nierówność izoperymetryczna w odpowiednim zakresie. Rozróżnić pole i obwód; ogólne całkowe uzasadnienia odsyłać do AM II/ME.
+7. Trygonometria geometryczna: twierdzenia sinusów i cosinusów, wzory na pola, rozwiązywanie trójkątów, kąty i długości w konstrukcjach. AM I pozostaje właścicielem analitycznej teorii funkcji trygonometrycznych.
+8. Przekształcenia: symetrie osiowe i środkowe, obroty, przesunięcia, jednokładności, podobieństwa, inwersja, składanie przekształceń i ich niezmienniki. Klasyczne konstrukcje cyrklem i linijką, kryteria wykonalności z odsyłaczem do AA30.
+9. Geometria analityczna płaszczyzny: układy współrzędnych, równania prostych i okręgów, odległości, iloczyn skalarny, metody wektorowe, przekroje stożkowe (elipsa, parabola, hiperbola), ich własności ogniskowe i styczne. LA zapewnia aparat algebraiczny.
+10. Stereometria: wzajemne położenie prostych i płaszczyzn, rzuty, kąty i odległości, kąty dwuścienne, wielościany, graniastosłupy, ostrosłupy, czworościany, bryły platońskie, walce, stożki, kule, przekroje, pola powierzchni i objętości, podobieństwo brył, zasada Cavalieriego. Powiązać ze wzorami całkowymi AM II oraz wzorem Eulera z GT/AT.
+11. Zadania konstrukcyjne i dowodowe, geometria olimpijska: dodatkowe twierdzenia, dowody syntetyczne, analityczne i wektorowe, nierówności geometryczne, przykłady z pełnym rozwiązaniem oraz osobne zadania z podpowiedziami. Nie ograniczać skryptu do tablic wzorów.
+
+**Blok B — uogólnienia klasycznych geometrii:**
+12. Geometria afiniczna: incydencja, równoległość, środki ciężkości, przekształcenia afiniczne, niezmienniki, relacja do geometrii euklidesowej.
+13. Geometria rzutowa nad ciałem: współrzędne jednorodne, incydencja, dualność, dwustosunek, twierdzenia Desargues'a i Pappusa, przekroje stożkowe, biegunowość, kolineacje, geometrie rzutowe nad ciałami skończonymi. Rozróżnić geometrię rzutową od geometrii algebraicznej odmian rzutowych.
+14. Geometria sferyczna i eliptyczna: wielkie koła, trójkąty, trygonometria sferyczna, pola i nadmiar kątowy, izometrie.
+15. Geometria hiperboliczna: modele Poincarégo (dysk i półpłaszczyzna/półprzestrzeń), Kleina i hiperboloidy, metryki, geodezyjne, izometrie, trójkąty, przejścia między modelami; porównanie pól, kątów i podobieństwa z geometrią euklidesową.
+16. Program erlangeński Kleina: geometria jako działanie grupy, niezmienniki, przestrzenie jednorodne G/H, hierarchia geometrii; geometria Möbiusa, konforemna, inwersyjna, Cayleya–Kleina, geometria Minkowskiego i Lorentza, geometrie Galileusza.
+17. Dodatkowe modele: geometria symplektyczna liniowa, geometria skończona, geometrie modelowe wymiaru 3 (osiem geometrii Thurstona jako pomost do TD, bez powielania dowodu geometryzacji); ewentualna geometria Finslera jako most do DG.
+
+**Granice i audyt pokrycia:** LA zachowuje algebrę liniową, formy i grupy macierzowe; AA teorię działań i grup oraz algebraiczne kryteria konstrukcji; AM I/II analityczne dowody dotyczące całek i funkcji; DG lokalną i globalną geometrię różniczkową; ALG schematy; GT/AT ogólne twierdzenia topologiczne. GK jest właścicielem klasycznych dowodów geometrycznych, konstrukcji, pól i objętości figur, modeli i niezmienników. Sprawdzić istniejące rozdziały przed migracją. Rysunki powinny jasno pokazywać konfigurację, założenia, pomocnicze konstrukcje i elementy dowodu; zadania mają narastać od elementarnych do olimpijskich.
+
 
 #### GAZ I — Geometria analityczna zespolona: teoria lokalna (proponowany tom I)
 1. Pierścienie zbieżnych szeregów, zarodki funkcji i zbiorów, twierdzenia Weierstrassa o przygotowaniu i dzieleniu, noetherowskość, analityczne twierdzenie o zerach.
@@ -409,7 +428,7 @@ Poniższe kierunki nie są jeszcze zatwierdzonymi nowymi skryptami. Najpierw oce
 | Geometria różniczkowa orbifoldów | ORB | DG, TD, DG4, TD4, GT, GAZ, ALG, GNP |
 | Prawdopodobieństwo/procesy/całki stochastyczne/statystyka | RP1/RP2/RP3/RP4 | RRC, GT, RTPC |
 | Operatory i widmo | AF | RRC, DT, FSG, DG4 |
-| Geometrie modelowe, rzutowe i program Kleina | GK | DG, ALG, AZ, PA |
+| Planimetria, stereometria, klasyczne twierdzenia, geometrie modelowe, rzutowe i program Kleina | GK | AM I/II, LA, DG, ALG, AZ, PA |
 | Analiza holomorficzna | AZ I (jedna zmienna), AZ II (wiele zmiennych) | GAZ, ALG, AF |
 | Geometria przestrzeni analitycznych | GAZ I–II | AZ, ALG, AT |
 | ODE i układy dynamiczne | RZUD | DG, FSG, RRC, RP3 |
