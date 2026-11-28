@@ -64,6 +64,48 @@ class DistributionRestructureTest(unittest.TestCase):
                 self.assertIn(label, actual, path)
                 self.assertLessEqual(actual[label], n, (path, label))
 
+    def test_planned_aliases_are_flat_and_exact(self):
+        plan = json.loads(PLAN.read_text(encoding="utf-8"))
+        migration = json.loads(MIGRATION.read_text(encoding="utf-8"))
+        config = json.loads((ROOT / "application/config/ALIASY_PO_SCALENIACH.json")
+                            .read_text(encoding="utf-8"))
+        owners = {label: f"DT-{row['number']:02d}"
+                  for row in plan["chapters"] for label in row["labels"]}
+        canonical = {(owner, label) for label, owner in owners.items()}
+        expected = {}
+        for row in migration["qualified_label_aliases"]:
+            expected[row["old_document"], row["old_label"]] = (
+                owners[row["target_label"]], row["target_label"])
+        for row in plan["label_map"]:
+            label = row["label"]
+            if row["old_document"] != owners[label]:
+                expected[row["old_document"], label] = (owners[label], label)
+        actual = {}
+        for row in plan["planned_qualified_aliases"]:
+            key = row["old_document"], row["old_label"]
+            target = row["target_document"], row["target_label"]
+            self.assertNotIn(key, actual)
+            self.assertNotIn(key, canonical)
+            self.assertIn(target, canonical)
+            self.assertEqual(key[1], target[1])
+            actual[key] = target
+        self.assertEqual(actual, expected)
+        self.assertFalse(set(actual).intersection(actual.values()),
+                         "aliases must point directly to canonical labels")
+        self.assertEqual(sum(k[0].startswith("FA-") for k in actual), 211)
+        self.assertEqual(sum(k[0].startswith("DT-") for k in actual), 224)
+        unrelated = {(a["old_document"], a["old_label"])
+                     for a in config["qualified_label_aliases"]
+                     if not a["target_document"].startswith("DT-")}
+        self.assertFalse(unrelated.intersection(actual))
+        # During staging, the live FA aliases still point at the old DT owners.
+        installed = {(a["old_document"], a["old_label"],
+                      a["target_document"], a["target_label"])
+                     for a in config["qualified_label_aliases"]}
+        self.assertTrue(all((a["old_document"], a["old_label"],
+                             a["target_document"], a["target_label"]) in installed
+                            for a in migration["qualified_label_aliases"]))
+
     def test_candidate_master_exact_order(self):
         plan = json.loads(PLAN.read_text(encoding="utf-8"))
         master = (ROOT / plan["candidate_master"]["path"]).read_text(

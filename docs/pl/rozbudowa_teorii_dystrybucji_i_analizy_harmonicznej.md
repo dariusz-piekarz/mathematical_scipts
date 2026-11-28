@@ -127,3 +127,7 @@ latexmk -pdf -interaction=nonstopmode -halt-on-error -jobname=distribution_theor
 ```
 
 Dodano test `python3 tools/tests/test_distribution_theory_restructure.py`, sprawdzający rzeczywiste pliki, zgodność etykiet i właścicieli, kolejność zwykłych odsyłaczy oraz master. Test i kompilacja wymagają uruchomienia. Następnie należy skorygować pozostałe opisowe odwołania do historycznej numeracji, sprawdzić zależności niewyrażone przez ref i przygotować atomowe przełączenie aliasów DT/FA. Nie zmieniano aktywnego katalogu ani istniejących workflow.
+
+## Audyt kontrolny i plan aliasów
+
+CI 46140457840 (510a30f) zakończył się PASS: testy regresji, kompilacja AF, aktywnego DT i kandydata oraz diagnostyka końcowa. Przygotowano w planie 435 bezpośrednich aliasów: 211 historycznych FA (147 zmienionych celów), 224 historycznych DT dla przeniesionych etykiet. Pozostałe 64 etykiety DT nie wymagają aliasu. Sprawdzono unikalność kluczy, istnienie właściciela, brak kolizji z bezpośrednimi etykietami i brak łańcuchów przekierowań. Konfiguracja aktywna pozostaje niezmieniona; nie wolno włączać aliasów przed zmianą katalogu. Dodano regresję planu aliasów do istniejącego workflow. Przed aktywacją należy dostosować historyczne testy AF17–25 do źródeł rozdzielonych, testy grafu do nowych właścicieli, test integralności katalogu i oczekiwaną numerację TOC; odsyłacze jawne DT w pozostałych skryptach zachowują semantykę poprzez aliasy, ale ich podpisy należy zaktualizować do aktualnej numeracji.
