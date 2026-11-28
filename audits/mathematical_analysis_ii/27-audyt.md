@@ -1,0 +1,5 @@
+# AM II 27 — całki na zbiorach nieograniczonych i z osobliwościami
+
+## Konstrukcja 1/2 (28.11.2026)
+
+Sprawdzono AM I 31, AM II 24 i 26, ME 04, 07–08. Dodano definicję wyczerpania mierzalnego i z dokładnością do zbioru zerowego, niezależność całek nieujemnych i bezwzględnie całkowalnych od wyczerpania, kryterium supremum całek z modułu, wyczerpanie zbiorów otwartych skończonymi sumami kostek diadycznych (szczegółowy dowód), zgodność z granicami całek Riemanna na zbiorach Jordana, kryteria potęgowe przy zerze i w nieskończoności dowodzone na rozłącznych warstwach kostkowych bez Fubiniego i zamiany zmiennych, porównanie norm i przykłady w R^3. Zakres euklidesowy, bez całek w ogólnych przestrzeniach Banacha. 7 etykiet, 10/10 odsyłaczy lokalnych (24,26,27), 3 kwalifikowane, środowiska zrównoważone, książka i katalog zaktualizowane. Pełnej kompilacji nie wykonano. Następny blok: całki radialne, osobliwości wzdłuż podzbiorów, wartość główna Cauchy'ego, zależność od wyczerpania oraz ilustracje.
