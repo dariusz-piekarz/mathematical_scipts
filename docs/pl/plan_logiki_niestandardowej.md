@@ -23,3 +23,9 @@ Każdy blok: definicje, intuicje, semantyka, rachunki, poprawność i pełność
 - Kontrola statyczna NCL-06: 3786 wierszy, 102 etykiety, 128 odsyłaczy z istniejącymi celami, bez odsyłaczy do późniejszych wyników wewnątrz rozdziału. W sześciu rozdziałach 523 unikatowe etykiety. Bilans środowisk, klamer i ograniczników matematycznych poprawny; 5 diagramów sprawdzonych na poziomie kodu.
 - CI: [Logic and model theory validation](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/46191946666) — in_progress podczas odczytu; wcześniejsze kroki kontroli importów, inwentarza, odsyłaczy i regresji zakończone sukcesem. [Kontrola terminologii](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/46191946627) — sukces.
 - Weryfikacja wizualna PDF nie została wykonana. Status stabilizacji i audytu kontrolnego pozostaje otwarty do potwierdzenia kompilacji, kontroli logów i osobnego odbioru.
+
+## NCL-06 — odbiór kontrolny, 2026-11-28
+
+- Źródło pozostaje niezmienione: blob `96f18e679642ace3773c47406886734e856fab3f`. Audyt kontrolny: 128/128 odsyłaczy, 523 unikatowe etykiety NCL, dodatkowe 7488 przypadków redukcji euklidesowej — bez wykrytych usterek.
+- [CI 46191946666](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/46191946666) zakończone sukcesem, w tym kompilacja NCL z odsyłaczami zewnętrznymi oraz kontrola PDF i logów. [Artefakt PDF i logów](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/46191946666/artifacts/15282167754): NCL ma 188 stron PDF; rozdział 6 obejmuje strony PDF 154–188 (drukowane 149–183). Końcowy log nie zawiera ostrzeżeń ani błędów. Oględziny wszystkich 35 stron w układzie przeglądowym oraz pięciu diagramów w powiększeniu nie ujawniły usterek graficznych.
+- NCL-06: zamknięty na wskazanym źródle po audycie stabilizacyjnym i kontrolnym. Kolejny planowany blok: NCL-07 — logiki parakonsystentne i relewantne. Nie zmieniano treści rozdziału przy odbiorze.
