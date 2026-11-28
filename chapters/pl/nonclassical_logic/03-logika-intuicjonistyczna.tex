@@ -516,3 +516,341 @@ $\alpha\to\beta$. Przykład pokazuje, jak twierdzenie
 o dedukcji zastępuje ręczne rozpisywanie wszystkich
 instancji H1 i H2.
 \end{przyklad}
+
+\section{Semantyka Kripkego dla IPC}
+
+\begin{definicja}[Rama i model Kripkego]
+\label{def:ncl-ipc-kripke}
+Ramą Kripkego dla IPC nazywamy niepusty zbiór
+częściowo uporządkowany $(W,\leq)$. Elementy $W$
+nazywamy światami lub stanami informacji.
+Model Kripkego to trójka $\mathcal M=(W,\leq,V)$,
+w której każdej zmiennej zdaniowej $p$
+przypisano zbiór $V(p)\subseteq W$ domknięty ku górze:
+\[
+ w\in V(p),\quad w\leq v\quad\Longrightarrow\quad
+ v\in V(p).
+\]
+Ramę nazywamy ukorzenioną, jeśli ma element najmniejszy.
+\end{definicja}
+Relacja $w\leq v$ oznacza, że stan $v$ zawiera
+co najmniej tyle informacji co stan $w$.
+Nie jest to porządek wartości logicznych z poprzedniego
+rozdziału. Porównujemy stany, nie wartości formuł.
+Dwa nieporównywalne stany mogą przedstawiać
+różne możliwe sposoby rozszerzenia informacji.
+
+\begin{definicja}[Relacja wymuszania]
+\label{def:ncl-ipc-forcing}
+Dla ustalonego modelu $\mathcal M$ definiujemy
+rekurencyjnie relację $w\Vdash\varphi$:
+\[
+\begin{aligned}
+ w\Vdash p &\iff w\in V(p),\\
+ w\not\Vdash\bot &\quad\text{dla każdego }w\in W,\\
+ w\Vdash\varphi\wedge\psi
+ &\iff w\Vdash\varphi\text{ i }w\Vdash\psi,\\
+ w\Vdash\varphi\vee\psi
+ &\iff w\Vdash\varphi\text{ lub }w\Vdash\psi,\\
+ w\Vdash\varphi\to\psi
+ &\iff \forall v\geq w\
+ (v\Vdash\varphi\ \Longrightarrow\ v\Vdash\psi).
+\end{aligned}
+\]
+Zapis $w\not\Vdash\varphi$ oznacza niezachodzenie
+relacji wymuszania, nie zaś wymuszanie negacji.
+\end{definicja}
+W definicji implikacji kwantyfikujemy także po $w$,
+ponieważ porządek jest zwrotny. W szczególności
+nie wystarczy sprawdzić, czy w aktualnym stanie
+wymuszanie przesłanki pociąga wymuszanie wniosku:
+należy uwzględnić wszystkie stany większe od niego.
+
+\begin{lemat}[Trwałość wymuszania]
+\label{lem:ncl-ipc-persistence}
+Dla każdej formuły $\varphi$ i modelu Kripkego
+zachodzi
+\[
+ w\leq v,\quad w\Vdash\varphi\quad\Longrightarrow\quad
+ v\Vdash\varphi.
+\]
+\end{lemat}
+\begin{proof}
+Indukujemy po budowie formuły.
+Dla zmiennych teza wynika z domknięcia $V(p)$
+ku górze, a dla $\bot$ założenia nie mogą zachodzić.
+Dla koniunkcji stosujemy hipotezę indukcyjną
+do obu członów, a dla alternatywy do członu
+wymuszanego w $w$.
+Niech $w\Vdash\alpha\to\beta$ oraz $w\leq v$.
+Jeżeli $u\geq v$ i $u\Vdash\alpha$, to $u\geq w$
+na mocy przechodniości porządku, więc $u\Vdash\beta$.
+To jest dokładnie warunek $v\Vdash\alpha\to\beta$.
+\end{proof}
+Zatem również zbiór światów wymuszających dowolną
+formułę jest domknięty ku górze. Dopełnienie tego
+zbioru jest domknięte ku dołowi: jeśli $v$ nie
+wymusza formuły, żaden świat $w\leq v$ jej nie wymusza,
+gdyż w przeciwnym razie trwałość dawałaby sprzeczność.
+
+\begin{stwierdzenie}[Negacja i podwójna negacja]
+\label{prop:ncl-ipc-kripke-negation}
+W dowolnym modelu zachodzą równoważności
+\[
+\begin{aligned}
+ w\Vdash\neg\varphi
+ &\iff \forall v\geq w\quad v\not\Vdash\varphi,\\
+ w\Vdash\neg\neg\varphi
+ &\iff \forall v\geq w\ \exists u\geq v
+                  \quad u\Vdash\varphi.
+\end{aligned}
+\]
+Każdy świat wymusza $\top$.
+\end{stwierdzenie}
+\begin{proof}
+Pierwsza równoważność wynika z definicji
+$\neg\varphi=\varphi\to\bot$ i faktu, że
+żaden świat nie wymusza $\bot$.
+Stosując ją do $\neg\varphi$, otrzymujemy
+\[
+ w\Vdash\neg\neg\varphi
+ \iff \forall v\geq w\quad v\not\Vdash\neg\varphi.
+\]
+Niezachodzenie warunku
+$\forall u\geq v\ (u\not\Vdash\varphi)$
+jest równoważne istnieniu $u\geq v$ wymuszającego
+$\varphi$. Rozumowanie odbywa się w klasycznym
+metajęzyku, w którym definiujemy modele.
+Wreszcie warunek wymuszania $\bot\to\bot$
+zachodzi w każdym świecie.
+\end{proof}
+Podwójna negacja wyraża więc możliwość osiągnięcia
+stanu wymuszającego formułę z każdego przyszłego
+stanu, a nie jej wymuszanie już teraz.
+
+\begin{stwierdzenie}[Ograniczenie do stożka górnego]
+\label{prop:ncl-ipc-generated-submodel}
+Niech $w\in W$ i $W_w=\{v\in W:w\leq v\}$.
+Ograniczenie modelu do $W_w$ z odziedziczonym
+porządkiem i wartościowaniem $V_w(p)=V(p)\cap W_w$
+jest modelem ukorzenionym o korzeniu $w$.
+Dla każdego $v\in W_w$ wymuszanie formuł w tym
+modelu pokrywa się z wymuszaniem w modelu wyjściowym.
+\end{stwierdzenie}
+\begin{proof}
+Zbiór $W_w$ jest domknięty ku górze, a ograniczenia
+wartościowań zachowują tę własność względem
+odziedziczonego porządku.
+Dla zmiennych i $\bot$ zgodność wymuszania
+wynika wprost z definicji, a dla koniunkcji
+i alternatywy z hipotezy indukcyjnej.
+Dla implikacji zauważamy, że jeśli $v\in W_w$,
+to wszystkie światy $u\geq v$ nadal należą do $W_w$.
+W obu modelach kwantyfikujemy zatem po tym samym
+zbiorze światów i stosujemy hipotezę indukcyjną
+do obu argumentów implikacji.
+\end{proof}
+
+\subsection{Konsekwencja i poprawność rachunku}
+
+\begin{definicja}[Konsekwencja Kripkego]
+\label{def:ncl-ipc-kripke-consequence}
+Piszemy $\Gamma\models_{\mathrm K}\varphi$, jeśli
+dla każdego modelu Kripkego $\mathcal M$
+i każdego jego świata $w$ zachodzi
+\[
+ (\forall\gamma\in\Gamma\quad w\Vdash\gamma)
+ \quad\Longrightarrow\quad w\Vdash\varphi.
+\]
+Formułę nazywamy ważną, jeśli
+$\varnothing\models_{\mathrm K}\varphi$.
+\end{definicja}
+Jest to konsekwencja lokalna, czyli sprawdzamy
+wszystkie przesłanki i wniosek w tym samym świecie.
+Na mocy Stwierdzenia~\ref{prop:ncl-ipc-generated-submodel}
+wystarczy rozpatrywać korzenie wszystkich modeli
+ukorzenionych: każdy kontrmodel w dowolnym świecie
+można ograniczyć do jego stożka górnego.
+
+\begin{twierdzenie}[Poprawność IPC względem semantyki Kripkego]
+\label{thm:ncl-ipc-kripke-soundness}
+Dla dowolnego zbioru formuł $\Gamma$ i formuły
+$\varphi$ zachodzi
+\[
+ \Gamma\vdash_{\mathrm I}\varphi
+ \quad\Longrightarrow\quad
+ \Gamma\models_{\mathrm K}\varphi.
+\]
+Na mocy Twierdzenia~\ref{thm:ncl-ipc-hilbert-equivalence}
+ta sama teza obowiązuje dla $\vdash_{\mathrm H}$.
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po drzewie dedukcji naturalnej.
+Dla każdego podwyprowadzenia dowodzimy, że w
+dowolnym świecie dowolnego modelu wymuszanie
+wszystkich jego otwartych założeń pociąga wymuszanie
+wniosku. Dla liścia będącego założeniem teza
+jest natychmiastowa.
+
+Reguły $\wedge I,\wedge E_1,\wedge E_2$ oraz
+$\vee I_1,\vee I_2$ są poprawne na mocy
+odpowiednich warunków z
+Definicji~\ref{def:ncl-ipc-forcing}.
+Jeżeli $w$ wymusza otwarte założenia wniosku
+reguły $\vee E$, to z hipotezy indukcyjnej
+wymusza $\alpha\vee\beta$. Zatem wymusza
+$\alpha$ lub $\beta$. W pierwszym przypadku
+hipotezę indukcyjną stosujemy do podwyprowadzenia
+z dodatkowym założeniem $\alpha$, w drugim
+do podwyprowadzenia z założeniem $\beta$.
+W obu przypadkach otrzymujemy wymuszanie
+wspólnego wniosku w $w$.
+
+Dla $\to E$ używamy zwrotności porządku:
+jeśli $w\Vdash\alpha\to\beta$ i $w\Vdash\alpha$,
+to $w\Vdash\beta$.
+Dla $\to I$ niech $\Delta$ oznacza założenia
+pozostające otwarte po zamknięciu wskazanych
+wystąpień $\alpha$. Ustalmy świat $w$
+wymuszający wszystkie formuły z $\Delta$.
+Niech $v\geq w$ oraz $v\Vdash\alpha$.
+Na mocy Lematu~\ref{lem:ncl-ipc-persistence}
+świat $v$ nadal wymusza wszystkie formuły z $\Delta$.
+Hipoteza indukcyjna dla podwyprowadzenia
+$\beta$ z otwartymi założeniami należącymi
+do $\Delta\cup\{\alpha\}$ daje $v\Vdash\beta$.
+Ponieważ $v$ był dowolny, mamy
+$w\Vdash\alpha\to\beta$.
+Argument obejmuje również zamykanie zerowej liczby
+wystąpień założenia.
+
+W przypadku $\bot E$ nie istnieje świat wymuszający
+wszystkie otwarte założenia podwyprowadzenia $\bot$:
+w przeciwnym razie z hipotezy indukcyjnej
+wymuszałby $\bot$. Implikacja semantyczna
+dla wniosku tej reguły zachodzi więc próżniowo.
+Rozpatrzyliśmy wszystkie reguły rachunku.
+\end{proof}
+
+\subsection{Kontrmodele dla zasad klasycznych}
+
+\begin{przyklad}[Wyłączony środek i eliminacja podwójnej negacji]
+\label{ex:ncl-ipc-two-world-countermodel}
+Rozważmy ramę $W=\{w_0,w_1\}$ z $w_0<w_1$
+oraz $V(p)=\{w_1\}$. Inne zmienne mogą mieć
+puste zbiory wymuszania.
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+\node[draw,rounded corners,minimum width=3.0cm,
+ minimum height=0.85cm] (w0) at (0,0)
+ {$w_0:\ p\ \text{niewymuszane}$};
+\node[draw,rounded corners,minimum width=3.0cm,
+ minimum height=0.85cm,fill=blue!8] (w1) at (0,1.8)
+ {$w_1:\ p$};
+\draw[->,thick] (w0)--(w1);
+\end{tikzpicture}
+\end{center}
+Strzałka oznacza przejście do większego świata;
+pętle zwrotności pomijamy na rysunkach.
+Mamy $w_0\not\Vdash p$ oraz
+$w_0\not\Vdash\neg p$, ponieważ $w_1\Vdash p$.
+Stąd
+\[
+ w_0\not\Vdash p\vee\neg p.
+\]
+Natomiast każdy świat $v\geq w_0$ ma rozszerzenie
+$w_1$ wymuszające $p$. Na mocy
+Stwierdzenia~\ref{prop:ncl-ipc-kripke-negation}
+otrzymujemy $w_0\Vdash\neg\neg p$.
+Ponieważ $w_0\not\Vdash p$, mamy
+$w_0\not\Vdash\neg\neg p\to p$.
+Z twierdzenia o poprawności wynika, że żadna
+z tych dwóch zasad nie jest twierdzeniem IPC.
+\end{przyklad}
+
+\begin{przyklad}[Rozgałęzienie i drugie prawo de Morgana]
+\label{ex:ncl-ipc-fork-countermodel}
+Niech $W=\{r,a,b\}$, gdzie $r<a$ i $r<b$,
+a $a,b$ są nieporównywalne i maksymalne.
+Przyjmijmy $V(p)=\{a\}$ i $V(q)=\{b\}$.
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+\node[draw,rounded corners,minimum width=1.5cm]
+ (r) at (0,0) {$r:\ \varnothing$};
+\node[draw,rounded corners,fill=blue!8,minimum width=1.5cm]
+ (a) at (-1.9,1.8) {$a:\ p$};
+\node[draw,rounded corners,fill=blue!8,minimum width=1.5cm]
+ (b) at (1.9,1.8) {$b:\ q$};
+\draw[->,thick] (r)--(a);
+\draw[->,thick] (r)--(b);
+\end{tikzpicture}
+\end{center}
+Węzły opisujemy tu wyłącznie przez wymuszane
+zmienne spośród $p,q$. Żaden świat nie wymusza
+$p\wedge q$, więc $r\Vdash\neg(p\wedge q)$.
+Jednocześnie $a\Vdash p$ i $b\Vdash q$ dają
+$r\not\Vdash\neg p$ oraz $r\not\Vdash\neg q$.
+W rezultacie
+\[
+ r\not\Vdash
+ \neg(p\wedge q)\to(\neg p\vee\neg q).
+\]
+To jest zapowiedziany kontrmodel do odwrotności
+drugiej implikacji ze
+Stwierdzenia~\ref{prop:ncl-ipc-demorgan}.
+
+Ten sam model obala zasadę prelinearności
+$(p\to q)\vee(q\to p)$: świat $a$ wymusza $p$,
+ale nie $q$, a świat $b$ wymusza $q$, ale nie $p$.
+Zatem korzeń nie wymusza żadnej z dwóch implikacji.
+Zasada ta występowała wcześniej jako aksjomat
+logik rozmytych typu MTL, lecz nie należy do IPC.
+\end{przyklad}
+
+\begin{stwierdzenie}[Światy maksymalne a logika klasyczna]
+\label{prop:ncl-ipc-maximal-classical}
+Jeżeli $w$ jest światem maksymalnym w modelu Kripkego,
+to istnieje klasyczne wartościowanie $e_w$ takie, że
+dla każdej formuły $\varphi$
+\[
+ w\Vdash\varphi\iff e_w(\varphi)=1.
+\]
+W szczególności modele jednoświatowe dają dokładnie
+klasyczną semantykę zdaniową w rozważanym języku.
+\end{stwierdzenie}
+\begin{proof}
+Definiujemy $e_w(p)=1$ wtedy i tylko wtedy,
+gdy $w\in V(p)$, oraz $e_w(\bot)=0$.
+Dla zmiennych i stałej teza jest natychmiastowa,
+a dla koniunkcji i alternatywy wynika z hipotezy
+indukcyjnej. Ponieważ jedynym światem $v\geq w$
+jest $w$, warunek wymuszania implikacji upraszcza
+się do
+\[
+ w\not\Vdash\alpha\quad\text{lub}\quad w\Vdash\beta,
+\]
+co przez hipotezę indukcyjną jest dokładnie
+klasyczną tablicą implikacji.
+Odwrotnie każde klasyczne wartościowanie można
+zrealizować na ramie jednoelementowej, wybierając
+$V(p)=\{w\}$ dla zmiennych prawdziwych oraz
+$V(p)=\varnothing$ dla pozostałych.
+\end{proof}
+
+\begin{wniosek}[IPC jako właściwy fragment konsekwencji klasycznej]
+\label{cor:ncl-ipc-classical-inclusion}
+Jeżeli $\Gamma\vdash_{\mathrm I}\varphi$,
+to $\Gamma\models_{\mathrm{CL}}\varphi$.
+Inkluzja relacji konsekwencji jest właściwa,
+nawet dla zbioru pustego przesłanek.
+\end{wniosek}
+\begin{proof}
+Z Twierdzenia~\ref{thm:ncl-ipc-kripke-soundness}
+konsekwencja zachodzi w każdym modelu jednoświatowym.
+Stwierdzenie~\ref{prop:ncl-ipc-maximal-classical}
+pozwala utożsamić te modele z wartościowaniami
+klasycznymi. Właściwość inkluzji wynika z
+Przykładu~\ref{ex:ncl-ipc-two-world-countermodel},
+gdyż $p\vee\neg p$ jest tautologią klasyczną,
+ale nie twierdzeniem IPC.
+\end{proof}
