@@ -48,3 +48,9 @@ Umieścić po klasycznej logice pierwszego rzędu (dotychczasowe 09–13), w blo
 - Uzgodnić preambuły, punkty wejścia, katalog, mapowania Atlasu i generatora, aliasy, dokumentację, workflow oraz testy; nie usuwać źródeł przed audytem.
 - Porównać liczbę i treść obiektów, globalne odsyłacze, uruchomić walidację repozytorium i testy indeksu, generatora i aplikacji; skompilować oba PDF-y.
 - Audyty do stabilizacji, następnie niezależny audyt kontrolny. Nie deklarować zielonego CI bez faktycznego wyniku.
+
+## Kolejność realizacji
+Najpierw LST: audyt metamatematyki i teorii mnogości, logiki nieklasyczne (rozmyta, intuicjonistyczna, modalna, wielowartościowa, parakonsystentna), kontrola pokrycia teorii krat i algebr Boole'a w AA, rachunki zdań i predykatów, konstrukcje liczb, indukcja i rekurencja pozaskończona, regularność i osobliwość kardynałów, kluby i zbiory stacjonarne, lemat Fodora, drzewa, wymuszanie i niezależność. Lista do audytu pokrycia, nie lista potwierdzonych braków.
+Rozdział 40: podstawy logiki rozmytej. Do rozwinięcia aksjomaty MTL/BL/MV i poprawność/pełność, twierdzenie McNaughtona, kontrprzykłady zwartości, dodatkowe rysunki, relacje równoważności, szczegółowe przykłady wnioskowania. Docelowo przenieść po rozdziale 13 z dostosowaniem numeracji i testów.
+Po stabilizacji LST: właściwa teoria modeli, kolejno diagramy, zwartość, LS, łańcuchy elementarne, ultrailoczyny, eliminacja kwantyfikatorów (DLO, ACF, RCF), typy, nasycenie, pomijanie typów, modelowa zupełność, kategoryczność, stabilność, o-minimalność i logika ciągła.
+Migracja wymaga zmiany istniejącego workflow, który sprawdza pierwsze 39 rozdziałów w pierwotnej kolejności, oraz testów odczytujących fizyczne ścieżki LST 14, 15, 23, 24. Nie usuwać starych rozdziałów bez audytu etykiet. Każdy rozdział audytować do stabilizacji, następnie audyt kontrolny.

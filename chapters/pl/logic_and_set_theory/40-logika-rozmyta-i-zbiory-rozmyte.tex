@@ -1,0 +1,211 @@
+\chapter{Logika rozmyta i zbiory rozmyte}\label{ch:lst-fuzzy-logic}
+
+\section{Wielowartościowość i zbiory rozmyte}
+Stopień prawdziwości zdania nie jest prawdopodobieństwem zdarzenia.
+W logice rozmytej interpretacje spójników zależą od wybranego systemu,
+a nie tylko od zbioru wartości $[0,1]$.
+\begin{definicja}\label{def:lst-fuzzy-set}
+Zbiór rozmyty $A$ w $X$ jest funkcją przynależności $\mu_A:X\to[0,1]$.
+Klasyczne podzbiory odpowiadają funkcjom charakterystycznym $\chi_E$.
+Porządek zawierania określa nierówność punktowa funkcji przynależności.
+Jądro to $\{x:\mu_A(x)=1\}$, nośnik to $\{x:\mu_A(x)>0\}$, a
+przekrój na poziomie $\alpha\in(0,1]$ to $A_\alpha=\{x:\mu_A(x)\geq\alpha\}$.
+\end{definicja}
+\begin{twierdzenie}\label{thm:lst-fuzzy-cuts}
+Przekroje wyznaczają zbiór rozmyty:
+\[
+\mu_A(x)=\sup(\{0\}\cup\{\alpha\in(0,1]:x\in A_\alpha\}).
+\]
+Ponadto dla $0<\alpha\leq\beta\leq1$ mamy $A_\beta\subseteq A_\alpha$,
+a $A_\alpha=\bigcap_{0<\beta<\alpha}A_\beta$.
+\end{twierdzenie}
+\begin{proof}
+Dodatnie poziomy zawierające $x$ tworzą przedział $(0,\mu_A(x)]$,
+pusty gdy $\mu_A(x)=0$. Stąd pierwszy wzór i monotoniczność.
+Jeśli $\mu_A(x)<\alpha$, istnieje $\beta$ między $\mu_A(x)$ a $\alpha$,
+więc $x$ nie należy do przecięcia. Druga inkluzja wynika z monotoniczności.
+\end{proof}
+\begin{przyklad}[Trójkątna funkcja przynależności]
+Dla $a<b<c$ połóżmy
+\[
+\mu(x)=\max\left(0,\min\left(\frac{x-a}{b-a},\frac{c-x}{c-b}\right)\right).
+\]
+Rozwiązanie obu nierówności liniowych daje
+$A_\alpha=[a+\alpha(b-a),c-\alpha(c-b)]$.
+\begin{center}
+\begin{tikzpicture}[x=1.1cm,y=2.6cm,>=Stealth]
+\draw[->] (0,0)--(6,0) node[right]{$x$};
+\draw[->] (0,0)--(0,1.15) node[above]{$\mu(x)$};
+\fill[blue!12] (1,0)--(3,1)--(5,0)--cycle;
+\draw[thick,blue!70!black] (0,0)--(1,0)--(3,1)--(5,0)--(6,0);
+\draw[dashed] (0,0.5) node[left]{$\alpha$}--(4,0.5)--(4,0);
+\draw[dashed] (2,0.5)--(2,0);
+\draw[very thick,teal!70!black] (2,0)--(4,0) node[midway,below=5pt]{$A_\alpha$};
+\draw (0,1) node[left]{$1$};
+\end{tikzpicture}
+\end{center}
+\end{przyklad}
+\section{Normy trójkątne i konormy}
+Kres dolny i górny w porządku punktowym to minimum i maksimum.
+Ich przekroje są odpowiednio przecięciem i sumą przekrojów.
+\begin{definicja}\label{def:lst-fuzzy-tnorm}
+Norma trójkątna $T:[0,1]^2\to[0,1]$ jest przemienna,
+łączna, niemalejąca w obu argumentach i spełnia $T(a,1)=a$.
+\end{definicja}
+\begin{lemat}\label{lem:lst-fuzzy-tnorm-bound}
+$T(a,0)=0$ oraz $T(a,b)\leq\min(a,b)$.
+\end{lemat}
+\begin{proof}
+$0\leq T(a,0)\leq T(1,0)=0$ i $T(a,b)\leq T(a,1)=a$;
+przemienność daje ograniczenie przez $b$.
+\end{proof}
+\begin{przyklad}\label{ex:lst-fuzzy-three-tnorms}
+Trzy ciągłe normy trójkątne to
+\[
+T_G(a,b)=\min(a,b),\quad T_P(a,b)=ab,\quad
+T_L(a,b)=\max(0,a+b-1).
+\]
+Dla minimum i iloczynu aksjomaty wynikają z własności porządku
+i mnożenia. Dla $T_L$ łączność wynika z równości obu sposobów
+złożenia do $\max(0,a+b+c-2)$; pozostałe aksjomaty wynikają wprost
+ze wzoru. Dla $a=b=0{,}7$ wartości wynoszą $0{,}7$, $0{,}49$, $0{,}4$.
+\end{przyklad}
+Konorma dualna względem negacji $N(a)=1-a$ ma postać
+$S(a,b)=1-T(1-a,1-b)$. Przemienność i łączność wynikają z
+przemienności i łączności $T$, monotoniczność z dwukrotnego
+odwrócenia porządku, a $S(a,0)=a$ z elementu neutralnego $T$.
+Definicja daje $N(S(a,b))=T(N(a),N(b))$, a inwolucja $N$
+daje drugie prawo de Morgana.
+
+\section{Residuum i implikacja}
+\begin{twierdzenie}\label{thm:lst-fuzzy-residuation}
+Niech $T$ będzie normą trójkątną lewostronnie ciągłą. Wówczas
+\[
+a\Rightarrow_T b=\sup\{c:T(a,c)\leq b\}
+\]
+spełnia $T(a,c)\leq b$ wtedy i tylko wtedy, gdy $c\leq a\Rightarrow_T b$.
+\end{twierdzenie}
+\begin{proof}
+Zbiór pod supremum jest niepustym przedziałem początkowym na mocy
+Lematu~\ref{lem:lst-fuzzy-tnorm-bound} i monotoniczności.
+Jeśli jego supremum $r>0$, ciąg elementów tego zbioru rosnący do $r$
+i lewostronna ciągłość dają $T(a,r)\leq b$; dla $r=0$ wynika to z lematu.
+Zbiór jest więc równy $[0,r]$.
+\end{proof}
+W szczególności $a\Rightarrow_T b=1$ wtedy i tylko wtedy, gdy $a\leq b$,
+przez podstawienie $c=1$, a $T(a,a\Rightarrow_T b)\leq b$ przez
+podstawienie $c=a\Rightarrow_T b$.
+\begin{przyklad}\label{ex:lst-fuzzy-implications}
+\[
+a\Rightarrow_G b=\begin{cases}1&a\leq b,\\b&a>b,\end{cases}
+\quad
+a\Rightarrow_P b=\begin{cases}1&a\leq b,\\b/a&a>b,\end{cases}
+\quad
+a\Rightarrow_L b=\min(1,1-a+b).
+\]
+Dla $a>b$ nierówności $\min(a,c)\leq b$ i $ac\leq b$ są
+równoważne odpowiednio $c\leq b$ i $c\leq b/a$.
+Dla $T_L$ nierówność jest równoważna $c\leq1-a+b$.
+Negacja rezydualna $a\Rightarrow_T0$ jest dla $G,P$ równa $1$
+w zerze i $0$ poza zerem, a dla $L$ równa $1-a$.
+\end{przyklad}
+
+\section{Semantyka i algebra}
+Wartościowanie przypisuje zmiennym zdaniowym liczby w $[0,1]$.
+Spójniki $\bot,\wedge,\vee,\mathbin{\&},\to$ interpretujemy przez
+$0,\min,\max,T,\Rightarrow_T$. Negacja to $\varphi\to\bot$.
+Tautologia ma wartość jeden przy każdym wartościowaniu.
+Konsekwencja $\Gamma\models_T\varphi$ oznacza, że wartość jeden
+wszystkich przesłanek pociąga wartość jeden wniosku.
+\begin{przyklad}
+Dla $v(p)=1/2$ i normy Łukasiewicza mamy $v(p\vee\neg p)=1/2$,
+a $v(p\mathbin{\&}p)=0\ne v(p\wedge p)=1/2$.
+Koniunkcja kratowa i monoidalna nie są więc tym samym spójnikiem.
+\end{przyklad}
+\begin{definicja}\label{def:lst-fuzzy-residuated-lattice}
+Ograniczona przemienna całkowita krata rezyduowana jest kratą
+$(L,\wedge,\vee,0,1)$ z przemiennym monoidem $(L,\mathbin{\&},1)$
+oraz operacją $\to$ spełniającą
+$a\mathbin{\&}c\leq b\iff c\leq a\to b$. Element $1$ jest największy.
+Algebra MTL spełnia dodatkowo prelinearność
+$(a\to b)\vee(b\to a)=1$; algebra BL ponadto podzielność
+$a\wedge b=a\mathbin{\&}(a\to b)$, a algebra MV może być
+scharakteryzowana jako algebra BL z negacją inwolucyjną.
+\end{definicja}
+\begin{stwierdzenie}
+Trzy struktury z Przykładu~\ref{ex:lst-fuzzy-three-tnorms}
+są algebrami BL; struktura Łukasiewicza jest algebrą MV.
+\end{stwierdzenie}
+\begin{proof}
+Residuacja wynika z Twierdzenia~\ref{thm:lst-fuzzy-residuation},
+a prelinearność z liniowości porządku. Dla $a\leq b$
+podzielność wynika z $a\to b=1$. Dla $a>b$ podstawienie wzorów
+implikacji daje odpowiednio $\min(a,b)=b$, $a(b/a)=b$ i
+$\max(0,a+1-a+b-1)=b$. Dla Łukasiewicza $\neg a=1-a$.
+\end{proof}
+
+\section{Logika pierwszego rzędu}
+W niepustym uniwersum $M$ interpretujemy symbole funkcyjne klasycznie,
+a predykaty $n$-argumentowe jako funkcje $M^n\to[0,1]$.
+Dla wartościowania $s$ zmiennych
+\[
+\|\forall x\,\varphi\|_s=\inf_{a\in M}\|\varphi\|_{s[x\mapsto a]},
+\qquad
+\|\exists x\,\varphi\|_s=\sup_{a\in M}\|\varphi\|_{s[x\mapsto a]}.
+\]
+Kresy istnieją przez zupełność porządkową $[0,1]$.
+Jeżeli $M=\N$ oraz $P(n)=1-1/(n+1)$, to $\|\exists xP(x)\|=1$,
+ale żadna wartość $P(n)$ nie jest równa jeden.
+
+\section{Relacje rozmyte}
+Dla $R:X\times Y\to[0,1]$ i $S:Y\times Z\to[0,1]$ definiujemy
+$(S\circ_T R)(x,z)=\sup_{y\in Y}T(R(x,y),S(y,z))$,
+gdzie $\sup\varnothing=0$.
+\begin{stwierdzenie}
+Dla lewostronnie ciągłej $T$ składanie jest łączne.
+\end{stwierdzenie}
+\begin{proof}
+Residuacja pokazuje, że $T(a,\cdot)$ zachowuje dowolne suprema:
+$T(a,\sup C)\leq b$ wtedy i tylko wtedy, gdy
+$\sup C\leq a\Rightarrow_T b$, równoważnie
+$T(a,c)\leq b$ dla wszystkich $c\in C$.
+Oba złożenia trzech relacji dają więc supremum po parach
+elementów pośrednich z tej samej wartości na mocy łączności $T$.
+\end{proof}
+
+\section{Liczby rozmyte i zasada rozszerzania}
+Liczba rozmyta to zbiór rozmyty w $\R$ z górnie półciągłą funkcją
+przynależności osiągającą jeden, ograniczonym nośnikiem i przedziałowymi
+dodatnimi przekrojami. Te przekroje są niepuste i zwarte.
+Dla ciągłej $f:\R^2\to\R$ definiujemy
+$\mu_{f(A,B)}(z)=\sup_{f(x,y)=z}\min(\mu_A(x),\mu_B(y))$.
+\begin{twierdzenie}\label{thm:lst-fuzzy-extension-cuts}
+Dla liczb rozmytych i $\alpha>0$, $\alpha\leq1$,
+$(f(A,B))_\alpha=f(A_\alpha\times B_\alpha)$.
+\end{twierdzenie}
+\begin{proof}
+Inkluzja od prawej do lewej wynika z definicji. Dla punktu
+lewej strony wybieramy pary o obrazie $z$ i stopniach co najmniej
+$\alpha-1/n$. Dla dużych $n$ należą do zwartego
+$A_{\alpha/2}\times B_{\alpha/2}$. Podciąg zbiega do pary
+o obrazie $z$ przez ciągłość $f$ i o stopniach co najmniej $\alpha$
+przez górną półciągłość funkcji przynależności.
+\end{proof}
+Przy dodawaniu przedziałów przekroje sumują się końcami, ponieważ
+dodawanie jest ciągłe i monotoniczne na zwartym spójnym prostokącie.
+Przykładowo trójkątne liczby $(1,2,4)$ i $(0,3,5)$ dają $(1,5,9)$.
+
+\section{Wnioskowanie rozmyte}
+Dwie reguły Mamdaniego z aktywacjami $0{,}25$, $0{,}75$
+i konsekwencjami $\nu_1,\nu_2$ dają funkcję
+$\nu(y)=\max(\min(0{,}25,\nu_1(y)),\min(0{,}75,\nu_2(y)))$.
+Dla całkowalnej $\nu$ o dodatniej całce i skończonym pierwszym momencie
+defuzyfikacja środkiem ciężkości daje
+\[
+y_*=\frac{\int_{\R} y\nu(y)\,\mathrm d\lambda_1(y)}
+{\int_{\R}\nu(y)\,\mathrm d\lambda_1(y)}.
+\]
+W systemie Sugeno zerowego rzędu, dla konsekwencji liczbowych $2,6$,
+znormalizowana średnia wynosi
+$(0{,}25\cdot2+0{,}75\cdot6)/(0{,}25+0{,}75)=5$.
+Nie tworzy się tu agregowanej funkcji przynależności wyjścia.
