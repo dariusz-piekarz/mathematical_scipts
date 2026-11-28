@@ -615,16 +615,20 @@ Mierzalność $(P_tf)(X_s)$ kończy dowód.
 
 \begin{lemat}[Własność Markowa po prawostronnym uzupełnieniu filtracji]
 \label{lem:markov-aug}
-Niech $E$ będzie skończone, $X$ nieeksplodującym łańcuchem
-o macierzy intensywności $Q$ i trajektoriach prawostronnie
-ciągłych. Niech $\calF_t^0=\sigma(X_s:0\le s\le t)$
+Niech $X$ będzie minimalnym procesem skokowym
+na przeliczalnym $E$ (z dodatkowym stanem $\partial$
+w razie eksplozji). Przyjmijmy topologię dyskretną
+na przestrzeni stanów $E'=E\cup\{\partial\}$.
+Proces ma prawostronnie ciągłe trajektorie:
+przed eksplozją wynika to z konstrukcji, a od chwili
+eksplozji trajektoria jest stała. Niech $\calF_t^0=\sigma(X_s:0\le s\le t)$
 oraz
 $\calF_t=\bigcap_{u>t}\sigma(\calF_u^0\cup\calN)$,
 gdzie $\calN$ jest rodziną wszystkich podzbiorów zbiorów
 zerowych z bazowego $\sigma$-ciała $\mathcal A$
 przestrzeni probabilistycznej $(\Omega,\mathcal A,\Prob)$,
 którą zakładamy zupełną.
-Wówczas dla $t,h\ge0$ i każdego $f:E\to\R$
+Wówczas dla $t,h\ge0$ i każdej ograniczonej funkcji $f:E'\to\R$
 \[
 \E[f(X_{t+h})\mid\calF_t]=(P(h)f)(X_t)
 \quad\text{prawie na pewno}.
@@ -649,8 +653,11 @@ poprzednią równość, początkowo prawdziwą dla $A_n$,
 można zastosować także do $A$.
 Prawostronna ciągłość daje $X_{u_n+h}\to X_{t+h}$
 oraz $X_{u_n}\to X_t$ niemal na pewno.
-Na skończonym $E$ funkcje $f$ i $P(h)f$ są ograniczone,
-więc zbieżność zmajoryzowana pozwala przejść do granicy.
+W topologii dyskretnej zbieżność stanów oznacza ich
+równość od pewnego indeksu. Funkcje $f$ i $P(h)f$
+są ograniczone (druga przez $\norm{f}_\infty$),
+więc twierdzenie o zbieżności zmajoryzowanej pozwala
+przejść do granicy.
 Otrzymana równość całek dla każdego $A\in\calF_t$
 oraz $\calF_t$-mierzalność $(P(h)f)(X_t)$
 stanowią charakterystykę warunkowej wartości oczekiwanej.
@@ -658,12 +665,15 @@ stanowią charakterystykę warunkowej wartości oczekiwanej.
 
 \begin{twierdzenie}[Mocna własność Markowa]
 \label{thm:ctmc-strong}
-Niech $X$ będzie nieeksplodującym łańcuchem w czasie
-ciągłym na skończonym zbiorze $E$, o macierzy intensywności
-$Q$, względem zwykłego uzupełnienia prawostronnie ciągłej
-filtracji naturalnej $\mathbb F=(\calF_t)_{t\ge0}$.
+Niech $X$ będzie minimalnym procesem skokowym
+o macierzy intensywności $Q$ na przeliczalnym $E$,
+z dodatkowym stanem $\partial$ w razie eksplozji.
+Niech $\mathbb F=(\calF_t)_{t\ge0}$ będzie zwykłym
+uzupełnieniem filtracji naturalnej (jak w poprzednim
+lemacie), a przestrzeń probabilistyczna niech będzie zupełna.
 Jeżeli $\tau$ jest czasem zatrzymania skończonym prawie na
-pewno, to dla każdego $t\ge0$ i funkcji $f:E\to\R$
+pewno, to dla każdego $t\ge0$ i ograniczonej funkcji
+$f:E\cup\{\partial\}\to\R$
 \[
 \E[f(X_{\tau+t})\mid\calF_\tau]=(P(t)f)(X_\tau)
 \quad\text{prawie na pewno}.
@@ -705,11 +715,12 @@ zastosowana do $\tau_m$ daje
 \E[\chi_A f(X_{\tau_m+t})]
 =\E[\chi_A(P(t)f)(X_{\tau_m})].
 \]
-Trajektorie procesu na skończonej przestrzeni stanów są
-prawostronnie ciągłe. Dlatego
+Trajektorie procesu są prawostronnie ciągłe także
+w stanie cmentarnym. Dlatego w topologii dyskretnej
 $X_{\tau_m+t}\to X_{\tau+t}$ i $X_{\tau_m}\to X_\tau$
 prawie na pewno. Ponieważ $f$ i $P(t)f$ są ograniczone,
-możemy zastosować zbieżność zdominowaną po obu stronach.
+możemy zastosować twierdzenie o zbieżności
+zmajoryzowanej po obu stronach.
 W efekcie identyczna równość zachodzi dla $\tau$ i wszystkich
 $A\in\calF_\tau$. Proces $X$ jest progresywnie mierzalny
 jako adaptowany proces prawostronnie ciągły
@@ -719,11 +730,43 @@ twierdzenia~\ref{thm:sampled}. Otrzymujemy więc
 charakterystykę wskazanej warunkowej wartości oczekiwanej.
 \end{proof}
 
+\begin{uwaga}[Prawo całej przyszłej trajektorii]
+Mocna własność Markowa w powyższej postaci dotyczy
+jednej przyszłej chwili. Dla $0<t_1<\cdots<t_m$
+oraz ograniczonych funkcji $f_1,\ldots,f_m$ stosujemy
+ją kolejno w czasach zatrzymania $\tau+t_{m-1},
+\ldots,\tau+t_1,\tau$ (dodanie deterministycznej
+stałej nieujemnej zachowuje własność czasu zatrzymania).
+Własność wieży daje
+\[
+\E\left[\prod_{j=1}^m f_j(X_{\tau+t_j})
+\mid\calF_\tau\right]
+=
+P(t_1)\bigl(f_1 P(t_2-t_1)
+(f_2\cdots P(t_m-t_{m-1})f_m)\bigr)(X_\tau),
+\]
+gdzie zagnieżdżenie rozumiemy rekurencyjnie od
+$f_m$ wstecz, a mnożenie funkcji jest punktowe.
+Dla $m=1$ prawa strona to $(P(t_1)f_1)(X_\tau)$.
+Wybór funkcji charakterystycznych i argument
+$\pi$--$\lambda$ dla cylindrów rozszerzają to na
+warunkowe prawo całego przesuniętego procesu
+względem $\sigma$-ciała cylindrycznego: jest ono
+prawem procesu startującego z $X_\tau$.
+\end{uwaga}
+
 \begin{przyklad}[Pierwsza naprawa jako chwila losowa]
 W modelu sprawny--uszkodzony niech $\tau$ będzie chwilą
 pierwszego powrotu do stanu sprawnego po awarii, przy starcie
 ze stanu $0$. Jeżeli $\alpha,\beta>0$, to $\tau<\infty$
-prawie na pewno. Mocna własność Markowa mówi, że warunkowo
+prawie na pewno. Jest to czas zatrzymania: dla
+$t>0$ zdarzenie $\{\tau\le t\}$ jest sumą po
+wymiernych $r\in(0,t)$ zdarzeń
+$\{X_r=1\}\cap(\{X_t=0\}\cup
+\bigcup_{q\in\mathbb Q\cap(r,t)}\{X_q=0\})$.
+Równość wynika z prawostronnej ciągłości dyskretnych
+trajektorii i dodatnich czasów przebywania; dla $t=0$
+zdarzenie jest puste. Mocna własność Markowa mówi, że warunkowo
 względem całej historii do $\tau$ dalszy proces jest
 nową kopią procesu zaczynającego w stanie $0$.
 Nie wolno zastąpić $\tau$ dowolną losową chwilą zależną
@@ -1071,14 +1114,23 @@ jest niezależny od minimum, z prawdopodobieństwami
 proporcjonalnymi do parametrów, co wynika z iloczynu
 funkcji przeżycia i gęstości. W stanie $K$ proces
 obcięty ignoruje zegar przejścia w górę; zachowuje
-zegar przejścia w dół. Do pierwszego wyjścia procesu
-pierwotnego poza $\{0,\ldots,K\}$ oba procesy są jednakowe.
-Po rozdzieleniu można kontynuować je zgodnie z ich
-własnymi intensywnościami, wykorzystując brak pamięci
-niezakończonego zegara. Ponieważ oryginalny proces jest nieeksplodujący,
+zegar przejścia w dół. Do pierwszego wyjścia procesu pierwotnego poza
+$\{0,\ldots,K\}$ oba procesy są jednakowe (bez
+samej chwili wyjścia). Po rozdzieleniu proces
+obcięty może dokończyć oczekiwanie według już
+wylosowanego zegara w dół; jego czas przebywania
+od wejścia do $K$ jest więc dokładnie wykładniczy
+z parametrem $\mu_K$. Po zakończeniu tego pobytu
+używamy nowych niezależnych zegarów dla procesu
+obciętego. W ten sposób dla każdego $K$ mamy sprzężenie
+o właściwych rozkładach brzegowych. Ponieważ oryginalny
+proces jest nieeksplodujący,
 na każdym $[0,t]$ wykonuje tylko skończenie wiele skoków
 prawie na pewno; jego trajektoria ma zatem na $[0,t]$
-skończone maksimum. Stąd dla każdego $i,j$ i $t$
+skończone maksimum. W opisanym sprzężeniu różnica
+prawdopodobieństw przejścia jest oszacowana przez
+$\Prob_i(\sup_{0\le v\le t}X_v>K)$, które dąży do zera.
+Stąd dla każdego $i,j$ i $t$
 \[
 P_t^{(K)}(i,j)\longrightarrow P_t(i,j)
 \quad (K\to\infty,\ K\ge i),
@@ -1128,9 +1180,11 @@ trajektorie obu procesów są więc identyczne.
 Przy założonym braku eksplozji liczba skoków procesu
 oryginalnego na $[0,t]$ jest prawie na pewno skończona,
 co oznacza, że na tym przedziale osiąga tylko skończenie
-wiele stanów. Dla każdego ustalonego wyniku losowania
-oraz dostatecznie dużego $K$ przybliżenia i oryginał
-zgadzają się na całym $[0,t]$.
+wiele stanów. Prawdopodobieństwo rozbieżności trajektorii w tym
+sprzężeniu na $[0,t]$ nie przekracza
+$\Prob_i(\sup_{0\le v\le t}X_v>K)$ i dąży do zera.
+Nie potrzebujemy zakładać wspólnej realizacji wszystkich
+przybliżeń dla różnych $K$.
 To uzasadnia zbieżność ich praw przejścia, a dopiero
 następnie można przejść do granicy w równaniu stacjonarności.
 \end{uwaga}
@@ -1254,7 +1308,7 @@ stacjonarne łańcucha w czasie ciągłym.
 \label{thm:ctmc-absorption}
 Niech $E=T\mathbin{\dot\cup}A$ będzie skończonym zbiorem stanów,
 $A\ne\varnothing$ zbiorem stanów pochłaniających,
-a $T$ zbiorem stanów niepochłaniających. Przy uporządkowaniu
+a $T\ne\varnothing$ zbiorem stanów niepochłaniających. Przy uporządkowaniu
 najpierw stanów $T$ macierz intensywności ma blokową postać
 \[
 Q=\begin{pmatrix}B&C\\0&0\end{pmatrix}.
@@ -1291,8 +1345,15 @@ prawie na pewno, istnieje $t_i>0$ takie, że
 $\Prob_i(\tau>t_i)<1/2$. Biorąc $t_0=\max_i t_i$,
 z monotoniczności funkcji przeżycia dostajemy
 $\sup_{i\in T}\Prob_i(\tau>t_0)\le1/2$.
-Własność Markowa w chwilach $nt_0$ pokazuje indukcyjnie,
-że $\sup_i\Prob_i(\tau>nt_0)\le2^{-n}$.
+Ponieważ $A$ jest pochłaniający, $\{\tau>t\}$
+jest równoważne $\{X_t\in T\}$. Własność Markowa
+w chwilach $nt_0$ daje dla $i\in T$
+\[
+\Prob_i(\tau>(n+1)t_0)
+=\E_i[\chi_{\{\tau>nt_0\}}\Prob_{X_{nt_0}}(\tau>t_0)]
+\le\tfrac12\Prob_i(\tau>nt_0).
+\]
+Indukcyjnie $\sup_{i\in T}\Prob_i(\tau>nt_0)\le2^{-n}$.
 Zatem wierszowe sumy macierzy $e^{tB}$ maleją
 wykładniczo do zera, a nieujemne wyrazy tej macierzy
 są całkowalne na $[0,\infty)$. Niech
@@ -1304,10 +1365,10 @@ BG=\lim_{t\to\infty}e^{tB}-I=-I.
 W skończonym wymiarze istnienie prawej odwrotności
 macierzy kwadratowej oznacza odwracalność, a
 $G=(-B)^{-1}$. Nieujemność wyrazów jest widoczna
-z całkowej reprezentacji. Sumując tożsamość
+z całkowej reprezentacji. Korzystając z tożsamości
 $\int_0^\tau\sum_{j\in T}\chi_{\{X_t=j\}}\,\mathrm d\lambda_1(t)=\tau$
 (na $[0,\tau)$ proces pozostaje w $T$)
-po $j$ i biorąc wartości oczekiwane,
+i liniowości wartości oczekiwanej dla skończonej sumy,
 otrzymujemy drugi wzór.
 \end{proof}
 
