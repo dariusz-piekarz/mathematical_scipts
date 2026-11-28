@@ -38,3 +38,17 @@ uwierzytelnionym podpisem. Bramka nie promuje automatycznie stable.
 Po trzeciej rzeczywistej próbie rootless i niezależnym odbiorze można
 rozliczyć techniczny zakres L1.5.7. Nadal execution_allowed=false,
 offline_ready=false, certificate=false dla dowolnego niezaufanego wykonania.
+
+
+## Uzupełnienie R2 — kompletne porównanie drzew (28.11.2026)
+
+Porównano rekurencyjne drzewa Git `56191f7c` i `d3e20ef2`, obydwa
+`truncated=false`. Porównanie typu, trybu i SHA dla sumy ścieżek
+niebędących katalogami: 4530 ścieżek, 4510 identycznych, 20 różnic.
+REST compare potwierdza tę samą listę 20 ścieżek i relację przodka
+(37 commitów). Różnice: 1 preambuła `application/config/preambles/KAT.tex`,
+1 dziennik postępów, 5 raportów audytowych, 2 pliki główne skryptów,
+3 katalogi JSON, 8 plików rozdziałów. Żaden plik workflow, kod backendu,
+skrypty wykonawcze, testy, przypięcia Lean/Mathlib ani inne konfiguracje
+aplikacji nie różnią się. Nadal są to dwa różne SHA; nie zastępuje to
+niezależnego zatwierdzenia adekwatności zakresu ani trzeciej próby.
