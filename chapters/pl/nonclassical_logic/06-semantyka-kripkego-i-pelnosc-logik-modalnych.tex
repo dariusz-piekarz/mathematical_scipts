@@ -1664,3 +1664,377 @@ Rozważane warunki domknięcia są warunkami
 koniecznymi definiowalności; nie wykazaliśmy
 ich wystarczalności.
 \end{przyklad}
+
+\section{Filtracja modeli Kripkego}
+
+\subsection{Iloraz względem skończonego zbioru formuł}
+
+Filtracja pozwala zastąpić, być może nieskończony,
+model modelem skończonym, zachowując prawdziwość
+wybranego skończonego zbioru formuł. W odróżnieniu
+od bisymulacji nie wymaga zachowania wszystkich
+formuł języka. Z tego powodu można niekiedy
+skleić stany, które nie są bisymilarne.
+
+\begin{definicja}[Podformuły]
+\label{def:ncl-kripke-subformulas}
+Zbiór podformuł $\operatorname{Sub}(A)$ formuły
+$A$ określamy rekurencyjnie w języku
+z Definicji~\ref{def:ncl-modal-language}:
+\[
+\begin{aligned}
+ \operatorname{Sub}(p)&=\{p\},&
+ \operatorname{Sub}(\bot)&=\{\bot\},\\
+ \operatorname{Sub}(B\circ C)
+ &=\{B\circ C\}\cup\operatorname{Sub}(B)
+                  \cup\operatorname{Sub}(C),
+ &\circ&\in\{\wedge,\vee,\to\},\\
+ \operatorname{Sub}(\Box B)
+ &=\{\Box B\}\cup\operatorname{Sub}(B).
+\end{aligned}
+\]
+Skróty, w tym $\neg$ i $\Diamond$,
+rozwijamy przed zastosowaniem tej definicji.
+Zbiór formuł $\Sigma$ jest domknięty względem
+podformuł, jeżeli dla każdego $A\in\Sigma$
+zachodzi $\operatorname{Sub}(A)\subseteq\Sigma$.
+\end{definicja}
+
+Indukcja po budowie formuły pokazuje, że
+$\operatorname{Sub}(A)$ jest skończony,
+zawiera $A$ i jest domknięty względem podformuł.
+Dla spójników dwuargumentowych korzystamy
+ze skończoności obu zbiorów podformuł
+argumentów, a dla $\Box$ z analogicznej
+własności jednego argumentu.
+Domknięcie wynika stąd, że podformuła
+podformuły jest również podformułą wyjściowej
+formuły, co wynika z tej samej rekurencji.
+
+\begin{definicja}[Równoważność filtracyjna]
+\label{def:ncl-kripke-filtration-equivalence}
+Niech $M=(W,R,V)$ będzie modelem Kripkego,
+a $\Sigma$ skończonym zbiorem formuł domkniętym
+względem podformuł. Dla $x,y\in W$ określamy
+\[
+ x\equiv_\Sigma y
+ \iff \forall A\in\Sigma\quad
+      (M,x\Vdash A\iff M,y\Vdash A).
+\]
+Jest to relacja równoważności, gdyż oznacza
+równość zbiorów formuł z $\Sigma$ prawdziwych
+w obu stanach. Oznaczamy
+$W_\Sigma=W/{\equiv_\Sigma}$, a klasę stanu
+$x$ przez $[x]_\Sigma$ lub krótko $[x]$.
+\end{definicja}
+
+\begin{stwierdzenie}[Liczba klas filtracji]
+\label{prop:ncl-kripke-filtration-bound}
+Zachodzi
+\[
+ 1\leq |W_\Sigma|\leq 2^{|\Sigma|}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Rama $W$ jest niepusta, więc zbiór klas
+równoważności również jest niepusty.
+Odwzorowanie
+\[
+ [x]\longmapsto\{A\in\Sigma:M,x\Vdash A\}
+\]
+jest dobrze określoną injekcją
+$W_\Sigma\to\mathcal P(\Sigma)$.
+Dobre określenie i injektywność wynikają
+bezpośrednio z definicji $\equiv_\Sigma$.
+Stąd żądane oszacowanie.
+\end{proof}
+
+\subsection{Dopuszczalne relacje filtracyjne}
+
+\begin{definicja}[Filtracja modelu]
+\label{def:ncl-kripke-filtration}
+Filtracją modelu $M$ względem $\Sigma$
+nazywamy model $M_\Sigma=(W_\Sigma,S,V_\Sigma)$,
+w którym
+\[
+ V_\Sigma(p)=\{[x]:M,x\Vdash p\}
+       \qquad(p\in\mathrm{Var}\cap\Sigma).
+\]
+Dla zmiennych spoza $\Sigma$ wartościowanie
+można wybrać dowolnie; przyjmujemy
+$V_\Sigma(p)=\varnothing$.
+Relacja $S$ na $W_\Sigma$ ma spełniać:
+\begin{enumerate}
+ \item jeżeli $xRy$, to $[x]S[y]$;
+ \item jeżeli $[x]S[y]$ oraz $\Box B\in\Sigma$,
+ to $M,x\Vdash\Box B$ implikuje $M,y\Vdash B$.
+\end{enumerate}
+W drugim warunku wartości obu formuł
+nie zależą od wyboru reprezentantów,
+ponieważ $\Box B\in\Sigma$ i $B\in\Sigma$.
+\end{definicja}
+
+\begin{definicja}[Najmniejsza i największa relacja filtracyjna]
+\label{def:ncl-kripke-filtration-extremes}
+Na $W_\Sigma$ określamy relacje
+\[
+\begin{aligned}
+ [x]S_{\min}[y]
+ &\iff \exists u\in[x]\ \exists v\in[y]\quad uRv,\\
+ [x]S_{\max}[y]
+ &\iff \forall\Box B\in\Sigma\quad
+       (M,x\Vdash\Box B\Rightarrow M,y\Vdash B).
+\end{aligned}
+\]
+W szczególności druga relacja jest pełna,
+jeśli $\Sigma$ nie zawiera żadnej formuły
+o postaci $\Box B$.
+\end{definicja}
+
+\begin{stwierdzenie}[Istnienie i charakterystyka filtracji]
+\label{prop:ncl-kripke-filtration-extremes}
+Zachodzi $S_{\min}\subseteq S_{\max}$.
+Relacja $S$ spełnia warunki filtracji
+dokładnie wtedy, gdy
+\[
+ S_{\min}\subseteq S\subseteq S_{\max}.
+\]
+W szczególności każda z relacji skrajnych
+wyznacza filtrację.
+\end{stwierdzenie}
+\begin{proof}
+Niech $[x]S_{\min}[y]$; wybieramy świadków
+$u\in[x]$, $v\in[y]$ z $uRv$.
+Jeżeli $\Box B\in\Sigma$ i $M,x\Vdash\Box B$,
+to $M,u\Vdash\Box B$ przez równoważność
+filtracyjną. Z $uRv$ dostajemy $M,v\Vdash B$,
+a ponieważ $B\in\Sigma$, także $M,y\Vdash B$.
+Zatem $[x]S_{\max}[y]$.
+Pierwszy warunek z
+Definicji~\ref{def:ncl-kripke-filtration}
+jest równoważny inkluzji $S_{\min}\subseteq S$,
+drugi zaś inkluzji $S\subseteq S_{\max}$.
+\end{proof}
+
+\begin{twierdzenie}[Lemat filtracyjny]
+\label{thm:ncl-kripke-filtration-lemma}
+Jeżeli $M_\Sigma$ jest filtracją $M$
+względem $\Sigma$, to dla każdej formuły
+$A\in\Sigma$ i każdego $x\in W$ zachodzi
+\[
+ M,x\Vdash A\iff M_\Sigma,[x]\Vdash A.
+\]
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po budowie $A$, jednocześnie
+dla wszystkich $x\in W$.
+Domknięcie $\Sigma$ względem podformuł
+zapewnia stosowalność hipotezy indukcyjnej
+do argumentów każdego spójnika.
+Dla zmiennej teza wynika z definicji
+$V_\Sigma$, a dla $\bot$ obie strony są
+fałszywe. Dla spójników klasycznych
+stosujemy ich klauzule semantyczne.
+
+Niech $A=\Box B\in\Sigma$.
+Jeżeli $M,x\Vdash\Box B$, to dla każdego
+$[y]$ z $[x]S[y]$ drugi warunek filtracji
+daje $M,y\Vdash B$. Z hipotezy indukcyjnej
+$M_\Sigma,[y]\Vdash B$, więc
+$M_\Sigma,[x]\Vdash\Box B$.
+Jeżeli $M,x\not\Vdash\Box B$, istnieje
+$y$ z $xRy$ i $M,y\not\Vdash B$.
+Pierwszy warunek filtracji daje $[x]S[y]$,
+a hipoteza indukcyjna
+$M_\Sigma,[y]\not\Vdash B$. Zatem
+$M_\Sigma,[x]\not\Vdash\Box B$.
+\end{proof}
+
+\begin{wniosek}[Skończona realizacja formuł]
+\label{cor:ncl-kripke-filtration-finite-realization}
+Jeżeli formuła $A$ jest spełnialna w pewnym
+modelu Kripkego, to jest spełnialna w modelu
+o co najwyżej $2^{|\operatorname{Sub}(A)|}$ stanach.
+Jeżeli $A$ jest fałszywa w pewnym stanie modelu,
+to istnieje taki sam skończony kontrmodel.
+\end{wniosek}
+\begin{proof}
+W obu przypadkach filtrujemy dany model
+względem $\Sigma=\operatorname{Sub}(A)$,
+używając na przykład $S_{\min}$.
+Twierdzenie~\ref{thm:ncl-kripke-filtration-lemma}
+zachowuje prawdziwość i fałszywość $A$,
+a Stwierdzenie~\ref{prop:ncl-kripke-filtration-bound}
+daje oszacowanie liczby stanów.
+\end{proof}
+
+\subsection{Przykład i ograniczenia filtracji}
+
+\begin{przyklad}[Filtracja nieskończonego łańcucha]
+\label{ex:ncl-kripke-filtration-chain}
+Niech $W=\{0,1,2,\ldots\}$,
+$nRm$ wtedy i tylko wtedy, gdy $m=n+1$,
+oraz $V(p)=\{2k:k\geq0\}$.
+Dla $\Sigma=\{p,\Box p\}$ otrzymujemy
+dwie klasy: $e$ stanów parzystych i $o$
+stanów nieparzystych. W stanach parzystych
+prawdziwe jest $p$, a fałszywe $\Box p$;
+w stanach nieparzystych jest odwrotnie.
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+ \node[draw,circle,fill=blue!15] (a) at (0,0) {$0$};
+ \node[draw,circle] (b) at (1.25,0) {$1$};
+ \node[draw,circle,fill=blue!15] (c) at (2.5,0) {$2$};
+ \node[draw,circle] (d) at (3.75,0) {$3$};
+ \node (more) at (5,0) {$\cdots$};
+ \draw[->] (a)--(b);
+ \draw[->] (b)--(c);
+ \draw[->] (c)--(d);
+ \draw[->] (d)--(more);
+ \node at (2.5,-0.65) {model wyjściowy};
+ \node[draw,circle,fill=blue!15] (e) at (1.5,-2) {$e$};
+ \node[draw,circle] (o) at (3.5,-2) {$o$};
+ \draw[->] (e) to[bend left=22] (o);
+ \draw[->] (o) to[bend left=22] (e);
+ \node at (2.5,-2.8) {filtracja przez $S_{\min}$};
+\end{tikzpicture}
+\end{center}
+Zaznaczenie kolorem oznacza prawdziwość $p$.
+Relacja $S_{\min}$ składa się z krawędzi
+$eS_{\min}o$ i $oS_{\min}e$.
+Natomiast $S_{\max}$ dopuszcza dodatkowo
+$eS_{\max}e$, ponieważ $\Box p$ jest
+fałszywa w stanach klasy $e$.
+W obu filtracjach zachowana jest prawdziwość
+$p$ i $\Box p$. Nie zachowują one jednak
+koniecznie prawdziwości formuł spoza $\Sigma$.
+Na przykład $\Box\neg p$ jest prawdziwa w $0$
+i w $e$ dla $S_{\min}$, lecz fałszywa w $e$
+dla $S_{\max}$.
+\end{przyklad}
+
+\begin{przyklad}[Utrata przechodniości]
+\label{ex:ncl-kripke-filtration-transitivity-loss}
+Niech $W=\{a,b,c,d\}$ i
+$R=\{(a,b),(c,d)\}$. Relacja jest przechodnia,
+ponieważ nie istnieje droga długości dwa.
+Dla $\Sigma=\{p,q\}$ przyjmujemy
+$V(p)=\{a\}$ i $V(q)=\{d\}$.
+Otrzymujemy trzy klasy
+\[
+ X=\{a\},\qquad Y=\{b,c\},\qquad Z=\{d\}.
+\]
+Relacja $S_{\min}$ zawiera dokładnie krawędzie
+$XS_{\min}Y$ oraz $YS_{\min}Z$,
+ale nie $XS_{\min}Z$. Nie jest zatem przechodnia.
+Sklejenie $b$ i $c$ stworzyło drogę,
+której nie było w modelu wyjściowym.
+Własność modelu skończonego dla logik
+wymagających przechodniości nie wynika
+więc bezpośrednio z użycia najmniejszej
+relacji filtracyjnej.
+\end{przyklad}
+
+\subsection{Zachowanie wybranych własności ram}
+
+\begin{stwierdzenie}[Seryjność, zwrotność i symetryczność]
+\label{prop:ncl-kripke-filtration-basic-properties}
+Jeżeli $R$ jest seryjna, zwrotna lub symetryczna,
+to $S_{\min}$ ma odpowiednią własność.
+Seryjność i zwrotność zachowują również
+wszystkie relacje filtracyjne $S$,
+natomiast dla symetryczności nie jest to
+gwarantowane.
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $R$ jest seryjna, to dla dowolnej
+klasy $[x]$ wybieramy następnika $y$ stanu
+$x$. Wtedy $[x]S_{\min}[y]$.
+Jeżeli $R$ jest zwrotna, to $xRx$ daje
+$[x]S_{\min}[x]$.
+Obie własności zachowują się przy
+powiększaniu relacji.
+Jeżeli $R$ jest symetryczna i
+$[x]S_{\min}[y]$, to istnieją świadkowie
+$u\in[x]$, $v\in[y]$ z $uRv$.
+Symetryczność daje $vRu$, a zatem
+$[y]S_{\min}[x]$.
+
+Aby zobaczyć, że dowolna filtracja nie
+musi być symetryczna, weźmy dwuelementową
+ramę z relacją identycznościową i
+$\Sigma=\{p\}$, gdzie $p$ rozróżnia stany.
+Wówczas $S_{\min}$ jest identycznością,
+a $S_{\max}$ relacją pełną. Do $S_{\min}$
+można dodać jedną krawędź między różnymi
+klasami bez dodawania krawędzi odwrotnej.
+Otrzymana relacja nadal jest filtracyjna.
+\end{proof}
+
+\begin{lemat}[Filtracja przechodnia]
+\label{lem:ncl-kripke-transitive-filtration}
+Jeżeli relacja $R$ jest przechodnia,
+to przechodnie domknięcie $S_{\min}^{+}$
+relacji $S_{\min}$ jest relacją filtracyjną.
+Przez $S_{\min}^{+}$ rozumiemy relację
+istnienia drogi dodatniej skończonej długości
+w relacji $S_{\min}$.
+Jeżeli $R$ jest ponadto zwrotna, to
+$S_{\min}^{+}$ jest zwrotna.
+\end{lemat}
+\begin{proof}
+Z definicji $S_{\min}\subseteq S_{\min}^{+}$,
+a konkatenacja dróg dowodzi przechodniości.
+Sprawdzimy inkluzję $S_{\min}^{+}\subseteq S_{\max}$.
+Najpierw zauważmy, że dla każdej
+$\Box B\in\Sigma$ oraz krawędzi
+$[x]S_{\min}[y]$ z $M,x\Vdash\Box B$
+wynikają jednocześnie $M,y\Vdash B$
+i $M,y\Vdash\Box B$.
+Pierwsza teza wynika z
+Stwierdzenia~\ref{prop:ncl-kripke-filtration-extremes}.
+Dla drugiej wybieramy świadków $uRv$
+z $u\in[x]$, $v\in[y]$.
+Mamy $M,u\Vdash\Box B$.
+Jeżeli $vRz$, to przechodniość daje $uRz$,
+więc $M,z\Vdash B$.
+Zatem $M,v\Vdash\Box B$, a ponieważ
+$\Box B\in\Sigma$, również $M,y\Vdash\Box B$.
+
+Jeżeli teraz $[x]S_{\min}^{+}[y]$, wybieramy
+drogę dodatniej długości od $[x]$ do $[y]$.
+Prawdziwość $\Box B$ przenosimy wzdłuż
+kolejnych krawędzi na wszystkie klasy
+drogi, a na ostatniej krawędzi uzyskujemy
+także prawdziwość $B$ w klasie $[y]$.
+To daje $[x]S_{\max}[y]$.
+Charakterystyka relacji filtracyjnych
+kończy dowód. Jeżeli $R$ jest zwrotna,
+to $S_{\min}$ jest zwrotna, a więc także
+jego nadrelacja $S_{\min}^{+}$.
+\end{proof}
+
+\begin{wniosek}[Filtracja ram z relacją równoważności]
+\label{cor:ncl-kripke-equivalence-filtration}
+Jeżeli $R$ jest relacją równoważności,
+to $S_{\min}^{+}$ jest relacją równoważności
+i wyznacza filtrację.
+\end{wniosek}
+\begin{proof}
+Z poprzedniego lematu otrzymujemy filtrację
+z relacją zwrotną i przechodnią.
+Ponieważ $R$ jest symetryczna, $S_{\min}$
+również jest symetryczna na mocy
+Stwierdzenia~\ref{prop:ncl-kripke-filtration-basic-properties}.
+Odwracając każdą drogę, otrzymujemy
+symetryczność $S_{\min}^{+}$.
+\end{proof}
+
+Powyższe konstrukcje będą wykorzystane
+do wykazania własności modelu skończonego
+dla logik K, KD, T, KB, K4, B, S4 i S5.
+Dla K5 potrzeba osobnego argumentu:
+euklidesowość nie jest tym samym co
+przechodniość ani symetryczność.
+Nie przypisujemy więc tej logice własności
+zachowania ram bez dodatkowego dowodu.
