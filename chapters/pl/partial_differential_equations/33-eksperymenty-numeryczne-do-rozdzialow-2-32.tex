@@ -749,6 +749,22 @@ print("Wygenerowano: pde10_koncentracja.html, pde10_skalowanie_norm.html, pde10_
 Poniższy program tworzy macierz sztywności metody elementów liniowych,
 porównuje aproksymację z rozwiązaniem dokładnym, weryfikuje wzory
 na błędy w $L^2$ i seminormie $H^1$ oraz wizualizuje funkcjonał energii.
+W tym zadaniu $u(x)=x(1-x)/2$, a aproksymacja Galerkina
+jest interpolantem węzłowym $I_hu$, zgodnie ze
+stwierdzeniem~\ref{prop:pde11-fem-errors}.
+Na elemencie $[x_j,x_j+h]$, pisząc $r=x-x_j$,
+mamy $u-I_hu=r(h-r)/2$, a pochodna tej różnicy
+wynosi $h/2-r$. Całkowanie kwadratów na elemencie
+daje odpowiednio $h^5/120$ oraz $h^3/12$; sumowanie
+po $1/h$ elementach daje kwadraty błędów
+$h^4/120$ i $h^2/12$.
+Dla $J(v)=\frac12\int_0^1|v'|^2\,\mathrm d\lambda_1(x)
+-\int_0^1v\,\mathrm d\lambda_1(x)$ równanie słabe daje
+$\int_0^1|u'|^2\,\mathrm d\lambda_1(x)
+=\int_0^1u\,\mathrm d\lambda_1(x)=1/12$,
+stąd $J(tu)=(t^2/2-t)/12$.
+Wykres przedstawia ograniczenie funkcjonału do jednej
+prostej, nie całą przestrzeń dopuszczalną.
 Wynikami są trzy interaktywne pliki HTML, otwierane bez połączenia
 z Internetem.
 \begin{lstlisting}[style=pythonpde,caption={Galerkin, błędy i funkcjonał energii (Plotly)},label={code:pde11-galerkin}]
@@ -772,6 +788,8 @@ def exact(x):
 
 def fem_solution(N):
     """Zwraca wezly i wartosci liniowych elementow skonczonych."""
+    if N < 2:
+        raise ValueError("Wymagane co najmniej dwa elementy")
     h = 1.0 / N
     diagonal = np.full(N - 1, 2.0 / h)
     K = np.diag(diagonal)
@@ -782,8 +800,9 @@ def fem_solution(N):
     U = np.linalg.solve(K, b)
     nodes = np.linspace(0.0, 1.0, N + 1)
     values = np.r_[0.0, U, 0.0]
-    assert np.allclose(values, exact(nodes), atol=1e-12)
+    assert np.allclose(values, exact(nodes), atol=1e-12, rtol=0)
     assert np.linalg.eigvalsh(K)[0] > 0
+    np.testing.assert_allclose(K @ U, b, atol=1e-11, rtol=0)
     return nodes, values
 
 
@@ -874,6 +893,25 @@ różnicowej, wizualizuje ewolucję cieplną i falową tych samych
 danych początkowych oraz wzrost normy rezolwenty w pobliżu
 pierwszej wartości własnej. Sprawdza również rząd zbieżności
 wartości własnych, równy $2$ dla zastosowanego schematu.
+Dla $h=1/N$ wektory o współrzędnych
+$v_i^{(j)}=\sin(\pi ji/N)$, $1\le i,j<N$,
+są wektorami własnymi macierzy różnicowej.
+Tożsamość
+$\sin(\theta+\eta)+\sin(\theta-\eta)=2\sin\theta\cos\eta$
+daje wartości własne
+$\lambda_{j,h}=4h^{-2}\sin^2(\pi jh/2)$.
+Są one różne, więc układ wektorów jest bazą.
+Dla ustalonego $j$ rozwinięcie sinusa w zerze daje
+$\lambda_{j,h}=(\pi j)^2-(\pi j)^4h^2/12+O(h^4)$.
+Nie jest to oszacowanie jednostajne względem wszystkich
+indeksów $j<N$.
+Z twierdzenia~\ref{thm:pde12-resolvent} wynika także
+$\|(A-\zeta I)^{-1}\|=1/\operatorname{dist}(\zeta,\sigma(A))$
+dla samosprzężonego $A$ i $\zeta$ poza widmem.
+Dla $\zeta=\lambda_1+\delta$, $0<\delta<(\lambda_2-\lambda_1)/2$,
+najbliższą wartością własną jest $\lambda_1$.
+Znormalizowana funkcja własna $\phi_1=\sqrt{2}\sin(\pi x)$
+osiąga tę normę: $(A-\zeta I)^{-1}\phi_1=-\phi_1/\delta$.
 \begin{lstlisting}[style=pythonpde,caption={Widmo operatora Dirichleta, ewolucje i rezonans (Plotly)},label={code:pde12-operators}]
 """PDE, rozdzial 12: widmo laplasjanu Dirichleta i ewolucje.
 
@@ -947,6 +985,11 @@ def main():
 
     lambda1 = PI**2
     delta = np.geomspace(0.001, 4.0, 160)
+    assert delta[-1] < (4*PI**2-lambda1)/2
+    zeta = lambda1 + delta
+    spectrum = (PI*np.arange(1, 21))**2
+    dist = np.min(abs(spectrum[:, None]-zeta[None, :]), axis=0)
+    np.testing.assert_allclose(dist, delta, rtol=1e-11)
     fig3 = go.Figure()
     fig3.add_trace(go.Scatter(x=delta, y=1.0 / delta,
                               name="|| (A-(lambda_1+delta)I)^-1 phi_1 ||"))
@@ -973,6 +1016,22 @@ $q=-a u'$ oraz bada błędy w normie $L^2$ i seminormie $H^1$.
 Sprawdza także dokładne wzory na błędy interpolacji:
 $\|u-u_h\|_{L^2}=h^2\sqrt{17/1920}$ i
 $\|(u-u_h)'\|_{L^2}=h\sqrt{17/192}$.
+Węzeł w zerze jest niezbędny w tym eksperymencie,
+aby współczynnik był stały na każdym elemencie.
+Na każdym elemencie $\int a(u-I_hu)'\,\mathrm d\lambda_1(x)=0$,
+ponieważ $a$ jest stałe, a błąd znika na obu końcach.
+Pochodna każdej funkcji testowej z przestrzeni elementów
+liniowych jest tam stała. Wynika stąd ortogonalność
+Galerkina i $u_h=I_hu$.
+Ponieważ $u''=-1/a$, lokalne kwadraty błędów
+wynoszą $h^5/(120a^2)$ i $h^3/(12a^2)$,
+tak jak w poprzednim przykładzie. Każda połowa ma
+$1/h$ elementów; czynnik $1+1/16=17/16$
+daje wskazane normy.
+Strumień dokładny $q(x)=x+0.3$ jest ciągły,
+natomiast $q_h$ jest stały na poszczególnych
+elementach i odpowiada średniej $q$ na elemencie,
+czyli jego wartości w środku.
 \begin{lstlisting}[style=pythonpde,caption={Transmisja i zbieżność metody Galerkina (Plotly)},label={code:pde13-transmission}]
 """PDE, rozdzial 13: dywergencyjne zagadnienie transmisyjne.
 
@@ -1017,8 +1076,11 @@ def fem_solution(n_per_half):
 
     Punkt 0 jest wezelm siatki. a=1 po lewej i a=4 po prawej.
     """
+    if n_per_half < 1:
+        raise ValueError("Wymagany co najmniej jeden element na polowe")
     nodes = np.linspace(-1., 1., 2 * n_per_half + 1)
-    h = nodes[1] - nodes[0]
+    nodes[n_per_half] = 0.0
+    h = 1.0/n_per_half
     a_elem = np.where((nodes[:-1] + nodes[1:]) / 2 < 0, 1., 4.)
     diag = (a_elem[:-1] + a_elem[1:]) / h
     subdiag = -a_elem[1:-1] / h
@@ -1072,6 +1134,7 @@ def main():
         if N in (4, 16):
             mid = (nodes[:-1]+nodes[1:])/2
             qfem = -a_elem*np.diff(vals)/h
+            np.testing.assert_allclose(qfem, mid+0.3, atol=1e-9, rtol=0)
             fig_flux.add_trace(go.Scatter(x=mid, y=qfem, mode="markers",
                                           name=f"q_h w srodkach, N={N}"))
         print(f"N={N:3d} h={h:.5f} L2={l2:.9e} H1-semi={h1:.9e}")
@@ -1107,6 +1170,24 @@ Kod oblicza harmoniczne przedłużenie danych brzegowych w dysku,
 weryfikuje nierówność Harnacka oraz pochodną normalną w przykładzie
 ilustrującym lemat Hopfa. Porównanie jądra Poissona z rozwiązaniem
 analitycznym jest jednocześnie testem poprawności normalizacji jądra.
+Dla $r<1$ gęstość jądra Poissona na okręgu jednostkowym
+wynosi $(1-r^2)/(2\pi(1+r^2-2r\cos(\theta-\varphi)))$.
+Jej całka wynosi jeden. Z oszacowania mianownika
+między $(1-r)^2$ i $(1+r)^2$ wynika dla dodatniej
+funkcji harmonicznej w dysku, ciągłej na jego domknięciu,
+\[
+ \frac{1-r}{1+r}u(0)
+ \le u(r,\theta)\le\frac{1+r}{1-r}u(0).
+\]
+Jest to wersja oszacowania Harnacka dla dysku,
+zgodna z metodą dowodu twierdzenia~\ref{thm:pde14-harnack}.
+W przykładzie $u(0)=1$, zatem dla $r=1/2$
+granice wynoszą $1/3$ i $3$, a iloraz maksimum
+i minimum nie przekracza $9$.
+Dla funkcji $u(x,y)=1-x$ pochodna w kierunku
+zewnętrznej normalnej $(1,0)$ w punkcie $(1,0)$
+wynosi $-1$, zgodnie z lematem Hopfa dla minimum
+(twierdzenie~\ref{thm:pde14-hopf}).
 \begin{lstlisting}[style=pythonpde,caption={Jądro Poissona, nierówność Harnacka i lemat Hopfa (Plotly)},label={code:pde14-plotly}]
 """PDE, rozdzial 14: jadro Poissona, Harnack i Hopf.
 
@@ -1133,7 +1214,10 @@ def boundary(phi):
 
 def poisson_disk(r, theta, phi):
     # Jadrowa gestosc wzgledem miary dlugosci na okregu jednostkowym.
-    return (1.0 - r * r) / (TWO_PI * (1.0 + r * r - 2.0 * r * np.cos(theta - phi)))
+    if not 0 <= r < 1:
+        raise ValueError("Wymagane 0 <= r < 1")
+    den = (1-r)**2 + 4*r*np.sin((theta-phi)/2)**2
+    return (1.0-r*r)/(TWO_PI*den)
 
 
 def harmonic_exact(r, theta):
@@ -1148,8 +1232,12 @@ def main():
     max_error = 0.0
     for r in [0.0, 0.3, 0.6, 0.85]:
         p = poisson_disk(r, theta[:, None], phi[None, :])
+        np.testing.assert_allclose(TWO_PI*np.mean(p, axis=1), 1.0,
+                                   atol=1e-10, rtol=0)
         vals = TWO_PI * np.mean(p * g[None, :], axis=1)
         exact = harmonic_exact(r, theta)
+        assert np.min(vals) >= np.min(g)-1e-10
+        assert np.max(vals) <= np.max(g)+1e-10
         error = np.max(np.abs(vals - exact))
         max_error = max(max_error, error)
         fig.add_trace(go.Scatter(x=theta, y=vals, mode="lines", name=f"r={r:g}"))
@@ -1164,9 +1252,10 @@ def main():
     t = np.linspace(0.0, TWO_PI, 500)
     vals = 1.0 + 0.6 * r * np.cos(t)
     ratio = np.max(vals) / np.min(vals)
-    lower = (1.0 - r**2) / (1.0 + r)**2
-    upper = 1.0 / (1.0 - r)**2
+    lower = (1-r)/(1+r)
+    upper = (1+r)/(1-r)
     assert np.min(vals) >= lower and np.max(vals) <= upper
+    assert ratio <= upper/lower
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=t, y=vals, name="u(0.5 cos(theta), 0.5 sin(theta))"))
     fig.add_hline(y=lower, line_dash="dash", annotation_text="dolne Harnack")
