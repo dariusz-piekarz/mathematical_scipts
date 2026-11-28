@@ -25,7 +25,7 @@ PROJECT_TEMPLATE_KEYS = {
     'AM1': 'AM1',
     'AM2': 'AM2',
     'ALG': 'ALG', 'AT': 'ALG', 'TOP': 'TOP', 'GW': 'GW',
-    'KAT': 'KAT', 'MOD': 'MOD', 'CAL': 'CAL',
+    'KAT': 'KAT', 'MOD': 'MOD', 'CAL': 'CAL', 'NCL': 'NCL', 'MMT': 'MMT',
     'P1': 'P1', 'P2': 'P2', 'P3': 'P3', 'P4': 'P4',
     'AA': 'AA', 'DG': 'DG', 'FA': 'FA', 'DT': 'DT', 'ME': 'ME',
     'PDE': 'PDE', 'LA': 'LA', 'LST': 'LST', 'GT': 'GT',

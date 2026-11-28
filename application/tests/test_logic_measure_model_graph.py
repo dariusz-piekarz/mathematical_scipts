@@ -34,7 +34,15 @@ class LogicMeasureModelGraphTest(unittest.TestCase):
                  if book["id"] == "logic_and_set_theory" for p in book["chapters"]}
         models = {module_id(Path(p)) for book in catalog["books"]
                   if book["id"] == "model_theory" for p in book["chapters"]}
-        self.assertIn("LST-40", logic)
+        nonclassical = {module_id(Path(p)) for book in catalog["books"]
+                        if book["id"] == "nonclassical_logic" for p in book["chapters"]}
+        meta = {module_id(Path(p)) for book in catalog["books"]
+                if book["id"] == "metamathematics" for p in book["chapters"]}
+        self.assertNotIn("LST-40", logic)
+        self.assertIn("NCL-01", nonclassical)
+        for moved in migration["metamathematics_moves"]:
+            self.assertIn(moved["new_id"], meta)
+            self.assertNotIn(moved["old_id"], logic)
         for moved in migration["moved_chapters"]:
             self.assertIn(moved["new_id"], models)
             self.assertNotIn(moved["old_id"], logic)
@@ -48,7 +56,12 @@ class LogicMeasureModelGraphTest(unittest.TestCase):
             ("LST-23", "thm:downward-ls", "MOD-22", "thm:downward-ls"),
             ("LST-24", "thm:upward-ls", "MOD-23", "thm:upward-ls"),
         }.issubset(mappings))
-        needed.update(logic | models)
+        for moved in [migration["nonclassical_logic_move"],
+                      *migration["metamathematics_moves"]]:
+            old, new = moved["old_id"], moved["new_id"]
+            self.assertTrue(any(a == old and c == new and b == d
+                                for a, b, c, d in mappings), (old, new))
+        needed.update(logic | models | nonclassical | meta)
         sources = {}
         for book in catalog["books"]:
             for relative in book["chapters"]:
