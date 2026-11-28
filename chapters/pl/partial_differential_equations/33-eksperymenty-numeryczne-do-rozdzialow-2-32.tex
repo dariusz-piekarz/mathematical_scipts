@@ -273,6 +273,26 @@ if __name__ == "__main__":
 \end{lstlisting}
 
 \section{Przybliżone jedynki, skok i jądro cieplne}
+Dla nieujemnej funkcji $b\in C_c^\infty(\R)$ o nośniku
+$[-1,1]$ i $M=\int_\R b(x)\,\mathrm d\lambda_1(x)>0$
+funkcje $\rho_\varepsilon(x)=b(x/\varepsilon)/(\varepsilon M)$
+mają całkę równą jeden przez podstawienie $x=\varepsilon z$.
+Dla ciągłej funkcji testowej $\varphi$ zachodzi
+\[
+ \left|\int_\R\rho_\varepsilon\varphi\,\mathrm d\lambda_1
+ -\varphi(0)\right|
+ \le\sup_{|x|\le\varepsilon}|\varphi(x)-\varphi(0)|
+ \longrightarrow0.
+\]
+Kod przybliża $M$ kwadraturą i kontroluje masę na
+siatce przestrzennej. Funkcja Gaussa użyta jako test
+należy do przestrzeni Schwartza; nie jest funkcją
+o zwartym nośniku. Dla jądra cieplnego
+$\Gamma_\kappa(t,x)=(4\pi\kappa t)^{-1/2}
+e^{-x^2/(4\kappa t)}$ całka na całej prostej wynosi
+jeden, natomiast masa na $[-2,2]$ wynosi
+$\operatorname{erf}(2/\sqrt{4\kappa t})$ z podstawienia
+w całce Gaussa. Te dwie wielkości należy odróżniać.
 \begin{lstlisting}[style=pythonpde,caption={Dystrybucje: przybliżone jedynki, funkcja Heaviside'a i jądro cieplne (Plotly)},label={code:pde-distributions}]
 """Przyblizone jedynki, pochodne slabego skoku i jadro ciepla.
 Wymagania: numpy, plotly. Eksportuje interaktywne HTML.
@@ -300,6 +320,10 @@ MASS = np.trapezoid(bump(zq), zq)
 
 
 def mollifier(epsilon):
+    if not np.isfinite(epsilon) or not 0 < epsilon <= 2:
+        raise ValueError("Nosnik musi miescic sie w [-2,2]")
+    if epsilon < 20*dx:
+        raise ValueError("Zbyt mala szerokosc wzgledem siatki")
     return bump(x / epsilon) / (epsilon * MASS)
 
 
@@ -322,7 +346,11 @@ def delta_and_heaviside():
         # Test dystrybucyjny: int rho_epsilon(x) * phi(x) dx -> phi(0)=1
         phi = np.exp(-x*x)
         pairing = np.trapezoid(rho * phi, x)
-        print(f"epsilon={eps:5.2f}, masa={np.trapezoid(rho,x):.7f}, "
+        mass = np.trapezoid(rho, x)
+        assert np.isclose(mass, 1.0, atol=1e-6, rtol=0)
+        assert np.isclose(h[-1], mass, atol=1e-10, rtol=0)
+        assert np.exp(-eps**2)-1e-6 <= pairing <= 1+1e-6
+        print(f"epsilon={eps:5.2f}, masa={mass:.7f}, "
               f"<rho_epsilon,phi>={pairing:.7f}, phi(0)=1")
     fig_h.add_trace(go.Scatter(x=x, y=(x > 0).astype(float),
                                mode="lines", name="H (skok)",
@@ -341,7 +369,12 @@ def heat_kernel():
     for t in (0.01, 0.04, 0.2):
         gamma = np.exp(-x*x/(4*kappa*t)) / np.sqrt(4*np.pi*kappa*t)
         fig.add_trace(go.Scatter(x=x, y=gamma, name=f"t={t}"))
-        print(f"t={t:0.3f}, masa na [-2,2]={np.trapezoid(gamma,x):.7f}")
+        from math import erf
+        mass = np.trapezoid(gamma, x)
+        exact_mass = erf(2/np.sqrt(4*kappa*t))
+        assert np.isclose(mass, exact_mass, atol=1e-7, rtol=0)
+        print(f"t={t:0.3f}, masa na [-2,2]={mass:.7f}, "
+              f"dokladna={exact_mass:.7f}")
     fig.update_layout(title="Jadro cieplne w 1D jako aproksymacja delty",
                       xaxis_title="x", yaxis_title="Gamma(t,x)")
     save(fig, "pde7_heat_kernel_plotly.html")
@@ -354,6 +387,25 @@ if __name__ == "__main__":
 
 
 \section[Transformata, Parseval i mnożniki]{Transformata na $\R^d$, tożsamość Parsevala i mnożniki}
+Eksperyment jednowymiarowy stosuje konwencję
+~\eqref{eq:pde8-convention}. Dla $N$ próbek z krokiem
+$\Delta x$ i długością $L=N\Delta x$ mamy
+$\Delta\xi=2\pi/L$. Jeśli $F_k$ oznacza nieznormalizowaną
+dyskretną transformatę próbek $f_j$, to
+$\sum_k|F_k|^2=N\sum_j|f_j|^2$ z dyskretnej
+tożsamości Parsevala. W konsekwencji
+\[
+ \frac{\Delta\xi}{2\pi}\sum_k|\Delta x F_k|^2
+ =\Delta x\sum_j|f_j|^2.
+\]
+Równość ta jest dokładna dla dyskretnych danych
+(z dokładnością do błędów zaokrągleń); osobnym
+zagadnieniem jest przybliżenie transformaty całkowej
+na $\R$. W przypadku delty Diraca kod całkuje
+$(1+\xi^2)^s$ tylko na $[-R,R]$. Porównanie z
+$\xi^{2s}$ dla $\xi\ge1$ daje skończoną granicę
+dla $s<-1/2$, wzrost logarytmiczny dla $s=-1/2$
+i wzrost rzędu $R^{2s+1}$ dla $s>-1/2$.
 \begin{lstlisting}[style=pythonpde,
 caption={Transformata Gaussa, dyskretna tożsamość Parsevala, ewolucje spektralne oraz normy $H^s$ (Plotly)},
 label={code:pde8-plotly}]
@@ -386,6 +438,8 @@ def gauss_fft():
     parseval_x = dx * np.sum(np.abs(f)**2)
     dxi = 2*np.pi/length
     parseval_k = (dxi/(2*np.pi))*np.sum(np.abs(fhat)**2)
+    assert np.isclose(parseval_x, parseval_k, rtol=1e-12, atol=1e-12)
+    assert err < 1e-9, "FFT nie zgadza sie z transformata Gaussa"
     print("FFT vs Gauss: blad max na |xi|<=8:", f"{err:.3e}")
     print("Parseval: przestrzen", f"{parseval_x:.10f}",
           "czestotliwosc", f"{parseval_k:.10f}")
@@ -449,6 +503,32 @@ if __name__ == "__main__":
 \section{Wygładzanie Sobolewa i warunki brzegowe}
 Poniższy eksperyment porównuje zbieżność splotu w normie $H^1$
 ze zbieżnością obcięć brzegowych jedynie w $L^2$.
+Dla $u(x)=|\sin x|$ na torusie mnożnik
+$e^{-\varepsilon^2 k^2/2}$ daje wygładzanie gaussowskie.
+Z tożsamości Parsevala w $H^1$ i zbieżności
+zmajoryzowanej szeregu wynika zbieżność w $H^1$.
+Błędy w programie są przybliżane na skończonej
+siatce; punkty siatki przesunięto o pół kroku,
+aby nie próbkować pochodnej w punktach załamania.
+Dla obcięcia na $(0,1)$ stosujemy funkcję
+$s(r)=3r^2-2r^3$ na $[0,1]$, przedłużoną przez
+$0$ i $1$ poza tym przedziałem.
+Funkcja $\chi_n(x)=s(nx)s(n(1-x))$ należy do
+$H_0^1(0,1)$, nie musi jednak należeć do
+$C_c^\infty(0,1)$.
+Dla $n\ge2$ warstwy brzegowe są rozłączne,
+więc przez podstawienie $r=nx$ i symetrię mamy
+\[
+ \begin{aligned}
+ \|\chi_n-1\|_2^2
+ &=\frac2n\int_0^1(1-s(r))^2\,\mathrm d\lambda_1(r)
+ =\frac{26}{35n},\\
+ \|\chi_n'\|_2^2
+ &=2n\int_0^1|s'(r)|^2\,\mathrm d\lambda_1(r)
+ =\frac{12n}{5}.
+ \end{aligned}
+\]
+Obie wartości są sprawdzane numerycznie.
 \begin{lstlisting}[style=pythonpde,caption={Wygładzanie w $H^1$, pochodna słaba i obcięcia brzegowe -- Plotly},label={code:pde-sobolev9}]
 """Iteracja 9: Sobolev W^{1,2}, periodyczny splot i warunki brzegowe.
 
@@ -469,8 +549,8 @@ def save(fig, filename):
 
 def periodic_mollification():
     n = 4096
-    x = -np.pi + 2 * np.pi * np.arange(n) / n
     h = 2 * np.pi / n
+    x = -np.pi + h * (np.arange(n) + 0.5)
     u = np.abs(np.sin(x))
     du = np.sign(np.sin(x)) * np.cos(x)  # pochodna slaba a.e.
     k = np.fft.fftfreq(n, d=h) * (2 * np.pi)
@@ -526,6 +606,8 @@ def boundary_cutoffs():
         d_chi = d_a*b + a*d_b
         err = np.sqrt(np.mean((chi-1)**2))
         grad = np.sqrt(np.mean(d_chi**2))
+        assert np.isclose(err**2, 26/(35*n), rtol=1e-3)
+        assert np.isclose(grad**2, 12*n/5, rtol=1e-3)
         vals.append((n, err, grad))
         fig.add_trace(go.Scatter(x=x, y=chi, name=f"n={n}"))
     fig.update_layout(title="Obciecia daza do 1 w L^2, ale nie w H^1",
@@ -543,7 +625,38 @@ if __name__ == "__main__":
 
 
 \section{Koncentracja krytyczna i ciąg Mosera — Plotly}
-Poniższy program wizualizuje koncentrację przy wykładniku $p^*=6$ dla $d=3$, $p=2$, porównuje skalowanie norm oraz ciąg Mosera w wymiarze $2$. Wyniki są zapisywane w trzech interaktywnych plikach HTML.
+Poniższy program wizualizuje koncentrację przy wykładniku
+$p^*=6$ dla $d=3$, $p=2$, porównuje skalowanie norm
+oraz ciąg Mosera w wymiarze $2$.
+Dla radialnego profilu $b$ i
+$u_\varepsilon(x)=\varepsilon^{-1/2}b(|x|/\varepsilon)$
+podstawienie $x=\varepsilon z$ daje
+$\|u_\varepsilon\|_q=\varepsilon^{3/q-1/2}\|u_1\|_q$
+oraz $\|\nabla u_\varepsilon\|_2=\|\nabla u_1\|_2$.
+Norma $L^6$ jest niezmiennicza względem tego skalowania,
+a norma $L^8$ rośnie przy $\varepsilon\downarrow0$.
+Kod porównuje wzory ze sferyczną kwadraturą
+na przeskalowanym nośniku.
+Dla ciągu Mosera na dysku jednostkowym
+przyjmujemy $L_\varepsilon=\log(1/\varepsilon)$ oraz
+\[
+ m_\varepsilon(r)=
+ \frac{\min\{\log(1/r),L_\varepsilon\}}
+ {\sqrt{2\pi L_\varepsilon}},\qquad 0<r\le1 .
+\]
+Przedłużamy funkcję stałą wartością w zerze
+i zerem poza dyskiem. Wówczas
+$\|m_\varepsilon\|_\infty=\sqrt{L_\varepsilon/(2\pi)}$
+oraz, ponieważ pochodna radialna znika dla
+$r<\varepsilon$ i ma moduł
+$1/(r\sqrt{2\pi L_\varepsilon})$ dla
+$\varepsilon<r<1$, mamy
+\[
+ \|\nabla m_\varepsilon\|_2^2
+ =\frac1{L_\varepsilon}
+ \int_\varepsilon^1\frac1r\,\mathrm d\lambda_1(r)=1.
+\]
+Wyniki są zapisywane w trzech interaktywnych plikach HTML.
 \begin{lstlisting}[style=pythonpde,caption={Koncentracja i ostrosc zanurzen Sobolewa - Plotly},label={code:pde-embed10}]
 """PDE, rozdzial 10. Interaktywne wizualizacje zanurzen Sobolewa.
 Uruchom: python demo_zanurzenia_plotly.py
@@ -593,6 +706,12 @@ grad = np.sqrt(4 * np.pi * np.trapezoid(bump_prime(r) ** 2 * r ** 2, r))
 fig = go.Figure()
 for q in q_values:
     vals = [e ** (-0.5 + 3 / q) * baseline[q] for e in EPS]
+    direct = []
+    for e in EPS:
+        rr = np.linspace(0, e, 10001)
+        u = e**(-0.5) * bump(rr/e)
+        direct.append((4*np.pi*np.trapezoid(abs(u)**q*rr**2, rr))**(1/q))
+    np.testing.assert_allclose(direct, vals, rtol=1e-6)
     fig.add_trace(go.Scatter(x=EPS, y=vals, mode="lines+markers", name=f"L^{q}"))
 fig.add_trace(go.Scatter(x=EPS, y=[grad] * len(EPS),
                          mode="lines+markers", name="norma gradientu L2"))
@@ -606,7 +725,10 @@ r = np.geomspace(1e-5, 1, 900)
 fig = go.Figure()
 for eps in [0.1, 0.01, 0.001, 0.0001]:
     L = np.log(1 / eps)
-    val = np.minimum(np.log(1 / r), L) / np.sqrt(L)
+    val = np.minimum(np.log(1 / r), L) / np.sqrt(2*np.pi*L)
+    rr = np.geomspace(eps, 1, 10001)
+    energy = np.trapezoid(1/(L*rr), rr)
+    assert np.isclose(energy, 1, rtol=1e-6)
     fig.add_trace(go.Scatter(x=r, y=val, mode="lines", name=f"eps={eps:g}"))
 fig.update_layout(title="Ciag Mosera: wzrost maksimum przy stalej normie gradu w L2",
                   xaxis_title="promien r", yaxis_title="u_eps(r)",
