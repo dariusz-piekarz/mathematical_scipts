@@ -24,7 +24,7 @@ class Chapter25(unittest.TestCase):
             self.assertIn(r"\label{" + (a or b) + "}", context)
 
     def test_FA25_embeddings_01(self):
-        s = split_source(25, 1, 2)
+        s = split_source(25, 1, 2, 8)
         for fragment in (
             r"K_j\subseteq\operatorname{int}K_{j+1}",
             (r"\bigcup_nK_n=\Omega" if using_dt() else r"\bigcup_jK_j=\Omega"),
