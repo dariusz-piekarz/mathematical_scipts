@@ -860,6 +860,89 @@ Wszystkie całki są skończone, gdyż nowa funkcja
 podcałkowa jest ograniczona na tym prostokącie.
 \end{przyklad}
 
+
+\paragraph{Wizualizacje interaktywne.}
+Pierwszy wykres przedstawia przekroje bryły
+z rysunku \ref{ma2:fig:multiple-section-volume}
+w obu kierunkach. Drugi pokazuje
+przekształcenie siatki przez $\Phi(u,v)=(u,uv)$
+z przykładu \ref{ma2:ex:multiple-nonlinear}.
+Dla komórki $Q=[u-h,u+h]\times[1/2-h,1/2+h]$
+zawartej w dziedzinie tego odwzorowania
+mamy dokładnie
+\[
+ \frac{\lambda_2(\Phi(Q))}{\lambda_2(Q)}
+ =\frac{2h\int_{u-h}^{u+h}s\,\mathrm d\lambda_1(s)}
+ {4h^2}=u.
+\]
+Równość wynika z wzoru na zamianę zmiennych
+\ref{ma2:thm:multiple-change} i Fubiniego.
+W tym przykładzie stosunek pól jest równy
+jakobianowi w środku komórki już dla
+skończonego $h$, ponieważ jakobian jest
+funkcją afiniczną. Nie jest to ogólna
+własność nieliniowych odwzorowań.
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+v=np.array([[0,0,0],[1,0,0],[1,1,0],[0,1,0],
+            [0,0,0],[1,0,1],[1,1,3],[0,1,2]])
+faces=np.array([[0,2,1],[0,3,2],[4,5,6],[4,6,7],
+ [0,1,5],[0,5,4],[1,2,6],[1,6,5],[2,3,7],
+ [2,7,6],[3,0,4],[3,4,7]])
+def mesh(v,f,color,opacity,visible=True):
+    return go.Mesh3d(x=v[:,0],y=v[:,1],z=v[:,2],
+        i=f[:,0],j=f[:,1],k=f[:,2],color=color,
+        opacity=opacity,visible=visible)
+fig=go.Figure(mesh(v,faces,"#397db5",.25))
+ts=np.linspace(0,1,21)
+opts=[(k,t) for k in range(2) for t in ts]
+for j,(k,t) in enumerate(opts):
+    v=np.array([[t,0,0],[t,1,0],[t,1,t+2],[t,0,t]]
+        if k==0 else
+        [[0,t,0],[1,t,0],[1,t,1+2*t],[0,t,2*t]])
+    fig.add_trace(mesh(v,np.array([[0,1,2],[0,2,3]]),
+        "#d97706" if k==0 else "#15988c",.9,j==10))
+steps=[dict(label=f"{'xy'[k]}={t:.2f}",method="update",
+    args=[dict(visible=[True]+[j==i for j in range(len(opts))]),
+          dict(title=f"A={1+t if k==0 else .5+2*t:.3f}")])
+    for i,(k,t) in enumerate(opts)]
+fig.update_layout(sliders=[dict(active=10,steps=steps)],
+    title="A=1.500",scene_aspectmode="data")
+fig.write_html("am2_30_sections.html", include_plotlyjs=True)
+
+fig=make_subplots(rows=1,cols=2)
+def cell(u,v,k,visible=True,fill="toself"):
+    return go.Scatter(x=u,y=np.array(u)*v if k else v,
+        mode="lines",fill=fill,visible=visible,
+        showlegend=False)
+for k in range(2):
+    fig.add_trace(cell([1,2,2,1,1],[0,0,1,1,0],k),1,k+1)
+    for s in np.linspace(.1,.9,9):
+        fig.add_trace(cell([1+s,1+s],[0,1],k,
+            fill="none"),1,k+1)
+        fig.add_trace(cell([1,2],[s,s],k,fill="none"),1,k+1)
+fixed=len(fig.data)
+opts=[(u,.1) for u in np.linspace(1.25,1.75,11)]
+opts += [(1.5,h) for h in np.linspace(.025,.25,10)]
+for i,(u,h) in enumerate(opts):
+    for k in range(2):
+        fig.add_trace(cell([u-h,u+h,u+h,u-h,u-h],
+            [.5-h,.5-h,.5+h,.5+h,.5-h],k,i==5),1,k+1)
+steps=[dict(label=f"u={u:.2f}, h={h:.3f}",
+    method="update",args=[dict(visible=[True]*fixed+
+        [j==i for j in range(len(opts)) for _ in range(2)]),
+        dict(title=f"Ratio={u:.2f}")])
+    for i,(u,h) in enumerate(opts)]
+fig.update_layout(sliders=[dict(active=5,steps=steps)],
+    title="Ratio=1.50",yaxis_scaleanchor="x",
+    yaxis2_scaleanchor="x2")
+fig.write_html("am2_30_jacobian.html", include_plotlyjs=True)
+\end{lstlisting}
+
 \section{Współrzędne biegunowe, walcowe i sferyczne}
 
 \subsection{Współrzędne biegunowe}
