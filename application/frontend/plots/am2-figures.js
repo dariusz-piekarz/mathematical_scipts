@@ -249,6 +249,32 @@
       const sc=k=>({...scene(),domain:{x:[k/2,(k+1)/2],y:[0,1]},aspectmode:"cube",xaxis:{...axis("x"),range:[-1.1,1.1]},yaxis:{...axis("y"),range:[-1.1,1.1]},zaxis:{...axis("z"),range:[0,2.1]}});
       return base(data,title(.5),{scene:sc(0),scene2:sc(1),margin:{l:0,r:0,b:70,t:80},annotations:[{xref:"paper",yref:"paper",x:.25,y:1.04,text:"γ₁(t) = H(t)",showarrow:false},{xref:"paper",yref:"paper",x:.75,y:1.04,text:"γ₂(t) = H(t²)",showarrow:false}],sliders:[{active:10,currentvalue:{prefix:"t = "},steps}]});
     },
+    "am2_29_oscillations.html":()=>{
+      const alphas=Array.from({length:12},(_,i)=>(i+1)/4),data=[];
+      const t=lin(1,200,2401).map(u=>1/u).reverse();
+      for(const [i,a] of alphas.entries()){
+        const visible=i===3;
+        data.push({type:"scatter",mode:"lines",x:t,y:t.map(x=>x**a*Math.sin(1/x)),name:"Wykres",line:{color:"#397db5",width:2},visible},
+          ...[-1,1].map(s=>({type:"scatter",mode:"lines",x:[0,...t],y:[0,...t.map(x=>s*x**a)],name:"Obwiednia",line:{color:"#8c98a4",dash:"dash"},visible,showlegend:false})));
+      }
+      const title=a=>"α = "+a.toFixed(2)+" — "+(a>1?"krzywa prostowalna":"krzywa nieprostowalna");
+      const steps=alphas.map((a,i)=>({label:a.toFixed(2),method:"update",args:[{visible:alphas.flatMap((_,j)=>Array(3).fill(i===j))},{"title.text":title(a)}]}));
+      return {data,layout:{title:{text:title(1)},xaxis:{title:"t",range:[0,1]},yaxis:{title:"gα(t)",range:[-1.05,1.05]},margin:{l:65,r:15,t:60,b:85},showlegend:false,sliders:[{active:3,currentvalue:{prefix:"α = "},steps}]}};
+    },
+    "am2_29_cantor.html":()=>{
+      const data=[],levels=Array.from({length:9},(_,i)=>i);
+      let p=[[0,0],[1,1]];
+      for(const n of levels){
+        const x=p.map(v=>v[0]),y=p.map(v=>v[1]),dx=[],dy=[];
+        for(let i=0;i<p.length-1;i++){dx.push(x[i],x[i+1],null);const slope=(y[i+1]-y[i])/(x[i+1]-x[i]);dy.push(slope,slope,null);}
+        data.push({type:"scatter",mode:"lines",x,y,name:"Cⱼ",line:{color:"#397db5",width:2},visible:n===3},
+          {type:"scatter",mode:"lines",x:dx,y:dy,xaxis:"x2",yaxis:"y2",name:"Cⱼ′",line:{color:"#d97706",width:2},visible:n===3});
+        p=[...p.map(([x,y])=>[x/3,y/2]),...p.map(([x,y])=>[(2+x)/3,(1+y)/2])];
+      }
+      const heading=n=>"j = "+n+" | miara = "+((2/3)**n).toFixed(5)+" | całka pochodnej = 1";
+      const steps=levels.map(n=>({label:String(n),method:"update",args:[{visible:levels.flatMap(j=>[j===n,j===n])},{"title.text":heading(n),"yaxis2.range":[0,1.1*(1.5**n)]}]}));
+      return {data,layout:{title:{text:heading(3)},xaxis:{domain:[0,1],anchor:"y",range:[0,1]},yaxis:{title:"Cⱼ(t)",domain:[.58,1],range:[0,1.05]},xaxis2:{domain:[0,1],anchor:"y2",title:"t",range:[0,1]},yaxis2:{title:"Cⱼ′(t)",domain:[0,.43],range:[0,1.1*1.5**3]},margin:{l:65,r:15,t:60,b:85},showlegend:false,sliders:[{active:3,currentvalue:{prefix:"j = "},steps}]}};
+    },
     "am2_36_geometric.html":()=>{
       const r=lin(0,.97,61),t=lin(0,2*Math.PI,121),X=t.map(a=>r.map(v=>v*Math.cos(a))),Y=t.map(a=>r.map(v=>v*Math.sin(a)));
       const norm=(a,v,n)=>n===null?1/Math.hypot(1-v*Math.cos(a),v*Math.sin(a)):Math.hypot(1-v**(n+1)*Math.cos((n+1)*a),v**(n+1)*Math.sin((n+1)*a))/Math.hypot(1-v*Math.cos(a),v*Math.sin(a));
