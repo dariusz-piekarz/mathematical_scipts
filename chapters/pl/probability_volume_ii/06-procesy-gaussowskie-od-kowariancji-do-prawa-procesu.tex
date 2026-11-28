@@ -53,7 +53,12 @@ zmiennych normalnych, a zatem jest normalna o wariancji
 $u^\top AD A^\top u=u^\top\Sigma u$. Jego funkcję charakterystyczną
 otrzymujemy, mnożąc funkcje charakterystyczne składników.
 Z jednoznaczności funkcji charakterystycznej wynika jednoznaczność
-rozkładu wektora $Z$.
+rozkładu wektora $Z$. Istotnie, dla dowolnego wektora
+gaussowskiego o średniej $m$ i kowariancji $\Sigma$ zmienna
+$\langle u,Z\rangle$ ma z definicji rozkład normalny,
+o średniej $\langle u,m\rangle$ i wariancji $u^\top\Sigma u$.
+Jej jednowymiarowa funkcja charakterystyczna w punkcie $1$
+daje ten sam wzór, także gdy wariancja jest zerowa.
 \end{proof}
 
 \begin{definicja}[Proces gaussowski]
@@ -71,7 +76,8 @@ Niech $X=(X_t)_{t\in T}$ i $Y=(Y_t)_{t\in T}$ będą rzeczywistymi
 procesami gaussowskimi (niekoniecznie na tej samej przestrzeni).
 Jeżeli dla wszystkich $s,t\in T$ zachodzą równości
 $\E X_t=\E Y_t$ i $\Cov(X_s,X_t)=\Cov(Y_s,Y_t)$, to $X$ i $Y$
-mają te same rozkłady skończeniewymiarowe.
+mają te same rozkłady skończeniewymiarowe, a więc to samo
+prawo na $\R^T$ z $\sigma$-ciałem cylindrycznym.
 \end{twierdzenie}
 \begin{proof}
 Ustalmy $t_1,\ldots,t_n$. Oba odpowiadające im wektory są
@@ -80,7 +86,10 @@ $(m(t_1),\ldots,m(t_n))$ i tę samą macierz kowariancji
 $(K(t_i,t_j))_{i,j}$. Z poprzedniego stwierdzenia ich funkcje
 charakterystyczne są identyczne. Jednoznaczność funkcji
 charakterystycznej daje równość rozkładów. Ponieważ wybór chwil był
-dowolny, otrzymujemy tezę.
+dowolny, otrzymujemy równość rozkładów skończeniewymiarowych.
+Zdarzenia cylindryczne tworzą $\pi$-układ generujący
+$\sigma$-ciało cylindryczne, więc jednoznaczność miar
+na tym układzie daje równość praw procesów.
 \end{proof}
 
 \begin{uwaga}[Dlaczego warunek wspólnej normalności jest istotny?]
@@ -88,7 +97,9 @@ Niech $U\sim\Normal(0,1)$, a $\varepsilon$ będzie od niego
 niezależnym symetrycznym znakiem o wartościach $\pm1$.
 Wtedy $X=U$, $Y=\varepsilon U$ mają standardowe rozkłady normalne,
 a $\Cov(X,Y)=0$, ponieważ $\E\varepsilon=0$.
-Jednak $|X|=|Y|$ prawie na pewno, zatem zmienne są zależne,
+Jednak $|X|=|Y|$ prawie na pewno. Dla $p=\Prob(|U|\le1)\in(0,1)$
+mamy $\Prob(|X|\le1,|Y|\le1)=p\ne p^2$,
+zatem zmienne są zależne,
 a para $(X,Y)$ nie jest wektorem gaussowskim.
 Wektor gaussowski o takiej macierzy kowariancji miałby niezależne
 współrzędne, co jest sprzeczne z $|X|=|Y|$.
@@ -146,8 +157,11 @@ jest liniowym obrazem wektora $(A,B)$.
 
 Dla ustalonej $\omega_0>0$ proces
 $Y_t=A\cos(\omega_0t)+B\sin(\omega_0t)$ również jest gaussowski,
-a $K_Y(s,t)=\cos(\omega_0(t-s))$. Jest to proces stacjonarny
-w sensie rozkładów skończeniewymiarowych, choć każda trajektoria
+a z tożsamości $\cos a\cos b+\sin a\sin b=\cos(a-b)$
+wynika $K_Y(s,t)=\cos(\omega_0(t-s))$. Średnia jest zerowa,
+a kowariancja nie zmienia się przy wspólnym przesunięciu
+argumentów, więc z jednoznaczności praw gaussowskich
+wynika stacjonarność w sensie rozkładów skończeniewymiarowych, choć każda trajektoria
 jest gładką, okresową funkcją. Stacjonarność nie wymaga więc
 ani niezależnych wartości, ani nieregularnych trajektorii.
 \end{przyklad}
@@ -158,20 +172,28 @@ $K(s,t)=\sigma^2 e^{-\alpha|t-s|}$ dla $s,t\ge0$.
 Rzeczywiście jest to jądro nieujemnie określone, ponieważ
 \[
 K(s,t)=2\alpha\sigma^2\int_{-\infty}^{\min(s,t)}
- e^{-\alpha(s-u)}e^{-\alpha(t-u)}\,\dd u.
+ e^{-\alpha(s-u)}e^{-\alpha(t-u)}\,\mathrm d\lambda_1(u).
 \]
 Dla dowolnych $a_i,t_i$ odpowiadająca mu forma kwadratowa jest
 całką z nieujemnego kwadratu:
 \[
 \sum_{i,j}a_ia_jK(t_i,t_j)=2\alpha\sigma^2\int_{-\infty}^\infty
-\left(\sum_i a_i\ind{\{u\le t_i\}}e^{-\alpha(t_i-u)}\right)^2\dd u\ge0.
+\left(\sum_i a_i\chi_{\{u\le t_i\}}e^{-\alpha(t_i-u)}\right)^2\mathrm d\lambda_1(u)\ge0.
 \]
-Poprzednie twierdzenie daje zatem stacjonarny proces gaussowski
-$Y$ o tej kowariancji. Co więcej,
+Poprzednie twierdzenie, zastosowane z $m\equiv0$, daje
+wycentrowany proces gaussowski $Y$ o tej kowariancji.
+Niezmienniczość średniej i kowariancji względem przesunięć
+czasu dowodzi jego stacjonarności. Co więcej,
 $\E|Y_t-Y_s|^4=3\,[2\sigma^2(1-e^{-\alpha|t-s|})]^2
 \le12\sigma^4\alpha^2|t-s|^2$.
-Kryterium ciągłości Kołmogorowa zapewnia istnienie jego ciągłej
-modyfikacji. Nie użyliśmy przy tym całki Itô, którą zdefiniujemy
+Kryterium ciągłości Kołmogorowa
+(twierdzenie~\ref{thm:kol-cont}) zapewnia istnienie ciągłej
+modyfikacji na każdym $[0,n]$. Na częściach wspólnych
+modyfikacje są nierozróżnialne, co wynika z ich ciągłości
+i równości prawie na pewno w każdej wymiernej chwili.
+Po przecięciu przeliczalnej rodziny zbiorów pełnej miary
+sklejamy je w jedną ciągłą modyfikację na $[0,\infty)$,
+a poza tym zbiorem przyjmujemy trajektorię zerową. Nie użyliśmy przy tym całki Itô, którą zdefiniujemy
 dopiero w dalszych rozdziałach.
 \end{przyklad}
 
@@ -220,12 +242,17 @@ Dla dowolnej ograniczonej mierzalnej funkcji $f$ i dowolnego
 zbioru borelowskiego $A$ niezależność oraz twierdzenie Fubiniego
 dają
 \[
-\E[f(X)\ind{\{Y\in A\}}]
-=\int_A\left(\int_\R f(m_X+a(y-m_Y)+z)\,\dd\Law(Z)(z)\right)
-\dd\Law(Y)(y).
+\E[f(X)\chi_{\{Y\in A\}}]
+=\int_A\left(\int_\R f(m_X+a(y-m_Y)+z)\,\mathrm d\Law(Z)(z)\right)
+\mathrm d\Law(Y)(y).
 \]
-Wewnętrzna całka jest całką względem zadeklarowanego rozkładu
-normalnego (także w przypadku wariancji zero), co dowodzi
+Dla $f=\chi_B$ z borelowskim $B$ wewnętrzna całka
+jest borelowską funkcją $y$ (z mierzalności funkcji
+podcałkowej i twierdzenia Tonellego). Dla ustalonego $y$
+jest to prawdopodobieństwo zbioru $B$ względem rozkładu
+normalnego. Otrzymujemy zatem jądro probabilistyczne.
+Dla ogólnego $f$ wewnętrzna całka jest całką względem
+zadeklarowanego rozkładu normalnego (także w przypadku wariancji zero), co dowodzi
 własności rozkładu warunkowego. Dla $f(x)=x$ i $x^2$
 stosujemy obcięcia i przejście do granicy, wykorzystując
 całkowalność drugich momentów, uzyskując obie formuły.
@@ -240,10 +267,19 @@ $Z=X-m_X-\Cov(X,Y)\Sigma_Y^{-1}(Y-m_Y)$ dowodzi wzoru
 \E[X\mid\sigma(Y)]
 =m_X+\Cov(X,Y)\Sigma_Y^{-1}(Y-m_Y).
 \]
-Wektor reszt jest nieskorelowany z każdą współrzędną $Y$,
+Reszta jest nieskorelowana z każdą współrzędną $Y$,
 więc niezależny od całego $Y$. To objaśnia, dlaczego
 w modelu gaussowskim \emph{najlepsza predykcja średniokwadratowa}
-jest funkcją liniowo-afiniczną zaobserwowanych wartości.
+jest funkcją afiniczną zaobserwowanych wartości. Istotnie,
+dla $g(Y)\in L^2$ różnica $X-\E[X\mid\sigma(Y)]$
+jest ortogonalna do każdej $\sigma(Y)$-mierzalnej
+zmiennej z $L^2$, zatem
+\[
+\E|X-g(Y)|^2=\E|X-\E[X\mid\sigma(Y)]|^2
++\E|\E[X\mid\sigma(Y)]-g(Y)|^2.
+\]
+Minimum jest osiągane dokładnie przez wersje warunkowej
+wartości oczekiwanej.
 Gdy $\Sigma_Y$ jest osobliwa, należy uwzględnić liniowe
 zależności między obserwacjami; bezmyślne odwracanie macierzy
 byłoby błędem.
@@ -264,27 +300,49 @@ Zastosujmy wzór na warunkowy rozkład gaussowski do par
 $(X_s,X_t)$ i $(X_u,X_t)$. Reszty
 $R_s=X_s-\frac{K(s,t)}{K(t,t)}X_t$ oraz
 $R_u=X_u-\frac{K(u,t)}{K(t,t)}X_t$
-są niezależne od $X_t$. Obliczenie daje
+tworzą wektor wspólnie gaussowski z $X_t$ i jako para
+są niezależne od $X_t$ (obie kowariancje z $X_t$ są zerowe). Obliczenie daje
 $\Cov(R_s,R_u)=K(s,u)-K(s,t)K(t,u)/K(t,t)$.
 
 Jeżeli zachodzi wskazana tożsamość dla każdych $s<t<u$,
 to dla dowolnych skończonych zbiorów chwil
-$s_1,\ldots,s_k<t<u_1,\ldots,u_m$ wektory reszt
-$(R_{s_j})_j$ i $(R_{u_l})_l$ są nieskorelowane, a zatem
-niezależne (również od $X_t$). Wynika stąd warunkowa
-niezależność skończonej przyszłości i przeszłości przy
-ustalonym $X_t$. Przez klasę monotoniczną przenosimy tę
-własność ze zdarzeń cylindrycznych na $\sigma(X_s:s\le t)$,
-co jest własnością Markowa.
+$s_1,\ldots,s_k<t<u_1,\ldots,u_m$ trzy bloki
+$(R_{s_j})_j$, $(R_{u_l})_l$ oraz $X_t$ mają wspólnie
+gaussowski rozkład o blokowo diagonalnej macierzy
+kowariancji. Funkcja charakterystyczna rozkłada się
+na iloczyn trzech czynników, więc bloki są łącznie
+niezależne. W szczególności wektor przyszłych reszt
+jest niezależny od $\sigma(X_t,R_s:s<t)$: dla
+zdarzeń cylindrycznych wynika to z powyższej
+niezależności, a argument $\pi$--$\lambda$ rozszerza
+ją na całe $\sigma$-ciało. Ponieważ
+$\sigma(X_t,R_s:s<t)=\sigma(X_s:s\le t)$,
+dla każdej ograniczonej borelowskiej funkcji $h$ mamy
+\[
+\E[h(X_u)\mid\sigma(X_s:s\le t)]
+=H(X_t),\quad H(x)=\E h\left(
+\frac{K(u,t)}{K(t,t)}x+R_u\right).
+\]
+Mierzalność $H$ wynika z twierdzenia Fubiniego,
+a tożsamość z niezależności $R_u$ od przeszłości.
+Warunkując jeszcze względem $\sigma(X_t)$,
+otrzymujemy własność Markowa.
 
 Odwrotnie, własność Markowa daje warunkową niezależność
 $X_s$ i $X_u$ względem $X_t$ dla $s<t<u$: dla
 ograniczonych funkcji przeszłości i przyszłości stosujemy
 własność wieży i warunkowanie przyszłości względem
 $\sigma(X_r:r\le t)$; funkcje nieograniczone dopuszczamy
-następnie przez obcięcie w $L^2$. Stąd
-$\E[R_sR_u\mid X_t]=0$ p.n. i po uśrednieniu
-$\Cov(R_s,R_u)=0$, czyli żądana tożsamość.
+następnie przez obcięcie w $L^2$. W szczególności $\E[X_u\mid\calF_t^X]
+=\E[X_u\mid\sigma(X_t)]=K(u,t)X_t/K(t,t)$,
+gdzie $\calF_t^X=\sigma(X_s:s\le t)$, a przejście
+od funkcji ograniczonych do $X_u$ jest dozwolone przez
+zbieżność w $L^2$ i kontraktywność warunkowej wartości
+oczekiwanej. Zatem $\E[R_u\mid\calF_t^X]=0$.
+Ponieważ $R_s$ jest $\calF_t^X$-mierzalna i należy do $L^2$,
+przez obcięcie $R_s$ i nierówność Cauchy'ego--Schwarza
+otrzymujemy $\E[R_sR_u]=0$. Reszty są wycentrowane,
+więc $\Cov(R_s,R_u)=0$, czyli żądana tożsamość.
 \end{proof}
 
 
@@ -320,12 +378,16 @@ Ponadto $X=m_X+A(Y-m_Y)+R$. Dla ograniczonej funkcji
 borelowskiej $h$ na $\R^k$ i zbioru borelowskiego
 $D\subset\R^m$, z niezależności oraz twierdzenia Fubiniego,
 \[
-\E[h(X)\ind{\{Y\in D\}}]
+\E[h(X)\chi_{\{Y\in D\}}]
 =\int_D\int_{\R^k}h(m_X+A(y-m_Y)+r)
-\,\dd\Law(R)(r)\,\dd\Law(Y)(y).
+\,\mathrm d\Law(R)(r)\,\mathrm d\Law(Y)(y).
 \]
-To dokładnie własność rozkładu warunkowego o podanych
-parametrach. W szczególności nie wolno interpretować
+Dla funkcji charakterystycznych zbiorów borelowskich
+mierzalność wewnętrznej całki względem $y$ wynika
+z twierdzenia Tonellego; dla ustalonego $y$ jest ona
+prawdopodobieństwem względem prawa przesuniętego $R$.
+To dokładnie własność regularnego rozkładu warunkowego
+o podanych parametrach. W szczególności nie wolno interpretować
 $\Sigma_Y^{-1}$ bez założenia odwracalności macierzy.
 \end{proof}
 
@@ -345,7 +407,7 @@ W przeciwnym razie $(X_t-X_s)/\sqrt{v(s,t)}$ ma standardowy
 rozkład normalny. Podstawienie w całce względem jego gęstości
 i zastosowanie definicji funkcji gamma daje
 $\E|G|^p=(2/\sqrt{2\pi})\int_0^\infty
- x^p e^{-x^2/2}\dd x=c_p$.
+ x^p e^{-x^2/2}\mathrm d\lambda_1(x)=c_p$.
 \end{proof}
 
 \begin{wniosek}[Praktyczne kryterium ciągłości procesu gaussowskiego]
@@ -383,8 +445,9 @@ silniejsze warunki metrycznej entropii.
 \end{uwaga}
 
 \section{Most gaussowski: obserwacja końca zmienia cały proces}
-W następnym rozdziale skonstruujemy ruch Browna $W$.
-Już teraz zapowiedzmy jego charakterystyczną kowariancję
+W rozdziale~\ref{ch:konstrukcja} skonstruowaliśmy proces
+Wienera $W$; w następnym rozdziale zbadamy jego własności.
+Przypomnijmy jego charakterystyczną kowariancję
 $\Cov(W_s,W_t)=\min(s,t)$ dla $s,t\ge0$.
 Ustalmy $T>0$ i zdefiniujmy na $[0,T]$
 \[
@@ -414,18 +477,23 @@ Ponieważ $\Cov(W_t,W_T)=t$ oraz $\Var W_T=T$,
 otrzymujemy $\Cov(\beta_t,W_T)=t-t=0$.
 Wspólna gaussowskość wszystkich skończonych wektorów daje
 niezależność $(\beta_{t_1},\ldots,\beta_{t_n})$ od $W_T$.
-Przechodząc ze zdarzeń cylindrycznych do sigma-ciała generowanego
+Przechodząc ze zdarzeń cylindrycznych do $\sigma$-ciała generowanego
 przez proces, otrzymujemy niezależność całego $\beta$ od $W_T$.
-Rachunek kowariancji daje wskazany wzór.
+Rozwijając kowariancję, otrzymujemy
+\[
+\Cov(\beta_s,\beta_t)=\min(s,t)
+-\frac{t}{T}s-\frac{s}{T}t+\frac{st}{T^2}T
+=\min(s,t)-\frac{st}{T}.
+\]
 Na koniec równość $W_t=(t/T)W_T+\beta_t$ i niezależność
 pozwalają rozwarunkować względem $W_T$ dokładnie tak,
 jak w dowodzie wzoru na warunkowy rozkład gaussowski.
 Dla każdej ograniczonej borelowskiej funkcji $F$ skończonej
 liczby współrzędnych oraz zbioru $A$ zachodzi
 \[
-\E\bigl[F(W_{t_1},\ldots,W_{t_n})\ind{\{W_T\in A\}}\bigr]
+\E\bigl[F(W_{t_1},\ldots,W_{t_n})\chi_{\{W_T\in A\}}\bigr]
 =\int_A \E\bigl[F((t_1/T)y+\beta_{t_1},\ldots,
-(t_n/T)y+\beta_{t_n})\bigr]\,\dd\Law(W_T)(y),
+(t_n/T)y+\beta_{t_n})\bigr]\,\mathrm d\Law(W_T)(y),
 \]
 co dowodzi tezy o rozkładach warunkowych.
 \end{proof}
@@ -436,19 +504,19 @@ co dowodzi tezy o rozkładach warunkowych.
 \draw[->] (0,-1.4)--(0,2.0) node[above] {$\beta_t$};
 \draw[dashed,gray] (0,0)--(10,0);
 \draw[very thick,blue!70!black]
- plot[smooth] coordinates {(0,0)(0.6,0.5)(1.2,0.2)(1.8,1.1)(2.5,0.35)(3,0.8)(3.7,0.2)(4.5,-0.8)(5.1,-0.35)(5.9,0.9)(6.6,0.2)(7.3,0.85)(8.1,0.25)(8.8,-0.35)(9.4,0.2)(10,0)};
+ plot coordinates {(0,0)(0.6,0.5)(1.2,0.2)(1.8,1.1)(2.5,0.35)(3,0.8)(3.7,0.2)(4.5,-0.8)(5.1,-0.35)(5.9,0.9)(6.6,0.2)(7.3,0.85)(8.1,0.25)(8.8,-0.35)(9.4,0.2)(10,0)};
 \node[below] at (0,0) {$0$};
 \node[below] at (10,0) {$T$};
 \node[above right,blue!70!black] at (2,1.15) {przykładowy most};
 \end{tikzpicture}
-\par\smallskip\small Schematyczna trajektoria mostu Browna: koniec jest przypięty do zera,
-choć między chwilami $0$ i $T$ proces pozostaje losowy.
+\par\smallskip\small Schematyczna łamana ilustrująca most Browna: oba końce są
+przypięte do zera. Łamana jest jedynie ilustracją, nie
+rzeczywistą trajektorią procesu.
 \end{center}
 
 \begin{zadanie}[Predykcja wartości procesu Wienera na podstawie dwóch obserwacji]
-Niech $W$ będzie procesem Wienera, $0<s<t$ oraz $0\le u\le t$.
-Obliczyć $\E[W_u\mid W_s,W_t]$ oraz wariancję warunkową,
-gdy $s\le u\le t$.
+Niech $W$ będzie procesem Wienera, $0<s<t$ oraz $s\le u\le t$.
+Obliczyć $\E[W_u\mid\sigma(W_s,W_t)]$ oraz wariancję warunkową.
 
 \emph{Rozwiązanie.} Z niezależności przyrostów wektory
 $(W_s,W_u-W_s,W_t-W_s)$ mają niezależną pierwszą współrzędną
