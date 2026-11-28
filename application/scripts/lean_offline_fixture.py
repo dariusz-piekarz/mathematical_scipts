@@ -498,6 +498,11 @@ def main(*, profile='minimal') -> int:
             return report, manifest, case_origins
 
         positive = run_case(origins, rejected=False)
+        if profile == 'scoped':
+            from scripts.lean_scoped_payload_probe import run_fixed_payload_probe
+            run_fixed_payload_probe(work=work, context=context, rootfs=rootfs,
+                                    prefix=prefix, env=env, packages=packages,
+                                    source_report=source_report, checkout_sha=sha)
         if missing_import not in origins:
             raise ValueError('Required import was not present in the successful observed bundle')
         (rootfs / missing_import).unlink()

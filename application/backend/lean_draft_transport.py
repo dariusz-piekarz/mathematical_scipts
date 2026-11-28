@@ -23,6 +23,8 @@ from backend import lean_draft_runner as policy
 
 MAX_METADATA_BYTES = 131072
 COMMAND_TIMEOUT = 15
+# CI-only fixed payload transport; not an execution admission API.
+MAX_FIXTURE_INPUT_BYTES = 65536 + len(b"\n#print axioms atlas_draft\n")
 CLEANUP_TIMEOUT = 30
 CLI_REAP_TIMEOUT = 5
 _CONTAINER_ID = re.compile(r"[0-9a-f]{64}\Z")
@@ -193,7 +195,8 @@ def deferred_cleanup_command(prefix: list[str], env: dict[str, str]):
 
 
 def _command(prefix: list[str], args: tuple[str, ...], env: dict[str, str],
-             *, deadline: float | None = None, capture_failure: bool = False) -> bytes:
+             *, deadline: float | None = None, capture_failure: bool = False,
+             fixture_input: bytes | None = None) -> bytes:
     """Bound captured output and CLI waiting, with a shared optional deadline.
 
     Reserve local reap time within the shared budget. Process creation and OS
@@ -205,9 +208,23 @@ def _command(prefix: list[str], args: tuple[str, ...], env: dict[str, str],
         remaining = _remaining(deadline)
         # Reserve up to five seconds (at most half of remaining time) for reap.
         end = min(end, deadline - min(CLI_REAP_TIMEOUT, remaining / 2))
-    p = subprocess.Popen(prefix + list(args), env=env, stdin=subprocess.DEVNULL,
-                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                         start_new_session=True)
+    if fixture_input is not None:
+        if (type(fixture_input) is not bytes or not 1 <= len(fixture_input) <= MAX_FIXTURE_INPUT_BYTES
+                or len(args) != 5 or args[:4] != ("container", "start", "--attach", "--interactive")
+                or not _CONTAINER_ID.fullmatch(args[4]) or deadline is not None):
+            raise ValueError("Invalid fixed CI fixture input transport")
+        # A bounded anonymous file avoids a simultaneous stdin/stdout pipe
+        # deadlock. No file path or mount is passed to the container.
+        with tempfile.TemporaryFile(mode="w+b") as incoming:
+            incoming.write(fixture_input)
+            incoming.seek(0)
+            p = subprocess.Popen(prefix + list(args), env=env, stdin=incoming,
+                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                 start_new_session=True)
+    else:
+        p = subprocess.Popen(prefix + list(args), env=env, stdin=subprocess.DEVNULL,
+                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                             start_new_session=True)
     try:
         assert p.stdout is not None
         out = bytearray()

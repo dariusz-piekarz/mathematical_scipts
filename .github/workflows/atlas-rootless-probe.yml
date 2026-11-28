@@ -13,6 +13,8 @@ on:
       - "application/scripts/lean_rootless_compiler_probe.py"
       - "application/scripts/lean_offline_fixture.py"
       - "application/scripts/lean_full_import_probe.py"
+      - "application/scripts/lean_scoped_payload_probe.py"
+      - "application/tests/test_lean_scoped_payload_probe.py"
       - "application/tests/test_lean_full_import_probe.py"
       - "application/tests/test_lean_offline_fixture.py"
       - "application/scripts/lean_mathlib_source_probe.py"
@@ -305,7 +307,7 @@ jobs:
           test "$(git -C .lake/packages/mathlib rev-parse HEAD)" = "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67"
       - name: Verify offline fixture contracts on native Linux
         working-directory: application
-        run: python3 -m unittest tests.test_lean_offline_fixture tests.test_lean_artifact_manifest -v
+        run: python3 -m unittest tests.test_lean_offline_fixture tests.test_lean_artifact_manifest tests.test_lean_scoped_payload_probe -v
       - name: Observe and compile one fixed Mathlib fixture without container network
         working-directory: application
         shell: bash
@@ -348,6 +350,7 @@ jobs:
           python3 -m scripts.lean_offline_fixture --profile scoped 2>&1 | tee "$RUNNER_TEMP/atlas-mathlib-scoped.log"
           grep -q '^ATLAS_MATHLIB_SCOPED_FIXTURE ' "$RUNNER_TEMP/atlas-mathlib-scoped.log"
           grep -q '^ATLAS_MATHLIB_SCOPED_REJECTED ' "$RUNNER_TEMP/atlas-mathlib-scoped.log"
+          grep -q '^ATLAS_SCOPED_PAYLOAD_PROBE ' "$RUNNER_TEMP/atlas-mathlib-scoped.log"
           digest="$(sha256sum "$RUNNER_TEMP/atlas-mathlib-scoped-manifest.json" | cut -d ' ' -f1)"
           rejected_digest="$(sha256sum "$RUNNER_TEMP/atlas-mathlib-scoped-rejected-manifest.json" | cut -d ' ' -f1)"
           echo "ATLAS_SCOPED_MANIFEST_SHA=$digest" >> "$GITHUB_ENV"
