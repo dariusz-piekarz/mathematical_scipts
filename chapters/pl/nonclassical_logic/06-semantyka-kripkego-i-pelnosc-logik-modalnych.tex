@@ -2038,3 +2038,450 @@ euklidesowość nie jest tym samym co
 przechodniość ani symetryczność.
 Nie przypisujemy więc tej logice własności
 zachowania ram bez dodatkowego dowodu.
+
+\section{Własność modelu skończonego i rozstrzygalność}
+
+\begin{definicja}[Własność modelu skończonego]
+\label{def:ncl-kripke-finite-model-property}
+Normalna logika modalna $L$ ma własność modelu
+skończonego, jeżeli dla każdej formuły $A\notin L$
+istnieje skończona rama $F\in\operatorname{Fr}(L)$,
+model $M$ na tej ramie i stan $w$ takie,
+że $M,w\not\Vdash A$.
+\end{definicja}
+
+Warunek $F\in\operatorname{Fr}(L)$ jest istotny:
+nie wystarczy znaleźć skończonego modelu,
+w którym $A$ jest fałszywa, ale trzeba także
+zagwarantować ważność wszystkich twierdzeń $L$
+na jego ramie. Dla logiki mającej tę własność
+i każdej formuły $B$ lokalna $L$-niesprzeczność
+$\{B\}$ jest równoważna spełnialności $B$
+na skończonej ramie z $\operatorname{Fr}(L)$.
+Istotnie, niesprzeczność $\{B\}$ oznacza
+$\neg B\notin L$ przez
+Lemat~\ref{lem:ncl-kripke-consistency-extension}
+i konsekwencję z pustego zbioru przesłanek.
+Stosujemy własność modelu skończonego
+do $\neg B$. Implikacja odwrotna wynika
+z poprawności
+(Twierdzenie~\ref{thm:ncl-kripke-soundness}).
+
+\subsection{Przypadek ram euklidesowych}
+
+\begin{lemat}[Budowa podramy generowanej w ramie euklidesowej]
+\label{lem:ncl-kripke-euclidean-cluster}
+Niech $R$ będzie relacją euklidesową
+na zbiorze $W$, a $w\in W$.
+Jeżeli $R(w)=\varnothing$, to $U_w=\{w\}$.
+Jeżeli $D=R(w)\ne\varnothing$, wybieramy
+$d\in D$ i oznaczamy $C=R(d)$.
+Wówczas
+\[
+ D\subseteq C,\qquad
+ R(c)=C\quad(c\in C),\qquad
+ U_w=\{w\}\cup C.
+\]
+W szczególności relacja ograniczona do $C$
+jest pełna. Jeżeli $w\in C$, to $D=C$
+i $U_w=C$. Jeżeli $w\notin C$, to $w$
+ma następniki dokładnie w $D$, a żaden
+stan z $C$ nie ma krawędzi do $w$.
+\end{lemat}
+\begin{proof}
+Przypadek $R(w)=\varnothing$ wynika z definicji
+osiągalności.
+W pozostałym przypadku dla każdego $u\in D$
+z $wRd$ i $wRu$ przez euklidesowość dostajemy
+$dRu$, czyli $D\subseteq C$. W szczególności
+$d\in C$ i $dRd$.
+
+Ustalmy $c\in C$. Dla każdego $v\in C$
+z $dRc$ i $dRv$ dostajemy $cRv$.
+Zatem $C\subseteq R(c)$, a ponadto $cRd$,
+ponieważ $d\in C$. Dla dowolnego $z\in R(c)$
+z $cRd$ i $cRz$ dostajemy $dRz$,
+czyli $z\in C$. Stąd $R(c)=C$.
+Zbiór $\{w\}\cup C$ zawiera $w$ i jest
+domknięty względem następników, ponieważ
+$R(w)=D\subseteq C$. Każdy stan $c\in C$
+jest osiągalny z $w$ przez $wRd$ i $dRc$.
+Na mocy Lematu~\ref{lem:ncl-kripke-generated-truth}
+otrzymujemy $U_w=\{w\}\cup C$.
+Jeżeli $w\in C$, podstawienie $c=w$
+w równości $R(c)=C$ daje $D=C$.
+Jeżeli $w\notin C$, żadna krawędź
+z $C$ nie prowadzi do $w$, bo każdy stan
+z $C$ ma zbiór następników równy $C$.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+ \draw[rounded corners=5pt,fill=blue!5]
+   (2,-1.05) rectangle (7,1.05);
+ \draw[rounded corners=4pt,fill=blue!15]
+   (2.25,-0.75) rectangle (4.4,0.75);
+ \node[draw,circle] (w) at (0,0) {$w$};
+ \node[draw,circle,fill=white] (d) at (3.3,0) {$d$};
+ \node[draw,circle,fill=white] (c) at (5.8,0) {$c$};
+ \draw[->] (w)--(d);
+ \draw[<->] (d)--(c);
+ \draw[->] (d) edge[loop above] (d);
+ \draw[->] (c) edge[loop above] (c);
+ \node at (3.3,-1.32) {$D=R(w)$};
+ \node at (5.8,-1.32) {$C=R(d)$};
+ \node at (3.5,-1.95) {$w\notin C,\quad D\subseteq C$};
+\end{tikzpicture}
+\end{center}
+Rysunek przedstawia przykład z jednoelementowym
+$D$ i dwuelementowym $C$; w ogólności oba
+zbiory mogą być nieskończone.
+Pełna relacja na $C$ jest wymuszona przez
+euklidesowość, lecz $w$ nie musi być zwrotny.
+
+\begin{lemat}[Zależność od zmiennych występujących w formule]
+\label{lem:ncl-kripke-variable-dependence}
+Niech dwa modele mają tę samą ramę i takie samo
+wartościowanie wszystkich zmiennych należących
+do zbioru $P\subseteq\mathrm{Var}$.
+Wówczas w każdym stanie zgadzają się co do
+prawdziwości każdej formuły, której wszystkie
+zmienne należą do $P$.
+\end{lemat}
+\begin{proof}
+Indukcja po budowie formuły:
+dla zmiennej stosujemy założenie o wartościowaniu,
+dla $\bot$ obie wartości są fałszywe,
+dla spójników klasycznych stosujemy hipotezę
+indukcyjną, a dla $\Box$ stosujemy ją
+w każdym następniku danego stanu.
+Zbiór następników jest taki sam w obu modelach.
+\end{proof}
+
+\begin{twierdzenie}[Skończona redukcja modelu euklidesowego]
+\label{thm:ncl-kripke-euclidean-finite-reduction}
+Niech $M$ będzie modelem na ramie euklidesowej,
+$w$ jego stanem, a $P$ skończonym zbiorem
+zmiennych zdaniowych. Istnieje skończony
+model $N$ na ramie euklidesowej, zawierający
+stan $w$, którego liczba stanów nie przekracza
+$1+2^{|P|}$, taki że dla każdej formuły $A$
+o zmiennych z $P$ zachodzi
+\[
+ M,w\Vdash A\iff N,w\Vdash A.
+\]
+Ponadto jeżeli $M$ spełnia globalnie każdą
+formułę z pewnego zbioru $\Gamma$ o zmiennych
+z $P$, to $N$ również spełnia globalnie
+każdą formułę z $\Gamma$.
+\end{twierdzenie}
+\begin{proof}
+Przechodzimy najpierw do podmodelu generowanego
+przez $w$; prawdziwość w każdym jego stanie
+nie zmienia się na mocy
+Lematu~\ref{lem:ncl-kripke-generated-truth}.
+Zmieniamy wartościowanie zmiennych spoza $P$
+na zbiór pusty, co nie wpływa na rozważane
+formuły przez
+Lemat~\ref{lem:ncl-kripke-variable-dependence}.
+Otrzymany model oznaczmy $M_0$.
+
+Jeżeli $R(w)=\varnothing$, bierzemy $N=M_0$,
+który w tym przypadku ma jeden stan.
+W przeciwnym przypadku używamy oznaczeń
+$D,C$ z
+Lematu~\ref{lem:ncl-kripke-euclidean-cluster}.
+Dla $c\in C$ niech
+\[
+ t(c)=\{p\in P:M_0,c\Vdash p\}.
+\]
+Wybieramy po jednym reprezentancie $c_T$
+każdego zrealizowanego typu $T=t(c)$.
+Jeżeli dany typ jest realizowany w $D$,
+wybieramy reprezentanta należącego do $D$.
+Jeżeli $w\in C$, to $D=C$, więc dla typu
+$t(w)$ możemy i będziemy wybierać $w$.
+Oznaczmy zbiór wybranych reprezentantów przez
+$E$. Ponieważ $t(c)\subseteq P$, mamy
+$|E|\leq 2^{|P|}$.
+
+Niech $N$ będzie ograniczeniem $M_0$
+do zbioru $U'=\{w\}\cup E$ z relacją
+indukowaną przez $R$ i ograniczonym wartościowaniem.
+Relacja ta jest euklidesowa, gdyż własność
+euklidesowości zachowuje się przy ograniczaniu
+do podzbiorów. Mamy $|U'|\leq 1+2^{|P|}$.
+
+Definiujemy $f:U_w\to U'$ wzorem
+$f(c)=c_{t(c)}$ dla $c\in C$, a jeśli
+$w\notin C$, dodatkowo $f(w)=w$.
+Gdy $w\in C$, wybór reprezentanta zapewnia
+również $f(w)=w$. Odwzorowanie jest
+surjektywne i zachowuje wartości wszystkich
+zmiennych: dla zmiennych z $P$ z definicji
+typu, a dla pozostałych dlatego, że są
+wszędzie fałszywe w obu modelach.
+
+Dla $c\in C$ mamy $R(c)=C$ i
+$f(R(c))=E=R(f(c))\cap U'$.
+Jeżeli $w\notin C$, to $R(w)=D$ i
+$f(D)=D\cap E$: typy realizowane w $D$
+mają wybranych reprezentantów w $D$,
+a każdy reprezentant z $D$ jest obrazem
+samego siebie. Zatem również
+$f(R(w))=R(f(w))\cap U'$.
+Otrzymujemy surjektywny morfizm ograniczony
+modeli $f:M_0\to N$.
+Z Twierdzenia~\ref{thm:ncl-kripke-bounded-truth}
+wynika zachowanie prawdziwości we wszystkich
+odpowiadających sobie stanach, w szczególności
+w $w=f(w)$. Surjektywność daje ponadto
+zachowanie prawdziwości globalnej.
+\end{proof}
+
+W dowodzie nie korzystamy z dowolnej
+filtracji euklidesowej. Najpierw ograniczamy
+model do części generowanej przez badany
+stan, a następnie dobieramy reprezentantów
+z uwzględnieniem szczególnej budowy tej części.
+W ten sposób zachowujemy wszystkie formuły
+o zmiennych z $P$, a nie tylko ustalony
+skończony zbiór podformuł.
+
+\subsection{Własność modelu skończonego podstawowych logik}
+
+\begin{twierdzenie}[Skończone kontrmodele]
+\label{thm:ncl-kripke-basic-fmp}
+Wszystkie logiki
+\[
+ \mathrm K,\ \mathrm{KD},\ \mathrm T,\ \mathrm{KB},\
+ \mathrm{K4},\ \mathrm{K5},\ \mathrm B,\
+ \mathrm{S4},\ \mathrm{S5}
+\]
+mają własność modelu skończonego.
+Jeśli $A\notin L$ i
+$n=|\operatorname{Sub}(A)|$, to dla
+$L\ne\mathrm{K5}$ można znaleźć kontrmodel
+o co najwyżej $2^n$ stanach.
+Dla K5 można znaleźć kontrmodel
+o co najwyżej $1+2^m$ stanach, gdzie $m$
+jest liczbą różnych zmiennych w $A$.
+\end{twierdzenie}
+\begin{proof}
+Z pełności
+(Wniosek~\ref{cor:ncl-kripke-basic-strong-local})
+istnieje model $M$ na ramie z
+$\operatorname{Fr}(L)$ i stan $w$,
+w którym $A$ jest fałszywa.
+Dla $L\ne\mathrm{K5}$ stosujemy filtrację
+względem $\Sigma=\operatorname{Sub}(A)$.
+Wybór relacji filtracyjnej przedstawia tabela:
+\[
+\begin{array}{c|c|l}
+ L &\text{relacja}&\text{zachowana własność}\\ \hline
+ \mathrm K&S_{\min}&\text{brak dodatkowych warunków}\\
+ \mathrm{KD}&S_{\min}&\text{seryjność}\\
+ \mathrm T&S_{\min}&\text{zwrotność}\\
+ \mathrm{KB}&S_{\min}&\text{symetryczność}\\
+ \mathrm B&S_{\min}&\text{zwrotność i symetryczność}\\
+ \mathrm{K4}&S_{\min}^{+}&\text{przechodniość}\\
+ \mathrm{S4}&S_{\min}^{+}&\text{zwrotność i przechodniość}\\
+ \mathrm{S5}&S_{\min}^{+}&\text{relacja równoważności}
+\end{array}
+\]
+Uzasadnienie wyborów dają
+Stwierdzenie~\ref{prop:ncl-kripke-filtration-basic-properties},
+Lemat~\ref{lem:ncl-kripke-transitive-filtration}
+i Wniosek~\ref{cor:ncl-kripke-equivalence-filtration}.
+Wszystkie otrzymane ramy należą zatem
+do $\operatorname{Fr}(L)$, na mocy
+Wniosku~\ref{cor:ncl-kripke-basic-frame-classes}.
+Lemat filtracyjny
+(Twierdzenie~\ref{thm:ncl-kripke-filtration-lemma})
+zachowuje fałszywość $A$ w $[w]$, a
+Stwierdzenie~\ref{prop:ncl-kripke-filtration-bound}
+daje oszacowanie liczby stanów.
+
+Dla K5 stosujemy
+Twierdzenie~\ref{thm:ncl-kripke-euclidean-finite-reduction}
+do zbioru $P$ wszystkich zmiennych $A$.
+Dostajemy skończoną ramę euklidesową
+z najwyżej $1+2^m$ stanami i z kontrmodelem
+dla $A$. Korespondencja ram dla K5
+zapewnia przynależność do $\operatorname{Fr}(L)$.
+\end{proof}
+
+\begin{wniosek}[Skończone kontrmodele dla skończonych przesłanek]
+\label{cor:ncl-kripke-finite-premise-countermodels}
+Niech $L$ będzie jedną z dziewięciu podstawowych
+logik, a $\Gamma$ skończonym zbiorem formuł.
+Jeżeli $\Gamma\not\vdash_L^{\mathrm{lok}}A$,
+istnieje skończony model na ramie z
+$\operatorname{Fr}(L)$ i jego stan,
+w którym wszystkie formuły $\Gamma$ są
+prawdziwe, a $A$ jest fałszywa.
+Jeżeli $\Gamma\not\vdash_L^{\mathrm{glob}}A$,
+istnieje taki skończony model, w którym
+wszystkie formuły $\Gamma$ są prawdziwe
+globalnie, lecz $A$ nie jest prawdziwa globalnie.
+\end{wniosek}
+\begin{proof}
+Z odpowiedniej silnej pełności
+(Wniosek~\ref{cor:ncl-kripke-basic-strong-local}
+lub
+Twierdzenie~\ref{thm:ncl-kripke-basic-strong-global})
+otrzymujemy, być może nieskończony, kontrmodel.
+W przypadku globalnym wybieramy stan $w$,
+w którym $A$ jest fałszywa.
+W przypadku lokalnym wybieramy stan
+spełniający przesłanki i obalający $A$.
+
+Dla $L\ne\mathrm{K5}$ filtrujemy względem
+skończonego zbioru
+\[
+ \Sigma=\bigcup_{B\in\Gamma\cup\{A\}}
+             \operatorname{Sub}(B).
+\]
+Jest on domknięty względem podformuł.
+Używamy relacji z dowodu
+Twierdzenia~\ref{thm:ncl-kripke-basic-fmp}.
+Lemat filtracyjny zachowuje prawdziwość
+każdej przesłanki w odpowiednich stanach
+oraz fałszywość $A$ w $[w]$.
+W przypadku globalnym każda klasa ma
+reprezentanta, zatem zachowujemy globalną
+prawdziwość przesłanek.
+Dla K5 stosujemy redukcję euklidesową
+do skończonego zbioru wszystkich zmiennych
+w $\Gamma\cup\{A\}$. Jej teza obejmuje
+zarówno prawdziwość w $w$, jak i zachowanie
+globalnej prawdziwości przesłanek.
+\end{proof}
+
+Skończone zbiory przesłanek są tutaj istotne.
+Silna pełność względem wszystkich ram
+nie oznacza silnej pełności względem samych
+ram skończonych. Na przykład w K rozważmy zbiór
+\[
+ \Delta=\{\Diamond p_i:i\geq1\}
+ \cup\{\Box\neg(p_i\wedge p_j):1\leq i<j\}.
+\]
+Jest on spełnialny w stanie $w$ mającym
+przeliczalnie nieskończenie wielu różnych
+następników $v_i$, przy $V(p_i)=\{v_i\}$
+i bez innych krawędzi.
+W każdym modelu spełniającym $\Delta$ w $w$
+formuła $\Diamond p_i$ wymaga następnika
+spełniającego $p_i$, a formuły z $\Box$
+nie pozwalają, aby ten sam następnik
+spełniał $p_i$ i $p_j$ dla $i\ne j$.
+Musi więc istnieć nieskończenie wielu
+następników. Zbiór $\Delta$ nie jest
+spełnialny na żadnej skończonej ramie.
+
+\subsection{Algorytm rozstrzygający}
+
+\begin{definicja}[Rozstrzygalność logiki]
+\label{def:ncl-kripke-decidability}
+Logikę $L$ nazywamy rozstrzygalną, gdy
+istnieje algorytm, który dla każdej formuły
+$A$ kończy działanie i poprawnie odpowiada,
+czy $A\in L$.
+Przyjmujemy efektywne kodowanie przeliczalnego
+zbioru zmiennych oraz formuł języka modalnego.
+\end{definicja}
+
+\begin{twierdzenie}[Rozstrzygalność podstawowych systemów]
+\label{thm:ncl-kripke-basic-decidability}
+Wszystkie dziewięć logik z
+Twierdzenia~\ref{thm:ncl-kripke-basic-fmp}
+jest rozstrzygalnych. Rozstrzygalna jest
+również konsekwencja lokalna i globalna
+ze skończonych zbiorów przesłanek
+w każdej z tych logik.
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonej formuły $A$ obliczamy zbiór
+jej podformuł i zbiór $P$ jej zmiennych.
+Niech $m=|P|$ i niech $N$ będzie ograniczeniem
+liczby stanów z
+Twierdzenia~\ref{thm:ncl-kripke-basic-fmp}.
+Dla każdego $k=1,\ldots,N$ wykonujemy
+następujące czynności:
+\begin{enumerate}
+ \item Wyliczamy wszystkie relacje $R$ na
+ zbiorze $\{1,\ldots,k\}$.
+ \item Odrzucamy relacje niespełniające
+ warunków ram dla ustalonej logiki z
+ Wniosku~\ref{cor:ncl-kripke-basic-frame-classes}.
+ Każdy z tych warunków można sprawdzić
+ przez skończone sprawdzenie odpowiednich
+ pojedynczych stanów, par lub trójek stanów.
+ \item Dla każdej pozostałej relacji wyliczamy
+ wszystkie wartościowania zmiennych z $P$.
+ Zmienne spoza $P$ wartościujemy przez
+ zbiór pusty, co jest dozwolone przez
+ Lemat~\ref{lem:ncl-kripke-variable-dependence}.
+ \item Obliczamy zbiory prawdziwości podformuł
+ $A$ od najmniejszych do największych.
+ Dla spójników klasycznych stosujemy operacje
+ boolowskie na podzbiorach zbioru stanów,
+ a dla konieczności obliczamy
+ \[
+ [\![\Box B]\!]=\{x:R(x)\subseteq[\![B]\!]\}.
+ \]
+ Jeżeli w którymkolwiek stanie $A$ jest
+ fałszywa, kończymy z odpowiedzią $A\notin L$.
+\end{enumerate}
+Jeżeli wszystkie sprawdzenia zakończą się
+bez znalezienia kontrmodelu, odpowiadamy $A\in L$.
+Algorytm kończy się, ponieważ na $k$ stanach
+jest $2^{k^2}$ relacji i $2^{km}$ wartościowań
+zmiennych z $P$. Łączna liczba badanych
+modeli jest ograniczona z góry przez
+\[
+ \sum_{k=1}^{N}2^{k^2+km}.
+\]
+Każda ocena formuły również wymaga
+skończenie wielu operacji.
+Poprawność odpowiedzi negatywnej wynika
+z poprawności relacyjnej $L$, a odpowiedzi
+pozytywnej z istnienia kontrmodelu o
+ograniczonej liczbie stanów dla każdej
+formuły spoza $L$.
+
+Dla konsekwencji ze skończonych przesłanek
+bierzemy sumę zbiorów podformuł wszystkich
+formuł $\Gamma\cup\{A\}$ i zbiór ich zmiennych.
+W dowodzie
+Wniosku~\ref{cor:ncl-kripke-finite-premise-countermodels}
+otrzymaliśmy jawne ograniczenia: $2^{|\Sigma|}$
+dla $L\ne\mathrm{K5}$ oraz $1+2^{|P|}$ dla K5.
+Wyliczamy modele do odpowiedniej granicy.
+Dla konsekwencji lokalnej szukamy stanu,
+w którym wszystkie przesłanki są prawdziwe,
+a $A$ fałszywa. Dla konsekwencji globalnej
+szukamy modelu spełniającego wszystkie
+przesłanki globalnie, lecz obalającego $A$
+w pewnym stanie.
+Znalezienie takiego modelu oznacza brak
+odpowiedniego wynikania; brak kontrmodelu
+oznacza wynikanie, przez przytoczony wniosek
+i poprawność. Wszystkie sprawdzenia są skończone.
+\end{proof}
+
+\begin{uwaga}[Rozstrzygalność a efektywność]
+\label{rem:ncl-kripke-decision-complexity}
+Powyższy algorytm jest celowo elementarny.
+Oszacowanie liczby sprawdzanych modeli
+nie jest oszacowaniem optymalnej złożoności
+problemu. W szczególności nie wnioskujemy
+z niego, że każda metoda rozstrzygania
+musi przeglądać wszystkie relacje i wartościowania.
+Nie twierdzimy również, że dla dowolnej
+normalnej logiki sama słaba pełność
+względem pewnej klasy ram daje rozstrzygalność:
+w tym dowodzie potrzebowaliśmy efektywnej
+granicy liczby stanów oraz efektywnego
+sprawdzania przynależności ramy do klasy.
+\end{uwaga}
