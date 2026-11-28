@@ -78,7 +78,60 @@ ich istnienie, monotoniczność uporządkowanie.
 Przejście do supremum daje drugą nierówność.
 \end{proof}
 
-\section{Krzywe klasy $C^1$ i absolutnie ciągłe}
+\begin{stwierdzenie}[Przybliżanie długości łamanymi]
+\label{ma2:prop:curve-polygon-limit}
+Niech $(P_j)$ będzie ciągiem podziałów $[a,b]$
+o średnicach $\|P_j\|=\max_i(t_i-t_{i-1})$
+dążących do zera. Wówczas
+$L_{P_j}(\gamma)\to L(\gamma)$, również wtedy,
+gdy długość jest nieskończona.
+\end{stwierdzenie}
+\begin{proof}
+Ustalmy dowolny podział $Q$ o $k$ punktach wewnętrznych.
+Niech $\omega(\delta)=\sup\{\|\gamma(u)-\gamma(v)\|_2:
+u,v\in[a,b],\ |u-v|\le\delta\}$.
+Z jednostajnej ciągłości $\gamma$ mamy
+$\omega(\delta)\to0$ przy $\delta\downarrow0$.
+Wstawienie jednego punktu do przedziału podziału
+$P_j$ (lub jego rozdrobnienia) zwiększa sumę
+długości o co najwyżej $2\omega(\|P_j\|)$,
+gdyż dodane odcinki mają długość nie większą
+od $\omega(\|P_j\|)$.
+Stąd
+\[
+ L_Q(\gamma)\le L_{P_j\cup Q}(\gamma)
+ \le L_{P_j}(\gamma)+2k\omega(\|P_j\|).
+\]
+Przechodząc do kresu dolnego granic, otrzymujemy
+$L_Q(\gamma)\le\liminf_j L_{P_j}(\gamma)$.
+Bierzemy supremum po $Q$, a przeciwną nierówność
+otrzymujemy wprost z definicji długości.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=2]
+ \draw[->,gray] (-.15,0)--(2.4,0) node[right] {$x_1$};
+ \draw[->,gray] (0,-.15)--(0,1.3) node[above] {$x_2$};
+ \draw[blue!75!black,very thick,domain=0:2.1,samples=90]
+  plot (\x,{.2+.65*sin(85*\x)});
+ \draw[orange!90!black,thick] (0,.2)
+ -- (.525,{.2+.65*sin(85*.525)})
+ -- (1.05,{.2+.65*sin(85*1.05)})
+ -- (1.575,{.2+.65*sin(85*1.575)})
+ -- (2.1,{.2+.65*sin(85*2.1)});
+ \foreach \t in {0,.525,1.05,1.575,2.1}
+  \fill[orange!90!black] (\t,{.2+.65*sin(85*\t)}) circle (1.1pt);
+ \node[blue!75!black] at (1.05,1.05) {$\gamma$};
+ \node[orange!90!black] at (1.2,.43) {$L_P$};
+\end{tikzpicture}
+\caption{Łamana wpisana w krzywą. Zmniejszanie
+średnicy podziału prowadzi do długości krzywej,
+zgodnie z \ref{ma2:prop:curve-polygon-limit}.}
+\label{ma2:fig:curve-polygon}
+\end{figure}
+
+\section{Krzywe klasy \texorpdfstring{$C^1$}{C1} i absolutnie ciągłe}
 
 \begin{twierdzenie}
 \label{ma2:thm:curve-c1-length}
@@ -246,12 +299,35 @@ Reguła łańcuchowa dla $\widehat\gamma=\gamma\circ s^{-1}$
 daje $\widehat\gamma'(s(t))=\gamma'(t)/\|\gamma'(t)\|_2$.
 \end{proof}
 
+\begin{wniosek}[Regularność parametru długości]
+\label{ma2:cor:curve-ac-arclength}
+Niech $\gamma$ będzie ciągła i prostowalna.
+Funkcja $s(t)=L_{[a,t]}(\gamma)$ jest absolutnie
+ciągła wtedy i tylko wtedy, gdy $\gamma$ jest
+absolutnie ciągła.
+\end{wniosek}
+\begin{proof}
+Jeżeli $\gamma$ jest absolutnie ciągła, to
+\ref{ma2:thm:curve-ac-length} daje
+$s(t)=\int_{[a,t]}\|\gamma'(u)\|_2\,\mathrm d\lambda_1(u)$.
+Całka funkcji całkowalnej jest absolutnie ciągła
+na mocy
+\atlasref{AM1-37::ma1:kh:thm:ac-lebesgue-primitive}{twierdzenia o funkcji pierwotnej}.
+Odwrotnie, dla $u\le v$ mamy
+$\|\gamma(v)-\gamma(u)\|_2\le s(v)-s(u)$
+z \ref{ma2:prop:curve-length-basic}.
+Sumując te nierówności i stosując definicję
+absolutnej ciągłości do $s$, otrzymujemy
+absolutną ciągłość $\gamma$.
+\end{proof}
+
 \section{Długość drogi i miara Hausdorffa obrazu}
 
 Stosujemy normalizację $\mathcal H^1$ z
 \atlasref{ME-26::thm:hausdorff-line-26}{teorii miary i całki},
 dla której $\mathcal H^1$ na prostej zgadza się
 z miarą Lebesgue'a na zbiorach mierzalnych.
+Niech teraz $\gamma$ będzie prostowalna i $\ell=L(\gamma)$.
 Dla $\ell>0$ parametryzacja długością łuku jest
 $1$-Lipschitzowska, więc
 \atlasref{ME-26::thm:hausdorff-lipschitz-26}{nierówność Lipschitza dla miary Hausdorffa}
@@ -278,6 +354,7 @@ Jeżeli $\gamma$ jest różnowartościowa, to
 $L(\gamma)=\mathcal H^1(\gamma([a,b]))$.
 \end{twierdzenie}
 \begin{proof}
+Oznaczmy $\ell=L(\gamma)$.
 Dla $\ell=0$ krotność jest zero poza jednym
 punktem, więc całka jest zero.
 Niech $\ell>0$. Parametryzację $\widehat\gamma$
@@ -319,8 +396,9 @@ $\gamma_m(t)=R(\cos t,\sin t)$ na $[0,2m\pi]$
 ma prędkość $R$, więc jej długość wynosi $2m\pi R$
 na mocy \ref{ma2:thm:curve-c1-length}.
 Jej obraz jest zawsze tym samym okręgiem.
-Krotność jest równa $m$ poza punktem $(R,0)$,
-w którym wynosi $m+1$. Punkt ma zerową miarę
+Na okręgu krotność jest równa $m$ poza punktem
+$(R,0)$, w którym wynosi $m+1$. Poza okręgiem
+jest równa zero. Punkt ma zerową miarę
 $\mathcal H^1$, więc \ref{ma2:thm:curve-length-multiplicity}
 dla $m=1$ daje miarę okręgu $2\pi R$, a dla dowolnego
 $m$ odzyskujemy długość $2m\pi R$.
@@ -334,6 +412,87 @@ ma pochodną $(-R\sin t,R\cos t,h)$.
 Jej długość wynosi $T\sqrt{R^2+h^2}$,
 a parametr długości to $s=t\sqrt{R^2+h^2}$,
 na mocy \ref{ma2:thm:curve-c1-length}.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=.78\linewidth,height=6cm,
+ view={55}{23},axis lines=center,
+ xlabel={$x_1$},ylabel={$x_2$},zlabel={$x_3$},
+ xmin=-1.3,xmax=1.3,ymin=-1.3,ymax=1.3,zmin=0,zmax=5,
+ xtick={-1,0,1},ytick={-1,0,1},ztick={0,2,4}]
+ \addplot3[blue!75!black,very thick,domain=0:720,samples=161]
+ ({cos(x)},{sin(x)},{x/180});
+ \addplot3[orange!85!black,only marks,mark=*,mark size=1.8pt]
+ coordinates {(1,0,0) (1,0,2) (1,0,4)};
+\end{axis}
+\end{tikzpicture}
+\caption{Helisa o promieniu $1$ i skoku $2$,
+z parametrem $t\in[0,4\pi]$ i $h=1/\pi$
+(przykład \ref{ma2:ex:curve-helix}).
+Punkty wyróżnione odpowiadają pełnym obrotom.}
+\label{ma2:fig:curve-helix}
+\end{figure}
+
+\begin{przyklad}[Krzywa prostowalna o pochodnej zerowej prawie wszędzie]
+\label{ma2:ex:curve-cantor}
+Niech $\kappa$ będzie bezatomową miarą Cantora,
+skupioną na klasycznym zbiorze Cantora $K$,
+z \atlasref{ME-17::ex:cantor-measure-17}{ME 17}.
+Dystrybuanta $C(t)=\kappa([0,t])$, $0\le t\le1$,
+jest ciągła i niemalejąca, $C(0)=0$, $C(1)=1$.
+Ciągłość wynika z braku atomów, a poza $K$ funkcja
+jest lokalnie stała. Ponieważ $\lambda_1(K)=0$,
+mamy $C'=0$ prawie wszędzie.
+Dla krzywej $\gamma(t)=(C(t),0)\in\R^2$
+każda suma długości w podziale jest równa
+$\sum_j(C(t_j)-C(t_{j-1}))=1$.
+W konsekwencji
+\[
+ L(\gamma)=1,\qquad
+ \int_{[0,1]}\|\gamma'(t)\|_2\,\mathrm d\lambda_1(t)=0.
+\]
+Krzywa nie jest absolutnie ciągła, gdyż
+przeczyłoby to \ref{ma2:thm:curve-ac-length}.
+Jej parametr długości to $s(t)=C(t)$,
+a $\widehat\gamma(s)=(s,0)$.
+Ten przykład pokazuje, że prostowalność
+nie zapewnia wzoru na długość przez całkę
+z prędkości w pierwotnym parametrze.
+\end{przyklad}
+
+\begin{przyklad}[Punkt nieregularny i parametr długości]
+\label{ma2:ex:curve-cusp}
+Niech $\gamma(t)=(t^2,t^3)$ dla $-1\le t\le1$.
+Mimo że $\gamma'(0)=0$, krzywa jest prostowalna
+jako krzywa klasy $C^1$. Jej prędkość wynosi
+$|t|\sqrt{4+9t^2}$, a długość
+\[
+ L(\gamma)=2\int_0^1 t\sqrt{4+9t^2}\,\mathrm d\lambda_1(t)
+ =\frac{2}{27}(13^{3/2}-8).
+\]
+Ostatnią równość otrzymujemy przez podstawienie
+$u=4+9t^2$. Parametr długości $s$ jest ściśle
+rosnący (prędkość jest dodatnia poza pojedynczym
+punktem). W punkcie $s_0=s(0)$ parametryzacja
+$\widehat\gamma$ nie jest różniczkowalna.
+Istotnie, dla $t\ne0$
+\[
+ \frac{\widehat\gamma(s(t))-\widehat\gamma(s_0)}
+ {s(t)-s_0}
+ =\frac{(t^2,t^3)}
+ {\operatorname{sgn}(t)\int_0^{|t|}u\sqrt{4+9u^2}\,
+ \mathrm d\lambda_1(u)}.
+\]
+Ponieważ dla $0\le u\le|t|$ mamy
+$2\le\sqrt{4+9u^2}\le\sqrt{4+9t^2}$,
+całka podzielona przez $t^2$ dąży do $1$.
+Ilorazy różnicowe mają granice jednostronne
+$(-1,0)$ i $(1,0)$, zatem pochodna nie istnieje.
+Warunek regularności w
+\ref{ma2:cor:curve-regular-arclength}
+nie jest więc zbędny.
 \end{przyklad}
 
 \begin{przyklad}[Ciągły wykres nieprostowalny]
