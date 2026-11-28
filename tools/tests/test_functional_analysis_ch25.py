@@ -4,13 +4,11 @@ from pathlib import Path
 from fractions import Fraction as F
 from itertools import product
 
-ROOT = Path(__file__).resolve().parents[2]
-DIR = ROOT / "chapters/pl/functional_analysis"
-SOURCE = next(DIR.glob("25-*.tex"))
+from distribution_migration_sources import split_source, split_context, using_dt
 
 class Chapter25(unittest.TestCase):
     def test_structure_and_references(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(25)
         labels = re.findall(r"\\label\{([^}]+)\}", s)
         self.assertEqual(len(labels), len(set(labels)))
         stack = []
@@ -21,17 +19,16 @@ class Chapter25(unittest.TestCase):
                 self.assertTrue(stack)
                 self.assertEqual(stack.pop(), env)
         self.assertFalse(stack)
-        context = "\n".join(p.read_text(encoding="utf-8") for p in DIR.glob("*.tex")
-                            if p.name[:2].isdigit() and int(p.name[:2]) <= 25)
+        context = split_context(25)
         for a,b in re.findall(r"\\ref\{([^}]+)\}|\\hyperref\[([^\]]+)\]", s):
             self.assertIn(r"\label{" + (a or b) + "}", context)
 
     def test_FA25_embeddings_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(25, 1, 2)
         for fragment in (
             r"K_j\subseteq\operatorname{int}K_{j+1}",
-            r"\bigcup_jK_j=\Omega",
-            r"\ref{prop:D-independence18}",
+            (r"\bigcup_nK_n=\Omega" if using_dt() else r"\bigcup_jK_j=\Omega"),
+            (r"\label{prop:D-independence18}" if using_dt() else r"\ref{prop:D-independence18}"),
             r"p_{N,m}((1-\chi_R)f)",
             r"\frac{C_{\chi,m}}{1+R}p_{N+1,m}(f)",
             r"p_{0,0}(f_n)=p_{0,0}(\psi)>0",
@@ -62,7 +59,7 @@ class Chapter25(unittest.TestCase):
             self.assertLessEqual((1+abs(x))**N,(1+n+A)**N)
 
     def test_FA25_dual_compact_extension_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(25, 3, 5, 7)
         for fragment in (
             r"p\circ j",
             r"= \sup_{y\in j(B)}",
@@ -96,7 +93,7 @@ class Chapter25(unittest.TestCase):
             self.assertEqual(mm((t,),mm(J,I)),mm(mm((t,),J),I))
 
     def test_FA25_tempered_extension_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(25, 7)
         for fragment in (
             r"\widetilde T\in\mathcal S'",
             r"\ref{thm:tempered-estimate22}",
@@ -134,11 +131,11 @@ class Chapter25(unittest.TestCase):
                                  F(3**N*2**(N+1)*factorial(N+1),n))
 
     def test_FA25_weak_strong_sequences_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(25, 7, 8)
         for fragment in (
-            r"K=\overline B^{\,X}",
-            r"K\subseteq\bigcup_{j=1}^k(x_j+U)",
-            r"\le2\varepsilon/3<\varepsilon",
+            (r"Zwartość $\overline B$ daje" if using_dt() else r"K=\overline B^{\,X}"),
+            (r"skończone pokrycie zbiorami $x_i+V$" if using_dt() else r"K\subseteq\bigcup_{j=1}^k(x_j+U)"),
+            (r"\le2\varepsilon/3" if using_dt() else r"\le2\varepsilon/3<\varepsilon"),
             r"\ref{cor:montel-dual-seq23}",
             r"\label{rem:sequence-net25}",
             r"T_{F,n}|_{\operatorname{lin}F}=0",
@@ -187,14 +184,14 @@ class Chapter25(unittest.TestCase):
             self.assertTrue(0<a<lo<=hi<1)
 
     def test_FA25_natural_operators_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(25, 1, 4, 7)
         for fragment in (
             r"p_{K,m}(\partial^\alpha f)\le p_{K,m+|\alpha|}(f)",
-            r"p_{N,m}(\partial^\alpha f)\le p_{N,m+|\alpha|}(f)",
-            r"p_{N,m}(af)\le 2^m A_m p_{N+M_m,m}(f)",
+            (r"Q_{N,m}(\partial^\alpha f)\le Q_{N,m+|\alpha|}(f)" if using_dt() else r"p_{N,m}(\partial^\alpha f)\le p_{N,m+|\alpha|}(f)"),
+            (r"Q_{N,m}(a\varphi)\le C_m Q_{N+M_m,m}(\varphi)" if using_dt() else r"p_{N,m}(af)\le 2^m A_m p_{N+M_m,m}(f)"),
             r"P_B(A'T)=P_{A(B)}(T)",
-            r"(-1)^{|\alpha|}\langle T,\partial^\alpha f\rangle",
-            r"\langle aT,f\rangle=\langle T,af\rangle",
+            (r"(-1)^{|\alpha|}\langle T,\partial^\alpha\varphi\rangle" if using_dt() else r"(-1)^{|\alpha|}\langle T,\partial^\alpha f\rangle"),
+            (r"\langle gT,\varphi\rangle=\langle T,g\varphi\rangle" if using_dt() else r"\langle aT,f\rangle=\langle T,af\rangle"),
             r"aT_1=T_a",
             r"\ref{thm:fourier-auto-tempered22}",
             r"\partial_y^\beta A_T f(y)",
@@ -225,7 +222,7 @@ class Chapter25(unittest.TestCase):
                                  (1+abs(x))**N*(1+abs(x+y))**N)
 
     def test_FA25_restriction_nonextension_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(25, 3)
         for fragment in (
             r"\supp(j\varphi)=\supp\varphi",
             r"\langle R_U T,\varphi\rangle=\langle T,j\varphi\rangle",
@@ -275,7 +272,7 @@ class Chapter25(unittest.TestCase):
                                      {i:weights[i] for i in V if weights[i]})
 
     def test_FA25_tensor_summary_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(25, 11)
         for fragment in (
             r"\mathcal D(\R^d)&\longrightarrow&\mathcal S(\R^d)",
             r"\mathcal D'(\R^d)&\longleftarrow&\mathcal S'(\R^d)",

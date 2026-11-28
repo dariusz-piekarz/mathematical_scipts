@@ -4,13 +4,11 @@ from pathlib import Path
 from fractions import Fraction as F
 from itertools import product
 
-ROOT = Path(__file__).resolve().parents[2]
-DIR = ROOT / "chapters/pl/functional_analysis"
-SOURCE = next(DIR.glob("24-*.tex"))
+from distribution_migration_sources import split_source, split_context, using_dt
 
 class Chapter24(unittest.TestCase):
     def test_structure_and_references(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(24)
         labels = re.findall(r"\\label\{([^}]+)\}", s)
         self.assertEqual(len(labels), len(set(labels)))
         stack = []
@@ -21,13 +19,12 @@ class Chapter24(unittest.TestCase):
                 self.assertTrue(stack)
                 self.assertEqual(stack.pop(), env)
         self.assertFalse(stack)
-        context = "\n".join(p.read_text(encoding="utf-8") for p in DIR.glob("*.tex")
-                            if p.name[:2].isdigit() and int(p.name[:2]) <= 24)
+        context = split_context(24)
         for a,b in re.findall(r"\\ref\{([^}]+)\}|\\hyperref\[([^\]]+)\]", s):
             self.assertIn(r"\label{" + (a or b) + "}", context)
 
     def test_FA24_algebraic_and_projective_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(24, 9)
         for fragment in (
             r"V/N",
             r"iloraz jest zerowy",
@@ -43,7 +40,7 @@ class Chapter24(unittest.TestCase):
             self.assertIn(fragment,s)
 
     def test_FA24_injective_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(24, 9)
         for fragment in (
             r"\ell\in E',\ m\in F'",
             r"wartość sumy jest niezależna",
@@ -81,7 +78,7 @@ class Chapter24(unittest.TestCase):
                 self.assertLessEqual(sum(map(abs,M[i])),eps)
 
     def test_FA24_seminorm_completion_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(24, 9)
         for fragment in (
             r"\pi_{p,q}(u)=\|u_{p,q}\|_\pi",
             r"\varepsilon_{p,q}(u)=\|u_{p,q}\|_\varepsilon",
@@ -124,7 +121,7 @@ class Chapter24(unittest.TestCase):
             self.assertEqual(eps,pi) # rank-one quotient tensor
 
     def test_FA24_functional_tensor_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(24, 9)
         for fragment in (
             r"\|Ju_N-Ju\|_{\ell^1(F)}\le\pi(u_N-u)",
             r"\pi_{p\circ A,q\circ B}(u)",
@@ -168,7 +165,7 @@ class Chapter24(unittest.TestCase):
                                      for k,l in product(range(4),repeat=2)),M[i][j])
 
     def test_FA24_inductive_tensor_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(24, 11)
         for fragment in (
             r"h(x\otimes\cdot)",
             r"h_s=s\circ\widetilde b",
@@ -205,7 +202,7 @@ class Chapter24(unittest.TestCase):
             self.assertEqual(v,w)
 
     def test_FA24_kernel_correspondence_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(24, 11)
         for fragment in (
             r"A:\mathcal D(\Omega)\to\mathcal D'(\Lambda)_\beta",
             r"\ref{thm:schwartz-kernel23}",

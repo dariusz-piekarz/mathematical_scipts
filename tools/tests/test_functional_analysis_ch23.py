@@ -4,13 +4,11 @@ from pathlib import Path
 from fractions import Fraction as F
 from itertools import product
 
-ROOT = Path(__file__).resolve().parents[2]
-DIR = ROOT / "chapters/pl/functional_analysis"
-SOURCE = next(DIR.glob("23-*.tex"))
+from distribution_migration_sources import split_source, split_context, using_dt
 
 class Chapter23(unittest.TestCase):
     def test_structure_and_references(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(23)
         labels = re.findall(r"\\label\{([^}]+)\}", s)
         self.assertEqual(len(labels), len(set(labels)))
         stack = []
@@ -21,13 +19,12 @@ class Chapter23(unittest.TestCase):
                 self.assertTrue(stack)
                 self.assertEqual(stack.pop(), env)
         self.assertFalse(stack)
-        context = "\n".join(p.read_text(encoding="utf-8") for p in DIR.glob("*.tex")
-                            if p.name[:2].isdigit() and int(p.name[:2]) <= 23)
+        context = split_context(23)
         for a,b in re.findall(r"\\ref\{([^}]+)\}|\\hyperref\[([^\]]+)\]", s):
             self.assertIn(r"\label{" + (a or b) + "}", context)
 
     def test_FA23_montel_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(23, 8)
         for fragment in (
             r"\ref{lem:montel-schwartz22}",
             r"\ref{lem:exhaustion17}",
@@ -42,7 +39,7 @@ class Chapter23(unittest.TestCase):
             self.assertIn(fragment,s)
 
     def test_FA23_nuclear_banach_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(23, 8)
         for fragment in (
             r"\sum_j\|\ell_j(x)y_j\|\le\|x\|\sum_j\|\ell_j\|\|y_j\|",
             r"\|T-T_N\|\le\sum_{j>N}\|\ell_j\|\|y_j\|",
@@ -80,7 +77,7 @@ class Chapter23(unittest.TestCase):
             self.assertEqual(lhs,rhs)
 
     def test_FA23_nuclear_completions_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(23, 8)
         for fragment in (
             r"j_{r,p}=j_{q,p}j_{r,q}",
             r"q=Cq_0",
@@ -105,7 +102,7 @@ class Chapter23(unittest.TestCase):
                 self.assertLessEqual(F(1,(1+r)**m),F(1,(1+R)**m))
 
     def test_FA23_nuclear_fourier_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(23, 8)
         for fragment in (
             r"L=\supp\chi\Subset\Omega",
             r"(2R)^{-d}\lambda_d",
@@ -129,7 +126,7 @@ class Chapter23(unittest.TestCase):
             self.assertEqual(((a+1j*b)*(c+1j*d)).real,a*c-b*d)
 
     def test_FA23_hilbert_factorization_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(23, 8)
         for fragment in (
             r"h(x)^2=b(x,x)",
             r"\|J^*\|_{\mathrm{HS}}=\|J\|_{\mathrm{HS}}",
@@ -158,7 +155,7 @@ class Chapter23(unittest.TestCase):
             self.assertLessEqual(sum(v*v for v in v1+v2),1)
 
     def test_FA23_nuclear_permanence_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(23, 8)
         for fragment in (
             r"P_{L^\perp}J|_{N^\perp}",
             r"p_F(x)\le p_E(x)",
@@ -191,7 +188,7 @@ class Chapter23(unittest.TestCase):
             self.assertLess(cost/c,F(1,2**n))
 
     def test_FA23_kernel_localization_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(23, 10)
         for fragment in (
             r"\chi_j\in\mathcal D(V_j)",
             r"\supp\chi_j\subset V_j",
@@ -243,7 +240,7 @@ class Chapter23(unittest.TestCase):
             self.assertEqual(cutoff(2*R,R),0)
 
     def test_FA23_hermite_basis_01(self):
-        s = SOURCE.read_text(encoding="utf-8")
+        s = split_source(23, 8)
         for fragment in (
             r"P_{n+1}=2xP_n-P_n'",
             r"2^n n!\sqrt\pi",
