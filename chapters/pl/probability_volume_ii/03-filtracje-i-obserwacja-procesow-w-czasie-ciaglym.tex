@@ -78,12 +78,14 @@ co daje sprzeczność.
 \foreach \x/\lab in {1/0,4/1,7/2,10/3}{
   \draw (\x,0.12)--(\x,-0.12) node[below] {$\lab$};
 }
-\draw[very thick,blue!70!black] (1,1.1)--(4,1.1);
-\draw[very thick,blue!70!black] (4,1.55)--(7,1.55);
-\draw[very thick,blue!70!black] (7,0.68)--(10,0.68);
-\draw[blue!70!black,fill=white,thick] (4,1.1) circle (2pt) (7,1.55) circle (2pt);
-\fill[blue!70!black] (1,1.1) circle (2pt) (4,1.55) circle (2pt) (7,0.68) circle (2pt);
-\node[left,blue!65!black] at (1,1.12) {$X_t$};
+\draw[->] (1,-0.25)--(1,1.9) node[above] {$X_t$};
+\draw (0.9,0.8)--(1.1,0.8) node[left=3pt] {$1$};
+\draw (0.9,1.6)--(1.1,1.6) node[left=3pt] {$2$};
+\draw[very thick,blue!70!black] (1,0)--(4,0);
+\draw[very thick,blue!70!black] (4,0.8)--(7,0.8);
+\draw[very thick,blue!70!black] (7,1.6)--(10,1.6);
+\draw[blue!70!black,fill=white,thick] (4,0) circle (2pt) (7,0.8) circle (2pt) (10,1.6) circle (2pt);
+\fill[blue!70!black] (1,0) circle (2pt) (4,0.8) circle (2pt) (7,1.6) circle (2pt) (10,0.8) circle (2pt);
 \node[draw,rounded corners,fill=green!8,align=center] at (2.5,2.45) {$\calF_0$\\bez rzutów};
 \node[draw,rounded corners,fill=green!8,align=center] at (5.5,2.45) {$\calF_1$\\po I rzucie};
 \node[draw,rounded corners,fill=green!8,align=center] at (8.5,2.45) {$\calF_2$\\po II rzucie};
@@ -91,7 +93,9 @@ co daje sprzeczność.
 \draw[->,green!45!black] (6.55,2.45)--(7.4,2.45);
 \node[below=18pt,align=center] at (5.9,-0.2) {informacja rośnie, a przyszły przyrost\\nie jest znany przed wykonaniem rzutu};
 \end{tikzpicture}
-\par\smallskip\small Rozróżnienie: wykres trajektorii oraz zbiory informacji $\calF_t$.
+\par\smallskip\small Przykładowa trajektoria dla wyników $+1,+1,-1$.
+Pełne punkty oznaczają wartości w chwilach skoków,
+puste -- granice lewostronne.
 \end{center}
 
 \section{Zupełność i prawostronna ciągłość filtracji}
@@ -436,6 +440,10 @@ jeżeli dla każdego $t\ge0$ zachodzi
 $\{\tau\le t\}\in\calF_t$.
 Jeśli dodatkowo $\Prob(\tau<\infty)=1$, to
 mówimy, że $\tau$ jest prawie na pewno skończony.
+Warunek $\{\tau\le t\}\in\calF_t$ sam zapewnia
+$\calF$-mierzalność $\tau$: przedziały $[0,t]$ dla
+skończonych $t\ge0$ generują borelowskie $\sigma$-ciało
+na $[0,\infty]$.
 \end{definicja}
 
 Warunek mówi, że w chwili $t$ umiemy rozstrzygnąć,
@@ -450,7 +458,9 @@ $\mathbb F=(\calF_t)_{t\ge0}$. Wtedy
 $\sigma\wedge\tau:=\min(\sigma,\tau)$,
 $\sigma\vee\tau:=\max(\sigma,\tau)$ oraz
 $\tau\wedge a$ dla każdej stałej $a\ge0$ są czasami
-zatrzymania. Jeśli $\mathbb F$ jest prawostronnie ciągła,
+zatrzymania. Również $\sup_{n\ge1}\tau_n$ jest czasem
+zatrzymania dla dowolnego ciągu czasów zatrzymania.
+Jeśli $\mathbb F$ jest prawostronnie ciągła,
 to również $\inf_{n\ge1}\tau_n$ jest czasem zatrzymania
 dla dowolnego ciągu czasów zatrzymania $(\tau_n)_{n\ge1}$.
 \end{stwierdzenie}
@@ -462,7 +472,9 @@ $\{\sigma\vee\tau\le t\}
 =\{\sigma\le t\}\cap\{\tau\le t\}$.
 Oba zdarzenia są w $\calF_t$.
 Dla $\tau\wedge a$ stosujemy pierwszy przypadek,
-bo stała $a$ jest czasem zatrzymania.
+bo stała $a$ jest czasem zatrzymania. Dla supremum
+korzystamy z równości
+$\{\sup_n\tau_n\le t\}=\bigcap_{n\ge1}\{\tau_n\le t\}\in\calF_t$.
 
 Niech $\rho=\inf_n\tau_n$. Dla dowolnego $u>0$
 $\{\rho<u\}=\bigcup_{n\ge1}\{\tau_n<u\}$:
@@ -599,7 +611,13 @@ A\cap\{\tau\le t\}\in\calF_t\quad
 \text{dla każdego }t\ge0\big\}.
 \]
 Interpretujemy $\calF_\tau$ jako informację dostępną
-w chwili losowej $\tau$.
+w chwili losowej $\tau$. Dla stałego czasu $\tau=a$
+otrzymujemy dokładnie $\calF_a$: warunek dla $t=a$
+wymusza $A\in\calF_a$, a dla pozostałych chwil wynika
+z monotoniczności filtracji lub pustego przecięcia.
+Dla filtracji na $[0,T]$ oraz czasu $\tau\le T$
+w definicji wystarczy rozpatrywać $0\le t\le T$;
+warunek dla $t=T$ daje wtedy $\calF_\tau\subseteq\calF_T$.
 \end{definicja}
 
 \begin{twierdzenie}[Podstawowe własności $\calF_\tau$]
@@ -629,7 +647,12 @@ $A^c\cap\{\tau\le t\}
 Dla ciągu $(A_n)$ elementów $\calF_\tau$ mamy
 $(\bigcup_nA_n)\cap\{\tau\le t\}
 =\bigcup_n(A_n\cap\{\tau\le t\})\in\calF_t$.
-Tak otrzymujemy $\sigma$-ciało.
+Tak otrzymujemy $\sigma$-ciało. Sama zmienna $\tau$
+jest $\calF_\tau$-mierzalna, gdyż dla każdego $a,t\ge0$
+\[
+\{\tau\le a\}\cap\{\tau\le t\}
+=\{\tau\le\min(a,t)\}\in\calF_{\min(a,t)}\subseteq\calF_t.
+\]
 
 Jeśli $\sigma\le\tau$ i $A\in\calF_\sigma$, to
 $A\cap\{\tau\le t\}
@@ -640,7 +663,8 @@ Stąd $A\in\calF_\tau$.
 Dla ostatniej równoważności, gdy $\tau$ jest
 $\N_0\cup\{\infty\}$-wartościowy, zauważmy, że
 $\{\tau=k\}=\{\tau\le k\}\setminus\{\tau\le k-1\}$
-(z odpowiednią konwencją dla $k=0$), więc jest w $\calF_k$.
+dla $k\ge1$, natomiast $\{\tau=0\}=\{\tau\le0\}$.
+Zatem $\{\tau=k\}\in\calF_k$ dla każdego $k\in\N_0$.
 Jeśli $A\in\calF_\tau$, to
 $A\cap\{\tau=k\}
 =(A\cap\{\tau\le k\})\cap\{\tau=k\}\in\calF_k$.
@@ -841,7 +865,7 @@ Niech $(\Omega,\calF,\Prob)$ będzie przestrzenią
 probabilistyczną z filtracją $(\calF_t)_{0\le t\le T}$,
 gdzie $T>0$. Niech $M=(M_t)_{0\le t\le T}$
 będzie całkowalnym martyngałem względem tej filtracji
-o trajektoriach prawostronnie ciągłych.
+o wszystkich trajektoriach prawostronnie ciągłych.
 Jeśli $\sigma,\tau$ są czasami zatrzymania spełniającymi
 punktowo $0\le\sigma\le\tau\le T$,
 to $M_\sigma,M_\tau\in L^1$ oraz
@@ -852,6 +876,14 @@ to $M_\sigma,M_\tau\in L^1$ oraz
 \end{twierdzenie}
 \begin{proof}
 \emph{Krok 1: aproksymacja czasów.}
+W razie potrzeby przedłużamy filtrację i proces na
+$[0,\infty)$ przez $\calF_t=\calF_T$, $M_t=M_T$ dla
+$t>T$. Nie zmienia to $\sigma$-ciał w chwilach
+zatrzymania ograniczonych przez $T$, ponieważ
+warunek dla $t=T$ wymusza już przynależność do
+$\calF_T$. Przedłużenie jest prawostronnie ciągłym
+martyngałem, co pozwala stosować wcześniejsze twierdzenia
+sformułowane na $[0,\infty)$.
 Dla każdego $n$ weźmy siatkę $D_n=\{kT2^{-n}:0\le k\le2^n\}$
 i niech $\tau_n$ (odpowiednio $\sigma_n$) będzie
 najmniejszym punktem siatki nie mniejszym od $\tau$
