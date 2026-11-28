@@ -23,14 +23,32 @@ class LogicMeasureModelGraphTest(unittest.TestCase):
             ("LST-30", "ME-04", "thm:lebesgue-inner-regular"),
             ("LST-30", "ME-04", "thm:lebesgue-completion"),
             ("LST-30", "GT-20", "def:topog20-analityczny"),
-            ("LST-23", "MOD-13", "res:14:5"),
-            ("LST-24", "MOD-13", "res:14:9"),
-            ("MOD-13", "LST-23", "thm:downward-ls"),
-            ("MOD-13", "LST-24", "thm:upward-ls"),
+            ("MOD-22", "MOD-21", "thm:model-tarski-vaught"),
+            ("MOD-23", "MOD-20", "thm:compactness"),
+            ("MOD-23", "MOD-22", "thm:downward-ls"),
         )
         needed = {doc for source, target, _ in expected for doc in (source, target)}
-        needed.update("LST-%02d" % n for n in range(1, 40))
         catalog = json.loads((repository / "catalog" / "books.json").read_text(encoding="utf-8"))
+        migration = json.loads((repository / "catalog" / "logic_model_migration.json").read_text(encoding="utf-8"))
+        logic = {module_id(Path(p)) for book in catalog["books"]
+                 if book["id"] == "logic_and_set_theory" for p in book["chapters"]}
+        models = {module_id(Path(p)) for book in catalog["books"]
+                  if book["id"] == "model_theory" for p in book["chapters"]}
+        self.assertIn("LST-40", logic)
+        for moved in migration["moved_chapters"]:
+            self.assertIn(moved["new_id"], models)
+            self.assertNotIn(moved["old_id"], logic)
+        self.assertNotIn("MOD-13", models)
+        aliases = json.loads((repository / "application/config/ALIASY_PO_SCALENIACH.json").read_text(encoding="utf-8"))
+        mappings = {(r["old_document"], r["old_label"], r["target_document"], r["target_label"])
+                    for r in aliases["qualified_label_aliases"]}
+        self.assertTrue({
+            ("MOD-13", "res:14:5", "MOD-22", "thm:downward-ls"),
+            ("MOD-13", "res:14:9", "MOD-23", "thm:upward-ls"),
+            ("LST-23", "thm:downward-ls", "MOD-22", "thm:downward-ls"),
+            ("LST-24", "thm:upward-ls", "MOD-23", "thm:upward-ls"),
+        }.issubset(mappings))
+        needed.update(logic | models)
         sources = {}
         for book in catalog["books"]:
             for relative in book["chapters"]:
@@ -50,7 +68,12 @@ class LogicMeasureModelGraphTest(unittest.TestCase):
             db = Path(tmp) / "index.db"
             build_database(root, db, recursive=True)
             with closing(sqlite3.connect(db)) as con, con:
-                edges = {(e["source"], e["target"]): e for e in graph_coverage(con)["edges"]}
+                coverage = graph_coverage(con)
+                edges = {(e["source"], e["target"]): e for e in coverage["edges"]}
+                # A retired duplicate must not remain a live reading target.
+                retired_targets = [issue for issue in coverage["reading_audit"]["issues"]
+                                   if issue["label"].startswith("MOD-13::")]
+                self.assertEqual(retired_targets, [])
                 for source, target, label in expected:
                     with self.subTest(source=source, target=target, label=label):
                         rows = con.execute(
