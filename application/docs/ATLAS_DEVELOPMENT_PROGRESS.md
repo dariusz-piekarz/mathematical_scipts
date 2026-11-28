@@ -6,7 +6,7 @@
 
 ## Wskaźnik wykonywania
 
-- **Aktualny krok (28.11.2026):** L1.5.6 / RT-09d i L1.5.7, faza B. Rootless #46177909934 PASS na `56191f7c`, 54+11 testów i rzeczywisty replay; pełna aplikacja #46178886864 PASS na `d3e20ef2`, 1139 testów, 11 sklasyfikowanych pominięć, Chromium 613 rozdziałów i 939 poprawnych odsyłaczy kwalifikowanych. Uruchomiono istniejący standardowy 2+1 na `d3e20ef2`; nie obejmuje trzech rootless przebiegów, rootless evidence osobne. `stabilizing / review pending`; `offline_ready=false`, `execution_allowed=false`, `certificate=false`. Szczegóły na końcu dziennika.
+- **Aktualny krok (28.11.2026):** L1.5.6 / RT-09d i L1.5.7, faza B. Standardowy techniczny 2+1 #46179766615 zakończony 3/3 PASS na `d3e20ef2`, końcowa bramka problems=[], status=stabilizing, review=pending. Oddzielny rootless #46177909934 na `56191f7c`: próba 1 PASS, próba 2 queued; 242 pliki backendu, skryptów, testów, Lean i workflow identyczne z d3e20ef2. Trzecia próba rootless dopiero po zaliczeniu drugiej i sceptycznej kontroli. `offline_ready=false`, `execution_allowed=false`, `certificate=false`. Nie uruchamiać dowolnych draftów. Szczegóły na końcu dziennika.
 
 - **Priorytet naprawczy:** L1.3 — pilotaż LST-01 / LST-02 / LA-01 nadal otwarty; **aktualna partia LST-02 ma techniczne 3/3 PASS na SHA `44cc2031`** (8 deklaracji LST-02, 4 mapowania `needs_review`), ale niezależna recenzja semantyczna nadal `pending`. L1.4.1 zachowuje osobne historyczne 3/3 PASS na swoim SHA, lecz również oczekuje niezależnego odbioru w issue #10; LA-01 i L1.4.2 nierozpoczęte.
 
@@ -2022,3 +2022,10 @@ Odczytany `atlas_validation_status.json`: `candidate_sha=02190e107a6305bc7b73334
 - Porównanie pełnych drzew Git (truncated=false na obu SHA): 242 pliki blob w application/backend, scripts, tests, lean oraz .github/workflows/atlas-rootless-probe.yml identyczne na 56191f7c i d3e20ef2; brak różnic w tym zakresie. Jest to silniejsze powiązanie dowodu rootless z kodem kandydata, ale nie trzy rootless przebiegi na identycznym SHA.
 - #46179721558 FA PASS na a0940acb, #46180708867 późniejszy FA PASS, potwierdzają naprawę historycznego testu FA22. #46179766489 pełny app PASS. Późniejsze błędy logiczne #46180571252 (rejestracja NCL-05) i #46179754262 (overfull) mają już nowsze rzeczywiste PASS #46180574980, #46180556180. Nie dublowano poprawek.
 - Nadal phase B, stabilizing, independent review pending, offline_ready=false, execution_allowed=false, certificate=false. Nie uruchomiono dodatkowych CI, nie zmieniono runnera, main ani harmonogramu.
+
+
+### 2026-11-28 — faza B: standardowe 2+1 PASS i druga próba izolacji rootless
+
+- #46179766615 completed/success, niezmienny SHA d3e20ef2eac1f92c112e97fccb22da549ad0c966: 3/3 kompletnych przebiegów, w każdym 1139 testów/11 sklasyfikowanych pominięć/0 unreviewed, Chromium 613 rozdziałów bez błędów JS, natywne Linux/Windows i Lean/Mathlib (5 plików, 26 twierdzeń, axiom_check=passed). Sceptyczna bramka 21 testów PASS. Job 141091369651 raport ATLAS_STABILIZATION: problems=[], status=stabilizing, skeptical_review=pending, certificate=false. Artefakt 15277417355. Nie obejmuje rootless 3/3.
+- Rootless #46177909934, SHA 56191f7cc08decf7e8497909737038272048a1e0: pierwsza próba completed/success (job 141080689602). Uruchomiono ponownie wyłącznie ten istniejący job na tym samym SHA; GitHub potwierdził run_attempt=2, queued. Nie powtarzano standardowego 2+1 ani nie zmieniano workflow. Kolejny krok: odczytać wynik próby 2, porównać zakres i dowód z pierwszą, sceptycznie zweryfikować oraz dopiero po PASS uruchomić trzecią próbę. To dwa osobne SHA dla dwóch zakresów dowodu, nie jeden wspólny 2+1 rootless+aplikacja. Bez niezależnej recenzji nie awansować stable.
+- #46180995860 fail przez przejściową rozbieżność rejestru MOD; nowsze #46181102479 i #46181165847 PASS, odczyt bieżącego katalogu i importów: 16/16 w identycznej kolejności. #46180925327 pełny FA PASS. Nie dublowano poprawek. Bez zmian main i harmonogramu.
