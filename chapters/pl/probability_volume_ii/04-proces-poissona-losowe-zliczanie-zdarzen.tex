@@ -449,7 +449,8 @@ $\E(M_t-M_s)^2=\Var(N_t-N_s)=\lambda(t-s)$.
 \begin{twierdzenie}[Chwila $n$-tego zdarzenia]
 Dla $n\ge1$ w procesie Poissona z intensywnością $\lambda>0$
 czas $T_n$ ma rozkład gamma o parametrach $n$ i $\lambda$,
-przy konwencji, że drugi parametr jest intensywnością. Zachodzi
+przy konwencji, że drugi parametr jest parametrem
+intensywności (rate), a nie skali. Dla $t\ge0$ zachodzi
 \[
 \Prob(T_n>t)=e^{-\lambda t}\sum_{k=0}^{n-1}
 \frac{(\lambda t)^k}{k!},\qquad
@@ -514,8 +515,8 @@ wystąpiły w pierwszych piętnastu minutach;
 \emph{Rozwiązanie.} Przyjmujemy czas w godzinach.
 (a) Z rozkładu Poissona dostajemy
 $\Prob(N_1=3)=e^{-4}4^3/3!$.
-(b) Na odcinku $[0,1/4]$ oczekiwana liczba zgłoszeń wynosi
-$1$, więc $\Prob(N_{1/4}\ge1)=1-e^{-1}$.
+(b) Z rozkładu $N_{1/4}\sim\operatorname{Poisson}(1)$
+wynika $\Prob(N_{1/4}\ge1)=1-\Prob(N_{1/4}=0)=1-e^{-1}$.
 (c) Z twierdzenia~\ref{thm:uniform-poisson-times} liczba
 zgłoszeń w pierwszym kwadransie pod warunkiem $N_1=4$
 ma rozkład $\operatorname{Bin}(4,1/4)$; prawdopodobieństwo
@@ -741,9 +742,11 @@ na wariancję całkowitą wynika
 &=\lambda t\bigl(\Var(Y_1)+(\E Y_1)^2\bigr)
 =\lambda t\E Y_1^2.
 \end{align*}
-Uśrednienie funkcji charakterystycznej wykorzystuje szereg
+Uśredniając funkcję charakterystyczną, podstawiamy
+$z=\E e^{iuY_1}$ do szeregu
 $\sum_{n\ge0}e^{-\lambda t}(\lambda t)^n z^n/n!
-=e^{\lambda t(z-1)}$.
+=e^{\lambda t(z-1)}$. Szereg jest bezwzględnie zbieżny,
+ponieważ $|z|\le1$, i nie wymaga założeń momentowych.
 Doprecyzujmy filtrację: $\mathcal G_s$ jest generowane przez
 $N_v$ dla $0\le v\le s$ oraz zmienne
 $Y_k\chi_{\{T_k\le s\}}$ dla $k\ge1$.
@@ -909,6 +912,46 @@ zmiana $a$ na zbiorze miary Lebesgue'a zero nie zmienia $A$
 ani prawa skonstruowanego procesu.
 \end{uwaga}
 
+\begin{wniosek}[Warunkowe chwile nadejść przy zmiennej intensywności]
+Niech $t>0$, $A(t)>0$ i $n\ge1$. Dla niejednorodnego
+procesu Poissona warunkowo względem $N_t=n$ chwile
+$T_1,\ldots,T_n$ mają rozkład statystyk pozycyjnych
+$n$ niezależnych zmiennych o gęstości
+$a(v)/A(t)$ na $(0,t)$ (względem miary Lebesgue'a).
+W szczególności dla $0\le s\le t$
+\[
+N_s\mid\{N_t=n\}\sim\operatorname{Bin}(n,A(s)/A(t)).
+\]
+\end{wniosek}
+\begin{proof}
+Dla podziału $0=t_0<\cdots<t_m=t$ oznaczmy
+$b_j=A(t_j)-A(t_{j-1})$. Przyrosty są niezależne
+i mają rozkłady Poissona o parametrach $b_j$.
+Dla $n_j\in\N_0$ z $\sum_j n_j=n$, dzieląc ich wspólne
+prawdopodobieństwo punktowe przez $\Prob(N_t=n)>0$,
+otrzymujemy
+\[
+\Prob\bigl(N_{t_j}-N_{t_{j-1}}=n_j,\ 1\le j\le m
+\mid N_t=n\bigr)
+=\frac{n!}{\prod_j n_j!}\prod_{j=1}^m
+\left(\frac{b_j}{A(t)}\right)^{n_j},
+\]
+z konwencją $0^0=1$. Jest to również prawo liczności
+$n$ niezależnych punktów o gęstości $a(v)/A(t)$
+w kolejnych przedziałach, ponieważ prawdopodobieństwo
+przynależności pojedynczego punktu do $(t_{j-1},t_j]$
+wynosi $b_j/A(t)$. Prawo uporządkowanych chwil
+wyznaczają wspólne prawdopodobieństwa zdarzeń
+$\{T_k\le u_k\}$ dla $u_k\in[0,t]$, które na
+$\{N_t=n\}$ są równoważne $\{N_{u_k}\ge k\}$.
+Zatem zgodność rozkładów przyrostów na każdym podziale
+daje zgodność rozkładów tych chwil ze statystykami
+pozycyjnymi. Biorąc podział w chwili $s$ dostajemy
+rozkład dwumianowy; dla $s=0,t$ jest on zdegenerowany.
+Przy $A(t)=0$ mamy $N_t=0$ prawie na pewno i nie
+warunkujemy względem dodatniej liczby nadejść.
+\end{proof}
+
 \begin{przyklad}[Intensywność sezonowa]
 Niech $a(t)=2+t$ dla $0\le t\le2$ i $a(t)=4$ dla $t>2$.
 W ciągu pierwszej godziny średnia liczba zdarzeń wynosi
@@ -918,6 +961,12 @@ Pomiędzy godziną pierwszą a drugą średnia przyrostu
 wynosi $A(2)-A(1)=7/2$. Obie liczby zdarzeń są niezależne,
 choć ich rozkłady nie są jednakowe: przyrosty pozostają
 niezależne, ale przestają być stacjonarne.
+Warunkowo względem $N_2=4$ liczba zgłoszeń w pierwszej
+godzinie ma rozkład $\operatorname{Bin}(4,5/12)$,
+ponieważ $A(2)=6$. W przeciwieństwie do procesu
+jednorodnego prawdopodobieństwo pojedynczego nadejścia
+w pierwszej połowie czasu obserwacji, przy ustalonej
+liczbie nadejść, nie wynosi tutaj $1/2$.
 \end{przyklad}
 
 \section{Charakterystyka przez przyrosty i zdarzenia rzadkie}
