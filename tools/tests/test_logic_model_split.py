@@ -48,6 +48,9 @@ class TestLogicModelSplit(unittest.TestCase):
             text = (ROOT / book["entrypoint"]).read_text("utf8")
             self.assertEqual(re.findall(r"\\input\{\.\./\.\./([^}]+)\}", text), book["chapters"])
         self.assertIn(str(FUZZY.relative_to(ROOT)), LST["chapters"])
+        self.assertEqual([Path(p).name[:2] for p in MOD["chapters"][:9]],
+                         ["24", "25", "26", "27", "28", "20", "21", "22", "23"])
+        self.assertEqual(len(MANIFEST["moved_chapters"]), 9)
 
     def test_no_active_reference_to_archive_only_label(self):
         historical = {label for old in MANIFEST["legacy_chapters"]

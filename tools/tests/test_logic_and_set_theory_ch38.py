@@ -37,8 +37,8 @@ class TestChapter38(unittest.TestCase):
     def test_catalog_position_and_input(self):
         data = json.loads((ROOT / "catalog/books.json").read_text("utf-8"))
         book = next(b for b in data["books"] if b["id"] == "logic_and_set_theory")
-        self.assertGreaterEqual(len(book["chapters"]), 34)
-        self.assertEqual(book["chapters"][33],
+        self.assertGreaterEqual(len(book["chapters"]), 29)
+        self.assertEqual(book["chapters"][28],
                          f"chapters/pl/logic_and_set_theory/{FILENAME}")
         main = (ROOT / "books/pl/logic_and_set_theory.tex").read_text("utf-8")
         self.assertIn(r"\input{../../chapters/pl/logic_and_set_theory/" +

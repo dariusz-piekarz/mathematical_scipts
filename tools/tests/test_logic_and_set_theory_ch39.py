@@ -43,8 +43,8 @@ class Chapter39Audits(unittest.TestCase):
     def test_book_and_catalog(self):
         catalog = json.loads((ROOT / "catalog/books.json").read_text("utf-8"))
         book = next(b for b in catalog["books"] if b["id"] == "logic_and_set_theory")
-        self.assertGreaterEqual(len(book["chapters"]), 35)
-        self.assertEqual(book["chapters"][34],
+        self.assertGreaterEqual(len(book["chapters"]), 30)
+        self.assertEqual(book["chapters"][29],
                          f"chapters/pl/logic_and_set_theory/{NAME}")
         source = (ROOT / "books/pl/logic_and_set_theory.tex").read_text("utf-8")
         self.assertIn(r"\input{../../chapters/pl/logic_and_set_theory/" + NAME + "}",

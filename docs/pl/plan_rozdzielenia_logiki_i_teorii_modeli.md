@@ -57,3 +57,6 @@ Migracja wymaga zmiany istniejącego workflow, który sprawdza pierwsze 39 rozdz
 
 ## Migracja strukturalna
 Cztery rozdziały LST przenosimy z zachowaniem bajtów i etykiet do MOD-20–23. Wybór numerów zapobiega ponownemu użyciu identyfikatorów dawnych MOD-00–18. Stare źródła w całości archiwizujemy w `sources/pl/legacy_model_theory_2026_11_28/` (w tym punkt wejścia), a nie usuwamy bezpowrotnie. Audyt pokrycia i ewentualne odtworzenie odsyłaczy historycznych są oddzielnym etapem. Szczegóły SHA i ścieżek w `catalog/logic_model_migration.json`.
+
+## Drugi etap podziału: fundamenty teorii modeli
+Decyzja po dyskusji: dotychczasowe LST 09–13 stają się MOD-24–28 i poprzedzają MOD-20–23 w kolejności dydaktycznej. Obejmuje to składnię, semantykę, dedukcję naturalną (jako niezbędny aparat), poprawność i pełność Gödla. Nowe rozdziały ogólnej teorii dowodu (rachunek sekwentów, eliminacja cięcia, normalizacja) pozostaną w LST i odsyłają do dedukcji naturalnej w MOD. Twierdzenia o niezupełności, arytmetyka formalna, obliczalność, logiki nieklasyczne i teoria mnogości pozostają w LST. Nie dublować dowodów. LST-40 docelowo umieścić w części logik nieklasycznych. Priorytet opracowania pozostaje LST. Zachować identyfikatory MOD-20–23 i kolejność katalogową niezależną od numerów plików.

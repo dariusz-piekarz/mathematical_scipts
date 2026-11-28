@@ -124,8 +124,8 @@ class TestLogicAndSetTheoryChapter11(unittest.TestCase):
         free_variable, bound_variable = "x", "z"
         self.assertNotEqual(free_variable, bound_variable)
         text = (Path(__file__).resolve().parents[2]
-                / "chapters/pl/logic_and_set_theory/"
-                  "11-dowody-formalne-i-dedukcja-naturalna.tex"
+                / "chapters/pl/model_theory/"
+                  "26-dowody-formalne-i-dedukcja-naturalna.tex"
                 ).read_text(encoding="utf-8")
         self.assertIn("podstawiając za $x$ samą", text)
         self.assertIn("zbiór ten może być nieskończony", text)
@@ -187,8 +187,8 @@ class TestLogicAndSetTheoryChapter11(unittest.TestCase):
             tuple(substitute(e, 0, u) for e in theta), (u, t))
 
         chapter = (Path(__file__).resolve().parents[2]
-                   / "chapters/pl/logic_and_set_theory/"
-                     "11-dowody-formalne-i-dedukcja-naturalna.tex"
+                   / "chapters/pl/model_theory/"
+                     "26-dowody-formalne-i-dedukcja-naturalna.tex"
                    ).read_text(encoding="utf-8")
         self.assertIn("nie występuje ani w $t$", chapter)
         self.assertIn(r"$\theta[z:=t]$", chapter)

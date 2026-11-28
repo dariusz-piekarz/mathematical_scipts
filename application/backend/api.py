@@ -185,7 +185,7 @@ def modules(domain: str | None = None, q: str = "", limit: Annotated[int,Query(g
     with db_connection() as con:
         sql_where = " AND ".join(where)
         count = con.execute(f"SELECT count(*) FROM documents WHERE {sql_where}",params).fetchone()[0]
-        rows = con.execute(f"SELECT id,title,domain,path,length(content) AS length FROM documents WHERE {sql_where} ORDER BY domain,id LIMIT ? OFFSET ?", (*params, limit, offset)).fetchall()
+        rows = con.execute(f"SELECT id,title,domain,path,length(content) AS length FROM documents WHERE {sql_where} ORDER BY domain, CASE WHEN id IN ('MOD-24','MOD-25','MOD-26','MOD-27','MOD-28') THEN 0 WHEN id LIKE 'MOD-%' THEN 1 ELSE 0 END, id LIMIT ? OFFSET ?", (*params, limit, offset)).fetchall()
         return {"total":count,"items":[dict(x) for x in rows]}
 
 

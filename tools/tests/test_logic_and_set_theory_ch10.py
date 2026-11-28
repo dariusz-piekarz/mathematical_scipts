@@ -225,8 +225,8 @@ class TestLogicAndSetTheoryChapter10(unittest.TestCase):
         self.assertTrue(all(induction(D) for D in henkin))
 
         source = (Path(__file__).resolve().parents[2]
-                  / "chapters/pl/logic_and_set_theory/"
-                    "10-struktury-wartosciowania-i-prawda.tex"
+                  / "chapters/pl/model_theory/"
+                    "25-struktury-wartosciowania-i-prawda.tex"
                  ).read_text(encoding="utf-8")
         self.assertIn(r"s(X^{(n)})\in\mathcal S_n", source)
         self.assertIn(r"D_n\in\mathcal S_n", source)

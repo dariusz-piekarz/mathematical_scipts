@@ -39,7 +39,7 @@ class TestHenkinChapter13(unittest.TestCase):
                 self.assertEqual(a % 3 == 0, b % 3 == 0)
 
     def test_source_side_conditions_and_inventory(self):
-        src = (Path(__file__).resolve().parents[2] / "chapters/pl/logic_and_set_theory/13-twierdzenie-godla-o-pelnosci-i-konstrukcja-henkina.tex").read_text(encoding="utf-8")
+        src = (Path(__file__).resolve().parents[2] / "chapters/pl/model_theory/28-twierdzenie-godla-o-pelnosci-i-konstrukcja-henkina.tex").read_text(encoding="utf-8")
         assert src.count(r"\begin{twierdzenie}") == 5
         assert src.count(r"\begin{lemat}") == 11
         assert src.count(r"\begin{definicja}") == 6

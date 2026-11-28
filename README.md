@@ -62,9 +62,9 @@ Poniższa lista pochodzi z `catalog/books.json`. Liczba rozdziałów oznacza poz
 | [Algebra liniowa](books/pl/linear_algebra.tex) | 27 (01–27 stabilne) |
 
 **Dalszy plan algebry liniowej:** [rozdziały 28–32: realizacje minimalne, grassmanniany, algebry Clifforda, grupy Pin/Spin, spinory i twistory](docs/pl/plan_algebry_liniowej.md). Materiał o Pin/Spin i spinorach przenosimy z DG-04, natomiast twistory opracujemy od podstaw.
-| [Logika matematyczna i teoria mnogości](books/pl/logic_and_set_theory.tex) | 36 |
+| [Logika matematyczna i teoria mnogości](books/pl/logic_and_set_theory.tex) | 31 |
 | [Teoria miary](books/pl/measure_theory.tex) | 31 |
-| [Teoria modeli](books/pl/model_theory.tex) | 4 |
+| [Teoria modeli](books/pl/model_theory.tex) | 9 |
 | [Równania różniczkowe cząstkowe](books/pl/partial_differential_equations.tex) | 33 |
 | [Rachunek prawdopodobieństwa — tom I](books/pl/probability_volume_i.tex) | 16 |
 | [Rachunek prawdopodobieństwa — tom II](books/pl/probability_volume_ii.tex) | 15 |
@@ -75,7 +75,7 @@ Książki w `books/pl/` zawierają preambuły, kolejność i `\input`; rozdział
 
 **Teoria całki:** samodzielny skrypt wycofano z katalogu. Materiał skalarnego rachunku całkowego znajduje się w analizie matematycznej I, teoria miar (w tym całki Daniella–Stone'a, Radona i miara Haara) w teorii miary, a całki wektorowe w analizie funkcjonalnej (15A–15B). Całka Mawhina pozostaje wstrzymana do odrębnej decyzji; całkę Pfeffera przewidziano w planie analizy matematycznej II.
 
-**Restrukturyzacja logiki i teorii modeli (28.11.2026):** nowa teoria modeli zawiera zwartość, elementarność i oba twierdzenia Löwenheima–Skolema. Pierwotne źródła starej książki zachowano w `sources/pl/legacy_model_theory_2026_11_28/` do audytu pełnego pokrycia. W przypadku ręcznej kompilacji obu książek uruchom `latexmk -pdf` dla LST, MOD, a następnie ponownie LST, aby rozstrzygnąć odsyłacze między książkami.
+**Restrukturyzacja logiki i teorii modeli (28.11.2026):** nowa teoria modeli zawiera składnię, semantykę, dedukcję naturalną, poprawność, pełność Gödla, zwartość, elementarność i oba twierdzenia Löwenheima–Skolema. Pierwotne źródła starej książki zachowano w `sources/pl/legacy_model_theory_2026_11_28/` do audytu pełnego pokrycia. W przypadku ręcznej kompilacji obu książek uruchom `latexmk -pdf` dla LST, MOD, a następnie ponownie LST, aby rozstrzygnąć odsyłacze między książkami.
 
 ## Uruchamianie Atlasu
 

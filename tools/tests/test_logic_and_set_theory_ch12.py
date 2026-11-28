@@ -177,8 +177,8 @@ class TestLogicAndSetTheoryChapter12(unittest.TestCase):
 
     def test_source_induction_treats_temporary_open_assumptions(self):
         source = (Path(__file__).resolve().parents[2]
-                  / "chapters/pl/logic_and_set_theory/"
-                    "12-poprawnosc-logiki-pierwszego-rzedu.tex"
+                  / "chapters/pl/model_theory/"
+                    "27-poprawnosc-logiki-pierwszego-rzedu.tex"
                   ).read_text(encoding="utf-8")
         self.assertIn("Dotyczy to również założeń tymczasowych", source)
         self.assertIn("dla każdej", source)
