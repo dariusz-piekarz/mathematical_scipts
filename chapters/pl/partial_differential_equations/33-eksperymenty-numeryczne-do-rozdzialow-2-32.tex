@@ -7,11 +7,13 @@ Wizualizacje są interaktywne i zapisują się do plików \texttt{.html};
 pliki zawierają również lokalną kopię biblioteki JavaScript Plotly,
 więc otwierają się bez połączenia z internetem.
 Programy uruchamia się przez \texttt{python nazwa\_pliku.py}.
-W załączonym projekcie wszystkie 29 listingów zapisano także jako
-osobne pliki w katalogu \texttt{scripts/listings/}. Aby uruchomić
-przykład, należy wykonać odpowiadający mu plik \texttt{.py};
-kompletną tabelę nazw umieszczono w pliku
-\texttt{INSTRUKCJA\_URUCHOMIENIA.md}. Eksperymenty korzystają
+Aby uruchomić przykład z tego rozdziału, należy
+zapisać treść wybranego listingu (bez poleceń LaTeX)
+w osobnym pliku \texttt{.py} i uruchomić go w katalogu,
+do którego można zapisywać pliki wynikowe.
+Listingi są niezależne: nie należy ich łączyć w jeden
+program. Przed uruchomieniem trzeba zainstalować
+wymagane biblioteki w tym samym środowisku Pythona. Eksperymenty korzystają
 z NumPy w wersji co najmniej 2.0 oraz Plotly. Część przykładów,
 w szczególności wizualizacja 3D wiru Taylora--Greena, wymaga ponadto
 SciPy i Matplotlib. Wykonanie programu testuje jego działanie
@@ -19,8 +21,19 @@ numeryczne, ale samo nie stanowi dowodu zbieżności schematu.
 
 \section{Charakterystyki, równanie Poissona i ciepło}
 W kodzie wykorzystujemy rozwiązanie charakterystyk
-równania Burgersa dla danych $-\tanh x$, tłumienie
-harmonicznych modów przez $r^k$ oraz jawny profil Gaussa.
+równania Burgersa $u_t+uu_x=0$ dla danych $-\tanh x$,
+tłumienie harmonicznych modów przez $r^k$ oraz
+jawny profil Gaussa. Charakterystyka ma postać
+$X(t,\xi)=\xi-t\tanh\xi$, a jej pochodna względem
+$\xi$ jest równa $1-t/\cosh^2\xi\ge1-t>0$
+dla $0\le t<1$. Zatem $X(t,\cdot)$ jest odwracalna
+na $\R$ (dąży do $\pm\infty$ na odpowiednich krańcach),
+a $u(t,X(t,\xi))=-\tanh\xi$.
+W chwili $t=1$ pochodna przestrzenna w zerze
+przestaje być skończona: z reguły łańcuchowej
+$u_x(t,0)=-1/(1-t)$.
+Interpolacja numeryczna przybliża odwrotność
+charakterystyki wyłącznie w zakresie próbkowanej siatki.
 
 \begin{lstlisting}[style=pythonpde,caption={Burgers, funkcje harmoniczne i dyfuzja: Plotly},label={code:pde-old}]
 """Interaktywne wykresy PDE: charakterystyki, profile, dyfuzja i Poisson.
@@ -47,10 +60,17 @@ def position(t, xi):
 
 
 def burgers(t, x):
-    xi = np.linspace(-8.0, 8.0, 100001)
+    if not np.isfinite(t) or not 0 <= t < 1:
+        raise ValueError("Wymagany czas 0 <= t < 1")
+    x = np.asarray(x, dtype=float)
+    if not np.all(np.isfinite(x)):
+        raise ValueError("Argumenty x musza byc skonczone")
+    # |X(t, xi)-xi| <= t: dobierz zakres do argumentow.
+    radius = max(8.0, float(np.max(np.abs(x), initial=0)) + t + 1)
+    xi = np.linspace(-radius, radius, 100001)
     X = position(t, xi)
     if not np.all(np.diff(X) > 0):
-        raise ValueError("Brak rozwiazania klasycznego dla tego czasu")
+        raise ValueError("Siatka nie rozroznia charakterystyk")
     return data(np.interp(x, X, xi))
 
 
@@ -109,6 +129,20 @@ if __name__ == "__main__":
 \end{lstlisting}
 
 \section{Schemat falowy i kontrola dokładności}
+Na odcinku $(0,L)$ rozwiązujemy równanie $u_{tt}=c^2u_{xx}$
+z jednorodnymi warunkami Dirichleta i zerową prędkością
+początkową. Parametr Couranta $\lambda=c\Delta t/\Delta x$
+nie przekracza jedności. Pierwszą warstwę obliczamy
+z rozwinięcia Taylora i równania, tj.
+$u_j^1=u_j^0+\frac{\lambda^2}{2}(u_{j+1}^0-2u_j^0+u_{j-1}^0)$.
+Następne warstwy wyznacza centralny schemat trójwarstwowy.
+Błąd porównujemy w rzeczywiście osiągniętej chwili
+$n\Delta t$, a nie w zadanym czasie przed zaokrągleniem.
+Dodatkowo powtarzamy eksperyment na zagęszczonych siatkach:
+dla gładkiego rozwiązania i ustalonego $\lambda$
+oczekujemy błędu rzędu drugiego. Empiryczny rząd
+$\log_2(E_N/E_{2N})$ stanowi kontrolę numeryczną,
+a nie dowód zbieżności.
 \begin{lstlisting}[style=pythonpde,caption={Schemat różnicowy równania falowego: Plotly i test błędu},label={code:pde-wave}]
 """Jawny schemat falowy: interaktywny wykres Plotly i blad max.
 Wymagania: numpy, plotly. Zapisuje plik HTML do katalogu skryptu.
@@ -117,41 +151,55 @@ from pathlib import Path
 import numpy as np
 import plotly.graph_objects as go
 
-c, L, N = 1.0, 1.0, 300
-dx = L / N
-lam = 0.8
-dt = lam * dx / c
-x = np.linspace(0.0, L, N + 1)
-T = 0.8
-steps = int(round(T / dt))
+c, L, T, lam = 1.0, 1.0, 0.8, 0.8
 
 
-def exact(t):
+def exact(t, x):
     return (np.cos(2*np.pi*c*t/L)*np.sin(2*np.pi*x/L)
             + 0.4*np.cos(7*np.pi*c*t/L)*np.sin(7*np.pi*x/L))
 
 
-u_prev = exact(0.0)
-u = u_prev.copy()
-u[1:-1] += 0.5*lam**2*(u_prev[2:] - 2*u_prev[1:-1] + u_prev[:-2])
-u[0] = u[-1] = 0.0
-snapshots = {0: u_prev.copy()}
-for m in range(1, steps):
-    u_next = np.zeros_like(u)
-    u_next[1:-1] = (2*u[1:-1] - u_prev[1:-1]
-                    + lam**2*(u[2:] - 2*u[1:-1] + u[:-2]))
-    u_prev, u = u, u_next
-    if m + 1 in (steps//3, 2*steps//3, steps):
-        snapshots[m + 1] = u.copy()
+def solve(N):
+    if N < 2 or not 0 < lam <= 1:
+        raise ValueError("Wymagane N >= 2 i 0 < CFL <= 1")
+    dx = L / N
+    steps = max(1, int(np.ceil(T*c/(lam*dx))))
+    dt = T / steps
+    r = c*dt/dx
+    x = np.linspace(0.0, L, N + 1)
+    u_prev = exact(0.0, x)
+    u_prev[0] = u_prev[-1] = 0.0
+    u = u_prev.copy()
+    u[1:-1] += 0.5*r**2*(u_prev[2:] - 2*u_prev[1:-1] + u_prev[:-2])
+    snapshots = {0: u_prev.copy()}
+    if steps == 1:
+        snapshots[1] = u.copy()
+    for m in range(1, steps):
+        u_next = np.zeros_like(u)
+        u_next[1:-1] = (2*u[1:-1] - u_prev[1:-1]
+                        + r**2*(u[2:] - 2*u[1:-1] + u[:-2]))
+        u_prev, u = u, u_next
+        if m + 1 in (steps//3, 2*steps//3, steps):
+            snapshots[m + 1] = u.copy()
+    error = np.max(np.abs(u - exact(T, x)))
+    return x, dt, r, snapshots, error
 
-fig = go.Figure()
-for m, values in snapshots.items():
-    fig.add_trace(go.Scatter(x=x, y=values, mode="lines", name=f"t={m*dt:.3f}"))
-fig.update_layout(template="plotly_white", title="Struna: lambda=0.8",
-                  xaxis_title="x", yaxis_title="u(t,x)")
-fig.write_html(Path(__file__).with_name("wave_leapfrog.html"),
-               include_plotlyjs=True, full_html=True)
-print("CFL:", lam, "blad max:", np.max(np.abs(u - exact(steps*dt))))
+
+if __name__ == "__main__":
+    previous = None
+    for N in (75, 150, 300, 600):
+        x, dt, r, snapshots, error = solve(N)
+        order = np.log2(previous/error) if previous is not None else np.nan
+        print(f"N={N}, CFL={r:.6f}, blad={error:.6e}, rzad={order:.3f}")
+        previous = error
+    fig = go.Figure()
+    for m, values in snapshots.items():
+        fig.add_trace(go.Scatter(x=x, y=values, mode="lines",
+                                 name=f"t={m*dt:.3f}"))
+    fig.update_layout(template="plotly_white", title=f"Struna: CFL={r:.3f}",
+                      xaxis_title="x", yaxis_title="u(t,x)")
+    fig.write_html(Path(__file__).with_name("wave_leapfrog.html"),
+                   include_plotlyjs=True, full_html=True)
 \end{lstlisting}
 
 \section{Szeregi Fouriera i ewolucje modalne}
@@ -173,8 +221,9 @@ def save(fig, name):
 
 def fourier_vs_fejer():
     # f(x) = sign(x), x in (-pi, pi). W wartosciach skoku: f=0.
-    x = np.linspace(-np.pi, np.pi, 1400)
+    x = np.linspace(-np.pi, np.pi, 1401)
     f = np.sign(x)
+    f[[0, -1]] = 0.0  # srednie granic jednostronnych na torusie
     fig = go.Figure([go.Scatter(x=x, y=f, name="dane skokowe")])
     for N in (5, 15, 45):
         ks = np.arange(1, N+1, 2)
@@ -193,8 +242,8 @@ def heat_modes():
     x = np.linspace(0.0, L, 500)
     t = np.linspace(0.0, 0.6, 100)
     X, T = np.meshgrid(x, t)
-    U = (np.exp(-kappa*np.pi**2*T)*np.sin(np.pi*X)
-         + 0.45*np.exp(-kappa*(5*np.pi)**2*T)*np.sin(5*np.pi*X))
+    U = (np.exp(-kappa*(np.pi/L)**2*T)*np.sin(np.pi*X/L)
+         + 0.45*np.exp(-kappa*(5*np.pi/L)**2*T)*np.sin(5*np.pi*X/L))
     fig = go.Figure(data=go.Surface(x=X, y=T, z=U, colorscale="Viridis"))
     fig.update_layout(title="Rownanie ciepla: tlumienie wysokich modow",
                       scene=dict(xaxis_title="x", yaxis_title="t",
