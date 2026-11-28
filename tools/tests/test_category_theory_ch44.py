@@ -66,5 +66,55 @@ class CategoryTheoryCh44(unittest.TestCase):
                 self.assertEqual((v-g) % 3, (u-gp) % 3)
 
 
+    def test_kan_horn_filler(self):
+        # Nerve of the additive group F_3, a simplicial abelian group.
+        def face(w, i):
+            if i == 0:
+                return w[1:]
+            if i == len(w):
+                return w[:-1]
+            return w[:i-1] + ((w[i-1]+w[i]) % 3,) + w[i+1:]
+
+        def correct(y, x, i, s):
+            error = tuple((a-b) % 3 for a, b in zip(x, face(y, i)))
+            degenerate = error[:s] + (0,) + error[s:]
+            return tuple((a+b) % 3 for a, b in zip(y, degenerate))
+
+        for n in range(1, 7):
+            for w in product(range(3), repeat=n):
+                for j in range(n+1):
+                    y = (0,) * n
+                    for i in range(j):
+                        y = correct(y, face(w, i), i, i)
+                    for i in range(n, j, -1):
+                        y = correct(y, face(w, i), i, i-1)
+                    for i in range(n+1):
+                        if i != j:
+                            self.assertEqual(face(y, i), face(w, i))
+
+    def test_tilting_a3_hom_and_ext(self):
+        # Thin representations over F_3: vertex dimensions and arrow scalars.
+        p1 = ((1, 1, 1), (1, 1))
+        p2 = ((0, 1, 1), (0, 1))
+        p3 = ((0, 0, 1), (0, 0))
+        s2 = ((0, 1, 0), (0, 0))
+
+        def hom(src, dst):
+            ds, fs = src
+            dt, ft = dst
+            choices = [range(3) if a*b else (0,) for a, b in zip(ds, dt)]
+            return {x for x in product(*choices)
+                    if all((ft[i]*x[i]-x[i+1]*fs[i]) % 3 == 0
+                           for i in range(2))}
+
+        terms = (p1, p2, s2)
+        self.assertEqual([[len(hom(x, y)) for y in terms] for x in terms],
+                         [[3, 1, 1], [3, 3, 3], [1, 1, 3]])
+        # Restriction along P3 -> P2 keeps only the component at vertex 3.
+        for target in terms:
+            self.assertEqual({(0, 0, x[2]) for x in hom(p2, target)},
+                             hom(p3, target))
+
+
 if __name__ == '__main__':
     unittest.main()
