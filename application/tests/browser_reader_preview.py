@@ -352,6 +352,35 @@ with sync_playwright() as pw:
             assert abs(check['projected']-1/16) < 1e-12, check
         host.locator('button').click()
         assert iframe.count() == 0
+    # AM II 27: transverse tube volumes for all slider positions.
+    source = (ROOT.parent / 'chapters/pl/mathematical_analysis_ii/27-calki-na-zbiorach-nieograniczonych-i-z-osobliwosciami.tex').read_text(encoding='utf-8')
+    page.evaluate("latex => renderSimplified(latex, 'AM2-27')", source)
+    host = box.locator('.atlas-plot-host')
+    assert host.count() == 1
+    host.locator('button').click()
+    iframe = host.locator('iframe')
+    assert iframe.get_attribute('sandbox') == 'allow-scripts'
+    assert iframe.get_attribute('src').endswith('am2_27_tubes.html')
+    plot = host.frame_locator('iframe').locator('#plot[data-ready=true]')
+    plot.wait_for(timeout=60000)
+    check = plot.evaluate("""el => {
+        const s=el.layout.sliders[0], d=el.data;
+        let error=0;
+        for(let h=0;h<8;h++){
+            const r=(h+1)/10;
+            for(let k=0;k<3;k++){
+                const m=d[3+6*h+2*k];
+                const volume=['x','y','z'].reduce((v,a)=>v*(Math.max(...m[a])-Math.min(...m[a])),1);
+                error=Math.max(error,Math.abs(volume-8*r**(3-k)));
+            }
+        }
+        return {error, steps:s.steps.length, active:s.active,
+            visible:d.slice(3).filter(t=>t.visible===true).length};
+    }""")
+    assert check['error'] < 1e-12 and check['steps'] == 8, check
+    assert check['active'] == 3 and check['visible'] == 6, check
+    host.locator('button').click()
+    assert iframe.count() == 0
     # Real graph chapters: every figure must decode, not merely insert a placeholder.
     for module, filename, expected in (
         ('GW-01', '01-podstawy-teorii-grafow.tex', 7),

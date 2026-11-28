@@ -178,6 +178,29 @@
       for(let i=0;i<4;i++)data.push({...line([a[i],a[i]],[b[i],b[i]],[0,a[i]+b[i]],"Rzutowanie","#888"),showlegend:false,line:{color:"#888",width:2,dash:"dash"}});
       return base(data,"Macierz Grama: mnożnik pola √3",{scene:{...scene(),aspectmode:"data",camera:{eye:{x:1.55,y:1.55,z:1.1}}}});
     },
+    "am2_27_tubes.html":()=>{
+      const faces=[[0,2,1],[0,3,2],[4,5,6],[4,6,7],[0,1,5],[0,5,4],[1,2,6],[1,6,5],[2,3,7],[2,7,6],[3,0,4],[3,4,7]];
+      const edges=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+      const radii=Array.from({length:8},(_,j)=>(j+1)/10),data=[],layouts={};
+      const sc=k=>k?"scene"+(k+1):"scene";
+      for(let k=0;k<3;k++){
+        layouts[sc(k)]={...scene(),aspectmode:"cube",domain:{x:[k/3,(k+1)/3],y:[0,1]},...Object.fromEntries(["x","y","z"].map(a=>[a+"axis",{...axis(a),range:[-1.1,1.1]}]))};
+      }
+      data.push({type:"scatter3d",mode:"markers",scene:"scene",x:[0],y:[0],z:[0],marker:{size:6,color:"#d97706"},showlegend:false},
+        {...line([0,0],[0,0],[-1,1],"Oś","#d97706"),scene:"scene2",showlegend:false},
+        {type:"mesh3d",scene:"scene3",x:[-1,1,1,-1],y:[-1,-1,1,1],z:[0,0,0,0],i:[0,0],j:[1,2],k:[2,3],color:"#d97706",opacity:.8,showlegend:false});
+      radii.forEach((r,j)=>{
+        [[r,r,r],[r,r,1],[1,1,r]].forEach(([a,b,d],k)=>{
+          const v=[[-a,-b,-d],[a,-b,-d],[a,b,-d],[-a,b,-d],[-a,-b,d],[a,-b,d],[a,b,d],[-a,b,d]];
+          const pts=edges.flatMap(([i,l])=>[v[i],v[l],[null,null,null]]);
+          data.push({type:"mesh3d",scene:sc(k),x:v.map(p=>p[0]),y:v.map(p=>p[1]),z:v.map(p=>p[2]),i:faces.map(p=>p[0]),j:faces.map(p=>p[1]),k:faces.map(p=>p[2]),color:"#397db5",opacity:.26,flatshading:true,visible:j===3,name:"Otoczenie",showlegend:false},
+            {...line(pts.map(p=>p[0]),pts.map(p=>p[1]),pts.map(p=>p[2]),"Krawędzie","#24517d"),scene:sc(k),visible:j===3,showlegend:false});
+        });
+      });
+      const title=r=>"r = "+r.toFixed(1)+" | objętości: "+[8*r**3,8*r**2,8*r].map(v=>v.toFixed(3)).join(" / ");
+      const steps=radii.map((r,j)=>({label:r.toFixed(1),method:"update",args:[{visible:[true,true,true,...radii.flatMap((_,i)=>Array(6).fill(i===j))]},{"title.text":title(r)}]}));
+      return base(data,title(.4),{...layouts,margin:{l:0,r:0,b:70,t:80},annotations:[0,1,2].map(k=>({xref:"paper",yref:"paper",x:(k+.5)/3,y:1.04,text:["Punkt: m=3","Oś: m=2","Płaszczyzna: m=1"][k],showarrow:false,xanchor:"center"})),sliders:[{active:3,currentvalue:{prefix:"r = "},steps}]});
+    },
     "am2_36_geometric.html":()=>{
       const r=lin(0,.97,61),t=lin(0,2*Math.PI,121),X=t.map(a=>r.map(v=>v*Math.cos(a))),Y=t.map(a=>r.map(v=>v*Math.sin(a)));
       const norm=(a,v,n)=>n===null?1/Math.hypot(1-v*Math.cos(a),v*Math.sin(a)):Math.hypot(1-v**(n+1)*Math.cos((n+1)*a),v**(n+1)*Math.sin((n+1)*a))/Math.hypot(1-v*Math.cos(a),v*Math.sin(a));

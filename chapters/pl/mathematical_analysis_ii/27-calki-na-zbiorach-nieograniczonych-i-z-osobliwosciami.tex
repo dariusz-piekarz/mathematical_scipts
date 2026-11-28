@@ -936,6 +936,59 @@ Nie wynika stąd całkowalność na całej
 $\R^n$: zachowanie w nieskończoności
 wymaga odrębnego sprawdzenia.
 
+
+\paragraph{Wizualizacja interaktywna.}
+Suwak zmienia promień $r$ kostkowego otoczenia
+punktu, osi oraz płaszczyzny w ograniczonej
+kostce $[-1,1]^3$. Ich objętości to
+$8r^3$, $8r^2$ i $8r$ dla $0<r\le1$.
+Są to otoczenia w normie supremum, nie
+otoczenia euklidesowe. Widać, że wykładnik
+zależy od kowymiaru.
+\begin{lstlisting}[language=Python]
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+fig=make_subplots(rows=1,cols=3,
+    specs=[[{"type":"scene"}]*3],
+    subplot_titles=["Punkt","Os","Plaszczyzna"])
+faces=[(0,2,1),(0,3,2),(4,5,6),(4,6,7),
+       (0,1,5),(0,5,4),(1,2,6),(1,6,5),
+       (2,3,7),(2,7,6),(3,0,4),(3,4,7)]
+i,j,k=zip(*faces)
+fig.add_trace(go.Scatter3d(x=[0],y=[0],z=[0],
+    mode="markers",marker=dict(color="#d97706")),1,1)
+fig.add_trace(go.Scatter3d(x=[0,0],y=[0,0],
+    z=[-1,1],mode="lines",
+    line=dict(color="#d97706")),1,2)
+fig.add_trace(go.Mesh3d(x=[-1,1,1,-1],
+    y=[-1,-1,1,1],z=[0]*4,i=[0,0],
+    j=[1,2],k=[2,3],color="#d97706"),1,3)
+rs=[j/10 for j in range(1,9)]
+for h,r in enumerate(rs):
+    for col,(a,b,d) in enumerate(
+            [(r,r,r),(r,r,1),(1,1,r)],1):
+        v=[(-a,-b,-d),(a,-b,-d),(a,b,-d),
+           (-a,b,-d),(-a,-b,d),(a,-b,d),
+           (a,b,d),(-a,b,d)]
+        x,y,z=zip(*v)
+        fig.add_trace(go.Mesh3d(x=x,y=y,z=z,
+            i=i,j=j,k=k,opacity=.26,
+            color="#397db5",visible=h==3),1,col)
+steps=[dict(label=str(r),method="update",
+    args=[dict(visible=[True]*3+
+         [j==h for j in range(len(rs)) for _ in range(3)]),
+         dict(title=f"V: {8*r**3:.3f}, {8*r**2:.3f}, {8*r:.3f}")])
+    for h,r in enumerate(rs)]
+fig.update_scenes(aspectmode="cube",
+    xaxis_range=[-1.1,1.1],yaxis_range=[-1.1,1.1],
+    zaxis_range=[-1.1,1.1])
+fig.update_layout(showlegend=False,
+    sliders=[dict(active=3,steps=steps)],
+    title="V: 0.512, 1.280, 3.200")
+fig.write_html("am2_27_tubes.html", include_plotlyjs=True)
+\end{lstlisting}
+
 \section{Wartość główna i zależność od wyczerpania}
 
 Dla funkcji ze znakiem, która nie jest

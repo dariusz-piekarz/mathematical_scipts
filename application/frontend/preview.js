@@ -210,7 +210,7 @@ const ATLAS_AM2_PLOTS=Object.freeze({
   'AM2-14':'am2_14_remainder.html','AM2-15':'am2_15_mixed.html',
   'AM2-16':'am2_16_taylor.html','AM2-17':'am2_17_saddle.html',
   'AM2-18':'am2_18_inverse.html','AM2-19':'am2_19_implicit.html',
-  'AM2-20':'am2_20_rank.html','AM2-21':'am2_21_tangent.html','AM2-22':'am2_22_constrained.html','AM2-23':'am2_23_gradient.html','AM2-24':Object.freeze(['am2_24_local_volume.html','am2_24_signed_volume.html','am2_24_darboux.html']),'AM2-26':Object.freeze(['am2_26_layers.html','am2_26_gram.html']),'AM2-36':'am2_36_geometric.html'
+  'AM2-20':'am2_20_rank.html','AM2-21':'am2_21_tangent.html','AM2-22':'am2_22_constrained.html','AM2-23':'am2_23_gradient.html','AM2-24':Object.freeze(['am2_24_local_volume.html','am2_24_signed_volume.html','am2_24_darboux.html']),'AM2-26':Object.freeze(['am2_26_layers.html','am2_26_gram.html']),'AM2-27':'am2_27_tubes.html','AM2-36':'am2_36_geometric.html'
 });
 function addAtlasPlot(parent,source,moduleId){
   if(!Object.hasOwn(ATLAS_AM2_PLOTS,moduleId))return;
@@ -219,7 +219,7 @@ function addAtlasPlot(parent,source,moduleId){
   const matches=[...source.matchAll(/^\s*fig\.write_html\("([a-z0-9_]+\.html)",\s*include_plotlyjs=True\)\s*$/gm)];
   for(const id of ids){
   if(!matches.some(m=>m[1]===id))continue;
-  const title=({'am2_24_local_volume.html':'Lokalny wkład','am2_24_signed_volume.html':'Objętość ze znakiem','am2_24_darboux.html':'Sumy Darboux','am2_26_layers.html':'Przekroje poziome','am2_26_gram.html':'Macierz Grama'})[id];
+  const title=({'am2_24_local_volume.html':'Lokalny wkład','am2_24_signed_volume.html':'Objętość ze znakiem','am2_24_darboux.html':'Sumy Darboux','am2_26_layers.html':'Przekroje poziome','am2_26_gram.html':'Macierz Grama','am2_27_tubes.html':'Otoczenia poprzeczne'})[id];
   const openLabel=title?'Otwórz wykres 3D (Plotly) — '+title:'Otwórz wykres 3D (Plotly)';
   const host=document.createElement('div'),button=document.createElement('button');
   host.className='atlas-plot-host';button.className='ghost-btn';
