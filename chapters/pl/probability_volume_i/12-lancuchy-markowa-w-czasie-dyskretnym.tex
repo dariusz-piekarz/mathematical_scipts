@@ -1223,35 +1223,48 @@ warunkami brzegowymi.
 Jeśli $i\in A$, mamy $\tau_A=0<\tau_B$,
 a jeśli $i\in B$, to $\tau_B=0$,
 więc wartości brzegowe wynoszą odpowiednio $1$ i $0$.
-Dla $i\notin A\cup B$ rozdzielamy zdarzenie trafienia
-według pierwszego kroku. Z prawa całkowitego
-prawdopodobieństwa i własności Markowa
+Dla $m\geq0$ połóżmy
+$h_m(j)=\Prob_j(\tau_A\leq m,\tau_A<\tau_B)$.
+Jeśli $i\notin A\cup B$, to rozdzielamy zdarzenie
+trafienia w ciągu $m+1$ kroków według pierwszego kroku.
+Pełna własność Markowa dla skończonego fragmentu
+przyszłości daje
 \[
- h(i)=\sum_{j\in S}\Prob_i(X_1=j)
- \Prob_i(\tau_A<\tau_B,\tau_A<\infty\mid X_1=j)
- =\sum_{j\in S}p_{ij}h(j),
+h_{m+1}(i)=\sum_{j\in S}p_{ij}h_m(j).
 \]
-przy czym składniki odpowiadające $p_{ij}=0$
-można pominąć. Istotne jest przesunięcie czasu:
-po pierwszym kroku problem zaczyna się od nowa
-w stanie $j$.
+Nie trzeba warunkować na zdarzeniach zerowych.
+Ponieważ $h_m(j)\uparrow h(j)$ dla każdego $j$,
+z twierdzenia o zbieżności monotonicznej dla
+szeregu nieujemnego wynika $h(i)=\sum_j p_{ij}h(j)$.
 
 Niech $g:S\to[0,\infty)$ będzie innym rozwiązaniem
 z tymi samymi wartościami brzegowymi, niekoniecznie
 ograniczonym. Dla $\tau=\tau_A\wedge\tau_B$
 pokażemy indukcyjnie
 $g(i)=\E_i[g(X_{n\wedge\tau})]$.
-Dla $n=0$ jest to oczywiste. Zdarzenie
-$\{\tau\leq n\}$ oznacza, że proces znajduje się
-już na brzegu, więc wartość zatrzymanego procesu
-nie zmienia się. Na $\{\tau>n\}$, warunkując
-względem $\mathcal F_n^X$, stosujemy
-$\E[g(X_{n+1})\mid\mathcal F_n^X]=(Pg)(X_n)
-=g(X_n)$. Dla nieujemnego $g$ równość
-warunkowych całek jest dozwolona także przed
-ustaleniem całkowalności; z indukcji wynika,
-że każda rozważana wartość oczekiwana jest
-równa skończonemu $g(i)$.
+Dla $n=0$ mamy $\E_i[g(X_0)]=g(i)$.
+Na $\{\tau\leq n\}$ zatrzymany stan nie zmienia się
+między chwilami $n$ i $n+1$. Na $\{\tau>n\}$
+stan $X_n$ należy do $S\setminus(A\cup B)$.
+Z własności Markowa dla zdarzeń
+$\{\tau>n,X_n=k\}\in\mathcal F_n^X$ wynika
+\begin{align*}
+&\E_i[\chi_{\{\tau>n\}}g(X_{n+1})]\\
+&\qquad=\sum_{k\notin A\cup B}\Prob_i(\tau>n,X_n=k)
+                         \sum_{j\in S}p_{kj}g(j)\\
+&\qquad=\sum_{k\notin A\cup B}\Prob_i(\tau>n,X_n=k)g(k)\\
+&\qquad=\E_i[\chi_{\{\tau>n\}}g(X_n)].
+\end{align*}
+Dla nieujemnego $g$ wszystkie zamiany sumowania
+uzasadnia twierdzenie Tonellego, bez odwoływania się
+do warunkowej wartości oczekiwanej zmiennej, której
+całkowalności jeszcze nie wykazaliśmy. Dodając
+wkład zdarzenia $\{\tau\leq n\}$, dostajemy
+$\E_i[g(X_{(n+1)\wedge\tau})]=\E_i[g(X_{n\wedge\tau})]$.
+Indukcja dowodzi zarazem całkowalności zatrzymanych
+zmiennych, gdyż $g(i)<\infty$. Ten sam argument działa
+dla dowolnej rzeczywistej ograniczonej funkcji $g$,
+ponieważ odpowiednie szeregi są absolutnie zbieżne.
 
 Na $\{\tau_A\leq n,\tau_A<\tau_B\}$ mamy
 $g(X_{n\wedge\tau})=1$, a poza tym z
@@ -1261,10 +1274,12 @@ Zdarzenia po prawej rosną do
 $\{\tau_A<\tau_B,\tau_A<\infty\}$;
 ciągłość miary od dołu daje $g(i)\geq h(i)$.
 
-Jeśli $g$ jest ograniczona i $\tau<\infty$
+Niech teraz $g:S\to\R$ będzie dowolnym ograniczonym
+rozwiązaniem (niekoniecznie nieujemnym). Jeśli $\tau<\infty$
 prawie na pewno przy każdym starcie, to
 $X_{n\wedge\tau}=X_\tau$ od pewnego losowego
-momentu. Zbieżność zdominowana prowadzi do
+momentu, a $|g(X_{n\wedge\tau})|\leq\|g\|_\infty$.
+Zbieżność zmajoryzowana prowadzi do
 \[
  g(i)=\lim_n\E_i g(X_{n\wedge\tau})
  =\E_i g(X_\tau)
@@ -1285,25 +1300,40 @@ i $q=1-p$. Niech $h_i$ oznacza prawdopodobieństwo
 dotarcia do $N$ przed zerem ze stanu $i$.
 Równanie harmoniczne przyjmuje postać
 $h_i=ph_{i+1}+qh_{i-1}$, z $h_0=0$, $h_N=1$.
-Jeśli $p\ne q$, szukamy rozwiązań $h_i=A+B(q/p)^i$,
-co po warunkach brzegowych daje
+Oznaczając $D_i=h_i-h_{i-1}$, otrzymujemy
+$pD_{i+1}=qD_i$, więc $D_i=(q/p)^{i-1}D_1$.
+Z $h_0=0$ i $h_N=1$ wynika
+$h_i=D_1\sum_{k=0}^{i-1}(q/p)^k$ oraz
+$D_1=(\sum_{k=0}^{N-1}(q/p)^k)^{-1}$.
+Dla $p\ne q$ wzór na sumę szeregu geometrycznego daje
 \[
 h_i=\frac{1-(q/p)^i}{1-(q/p)^N}.
 \]
-Jeśli $p=q=1/2$, równanie oznacza stałe
-pierwsze różnice, więc $h_i=i/N$.
+Jeśli $p=q=1/2$, pierwsze różnice są stałe
+i z warunku $h_N=1$ wynika $D_1=1/N$,
+więc $h_i=i/N$. Wyprowadzenie nie zakłada
+z góry postaci rozwiązania.
 
 Również oczekiwany czas pochłonięcia
 $u_i=\E_i(\tau_{\{0,N\}})$ można wyprowadzić
-bez zgadywania. Ponieważ z każdego stanu wewnętrznego
-istnieje droga do brzegu długości co najwyżej $N-1$
-o prawdopodobieństwie ograniczonym od dołu przez
-dodatnią liczbę zależną od $p,q,N$, czas
-pochłonięcia ma ogon geometryczny i $u_i<\infty$.
-Pierwszy krok daje $u_i=1+pu_{i+1}+qu_{i-1}$,
-$u_0=u_N=0$. Przy $p=q$ rozwiązanie ma postać
-$u_i=i(N-i)$; podstawienie w równaniu sprawdza
-je wprost. Przy $p\ne q$, funkcja $i\mapsto i$
+bez zgadywania. Z każdego stanu wewnętrznego
+można dojść do zera przez co najwyżej $L=N-1$
+kolejnych kroków w lewo. Prawdopodobieństwo tej
+drogi jest co najmniej $\delta=q^{N-1}>0$.
+Warunkując po każdym bloku długości $L$ na
+zdarzeniu, że pochłonięcie jeszcze nie nastąpiło,
+dostajemy indukcyjnie
+$\Prob_i(\tau_{\{0,N\}}>kL)\leq(1-\delta)^k$.
+Z tożsamości $\E_i\tau_{\{0,N\}}=
+\sum_{n\geq0}\Prob_i(\tau_{\{0,N\}}>n)$ wynika
+$u_i\leq L/\delta<\infty$.
+Pierwszy krok i własność Markowa dają więc
+$u_i=1+pu_{i+1}+qu_{i-1}$ dla $1\leq i<N$,
+natomiast $u_0=u_N=0$. Przy $p=q$ rozwiązanie ma postać
+$u_i=i(N-i)$, gdyż funkcja ta znika na brzegu,
+a jej druga różnica wynosi
+$u_{i+1}-2u_i+u_{i-1}=-2$, czyli
+$u_i=1+(u_{i+1}+u_{i-1})/2$. Przy $p\ne q$, funkcja $i\mapsto i$
 spełnia $p(i+1)+q(i-1)-i=p-q$,
 a $h$ jest harmoniczna, stąd
 \[
@@ -1311,16 +1341,21 @@ u_i=\frac{Nh_i-i}{p-q}.
 \]
 Jednoznaczność rozwiązań wynika z zasady maksimum
 dla różnicy dwóch rozwiązań: dodatnie maksimum
-w punkcie wewnętrznym propaguje do sąsiadów,
-a więc aż do brzegu, gdzie funkcja jest zerowa.
+w punkcie wewnętrznym wymusza tę samą wartość
+u obu sąsiadów, ponieważ $p,q>0$, a więc
+propaguje aż do brzegu, gdzie różnica jest zerowa.
+Analogicznie dla ujemnego minimum rozważamy
+przeciwną funkcję. Różnica musi więc być identycznie
+zerowa.
 \end{przyklad}
 
 \begin{przyklad}[Łańcuch urodzeń i śmierci na skończonym odcinku]
 Na $S=\{0,\ldots,N\}$ przyjmijmy
 $p_{i,i+1}=b_i>0$ dla $i<N$,
 $p_{i,i-1}=d_i>0$ dla $i>0$ oraz
-$p_{ii}=1-b_i-d_i\geq0$, z pominięciem
-nieistniejących przejść na brzegach.
+$p_{ii}=1-b_i-d_i\geq0$, przy konwencji
+$d_0=b_N=0$; wszystkie inne przejścia mają
+prawdopodobieństwo zero.
 Warunek równowagi szczegółowej daje
 $\pi_i b_i=\pi_{i+1}d_{i+1}$.
 Stąd rekurencyjnie
@@ -1331,7 +1366,14 @@ C^{-1}=1+\sum_{i=1}^N\prod_{k=0}^{i-1}
 \frac{b_k}{d_{k+1}}.
 \]
 Pusty iloczyn przy $i=0$ jest równy $1$.
-Otrzymujemy dokładnie rozkład stacjonarny.
+Wszystkie współrzędne są dodatnie, ich suma
+wynosi $1$ dzięki wyborowi $C$, a równowaga
+szczegółowa zachodzi dla sąsiednich stanów
+i trywialnie dla pozostałych par. Łańcuch jest
+nieprzywiedlny, ponieważ wszystkie przejścia
+do sąsiednich stanów wewnątrz odcinka są dodatnie.
+Z twierdzenia o jedyności rozkładu stacjonarnego
+otrzymujemy zatem dokładnie jeden taki rozkład.
 To model np. ograniczonego bufora, w którym
 przyjścia zwiększają zajętość, a obsługa ją zmniejsza.
 \end{przyklad}
@@ -1359,18 +1401,28 @@ nie zależą od czasu.
 \end{proof}
 
 \begin{przyklad}[Autokorelacja dwustanowego łańcucha]
-Niech $S=\{0,1\}$, $\alpha,\beta>0$,
-$\alpha+\beta<2$ oraz rozkład początkowy
+Niech $S=\{0,1\}$, $0<\alpha,\beta\leq1$,
+$\alpha+\beta<2$ i
+$P=\begin{psmallmatrix}1-\alpha&\alpha\\
+\beta&1-\beta\end{psmallmatrix}$.
+Przyjmijmy rozkład początkowy
 $\pi=(\beta,\alpha)/(\alpha+\beta)$.
 Dla $I_n=\chi_{\{X_n=1\}}$ otrzymujemy
 \[
 \Cov(I_0,I_k)=\pi_1(1-\pi_1)(1-\alpha-\beta)^k.
 \]
-Wynika to z jawnego wzoru na prawdopodobieństwo
-$X_k=1$ przy starcie z $X_0=1$.
+Istotnie, z wcześniej wyprowadzonego wzoru
+$p_{11}^{(k)}=\pi_1+(1-\pi_1)(1-\alpha-\beta)^k$.
+Ponieważ $\E[I_0 I_k]=\pi_1p_{11}^{(k)}$ i
+$\E I_k=\E I_0=\pi_1$, po odjęciu $\pi_1^2$
+dostajemy wskazaną kowariancję. Wariancja
+każdej zmiennej $I_n$ wynosi $\pi_1(1-\pi_1)>0$,
+więc współczynnik autokorelacji jest równy
+$(1-\alpha-\beta)^k$.
 Jeśli $\alpha+\beta>1$, korelacje zmieniają
 znak naprzemiennie, a jeśli $\alpha+\beta<1$,
-zanikają bez zmiany znaku. Proces może zatem
+zanikają bez zmiany znaku. Dla $\alpha+\beta=1$
+korelacja jest zerowa dla każdego $k\geq1$. Proces może zatem
 mieć pamięć statystyczną mimo ustalonego rozkładu
 jednowymiarowego.
 \end{przyklad}
@@ -1402,11 +1454,13 @@ nieprzywiedlność zapewnia ścieżkę
 $j=j_0,j_1,\ldots,j_{\ell_j}=i$ o dodatnim
 prawdopodobieństwie
 $a_j=\prod_{r=1}^{\ell_j}p_{j_{r-1}j_r}>0$.
-Dla $j=i$ wybierzmy analogicznie dodatnią
-ścieżkę powrotu z $i$ do $i$, tym razem o
-długości co najmniej $1$; istnienie wynika z
-nieprzywiedlności i skończoności $S$
-(w przypadku jednego stanu bierzemy pętlę długości $1$).
+Dla $j=i$ wybierzmy dodatnie przejście
+z $i$ do pewnego $v$, które istnieje, gdyż
+wiersz macierzy sumuje się do $1$. Jeżeli $v=i$,
+mamy powrót w jednym kroku. W przeciwnym razie
+dołączamy dodatnią ścieżkę z $v$ do $i$,
+istniejącą dzięki nieprzywiedlności. Otrzymujemy
+dodatnią ścieżkę powrotu o długości co najmniej $1$.
 Ponieważ $S$ jest skończony, możemy ustalić
 $L\geq\max_j\ell_j$ oraz
 $\delta=\min_j a_j\in(0,1]$.
@@ -1439,7 +1493,11 @@ w następnym bloku jest co najmniej $\delta$.
 Ten sam argument indukcyjny daje zatem
 $\Prob_i(\tau_i^+>kL)\leq(1-\delta)^k$.
 Wreszcie dla nieujemnej całkowitoliczbowej zmiennej
-losowej $T$ mamy $\E T=\sum_{n\geq0}\Prob(T>n)$.
+losowej $T$, także z dopuszczalną wartością
+$\infty$, mamy punktowo
+$T=\sum_{n\geq0}\chi_{\{T>n\}}$.
+Twierdzenie o zbieżności monotonicznej daje
+$\E T=\sum_{n\geq0}\Prob(T>n)$.
 Grupując wyrazy w bloki długości $L$, otrzymujemy
 \[
 \E_j\tau_i\leq L\sum_{k\geq0}(1-\delta)^k
@@ -1468,12 +1526,31 @@ Zacznijmy od prawa procesu $\Prob_i$, tzn.
 $X_0=i$ prawie na pewno. Zdefiniujmy $T_0=0$ i
 rekurencyjnie $T_r=\inf\{n>T_{r-1}:X_n=i\}$.
 Z poprzedniego lematu i mocnej własności Markowa
-wszystkie $T_r$ są skończone p.n., a odstępy
-$L_r=T_r-T_{r-1}$ są niezależne i mają wspólny
-rozkład $\tau_i^+$ przy $\Prob_i$. Nie jest to
-stwierdzenie o niezależności stanów łańcucha:
-niezależne są \emph{całe odcinki pomiędzy kolejnymi
-powrotami}, po rozpoczęciu każdego z nich w stanie $i$.
+wszystkie $T_r$ są skończone p.n. (indukcyjnie,
+stosując kryterium powracania oraz wykazane wcześniej
+własności kolejnych czasów powrotu).
+Dla $m\geq1$ zdarzenie $L_r=T_r-T_{r-1}=m$
+oznacza, że w następnych $m-1$ krokach po
+$T_{r-1}$ nie odwiedzamy $i$, a w kroku $m$
+odwiedzamy $i$. Jest to zdarzenie zależne od
+skończonego fragmentu przyszłości. Mocna własność
+Markowa daje dla każdego $m\geq1$
+\[
+\Prob_i(L_r=m\mid\mathcal F_{T_{r-1}}^X)
+=\Prob_i(\tau_i^+=m)\quad\text{p.n.}
+\]
+Wcześniejsze odstępy $L_1,\ldots,L_{r-1}$ są
+$\mathcal F_{T_{r-1}}^X$-mierzalne: na zdarzeniu
+$\{T_{r-1}=n\}$ ich wartości są wyznaczone przez
+historię do chwili $n$. Zatem dla dowolnych
+$m_1,\ldots,m_r\geq1$ kolejne warunkowanie daje
+\[
+\Prob_i(L_1=m_1,\ldots,L_r=m_r)
+=\prod_{s=1}^r\Prob_i(\tau_i^+=m_s).
+\]
+Dowodzi to niezależności i jednakowego rozkładu
+odstępów, bez zakładania niezależności kolejnych
+stanów łańcucha.
 Niech $m_i=\E_i\tau_i^+\in(0,\infty)$. MPWL daje
 \[
  \frac{T_r}{r}=\frac1r\sum_{s=1}^rL_s
@@ -1502,11 +1579,23 @@ $N_i(n)/n\to1/m_i$ prawie na pewno.
 
 Dla dowolnego stanu początkowego $j$ mamy
 $\tau_i<\infty$ p.n. (poprzedni lemat).
-Po tej chwili, dzięki mocnej własności Markowa,
-proces ma prawo łańcucha startującego od $i$.
-Przed $\tau_i$ nie ma żadnej wizyty w $i$;
-pojedyncza skończona chwila wejścia nie wpływa
-na stosunek liczby wizyt do $n$. Stąd granica
+Z mocnej własności Markowa w $\tau_i$ wynika,
+że wszystkie skończenie wymiarowe rozkłady
+ciągu $(X_{\tau_i+k})_{k\geq0}$ są takie jak
+dla łańcucha o prawie $\Prob_i$. Rozkład całego
+ciągu jest wyznaczony przez rozkłady cylindryczne
+(rozdział~\ref{ch:probability}), więc udowodniona
+zbieżność częstości zachodzi również dla
+przesuniętej trajektorii. Oznaczając jej liczbę
+wizyt do chwili $m-1$ przez $\widetilde N_i(m)$,
+dla $n>\tau_i$ mamy dokładnie
+\[
+\frac{N_i(n)}n=
+\frac{n-\tau_i}n\,
+\frac{\widetilde N_i(n-\tau_i)}{n-\tau_i}.
+\]
+Pierwszy czynnik dąży do $1$, a drugi do $1/m_i$
+na zbiorze pełnej miary. Stąd granica
 $1/m_i$ jest niezależna od stanu początkowego,
 a zsumowanie po rozkładzie początkowym daje ją
 dla dowolnego startu. W skończonym $S$ można
@@ -1517,7 +1606,7 @@ Aby rozpoznać tę granicę, rozpocznijmy łańcuch
 z rozkładu stacjonarnego $\pi$. Wtedy
 $\E_\pi N_i(n)/n=\pi_i$ dla każdego $n$,
 bo $\Prob_\pi(X_k=i)=\pi_i$. Ponieważ
-$0\leq N_i(n)/n\leq1$, zbieżność zdominowana
+$0\leq N_i(n)/n\leq1$, zbieżność zmajoryzowana
 daje $\pi_i=1/m_i$, czyli
 $\E_i\tau_i^+=1/\pi_i$. Zwróćmy uwagę,
 że w tym rozumowaniu \emph{nie} użyliśmy
@@ -1549,7 +1638,7 @@ Dla macierzy
 $P=\begin{psmallmatrix}0&1\\1&0\end{psmallmatrix}$
 i $X_0=0$ rozkład $X_n$ nie jest zbieżny:
 znajduje się na przemian w stanie $0$ lub $1$.
-Jednak na każdej trajektorii
+Jednak prawie na pewno
 $\frac1n\sum_{k<n}\chi_{\{X_k=0\}}\to1/2$
 i analogicznie dla stanu $1$. Nieokresowość
 potrzebna jest dla zbieżności \emph{rozkładów
