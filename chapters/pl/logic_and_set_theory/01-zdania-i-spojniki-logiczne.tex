@@ -557,6 +557,217 @@ ogólny argument obejmujący każdą możliwość. Z kolei do
 \emph{jedno} wartościowanie, przy którym formuły są różne.
 \end{uwaga}
 
+\section{Postacie normalne i zupełność funkcyjna}
+\label{sec:lst-propositional-normal-forms}
+Tablica prawdy pozwala odczytać wartości danej formuły.
+Można również rozwiązać zadanie odwrotne: mając ustaloną
+tablicę wartości, zbudować formułę, która ją realizuje.
+W ten sposób otrzymamy systematyczną metodę zapisywania
+i upraszczania formuł.
+
+\begin{definicja}[Literały i postacie normalne]
+\label{def:lst-dnf-cnf}
+Literałem nazywamy literę zdaniową $p$ albo jej negację $\neg p$.
+Formuła jest w alternatywnej postaci normalnej
+(ang. \emph{disjunctive normal form}, DNF), gdy jest
+alternatywą koniunkcji literałów. Jest w koniunkcyjnej
+postaci normalnej (ang. \emph{conjunctive normal form}, CNF),
+gdy jest koniunkcją alternatyw literałów.
+Alternatywę literałów w CNF nazywamy klauzulą.
+\end{definicja}
+Pojedynczy literał jest zarówno koniunkcją, jak i alternatywą
+jednoelementową. Dla $n\geq1$ puste alternatywy i koniunkcje
+możemy zastępować odpowiednio przez $p_1\land\neg p_1$
+oraz $p_1\lor\neg p_1$. Symbole $\bot,\top$ traktujemy
+w tej części jako skróty tych formuł, a nie nowe symbole
+w definicji składni z
+Definicji~\ref{def:propositional-grammar-xli}.
+
+\begin{twierdzenie}[Konstrukcja postaci normalnych z tablicy prawdy]
+\label{thm:lst-canonical-normal-forms}
+Niech $n\geq1$ i $f:\{0,1\}^n\to\{0,1\}$.
+Dla $a=(a_1,\ldots,a_n)\in\{0,1\}^n$ określamy
+\[
+\begin{split}
+ \ell_i^a&=\begin{cases}p_i,&a_i=1,\\\neg p_i,&a_i=0,\end{cases}\\
+ m_a&=\bigwedge_{i=1}^n\ell_i^a,\qquad
+ c_a=\bigvee_{i=1}^n\neg\ell_i^a.
+\end{split}
+\]
+W wyrażeniu $c_a$ podwójną negację zastępujemy
+odpowiednim literałem dodatnim.
+Wówczas formuły
+\[
+ D_f=\bigvee_{a:\,f(a)=1}m_a,\qquad
+ C_f=\bigwedge_{a:\,f(a)=0}c_a
+\]
+mają tablicę prawdy określoną przez $f$. W szczególności
+każda formuła jest równoważna pewnej formule w DNF
+oraz pewnej formule w CNF.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy wartościowanie $p_i=b_i$ dla
+$b=(b_1,\ldots,b_n)\in\{0,1\}^n$.
+Literał $\ell_i^a$ ma wartość $1$ dokładnie wtedy,
+gdy $b_i=a_i$. Koniunkcja $m_a$ ma zatem wartość $1$
+dokładnie dla $b=a$. Alternatywa wszystkich $m_a$,
+dla których $f(a)=1$, ma wartość $1$ wtedy i tylko wtedy,
+gdy $f(b)=1$. Otrzymujemy tablicę $D_f$.
+Z kolei $c_a$ ma wartość $0$ dokładnie wtedy,
+gdy wszystkie $\neg\ell_i^a$ mają wartość $0$,
+czyli gdy $b=a$. Koniunkcja klauzul odpowiadających
+wierszom, w których $f$ przyjmuje $0$, ma wartość $0$
+dokładnie w tych wierszach. Otrzymujemy tablicę $C_f$.
+W przypadku funkcji stałej obowiązuje podana wyżej
+konwencja dotycząca pustych działań. Dla tablicy
+dowolnej formuły podstawiamy jej funkcję wartości
+za $f$ i stosujemy definicję równoważności logicznej.
+\end{proof}
+Wszystkie litery $p_1,\ldots,p_n$ występujące
+w poszczególnych członach dają postacie pełne (kanoniczne).
+Dla ustalonej kolejności liter i wierszy wybór członów
+jest jednoznaczny, ponieważ każdy odpowiada dokładnie
+jednemu wierszowi tablicy prawdy. Nie oznacza to
+jednoznaczności dowolnej DNF lub CNF: równoważna
+formuła może zawierać mniej literałów.
+
+\begin{przyklad}[Dokładnie jedna z dwóch przesłanek]
+\label{ex:lst-xor-normal-forms}
+Niech $f(p,q)$ ma wartość $1$, gdy dokładnie jedna
+z liter $p,q$ ma wartość $1$.
+\[
+\begin{array}{c|c|c|l|l}
+ p&q&f&\text{człon DNF}&\text{klauzula CNF}\\ \hline
+ 0&0&0&-&p\lor q\\
+ 0&1&1&\neg p\land q&-\\
+ 1&0&1&p\land\neg q&-\\
+ 1&1&0&-&\neg p\lor\neg q
+\end{array}
+\]
+Z wierszy prawdziwych odczytujemy
+$(\neg p\land q)\lor(p\land\neg q)$,
+a z fałszywych $(p\lor q)\land(\neg p\lor\neg q)$.
+Obie formuły wyrażają tę samą funkcję alternatywy
+rozłącznej. W drugim zapisie pierwszy nawias wymaga
+co najmniej jednej prawdy, a drugi wyklucza dwie prawdy.
+\end{przyklad}
+
+\begin{przyklad}[Upraszczanie postaci pełnej]
+\label{ex:lst-dnf-simplification}
+Z dwóch sąsiednich wierszy tablicy, różniących się
+tylko wartością $q$, możemy otrzymać krótszy człon:
+\[
+ (p\land q)\lor(p\land\neg q)
+ \equiv p\land(q\lor\neg q)\equiv p.
+\]
+Pierwsza równoważność wynika z rozdzielności
+(Twierdzenie~\ref{thm:logic-distributivity}),
+a druga z faktu, że $q\lor\neg q$ przyjmuje zawsze
+wartość $1$. Konstrukcja z tablicy daje więc
+poprawną formułę, lecz nie gwarantuje najmniejszej
+liczby spójników.
+\end{przyklad}
+
+\begin{definicja}[Zupełność funkcyjna spójników]
+\label{def:lst-functional-completeness}
+Rodzinę spójników nazywamy funkcyjnie zupełną, jeżeli
+dla każdego $n\geq1$ i każdej funkcji
+$f:\{0,1\}^n\to\{0,1\}$ istnieje formuła w literach
+$p_1,\ldots,p_n$, używająca wyłącznie spójników
+tej rodziny, której funkcją wartości jest $f$.
+\end{definicja}
+
+\begin{twierdzenie}\label{thm:lst-complete-connectives}
+Funkcyjnie zupełne są rodziny
+$\{\neg,\land,\lor\}$, $\{\neg,\land\}$,
+$\{\neg,\lor\}$ i $\{\neg,\Rightarrow\}$.
+\end{twierdzenie}
+\begin{proof}
+Pierwsza teza wynika z konstrukcji DNF
+w Twierdzeniu~\ref{thm:lst-canonical-normal-forms}.
+Alternatywę można zastąpić przez
+$\neg(\neg p\land\neg q)$, a koniunkcję przez
+$\neg(\neg p\lor\neg q)$, korzystając z praw
+de Morgana (Twierdzenie~\ref{thm:de-morgan-logic}).
+Dla rodziny $\{\neg,\Rightarrow\}$ mamy
+$p\lor q\equiv(\neg p\Rightarrow q)$:
+obie formuły są fałszywe dokładnie dla $p=q=0$.
+Stąd możemy zbudować alternatywę, negację i,
+przez prawo de Morgana, koniunkcję.
+Sukcesywne zastępowanie spójników w dowolnej DNF
+zachowuje wartość całej formuły, co wynika
+z rekurencyjnej definicji wartościowania.
+\end{proof}
+
+\begin{twierdzenie}[Pojedynczy spójnik wystarcza]
+\label{thm:lst-nand-nor}
+Każda z jednoelementowych rodzin zawierających
+spójnik NAND (kreska Sheffera) lub NOR (strzałka Peirce'a)
+jest funkcyjnie zupełna.
+\end{twierdzenie}
+\begin{proof}
+Piszemy $p\uparrow q=\neg(p\land q)$ oraz
+$p\downarrow q=\neg(p\lor q)$. Dla NAND zachodzi
+\[
+ \neg p\equiv p\uparrow p,\qquad
+ p\land q\equiv(p\uparrow q)\uparrow(p\uparrow q).
+\]
+Dla NOR zachodzi
+\[
+ \neg p\equiv p\downarrow p,\qquad
+ p\lor q\equiv(p\downarrow q)\downarrow(p\downarrow q).
+\]
+Wzory wynikają bezpośrednio z idempotentności
+koniunkcji i alternatywy oraz prawa podwójnej negacji;
+można też sprawdzić cztery wiersze tablicy.
+Twierdzenie~\ref{thm:lst-complete-connectives}
+daje zupełność obu rodzin.
+\end{proof}
+
+\begin{stwierdzenie}[Rodziny niezupełne funkcyjnie]
+\label{prop:lst-incomplete-connectives}
+Rodzina $\{\land,\lor\}$ nie jest funkcyjnie zupełna,
+nawet po dołączeniu obu stałych logicznych.
+Sama implikacja bez stałej fałszu również nie jest
+funkcyjnie zupełna.
+\end{stwierdzenie}
+\begin{proof}
+Na $\{0,1\}^n$ przyjmujemy porządek współrzędny,
+$0<1$. Rzuty i funkcje stałe są niemalejące,
+a minimum oraz maksimum dwóch funkcji niemalejących
+są niemalejące. Indukcja po budowie formuły
+pokazuje, że każda formuła z koniunkcji,
+alternatywy i stałych wyznacza funkcję niemalejącą.
+Negacja nie jest niemalejąca, ponieważ jej wartości
+w $0$ i $1$ to odpowiednio $1$ i $0$.
+Dla samej implikacji indukcja pokazuje, że przy
+wartościowaniu wszystkich liter przez $1$ każda
+formuła ma wartość $1$: w kroku indukcyjnym
+korzystamy z $1\Rightarrow1=1$. Nie można więc
+zbudować negacji ani funkcji stale równej $0$.
+\end{proof}
+
+\begin{wniosek}[Ile istnieje funkcji prawdziwościowych?]
+\label{cor:lst-boolean-function-count}
+Dla ustalonej listy $n\geq1$ liter zdaniowych istnieje
+dokładnie $2^{2^n}$ klas równoważności logicznej formuł
+w tych literach.
+\end{wniosek}
+\begin{proof}
+Tablica ma $2^n$ wierszy, w każdym można niezależnie
+wybrać $0$ albo $1$. Jest zatem $2^{2^n}$ tablic.
+Każdą realizuje formuła z
+Twierdzenia~\ref{thm:lst-canonical-normal-forms}.
+Dwie formuły są równoważne dokładnie wtedy, gdy
+mają tę samą tablicę prawdy. Stąd podana liczba klas.
+\end{proof}
+Przykładowo dla dwóch liter istnieje $16$ funkcji
+prawdziwościowych, chociaż samych formuł jest
+nieskończenie wiele. Zupełność funkcyjna dotyczy
+reprezentowania funkcji prawdziwościowych; nie jest
+tym samym co pełność rachunku dowodów, która dotyczy
+przejścia od konsekwencji semantycznej do dowodliwości.
+
 \section{Przesłanki, wnioski i kontrprzykłady}\label{sec:logical-consequence}
 \begin{definicja}[Poprawność wnioskowania zdaniowego]
 \label{def:consequence}

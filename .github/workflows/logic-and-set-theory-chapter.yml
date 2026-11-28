@@ -13,6 +13,7 @@ on:
       - "catalog/logic_model_migration.json"
       - "tools/tests/logic_model_sources.py"
       - "tools/tests/test_logic_model_split.py"
+      - "tools/tests/test_logic_and_set_theory_ch01_normal_forms.py"
       - "books/pl/logic_and_set_theory.tex"
       - "catalog/books.json"
       - "audits/logic_and_set_theory_ch07_audit_*.md"
@@ -168,8 +169,8 @@ jobs:
           labels = [name for source in sources for name in re.findall(r"\\label\{([^}]+)\}", source)]
           refs = [name for source in sources for name in re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", source)]
           assert len(labels) == len(set(labels)), "Duplicate LaTeX labels"
-          assert len(labels) == 974, f"Unexpected labels: {len(labels)}"
-          assert len(refs) == 763, f"Unexpected references: {len(refs)}"
+          assert len(labels) == 984, f"Unexpected labels: {len(labels)}"
+          assert len(refs) == 769, f"Unexpected references: {len(refs)}"
           forward = set()
           assert set(refs) - set(labels) == forward, "Unexpected unresolved targets in partial book"
           inventories = [
@@ -357,6 +358,8 @@ jobs:
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch38 -v
       - name: Run chapter 39 weak compactness and infinitary logic regression tests
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch39 -v
+      - name: Verify propositional normal forms and functional completeness
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch01_normal_forms -v
       - name: Verify the split, archive and fuzzy logic examples
         run: python -m unittest tools.tests.test_logic_model_split -v
       - name: Compile logic and set theory PDF (first pass)
