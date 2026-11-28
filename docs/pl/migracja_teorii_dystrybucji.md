@@ -1,4 +1,4 @@
-# Teoria dystrybucji i analiza harmoniczna — migracja (etap 4)
+# Teoria dystrybucji i analiza harmoniczna — migracja (etap 5)
 
 Data: 2026-11-28. Nazwa robocza: distribution_theory. Planowany prefiks Atlasu: DT (do potwierdzenia przy przełączeniu identyfikatorów).
 
@@ -45,3 +45,10 @@ Etap 1 pozostaje celowo poza katalogiem aktywnych książek Atlasu. Nie jest to 
 - Rozdział 33: splot na grupach lokalnie zwartych z ME-23, algebra L1, modularność, nierówność Younga L1 × Lp i dowód przedłużenia bez założenia sigma-skończoności. Konstrukcja miary Haara i jej własności pozostają w ME.
 - Rozdział 34: wzór skoku przez hiperpowierzchnię, skok strumienia, przeszkoda Schwartza i rozbieżność kwadratów aproksymacji delty z RRC-07. Nie przenoszono zastosowań do praw zachowania. Zachowano wszystkie etykiety źródłowe w ME/RRC; nowe mają prefiks dt.
 - Do dalszej kontroli: lokalna aproksymacja w Lp, słabe pochodne, lemat Weyla jako zastosowanie PDE, porównanie szczegółów Fourier i zależności katalogowe. Kompilacja wciąż do potwierdzenia.
+
+## Etap 5 — układ zależności i pierwsza deduplikacja
+- Ustalono kolejność 18 jednostek w czterech częściach: przestrzenie testowe i rachunek dystrybucji; struktura topologiczna i jądra; analiza Fouriera i splot na grupach; operatory maksymalne i całki osobliwe. Graf jawnych odsyłaczy: zero zależności do późniejszej jednostki w nowym układzie, 263 unikatowe etykiety, cztery odsyłacze zwykłe do AF.
+- Master ma przejściową numerację 1–18 przez pominięcie pierwszego ustawienia licznika w każdej jednostce. Źródła AF niezmienione; adapter usunąć po fizycznej migracji.
+- Usunięto powtórzenie dowodu ograniczoności operatorów Hessianu w Lp: szczególny przypadek wynika z ogólnego twierdzenia CZ, bez utraty etykiet.
+- AF-25 nie można usunąć bez analizy każdego wyniku: zawiera m.in. nieprzedłużalność dystrybucji, kryterium temperowania dla dystrybucji na D, porównanie topologii i odrębne kontrprzykłady. Zostaje do redystrybucji. Podobnie AF-23/24 wymagają rozdzielenia sekcji nuklearności, Hermite'a i jąder bez odwracania zależności dowodowych.
+- Nie jest to jeszcze migracja katalogowa; kompilacja nowego mastera nie została przeprowadzona.
