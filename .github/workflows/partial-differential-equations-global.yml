@@ -1,0 +1,129 @@
+name: PDE - full book audit
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - '.github/workflows/partial-differential-equations-global.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: atlas-pde-full-book
+  cancel-in-progress: false
+
+jobs:
+  full-book:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Audit the actual master and chapter references
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import collections, json, re, hashlib
+          book = Path("books/pl/partial_differential_equations.tex")
+          master = book.read_text(encoding="utf-8")
+          manifest = json.loads(Path("catalog/partial_differential_equations_manifest.json").read_text())
+          inputs = re.findall(r"\\input\{\.\./\.\./(chapters/pl/partial_differential_equations/[^}]+)\}", master)
+          assert len(inputs) == len(set(inputs)) == 33
+          assert inputs == [x["path"] for x in manifest["chapters"]]
+          assert [Path(p).name[:2] for p in inputs] == [f"{i:02}" for i in range(1,34)]
+          root = Path("chapters/pl/partial_differential_equations")
+          assert set(inputs) == {p.as_posix() for p in root.glob("[0-9][0-9]-*.tex")}
+          canonical = Path("latex/pl/code-listings.tex").read_text(encoding="utf-8")
+          assert master.count(canonical) == 1
+          assert Path("application/config/preambles/PDE.tex").read_text(encoding="utf-8").count(canonical) == 1
+          definitions = collections.defaultdict(list)
+          references = collections.defaultdict(list)
+          chapter_rows = []
+          pattern = r"(?ms)^\\begin\{lstlisting\}\[(.*?)\]\s*\n(.*?)^\\end\{lstlisting\}"
+          for number, name in enumerate(inputs, 1):
+              path = Path(name)
+              data = path.read_bytes()
+              source = data.decode("utf-8")
+              blocks = re.findall(pattern, source)
+              prose = re.sub(pattern, "", source)
+              prose = re.sub(r"(?m)(?<!\\)%.*$", "", prose)
+              assert len(re.findall(r"\\chapter(?:\[[^\]]*\])?\{", prose)) == 1, name
+              labels = re.findall(r"\\label\{([^}]+)\}", prose)
+              labels += [x for header, _ in blocks for x in re.findall(r"label=\{([^}]+)\}", header)]
+              refs = re.findall(r"\\(?:ref|eqref|pageref|autoref)\{([^}]+)\}", prose)
+              for label in labels:
+                  definitions[label].append(name)
+              for ref in refs:
+                  references[ref].append(name)
+              stack = []
+              for action, env in re.findall(r"\\(begin|end)\{([^}]+)\}", prose):
+                  if action == "begin":
+                      stack.append(env)
+                  else:
+                      assert stack and stack.pop() == env, (name, env)
+              assert not stack, (name, stack)
+              chapter_rows.append({"chapter":number, "path":name,"labels":len(labels),
+                                   "references":len(refs),"listings":len(blocks),
+                                   "bytes":len(data),"sha256":hashlib.sha256(data).hexdigest()})
+          duplicate = {k:v for k,v in definitions.items() if len(v)>1}
+          missing = {k:v for k,v in references.items() if k not in definitions}
+          report = {"chapters":chapter_rows,"duplicate_labels":duplicate,"missing_references":missing,
+                    "total_labels":sum(map(len, definitions.values())),
+                    "total_references":sum(map(len, references.values()))}
+          Path("pde-global-audit.json").write_text(json.dumps(report,indent=2,ensure_ascii=False),encoding="utf-8")
+          print(json.dumps(report,indent=2,ensure_ascii=False))
+          assert not duplicate, duplicate
+          assert not missing, missing
+          PY
+      - name: Compile the actual complete book
+        if: always()
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: partial_differential_equations.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Inspect PDF, final diagnostics and chapter numbering
+        if: always()
+        run: |
+          set -e
+          if ! command -v pdftotext >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq poppler-utils
+          fi
+          cd books/pl
+          stem=partial_differential_equations
+          test -s "$stem.pdf"
+          test -s "$stem.log"
+          test -s "$stem.toc"
+          pdfinfo "$stem.pdf"
+          pdftotext -layout "$stem.pdf" "$stem.txt"
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          stem = Path("partial_differential_equations")
+          toc = stem.with_suffix(".toc").read_text(encoding="utf-8")
+          numbers = re.findall(r"\\contentsline\s*\{chapter\}\s*\{\\numberline\s*\{([^}]+)\}",toc)
+          print("Numbered chapters:", numbers)
+          assert numbers == [str(i) for i in range(1,34)]
+          log = stem.with_suffix(".log").read_text(encoding="utf-8",errors="replace")
+          patterns = [r"Undefined control sequence", r"There were undefined references",
+                      r"There were multiply-defined labels",r"LaTeX Warning: (Reference|Citation).*undefined",
+                      r"Overfull \\hbox",r"Missing character",r"destination with the same identifier",
+                      r"Label\(s\) may have changed",r"Rerun to get cross-references right"]
+          errors = [line for line in log.splitlines() if any(re.search(p,line) for p in patterns)]
+          print("\n".join(errors))
+          assert not errors, "Final LaTeX diagnostics failed"
+          PY
+      - name: Archive complete book and audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pde-full-book-audit
+          path: |
+            pde-global-audit.json
+            books/pl/partial_differential_equations.pdf
+            books/pl/partial_differential_equations.log
+            books/pl/partial_differential_equations.toc
+            books/pl/partial_differential_equations.txt
+          if-no-files-found: warn
