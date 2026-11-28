@@ -128,3 +128,57 @@ class LeanGeneratorAdapterTests(unittest.TestCase):
                 self.assert_blocked(adapter.generate(
                     s, generator="rules", consent=True,
                     expected_source_sha256=digest(s)), "candidate_identity_mismatch")
+
+    def test_failure_diagnostics_bound_to_parser(self):
+        s = r"\top \text{extra}"
+        original = rules.generate(s, consent=True)
+        self.assertIn("diagnostic", original)
+        actual = adapter.generate(s, generator="rules", consent=True,
+                                  expected_source_sha256=digest(s))
+        self.assertEqual(actual["diagnostic"], original["diagnostic"])
+        self.assertEqual(actual["error"], original["error"])
+        for changed in (
+            {**original, "diagnostic": []},
+            {**original, "diagnostic": {"span": [0, 99999]}},
+            {**original, "diagnostic": {**original["diagnostic"], "extra": "untrusted"}},
+            {**original, "error": "invented_error"},
+            {k: v for k, v in original.items() if k != "diagnostic"},
+        ):
+            with patch.object(rules, "generate", return_value=changed):
+                self.assert_blocked(adapter.generate(
+                    s, generator="rules", consent=True,
+                    expected_source_sha256=digest(s)), "candidate_identity_mismatch")
+        with patch.object(rules, "generate", return_value=original):
+            self.assert_blocked(adapter.generate(
+                r"\top", generator="rules", consent=True,
+                expected_source_sha256=digest(r"\top")), "candidate_identity_mismatch")
+
+    def test_code_limit_failure_is_preserved(self):
+        s = r"\top"
+        with patch.object(rules, "MAX_CODE_BYTES", 1):
+            result = adapter.generate(s, generator="rules", consent=True,
+                                      expected_source_sha256=digest(s))
+        self.assertEqual(result["status"], "invalid_input")
+        self.assertEqual(result["error"], "code_byte_limit")
+        self.assertIsNone(result["lean_code"])
+
+    def test_segment_roles_and_uncovered_assumptions(self):
+        s = "P:Prop\nP\nP"
+        spans = [{"role": "parameter", "span": [0, 6]},
+                 {"role": "assumption", "span": [7, 8]},
+                 {"role": "conclusion", "span": [9, 10]}]
+        result = adapter.generate(s, generator="rules", consent=True, segments=spans,
+                                  expected_source_sha256=digest(s))
+        self.assertEqual(result["status"], "generated", result)
+        self.assertEqual(result["signature"],
+                         "theorem atlas_draft (v1 : Prop) (h1 : v1) : v1")
+        omitted = [spans[0], spans[2]]
+        actual = adapter.generate(s, generator="rules", consent=True, segments=omitted,
+                                  expected_source_sha256=digest(s))
+        self.assertEqual(actual["error"], "uncovered_source")
+        self.assertIsNone(actual["lean_code"])
+        original = rules.generate(s, segments=spans, consent=True)
+        with patch.object(rules, "generate", return_value=original):
+            self.assert_blocked(adapter.generate(
+                s, generator="rules", consent=True, segments=omitted,
+                expected_source_sha256=digest(s)), "candidate_identity_mismatch")

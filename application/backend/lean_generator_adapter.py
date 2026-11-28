@@ -115,13 +115,36 @@ def generate(source: str, *, generator: str, expected_source_sha256: str,
         if (signature != result["signature"] or names != result["binding_names"]
                 or result["lean_code"] != expected_code):
             return reject("candidate_identity_mismatch")
-    elif (result["status"] not in ("unsupported", "invalid_input", "blocked")
-          or not set(result) <= common | {"error", "diagnostic"}
-          or result["candidate_status"] != "not_generated"
-          or result["statement_status"] != "unreviewed"
-          or result["lean_code"] is not None
-          or type(result.get("error")) is not str):
-        return reject()
+    else:
+        if (result["status"] not in ("unsupported", "invalid_input", "blocked")
+                or not set(result) <= common | {"error", "diagnostic"}
+                or result["candidate_status"] != "not_generated"
+                or result["statement_status"] != "unreviewed"
+                or result["lean_code"] is not None
+                or type(result.get("error")) is not str):
+            return reject()
+        # A negative result is also deterministic. Reconstruct the diagnostic
+        # from the parser, never forward unchecked nested provider fields.
+        parsed = (rules.lean_parser.parse_formula(source) if segments is None
+                  else rules.lean_parser.parse_pilot_statement(source, segments))
+        if parsed["status"] in ("parsed_formula", "parsed_pilot_statement"):
+            signature, _ = rules._render(parsed["ast"])
+            expected_code = (rules.IMPORT_HEADER + "\nset_option maxHeartbeats 100000\n"
+                             "set_option maxRecDepth 512\n\n" + signature + " := " + rules._PROOF)
+            if (len(expected_code.encode("utf-8")) <= rules.MAX_CODE_BYTES
+                    or set(result) != common | {"error"}
+                    or result["status"] != "invalid_input"
+                    or result["error"] != "code_byte_limit"):
+                return reject("candidate_identity_mismatch")
+        else:
+            diagnostic = {k: parsed[k] for k in ("span", "path") if k in parsed}
+            if (set(result) != common | {"error", "diagnostic"}
+                    or result["status"] != parsed["status"]
+                    or result["error"] != parsed.get("error")
+                    or type(result["diagnostic"]) is not dict
+                    or result["diagnostic"] != diagnostic):
+                return reject("candidate_identity_mismatch")
+            result = {**result, "diagnostic": diagnostic}
     return {**base, **result, "source_sha256": digest,
             "schema_version": 1, "adapter_version": VERSION,
             "generator": "rules", "model": None, "model_called": False,
