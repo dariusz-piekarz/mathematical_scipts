@@ -1,4 +1,4 @@
-# Teoria dystrybucji i analiza harmoniczna — migracja (etap 6)
+# Teoria dystrybucji i analiza harmoniczna — migracja (etap 7)
 
 Data: 2026-11-28. Nazwa robocza: distribution_theory. Planowany prefiks Atlasu: DT (do potwierdzenia przy przełączeniu identyfikatorów).
 
@@ -57,3 +57,8 @@ Etap 1 pozostaje celowo poza katalogiem aktywnych książek Atlasu. Nie jest to 
 - Roboczy master TD korzysta teraz z czterech jednostek: Montel i nuklearność (w tym funkcje Hermite'a), ogólne topologiczne iloczyny tensorowe, twierdzenie o jądrze Schwartza, induktywne iloczyny tensorowe funkcji testowych. Zachowano wszystkie historyczne etykiety AF 23–24, dodano dwie etykiety sekcji.
 - Kolejność wymuszona przez dowód: twierdzenie o jądrze jest wykorzystywane w dowodzie identyfikacji ukończonego iloczynu induktywnego. Zweryfikowano odsyłacze między czterema nowymi jednostkami, brak odsyłaczy do późniejszych jednostek.
 - Ze względu na aktywne CI AF oraz testy czytające konkretne pliki, nowe jednostki są tymczasowymi kopiami roboczymi poza aktywnym katalogiem Atlasu. Nie są równocześnie wczytywane ze starymi AF 23–24 w masterze TD. Po przełączeniu katalogu trzeba usunąć stare kopie i zachować aliasy dawnych identyfikatorów. AF 25 nadal do redystrybucji. Kompilacja niepotwierdzona.
+
+## Etap 7 — redystrybucja AF 25
+- Rozdział syntetyczny wyłączono z mastera TD i rozprowadzono jego materiał w sześciu fragmentach: porównanie przestrzeni testowych, ograniczenie/przedłużenie dystrybucji, zwarty nośnik, kryterium temperowania i operacje, topologie przestrzeni sprzężonych, identyfikacje tensorowe. Zachowano wszystkie historyczne etykiety, w tym sec:synteza25 przy porównaniu topologii. Skrócono powtórzenia definicji, dowodu równoważności zbieżności ciągów na przestrzeniach Montela i dowodu ciągłości operacji, wskazując wcześniejsze wyniki.
+- Pozostawiono pełne dowody nieprzedłużalności, kryterium temperowania, kontrprzykłady topologiczne i identyfikacje. Usunięto nieaktualną zapowiedź dalszej teorii AF i zbędny import etykiety rozdziału 15.
+- Fragmenty w masterze nie mają własnych liczników sekcji. Przy fizycznej migracji należy włączyć je do odpowiednich plików kanonicznych i zaktualizować aliasy FA-25. AF pozostaje bez zmian; kompilacja niepotwierdzona.
