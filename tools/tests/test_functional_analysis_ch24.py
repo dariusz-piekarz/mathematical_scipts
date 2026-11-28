@@ -124,7 +124,6 @@ class Chapter24(unittest.TestCase):
         s = split_source(24, 9)
         for fragment in (
             r"\|Ju_N-Ju\|_{\ell^1(F)}\le\pi(u_N-u)",
-            r"\pi_{p\circ A,q\circ B}(u)",
             r"w(i,j)\le(1+|i|)(1+|j|)",
             r"P_m(Ju)\le\pi_{p_m,p_m}(u)",
             r"M>2m+d_1+d_2",
@@ -141,6 +140,18 @@ class Chapter24(unittest.TestCase):
             r"T\widehat J_{\mathcal E}=I",
         ):
             self.assertIn(fragment,s)
+        # The restructured chapter proves functoriality once for both
+        # tensor topologies and invokes that result in the function-space proof.
+        if r"\label{prop:dt-tensor-functoriality}" in s:
+            for fragment in (
+                r"\tau\in\{\pi,\varepsilon\}",
+                r"\tau_{p_1,q_1}((A\otimes B)u)",
+                r"\le\tau_{p_1\circ A,q_1\circ B}(u)",
+                r"\ref{prop:dt-tensor-functoriality}",
+            ):
+                self.assertIn(fragment, s)
+        else:
+            self.assertIn(r"\pi_{p\circ A,q\circ B}(u)", s)
         # Weighted coordinate models, exact integer arithmetic.
         for i,j,m in product(range(13),range(13),range(7)):
             self.assertLessEqual((1+i+j)**m,(1+i)**m*(1+j)**m)
