@@ -2758,8 +2758,36 @@ if __name__ == '__main__':
 \section{Reakcja--dyfuzja: fale biegnące, energia i niestabilność Turinga (Plotly)}
 \label{sec:pde27-code}
 Program symuluje fale biegnące dla równania Fishera--KPP,
-rozpad energii w równaniu Allena--Cahna i wzrost modów
-w niestabilności Turinga. Wizualizacje ilustrują wyniki analityczne;
+dyssypację energii w równaniu Allena--Cahna i wzrost modów
+w niestabilności Turinga. Dla równania Fishera--KPP
+$u_t=u_{xx}+u(1-u)$ stosujemy rozdzielanie Stranga:
+pół kroku dyfuzji, pełny krok reakcji i pół kroku dyfuzji.
+Dokładny przepływ reakcji logistycznej wynosi
+$R_\tau(v)=ve^\tau/(1+v(e^\tau-1))$, co otrzymujemy
+przez rozwiązanie równania $v'=v(1-v)$.
+Zachowuje on przedział $[0,1]$.
+Dyskretna dyfuzja spektralna nie musi jednak zachowywać
+ograniczeń punktowych dla dowolnych danych siatkowych.
+Program kontroluje wielkość naruszeń przed obcięciem;
+samo obcięcie nie jest dowodem zasady maksimum.
+Symulacja jest okresowa, zatem nie jest rozwiązaniem
+zagadnienia na całej prostej.
+Dla jawnego frontu $U(z)=(1+e^{z/\sqrt6})^{-2}$,
+$z=x-ct$, podstawienie do równania daje
+$U''+cU'+U(1-U)=0$ dla $c=5/\sqrt6$.
+W eksperymencie Turinga analizujemy liniowy układ
+o macierzy reakcji $J=\left(\begin{smallmatrix}1&-2\\2&-3\end{smallmatrix}\right)$
+i macierzy dyfuzji $D=\operatorname{diag}(1,10)$.
+Dla modu laplasjanu o wartości własnej $\mu\ge0$
+mamy $\operatorname{tr}(J-\mu D)=-2-11\mu$ oraz
+$\det(J-\mu D)=1-7\mu+10\mu^2=(1-5\mu)(1-2\mu)$.
+Zatem reakcja bez dyfuzji jest asymptotycznie stabilna,
+a dodatnia wartość własna pojawia się dokładnie dla
+$1/5<\mu<1/2$. Na konkretnym obszarze niestabilność
+wymaga istnienia wartości własnej w tym przedziale.
+Wykres ciągłej zmiennej $\mu$ nie jest symulacją
+powstawania wzoru przestrzennego.
+Wizualizacje ilustrują wyniki analityczne;
 nie zastępują ich dowodów.
 \begin{lstlisting}[style=pythonpde,caption={Fale reakcji--dyfuzji, energia i niestabilność Turinga (Plotly)},label={code:pde27-plotly}]
 """PDE 27: Fisher--KPP, fala biegnaca, Allen--Cahn i Turing.
@@ -2794,14 +2822,22 @@ def split_step_kpp():
     u = .8 * np.exp(-x*x/6)
     fig = go.Figure()
     fig.add_scatter(x=x, y=u, name="t=0")
+    max_violation = 0.0
+    def bounded(v):
+        nonlocal max_violation
+        violation = max(0., -float(v.min()), float(v.max())-1.)
+        max_violation = max(max_violation, violation)
+        assert np.all(np.isfinite(v)) and violation < 1e-8
+        return np.clip(v, 0, 1)
     for j in range(1, round(tmax/dt)+1):
         u = np.fft.ifft(np.fft.fft(u) * diffusion_half).real
-        u = reaction_kpp(np.clip(u, 0, 1), dt)
+        u = reaction_kpp(bounded(u), dt)
         u = np.fft.ifft(np.fft.fft(u) * diffusion_half).real
-        u = np.clip(u, 0, 1)
+        u = bounded(u)
         if j % 100 == 0:
             fig.add_scatter(x=x, y=u, name=f"t={j*dt:g}")
     assert np.min(u) >= 0 and np.max(u) <= 1
+    print("Maksymalne naruszenie ograniczen przed obcieciem:", max_violation)
     fig.update_layout(title="Rownanie Fishera-KPP: rozprzestrzenianie danych skupionych",
                       xaxis_title="x", yaxis_title="u(t,x)")
     save(fig, 'pde27_fronty.html')
@@ -2832,7 +2868,7 @@ def reaction_allen(u, dt):
 
 
 def allen_cahn_energy():
-    n, L, D, dt = 512, 20.0, .3, .02
+    n, L, D, dt = 513, 20.0, .3, .02
     x = np.linspace(0, L, n, endpoint=False)
     k = 2*np.pi*np.fft.fftfreq(n, d=L/n)
     half = np.exp(-D*k*k*dt/2)
@@ -2850,6 +2886,7 @@ def allen_cahn_energy():
             u = np.fft.ifft(np.fft.fft(u)*half).real
     energy = np.asarray(energy)
     assert energy[-1] < energy[0] and np.all(np.isfinite(energy))
+    assert np.max(np.diff(energy)) <= 1e-8
     fig = go.Figure(go.Scatter(x=time, y=energy, mode="lines+markers", name="E(u)"))
     fig.update_layout(title="Rownanie Allena-Cahna: dyssypacja energii (rozszczepienie Stranga)",
                       xaxis_title="t", yaxis_title="energia")
@@ -2858,16 +2895,23 @@ def allen_cahn_energy():
 
 
 def turing_mode():
-    mu = np.linspace(0, 1.1, 400)
+    mu = np.unique(np.r_[np.linspace(0, 1.1, 400), .2, .5])
+    J = np.array([[1.,-2.],[2.,-3.]])
+    D = np.diag([1.,10.])
     lam = []
     for m in mu:
-        A = np.array([[1-m,-2],[2,-3-10*m]])
+        A = J-m*D
+        assert np.isclose(np.trace(A), -2-11*m)
+        assert np.isclose(np.linalg.det(A), (1-5*m)*(1-2*m))
         lam.append(np.max(np.linalg.eigvals(A).real))
     lam = np.asarray(lam)
-    at = np.linalg.eigvals(np.array([[.7,-2],[2,-6]])).real
+    at = np.linalg.eigvals(J-.3*D).real
+    assert np.max(np.linalg.eigvals(J).real) < 0
     assert max(at) > 0
     assert np.all(lam[(mu > .2) & (mu < .5)] > 0)
-    fig = go.Figure(go.Scatter(x=mu, y=lam, name="max Re lambda(J-muD)"))
+    assert np.all(lam[(mu < .2) | (mu > .5)] < 0)
+    assert np.allclose(lam[(mu == .2) | (mu == .5)], 0, atol=1e-12)
+    fig = go.Figure(go.Scatter(x=mu, y=lam, name="max Re lambda(J-mu D)"))
     fig.add_hline(y=0, line_dash="dash")
     fig.add_vrect(x0=.2, x1=.5, fillcolor="lightgray", opacity=.18,
                   line_width=0, annotation_text="niestabilne mody")
@@ -2894,6 +2938,26 @@ przedstawia wirowość i ciśnienie oraz oblicza rzut Leraya
 w przestrzeni Fouriera. W modelowym polu dywergencja po rzutowaniu
 jest bliska zeru z dokładnością maszynową. To eksperyment numeryczny,
 nie zamiennik dowodu istnienia rozwiązania Leraya--Hopfa.
+Na torusie $(\R/2\pi\mathbb Z)^2$ przyjmujemy
+$b(t)=e^{-2\nu t}$ oraz
+$u=b(t)(\sin x\cos y,-\cos x\sin y)$.
+Mamy $\operatorname{div}u=0$, $\Delta u=-2u$,
+$u_t=-2\nu u$ i
+$(u\cdot\nabla)u=b(t)^2(\sin x\cos x,\sin y\cos y)$.
+Dla ciśnienia $p=b(t)^2(\cos2x+\cos2y)/4$
+ostatni człon jest równy $-\nabla p$.
+Całkowanie kwadratu prędkości na torusie daje
+$E(t)=\frac12\|u(t)\|_2^2=\pi^2 b(t)^2$,
+a $\omega=\partial_xu_2-\partial_yu_1=2b(t)\sin x\sin y$.
+Rzut Leraya na pola bezdywergentne ma dla $k\ne0$
+symbol $P(k)=I-kk^{\mathsf T}/|k|^2$.
+Macierz ta jest symetryczna i idempotentna,
+a jej obraz jest prostopadły do $k$.
+Dla $k=0$ rzut jest tożsamością: pola stałe mają
+zerową dywergencję. Usunięcie średniej oznaczałoby
+inny rzut, na pola bezdywergentne o zerowej średniej.
+Kod sprawdza zachowanie średniej, idempotentność
+i ortogonalność rozkładu w dyskretnej normie $L^2$.
 \begin{lstlisting}[style=pythonpde,caption={Wir Taylora--Greena i rzut Leraya (Plotly)},label={code:pde28-plotly}]
 """Rownania Naviera-Stokesa: wir Taylora-Greena i rzut Leraya.
 
@@ -2907,7 +2971,7 @@ import numpy as np
 import plotly.graph_objects as go
 
 OUT = Path(__file__).resolve().parent
-N, NU = 128, 0.08
+N, NU = 129, 0.08  # Nieparzyste N: brak modu Nyquista.
 x = np.linspace(0, 2*np.pi, N, endpoint=False)
 X, Y = np.meshgrid(x, x, indexing='ij')
 k = np.fft.fftfreq(N, d=1/N)  # Fourier integers, not physical cycles
@@ -2940,8 +3004,10 @@ def project(vx, vy):
     dot = KX*hx+KY*hy
     hx = hx-KX*dot/safe
     hy = hy-KY*dot/safe
-    hx[0,0]=hy[0,0]=0
-    return np.fft.ifft2(hx).real, np.fft.ifft2(hy).real
+    # Dla k=0 symbol P jest tozsamoscia.
+    rx, ry = np.fft.ifft2(hx), np.fft.ifft2(hy)
+    assert max(np.max(abs(rx.imag)), np.max(abs(ry.imag))) < 1e-12
+    return rx.real, ry.real
 
 
 def plots():
@@ -2971,15 +3037,30 @@ def plots():
                       xaxis_title='x',yaxis_title='y',yaxis_scaleanchor='x')
     store(fig,'pde28_cisnienie.html')
 
-    fx=np.sin(Y)+np.cos(X)
-    fy=np.sin(X)+np.cos(Y)
+    fx=np.sin(Y)+np.cos(X)+0.4
+    fy=np.sin(X)+np.cos(Y)-0.2
     px,py=project(fx,fy)
-    assert np.max(np.abs(px-np.sin(Y)))<2e-12
-    assert np.max(np.abs(py-np.sin(X)))<2e-12
+    assert np.max(np.abs(px-np.sin(Y)-0.4))<2e-12
+    assert np.max(np.abs(py-np.sin(X)+0.2))<2e-12
+    ppx, ppy = project(px,py)
+    np.testing.assert_allclose(ppx, px, atol=1e-12, rtol=0)
+    np.testing.assert_allclose(ppy, py, atol=1e-12, rtol=0)
+    np.testing.assert_allclose([px.mean(),py.mean()],
+                               [fx.mean(),fy.mean()], atol=1e-12)
+    assert abs(np.mean(px*(fx-px)+py*(fy-py))) < 1e-12
     div_before=np.max(np.abs(divergence_fft(fx,fy)))
     div_after=np.max(np.abs(divergence_fft(px,py)))
     assert div_before>1.9 and div_after<1e-10
     assert np.max(np.abs(divergence_fft(u1,u2)))<1e-10
+    def derivative(v, axis):
+        return np.fft.ifft2(1j*axis*np.fft.fft2(v)).real
+    lap = lambda v: np.fft.ifft2(-(KX*KX+KY*KY)*np.fft.fft2(v)).real
+    for v, axis in ((u1,KX),(u2,KY)):
+        residual = (-2*NU*v + u1*derivative(v,KX)
+                    + u2*derivative(v,KY) + derivative(p,axis)-NU*lap(v))
+        assert np.max(abs(residual)) < 1e-9
+    np.testing.assert_allclose(derivative(u2,KX)-derivative(u1,KY),
+                               omega, atol=1e-10, rtol=0)
     fig=go.Figure()
     step=9
     for vx,vy,name,dx in [(fx,fy,'F przed rzutem',0), (px,py,'PF po rzucie',2*np.pi+1)]:
@@ -3006,12 +3087,31 @@ if __name__ == '__main__':
 
 \section{Zagadnienie przeszkody i reakcja kontaktowa — Plotly}
 \label{sec:pde29-code}
-Program implementuje metodę Gaussa--Seidela z projekcją
-na zbiór funkcji spełniających przeszkodę. Porównuje wyniki
-z dokładnym rozwiązaniem z przykładu~\ref{ex:pde29-explicit}
+Program implementuje metodę kolejnych nadrelaksacji
+z projekcją (PSOR), która dla parametru $\omega=1$
+jest metodą Gaussa--Seidela z projekcją.
+Porównuje wyniki z dokładnym rozwiązaniem
+z przykładu~\ref{ex:pde29-explicit}
 i kontroluje nieujemność reakcji oraz warunek komplementarności.
-Listing jest obramowany; samodzielny plik \texttt{demo\_przeszkoda\_plotly.py}
-znajduje się również w pakiecie projektu.
+Minimalizowany funkcjonał dyskretny to
+$E_h(U)=\frac1{2h}\sum_{i=0}^{N-1}(U_{i+1}-U_i)^2$
+przy $U_i\ge\psi_i$, $U_0=U_N=0$.
+Dla pojedynczej współrzędnej nieograniczone minimum
+jest średnią sąsiadów. Aktualizacja z relaksacją
+i projekcją zachowuje dopuszczalność.
+Oznaczając zmianę współrzędnej przez $d$,
+a starą wartość przez $v$ i średnią sąsiadów przez $m$,
+z charakterystyki rzutu na $[\psi_i,\infty)$ dostajemy
+$(v-m)d\le-d^2/\omega$.
+Zmiana energii wynosi $(2(v-m)d+d^2)/h$,
+więc dla $0<\omega<2$ nie jest dodatnia.
+Warunki optymalności mają postać
+$U_i-\psi_i\ge0$, $R_i\ge0$ i
+$R_i(U_i-\psi_i)=0$, gdzie
+$R_i=(2U_i-U_{i-1}-U_{i+1})/h^2$.
+Kontrolujemy również residuum rzutowanego gradientu;
+mała zmiana iteracji sama nie gwarantuje
+dokładnego spełnienia warunków optymalności.
 \begin{lstlisting}[style=pythonpde,caption={Przeszkoda, reakcja i zbieżność schematu (Plotly)},label={code:pde29-plotly}]
 """Rozdzial 29 PDE: metoda Gaussa-Seidela z projekcja dla przeszkody.
 
@@ -3039,6 +3139,8 @@ def exact(x: np.ndarray) -> np.ndarray:
 
 def projected_gauss_seidel(n: int, omega=1.75, tol=2e-12,
                             max_sweeps=18000):
+    if n < 2 or not 0 < omega < 2 or tol <= 0 or max_sweeps < 1:
+        raise ValueError("Niepoprawne parametry PSOR")
     h = 2.0 / n
     x = np.linspace(-1.0, 1.0, n + 1)
     psi = obstacle(x)
@@ -3056,12 +3158,19 @@ def projected_gauss_seidel(n: int, omega=1.75, tol=2e-12,
             energy = np.sum(np.diff(u) ** 2) / (2 * h)
             history.append((k, energy, change))
         if change < tol:
-            break
+            mid = (u[:-2]+u[2:])/2
+            fixed_residual = np.max(abs(u[1:-1]-np.maximum(psi[1:-1],mid)))
+            if fixed_residual < tol:
+                break
     else:
-        raise RuntimeError(f'Projected GS did not converge for n={n}')
+        raise RuntimeError(f'PSOR did not converge for n={n}')
     reaction = (2 * u[1:-1] - u[:-2] - u[2:]) / (h * h)
     slack = u[1:-1] - psi[1:-1]
-    return x, u, psi, reaction, slack, np.array(history), k + 1
+    hist = np.array(history)
+    assert np.all(np.diff(hist[:,1]) <= 1e-10)
+    projected = np.maximum(psi[1:-1], u[1:-1]-0.5*h*h*reaction)
+    assert np.max(abs(u[1:-1]-projected)) < tol
+    return x, u, psi, reaction, slack, hist, k + 1
 
 
 def save(fig, name):
