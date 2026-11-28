@@ -57,12 +57,68 @@ def generate(source: str, *, generator: str, expected_source_sha256: str,
     if generator == "local_model":
         return {**base, "error": "local_model_not_integrated"}
     result = rules.generate(source, segments=segments, consent=True)
-    if result["status"] == "generated" and (
-        result["source_sha256"] != digest or
-        hashlib.sha256(result["lean_code"].encode("utf-8")).hexdigest()
-        != result["lean_code_sha256"]
-    ):
-        return {**base, "error": "candidate_identity_mismatch"}
+    # A provider result is not an authority grant. Reject malformed or
+    # contradictory envelopes instead of propagating arbitrary extra fields.
+    common = {"generator_version", "status", "candidate_status",
+              "statement_status", "proof_status", "certificate", "lean_code",
+              "external_transfer_allowed", "external_cost_minor_units",
+              "execution_allowed", "execution_blocker"}
+    def reject(error="invalid_generator_result"):
+        return {**base, "error": error}
+    if type(result) is not dict or not common <= result.keys():
+        return reject()
+    if (result["generator_version"] != rules.VERSION
+            or result["proof_status"] != "not_run"
+            or result["execution_blocker"] != "isolated_runner_required"
+            or any(result[k] is not False for k in
+                   ("certificate", "external_transfer_allowed", "execution_allowed"))
+            or type(result["external_cost_minor_units"]) is not int
+            or result["external_cost_minor_units"] != 0):
+        return reject()
+    if result["status"] == "generated":
+        fields = {"coverage", "source_sha256", "ast_sha256", "lean_code_sha256",
+                  "signature", "binding_names", "trace"}
+        if (set(result) != common | fields
+                or result["candidate_status"] != "draft"
+                or result["statement_status"] != "needs_review"
+                or result["coverage"] != "controlled_pilot_only"
+                or type(result["lean_code"]) is not str
+                or not result["lean_code"]
+                or len(result["lean_code"]) > rules.MAX_CODE_BYTES
+                or type(result["signature"]) is not str
+                or type(result["binding_names"]) is not dict
+                or type(result["trace"]) is not dict):
+            return reject()
+        try:
+            code = result["lean_code"].encode("utf-8")
+        except UnicodeError:
+            return reject()
+        if len(code) > rules.MAX_CODE_BYTES:
+            return reject()
+        if (result["source_sha256"] != digest or
+                hashlib.sha256(code).hexdigest() != result["lean_code_sha256"]):
+            return reject("candidate_identity_mismatch")
+        # Reparse the exact selection, including its segment roles. A digest
+        # of arbitrary code alone cannot establish source/AST correspondence.
+        parsed = (rules.lean_parser.parse_formula(source) if segments is None
+                  else rules.lean_parser.parse_pilot_statement(source, segments))
+        if (parsed["status"] not in ("parsed_formula", "parsed_pilot_statement")
+                or parsed["ast_sha256"] != result["ast_sha256"]
+                or parsed["trace"] != result["trace"]):
+            return reject("candidate_identity_mismatch")
+        signature, names = rules._render(parsed["ast"])
+        if (signature != result["signature"] or names != result["binding_names"]
+                or not result["lean_code"].startswith(
+                    rules.IMPORT_HEADER + "\nset_option maxHeartbeats 100000\n"
+                    "set_option maxRecDepth 512\n\n" + signature + " := ")):
+            return reject("candidate_identity_mismatch")
+    elif (result["status"] not in ("unsupported", "invalid_input", "blocked")
+          or not set(result) <= common | {"error", "diagnostic"}
+          or result["candidate_status"] != "not_generated"
+          or result["statement_status"] != "unreviewed"
+          or result["lean_code"] is not None
+          or type(result.get("error")) is not str):
+        return reject()
     return {**base, **result, "source_sha256": digest,
             "schema_version": 1, "adapter_version": VERSION,
             "generator": "rules", "model": None, "model_called": False,

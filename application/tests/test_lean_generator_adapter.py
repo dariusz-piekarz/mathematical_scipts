@@ -81,3 +81,34 @@ class LeanGeneratorAdapterTests(unittest.TestCase):
         self.assertIs(b["generators"]["local_model"]["available"], False)
         self.assertIs(b["generators"]["external_provider"]["available"], False)
         self.assertIs(b["automatic_fallback"], False)
+
+    def test_malformed_and_contradictory_results_fail_closed(self):
+        s = r"\top"
+        original = rules.generate(s, consent=True)
+        for result in (None, [], {}, {**original, "lean_code": None},
+                       {**original, "lean_code": "\ud800"},
+                       {**original, "lean_code": "a" * 65537},
+                       {**original, "certificate": True},
+                       {**original, "execution_allowed": True},
+                       {**original, "offline_ready": True},
+                       {**original, "status": "unsupported"},
+                       {**original, "external_cost_minor_units": False}):
+            with self.subTest(result_type=type(result)):
+                with patch.object(rules, "generate", return_value=result):
+                    self.assert_blocked(adapter.generate(
+                        s, generator="rules", consent=True,
+                        expected_source_sha256=digest(s)), "invalid_generator_result")
+
+    def test_rehashed_wrong_statement_and_ast_rejected(self):
+        s = r"\top"
+        original = rules.generate(s, consent=True)
+        wrong = original["lean_code"].replace(": True :=", ": False :=")
+        self.assertNotEqual(wrong, original["lean_code"])
+        for result in ({**original, "ast_sha256": "0" * 64},
+                       {**original, "lean_code": wrong, "lean_code_sha256": digest(wrong)},
+                       {**original, "trace": {}},
+                       {**original, "signature": "theorem atlas_draft : False"}):
+            with patch.object(rules, "generate", return_value=result):
+                self.assert_blocked(adapter.generate(
+                    s, generator="rules", consent=True,
+                    expected_source_sha256=digest(s)), "candidate_identity_mismatch")
