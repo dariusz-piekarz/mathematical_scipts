@@ -848,3 +848,466 @@ potrzebne do reprezentacji algebr Heytinga.
 Odróżnienie to odpowiada różnicy między teoriami
 pierwszymi i maksymalnie niesprzecznymi z
 Przykładu~\ref{ex:ncl-ipc-prime-not-maximal}.
+
+\section{Semantyka algebraiczna IPC}
+
+\begin{definicja}[Wartościowanie w algebrze Heytinga]
+\label{def:ncl-heyting-valuation}
+Niech $H$ będzie algebrą Heytinga. Dowolną funkcję
+$v$ ze zbioru zmiennych zdaniowych do $H$
+rozszerzamy rekurencyjnie na wszystkie formuły IPC,
+przyjmując
+\[
+\begin{aligned}
+ v(\bot)&=0,\\
+ v(A\wedge B)&=v(A)\wedge v(B),\\
+ v(A\vee B)&=v(A)\vee v(B),\\
+ v(A\to B)&=v(A)\to v(B).
+\end{aligned}
+\]
+W szczególności $v(\top)=1$ oraz
+$v(\neg A)=\neg v(A)$, z definicji skrótów
+i praw implikacji.
+Piszemy $\Gamma\models_H A$, jeśli dla każdego
+wartościowania $v$ warunek $v(B)=1$ dla wszystkich
+$B\in\Gamma$ pociąga $v(A)=1$.
+Piszemy $\Gamma\models_{\mathrm{HA}} A$, jeśli
+$\Gamma\models_H A$ dla każdej algebry Heytinga $H$.
+\end{definicja}
+
+\begin{twierdzenie}[Algebraiczna poprawność IPC]
+\label{thm:ncl-heyting-soundness}
+Jeżeli $\Gamma\vdash_{\mathrm I} A$, to
+$\Gamma\models_{\mathrm{HA}} A$.
+Dokładniej, dla skończonego zbioru $\Delta$
+i dowolnego wartościowania w algebrze Heytinga,
+\[
+ \Delta\vdash_{\mathrm I} A
+ \quad\Longrightarrow\quad
+ \bigwedge_{B\in\Delta}v(B)\leq v(A).
+\]
+Przyjmujemy, że kres dolny pustej rodziny jest równy $1$.
+\end{twierdzenie}
+\begin{proof}
+Dowodzimy mocniejszego stwierdzenia przez indukcję
+po drzewie dedukcji naturalnej z
+Definicji~\ref{def:ncl-ipc-natural-deduction}.
+Dla każdego podwyprowadzenia bierzemy kres dolny
+wartości jego otwartych założeń. Powtórzenia
+formuł nie zmieniają tego kresu przez idempotentność.
+
+W liściu będącym założeniem $B$ teza jest
+nierównością $v(B)\leq v(B)$.
+Przy łączeniu kilku podwyprowadzeń kres dolny
+wartości wszystkich ich otwartych założeń
+jest nie większy od odpowiedniego kresu
+dla każdego z nich.
+
+Dla $\wedge I$ wspólny kres dolny $d$ jest
+nie większy od wartości obu członów, a więc
+od ich koniunkcji. Dla $\wedge E_i$ korzystamy
+z faktu, że kres dolny jest nie większy od
+każdego argumentu. Dla $\vee I_i$ wartość
+odpowiedniego członu jest nie większa od
+wartości alternatywy.
+
+W kroku $\to I$ niech $d$ będzie kresem dolnym
+wartości założeń pozostających otwartych.
+Jeżeli zamykamy założenia $B$ w wyprowadzeniu $C$,
+to $d\wedge v(B)$ jest nie większy od kresu
+dolnego wartości wszystkich otwartych założeń
+tego wyprowadzenia przed zastosowaniem reguły.
+Dotyczy to także pustego zbioru zamykanych wystąpień.
+Z hipotezy indukcyjnej
+$d\wedge v(B)\leq v(C)$, więc residuacja daje
+$d\leq v(B)\to v(C)$.
+Dla $\to E$ wspólny kres dolny $d$ spełnia
+$d\leq v(B)$ i $d\leq v(B)\to v(C)$.
+Stąd $d\leq v(B)\wedge(v(B)\to v(C))\leq v(C)$.
+W kroku $\bot E$ mamy $d\leq0$, a zatem
+$d=0\leq v(A)$ dla dowolnego wniosku $A$.
+
+Pozostaje $\vee E$. Oznaczmy przez $d$ kres
+dolny wartości wszystkich założeń pozostających
+otwartych po zastosowaniu reguły, a przez
+$a,b,c$ wartości dwóch członów alternatywy
+oraz wniosku. Z hipotezy indukcyjnej mamy
+\[
+ d\leq a\vee b,\qquad d\wedge a\leq c,\qquad
+ d\wedge b\leq c.
+\]
+Dwie ostatnie nierówności obowiązują również,
+gdy część wystąpień założenia danego przypadku
+pozostaje otwarta albo gdy nie zamykamy żadnego.
+Z rozdzielności
+\[
+ d=d\wedge(a\vee b)
+   =(d\wedge a)\vee(d\wedge b)\leq c.
+\]
+To kończy indukcję.
+Jeżeli $\Delta$ jest zbiorem skończonym zawierającym
+wszystkie otwarte założenia całego wyprowadzenia,
+to jego kres dolny jest nie większy od kresu
+użytego w indukcji, co daje mocniejsze stwierdzenie.
+
+Dla dowolnego $\Gamma$ każdy dowód z $\Gamma$
+używa skończenie wielu przesłanek
+$\Delta\subseteq\Gamma$. Jeżeli wszystkie
+przesłanki z $\Gamma$ mają wartość $1$, to
+$\bigwedge_{B\in\Delta}v(B)=1$, zatem $v(A)=1$.
+\end{proof}
+
+\begin{stwierdzenie}[Wartościowanie zbiorami wymuszania]
+\label{prop:ncl-heyting-kripke-valuation}
+Dla modelu Kripkego $\mathcal M=(W,\leq,V)$
+przypisanie zmiennym $p$ zbiorów $V(p)$
+jest wartościowaniem w $\operatorname{Up}(W)$.
+Jego rozszerzenie na formuły spełnia
+\[
+ v(A)=\{w\in W:w\Vdash_{\mathcal M}A\}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Zbiory $V(p)$ są domknięte ku górze z definicji
+modelu. Indukujemy po budowie $A$.
+Dla zmiennych teza jest definicją wartościowania,
+dla $\bot$ obie strony są zbiorem pustym.
+Koniunkcja i alternatywa odpowiadają przecięciu
+i sumie zbiorów wymuszania.
+W przypadku implikacji korzystamy ze wzoru
+z Przykładu~\ref{ex:ncl-heyting-upsets}:
+\[
+ w\in v(B)\to v(C)
+ \iff \forall z\geq w\
+ (z\in v(B)\Longrightarrow z\in v(C)).
+\]
+Hipoteza indukcyjna zamienia prawą stronę
+w klauzulę wymuszania implikacji.
+\end{proof}
+W szczególności jeżeli model ma korzeń $r$,
+to $v(A)=W$ wtedy i tylko wtedy, gdy $r\Vdash A$.
+Kierunek nietrywialny wynika z trwałości
+wymuszania (Lemat~\ref{lem:ncl-ipc-persistence}).
+
+\section{Algebra Lindenbauma--Tarskiego}
+
+\begin{definicja}[Równoważność formuł względem teorii]
+\label{def:ncl-heyting-lindenbaum}
+Niech $T$ będzie dowolną teorią IPC, tj. zbiorem
+domkniętym dedukcyjnie w sensie
+Definicji~\ref{def:ncl-ipc-prime-theory}.
+Na zbiorze formuł określamy relację
+\[
+ A\equiv_T B
+ \iff T\vdash_{\mathrm I}A\to B
+       \ \text{i}\ T\vdash_{\mathrm I}B\to A.
+\]
+Oznaczmy przez $L_T$ zbiór klas równoważności
+tej relacji, a przez $[A]_T$ klasę formuły $A$.
+Zamierzamy określić na nim działania
+\[
+\begin{aligned}
+ [A]_T\wedge[B]_T&=[A\wedge B]_T,\\
+ [A]_T\vee[B]_T&=[A\vee B]_T,\\
+ [A]_T\to[B]_T&=[A\to B]_T,
+\end{aligned}
+\qquad 0=[\bot]_T,\quad 1=[\top]_T.
+\]
+\end{definicja}
+
+\begin{twierdzenie}[Algebra formuł modulo teorię]
+\label{thm:ncl-heyting-lindenbaum}
+Relacja $\equiv_T$ jest kongruencją na algebrze
+formuł, a powyższe działania są dobrze określone.
+Struktura $L_T$ jest algebrą Heytinga, w której
+\[
+ [A]_T\leq[B]_T
+ \iff T\vdash_{\mathrm I}A\to B,\qquad
+ [A]_T=1\iff A\in T.
+\]
+Nazywamy ją algebrą Lindenbauma--Tarskiego
+teorii $T$.
+\end{twierdzenie}
+\begin{proof}
+W całym dowodzie pomijamy indeks $T$ przy
+dowodliwości i klasach, jeśli nie prowadzi to
+do niejednoznaczności.
+Twierdzenie o dedukcji
+(Twierdzenie~\ref{thm:ncl-ipc-deduction})
+daje równoważność
+\[
+ T\vdash_{\mathrm I}A\to B
+ \iff T\cup\{A\}\vdash_{\mathrm I}B.
+\]
+W szczególności relacja dowodliwości implikacji
+jest zwrotna i przechodnia: z $A$ można uzyskać
+$A$, a z dwóch dowodów implikacji $A\to B$,
+$B\to C$ można przy dodatkowym założeniu $A$
+uzyskać $B$, następnie $C$ i zamknąć założenie.
+Jej symetryczna część $\equiv_T$ jest zatem
+relacją równoważności.
+
+Załóżmy $A\equiv_T A'$ oraz $B\equiv_T B'$.
+Z założenia $A\wedge B$ otrzymujemy $A,B$,
+następnie $A',B'$ przez eliminację implikacji
+i wreszcie $A'\wedge B'$. Twierdzenie o dedukcji
+daje implikację, a zamiana primowanych
+i nieprimowanych formuł daje implikację odwrotną.
+Z założenia $A\vee B$ otrzymujemy $A'\vee B'$
+przez eliminację alternatywy: w pierwszym
+przypadku przechodzimy od $A$ do $A'$, w drugim
+od $B$ do $B'$, po czym wprowadzamy alternatywę.
+Analogicznie otrzymujemy kierunek odwrotny.
+
+Dla implikacji zakładamy $A\to B$ oraz $A'$.
+Z $A'\to A$ dowodliwego z $T$ dostajemy $A$,
+z założonej implikacji dostajemy $B$,
+a z $B\to B'$ dostajemy $B'$.
+Zamknięcie kolejno założeń $A'$ i $A\to B$
+daje $(A\to B)\to(A'\to B')$.
+Zamiana formuł primowanych z nieprimowanymi
+daje implikację odwrotną. Otrzymaliśmy zgodność
+ze wszystkimi działaniami, więc działania
+na klasach są dobrze określone.
+
+Na klasach określmy porządek przez
+$[A]\leq[B]$ wtedy i tylko wtedy, gdy
+$T\vdash_{\mathrm I}A\to B$.
+Nie zależy on od reprezentantów przez
+przechodniość implikacji; jest zwrotny,
+przechodni, a antysymetria wynika z definicji
+$\equiv_T$.
+
+Klasa $[A\wedge B]$ jest kresem dolnym $[A],[B]$:
+jest ich ograniczeniem dolnym przez reguły
+eliminacji koniunkcji, a jeżeli
+$T\vdash_{\mathrm I}C\to A$ oraz
+$T\vdash_{\mathrm I}C\to B$, to z założenia $C$
+otrzymujemy $A\wedge B$, czyli
+$T\vdash_{\mathrm I}C\to(A\wedge B)$.
+Dla kresu górnego korzystamy z reguł wprowadzania
+alternatywy oraz z eliminacji alternatywy:
+jeśli $T\vdash_{\mathrm I}A\to C$ i
+$T\vdash_{\mathrm I}B\to C$, to
+$T\vdash_{\mathrm I}(A\vee B)\to C$.
+Klasa $[\bot]$ jest najmniejsza dzięki $\bot E$,
+a $[\top]$ największa dzięki dowodliwości $\top$
+i twierdzeniu o dedukcji.
+
+Pozostaje sprawdzić residuację. Mamy
+\[
+\begin{aligned}
+ [A]\wedge[C]\leq[B]
+ &\iff T\cup\{A\wedge C\}\vdash_{\mathrm I}B\\
+ &\iff T\cup\{A,C\}\vdash_{\mathrm I}B\\
+ &\iff T\cup\{C\}\vdash_{\mathrm I}A\to B\\
+ &\iff [C]\leq[A\to B].
+\end{aligned}
+\]
+Druga równoważność wynika z wprowadzania
+i eliminacji koniunkcji oraz reguły cięcia
+(Stwierdzenie~\ref{prop:ncl-ipc-structural}).
+Trzecia wynika z twierdzenia o dedukcji.
+Zatem $L_T$ jest algebrą Heytinga.
+
+Wreszcie $[A]=1$ wtedy i tylko wtedy, gdy
+$T\vdash_{\mathrm I}\top\to A$, ponieważ
+$T\vdash_{\mathrm I}A\to\top$ zachodzi zawsze.
+Dowodliwość $\top$ i twierdzenie o dedukcji
+pokazują, że jest to równoważne
+$T\vdash_{\mathrm I} A$, czyli $A\in T$.
+\end{proof}
+Jeżeli $T$ jest teorią sprzeczną, to $T$ zawiera
+wszystkie formuły i algebra $L_T$ ma jeden element.
+Jeżeli $T$ jest niesprzeczna, to $[\bot]\ne1$,
+zatem algebra jest nietrywialna.
+
+\begin{twierdzenie}[Własność uniwersalna algebry formuł]
+\label{thm:ncl-heyting-lindenbaum-universal}
+Dla każdej algebry Heytinga $H$ i wartościowania
+$v$ w $H$ takiego, że $v(A)=1$ dla wszystkich
+$A\in T$, istnieje dokładnie jeden homomorfizm
+$\overline v:L_T\to H$ spełniający
+\[
+ \overline v([A]_T)=v(A)
+ \qquad(A\in\mathrm{Fm}).
+\]
+W szczególności dla $T_0=\operatorname{Cn}(\varnothing)$
+algebra $L_{T_0}$ jest wolna na klasach zmiennych:
+każde przypisanie zmiennym dowolnych elementów $H$
+rozszerza się jednoznacznie do homomorfizmu
+$L_{T_0}\to H$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $A\equiv_T B$, to z algebraicznej poprawności
+(Twierdzenie~\ref{thm:ncl-heyting-soundness}) mamy
+$v(A)\to v(B)=v(B)\to v(A)=1$.
+Zatem $v(A)=v(B)$ na mocy
+Twierdzenia~\ref{thm:ncl-heyting-implication-laws}.
+Wzór na $\overline v$ nie zależy od reprezentanta.
+Zachowanie działań i stałych wynika z ich definicji
+na klasach i z rekurencyjnej definicji wartościowania.
+Jednoznaczność jest natychmiastowa, ponieważ
+każdy element $L_T$ jest klasą pewnej formuły.
+
+Dla $T_0$ warunek $v(A)=1$ dla $A\in T_0$
+zachodzi dla każdego wartościowania przez
+poprawność IPC. Wybór wartości zmiennych
+wyznacza wartościowanie przez rekursję,
+a zatem homomorfizm. Klasy zmiennych generują
+algebrę, ponieważ każdą formułę budujemy
+ze zmiennych, stałej $\bot$ i spójników.
+Dwie różne zmienne mają różne klasy: w algebrze
+dwuelementowej można przypisać im różne wartości,
+a poprawność wyklucza ich równoważność względem $T_0$.
+W ten sposób otrzymujemy własność uniwersalną
+algebry wolnej na zbiorze zmiennych.
+\end{proof}
+
+\begin{stwierdzenie}[Teorie i filtry algebry wolnej]
+\label{prop:ncl-heyting-theories-filters}
+Niech $L=L_{T_0}$, gdzie
+$T_0=\operatorname{Cn}(\varnothing)$.
+Odpowiedniość
+\[
+ T\longmapsto F_T=\{[A]_{T_0}:A\in T\}
+\]
+jest izomorfizmem porządkowym zbioru teorii IPC
+i zbioru filtrów $L$, uporządkowanych przez inkluzję.
+Odwzorowanie odwrotne ma postać
+$F\longmapsto T_F=\{A:[A]_{T_0}\in F\}$.
+Ponadto
+\[
+ L/F_T\cong L_T.
+\]
+Teoria $T$ jest pierwsza dokładnie wtedy,
+gdy odpowiadający jej filtr jest pierwszy.
+\end{stwierdzenie}
+\begin{proof}
+Przynależność $A$ do teorii $T$ nie zależy od
+reprezentanta klasy w $L$: jeżeli
+$A\equiv_{T_0}B$, to obie implikacje są
+twierdzeniami IPC, więc z przynależności jednej
+formuły do $T$ wynika przynależność drugiej.
+Każda teoria zawiera $T_0$, dlatego $1\in F_T$.
+Jeżeli $[A]\in F_T$ i $[A]\leq[B]$, to
+$A\in T$ i $\vdash_{\mathrm I}A\to B$,
+zatem $B\in T$. Domknięcie względem kresu
+dolnego wynika z reguły wprowadzania koniunkcji.
+Stąd $F_T$ jest filtrem.
+
+Dla filtru $F$ zbiór $T_F$ jest teorią:
+jeżeli $T_F\vdash_{\mathrm I}A$, to dowód
+wykorzystuje skończony zbiór przesłanek
+$\Delta\subseteq T_F$. Dla kanonicznego
+wartościowania $v(B)=[B]_{T_0}$ mocniejsza
+postać algebraicznej poprawności daje
+\[
+ \bigwedge_{B\in\Delta}[B]_{T_0}\leq[A]_{T_0}.
+\]
+Lewa strona należy do $F$, także dla
+$\Delta=\varnothing$, więc $[A]_{T_0}\in F$
+i $A\in T_F$. W drugą stronę domknięcie
+dedukcyjne zawiera wszystkie swoje przesłanki.
+Z definicji i niezależności przynależności
+od reprezentanta obie konstrukcje są wzajemnie
+odwrotne oraz zachowują inkluzję.
+
+Odwzorowanie $h:L\to L_T$ dane wzorem
+$h([A]_{T_0})=[A]_T$ jest dobrze określonym
+surjektywnym homomorfizmem, gdyż $T_0\subseteq T$,
+a działania są określone tak samo w obu algebrach.
+Z Twierdzenia~\ref{thm:ncl-heyting-lindenbaum}
+mamy $h^{-1}(\{1\})=F_T$.
+Wniosek~\ref{cor:ncl-heyting-quotient-universal}
+daje żądany izomorfizm.
+Ostatnia równoważność wynika z
+$[\bot]_{T_0}\in F_T$ wtedy i tylko wtedy,
+gdy $\bot\in T$, oraz z
+$[A]_{T_0}\vee[B]_{T_0}=[A\vee B]_{T_0}$.
+\end{proof}
+
+\section{Algebraiczna pełność IPC}
+
+\begin{twierdzenie}[Silna pełność algebraiczna]
+\label{thm:ncl-heyting-strong-completeness}
+Dla dowolnego zbioru formuł $\Gamma$ i formuły $A$
+zachodzi
+\[
+ \Gamma\vdash_{\mathrm I}A
+ \iff \Gamma\models_{\mathrm{HA}}A
+ \iff \Gamma\models_{\mathrm K}A.
+\]
+\end{twierdzenie}
+\begin{proof}
+Kierunek od dowodliwości do konsekwencji
+algebraicznej wynika z
+Twierdzenia~\ref{thm:ncl-heyting-soundness}.
+Jeżeli $\Gamma\nvdash_{\mathrm I}A$, przyjmijmy
+$T=\operatorname{Cn}(\Gamma)$ i algebrę $L_T$.
+Kanoniczne wartościowanie przypisuje zmiennej
+$p$ klasę $[p]_T$, więc przez indukcję
+$v(B)=[B]_T$ dla każdej formuły $B$.
+Każda przesłanka $\gamma\in\Gamma$ należy do $T$,
+więc $v(\gamma)=1$, ale $A\notin T$,
+zatem $v(A)\ne1$. To obala konsekwencję
+algebraiczną i dowodzi pierwszej równoważności.
+Druga wynika z silnej pełności Kripkego
+(Twierdzenie~\ref{thm:ncl-ipc-strong-completeness}).
+\end{proof}
+Można również otrzymać kontrwartościowanie
+algebraiczne wprost z ukorzenionego kontrmodelu
+Kripkego, stosując
+Stwierdzenie~\ref{prop:ncl-heyting-kripke-valuation}.
+
+\begin{wniosek}[Skończone przesłanki i nierówności algebraiczne]
+\label{cor:ncl-heyting-finite-consequence}
+Dla skończonego zbioru $\Delta$ następujące
+warunki są równoważne:
+\begin{enumerate}
+\item $\Delta\vdash_{\mathrm I}A$.
+\item Dla każdej algebry Heytinga i każdego
+      wartościowania $v$ zachodzi
+      $\bigwedge_{B\in\Delta}v(B)\leq v(A)$.
+\item $\Delta\models_H A$ dla każdej skończonej
+      algebry Heytinga $H$.
+\end{enumerate}
+\end{wniosek}
+\begin{proof}
+Warunek 1 daje warunek 2 przez mocniejszą
+postać poprawności algebraicznej.
+Warunek 2 daje warunek 3 przez podstawienie
+wartości $1$ dla wszystkich przesłanek.
+Jeśli warunek 1 nie zachodzi, to
+Twierdzenie~\ref{thm:ncl-ipc-finite-model-property}
+daje skończony ukorzeniony kontrmodel Kripkego.
+Algebra $\operatorname{Up}(W)$ jest wtedy skończona,
+a wartościowanie zbiorami wymuszania daje wartość
+$1$ dla wszystkich przesłanek i wartość różną
+od $1$ dla wniosku. Zatem nie zachodzi warunek 3.
+\end{proof}
+
+\begin{stwierdzenie}[Równoważność formuł i tożsamości]
+\label{prop:ncl-heyting-equational}
+Dla dowolnych formuł $A,B$ zachodzi
+\[
+ \vdash_{\mathrm I}A\leftrightarrow B
+ \iff \forall H\ \forall v\quad v(A)=v(B),
+\]
+gdzie $H$ przebiega wszystkie algebry Heytinga,
+a $v$ wszystkie ich wartościowania.
+\end{stwierdzenie}
+\begin{proof}
+W algebrze Heytinga
+$(a\to b)\wedge(b\to a)=1$ dokładnie wtedy,
+gdy obie implikacje są równe $1$, czyli
+$a\leq b$ i $b\leq a$. Jest to równoważne $a=b$.
+Stosujemy silną pełność algebraiczną dla
+pustego zbioru przesłanek do formuły
+$A\leftrightarrow B$.
+\end{proof}
+Zatem równoważności dowodliwe intuicjonistycznie
+są dokładnie tożsamościami algebr Heytinga
+wyrażonymi w języku formuł.
+Stałą $1$ w dowolnym termie można zastąpić
+skrótem $\top=\bot\to\bot$.
