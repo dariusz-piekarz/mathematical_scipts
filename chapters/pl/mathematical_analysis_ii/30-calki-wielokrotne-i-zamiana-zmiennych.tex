@@ -1401,6 +1401,81 @@ miar wynika też z ciągłości miary z dołu,
 ponieważ graniczna płaszczyzna ma miarę zero.
 \end{przyklad}
 
+
+\paragraph{Wizualizacja interaktywna komórek przestrzennych.}
+Porównujemy komórki walcowe i sferyczne
+o trzech przyrostach równych $\delta>0$.
+W pierwszej przyjmujemy punkt parametrów
+$(r,\theta,z)=(1.2,0.3,0.2)$, w drugiej
+$(\rho,\varphi,\theta)=(1.2,0.65,0.3)$.
+Kąty podajemy w radianach. Suwak zmienia
+$\delta$, a nagłówek podaje dokładne
+stosunki objętości do $\delta^3$,
+obliczone z powyższych wzorów, a nie
+z przybliżonej triangulacji powierzchni.
+Ich granicami są odpowiednio $1.2$ oraz
+$1.2^2\sin(0.65)$.
+Wizualizacja obejmuje wszystkie sześć
+ścian każdej komórki i jej dwanaście
+krawędzi. Ściany krzywoliniowe są
+przybliżane siatką trójkątów.
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+def cyl(r,a,z):
+    return r*np.cos(a),r*np.sin(a),z
+def sph(r,p,a):
+    return (r*np.sin(p)*np.cos(a),
+            r*np.sin(p)*np.sin(a),r*np.cos(p))
+starts=[np.array([1.2,.3,.2]),
+        np.array([1.2,.65,.3])]
+maps=[cyl,sph]
+ds=[.05,.075,.1,.15,.2,.3,.4]
+N=16
+fig=make_subplots(rows=1,cols=2,
+    specs=[[{"type":"scene"}]*2])
+for j,d in enumerate(ds):
+    for k in range(2):
+        v,f=[],[]
+        for ax in range(3):
+            b,c=(ax+1)%3,(ax+2)%3
+            for side in (0,1):
+                off=len(v)
+                for i in range(N+1):
+                    for l in range(N+1):
+                        q=np.zeros(3)
+                        q[ax],q[b],q[c]=side,i/N,l/N
+                        v.append(maps[k](*(starts[k]+d*q)))
+                for i in range(N):
+                    for l in range(N):
+                        a=off+i*(N+1)+l
+                        m=a+N+1
+                        for tri in [(a,m,m+1),(a,m+1,a+1)]:
+                            f.append(tri if side else tri[::-1])
+        x,y,z=np.array(v).T
+        a,b,c=np.array(f).T
+        fig.add_trace(go.Mesh3d(x=x,y=y,z=z,
+            i=a,j=b,k=c,opacity=.85,visible=j==4,
+            color=["#397db5","#15988c"][k]),1,k+1)
+def heading(d):
+    r,p=1.2,.65
+    c=r+d/2
+    s=((r+d)**3-r**3)/3*(np.cos(p)-np.cos(p+d))/d**2
+    return f"delta={d}: V/delta^3 = {c:.4f}, {s:.4f}"
+steps=[dict(label=str(d),method="update",
+    args=[dict(visible=[j==i for j in range(len(ds))
+                               for _ in range(2)]),
+          dict(title=heading(d))])
+    for i,d in enumerate(ds)]
+fig.update_scenes(aspectmode="cube")
+fig.update_layout(sliders=[dict(active=4,steps=steps)],
+    title=heading(ds[4]),showlegend=False)
+fig.write_html("am2_30_curvilinear_cells.html", include_plotlyjs=True)
+\end{lstlisting}
+
 W zamianie zmiennych należy zawsze sprawdzić
 dziedzinę parametrów, różnowartościowość,
 wyznacznik pochodnej i miarę pominiętych zbiorów.
