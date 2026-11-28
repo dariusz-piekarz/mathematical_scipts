@@ -2238,7 +2238,27 @@ if __name__ == '__main__':
 \section{Równanie Hamiltona--Jacobiego: charakterystyki i rozwiązania lepkościowe (Plotly)}
 Kod oblicza wartości wzoru Hopfa--Laxa przez minimalizację na siatce,
 rysuje charakterystyki i pochodną rozwiązania po powstaniu osobliwości.
-Wykresy ilustrują teorię; nie zastępują dowodów z Rozdziału~\ref{chap:pde23}.
+Dla $t>0$ minimalizujemy funkcję
+$F_{t,x}(y)=\cos y+(x-y)^2/(2t)$ na $\R$.
+Jest ona koercywna, więc osiąga minimum.
+Każdy minimizator spełnia $x=y-t\sin y$,
+a zatem $|x-y|\le t$; wystarczy przeszukiwać
+siatkę obejmującą ten przedział.
+Ponieważ $|F_{t,x}''|\le1+1/t$, wzór Taylora
+w punkcie minimum daje dla równomiernej siatki
+o kroku $\eta$ błąd wartości minimum nie większy
+niż $(1+1/t)\eta^2/8$, jeśli siatka obejmuje
+przedział $[x-t,x+t]$.
+Dla $t<1$ mamy $F_{t,x}''>0$ i minimizator jest
+jedyny. Dla $t>1$ oraz $x=0$ funkcja jest parzysta,
+a $F_{t,0}''(0)<0$, więc istnieją co najmniej dwa
+różne minimizatory. Ich nachylenia $(x-y)/t$ są różne.
+W punktach różniczkowalności rozwiązania nachylenie
+to jest jego pochodną przestrzenną; w punkcie
+wieloznaczności minimum nie należy interpretować
+wybranego przez program nachylenia jako pochodnej.
+Wykresy ilustrują teorię; nie zastępują dowodów
+z rozdziału~\ref{chap:pde23}.
 \begin{lstlisting}[style=pythonpde,caption={Wzór Hopfa--Laxa i powstawanie narożnika (Plotly)},label={code:pde23-plotly}]
 from pathlib import Path
 import numpy as np
@@ -2246,6 +2266,10 @@ import plotly.graph_objects as go
 OUT = Path(__file__).resolve().parent
 def hopf_lax(t: float, x: np.ndarray, y: np.ndarray):
     """Minimalizacja dla g(y)=cos(y) i H(p)=p^2/2."""
+    if not np.isfinite(t) or t <= 0 or len(y) < 2:
+        raise ValueError("Wymagany t > 0 i siatka z co najmniej 2 punktami")
+    if np.any(np.diff(y) <= 0) or y[0] > x.min()-t or y[-1] < x.max()+t:
+        raise ValueError("Siatka musi pokrywac wszystkie [x-t,x+t]")
     cost = np.cos(y)[None, :] + (x[:, None] - y[None, :])**2 / (2 * t)
     argmin = np.argmin(cost, axis=1)
     return cost[np.arange(len(x)), argmin], y[argmin]
@@ -2277,10 +2301,15 @@ def main():
     dx = x[1] - x[0]
     u, minimizer = hopf_lax(t, x, y)
     grad = np.gradient(u, dx)
+    grad[np.abs(x) < 1e-12] = np.nan
     fig = go.Figure()
     fig.add_scatter(x=x, y=grad, mode="lines", name="gradient numeryczny")
-    fig.add_scatter(x=x, y=(x - minimizer) / t, mode="lines",
-                    name="(x-y_min)/t", line=dict(dash="dash"))
+    slope = (x-minimizer)/t
+    # W zerze po t=1 pochodna nie istnieje.
+    slope[np.abs(x) < 1e-12] = np.nan
+    grad[np.abs(x) < 1e-12] = np.nan
+    fig.add_scatter(x=x, y=slope, mode="lines",
+                    name="Nachylenie wybranego minimum", line=dict(dash="dash"))
     fig.update_layout(title="Skok gradientu rozwiazania po t=1",
                       xaxis_title="x", yaxis_title="pochodna przestrzenna")
     save(fig, "pde23_skok_gradientu_plotly.html")
@@ -2290,7 +2319,12 @@ def main():
     near = np.where(costs <= costs.min() + 1e-4)[0]
     assert np.any(y[near] < -0.4) and np.any(y[near] > 0.4)
     assert np.all(1 - 0.8*np.cos(yy) > 0)
-    print("Trzy wizualizacje zapisane. Test symetrycznych minimow: OK.")
+    fine_y = np.linspace(y[0], y[-1], 2*len(y)-1)
+    fine_u, _ = hopf_lax(t, x, fine_y)
+    eta = y[1]-y[0]
+    assert np.min(u-fine_u) >= -1e-12
+    assert np.max(u-fine_u) <= (1+1/t)*eta**2/8+1e-12
+    print("Test symetrycznych minimow i bledu siatki: OK.")
 if __name__ == "__main__":
     main()
 \end{lstlisting}
@@ -2302,8 +2336,27 @@ Program implementuje monotoniczny schemat Godunowa dla strumienia
 $f(u)=u^2/2$, porównuje go ze ścisłymi rozwiązaniami
 entropijnymi zagadnienia Riemanna i wyznacza błąd w normie
 $L^1$ na skończonym przedziale obliczeniowym.
-Dane Riemanna nie są całkowalne na całej prostej; eksperyment
-wykonujemy w skończonym oknie przestrzennym.
+Dane Riemanna z niezerowym stanem stałym nie są
+całkowalne na całej prostej; eksperyment wykonujemy
+w skończonym oknie przestrzennym.
+Dla wypukłego strumienia $f(u)=u^2/2$ strumień
+Godunowa jest minimum $f$ na $[u_L,u_R]$ dla
+$u_L\le u_R$, a maksimum na $[u_R,u_L]$ w przeciwnym
+przypadku. Minimum przy przedziale zawierającym zero
+wynosi zero, maksimum zawsze jest osiągane na końcu
+przedziału. Aktualizacja objętości skończonych ma postać
+$U_j^{m+1}=U_j^m-\frac{\tau}{h}
+(F_{j+1/2}-F_{j-1/2})$.
+Sumowanie daje dokładny bilans masy z uwzględnieniem
+strumieni na obu krańcach okna.
+Błąd $L^1$ obliczamy dla rekonstrukcji stałej
+na komórkach, całkując moduł różnicy z rozwiązaniem
+entropijnym, a nie tylko próbkując w środkach
+komórek. Dzielimy komórki w miejscach przejścia
+fali uderzeniowej lub granic fali rozrzedzenia.
+Na każdym fragmencie różnica jest afiniczna,
+więc całkę jej modułu można wyznaczyć dokładnie
+po dodatkowym podziale w miejscu zmiany znaku.
 \begin{lstlisting}[style=pythonpde,caption={Fala uderzeniowa, fala rozrzedzenia i metoda Godunowa — Plotly},label={code:pde24-plotly}]
 """Skalarne prawa zachowania: fala uderzeniowa, rozrzedzenie, zbieznosc.
 
@@ -2342,9 +2395,19 @@ def riemann_exact(x, t, left, right):
 
 
 def numerical(n, tfinal, left, right):
+    if n < 2 or not np.isfinite(tfinal) or tfinal < 0:
+        raise ValueError("Wymagane n >= 2 i czas >= 0")
+    if not np.all(np.isfinite([left, right])):
+        raise ValueError("Stany musza byc skonczone")
+    if tfinal*max(abs(left), abs(right)) >= 3:
+        raise ValueError("Fala moze osiagnac granice okna")
     dx = 6.0/n
-    x = -3.0 + (np.arange(n) + 0.5) * dx
-    u = np.where(x < 0, left, right).astype(float)
+    edges = np.linspace(-3., 3., n+1)
+    x = (edges[:-1]+edges[1:])/2
+    fraction = np.clip(-edges[:-1]/dx, 0., 1.)
+    u = left*fraction + right*(1-fraction)
+    mass0 = dx*np.sum(u)
+    balance = 0.0
     t = 0.0
     while t < tfinal - 1e-13:
         max_speed = max(1.0, np.max(np.abs(u)))
@@ -2352,8 +2415,32 @@ def numerical(n, tfinal, left, right):
         padded = np.concatenate(([left], u, [right]))
         numerical_flux = godunov(padded[:-1], padded[1:])
         u -= dt/dx * (numerical_flux[1:] - numerical_flux[:-1])
+        balance += dt*(numerical_flux[0]-numerical_flux[-1])
+        assert u.min() >= min(left,right)-1e-12
+        assert u.max() <= max(left,right)+1e-12
         t += dt
+    assert np.isclose(dx*np.sum(u), mass0+balance, atol=1e-10, rtol=0)
     return x, u, dx
+
+
+def l1_error(x, u, dx, t, left, right):
+    """Integral bledu rekonstrukcji stalej na komorkach."""
+    lo, hi = x-dx/2, x+dx/2
+    if left > right or t == 0:
+        shock = (left+right)*t/2
+        w = np.clip(shock-lo, 0., dx)
+        return np.sum(w*abs(u-left)+(dx-w)*abs(u-right))
+    a, b = left*t, right*t
+    wl = np.clip(a-lo, 0., dx)
+    wr = np.clip(hi-b, 0., dx)
+    l, r = np.maximum(lo,a), np.minimum(hi,b)
+    width = np.maximum(r-l, 0.)
+    v, w = u-l/t, u-r/t
+    area = width*(abs(v)+abs(w))/2
+    cross = (v*w < 0) & (width > 0)
+    area[cross] = (width[cross]*(v[cross]**2+w[cross]**2)
+                   /(2*(abs(v[cross])+abs(w[cross]))))
+    return np.sum(wl*abs(u-left)+wr*abs(u-right)+area)
 
 
 def graph(filename, title, traces, xaxis='x', yaxis='u'):
@@ -2378,7 +2465,7 @@ def main():
         graph(f'pde24_{name}.html', f'Burgers: {name} (t={t})',
               [(x, exact, 'Rozwiazanie entropijne', 'solid'),
                (x, u, 'Schemat Godunowa', 'dash')])
-        print(name, 'L1 error:', np.sum(abs(u-exact))*dx)
+        print(name, 'L1 error:', l1_error(x,u,dx,t,left,right))
 
     ns = np.array([100, 200, 400, 800, 1600])
     trace_data = []
@@ -2387,7 +2474,7 @@ def main():
         errors = []
         for n in ns:
             x, u, dx = numerical(int(n), t, left, right)
-            errors.append(np.sum(abs(u-riemann_exact(x,t,left,right)))*dx)
+            errors.append(l1_error(x,u,dx,t,left,right))
         errors = np.asarray(errors)
         rate = np.polyfit(np.log(6.0/ns), np.log(errors), 1)[0]
         trace_data.append((6.0/ns, errors, f'{name}, nachylenie {rate:.2f}', dash))
@@ -2411,6 +2498,27 @@ Program ilustruje spadek energii w równaniu Allena--Cahna
 oraz dolną barierę na średnią rozwiązania równania
 $u_t=\Delta u+u^2$ na torusie. Schemat Stranga jest
 eksperymentem numerycznym, a nie dowodem twierdzeń.
+Dla gładkiego okresowego rozwiązania
+$u_t=u_{xx}+u-u^3$ funkcjonał
+\[
+ E(u)=\int_0^{2\pi}
+ \left(\tfrac12|u_x|^2+\tfrac14(u^2-1)^2\right)
+ \,\mathrm d\lambda_1(x)
+\]
+spełnia $E'(t)=-\int_0^{2\pi}|u_t|^2\,\mathrm d\lambda_1(x)$:
+różniczkujemy pod całką, całkujemy przez części
+i wykorzystujemy równanie oraz okresowość.
+Nie wynika stąd automatycznie monotoniczność energii
+w metodzie rozdzielania operatorów.
+Dla $u_t=u_{xx}+u^2$ średnia przestrzenna
+$m(t)=(2\pi)^{-1}\int_0^{2\pi}u(t,x)\,\mathrm d\lambda_1(x)$
+spełnia $m'(t)\ge m(t)^2$ z nierówności Jensena.
+Jeśli $m(0)=m_0>0$, to całkowanie nierówności
+$(1/m)'\le-1$ daje $m(t)\ge m_0/(1-tm_0)$
+dla $t<\min\{T_*,1/m_0\}$, gdzie $T_*$ oznacza
+maksymalny czas istnienia rozwiązania klasycznego.
+Stąd $T_*\le1/m_0$; nie jest to dokładny czas
+eksplozji ani jego numeryczny pomiar.
 \begin{lstlisting}[style=pythonpde,caption={Równania półliniowe: energia i eksplozja (Plotly)},label={code:pde25-plotly}]
 """PDE, rozdzial 25: reakcja, energia i eksplozja na torusie.
 
@@ -2423,7 +2531,8 @@ import numpy as np
 import plotly.graph_objects as go
 
 OUT = Path(__file__).resolve().parent
-N = 512
+# Nieparzyste N: brak niejednoznacznego modu Nyquista w pochodnej.
+N = 513
 x = 2 * np.pi * np.arange(N) / N
 k = np.fft.fftfreq(N, d=1 / N)
 dx = 2 * np.pi / N
@@ -2457,7 +2566,8 @@ def allen_cahn():
         e2 = np.exp(2 * dt)
         u = e2**0.5 * u / np.sqrt(1 + u*u * (e2 - 1))
         u = diffuse(u, dt / 2)
-    # Wybieramy dostatecznie dokladny krok, by energia byla nierosnaca.
+    # Kontrola empiryczna dla tych danych i tego kroku.
+    assert np.all(np.isfinite(energies))
     assert np.max(np.diff(energies)) < 1e-6
     fig = go.Figure()
     for t, v in snapshots.items():
@@ -2485,10 +2595,15 @@ def blowup_mean():
             maxs.append(float(np.max(u)))
         if j == int(round(tmax/dt)):
             break
+        previous_mean = np.mean(u)
         u = diffuse(u, dt / 2)
-        assert dt * np.max(u) < 1
+        assert np.isclose(np.mean(u),previous_mean,atol=1e-12,rtol=0)
+        assert np.min(u) >= -1e-10 and dt*np.max(u) < 1
         u = u / (1 - dt * u)  # scisly przeplyw reakcji u'=u^2
         u = diffuse(u, dt / 2)
+        assert np.all(np.isfinite(u))
+        # Dyskretny Jensen dla wypuklego przeplywu reakcji.
+        assert np.mean(u) >= previous_mean/(1-dt*previous_mean)-1e-12
     ts = np.asarray(ts)
     barrier = m0 / (1 - m0 * ts)
     # Blad splittigu i kwadratury dopuszczamy ponizej 1e-3.
@@ -2497,7 +2612,7 @@ def blowup_mean():
     fig.add_trace(go.Scatter(x=ts, y=means, name="srednia numeryczna"))
     fig.add_trace(go.Scatter(x=ts, y=barrier, name="bariera Jensena / ODE", line=dict(dash="dash")))
     fig.add_trace(go.Scatter(x=ts, y=maxs, name="maksimum"))
-    fig.update_layout(title=f"u_t=Delta u + u^2: srednia i dolna bariera, T*  {bound:.3f}", xaxis_title="czas t", yaxis_title="wartosc")
+    fig.update_layout(title=f"u_t=Delta u + u^2: srednia i dolna bariera, T* <= {bound:.3f}", xaxis_title="czas t", yaxis_title="wartosc")
     save(fig, "pde25_eksplozja_srednia.html")
     print("Bariera T* <=", bound, "roznica sredniej i bariery w koncu", means[-1] - barrier[-1])
 
@@ -2516,8 +2631,25 @@ z zerowymi warunkami Dirichleta konstruuje dyskretny strumień
 z równania bilansu i odtwarza węzłowe wartości rozwiązania.
 Osobno mierzymy błąd i wzrost przybliżonej drugiej pochodnej
 w maksimum. Przy $p>2$ rozwiązanie jest klasy $C^1$,
-lecz nie musi należeć do $C^2$. Obliczenia stanowią
-ilustrację, a nie dowód twierdzenia Minty'ego--Browdera.
+lecz nie należy do $C^2$ w tym przykładzie.
+Integrując równanie strumienia i wykorzystując
+symetrię, otrzymujemy $q(x)=1/2-x$, gdzie
+$q=|u'|^{p-2}u'$. Odwrócenie tej funkcji daje
+$u'=\operatorname{sgn}(q)|q|^{1/(p-1)}$.
+Całkowanie z warunkiem $u(0)=0$ prowadzi do
+\[
+ u(x)=\frac{p-1}{p}
+ \left((1/2)^{p/(p-1)}-|x-1/2|^{p/(p-1)}\right).
+\]
+Ten wzór spełnia również warunek $u(1)=0$.
+Dla $p>2$ wykładnik $p/(p-1)$ leży między $1$ i $2$,
+a ujemna centralna druga różnica w maksimum wynosi
+$2(p-1)h^{p/(p-1)-2}/p$, więc rośnie bez ograniczenia.
+Dyskretny strumień jest dokładny w środkach elementów,
+lecz odtworzenie wartości węzłowych przez sumę
+prostokątów środkowych nie jest na ogół dokładne.
+Obliczenia stanowią ilustrację, a nie dowód
+twierdzenia Minty'ego--Browdera.
 \begin{lstlisting}[style=pythonpde,caption={Nieliniowy strumień, błąd aproksymacji i krzywizna (Plotly)},label={code:pde26-plotly}]
 """PDE 26: p-Laplacian Dirichlet, finite-volume flux and Plotly.
 Requires: numpy, plotly. Run: python demo_plaplasjan_plotly.py
@@ -2539,16 +2671,22 @@ def discrete(p, n):
     """Solve -D_h(|D_h u|^(p-2) D_h u)=1 with zero end values.
     In 1D the numerical flux is q_{i+1/2}=1/2-(i+1/2)h.
     """
+    if not np.isfinite(p) or p <= 1 or n < 2:
+        raise ValueError("Wymagane p > 1 oraz n >= 2")
     x = np.linspace(0, 1, n + 1)
     h = 1.0 / n
-    xm = (x[1:] + x[:-1]) / 2
-    flux = 0.5 - xm
+    xm = (np.arange(n)+0.5)*h
+    flux = ((n-1)/2-np.arange(n))*h
     grad = np.sign(flux) * np.abs(flux)**(1 / (p - 1))
     values = np.r_[0.0, np.cumsum(h * grad)]
     assert abs(values[-1]) < 5e-13
     q_recovered = np.sign(np.diff(values) / h) * np.abs(np.diff(values) / h)**(p - 1)
     residual = -(np.diff(q_recovered) / h) - 1
     assert np.max(np.abs(residual)) < 1e-8
+    np.testing.assert_allclose(q_recovered, flux, atol=1e-10, rtol=0)
+    np.testing.assert_allclose(values, values[::-1], atol=1e-12, rtol=0)
+    if p == 2:
+        np.testing.assert_allclose(values, exact(x,p), atol=1e-12, rtol=0)
     return x, values
 
 
