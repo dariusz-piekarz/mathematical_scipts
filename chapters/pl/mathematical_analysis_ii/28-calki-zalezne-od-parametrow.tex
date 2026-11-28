@@ -120,6 +120,34 @@ pierwszych pochodnych cząstkowych. Ponieważ
 $t_0$ był dowolny, teza zachodzi na $T$.
 \end{proof}
 
+\begin{wniosek}[Całkowalność w jednym punkcie każdej składowej]
+\label{ma2:cor:parameter-anchor}
+W twierdzeniu \ref{ma2:thm:parameter-multivariate}
+wystarczy założyć całkowalność $f(t_*,\cdot)$
+dla co najmniej jednego $t_*$ w każdej składowej
+spójnej zbioru $T$, zamiast dla każdego $t\in T$.
+\end{wniosek}
+\begin{proof}
+Niech $K$ będzie domkniętą kulą zawartą w $T$.
+Dla $s,t\in K$ i $x\notin N$ stosujemy
+twierdzenie o wartości średniej do funkcji
+$\theta\mapsto f(s+\theta(t-s),x)$ na $[0,1]$.
+Reguła łańcuchowa i ograniczenia pochodnych dają
+\[
+ |f(t,x)-f(s,x)|\le
+ \sum_{i=1}^m |t_i-s_i|g_{K,e_i}(x).
+\]
+Prawa strona jest całkowalna jako skończona suma
+funkcji całkowalnych. Zatem wszystkie przekroje
+na $K$ są jednocześnie całkowalne albo wszystkie
+niecałkowalne. Każdy punkt $T$ ma takie kuliste
+otoczenie, więc zbiór parametrów o całkowalnym
+przekroju oraz jego dopełnienie są otwarte w $T$.
+Na składowej spójnej zawierającej $t_*$ pierwszy
+zbiór jest niepusty, wobec czego obejmuje całą
+składową. Stosujemy poprzednie twierdzenie.
+\end{proof}
+
 \begin{wniosek}[Gradient, macierz Hessego i różniczka]
 \label{ma2:cor:parameter-gradient-hessian}
 Przy założeniach poprzedniego twierdzenia
@@ -219,6 +247,87 @@ Przy $p\uparrow n$ całka podstawowa i wszystkie
 te momenty logarytmiczne dążą do nieskończoności.
 \end{przyklad}
 
+\begin{przyklad}[Gładkie przekroje nie gwarantują różniczkowalności całki]
+\label{ma2:ex:parameter-escape-derivative}
+Niech $\psi:\R^n\to[0,\infty)$ będzie ciągłą
+funkcją klasy $C^\infty$, równą zero poza kulą
+domkniętą jednostkową, o całce równej $1$.
+Można ją uzyskać, normalizując funkcję
+\[
+ \psi_0(x)=
+ \begin{cases}
+ \exp(-1/(1-\|x\|_2^2)),&\|x\|_2<1,\\
+ 0,&\|x\|_2\ge1.
+ \end{cases}
+\]
+Jej całka jest dodatnia i skończona, ponieważ
+funkcja jest ograniczona, ma ograniczony nośnik
+i jest dodatnia we wnętrzu kuli.
+Gładkość na brzegu wynika z faktu, że funkcja
+$s\mapsto e^{-1/s}$ dla $s>0$, przedłużona zerem
+dla $s\le0$, jest gładka: jej kolejne pochodne
+na dodatniej półosi mają postać wielomianu w $1/s$
+pomnożonego przez $e^{-1/s}$, więc dążą do zera
+przy $s\downarrow0$.
+
+Dla $t\in(-1,1)$ określmy
+\[
+ f(t,x)=
+ \begin{cases}
+ |t|\psi(x-e_1/t),&t\ne0,\\
+ 0,&t=0.
+ \end{cases}
+\]
+Funkcja jest gładka również w otoczeniu każdego
+punktu $(0,x_0)$: dla $x$ w ograniczonym otoczeniu
+$x_0$ i dostatecznie małego $|t|$ zachodzi
+$\|x-e_1/t\|_2>1$, więc $f$ jest tam identycznie
+zerowa. W szczególności $\partial_t f(0,x)=0$
+dla każdego $x$.
+Niezmienniczość miary względem translacji
+(\atlasref{ME-04::thm:invariance-lebesgue}{teoria miary i całki}),
+przeniesiona z funkcji charakterystycznych na
+nieujemne funkcje przez aproksymację prostą
+i zbieżność monotoniczną, daje
+\[
+ F(t)=\int_{\R^n}f(t,x)\,\mathrm d\lambda_n(x)=|t|.
+\]
+Funkcja $F$ jest ciągła, lecz nie jest
+różniczkowalna w zerze, mimo że wszystkie
+pochodne przekrojów istnieją.
+Gdyby pierwsza pochodna podcałkowa miała
+wspólną całkowalną majorantę w otoczeniu zera,
+twierdzenie \ref{ma2:thm:parameter-multivariate}
+dawałoby różniczkowalność $F$ i $F'(0)=0$,
+co jest sprzecznością.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1.05cm,y=1cm]
+ \draw[->] (-.25,0)--(8.15,0) node[right] {$x_1$};
+ \draw[->] (0,-.12)--(0,1.3) node[above] {$f(t,x_1)$};
+ \foreach \a/\h/\col in {2/.9/blue,4/.45/teal,7/.257/orange}{
+   \fill[\col!20] plot[domain=-1:1,samples=60,variable=\s]
+    ({\a+\s},{\h*(1-\s*\s)^2}) -- cycle;
+   \draw[\col!75!black,thick] plot[domain=-1:1,samples=60,variable=\s]
+    ({\a+\s},{\h*(1-\s*\s)^2});
+   \draw[\col!75!black,densely dashed] (\a,0)--(\a,\h);
+ }
+ \node[below] at (2,0) {$2$};
+ \node[below] at (4,0) {$4$};
+ \node[below] at (7,0) {$7$};
+ \node[blue!75!black,above] at (2,.9) {$t=1/2$};
+ \node[teal!75!black,above] at (4,.45) {$t=1/4$};
+ \node[orange!75!black,above] at (7,.257) {$t=1/7$};
+\end{tikzpicture}
+\caption{Schemat przesuwającego się nośnika z przykładu
+\ref{ma2:ex:parameter-escape-derivative} dla $t>0$
+i $n=1$. Kształt krzywych jest schematyczny;
+środki są równe $1/t$, a wysokości proporcjonalne do $t$.}
+\label{ma2:fig:parameter-escape}
+\end{figure}
+
 \section{Zmienna dziedzina całkowania}
 
 \begin{twierdzenie}[Ciągłość całki na ruchomych zbiorach]
@@ -263,6 +372,62 @@ W otoczeniu $(c_0,r_0)$ wszystkie kule mieszczą się
 w pewnej kuli domkniętej $K$, na której $|u|\le M$.
 Majorantą jest $M\chi_K$.
 Stosujemy \ref{ma2:thm:parameter-moving-domains}.
+\end{przyklad}
+
+\begin{stwierdzenie}[Różniczkowanie położenia kuli]
+\label{ma2:prop:parameter-ball-center}
+Niech $u\in C^k(\R^n)$, $k\ge1$, i niech $r>0$
+będzie ustalony. Wówczas funkcja
+$H_r(c)=\int_{B(c,r)}u(x)\,\mathrm d\lambda_n(x)$
+jest klasy $C^k$, a dla $1\le|\alpha|\le k$
+\[
+ \partial_c^\alpha H_r(c)
+ =\int_{B(c,r)}\partial^\alpha u(x)\,
+ \mathrm d\lambda_n(x).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Niezmienniczość miary Lebesgue'a względem translacji
+(\atlasref{ME-04::thm:invariance-lebesgue}{teoria miary i całki})
+daje
+\[
+ H_r(c)=\int_{B(0,r)}u(c+y)\,\mathrm d\lambda_n(y).
+\]
+Wzór dla całek wynika z niezmienniczości dla
+funkcji charakterystycznych, liniowości,
+aproksymacji nieujemnych funkcjami prostymi
+i rozkładu na część dodatnią i ujemną.
+Dla $c$ w domkniętej kuli $K$ pochodne
+$\partial^\alpha u(c+y)$ są ograniczone,
+gdyż $K+\overline{B(0,r)}$ jest zwarty
+jako obraz iloczynu dwóch zbiorów zwartych
+przez ciągłe dodawanie. Stałe ograniczenia
+są całkowalnymi majorantami na $B(0,r)$.
+Twierdzenie \ref{ma2:thm:parameter-multivariate}
+daje wzory pochodnych, a ponowne przesunięcie
+zmiennej całkowania prowadzi do tezy.
+\end{proof}
+
+\begin{przyklad}[Moment drugiego rzędu ruchomej kuli]
+\label{ma2:ex:parameter-ball-moment}
+Dla $u(x)=\|x\|_2^2$ rozwinięcie kwadratu
+po przesunięciu kuli daje
+\[
+ H_r(c)=v_nr^n\|c\|_2^2+
+ \frac{nv_n}{n+2}r^{n+2}.
+\]
+Istotnie, $\|c+y\|_2^2=\|c\|_2^2+2\langle c,y\rangle+
+\|y\|_2^2$, całka składnika liniowego po kuli
+$B(0,r)$ jest zerowa dzięki symetrii $y\mapsto-y$,
+a pozostały moment radialny obliczamy z
+\ref{ma2:thm:improper-radial}.
+Stąd $\nabla_c H_r(c)=2v_nr^n c$ oraz
+$H_{H_r}(c)=2v_nr^n I_n$, gdzie $I_n$ jest
+macierzą jednostkową. Wzory te można także
+uzyskać bez obliczania samej całki:
+stosujemy \ref{ma2:prop:parameter-ball-center}
+do pochodnych $2x_i$ oraz $2\delta_{ij}$,
+a następnie używamy tej samej symetrii.
 \end{przyklad}
 
 \section{Reguła Leibniza i ruchomy promień}
