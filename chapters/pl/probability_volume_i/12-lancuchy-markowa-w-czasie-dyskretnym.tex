@@ -318,6 +318,10 @@ $(s,s,d)$ i $(s,d,d)$:
 +\underbrace{\frac15\frac35}_{s\to d\to d}
 =\frac7{25}.
 \]
+Drzewo rozważanych trajektorii przedstawia
+rysunek~\ref{fig:rp1-12-weather-paths}, natomiast
+rysunek~\ref{fig:rp1-12-weather-chain} przedstawia
+samą macierz przejścia.
 To wyjaśnia różnicę między \emph{prawdopodobieństwem
 trajektorii} i \emph{prawdopodobieństwem stanu w danej chwili}.
 Przykładowo
@@ -350,9 +354,11 @@ nie zmienia prognozy następnego kroku.
 \end{tikzpicture}
 \caption{Drzewo dwóch kroków z początkowego stanu suchego.
 W przeciwieństwie do grafu przejść ten rysunek odróżnia
-historie: dwie pomarańczowe strzałki kończą się w deszczu,
-a ich prawdopodobieństwa trzeba dodać.
-Kolejne krawędzie jednej historii mnożymy.}
+historie. Pomarańczowe strzałki wskazują dwa zakończenia
+w stanie deszczowym. Sumujemy prawdopodobieństwa
+całych ścieżek do tych zakończeń, a nie same etykiety
+ostatnich strzałek. Prawdopodobieństwo pojedynczej
+ścieżki jest iloczynem etykiet jej kolejnych krawędzi.}
 \label{fig:rp1-12-weather-paths}
 \end{figure}
 
@@ -1144,11 +1150,14 @@ Definiujemy $v_j=\sum_{n\geq0}\Prob_i(X_n=j,\tau>n)$,
 dopuszczając wartość nieskończoną. W stacjonarnym
 łańcuchu, dla ustalonego $M\geq0$, zdarzenia
 \[
-\{X_{M-n}=i,\ X_{M-n+1}\ne i,\ldots,
-  X_M\ne i,\ X_M=j\},\qquad 0\leq n\leq M,
+A_{n,j}^{(M)}=\{X_{M-n}=i,\ X_M=j\}
+\cap\bigcap_{\ell=M-n+1}^{M}\{X_\ell\ne i\},
+\qquad 0\leq n\leq M,
 \]
-są rozłączne (dla $n=0$ warunki po $X_{M}=i$
-dotyczące braku ponownej wizyty są puste).
+są rozłączne względem $n$ przy ustalonym $j$.
+Dla $n=0$ przecięcie jest puste w sensie
+liczby czynników, czyli równe całej przestrzeni;
+wtedy $A_{0,j}^{(M)}=\{X_M=i,X_M=j\}$.
 Każde określa ostatnią wizytę w $i$ do chwili $M$
 i zawiera się w $\{X_M=j\}$. Z prawa trajektorii
 oraz stacjonarności prawdopodobieństwo tego
@@ -1179,8 +1188,8 @@ Wtedy $0=w_i=(wP^m)_i\geq w_kp_{ki}^{(m)}$,
 więc $w_k=0$. Stąd $\pi=\pi_iv$, a sumowanie
 współrzędnych daje $1=\pi_i\E_i\tau$.
 Wektor $v$ zależy wyłącznie od $P$ i wybranego $i$,
-więc ten wzór wyznacza cały rozkład stacjonarny
-jednoznacznie.
+więc $\pi=v/(\E_i\tau)$ wyznacza cały rozkład
+stacjonarny jednoznacznie.
 \end{proof}
 
 \begin{uwaga}
@@ -1201,7 +1210,10 @@ $\pi_j=(\pi_{j-1}+\pi_{j+1})/2$.
 Zatem $\pi_{j+1}-\pi_j$ nie zależy od $j$.
 Ciąg $(\pi_j)_{j\in\Z}$ byłby afiniczny,
 a jego nieujemność dla wszystkich całkowitych
-$j$ wymusza zerową różnicę. Stały ciąg nieujemny
+$j$ wymusza zerową różnicę. Istotnie, gdyby różnica była dodatnia, masy
+dla dostatecznie małych $j$ byłyby ujemne;
+gdyby była ujemna, stałoby się tak dla
+dostatecznie dużych $j$. Stały ciąg nieujemny
 na $\Z$ nie może mieć sumy równej $1$.
 Nie istnieje więc rozkład stacjonarny.
 Z twierdzenia~\ref{thm:rp1-12-positive-recurrence}
@@ -1237,7 +1249,10 @@ to rozkład stacjonarny $\pi$ istnieje, jest jedyny
 i spełnia $\pi_i>0$ dla każdego $i\in S$.
 \end{twierdzenie}
 \begin{proof}
-Istnienie wynika z poprzedniego twierdzenia.
+Istnienie wynika z poprzedniego twierdzenia,
+a jedyność także z twierdzenia~\ref{thm:rp1-12-positive-recurrence}.
+Podajmy niezależny dowód elementarny dla skończonego
+$S$, który nie wymaga analizy cykli powrotu.
 Jeżeli $\pi_i>0$ i $i\to j$, to dla pewnego $n$
 $\pi_j=(\pi P^n)_j\geq\pi_i p_{ij}^{(n)}>0$.
 Ponieważ pewne $\pi_i>0$ i łańcuch jest
@@ -1248,7 +1263,6 @@ Niech $c=\max_{i\in S}\pi_i/\rho_i$ i
 $D_i=c\rho_i-\pi_i\geq0$. Co najmniej jeden $D_i=0$.
 Ponieważ obie miary są stacjonarne,
 $D_j=\sum_iD_i p_{ij}$ dla wszystkich $j$.
-Jeśli $D_j=0$, to każdy $i$ z $p_{ij}>0$ ma $D_i=0$.
 Wybieramy $j$ z $D_j=0$. Z $DP^n=D$ dla
 każdego $n$ otrzymujemy
 $0=D_j\geq D_i p_{ij}^{(n)}$. Dla każdego $i$
@@ -1726,7 +1740,8 @@ początkowego
 \frac1n\sum_{k=0}^{n-1}\chi_{\{X_k=i\}}
 \longrightarrow\pi_i\quad\text{prawie na pewno}.
 \]
-Ponadto $\E_i\tau_i^+=1/\pi_i$.
+Ponadto $\E_i\tau_i^+=1/\pi_i$, zgodnie
+z twierdzeniem~\ref{thm:rp1-12-positive-recurrence}.
 \end{twierdzenie}
 \begin{proof}
 Zacznijmy od prawa procesu $\Prob_i$, tzn.
@@ -2192,9 +2207,12 @@ Stąd
 \]
 Zdarzenia $\{\tau_0<\tau_M\}$ rosną wraz z $M$:
 aby osiągnąć $M+1$, trzeba wcześniej osiągnąć $M$.
-Ich suma jest równa $\{\tau_0<\infty\}$,
-ponieważ skończona trajektoria do zera ma
-skończone maksimum. Z ciągłości miary z dołu
+Ich suma jest równa $\{\tau_0<\infty\}$.
+Istotnie, nierówność $\tau_0<\tau_M$ implikuje
+$\tau_0<\infty$. Odwrotnie, dla każdej trajektorii
+z $\tau_0<\infty$ wystarczy wybrać $M$ większe
+od maksimum stanów odwiedzonych do $\tau_0$,
+aby zachodziło $\tau_0<\tau_M$. Z ciągłości miary z dołu
 otrzymujemy
 \[
 \Prob_1(\tau_0<\infty)=
@@ -2204,7 +2222,10 @@ q/p,&p>q.
 \end{cases}
 \]
 Rozdzielając pierwszy krok ze stanu $0$, mamy
-$\Prob_0(\tau_0^+<\infty)=q+p\Prob_1(\tau_0<\infty)$.
+$\Prob_0(\tau_0^+<\infty)=q+p\Prob_1(\tau_0<\infty)$:
+z prawdopodobieństwem $q$ następuje powrót już
+w chwili $1$, a z prawdopodobieństwem $p$
+proces zaczyna dalszą drogę od stanu $1$.
 Dla $p=q$ jest to $1$, lecz nie istnieje
 rozkład stacjonarny, zatem łańcuch jest zerowo
 powracający. Dla $p>q$ prawdopodobieństwo
