@@ -1528,3 +1528,449 @@ w $s$. Nie jest to dolne ograniczenie złożoności
 problemu ani twierdzenie o optymalności algorytmu.
 Do praktycznego wyszukiwania dowodów potrzebne
 są bardziej oszczędne procedury.
+
+\section{Własność alternatywy}
+
+\begin{lemat}[Dołączanie wspólnego korzenia]
+\label{lem:ncl-ipc-root-amalgamation}
+Niech $\mathcal M_1=(W_1,\leq_1,V_1)$ i
+$\mathcal M_2=(W_2,\leq_2,V_2)$ będą modelami
+Kripkego o rozłącznych zbiorach światów.
+Istnieje model ukorzeniony $\mathcal M$ na zbiorze
+$W=W_1\cup W_2\cup\{r\}$, gdzie $r\notin W_1\cup W_2$,
+który zachowuje wymuszanie wszystkich formuł
+w światach obu modeli wyjściowych.
+\end{lemat}
+\begin{proof}
+Zachowujemy porządki $\leq_i$ w obrębie $W_i$,
+nie wprowadzamy porównań między elementami
+$W_1$ i $W_2$ oraz przyjmujemy $r\leq w$
+dla każdego $w\in W$. Jest to częściowy porządek:
+zwrotność i antysymetria wynikają z własności
+porządków wyjściowych oraz faktu, że żaden świat
+różny od $r$ nie jest mniejszy od $r$;
+przechodniość sprawdzamy w obrębie jednej
+składowej albo dla relacji zaczynającej się w $r$.
+Element $r$ jest najmniejszy.
+
+Dla każdej zmiennej $p$ przyjmujemy
+$V(p)=V_1(p)\cup V_2(p)$. Wartościowanie jest
+domknięte ku górze: jeżeli $w\in V(p)$, to
+$w$ należy do jednej ze składowych, a wszystkie
+jego rozszerzenia pozostają w tej samej składowej.
+Stosujemy domknięcie ku górze w odpowiednim
+modelu wyjściowym.
+
+Dla $w\in W_i$ zbiór jego rozszerzeń w nowym
+modelu jest identyczny jak w $\mathcal M_i$.
+Wymuszanie zmiennych i $\bot$ nie zmienia się,
+a indukcja po budowie formuły daje zachowanie
+koniunkcji, alternatywy i implikacji. W przypadku
+implikacji używamy właśnie równości zbiorów
+rozszerzeń i hipotezy indukcyjnej dla argumentów.
+\end{proof}
+Jeżeli nośniki modeli nie są rozłączne, najpierw
+zastępujemy je rozłącznymi kopiami, np.
+$W_i\times\{i\}$, przenosząc porządki i wartościowania
+wzdłuż naturalnych bijekcji. Indukcja po formułach
+pokazuje, że takie przeniesienie zachowuje wymuszanie.
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+\node[draw,rounded corners] (r) at (0,0) {$r$};
+\node[draw,rounded corners,minimum width=2.3cm,
+ minimum height=1.1cm,fill=blue!6] (m1) at (-2,2)
+ {$\mathcal M_1$};
+\node[draw,rounded corners,minimum width=2.3cm,
+ minimum height=1.1cm,fill=blue!6] (m2) at (2,2)
+ {$\mathcal M_2$};
+\draw[->,thick] (r)--(m1);
+\draw[->,thick] (r)--(m2);
+\end{tikzpicture}
+\end{center}
+Rysunek przedstawia składowe schematycznie:
+$r$ jest mniejszy od każdego świata w obu modelach,
+a światy z różnych składowych pozostają nieporównywalne.
+
+\begin{twierdzenie}[Własność alternatywy IPC]
+\label{thm:ncl-ipc-disjunction-property}
+Jeśli $\vdash_{\mathrm I}\alpha\vee\beta$, to
+$\vdash_{\mathrm I}\alpha$ lub $\vdash_{\mathrm I}\beta$.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy przeciwnie, że $\nvdash_{\mathrm I}\alpha$
+oraz $\nvdash_{\mathrm I}\beta$. Z pełności
+(Twierdzenie~\ref{thm:ncl-ipc-strong-completeness})
+otrzymujemy ukorzenione modele $\mathcal M_1$
+i $\mathcal M_2$ z korzeniami $w_1,w_2$ takimi, że
+$w_1\not\Vdash\alpha$ i $w_2\not\Vdash\beta$.
+Zastępujemy modele rozłącznymi kopiami i stosujemy
+Lemat~\ref{lem:ncl-ipc-root-amalgamation}.
+W otrzymanym modelu $r\leq w_1$ i $r\leq w_2$,
+a niewymuszanie odpowiednich formuł w $w_1,w_2$
+zostało zachowane.
+Gdyby $r\Vdash\alpha$, trwałość wymuszania
+(Lemat~\ref{lem:ncl-ipc-persistence}) dawałaby
+$w_1\Vdash\alpha$. Analogicznie $r\Vdash\beta$
+pociągałoby $w_2\Vdash\beta$.
+Zatem korzeń nie wymusza żadnego członu alternatywy,
+czyli $r\not\Vdash\alpha\vee\beta$.
+Poprawność IPC
+(Twierdzenie~\ref{thm:ncl-ipc-kripke-soundness})
+daje $\nvdash_{\mathrm I}\alpha\vee\beta$.
+Jest to kontrapozycja tezy.
+\end{proof}
+
+\begin{wniosek}[Skończone alternatywy i teoria twierdzeń]
+\label{cor:ncl-ipc-theorem-prime}
+Dla $n\geq1$ z
+$\vdash_{\mathrm I}\bigvee_{j=1}^n\alpha_j$
+wynika istnienie $j$ z $\vdash_{\mathrm I}\alpha_j$.
+Ponadto teoria wszystkich twierdzeń IPC,
+$\operatorname{Cn}(\varnothing)$, jest pierwsza.
+\end{wniosek}
+\begin{proof}
+Skończoną alternatywę definiujemy rekurencyjnie,
+dołączając kolejne człony z prawej strony.
+Dla $n=1$ teza jest oczywista, a krok indukcyjny
+wynika z Twierdzenia~\ref{thm:ncl-ipc-disjunction-property}
+i hipotezy indukcyjnej dla alternatywy $n-1$ członów.
+Z Lematu~\ref{lem:ncl-ipc-deductive-closure}
+zbiór twierdzeń jest teorią, z poprawności nie
+zawiera $\bot$, a własność alternatywy daje
+pierwszość.
+\end{proof}
+W szczególności model kanoniczny
+z Definicji~\ref{def:ncl-ipc-canonical-model}
+ma korzeń: każda teoria pierwsza zawiera wszystkie
+twierdzenia IPC, a ich zbiór sam jest teorią pierwszą.
+
+\begin{przyklad}[Ograniczenia własności alternatywy]
+\label{ex:ncl-ipc-relative-disjunction}
+Nie można zastąpić pustego zbioru przesłanek
+dowolnym zbiorem $\Gamma$ i wnioskować z
+$\Gamma\vdash_{\mathrm I}p\vee q$, że
+$\Gamma\vdash_{\mathrm I}p$ lub $\Gamma\vdash_{\mathrm I}q$.
+Dla różnych zmiennych $p,q$ wystarczy wziąć
+$\Gamma=\{p\vee q\}$. Konsekwencja z alternatywą
+jest natychmiastowa z reguły założenia.
+Model jednoświatowy z $p$ fałszywym i $q$ prawdziwym
+obala pierwszą z pozostałych konsekwencji,
+a model z zamienionymi wartościami obala drugą.
+Z poprawności żadna z nich nie jest dowodliwa.
+\end{przyklad}
+
+\section{Translacja negatywna logiki klasycznej}
+
+\subsection{Klasyczne rozszerzenie dedukcji naturalnej}
+
+Do intuicjonistycznej dedukcji naturalnej dołączamy
+regułę eliminacji podwójnej negacji
+\[
+ \frac{\neg\neg\alpha}{\alpha}\ (\mathrm{DNE}).
+\]
+Otrzymaną relację dowodliwości oznaczamy
+$\vdash_{\mathrm C}$.
+
+\begin{stwierdzenie}[Równoważność dwóch klasycznych zasad]
+\label{prop:ncl-ipc-dne-lem-equivalence}
+Dołączenie do IPC reguły DNE jest równoważne
+dołączeniu wszystkich schematów
+$\alpha\vee\neg\alpha$ jako dodatkowych aksjomatów.
+\end{stwierdzenie}
+\begin{proof}
+W Stwierdzeniu~\ref{prop:ncl-ipc-triple-negation}
+udowodniliśmy $\vdash_{\mathrm I}
+\neg\neg(\alpha\vee\neg\alpha)$.
+Zastosowanie DNE daje prawo wyłączonego środka.
+Odwrotnie, mając $\neg\neg\alpha$, rozpatrujemy
+dwa przypadki z aksjomatu $\alpha\vee\neg\alpha$.
+W pierwszym $\alpha$ jest założeniem;
+w drugim z $\neg\alpha$ i $\neg\neg\alpha$
+otrzymujemy $\bot$, a następnie $\alpha$
+przez $\bot E$. Reguła $\vee E$ daje $\alpha$,
+zamykając oba założenia przypadków.
+\end{proof}
+
+\begin{twierdzenie}[Pełność klasycznego rozszerzenia]
+\label{thm:ncl-ipc-classical-extension}
+Dla dowolnego zbioru formuł $\Gamma$ zachodzi
+$\Gamma\vdash_{\mathrm C}\varphi$ wtedy i tylko wtedy,
+gdy $\Gamma\models_{\mathrm{CL}}\varphi$.
+\end{twierdzenie}
+\begin{proof}
+Poprawność wynika z poprawności IPC dla modeli
+jednoświatowych i z klasycznej tablicy negacji,
+która uzasadnia DNE. Dokładniej, indukcję
+z dowodu Twierdzenia~\ref{thm:ncl-ipc-kripke-soundness}
+ograniczamy do takich modeli, a dodatkowy krok
+DNE jest poprawny dzięki klasycznej interpretacji
+ze Stwierdzenia~\ref{prop:ncl-ipc-maximal-classical}.
+
+Dla pełności, korzystając ze zwartości klasycznej
+konsekwencji (dwuelementowa macierz,
+Twierdzenie~\ref{thm:ncl-finite-matrix-compactness}),
+możemy założyć, że $\Gamma$ jest skończony.
+Niech $p_1,\ldots,p_n$ będą wszystkimi zmiennymi
+w przesłankach i wniosku.
+Dla klasycznego wartościowania $e$ tych zmiennych
+określamy zbiór literałów
+\[
+ L_e=\{p_j:e(p_j)=1\}\cup
+     \{\neg p_j:e(p_j)=0\}.
+\]
+Indukcja po budowie dowolnej formuły $\psi$
+o zmiennych spośród $p_1,\ldots,p_n$ daje:
+jeśli $e(\psi)=1$, to $L_e\vdash_{\mathrm I}\psi$;
+jeśli $e(\psi)=0$, to $L_e\vdash_{\mathrm I}\neg\psi$.
+Dla zmiennych jest to definicja $L_e$, a dla $\bot$
+korzystamy z $\vdash_{\mathrm I}\bot\to\bot$.
+
+Dla koniunkcji przy wartości $1$ oba argumenty
+są dowodliwe z $L_e$, więc stosujemy $\wedge I$.
+Przy wartości $0$ co najmniej jeden argument
+ma dowodliwą negację; dodatkowe założenie
+koniunkcji daje ten argument i sprzeczność.
+Dla alternatywy o wartości $1$ stosujemy
+$\vee I$ do prawdziwego argumentu. Jeśli
+alternatywa ma wartość $0$, negacje obu
+argumentów są dowodliwe; z dodatkowego
+założenia alternatywy przez $\vee E$ uzyskujemy
+$\bot$ i zamykamy to założenie.
+
+Dla implikacji o wartości $1$ albo jej następnik
+jest prawdziwy i można go dowieść niezależnie
+od dodatkowego założenia poprzednika, albo
+poprzednik jest fałszywy. W drugim przypadku
+z jego dowodliwej negacji i dodatkowego
+założenia poprzednika otrzymujemy $\bot$,
+a zatem następnik przez $\bot E$.
+W obu sytuacjach $\to I$ daje implikację.
+Jeśli implikacja ma wartość $0$, jej poprzednik
+jest prawdziwy, a następnik fałszywy.
+Dodatkowe założenie implikacji wraz z poprzednikiem
+daje następnik, sprzeczny z jego dowodliwą negacją.
+Zamknięcie założenia daje negację implikacji.
+Indukcja jest zakończona.
+
+Dla każdego $e$ otrzymujemy teraz
+$\Gamma\cup L_e\vdash_{\mathrm I}\varphi$.
+Jeśli wszystkie przesłanki mają wartość $1$,
+to $e(\varphi)=1$ z założonej konsekwencji,
+więc wystarczy powyższa indukcja.
+Jeżeli pewna $\gamma\in\Gamma$ ma wartość $0$,
+to $L_e\vdash_{\mathrm I}\neg\gamma$ i założenie
+$\gamma$ daje sprzeczność, a stąd $\varphi$.
+
+W klasycznym rozszerzeniu dysponujemy każdą
+alternatywą $p_j\vee\neg p_j$ na mocy
+Stwierdzenia~\ref{prop:ncl-ipc-dne-lem-equivalence}.
+Łączymy dowody odpowiadające wartościowaniom
+różniącym się tylko wartością $p_n$, stosując
+$\vee E$ do $p_n\vee\neg p_n$.
+Usuwa to literał dotyczący $p_n$.
+Powtarzamy procedurę dla $p_{n-1},\ldots,p_1$.
+Otrzymujemy $\Gamma\vdash_{\mathrm C}\varphi$.
+Jeśli $n=0$, jedyny zbiór literałów jest pusty,
+więc etap usuwania założeń nie jest potrzebny.
+\end{proof}
+
+\subsection{Formuły stabilne}
+
+\begin{definicja}[Stabilność względem podwójnej negacji]
+\label{def:ncl-ipc-stable}
+Formułę $\alpha$ nazywamy stabilną, jeśli
+$\vdash_{\mathrm I}\neg\neg\alpha\to\alpha$.
+\end{definicja}
+
+\begin{lemat}[Operacje zachowujące stabilność]
+\label{lem:ncl-ipc-stability-closure}
+Formuła $\bot$ oraz każda formuła $\neg\alpha$
+są stabilne. Jeżeli $\alpha,\beta$ są stabilne,
+to $\alpha\wedge\beta$ jest stabilna.
+Jeżeli $\beta$ jest stabilna, to
+$\alpha\to\beta$ jest stabilna dla dowolnej $\alpha$.
+\end{lemat}
+\begin{proof}
+Z $\neg\neg\bot=(\bot\to\bot)\to\bot$ oraz
+twierdzenia $\bot\to\bot$ otrzymujemy $\bot$,
+a następnie zamykamy założenie.
+Stabilność $\neg\alpha$ wynika z prawa potrójnej
+negacji (Stwierdzenie~\ref{prop:ncl-ipc-triple-negation}).
+
+Załóżmy $\neg\neg(\alpha\wedge\beta)$.
+Dodatkowe założenie $\neg\alpha$ prowadzi do
+$\neg(\alpha\wedge\beta)$: z hipotetycznej
+koniunkcji uzyskujemy $\alpha$ i sprzeczność.
+Zatem $\neg\alpha$ prowadzi do $\bot$,
+a zamknięcie tego założenia daje $\neg\neg\alpha$.
+Analogicznie otrzymujemy $\neg\neg\beta$.
+Stabilność obu argumentów daje $\alpha,\beta$,
+a wprowadzenie koniunkcji i zamknięcie
+pierwotnego założenia dowodzą tezy.
+
+Niech teraz $\beta$ będzie stabilna.
+Zakładamy $\neg\neg(\alpha\to\beta)$ oraz $\alpha$.
+Jeżeli dodatkowo założymy $\neg\beta$,
+to hipotetyczna implikacja $\alpha\to\beta$
+prowadzi do sprzeczności z $\neg\beta$.
+Otrzymujemy więc $\neg(\alpha\to\beta)$,
+sprzeczne z pierwszym założeniem.
+Zamknięcie $\neg\beta$ daje $\neg\neg\beta$,
+a stabilność $\beta$ daje $\beta$.
+Zamykamy kolejno $\alpha$ oraz
+$\neg\neg(\alpha\to\beta)$, co daje stabilność
+implikacji.
+\end{proof}
+
+\subsection{Translacja Gödla--Gentzena}
+
+\begin{definicja}[Translacja negatywna]
+\label{def:ncl-ipc-negative-translation}
+Każdej formule $\varphi$ przypisujemy formułę
+$\varphi^N$ określoną rekurencyjnie:
+\[
+\begin{aligned}
+ p^N&=\neg\neg p, & \bot^N&=\bot,\\
+ (\alpha\wedge\beta)^N&=\alpha^N\wedge\beta^N,&
+ (\alpha\to\beta)^N&=\alpha^N\to\beta^N,\\
+ (\alpha\vee\beta)^N&=\neg(\neg\alpha^N\wedge
+                                      \neg\beta^N).
+\end{aligned}
+\]
+W szczególności, rozwijając skrót negacji,
+otrzymujemy $(\neg\alpha)^N=\neg\alpha^N$.
+Dla zbioru formuł $\Gamma$ przyjmujemy
+$\Gamma^N=\{\gamma^N:\gamma\in\Gamma\}$.
+\end{definicja}
+Na mocy pierwszego intuicjonistycznego prawa
+de Morgana (Stwierdzenie~\ref{prop:ncl-ipc-demorgan})
+translacja alternatywy jest intuicjonistycznie
+równoważna $\neg\neg(\alpha^N\vee\beta^N)$.
+W przyjętej wersji każda przetłumaczona formuła
+po rozwinięciu skrótów nie zawiera alternatywy.
+
+\begin{lemat}[Stabilność i klasyczna równoważność translacji]
+\label{lem:ncl-ipc-negative-stability}
+Dla każdej formuły $\varphi$ zachodzą:
+\[
+ \vdash_{\mathrm I}\neg\neg\varphi^N\to\varphi^N,
+ \qquad
+ \models_{\mathrm{CL}}\varphi\leftrightarrow\varphi^N.
+\]
+\end{lemat}
+\begin{proof}
+Dla pierwszej tezy indukujemy po budowie formuły.
+Translacja zmiennej jest negacją formuły $\neg p$,
+a translacja $\bot$ jest stabilna na mocy
+Lematu~\ref{lem:ncl-ipc-stability-closure}.
+Koniunkcja i implikacja zachowują stabilność
+zgodnie z tym lematem, natomiast translacja
+alternatywy jest negacją, więc także jest stabilna.
+
+Dla drugiej tezy w każdym klasycznym wartościowaniu
+$p$ i $\neg\neg p$ mają tę samą wartość, a $\bot$
+nie zmienia się. Koniunkcja i implikacja zachowują
+równość wartości argumentów. Dla alternatywy
+korzystamy z klasycznej równoważności
+$\neg(\neg A\wedge\neg B)\leftrightarrow A\vee B$,
+wynikającej z tablic negacji i koniunkcji.
+Indukcja daje tezę.
+\end{proof}
+
+\begin{twierdzenie}[Translacja Gödla--Gentzena]
+\label{thm:ncl-ipc-godel-gentzen}
+Dla dowolnego zbioru formuł $\Gamma$ oraz formuły
+$\varphi$ zachodzi
+\[
+ \Gamma\models_{\mathrm{CL}}\varphi
+ \quad\Longleftrightarrow\quad
+ \Gamma^N\vdash_{\mathrm I}\varphi^N.
+\]
+\end{twierdzenie}
+\begin{proof}
+Z Twierdzenia~\ref{thm:ncl-ipc-classical-extension}
+wystarczy dla kierunku prostego wykazać, że
+$\Gamma\vdash_{\mathrm C}\varphi$ implikuje
+$\Gamma^N\vdash_{\mathrm I}\varphi^N$.
+Indukujemy po drzewie klasycznej dedukcji naturalnej.
+Otwarte założenia każdego podwyprowadzenia
+zastępujemy ich translacjami. Jeżeli różne
+formuły mają tę samą translację, zachowujemy
+oznaczenia zamykanych wystąpień założeń.
+
+Reguła założenia oraz reguły dotyczące
+$\wedge,\to,\bot$ przechodzą bezpośrednio
+w odpowiednie reguły intuicjonistyczne, ponieważ
+translacja zachowuje te spójniki i stałą.
+Reguła DNE przechodzi w wnioskowanie
+z $\neg\neg\alpha^N$ do $\alpha^N$, dozwolone
+na mocy Lematu~\ref{lem:ncl-ipc-negative-stability}.
+
+Dla wprowadzenia alternatywy mamy z indukcji
+wyprowadzenie $A=\alpha^N$ albo $B=\beta^N$.
+Zakładając $\neg A\wedge\neg B$, otrzymujemy
+odpowiednio $\neg A$ albo $\neg B$ oraz $\bot$.
+Zamykając to założenie, uzyskujemy
+$\neg(\neg A\wedge\neg B)$, czyli translację
+alternatywy.
+
+Pozostaje eliminacja alternatywy. Niech
+$A=\alpha^N$, $B=\beta^N$, $C=\gamma^N$,
+a $\Delta$ niech oznacza sumę zbiorów translacji
+założeń pozostających otwartych po regule.
+Hipoteza indukcyjna i monotoniczność dają
+\[
+ \Delta\vdash_{\mathrm I}\neg(\neg A\wedge\neg B),
+ \qquad
+ \Delta\cup\{A\}\vdash_{\mathrm I}C,\qquad
+ \Delta\cup\{B\}\vdash_{\mathrm I}C.
+\]
+Zakładamy tymczasowo $\neg C$.
+Z dodatkowego założenia $A$ otrzymujemy $C$
+z pierwszego dowodu przypadku, a następnie $\bot$.
+Zamykając $A$, otrzymujemy $\neg A$.
+Analogicznie z drugiego dowodu przypadku
+otrzymujemy $\neg B$.
+Koniunkcja $\neg A\wedge\neg B$ jest sprzeczna
+z translacją alternatywy, więc otrzymujemy $\bot$.
+Zamknięcie założenia $\neg C$ daje $\neg\neg C$
+przy założeniach z $\Delta$.
+Stabilność $C$ pozwala uzyskać $C$.
+Tak odtwarzamy regułę $\vee E$ dla translacji.
+Rozpatrzyliśmy wszystkie reguły rachunku klasycznego.
+
+Dla kierunku odwrotnego, jeżeli
+$\Gamma^N\vdash_{\mathrm I}\varphi^N$, to
+Wniosek~\ref{cor:ncl-ipc-classical-inclusion}
+daje $\Gamma^N\models_{\mathrm{CL}}\varphi^N$.
+Każde klasyczne wartościowanie nadaje formule
+i jej translacji tę samą wartość na mocy
+Lematu~\ref{lem:ncl-ipc-negative-stability}.
+Zatem każde klasyczne wartościowanie spełniające
+$\Gamma$ spełnia $\Gamma^N$, a więc $\varphi^N$
+i tym samym $\varphi$.
+\end{proof}
+
+\begin{przyklad}[Translacja prawa wyłączonego środka]
+\label{ex:ncl-ipc-negative-lem}
+Dla zmiennej $p$ mamy
+\[
+ (p\vee\neg p)^N=
+ \neg\bigl(\neg\neg\neg p\wedge
+                  \neg\neg\neg\neg p\bigr).
+\]
+Wzór wynika bezpośrednio z
+$p^N=\neg\neg p$, $(\neg p)^N=\neg\neg\neg p$
+i definicji translacji alternatywy.
+Wewnętrzna koniunkcja ma postać $D\wedge\neg D$
+dla $D=\neg\neg\neg p$. Jej negacja jest
+dowodliwa intuicjonistycznie: z koniunkcji
+otrzymujemy oba człony, z nich $\bot$, a następnie
+zamykamy założenie koniunkcji.
+Samo $p\vee\neg p$ nie jest twierdzeniem IPC
+(Przykład~\ref{ex:ncl-ipc-two-world-countermodel}).
+Translacja zachowuje więc klasyczną dowodliwość
+nie przez utożsamienie obu logik, lecz przez
+zmianę postaci formuł.
+\end{przyklad}
