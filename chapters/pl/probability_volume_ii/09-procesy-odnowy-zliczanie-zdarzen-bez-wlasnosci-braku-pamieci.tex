@@ -321,6 +321,46 @@ powodu para $(N_t,A_t)$ przenosi więcej informacji niż $N_t$.
 \end{zadanie}
 
 \section{Równanie odnowy i jego jednoznaczność}
+
+Dla lokalnie ograniczonej funkcji borelowskiej $g$
+na $[0,\infty)$ i lokalnie skończonej miary dodatniej
+$V$ na tej półprostej piszemy
+$(g*V)(t)=\int_{[0,t]}g(t-s)\,\mathrm dV(s)$.
+Miara odnowy
+\[
+U=\sum_{n=0}^\infty \nu^{*n}
+\]
+obejmuje atom $\delta_0$ odpowiadający chwili początkowej.
+Jest lokalnie skończona, gdyż $U([0,t])=1+\E N_t$.
+Przeliczalna suma miar jest miarą z twierdzenia Tonellego.
+
+\begin{twierdzenie}[Ogólne równanie odnowy]
+\label{thm:renewal-equation}
+Dla każdej lokalnie ograniczonej funkcji borelowskiej $g$
+równanie
+\[
+u=g+u*\nu
+\]
+ma dokładnie jedno lokalnie ograniczone rozwiązanie
+borelowskie, dane przez $u=g*U$.
+\end{twierdzenie}
+\begin{proof}
+Dla $t\le T$ szereg
+$\sum_{n\ge0}(g*\nu^{*n})(t)$ jest bezwzględnie
+i jednostajnie zbieżny, gdyż suma oszacowań modułów
+nie przekracza
+$\sup_{[0,T]}|g|\,U([0,T])<\infty$.
+Każdy składnik jest borelowski na mocy twierdzenia
+Fubiniego. Z łączności splotu (Fubini na ograniczonym
+trójkącie sumowania) i bezwzględnej zbieżności
+otrzymujemy $(g*U)*\nu=g*(U-\delta_0)$,
+co dowodzi istnienia.
+Różnica $w$ dwóch rozwiązań spełnia
+$w=w*\nu=w*\nu^{*n}$ dla każdego $n$.
+Stąd $|w(t)|\le\sup_{[0,t]}|w|\,\Prob(S_n\le t)\to0$.
+Dowolność $t$ daje jednoznaczność.
+\end{proof}
+
 \begin{twierdzenie}[Równanie dla średniej liczby odnowień]
 Niech $N$ będzie procesem odnowy o dystrybuancie
 odstępów $F$. Funkcja $m(t)=\E N_t$ jest skończona
@@ -339,15 +379,19 @@ odnowień ma rozkład $N'_{t-s}$, gdzie proces $N'$ jest
 zbudowany z niezależnych odstępów $T_2,T_3,\ldots$
 i ma to samo prawo co $N$. Stąd, warunkując względem
 $T_1$, otrzymujemy
-$m(t)=\E[\chi_{\{T_1\le t\}}(1+m(t-T_1))]
+$m(t)=\E[\chi_{\{T_1\le t\}}(1+m((t-T_1)_+))]
 =F(t)+\int_{(0,t]}m(t-s)\,\mathrm d\nu(s)$.
 Dla ścisłości w drugim składniku używamy niezależności
 $T_1$ od całego ciągu przyszłych odstępów, a nie tylko
 równości rozkładów poszczególnych $T_n$.
 
 Załóżmy, że $u_1,u_2$ są lokalnie ograniczonymi rozwiązaniami.
-Dla $d=u_1-u_2$ mamy $d=d*F$ (w sensie splotu
-Stieltjesa), a przez iterację $d=d*F^{*n}$.
+Dla $d=u_1-u_2$ mamy $d=d*\nu$,
+a przez iterację $d=d*\nu^{*n}$.
+Funkcja $m$ jest lokalnie ograniczona i borelowska,
+ponieważ jest niemalejąca i skończona.
+Można więc również zastosować
+twierdzenie~\ref{thm:renewal-equation}.
 Dla ustalonego $t$ niech $M_t=\sup_{0\le s\le t}|d(s)|<\infty$.
 Wówczas
 $|d(t)|\le M_t F^{*n}(t)=M_t\Prob(S_n\le t)\to0$,
@@ -475,6 +519,286 @@ W ogólności potrzebna jest jednostajna całkowalność
 albo odrębne oszacowania. W powyższym dowodzie rolę takich
 oszacowań pełnią lemat Walda i obcięcie odstępów.
 \end{uwaga}
+
+\section{Twierdzenie Blackwella i kluczowe twierdzenie odnowy}
+
+Elementarne twierdzenie odnowy opisuje średnią na
+przedziale $[0,t]$, lecz nie mówi, co dzieje się
+na przesuwanym przedziale o ustalonej długości.
+Wprowadzamy rozróżnienie zależne od nośnika prawa
+odstępu, a nie od tego, czy prawo ma gęstość.
+
+\begin{definicja}[Rozkład arytmetyczny]
+Prawo $\nu$ na $(0,\infty)$ nazywamy arytmetycznym,
+jeżeli istnieje $h>0$ takie, że
+$\nu(h\N)=1$. Największe takie $h$ nazywamy krokiem
+arytmetycznym. W przeciwnym razie prawo jest
+niearytmetyczne. Równoważnie, domknięta podgrupa
+addytywna $\R$ generowana przez nośnik $\nu$
+jest odpowiednio $h\Z$ lub $\R$.
+\end{definicja}
+Istotnie, każda domknięta niezerowa podgrupa
+addytywna $\R$ ma tę postać: jeśli kres dolny
+jej dodatnich elementów jest zerem, wielokrotności
+dowolnie małych dodatnich elementów tworzą dowolnie
+gęste siatki, więc domknięcie jest całą prostą.
+Jeśli kres dolny jest dodatni, należy do podgrupy
+przez domkniętość, a dzielenie z resztą dowodzi,
+że wszystkie elementy są jego wielokrotnościami.
+
+\begin{lemat}[Jednostajne ograniczenie miary odnowy]
+\label{lem:renewal-local-bound}
+Dla każdego $a>0$ istnieje skończona stała $C_a$
+taka, że $U([x,x+a])\le C_a$ dla wszystkich $x\in\R$,
+gdzie $U$ przedłużamy przez zero na $(-\infty,0)$.
+\end{lemat}
+\begin{proof}
+Dla $x>0$ niech $J=\inf\{n\ge0:S_n\ge x\}$.
+Jest to skończony czas zatrzymania względem
+$\sigma(T_1,\ldots,T_n)$.
+Jeśli $S_J\le x+a$, odnowień w $[x,x+a]$ jest
+nie więcej niż $1+N'_a$, gdzie $N'$ jest procesem
+zbudowanym z odstępów po indeksie $J$.
+Warunkując na zdarzeniach $\{J=j\}$, które zależą
+tylko od pierwszych $j$ odstępów, widzimy,
+że przyszłe odstępy mają to samo prawo produktowe
+co pierwotny ciąg. Zatem wartość oczekiwana
+liczby odnowień jest nie większa niż $1+\E N_a$.
+Dla $x\le0$ to samo ograniczenie wynika bezpośrednio
+z $[x,x+a]\cap[0,\infty)\subseteq[0,a]$.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Blackwella]
+\label{thm:blackwell-renewal}
+Niech $\mu=\E T_1\in(0,\infty]$ i przyjmijmy
+$1/\infty=0$.
+Jeżeli $\nu$ jest niearytmetyczne, to dla każdego $a>0$
+\[
+\lim_{t\to\infty}U((t,t+a])=\frac a\mu.
+\]
+Jeżeli $\nu$ jest arytmetyczne o kroku $h$, to
+\[
+\lim_{n\to\infty}U(\{nh\})=\frac h\mu.
+\]
+\end{twierdzenie}
+\begin{proof}
+Podamy dowód metodą przesuwanych miar.
+Z lematu~\ref{lem:renewal-local-bound} miary
+$U_t(D)=U(t+D)$ mają jednostajnie ograniczoną
+masę na każdym ograniczonym przedziale.
+Z każdego ciągu $t_j\to\infty$ można wybrać
+podciąg zbieżny mgliście (tj. na funkcjach
+ciągłych o zwartym nośniku) do pewnej
+lokalnie skończonej miary $V$.
+Dla ścisłości wybieramy przeliczalny zbiór
+funkcji gęsty w normie supremum w każdej
+przestrzeni funkcji ciągłych o nośniku w $[-m,m]$,
+$m\in\N$. Argument diagonalny daje zbieżność
+całek na tym zbiorze, a lokalne ograniczenia
+mas rozszerzają ją na całe $C_c(\R)$.
+Dodatni funkcjonał graniczny reprezentuje
+miara Radona na mocy twierdzenia Riesza--Markowa.
+Granica $V$ również ma jednostajnie ograniczone
+masy przedziałów jednostkowych: ograniczamy
+ich funkcje charakterystyczne od góry przez
+ciągłe funkcje o nośnikach w przedziałach
+o długości $3$.
+
+Z równania miar $U=\delta_0+U*\nu$ otrzymujemy
+$V=V*\nu$. Rzeczywiście, dla $f\in C_c(\R)$
+\[
+\int f\,\mathrm dU_{t_j}
+=f(-t_j)+\int_{(0,\infty)}
+\left(\int f(z+s)\,\mathrm dU_{t_j}(z)\right)\mathrm d\nu(s).
+\]
+Wewnętrzne całki są jednostajnie ograniczone
+niezależnie od $s,j$ dzięki lematowi
+\ref{lem:renewal-local-bound}. Zbieżność mglista
+dla ustalonego $s$ i zbieżność zmajoryzowana
+dają równanie dla $V$.
+
+Ustalmy $f\in C_c(\R)$ i połóżmy
+$H(x)=\int f(x-y)\,\mathrm dV(y)$.
+Jest to ograniczona ciągła funkcja
+(na mocy jednostajnej ciągłości $f$ i
+jednostajnych ograniczeń mas).
+Z $V=V*\nu$ wynika
+$H(x)=\int H(x-s)\,\mathrm d\nu(s)$.
+Dla ustalonego $x$ ciąg $H(x-S_n)$ jest
+ograniczonym martyngałem względem odstępów.
+Ma więc granicę $L_x$ prawie na pewno i w $L^1$
+(z twierdzenia o zbieżności martyngałów ograniczonych).
+Granica jest niezmiennicza względem skończonych
+permutacji odstępów, ponieważ od pewnego indeksu
+takie permutacje nie zmieniają sum częściowych.
+
+Przypomnijmy krótki argument zero-jedynkowy.
+Jeżeli zdarzenie $A$ zależne od niezależnych,
+jednakowo rozłożonych zmiennych jest niezmiennicze
+względem skończonych permutacji, to dla każdego
+$\varepsilon>0$ można przybliżyć je zdarzeniem $D$
+zależnym od pierwszych $m$ zmiennych tak, że
+$\Prob(A\mathbin{\triangle}D)<\varepsilon$.
+Istnienie takiego przybliżenia wynika z faktu,
+że zdarzenia przybliżalne w mierze tworzą
+$\sigma$-ciało zawierające cylindry (dla sumy
+przeliczalnej najpierw bierzemy sumę skończoną).
+Zamieniając pierwsze $m$ zmiennych z następnymi
+$m$, dostajemy niezależną kopię $D'$ zdarzenia $D$
+i nadal $\Prob(A\mathbin{\triangle}D')<\varepsilon$.
+Stąd $|\Prob(A)-\Prob(D\cap D')|<2\varepsilon$,
+a $\Prob(D\cap D')=\Prob(D)^2$.
+Przejście $\varepsilon\downarrow0$ daje
+$\Prob(A)=\Prob(A)^2$.
+Stosując ten argument do zdarzeń
+$\{L_x\le q\}$ dla wymiernych $q$, widzimy,
+że $L_x$ jest stała p.n.
+Możemy pracować na kanonicznej przestrzeni
+produktowej odstępów i zdefiniować granicę
+przez $\limsup$, dzięki czemu niezmienniczość
+jest punktowa. Ponieważ $\E L_x=H(x)$,
+z własności martyngału i zbieżności w $L^1$
+wynika $H(x-T_1)=\E[L_x\mid T_1]=H(x)$ p.n.
+Ciągłość $H$ daje $H(x-s)=H(x)$ dla każdego
+$s$ z nośnika $\nu$, dla każdego ustalonego $x$.
+W konsekwencji każdy element domkniętej
+podgrupy generowanej przez nośnik jest okresem $H$.
+Ponieważ dotyczy to każdej $f\in C_c(\R)$,
+miara $V$ jest niezmiennicza względem przesunięć
+o elementy tej podgrupy.
+
+W przypadku niearytmetycznym oznacza to
+$V=c\lambda_1$ dla $c\ge0$. Istotnie,
+niezmienniczość wymusza brak atomów
+(lokalna skończoność), a masa przedziału
+jest addytywną niemalejącą funkcją jego długości,
+zatem jest proporcjonalna do długości.
+W przypadku arytmetycznym rozważamy wyłącznie
+$t_j=n_jh$. Miary $U_{t_j}$ i ich granica
+są skupione na domkniętym zbiorze $h\Z$,
+a niezmienniczość względem $h$ daje
+$V=c\sum_{k\in\Z}\delta_{kh}$.
+
+Pozostaje ustalić $c$. Dokładnie jeden cykl
+zawiera chwilę $t$, więc niezależność
+$T_{n+1}$ od $S_n$ daje tożsamość
+\[
+1=\sum_{n\ge0}\Prob(S_n\le t<S_{n+1})
+=\int_{[0,t]}\overline F(t-s)\,\mathrm dU(s).
+\]
+W zmiennej przesuniętej $z=s-t$ jest to
+całka $\overline F(-z)$ po $[-t,0]$
+względem $U_t$. Dla $\mu<\infty$
+ogon tej całki po $z<-M$ jest jednostajnie
+mały, ponieważ z lokalnego ograniczenia
+jest nie większy niż
+$C_1\sum_{k\ge\lfloor M\rfloor}\overline F(k)$,
+a szereg jest zbieżny z
+$\int_0^\infty\overline F(v)\,\mathrm d\lambda_1(v)=\mu$.
+W przypadku niearytmetycznym na każdym
+$[-M,0]$ możemy przejść do granicy:
+funkcja monotoniczna $\overline F(-z)$ ma
+co najwyżej przeliczalnie wiele nieciągłości,
+które mają miarę $V$ zero. Uzasadnienie
+dają górne i dolne sumy schodkowe na podziałach
+o końcach bez atomów $V$ oraz zbieżność
+mas tych przedziałów wynikająca z mglistej
+zbieżności przez aproksymację ciągłą.
+Otrzymujemy $1=c\mu$.
+Gdy $\mu=\infty$, używamy wyłącznie obciętych
+całek: $1\ge c\int_0^M\overline F(v)\,\mathrm d\lambda_1(v)$,
+więc $c=0$.
+
+W przypadku arytmetycznym na każdym skończonym
+zbiorze punktów siatki masy zbiegają do $c$:
+każdy punkt można izolować funkcją ciągłą
+o nośniku w przedziale długości mniejszej niż $h$.
+Analogicznie dla $\mu<\infty$ dostajemy
+$1=c\sum_{k\ge0}\overline F(kh)=c\mu/h$,
+gdzie ostatnia równość wynika z wzoru na średnią
+dodatniej całkowitoliczbowej zmiennej $T_1/h$.
+Przy nieskończonej średniej skończone sumy
+wymuszają $c=0$.
+
+Każda granica podciągowa jest więc taka sama.
+W przypadku niearytmetycznym końce $(0,a]$
+nie mają masy granicznej, więc zbieżność mglista
+daje $U_{t_j}((0,a])\to a/\mu$.
+W przypadku arytmetycznym izolujemy punkt zero
+i dostajemy $U_{n_jh}(\{0\})\to h/\mu$.
+Argument podciągowy kończy dowód.
+\end{proof}
+
+\begin{definicja}[Bezpośrednia całkowalność Riemanna]
+Nieujemną funkcję $g:[0,\infty)\to\R$ nazywamy
+bezpośrednio całkowalną w sensie Riemanna, jeżeli
+dla przedziałów $I_{k,\delta}=[k\delta,(k+1)\delta)$
+górne sumy
+$\delta\sum_{k\ge0}\sup_{I_{k,\delta}}g$
+są skończone dla wszystkich dostatecznie małych
+$\delta>0$, a różnica górnej i dolnej sumy
+dąży do zera przy $\delta\downarrow0$.
+Dla funkcji ze znakiem wymagamy tej własności
+od części dodatniej i ujemnej.
+\end{definicja}
+
+\begin{twierdzenie}[Kluczowe twierdzenie odnowy]
+\label{thm:key-renewal}
+Jeżeli $\nu$ jest niearytmetyczne, a $g$ jest
+borelowska i bezpośrednio całkowalna w sensie
+Riemanna, to
+\[
+\lim_{t\to\infty}(g*U)(t)
+=\frac1\mu\int_0^\infty g(v)\,\mathrm d\lambda_1(v).
+\]
+W przypadku arytmetycznym o kroku $h$,
+jeśli $\sum_{k\ge0}|g(kh)|<\infty$, to
+\[
+\lim_{n\to\infty}(g*U)(nh)
+=\frac h\mu\sum_{k\ge0}g(kh).
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla $g\ge0$ w przypadku niearytmetycznym
+ustalmy $\delta>0$ z definicji.
+Rozbijamy całkę względem $U_t$ na przedziały
+$(- (k+1)\delta,-k\delta]$ i ograniczamy ją
+górnymi oraz dolnymi wartościami $g$ na
+$I_{k,\delta}$. Miara każdego takiego przedziału
+dąży do $\delta/\mu$ na mocy twierdzenia
+\ref{thm:blackwell-renewal}, a jest jednostajnie
+ograniczona przez $C_\delta$ z lematu
+\ref{lem:renewal-local-bound}. Przedłużenie
+$U_t$ przez zero poza jego nośnikiem pozwala
+sumować po wszystkich $k\ge0$.
+Sumowalność górnych wartości daje zbieżność
+sum przez zmajoryzowanie szeregu.
+Dolna i górna granica splotu leżą więc między
+dolną i górną sumą Riemanna podzielonymi przez
+$\mu$. Przejście $\delta\downarrow0$ daje
+wskazaną całkę; gdy $\mu=\infty$, już dla
+jednego $\delta$ górna granica wynosi zero.
+Dla funkcji ze znakiem stosujemy dowód do obu części.
+W przypadku arytmetycznym splot w chwili $nh$
+jest sumą $\sum_{k=0}^n g(kh)U(\{(n-k)h\})$.
+Każdy czynnik miary zbiega do $h/\mu$,
+a lokalne ograniczenie i bezwzględna sumowalność
+pozwalają przejść do granicy w szeregu.
+\end{proof}
+
+\begin{przyklad}[Dlaczego arytmetyczność ma znaczenie?]
+Dla $T_n=h$ punktowo miara odnowy jest
+$\sum_{k\ge0}\delta_{kh}$.
+Jeśli $0<a<h$, to $U((t,t+a])$ przyjmuje
+wartości $0$ i $1$ w dowolnie późnych chwilach,
+więc nie może zbiegać do $a/h$.
+Natomiast $U(\{nh\})=1=h/\mu$.
+Prawo o dwóch atomach $1,\sqrt2$ jest
+niearytmetyczne, mimo że nie ma gęstości:
+żadna dodatnia liczba nie jest wspólnym krokiem
+dla obu tych liczb, ponieważ ich stosunek
+jest niewymierny.
+\end{przyklad}
 
 \section{Wiek odnowy i czas pozostały do następnego zdarzenia}
 \begin{definicja}[Wiek i czas resztkowy]
@@ -657,8 +981,10 @@ odnowy opisuje średnią liczbę zakończonych cykli, a oba
 prawa graniczne podają długookresową częstość odnowień.
 Zagadnienia o wieku i czasie resztkowym wyjaśniają, dlaczego
 sama liczba zdarzeń nie musi wystarczać do uzyskania własności Markowa.
-W przyszłości twierdzenia o granicznych rozkładach wieku
-oraz procesy pół-Markowa pozwolą uogólnić ten model.
+Twierdzenie Blackwella oraz kluczowe twierdzenie
+odnowy opisują lokalne granice miary odnowy
+i jej splotów, z rozróżnieniem przypadku
+arytmetycznego i niearytmetycznego.
 
 
 % ==============================================================
