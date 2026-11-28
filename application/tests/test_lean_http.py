@@ -1,7 +1,9 @@
 """HTTP-level regression for Lean panel against the indexed canonical source."""
 from __future__ import annotations
 
+import hashlib
 import os
+from pathlib import Path
 import unittest
 from unittest.mock import patch
 
@@ -146,8 +148,12 @@ class LeanHttpTests(unittest.TestCase):
         self.assertIn("def equivalent", data["lean_code"])
         self.assertEqual(data["statement_status"], "approved")
         self.assertEqual(data["formalization_status"], "ready")
+        # Compare with the canonical file, not a stale literal from an older
+        # reviewed revision. The independent manifest audit verifies its pin.
+        canonical = (Path(__file__).resolve().parents[2] /
+                     "chapters/pl/logic_and_set_theory/01-zdania-i-spojniki-logiczne.tex")
         self.assertEqual(data["source_document_sha256"],
-                         "9b5cbe26dee8ed5bc437cb3a0d19638eafc5d9ae178a3caa545b8bcf5842b8d0")
+                         hashlib.sha256(canonical.read_bytes()).hexdigest())
         self.assertEqual(data["lean_theorems"],
                          ["lst01_syntax_de_morgan_and", "lst01_syntax_de_morgan_or"])
         self.assertFalse(data["certificate"])
