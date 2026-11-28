@@ -1,6 +1,10 @@
 \chapter{Łańcuchy Markowa w czasie dyskretnym}
 \label{ch:markov}
-\paragraph{Odsyłacze międzytomowe.} Uogólnienie łańcuchów na czas ciągły znajduje się w tomie II, rozdziale~\ref{II-ch:ctmc}, zaś algorytmy MCMC w tomie IV, rozdziale~\ref{IV-ch:mcmc}.
+\paragraph{Odsyłacze międzytomowe.}
+Uogólnienie łańcuchów na czas ciągły znajduje się w tomie II
+\IfFileExists{probability_volume_ii.aux}{(rozdział~\ref{II-ch:ctmc})}{(rozdział o łańcuchach Markowa w czasie ciągłym)},
+zaś algorytmy MCMC w tomie IV
+\IfFileExists{probability_volume_iv.aux}{(rozdział~\ref{IV-ch:mcmc})}{(rozdział o metodach MCMC)}.
 
 
 \section{Dlaczego przeszłość można zastąpić stanem?}
@@ -32,6 +36,8 @@ oraz dla każdego $n\geq0$ i $j\in S$ zachodzi
 \Prob(X_{n+1}=j\mid\sigma(X_0,\ldots,X_n))
 =p_{X_nj}\quad\text{p.n.}
 \]
+Zapis $\Prob(B\mid\mathcal G)$ oznacza tutaj
+$\E[\chi_B\mid\mathcal G]$ (rozdział~\ref{ch:condexp}).
 Początkowy rozkład $\mu_i=\Prob(X_0=i)$
 razem z $P$ określa prawo wszystkich skończenie
 wymiarowych rozkładów procesu. Macierz $P$ nazywamy
@@ -43,8 +49,11 @@ Gdy $\Prob(X_n=i)=0$, zapis
 $\Prob(X_{n+1}=j\mid X_n=i)$ jako iloraz liczb
 nie jest zdefiniowany. Sformułowanie przez
 warunkową wartość oczekiwaną nie ma tej wady:
-$p_{X_nj}$ określamy tylko z dokładnością do
-prawdopodobieństwa zero. Jeśli przejścia zależą
+zmienna $p_{X_nj}$ jest określona na całej $\Omega$,
+a równość z warunkową wartością oczekiwaną zachodzi
+prawie na pewno. Wiersz $i$ macierzy $P$ nie musi być
+jednoznacznie wyznaczony przez rozkład procesu, jeśli
+$\Prob(X_n=i)=0$ dla każdego $n$. Jeśli przejścia zależą
 od $n$, otrzymujemy łańcuch niejednorodny
 z macierzami $P_n$.
 \end{uwaga}
@@ -91,9 +100,9 @@ $\Prob(X_{n+1}=j\mid X_n=i)=p_{ij}$.
 \begin{proof}
 Niech $A=\{X_0=i_0,\ldots,X_n=i_n\}\in
 \sigma(X_0,\ldots,X_n)$. Z definicji łańcucha
-$\E[\ind{\{X_{n+1}=j\}}\mid
+$\E[\chi_{\{X_{n+1}=j\}}\mid
 \sigma(X_0,\ldots,X_n)]=p_{X_nj}$.
-Mnożymy tę równość przez $\ind A$ i bierzemy
+Mnożymy tę równość przez $\chi_{A}$ i bierzemy
 wartości oczekiwane. Otrzymujemy
 $\Prob(A\cap\{X_{n+1}=j\})=p_{i_nj}\Prob(A)$.
 Dzielenie przez dodatnie $\Prob(A)$ daje pierwszą
@@ -111,8 +120,9 @@ a następnie wyprowadzić z niej prawo trajektorii,
 własności wielokrokowe i mocną własność Markowa.
 Osobne znaczenie ma \emph{zanikanie wpływu stanu początkowego}
 po wielu krokach. Jest to twierdzenie asymptotyczne,
-które dla skończonych łańcuchów wymaga m.in.
-nieprzywiedlności i nieokresowości.
+którego wystarczającymi warunkami dla skończonych
+łańcuchów są nieprzywiedlność i nieokresowość
+(nie są one konieczne dla każdego możliwego modelu).
 \end{uwaga}
 
 \begin{twierdzenie}[Prawo trajektorii]
@@ -128,12 +138,12 @@ przy czym iloczyn pusty dla $n=0$ jest równy $1$.
 \begin{proof}
 Dla $n=0$ równość jest definicją $\mu$.
 Niech $A=\{X_0=i_0,\ldots,X_{n-1}=i_{n-1}\}$.
-Ponieważ $\ind A$ jest $\sigma(X_0,\ldots,X_{n-1})$-
+Ponieważ $\chi_{A}$ jest $\sigma(X_0,\ldots,X_{n-1})$-
 mierzalna, z definicji łańcucha i własności
 wyciągania czynnika otrzymujemy
 \[
 \Prob(A\cap\{X_n=i_n\})
-=\E\left[\ind A\E[\ind{\{X_n=i_n\}}
+=\E\left[\chi_{A}\E[\chi_{\{X_n=i_n\}}
 \mid\sigma(X_0,\ldots,X_{n-1})]\right]
 =p_{i_{n-1}i_n}\Prob(A).
 \]
@@ -163,12 +173,16 @@ $\Prob(X_{n+1}=j\mid A)=p_{i_nj}$.
 Każde zdarzenie z $\sigma(X_0,\ldots,X_n)$
 jest sumą rozłącznych atomów postaci $A$,
 ponieważ $S^{n+1}$ jest przeliczalny.
-Na atomach o prawdopodobieństwie zero nie trzeba
-niczego sprawdzać; na pozostałych otrzymana
-równość mówi, że $p_{X_nj}$ spełnia definicyjną
-tożsamość całkową warunkowej wartości oczekiwanej.
+Na atomach o prawdopodobieństwie zero obie całki
+są zerowe. Na pozostałych otrzymana równość mówi,
+że $p_{X_nj}$ spełnia definicyjną tożsamość całkową.
+Funkcja ta jest mierzalna względem
+$\sigma(X_0,\ldots,X_n)$ i ograniczona przez $1$.
+Sumowanie tożsamości po rozłącznych atomach
+jest więc uprawnione i daje ją dla każdego zdarzenia
+z tego $\sigma$-ciała.
 Wobec tego
-$\E[\ind{\{X_{n+1}=j\}}\mid
+$\E[\chi_{\{X_{n+1}=j\}}\mid
 \sigma(X_0,\ldots,X_n)]=p_{X_nj}$ p.n.
 To jest własność Markowa.
 \end{proof}
@@ -203,8 +217,21 @@ warunkujące jest dodatnie, więc $c>0$ i
 $\sum_k\mu_kp_{ki_1}>0$. Po podzieleniu
 obu wzorów wspólny czynnik $c$ się skraca.
 Tak samo przy $n=1$ otrzymujemy drugi warunek.
-To jest \emph{warunkowa niezależność} przeszłości
-i dalszej przyszłości względem stanu pośredniego.
+Aby przejść do warunkowej niezależności, ustalmy
+$j\in S$ z $\Prob(X_1=j)>0$ i dowolną historię
+$B=\{X_2=i_2,\ldots,X_n=i_n\}$. Jeśli
+$\Prob(B\mid X_1=j)>0$, wykazana równość daje
+\[
+\Prob(X_0=i,B\mid X_1=j)
+=\Prob(X_0=i\mid X_1=j)\Prob(B\mid X_1=j).
+\]
+Przy zerowym prawdopodobieństwie warunkowym $B$
+obie strony są zerowe. Sumowanie po przeliczalnych
+zbiorach stanów i historii rozszerza tożsamość
+na dowolne zdarzenia z $\sigma(X_0)$
+i $\sigma(X_2,\ldots,X_n)$. To jest warunkowa
+niezależność względem $\sigma(X_1)$; na jego atomach
+zerowych równość jest wymagana tylko p.n.
 \end{proof}
 
 
@@ -235,8 +262,12 @@ ponieważ rozkłady $\mu_{n-1}$ i $\mu_n$ mogą się zmieniać.
 Jeśli $\mu_0=\pi$ jest stacjonarny, macierz
 przejścia wstecz ma stałe współrzędne
 $\widetilde p_{ji}=\pi_i p_{ij}/\pi_j$
-dla $\pi_j>0$. Równowaga szczegółowa oznacza
-wówczas $\widetilde p_{ji}=p_{ji}$.
+dla $\pi_j>0$. Jeśli $\pi_j=0$, wiersz wsteczny
+można wybrać jako dowolny rozkład na $S$, ponieważ
+taki stan ma prawdopodobieństwo zero w każdej chwili.
+Równowaga szczegółowa oznacza
+$\widetilde p_{ji}=p_{ji}$ dla $\pi_j>0$.
+Wynika to z równości $\pi_i p_{ij}=\pi_j p_{ji}$.
 \end{uwaga}
 
 \begin{przyklad}[Pogoda z pamięcią jednego dnia]
@@ -350,7 +381,11 @@ Z wierzchołka $v$ przechodzimy jednostajnie do jednego
 z jego sąsiadów: $p_{vw}=1/d(v)$, gdy $\{v,w\}\in E$,
 i zero w przeciwnym razie. Jest to spacer losowy
 po grafie. Mimo że wybór sąsiada jest jednostajny,
-stany o większym stopniu będą zwykle częściej odwiedzane.
+w skończonym spójnym grafie częstości odwiedzin
+będą proporcjonalne do stopni wierzchołków,
+co wynika z twierdzenia ergodycznego podanego dalej.
+Nie zakładamy tutaj zbieżności rozkładów w pojedynczych
+chwilach (graf może być dwudzielny).
 \end{przyklad}
 
 \section{Macierze przejścia, półgrupa i własność Markowa}
@@ -359,7 +394,15 @@ stany o większym stopniu będą zwykle częściej odwiedzane.
 Niech $(X_n)$ będzie jednorodnym łańcuchem Markowa
 o macierzy $P$ na przeliczalnym $S$. Dla $m,n\geq0$
 przyjmijmy $p_{ij}^{(n)}=(P^n)_{ij}$, przy czym
-$P^0=I$. Wówczas
+$P^0=I$, gdzie $I$ jest macierzą jednostkową.
+Dla macierzy stochastycznych $A,B$ na $S$
+iloczyn określamy przez $(AB)_{ij}=\sum_k a_{ik}b_{kj}$.
+Szeregi są nieujemne i ograniczone przez $1$, a
+$\sum_j(AB)_{ij}=\sum_k a_{ik}\sum_j b_{kj}=1$.
+Łączność mnożenia wynika z zamiany kolejności
+sumowania nieujemnego szeregu podwójnego.
+W szczególności potęgi $P^n$ są stochastyczne.
+Wówczas
 \[
 \Prob(X_{m+n}=j\mid\sigma(X_0,\ldots,X_m))
 =p^{(n)}_{X_mj}\quad\text{p.n.},\qquad
@@ -369,31 +412,34 @@ p_{ij}^{(m+n)}=\sum_{k\in S}p_{ik}^{(m)}p_{kj}^{(n)}.
 \begin{proof}
 Oznaczmy $\mathcal F_m^X=\sigma(X_0,\ldots,X_m)$.
 Pokażemy indukcyjnie względem $n$, że
-$\E[\ind{\{X_{m+n}=j\}}\mid\mathcal F_m^X]
+$\E[\chi_{\{X_{m+n}=j\}}\mid\mathcal F_m^X]
 =(P^n)_{X_mj}$. Dla $n=0$ jest to
-$\ind{\{X_m=j\}}=(P^0)_{X_mj}$, a dla $n=1$
+$\chi_{\{X_m=j\}}=(P^0)_{X_mj}$, a dla $n=1$
 równość jest właśnie własnością Markowa.
 Załóżmy teraz tezę dla $n\geq1$ i każdego
 początkowego czasu. Zastosujmy ją z czasem $m+1$,
 a następnie użyjmy własności wieży:
 \begin{align*}
-&\E[\ind{\{X_{m+n+1}=j\}}\mid\mathcal F_m^X]\\
+&\E[\chi_{\{X_{m+n+1}=j\}}\mid\mathcal F_m^X]\\
 &=\E[(P^n)_{X_{m+1}j}\mid\mathcal F_m^X]\\
 &=\E\left[\sum_{k\in S}(P^n)_{kj}
- \ind{\{X_{m+1}=k\}}\mid\mathcal F_m^X\right]\\
+ \chi_{\{X_{m+1}=k\}}\mid\mathcal F_m^X\right]\\
 &=\sum_{k\in S}(P^n)_{kj}\,p_{X_mk}
  =(P^{n+1})_{X_mj}.
 \end{align*}
 Przy przedostatniej równości wyrazy szeregu są
-nieujemne, więc można przejść z sumą pod znak
-warunkowej wartości oczekiwanej przez warunkową
-zbieżność monotoniczną. Ostatnią równość daje
+nieujemne, a ich sumy częściowe są ograniczone
+przez $1$ (w każdym punkcie co najwyżej jeden
+wyraz jest niezerowy). Można zatem przejść z sumą
+pod znak warunkowej wartości oczekiwanej przez
+warunkową zbieżność monotoniczną
+(rozdział~\ref{ch:condexp}). Ostatnią równość daje
 definicja mnożenia macierzy stochastycznych.
 
 Aby odczytać z tego wynik probabilistyczny,
 wystarczy wziąć $A=\{X_m=i\}$ o dodatnim
 prawdopodobieństwie i pomnożyć otrzymaną
-tożsamość przez $\ind A$; dostajemy
+tożsamość przez $\chi_{A}$; dostajemy
 $\Prob(X_{m+n}=j\mid X_m=i)=(P^n)_{ij}$.
 Nie korzystamy z takiego ilorazu, gdy $\Prob(A)=0$.
 
@@ -428,7 +474,7 @@ nie zależy od wcześniejszych stanów $X_0,\ldots,X_{n-1}$.
 \end{twierdzenie}
 \begin{proof}
 Wystarczy najpierw rozważyć funkcję wskaźnikową
-$f=\ind{\{(j_1,\ldots,j_r)\}}$. Ustalmy historię
+$f=\chi_{\{(j_1,\ldots,j_r)\}}$. Ustalmy historię
 $A=\{X_0=i_0,\ldots,X_n=i_n\}$ o dodatnim
 prawdopodobieństwie. Z prawa trajektorii
 \begin{align*}
@@ -538,22 +584,39 @@ Wybierzmy enumerację $S=\{s_1,s_2,\ldots\}$
 Dla $i\in S$ i $u\in(0,1)$ niech $F(i,u)=s_r$,
 gdzie $r$ jest najmniejszym indeksem takim, że
 $\sum_{\ell\leq r}p_{i,s_\ell}\geq u$.
-Definicja ma sens poza ewentualnym zbiorem punktów
-brzegowych miary Lebesgue'a zero, w których można
-przypisać dowolny stan; przy prawdopodobieństwie
-sumującym się do jedności dla każdego $u<1$
-odpowiedni indeks istnieje. Funkcja $F$ jest
-mierzalna względem $2^S\otimes\mathcal B((0,1))$.
+Definicja ma sens dla każdego $u\in(0,1)$, ponieważ
+sumy częściowe dążą do $1$. Oznaczając
+$c_{i,r}=\sum_{\ell\leq r}p_{i,s_\ell}$ oraz
+$c_{i,0}=0$, mamy dokładnie
+\[
+F^{-1}(\{s_r\})=
+\bigcup_{i\in S}\{i\}\times
+\bigl((c_{i,r-1},c_{i,r}]\cap(0,1)\bigr).
+\]
+Jest to przeliczalna suma zbiorów mierzalnych,
+więc $F$ jest mierzalna względem
+$2^S\otimes\mathcal B((0,1))$. Długość wskazanego
+przedziału wynosi $p_{i,s_r}$, również gdy jest zerowa.
 Na przestrzeni iloczynowej weźmy niezależne
 $U_1,U_2,\ldots\sim\Unif(0,1)$, niezależne od
 $X_0$ o rozkładzie $\mu$, i rekurencyjnie połóżmy
 $X_{n+1}=F(X_n,U_{n+1})$. Ponieważ
 $U_{n+1}$ jest niezależna od $X_0,U_1,\ldots,U_n$,
-a w szczególności od $\sigma(X_0,\ldots,X_n)$,
-warunkowo przy $X_n=i$ otrzymujemy
-$\Prob(F(i,U_{n+1})=j)=p_{ij}$.
-Zatem $\E[\ind{\{X_{n+1}=j\}}\mid\sigma(X_0,\ldots,X_n)]
-=p_{X_nj}$, jak należało wykazać.
+a każda $X_k$ dla $k\leq n$ jest mierzalna względem
+$\sigma(X_0,U_1,\ldots,U_n)$ na mocy rekurencji,
+$U_{n+1}$ jest niezależna od $\sigma(X_0,\ldots,X_n)$.
+Dla dowolnego $A$ z tego $\sigma$-ciała mamy
+\begin{align*}
+\Prob(A\cap\{X_{n+1}=j\})
+&=\sum_{i\in S}\Prob(A\cap\{X_n=i\}
+                      \cap\{F(i,U_{n+1})=j\})\\
+&=\sum_{i\in S}\Prob(A\cap\{X_n=i\})p_{ij}\\
+&=\E[\chi_A\,p_{X_nj}].
+\end{align*}
+Prawa strona jest całką ograniczonej mierzalnej
+funkcji $p_{X_nj}$ po $A$. Z definicji warunkowej
+wartości oczekiwanej otrzymujemy własność Markowa,
+także na atomach o prawdopodobieństwie zero.
 \end{proof}
 
 \section{Czasy wejścia, mocna własność Markowa}
@@ -566,6 +629,16 @@ przyjmując $\inf\varnothing=\infty$.
 Dla jednego stanu piszemy $\tau_i$ i $\tau_i^+$.
 \end{definicja}
 
+Czasem zatrzymania względem naturalnej filtracji
+$\mathcal F_n^X$ nazywamy funkcję
+$\tau:\Omega\to\N_0\cup\{\infty\}$, dla której
+$\{\tau\leq n\}\in\mathcal F_n^X$ dla każdego $n$.
+Oba powyższe czasy są czasami zatrzymania, ponieważ
+$\{\tau_A\leq n\}=\bigcup_{k=0}^n\{X_k\in A\}$,
+a dla $\tau_A^+$ bierzemy sumę od $k=1$ (pustą dla $n=0$).
+Dalsze własności czasów zatrzymania rozwiniemy
+w rozdziale~\ref{ch:filtracje}.
+
 \begin{twierdzenie}[Mocna własność Markowa, wersja dyskretna]
 Niech $(X_n)$ będzie jednorodnym łańcuchem Markowa
 na przeliczalnym $S$, a $\tau$ czasem zatrzymania
@@ -575,37 +648,53 @@ Dla każdego $r\geq0$ i ograniczonej funkcji
 $f:S^{r+1}\to\R$ zachodzi
 \[
 \E\bigl[f(X_\tau,\ldots,X_{\tau+r})
-\ind{\{\tau<\infty\}}\mid\mathcal F_\tau^X\bigr]
-=\ind{\{\tau<\infty\}}\,G_f(X_\tau),
+\chi_{\{\tau<\infty\}}\mid\mathcal F_\tau^X\bigr]
+=\chi_{\{\tau<\infty\}}\,G_f(X_\tau),
 \]
 gdzie $G_f(i)=\E_i f(X_0,\ldots,X_r)$, a
 $\E_i$ oznacza wartość oczekiwaną dla łańcucha
-rozpoczynającego w $i$. Wartości procesu na
-$\{\tau=\infty\}$ w formule rozumiemy jako zero.
+rozpoczynającego w $i$. Oba wyrażenia przed warunkowaniem i po jego prawej
+stronie definiujemy kawałkami: na $\{\tau=\infty\}$
+przyjmują wartość zero, bez potrzeby określania
+$X_\infty$ (zero nie musi należeć do $S$).
 \end{twierdzenie}
 \begin{proof}
-Definicję $\mathcal F_\tau^X$ podamy dokładnie
-w następnym rozdziale; tu wystarczy jej własność:
-jeśli $A\in\mathcal F_\tau^X$, to
-$A\cap\{\tau=n\}\in\mathcal F_n^X$.
+Przyjmujemy
+$\mathcal F_\tau^X=\{A\in\mathcal F:
+A\cap\{\tau\leq n\}\in\mathcal F_n^X
+\text{ dla każdego }n\geq0\}$.
+Jest to $\sigma$-ciało (przecięcie ze
+$\{\tau\leq n\}$ zachowuje przeliczalne sumy
+i względne dopełnienia). Równoważnie
+$A\cap\{\tau=n\}\in\mathcal F_n^X$ dla każdego $n$:
+w jedną stronę odejmujemy
+$A\cap\{\tau\leq n-1\}$, a w drugą sumujemy
+po $k\leq n$; przypadek $n=0$ jest bezpośredni.
+Szczegóły omawiamy w rozdziale~\ref{ch:filtracje}.
 Dla dowolnego takiego $A$ piszemy, korzystając
 z rozbicia $\{\tau<\infty\}=\bigcup_{n\geq0}\{\tau=n\}$,
 \begin{align*}
-&\E\bigl[\ind A\ind{\{\tau<\infty\}}
+&\E\bigl[\chi_{A}\chi_{\{\tau<\infty\}}
  f(X_\tau,\ldots,X_{\tau+r})\bigr]\\
 &=\sum_{n\geq0}\E\bigl[
-\ind{A\cap\{\tau=n\}}f(X_n,\ldots,X_{n+r})\bigr]\\
+\chi_{A\cap\{\tau=n\}}f(X_n,\ldots,X_{n+r})\bigr]\\
 &=\sum_{n\geq0}\E\bigl[
-\ind{A\cap\{\tau=n\}}G_f(X_n)\bigr]
-=\E\bigl[\ind A\ind{\{\tau<\infty\}}G_f(X_\tau)\bigr].
+\chi_{A\cap\{\tau=n\}}G_f(X_n)\bigr]
+=\E\bigl[\chi_{A}\chi_{\{\tau<\infty\}}G_f(X_\tau)\bigr].
 \end{align*}
 Druga równość wynika ze zwykłej własności Markowa
 oraz warunkowania względem $\mathcal F_n^X$.
 Szeregi są absolutnie zbieżne, bo $f$ jest ograniczona
 i zdarzenia $\{\tau=n\}$ są rozłączne.
-Prawa strona jest $\mathcal F_\tau^X$-mierzalna,
-a więc definiuje wskazaną warunkową wartość
-oczekiwaną. Nie ma tu żadnego warunkowania
+Prawa strona jest $\mathcal F_\tau^X$-mierzalna:
+na $\{\tau=n\}$ jest równa $G_f(X_n)$,
+które jest $\mathcal F_n^X$-mierzalne.
+Dla borelowskiego zbioru $B$ przeciwobraz prawej
+strony przecięty z $\{\tau=n\}$ jest więc równy
+$\{\tau=n\}\cap\{G_f(X_n)\in B\}$.
+Ponadto jest ograniczona przez $\|f\|_\infty$,
+więc całkowalna. Wykazana tożsamość całkowa
+definiuje wskazaną warunkową wartość oczekiwaną. Nie ma tu żadnego warunkowania
 na zdarzenie $\{\tau=n\}$ o dodatniej miarze:
 dowód działa również dla zerowych prawdopodobieństw.
 \end{proof}
@@ -677,7 +766,7 @@ to $\sum_{n\geq0}p_{ii}^{(n)}=1/(1-r_i)$.
 \end{twierdzenie}
 \begin{proof}
 Rozważmy liczbę wszystkich wizyt w $i$,
-$N_i=\sum_{n\geq0}\ind{\{X_n=i\}}$, dla łańcucha
+$N_i=\sum_{n\geq0}\chi_{\{X_n=i\}}$, dla łańcucha
 rozpoczętego w $i$. Niech $T_k$ oznacza chwilę
 $k$-tego powrotu po czasie zero; $T_0=0$.
 Mocna własność Markowa zastosowana w $T_k$
@@ -1169,7 +1258,7 @@ nie zależą od czasu.
 Niech $S=\{0,1\}$, $\alpha,\beta>0$,
 $\alpha+\beta<2$ oraz rozkład początkowy
 $\pi=(\beta,\alpha)/(\alpha+\beta)$.
-Dla $I_n=\ind{\{X_n=1\}}$ otrzymujemy
+Dla $I_n=\chi_{\{X_n=1\}}$ otrzymujemy
 \[
 \Cov(I_0,I_k)=\pi_1(1-\pi_1)(1-\alpha-\beta)^k.
 \]
@@ -1228,7 +1317,7 @@ $X_{kL}\neq i$. Własność Markowa i oszacowanie
 jednego bloku dają
 \begin{align*}
 \Prob_j(\tau_i>(k+1)L)
-&=\E_j\Bigl[\ind{\{\tau_i>kL\}}
+&=\E_j\Bigl[\chi_{\{\tau_i>kL\}}
   \Prob_j(\tau_i>(k+1)L\mid\mathcal F_{kL}^X)\Bigr]\\
 &\leq(1-\delta)\Prob_j(\tau_i>kL).
 \end{align*}
@@ -1265,7 +1354,7 @@ jego jedynym rozkładem stacjonarnym. Wtedy
 dla każdego $i\in S$ i dowolnego rozkładu
 początkowego
 \[
-\frac1n\sum_{k=0}^{n-1}\ind{\{X_k=i\}}
+\frac1n\sum_{k=0}^{n-1}\chi_{\{X_k=i\}}
 \longrightarrow\pi_i\quad\text{prawie na pewno}.
 \]
 Ponadto $\E_i\tau_i^+=1/\pi_i$.
@@ -1301,7 +1390,7 @@ Z definicji $T_{r(n)}\leq n<T_{r(n)+1}$, skąd
 \]
 Dla $r(n)\geq1$ obie skrajne strony zbiegają
 do $m_i$, a więc $r(n)/n\to1/m_i$.
-Liczba $N_i(n)=\sum_{k=0}^{n-1}\ind{\{X_k=i\}}$
+Liczba $N_i(n)=\sum_{k=0}^{n-1}\chi_{\{X_k=i\}}$
 zlicza chwile $T_r<n$, podczas gdy $r(n)$
 zlicza dodatnie powroty $T_r\leq n$.
 Zatem $|N_i(n)-r(n)|\leq1$, a stąd
@@ -1345,7 +1434,7 @@ rozkładu początkowego zachodzi
 \begin{proof}
 Ponieważ $S$ jest skończony,
 $\frac1n\sum_{k<n}f(X_k)=
-\sum_{i\in S}f(i)\frac1n\sum_{k<n}\ind{\{X_k=i\}}$.
+\sum_{i\in S}f(i)\frac1n\sum_{k<n}\chi_{\{X_k=i\}}$.
 Dla wszystkich stanów jednocześnie zachodzi
 prawie pewna zbieżność częstości, a skończona
 suma pozwala przejść do granicy.
@@ -1357,7 +1446,7 @@ $P=\begin{psmallmatrix}0&1\\1&0\end{psmallmatrix}$
 i $X_0=0$ rozkład $X_n$ nie jest zbieżny:
 znajduje się na przemian w stanie $0$ lub $1$.
 Jednak na każdej trajektorii
-$\frac1n\sum_{k<n}\ind{\{X_k=0\}}\to1/2$
+$\frac1n\sum_{k<n}\chi_{\{X_k=0\}}\to1/2$
 i analogicznie dla stanu $1$. Nieokresowość
 potrzebna jest dla zbieżności \emph{rozkładów
 w kolejnych chwilach}, ale nie dla \emph{częstości
@@ -1409,7 +1498,7 @@ Dla $i,j\in T$ prawdopodobieństwo
 $\Prob_i(X_n=j,\tau_A>n)$ jest równe
 $(Q^n)_{ij}$. Sumując po $n$ i stosując
 monotoniczną zbieżność, otrzymujemy
-$N_{ij}=\E_i\sum_{n<\tau_A}\ind{\{X_n=j\}}$.
+$N_{ij}=\E_i\sum_{n<\tau_A}\chi_{\{X_n=j\}}$.
 Sumowanie po $j$ daje
 $\E_i\tau_A=(N\mathbf 1)_i$.
 Prawdopodobieństwo pochłonięcia w $a\in A$
