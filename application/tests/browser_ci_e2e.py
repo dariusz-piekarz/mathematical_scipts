@@ -106,7 +106,7 @@ def main() -> None:
                 assert page.locator("#latexSource").inner_text().strip()
                 # Verify actual KaTeX output, not merely the presence of script tags.
                 assert page.evaluate("typeof window.renderMathInElement") == "function"
-                assert page.evaluate(r"() => previewMacros('MOD-01')['\\Q']") == r"\mathrm Q"
+                assert page.evaluate(r"() => previewMacros('MOD-24')['\\Q']") == r"\mathbb Q"
                 assert page.evaluate(r"() => previewMacros('DG-01')['\\Q']") == r"\mathbb{Q}"
                 assert page.evaluate(r"() => previewMacros('KAT-01')['\\Hom']") == r"\operatorname{Hom}"
                 page.evaluate(r"() => renderSimplified('Inline $\\R^2$; \\[\\frac{1}{2}\\] \\begin{align}x&=1\\\\y&=2\\end{align}', 'DG-01')")
