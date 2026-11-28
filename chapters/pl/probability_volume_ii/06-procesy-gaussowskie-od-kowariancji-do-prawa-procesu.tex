@@ -148,6 +148,50 @@ z zadanymi rozkładami skończeniewymiarowymi. Wszystkie te rozkłady
 są gaussowskie, a ich średnie i kowariancje są równe $m,K$.
 \end{proof}
 
+\begin{stwierdzenie}[Reprezentacja jądra kowariancji w przestrzeni Hilberta]
+Dla symetrycznego jądra $K:T\times T\to\R$ nieujemna
+określoność jest równoważna istnieniu rzeczywistej
+przestrzeni Hilberta $H$ i odwzorowania $\Phi:T\to H$
+takiego, że
+\[
+K(s,t)=\langle\Phi(s),\Phi(t)\rangle_H.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Dla jądra nieujemnie określonego poprzednie twierdzenie
+daje wycentrowany proces $X$ o kowariancji $K$.
+Wystarczy przyjąć $H=L^2(\Omega,\calF,\Prob)$
+i $\Phi(t)=X_t$ (klasa równości prawie na pewno).
+Wówczas $\langle X_s,X_t\rangle_H=K(s,t)$.
+Odwrotnie, dla takiej reprezentacji
+\[
+\sum_{i,j=1}^n a_ia_jK(t_i,t_j)
+=\left\|\sum_{i=1}^n a_i\Phi(t_i)\right\|_H^2\ge0.
+\]
+Możemy ograniczyć $H$ do domkniętej przestrzeni
+liniowej rozpiętej przez $\Phi(T)$.
+\end{proof}
+
+\begin{definicja}[Kanoniczna pseudometryka kowariancji]
+Dla procesu $X$ o skończonych drugich momentach
+definiujemy
+\[
+d_K(s,t)=\sqrt{K(s,s)+K(t,t)-2K(s,t)}.
+\]
+Jest to pseudometryka: jest symetryczna, nieujemna,
+znika na przekątnej i spełnia nierówność trójkąta,
+lecz może znikać dla różnych indeksów.
+\end{definicja}
+Istotnie, po wycentrowaniu procesu mamy
+$d_K(s,t)=\|(X_s-m(s))-(X_t-m(t))\|_{L^2}$,
+więc wszystkie własności wynikają z własności normy.
+Równość $d_K(s,t)=0$ oznacza równość wycentrowanych
+zmiennych prawie na pewno, niekoniecznie równość
+ich średnich. Na zbiorze klas równoważności relacji
+$s\sim t$ wtedy i tylko wtedy, gdy $d_K(s,t)=0$,
+pseudometryka indukuje metrykę: jej niezależność
+od reprezentantów wynika z nierówności trójkąta.
+
 \begin{przyklad}[Losowa prosta i losowa fala]
 Niech $A,B$ będą niezależne o rozkładzie $\Normal(0,1)$.
 Proces $X_t=A+tB$ ma średnią zero i kowariancję
@@ -541,6 +585,109 @@ początkowym w modelu stacjonarnym.
 \end{przyklad}
 
 \section{Od kowariancji do ciągłości trajektorii}
+
+\begin{stwierdzenie}[Ciągłość średniokwadratowa a kowariancja]
+Niech $I$ będzie przedziałem i niech $X=(X_t)_{t\in I}$
+będzie procesem o skończonych drugich momentach.
+Następujące warunki są równoważne:
+\begin{itemize}
+\item odwzorowanie $t\mapsto X_t$ jest ciągłe w $L^2$;
+\item funkcja średniej $m$ i jądro kowariancji $K$
+są ciągłe (odpowiednio na $I$ i $I\times I$).
+\end{itemize}
+\end{stwierdzenie}
+\begin{proof}
+Rozkład przyrostu na część wycentrowaną i średnią daje
+\[
+\E|X_t-X_s|^2=|m(t)-m(s)|^2+d_K(s,t)^2.
+\]
+Stąd ciągłość $m,K$ implikuje ciągłość w $L^2$.
+Odwrotnie, z nierówności Cauchy'ego--Schwarza
+$|\E X_t-\E X_s|\le\|X_t-X_s\|_{L^2}$.
+Ciągły jest więc również proces wycentrowany
+$Z_t=X_t-m(t)$ jako odwzorowanie do $L^2$.
+Jeżeli $(s_n,t_n)\to(s,t)$, to
+\[
+|K(s_n,t_n)-K(s,t)|
+\le\|Z_{s_n}-Z_s\|_{L^2}\|Z_{t_n}\|_{L^2}
++\|Z_s\|_{L^2}\|Z_{t_n}-Z_t\|_{L^2}.
+\]
+Normy $\|Z_{t_n}\|_{L^2}$ są ograniczone, gdyż
+$Z_{t_n}\to Z_t$ w $L^2$. Prawa strona dąży do zera.
+\end{proof}
+
+\begin{twierdzenie}[Różniczkowanie średniokwadratowe]
+Niech $X$ będzie procesem o skończonych drugich
+momentach na otwartym przedziale $I$. Załóżmy, że
+$m\in C^1(I)$ oraz $K\in C^2(I\times I)$.
+Wówczas dla każdego $t\in I$ istnieje pochodna
+średniokwadratowa
+\[
+D_t=\lim_{h\to0}\frac{X_{t+h}-X_t}{h}
+\quad\text{w }L^2.
+\]
+Zachodzą wzory
+\[
+\E D_t=m'(t),\qquad
+\Cov(D_s,D_t)=\partial_s\partial_t K(s,t).
+\]
+Jeżeli $X$ jest gaussowski, to rodzina jego wartości
+i pochodnych średniokwadratowych jest wspólnie
+gaussowska.
+\end{twierdzenie}
+\begin{proof}
+Niech $Z_t=X_t-m(t)$ i
+$A_h(t)=(Z_{t+h}-Z_t)/h$ dla $h\ne0$, $t+h\in I$.
+Dwukrotne zastosowanie podstawowego twierdzenia
+rachunku całkowego daje dla dopuszczalnych $h,k$
+\[
+\E[A_h(s)A_k(t)]
+=\int_0^1\int_0^1
+\partial_s\partial_t K(s+uh,t+vk)
+\,\mathrm d\lambda_1(u)\,\mathrm d\lambda_1(v).
+\]
+Wzór obowiązuje także dla ujemnych $h,k$, gdyż
+stosujemy parametryzację odcinków przez $[0,1]$.
+Z ciągłości pochodnej mieszanej prawa strona dąży
+do $\partial_s\partial_t K(s,t)$ przy $h,k\to0$.
+W szczególności dla $s=t$, rozwijając
+$\E|A_h(t)-A_k(t)|^2$, otrzymujemy granicę zero.
+Z zupełności $L^2$ wynika istnienie granicy $A(t)$
+w $L^2$ (najpierw dla dowolnego ciągu $h_n\to0$,
+a warunek Cauchy'ego zapewnia tę samą granicę dla
+wszystkich $h\to0$). Mamy $\E A(t)=0$.
+Dodając iloraz różnicowy $m$, otrzymujemy
+$D_t=A(t)+m'(t)$. Granica iloczynów skalarnych
+w $L^2$ daje wzór na kowariancję pochodnych.
+Jeżeli $X$ jest gaussowski, każda skończona kombinacja
+liniowa wartości i ilorazów różnicowych jest normalna.
+Przechodząc do granicy w $L^2$, stosujemy argument
+z funkcjami charakterystycznymi użyty w dowodzie
+twierdzenia o predykcji względem dowolnej rodziny
+obserwacji. Otrzymujemy wspólną gaussowskość.
+\end{proof}
+
+\begin{przyklad}[Gładkość średniokwadratowa losowej fali i procesu Ornsteina--Uhlenbecka]
+Dla losowej fali o kowariancji
+$K(s,t)=\cos(\omega_0(t-s))$ mamy
+$\partial_s\partial_t K(s,t)=\omega_0^2\cos(\omega_0(t-s))$.
+Pochodna średniokwadratowa jest tu także pochodną
+trajektorii, gdyż bezpośrednio różniczkujemy
+$A\cos(\omega_0t)+B\sin(\omega_0t)$, a zbieżność
+współczynników daje zbieżność w $L^2$.
+Dla procesu Ornsteina--Uhlenbecka natomiast
+\[
+\E\left|\frac{Y_{t+h}-Y_t}{h}\right|^2
+=\frac{2\sigma^2(1-e^{-\alpha|h|})}{h^2}
+\longrightarrow\infty\qquad(h\to0).
+\]
+Wynika to z granicy $(1-e^{-x})/x\to1$ przy
+$x\downarrow0$. Ilorazy różnicowe nie mogą więc
+zbiegać w $L^2$, choć proces ma ciągłą modyfikację.
+Brak pochodnej w $L^2$ sam w sobie nie jest dowodem
+braku różniczkowalności trajektorii.
+\end{przyklad}
+
 \begin{lemat}[Moment przyrostu gaussowskiego]
 Jeżeli $X$ jest rzeczywistym procesem gaussowskim,
 a $X_t-X_s$ ma średnią zero oraz wariancję $v(s,t)$,
@@ -598,9 +745,57 @@ Oszacowanie tej różnicy daje konkretne kryterium regularności.
 Nie należy jednak wnioskować automatycznie o ciągłości
 trajektorii wyłącznie z samej ciągłości funkcji $K$:
 kryterium momentowe wymaga kontroli \emph{szybkości}
-zanikania wariancji przyrostów, a ogólnie stosuje się
-silniejsze warunki metrycznej entropii.
+zanikania wariancji przyrostów. Bardziej ogólne kryteria
+wykorzystują między innymi metryczną entropię.
 \end{uwaga}
+
+\begin{przyklad}[Ciągła kowariancja bez ciągłej modyfikacji]
+Niech $(G_n)_{n\ge1}$ będą niezależnymi zmiennymi
+$\Normal(0,1)$. Na każdym przedziale
+$I_n=[2^{-(n+1)},2^{-n}]$ niech $\varphi_n$ będzie
+ciągłą funkcją łamaną, równą zero na końcach,
+równą $1$ w środku $c_n$ i zerową poza $I_n$.
+Na $[0,1]$ definiujemy
+\[
+X_t=\sum_{n\ge1}\frac{G_n\varphi_n(t)}{\sqrt{\log(n+1)}}.
+\]
+Dla każdego $t$ co najwyżej jeden składnik jest
+niezerowy, więc każda skończona rodzina wartości
+jest liniowym obrazem skończonego wektora niezależnych
+zmiennych normalnych. Proces jest wycentrowany, a
+\[
+K(s,t)=\sum_{n\ge1}\frac{\varphi_n(s)\varphi_n(t)}{\log(n+1)}.
+\]
+Szereg jest jednostajnie zbieżny: dla każdego $(s,t)$
+co najwyżej jeden składnik jest niezerowy, a supremum
+ogona po $n>N$ nie przekracza $1/\log(N+2)$.
+Zatem $K$ jest ciągłe na $[0,1]^2$ i proces jest
+ciągły średniokwadratowo.
+
+Pokażemy, że nie istnieje ciągła modyfikacja.
+Niech $a_n=\sqrt{\log(n+1)}$. Dla standardowej
+zmiennej normalnej $G$ i $a\ge1$ mamy
+\[
+\Prob(G>a)\ge
+\frac1{\sqrt{2\pi}}\int_a^{a+1/a}e^{-x^2/2}\,
+\mathrm d\lambda_1(x)
+\ge \frac{e^{-3/2}}{\sqrt{2\pi}a}e^{-a^2/2}.
+\]
+Ostatnia nierówność wynika z
+$(a+1/a)^2/2\le a^2/2+3/2$.
+Stąd szereg $\sum_n\Prob(G_n>a_n)$ jest rozbieżny,
+gdyż jego wyrazy dla dużych $n$ są ograniczone od dołu
+przez dodatnią stałą razy
+$1/\sqrt{(n+1)\log(n+1)}$, a $\log(n+1)\le n+1$.
+Z niezależności zdarzeń i drugiego lematu
+Borela--Cantellego otrzymujemy $X_{c_n}>1$
+dla nieskończenie wielu $n$ prawie na pewno.
+Ponieważ $c_n\to0$ oraz $X_0=0$, ciągłość w zerze
+nie zachodzi. Każda modyfikacja zgadza się z $X$
+w chwilach $0,c_1,c_2,\ldots$ na jednym zbiorze
+pełnej miary, więc również nie może być ciągła
+w zerze prawie na pewno.
+\end{przyklad}
 
 \section{Most gaussowski: obserwacja końca zmienia cały proces}
 W rozdziale~\ref{ch:konstrukcja} skonstruowaliśmy proces
