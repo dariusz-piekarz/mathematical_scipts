@@ -349,7 +349,7 @@
       ds.forEach((d,i)=>{for(let k=0;k<2;k++)data.push(...cell(k,d,i===4));});
       const heading=d=>"δ = "+d.toFixed(3)+" | V/δ³: walcowa "+(r+d/2).toFixed(4)+"; sferyczna "+((((r+d)**3-r**3)/3)*(Math.cos(p)-Math.cos(p+d))/d**2).toFixed(4);
       const steps=ds.map((d,i)=>({label:String(d),method:"update",args:[{visible:ds.flatMap((_,j)=>Array(4).fill(i===j))},{"title.text":heading(d)}]}));
-      const sc=k=>({...scene(),domain:{x:[k/2,(k+1)/2],y:[0,1]},aspectmode:"cube",xaxis:{...axis("x"),range:[.45,1.65]},yaxis:{...axis("y"),range:[0,1.2]},zaxis:{...axis("z"),range:[0,1.6]}});
+      const sc=k=>({...scene(),domain:{x:[k/2,(k+1)/2],y:[0,1]},aspectmode:"data",xaxis:{...axis("x"),range:[.4,1.7]},yaxis:{...axis("y"),range:[0,1.2]},zaxis:{...axis("z"),range:[0,1.7]}});
       return base(data,heading(.2),{scene:sc(0),scene2:sc(1),margin:{l:0,r:0,b:70,t:85},annotations:[{xref:"paper",yref:"paper",x:.25,y:1.04,text:"Walcowa: J = "+r.toFixed(3),showarrow:false},{xref:"paper",yref:"paper",x:.75,y:1.04,text:"Sferyczna: J = "+(r*r*Math.sin(p)).toFixed(3),showarrow:false}],sliders:[{active:4,currentvalue:{prefix:"δ = "},steps}]});
     },
     "am2_36_geometric.html":()=>{
