@@ -799,3 +799,325 @@ domknięcie globalne.
 Odwrotnie domknięcie globalne daje domknięcie
 względem $\Box$ bezpośrednio z reguły konieczności.
 \end{proof}
+
+\section{Hierarchia normalnych logik modalnych}
+
+Porównujemy logiki przez inkluzję ich zbiorów twierdzeń.
+Jeżeli $L_1\subseteq L_2$, każda formuła dowodliwa
+w $L_1$ jest dowodliwa również w $L_2$.
+Nie jest to porównanie liczby aksjomatów:
+różne zbiory aksjomatów mogą generować tę samą
+normalną logikę.
+
+\begin{lemat}[Zależności między B, T, 4 i 5]
+\label{lem:ncl-modal-axiom-dependencies}
+W normalnej logice modalnej zachodzą następujące
+zależności między schematami:
+\[
+\begin{aligned}
+ \mathrm T+5&\Longrightarrow\mathrm B,\\
+ \mathrm B+4&\Longrightarrow5,\\
+ \mathrm B+5&\Longrightarrow4.
+\end{aligned}
+\]
+Każda strzałka oznacza dowodliwość wszystkich
+instancji schematu po prawej stronie przy założeniu
+schematów po lewej.
+\end{lemat}
+\begin{proof}
+Dla pierwszej zależności bierzemy dualną postać T
+ze Stwierdzenia~\ref{prop:ncl-modal-dual-axioms}
+i schemat 5:
+\[
+ A\to\Diamond A,\qquad
+ \Diamond A\to\Box\Diamond A.
+\]
+Złożenie implikacji daje $A\to\Box\Diamond A$,
+czyli B.
+
+Dla drugiej stosujemy B do $\Diamond A$:
+\[
+ \Diamond A\to\Box\Diamond\Diamond A.
+\]
+Dualna postać 4 to $\Diamond\Diamond A\to\Diamond A$.
+Monotoniczność konieczności
+(Twierdzenie~\ref{thm:ncl-modal-monotonicity})
+daje
+$\Box\Diamond\Diamond A\to\Box\Diamond A$.
+Po złożeniu otrzymujemy 5.
+
+Dla trzeciej stosujemy B do $\Box A$:
+\[
+ \Box A\to\Box\Diamond\Box A.
+\]
+Dualna postać 5 to $\Diamond\Box A\to\Box A$.
+Przeniesienie jej przez konieczność daje
+$\Box\Diamond\Box A\to\Box\Box A$.
+Złożenie implikacji daje 4.
+We wszystkich trzech przypadkach złożenie
+jest uzasadnione klasyczną tautologią
+przechodniości implikacji i modus ponens.
+\end{proof}
+
+\begin{twierdzenie}[Alternatywne aksjomatyzacje S5]
+\label{thm:ncl-modal-S5-alternatives}
+Następujące logiki są równe:
+\[
+ \mathrm{S5}
+ =\mathrm K+\mathrm T+5
+ =\mathrm K+\mathrm T+\mathrm B+4
+ =\mathrm{S4}+5
+ =\mathrm B+5
+ =\mathrm K+\mathrm D+\mathrm B+4.
+\]
+\end{twierdzenie}
+\begin{proof}
+Pierwsza równość jest definicją S5.
+Z T i 5 otrzymujemy B, a z B i 5 otrzymujemy 4
+na mocy Lematu~\ref{lem:ncl-modal-axiom-dependencies}.
+Odwrotnie B i 4 dają 5. Stąd równość
+$\mathrm{S5}=\mathrm K+\mathrm T+\mathrm B+4$
+i, korzystając z definicji systemów,
+równości z $\mathrm{S4}+5$ oraz $\mathrm B+5$.
+
+Pozostaje ostatnia aksjomatyzacja.
+Wystarczy wyprowadzić T z D i B.
+Z D dla $\Box A$ mamy
+$\Box\Box A\to\Diamond\Box A$,
+a z dualnej postaci B mamy
+$\Diamond\Box A\to A$.
+Z 4 otrzymujemy więc ciąg implikacji
+\[
+ \Box A\to\Box\Box A\to\Diamond\Box A\to A,
+\]
+który daje T w systemie $\mathrm K+\mathrm D+\mathrm B+4$.
+W przeciwnym kierunku T daje D na mocy
+Wniosku~\ref{cor:ncl-modal-T-implies-D}.
+\end{proof}
+
+\begin{uwaga}[D i B bez schematu 4]
+\label{rem:ncl-modal-DB-not-T}
+Same D i B nie wystarczają do wyprowadzenia T
+w normalnej logice. Istotnie,
+na ramie dwóch stanów połączonych w obie strony,
+bez pętli, D i B są ważne, lecz T zawodzi.
+Uzasadnienie ważności i kontrmodel podamy
+w dalszej części sekcji.
+Zatem w ostatniej aksjomatyzacji S5 w
+Twierdzeniu~\ref{thm:ncl-modal-S5-alternatives}
+schematu 4 nie można po prostu pominąć.
+\end{uwaga}
+
+\subsection{Skończone świadectwa ścisłości inkluzji}
+
+Do sprawdzania niedowodliwości użyjemy
+elementarnej interpretacji relacyjnej wprowadzonej
+przy Przykładzie~\ref{ex:ncl-modal-local-global-difference}.
+Nie rozwijamy tu jeszcze ogólnej teorii korespondencji
+ani pełności. Potrzebujemy jedynie kierunku
+od własności relacji do ważności odpowiedniego
+schematu.
+
+\begin{lemat}[Wystarczające warunki ważności schematów]
+\label{lem:ncl-modal-frame-sufficient}
+Niech $W$ będzie niepustym zbiorem stanów
+i $R$ relacją na $W$. Dla każdego wartościowania
+wszystkie instancje wskazanego schematu są
+prawdziwe w każdym stanie, jeśli $R$ ma
+odpowiednią własność:
+\[
+\begin{array}{c|l}
+ \mathrm D&\forall w\,\exists z\quad wRz\\
+ \mathrm T&\forall w\quad wRw\\
+ \mathrm B& wRz\Longrightarrow zRw\\
+ 4&wRz,\ zRu\Longrightarrow wRu\\
+ 5&wRz,\ wRu\Longrightarrow zRu.
+\end{array}
+\]
+\end{lemat}
+\begin{proof}
+Z klasycznej definicji możliwości wynika,
+że $\Diamond A$ jest prawdziwa w $w$ dokładnie
+wtedy, gdy istnieje $z$ z $wRz$, w którym
+$A$ jest prawdziwa.
+
+Dla D, jeżeli $\Box A$ jest prawdziwa w $w$,
+wybieramy dostępny stan $z$. W nim $A$ jest
+prawdziwa, więc w $w$ prawdziwa jest $\Diamond A$.
+Dla T wystarczy wybrać $z=w$.
+Dla B, jeżeli $A$ jest prawdziwa w $w$ i $wRz$,
+to $zRw$, więc $\Diamond A$ jest prawdziwa w $z$.
+Ponieważ $z$ było dowolnym dostępnym stanem,
+$\Box\Diamond A$ jest prawdziwa w $w$.
+Dla 4, jeśli $\Box A$ jest prawdziwa w $w$,
+to dla dowolnych $wRz$ i $zRu$ zachodzi $wRu$,
+a zatem $A$ jest prawdziwa w $u$.
+W konsekwencji $\Box A$ jest prawdziwa w każdym
+$z$ dostępnym z $w$.
+Dla 5, jeżeli $\Diamond A$ jest prawdziwa w $w$,
+wybieramy świadka $u$ z $wRu$, w którym $A$
+jest prawdziwa. Dla dowolnego $z$ z $wRz$
+mamy $zRu$, więc $\Diamond A$ jest prawdziwa w $z$.
+To daje $\Box\Diamond A$ w $w$.
+
+Poprawność K oraz zachowanie globalnej ważności
+przez obie reguły dowodzenia sprawiają,
+że na ramie spełniającej wymienione warunki
+ważne są wszystkie twierdzenia odpowiedniego
+rozszerzenia aksjomatycznego K, przez indukcję
+po dowodzie. Nie zakładamy twierdzenia o pełności.
+\end{proof}
+
+\begin{twierdzenie}[Ścisłe inkluzje podstawowych systemów]
+\label{thm:ncl-modal-hierarchy}
+Zachodzą ścisłe inkluzje
+\[
+\begin{gathered}
+ \mathrm K\subsetneq\mathrm{KD}\subsetneq\mathrm T,\\
+ \mathrm T\subsetneq\mathrm B\subsetneq\mathrm{S5},
+ \qquad
+ \mathrm T\subsetneq\mathrm{S4}\subsetneq\mathrm{S5}.
+\end{gathered}
+\]
+Systemy B i S4 są nieporównywalne.
+Ponadto $\mathrm K\subsetneq\mathrm{K4}$,
+$\mathrm K\subsetneq\mathrm{KB}$ i
+$\mathrm K\subsetneq\mathrm{K5}$,
+a systemy K4 i K5 są nieporównywalne.
+\end{twierdzenie}
+\begin{proof}
+Inkluzje niestrikte wynikają z definicji,
+Wniosku~\ref{cor:ncl-modal-T-implies-D}
+oraz Twierdzenia~\ref{thm:ncl-modal-S5-alternatives}.
+Dla ścisłości i nieporównywalności podamy
+konkretne skończone ramy. W tabeli $R(i)$
+oznacza zbiór stanów dostępnych z $i$;
+stanami są dokładnie indeksy wymienionych wierszy
+relacji. Zapis $V(p)$ określa zbiór stanów,
+w których prawdziwe jest $p$. Kolumna $w$
+wskazuje stan, w którym dana instancja
+schematu dla $A=p$ jest fałszywa.
+\[
+\begin{array}{c|l|c|c|c|c}
+ & R(i) & \text{ważne} & \text{zawodzi}
+ &V(p)&w\\ \hline
+ F_0&R(0)=\varnothing&B,4,5&D&\{0\}&0\\
+ F_1&R(0)=R(1)=\{0\}&D,4,5&T&\{0\}&1\\
+ F_2&R(0)=\{0,1\},\ R(1)=\{1\}&T,4,D&B&\{0\}&0\\
+ F_3&
+ \begin{array}{l}R(0)=\{0,1\}\\
+ R(1)=\{0,1,2\}\\R(2)=\{1,2\}\end{array}
+ &T,B,D&4&\{0,1\}&0\\
+ F_4&R(0)=\{1\},\ R(1)=\{0\}&D,B&4&\{1\}&0\\
+ F_5&R(0)=\{1\},\ R(1)=\varnothing&4&B,5&\{0,1\}&0\\
+ F_6&
+ \begin{array}{l}R(0)=R(1)=\{0,1\}\\R(2)=\{0\}\end{array}
+ &D,5&4&\{0,2\}&2
+\end{array}
+\]
+W kolumnie ważności wymieniono potrzebne
+schematy, niekoniecznie wszystkie ważne na ramie.
+
+Sprawdzamy świadectwa w tabeli.
+Na $F_0$ mamy $\Box p$ prawdziwe próżniowo,
+a $\Diamond p$ fałszywe.
+Na $F_1$ stan $1$ widzi wyłącznie stan $0$,
+więc $\Box p$ jest prawdziwe, a $p$ fałszywe
+w stanie $1$.
+Na $F_2$ w stanie $0$ prawdziwe jest $p$,
+ale dostępny stan $1$ nie spełnia $\Diamond p$.
+Stąd $\Box\Diamond p$ jest fałszywe w $0$.
+Na $F_3$ w $0$ zachodzi $\Box p$,
+ale stan $1$ widzi stan $2$, gdzie $p$
+jest fałszywe, więc $\Box\Box p$ jest
+fałszywe w $0$.
+Na $F_4$ w $0$ zachodzi $\Box p$, lecz
+stan $1$ widzi $0$, gdzie $p$ jest fałszywe.
+Na $F_5$ zarówno $p$, jak i $\Diamond p$
+są prawdziwe w $0$, lecz stan $1$ nie ma
+żadnych następców i nie spełnia $\Diamond p$.
+Wobec tego B oraz 5 zawodzą w $0$.
+Na $F_6$ stan $2$ widzi tylko $0$, gdzie
+$p$ jest prawdziwe, jednak $0$ widzi również
+$1$, gdzie $p$ jest fałszywe. Zatem 4 zawodzi
+w stanie $2$.
+
+Własności relacji podane w kolumnie ważności
+sprawdza się bezpośrednio: $F_0$ ma pustą
+relację, $F_1$ ma wspólny jedyny następnik
+$0$, $F_2$ jest łańcuchem z pętlami, a $F_3$
+jest symetryczną drogą z pętlami.
+Rama $F_4$ jest symetryczna i seryjna,
+$F_5$ jest przechodnia, gdyż nie istnieją
+dwa następujące po sobie kroki.
+Na $F_6$ każdy następnik dowolnego stanu
+widzi wszystkich następców tego stanu:
+dla $0,1$ jest to zbiór $\{0,1\}$, a dla $2$
+jest to zbiór $\{0\}$. Stąd ważność 5.
+Stosujemy Lemat~\ref{lem:ncl-modal-frame-sufficient}.
+
+Ramy $F_0,F_1$ pokazują ścisłość pierwszych
+dwóch inkluzji. Rama $F_2$ oddziela T i S4
+od B oraz S5, a $F_3$ oddziela T i B od S4
+oraz S5. W szczególności B i S4 są
+nieporównywalne.
+Rama $F_4$ oddziela K od K4, a $F_5$
+oddziela K od KB i K5 oraz pokazuje, że
+5 nie jest twierdzeniem K4. Wreszcie
+$F_6$ pokazuje, że 4 nie jest twierdzeniem K5.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,node distance=12mm]
+\node (k) {$\mathrm K$};
+\node[above=of k] (kd) {$\mathrm{KD}$};
+\node[above=of kd] (t) {$\mathrm T$};
+\node[above left=13mm and 12mm of t] (b) {$\mathrm B$};
+\node[above right=13mm and 12mm of t] (s4) {$\mathrm{S4}$};
+\node[above=34mm of t] (s5) {$\mathrm{S5}$};
+\draw[->] (k)--(kd);
+\draw[->] (kd)--(t);
+\draw[->] (t)--(b);
+\draw[->] (t)--(s4);
+\draw[->] (b)--(s5);
+\draw[->] (s4)--(s5);
+\end{tikzpicture}
+\end{center}
+Strzałki przedstawiają ścisłą inkluzję wśród
+sześciu wymienionych systemów, nie wszystkie
+możliwe rozszerzenia normalnej logiki K.
+
+\begin{stwierdzenie}[Niezależność rozdzielności operatorów]
+\label{prop:ncl-modal-nondistributivity}
+W K nie są dowodliwe schematy
+\[
+ \Box(A\vee B)\to(\Box A\vee\Box B),
+ \qquad
+ (\Diamond A\wedge\Diamond B)\to\Diamond(A\wedge B).
+\]
+Nie są one dowodliwe nawet w S5.
+\end{stwierdzenie}
+\begin{proof}
+Niech $W=\{0,1\}$, $R=W\times W$,
+$V(p)=\{0\}$ i $V(q)=\{1\}$.
+Relacja jest zwrotna i spełnia warunek
+schematu 5, więc wszystkie twierdzenia S5
+są ważne na tej ramie.
+W każdym stanie $p\vee q$ jest konieczne,
+ale ani $p$, ani $q$ nie jest konieczne.
+Z drugiej strony oba zdania są możliwe,
+lecz $p\wedge q$ nie jest możliwe.
+Obie implikacje zawodzą w każdym stanie.
+\end{proof}
+
+\begin{wniosek}[Niesprzeczność podstawowych systemów]
+\label{cor:ncl-modal-basic-consistency}
+Wszystkie systemy zawarte w S5 są niesprzeczne
+w tym sensie, że nie dowodzą $\bot$.
+\end{wniosek}
+\begin{proof}
+Jednoelementowa rama z pętlą spełnia warunki
+T oraz 5. Wszystkie twierdzenia S5 są na niej
+ważne na mocy Lematu~\ref{lem:ncl-modal-frame-sufficient},
+a $\bot$ jest w jej jedynym stanie fałszywe.
+\end{proof}
