@@ -56,7 +56,9 @@ $t\in[0,2\pi]$, $R>0$, rozpatrzmy
 podział na $m\ge2$ równych przedziałów.
 Kolejne wierzchołki dzieli kąt $2\pi/m$,
 więc z tożsamości trygonometrycznych
-każda cięciwa ma długość $2R\sin(\pi/m)$.
+każda cięciwa ma długość $2R\sin(\pi/m)$:
+kwadrat odległości dwóch kolejnych punktów
+wynosi $2R^2(1-\cos(2\pi/m))=4R^2\sin^2(\pi/m)$.
 Długość łamanej wynosi
 \[
  L_m=2mR\sin(\pi/m).
@@ -68,7 +70,7 @@ jest to dokładna długość okręgu,
 bez stosowania wzoru całkowego
 z pochodną. Dla $m=2$ łamana biegnie
 po tej samej średnicy w obie strony.
-Dla $m=2^j$ podziały są zagnieżdżone,
+Dla $m=2^j$, $j\ge1$, podziały są zagnieżdżone,
 a długości łamanych niemalejące.
 \end{przyklad}
 
@@ -125,9 +127,10 @@ definicji przez supremum wzorem całkowym.
 \paragraph{Droga a jej geometryczny obraz.}
 Niech $E=\gamma([a,b])$. Z rozdziału
 \ref{ma2:ch:lebesgue-euclidean} wiemy,
-że $\mathcal H^1$ jest miarą długości
-geometrycznego zbioru. Każdy punkt
-obrazu jest w tej mierze liczony tylko raz.
+że $\mathcal H^1$ mierzy geometryczny
+obraz niezależnie od parametryzacji.
+Nie uwzględnia liczby przejść przez
+poszczególne części obrazu.
 Długość drogi uwzględnia natomiast
 powtórzenia. Możliwe jest więc, że
 krzywa zamknięta ma niezerową długość
@@ -339,7 +342,10 @@ Ciągłość funkcji podcałkowej zapewnia zgodność
 całek Riemanna i Lebesgue'a na mocy
 \ref{ma2:thm:lebesgue-jordan-agreement}.
 Addytywność długości rozszerza wzór na krzywe
-ciągłe i kawałkami klasy $C^1$ dla skończonego podziału.
+ciągłe, których ograniczenia do domkniętych
+podprzedziałów pewnego skończonego podziału
+są klasy $C^1$ (z pochodnymi jednostronnymi
+na końcach tych podprzedziałów).
 
 \begin{definicja}
 \label{ma2:def:curve-ac}
@@ -420,6 +426,18 @@ absolutnie ciągłe. Dla $u=v$ obie strony są zerowe.
 \end{proof}
 
 \section{Parametryzacja długością łuku}
+
+Parametr $s(t)$ oznacza długość przebytą
+od początku drogi do chwili $t$, a nie
+odległość od punktu początkowego.
+Na odcinku czasu, w którym punkt
+pozostaje nieruchomy, parametr $s$
+jest stały. Parametryzacja długością
+łuku usuwa takie postoje i zastępuje
+zmienne tempo ruchem o jednostkowej
+prędkości prawie wszędzie. Nie usuwa
+natomiast przejść powrotnych ani
+samoprzecięć krzywej.
 
 \begin{twierdzenie}
 \label{ma2:thm:curve-arclength}
@@ -525,6 +543,69 @@ Sumując te nierówności i stosując definicję
 absolutnej ciągłości do $s$, otrzymujemy
 absolutną ciągłość $\gamma$.
 \end{proof}
+
+\begin{przyklad}[Ten sam łuk przebyty w różnym tempie]
+\label{ma2:ex:curve-arclength-variable-speed}
+Niech $H:[0,1]\to\R^3$,
+$H(q)=(\cos(2\pi q),\sin(2\pi q),2q)$.
+Rozważmy $\gamma_1(t)=H(t)$ oraz
+$\gamma_2(t)=H(t^2)$ dla $0\le t\le1$.
+Krzywe mają ten sam obraz i tę samą
+kolejność przejścia, ponieważ
+$t\mapsto t^2$ jest rosnącą surjekcją
+na $[0,1]$. Z twierdzenia
+\ref{ma2:thm:curve-reparam} ich długości
+są więc równe.
+Rachunek pochodnych daje
+\[
+ \|H'(q)\|_2=\ell=\sqrt{4\pi^2+4},
+ \qquad
+ \|\gamma_1'(t)\|_2=\ell,\quad
+ \|\gamma_2'(t)\|_2=2t\ell.
+\]
+Na mocy \ref{ma2:thm:curve-c1-length}
+funkcje długości to odpowiednio
+$s_1(t)=\ell t$ oraz $s_2(t)=\ell t^2$.
+Obie parametryzacje prowadzą do tej
+samej funkcji
+\[
+ \widehat\gamma(s)=H(s/\ell),\qquad 0\le s\le\ell.
+\]
+Jest ona klasy $C^1$ i ma jednostkową
+prędkość, chociaż $\gamma_2'(0)=0$.
+Regularność pierwotnej krzywej jest
+więc warunkiem wystarczającym, lecz
+nie koniecznym dla gładkości parametryzacji
+długością łuku (por.
+\ref{ma2:cor:curve-regular-arclength} oraz
+\ref{ma2:ex:curve-cusp}).
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=4.2cm,y=3.1cm,>=stealth]
+ \draw[->,gray] (-.05,0)--(1.13,0) node[right] {$t$};
+ \draw[->,gray] (0,-.05)--(0,1.15) node[above] {$s/\ell$};
+ \draw[blue!75!black,very thick] (0,0)--(1,1);
+ \draw[orange!85!black,very thick,domain=0:1,samples=61]
+  plot (\x,{\x*\x});
+ \foreach \t in {.25,.5,.75,1}{
+  \draw[gray!65,densely dashed] (\t,0)--(\t,\t);
+  \fill[blue!75!black] (\t,\t) circle (1.3pt);
+  \fill[orange!85!black] (\t,{\t*\t}) circle (1.3pt);
+ }
+ \node[blue!75!black,above left] at (.6,.6) {$t$};
+ \node[orange!85!black,below right] at (.76,.5776) {$t^2$};
+ \node[below left] at (0,0) {$0$};
+ \node[below] at (1,0) {$1$};
+ \node[left] at (0,1) {$1$};
+\end{tikzpicture}
+\caption{Znormalizowane funkcje długości
+z przykładu \ref{ma2:ex:curve-arclength-variable-speed}.
+W chwili $t=1/2$ pierwszy ruch przebył
+połowę, a drugi jedną czwartą długości łuku.}
+\label{ma2:fig:curve-arclength-variable-speed}
+\end{figure}
 
 \section{Długość drogi i miara Hausdorffa obrazu}
 
