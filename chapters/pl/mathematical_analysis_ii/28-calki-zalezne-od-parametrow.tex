@@ -1,8 +1,11 @@
 \chapter{Całki zależne od parametrów}
 \label{ma2:ch:parameter-integrals}
 
-Niech $A\subseteq\R^n$ będzie mierzalny,
+Niech $n,m\ge1$ będą liczbami naturalnymi,
+$A\subseteq\R^n$ będzie mierzalny,
 $T\subseteq\R^m$ i $f:T\times A\to\R$.
+Przyjmujemy $v_n=\lambda_n(B(0,1))$, gdzie kule
+są euklidesowe.
 Rozpatrujemy funkcję skalarną
 \[
  F(t)=\int_A f(t,x)\,\mathrm d\lambda_n(x).
@@ -66,7 +69,8 @@ Zgodność obu całek wynika z
 
 \begin{twierdzenie}[Pochodne całki]
 \label{ma2:thm:parameter-multivariate}
-Niech $T\subseteq\R^m$ będzie otwarty i $k\ge1$.
+Niech $T\subseteq\R^m$ będzie otwarty,
+a $k\ge1$ będzie liczbą naturalną.
 Załóżmy, że $f(t,\cdot)$ jest całkowalna dla każdego
 $t\in T$, a poza ustalonym mierzalnym zbiorem zerowym
 $N\subseteq A$ funkcje $f(\cdot,x)$ są klasy $C^k$.
@@ -150,7 +154,9 @@ składową. Stosujemy poprzednie twierdzenie.
 
 \begin{wniosek}[Gradient, macierz Hessego i różniczka]
 \label{ma2:cor:parameter-gradient-hessian}
-Przy założeniach poprzedniego twierdzenia
+Przy założeniach twierdzenia
+\ref{ma2:thm:parameter-multivariate} (również
+z osłabieniem z wniosku \ref{ma2:cor:parameter-anchor})
 dla $k\ge1$ mamy, współrzędna po współrzędnej,
 \[
  \nabla F(t)=\left(
@@ -189,8 +195,7 @@ Dla $a>0$, $b>0$ rozważmy
  F(a,b)=\int_{\R^n}
  \exp(-a\|x\|_2-b)\,\mathrm d\lambda_n(x).
 \]
-Niech $v_n=\lambda_n(B(0,1))$.
-Z wzoru radialnego \ref{ma2:thm:improper-radial}
+Ze wzoru radialnego \ref{ma2:thm:improper-radial}
 wynika
 \[
  F(a,b)=nv_n e^{-b}\int_0^\infty
@@ -265,10 +270,17 @@ funkcja jest ograniczona, ma ograniczony nośnik
 i jest dodatnia we wnętrzu kuli.
 Gładkość na brzegu wynika z faktu, że funkcja
 $s\mapsto e^{-1/s}$ dla $s>0$, przedłużona zerem
-dla $s\le0$, jest gładka: jej kolejne pochodne
-na dodatniej półosi mają postać wielomianu w $1/s$
-pomnożonego przez $e^{-1/s}$, więc dążą do zera
-przy $s\downarrow0$.
+dla $s\le0$, jest gładka. Indukcyjnie, stosując
+regułę iloczynu i łańcuchową, otrzymujemy na
+dodatniej półosi pochodne postaci $P(1/s)e^{-1/s}$,
+gdzie $P$ jest wielomianem. Każde takie wyrażenie
+oraz jego iloraz przez $s$ dążą do zera przy
+$s\downarrow0$, ponieważ wykładnicza funkcja
+zanika szybciej od każdej potęgi $s$.
+Indukcja wprost z definicji pochodnej w zerze
+pokazuje, że wszystkie pochodne przedłużenia
+istnieją i są tam równe zero. Gładkość $\psi_0$
+wynika następnie z reguły łańcuchowej.
 
 Dla $t\in(-1,1)$ określmy
 \[
@@ -298,6 +310,8 @@ pochodne przekrojów istnieją.
 Gdyby pierwsza pochodna podcałkowa miała
 wspólną całkowalną majorantę w otoczeniu zera,
 twierdzenie \ref{ma2:thm:parameter-multivariate}
+zastosowane po ograniczeniu przestrzeni parametrów
+do mniejszego otwartego przedziału wokół zera
 dawałoby różniczkowalność $F$ i $F'(0)=0$,
 co jest sprzecznością.
 \end{przyklad}
@@ -328,11 +342,56 @@ i $n=1$. Kształt krzywych jest schematyczny;
 \label{ma2:fig:parameter-escape}
 \end{figure}
 
+\begin{przyklad}[Majoranta funkcji nie zastępuje majoranty pochodnej]
+\label{ma2:ex:parameter-bounded-concentration}
+Niech $A=(0,1)$, $T=(-1/3,1/3)$, a $\eta$ będzie
+nieujemną funkcją gładką na $\R$, o nośniku
+zawartym w $[1,2]$ i całce równej $1$.
+Taką funkcję otrzymujemy przez przesunięcie,
+przeskalowanie i normalizację jednowymiarowej
+funkcji $\psi_0$ z przykładu
+\ref{ma2:ex:parameter-escape-derivative}.
+Połóżmy
+\[
+ f(t,x)=
+ \begin{cases}
+ \eta(x/|t|),&t\ne0,\\
+ 0,&t=0.
+ \end{cases}
+\]
+Dla ustalonego $x_0>0$ funkcja $f$ jest identycznie
+zerowa w pewnym otoczeniu $(0,x_0)$, ponieważ
+$x/|t|>2$ dla $x>x_0/2$ i $|t|<x_0/4$.
+Poza $t=0$ jest gładka z reguły łańcuchowej.
+Zatem $f\in C^\infty(T\times A)$ i
+$\partial_t f(0,x)=0$ dla każdego $x\in A$.
+W odróżnieniu od poprzedniego przykładu wszystkie
+funkcje $f(t,\cdot)$ mają wspólną całkowalną
+majorantę $\|\eta\|_\infty$ na $A$.
+Całka $F$ jest więc ciągła na mocy
+\ref{ma2:thm:parameter-continuity}.
+Jednak dla $t\ne0$, podstawiając $s=x/|t|$,
+otrzymujemy
+\[
+ F(t)=|t|\int_0^{1/|t|}\eta(s)\,
+ \mathrm d\lambda_1(s)=|t|,
+\]
+gdyż $1/|t|>3$ i cały nośnik $\eta$
+mieści się w przedziale całkowania.
+Zatem $F$ nie ma pochodnej w zerze.
+Istnienie majoranty funkcji podcałkowej
+nie zapewnia przeniesienia różniczkowania pod całkę,
+nawet na ograniczonym przedziale i przy
+gładkości funkcji we wszystkich zmiennych
+na otwartym zbiorze $T\times A$.
+\end{przyklad}
+
 \section{Zmienna dziedzina całkowania}
 
 \begin{twierdzenie}[Ciągłość całki na ruchomych zbiorach]
 \label{ma2:thm:parameter-moving-domains}
-Niech $A_t\subseteq\R^n$ będą mierzalne, a
+Niech $t_0\in T$, zbiory $A_t\subseteq\R^n$
+będą mierzalne, a
 $u:T\times\R^n\to\R$ ma mierzalne przekroje.
 Załóżmy, że przy $t\to t_0$ zachodzi
 \[
@@ -433,7 +492,8 @@ a następnie używamy tej samej symetrii.
 \section{Reguła Leibniza i ruchomy promień}
 
 Dla funkcji skalarnej $w(t,s)$, gdzie $t$ należy
-do otwartego $T\subseteq\R^m$, a $s\in[a,b]$,
+do otwartego $T\subseteq\R^m$, a $s\in[a,b]$
+przy $a<b$,
 załóżmy ciągłość $w$ i wszystkich $\partial_{t_i}w$
 oraz różniczkowalność $\alpha,\beta:T\to[a,b]$.
 Wtedy dla zorientowanej całki jednowymiarowej
@@ -454,7 +514,15 @@ po przedziale o uporządkowanych końcach.
 Wzór jest zastosowaniem
 \atlasref{AM1-32::ma1:thm:parameter-leibniz}{reguły Leibniza}
 na prostej $t+h e_i$; ciągłość gwarantuje zgodność
-całek Riemanna i Lebesgue'a.
+całek Riemanna i Lebesgue'a. Jeżeli dodatkowo
+$\alpha,\beta$ są klasy $C^1$, to prawe strony
+są ciągłe w $t$: składniki brzegowe przez złożenie
+funkcji ciągłych, a całkę z pochodnej przez
+zbieżność zmajoryzowaną po przedłużeniu przez zero
+na $[a,b]$ (funkcje charakterystyczne przedziałów
+zbiegają poza ich końcami, a przy końcach równych
+granica jest zero prawie wszędzie; przy odwróceniu
+końców uwzględniamy znak). Zatem $L\in C^1(T)$.
 
 \begin{przyklad}[Różniczkowanie całki po kuli radialnej]
 \label{ma2:ex:parameter-radial-leibniz}
@@ -497,7 +565,9 @@ można zastąpić poszukiwanie wspólnej majoranty
 jednostajną kontrolą ogonów. Dokładna teza i dowód
 znajdują się w
 \atlasref{ME-11::thm:tails-11}{teorii miary i całki}.
-Jeżeli $A_j$ wyczerpują $A$, całki po $A_j$
+Jeżeli $(A_j)$ jest rosnącym wyczerpaniem mierzalnym
+zbioru $A$ w sensie definicji
+\ref{ma2:def:integral-exhaustion}, całki po $A_j$
 są ciągłe względem parametru w $t_0$,
 a dla pewnego otoczenia $V$ punktu $t_0$
 \[
