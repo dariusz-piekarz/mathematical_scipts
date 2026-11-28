@@ -1,6 +1,6 @@
 # PLAN GLOBALNY BIBLIOTEKI MATEMATYCZNEJ
 
-**Wersja 1.1 — 28.11.2026.** Nadrzędny dokument roboczy. Migawka katalogu: [8e104a7](https://github.com/dariusz-piekarz/mathematical_scipts/commit/8e104a732fb4293b1f23f06774f01f8d6e17d96c). Gałąź robocza: biblioteka-matematyczna-iteracja-6. **22 aktywne skrypty, 607 rozdziałów.** Pełny indeks ścieżek, blobów i kandydatów na raporty: [catalog/global_library_inventory.json](../../catalog/global_library_inventory.json).
+**Wersja 1.2 — 28.11.2026.** Nadrzędny dokument roboczy. Migawka katalogu: [8e104a7](https://github.com/dariusz-piekarz/mathematical_scipts/commit/8e104a732fb4293b1f23f06774f01f8d6e17d96c). Gałąź robocza: biblioteka-matematyczna-iteracja-6. **22 aktywne skrypty, 607 rozdziałów.** Pełny indeks ścieżek, blobów i kandydatów na raporty: [catalog/global_library_inventory.json](../../catalog/global_library_inventory.json).
 
 To plan żywy, nie certyfikat ukończenia całej biblioteki. Inwentaryzacja obejmuje katalog i nazwy wszystkich aktywnych rozdziałów oraz wybrane raporty i plany. Nie przeczytano ponownie wszystkich dowodów ani wszystkich raportów; propozycje uzupełnień są zadaniami sprawdzenia pokrycia, a nie stwierdzeniem braku. Statusy historyczne dotyczą wersji wskazanych w raportach. Brak raportu w standardowym katalogu nie oznacza braku przeprowadzonego audytu.
 
@@ -27,7 +27,8 @@ To plan żywy, nie certyfikat ukończenia całej biblioteki. Inwentaryzacja obej
 | P2 | AZ I–II, geometria klasyczna, RZUD, teoria liczb i arytmetyka | po ustaleniu zależności i pokrycia |
 | P2 | Liczby p-adyczne i analiza niearchimedesowa, analiza niestandardowa | AA, TL, ME, AF, MOD i LTM |
 | P2 | Rozdzielenie DG na geometrię i topologię różniczkową; następnie osobne specjalizacje wymiaru 4 | mapa etykiet, audyt pokrycia DG/AT/GT/RRC |
-| P3 | GAZ I–II i pogłębione tomy czterowymiarowe | po odpowiednich podstawach; dokładna kolejność do ustalenia |
+| P2 | Algebra przemienna i nieprzemienna; geometria różniczkowa orbifoldów (szczególnie ważna dla użytkownika) | po inwentaryzacji AA/ALG/CAT/DG/GT; ustalić kolejność zależności |
+| P3 | GAZ I–II, geometria nieprzemienna i pogłębione tomy czterowymiarowe | po odpowiednich podstawach; dokładna kolejność do ustalenia |
 
 P0 w wątku AM ma ścisłą kolejność AM II → AM I → RTPC. FSG i inne rozpoczęte wątki mogą być prowadzone osobno pod warunkiem bezpiecznej koordynacji i braku utraty zależności. Nie włączać automatyzacji tym planem.
 
@@ -43,7 +44,7 @@ P0 w wątku AM ma ścisłą kolejność AM II → AM I → RTPC. FSG i inne rozp
 ### ALG — Geometria algebraiczna (11)
 
 - **Rdzeń:** Schematy/odmiany algebraiczne, geometria lokalna i globalna, przecięcia, geometria biwymierna.
-- **Plan / granice:** 00–10 zachować; rozbudować od schematów: morfizmy, włókna, płaskość, gładkość, étale, koherentne snopy, kohomologia, dywizory, Riemann–Roch, moduły, moduli, podstawy arytmetyczne. AA właściciel algebry przemiennej, CAT formalizm snopów. GAGA łącznik z przyszłą GAZ.
+- **Plan / granice:** 00–10 zachować; rozbudować od schematów: morfizmy, włókna, płaskość, gładkość, étale, koherentne snopy, kohomologia, dywizory, Riemann–Roch, moduły, moduli, podstawy arytmetyczne. AP docelowy właściciel zaawansowanej algebry przemiennej, AA podstaw, CAT formalizmu snopów. GAGA łącznik z przyszłą GAZ.
 - **Audyt:** Raport 22.11: ALG00–10 zamknięte na ówczesnej wersji; ponownie sprawdzić bloby przed zmianą. [Dokument](../../audits/algebraic_geometry/STATUS.md).
 - [Aktywny katalog rozdziałów](../../books/pl/algebraic_geometry.tex).
 
@@ -208,6 +209,10 @@ P0 w wątku AM ma ścisłą kolejność AM II → AM I → RTPC. FSG i inne rozp
 | M15 | LA/AA/DG/ALG/AM I | GK/AZ I–II | geometrie modelowe i rzutowe, grupy przekształceń, gotowe zespolone funkcje elementarne; dowody algebraiczne pozostają u właścicieli |
 | M16 | AF/LA/RRC/AA/FSG | RZUD | ODE, przepływy, układy dynamiczne, stabilność, sterowanie tylko w zakresie potrzebnym dla ODE; istniejące dowody i zastosowania zachować |
 | M17 | MOD/LTM/AM I/AA/ME | AN/PA | ultrailoczyny i transfer, liczby hiperrzeczywiste, liczby p-adyczne i wartościowania; odróżniać analizę niestandardową od niearchimedesowskiej |
+| M18 | AA09–18, 37–40; ALG00/04 | AP | algebra przemienna: porównać pełne tezy i dowody, wydzielić materiał zaawansowany; AA zachowuje kurs podstawowy, ALG zastosowania geometryczne |
+| M19 | AA15–18/41–42/53–72, CAT22–25/44 | ANP | algebra nieprzemienna: moduły, pierścienie, reprezentacje, Morita; nie przenosić automatycznie całej teorii Liego ani kategorii pochodnych |
+| M20 | AF31–33, CAT44, DG/AT, ANP | GNP | geometria nieprzemienna: AF właściciel ogólnej teorii operatorów, CAT formalizmu kategorialnego, GNP właściwych konstrukcji geometrycznych |
+| M21 | GT24, DG, CAT38, ALG (plan stosów), AT | ORB | geometria orbifoldów; zachować zastosowania Seiferta w GT, formalizm stosów w CAT i algebraiczne stosy w ALG; audyt pełnych tez przed migracją |
 
 ## 5. Nowe skrypty i ich program
 
@@ -306,13 +311,82 @@ Zatwierdzony kierunek: osobne skrypty geometrii i topologii różniczkowej, z po
 
 **ALG — geometria algebraiczna (zatwierdzone pogłębienie):**
 - Zachować i audytować most od geometrii afinicznej/rzutowej oraz krzywych i powierzchni (ALG00–10) do schematów: Spec, Proj, snopy strukturalne, morfizmy, włókna, produkty, lokalne własności.
-- Algebra przemienna (AA): lokalizacja, moduły, noetherowskość, całkowitość, wymiar, płaskość i uzupełnienia; w ALG zastosowania geometryczne, bez powtórnego pełnego kursu.
+- Algebra przemienna (AA/AP): lokalizacja, moduły, noetherowskość, całkowitość, wymiar, płaskość i uzupełnienia; w ALG zastosowania geometryczne, bez powtórnego pełnego kursu.
 - Morfizmy właściwe, skończone, gładkie, nierozgałęzione i étale; dywizory Cartiera i Weila, wiązki, kohomologia koherentna, dualność Serre'a, Riemann–Roch/Hirzebruch–Riemann–Roch w odpowiednim zakresie.
 - Geometria przecięć i grupy Chowa, klasy charakterystyczne, osobliwości i rozwiązywanie, geometria biwymierna i program modeli minimalnych, geometria rodzin, deformacje i moduli, podstawy stosów (CAT).
 - Geometria arytmetyczna: schematy nad Z, krzywe eliptyczne i odmiany abelowe, redukcja, punkty wymierne, wprowadzenie do kohomologii étale; zaawansowane twierdzenia po TL/PA.
 - Porównanie z GAZ (analityfikacja, GAGA), AT (kohomologia, Hodge), DG4/TD4 (powierzchnie zespolone i czterorozmaitości). Uzupełnienia dopiero po inwentaryzacji planu lokalnego i pełnych tez ALG00–10.
 
 **Pozostałe wcześniejsze propozycje (niezatwierdzone automatycznie):** wydzielenie teorii Liego i reprezentacji z AA51–72, analiza numeryczna i optymalizacja/sterowanie, teoria informacji i uczenie statystyczne po RP4, zbiór zadań do RP I–IV z podpowiedziami. Nie tworzyć pustych wpisów katalogu.
+
+
+### 5.5. Dodatkowe zatwierdzone kierunki: algebra i geometria (28.11.2026)
+
+Użytkownik wskazał algebrę przemienną, algebrę nieprzemienną, geometrię nieprzemienną i geometrię różniczkową orbifoldów; ostatnia jest dla niego szczególnie ważna. Poniżej proponowana organizacja w czterech samodzielnych skryptach (ewentualnie blokach większych tomów, jeśli później tak ustalimy). Kierunki zatwierdzone, szczegółowe programy robocze, realizacja po audycie pokrycia. Nie zmieniać bieżącego priorytetu AM II → AM I → RTPC.
+
+#### AP — Algebra przemienna
+
+- Podstawy: pierścienie przemienne, ideały, moduły, lokalizacje, pierścienie lokalne, spektrum i topologia Zariskiego jako pomost do ALG.
+- Pierścienie noetherowskie i artinowskie; rozkłady prymarne, ideały stowarzyszone, lemat Nakayamy, twierdzenie o bazie Hilberta.
+- Moduły skończenie generowane, dokładność, iloczyn tensorowy, płaskość i wierna płaskość, moduły rzutowe i injektywne. CAT właściciel ogólnych konstrukcji homologicznych; AP ich realizacji dla pierścieni przemiennych.
+- Rozszerzenia całkowite, normalizacja, twierdzenia going-up/going-down, dziedziny Dedekinda i pierścienie wartościowań, wymiar Krulla, twierdzenia o wysokości ideałów.
+- Filtracje, algebry graduowane i algebry Reesa, uzupełnienia adyczne, twierdzenia Artina–Reesa i Krulla, funkcja i wielomian Hilberta–Samuela, krotności.
+- Ciągi regularne, głębokość, pierścienie regularne, Cohen–Macaulaya i Gorensteina, zupełne przecięcia, formuła Auslandera–Buchsbauma, kohomologia lokalna i dualność lokalna.
+- Różniczki Kählera, formalna gładkość, algebraiczne podstawy deformacji, kompleks kotangensowy w uzgodnieniu z CAT/ALG.
+- Istniejące źródła: AA09–14,16–18,37–40; ALG00 i ALG04, w którym sprawdzono sekcje o lokalizacji, modułach, płaskości, normalizacji, wymiarze, ideałach prymarnych i różniczkach Kählera. AA zachowuje podstawowy kurs, ALG zastosowania geometryczne; nie wycofywać żadnego wyniku przed sprawdzeniem pełnych hipotez, etykiet i audytów.
+
+#### ANP — Algebra nieprzemienna
+
+- Pierścienie i algebry nieprzemienne, ideały jednostronne, pierścień przeciwny, bimoduły, wolne algebry, algebry grupowe.
+- Moduły proste i półproste, radykał Jacobsona, twierdzenie Artina–Wedderburna, pierścienie pierwotne, twierdzenie o gęstości Jacobsona.
+- Równoważność Mority, progeneratory, centralne algebry proste, algebry z dzieleniem, grupa Brauera i jej związek z teorią Galois.
+- Lokalizacja Orego, teoria Goldiego, pierścienie ilorazowe, pierścienie noetherowskie, dziedziny nieprzemienne, algebry Weyla, rozszerzenia Orego.
+- Tożsamości wielomianowe, PI-algebry, algebra homologiczna pierścieni (wymiary globalne i homologie), dualność i kategorie pochodne z CAT.
+- Kołczany, algebry ścieżek i reprezentacje; algebry skończenie wymiarowe, typy reprezentacji, podstawy teorii Auslandera–Reiten.
+- Algebry Hopfa, bialgebry, moduły i komoduły, grupy kwantowe jako dalsza część. Nie utożsamiać algebraicznych grup kwantowych z analityczną teorią lokalnie zwartych grup kwantowych.
+- Źródła: AA15 (sprawdzono sekcje: ideały lewo/prawostronne, macierze, pierścienie przeciwne, grupowe i wolne), AA16–18/41–42/53–72, CAT22–25/44. Zachować teorię Liego w AA do odrębnej decyzji; CAT zachowuje abstrakcyjną teorię Mority i pochodnych lokalizacji.
+
+#### GNP — Geometria nieprzemienna
+
+- Motywacja i dualności: przestrzenie a algebry funkcji, przemienne C*-algebry i dualność Gelfanda (dowód ogólny AF), nieprzemienne przestrzenie.
+- Algebry grupoidów, iloczyny skrzyżowane, działania grup, przestrzenie ilorazowe, foliowane rozmaitości i ich grupoidy; orbifoldy jako konkretne źródło przykładów.
+- Nieprzemienny rachunek różniczkowy: różniczki uniwersalne, koneksje na modułach rzutowych, krzywizna, ślad i całkowanie, homologia Hochschilda, homologia i kohomologia cykliczna, parowania.
+- K-teoria topologiczna i operatorowa, K-homologia, KK-teoria Kasparowa, ciągi dokładne i indeksy; abstrakcyjny formalizm CAT/AT, analityczne podstawy AF.
+- Trójki spektralne, operator Diraca, gradacja, rzeczywistość, warunek ograniczonych komutatorów i odpowiednie hipotezy zwartości; wzór na odległość Connes'a, wymiar spektralny, ślad Dixmiera, nieprzemienny torus.
+- Nieprzemienne twierdzenia indeksowe, geometria foliacji, kwantowanie deformacyjne i wybrane zastosowania w fizyce matematycznej. Rozróżniać formalne kwantowanie i ścisłe kwantowanie.
+- Źródła: AF31–33 (AF31 już obejmuje algebry Banacha, widmo, Gelfanda, holomorficzny rachunek funkcyjny i przemienny model C*-algebr), CAT44 (Morita), AA/ANP, AT, DG/DG4, ORB. Nie powielać kursu algebr operatorowych: AF teoria analityczna, GNP geometria. Algebraiczna geometria nieprzemienna (kategorie modułów i qgr, przestrzenie Artina–Zhanga) jako możliwe późniejsze rozszerzenie w porozumieniu z ALG, nie utożsamiać z podejściem spektralnym.
+
+#### ORB — Geometria różniczkowa orbifoldów (szczególny priorytet)
+
+Proponowany samodzielny skrypt, nie tylko rozdział DG. Teorię budować od podstaw, do narzędzi analitycznych i głębokich zastosowań. Zwykła przestrzeń ilorazowa nie wyznacza całej struktury orbifoldu: istotna jest izotropia i dane lokalnych działań.
+
+1. Motywacja: ilorazy rozmaitości przez działania grup skończonych, przykłady stożków, odbić, orbifoldów dobrych i złych, orbifoldy efektywne i nieefektywne. Rozróżniać orbifold z brzegiem od zjawiska lokalnych odbić oraz ustalić konwencje.
+2. Atlasy orbifoldowe, mapy lokalne, zgodność, morfizmy i ich podniesienia, grupy izotropii, warstwy osobliwe, przestrzeń podległa; równoważne opisy przez właściwe étale grupoidy Liego i równoważność Mority. Działania lokalnie swobodne grup Liego przy właściwych hipotezach; orbifoldy a stosy różniczkowe.
+3. Różniczkowanie, funkcje gładkie, pola, formy, rozkłady jedności, przestrzenie styczne i wiązki orbifoldowe, orientacja, całkowanie lokalne z właściwą normalizacją izotropii, twierdzenie Stokesa.
+4. Metryki riemannowskie, koneksje, geodezyjne, krzywizna, zupełność, twierdzenia porównawcze w zakresie uzasadnionych hipotez; orbifoldy stałej krzywizny i związki z GK.
+5. Nakrycia orbifoldowe, orbifoldowa grupa fundamentalna, uniwersalne nakrycie w odpowiednim sensie, charakterystyka Eulera Satakego; rozróżnić charakterystyki Eulera przestrzeni podległej, orbifoldu i sektora bezwładności.
+6. Orbifoldy dwuwymiarowe: stożki, punkty lustrzane, kąty, klasyfikacja i uniformizacja, grupy trójkątne, przykłady sferyczne, euklidesowe i hiperboliczne. Powiązać z rozmaitościami Seiferta i geometriami modelowymi wymiaru 3.
+7. Kohomologia de Rhama orbifoldów, klasy charakterystyczne, twierdzenie Gaussa–Bonneta, dualności przy odpowiednich założeniach, orbifold bezwładności i kohomologia Chen–Ruana; nie utożsamiać jej ze zwykłą kohomologią przestrzeni podległej.
+8. Analiza na orbifoldach: przestrzenie Sobolewa, Laplace, operatory eliptyczne, jądro cieplne, teoria Hodge'a, operatory Diraca i struktury spin/spin^c, twierdzenia indeksowe Kawasaki. RRC i AF dają teorię operatorową i analityczną; w ORB dowody adaptacji i nowe składniki izotropowe.
+9. Orbifoldy zespolone, Kählera i symplektyczne; redukcja symplektyczna, ważone przestrzenie rzutowe, osobliwości ilorazowe, rozwiązywanie osobliwości i korespondencja McKaya jako połączenie z AA/ALG/GAZ.
+10. Orbifoldy wymiaru 4: geometria samodualna, teoria cechowania, przestrzenie moduli i związki z rozwiązywaniem osobliwości. Specjalistyczne zastosowania topologiczne i geometryczne w DG4/TD4 z odsyłaczami.
+11. Orbifoldy w geometrii nieprzemiennej: algebry grupoidów, K-teoria orbifoldowa, trójki spektralne i indeksy; GNP zachowuje ogólne narzędzia nieprzemienne.
+12. Liczne rysunki: lokalne ilorazy R² przez grupy cykliczne i dihedralne, stożki, orbifoldy sferyczne i hiperboliczne, ważone przestrzenie rzutowe jako porównanie, modele rozmaitości Seiferta. Wyjaśniać, które rysunki przedstawiają tylko przestrzeń podległą, a które dane izotropii.
+
+Źródła do pierwszego audytu pokrycia: GT24 (sekcja o orbicharakterystyce Eulera i geometrii, etykieta sec:tg-seifert-orbifold), CAT38 (zstępowanie, torsory, stosy ilorazowe), DG01/10–16, AT (nakrycia, kohomologia, klasy charakterystyczne), GK (plan), AA (działania grup), ALG (plan stosów Deligne'a–Mumforda i osobliwości), AF/RRC (analiza eliptyczna). Nie utożsamiać gładkich orbifoldów z dowolnymi stosami Deligne'a–Mumforda; porównać odpowiednie kategorie i hipotezy. ORB powinien otrzymać szczegółowe audyty definicji, niezależności od atlasu, normalizacji całek oraz przypadków osobliwych.
+
+### 5.6. Dodatkowe propozycje do decyzji użytkownika
+
+Poniższe kierunki nie są jeszcze zatwierdzonymi nowymi skryptami. Najpierw ocenić pokrycie obecnych i zaplanowanych książek.
+
+- **Geometria symplektyczna i kontaktowa:** formy symplektyczne, Darboux, Moser, redukcja, odwzorowania momentu, geometria lagranżowska, krzywe pseudoholomorficzne, homologia Floera. Początkowo DG; po rozroście samodzielny tom. Ważny most do TD4, ORB i RZUD.
+- **Grupy Liego i teoria reprezentacji:** grupy Liego, algebry Liego, reprezentacje, działania, przestrzenie jednorodne, reprezentacje grup zwartych, Peter–Weyl, reprezentacje unitarne i metody harmoniczne. AA51–72, DG, GK, DT jako źródła; bez automatycznej migracji.
+- **K-teoria i teoria indeksu:** wiązki, K-teoria topologiczna, okresowość Botta, K-teoria algebraiczna i operatorowa z rozróżnieniem, operatory Fredholma, indeks Atiyaha–Singera, warianty rodzinne i orbifoldowe. Najpierw wspólna mapa AT/ALG/AF/DG/ORB/GNP; osobny skrypt dopiero jeśli ułatwi uniknięcie duplikacji.
+- **Grupoidy Liego, algebroidy i geometria stosów różniczkowych:** grupoidy, algebroidy, integracja, równoważność Mority, foliacje, geometria Poissona, stosy różniczkowe. Początkowo DG/ORB/CAT, osobny tom tylko przy dużej objętości.
+- **Geometria metryczna i geometryczna teoria miary:** przestrzenie długości, geodezyjne, Gromov–Hausdorff, przestrzenie CAT(k), krzywizna w sensie Aleksandrowa, przestrzenie metryczno-miarowe, transport optymalny i krzywizna syntetyczna; ME24–29 jako punkt wyjścia.
+- **Geometria Poissona i kwantowanie:** nawiasy Poissona, struktury Poissona, algebroidy, kwantowanie geometryczne i deformacyjne, powiązania z symplektyką i GNP. Najpierw rozdziały DG/GNP, wydzielenie później.
+- **Topologia geometryczna wymiaru 3:** rozkłady JSJ, geometrie Thurstona, rozmaitości hiperboliczne, teoria węzłów i splotów, geometryzacja. Rozważyć wraz z GT/TD; nie dublować dotychczasowych rozdziałów o Seifercie.
+- **Teoria osobliwości:** osobliwości odwzorowań gładkich i analitycznych, stabilność, katastrofy, osobliwości ADE, włókna Milnora, monodromia i cykle zanikające. Początkowo DG/GAZ/ALG/AT, później ewentualna synteza.
 
 
 ## 6. Mapa kanonicznych właścicieli (skrót przed dodawaniem)
@@ -328,7 +402,11 @@ Zatwierdzony kierunek: osobne skrypty geometrii i topologii różniczkowej, z po
 | Algebra homologiczna, kategorie pochodne | CAT | AT, ALG, DG, AA |
 | Homologia/kohomologia przestrzeni | AT | DG, GT, ALG |
 | Macierze, formy i tensory | LA | AA, DG, AF, RRC |
-| Algebra przemienna i Galois | AA | ALG, TL, MOD |
+| Algebra podstawowa i Galois | AA | AP, ANP, ALG, TL, MOD |
+| Algebra przemienna zaawansowana | AP | ALG, GAZ, TL, PA |
+| Algebra nieprzemienna | ANP | GNP, AA, CAT, AF |
+| Geometria nieprzemienna | GNP | AF, ORB, DG, DG4 |
+| Geometria różniczkowa orbifoldów | ORB | DG, TD, DG4, TD4, GT, GAZ, ALG, GNP |
 | Prawdopodobieństwo/procesy/całki stochastyczne/statystyka | RP1/RP2/RP3/RP4 | RRC, GT, RTPC |
 | Operatory i widmo | AF | RRC, DT, FSG, DG4 |
 | Geometrie modelowe, rzutowe i program Kleina | GK | DG, ALG, AZ, PA |
@@ -392,6 +470,9 @@ Indeks JSON zawiera wszystkie aktywne pliki z blobami w migawce i ścieżki rapo
 - [ ] Przygotować mapy pokrycia i zależności AZ I–II, GK, RZUD, GAZ I–II, AN i PA; nie tworzyć pustych skryptów.
 - [ ] Przygotować szczegółową mapę rozdzielenia DG/TD/DG4/TD4, z inwentaryzacją GT/AT/RRC i audytów źródłowych.
 - [ ] AF: teoria operatorów i ALG: pogłębienie geometrii algebraicznej — audyty pokrycia i kolejność rozwoju.
+- [ ] AP/ANP: audyt pokrycia AA/ALG/CAT, mapa kanonicznych etykiet i program samodzielnych skryptów.
+- [ ] ORB (szczególny priorytet użytkownika): inwentaryzacja GT24, CAT38, DG, AT i źródeł dotyczących działań grup, geometria lokalna i globalna, grupoidy, przykłady, plan dowodów.
+- [ ] GNP: audyt pokrycia AF31–33, CAT44, AT i ANP; ustalić zależności operatorowe, homologiczne i geometryczne.
 - [ ] Cross-check właścicieli tematów przed każdym nowym rozdziałem. Zmieniać plan po decyzji użytkownika, nie traktować propozycji P2/P3 jako nakazu implementacji.
 
 ## 9. Dokumenty lokalne i techniczne
