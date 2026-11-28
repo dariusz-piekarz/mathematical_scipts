@@ -1,0 +1,95 @@
+\section{Logika kategorialna}\label{cat:sec:categorical-logic}
+
+Teoria kategorii pozwala interpretować formułę nie tylko jako zdanie prawdziwe lub fałszywe, lecz także jako podobiekt obiektu parametrów. Podstawianie odpowiada zmianie bazy, koniunkcja przecięciu podobiektów, a kwantyfikator egzystencjalny obrazowi odpowiedniej projekcji. W rozdziale~\ref{cat:sec:lawvere-theories} rozpatrywaliśmy kategorie termów teorii równościowych; teraz uwzględnimy również relacje, formuły i wynikanie. Wykorzystamy kategorie regularne z definicji~\ref{cat:def:barr-regular} oraz toposy elementarne z rozdziału~\ref{cat:sec:toposes}. Logika wewnętrzna nie musi być klasyczna: prawo wyłączonego środka zależy od kategorii, w której interpretujemy formuły.
+
+\subsection{Sygnatury, konteksty i fragmenty logiki}
+
+\begin{definicja}[Sygnatura wielosortowa i kontekst]\label{cat:def:cl-signature}
+Sygnatura finitarna wielosortowa składa się z małego zbioru sortów, symboli funkcji o określonych skończonych ciągach sortów argumentów i jednym sorcie wartości oraz symboli relacji o określonych skończonych ciągach sortów argumentów. Symbol funkcji o zerowej liczbie argumentów jest stałą. Kontekstem $\vec x$ nazywamy skończony ciąg różnych zmiennych z przypisanymi sortami, zapisany jako $(x_1:S_1,\ldots,x_m:S_m)$. Termy tworzymy ze zmiennych i symboli funkcji zgodnie z sortami. Formuły atomowe to równości dwóch termów tego samego sortu i zastosowania symboli relacji do termów odpowiednich sortów.
+\end{definicja}
+
+Zapis $\varphi(\vec x)$ oznacza, że wszystkie zmienne wolne formuły należą do kontekstu $\vec x$; nie wymagamy, aby wszystkie zmienne kontekstu rzeczywiście występowały w formule. Dopuszczamy kontekst pusty. Podstawianie termów za zmienne wolne wykonujemy z unikaniem przechwytywania zmiennych związanych, w razie potrzeby zmieniając ich nazwy.
+
+\begin{definicja}[Formuły regularne i sekwenty]\label{cat:def:cl-regular-formulas}
+Formuły regularne otrzymujemy z formuł atomowych oraz $\top$ za pomocą skończonych koniunkcji i kwantyfikatorów egzystencjalnych. Sekwent regularny ma postać
+\[
+ \varphi\vdash_{\vec x}\psi,
+\]
+gdzie obie formuły są regularne w kontekście $\vec x$. Teoria regularna jest zbiorem takich sekwentów traktowanych jako aksjomaty. Fragment koherentny dopuszcza ponadto skończone alternatywy, w tym pustą alternatywę $\bot$. Fragment geometryczny dopuszcza małe alternatywy, przy zachowaniu skończonych koniunkcji i kwantyfikatorów egzystencjalnych.
+\end{definicja}
+
+Nie mylimy sekwentu z formułą implikacji: sekwent jest sądem o wynikaniu w ustalonym kontekście, natomiast implikacja może występować jako podformuła w szerszych fragmentach logiki. Formuły regularne nie zawierają w szczególności negacji ani kwantyfikacji ogólnej.
+
+\subsection{Semantyka w kategorii regularnej}
+
+\begin{definicja}[Struktura w kategorii regularnej]\label{cat:def:cl-structure}
+Niech $\mathcal E$ będzie kategorią regularną. Strukturą $M$ dla zadanej sygnatury nazywamy przypisanie każdemu sortowi $S$ obiektu $M_S$, każdemu symbolowi funkcji $f:S_1,\ldots,S_k\to S$ morfizmu
+\[
+ M_f:\prod_{j=1}^k M_{S_j}\longrightarrow M_S,
+\]
+a każdemu symbolowi relacji $R$ podobiektu $M_R\hookrightarrow\prod_{j=1}^k M_{S_j}$. Iloczyn pusty jest obiektem końcowym. Obiekt kontekstu $\vec x$ oznaczamy przez $M_{\vec x}=\prod_{j=1}^m M_{S_j}$.
+\end{definicja}
+
+Term $t$ sortu $S$ w kontekście $\vec x$ interpretujemy jako morfizm $\llbracket t\rrbracket_M:M_{\vec x}\to M_S$: zmienne są projekcjami, stałe są złożeniami morfizmu do obiektu końcowego z interpretacją stałej, a zastosowanie symbolu funkcji interpretujemy przez złożenie $M_f$ z morfizmem do iloczynu wyznaczonym przez interpretacje argumentów. Rekurencja po budowie termu zapewnia istnienie i jednoznaczność tej interpretacji po ustaleniu iloczynów.
+
+\begin{definicja}[Interpretacja formuły regularnej]\label{cat:def:cl-regular-semantics}
+Interpretacją formuły $\varphi$ w kontekście $\vec x$ jest podobiekt $\llbracket\varphi\rrbracket_{M,\vec x}$ obiektu $M_{\vec x}$, zdefiniowany rekurencyjnie:
+\begin{enumerate}
+ \item $\top$ odpowiada identyczności obiektu kontekstu.
+ \item Równość $t=u$ odpowiada equalizatorowi morfizmów interpretujących termy.
+ \item $R(t_1,\ldots,t_k)$ odpowiada zmianie bazy podobiektu $M_R$ wzdłuż morfizmu o składowych $\llbracket t_j\rrbracket_M$.
+ \item $\varphi\wedge\psi$ odpowiada przecięciu podobiektów, tj. ich iloczynowi włóknistemu nad obiektem kontekstu.
+ \item $\exists y:S\,\theta(\vec x,y)$ odpowiada obrazowi złożenia
+ \[
+ \llbracket\theta\rrbracket_{M,(\vec x,y)}
+ \hookrightarrow M_{\vec x}\times M_S
+ \xrightarrow{\pi} M_{\vec x}.
+ \]
+\end{enumerate}
+Struktura $M$ spełnia sekwent $\varphi\vdash_{\vec x}\psi$, jeżeli $\llbracket\varphi\rrbracket_{M,\vec x}\leq\llbracket\psi\rrbracket_{M,\vec x}$ w zbiorze uporządkowanym podobiektów. Model teorii regularnej jest strukturą spełniającą wszystkie jej aksjomaty.
+\end{definicja}
+
+W dalszym ciągu zakładamy, że rozpatrywane zbiory podobiektów są małe w ustalonym uniwersum (można powiększyć uniwersum dla małej kategorii). Obrazy w powyższej definicji istnieją na mocy twierdzenia~\ref{cat:thm:barr-image}. Nie wybieramy elementów włókien; kwantyfikator egzystencjalny jest określony bez odwołania do punktów obiektu.
+
+\begin{stwierdzenie}[Podstawianie i zmiana bazy]\label{cat:prop:cl-substitution}
+Niech $\vec t$ będzie ciągiem termów w kontekście $\vec z$, zgodnym z sortami kontekstu $\vec x$. Oznaczmy przez $h:M_{\vec z}\to M_{\vec x}$ morfizm o składowych interpretujących $\vec t$. Dla każdej formuły regularnej $\varphi$ w kontekście $\vec x$ zachodzi równość podobiektów
+\[
+ \llbracket\varphi[\vec t/\vec x]\rrbracket_{M,\vec z}
+ =h^*\llbracket\varphi\rrbracket_{M,\vec x}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Dla termu $u$ podstawianie odpowiada złożeniu $\llbracket u\rrbracket_M h$: dla zmiennych wynika to z definicji składowych $h$, a dla zastosowania symbolu funkcji z własności uniwersalnej iloczynu i założenia indukcyjnego dla argumentów. Równości, relacje, $\top$ i koniunkcje zachowują się zatem zgodnie z tezą przez własność uniwersalną equalizatorów i iloczynów włóknistych. W przypadku $\varphi=\exists y:S\,\theta$ wybieramy $y$ różną od zmiennych występujących w podstawianiu. Mamy kwadrat kartezjański
+\[
+\begin{array}{ccc}
+ M_{\vec z}\times M_S&\xrightarrow{h\times\id_{M_S}}&M_{\vec x}\times M_S\\
+ \downarrow&&\downarrow\\
+ M_{\vec z}&\xrightarrow{h}&M_{\vec x}.
+\end{array}
+\]
+Z założenia indukcyjnego interpretacja podstawionej formuły $\theta$ jest zmianą bazy interpretacji wyjściowej. Stabilność rozkładów na regularny epimorfizm i monomorfizm przy zmianie bazy (definicja~\ref{cat:def:barr-regular}, twierdzenie~\ref{cat:thm:barr-image}) oznacza, że obraz złożenia z projekcją po lewej jest zmianą bazy obrazu złożenia po prawej. Otrzymujemy tezę dla kwantyfikatora, co kończy indukcję.
+\end{proof}
+
+\begin{przyklad}[Semantyka w zbiorach]\label{cat:ex:cl-set-semantics}
+Rozważmy jeden sort $S$ interpretowany przez zbiór $\mathbb Z$ i relację $R(x,y)$ interpretowaną przez podzbiór par $(a,b)$ spełniających $a=2b$. Interpretacją $\exists y\,R(x,y)$ jest obraz projekcji tego podzbioru na pierwszą współrzędną, czyli $2\mathbb Z$. Formuła $R(x,y)\wedge R(x,z)$ interpretuje się jako przecięcie przeciwobrazów $R$ w $\mathbb Z^3$. Z równości $2y=2z$ wynika $y=z$, zatem spełniony jest sekwent
+\[
+ R(x,y)\wedge R(x,z)\vdash_{x,y,z} y=z.
+\]
+Sekwent $\top\vdash_x\exists y\,R(x,y)$ nie jest spełniony, ponieważ $1$ nie należy do obrazu projekcji. W kategorii zbiorów powyższa interpretacja odtwarza zwykłą semantykę formuł regularnych.
+\end{przyklad}
+
+\begin{stwierdzenie}[Semantyka jest zachowywana przez funktory regularne]\label{cat:prop:cl-regular-functors}
+Niech $F:\mathcal E\to\mathcal D$ będzie funktorem między kategoriami regularnymi, zachowującym skończone granice i regularne epimorfizmy. Wówczas $F$ przenosi strukturę $M$ na strukturę $FM$ i dla każdej formuły regularnej zachodzi
+\[
+ F(\llbracket\varphi\rrbracket_{M,\vec x})
+ =\llbracket\varphi\rrbracket_{FM,\vec x}
+\]
+jako równość podobiektów po kanonicznym utożsamieniu $F(M_{\vec x})\cong(FM)_{\vec x}$. W szczególności modele teorii regularnych przechodzą na modele tej samej teorii.
+\end{stwierdzenie}
+\begin{proof}
+Zachowywanie iloczynów umożliwia interpretację symboli funkcji, a zachowywanie monomorfizmów (przez kryterium diagonali) pozwala przenieść interpretacje relacji. Funktor zachowuje obrazy, ponieważ obraz jest częścią rozkładu na regularny epimorfizm i monomorfizm, a $F$ zachowuje obie klasy morfizmów. Jednoznaczność obrazu daje kanoniczne utożsamienie. Indukcja po termach wykorzystuje zachowywanie iloczynów, a indukcja po formułach wykorzystuje zachowywanie equalizatorów, zmian bazy, obiektu końcowego i obrazów. Jeżeli jeden podobiekt faktoryzuje się przez drugi, zastosowanie $F$ zachowuje tę faktoryzację, więc zachowuje spełnione sekwenty.
+\end{proof}
+
+\begin{uwaga}[Dalszy zakres]\label{cat:rem:cl-scope}
+Następnie skonstruujemy kategorię syntaktyczną teorii regularnej, zbadamy jej własność uniwersalną, rachunek podobiektów i kwantyfikatorów, logikę wewnętrzną toposów, hiperdoktryny, teorie koherentne i geometryczne oraz toposy klasyfikujące i ich powiązania z teorią modeli.
+\end{uwaga}
