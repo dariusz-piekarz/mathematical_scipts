@@ -93,6 +93,47 @@ class GraphCoverageTest(unittest.TestCase):
                                  {"unresolved", "target_entity_owner_mismatch"})
                 self.assertEqual(audit["checked"], 3)
 
+    def test_qualified_migration_alias_keeps_exact_owner_and_graph_edge(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "pl"
+            for relative, body in {
+                "distribution_theory/01-a.tex": (
+                    r"\section{Nowy rozdział}\label{old}"
+                    r"\subsection{Inny wynik}\label{other}"),
+                "measure_theory/01-b.tex": (
+                    r"\section{Miary}\atlasref{FA-17::old}{Wynik}"),
+            }.items():
+                dest = root / relative
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                dest.write_text(body, encoding="utf-8")
+            aliases = Path(tmp) / "aliases.json"
+            aliases.write_text(json.dumps({"qualified_label_aliases": [{
+                "old_document": "FA-17", "old_label": "old",
+                "target_document": "DT-01", "target_label": "old",
+            }]}), encoding="utf-8")
+            db = Path(tmp) / "index.db"
+            build_database(root, db, aliases, recursive=True)
+            with closing(sqlite3.connect(db)) as con, con:
+                self.assertEqual(reading_reference_issues(con)["invalid"], 0)
+                self.assertEqual(graph_coverage(con)["edges"], [
+                    {"source": "ME-01", "target": "DT-01", "weight": 1, "reading": 1}
+                ])
+                good = con.execute(
+                    "SELECT target_entity FROM references_tex WHERE command='atlasref'"
+                ).fetchone()[0]
+                wrong = con.execute(
+                    "SELECT entity_id FROM label_occurrences "
+                    "WHERE document_id='DT-01' AND name='other'"
+                ).fetchone()[0]
+                self.assertNotEqual(good, wrong)
+                con.execute("UPDATE references_tex SET target_entity=?", (wrong,))
+                self.assertEqual(reading_reference_issues(con)["issues"][0]["reason"],
+                                 "qualified_migration_alias_mismatch")
+                con.execute("UPDATE references_tex SET target_entity=?", (good,))
+                con.execute("DELETE FROM historical_aliases")
+                self.assertEqual(reading_reference_issues(con)["issues"][0]["reason"],
+                                 "qualified_migration_alias_missing_or_ambiguous")
+
     def test_reading_audit_rejects_wrong_entity_in_same_chapter(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "pl"

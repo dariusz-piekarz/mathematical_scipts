@@ -508,6 +508,10 @@ def load_historical_aliases(con: sqlite3.Connection, alias_file: Path | None) ->
         rows.append((item["old"], item["new"], item.get("chapter", ""), "collision_rename"))
     for item in obj.get("lost_labels_restored", []):
         rows.append((item["label"], item["maps_to_chapter_label"], item.get("module", ""), "restored_label"))
+    for item in obj.get("qualified_label_aliases", []):
+        rows.append((item["old_document"] + "::" + item["old_label"],
+                     item["target_document"] + "::" + item["target_label"],
+                     "", "qualified_migration_alias"))
     con.executemany("INSERT OR IGNORE INTO historical_aliases VALUES(?,?,?,?)", rows)
 
 

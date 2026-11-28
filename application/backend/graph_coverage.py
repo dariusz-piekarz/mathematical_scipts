@@ -22,6 +22,14 @@ def reading_reference_issues(con):
     for doc, label, entity in con.execute(
             "SELECT document_id,name,entity_id FROM label_occurrences"):
         occurrences[(doc, label)].append(entity)
+    migrations = defaultdict(set)
+    for old, new in con.execute(
+            "SELECT old_label,new_label FROM historical_aliases "
+            "WHERE scope_document='' AND reason='qualified_migration_alias'"):
+        old_pair = qualified_occurrence(old)
+        new_pair = qualified_occurrence(new)
+        if old_pair is not None and new_pair is not None and old_pair != new_pair:
+            migrations[old_pair].add(new_pair)
     issues = []
     for reference_id, source, label, line, status, target, entity, entity_owner in rows:
         qualified = qualified_occurrence(label)
@@ -34,6 +42,14 @@ def reading_reference_issues(con):
             expected_doc, expected_label = qualified
             if len(occurrences[qualified]) > 1:
                 reason = "qualified_occurrence_ambiguous"
+            elif status == "alias_resolved" and not occurrences[qualified]:
+                candidates = migrations[qualified]
+                if len(candidates) != 1:
+                    reason = "qualified_migration_alias_missing_or_ambiguous"
+                else:
+                    successor = next(iter(candidates))
+                    if target != successor[0] or occurrences[successor] != [entity]:
+                        reason = "qualified_migration_alias_mismatch"
             elif target != expected_doc or occurrences[qualified] != [entity]:
                 reason = "qualified_occurrence_mismatch"
         if reason:
