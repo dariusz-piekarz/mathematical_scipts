@@ -1757,7 +1757,24 @@ Poniższy program porównuje pojemności względne
 $\operatorname{cap}_{2,B_1}(\overline B_r)$ w wymiarach $2$ i $3$.
 Każda krzywa jest obliczana z dokładnego wzoru
 \eqref{eq:pde19-ball-exact}; program nie zastępuje dowodu
-minimalności energii ani nie numeryzuje równania Laplace'a.
+minimalności energii ani nie rozwiązuje numerycznie
+równania Laplace'a. Dodatkowo sprawdzamy energię
+radialnego potencjału kondensatora. Na pierścieniu
+$r<\varrho<R$ ma on postać
+\[
+ v_2(\varrho)=\frac{\log(R/\varrho)}{\log(R/r)},
+ \qquad
+ v_3(\varrho)=\frac{\varrho^{-1}-R^{-1}}{r^{-1}-R^{-1}}.
+\]
+Pochodne wynoszą odpowiednio
+$-1/(\varrho\log(R/r))$ oraz
+$-\varrho^{-2}/(r^{-1}-R^{-1})$.
+Całkowanie radialne energii
+$|\mathbb S^{d-1}|\int_r^R|v_d'(\varrho)|^2
+\varrho^{d-1}\,\mathrm d\lambda_1(\varrho)$
+prowadzi do wzorów~\eqref{eq:pde19-ball-exact}.
+W kodzie tę całkę przybliżamy niezależną kwadraturą
+na siatce geometrycznej, uwzględniającej małe promienie.
 Wykresy zapisywane są jako interaktywne pliki HTML.
 \begin{lstlisting}[style=pythonpde,caption={Pojemność Sobolewa i tempo zaniku pojemności punktu (Plotly)},label={code:pde19-plotly}]
 """PDE, rozdzial 19: pojemnosc kondensatora kulistego.
@@ -1801,8 +1818,15 @@ def comparison():
 def test_exact_values():
     assert np.all(np.diff(cap2) > 0)
     assert np.all(np.diff(cap3) > 0)
-    assert np.isclose(2 * np.pi / np.log(2), 9.064720283654388)
-    assert np.isclose(4 * np.pi / (2 - 1), 4 * np.pi)
+    for inner in (1e-6, 0.01, 0.5, 0.9):
+        rho = np.geomspace(inner, R, 20001)
+        d2 = -1/(rho*np.log(R/inner))
+        d3 = -1/(rho**2*(1/inner-1/R))
+        e2 = 2*np.pi*np.trapezoid(d2**2*rho, rho)
+        e3 = 4*np.pi*np.trapezoid(d3**2*rho**2, rho)
+        assert np.isclose(e2, 2*np.pi/np.log(R/inner), rtol=1e-6)
+        assert np.isclose(e3, 4*np.pi/(1/inner-1/R), rtol=1e-6)
+    assert np.isclose(cap3[0]/(4*np.pi*r[0]), 1, rtol=2e-6)
     print("d=2, r=1/2:", 2 * np.pi / np.log(2))
     print("d=3, r=1/2:", 4 * np.pi)
     print("d=2, r=1e-6:", cap2[0])
@@ -1825,6 +1849,24 @@ ilustruje tłumienie poszczególnych modów. W algorytmie stosujemy
 dyskretną transformatę sinusową, która diagonalizuje laplasjan
 z jednorodnymi warunkami Dirichleta. Jest to implementacja
 wstecznego Eulera, a nie schematu dokładnej ewolucji macierzy.
+Dla dodatniej macierzy laplasjanu różnicowego $A_h$
+schemat ma postać $(I+\tau A_h)U^{m+1}=U^m$.
+W bazie dyskretnych funkcji sinusowych każdy mod
+jest mnożony przez $(1+\tau\lambda_{j,h})^{-1}$.
+Po $m$ krokach mnożnik jest więc potęgą o wykładniku
+$-m$. Ponieważ $\lambda_{j,h}>0$, schemat jest
+kontrakcyjny w normie $\|U\|_h^2=h\sum_j|U_j|^2$
+dla każdego $\tau>0$, bez warunku CFL.
+Dla ustalonego modu i czasu $T=m\tau$ mamy
+$m\log(1+\tau\lambda_{j,h})=T\lambda_{j,h}+O(\tau)$;
+wraz z błędem wartości własnej $O(h^2)$
+daje to błąd $O(h^2+\tau)$ dla użytych danych
+złożonych z dwóch modów.
+Jawny Euler ma mnożnik $1-\tau\lambda_{j,h}$,
+więc dla kontrakcyjności wymaga
+$0\le\tau\lambda_{j,h}\le2$ dla wszystkich modów.
+Wybór $\tau$ proporcjonalnego do $h^2$ służy
+porównaniu rzędów błędów, nie stabilności wstecznego Eulera.
 \begin{lstlisting}[style=pythonpde,caption={Niejawny schemat cieplny, zbieżność i tłumienie modów (Plotly)},label={code:pde20-plotly}]
 """Iteracja 20, rownanie ciepa na (0,1) z Dirichletem.
 
@@ -1850,17 +1892,24 @@ def exact(x, t):
     return np.exp(-np.pi**2 * t) * np.sin(np.pi*x) + 0.5 * np.exp(-9*np.pi**2*t) * np.sin(3*np.pi*x)
 
 
-def backward_euler(n, at=T, cfl=0.32):
+def backward_euler(n, at=T, step_factor=0.32):
     """Rozwiazanie po nstep krokach: kazdy krok jest niejawny."""
+    if n < 3 or not np.isfinite(at) or at < 0:
+        raise ValueError("Wymagane n >= 3 oraz skonczony czas >= 0")
+    if not np.isfinite(step_factor) or step_factor <= 0:
+        raise ValueError("Wspolczynnik kroku musi byc dodatni")
     h = 1 / (n + 1)
-    nstep = max(1, int(np.ceil(at / (cfl*h*h))))
+    nstep = max(1, int(np.ceil(at / (step_factor*h*h))))
     tau = at / nstep
     x = np.arange(1, n+1) * h
     j = np.arange(1, n+1)
     eig = 4 / h**2 * np.sin(j*np.pi/(2*(n+1)))**2
     coeffs = dst(initial(x), type=1, norm='ortho')
-    ampl = (1 + tau*eig)**(-nstep)
+    ampl = np.exp(-nstep*np.log1p(tau*eig))
     uh = idst(coeffs*ampl, type=1, norm='ortho')
+    assert np.linalg.norm(uh) <= np.linalg.norm(initial(x))+1e-12
+    modal = ampl[0]*np.sin(np.pi*x)+0.5*ampl[2]*np.sin(3*np.pi*x)
+    np.testing.assert_allclose(uh, modal, atol=1e-12, rtol=0)
     return x, uh, tau, eig
 
 
@@ -1885,7 +1934,9 @@ def profiles():
                       xaxis_title='x',yaxis_title='u(t,x)')
     save(fig, 'pde20_profile_plotly.html')
     # Zanik nie zwieksza normy w l2 dla danych bez wymuszenia.
-    assert np.linalg.norm(backward_euler(n)[1]) <= np.linalg.norm(initial(x))
+    for factor in (0.32, 2., 20.):
+        _, u, _, _ = backward_euler(n, step_factor=factor)
+        assert np.linalg.norm(u) <= np.linalg.norm(initial(x))+1e-12
 
 
 def convergence():
@@ -1910,17 +1961,21 @@ def convergence():
 
 
 def damping():
-    z=np.logspace(-3,2,500)
+    z=np.unique(np.r_[np.logspace(-3,2,500), 1., 2.])
     fig=go.Figure()
     fig.add_trace(go.Scatter(x=z,y=np.exp(-z),name='Dokadny: exp(-z)'))
     fig.add_trace(go.Scatter(x=z,y=1/(1+z),name='Wsteczny Euler: 1/(1+z)'))
-    fig.add_trace(go.Scatter(x=z,y=np.abs(1-z),name='Jawny Euler: |1-z|'))
-    fig.update_layout(title='Tumienie jednego modu; z=',
+    explicit = np.abs(1-z)
+    fig.add_trace(go.Scatter(x=z,y=np.where(explicit>0, explicit, np.nan),
+                             name='Jawny Euler: |1-z|'))
+    fig.add_vline(x=2, line_dash='dash', annotation_text='Granica stabilnosci')
+    fig.update_layout(title='Tlumienie jednego modu; z = tau*lambda',
                       xaxis_title='z',yaxis_title='wspoczynnik amplitudy',
                       xaxis_type='log',yaxis_type='log')
     save(fig,'pde20_tlumienie_plotly.html')
     assert np.all(1/(1+z)<=1)
-    assert np.any(np.abs(1-z)>1)
+    assert np.all(explicit[z<=2] <= 1)
+    assert np.all(explicit[z>2] > 1)
 
 
 if __name__ == '__main__':
@@ -1938,6 +1993,25 @@ sprawdza nierosnącą energię dyskretną i wyznacza rząd
 zbieżności jawnego schematu pod prąd. Rozdzielenie macierzy
 $A=A_++A_-$ odbywa się przez diagonalizację ortogonalną,
 a warunek CFL ma postać $\tau\max_k|a_k|/h\le1$.
+Po zmianie zmiennych $W=Q^{\mathsf T}U$ układ
+$U_t+AU_x=0$ rozpada się na skalarne równania
+transportu $w_{k,t}+a_kw_{k,x}=0$.
+Dla każdego modu schemat ma postać
+\[
+ W_{k,j}^{m+1}=(1-\nu_k)W_{k,j}^m+
+ \nu_k W_{k,j-\operatorname{sgn}(a_k)}^m,\qquad
+ \nu_k=\tau|a_k|/h.
+\]
+Jeżeli $0\le\nu_k\le1$, z wypukłości kwadratu
+i niezmienniczości sumy po przesunięciu okresowym
+wynika nierosnąca suma kwadratów. Ortogonalność $Q$
+przenosi to oszacowanie na $U$.
+Dokładne rozwiązanie otrzymujemy przez przesunięcie
+każdego okresowego modu o $a_kt$.
+Zamiast profilu o załamaniu po sklejeniu okresów
+używamy gładkiego profilu
+$\exp(-\sin^2(\pi(x-x_0))/(\pi w)^2)$,
+o lokalnej skali gaussowskiej $w$.
 \begin{lstlisting}[style=pythonpde,caption={Hiperboliczny układ, energia i zbieżność: Plotly},label={code:pde21-plotly}]
 """Rozdzial 21: dwa przemieszczajace sie mody ukadu symetrycznego.
 Zaleznosci: numpy, plotly; uruchomienie: python demo_hiperboliczne_plotly.py
@@ -1958,8 +2032,7 @@ A_MINUS = Q @ np.diag(np.minimum(SPEEDS, 0.0)) @ Q.T
 
 
 def wrapped_gauss(x, center, width):
-    y = (x - center + 0.5) % 1.0 - 0.5
-    return np.exp(-(y / width) ** 2)
+    return np.exp(-(np.sin(np.pi*(x-center))/(np.pi*width))**2)
 
 
 def initial(x):
@@ -1975,9 +2048,11 @@ def exact(x, t):
 
 
 def upwind(n, T=0.35, cfl=0.8, record=False):
+    if n < 2 or not np.isfinite(T) or T < 0 or not 0 < cfl <= 1:
+        raise ValueError("Wymagane n >= 2, T >= 0 i 0 < CFL <= 1")
     h = 1.0 / n
     x = np.arange(n) * h
-    steps = int(np.ceil(T * np.max(abs(SPEEDS)) / (cfl * h)))
+    steps = max(1, int(np.ceil(T * np.max(abs(SPEEDS)) / (cfl * h))))
     dt = T / steps
     U = initial(x)
     en = [h * np.sum(U * U)]
@@ -2046,6 +2121,29 @@ if __name__ == '__main__':
 Kod stosuje reprezentację spektralną na torusie, a nie swobodne
 jądro propagatora na $\R^d$. Sprawdza zachowanie normy
 $L^2$, ruch pakietu i wzór Parsevala na błąd obcięcia.
+Dla równania $i\partial_t\psi=-\partial_x^2\psi$
+na torusie o okresie $2\pi$ funkcje
+$e^{ikx}/\sqrt{2\pi}$ tworzą bazę ortonormalną
+względem miary Lebesgue'a.
+Współczynnik $c_k$ ewoluuje jako $e^{-itk^2}c_k$,
+zatem jego moduł nie zmienia się.
+Dla początkowych współczynników o skończonym nośniku
+$|k|\le K_0$ mamy
+\[
+ \|\psi(t)\|_2^2=\sum_{|k|\le K_0}|c_k|^2,\qquad
+ \|\psi(t)-P_K\psi(t)\|_2^2
+ =\sum_{K<|k|\le K_0}|c_k|^2.
+\]
+Błąd obcięcia jest niezależny od czasu.
+Jeżeli $N>2K_0$, wszystkie niezerowe częstotliwości
+w iloczynach użytych do obliczenia norm mają moduł
+mniejszy od $N$. Sumowanie po $N$ równomiernych
+punktach jednego okresu zeruje te mody przez wzór
+na sumę szeregu geometrycznego, więc kwadratura
+okresowa jest dokładna z pominięciem błędów
+arytmetyki zmiennoprzecinkowej.
+Test dotyczy skończonego szeregu, nie błędu
+obcięcia nieskończonego pakietu.
 
 \begin{lstlisting}[style=pythonpde,caption={Ewolucja Schrodingera: pakiet, faza i błąd widmowy (Plotly)},label={code:pde22-plotly}]
 """Rozdzial 22: swobodny propagator Schrodingera na torusie.
@@ -2065,6 +2163,8 @@ x = -np.pi + (2 * np.pi / N) * np.arange(N)
 k = np.arange(-100, 101)
 k0, sigma, x0 = 12.0, 5.0, -1.0
 coef = np.exp(-0.5 * ((k - k0) / sigma)**2) * np.exp(-1j * k * x0)
+coef /= np.linalg.norm(coef)
+assert N > 2*np.max(abs(k))
 
 def psi(t, cutoff=None):
     mask = np.ones(k.shape, dtype=bool) if cutoff is None else np.abs(k) <= cutoff
@@ -2091,7 +2191,8 @@ def main():
     # okresowa kwadratura trapezowa jest dokladna dla pasmowych iloczynow.
     norms_periodic = [(2*np.pi/N)*np.sum(np.abs(psi(t))**2) for t in times]
     parseval = np.sum(np.abs(coef)**2)
-    print('Maksymalna zmiana normy (kwadrat):',
+    assert np.isclose(parseval, 1, atol=1e-14)
+    print('Maksymalny blad kwadratu normy:',
           max(abs(v - parseval) for v in norms_periodic))
     assert max(abs(v-parseval) for v in norms_periodic) < 1e-10
 
@@ -2112,7 +2213,12 @@ def main():
               for K in cutoffs]
     exact_tails = [np.sqrt(np.sum(np.abs(coef[np.abs(k)>K])**2))
                    for K in cutoffs]
-    assert np.allclose(errors, exact_tails, rtol=1e-7, atol=1e-12)
+    np.testing.assert_allclose(errors, exact_tails, rtol=1e-7, atol=1e-12)
+    for t_check in (0., 0.09):
+        ref = psi(t_check)
+        err = [np.sqrt(2*np.pi/N*np.sum(abs(ref-psi(t_check,K))**2))
+               for K in cutoffs]
+        np.testing.assert_allclose(err, exact_tails, rtol=1e-7, atol=1e-12)
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=cutoffs, y=errors, name='blad numeryczny',
                              mode='lines+markers'))
