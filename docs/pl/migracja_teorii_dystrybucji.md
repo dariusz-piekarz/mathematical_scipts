@@ -1,4 +1,4 @@
-# Teoria dystrybucji i analiza harmoniczna — migracja (etap 2)
+# Teoria dystrybucji i analiza harmoniczna — migracja (etap 3)
 
 Data: 2026-11-28. Nazwa robocza: distribution_theory. Planowany prefiks Atlasu: DT (do potwierdzenia przy przełączeniu identyfikatorów).
 
@@ -35,3 +35,8 @@ Etap 1 pozostaje celowo poza katalogiem aktywnych książek Atlasu. Nie jest to 
 - Rozdział 29: skala Bessela H^s, izometria J^s, równoważność H^m i W^{m,2}, gęstość przestrzeni Schwartza, kryterium delta w H^s. Normalizacja unitarna, odsyłacze do AF 17–22.
 - Rozdział 30: nierówność Heisenberga, przypadki równości, przesunięcie środka i wariancje. Uwzględniono współczynniki transformaty unitarnej.
 - Numeracja 17–30 pozostaje tymczasowa. Rozdziały RRC nadal niezmienione; stare etykiety zachowane. Przed przełączeniem katalogu trzeba dopiąć kontrolę kompilacji, deduplikację oraz migrację pozostałych tematów.
+
+## Etap 3 — całki osobliwe i interpolacja
+- Rozdział 31: rozwiązanie fundamentalne laplasjanu, jądra Hessianu, główna wartość, człon delta i oszacowanie L2.
+- Rozdział 32: gęstość testów, aproksymacja jedności, rozkład dyadyczny, ogólne twierdzenie o słabym typie (1,1), szczególny przypadek interpolacji Marcinkiewicza i ograniczoność w Lp dla 1<p<∞ (z dowodem przez sprzężenie), Hessian oraz kontrprzykłady końcowe. Nie udowodniono jeszcze zbieżności głównych wartości p.w. dla ogólnych danych Lp.
+- RRC i AF pozostają nietknięte. Kompilacja i przełączenie katalogu nadal do wykonania.
