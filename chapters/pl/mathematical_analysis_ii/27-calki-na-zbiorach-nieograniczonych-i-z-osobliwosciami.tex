@@ -13,6 +13,151 @@ sposobu wyczerpania dziedziny.
 Nie będziemy zakładać twierdzenia Fubiniego
 ani wzoru na zamianę zmiennych, które omówimy później.
 
+\section{Intuicja: odcięcie osobliwości i nieskończoności}
+
+Całka po nieograniczonym zbiorze nie jest
+sumą wkładów z jednego skończonego podziału.
+Zaczynamy od części dziedziny, na której
+rachunek jest już dobrze określony, a następnie
+stopniowo odzyskujemy pominięte fragmenty.
+Jeżeli funkcja jest nieujemna, każdy kolejny
+fragment może tylko powiększyć zgromadzony
+wkład. Dla funkcji ze znakiem przyrost może
+mieć dowolny znak.
+
+Przy całkowaniu na $\R^n\setminus\{0\}$
+wygodnie jest jednocześnie odciąć
+otoczenie osobliwości i daleką część
+dziedziny. Dla $0<\varepsilon<R$ używamy
+zbioru
+\[
+ K_{\varepsilon,R}=\{x:\varepsilon\le
+ \|x\|_2\le R\}.
+\]
+Jeżeli $f$ jest ciągła poza zerem, to
+jest ograniczona na tym zwartym zbiorze.
+Zmniejszanie $\varepsilon$ i zwiększanie
+$R$ przywraca kolejno oba pominięte fragmenty.
+Dla $f\in L^1(\R^n)$ błąd takiego odcięcia
+spełnia
+\[
+ \left|\int_{\R^n}f\,\mathrm d\lambda_n
+ -\int_{K_{\varepsilon,R}}f\,\mathrm d\lambda_n\right|
+ \le
+ \int_{\{\|x\|_2<\varepsilon\}}|f|\,\mathrm d\lambda_n
+ +\int_{\{\|x\|_2>R\}}|f|\,\mathrm d\lambda_n.
+\]
+Oba składniki dążą niezależnie do zera:
+pierwszy na mocy
+\ref{ma2:cor:lebesgue-absolute-cont}
+(objętość kuli dąży do zera), a drugi
+na mocy twierdzenia o zbieżności
+zmajoryzowanej \ref{ma2:thm:lebesgue-dominated}
+zastosowanego do funkcji
+$|f|\chi_{\{\|x\|_2>R\}}$.
+Nierówność wynika z liniowości
+i oszacowania modułu całki
+\ref{ma2:thm:lebesgue-linearity}.
+Nie ma zatem potrzeby uzgadniania
+tempa obu odcięć, gdy moduł funkcji
+jest całkowalny.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.05,>=stealth]
+ \foreach \d/\ri/\ro/\lab in
+ {0/.65/1.05/{1},4.25/.4/1.4/{2},8.5/.2/1.75/{3}}{
+  \begin{scope}[xshift=\d cm]
+   \fill[blue!25,even odd rule] (0,0) circle (\ro)
+     (0,0) circle (\ri);
+   \draw[blue!65!black,thick] (0,0) circle (\ro);
+   \draw[orange!80!black,thick] (0,0) circle (\ri);
+   \draw[->,gray!70] (-1.9,0)--(1.95,0);
+   \draw[->,gray!70] (0,-1.9)--(0,1.95);
+   \fill (0,0) circle (1.2pt);
+   \draw[orange!80!black,->] (0,0)--(40:\ri);
+   \draw[blue!75!black,->] (0,0)--(-35:\ro);
+   \node[below] at (0,-2) {$K_{\lab}$};
+  \end{scope}
+ }
+\end{tikzpicture}
+\caption{Rosnące fragmenty przebitej płaszczyzny.
+Zewnętrzny promień rośnie, wewnętrzny maleje.
+W każdym etapie całkujemy po niebieskim
+pierścieniu, omijając osobliwość w zerze
+i nieograniczony ogon dziedziny.}
+\label{ma2:fig:improper-exhaustion-intuition}
+\end{figure}
+
+\paragraph{Wysokość funkcji a rozmiar obszaru.}
+Nieograniczoność funkcji nie przesądza o
+rozbieżności całki. W pobliżu osobliwości
+duże wartości mogą występować na tak
+małych zbiorach, że ich łączny wkład
+pozostaje skończony. Analogicznie
+w nieskończoności sam zanik funkcji do
+zera nie zapewnia całkowalności: obszar
+dostępny w kolejnych warstwach może
+rosnąć szybciej niż maleje funkcja.
+
+Dla $\|x\|_2^{-p}$ w $\R^n$ warstwa
+o promieniach od $r$ do $2r$ ma objętość
+proporcjonalną do $r^n$, a wartości
+funkcji są porównywalne z $r^{-p}$.
+Jej wkład jest więc porównywalny
+z $r^{n-p}$. Dokładne oszacowania
+podamy w twierdzeniu
+\ref{ma2:thm:improper-power-test}.
+Przy $r=2^{-j}$ wkłady maleją geometrycznie
+wtedy, gdy $p<n$. Przy $r=2^j$ maleją
+geometrycznie wtedy, gdy $p>n$.
+W przypadku granicznym $p=n$ każda
+warstwa wnosi porównywalną dodatnią
+ilość, więc nieskończenie wiele warstw
+daje nieskończoną całkę.
+Jest to intuicja niezależna od użycia
+współrzędnych biegunowych.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1.05cm,y=1.5cm,>=stealth]
+ \draw[->] (-.15,0)--(7.6,0) node[right] {$j$};
+ \draw[->] (0,-.08)--(0,1.65) node[above] {wkład};
+ \foreach \j in {0,...,6}{
+  \pgfmathsetmacro{\h}{pow(.5,\j)}
+  \filldraw[fill=blue!35,draw=blue!70!black]
+   ({\j+.08},0) rectangle ({\j+.32},\h);
+  \filldraw[fill=orange!35,draw=orange!85!black]
+   ({\j+.36},0) rectangle ({\j+.60},1);
+  \node[below] at ({\j+.34},0) {$\j$};
+ }
+ \node[blue!75!black,right] at (1.5,1.48)
+ {$p=n-1$: $2^{-j}$};
+ \node[orange!85!black,right] at (1.5,1.22)
+ {$p=n$: $1$};
+\end{tikzpicture}
+\caption{Porównanie rzędów wkładów kolejnych
+warstw diadycznych przy osobliwości: dla
+$p=n-1$ sumujemy szereg geometryczny,
+a dla $p=n$ szereg o wyrazach stałych.
+Pominięto stałe mnożniki zależne od wymiaru
+i wykładnika.}
+\label{ma2:fig:improper-shell-contributions}
+\end{figure}
+
+\paragraph{Dlaczego wartość główna nie zastępuje całki?}
+Jeżeli dodatnia i ujemna część funkcji
+mają obie nieskończone całki, ich formalna
+różnica nie jest określona. Symetryczne
+odcięcie może wymusić dokładne znoszenie
+się wkładów, ale odcięcie asymetryczne
+może dać inną granicę. Nie jest to błąd
+rachunkowy, lecz efekt zmiany sposobu
+grupowania wkładów. W przykładzie
+\ref{ma2:ex:improper-asymmetric-cut}
+wykażemy, że można w ten sposób otrzymać
+dowolną zadaną liczbę rzeczywistą.
+
 \section{Wyczerpania zbiorów mierzalnych}
 
 \begin{definicja}
