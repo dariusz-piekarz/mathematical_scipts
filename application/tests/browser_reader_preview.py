@@ -243,16 +243,48 @@ with sync_playwright() as pw:
         page.evaluate("([latex, code]) => renderSimplified(latex, code)", [source, module])
         # Dynamic TikZ first inserts a placeholder and loads the image asynchronously.
         # Wait for the actual decoded image, not just for an immediate DOM snapshot.
-        assert box.locator('.atlas-tikz-preview').count() == 1, module
+        expected = 3 if module == 'AM2-24' else 1
+        assert box.locator('.atlas-tikz-preview').count() == expected, module
         page.wait_for_function(
-            """() => {
-                const images = document.querySelectorAll('#simplified .atlas-tikz-preview img');
-                return images.length === 1 && images[0].complete && images[0].naturalWidth > 0;
-            }""", timeout=90000
+            """expected => {
+                const images = [...document.querySelectorAll('#simplified .atlas-tikz-preview img')];
+                return images.length === expected && images.every(img => img.complete && img.naturalWidth > 0);
+            }""", arg=expected, timeout=180000
         )
-        assert box.locator('.atlas-tikz-preview img').count() == 1, module
-        host = box.locator('.atlas-plot-host')
-        assert host.count() == 1
+        assert box.locator('.atlas-tikz-preview img').count() == expected, module
+        hosts = box.locator('.atlas-plot-host')
+        assert hosts.count() == expected
+        if module == 'AM2-24':
+            for i, identifier in enumerate(('am2_24_local_volume.html', 'am2_24_signed_volume.html')):
+                host = hosts.nth(i)
+                assert host.locator('iframe').count() == 0
+                host.locator('button').click()
+                iframe = host.locator('iframe')
+                assert iframe.get_attribute('sandbox') == 'allow-scripts'
+                assert iframe.get_attribute('src').endswith(identifier)
+                frame = host.frame_locator('iframe')
+                plot = frame.locator('#plot[data-ready=true]')
+                plot.wait_for(timeout=60000)
+                assert frame.locator('#plot .gl-container').count() > 0
+                check = plot.evaluate("""el => {
+                    const m=el.data.filter(t=>t.type==='mesh3d');
+                    return {meshes:m.length, edges:el.data.filter(t=>t.type==='scatter3d').length,
+                        vertices:m.map(t=>t.x.length), triangles:m.map(t=>t.i.length),
+                        bounds:m.map(t=>['x','y','z'].map(k=>[Math.min(...t[k]),Math.max(...t[k])])),
+                        planeError:Math.max(...m[0].x.slice(4).map((x,j)=>Math.abs(m[0].z[j+4]-(.3+.4*x+.3*m[0].y[j+4]))))};
+                }""")
+                assert check['meshes'] == 2 and check['edges'] == 2, check
+                if i == 0:
+                    assert check['vertices'] == [8, 8] and check['triangles'] == [12, 12], check
+                    assert check['planeError'] < 1e-12, check
+                    assert check['bounds'][1][:2] == [[.75, 1], [.75, 1]], check
+                    assert abs(check['bounds'][1][2][1]-.825) < 1e-12, check
+                else:
+                    assert check['vertices'] == [6, 6] and check['triangles'] == [8, 8], check
+                    assert check['bounds'] == [[[-1,0],[0,1],[-1,0]],[[0,1],[0,1],[0,1]]], check
+                host.locator('button').click()
+                assert iframe.count() == 0
+        host = hosts.nth(expected-1)
         assert host.locator('iframe').count() == 0
         host.locator('button').click()
         assert host.locator('iframe').get_attribute('sandbox') == 'allow-scripts'
