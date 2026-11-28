@@ -206,6 +206,53 @@ class TestChapter15B(unittest.TestCase):
         ):
             self.assertEqual(source.count(r"\label{" + label + "}"), 1)
 
+    def test_vector_integral_order_and_independent_birkhoff_construction(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        headings = [
+            r"\subsection{Mierzalność funkcji wektorowych}",
+            r"\subsection{Całka Bochnera}",
+            r"\subsection{Całka Birkhoffa}",
+            r"\subsection{Całka Dunforda}",
+            r"\subsection{Całka Pettisa}",
+            r"\subsection{Całka Gelfanda}",
+        ]
+        positions = [source.index(heading) for heading in headings]
+        self.assertEqual(positions, sorted(positions))
+        core = source[positions[2]:positions[3]]
+        for label in (
+            "def:birkhoff15b", "thm:bochner-implies-birkhoff15b",
+            "thm:birkhoff-limit15b", "cor:birkhoff-dct15b",
+        ):
+            self.assertIn(r"\label{" + label + "}", core)
+        self.assertNotIn(r"\ref{thm:birkhoff-hierarchy15b}", core)
+        self.assertNotIn(r"\ref{def:pettis15b}", core)
+
+    def test_vector_integral_extensions_and_sobolev_structure(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for label in (
+            "def:weakstar-measurable15b",
+            "thm:gelfand-integration-operator15b",
+            "thm:birkhoff-vector-measure15b",
+            "cor:birkhoff-fubini-separable15b",
+            "ex:birkhoff-fubini-separable-failure15b",
+            "def:vector-variation15b",
+            "prop:rnp-completion15b",
+            "thm:rnp-separable-hilbert15b",
+            "def:bochner-lp15b",
+            "thm:bochner-lp-complete15b",
+            "thm:bochner-sobolev-banach-traces15b",
+            "cor:bochner-sobolev-zero-trace15b",
+        ):
+            self.assertEqual(source.count(r"\label{" + label + "}"), 1)
+        for label in ("def:rnp15b", "def:vector-measure15b"):
+            start = source.index(r"\label{" + label + "}")
+            end = source.index(r"\end{definicja}", start)
+            definition = source[start:end]
+            self.assertNotIn(r"\begin{proof}", definition)
+            self.assertNotIn("rozszerza się na uzupełnienie", definition)
+        self.assertLess(source.index(r"\label{thm:bochner-lp-complete15b}"),
+                        source.index(r"\label{thm:bochner-sobolev-banach-traces15b}"))
+
     def test_audit10_completion_and_total_integral(self):
         source = SOURCE.read_text(encoding="utf-8")
         for fragment in (
