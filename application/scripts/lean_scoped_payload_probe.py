@@ -22,6 +22,9 @@ from scripts.lean_ci_audit import inspect_log
 from scripts.lean_rootless_ci_probe import cleanup_fixture, validate_exited_fixture
 
 CASES = {"true": (r"\top", 0), "false": (r"\bot", 1)}
+POLYNOMIAL = (r"\forall x:Real, \forall y:Real, "
+              r"(x + y) \cdot (x + y) = (x \cdot x) + "
+              r"((2:Real) \cdot x \cdot y) + (y \cdot y)")
 
 
 def prepared_fixture(case):
@@ -57,7 +60,7 @@ def payload_entry(package_names):
             "exec /opt/lean/bin/lean Draft.lean\n")
 
 
-def validate_payload_output(output, prepared, *, expected_exit):
+def _payload_envelope(output, prepared, *, expected_exit):
     if (type(output) is not bytes or len(output) > policy.MAX_OUTPUT_BYTES
             or type(expected_exit) is not int or expected_exit not in (0, 1)):
         raise ValueError("Invalid bounded payload output")
@@ -68,6 +71,11 @@ def validate_payload_output(output, prepared, *, expected_exit):
         raise ValueError("Observed payload digest mismatch")
     core.validate_version(version.decode("ascii"))
     text = diagnostic.decode("utf-8")
+    return version.decode("ascii"), diagnostic, text
+
+
+def validate_payload_output(output, prepared, *, expected_exit):
+    version, diagnostic, text = _payload_envelope(output, prepared, expected_exit=expected_exit)
     if expected_exit == 0:
         if "error:" in text.lower():
             raise ValueError("Unexpected successful fixture diagnostic")
@@ -86,13 +94,19 @@ def validate_payload_output(output, prepared, *, expected_exit):
             raise ValueError("Unexpected fixed negative fixture diagnostic")
         axioms = None
     return {"observed_input_sha256": prepared.input_sha256,
-            "lean_version": version.decode("ascii"),
+            "lean_version": version,
             "diagnostic_sha256": hashlib.sha256(diagnostic).hexdigest(),
             "diagnostic_bytes": len(diagnostic), "axioms": axioms}
 
 
-def check_fixed_payload(prefix, env, image, case):
-    prepared, expected_exit = prepared_fixture(case)
+def _execute_fixed_payload(prefix, env, image, prepared, *, expected_exit):
+    """Private CI helper, called only with freshly prepared fixed fixtures."""
+    if (type(prepared) not in (policy.PreparedDraft, policy.PreparedRepair)
+            or hashlib.sha256(prepared.input_bytes).hexdigest() != prepared.input_sha256
+            or hashlib.sha256(prepared.input_bytes.removesuffix(b"\n#print axioms atlas_draft\n")).hexdigest()
+            != prepared.lean_code_sha256
+            or not prepared.input_bytes.endswith(b"\n#print axioms atlas_draft\n")):
+        raise ValueError("Invalid prepared fixed fixture identity")
     def call(*args):
         return transport._command(prefix, args, env)
     transport.validate_engine(transport._decode_metadata(call("info", "--format", "{{json .}}")))
@@ -114,14 +128,97 @@ def check_fixed_payload(prefix, env, image, case):
             output, actual_exit = exc.output, exc.returncode
         if type(actual_exit) is not int or actual_exit != expected_exit:
             raise ValueError("Unexpected fixed payload compiler exit")
-        evidence = validate_payload_output(output, prepared, expected_exit=expected_exit)
+        version, diagnostic, text = _payload_envelope(output, prepared, expected_exit=expected_exit)
+        axioms = None
+        if expected_exit == 0:
+            if "error:" in text.lower():
+                raise ValueError("Unexpected successful fixture diagnostic")
+            axioms = inspect_log(text, ["atlas_draft"])["atlas_draft"]
+        elif "error:" not in text.lower():
+            raise ValueError("Expected fixed fixture failure diagnostic")
+        evidence = dict(observed_input_sha256=prepared.input_sha256, lean_version=version,
+                        diagnostic_sha256=hashlib.sha256(diagnostic).hexdigest(),
+                        diagnostic_bytes=len(diagnostic), axioms=axioms)
         state = validate_exited_fixture(transport._decode_metadata(cleanup("container", "inspect", cid)),
                                         container_id=cid, image_id=image, expected_exit=expected_exit)
     finally:
         cleanup_fixture(cleanup, cid)
-    return dict(case=case, image_id=image, container_id=cid, input_sha256=prepared.input_sha256,
-                code_sha256=prepared.lean_code_sha256, source_sha256=prepared.source_sha256,
-                ast_sha256=prepared.ast_sha256, cleanup_status="removed_verified", **state, **evidence)
+    row = dict(image_id=image, container_id=cid, input_sha256=prepared.input_sha256,
+               code_sha256=prepared.lean_code_sha256, source_sha256=prepared.source_sha256,
+               ast_sha256=prepared.ast_sha256, cleanup_status="removed_verified", **state, **evidence)
+    return row, output
+
+
+def check_fixed_payload(prefix, env, image, case):
+    prepared, expected_exit = prepared_fixture(case)
+    row, output = _execute_fixed_payload(prefix, env, image, prepared, expected_exit=expected_exit)
+    validate_payload_output(output, prepared, expected_exit=expected_exit)
+    return dict(case=case, **row)
+
+
+def run_fixed_repair_loop(prefix, env, image):
+    """Actual diagnostics from the same verified image, fresh container per attempt.
+
+    Fixed CI polynomial only. No caller-supplied source or attempt history.
+    """
+    from backend.lean_draft_repair import plan_next, MAX_ATTEMPTS
+    if MAX_ATTEMPTS != 3:
+        raise ValueError("Fixed repair attempt contract changed")
+    source = POLYNOMIAL
+    initial = generate(source, consent=True)
+    identity = dict(expected_source_sha256=initial["source_sha256"],
+                    expected_ast_sha256=initial["ast_sha256"],
+                    expected_initial_code_sha256=initial["lean_code_sha256"],
+                    consent=True)
+    status, prepared = policy.prepare(source, consent=True,
+        expected_source_sha256=identity["expected_source_sha256"],
+        expected_ast_sha256=identity["expected_ast_sha256"],
+        expected_code_sha256=identity["expected_initial_code_sha256"])
+    if type(prepared) is not policy.PreparedDraft or status["execution_allowed"] is not False:
+        raise ValueError("Fixed polynomial preparation rejected")
+    original_prefix = initial["lean_code"].split(" := by\n", 1)[0]
+    history, rows = [], []
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        expected_exit = 0 if attempt == MAX_ATTEMPTS else 1
+        if (prepared.source_sha256 != initial["source_sha256"]
+                or prepared.ast_sha256 != initial["ast_sha256"]
+                or prepared.input_bytes.decode("utf-8").split(" := by\n", 1)[0] != original_prefix):
+            raise ValueError("Fixed repair changed statement or imports")
+        row, output = _execute_fixed_payload(prefix, env, image, prepared, expected_exit=expected_exit)
+        version, diagnostic, _ = _payload_envelope(output, prepared, expected_exit=expected_exit)
+        if (row["exit_code"] != expected_exit or row["input_sha256"] != prepared.input_sha256
+                or row["observed_input_sha256"] != prepared.input_sha256
+                or row["code_sha256"] != prepared.lean_code_sha256
+                or row["diagnostic_sha256"] != hashlib.sha256(diagnostic).hexdigest()
+                or row["cleanup_status"] != "removed_verified" or row["image_id"] != image
+                or any(previous["container_id"] == row["container_id"] for previous in rows)):
+            raise ValueError("Fixed repair execution evidence mismatch")
+        row.update(attempt=attempt)
+        rows.append(row)
+        if expected_exit == 0:
+            if row["axioms"] is None:
+                raise ValueError("Missing successful repair axiom audit")
+            break
+        history.append(dict(code_sha256=prepared.lean_code_sha256, exit_code=1, diagnostic=diagnostic))
+        plan = plan_next(source, observations=history, **identity)
+        if (plan["status"] != "repair_planned" or plan["signature"] != initial["signature"]
+                or plan["execution_allowed"] is not False or plan["certificate"] is not False):
+            raise ValueError("Real isolated proof failure did not authorize fixed repair plan")
+        status, next_prepared = policy.prepare_repair(
+            source, observations=history, expected_repair_code_sha256=plan["lean_code_sha256"], **identity)
+        if (type(next_prepared) is not policy.PreparedRepair or next_prepared.attempt != attempt + 1
+                or next_prepared.initial_code_sha256 != initial["lean_code_sha256"]
+                or next_prepared.diagnostic_sha256 != tuple(r["diagnostic_sha256"] for r in rows)
+                or status["execution_allowed"] is not False or status["certificate"] is not False
+                or next_prepared.input_bytes != plan["lean_code"].encode() + b"\n#print axioms atlas_draft\n"):
+            raise ValueError("Prepared repair identity or history mismatch")
+        row["planner_status"] = plan["status"]
+        prepared = next_prepared
+    if len(rows) != MAX_ATTEMPTS or len({r["input_sha256"] for r in rows}) != MAX_ATTEMPTS:
+        raise ValueError("Incomplete fixed isolated repair loop")
+    return dict(outcome="repair_compiled", initial_code_sha256=initial["lean_code_sha256"],
+                attempts=rows, max_attempts=MAX_ATTEMPTS, fixture_only=True,
+                execution_allowed=False, offline_ready=False, certificate=False, proof_status="not_run")
 
 
 def run_fixed_payload_probe(*, work, context, rootfs, prefix, env, packages, source_report, checkout_sha):
@@ -149,13 +246,15 @@ def run_fixed_payload_probe(*, work, context, rootfs, prefix, env, packages, sou
         try:
             verify()
             rows = [check_fixed_payload(prefix, env, image, case) for case in CASES]
-            if len({row["container_id"] for row in rows}) != len(CASES):
-                raise ValueError("Fixed payload cases must use distinct containers")
+            repair = run_fixed_repair_loop(prefix, env, image)
+            all_rows = rows + repair["attempts"]
+            if len({row["container_id"] for row in all_rows}) != len(all_rows):
+                raise ValueError("Fixed payload and repair cases must use distinct containers")
         finally:
             transport._command(prefix, ("image", "rm", image), env)
         report = dict(schema=1, checkout_sha=checkout_sha, fixture_only=True,
                       manifest_sha256=digest, execution_allowed=False, offline_ready=False,
-                      certificate=False, proof_status="not_run", cases=rows)
+                      certificate=False, proof_status="not_run", cases=rows, repair_loop=repair)
         for name, value in (("manifest", manifest), ("report", report)):
             with (Path(os.environ["RUNNER_TEMP"]) / ("atlas-mathlib-scoped-payload-" + name + ".json")).open("xb") as f:
                 f.write(artifacts.encoded(value))

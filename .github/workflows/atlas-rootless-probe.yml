@@ -351,6 +351,7 @@ jobs:
           grep -q '^ATLAS_MATHLIB_SCOPED_FIXTURE ' "$RUNNER_TEMP/atlas-mathlib-scoped.log"
           grep -q '^ATLAS_MATHLIB_SCOPED_REJECTED ' "$RUNNER_TEMP/atlas-mathlib-scoped.log"
           grep -q '^ATLAS_SCOPED_PAYLOAD_PROBE ' "$RUNNER_TEMP/atlas-mathlib-scoped.log"
+          python3 -c 'import json,sys; from pathlib import Path; r=json.loads(Path(sys.argv[1]).read_text()); assert r["repair_loop"]["outcome"]=="repair_compiled"; assert [x["exit_code"] for x in r["repair_loop"]["attempts"]]==[1,1,0]' "$RUNNER_TEMP/atlas-mathlib-scoped-payload-report.json"
           digest="$(sha256sum "$RUNNER_TEMP/atlas-mathlib-scoped-manifest.json" | cut -d ' ' -f1)"
           rejected_digest="$(sha256sum "$RUNNER_TEMP/atlas-mathlib-scoped-rejected-manifest.json" | cut -d ' ' -f1)"
           echo "ATLAS_SCOPED_MANIFEST_SHA=$digest" >> "$GITHUB_ENV"

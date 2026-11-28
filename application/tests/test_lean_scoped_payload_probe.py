@@ -55,3 +55,45 @@ class ScopedPayloadTests(unittest.TestCase):
         self.assertIn("head -c " + str(transport.MAX_FIXTURE_INPUT_BYTES + 1), entry)
         self.assertIn("sha256sum Draft.lean", entry)
         self.assertIn("exec /opt/lean/bin/lean Draft.lean", entry)
+
+
+    def test_fixed_repair_loop_replays_diagnostics_and_distinct_payloads(self):
+        # Simulated subprocess results for the contract test only.
+        # The real workflow must independently produce all three exit codes.
+        import hashlib
+        seen = []
+        image = "sha256:" + "a"*64
+
+        def execute(prefix, env, actual_image, prepared, *, expected_exit):
+            attempt = len(seen) + 1
+            self.assertEqual(actual_image, image)
+            self.assertEqual(expected_exit, 0 if attempt == 3 else 1)
+            self.assertEqual(hashlib.sha256(prepared.input_bytes).hexdigest(), prepared.input_sha256)
+            if expected_exit:
+                line = next(i for i, line in enumerate(prepared.input_bytes.decode().splitlines(), 1)
+                            if line.strip().startswith("| omega"))
+                diagnostic = f"Draft.lean:{line}:4: error: omega could not prove the goal:\n".encode()
+            else:
+                diagnostic = b"'atlas_draft' depends on axioms: [propext]\n"
+            output = b"ATLAS_INPUT_SHA256 " + prepared.input_sha256.encode() + b"\n" + VERSION + diagnostic
+            row = dict(exit_code=expected_exit, image_id=image, container_id=str(attempt)*64,
+                       input_sha256=prepared.input_sha256, observed_input_sha256=prepared.input_sha256,
+                       code_sha256=prepared.lean_code_sha256,
+                       diagnostic_sha256=hashlib.sha256(diagnostic).hexdigest(),
+                       cleanup_status="removed_verified", axioms=None if expected_exit else ["propext"])
+            seen.append(prepared)
+            return row, output
+
+        with patch.object(probe, "_execute_fixed_payload", side_effect=execute):
+            report = probe.run_fixed_repair_loop([], {}, image)
+        self.assertEqual([x["exit_code"] for x in report["attempts"]], [1, 1, 0])
+        self.assertEqual(len({x.input_sha256 for x in seen}), 3)
+        self.assertEqual(seen[-1].attempt, 3)
+        self.assertFalse(report["execution_allowed"])
+        self.assertFalse(report["certificate"])
+
+    def test_fixed_repair_loop_stops_on_invalid_transport(self):
+        with patch.object(probe, "_execute_fixed_payload", side_effect=ValueError("digest mismatch")) as run:
+            with self.assertRaises(ValueError):
+                probe.run_fixed_repair_loop([], {}, "sha256:" + "a"*64)
+            run.assert_called_once()
