@@ -1,4 +1,4 @@
-# Teoria dystrybucji i analiza harmoniczna — migracja (etap 1)
+# Teoria dystrybucji i analiza harmoniczna — migracja (etap 2)
 
 Data: 2026-11-28. Nazwa robocza: distribution_theory. Planowany prefiks Atlasu: DT (do potwierdzenia przy przełączeniu identyfikatorów).
 
@@ -29,3 +29,9 @@ Nie przepisywać bez porównania: AF 17,22 mają już odwrócenie i Plancherela,
 5. Kompilacja AF i nowego skryptu, testy Atlasu i audyt braku utraty etykiet. Dopiero potem usunięcie starych źródeł i końcowa renumeracja.
 
 Etap 1 pozostaje celowo poza katalogiem aktywnych książek Atlasu. Nie jest to jeszcze fizyczne przeniesienie ani ukończony audyt matematyczny. Nie uruchomiono dodatkowych automatyzacji. Kompilacja roboczego mastera wymaga wcześniejszej kompilacji AF z tego samego stanu repozytorium.
+
+## Etap 2 — uzupełnienia Fouriera
+- Rozdział 28: szeregi Fouriera na okręgu, Bessel, Fejér, Parseval, gęstość wielomianów trygonometrycznych i różniczkowanie szeregów; przejęto ogólną część RRC-06, bez zagadnień Sturma–Liouville'a.
+- Rozdział 29: skala Bessela H^s, izometria J^s, równoważność H^m i W^{m,2}, gęstość przestrzeni Schwartza, kryterium delta w H^s. Normalizacja unitarna, odsyłacze do AF 17–22.
+- Rozdział 30: nierówność Heisenberga, przypadki równości, przesunięcie środka i wariancje. Uwzględniono współczynniki transformaty unitarnej.
+- Numeracja 17–30 pozostaje tymczasowa. Rozdziały RRC nadal niezmienione; stare etykiety zachowane. Przed przełączeniem katalogu trzeba dopiąć kontrolę kompilacji, deduplikację oraz migrację pozostałych tematów.
