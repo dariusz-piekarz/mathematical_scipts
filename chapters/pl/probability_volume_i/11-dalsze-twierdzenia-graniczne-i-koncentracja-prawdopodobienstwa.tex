@@ -112,14 +112,18 @@ z sumowania prawdopodobieństw dwóch ogonów.
 
 \begin{przyklad}[Ile prób potrzeba do kontroli częstości?]
 Jeżeli $B_1,\ldots,B_n$ są niezależnymi próbami
-Bernoulliego z parametrem $p\in[0,1]$, to $0\leq B_k\leq1$
-i $\E\overline B_n=p$. Nierówność Hoeffdinga
+Bernoulliego z parametrem $p\in[0,1]$, to $0\leq B_k\leq1$.
+Dla $\overline B_n=n^{-1}\sum_{k=1}^n B_k$ mamy
+$\E\overline B_n=p$ z liniowości wartości oczekiwanej. Nierówność Hoeffdinga
 przy $u=n\varepsilon$ daje
 $\Prob(|\overline B_n-p|\geq\varepsilon)
 \leq2e^{-2n\varepsilon^2}$.
 Dla $\varepsilon>0$ i zadanej $\delta\in(0,1)$,
 aby prawa strona była nie większa niż $\delta$, wystarczy
 $n\geq\log(2/\delta)/(2\varepsilon^2)$.
+Na przykład dla $\varepsilon=0{,}05$ i $\delta=0{,}05$
+wystarczy $n=\lceil 200\log 40\rceil=738$ prób,
+niezależnie od nieznanego parametru $p$.
 Jest to gwarancja nieasymptotyczna, ważna dla
 każdego $n$, choć nie zawsze ostra.
 \end{przyklad}
@@ -300,8 +304,11 @@ $\sum_k|z_{n,k}|^2\leq
 Dla dostatecznie dużych $n$ mamy $|z_{n,k}|\leq1/2$
 dla wszystkich $k$. Na tym kole określamy
 $L(z)=\sum_{j=1}^\infty(-1)^{j+1}z^j/j$.
-Jest to lokalna gałąź logarytmu spełniająca
-$\exp L(z)=1+z$. Z szeregu otrzymujemy
+Różniczkując szereg potęgowy wewnątrz koła jednostkowego,
+otrzymujemy $L'(z)=\sum_{j=0}^\infty(-z)^j=1/(1+z)$.
+Pochodna funkcji $\exp L(z)/(1+z)$ jest więc zerowa,
+a jej wartość w zerze wynosi jeden. Stąd $\exp L(z)=1+z$.
+Z szeregu otrzymujemy
 $|L(z)-z|\leq |z|^2/(1-|z|)\leq2|z|^2$.
 W konsekwencji
 \[
@@ -310,7 +317,7 @@ W konsekwencji
 \]
 Nie trzeba utożsamiać sumy lokalnych logarytmów
 z logarytmem głównym iloczynu. Z niezależności w każdym wierszu i własności
-funkcji charakterystycznej sumy (rozdział~\ref{ch:clt}) mamy
+funkcji charakterystycznej sumy (rozdział~\ref{ch:expectation}) mamy
 \[
 \varphi_{\sum_k Z_{n,k}}(t)
 =\prod_k(1+z_{n,k})
@@ -320,6 +327,80 @@ funkcji charakterystycznej sumy (rozdział~\ref{ch:clt}) mamy
 Jest to funkcja charakterystyczna $\Normal(0,1)$,
 ciągła w zerze. Twierdzenie Lévy'ego
 (rozdział~\ref{ch:convergence}) kończy dowód.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Lindeberga--Fellera: pełna równoważność]
+\label{thm:rp1-11-lindeberg-feller}
+Przy założeniach schematu trójkątnego załóżmy dodatkowo
+warunek Fellera:
+\[
+\max_{k\leq k_n}\frac{\Var(Y_{n,k})}{s_n^2}
+\longrightarrow0.
+\]
+Wtedy zbieżność według rozkładu
+$s_n^{-1}\sum_{k=1}^{k_n}Y_{n,k}\xrightarrow{d}\Normal(0,1)$
+jest równoważna warunkowi Lindeberga.
+\end{twierdzenie}
+\begin{proof}
+Kierunek wystarczający udowodniono wcześniej, bez
+dodatkowego założenia Fellera; co więcej, warunek
+Fellera wynika już z warunku Lindeberga (krok 1
+poprzedniego dowodu).
+
+Wykażemy konieczność. Niech $Z_{n,k}=Y_{n,k}/s_n$,
+a $v_{n,k}=\E Z_{n,k}^2$. Mamy $\sum_k v_{n,k}=1$
+i $\max_k v_{n,k}\to0$.
+Ustalmy $t=1$ oraz połóżmy
+$z_{n,k}=\E e^{iZ_{n,k}}-1$. Z oszacowania Taylora
+z poprzedniego dowodu i z $\E Z_{n,k}=0$ wynika
+$|z_{n,k}|\leq v_{n,k}/2$. Zatem
+\[
+\max_k|z_{n,k}|\to0,\qquad
+\sum_k |z_{n,k}|^2\leq
+\frac14\max_k v_{n,k}\to0.
+\]
+Dla dostatecznie dużych $n$ możemy użyć tej samej
+lokalnej gałęzi logarytmu $L$ co poprzednio.
+Ponieważ $\exp L(z)=1+z$, mamy
+$\log|1+z|=\operatorname{Re} L(z)$.
+Z niezależności w wierszach i oszacowania
+$|L(z)-z|\leq2|z|^2$ dostajemy
+\[
+\log\left|\E e^{i\sum_k Z_{n,k}}\right|
+=\sum_k\operatorname{Re} z_{n,k}+r_n,
+\qquad |r_n|\leq 2\sum_k|z_{n,k}|^2\to0.
+\]
+Założona zbieżność według rozkładu do $\Normal(0,1)$
+implikuje zbieżność funkcji charakterystycznych
+(rozdział~\ref{ch:convergence}), zatem lewa strona
+dąży do $\log e^{-1/2}=-1/2$. Wobec tego
+$\sum_k\E(1-\cos Z_{n,k})\to1/2$ i, ponieważ
+$\sum_k\E Z_{n,k}^2=1$,
+\[
+\sum_k\E\left[\frac{Z_{n,k}^2}{2}
+ -(1-\cos Z_{n,k})\right]\longrightarrow0.
+\]
+
+Dla rzeczywistego $u$ połóżmy
+$h(u)=u^2/2-(1-\cos u)$. Funkcja jest nieujemna
+i ściśle dodatnia poza zerem: dla $u\ne0$
+mamy $1-\cos u=2\sin^2(u/2)<u^2/2$,
+gdyż $|\sin v|<|v|$ dla $v\ne0$.
+Ponadto $h(u)/u^2\to1/2$ dla $|u|\to\infty$,
+bo $0\leq1-\cos u\leq2$.
+Dla każdego $\varepsilon>0$ ciągłość ilorazu
+na $\{|u|\geq\varepsilon\}$, jego ścisła dodatniość
+oraz dodatnia granica w nieskończoności dają
+stałą $c_\varepsilon>0$, taką że
+$h(u)\geq c_\varepsilon u^2$ dla $|u|\geq\varepsilon$.
+Z nieujemności $h$ na całej prostej wynika
+\[
+0\leq\sum_k\E\left[
+ Z_{n,k}^2\chi_{\{|Z_{n,k}|>\varepsilon\}}\right]
+\leq \frac1{c_\varepsilon}\sum_k\E h(Z_{n,k})
+\longrightarrow0.
+\]
+Jest to dokładnie warunek Lindeberga po normalizacji.
 \end{proof}
 
 \begin{wniosek}[Warunek Lapunowa]
@@ -439,9 +520,17 @@ a_n^2(g(T_n)-g(\theta))
 \]
 \end{wniosek}
 \begin{proof}
-Z rozwinięcia Taylora z resztą Peana w punkcie $\theta$
-(rozwijamy do drugiego rzędu, korzystając z
-różniczkowalności $g'$ w $\theta$) mamy
+Uzasadnimy rozwinięcie Taylora z resztą Peana
+przy podanej, lokalnej hipotezie. Niech
+$h(x)=g(x)-g(\theta)-\frac12g''(\theta)(x-\theta)^2$.
+Ponieważ $g'(\theta)=0$ i $g'$ jest różniczkowalna
+w $\theta$, mamy $h'(x)=o(|x-\theta|)$ dla $x\to\theta$.
+Dla każdego $\eta>0$ w dostatecznie małym otoczeniu
+$\theta$ zachodzi więc $|h'(x)|\leq\eta|x-\theta|$.
+Z twierdzenia Lagrange'a o wartości średniej,
+zastosowanego do $h$ między $\theta$ i $x$, wynika
+$|h(x)|\leq\eta|x-\theta|^2$, ponieważ $h(\theta)=0$.
+Stąd
 $g(x)-g(\theta)=\frac12g''(\theta)(x-\theta)^2
 +o((x-\theta)^2)$. Ponieważ $T_n\to\theta$
 według prawdopodobieństwa, iloraz reszty przez
@@ -452,7 +541,9 @@ metody delty pierwszego rzędu.
 Zatem
 $a_n^2(g(T_n)-g(\theta))
 =(\frac12g''(\theta)+o_{\Prob}(1))
-[a_n(T_n-\theta)]^2$.
+[a_n(T_n-\theta)]^2$,
+gdzie $o_{\Prob}(1)$ oznacza zmienną losową zależną od $n$,
+która zbiega do zera według prawdopodobieństwa.
 Z twierdzenia o ciągłym przekształceniu
 $[a_n(T_n-\theta)]^2\xrightarrow d Z^2$;
 Slutsky kończy dowód.
@@ -468,13 +559,13 @@ $\{\overline X_n\leq0\}\subseteq
 \{|\overline X_n-m|\geq m\}$ i $m>0$,
 prawdopodobieństwo zdarzenia $\{\overline X_n>0\}$
 dąży do jedności;
-na jego dopełnieniu możemy umownie ustawić
-$T_n=\log m$, a na nim $T_n=\log\overline X_n$.
+definiujemy $T_n=\log\overline X_n$ na zdarzeniu
+$\{\overline X_n>0\}$, a $T_n=\log m$ na jego dopełnieniu.
 Z klasycznego CTG mamy
 $\sqrt n(\overline X_n-m)\xrightarrow d\Normal(0,\sigma^2)$.
 Z metody delty dla $g(x)=\log x$ w otoczeniu $m$
 (z borelowskim rozszerzeniem
-$g(x)=\log m$ dla $x\leq0$)
+$g(x)=\log m$ dla $x\leq0$) i z $g'(m)=1/m$
 otrzymujemy
 $\sqrt n(T_n-\log m)\xrightarrow d
 \Normal(0,\sigma^2/m^2)$.
@@ -492,7 +583,12 @@ i $g''(0)=2$, zatem
 $nT_n^2\xrightarrow d Z^2\sim\chi^2_1$.
 W tym przykładzie równość rozkładów jest nawet
 prawdziwa dla każdego $n$, ponieważ
-$\sqrt n\,T_n\sim \Normal(0,1)$. Zastosowanie
+$\sqrt n\,T_n\sim \Normal(0,1)$: niezależność
+daje funkcję charakterystyczną
+$\prod_{k=1}^n e^{-t^2/(2n)}=e^{-t^2/2}$,
+a jednoznaczność funkcji charakterystycznej
+identyfikuje rozkład (rozdział~\ref{ch:convergence}).
+Zastosowanie
 metody delty pierwszego rzędu dawałoby tylko
 zdegenerowaną granicę zero przy skali $\sqrt n$.
 \end{przyklad}
@@ -760,15 +856,15 @@ a prawa strona może być mniejsza od jedności.
 Dla $L>0$ wynik wynika z implikacji
 $|g(S_n/n)-g(p)|\geq L\varepsilon\Longrightarrow
 |S_n/n-p|\geq\varepsilon$.
-Ten przykład przygotowuje późniejszą nierówność
-Azumy--Hoeffdinga dla martyngałów: po zastąpieniu
-niezależnych składników różnicami martyngałowymi
-uzyskamy podobną kontrolę.
+Ogólniejsze narzędzia koncentracji dla funkcji wielu
+niezależnych zmiennych, w tym nierówność ograniczonych
+różnic McDiarmida opartą na nierówności
+Azumy--Hoeffdinga, przedstawimy w rozdziale~\ref{ch:martyngaly}.
 \end{przyklad}
 
 \begin{uwaga}[Dokładny zakres twierdzenia Lindeberga]
-W niniejszym rozdziale udowodniono
-\emph{kierunek wystarczający} twierdzenia Lindeberga--Fellera.
+W twierdzeniu~\ref{thm:rp1-11-lindeberg-feller}
+założenie Fellera jest istotne dla kierunku koniecznego.
 Sama zbieżność sum do rozkładu normalnego nie implikuje
 warunku Lindeberga. Istotnie, jeśli w każdym wierszu
 $Y_{n,1}\sim\Normal(0,1)$, a wszystkie pozostałe
@@ -804,7 +900,7 @@ i $-\sqrt n$ z prawdopodobieństwami $1/(2n)$
 każde, a zero z prawdopodobieństwem $1-1/n$.
 Pozostałe wyrazy wiersza są zerowe. Mamy
 $\E Y_{n,1}=0$, $s_n^2=\E Y_{n,1}^2=1$.
-Zmienna sumy zbiega do zera według prawdopodobieństwa,
+Suma znormalizowana zbiega do zera według prawdopodobieństwa,
 bo prawdopodobieństwo niezerowego wyniku wynosi $1/n$,
 choć jej wariancja pozostaje równa jeden.
 Dla dowolnego $\varepsilon>0$ i $n>\varepsilon^2$
@@ -815,6 +911,26 @@ z poprzedniej uwagi jest spełniony.
 Nie można więc uzyskać granicy normalnej przez
 argument opierający się wyłącznie na malejącej
 częstości dużych skoków.
+
+Nawet dołączenie warunku Fellera nie wystarcza do
+naprawienia słabszego kryterium. Istotnie, w wierszu
+o długości $n$ weźmy niezależne zmienne, z których
+każda przyjmuje wartości $\pm\sqrt n$ z prawdopodobieństwem
+$1/(2n^2)$ każda, a zero z prawdopodobieństwem $1-1/n^2$.
+Każda ma średnią zero i wariancję $1/n$, więc
+$s_n^2=1$ i warunek Fellera zachodzi. Dla ustalonego
+$\varepsilon>0$ i $n>\varepsilon^2$ suma
+prawdopodobieństw dużych skoków wynosi $1/n$,
+natomiast suma obciętych drugich momentów wynosi $1$.
+Ponadto z nierówności dla prawdopodobieństwa sumy
+zdarzeń otrzymujemy
+\[
+\Prob\left(\left|\sum_{k=1}^n Y_{n,k}\right|>\varepsilon\right)
+\leq\Prob\left(\bigcup_{k=1}^n\{Y_{n,k}\ne0\}\right)
+\leq\frac1n.
+\]
+Suma zbiega więc według prawdopodobieństwa do zera,
+a nie według rozkładu do $\Normal(0,1)$.
 \end{przyklad}
 
 \section{Synteza: jak wybrać właściwe twierdzenie?}
