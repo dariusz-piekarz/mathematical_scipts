@@ -2393,6 +2393,63 @@ jego wartość wynosi $1$. Konsekwencję semantyczną zbioru zdań
 określamy przez zachowanie tej wyróżnionej wartości
 we wszystkich rozważanych strukturach.
 
+\begin{lemat}[Lemat o podstawieniu]\label{lem:ncl-substitution}
+Niech term $t$ będzie podstawialny za zmienną $x$ w
+formule $\varphi$, tzn. żadne wolne wystąpienie $x$,
+w miejsce którego podstawiamy $t$, nie leży w zasięgu
+kwantyfikatora wiążącego zmienną występującą w $t$.
+Jeżeli $t^{\mathfrak M}[s]$ oznacza wartość termu przy
+wartościowaniu $s$, to
+\[
+ \|\varphi[t/x]\|_s
+ =\|\varphi\|_{s[x\mapsto t^{\mathfrak M}[s]]}.
+\]
+\end{lemat}
+\begin{proof}
+Dla termu $u$ analogiczna równość
+$(u[t/x])^{\mathfrak M}[s]
+=u^{\mathfrak M}[s[x\mapsto t^{\mathfrak M}[s]]]$
+wynika przez indukcję po budowie termu: dla zmiennej
+$x$ obie strony są wartością $t$, dla innej zmiennej
+i stałej podstawienie nie zmienia wartości, a dla
+symbolu funkcyjnego stosujemy hipotezę do argumentów.
+Daje to tezę dla atomów, w tym atomów równości.
+Dla spójników stosujemy hipotezę indukcyjną do
+podformuł i tę samą operację algebraiczną.
+
+Niech $\varphi=Qy\,\eta$, gdzie $Q$ jest jednym z
+kwantyfikatorów $\forall,\exists$. Jeśli $x$ nie jest
+wolna w $\varphi$, podstawienie nie zmienia formuły,
+a zmiana wartości $x$ nie zmienia jej wartości
+na mocy Lematu~\ref{lem:lst-fuzzy-free-variables}.
+W przeciwnym razie $y\ne x$ i $y$ nie występuje w $t$
+na mocy założenia podstawialności. Dla $a\in M$
+mamy zatem $t^{\mathfrak M}[s[y\mapsto a]]
+=t^{\mathfrak M}[s]$. Hipoteza indukcyjna daje
+\[
+ \|\eta[t/x]\|_{s[y\mapsto a]}
+ =\|\eta\|_{s[y\mapsto a][x\mapsto t^{\mathfrak M}[s]]}
+ =\|\eta\|_{s[x\mapsto t^{\mathfrak M}[s]][y\mapsto a]}.
+\]
+Ostatnia równość wynika z $x\ne y$, więc aktualizacje
+wartościowania są przemienne. Bierzemy infimum
+dla $Q=\forall$, a supremum dla $Q=\exists$.
+\end{proof}
+W szczególności formuły
+$(\forall x\,\varphi)\to\varphi[t/x]$ oraz
+$\varphi[t/x]\to(\exists x\,\varphi)$ mają wartość $1$.
+Istotnie, wartość podstawionej formuły jest jednym
+z elementów rodziny, której kresy interpretują
+kwantyfikatory. Infimum jest nie większe od tej
+wartości, a supremum nie mniejsze; stosujemy residuację.
+Bez warunku podstawialności zmienna termu mogłaby
+zostać związana. Na przykład dla $\varphi=\exists y\,P(x,y)$
+i $t=y$ naiwna zamiana prowadzi do $\exists y\,P(y,y)$,
+która nie musi mieć wartości $\|\varphi\|_{s[x\mapsto s(y)]}$.
+Na dwuelementowym uniwersum z predykatem $P$ będącym
+funkcją charakterystyczną relacji nierówności pierwsza
+formuła ma wartość $0$, a druga wartość $1$.
+
 \begin{stwierdzenie}[Powrót do logiki klasycznej]
 \label{prop:lst-fuzzy-crisp-reduction}
 Jeżeli wszystkie predykaty przyjmują tylko wartości $0,1$,
@@ -2447,8 +2504,8 @@ wynikają tożsamości
  (\sup_m a_m)\Rightarrow_T b&=\inf_m(a_m\Rightarrow_T b).
 \end{split}
 \]
-Pierwszą udowodniono w
-Stwierdzeniu~\ref{prop:lst-fuzzy-standard-chains}.
+Pierwsza wynika z
+Twierdzenia~\ref{thm:ncl-residuation-equivalences}.
 W drugiej, dla dowolnego $c\in[0,1]$, warunek
 $c\leq b\Rightarrow_T\inf_m a_m$ jest równoważny
 $T(b,c)\leq a_m$ dla wszystkich $m$, czyli
@@ -2494,6 +2551,35 @@ Zatem klasycznej równoważności
 $\neg\forall x\,\varphi$ i $\exists x\neg\varphi$
 nie wolno przyjmować bez sprawdzenia rodzaju negacji.
 
+\begin{stwierdzenie}[Negacja a kwantyfikatory]
+\label{prop:ncl-quantifier-negation}
+Dla dowolnej rozważanej normy trójkątnej z residuum
+formuły $\neg\exists x\,\varphi$ oraz $\forall x\,\neg\varphi$
+mają jednakowe wartości. Ponadto zawsze
+\[
+ \|\exists x\,\neg\varphi\|_s\leq
+ \|\neg\forall x\,\varphi\|_s.
+\]
+Jeżeli negacja rezydualna jest inwolucją (w szczególności
+dla normy Łukasiewicza), zachodzi równość także
+w drugim przypadku.
+\end{stwierdzenie}
+\begin{proof}
+Niech $a_m=\|\varphi\|_{s[x\mapsto m]}$ oraz $n(a)=a\Rightarrow_T0$.
+Trzecia tożsamość z dowodu
+Stwierdzenia~\ref{prop:lst-fuzzy-quantifier-laws}
+dla $b=0$ daje $n(\sup_m a_m)=\inf_m n(a_m)$.
+Ponieważ $n$ jest nierosnąca, z $\inf_m a_m\leq a_m$
+wynika $n(a_m)\leq n(\inf_m a_m)$ dla każdego $m$.
+Biorąc supremum, otrzymujemy żądaną nierówność.
+Jeżeli $n(n(a))=a$, to $n$ jest odwracającą porządek
+bijekcją, a z pierwszej tożsamości zastosowanej do
+rodziny $(n(a_m))_m$ otrzymujemy
+$n(\sup_m n(a_m))=\inf_m a_m$.
+Ponowne zastosowanie $n$ daje
+$\sup_m n(a_m)=n(\inf_m a_m)$.
+\end{proof}
+
 \section{Relacje rozmyte}
 Dla relacji rozmytych $R:X\times Y\to[0,1]$ i
 $S:Y\times Z\to[0,1]$ definiujemy
@@ -2512,6 +2598,47 @@ $T(a,c)\leq b$ dla wszystkich $c\in C$.
 Oba złożenia trzech relacji dają więc supremum po parach
 elementów pośrednich z tej samej wartości na mocy łączności $T$.
 \end{proof}
+
+\begin{stwierdzenie}[Przekroje złożenia dla minimum]
+\label{prop:ncl-relation-cut-composition}
+Niech $T=T_G=\min$ i $R_\alpha,S_\alpha$ będą słabymi
+przekrojami relacji $R,S$ na poziomie $\alpha\in(0,1]$.
+Przy zwykłym składaniu relacji zachodzi
+\[
+ S_\alpha\circ R_\alpha\subseteq (S\circ_{T_G}R)_\alpha.
+\]
+Jeżeli zbiór pośredni $Y$ jest skończony, zachodzi
+równość. W ogólności dokładny wzór to
+\[
+ (S\circ_{T_G}R)_\alpha
+ =\bigcap_{0<\beta<\alpha}(S_\beta\circ R_\beta).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli istnieje $y$ z $R(x,y),S(y,z)\geq\alpha$,
+to supremum minimów jest nie mniejsze od $\alpha$.
+Gdy $Y$ jest skończony i niepusty, supremum jest
+maksimum, więc odwrotnie istnieje taki $y$.
+Dla pustego $Y$ obie strony są puste, gdy $\alpha>0$.
+W ogólności, jeżeli supremum minimów jest co najmniej
+$\alpha$, to dla każdego $0<\beta<\alpha$ istnieje $y$,
+dla którego minimum jest większe od $\beta$.
+Stąd inkluzja w prawą stronę dokładnego wzoru.
+Odwrotnie, przynależność do prawej strony oznacza,
+że supremum minimów jest nie mniejsze od każdego
+$\beta<\alpha$, a więc nie mniejsze od $\alpha$.
+\end{proof}
+
+\begin{przyklad}[Supremum bez osiągnięcia przy składaniu relacji]
+\label{ex:ncl-relation-cut-no-witness}
+Niech $X=\{x\}$, $Z=\{z\}$, $Y=\N$ oraz
+$R(x,n)=S(n,z)=1-1/(n+1)$.
+Wówczas $(S\circ_{T_G}R)(x,z)=1$, ale $R_1=S_1=\varnothing$.
+Zatem $(x,z)$ należy do przekroju złożenia na poziomie $1$,
+choć nie należy do złożenia przekrojów na tym poziomie.
+Jest to odpowiednik braku świadka dla kwantyfikatora
+egzystencjalnego z Przykładu~\ref{ex:lst-fuzzy-no-witness}.
+\end{przyklad}
 
 \subsection{Rozmyte relacje równoważności i przekroje}
 
