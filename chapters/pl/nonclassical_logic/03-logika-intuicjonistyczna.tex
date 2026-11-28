@@ -1217,3 +1217,314 @@ W szczególności $T_0$ jest teorią pierwszą, ale
 nie jest maksymalnym zbiorem niesprzecznym.
 Nie należy do niej ani $p$, ani $\neg p$.
 \end{przyklad}
+
+\section{Filtracja i własność modelu skończonego}
+
+Twierdzenie o silnej pełności pozwala znaleźć kontrmodel
+każdej niedowodliwej konsekwencji, lecz nie ogranicza
+liczby jego światów. Dla skończonego zbioru rozważanych
+formuł można jednak utożsamić światy, których nie
+odróżnia żadna z tych formuł. Trzeba przy tym zachować
+nie tylko wartości zmiennych, ale również informację
+istotną dla wymuszania implikacji.
+
+\begin{definicja}[Zbiory podformuł]
+\label{def:ncl-ipc-subformulas}
+Zbiór $\operatorname{Sub}(\varphi)$ podformuł formuły
+$\varphi$ zawiera samą $\varphi$ oraz wszystkie
+podformuły jej bezpośrednich argumentów.
+Dla zmiennej i stałej $\bot$ jest to zbiór jednoelementowy.
+Dla zbioru formuł $E$ przyjmujemy
+\[
+ \operatorname{Sub}(E)=
+ \bigcup_{\varphi\in E}\operatorname{Sub}(\varphi).
+\]
+Zbiór $\Sigma$ jest domknięty względem podformuł,
+jeśli $\varphi\in\Sigma$ implikuje
+$\operatorname{Sub}(\varphi)\subseteq\Sigma$.
+Skróty takie jak $\neg,\top,\leftrightarrow$
+rozwijamy przed wyznaczeniem podformuł.
+\end{definicja}
+Każda formuła ma skończenie wiele podformuł,
+co wynika z indukcji po jej skończonym drzewie
+składniowym. W szczególności dla skończonego $E$
+zbiór $\operatorname{Sub}(E)$ jest skończony
+i domknięty względem podformuł.
+
+\begin{definicja}[Filtracja przez profile wymuszania]
+\label{def:ncl-ipc-filtration}
+Niech $\mathcal M=(W,\leq,V)$ będzie modelem Kripkego
+oraz niech $\Sigma$ będzie skończonym zbiorem formuł
+domkniętym względem podformuł.
+Dla $w\in W$ definiujemy profil
+\[
+ t_\Sigma(w)=\{\psi\in\Sigma:w\Vdash_{\mathcal M}\psi\}.
+\]
+Określamy model filtracyjny
+$\mathcal M_\Sigma=(W_\Sigma,\subseteq,V_\Sigma)$,
+gdzie
+\[
+ W_\Sigma=\{t_\Sigma(w):w\in W\},\qquad
+ V_\Sigma(p)=
+ \begin{cases}
+  \{S\in W_\Sigma:p\in S\},&p\in\Sigma,\\
+  \varnothing,&p\notin\Sigma.
+ \end{cases}
+\]
+\end{definicja}
+Model jest dobrze określony: $W_\Sigma$ jest niepusty,
+inkluzja jest częściowym porządkiem, a każdy
+$V_\Sigma(p)$ jest domknięty ku górze.
+Ponieważ $W_\Sigma\subseteq\mathcal P(\Sigma)$,
+mamy
+\[
+ 1\leq |W_\Sigma|\leq 2^{|\Sigma|}.
+\]
+Z Lematu~\ref{lem:ncl-ipc-persistence} wynika, że
+$w\leq v$ pociąga $t_\Sigma(w)\subseteq t_\Sigma(v)$.
+Filtracja może jednak wprowadzać porównania profili
+światów, które pierwotnie nie były porównywalne.
+Nie definiujemy porządku ilorazowego przez samo
+istnienie porównywalnych reprezentantów: taka
+relacja nie musi być przechodnia.
+Jeśli model wyjściowy ma korzeń $r$, to
+$t_\Sigma(r)$ jest elementem najmniejszym modelu
+filtracyjnego.
+
+\begin{twierdzenie}[Lemat o filtracji]
+\label{thm:ncl-ipc-filtration}
+Dla każdej $\varphi\in\Sigma$ i każdego $w\in W$
+zachodzi
+\[
+ w\Vdash_{\mathcal M}\varphi
+ \iff t_\Sigma(w)\Vdash_{\mathcal M_\Sigma}\varphi.
+\]
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po budowie $\varphi$, jednocześnie
+dla wszystkich światów modelu wyjściowego.
+Wszystkie podformuły używane w indukcji należą
+do $\Sigma$.
+
+Dla zmiennej $p\in\Sigma$ mamy
+$w\Vdash_{\mathcal M}p$ dokładnie wtedy, gdy
+$p\in t_\Sigma(w)$, czyli wtedy, gdy
+$t_\Sigma(w)\in V_\Sigma(p)$.
+Dla $\bot$ obie strony równoważności są fałszywe.
+Dla koniunkcji i alternatywy stosujemy odpowiednie
+klauzule wymuszania oraz hipotezę indukcyjną
+do obu argumentów.
+
+Niech $\varphi=\alpha\to\beta$.
+Załóżmy najpierw $w\Vdash_{\mathcal M}\alpha\to\beta$.
+Niech $S\in W_\Sigma$ będzie dowolnym profilem
+z $t_\Sigma(w)\subseteq S$ i
+$S\Vdash_{\mathcal M_\Sigma}\alpha$.
+Wybieramy $v\in W$ takie, że $S=t_\Sigma(v)$.
+Ponieważ $\alpha\to\beta\in\Sigma$ i należy
+do $t_\Sigma(w)$, należy również do $S$.
+Zatem $v\Vdash_{\mathcal M}\alpha\to\beta$.
+Z hipotezy indukcyjnej dla $\alpha$ mamy
+$v\Vdash_{\mathcal M}\alpha$.
+Zwrotność porządku daje $v\Vdash_{\mathcal M}\beta$,
+a hipoteza indukcyjna dla $\beta$ daje
+$S\Vdash_{\mathcal M_\Sigma}\beta$.
+Dowolność $S$ dowodzi
+$t_\Sigma(w)\Vdash_{\mathcal M_\Sigma}\alpha\to\beta$.
+
+Odwrotnie, jeśli $w\not\Vdash_{\mathcal M}\alpha\to\beta$,
+to istnieje $v\geq w$ takie, że
+$v\Vdash_{\mathcal M}\alpha$ oraz
+$v\not\Vdash_{\mathcal M}\beta$.
+Trwałość wymuszania wszystkich formuł z $\Sigma$
+daje $t_\Sigma(w)\subseteq t_\Sigma(v)$.
+Z hipotezy indukcyjnej wynika, że
+$t_\Sigma(v)$ wymusza $\alpha$, lecz nie wymusza
+$\beta$ w modelu filtracyjnym.
+Jest to świadek niewymuszania implikacji w
+$t_\Sigma(w)$. Otrzymujemy drugą implikację
+i kończymy indukcję.
+\end{proof}
+Istotny jest pierwszy kierunek dla implikacji:
+nowe porównania nie tworzą kontrprzykładu, ponieważ
+profil pamięta również samą formułę implikacyjną.
+
+\begin{przyklad}[Utożsamianie światów o jednakowym profilu]
+\label{ex:ncl-ipc-filtration}
+Niech $W=\{r,a,b\}$, gdzie $r<a$, $r<b$,
+a $a,b$ są nieporównywalne. Przyjmijmy
+$V(p)=\{a,b\}$ oraz $V(q)=\{a\}$.
+Dla zbioru $\Sigma=\{p,\neg p,\bot\}$ mamy
+\[
+ t_\Sigma(r)=\varnothing,\qquad
+ t_\Sigma(a)=t_\Sigma(b)=\{p\}.
+\]
+Rzeczywiście, żaden świat nie wymusza $\bot$,
+a każdy świat ma rozszerzenie wymuszające $p$,
+więc żaden nie wymusza $\neg p$.
+Światy $a,b$ różnią się wymuszaniem $q$, lecz
+formuła $q$ nie należy do $\Sigma$.
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+\node[draw,rounded corners] (r) at (0,0) {$r:\ \varnothing$};
+\node[draw,rounded corners,fill=blue!8] (a) at (-1.6,1.8) {$a:\ p,q$};
+\node[draw,rounded corners,fill=blue!8] (b) at (1.6,1.8) {$b:\ p$};
+\draw[->,thick] (r)--(a);
+\draw[->,thick] (r)--(b);
+\node at (3.0,0.9) {$\longmapsto$};
+\node[draw,rounded corners] (r2) at (5.0,0) {$\varnothing$};
+\node[draw,rounded corners,fill=blue!8] (t2) at (5.0,1.8) {$\{p\}$};
+\draw[->,thick] (r2)--(t2);
+\end{tikzpicture}
+\end{center}
+W modelu po lewej podpisy przedstawiają wymuszane
+zmienne spośród $p,q$, a po prawej całe profile
+względem $\Sigma$. Filtracja redukuje liczbę światów
+z trzech do dwóch. Zachowuje wymuszanie $p$,
+$\neg p$ i $\bot$, ale nie musi zachowywać
+wymuszania formuł spoza $\Sigma$.
+\end{przyklad}
+
+\begin{twierdzenie}[Własność modelu skończonego IPC]
+\label{thm:ncl-ipc-finite-model-property}
+Niech $\Gamma$ będzie skończonym zbiorem formuł
+i niech $\varphi$ będzie formułą. Połóżmy
+$\Sigma=\operatorname{Sub}(\Gamma\cup\{\varphi\})$.
+Jeżeli $\Gamma\nvdash_{\mathrm I}\varphi$, to istnieje
+skończony ukorzeniony model Kripkego o co najwyżej
+$2^{|\Sigma|}$ światach, którego korzeń wymusza
+wszystkie przesłanki z $\Gamma$, lecz nie wymusza
+$\varphi$.
+\end{twierdzenie}
+\begin{proof}
+Silna pełność
+(Twierdzenie~\ref{thm:ncl-ipc-strong-completeness})
+daje ukorzeniony kontrmodel $\mathcal M$ z korzeniem
+$r$. Filtrujemy go przez $\Sigma$.
+Model filtracyjny ma korzeń $t_\Sigma(r)$ i nie
+więcej niż $2^{|\Sigma|}$ światów, jak wynika
+z Definicji~\ref{def:ncl-ipc-filtration} i następujących
+po niej uwag.
+Ponieważ $\Gamma\cup\{\varphi\}\subseteq\Sigma$,
+Twierdzenie~\ref{thm:ncl-ipc-filtration}
+zachowuje wymuszanie wszystkich przesłanek
+i niewymuszanie wniosku w obrazie korzenia.
+\end{proof}
+
+\begin{wniosek}[Pełność względem modeli skończonych]
+\label{cor:ncl-ipc-finite-completeness}
+Dla skończonego $\Gamma$ mamy
+\[
+ \Gamma\vdash_{\mathrm I}\varphi
+ \iff \Gamma\models_{\mathrm K,fin}\varphi,
+\]
+gdzie konsekwencję po prawej stronie definiujemy
+jak w Definicji~\ref{def:ncl-ipc-kripke-consequence},
+ograniczając się do modeli o skończonej liczbie światów.
+\end{wniosek}
+\begin{proof}
+Kierunek prosty wynika z poprawności IPC, gdyż
+każdy model skończony jest modelem Kripkego.
+Dla kierunku odwrotnego stosujemy kontrapozycję
+Twierdzenia~\ref{thm:ncl-ipc-finite-model-property}.
+\end{proof}
+Skończoność $\Gamma$ jest istotna dla powyższego
+dowodu. Silna pełność względem wszystkich modeli
+nie daje automatycznie silnej pełności względem
+samych modeli skończonych.
+
+\subsection{Rozstrzygalność}
+
+\begin{twierdzenie}[Algorytm rozstrzygania IPC]
+\label{thm:ncl-ipc-decidability}
+Dla skończonego zbioru przesłanek $\Gamma$
+można rozstrzygnąć, czy
+$\Gamma\vdash_{\mathrm I}\varphi$.
+W szczególności zbiór twierdzeń IPC jest rozstrzygalny
+w standardowej efektywnej prezentacji języka zdaniowego.
+\end{twierdzenie}
+\begin{proof}
+Obliczamy $\Sigma=\operatorname{Sub}
+(\Gamma\cup\{\varphi\})$, liczbę $s=|\Sigma|$,
+ograniczenie $N=2^s$ oraz skończony zbiór $P$
+zmiennych występujących w przesłankach i wniosku.
+
+Dla $n=1,\ldots,N$ rozpatrujemy wszystkie relacje
+binarne na zbiorze $\{1,\ldots,n\}$.
+Odrzucamy relacje, które nie są zwrotne,
+antysymetryczne i przechodnie, a następnie
+te porządki, które nie mają elementu najmniejszego.
+Dla każdego pozostałego porządku rozpatrujemy
+wszystkie przyporządkowania zmiennym z $P$
+zbiorów domkniętych ku górze; pozostałym zmiennym
+przypisujemy zbiór pusty.
+
+W każdym z otrzymanych modeli obliczamy rekurencyjnie
+wymuszanie wszystkich formuł z $\Sigma$,
+w kolejności od podformuł do formuł złożonych.
+Dla implikacji $\alpha\to\beta$ i świata $i$
+sprawdzamy wszystkie światy $j\geq i$:
+żaden nie może wymuszać $\alpha$ bez wymuszania
+$\beta$. Sprawdzamy, czy korzeń wymusza wszystkie
+przesłanki i nie wymusza wniosku.
+
+Jeśli znajdziemy taki model, poprawność IPC
+daje odpowiedź przeczącą. Jeśli wyczerpiemy wszystkie
+modele bez znalezienia kontrmodelu, odpowiadamy
+twierdząco na mocy
+Twierdzenia~\ref{thm:ncl-ipc-finite-model-property}.
+Każdy skończony model o co najwyżej $N$ światach
+można przenumerować do jednego z rozpatrywanych
+zbiorów nośnych, a wymuszanie rozważanych formuł
+nie zależy od wartościowania zmiennych spoza $P$,
+co wynika z indukcji po budowie formuły.
+Wszystkie pętle przebiegają skończone zbiory,
+więc algorytm zawsze się kończy.
+\end{proof}
+
+\begin{stwierdzenie}[Oszacowanie kosztu enumeracji]
+\label{prop:ncl-ipc-enumeration-complexity}
+Niech $s=|\Sigma|$, $k=|P|$ oraz $N=2^s$
+jak w dowodzie poprzedniego twierdzenia.
+Liczba rozpatrywanych par relacji i wartościowań
+przed odrzuceniem niedopuszczalnych kandydatów
+jest ograniczona przez
+\[
+ \sum_{n=1}^N 2^{n^2+kn}\leq N2^{N^2+kN}.
+\]
+Przy reprezentacji relacji i zbiorów wymuszania
+za pomocą tablic boolowskich koszt sprawdzenia
+kandydata można ograniczyć przez
+$O(n^3+(s+k)n^2)$ operacji boolowskich.
+\end{stwierdzenie}
+\begin{proof}
+Relacja na $n$ elementach jest podzbiorem
+zbioru $n^2$ uporządkowanych par, więc mamy
+$2^{n^2}$ możliwości. Każda z $k$ zmiennych
+może otrzymać jeden z $2^n$ podzbiorów,
+co daje $2^{kn}$ przyporządkowań.
+Każdy składnik sumy jest co najwyżej równy
+ostatniemu.
+
+Zwrotność i antysymetrię sprawdzamy w czasie
+$O(n^2)$, przechodniość przez sprawdzenie
+wszystkich trójek w czasie $O(n^3)$.
+Istnienie korzenia oraz domknięcie ku górze
+wartościowań wymagają odpowiednio $O(n^2)$
+i $O(kn^2)$ operacji.
+Dla każdej podformuły wystarczy obliczyć jej
+zbiór wymuszania w modelu. Koniunkcja i alternatywa
+wymagają $O(n)$ operacji, implikacja wymaga
+sprawdzenia co najwyżej $n^2$ par światów.
+Wartości $\bot$ i zmiennych są bezpośrednio
+dostępne. Ponieważ argumenty spójników zostały
+obliczone wcześniej, cały ten etap kosztuje
+$O(sn^2)$. Dodanie kosztów daje tezę.
+\end{proof}
+Otrzymujemy skończony, lecz bardzo kosztowny
+algorytm. Ponieważ $N=2^s$ i $k\leq s$,
+podane oszacowanie jest podwójnie wykładnicze
+w $s$. Nie jest to dolne ograniczenie złożoności
+problemu ani twierdzenie o optymalności algorytmu.
+Do praktycznego wyszukiwania dowodów potrzebne
+są bardziej oszczędne procedury.
