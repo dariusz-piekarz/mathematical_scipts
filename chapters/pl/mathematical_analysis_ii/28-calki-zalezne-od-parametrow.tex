@@ -733,8 +733,8 @@ Tożsamość dla całek wynika z odpowiedniej
 tożsamości miar dla funkcji charakterystycznych,
 a następnie z aproksymacji funkcjami prostymi
 i rozkładu na części dodatnią i ujemną.
-Dla $t$ w zwartym podprzedziale $I$
-wszystkie argumenty $(t,c(t)+r(t)y)$,
+Dla $t$ w dowolnym zwartym podprzedziale
+zawartym w $I$ wszystkie argumenty $(t,c(t)+r(t)y)$,
 $\|y\|_2\le1$, należą do jednego zbioru
 zwartego. Funkcja podcałkowa i jej pochodna
 względem $t$ są więc jednostajnie ograniczone
@@ -768,11 +768,14 @@ Wzór wyprowadziliśmy bez twierdzenia
 Gaussa--Ostrogradskiego; po jego poznaniu
 dwa ostatnie składniki będzie można
 zapisać jako strumień pola $uV$ przez
-brzeg kuli.
+brzeg kuli. Z reguły iloczynu ich suma
+jest bowiem równa $\operatorname{div}_x(uV)$.
+Na razie wzór objętościowy jest niezależny
+od twierdzenia o strumieniu przez brzeg.
 
 \begin{przyklad}[Kontrola rachunku dla gęstości stałej]
 \label{ma2:ex:parameter-ball-all-constant}
-Jeśli $u(t,x)=a(t)$, to
+Jeśli $u(t,x)=a(t)$ dla $a\in C^1(I)$, to
 $G(t)=a(t)v_nr(t)^n$ i powyższy wzór daje
 \[
  G'(t)=v_nr(t)^na'(t)
@@ -894,6 +897,72 @@ wzór radialny, ponieważ $\lambda_n(\{0\})=0$.
 Nie jest to jeszcze ogólny wzór różniczkowania
 całki po ruchomej podrozmaitości.
 \end{przyklad}
+
+
+\paragraph{Wizualizacje interaktywne.}
+Pierwszy wykres przedstawia przykład
+\ref{ma2:ex:parameter-two-changes} dla $t=1$.
+Dodajemy pomocniczy kierunek o długości $1$,
+więc pola z rysunku są równe objętościom
+odpowiednich graniastosłupów.
+Suwak zmienia $h$ i pokazuje iloraz
+różnicowy $5/2+3h/2+h^2/2$.
+Drugi wykres przedstawia kule o środku
+$c(h)=(h,0,0)$ i promieniu $1+h/2$.
+Przezroczyste powierzchnie oznaczają
+brzegi kul, a nie osobne miary powierzchniowe.
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+
+faces=[(0,2,1),(0,3,2),(4,5,6),(4,6,7),
+       (0,1,5),(0,5,4),(1,2,6),(1,6,5),
+       (2,3,7),(2,7,6),(3,0,4),(3,4,7)]
+i,j,k=zip(*faces)
+def prism(a,b,lo,hi,color,name,visible):
+    v=[(a,0,lo(a)),(b,0,lo(b)),(b,1,lo(b)),
+       (a,1,lo(a)),(a,0,hi(a)),(b,0,hi(b)),
+       (b,1,hi(b)),(a,1,hi(a))]
+    x,y,z=zip(*v)
+    return go.Mesh3d(x=x,y=y,z=z,i=i,j=j,k=k,
+        color=color,name=name,visible=visible,
+        showlegend=True)
+hs=np.arange(1,9)/20
+old=lambda x:1+x
+fig=go.Figure(prism(0,1,lambda x:0,old,
+    "#397db5","F(t)",True))
+for jh,h in enumerate(hs):
+    f=lambda x:1+(1+h)*x
+    fig.add_trace(prism(0,1,old,f,
+        "#15988c","Density",jh==4))
+    fig.add_trace(prism(1,1+h,lambda x:0,f,
+        "#d97706","Domain",jh==4))
+steps=[dict(label=f"{h:.2f}",method="update",
+    args=[dict(visible=[True]+
+          [j==ih for j in range(len(hs)) for _ in range(2)]),
+          dict(title=f"Q = {2.5+1.5*h+.5*h*h:.4f}")])
+       for ih,h in enumerate(hs)]
+fig.update_layout(sliders=[dict(active=4,steps=steps)],
+    title="Q = 2.9062")
+fig.write_html("am2_28_leibniz.html", include_plotlyjs=True)
+
+p,q=np.meshgrid(np.linspace(0,np.pi,33),
+                np.linspace(0,2*np.pi,65))
+def sphere(c,r,color,visible):
+    return go.Surface(x=c+r*np.sin(p)*np.cos(q),
+        y=r*np.sin(p)*np.sin(q),z=r*np.cos(p),
+        colorscale=[[0,color],[1,color]],
+        opacity=.38,showscale=False,visible=visible)
+fig=go.Figure(sphere(0,1,"#397db5",True))
+for ih,h in enumerate(hs):
+    fig.add_trace(sphere(h,1+h/2,"#d97706",ih==4))
+steps=[dict(label=f"{h:.2f}",method="update",
+    args=[dict(visible=[True]+[j==ih for j in range(len(hs))])])
+       for ih,h in enumerate(hs)]
+fig.update_layout(scene_aspectmode="cube",
+    sliders=[dict(active=4,steps=steps)])
+fig.write_html("am2_28_moving_ball.html", include_plotlyjs=True)
+\end{lstlisting}
 
 \section{Kontrola ogonów i dobór metody}
 

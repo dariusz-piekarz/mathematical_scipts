@@ -201,6 +201,39 @@
       const steps=radii.map((r,j)=>({label:r.toFixed(1),method:"update",args:[{visible:[true,true,true,...radii.flatMap((_,i)=>Array(6).fill(i===j))]},{"title.text":title(r)}]}));
       return base(data,title(.4),{...layouts,margin:{l:0,r:0,b:70,t:80},annotations:[0,1,2].map(k=>({xref:"paper",yref:"paper",x:(k+.5)/3,y:1.04,text:["Punkt: m=3","Oś: m=2","Płaszczyzna: m=1"][k],showarrow:false,xanchor:"center"})),sliders:[{active:3,currentvalue:{prefix:"r = "},steps}]});
     },
+    "am2_28_leibniz.html":()=>{
+      // Extrusion of the one-dimensional integral along a unit auxiliary axis.
+      const faces=[[0,2,1],[0,3,2],[4,5,6],[4,6,7],[0,1,5],[0,5,4],[1,2,6],[1,6,5],[2,3,7],[2,7,6],[3,0,4],[3,4,7]];
+      const edges=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+      const prism=(a,b,lo,hi,color,name,visible)=>{
+        const v=[[a,0,lo(a)],[b,0,lo(b)],[b,1,lo(b)],[a,1,lo(a)],[a,0,hi(a)],[b,0,hi(b)],[b,1,hi(b)],[a,1,hi(a)]];
+        const pts=edges.flatMap(([i,j])=>[v[i],v[j],[null,null,null]]);
+        return [{type:"mesh3d",x:v.map(p=>p[0]),y:v.map(p=>p[1]),z:v.map(p=>p[2]),i:faces.map(p=>p[0]),j:faces.map(p=>p[1]),k:faces.map(p=>p[2]),color,flatshading:true,name,visible,showlegend:true},
+          {...line(pts.map(p=>p[0]),pts.map(p=>p[1]),pts.map(p=>p[2]),name,color),visible,showlegend:false,hoverinfo:"skip"}];
+      };
+      const t=1,hs=Array.from({length:8},(_,i)=>(i+1)/20),data=[];
+      const old=x=>1+t*x;
+      data.push(...prism(0,t,()=>0,old,"#397db5","F(t)",true));
+      hs.forEach((h,i)=>{
+        const f=x=>1+(t+h)*x;
+        data.push(...prism(0,t,old,f,"#15988c","Zmiana gęstości",i===4),...prism(t,t+h,()=>0,f,"#d97706","Zmiana dziedziny",i===4));
+      });
+      const title=h=>"h = "+h.toFixed(2)+" | iloraz: "+(2.5+1.5*h+.5*h*h).toFixed(4)+" → 2.5";
+      const steps=hs.map((h,i)=>({label:h.toFixed(2),method:"update",args:[{visible:[true,true,...hs.flatMap((_,j)=>Array(4).fill(i===j))]},{"title.text":title(h)}]}));
+      return base(data,title(.25),{scene:{...scene("x","oś pomocnicza","f(t,x)"),aspectmode:"manual",aspectratio:{x:1.15,y:.6,z:1.4},xaxis:{...axis("x"),range:[0,1.5]},yaxis:{...axis("oś pomocnicza"),range:[0,1]},zaxis:{...axis("f(t,x)"),range:[0,3.2]}},margin:{l:0,r:0,b:70,t:55},sliders:[{active:4,currentvalue:{prefix:"h = "},steps}]});
+    },
+    "am2_28_moving_ball.html":()=>{
+      const a=lin(0,Math.PI,33),b=lin(0,2*Math.PI,65),hs=Array.from({length:8},(_,i)=>(i+1)/20);
+      const sphere=(c,r,color,name,visible)=>surface(a.map(p=>b.map(q=>c+r*Math.sin(p)*Math.cos(q))),a.map(p=>b.map(q=>r*Math.sin(p)*Math.sin(q))),a.map(p=>b.map(()=>r*Math.cos(p))),{colorscale:[[0,color],[1,color]],opacity:.38,name,visible,showlegend:true,hoverinfo:"skip"});
+      const data=[sphere(0,1,"#397db5","Kula początkowa",true)];
+      hs.forEach((h,i)=>{
+        const r=1+h/2;
+        data.push(sphere(h,r,"#d97706","Kula w chwili h",i===4),{...line([0,h],[0,0],[0,0],"Przesunięcie środka","#333"),visible:i===4,showlegend:false});
+      });
+      const title=h=>"h = "+h.toFixed(2)+" | c = ("+h.toFixed(2)+", 0, 0), r = "+(1+h/2).toFixed(3);
+      const steps=hs.map((h,i)=>({label:h.toFixed(2),method:"update",args:[{visible:[true,...hs.flatMap((_,j)=>[i===j,i===j])]},{"title.text":title(h)}]}));
+      return base(data,title(.25),{scene:{...scene(),aspectmode:"cube",...Object.fromEntries(["x","y","z"].map(k=>[k+"axis",{...axis(k),range:[-1.7,1.7]}]))},margin:{l:0,r:0,b:70,t:55},sliders:[{active:4,currentvalue:{prefix:"h = "},steps}]});
+    },
     "am2_36_geometric.html":()=>{
       const r=lin(0,.97,61),t=lin(0,2*Math.PI,121),X=t.map(a=>r.map(v=>v*Math.cos(a))),Y=t.map(a=>r.map(v=>v*Math.sin(a)));
       const norm=(a,v,n)=>n===null?1/Math.hypot(1-v*Math.cos(a),v*Math.sin(a)):Math.hypot(1-v**(n+1)*Math.cos((n+1)*a),v**(n+1)*Math.sin((n+1)*a))/Math.hypot(1-v*Math.cos(a),v*Math.sin(a));

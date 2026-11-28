@@ -381,6 +381,46 @@ with sync_playwright() as pw:
     assert check['active'] == 3 and check['visible'] == 6, check
     host.locator('button').click()
     assert iframe.count() == 0
+    # AM II 28: density and domain contributions, plus moving sphere geometry.
+    source = (ROOT.parent / 'chapters/pl/mathematical_analysis_ii/28-calki-zalezne-od-parametrow.tex').read_text(encoding='utf-8')
+    page.evaluate("latex => renderSimplified(latex, 'AM2-28')", source)
+    hosts = box.locator('.atlas-plot-host')
+    assert hosts.count() == 2
+    for i, identifier in enumerate(('am2_28_leibniz.html', 'am2_28_moving_ball.html')):
+        host = hosts.nth(i)
+        host.locator('button').click()
+        iframe = host.locator('iframe')
+        assert iframe.get_attribute('sandbox') == 'allow-scripts'
+        assert iframe.get_attribute('src').endswith(identifier)
+        plot = host.frame_locator('iframe').locator('#plot[data-ready=true]')
+        plot.wait_for(timeout=60000)
+        if i == 0:
+            check = plot.evaluate("""el => {
+                const d=el.data, s=el.layout.sliders[0];
+                const volume=m=>(m.x[1]-m.x[0])*((m.z[4]-m.z[0])+(m.z[5]-m.z[1]))/2;
+                let error=0;
+                for(let j=0;j<8;j++){
+                    const h=(j+1)/20, v=volume(d[2+4*j])+volume(d[4+4*j]);
+                    error=Math.max(error,Math.abs(v/h-(2.5+1.5*h+.5*h*h)));
+                }
+                return {error, steps:s.steps.length, active:s.active, old:volume(d[0])};
+            }""")
+            assert check['error'] < 1e-12 and abs(check['old']-1.5) < 1e-12, check
+        else:
+            check = plot.evaluate("""el => {
+                const d=el.data, s=el.layout.sliders[0];
+                let error=0;
+                for(let j=0;j<8;j++){
+                    const h=(j+1)/20,r=1+h/2,m=d[1+2*j];
+                    for(let a=0;a<m.x.length;a++)for(let b=0;b<m.x[a].length;b++)
+                        error=Math.max(error,Math.abs((m.x[a][b]-h)**2+m.y[a][b]**2+m.z[a][b]**2-r*r));
+                }
+                return {error,steps:s.steps.length,active:s.active};
+            }""")
+            assert check['error'] < 1e-12, check
+        assert check['steps'] == 8 and check['active'] == 4, check
+        host.locator('button').click()
+        assert iframe.count() == 0
     # Real graph chapters: every figure must decode, not merely insert a placeholder.
     for module, filename, expected in (
         ('GW-01', '01-podstawy-teorii-grafow.tex', 7),
