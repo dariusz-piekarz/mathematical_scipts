@@ -1,4 +1,4 @@
-# Teoria dystrybucji i analiza harmoniczna — migracja (etap 5)
+# Teoria dystrybucji i analiza harmoniczna — migracja (etap 6)
 
 Data: 2026-11-28. Nazwa robocza: distribution_theory. Planowany prefiks Atlasu: DT (do potwierdzenia przy przełączeniu identyfikatorów).
 
@@ -52,3 +52,8 @@ Etap 1 pozostaje celowo poza katalogiem aktywnych książek Atlasu. Nie jest to 
 - Usunięto powtórzenie dowodu ograniczoności operatorów Hessianu w Lp: szczególny przypadek wynika z ogólnego twierdzenia CZ, bez utraty etykiet.
 - AF-25 nie można usunąć bez analizy każdego wyniku: zawiera m.in. nieprzedłużalność dystrybucji, kryterium temperowania dla dystrybucji na D, porównanie topologii i odrębne kontrprzykłady. Zostaje do redystrybucji. Podobnie AF-23/24 wymagają rozdzielenia sekcji nuklearności, Hermite'a i jąder bez odwracania zależności dowodowych.
 - Nie jest to jeszcze migracja katalogowa; kompilacja nowego mastera nie została przeprowadzona.
+
+## Etap 6 — rozdzielenie AF 23–24
+- Roboczy master TD korzysta teraz z czterech jednostek: Montel i nuklearność (w tym funkcje Hermite'a), ogólne topologiczne iloczyny tensorowe, twierdzenie o jądrze Schwartza, induktywne iloczyny tensorowe funkcji testowych. Zachowano wszystkie historyczne etykiety AF 23–24, dodano dwie etykiety sekcji.
+- Kolejność wymuszona przez dowód: twierdzenie o jądrze jest wykorzystywane w dowodzie identyfikacji ukończonego iloczynu induktywnego. Zweryfikowano odsyłacze między czterema nowymi jednostkami, brak odsyłaczy do późniejszych jednostek.
+- Ze względu na aktywne CI AF oraz testy czytające konkretne pliki, nowe jednostki są tymczasowymi kopiami roboczymi poza aktywnym katalogiem Atlasu. Nie są równocześnie wczytywane ze starymi AF 23–24 w masterze TD. Po przełączeniu katalogu trzeba usunąć stare kopie i zachować aliasy dawnych identyfikatorów. AF 25 nadal do redystrybucji. Kompilacja niepotwierdzona.
