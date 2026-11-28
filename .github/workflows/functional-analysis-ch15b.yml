@@ -9,6 +9,11 @@ on:
       - 'tools/tests/test_functional_analysis_ch15b.py'
   workflow_dispatch:
 
+# Preserve independent manual audits; coalesce only obsolete queued pushes.
+concurrency:
+  group: atlas-functional-analysis-ch15b-${{ github.event_name == 'workflow_dispatch' && format('manual-{0}', github.run_id) || github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 

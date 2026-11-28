@@ -11,6 +11,11 @@ on:
       - '.github/workflows/functional-analysis-ch*.yml'
   workflow_dispatch:
 
+# Preserve independent manual audits; coalesce only obsolete queued pushes.
+concurrency:
+  group: atlas-functional-analysis-book-${{ github.event_name == 'workflow_dispatch' && format('manual-{0}', github.run_id) || github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
