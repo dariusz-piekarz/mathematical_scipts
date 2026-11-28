@@ -8,6 +8,9 @@ on:
       - "application/lean/**"
       - "application/backend/lean_concepts.py"
       - "application/backend/lean_draft_generator.py"
+      - "application/backend/lean_draft_repair.py"
+      - "application/backend/lean_draft_runner.py"
+      - "application/tests/test_lean_draft_repair.py"
       - "application/tests/test_lean_draft_generator.py"
       - "application/tests/test_lean_concept_fixture.py"
       - "application/scripts/lean_ci_audit.py"
@@ -233,6 +236,14 @@ jobs:
           probe="$(mktemp -d "$PWD/lean/DraftProbeXXXXXX")"
           trap 'rm -rf "$probe"' EXIT
           python -c 'import sys; from tests.test_lean_draft_generator import write_trusted_fixtures; write_trusted_fixtures(sys.argv[1])' "$probe"
+          if [[ -f backend/lean_draft_repair.py ]]; then
+            python -m unittest tests.test_lean_draft_repair -v
+            if grep -q '^def write_trusted_repair_fixtures' tests/test_lean_draft_repair.py; then
+              python -c 'import sys; from tests.test_lean_draft_repair import write_trusted_repair_fixtures; write_trusted_repair_fixtures(sys.argv[1])' "$probe"
+              test -s "$probe/DraftRepair2.lean"
+              test -s "$probe/DraftRepair3.lean"
+            fi
+          fi
           export PYTHONPATH="$PWD"
           (cd lean; mkdir -p ci_lean_logs
            for file in "$probe"/Draft*.lean; do

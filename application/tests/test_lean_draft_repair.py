@@ -125,5 +125,78 @@ class LeanDraftRepairTests(unittest.TestCase):
             self.assertIsNone(self.plan([self.record(self.initial)])["lean_code"])
 
 
+def write_trusted_repair_fixtures(directory):
+    """Compile fixed proof variants only; deliberately simulated diagnostics."""
+    from pathlib import Path
+    from backend import lean_draft_runner as runner
+    initial = generate(SOURCE, consent=True)
+    identity = dict(expected_source_sha256=initial["source_sha256"],
+                    expected_ast_sha256=initial["ast_sha256"],
+                    expected_initial_code_sha256=initial["lean_code_sha256"],
+                    consent=True)
+    history, previous = [], initial
+    for attempt in range(2, MAX_ATTEMPTS + 1):
+        history.append(dict(code_sha256=previous["lean_code_sha256"],
+                            exit_code=1, diagnostic=FAILURE))
+        result = plan_next(SOURCE, observations=history, **identity)
+        if result["status"] != "repair_planned":
+            raise ValueError(result)
+        status, prepared = runner.prepare_repair(
+            SOURCE, observations=history, expected_repair_code_sha256=result["lean_code_sha256"],
+            **identity)
+        if prepared is None or status["execution_allowed"] or prepared.attempt != attempt:
+            raise ValueError(status)
+        (Path(directory) / f"DraftRepair{attempt}.lean").write_bytes(prepared.input_bytes)
+        previous = result
+
+
+class LeanRepairAdmissionTests(unittest.TestCase):
+    setUp = LeanDraftRepairTests.setUp
+    record = LeanDraftRepairTests.record
+    plan = LeanDraftRepairTests.plan
+
+    def prepare(self, history, **overrides):
+        from backend import lean_draft_runner as runner
+        result = self.plan(history)
+        args = self.args | dict(expected_repair_code_sha256=result.get("lean_code_sha256"))
+        return runner.prepare_repair(SOURCE, observations=history, **(args | overrides))
+
+    def test_prepared_repair_is_distinct_and_blocked(self):
+        from backend import lean_draft_runner as runner
+        history = [self.record(self.initial)]
+        result = self.plan(history)
+        with patch("subprocess.Popen", side_effect=AssertionError("execution forbidden")):
+            status, prepared = self.prepare(history)
+        self.assertIsInstance(prepared, runner.PreparedRepair)
+        self.assertNotIsInstance(prepared, runner.PreparedDraft)
+        self.assertEqual(prepared.input_bytes, result["lean_code"].encode() + b"\n#print axioms atlas_draft\n")
+        self.assertEqual(prepared.input_sha256, hashlib.sha256(prepared.input_bytes).hexdigest())
+        self.assertEqual(prepared.diagnostic_sha256, (hashlib.sha256(FAILURE).hexdigest(),))
+        self.assertEqual(status["diagnostic_authenticity"], "unverified")
+        self.assertFalse(status["execution_allowed"])
+        self.assertFalse(status["certificate"])
+        self.assertEqual(status["proof_status"], "not_run")
+
+    def test_admission_rejects_stale_hashes_and_consent(self):
+        history = [self.record(self.initial)]
+        for key in ("expected_source_sha256", "expected_ast_sha256",
+                    "expected_initial_code_sha256", "expected_repair_code_sha256"):
+            self.assertIsNone(self.prepare(history, **{key: "0"*64})[1])
+        for consent in (False, 1, None):
+            self.assertIsNone(self.prepare(history, consent=consent)[1])
+
+    def test_second_attempt_and_exhaustion(self):
+        history = [self.record(self.initial)]
+        history.append(self.record(self.plan(history)))
+        status, prepared = self.prepare(history)
+        self.assertEqual(prepared.attempt, 3)
+        self.assertEqual(len(prepared.diagnostic_sha256), 2)
+        digest = prepared.lean_code_sha256
+        history.append(self.record(self.plan(history)))
+        self.assertIsNone(self.prepare(history, expected_repair_code_sha256=digest)[1])
+        history[0] = self.record(self.initial, exit_code=0)
+        self.assertIsNone(self.prepare(history, expected_repair_code_sha256=digest)[1])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -66,6 +66,60 @@ def prepare(source: str, *, segments: list | None = None,
             "admission_status": "prepared", "input_sha256": draft.input_sha256}, draft
 
 
+@dataclass(frozen=True)
+class PreparedRepair:
+    """Distinct, non-executable payload; observations are not trusted evidence."""
+    source_sha256: str
+    ast_sha256: str
+    initial_code_sha256: str
+    lean_code_sha256: str
+    attempt: int
+    diagnostic_sha256: tuple[str, ...]
+    input_sha256: str
+    input_bytes: bytes
+
+
+def prepare_repair(source: str, *, segments: list | None = None,
+                   expected_source_sha256: str, expected_ast_sha256: str,
+                   expected_initial_code_sha256: str, expected_repair_code_sha256: str,
+                   observations: list, consent: bool = False) -> tuple[dict, PreparedRepair | None]:
+    """Replan from source and exact history; never admit supplied Lean text.
+
+    Explicit consent binds the initial and repaired candidate. A prepared
+    repair is not a PreparedDraft and cannot grant transport authority.
+    Diagnostics may be forged; this function is deliberately offline.
+    """
+    from backend import lean_draft_repair
+
+    flags = {"status": "blocked", "proof_status": "not_run",
+             "statement_status": "needs_review", "certificate": False,
+             "execution_allowed": False, "external_transfer_allowed": False,
+             "external_cost_minor_units": 0}
+    if consent is not True:
+        return {**flags, "error": "execution_consent_required"}, None
+    hashes = (expected_source_sha256, expected_ast_sha256,
+              expected_initial_code_sha256, expected_repair_code_sha256)
+    if any(type(h) is not str or not _HEX.fullmatch(h) for h in hashes):
+        return {**flags, "error": "invalid_expected_digest"}, None
+    result = lean_draft_repair.plan_next(
+        source, segments=segments, expected_source_sha256=hashes[0],
+        expected_ast_sha256=hashes[1], expected_initial_code_sha256=hashes[2],
+        observations=observations, consent=True)
+    if result["status"] != "repair_planned":
+        return {**flags, "error": result.get("error", "repair_rejected")}, None
+    code = result["lean_code"].encode("utf-8")
+    if result["lean_code_sha256"] != hashes[3] or hashlib.sha256(code).hexdigest() != hashes[3]:
+        return {**flags, "error": "stale_repair_candidate"}, None
+    payload = code + b"\n#print axioms atlas_draft\n"
+    repair = PreparedRepair(*hashes, result["attempt"],
+                            tuple(row["diagnostic_sha256"] for row in result["attempts"]),
+                            hashlib.sha256(payload).hexdigest(), payload)
+    return {**flags, "error": "isolated_transport_not_verified",
+            "admission_status": "prepared_repair", "attempt": repair.attempt,
+            "input_sha256": repair.input_sha256,
+            "diagnostic_authenticity": "unverified"}, repair
+
+
 def validate_image_inspection(inspection: object, *, approved_image_id: str) -> None:
     """Fail closed on Docker image metadata before a future transport.
 
