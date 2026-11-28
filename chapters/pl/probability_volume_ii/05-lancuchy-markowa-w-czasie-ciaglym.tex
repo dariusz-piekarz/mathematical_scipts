@@ -389,6 +389,43 @@ uniformizacji. Ta obserwacja uzasadnia
 równoważność uniformizacji i konstrukcji przez czasy przebywania.
 \end{uwaga}
 
+\begin{uwaga}[Dwie macierze oznaczane literą $R$]
+W konstrukcji przez rzeczywiste skoki macierz ma
+wyrazy $q_{ij}/q_i$ poza przekątną (dla $q_i>0$).
+Natomiast macierz pomocnicza uniformizacji
+$I+Q/\Lambda$ ma wyrazy $q_{ij}/\Lambda$ poza
+przekątną i dopuszcza fikcyjne impulsy na przekątnej.
+Są to na ogół różne macierze.
+\end{uwaga}
+
+\begin{wniosek}[Uniformizacja przy ograniczonych intensywnościach]
+Jeżeli $E$ jest przeliczalny i $\sup_i q_i<\infty$,
+to dla $\Lambda>\sup_i q_i$ macierz $R=I+Q/\Lambda$
+jest stochastyczna, a minimalny proces jest
+nieeksplodujący i ma macierz przejścia
+\[
+p_{ij}(t)=e^{-\Lambda t}\sum_{n\ge0}
+\frac{(\Lambda t)^n}{n!}(R^n)_{ij}.
+\]
+\end{wniosek}
+\begin{proof}
+Sumy wierszy $R$ są równe $1$, a wyrazy nieujemne.
+Konstruujemy przeliczalny łańcuch dyskretny z $R$
+oraz niezależny zegar Poissona. Dowód identyczności
+warunkowych rozkładów czasu i kierunku rzeczywistego
+skoku w twierdzeniu~\ref{thm:uniformization} nie
+korzystał ze skończoności $E$: rozkład geometryczny
+liczby impulsów, niezależność zegara i własność Markowa
+łańcucha dyskretnego pozostają prawdziwe.
+Zatem otrzymujemy proces o zadanych czasach przebywania
+i kierunkach skoków. Nie może eksplodować, ponieważ
+liczba jego skoków nie przekracza liczby impulsów
+zegara. Warunkowanie względem $N_t=n$ daje wzór.
+Szereg składa się z nieujemnych wyrazów, a jego
+sumy wierszy wynoszą $1$ dzięki twierdzeniu Tonellego
+dla sum i stochastyczności wszystkich potęg $R$.
+\end{proof}
+
 Ważna korzyść uniformizacji jest obliczeniowa: możemy
 symulować jeden wspólny zegar Poissona i niezależną sekwencję
 kroków macierzy $R$, a przy prawdopodobieństwach przejścia
@@ -737,22 +774,37 @@ oraz ograniczonych funkcji $f_1,\ldots,f_m$ stosujemy
 ją kolejno w czasach zatrzymania $\tau+t_{m-1},
 \ldots,\tau+t_1,\tau$ (dodanie deterministycznej
 stałej nieujemnej zachowuje własność czasu zatrzymania).
-Własność wieży daje
+Zdefiniujmy rekurencyjnie funkcje $g_m=f_m$ oraz
+$g_k=f_k\cdot P(t_{k+1}-t_k)g_{k+1}$ dla
+$k=m-1,\ldots,1$, gdzie mnożenie funkcji jest punktowe.
+Ponieważ $X_{\tau+t_j}$ jest mierzalna względem
+$\calF_{\tau+t_j}$, a $\calF_{\tau+t_j}\subseteq
+\calF_{\tau+t_k}$ dla $j\le k$, własność wieży daje
 \[
 \E\left[\prod_{j=1}^m f_j(X_{\tau+t_j})
-\mid\calF_\tau\right]
-=
-P(t_1)\bigl(f_1 P(t_2-t_1)
-(f_2\cdots P(t_m-t_{m-1})f_m)\bigr)(X_\tau),
+\mid\calF_\tau\right]=(P(t_1)g_1)(X_\tau).
 \]
-gdzie zagnieżdżenie rozumiemy rekurencyjnie od
-$f_m$ wstecz, a mnożenie funkcji jest punktowe.
-Dla $m=1$ prawa strona to $(P(t_1)f_1)(X_\tau)$.
-Wybór funkcji charakterystycznych i argument
-$\pi$--$\lambda$ dla cylindrów rozszerzają to na
-warunkowe prawo całego przesuniętego procesu
-względem $\sigma$-ciała cylindrycznego: jest ono
-prawem procesu startującego z $X_\tau$.
+Przypadek $t_1=0$ otrzymujemy w ten sam sposób,
+wykorzystując $\calF_\tau$-mierzalność $X_\tau$
+oraz $P(0)=I$.
+Niech $\mathsf P_i$ oznacza prawo całego procesu
+startującego z $i$ na przestrzeni trajektorii
+$(E\cup\{\partial\})^{[0,\infty)}$ z $\sigma$-ciałem
+cylindrycznym. Dla każdego zbioru mierzalnego $B$
+na tej przestrzeni funkcja
+$\omega\mapsto\mathsf P_{X_\tau(\omega)}(B)$
+jest $\calF_\tau$-mierzalna, ponieważ przestrzeń
+stanów jest przeliczalna. Dla każdego $A\in\calF_\tau$
+równość
+\[
+\Prob(A\cap\{(X_{\tau+t})_{t\ge0}\in B\})
+=\E[\chi_A\mathsf P_{X_\tau}(B)]
+\]
+zachodzi dla cylindrów z poprzedniego rachunku,
+a następnie dla wszystkich $B$ na mocy argumentu
+$\pi$--$\lambda$ dla dwóch miar skończonych.
+Jest to precyzyjny sens warunkowego prawa całej
+przyszłej trajektorii.
 \end{uwaga}
 
 \begin{przyklad}[Pierwsza naprawa jako chwila losowa]
@@ -966,7 +1018,7 @@ nazywamy \emph{stacjonarnym}, jeżeli
 $\pi P(t)=\pi$ dla każdego $t\ge0$.
 Rozkład $\pi$ spełnia \emph{równania bilansu}, jeśli
 $\pi Q=0$, przy czym na przeliczalnym $E$ wymagamy
-istnienia odpowiednich sum w każdej współrzędnej.
+skończoności odpowiednich sum w każdej współrzędnej.
 \end{definicja}
 
 \begin{twierdzenie}[Bilans i równowaga szczegółowa]
@@ -1488,7 +1540,12 @@ $\Prob_i(X_t=j,\tau>t)=\Prob_i(X_t=j)$.
 Macierz przejścia ograniczona do $T$ jest równa $e^{tB}$:
 wynika to z blokowo-trójkątnej postaci $e^{tQ}$,
 którą widać bezpośrednio z potęg macierzy $Q$.
-Stąd całkując funkcję wskaźnikową i stosując Tonellego,
+Stąd całkując funkcję charakterystyczną i stosując
+twierdzenie Tonellego (proces jest progresywnie mierzalny,
+a $\tau$ jest czasem zatrzymania jako pierwsza chwila
+trafienia do otwartego zbioru w topologii dyskretnej
+przy prawostronnie ciągłych trajektoriach i zwykłym
+uzupełnieniu filtracji),
 \[
 \E_i\int_0^\tau\chi_{\{X_t=j\}}\,\mathrm d\lambda_1(t)
 =\int_0^\infty\Prob_i(X_t=j,\tau>t)\,\mathrm d\lambda_1(t)
@@ -1501,7 +1558,7 @@ prawie na pewno, istnieje $t_i>0$ takie, że
 $\Prob_i(\tau>t_i)<1/2$. Biorąc $t_0=\max_i t_i$,
 z monotoniczności funkcji przeżycia dostajemy
 $\sup_{i\in T}\Prob_i(\tau>t_0)\le1/2$.
-Ponieważ $A$ jest pochłaniający, $\{\tau>t\}$
+Ponieważ każdy stan w $A$ jest pochłaniający, $\{\tau>t\}$
 jest równoważne $\{X_t\in T\}$. Własność Markowa
 w chwilach $nt_0$ daje dla $i\in T$
 \[
@@ -1520,7 +1577,10 @@ BG=\lim_{t\to\infty}e^{tB}-I=-I.
 \]
 W skończonym wymiarze istnienie prawej odwrotności
 macierzy kwadratowej oznacza odwracalność, a
-$G=(-B)^{-1}$. Nieujemność wyrazów jest widoczna
+$G=(-B)^{-1}$. W szczególności wektor $u=(\E_i\tau)_{i\in T}$
+jest jedynym rozwiązaniem układu $-Bu=\mathbf 1$,
+ponieważ $u=G\mathbf 1$, gdzie $\mathbf 1$ jest wektorem
+złożonym z jedynek. Nieujemność wyrazów jest widoczna
 z całkowej reprezentacji. Korzystając z tożsamości
 $\int_0^\tau\sum_{j\in T}\chi_{\{X_t=j\}}\,\mathrm d\lambda_1(t)=\tau$
 (na $[0,\tau)$ proces pozostaje w $T$)
@@ -1612,8 +1672,9 @@ $q_i>0$, to $J_1\sim\operatorname{Exp}(q_i)$ i
 $\Prob(J_1=t)=0$ dla każdego ustalonego $t\ge0$.
 Nie pytamy więc o \emph{prawdopodobieństwo} dokładnego czasu,
 lecz o jego \emph{gęstość}. Dla ściśle rosnących
-$0<s_1<\cdots<s_m<t$ oraz ciągu rzeczywistych zmian
-$i_0\to i_1\to\cdots\to i_m$ gęstość zdarzenia:
+$0<s_1<\cdots<s_m<t$ oraz ciągu dozwolonych rzeczywistych
+zmian $i_0\to i_1\to\cdots\to i_m$ gęstość względem
+$\lambda_m$ miary wspólnej czasów skoków na zdarzeniu:
 ``skoki nastąpiły w chwilach $s_1,\ldots,s_m$,
 a do $t$ nie nastąpił następny skok'' jest równa
 \[
@@ -1624,6 +1685,14 @@ e^{-q_{i_m}(t-s_m)},\qquad s_0:=0.
 Wynika to z mnożenia gęstości wykładniczych czasów
 przebywania i prawdopodobieństw wyboru kolejnych stanów:
 $[q_i e^{-q_i u}](q_{ij}/q_i)=q_{ij}e^{-q_i u}$.
+Przejście od odstępów do chwil skoków jest liniową
+transformacją trójkątną o wyznaczniku $1$.
+Ostatni czynnik jest prawdopodobieństwem braku
+następnego skoku do $t$ (równym $1$ w stanie
+pochłaniającym). Dla ciągu zawierającego niedozwolone
+przejście gęstość jest zerowa; przy $m=0$ prawdopodobieństwo
+startu z $i_0$ i braku skoku do $t$ wynosi
+$\mu_{i_0}e^{-q_{i_0}t}$.
 To zapis, od którego zaczyna się matematyczne formułowanie
 wiarygodności ciągłych trajektorii procesów skokowych;
 sama statystyczna estymacja należy jednak do tomu IV.
