@@ -20,43 +20,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check chapter 28 approximation property regressions
         run: python3 tools/tests/test_functional_analysis_ch28.py
-      - name: Prepare TeX wrapper with complete reference context 01-28 (including 15A/15B)
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-          book = Path('books/pl/functional_analysis.tex').read_text(encoding='utf-8')
-          assert book.count(r'\begin{document}') == 1
-          pre = book.split(r'\begin{document}', 1)[0]
-          inputs = re.findall(
-              r'\\input\{(\.\./\.\./chapters/pl/functional_analysis/[^}]+)\}',
-              book
-          )
-          assert len(inputs) >= 30
-          assert all(inputs[i].split('/')[-1].startswith(f'{i+1:02d}-')
-                     for i in range(15))
-          assert inputs[15].split('/')[-1].startswith('15A-')
-          assert inputs[16].split('/')[-1].startswith('15B-')
-          assert inputs[17].split('/')[-1].startswith('16-')
-          assert inputs[18].split('/')[-1].startswith('17-')
-          assert inputs[19].split('/')[-1].startswith('18-')
-          assert inputs[20].split('/')[-1].startswith('19-')
-          assert inputs[21].split('/')[-1].startswith('20-')
-          assert inputs[22].split('/')[-1].startswith('21-')
-          assert inputs[23].split('/')[-1].startswith('22-')
-          assert inputs[24].split('/')[-1].startswith('23-')
-          assert inputs[25].split('/')[-1].startswith('24-')
-          assert inputs[26].split('/')[-1].startswith('25-')
-          assert inputs[27].split('/')[-1].startswith('26-')
-          assert inputs[28].split('/')[-1].startswith('27-')
-          assert inputs[29].split('/')[-1].startswith('28-')
-          body = r'\begin{document}' + '\n'
-          body += '\n'.join(r'\input{' + name + '}' for name in inputs[:30])
-          body += '\n' + r'\end{document}' + '\n'
-          Path('books/pl/functional_analysis_ch28_context_ci.tex').write_text(
-              pre + body, encoding='utf-8'
-          )
-          PY
+      - name: Prepare chapter context from the current AF inventory
+        id: context
+        run: python3 tools/prepare_functional_analysis_context.py 28
       - name: Compile chapter 28 with complete 01-28 reference context
         uses: xu-cheng/latex-action@v3
         with:

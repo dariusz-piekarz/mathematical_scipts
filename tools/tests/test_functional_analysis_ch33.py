@@ -3,6 +3,7 @@ import re
 import unittest
 from fractions import Fraction as F
 from pathlib import Path
+from distribution_migration_sources import using_dt, _dt_paths
 
 DIR = Path(__file__).resolve().parents[2] / "chapters/pl/functional_analysis"
 S = next(DIR.glob("33-*.tex")).read_text(encoding="utf-8")
@@ -19,7 +20,11 @@ class Chapter33(unittest.TestCase):
                 self.assertTrue(stack)
                 self.assertEqual(stack.pop(), env)
         self.assertFalse(stack)
-        ctx = "\n".join(p.read_text(encoding="utf-8") for p in DIR.glob("*.tex"))
+        context_paths = list(DIR.glob("*.tex"))
+        if using_dt():
+            dt_paths, _ = _dt_paths()
+            context_paths.extend(dt_paths.values())
+        ctx = "\n".join(p.read_text(encoding="utf-8") for p in context_paths)
         for label in re.findall(r"\\ref\{([^}]+)\}", S) + re.findall(r"\\hyperref\[([^\]]+)\]", S):
             self.assertIn(r"\label{" + label + "}", ctx)
 
