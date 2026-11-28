@@ -150,6 +150,39 @@ def write_trusted_repair_fixtures(directory):
         previous = result
 
 
+    # Separate nontrivial statements: the linear inequality can be discharged
+    # by omega and the nonlinear identity by ring. Histories are simulated;
+    # the existing Lean CI compiles each resulting payload and checks axioms.
+    for source, attempt, filename in (
+        (r"\forall x:Int, \forall y:Int, x + y \le y + x",
+         2, "DraftRepairArithmetic2.lean"),
+        (r"\forall x:Nat, \forall y:Nat, x \cdot y = y \cdot x",
+         3, "DraftRepairPolynomial3.lean"),
+    ):
+        initial = generate(source, consent=True)
+        if initial["status"] != "generated":
+            raise ValueError(initial)
+        identity = dict(expected_source_sha256=initial["source_sha256"],
+                        expected_ast_sha256=initial["ast_sha256"],
+                        expected_initial_code_sha256=initial["lean_code_sha256"],
+                        consent=True)
+        history, previous = [], initial
+        for _ in range(1, attempt):
+            history.append(dict(code_sha256=previous["lean_code_sha256"],
+                                exit_code=1, diagnostic=FAILURE))
+            previous = plan_next(source, observations=history, **identity)
+            if previous["status"] != "repair_planned":
+                raise ValueError(previous)
+        status, prepared = runner.prepare_repair(
+            source, observations=history,
+            expected_repair_code_sha256=previous["lean_code_sha256"], **identity)
+        if (prepared is None or status["execution_allowed"] or
+                status["certificate"] or prepared.attempt != attempt or
+                previous["signature"] != initial["signature"]):
+            raise ValueError(status)
+        (Path(directory) / filename).write_bytes(prepared.input_bytes)
+
+
 class LeanRepairAdmissionTests(unittest.TestCase):
     setUp = LeanDraftRepairTests.setUp
     record = LeanDraftRepairTests.record
@@ -176,6 +209,18 @@ class LeanRepairAdmissionTests(unittest.TestCase):
         self.assertFalse(status["execution_allowed"])
         self.assertFalse(status["certificate"])
         self.assertEqual(status["proof_status"], "not_run")
+
+    def test_repair_branches_require_goal_closure(self):
+        history = [self.record(self.initial)]
+        for expected in (("solve_by_elim", "simp_all", "omega"),
+                         ("aesop", "omega", "ring")):
+            plan = self.plan(history)
+            self.assertEqual(plan["status"], "repair_planned")
+            proof = plan["lean_code"].split(" := by\n", 1)[1]
+            branches = [line.strip() for line in proof.splitlines()
+                        if line.strip().startswith("|")]
+            self.assertEqual(branches, ["| " + tactic + " <;> done" for tactic in expected])
+            history.append(self.record(plan))
 
     def test_admission_rejects_stale_hashes_and_consent(self):
         history = [self.record(self.initial)]

@@ -13,11 +13,12 @@ from backend import lean_draft_generator as generator
 
 MAX_ATTEMPTS = 3  # Includes the original candidate.
 MAX_DIAGNOSTIC_BYTES = 16000
-VERSION = "0.1.1"
-# Fixed, reviewed tactic text only. Never interpolate diagnostics.
+VERSION = "0.1.2"
+# Fixed tactic text only. Never interpolate diagnostics.
+# A branch of `first` must close all goals, not merely make progress.
 _REPAIRS = (
-    "by\n  repeat' intro\n  first\n  | solve_by_elim\n  | simp_all\n  | omega\n",
-    "by\n  repeat' intro\n  first\n  | aesop\n  | omega\n  | ring\n",
+    "by\n  repeat' intro\n  first\n  | solve_by_elim <;> done\n  | simp_all <;> done\n  | omega <;> done\n",
+    "by\n  repeat' intro\n  first\n  | aesop <;> done\n  | omega <;> done\n  | ring <;> done\n",
 )
 _ERROR = re.compile(r"^(?:/tmp/)?Draft\.lean:([0-9]{1,6}):([0-9]{1,6}): error: (.+)$")
 # Deliberately narrow: a diagnostic about an unknown tactic, elaboration,
