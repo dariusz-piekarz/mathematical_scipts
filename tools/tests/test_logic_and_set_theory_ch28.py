@@ -1,5 +1,6 @@
 """Audyt 28: ordynały, supremum, indukcja, rekurencja i kardynały."""
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 import re
 import unittest
 
@@ -47,7 +48,7 @@ class TestChapter28(unittest.TestCase):
                 self.assertIn(r"\label{"+label+"}",TEXT)
 
     def test_all_cross_references_resolve(self):
-        files=list(DIR.glob("*.tex"))
+        files=list(logic_model_sources(DIR))
         labels=set()
         for file in files:
             labels.update(re.findall(r"\\label\{([^}]+)\}",file.read_text("utf8")))

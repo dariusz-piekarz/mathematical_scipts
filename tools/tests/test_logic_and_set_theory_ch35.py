@@ -5,6 +5,7 @@ import unittest
 from functools import lru_cache
 from itertools import combinations
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 
 ROOT = Path(__file__).resolve().parents[2]
 CHAPTERS = ROOT / "chapters/pl/logic_and_set_theory"
@@ -17,8 +18,8 @@ class TestBooleanModelsChapter35(unittest.TestCase):
         book = (ROOT / "books/pl/logic_and_set_theory.tex").read_text("utf8")
         books = json.loads((ROOT / "catalog/books.json").read_text("utf8"))["books"]
         current = next(x for x in books if x["id"] == "logic_and_set_theory")
-        self.assertGreaterEqual(len(current["chapters"]), 35)
-        self.assertTrue(current["chapters"][34].endswith(SOURCE.name))
+        self.assertGreaterEqual(len(current["chapters"]), 31)
+        self.assertTrue(current["chapters"][30].endswith(SOURCE.name))
         self.assertIn(SOURCE.name, book)
         self.assertIn(r"\label{ch:boolean-valued-independence}", TEXT)
 
@@ -51,7 +52,7 @@ class TestBooleanModelsChapter35(unittest.TestCase):
 
     def test_all_references_exist(self):
         all_labels = set()
-        for source in CHAPTERS.glob("*.tex"):
+        for source in logic_model_sources(CHAPTERS):
             all_labels.update(re.findall(
                 r"\\label\{([^}]+)\}", source.read_text("utf8")
             ))

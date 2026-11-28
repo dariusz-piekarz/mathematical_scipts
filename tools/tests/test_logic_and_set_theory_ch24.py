@@ -2,17 +2,18 @@
 import re
 import unittest
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 
 ROOT = Path(__file__).resolve().parents[2]
-DIR = ROOT/"chapters/pl/logic_and_set_theory"
-PATH = DIR/"24-gorne-twierdzenie-lowenheima-skolema-i-paradoks-skolema.tex"
+DIR = ROOT/"chapters/pl/model_theory"
+PATH = DIR/"23-gorne-twierdzenie-lowenheima-skolema-i-paradoks-skolema.tex"
 SOURCE = PATH.read_text(encoding="utf-8")
 
 
 class TestLogicChapter24(unittest.TestCase):
     def test_imported_and_catalogued(self):
         self.assertTrue(PATH.is_file())
-        self.assertIn(PATH.name, (ROOT/"books/pl/logic_and_set_theory.tex").read_text(encoding="utf-8"))
+        self.assertIn(PATH.name, (ROOT/"books/pl/model_theory.tex").read_text(encoding="utf-8"))
         self.assertIn(str(PATH.relative_to(ROOT)).replace("\\", "/"),
                       (ROOT/"catalog/books.json").read_text(encoding="utf-8"))
 
@@ -35,7 +36,7 @@ class TestLogicChapter24(unittest.TestCase):
 
     def test_labels_and_references(self):
         labels=[]
-        for p in DIR.glob("*.tex"):
+        for p in logic_model_sources(DIR):
             labels += re.findall(r"\\label\{([^}]+)\}",p.read_text(encoding="utf8"))
         own=re.findall(r"\\label\{([^}]+)\}",SOURCE)
         refs=re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}",SOURCE)

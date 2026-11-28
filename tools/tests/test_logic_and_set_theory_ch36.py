@@ -8,6 +8,7 @@ import json
 import re
 import unittest
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 
 ROOT = Path(__file__).resolve().parents[2]
 CHAPTERS = ROOT / "chapters/pl/logic_and_set_theory"
@@ -30,8 +31,8 @@ class TestSymmetricChoiceChapter36(unittest.TestCase):
         book = (ROOT / "books/pl/logic_and_set_theory.tex").read_text("utf-8")
         catalog = json.loads((ROOT / "catalog/books.json").read_text("utf-8"))
         entry = next(b for b in catalog["books"] if b["id"] == "logic_and_set_theory")
-        self.assertGreaterEqual(len(entry["chapters"]), 36)
-        self.assertEqual(entry["chapters"][35], f"chapters/pl/logic_and_set_theory/{NAME}")
+        self.assertGreaterEqual(len(entry["chapters"]), 32)
+        self.assertEqual(entry["chapters"][31], f"chapters/pl/logic_and_set_theory/{NAME}")
         self.assertIn(r"\input{../../chapters/pl/logic_and_set_theory/" + NAME + "}", book)
         self.assertIn(r"\label{ch:symmetric-choice}", TEXT)
 
@@ -61,7 +62,7 @@ class TestSymmetricChoiceChapter36(unittest.TestCase):
         refs = re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", TEXT)
         self.assertEqual(len(refs), 27)
         available = set()
-        for chapter in CHAPTERS.glob("*.tex"):
+        for chapter in logic_model_sources(CHAPTERS):
             available.update(re.findall(
                 r"\\label\{([^}]+)\}", chapter.read_text("utf-8")
             ))

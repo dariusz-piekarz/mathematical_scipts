@@ -4,7 +4,7 @@ from pathlib import Path
 import unittest
 
 SRC = (Path(__file__).resolve().parents[2]
-       / 'chapters/pl/logic_and_set_theory/15-homomorfizmy-izomorfizmy-i-elementarnosc-struktur.tex')
+       / 'chapters/pl/model_theory/21-homomorfizmy-izomorfizmy-i-elementarnosc-struktur.tex')
 
 def models(n):
     universe=tuple(range(n))

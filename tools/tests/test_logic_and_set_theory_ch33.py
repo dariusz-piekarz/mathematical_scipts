@@ -2,6 +2,7 @@
 import re
 import unittest
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 
 ROOT = Path(__file__).resolve().parents[2]
 CHAPTER_DIR = ROOT / "chapters/pl/logic_and_set_theory"
@@ -45,7 +46,7 @@ class TestChapter33(unittest.TestCase):
 
     def test_all_refs_resolve(self):
         all_labels = set()
-        for path in CHAPTER_DIR.glob("*.tex"):
+        for path in logic_model_sources(CHAPTER_DIR):
             all_labels.update(re.findall(
                 r"\\label\{([^}]+)\}", path.read_text("utf8")
             ))

@@ -1,6 +1,7 @@
 """Chapter 31: constructible universe, finite Gödel operations, condensation, GCH."""
 from itertools import combinations
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 import re
 import unittest
 
@@ -40,7 +41,7 @@ class TestChapter31(unittest.TestCase):
 
     def test_references_have_targets_and_counts(self):
         all_labels = set()
-        for path in DIR.glob("*.tex"):
+        for path in logic_model_sources(DIR):
             all_labels.update(re.findall(r"\\label\{([^}]+)\}", path.read_text("utf8")))
         refs = re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", TEXT)
         self.assertEqual(len(refs), 87)

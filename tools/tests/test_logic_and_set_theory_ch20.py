@@ -1,6 +1,7 @@
 """Chapter 20 clean audits III-IV: structural, cross-reference, finite semantic checks.
 Finite computations complement but do not replace mathematical proofs."""
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 import itertools
 import re
 import unittest
@@ -27,14 +28,14 @@ class TestChapter20(unittest.TestCase):
             self.assertEqual(SOURCE.count('\\begin{'+name+'}'),count,name)
 
     def test_labels_unique(self):
-        files=list(FIXTURE.glob('*.tex'))
+        files=list(logic_model_sources(FIXTURE))
         labels=[lab for file in files for lab in re.findall(r'\\label\{([^}]+)\}',file.read_text(encoding='utf8'))]
         self.assertEqual(len(labels),len(set(labels)))
         self.assertEqual(len(re.findall(r'\\label\{([^}]+)\}',SOURCE)),8)
 
     def test_internal_refs_resolved_against_actual_chapters(self):
         labels=set()
-        for path in FIXTURE.glob('*.tex'):
+        for path in logic_model_sources(FIXTURE):
             labels.update(re.findall(r'\\label\{([^}]+)\}',path.read_text(encoding='utf8')))
         refs=re.findall(r'\\(?:ref|eqref|autoref)\{([^}]+)\}',SOURCE)
         self.assertFalse((set(refs)-labels)-FORWARD)
@@ -186,8 +187,8 @@ class TestChapter20(unittest.TestCase):
     def test_chapter20_labels_not_reused_elsewhere(self):
         here=set(re.findall(r'\\label\{([^}]+)\}', SOURCE))
         elsewhere=set()
-        for file in FIXTURE.glob('*.tex'):
-            if file.name.startswith('20-'):
+        for file in logic_model_sources(FIXTURE):
+            if file.parent == FIXTURE and file.name.startswith('20-'):
                 continue
             elsewhere.update(re.findall(r'\\label\{([^}]+)\}',file.read_text(encoding='utf8')))
         self.assertFalse(here & elsewhere)

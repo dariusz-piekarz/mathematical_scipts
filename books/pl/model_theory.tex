@@ -1,34 +1,30 @@
-\documentclass[11pt,a4paper]{article}
-% Kompilacja: pdfLaTeX (MiKTeX / TeX Live)
+% Preambula teorii modeli, zgodna z logika i teoria mnogosci
+\documentclass[11pt,a4paper,oneside,openany]{book}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[polish]{babel}
 \usepackage{lmodern}
-\usepackage{amsmath,amssymb,amsthm,mathtools}
 \usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{stmaryrd} % wartosci boolowskie: \llbracket i \rrbracket
+\usepackage{enumitem}
 \usepackage{xcolor}
 \usepackage{geometry}
-\usepackage{enumitem}
-\usepackage{fancyhdr}
-\usepackage[unicode]{hyperref}
-\hypersetup{colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!45!black}
-\geometry{margin=2.5cm}
+\usepackage{tikz}
+\usepackage{titlesec}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage{xr-hyper}
+\usepackage[unicode,colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!45!black]{hyperref}
+\externaldocument{logic_and_set_theory}
+\geometry{margin=27mm,headheight=14pt}
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{4pt}
+\setlength{\parskip}{2.5pt}
 \setlength{\emergencystretch}{2em}
-\setlist[enumerate]{topsep=4pt,itemsep=2pt}
-\setlist[itemize]{topsep=4pt,itemsep=2pt}
-\numberwithin{equation}{section}
-\newcommand{\N}{\mathbb N}
-\newcommand{\R}{\mathbb R}
-\newcommand{\PA}{\mathrm{PA}}
-\newcommand{\Q}{\mathrm Q}
-\newcommand{\Prov}{\operatorname{Prov}}
-\newcommand{\Prf}{\operatorname{Prf}}
-\newcommand{\Bew}{\operatorname{Bew}}
-\newcommand{\dotminus}{\mathbin{\dot-}}
+\setlist[itemize]{topsep=3pt,itemsep=2pt}
+\setlist[enumerate]{topsep=3pt,itemsep=2pt}
+\numberwithin{equation}{chapter}
 \theoremstyle{plain}
-\newtheorem{twierdzenie}{Twierdzenie}[section]
+\newtheorem{twierdzenie}{Twierdzenie}[chapter]
 \newtheorem{lemat}[twierdzenie]{Lemat}
 \newtheorem{wniosek}[twierdzenie]{Wniosek}
 \newtheorem{stwierdzenie}[twierdzenie]{Stwierdzenie}
@@ -38,15 +34,25 @@
 \theoremstyle{remark}
 \newtheorem{uwaga}[twierdzenie]{Uwaga}
 \renewcommand{\proofname}{Dowód}
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[L]{\small Teoria modeli}
-\fancyhead[R]{\small\ifnum\value{section}>0 Sekcja \thesection\else Wprowadzenie\fi}
-\fancyfoot[C]{\thepage}
-\renewcommand{\headrulewidth}{0.4pt}
-\title{Teoria Modeli}
-\author{}
-\date{22 października 2026}
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\calP}{\mathcal P}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\dom}{\operatorname{dom}}
+\newcommand{\ran}{\operatorname{ran}}
+\newcommand{\fld}{\operatorname{fld}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\symdiff}{\mathbin{\triangle}}
+\newcommand{\dotminus}{\mathbin{\dot-}}
+\newcommand{\set}[1]{\left\{#1\right\}}
+
+% Zwarty, jednostronny sklad skryptu: bez pustych stron dla parzystosci.
+\raggedbottom
+\titleformat{\chapter}[display]{\normalfont\bfseries\LARGE\raggedright}{\chaptername\ \thechapter}{5pt}{\LARGE}
+\titlespacing*{\chapter}{0pt}{0pt}{16pt}
+\titlespacing*{\section}{0pt}{10pt plus 2pt minus 1pt}{5pt}
 
 % BEGIN GLOBAL CODE LISTINGS (generated from latex/pl/code-listings.tex)
 \usepackage{xcolor}
@@ -82,41 +88,17 @@
 \renewcommand{\lstlistlistingname}{Spis kodów}
 % END GLOBAL CODE LISTINGS
 \begin{document}
+\frontmatter
+\hypersetup{pageanchor=false} % bez zdublowanej kotwicy strony tytulowej
+\title{Teoria modeli}
+\author{}
+\date{}
 \maketitle
-\begin{abstract}
-Niniejszy dokument przedstawia szczegółowe dowody obu twierdzeń Gödla o niezupełności.
-Zaczynamy od precyzyjnych definicji systemu formalnego, arytmetyki Peana, rekurencyjności
-oraz reprezentowalności. Następnie budujemy narzędzia techniczne (numerację Gödla,
-lemat o reprezentacji, lemat o punkcie stałym / diagonalizacji) i na ich podstawie dowodzimy
-pierwszego oraz drugiego twierdzenia o niezupełności. Reprezentowalność uzasadniamy
-przez kodowanie skończonych obliczeń, a warunki wyprowadzalności --- przez wewnętrzne
-weryfikowanie dowodów. Rozróżniamy wersję Gödla z 1931 r., wzmocnienie Rossera oraz
-późniejsze ujęcie Hilberta--Bernaysa--Löba. Końcowe sekcje zawierają oba kierunki
-twierdzenia Löwenheima--Skolema, z dowodem zwartości, oraz omówienie konsekwencji
-całego skryptu: niestandardowych modeli, paradoksu Skolema, granic metod algorytmicznych
-i różnicy między prawdą, dowodem oraz zaufaniem do aksjomatów.
-\end{abstract}
+\hypersetup{pageanchor=true}
 \tableofcontents
-\clearpage
-
-% Strony 3--6 oryginalnego skanu -- transkrypcja sprawdzona na obrazach.
-\input{../../chapters/pl/model_theory/00-wstep-i-zalozenia.tex}
-\input{../../chapters/pl/model_theory/01-podstawy-od-alfabetu-do-teorii.tex}
-\input{../../chapters/pl/model_theory/02-jezyk-i-system-formalny.tex}
-\input{../../chapters/pl/model_theory/03-arytmetyka-peana-i-robinsona.tex}
-\input{../../chapters/pl/model_theory/04-funkcje-i-zbiory-rekurencyjne.tex}
-\input{../../chapters/pl/model_theory/05-numeracja-godla.tex}
-\input{../../chapters/pl/model_theory/06-reprezentowalnosc.tex}
-\input{../../chapters/pl/model_theory/07-lemat-o-punkcie-stalym-diagonalizacja.tex}
-\input{../../chapters/pl/model_theory/08-pierwsze-twierdzenie-o-niezupelnosci.tex}
-\input{../../chapters/pl/model_theory/09-twierdzenie-o-niedefiniowalnosci-prawdy-tarski.tex}
-\input{../../chapters/pl/model_theory/10-warunki-hilberta-bernaysa-loba.tex}
-\input{../../chapters/pl/model_theory/11-drugie-twierdzenie-o-niezupelnosci.tex}
-\input{../../chapters/pl/model_theory/12-twierdzenie-loba.tex}
-\input{../../chapters/pl/model_theory/13-twierdzenie-lowenheima-skolema.tex}
-\input{../../chapters/pl/model_theory/14-konsekwencje-dla-modeli-niestandardowe-liczby-i-paradoks-skole.tex}
-\input{../../chapters/pl/model_theory/15-co-niezupelnosc-oznacza-dla-codziennej-matematyki.tex}
-\input{../../chapters/pl/model_theory/16-wlasna-niesprzecznosc-i-granice-zaufania-godel-ii-oraz-lob.tex}
-\input{../../chapters/pl/model_theory/17-kodowanie-diagonalizacja-i-prawda-sens-twierdzenia-tarskiego.tex}
-\input{../../chapters/pl/model_theory/18-czego-te-twierdzenia-nie-mowia.tex}
+\mainmatter
+\input{../../chapters/pl/model_theory/20-twierdzenie-o-zwartosci-i-jego-zastosowania.tex}
+\input{../../chapters/pl/model_theory/21-homomorfizmy-izomorfizmy-i-elementarnosc-struktur.tex}
+\input{../../chapters/pl/model_theory/22-dolne-twierdzenie-lowenheima-skolema-i-domkniecia-skolema.tex}
+\input{../../chapters/pl/model_theory/23-gorne-twierdzenie-lowenheima-skolema-i-paradoks-skolema.tex}
 \end{document}

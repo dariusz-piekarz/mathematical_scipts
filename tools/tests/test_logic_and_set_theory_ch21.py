@@ -3,6 +3,7 @@
 Finite arithmetic checks are sanity tests; they are not proofs inside PA.
 """
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 import math
 import re
 import unittest
@@ -55,8 +56,8 @@ class TestChapter21(unittest.TestCase):
         self.assertEqual(len(set(labels)), 8)
         self.assertEqual(len(refs), 20)
         other = set()
-        for f in CHAPTERS.glob('*.tex'):
-            if f.name.startswith('21-'):
+        for f in logic_model_sources(CHAPTERS):
+            if f.parent == CHAPTERS and f.name.startswith('21-'):
                 continue
             other.update(re.findall(r'\\label\{([^}]+)\}', f.read_text(encoding='utf-8')))
         self.assertFalse(set(labels) & other)

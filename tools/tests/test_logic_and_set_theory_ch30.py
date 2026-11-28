@@ -1,5 +1,6 @@
 """Chapter 30: infinite games, AD, PD and Wadge reductions."""
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 import itertools
 import re
 import unittest
@@ -38,7 +39,7 @@ class TestChapter30(unittest.TestCase):
 
     def test_all_references_resolve_in_existing_chapters(self):
         labels=set()
-        for path in DIR.glob("*.tex"):
+        for path in logic_model_sources(DIR):
             labels.update(re.findall(r"\\label\{([^}]+)\}",path.read_text("utf8")))
         refs=re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}",TEXT)
         self.assertEqual(len(refs),49)

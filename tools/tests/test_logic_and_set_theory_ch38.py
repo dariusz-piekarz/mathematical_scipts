@@ -8,6 +8,7 @@ import json
 import re
 import unittest
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 
 ROOT = Path(__file__).resolve().parents[2]
 DIRECTORY = ROOT / "chapters/pl/logic_and_set_theory"
@@ -36,8 +37,8 @@ class TestChapter38(unittest.TestCase):
     def test_catalog_position_and_input(self):
         data = json.loads((ROOT / "catalog/books.json").read_text("utf-8"))
         book = next(b for b in data["books"] if b["id"] == "logic_and_set_theory")
-        self.assertGreaterEqual(len(book["chapters"]), 38)
-        self.assertEqual(book["chapters"][37],
+        self.assertGreaterEqual(len(book["chapters"]), 34)
+        self.assertEqual(book["chapters"][33],
                          f"chapters/pl/logic_and_set_theory/{FILENAME}")
         main = (ROOT / "books/pl/logic_and_set_theory.tex").read_text("utf-8")
         self.assertIn(r"\input{../../chapters/pl/logic_and_set_theory/" +
@@ -65,7 +66,7 @@ class TestChapter38(unittest.TestCase):
         self.assertEqual(len(set(labels)), 26)
         self.assertEqual(len(refs), 19)
         existing = set()
-        for path in DIRECTORY.glob("*.tex"):
+        for path in logic_model_sources(DIRECTORY):
             existing.update(re.findall(r"\\label\{([^}]+)\}",
                                        path.read_text("utf-8")))
         self.assertFalse(set(refs) - existing)

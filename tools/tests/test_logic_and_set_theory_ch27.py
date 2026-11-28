@@ -2,6 +2,7 @@
 import itertools
 import math
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 import re
 import unittest
 
@@ -36,7 +37,7 @@ class TestChapter27(unittest.TestCase):
                 self.assertEqual(SOURCE.count(r"\end{"+env+"}"),num)
 
     def test_labels_and_declared_forward_reference(self):
-        sources = [p.read_text(encoding="utf8") for p in DIR.glob("*.tex")]
+        sources = [p.read_text(encoding="utf8") for p in logic_model_sources(DIR)]
         full="\n".join(sources)
         labels=re.findall(r"\\label\{([^}]+)\}",full)
         refs=re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}",SOURCE)

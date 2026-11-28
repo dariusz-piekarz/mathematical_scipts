@@ -1,6 +1,7 @@
 """Audyt 26: AC, dobry porządek, Hartogs, Zorn, przekroje i bazy."""
 from itertools import combinations
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 import re
 import unittest
 
@@ -37,7 +38,7 @@ class TestChapter26(unittest.TestCase):
         refs=re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}",TEXT)
         self.assertEqual(len(labels),20)
         self.assertEqual(len(refs),18)
-        other="\n".join(x.read_text(encoding="utf8") for x in DIR.glob("*.tex"))
+        other="\n".join(x.read_text(encoding="utf8") for x in logic_model_sources(DIR))
         all_labels=re.findall(r"\\label\{([^}]+)\}",other)
         self.assertEqual(len(all_labels),len(set(all_labels)))
         self.assertFalse(set(refs)-set(all_labels))

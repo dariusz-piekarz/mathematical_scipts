@@ -4,6 +4,7 @@ import re
 import unittest
 from itertools import combinations, product
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 
 ROOT = Path(__file__).resolve().parents[2]
 CHAPTERS = ROOT / "chapters/pl/logic_and_set_theory"
@@ -16,8 +17,8 @@ class TestContinuumForcingChapter34(unittest.TestCase):
         book = (ROOT / "books/pl/logic_and_set_theory.tex").read_text("utf8")
         catalog = json.loads((ROOT / "catalog/books.json").read_text("utf8"))
         logic = next(b for b in catalog["books"] if b["id"] == "logic_and_set_theory")
-        self.assertGreaterEqual(len(logic["chapters"]), 34)
-        self.assertTrue(logic["chapters"][33].endswith(PATH.name))
+        self.assertGreaterEqual(len(logic["chapters"]), 30)
+        self.assertTrue(logic["chapters"][29].endswith(PATH.name))
         self.assertIn(PATH.name, book)
         self.assertIn(r"\label{ch:forcing-continuum}", TEXT)
 
@@ -50,7 +51,7 @@ class TestContinuumForcingChapter34(unittest.TestCase):
 
     def test_all_references_resolve(self):
         all_labels = set()
-        for source in CHAPTERS.glob("*.tex"):
+        for source in logic_model_sources(CHAPTERS):
             all_labels.update(re.findall(
                 r"\\label\{([^}]+)\}", source.read_text("utf8")
             ))

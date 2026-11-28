@@ -53,7 +53,7 @@ class TestForcingIndependenceCrossChapter(unittest.TestCase):
         indices = []
         for chapter, name in NAMES.items():
             source_path = f"chapters/pl/logic_and_set_theory/{name}"
-            self.assertEqual(entry["chapters"][chapter - 1], source_path)
+            self.assertEqual(entry["chapters"][chapter - 5], source_path)
             token = r"\input{../../" + source_path + "}"
             self.assertEqual(book.count(token), 1)
             indices.append(book.index(token))

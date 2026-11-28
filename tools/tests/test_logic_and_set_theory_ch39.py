@@ -8,6 +8,7 @@ import json
 import re
 import unittest
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 
 ROOT = Path(__file__).resolve().parents[2]
 DIRECTORY = ROOT / "chapters/pl/logic_and_set_theory"
@@ -42,8 +43,8 @@ class Chapter39Audits(unittest.TestCase):
     def test_book_and_catalog(self):
         catalog = json.loads((ROOT / "catalog/books.json").read_text("utf-8"))
         book = next(b for b in catalog["books"] if b["id"] == "logic_and_set_theory")
-        self.assertGreaterEqual(len(book["chapters"]), 39)
-        self.assertEqual(book["chapters"][38],
+        self.assertGreaterEqual(len(book["chapters"]), 35)
+        self.assertEqual(book["chapters"][34],
                          f"chapters/pl/logic_and_set_theory/{NAME}")
         source = (ROOT / "books/pl/logic_and_set_theory.tex").read_text("utf-8")
         self.assertIn(r"\input{../../chapters/pl/logic_and_set_theory/" + NAME + "}",
@@ -73,7 +74,7 @@ class Chapter39Audits(unittest.TestCase):
         self.assertEqual(len(set(labels)), len(labels))
         self.assertEqual(len(refs), 25)
         all_labels = set()
-        for path in DIRECTORY.glob("*.tex"):
+        for path in logic_model_sources(DIRECTORY):
             all_labels.update(re.findall(
                 r"\\label\{([^}]+)\}", path.read_text("utf-8")))
         self.assertFalse(set(refs) - all_labels, set(refs) - all_labels)
@@ -82,7 +83,7 @@ class Chapter39Audits(unittest.TestCase):
         # Every Polish chapter must use the full noun "liczba kardynalna".
         # This checks file contents, not legacy filenames or labels.
         bad = re.compile(r"(?iu)\bkardynał(?:u|em|owi|y|ów|ami|ach)?\b")
-        for chapter in DIRECTORY.glob("*.tex"):
+        for chapter in logic_model_sources(DIRECTORY):
             src = chapter.read_text("utf-8")
             self.assertIsNone(bad.search(src), chapter.name)
 

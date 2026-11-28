@@ -1,4 +1,4 @@
-name: Logic and set theory chapters 01-39 validation
+name: Logic and model theory validation
 
 on:
   push:
@@ -6,6 +6,11 @@ on:
       - biblioteka-matematyczna-iteracja-6
     paths:
       - "chapters/pl/logic_and_set_theory/**"
+      - "chapters/pl/model_theory/**"
+      - "books/pl/model_theory.tex"
+      - "catalog/logic_model_migration.json"
+      - "tools/tests/logic_model_sources.py"
+      - "tools/tests/test_logic_model_split.py"
       - "books/pl/logic_and_set_theory.tex"
       - "catalog/books.json"
       - "audits/logic_and_set_theory_ch07_audit_*.md"
@@ -93,8 +98,9 @@ jobs:
 
           catalog = json.loads(Path("catalog/books.json").read_text(encoding="utf-8"))
           book = next(item for item in catalog["books"] if item["id"] == "logic_and_set_theory")
-          chapters = book["chapters"]
-          assert len(chapters) >= 39, chapters
+          models = next(item for item in catalog["books"] if item["id"] == "model_theory")
+          combined = {Path(p).name: p for p in book["chapters"] + models["chapters"]}
+          assert len(combined) == len(book["chapters"]) + len(models["chapters"]), "Repeated chapter filename"
           expected_names = [
               "01-zdania-i-spojniki-logiczne.tex",
               "02-kwantyfikatory-i-podstawowe-metody-dowodzenia.tex",
@@ -136,13 +142,25 @@ jobs:
               "38-kardynaly-mahla-i-slaba-zwartosc.tex",
               "39-slaba-zwartosc-charakterystyki-i-logika-infinitarna.tex",
           ]
-          assert [Path(path).name for path in chapters[:39]] == expected_names
-          entry = Path(book["entrypoint"])
-          text = entry.read_text(encoding="utf-8")
+          moved = {14: 20, 15: 21, 23: 22, 24: 23}
+          expected_model_names = [
+              str(moved[n]) + "-" + expected_names[n-1].split("-", 1)[1]
+              for n in moved
+          ]
+          expected_logic_names = [name for n, name in enumerate(expected_names, 1)
+                                  if n not in moved]
+          assert [Path(p).name for p in book["chapters"]][:35] == expected_logic_names
+          assert [Path(p).name for p in models["chapters"]][:4] == expected_model_names
           sources = []
-          for path in chapters[:39]:
+          for n, name in enumerate(expected_names, 1):
+              owner = models if n in moved else book
+              if n in moved:
+                  name = str(moved[n]) + "-" + name.split("-", 1)[1]
+              path = combined[name]
+              assert path in owner["chapters"], path
               chapter = Path(path)
               assert chapter.is_file(), path
+              text = Path(owner["entrypoint"]).read_text(encoding="utf-8")
               assert "\\input{../../" + path + "}" in text, path
               sources.append(chapter.read_text(encoding="utf-8"))
           labels = [name for source in sources for name in re.findall(r"\\label\{([^}]+)\}", source)]
@@ -337,21 +355,37 @@ jobs:
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch38 -v
       - name: Run chapter 39 weak compactness and infinitary logic regression tests
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch39 -v
-      - name: Compile logic and set theory PDF
+      - name: Verify the split, archive and fuzzy logic examples
+        run: python -m unittest tools.tests.test_logic_model_split -v
+      - name: Compile logic and set theory PDF (first pass)
         uses: xu-cheng/latex-action@v3
         with:
           root_file: logic_and_set_theory.tex
           working_directory: books/pl
           args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
-      - name: Check compiled PDF and log
+      - name: Compile model theory PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: model_theory.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Recompile logic and set theory with model theory references
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: logic_and_set_theory.tex
+          working_directory: books/pl
+          args: -pdf -g -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Check both compiled PDFs and logs
         shell: bash
         run: |
           test -s books/pl/logic_and_set_theory.pdf
+          test -s books/pl/model_theory.pdf
           python - <<'PY'
           import re
           from pathlib import Path
 
-          log = Path("books/pl/logic_and_set_theory.log").read_text(errors="replace")
+          log = "\n".join(Path("books/pl", name + ".log").read_text(errors="replace")
+                          for name in ("logic_and_set_theory", "model_theory"))
           refs = set(re.findall(r"LaTeX Warning: Reference `([^']+)' on page \d+ undefined", log))
           allowed = set()
           assert refs <= allowed, f"Unexpected undefined references: {sorted(refs - allowed)}"
@@ -367,8 +401,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: logic-and-set-theory-ch01-ch39
+          name: logic-and-model-theory-pdfs
           path: |
             books/pl/logic_and_set_theory.pdf
             books/pl/logic_and_set_theory.log
+            books/pl/model_theory.pdf
+            books/pl/model_theory.log
           if-no-files-found: warn

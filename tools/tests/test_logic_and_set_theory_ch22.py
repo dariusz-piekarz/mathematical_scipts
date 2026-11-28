@@ -5,6 +5,7 @@ Testy skryptowe NIE zastepuja dowodow metamatematycznych w PA.
 import re
 import unittest
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 
 ROOT = Path(__file__).resolve().parents[2]
 CHAPTER_DIR = ROOT / "chapters/pl/logic_and_set_theory"
@@ -40,7 +41,7 @@ class TestLogicChapter22(unittest.TestCase):
                 self.assertEqual(SOURCE.count(r"\end{" + env + "}"), count)
 
     def test_references_exist_and_labels_unique(self):
-        files = sorted(CHAPTER_DIR.glob("*.tex"))
+        files = sorted(logic_model_sources(CHAPTER_DIR))
         labels = []
         for path in files:
             labels.extend(re.findall(r"\\label\{([^}]+)\}", path.read_text(encoding="utf-8")))

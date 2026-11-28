@@ -1,6 +1,7 @@
 """Audyt 25: aksjomaty ZF, liczby von Neumanna, rekursja i arytmetyka."""
 from itertools import product
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 import re
 import unittest
 
@@ -37,7 +38,7 @@ class TestChapter25(unittest.TestCase):
         self.assertEqual(len(re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}",TEXT)),25)
 
     def test_labels_resolved_with_all_chapters(self):
-        all_text = "\n".join(p.read_text(encoding="utf8") for p in sorted(DIR.glob("*.tex")))
+        all_text = "\n".join(p.read_text(encoding="utf8") for p in sorted(logic_model_sources(DIR)))
         labels = re.findall(r"\\label\{([^}]+)\}",all_text)
         self.assertEqual(len(labels),len(set(labels)))
         refs = re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}",TEXT)

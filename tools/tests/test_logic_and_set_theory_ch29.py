@@ -1,5 +1,6 @@
 """Logic chapter 29: weaker choice principles, Baire, BPI and Tychonoff."""
 from pathlib import Path
+from tools.tests.logic_model_sources import logic_model_sources
 from itertools import product, combinations
 import re
 import unittest
@@ -37,7 +38,7 @@ class TestChapter29(unittest.TestCase):
 
     def test_all_references_resolve(self):
         labels=set()
-        for f in DIR.glob("*.tex"):
+        for f in logic_model_sources(DIR):
             labels.update(re.findall(r"\\label\{([^}]+)\}",f.read_text("utf8")))
         refs=re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}",TEXT)
         self.assertEqual(len(refs),11)

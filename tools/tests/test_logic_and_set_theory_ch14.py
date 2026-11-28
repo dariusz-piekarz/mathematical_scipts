@@ -11,8 +11,8 @@ from collections import deque
 from pathlib import Path
 
 SOURCE = (Path(__file__).resolve().parents[2] / 'chapters' / 'pl'
-          / 'logic_and_set_theory'
-          / '14-twierdzenie-o-zwartosci-i-jego-zastosowania.tex')
+          / 'model_theory'
+          / '20-twierdzenie-o-zwartosci-i-jego-zastosowania.tex')
 
 
 def finite_graphs(n):
