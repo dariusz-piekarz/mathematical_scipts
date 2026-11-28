@@ -1155,3 +1155,290 @@ wielomianem zarówno w $\mathcal P_2$,
 jak i w $\mathcal P_3$, oraz
 $E_2(f)=E_3(f)=1/8$.
 \end{przyklad}
+
+\section{Interpolacja wielomianowa}
+
+Aproksymacja najlepsza minimalizuje błąd na całym
+przedziale. Interpolacja stawia inny warunek:
+przybliżenie ma być dokładne w zadanych punktach.
+Zbieżność interpolantów przy zwiększaniu liczby
+węzłów nie jest automatyczna.
+
+\begin{definicja}
+\label{ma2:def:approx-interpolation}
+Niech $a<b$, $n\ge0$ i niech
+$x_0,\ldots,x_n\in[a,b]$ będą parami różne.
+Dla danych $y_0,\ldots,y_n\in\R$ interpolantem
+wielomianowym nazywamy wielomian $p\in\mathcal P_n$
+spełniający $p(x_j)=y_j$ dla $j=0,\ldots,n$.
+Jeżeli $y_j=f(x_j)$, piszemy $I_nf=p$,
+przy czym operator $I_n$ zależy także od węzłów.
+\end{definicja}
+
+\begin{twierdzenie}[Wzór interpolacyjny Lagrange'a]
+\label{ma2:thm:approx-lagrange}
+Interpolant z definicji \ref{ma2:def:approx-interpolation}
+istnieje i jest jedyny. Ma postać
+\[
+ p(x)=\sum_{j=0}^n y_j L_j(x),\qquad
+ L_j(x)=\prod_{\substack{0\le i\le n\\i\ne j}}
+ \frac{x-x_i}{x_j-x_i}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Mianowniki nie znikają, ponieważ węzły są
+parami różne. Dla $n=0$ pusty iloczyn wynosi $1$.
+Każdy $L_j$ jest wielomianem stopnia co najwyżej $n$.
+Podstawienie $x=x_k$ daje $L_j(x_k)=0$ dla
+$k\ne j$ oraz $L_j(x_j)=1$.
+Stąd wskazany wielomian spełnia wszystkie warunki.
+Gdyby dwa interpolanty spełniały te warunki,
+ich różnica miałaby $n+1$ różnych zer i stopień
+co najwyżej $n$, więc byłaby zerowa.
+\end{proof}
+
+Wzór zastosowaliśmy już w dowodzie ekstremalnej
+własności wielomianów Czebyszewa
+(\ref{ma2:thm:approx-chebyshev-minimax}).
+Jednoznaczność oznacza także, że przestawienie
+węzłów wraz z przypisanymi im wartościami
+nie zmienia interpolantu.
+
+\begin{definicja}[Różnice dzielone]
+\label{ma2:def:approx-divided-differences}
+Dla funkcji $f$ określonej w parami różnych
+punktach $x_0,\ldots,x_n$ definiujemy
+\[
+ f[x_i]=f(x_i),\qquad
+ f[x_i,\ldots,x_j]=
+ \frac{f[x_{i+1},\ldots,x_j]-f[x_i,\ldots,x_{j-1}]}
+ {x_j-x_i}\quad(i<j).
+\]
+\end{definicja}
+
+\begin{lemat}
+\label{ma2:lem:approx-divided-explicit}
+Dla $m\ge0$ i parami różnych punktów
+$x_0,\ldots,x_m$ zachodzi
+\[
+ f[x_0,\ldots,x_m]=
+ \sum_{j=0}^m
+ \frac{f(x_j)}{\prod_{i\ne j}(x_j-x_i)}.
+\]
+Różnica dzielona jest więc symetryczna
+względem przestawienia węzłów i jest
+współczynnikiem przy $x^m$ interpolantu
+stopnia co najwyżej $m$.
+\end{lemat}
+\begin{proof}
+Dla $m=0$ jest to definicja.
+Załóżmy, że wzór zachodzi dla $m-1$.
+Podstawiamy go do rekurencji z
+\ref{ma2:def:approx-divided-differences}.
+Dla $0<j<m$ współczynnik przy $f(x_j)$
+wynosi
+\[
+ \frac{1}{x_m-x_0}
+ \left(\frac1{x_j-x_m}-\frac1{x_j-x_0}\right)
+ \prod_{\substack{1\le i<m\\i\ne j}}
+ \frac1{x_j-x_i}
+ =\prod_{i\ne j}\frac1{x_j-x_i}.
+\]
+Dla $j=0$ występuje tylko drugi składnik
+rekurencji, a dla $j=m$ tylko pierwszy.
+Dodatkowe czynniki wynoszą odpowiednio
+$-1/(x_m-x_0)=1/(x_0-x_m)$
+oraz $1/(x_m-x_0)$, co daje ten sam wzór.
+W ten sposób kończymy indukcję, również
+dla $m=1$, gdy brak indeksów pośrednich.
+Symetria wynika z postaci sumy, a ostatnia
+teza z porównania współczynnika przy $x^m$
+we wzorze \ref{ma2:thm:approx-lagrange}.
+\end{proof}
+
+\begin{twierdzenie}[Wzór interpolacyjny Newtona]
+\label{ma2:thm:approx-newton}
+Dla danych $f(x_0),\ldots,f(x_n)$
+interpolant ma postać
+\[
+ I_nf(x)=\sum_{j=0}^n f[x_0,\ldots,x_j]
+                \prod_{i=0}^{j-1}(x-x_i).
+\]
+\end{twierdzenie}
+\begin{proof}
+Niech $p_j$ oznacza interpolant na pierwszych
+$j+1$ węzłach. Dla $j=0$ mamy $p_0=f(x_0)$.
+Dla $j\ge1$ różnica $p_j-p_{j-1}$ ma stopień
+co najwyżej $j$ i znika w $x_0,\ldots,x_{j-1}$.
+Z twierdzenia o czynniku liniowym wynika,
+że jest równa $c_j\prod_{i=0}^{j-1}(x-x_i)$
+dla pewnego $c_j\in\R$ (również gdy różnica
+jest zerowa).
+Ponieważ $p_{j-1}$ ma stopień co najwyżej $j-1$,
+porównanie współczynników przy $x^j$ i
+\ref{ma2:lem:approx-divided-explicit}
+dają $c_j=f[x_0,\ldots,x_j]$.
+Sumowanie tożsamości $p_j-p_{j-1}$
+kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Tablica różnic dzielonych]
+\label{ma2:ex:approx-newton-table}
+Interpolujemy $f(x)=x^3$ w punktach $0,1,2$.
+Z definicji różnic dzielonych otrzymujemy
+\[
+\begin{array}{c|r|r|r}
+ x_j&f[x_j]&f[x_{j-1},x_j]&f[x_{j-2},x_{j-1},x_j]\\ \hline
+ 0&0&&\\
+ 1&1&1&\\
+ 2&8&7&3
+\end{array}
+\]
+Różnice pierwszego rzędu to $(1-0)/(1-0)=1$
+oraz $(8-1)/(2-1)=7$, a drugiego rzędu
+$(7-1)/(2-0)=3$.
+Z \ref{ma2:thm:approx-newton} wynika
+$I_2f(x)=x+3x(x-1)=3x^2-2x$.
+Jeżeli dodamy kolejny węzeł $3$, wystarczy
+obliczyć dodatkowe różnice: $19$, $6$ oraz $1$
+(z kolejnych ilorazów $(27-8)/1$,
+$(19-7)/2$ i $(6-3)/3$).
+Nowy interpolant otrzymujemy przez dodanie
+$x(x-1)(x-2)$ do $I_2f$ i jest on równy $x^3$.
+Nie trzeba zmieniać wcześniejszych współczynników
+w postaci Newtona.
+\end{przyklad}
+
+\section{Błąd interpolacji i wybór węzłów}
+
+\begin{twierdzenie}[Reszta interpolacyjna]
+\label{ma2:thm:approx-interpolation-remainder}
+Niech $f$ będzie klasy $C^{n+1}$ na otoczeniu
+$[a,b]$ i niech $x_0,\ldots,x_n\in[a,b]$
+będą parami różne. Oznaczmy
+\[
+ W(x)=\prod_{j=0}^n(x-x_j).
+\]
+Dla każdego $x\in[a,b]$ różnego od węzłów
+istnieje punkt $\xi$ we wnętrzu najmniejszego
+przedziału zawierającego $x,x_0,\ldots,x_n$ taki, że
+\[
+ f(x)-I_nf(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}W(x).
+\]
+W węzłach błąd jest zerowy. W szczególności
+\[
+ \|f-I_nf\|_\infty
+ \le\frac{\|f^{(n+1)}\|_\infty}{(n+1)!}\|W\|_\infty .
+\]
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $x$ różne od węzłów i połóżmy
+$c=(f(x)-I_nf(x))/W(x)$.
+Funkcja
+$g(t)=f(t)-I_nf(t)-cW(t)$
+znika w $n+2$ parami różnych punktach.
+Uporządkujmy je rosnąco. Twierdzenie Rolle'a
+zastosowane na każdym przedziale pomiędzy
+kolejnymi zerami daje co najmniej $n+1$
+różnych zer $g'$ we wnętrzu przedziału
+rozpiętego przez pierwotne zera.
+Powtarzając ten argument $n+1$ razy,
+otrzymujemy punkt $\xi$ z $g^{(n+1)}(\xi)=0$.
+Ponieważ $I_nf$ ma stopień co najwyżej $n$,
+a $W$ jest moniczny stopnia $n+1$,
+mamy $g^{(n+1)}=f^{(n+1)}-c(n+1)!$.
+Stąd $c=f^{(n+1)}(\xi)/(n+1)!$.
+Oszacowanie normy wynika z tego wzoru
+po wzięciu modułów i supremum, uwzględniając
+zerowy błąd w węzłach.
+\end{proof}
+
+\begin{wniosek}[Twierdzenie o wartości średniej dla różnic dzielonych]
+\label{ma2:cor:approx-divided-mean}
+Jeżeli $m\ge1$, $f$ jest klasy $C^m$
+na otoczeniu przedziału zawierającego
+parami różne punkty $x_0,\ldots,x_m$,
+to dla pewnego $\xi$ pomiędzy skrajnymi
+węzłami zachodzi
+\[
+ f[x_0,\ldots,x_m]=\frac{f^{(m)}(\xi)}{m!}.
+\]
+\end{wniosek}
+\begin{proof}
+Stosujemy \ref{ma2:thm:approx-interpolation-remainder}
+dla $n=m-1$ w punkcie $x=x_m$.
+Ze wzoru Newtona wynika
+\[
+ f(x_m)-I_{m-1}f(x_m)=
+ f[x_0,\ldots,x_m]\prod_{j=0}^{m-1}(x_m-x_j).
+\]
+Wszystkie czynniki iloczynu są niezerowe,
+więc porównanie obu równości i skrócenie
+iloczynu daje tezę.
+\end{proof}
+
+\begin{twierdzenie}[Optymalne węzły dla oszacowania reszty]
+\label{ma2:thm:approx-chebyshev-interpolation}
+Dla $a<b$, $n\ge0$ oznaczmy $c=(a+b)/2$,
+$\ell=(b-a)/2$.
+Spośród wszystkich układów $n+1$ różnych
+węzłów na $[a,b]$ normę supremum iloczynu
+$\prod_{j=0}^n(x-x_j)$ minimalizuje,
+z dokładnością do kolejności, układ
+\[
+ x_j=c+\ell\cos\frac{(2j+1)\pi}{2(n+1)},
+ \qquad j=0,\ldots,n.
+\]
+Minimum wynosi $\ell^{n+1}2^{-n}$.
+Dla tych węzłów oraz $f$ klasy $C^{n+1}$
+na otoczeniu $[a,b]$ otrzymujemy
+\[
+ \|f-I_nf\|_\infty
+ \le \frac{\ell^{n+1}}{2^n(n+1)!}
+       \|f^{(n+1)}\|_\infty .
+\]
+\end{twierdzenie}
+\begin{proof}
+Każdy iloczyn w tezie jest monicznym
+wielomianem stopnia $n+1$.
+Z \ref{ma2:cor:approx-chebyshev-interval}
+wynika, że spośród wszystkich takich
+wielomianów jedynym o najmniejszej normie
+jest $\ell^{n+1}2^{-n}T_{n+1}((x-c)/\ell)$.
+Na mocy \ref{ma2:prop:approx-chebyshev-nodes}
+ma on dokładnie podane $n+1$ różnych zer
+we wnętrzu $[a,b]$.
+Ponieważ jest moniczny, jest iloczynem
+czynników liniowych odpowiadających tym zerom.
+Należy więc do rozpatrywanej klasy, a jego
+jednoznaczność daje jednoznaczność zbioru węzłów.
+Ostatnia nierówność wynika z podstawienia
+minimalnej normy do
+\ref{ma2:thm:approx-interpolation-remainder}.
+\end{proof}
+
+Wniosek dotyczy minimalizacji czynnika w ogólnym
+oszacowaniu błędu, a nie minimalizacji rzeczywistego
+błędu dla każdej ustalonej funkcji. Dla wielomianu
+stopnia co najwyżej $n$ każdy układ węzłów
+daje interpolację dokładną. Dla funkcji
+$f(x)=x^{n+1}$ sytuacja jest szczególna:
+$f-I_nf$ jest moniczny stopnia $n+1$
+i znika w węzłach, więc jest równy $W$.
+Wtedy wybór węzłów Czebyszewa daje także
+najlepszą aproksymację jednostajną w $\mathcal P_n$
+na mocy \ref{ma2:cor:approx-chebyshev-interval}.
+
+\begin{przyklad}[Interpolacja a najlepsza aproksymacja]
+\label{ma2:ex:approx-interpolation-difference}
+Dla $f(x)=x^2$ na $[-1,1]$ i $n=1$
+interpolacja w końcach przedziału daje
+$I_1f=1$, z błędem normy $1$.
+W węzłach Czebyszewa $\pm1/\sqrt2$
+wartości funkcji są równe $1/2$,
+więc interpolant jest stałą $1/2$,
+z błędem normy $1/2$.
+Jest to jedyna najlepsza aproksymacja
+w $\mathcal P_1$ na mocy
+\ref{ma2:cor:approx-chebyshev-monomial}.
+\end{przyklad}
