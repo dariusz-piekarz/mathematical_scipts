@@ -1,0 +1,12 @@
+# AA-60 — audyt III: niezależne rozszerzenia i ciągi korzeniowe
+
+24 listopada 2026 r. Gałąź biblioteka-matematyczna-iteracja-6. Sprawdzony blob 6a494ed2249d6f8d3bc58ff3fadf001e3dbfbe01.
+
+## Kontrola matematyczna
+Ponownie sprawdzono relacje komutacyjne, klasyfikację L(m), współczynniki w bazie wielomianowej, oba komutatory Casimira, rozdzielenie jego uogólnionych przestrzeni własnych oraz podniesienie najwyższej wagi ilorazu. Dla m=0 argument nadal działa (F^0=I). Sprawdzono iniektywność F^m na najwyższej wadze jądra i rozszczepienie przez izomorfizm rzutu. W dowodzie jednowymiarowości sprawdzono parzystość, rangę E na wadze zero, rzut podmodułu L(2) oraz ograniczenie proporcji przez iloczyn dwóch całkowitych liczb równy 4. Sprawdzono w AA-58, że odsyłacz aa:prz:lie-radical-examples rzeczywiście zawiera dowód prostoty sl2. W ciągach korzeniowych sprawdzono wspólną wagę 0 lub 1 przy wielu składnikach i znak p-q. W realizacji euklidesowej sprawdzono odwracalność całkowitej macierzy parowania, dodatnią określoność B i B^-1, zgodność wymiernych współrzędnych nad K i R oraz odbicia. Nie znaleziono usterek wymagających korekty źródła. Pierwszy czysty audyt po korektach II: 1/2.
+
+## Trwałe niezależne regresje
+Dodano tools/tests/test_abstract_algebra_ch60_independent.js w 7eb065276fb4f4914e842a987f4ece86ff4693fd; funkcję uruchomiono w JavaScript z wynikiem PASS. Dla a,b=0,...,4 skonstruowano 25 układów liniowych dla pozadiagonalnych bloków H,E,F rozszerzenia L(b) przez L(a), w tym 5 przypadków jednakowych modułów, łącznie 675 zmiennych. Eliminacja całkowita BigInt: sprawdzono zawieranie obrazu zmian rozszczepienia w jądrze warunków komutacyjnych i równość wymiarów. Moduły w nieskalowanej bazie jednomianów, niezależnie od głównego testu SymPy. Sprawdzono także 12 układów B2–B5, C2–C5, D4–D5, F4 i G2, 12448 uporządkowanych par dla całkowitości, odbicia i zredukowania, 11768 ciągów nieproporcjonalnych par dla braku luk i znaku p-q. Maksymalna długość 4 w G2. Testy nie stanowią dowodu ogólnego. Workflow rozszerzono w ce2e782bb038adb544c3d767359eabf26c949787.
+
+## CI i status
+Run 45381029678 dla commitu b53246ae7b0865764c2b0c270c2c537bf7939520: 129/129 success, pierwszy zestaw AA-60, globalna integralność, latexmk i odsyłacze zaliczone. Drugi zestaw zaliczony w wykonaniu bezpośrednim, nowy CI z drugim zestawem jeszcze niepotwierdzony. PDF nieobejrzany. AA-60 W AUDYCIE, czyste audyty 1/2; zakres bez zmian, AA-61 nieotwarty.

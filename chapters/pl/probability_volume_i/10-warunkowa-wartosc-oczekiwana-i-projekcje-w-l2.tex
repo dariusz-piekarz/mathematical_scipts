@@ -1,12 +1,23 @@
-\chapter{Warunkowa wartość oczekiwana i projekcje w \texorpdfstring{$L^2$}{L2}}
+\chapter{Warunkowa wartość oczekiwana i rzuty ortogonalne w \texorpdfstring{$L^2$}{L2}}
 \label{ch:condexp}
-\paragraph{Odsyłacze międzytomowe.} Statystyczne zastosowania warunkowej wartości oczekiwanej to teoria Rao--Blackwella i reguły Bayesa w tomie IV, rozdziałach~\ref{IV-ch:sufficiency} i~\ref{IV-ch:bayes-foundations}.
+
+\providecommand{\atlasref}[2]{#2}
+
+\paragraph{Odsyłacze międzytomowe.}
+Statystyczne zastosowania warunkowej wartości oczekiwanej
+obejmują twierdzenie Rao--Blackwella i reguły Bayesa w tomie IV
+(rozdziały o dostateczności i podstawach wnioskowania bayesowskiego%
+\IfFileExists{probability_volume_iv.aux}{,
+ odpowiednio~\ref{IV-ch:sufficiency} i~\ref{IV-ch:bayes-foundations}}{}).
 
 \section{Dlaczego warunkowanie wymaga nowej definicji?}
 
-W elementarnych zadaniach, gdy $B\in\mathcal F$ i
-$\Prob(B)>0$, używaliśmy
-$\E[X\mid B]=\E[X\ind B]/\Prob(B)$.
+\noindent\emph{Powiązania tematyczne w Bibliotece matematycznej:} \atlasref{ME-18::thm:RN-sigfin-18}{ME-18: twierdzenie Radona--Nikodyma}.
+
+
+W elementarnych zadaniach, gdy $X\in L^1(\Prob)$,
+$B\in\mathcal F$ i $\Prob(B)>0$, używaliśmy
+$\E[X\mid B]=\E[X\chi_{B}]/\Prob(B)$.
 Ten zapis opisuje jedną liczbę: średnią wartości $X$
 po ograniczeniu próby do $B$. W wielu zastosowaniach
 obserwujemy jednak nie jedno zdarzenie, lecz pewną
@@ -58,10 +69,15 @@ jednoznaczna $\Prob$-prawie na pewno.
 Rozłóżmy $X=X^+-X^-$, gdzie
 $X^+=\max(X,0)$ i $X^-=\max(-X,0)$.
 Na $(\Omega,\mathcal G)$ definiujemy skończone
-miary dodatnie $\nu_\pm(A)=\E[X^\pm\ind A]$.
-Są przeliczalnie addytywne przez twierdzenie
-Tonellego i spełniają $\nu_\pm\ll\Prob|_\mathcal G$:
+miary dodatnie $\nu_\pm(A)=\E[X^\pm\chi_{A}]$.
+Dla rozłącznych $A_j\in\mathcal G$ zachodzi
+$X^\pm\chi_{\bigcup_j A_j}=\sum_j X^\pm\chi_{A_j}$.
+Z twierdzenia o zbieżności monotonicznej, zastosowanego
+do sum częściowych, wynika przeliczalna addytywność.
+Miary te spełniają $\nu_\pm\ll\Prob|_\mathcal G$:
 gdy $\Prob(A)=0$, to $\nu_\pm(A)=0$.
+Ponieważ $\Prob|_{\mathcal G}$ jest miarą skończoną,
+spełnia w szczególności warunek $\sigma$-skończoności.
 Twierdzenie Radona--Nikodyma, zastosowane do miar
 na \emph{mniejszym} $\sigma$-ciele $\mathcal G$,
 daje nieujemne funkcje $Y_\pm$, mierzalne względem
@@ -69,16 +85,20 @@ $\mathcal G$, takie że
 $\nu_\pm(A)=\int_A Y_\pm\,\dd\Prob$ dla
 każdego $A\in\mathcal G$. Ponieważ
 $\E Y_\pm=\nu_\pm(\Omega)=\E X^\pm<\infty$,
-zmienna $Y=Y_+-Y_-$ należy do $L^1$ i spełnia
+możemy zastąpić $Y_\pm$ przez zero na ich
+$\mathcal G$-mierzalnych zbiorach wartości nieskończonych,
+które mają miarę zero. Wtedy różnica
+$Y=Y_+-Y_-$ jest wszędzie określona, należy do $L^1$ i spełnia
 wymaganą tożsamość.
 
 Jeśli $Y$ i $Z$ spełniają tę samą tożsamość,
 różnica $D=Y-Z$ jest $\mathcal G$-mierzalna i
 $\int_A D\,\dd\Prob=0$ dla wszystkich
 $A\in\mathcal G$. W szczególności dla
-$A_+=\{D>0\}$ całka $\E[D\ind{A_+}]=0$.
-Nieujemna zmienna $D\ind{A_+}$ jest więc zerowa
-p.n. Podobnie dla $A_-=\{D<0\}$.
+$A_+=\{D>0\}$ całka $\E[D\chi_{A_+}]=0$.
+Nieujemna zmienna $D\chi_{A_+}$ jest więc zerowa
+p.n. Dla $A_-=\{D<0\}$ stosujemy ten sam argument
+do nieujemnej zmiennej $-D\chi_{A_-}$.
 Otrzymujemy $Y=Z$ p.n. Istnienie i jednoznaczność
 wynikają zatem dokładnie z konstrukcji pochodnej
 Radona--Nikodyma.
@@ -88,7 +108,9 @@ Radona--Nikodyma.
 Definicja nie wymaga, aby wszystkie zdarzenia
 z $\mathcal G$ miały dodatnie prawdopodobieństwo.
 Wartości warunkowej wartości oczekiwanej na zbiorach
-zerowych nie są wyznaczone jednoznacznie. Jest to
+zerowych nie są wyznaczone jednoznacznie, o ile
+modyfikacja zachowuje $\mathcal G$-mierzalność.
+Nie zakładamy zupełności $\mathcal G$. Jest to
 własność definicji, a nie przeszkoda techniczna.
 \end{uwaga}
 
@@ -105,26 +127,37 @@ Warunkowanie interpoluje między całkowitą niewiedzą
 i pełną znajomością wyniku.
 \end{przyklad}
 
-\begin{twierdzenie}[Średnia na atomach skończonego podziału]
-Niech $A_1,\ldots,A_m\in\mathcal F$ tworzą
-rozłączny podział $\Omega$ i niech
-$\mathcal G=\sigma(A_1,\ldots,A_m)$.
+\begin{twierdzenie}[Średnia na atomach skończonego lub przeliczalnego podziału]
+Niech $(A_j)_{j\in J}$ będzie skończonym lub przeliczalnym
+rozłącznym podziałem $\Omega$ na zbiory z $\mathcal F$,
+a $\mathcal G=\sigma(A_j:j\in J)$.
 Jeśli $X\in L^1$, to wersją $\E[X\mid\mathcal G]$ jest
 \[
 \sum_{j:\Prob(A_j)>0}
-\frac{\E[X\ind{A_j}]}{\Prob(A_j)}\ind{A_j},
+\frac{\E[X\chi_{A_j}]}{\Prob(A_j)}\chi_{A_j},
 \]
-przy dowolnych wartościach na atomach zerowych.
+przy wartości zero na atomach zerowych. Można ją
+zastąpić dowolną skończoną stałą na każdym takim atomie,
+zachowując $\mathcal G$-mierzalność.
 \end{twierdzenie}
 \begin{proof}
 Zmienna z tezy jest stała na każdym atomie $A_j$,
 więc jest $\mathcal G$-mierzalna. Na atomie
 z $\Prob(A_j)>0$ jej całka jest równa
-$\E[X\ind{A_j}]$; na atomie zerowym obie całki
-wynoszą zero. Każde zdarzenie z $\mathcal G$
-jest sumą pewnych atomów, zatem dodając równości
-całek dla atomów otrzymujemy równość dla wszystkich
-$A\in\mathcal G$.
+$\E[X\chi_{A_j}]$; na atomie zerowym obie całki
+wynoszą zero. Jeśli $Y$ oznacza zmienną z tezy, to dzięki
+przeliczalnej addytywności całki funkcji nieujemnej
+\[
+\E|Y|=\sum_{j:\Prob(A_j)>0}|\E[X\chi_{A_j}]|
+\leq\sum_{j\in J}\E[|X|\chi_{A_j}]=\E|X|<\infty.
+\]
+Rodzina wszystkich sum podrodzin $(A_j)_{j\in J}$
+jest $\sigma$-ciałem, gdyż dopełnienia i przeliczalne
+sumy nadal są sumami atomów. Jest więc równa
+$\mathcal G$. Dodając równości całek dla atomów
+otrzymujemy równość dla wszystkich $A\in\mathcal G$;
+w przypadku nieskończonej sumy uzasadnia to
+całkowalność $X$ i $Y$.
 \end{proof}
 
 \begin{przyklad}[Jedna informacja o wyniku dwóch kostek]
@@ -137,8 +170,8 @@ $\E[D_1\mid D_1\text{ nieparzysta}]=3$,
 a $\E D_2=7/2$. Zatem
 \[
 \E[X\mid\mathcal G]
-=\frac{15}{2}\ind{\{D_1\text{ parzysta}\}}
-+\frac{13}{2}\ind{\{D_1\text{ nieparzysta}\}}.
+=\frac{15}{2}\chi_{\{D_1\text{ parzysta}\}}
++\frac{13}{2}\chi_{\{D_1\text{ nieparzysta}\}}.
 \]
 To dwuwartościowa zmienna losowa: zanim zobaczymy
 parzystość, nie wiemy, którą z dwóch średnich otrzymamy.
@@ -150,8 +183,8 @@ $\mathcal G=\sigma(U^2)$. Symetria rozkładu sprawia,
 że $\E[U\mid\mathcal G]=0$, mimo że $U$ nie jest
 zmienną stałą. Aby to uzasadnić bez odwoływania się
 do intuicji, zauważmy, że dla każdego borelowskiego
-$B\subseteq[0,1]$ mamy
-$\E[U\ind{\{U^2\in B\}}]=0$:
+$B\subseteq\R$ mamy
+$\E[U\chi_{\{U^2\in B\}}]=0$:
 całka po symetrycznym zbiorze z funkcji nieparzystej
 jest zerowa. Ponieważ zdarzenia $\{U^2\in B\}$
 tworzą $\sigma(U^2)$, zmienna zerowa spełnia
@@ -165,7 +198,8 @@ $\mathcal G=\sigma(V)$ oraz $Y$ jest rzeczywistą
 $\mathcal G$-mierzalną zmienną losową, to istnieje
 funkcja borelowska $g:\R\to\R$ taka, że
 $Y=g(V)$ na całej $\Omega$. W szczególności
-istnieje funkcja borelowska $g$ spełniająca
+dla każdego $X\in L^1(\Prob)$ istnieje funkcja
+borelowska $g$ spełniająca
 $\E[X\mid\sigma(V)]=g(V)$ prawie na pewno.
 \end{twierdzenie}
 \begin{proof}
@@ -173,13 +207,16 @@ Każde zdarzenie $A\in\sigma(V)$ ma postać
 $V^{-1}(B)$ dla pewnego $B\in\mathcal B(\R)$,
 ponieważ rodzina wszystkich takich przeciwobrazów
 jest dokładnie $\sigma(V)$. Dla prostej funkcji
-$Y=\sum_j c_j\ind{A_j}$ otrzymujemy reprezentację
+$Y=\sum_j c_j\chi_{A_j}$ otrzymujemy reprezentację
 $Y=g(V)$ z borelowską funkcją
-$g=\sum_j c_j\ind{B_j}$.
+$g=\sum_j c_j\chi_{B_j}$.
 Dla dowolnej mierzalnej rzeczywistej $Y$
 konstruujemy ciąg funkcji prostych $Y_m\to Y$
 punktowo (osobno aproksymując części dodatnią
 i ujemną). Każdą zapisujemy $Y_m=g_m(V)$.
+Zbiór punktów, w których $(g_m)$ ma skończoną granicę,
+jest borelowski na mocy kryterium Cauchy'ego zapisanego
+za pomocą przeliczalnych sum i przecięć zbiorów borelowskich.
 Funkcja $g(t)=\lim_m g_m(t)$ w punktach, w których
 granica jest skończona, oraz $g(t)=0$ gdzie indziej,
 jest borelowska. Ponieważ $Y_m(\omega)\to Y(\omega)$
@@ -227,18 +264,32 @@ dodatniości do $Y-X$.
 Własność (3) to definicja dla $A=\Omega$.
 Własność (4) wynika z tego, że sama zmienna $X$
 spełnia oba warunki definicji. Dla (5) zaczynamy
-od $H=\ind B$, $B\in\mathcal G$: dla
+od $H=\chi_{B}$, $B\in\mathcal G$: dla
 $A\in\mathcal G$ mamy
-$\int_A\ind B\,\E[X\mid\mathcal G] \,\dd\Prob
+$\int_A\chi_{B}\,\E[X\mid\mathcal G] \,\dd\Prob
 =\int_{A\cap B}X\,\dd\Prob$.
-Liniowość rozszerza to na funkcje proste, a
-jednostajna aproksymacja ograniczonych funkcji
-mierzalnych przez proste oraz zdominowana zbieżność
-na dowolne ograniczone $H$.
+Liniowość rozszerza to na funkcje proste.
+Dla ograniczonego $H$ wybieramy $\mathcal G$-mierzalne
+funkcje proste $H_j$ zbiegające do $H$ jednostajnie.
+Jeśli $M=\E[X\mid\mathcal G]$, to
+\[
+\|H_jX-HX\|_1\leq\|H_j-H\|_\infty\|X\|_1,\qquad
+\|H_jM-HM\|_1\leq\|H_j-H\|_\infty\|M\|_1.
+\]
+Obie strony dążą do zera, więc w równości
+$\int_A H_jM\,\dd\Prob=\int_A H_jX\,\dd\Prob$
+możemy przejść do granicy dla każdego $A\in\mathcal G$.
+Zmienna $HM$ jest całkowalna i $\mathcal G$-mierzalna,
+a jednoznaczność daje (5).
 Wreszcie dla niezależnego $X$ i $A\in\mathcal G$
-$\E[X\ind A]=\E X\,\Prob(A)$.
-Dla całkowalnych zmiennych wynika to z definicji
-niezależności i aproksymacji funkcjami prostymi;
+$\E[X\chi_{A}]=\E X\,\Prob(A)$.
+Istotnie, $\sigma(X)$ i $\mathcal G$ są niezależne.
+Dla $B\in\mathcal B(\R)$ mamy
+$\Prob(\{X\in B\}\cap A)=\Prob(X\in B)\Prob(A)$.
+Rozszerzamy tę równość liniowo na nieujemne
+proste funkcje mierzalne względem $\sigma(X)$,
+a następnie przez zbieżność monotoniczną na $X^+$ i $X^-$. Odejmując obie
+skończone całki, uzyskujemy żądany wzór;
 stała $\E X$ spełnia zatem wymaganą tożsamość.
 \end{proof}
 
@@ -272,7 +323,7 @@ warunkowanie względem $\mathcal H$ nic nie zmienia.
 \begin{przyklad}[Trzy poziomy informacji]
 Niech $D_1,D_2$ będą niezależnymi wynikami kostek,
 $X=D_1+D_2$, $\mathcal H=\sigma(D_1)$,
-a $\mathcal G=\sigma(\ind{\{D_1\text{ parzysta}\}})$.
+a $\mathcal G=\sigma(\chi_{\{D_1\text{ parzysta}\}})$.
 Wtedy
 $\E[X\mid\mathcal H]=D_1+7/2$,
 a następnie $\E[D_1+7/2\mid\mathcal G]$
@@ -286,7 +337,7 @@ pośredniego kroku.
 
 \begin{przyklad}[Wieża nie działa dowolnie dla nieporównywalnych informacji]
 Niech $\Omega=\{1,2,3\}$, każdy punkt z masą $1/3$,
-$X=\ind{\{1\}}$, $\mathcal G=\sigma(\{1\})$
+$X=\chi_{\{1\}}$, $\mathcal G=\sigma(\{1\})$
 i $\mathcal H=\sigma(\{2\})$.
 Zapisując zmienne jako wektory wartości na
 $(1,2,3)$, dostajemy
@@ -298,13 +349,13 @@ $(1,2,3)$, dostajemy
 \]
 Te wyniki są różne. Własność wieży zakłada
 \emph{zawieranie się} odpowiednich $\sigma$-ciał;
-bez niego kolejne projekcje na różne zbiory
+bez niego kolejne rzuty na różne przestrzenie
 informacji nie muszą być przemienne.
 \end{przyklad}
 
 \section{Granice pod warunkowaniem i nierówność Jensena}
 
-\begin{twierdzenie}[Monotoniczna i zdominowana zbieżność warunkowa]
+\begin{twierdzenie}[Warunkowa zbieżność monotoniczna i zmajoryzowana]
 Niech $\mathcal G\subseteq\mathcal F$.
 \begin{enumerate}
 \item Jeśli $0\leq X_n\uparrow X$ p.n., a $X\in L^1$,
@@ -318,20 +369,27 @@ prawie na pewno oraz w $L^1$.
 \end{twierdzenie}
 \begin{proof}
 W (1) monotoniczność warunkowej wartości oczekiwanej
-daje niemalejący ciąg $Y_n=\E[X_n\mid\mathcal G]$.
-Jest on ograniczony z góry przez
+daje $0\leq Y_n\leq Y_{n+1}$ p.n. dla
+$Y_n=\E[X_n\mid\mathcal G]$. Wszystkie nierówności
+oraz ograniczenie z góry zachodzą jednocześnie
+po usunięciu przeliczalnej sumy $\mathcal G$-mierzalnych
+zbiorów zerowych. Ciąg jest tam ograniczony z góry przez
 $\E[X\mid\mathcal G]\in L^1$, więc granica
-$Y=\lim_nY_n$ jest skończona p.n. Dla dowolnego
+$Y=\lim_nY_n$ jest skończona p.n. Na wyjątkowym
+$\mathcal G$-mierzalnym zbiorze zerowym możemy
+przyjąć $Y_n=Y=0$, otrzymując mierzalną,
+całkowalną granicę. Dla dowolnego
 $A\in\mathcal G$ twierdzenie o zbieżności monotonicznej
 daje
-$\E[Y\ind A]=\lim_n\E[Y_n\ind A]
-=\lim_n\E[X_n\ind A]=\E[X\ind A]$.
+$\E[Y\chi_{A}]=\lim_n\E[Y_n\chi_{A}]
+=\lim_n\E[X_n\chi_{A}]=\E[X\chi_{A}]$.
 Jednoznaczność dowodzi (1).
 
-Dla (2) mamy $X_n+W\geq0$ i $W-X_n\geq0$,
-więc można zastosować (1) po uprzednim zastąpieniu
-ogólnego ciągu przez suprema i infima ogonowe.
-Dokładniej, niech
+Dla (2) wybieramy jeden $\mathcal F$-mierzalny
+zbiór pełnej miary, na którym zachodzą wszystkie
+ograniczenia i zbieżność $X_n\to X$ oraz $W<\infty$.
+Po zdefiniowaniu $X_n,X,W$ jako zero poza tym zbiorem
+możemy wykonywać poniższe operacje punktowo. Niech
 $L_n=\inf_{k\geq n}X_k$ i
 $U_n=\sup_{k\geq n}X_k$. Wtedy
 $L_n\uparrow X$, $U_n\downarrow X$ p.n., a
@@ -344,7 +402,7 @@ Monotoniczność i twierdzenie o trzech ciągach
 dają zbieżność p.n. warunkowych wartości $X_n$.
 Są one ograniczone modułem przez $\E[W\mid\mathcal G]$
 na mocy dodatniości, a ten majorant jest całkowalny;
-zdominowana zbieżność daje też zbieżność w $L^1$.
+zbieżność zmajoryzowana daje też zbieżność w $L^1$.
 \end{proof}
 
 \begin{twierdzenie}[Nierówność Jensena warunkowa]
@@ -380,8 +438,17 @@ Dla ciągłej skończonej funkcji wypukłej zachodzi
 $\phi(x)=\sup_{r\in\mathbb Q}\{\phi(r)+s_r(x-r)\}$:
 z prawej strony mamy co najwyżej $\phi(x)$,
 a dla wymiernych $r\to x$ wyrażenia zbliżają się
-do $\phi(x)$, ponieważ lokalnie nachylenia
-podpierające są ograniczone. Podstawienie
+do $\phi(x)$. Istotnie, dla $r\in[x-1,x+1]$
+z nierówności prostej podpierającej w $r$,
+zastosowanej do argumentów $x-2$ i $x+2$, mamy
+\[
+\frac{\phi(r)-\phi(x-2)}{r-(x-2)}
+\leq s_r\leq
+\frac{\phi(x+2)-\phi(r)}{x+2-r}.
+\]
+Mianowniki są nie mniejsze niż $1$, a liczniki są
+ograniczone dzięki ciągłości $\phi$ na zwartym
+przedziale. Stąd $s_r(x-r)\to0$ i $\phi(r)\to\phi(x)$. Podstawienie
 $x=\E[X\mid\mathcal G]$ daje tezę.
 \end{proof}
 
@@ -392,8 +459,10 @@ $\E[X\mid\mathcal G]\in L^p$ oraz
 $\|\E[X\mid\mathcal G]\|_p\leq\|X\|_p$.
 \end{wniosek}
 \begin{proof}
-Dla $p\geq1$ funkcja $x\mapsto|x|^p$ jest wypukła.
-Stosując warunkowego Jensena, a następnie całkując,
+Ponieważ $\Prob(\Omega)=1$, z nierówności Höldera
+(dla $p>1$) mamy $\|X\|_1\leq\|X\|_p$; dla $p=1$
+jest to równość. Funkcja $x\mapsto|x|^p$ jest wypukła
+i $|X|^p$ całkowalna. Stosując warunkowego Jensena, a następnie całkując,
 dostajemy
 $\E|\E[X\mid\mathcal G]|^p\leq
 \E\E[|X|^p\mid\mathcal G]=\E|X|^p$.
@@ -406,11 +475,15 @@ zero i skończonej wariancji. Jeśli obserwujemy $Z$,
 to $\E[X\mid\sigma(Z)]=Z$. Zmienna $Z$ jest więc
 średnią przewidywaną na podstawie obserwacji, a
 $\varepsilon$ pozostaje nieprzewidywalnym błędem.
-Gdy oba składniki są w $L^2$, ich zależność
-z formalną projekcją zostanie wyprowadzona poniżej.
+Jeśli dodatkowo $Z\in L^2$, to oba składniki należą
+do $L^2$ i poniższa interpretacja jako rzut
+ortogonalny ma zastosowanie.
 \end{przyklad}
 
 \section{Interpretacja geometryczna: rzut ortogonalny w \texorpdfstring{$L^2$}{L2}}
+
+\noindent\emph{Powiązania tematyczne w Bibliotece matematycznej:} \atlasref{ME-14::thm:riesz-fischer-14}{ME-14: zupełność przestrzeni funkcji całkowalnych z kwadratem}.
+
 
 Oznaczmy przez $L^2(\mathcal F)$ przestrzeń
 rzeczywistych zmiennych losowych o skończonym drugim
@@ -421,10 +494,17 @@ Podprzestrzeń $L^2(\mathcal G)$ składa się z klas
 $\mathcal G$-mierzalnych zmiennych całkowalnych z
 kwadratem. Jest domknięta w $L^2(\mathcal F)$:
 jeżeli $Y_n\in L^2(\mathcal G)$ i $Y_n\to Y$
-w $L^2$, to z kryterium podciągowego istnieje
+w $L^2$, to z nierówności Czebyszewa wynika
+zbieżność według prawdopodobieństwa. Z kryterium podciągowego (rozdział~\ref{ch:convergence}) istnieje
 podciąg zbiegający do $Y$ prawie na pewno.
-Jego granica jest $\mathcal G$-mierzalna (po wyborze
-odpowiedniej wersji $Y$), co dowodzi domkniętości.
+Wybieramy $\mathcal G$-mierzalne reprezentanty
+tego podciągu. Zbiór, na którym podciąg ma skończoną
+granicę, jest $\mathcal G$-mierzalny (kryterium
+Cauchy'ego). Definiujemy na nim granicę, a na
+dopełnieniu przyjmujemy zero. Tak otrzymana
+$\mathcal G$-mierzalna funkcja jest równa $Y$ p.n.,
+co dowodzi domkniętości także wtedy, gdy
+$\mathcal G$ nie jest zupełnym $\sigma$-ciałem.
 
 \begin{twierdzenie}[Warunkowa wartość oczekiwana jako rzut]
 Niech $X\in L^2(\Omega,\mathcal F,\Prob)$ i
@@ -449,11 +529,18 @@ $\mathcal G$-mierzalne w normie $L^2$.
 \begin{proof}
 Kontrakcja w $L^2$ dowodzi, że $P_{\mathcal G}X$
 należy do $L^2(\mathcal G)$. Z definicji mamy
-$\E[(X-P_{\mathcal G}X)\ind A]=0$
+$\E[(X-P_{\mathcal G}X)\chi_{A}]=0$
 dla wszystkich $A\in\mathcal G$.
 Liniowość rozszerza równość na proste funkcje
 $\mathcal G$-mierzalne. Jeżeli $Z\in L^2(\mathcal G)$,
-istnieją proste $Z_j\to Z$ w $L^2$. Na mocy
+istnieją $\mathcal G$-mierzalne funkcje proste
+$Z_j\to Z$ w $L^2$. Można najpierw obciąć $Z$ do
+$[-j,j]$, a następnie przybliżyć obcięcie funkcją prostą
+z błędem punktowym co najwyżej $1/j$.
+Błąd obcięcia dąży do zera w $L^2$ z twierdzenia
+o zbieżności zmajoryzowanej, a błąd aproksymacji
+ma normę co najwyżej $1/j$, ponieważ $\Prob(\Omega)=1$.
+Na mocy
 nierówności Cauchy'ego--Schwarza
 \[
 \left|\E[(X-P_{\mathcal G}X)(Z_j-Z)]\right|
@@ -469,9 +556,44 @@ To daje tożsamość Pitagorasa. Drugi składnik
 po prawej jest nieujemny i znika wtedy i tylko
 wtedy, gdy $Z=P_{\mathcal G}X$ w $L^2$.
 Jednoznaczność najlepszego przybliżenia jest dowiedziona.
+Jeśli $Q\in L^2(\mathcal G)$ również spełnia warunek
+ortogonalności, to odejmując obie równości i podstawiając
+$Z=Q-P_{\mathcal G}X$, dostajemy
+$\|Q-P_{\mathcal G}X\|_2^2=0$. Dowodzi to również
+jednoznaczności w charakterystyce przez ortogonalność.
 \end{proof}
 
-\begin{wniosek}[Własności operatora projekcji]
+Geometria uzyskanej tożsamości jest przedstawiona
+na rysunku~\ref{fig:rp1-10-conditional-projection}.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.2,>=Latex]
+  \fill[blue!9] (-.6,-.6)--(4.5,-.6)--(5.5,.9)--(.4,.9)--cycle;
+  \draw[blue!45] (-.6,-.6)--(4.5,-.6)--(5.5,.9)--(.4,.9)--cycle;
+  \coordinate (P) at (2.1,.15);
+  \coordinate (X) at (2.1,2.7);
+  \coordinate (Z) at (4,.15);
+  \draw[very thick,blue!65!black,->] (Z)--(P)
+    node[midway,below=3pt] {$P_{\mathcal G}X-Z$};
+  \draw[very thick,teal!65!black,->] (P)--(X)
+    node[midway,left] {$X-P_{\mathcal G}X$};
+  \draw[thick,black!75,->] (Z)--(X)
+    node[midway,right] {$X-Z$};
+  \draw[black!65] (2.1,.43)--(2.38,.43)--(2.38,.15);
+  \fill (X) circle (1.7pt) node[above] {$X$};
+  \fill (P) circle (1.7pt) node[below left=5pt] {$P_{\mathcal G}X$};
+  \fill (Z) circle (1.7pt) node[right] {$Z$};
+  \node[blue!65!black] at (4.65,.65) {$L^2(\mathcal G)$};
+\end{tikzpicture}
+\caption{Schemat rzutu ortogonalnego w $L^2(\mathcal F)$.
+Błąd $X-P_{\mathcal G}X$ jest prostopadły do całej
+podprzestrzeni $L^2(\mathcal G)$. Rysunek przedstawia
+dwuwymiarowy przekrój ilustrujący tożsamość Pitagorasa.}
+\label{fig:rp1-10-conditional-projection}
+\end{figure}
+
+\begin{wniosek}[Własności operatora rzutu]
 Dla $X,Y\in L^2(\mathcal F)$ i
 $\mathcal G\subseteq\mathcal F$ operator
 $P_{\mathcal G}:L^2(\mathcal F)\to L^2(\mathcal F)$
@@ -515,8 +637,10 @@ $\mathcal G\subseteq\mathcal F$ definiujemy
 \Var(X\mid\mathcal G)
 :=\E[(X-\E[X\mid\mathcal G])^2\mid\mathcal G].
 \]
-Jest to nieujemna, $\mathcal G$-mierzalna
-zmienna losowa.
+Ponieważ $X-\E[X\mid\mathcal G]\in L^2$,
+jego kwadrat należy do $L^1$. Wariancja warunkowa
+jest więc nieujemną, całkowalną,
+$\mathcal G$-mierzalną zmienną losową.
 \end{definicja}
 
 \begin{twierdzenie}[Wzór na wariancję całkowitą]
@@ -535,11 +659,19 @@ oraz
 \end{twierdzenie}
 \begin{proof}
 Oznaczmy $M=\E[X\mid\mathcal G]$.
-Rozwinięcie kwadratu i reguła wyciągania
-czynnika (najpierw dla ograniczonych obcięć $M$,
-a potem przez zbieżność w $L^1$ wynikającą
-z Cauchy'ego--Schwarza) dają
-$\E[X M\mid\mathcal G]=M\E[X\mid\mathcal G]=M^2$.
+Niech $M_j=(-j)\vee(M\wedge j)$. Z twierdzenia
+o zbieżności zmajoryzowanej zastosowanego do
+$|M_j-M|^2\leq |M|^2$ wynika $M_j\to M$ w $L^2$.
+Z nierówności Cauchy'ego--Schwarza
+\[
+\|XM_j-XM\|_1\leq\|X\|_2\|M_j-M\|_2,\qquad
+\|M_jM-M^2\|_1\leq\|M\|_2\|M_j-M\|_2.
+\]
+Obie prawe strony dążą do zera. Reguła wyciągania
+ograniczonego czynnika daje $\E[XM_j\mid\mathcal G]=M_jM$.
+Kontrakcja w $L^1$ pozwala przejść do granicy w tej
+równości, otrzymując
+$\E[XM\mid\mathcal G]=M^2$ p.n.
 Podobnie $\E[M^2\mid\mathcal G]=M^2$.
 Stąd pierwszy wzór.
 
@@ -581,7 +713,11 @@ $\Cov(X,Y\mid\mathcal G)=
 \end{twierdzenie}
 \begin{proof}
 Niech $M=\E[X\mid\mathcal G]$ i
-$N=\E[Y\mid\mathcal G]$. Własność wieży daje
+$N=\E[Y\mid\mathcal G]$. Z kontrakcji w $L^2$
+mamy $M,N\in L^2$. Nierówność Cauchy'ego--Schwarza
+zapewnia, że $XY,MN\in L^1$, a więc również
+$\Cov(X,Y\mid\mathcal G)\in L^1$.
+Własność zachowania całki daje
 $\E\Cov(X,Y\mid\mathcal G)=\E[XY]-\E[MN]$.
 Ponieważ $\E M=\E X$ i $\E N=\E Y$,
 $\Cov(M,N)=\E[MN]-\E X\E Y$.
@@ -601,6 +737,8 @@ ciągłym zwykle ma prawdopodobieństwo zero.
 Niech $(X,V)$ będzie rzeczywistym wektorem losowym
 o wspólnej gęstości $f_{X,V}$ względem miary
 $\lambda_2$ oraz niech $\E|X|<\infty$.
+Wybieramy nieujemną borelowską wersję gęstości
+(jest ona pochodną Radona--Nikodyma na $\mathcal B(\R^2)$).
 Niech $f_V(v)=\int_\R f_{X,V}(x,v)\,\dd\lambda_1(x)$.
 Dla tych $v$, dla których $0<f_V(v)<\infty$ oraz
 $\int_\R |x|f_{X,V}(x,v)\,\dd\lambda_1(x)<\infty$,
@@ -613,35 +751,29 @@ Wówczas $g(V)$ jest wersją
 $\E[X\mid\sigma(V)]$.
 \end{twierdzenie}
 \begin{proof}
-Z twierdzenia Tonellego i założenia $\E|X|<\infty$
-wynika
-\[
-\int_\R\int_\R |x|f_{X,V}(x,v)
-\,\dd\lambda_1(x)\,\dd\lambda_1(v)<\infty.
-\]
-Stąd licznik w definicji $g$ istnieje dla
-$\lambda_1$-prawie wszystkich $v$; zbiory, na których
-$f_V=0$ lub $f_V=\infty$, mają zerową masę
-względem rozkładu $V$. Ponadto
-$\int |g(v)|f_V(v)\,\dd\lambda_1(v)\leq\E|X|$,
-więc $g(V)\in L^1$. Dla każdego zbioru borelowskiego
-$B\subseteq\R$ twierdzenie Fubiniego daje
-\[
-\E[g(V)\ind{\{V\in B\}}]
-=\int_Bg(v)f_V(v)\,\dd\lambda_1(v)
-=\int_B\int_\R xf_{X,V}(x,v)
-\,\dd\lambda_1(x)\,\dd\lambda_1(v)
-=\E[X\ind{\{V\in B\}}].
-\]
-Każde zdarzenie z $\sigma(V)$ ma postać
-$\{V\in B\}$, więc jest to dokładnie
-tożsamość definiująca warunkową wartość oczekiwaną.
+Stosujemy twierdzenie o warunkowej wartości
+oczekiwanej obliczanej z gęstości z
+rozdziału~\ref{ch:random-variables} dla obserwacji
+$V$ i funkcji $h(x)=x$. Z twierdzenia Tonellego
+$f_V$ jest borelowską gęstością rozkładu $V$;
+zbiory $\{f_V=\infty\}$ oraz
+$\{\int_\R |x|f_{X,V}(x,v)\,\dd\lambda_1(x)=\infty\}$
+są $\lambda_1$-zerowe, ponieważ odpowiednie całki
+po $v$ wynoszą $1$ i $\E|X|<\infty$.
+Zbiór $\{f_V=0\}$ jest $\Law(V)$-zerowy.
+Na pozostałym zbiorze gęstość warunkowa ma postać
+$k(v,x)=f_{X,V}(x,v)/f_V(v)$, więc
+$\int_\R xk(v,x)\,\dd\lambda_1(x)=g(v)$.
+Na zbiorze wyjątkowym przyjmujemy $g=0$,
+co zachowuje borelowską mierzalność i nie zmienia
+klasy $g(V)$ w $L^1$. Przywołane twierdzenie daje
+żądaną równość prawie na pewno.
 \end{proof}
 
 \begin{przyklad}[Jednostajny punkt trójkąta]
 Niech $(X,V)$ będzie jednostajny na zbiorze
 $T=\{(x,v):0<v<x<1\}$, a więc jego gęstość
-wynosi $2\ind T$. Dla $v\in(0,1)$ mamy
+wynosi $2\chi_{T}$. Dla $v\in(0,1)$ mamy
 $f_V(v)=\int_v^1 2\,\dd\lambda_1(x)=2(1-v)$,
 a gęstość $X$ warunkowo przy $V=v$ jest
 jednostajna na $(v,1)$. Otrzymujemy
@@ -651,13 +783,13 @@ $\E[X\mid\sigma(V)]=(1+V)/2$ p.n.
 Sprawdźmy to bezpośrednio: dla dowolnego
 borelowskiego $B\subseteq(0,1)$
 \[
-\E[X\ind{\{V\in B\}}]
+\E[X\chi_{\{V\in B\}}]
 =2\int_B\!\int_v^1 x\,\dd\lambda_1(x)
 \,\dd\lambda_1(v)
 =\int_B(1-v^2)\,\dd\lambda_1(v),
 \]
 podczas gdy
-$\E[((1+V)/2)\ind{\{V\in B\}}]
+$\E[((1+V)/2)\chi_{\{V\in B\}}]
 =\int_B (1+v)(1-v)\,\dd\lambda_1(v)$.
 Obie całki są równe. Ten rachunek pokazuje
 zarówno funkcję warunkową, jak i poprawne znaczenie
@@ -691,20 +823,9 @@ potrzebna do definicji i własności
 $\E[X\mid\sigma(V)]$.
 \end{uwaga}
 
-\section{Co warto zapamiętać przed procesami stochastycznymi?}
-Warunkowa wartość oczekiwana działa w dwóch językach.
-W języku miary zachowuje całki na zdarzeniach
-obserwowalnych. W języku geometrii jest rzutem
-ortogonalnym na domkniętą przestrzeń zmiennych
-zależnych od dostępnej informacji. Zmiana informacji
-zmienia rzut, a własność wieży kontroluje kolejne
-etapy ujawniania danych. W drugim tomie właśnie
-ten mechanizm będzie podstawą definicji martyngału,
-w którym zachodzi $\E[M_{n+1}\mid\mathcal F_n]=M_n$.
-
 \section{Warunkowanie: czynnik nie musi być ograniczony}
 
-W rozdziale~\ref{ch:condexp} reguła wyciągania czynnika została wykazana dla
+Wcześniej reguła wyciągania czynnika została wykazana dla
 ograniczonej zmiennej $H$. To założenie nie jest konieczne, ale jego
 usunięcie wymaga całkowalności odpowiednich iloczynów.
 
@@ -732,7 +853,7 @@ W szczególności $H\E[X\mid\mathcal G]$ jest całkowalna.
 Dla $H^{(m)}=(-m)\vee(H\wedge m)$ zachodzi
 $H^{(m)}X\to HX$ i $H^{(m)}\E[X\mid\mathcal G]\to
 H\E[X\mid\mathcal G]$ prawie na pewno, a obie rodziny
-są zdominowane odpowiednio przez $|HX|$ oraz
+są zmajoryzowane odpowiednio przez $|HX|$ oraz
 $|H|\E[|X|\mid\mathcal G]$. Stosujemy wcześniejszą
 regułę dla $H^{(m)}$, całkujemy po dowolnym $A\in\mathcal G$
 i przechodzimy do granicy. Jednoznaczność warunkowej
@@ -750,6 +871,53 @@ lecz wymaga to definicji o wartościach w $[0,\infty]$.
 \end{przyklad}
 
 \section{Granice i jednostajna całkowalność}
+\begin{twierdzenie}[Jednostajna całkowalność po warunkowaniu]
+Niech $\mathcal K\subseteq L^1(\Prob)$ będzie jednostajnie
+całkowalna (rozdział~\ref{ch:convergence}).
+Wówczas rodzina wszystkich $\E[X\mid\mathcal G]$,
+dla $X\in\mathcal K$ i dowolnych pod-$\sigma$-ciał
+$\mathcal G\subseteq\mathcal F$, jest jednostajnie całkowalna.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $K>0$, $X\in\mathcal K$ oraz $\mathcal G$.
+Niech $Y=\E[X\mid\mathcal G]$ i
+$R=|X|\chi_{\{|X|>K/2\}}$.
+Z monotoniczności oraz nierówności Jensena wynika
+$|Y|\leq K/2+\E[R\mid\mathcal G]$.
+Na zdarzeniu $A=\{|Y|>K\}\in\mathcal G$ mamy
+$\E[R\mid\mathcal G]>K/2$. Zatem
+\[
+(K/2)\Prob(A)\leq\E[R\chi_{A}]\leq\E R.
+\]
+Całkując wcześniejsze oszacowanie na $A$, otrzymujemy
+\[
+\E[|Y|\chi_{A}]\leq (K/2)\Prob(A)+\E[R\chi_{A}]
+\leq 2\E[|X|\chi_{\{|X|>K/2\}}].
+\]
+Prawa strona jest niezależna od $\mathcal G$, a jej
+supremum po $X\in\mathcal K$ dąży do zera przy
+$K\to\infty$, co dowodzi tezy.
+\end{proof}
+\begin{wniosek}
+Jeżeli $X_n\to X$ według prawdopodobieństwa i rodzina
+$(X_n)$ jest jednostajnie całkowalna, to $X\in L^1$
+oraz dla dowolnego ciągu pod-$\sigma$-ciał
+$(\mathcal G_n)$ zachodzi
+\[
+\|\E[X_n\mid\mathcal G_n]-\E[X\mid\mathcal G_n]\|_1
+\longrightarrow0.
+\]
+\end{wniosek}
+\begin{proof}
+Twierdzenie Vitaliego (rozdział~\ref{ch:convergence})
+daje $X\in L^1$ i $\|X_n-X\|_1\to0$.
+Dla każdego $n$ kontrakcja w $L^1$ ogranicza lewą
+stronę przez $\|X_n-X\|_1$, co daje tezę.
+Nie twierdzimy, że zmienne $\E[X\mid\mathcal G_n]$
+mają granicę, jeśli same $\mathcal G_n$ zmieniają się
+bez dodatkowych założeń.
+\end{proof}
+
 
 \begin{twierdzenie}[Zbieżność $L^1$ zachowuje się przy warunkowaniu]
 Niech $X_n,X\in L^1(\Prob)$, $\mathcal G\subseteq\mathcal F$.
@@ -771,18 +939,48 @@ Z liniowości i warunkowej nierówności Jensena
 
 \begin{przyklad}[Zbieżność prawie na pewno nie wystarcza]
 Na $((0,1),\mathcal B((0,1)),\lambda_1)$ niech
-$X_n=n\ind{(0,1/n)}$. Wtedy $X_n\to0$ prawie na pewno,
+$X_n=n\chi_{(0,1/n)}$. Wtedy $X_n\to0$ prawie na pewno,
 ale $\E X_n=1$ dla każdego $n$.
 Przy trywialnym $\mathcal G$ mamy zatem
 $\E[X_n\mid\mathcal G]=1\not\to0=\E[0\mid\mathcal G]$.
-To wyjaśnia, dlaczego w twierdzeniu o zbieżności zdominowanej
-w rozdziale~\ref{ch:condexp} rzeczywiście potrzebny jest majorant
-całkowalny lub inny warunek gwarantujący $L^1$.
+To wyjaśnia, dlaczego w twierdzeniu o zbieżności zmajoryzowanej
+rzeczywiście potrzebny jest dodatkowy warunek. Sama
+zbieżność w $L^1$ gwarantuje zbieżność warunkowych wartości
+w $L^1$, lecz nie zawsze prawie na pewno.
+Aby zobaczyć to ostatnie, na $(0,1)$ z miarą
+Lebesgue'a rozważmy funkcje charakterystyczne
+kolejnych przedziałów podziałów dwójkowych:
+\[
+X_{2^m+k}=\chi_{[k2^{-m},(k+1)2^{-m})\cap(0,1)},
+\qquad 0\leq k<2^m,\quad m\geq0.
+\]
+Mamy $\|X_{2^m+k}\|_1=2^{-m}\to0$.
+Dla każdego punktu $\omega\in(0,1)$ w każdym
+bloku dokładnie jedna funkcja ma wartość $1$,
+a pozostałe (dla $m\geq1$) mają wartość $0$.
+Ciąg nie ma więc granicy punktowej. Dla
+$\mathcal G=\mathcal F$ warunkowanie jest identycznością,
+więc także warunkowe wartości oczekiwane nie zbiegają p.n.
 \end{przyklad}
 
 
 
-\begin{przyklad}[Niezależność warunkowa nie jest niezależnością]
+\section{Niezależność warunkowa}
+
+\begin{definicja}[Niezależność warunkowa]
+Zmienne rzeczywiste $X,Y$ na wspólnej przestrzeni
+probabilistycznej są warunkowo niezależne względem
+$\mathcal G$, jeśli dla wszystkich borelowskich
+$A,B\subseteq\R$
+\[
+\E[\chi_{\{X\in A,Y\in B\}}\mid\mathcal G]
+=\E[\chi_{\{X\in A\}}\mid\mathcal G]\,
+ \E[\chi_{\{Y\in B\}}\mid\mathcal G]\quad\text{p.n.}
+\]
+Równość dotyczy każdej ustalonej pary $A,B$.
+\end{definicja}
+
+\begin{przyklad}[Niezależność nie musi zachodzić po warunkowaniu]
 Niech $B_1,B_2$ będą niezależnymi próbami Bernoulliego
 z parametrem $1/2$ i $S=B_1+B_2$.
 Zmienne $B_1,B_2$ są niezależne, ale po poznaniu
@@ -803,7 +1001,7 @@ iloczynem warunkowych wartości oczekiwanych.
 \begin{przyklad}[Suma niezależnych zmiennych Poissona]
 Niech $X\sim\Poi(\lambda)$ i $Y\sim\Poi(\mu)$ będą
 niezależne, gdzie $\lambda,\mu>0$, i niech $S=X+Y$.
-Z rozkładu splotu wiemy, że $S\sim\Poi(\lambda+\mu)$.
+Z własności sumy niezależnych zmiennych Poissona (rozdział~\ref{ch:distributions}) wiemy, że $S\sim\Poi(\lambda+\mu)$.
 Dla $n\in\N_0$ i $0\leq k\leq n$ obliczamy
 \begin{align*}
 \Prob(X=k\mid S=n)
@@ -813,8 +1011,12 @@ Dla $n\in\N_0$ i $0\leq k\leq n$ obliczamy
 \end{align*}
 Zatem $X$ przy warunku $S=n$ ma rozkład
 $\Bin(n,\lambda/(\lambda+\mu))$. Ponieważ
-$\sigma(S)$ jest generowana przez rozłączny,
-przeliczalny podział $\{S=n\}$,
+$\sigma(S)$ opisuje wartości $S$, które są całkowite
+i nieujemne p.n., stosujemy wzory na atomach
+$\{S=n\}$; ich suma ma prawdopodobieństwo jeden.
+Równości definiujące warunkowanie na dowolnym
+zdarzeniu z $\sigma(S)$ uzyskujemy, sumując całki
+po tych atomach. Z momentów rozkładu dwumianowego
 \[
 \E[X\mid\sigma(S)]
 =\frac{\lambda}{\lambda+\mu}S,
@@ -834,9 +1036,9 @@ przewidzieć $X$. Z symetrii otrzymujemy
 $\E[X\mid\sigma(S)]=S/2$.
 Aby poznać również wariancję warunkową,
 połóżmy $D=(X-Z)/2$. Wtedy
-$X=S/2+D$, a odwrotną transformacją jest
-$X=S/2+D$, $Z=S/2-D$, o wyznaczniku
-Jacobianu o module $1$. Wspólna gęstość
+odwrotna transformacja ma postać
+$X=S/2+D$, $Z=S/2-D$, a wyznacznik jej macierzy
+Jacobiego wynosi $-1$. Wspólna gęstość
 $(S,D)$ wynosi
 \[
 f_{S,D}(s,d)=\frac1{2\pi}
@@ -851,3 +1053,13 @@ Po obserwacji sumy pozostaje połowa pierwotnej
 wariancji pojedynczego składnika.
 \end{przyklad}
 
+\section{Co warto zapamiętać przed procesami stochastycznymi?}
+Warunkowa wartość oczekiwana działa w dwóch językach.
+W języku miary zachowuje całki na zdarzeniach
+obserwowalnych. W języku geometrii, gdy $X\in L^2$, jest rzutem
+ortogonalnym na domkniętą przestrzeń zmiennych
+zależnych od dostępnej informacji. Zmiana informacji
+zmienia rzut, a własność wieży kontroluje kolejne
+etapy ujawniania danych. W rozdziale~\ref{ch:filtracje}, a następnie w drugim tomie,
+ten mechanizm będzie podstawą definicji martyngału,
+w którym zachodzi $\E[M_{n+1}\mid\mathcal F_n]=M_n$.

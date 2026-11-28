@@ -1,0 +1,12 @@
+# Moduł 15A — audyt 30 (poprawkowy, 0/2)
+
+Data: 24 listopada 2026. Gałąź biblioteka-matematyczna-iteracja-6. Punkt wyjścia: rozdział 15 ustabilizowany w audycie 29 (c2e52734cab48111767f8ad004bfa415c1c9d773). Źródło 15A ec55436f83b04a13ed52a424cda238e43e5b2c16.
+
+## Kontrola matematyczna i redakcyjna
+Przejrzano cały moduł, bez rozszerzania zakresu. 20 zamian fragmentów: samodzielna definicja całki Riemanna i dowód jednoznaczności przez seminormy rozdzielające punkty; istnienie całki kombinacji liniowej; pełne uzasadnienie gęstości c00 w l2, niezupełności i ciągłości przykładu w zerze, odbicie funkcji i zerowa całka na [0,2] przez testy skalarne; określenie C1 na przedziale domkniętym i zakres supremum; jawne oszacowania różniczkowania całki z parametrem przez wektorowe twierdzenie Newtona–Leibniza i jednostajną ciągłość; dobór zwartego prostokąta i ciągłość pochodnej w regule Leibniza również przy równych lub odwróconych granicach; uściślenie założeń wyższych pochodnych; pełne oszacowanie różnic obu sum iterowanych od wspólnej sumy podwójnej w dowodzie Fubiniego; ciągłość różniczkowania i ewaluacji w C-infty; wspólne ciało przestrzeni w twierdzeniu o silnej całce operatorowej; szczegółowy dowód silnej ciągłości grupy modulacji i normy różnicy równej 2 przez wektor charakterystyczny przedziału. Nie dodano tematów.
+
+## Technika
+Źródło commity 980cc9521c7a7383ec74f1a98039ac031ae62830 i ea33821b6cfb277f5fccc43c25d0ffc258402db6, blob be3e0dc4896169c9234fc51d5dc872997a15aa6f: 607 wierszy (wcześniej 515), 18 etykiet zachowanych, 12 dowodów, 4 przykłady, sprawdzone zagnieżdżenie środowisk. Dedykowane CI wejściowego źródła: 45357544029, job 138319015407, 9/9 kroków, 2/2 testów, 3 przebiegi pdflatex, PDF 138 stron i 1358916 bajtów, diagnostyka zaliczona. Znane ostrzeżenie underfull hbox 1127. Dedykowane testy rozszerzono do 5 (commit 4d5ecd38a181f327290485c14362c210ec1e5356, blob 9e42e07d6413489484982a7dfde7ea1a5c408345): kontrakty źródła, dokładny przykład ruchomych granic przechodzących przez równość i porównanie całek iterowanych wielomianu. Nowe CI źródła 45359604142 i 45359664667 były w toku podczas odczytu; nie potwierdzono jeszcze zaliczenia nowych testów i oględzin nowego PDF. Wyodrębniono dla użytkownika PDF rozdziałów 14 i 15 z zatwierdzonego kontekstu audytu 28, zachowując numerację i pikselową zgodność zachowanej treści.
+
+## Decyzja
+14 i 15 pozostają stabilne. 15A: 0/2, audyt 31 nadal modułu 15A. Zweryfikować poprawki, nowe testy i PDF; po dwóch czystych audytach przejść do 15B, następnie 16 itd. Zakres zamknięty.

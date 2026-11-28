@@ -1,10 +1,17 @@
 \chapter{Prawa wielkich liczb}
 \label{ch:lln}
-\paragraph{Odsyłacze międzytomowe.} Zastosowania MPWL do zgodności estymatorów i metod Monte Carlo przedstawiono w tomie IV, rozdziałach~\ref{IV-ch:estimators} i~\ref{IV-ch:monte-carlo}.
+
+\providecommand{\atlasref}[2]{#2}
+
+\paragraph{Odsyłacze międzytomowe.}
+Zastosowania mocnego prawa wielkich liczb do zgodności
+estymatorów i metod Monte Carlo przedstawiono w tomie IV
+(w rozdziałach o estymatorach oraz metodach Monte Carlo%
+\IfFileExists{probability_volume_iv.aux}{, odpowiednio~\ref{IV-ch:estimators} i~\ref{IV-ch:monte-carlo}}{}).
 
 
 Prawa wielkich liczb formalizują stabilizację częstości
-obserwowanych w długiej serii doświadczeń. W rzucie monetą
+obserwowanych w długiej serii doświadczeń. W serii rzutów symetryczną monetą
 względna liczba orłów nie musi być bliska $1/2$ po
 kilkunastu próbach, lecz przy dużej liczbie niezależnych
 rzutów odchylenia stają się rzadkie. Zależnie od tego,
@@ -22,26 +29,37 @@ W szczególności, gdy $\E Y<\infty$, to
 $\sum_{k=1}^\infty\Prob(Y>k)\leq\E Y$.
 \end{lemat}
 \begin{proof}
-Dla każdej liczby $y\geq0$ mamy tożsamość
-$y=\int_0^\infty\ind{\{y>t\}}\,\dd\lambda_1(t)$.
-Podstawiając $y=Y(\omega)$ i stosując twierdzenie
-Tonellego do nieujemnej funkcji
-$(\omega,t)\mapsto\ind{\{Y(\omega)>t\}}$,
-otrzymujemy
-$\E Y=\int_0^\infty \E\ind{\{Y>t\}}\,\dd\lambda_1(t)$,
-a więc żądaną tożsamość. Ponieważ dla każdego $k\geq1$
-i $t\in[k-1,k)$ zachodzi
-$\Prob(Y>t)\geq\Prob(Y>k)$, suma całek po
-kolejnych jednostkowych przedziałach daje nierówność.
+Pierwsza równość jest tożsamością ogonową
+wykazaną w rozdziale~\ref{ch:distributions}
+(w przykładzie porównującym ogony rozkładów
+normalnego i Cauchy'ego); jej dowód z twierdzenia
+Tonellego dotyczy dowolnej nieujemnej zmiennej
+losowej, niezależnie od skończoności jej średniej.
+Funkcja ogonowa jest mierzalna, gdyż jest nierosnąca.
+Dla każdego całkowitego $k\geq1$ i $t\in[k-1,k)$
+z inkluzji $\{Y>k\}\subseteq\{Y>t\}$ wynika
+$\Prob(Y>t)\geq\Prob(Y>k)$, zatem
+\[
+\sum_{k=1}^N\Prob(Y>k)
+\leq\sum_{k=1}^N\int_{k-1}^k\Prob(Y>t)\,\dd\lambda_1(t)
+\leq\E Y.
+\]
+Przejście z $N\to\infty$ dowodzi nierówności
+dla szeregu.
 \end{proof}
 
 \section{Sformułowania i wersja wariancyjna}
 
 \begin{definicja}
-Niech $(X_n)_{n\geq1}$ będzie ciągiem całkowalnych
-rzeczywistych zmiennych losowych na jednej przestrzeni
+Niech $(X_n)_{n\geq1}$ będzie ciągiem rzeczywistych
+zmiennych losowych na jednej przestrzeni
 probabilistycznej i niech
-$\overline X_n=n^{-1}\sum_{k=1}^nX_k$.
+$\overline X_n=n^{-1}\sum_{k=1}^nX_k$ dla $n\geq1$.
+Każda średnia jest mierzalna jako skończona kombinacja
+liniowa zmiennych mierzalnych. Jeżeli wszystkie $X_k$
+są całkowalne, to także każda średnia jest całkowalna.
+Sama definicja zbieżności średnich nie wymaga jednak
+istnienia ich wartości oczekiwanych.
 Dla $m\in\R$ mówimy, że zachodzi \emph{słabe prawo
 wielkich liczb} (SPWL) z granicą $m$, jeśli
 $\overline X_n\xrightarrow{\Prob}m$.
@@ -51,168 +69,349 @@ $\overline X_n\to m$ prawie na pewno.
 \end{definicja}
 
 Mocne prawo pociąga słabe, ponieważ zbieżność prawie na
-pewno implikuje zbieżność według prawdopodobieństwa.
+pewno implikuje zbieżność według prawdopodobieństwa
+(rozdział~\ref{ch:convergence}).
 W drugą stronę implikacja nie zachodzi dla dowolnych ciągów
-zmiennych losowych. Nawet przy zbieżności prawie na pewno
-nie twierdzimy, że średnia od pewnego momentu \emph{zawsze}
-jest równa $m$: tylko że jej odchylenie dąży do zera.
+zmiennych losowych. Istotnie, niech $(A_n)_{n\geq1}$
+będzie ciągiem funkcji charakterystycznych przedziałów
+diadycznych z przykładu w rozdziale~\ref{ch:convergence},
+zbieżnym do zera według prawdopodobieństwa, lecz
+niezbieżnym punktowo w żadnym punkcie $[0,1)$.
+Połóżmy $A_0=0$ i $X_n=nA_n-(n-1)A_{n-1}$.
+Każda zmienna $X_n$ jest mierzalna i ograniczona,
+a sumowanie teleskopowe daje
+\[
+\overline X_n=\frac1n\sum_{k=1}^n
+(kA_k-(k-1)A_{k-1})=A_n.
+\]
+Dla tego ciągu zachodzi SPWL z granicą zero, ale nie MPWL.
+Nawet przy zbieżności prawie na pewno nie twierdzimy,
+że średnia od pewnego momentu jest równa $m$.
+Twierdzimy, że poza pewnym mierzalnym zbiorem zerowym
+dla każdego $\varepsilon>0$ istnieje indeks
+$N=N(\omega,\varepsilon)$, po którym
+$|\overline X_n(\omega)-m|<\varepsilon$ dla wszystkich
+$n\geq N$.
 
 \begin{twierdzenie}[SPWL z kontroli wariancji]
-Niech $(X_n)_{n\geq1}$ będą rzeczywistymi zmiennymi losowymi
-o skończonych drugich momentach. Jeśli
+Niech $(X_n)_{n\geq1}$ będzie ciągiem rzeczywistych zmiennych
+losowych na wspólnej przestrzeni probabilistycznej,
+o skończonych drugich momentach. Jeśli dla pewnego $m\in\R$
 \[
 \frac1n\sum_{k=1}^n\E X_k\longrightarrow m,
 \qquad
 \frac1{n^2}\Var\!\left(\sum_{k=1}^nX_k\right)\longrightarrow0,
 \]
-to $n^{-1}\sum_{k=1}^nX_k\xrightarrow{\Prob}m$.
+to $\overline X_n\to m$ w $L^2$, a w szczególności
+$\overline X_n\xrightarrow{\Prob}m$.
 W szczególności wystarcza, by $X_k$ były parami
 nieskorelowane, miały wspólną średnią $m$ i
 $\sum_{k=1}^n\Var(X_k)=o(n^2)$.
 \end{twierdzenie}
 \begin{proof}
+Z nierówności Cauchy'ego--Schwarza dla $|X_k|$ i
+funkcji stałej $1$ wynika
+$\E|X_k|\leq(\E X_k^2)^{1/2}<\infty$.
+Skończone sumy także należą do $L^2$, ponieważ
+punktowo $(\sum_{k=1}^n X_k)^2\leq n\sum_{k=1}^n X_k^2$
+z nierówności Cauchy'ego--Schwarza w $\R^n$.
+Po scałkowaniu prawa strona jest skończona.
 Oznaczmy $a_n=n^{-1}\sum_{k=1}^n\E X_k$.
 Z liniowości wartości oczekiwanej
-$\E\overline X_n=a_n$, a z jednorodności wariancji
-$\Var(\overline X_n)=n^{-2}\Var(\sum_{k\leq n}X_k)$.
+$\E\overline X_n=a_n$, zaś z definicji wariancji
+\[
+\Var(\overline X_n)
+=\E\left|\frac1n\sum_{k=1}^n(X_k-\E X_k)\right|^2
+=\frac1{n^2}\Var\left(\sum_{k=1}^nX_k\right).
+\]
+W szczególności z obu założeń twierdzenia wynika
+\[
+\E|\overline X_n-m|^2
+=\Var(\overline X_n)+|a_n-m|^2\longrightarrow0,
+\]
+gdyż po rozwinięciu kwadratu wyraz mieszany znika
+na mocy $\E(\overline X_n-a_n)=0$.
 Dla ustalonego $\varepsilon>0$ i dostatecznie
 dużego $n$ mamy $|a_n-m|<\varepsilon/2$.
-Jeżeli $|\overline X_n-m|>\varepsilon$, to
-$|\overline X_n-a_n|>\varepsilon/2$. Czebyszew daje
+Z nierówności trójkąta
+$|\overline X_n-m|\leq|\overline X_n-a_n|+|a_n-m|$
+wynika inkluzja zdarzeń
+$\{|\overline X_n-m|>\varepsilon\}\subseteq
+\{|\overline X_n-a_n|>\varepsilon/2\}$.
+Z nierówności Czebyszewa (rozdział~\ref{ch:expectation}) otrzymujemy
 \[
 \Prob(|\overline X_n-m|>\varepsilon)
 \leq\frac{4}{\varepsilon^2}\Var(\overline X_n)
 \longrightarrow0.
 \]
-Dla parami nieskorelowanych zmiennych kowariancje
-między różnymi składnikami znikają, toteż wariancja
-sumy jest sumą wariancji. To prowadzi do drugiej części.
+Rozwijając kwadrat sumy zmiennych scentrowanych
+i korzystając z liniowości wartości oczekiwanej, mamy
+\[
+\Var\left(\sum_{k=1}^n X_k\right)
+=\sum_{k=1}^n\Var(X_k)
++2\sum_{1\leq j<k\leq n}\operatorname{Cov}(X_j,X_k).
+\]
+Iloczyny zmiennych scentrowanych są całkowalne
+z nierówności Cauchy'ego--Schwarza.
+Dla zmiennych parami nieskorelowanych wszystkie
+kowariancje w drugiej sumie są zerowe. Przy wspólnej
+średniej $a_n=m$ oraz $\sum_{k=1}^n\Var(X_k)=o(n^2)$
+obie hipotezy twierdzenia są zatem spełnione.
 \end{proof}
 
-\begin{wniosek}[SPWL dla niezależnych zmiennych o skończonej wariancji]
-Jeśli $X_1,X_2,\ldots$ są niezależne, mają wspólną
-średnią $m$ i wspólną skończoną wariancję $\sigma^2$,
+\begin{wniosek}[SPWL dla parami niezależnych zmiennych o wspólnej skończonej wariancji]
+Jeśli rzeczywiste zmienne $X_1,X_2,\ldots$ na jednej
+przestrzeni probabilistycznej są parami niezależne,
+mają wspólną średnią $m$ i wspólną skończoną wariancję $\sigma^2$,
 to $\overline X_n\xrightarrow{\Prob}m$ oraz
 $\E|\overline X_n-m|^2=\sigma^2/n\to0$.
 \end{wniosek}
 \begin{proof}
-Z niezależności wynika
+Z niezależności parami wynika
+$\E[(X_j-m)(X_k-m)]=\E(X_j-m)\E(X_k-m)=0$ dla $j\ne k$
+(rozdział~\ref{ch:expectation}). Zatem ze wzoru
+na wariancję sumy w poprzednim dowodzie mamy
 $\Var(\sum_{k=1}^nX_k)=n\sigma^2$.
 Po podzieleniu przez $n^2$ dostajemy
 $\Var(\overline X_n)=\sigma^2/n$.
 Ponieważ $\E\overline X_n=m$, ostatnia wielkość
 jest równa $\E|\overline X_n-m|^2$.
-Zbieżność w $L^2$ implikuje zbieżność według
-prawdopodobieństwa.
+Oznacza to zbieżność średnich do stałej $m$ w $L^2$,
+a zatem według prawdopodobieństwa
+(rozdział~\ref{ch:convergence}).
 \end{proof}
 
 \section{SPWL przy samym istnieniu wartości oczekiwanej}
 
-Nierówność Czebyszewa wymaga skończonej wariancji.
-Istnieją jednak rozkłady o skończonej średniej i
-nieskończonej wariancji, np. odpowiednio ciężkoogonowe
-rozkłady potęgowe. Czy empiryczna średnia nadal się
-stabilizuje? Dla niezależnych prób o tym samym rozkładzie
-wystarcza sama całkowalność.
+Oszacowanie za pomocą wariancji w dowodzie SPWL
+wymaga skończonego drugiego momentu, aby dało
+niebanalne ograniczenie. Istnieją jednak rozkłady
+o skończonej średniej i nieskończonej wariancji,
+np. rozważany dalej rozkład Pareto z parametrem
+$1<\alpha<2$. Dla parami niezależnych prób o tym
+samym rozkładzie wystarcza sama całkowalność.
 
 \begin{twierdzenie}[Słabe prawo wielkich liczb w wersji całkowalnej]
-Niech $X_1,X_2,\ldots$ będą niezależnymi zmiennymi
-losowymi o tym samym rozkładzie oraz
-$\E|X_1|<\infty$. Wówczas, oznaczając $m=\E X_1$,
+Niech $X_1,X_2,\ldots$ będą rzeczywistymi zmiennymi
+losowymi na jednej przestrzeni probabilistycznej,
+parami niezależnymi, o tym samym rozkładzie, oraz
+niech $\E|X_1|<\infty$. Wówczas, oznaczając $m=\E X_1$,
 mamy $\overline X_n\xrightarrow{\Prob}m$.
 \end{twierdzenie}
 \begin{proof}
 Dla $K>0$ obetnijmy duże wartości:
-$Y_k^{(K)}=X_k\ind{\{|X_k|\leq K\}}$.
-Dla ustalonego $K$ zmienne $Y_k^{(K)}$ są niezależne,
-o tym samym rozkładzie i ograniczone modułem przez $K$,
-a więc mają skończoną wariancję. Poprzednie twierdzenie
-daje $n^{-1}\sum_{k\leq n}Y_k^{(K)}
-\xrightarrow{\Prob}\E Y_1^{(K)}$.
+$Y_k^{(K)}=X_k\chi_{\{|X_k|\leq K\}}$.
+Funkcja $g_K(x)=x\chi_{[-K,K]}(x)$ jest borelowska,
+więc $Y_k^{(K)}=g_K(X_k)$ są mierzalnymi zmiennymi
+losowymi. Dla $j\ne k$ i borelowskich $A,B\subseteq\R$
+zdarzenia $\{Y_j^{(K)}\in A\}$ i $\{Y_k^{(K)}\in B\}$
+są odpowiednio zdarzeniami
+$\{X_j\in g_K^{-1}(A)\}$ i $\{X_k\in g_K^{-1}(B)\}$,
+a więc są niezależne. Zmienne obcięte mają wspólny
+rozkład jako obrazy tego samego rozkładu przez $g_K$.
+Ponieważ $|Y_k^{(K)}|\leq K$, ich drugie momenty są
+nie większe niż $K^2$. Poprzedni wniosek ma więc zastosowanie z
+$m_K=\E Y_1^{(K)}$ i $\sigma_K^2=\Var(Y_1^{(K)})$.
+Dla ustalonego $K$ otrzymujemy
+\[
+\E\left|\frac1n\sum_{k=1}^nY_k^{(K)}-m_K\right|^2
+=\frac{\sigma_K^2}{n}\leq\frac{K^2}{n}.
+\]
+W szczególności $n^{-1}\sum_{k=1}^nY_k^{(K)}
+\xrightarrow{\Prob}m_K$.
 
 Kontrolujemy teraz błąd obcięcia, bez zakładania
-skończonej wariancji $X_1$. Liniowość wartości
-oczekiwanej i nierówność trójkąta dają
+skończonej wariancji $X_1$. Każda zmienna $X_k$ jest
+całkowalna ze wzoru \eqref{eq:lotus} i jednakowości
+rozkładów. Ponieważ
+$|X_k-Y_k^{(K)}|=|X_k|\chi_{\{|X_k|>K\}}$,
+liniowość wartości oczekiwanej, nierówność trójkąta
+oraz jednakowość rozkładów dają
 \[
 \E\left|\frac1n\sum_{k=1}^n(X_k-Y_k^{(K)})\right|
 \leq\frac1n\sum_{k=1}^n\E|X_k-Y_k^{(K)}|
-=\E[|X_1|\ind{\{|X_1|>K\}}].
+=\E[|X_1|\chi_{\{|X_1|>K\}}]=:u(K).
 \]
-Ostatnie wyrażenie dąży do zera przy $K\to\infty$
-z twierdzenia o zbieżności zdominowanej.
-Ponadto $|\E Y_1^{(K)}-m|$ jest nie większe od tej
-samej wielkości. Ustalmy $\varepsilon>0$. Wybieramy
-$K$ tak duże, by $|\E Y_1^{(K)}-m|<\varepsilon/3$
-oraz $\E|X_1-Y_1^{(K)}|$ było dowolnie małe.
-Rozkładamy $\overline X_n-m$ na średni błąd obcięcia,
-średnią zmiennych obciętych pomniejszoną o jej wartość
-oczekiwaną oraz deterministyczny błąd średniej.
-Dla pierwszego składnika nierówność Markowa daje
+Dla całkowitych $K\to\infty$ funkcje
+$|X_1|\chi_{\{|X_1|>K\}}$ zbiegają punktowo do zera
+i są zmajoryzowane przez całkowalną funkcję $|X_1|$.
+Z \atlasref{ME-08::thm:dct}{twierdzenia o zbieżności zmajoryzowanej}
+wynika $u(K)\to0$; dla dowolnych rzeczywistych $K\to\infty$
+wniosek wynika z monotoniczności $u$.
+Ponadto
+$|\E Y_1^{(K)}-m|\leq\E|Y_1^{(K)}-X_1|=u(K)$.
+Ustalmy $\varepsilon>0$ i wybierzmy $K$ takie,
+że $u(K)<\varepsilon/3$.
+Oznaczmy $\overline Y_n^{(K)}=n^{-1}\sum_{k=1}^nY_k^{(K)}$.
+Mamy dokładną tożsamość
+\[
+\overline X_n-m
+=(\overline X_n-\overline Y_n^{(K)})
++(\overline Y_n^{(K)}-\E Y_1^{(K)})
++(\E Y_1^{(K)}-m).
+\]
+Dla modułu pierwszego składnika stosujemy
+nierówność Markowa (rozdział~\ref{ch:expectation})
+oraz wcześniej uzyskane oszacowanie wartości oczekiwanej:
 \[
 \Prob\!\left(\left|\frac1n\sum_{k\leq n}
 (X_k-Y_k^{(K)})\right|>\varepsilon/3\right)
 \leq\frac3\varepsilon\E|X_1-Y_1^{(K)}|.
 \]
-Drugi składnik dąży do zera według prawdopodobieństwa
-dla ustalonego $K$. Po przejściu z $n\to\infty$,
-a następnie z $K\to\infty$, prawdopodobieństwo
-$|\overline X_n-m|>\varepsilon$ dąży do zera.
+Trzeci składnik ma moduł mniejszy niż $\varepsilon/3$.
+Z nierówności trójkąta i podaddytywności prawdopodobieństwa
+otrzymujemy
+\[
+\begin{aligned}
+\Prob(|\overline X_n-m|>\varepsilon)
+&\leq\frac{3u(K)}{\varepsilon}
++\Prob\left(\left|\frac1n\sum_{k=1}^nY_k^{(K)}
+-\E Y_1^{(K)}\right|>\frac{\varepsilon}{3}\right).
+\end{aligned}
+\]
+Dla ustalonego $K$ drugi składnik dąży do zera
+na mocy wersji wariancyjnej SPWL.
+Zatem dla wszystkich dostatecznie dużych $K$
+\[
+0\leq\limsup_{n\to\infty}
+\Prob(|\overline X_n-m|>\varepsilon)
+\leq\frac{3u(K)}{\varepsilon}.
+\]
+Przechodząc z $K\to\infty$, otrzymujemy tezę.
 \end{proof}
 
 \section{Nierówność maksymalna Kołmogorowa}
 
-Do mocnego prawa nie wystarczy kontrolować odchylenia
-$\overline X_n$ dla pojedynczego indeksu $n$: trzeba
-jednocześnie opanować nieskończenie wiele częściowych sum.
+W dowodzie mocnego prawa sama zbieżność do zera
+prawdopodobieństw odchyleń dla pojedynczych indeksów
+nie wystarcza. Potrzebna jest dodatkowa kontrola
+zdarzeń odchyleń na całym ogonie ciągu.
 Nierówność maksymalna pozwala przejść od sumy wariancji
 do prawdopodobieństwa, że \emph{któraś} suma częściowa
 przekroczy próg.
 
 \begin{twierdzenie}[Nierówność maksymalna Kołmogorowa]
-Niech $Z_1,\ldots,Z_n$ będą niezależnymi rzeczywistymi
-zmiennymi losowymi o $\E Z_k=0$ i
-$\E Z_k^2<\infty$. Dla $S_j=\sum_{k=1}^j Z_k$
-i $a>0$ zachodzi
+Niech $n\geq1$ będzie liczbą całkowitą, a
+$Z_1,\ldots,Z_n$ będą wzajemnie niezależnymi rzeczywistymi
+zmiennymi losowymi na jednej przestrzeni probabilistycznej
+$(\Omega,\mathcal F,\Prob)$,
+o $\E Z_k=0$ i $\E Z_k^2<\infty$.
+Dla $S_j=\sum_{k=1}^j Z_k$ oraz $a>0$ zachodzi
 \[
 \Prob\!\left(\max_{1\leq j\leq n}|S_j|\geq a\right)
 \leq\frac1{a^2}\sum_{k=1}^n\Var(Z_k).
 \]
 \end{twierdzenie}
 \begin{proof}
-Niech $A_k$ oznacza zdarzenie, że $|S_k|\geq a$
-po raz pierwszy, tzn.
-$A_k=\{|S_1|<a,\ldots,|S_{k-1}|<a,|S_k|\geq a\}$.
-Zdarzenia $A_1,\ldots,A_n$ są rozłączne, a ich suma
-to zdarzenie z tezy. Dla ustalonego $k$ zmienna
-$S_n-S_k$ jest niezależna od $S_1,\ldots,S_k$
-i ma średnią zero. Rozwijamy kwadrat na $A_k$:
+Wszystkie sumy częściowe należą do $L^2$, a ich
+średnie wynoszą zero z liniowości wartości oczekiwanej.
+Dla $1\leq k\leq n$ niech
 \[
-\E[S_n^2\ind{A_k}]
-=\E[S_k^2\ind{A_k}]
-+2\E[S_k(S_n-S_k)\ind{A_k}]
-+\E[(S_n-S_k)^2\ind{A_k}].
+A_k=\left(\bigcap_{j=1}^{k-1}\{|S_j|<a\}\right)
+\cap\{|S_k|\geq a\},
 \]
-Środkowa całka jest równa zero dzięki niezależności
-i zerowej średniej $S_n-S_k$. Pierwsza jest nie mniejsza
-niż $a^2\Prob(A_k)$, a ostatnia jest nieujemna.
+przy czym dla $k=1$ puste przecięcie oznacza całą
+przestrzeń $\Omega$. Są to mierzalne zdarzenia pierwszego
+osiągnięcia progu. Jeżeli $k<\ell$, to na $A_k$
+mamy $|S_k|\geq a$, podczas gdy na $A_\ell$ mamy
+$|S_k|<a$, stąd zdarzenia są parami rozłączne.
+Każdy wynik, dla którego maksimum osiąga próg,
+należy do $A_k$ o najmniejszym indeksie osiągnięcia,
+a każdy wynik z $A_k$ spełnia warunek na maksimum.
+Zatem
+\[
+\bigcup_{k=1}^n A_k
+=\left\{\max_{1\leq j\leq n}|S_j|\geq a\right\}.
+\]
+
+Dla $k<n$ oznaczmy $U=(Z_1,\ldots,Z_k)$ oraz
+$V=(Z_{k+1},\ldots,Z_n)$.
+Jeżeli $\mu_i=\Law(Z_i)$, to z charakteryzacji wzajemnej
+niezależności przez iloczynowy rozkład łączny
+(rozdział~\ref{ch:random-variables}) oraz
+\atlasref{ME-12::cor:associative-product-12}{łączności konstrukcji miary produktowej}
+wynika
+\[
+\Law(U,V)
+=\bigotimes_{i=1}^n\mu_i
+=\left(\bigotimes_{i=1}^k\mu_i\right)
+ \otimes\left(\bigotimes_{i=k+1}^n\mu_i\right)
+=\Law(U)\otimes\Law(V).
+\]
+Przyjmujemy tu naturalne utożsamienie
+$\R^k\times\R^{n-k}$ z $\R^n$.
+Zmienna $S_k\chi_{A_k}$ jest borelowską funkcją
+pierwszego wektora, ponieważ warunki definiujące
+$A_k$ są przeciwobrazami przedziałów przez ciągłe
+funkcje sum częściowych. Zmienna $S_n-S_k$ jest
+ciągłą funkcją drugiego wektora. Dla zbiorów
+borelowskich $B,C\subseteq\R$ zdarzenie
+$\{S_k\chi_{A_k}\in B,\ S_n-S_k\in C\}$ jest
+przeciwobrazem odpowiedniego prostokąta przez $(U,V)$.
+Jeśli $f(U)=S_k\chi_{A_k}$ i $g(V)=S_n-S_k$, to
+\[
+\begin{aligned}
+\Prob(f(U)\in B,\ g(V)\in C)
+&=(\Law(U)\otimes\Law(V))(f^{-1}(B)\times g^{-1}(C))\\
+&=\Prob(f(U)\in B)\Prob(g(V)\in C).
+\end{aligned}
+\]
+Dowodzi to niezależności obu zmiennych.
+Dla $k=n$ druga zmienna jest identycznie zerowa,
+więc niezależność zachodzi także w tym przypadku.
+Ponadto $\E(S_n-S_k)=0$.
+Wszystkie wyrazy w poniższym rozwinięciu są całkowalne:
+$S_k\chi_{A_k}$ oraz $S_n-S_k$ należą do $L^2$,
+a ich iloczyn należy do $L^1$ z nierówności
+Cauchy'ego--Schwarza. Rozwijamy kwadrat:
+\[
+\E[S_n^2\chi_{A_k}]
+=\E[S_k^2\chi_{A_k}]
++2\E[S_k(S_n-S_k)\chi_{A_k}]
++\E[(S_n-S_k)^2\chi_{A_k}].
+\]
+Z faktoryzacji wartości oczekiwanej iloczynu niezależnych
+zmiennych (rozdział~\ref{ch:expectation}) otrzymujemy
+\[
+\E[S_k\chi_{A_k}(S_n-S_k)]
+=\E[S_k\chi_{A_k}]\E(S_n-S_k)=0.
+\]
+Na $A_k$ zachodzi $S_k^2\geq a^2$, a poza $A_k$
+obie strony nierówności
+$S_k^2\chi_{A_k}\geq a^2\chi_{A_k}$ są zerowe.
+Pierwsza całka jest więc nie mniejsza niż
+$a^2\Prob(A_k)$, a ostatnia jest nieujemna.
 Sumując po $k$ i wykorzystując rozłączność zdarzeń,
 otrzymujemy
-$\E S_n^2\geq\sum_{k=1}^n\E[S_n^2\ind{A_k}]
-\geq a^2\sum_{k=1}^n\Prob(A_k)$.
-Ponieważ $\E S_n=0$ i składniki są niezależne,
-$\E S_n^2=\sum_{k\leq n}\Var(Z_k)$. Dzielenie przez
-$a^2$ kończy dowód.
+\[
+\begin{aligned}
+\E S_n^2
+&\geq \E\left[S_n^2\chi_{\bigcup_{k=1}^n A_k}\right]
+=\sum_{k=1}^n\E[S_n^2\chi_{A_k}]\\
+&\geq a^2\sum_{k=1}^n\Prob(A_k)
+=a^2\Prob\left(\max_{1\leq j\leq n}|S_j|\geq a\right).
+\end{aligned}
+\]
+Ponieważ $\E S_n=0$ i kowariancje różnych składników
+są zerowe, z wcześniej wyprowadzonego wzoru na
+wariancję sumy mamy
+$\E S_n^2=\Var(S_n)=\sum_{k=1}^n\Var(Z_k)$.
+Dzielenie przez $a^2>0$ kończy dowód.
 \end{proof}
 
 \begin{lemat}[Kryterium zbieżności szeregu niezależnych zmiennych]
-Niech $(Z_n)_{n\geq1}$ będą niezależnymi rzeczywistymi
-zmiennymi losowymi o zerowych średnich i skończonych
-wariancjach. Jeśli $\sum_{n=1}^\infty\Var(Z_n)<\infty$,
+Niech $(Z_n)_{n\geq1}$ będzie ciągiem wzajemnie
+niezależnych rzeczywistych zmiennych losowych na jednej
+przestrzeni probabilistycznej, o zerowych średnich
+i skończonych wariancjach. Jeśli $\sum_{n=1}^\infty\Var(Z_n)<\infty$,
 to szereg $\sum_{n=1}^\infty Z_n$ jest zbieżny
 prawie na pewno.
 \end{lemat}
 \begin{proof}
-Wybierzmy rosnący ciąg indeksów $n_j$ tak, by
+Niech $S_m=\sum_{k=1}^m Z_k$, $S_0=0$.
+Z założenia ogony szeregu nieujemnych wariancji
+dążą do zera. Możemy więc rekurencyjnie wybrać
+ściśle rosnące indeksy $n_j$ dla $j\geq1$ tak, by
 $\sum_{k>n_j}\Var(Z_k)\leq2^{-3j}$.
 Zastosujmy nierówność maksymalną do skończonego
 ciągu $Z_{n_j+1},\ldots,Z_m$. Dla każdego $m>n_j$
@@ -221,17 +420,38 @@ ciągu $Z_{n_j+1},\ldots,Z_m$. Dla każdego $m>n_j$
 \left|\sum_{k=n_j+1}^rZ_k\right|>2^{-j}\right)
 \leq 2^{2j}\sum_{k>n_j}\Var(Z_k)\leq2^{-j}.
 \]
-Przechodząc z $m\to\infty$ przez ciągłość miary
-z dołu, uzyskujemy to samo oszacowanie dla
-supremum po wszystkich $r>n_j$.
-Suma prawych stron jest skończona, więc z pierwszego
-lematu Borela--Cantellego wynika, że prawie na pewno
-dla wszystkich dostatecznie dużych $j$ mamy
-$\sup_{r>n_j}|\sum_{k=n_j+1}^rZ_k|\leq2^{-j}$.
-Różnica dowolnych dwóch sum częściowych po indeksie
-$n_j$ ma zatem moduł co najwyżej $2^{1-j}$.
-Sumy częściowe są prawie na pewno ciągiem Cauchy'ego,
-a więc szereg jest zbieżny.
+Dla ustalonego $j$ zdarzenia po lewej stronie
+rosną wraz z $m$ do mierzalnego zdarzenia
+\[
+B_j=\bigcup_{r>n_j}\{|S_r-S_{n_j}|>2^{-j}\}
+=\left\{\sup_{r>n_j}|S_r-S_{n_j}|>2^{-j}\right\}.
+\]
+W ostatniej równości ważna jest ostra nierówność.
+Z ciągłości miary z dołu (rozdział~\ref{ch:probability})
+mamy $\Prob(B_j)\leq2^{-j}$.
+Ponieważ $\sum_{j\geq1}\Prob(B_j)\leq1$, pierwszy
+lemat Borela--Cantellego (rozdział~\ref{ch:probability})
+daje $\Prob(\limsup_j B_j)=0$.
+Dla $\omega$ spoza tego mierzalnego zbioru zerowego
+istnieje $J(\omega)$ takie, że dla każdego $j\geq J(\omega)$
+i każdego $r>n_j$ zachodzi
+$|S_r(\omega)-S_{n_j}(\omega)|\leq2^{-j}$.
+Dla dowolnych $r,s\geq n_j$ nierówność trójkąta daje
+$|S_r(\omega)-S_s(\omega)|\leq2^{1-j}$.
+W przypadku indeksu równego $n_j$ odpowiadające
+odchylenie od $S_{n_j}$ jest zerowe, więc oszacowanie
+obejmuje również ten przypadek.
+Dla dowolnego $\eta>0$ wybieramy $j\geq J(\omega)$
+takie, że $2^{1-j}<\eta$, i przyjmujemy $n_j$ jako
+indeks w warunku Cauchy'ego. Sumy częściowe są więc
+ciągiem Cauchy'ego dla każdej takiej $\omega$. Zupełność $\R$
+zapewnia ich zbieżność do skończonej granicy.
+Oznaczmy $G=\Omega\setminus\limsup_j B_j$.
+Funkcje $S_m\chi_G$ są mierzalne i zbiegają punktowo
+na całej przestrzeni: na $G$ do skończonej granicy
+sum częściowych, a na $G^c$ do zera. Ich granica
+jest więc mierzalną rzeczywistą zmienną losową.
+Szereg zbiega więc prawie na pewno.
 \end{proof}
 
 \begin{lemat}[Lemat Kroneckera]
@@ -242,20 +462,38 @@ to $n^{-1}\sum_{k=1}^n a_k\to0$.
 \begin{proof}
 Niech $s_n=\sum_{k=1}^n a_k/k$ oraz $s_0=0$.
 Z założenia $s_n\to s\in\R$.
-Ponieważ $a_k=k(s_k-s_{k-1})$, sumowanie przez części
-daje
-$\sum_{k=1}^n a_k=n s_n-\sum_{k=1}^{n-1}s_k$.
+Ponieważ $a_k=k(s_k-s_{k-1})$, otrzymujemy
+\[
+\begin{aligned}
+\sum_{k=1}^n a_k
+&=\sum_{k=1}^n k s_k-\sum_{k=0}^{n-1}(k+1)s_k\\
+&=n s_n-\sum_{k=1}^{n-1}s_k,
+\end{aligned}
+\]
+gdzie użyliśmy $s_0=0$.
 Dzieląc przez $n$, otrzymujemy
 $\frac1n\sum_{k=1}^n a_k
 =s_n-\frac1n\sum_{k=1}^{n-1}s_k$.
-Pierwszy składnik dąży do $s$, a drugi również do $s$
-na mocy twierdzenia Cesàra o średnich ciągu zbieżnego.
-Ich różnica dąży zatem do zera.
+Pierwszy składnik dąży do $s$. Dla drugiego zauważmy,
+że
+\[
+\left|\frac1n\sum_{k=1}^{n-1}s_k-s\right|
+\leq\frac1n\sum_{k=1}^{n-1}|s_k-s|+\frac{|s|}{n}.
+\]
+Dla dowolnego $\eta>0$ wybieramy $K\geq1$ takie,
+że $|s_k-s|<\eta$ dla $k\geq K$.
+Dla $n>K$ prawa strona jest nie większa niż
+$n^{-1}\sum_{k=1}^{K-1}|s_k-s|+\eta+|s|/n$.
+Jej granica górna po $n$ nie przekracza $\eta$,
+a $\eta$ jest dowolne. Zatem drugi składnik także
+dąży do $s$, co dowodzi tezy. Jest to zastosowanie
+twierdzenia Cesàra o średnich ciągu zbieżnego.
 \end{proof}
 
-\begin{twierdzenie}[MPWL przy sumowalnych wariancjach]
-Niech $X_1,X_2,\ldots$ będą niezależnymi rzeczywistymi
-zmiennymi losowymi o skończonych drugich momentach.
+\begin{twierdzenie}[MPWL przy sumowalnych wariancjach ważonych]
+Niech $X_1,X_2,\ldots$ będą wzajemnie niezależnymi
+rzeczywistymi zmiennymi losowymi na jednej przestrzeni
+probabilistycznej, o skończonych drugich momentach.
 Jeśli
 $\sum_{n=1}^\infty\Var(X_n)/n^2<\infty$,
 to
@@ -263,34 +501,53 @@ to
 \frac1n\sum_{k=1}^n(X_k-\E X_k)\longrightarrow0
 \quad\text{prawie na pewno}.
 \]
-Jeżeli ponadto $n^{-1}\sum_{k=1}^n\E X_k\to m$,
+Jeżeli ponadto dla pewnego $m\in\R$ zachodzi
+$n^{-1}\sum_{k=1}^n\E X_k\to m$,
 to $\overline X_n\to m$ prawie na pewno.
 \end{twierdzenie}
 \begin{proof}
 Zmienna $Z_n=(X_n-\E X_n)/n$ ma średnią zero
-i wariancję $\Var(X_n)/n^2$. Z założenia szereg
-wariancji jest zbieżny, zatem na mocy kryterium
-Kołmogorowa szereg $\sum_{n=1}^\infty Z_n$
-zbiega prawie na pewno. Dla każdej trajektorii,
-na której ten szereg jest zbieżny, stosujemy
-lemat Kroneckera do liczb $a_n=X_n-\E X_n$.
-Otrzymujemy pierwszą granicę. Dodanie granicy
-średnich wartości oczekiwanych daje drugą.
+i wariancję $\Var(X_n)/n^2$ z liniowości wartości
+oczekiwanej i jednorodności wariancji.
+Zmienne $Z_n$ są wzajemnie niezależne, ponieważ
+każda z nich jest borelowską funkcją wyłącznie
+odpowiadającego jej $X_n$ (w definicji niezależności
+zastępujemy zbiory borelowskie ich przeciwobrazami).
+Z założenia szereg wariancji jest zbieżny, więc na
+mocy kryterium zbieżności szeregu niezależnych zmiennych
+istnieje mierzalny zbiór $G$ o prawdopodobieństwie
+jeden, na którym szereg $\sum_{n=1}^\infty Z_n(\omega)$
+jest zbieżny. Dla każdego ustalonego $\omega\in G$
+stosujemy lemat Kroneckera do liczb
+$a_n=X_n(\omega)-\E X_n$. Otrzymujemy
+\[
+\frac1n\sum_{k=1}^n(X_k(\omega)-\E X_k)\longrightarrow0.
+\]
+Jeżeli ponadto $n^{-1}\sum_{k=1}^n\E X_k\to m$, to
+dla każdego $\omega\in G$ dodajemy do powyższej
+granicy granicę deterministycznych średnich i otrzymujemy
+$\overline X_n(\omega)\to m$.
 \end{proof}
 
 \section{Mocne prawo wielkich liczb dla prób niezależnych jednakowo rozłożonych}
 
 Powyższe twierdzenie zakłada zbieżność szeregu
-wariancji. Dla prób o wspólnym skończonym drugim momencie
-jest to automatyczne, ponieważ $\sum n^{-2}<\infty$.
+$\sum_{n=1}^\infty\Var(X_n)/n^2$. Dla wzajemnie
+niezależnych prób o tym samym rozkładzie i skończonym
+drugim momencie jest to automatyczne, ponieważ ich
+wariancje mają wspólną skończoną wartość $\sigma^2$
+i $\sum_{n=1}^\infty n^{-2}<\infty$.
 Istotne jest jednak silniejsze twierdzenie: dla
-niezależnych zmiennych o identycznym rozkładzie
-wystarcza \emph{skończony pierwszy moment}.
+wzajemnie niezależnych zmiennych o jednakowym rozkładzie
+wystarcza \emph{całkowalność}, czyli skończoność
+pierwszego momentu bezwzględnego.
 
 \begin{twierdzenie}[Mocne prawo wielkich liczb Kołmogorowa]
-Niech $X_1,X_2,\ldots$ będą niezależnymi rzeczywistymi
-zmiennymi losowymi o jednakowym rozkładzie i
-$\E|X_1|<\infty$. Wtedy
+Niech $X_1,X_2,\ldots$ będą wzajemnie niezależnymi
+rzeczywistymi zmiennymi losowymi na jednej przestrzeni
+probabilistycznej $(\Omega,\mathcal F,\Prob)$,
+o jednakowym rozkładzie, oraz niech $\E|X_1|<\infty$.
+Wtedy
 \[
 \frac1n\sum_{k=1}^n X_k\longrightarrow\E X_1
 \qquad\text{prawie na pewno}.
@@ -299,50 +556,113 @@ $\E|X_1|<\infty$. Wtedy
 \begin{proof}
 \emph{Krok pierwszy: obcinamy rzadkie wielkie wartości.}
 Dla $k\geq1$ zdefiniujmy
-$Y_k=X_k\ind{\{|X_k|\leq k\}}$.
+$Y_k=X_k\chi_{\{|X_k|\leq k\}}$.
+Każda zmienna $Y_k$ jest mierzalna jako złożenie
+$X_k$ z borelowską funkcją
+$g_k(x)=x\chi_{[-k,k]}(x)$.
 W odróżnieniu od obcięcia przy stałym progu stosowanego
 w dowodzie słabego prawa tutaj próg rośnie z indeksem.
-Z tożsamości warstwowej dla $|X_1|$ wynika
+Z jednakowości rozkładów i tożsamości warstwowej
+dla nieujemnej zmiennej $|X_1|$ wynika
 \[
 \sum_{k=1}^\infty\Prob(|X_k|>k)
 =\sum_{k=1}^\infty\Prob(|X_1|>k)
 \leq\E|X_1|<\infty.
 \]
-Z pierwszego lematu Borela--Cantellego dostajemy,
-że prawie na pewno $X_k=Y_k$ dla wszystkich
-poza skończenie wieloma indeksami. Dla takiej
-trajektorii suma $\sum_{k\leq n}(X_k-Y_k)$
-od pewnego momentu jest stała, więc po podzieleniu
-przez $n$ dąży do zera.
+Z pierwszego lematu Borela--Cantellego
+(rozdział~\ref{ch:probability}) zastosowanego do
+mierzalnych zdarzeń $A_k=\{|X_k|>k\}$ wynika
+$\Prob(\limsup_k A_k)=0$.
+Oznaczmy $G_1=\Omega\setminus\limsup_k A_k$.
+Dla każdego $\omega\in G_1$ istnieje $N=N(\omega)$
+takie, że dla $k\geq N$ mamy $|X_k(\omega)|\leq k$,
+czyli $X_k(\omega)=Y_k(\omega)$.
+Dla $n\geq N$ zachodzi zatem
+\[
+\frac1n\sum_{k=1}^n(X_k(\omega)-Y_k(\omega))
+=\frac1n\sum_{k=1}^{N-1}(X_k(\omega)-Y_k(\omega))
+\longrightarrow0.
+\]
+Licznik jest skończoną liczbą rzeczywistą niezależną
+od $n$, a zbiór $G_1$ ma prawdopodobieństwo jeden.
 
 \emph{Krok drugi: kontrolujemy wariancje obciętych
-zmiennych.} Zmienne $Y_k$ są niezależne, mają skończone
-drugie momenty i $\Var(Y_k)\leq\E Y_k^2$.
-Wystarczy pokazać
+zmiennych.} Zmienne $Y_k$ są wzajemnie niezależne:
+dla dowolnych różnych indeksów $k_1,\ldots,k_r$
+i zbiorów borelowskich $B_1,\ldots,B_r$ zdarzenie
+$\{Y_{k_i}\in B_i\}$ jest równe
+$\{X_{k_i}\in g_{k_i}^{-1}(B_i)\}$.
+Niezależność $X_k$ daje więc wymagany iloczyn
+prawdopodobieństw. Nie zakładamy jednakowości
+rozkładów $Y_k$, ponieważ progi obcięcia są różne.
+Z $|Y_k|\leq k$ wynika $\E Y_k^2\leq k^2$,
+a z definicji wariancji
+$\Var(Y_k)=\E Y_k^2-(\E Y_k)^2\leq\E Y_k^2$.
+Wystarczy zatem pokazać
 $\sum_{k=1}^\infty\E Y_k^2/k^2<\infty$.
-Dzięki Tonellemu i jednakowemu rozkładowi $X_k$
+Z jednakowości rozkładów $X_k$ i wzoru \eqref{eq:lotus}
+dla nieujemnej funkcji borelowskiej
+$x\mapsto x^2\chi_{[-k,k]}(x)$ otrzymujemy
+$\E Y_k^2=\E[|X_1|^2\chi_{\{|X_1|\leq k\}}]$.
+Wszystkie składniki szeregu pod całką są nieujemne
+i mierzalne, zatem
 \[
+\begin{aligned}
 \sum_{k=1}^\infty\frac{\E Y_k^2}{k^2}
-=\E\left[|X_1|^2
- \sum_{k=1}^\infty\frac{\ind{\{|X_1|\leq k\}}}{k^2}\right].
+&=\lim_{N\to\infty}\E\left[
+\sum_{k=1}^{N}\frac{|X_1|^2\chi_{\{|X_1|\leq k\}}}{k^2}
+\right]\\
+&=\E\left[|X_1|^2
+\sum_{k=1}^\infty\frac{\chi_{\{|X_1|\leq k\}}}{k^2}\right].
+\end{aligned}
 \]
-Dla liczby $x\geq0$ mamy
-$x^2\sum_{k\geq\max(1,\lceil x\rceil)}k^{-2}\leq Cx$
-z pewną stałą uniwersalną $C$: jeśli $0\leq x\leq1$,
-lewa strona jest nie większa niż
-$x^2\sum_{k\geq1}k^{-2}\leq Cx$;
-jeśli $x>1$, szacujemy ogon szeregu $\sum k^{-2}$
-przez stałą razy $1/x$.
-Wobec tego ostatnia wartość oczekiwana jest nie większa
-niż $C\E|X_1|<\infty$. Możemy więc zastosować
-poprzednie twierdzenie do $Y_k$ i otrzymać
-$\frac1n\sum_{k=1}^n(Y_k-\E Y_k)\to0$
-prawie na pewno.
+Ostatnia równość wynika z
+\atlasref{ME-08::thm:mct}{twierdzenia o zbieżności monotonicznej};
+na tym etapie dopuszczamy wartość nieskończoną.
+Dla każdej liczby $x\geq0$ połóżmy
+$m=\max(1,\lceil x\rceil)$, gdzie $\lceil x\rceil$
+jest najmniejszą liczbą całkowitą nie mniejszą od $x$.
+Wtedy zbiór dodatnich indeksów całkowitych $k$,
+dla których $x\leq k$, składa się dokładnie
+z indeksów $k\geq m$.
+Ponieważ funkcja $t\mapsto t^{-2}$ jest malejąca
+na $(0,\infty)$, mamy
+\[
+\sum_{k=m}^\infty\frac1{k^2}
+\leq \frac1{m^2}+\int_m^\infty\frac1{t^2}\,\dd\lambda_1(t)
+=\frac1{m^2}+\frac1m\leq\frac2m.
+\]
+Istotnie, dla każdego $k\geq m+1$ całka na
+$[k-1,k]$ jest nie mniejsza niż $k^{-2}$.
+Ponieważ $m\geq x$ oraz $m\geq1$, dostajemy
+\[
+x^2\sum_{k\geq\max(1,\lceil x\rceil)}\frac1{k^2}
+\leq\frac{2x^2}{m}\leq2x
+\qquad (x\geq0).
+\]
+Podstawiając $x=|X_1(\omega)|$ i całkując, otrzymujemy
+\[
+\sum_{k=1}^\infty\frac{\Var(Y_k)}{k^2}
+\leq\sum_{k=1}^\infty\frac{\E Y_k^2}{k^2}
+\leq2\E|X_1|<\infty.
+\] Możemy więc zastosować
+poprzednie twierdzenie do $Y_k$: istnieje mierzalny
+zbiór $G_2$ o prawdopodobieństwie jeden, na którym
+\[
+\frac1n\sum_{k=1}^n(Y_k-\E Y_k)\longrightarrow0.
+\]
 
 \emph{Krok trzeci: wracamy do pierwotnych średnich.}
-Zdominowana zbieżność daje
-$\E Y_k=\E[X_1\ind{\{|X_1|\leq k\}}]\to\E X_1$.
-Twierdzenie Cesàra zapewnia zatem
+Z jednakowości rozkładów $X_k$ i wzoru \eqref{eq:lotus}
+mamy $\E Y_k=\E[X_1\chi_{\{|X_1|\leq k\}}]$.
+Na przestrzeni, na której określono $X_1$, zachodzą
+punktowo $X_1\chi_{\{|X_1|\leq k\}}\to X_1$ oraz
+$|X_1\chi_{\{|X_1|\leq k\}}|\leq|X_1|$.
+Z założenia $|X_1|$ jest całkowalna, więc
+\atlasref{ME-08::thm:dct}{twierdzenie o zbieżności zmajoryzowanej}
+daje $\E Y_k\to\E X_1$.
+Twierdzenie Cesàra, wykorzystane w dowodzie lematu
+Kroneckera, zapewnia zatem
 $n^{-1}\sum_{k=1}^n\E Y_k\to\E X_1$.
 Wreszcie
 \[
@@ -351,59 +671,135 @@ Wreszcie
 +\frac1n\sum_{k=1}^n(Y_k-\E Y_k)
 +\frac1n\sum_{k=1}^n\E Y_k.
 \]
-Pierwszy i drugi składnik dążą do zera prawie na pewno,
-a trzeci do $\E X_1$. To kończy dowód.
+Na mierzalnym zbiorze $G_1\cap G_2$ pierwszy i drugi
+składnik dążą do zera, a trzeci (deterministyczny)
+do $\E X_1$. Zbiór ten ma prawdopodobieństwo jeden,
+ponieważ jego dopełnienie jest sumą dwóch zbiorów
+zerowych. To kończy dowód.
 \end{proof}
 
 \begin{przyklad}[Częstości w rzutach monetą]
-Niech $(B_n)$ będą niezależnymi próbami Bernoulliego
-z parametrem $p\in[0,1]$. Zmienna
+Niech $(B_n)$ będzie ciągiem wzajemnie niezależnych
+zmiennych losowych o rozkładzie Bernoulliego
+z parametrem $p\in[0,1]$, na wspólnej przestrzeni
+probabilistycznej. Każda zmienna przyjmuje wartości
+$0$ i $1$ prawie na pewno (wspólnie dla wszystkich $n$,
+poza przeliczalną sumą zbiorów zerowych). Zmienna
 $\overline B_n=n^{-1}\sum_{k=1}^n B_k$ jest częstością
 sukcesów w pierwszych $n$ próbach.
 Ponieważ $\E B_1=p$ i $\E|B_1|\leq1$,
 MPWL daje $\overline B_n\to p$ prawie na pewno.
 Twierdzenie nie stwierdza, że po dużej liczbie prób
 kolejne sukcesy i porażki muszą się \emph{wyrównywać}:
-możliwe są długie serie jednego wyniku, ale ich wpływ
-na średnią z całej dotychczasowej próby maleje.
+dla $0<p<1$ prawdopodobieństwo samych sukcesów
+w ustalonym bloku $r$ kolejnych prób wynosi $p^r>0$
+z wzajemnej niezależności zmiennych.
+Jeżeli do $n$ obserwacji dopiszemy $r$ kolejnych,
+to
+\[
+|\overline B_{n+r}-\overline B_n|
+=\frac{\left|\sum_{k=n+1}^{n+r}B_k-r\overline B_n\right|}
+{n+r}\leq\frac{r}{n+r}
+\quad\text{prawie na pewno},
+\]
+gdyż zarówno suma nowych obserwacji, jak i
+$r\overline B_n$ należą do $[0,r]$.
+Dla ustalonego $r$ wpływ takiego pasma na średnią
+maleje przy $n\to\infty$.
+Rysunek~\ref{fig:rp1-08-empirical-means} przedstawia trzy przykładowe przebiegi częstości sukcesów.
 \end{przyklad}
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=.041cm,y=5cm,>=Stealth]
+\draw[->] (0,0)--(269,0) node[right] {$n$};
+\draw[->] (0,0)--(0,1.1) node[above] {$\overline B_n$};
+\foreach \x in {64,128,192,256} {
+ \draw[gray!20] (\x,0)--(\x,1);
+ \node[below,font=\small] at (\x,0) {$\x$};
+}
+\foreach \y/\lab in {0/0,.25/{1/4},.5/{1/2},.75/{3/4},1/1}
+ \node[left,font=\small] at (0,\y) {$\lab$};
+\draw[gray,thick,dashed] (0,.5)--(256,.5) node[right,font=\small] {$p$};
+\draw[blue!75!black,thick] plot coordinates {(1,0) (2,0.5) (3,0.6666667) (4,0.5) (5,0.6) (6,0.5) (7,0.4285714) (8,0.5) (9,0.4444444) (10,0.4) (11,0.3636364) (12,0.3333333) (13,0.3076923) (14,0.2857143) (15,0.3333333) (16,0.3125) (17,0.3529412) (18,0.3888889) (19,0.4210526) (20,0.45) (21,0.4761905) (22,0.5) (23,0.4782609) (24,0.5) (25,0.52) (26,0.5) (27,0.4814815) (28,0.5) (29,0.4827586) (30,0.4666667) (31,0.4516129) (32,0.4375) (33,0.4545455) (34,0.4411765) (35,0.4285714) (36,0.4444444) (37,0.4324324) (38,0.4473684) (39,0.4358974) (40,0.45) (41,0.4634146) (42,0.452381) (43,0.4651163) (44,0.4772727) (45,0.4666667) (46,0.4565217) (47,0.4680851) (48,0.4583333) (49,0.4693878) (50,0.48) (51,0.4705882) (52,0.4615385) (53,0.4716981) (54,0.462963) (55,0.4545455) (56,0.4642857) (57,0.4736842) (58,0.4827586) (59,0.4745763) (60,0.4833333) (61,0.4754098) (62,0.4677419) (63,0.4603175) (64,0.453125) (65,0.4461538) (66,0.4545455) (67,0.4477612) (68,0.4411765) (69,0.4347826) (70,0.4285714) (71,0.4366197) (72,0.4305556) (73,0.4246575) (74,0.4324324) (75,0.44) (76,0.4473684) (77,0.4545455) (78,0.4487179) (79,0.443038) (80,0.4375) (81,0.4444444) (82,0.4512195) (83,0.4457831) (84,0.452381) (85,0.4588235) (86,0.4534884) (87,0.4482759) (88,0.4431818) (89,0.4382022) (90,0.4333333) (91,0.4285714) (92,0.4347826) (93,0.4408602) (94,0.4468085) (95,0.4526316) (96,0.4583333) (97,0.4536082) (98,0.4489796) (99,0.4444444) (100,0.44) (101,0.4356436) (102,0.4411765) (103,0.4466019) (104,0.4423077) (105,0.447619) (106,0.4528302) (107,0.4579439) (108,0.462963) (109,0.4587156) (110,0.4545455) (111,0.4504505) (112,0.4553571) (113,0.460177) (114,0.4649123) (115,0.4695652) (116,0.4655172) (117,0.4615385) (118,0.4661017) (119,0.4705882) (120,0.4666667) (121,0.4628099) (122,0.4590164) (123,0.4634146) (124,0.4677419) (125,0.464) (126,0.4603175) (127,0.4566929) (128,0.4609375) (129,0.4573643) (130,0.4538462) (131,0.4503817) (132,0.4545455) (133,0.4511278) (134,0.4552239) (135,0.4518519) (136,0.4485294) (137,0.4452555) (138,0.442029) (139,0.4460432) (140,0.45) (141,0.4468085) (142,0.443662) (143,0.4405594) (144,0.4444444) (145,0.4482759) (146,0.4452055) (147,0.4421769) (148,0.4391892) (149,0.4362416) (150,0.4333333) (151,0.4370861) (152,0.4342105) (153,0.4313725) (154,0.4350649) (155,0.4387097) (156,0.4423077) (157,0.4458599) (158,0.443038) (159,0.4402516) (160,0.44375) (161,0.447205) (162,0.4506173) (163,0.4539877) (164,0.4573171) (165,0.4606061) (166,0.4638554) (167,0.4610778) (168,0.4642857) (169,0.4615385) (170,0.4647059) (171,0.4619883) (172,0.4593023) (173,0.4624277) (174,0.4597701) (175,0.4571429) (176,0.4602273) (177,0.4576271) (178,0.4606742) (179,0.4636872) (180,0.4666667) (181,0.4696133) (182,0.467033) (183,0.4644809) (184,0.4619565) (185,0.4648649) (186,0.4623656) (187,0.459893) (188,0.4574468) (189,0.4603175) (190,0.4578947) (191,0.460733) (192,0.4635417) (193,0.4663212) (194,0.4639175) (195,0.4615385) (196,0.4591837) (197,0.4568528) (198,0.4545455) (199,0.4572864) (200,0.455) (201,0.4527363) (202,0.4554455) (203,0.453202) (204,0.4558824) (205,0.4585366) (206,0.4563107) (207,0.4589372) (208,0.4567308) (209,0.4593301) (210,0.4571429) (211,0.4597156) (212,0.4575472) (213,0.4600939) (214,0.4579439) (215,0.455814) (216,0.4537037) (217,0.4516129) (218,0.4495413) (219,0.4520548) (220,0.45) (221,0.4479638) (222,0.4459459) (223,0.4484305) (224,0.4464286) (225,0.4444444) (226,0.4469027) (227,0.4449339) (228,0.4429825) (229,0.4454148) (230,0.4434783) (231,0.4415584) (232,0.4439655) (233,0.4463519) (234,0.4444444) (235,0.4425532) (236,0.4449153) (237,0.443038) (238,0.4411765) (239,0.4393305) (240,0.4375) (241,0.4356846) (242,0.4338843) (243,0.4320988) (244,0.4303279) (245,0.4326531) (246,0.4308943) (247,0.4331984) (248,0.4354839) (249,0.4337349) (250,0.432) (251,0.4302789) (252,0.4285714) (253,0.43083) (254,0.4291339) (255,0.4313725) (256,0.4296875)};
+\draw[orange!85!black,thick] plot coordinates {(1,0) (2,0.5) (3,0.6666667) (4,0.5) (5,0.6) (6,0.5) (7,0.5714286) (8,0.5) (9,0.4444444) (10,0.4) (11,0.4545455) (12,0.4166667) (13,0.3846154) (14,0.4285714) (15,0.4666667) (16,0.5) (17,0.4705882) (18,0.5) (19,0.4736842) (20,0.45) (21,0.4761905) (22,0.5) (23,0.5217391) (24,0.5416667) (25,0.56) (26,0.5384615) (27,0.5555556) (28,0.5357143) (29,0.5172414) (30,0.5333333) (31,0.5483871) (32,0.5625) (33,0.5757576) (34,0.5882353) (35,0.6) (36,0.6111111) (37,0.6216216) (38,0.6052632) (39,0.5897436) (40,0.575) (41,0.5609756) (42,0.5714286) (43,0.5813953) (44,0.5909091) (45,0.6) (46,0.6086957) (47,0.5957447) (48,0.6041667) (49,0.5918367) (50,0.6) (51,0.6078431) (52,0.6153846) (53,0.6226415) (54,0.6111111) (55,0.6) (56,0.5892857) (57,0.5789474) (58,0.5862069) (59,0.5932203) (60,0.6) (61,0.6065574) (62,0.5967742) (63,0.5873016) (64,0.59375) (65,0.5846154) (66,0.5757576) (67,0.5671642) (68,0.5588235) (69,0.5652174) (70,0.5571429) (71,0.5492958) (72,0.5555556) (73,0.5479452) (74,0.5405405) (75,0.5466667) (76,0.5394737) (77,0.5454545) (78,0.5384615) (79,0.5443038) (80,0.55) (81,0.5555556) (82,0.5609756) (83,0.5542169) (84,0.5595238) (85,0.5529412) (86,0.5581395) (87,0.5517241) (88,0.5454545) (89,0.5505618) (90,0.5444444) (91,0.5494505) (92,0.5543478) (93,0.5591398) (94,0.5531915) (95,0.5578947) (96,0.5625) (97,0.556701) (98,0.5612245) (99,0.5555556) (100,0.55) (101,0.5445545) (102,0.5392157) (103,0.5339806) (104,0.5288462) (105,0.5238095) (106,0.5188679) (107,0.5140187) (108,0.5185185) (109,0.5137615) (110,0.5181818) (111,0.5135135) (112,0.5089286) (113,0.5044248) (114,0.5087719) (115,0.5130435) (116,0.5086207) (117,0.5128205) (118,0.5084746) (119,0.5042017) (120,0.5083333) (121,0.5041322) (122,0.5) (123,0.495935) (124,0.4919355) (125,0.488) (126,0.484127) (127,0.488189) (128,0.4921875) (129,0.496124) (130,0.4923077) (131,0.4885496) (132,0.4848485) (133,0.4887218) (134,0.4925373) (135,0.4888889) (136,0.4852941) (137,0.4890511) (138,0.4855072) (139,0.4820144) (140,0.4785714) (141,0.4751773) (142,0.471831) (143,0.4685315) (144,0.4652778) (145,0.4689655) (146,0.4657534) (147,0.4693878) (148,0.4662162) (149,0.4630872) (150,0.4666667) (151,0.4635762) (152,0.4605263) (153,0.4575163) (154,0.4545455) (155,0.4580645) (156,0.4615385) (157,0.4585987) (158,0.4620253) (159,0.4591195) (160,0.45625) (161,0.4534161) (162,0.4506173) (163,0.4478528) (164,0.4512195) (165,0.4545455) (166,0.4578313) (167,0.4550898) (168,0.452381) (169,0.4556213) (170,0.4588235) (171,0.4619883) (172,0.4593023) (173,0.4624277) (174,0.4655172) (175,0.4685714) (176,0.4659091) (177,0.4689266) (178,0.4662921) (179,0.4692737) (180,0.4666667) (181,0.4640884) (182,0.467033) (183,0.4699454) (184,0.4728261) (185,0.4702703) (186,0.4731183) (187,0.4759358) (188,0.4734043) (189,0.4708995) (190,0.4736842) (191,0.4712042) (192,0.4739583) (193,0.4715026) (194,0.4742268) (195,0.4769231) (196,0.4744898) (197,0.4720812) (198,0.4747475) (199,0.4723618) (200,0.47) (201,0.4726368) (202,0.470297) (203,0.4679803) (204,0.4705882) (205,0.4731707) (206,0.4708738) (207,0.468599) (208,0.4663462) (209,0.4688995) (210,0.4714286) (211,0.4739336) (212,0.4764151) (213,0.4741784) (214,0.4766355) (215,0.4790698) (216,0.4814815) (217,0.4792627) (218,0.4770642) (219,0.4794521) (220,0.4772727) (221,0.479638) (222,0.481982) (223,0.4843049) (224,0.4866071) (225,0.4844444) (226,0.4867257) (227,0.4845815) (228,0.4824561) (229,0.4803493) (230,0.4826087) (231,0.4848485) (232,0.4827586) (233,0.4849785) (234,0.4871795) (235,0.4893617) (236,0.4872881) (237,0.4852321) (238,0.487395) (239,0.4895397) (240,0.4875) (241,0.4896266) (242,0.4876033) (243,0.4897119) (244,0.4918033) (245,0.4897959) (246,0.4878049) (247,0.48583) (248,0.483871) (249,0.4859438) (250,0.488) (251,0.4900398) (252,0.4920635) (253,0.4901186) (254,0.488189) (255,0.4901961) (256,0.4921875)};
+\draw[teal!70!black,thick] plot coordinates {(1,0) (2,0) (3,0) (4,0.25) (5,0.2) (6,0.1666667) (7,0.2857143) (8,0.375) (9,0.4444444) (10,0.4) (11,0.4545455) (12,0.5) (13,0.4615385) (14,0.5) (15,0.5333333) (16,0.5625) (17,0.5294118) (18,0.5) (19,0.4736842) (20,0.45) (21,0.4761905) (22,0.4545455) (23,0.4347826) (24,0.4583333) (25,0.48) (26,0.5) (27,0.4814815) (28,0.5) (29,0.5172414) (30,0.5333333) (31,0.5483871) (32,0.5625) (33,0.5454545) (34,0.5588235) (35,0.5428571) (36,0.5555556) (37,0.5675676) (38,0.5526316) (39,0.5641026) (40,0.55) (41,0.5365854) (42,0.5238095) (43,0.5116279) (44,0.5) (45,0.5111111) (46,0.5217391) (47,0.5319149) (48,0.5416667) (49,0.5306122) (50,0.54) (51,0.5490196) (52,0.5576923) (53,0.5471698) (54,0.5555556) (55,0.5636364) (56,0.5535714) (57,0.5438596) (58,0.5344828) (59,0.5254237) (60,0.5333333) (61,0.5245902) (62,0.5322581) (63,0.5238095) (64,0.515625) (65,0.5076923) (66,0.5151515) (67,0.5223881) (68,0.5147059) (69,0.5072464) (70,0.5) (71,0.4929577) (72,0.5) (73,0.5068493) (74,0.5135135) (75,0.5066667) (76,0.5) (77,0.5064935) (78,0.5) (79,0.4936709) (80,0.4875) (81,0.4938272) (82,0.5) (83,0.4939759) (84,0.4880952) (85,0.4941176) (86,0.4883721) (87,0.4942529) (88,0.5) (89,0.505618) (90,0.5111111) (91,0.5164835) (92,0.5217391) (93,0.516129) (94,0.5106383) (95,0.5052632) (96,0.5104167) (97,0.5154639) (98,0.5204082) (99,0.5151515) (100,0.51) (101,0.5148515) (102,0.5196078) (103,0.5242718) (104,0.5192308) (105,0.5142857) (106,0.509434) (107,0.5046729) (108,0.5) (109,0.4954128) (110,0.5) (111,0.4954955) (112,0.4910714) (113,0.4867257) (114,0.4824561) (115,0.4869565) (116,0.4827586) (117,0.4871795) (118,0.4915254) (119,0.487395) (120,0.4916667) (121,0.4958678) (122,0.5) (123,0.504065) (124,0.5) (125,0.504) (126,0.5079365) (127,0.503937) (128,0.5) (129,0.496124) (130,0.4923077) (131,0.4961832) (132,0.4924242) (133,0.4887218) (134,0.4850746) (135,0.4888889) (136,0.4852941) (137,0.4817518) (138,0.4855072) (139,0.4820144) (140,0.4785714) (141,0.4822695) (142,0.4859155) (143,0.4825175) (144,0.4861111) (145,0.4827586) (146,0.4863014) (147,0.4897959) (148,0.4864865) (149,0.4832215) (150,0.48) (151,0.4834437) (152,0.4802632) (153,0.4836601) (154,0.487013) (155,0.4903226) (156,0.4935897) (157,0.4968153) (158,0.5) (159,0.5031447) (160,0.5) (161,0.5031056) (162,0.5061728) (163,0.5030675) (164,0.5060976) (165,0.5030303) (166,0.5) (167,0.502994) (168,0.5059524) (169,0.5088757) (170,0.5117647) (171,0.5087719) (172,0.5116279) (173,0.5086705) (174,0.5114943) (175,0.5085714) (176,0.5056818) (177,0.5028249) (178,0.5) (179,0.5027933) (180,0.5) (181,0.4972376) (182,0.5) (183,0.4972678) (184,0.4945652) (185,0.4918919) (186,0.4892473) (187,0.4919786) (188,0.4946809) (189,0.4920635) (190,0.4947368) (191,0.4921466) (192,0.4947917) (193,0.4974093) (194,0.5) (195,0.5025641) (196,0.5) (197,0.4974619) (198,0.4949495) (199,0.4974874) (200,0.5) (201,0.5024876) (202,0.5049505) (203,0.5024631) (204,0.504902) (205,0.5073171) (206,0.5097087) (207,0.5072464) (208,0.5048077) (209,0.5023923) (210,0.5) (211,0.4976303) (212,0.5) (213,0.4976526) (214,0.4953271) (215,0.4930233) (216,0.4953704) (217,0.4930876) (218,0.4954128) (219,0.4931507) (220,0.4954545) (221,0.4977376) (222,0.4954955) (223,0.4932735) (224,0.4910714) (225,0.4888889) (226,0.4867257) (227,0.4845815) (228,0.4868421) (229,0.4847162) (230,0.4826087) (231,0.4848485) (232,0.4827586) (233,0.4806867) (234,0.4786325) (235,0.4808511) (236,0.4788136) (237,0.4810127) (238,0.4831933) (239,0.4853556) (240,0.4833333) (241,0.4813278) (242,0.4793388) (243,0.4773663) (244,0.4754098) (245,0.477551) (246,0.4756098) (247,0.4736842) (248,0.4758065) (249,0.4779116) (250,0.476) (251,0.4741036) (252,0.4761905) (253,0.4782609) (254,0.480315) (255,0.4784314) (256,0.4765625)};
+\end{tikzpicture}
+\caption{Trzy przykładowe przebiegi średniej empirycznej
+dla binarnych ciągów wygenerowanych pseudolosowo
+z parametrem $p=1/2$. Każdy punkt jest średnią
+pierwszych $n$ obserwacji z danego ciągu.
+Wykres ilustruje mocne prawo wielkich liczb,
+ale skończona symulacja nie stanowi jego dowodu.}
+\label{fig:rp1-08-empirical-means}
+\end{figure}
+
+
 \begin{przyklad}[Dlaczego dla rozkładu Cauchy'ego nie ma analogicznego MPWL]
-Niech $C_1,C_2,\ldots$ będą niezależne i mają
-standardowy rozkład Cauchy'ego. Z jego funkcji
-charakterystycznej $\varphi_C(t)=e^{-|t|}$
-wynika dla każdej liczby naturalnej $n$, że
+Niech $C_1,C_2,\ldots$ będą wzajemnie niezależnymi
+zmiennymi losowymi na jednej przestrzeni probabilistycznej
+i niech każda ma standardowy rozkład Cauchy'ego.
+Jego pierwszy moment bezwzględny jest nieskończony
+(rozdział~\ref{ch:distributions}), więc hipoteza
+całkowalności w MPWL Kołmogorowa nie jest spełniona.
+Z wzoru na funkcję charakterystyczną standardowego
+rozkładu Cauchy'ego $\varphi_C(t)=e^{-|t|}$ oraz
+faktoryzacji funkcji charakterystycznych sumy zmiennych
+wzajemnie niezależnych (rozdział~\ref{ch:expectation})
+wynika dla każdego całkowitego $n\geq1$ i $t\in\R$,
+że
 \[
 \varphi_{(C_1+\cdots+C_n)/n}(t)
 =\bigl[\varphi_C(t/n)\bigr]^n=e^{-|t|}.
 \]
-Jednoznaczność funkcji charakterystycznej pokazuje,
-że każda średnia $n^{-1}\sum_{k\leq n}C_k$ ma ten sam
-rozkład co pojedyncze $C_1$. Nie może więc zbiegać
-według prawdopodobieństwa do żadnej stałej, ponieważ
-wtedy musiałaby również zbiegać do niej według rozkładu.
+Z twierdzenia o jednoznaczności rozkładu wyznaczonego
+przez funkcję charakterystyczną
+(rozdział~\ref{ch:expectation}) wynika, że każda średnia
+$n^{-1}\sum_{k=1}^n C_k$ ma ten sam rozkład co $C_1$.
+Gdyby dla pewnego $c\in\R$ średnie zbiegały do $c$
+według prawdopodobieństwa, to z twierdzenia
+o podstawowych implikacjach zbieżności
+(rozdział~\ref{ch:convergence}) zbiegałyby do $c$
+również według rozkładu. Jednocześnie ich rozkłady
+tworzą stały ciąg miar o granicy $\Law(C_1)$.
+Z jednoznaczności granicy według rozkładu wynikałoby
+$\Law(C_1)=\delta_c$. Jest to niemożliwe, ponieważ
+rozkład Cauchy'ego ma gęstość względem miary Lebesgue'a,
+a zatem $\Prob(C_1=c)=0$, podczas gdy $\delta_c(\{c\})=1$.
+Nie zachodzi więc ani SPWL, ani MPWL z granicą stałą.
 Brak całkowalności nie jest tylko techniczną luką
 dowodu prawa wielkich liczb.
 \end{przyklad}
 
 \section{Alternatywny dowód MPWL: kontrola podciągu diadycznego}
 
-Dla zmiennych o skończonym drugim momencie można udowodnić
-mocne prawo także bez lematu Kroneckera. Taki dowód
-wyjaśnia, dlaczego do zbieżności p.n. potrzebna jest
-kontrola \emph{maksimum} sum częściowych, a nie wyłącznie
-wariancji pojedynczej średniej.
+Dla wzajemnie niezależnych zmiennych o wspólnej średniej
+i jednostajnie ograniczonych wariancjach można udowodnić
+mocne prawo także bez lematu Kroneckera. Poniższy dowód
+pokazuje, jak kontrola \emph{maksimum} sum częściowych
+pozwala przejść od oszacowań na indeksach diadycznych
+do zbieżności całego ciągu prawie na pewno.
 
-\begin{twierdzenie}[MPWL dla niezależnych zmiennych o wspólnej wariancji]
-Niech $X_1,X_2,\ldots$ będą niezależnymi zmiennymi
-losowymi o wspólnej średniej $m\in\R$ oraz
-$\sup_n\Var(X_n)\leq C<\infty$.
+\begin{twierdzenie}[MPWL dla niezależnych zmiennych o jednostajnie ograniczonych wariancjach]
+Niech $X_1,X_2,\ldots$ będą wzajemnie niezależnymi
+rzeczywistymi zmiennymi losowymi na jednej przestrzeni
+probabilistycznej $(\Omega,\mathcal F,\Prob)$,
+o skończonych drugich momentach, wspólnej średniej
+$m\in\R$ oraz $\sup_n\Var(X_n)\leq C<\infty$.
 Wówczas $n^{-1}\sum_{k=1}^nX_k\to m$ prawie na pewno.
 \end{twierdzenie}
 \begin{proof}
 Połóżmy $Z_k=X_k-m$ i $S_n=\sum_{k=1}^nZ_k$.
-Dla $\varepsilon>0$ nierówność maksymalna
-Kołmogorowa zastosowana do $2^j$ zmiennych daje
+Zmienne $Z_k$ są wzajemnie niezależne, ponieważ
+powstają z $X_k$ przez osobne przekształcenia borelowskie.
+Mają średnie zero oraz
+$\Var(Z_k)=\Var(X_k)\leq C$, a więc spełniają hipotezy
+nierówności maksymalnej Kołmogorowa.
+Dla $\varepsilon>0$ oraz całkowitego $j\geq1$ określmy
+mierzalne zdarzenie
+$A_j(\varepsilon)=\{\max_{1\leq k\leq2^j}|S_k|>
+\varepsilon2^j\}$.
+Z nierówności maksymalnej otrzymujemy
 \[
 \Prob\left(\max_{1\leq k\leq2^j}|S_k|>
 \varepsilon2^j\right)
@@ -411,40 +807,98 @@ Kołmogorowa zastosowana do $2^j$ zmiennych daje
 {\varepsilon^2 2^{2j}}
 \leq\frac{C}{\varepsilon^2 2^j}.
 \]
-Suma po $j\geq1$ jest skończona. Pierwszy lemat
-Borela--Cantellego zapewnia, że dla prawie każdej
-trajektorii, od pewnego $j$, wszystkie sumy
-$S_1,\ldots,S_{2^j}$ mają moduł co najwyżej
-$\varepsilon2^j$.
-Dla $2^{j-1}<n\leq2^j$ otrzymujemy zatem
-$|S_n|/n\leq2\varepsilon$.
-Stosując ten argument jednocześnie dla
-$\varepsilon=1,1/2,1/3,\ldots$ (przeliczalne
-przecięcie zdarzeń prawdopodobieństwa jeden),
-dostajemy $S_n/n\to0$ prawie na pewno.
+Ponieważ $\sum_{j=1}^\infty2^{-j}=1$, mamy
+$\sum_{j=1}^\infty\Prob(A_j(\varepsilon))<\infty$.
+Z pierwszego lematu Borela--Cantellego
+(rozdział~\ref{ch:probability}) wynika, że mierzalny
+zbiór $G_\varepsilon=\Omega\setminus\limsup_j A_j(\varepsilon)$
+ma prawdopodobieństwo jeden.
+Dla każdego $\omega\in G_\varepsilon$ istnieje
+$J=J(\omega,\varepsilon)$ takie, że dla $j\geq J$
+oraz $1\leq k\leq 2^j$ mamy $|S_k(\omega)|\leq\varepsilon 2^j$.
+Każdemu całkowitemu $n\geq2$ odpowiada dokładnie
+jeden całkowity $j\geq1$ spełniający $2^{j-1}<n\leq2^j$,
+a ten indeks dąży do nieskończoności wraz z $n$.
+Dla dostatecznie dużego $n$ otrzymujemy
+\[
+\frac{|S_n(\omega)|}{n}
+\leq\frac{\varepsilon2^j}{n}<2\varepsilon.
+\]
+Mierzalny zbiór $G=\bigcap_{r=1}^\infty G_{1/r}$
+ma prawdopodobieństwo jeden, gdyż jego dopełnienie
+jest przeliczalną sumą zbiorów zerowych.
+Dla każdego $\omega\in G$ oraz każdego $r\geq1$
+mamy $\limsup_{n\to\infty}|S_n(\omega)|/n\leq2/r$.
+Przechodząc z $r\to\infty$, otrzymujemy $S_n(\omega)/n\to0$.
+Ponieważ $\overline X_n=m+S_n/n$, zachodzi teza.
 \end{proof}
 
 \begin{uwaga}
-Założenie wspólnego rozkładu nie występuje w tym
-twierdzeniu; wystarczy wspólna średnia i jednostajne
-ograniczenie wariancji. Jest to mocniejsze od
-wersji wariancyjnej dla prób iid w aspekcie
-jednakowości rozkładu, ale słabsze od prawa Kołmogorowa
-przy samym $\E|X_1|<\infty$ w aspekcie momentów.
+Przy zachowaniu wzajemnej niezależności założenie
+jednakowego rozkładu nie jest tu potrzebne: wystarczy
+wspólna średnia i jednostajne ograniczenie wariancji.
+Twierdzenie jest szczególnym przypadkiem wcześniejszego
+MPWL przy sumowalnych wariancjach ważonych, ponieważ
+$\sum_{n=1}^\infty\Var(X_n)/n^2
+\leq C\sum_{n=1}^\infty n^{-2}<\infty$.
+Natomiast w przypadku jednakowych rozkładów MPWL
+Kołmogorowa wymaga tylko całkowalności, a nie
+skończoności drugiego momentu. W ogólności tych dwóch
+zestawów założeń (jednakowych rozkładów i całkowalności
+oraz wspólnej średniej i ograniczonych wariancji)
+nie należy utożsamiać.
 \end{uwaga}
 
 \begin{przyklad}[MPWL pomimo nieskończonej wariancji]
-Niech $X_1,X_2,\ldots$ będą niezależne o rozkładzie
-Pareto z gęstością
-$f(x)=\alpha x^{-\alpha-1}\ind{\{x\geq1\}}$
-dla ustalonego $1<\alpha<2$. Bezpośrednie całkowanie daje
-$\E X_1=\alpha/(\alpha-1)<\infty$ oraz
-$\E X_1^2=\infty$ (całka
-$\int_1^\infty x^{1-\alpha}\,\dd\lambda_1(x)$
-jest rozbieżna). Wariant MPWL wykorzystujący
-sumowalne wariancje nie ma tu zastosowania, ale
-MPWL Kołmogorowa zapewnia
-$\overline X_n\to\alpha/(\alpha-1)$ p.n.
+Niech $X_1,X_2,\ldots$ będą wzajemnie niezależnymi
+zmiennymi losowymi na wspólnej przestrzeni
+probabilistycznej, o jednakowym rozkładzie Pareto
+z gęstością
+\[
+f(x)=
+\begin{cases}
+\alpha x^{-\alpha-1},&x\geq1,\\
+0,&x<1,
+\end{cases}
+\qquad 1<\alpha<2.
+\]
+Jest to nieujemna funkcja borelowska, a
+$\int_1^\infty\alpha x^{-\alpha-1}\,\dd\lambda_1(x)=1$,
+ponieważ całka na $[1,R]$ wynosi $1-R^{-\alpha}$.
+Zatem $f$ jest gęstością probabilistyczną.
+Ponieważ rozkład jest skupiony na $[1,\infty)$,
+mamy $X_1\geq1$ prawie na pewno. Ze wzoru
+\eqref{eq:lotus} dla funkcji nieujemnych oraz
+\atlasref{ME-08::thm:mct}{twierdzenia o zbieżności monotonicznej}
+dla całek obciętych do $[1,R]$ (najpierw dla
+całkowitych $R\to\infty$) otrzymujemy
+\[
+\begin{aligned}
+\E|X_1|=\E X_1
+&=\lim_{R\to\infty}\alpha\int_1^R x^{-\alpha}\,
+\dd\lambda_1(x)=\frac{\alpha}{\alpha-1},\\
+\E X_1^2
+&=\lim_{R\to\infty}\alpha\int_1^R x^{1-\alpha}\,
+\dd\lambda_1(x)\\
+&=\lim_{R\to\infty}\frac{\alpha}{2-\alpha}
+(R^{2-\alpha}-1)=+\infty.
+\end{aligned}
+\]
+W pierwszej równości granicznej korzystamy z
+$\int_1^R x^{-\alpha}\,\dd\lambda_1(x)
+=(1-R^{1-\alpha})/(\alpha-1)$.
+Jeśli $m=\E X_1$, to dla $x\geq 2m$ mamy
+$(x-m)^2\geq x^2/4$; całka drugiego momentu na
+$[2m,\infty)$ jest nieskończona. Zatem również
+$\E(X_1-m)^2=+\infty$.
+W tym sensie mówimy o nieskończonej wariancji:
+całkę definiującą wariancję dopuszczamy tutaj
+w rozszerzonym przedziale $[0,\infty]$, mimo że
+w algebrze momentów rozważaliśmy wariancje skończone
+(rozdział~\ref{ch:expectation}).
+Wariant MPWL wykorzystujący sumowalne wariancje
+ważone nie ma tu zastosowania, ale MPWL Kołmogorowa
+zapewnia $\overline X_n\to\alpha/(\alpha-1)$ p.n.
 \end{przyklad}
 
 \begin{przyklad}[Dlaczego nie można pominąć warunku niezależności]
@@ -452,18 +906,36 @@ Niech $Z$ ma rozkład Bernoulliego z parametrem $1/2$
 i połóżmy $X_n=Z$ dla każdego $n$. Wszystkie $X_n$
 mają ten sam rozkład i skończone momenty dowolnego
 rzędu, lecz $\overline X_n=Z$ dla wszystkich $n$.
-Zatem średnia nie dąży do $\E Z=1/2$ ani p.n.,
-ani według prawdopodobieństwa. Kolejne obserwacje
-nie wnoszą nowej informacji, jeśli są identyczną
-kopią tej samej zmiennej.
+Dla $j\ne k$ mamy
+$\Prob(X_j=1,X_k=1)=1/2\ne1/4
+=\Prob(X_j=1)\Prob(X_k=1)$, więc zmienne nie są
+nawet parami niezależne.
+Dla każdego $n$ zachodzi
+$\Prob(|\overline X_n-1/2|>1/4)=1$,
+a zatem nie ma zbieżności według prawdopodobieństwa
+do $\E Z=1/2$. Granicą prawie na pewno jest natomiast
+$Z$, które różni się od $1/2$ z prawdopodobieństwem jeden.
+Kolejne obserwacje nie wnoszą nowej informacji,
+jeśli są identyczną kopią tej samej zmiennej.
 \end{przyklad}
 
 \begin{przyklad}[Różnica między zbieżnością średnich a zbieżnością pojedynczych wyników]
-Dla niezależnych $B_n\sim\operatorname{Bernoulli}(1/2)$
-średnie $\overline B_n\to1/2$ p.n. Jednocześnie
-z drugiego lematu Borela--Cantellego prawie na pewno
-występuje nieskończenie wiele jedynek i nieskończenie
-wiele zer, a więc ciąg $B_n$ \emph{nie jest} zbieżny.
+Dla wzajemnie niezależnych zmiennych
+$B_n\sim\operatorname{Bernoulli}(1/2)$ na wspólnej
+przestrzeni probabilistycznej MPWL Kołmogorowa daje
+$\overline B_n\to1/2$ p.n.
+Rodzina zdarzeń $D_n=\{B_n=1\}$ jest wzajemnie niezależna,
+podobnie jak rodzina $E_n=\{B_n=0\}$, z definicji
+niezależności zmiennych losowych. Ponieważ
+$\Prob(D_n)=\Prob(E_n)=1/2$, oba szeregi
+$\sum_n\Prob(D_n)$ i $\sum_n\Prob(E_n)$ są rozbieżne.
+Drugi lemat Borela--Cantellego (rozdział~\ref{ch:probability})
+daje $\Prob(\limsup_n D_n)=\Prob(\limsup_n E_n)=1$.
+Na przecięciu tych dwóch zbiorów pełnej miary
+ciąg $B_n(\omega)$ zawiera podciąg stale równy jeden
+i podciąg stale równy zero. Z jednoznaczności granicy
+liczbowej wynika, że ciąg $B_n$ prawie na pewno
+\emph{nie jest} zbieżny.
 To stabilizacja średniej, nie stabilizacja
 poszczególnych rezultatów.
 \end{przyklad}

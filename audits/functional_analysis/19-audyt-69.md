@@ -1,0 +1,12 @@
+# Rozdział 19 — audyt 69 (4/4, czysty, 3/3)
+
+24 listopada 2026. Wyłącznie istniejąca gałąź biblioteka-matematyczna-iteracja-6. Źródło niezmienione od 66: blob 6a2a762c6d03e089d66841c56fc6ae1411ffff10.
+
+## Końcowy przegląd
+Ponownie przeczytano wszystkie cztery podsekcje, 5 definicji, 13 dowodów i 6 przykładów. W pierwszej części sprawdzono kwantyfikatory kryterium ciągłości i rzędu, lokalny splot, całkowalną majorantę i zbiory miary zero, nieregularność delty oraz wartość główną. W drugiej części sprawdzono ograniczenie przez przedłużenie zerem, rozkład funkcji na składniki o nośnikach w zbiorach zerowania, największy otwarty zbiór zerowania, oszacowanie Leibniza i jednoznaczność przedłużenia. W trzeciej części sprawdzono seminormy obu topologii, beczkowość, równociągłość, skończone pokrycie zwartego domknięcia i konstrukcję skierowanej sieci przez oddzielenie od podprzestrzeni. W czwartej części skontrolowano ucieczkę delt, całkowanie po odcinku, czynnik sqrt(d), zakres regularizacji, zbieżność w L^1_loc oraz granicę 4/pi w przykładzie oscylacyjnym. Nie stwierdzono istotnych usterek wymagających zmian. Nie rozszerzono zakresu.
+
+## Kontrole
+781 wierszy, 27/27 unikatowych etykiet, 33/33 odsyłaczy ref i hyperref rozwiązanych, poprawnie zagnieżdżone środowiska. Dodatkowo wykonano 512 dokładnych skończonych kontroli tożsamości sumy współczynników wielowskaźnikowego wzoru Leibniza dla trzech współrzędnych o rzędach 0–7; wszystkie zgodne z 2 do potęgi sumy rzędów. To kontrola pomocnicza, nie formalizacja twierdzenia. Zaliczone CI 66 (45401366762) i 67 (45402110489) dotyczą niezmienionego źródła. W biegu CI 68 (45402859387) stan przy zapisie: in_progress, wynik jeszcze nieustalony; Set up job: success; Run actions/checkout@v4: success; Check chapter 19 distributions and locality regressions: success; Prepare TeX wrapper with complete reference context 01-19 (including 15A/15B): success; Compile chapter 19 with complete 01-19 reference context: in_progress; Verify PDF, chapter heading, mathematical content and cross-references: pending; Upload PDF and diagnostic logs: pending; Post Run actions/checkout@v4: pending. Oględziny PDF 8/8 stron wykonano w audycie 67 dla tego samego blobu; nie powtarzano ich w 69. Nie wykonywano formalizacji Lean.
+
+## Decyzja
+Trzy kolejne czyste pełne audyty 67–69, 3/3. Rozdział 19 zamknięty na podstawie niezmienionego źródła, wcześniej zaliczonego pełnego CI i kontroli wizualnej. Następny audyt 70: pierwsze dwa bloki rozdziału 20 — Pochodne dystrybucyjne i transpozycja operatorów.

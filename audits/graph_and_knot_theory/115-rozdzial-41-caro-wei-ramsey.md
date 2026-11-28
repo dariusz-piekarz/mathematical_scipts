@@ -1,0 +1,5 @@
+# Rozdział 41 — audyt indywidualny 02
+
+2026-11-24. Przebieg 45386307677: finite-models 138418004108 i chapter-pdf 138418004937 completed/success. Log: 33868 grafów Mantel/Turán, 10650 symetryzacji wierzchołków, TG41-ZYK-01 7912 symetryzacji klas, 33792 kolorowania Ramseya.
+
+Źródło 702e18c7256305a9f0491dae85adad3cea137d43, blob 8408cfed70c80f8425db1a2e29828e3166b79b3c: 14 podmian; dokładna liczba rozszerzeń ustalonej permutacji podzbioru, funkcje charakterystyczne i liniowość wartości oczekiwanej, średnia a maksimum, osiąganie liczby niezależności w sumach rozłącznych klik, samodzielne założenia wniosków, doprecyzowanie przykładu z zaokrągleniem, jawne kroki indukcji Ramseya, rachunek Pascala, indukcja po liczbie kolorów. TG41-CW-01 (800eae42c68675b4ce46c5dc5b56589c8230b70b): niezależna enumeracja zbiorów niezależnych i permutacji dla wszystkich grafów n=1..5, dokładne ułamki, kontrola niezależności losowego zbioru i obu nierówności. Nowe CI jeszcze niepotwierdzone. Bez rozszerzeń. Status OTWARTY. Następnie kontrola pozostałych dowodów, założeń i aktualnych CI/PDF; zamknięcie po stabilizacji.

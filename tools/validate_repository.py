@@ -12,6 +12,8 @@ import json
 import re
 import sys
 
+from audit_chapter_dependencies import _mask, audit as audit_dependencies
+
 ROOT = Path(__file__).resolve().parents[1]
 INPUT_RE = re.compile(r"\\input\{([^}]+)\}")
 
@@ -20,7 +22,7 @@ def validate_books() -> list[str]:
     """Return missing-import errors for every book and shared chapter."""
     errors: list[str] = []
     for book in sorted((ROOT / "books").glob("*/*.tex")):
-        text = book.read_text(encoding="utf-8")
+        text = _mask(book.read_text(encoding="utf-8"))
         for relative in INPUT_RE.findall(text):
             # TeX resolves input paths relative to the compilation directory.
             target = (book.parent / relative).resolve()
@@ -34,7 +36,7 @@ def validate_books() -> list[str]:
             chapter = (book.parent / relative).resolve()
             if chapter.is_file():
                 try:
-                    child_text = chapter.read_text(encoding="utf-8")
+                    child_text = _mask(chapter.read_text(encoding="utf-8"))
                 except UnicodeError:
                     errors.append(f"Non UTF-8 chapter: {chapter}")
                     continue
@@ -45,7 +47,11 @@ def validate_books() -> list[str]:
 
 
 def validate_attachments() -> list[str]:
-    """Check that all 20 uploaded chapters match their normalized sources."""
+    """Check the immutable import baseline, not equality with edited chapters.
+
+    sources/pl stores original materials; chapters/pl is the evolving canonical
+    manuscript. The normalized manifest digest records the original import.
+    """
     errors: list[str] = []
     manifest_path = ROOT / "catalog/new_chapters.json"
     if not manifest_path.exists():
@@ -60,25 +66,29 @@ def validate_attachments() -> list[str]:
             errors.append(f"Missing canonical or source file: {item['source']}")
             continue
         normalize = lambda b: b.decode("utf-8-sig").replace("\r\n", "\n").replace("\r", "\n").encode("utf-8")
-        left = normalize(chapter.read_bytes())
-        right = normalize(source.read_bytes())
-        if left != right:
-            errors.append(f"Source copy differs from canonical chapter: {item['source']}")
-        digest = hashlib.sha256(left).hexdigest()
+        try:
+            normalize(chapter.read_bytes())  # Canonical source must remain valid UTF-8.
+            original = normalize(source.read_bytes())
+        except UnicodeError:
+            errors.append(f"Non UTF-8 canonical or archived source: {item['source']}")
+            continue
+        digest = hashlib.sha256(original).hexdigest()
         if digest != item["repository_normalized_sha256"]:
-            errors.append(f"Normalized SHA-256 mismatch: {item['source']}")
+            errors.append(f"Archived source normalized SHA-256 mismatch: {item['source']}")
+        if len(original.decode("utf-8")) != item["repository_normalized_characters"]:
+            errors.append(f"Archived source normalized character count mismatch: {item['source']}")
     return errors
 
 
 def main() -> int:
     """Print a concise validation report; return a failing exit code on error."""
-    errors = validate_books() + validate_attachments()
+    errors = validate_books() + validate_attachments() + audit_dependencies(ROOT)['errors']
     for error in errors:
         print("ERROR:", error)
     if errors:
         print(f"Validation failed: {len(errors)} issues")
         return 1
-    print("Validation passed: book imports and 20 normalized source copies")
+    print("Validation passed: imports, 20 archived source baselines, chapter assets and catalog")
     return 0
 
 

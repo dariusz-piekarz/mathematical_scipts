@@ -78,12 +78,14 @@ co daje sprzeczność.
 \foreach \x/\lab in {1/0,4/1,7/2,10/3}{
   \draw (\x,0.12)--(\x,-0.12) node[below] {$\lab$};
 }
-\draw[very thick,blue!70!black] (1,1.1)--(4,1.1);
-\draw[very thick,blue!70!black] (4,1.55)--(7,1.55);
-\draw[very thick,blue!70!black] (7,0.68)--(10,0.68);
-\draw[blue!70!black,fill=white,thick] (4,1.1) circle (2pt) (7,1.55) circle (2pt);
-\fill[blue!70!black] (1,1.1) circle (2pt) (4,1.55) circle (2pt) (7,0.68) circle (2pt);
-\node[left,blue!65!black] at (1,1.12) {$X_t$};
+\draw[->] (1,-0.25)--(1,1.9) node[above] {$X_t$};
+\draw (0.9,0.8)--(1.1,0.8) node[left=3pt] {$1$};
+\draw (0.9,1.6)--(1.1,1.6) node[left=3pt] {$2$};
+\draw[very thick,blue!70!black] (1,0)--(4,0);
+\draw[very thick,blue!70!black] (4,0.8)--(7,0.8);
+\draw[very thick,blue!70!black] (7,1.6)--(10,1.6);
+\draw[blue!70!black,fill=white,thick] (4,0) circle (2pt) (7,0.8) circle (2pt) (10,1.6) circle (2pt);
+\fill[blue!70!black] (1,0) circle (2pt) (4,0.8) circle (2pt) (7,1.6) circle (2pt) (10,0.8) circle (2pt);
 \node[draw,rounded corners,fill=green!8,align=center] at (2.5,2.45) {$\calF_0$\\bez rzutów};
 \node[draw,rounded corners,fill=green!8,align=center] at (5.5,2.45) {$\calF_1$\\po I rzucie};
 \node[draw,rounded corners,fill=green!8,align=center] at (8.5,2.45) {$\calF_2$\\po II rzucie};
@@ -91,7 +93,9 @@ co daje sprzeczność.
 \draw[->,green!45!black] (6.55,2.45)--(7.4,2.45);
 \node[below=18pt,align=center] at (5.9,-0.2) {informacja rośnie, a przyszły przyrost\\nie jest znany przed wykonaniem rzutu};
 \end{tikzpicture}
-\par\smallskip\small Rozróżnienie: wykres trajektorii oraz zbiory informacji $\calF_t$.
+\par\smallskip\small Przykładowa trajektoria dla wyników $+1,+1,-1$.
+Pełne punkty oznaczają wartości w chwilach skoków,
+puste -- granice lewostronne.
 \end{center}
 
 \section{Zupełność i prawostronna ciągłość filtracji}
@@ -121,14 +125,15 @@ Nie jest jednak automatyczną własnością każdej filtracji.
 
 \begin{stwierdzenie}[Prawostronnie ciągłe powiększenie]
 Niech $\mathbb F^0=(\calF_t^0)_{t\ge0}$ będzie
-filtracją na pełnej przestrzeni probabilistycznej
+filtracją na zupełnej przestrzeni probabilistycznej
 $(\Omega,\calF,\Prob)$, a $\calN$ rodziną podzbiorów
 zdarzeń zerowych z $\calF$. Niech
 $\calH_t:=\sigma(\calF_t^0\cup\calN)$ i
 $\calG_t:=\bigcap_{u>t}\calH_u$.
-Wówczas $(\calG_t)_{t\ge0}$ jest zupełną,
-prawostronnie ciągłą filtracją oraz
-$\calF_t^0\subseteq\calG_t$ dla każdego $t$.
+Wówczas $(\calG_t)_{t\ge0}$ jest najmniejszą zupełną,
+prawostronnie ciągłą filtracją zawierającą
+$\mathbb F^0$ (w sensie inkluzji $\calF_t^0\subseteq\calG_t$
+dla każdego $t$).
 \end{stwierdzenie}
 \begin{proof}
 Rodzina $\calH_t$ jest rosnąca, dlatego również
@@ -146,6 +151,11 @@ można wybrać $s$ z $t<s<u$, a warunki indeksowane
 przez wszystkie takie pary $(s,u)$ są więc dokładnie
 warunkami indeksowanymi przez $u>t$.
 To dowodzi prawostronnej ciągłości i zupełności.
+Ponadto jest to najmniejsza filtracja spełniająca
+warunki zwykłe i zawierająca $\mathbb F^0$:
+jeśli $\mathbb K$ jest inną taką filtracją, to
+$\calH_u\subseteq\mathcal{K}_u$ dla każdego $u$, a więc
+$\calG_t\subseteq\bigcap_{u>t}\mathcal{K}_u=\mathcal{K}_t$.
 \end{proof}
 
 \begin{uwaga}
@@ -186,7 +196,7 @@ $\mathbb F=(\calF_t)_{t\ge0}$ filtracją.
 $(t,\omega)\mapsto X_t(\omega)$ jest mierzalny względem
 $\calB([0,\infty))\otimes\calF$.
 \item $X$ jest \emph{progresywnie mierzalny}, jeśli dla każdego
-$T>0$ jego ograniczenie do $[0,T]\times\Omega$
+$T\ge0$ jego ograniczenie do $[0,T]\times\Omega$
 jest mierzalne względem
 $\calB([0,T])\otimes\calF_T$.
 \item \emph{Przewidywalne $\sigma$-ciało} $\calP$ na
@@ -220,7 +230,8 @@ $t=0$. W szczególności proces adaptowany o ciągłych
 trajektoriach jest progresywnie mierzalny i przewidywalny.
 \end{twierdzenie}
 \begin{proof}
-Ustalmy $T>0$. Dla każdej liczby naturalnej $n$
+Dla $T=0$ teza wynika wprost z adaptacji. Ustalmy
+$T>0$. Dla każdej liczby naturalnej $n\ge1$
 rozpatrzmy podział $[0,T]$ o węzłach
 $t_k=kT/n$, $k=0,\ldots,n$. Jeśli trajektorie są
 prawostronnie ciągłe, zdefiniujmy funkcję schodkową
@@ -251,9 +262,18 @@ $t_{k-1}\le s<t_k$, a w chwili $T$ ustawiamy
 $X^{(n)}_T=X_T$. Dla $s>0$ czasy aproksymacji
 zbiegają do $s$ z lewej, a w chwili $0$ mamy
 $X^{(n)}_0=X_0$. To dowodzi drugiej wersji.
-Proces ciągły adaptowany jest z definicji
-przewidywalny, ponieważ jest lewostronnie ciągły;
-pierwsza część dowodu daje jego progresywną mierzalność.
+Dla procesu o wartościach w ogólnej przestrzeni polskiej
+$E$ przewidywalność wymaga jeszcze uzasadnienia, gdyż
+generatory $\cal P$ są procesami rzeczywistymi.
+Wybierzmy przeliczalny zbiór gęsty $(a_j)$ w $E$ i zgodną
+metrykę $d$. Każdy proces $d(X_t,a_j)$ jest rzeczywisty,
+adaptowany i lewostronnie ciągły, zatem jest
+$\cal P$-mierzalny. Kule o środkach $a_j$ i dodatnich
+wymiernych promieniach generują $\cal B(E)$, a ich
+przeciwobrazy przez $X$ są $\cal P$-mierzalne.
+Stąd każdy adaptowany proces lewostronnie ciągły
+o wartościach w $E$, w szczególności ciągły,
+jest przewidywalny.
 \end{proof}
 
 \begin{uwaga}[Dlaczego lewa aproksymacja wymaga ostrożności?]
@@ -266,14 +286,125 @@ bez regularności trajektorii, nie muszą być wspólnie,
 a tym bardziej progresywnie mierzalne.
 \end{uwaga}
 
+\begin{stwierdzenie}[Generatory przewidywalnego $\sigma$-ciała]
+Przewidywalne $\sigma$-ciało $\cal P$ jest generowane przez
+zbiory
+\[
+\{0\}\times A,\quad A\in\calF_0,\qquad
+(s,t]\times A,\quad 0\le s<t<\infty,\quad A\in\calF_s.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Oznaczmy przez $\mathcal{R}$ $\sigma$-ciało generowane przez
+wymienione zbiory. Ich funkcje charakterystyczne są
+rzeczywistymi procesami adaptowanymi i lewostronnie
+ciągłymi na $(0,\infty)$, zatem $\mathcal{R}\subseteq\cal P$.
+Odwrotnie, dla rzeczywistego adaptowanego procesu $H$
+o trajektoriach lewostronnie ciągłych rozważmy
+\[
+H^{(n)}_t=H_0\chi_{\{0\}}(t)+
+\sum_{k=0}^\infty H_{k2^{-n}}
+\chi_{(k2^{-n},(k+1)2^{-n}]}(t).
+\]
+Na każdym przedziale $(k2^{-n},(k+1)2^{-n}]$
+przeciwobraz dowolnego zbioru borelowskiego $B$ przez
+$H^{(n)}$ ma postać
+\[
+(k2^{-n},(k+1)2^{-n}]\times
+\{H_{k2^{-n}}\in B\}\in\mathcal{R}.
+\]
+W chwili $0$ odpowiednia część przeciwobrazu to
+$\{0\}\times\{H_0\in B\}\in\mathcal{R}$.
+Przeliczalna suma tych zbiorów daje cały przeciwobraz,
+więc $H^{(n)}$ jest $\mathcal{R}$-mierzalny.
+Dla $t>0$ czasy w lewych końcach przedziałów są ściśle
+mniejsze od $t$ i dążą do $t$, stąd $H^{(n)}_t\to H_t$;
+dla $t=0$ zachodzi równość. Otrzymujemy mierzalność $H$
+względem $\mathcal{R}$, a z definicji $\cal P\subseteq\mathcal{R}$.
+\end{proof}
+
+\begin{stwierdzenie}[Hierarchia rodzajów mierzalności]
+Każdy proces przewidywalny jest progresywnie mierzalny,
+a każdy proces progresywnie mierzalny jest adaptowany
+i wspólnie mierzalny.
+\end{stwierdzenie}
+\begin{proof}
+Zbiory, których ograniczenia do $[0,T]\times\Omega$
+należą do $\calB([0,T])\otimes\calF_T$ dla każdego $T\ge0$,
+tworzą $\sigma$-ciało. Z twierdzenia~\ref{thm:prog}
+zawiera ono przeciwobrazy zbiorów borelowskich przez
+wszystkie generatory $\cal P$, zatem zawiera $\cal P$.
+To daje pierwszą implikację. Dla procesu progresywnie
+mierzalnego przekrój w chwili $t$ jego ograniczenia
+do $[0,t]\times\Omega$ jest $\calF_t$-mierzalny.
+Dla $B\in\calB(E)$ przeciwobraz $X^{-1}(B)$ jest sumą
+po $n\ge1$ swoich ograniczeń do $[0,n]\times\Omega$,
+które należą do $\calB([0,\infty))\otimes\calF$.
+Dowodzi to adaptacji i mierzalności wspólnej.
+\end{proof}
+
+\begin{przyklad}[Implikacje nie są odwracalne]
+Na jednopunktowej przestrzeni probabilistycznej niech
+$V\subseteq[0,1]$ będzie zbiorem nieborelowskim.
+Proces deterministyczny $X_t=\chi_V(t)$ jest adaptowany
+do filtracji trywialnej, lecz nie jest wspólnie mierzalny,
+a więc nie jest progresywnie mierzalny.
+
+Niech teraz $Z$ będzie symetryczną zmienną o wartościach
+$\pm1$ i niech $\calF_t$ będzie trywialne dla $t<1$,
+a równe $\sigma(Z)$ dla $t\ge1$.
+Proces $Y_t=Z\chi_{[1,\infty)}(t)$ jest adaptowany
+i prawostronnie ciągły, więc progresywnie mierzalny.
+Nie jest przewidywalny: przekrój w chwili $1$ każdego
+generatora $\cal P$ należy do trywialnego $\sigma$-ciała
+(gdy $1\in(s,t]$, mamy $s<1$).
+Własność tę zachowują dopełnienia i przeliczalne sumy,
+więc każdy proces przewidywalny ma w chwili $1$
+wartość mierzalną względem trywialnego $\sigma$-ciała.
+Tymczasem $Y_1=Z$ nie jest zmienną stałą.
+
+Mierzalność wspólna nie implikuje nawet adaptacji:
+w tej samej filtracji proces $V_t=Z$ dla wszystkich
+$t\ge0$ jest wspólnie mierzalny (przeciwobrazy mają
+postać $[0,\infty)\times\{Z\in B\}$), ale $V_0=Z$
+nie jest $\calF_0$-mierzalna.
+\end{przyklad}
+
+\begin{stwierdzenie}[Informacja tuż przed chwilą deterministyczną]
+Dla $t>0$ połóżmy
+$\calF_{t-}:=\sigma(\bigcup_{0\le s<t}\calF_s)$
+oraz $\calF_{0-}:=\calF_0$. Jeżeli $X$ jest
+przewidywalny, to $X_t$ jest $\calF_{t-}$-mierzalny
+dla każdego $t\ge0$.
+\end{stwierdzenie}
+\begin{proof}
+Dla ustalonego $t$ rodzina zbiorów $C$ w przestrzeni
+$[0,\infty)\times\Omega$, których przekroje
+$C_t:=\{\omega:(t,\omega)\in C\}$ należą do
+$\calF_{t-}$, jest $\sigma$-ciałem. Zawiera generatory
+$\cal P$: przekrój prostokąta $(a,b]\times A$
+jest pusty albo równy $A\in\calF_a$ przy $a<t$,
+a przekrój $\{0\}\times A$ jest pusty albo należy do
+$\calF_0$ w chwili $0$. Zatem dla $B\in\calB(E)$
+przekrój zbioru $X^{-1}(B)\in\cal P$, czyli
+$\{X_t\in B\}$, należy do $\calF_{t-}$.
+\end{proof}
+\begin{uwaga}
+Mierzalność $X_t$ względem $\calF_{t-}$ jest warunkiem
+koniecznym, lecz nie wystarczającym przewidywalności:
+deterministyczny proces z nieborelowskim zbiorem $V$
+z poprzedniego przykładu spełnia ten warunek, ale
+nie jest nawet wspólnie mierzalny.
+\end{uwaga}
+
 \begin{stwierdzenie}[Proste strategie przewidywalne]
 Niech $0=t_0<t_1<\cdots<t_m<\infty$, a
 $H_0,\ldots,H_{m-1}$ będą rzeczywistymi zmiennymi
 losowymi, przy czym $H_k$ jest $\calF_{t_k}$-mierzalna.
 Wtedy proces
 \[
-H_t=H_{-1}\ind{\{0\}}(t)
-+\sum_{k=0}^{m-1}H_k\ind{(t_k,t_{k+1}]}(t),
+H_t=H_{-1}\chi_{\{0\}}(t)
++\sum_{k=0}^{m-1}H_k\chi_{(t_k,t_{k+1}]}(t),
 \qquad 0\le t\le t_m,
 \]
 gdzie $H_{-1}$ jest dowolną $\calF_0$-mierzalną
@@ -285,16 +416,19 @@ $\calF_{t_k}\subseteq\calF_t$-mierzalna.
 W punkcie $t_k$ ($k\ge1$) wartość z poprzedniego
 przedziału wynosi $H_{k-1}$ i też jest mierzalna
 względem $\calF_{t_k}$. Proces jest więc adaptowany.
-Przy każdym $t>0$ jego wartość jest granicą wartości
-z czasów $s\uparrow t$, ponieważ przedziały mają
-postać $(t_k,t_{k+1}]$. Trajektorie są lewostronnie
-ciągłe, a więc $H$ jest przewidywalny z definicji.
+Przy każdym $t\in(0,t_m]$ jego wartość jest granicą
+wartości z czasów $s\uparrow t$, ponieważ przedziały
+mają postać $(t_k,t_{k+1}]$. Przedłużmy $H$ przez zero
+dla $t>t_m$. Otrzymany proces na $[0,\infty)$ jest
+adaptowany i lewostronnie ciągły na $(0,\infty)$,
+a więc przewidywalny z definicji. Jego ograniczenie
+jest mierzalne względem śladu $\cal P$ na $[0,t_m]\times\Omega$.
 \end{proof}
 
 \begin{uwaga}
 Zapis $H_{-1}$ nie oznacza informacji w chwili ujemnej;
 służy wyłącznie do oddzielnego określenia wartości w $0$.
-Przy konstrukcji całki Itô wybierzemy zwykle $H_0=0$
+Przy konstrukcji całki Itô można wybrać $H_{-1}=0$
 i pominiemy wkład pojedynczej chwili $0$.
 \end{uwaga}
 
@@ -307,6 +441,10 @@ jeżeli dla każdego $t\ge0$ zachodzi
 $\{\tau\le t\}\in\calF_t$.
 Jeśli dodatkowo $\Prob(\tau<\infty)=1$, to
 mówimy, że $\tau$ jest prawie na pewno skończony.
+Warunek $\{\tau\le t\}\in\calF_t$ sam zapewnia
+$\calF$-mierzalność $\tau$: przedziały $[0,t]$ dla
+skończonych $t\ge0$ generują borelowskie $\sigma$-ciało
+na $[0,\infty]$.
 \end{definicja}
 
 Warunek mówi, że w chwili $t$ umiemy rozstrzygnąć,
@@ -321,7 +459,9 @@ $\mathbb F=(\calF_t)_{t\ge0}$. Wtedy
 $\sigma\wedge\tau:=\min(\sigma,\tau)$,
 $\sigma\vee\tau:=\max(\sigma,\tau)$ oraz
 $\tau\wedge a$ dla każdej stałej $a\ge0$ są czasami
-zatrzymania. Jeśli $\mathbb F$ jest prawostronnie ciągła,
+zatrzymania. Również $\sup_{n\ge1}\tau_n$ jest czasem
+zatrzymania dla dowolnego ciągu czasów zatrzymania.
+Jeśli $\mathbb F$ jest prawostronnie ciągła,
 to również $\inf_{n\ge1}\tau_n$ jest czasem zatrzymania
 dla dowolnego ciągu czasów zatrzymania $(\tau_n)_{n\ge1}$.
 \end{stwierdzenie}
@@ -333,7 +473,9 @@ $\{\sigma\vee\tau\le t\}
 =\{\sigma\le t\}\cap\{\tau\le t\}$.
 Oba zdarzenia są w $\calF_t$.
 Dla $\tau\wedge a$ stosujemy pierwszy przypadek,
-bo stała $a$ jest czasem zatrzymania.
+bo stała $a$ jest czasem zatrzymania. Dla supremum
+korzystamy z równości
+$\{\sup_n\tau_n\le t\}=\bigcap_{n\ge1}\{\tau_n\le t\}\in\calF_t$.
 
 Niech $\rho=\inf_n\tau_n$. Dla dowolnego $u>0$
 $\{\rho<u\}=\bigcup_{n\ge1}\{\tau_n<u\}$:
@@ -341,13 +483,18 @@ jeśli infimum jest mniejsze od $u$, to pewien
 składnik jest mniejszy od $u$.
 Każde $\{\tau_n<u\}$ należy do $\calF_u$,
 bo jest przeliczalną sumą zbiorów
-$\{\tau_n\le q\}$ po wymiernych $q<u$.
+$\{\tau_n\le q\}$ po wymiernych $q\in[0,u)$.
 Stąd $\{\rho<u\}\in\calF_u$.
 Ponieważ
 $\{\rho\le t\}=\bigcap_{k\ge1}\{\rho<t+1/k\}$,
 to zdarzenie po lewej należy do
 $\bigcap_{k\ge1}\calF_{t+1/k}=\calF_t$
-przy prawostronnej ciągłości filtracji.
+przy prawostronnej ciągłości filtracji. Ściślej, dla
+każdego $k$ przecięcie można ograniczyć do indeksów
+$j\ge k$, gdyż zdarzenia $\{\rho<t+1/j\}$ maleją.
+Wszystkie zdarzenia z tego ogona należą do
+$\calF_{t+1/k}$, co uzasadnia przejście do przecięcia
+$\sigma$-ciał.
 \end{proof}
 
 \begin{twierdzenie}[Czas pierwszego trafienia w zbiór domknięty]
@@ -375,8 +522,12 @@ Wobec tego
 gdzie $D_t=(\Q\cap[0,t])\cup\{0,t\}$ jest przeliczalny
 i gęsty w $[0,t]$ (dla $t=0$ zawiera punkt $0$).
 Pierwsza równość wymaga uzasadnienia w obie strony.
-Jeżeli proces trafia do $F$ przed $t$ lub w chwili $t$,
-infimum odległości wynosi $0$. Jeśli infimum wynosi $0$,
+Jeżeli $\tau_F\le t$, zbiór chwil trafienia jest
+niepusty i domknięty w $[0,\infty)$ jako przeciwobraz
+$F$ przez ciągłą trajektorię. Jego skończone infimum
+należy zatem do tego zbioru. Proces trafia do $F$
+w chwili $\tau_F\in[0,t]$, więc infimum odległości
+wynosi $0$. Jeśli infimum wynosi $0$,
 to na mocy zwartości $[0,t]$ jest osiągane w pewnej
 chwili $u\in[0,t]$; domkniętość $F$ implikuje
 $X_u\in F$, więc $\tau_F\le t$.
@@ -393,8 +544,8 @@ $\{\tau_F\le t\}\in\calF_t$.
 Niech $(E,d)$ będzie przestrzenią metryczną,
 $O\subseteq E$ otwartym zbiorem,
 $\mathbb F=(\calF_t)_{t\ge0}$ prawostronnie ciągłą filtracją,
-a $X=(X_t)_{t\ge0}$ adaptowanym procesem o ciągłych
-trajektoriach. Wtedy
+a $X=(X_t)_{t\ge0}$ adaptowanym procesem o prawostronnie
+ciągłych trajektoriach. Wtedy
 $\tau_O:=\inf\{t\ge0:X_t\in O\}$ (z $\inf\varnothing=\infty$)
 jest czasem zatrzymania.
 \end{twierdzenie}
@@ -403,9 +554,10 @@ Dla każdego $t>0$ mamy
 $\{\tau_O<t\}=\bigcup_{q\in\Q\cap[0,t)}\{X_q\in O\}$.
 Jeżeli $\tau_O<t$, istnieje chwila $u<t$ z $X_u\in O$
 (z definicji infimum). Ponieważ $O$ jest otwarty,
-a trajektoria ciągła, istnieje otoczenie $u$,
-w którym trajektoria nadal należy do $O$; zawiera
-ono wymierną chwilę $q<t$. Implikacja odwrotna
+a trajektoria prawostronnie ciągła, istnieje $\delta>0$
+takie, że $X_v\in O$ dla $u\le v<u+\delta$.
+Przedział $[u,\min(u+\delta,t))$ zawiera wymierną
+chwilę $q<t$. Implikacja odwrotna
 jest oczywista. Zatem $\{\tau_O<t\}\in\calF_t$.
 Dla każdego $t\ge0$ zachodzi
 \[
@@ -413,19 +565,40 @@ Dla każdego $t\ge0$ zachodzi
 \in\bigcap_{n\ge1}\calF_{t+1/n}=\calF_t,
 \]
 co dowodzi tezy. Założenie prawostronnej ciągłości
-pojawia się dokładnie w ostatnim przejściu.
+pojawia się dokładnie w ostatnim przejściu (przecięcie
+malejących zdarzeń można liczyć po dowolnym ogonie,
+jak w dowodzie dotyczącym infimum czasów zatrzymania).
+Nie potrzebowaliśmy lewostronnej ciągłości trajektorii.
 \end{proof}
+
+\begin{przyklad}[Dlaczego potrzebna jest prawostronna ciągłość filtracji?]
+Niech $Z$ będzie symetryczną zmienną o wartościach $\pm1$,
+a $X_t=tZ$. Proces ma ciągłe trajektorie i jest adaptowany
+do swojej filtracji naturalnej, trywialnej w chwili $0$
+i równej $\sigma(Z)$ dla $t>0$.
+Dla $O=(0,\infty)$ czas $\tau_O$ wynosi $0$ na
+$\{Z=1\}$ oraz $\infty$ na $\{Z=-1\}$.
+Zdarzenie $\{\tau_O\le0\}=\{Z=1\}$ nie należy do
+$\calF_0^X$, więc $\tau_O$ nie jest czasem zatrzymania.
+Podobnie czasy $\rho_n$, równe $1/n$ na $\{Z=1\}$
+i $\infty$ poza tym zdarzeniem, są czasami zatrzymania,
+ale ich infimum nie jest nim. Jeden przykład pokazuje
+więc konieczność założenia o filtracji w obu twierdzeniach.
+\end{przyklad}
 
 \begin{uwaga}[Wersja dla procesu ciągłego tylko prawie na pewno]
 Jeśli ciągłość trajektorii zachodzi na mierzalnym
 zbiorze pełnej miary $\Omega_0$, to zbiory opisujące
 czas trafienia mogą różnić się od zdarzeń mierzalnych
-przez podzbiory $\Omega\setminus\Omega_0$. Wystarczy
-pracować z ciągłą modyfikacją o trajektoriach ciągłych
-wszędzie (zmieniając proces poza $\Omega_0$) albo
-założyć zupełność filtracji; wówczas powyższe
-argumenty zachowują ważność po uwzględnieniu
-zbiorów zerowych.
+przez podzbiory $\Omega\setminus\Omega_0$. Przy zupełnej filtracji można zastąpić trajektorie
+poza $\Omega_0$ ustaloną stałą trajektorią, nie tracąc
+adaptacji, ponieważ $\Omega\setminus\Omega_0\in\cal F_0$.
+Czasy trafienia obu procesów różnią się co najwyżej
+na tym zbiorze zerowym; wszystkie jego podzbiory należą
+do $\cal F_0$, więc własność czasu zatrzymania przechodzi
+na pierwotny proces. Dla zbioru otwartego nadal wymagamy
+prawostronnej ciągłości filtracji. Bez zupełności sama
+zmiana na zbiorze zerowym nie musi zachować adaptacji.
 \end{uwaga}
 
 \section{Informacja dostępna w losowej chwili}
@@ -439,12 +612,19 @@ A\cap\{\tau\le t\}\in\calF_t\quad
 \text{dla każdego }t\ge0\big\}.
 \]
 Interpretujemy $\calF_\tau$ jako informację dostępną
-w chwili losowej $\tau$.
+w chwili losowej $\tau$. Dla stałego czasu $\tau=a$
+otrzymujemy dokładnie $\calF_a$: warunek dla $t=a$
+wymusza $A\in\calF_a$, a dla pozostałych chwil wynika
+z monotoniczności filtracji lub pustego przecięcia.
+Dla filtracji na $[0,T]$ oraz czasu $\tau\le T$
+w definicji wystarczy rozpatrywać $0\le t\le T$;
+warunek dla $t=T$ daje wtedy $\calF_\tau\subseteq\calF_T$.
 \end{definicja}
 
 \begin{twierdzenie}[Podstawowe własności $\calF_\tau$]
 Niech $\mathbb F$ będzie filtracją i $\tau$ jej czasem
-zatrzymania. Wtedy $\calF_\tau$ jest $\sigma$-ciałem.
+zatrzymania. Wtedy $\calF_\tau$ jest $\sigma$-ciałem,
+a $\tau$ jest względem niego mierzalny.
 Jeśli $\sigma$ jest innym czasem zatrzymania i
 $\sigma\le\tau$ punktowo, to
 $\calF_\sigma\subseteq\calF_\tau$.
@@ -469,7 +649,12 @@ $A^c\cap\{\tau\le t\}
 Dla ciągu $(A_n)$ elementów $\calF_\tau$ mamy
 $(\bigcup_nA_n)\cap\{\tau\le t\}
 =\bigcup_n(A_n\cap\{\tau\le t\})\in\calF_t$.
-Tak otrzymujemy $\sigma$-ciało.
+Tak otrzymujemy $\sigma$-ciało. Sama zmienna $\tau$
+jest $\calF_\tau$-mierzalna, gdyż dla każdego $a,t\ge0$
+\[
+\{\tau\le a\}\cap\{\tau\le t\}
+=\{\tau\le\min(a,t)\}\in\calF_{\min(a,t)}\subseteq\calF_t.
+\]
 
 Jeśli $\sigma\le\tau$ i $A\in\calF_\sigma$, to
 $A\cap\{\tau\le t\}
@@ -480,7 +665,8 @@ Stąd $A\in\calF_\tau$.
 Dla ostatniej równoważności, gdy $\tau$ jest
 $\N_0\cup\{\infty\}$-wartościowy, zauważmy, że
 $\{\tau=k\}=\{\tau\le k\}\setminus\{\tau\le k-1\}$
-(z odpowiednią konwencją dla $k=0$), więc jest w $\calF_k$.
+dla $k\ge1$, natomiast $\{\tau=0\}=\{\tau\le0\}$.
+Zatem $\{\tau=k\}\in\calF_k$ dla każdego $k\in\N_0$.
 Jeśli $A\in\calF_\tau$, to
 $A\cap\{\tau=k\}
 =(A\cap\{\tau\le k\})\cap\{\tau=k\}\in\calF_k$.
@@ -513,13 +699,13 @@ nie należy utożsamiać $\calF_\infty$ z całym $\calF$.
 Niech $E$ będzie przestrzenią polską,
 $X=(X_t)_{t\ge0}$ progresywnie mierzalnym procesem
 $E$-wartościowym, a $\tau$ czasem zatrzymania
-względem $\mathbb F$. Załóżmy $\tau<\infty$
-prawie na pewno i że $\calF_0$ zawiera wszystkie
-zbiory zerowe (aby można było dowolnie określić
-$X_\tau$ na $\{\tau=\infty\}$).
+względem $\mathbb F$. Ustalmy $e_0\in E$.
 Wtedy zmienna $X_\tau(\omega):=X_{\tau(\omega)}(\omega)$
-na $\{\tau<\infty\}$, dowolnie uzupełniona w
-$\{\tau=\infty\}$, jest $\calF_\tau$-mierzalna.
+na $\{\tau<\infty\}$, uzupełniona wartością $e_0$
+na $\{\tau=\infty\}$, jest $\calF_\tau$-mierzalna.
+Nie wymagamy ani skończoności $\tau$ prawie na pewno,
+ani zupełności filtracji. Na $\{\tau=\infty\}$ można też
+użyć dowolnego $\cal F/\cal B(E)$-mierzalnego uzupełnienia.
 \end{twierdzenie}
 \begin{proof}
 Ustalmy $t\ge0$. Z własności czasu zatrzymania
@@ -540,10 +726,16 @@ $B\in\calB(E)$ zachodzi
 \{X_\tau\in B\}\cap\{\tau\le t\}
 =\{X_{\tau\wedge t}\in B\}\cap\{\tau\le t\}\in\calF_t.
 \]
-Z definicji oznacza to
-$\{X_\tau\in B\}\in\calF_\tau$.
-Dla $\tau=\infty$ na zbiorze zerowym uzupełnienie
-jest mierzalne przy założonej zupełności filtracji.
+Pozostaje sprawdzić, że $\{X_\tau\in B\}\in\cal F$:
+jego część na $\{\tau<\infty\}$ jest sumą po $n\ge1$
+zdarzeń $\{X_{\tau\wedge n}\in B\}\cap\{\tau\le n\}$,
+a część na $\{\tau=\infty\}$ jest albo pusta, albo
+równa $\{\tau=\infty\}\in\cal F$, zależnie od tego,
+czy $e_0\in B$. Dla mierzalnego uzupełnienia argument
+jest analogiczny. Z definicji $\cal F_\tau$ otrzymujemy tezę.
+Jeśli $\{\tau=\infty\}$ ma miarę zero i przestrzeń bazowa
+jest zupełna, nawet dowolne uzupełnienie na tym zbiorze
+jest mierzalne.
 \end{proof}
 
 \section{Zatrzymywanie procesów i próbkowanie opcjonalne}
@@ -558,7 +750,8 @@ $X_{t\wedge\tau}=X_t$ dla wszystkich skończonych $t$.
 \begin{stwierdzenie}
 Niech $X$ będzie progresywnie mierzalny i adaptowany do
 filtracji $\mathbb F$, a $\tau$ czasem zatrzymania.
-Wtedy proces $X^\tau$ jest adaptowany. Jeśli każda
+Wtedy proces $X^\tau$ jest progresywnie mierzalny,
+a w szczególności adaptowany. Jeśli każda
 trajektoria $X$ jest ciągła (odpowiednio prawostronnie
 ciągła), to taka sama regularność zachodzi dla $X^\tau$.
 \end{stwierdzenie}
@@ -567,7 +760,15 @@ Dla ustalonego $t$ zmienna $X_{\tau\wedge t}$
 jest $\calF_t$-mierzalna na mocy argumentu z dowodu
 twierdzenia~\ref{thm:sampled}, ponieważ $\tau\wedge t$
 jest $\calF_t$-mierzalna, a proces jest progresywny.
-To jest adaptacja. Dla ustalonego $\omega$ funkcja
+To jest adaptacja. Dla $T>0$ funkcja
+$(t,\omega)\mapsto(t\wedge(\tau(\omega)\wedge T),\omega)$
+na $[0,T]\times\Omega$ jest mierzalna względem
+$\cal B([0,T])\otimes\cal F_T$: pierwsza współrzędna
+jest minimum dwóch mierzalnych funkcji, a druga jest
+rzutem. Złożenie z ograniczeniem $X$ do $[0,T]\times\Omega$
+jest zatem mierzalne i równe $X^\tau$ na tym przedziale.
+Dowodzi to progresywnej mierzalności.
+Dla ustalonego $\omega$ funkcja
 $t\mapsto t\wedge\tau(\omega)$ jest ciągła.
 Złożenie jej z ciągłą trajektorią $u\mapsto X_u(\omega)$
 jest ciągłe. Jeśli ta ostatnia jest tylko prawostronnie
@@ -579,7 +780,10 @@ zachodzi prawostronna ciągłość złożenia.
 W tomie I udowodniliśmy twierdzenie o zatrzymywaniu
 martyngałów w czasie dyskretnym. W czasie ciągłym
 przyda się jego odpowiednik dla czasów ograniczonych.
-Przytoczymy go tu z dowodem, aby od początku pilnować
+Przypomnijmy, że martyngał w czasie ciągłym to rzeczywisty
+proces adaptowany, dla którego $M_t\in L^1$ dla każdego
+$t$ oraz $\E[M_t\mid\cal F_s]=M_s$ prawie na pewno dla
+$0\le s\le t$. Przytoczymy twierdzenie z dowodem, aby od początku pilnować
 różnicy pomiędzy \emph{ograniczeniem czasu} a jedynie
 jego prawie pewną skończonością.
 
@@ -592,21 +796,24 @@ Rodzina $\{\E[Y\mid\calG]:\calG\subseteq\calF
 \begin{proof}
 Ustalmy $K>0$ i pod-$\sigma$-ciało $\calG$.
 Rozpiszmy $Y=Y^{\le}+Y^{>}$, gdzie
-$Y^{\le}=Y\ind{\{|Y|\le K/2\}}$ oraz
-$Y^{>}=Y\ind{\{|Y|>K/2\}}$.
+$Y^{\le}=Y\chi_{\{|Y|\le K/2\}}$ oraz
+$Y^{>}=Y\chi_{\{|Y|>K/2\}}$.
 Dla $Z=\E[Y\mid\calG]$ mamy
 $|\E[Y^{\le}\mid\calG]|\le K/2$ oraz
 $|Z|\le K/2+\E[|Y^{>}|\mid\calG]$.
 Na zdarzeniu $A=\{|Z|>K\}$ otrzymujemy
 $\E[|Y^{>}|\mid\calG]>K/2$ i stąd
-$|Z|\ind A\le2\E[|Y^{>}|\mid\calG]\ind A$.
+$|Z|\chi_A\le2\E[|Y^{>}|\mid\calG]\chi_A$.
 Po scałkowaniu i wykorzystaniu własności
 warunkowej wartości oczekiwanej dostajemy
 \[
-\E[|Z|\ind{\{|Z|>K\}}]
-\le2\E[|Y|\ind{\{|Y|>K/2\}}]\xrightarrow[K\to\infty]{}0.
+\E[|Z|\chi_{\{|Z|>K\}}]
+\le2\E[|Y|\chi_{\{|Y|>K/2\}}]\xrightarrow[K\to\infty]{}0.
 \]
-Oszacowanie nie zależy od $\calG$, co dowodzi
+Prawa strona dąży do zera na mocy twierdzenia
+o zbieżności zmajoryzowanej, z funkcją dominującą $|Y|$.
+Ponadto $\E|Z|\le\E|Y|$ dla każdego $\calG$.
+Oszacowania nie zależą od $\calG$, co dowodzi
 jednostajnej całkowalności całej rodziny.
 \end{proof}
 
@@ -624,7 +831,7 @@ Niech $A\in\calH_\sigma$. Rozpiszmy różnicę
 $M_\tau-M_\sigma$ wzdłuż przyrostów:
 \[
 M_\tau-M_\sigma
-=\sum_{k=1}^N\ind{\{\sigma<k\le\tau\}}
+=\sum_{k=1}^N\chi_{\{\sigma<k\le\tau\}}
 (M_k-M_{k-1}).
 \]
 Dla każdego $k$ zdarzenie
@@ -635,16 +842,23 @@ z definicji $\calH_\sigma$, a
 $\{\tau\ge k\}=\{\tau\le k-1\}^c\in\calH_{k-1}$.
 Własność martyngałowa daje więc
 \[
-\E[\ind{A\cap\{\sigma<k\le\tau\}}(M_k-M_{k-1})]
-=\E\!\left[\ind{A\cap\{\sigma<k\le\tau\}}
+\E[\chi_{A\cap\{\sigma<k\le\tau\}}(M_k-M_{k-1})]
+=\E\!\left[\chi_{A\cap\{\sigma<k\le\tau\}}
 \E[M_k-M_{k-1}\mid\calH_{k-1}]\right]=0.
 \]
 Sumujemy po skończenie wielu $k$ i otrzymujemy
-$\E[\ind A M_\tau]=\E[\ind A M_\sigma]$.
-Ponieważ $M_\sigma$ jest $\calH_\sigma$-mierzalny
-(jest sumą $M_k\ind{\{\sigma=k\}}$),
-charakterystyka warunkowej wartości oczekiwanej
-daje tezę.
+$\E[\chi_A M_\tau]=\E[\chi_A M_\sigma]$.
+Dla dowolnego czasu zatrzymania $\rho$ o wartościach
+w $\{0,\ldots,N\}$ zachodzi
+$|M_\rho|\le\sum_{k=0}^N|M_k|$, więc $M_\rho\in L^1$.
+Dla $B\in\calB(\R)$ i $0\le j\le N$ mamy ponadto
+\[
+\{M_\rho\in B\}\cap\{\rho\le j\}
+=\bigcup_{k=0}^j(\{M_k\in B\}\cap\{\rho=k\})\in\calH_j.
+\]
+Dowodzi to $\calH_\rho$-mierzalności, w szczególności
+dla $\rho=\sigma$. Charakterystyka warunkowej
+wartości oczekiwanej daje tezę.
 \end{proof}
 
 \begin{twierdzenie}[Opcjonalne próbkowanie w ograniczonym horyzoncie]
@@ -653,7 +867,7 @@ Niech $(\Omega,\calF,\Prob)$ będzie przestrzenią
 probabilistyczną z filtracją $(\calF_t)_{0\le t\le T}$,
 gdzie $T>0$. Niech $M=(M_t)_{0\le t\le T}$
 będzie całkowalnym martyngałem względem tej filtracji
-o trajektoriach prawostronnie ciągłych.
+o wszystkich trajektoriach prawostronnie ciągłych.
 Jeśli $\sigma,\tau$ są czasami zatrzymania spełniającymi
 punktowo $0\le\sigma\le\tau\le T$,
 to $M_\sigma,M_\tau\in L^1$ oraz
@@ -664,6 +878,14 @@ to $M_\sigma,M_\tau\in L^1$ oraz
 \end{twierdzenie}
 \begin{proof}
 \emph{Krok 1: aproksymacja czasów.}
+W razie potrzeby przedłużamy filtrację i proces na
+$[0,\infty)$ przez $\calF_t=\calF_T$, $M_t=M_T$ dla
+$t>T$. Nie zmienia to $\sigma$-ciał w chwilach
+zatrzymania ograniczonych przez $T$, ponieważ
+warunek dla $t=T$ wymusza już przynależność do
+$\calF_T$. Przedłużenie jest prawostronnie ciągłym
+martyngałem, co pozwala stosować wcześniejsze twierdzenia
+sformułowane na $[0,\infty)$.
 Dla każdego $n$ weźmy siatkę $D_n=\{kT2^{-n}:0\le k\le2^n\}$
 i niech $\tau_n$ (odpowiednio $\sigma_n$) będzie
 najmniejszym punktem siatki nie mniejszym od $\tau$
@@ -673,7 +895,17 @@ $\sigma_n\downarrow\sigma$ i oba przybliżenia są
 czasami zatrzymania o wartościach w $D_n$.
 Istotnie, dla $kT2^{-n}\in D_n$ zachodzi
 $\{\tau_n\le kT2^{-n}\}=\{\tau\le kT2^{-n}\}\in\calF_{kT2^{-n}}$,
-podobnie dla $\sigma_n$.
+podobnie dla $\sigma_n$. Dla $t$ pomiędzy węzłami
+siatki zdarzenie $\{\tau_n\le t\}$ jest równe zdarzeniu
+$\{\tau_n\le q\}$ dla największego węzła $q\le t$.
+To uzasadnia własność czasu zatrzymania również
+względem filtracji ciągłoczasowej.
+Przy stosowaniu lematu utożsamiamy $\calF_{\sigma_n}$
+z $\sigma$-ciałem w chwili zatrzymania na siatce:
+dla zmiennej przyjmującej wartości w $D_n$ wystarczy
+sprawdzić warunek definiujący to $\sigma$-ciało
+w węzłach, ponieważ między nimi zdarzenia
+$\{\sigma_n\le t\}$ się nie zmieniają, a filtracja rośnie.
 Lemat~\ref{lem:disc-optional} daje
 $\E[M_{\tau_n}\mid\calF_{\sigma_n}]=M_{\sigma_n}$.
 
@@ -700,9 +932,9 @@ $\sigma\le\sigma_n$ punktowo, z poprzedniego
 twierdzenia o informacjach w czasach zatrzymania
 wynika $A\in\calF_{\sigma_n}$. Z równości
 warunkowych wartości oczekiwanych z kroku 1 dostajemy
-$\E[\ind A M_{\tau_n}]=\E[\ind A M_{\sigma_n}]$.
+$\E[\chi_A M_{\tau_n}]=\E[\chi_A M_{\sigma_n}]$.
 Przechodząc do granicy w $L^1$, otrzymujemy
-$\E[\ind A M_\tau]=\E[\ind A M_\sigma]$.
+$\E[\chi_A M_\tau]=\E[\chi_A M_\sigma]$.
 Zmienna $M_\sigma$ jest $\calF_\sigma$-mierzalna,
 ponieważ $M$ jest progresywnie mierzalny jako
 proces adaptowany prawostronnie ciągły oraz na mocy
@@ -716,7 +948,28 @@ Twierdzenie wymaga $\tau\le T$ dla ustalonego $T$.
 Dla symetrycznego spaceru losowego
 $S_n=\xi_1+\cdots+\xi_n$, $\E S_n=0$,
 czas $\tau=\inf\{n\ge0:S_n=1\}$ jest prawie
-na pewno skończony, ale $S_\tau=1$ prawie na pewno.
+na pewno skończony. Można to wywnioskować z powracania
+spaceru symetrycznego (tom I, rozdział \emph{Łańcuchy
+Markowa w czasie dyskretnym}), lecz podamy też krótki
+argument niezależny od tego wyniku. Dla $m\ge1$ połóżmy
+$\rho_m=\inf\{n\ge0:S_n\in\{-m,1\}\}$.
+Każdy blok $m+1$ kolejnych dodatnich przyrostów wymusza
+trafienie w brzeg, jeśli do tego czasu jeszcze nie
+nastąpiło. Takie bloki są niezależne i każdy ma
+prawdopodobieństwo $2^{-(m+1)}$, więc
+$\Prob(\rho_m>k(m+1))\le(1-2^{-(m+1)})^k\to0$.
+Ponadto $-m\le S_{\rho_m\wedge n}\le1$.
+Z lematu o próbkowaniu na skończonej siatce
+$\E S_{\rho_m\wedge n}=0$. Przez twierdzenie
+o zbieżności zmajoryzowanej otrzymujemy
+$\E S_{\rho_m}=0$, gdzie wartość na
+$\{\rho_m=\infty\}$ ustalamy jako $0$.
+Ponieważ $S_{\rho_m}\in\{-m,1\}$ prawie na pewno,
+$\Prob(S_{\rho_m}=1)=m/(m+1)$.
+Stąd $\Prob(\tau<\infty)\ge m/(m+1)$ dla każdego $m$,
+a więc $\Prob(\tau<\infty)=1$.
+Z definicji $S_\tau=1$ prawie na pewno (na zbiorze
+$\{\tau=\infty\}$ przyjmujemy wartość $0$).
 Zatem $\E S_\tau=1\ne0=\E S_0$.
 Nie ma sprzeczności: brak ograniczenia $\tau$
 uniemożliwia bez dodatkowych hipotez przejście
@@ -737,24 +990,33 @@ są całkowalnymi martyngałami względem $\mathbb F^W$.
 \begin{proof}
 Ustalmy $0\le s<t$ i połóżmy
 $Z=W_t-W_s$. Wiemy, że $Z\sim\Normal(0,t-s)$
-i jest niezależne od wektora
+i jest niezależny od wektora
 $(W_{u_1},\ldots,W_{u_m})$ dla dowolnych
-$u_1,\ldots,u_m\le s$: wynika to z gaussowskości
-wspólnego wektora i zerowych kowariancji $Z$
-z każdą wcześniejszą współrzędną.
+$0\le u_1,\ldots,u_m\le s$. Istotnie, po uporządkowaniu
+różnych chwil $u_i$ wektor ten jest prawie na pewno
+równy mierzalnej funkcji przyrostów na kolejnych
+przedziałach zawartych w $[0,s]$, gdyż $W_0=0$ prawie
+na pewno. Z definicji procesu Wienera te przyrosty są
+łącznie niezależne od $Z$. Równość prawie na pewno
+zachowuje niezależność; powtórzone chwile nie zmieniają
+tego argumentu.
 Aby przejść od skończenie wielu współrzędnych do
 całego $\sigma$-ciała $\calF_s^W$, stosujemy
 twierdzenie $\pi$--$\lambda$: niezależność zachodzi
 na $\pi$-układzie zdarzeń cylindrycznych
 $\{(W_{u_1},\ldots,W_{u_m})\in B\}$, które generują
 $\calF_s^W$, a klasa zdarzeń niezależnych od $Z$
-jest $\lambda$-układem. Zatem $Z$ jest niezależne
+jest $\lambda$-układem. Zatem $Z$ jest niezależny
 od $\calF_s^W$.
 
 Ponieważ $\E Z=0$ i $\E Z^2=t-s$, z własności
 warunkowej wartości oczekiwanej dostajemy
 $\E[Z\mid\calF_s^W]=0$ oraz
 $\E[Z^2\mid\calF_s^W]=t-s$.
+Ponieważ $W_s,Z\in L^2$, nierówność Cauchy'ego--Schwarza
+zapewnia $W_s Z\in L^1$. Własność wyłączania czynnika
+$\calF_s^W$-mierzalnego z warunkowej wartości oczekiwanej
+można więc zastosować również do $W_s Z$.
 Z $W_t=W_s+Z$ otrzymujemy
 \[
 \E[W_t\mid\calF_s^W]=W_s,
@@ -790,9 +1052,12 @@ $W_t$ i $W_t^2-t$. Otrzymujemy
 \qquad \E W_{\tau\wedge T}^2=\E(\tau\wedge T).
 \tag{8}
 \]
-Z ciągłości trajektorii i definicji pierwszego
-wyjścia wynika $|W_{\tau\wedge T}|\le a$
-punktowo. Wobec tego z (8) mamy
+Z ciągłości trajektorii i $W_0=0$ wynika, że
+$|W_t|<a$ dla $t<\tau$ (przekroczenie poziomu $a$
+wymaga wcześniejszego jego osiągnięcia).
+Jeśli $\tau\le T$, domkniętość zbioru chwil trafienia
+zapewnia $|W_\tau|=a$. W obu przypadkach
+$|W_{\tau\wedge T}|\le a$ punktowo. Wobec tego z (8) mamy
 $0\le\E(\tau\wedge T)\le a^2$.
 Gdy $T\uparrow\infty$, twierdzenie o zbieżności
 monotonicznej daje $\E\tau\le a^2<\infty$.
@@ -800,11 +1065,15 @@ W szczególności $\tau<\infty$ prawie na pewno:
 gdyby $\Prob(\tau=\infty)>0$, całka $\E\tau$
 byłaby nieskończona.
 
-Skoro $\tau$ jest skończony i trajektorie są ciągłe,
-mamy $|W_\tau|=a$ prawie na pewno.
+Na zdarzeniu $\{\tau<\infty\}$ określamy
+$W_\tau$ przez podstawienie czasu, a na
+$\{\tau=\infty\}$ przyjmujemy wartość $0$.
+Z twierdzenia~\ref{thm:sampled} wynika mierzalność
+tej zmiennej. Ponieważ $\tau$ jest skończony prawie
+na pewno, mamy $|W_\tau|=a$ prawie na pewno.
 Ponadto $W_{\tau\wedge T}\to W_\tau$ prawie na pewno
-i $|W_{\tau\wedge T}|\le a$, więc przez zbieżność
-zdominowaną $\E W_\tau=0$ oraz
+i $|W_{\tau\wedge T}|\le a$, więc przez twierdzenie o zbieżności
+zmajoryzowanej $\E W_\tau=0$ oraz
 $\E W_{\tau\wedge T}^2\to\E W_\tau^2=a^2$.
 Przechodząc do granicy w (8), dostajemy
 $\E\tau=a^2$.
@@ -876,7 +1145,7 @@ Niech $\rho=1$ dla $\xi_2=+1$ oraz $\rho=2$
 dla $\xi_2=-1$. Zdarzenie $\{\rho\le1\}
 =\{\xi_2=+1\}$ nie należy do $\calF_1$,
 więc $\rho$ nie jest czasem zatrzymania.
-Mamy $S_\rho=\xi_1+\xi_2\ind{\{\xi_2=-1\}}$,
+Mamy $S_\rho=\xi_1+\xi_2\chi_{\{\xi_2=-1\}}$,
 zatem $\E S_\rho=0-\tfrac12=-\tfrac12$.
 Nie narusza to twierdzenia o próbkowaniu opcjonalnym:
 strategia używa przyszłego wyniku, czyli jej czas nie

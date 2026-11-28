@@ -1,0 +1,3 @@
+# CAT-18 — audyt I
+
+Wejście 9f405708073f0b640cfc196b85cbc52e12919236. Porównano definicje, twierdzenia i notację CAT-00–17. Zastąpiono tabelę 16 pozycji sześcioma tabelami tematycznymi (47 pozycji), uzupełniono oba funktory Hom, kategorie elementów i przecinkowe, obiekty wykładnicze, składanie poziome, sprzężenia, Kleisliego, Eilenberga–Moore'a, przykłady CAT-16. Rozwinięto podsumowanie zależności i pułapek, z 27 odsyłaczami do wcześniejszych definicji i twierdzeń. Zachowano sec:slownik, dodano 2 etykiety. Kontrola środowisk JS PASS. Dodano 3 trwałe testy i rejestr. Testy Python, kompilacja, dokładne sprawdzenie odsyłaczy i kontrola wizualna jeszcze niepotwierdzone. Lean nie uruchamiano.

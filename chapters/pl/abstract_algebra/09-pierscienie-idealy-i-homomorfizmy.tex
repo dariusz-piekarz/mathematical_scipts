@@ -1,0 +1,755 @@
+% AA-09 | Algebra abstrakcyjna | Iteracja V
+\setlength{\parskip}{0pt}
+\chapter{Pierścienie, ideały i homomorfizmy}
+\label{aa:ch:pierscienie}
+
+\section{Dlaczego jedno działanie już nie wystarcza?}
+Grupa pozwala mówić o jednym działaniu i jego odwracalności.
+Jednak w arytmetyce liczb całkowitych i w rachunku wielomianów
+mamy \emph{dwa} działania: dodawanie i mnożenie. Zachowują się one
+inaczej: każdą liczbę całkowitą można odjąć, lecz przez niezerową
+liczbę całkowitą nie zawsze można podzielić z wynikiem całkowitym.
+Z drugiej strony macierze można dodawać i mnożyć, ale mnożenie
+macierzy na ogół nie jest przemienne. Szukamy struktury, która
+obejmie wszystkie te przykłady i zachowa reguły rozdzielności.
+
+\begin{przyklad}[Jedno równanie w trzech pierścieniach]
+\label{aa:prz:pierscienie-rownanie}
+Rozważmy równanie $x^2=1$. W pierścieniu $\mathbb Z$
+ma ono dokładnie dwa rozwiązania: $1$ i $-1$. Istotnie,
+$(x-1)(x+1)=0$; ponieważ z iloczynu dwóch liczb całkowitych
+równego zeru wynika zerowość jednego czynnika, mamy $x=1$ albo
+$x=-1$. W pierścieniu $\mathbb Z/8\mathbb Z$ rozwiązaniami
+są klasy $[1],[3],[5],[7]$. Dla nieparzystej liczby $x=2k+1$
+liczba $x^2-1=4k(k+1)$ jest podzielna przez $8$, gdyż jedna
+z liczb $k,k+1$ jest parzysta. Klasy parzyste nie rozwiązują
+równania, ponieważ ich kwadraty są parzyste. Wreszcie w pierścieniu
+$\mathbb R[\varepsilon]/(\varepsilon^2)$ klasa wielomianu
+$\varepsilon$ nie jest zerem (bo $\varepsilon\notin(\varepsilon^2)$,
+co wynika ze stopni wielomianów), lecz jej kwadrat jest zerem.
+Pojęcie pierścienia
+musi zatem dopuszczać dzielniki zera i elementy nilpotentne.
+\end{przyklad}
+
+\section{Aksjomaty pierścienia i podstawowe konsekwencje}
+\begin{definicja}[Pierścień z jedynką]
+\label{aa:def:pierscien}
+\emph{Pierścieniem z jedynką} nazywamy zbiór $R$ wyposażony
+w działania $+:R\times R\to R$ oraz $\cdot:R\times R\to R$
+takie, że:
+\begin{enumerate}[label=\textup{(P\arabic*)}]
+\item $(R,+)$ jest grupą abelową z elementem neutralnym $0_R$;
+\item mnożenie jest łączne: $(ab)c=a(bc)$ dla wszystkich $a,b,c\in R$;
+\item istnieje $1_R\in R$ takie, że $1_Ra=a1_R=a$ dla każdego $a\in R$;
+\item $a(b+c)=ab+ac$ i $(a+b)c=ac+bc$ dla wszystkich $a,b,c\in R$.
+\end{enumerate}
+Pierścień jest \emph{przemienny}, jeśli $ab=ba$ dla wszystkich
+$a,b\in R$. Nie zakładamy tego, jeśli nie zostało to wskazane.
+Dopuszczamy pierścień zerowy $R=\{0\}$, w którym $1_R=0_R$;
+we wszystkich twierdzeniach o dziedzinach i ciałach wykluczymy go jawnie.
+\end{definicja}
+
+\begin{lemat}[Rachunek znaków]
+\label{aa:lem:pierscien-znaki}
+Niech $R$ będzie pierścieniem z jedynką i niech $a,b\in R$.
+Wtedy $a0_R=0_Ra=0_R$, $(-a)b=-(ab)=a(-b)$ oraz
+$(-a)(-b)=ab$. Jeżeli $1_R=0_R$, to $R=\{0_R\}$.
+\end{lemat}
+\begin{proof}
+Z rozdzielności otrzymujemy $a0_R=a(0_R+0_R)=a0_R+a0_R$.
+Po dodaniu elementu odwrotnego do $a0_R$ dostajemy $a0_R=0_R$.
+Analogicznie $0_Ra=0_R$. Następnie
+$(-a)b+ab=((-a)+a)b=0_Rb=0_R$, więc $(-a)b=-(ab)$.
+Z kolei $a(-b)+ab=a((-b)+b)=0_R$, zatem $a(-b)=-(ab)$.
+Stosując pierwszą z tych równości do $-b$, dostajemy
+$(-a)(-b)=-(a(-b))=-(-(ab))=ab$.
+Jeżeli $1_R=0_R$, to każdy $a\in R$ spełnia
+$a=1_Ra=0_Ra=0_R$, co dowodzi ostatniego zdania.
+\end{proof}
+
+
+\section{Konstrukcja pierścienia liczb całkowitych z liczb naturalnych}
+\label{aa:sec:konstrukcja-z}
+Wcześniej korzystaliśmy z liczb całkowitych jako znanego przykładu
+pierścienia. Możemy teraz uzasadnić ich istnienie, nie zakładając
+z góry, że odejmowanie liczb naturalnych jest zawsze możliwe.
+W tej sekcji $\mathbb N_0=\{0,1,2,\ldots\}$ jest półpierścieniem
+zwykłych liczb naturalnych, to znaczy ma łączne i przemienne dodawanie
+z zerem, łączne i przemienne mnożenie z jedynką oraz rozdzielność.
+Korzystamy z własności skracania dodawania w $\mathbb N_0$:
+$a+t=b+t$ pociąga $a=b$; wynika ona z definicji dodawania
+liczb naturalnych i można ją wykazać indukcyjnie względem $t$.
+
+\begin{definicja}[Formalne różnice liczb naturalnych]
+\label{aa:def:formal-differences}
+Na $\mathbb N_0\times\mathbb N_0$ określamy relację
+\[
+ (a,b)\sim(c,d)\quad\Longleftrightarrow\quad a+d=b+c.
+\]
+Zbiór klas tej relacji oznaczymy przez $Z$; klasę pary $(a,b)$
+zapisujemy $[a,b]$. Para $(a,b)$ ma wyrażać \emph{formalną różnicę}
+$a-b$, lecz zapis ten jest na razie tylko intuicją: liczby ujemne
+nie zostały jeszcze zdefiniowane.
+\end{definicja}
+
+\begin{lemat}[Relacja formalnych różnic]
+\label{aa:lem:formal-differences-equivalence}
+Niech $\sim$ oznacza warunek $(a,b)\sim(c,d)$ wtedy i tylko wtedy,
+  gdy $a+d=b+c$ dla par z $\mathbb N_0\times\mathbb N_0$.
+  Jest to relacja równoważności.
+\end{lemat}
+\begin{proof}
+Dla każdej pary $(a,b)$ zachodzi $a+b=b+a$, więc relacja
+jest zwrotna. Jeśli $a+d=b+c$, to $c+b=d+a$,
+więc jest symetryczna. Wreszcie z $(a,b)\sim(c,d)$
+oraz $(c,d)\sim(e,f)$ otrzymujemy
+$a+d=b+c$ i $c+f=d+e$. Dodając $f$ do pierwszej
+równości, a następnie podstawiając drugą, mamy
+$a+d+f=b+c+f=b+d+e$. Dzięki skracaniu składnika $d$
+dostajemy $a+f=b+e$, czyli $(a,b)\sim(e,f)$.
+\end{proof}
+
+\begin{definicja}[Działania na formalnych różnicach]
+\label{aa:def:z-operations}
+Niech $Z=(\mathbb N_0\times\mathbb N_0)/\sim$, gdzie
+$(a,b)\sim(c,d)$ wtedy i tylko wtedy, gdy $a+d=b+c$.
+Dla wszystkich $a,b,c,d\in\mathbb N_0$ określamy na $Z$
+działania wzorami
+\[
+ [a,b]+[c,d]=[a+c,b+d],\qquad
+ [a,b]\,[c,d]=[ac+bd,ad+bc].
+\]
+Pierwszy odpowiada dodawaniu różnic, a drugi tożsamości
+$(a-b)(c-d)=ac+bd-(ad+bc)$, użytej jedynie jako
+wskazówka przy wyborze wzoru.
+\end{definicja}
+
+\begin{lemat}[Działania są dobrze określone]
+\label{aa:lem:z-well-defined}
+Niech $Z=(\mathbb N_0\times\mathbb N_0)/\sim$, gdzie
+$(a,b)\sim(c,d)$ wtedy i tylko wtedy, gdy $a+d=b+c$.
+Dodawanie i mnożenie klas zadane wzorami z
+Definicji~\ref{aa:def:z-operations} nie zależą od wyboru reprezentantów.
+\end{lemat}
+\begin{proof}
+Niech $(a,b)\sim(a',b')$, a więc $a+b'=b+a'$.
+Dla dowolnej pary $(c,d)$ otrzymujemy
+$(a+c)+(b'+d)=(b+d)+(a'+c)$, co dowodzi
+niezależności dodawania od reprezentanta pierwszego składnika.
+Analogicznie postępujemy z drugim składnikiem.
+
+Dla mnożenia należy wykazać
+$(ac+bd,ad+bc)\sim(a'c+b'd,a'd+b'c)$.
+Warunek ten oznacza równość
+\[
+ (ac+bd)+(a'd+b'c)=(ad+bc)+(a'c+b'd).
+\]
+Lewą stronę przestawiamy na $(a+b')c+(b+a')d$,
+a prawą na $(b+a')c+(a+b')d$; są one równe, bo
+$a+b'=b+a'$. Dowodzi to niezależności od
+reprezentanta pierwszego czynnika. Ponieważ podany wzór
+na mnożenie jest symetryczny względem par czynników,
+ten sam argument stosuje się do drugiego czynnika.
+Po dwóch kolejnych zmianach reprezentantów otrzymujemy
+niezależność obu działań jednocześnie.
+\end{proof}
+
+\begin{twierdzenie}[Pierścień liczb całkowitych]
+\label{aa:tw:integers-as-ring}
+Niech $Z=(\mathbb N_0\times\mathbb N_0)/\sim$, gdzie
+$(a,b)\sim(c,d)$ wtedy i tylko wtedy, gdy $a+d=b+c$.
+Niech dla wszystkich $a,b,c,d\in\mathbb N_0$ zachodzą wzory
+$[a,b]+[c,d]=[a+c,b+d]$ oraz
+$[a,b][c,d]=[ac+bd,ad+bc]$.
+Wówczas $Z$ jest niezerowym pierścieniem przemiennym z jedynką.
+Jego elementem zerowym
+jest $[0,0]$, jedynką $[1,0]$, a przeciwnym do $[a,b]$
+jest $[b,a]$. Odwzorowanie
+\[
+ \iota:\mathbb N_0\longrightarrow Z,\qquad \iota(n)=[n,0]
+\]
+jest różnowartościowe oraz zachowuje dodawanie,
+mnożenie, zero i jedynkę. Pierścień $Z$ utożsamiamy
+odtąd z pierścieniem $\mathbb Z$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw sprawdzamy strukturę addytywną. Łączność,
+przemienność i neutralność $[0,0]$ wynikają z
+odpowiednich reguł dodawania w $\mathbb N_0$.
+Przy tym
+$[a,b]+[b,a]=[a+b,a+b]=[0,0]$,
+bo $(a+b)+0=(a+b)+0$. Każda klasa ma więc element
+przeciwny i $(Z,+)$ jest grupą abelową.
+
+Przemienność mnożenia wynika ze wzoru i przemienności
+mnożenia w $\mathbb N_0$. Dla łączności porównajmy
+współrzędne obu iloczynów trzech par. Pierwsza współrzędna
+$(([a,b][c,d])[e,f])$ wynosi
+$ace+bde+adf+bcf$, a druga
+$acf+bdf+ade+bce$. W iloczynie
+$[a,b]([c,d][e,f])$ otrzymujemy dokładnie te same
+składniki, jedynie w innej kolejności. Oba wyniki są więc
+równe już jako pary. Ponadto
+$[a,b][1,0]=[a,b]$. Wreszcie rozdzielność
+mnożenia względem dodawania wynika z rachunku
+\[
+ [a,b]([c,d]+[e,f])
+ =[a(c+e)+b(d+f),\,a(d+f)+b(c+e)]
+ =[a,b][c,d]+[a,b][e,f].
+\]
+Rozdzielność z prawej wynika z przemienności mnożenia.
+Zatem mamy przemienny pierścień z jedynką.
+
+Elementy $[1,0]$ i $[0,0]$ nie są równe, bo równość
+ich klas wymagałaby $1+0=0+0$ w $\mathbb N_0$.
+Odwzorowanie $\iota$ zachowuje oba działania i elementy
+wyróżnione bezpośrednio ze wzorów. Jeśli
+$[m,0]=[n,0]$, to $m+0=0+n$, zatem $m=n$;
+$\iota$ jest różnowartościowe.
+\end{proof}
+
+\begin{twierdzenie}[Własność uniwersalna dopełnienia grupowego]
+\label{aa:tw:z-grothendieck-universal}
+Niech $\mathbb Z=(\mathbb N_0\times\mathbb N_0)/\sim$, gdzie
+$(a,b)\sim(c,d)$ wtedy i tylko wtedy, gdy $a+d=b+c$,
+oraz niech $\iota:\mathbb N_0\to\mathbb Z$ będzie dane wzorem
+$\iota(n)=[n,0]$. Niech $A$ będzie dowolną grupą abelową
+zapisywaną addytywnie,
+a $f:\mathbb N_0\to A$ odwzorowaniem spełniającym
+$f(m+n)=f(m)+f(n)$ i $f(0)=0$. Istnieje dokładnie jeden
+homomorfizm grup abelowych $\overline f:\mathbb Z\to A$
+taki, że $\overline f\circ\iota=f$. Jest nim
+\[
+ \overline f([a,b])=f(a)-f(b).
+\]
+Co więcej, dla każdego przemiennego pierścienia $R$
+z jedynką jedyny homomorfizm pierścieni
+$\Phi:\mathbb Z\to R$ ma postać
+$\Phi([a,b])=a1_R-b1_R$.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $(a,b)\sim(c,d)$, to $a+d=b+c$.
+Po zastosowaniu addytywności $f$ dostajemy
+$f(a)+f(d)=f(b)+f(c)$, stąd
+$f(a)-f(b)=f(c)-f(d)$. Wzór nie zależy więc
+od reprezentanta. Dodawanie klas przechodzi na dodawanie
+w $A$, zatem $\overline f$ jest homomorfizmem,
+a $\overline f([n,0])=f(n)$. Każda klasa jest różnicą
+$[a,0]-[b,0]$, dlatego każdy homomorfizm spełniający
+ten warunek musi przyjmować podane wartości. To dowodzi
+jednoznaczności.
+
+Jeśli $R$ jest pierścieniem z jedynką, homomorfizm
+$\mathbb Z\to R$ musi wysłać $[1,0]$ na $1_R$, a stąd
+$[n,0]$ na $n1_R$. Z poprzedniej części ma zatem
+jedyną możliwą postać. Sprawdzenie mnożenia daje
+\[
+ (a1_R-b1_R)(c1_R-d1_R)
+ =(ac+bd)1_R-(ad+bc)1_R,
+\]
+co jest obrazem produktu klas. Wzór zachowuje więc
+również mnożenie i jedynkę. Jest homomorfizmem pierścieni.
+\end{proof}
+
+\begin{przyklad}[Rachunek na klasach formalnych różnic]
+\label{aa:prz:z-pairs}
+Klasy $[7,3]$ i $[4,0]$ są równe, ponieważ
+$7+0=3+4$. Klasa $[2,9]$ odpowiada liczbie $-7$;
+ściślej, $[2,9]=[0,7]$, bo $2+7=9+0$.
+Mnożąc klasy $[2,5]$ i $[7,3]$, otrzymujemy
+$[2,5][7,3]=[29,41]=[0,12]$, czyli $(-3)\cdot4=-12$.
+Każda klasa ma postać $[n,0]$ lub $[0,n]$ dla pewnego
+$n\in\mathbb N_0$: gdy $a\ge b$, piszemy $a=b+n$,
+a gdy $b\ge a$, piszemy $b=a+n$ i stosujemy definicję
+relacji $\sim$.
+\end{przyklad}
+
+\begin{uwaga}[Dlaczego to nie jest zwykły pierścień ilorazowy?]
+\label{aa:uw:z-vs-quotient-ring}
+Konstrukcja zaczyna się od półpierścienia $\mathbb N_0$
+i relacji równoważności na parach liczb naturalnych;
+nie dzielimy istniejącego pierścienia przez ideał.
+W języku algebry ogólnej jest to \emph{dopełnienie grupowe}
+przemiennego monoidu $(\mathbb N_0,+)$, a poprzednie
+twierdzenie wyraża jego własność uniwersalną.
+W późniejszej części skryptu skonstruujemy $\mathbb Q$
+jako ciało ułamków pierścienia $\mathbb Z$.
+Konstrukcję ciała $\mathbb R$ --- w szczególności uzasadnienie
+jego zupełności i porządku --- pozostawiamy skryptowi analizy.
+Tutaj, przyjmując ciało $\mathbb R$ za dane, skonstruujemy
+$\mathbb C$ na dwa algebraiczne sposoby:
+jako $\mathbb R[x]/(x^2+1)$ oraz na zbiorze $\mathbb R^2$,
+a następnie udowodnimy ich izomorfizm.
+\end{uwaga}
+
+\begin{definicja}[Jednostki, dzielniki zera i elementy nilpotentne]
+\label{aa:def:pierscien-jednostki}
+Niech $R$ będzie pierścieniem z jedynką.
+Element $u\in R$ jest \emph{jednostką}, jeśli ma odwrotność
+obustronną $v$, tj. $uv=vu=1_R$. Zbiór jednostek oznaczamy $R^\times$.
+W niezerowym pierścieniu przemiennym element $a\ne0_R$ jest
+\emph{dzielnikiem zera}, jeśli istnieje $b\ne0_R$ z $ab=0_R$.
+Element $a$ jest \emph{nilpotentny}, jeśli $a^n=0_R$ dla pewnego
+$n\ge1$, a \emph{idempotentny}, jeśli $a^2=a$.
+\end{definicja}
+\begin{stwierdzenie}[Grupa jednostek]
+\label{aa:st:unit-group}
+Dla dowolnego pierścienia $R$ jego jednostki tworzą grupę
+$R^\times$ względem mnożenia. W pierścieniu przemiennym
+niezerowym jednostka nie jest dzielnikiem zera.
+\end{stwierdzenie}
+\begin{proof}
+Dla jednostek $u,v$ zachodzą równości
+$(uv)(v^{-1}u^{-1})=(v^{-1}u^{-1})(uv)=1_R$.
+Wynika z nich, że $uv$ ma odwrotność obustronną,
+zatem jest jednostką. Element $1_R$ należy do $R^\times$,
+a wraz z każdą jednostką jej odwrotność także należy do $R^\times$.
+Łączność mnożenia jest dziedziczona z pierścienia.
+Jeśli $ua=0_R$, mnożenie przez $u^{-1}$ daje
+$a=u^{-1}(ua)=0_R$, dlatego jednostka nie jest dzielnikiem zera.
+\end{proof}
+
+\begin{definicja}[Dziedzina całkowitości i ciało]
+\label{aa:def:dziedzina-cialo}
+Niezerowy pierścień przemienny z jedynką, w którym
+$ab=0_R$ pociąga $a=0_R$ lub $b=0_R$, nazywamy
+\emph{dziedziną całkowitości}. \emph{Ciałem} nazywamy
+niezerowy pierścień przemienny z jedynką, w którym każdy
+niezerowy element jest jednostką.
+\end{definicja}
+\begin{lemat}[Skracanie i skończone dziedziny]
+\label{aa:lem:skracanie-pierscien}
+Niech $R$ będzie dziedziną całkowitości, a $a,b,c\in R$.
+Jeśli $a\ne0_R$ i $ab=ac$, to $b=c$.
+Każda skończona dziedzina całkowitości jest ciałem.
+\end{lemat}
+\begin{proof}
+Z $ab=ac$ mamy $a(b-c)=0_R$. Brak dzielników zera
+oraz $a\ne0_R$ dają $b-c=0_R$. Teraz niech $R$ będzie
+skończona, a $a\ne0_R$. Odwzorowanie $m_a:R\to R$,
+$m_a(x)=ax$, jest różnowartościowe: jeśli $ax=ay$, to $x=y$
+na mocy pierwszej części. Każde różnowartościowe odwzorowanie
+skończonego zbioru w siebie jest surjektywne. Istnieje więc
+$b\in R$ z $ab=1_R$. Ponieważ $R$ jest przemienny,
+$b$ jest odwrotnością $a$. Wszystkie niezerowe elementy są jednostkami.
+\end{proof}
+
+\begin{przyklad}[Rozpoznawanie struktur]
+\label{aa:prz:pierscien-struktury}
+Pierścienie $\mathbb Z$, $\mathbb Q[x]$ i $\mathbb R[x,y]$
+są dziedzinami całkowitości. W $\mathbb Z$ jednostkami są
+$1,-1$. W pierścieniu $K[x]$ nad ciałem $K$ jednostkami
+są dokładnie niezerowe wielomiany stałe: dla niezerowych
+wielomianów $f,g$ zachodzi $\deg(fg)=\deg f+\deg g$,
+zatem iloczyn równy $1$ wymusza stopnie zero.
+Pierścień $M_2(\mathbb R)$ jest nieprzemienny:
+$E_{12}E_{21}=E_{11}$, podczas gdy $E_{21}E_{12}=E_{22}$.
+Ma także niezerowe macierze, których iloczyn jest macierzą zerową,
+na przykład $E_{12}^2=0$. Nie jest więc dziedziną całkowitości.
+W $\mathbb Z/6\mathbb Z$ zachodzi $[2][3]=[0]$, lecz
+żaden czynnik nie jest zerem. W $\mathbb Z/8\mathbb Z$
+klasa $[2]$ jest nilpotentna, bo $[2]^3=[8]=[0]$,
+chociaż $[2]\ne[0]$ i $[2]^2=[4]\ne[0]$.
+W pierścieniu $\mathbb R\times\mathbb R$ element $(1,0)$
+jest idempotentny i jest dzielnikiem zera; jego dopełnienie
+$(0,1)$ też jest idempotentne, a ich suma jest jedynką.
+\end{przyklad}
+
+\begin{definicja}[Charakterystyka pierścienia]
+\label{aa:def:char-ring}
+Niech $R$ będzie niezerowym pierścieniem z jedynką.
+\emph{Charakterystyką} $R$ jest najmniejsza liczba całkowita
+$n>0$ spełniająca $n1_R=0_R$, o ile istnieje;
+w przeciwnym razie charakterystyka wynosi $0$.
+\end{definicja}
+\begin{stwierdzenie}[Charakterystyka dziedziny]
+\label{aa:st:char-domain}
+Niech $R$ będzie dziedziną całkowitości. Jeśli
+$\operatorname{char}R>0$, to $\operatorname{char}R$ jest liczbą pierwszą.
+Dla każdej liczby całkowitej
+$n\ge2$ pierścień $\mathbb Z/n\mathbb Z$ ma charakterystykę $n$.
+\end{stwierdzenie}
+\begin{proof}
+Jeśli charakterystyka dziedziny wynosi $n=ab$, gdzie
+$1<a,b<n$, to $0_R=n1_R=(a1_R)(b1_R)$.
+Ponieważ $R$ jest niezerowy, $n\ne1$. Minimalność $n$ zapewnia
+$a1_R,b1_R\ne0_R$, co przeczy brakowi dzielników zera.
+Zatem $n$ jest liczbą pierwszą.
+W $\mathbb Z/n\mathbb Z$ równość $m[1]=[0]$ zachodzi
+dokładnie wtedy, gdy $n$ dzieli $m$; najmniejsze dodatnie $m$
+to $n$.
+\end{proof}
+
+\section{Podpierścienie, homomorfizmy i jądra}
+\begin{definicja}[Podpierścień i homomorfizm]
+\label{aa:def:ring-hom}
+Niech $R$ i $T$ będą pierścieniami z jedynką.
+\emph{Podpierścieniem z jedynką} pierścienia $R$ jest podzbiór
+$S\subseteq R$ zawierający $1_R$ i zamknięty na dodawanie,
+przeciwne elementy i mnożenie. \emph{Homomorfizmem pierścieni}
+$\varphi:R\to T$ nazywamy odwzorowanie zachowujące dodawanie,
+mnożenie i jedynkę: $\varphi(a+b)=\varphi(a)+\varphi(b)$,
+$\varphi(ab)=\varphi(a)\varphi(b)$ i $\varphi(1_R)=1_T$.
+Izomorfizm jest bijektywnym homomorfizmem pierścieni.
+\end{definicja}
+\begin{lemat}[Własności homomorfizmu]
+\label{aa:lem:ring-hom-properties}
+Niech $R,T$ będą pierścieniami z jedynką,
+a $\varphi:R\to T$ homomorfizmem pierścieni.
+Wtedy $\varphi(0_R)=0_T$ oraz
+$\varphi(-a)=-\varphi(a)$ dla każdego $a\in R$.
+Jeżeli $u\in R^\times$, to $\varphi(u)\in T^\times$.
+Obraz homomorfizmu jest podpierścieniem $T$ z jedynką.
+\end{lemat}
+\begin{proof}
+Z $\varphi(0_R)=\varphi(0_R+0_R)=2\varphi(0_R)$
+po odjęciu $\varphi(0_R)$ otrzymujemy $\varphi(0_R)=0_T$.
+Z $\varphi(a)+\varphi(-a)=\varphi(0_R)=0_T$
+wynika $\varphi(-a)=-\varphi(a)$. Dla jednostki $u$
+i odwrotności $v$ obrazy spełniają
+$\varphi(u)\varphi(v)=\varphi(v)\varphi(u)=1_T$.
+Obraz jest zamknięty na działania, przeciwny element,
+a dzięki zachowaniu jedynki zawiera $1_T$.
+\end{proof}
+
+\begin{przyklad}[Podstawienie w wielomianie]
+\label{aa:prz:poly-eval}
+Niech $K$ będzie ciałem, a $a\in K$. Wzór
+$\operatorname{ev}_a:K[x]\to K$, $f\mapsto f(a)$,
+określa homomorfizm pierścieni, ponieważ podstawienie
+zachowuje sumy, iloczyny i jedynkę. Jego jądro składa się
+z wielomianów mających pierwiastek $a$. Dla każdego $k\ge1$ wielomian $x^k-a^k$ jest podzielny
+przez $x-a$, ponieważ
+$x^k-a^k=(x-a)\sum_{j=0}^{k-1}x^{k-1-j}a^j$.
+Stąd dla każdego $f\in K[x]$ różnica $f(x)-f(a)$ jest
+wielokrotnością $x-a$. Zatem
+$\ker\operatorname{ev}_a=(x-a)$, a obraz jest całym $K$,
+ponieważ zawiera wszystkie wielomiany stałe.
+Ten przykład będzie za chwilę przypadkiem ogólnego twierdzenia
+o izomorfizmie pierścieni.
+\end{przyklad}
+
+\section{Ideały jako warunek poprawności konstrukcji ilorazu}
+\begin{definicja}[Ideały lewostronne, prawostronne i dwustronne]
+\label{aa:def:ideal}
+Niech $R$ będzie pierścieniem. Podgrupa addytywna
+$I\le(R,+)$ jest \emph{ideałem lewostronnym}, jeśli
+$ra\in I$ dla wszystkich $r\in R$, $a\in I$, oraz
+\emph{ideałem prawostronnym}, jeśli $ar\in I$ dla tych par.
+Jest \emph{ideałem dwustronnym}, jeśli ma obie własności.
+W pierścieniu przemiennym te pojęcia są identyczne i mówimy
+po prostu \emph{ideał}. Ideał jest \emph{właściwy}, jeśli $I\ne R$.
+\end{definicja}
+\begin{lemat}[Jądro homomorfizmu jest ideałem]
+\label{aa:lem:kernel-ideal}
+Niech $R,T$ będą pierścieniami z jedynką, a $\varphi:R\to T$
+ich homomorfizmem. Wtedy zbiór
+$\ker\varphi=\{a\in R:\varphi(a)=0_T\}$
+jest ideałem dwustronnym $R$.
+\end{lemat}
+\begin{proof}
+Ponieważ $\varphi$ zachowuje dodawanie i przeciwne elementy,
+$\ker\varphi$ jest podgrupą addytywną. Jeśli
+$a\in\ker\varphi$ i $r\in R$, to
+$\varphi(ra)=\varphi(r)\varphi(a)=\varphi(r)0_T=0_T$.
+Analogicznie $\varphi(ar)=0_T$. Obie własności ideału zachodzą.
+\end{proof}
+
+\begin{lemat}[Jedynka w ideale]
+\label{aa:lem:ideal-unit}
+Niech $R$ będzie pierścieniem z jedynką, a $I\subseteq R$
+jego ideałem dwustronnym. Wówczas $I=R$
+wtedy i tylko wtedy, gdy $1_R\in I$. Wystarczy też,
+aby $I$ zawierał dowolną jednostkę $u\in R^\times$.
+\end{lemat}
+\begin{proof}
+Jeśli $1_R\in I$, to dla każdego $r\in R$ mamy
+$r=r1_R\in I$, zatem $I=R$. Jeśli $u\in I$ jest jednostką,
+to $1_R=u^{-1}u\in I$. Jeżeli $I=R$, to $1_R\in I$, co dowodzi również implikacji odwrotnej.
+\end{proof}
+
+\begin{definicja}[Ideał generowany przez zbiór]
+\label{aa:def:generated-ideal}
+Niech $R$ będzie pierścieniem przemiennym z jedynką,
+a $a_1,\ldots,a_s\in R$ dla pewnego $s\ge1$.
+Przez $(a_1,\ldots,a_s)$ oznaczamy zbiór wszystkich sum $r_1a_1+\cdots+r_sa_s$,
+$r_i\in R$. Jest to najmniejszy ideał zawierający
+$a_1,\ldots,a_s$. Ideał $(a)$ nazywamy \emph{głównym}.
+Dla dowolnego zbioru $S\subseteq R$ ideał $(S)$ składa się
+ze skończonych sum $\sum_i r_i s_i$, gdzie $r_i\in R$, $s_i\in S$;
+dla $S=\varnothing$ jest to ideał zerowy.
+\end{definicja}
+\begin{proof}
+Przedstawiony zbiór zawiera zero, jest zamknięty na sumy,
+przeciwne elementy i mnożenie przez dowolny element $R$,
+zatem jest ideałem. Zawiera generatory, ponieważ
+$a_i=1_Ra_i$. Każdy ideał zawierający te generatory musi
+zawierać wszystkie ich wielokrotności i skończone sumy,
+więc musi zawierać cały opisany zbiór.
+\end{proof}
+
+\begin{definicja}[Suma, przecięcie i iloczyn ideałów]
+\label{aa:def:ideal-ops}
+Dla ideałów $I,J$ przemiennego pierścienia $R$ definiujemy
+$I+J=\{a+b:a\in I,b\in J\}$, $I\cap J$ w zwykłym
+sensie teoriomnogościowym oraz \emph{iloczyn ideałów}
+$I J$ jako ideał składający się z \emph{wszystkich skończonych
+sum} elementów $ab$ z $a\in I$, $b\in J$.
+W szczególności nie należy zastępować iloczynu ideałów
+przez zbiór samych pojedynczych iloczynów.
+\end{definicja}
+\begin{stwierdzenie}[Relacje między działaniami na ideałach]
+\label{aa:st:ideals-ops}
+Niech $R$ będzie pierścieniem przemiennym z jedynką,
+a $I,J\subseteq R$ jego ideałami. Wtedy
+$IJ\subseteq I\cap J\subseteq I+J$. Ponadto $I+J$
+jest najmniejszym ideałem zawierającym $I\cup J$.
+\end{stwierdzenie}
+\begin{proof}
+Każdy składnik $ab$ z $a\in I$, $b\in J$ leży jednocześnie
+w $I$ (bo $I$ jest ideałem) i w $J$. Suma takich składników
+również leży w obu ideałach. Jeśli $x\in I\cap J$,
+to $x=x+0_R\in I+J$. Opis minimalności $I+J$ wynika
+z tego, że każdy ideał zawierający $I$ i $J$ jest zamknięty
+na ich sumy.
+\end{proof}
+
+\begin{twierdzenie}[Pierścień ilorazowy]
+\label{aa:tw:ring-quotient}
+Niech $I$ będzie ideałem dwustronnym pierścienia $R$.
+Na grupie abelowej $R/I$ istnieje pierścień z jedynką,
+którego mnożenie jest zadane wzorem
+$(a+I)(b+I)=ab+I$. Odwzorowanie
+$\pi:R\to R/I$, $a\mapsto a+I$, jest surjektywnym
+homomorfizmem pierścieni o jądrze $I$.
+\end{twierdzenie}
+\begin{proof}
+Trzeba przede wszystkim sprawdzić niezależność od reprezentantów.
+Jeśli $a'=a+i$ i $b'=b+j$, gdzie $i,j\in I$, to
+$a'b'-ab=aj+ib+ij\in I$; pierwsze dwa składniki należą
+do $I$ dzięki własnościom ideału dwustronnego,
+a trzeci dzięki dowolnej z nich. Zatem $a'b'+I=ab+I$.
+Łączność obu działań, przemienność dodawania i oba prawa
+rozdzielności przechodzą z $R$ do ilorazu.
+Elementem neutralnym dodawania jest $I$,
+a jedynką mnożenia $1_R+I$. Projekcja zachowuje oba działania
+i jedynkę, zaś $a+I=I$ wtedy i tylko wtedy, gdy $a\in I$.
+\end{proof}
+
+\begin{twierdzenie}[Pierwsze twierdzenie o izomorfizmie pierścieni]
+\label{aa:tw:ring-isomorphism}
+Niech $R,T$ będą pierścieniami z jedynką i niech
+$\varphi:R\to T$ będzie homomorfizmem. Wtedy indukowane odwzorowanie
+$\overline\varphi:R/\ker\varphi\to\operatorname{im}\varphi$,
+$a+\ker\varphi\mapsto\varphi(a)$, jest izomorfizmem pierścieni.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $a+\ker\varphi=b+\ker\varphi$, to
+$a-b\in\ker\varphi$, więc $\varphi(a)=\varphi(b)$;
+odwzorowanie jest dobrze określone. Zachowuje sumy,
+iloczyny i jedynkę, ponieważ $\varphi$ je zachowuje.
+Jest surjektywne z definicji obrazu. Jeśli
+$\overline\varphi(a+\ker\varphi)=0_T$, to
+$a\in\ker\varphi$, czyli $a+\ker\varphi$ jest zerem
+ilorazu. Zatem jest też różnowartościowe.
+\end{proof}
+
+\begin{twierdzenie}[Odpowiedniość ideałów przy ilorazie]
+\label{aa:tw:ring-ideal-correspondence}
+Niech $R$ będzie pierścieniem z jedynką, $I\subseteq R$
+jego ideałem dwustronnym i niech
+$\pi:R\to R/I$, $\pi(a)=a+I$, będzie projekcją kanoniczną.
+Wówczas przyporządkowanie $J\mapsto J/I$ jest bijekcją
+między ideałami dwustronnymi $J$ pierścienia $R$
+zawierającymi $I$ a ideałami dwustronnymi pierścienia $R/I$.
+Odwrotną bijekcją jest $L\mapsto\pi^{-1}(L)$.
+Konstrukcja zachowuje zawieranie.
+\end{twierdzenie}
+\begin{proof}
+Przeciwobraz ideału dwustronnego przez homomorfizm pierścieni
+jest ideałem dwustronnym: przeciwobraz jest podgrupą addytywną,
+a mnożenie elementu przeciwobrazu przez dowolny element
+$R$ przenosi się pod $\pi$ na mnożenie elementu $L$
+przez element $R/I$. Ponadto $I=\ker\pi\subseteq\pi^{-1}(L)$.
+Dla ideału $J$ z $I\subseteq J$ jego obraz $\pi(J)=J/I$
+jest ideałem ilorazu, gdyż $\pi$ jest surjektywne.
+Jeżeli $a\in\pi^{-1}(\pi(J))$, to $\pi(a)=\pi(j)$
+dla pewnego $j\in J$, a więc $a-j\in I\subseteq J$;
+stąd $a\in J$. Z drugiej strony $\pi(\pi^{-1}(L))=L$
+z surjektywności $\pi$. Otrzymaliśmy obie odwrotne bijekcje.
+Jeśli $J_1\subseteq J_2$, to każda klasa elementu $J_1$
+należy również do $J_2/I$, zatem $J_1/I\subseteq J_2/I$.
+Analogicznie z $L_1\subseteq L_2$ wynika
+$\pi^{-1}(L_1)\subseteq\pi^{-1}(L_2)$.
+\end{proof}
+
+\begin{przyklad}[Wszystkie ideały w $\mathbb Z/12\mathbb Z$]
+\label{aa:prz:ideals-z12}
+Wszystkie ideały pierścienia $\mathbb Z/12\mathbb Z$ można przedstawić
+przez przeciwobrazy w $\mathbb Z$. Uzasadnijmy najpierw, że każdy ideał $J\subseteq\mathbb Z$ ma postać
+$d\mathbb Z$. Jeśli $J=\{0\}$, bierzemy $d=0$. W przeciwnym
+razie w $J$ istnieje dodatnia liczba całkowita, gdyż dla
+$z\in J\setminus\{0\}$ również $-z\in J$,
+a jedna z liczb $z,-z$ jest dodatnia. Wybieramy najmniejszą
+taką liczbę $d$. Dla dowolnego $a\in J$ dzielenie z resztą daje
+$a=qd+r$ z $0\le r<d$. Ponieważ $r=a-qd\in J$,
+minimalność $d$ wymusza $r=0$. Zatem $J=d\mathbb Z$.
+Teraz zawieranie $12\mathbb Z\subseteq d\mathbb Z$ oznacza
+$d\mid12$. Warunek ten wyklucza $d=0$.
+Dla dodatniego dzielnika $d$ obraz ideału $d\mathbb Z$ ma
+$12/d$ elementów, reprezentowanych przez klasy
+$[0],[d],\ldots,[(12/d-1)d]$. Zatem mamy dokładnie sześć ideałów:
+$\{0\}$, $([6])$, $([4])$, $([3])$, $([2])$ i cały pierścień.
+Na przykład $([4])=\{[0],[4],[8]\}$, a
+$([6])=\{[0],[6]\}$. Ich indeksy i liczności wynikają
+z dzielenia $12$ przez odpowiednie dzielniki.
+\end{przyklad}
+
+\section{Ideały pierwsze i maksymalne}
+\begin{definicja}[Ideał pierwszy i maksymalny]
+\label{aa:def:prime-max-ideal}
+Niech $R$ będzie pierścieniem przemiennym z jedynką.
+Ideał właściwy $P\subsetneq R$ jest \emph{pierwszy}, gdy
+dla wszystkich $a,b\in R$ warunek $ab\in P$ pociąga
+$a\in P$ lub $b\in P$.
+Ideał właściwy $M\subsetneq R$ jest \emph{maksymalny}, gdy
+nie istnieje ideał $J$ spełniający
+$M\subsetneq J\subsetneq R$.
+\end{definicja}
+\begin{twierdzenie}[Kryteria przez pierścień ilorazowy]
+\label{aa:tw:prime-max-quotient}
+Niech $R$ będzie pierścieniem przemiennym z jedynką,
+a $I\subsetneq R$ jego ideałem właściwym.
+Wówczas $I$ jest pierwszy wtedy i tylko wtedy, gdy
+$R/I$ jest dziedziną całkowitości. Ponadto $I$ jest
+maksymalny wtedy i tylko wtedy, gdy $R/I$ jest ciałem.
+W szczególności każdy ideał maksymalny jest pierwszy.
+\end{twierdzenie}
+\begin{proof}
+W ilorazie $R/I$ mamy $(a+I)(b+I)=I$ dokładnie wtedy,
+gdy $ab\in I$. Klasa $a+I$ jest zerem dokładnie wtedy,
+gdy $a\in I$. Ponieważ $I$ jest właściwy, iloraz nie jest
+pierścieniem zerowym. Warunek braku dzielników zera jest
+zatem równoważny definicji ideału pierwszego.
+
+Jeżeli $I$ jest maksymalny, to z twierdzenia o odpowiedniości
+ideałów wynika, że w $R/I$ jedynymi ideałami są $\{0\}$
+i cały pierścień. Dla dowolnego $a+I\ne0$ ideał
+$(a+I)$ nie jest zerowy, więc jest całym $R/I$.
+Istnieje zatem klasa $b+I$ z $(a+I)(b+I)=1_R+I$,
+czyli każda klasa niezerowa jest odwracalna. Iloraz jest ciałem.
+Odwrotnie, w ciele każdy ideał niezerowy zawiera element
+odwracalny, a więc jest całym ciałem. Twierdzenie
+o odpowiedniości daje maksymalność $I$.
+Wreszcie każde ciało jest dziedziną całkowitości:
+z $ab=0$ i $a\ne0$ wynika $b=a^{-1}(ab)=0$.
+\end{proof}
+
+\begin{przyklad}[Ideały w $\mathbb Z$ i wielomiany]
+\label{aa:prz:prime-max-examples}
+Dla liczby pierwszej $p$ ideał $p\mathbb Z$ jest
+maksymalny, ponieważ $\mathbb Z/p\mathbb Z$ jest ciałem.
+Ideał $(0)$ w $\mathbb Z$ jest pierwszy, ale nie maksymalny:
+iloraz $\mathbb Z/(0)$ to $\mathbb Z$, który nie jest ciałem.
+W $K[x]$ ideał $(x-a)$ jest maksymalny dla $a\in K$,
+ponieważ przez podstawienie w $a$ mamy izomorfizm
+$K[x]/(x-a)\cong K$. Natomiast w $K[x,y]$ ideał $(x)$ jest pierwszy,
+ale nie maksymalny. Rzeczywiście, podstawienie $x=0$
+określa surjektywny homomorfizm $K[x,y]\to K[y]$ o jądrze
+$(x)$: każdy wielomian ma postać $f(0,y)+xg(x,y)$.
+Z pierwszego twierdzenia o izomorfizmie wynika
+$K[x,y]/(x)\cong K[y]$, a ten ostatni pierścień
+jest dziedziną całkowitości, lecz nie jest ciałem.
+\end{przyklad}
+
+\section{Chińskie twierdzenie o resztach dla pierścieni}
+\begin{definicja}[Ideały względnie pierwsze]
+\label{aa:def:comaximal}
+Dwa ideały $I,J$ przemiennego pierścienia $R$ nazywamy
+\emph{względnie pierwszymi}, jeśli $I+J=R$.
+Jest to równoważne istnieniu $u\in I$ i $v\in J$ z $u+v=1_R$.
+\end{definicja}
+\begin{lemat}[Przecięcie i iloczyn ideałów względnie pierwszych]
+\label{aa:lem:comaximal-intersection}
+Niech $R$ będzie pierścieniem przemiennym z jedynką,
+a $I,J\subseteq R$ ideałami. Jeśli $I+J=R$, to $I\cap J=IJ$.
+\end{lemat}
+\begin{proof}
+Inkluzja $IJ\subseteq I\cap J$ została już udowodniona.
+Niech $u\in I$, $v\in J$ oraz $u+v=1_R$.
+Jeśli $z\in I\cap J$, to $z=zu+zv$.
+Pierwszy składnik leży w $IJ$, ponieważ $z\in J$, $u\in I$;
+drugi też leży w $IJ$, ponieważ $z\in I$, $v\in J$.
+Zatem $z\in IJ$ i otrzymujemy równość.
+\end{proof}
+\begin{twierdzenie}[Chińskie twierdzenie o resztach]
+\label{aa:tw:crt-ring}
+Niech $R$ będzie pierścieniem przemiennym z jedynką,
+a $I_1,\ldots,I_s$ parami względnie pierwszymi ideałami
+($s\ge2$). Wówczas homomorfizm
+\[
+\Phi:R\longrightarrow \prod_{i=1}^{s}R/I_i,
+\qquad r\longmapsto(r+I_1,\ldots,r+I_s)
+\]
+jest surjektywny, ma jądro $I_1\cap\cdots\cap I_s$
+i indukuje izomorfizm pierścieni
+\[
+R/(I_1\cdots I_s)\ \cong\ \prod_{i=1}^{s}R/I_i.
+\]
+\end{twierdzenie}
+\begin{proof}
+Jądro $\Phi$ to elementy należące do wszystkich ideałów,
+czyli ich przecięcie. Udowodnimy surjektywność jawnie.
+Dla $i\ne j$ wybierzmy $u_{ij}\in I_i$ i $v_{ij}\in I_j$
+takie, że $u_{ij}+v_{ij}=1_R$. Dla ustalonego $i$
+połóżmy $e_i=\prod_{j\ne i}v_{ij}$. Mamy wtedy
+$e_i\equiv1_R\pmod{I_i}$, ponieważ każdy czynnik
+$v_{ij}=1_R-u_{ij}$ ma tę własność, oraz
+$e_i\equiv0_R\pmod{I_j}$ dla każdego $j\ne i$, bo w
+iloczynie występuje czynnik $v_{ij}\in I_j$.
+Dla dowolnie wybranych klas $r_i+I_i$ element
+$r=\sum_i r_i e_i$ ma obraz $\Phi(r)=(r_i+I_i)_i$.
+To dowodzi surjektywności.
+
+Pozostaje pokazać równość przecięcia z iloczynem dla wielu
+ideałów. Jeśli $I+J=R$ i $I+K=R$, wybieramy
+$u+v=1_R$ i $u'+w=1_R$ z $u,u'\in I$, $v\in J$, $w\in K$.
+Mnożenie daje $1_R=uu'+uw+vu'+vw$, przy czym
+pierwsze trzy składniki należą do $I$, a ostatni do $JK$.
+Zatem $I+JK=R$. Stosując ten fakt wielokrotnie, otrzymujemy,
+że $I_s$ jest względnie pierwszy z $I_1\cdots I_{s-1}$.
+Indukcja i poprzedni lemat pokazują
+$I_1\cap\cdots\cap I_s=I_1\cdots I_s$.
+Pierwsze twierdzenie o izomorfizmie pierścieni kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Rachunek modulo $12$ i idempotenty]
+\label{aa:prz:crt12}
+Ideały $3\mathbb Z$ i $4\mathbb Z$ są względnie pierwsze,
+ponieważ $4-3=1$. Chińskie twierdzenie o resztach daje
+$\mathbb Z/12\mathbb Z\cong\mathbb Z/3\mathbb Z\times\mathbb Z/4\mathbb Z$.
+Wprost: klasa $[4]_{12}$ przechodzi na parę $([1]_3,[0]_4)$,
+a klasa $[9]_{12}$ na $([0]_3,[1]_4)$.
+Obie są idempotentne, bo $4^2\equiv4\pmod{12}$ i
+$9^2\equiv9\pmod{12}$, a ich iloczyn jest zerowy.
+Dla układu $x\equiv2\pmod3$, $x\equiv3\pmod4$ dostajemy
+$x\equiv 2\cdot4+3\cdot9=35\equiv11\pmod{12}$.
+Wynik można sprawdzić: $11-2=9$ jest podzielne przez $3$,
+a $11-3=8$ jest podzielne przez $4$.
+Natomiast dla ideałów $2\mathbb Z$ i $4\mathbb Z$
+warunek względnej pierwszości nie zachodzi; układ
+$x\equiv0\pmod2$, $x\equiv1\pmod4$ nie ma rozwiązania.
+\end{przyklad}
+
+\begin{uwaga}[Od pierścieni do geometrii i modułów]
+\label{aa:uw:ring-next}
+Ideały pierścieni wielomianów opisują układy równań
+algebraicznych, a ilorazy pierścieni pozwalają zachować
+informację nie tylko o zbiorach zer, lecz również o krotnościach
+i elementach nilpotentnych. Moduły z poprzedniego rozdziału
+są strukturami addytywnymi, na których działa pierścień.
+W kolejnym rozdziale sprawdzimy, kiedy podzielność w pierścieniu
+jest na tyle dobrze zorganizowana, aby każdy ideał był główny.
+\end{uwaga}
+
+\setlength{\parskip}{4pt}

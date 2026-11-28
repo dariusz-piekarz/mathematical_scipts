@@ -1,0 +1,9 @@
+# L1.5.5a — wersjonowany słownik pojęć (pierwsza implementacja)
+
+Na podstawie decyzji użytkownika „kontynnuuj” bezpośrednio po propozycji przejścia do L1.5.5 mimo oczekującej recenzji L1.5.4: jednorazowe przejście po technicznym 3/3, bez nadawania stable, bez uchylania wymogu niezależnego odbioru i bez zmiany bramki. L1.5.4 pozostaje stabilizing. Nie zmieniono harmonogramu.
+
+Pierwszy moduł backend/lean_concepts.py: 11 niezmiennych wpisów w 4 jawnych zakresach, wersja 0.1.0, przypięte Lean/Mathlib jak w projekcie, deterministyczny SHA-256 całej treści, dokładne aliasy. Rozróżnia Iff (Prop) od LST01.equivalent (formuły składniowe). Bez kontekstu nawet jedno dopasowanie ma needs_context; wieloznaczność ambiguous; brak dopasowania unsupported. Nie ma normalizacji, dopasowań przybliżonych ani fallbacku do innego zakresu. Wynik jest kandydatem needs_review, declaration_check=not_run; nie generuje kodu ani nie wykonuje Lean, nie ma sieci, transferu ani zmian kanonicznych plików.
+
+Kryteria odbioru: identyczna treść daje identyczny skrót, unikatowe ID i aliasy w zakresie, nieufne wejście odrzucane, rozróżnienie semantyczne logiki, zgodność przypiętych wersji, brak możliwości mutacji rejestru przez wynik, brak certyfikacji. Testy sprawdzają także tekst rzeczywistych deklaracji LST01, co nie jest kompilacją ani dowodem zgodności ze źródłem. Wpisy Mathlib są propozycjami, nie sprawdzonymi sygnaturami.
+
+Następny krok po rzeczywistym CI: weryfikacja nazw i sygnatur na przypiętym Lean/Mathlib (bez uruchamiania kodu od użytkownika); następnie jawny kontekst źródłowy oparty na indeksie oraz zatwierdzonych mapowaniach, z testami rzeczywistych obiektów LST/LA. Nie rozszerzać parsera ani przechodzić do generacji kodu L1.5.6. Odbiór 2+1 na wybranym SHA po ukończeniu zakresu L1.5.5, z niezależną recenzją.

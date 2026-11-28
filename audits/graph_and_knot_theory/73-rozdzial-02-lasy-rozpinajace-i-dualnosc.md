@@ -1,0 +1,9 @@
+# Rozdział 02 — audyt indywidualny 02
+
+2026-11-24. Poprzedni commit a7af5fa6e5af0ade02a379e86e86a86586bafc52: pełny audyt globalny 45356796452 completed/success, terminologia i aplikacja success, algorytmy w toku przy odczycie. Nowe źródło commit 2be3a1b273b722fd689b986dab18d0c77a183569, blob aabfbe5dd870bbe0c2fe1b1da6662de1c32e41e0. Nie zmieniano innych rozdziałów.
+
+Uzupełnienia: definicja lasu rozpinającego dla grafów dowolnie niespójnych, w tym zerowego; twierdzenie z pełnym dowodem istnienia i równoważności zachowania składowych, n-c krawędzi oraz maksymalności acyklicznego podgrafu. Przykład trójkąt + krawędź + izolowany wierzchołek. Przykład dwóch trójkątów ze wspólnym wierzchołkiem, których suma w przestrzeni cykli nie jest prostym cyklem. Przykład i dwupanelowy TikZ dla C_e i D_f, podpis zablokowany w minipage. Uściślono dowód jednoznaczności drogi, zachowanie parzystości przy różnicy symetrycznej, odróżniono nietrywialność podziału wierzchołków od niepustości przekroju (istotne dla grafów niespójnych).
+
+Niezależny test JS wszystkich 1100 grafów prostych na 0–5 etykietowanych wierzchołkach i 40399 acyklicznych podgrafów na pełnym zbiorze wierzchołków. Porównano zachowanie liczby składowych, liczbę n-c krawędzi i maksymalność względem dodania pojedynczej krawędzi; 8962 lasy rozpinające, każdy graf miał co najmniej jeden. Dla każdej pary krawędzi drzewa/lasu i krawędzi spoza niego (99636 przypadków) porównano rozdzielenie końców po usunięciu krawędzi lasu z występowaniem tej krawędzi na drodze w lesie, wyznaczonej niezależnie przez przeszukiwanie. Wszystkie kontrole PASS. Test skończony nie zastępuje dowodu.
+
+Status OTWARTY. Następnie kontrola nowego CI i PDF, audyt pozostałych dowodów BFS i przestrzeni cykli, trwałe regresje oraz sprawdzenie konwencji oznaczeń w obrębie rozdziału. Nie przechodzić do 03 przed stabilizacją 02.

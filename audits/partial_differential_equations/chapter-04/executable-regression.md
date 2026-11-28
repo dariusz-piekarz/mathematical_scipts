@@ -1,0 +1,9 @@
+# PDE-04 — iteracja 50: testy wykonywalne i CI (2026-11-24)
+
+Źródło rozdziału bez zmian: blob abd8dc9eca604f7105a6649cfd961547ef7968c5. Pierwszy audyt matematyczny 10/10 sekcji, rejestr 36 kryteriów semantycznych (blob 99c86c38b06f4e3479933ba9e63fbb7c20abcb5d).
+
+Dodano tests/mathematical/partial_differential_equations/chapter-04/test_heat.py (commit 98290b25e1a777ca2f69bd6534d101a22721d493, blob d584e5591216dc527bc1b0acb0fa767668f0d051). Dziewięć metod unittest: równanie jądra, normalizacja i norma L², splot jąder, półprzestrzeń i skalowanie, moduł przedłużenia zespolonego, Duhamel dla pojedynczego modu ze stałym w czasie wymuszeniem, energia i odwracanie modów, oszacowanie Cauchy'ego i ilorazy silni Tychonoffa, płaska majoranta. Testy wykorzystują skończone rachunki dokładne Fraction oraz kwadraturę numeryczną; nie weryfikują formalnie dowodów ani nie parsują wzorów TeX.
+
+Dodano .github/workflows/partial-differential-equations-ch04.yml (commit 2583eecea5505250a0ccc1ab3ff92bf7d20d52f3): uruchomienie testów, kontrola etykiet, odsyłaczy, kryteriów i środowisk, zgodność manifestu i kanonicznego preambułu oraz listings, izolowana kompilacja rozdziału, sprawdzenie diagnostyki, render stron i artefakt PDF/log/txt/PNG. Jedyny odsyłacz zewnętrzny eq:pde3-green1: numer 3.7 wyprowadzany z sześciu poprzednich equation i pierwszego wiersza align w rozdziale 03 przy numeracji chapter.equation. Izolowany PDF ma numer bez aktywnego odsyłacza do nieobecnego rozdziału.
+
+Pierwszy przebieg CI 45483410218 został utworzony dla właściwego commitu; przy sprawdzeniu był queued. Nie zgłaszamy zaliczenia testów, kompilacji ani kontroli wizualnej przed rzeczywistym wynikiem. Nie uruchomiono testów lokalnie ani Lean. Nie kompilowano całej książki. Rozdział otwarty; następny etap: odczyt kroków CI, ewentualne poprawki i rzeczywisty przegląd renderu.

@@ -1,0 +1,9 @@
+# CAT-11 — audyt kontrolny IV (2026-11-25)
+
+Ponowna lektura całego rozdziału 11: definicja i jednoznaczność wykładnika; wzajemna odwrotność transpozycji; naturalność w X i B; zmiana wykładnika, zgodność obu wariancji, typy morfizmów i prawo złożenia bifunktora; przypadki pustych zbiorów, implikacja w algebrze Boole'a, przeszkoda w Grp i kategoriach z obiektem zerowym; ciągłość ewaluacji w Top, skończone pokrycie zwartego K (również K puste), ciągłość transpozycji, jej jednoznaczność; naturalność praw wykładniczych i zastosowanie lematu Yonedy. Nie stwierdzono nowych istotnych błędów ani luk wymagających zmian. Nie zmieniano źródła matematycznego ani testów; zachowano 9 etykiet.
+
+Walidacja: rzeczywisty przebieg Category theory CAT-00 validation #45615031213, commit 4ee4a87bf595080a3fe00503a2775217d2d8e645, job 139208100798, SUCCESS. Log potwierdza 84 testy Python, w tym wszystkie 10 CAT-11, kompilację całego skryptu oraz kontrolę odsyłaczy. Porównano treść źródła CAT-11 i pliku testowego z bieżącą gałęzią — identyczne. Nie deklaruje się uruchomienia testów lokalnie ani formalizacji Lean.
+
+Pobrano rzeczywisty artefakt 15021399331 (PDF i log): 62 strony, 705580 bajtów. Wyrenderowano i obejrzano strony 48–52 zawierające CAT-11. Nie zauważono ucięć, kolizji wzorów ani nieczytelnych elementów. W logu brak dopasowań do Overfull, undefined references, LaTeX Warning: Reference oraz błędów zaczynających się od !.
+
+Wynik: CAT-11 stabilny w zakresie matematycznym, regresji kategorii i kontroli PDF na zweryfikowanym commicie. Niezależny workflow Mathematical library application checks #45615031253 ma FAILURE na etapie regresji aplikacji; nie oznaczamy całego repozytorium jako zielonego. Nie modyfikowano aplikacji. Kolejny rozdział do audytu: CAT-12 (obiekty nad ustaloną bazą i kategorie przecinkowe).

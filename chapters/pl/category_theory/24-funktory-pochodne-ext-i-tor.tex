@@ -1,0 +1,450 @@
+\section{Funktory pochodne, Ext i Tor}\label{cat:sec:derived-functors}
+Pracujemy w lokalnie małych kategoriach abelowych. Wykorzystujemy konstrukcje z rozdziałów~\ref{cat:sec:abelian-categories} i~\ref{cat:sec:projective-injective}. Wersję modułową teorii homologii i kohomologii omówiono w \atlasref{TOP-03::def:homologia-algebraiczna}{TOP-03: homologia} oraz \atlasref{TOP-03::def:kohomologia-algebraiczna}{TOP-03: kohomologia}.
+
+\subsection{Homologia w kategorii abelowej}
+\begin{definicja}[Cykle, brzegi i homologia]\label{cat:def:abelian-homology}
+Niech $(C_\bullet,d)$ będzie kompleksem łańcuchowym, tj. rodziną obiektów $C_n$ i morfizmów $d_n:C_n\to C_{n-1}$ z $d_nd_{n+1}=0$. Dopuszczamy indeksy całkowite; dla kompleksu nieujemnie stopniowanego przyjmujemy $C_n=0$ dla $n<0$. Niech $z_n:Z_n\to C_n$ będzie jądrem $d_n$, a $b_n:B_n\to C_n$ obrazem $d_{n+1}$. Rozkład $d_{n+1}=b_ne_{n+1}$ z $e_{n+1}$ epi daje $d_nb_n=0$. Istnieje więc jedyny monomorfizm $j_n:B_n\to Z_n$ z $z_nj_n=b_n$; jest mono, ponieważ $b_n$ jest mono. Definiujemy
+\[
+ H_n(C_\bullet)=\operatorname{coker}(j_n)
+\]
+w sensie przeciwdziedziny kojądra $\pi_n:Z_n\to H_n(C_\bullet)$. Obiekty $Z_n,B_n$ nazywamy odpowiednio obiektami cykli i brzegów. Dla kompleksu kołańcuchowego stosujemy ten sam schemat z indeksami odwróconymi: $Z^n=\ker d^n$, $B^n=\operatorname{im}d^{n-1}$, $H^n=\operatorname{coker}(B^n\to Z^n)$, gdzie symbole oznaczają odpowiednie obiekty.
+\end{definicja}
+\begin{stwierdzenie}\label{cat:prop:homology-zero}
+Kompleks jest dokładny w stopniu $n$ wtedy i tylko wtedy, gdy $H_n=0$ jako obiekt.
+\end{stwierdzenie}
+\begin{proof}
+Kojądro $j_n$ jest zerowe dokładnie wtedy, gdy $j_n$ jest epi (stwierdzenie~\ref{cat:prop:mono-epi-zero-kernel}). Ponieważ $j_n$ jest mono, twierdzenie~\ref{cat:thm:abelian-factorization} daje równoważność z tym, że jest izomorfizmem, czyli że obraz i jądro określają ten sam podobiekt $C_n$. To jest dokładność.
+\end{proof}
+\begin{twierdzenie}[Funktorialność i niezmienniczość homotopijna]\label{cat:thm:abelian-homology-functor}
+Dla ustalonego wyboru jąder, obrazów i kojąder $H_n$ jest funktorem addytywnym z kategorii kompleksów łańcuchowych w $\mathcal A$ do $\mathcal A$. Morfizmy homotopijne indukują ten sam morfizm homologii. Analogiczne twierdzenie obowiązuje dla kohomologii.
+\end{twierdzenie}
+\begin{proof}
+Dla morfizmu kompleksów $f:C_\bullet\to D_\bullet$ mamy $d_n^D f_nz_n^C=f_{n-1}d_n^Cz_n^C=0$. Istnieje jedyny $f_Z:Z_n^C\to Z_n^D$ z $z_n^Df_Z=f_nz_n^C$. Ponadto
+\[
+ f_nb_n^Ce_{n+1}^C=f_nd_{n+1}^C=d_{n+1}^Df_{n+1}
+ =b_n^De_{n+1}^Df_{n+1}.
+\]
+Jeśli $q$ jest kojądrem $b_n^D$, to $q f_nb_n^Ce_{n+1}^C=0$, a $e_{n+1}^C$ jest epi, więc $qf_nb_n^C=0$. Ponieważ $b_n^D=\ker q$ (twierdzenie~\ref{cat:thm:abelian-factorization}), istnieje jedyny $f_B:B_n^C\to B_n^D$ z $b_n^Df_B=f_nb_n^C$. Z monomorficzności $z_n^D$ wynika $f_Zj_n^C=j_n^Df_B$. Zatem $\pi_n^Df_Zj_n^C=0$, co daje jedyny morfizm $H_n(f)$ z $H_n(f)\pi_n^C=\pi_n^Df_Z$. Dla identyczności mamy $(\id_C)_Z=\id_{Z_n^C}$, a dla $g:D_\bullet\to E_\bullet$ zachodzi $(gf)_Z=g_Zf_Z$, ponieważ po złożeniu z $z_n^E$ obie strony są równe $g_nf_nz_n^C$. Stąd
+\[
+ H_n(gf)\pi_n^C=\pi_n^E g_Zf_Z
+ =H_n(g)H_n(f)\pi_n^C.
+\]
+Skracamy epi $\pi_n^C$; analogicznie $H_n(\id_C)\pi_n^C=\pi_n^C$ daje zachowywanie identyczności. Addytywność wynika z równości $(f+g)_Z=f_Z+g_Z$ (składamy z mono $z_n^D$) i $(H_n(f)+H_n(g))\pi_n^C=\pi_n^D(f_Z+g_Z)$; skracamy epi $\pi_n^C$.
+
+Jeżeli $f-g=d^Dh+hd^C$, to $(f_n-g_n)z_n^C=d_{n+1}^Dh_nz_n^C=b_n^De_{n+1}^Dh_nz_n^C$. Po skróceniu mono $z_n^D$ otrzymujemy $f_Z-g_Z=j_n^De_{n+1}^Dh_nz_n^C$. Składając z $\pi_n^D$, otrzymujemy zero, więc $(H_n(f)-H_n(g))\pi_n^C=0$. Epimorficzność $\pi_n^C$ kończy dowód. Dla kompleksów kołańcuchowych zamieniamy $C_n$ na $C^{-n}$ i stosujemy dowód bez zmian.
+\end{proof}
+
+\subsection{Lewe i prawe funktory pochodne}
+\begin{definicja}[Funktory pochodne]\label{cat:def:derived-functors}
+Niech $F:\mathcal A\to\mathcal B$ będzie funktorem addytywnym między kategoriami abelowymi. Jeżeli $\mathcal A$ ma dostatecznie wiele obiektów rzutowych, wybieramy rezolucję rzutową $P_\bullet(X)\to X$ i kładziemy
+\[
+ L_nF(X)=H_n(F(P_\bullet(X)))\quad(n\ge0).
+\]
+Jeżeli $\mathcal A$ ma dostatecznie wiele obiektów injektywnych, wybieramy rezolucję injektywną $X\to I^\bullet(X)$ i kładziemy
+\[
+ R^nF(X)=H^n(F(I^\bullet(X)))\quad(n\ge0).
+\]
+W obu wzorach pomijamy augmentację lub koaugmentację przed zastosowaniem homologii. Addytywność $F$ zapewnia zachowanie morfizmów zerowych, zatem obrazy kompleksów pozostają kompleksami. Przy wyborach dotyczących wszystkich obiektów pracujemy w ustalonym uniwersum, w którym można dokonać takich wyborów.
+\end{definicja}
+\begin{twierdzenie}[Dobrze określone funktory pochodne]\label{cat:thm:derived-well-defined}
+Powyższe konstrukcje wyznaczają funktory addytywne, niezależne od wyboru rezolucji z dokładnością do kanonicznych izomorfizmów naturalnych zgodnych z kolejną zmianą wyborów.
+\end{twierdzenie}
+\begin{proof}
+Dla $u:X\to Y$ wybieramy podniesienie $f:P_\bullet(X)\to P_\bullet(Y)$ z twierdzenia~\ref{cat:thm:resolution-comparison}. Definiujemy $L_nF(u)=H_n(Ff)$. Dwa podniesienia są homotopijne; zastosowanie addytywnego $F$ do równań homotopii zachowuje wszystkie sumy i złożenia, więc ich obrazy pozostają homotopijne. Twierdzenie~\ref{cat:thm:abelian-homology-functor} daje tę samą strzałkę homologii. Złożenie podniesień podnosi złożenie morfizmów, identyczność podnosi identyczność, a suma podniesień podnosi sumę; stąd funktorialność i addytywność.
+Dla drugiego wyboru rezolucji $Q_\bullet(X)$ podniesienie $\id_X$ daje morfizm $P_\bullet(X)\to Q_\bullet(X)$. Podniesienie w drugą stronę jest jego odwrotnością z dokładnością do homotopii na mocy wniosku~\ref{cat:cor:resolution-homotopy-equivalence}. Po zastosowaniu $F$ i $H_n$ otrzymujemy izomorfizm $\alpha_X$. Dla $u:X\to Y$ oba złożenia w kwadracie naturalności przed zastosowaniem $F$ i $H_n$ podnoszą $u$ z $P_\bullet(X)$ do $Q_\bullet(Y)$, więc są homotopijne. Stąd kwadrat jest przemienny. Przy trzecim wyborze rezolucji złożenie dwóch izomorfizmów odpowiada kolejnemu podniesieniu $\id_X$, więc jest równe bezpośredniemu izomorfizmowi. Dla $R^nF$ stosujemy wniosek~\ref{cat:cor:injective-comparison} i kohomologiczną wersję twierdzenia~\ref{cat:thm:abelian-homology-functor}; wszystkie argumenty o podniesieniach zastępujemy przedłużeniami.
+\end{proof}
+\begin{stwierdzenie}[Stopień zerowy i zanikanie]\label{cat:prop:derived-degree-zero}
+Jeżeli $F$ jest prawostronnie dokładny, to $L_0F\cong F$ naturalnie. Jeżeli jest lewostronnie dokładny, to $R^0F\cong F$ naturalnie. Dla obiektu rzutowego $P$ mamy $L_nF(P)=0$ dla $n>0$, a dla injektywnego $I$ mamy $R^nF(I)=0$ dla $n>0$. Jeśli $\operatorname{pd}X\le r$, to $L_nF(X)=0$ dla $n>r$; dualnie dla wymiaru injektywnego.
+\end{stwierdzenie}
+\begin{proof}
+W rezolucji rzutowej $P_1\xrightarrow{d_1}P_0\xrightarrow{\epsilon}X\to0$ augmentacja jest kojądrem $d_1$: dokładność daje $\operatorname{im}d_1=\ker\epsilon$ jako podobiekty $P_0$, a $\epsilon$ jest epi, więc własność uniwersalna kojądra $\ker\epsilon$ jest także własnością kojądra $d_1$. Prawostronna dokładność oznacza zachowywanie kojąder (twierdzenie~\ref{cat:thm:exact-functor-kernels}); zatem $F\epsilon$ jest kojądrem $Fd_1$. Ponieważ w kompleksie bez augmentacji $Z_0=FP_0$, mamy $L_0F(X)\cong FX$. Dla podniesienia $f$ morfizmu $u$ zachodzi $F\epsilon_Y Ff_0=Fu F\epsilon_X$; własność kojądra daje naturalność. Dualnie $F\eta$ jest jądrem $Fd^0$ dla lewostronnie dokładnego $F$, co daje naturalne $R^0F\cong F$.
+Dla $P$ wybieramy rezolucję z identycznością w stopniu zerowym i zerami w dodatnich stopniach. Funktor addytywny zachowuje obiekty zerowe, więc wyższe homologie są zerowe. Dla skończonej rezolucji długości $r$ obiekty w stopniach $n>r$ są zerowe i otrzymujemy to samo zanikanie. Argument injektywny jest dualny.
+\end{proof}
+\begin{stwierdzenie}\label{cat:prop:exact-derived-zero}
+Jeżeli $F$ jest dokładny, wszystkie jego istniejące funktory pochodne dodatniego stopnia znikają.
+\end{stwierdzenie}
+\begin{proof}
+Funktor dokładny zachowuje dokładność ciągów, w szczególności rezolucji z augmentacją lub koaugmentacją. Po usunięciu tych strzałek dokładność w dodatnich stopniach pozostaje bez zmian. Stwierdzenie~\ref{cat:prop:homology-zero} daje tezę.
+\end{proof}
+
+\subsection{Długi ciąg dokładny homologii}
+\begin{twierdzenie}[Długi ciąg dokładny]\label{cat:thm:abelian-homology-les}
+Niech $0\to A_\bullet\xrightarrow{i}B_\bullet\xrightarrow{p}C_\bullet\to0$ będzie ciągiem kompleksów łańcuchowych dokładnym w każdym stopniu. Istnieją naturalne morfizmy łączące $\partial_n:H_n(C_\bullet)\to H_{n-1}(A_\bullet)$, dla których ciąg
+\[
+\cdots\to H_n(A_\bullet)\xrightarrow{H_n(i)}H_n(B_\bullet)
+\xrightarrow{H_n(p)}H_n(C_\bullet)
+\xrightarrow{\partial_n}H_{n-1}(A_\bullet)\to\cdots
+\]
+jest dokładny. Dla kompleksów kołańcuchowych morfizm łączący zwiększa stopień o jeden. W szczególności dla kompleksów łańcuchowych nieujemnie stopniowanych ciąg kończy się na $H_0(C_\bullet)\to0$, a dla nieujemnie stopniowanych kompleksów kołańcuchowych zaczyna się od $0\to H^0(A^\bullet)$: homologie lub kohomologie w ujemnych stopniach są zerowe.
+\end{twierdzenie}
+\begin{proof}
+Piszemy $z_n^X:Z_n^X\to X_n$ dla jądra różniczki, $\pi_n^X:Z_n^X\to H_n(X)$ dla projekcji na homologię, a $d_{n+1}^X=z_n^X j_n^X e_{n+1}^X$ dla rozkładu różniczki przez cykle i brzegi, gdzie $e_{n+1}^X$ jest epi.
+
+\emph{Konstrukcja.}
+Tworzymy iloczyn włóknisty $D=B_n\times_{C_n} Z_n^C$ z projekcjami $t:D\to B_n$, $r:D\to Z_n^C$. Morfizm $r$ jest epi jako cofnięcie epi $p_n$ (twierdzenie~\ref{cat:thm:abelian-base-change}). Ponieważ $p_{n-1}d_n^Bt=d_n^Cz_n^Cr=0$, istnieje jedyny $a:D\to A_{n-1}$ z $i_{n-1}a=d_n^Bt$. Mamy $i_{n-2}d_{n-1}^Aa=d_{n-1}^Bd_n^Bt=0$, więc $d_{n-1}^Aa=0$. Istnieje jedyny $v:D\to Z_{n-1}^A$ z $z_{n-1}^Av=a$. Jeśli $rh=0$, to $p_nth=0$, więc $th=i_nu$ dla pewnego $u$ i $z_{n-1}^Avh=d_n^Au$. Stąd $vh=j_{n-1}^Ae_n^Au$ i $\pi_{n-1}^Avh=0$. W szczególności $\pi_{n-1}^Av$ zeruje się na jądrze $r$ i rozkłada się jednoznacznie przez epi $r$ jako $\lambda r$, gdzie $\lambda:Z_n^C\to H_{n-1}(A)$.
+
+Aby $\lambda$ rozkładało się przez $\pi_n^C$, wystarczy wykazać $\lambda j_n^C=0$. Tworzymy morfizm $w:B_{n+1}\to D$ o składowych $d_{n+1}^B$ i $j_n^C e_{n+1}^C p_{n+1}$; warunek iloczynu włóknistego wynika z przemienności $p$ z różniczkami. Wówczas $vw=0$, ponieważ $i_{n-1}z_{n-1}^Avw=d_n^Bd_{n+1}^B=0$. Zatem $\lambda j_n^C e_{n+1}^C p_{n+1}=0$. Ostatnie dwa morfizmy są epi, więc $\lambda j_n^C=0$. Otrzymujemy jedyny morfizm $\partial_n$ z
+\begin{equation}\label{cat:eq:homology-connecting}
+ \partial_n\pi_n^Cr=\pi_{n-1}^Av.
+\end{equation}
+
+\emph{Podnoszenie lokalne.}
+W dowodzie dokładności stosujemy lemat~\ref{cat:lem:abelian-local-lift}: gdy chcemy podnieść morfizm przez epi, możemy zastąpić jego dziedzinę $T$ przez dziedzinę epi $T'\to T$. Wszystkie wcześniej uzyskane morfizmy składamy wówczas z tym epi. Piszemy równości bez oznaczania kolejnych zmian dziedziny; każda równość po zmianie ma wspólną nową dziedzinę. Kryterium~\ref{cat:lem:exactness-local-criterion} pozwala w ten sposób dowodzić dokładności. W szczególności każdy morfizm do $H_n(X)$ można lokalnie podnieść do $Z_n^X$, a cykl o zerowej klasie homologii można lokalnie zapisać jako różniczkę: jest to zastosowanie lematu do dokładnego ciągu $X_{n+1}\to Z_n^X\to H_n(X)\to0$, którego dokładność wynika z definicji obrazu i kojądra.
+
+\emph{Zerowanie złożeń i dokładność.}
+Przez cykl w poniższych rachunkach rozumiemy morfizm $x:T\to X_n$ z $d_n^Xx=0$, a przez $[x]$ złożenie jego jednoznacznego rozkładu przez $z_n^X$ z $\pi_n^X$. Każdy morfizm homologii jest lokalnie takiej postaci. Mamy $H_n(p)H_n(i)=0$ z $pi=0$. Dla cyklu $b$ w $B_n$ równanie~\eqref{cat:eq:homology-connecting} daje $\partial_n[p_nb]=0$, gdyż można użyć podniesienia $b$ o zerowej różniczce. Dla lokalnego podniesienia $b$ cyklu $c$ z $C_n$ mamy $p_nb=c$, $d_n^Bb=i_{n-1}a$ i $\partial_n[c]=[a]$. Zatem $H_{n-1}(i)\partial_n[c]=[d_n^Bb]=0$. Te złożenia zerują się na wszystkich morfizmach, gdyż epi użyte do zmian dziedziny można skrócić.
+
+Jeśli $b$ jest cyklem w $B_n$ i $H_n(p)[b]=0$, to lokalnie $p_nb=d_{n+1}^Cc'$ dla $c':T'\to C_{n+1}$. Podnosimy $c'$ przez epi $p_{n+1}$ do $b'$. Wtedy $p_n(b-d_{n+1}^Bb')=0$, więc $b-d_{n+1}^Bb'=i_na$. Monomorficzność $i_{n-1}$ daje $d_n^Aa=0$. Stąd $[b]=H_n(i)[a]$.
+
+Jeśli $c$ jest cyklem w $C_n$ i $\partial_n[c]=0$, podnosimy $c$ lokalnie do $b$ przez $p_n$. Mamy $d_n^Bb=i_{n-1}a$ z $a$ cyklem w $A_{n-1}$ i $[a]=0$. Lokalnie $a=d_n^Aa'$; wtedy $b-i_na'$ jest cyklem w $B_n$ i $p_n(b-i_na')=c$. Zatem $[c]=H_n(p)[b-i_na']$.
+
+Jeśli $a$ jest cyklem w $A_{n-1}$ i $H_{n-1}(i)[a]=0$, to lokalnie $i_{n-1}a=d_n^Bb$ dla pewnego $b$. Wtedy $c=p_nb$ jest cyklem, gdyż $d_n^Cc=p_{n-1}i_{n-1}a=0$. Równanie~\eqref{cat:eq:homology-connecting} daje $\partial_n[c]=[a]$. Te trzy rachunki wraz z kryterium lokalnego podnoszenia dowodzą dokładności we wszystkich stopniach.
+
+\emph{Naturalność.}
+Dla morfizmu krótkich ciągów kompleksów $(f_A,f_B,f_C)$ lokalne podniesienie $b$ cyklu $c$ przechodzi na $f_{B,n}b$, podniesienie $f_{C,n}c$. Jeśli $d_n^Bb=i_{n-1}a$, to $d_n^{B'}f_{B,n}b=i'_{n-1}f_{A,n-1}a$. Z definicji morfizmu łączącego wynika zatem
+$\partial'_nH_n(f_C)[c]=H_{n-1}(f_A)\partial_n[c]$.
+Każda klasa ma lokalnego reprezentanta, więc po skróceniu epi otrzymujemy równość morfizmów. Pozostałe kwadraty są przemienne przez funktorialność homologii. Odwrócenie indeksów daje wersję kołańcuchową.
+\end{proof}
+
+\begin{twierdzenie}[Długie ciągi funktorów pochodnych]\label{cat:thm:derived-les}
+Dla addytywnego funktora $F:\mathcal A\to\mathcal B$ oraz krótkiego ciągu dokładnego $0\to X\to Y\to Z\to0$ istnieją naturalne długie ciągi
+\[
+ \cdots\to L_nF(X)\to L_nF(Y)\to L_nF(Z)
+ \to L_{n-1}F(X)\to\cdots\to L_0F(Z)\to0
+\]
+przy dostatecznej liczbie obiektów rzutowych, a przy dostatecznej liczbie injektywnych
+\[
+ 0\to R^0F(X)\to R^0F(Y)\to R^0F(Z)
+ \to R^1F(X)\to R^1F(Y)\to\cdots .
+\]
+\end{twierdzenie}
+\begin{proof}
+Lemat o podkowie (twierdzenie~\ref{cat:thm:horseshoe}) daje krótki ciąg rezolucji rozkładalny w każdym stopniu. Addytywny $F$ zachowuje biprodukty, więc po jego zastosowaniu ciąg pozostaje dokładny w każdym stopniu, niezależnie od dokładności $F$. Twierdzenie~\ref{cat:thm:abelian-homology-les} daje długi ciąg, a twierdzenie~\ref{cat:thm:derived-well-defined} identyfikuje jego obiekty i strzałki niełączące z ustalonymi funktorami pochodnymi.
+
+Dla naturalności potrzebujemy zgodnych morfizmów między ciągami rezolucji z lematu o podkowie. Rozpiszemy pojedynczy krok, który obejmuje zarówno augmentacje, jak i kolejne jądra. Niech $(a,b,c)$ będzie morfizmem krótkich ciągów $0\to U\xrightarrow{i}V\xrightarrow{p}W\to0$ oraz $0\to U'\xrightarrow{i'}V'\xrightarrow{p'}W'\to0$. Oznaczmy epimorfizmy na obiekty skrajne przez $e:P\to U$, $g:Q\to W$ i odpowiednio $e':P'\to U'$, $g':Q'\to W'$. W konstrukcji podkowy środkowe epi mają postać $t=[ie,s]$ i $t'=[i'e',s']$, gdzie $ps=g$, $p's'=g'$. Rzutowość $P,Q$ daje morfizmy $u:P\to P'$, $v:Q\to Q'$ z $e'u=ae$ i $g'v=cg$. Ponieważ
+\[
+ p'(bs-s'v)=cps-g'v=cg-cg=0,
+\]
+istnieje jedyny $\ell:Q\to U'$ z $i'\ell=bs-s'v$. Rzutowość $Q$ pozwala wybrać $h:Q\to P'$ z $e'h=\ell$. Definiujemy
+\[
+ f_T=\begin{pmatrix}u&h\\0&v\end{pmatrix}
+ :P\oplus Q\to P'\oplus Q'.
+\]
+Morfizm ten komutuje z kanonicznymi włożeniami i projekcjami, a ponadto
+\[
+ t'f_T=[i'e'u,i'e'h+s'v]=[bie,bs]=bt.
+\]
+Tak otrzymany morfizm diagramów indukuje morfizm krótkich ciągów jąder: na każdym jądrze stosujemy własność uniwersalną, a przemienność strzałek między jądrami wynika po złożeniu z ich monomorfizmami do obiektów rezolucji. W stopniu $0$ bierzemy $U=X,V=Y,W=Z$ i augmentacje. W każdym następnym stopniu stosujemy ten sam krok do indukowanego morfizmu ciągów jąder. Ponieważ różniczki są złożeniami epi na jądro i włożenia tego jądra, przemienność z obiema składowymi daje przemienność z różniczkami. Indukcja daje morfizm krótkich ciągów rezolucji zgodny z augmentacjami. Twierdzenie o naturalności homologii daje naturalność strzałek łączących. Stosując konstrukcję do identyczności krótkiego ciągu i dwóch wyborów podków, otrzymujemy zgodność strzałek łączących z kanonicznymi izomorfizmami zmiany rezolucji. Wersję injektywną otrzymujemy odwracając strzałki w kategorii przeciwnej i stosując wersję kołańcuchową homologii.
+\end{proof}
+
+\subsection{Funktory Ext i Tor}
+\begin{definicja}\label{cat:def:ext-tor}
+Niech $R$ będzie pierścieniem z jedynką. Dla lewych $R$-modułów $M,N$ definiujemy
+\[
+ \operatorname{Ext}_R^n(M,N)=H^n(\Hom_R(P_\bullet(M),N)).
+\]
+Jest to prawy funktor pochodny kontrawariantnego funktora $\Hom_R(-,N)$ rozpatrywanego na kategorii przeciwnej; rezolucja rzutowa w kategorii modułów staje się tam rezolucją injektywną. Dla prawego $R$-modułu $U$ i lewego $R$-modułu $M$ definiujemy
+\[
+ \operatorname{Tor}_n^R(U,M)=H_n(U\otimes_R P_\bullet(M)).
+\]
+Jest to lewy funktor pochodny funktora $U\otimes_R-$ o wartościach w grupach abelowych. Nie zakładamy przemienności $R$. Obie konstrukcje są niezależne od wyboru rezolucji na mocy twierdzenia~\ref{cat:thm:derived-well-defined}.
+\end{definicja}
+\begin{stwierdzenie}\label{cat:prop:ext-tor-basic}
+Mamy naturalne izomorfizmy $\operatorname{Ext}_R^0(M,N)\cong\Hom_R(M,N)$ oraz $\operatorname{Tor}_0^R(U,M)\cong U\otimes_R M$. Ext jest kontrawariantny w pierwszej i kowariantny w drugiej zmiennej, a Tor kowariantny w obu. Przy rzutowym $M$ oba funktory znikają w dodatnich stopniach. Dla injektywnego $N$ również $\operatorname{Ext}_R^n(M,N)=0$ dla $n>0$.
+\end{stwierdzenie}
+\begin{proof}
+Funktor $\Hom_R(-,N)$ jest lewostronnie dokładny na kategorii przeciwnej, natomiast $U\otimes_R-$ jest prawostronnie dokładny, gdyż jest lewym sprzężonym funktora $\Hom_{\mathbb Z}(U,-)$ z lewym działaniem $(rf)(u)=f(ur)$. Dla grupy abelowej $D$ wzór na lewe działanie określa moduł, ponieważ $(r(tf))(u)=f((ur)t)=f(u(rt))$ i $1_Rf=f$, a rozdzielność wynika z addytywności $f$. Własność sprzężenia wynika z bijekcji między homomorfizmami $g:U\otimes_R M\to D$ i $h:M\to\Hom_{\mathbb Z}(U,D)$ danej przez $h(m)(u)=g(u\otimes m)$. Addytywność w obu argumentach oraz relacja $ur\otimes m=u\otimes rm$ dają $R$-liniowość $h$. Odwrotnie, dla $R$-liniowego $h$ odwzorowanie $(u,m)\mapsto h(m)(u)$ jest addytywne w obu zmiennych i spełnia $h(m)(ur)=(rh(m))(u)=h(rm)(u)$, więc własność uniwersalna iloczynu tensorowego daje jedyny $g$ o wymaganych wartościach. Konstrukcje są odwrotne i naturalne: prekompozycja w $M$ oraz postkompozycja w $D$ odpowiadają tym samym operacjom na obu stronach bijekcji. Twierdzenie~\ref{cat:thm:adjoint-exactness} i stwierdzenie~\ref{cat:prop:derived-degree-zero} dają izomorfizmy stopnia zerowego oraz zanikanie przy rzutowym $M$. Morfizmy w pozostałej zmiennej działają stopniowo przez postkompozycję w Hom lub przez iloczyn tensorowy z identycznością; są to morfizmy kompleksów. Komutują z morfizmami pochodzącymi z rezolucji, gdyż składanie homomorfizmów jest łączne, a iloczyn tensorowy jest bifunktorem. Stąd otrzymujemy bifunktory. Przy injektywnym $N$ funktor $\Hom_R(-,N)$ jest dokładny na mocy twierdzenia~\ref{cat:thm:projective-characterization}, więc wyższe funktory znikają.
+\end{proof}
+\begin{przyklad}[Grupy cykliczne]\label{cat:ex:ext-tor-cyclic}
+Dla grupy abelowej $N$ i $m\ge2$ stosujemy rezolucję $0\to\mathbb Z\xrightarrow{m}\mathbb Z\to\mathbb Z/m\mathbb Z\to0$ z przykładu~\ref{cat:ex:cyclic-projective-resolution}. Utożsamienia $\Hom_{\mathbb Z}(\mathbb Z,N)\cong N$, $f\mapsto f(1)$, i $N\otimes_{\mathbb Z}\mathbb Z\cong N$, $x\otimes k\mapsto kx$, przekształcają odpowiednie różniczki na mnożenie przez $m$. Stąd
+\[
+\begin{aligned}
+ \operatorname{Ext}_{\mathbb Z}^1(\mathbb Z/m\mathbb Z,N)&\cong N/mN,\\
+ \operatorname{Tor}_1^{\mathbb Z}(N,\mathbb Z/m\mathbb Z)&\cong\{x\in N:mx=0\}.
+\end{aligned}
+\]
+Wyższe stopnie $n\ge2$ znikają. Jeśli $N=\mathbb Z/k\mathbb Z$ i $g=\gcd(m,k)$, to jądro mnożenia przez $m$ jest generowane przez klasę $k/g$ o rzędzie $g$, a obraz przez klasę $g$: z tożsamości Bézouta wynika $g\in m\mathbb Z+k\mathbb Z$. Iloraz przez obraz ma więc rząd $g$ i jest cykliczny. Obie grupy są izomorficzne z $\mathbb Z/g\mathbb Z$, co nie oznacza, że Ext i Tor są tym samym funktorem.
+\end{przyklad}
+
+\subsection{Kompleksy podwójne i zrównoważoność}
+\begin{lemat}[Porównanie z kompleksem totalnym]\label{cat:lem:total-acyclic}
+Niech $D_{p,q}$, $p,q\ge0$, będzie podwójnym kompleksem grup abelowych z różniczkami poziomą $d_h$ i pionową $d_v$, które komutują i osobno mają kwadrat zero. Kompleks totalny ma $\operatorname{Tot}_n D=\bigoplus_{p+q=n}D_{p,q}$ i różniczkę $d=d_h+(-1)^p d_v$ na $D_{p,q}$.
+Jeżeli wszystkie augmentowane poziome wiersze $\cdots\to D_{1,q}\to D_{0,q}\to E_q\to0$ są dokładne i augmentacje są zgodne z różniczkami pionowymi, to naturalny morfizm $\operatorname{Tot}D\to E_\bullet$ indukuje izomorfizmy homologii. Analogicznie dla kompleksów podwójnych kołańcuchowych $D^{p,q}$ z różniczkami zwiększającymi indeksy, jeśli wszystkie koaugmentowane pionowe kolumny $0\to E^p\to D^{p,0}\to D^{p,1}\to\cdots$ są dokładne i koaugmentacje są zgodne z różniczkami poziomymi, to morfizm $E^\bullet\to\operatorname{Tot}D$ indukuje izomorfizmy kohomologii.
+\end{lemat}
+\begin{proof}
+Z przemienności różniczek wynika $d^2=0$: dwa mieszane składniki na $D_{p,q}$ mają współczynniki $(-1)^p$ oraz $(-1)^{p-1}$; w wersji kołańcuchowej odpowiednio $(-1)^p$ i $(-1)^{p+1}$. W obu przypadkach się znoszą. Wszystkie sumy w ustalonym stopniu są skończone.
+
+W wersji łańcuchowej projekcja na $p=0$ i augmentacja dają surjektywny w każdym stopniu morfizm kompleksów: na składowej $p=0$ znak różniczki pionowej jest dodatni i augmentacja z nią komutuje, na $p=1$ składnik poziomy znika po augmentacji przez dokładność wiersza, a pozostałe składowe mają obraz zerowy. Surjektywność wynika z epi $D_{0,q}\to E_q$. Jego jądro jest totalizacją podwójnego kompleksu $K$ z $K_{p,q}=D_{p,q}$ dla $p>0$ oraz $K_{0,q}=\ker(D_{0,q}\to E_q)$. Wiersze $K$ są dokładne. Pokażemy, że każdy cykl $x$ stopnia $n$ w $\operatorname{Tot}K$ jest brzegiem. Niech $q$ będzie największym indeksem pionowym niezerowej składowej $x_{p,q}$, gdzie $p+q=n$. Jeśli $p>0$, równanie $dx=0$ w składowej $(p-1,q)$ daje $d_hx_{p,q}=0$, gdyż nie ma składowej o indeksie pionowym $q+1$. Dla $p=0$ ten sam warunek zachodzi przez przyjęcie $K_{-1,q}=0$. Dokładność wiersza pozwala wybrać $y_{p+1,q}$ z $d_hy_{p+1,q}=x_{p,q}$. Odejmując $dy_{p+1,q}$, usuwamy tę składową i zmieniamy co najwyżej składową o indeksie pionowym $q-1$. Powtarzamy aż do $q=0$, otrzymując $x=d(\sum y)$. Jądro jest zatem acykliczne. Długi ciąg dokładny z twierdzenia~\ref{cat:thm:abelian-homology-les} daje tezę.
+
+W wersji kołańcuchowej koaugmentacja daje monomorfizm kompleksów: składnik poziomy komutuje z koaugmentacją, a składnik pionowy znika po złożeniu z nią przez dokładność kolumny. Monomorficzność zachodzi w każdym stopniu z założenia. Jego iloraz jest totalizacją podwójnego kompleksu $K$ o dokładnych kolumnach pionowych: w stopniu $q=0$ zastępujemy $D^{p,0}$ ilorazem przez obraz $E^p$, a w wyższych stopniach nic nie zmieniamy. Dla cocyklu $x$ stopnia $n$ wybieramy najmniejszy indeks poziomy $p$ niezerowej składowej $x^{p,q}$, $p+q=n$. Równanie $dx=0$ w składowej $(p,q+1)$ daje $d_vx^{p,q}=0$, ponieważ nie ma składowej o indeksie $p-1$. Jeśli $q=0$, dokładność kolumny wymusza $x^{p,0}=0$. Jeśli $q>0$, istnieje $y^{p,q-1}$ z $d_vy^{p,q-1}=(-1)^p x^{p,q}$. Odejmując $dy^{p,q-1}$, usuwamy składową o indeksie $p$, zmieniając co najwyżej następną o indeksie $p+1$. Po skończonej liczbie kroków otrzymujemy zero. Iloraz jest acykliczny, więc długi ciąg dokładny kohomologii daje izomorfizm. Obie konstrukcje są naturalne względem morfizmów podwójnych kompleksów zgodnych z augmentacjami.
+\end{proof}
+\begin{uwaga}
+W lemacie można zamienić role wierszy i kolumn. Przy transpozycji $(p,q)\mapsto(q,p)$ mnożenie składowej przez $(-1)^{pq}$ daje izomorfizm kompleksów totalnych: dla różniczki poziomej zmiana znaku wynosi $(-1)^q$, a dla pionowej $(-1)^p$. Dotyczy to zarówno zwiększania, jak i zmniejszania indeksów.
+\end{uwaga}
+
+\begin{twierdzenie}[Zrównoważoność Ext]\label{cat:thm:ext-balanced}
+Dla lewych $R$-modułów $M,N$ i dowolnej rezolucji injektywnej $N\to I^\bullet$ mamy naturalny izomorfizm
+\[
+ \operatorname{Ext}_R^n(M,N)\cong H^n(\Hom_R(M,I^\bullet)).
+\]
+\end{twierdzenie}
+\begin{proof}
+Wybieramy rezolucję rzutową $P_\bullet\to M$. Rozważamy $D^{p,q}=\Hom_R(P_p,I^q)$ z różniczkami $d_h(f)=f d_{p+1}^P$ i $d_v(f)=d_I^q f$. Mają one kwadrat zero i komutują przez łączność składania. Dla ustalonego $p$ funktor $\Hom_R(P_p,-)$ jest dokładny przez rzutowość $P_p$. Kolumna ma więc dokładną koaugmentację $\Hom_R(P_p,N)\to D^{p,0}$. Dla ustalonego $q$ dokładność $\Hom_R(-,I^q)$ przez injektywność $I^q$ daje dokładną koaugmentację wiersza $\Hom_R(M,I^q)\to D^{0,q}$. Obie koaugmentacje są zgodne z pozostałymi różniczkami przez przemienność złożeń. Lemat~\ref{cat:lem:total-acyclic} oraz transpozycja dają izomorfizmy
+\[
+ H^n(\Hom_R(P_\bullet,N))
+ \longrightarrow H^n(\operatorname{Tot}D)
+ \longleftarrow H^n(\Hom_R(M,I^\bullet)).
+\]
+Złożenie pierwszego z odwrotnością drugiego daje żądany izomorfizm. Dla morfizmu w pierwszej zmiennej wybieramy podniesienie między rezolucjami rzutowymi i stosujemy prekompozycję; dla morfizmu w drugiej zmiennej wybieramy przedłużenie między rezolucjami injektywnymi i stosujemy postkompozycję. Otrzymujemy morfizmy podwójnych kompleksów zgodne z obiema koaugmentacjami. Przemienność kwadratów indukowanych w kohomologii daje naturalność. Dla identyczności obiektów i zmiany rezolucji ta sama przemienność daje zgodność z kanonicznymi izomorfizmami z twierdzenia~\ref{cat:thm:derived-well-defined}. Zatem otrzymany izomorfizm nie zależy od wyboru rezolucji.
+\end{proof}
+
+\begin{definicja}[Moduł płaski]\label{cat:def:flat}
+Lewy moduł $F$ jest płaski, jeśli funktor $-\otimes_R F$ na prawych modułach jest dokładny; prawy moduł $G$ jest płaski, jeśli $G\otimes_R-$ jest dokładny na lewych modułach. Por. \atlasref{AA-18::aa:def:flat-module}{AA-18: moduły płaskie}.
+\end{definicja}
+\begin{stwierdzenie}\label{cat:prop:projective-flat}
+Każdy moduł rzutowy jest płaski.
+\end{stwierdzenie}
+\begin{proof}
+Dla modułów wolnych $R^{(S)}$ funktor iloczynu tensorowego z nimi utożsamia się z sumą prostą $S$ kopii drugiego modułu, która zachowuje dokładność: cykle i obrazy wyznacza się współrzędnie, a element ma skończenie wiele niezerowych współrzędnych. Utożsamienie wynika z własności uniwersalnej iloczynu tensorowego; por. \atlasref{AA-18::aa:tw:tensor-direct-sum}{AA-18: iloczyn tensorowy i sumy proste} oraz \atlasref{AA-18::aa:tw:tensor-unit}{AA-18: iloczyn tensorowy z pierścieniem}. Moduł rzutowy jest składnikiem sumy prostej modułu wolnego (dla prawych modułów stosujemy twierdzenie o lewych modułach nad $R^{\op}$). Iloczyn tensorowy rozkłada się zgodnie z tą sumą prostą. Dokładność sumy dwóch ciągów implikuje dokładność każdego składnika, ponieważ jądra i obrazy rozkładają się na sumy prostych odpowiednich jąder i obrazów. Stąd płaskość; por. również \atlasref{AA-18::aa:tw:projective-flat}{AA-18: moduły rzutowe są płaskie}.
+\end{proof}
+\begin{twierdzenie}[Zrównoważoność Tor i rezolucje płaskie]\label{cat:thm:tor-balanced}
+Niech $U$ będzie prawym, a $M$ lewym $R$-modułem. Jeżeli $G_\bullet\to U$ jest dokładną rezolucją przez płaskie prawe moduły, a $F_\bullet\to M$ dokładną rezolucją przez płaskie lewe moduły, to naturalnie
+\[
+ \operatorname{Tor}_n^R(U,M)\cong H_n(G_\bullet\otimes_R M)
+ \cong H_n(U\otimes_R F_\bullet).
+\]
+W szczególności dowolna rezolucja rzutowa prawego modułu $U$ może służyć do obliczania Tor.
+\end{twierdzenie}
+\begin{proof}
+Najpierw rozważamy dwie rezolucje rzutowe $Q_\bullet\to U$, $P_\bullet\to M$. Kompleks podwójny $D_{p,q}=Q_p\otimes_R P_q$ ma komutujące różniczki $d_h=d^Q\otimes1$, $d_v=1\otimes d^P$; komutują one dzięki bifunktorialności iloczynu tensorowego. Dokładność wierszy augmentowanych do $U\otimes_R P_q$ wynika z płaskości $P_q$, a kolumn augmentowanych do $Q_p\otimes_R M$ z płaskości $Q_p$. Lemat~\ref{cat:lem:total-acyclic} i transpozycja dają izomorfizmy
+\[
+ H_n(U\otimes_R P_\bullet)
+ \longleftarrow H_n(\operatorname{Tot}D)
+ \longrightarrow H_n(Q_\bullet\otimes_R M).
+\]
+Podniesienia morfizmów $U,M$ do rezolucji rzutowych indukują morfizmy kompleksów podwójnych zgodne z augmentacjami; naturalność lematu daje naturalność izomorfizmu. Niezależność od wyboru rezolucji wynika z zastosowania tej samej naturalności do podniesień identyczności.
+
+Następnie stosujemy argument do $D_{p,q}=Q_p\otimes_R F_q$. Dokładność augmentowanych wierszy wynika z płaskości $F_q$, a kolumn z płaskości $Q_p$. Otrzymujemy izomorfizm $H_n(U\otimes_R F_\bullet)\cong H_n(Q_\bullet\otimes_R M)$, a ten drugi obiekt oblicza Tor na mocy pierwszej części dowodu. Zamiana $Q,P$ na $G,P$ daje analogiczny wynik dla $H_n(G_\bullet\otimes_R M)$. Nie zakładamy istnienia podniesień dowolnych morfizmów między rezolucjami płaskimi: do porównania służą podniesienia z rezolucji rzutowych (twierdzenie~\ref{cat:thm:resolution-comparison}). Dla dowolnego takiego podniesienia otrzymujemy przemienny diagram z augmentacjami w kompleksach podwójnych po użyciu rezolucji rzutowej w drugiej zmiennej. Stąd izomorfizm jest kanoniczny i zgodny z morfizmami rezolucji płaskich, gdy takie morfizmy są dane. Naturalne działanie na Tor jest zawsze określone przez rezolucje rzutowe.
+\end{proof}
+\begin{wniosek}\label{cat:cor:tor-flat}
+Jeżeli $M$ lub $U$ jest płaski, to $\operatorname{Tor}_n^R(U,M)=0$ dla $n>0$.
+\end{wniosek}
+\begin{proof}
+Dla płaskiego modułu można wybrać rezolucję płaską długości zero z identycznością jako augmentacją. Twierdzenie~\ref{cat:thm:tor-balanced} pozwala obliczyć Tor przez tę rezolucję. W dodatnich stopniach kompleks jest zerowy, więc jego homologia znika.
+\end{proof}
+
+\subsection{Rozszerzenia modułów i suma Baera}
+\begin{definicja}\label{cat:def:module-extension}
+Rozszerzeniem $M$ przez $N$ nazywamy krótki ciąg dokładny $0\to N\xrightarrow{i}E\xrightarrow{p}M\to0$. Dwa rozszerzenia są równoważne, jeśli istnieje izomorfizm ich środkowych modułów zgodny z włożeniami i projekcjami, przy identycznościach na $N,M$.
+\end{definicja}
+\begin{twierdzenie}[Klasy rozszerzeń]\label{cat:thm:ext-extensions}
+Istnieje kanoniczna bijekcja między klasami równoważności rozszerzeń $M$ przez $N$ a elementami $\operatorname{Ext}_R^1(M,N)$. Klasa zerowa odpowiada dokładnie rozszerzeniom rozkładalnym.
+\end{twierdzenie}
+\begin{proof}
+Wybieramy epi $\epsilon:P\to M$ z $P$ rzutowym i jego jądro $k:K\hookrightarrow P$. Z dokładnego ciągu funktorów Ext w pierwszej zmiennej (twierdzenie~\ref{cat:thm:derived-les}) i zanikania $\operatorname{Ext}_R^1(P,N)$ otrzymujemy izomorfizm
+\[
+ \operatorname{Ext}_R^1(M,N)\cong
+ \Hom_R(K,N)/\{hk:h\in\Hom_R(P,N)\}.
+\]
+W dalszym dowodzie wybieramy jawne utożsamienie ilorazu z Ext na poziomie rezolucji (nie potrzebujemy porównania jego znaku z morfizmem łączącym): piszemy $d_1=ke$ z epi $e:P_1\to K$. Cocykl $f:P_1\to N$ zeruje się na $\operatorname{im}d_2=\ker e$, więc jednoznacznie ma postać $ae$ dla $a:K\to N$. Cobrzeg ma postać $hd_1=(hk)e$. Zatem klasa $a$ odpowiada klasie cocyklu $ae$.
+
+Dla rozszerzenia wybieramy podniesienie $s:P\to E$ z $ps=\epsilon$. Ponieważ $psk=0$, istnieje jedyny $a:K\to N$ z $ia=sk$. Zmiana podniesienia na $s'$ daje $s'-s=ih$ dla pewnego $h:P\to N$, a więc $a'-a=hk$. Izomorfizm rozszerzeń przenosi podniesienia i nie zmienia klasy $a$.
+
+Odwrotnie dla $a:K\to N$ kładziemy
+\[
+ E_a=(N\oplus P)/\{(a(x),-k(x)):x\in K\}.
+\]
+Definiujemy $i_a(n)=[n,0]$ i $p_a([n,y])=\epsilon(y)$. Drugi wzór jest dobrze określony, ponieważ $\epsilon k=0$. Jeżeli $[n,0]=0$, to $(n,0)=(a(x),-k(x))$ dla pewnego $x$, a monomorficzność $k$ daje $x=0$ i $n=0$. Surjektywność $p_a$ wynika z surjektywności $\epsilon$. Gdy $p_a([n,y])=0$, mamy $y=k(x)$, więc $[n,y]=[n+a(x),0]$. Dowodzi to dokładności. Podniesienie $s_a(y)=[0,y]$ spełnia $s_ak=i_aa$, zatem odzyskujemy klasę $a$.
+Dla wyjściowego rozszerzenia i wybranego $s$ morfizm $[n,y]\mapsto i(n)+s(y)$ z $E_a$ do $E$ jest dobrze określony, bo $ia=sk$. Jest zgodny z identycznościami na modułach skrajnych, więc jest izomorfizmem na mocy lematu o pięciu morfizmach~\ref{cat:thm:five-lemma}. Jeżeli $a'=a+hk$, to $[n,y]_a\mapsto[n-h(y),y]_{a'}$ jest izomorfizmem rozszerzeń: relacja $(a(x),-k(x))$ przechodzi na $(a'(x),-k(x))$, a odwrotność wykorzystuje $+h$. Obie konstrukcje są więc wzajemnie odwrotne na klasach.
+Dla $a=0$ mamy $E_0\cong N\oplus M$ przez $[n,y]\mapsto(n,\epsilon y)$; surjektywność i jądro tego morfizmu wynikają z dokładności ciągu $K\to P\to M$. Odwrotnie dla rozkładalnego rozszerzenia można wybrać $s$ jako złożenie $\epsilon$ z przekrojem $p$, wtedy $a=0$. To dowodzi ostatniego stwierdzenia.
+\end{proof}
+\begin{stwierdzenie}[Naturalność i suma Baera]\label{cat:prop:baer-sum}
+Bijekcja z twierdzenia~\ref{cat:thm:ext-extensions} jest naturalna: w $M$ odpowiada iloczynowi włóknistemu rozszerzenia, a w $N$ sumie amalgamowanej. Dodawanie w $\operatorname{Ext}_R^1(M,N)$ odpowiada sumie Baera, czyli utworzeniu sumy prostej dwóch rozszerzeń, następnie cofnięciu przez diagonalę $M\to M\oplus M$ i przeniesieniu przez dodawanie $N\oplus N\to N$.
+\end{stwierdzenie}
+\begin{proof}
+Niech $u:M'\to M$. Wybieramy epi $\epsilon':P'\to M'$ z $P'$ rzutowym i podniesienie $v:P'\to P$ z $\epsilon v=u\epsilon'$. Dla jądra $k':K'\to P'$ istnieje jedyny $v_K:K'\to K$ z $kv_K=vk'$. Iloczyn włóknisty $E\times_M M'=\{(z,m'):p(z)=u(m')\}$ wraz z włożeniem $n\mapsto(i(n),0)$ i projekcją na $M'$ daje krótkie rozszerzenie: projekcja jest surjektywna dzięki surjektywności $p$, a jej jądro składa się dokładnie z par $(i(n),0)$. Podniesienie $y\mapsto(sv(y),\epsilon'(y))$ jest dobrze określone dzięki $psv=\epsilon v=u\epsilon'$; jego ograniczenie do $K'$ odpowiada $av_K$, ponieważ $svk'=skv_K=iav_K$. Jest to dokładnie działanie Ext na pierwszej zmiennej, gdyż $v$ przedłuża się do morfizmu rezolucji przez twierdzenie~\ref{cat:thm:resolution-comparison}. W drugiej zmiennej dla $w:N\to N'$ suma amalgamowana ma postać $(N'\oplus E)/\{(w(n),-i(n)):n\in N\}$. Włożenie $N'$ jest mono, projekcja na $M$ epi, a jej jądro jest obrazem $N'$ przez ten sam rachunek co dla $E_a$. Podniesienie $y\mapsto[0,s(y)]$ daje ograniczenie $wa$. Jest to działanie Ext przez postkompozycję.
+
+Dla dwóch rozszerzeń z podniesieniami $s_1,s_2$ i ograniczeniami $a_1,a_2$ ich suma prosta ma podniesienie $s_1\oplus s_2$. Po cofnięciu przez diagonalę podniesienie z $P$ ma składowe $(s_1,s_2)$ i ograniczenie do $K$ ma składowe $(a_1,a_2)$. Po przeniesieniu przez dodawanie ograniczenie jest $a_1+a_2$. Zatem suma Baera odpowiada zwykłemu dodawaniu w ilorazie grup Hom. W szczególności nie zależy od przedstawicieli, jest przemienna i łączna, ma element neutralny reprezentowany przez rozszerzenie rozkładalne, a odwrotność uzyskuje się przez przeniesienie wzdłuż $-\id_N$. Naturalność dla identyczności przy zmianie prezentacji rzutowej uzasadnia kanoniczność bijekcji.
+\end{proof}
+
+\subsection{Przesuwanie wymiaru}
+\begin{twierdzenie}\label{cat:thm:dimension-shifting}
+Niech $0\to K\to P\to M\to0$ będzie krótkim ciągiem dokładnym z $P$ rzutowym, a $0\to N\to I\to C\to0$ krótkim ciągiem dokładnym z $I$ injektywnym. Dla $j\ge1$ zachodzą izomorfizmy
+\[
+\begin{aligned}
+ \operatorname{Ext}_R^j(K,N)&\cong\operatorname{Ext}_R^{j+1}(M,N),\\
+ \operatorname{Ext}_R^j(M,C)&\cong\operatorname{Ext}_R^{j+1}(M,N),\\
+ \operatorname{Tor}_{j+1}^R(U,M)&\cong\operatorname{Tor}_j^R(U,K).
+\end{aligned}
+\]
+Ostatni izomorfizm pozostaje prawdziwy, jeśli $P$ jest tylko płaski.
+\end{twierdzenie}
+\begin{proof}
+W długich ciągach z twierdzenia~\ref{cat:thm:derived-les}, stosowanych do $\Hom_R(-,N)$ w kategorii przeciwnej, $\Hom_R(M,-)$ oraz $U\otimes_R-$, strzałki łączące we wskazanych stopniach mają z obu stron obiekty zerowe: odpowiednio wyższe Ext z $P$, wyższe Ext do $I$ i wyższe Tor z $P$. Korzystamy tu ze zrównoważoności Ext (twierdzenie~\ref{cat:thm:ext-balanced}) i zanikania Tor dla modułu płaskiego (wniosek~\ref{cat:cor:tor-flat}). Dokładność oznacza, że każda z tych strzałek łączących jest mono i epi, czyli izomorfizmem.
+\end{proof}
+\begin{twierdzenie}[Kryteria wymiarów homologicznych]\label{cat:thm:dimension-vanishing}
+Dla $n\ge0$ następujące warunki są równoważne:
+\[
+ \operatorname{pd}M\le n
+ \quad\Longleftrightarrow\quad
+ \operatorname{Ext}_R^{n+1}(M,N)=0\ \text{dla wszystkich }N.
+\]
+Dualnie $\operatorname{idim}N\le n$ wtedy i tylko wtedy, gdy $\operatorname{Ext}_R^{n+1}(M,N)=0$ dla wszystkich $M$. Moduł $M$ ma wymiar płaski co najwyżej $n$ (istnieje rezolucja płaska długości co najwyżej $n$) wtedy i tylko wtedy, gdy $\operatorname{Tor}_{n+1}^R(U,M)=0$ dla wszystkich prawych modułów $U$.
+\end{twierdzenie}
+\begin{proof}
+Implikacje od ograniczeń wymiaru do zanikania wynikają ze stwierdzenia~\ref{cat:prop:derived-degree-zero} oraz twierdzenia~\ref{cat:thm:tor-balanced}. Dla $n=0$ zanikanie $\operatorname{Ext}_R^1(M,-)$ oznacza przez twierdzenie~\ref{cat:thm:ext-extensions}, że wszystkie rozszerzenia kończące się $M$ są rozkładalne; jest to rzutowość. Zanikanie $\operatorname{Ext}_R^1(-,N)$ analogicznie oznacza injektywność. Dla $n>0$ iterujemy przesuwanie wymiaru w rezolucji rzutowej lub injektywnej $n$ razy, otrzymując zanikanie Ext stopnia pierwszego dla odpowiedniej syzygii lub przeciwdziedziny kojądra. Stwierdzenie~\ref{cat:prop:syzygy-dimension} daje ograniczenie wymiaru.
+
+Jeśli $\operatorname{Tor}_1^R(U,M)=0$ dla wszystkich $U$, to dla dowolnego krótkiego ciągu dokładnego prawych modułów $0\to U'\to U\to U''\to0$ długi ciąg Tor w pierwszej zmiennej zaczyna się w rozpatrywanym fragmencie od
+\[
+ 0=\operatorname{Tor}_1^R(U'',M)\to U'\otimes_R M
+ \to U\otimes_R M\to U''\otimes_R M\to0 .
+\]
+Zrównoważoność pozwala użyć tutaj rezolucji prawych modułów. Funktor $-\otimes_R M$ jest prawostronnie dokładny: stosujemy sprzężenie z dowodu stwierdzenia~\ref{cat:prop:ext-tor-basic} nad pierścieniem przeciwnym $R^{\op}$, używając naturalnego izomorfizmu $M\otimes_{R^{\op}}U\cong U\otimes_R M$, $m\otimes u\mapsto u\otimes m$. Oba kierunki tego izomorfizmu zachowują relacje balansowania i są wzajemnie odwrotne na tensorach prostych. Dokładność daje płaskość $M$. Dla $n>0$ iterujemy przesuwanie wymiaru w rezolucji rzutowej $M$, otrzymując $\operatorname{Tor}_1^R(U,K_n)=0$ dla wszystkich $U$, gdzie $K_n$ jest $n$-tą syzygią. Jest ona płaska na mocy właśnie udowodnionego przypadku $n=0$. Obcinając rezolucję w tym miejscu, otrzymujemy rezolucję płaską długości $n$.
+\end{proof}
+
+\subsection{Uniwersalne funktory delta}
+\begin{definicja}[Kohomologiczny funktor delta]\label{cat:def:delta-functor}
+Kohomologicznym $\delta$-funktorem z kategorii abelowej $\mathcal A$ do kategorii abelowej $\mathcal B$ nazywamy rodzinę funktorów addytywnych $T^n$, $n\ge0$, wyposażoną dla każdego krótkiego ciągu dokładnego $0\to X\to Y\to Z\to0$ w morfizmy $\delta_T^n:T^n(Z)\to T^{n+1}(X)$, naturalne względem morfizmów krótkich ciągów, takie że powstaje długi ciąg dokładny zaczynający się od $0\to T^0(X)$. Morfizm $\delta$-funktorów $\alpha:T\to S$ jest rodziną przekształceń naturalnych $\alpha^n:T^n\to S^n$ komutujących z morfizmami łączącymi. Funktor $T$ jest uniwersalny, jeśli dla dowolnego $S$ każde przekształcenie naturalne $T^0\to S^0$ przedłuża się jednoznacznie do morfizmu $\delta$-funktorów. Mówimy, że $T$ jest usuwalny w dodatnich stopniach, jeśli dla każdego $X$ i $n>0$ istnieje mono $j:X\to Y$ z $T^n(j)=0$.
+\end{definicja}
+\begin{twierdzenie}[Uniwersalność usuwalnego funktora delta]\label{cat:thm:effaceable-universal}
+Kohomologiczny $\delta$-funktor usuwalny we wszystkich dodatnich stopniach jest uniwersalny.
+\end{twierdzenie}
+\begin{proof}
+Niech $\alpha^0:T^0\to S^0$ będzie dane. Indukcyjnie załóżmy, że skonstruowaliśmy naturalne $\alpha^k$ dla $k<n$, zgodne z dotychczasowymi morfizmami łączącymi. Dla $X$ wybieramy mono $j:X\to Y$ z $T^n(j)=0$, a jego kojądro oznaczamy przez $p:Y\to Z$. Z dokładności $\delta_T^{n-1}:T^{n-1}(Z)\to T^n(X)$ jest epi i jego jądro jest obrazem $T^{n-1}(p)$. Mamy
+\[
+ \delta_S^{n-1}\alpha_Z^{n-1}T^{n-1}(p)
+ =\delta_S^{n-1}S^{n-1}(p)\alpha_Y^{n-1}=0.
+\]
+Zatem ten morfizm zeruje się na jądrze $\delta_T^{n-1}$ (skracamy epimorfizm na obraz $T^{n-1}(p)$). Ponieważ epi w kategorii abelowej jest kojądrem swego jądra, istnieje jedyny $\alpha_X^n$ spełniający
+\begin{equation}\label{cat:eq:universal-delta}
+ \alpha_X^n\delta_T^{n-1}=\delta_S^{n-1}\alpha_Z^{n-1}.
+\end{equation}
+
+Sprawdzamy niezależność wyboru i naturalność jednocześnie. Dla $f:X\to X'$ oraz wybranych mono $j:X\to Y$, $j':X'\to Y'$ usuwających $T^n$, tworzymy sumę amalgamowaną $W=Y\amalg_X Y'$ morfizmów $j$ i $j'f$. Morfizm $Y'\to W$ jest mono jako zmiana bazy mono $j$ (twierdzenie~\ref{cat:thm:abelian-base-change}), więc $X'\to Y'\to W$ jest mono. Ponadto $T^n(X')\to T^n(W)$ jest zerowy, bo rozkłada się przez $T^n(j')$. Mamy dwa morfizmy krótkich ciągów, z ciągu dla $X$ do ciągu dla $X'\to W$ nad $f$ oraz z ciągu dla $X'$ do tego samego ciągu nad $\id_{X'}$. Dla dowolnego takiego morfizmu $(f,g,h)$ między ciągami usuwającymi, naturalność $\delta$ oraz $\alpha^{n-1}$ daje
+\[
+ \alpha_{X'}^n T^n(f)\delta_T^{n-1}
+ =\delta_S'{}^{n-1}\alpha_{Z'}^{n-1}T^{n-1}(h)
+ =S^n(f)\alpha_X^n\delta_T^{n-1}.
+\]
+Skracając epi po prawej stronie, otrzymujemy naturalność względem tego morfizmu. Zastosowanie do dwóch ciągów i wspólnego $W$ daje naturalność dla dowolnego $f$, a dla $f=\id_X$ także niezależność wyboru.
+
+Niech teraz $0\to X\to B\to C\to0$ będzie dowolnym krótkim ciągiem dokładnym. Tworzymy sumę amalgamowaną $B\amalg_X Y$, gdzie $j:X\to Y$ usuwa $T^n$. Morfizm $X\to B\amalg_X Y$ jest mono, gdyż $Y\to B\amalg_X Y$ jest mono. Usuwa $T^n$, ponieważ rozkłada się przez $j$. Istnieje więc morfizm krótkich ciągów od zadanego ciągu do tego usuwającego nad $\id_X$. Oznaczmy morfizm na kojądrach przez $h:C\to C_W$, a morfizmy łączące dla ciągu usuwającego przez $\delta_{T,W}$ i $\delta_{S,W}$. Naturalność daje
+\[
+\begin{aligned}
+\alpha_X^n\delta_T^{n-1}
+&=\alpha_X^n\delta_{T,W}^{n-1}T^{n-1}(h)\\
+&=\delta_{S,W}^{n-1}\alpha_{C_W}^{n-1}T^{n-1}(h)\\
+&=\delta_{S,W}^{n-1}S^{n-1}(h)\alpha_C^{n-1}
+=\delta_S^{n-1}\alpha_C^{n-1}.
+\end{aligned}
+\]
+Jest to równanie~\eqref{cat:eq:universal-delta} dla zadanego ciągu. To kończy krok indukcyjny. Jednoznaczność w każdym stopniu wynika z epimorficzności $\delta_T^{n-1}$ w ciągu usuwającym.
+\end{proof}
+\begin{wniosek}[Uniwersalność funktorów pochodnych]\label{cat:cor:derived-universal}
+Jeśli $\mathcal A$ ma dostatecznie wiele obiektów injektywnych, a $F$ jest addytywny i lewostronnie dokładny, to $(R^nF)_{n\ge0}$ jest uniwersalnym kohomologicznym $\delta$-funktorem o stopniu zerowym naturalnie izomorficznym z $F$. Dualnie dla prawostronnie dokładnego $F$ i dostatecznej liczby obiektów rzutowych otrzymujemy uniwersalny homologiczny $\delta$-funktor w sensie dualnym: morfizmy z dowolnego homologicznego $\delta$-funktora $T$ do $L_\bullet F$ są jednoznacznie wyznaczone przez przekształcenie $T_0\to F$.
+\end{wniosek}
+\begin{proof}
+Twierdzenie~\ref{cat:thm:derived-les} daje długie ciągi i ich naturalność, a stwierdzenie~\ref{cat:prop:derived-degree-zero} identyfikuje stopień zerowy i daje $R^nF(I)=0$ dla $n>0$ i injektywnego $I$. Każdy $X$ ma mono do takiego $I$, zatem $R^\bullet F$ jest usuwalny. Stosujemy twierdzenie~\ref{cat:thm:effaceable-universal}. Dualna teza wynika z zastosowania tej argumentacji do $F^{\op}:\mathcal A^{\op}\to\mathcal B^{\op}$: odwracają się zarówno strzałki łączące, jak i kierunki przekształceń naturalnych.
+\end{proof}
+\begin{uwaga}
+Dwa uniwersalne kohomologiczne $\delta$-funktory o izomorficznych stopniach zerowych są izomorficzne jako $\delta$-funktory: izomorfizm stopnia zerowego i jego odwrotność przedłużamy, a ich złożenia są identycznościami przez jednoznaczność przedłużenia. Analogicznie w przypadku homologicznym.
+\end{uwaga}
+
+\subsection{Rezolucje acykliczne}
+\begin{definicja}\label{cat:def:acyclic-resolution}
+Dla lewostronnie dokładnego funktora $F$ na kategorii abelowej mającej dostatecznie wiele obiektów injektywnych obiekt $A$ nazywamy $F$-acyklicznym, jeśli $R^jF(A)=0$ dla $j>0$. Rezolucja $0\to X\to A^0\to A^1\to\cdots$ jest $F$-acykliczna, jeśli jest dokładna i wszystkie $A^k$ są $F$-acykliczne.
+\end{definicja}
+\begin{twierdzenie}[Obliczanie funktorów pochodnych przez rezolucje acykliczne]\label{cat:thm:acyclic-resolution}
+Jeśli $F$ jest addytywny i lewostronnie dokładny oraz $X\to A^\bullet$ jest rezolucją $F$-acykliczną, to $R^nF(X)\cong H^n(F(A^\bullet))$ dla każdego $n\ge0$. Izomorfizm jest kanoniczny i naturalny względem morfizmów takich rezolucji zgodnych z koaugmentacjami. Dualnie, dla prawostronnie dokładnego funktora i dostatecznej liczby obiektów rzutowych, można obliczać $L_nF$ przez dokładne rezolucje obiektami, na których znikają wyższe $L_jF$.
+\end{twierdzenie}
+\begin{proof}
+Niech $K^0=X$. Dokładność rezolucji daje krótkie ciągi $0\to K^k\xrightarrow{i_k}A^k\xrightarrow{p_k}K^{k+1}\to0$, gdzie $K^{k+1}$ jest przeciwdziedziną kojądra $i_k$, a różniczka ma rozkład $d^k=i_{k+1}p_k$. Z długich ciągów funktorów pochodnych i acykliczności otrzymujemy
+\[
+\begin{gathered}
+0\to F(K^k)\to F(A^k)\to F(K^{k+1})
+ \xrightarrow{\delta}R^1F(K^k)\to0,\\
+R^jF(K^{k+1})\xrightarrow{\ \cong\ }R^{j+1}F(K^k)
+\qquad(j\ge1).
+\end{gathered}
+\]
+Lewostronna dokładność daje $\ker F(p_k)=F(i_k)$ jako podobiekt, a $F(i_{k+1})$ jest mono, więc $\ker F(d^k)=\ker F(p_k)$. Dla $n=0$ otrzymujemy $H^0(F(A^\bullet))\cong F(X)$. Dla $n\ge1$ obraz $F(d^{n-1})$ wewnątrz cykli $F(K^n)$ odpowiada obrazowi $F(p_{n-1})$. Stąd
+\[
+ H^n(F(A^\bullet))\cong
+ \operatorname{coker}(F(p_{n-1}))\cong R^1F(K^{n-1})
+ \cong R^nF(X),
+\]
+gdzie $\operatorname{coker}(F(p_{n-1}))$ oznacza przeciwdziedzinę kojądra, a ostatni izomorfizm otrzymujemy przez $n-1$ kolejnych morfizmów łączących: $R^1F(K^{n-1})\to R^2F(K^{n-2})\to\cdots\to R^nF(K^0)$. Dla $n=1$ to ostatnie złożenie jest identycznością. Dla morfizmu rezolucji indukowane morfizmy na $K^k$ tworzą morfizmy krótkich ciągów; naturalność kojąder i morfizmów łączących daje naturalność całej konstrukcji. Uściślijmy normalizację izomorfizmu przez porównanie rezolucji. Oznaczmy izomorfizm skonstruowany za pomocą przesuwania wymiaru przez $\theta_A:H^n(F(A^\bullet))\to R^nF(X)$. Dla ustalonej rezolucji injektywnej $I^\bullet$ otrzymujemy również izomorfizm $\theta_I$; nie zakładamy z góry, że jest identycznością przy identyfikacji z definicją $R^nF$. Przedłużamy $\id_X$ do morfizmu $f:A^\bullet\to I^\bullet$ (wniosek~\ref{cat:cor:injective-comparison}). Naturalność właśnie skonstruowanych $\theta$ daje $\theta_I H^n(Ff)=\theta_A$, więc $H^n(Ff)=\theta_I^{-1}\theta_A$ jest izomorfizmem. To jest kanoniczny izomorfizm porównawczy do $R^nF(X)$ obliczanego przez $I^\bullet$. Nie zależy od wyboru $f$, także bez utożsamiania znaków kolejnych morfizmów łączących. Przy zmianie $I^\bullet$ składamy $f$ z przedłużeniem identyczności między rezolucjami injektywnymi; twierdzenie~\ref{cat:thm:derived-well-defined} daje zgodność z izomorfizmami zmiany rezolucji. Dla morfizmu rezolucji acyklicznych i odpowiadającego mu morfizmu ich obiektów oba złożenia do docelowej rezolucji injektywnej przedłużają ten sam morfizm; są homotopijne na mocy wniosku~\ref{cat:cor:injective-comparison}. To daje naturalność izomorfizmu porównawczego. Nie trzeba zakładać możliwości przedłużania do dowolnej rezolucji acyklicznej. Dualizujemy cały dowód dla $L_nF$.
+\end{proof}
+
+\subsection{Wyższe rozszerzenia i iloczyn Yonedy}
+\begin{definicja}\label{cat:def:yoneda-extension}
+Dla $n\ge1$ rozszerzeniem długości $n$ modułu $M$ przez $N$ nazywamy dokładny ciąg
+\[
+ 0\to N\to E_{n-1}\to\cdots\to E_0\to M\to0.
+\]
+Relację równoważności generują morfizmy takich ciągów będące identycznościami na modułach skrajnych: dopuszczamy skończony ciąg morfizmów w obu kierunkach. Dla $n=1$ jest to dotychczasowa równoważność, ponieważ każdy taki morfizm jest izomorfizmem na mocy lematu o pięciu morfizmach.
+\end{definicja}
+\begin{twierdzenie}[Interpretacja wyższych Ext]\label{cat:thm:yoneda-extensions}
+Klasy rozszerzeń długości $n$ odpowiadają bijektywnie elementom $\operatorname{Ext}_R^n(M,N)$. Dla $n=1$ otrzymujemy bijekcję z twierdzenia~\ref{cat:thm:ext-extensions}.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy rezolucję rzutową $P_\bullet\to M$ i oznaczmy przez $k_n:K_n\hookrightarrow P_{n-1}$ jej $n$-tą syzygię. Różniczka $d_n$ rozkłada się jako $k_ne_n$, gdzie $e_n:P_n\to K_n$ jest epi. Cocykle stopnia $n$ to homomorfizmy $P_n\to N$ zerujące się na $\operatorname{im}d_{n+1}=\ker e_n$, więc rozkładają się jednoznacznie przez $e_n$. Cobrzegi to homomorfizmy $h d_n=h k_ne_n$, gdzie $h:P_{n-1}\to N$. Stąd
+\[
+ \operatorname{Ext}_R^n(M,N)\cong
+ \Hom_R(K_n,N)/\{hk_n:h:P_{n-1}\to N\}.
+\]
+Dla danego rozszerzenia oznaczamy jego różniczki przez $\partial_j$, augmentację przez $\partial_0:E_0\to M$ i włożenie $N\to E_{n-1}$ przez $i$. Rzutowość $P_j$ i dokładność rozszerzenia dają podniesienia $s_j:P_j\to E_j$ dla $0\le j<n$. Najpierw $\partial_0s_0=\epsilon_P$ przez rzutowość $P_0$. Dla $j\ge1$ morfizm $s_{j-1}d_j^P$ ma złożenie z $\partial_{j-1}$ równe zeru: dla $j=1$ jest to $\epsilon_Pd_1^P=0$, a dla $j>1$ jest to $s_{j-2}d_{j-1}^Pd_j^P=0$. Rozkłada się więc przez jądro $\partial_{j-1}$, na które $\partial_j$ indukuje epi; rzutowość $P_j$ daje $s_j$ z $\partial_js_j=s_{j-1}d_j^P$. Mamy $\partial_{n-1}s_{n-1}k_n=0$ (dla $n=1$ używamy augmentacji), więc $s_{n-1}k_n=ia$ dla jedynego $a:K_n\to N$.
+
+Sprawdzamy niezależność podniesień. Jeśli $s'_j$ jest drugim wyborem, to dla $j=0,\ldots,n-2$ konstruujemy kolejno $h_j:P_j\to E_{j+1}$ z
+$s_j-s'_j=\partial_{j+1}h_j+h_{j-1}d_j$, przy czym drugi składnik w stopniu $0$ jest zerem. Istnienie wynika z dokładnie tego samego kroku co w dowodzie twierdzenia~\ref{cat:thm:resolution-comparison}: różnica po odjęciu $h_{j-1}d_j$ trafia do jądra poprzedniej strzałki, a rzutowość pozwala ją podnieść. W ostatnim stopniu różnica $s_{n-1}-s'_{n-1}-h_{n-2}d_{n-1}$ (bez drugiego składnika dla $n=1$) trafia do $\ker\partial_{n-1}=\operatorname{im}i$, więc jest równa $ih$ dla $h:P_{n-1}\to N$. Po złożeniu z $k_n$ i skróceniu $i$ mamy $a-a'=hk_n$. Morfizm rozszerzeń zgodny z identycznościami przenosi podniesienia, a więc zachowuje klasę; zachowują ją również skończone ciągi takich morfizmów.
+
+Odwrotnie dla $a:K_n\to N$ zastępujemy początkowy fragment $0\to K_n\to P_{n-1}$ obiektem
+\[
+ E_a=(N\oplus P_{n-1})/\{(a(x),-k_n(x)):x\in K_n\}.
+\]
+Dostajemy ciąg $0\to N\to E_a\to P_{n-2}\to\cdots\to P_0\to M\to0$, w którym dla $n=1$ po $E_a$ następuje $M$. Dokładność w $N,E_a$ wynika z rachunku z twierdzenia~\ref{cat:thm:ext-extensions} zastosowanego do krótkiego ciągu $0\to K_n\to P_{n-1}\to K_{n-1}\to0$, gdzie $K_0=M$; pozostała część jest niezmieniona. Wybierając identyczności w niższych stopniach i $y\mapsto[0,y]$ w ostatnim, odzyskujemy $a$. Zmiana $a$ o $hk_n$ daje izomorfizm w ostatnim obiekcie przez $[z,y]_a\mapsto[z-h(y),y]_{a+hk_n}$. Dla pierwotnego rozszerzenia istnieje morfizm z tego kanonicznego ciągu: w niższych stopniach używamy $s_j$, w ostatnim $[z,y]\mapsto i(z)+s_{n-1}(y)$. Jest dobrze określony, gdyż $ia=s_{n-1}k_n$, a zgodność z różniczkami wynika z równań podniesienia. Na końcach jest identycznością, zatem oba rozszerzenia są równoważne. Konstrukcje są wzajemnie odwrotne. Przy zmianie rezolucji podniesienie identyczności indukuje morfizm syzygii, a złożenie podniesień do rozszerzenia daje tę samą klasę przez twierdzenie~\ref{cat:thm:derived-well-defined}.
+\end{proof}
+
+\begin{twierdzenie}[Iloczyn Yonedy]\label{cat:thm:yoneda-product}
+Dla modułów $M,N,L$ i $p,q\ge0$ istnieje dwuliniowy iloczyn
+\[
+ \operatorname{Ext}_R^q(N,L)\times\operatorname{Ext}_R^p(M,N)
+ \longrightarrow\operatorname{Ext}_R^{p+q}(M,L),
+ \qquad(\beta,\alpha)\longmapsto\beta\alpha.
+\]
+Jest łączny, w stopniu zerowym odpowiada składaniu homomorfizmów, a identyczności są elementami jednostkowymi dla odpowiednich modułów. Dla $p,q>0$ odpowiada sklejaniu rozszerzeń: koniec rozszerzenia reprezentującego $\beta$ w $N$ składamy z początkiem rozszerzenia reprezentującego $\alpha$ w $N$.
+\end{twierdzenie}
+\begin{proof}
+Niech $P_\bullet,Q_\bullet$ będą rezolucjami rzutowymi $M,N$. Wybieramy cocykle $a:P_p\to N$, $b:Q_q\to L$ reprezentujące $\alpha,\beta$. Konstruujemy rodzinę $f_j:P_{p+j}\to Q_j$, $j\ge0$, z
+$\epsilon_Q f_0=a$ i $d_j^Q f_j=f_{j-1}d_{p+j}^P$ dla $j\ge1$. Pierwszy krok wykorzystuje rzutowość $P_p$ i epi $\epsilon_Q$. Dla $j=1$ mamy $\epsilon_Q f_0d_{p+1}^P=ad_{p+1}^P=0$, więc $f_0d_{p+1}^P$ rozkłada się przez jądro $\epsilon_Q$. Dla $j\ge2$ zachodzi
+\[
+ d_{j-1}^Q f_{j-1}d_{p+j}^P=f_{j-2}d_{p+j-1}^Pd_{p+j}^P=0.
+\]
+Z dokładności $Q_\bullet$ różniczka $d_j^Q$ indukuje epi na odpowiednie jądro; rzutowość $P_{p+j}$ pozwala podnieść przez ten epi uzyskany morfizm do jądra. To daje $f_j$ i żądaną równość. Definiujemy produkt jako klasę cocyklu $bf_q$: mamy $bf_qd_{p+q+1}^P=bd_{q+1}^Q f_{q+1}=0$.
+
+Jeśli $b$ zastąpimy przez $b+c d_q^Q$ dla $q>0$, różnica produktów wynosi $c f_{q-1}d_{p+q}^P$, czyli jest cobrzegiem. Nie ma cobrzegów stopnia $0$. Gdy $a-a'=u d_p^P$ dla $p>0$, podnosimy $u:P_{p-1}\to N$ do $h_{-1}:P_{p-1}\to Q_0$. Dla $p=0$ mamy $a=a'$ i przyjmujemy wyrażenie $h_{-1}d_p^P$ jako morfizm zerowy w stopniu $0$. Różnica $f_0-f'_0-h_{-1}d_p^P$ zeruje się po augmentacji $Q$, więc rozkłada się przez jej jądro; z dokładności $Q$ i rzutowości $P_p$ podnosimy ją do $h_0:P_p\to Q_1$. Indukcja jak w twierdzeniu~\ref{cat:thm:resolution-comparison} daje
+\[
+ f_j-f'_j=d_{j+1}^Qh_j+h_{j-1}d_{p+j}^P.
+\]
+Po złożeniu z $b$ pierwszy składnik znika, drugi jest cobrzegiem (lub zerem w stopniu $p+q=0$). Obejmuje to także zmianę samych podniesień przy ustalonym $a$. Produkt jest więc dobrze określony. Przy zmianie $P$ na $P'$ wybieramy morfizm kompleksów $v:P'\to P$ podnoszący $\id_M$. Nowy reprezentant $\alpha$ to $av_p$, a jego podniesieniem jest $f_jv_{p+j}$. Produkt ma więc reprezentanta $bf_qv_{p+q}$, zgodnego z kanonicznym izomorfizmem. Przy zmianie $Q$ na $Q'$ wybieramy $w:Q\to Q'$ i $u:Q'\to Q$ podnoszące $\id_N$. Reprezentant $\beta$ zmienia się na $bu_q$, a $w_jf_j$ podnosi $a$. Ponieważ $uw$ jest homotopijny z $\id_Q$, dla pewnej homotopii $h$ mamy
+\[
+ bu_qw_qf_q-bf_q=b h_{q-1}d_q^Q f_q
+ =b h_{q-1}f_{q-1}d_{p+q}^P
+\]
+dla $q>0$; składnik zawierający $bd_{q+1}^Q$ znika, a dla $q=0$ cała różnica jest zerowa. Jest to cobrzeg, więc produkt jest zgodny z kanonicznymi izomorfizmami zmiany rezolucji.
+
+Dwuliniowość wynika z użycia sumy podniesień dla sumy cocykli i rozdzielności składania. Dla trzeciej klasy reprezentowanej przez cocykl $c:S_r\to V$ wybieramy podniesienia $g_j:Q_{q+j}\to S_j$ cocyklu $b$. Podniesieniem cocyklu $bf_q$ do $S_\bullet$ jest rodzina $g_j f_{q+j}$: w stopniu $0$ augmentacja daje $bf_q$, a zgodność z różniczkami wynika ze zgodności obu rodzin. Oba sposoby nawiasowania potrójnego produktu są reprezentowane przez $c g_r f_{q+r}$. W stopniu zerowym cocykle rozkładają się przez augmentacje. Dla $p=q=0$ mamy $a=\bar a\epsilon_P$, $b=\bar b\epsilon_Q$, więc $bf_0=\bar b a=\bar b\bar a\epsilon_P$. Dla $\beta=\id_N$ w stopniu $q=0$ jej reprezentantem jest $\epsilon_Q$, a produkt ma reprezentanta $\epsilon_Q f_0=a$. Dla $\alpha=\id_M$ w stopniu $p=0$ jako rodzinę podniesień można wybrać identyczność rezolucji $P=Q$, więc produkt ma reprezentanta $b$. Daje to oba prawa jednostki. Gdy tylko $q=0$, reprezentant $b=\bar b\epsilon_Q$ daje $bf_0=\bar b a$, czyli produkt jest postkompozycją z $\bar b:N\to L$. Gdy tylko $p=0$, rodzina $f_j$ jest morfizmem rezolucji podnoszącym $\bar a:M\to N$, a reprezentant $bf_q$ daje dokładnie działanie kontrawariantne Ext na $\bar a$.
+
+Sprawdzimy zgodność ze sklejaniem dla $p,q>0$. Z twierdzenia~\ref{cat:thm:yoneda-extensions} możemy reprezentować $\alpha$ przez kanoniczne rozszerzenie z ostatnim obiektem $E_A=(N\oplus P_{p-1})/\{(A(x),-k_p(x))\}$, gdzie $a=Ae_p$. Niech $0\to L\to B_{q-1}\to\cdots\to B_0\to N\to0$ reprezentuje $\beta$. Wybieramy podniesienia $t_j:Q_j\to B_j$ dla $j<q$ jak w dowodzie tego twierdzenia. W ostatnim stopniu $t_{q-1}d_q^Q=i_L b'$, gdzie $i_L:L\to B_{q-1}$, a $b'$ jest cocyklem reprezentującym $\beta$ na mocy twierdzenia~\ref{cat:thm:yoneda-extensions}. Możemy zastąpić wcześniejszy reprezentant $b$ przez $b'$ dzięki udowodnionej niezależności od przedstawicieli; dalej oznaczamy go przez $b$. Sklejamy ciągi przez złożenie $B_0\to N\to E_A$; dokładność w miejscu sklejenia wynika z epimorficzności $B_0\to N$ i monomorficzności $N\to E_A$. Podniesienia z $P_\bullet$ do sklejonego ciągu są identycznościami do stopnia $p-2$, w stopniu $p-1$ mają postać $y\mapsto[0,y]$, a w stopniach $p+j$ dla $0\le j<q$ mają postać $t_j f_j$. W miejscu sklejenia zgodność wynika z równości $[0,d_p^P(x)]=[a(x),0]$ oraz $\epsilon_Q f_0=a$. W pozostałych stopniach wynika z równań dla $f_j,t_j$. W ostatnim stopniu
+\[
+ t_{q-1} f_{q-1}d_{p+q}^P
+ =t_{q-1}d_q^Q f_q=i_L b f_q.
+\]
+Zatem cocykl sklejonego rozszerzenia to $bf_q$, jak chcieliśmy. Równoważność rozszerzeń jest zachowana przez sklejanie, ponieważ morfizmy identyczne na końcach można skleić z identycznością drugiego rozszerzenia. To kończy dowód.
+\end{proof}
+\begin{wniosek}
+Dla każdego modułu $M$ grupa stopniowana $\bigoplus_{n\ge0}\operatorname{Ext}_R^n(M,M)$ z iloczynem Yonedy jest pierścieniem stopniowanym z jedynką $\id_M$. Nie zakładamy jego przemienności ani przemienności stopniowanej.
+\end{wniosek}
+\begin{proof}
+Twierdzenie~\ref{cat:thm:yoneda-product} daje dwuliniowość, łączność i jedynkę; rozszerzamy mnożenie na skończone sumy jednorodnych składników przez rozdzielność. Stopnie dodają się na mocy definicji produktu.
+\end{proof}

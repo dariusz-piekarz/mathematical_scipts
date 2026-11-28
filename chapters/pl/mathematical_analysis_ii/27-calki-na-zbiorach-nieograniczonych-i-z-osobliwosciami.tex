@@ -1,0 +1,1218 @@
+\chapter{Całki na zbiorach nieograniczonych i z osobliwościami}
+\label{ma2:ch:improper-euclidean}
+
+W analizie matematycznej I omówiono całki niewłaściwe
+funkcji jednej zmiennej, w tym zbieżność bezwzględną,
+warunkową i wartość główną Cauchy'ego
+(\atlasref{AM1-31::ma1:ch:improper-integrals}{rozdział 31}).
+W przestrzeni $\R^n$ można zbliżać się do nieskończoności
+lub do zbioru osobliwości na wiele sposobów.
+Punktem odniesienia będzie całka Lebesgue'a:
+jeżeli funkcja jest całkowalna, wynik nie zależy od
+sposobu wyczerpania dziedziny.
+W rozdziale \ref{ma2:ch:multiple-integrals}
+omówiliśmy twierdzenie Fubiniego i zamianę zmiennych.
+Podstawowe wyniki o wyczerpaniach wyprowadzimy
+jednak niezależnie od tych metod.
+
+\section{Intuicja: odcięcie osobliwości i nieskończoności}
+
+Całkę po nieograniczonym zbiorze wygodnie
+przybliżać całkami po jego ograniczonych
+fragmentach.
+Zaczynamy od części dziedziny, na której
+rachunek jest już dobrze określony, a następnie
+stopniowo odzyskujemy pominięte fragmenty.
+Jeżeli funkcja jest nieujemna, każdy kolejny
+fragment może tylko powiększyć zgromadzony
+wkład. Dla funkcji ze znakiem przyrost może
+mieć dowolny znak.
+
+Przy całkowaniu na $\R^n\setminus\{0\}$
+wygodnie jest jednocześnie odciąć
+otoczenie osobliwości i daleką część
+dziedziny. Dla $0<\varepsilon<R$ używamy
+zbioru
+\[
+ K_{\varepsilon,R}=\{x:\varepsilon\le
+ \|x\|_2\le R\}.
+\]
+Jeżeli $f$ jest ciągła poza zerem, to
+jest ograniczona na tym zwartym zbiorze.
+Zmniejszanie $\varepsilon$ i zwiększanie
+$R$ przywraca kolejno oba pominięte fragmenty.
+Dla mierzalnej funkcji rzeczywistej $f$
+całkowalnej na $\R^n$ (w razie potrzeby
+przedłużonej przez zero w punkcie $0$)
+błąd takiego odcięcia
+spełnia
+\[
+ \left|\int_{\R^n}f\,\mathrm d\lambda_n
+ -\int_{K_{\varepsilon,R}}f\,\mathrm d\lambda_n\right|
+ \le
+ \int_{\{\|x\|_2<\varepsilon\}}|f|\,\mathrm d\lambda_n
+ +\int_{\{\|x\|_2>R\}}|f|\,\mathrm d\lambda_n.
+\]
+Oba składniki dążą niezależnie do zera:
+pierwszy na mocy
+\ref{ma2:cor:lebesgue-absolute-cont}
+(kula o promieniu $\varepsilon$ zawiera się
+w kostce o objętości $(2\varepsilon)^n$), a drugi
+na mocy twierdzenia o zbieżności
+zmajoryzowanej \ref{ma2:thm:lebesgue-dominated}
+zastosowanego do funkcji
+$|f|\chi_{\{\|x\|_2>R\}}$.
+Nierówność wynika z liniowości
+i oszacowania modułu całki
+\ref{ma2:thm:lebesgue-linearity}.
+Nie ma zatem potrzeby uzgadniania
+tempa obu odcięć, gdy moduł funkcji
+jest całkowalny.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.05,>=stealth]
+ \foreach \d/\ri/\ro/\lab in
+ {0/.65/1.05/{1},4.25/.4/1.4/{2},8.5/.2/1.75/{3}}{
+  \begin{scope}[xshift=\d cm]
+   \fill[blue!25,even odd rule] (0,0) circle (\ro)
+     (0,0) circle (\ri);
+   \draw[blue!65!black,thick] (0,0) circle (\ro);
+   \draw[orange!80!black,thick] (0,0) circle (\ri);
+   \draw[->,gray!70] (-1.9,0)--(1.95,0);
+   \draw[->,gray!70] (0,-1.9)--(0,1.95);
+   \fill (0,0) circle (1.2pt);
+   \draw[orange!80!black,->] (0,0)--(40:\ri);
+   \draw[blue!75!black,->] (0,0)--(-35:\ro);
+   \node[below] at (0,-2) {$K_{\lab}$};
+  \end{scope}
+ }
+\end{tikzpicture}
+\caption{Rosnące fragmenty przebitej płaszczyzny.
+Zewnętrzny promień rośnie, wewnętrzny maleje.
+W każdym etapie całkujemy po niebieskim
+pierścieniu, omijając osobliwość w zerze
+i nieograniczony ogon dziedziny.}
+\label{ma2:fig:improper-exhaustion-intuition}
+\end{figure}
+
+\paragraph{Wysokość funkcji a rozmiar obszaru.}
+Nieograniczoność funkcji nie przesądza o
+rozbieżności całki. W pobliżu osobliwości
+duże wartości mogą występować na tak
+małych zbiorach, że ich łączny wkład
+pozostaje skończony. Analogicznie
+w nieskończoności sam zanik funkcji do
+zera nie zapewnia całkowalności: obszar
+dostępny w kolejnych warstwach może
+rosnąć szybciej niż maleje funkcja.
+
+Dla $\|x\|_2^{-p}$ w $\R^n$ warstwa
+o promieniach od $r$ do $2r$ ma objętość
+proporcjonalną do $r^n$ (skalowanie miary,
+\atlasref{ME-04::thm:invariance-lebesgue}{ME 04}), a wartości
+funkcji są porównywalne z $r^{-p}$.
+Jej wkład jest więc porównywalny
+z $r^{n-p}$. Dokładne oszacowania
+podamy w twierdzeniu
+\ref{ma2:thm:improper-power-test}.
+Przy $r=2^{-j}$ wkłady maleją geometrycznie
+wtedy, gdy $p<n$. Przy $r=2^j$ maleją
+geometrycznie wtedy, gdy $p>n$.
+W przypadku granicznym $p=n$ każda
+warstwa wnosi porównywalną dodatnią
+ilość, więc nieskończenie wiele warstw
+daje nieskończoną całkę.
+Jest to intuicja niezależna od użycia
+współrzędnych biegunowych.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1.05cm,y=1.5cm,>=stealth]
+ \draw[->] (-.15,0)--(7.6,0) node[right] {$j$};
+ \draw[->] (0,-.08)--(0,1.65) node[above] {wkład};
+ \foreach \j in {0,...,6}{
+  \pgfmathsetmacro{\h}{pow(.5,\j)}
+  \filldraw[fill=blue!35,draw=blue!70!black]
+   ({\j+.08},0) rectangle ({\j+.32},\h);
+  \filldraw[fill=orange!35,draw=orange!85!black]
+   ({\j+.36},0) rectangle ({\j+.60},1);
+  \node[below] at ({\j+.34},0) {$\j$};
+ }
+ \node[blue!75!black,right] at (1.5,1.48)
+ {$p=n-1$: $2^{-j}$};
+ \node[orange!85!black,right] at (1.5,1.22)
+ {$p=n$: $1$};
+\end{tikzpicture}
+\caption{Porównanie rzędów wkładów kolejnych
+warstw diadycznych przy osobliwości: dla
+$p=n-1$ sumujemy szereg geometryczny,
+a dla $p=n$ szereg o wyrazach stałych.
+Pominięto stałe mnożniki zależne od wymiaru
+i wykładnika.}
+\label{ma2:fig:improper-shell-contributions}
+\end{figure}
+
+\paragraph{Dlaczego wartość główna nie zastępuje całki?}
+Jeżeli dodatnia i ujemna część funkcji
+mają obie nieskończone całki, ich formalna
+różnica nie jest określona. Symetryczne
+odcięcie może wymusić dokładne znoszenie
+się wkładów, ale odcięcie asymetryczne
+może dać inną granicę. Nie jest to błąd
+rachunkowy, lecz efekt zmiany sposobu
+grupowania wkładów. W przykładzie
+\ref{ma2:ex:improper-asymmetric-cut}
+wykażemy, że można w ten sposób otrzymać
+dowolną zadaną liczbę rzeczywistą.
+
+\section{Wyczerpania zbiorów mierzalnych}
+
+\begin{definicja}
+\label{ma2:def:integral-exhaustion}
+Niech $A\subseteq\R^n$ będzie mierzalny.
+Wyczerpaniem mierzalnym zbioru $A$ nazywamy
+ciąg mierzalnych zbiorów $A_j$ takich, że
+\[
+ A_j\subseteq A_{j+1}\subseteq A,\qquad
+ \lambda_n(A_j)<\infty,\qquad
+ A=\bigcup_{j\ge1}A_j.
+\]
+Mówimy o wyczerpaniu z dokładnością do zbioru zerowego,
+jeżeli zamiast ostatniej równości zachodzi
+$\lambda_n(A\setminus\bigcup_j A_j)=0$.
+\end{definicja}
+
+Każdy zbiór mierzalny ma wyczerpanie, na przykład
+$A_j=A\cap[-j,j]^n$. Jeśli $f:A\to\R$ jest
+mierzalna, możemy dodatkowo wymagać, aby $f$
+była ograniczona na każdym $A_j$: wystarczy
+przyjąć $A_j=A\cap[-j,j]^n\cap\{|f|\le j\}$.
+Dla funkcji nieujemnej o wartościach rozszerzonych
+taka modyfikacja pomija zbiór $\{f=+\infty\}$;
+jeżeli ma miarę zero, całka nie zależy od wartości
+na nim. Jeżeli ma dodatnią miarę, całka z $f$
+na $A$ wynosi $+\infty$, a całki po zmodyfikowanym
+ciągu nie muszą odzwierciedlać tej wartości.
+
+\begin{twierdzenie}[Niezależność od wyczerpania]
+\label{ma2:thm:improper-exhaustion}
+Niech $(A_j)$ będzie wyczerpaniem mierzalnym
+zbioru $A$ z dokładnością do zbioru zerowego.
+\begin{enumerate}[label=(\roman*)]
+\item Jeżeli $f:A\to[0,\infty]$ jest mierzalna, to
+\[
+ \int_A f(x)\,\mathrm d\lambda_n(x)
+ =\lim_{j\to\infty}\int_{A_j}f(x)\,\mathrm d\lambda_n(x)
+ \quad\text{w }[0,\infty].
+\]
+\item Jeżeli $f:A\to\R$ jest całkowalna, to
+\[
+ \int_A f(x)\,\mathrm d\lambda_n(x)
+ =\lim_{j\to\infty}\int_{A_j}f(x)\,\mathrm d\lambda_n(x).
+\]
+Ponadto
+$\int_{A\setminus A_j}|f(x)|\,\mathrm d\lambda_n(x)\to0$.
+\item Dla mierzalnej $f:A\to\R$ warunek
+\[
+ \sup_j\int_{A_j}|f(x)|\,\mathrm d\lambda_n(x)<\infty
+\]
+jest równoważny całkowalności $f$ na $A$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Niech $N=A\setminus\bigcup_j A_j$.
+Przedłużenia ograniczeń $f|_{A_j}$ przez zero
+na $A$ oznaczamy przez $f\chi_{A_j}$, przy
+konwencji $0\cdot(+\infty)=0$.
+Dla $f\ge0$ tworzą one ciąg niemalejący
+o granicy $f$ poza $N$ i zero na $N$.
+Twierdzenie o zbieżności monotonicznej
+\ref{ma2:thm:lebesgue-monotone} oraz niezmienniczość
+całki po zmianie na zbiorze zerowym
+(\atlasref{ME-07::thm:ae-integral-invariance}{teoria miary i całki})
+dają punkt (i).
+
+W punkcie (ii) funkcje $f\chi_{A_j}$ są
+zmajoryzowane przez $|f|$ i zbiegają do $f$
+prawie wszędzie. Stosujemy twierdzenie
+\ref{ma2:thm:lebesgue-dominated}.
+Do funkcji $|f|\chi_{A\setminus A_j}$ stosujemy
+to samo twierdzenie: zbiegają prawie wszędzie
+do zera i mają tę samą całkowalną majorantę.
+We wszystkich tych zastosowaniach identyfikujemy
+całki przedłużeń przez zero z całkami na odpowiednich
+zbiorach na mocy \ref{ma2:prop:lebesgue-zero-extension}.
+Punkt (iii) wynika z (i) zastosowanego do $|f|$,
+gdyż całki nieujemne na $A_j$ są niemalejące
+(\atlasref{ME-07::thm:nonnegative-first-properties}{monotoniczność całki}),
+a ich granica jest ich supremum.
+\end{proof}
+
+Punkty (i) i (ii) można stosować również do
+niemonotonicznego ciągu zbiorów $A_j\subseteq A$,
+jeżeli $\chi_{A_j}\to\chi_A$ prawie wszędzie.
+Dla całkowalnej $f$ wynika to z
+\ref{ma2:cor:lebesgue-moving-sets}.
+Dla nieujemnej $f$ o nieskończonej całce
+lemat Fatou \ref{ma2:thm:lebesgue-fatou} daje wówczas
+$\liminf_j\int_{A_j}f\,\mathrm d\lambda_n=+\infty$,
+gdyż funkcje przedłużone przez zero
+zbiegają prawie wszędzie do $f$.
+Dla skończonej całki nieujemnej stosujemy
+zbieżność zmajoryzowaną po zastąpieniu wartości
+$+\infty$ przez zero na zbiorze zerowym:
+zbiór $N_\infty=\{f=+\infty\}$ ma miarę zero,
+gdyż dla każdego $M>0$ mamy
+$\int_A f\,\mathrm d\lambda_n\ge M\lambda_n(N_\infty)$.
+Jeśli $\lambda_n(N_\infty)>0$, to całka
+musiałaby być nieskończona.
+
+\section{Wyczerpania geometryczne obszaru}
+
+Niech $U\subseteq\R^n$ będzie otwarty i
+$f:U\to\R$ ciągła. Nawet jeśli $U$ jest
+nieograniczony lub $f$ nie jest ograniczona
+w pobliżu brzegu, na zwartych podzbiorach
+$U$ funkcja $f$ jest ograniczona.
+
+\begin{lemat}[Wyczerpanie kostkami]
+\label{ma2:lem:improper-jordan-exhaustion}
+Każdy otwarty zbiór $U\subseteq\R^n$ ma
+wyczerpanie $(K_j)$ złożone ze zwartych
+zbiorów mierzalnych w sensie Jordana,
+zawartych w $U$.
+\end{lemat}
+\begin{proof}
+Dla $j\ge1$ rozpatrujemy wszystkie domknięte
+kostki siatki diadycznej o boku $2^{-j}$,
+zawarte w $U\cap[-j,j]^n$.
+Ich suma $K_j$ jest skończona, gdyż
+$[-j,j]^n$ jest ograniczony. Przy braku
+takich kostek przyjmujemy $K_j=\varnothing$.
+Każdy $K_j$ jest zwarty. Brzeg skończonej
+sumy domkniętych kostek zawiera się w sumie
+ich brzegów: poza tą sumą każdy punkt jest
+albo we wnętrzu jednej kostki, albo poza
+wszystkimi kostkami w pewnym otoczeniu.
+Każdy brzeg kostki jest zawarty w skończonej
+sumie hiperpłaszczyzn współrzędnościowych,
+które mają miarę zero
+(\atlasref{ME-04::lem:hyperplane-null}{lemat o hiperpłaszczyznach}).
+Z twierdzenia \ref{ma2:thm:jordan-criterion}
+wynika mierzalność $K_j$ w sensie Jordana.
+
+Każda kostka wybrana na etapie $j$ jest sumą
+$2^n$ kostek siatki etapu $j+1$, również
+zawartych w $U\cap[-(j+1),j+1]^n$.
+Zatem $K_j\subseteq K_{j+1}$.
+Dla każdego $x\in U$ istnieje $r>0$
+takie, że kula euklidesowa $B(x,r)$
+zawiera się w $U$. Wybieramy $j$
+tak duże, by $j>\|x\|_\infty+r$
+oraz $\sqrt n\,2^{-j}<r$.
+Każda kostka tej siatki zawierająca $x$
+ma średnicę $\sqrt n\,2^{-j}$,
+a więc zawiera się w $B(x,r)$
+i w $[-j,j]^n$. Stąd $x\in K_j$.
+Otrzymujemy $\bigcup_j K_j=U$.
+\end{proof}
+
+\begin{wniosek}[Całka przez całki Riemanna na wyczerpaniu]
+\label{ma2:cor:improper-riemann-exhaustion}
+Niech $U\subseteq\R^n$ będzie otwarty,
+$f:U\to\R$ ciągła, a $(K_j)$ dowolnym
+rosnącym wyczerpaniem $U$ zwartymi zbiorami
+mierzalnymi w sensie Jordana.
+Jeżeli $f$ jest nieujemna lub całkowalna
+w sensie Lebesgue'a, to
+\[
+ \int_U f(x)\,\mathrm d\lambda_n(x)
+ =\lim_{j\to\infty} I_{K_j}(f|_{K_j}),
+\]
+gdzie $I_{K_j}$ oznacza całkę Riemanna
+z rozdziału \ref{ma2:ch:lebesgue-euclidean}.
+W przypadku $f\ge0$ dopuszczamy wartość $+\infty$.
+Ponadto $f$ jest całkowalna wtedy i tylko wtedy,
+gdy $\sup_j I_{K_j}(|f|\restriction_{K_j})<\infty$.
+\end{wniosek}
+\begin{proof}
+Funkcje $f|_{K_j}$ i $|f|\restriction_{K_j}$ są ciągłe
+i ograniczone. Twierdzenie
+\ref{ma2:thm:lebesgue-jordan-agreement}
+zapewnia istnienie całek Riemanna i ich
+zgodność z całkami Lebesgue'a. Dla zbioru
+pustego przyjmujemy całkę zero.
+Stosujemy kolejno punkty (i)--(iii)
+twierdzenia \ref{ma2:thm:improper-exhaustion}.
+\end{proof}
+
+Wniosek stosujemy np. na $U=\R^n\setminus S$,
+gdzie $S$ jest domkniętym zbiorem osobliwości.
+Jeżeli $S$ jest zerowy, wartości przypisane
+funkcji na $S$ nie wpływają na całkę Lebesgue'a,
+o ile rozpatrujemy mierzalne przedłużenie.
+Nie oznacza to, że osobliwość jest nieszkodliwa:
+o całkowalności decyduje zachowanie funkcji
+w otoczeniu $S$.
+
+\section{Osobliwości punktowe i zachowanie w nieskończoności}
+
+Oznaczmy $\rho(x)=\|x\|_\infty=\max_i|x_i|$,
+a przez $C_r=[-r,r]^n$ kostkę o promieniu $r>0$
+w tej normie.
+
+\begin{twierdzenie}[Kryterium potęgowe]
+\label{ma2:thm:improper-power-test}
+Niech $p\in\R$ i $n\ge1$.
+\begin{enumerate}[label=(\roman*)]
+\item Funkcja $\|x\|^{-p}$ jest całkowalna
+na $\{x:0<\|x\|<1\}$ wtedy i tylko wtedy,
+gdy $p<n$.
+\item Funkcja $\|x\|^{-p}$ jest całkowalna
+na $\{x:\|x\|\ge1\}$ wtedy i tylko wtedy,
+gdy $p>n$.
+\end{enumerate}
+Twierdzenie zachodzi dla normy euklidesowej
+i normy supremum.
+\end{twierdzenie}
+\begin{proof}
+Najpierw rozpatrzmy normę supremum.
+Dla $j\ge0$ połóżmy
+\[
+ S_j=C_{2^{-j}}\setminus C_{2^{-(j+1)}}.
+\]
+Zbiory są rozłączne i ich suma to
+$C_1\setminus\{0\}$. Z addytywności miary i wzoru
+na objętość kostki ich miary wynoszą
+\[
+ \lambda_n(S_j)
+ =2^n(1-2^{-n})\,2^{-jn}.
+\]
+Na $S_j$ mamy $2^{-(j+1)}<\rho(x)\le2^{-j}$.
+Dla dowolnego rzeczywistego $p$ stąd
+\[
+ 2^{-|p|}2^{jp}\le \rho(x)^{-p}
+ \le 2^{|p|}2^{jp}.
+\]
+Zatem, oznaczając $c_n=2^n(1-2^{-n})>0$,
+\[
+ c_n2^{-|p|}2^{j(p-n)}
+ \le\int_{S_j}\rho(x)^{-p}\,\mathrm d\lambda_n(x)
+ \le c_n2^{|p|}2^{j(p-n)}.
+\]
+Rozkład całki nieujemnej na rozłączne
+zbiory (rozdział \ref{ma2:ch:lebesgue-euclidean})
+i kryterium zbieżności szeregu geometrycznego
+dają warunek $p<n$.
+Brzeg $C_1$ ma miarę zero jako podzbiór
+skończonej sumy hiperpłaszczyzn współrzędnościowych.
+Jego pominięcie nie zmienia wyniku.
+
+W nieskończoności używamy rozłącznych
+warstw $T_j=C_{2^{j+1}}\setminus C_{2^j}$,
+$j\ge0$. Zachodzi
+$\lambda_n(T_j)=c_n2^{(j+1)n}$, a
+$2^j<\rho(x)\le2^{j+1}$.
+Analogiczne oszacowania dają
+\[
+ c_n2^{n-|p|}2^{j(n-p)}
+ \le\int_{T_j}\rho(x)^{-p}\,\mathrm d\lambda_n(x)
+ \le c_n2^{n+|p|}2^{j(n-p)}.
+\]
+Warstwy $T_j$ pokrywają $\{\rho>1\}$.
+Suma całek jest skończona dokładnie wtedy,
+gdy $p>n$. Dołączenie brzegu $C_1$ nie wpływa
+na wynik.
+
+Dla normy euklidesowej zachodzi
+$\rho(x)\le\|x\|_2\le\sqrt n\,\rho(x)$,
+więc dla $x\ne0$
+\[
+ n^{-|p|/2}\rho(x)^{-p}
+ \le\|x\|_2^{-p}
+ \le n^{|p|/2}\rho(x)^{-p}.
+\]
+Kula euklidesowa jednostkowa zawiera wnętrze
+$C_{1/\sqrt n}$ i zawiera się w $C_1$;
+na różnicy między tymi kostkami funkcje
+są ograniczone i zbiór ma skończoną miarę.
+Podobnie różnica między zewnętrzem kuli
+a zewnętrzem $C_1$ zawiera się w ograniczonym
+obszarze $\rho(x)\ge1/\sqrt n$.
+W obu przypadkach dodatkowe części mają
+skończone całki. Porównanie przenosi więc
+oba kryteria na normę euklidesową.
+\end{proof}
+
+\begin{przyklad}[Osobliwość i zanik w różnych wymiarach]
+\label{ma2:ex:improper-power-dimensions}
+W $\R^3$ funkcja $1/\|x\|_2^2$ jest
+całkowalna w przebitej kuli jednostkowej,
+ale nie na jej zewnętrzu.
+Funkcja $1/\|x\|_2^4$ ma własności odwrotne.
+Przypadek graniczny $1/\|x\|_2^3$
+nie jest całkowalny ani przy zerze, ani
+w nieskończoności: każda z warstw
+w dowodzie daje wkład ograniczony od dołu
+przez tę samą dodatnią stałą.
+Natomiast funkcja
+\[
+ f(x)=\frac{1}{\|x\|_2^2(1+\|x\|_2)^2},
+ \qquad x\ne0,
+\]
+jest całkowalna na $\R^3\setminus\{0\}$:
+dla $0<\|x\|_2\le1$ jest nie większa od
+$\|x\|_2^{-2}$, a dla $\|x\|_2\ge1$
+od $\|x\|_2^{-4}$. Obie części są całkowalne
+na mocy twierdzenia \ref{ma2:thm:improper-power-test}.
+\end{przyklad}
+
+\section{Całkowanie funkcji radialnych}
+
+Niech $v_n=\lambda_n(B(0,1))$, gdzie $B(0,r)$
+oznacza otwartą kulę euklidesową o promieniu $r$.
+Mamy $0<v_n<\infty$, gdyż kula zawiera otwartą
+kostkę o boku $2/\sqrt n$ i zawiera się w $[-1,1]^n$.
+Ze skalowania miary Lebesgue'a
+(\atlasref{ME-04::thm:invariance-lebesgue}{twierdzenie o skalowaniu})
+wynika $\lambda_n(B(0,r))=v_nr^n$.
+Sfera o promieniu $r>0$ ma miarę $\lambda_n$ zero:
+dla $0<\delta<r$ zawiera się w różnicy
+$B(0,r+\delta)\setminus B(0,r-\delta)$, której
+miara dąży do zera wraz z $\delta$.
+Kula domknięta ma więc tę samą miarę co otwarta.
+
+\begin{twierdzenie}[Wzór radialny bez współrzędnych biegunowych]
+\label{ma2:thm:improper-radial}
+Niech $0\le a<b<\infty$ i niech
+$h:(0,\infty)\to[0,\infty]$ będzie borelowska.
+Wtedy
+\[
+ \int_{\{x:a<\|x\|_2<b\}}h(\|x\|_2)\,
+ \mathrm d\lambda_n(x)
+ =nv_n\int_{(a,b)}h(r)r^{n-1}\,\mathrm d\lambda_1(r).
+\]
+Wzór zachodzi również dla $b=\infty$.
+Dla rzeczywistej borelowskiej $h$ zachodzi,
+jeżeli prawa strona z $|h|$ jest skończona.
+\end{twierdzenie}
+\begin{proof}
+Na przestrzeni $(0,\infty)$ określamy dwie miary
+borelowskie:
+\[
+ \begin{aligned}
+ \nu(E)&=\lambda_n(\{x\ne0:\|x\|_2\in E\}),\\
+ \eta(E)&=nv_n\int_E r^{n-1}\,\mathrm d\lambda_1(r).
+ \end{aligned}
+\]
+Pierwsza jest miarą, ponieważ przeciwobrazy
+zachowują rozłączność i przeliczalne sumy,
+a dla drugiej przeliczalna addytywność wynika
+z rozkładu całki nieujemnej na rozłączne zbiory
+(\atlasref{ME-08::cor:integral-countable-partition}{twierdzenie o rozkładzie całki}). Obie są skończone
+na $(0,R]$ dla $R>0$.
+Dla $0\le s<t<\infty$ mamy
+\[
+ \nu((s,t])=v_n(t^n-s^n)=\eta((s,t]).
+\]
+Pierwsza równość wynika z miary kul i zerowej
+miary sfer oraz punktu $0$; druga z klasycznego
+wzoru Newtona--Leibniza i zgodności całek
+Riemanna i Lebesgue'a na przedziale.
+Dla ustalonego $R>0$ rodzina przedziałów
+$(s,t]$, $0\le s<t\le R$, wraz ze zbiorem
+pustym jest układem $\pi$: przecięcie dwóch
+jej elementów jest znów takim przedziałem
+lub zbiorem pustym. Generuje borelowską
+$\sigma$-algebrę na $(0,R]$, gdyż przedziały otwarte
+względnie są przeliczalnymi sumami takich
+przedziałów. Obie miary mają tę samą
+skończoną wartość $v_nR^n$ na $(0,R]$.
+Z twierdzenia o jednoznaczności miar skończonych
+(\atlasref{ME-02::thm:uniqueness-finite}{teoria miary i całki})
+otrzymujemy równość na borelowskich podzbiorach
+$(0,R]$. Dla każdego borelowskiego $E\subseteq
+(0,\infty)$ zbiory $E\cap(0,j]$ rosną do $E$,
+więc ciągłość miar z dołu daje $\nu(E)=\eta(E)$.
+
+Dla funkcji charakterystycznych zbiorów
+borelowskich równość całki radialnej z całką
+względem $\nu$ jest definicją $\nu$.
+Dla nieujemnych funkcji prostych wynika
+z addytywności, a dla dowolnej borelowskiej
+funkcji nieujemnej z aproksymacji rosnącymi
+funkcjami prostymi
+(\atlasref{ME-08::cor:simple-approx-integral}{aproksymacja całki})
+i twierdzenia \ref{ma2:thm:lebesgue-monotone}
+zastosowanego po obu stronach.
+Stosując ten argument do
+$h\chi_{(a,b)}$ i korzystając z $\nu=\eta$,
+dostajemy tezę, także dla $b=\infty$.
+Dla funkcji ze znakiem stosujemy wynik
+do $|h|$, a następnie do obu części $h^+$ i $h^-$.
+\end{proof}
+
+Wzór radialny nie wymaga jeszcze ani
+parametryzacji sfery, ani całkowania
+względem miary powierzchniowej. Stała $nv_n$
+pojawi się później jako pole sfery jednostkowej;
+na razie jest wyłącznie współczynnikiem
+pochodzącym z objętości kul.
+
+\begin{przyklad}[Dokładna całka potęgowa]
+\label{ma2:ex:improper-radial-power}
+Dla $0<a<b<\infty$ i $p\in\R$ mamy
+\[
+ \int_{\{a<\|x\|_2<b\}}\frac{1}{\|x\|_2^p}\,
+ \mathrm d\lambda_n(x)
+ =
+ \begin{cases}
+ nv_n\dfrac{b^{n-p}-a^{n-p}}{n-p},&p\ne n,\\[6pt]
+ nv_n\log(b/a),&p=n.
+ \end{cases}
+\]
+Istotnie, z twierdzenia \ref{ma2:thm:improper-radial}
+pozostaje całka funkcji $r^{n-p-1}$.
+Na przedziale $[a,b]$ jest ona ciągła, więc
+stosujemy wzór Newtona--Leibniza.
+Przechodząc z $a\downarrow0$ lub $b\uparrow\infty$
+na mocy twierdzenia \ref{ma2:thm:improper-exhaustion},
+odzyskujemy kryterium \ref{ma2:thm:improper-power-test}.
+W przypadku $p=n$ rozbieżność jest logarytmiczna.
+
+Dla funkcji z przykładu
+\ref{ma2:ex:improper-power-dimensions} w $\R^3$
+otrzymujemy teraz dokładną wartość:
+\[
+ \begin{aligned}
+ \int_{\R^3\setminus\{0\}}
+ \frac{\mathrm d\lambda_3(x)}
+ {\|x\|_2^2(1+\|x\|_2)^2}
+ &=3v_3\int_{(0,\infty)}
+     \frac{\mathrm d\lambda_1(r)}{(1+r)^2}\\
+ &=3v_3.
+ \end{aligned}
+\]
+Ostatnia równość wynika z funkcji pierwotnej
+$-(1+r)^{-1}$ i przejścia do granicy.
+Po obliczeniu $v_3=4\pi/3$ w rachunku
+całek wielokrotnych wynik będzie równy $4\pi$.
+\end{przyklad}
+
+\begin{przyklad}[Logarytmiczne kryterium w przypadku granicznym]
+\label{ma2:ex:improper-logarithmic-critical}
+Niech $q\in\R$. Rozważmy dwie funkcje radialne:
+\[
+ f_q(x)=\frac{1}{\|x\|_2^n
+       (\log(1/\|x\|_2))^q},
+ \qquad 0<\|x\|_2<e^{-1},
+\]
+oraz
+\[
+ g_q(x)=\frac{1}{\|x\|_2^n
+       (\log\|x\|_2)^q},
+ \qquad \|x\|_2>e.
+\]
+Każda z nich jest całkowalna na swojej dziedzinie
+wtedy i tylko wtedy, gdy $q>1$.
+Istotnie, na mocy wzoru radialnego
+\ref{ma2:thm:improper-radial}, dla $0<a<e^{-1}$,
+\[
+ \int_{\{a<\|x\|_2<e^{-1}\}} f_q(x)\,
+ \mathrm d\lambda_n(x)
+ =nv_n\int_a^{e^{-1}}\frac{1}{r(\log(1/r))^q}\,
+ \mathrm d\lambda_1(r).
+\]
+Podstawienie $t=\log(1/r)$ na zwartym przedziale
+daje po prawej stronie
+$nv_n\int_1^{\log(1/a)}t^{-q}\,\mathrm d\lambda_1(t)$.
+Analogicznie dla $R>e$, stosując $t=\log r$,
+otrzymujemy
+\[
+ \int_{\{e<\|x\|_2<R\}} g_q(x)\,
+ \mathrm d\lambda_n(x)
+ =nv_n\int_1^{\log R} t^{-q}\,\mathrm d\lambda_1(t).
+\]
+Oba podstawienia są klasycznymi podstawieniami
+jednowymiarowymi dla funkcji ciągłych.
+Dla $T>1$ wspólna całka pomocnicza wynosi
+\[
+ \int_1^T t^{-q}\,\mathrm d\lambda_1(t)
+ =
+ \begin{cases}
+ (T^{1-q}-1)/(1-q),&q\ne1,\\
+ \log T,&q=1,
+ \end{cases}
+\]
+co wynika ze wzoru Newtona--Leibniza.
+Przechodząc do granicy na podstawie
+\ref{ma2:thm:improper-exhaustion}, dostajemy
+w obu przypadkach wartość $nv_n/(q-1)$ dla $q>1$
+oraz $+\infty$ dla $q\le1$.
+W szczególności dla $q=1$ rozbieżność jest
+rzędu $\log\log(1/a)$ przy zerze i
+$\log\log R$ w nieskończoności.
+\end{przyklad}
+
+\section{Osobliwości wzdłuż podprzestrzeni}
+
+W przypadku osobliwości wzdłuż zbioru
+dodatniego wymiaru decydujące znaczenie
+może mieć liczba kierunków poprzecznych,
+a nie wymiar całej przestrzeni.
+
+\begin{twierdzenie}[Osobliwość poprzeczna]
+\label{ma2:thm:improper-transverse}
+Niech $1\le k<n$, $m=n-k$ i zapiszmy
+$x=(u,v)\in\R^k\times\R^m$.
+Niech $S=\R^k\times\{0\}$ i
+$Q=(-1,1)^n$. Wówczas funkcja
+\[
+ f(x)=\operatorname{dist}(x,S)^{-p},
+ \qquad x\in Q\setminus S,
+\]
+jest całkowalna wtedy i tylko wtedy, gdy $p<m$,
+gdzie odległość jest euklidesowa, a $p\in\R$.
+\end{twierdzenie}
+\begin{proof}
+Dla dowolnego $w\in\R^k$ mamy
+$\|(u,v)-(w,0)\|_2^2=\|u-w\|_2^2+\|v\|_2^2$.
+Minimum osiąga się przy $w=u$, zatem
+$\operatorname{dist}(x,S)=\|v\|_2$.
+Zbiór $S$ jest zawarty w hiperpłaszczyźnie
+współrzędnościowej, więc ma miarę zero.
+
+Zamiast używać Fubiniego, dzielimy kostkę
+w kierunkach poprzecznych na warstwy:
+\[
+ E_j=[-1,1]^k\times
+ ([-2^{-j},2^{-j}]^m\setminus
+ [-2^{-j-1},2^{-j-1}]^m),\qquad j\ge0.
+\]
+Na potrzeby tego rachunku przedłużamy $f$ na
+$\overline Q\setminus S$ tym samym wzorem.
+Warstwy są rozłączne i ich suma to
+$\overline Q\setminus S$. Ponieważ
+$\lambda_n(\partial Q)=0$, całki po tej sumie
+i po $Q\setminus S$ są równe.
+Ich miary liczymy jako różnice objętości
+dwóch prostokątów:
+\[
+ \lambda_n(E_j)=2^n(1-2^{-m})2^{-jm}.
+\]
+Na $E_j$ zachodzi
+$2^{-j-1}<\|v\|_\infty\le2^{-j}$
+oraz $\|v\|_\infty\le\|v\|_2
+\le\sqrt m\,\|v\|_\infty$.
+Stąd istnieją dodatnie stałe $c,C$
+zależne tylko od $n,k,p$, dla których
+\[
+ c2^{j(p-m)}
+ \le\int_{E_j}f(x)\,\mathrm d\lambda_n(x)
+ \le C2^{j(p-m)}.
+\]
+Można przyjąć
+$c=2^n(1-2^{-m})2^{-|p|}m^{-|p|/2}$
+i $C=2^n(1-2^{-m})2^{|p|}m^{|p|/2}$.
+Rozkład całki na warstwy daje zbieżność
+dokładnie wtedy, gdy $p-m<0$.
+\end{proof}
+
+\begin{przyklad}
+\label{ma2:ex:improper-transverse}
+W $\R^3$ osobliwość względem odległości
+od osi $z$ ma próg $p<2$, natomiast
+osobliwość względem odległości od
+płaszczyzny $z=0$ ma próg $p<1$.
+Dla osobliwości punktowej próg wynosi $p<3$.
+Wszystkie trzy kryteria dotyczą całkowania
+w ograniczonym otoczeniu odpowiedniego zbioru.
+W przypadku ogólnego zbioru osobliwości
+nie wolno wnioskować jedynie z jego
+miary zero; potrzebne są oszacowania miar
+otoczeń lub odpowiednie parametryzacje.
+\end{przyklad}
+
+\paragraph{Intuicja kowymiaru.}
+Wzdłuż $k$-wymiarowej podprzestrzeni
+zmniejszamy jedynie $m=n-k$ wymiarów
+poprzecznych. W ograniczonym fragmencie
+podprzestrzeni jej kierunki styczne mają
+ustaloną rozciągłość. Dlatego warstwa
+poprzeczna o grubości rzędu $r$ ma
+$n$-wymiarową objętość rzędu $r^m$,
+a nie $r^n$. Zgodnie z twierdzeniem
+\ref{ma2:thm:improper-transverse}
+próg całkowalności to $p<m$.
+Rysunek \ref{ma2:fig:improper-codimension}
+porównuje trzy przypadki w $\R^3$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(1.2cm,-.3cm)},y={(-.8cm,-.45cm)},z={(0cm,1.35cm)},>=stealth]
+ \begin{scope}
+  \filldraw[fill=blue!25,draw=blue!70!black] (-.45,.45,-.45)--(.45,.45,-.45)--(.45,.45,.45)--(-.45,.45,.45)--cycle;
+  \filldraw[fill=blue!40,draw=blue!70!black] (.45,-.45,-.45)--(.45,.45,-.45)--(.45,.45,.45)--(.45,-.45,.45)--cycle;
+  \filldraw[fill=blue!15,draw=blue!70!black] (-.45,-.45,.45)--(.45,-.45,.45)--(.45,.45,.45)--(-.45,.45,.45)--cycle;
+  \fill[orange!90!black] (0,0,0) circle (2pt);
+  \node at (0,0,-1.0) {$m=3$};
+  \node at (0,0,-1.3) {$p<3$};
+ \end{scope}
+ \begin{scope}[xshift=4cm]
+  \filldraw[fill=blue!25,draw=blue!70!black] (-.35,.35,-.8)--(.35,.35,-.8)--(.35,.35,.8)--(-.35,.35,.8)--cycle;
+  \filldraw[fill=blue!40,draw=blue!70!black] (.35,-.35,-.8)--(.35,.35,-.8)--(.35,.35,.8)--(.35,-.35,.8)--cycle;
+  \filldraw[fill=blue!15,draw=blue!70!black] (-.35,-.35,.8)--(.35,-.35,.8)--(.35,.35,.8)--(-.35,.35,.8)--cycle;
+  \draw[orange!90!black,very thick,densely dashed] (0,0,-.8)--(0,0,.8);
+  \draw[orange!90!black,very thick] (0,0,.8)--(0,0,1.12);
+  \node at (0,0,-1.0) {$m=2$};
+  \node at (0,0,-1.3) {$p<2$};
+ \end{scope}
+ \begin{scope}[xshift=8cm]
+  \filldraw[fill=blue!25,draw=blue!70!black] (-.8,.8,-.18)--(.8,.8,-.18)--(.8,.8,.18)--(-.8,.8,.18)--cycle;
+  \filldraw[fill=blue!40,draw=blue!70!black] (.8,-.8,-.18)--(.8,.8,-.18)--(.8,.8,.18)--(.8,-.8,.18)--cycle;
+  \filldraw[fill=blue!15,draw=blue!70!black,fill opacity=.75] (-.8,-.8,.18)--(.8,-.8,.18)--(.8,.8,.18)--(-.8,.8,.18)--cycle;
+  \draw[orange!90!black,thick,densely dashed] (-.8,-.8,0)--(.8,-.8,0)--(.8,.8,0)--(-.8,.8,0)--cycle;
+  \node at (0,0,-1.0) {$m=1$};
+  \node at (0,0,-1.3) {$p<1$};
+ \end{scope}
+\end{tikzpicture}
+\caption{Otoczenia punktu, odcinka osi i fragmentu
+płaszczyzny. Niebieskie bryły ilustrują kostkowe
+odcięcia w kierunkach poprzecznych; pomarańczowo
+oznaczono zbiór osobliwości. Przy ustalonych
+wymiarach stycznych ich objętości są odpowiednio
+rzędu $r^3$, $r^2$ i $r$.}
+\label{ma2:fig:improper-codimension}
+\end{figure}
+
+\begin{twierdzenie}[Lokalne kryterium przy gładkiej podrozmaitości]
+\label{ma2:thm:improper-submanifold}
+Niech $M\subseteq\R^n$ będzie $k$-wymiarową
+podrozmaitością klasy $C^1$ bez brzegu,
+$1\le k<n$, a $a\in M$.
+Wtedy istnieje ograniczone otwarte
+otoczenie $W$ punktu $a$ takie, że
+dla $p\in\R$ funkcja
+\[
+ x\longmapsto\operatorname{dist}(x,M)^{-p}
+\]
+jest całkowalna na $W\setminus M$
+wtedy i tylko wtedy, gdy $p<n-k$.
+W szczególności nie jest całkowalna
+w żadnym otoczeniu $a$ dla $p\ge n-k$.
+\end{twierdzenie}
+\begin{proof}
+Po izometrycznej zmianie współrzędnych
+przyjmujemy $a=0$. Z lokalnego opisu
+podrozmaitości jako wykresu
+(\ref{ma2:thm:submanifold-descriptions})
+wynika, że w pewnym otoczeniu zera
+$M$ jest wykresem funkcji $g$ klasy
+$C^1$ nad otwartym otoczeniem zera
+w $\R^k$, przy $g(0)=0$.
+Wybieramy zamkniętą kostkę $C$ wokół
+zera zawartą w dziedzinie $g$.
+Na $C$ funkcja $g$ jest Lipschitzowska
+ze stałą $L$, ponieważ jej różniczka
+jest ograniczona i $C$ jest wypukły.
+
+Istnieje $r>0$ takie, że każdy punkt
+$M\cap B(0,2r)$ ma postać $(w,g(w))$
+z $w\in C$. Zmniejszając $r$,
+zapewniamy także, że wykres nad
+dostatecznie małą kostką wokół zera
+jest zawarty w $M$. Wybieramy $b>0$
+tak małe, by dla
+\[
+ D=(-b,b)^k\times(-b,b)^{n-k},\qquad
+ T(u,v)=(u,g(u)+v)
+\]
+zachodziło $T(D)\subset B(0,r)$,
+$\|v\|_2<r$ na $D$, oraz
+$(-b,b)^k\subset C$, z wykresem nad
+tą kostką zawartym w $M$.
+Jest to możliwe dzięki ciągłości $T$
+w $(0,0)$.
+Odwzorowanie $T$ jest homeomorfizmem
+na otwarty zbiór $W=T(D)$, z odwrotnością
+$(u,z)\mapsto(u,z-g(u))$.
+Oba odwzorowania są Lipschitzowskie
+ze stałą nie większą niż $1+L$:
+każde z nich jest sumą identyczności
+w odpowiednich współrzędnych oraz
+przesunięcia ostatnich współrzędnych
+przez $g$ lub $-g$. W szczególności
+oszacowanie wynika z nierówności trójkąta
+oraz $\|g(u)-g(w)\|_2\le L\|u-w\|_2$.
+
+Dla $x=T(u,v)$ mamy
+$\operatorname{dist}(x,M)\le\|v\|_2$,
+bo $(u,g(u))\in M$.
+Jeżeli $y=(w,g(w))\in M\cap B(0,2r)$,
+to
+\[
+ \|v\|_2
+ \le \|g(u)+v-g(w)\|_2+L\|u-w\|_2
+ \le\sqrt{1+L^2}\|x-y\|_2.
+\]
+Dla $y\in M\setminus B(0,2r)$
+zachodzi $\|x-y\|_2\ge r>\|v\|_2$.
+Biorąc infimum po wszystkich $y\in M$,
+dostajemy
+\[
+ (1+L^2)^{-1/2}\|v\|_2
+ \le\operatorname{dist}(T(u,v),M)
+ \le\|v\|_2.
+\]
+W szczególności $W\cap M=T(\{(u,0)\in D\})$
+i poza tym zbiorem odległość jest dodatnia,
+nawet jeśli $M$ nie jest globalnie domknięta.
+Zbiór $W\cap M$ jest względnie domknięty
+w $W$, ponieważ jest przeciwobrazem zera
+przez ciągłą ostatnią składową $T^{-1}$.
+Funkcja odległości od niepustego zbioru
+jest $1$-Lipschitzowska: z nierówności
+trójkąta i przejścia do infimum wynika
+$\operatorname{dist}(x,M)\le\|x-y\|_2+
+\operatorname{dist}(y,M)$, a zamiana $x,y$
+daje oszacowanie modułu różnicy.
+
+Pozostaje przenieść kryterium całkowalności
+z $D$ na $W$ bez korzystania z ogólnego
+wzoru zamiany zmiennych.
+Ponieważ $T$ i $T^{-1}$ są Lipschitzowskie,
+istnieją $c,C'>0$ takie, że dla każdego
+borelowskiego $B\subseteq D$ mamy
+\[
+ c\lambda_n(B)\le\lambda_n(T(B))
+ \le C'\lambda_n(B).
+\]
+Istotnie, stosujemy oszacowanie miary
+Hausdorffa przez stałą Lipschitza
+(\atlasref{ME-26::thm:hausdorff-lipschitz-26}{ME 26})
+w obu kierunkach, korzystając z
+$\mathcal H^n=\lambda_n$ z rozdziału
+\ref{ma2:ch:lebesgue-euclidean}.
+Możemy przyjąć $c=(1+L)^{-n}$ i $C'=(1+L)^n$.
+Obrazy zbiorów borelowskich są borelowskie,
+bo $T$ jest homeomorfizmem między
+zbiorami otwartymi. Dla dowolnej
+nieujemnej borelowskiej funkcji $h$ na $W$
+nierówności miar przenoszą się na całki:
+\[
+ c\int_D h(T(u,v))\,\mathrm d\lambda_n(u,v)
+ \le\int_W h(x)\,\mathrm d\lambda_n(x)
+ \le C'\int_D h(T(u,v))\,\mathrm d\lambda_n(u,v).
+\]
+Najpierw wynika to dla funkcji
+charakterystycznych, potem dla prostych
+i wreszcie przez zbieżność monotoniczną
+(\ref{ma2:thm:lebesgue-monotone}).
+Przyjmujemy $h=0$ na $W\cap M$ i
+$h=\operatorname{dist}(\,\cdot\,,M)^{-p}$
+poza nim. Oszacowanie odległości daje
+porównywalność $h\circ T$ z $\|v\|_2^{-p}$
+poza $\{v=0\}$, dla dowolnego znaku $p$.
+Podstawiając $(u,v)=b(u',v')$ przez
+skalowanie miary Lebesgue'a (najpierw
+na funkcjach prostych, potem przez
+zbieżność monotoniczną), otrzymujemy
+mnożnik $b^{n-p}>0$. Kryterium
+\ref{ma2:thm:improper-transverse}
+daje warunek $p<n-k$.
+Konstrukcję można przeprowadzić
+w dowolnie małym otoczeniu $a$,
+co dowodzi również ostatniego zdania.
+\end{proof}
+
+Jeśli $M$ jest zwarta, to dla $p<n-k$
+możemy pokryć ją skończenie wieloma
+otoczeniami z powyższego twierdzenia.
+Całka z nieujemnej funkcji na ich sumie
+jest nie większa od sumy skończenie wielu
+skończonych całek. Jeżeli $M$ jest
+niepusta i $p\ge n-k$, całka jest
+nieskończona w każdym otoczeniu $M$.
+Nie wynika stąd całkowalność na całej
+$\R^n$: zachowanie w nieskończoności
+wymaga odrębnego sprawdzenia.
+
+
+\paragraph{Wizualizacja interaktywna.}
+Suwak zmienia promień $r$ kostkowego otoczenia
+punktu, osi oraz płaszczyzny w ograniczonej
+kostce $[-1,1]^3$. Ich objętości to
+$8r^3$, $8r^2$ i $8r$ dla $0<r\le1$.
+Są to otoczenia w normie supremum, nie
+otoczenia euklidesowe. Widać, że wykładnik
+zależy od kowymiaru.
+\begin{lstlisting}[language=Python]
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+fig=make_subplots(rows=1,cols=3,
+    specs=[[{"type":"scene"}]*3],
+    subplot_titles=["Punkt","Os","Plaszczyzna"])
+faces=[(0,2,1),(0,3,2),(4,5,6),(4,6,7),
+       (0,1,5),(0,5,4),(1,2,6),(1,6,5),
+       (2,3,7),(2,7,6),(3,0,4),(3,4,7)]
+i,j,k=zip(*faces)
+fig.add_trace(go.Scatter3d(x=[0],y=[0],z=[0],
+    mode="markers",marker=dict(color="#d97706")),1,1)
+fig.add_trace(go.Scatter3d(x=[0,0],y=[0,0],
+    z=[-1,1],mode="lines",
+    line=dict(color="#d97706")),1,2)
+fig.add_trace(go.Mesh3d(x=[-1,1,1,-1],
+    y=[-1,-1,1,1],z=[0]*4,i=[0,0],
+    j=[1,2],k=[2,3],color="#d97706"),1,3)
+rs=[j/10 for j in range(1,9)]
+for h,r in enumerate(rs):
+    for col,(a,b,d) in enumerate(
+            [(r,r,r),(r,r,1),(1,1,r)],1):
+        v=[(-a,-b,-d),(a,-b,-d),(a,b,-d),
+           (-a,b,-d),(-a,-b,d),(a,-b,d),
+           (a,b,d),(-a,b,d)]
+        x,y,z=zip(*v)
+        fig.add_trace(go.Mesh3d(x=x,y=y,z=z,
+            i=i,j=j,k=k,opacity=.26,
+            color="#397db5",visible=h==3),1,col)
+steps=[dict(label=str(r),method="update",
+    args=[dict(visible=[True]*3+
+         [j==h for j in range(len(rs)) for _ in range(3)]),
+         dict(title=f"V: {8*r**3:.3f}, {8*r**2:.3f}, {8*r:.3f}")])
+    for h,r in enumerate(rs)]
+fig.update_scenes(aspectmode="cube",
+    xaxis_range=[-1.1,1.1],yaxis_range=[-1.1,1.1],
+    zaxis_range=[-1.1,1.1])
+fig.update_layout(showlegend=False,
+    sliders=[dict(active=3,steps=steps)],
+    title="V: 0.512, 1.280, 3.200")
+fig.write_html("am2_27_tubes.html", include_plotlyjs=True)
+\end{lstlisting}
+
+\section{Wartość główna i zależność od wyczerpania}
+
+Dla funkcji ze znakiem, która nie jest
+całkowalna bezwzględnie, granica całek
+po wyczerpaniu może istnieć, lecz nie
+musi być niezależna od wyczerpania.
+Nie należy takiej granicy nazywać
+całką Lebesgue'a.
+
+\begin{definicja}[Wartość główna przy osobliwości punktowej]
+\label{ma2:def:improper-principal-value}
+Niech $A\subseteq\R^n$ będzie mierzalny,
+$a\in\R^n$ i niech $f$ będzie mierzalna
+na $A\setminus\{a\}$. Załóżmy, że $f$
+jest całkowalna na każdym
+$A\setminus B(a,\varepsilon)$ dla $\varepsilon>0$.
+Przez całkę w poniższej granicy rozumiemy
+całkę na $(A\setminus\{a\})\setminus B(a,\varepsilon)$;
+dla $\varepsilon>0$ jest to po prostu
+$A\setminus B(a,\varepsilon)$.
+Jeżeli istnieje skończona granica
+\[
+ \operatorname{pv}\int_A f(x)\,\mathrm d\lambda_n(x)
+ :=\lim_{\varepsilon\downarrow0}
+ \int_{A\setminus B(a,\varepsilon)}
+ f(x)\,\mathrm d\lambda_n(x),
+\]
+nazywamy ją wartością główną Cauchy'ego
+względem kul euklidesowych o środku $a$.
+\end{definicja}
+
+Analogicznie dla funkcji lokalnie całkowalnej
+na $\R^n$ można rozważyć granicę całek
+po $B(0,R)$ przy $R\uparrow\infty$.
+W obu przypadkach, gdy $f$ jest całkowalna
+na całej dziedzinie, granica jest równa
+całce Lebesgue'a na mocy
+\ref{ma2:thm:improper-exhaustion}.
+Równość dla granicy z parametrem ciągłym
+wynika z zastosowania twierdzenia do dowolnego
+ciągu parametrów dążącego do odpowiedniego
+końca zakresu (dla funkcji całkowalnej także
+ciągi niemonotoniczne dają tę samą granicę).
+Bez tego warunku sposób odcinania
+osobliwości lub nieskończoności ma znaczenie
+(por. przypadek jednowymiarowy:
+\atlasref{AM1-31::ma1:def:cauchy-principal-value}{wartość główna Cauchy'ego}).
+
+\begin{przyklad}[Dowolna wartość granicy przy tej samej osobliwości]
+\label{ma2:ex:improper-asymmetric-cut}
+Na $A=B(0,1)\setminus\{0\}$ określmy
+\[
+ f(x)=\frac{\operatorname{sgn}(x_1)}{\|x\|_2^n},
+\]
+przyjmując $\operatorname{sgn}(0)=0$.
+Oznaczmy $c=nv_n/2>0$.
+Dla $0<r<1$ całka z $\|x\|_2^{-n}$
+na każdym z dwóch półpierścieni
+$\{r<\|x\|_2<1,\ \pm x_1>0\}$
+wynosi $c\log(1/r)$.
+Istotnie, odwzorowanie $x\mapsto-x$
+zachowuje miarę Lebesgue'a
+(\atlasref{ME-04::thm:invariance-lebesgue}{skalowanie dla $t=-1$})
+i zamienia półpierścienie. Ich całki
+z funkcji radialnej są równe, co wynika
+najpierw dla funkcji prostych, a następnie
+przez zbieżność monotoniczną.
+Hiperpłaszczyzna $x_1=0$ jest zerowa,
+więc każda całka stanowi połowę całki
+z przykładu \ref{ma2:ex:improper-radial-power}.
+
+W szczególności całki z $f^+$ i $f^-$
+na $A$ są nieskończone. Całka Lebesgue'a
+z $f$ nie istnieje, nawet jako całka
+o wartości rozszerzonej.
+Przy symetrycznym odcięciu kuli promienia
+$\varepsilon$ obie części dokładnie się
+znoszą, zatem wartość główna wynosi zero.
+
+Niech jednak $\alpha,\beta>0$ i
+$0<\varepsilon<\min(1/\alpha,1/\beta)$.
+Rozpatrzmy zbiór
+\[
+ A_\varepsilon=
+ \{x\in A:x_1\ge0,\ \|x\|_2\ge\alpha\varepsilon\}
+ \cup
+ \{x\in A:x_1\le0,\ \|x\|_2\ge\beta\varepsilon\}.
+\]
+Jeżeli $0<\varepsilon'<\varepsilon$,
+to $A_\varepsilon\subseteq A_{\varepsilon'}$.
+Dla każdego ciągu $\varepsilon_j\downarrow0$
+z podanego zakresu mamy
+$\bigcup_j A_{\varepsilon_j}=A$:
+każdy punkt o dodatnim promieniu zostaje
+włączony, gdy obie granice odcięcia są
+mniejsze od jego promienia. Różnice
+między nierównościami ostrymi i nieostrymi
+dotyczą tylko zbiorów miary zero.
+Obliczenie daje
+\[
+ \int_{A_\varepsilon} f(x)\,\mathrm d\lambda_n(x)
+ =c\log\frac1{\alpha\varepsilon}
+  -c\log\frac1{\beta\varepsilon}
+ =c\log\frac{\beta}{\alpha}.
+\]
+Wybierając $\alpha=1$ oraz
+$\beta=\exp(L/c)$, otrzymujemy granicę
+równą dowolnej zadanej liczbie $L\in\R$.
+Nawet monotoniczne wyczerpanie dziedziny
+nie zapewnia więc niezależności wyniku.
+
+Jeżeli wymagamy zwartych zbiorów Jordana
+zawartych w $A$, bierzemy
+$K_\varepsilon=A_\varepsilon\cap
+\{x:\|x\|_2\le1-\varepsilon\}$.
+Są to zbiory domknięte w $\R^n$ (dolne
+ograniczenie promienia jest dodatnie,
+górne mniejsze od $1$), ograniczone i
+rosnące przy $\varepsilon\downarrow0$.
+Ich suma dla $\varepsilon_j\downarrow0$
+jest równa $A$. Dla dostatecznie małego
+$\varepsilon$ oba półpierścienie istnieją,
+a wspólny składnik $c\log(1-\varepsilon)$
+znosi się w różnicy. Zbiory są zwarte,
+ich brzegi zawierają się w skończonej
+sumie sfer i hiperpłaszczyźnie, więc są
+mierzalne w sensie Jordana.
+Funkcja $f$ jest ograniczona na każdym
+z nich i ciągła poza hiperpłaszczyzną
+miary zero. Po przedłużeniu przez zero
+zbiór nieciągłości jest zawarty w sumie
+tej hiperpłaszczyzny i brzegów zbioru.
+Kryterium Lebesgue'a
+(\ref{ma2:thm:riemann-box-lebesgue-criterion})
+i zgodność całek
+(\ref{ma2:thm:riemann-box-lebesgue})
+dają ten sam wynik dla całek Riemanna.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=2.15]
+\fill[blue!22] (90:1) arc[start angle=90,end angle=-90,radius=1]
+ -- (-90:.25) arc[start angle=-90,end angle=90,radius=.25] -- cycle;
+\fill[orange!28] (90:1) arc[start angle=90,end angle=270,radius=1]
+ -- (270:.52) arc[start angle=270,end angle=90,radius=.52] -- cycle;
+\draw[thick] (0,0) circle (1);
+\draw[blue!65!black,thick] (90:.25) arc[start angle=90,end angle=-90,radius=.25];
+\draw[orange!80!black,thick] (90:.52) arc[start angle=90,end angle=270,radius=.52];
+\draw[->] (-1.20,0)--(1.25,0) node[right] {$x_1$};
+\draw[->] (0,-1.15)--(0,1.22) node[above] {$x_2$};
+\node[blue!65!black] at (.67,.48) {$f>0$};
+\node[orange!80!black] at (-.73,.46) {$f<0$};
+\draw[blue!65!black,<-] (30:.25)--(.39,.92)
+ node[above right,inner sep=1pt] {$\alpha\varepsilon$};
+\draw[orange!80!black,<-] (155:.52)--(-.68,.92)
+ node[above left,inner sep=1pt] {$\beta\varepsilon$};
+\node at (0,-1.38) {$\alpha\varepsilon<\beta\varepsilon$};
+\end{tikzpicture}
+\caption{Asymetryczne odcięcie osobliwości w wymiarze $2$:
+odrębne promienie w dodatniej i ujemnej półpłaszczyźnie.
+Zacieniowane części są dziedzinami całkowania.}
+\label{ma2:fig:improper-asymmetric-cut}
+\end{figure}
+
+\begin{przyklad}[Wartość główna w nieskończoności]
+\label{ma2:ex:improper-asymmetric-infinity}
+Niech $A=\{x:\|x\|_2\ge1\}$ i
+$f(x)=\operatorname{sgn}(x_1)\|x\|_2^{-n}$.
+Z rachunku półpierścieni w przykładzie
+\ref{ma2:ex:improper-asymmetric-cut} (teraz
+dla promieni od $1$ do $R$) wynika, że
+obie całki z $f^+$ i $f^-$ są nieskończone,
+a dla $R>1$ całka na $A\cap B(0,R)$
+wynosi zero. Zatem wartość główna w
+nieskończoności istnieje i jest równa zero.
+
+Dla $\alpha,\beta>0$ i
+$R>\max(1/\alpha,1/\beta)$ ograniczmy
+dodatni półpierścień przez $\alpha R$,
+a ujemny przez $\beta R$. Dokładniej
+\[
+ K_R=
+ \{x\in A:x_1\ge0,\ \|x\|_2\le\alpha R\}
+ \cup
+ \{x\in A:x_1\le0,\ \|x\|_2\le\beta R\}.
+\]
+Zbiory $K_R$ są zwarte i mierzalne
+w sensie Jordana, gdyż ich brzegi
+są zawarte w skończonej sumie sfer
+i hiperpłaszczyźnie. Dla $R_j\uparrow\infty$
+tworzą wyczerpanie $A$. Pisząc $c=nv_n/2$,
+otrzymujemy
+\[
+ \int_{K_R}f(x)\,\mathrm d\lambda_n(x)
+ =c\log(\alpha R)-c\log(\beta R)
+ =c\log(\alpha/\beta).
+\]
+Przy dowolnym $L\in\R$ wybór
+$\alpha=\exp(L/c)$ oraz $\beta=1$ daje
+granicę $L$. Zależność od sposobu
+wyczerpania występuje więc także dla
+funkcji ograniczonej, bez osobliwości
+w skończonej części dziedziny.
+\end{przyklad}
+
+\section{Podsumowanie rachunkowe}
+
+Przy całkowaniu na zbiorze nieograniczonym
+lub z osobliwością najpierw ustalamy,
+czy funkcja jest nieujemna, lub badamy
+całkowalność modułu. Dla funkcji nieujemnej
+można stosować rosnące wyczerpania nawet
+przy nieskończonej wartości całki.
+Dla funkcji całkowalnej dowolne wyczerpanie
+z dokładnością do zbioru zerowego daje
+tę samą wartość. Jeżeli obie części
+funkcji ze znakiem mają nieskończone
+całki, nie wolno interpretować granicy
+symetrycznej jako całki Lebesgue'a.
+
+W kolejnym rozdziale rozważymy zależność
+całki od parametrów rzeczywistych, a dalej
+metody całkowania iterowanego i zamiany
+zmiennych w przestrzeni euklidesowej.

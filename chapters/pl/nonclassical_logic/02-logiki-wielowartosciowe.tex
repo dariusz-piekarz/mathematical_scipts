@@ -1,0 +1,1832 @@
+\chapter{Logiki wielowartościowe}\label{ch:ncl-many-valued}
+
+\section{Macierze logiczne}
+W logice klasycznej rozróżniamy dwie wartości logiczne.
+W rozdziale~\ref{ch:lst-fuzzy-logic} rozważaliśmy
+głównie wartości z odcinka jednostkowego i spójniki
+określone za pomocą norm trójkątnych. Wielowartościowość
+jest jednak pojęciem ogólniejszym: wartości nie muszą
+być liczbami, nie muszą tworzyć łańcucha, a za wartości
+wyróżnione można uznać więcej niż jeden element.
+Przykładowo trzecia wartość może opisywać brak
+informacji albo jednoczesne uznanie zdania i jego
+negacji. Są to różne interpretacje, nawet jeśli
+rachunek spójników ma takie same tablice.
+
+\begin{definicja}[Macierz logiczna]\label{def:ncl-matrix}
+Ustalmy język zdaniowy, w którym każdy spójnik $c$
+ma ustaloną skończoną liczbę argumentów $n_c\geq0$.
+Macierzą logiczną nazywamy parę
+$\mathcal M=(A,D)$, gdzie $A$ jest niepustym zbiorem
+wyposażonym dla każdego spójnika $c$ w operację
+$c^A:A^{n_c}\to A$, a $D\subseteq A$ jest zbiorem
+wartości wyróżnionych. Wartościowanie zmiennych
+$p\mapsto v(p)\in A$ rozszerzamy rekurencyjnie na
+formuły przez
+\[
+ v(c(\varphi_1,\ldots,\varphi_{n_c}))
+ =c^A(v(\varphi_1),\ldots,v(\varphi_{n_c})).
+\]
+Dla spójnika zeroargumentowego prawa strona jest
+ustaloną stałą algebry.
+\end{definicja}
+Zwykle interesuje nas przypadek $\varnothing\subsetneq D
+\subsetneq A$. Nie jest to jednak konieczne dla samej
+definicji.
+
+\begin{definicja}[Konsekwencja macierzowa]\label{def:ncl-matrix-consequence}
+Dla zbioru formuł $\Gamma$ i formuły $\varphi$ piszemy
+\[
+ \Gamma\models_{\mathcal M}\varphi
+ \quad\Longleftrightarrow\quad
+ \forall v\ \bigl(v(\Gamma)\subseteq D
+                 \ \Longrightarrow\ v(\varphi)\in D\bigr).
+\]
+Dla klasy macierzy $\mathcal K$ definiujemy
+$\Gamma\models_{\mathcal K}\varphi$, gdy powyższa
+konsekwencja zachodzi w każdej macierzy z $\mathcal K$.
+Tautologią macierzy jest formuła $\varphi$ taka,
+że $\varnothing\models_{\mathcal M}\varphi$.
+Zbiór $\Gamma$ jest spełnialny w $\mathcal M$, jeżeli
+istnieje wartościowanie $v$ z $v(\Gamma)\subseteq D$.
+\end{definicja}
+W logice klasycznej bierzemy $A=\{0,1\}$, $D=\{1\}$
+i klasyczne operacje boolowskie. Macierz
+$([0,1],\{1\})$ z operacjami MTL opisuje konsekwencję
+zachowującą prawdę z
+Definicji~\ref{def:ncl-degree-consequence}, nie zaś
+konsekwencję zachowującą stopnie prawdy.
+Przypadki skrajne również mają określony sens:
+dla $D=A$ każda konsekwencja zachodzi, natomiast
+dla $D=\varnothing$ zachodzi dokładnie wtedy, gdy
+zbiór przesłanek jest niepusty. W drugim przypadku
+żadne wartościowanie nie spełnia niepustego zbioru
+przesłanek, a dla pustego zbioru każde wartościowanie
+spełnia przesłanki i żadne nie wyróżnia wniosku.
+Istnienie wartościowania wynika z niepustości $A$.
+
+\begin{twierdzenie}[Własności konsekwencji macierzowej]
+\label{thm:ncl-matrix-tarski}
+Konsekwencja $\models_{\mathcal K}$ ma następujące własności:
+\begin{enumerate}
+\item jeżeli $\varphi\in\Gamma$, to
+      $\Gamma\models_{\mathcal K}\varphi$;
+\item jeżeli $\Gamma\subseteq\Delta$ oraz
+      $\Gamma\models_{\mathcal K}\varphi$, to
+      $\Delta\models_{\mathcal K}\varphi$;
+\item jeżeli $\Gamma\models_{\mathcal K}\delta$ dla
+      każdego $\delta\in\Delta$ i
+      $\Delta\models_{\mathcal K}\varphi$, to
+      $\Gamma\models_{\mathcal K}\varphi$;
+\item dla każdego jednolitego podstawienia $\sigma$,
+      z $\Gamma\models_{\mathcal K}\varphi$ wynika
+      $\sigma(\Gamma)\models_{\mathcal K}\sigma(\varphi)$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Ustalmy dowolną macierz z $\mathcal K$. W pierwszym
+przypadku wartość wniosku należy do wartości przesłanek.
+W drugim każde wartościowanie wyróżniające wszystkie
+formuły $\Delta$ wyróżnia także wszystkie formuły $\Gamma$.
+W trzecim wartościowanie wyróżniające $\Gamma$ wyróżnia
+kolejno każdą formułę $\Delta$, a więc również $\varphi$.
+
+Dla ostatniej własności podstawienie $\sigma$ przypisuje
+każdej zmiennej pewną formułę i rozszerza się na formuły
+przez zachowanie spójników. Dla dowolnego wartościowania
+$v$ definiujemy $u(p)=v(\sigma(p))$.
+Nie jest wymagane, aby $\sigma$ było różnowartościowe. Indukcja po budowie
+formuły daje $u(\psi)=v(\sigma(\psi))$: dla zmiennych
+jest to definicja, dla stałych obie strony są tą samą
+wartością, a dla spójników stosujemy hipotezę indukcyjną
+do argumentów i tę samą operację w $A$.
+Jeżeli $v(\sigma(\Gamma))\subseteq D$, to
+$u(\Gamma)\subseteq D$, a z założenia $u(\varphi)\in D$.
+Stąd $v(\sigma(\varphi))\in D$. Ponieważ macierz
+i wartościowanie były dowolne, otrzymujemy tezę.
+\end{proof}
+
+\begin{wniosek}[Operator konsekwencji]\label{cor:ncl-matrix-closure}
+Przyporządkowanie
+$C_{\mathcal K}(\Gamma)=\{\varphi:\Gamma\models_{\mathcal K}\varphi\}$
+jest operatorem domknięcia na zbiorze formuł:
+jest ekstensywne, monotoniczne i idempotentne.
+\end{wniosek}
+\begin{proof}
+Pierwsze dwie własności odpowiadają pierwszym dwóm
+punktom Twierdzenia~\ref{thm:ncl-matrix-tarski}.
+Jeżeli $\varphi\in C_{\mathcal K}(C_{\mathcal K}(\Gamma))$,
+to stosujemy punkt trzeci z $\Delta=C_{\mathcal K}(\Gamma)$,
+uzyskując $\varphi\in C_{\mathcal K}(\Gamma)$.
+Odwrotna inkluzja wynika z ekstensywności.
+\end{proof}
+
+\section{Macierze skończone i zwartość}
+\begin{twierdzenie}[Zwartość skończonej macierzy]
+\label{thm:ncl-finite-matrix-compactness}
+Jeżeli $A$ jest skończone, to konsekwencja
+$\models_{\mathcal M}$ jest zwarta: jeśli
+$\Gamma\models_{\mathcal M}\varphi$, to
+istnieje skończony $\Gamma_0\subseteq\Gamma$,
+dla którego $\Gamma_0\models_{\mathcal M}\varphi$.
+Zwartość zachodzi również dla skończonej klasy
+skończonych macierzy.
+\end{twierdzenie}
+\begin{proof}
+Niech $P$ będzie zbiorem zmiennych zdaniowych.
+Nadajmy $A$ topologię dyskretną. Jest to przestrzeń
+zwarta, ponieważ $A$ jest skończone.
+Z twierdzenia Tychonoffa
+(Twierdzenie~\ref{thm:topog-tychonoff-iloczyny}
+w topologii ogólnej) przestrzeń wartościowań
+$A^P$ z topologią produktową jest zwarta.
+Wartość formuły jest ciągłą funkcją na $A^P$:
+rzuty są ciągłe, operacje na skończonych przestrzeniach
+dyskretnych są ciągłe, a indukcja po budowie formuły
+daje ciągłość złożenia.
+Zatem dla każdej formuły $\psi$ zbiór
+$V_\psi=\{v:v(\psi)\in D\}$ jest otwarto-domknięty.
+
+Przypuśćmy, że żaden skończony podzbiór $\Gamma$
+nie pociąga $\varphi$. Wtedy rodzina zbiorów domkniętych
+\[
+ \{V_\gamma:\gamma\in\Gamma\}
+ \cup\{A^P\setminus V_\varphi\}
+\]
+ma własność skończonych przecięć: kontrmodel
+dla odpowiedniego skończonego zbioru przesłanek
+należy do każdego z rozpatrywanych zbiorów.
+Zwartość daje punkt wspólny całej rodziny.
+Jest to kontrmodel dla $\Gamma\models_{\mathcal M}\varphi$.
+
+Jeżeli $\mathcal K$ jest niepustą skończoną klasą
+takich macierzy i $\Gamma\models_{\mathcal K}\varphi$,
+dla każdej $\mathcal M\in\mathcal K$ wybieramy
+skończony $\Gamma_{\mathcal M}\subseteq\Gamma$,
+który pociąga $\varphi$ w tej macierzy.
+Ich suma jest skończona i na mocy monotoniczności
+pociąga $\varphi$ w każdej macierzy z $\mathcal K$.
+Dla pustej klasy wystarczy pusty zbiór przesłanek.
+\end{proof}
+W rozdziale~\ref{ch:lst-fuzzy-logic} zwartość
+spełnialności nie zawsze pociągała zwartość konsekwencji.
+Tutaj istotne jest to, że również dopełnienie zbioru
+wartości wyróżnionych jest domknięte.
+Nie wolno automatycznie rozciągać twierdzenia
+na nieskończone klasy skończonych macierzy:
+kontrprzykład stanowi klasa wszystkich skończonych
+łańcuchów Łukasiewicza, co wykażemy we
+Wniosku~\ref{cor:ncl-finite-mv-completeness-limits}.
+
+\begin{stwierdzenie}[Rozstrzygalność przez tablice]
+\label{prop:ncl-finite-matrix-decision}
+Niech $\Gamma$ będzie skończonym zbiorem formuł,
+$\varphi$ formułą, a $\mathcal M$ ustaloną macierzą
+o $k$ elementach. Jeżeli w $\Gamma\cup\{\varphi\}$
+występuje $n$ różnych zmiennych, to do rozstrzygnięcia
+$\Gamma\models_{\mathcal M}\varphi$ wystarczy sprawdzić
+$k^n$ przypisań wartości tym zmiennym.
+Dla $n=0$ sprawdzamy jedyne puste przypisanie,
+czyli obliczamy wartości formuł bez zmiennych.
+\end{stwierdzenie}
+\begin{proof}
+Indukcja po budowie formuły pokazuje, że jej wartość
+zależy jedynie od wartości występujących w niej zmiennych.
+Każde przypisanie do skończonego zbioru zmiennych
+rozszerza się na wartościowanie wszystkich zmiennych,
+ponieważ $A$ jest niepuste.
+Wobec tego istnieje kontrmodel wtedy i tylko wtedy,
+gdy jedno z $k^n$ przypisań wyróżnia wszystkie przesłanki,
+lecz nie wyróżnia wniosku. Operacje macierzy skończonej
+możemy zapisać w postaci skończonych tablic, więc
+każda taka kontrola kończy się po skończonej liczbie kroków.
+\end{proof}
+Jeżeli sygnatura jest nieskończona, rozstrzygalność
+w sensie jednolitego algorytmu wymaga ponadto
+efektywnego dostępu do arności i tablic spójników.
+Dla skończonej sygnatury wszystkie tablice można
+zapisać raz na zawsze.
+Dla ustalonej macierzy i stałego kosztu odczytu tablicy,
+jeśli $L$ oznacza łączną liczbę węzłów drzew składniowych
+przesłanek i wniosku, bezpośrednia enumeracja ma czas
+$O(k^n L)$. Nie jest to twierdzenie o optymalności algorytmu.
+
+\section{Logika silna Kleene'ego i logika Priesta}
+\begin{definicja}[Wspólna algebra trójwartościowa]\label{def:ncl-k3-lp}
+Niech $A=\{0,u,1\}$, gdzie $0<u<1$.
+Dla negacji, koniunkcji i alternatywy określamy
+\[
+ \neg0=1,\quad \neg u=u,\quad \neg1=0,\qquad
+ a\wedge b=\min(a,b),\quad a\vee b=\max(a,b).
+\]
+Rozważamy dwie macierze w języku $\neg,\wedge,\vee$:
+\[
+ K_3=(A,\{1\}),\qquad \mathrm{LP}=(A,\{u,1\}).
+\]
+Pierwsza wyznacza silną logikę trójwartościową
+Kleene'ego, druga logikę paradoksu Priesta.
+\end{definicja}
+W $K_3$ wartość $u$ można rozumieć jako nieokreśloną,
+natomiast w LP jako jednoczesną prawdziwość i fałszywość.
+To interpretacje semantyczne, nie identyfikacja
+wartości $u$ z prawdopodobieństwem $1/2$.
+Tablice operacji są identyczne:
+\[
+\begin{array}{c|c}
+ a&\neg a\\\hline
+ 0&1\\u&u\\1&0
+\end{array}
+\qquad
+\begin{array}{c|ccc}
+ \wedge&0&u&1\\\hline
+ 0&0&0&0\\u&0&u&u\\1&0&u&1
+\end{array}
+\qquad
+\begin{array}{c|ccc}
+ \vee&0&u&1\\\hline
+ 0&0&u&1\\u&u&u&1\\1&1&1&1
+\end{array}
+\]
+Różne zbiory wartości wyróżnionych prowadzą jednak
+do różnych relacji konsekwencji.
+
+\begin{przyklad}[Wyłączony środek i eksplozja]\label{ex:ncl-k3-lp-laws}
+W $K_3$ formuła $p\vee\neg p$ nie jest tautologią:
+dla $v(p)=u$ ma wartość $u$, która nie jest wyróżniona.
+W LP jest tautologią, ponieważ jej wartość wynosi
+$1$ dla $v(p)=0,1$ oraz $u$ dla $v(p)=u$.
+
+Dla różnych zmiennych $p,q$ w $K_3$ zachodzi
+$\{p,\neg p\}\models_{K_3}q$:
+nie istnieje wartościowanie, w którym jednocześnie
+$p$ i $\neg p$ mają wartość $1$.
+Natomiast w LP wartościowanie $v(p)=u$, $v(q)=0$
+wyróżnia obie przesłanki, lecz nie wniosek, zatem
+$\{p,\neg p\}\not\models_{\mathrm{LP}}q$.
+Brak prawa eksplozji nie oznacza, że wszystkie
+formuły stają się prawdziwe.
+\end{przyklad}
+\begin{stwierdzenie}[Porównanie z klasyczną konsekwencją]
+\label{prop:ncl-k3-lp-classical}
+Każda konsekwencja w $K_3$ lub LP jest konsekwencją
+klasyczną w języku $\neg,\wedge,\vee$.
+Ponadto relacje konsekwencji $K_3$ i LP
+nie zawierają się jedna w drugiej.
+\end{stwierdzenie}
+\begin{proof}
+Ograniczenie obu macierzy do $\{0,1\}$ daje
+klasyczne tablice i dokładnie jedną wartość wyróżnioną $1$.
+Każde wartościowanie klasyczne jest więc szczególnym
+wartościowaniem w obu macierzach. Teza o klasycznej
+konsekwencji wynika przez ograniczenie kwantyfikacji.
+Przykład~\ref{ex:ncl-k3-lp-laws} pokazuje, że
+$p\vee\neg p$ jest tautologią LP, lecz nie $K_3$,
+a konsekwencja z przesłanek $p,\neg p$ do $q$
+zachodzi w $K_3$, lecz nie w LP.
+Daje to obie nieinkluzje.
+\end{proof}
+Dla pojedynczej przesłanki zachodzi ponadto użyteczna
+równoważność
+\[
+ \varphi\models_{K_3}\psi
+ \iff \neg\psi\models_{\mathrm{LP}}\neg\varphi.
+\]
+Istotnie, kontrmodel po lewej spełnia
+$v(\varphi)=1$ i $v(\psi)\ne1$. Z tablicy negacji
+jest to równoważne $v(\neg\varphi)=0$ oraz
+$v(\neg\psi)\ne0$, czyli warunkom kontrmodelu
+po prawej. Ten sam argument działa dla pary
+$B_3,\mathrm{PWK}$ w ich wspólnym języku
+(Definicja~\ref{def:ncl-weak-kleene}).
+
+\subsection{Porządek informacyjny i uzupełnienia klasyczne}
+Na zbiorze $\{0,u,1\}$ wprowadzamy drugi porządek
+$\leq_{\mathrm i}$, różny od porządku $0<u<1$.
+Jego jedyne ostre porównania to $u<_{\mathrm i}0$
+oraz $u<_{\mathrm i}1$: wartości $0$ i $1$ są
+nieporównywalne. W interpretacji Kleene'ego zastąpienie
+$u$ jedną z nich odpowiada uzupełnieniu informacji.
+\begin{center}
+\begin{tikzpicture}[x=1.2cm,y=1cm]
+\node (z) at (-1,1) {$0$};
+\node (j) at (1,1) {$1$};
+\node (u) at (0,0) {$u$};
+\draw[thick] (u)--(z) (u)--(j);
+\end{tikzpicture}
+\end{center}
+
+\begin{stwierdzenie}[Monotoniczność informacyjna]
+\label{prop:ncl-kleene-information}
+Wszystkie operacje silnej logiki Kleene'ego są
+monotoniczne względem $\leq_{\mathrm i}$. Jeżeli
+wartościowania $v,w$ spełniają $v(p)\leq_{\mathrm i}w(p)$
+dla każdej zmiennej $p$, to
+$v(\varphi)\leq_{\mathrm i}w(\varphi)$ dla każdej formuły.
+\end{stwierdzenie}
+\begin{proof}
+Negacja zamienia $0$ z $1$ i pozostawia $u$, więc
+zachowuje oba ostre porównania. Dla koniunkcji
+ustalmy drugi argument $b$. Gdy $b=0$, wynik jest
+stale równy $0$. Gdy $b=1$, wynikiem jest pierwszy
+argument. Gdy $b=u$, mamy
+$0\wedge u=0$, $u\wedge u=u$ i $1\wedge u=u$.
+Zastąpienie pierwszego argumentu $u$ przez $0$ lub
+$1$ nie zmniejsza więc informacji. Przemienność
+daje tę samą własność w drugim argumencie.
+Alternatywa jest monotoniczna, ponieważ
+$a\vee b=\neg(\neg a\wedge\neg b)$, co wynika
+z tablic operacji. Teza o formułach wynika
+z indukcji po ich budowie.
+\end{proof}
+
+\begin{wniosek}[Trwałość wartości określonej]
+\label{cor:ncl-kleene-completions}
+Niech $v$ będzie wartościowaniem trójwartościowym.
+Jeżeli $v(\varphi)\in\{0,1\}$ w silnej logice
+Kleene'ego, to każde klasyczne wartościowanie $w$
+zgodne z $v$ na zmiennych o wartości $0$ lub $1$
+nadaje $\varphi$ tę samą wartość.
+\end{wniosek}
+\begin{proof}
+Dla takiego $w$ mamy $v(p)\leq_{\mathrm i}w(p)$
+dla każdej zmiennej. Z poprzedniego stwierdzenia
+$v(\varphi)\leq_{\mathrm i}w(\varphi)$.
+Elementy $0,1$ są maksymalne w porządku
+informacyjnym, więc wartości muszą być równe.
+\end{proof}
+Odwrotna implikacja nie zachodzi. Dla $v(p)=u$
+formuła $p\vee\neg p$ ma wartość $u$, choć każde
+klasyczne uzupełnienie nadaje jej wartość $1$.
+Interpretacja przez zgodność wszystkich klasycznych
+uzupełnień, nazywana semantyką superwaluacyjną,
+nie jest więc tym samym co silne tablice Kleene'ego.
+Dokładniej, przypisujemy formule wartość $1$, gdy
+wszystkie klasyczne uzupełnienia dają $1$, wartość
+$0$, gdy wszystkie dają $0$, i $u$ w pozostałym
+przypadku. Uzupełnienia istnieją, ponieważ można
+każdej zmiennej nieokreślonej przypisać $0$.
+Ta semantyka nie jest prawdziwościowo funkcyjna
+względem samych trzech wartości: przy $v(p)=v(q)=u$
+formuły $p\vee\neg p$ oraz $p\vee q$ mają w niej
+odpowiednio wartości $1$ i $u$, choć w obu
+przypadkach argumenty alternatywy mają wartość $u$.
+
+\section{Słaba logika Kleene'ego i logika Bochvara}
+\begin{definicja}[Słaba algebra Kleene'ego]
+\label{def:ncl-weak-kleene}
+Na $A=\{0,u,1\}$ zachowujemy dotychczasową negację.
+Koniunkcja $\wedge_{\mathrm w}$ i alternatywa
+$\vee_{\mathrm w}$ zgadzają się z operacjami
+klasycznymi na $\{0,1\}$, natomiast jeżeli dowolny
+argument jest równy $u$, wynikiem jest $u$.
+Otrzymujemy tablice
+\[
+\begin{array}{c|ccc}
+ \wedge_{\mathrm w}&0&u&1\\\hline
+ 0&0&u&0\\u&u&u&u\\1&0&u&1
+\end{array}
+\qquad
+\begin{array}{c|ccc}
+ \vee_{\mathrm w}&0&u&1\\\hline
+ 0&0&u&1\\u&u&u&u\\1&1&u&1
+\end{array}
+\]
+Macierz z $D=\{1\}$ oznaczamy $B_3$ (słaba logika
+Kleene'ego, wewnętrzny fragment logiki Bochvara),
+a macierz z $D=\{u,1\}$ przez $\mathrm{PWK}$
+(parakonsystentna słaba logika Kleene'ego).
+\end{definicja}
+W odróżnieniu od silnych tablic, tutaj nawet
+$0\wedge_{\mathrm w}u=u$ i $1\vee_{\mathrm w}u=u$.
+Trzecia wartość ma charakter absorbujący
+dla wszystkich spójników wewnętrznych.
+W dalszym ciągu, o ile nie zaznaczono inaczej,
+rozważamy język bez stałych, z negacją,
+koniunkcją i alternatywą.
+
+\begin{lemat}[Propagacja trzeciej wartości]
+\label{lem:ncl-weak-kleene-infection}
+Niech $\operatorname{Var}(\varphi)$ oznacza zbiór
+zmiennych występujących w formule $\varphi$.
+W słabej algebrze Kleene'ego
+\[
+ v(\varphi)=u
+ \iff \exists p\in\operatorname{Var}(\varphi)
+       \quad v(p)=u.
+\]
+Jeżeli wszystkie zmienne formuły mają wartości
+w $\{0,1\}$, wartość formuły jest klasyczna.
+\end{lemat}
+\begin{proof}
+Dla zmiennej obie tezy są natychmiastowe.
+Negacja zachowuje wartość $u$ i nie wytwarza jej
+z $0$ ani $1$. Dla spójnika dwuargumentowego
+wynik jest równy $u$ dokładnie wtedy, gdy co
+najmniej jeden argument ma tę wartość.
+W pozostałym przypadku operacja jest klasyczna.
+Hipoteza indukcyjna daje tezę dla obu argumentów,
+a suma zbiorów ich zmiennych jest zbiorem
+zmiennych całej formuły.
+\end{proof}
+
+\begin{twierdzenie}[Charakteryzacja konsekwencji Bochvara]
+\label{thm:ncl-bochvar-variable-inclusion}
+Niech $\operatorname{Var}(\Gamma)=
+\bigcup_{\gamma\in\Gamma}\operatorname{Var}(\gamma)$.
+W języku wewnętrznym zachodzi
+$\Gamma\models_{B_3}\varphi$ wtedy i tylko wtedy,
+gdy $\Gamma$ jest klasycznie niespełnialny
+lub spełnione są oba warunki
+\[
+ \Gamma\models_{\mathrm{CL}}\varphi,\qquad
+ \operatorname{Var}(\varphi)\subseteq
+ \operatorname{Var}(\Gamma).
+\]
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $v(\Gamma)\subseteq\{1\}$, to z
+Lematu~\ref{lem:ncl-weak-kleene-infection}
+każda zmienna występująca w $\Gamma$ ma wartość
+klasyczną. Uzupełniając dowolnie pozostałe zmienne
+wartościami klasycznymi, otrzymujemy klasyczny
+model $\Gamma$. Zatem dla klasycznie niespełnialnego
+$\Gamma$ konsekwencja Bochvara zachodzi próżniowo.
+
+Jeżeli oba warunki są spełnione i $v$ wyróżnia
+$\Gamma$, to zmienne $\varphi$ również mają
+wartości klasyczne. W klasycznym uzupełnieniu
+$v$ formuła $\varphi$ ma wartość $1$ na mocy
+klasycznej konsekwencji, a jej wartość nie zmienia
+się przy uzupełnianiu zmiennych spoza
+$\operatorname{Var}(\Gamma)$. Stąd $v(\varphi)=1$.
+
+Odwrotnie, załóżmy, że $\Gamma$ jest klasycznie
+spełnialny i $\Gamma\models_{B_3}\varphi$.
+Ograniczenie do klasycznych wartościowań daje
+$\Gamma\models_{\mathrm{CL}}\varphi$.
+Gdyby istniała zmienna
+$p\in\operatorname{Var}(\varphi)\setminus
+\operatorname{Var}(\Gamma)$, moglibyśmy w
+klasycznym modelu $\Gamma$ zmienić jej wartość
+na $u$. Wszystkie przesłanki zachowałyby wartość
+$1$, ale $\varphi$ miałaby wartość $u$ na mocy
+lematu. Byłby to kontrmodel.
+\end{proof}
+
+\begin{twierdzenie}[Charakteryzacja konsekwencji PWK]
+\label{thm:ncl-pwk-variable-inclusion}
+Dla $\Gamma_\varphi=
+\{\gamma\in\Gamma:
+\operatorname{Var}(\gamma)\subseteq
+\operatorname{Var}(\varphi)\}$ zachodzi
+\[
+ \Gamma\models_{\mathrm{PWK}}\varphi
+ \iff \Gamma_\varphi\models_{\mathrm{CL}}\varphi.
+\]
+\end{twierdzenie}
+\begin{proof}
+Załóżmy warunek po prawej i niech $v$ wyróżnia
+wszystkie przesłanki w PWK. Jeżeli $v(\varphi)=u$,
+wniosek jest wyróżniony. W przeciwnym razie
+wszystkie jego zmienne są klasyczne na mocy
+Lematu~\ref{lem:ncl-weak-kleene-infection}.
+Zatem każda formuła z $\Gamma_\varphi$ ma
+wartość klasyczną i wyróżnioną, czyli $1$.
+Klasyczne uzupełnienie $v$ na pozostałych
+zmiennych jest modelem $\Gamma_\varphi$ i
+z założenia daje $\varphi$ wartość $1$.
+Wartość $\varphi$ nie zależy od tych pozostałych
+zmiennych, stąd $v(\varphi)=1$.
+
+Odwrotnie, jeśli warunek po prawej nie zachodzi,
+istnieje klasyczne wartościowanie $w$ wyróżniające
+$\Gamma_\varphi$ i nadające $\varphi$ wartość $0$.
+Definiujemy $v(p)=w(p)$ dla
+$p\in\operatorname{Var}(\varphi)$ i $v(p)=u$
+poza tym zbiorem. Przesłanki z $\Gamma_\varphi$
+mają nadal wartość $1$, a każda pozostała
+przesłanka zawiera zmienną o wartości $u$,
+więc ma wartość $u$. Wniosek ma wartość $0$.
+Jest to kontrmodel w PWK.
+\end{proof}
+
+\begin{przyklad}[Porównanie czterech macierzy]
+\label{ex:ncl-weak-strong-comparison}
+Poniższe zestawienie dotyczy wspólnego języka
+wewnętrznego. Symbol $+$ oznacza zachodzenie
+konsekwencji, symbol $-$ jej brak.
+\[
+\begin{array}{l|cccc}
+ & K_3&B_3&\mathrm{LP}&\mathrm{PWK}\\\hline
+ \models p\vee\neg p &-&-&+&+\\
+ p,\neg p\models q &+&+&-&-\\
+ p\models p\vee q &+&-&+&+\\
+ p\wedge q\models p &+&+&+&-
+\end{array}
+\]
+Pierwsze dwa wiersze wynikają z tablic negacji
+i koniunkcji bądź alternatywy oraz wyboru wartości
+wyróżnionych. W trzecim wierszu jedyny brak
+konsekwencji pokazuje $v(p)=1$, $v(q)=u$ w $B_3$.
+W pozostałych macierzach wyróżniony pierwszy argument
+daje wyróżnioną alternatywę, co wynika z odpowiednich
+tablic. W czwartym wierszu dla PWK kontrmodelem
+jest $v(p)=0$, $v(q)=u$. W $K_3$ i $B_3$ koniunkcja
+ma wartość $1$ tylko wtedy, gdy oba argumenty są
+równe $1$, a w LP minimum wyróżnione oznacza,
+że oba argumenty są wyróżnione.
+\end{przyklad}
+
+\subsection{Zewnętrzne stwierdzanie prawdziwości}
+Bochvar rozróżniał spójniki wewnętrzne od operacji
+zewnętrznych. Rozszerzamy słabą algebrę Kleene'ego
+o jednoargumentową operację $J_1$, określoną przez
+$J_1(1)=1$ oraz $J_1(0)=J_1(u)=0$.
+Jest ona testem, czy argument jest prawdziwy,
+nie zaś zwykłym spójnikiem wewnętrznym.
+W rozszerzonej macierzy zachowujemy $D=\{1\}$.
+
+\begin{stwierdzenie}[Testy wartości i zewnętrzna klasyczność]
+\label{prop:ncl-bochvar-external-tests}
+Formuły
+\[
+ J_0(p)=J_1(\neg p),\qquad
+ J_u(p)=\neg(J_0(p)\vee_{\mathrm w}J_1(p))
+\]
+przyjmują wyłącznie wartości $0,1$ i spełniają
+$J_a(b)=\chi_{\{a\}}(b)$ dla $a\in\{0,u,1\}$.
+Każda formuła zbudowana wyłącznie z testów wartości
+jako składników oraz spójników wewnętrznych
+przyjmuje wartości klasyczne.
+\end{stwierdzenie}
+\begin{proof}
+Z tablicy negacji $J_1(\neg b)=1$ dokładnie dla
+$b=0$. Stąd $J_0$ jest testem zera.
+Oba testy mają wartości klasyczne, więc alternatywa
+w definicji $J_u$ jest klasyczna i wynosi $1$
+dokładnie dla $b=0$ lub $b=1$. Jej negacja wynosi
+$1$ dokładnie dla $b=u$. Ostatnia teza wynika
+indukcyjnie z tego, że zbiór $\{0,1\}$ jest zamknięty
+ze względu na spójniki wewnętrzne.
+\end{proof}
+W szczególności $J_1(p)\vee_{\mathrm w}\neg J_1(p)$
+jest tautologią rozszerzonego języka Bochvara,
+chociaż $p\vee_{\mathrm w}\neg p$ nią nie jest.
+Twierdzenia~\ref{thm:ncl-bochvar-variable-inclusion}
+i~\ref{thm:ncl-pwk-variable-inclusion} dotyczą
+wyłącznie języka wewnętrznego; nie wolno przenosić
+ich bez dodatkowego dowodu na język z testami.
+
+Por. D. A. Bochvar, \emph{On a three-valued logical calculus
+and its application to the analysis of the paradoxes of
+the classical extended functional calculus}, History and
+Philosophy of Logic 2 (1981), 87--112 (angielskie tłumaczenie
+pracy z 1938 r.); oraz hasło \emph{Many-Valued Logic}
+w Stanford Encyclopedia of Philosophy, część dotycząca
+słabych algebr Kleene'ego.
+
+\section{Logiki Posta i zupełność funkcjonalna}
+
+\begin{definicja}[Zupełność funkcjonalna]
+\label{def:ncl-functional-completeness}
+Rodzinę operacji na skończonym niepustym zbiorze $A$
+nazywamy funkcjonalnie zupełną, jeżeli dla każdego $n\geq1$
+i każdej funkcji $f:A^n\to A$ istnieje term o zmiennych
+$p_1,\ldots,p_n$, którego funkcja termowa jest równa $f$.
+Dopuszczenie operacji zeroargumentowych (stałych)
+należy zaznaczyć w opisie języka.
+\end{definicja}
+Jest to własność operacji, nie zbioru wartości wyróżnionych;
+nie należy jej utożsamiać z pełnością rachunku dowodów.
+
+\begin{definicja}[Macierz Posta]\label{def:ncl-post-chain}
+Dla całkowitego $m\geq2$ przyjmujemy
+$P_m=\{0,1,\ldots,m-1\}$ z naturalnym porządkiem.
+Określamy cykliczną negację $s$ i alternatywę przez
+\[
+ s(a)=(a+1)\bmod m,\qquad a\vee b=\max(a,b).
+\]
+Jedyną wartością wyróżnioną jest $m-1$.
+Numerację można odwrócić, odpowiednio zmieniając
+operacje. Dla $m>2$ operacja $s$ nie jest inwolucją
+ani negacją odwracającą porządek.
+\end{definicja}
+Dla $m=2$ otrzymujemy klasyczną negację i alternatywę,
+a dla $m=3$ cykl przedstawiony na rysunku.
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+\node[draw,circle] (z) at (0,0) {$0$};
+\node[draw,circle] (j) at (3,0) {$1$};
+\node[draw,circle] (d) at (1.5,2) {$2$};
+\draw[->,thick] (z)--(j);
+\draw[->,thick] (j)--(d);
+\draw[->,thick] (d)--(z);
+\end{tikzpicture}
+\end{center}
+
+\begin{lemat}[Testy i stałe Posta]\label{lem:ncl-post-tests}
+Dla $i\in P_m$ istnieje jednoargumentowy term $E_i$
+w języku $s,\vee$ taki, że
+\[
+ E_i(a)=
+ \begin{cases}
+ m-1,&a=i,\\
+ 0,&a\ne i.
+ \end{cases}
+\]
+W tym języku można również zdefiniować wszystkie
+stałe jako jednoargumentowe funkcje termowe.
+\end{lemat}
+\begin{proof}
+Niech $C(p)=\bigvee_{k=0}^{m-1}s^k(p)$,
+gdzie $s^0$ jest identycznością. Dla każdej wartości
+$p$ argumenty alternatywy przebiegają całe $P_m$,
+więc $C(p)=m-1$. Iterując $s$ na $C$, otrzymujemy
+wszystkie stałe, w szczególności funkcje termowe
+$c_j(p)=j$ dla $j\in P_m$.
+
+Połóżmy $H(p)=s(p\vee c_{m-2}(p))$.
+Jeżeli $p=m-1$, to $H(p)=0$; dla każdej innej
+wartości $H(p)=m-1$. Stąd
+$E_{m-1}(p)=H(H(p))$ jest testem wartości $m-1$.
+Istotnie, $H(0)=m-1$ i $H(m-1)=0$.
+Dla ogólnego $i$ bierzemy
+$E_i(p)=E_{m-1}(s^{m-1-i}(p))$.
+Iteracja przesuwa $i$ na $m-1$ i żadnej innej
+wartości na $m-1$, ponieważ jest bijekcją.
+\end{proof}
+
+\begin{twierdzenie}[Zupełność funkcjonalna operacji Posta]
+\label{thm:ncl-post-functional-completeness}
+Operacje $s,\vee$ na $P_m$ są funkcjonalnie zupełne.
+\end{twierdzenie}
+\begin{proof}
+Na zbiorze $\{0,m-1\}$ operacja $H$ z dowodu
+Lematu~\ref{lem:ncl-post-tests} zamienia oba elementy,
+a $\vee$ jest klasyczną alternatywą w tej numeracji.
+Dlatego dla argumentów z tego zbioru term
+\[
+ B(x,y)=H(H(x)\vee H(y))
+\]
+przyjmuje wartość $m-1$ dokładnie wtedy, gdy oba
+argumenty są równe $m-1$, i wartość $0$ w pozostałych
+przypadkach.
+
+Dla krotki $a=(a_1,\ldots,a_n)\in P_m^n$
+tworzymy term $D_a$ jako iterowane $B$ testów
+$E_{a_j}(p_j)$, $1\leq j\leq n$. Dla $n=1$
+bierzemy sam test. Z konstrukcji
+$D_a(b)=m-1$ wtedy i tylko wtedy, gdy $b=a$,
+a w przeciwnym razie $D_a(b)=0$.
+Dla $1\leq j\leq m-1$ term
+\[
+ G_j(x)=s(H(x)\vee c_{j-1}(x))
+\]
+spełnia $G_j(0)=0$ oraz $G_j(m-1)=j$.
+Dla $j=0$ bierzemy $G_0=c_0$.
+Dla dowolnej funkcji $f:P_m^n\to P_m$ otrzymujemy
+\[
+ f(p_1,\ldots,p_n)=
+ \bigvee_{a\in P_m^n} G_{f(a)}(D_a(p_1,\ldots,p_n)).
+\]
+Istotnie, przy wartościowaniu $b$ wszystkie składniki
+poza składnikiem o indeksie $a=b$ są zerowe,
+a ten ostatni ma wartość $f(b)$. Maksimum jest
+więc równe $f(b)$. Prawa strona jest skończonym
+termem w języku $s,\vee$, co kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Trójwartościowy spójnik równości]
+\label{ex:ncl-post-equality}
+Na $P_3$ funkcję przyjmującą wartość $2$ dla $p=q$
+i $0$ poza przekątną reprezentuje term
+\[
+ B(E_0(p),E_0(q))\vee
+ B(E_1(p),E_1(q))\vee
+ B(E_2(p),E_2(q)).
+\]
+Każdy składnik wykrywa równość obu argumentów
+z odpowiednią stałą. Maksimum jest wyróżnione
+dokładnie wtedy, gdy jeden z tych trzech przypadków
+zachodzi.
+\end{przyklad}
+W języku bez stałych nie ma termów zeroargumentowych.
+Dowód zupełności funkcjonalnej dotyczy więc funkcji
+dodatniej liczby argumentów, w tym funkcji stałych
+takiej liczby argumentów.
+
+\section{Skończone logiki Łukasiewicza}
+\begin{definicja}[Skończony łańcuch Łukasiewicza]
+\label{def:ncl-finite-lukasiewicz}
+Dla całkowitego $m\geq1$ oznaczmy
+$L_{m+1}=\{0,1/m,\ldots,(m-1)/m,1\}$.
+Wyposażamy go w operacje standardowej algebry MV
+z Definicji~\ref{def:lst-fuzzy-mv-operations},
+ograniczone do tego zbioru, oraz wyróżniamy wartość $1$.
+W szczególności
+\[
+ \begin{aligned}
+ \neg x&=1-x, & x\oplus y&=\min(1,x+y),\\
+ x\odot y&=\max(0,x+y-1), & x\to y&=\min(1,1-x+y).
+ \end{aligned}
+\]
+W języku MV używamy stałej $0$ i operacji
+$\neg,\oplus$. Pozostałe spójniki można wyrazić
+przez
+\[
+ \begin{aligned}
+ x\odot y&=\neg(\neg x\oplus\neg y),&
+ x\to y&=\neg x\oplus y,\\
+ x\vee y&=(x\to y)\to y,&
+ x\wedge y&=\neg(\neg x\vee\neg y).
+ \end{aligned}
+\]
+Pierwsze dwa wzory wynikają bezpośrednio z obciętej
+sumy i negacji. Dla $x\leq y$ mamy $(x\to y)\to y=y$,
+a dla $x>y$ otrzymujemy
+$\min(1,1-(1-x+y)+y)=x$.
+Ostatnia równość wynika z odwracania porządku przez
+negację. W przeciwnym kierunku $\neg x=x\to0$
+oraz $x\oplus y=(\neg x)\to y$ jak w
+Definicji~\ref{def:lst-fuzzy-mv-operations}.
+\end{definicja}
+Zapis $L_{m+1}$ podkreśla liczbę wartości,
+a $m$ jest mianownikiem siatki.
+Domkniętość względem operacji wynika stąd, że
+suma i różnica wielokrotności $1/m$ są takimi
+wielokrotnościami, a obcięcia zachowują siatkę.
+Dla $m=1$ otrzymujemy logikę klasyczną.
+
+\begin{stwierdzenie}[Trójwartościowy przypadek]
+\label{prop:ncl-l3-comparison}
+Redukt algebry $L_3$ do $\neg,\wedge,\vee$ pokrywa się
+z algebrą silnej logiki Kleene'ego przy $u=1/2$.
+Jednak implikacja Łukasiewicza różni się od
+implikacji materialnej $\neg p\vee q$.
+\end{stwierdzenie}
+\begin{proof}
+Negacja $1-x$ oraz minimum i maksimum mają
+dokładnie tablice z Definicji~\ref{def:ncl-k3-lp}.
+Dla $x=y=1/2$ mamy $x\to y=1$, podczas gdy
+$\neg x\vee y=1/2$. W szczególności pierwsza
+implikacja daje tautologię $p\to p$, a druga nie.
+\end{proof}
+
+\begin{lemat}[Podalgebry skończonych łańcuchów MV]
+\label{lem:ncl-finite-mv-subalgebras}
+Podalgebry $L_{m+1}$ są dokładnie zbiorami $L_{d+1}$
+dla dodatnich dzielników $d$ liczby $m$.
+Podalgebra generowana przez krotkę
+$a=(k_1/m,\ldots,k_n/m)$ jest równa
+\[
+ L_{m/g+1},\qquad g=\gcd(m,k_1,\ldots,k_n).
+\]
+\end{lemat}
+\begin{proof}
+Dla dowolnej podalgebry $B$ rozważmy zbiór
+całkowitych liczników $S=\{k:k/m\in B\}$.
+Zawiera on $0,m$. Ponadto jest zamknięty ze względu
+na nieujemną różnicę, gdyż
+$x\odot\neg y=\max(0,x-y)$.
+Niech $g$ będzie najmniejszym dodatnim elementem $S$.
+Dzieląc dowolny $k\in S$ z resztą przez $g$,
+otrzymujemy resztę należącą do $S$ przez wielokrotne
+odejmowanie $g$. Minimalność $g$ wymusza resztę zero.
+W szczególności $g$ dzieli $m$.
+Z drugiej strony przez iterowanie $\oplus$ na $g/m$
+otrzymujemy wszystkie wielokrotności $g/m$ nie większe
+od $1$. Zatem $B=L_{m/g+1}$.
+Każdy taki zbiór jest podalgebrą na mocy wzorów
+Definicji~\ref{def:ncl-finite-lukasiewicz}.
+Podalgebra zawiera krotkę $a$ wtedy i tylko wtedy,
+gdy jej krok $g/m$ ma licznik $g$ dzielący
+$m,k_1,\ldots,k_n$. Największy taki dzielnik
+daje najmniejszą podalgebrę zawierającą $a$,
+co dowodzi wzoru.
+\end{proof}
+
+\begin{twierdzenie}[Charakteryzacja funkcji termowych na skończonym łańcuchu MV]
+\label{thm:ncl-finite-mv-term-functions}
+Niech $n\geq1$. Funkcja $f:L_{m+1}^n\to L_{m+1}$
+jest funkcją termową w języku MV wtedy i tylko wtedy,
+gdy dla każdego dodatniego dzielnika $d$ liczby $m$
+zachodzi
+\[
+ f(L_{d+1}^n)\subseteq L_{d+1}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Konieczność wynika z Lematu~\ref{lem:ncl-finite-mv-subalgebras}:
+każdy term zachowuje podalgebry przez indukcję
+po swojej budowie.
+
+Dla dostateczności zauważmy, że funkcja
+\[
+ e_k(x)=\max(0,1-|mx-k|),\qquad 0\leq k\leq m,
+\]
+jest ciągła, kawałkami afiniczna ze współczynnikami
+całkowitymi i przyjmuje wartości w $[0,1]$.
+Twierdzenie McNaughtona
+(Twierdzenie~\ref{thm:lst-fuzzy-mcnaughton})
+daje reprezentujący ją term MV. Na siatce $L_{m+1}$
+funkcja $e_k$ jest testem równości z $k/m$:
+ma wartość $1$ w tym punkcie, a $0$ we wszystkich
+pozostałych punktach siatki.
+Dla $a=(k_1/m,\ldots,k_n/m)$ term
+$D_a(p)=\bigwedge_{j=1}^n e_{k_j}(p_j)$
+jest zatem charakterystyczną funkcją krotki $a$.
+
+Z założenia $f(a)$ należy do podalgebry
+generowanej przez $a$ (stosujemy warunek dla
+$d=m/\gcd(m,k_1,\ldots,k_n)$).
+Każdy element tej podalgebry jest wartością
+pewnego termu $t_a$ na krotce $a$: zbiór wartości
+wszystkich termów na $a$ zawiera generatory i stałe,
+jest zamknięty względem operacji, a każda podalgebra
+zawierająca $a$ musi zawierać te wartości.
+Wobec tego istnieje term $t_a$ z $t_a(a)=f(a)$.
+Teraz term
+\[
+ \bigvee_{a\in L_{m+1}^n}(D_a(p)\wedge t_a(p))
+\]
+reprezentuje $f$, ponieważ przy ustalonej krotce
+$b$ jedyny składnik, który może być niezerowy,
+ma indeks $a=b$ i wartość $f(b)$.
+\end{proof}
+
+\begin{wniosek}[Ograniczenia i rozszerzenia zupełności funkcjonalnej]
+\label{cor:ncl-finite-mv-functional}
+Dla $m>1$ operacje MV bez dodatkowych stałych
+nie są funkcjonalnie zupełne na $L_{m+1}$.
+Po dodaniu stałej $1/m$ stają się funkcjonalnie zupełne.
+\end{wniosek}
+\begin{proof}
+Podalgebra $\{0,1\}$ jest zachowywana przez wszystkie
+termy, ale nie przez funkcję stałą równą $1/m$.
+Po dodaniu tej stałej wszystkie elementy siatki
+są definiowalne przez iterowanie $\oplus$.
+Stosując testy $D_a$ z dowodu poprzedniego twierdzenia,
+reprezentujemy dowolną funkcję jako
+$\bigvee_a(D_a(p)\wedge f(a))$, gdzie każda wartość
+$f(a)$ występuje jako definiowalna stała.
+\end{proof}
+
+\begin{wniosek}[Pełność dla skończonych przesłanek względem skończonych łańcuchów]
+\label{cor:ncl-finite-lukasiewicz-completeness}
+Dla skończonego zbioru formuł $\Gamma$ oraz formuły
+$\varphi$ w języku logiki Łukasiewicza zachodzi
+\[
+ \Gamma\vdash_L\varphi
+ \iff \Gamma\models_{\{(L_{m+1},\{1\}):m\geq1\}}\varphi.
+\]
+\end{wniosek}
+\begin{proof}
+Kierunek prosty wynika z poprawności względem algebr MV.
+Jeżeli $\Gamma\nvdash_L\varphi$, to
+Twierdzenie~\ref{thm:lst-fuzzy-mv-rational-countermodel}
+daje standardowy kontrmodel o wymiernych wartościach
+zmiennych. W skończenie wielu rozważanych formułach
+występuje skończenie wiele zmiennych. Wybieramy
+wspólny dodatni mianownik $m$ ich wartości.
+Wszystkie wartości podformuł należą do $L_{m+1}$
+przez domkniętość tej algebry względem operacji.
+Pozostałym zmiennym przypisujemy zero.
+Otrzymujemy kontrmodel w skończonym łańcuchu.
+\end{proof}
+\begin{wniosek}[Ograniczenia pełności skończonych łańcuchów]
+\label{cor:ncl-finite-mv-completeness-limits}
+Żaden pojedynczy skończony łańcuch $L_{m+1}$ nie daje
+pełności logiki $L$ nawet dla tautologii. Ponadto
+konsekwencja względem klasy wszystkich skończonych
+łańcuchów Łukasiewicza nie jest zwarta.
+\end{wniosek}
+\begin{proof}
+Dla ustalonego $m$ rozważmy formułę $p^m\to p^{m+1}$,
+gdzie potęgi oznaczają iterację $\odot$.
+Wzór z Przykładu~\ref{ex:ncl-standard-filters} daje
+$x^m=x^{m+1}=0$ dla $x\leq 1-1/m$, a dla $x=1$
+obie potęgi są jedynkami. Formuła jest więc tautologią
+$L_{m+1}$. Jednak dla standardowego wartościowania
+$x=1-1/(m+2)$ obie potęgi są dodatnie i wynoszą
+odpowiednio $2/(m+2)$ oraz $1/(m+2)$, więc formuła
+nie jest dowodliwa na mocy poprawności.
+
+Dla drugiej tezy bierzemy zbiór
+$\Gamma=\{p\to q^n:n\geq1\}$ i formułę
+$\varphi=q\vee\neg p$ z dowodu
+Twierdzenia~\ref{thm:lst-fuzzy-noncompactness}.
+Ponieważ $\Gamma\models_L\varphi$ w semantyce
+standardowej, konsekwencja zachodzi w każdej jej
+skończonej podalgebrze.
+Dla skończonego $\Gamma_0\subseteq\Gamma$ wybieramy
+$N\geq1$ nie mniejsze od wszystkich wykładników
+w $\Gamma_0$ (także dla pustego $\Gamma_0$).
+W łańcuchu $L_{2N+1}$ przypisujemy
+$v(p)=1/2$ i $v(q)=1-1/(2N)$.
+Dla $n\leq N$ mamy $v(q^n)=1-n/(2N)\geq1/2$.
+Wszystkie przesłanki $\Gamma_0$ mają wartość $1$,
+ale $v(\varphi)=1-1/(2N)<1$.
+Zatem żaden skończony podzbiór nie wystarcza.
+\end{proof}
+W szczególności rachunek o skończonych dowodach
+nie może być silnie pełny względem tej klasy macierzy
+(por. Stwierdzenie~\ref{prop:ncl-compactness-completeness}).
+
+\section{Logika czterowartościowa Belnapa--Dunna}
+\begin{definicja}[Reprezentacja parowa wartości]
+\label{def:ncl-four-values}
+Niech $V=\{0,1\}^2$. Współrzędne pary $(a,b)$
+oznaczają odpowiednio obecność informacji przemawiającej
+za zdaniem oraz za jego negacją. Wprowadzamy oznaczenia
+\[
+ \mathsf N=(0,0),\quad \mathsf T=(1,0),\quad
+ \mathsf F=(0,1),\quad \mathsf B=(1,1).
+\]
+Wartość $\mathsf N$ oznacza brak obu rodzajów informacji,
+a $\mathsf B$ ich jednoczesną obecność. Nie są to
+prawdopodobieństwa ani stopnie przynależności.
+Definiujemy operacje
+\[
+ \neg(a,b)=(b,a),\qquad
+ (a,b)\wedge(c,d)=(\min(a,c),\max(b,d)),
+\]
+\[
+ (a,b)\vee(c,d)=(\max(a,c),\min(b,d)).
+\]
+Macierz logiki Belnapa--Dunna (FDE, ang. first-degree
+entailment) w języku $\neg,\wedge,\vee$ ma postać
+$\mathcal M_{\mathrm{FDE}}=(V,\{\mathsf T,\mathsf B\})$.
+\end{definicja}
+Wyróżniamy zatem wartości, których pierwsza współrzędna
+wynosi $1$, niezależnie od drugiej.
+Na przykład dla koniunkcji informacja pozytywna wymaga
+obu informacji pozytywnych, a negatywna wymaga
+co najmniej jednej informacji negatywnej.
+Dla alternatywy role tych warunków są zamienione.
+
+\begin{definicja}[Dwa porządki]\label{def:ncl-bilattice-orders}
+Na $V$ określamy porządek prawdziwości $\leq_{\mathrm t}$
+oraz porządek informacyjny $\leq_{\mathrm i}$:
+\[
+ (a,b)\leq_{\mathrm t}(c,d)\iff a\leq c,\ d\leq b,
+ \qquad
+ (a,b)\leq_{\mathrm i}(c,d)\iff a\leq c,\ b\leq d.
+\]
+\end{definicja}
+\begin{center}
+\begin{tikzpicture}[x=1.2cm,y=1cm]
+\begin{scope}
+\node (t) at (0,2) {$\mathsf T$};
+\node (n) at (-1,1) {$\mathsf N$};
+\node (b) at (1,1) {$\mathsf B$};
+\node (f) at (0,0) {$\mathsf F$};
+\draw[thick] (f)--(n)--(t)--(b)--(f);
+\node at (0,-0.65) {Prawdziwość};
+\end{scope}
+\begin{scope}[xshift=4.8cm]
+\node (ib) at (0,2) {$\mathsf B$};
+\node (it) at (-1,1) {$\mathsf T$};
+\node (if) at (1,1) {$\mathsf F$};
+\node (in) at (0,0) {$\mathsf N$};
+\draw[thick] (in)--(it)--(ib)--(if)--(in);
+\node at (0,-0.65) {Informacja};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+Na obu diagramach element położony wyżej jest większy
+od elementu niższego, jeżeli łączy je rosnąca droga
+wzdłuż krawędzi diagramu Hassego. W pierwszym porządku
+$\mathsf N$ i $\mathsf B$ są nieporównywalne,
+w drugim nieporównywalne są $\mathsf T$ i $\mathsf F$.
+
+\begin{twierdzenie}[Struktura dwukraty]
+\label{thm:ncl-four-bilattice}
+Oba porządki z Definicji~\ref{def:ncl-bilattice-orders}
+są porządkami krat ograniczonych i rozdzielnych.
+Kresami w porządku prawdziwości są operacje
+$\wedge,\vee$ z Definicji~\ref{def:ncl-four-values},
+a kresami w porządku informacyjnym są
+\[
+ (a,b)\otimes(c,d)=(\min(a,c),\min(b,d)),
+\]
+\[
+ (a,b)\oplus(c,d)=(\max(a,c),\max(b,d)).
+\]
+Każda z czterech operacji kratowych jest monotoniczna
+w obu porządkach. Negacja jest inwolucją odwracającą
+porządek prawdziwości i zachowującą porządek informacyjny.
+\end{twierdzenie}
+\begin{proof}
+Porządek informacyjny jest porządkiem produktowym
+dwóch dwuelementowych łańcuchów, a porządek prawdziwości
+jest produktem pierwszego łańcucha z drugim o odwróconym
+porządku. Kresy w produktach obliczamy współrzędnie:
+para kresów jest ograniczeniem odpowiedniego rodzaju
+i każde inne ograniczenie jest od niej odpowiednio
+większe lub mniejsze w obu współrzędnych.
+Daje to wszystkie podane wzory i rozdzielność, ponieważ
+minimum i maksimum w łańcuchu spełniają obie tożsamości
+rozdzielności. Elementami najmniejszymi i największymi
+są odpowiednio $\mathsf F,\mathsf T$ w pierwszym
+porządku i $\mathsf N,\mathsf B$ w drugim.
+
+Minimum i maksimum są niemalejące w każdym argumencie
+w zwykłym porządku na $\{0,1\}$, a więc również
+zachowują porządek odwrócony, jeśli używamy go
+jednocześnie w dziedzinie i przeciwdziedzinie.
+Stąd monotoniczność wszystkich czterech operacji
+w obu porządkach wynika współrzędnie.
+Dwukrotna zamiana współrzędnych jest identycznością.
+Jeżeli $a\leq c$ oraz $d\leq b$, to
+$(d,c)\leq_{\mathrm t}(b,a)$; jeżeli $a\leq c$
+oraz $b\leq d$, to $(b,a)\leq_{\mathrm i}(d,c)$.
+Daje to własności negacji.
+\end{proof}
+Taka para struktur kratowych na tym samym zbiorze
+jest przykładem dwukraty. Udowodniona monotoniczność
+wszystkich operacji w obu porządkach oznacza, że
+dwukrata jest przeplatana. W tym przykładzie zachodzi
+także rozdzielność mieszana: dla dowolnych dwóch
+operacji $\circ,\star\in\{\wedge,\vee,\otimes,\oplus\}$
+mamy
+\[
+ x\circ(y\star z)=(x\circ y)\star(x\circ z).
+\]
+Istotnie, w każdej współrzędnej jest to jedna z dwóch
+tożsamości rozdzielności minimum i maksimum, gdy
+operacje współrzędne są różne. Gdy są jednakowe,
+równość wynika z ich łączności i idempotentności.
+Operacje informacyjne
+nie należą do podstawowego języka FDE; rozszerzenie
+języka o nie zmienia zbiór dostępnych formuł.
+
+\begin{stwierdzenie}[Prawa de Morgana]
+\label{prop:ncl-four-demorgan}
+Negacja spełnia
+\[
+ \neg(x\wedge y)=\neg x\vee\neg y,\qquad
+ \neg(x\vee y)=\neg x\wedge\neg y,
+\]
+a także
+\[
+ \neg(x\otimes y)=\neg x\otimes\neg y,\qquad
+ \neg(x\oplus y)=\neg x\oplus\neg y.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Bijekcja odwracająca porządek zamienia kres dolny
+z górnym: obraz ograniczenia dolnego jest ograniczeniem
+górnym obrazów, a maksymalność pierwszego odpowiada
+minimalności drugiego. Bijekcja zachowująca porządek
+zachowuje oba kresy przez analogiczny argument.
+Stosujemy Twierdzenie~\ref{thm:ncl-four-bilattice}.
+\end{proof}
+
+\subsection{Konsekwencja i podmacierze trójwartościowe}
+\begin{stwierdzenie}[Dwie podmacierze FDE]
+\label{prop:ncl-four-reducts}
+W języku $\neg,\wedge,\vee$ podzbiory
+$V\setminus\{\mathsf B\}$ i
+$V\setminus\{\mathsf N\}$ są podalgebrami.
+Macierze otrzymane przez ograniczenie FDE do tych
+podalgebr są izomorficzne odpowiednio z $K_3$ i LP.
+\end{stwierdzenie}
+\begin{proof}
+Pierwszy podzbiór jest łańcuchem
+$\mathsf F<_{\mathrm t}\mathsf N<_{\mathrm t}\mathsf T$,
+drugi jest łańcuchem
+$\mathsf F<_{\mathrm t}\mathsf B<_{\mathrm t}\mathsf T$.
+Kresy dwóch elementów każdego łańcucha są jednym
+z argumentów. Negacja zamienia skrajne elementy
+i pozostawia środkowy, co daje domkniętość.
+Ograniczenia zbioru wartości wyróżnionych to odpowiednio
+$\{\mathsf T\}$ i $\{\mathsf T,\mathsf B\}$.
+Po identyfikacji $\mathsf F=0$, $\mathsf T=1$ oraz
+odpowiedniego elementu środkowego z $u$ otrzymujemy
+dokładnie macierze z Definicji~\ref{def:ncl-k3-lp}.
+\end{proof}
+
+\begin{wniosek}[Porównanie konsekwencji]
+\label{cor:ncl-four-consequences}
+Każda konsekwencja FDE jest konsekwencją zarówno
+$K_3$, jak i LP. Obie inkluzje są ostre.
+Ponadto FDE nie spełnia prawa eksplozji ani
+prawa wyłączonego środka.
+\end{wniosek}
+\begin{proof}
+Każde wartościowanie w jednej z podmacierzy jest
+wartościowaniem FDE, z tym samym statusem wyróżnienia.
+Zatem konsekwencja FDE zachodzi w obu podmacierzach.
+Przypisanie $v(p)=\mathsf B$, $v(q)=\mathsf F$
+wyróżnia $p,\neg p$, lecz nie $q$. Eksplozja zachodzi
+w $K_3$, więc pierwsza inkluzja jest ostra.
+Przypisanie $v(p)=\mathsf N$ daje
+$v(p\vee\neg p)=\mathsf N$. Wyłączony środek
+jest tautologią LP, więc druga inkluzja jest ostra.
+\end{proof}
+Macierze $K_3$ i LP są tutaj podmacierzami FDE:
+ograniczamy zbiór wartości i zbiór wyróżniony,
+a nie sygnaturę operacji. Wszystkie trzy logiki
+mają jednak zwartą konsekwencję
+na mocy Twierdzenia~\ref{thm:ncl-finite-matrix-compactness}.
+
+\begin{twierdzenie}[Redukcja do dwóch współrzędnych boolowskich]
+\label{thm:ncl-four-boolean-translation}
+Każdej formule $\varphi$ przypisujemy dwie formuły
+klasyczne $\varphi^+,\varphi^-$ na niezależnych zmiennych
+$p^+,p^-$ odpowiadających każdej zmiennej $p$.
+Dla zmiennej przyjmujemy te właśnie dwa symbole
+jako jej translacje; dla formuł złożonych stosujemy
+rekurencyjnie reguły:
+\[
+ (\neg\varphi)^+=\varphi^-,\quad
+ (\neg\varphi)^-=\varphi^+,
+\]
+\[
+\begin{array}{ll}
+ (\varphi\wedge\psi)^+=\varphi^+\wedge\psi^+,&
+ (\varphi\wedge\psi)^-=\varphi^-\vee\psi^-,\\
+ (\varphi\vee\psi)^+=\varphi^+\vee\psi^+,&
+ (\varphi\vee\psi)^-=\varphi^-\wedge\psi^-.
+\end{array}
+\]
+Wówczas dla dowolnego zbioru formuł $\Gamma$ zachodzi
+\[
+ \Gamma\models_{\mathrm{FDE}}\varphi
+ \iff \{\gamma^+:\gamma\in\Gamma\}
+        \models_{\mathrm{CL}}\varphi^+.
+\]
+\end{twierdzenie}
+\begin{proof}
+Każde wartościowanie FDE odpowiada dokładnie jednemu
+klasycznemu wartościowaniu $w$ podwojonego zbioru
+zmiennych przez $v(p)=(w(p^+),w(p^-))$.
+Indukcja po budowie formuły daje
+$v(\varphi)=(w(\varphi^+),w(\varphi^-))$:
+krok dla negacji zamienia współrzędne, a kroki dla
+koniunkcji i alternatywy są dokładnie wzorami operacji
+z Definicji~\ref{def:ncl-four-values}.
+Wartość $v(\varphi)$ jest wyróżniona wtedy i tylko wtedy,
+gdy $w(\varphi^+)=1$. Stosujemy tę równoważność
+do wszystkich przesłanek i wniosku oraz korzystamy
+z bijekcji wartościowań.
+\end{proof}
+
+\begin{przyklad}[Praktyczne zastosowanie translacji]
+\label{ex:ncl-four-disjunctive-syllogism}
+Konsekwencja $p\vee q,\neg p\models_{\mathrm{FDE}}q$
+nie zachodzi: po translacji wystarcza wykazać
+$p^+\vee q^+,p^-\not\models_{\mathrm{CL}}q^+$.
+Kontrmodel klasyczny to $p^+=p^-=1$, $q^+=0$,
+z dowolną wartością $q^-$. W FDE można więc
+wziąć $v(p)=\mathsf B$ oraz $v(q)=\mathsf F$.
+Natomiast $p\wedge(q\vee r)\models_{\mathrm{FDE}}
+(p\wedge q)\vee(p\wedge r)$ zachodzi dzięki
+klasycznej rozdzielności w pierwszej współrzędnej.
+\end{przyklad}
+
+\begin{wniosek}[Postać negacyjna i brak tautologii]
+\label{cor:ncl-four-nnf}
+Każda formuła FDE w języku bez stałych jest równoważna
+co do wartości formule, w której negacja występuje
+wyłącznie bezpośrednio przed zmiennymi.
+W tym języku FDE nie ma tautologii.
+\end{wniosek}
+\begin{proof}
+Prawa de Morgana i inwolucyjność negacji pozwalają
+przesuwać negacje do argumentów spójników.
+Formalnie przez indukcję konstruujemy jednocześnie
+postacie negacyjne $\varphi$ i $\neg\varphi$:
+dla zmiennej są to odpowiednie literały, dla negacji
+zamieniamy obie postacie, a dla koniunkcji lub alternatywy
+łączymy postacie argumentów odpowiednim spójnikiem,
+używając spójnika przeciwnego w postaci zanegowanej.
+Każdy krok zachowuje wartość całej formuły.
+Przypisanie wszystkim zmiennym wartości $\mathsf N$
+daje każdej formule wartość $\mathsf N$ przez indukcję,
+gdyż $\neg\mathsf N=\mathsf N$ oraz oba spójniki
+kratowe zachowują tę wartość przy jednakowych
+argumentach. Nie jest ona wyróżniona, więc żadna
+formuła tego języka nie jest tautologią.
+\end{proof}
+
+\begin{uwaga}[Zakres języka]\label{rem:ncl-four-language}
+Brak tautologii dotyczy języka bez stałych.
+Dodanie stałej $\mathsf T$ natychmiast daje tautologię.
+Podobnie twierdzenia o podmacierzach wymagają podstawowego
+języka: np. $\mathsf T\otimes\mathsf F=\mathsf N$,
+więc nośnik podmacierzy LP nie jest zamknięty względem
+$\otimes$, a $\mathsf T\oplus\mathsf F=\mathsf B$,
+więc nośnik podmacierzy $K_3$ nie jest zamknięty
+względem $\oplus$.
+Nie należy też utożsamiać porządku informacyjnego
+z konsekwencją macierzową.
+\end{uwaga}
+
+\section{Klony operacji i kryteria zupełności funkcjonalnej}
+
+\begin{definicja}[Klon operacji]\label{def:ncl-clone}
+Niech $A$ będzie niepustym zbiorem. Klonem na $A$
+nazywamy rodzinę operacji dodatnich skończonych arności,
+zawierającą wszystkie rzuty $\pi_i^n:A^n\to A$,
+$\pi_i^n(x_1,\ldots,x_n)=x_i$, oraz zamkniętą
+ze względu na składanie: jeśli $f$ jest $k$-argumentowa,
+a $g_1,\ldots,g_k$ są $n$-argumentowe i należą do klonu,
+to należy do niego także
+\[
+ x\longmapsto f(g_1(x),\ldots,g_k(x)).
+\]
+Przez $\operatorname{Clo}(F)$ oznaczamy najmniejszy klon
+zawierający rodzinę operacji $F$ dodatnich arności.
+Jeżeli język zawiera stałą $a$, w tej konwencji
+do generatorów dołączamy jednoargumentową funkcję
+stale równą $a$.
+\end{definicja}
+
+\begin{stwierdzenie}[Generowanie klonu]\label{prop:ncl-clone-terms}
+Klon $\operatorname{Clo}(F)$ jest rodziną funkcji
+termowych dodatnich arności języka o operacjach $F$,
+przy czym term może nie wykorzystywać wszystkich
+zmiennych zadanej arności. Jeśli w języku występują
+stałe, przyjmujemy konwencję z Definicji~\ref{def:ncl-clone}.
+Rodzina $F$ jest funkcjonalnie zupełna dokładnie wtedy,
+gdy generuje klon wszystkich operacji dodatnich arności.
+\end{stwierdzenie}
+\begin{proof}
+Rodzina funkcji termowych zawiera rzuty, ponieważ
+każda zmienna jest termem, i zawiera generatory.
+Podstawianie termów za zmienne daje składanie funkcji,
+więc rodzina jest klonem. Każdy klon zawierający $F$
+zawiera funkcje wszystkich termów przez indukcję
+po ich budowie. W przypadku stałej jej funkcję
+$n$-argumentową, $n\geq1$, otrzymujemy przez
+złożenie odpowiadającej jej jednoargumentowej
+funkcji stałej z rzutem $\pi_1^n$. Daje to równość z najmniejszym klonem.
+Druga teza wynika z
+Definicji~\ref{def:ncl-functional-completeness}.
+\end{proof}
+
+\begin{definicja}[Zachowywanie relacji]\label{def:ncl-pol-inv}
+Niech $R\subseteq A^r$, gdzie $r\geq1$.
+Operacja $f:A^n\to A$ zachowuje $R$, jeżeli dla
+dowolnych $n$ krotek $a^1,\ldots,a^n\in R$
+krotka
+\[
+ (f(a^1_1,\ldots,a^n_1),\ldots,
+   f(a^1_r,\ldots,a^n_r))
+\]
+należy do $R$. Dla rodziny relacji $\mathcal R$
+oznaczamy przez $\operatorname{Pol}(\mathcal R)$
+rodzinę wszystkich operacji dodatnich arności
+zachowujących każdą relację z $\mathcal R$.
+Dla rodziny operacji $F$ przez $\operatorname{Inv}(F)$
+oznaczamy rodzinę wszystkich relacji dodatnich
+skończonych arności zachowywanych przez $F$.
+\end{definicja}
+Relacja jednoargumentowa jest po prostu podzbiorem
+$A$. Jej zachowywanie oznacza domkniętość względem
+operacji. Relacje o większej arności dostarczają
+dodatkowych ograniczeń definiowalności.
+
+\begin{lemat}[Odpowiedniość operacji i relacji]
+\label{lem:ncl-pol-inv-galois}
+Dla dowolnych $F,\mathcal R$ zachodzi
+\[
+ F\subseteq\operatorname{Pol}(\mathcal R)
+ \iff \mathcal R\subseteq\operatorname{Inv}(F).
+\]
+Ponadto $\operatorname{Pol}(\mathcal R)$ jest klonem
+i $\operatorname{Inv}(F)=
+\operatorname{Inv}(\operatorname{Clo}(F))$.
+\end{lemat}
+\begin{proof}
+Pierwsza równoważność po obu stronach wyraża
+zachowywanie każdej relacji z $\mathcal R$
+przez każdą operację z $F$.
+Rzut zastosowany współrzędnie do krotek relacji
+zwraca jedną z tych krotek, a więc zachowuje relację.
+Złożenie operacji zachowujących relację również
+ją zachowuje: najpierw otrzymujemy krotki należące
+do relacji przez zastosowanie operacji wewnętrznych,
+a potem stosujemy operację zewnętrzną.
+Zatem $\operatorname{Pol}(\mathcal R)$ jest klonem.
+Jeżeli $R\in\operatorname{Inv}(F)$, to klon
+$\operatorname{Pol}(\{R\})$ zawiera $F$,
+a więc zawiera także $\operatorname{Clo}(F)$.
+Odwrotna inkluzja rodzin relacji wynika z
+$F\subseteq\operatorname{Clo}(F)$.
+\end{proof}
+
+\begin{twierdzenie}[Charakteryzacja klonu na zbiorze skończonym]
+\label{thm:ncl-finite-pol-inv}
+Jeżeli $A$ jest skończonym zbiorem niepustym i $C$
+jest klonem na $A$, to
+\[
+ C=\operatorname{Pol}(\operatorname{Inv}(C)).
+\]
+\end{twierdzenie}
+\begin{proof}
+Inkluzja od lewej do prawej wynika z definicji.
+Niech $f:A^n\to A$ nie należy do $C$.
+Ponumerujmy wszystkie krotki $A^n$ jako
+$b^1,\ldots,b^q$, gdzie $q=|A|^n$, i określmy
+relację $R\subseteq A^q$ przez
+\[
+ R=\{(g(b^1),\ldots,g(b^q)):
+                g\in C,\ g:A^n\to A\}.
+\]
+Relacja jest zachowywana przez każdą operację
+$h\in C$: zastosowanie $h$ współrzędnie do tablic
+funkcji $g_1,\ldots,g_k$ daje tablicę funkcji
+$h(g_1,\ldots,g_k)$, należącej do klonu.
+Ponadto $R$ zawiera tablice wszystkich $n$ rzutów.
+Zastosowanie $f$ współrzędnie do tych tablic
+daje $(f(b^1),\ldots,f(b^q))$.
+Krotka ta nie należy do $R$, ponieważ równość
+dwóch tablic na całym $A^n$ oznacza równość funkcji,
+a $f\notin C$. Zatem $R\in\operatorname{Inv}(C)$,
+lecz $f\notin\operatorname{Pol}(\operatorname{Inv}(C))$.
+Otrzymujemy drugą inkluzję.
+\end{proof}
+Skończoność $A$ jest istotna dla tej konstrukcji:
+relacja rozdzielająca ma skończoną arność $|A|^n$.
+Dla zbiorów nieskończonych nie wynika stąd analogiczna
+równość dla relacji wyłącznie skończonych arności.
+
+\subsection{Kryterium Posta dla operacji boolowskich}
+Na $\{0,1\}$ używamy zwykłego porządku oraz dodawania
+modulo $2$, oznaczanego przez $\oplus_2$.
+
+\begin{twierdzenie}[Kryterium Posta]\label{thm:ncl-post-criterion}
+Rodzina operacji boolowskich dodatnich arności jest
+funkcjonalnie zupełna wtedy i tylko wtedy, gdy nie jest
+w całości zawarta w żadnej z pięciu klas:
+\begin{enumerate}
+\item operacje zachowujące zero, $f(0,\ldots,0)=0$;
+\item operacje zachowujące jeden, $f(1,\ldots,1)=1$;
+\item operacje monotoniczne;
+\item operacje samodualne, $f(1-x)=1-f(x)$,
+      gdzie $1-x$ oznacza dopełnienie każdej współrzędnej;
+\item operacje afiniczne nad ciałem dwuelementowym,
+      $f(x)=a_0\oplus_2 a_1x_1\oplus_2\cdots
+      \oplus_2 a_nx_n$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Każda z pięciu klas zawiera rzuty i jest zamknięta
+ze względu na składanie: w pierwszych dwóch przypadkach
+podstawiamy odpowiednią stałą krotkę, w trzecim składamy
+nierówności, w czwartym stosujemy samodualność kolejno
+do operacji wewnętrznych i zewnętrznej, a w piątym
+podstawiamy wyrażenia afiniczne do wyrażenia afinicznego.
+Każda jest właściwa: negacja narusza zachowywanie zera,
+jedynki i monotoniczność, funkcja stale zerowa nie jest
+samodualna, a koniunkcja nie jest afiniczna
+(z jej wartości w $(0,0),(1,0),(0,1)$ wynikałyby
+zerowe współczynniki, sprzecznie z wartością w $(1,1)$).
+To dowodzi konieczności.
+
+Dla dostateczności niech $C$ będzie klonem generowanym
+przez rozważane operacje. Ponieważ pewna operacja
+nie zachowuje zera, identyfikacja wszystkich jej argumentów
+daje jednoargumentową operację $g$ z $g(0)=1$.
+Analogicznie otrzymujemy $h$ z $h(1)=0$.
+Każda z nich jest albo negacją, albo stałą
+odpowiednio $1$ lub $0$. Jeśli obie są stałymi,
+niemonotoniczna operacja $f$ pozwala uzyskać negację:
+istnieją $a\leq b$ z $f(a)=1$, $f(b)=0$.
+Wzdłuż ciągu krotek od $a$ do $b$, zmieniającego po
+jednej współrzędnej z zera na jeden, występuje krok
+ze spadkiem wartości z $1$ na $0$.
+Ustalenie pozostałych argumentów za pomocą stałych
+daje negację. Jeśli już jedna z $g,h$ jest negacją,
+mamy ją bezpośrednio.
+
+Niech teraz $u$ nie będzie samodualna. Istnieje
+krotka $a$ taka, że $u(a)=u(1-a)$. Podstawiając
+do jej argumentów $x$ lub $\neg x$ tak, by dla
+$x=0$ otrzymać $a$, a dla $x=1$ krotkę $1-a$,
+otrzymujemy funkcję stałą. Jej negacja daje drugą
+stałą. W klonie są więc obie stałe oraz negacja.
+
+Pozostaje uzyskać koniunkcję z nieafinicznej operacji.
+Każda funkcja boolowska ma jednoznaczne przedstawienie
+wielomianowe
+\[
+ f(x)=\bigoplus_{S\subseteq\{1,\ldots,n\}}
+       a_S\prod_{i\in S}x_i
+\]
+nad ciałem dwuelementowym. Istotnie, dla krotki
+o jedynkach dokładnie na zbiorze $U$ wartość wynosi
+$\bigoplus_{S\subseteq U}a_S$. W kolejności rosnących
+mocy $U$ wyznaczamy zatem jednoznacznie współczynniki
+$a_U$, uzyskując zadane wartości funkcji.
+Nieafiniczność oznacza istnienie składnika stopnia
+co najmniej dwa. Wybierzmy dwa różne indeksy $i,j$
+należące do takiego składnika. Współczynnik przy $x_i x_j$ po ustaleniu
+pozostałych zmiennych jest wartością funkcji
+\[
+ \bigoplus_{S\supseteq\{i,j\}}
+    a_S\prod_{k\in S\setminus\{i,j\}}x_k.
+\]
+Reprezentuje ją niezerowy wielomian wieloliniowy: różne składniki
+zawierające $i,j$ dają różne jednomiany po usunięciu
+tych dwóch indeksów. Na mocy jednoznaczności istnieje
+ustalenie pozostałych zmiennych, dla którego
+współczynnik przy $x_i x_j$ wynosi $1$.
+Dostajemy operację dwuargumentową
+\[
+ xy\oplus_2 ax\oplus_2 by\oplus_2 c.
+\]
+Zastąpienie $x$ przez $x\oplus_2 b$, a $y$ przez
+$y\oplus_2 a$ usuwa składniki liniowe; pozostaje
+$xy\oplus_2 c\oplus_2 ab$. Te podstawienia wymagają
+jedynie identyczności lub negacji. Ewentualna negacja
+wyniku daje $xy$, czyli koniunkcję.
+Mamy zatem negację i koniunkcję, z których przez
+prawo de Morgana uzyskujemy alternatywę.
+Dla dowolnej funkcji boolowskiej jej tablica daje
+alternatywę koniunkcji literałów odpowiadających
+krotkom, na których funkcja wynosi $1$;
+dla pustej alternatywy używamy stałej zero.
+To reprezentuje każdą funkcję.
+\end{proof}
+
+\begin{przyklad}[Bramki NAND i NOR]\label{ex:ncl-nand-nor}
+Operacja NAND $f(x,y)=\neg(x\wedge y)$ sama
+jest funkcjonalnie zupełna:
+$f(x,x)=\neg x$ oraz $f(f(x,y),f(x,y))=x\wedge y$.
+Analogicznie NOR $g(x,y)=\neg(x\vee y)$ daje negację
+przez $g(x,x)$ i alternatywę przez $g(g(x,y),g(x,y))$.
+W obu przypadkach prawo de Morgana daje brakujący
+spójnik kratowy. Funkcje stałe uzyskujemy jako
+$x\wedge\neg x$ i $x\vee\neg x$, a alternatywa
+koniunkcji literałów z dowodu
+Twierdzenia~\ref{thm:ncl-post-criterion}
+reprezentuje wszystkie pozostałe funkcje boolowskie.
+\end{przyklad}
+
+\subsection{Kryterium z selektorami na zbiorze skończonym}
+\begin{twierdzenie}[Testy wartości i selektor]
+\label{thm:ncl-finite-selector-completeness}
+Niech $A$ będzie skończonym zbiorem z dwoma różnymi
+elementami $0,1$. Jeżeli klon $C$ zawiera wszystkie
+funkcje stałe, testy $E_a(x)=\chi_{\{a\}}(x)$
+dla $a\in A$ oraz operację $S:A^3\to A$
+spełniającą $S(1,x,y)=x$ i $S(0,x,y)=y$,
+to $C$ jest klonem wszystkich operacji.
+\end{twierdzenie}
+\begin{proof}
+Dla $x,y\in\{0,1\}$ operacja $S(x,y,0)$ jest
+koniunkcją boolowską. Składając ją z testami $E_a$,
+konstruujemy dla każdej krotki $a\in A^n$ test
+$D_a(x)$ równy $1$ dla $x=a$, a $0$ poza tym punktem.
+Ponumerujmy wszystkie krotki $A^n$ jako $a^1,\ldots,a^q$.
+Dla dowolnej funkcji $f:A^n\to A$ zaczynamy
+od dowolnej funkcji stałej $t_0$ i rekurencyjnie
+definiujemy
+\[
+ t_j(x)=S(D_{a^j}(x),f(a^j),t_{j-1}(x)).
+\]
+Wartość $f(a^j)$ oznacza tu funkcję stałą.
+Po kroku $j$ funkcja $t_j$ zgadza się z $f$
+na pierwszych $j$ krotkach, ponieważ nowy test
+jest zerowy na wszystkich wcześniejszych.
+Indukcja daje $t_q=f$. Każdy krok jest składaniem
+operacji klonu, więc $f\in C$.
+\end{proof}
+Konstrukcja uogólnia argument z
+Twierdzenia~\ref{thm:ncl-post-functional-completeness}.
+W przypadku skończonych łańcuchów MV testy są dostępne
+nawet bez wszystkich stałych, ale funkcje termowe
+muszą zachowywać podalgebry
+(Twierdzenie~\ref{thm:ncl-finite-mv-term-functions}).
+Ogólna charakterystyka przez relacje niezmiennicze
+z Twierdzenia~\ref{thm:ncl-finite-pol-inv} nie wymaga
+istnienia selektora ani testów.
+
+\section{Systemy dowodowe dla skończonych macierzy}
+
+Ustalmy skończoną macierz $\mathcal M=(A,D)$
+z Definicji~\ref{def:ncl-matrix}. Zamiast szukać osobnego
+rachunku aksjomatów dla każdej logiki, skonstruujemy
+rachunek bezpośrednio z tablic jej spójników.
+Będzie on rozstrzygał konsekwencję skończonych
+zbiorów formuł i pozwalał odczytać kontrmodel
+z nieudanego dowodu.
+
+\subsection{Sekwenty wielostronne}
+\begin{definicja}[Sekwent znakowany]\label{def:ncl-signed-sequent}
+Formułą znakowaną nazywamy parę $a:\varphi$,
+gdzie $a\in A$. Sekwent $S$ jest skończonym zbiorem
+takich par. Wartościowanie $v$ spełnia $S$, jeżeli
+istnieje $a:\varphi\in S$ takie, że $v(\varphi)=a$.
+Sekwent jest ważny, jeśli każde wartościowanie
+go spełnia. Pusty sekwent nie jest spełniony
+przez żadne wartościowanie.
+\end{definicja}
+Równoważnie sekwent ma po jednej stronie dla każdej
+wartości $a$: strona $S_a$ zawiera dokładnie formuły
+$\varphi$ takie, że $a:\varphi\in S$.
+Poszczególne strony są połączone semantyczną
+alternatywą, nie koniunkcją. Znaki są metajęzykowe,
+więc nie wymagamy istnienia w języku spójnika
+testującego daną wartość.
+
+\begin{stwierdzenie}[Kodowanie konsekwencji]
+\label{prop:ncl-sequent-consequence}
+Dla skończonego $\Gamma$ i formuły $\varphi$ zachodzi
+$\Gamma\models_{\mathcal M}\varphi$ dokładnie wtedy,
+gdy ważny jest sekwent
+\[
+ S_{\Gamma,\varphi}=
+ \{a:\gamma:\gamma\in\Gamma,\ a\in A\setminus D\}
+ \cup\{a:\varphi:a\in D\}.
+\]
+W zapisie zbiorów pierwszy dwukropek łączy znak
+z formułą, a drugi oddziela element od warunku.
+\end{stwierdzenie}
+\begin{proof}
+Niespełnienie sekwentu oznacza, że żaden jego
+znak nie odpowiada rzeczywistej wartości formuły.
+W szczególności dla każdej $\gamma\in\Gamma$
+mamy $v(\gamma)\in D$, a $v(\varphi)\notin D$.
+Jest to dokładnie kontrmodel dla konsekwencji.
+Argument działa również dla $\Gamma=\varnothing$
+oraz dla $D=\varnothing$ lub $D=A$.
+\end{proof}
+
+\begin{definicja}[Rachunek tablicowy sekwentów]
+\label{def:ncl-matrix-sequent-calculus}
+Aksjomatami są wszystkie sekwenty zawierające
+$\{a:\psi:a\in A\}$ dla pewnej formuły $\psi$.
+Dla spójnika $c$ arności $k\geq0$ i znaku $a$
+wprowadzamy następującą regułę:
+\[
+\frac{
+ \bigl(S\cup
+       \{d:\psi_i:1\leq i\leq k,\ d\in A\setminus\{b_i\}\}
+ \bigr)_{\substack{b=(b_1,\ldots,b_k)\in A^k\\
+                    c^A(b)\ne a}}
+}{
+ S\cup\{a:c(\psi_1,\ldots,\psi_k)\}
+}.
+\]
+Licznik oznacza rodzinę wszystkich przesłanek reguły,
+po jednej dla każdej krotki $b$ z $c^A(b)\ne a$.
+Gdy rodzina jest pusta, reguła ma zero przesłanek.
+Dla $k=0$ zbiór $A^0$ zawiera jedną pustą krotkę,
+a do kontekstu $S$ nie dodajemy żadnych znaków.
+Dowód jest skończonym drzewem z korzeniem
+oznaczonym dowodzonym sekwentem i liśćmi będącymi
+aksjomatami lub zastosowaniami reguł bez przesłanek.
+\end{definicja}
+
+Intuicja reguły jest następująca. Aby znak
+$a:c(\psi_1,\ldots,\psi_k)$ był fałszywy,
+argumenty muszą przyjąć jedną z krotek $b$
+niedających wyniku $a$. Każdej takiej krotce
+odpowiada przesłanka, której fałszywość wymusza
+dokładnie tę krotkę i fałszywość kontekstu.
+
+\begin{lemat}[Odwracalność reguły]
+\label{lem:ncl-sequent-invertibility}
+Dla ustalonego wartościowania wniosek reguły
+z Definicji~\ref{def:ncl-matrix-sequent-calculus}
+jest spełniony wtedy i tylko wtedy, gdy wszystkie
+jej przesłanki są spełnione.
+\end{lemat}
+\begin{proof}
+Jeśli kontekst $S$ jest spełniony, obie strony
+równoważności zachodzą. Załóżmy więc, że nie jest.
+Niech $u=(v(\psi_1),\ldots,v(\psi_k))$.
+Przesłanka odpowiadająca $b$ jest niespełniona
+dokładnie wtedy, gdy $v(\psi_i)=b_i$ dla wszystkich
+$i$, czyli $u=b$. Istnieje taka niespełniona
+przesłanka wtedy i tylko wtedy, gdy $c^A(u)\ne a$,
+co jest równoważne niespełnieniu wniosku.
+Dla spójnika zeroargumentowego argument działa
+z pustą krotką, a warunek o wszystkich przesłankach
+jest prawdziwy próżniowo, jeśli ich nie ma.
+\end{proof}
+
+\begin{twierdzenie}[Poprawność, pełność i zakończenie]
+\label{thm:ncl-sequent-sound-complete}
+Dla skończonej macierzy $\mathcal M$ sekwent jest
+ważny wtedy i tylko wtedy, gdy ma dowód w rachunku
+z Definicji~\ref{def:ncl-matrix-sequent-calculus}.
+Dowodu lub kontrmodelu można szukać, stosując
+reguły od wniosku do przesłanek, bez reguły cięcia.
+Każdy taki rozwój, w którym kontekst jest dokładnie
+zbiorem pozostałych znaków wniosku, kończy się po
+skończenie wielu krokach. Rozwój prowadzimy do chwili,
+gdy każdy liść jest aksjomatem, zastosowaniem reguły
+bez przesłanek albo sekwentem zawierającym wyłącznie
+znaki zmiennych.
+\end{twierdzenie}
+\begin{proof}
+Każde wartościowanie przypisuje formule $\psi$
+pewną wartość $a\in A$, więc aksjomaty są ważne.
+Lemat~\ref{lem:ncl-sequent-invertibility} daje
+poprawność wszystkich reguł, a indukcja po drzewie
+dowodu poprawność rachunku.
+
+Dla pełności ustalmy rangę $r(p)=0$ dla zmiennej
+i $r(c(\psi_1,\ldots,\psi_k))=
+1+\max(\{0\}\cup\{r(\psi_i):1\leq i\leq k\})$.
+W szczególności stała ma rangę $1$.
+Niech $K$ będzie największą arnością spójnika
+w początkowym sekwencie (bierzemy $K=0$, jeśli
+nie ma spójników) i $B=2+K|A|$.
+Waga sekwentu to
+\[
+ W(S)=\sum_{a:\psi\in S} B^{r(\psi)}.
+\]
+Rozwijając jeden znak formuły rangi $r\geq1$,
+usuwamy składnik $B^r$ i w każdej przesłance
+dodajemy co najwyżej $K(|A|-1)$ składników
+o randze nie większej niż $r-1$.
+Łączna waga dodanych składników jest mniejsza
+od $B^r$. Powtórzenia znaków jedynie zmniejszają
+liczbę nowych składników, gdyż sekwenty są zbiorami.
+Nie pojawiają się spójniki spoza podformuł
+początkowego sekwentu. Waga maleje zatem
+ściśle na każdej gałęzi i jest nieujemną liczbą
+całkowitą. Każdy węzeł ma skończenie wiele
+bezpośrednich następców. Ponieważ długość gałęzi
+jest ograniczona początkową wagą, rozwój jest skończony.
+
+Jeśli liść zawiera wyłącznie znaki zmiennych i nie
+jest aksjomatem, to dla każdej występującej zmiennej
+$p$ istnieje $b_p\in A$ taki, że $b_p:p$ nie należy
+do liścia. Wartościowanie $v(p)=b_p$ nie spełnia
+żadnego znaku liścia; pozostałe zmienne wartościujemy
+dowolnie. Lemat~\ref{lem:ncl-sequent-invertibility}
+pokazuje, że jeśli nie jest spełniona choć jedna
+przesłanka, to nie jest spełniony jej wniosek.
+Idąc od liścia do korzenia otrzymujemy więc
+kontrmodel dla początkowego sekwentu.
+
+Jeśli początkowy sekwent jest ważny, taki liść
+nie może wystąpić. Wszystkie gałęzie kończą się
+aksjomatami lub regułami bez przesłanek, a całe
+drzewo stanowi dowód. Jeśli sekwent nie jest ważny,
+co najmniej jeden liść jest nieważny: wartościowanie
+niespełniające korzenia, na mocy odwracalności,
+nie spełnia pewnego następnika na każdym kolejnym
+poziomie drzewa. Ponieważ rozwój jest skończony,
+docieramy do nieważnego liścia atomowego, z którego
+można odczytać kontrmodel.
+\end{proof}
+
+\begin{wniosek}[Skończone dowody dla dowolnych przesłanek]
+\label{cor:ncl-sequent-compact}
+Dla dowolnego zbioru formuł $\Gamma$ zachodzi
+$\Gamma\models_{\mathcal M}\varphi$ wtedy i tylko wtedy,
+gdy istnieje skończony $\Gamma_0\subseteq\Gamma$,
+dla którego $S_{\Gamma_0,\varphi}$ ma dowód.
+\end{wniosek}
+\begin{proof}
+Twierdzenie~\ref{thm:ncl-finite-matrix-compactness}
+daje skończony podzbiór wystarczających przesłanek,
+a Stwierdzenie~\ref{prop:ncl-sequent-consequence}
+i Twierdzenie~\ref{thm:ncl-sequent-sound-complete}
+dają dowód odpowiedniego sekwentu.
+Odwrotnie korzystamy z poprawności rachunku,
+kodowania konsekwencji i monotoniczności.
+\end{proof}
+
+\subsection{Przykłady wyprowadzeń}
+\begin{przyklad}[Negacja w logice trójwartościowej]
+\label{ex:ncl-sequent-kleene-negation}
+W algebrze z Definicji~\ref{def:ncl-k3-lp}
+znak $1:\neg p$ jest spełniony dokładnie wtedy,
+gdy $0:p$ jest spełniony. Reguła z tablicy negacji
+ma w tym przypadku postać
+\[
+\frac{S\cup\{0:p,1:p\}\qquad
+      S\cup\{0:p,u:p\}}
+     {S\cup\{1:\neg p\}}.
+\]
+Istotnie, negacja nie daje jedynki dla argumentów
+$u$ i $1$. Obie przesłanki są jednocześnie spełnione
+dokładnie wtedy, gdy spełniony jest $S$ lub $0:p$.
+Można zatem zastąpić tę regułę uproszczoną regułą
+o jednej przesłance $S\cup\{0:p\}$, zachowując
+odwracalność. Jest ona dopuszczalna w pierwotnym
+rachunku: z dowodliwości jej przesłanki wynika
+ważność wniosku, a z pełności
+(Twierdzenie~\ref{thm:ncl-sequent-sound-complete})
+istnieje dowód wniosku bez reguły uproszczonej.
+Analogicznie dla pozostałych znaków
+negacji, ponieważ negacja jest bijekcją.
+\end{przyklad}
+
+\begin{przyklad}[Eksplozja w $K_3$ i kontrmodel w LP]
+\label{ex:ncl-sequent-explosion}
+Niech $p,q$ będą różnymi zmiennymi.
+W $K_3$ sekwent kodujący konsekwencję
+$p,\neg p\models q$ jest równy
+\[
+ \{0:p,u:p,0:\neg p,u:\neg p,1:q\}.
+\]
+Uproszczone reguły negacji zastępują odpowiednio
+$0:\neg p$ znakiem $1:p$, a $u:\neg p$ znakiem
+$u:p$. Otrzymujemy sekwent atomowy zawierający
+wszystkie trzy znaki dla $p$, więc jest aksjomatem.
+Rozwój czytany w przeciwnym kierunku daje dowód.
+
+W LP ta sama konsekwencja jest kodowana przez
+\[
+ \{0:p,0:\neg p,u:q,1:q\}.
+\]
+Po rozwinięciu negacji otrzymujemy
+$\{0:p,1:p,u:q,1:q\}$.
+Brakujący znak dla $p$ to $u:p$, a dla $q$ to $0:q$.
+Odczytujemy kontrmodel $v(p)=u$, $v(q)=0$,
+zgodny z Przykładem~\ref{ex:ncl-k3-lp-laws}.
+\end{przyklad}
+
+\subsection{Tablice ograniczeń i wyszukiwanie kontrmodeli}
+\begin{definicja}[Ograniczenia wartości]
+\label{def:ncl-matrix-constraints}
+Ograniczeniem jest para $(\psi,B)$, gdzie
+$B\subseteq A$. Wartościowanie spełnia ograniczenie,
+jeżeli $v(\psi)\in B$. Gałąź jest skończonym
+zbiorem ograniczeń i jest spełnialna, jeśli pewne
+wartościowanie spełnia je wszystkie.
+\end{definicja}
+W odróżnieniu od sekwentu znakowanego ograniczenia
+gałęzi są połączone koniunkcją. Dla ustalonego wartościowania niespełnienie
+sekwentu $S$ jest równoważne spełnieniu wszystkich
+ograniczeń gałęzi postaci
+\[
+ (\psi,A\setminus\{a:a:\psi\in S\})
+\]
+dla wszystkich formuł występujących w $S$.
+W konsekwencji sekwent jest nieważny dokładnie wtedy,
+gdy odpowiadająca mu gałąź jest spełnialna.
+Można łączyć ograniczenia tej samej formuły
+przez przecięcie dozwolonych zbiorów wartości.
+
+\begin{twierdzenie}[Procedura tablic ograniczeń]
+\label{thm:ncl-matrix-tableau}
+Gałąź z ograniczeniem $(c(\psi_1,\ldots,\psi_k),B)$
+jest spełnialna dokładnie wtedy, gdy spełnialna
+jest co najmniej jedna z gałęzi uzyskanych przez
+usunięcie tego ograniczenia i dodanie
+\[
+ (\psi_i,\{b_i\}),\qquad 1\leq i\leq k,
+\]
+dla każdej krotki $b\in A^k$ z $c^A(b)\in B$.
+Gałąź zawierająca ograniczenia $(\psi,B_1),\ldots,
+(\psi,B_s)$ z $\bigcap_{i=1}^s B_i=\varnothing$
+jest niespełnialna.
+Rozwijając ograniczenia formuł złożonych aż do
+zmiennych, otrzymujemy skończoną procedurę
+sprawdzania spełnialności gałęzi.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $v$ spełnia początkową gałąź, to krotka
+$b_i=v(\psi_i)$ jest jedną z krotek dopuszczonych
+przez warunek $c^A(b)\in B$. Wartościowanie
+spełnia więc odpowiadającą jej gałąź potomną.
+Odwrotnie wartościowanie spełniające taką gałąź
+nadaje argumentom dokładnie wartości $b_i$,
+a więc spełnia usunięte ograniczenie.
+Pusty zbiór dopuszczonych krotek zamyka gałąź.
+Dla stałej jest co najwyżej jedna pusta krotka.
+Warunek przecięcia zbiorów wynika bezpośrednio
+z jednoczesnego spełniania ograniczeń.
+
+Zakończenie wynika z tej samej funkcji rang co w
+Twierdzeniu~\ref{thm:ncl-sequent-sound-complete}:
+stosujemy wagę $\sum_{(\psi,B)}(K+2)^{r(\psi)}$,
+gdzie $K$ jest największą arnością spójnika
+w początkowych formułach lub zerem, gdy ich nie ma.
+Każde rozwinięcie zastępuje jeden składnik
+co najwyżej $K$ składnikami niższej rangi.
+Dla liścia zawierającego wyłącznie zmienne
+wystarczy dla każdej zmiennej wybrać wartość
+ze wspólnej części jej ograniczeń.
+Jeśli każde takie przecięcie jest niepuste,
+otrzymujemy wartościowanie spełniające liść;
+w przeciwnym razie gałąź jest zamknięta.
+Przez udowodnione równoważności spełnialność
+co najmniej jednego liścia jest równoważna
+spełnialności gałęzi początkowej.
+\end{proof}
+Dla sprawdzenia $\Gamma\models_{\mathcal M}\varphi$
+przy skończonym $\Gamma$ zaczynamy od ograniczeń $(\gamma,D)$ dla $\gamma\in\Gamma$
+oraz $(\varphi,A\setminus D)$.
+Jeśli wszystkie gałęzie się zamykają, konsekwencja
+zachodzi. Otwarta gałąź daje kontrmodel.
+W najgorszym przypadku procedura może rozgałęziać
+się wykładniczo; nie wynika z niej lepsze ograniczenie
+złożoności niż z enumeracji wartościowań.
+W implementacji można wcześnie wykrywać sprzeczne
+ograniczenia, łączyć ograniczenia tej samej formuły
+i unikać ponownego rozwijania identycznych gałęzi.
+Wszystkie przedstawione rachunki są konstrukcjami
+ogólnymi, zależnymi jedynie od tablic skończonej macierzy,
+a nie od istnienia szczególnych spójników w jej języku.

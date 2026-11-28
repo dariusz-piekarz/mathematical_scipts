@@ -1,0 +1,11 @@
+# GT — audyt kontrolny 329
+
+Porównano migawkę 327 (d0d6e3db19e5850d1869a9ee2f32f5f060bc0ce7) z migawką 037e0260dc3f5174c2a55efb0deb5ca7cfb316a3. Wszystkie 42 rozdziały zachowane, 41 identycznych blobów, jedyna różnica to zweryfikowana poprawka GT26 z iteracji 327. Plik książki identyczny. Nie wykryto regresji strukturalnej; nie przeprowadzono ponownego odbioru wszystkich dowodów.
+
+Utrwalono dwa testy regresji w istniejących skryptach objętych pełnym workflow, bez zmian rozdziałów ani workflow:
+- test_graph_and_knot_flow_extremal_random_second_pass.py: enumeracja grafów prostych na 0..6 wierzchołkach, kontrola wartości ekstremalnej i klasyfikacji przypadków równości, także pustych części. 150/150 przypadków równości. Dodatkowa kontrola etykiety prop:tg-turan-unique. Commit 7a453f3e7eba9d450eff22ae111f7b79930702c7.
+- test_graph_and_knot_kirby_rational_blowdowns.py: jawna enumeracja orbit dla W=Z/m x Z/n, m,n=1..8, p=2..7, wszystkich klas (a,b) anihilowanych przez p². Kontrola bijekcji ilorazu pushout z W/<p(a,b)>, liczności oraz rzędu jądra. 1624/1624 przypadków. Kontrola etykiety GT26 i odsyłacza GT27. Commit bfb65f5ecd9df0a157cb145f97121d7bf2258e51.
+
+Obie nowe funkcje wykonano lokalnie w Pythonie, wyodrębnione z reszty suity; wynik PASS (150 i 1624 przypadki). Potwierdzono ponownym odczytem oba zapisy oraz wywołania w main. Nie uruchomiono pełnych plików testowych ani kontroli źródeł z tych plików lokalnie, ponieważ środowisko nie ma kopii repozytorium i próba git ls-remote zakończyła się błędem DNS github.com. pdflatex, latexmk i lualatex są dostępne, ale pełna kompilacja nie jest możliwa bez źródeł. CI 45988171847 i oba jego zadania structural-audit/full-book-pdf w kolejce bez przydzielonego runnera. Pozostałe trzy przebiegi ostatniego commitu źródłowego również queued. Nowe pełne CI 45988745470 queued. Nie zmieniano konfiguracji CI i nie uruchamiano dodatkowego workflow ręcznie.
+
+Wynik: kontrola aktualności i testy nowych regresji zaliczone; pełna stabilizacja nadal niepotwierdzona z powodu CI i PDF. Dalszy etap: sprawdzić wykonanie pełnego workflow i odebrać PDF; jeżeli kolejka nadal blokuje, kontynuować szczegółową kontrolę dowodów spoza ostatniego zakresu, bez sztucznego powtarzania identycznych kontroli.

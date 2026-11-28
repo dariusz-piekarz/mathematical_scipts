@@ -1,0 +1,1162 @@
+% AA-07 | Algebra abstrakcyjna | Iteracja IV
+% Reinterpretacja i integracja dowodu z BT-01; bez cwiczen.
+\chapter[Grupy wolne i twierdzenie Nielsena--Schreiera]{Grupy wolne, prezentacje i twierdzenie Nielsena--Schreiera}
+\label{aa:ch:grupy-wolne}
+
+\providecommand{\atlasref}[2]{#2}
+
+
+\section{Dlaczego grupy wolne są obiektem uniwersalnym?}
+
+\noindent\emph{Powiązania tematyczne w Bibliotece matematycznej:} \atlasref{KAT-14::def:adjunction}{KAT-14: sprzężenia funktorów i konstrukcje wolne}.
+
+W grupie cyklicznej jeden generator może spełniać relację $a^m=e$.
+W grupie abelowej dwa generatory zawsze komutują. Pytamy, co otrzymamy,
+jeżeli wskażemy pewien zbiór generatorów, ale \emph{nie narzucimy im żadnych
+relacji poza aksjomatami grupy}. Odpowiedź prowadzi do grup wolnych.
+Są one przydatne do opisu grup za pomocą generatorów i relacji, grup
+podstawowych przestrzeni topologicznych oraz konstrukcji paradoksalnych.
+Ostatnie zastosowanie wykorzystamy przy dowodzie twierdzenia
+Banacha--Tarskiego.
+
+\begin{definicja}[Własność uniwersalna grupy wolnej]
+\label{aa:def:free-universal}
+\label{def:grupa-wolna}
+Niech $S$ będzie zbiorem. Para $(F,\iota)$, gdzie $F$ jest grupą,
+a $\iota:S\to F$ jest funkcją, nazywa się \emph{grupą wolną na $S$},
+gdy dla każdej grupy $G$ i każdej funkcji $f:S\to G$ istnieje
+\emph{dokładnie jeden} homomorfizm $\widetilde f:F\to G$ taki, że
+$\widetilde f\circ\iota=f$. Grupę taką oznaczamy przez $F(S)$.
+\end{definicja}
+
+Strzałka przerywana oznacza jedyny morfizm (odwzorowanie) wyznaczony przez własność uniwersalną.
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (a) at (0,2.0) {$S$};
+ \node (b) at (4.4,2.0) {$F(S)$};
+ \node (c) at (2.2,0) {$G$};
+ \draw[->] (a) -- node[above] {$\iota$} (b);
+ \draw[->] (a) -- node[below left] {$f$} (c);
+ \draw[->,dashed] (b) -- node[below right] {$\widetilde f$} (c);
+\end{tikzpicture}
+\end{center}
+
+
+Warunek dotyczy dowolnej funkcji $f$: obrazy generatorów mogą mieć
+jakiekolwiek rzędy i nie muszą generować całego $G$. Jeśli $S$ ma
+dwa elementy $a,b$, to w $F(S)$ wyrazy $ab$ i $ba$ będą różne.
+W grupie $G$ ich obrazy mogą się natomiast pokrywać; oznacza to
+jedynie, że $\widetilde f$ ma nietrywialne jądro.
+
+\begin{lemat}[Jednoznaczność z dokładnością do izomorfizmu]
+\label{aa:lem:free-unique}
+Jeśli $(F,\iota)$ i $(F',\iota')$ spełniają powyższą własność
+uniwersalną dla tego samego zbioru $S$, to istnieje dokładnie jeden
+izomorfizm $u:F\to F'$ spełniający $u\circ\iota=\iota'$.
+\end{lemat}
+\begin{proof}
+Własność uniwersalna grupy $F$ zastosowana do $\iota':S\to F'$ daje
+homomorfizm $u:F\to F'$, a własność uniwersalna grupy $F'$ zastosowana
+do $\iota:S\to F$ daje $v:F'\to F$.
+Złożenie $vu:F\to F$ spełnia $(vu)\iota=\iota$,
+tak samo jak identyczność $\operatorname{id}_F$. Jednoznaczność
+z definicji daje $vu=\operatorname{id}_F$.
+Analogicznie $uv=\operatorname{id}_{F'}$.
+Zatem $u$ jest izomorfizmem o odwrotności $v$;
+jego jednoznaczność była już częścią konstrukcji.
+\end{proof}
+
+\section{Słowa zredukowane: budowa grupy bez ukrytych założeń}
+Niech $S^{-1}$ będzie rozłączną kopią $S$; dla $s\in S$ zapisujemy
+odpowiadający mu symbol przez $s^{-1}$. Formalny alfabet to
+$\mathcal A=S\sqcup S^{-1}$. Przyporządkowanie liter odwrotnych
+jest inwolucją: $(s^{-1})^{-1}=s$; na tym etapie nie jest to jeszcze
+operacja w grupie.
+
+\begin{definicja}[Słowo, redukcja]
+\label{aa:def:free-word}
+\emph{Słowo} to skończony ciąg liter $w=s_1\cdots s_n$ z $\mathcal A$;
+dopuszczamy słowo puste $e$. \emph{Elementarna redukcja} usuwa
+sąsiednią parę $ss^{-1}$ albo $s^{-1}s$.
+Słowo jest \emph{zredukowane}, gdy nie zawiera takiej pary.
+\end{definicja}
+
+\begin{przyklad}[Co wolno skreślić, a czego nie]
+\label{aa:prz:free-reduction}
+Dla $S=\{a,b\}$ słowo $a a^{-1} b b^{-1} b a$ redukuje się
+do $ba$. Słowo $aba^{-1}b^{-1}$ jest już zredukowane i nie jest
+słowem pustym. Nie wolno przestawiać liter, aby usunąć $aa^{-1}$:
+możliwość przestawiania liter oznaczałaby dodatkową relację
+przemienności, której w grupie wolnej nie wprowadzamy.
+\end{przyklad}
+
+\begin{definicja}[Algorytm stosu]
+\label{aa:def:free-stack}
+Czytamy słowo od lewej do prawej, przechowując jego aktualnie
+zredukowany prefiks $r$. Początkowo $r=e$.
+Po przeczytaniu litery $s$ usuwamy ostatnią literę $r$, jeżeli jest
+ona równa $s^{-1}$; w przeciwnym razie dopisujemy $s$ na końcu.
+Wynik oznaczamy $\operatorname{red}(w)$.
+\end{definicja}
+
+\begin{lemat}[Wstawienie pary odwrotnej nie zmienia stosu]
+\label{aa:lem:free-stack-pair}
+\label{lem:stos}
+Niech przed przeczytaniem dwóch kolejnych liter $s,s^{-1}$
+na stosie leży słowo zredukowane $r$. Po przeczytaniu obu liter
+na stosie ponownie leży $r$.
+\end{lemat}
+\begin{proof}
+Jeśli $r$ nie kończy się literą $s^{-1}$, pierwsze czytanie
+dopisuje $s$, a drugie natychmiast kasuje dopisaną literę.
+Jeśli $r=us^{-1}$, pierwsze czytanie usuwa końcową literę
+$s^{-1}$ i pozostawia $u$. Ponieważ $r$ było zredukowane,
+$u$ nie kończy się literą $s$; wobec tego drugie czytanie
+dopisuje $s^{-1}$, odtwarzając $r=us^{-1}$.
+Przypadek pustego $u$ jest taki sam.
+\end{proof}
+
+\begin{twierdzenie}[Jednoznaczność redukcji]
+\label{aa:tw:free-reduction}
+\label{tw:redukcja}
+Każde słowo $w$ można doprowadzić przez elementarne redukcje
+do dokładnie jednego słowa zredukowanego. Jest nim
+$\operatorname{red}(w)$ otrzymane algorytmem stosu.
+\end{twierdzenie}
+\begin{proof}
+Każda elementarna redukcja zmniejsza długość o dwa, więc każdy
+ciąg redukcji musi się zakończyć. Algorytm stosu również można
+zrealizować za pomocą elementarnych redukcji: po redukcji prefiksu
+dopisujemy następną literę i ewentualnie kasujemy jedną parę na końcu.
+Indukcja po długości przeczytanego prefiksu pokazuje, że otrzymujemy
+osiągalne słowo zredukowane.
+
+Pozostaje wykazać niezależność od wybranej kolejności skreśleń.
+Jeśli $w=pss^{-1}q$, to algorytm stosu dla $w$ i dla $pq$
+daje ten sam wynik: po prefiksie $p$ stan jest jednakowy,
+a dwie kolejne litery $s,s^{-1}$ go nie zmieniają na mocy
+Lematu~\ref{aa:lem:free-stack-pair}; sufiks $q$ jest następnie
+taki sam. Zatem każda elementarna redukcja zachowuje
+$\operatorname{red}(w)$. Jeśli dowolny ciąg redukcji kończy się
+słowem zredukowanym $z$, to
+$\operatorname{red}(w)=\operatorname{red}(z)=z$.
+Wszystkie możliwe wyniki końcowe są więc identyczne.
+\end{proof}
+
+\begin{wniosek}[Redukcja nie zależy od wcześniejszych skreśleń]
+\label{aa:wn:free-concat}
+\label{wn:redukcja-iloczyn}
+Dla dowolnych słów $u,v$ zachodzą równości
+$\operatorname{red}(\operatorname{red}(u)v)=\operatorname{red}(uv)$
+oraz $\operatorname{red}(u\operatorname{red}(v))=\operatorname{red}(uv)$.
+\end{wniosek}
+\begin{proof}
+W słowie $uv$ możemy najpierw wykonać redukcje
+w całym fragmencie $u$ (albo $v$), a dopiero później w pozostałej
+części. Jednoznaczność końcowego wyniku dowodzi równości.
+\end{proof}
+
+\begin{twierdzenie}[Istnienie grupy wolnej]
+\label{aa:tw:free-exists}
+\label{tw:uniwersalnosc}
+\label{st:grupa-slow}
+Zbiór wszystkich słów zredukowanych w alfabecie
+$S\sqcup S^{-1}$ jest grupą przy mnożeniu
+$u\cdot v=\operatorname{red}(uv)$.
+Ta grupa wraz z funkcją $\iota(s)=s$ spełnia własność
+uniwersalną z Definicji~\ref{aa:def:free-universal}.
+\end{twierdzenie}
+\begin{proof}
+Wynik redukcji jest słowem zredukowanym, więc działanie
+jest wewnętrzne. Na mocy
+Wniosku~\ref{aa:wn:free-concat} mamy
+$(u\cdot v)\cdot w=\operatorname{red}(uvw)
+=u\cdot(v\cdot w)$, czyli łączność.
+Słowo puste jest jedynką. Dla $u=s_1\cdots s_n$ słowo
+$u^{-1}=s_n^{-1}\cdots s_1^{-1}$ jest zredukowane;
+redukcja $uu^{-1}$ i $u^{-1}u$ od środka prowadzi do $e$.
+Są to więc odwrotności obustronne.
+
+Niech teraz $f:S\to G$ będzie dowolna funkcja do grupy $G$.
+Dla zredukowanego słowa $s_1\cdots s_n$ definiujemy
+$\widetilde f(s_1\cdots s_n)$ jako iloczyn obrazów liter,
+przy czym obrazem formalnego $s^{-1}$ jest $f(s)^{-1}$.
+Elementarna redukcja nie zmienia tego iloczynu, bo usuwa
+czynniki wzajemnie odwrotne. Wobec tego
+$\widetilde f(u\cdot v)=\widetilde f(u)\widetilde f(v)$.
+Jest to homomorfizm przedłużający $f$.
+Każdy taki homomorfizm musi działać w ten sposób na słowach,
+ponieważ zachowuje mnożenie i odwrotności; zatem jest jedyny.
+\end{proof}
+
+\begin{przyklad}[Grupa wolna rangi zero, jeden i dwa]
+\label{aa:prz:free-ranks}
+Dla $S=\varnothing$ jedynym słowem jest słowo puste, więc
+$F(\varnothing)=\{e\}$. Dla $S=\{a\}$ zredukowane słowa mają
+postać $a^n$, $n\in\mathbb Z$, a mnożenie odpowiada dodawaniu
+wykładników, więc $F(\{a\})\cong\mathbb Z$.
+Dla $S=\{a,b\}$ słowa $ab$ i $ba$ są różne, ponieważ są
+różnymi słowami zredukowanymi. Zatem $F(\{a,b\})$ nie jest
+abelowa. Słowo $aba^{-1}b^{-1}\ne e$ jest jej nietrywialnym
+komutatorem.
+\end{przyklad}
+
+\begin{stwierdzenie}[Liczba słów o danej długości]
+\label{aa:st:free-count}
+\label{st:przeliczalnosc-f2}
+Dla liczb całkowitych $r\ge2$ i $n\ge1$ grupa wolna
+$F_r=F(\{s_1,\ldots,s_r\})$ ma dokładnie
+$2r(2r-1)^{n-1}$ słów zredukowanych długości $n$.
+Jest przeliczalnie nieskończona.
+\end{stwierdzenie}
+\begin{proof}
+Pierwszą literę można wybrać na $2r$ sposobów;
+każda następna ma $2r-1$ możliwości, bo zabroniona jest
+jedynie odwrotność poprzedniej. Dla każdego $n$ liczba jest
+skończona, a zliczalna suma zbiorów skończonych jest przeliczalna.
+Nieskończoność wynika z różności słów $s_1^n$ dla $n\ge0$.
+\end{proof}
+
+
+\begin{przyklad}[Dwa rodzaje zależności między generatorami]
+\label{aa:prz:free-nonfree-pairs}
+Grupa abelowa $\mathbb Z^2$ jest generowana przez
+$(1,0)$ i $(0,1)$, ale nie jest grupą wolną na tych dwóch
+generatorach: komutator dwóch generatorów jest w niej elementem neutralnym,
+podczas gdy odpowiadające mu słowo $aba^{-1}b^{-1}$
+w $F(a,b)$ jest zredukowane i niepuste.
+Z drugiej strony sama nieprzemienność również nie wystarcza,
+aby para elementów była parą wolnych generatorów.
+W $S_3$ transpozycje $(1\,2)$ i $(2\,3)$ nie komutują,
+ale spełniają relację $(1\,2)^2=e$.
+Homomorfizm $F(a,b)\to S_3$ wysyłający $a$ na $(1\,2)$,
+a $b$ na $(2\,3)$ ma więc w jądrze nietrywialne słowo $a^2$.
+W dowodzie paradoksu Banacha--Tarskiego trzeba będzie
+wykluczyć nie tylko przemienność lub relacje torsyjne,
+lecz każdą możliwą nietrywialną relację.
+\end{przyklad}
+
+\section{Generatory, relacje i ilorazy grup wolnych}
+\begin{definicja}[Prezentacja grupy]
+\label{aa:def:presentation}
+Dla zbioru generatorów $S$ i zbioru słów $R\subseteq F(S)$
+niech $\langle\!\langle R\rangle\!\rangle$ oznacza
+\emph{domknięcie normalne} $R$, czyli najmniejszą
+podgrupę normalną $F(S)$ zawierającą $R$.
+Definiujemy
+\[
+\langle S\mid R\rangle
+ =F(S)/\langle\!\langle R\rangle\!\rangle.
+\]
+Przy $R=\varnothing$ otrzymujemy $F(S)$.
+\end{definicja}
+
+\begin{lemat}[Co oznacza domknięcie normalne]
+\label{aa:lem:normal-closure}
+Dla grupy $G$ i podzbioru $R\subseteq G$ domknięcie normalne
+$\langle\!\langle R\rangle\!\rangle$ jest podgrupą generowaną
+przez wszystkie elementy $grg^{-1}$, gdzie $g\in G$, $r\in R$.
+\end{lemat}
+\begin{proof}
+Niech $N$ będzie podgrupą generowaną przez wskazane sprzężenia.
+Jest normalna, bo sprzężenie $grg^{-1}$ przez $h\in G$
+ma postać $(hg)r(hg)^{-1}$, a sprzężenie iloczynu jest iloczynem
+sprzężeń. Zawiera $R$, biorąc $g=e$.
+Każda inna podgrupa normalna zawierająca $R$ musi zawierać
+wszystkie jego sprzężenia, a więc zawiera $N$. Jest więc
+$N$ najmniejszą taką podgrupą.
+\end{proof}
+
+\begin{twierdzenie}[Własność uniwersalna prezentacji]
+\label{aa:tw:presentation-universal}
+Niech $S$ będzie zbiorem, $R\subseteq F(S)$ zbiorem słów,
+$G$ grupą, a $f:S\to G$ dowolną funkcją.
+Istnieje homomorfizm $\langle S\mid R\rangle\to G$
+przypisujący klasie generatora $s$ element $f(s)$ wtedy
+i tylko wtedy, gdy homomorfizm $\widetilde f:F(S)\to G$
+indukowany przez $f$ spełnia $\widetilde f(r)=e_G$
+dla każdego $r\in R$. Takie przedłużenie jest jedyne.
+\end{twierdzenie}
+\begin{proof}
+Jeśli istnieje zadany homomorfizm z ilorazu, każda relacja
+$r\in R$ jest w nim równa jedynce; w szczególności
+$\widetilde f(r)=e_G$.
+Odwrotnie, jeśli $\widetilde f$ zeruje wszystkie relacje,
+to normalność $\ker\widetilde f$ oznacza, że zawiera ich
+domknięcie normalne. Definiujemy więc na ilorazie odwzorowanie
+$w\langle\!\langle R\rangle\!\rangle\mapsto\widetilde f(w)$.
+Jest ono dobrze określone: równość dwóch warstw oznacza,
+że różnica ich reprezentantów (w sensie iloczynu z odwrotnością)
+należy do domknięcia normalnego, a więc do jądra $\widetilde f$.
+Zachowywanie mnożenia wynika z tego, że $\widetilde f$ jest
+homomorfizmem.
+Jednoznaczność bierze się z faktu, że klasy generatorów
+generują cały iloraz.
+\end{proof}
+
+\begin{przyklad}[Najważniejsze prezentacje elementarne]
+\label{aa:prz:presentations-basic}
+Dla każdej liczby całkowitej $n\ge1$ grupa cykliczna $C_n$
+ma prezentację $\langle a\mid a^n\rangle$, ponieważ słowa na jednym generatorze
+są potęgami $a$, a relacja $a^n=e$ utożsamia wykładniki
+różniące się o wielokrotność $n$.
+Grupa $\mathbb Z^2$ ma prezentację
+$\langle a,b\mid aba^{-1}b^{-1}\rangle$:
+relacja wymusza $ab=ba$, więc każde słowo daje $a^m b^n$;
+jednoznaczność pary $(m,n)$ wynika z homomorfizmu do
+$\mathbb Z^2$ przypisującego $a\mapsto(1,0)$ i
+$b\mapsto(0,1)$.
+Grupa diedralna $D_{2n}$ ma prezentację
+$\langle r,s\mid r^n,s^2,srs^{-1}r\rangle$ dla $n\ge3$.
+Z relacji $sr=r^{-1}s$ każde słowo można sprowadzić do jednej
+z postaci $r^i$ albo $r^is$, $0\le i<n$.
+Daje to co najwyżej $2n$ elementów; rzeczywista grupa
+symetrii foremnego $n$-kąta ma dokładnie $2n$ elementów,
+i spełnia relację, więc homomorfizm z prezentacji na tę grupę
+jest bijekcją.
+\end{przyklad}
+
+\begin{twierdzenie}[Abelianizacja grupy wolnej]
+\label{aa:tw:free-abelianization}
+Dla dowolnego zbioru $S$ grupa abelowa $F(S)_{\mathrm{ab}}=
+F(S)/[F(S),F(S)]$ jest naturalnie izomorficzna z grupą
+$\mathbb Z^{(S)}$ skończonych kombinacji formalnych
+$\sum_{s\in S}n_s e_s$, $n_s\in\mathbb Z$.
+\end{twierdzenie}
+\begin{proof}
+Niech $u:F(S)\to\mathbb Z^{(S)}$ wysyła generator $s$ na
+$e_s$. Istnieje i jest jedyny na mocy uniwersalności grupy
+wolnej; jest surjektywny, bo obrazy generatorów generują
+$\mathbb Z^{(S)}$. Ponieważ grupa docelowa jest abelowa,
+$[F(S),F(S)]\subseteq\ker u$, więc $u$ indukuje surjekcję
+$\bar u:F(S)_{\mathrm{ab}}\to\mathbb Z^{(S)}$.
+Odwrotnie, przyporządkowanie $e_s\mapsto[s]$ można
+rozszerzyć do homomorfizmu z $\mathbb Z^{(S)}$ do
+$F(S)_{\mathrm{ab}}$, ponieważ ten ostatni iloraz jest abelowy.
+Oba złożenia zachowują generatory $e_s$ i $[s]$, a więc
+są identycznościami. Zatem $\bar u$ jest izomorfizmem.
+\end{proof}
+
+
+\begin{stwierdzenie}[Niezmienniczość skończonej rangi grupy wolnej]
+\label{aa:st:free-rank-invariant}
+Jeśli $F_r\cong F_s$ dla liczb całkowitych $r,s\ge0$,
+to $r=s$.
+\end{stwierdzenie}
+\begin{proof}
+Niech $C_2$ będzie dwuelementową grupą cykliczną.
+Każdy homomorfizm $F_r\to C_2$ jest jednoznacznie wyznaczony
+przez niezależny wybór obrazów $r$ wolnych generatorów,
+a każdy taki wybór daje homomorfizm na mocy własności
+uniwersalnej. Istnieje więc dokładnie $2^r$ takich homomorfizmów.
+Izomorfizm $F_r\cong F_s$ przez złożenie w jedną stronę
+ustanawia bijekcję pomiędzy zbiorami homomorfizmów
+$F_r\to C_2$ oraz $F_s\to C_2$.
+Zatem $2^r=2^s$, skąd $r=s$.
+\end{proof}
+
+\section{Graf warstw: geometria ukryta w podgrupie grupy wolnej}
+Niech $F=F(S)$, $H\le F$ będzie dowolną podgrupą.
+Zbudujemy graf, który pozwala rozpoznać elementy $H$ jako
+zamknięte ścieżki oraz znaleźć dla $H$ nowe wolne generatory.
+Nie zakładamy, że $H$ ma skończony indeks.
+
+\begin{definicja}[Graf Schreiera]
+\label{aa:def:schreier-graph}
+\emph{Grafem Schreiera} podgrupy $H\le F(S)$ nazywamy graf
+skierowany $\Gamma(H\backslash F,S)$, którego wierzchołki
+to prawe warstwy $Hg$, $g\in F$. Dla każdego $v=Hg$ i $s\in S$
+umieszczamy krawędź $e(v,s)$ od $v$ do $v s=Hgs$
+o etykiecie $s$; dopuszczamy pętle i krawędzie wielokrotne.
+Krawędź wolno przejść także w przeciwnym kierunku, z etykietą $s^{-1}$.
+Wierzchołek $H$ nazywamy \emph{bazowym}.
+Przy rozpatrywaniu drzew rozpinających zapominamy o orientacji,
+ale zachowujemy rozróżnienie poszczególnych krawędzi:
+przeciwne skierowanie dwóch różnych krawędzi z etykietą $s$
+nie utożsamia ich ze sobą. Odwrotne przejście danej krawędzi
+nie jest natomiast nową krawędzią grafu.
+\end{definicja}
+
+\begin{lemat}[Słowa, drogi i pętle]
+\label{aa:lem:schreier-path}
+Dla dowolnego słowa $w\in F(S)$ istnieje dokładnie jedna droga
+w grafie Schreiera wychodząca z każdego wskazanego wierzchołka
+i mająca kolejno etykiety liter zredukowanego słowa $w$.
+Droga rozpoczęta w $Hg$ kończy się w $Hgw$.
+W szczególności droga z bazowego $H$ jest zamknięta wtedy
+i tylko wtedy, gdy $w\in H$.
+Ponadto redukcja dwóch kolejnych, przeciwnie skierowanych przejść
+tej samej krawędzi odpowiada skreśleniu sąsiednich liter odwrotnych.
+\end{lemat}
+\begin{proof}
+Z każdego wierzchołka wychodzi dokładnie jedna krawędź
+z każdą dodatnią etykietą $s$, a dokładnie jedna odwrotność
+krawędzi kończącej się w danym wierzchołku ma etykietę $s^{-1}$:
+jest to odwrotność $e(Hgs^{-1},s)$.
+Indukcja po kolejnych literach pokazuje, że od wierzchołka
+$Hg$ przechodzimy do $Hgs_1$, potem do $Hgs_1s_2$ itd.,
+ostatecznie do $Hgw$. Jeśli $g=e$, koniec jest równy $H$
+dokładnie wtedy, gdy $Hw=H$, czyli $w\in H$.
+Przejście krawędzi i natychmiastowy powrót to dokładnie
+przejście litery i jej odwrotności.
+\end{proof}
+
+Dla dowolnego zbioru generatorów $S$, również nieskończonego,
+pojęcie grafu uwzględnia krawędzie wielokrotne i pętle.
+Ważne jest to, że warstwy $Hg$ są jedynie elementami zbioru
+$H\backslash F$; bez normalności $H$ nie ma on struktury grupy
+ilorazowej pochodzącej z $F$.
+
+Graf Schreiera jest spójny: każdy wierzchołek $Hg$ można
+osiągnąć z $H$ drogą oznaczoną dowolnym słowem reprezentującym $g$.
+Uzasadnimy teraz, dlaczego można wybrać w nim drzewo rozpinające.
+W przypadku skończonego grafu wystarczy kolejno dodawać krawędzie,
+które docierają do jeszcze nieodwiedzonego wierzchołka.
+Dla dowolnego $S$ można dobrze uporządkować alfabet
+$S\sqcup S^{-1}$ (korzystając z aksjomatu wyboru).
+Słowa porządkujemy najpierw według długości,
+a słowa tej samej długości leksykograficznie.
+Jest to dobre uporządkowanie słów skończonych. Dla każdej
+warstwy wybieramy pierwsze w tym porządku słowo, które
+do niej prowadzi. Każdy prefiks wybranego słowa jest wybranym
+słowem dla swojego wierzchołka: zastąpienie prefiksu słowem
+krótszym albo leksykograficznie wcześniejszym dałoby
+wcześniejsze słowo prowadzące do tej samej warstwy.
+Wybrane słowa są zredukowane, gdyż skreślenie sąsiednich
+liter odwrotnych prowadziłoby do krótszego słowa.
+Łączymy każdy niebazowy wierzchołek z jego poprzednikiem
+na wybranej drodze. Długość wybranego słowa maleje o jeden
+przy przejściu do poprzednika, więc otrzymane krawędzie
+nie tworzą cyklu i prowadzą każdy wierzchołek do $H$.
+Tworzą zatem drzewo rozpinające $T$.
+
+\begin{lemat}[Pętle związane z krawędziami spoza drzewa]
+\label{aa:lem:tree-paths}
+Niech $\Gamma$ będzie spojnym grafem z wyróżnionym
+wierzchołkiem $v_0$ i drzewem rozpinającym $T$.
+Dla każdego wierzchołka $v$ niech $t_v$ będzie jedyną
+zredukowaną drogą w $T$ od $v_0$ do $v$.
+Dla każdej zorientowanej krawędzi $e:v\to w$ nieleżącej
+w $T$ definiujemy pętlę $b_e=t_v e t_w^{-1}$.
+Wybieramy dokładnie jedną orientację każdej krawędzi
+spoza $T$. Wtedy każda zamknięta droga od $v_0$ jest,
+z dokładnością do usuwania natychmiastowych powrotów,
+iloczynem pętli $b_e$ i ich odwrotności.
+\end{lemat}
+\begin{proof}
+Przejdźmy po kolei krawędzie zamkniętej drogi
+$v_0=v_0',v_1',\dots,v_m'=v_0$.
+Dla krawędzi $e_i:v_{i-1}'\to v_i'$ wstawmy
+między kolejne kroki drogi ścieżki $t_{v_i'}^{-1}t_{v_i'}$.
+Otrzymamy iloczyn pętli
+$(t_{v_0'}e_1t_{v_1'}^{-1})\cdots
+ (t_{v_{m-1}'}e_mt_{v_m'}^{-1})$.
+Jeśli $e_i$ należy do drzewa, pętlą
+$t_{v_{i-1}'}e_it_{v_i'}^{-1}$ redukuje się do drogi pustej,
+ponieważ w drzewie pomiędzy dwiema końcówkami istnieje
+jedyna zredukowana droga.
+Jeśli $e_i$ nie należy do drzewa, dostajemy
+$b_{e_i}$ albo $b_{e_i}^{-1}$, w zależności od kierunku przejścia.
+Po usunięciu pustych pętli pozostaje zadany iloczyn.
+\end{proof}
+
+\begin{lemat}[Brak dodatkowych relacji między pętlami]
+\label{aa:lem:tree-free}
+Niech $\Gamma$ będzie spójnym grafem z wierzchołkiem
+bazowym $v_0$, $T$ jego drzewem rozpinającym, a $b_e$
+pętlami przypisanymi po jednej do każdej krawędzi spoza $T$
+przy wybranych orientacjach, jak w Lemacie~\ref{aa:lem:tree-paths}.
+Wtedy żadne niepuste, zredukowane słowo w symbolach
+$b_e^{\pm1}$ nie jest równoważne pustej drodze
+po usuwaniu natychmiastowych powrotów.
+\end{lemat}
+\begin{proof}
+Rozważmy zredukowane słowo
+$b_{e_1}^{\varepsilon_1}\cdots b_{e_k}^{\varepsilon_k}$, $k\ge1$,
+$\varepsilon_i\in\{1,-1\}$.
+Po zastąpieniu każdego czynnika jego drogą
+$t_v e_i^{\varepsilon_i}t_w^{-1}$ oraz skreśleniu
+sąsiednich krawędzi drzewa pozostają \emph{kolejno}
+$k$ krawędzi spoza drzewa, zorientowanych jak
+$e_i^{\varepsilon_i}$; żadna z nich nie może zniknąć
+w wyniku redukcji wewnątrz drogi leżącej w drzewie.
+Jedyny sposób usunięcia pierwszej krawędzi spoza drzewa
+w dalszej redukcji wymagałby, aby kolejna krawędź
+spoza drzewa była dokładnie tą samą krawędzią przebieganą
+w przeciwnym kierunku oraz aby łącząca je droga w $T$
+zredukowała się do drogi pustej.
+Ponieważ drzewo ma jednoznaczne zredukowane drogi,
+zdarza się to tylko wtedy, gdy sąsiednie symbole
+$b_{e_i}^{\varepsilon_i}$ i $b_{e_{i+1}}^{\varepsilon_{i+1}}$
+są wzajemnie odwrotne. Przeczy to zredukowaniu
+rozpatrywanego słowa. Zatem co najmniej jedna
+krawędź spoza drzewa pozostaje; droga nie może
+zredukować się do pustej.
+\end{proof}
+
+\begin{twierdzenie}[Nielsena--Schreiera]
+\label{aa:tw:nielsen-schreier}
+Niech $S$ będzie dowolnym zbiorem, $F(S)$ grupą wolną na $S$,
+a $H\le F(S)$ dowolną podgrupą. Wtedy $H$ jest grupą wolną.
+Dokładniej, dla wybranego drzewa rozpinającego $T$
+w grafie Schreiera $\Gamma(H\backslash F(S),S)$ elementy
+$h_e\in H$ odpowiadające słowom etykiet pętli $t_v e t_w^{-1}$,
+po jednym dla każdej krawędzi poza $T$ i po wybraniu jej orientacji,
+tworzą wolną bazę $H$.
+\end{twierdzenie}
+\begin{proof}
+Dla krawędzi $e:v\to w$ o etykiecie $s$ zapiszmy
+przez $u_v\in F(S)$ element reprezentowany przez słowo
+etykiet drogi $t_v$. Ponieważ $t_v$ kończy się w warstwie $v$,
+mamy $v=Hu_v$; analogicznie $w=Hu_w$.
+Relacja $w=vs$ daje $Hu_v s=Hu_w$, a więc
+$h_e=u_v s u_w^{-1}\in H$. Dla krawędzi drzewa
+odpowiednia droga zamknięta redukuje się do pustej,
+więc $h_e=e$. Dla krawędzi poza drzewem zachowujemy $h_e$.
+
+Niech $h\in H$ będzie reprezentowany przez zredukowane
+słowo $w\in F(S)$. Z Lematu~\ref{aa:lem:schreier-path}
+ścieżka o etykiecie $w$ jest pętlą w bazowym wierzchołku.
+Lemat~\ref{aa:lem:tree-paths} rozkłada ją na
+pętle $b_e^{\pm1}$, zatem $h$ jest iloczynem elementów
+$h_e^{\pm1}$. Elementy $h_e$ generują $H$.
+
+Wolna grupa na formalnych symbolach krawędzi spoza $T$
+ma więc naturalny surjektywny homomorfizm na $H$.
+Gdyby jego jądro było nietrywialne, istniałoby niepuste
+zredukowane słowo w symbolach $h_e^{\pm1}$ reprezentujące
+jedynkę $F(S)$. Rozwinięcie tego słowa daje drogę zamkniętą
+w grafie Schreiera. Słowo etykiet jest równe jedynce w
+$F(S)$, więc na mocy jednoznaczności redukcji
+(Twierdzenie~\ref{aa:tw:free-reduction}) można usuwać
+kolejne sąsiednie pary liter odwrotnych aż do słowa pustego.
+W grafie Schreiera każde takie skreślenie odpowiada
+przejściu daną krawędzią i natychmiastowemu powrotowi
+tą samą krawędzią: dla ustalonego wierzchołka i litery
+istnieje dokładnie jedno możliwe przejście.
+Zatem również droga zredukowałaby się przez usuwanie
+powrotów do drogi pustej.
+Ale Lemat~\ref{aa:lem:tree-free} wyklucza taką redukcję.
+Sprzeczność dowodzi różnowartościowości homomorfizmu.
+Skoro jest on także surjektywny, jest izomorfizmem.
+\end{proof}
+
+\begin{uwaga}[Co w dowodzie jest istotne]
+Dowód nie zakłada, że $H$ jest normalna w $F(S)$ ani że
+$H$ jest skończonego indeksu. Kluczowa jest swoboda
+skreślania liter, a nie rachunek rzędów.
+Drzewo rozpinające eliminuje wszystkie relacje pochodzące
+z kroków „w obie strony” i pozostawia niezależne generatory
+odpowiadające pozostałym krawędziom.
+\end{uwaga}
+
+\section{Podgrupy skończonego indeksu i wzór Schreiera}
+\begin{twierdzenie}[Wzór Schreiera na rangę]
+\label{aa:tw:schreier-index}
+Niech $F_r$ będzie grupą wolną o skończonej randze $r\ge1$,
+a $H\le F_r$ podgrupą o skończonym indeksie
+$d=[F_r:H]\ge1$. Wtedy $H$ jest wolna rangi
+$1+d(r-1)$.
+\end{twierdzenie}
+\begin{proof}
+Graf Schreiera ma dokładnie $d$ wierzchołków (po jednym
+na prawą warstwę). Dla każdego z $r$ generatorów z każdego
+wierzchołka wychodzi dokładnie jedna dodatnio zorientowana
+krawędź. Mamy więc $dr$ różnych krawędzi (każda ma wybraną
+dodatnią orientację), liczonych z krotnościami, również
+wtedy, gdy mają te same końce. Przejście wstecz po danej
+krawędzi nie jest doliczane jako nowa krawędź.
+Dowolne drzewo rozpinające ma dokładnie $d-1$ krawędzi:
+można to wykazać indukcją po liczbie wierzchołków, usuwając
+liść i jego jedyną krawędź; przypadek $d=1$ jest pusty.
+Z Twierdzenia~\ref{aa:tw:nielsen-schreier} pozostałe
+$dr-(d-1)=1+d(r-1)$ krawędzie dają wolną bazę $H$.
+\end{proof}
+
+\begin{przyklad}[Jądro homomorfizmu $F(a,b)\to C_2$]
+\label{aa:prz:schreier-index-two}
+Niech $\varepsilon:F(a,b)\to C_2$ wysyła $a$ na $1$,
+a $b$ na $0$ (zapisujemy $C_2$ addytywnie).
+Dla $H=\ker\varepsilon$ graf Schreiera ma dwa wierzchołki
+$H$ oraz $Ha$. Krawędzie o etykiecie $a$ łączą
+obie warstwy w obie strony (są to dwie różne krawędzie,
+a nie dwa przejścia tej samej krawędzi), zaś przy każdym
+wierzchołku istnieje pętla
+z etykietą $b$. Jeśli za drzewo wybierzemy pierwszą
+krawędź $a:H\to Ha$, to trzy krawędzie poza drzewem
+dają odpowiednio elementy $b$, $a^2$ oraz $aba^{-1}$.
+Zatem
+\[
+H=\langle b,a^2,aba^{-1}\rangle
+\quad\text{jest grupą wolną rangi }3.
+\]
+Tego wyniku nie należy mylić z twierdzeniem, że same
+$a^2,b$ generują $H$: bez trzeciego generatora ta
+konkretna podgrupa jest mniejsza: z udowodnionej wolności
+bazy wynika, że trzeci generator nie należy do podgrupy
+generowanej przez dwa pozostałe.
+\end{przyklad}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=Latex, every node/.style={font=\small}]
+  \node[draw,circle,minimum size=10mm] (v0) at (0,0) {$H$};
+  \node[draw,circle,minimum size=10mm] (v1) at (4.3,0) {$Ha$};
+  \draw[->,thick] (v0) to[bend left=21] node[above] {$a$} (v1);
+  \draw[->,thick] (v1) to[bend left=21] node[below] {$a$} (v0);
+  \draw[->,thick] (v0) to[loop left,looseness=9] node[left] {$b$} (v0);
+  \draw[->,thick] (v1) to[loop right,looseness=9] node[right] {$b$} (v1);
+\end{tikzpicture}
+\caption{Graf Schreiera jądra $F(a,b)\to C_2$: obie krawędzie oznaczone $a$
+są różnymi krawędziami, a pętle $b$ odpowiadają dwóm różnym generatorom podgrupy.}
+\label{aa:fig:schreier-two}
+\end{figure}
+
+\begin{przyklad}[Podgrupa wolna nieskończonej rangi w $F_2$]
+\label{aa:prz:infinite-rank-subgroup}
+Niech $\psi:F(a,b)\to\mathbb Z$ będzie homomorfizmem
+zadanym przez $\psi(a)=1$, $\psi(b)=0$.
+Dla $K=\ker\psi$ wierzchołkami grafu Schreiera są liczby
+całkowite $n$, odpowiadające warstwom $Ka^n$.
+Krawędź $a$ łączy $n$ z $n+1$, a przy każdym $n$
+znajduje się pętla o etykiecie $b$.
+Wszystkie krawędzie $a$ tworzą drzewo rozpinające (dwustronną
+nieskończoną ścieżkę), a pętle $b$ są poza nim.
+Droga w drzewie od $0$ do $n$ ma etykietę $a^n$;
+odpowiadający jej generator to $a^nba^{-n}$.
+Dostajemy więc wolną bazę
+$\{a^nba^{-n}:n\in\mathbb Z\}$ grupy $K$.
+Pokazuje to, że podgrupa grupy wolnej rangi dwa może mieć
+nieskończoną rangę. Nie przeczy to wzorowi Schreiera,
+ponieważ $[F(a,b):K]=\infty$.
+\end{przyklad}
+
+\section{Paradoks Banacha--Tarskiego: cel i plan dowodu}
+\label{aa:sec:banach-tarski}
+
+Korzystamy z konstrukcji $F_2=F(\{a,b\})$ z
+Twierdzenia~\ref{aa:tw:free-exists}, z przeliczalności
+(Stwierdzenie~\ref{aa:st:free-count}) oraz z teorii działań
+grup z wcześniejszej części skryptu.
+Przyjmujemy oznaczenia $\bar a=a^{-1}$ i $\bar b=b^{-1}$,
+a alfabet to $\mathcal A=\{a,\bar a,b,\bar b\}$.
+Nie powtarzamy dowodu jednoznaczności redukcji.
+
+
+Słowo \emph{paradoks} oznacza tutaj twierdzenie sprzeczne z intuicją, a nie sprzeczność logiczną. Pracujemy w zwykłej teorii mnogości ZFC, czyli z aksjomatem wyboru. Kawałkiem nazywamy dowolny podzbiór kuli: nie musi być bryłą, nie musi być spójny ani mierzalny w sensie Lebesgue'a.
+
+Zakładamy znajomość zbiorów, funkcji, liczb rzeczywistych oraz elementarnego rachunku macierzy i wektorów. Korzystamy z przedstawionej wcześniej teorii grup wolnych i działań grup; teorię rozkładów paradoksalnych wprowadzamy poniżej. Nie konstruujemy liczb rzeczywistych ani nie wyprowadzamy podstaw algebry liniowej z aksjomatów. Teoria miary pojawia się dopiero w komentarzu po dowodzie i nie jest narzędziem samej konstrukcji.
+
+\subsection{Co dokładnie zostanie udowodnione?}
+Przez $\|x\|$ oznaczamy długość euklidesową wektora $x\in\mathbb R^3$. Niech
+\[
+ B^3=\{x\in\mathbb R^3:\|x\|\le1\},\qquad S^2=\{x\in\mathbb R^3:\|x\|=1\}.
+\]
+To odpowiednio kula domknięta i jej brzeg, czyli sfera. Kula zawiera również punkty wnętrza; nie wolno jej utożsamiać ze sferą.
+
+\begin{twierdzenie}[Banach--Tarski: podwojenie kuli]\label{tw:banach-tarski}
+Istnieje skończona rodzina parami rozłącznych zbiorów $P_1,\ldots,P_N\subset B^3$ oraz ruchy sztywne $f_i(x)=Q_ix+v_i$, gdzie $Q_i\in\mathrm{SO}(3)$, takie że
+\[
+ B^3=\bigsqcup_{i=1}^{N}P_i,\qquad
+ \bigsqcup_{i=1}^{N}f_i(P_i)
+ =(B^3+(-3,0,0))\sqcup(B^3+(3,0,0)).
+\]
+\end{twierdzenie}
+W obu zapisach występują sumy rozłączne. Każdy kawałek jest użyty dokładnie raz; nie rozciągamy go, nie pomniejszamy i nie tworzymy jego dodatkowej kopii. Konstrukcja podana niżej używa co najwyżej $64$ kawałków; nie jest to twierdzenie o najmniejszej możliwej liczbie kawałków.
+
+Grupę $\mathrm{SO}(3)$, czyli grupę obrotów zachowujących orientację i punkt $0$, zdefiniujemy macierzowo w podsekcji~\ref{subsec:so3}. Dodanie $v_i$ pozwala przesuwać kawałki. Odległość między środkami dwóch kul docelowych wynosi $6>2$, więc rzeczywiście są one rozłączne.
+
+\subsection{Siedem etapów}
+\begin{enumerate}
+\item Wykorzystamy skonstruowaną wcześniej grupę wolną $F_2$ z liter $a,a^{-1},b,b^{-1}$.
+\item Podzielimy $F_2$ na cztery zbiory, z których dwa odtworzą pierwszą kopię $F_2$, a pozostałe dwa drugą.
+\item Pokażemy dwa konkretne obroty, które nie spełniają żadnej nietrywialnej relacji. Dzięki temu otrzymamy monomorfizm $F_2\to\mathrm{SO}(3)$.
+\item Usuniemy ze sfery przeliczalny zbiór punktów stałych $D$. Na pozostałym zbiorze $X$ przeniesiemy rozkład grupy na każdą orbitę.
+\item Wykażemy, że dodanie $D$ nie przeszkadza: sfera i $X$ są równoważne przez rozkład na dwa kawałki.
+\item Przedłużymy rozkład sfery wzdłuż promieni, otrzymując rozkład kuli bez środka, a następnie osobno wchłoniemy środek.
+\item Umieścimy dwie formalne kopie w dwóch różnych miejscach przestrzeni. Sprawdzimy skończoność, rozłączność i pokrycie.
+\end{enumerate}
+Najtrudniejszy krok algebraiczny, czyli dowód, że wskazane obroty są wolnymi generatorami, przeprowadzimy rachunkiem macierzowym modulo $3$. Nie odwołujemy się do twierdzenia o istnieniu „odpowiednich obrotów”.
+
+\section{Skończone rozkłady i dwie kopie zbioru}
+\subsection{Działanie grupy i dozwolone ruchy}
+\begin{definicja}[Działanie grupy]
+Grupa $G$ działa na zbiorze $Y$, jeśli każdej parze $(g,x)\in G\times Y$ przyporządkowano $gx\in Y$ tak, że $ex=x$ i $(gh)x=g(hx)$. Każde przekształcenie $x\mapsto gx$ jest bijekcją, z odwrotnością $x\mapsto g^{-1}x$. Dla $C\subseteq Y$ piszemy $gC=\{gx:x\in C\}$.
+\end{definicja}
+Przykłady to działanie grupy na sobie przez mnożenie z lewej, działanie obrotów na sferze oraz działanie ruchów sztywnych na $\mathbb R^3$.
+\begin{definicja}[Równoważność przez skończony rozkład]\label{def:rownorozklad}
+Niech $E,F\subseteq Y$, gdzie $G$ działa na $Y$. Piszemy $E\mathrel{\equiv_G} F$, jeżeli istnieje skończony podział $E=E_1\sqcup\cdots\sqcup E_k$ i istnieją $g_1,\ldots,g_k\in G$ takie, że $F=g_1E_1\sqcup\cdots\sqcup g_kE_k$. Słowo \emph{podział} oznacza, że części są parami rozłączne i pokrywają cały zbiór. Puste części można usuwać. Gdy grupa ruchów jest ustalona, opuszczamy indeks $G$.
+\end{definicja}
+Istnienie takiego rozkładu jest równoważne istnieniu bijekcji $f:E\to F$, która na każdej ze skończenie wielu części $E_i$ ma postać $f(x)=g_ix$. Rozłączność obrazów daje różnowartościowość, a pokrycie $F$ --- surjektywność.
+
+\textbf{Przykład (dwie części).} Niech grupa $(\mathbb Z,+)$ działa na $\mathbb Z$ przez przesunięcia. Zbiór $E=\{0,1\}$ jest równoważny zbiorowi $F=\{0,3\}$: część $\{0\}$ pozostawiamy na miejscu, a część $\{1\}$ przesuwamy o $2$. Obrazy $\{0\}$ i $\{3\}$ są rozłączne i pokrywają $F$. Ten przykład pokazuje, że na różnych częściach mogą działać różne elementy grupy.
+
+\begin{lemat}[Składanie rozkładów]\label{lem:skladanie}
+Relacja $\mathrel{\equiv_G}$ jest zwrotna, symetryczna i przechodnia. Złożenie rozkładów na odpowiednio $p$ i $q$ części wymaga co najwyżej $pq$ części.
+\end{lemat}
+\begin{proof}
+Zwrotność daje jedna część i ruch $e$. Dla symetrii bierzemy części $g_iE_i$ zbioru docelowego i ruchy $g_i^{-1}$. Przejdźmy do przechodniości. Niech $f:E\to F$ działa jako $g_i$ na $E_i$, a $h:F\to H$ jako $h_j$ na $F_j$. Dzielimy $E$ na zbiory
+\begin{equation}\label{eq:3-1}
+ E_{ij}'=E_i\cap g_i^{-1}(F_j).
+\end{equation}
+Dla każdego $x\in E$ istnieje dokładnie jedno $i$ z $x\in E_i$, a następnie dokładnie jedno $j$ z $g_ix\in F_j$. Zatem zbiory $E_{ij}'$ tworzą podział. Na $E_{ij}'$ złożenie $h\circ f$ jest pojedynczym ruchem $h_jg_i$. Ponieważ złożenie bijekcji jest bijekcją, obrazy tych części są rozłączne i pokrywają $H$. Liczba par $(i,j)$ wynosi $pq$.
+\end{proof}
+
+\subsection{Dwie kopie oznaczone etykietami}
+Symbol $E\sqcup E$ oznacza sumę rozłączną dwóch kopii $E$. Będziemy ją przedstawiać jako $2E=E\times\{1,2\}$. Pary $(x,1)$ i $(x,2)$ oznaczają dwa różne miejsca docelowe. Etykieta nie jest dodatkową współrzędną euklidesową.
+
+Uogólniamy relację $\mathrel{\equiv_G}$ na podzbiory skończenie wielu etykietowanych kopii $Y$: każda część ma jedną ustaloną etykietę źródłową i jedną docelową, a przekształcenie ma postać $(x,i)\mapsto(gx,j)$. Zbiór bez etykiety utożsamiamy z jego pojedynczą kopią. Wymagamy, aby części tworzyły podział źródła, a ich obrazy podział celu. Etykiety służą jedynie do rozróżnienia kopii. Na końcu umieścimy kopie w różnych miejscach $\mathbb R^3$ za pomocą przesunięć.
+
+Dowód lematu~\ref{lem:skladanie} działa także dla tego uogólnienia: w przecięciach \eqref{eq:3-1} zachowujemy tylko pary części o zgodnych etykietach pośrednich. Na każdej niepustej części złożenie nadal jest jednym elementem $G$ z ustaloną etykietą docelową. Jeżeli $E\mathrel{\equiv_G} F$, możemy wykonać ten sam rozkład osobno w obu kopiach, otrzymując $2E\mathrel{\equiv_G}2F$.
+\begin{definicja}[Zbiór paradoksalny]\label{def:paradoksalny}
+Zbiór $E$ jest \emph{paradoksalny} dla danego działania grupy, jeśli $E\mathrel{\equiv_G}2E$. Równoważnie, istnieje podział $E=A_1\sqcup\cdots\sqcup A_m\sqcup B_1\sqcup\cdots\sqcup B_n$ i elementy $g_i,h_j\in G$ takie, że
+\[
+ E=\bigsqcup_{i=1}^{m}g_iA_i,\qquad E=\bigsqcup_{j=1}^{n}h_jB_j.
+\]
+Pierwsze równanie odtwarza kopię z etykietą $1$, drugie kopię z etykietą $2$. Źródłowe części nie są kopiowane.
+\end{definicja}
+Niepusty zbiór paradoksalny musi być nieskończony: dla niepustego zbioru skończonego bijekcja $E\to2E$ wymagałaby $|E|=2|E|$. W dalszej części zbudujemy taki rozkład dla $F_2$, a następnie przeniesiemy go na sferę i kulę.
+\begin{wniosek}[Przenoszenie paradoksalności]\label{wn:przenoszenie}
+Jeśli $E\mathrel{\equiv_G} F$ i $F\mathrel{\equiv_G}2F$, to $E\mathrel{\equiv_G}2E$.
+\end{wniosek}
+\begin{proof}
+Składamy trzy skończone rozkłady: $E\mathrel{\equiv_G} F\mathrel{\equiv_G}2F\mathrel{\equiv_G}2E$. Ostatnia równoważność jest dwukrotnym zastosowaniem odwrotnego rozkładu $F\mathrel{\equiv_G} E$. Lemat~\ref{lem:skladanie} zapewnia, że po złożeniu nadal mamy skończenie wiele części i pojedynczy dozwolony ruch na każdej.
+\end{proof}
+\subsection{Przesunięcie wzdłuż nieskończonego łańcucha}
+\begin{lemat}[Przesunięcie łańcucha]\label{lem:lancuch}
+Niech $D\subseteq E\subseteq Y$, a $T:Y\to Y$ będzie przekształceniem wyznaczonym przez pewien element $G$. Załóżmy, że zbiory $D,T(D),T^2(D),\ldots$ są parami rozłączne i wszystkie zawierają się w $E$. Wówczas $E\mathrel{\equiv_G} E\setminus D$ przy użyciu co najwyżej dwóch części.
+\end{lemat}
+\begin{proof}
+Niech $L=\bigcup_{n=0}^{\infty}T^n(D)$. Rozłączność poziomów daje $T(L)=\bigcup_{n=1}^{\infty}T^n(D)=L\setminus D$. Dzielimy $E$ na dwie części $L$ i $E\setminus L$. Pierwszą przenosimy przez $T$, drugą pozostawiamy bez zmian. Obrazy to odpowiednio $L\setminus D$ i $E\setminus L$; są rozłączne i ich suma wynosi $E\setminus D$.
+\end{proof}
+\begin{uwaga}
+Użyliśmy nieskończonej sumy do zdefiniowania jednego kawałka $L$. Nie wykonujemy nieskończenie wielu ruchów na różnych poziomach: na całym $L$ działa jeden i ten sam ruch $T$. Rozkład ma więc dwie części, mimo że jedna z nich jest sumą nieskończenie wielu zbiorów.
+\end{uwaga}
+
+\section{Paradoksalny rozkład grupy wolnej}
+\subsection{Podział według pierwszej litery}
+Dla $s\in\mathcal A$ niech $W(s)$ oznacza zbiór niepustych słów zredukowanych zaczynających się literą $s$. Zatem
+\begin{equation}\label{eq:4-1}
+ F_2=\{e\}\sqcup W(a)\sqcup W(\bar a)\sqcup W(b)\sqcup W(\bar b).
+\end{equation}
+Każde słowo niepuste ma dokładnie jedną pierwszą literę, więc zbiory po prawej stronie są parami rozłączne i pokrywają $F_2$.
+\begin{lemat}[Kasowanie pierwszej litery]\label{lem:pierwsza-litera}
+Mamy $aW(\bar a)=F_2\setminus W(a)$ oraz $bW(\bar b)=F_2\setminus W(b)$.
+\end{lemat}
+\begin{proof}
+Sprawdzimy obie inkluzje pierwszej równości. Słowo z $W(\bar a)$ ma postać $\bar au$, gdzie $u$ jest puste albo nie zaczyna się literą $a$; w przeciwnym razie nie byłoby zredukowane. Mnożenie przez $a$ z lewej kasuje parę $a\bar a$ i daje właśnie $u$. Wynik nie należy do $W(a)$.
+
+Odwrotnie, jeśli $u\notin W(a)$, to $u=e$ albo jego pierwsza litera nie jest $a$. Słowo $\bar au$ jest wtedy zredukowane i należy do $W(\bar a)$, a $a(\bar au)=u$. Dotyczy to także $u=e$: jego poprzednikiem jest słowo $\bar a$. Drugą równość dowodzimy tak samo, zastępując $a$ przez $b$.
+\end{proof}
+Już teraz mamy dwa równania $F_2=W(a)\sqcup aW(\bar a)$ oraz $F_2=W(b)\sqcup bW(\bar b)$. Nie jest to jeszcze pełny rozkład paradoksalny, ponieważ cztery źródłowe zbiory $W(s)$ nie zawierają $e$. Nie wolno zgubić tego jednego elementu.
+
+\subsection{Włączenie słowa pustego bez dodatkowej kopii}
+Połóżmy $P=\{a^n:n=0,1,2,\ldots\}$, gdzie $a^0=e$. Zauważmy dokładnie, że
+\begin{equation}\label{eq:4-2}
+ aP=P\setminus\{e\}=P\cap W(a).
+\end{equation}
+Pierwsza równość wynika z $a\cdot a^n=a^{n+1}$ i z tego, że potęgi $a^0,a^1,\ldots$ są parami różne. Druga mówi, że spośród tych potęg tylko $a^0$ nie zaczyna się literą $a$.
+\begin{twierdzenie}[Cztery kawałki grupy]\label{tw:cztery-kawalki}
+Zbiory
+\begin{equation}\label{eq:4-3}
+ A_1=W(a)\setminus P,\quad A_2=W(\bar a)\cup P,
+ \qquad B_1=W(b),\quad B_2=W(\bar b)
+\end{equation}
+tworzą podział $F_2$ i spełniają
+\begin{equation}\label{eq:4-4}
+ F_2=A_1\sqcup aA_2,\qquad F_2=B_1\sqcup bB_2.
+\end{equation}
+W szczególności $F_2$ jest zbiorem paradoksalnym względem działania na sobie przez mnożenie z lewej.
+\end{twierdzenie}
+\begin{proof}
+\emph{Podział zbioru źródłowego.} W podziale \eqref{eq:4-1} wydzielamy dodatnie potęgi $a$ ze zbioru $W(a)$ i razem z $e$ dołączamy je do $W(\bar a)$, tworząc $A_2=W(\bar a)\cup P$. Pozostała część $W(a)$ to $A_1$. Nic nie zmieniamy w $W(b)$ i $W(\bar b)$. Zbiory pozostają rozłączne, a teraz pokrywają także $e$.
+
+\emph{Pierwsza kopia.} Korzystając z lematu~\ref{lem:pierwsza-litera} i \eqref{eq:4-2}, otrzymujemy $aA_2=aW(\bar a)\sqcup aP=(F_2\setminus W(a))\sqcup(P\setminus\{e\})$. Pierwszy składnik nie zawiera słów zaczynających się od $a$, a drugi składa się właśnie z dodatnich potęg $a$. Ich suma jest rozłączna. Zbiór $A_1=W(a)\setminus P$ jest rozłączny z obydwoma składnikami i uzupełnia je do całego $F_2$.
+
+\emph{Druga kopia.} Lemat~\ref{lem:pierwsza-litera} od razu daje $B_1\sqcup bB_2=W(b)\sqcup(F_2\setminus W(b))=F_2$. W obu kopiach sprawdziliśmy zarówno pokrycie, jak i rozłączność.
+\end{proof}
+\begin{center}
+\begin{tabular}{c|c|c}
+ kawałek źródłowy&ruch&etykieta celu\\\hline
+ $A_1$&$e$&$1$\\ $A_2$&$a$&$1$\\ $B_1$&$e$&$2$\\ $B_2$&$b$&$2$
+\end{tabular}
+\end{center}
+\begin{przyklad}[Sprawdzenie kilku punktów]
+$e,a,a^2$ należą do $A_2$ i po ruchu $a$ trafiają odpowiednio do $a,a^2,a^3$ w pierwszej kopii. Element $\bar a\in A_2$ trafia do $e$ w pierwszej kopii. Słowo $ab\in A_1$ pozostaje $ab$ w tej samej kopii. Element $\bar b\in B_2$ trafia do $e$ w drugiej kopii. Dwie kopie $e$ w zbiorze docelowym mają różnych poprzedników i różne etykiety.
+\end{przyklad}
+
+\section{Dwa konkretne obroty generujące grupę wolną}
+\subsection{Grupa obrotów i punkty stałe jej elementów}\label{subsec:so3}
+\begin{definicja}
+Macierz $Q\in M_3(\mathbb R)$ jest ortogonalna, jeżeli $Q^TQ=I$. Definiujemy $\mathrm{SO}(3)=\{Q\in M_3(\mathbb R):Q^TQ=I,\ \det Q=1\}$. Macierze te zachowują długości i orientację. Działają na $\mathbb R^3$ przez $x\mapsto Qx$ oraz, przez ograniczenie, na $S^2$.
+\end{definicja}
+Rzeczywiście $\|Qx\|^2=x^TQ^TQx=\|x\|^2$. Iloczyn dwóch takich macierzy i odwrotność $Q^{-1}=Q^T$ również spełniają warunki definicji. Mamy więc grupę.
+\begin{lemat}[Oś nietrywialnego obrotu]\label{lem:os-obrotu}
+Jeśli $Q\in\mathrm{SO}(3)$ i $Q\ne I$, to zbiór wektorów ustalanych przez $Q$ jest prostą przez $0$. W szczególności $Q$ ma dokładnie dwa punkty stałe na $S^2$.
+\end{lemat}
+\begin{proof}
+Najpierw wykażemy istnienie niezerowego wektora stałego. Mamy
+\[
+ \det(Q-I)=\det Q\det(I-Q^{-1})=\det(I-Q^T)
+ =\det(I-Q)=-\det(Q-I).
+\]
+Ostatni znak minus wynika z nieparzystego wymiaru $3$. Zatem $\det(Q-I)=0$, więc układ $(Q-I)x=0$ ma rozwiązanie $x\ne0$.
+
+Gdyby $Q$ ustalało dwa liniowo niezależne wektory, ustalałoby całą rozpiętą przez nie płaszczyznę. Wybierzmy w niej ortonormalną bazę $u,v$ i jednostkowy wektor $w$ prostopadły do tej płaszczyzny. Ortogonalność implikuje $Qw\perp u,v$ i $\|Qw\|=1$, zatem $Qw=\pm w$. W bazie $u,v,w$ wyznacznik wynosi odpowiednio $1$ albo $-1$. Warunek $\det Q=1$ wymusza $Qw=w$, a wtedy $Q=I$. To sprzeczność. Przestrzeń punktów stałych ma więc wymiar dokładnie jeden. Prosta przez $0$ przecina sferę w dwóch punktach antypodycznych.
+\end{proof}
+\subsection{Wybór generatorów}
+Rozważmy
+\begin{equation}\label{eq:5-1}
+ A=\frac13\begin{pmatrix}3&0&0\\0&1&-2\sqrt2\\0&2\sqrt2&1\end{pmatrix},\qquad
+ B=\frac13\begin{pmatrix}1&-2\sqrt2&0\\2\sqrt2&1&0\\0&0&3\end{pmatrix}.
+\end{equation}
+W obu macierzach blok $2\times2$ ma postać $\begin{psmallmatrix}c&-s\\s&c\end{psmallmatrix}$, gdzie $c=1/3$, $s=2\sqrt2/3$ i $c^2+s^2=1$. Jego kolumny są ortonormalne i wyznacznik wynosi $1$. Wobec tego $A,B\in\mathrm{SO}(3)$. Macierz $A$ obraca wokół osi $x$, a $B$ wokół osi $z$, o kąt o cosinusie $1/3$.
+
+Z własności uniwersalnej istnieje homomorfizm $\rho:F_2\to\mathrm{SO}(3)$, $\rho(a)=A$, $\rho(b)=B$. Musimy udowodnić, że jest \emph{różnowartościowy}. To znacznie mocniejsze niż $AB\ne BA$.
+
+\subsection{Rachunek modulo 3 i usunięcie pierwiastków}
+Dla liczb całkowitych $m\equiv n\pmod3$ oznacza, że $m-n$ jest podzielne przez $3$. Występują tylko trzy reszty, które wygodnie zapisujemy jako $0,1,-1$. Mamy $2\equiv-1$. Redukcja modulo $3$ zachowuje sumy i iloczyny. Dotyczy to również iloczynów macierzy całkowitych, ponieważ ich wpisy powstają przez sumowanie iloczynów wpisów. Reszty tworzą ciało $\mathbb F_3$; potrzebujemy jedynie tego, że iloczyn dowolnej liczby czynników $1$ i $-1$ nie jest zerem. Nie będziemy dzielić przez $3$ po redukcji modulo $3$.
+
+Dla litery $s\in\{a,\bar a,b,\bar b\}$ oznaczmy przez $R_s$ odpowiednio $A,A^{-1},B,B^{-1}$. Macierze $3R_s$ mają wpisy z pierwiastkiem $\sqrt2$. Aby dostać macierze całkowite, wprowadzamy pomocniczo $D_0=\operatorname{diag}(1,\sqrt2,1)$ oraz $N_s=3D_0^{-1}R_sD_0$. Bezpośrednie mnożenie daje
+\begin{equation}\label{eq:5-2}
+ N_a=\begin{pmatrix}3&0&0\\0&1&-2\\0&4&1\end{pmatrix},\qquad
+ N_{\bar a}=\begin{pmatrix}3&0&0\\0&1&2\\0&-4&1\end{pmatrix},
+\end{equation}
+\begin{equation}\label{eq:5-3}
+ N_b=\begin{pmatrix}1&-4&0\\2&1&0\\0&0&3\end{pmatrix},\qquad
+ N_{\bar b}=\begin{pmatrix}1&4&0\\-2&1&0\\0&0&3\end{pmatrix}.
+\end{equation}
+Na przykład wpis $(2,3)$ w $D_0^{-1}(3A)D_0$ wynosi $(1/\sqrt2)(-2\sqrt2)\cdot1=-2$, a wpis $(3,2)$ wynosi $1\cdot2\sqrt2\cdot\sqrt2=4$. Macierze odwrotnych obrotów otrzymujemy z $A^{-1}=A^T$, $B^{-1}=B^T$, co wyjaśnia zmianę znaków.
+\begin{uwaga}[Rola pomocniczej zmiany bazy]
+Macierz $D_0$ nie jest obrotem i służy wyłącznie do obliczeń. Sprawdzamy za jej pomocą relacje między obrotami $A,B$. W konstrukcji kawałki sfery i kuli przemieszczamy jedynie obrotami i przesunięciami.
+\end{uwaga}
+
+\subsection{Cztery wektory i jedna tabela}
+W rachunku modulo $3$ przyjmijmy wektory kolumnowe
+\[
+ w_a=\begin{pmatrix}0\\1\\1\end{pmatrix},\quad
+ w_{\bar a}=\begin{pmatrix}0\\1\\-1\end{pmatrix},\quad
+ w_b=\begin{pmatrix}1\\-1\\0\end{pmatrix},\quad
+ w_{\bar b}=\begin{pmatrix}1\\1\\0\end{pmatrix}.
+\]
+Iloczyn $uv^T$ oznacza macierz, której wpis $(i,j)$ to $u_iv_j$. Z \eqref{eq:5-2}--\eqref{eq:5-3} otrzymujemy
+\begin{equation}\label{eq:5-4}
+ \overline{N_s}=w_sw_s^T,
+\end{equation}
+gdzie kreska oznacza redukcję wszystkich wpisów modulo $3$. Na przykład $\overline{N_a}=\begin{psmallmatrix}0&0&0\\0&1&1\\0&1&1\end{psmallmatrix}=w_aw_a^T$ i $\overline{N_b}=\begin{psmallmatrix}1&-1&0\\-1&1&0\\0&0&0\end{psmallmatrix}=w_bw_b^T$. Pozostałe dwie równości sprawdzamy identycznie.
+
+Tabela iloczynów skalarnych $w_s^Tw_t$, już modulo $3$, ma postać
+\begin{equation}\label{eq:5-5}
+\begin{array}{c|rrrr}
+ s\backslash t&a&\bar a&b&\bar b\\\hline
+ a&-1&0&-1&1\\
+ \bar a&0&-1&-1&1\\
+ b&-1&-1&-1&0\\
+ \bar b&1&1&0&-1
+\end{array}
+\end{equation}
+Na przekątnej jest $1+1=2\equiv-1$. Dla pary $a,\bar a$ mamy $1-1=0$, a dla $b,\bar b$ także $1-1=0$. Przy dwóch różnych osiach tylko jedna współrzędna daje niezerowy wkład, równy $1$ albo $-1$. Otrzymujemy ważną równoważność:
+\begin{equation}\label{eq:5-6}
+ w_s^Tw_t=0\quad\Longleftrightarrow\quad t=s^{-1} \qquad(\text{w }\mathbb F_3).
+\end{equation}
+\begin{lemat}[Iloczyn pomocniczych macierzy słowa zredukowanego]\label{lem:liczniki}
+Jeżeli $s_1\cdots s_n$ jest niepustym słowem zredukowanym, to $\overline{N_{s_1}\cdots N_{s_n}}$ nie jest macierzą zerową.
+\end{lemat}
+\begin{proof}
+Dla wektorów $u,v,x,y$ zachodzi $(uv^T)(xy^T)=u(v^Tx)y^T$. Wpis $(i,j)$ po lewej stronie jest równy $\sum_k u_iv_kx_ky_j=u_i(\sum_kv_kx_k)y_j$, co dowodzi wzoru bez żadnej dodatkowej teorii. Stosując go kolejno do \eqref{eq:5-4}, dostajemy
+\begin{equation}\label{eq:5-7}
+ \overline{N_{s_1}\cdots N_{s_n}}=
+ \left(\prod_{j=1}^{n-1}w_{s_j}^Tw_{s_{j+1}}\right)w_{s_1}w_{s_n}^T.
+\end{equation}
+Dla $n=1$ iloczyn skalarnych czynników jest pusty i z definicji równy $1$. Ponieważ słowo jest zredukowane, $s_{j+1}\ne s_j^{-1}$. Według \eqref{eq:5-6} każdy czynnik skalarny jest $1$ albo $-1$, więc ich iloczyn również jest niezerowy. Każdy z wektorów $w_s$ ma pewną współrzędną równą $1$. Macierz $w_{s_1}w_{s_n}^T$ ma zatem co najmniej jeden wpis równy $1$. Pomnożenie przez niezerowy skalar nie może wyzerować tego wpisu.
+\end{proof}
+\begin{twierdzenie}[Wolna podgrupa obrotów]\label{tw:wolne-obroty}
+Homomorfizm $\rho:F_2\to\mathrm{SO}(3)$ określony przez $\rho(a)=A$, $\rho(b)=B$ jest różnowartościowy.
+\end{twierdzenie}
+\begin{proof}
+Niech $w=s_1\cdots s_n$ będzie niepustym słowem zredukowanym. Z definicji $N_s$ i kolejnych skróceń $D_0D_0^{-1}$ wynika $N_{s_1}\cdots N_{s_n}=3^nD_0^{-1}\rho(w)D_0$. Gdyby $\rho(w)=I$, prawa strona byłaby równa $3^nI$. Ponieważ $n\ge1$, jej redukcja modulo $3$ byłaby zerowa, wbrew lematowi~\ref{lem:liczniki}. Zatem żadne niepuste słowo zredukowane nie przechodzi na $I$.
+
+Jeśli $\rho(u)=\rho(v)$, to $\rho(v^{-1}u)=I$. Jedynym elementem mającym taki obraz jest $e$, więc $v^{-1}u=e$ i $u=v$. To dokładnie różnowartościowość.
+\end{proof}
+\begin{uwaga}[Czego rachunek modulo 3 nie dowodzi]
+Nie zanurzyliśmy nieskończonej grupy w skończonej grupie macierzy modulo $3$. Macierze $\overline{N_s}$ są osobliwe. Ponadto $N_sN_{s^{-1}}=9I$, a nie $I$. Badaliśmy podzielność wpisów liczników iloczynu obrotów, a nie homomorfizm grupy obrotów uzyskany przez redukcję ułamka $1/3$.
+\end{uwaga}
+
+\section{Od grupy do sfery bez punktów wyjątkowych}
+Od tej chwili oznaczamy przez $G=\rho(F_2)\le\mathrm{SO}(3)$ wolną podgrupę z twierdzenia~\ref{tw:wolne-obroty}. Dzięki różnowartościowości możemy utożsamiać elementy $G$ z ich jedynymi słowami zredukowanymi. Litery $a,b$ w działaniu na sferze oznaczają obroty $A,B$.
+
+\subsection{Orbity, stabilizatory i działanie swobodne}
+\begin{definicja}
+Orbita punktu $x$ to $\operatorname{Orb}(x)=Gx=\{gx:g\in G\}$. Stabilizator punktu to $\operatorname{Stab}(x)=\{g\in G:gx=x\}$. Działanie jest \emph{swobodne}, jeśli $\operatorname{Stab}(x)=\{e\}$ dla każdego punktu rozważanego zbioru.
+\end{definicja}
+Relacja „należą do tej samej orbity” jest równoważnością: $x=ex$, równanie $y=gx$ daje $x=g^{-1}y$, a z $y=gx$ i $z=hy$ mamy $z=(hg)x$. Orbity są więc parami rozłączne i pokrywają zbiór, na którym działa $G$.
+\begin{uwaga}[Grupa wolna a działanie swobodne]
+Wolna grupa nie musi działać swobodnie! Nasza grupa $G$ jest wolna, ale obrót $A$ ustala dwa punkty osi $x$ na sferze. Aby punkt sfery miał jednoznaczny opis przez słowo i reprezentanta orbity, trzeba usunąć wszystkie punkty ustalane przez element $G$ różny od identyczności.
+\end{uwaga}
+
+\subsection{Przeliczalny zbiór wyjątkowy}
+Definiujemy
+\begin{equation}\label{eq:6-1}
+ D=\bigcup_{g\in G\setminus\{e\}}\operatorname{Fix}_{S^2}(g),\qquad X=S^2\setminus D,
+\end{equation}
+gdzie $\operatorname{Fix}_{S^2}(g)=\{x\in S^2:gx=x\}$.
+\begin{lemat}\label{lem:wyjatkowy}
+Zbiór $D$ jest co najwyżej przeliczalny i niezmienniczy względem $G$. Zbiór $X$ jest niezmienniczy, a działanie $G$ na $X$ jest swobodne.
+\end{lemat}
+\begin{proof}
+Grupa $G$ jest przeliczalna na mocy stwierdzenia~\ref{st:przeliczalnosc-f2} i monomorfizmu $\rho$. Każdy $g\ne e$ jest nietrywialnym obrotem i ma dokładnie dwa punkty stałe na sferze, zgodnie z lematem~\ref{lem:os-obrotu}. Przeliczalna suma zbiorów dwuelementowych jest co najwyżej przeliczalna: wyliczamy elementy grupy i dla każdego wypisujemy oba punkty osi. Można najpierw wypisać punkt, którego pierwsza niezerowa współrzędna jest dodatnia, więc ten porządek nie wymaga nowych arbitralnych wyborów.
+
+Jeśli $gx=x$, to dla dowolnego $h\in G$ mamy $(hgh^{-1})(hx)=hx$. Sprzężony element $hgh^{-1}$ nie jest neutralny, gdyż równość $hgh^{-1}=e$ implikowałaby $g=e$. Zatem $hD\subseteq D$. Stosując to samo do $h^{-1}$, dostajemy $D\subseteq hD$, więc $hD=D$. Ponieważ $h$ jest bijekcją sfery, także $hX=X$.
+
+Wreszcie, jeśli $x\in X$ i $gx=x$, to $g\ne e$ oznaczałoby $x\in D$, sprzecznie z definicją $X$. Stabilizator każdego punktu $X$ jest więc trywialny.
+\end{proof}
+
+\subsection{Wybór reprezentantów: dokładne miejsce aksjomatu wyboru}
+\begin{definicja}[Aksjomat wyboru w potrzebnej postaci]
+Dla każdej rodziny niepustych zbiorów istnieje funkcja, która każdemu zbiorowi z tej rodziny przyporządkowuje jeden z jego elementów.
+\end{definicja}
+Zastosujmy ten aksjomat do rodziny wszystkich orbit działania $G$ na $X$. Wybieramy zbiór $T\subseteq X$ zawierający dokładnie po jednym punkcie z każdej orbity. To jest zasadniczy niekonstruktywny wybór w dowodzie. Nie podajemy algorytmu wyznaczającego $T$.
+\begin{lemat}[Jednoznaczne współrzędne orbitowe]\label{lem:wspolrzedne-orbitowe}
+Każdy punkt $x\in X$ ma dokładnie jedno przedstawienie $x=gt$, gdzie $g\in G$ i $t\in T$.
+\end{lemat}
+\begin{proof}
+Istnienie wynika z wyboru reprezentanta orbity $x$. Jeśli $gt=hu$, to $t$ i $u$ należą do tej samej orbity, bo $t=g^{-1}hu$. Z wyboru jednego reprezentanta wynika $t=u$. Równość $gt=ht$ daje $(h^{-1}g)t=t$. Swoboda działania wymusza $h^{-1}g=e$, czyli $g=h$.
+\end{proof}
+\begin{uwaga}
+To, że każda orbita jest przeliczalna, nie daje automatycznie przepisu wyboru jednego punktu z każdej orbity. W tym przypadku orbit jest nieprzeliczalnie wiele: zbiór $X$ jest nieprzeliczalny (usuwamy ze sfery zbiór przeliczalny), a suma przeliczalnie wielu przeliczalnych orbit byłaby przeliczalna. Aksjomat wyboru nie jest tu skrótem dla wyliczenia wszystkich punktów sfery.
+\end{uwaga}
+
+\subsection{Cztery kawałki na wszystkich orbitach jednocześnie}
+Dla $C\subseteq G$ definiujemy $C^T=\{gt:g\in C,\ t\in T\}\subseteq X$. Z jednoznaczności w lemacie~\ref{lem:wspolrzedne-orbitowe} wynika, że rozłączne podzbiory $G$ dają rozłączne zbiory $C^T$. Ponadto
+\begin{equation}\label{eq:6-2}
+ h(C^T)=(hC)^T\qquad(h\in G),
+\end{equation}
+ponieważ $h(gt)=(hg)t$. Na wszystkich orbitach działa ten sam obrót $h$, niezależny od wybranego reprezentanta.
+\begin{twierdzenie}[Paradoksalność $X$]\label{tw:paradoksalnosc-x}
+Zbiór $X=S^2\setminus D$ jest paradoksalny pod działaniem obrotów. Wystarczają cztery części.
+\end{twierdzenie}
+\begin{proof}
+Przenosimy zbiory z \eqref{eq:4-3} na orbity: $C_1=A_1^T$, $C_2=A_2^T$, $C_3=B_1^T$, $C_4=B_2^T$. Tworzą podział $X$, ponieważ odpowiadające im zbiory grupowe tworzą podział $G$, a każdy punkt ma jednoznaczne współrzędne $gt$. Z \eqref{eq:4-4} i \eqref{eq:6-2} otrzymujemy $X=C_1\sqcup aC_2$ oraz $X=C_3\sqcup bC_4$. To rozkład $X\mathrel{\equiv_G}2X$. Ruchy to $h_1=I$, $h_2=A$, $h_3=I$, $h_4=B$, a etykiety docelowe to odpowiednio $1,1,2,2$.
+\end{proof}
+Nie mnożymy liczby kawałków przez liczbę orbit: $C_1$ jest jednym zbiorem zawierającym stosowne punkty wszystkich orbit, i tak samo dla $C_2,C_3,C_4$.
+
+\section{Przywrócenie wszystkich punktów sfery}
+Pozostało uzasadnić $S^2\equiv X$. Nie wystarcza zdanie „zbiór przeliczalny jest mały”. Potrzebujemy skończonego rozkładu i obrotów przypisanych jego częściom.
+
+\subsection{Wybór kąta poza zbiorem przeliczalnym}
+\begin{lemat}\label{lem:nieprzeliczalnosc}
+Żaden niepusty otwarty przedział liczb rzeczywistych nie jest przeliczalny. W szczególności można w nim wybrać liczbę poza dowolnym podanym zbiorem co najwyżej przeliczalnym.
+\end{lemat}
+\begin{proof}
+Niech $x_1,x_2,\ldots$ będzie dowolną listą punktów przedziału. Wybierzmy w nim niejednopunktowy przedział domknięty $I_0$. Indukcyjnie wybieramy niejednopunktowy przedział domknięty $I_n\subset I_{n-1}$ o długości co najwyżej połowy poprzedniej, taki że $x_n\notin I_n$. Możemy go umieścić po jednej stronie $x_n$; jeśli $x_n$ nie należy do $I_{n-1}$, dowolny mniejszy podprzedział wystarczy.
+
+Przedziały są zstępujące, domknięte i ich długości dążą do zera. Z zupełności liczb rzeczywistych ich przecięcie zawiera dokładnie jeden punkt $x$: jest nim wspólna granica lewych i prawych końców. Dla każdego $n$ mamy $x\in I_n$, więc $x\ne x_n$. Lista nie obejmowała całego przedziału.
+\end{proof}
+Sfera też jest nieprzeliczalna: zawiera półokrąg parametryzowany różnowartościowo przez $\theta\mapsto(\cos\theta,\sin\theta,0)$ dla $0<\theta<\pi$. Przeliczalność zbioru trójek indeksów naturalnych wynika z wyliczania ich według sumy indeksów; dla każdej sumy jest tylko skończenie wiele trójek. Dlatego suma przeliczalnej rodziny skończonych zbiorów wykluczonych kątów jest przeliczalna.
+
+\subsection{Obrót rozdzielający przeliczalny zbiór}
+\begin{lemat}\label{lem:obrot-rozdzielajacy}
+Dla dowolnego co najwyżej przeliczalnego $D\subseteq S^2$ istnieje obrót $R\in\mathrm{SO}(3)$, dla którego zbiory $D,RD,R^2D,\ldots$ są parami rozłączne.
+\end{lemat}
+\begin{proof}
+Jeśli $D=\varnothing$, teza jest oczywista. Niech $D\ne\varnothing$. Wybieramy punkt $u\in S^2$ poza $D\cup(-D)$, co jest możliwe, bo ten ostatni zbiór jest przeliczalny. Żaden punkt $D$ nie leży na osi $\mathbb R u$.
+
+Niech $R_u(\theta)$ oznacza obrót wokół tej osi o kąt $\theta$. Można go zdefiniować, wybierając ortonormalną bazę $u,v,w$ o dodatniej orientacji i przyjmując
+\[
+ R_u(\theta)(\alpha u+\beta v+\gamma w)=\alpha u+
+ (\beta\cos\theta-\gamma\sin\theta)v+
+ (\beta\sin\theta+\gamma\cos\theta)w.
+\]
+Ze wzorów dodawania kątów wynika $R_u(\theta)^n=R_u(n\theta)$.
+
+Ustalmy $d,e\in D$ i $n\ge1$. Ponieważ $d$ nie leży na osi, jego składowa w płaszczyźnie $u^\perp$ jest niezerowa. Obracając tę składową wokół osi, otrzymujemy okrąg; każde położenie na nim wyznacza kąt jednoznacznie modulo $2\pi$. Zatem albo nie istnieje obrót wokół tej osi przenoszący $d$ na $e$, albo istnieje dokładnie jedna klasa kątów $\alpha$ modulo $2\pi$ o tej własności.
+
+Równanie $R_u(n\theta)d=e$ sprowadza się w drugim przypadku do $n\theta\equiv\alpha\pmod{2\pi}$. W przedziale $0<\theta<2\pi$ ma najwyżej $n$ rozwiązań. Dla każdej trójki $(d,e,n)$ wykluczamy więc skończenie wiele kątów. Trójek jest co najwyżej przeliczalnie wiele. Na mocy lematu~\ref{lem:nieprzeliczalnosc} możemy wybrać $\theta$ poza sumą wszystkich zbiorów wykluczonych kątów.
+
+Dla $R=R_u(\theta)$ mamy teraz
+\begin{equation}\label{eq:7-1}
+ R^nD\cap D=\varnothing\qquad(n\ge1).
+\end{equation}
+Jeśli dla $0\le i<j$ istniałby punkt w $R^iD\cap R^jD$, to jego obraz przez $R^{-i}$ należałby do $D\cap R^{j-i}D$, wbrew \eqref{eq:7-1}. Dostajemy żądaną rozłączność wszystkich poziomów.
+\end{proof}
+\begin{uwaga}
+Nowy obrót $R$ nie musi należeć do $G$. Ponieważ $D$ jest $G$-niezmienniczy, żaden element $G$ nie mógłby przenieść niepustego $D$ całkowicie poza $D$. Od tego miejsca dla równoważności całej sfery dopuszczamy pełną grupę obrotów $\mathrm{SO}(3)$.
+\end{uwaga}
+\begin{twierdzenie}[Pełna sfera jest paradoksalna]\label{tw:pelna-sfera}
+Sfera $S^2$ jest równoważna przez skończony rozkład dwóm swoim etykietowanym kopiom, przy użyciu samych obrotów wokół $0$. Wystarcza co najwyżej $16$ części.
+\end{twierdzenie}
+\begin{proof}
+Stosujemy lemat~\ref{lem:obrot-rozdzielajacy} do zbioru $D$ z \eqref{eq:6-1}. Niech $L=\bigcup_{n=0}^\infty R^nD$. Wszystkie poziomy leżą na sferze, więc lemat~\ref{lem:lancuch} daje dwuczęściowy rozkład $S^2\equiv X$. Twierdzenie~\ref{tw:paradoksalnosc-x} daje $X\equiv2X$. Przeniesienie paradoksalności z wniosku~\ref{wn:przenoszenie} kończy dowód istnienia rozkładu $S^2\equiv2S^2$.
+
+Poniżej podajemy dokładne części, aby samo odwołanie do przechodniości nie ukrywało konstrukcji ani oszacowania ich liczby. Niech $E_0=L$, $E_1=S^2\setminus L$, $g_0=R$, $g_1=I$. Bijekcja $f:S^2\to X$ ma na $E_i$ postać $g_i$. Zbiory $g_0E_0=L\setminus D$ i $g_1E_1=S^2\setminus L$ tworzą podział $X$.
+
+Oznaczmy przez $C_j,h_j,\ell(j)$ cztery części, ruchy i etykiety z dowodu twierdzenia~\ref{tw:paradoksalnosc-x}. Dla $i,k\in\{0,1\}$ i $j\in\{1,2,3,4\}$ połóżmy
+\begin{equation}\label{eq:7-2}
+ H_{ijk}=\{x\in E_i:g_ix\in C_j,\ h_jg_ix\in g_kE_k\}.
+\end{equation}
+Na tej części działa obrót
+\begin{equation}\label{eq:7-3}
+ q_{ijk}=g_k^{-1}h_jg_i,
+\end{equation}
+z etykietą docelową $\ell(j)$. Dla każdego $x$ indeksy $i,j,k$ są wyznaczone jednoznacznie, w tej kolejności. Zatem części \eqref{eq:7-2} tworzą podział sfery.
+
+Sprawdźmy jeszcze obrazy. Całe odwzorowanie jest złożeniem bijekcji $f$, czteroczęściowej bijekcji $X\to2X$ i odwrotnej bijekcji $f^{-1}$ w każdej kopii. Jest zatem bijekcją $S^2\to2S^2$. Stąd obrazy kawałków są rozłączne wewnątrz każdej etykiety i pokrywają obie sfery. Indeksów jest $2\cdot4\cdot2=16$. Każde $q_{ijk}$ jest złożeniem obrotów, a więc nadal jednym obrotem w $\mathrm{SO}(3)$.
+\end{proof}
+
+\section{Od sfery do pełnej kuli}
+\subsection{Przedłużenie kawałków wzdłuż promieni}
+Niech $B^3_*=B^3\setminus\{0\}$. Dla $H\subseteq S^2$ definiujemy jego stożek promieniowy w kuli bez środka:
+\[
+ \widehat H=\{rx:x\in H,\ 0<r\le1\}.
+\]
+Każdy $y\in B^3_*$ ma dokładnie jedno przedstawienie $y=rx$ z $0<r\le1$, $x\in S^2$: mianowicie $r=\|y\|$, $x=y/\|y\|$. Dlatego podział sfery daje podział $B^3_*$ przez odpowiednie stożki.
+\begin{lemat}[Obroty komutują z przedłużeniem promieniowym]\label{lem:stozki}
+Dla $Q\in\mathrm{SO}(3)$ i $H\subseteq S^2$ mamy $Q\widehat H=\widehat{QH}$.
+\end{lemat}
+\begin{proof}
+Liniowość macierzy daje $Q(rx)=rQx$, a ortogonalność daje $\|Qx\|=1$. To dowodzi jednej inkluzji. Jeśli $ry$ należy do $\widehat{QH}$, to $y=Qx$ dla pewnego $x\in H$, więc $ry=Q(rx)\in Q\widehat H$. Mamy także drugą inkluzję.
+\end{proof}
+\begin{wniosek}\label{wn:kula-bez-srodka}
+$B^3_*\equiv2B^3_*$ za pomocą co najwyżej $16$ kawałków i obrotów.
+\end{wniosek}
+\begin{proof}
+Bierzemy stożki nad częściami $H_{ijk}$ z \eqref{eq:7-2} i stosujemy te same obroty $q_{ijk}$. Jednoznaczność kierunku i promienia zapewnia rozłączność części wyjściowych, a lemat~\ref{lem:stozki} przenosi rozłączność i pokrycie obrazów z każdej sfery na całą kulę bez środka. Nie zmieniamy promienia żadnego punktu podczas tego etapu.
+\end{proof}
+\begin{uwaga}[Dlaczego nie dopisać po prostu środka?]
+Wszystkie obroty wokół $0$ ustalają $0$. Z jednego takiego punktu nie otrzymamy dwóch punktów oznaczonych różnymi etykietami przez dopisanie go do dwóch części --- przestałyby być rozłączne. Środek wymaga osobnego argumentu i ruchu wokół osi nieprzechodzącej przez $0$.
+\end{uwaga}
+
+\subsection{Wchłonięcie środka za pomocą obrotu}
+W płaszczyźnie $z=0$ weźmy okrąg
+\[
+ \Gamma=\{(1/4,0,0)+(1/4)(\cos t,\sin t,0):t\in\mathbb R\}.
+\]
+Ma środek $c=(1/4,0,0)$ i promień $1/4$. Punkt $0$ należy do $\Gamma$ (dla $t=\pi$). Każdy punkt okręgu ma normę nie większą niż $\|c\|+1/4=1/2$, więc cały okrąg leży wewnątrz $B^3$.
+
+Niech $U$ będzie obrotem wokół osi $z$ o kąt $\alpha=2\pi\sqrt2$. Określmy ruch sztywny
+\begin{equation}\label{eq:8-1}
+ T_0(x)=c+U(x-c)=Ux+(c-Uc).
+\end{equation}
+Jest to obrót wokół prostej $c+\mathbb R(0,0,1)$; zachowuje okrąg $\Gamma$.
+\begin{lemat}\label{lem:wchloniecie-srodka}
+Punkty $0,T_0(0),T_0^2(0),\ldots$ są parami różne. W konsekwencji $B^3\equiv B^3_*$ za pomocą dwóch części i ruchów sztywnych zachowujących orientację.
+\end{lemat}
+\begin{proof}
+Gdyby $T_0^m(0)=T_0^n(0)$ dla $m>n$, to $T_0^{m-n}(0)=0$. Punkt $0$ leży na okręgu o dodatnim promieniu, więc wraca na swoje miejsce dokładnie wtedy, gdy kąt obrotu jest całkowitą wielokrotnością $2\pi$. Dostajemy $(m-n)\alpha=2\pi k$, a więc $(m-n)\sqrt2=k$ dla pewnego $k\in\mathbb Z$. To sprzeczność z niewymiernością $\sqrt2$.
+
+Dla kompletności: gdyby $\sqrt2=p/q$ w postaci nieskracalnej, to $p^2=2q^2$, więc $p$ byłoby parzyste. Zapis $p=2r$ dawałby $q^2=2r^2$, więc także $q$ byłoby parzyste, wbrew nieskracalności.
+
+Niech $M=\{T_0^n(0):n\ge0\}$. Wszystkie te punkty leżą na $\Gamma\subset B^3$. Stosujemy lemat~\ref{lem:lancuch} dla $D=\{0\}$, $E=B^3$, $T=T_0$. Częściami są $M$ i $B^3\setminus M$, a ruchami $T_0$ i identyczność. Ich obrazy to $M\setminus\{0\}$ oraz $B^3\setminus M$, czyli podział $B^3_*$.
+\end{proof}
+\begin{uwaga}
+Nie twierdzimy, że $T_0(B^3)=B^3$. Nie jest to potrzebne. Obracamy wyłącznie kawałek $M$, który leży na zachowywanym okręgu. Reszta kuli nie jest poruszana. Dowolny ruch nie musi zachowywać całej kuli, tylko poprawnie przenosić przypisany mu kawałek.
+\end{uwaga}
+
+\subsection{Złożenie wszystkich etapów}
+\begin{proof}[Dowód twierdzenia~\ref{tw:banach-tarski}]
+W tej części wszystkie równoważności rozumiemy względem grupy ruchów $x\mapsto Qx+v$, gdzie $Q\in\mathrm{SO}(3)$ i $v\in\mathbb R^3$. Zawiera ona obroty wokół $0$, więc lemat~\ref{lem:wchloniecie-srodka} i wniosek~\ref{wn:kula-bez-srodka} dają $B^3\equiv B^3_*\equiv2B^3_*\equiv2B^3$. Przechodniość została udowodniona przez jawne rozdrobnienie części w lemacie~\ref{lem:skladanie}. Nie używamy więc żadnego nieskończonego składania ruchów.
+
+Podajmy również bezpośredni wzór na końcowe części. Zanumerujmy niepuste części rozkładu sfery jako $H_v$, ich obroty jako $q_v$, a etykiety jako $\ell(v)\in\{1,2\}$, gdzie $v$ przebiega zbiór najwyżej $16$ indeksów. Niech $\widehat H_v$ oznacza ich stożki promieniowe. Przyjmijmy $J_0=M$, $J_1=B^3\setminus M$, $t_0=T_0$, $t_1=\mathrm{id}$. Bijekcja $k:B^3\to B^3_*$ działa na $J_s$ jako $t_s$. Zbiory $t_0J_0$ i $t_1J_1$ tworzą podział $B^3_*$.
+
+Dla $s,t\in\{0,1\}$ i indeksu $v$ definiujemy
+\begin{equation}\label{eq:8-2}
+ P_{svt}=\{x\in J_s:t_sx\in\widehat H_v,\quad q_vt_sx\in t_tJ_t\}.
+\end{equation}
+Na tym zbiorze złożenie bijekcji $k$, bijekcji wyznaczonej przez paradoksalny rozkład $B^3_*$ i odwrotnej bijekcji $k^{-1}$ ma postać jednego ruchu
+\begin{equation}\label{eq:8-3}
+ x\longmapsto t_t^{-1}q_vt_sx,
+\end{equation}
+z etykietą $\ell(v)$. Dla każdego $x\in B^3$ istnieje jedyne $s$ z $x\in J_s$, jedyne $v$ z $t_sx\in\widehat H_v$ i jedyne $t$ określające, w której części $t_tJ_t$ leży $q_vt_sx$. To dowodzi, że \eqref{eq:8-2} jest podziałem całej $B^3$.
+
+Ponieważ każdy etap jest bijekcją między odpowiednimi zbiorami etykietowanymi, obrazy pod ruchami \eqref{eq:8-3} tworzą podział dwóch formalnych kul. Liczba części jest nie większa niż $2\cdot16\cdot2=64$. Nie ma dodatkowego czynnika $2$ za etykiety: każdy indeks $v$ ma już jedną, określoną etykietę docelową.
+
+Teraz umieszczamy te kopie w przestrzeni. Dla etykiety $1$ dodajemy $v_1=(-3,0,0)$, a dla etykiety $2$ dodajemy $v_2=(3,0,0)$. Ostateczny ruch dla części $P_{svt}$ to $f_{svt}(x)=t_t^{-1}q_vt_sx+v_{\ell(v)}$. Każde $t_s$ jest ruchem $x\mapsto Qx+v$ z $Q\in\mathrm{SO}(3)$, a każde $q_v$ obrotem. Odwrotności i złożenia takich ruchów znów mają tę postać: jeśli $f(x)=Qx+v$, $g(x)=Rx+w$, to $g(f(x))=RQx+(Rv+w)$ oraz $f^{-1}(x)=Q^{-1}x-Q^{-1}v$.
+
+Zatem wszystkie $f_{svt}$ są dozwolonymi ruchami sztywnymi. Ich obrazy wypełniają dokładnie dwie wskazane kule i są parami rozłączne: wewnątrz każdej kuli wynika to z bijekcji, a między kulami z ich rozłącznego położenia. To kończy dowód.
+\end{proof}
+
+\subsection{Kula o innym środku i promieniu}
+\begin{wniosek}\label{wn:dowolna-kula}
+Każdą kulę domkniętą o promieniu $r>0$ można podzielić na skończenie wiele części, a następnie za pomocą ruchów sztywnych zachowujących orientację złożyć z nich dwie rozłączne kule tego samego promienia.
+\end{wniosek}
+\begin{proof}
+Dla kuli o środku $c$ użyjmy pomocniczego podobieństwa $S(x)=c+rx$ do zdefiniowania części $S(P_i)$ z dowodu dla kuli jednostkowej. Jeśli ruch jednostkowy miał postać $f_i(x)=Q_ix+v_i$, to $Sf_iS^{-1}(y)=Q_iy+(c-Q_ic+rv_i)$. To nadal izometria: liniowa część wynosi $Q_i$, nie $rQ_i$. Podobieństwo służy tylko przeniesieniu opisu konstrukcji; rzeczywiste kawałki nowej kuli poruszamy powyższymi izometriami, bez skalowania.
+\end{proof}
+
+\section{Dlaczego nie przeczy to objętości?}
+\subsection{Miara jest określona tylko na pewnych zbiorach}
+Miara Lebesgue'a w $\mathbb R^3$ przypisuje zbiorom mierzalnym objętość $\lambda_3(E)\in[0,\infty]$. Do poniższego argumentu potrzebne są tylko jej standardowe własności:
+\begin{itemize}
+\item kule są mierzalne i $0<\lambda_3(B^3)<\infty$;
+\item izometrie zachowują mierzalność i objętość;
+\item skończona suma rozłącznych zbiorów mierzalnych ma objętość równą sumie ich objętości.
+\end{itemize}
+W standardowej normalizacji $\lambda_3(B^3)=4\pi/3$, ale konkretna liczba nie jest istotna. Twierdzenie o istnieniu i własnościach miary Lebesgue'a jest tu wyłącznie tłem interpretacyjnym; główny dowód w poprzednich sekcjach nie korzystał z teorii miary.
+\begin{stwierdzenie}[Co najmniej jeden kawałek jest niemierzalny]\label{st:niemierzalnosc}
+W rozkładzie z twierdzenia~\ref{tw:banach-tarski} co najmniej jeden kawałek jest niemierzalny w sensie Lebesgue'a.
+\end{stwierdzenie}
+\begin{proof}
+Załóżmy przeciwnie, że wszystkie $P_i$ są mierzalne. Ponieważ tworzą podział $B^3$, mamy $\lambda_3(B^3)=\sum_{i=1}^{N}\lambda_3(P_i)$. Obrazy $f_i(P_i)$ też są mierzalne, mają te same objętości i tworzą podział dwóch rozłącznych kul przystających do $B^3$. Zatem
+\[
+ 2\lambda_3(B^3)=\sum_{i=1}^{N}\lambda_3(f_i(P_i))=
+ \sum_{i=1}^{N}\lambda_3(P_i)=\lambda_3(B^3).
+\]
+Jest to niemożliwe dla dodatniej skończonej liczby $\lambda_3(B^3)$. Sprzeczne było założenie o mierzalności wszystkich części, a nie twierdzenie Banacha--Tarskiego.
+\end{proof}
+\begin{uwaga}
+Sformułowanie „objętość wzrosła dwukrotnie podczas obracania kawałków” jest mylące. Co najmniej jednemu kawałkowi nie można przypisać objętości Lebesgue'a, więc nie można zsumować objętości wszystkich części. Nie mamy prawa zastosować addytywności miary do dowolnych podzbiorów tylko dlatego, że ich suma jest kulą.
+\end{uwaga}
+
+\subsection{Co jest, a co nie jest konstruktywne?}
+Generatory obrotów są podane jawnymi macierzami. Cztery zbiory słów są zdefiniowane jawnie. Wzory na składanie kawałków też są jawne. Jednak zbiór reprezentantów $T$ został wybrany aksjomatem wyboru. Nie otrzymaliśmy algorytmu, który dla dowolnego punktu kuli rozstrzyga, do którego kawałka należy.
+
+Nie twierdzimy też, że twierdzenie Banacha--Tarskiego jest równoważne pełnemu aksjomatowi wyboru ani że każdy fragment użytego wyboru jest logicznie niezbędny. Wykazaliśmy konkretnie: w ZFC istnieją zbiory i ruchy o opisanych własnościach. Taka jest treść tego dowodu.
+
+Kula jako model ciągłego zbioru punktów nie jest fizycznym przedmiotem zbudowanym z atomów. Rozkład nie opisuje procedury możliwej do wykonania nożem ani technologii powielania materii. Kawałki nie muszą mieć wnętrza ani regularnego brzegu.
+
+\section{Kontrola dowodu i najczęstsze pułapki}
+\subsection{Łańcuch zależności}
+Każda strzałka w poniższym schemacie została w tekście uzasadniona:
+\[
+\begin{gathered}
+\text{słowa zredukowane}\xrightarrow{\text{tw. \ref{tw:redukcja}, stw. \ref{st:grupa-slow}}}F_2
+\xrightarrow{\text{tw. \ref{tw:cztery-kawalki}}}2F_2,\\
+F_2\xrightarrow{\text{tw. \ref{tw:wolne-obroty}}}G\le\mathrm{SO}(3)
+\xrightarrow{\text{lem. \ref{lem:wyjatkowy}, wybór }T}X,\\
+X\xrightarrow{\text{tw. \ref{tw:paradoksalnosc-x}}}2X,
+\qquad S^2\xrightarrow{\text{lem. \ref{lem:lancuch}, \ref{lem:obrot-rozdzielajacy}}}X,\\
+S^2\xrightarrow{\text{tw. \ref{tw:pelna-sfera}}}2S^2,\\
+\text{stożki (lem. \ref{lem:stozki}):}\qquad B^3_*\equiv2B^3_*,\\
+B^3\xrightarrow{\text{lem. \ref{lem:wchloniecie-srodka}}}B^3_*
+\equiv2B^3_*\equiv2B^3
+\xrightarrow{\text{przesunięcia}}\text{dwie rozłączne kule w }\mathbb R^3.
+\end{gathered}
+\]
+\subsection{Dziesięć miejsc wymagających szczególnej uwagi}
+\begin{enumerate}
+\item \textbf{Redukcja nie polega na przestawianiu liter.} Usuwamy tylko sąsiadujące odwrotności. Jednoznaczność wyniku została udowodniona, a nie przyjęta intuicyjnie.
+\item \textbf{Słowo puste musi należeć do podziału.} Włącza je zbiór $P$ w konstrukcji \eqref{eq:4-3}.
+\item \textbf{Dwa niekomutujące obroty nie wystarczają.} Rachunek modulo $3$ wyklucza wszystkie niepuste słowa zredukowane.
+\item \textbf{Nie redukujemy ułamka $1/3$ modulo $3$.} Redukujemy całkowite macierze liczników $N_s$.
+\item \textbf{Grupa wolna to nie działanie swobodne.} Po usunięciu punktów ze zbioru $D$ wszystkie pozostałe stabilizatory są równe $\{e\}$.
+\item \textbf{Wybór reprezentantów nie jest automatyczny.} Wskazaliśmy użycie aksjomatu wyboru przed lematem~\ref{lem:wspolrzedne-orbitowe}.
+\item \textbf{Przeliczalne wyjątki nie znikają same.} Wchłania je dwuczęściowy rozkład oparty na obrocie spoza $G$.
+\item \textbf{Kawałek złożony z nieskończenie wielu poziomów to nadal jeden kawałek.} Na całej sumie poziomów $L$ działa jeden obrót $R$.
+\item \textbf{Środek kuli wymaga osobnego ruchu.} Obroty wokół $0$ nigdy go nie przemieszczą; użyliśmy obrotu wokół osi przesuniętej w \eqref{eq:8-1}.
+\item \textbf{Formalne kopie nie są jeszcze dwiema kulami w przestrzeni.} Dopiero końcowe przesunięcia o $v_1,v_2$ realizują etykiety jako rzeczywiste rozłączne położenia.
+\end{enumerate}
+\subsection{Przykłady zastosowania konstrukcji}
+\begin{enumerate}
+\item \textbf{Do której części należy $a^5$?} Należy do $P$, więc do $A_2$, a nie do $A_1$. Po ruchu $a$ daje $a^6$ w pierwszej kopii. Źródłem $e$ w tej kopii jest $\bar a$.
+\item \textbf{Dlaczego z $hgt=hku$ wynika $g=k$ i $t=u$?} Najpierw skracamy działanie $h$, otrzymując $gt=ku$. Punkty $t,u$ reprezentują tę samą orbitę, zatem są równe. Wtedy $(k^{-1}g)t=t$ i swoboda działania daje $k^{-1}g=e$. Bez swobody ostatni wniosek nie byłby uzasadniony.
+\item \textbf{Gdzie w rachunku macierzowym wykrywa się redukcję?} Dokładnie w zerowych wpisach tabeli \eqref{eq:5-5}. Sąsiednia para $ss^{-1}$ daje czynnik $w_s^Tw_{s^{-1}}=0$. Brak takich par gwarantuje, że wszystkie czynniki skalarne w \eqref{eq:5-7} są niezerowe.
+\item \textbf{Dlaczego nie wystarczy policzyć samej liczby punktów?} Sama bijekcja $B^3\to2B^3$ nie musi być realizowana skończonym rozkładem, w którym każdy kawałek przenosimy ruchem sztywnym. W twierdzeniu istotne są jednocześnie: skończona liczba kawałków, rozłączność i ograniczenie do izometrii.
+\item \textbf{Czy możemy powtórzyć podwojenie?} Tak. Po pierwszym podwojeniu stosujemy odpowiednio przesunięty rozkład do każdej kuli osobno. Na każdym etapie wybieramy nowe położenia wszystkich kul docelowych o odległościach między środkami większych niż dwukrotność promienia, dodając odpowiednie przesunięcia do ruchów. Otrzymujemy cztery rozłączne kopie, potem osiem itd. Każda ustalona liczba powtórzeń nadal daje skończony rozkład, bo mnożymy tylko skończone liczby kawałków. Nie twierdzimy, że graniczna procedura z nieskończenie wielu powtórzeń jest skończonym rozkładem w sensie definicji~\ref{def:rownorozklad}.
+\end{enumerate}
+
+\subsection{Uwagi bibliograficzne}
+Przedstawiony tekst jest samodzielnym opracowaniem klasycznego argumentu: grupa wolna, swobodne działanie na części sfery, wchłanianie przeliczalnych wyjątków i przedłużenie promieniowe. Nie zakłada ogólniejszej postaci twierdzenia o równoważności dowolnych ograniczonych zbiorów o niepustym wnętrzu. Udowodniona tutaj wersja to podwojenie kuli domkniętej. Szerszy kontekst i inne warianty rozkładów omawiają:
+\begin{itemize}
+\item Stefan Banach, Alfred Tarski, \emph{Sur la décomposition des ensembles de points en parties respectivement congruentes}, Fundamenta Mathematicae \textbf{6} (1924), 244--277, \href{https://doi.org/10.4064/fm-6-1-244-277}{DOI: 10.4064/fm-6-1-244-277}.
+\item Stan Wagon, \emph{The Banach--Tarski Paradox}, Cambridge University Press, 1985, \href{https://www.cambridge.org/core/books/the-banach-tarski-paradox/EA35091E69D798AE0FAE5A4E8386DD08}{katalog wydawcy}.
+\end{itemize}

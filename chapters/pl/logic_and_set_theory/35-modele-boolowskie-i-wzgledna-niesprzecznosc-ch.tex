@@ -1,0 +1,2405 @@
+\chapter{Modele o wartościach boolowskich i względna niesprzeczność CH}
+\label{ch:boolean-valued-independence}
+\chaptermark{Modele boolowskie i niesprzeczność}
+
+\section{Dlaczego potrzebujemy innej konstrukcji?}
+
+W Rozdziale~\ref{ch:forcing-continuum} wykazaliśmy, że z
+\emph{istnienia przeliczalnego tranzytywnego modelu zbiorowego
+ZFC} wynikają modele spełniające CH oraz modele spełniające
+jej zaprzeczenie. Samo założenie
+$\operatorname{Con}(\mathrm{ZFC})$ nie daje jednak takiego
+modelu tranzytywnego. Poniżej uzasadnimy silniejszy wynik:
+\[
+\begin{aligned}
+\operatorname{Con}(\mathrm{ZFC})
+ &\Longrightarrow \operatorname{Con}(\mathrm{ZFC}+\mathrm{CH}),\\
+\operatorname{Con}(\mathrm{ZFC})
+ &\Longrightarrow \operatorname{Con}(\mathrm{ZFC}+\neg\mathrm{CH}).
+\end{aligned}
+\]
+Argument będzie przebiegał przez modele o wartościach w
+\emph{zupełnych algebrach Boole'a}. W przeciwieństwie do
+poprzedniego rozdziału nie wymaga on, by model wyjściowy
+był tranzytywny, dobrze ufundowany ani przeliczalny.
+
+\begin{uwaga}[Metateoria i oznaczenia]
+\label{rem:boolean35-metatheory}
+Rozumujemy w zwykłej metateorii matematycznej opartej
+na ZFC. Przez $M\models\mathrm{ZFC}$ rozumiemy dowolną
+\emph{strukturę zbiorową} języka $\{\in\}$ spełniającą
+wszystkie standardowe aksjomaty ZFC. Zbiór jej elementów
+oznaczamy przez $|M|$; relację przynależności w $M$
+przez $\in^M$. Nie zakładamy, że $\in^M$ pokrywa się z
+zewnętrzną relacją $\in$. Jeśli $b\in|M|$ jest według $M$
+algebrą Boole'a, przez $\mathbb B^M$ oznaczamy
+\emph{zewnętrzny} zbiór jej elementów z działaniami
+interpretowanymi przez $M$. Kresy w $\mathbb B$ są
+zupełne \emph{w sensie $M$}; nie twierdzimy, że
+istnieją kresy dowolnych zewnętrznych podzbiorów
+$\mathbb B^M$.
+
+Formuła $\varphi$ jest zawsze \emph{ustaloną standardową}
+formułą pierwszego rzędu. Nie postulujemy pojedynczego
+predykatu prawdy dla wszystkich wewnętrznych kodów
+formuł w modelu $M$.
+\end{uwaga}
+
+\section{Od pojęcia wymuszania do algebry zupełnej}
+
+\begin{definicja}[Algebra Boole'a i zupełność]
+\label{def:boolean35-algebra}
+Niech $\mathbb B$ będzie zbiorem z działaniami
+$\wedge,\vee$, dopełnieniem $b\mapsto\neg b$
+i elementami $0\ne1$, spełniającym aksjomaty
+algebry Boole'a. Porządek określamy przez
+$b\le c$ wtedy i tylko wtedy, gdy $b\wedge c=b$.
+Algebra jest \emph{zupełna}, gdy każdy
+podzbiór $A\subseteq\mathbb B$ ma kres górny
+$\bigvee A$ i dolny $\bigwedge A$ w $\mathbb B$.
+Implikację boolowską oznaczamy
+$b\Rightarrow c:=\neg b\vee c$.
+\end{definicja}
+
+\begin{definicja}[Algebra zbiorów regularnie otwartych]
+\label{def:boolean35-regular-open}
+Niech $(X,\mathcal T)$ będzie przestrzenią
+topologiczną. Zbiór otwarty $U\subseteq X$
+nazywamy \emph{regularnie otwartym}, gdy
+$U=\operatorname{int}(\overline U)$.
+Rodzinę takich zbiorów oznaczamy
+$\operatorname{RO}(X)$.
+\end{definicja}
+
+\begin{lemat}[Zupełność algebry zbiorów regularnie otwartych]
+\label{lem:boolean35-ro-complete}
+Dla każdej \emph{niepustej} przestrzeni
+topologicznej $(X,\mathcal T)$
+zbiór $\operatorname{RO}(X)$
+jest niezerową zupełną
+algebrą Boole'a z działaniami
+\[
+ U\wedge V=U\cap V,\qquad
+ \neg U=\operatorname{int}(X\setminus\overline U),
+ \qquad
+ \bigvee_{i\in I}U_i=
+ \operatorname{int}\overline{\bigcup_{i\in I}U_i}.
+\]
+Zbiór pusty i $X$ są odpowiednio $0$ i $1$.
+Założenie $X\ne\varnothing$ jest konieczne przy
+Definicji~\ref{def:boolean35-algebra}: dla przestrzeni
+pustej mamy $\operatorname{RO}(\varnothing)
+=\{\varnothing\}$, a więc $0=1$.
+\end{lemat}
+\begin{proof}
+Operator $r(A)=\operatorname{int}(\overline A)$
+jest idempotentny na zbiorach otwartych:
+dla otwartego $U$ zachodzi
+$\overline{r(U)}=\overline U$, gdyż
+$U\subseteq r(U)\subseteq\overline U$.
+Stąd $r(r(U))=r(U)$.
+Jeżeli $U,V$ są regularnie otwarte,
+to $U\cap V$ jest otwarty i
+\[
+ U\cap V\subseteq r(U\cap V)
+ \subseteq r(U)\cap r(V)=U\cap V.
+\]
+Wskazany wzór na dopełnienie daje
+zbiór regularnie otwarty rozłączny z $U$;
+suma boolowska obu jest równa $X$,
+ponieważ ich suma jest gęsta w $X$.
+Wzór na dowolny kres górny jest
+najmniejszym regularnie otwartym
+zbiorem zawierającym wszystkie $U_i$.
+Kres dolny dowolnej rodziny definiujemy
+z praw de Morgana; dla pustej rodziny
+są to odpowiednio $0$ i $1$.
+Pozostałe tożsamości boolowskie
+wynikają z powyższych działań,
+w szczególności z rozdzielności
+przecięcia względem regularnego
+domknięcia sumy zbiorów otwartych.
+\end{proof}
+
+\begin{definicja}[Uzupełnienie boolowskie wymuszania]
+\label{def:boolean35-completion}
+Niech $(\mathbb P,\leq)$ będzie niepustym
+pojęciem wymuszania. Na $\mathbb P$
+rozpatrujemy topologię, której bazą są
+stożki $\mathbb P_{\le p}=\{q:q\le p\}$.
+Algebrę
+$\mathbb B_{\mathbb P}=\operatorname{RO}(\mathbb P)$
+nazywamy jego \emph{uzupełnieniem boolowskim}.
+Warunkowi $p$ odpowiada niezerowy element
+$i(p)=\operatorname{int}\overline{\mathbb P_{\le p}}$.
+Przy porównywaniu wymuszań korzystamy z
+dodatnich elementów $\mathbb B_{\mathbb P}$
+i ich porządku; równoważne warunki
+preorderu mogą dawać ten sam element $i(p)$.
+\end{definicja}
+
+\begin{lemat}[Gęstość obrazów warunków]
+\label{lem:boolean35-dense-completion}
+Dla niepustego pojęcia wymuszania
+$(\mathbb P,\leq)$ oraz algebry
+$\mathbb B_{\mathbb P}$ z
+Definicji~\ref{def:boolean35-completion}
+zbiór $\{i(p):p\in\mathbb P\}$
+jest gęsty w $\mathbb B_{\mathbb P}^+
+=\mathbb B_{\mathbb P}\setminus\{0\}$:
+dla każdego $b>0$ istnieje
+$p\in\mathbb P$ z $0<i(p)\le b$.
+Jeśli $p,q$ mają wspólne wzmocnienie,
+to $i(p)\wedge i(q)>0$; jeżeli są niezgodne,
+to $i(p)\wedge i(q)=0$.
+\end{lemat}
+\begin{proof}
+Niech $b$ będzie niepustym regularnie
+otwartym zbiorem warunków. Wybieramy
+$p\in b$. Ponieważ $b$ jest otwarty,
+istnieje $q\le p$ takie, że
+$\mathbb P_{\le q}\subseteq b$.
+Z regularnej otwartości $b$ wynika
+$i(q)\subseteq b$. Stożek nie jest pusty,
+więc $i(q)>0$. Jeżeli istnieje
+$r\le p,q$, to $r$ należy do przecięcia
+stożków i jego regularne otwarte
+otoczenie świadczy o niezerowości
+$i(p)\cap i(q)$. Gdy wspólnego
+wzmocnienia nie ma, stożki są rozłączne,
+a przecięcie ich regularnych otwartych
+domknięć jest puste: gdyby było
+niepuste, zawierałoby stożek i na nim
+oba pierwotne stożki byłyby gęste,
+co dostarczyłoby wspólnego wzmocnienia.
+\end{proof}
+
+\section{Nazwy boolowskie i wartości formuł}
+
+\begin{definicja}[Hierarchia nazw boolowskich]
+\label{def:boolean35-names}
+Niech $\mathbb B$ będzie niezerową
+zupełną algebrą Boole'a.
+Rekurencyjnie po liczbach porządkowych
+definiujemy
+\[
+ V_0^{\mathbb B}=\varnothing,\quad
+ V_{\alpha+1}^{\mathbb B}
+ =\{f:\operatorname{dom}f\subseteq
+   V_\alpha^{\mathbb B},\
+   f:\operatorname{dom}f\to\mathbb B\},
+ \quad
+ V_\lambda^{\mathbb B}
+ =\bigcup_{\alpha<\lambda}V_\alpha^{\mathbb B}.
+\]
+Elementy klasy
+$V^{\mathbb B}=\bigcup_{\alpha\in\operatorname{Ord}}
+V_\alpha^{\mathbb B}$ nazywamy
+\emph{nazwami boolowskimi}.
+Dla $\tau\in V^{\mathbb B}$
+definiujemy \emph{rangę nazwy}
+\[
+ \operatorname{rk}(\tau)=
+ \min\{\alpha:\tau\in V_{\alpha+1}^{\mathbb B}\}.
+\]
+W szczególności dla każdej
+$\sigma\in\operatorname{dom}\tau$
+zachodzi
+$\operatorname{rk}(\sigma)<
+ \operatorname{rk}(\tau)$.
+Zapis $\tau(\sigma)$ oznacza
+współczynnik nazwy
+$\sigma\in\operatorname{dom}\tau$.
+Dla $x$ z modelu wyjściowego
+nazwa kanoniczna $\check x$ ma dziedzinę
+$\{\check y:y\in x\}$ i przypisuje każdemu
+$\check y$ wartość $1$.
+\end{definicja}
+
+\begin{definicja}[Wartości boolowskie formuł]
+\label{def:boolean35-values}
+Dla nazw $\sigma,\tau$ definiujemy
+jednoczesną rekurencję atomową
+\[
+\begin{aligned}
+\llbracket\sigma\in\tau\rrbracket
+ &=\bigvee_{\pi\in\operatorname{dom}\tau}
+       \bigl(\tau(\pi)\wedge
+             \llbracket\sigma=\pi\rrbracket\bigr),\\
+\llbracket\sigma=\tau\rrbracket
+ &=\bigwedge_{\pi\in\operatorname{dom}\sigma}
+       \bigl(\sigma(\pi)\Rightarrow
+             \llbracket\pi\in\tau\rrbracket\bigr)
+   \wedge
+   \bigwedge_{\pi\in\operatorname{dom}\tau}
+       \bigl(\tau(\pi)\Rightarrow
+             \llbracket\pi\in\sigma\rrbracket\bigr).
+\end{aligned}
+\]
+Kolejne klauzule dla ustalonych formuł są:
+\[
+\begin{aligned}
+\llbracket\neg\varphi\rrbracket
+   &=\neg\llbracket\varphi\rrbracket,\qquad
+\llbracket\varphi\land\psi\rrbracket
+   =\llbracket\varphi\rrbracket
+       \wedge\llbracket\psi\rrbracket,\\
+\llbracket\exists x\,\varphi(x)\rrbracket
+   &=\bigvee\{\llbracket\varphi(\tau)\rrbracket:
+               \tau\in V^{\mathbb B}\}.
+\end{aligned}
+\]
+Pozostałe spójniki i kwantyfikator
+ogólny definiujemy zwyczajowo.
+\end{definicja}
+
+\begin{lemat}[Poprawność definicji wartości]
+\label{lem:boolean35-well-defined}
+Niech $\mathbb B$ będzie niezerową
+zupełną algebrą Boole'a.
+Dla każdej ustalonej formuły
+$\varphi(x_1,\ldots,x_n)$ i wszystkich
+nazw $\tau_1,\ldots,\tau_n$
+wartość $\llbracket
+\varphi(\tau_1,\ldots,\tau_n)\rrbracket$
+jest jednoznacznie określonym
+elementem $\mathbb B$. Operacja ta
+jest definiowalna w ZFC przy
+ustalonej formule $\varphi$.
+\end{lemat}
+\begin{proof}
+Klauzule atomowe są poprawnie
+ufundowane przez rekurencję
+po \emph{sumie naturalnej rang}
+dwóch nazw, podobnie jak w
+Uwadze~\ref{rem:forcing33-ranks}.
+Przy każdej rekurencyjnej zależności
+jedna z nazw jest zastępowana nazwą
+ze zbioru wartości współrzędnych
+pierwszej nazwy, o ściśle mniejszej
+randze. Kresy w obu klauzulach
+dotyczą zbiorów, a ich istnienie
+zapewnia zupełność $\mathbb B$.
+
+Pozostaje uzasadnić kwantyfikator
+egzystencjalny. Choć
+$V^{\mathbb B}$ jest klasą właściwą,
+\emph{zbiór różnych wartości}
+\[
+ S_\varphi=\{b\in\mathbb B:
+      \exists\tau\ (\tau\text{ jest nazwą}
+        \land b=\llbracket\varphi(\tau)\rrbracket)\}
+\]
+jest podzbiorem \emph{zbioru}
+$\mathbb B$. Powstaje przez
+wyróżnianie, gdy klauzula dla
+$\varphi$ jest już ustalona.
+Zupełność $\mathbb B$ daje
+$\bigvee S_\varphi$.
+Indukcja po budowie każdej
+ustalonej formuły kończy dowód.
+Nie twierdzimy, że zbiór
+wszystkich nazw jest elementem
+uniwersum.
+\end{proof}
+
+\begin{lemat}[Tożsamości równości i podstawiania]
+\label{lem:boolean35-equality}
+Niech $\mathbb B$ będzie niezerową
+zupełną algebrą Boole'a i
+$\sigma,\tau,\rho$ nazwami.
+Wtedy
+\[
+\begin{aligned}
+\llbracket\sigma=\sigma\rrbracket&=1,\\
+\llbracket\sigma=\tau\rrbracket
+ &=\llbracket\tau=\sigma\rrbracket,\\
+\llbracket\sigma=\tau\rrbracket\wedge
+ \llbracket\tau=\rho\rrbracket
+ &\le\llbracket\sigma=\rho\rrbracket.
+\end{aligned}
+\]
+Dla każdej ustalonej formuły $\varphi(x)$
+z dodatkowymi parametrami nazwami mamy
+\[
+ \llbracket\sigma=\tau\rrbracket\wedge
+ \llbracket\varphi(\sigma)\rrbracket
+ \le\llbracket\varphi(\tau)\rrbracket.
+\]
+\end{lemat}
+\begin{proof}
+Rozpatrujemy równocześnie trzy własności:
+przechodniość równości oraz podstawianie
+równej nazwy w obu argumentach relacji
+przynależności. Indukcja jest prowadzona
+po sumie naturalnej rang nazw występujących
+w odpowiedniej nierówności. Przy rozwinięciu
+przynależności występuje nazwa z dziedziny
+jednego z argumentów, więc parametr
+indukcji ściśle maleje.
+
+Z definicji równości, dla każdego
+$\pi\in\operatorname{dom}\sigma$, mamy
+\[
+ \llbracket\sigma=\tau\rrbracket
+ \wedge\sigma(\pi)
+ \le\llbracket\pi\in\tau\rrbracket.
+\]
+Analogiczna nierówność zachodzi
+po zamianie $\sigma$ i $\tau$.
+Refleksyjność wynika przez indukcję
+po randze $\sigma$: każdy składnik
+$\sigma(\pi)$ daje
+$\sigma(\pi)\le\llbracket\pi\in\sigma
+\rrbracket$, gdyż
+$\llbracket\pi=\pi\rrbracket=1$.
+Symetria wynika wprost z obu
+czynników definicji równości.
+
+Wyjaśnijmy krok przechodniości.
+Niech
+$b=\llbracket\sigma=\tau\rrbracket
+ \wedge\llbracket\tau=\rho\rrbracket$.
+Dla $\pi\in\operatorname{dom}\sigma$
+otrzymujemy
+\[
+ b\wedge\sigma(\pi)
+ \le\llbracket\tau=\rho\rrbracket
+     \wedge\llbracket\pi\in\tau\rrbracket
+ \le\llbracket\pi\in\rho\rrbracket.
+\]
+Ostatnia nierówność jest
+przypadkiem podstawiania w drugim
+argumencie przynależności na
+niższym poziomie indukcji.
+Analogicznie traktujemy
+$\pi\in\operatorname{dom}\rho$.
+Dwie klauzule definicji równości
+dają $b\le\llbracket\sigma=\rho\rrbracket$.
+
+Dla podstawiania w pierwszym
+argumencie przynależności
+rozwijamy
+\[
+\begin{aligned}
+ &\llbracket\sigma=\tau\rrbracket
+   \wedge\llbracket\sigma\in\rho\rrbracket\\
+ &=\bigvee_{\pi\in\operatorname{dom}\rho}
+   \rho(\pi)\wedge
+   \llbracket\sigma=\tau\rrbracket\wedge
+   \llbracket\sigma=\pi\rrbracket\\
+ &\le\bigvee_{\pi\in\operatorname{dom}\rho}
+   \rho(\pi)\wedge\llbracket\tau=\pi\rrbracket
+   =\llbracket\tau\in\rho\rrbracket.
+\end{aligned}
+\]
+Stosujemy przechodniość dla nazw,
+wśród których $\pi$ ma mniejszą
+rangę niż $\rho$. Podstawianie
+w drugim argumencie dowodzimy,
+rozwijając
+$\llbracket\eta\in\sigma\rrbracket$
+po $\pi\in\operatorname{dom}\sigma$:
+na fragmencie
+$\llbracket\sigma=\tau\rrbracket
+\wedge\sigma(\pi)$ mamy
+$\llbracket\pi\in\tau\rrbracket$,
+a rozwinięcie tej przynależności
+i przechodniość równości dają
+$\llbracket\eta\in\tau\rrbracket$.
+Wszystkie użyte tu wystąpienia
+przechodniości dotyczą argumentu
+o mniejszej randze, co zamyka
+równoczesną indukcję.
+
+Dla formuły złożonej prowadzimy
+indukcję po jej budowie. Dla
+atomów nierówność jest już
+udowodniona; dla koniunkcji
+stosujemy monotoniczność $\wedge$.
+Jeżeli $e=\llbracket\sigma=\tau\rrbracket$,
+to dzięki symetrii także
+$e\wedge\llbracket\psi(\sigma)\rrbracket
+=e\wedge\llbracket\psi(\tau)\rrbracket$.
+Po dopełnieniu obu wartości
+\emph{wewnątrz fragmentu $e$}
+otrzymujemy tę samą równość dla
+$\neg\psi$. Dla egzystencji
+korzystamy z pełnej rozdzielności
+\[
+ e\wedge\bigvee_{\rho}
+   \llbracket\psi(\sigma,\rho)\rrbracket
+ =\bigvee_{\rho}
+   \bigl(e\wedge
+     \llbracket\psi(\sigma,\rho)\rrbracket\bigr),
+\]
+gdzie prawa strona jest nie większa
+od wartości
+$\llbracket\exists y\,\psi(\tau,y)\rrbracket$.
+W ten sposób podstawianie zachodzi
+dla każdej ustalonej formuły.
+\end{proof}
+
+\section{Mieszanie nazw i lemat o świadkach}
+
+\begin{definicja}[Antyłańcuch w algebrze Boole'a]
+\label{def:boolean35-antichain}
+Niech $\mathbb B$ będzie algebrą Boole'a.
+Zbiór $A\subseteq\mathbb B\setminus\{0\}$
+jest \emph{antyłańcuchem boolowskim},
+jeżeli $a\wedge a'=0$ dla wszystkich
+różnych $a,a'\in A$. Jest maksymalny
+poniżej $b\in\mathbb B$, gdy
+$a\le b$ dla każdego $a\in A$
+oraz $\bigvee A=b$.
+\end{definicja}
+
+\begin{lemat}[Mieszanie nazw]
+\label{lem:boolean35-mixing}
+Niech $\mathbb B$ będzie zupełną
+algebrą Boole'a, $A\subseteq\mathbb B^+$
+antyłańcuchem i
+$(\tau_a)_{a\in A}$ rodziną nazw
+boolowskich \emph{indeksowaną zbiorem} $A$.
+Wtedy istnieje nazwa $\tau$ taka, że
+\[
+ a\le\llbracket\tau=\tau_a\rrbracket
+ \qquad(a\in A).
+\]
+\end{lemat}
+\begin{proof}
+Niech $D=\bigcup_{a\in A}
+\operatorname{dom}\tau_a$. Zastępowanie
+i suma zapewniają, że $D$ jest zbiorem
+nazw o wspólnie ograniczonych rangach.
+Definiujemy na $D$ funkcję
+\[
+ \tau(\pi)=
+  \bigvee\{a\wedge\tau_a(\pi):
+       a\in A,\ \pi\in\operatorname{dom}\tau_a\}.
+\]
+Jest to nazwa, ponieważ wszystkie
+jej współczynniki należą do $\mathbb B$.
+Dla ustalonego $a\in A$ i $\pi\in D$
+rozdzielność i rozłączność
+antyłańcucha dają
+$a\wedge\tau(\pi)=
+ a\wedge\tau_a(\pi)$, gdy
+$\pi\in\operatorname{dom}\tau_a$,
+oraz $a\wedge\tau(\pi)=0$ w przeciwnym
+przypadku. Wstawiając te równości
+do atomowych klauzul
+Definicji~\ref{def:boolean35-values}
+i korzystając z refleksyjności
+równości z Lematu~\ref{lem:boolean35-equality},
+otrzymujemy
+$a\le\llbracket\tau=\tau_a\rrbracket$.
+\end{proof}
+
+\begin{twierdzenie}[Lemat o pełności wartości]
+\label{thm:boolean35-fullness}
+Niech $\mathbb B$ będzie niezerową
+zupełną algebrą Boole'a.
+Dla każdej ustalonej formuły
+$\varphi(x,\tau_1,\ldots,\tau_n)$
+oraz nazw $\tau_1,\ldots,\tau_n$
+istnieje nazwa $\rho$ spełniająca
+\[
+ \llbracket\exists x\,\varphi(x,\vec\tau)\rrbracket
+   =\llbracket\varphi(\rho,\vec\tau)\rrbracket.
+\]
+\end{twierdzenie}
+\begin{proof}
+Niech $u=\bigvee S_\varphi$, gdzie
+$S_\varphi\subseteq\mathbb B$
+jest zbiorem wartości
+z Lematu~\ref{lem:boolean35-well-defined}.
+Jeżeli $u=0$, dowolna nazwa
+jest świadkiem, ponieważ jej wartość
+nie przekracza $u$. Załóżmy $u>0$.
+Zdefiniujmy
+\[
+ D=\{a\in\mathbb B^+:
+    a\le u,\ \exists b\in S_\varphi\ (a\le b)\}.
+\]
+Zbiór $D$ jest gęsty poniżej $u$:
+jeżeli $0<c\le u$, to z
+$c\wedge\bigvee S_\varphi=c>0$
+i rozdzielności istnieje
+$b\in S_\varphi$ z $c\wedge b>0$;
+wówczas $c\wedge b\in D$.
+Wybierzmy maksymalny antyłańcuch
+$A\subseteq D$, którego kres górny
+jest równy $u$.
+
+Dla każdego $a\in A$ istnieje
+nazwa $\rho_a$ taka, że
+$a\le\llbracket\varphi(\rho_a,\vec\tau)
+\rrbracket$. Nie stosujemy wyboru
+z klasy właściwej: dla każdego $a$
+wybieramy \emph{najmniejszą rangę}
+nazwy spełniającej nierówność.
+Istnienie minimum wynika ze
+znalezienia jednej nazwy i
+minimalizacji w zbiorze liczb
+porządkowych poniżej jej rangi.
+Zastępowanie na zbiorze $A$
+ogranicza wszystkie minimalne
+rangi wspólną liczbą porządkową
+$\gamma$. Teraz wszystkie
+kandydatury leżą w jednym
+\emph{zbiorze} $V_{\gamma+1}^{\mathbb B}$;
+zastosowanie aksjomatu wyboru
+daje rodzinę $(\rho_a)_{a\in A}$.
+
+Lemat~\ref{lem:boolean35-mixing}
+daje nazwę $\rho$ równą $\rho_a$
+z wartością co najmniej $a$.
+Z Lematu~\ref{lem:boolean35-equality}
+i podstawiania wynika
+\[
+ a\le\llbracket\varphi(\rho,\vec\tau)\rrbracket
+ \quad(a\in A).
+\]
+Ponieważ $\bigvee A=u$,
+mamy $u\le\llbracket\varphi(\rho,\vec\tau)
+\rrbracket$. Odwrotna nierówność
+wynika z definicji $u$ jako kresu
+wszystkich wartości formuły.
+\end{proof}
+
+\section{Aksjomaty ZFC w uniwersum boolowskim}
+
+\begin{twierdzenie}[Boolowska poprawność ZFC]
+\label{thm:boolean35-zfc}
+Niech $\mathbb B$ będzie
+niezerową zupełną algebrą Boole'a.
+Wtedy dla każdego \emph{ustalonego}
+aksjomatu ZFC oraz każdego
+ustalonego wystąpienia schematów
+wyróżniania i zastępowania,
+oznaczonego przez $\theta$,
+zachodzi
+$\llbracket\theta\rrbracket=1$.
+Dotyczy to także wszystkich
+aksjomatów logicznych i
+reguł poprawnego wnioskowania.
+\end{twierdzenie}
+\begin{proof}
+Poniżej wskazujemy konstrukcje nazw
+i uzasadnienie wartości $1$ dla
+każdej grupy aksjomatów. W całym
+dowodzie korzystamy z
+Lematu~\ref{lem:boolean35-equality},
+w szczególności z podstawiania.
+
+\emph{Ekstensjonalność.}
+Klauzula równości stwierdza, że
+każdy element nazwy $\sigma$,
+z odpowiednim współczynnikiem,
+należy do $\tau$ i odwrotnie.
+Użycie obu implikacji boolowskich
+oraz podstawiania daje
+\[
+ \llbracket\forall x\,
+ (x\in\sigma\leftrightarrow x\in\tau)
+ \rrbracket
+ \le\llbracket\sigma=\tau\rrbracket.
+\]
+W drugą stronę stosujemy podstawianie.
+Zatem ekstensjonalność ma wartość $1$.
+
+\emph{Pusty zbiór, para i nieskończoność.}
+Zacznijmy od nazw kanonicznych.
+Dla dowolnych zbiorów $a,b$
+z modelu wyjściowego
+równoczesna indukcja po ich
+rangach daje
+\[
+\begin{aligned}
+ \llbracket\check a=\check b\rrbracket
+ &=\begin{cases}1,&a=b,\\0,&a\ne b,\end{cases}\\
+ \llbracket\check a\in\check b\rrbracket
+ &=\begin{cases}1,&a\in b,\\0,&a\notin b.\end{cases}
+\end{aligned}
+\]
+Istotnie, po rozwinięciu
+przynależności do $\check b$
+otrzymujemy kres
+$\bigvee_{y\in b}
+\llbracket\check a=\check y\rrbracket$.
+W klauzuli równości obie
+nazwy kanoniczne mają
+wszystkie współczynniki
+równe $1$. Jeżeli $a\ne b$,
+ekstensjonalność zwykłych
+zbiorów dostarcza elementu
+różnicy symetrycznej, którego
+odpowiednia przynależność
+ma wartość $0$ na mocy
+hipotezy indukcyjnej.
+Jeżeli $a=b$, wartość
+równości wynosi $1$ przez
+Lemat~\ref{lem:boolean35-equality}.
+To dowodzi obu wzorów.
+
+Pusta funkcja jest nazwą
+zbioru pustego: dla każdej
+nazwy $\eta$ jej wartość
+przynależności wynosi $0$.
+Dla dwóch dowolnych nazw
+$\sigma,\tau$ tworzymy
+nazwę $P_{\sigma,\tau}$
+o dziedzinie
+$\{\sigma,\tau\}$ i
+współczynnikach $1$.
+Jeżeli $\sigma=\tau$
+dosłownie jako nazwy,
+w dziedzinie pozostaje
+jeden element. W obu
+przypadkach dla każdej
+nazwy $\eta$ otrzymujemy
+\[
+ \llbracket\eta\in
+    P_{\sigma,\tau}\rrbracket
+ =\llbracket\eta=\sigma\rrbracket
+   \vee\llbracket\eta=\tau\rrbracket.
+\]
+To daje aksjomaty pustego
+zbioru i pary z wartością $1$.
+
+Dla nieskończoności
+rozważamy $\check\omega$.
+Z powyższych wzorów
+$\llbracket\check 0\in
+\check\omega\rrbracket=1$.
+Ponadto dla każdej nazwy
+$\eta$ mamy
+\[
+ \llbracket\eta\in\check\omega\rrbracket
+ =\bigvee_{n<\omega}
+     \llbracket\eta=\check n\rrbracket.
+\]
+Każda liczba $n<\omega$
+spełnia $n+1=n\cup\{n\}$,
+a $\check{n+1}$ należy
+do $\check\omega$ z
+wartością $1$. Konstrukcja
+pary powyżej i konstrukcja
+sumy w następnym akapicie
+dają nazwę następcy każdej
+nazwy $\eta$. Na fragmencie
+$\llbracket\eta=\check n\rrbracket$
+podstawianie pokazuje, że
+następnik $\eta$ jest równy
+$\check{n+1}$. Biorąc kres
+górny po $n<\omega$,
+otrzymujemy
+\[
+ \llbracket
+  \forall x\in\check\omega\
+  \exists y\in\check\omega\
+     (y=x\cup\{x\})
+ \rrbracket=1.
+\]
+Zatem $\check\omega$ jest
+z wartością $1$ zbiorem
+induktywnym, co dowodzi
+aksjomatu nieskończoności.
+
+\emph{Aksjomat sumy.}
+Dla nazwy $\sigma$ ustalamy
+$D=\bigcup_{\pi\in\operatorname{dom}\sigma}
+\operatorname{dom}\pi$. To jest zbiór.
+Tworzymy na $D$ nazwę
+\[
+ U_\sigma(\rho)=
+ \bigvee_{\pi\in\operatorname{dom}\sigma}
+   \bigl(\sigma(\pi)\wedge
+     \pi(\rho)\bigr),
+\]
+przyjmując $\pi(\rho)=0$ dla
+$\rho\notin\operatorname{dom}\pi$.
+Klauzule atomowe, rozdzielność
+kresów i podstawianie pokazują,
+że dla każdej nazwy $\eta$
+\[
+ \llbracket\eta\in U_\sigma\rrbracket
+ =\llbracket
+    \exists x\in\sigma\ (\eta\in x)\rrbracket.
+\]
+To jest aksjomat sumy z wartością $1$.
+
+\emph{Schemat wyróżniania.}
+Niech $\varphi(x,\vec\tau)$ będzie
+ustaloną formułą, a $\sigma$ nazwą.
+Na zbiorze $\operatorname{dom}\sigma$
+definiujemy nazwę
+\[
+ S(\rho)=\sigma(\rho)\wedge
+      \llbracket\varphi(\rho,\vec\tau)\rrbracket.
+\]
+Podstawianie oraz rozdzielność
+dają dla każdej nazwy $\eta$
+\[
+ \llbracket\eta\in S\rrbracket
+ =\llbracket\eta\in\sigma\land
+                  \varphi(\eta,\vec\tau)\rrbracket.
+\]
+To potwierdza każdy ustalony
+przypadek schematu wyróżniania.
+
+\emph{Aksjomat zbioru potęgowego.}
+Niech $D=\operatorname{dom}\sigma$.
+W \emph{modelu wyjściowym},
+w którym budujemy nazwy,
+tworzymy zbiór
+\[
+ T_\sigma=\{f:D\to\mathbb B:
+                 \forall\rho\in D\
+                 f(\rho)\le\sigma(\rho)\}.
+\]
+Jest to podzbiór
+$\mathbb B^D$, więc istnieje
+na mocy aksjomatu zbioru
+potęgowego i wyróżniania
+w modelu wyjściowym.
+Każde $f\in T_\sigma$
+jest nazwą boolowską,
+a $\operatorname{rk}(f)$
+ma wspólne ograniczenie,
+zależne tylko od $D$.
+Tworzymy nazwę $\Pi_\sigma$
+o dziedzinie $T_\sigma$,
+przypisującą każdej
+$f\in T_\sigma$ wartość $1$.
+
+Najpierw sprawdźmy, że
+$f\in T_\sigma$ ma
+\[
+ \llbracket f\subseteq\sigma\rrbracket=1.
+\]
+Istotnie, dla dowolnej nazwy
+$\eta$ rozwijamy klauzulę
+przynależności:
+\[
+ \llbracket\eta\in f\rrbracket
+ =\bigvee_{\rho\in D}
+       f(\rho)\wedge
+       \llbracket\eta=\rho\rrbracket
+ \le\llbracket\eta\in\sigma\rrbracket.
+\]
+Ponieważ nierówność zachodzi
+dla \emph{każdej} nazwy $\eta$,
+prawdziwa z wartością $1$
+jest implikacja
+$\eta\in f\Longrightarrow\eta\in\sigma$
+pod kwantyfikatorem ogólnym.
+
+W drugim kierunku weźmy
+\emph{dowolną} nazwę $\tau$
+i połóżmy
+$b=\llbracket\tau\subseteq\sigma\rrbracket$.
+Na ustalonej dziedzinie $D$
+definiujemy nazwę
+\[
+ f_\tau(\rho)=\sigma(\rho)\wedge
+          \llbracket\rho\in\tau\rrbracket
+      \qquad(\rho\in D).
+\]
+Jest ona elementem $T_\sigma$.
+Pokażemy, że
+$b\le\llbracket\tau=f_\tau\rrbracket$,
+bez utożsamiania dziedzin
+obu nazw. Dla każdej nazwy
+$\eta$ z podstawiania wynika
+\[
+\begin{aligned}
+ \llbracket\eta\in f_\tau\rrbracket
+ &=\bigvee_{\rho\in D}
+   \sigma(\rho)\wedge
+   \llbracket\rho\in\tau\rrbracket
+   \wedge\llbracket\eta=\rho\rrbracket\\
+ &\le\llbracket\eta\in\tau\rrbracket.
+\end{aligned}
+\]
+Z definicji $b$ mamy z kolei
+\[
+ b\wedge\llbracket\eta\in\tau\rrbracket
+ \le\llbracket\eta\in\sigma\rrbracket
+ =\bigvee_{\rho\in D}
+   \sigma(\rho)\wedge
+   \llbracket\eta=\rho\rrbracket.
+\]
+Po pomnożeniu tej nierówności
+przez $\llbracket\eta\in\tau\rrbracket$
+i zastosowaniu podstawiania
+otrzymujemy
+$b\wedge\llbracket\eta\in\tau\rrbracket
+ \le\llbracket\eta\in f_\tau\rrbracket$.
+Z ekstensjonalności boolowskiej
+i arbitralności $\eta$
+wynika
+$b\le\llbracket\tau=f_\tau\rrbracket$.
+
+Ponieważ $f_\tau\in T_\sigma$
+oraz $\Pi_\sigma(f_\tau)=1$,
+dostajemy
+\[
+ \llbracket\tau\subseteq\sigma\rrbracket
+ \le\llbracket\tau\in\Pi_\sigma\rrbracket.
+\]
+Odwrotna nierówność
+wynika z pierwszej części
+dowodu i definicji przynależności
+do $\Pi_\sigma$. Zatem dla
+każdej nazwy $\tau$ zachodzi
+\[
+ \llbracket\tau\in\Pi_\sigma\rrbracket
+ =\llbracket\tau\subseteq\sigma\rrbracket,
+\]
+co dowodzi aksjomatu zbioru
+potęgowego z wartością $1$.
+
+\emph{Schemat zastępowania.}
+Niech $\varphi(x,y,\vec\tau)$
+będzie ustaloną formułą, a
+$\sigma$ nazwą. Oznaczmy
+\[
+ b=\llbracket
+  \forall x\in\sigma\ \exists!y\
+            \varphi(x,y,\vec\tau)\rrbracket.
+\]
+Dla każdego
+$\pi\in\operatorname{dom}\sigma$
+Twierdzenie~\ref{thm:boolean35-fullness}
+dostarcza nazwę $\rho_\pi$
+taką, że
+\[
+ \llbracket\varphi(\pi,\rho_\pi,\vec\tau)
+ \rrbracket
+ =\llbracket\exists y\,
+              \varphi(\pi,y,\vec\tau)\rrbracket.
+\]
+Rodzinę $(\rho_\pi)$ wybieramy
+\emph{dla zbioru}
+$\operatorname{dom}\sigma$,
+ograniczając najpierw minimalne
+rangi przez zastępowanie,
+a następnie stosując wybór
+w jednym zbiorze nazw.
+Definiujemy nazwę $R_\sigma$
+na zbiorze
+$D=\{\rho_\pi:\pi\in
+              \operatorname{dom}\sigma\}$
+wzorem
+\[
+ R_\sigma(\rho)=
+  \bigvee\{\sigma(\pi):
+       \pi\in\operatorname{dom}\sigma,\
+       \rho_\pi=\rho\},
+ \qquad \rho\in D.
+\]
+Użyta w warunku równość
+$\rho_\pi=\rho$ jest tu
+\emph{równością nazw jako funkcji},
+nie wartością boolowską równości.
+
+Pokażemy, że dla każdej nazwy
+$\eta$ zachodzi nierówność
+\[
+\begin{split}
+ b\wedge\llbracket\eta\in R_\sigma\rrbracket
+ =b\wedge\llbracket
+    \exists x\in\sigma\
+          \varphi(x,\eta,\vec\tau)
+               \rrbracket.
+\end{split}
+\]
+Po lewej stronie rozwijamy
+przynależność do $R_\sigma$
+jako kres wartości
+$\sigma(\pi)\wedge
+ \llbracket\eta=\rho_\pi\rrbracket$.
+Na fragmencie
+$b\wedge\sigma(\pi)$ zachodzi
+$\varphi(\pi,\rho_\pi,\vec\tau)$,
+zatem podstawianie daje
+nierówność od lewej do prawej.
+W drugim kierunku rozwijamy
+wartość egzystencji ograniczonej
+do $\sigma$; każdą niezerową
+część otrzymujemy z pewnej
+$\pi\in\operatorname{dom}\sigma$.
+Na fragmencie $b\wedge\sigma(\pi)$
+formuła $\varphi(\pi,y,\vec\tau)$
+wyznacza jedyną wartość,
+a świadek $\rho_\pi$ spełnia
+ją na całym tym fragmencie.
+Podstawianie i jednoznaczność
+dają
+\[
+ b\wedge\sigma(\pi)\wedge
+ \llbracket\varphi(\pi,\eta,\vec\tau)\rrbracket
+ \le\llbracket\eta=\rho_\pi\rrbracket.
+\]
+Po złączeniu tych nierówności
+otrzymujemy zapowiedzianą
+równość dla dowolnej $\eta$.
+Nazwa $R_\sigma$ jest więc
+obrazem zbioru $\sigma$
+na całym fragmencie $b$,
+co dowodzi danej instancji
+schematu zastępowania z
+wartością $1$.
+
+\emph{Aksjomat ufundowania.}
+Ustalmy nazwę $\sigma$ i połóżmy
+$b=\llbracket\sigma\ne\varnothing\rrbracket$.
+Jeżeli $b=0$, rozważana instancja
+ufundowania jest spełniona z wartością
+$1$. Załóżmy zatem $b>0$.
+Z klauzuli przynależności i z
+definicji kwantyfikatora egzystencjalnego
+otrzymujemy
+\[
+ b=\bigvee_{\pi\in\operatorname{dom}\sigma}
+                \sigma(\pi).
+\]
+Dla każdego $0<c\le b$ istnieje
+więc nazwa $\pi$ taka, że
+$c\wedge\llbracket\pi\in\sigma\rrbracket>0$.
+Rozpatrzmy \emph{wszystkie nazwy}
+mające tę własność, a nie tylko
+elementy $\operatorname{dom}\sigma$.
+Ich rangi tworzą niepustą
+definiowalną klasę liczb porządkowych
+o najmniejszym elemencie: wybieramy
+jedną nazwę świadka o randze $\beta$
+i minimalizujemy w zbiorze
+liczb porządkowych nie większych
+od $\beta$. Niech $\pi$ będzie
+świadkiem o tej najmniejszej randze,
+a
+\[
+ d=c\wedge\llbracket\pi\in\sigma\rrbracket>0.
+\]
+
+Twierdzimy, że
+\[
+ d\le\llbracket
+   \neg\exists y\,
+      (y\in\pi\land y\in\sigma)
+             \rrbracket.
+\]
+Gdyby nie, dla pewnego niezerowego
+$e\le d$ wartość formuły
+$\exists y\,(y\in\pi\land y\in\sigma)$
+miałaby niezerowe przecięcie z $e$.
+Z definicji egzystencji istnieje
+wówczas nazwa $\rho$ taka, że
+\[
+ e\wedge\llbracket\rho\in\pi\rrbracket
+   \wedge\llbracket\rho\in\sigma\rrbracket>0.
+\]
+Klauzula atomowej przynależności
+do $\pi$ pozwala znaleźć
+$\eta\in\operatorname{dom}\pi$
+z niezerową wartością
+\[
+ e\wedge\pi(\eta)
+ \wedge\llbracket\rho=\eta\rrbracket
+ \wedge\llbracket\rho\in\sigma\rrbracket.
+\]
+Na mocy podstawiania daje to
+$c\wedge\llbracket\eta\in\sigma\rrbracket>0$.
+Jednak $\operatorname{rk}(\eta)<
+\operatorname{rk}(\pi)$, sprzecznie
+z minimalnością rangi $\pi$.
+Wobec tego $d$ wymusza równocześnie
+$\pi\in\sigma$ i brak elementu
+wspólnego zbiorów $\pi,\sigma$.
+
+Tak skonstruowane niezerowe
+fragmenty $d$ tworzą zbiór
+\[
+ D=\{d\in\mathbb B^+:
+   d\le b\ \land\
+   \exists\pi\ 
+      d\le\llbracket\pi\in\sigma
+      \land\neg\exists y\,
+        (y\in\pi\land y\in\sigma)\rrbracket\}.
+\]
+Powstaje on przez wyróżnianie
+z $\mathbb B$ i jest gęsty poniżej
+$b$, gdyż konstrukcja działa dla
+\emph{każdego} $0<c\le b$.
+Wybieramy maksymalny antyłańcuch
+$A\subseteq D$ o $\bigvee A=b$.
+Dla jego elementów wybieramy
+nazwane świadectwa przez
+minimalizację rang, zastępowanie
+i aksjomat wyboru na zbiorze
+nazw o wspólnie ograniczonych
+rangach, dokładnie jak w
+Twierdzeniu~\ref{thm:boolean35-fullness}.
+Lemat~\ref{lem:boolean35-mixing}
+daje jedną nazwę $\pi_*$,
+dla której
+\[
+ b\le\llbracket
+ \pi_*\in\sigma\land
+ \neg\exists y\,
+ (y\in\pi_*\land y\in\sigma)
+ \rrbracket.
+\]
+Jest to poszukiwany element
+minimalny w $\sigma$ pod
+wartością $b$. Wobec tego
+aksjomat ufundowania ma
+wartość $1$.
+
+\emph{Aksjomat wyboru.}
+Ustalmy nazwę $\sigma$ i oznaczmy
+$D=\operatorname{dom}\sigma$.
+W modelu wyjściowym wybieramy
+liczbę porządkową $\kappa$ oraz
+bijekcję $e:\kappa\to D$.
+Dla $D=\varnothing$ bierzemy
+$\kappa=0$. W uniwersum boolowskim
+tworzymy nazwę $K$ podzbioru
+$\check\kappa$, której współczynnik
+przy $\check\xi$ wynosi
+$\sigma(e(\xi))$ dla $\xi<\kappa$.
+Tworzymy też nazwę grafu $F$
+ze współczynnikami
+$\sigma(e(\xi))$ przy nazwach
+par uporządkowanych
+$(\check\xi,e(\xi))$.
+Istnienie tych nazw wynika
+z zastępowania w modelu
+wyjściowym i z konstrukcji
+par uporządkowanych.
+
+Sprawdźmy bez zakładania wyboru
+\emph{w uniwersum boolowskim},
+że wartość zdania
+„$F:K\to\sigma$ jest surjekcją”
+wynosi $1$. Dla każdego
+$\xi<\kappa$ wskazany graf
+zawiera dokładnie parę
+o pierwszej współrzędnej
+$\check\xi$ i drugiej
+$e(\xi)$ na fragmencie
+$\sigma(e(\xi))$. Dla dowolnej
+nazwy $\eta$ mamy
+\[
+ \llbracket\eta\in\sigma\rrbracket
+ =\bigvee_{\xi<\kappa}
+   \sigma(e(\xi))\wedge
+   \llbracket\eta=e(\xi)\rrbracket,
+\]
+więc każdy element $\sigma$
+ma przeciwobraz w $K$.
+Z drugiej strony każdy element
+obrazu $F$ należy do $\sigma$,
+ponieważ współczynniki grafu
+nie przekraczają odpowiednich
+współczynników $\sigma$.
+Jednoznaczność wartości $F$
+przy ustalonym indeksie
+wynika z jego konstrukcji i
+podstawiania w równości nazw.
+
+W ZF dowodzi się, że surjektywny
+obraz zbioru dobrze uporządkowanego
+można dobrze uporządkować:
+dla każdej wartości funkcji
+wybiera się \emph{najmniejszy}
+indeks jej przeciwobrazu.
+Dokładniej, z $F$ tworzymy
+przez wyróżnianie zbiór $K_0$
+tych $\xi\in K$, dla których
+żaden mniejszy indeks nie ma
+tego samego obrazu. Ograniczenie
+$F|_{K_0}$ jest bijekcją na
+$\sigma$, a porządek na $K_0$
+odziedziczony z $\check\kappa$
+przenosi się przez tę bijekcję
+na dobre uporządkowanie $\sigma$.
+Wszystkie te operacje wykorzystują
+wyłącznie wyróżnianie, zastępowanie
+i porządek liczby porządkowej,
+których poprawność boolowską
+już wykazano. Zatem aksjomat
+dobrego uporządkowania, a więc
+równoważny mu w ZF aksjomat
+wyboru, ma wartość $1$.
+
+Pozostają logiczne reguły
+rachunku pierwszego rzędu.
+Wszystkie aksjomaty logiczne
+mają wartość $1$ na mocy
+tożsamości algebry Boole'a,
+a modus ponens zachowuje
+wartość $1$. Reguła uogólniania
+zachowuje wartość $1$, ponieważ
+kres dolny rodziny wartości
+równych $1$ jest równy $1$.
+Jest to poprawność boolowska
+całego rachunku.
+\end{proof}
+
+\section{Iloraz przez ultrafiltr}
+
+\begin{definicja}[Ultrafiltr algebry Boole'a]
+\label{def:boolean35-ultrafilter}
+Niech $\mathbb B$ będzie niezerową
+algebrą Boole'a. Podzbiór
+$U\subseteq\mathbb B$ jest
+\emph{ultrafiltrem}, jeżeli
+$1\in U$, $0\notin U$,
+z $b,c\in U$ wynika $b\wedge c\in U$,
+z $b\in U$ i $b\le c$ wynika $c\in U$
+oraz dla każdego $b\in\mathbb B$
+dokładnie jeden z $b,\neg b$
+należy do $U$.
+\end{definicja}
+
+\begin{lemat}[Istnienie ultrafiltru]
+\label{lem:boolean35-ultrafilter-exists}
+Na każdej niezerowej algebrze
+Boole'a $\mathbb B$ istnieje ultrafiltr.
+Dowód wykorzystuje aksjomat
+wyboru metateorii.
+\end{lemat}
+\begin{proof}
+Rozpatrujemy zbiór wszystkich
+filtrów właściwych algebry
+$\mathbb B$, uporządkowany
+przez inkluzję. Zawiera on
+$\{1\}$, a suma dowolnego
+łańcucha filtrów właściwych
+jest filtrem właściwym:
+dwa elementy należące do
+sumy leżą razem w pewnym
+elemencie łańcucha.
+Lemat Kuratowskiego--Zorna
+daje filtr maksymalny $U$.
+Jeżeli dla pewnego $b$
+ani $b$, ani $\neg b$
+nie należałyby do $U$,
+to maksymalność obu filtrów
+generowanych przez dołączenie
+tych elementów wymuszałaby
+istnienie $u,v\in U$ z
+$u\wedge b=0$ i
+$v\wedge\neg b=0$.
+Wtedy $u\le\neg b$ oraz $v\le b$,
+co przeczy $u\wedge v\in U$.
+Zatem $U$ jest ultrafiltrem.
+\end{proof}
+
+\begin{definicja}[Iloraz nazw przez ultrafiltr]
+\label{def:boolean35-quotient}
+Niech $M\models\mathrm{ZFC}$ będzie
+dowolnym modelem zbiorowym,
+a $\mathbb B\in M$ niezerową
+zupełną algebrą Boole'a
+\emph{w sensie $M$}.
+Niech $U\subseteq\mathbb B^M$
+będzie zewnętrznym ultrafiltrem.
+Przez $\mathcal N_M^{\mathbb B}$
+oznaczamy zewnętrzny zbiór
+wszystkich elementów $|M|$,
+które $M$ uznaje za nazwy
+boolowskie. Dla
+$\sigma,\tau\in\mathcal N_M^{\mathbb B}$
+określamy
+\[
+\begin{aligned}
+\sigma\equiv_U\tau
+ &\iff \llbracket\sigma=\tau\rrbracket^M\in U,\\
+[\sigma]_U\in_U[\tau]_U
+ &\iff \llbracket\sigma\in\tau\rrbracket^M\in U.
+\end{aligned}
+\]
+Strukturę o uniwersum
+$\{[\tau]_U:\tau\in\mathcal N_M^{\mathbb B}\}$
+i relacji $\in_U$ oznaczamy
+$M^{\mathbb B}/U$.
+\end{definicja}
+
+\begin{lemat}[Iloraz jest poprawnie określoną strukturą]
+\label{lem:boolean35-quotient-defined}
+Przy założeniach
+Definicji~\ref{def:boolean35-quotient}
+relacja $\equiv_U$ jest relacją
+równoważności, a relacja $\in_U$
+nie zależy od wyboru reprezentantów.
+Uniwersum i relacja $\in_U$ są
+zbiorami w otaczającej metateorii.
+\end{lemat}
+\begin{proof}
+Zastosujmy wewnątrz $M$
+Lemat~\ref{lem:boolean35-equality}.
+Refleksyjność daje wartość $1$
+dla $\sigma=\sigma$;
+symetria i przechodniość,
+wraz z domknięciem $U$ na
+kresy dolne \emph{skończone},
+dają własności relacji
+równoważności. Podstawianie
+zapewnia, że jeśli
+$\sigma\equiv_U\sigma'$ i
+$\tau\equiv_U\tau'$, to
+\[
+\llbracket\sigma\in\tau\rrbracket^M\in U
+\iff
+\llbracket\sigma'\in\tau'\rrbracket^M\in U.
+\]
+Własności te dotyczą ustalonych
+formuł atomowych, więc ich
+wewnętrzne dowody ZFC
+są spełnione także w
+nietranzytywnym modelu $M$.
+
+Ponieważ $|M|$ jest zewnętrznie
+zbiorem, $\mathcal N_M^{\mathbb B}$
+jest jego podzbiorem.
+Relacje $\equiv_U$ i
+przynależność między klasami
+są relacjami na tym zbiorze,
+zatem przez wyróżnianie i
+zastępowanie metateorii
+otrzymujemy strukturę zbiorową.
+Nie potrzebujemy zewnętrznego
+dobrego ufundowania relacji $\in^M$.
+\end{proof}
+
+\begin{twierdzenie}[Lemat prawdy dla ilorazu boolowskiego]
+\label{thm:boolean35-quotient-truth}
+Niech $M,\mathbb B,U$ spełniają
+założenia Definicji
+\ref{def:boolean35-quotient}.
+Dla każdej ustalonej formuły
+$\varphi(x_1,\ldots,x_n)$ i
+wszystkich nazw
+$\tau_1,\ldots,\tau_n\in
+\mathcal N_M^{\mathbb B}$
+zachodzi
+\[
+ M^{\mathbb B}/U\models
+  \varphi([\tau_1]_U,\ldots,[\tau_n]_U)
+ \iff
+ \llbracket\varphi(\vec\tau)\rrbracket^M\in U.
+\]
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po budowie \emph{standardowej}
+formuły $\varphi$.
+Dla formuł atomowych równoważność
+jest definicją relacji $\in_U$
+i równoważności $\equiv_U$.
+Dla koniunkcji wykorzystujemy
+$b\wedge c\in U$ wtedy i tylko wtedy,
+gdy $b,c\in U$.
+Dla negacji korzystamy z tego,
+że dokładnie jeden z
+$b,\neg b$ należy do ultrafiltru.
+
+Rozważmy egzystencję.
+Jeżeli struktura ilorazowa
+spełnia $\exists x\,\psi(x,\vec\tau)$,
+to pewna klasa $[\rho]_U$
+jest świadkiem. Indukcja daje
+$\llbracket\psi(\rho,\vec\tau)\rrbracket^M
+\in U$, a wartość ta nie
+przekracza wartości egzystencji,
+która również należy do $U$.
+Odwrotnie, jeżeli
+$\llbracket\exists x\,\psi(x,\vec\tau)
+\rrbracket^M\in U$, to
+\emph{wewnątrz $M$} stosujemy
+Twierdzenie~\ref{thm:boolean35-fullness}.
+Otrzymujemy nazwę $\rho\in M$
+o tej samej wartości boolowskiej,
+a więc jej wartość należy do $U$.
+Hipoteza indukcyjna daje
+$M^{\mathbb B}/U\models
+\psi([\rho]_U,[\vec\tau]_U)$.
+Na tym kończy się indukcja.
+Kluczowe jest użycie pełności:
+dla niegłównego ultrafiltru $U$
+na $\mathcal P(\omega)$ mamy
+$\bigvee_{n\in\omega}\{n\}=1\in U$,
+chociaż $\{n\}\notin U$ dla każdego
+$n$. Z samej przynależności kresu
+górnego do ultrafiltru nie wolno
+wyprowadzać istnienia składnika,
+który do niego należy.
+Lemat o pełności daje właśnie
+jednego świadka o wartości
+\emph{równej całemu kresowi}.
+W szczególności nie założono,
+że ultrafiltr jest generyczny.
+\end{proof}
+
+\begin{twierdzenie}[Model ZFC z dowolnego ultrafiltru]
+\label{thm:boolean35-quotient-zfc}
+Niech $M\models\mathrm{ZFC}$
+będzie dowolnym modelem zbiorowym,
+$\mathbb B\in M$ niezerową
+zupełną algebrą Boole'a w sensie
+$M$, a $U\subseteq\mathbb B^M$
+\emph{dowolnym} ultrafiltrem
+w otaczającej metateorii.
+Wówczas
+\[
+ M^{\mathbb B}/U\models\mathrm{ZFC}.
+\]
+Ponadto dla każdej ustalonej formuły
+$\theta$ bez parametrów, jeżeli
+$M\models
+\llbracket\theta\rrbracket=1_{\mathbb B}$,
+to $M^{\mathbb B}/U\models\theta$.
+\end{twierdzenie}
+\begin{proof}
+Dla każdego standardowego aksjomatu
+ZFC jego wartość boolowska jest
+równa $1$ na mocy
+Twierdzenia~\ref{thm:boolean35-zfc},
+którego dowód można wykonać
+wewnątrz każdego modelu ZFC.
+Ponieważ $1\in U$,
+Twierdzenie~\ref{thm:boolean35-quotient-truth}
+daje prawdziwość aksjomatu
+w ilorazie. Dotyczy to
+\emph{każdej} standardowej
+instancji schematów wyróżniania
+i zastępowania, a więc całej ZFC.
+Drugie twierdzenie jest
+bezpośrednią konsekwencją
+lematu prawdy.
+\end{proof}
+
+\begin{uwaga}[Nie zakładamy dobrego ufundowania ilorazu]
+\label{rem:boolean35-ill-founded}
+Jeżeli wyjściowe $M$ nie jest
+tranzytywne lub jest zewnętrznie
+źle ufundowane, iloraz
+$M^{\mathbb B}/U$ również może
+nie być dobrze ufundowany
+z zewnętrznego punktu widzenia.
+Nie wolno wtedy automatycznie
+stosować twierdzenia o kolapsie
+Mostowskiego. Dla dowodu
+niesprzeczności potrzebna jest
+jednak tylko \emph{struktura
+zbiorowa spełniająca aksjomaty},
+nie jej tranzytywność.
+To właśnie usuwa ograniczenie
+poprzedniego rozdziału.
+\end{uwaga}
+
+\section{Wartości boolowskie CH i jej zaprzeczenia}
+
+\begin{lemat}[Relacja z wymuszaniem porządkowym]
+\label{lem:boolean35-poset-truth}
+Niech $\mathbb P$ będzie niepustym
+pojęciem wymuszania, a
+$\mathbb B_{\mathbb P}$ jego
+uzupełnieniem boolowskim.
+Dla każdej ustalonej formuły
+$\varphi$ z parametrami nazwami
+istnieje przekład nazw
+$\mathbb P$ na nazwy
+$\mathbb B_{\mathbb P}$ taki, że
+\[
+ p\Vdash_{\mathbb P}\varphi(\vec\tau)
+ \iff
+ i(p)\le
+  \llbracket\varphi(\vec\tau^{\mathbb B})
+                   \rrbracket_{\mathbb B}.
+\]
+Przekład zachowuje formuły
+z nazwami kanonicznymi oraz
+nazwy obiektów generycznych.
+\end{lemat}
+\begin{proof}
+Przekład nazwy porządkowej
+$\sigma$ na nazwę boolowską
+$\sigma^{\mathbb B}$ definiujemy
+rekurencyjnie: parze $(\rho,p)$
+odpowiada współczynnik $i(p)$
+przy nazwie $\rho^{\mathbb B}$.
+Jeżeli kilka par prowadzi do
+tego samego argumentu, ich
+współczynniki łączymy kresem
+górnym. Rekurencja jest
+poprawna, gdyż każda nazwa
+porządkowa jest zbiorem par.
+
+Potrzebujemy też przejścia
+w przeciwną stronę. Dla
+\emph{dowolnej nazwy boolowskiej}
+$\tau$ definiujemy rekurencyjnie
+nazwę porządkową
+\[
+ \tau^{\mathbb P}=
+ \{(\rho^{\mathbb P},p):
+    \rho\in\operatorname{dom}\tau,\
+    p\in\mathbb P,\
+    i(p)\le\tau(\rho)\}.
+\]
+Jest to zbiór par, ponieważ
+$\mathbb P$ i
+$\operatorname{dom}\tau$
+są zbiorami. Dla każdego
+$b\in\mathbb B$ z
+Lematu~\ref{lem:boolean35-dense-completion}
+wynika
+\[
+ b=\bigvee\{i(p):
+       p\in\mathbb P,\ i(p)\le b\}.
+\]
+Istotnie, gdyby kres po
+prawej stronie był mniejszy
+od $b$, ich niezerową różnicę
+można byłoby jeszcze
+wzmocnić obrazem warunku.
+Wykażemy dokładnie, że
+\[
+ \llbracket\tau=
+      (\tau^{\mathbb P})^{\mathbb B}
+       \rrbracket_{\mathbb B}=1.
+\]
+Indukujemy po randze $\tau$.
+Dla $\rho\in\operatorname{dom}\tau$
+połóżmy
+$\rho_*=(\rho^{\mathbb P})^{\mathbb B}$;
+hipoteza indukcyjna daje
+$\llbracket\rho=\rho_*\rrbracket=1$.
+Z konstrukcji przekładu wstecznego
+współczynnik przy $\rho_*$
+pochodzący od $\rho$ jest równy
+\[
+ \bigvee_{\substack{p\in\mathbb P\\
+                     i(p)\le\tau(\rho)}}i(p)
+ =\tau(\rho).
+\]
+Jeżeli różne $\rho$ prowadzą
+do dosłownie tej samej nazwy
+$\rho_*$, współczynniki należy
+połączyć kresem górnym.
+Dla \emph{dowolnej} nazwy
+$\eta$ można więc rozwinąć
+przynależność do podwójnego
+przekładu i otrzymać
+\[
+\begin{aligned}
+ \llbracket\eta\in
+       (\tau^{\mathbb P})^{\mathbb B}
+                 \rrbracket
+ &=\bigvee_{\rho\in\operatorname{dom}\tau}
+    \tau(\rho)\wedge
+    \llbracket\eta=\rho_*\rrbracket\\
+ &=\bigvee_{\rho\in\operatorname{dom}\tau}
+    \tau(\rho)\wedge
+    \llbracket\eta=\rho\rrbracket
+ =\llbracket\eta\in\tau\rrbracket.
+\end{aligned}
+\]
+Druga równość wynika z
+podstawiania na fragmencie
+$\llbracket\rho=\rho_*\rrbracket=1$.
+Ponieważ tożsamość zachodzi
+dla każdej nazwy $\eta$,
+boolowska ekstensjonalność,
+udowodniona w
+Twierdzeniu~\ref{thm:boolean35-zfc},
+kończy krok indukcyjny.
+
+Nie zakładamy więc, że każda
+nazwa boolowska \emph{dosłownie}
+jest przekładem nazwy
+porządkowej: ma jedynie
+równoważnego boolowsko
+przedstawiciela.
+
+Dowód zgodności obu definicji
+wymuszania prowadzimy przez
+równoczesną indukcję po rangach
+nazw w klauzulach atomowych,
+a następnie po budowie formuły.
+Przyda nam się następujące
+kryterium dla $b\in\mathbb B$:
+\[
+ i(p)\le b
+ \quad\Longleftrightarrow\quad
+ \forall q\le p\ \exists r\le q\
+              (i(r)\le b).
+\]
+Implikacja w prawo wynika
+z monotoniczności $i$:
+można wziąć $r=q$.
+Gdyby prawa strona zachodziła,
+ale $i(p)\not\le b$, mielibyśmy
+$i(p)\wedge\neg b>0$.
+Gęstość obrazów warunków z
+Lematu~\ref{lem:boolean35-dense-completion}
+daje $t$ z
+$0<i(t)\le i(p)\wedge\neg b$.
+Ponieważ $t$ i $p$ są zgodne,
+istnieje $q\le t,p$.
+Żadne $r\le q$ nie może mieć
+$i(r)\le b$, gdyż
+$0<i(r)\le\neg b$.
+Otrzymujemy sprzeczność.
+
+Trzeba przy tym pamiętać,
+że z $i(t)\le i(p)$
+nie musi wynikać $t\le p$:
+nierówność zapewnia tylko
+zgodność warunków i możliwość
+znalezienia wspólnego
+wzmocnienia.
+
+\emph{Przynależność.}
+Dla nazw porządkowych
+$\sigma,\tau$ połóżmy
+\[
+ v=\bigvee_{(\pi,s)\in\tau}
+       \bigl(i(s)\wedge
+          \llbracket\sigma^{\mathbb B}
+                    =\pi^{\mathbb B}
+          \rrbracket\bigr).
+\]
+Jest to dokładnie
+$\llbracket\sigma^{\mathbb B}
+            \in\tau^{\mathbb B}\rrbracket$;
+powtarzające się argumenty
+nazwy boolowskiej łączymy
+kresem górnym.
+Załóżmy, że
+$p\Vdash_{\mathbb P}\sigma\in\tau$.
+Dla dowolnego $q\le p$ atomowa
+klauzula wymuszania daje
+$r\le q$ i $(\pi,s)\in\tau$
+takie, że $r\le s$ oraz
+$r\Vdash_{\mathbb P}\sigma=\pi$.
+Z hipotezy indukcyjnej
+$i(r)\le\llbracket
+\sigma^{\mathbb B}=\pi^{\mathbb B}
+\rrbracket$, a z $r\le s$
+mamy $i(r)\le i(s)$.
+Zatem $i(r)\le v$.
+Kryterium gęstości daje
+$i(p)\le v$.
+
+Odwrotnie, jeśli $i(p)\le v$,
+to dla każdego $q\le p$,
+z rozdzielności i niezerowości
+$i(q)$, istnieje $(\pi,s)\in\tau$
+z
+\[
+ i(q)\wedge i(s)\wedge
+ \llbracket\sigma^{\mathbb B}
+          =\pi^{\mathbb B}\rrbracket>0.
+\]
+Wybieramy obraz warunku $t$
+poniżej tego niezerowego
+elementu. Najpierw znajdujemy
+wspólne wzmocnienie $t,q$,
+a potem wzmacniamy je
+razem z $s$; otrzymujemy
+$r\le q,s$ i
+\[
+ i(r)\le\llbracket
+ \sigma^{\mathbb B}=\pi^{\mathbb B}
+ \rrbracket.
+\]
+Hipoteza indukcyjna daje
+$r\Vdash_{\mathbb P}\sigma=\pi$,
+czyli dokładnie klauzulę
+$p\Vdash_{\mathbb P}\sigma\in\tau$.
+
+\emph{Równość.}
+Dla $(\pi,s)\in\sigma$ warunek
+$i(p)\wedge i(s)\le
+ \llbracket\pi^{\mathbb B}
+             \in\tau^{\mathbb B}\rrbracket$
+jest równoważny temu, że
+\emph{każdy} $q\le p,s$
+ma wzmocnienie wymuszające
+$\pi\in\tau$. Istotnie,
+z nierówności wynika już
+$i(q)\le\llbracket
+\pi^{\mathbb B}\in\tau^{\mathbb B}
+\rrbracket$, a więc przez
+hipotezę indukcyjną sam $q$
+wymusza tę przynależność.
+W przeciwną stronę, gdyby
+nierówność nie zachodziła,
+wybralibyśmy niezerowy obraz
+warunku poniżej
+\[
+ i(p)\wedge i(s)\wedge
+ \neg\llbracket
+   \pi^{\mathbb B}\in\tau^{\mathbb B}
+ \rrbracket
+\]
+i wzmocnili go równocześnie
+poniżej $p,s$. Żaden dalszy
+warunek nie mógłby wymuszać
+wskazanej przynależności,
+wbrew atomowej klauzuli
+równości. Otrzymujemy
+\[
+ i(p)\le
+ i(s)\Rightarrow
+ \llbracket\pi^{\mathbb B}
+             \in\tau^{\mathbb B}
+ \rrbracket.
+\]
+Biorąc kres dolny po
+$(\pi,s)\in\sigma$ i analogicznie
+po parach z $\tau$, dostajemy
+dokładnie definicję wartości
+$\llbracket\sigma^{\mathbb B}
+            =\tau^{\mathbb B}\rrbracket$.
+Jeśli kilka par daje ten sam
+argument, używamy tożsamości
+\[
+ \bigwedge_j(a_j\Rightarrow c)
+ =\bigl(\bigvee_j a_j\bigr)\Rightarrow c.
+\]
+Kończy to równoczesny krok
+atomowy, bez odwoływania się
+do zewnętrznego filtru
+generycznego.
+
+Koniunkcja odpowiada
+przecięciu fragmentów.
+Dla negacji
+$p\Vdash\neg\psi$ oznacza,
+że żadne $q\le p$ nie wymusza
+$\psi$. Wykazany przed chwilą
+fakt o wzmacnianiu poniżej $p$
+i hipoteza indukcyjna pokazują,
+że jest to równoważne
+$i(p)\wedge\llbracket\psi\rrbracket=0$,
+czyli
+$i(p)\le\neg\llbracket\psi\rrbracket$.
+
+Dla egzystencji rozpatrujemy
+$u=\llbracket\exists x\,
+\psi(x,\vec\tau^{\mathbb B})
+\rrbracket_{\mathbb B}$.
+Lemat~\ref{thm:boolean35-fullness}
+daje nazwę boolowską $\rho$
+z
+$u=\llbracket\psi(\rho,
+\vec\tau^{\mathbb B})\rrbracket$.
+Jej nazwa porządkowa
+$\rho^{\mathbb P}$ spełnia
+$\llbracket\rho=
+(\rho^{\mathbb P})^{\mathbb B}
+\rrbracket=1$, więc
+podstawianie zachowuje wartość
+$u$. Jeżeli $i(p)\le u$,
+to z hipotezy indukcyjnej
+otrzymujemy
+$p\Vdash\psi(\rho^{\mathbb P},
+\vec\tau)$, a stąd
+$p\Vdash\exists x\,\psi(x,\vec\tau)$.
+Odwrotnie, definicja
+wymuszania egzystencji
+zapewnia gęsto poniżej $p$
+wzmocnienia wymuszające
+$\psi$ dla odpowiednich
+nazw porządkowych. Na mocy
+hipotezy indukcyjnej ich
+obrazy leżą poniżej $u$;
+gęstość daje $i(p)\le u$.
+To kończy indukcję dla
+każdej ustalonej formuły.
+Wszystkie kroki są
+rekurencjami po zbiorach nazw
+i wykorzystują definiowalne
+w ZFC klauzule wymuszania z
+Twierdzenia~\ref{thm:forcing33-definability}.
+Chociaż tam sformułowaliśmy
+lemat dla tranzytywnego
+modelu wyjściowego, jego
+\emph{część syntaktyczna}
+nie wymaga tranzytywności:
+cały przedstawiony argument
+jest dowodem w ZFC dla
+dowolnego zbiorowego pojęcia
+wymuszania. Dlatego może
+być interpretowany również
+wewnątrz modelu ZFC,
+który zewnętrznie nie jest
+dobrze ufundowany.
+
+Dla przykładu rozważmy
+standardową nazwę filtru
+generycznego
+$\dot G=\{(\check p,p):p\in\mathbb P\}$.
+Jej przekład ma współczynnik
+$i(p)$ przy $\check p$.
+Ponieważ równość
+$\llbracket\check p=\check q\rrbracket$
+ma wartość $1$ dokładnie dla
+$p=q$, a w pozostałych przypadkach
+wartość $0$, otrzymujemy
+\[
+ \llbracket\check p\in
+            \dot G^{\mathbb B}\rrbracket=i(p).
+\]
+To uzasadnia również zgodność
+przekładu z nazwą obiektu
+generycznego, wskazaną w tezie.
+\end{proof}
+
+\begin{twierdzenie}[Dwie algebry rozstrzygające CH]
+\label{thm:boolean35-two-algebras}
+W ZFC istnieją niezerowe
+zupełne algebry Boole'a
+$\mathbb B_{\mathrm{CH}}$ i
+$\mathbb B_{\neg\mathrm{CH}}$
+zadane odpowiednio przez
+\[
+\begin{aligned}
+ \mathbb B_{\mathrm{CH}}
+ &=\operatorname{RO}\bigl(
+   \operatorname{Coll}(\omega_1,2^{\aleph_0})
+                        \bigr),\\
+ \mathbb B_{\neg\mathrm{CH}}
+ &=\operatorname{RO}\bigl(
+   \operatorname{Add}(\omega,\omega_2)
+                        \bigr),
+\end{aligned}
+\]
+takie, że
+\[
+ \llbracket\mathrm{CH}\rrbracket_{
+      \mathbb B_{\mathrm{CH}}}=1,\qquad
+ \llbracket\neg\mathrm{CH}\rrbracket_{
+      \mathbb B_{\neg\mathrm{CH}}}=1.
+\]
+Obydwa stwierdzenia są
+\emph{twierdzeniami ZFC o
+ustalonych wartościach boolowskich},
+a nie jedynie stwierdzeniami
+o rozszerzeniach pewnego
+wybranego modelu tranzytywnego.
+\end{twierdzenie}
+\begin{proof}
+Używamy definicji pojęć
+wymuszania z
+Rozdziału~\ref{ch:forcing-continuum}
+i Lematu~\ref{lem:boolean35-poset-truth}.
+
+\emph{Algebra wymuszająca zaprzeczenie CH.}
+Niech
+$\mathbb P_{\mathrm C}
+=\operatorname{Add}(\omega,\omega_2)$
+oraz
+$\mathbb B_{\mathrm C}
+=\operatorname{RO}(\mathbb P_{\mathrm C})$.
+Lemat o systemie $\Delta$
+pokazuje wewnątrz ZFC,
+że $\mathbb P_{\mathrm C}$
+spełnia ccc. Również
+$\mathbb B_{\mathrm C}$
+spełnia ccc: gdyby miała
+nieprzeliczalny antyłańcuch
+$A\subseteq\mathbb B_{\mathrm C}^+$,
+dla każdego $a\in A$
+wybralibyśmy $p_a$ z
+$0<i(p_a)\le a$. Warunki
+$p_a$ byłyby parami niezgodne,
+wbrew ccc dla
+$\mathbb P_{\mathrm C}$.
+
+Wyprowadzimy zachowanie
+$\omega_1$ i $\omega_2$
+\emph{bez} korzystania
+z rozszerzeń generycznych.
+Wystarczy wykluczyć surjekcje
+z $\check\beta$ na
+$\check\lambda$ dla
+$\beta<\lambda$ ze zbioru
+wyjściowego. Istotnie, każda
+nazwa liczby porządkowej
+mniejszej od $\check\lambda$
+ma na niezerowym fragmencie
+wartość równą pewnej
+$\check\beta$, gdyż
+\[
+ \llbracket\tau\in
+           \check\lambda\rrbracket
+ =\bigvee_{\beta<\lambda}
+   \llbracket\tau=\check\beta\rrbracket.
+\]
+Gdyby więc istniała
+surjekcja z jakiejkolwiek
+wewnętrznej mniejszej liczby
+porządkowej, na pewnym
+niezerowym fragmencie
+istniałaby surjekcja
+ze starej $\check\beta$.
+
+Niech
+$\lambda\in\{\omega_1,\omega_2\}$,
+$\beta<\lambda$, a $\dot f$
+będzie nazwą funkcji, której
+surjektywność
+$\check\beta\to\check\lambda$
+ma dodatnią wartość boolowską
+$b$. Dla każdego $\xi<\beta$
+Twierdzenie~\ref{thm:boolean35-fullness}
+dostarcza
+nazwę $\dot v_\xi$ wartości
+$\dot f(\check\xi)$ na
+fragmencie $b$.
+W szczególności
+\[
+ b=\bigvee_{\eta<\lambda}
+       \bigl(b\wedge
+       \llbracket\dot v_\xi
+               =\check\eta\rrbracket\bigr).
+\]
+Jest to rozwinięcie relacji
+$\dot v_\xi\in\check\lambda$:
+kanoniczna nazwa
+$\check\lambda$ ma współczynnik
+$1$ przy każdej $\check\eta$,
+$\eta<\lambda$.
+
+Dla każdego $\xi<\beta$
+wybieramy więc maksymalny
+antyłańcuch $A_\xi$ poniżej
+$b$, którego każdy element
+leży poniżej wartości
+$\llbracket\dot v_\xi
+=\check\eta\rrbracket$
+dla pewnego $\eta<\lambda$.
+Istnienie antyłańcucha
+o kresie $b$ wynika
+z rozdzielności i
+lematu Kuratowskiego--Zorna,
+jak w dowodzie pełności.
+Ponieważ $\mathbb B_{\mathrm C}$
+spełnia ccc, $A_\xi$
+jest co najwyżej przeliczalny.
+Niech $S_\xi\subseteq\lambda$
+zawiera jedną taką wartość
+$\eta$ dla każdego elementu
+$A_\xi$. Otrzymujemy
+\[
+ |S|<\lambda,\qquad
+ S=\bigcup_{\xi<\beta}S_\xi,
+\]
+gdyż $\lambda$ jest jedną
+z liczb $\omega_1,\omega_2$
+i
+$|S|\le\max(\aleph_0,|\beta|)$.
+Wybierzmy $\eta\in\lambda
+\setminus S$. Dla każdego
+$\xi<\beta$ mamy
+$b\wedge\llbracket
+\dot v_\xi=\check\eta\rrbracket=0$,
+ponieważ antyłańcuch
+$A_\xi$ pokrywa $b$,
+a różne kanoniczne liczby
+porządkowe mają wartość
+równości równą $0$.
+Jest to sprzeczne
+z założeniem, że na
+fragmencie $b$ funkcja
+$\dot f$ jest surjekcją.
+
+Zatem obie kanoniczne
+liczby porządkowe
+$\check{\omega_1},\check{\omega_2}$
+pozostają liczbami kardynalnymi.
+Dla każdej liczby
+porządkowej $\alpha<\omega_2$,
+która nie jest liczbą kardynalną,
+stara bijekcja świadcząca
+o tym fakcie zachowuje
+wartość boolowską $1$
+jako nazwa kanoniczna.
+Co ważne, \emph{każda}
+nazwa $\rho$ spełniająca
+$\rho\in\check{\omega_2}$
+jest na odpowiednich
+fragmentach boolowskich
+równa pewnej
+$\check\alpha$, $\alpha<\omega_2$:
+wynika to wprost z rozwinięcia
+przynależności do nazwy
+$\check{\omega_2}$.
+Nie mogą więc powstać
+nieznane wcześniej liczby kardynalne
+poniżej $\check{\omega_2}$.
+Wobec tego
+$\check{\omega_1}$ i
+$\check{\omega_2}$ są
+odpowiednio pierwszą i
+drugą nieprzeliczalną
+liczbą kardynalną w uniwersum
+boolowskim.
+
+Dla każdego $\alpha<\omega_2$
+tworzymy nazwę
+$\dot c_\alpha$ podzbioru
+$\check\omega$ o współczynniku
+przy $\check n$ równym
+\[
+ b_{\alpha,n}
+ =\bigvee\{i(p):p\in\mathbb P_{\mathrm C},\
+       (\alpha,n)\in\operatorname{dom}p,\
+       p(\alpha,n)=1\}.
+\]
+Zbiory warunków rozstrzygających
+wartość na $(\alpha,n)$
+są gęste. Nazwa
+$\dot c_\alpha$ reprezentuje
+podzbiór $\omega$, który
+odpowiada funkcji binarnej
+o współrzędnych
+indeksowanych przez $n$.
+Jeżeli $\alpha\ne\beta$,
+zbiór warunków nadających
+odmienne wartości
+$(\alpha,n)$ oraz
+$(\beta,n)$ dla pewnego
+$n$ jest gęsty: wybieramy
+wolny numer $n$ i wpisujemy
+odpowiednio $0$ i $1$.
+Stąd
+\[
+ \llbracket\dot c_\alpha
+           \ne\dot c_\beta
+           \rrbracket=1.
+\]
+W modelu wyjściowym można
+więc utworzyć nazwę grafu
+$\check{\omega_2}\to
+\Pi_{\check\omega}$
+złożoną z nazw par
+$(\check\alpha,\dot c_\alpha)$,
+o współczynnikach $1$.
+Tutaj $\Pi_{\check\omega}$
+jest nazwą zbioru potęgowego
+skonstruowaną wcześniej
+w dowodzie poprawności ZFC.
+Każda $\dot c_\alpha$
+należy do niej z wartością $1$;
+otrzymany graf jest
+nazwą iniekcji
+z wartością $1$.
+Zachowanie $\omega_2$
+wykazane wyżej daje
+$\llbracket\neg\mathrm{CH}
+\rrbracket_{\mathbb B_{\mathrm C}}=1$.
+
+\emph{Algebra wymuszająca CH.}
+Niech $\lambda=2^{\aleph_0}$,
+a $\mathbb P_{\mathrm H}$
+składa się z częściowych funkcji
+$\omega_1\to\lambda$
+o przeliczalnych dziedzinach;
+połóżmy
+$\mathbb B_{\mathrm H}
+=\operatorname{RO}(\mathbb P_{\mathrm H})$.
+Suma malejącego przeliczalnego
+ciągu warunków jest ich
+wspólnym wzmocnieniem.
+
+Pokażemy wprost, że nie
+powstaje nowy podzbiór
+$\omega$. Niech $\dot x$
+będzie dowolną nazwą, a
+$p\in\mathbb P_{\mathrm H}$
+warunkiem takim, że
+\[
+ i(p)\le\llbracket\dot x
+ \subseteq\check\omega\rrbracket.
+\]
+Wystarczy dowieść, że zbiór
+wzmocnień $q\le p$
+rozstrzygających $\dot x$
+jako starą nazwę jest gęsty
+poniżej $p$. Połóżmy
+\[
+ b_n=\llbracket
+       \check n\in\dot x\rrbracket
+       \qquad(n\in\omega).
+\]
+Dla każdego $r\in\mathbb P_{\mathrm H}$
+i każdego $b\in\mathbb B_{\mathrm H}$
+istnieje $q\le r$ takie,
+że $i(q)\le b$ albo
+$i(q)\le\neg b$:
+co najmniej jeden ze
+składników
+$i(r)\wedge b$,
+$i(r)\wedge\neg b$
+jest niezerowy, a
+Lemat~\ref{lem:boolean35-dense-completion}
+pozwala znaleźć wspólne
+wzmocnienie z $r$.
+Zaczynając od
+\emph{dowolnego} $r\le p$
+i kładąc $p_0=r$,
+wybieramy rekurencyjnie
+$p_{n+1}\le p_n$
+rozstrzygające $b_n$.
+Przeliczalna domkniętość
+daje $q\le p_n$ dla
+wszystkich $n$. W modelu
+wyjściowym określamy
+\[
+ x=\{n\in\omega:
+        i(q)\le b_n\}.
+\]
+Wówczas $q$ rozstrzyga
+wszystkie przynależności
+$\check n\in\dot x$
+dokładnie tak jak
+$\check n\in\check x$.
+Ponieważ $q\le p$,
+na fragmencie $i(q)$
+zachodzi też
+$\dot x\subseteq\check\omega$;
+ekstensjonalność boolowska
+daje
+\[
+ i(q)\le\llbracket
+      \dot x=\check x\rrbracket.
+\]
+Konstrukcja działa poniżej
+każdego $p$, więc zbiór
+warunków rozstrzygających
+całą nazwę podzbioru
+$\omega$ jest gęsty.
+W języku wartości boolowskich
+uzyskaliśmy dla każdej
+nazwy $\dot x$ nierówność
+\[
+ \llbracket\dot x\subseteq
+      \check\omega\rrbracket
+ \le\bigvee_{x\subseteq\omega}
+       \llbracket\dot x=\check x\rrbracket
+ =\llbracket\dot x\in
+       \check{\mathcal P(\omega)}\rrbracket.
+\]
+Odwrotna nierówność wynika
+z definicji nazw kanonicznych.
+To precyzyjnie wyraża brak
+nowych podzbiorów $\omega$.
+
+W ten sam sposób wykażemy,
+że $\omega_1$ pozostaje
+nieprzeliczalna. Dla nazwy
+$\dot f$ funkcji
+$\check\omega\to\check{\omega_1}$
+wartości na każdej
+$\check n$ można na
+każdym fragmencie, na którym
+$\dot f$ jest funkcją,
+przedstawić przez nazwy
+$\dot v_n$ na mocy pełności.
+Ponieważ
+\[
+ \llbracket\dot v_n
+       \in\check{\omega_1}\rrbracket
+ =\bigvee_{\xi<\omega_1}
+   \llbracket\dot v_n
+           =\check\xi\rrbracket,
+\]
+każdy warunek wymuszający
+funkcjonalność można wzmocnić
+do warunku rozstrzygającego
+$\dot v_n=\check\xi$
+dla pewnego $\xi<\omega_1$.
+Wykonujemy to kolejno dla
+$n\in\omega$ i wybieramy
+wspólne wzmocnienie $q$
+przez przeliczalną domkniętość.
+Otrzymujemy starą funkcję
+$g:\omega\to\omega_1$,
+taką że
+\[
+ i(q)\le\llbracket
+        \dot f=\check g\rrbracket.
+\]
+Żadna taka $g$ nie jest
+surjekcją na $\omega_1$;
+zatem żaden warunek
+nie może wymusić, że
+$\omega_1$ staje się
+przeliczalna.
+
+Wreszcie zbiory warunków
+określonych na ustalonej
+$\xi<\omega_1$ są gęste,
+a dla każdego $\eta<\lambda$
+gęsty jest zbiór warunków,
+które przyjmują gdzieś
+wartość $\eta$: wybieramy
+współrzędną poza przeliczalną
+dziedziną danego warunku.
+Dokładniej, definiujemy
+\[
+ d_{\xi,\eta}
+ =\bigvee\{i(p):
+     p\in\mathbb P_{\mathrm H},\
+     \xi\in\operatorname{dom}p,\
+     p(\xi)=\eta\}.
+\]
+Dla każdego $\xi<\omega_1$
+wartości $d_{\xi,\eta}$
+są parami rozłączne
+i ich kres po
+$\eta<\lambda$ jest
+równy $1$. Dla każdego
+$\eta<\lambda$ również
+$\bigvee_{\xi<\omega_1}
+ d_{\xi,\eta}=1$.
+Nazwa grafu o współczynnikach
+$d_{\xi,\eta}$ przy parach
+$(\check\xi,\check\eta)$
+jest zatem nazwą
+funkcji całkowitej
+$\check{\omega_1}\to\check\lambda$,
+która jest surjekcją
+z wartością $1$.
+
+Pozostaje wskazać, że
+$\check{\omega_1}$ jest
+\emph{pierwszą} nieprzeliczalną
+liczbą porządkową:
+każda nazwa jej elementu
+jest na odpowiednich
+fragmentach równa
+$\check\alpha$ dla
+$\alpha<\omega_1$,
+a takie liczby porządkowe
+pozostają przeliczalne
+za sprawą starych bijekcji.
+Brak nowych podzbiorów
+$\omega$ i zachowanie
+$\omega_1$ pokazują
+$\llbracket\mathrm{CH}
+\rrbracket_{\mathbb B_{\mathrm H}}=1$.
+
+Wszystkie użyte argumenty
+wybierają antyłańcuchy,
+stosują zastępowanie i
+konstruują skończone lub
+przeliczalne ciągi
+\emph{wewnątrz ZFC}.
+Własność wartości $1$ jest
+więc formalizowalnym
+twierdzeniem pierwszego rzędu
+o każdym z dwóch wskazanych
+parametrów, także gdy
+parametry są interpretowane
+w modelu nietranzytywnym.
+\end{proof}
+
+\section{Pełne twierdzenie o względnej niesprzeczności}
+
+\begin{twierdzenie}[Względna niesprzeczność CH i jej zaprzeczenia]
+\label{thm:boolean35-relative-consistency}
+Dla teorii ZFC w języku
+pierwszego rzędu zachodzą
+implikacje metamatematyczne
+\[
+\begin{aligned}
+ \operatorname{Con}(\mathrm{ZFC})
+ &\Longrightarrow
+   \operatorname{Con}(\mathrm{ZFC}+\mathrm{CH}),\\
+ \operatorname{Con}(\mathrm{ZFC})
+ &\Longrightarrow
+   \operatorname{Con}(\mathrm{ZFC}+\neg\mathrm{CH}).
+\end{aligned}
+\]
+W szczególności, jeżeli ZFC
+jest niesprzeczna, to ani CH,
+ani jej zaprzeczenie nie jest
+twierdzeniem ZFC.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy $\operatorname{Con}(\mathrm{ZFC})$.
+Z twierdzenia Gödla o pełności
+rachunku pierwszego rzędu
+istnieje \emph{model zbiorowy}
+$M\models\mathrm{ZFC}$.
+Możemy wybrać model przeliczalny,
+lecz nie będziemy zakładać,
+że jest tranzytywny albo
+dobrze ufundowany zewnętrznie.
+
+Wewnątrz $M$ istnieją obie
+zupełne algebry Boole'a
+$\mathbb B_{\mathrm{CH}}$
+i $\mathbb B_{\neg\mathrm{CH}}$
+z Twierdzenia~\ref{thm:boolean35-two-algebras}.
+Ponieważ są niezerowe,
+ich \emph{zewnętrzne} algebry
+$\mathbb B_{\mathrm{CH}}^M$ i
+$\mathbb B_{\neg\mathrm{CH}}^M$
+mają ultrafiltry
+$U_{\mathrm{CH}}$ oraz
+$U_{\neg\mathrm{CH}}$,
+których istnienie wynika z
+Lematu~\ref{lem:boolean35-ultrafilter-exists}.
+Nie żądamy, by te ultrafiltry
+należały do $M$ ani by
+były generyczne.
+
+Twierdzenie~\ref{thm:boolean35-quotient-zfc}
+daje dwa modele zbiorowe
+\[
+\begin{aligned}
+ N_{\mathrm{CH}}
+    &=M^{\mathbb B_{\mathrm{CH}}}/U_{\mathrm{CH}}
+        \models\mathrm{ZFC},\\
+ N_{\neg\mathrm{CH}}
+    &=M^{\mathbb B_{\neg\mathrm{CH}}}/U_{\neg\mathrm{CH}}
+        \models\mathrm{ZFC}.
+\end{aligned}
+\]
+Twierdzenie~\ref{thm:boolean35-two-algebras}
+jest dowiedzione \emph{w ZFC},
+więc także $M$ spełnia obie
+jego ustalone konkluzje o
+wartościach boolowskich:
+\[
+\begin{aligned}
+ M&\models
+  \llbracket\mathrm{CH}\rrbracket_{
+                \mathbb B_{\mathrm{CH}}}=1,\\
+ M&\models
+  \llbracket\neg\mathrm{CH}\rrbracket_{
+                \mathbb B_{\neg\mathrm{CH}}}=1.
+\end{aligned}
+\]
+Ponieważ $1$ należy do każdego
+ultrafiltru, lemat prawdy
+dla ilorazu daje
+$N_{\mathrm{CH}}\models\mathrm{CH}$
+i
+$N_{\neg\mathrm{CH}}\models\neg\mathrm{CH}$.
+Uzyskaliśmy zatem
+\emph{modele obu rozszerzonych teorii}.
+Z poprawności rachunku
+pierwszego rzędu każda
+z nich jest niesprzeczna.
+
+Gdyby ZFC dowodziła CH,
+teoria ZFC+$\neg$CH
+byłaby sprzeczna.
+Gdyby ZFC dowodziła $\neg$CH,
+teoria ZFC+CH byłaby
+sprzeczna. Obydwie możliwości
+zostały wykluczone przy
+założeniu niesprzeczności ZFC.
+\end{proof}
+
+\begin{uwaga}[Dwie różne metody i ich wnioski]
+\label{rem:boolean35-comparison}
+Rozdział~\ref{ch:forcing-continuum}
+konstruuje rzeczywiste
+\emph{tranzytywne rozszerzenia}
+przy silniejszym założeniu
+istnienia przeliczalnego
+tranzytywnego modelu zbiorowego.
+Obecny rozdział konstruuje
+\emph{ilorazy nazw} i
+otrzymuje modele ZFC nawet
+wtedy, gdy model wyjściowy
+jest zewnętrznie źle
+ufundowany. Nie wnioskujemy,
+że tak otrzymane ilorazy
+są tranzytywnymi zbiorami.
+
+Słowo „niezależność” w
+konkluzji oznacza dwa
+stwierdzenia
+$\mathrm{ZFC}\nvdash\mathrm{CH}$
+oraz
+$\mathrm{ZFC}\nvdash\neg\mathrm{CH}$,
+\emph{warunkowo względem
+$\operatorname{Con}(\mathrm{ZFC})$}.
+Nie jest to twierdzenie o
+niesprzeczności ZFC bez
+dodatkowych założeń.
+\end{uwaga}
+
+\begin{przyklad}[Czteroelementowa algebra]
+\label{ex:boolean35-four}
+Niech
+$\mathbb B=\mathcal P(\{0,1\})$.
+Jest to zupełna algebra Boole'a
+o czterech elementach.
+Dwa ultrafiltry główne to
+\[
+ U_0=\{A\subseteq\{0,1\}:0\in A\},
+ \qquad
+ U_1=\{A\subseteq\{0,1\}:1\in A\}.
+\]
+Niech $\dot a$ będzie nazwą
+o dziedzinie $\{\check\varnothing\}$
+i współczynniku
+$\dot a(\check\varnothing)=\{0\}$.
+Dla formuły \emph{z parametrem}
+$\varphi(\dot a)$ postaci
+$\check\varnothing\in\dot a$
+mamy dokładnie
+$\llbracket\varphi(\dot a)\rrbracket=\{0\}$.
+Jest ona prawdziwa w ilorazie
+przez $U_0$ i fałszywa
+w ilorazie przez $U_1$.
+Natomiast każde zdanie
+o wartości $1_{\mathbb B}=\{0,1\}$
+jest prawdziwe w obu ilorazach.
+Pokazuje to, dlaczego
+wartość \emph{największa},
+a nie tylko dodatnia, jest
+właściwa przy dowodzeniu
+niesprzeczności przez
+\emph{dowolny} ultrafiltr.
+\end{przyklad}
+
+\begin{uwaga}[Zakres formalnej weryfikacji]
+\label{rem:boolean35-formalization}
+Powyższy dowód jest
+zwykłym argumentem
+matematycznym w ZFC,
+a nie zapisem dowodu
+zweryfikowanego przez
+asystenta dowodzenia.
+Syntaktyzacja definicji nazw
+boolowskich, twierdzenia o
+pełności i prawdy dla ilorazu
+pozwala formalizować argument
+nawet w relatywnie słabej
+metateorii. Aby jednak
+przedstawić wynik jako
+\emph{sprawdzony w Lean},
+trzeba osobno dostarczyć
+kompilujący się kod,
+określić użyte aksjomaty
+i przeprowadzić kontrolę
+jądra systemu. Sam sukces
+kompilacji LaTeX ani testów
+Python nie wystarcza.
+\end{uwaga}

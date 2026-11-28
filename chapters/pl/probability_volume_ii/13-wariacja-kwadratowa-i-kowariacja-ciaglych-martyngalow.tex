@@ -3,6 +3,12 @@
 \paragraph{Odsyłacze międzytomowe.} Konstrukcja całki Itô wykorzystująca wariację kwadratową znajduje się w tomie III, rozdziale~\ref{III-ch:ito-construction}.
 
 
+W całym rozdziale zakładamy warunki zwykłe filtracji
+(rozdział~\ref{ch:mart-cont}). Procesy o prawie na pewno
+ciągłych trajektoriach zastępujemy w razie potrzeby
+nierozróżnialnymi wersjami o wszędzie ciągłych
+trajektoriach, zmieniając je na zbiorze zerowym z $\calF_0$.
+
 \section{Dlaczego kwadraty przyrostów są inne niż zwykła wariacja?}
 Dla gładkiej funkcji $f$ na $[0,T]$ suma
 $\sum_i(f(t_{i+1})-f(t_i))^2$ dąży do zera, gdy
@@ -26,16 +32,30 @@ V_t^\pi(X)=\sum_{i=0}^{m-1}
 \]
 Jest to ciągły proces nieujemny, choć dla ustalonej
 siatki nie musi być niemalejący pomiędzy jej węzłami.
-Gdy dla każdej sekwencji deterministycznych podziałów
-$\pi_n$ o średnicach $|\pi_n|\to0$ mamy
+Średnicą podziału nazywamy $|\pi|=\max_i(t_{i+1}-t_i)$.
+Gdy istnieje ciągły proces $A$ taki, że dla każdego
+$T>0$ i każdego ciągu deterministycznych podziałów
+$\pi_n$ przedziału $[0,T]$ o średnicach $|\pi_n|\to0$
+mamy
 $\sup_{t\le T}|V_t^{\pi_n}(X)-A_t|\to0$
 według prawdopodobieństwa, proces $A$ nazywamy
 \emph{wariacją kwadratową} $X$ i oznaczamy $[X]$.
 Skrót \emph{ucp} oznacza właśnie zbieżność jednostajną
 na przedziałach zwartych według prawdopodobieństwa.
+Taka granica jest jednoznaczna z dokładnością do
+nierozróżnialności: dla dwóch granic $A,A'$ na każdym
+$[0,T]$ nierówność trójkąta daje
+$\Prob(\sup_{t\le T}|A_t-A'_t|>\varepsilon)=0$
+dla każdego $\varepsilon>0$. Wystarczy następnie
+wziąć przeliczalnie wiele dodatnich całkowitych $T$
+i $\varepsilon=1/n$.
+Jeżeli $X$ jest adaptowany, to $V^\pi(X)$ również;
+ciągłą granicę można wybrać adaptowaną, korzystając
+z zupełności filtracji, jak w dowodzie poniżej.
 \end{definicja}
 
-\begin{lemat}[Znikanie wariacji kwadratowej skończonej wariacji]
+\begin{lemat}[Znikanie wariacji kwadratowej dla trajektorii o skończonej wariacji]
+\label{lem:finite-var-zero-quadratic}
 Niech $f:[0,T]\to\R$ będzie funkcją ciągłą o
 skończonej wariacji całkowitej $\operatorname{Var}_{[0,T]}(f)$.
 Dla dowolnego ciągu podziałów o średnicach malejących
@@ -65,8 +85,11 @@ $V_T^{\pi_n}(W)\to T$ w $L^2$, a nawet
 \longrightarrow0
 \quad\text{według prawdopodobieństwa}.
 \]
-Ponadto dla siatek równomiernych dyadycznych
-zbieżność ta zachodzi prawie na pewno.
+Ponadto dla każdego ciągu siatek spełniającego
+$\sum_n|\pi_n|<\infty$ zbieżność jednostajna
+zachodzi prawie na pewno. Dotyczy to w szczególności
+siatek równomiernych dyadycznych.
+Wynik jest zgodny z konstrukcją w rozdziale~\ref{ch:wiener}.
 \end{twierdzenie}
 \begin{proof}
 Z niezależności przyrostów $\Delta_iW\sim
@@ -83,7 +106,8 @@ To daje zbieżność w $L^2$ dla wszystkich siatek.
 Aby uzyskać zbieżność jednostajną, w węzłach podziału
 rozważmy dyskretny martyngał
 $D_k=\sum_{i<k}((\Delta_iW)^2-h_i)$.
-Nierówność maksymalna Dooba w $L^2$ daje
+Nierówność maksymalna Dooba w $L^2$
+(tom I, rozdział~\ref{I-ch:nadmartyngaly}) daje
 \[
 \E\max_{k\le m}|D_k|^2\le4\E|D_m|^2
 \le8T|\pi|.
@@ -93,13 +117,45 @@ zmienić się względem lewego węzła najwyżej o
 $\max_i\sup_{u,v\in[t_i,t_{i+1}]}|W_u-W_v|^2+|\pi|$.
 Ta wielkość dąży prawie na pewno do zera dzięki
 jednostajnej ciągłości trajektorii. Stąd teza ucp.
-Dla siatek dyadycznych $|\pi_n|=T2^{-n}$
-i $\sum_n\E\max_k|D_k|^2<\infty$.
+Jeśli $\sum_n|\pi_n|<\infty$, to
+$\sum_n\E\max_k|D_k|^2<\infty$
+(w szczególności dla siatek dyadycznych $|\pi_n|=T2^{-n}$).
 Nierówność Markowa i lemat Borela--Cantellego dają
 zbieżność $\max_k|D_k|\to0$ prawie na pewno.
 Oscylacje wewnątrz komórek także zanikają prawie na pewno,
 więc zbieżność jest jednostajna prawie na pewno.
 \end{proof}
+
+\begin{center}
+\begin{tikzpicture}[x=1.5cm,y=0.85cm,>=Latex]
+\draw[->] (0,0)--(4.4,0) node[right] {$t$};
+\draw[->] (0,0)--(0,3.8) node[above] {$x(t)$};
+\foreach \x in {1,2,3,4}{\draw[gray,densely dotted] (\x,0)--(\x,3.3);}
+\draw[blue!75!black,thick] (0,1)--(0.55,2.4)--(1,1.8)--(1.6,0.6)--(2,1.2)--(2.5,2.8)--(3,2.2)--(3.5,1.4)--(4,2.8);
+\foreach \x/\y in {0/1,1/1.8,2/1.2,3/2.2,4/2.8}{\fill[blue!75!black] (\x,\y) circle (1.6pt);}
+\end{tikzpicture}
+
+\begin{tikzpicture}[x=1.5cm,y=0.85cm,>=Latex]
+\draw[->] (0,0)--(4.4,0) node[right] {$t$};
+\draw[->] (0,0)--(0,4.2) node[above] {$V_t^\pi(x)$};
+\foreach \x in {1,2,3,4}{\draw[gray,densely dotted] (\x,0)--(\x,3.85);}
+\draw[blue!75!black,thick,domain=0:0.55,samples=25] plot(\x,{(1.4*\x/0.55)^2});
+\draw[blue!75!black,thick,domain=0.55:1,samples=25] plot(\x,{(1.4-0.6*(\x-0.55)/0.45)^2});
+\draw[blue!75!black,thick,domain=1:1.6,samples=25] plot(\x,{0.64+(1.2*(\x-1)/0.6)^2});
+\draw[blue!75!black,thick,domain=1.6:2,samples=25] plot(\x,{0.64+(1.2-0.6*(\x-1.6)/0.4)^2});
+\draw[blue!75!black,thick,domain=2:2.5,samples=25] plot(\x,{1+(1.6*(\x-2)/0.5)^2});
+\draw[blue!75!black,thick,domain=2.5:3,samples=25] plot(\x,{1+(1.6-0.6*(\x-2.5)/0.5)^2});
+\draw[blue!75!black,thick,domain=3:3.5,samples=25] plot(\x,{2+(0.8*(\x-3)/0.5)^2});
+\draw[blue!75!black,thick,domain=3.5:4,samples=30] plot(\x,{2+(-0.8+1.4*(\x-3.5)/0.5)^2});
+\draw[orange!80!black,thick,dashed] (0,0)--(1,0)--(1,0.64)--(2,0.64)--(2,1)--(3,1)--(3,2)--(4,2)--(4,2.36);
+\end{tikzpicture}
+\par\smallskip\small Góra: przykładowa ciągła trajektoria
+odcinkami liniowa i siatka $\{0,1,2,3,4\}$.
+Dół: suma kwadratów z niedokończonym przyrostem (linia ciągła)
+oraz suma tylko pełnych przyrostów (linia przerywana).
+Pierwsza może lokalnie maleć, druga jest niemalejąca.
+Nie jest to symulacja ruchu Browna.
+\end{center}
 
 \section{Dyskretny lemat izometrii: fundament konstrukcji}
 Zanim skonstruujemy wariację kwadratową \emph{dowolnego}
@@ -140,7 +196,8 @@ postać to zwykła własność warunkowej wartości oczekiwanej.
 \section{Konstrukcja nawiasu ciągłego martyngału bez całki Itô}
 \begin{twierdzenie}[Istnienie wariacji kwadratowej]
 \label{thm:general-bracket}
-Niech $(\calF_t)_{t\ge0}$ będzie filtracją,
+Niech $(\calF_t)_{t\ge0}$ będzie filtracją
+spełniającą warunki zwykłe,
 a $M$ ciągłym lokalnym martyngałem rzeczywistym,
 $M_0=0$. Istnieje, z dokładnością do nierozróżnialności, dokładnie jeden
 ciągły, adaptowany, niemalejący proces $[M]$, rozpoczynający się od zera,
@@ -152,8 +209,13 @@ $|\pi_n|\to0$ zachodzi
 \sup_{0\le t\le T}|V_t^{\pi_n}(M)-[M]_t|
 \xrightarrow{\Prob}0.
 \]
-Jeśli $M_0$ jest dowolną skończoną zmienną
-$\calF_0$-mierzalną, definiujemy $[M]=[M-M_0]$.
+Dla ciągłego lokalnego martyngału o dowolnej
+wartości początkowej definiujemy $[M]=[M-M_0]$;
+przyrosty obu procesów są identyczne.
+Wówczas $(M-M_0)^2-[M]$ jest lokalnym martyngałem.
+Nie twierdzimy bez dodatkowego założenia,
+że $M^2-[M]$ jest lokalnym martyngałem,
+gdyż $M_0^2$ może nie być całkowalna.
 \end{twierdzenie}
 \begin{proof}
 \emph{Krok 1: martyngał ograniczony na $[0,T]$.}
@@ -163,9 +225,15 @@ Dla podziału $\pi$ definiujemy
 I_t^\pi=\sum_i M_{t_i}
 (M_{t\wedge t_{i+1}}-M_{t\wedge t_i}).
 \]
-Dla ustalonego podziału $I^\pi$ jest ciągłym martyngałem;
-na każdym przedziale siatki mamy jedynie stały
-współczynnik $M_{t_i}$ pomnożony przez przyrost $M$.
+Dla ustalonego podziału $I^\pi$ jest ciągłym martyngałem:
+każdy składnik jest zerowy przed $t_i$, a dla
+$t\ge t_i$ jest martyngałem $M_{t_i}(M_{t\wedge t_{i+1}}-M_{t_i})$.
+Dla $s<t_i<t$ warunkujemy najpierw względem
+$\calF_{t_i}$, uzyskując zero, a następnie względem
+$\calF_s$. Dla $t_i\le s\le t$ wystarcza
+własność martyngałowa zatrzymanego procesu i
+$\calF_s$-mierzalność współczynnika.
+Ograniczenie $M$ zapewnia całkowalność.
 Z dyskretnej izometrii i ortogonalności przyrostów
 $\E|I_t^\pi|^2\le K^2\E M_t^2$.
 
@@ -175,15 +243,24 @@ $\varepsilon>0$ i dwa podziały $\pi,\rho$.
 Niech $\sigma$ będzie pierwszą chwilą, w której
 oscylacja $M$ od lewego końca komórki $\pi$ lub
 $\rho$ osiąga poziom $\varepsilon$, oraz $T$,
-jeśli nie nastąpi to wcześniej. Jest to czas zatrzymania:
-na każdej komórce obserwujemy proces ciągły,
-a lewy koniec należy do znanej wówczas przeszłości.
+jeśli nie nastąpi to wcześniej. Formalnie dla każdej komórki $[u,v]$ obu siatek
+bierzemy pierwszy czas $q\in[u,v]$ taki, że
+$|M_q-M_u|\ge\varepsilon$ (lub $\infty$, gdy go nie ma).
+Zdarzenie trafienia do chwili $t\ge u$ wyraża się przez
+$\sup_{u\le q\le v\wedge t}|M_q-M_u|\ge\varepsilon$,
+które jest $\calF_t$-mierzalne dzięki ciągłości
+i możliwości użycia przeliczalnego gęstego zbioru
+chwil wraz z końcami przedziału.
+Minimum tych czasów i $T$ jest więc czasem zatrzymania.
 Z jednostajnej ciągłości trajektorii wynika
 $\Prob(\sigma<T)\to0$ przy
 $|\pi|\vee|\rho|\to0$.
-Dla zatrzymanego martyngału $M^\sigma$ przyrosty
-w każdej komórce obu siatek mają moduł co najwyżej
-$\varepsilon$ (również po zatrzymaniu).
+Dla zatrzymanego martyngału $M^\sigma$ przyrost
+od lewego końca każdej komórki obu siatek
+do dowolnej chwili w tej komórce ma moduł
+co najwyżej $\varepsilon$ (również po zatrzymaniu).
+W komórkach rozpoczynających się po $\sigma$
+przyrost taki jest zerowy.
 Na wspólnym rozdrobnieniu siatek różnicę
 $I^\pi(M^\sigma)-I^\rho(M^\sigma)$ zapisujemy jako
 skończoną sumę przewidywalną z współczynnikami
@@ -197,10 +274,11 @@ I_t^\rho(M^\sigma)|^2
 \le16\varepsilon^2\E (M^\sigma_T)^2
 \le16\varepsilon^2\E M_T^2.
 \]
-Pierwsze oszacowanie dla supremum można otrzymać także
-bezpośrednio z ciągłoczasowej nierówności Dooba;
-ostatnią nierówność zapewnia próbkowanie opcjonalne
-dla podmartyngału $M^2$.
+Oszacowanie supremum wykorzystuje ciągłoczasową
+nierówność Dooba (twierdzenie~\ref{thm:doob-cont});
+ostatnią nierówność zapewnia ograniczone próbkowanie
+opcjonalne dla podmartyngału $M^2$
+(twierdzenie~\ref{thm:ost-cont}).
 Na $\{\sigma=T\}$ oba procesy zatrzymane są zgodne
 z niezatrzymanym na $[0,T]$. Stąd dla $\eta>0$
 \[
@@ -209,8 +287,21 @@ z niezatrzymanym na $[0,T]$. Stąd dla $\eta>0$
 \]
 Najpierw wybieramy małe $\varepsilon$, potem drobne
 siatki: prawa strona może być dowolnie mała.
-Istnieje więc ciągły proces $I$ taki, że
-$I^\pi\to I$ w ucp.
+Aby skonstruować granicę, wybieramy jeden ciąg siatek
+o średnicach zbiegających do zera, np. dyadycznych.
+Z własności Cauchy'ego wybieramy podciąg $(\pi_{n_k})$
+tak, aby
+$\Prob(\sup_{t\le T}|I^{\pi_{n_{k+1}}}_t-I^{\pi_{n_k}}_t|>2^{-k})
+\le2^{-k}$.
+Lemat Borela--Cantellego i zupełność przestrzeni
+$C([0,T])$ z normą supremum dają jednostajną
+zbieżność podciągu p.n. do ciągłej trajektorii $I$.
+Poza zbiorem pełnej miary przyjmujemy zerową
+trajektorię; dzięki warunkom zwykłym $I_t$ jest
+$\calF_t$-mierzalna. Oszacowanie Cauchy'ego i
+nierówność trójkąta pokazują, że dla każdego
+innego ciągu siatek o zanikającej średnicy
+granica ucp jest tym samym $I$.
 Ponieważ zmienne $I_t^\pi$ są jednostajnie ograniczone
 w $L^2$, zbieżność według prawdopodobieństwa implikuje
 zbieżność w $L^1$ w każdej ustalonej chwili.
@@ -218,15 +309,9 @@ Przechodząc do granicy w warunkowych równościach,
 stwierdzamy, że $I$ jest martyngałem.
 
 
-Warto zauważyć dwie techniczne rzeczy. Po pierwsze, ograniczenia
-$\E|I_t^\pi|^2\le K^2\E M_t^2$ dotyczą każdej chwili $t\le T$,
-a nie tylko końca siatki: możemy dopisać $t$ jako ostatni punkt
-podziału i zastosować tę samą ortogonalność przyrostów.
-Po drugie, zbieżność ucp daje podciąg zbieżny jednostajnie prawie
-na pewno na każdym ustalonym horyzoncie (wybieramy kolejne błędy
-i prawdopodobieństwa ich przekroczenia sumowalne). Jego granica
-jest ciągła, a na chwilach deterministycznych również
-$\calF_t$-mierzalna, więc otrzymany proces $I$ jest adaptowany.
+Oszacowanie $\E|I_t^\pi|^2\le K^2\E M_t^2$
+stosuje się również dla $t$ wewnątrz komórki,
+ponieważ można zakończyć podział w $t$.
 
 
 \emph{Krok 2: konstrukcja procesu niemalejącego.}
@@ -257,41 +342,73 @@ $s,t$, a potem dla wszystkich dzięki ciągłości.
 Ponieważ $M^2-A=2I$ jest martyngałem na $[0,T]$,
 otrzymaliśmy żądany proces w przypadku ograniczonym.
 
-\emph{Krok 3: lokalizacja.}
+\emph{Krok 3: zgodność konstrukcji na horyzontach i lokalizacja.}
+Najpierw dla globalnie ograniczonego martyngału
+łączymy wyniki z horyzontów $T=1,2,\ldots$.
+Dla $S<T$ całkowitych porównujemy podziały $[0,T]$
+zawierające $S$, których ograniczenia do $[0,S]$
+mają zanikającą średnicę. Sumy na $[0,S]$ są
+identyczne, więc jednoznaczność granicy ucp daje
+zgodność procesów skonstruowanych na obu horyzontach.
+Przeliczalność horyzontów pozwala połączyć je poza
+jednym zbiorem zerowym w ciągły, adaptowany,
+niemalejący proces $A$ na całej półprostej.
+Proces $M^2-A$ jest martyngałem.
+
 Dla dowolnego ciągłego lokalnego martyngału o $M_0=0$
-niech $\tau_K=\inf\{t:|M_t|\ge K\}$.
-Na mocy poprzedniego rozdziału $M^{\tau_K}$ jest
-ograniczonym martyngałem. Stosujemy kroki 1--2 do
-każdego zatrzymanego procesu. Wariacja kwadratowa
-$M^{\tau_K}$ jest zgodna z wariacją kwadratową
-$M^{\tau_{K+1}}$ przed $\tau_K$: wynika to z
-bezpośredniej równości przyrostów zatrzymanych
-procesów, a następnie z jednoznaczności granicy
-ucp. Możemy więc skleić te procesy w jeden
-$[M]$, ciągły, niemalejący i lokalnie skończony.
-Ponieważ $\tau_K\uparrow\infty$ prawie na pewno,
-ucp na każdym skończonym horyzoncie wynika przez
-rozbicie prawdopodobieństwa na $\{\tau_K\le T\}$
-i jego dopełnienie, a następnie $K\to\infty$.
+niech $\tau_K=\inf\{t:|M_t|\ge K\}$, $K\in\mathbb N$,
+$K\ge1$. Na mocy rozdziału~\ref{ch:mart-cont}
+proces $M^{\tau_K}$ jest ograniczonym martyngałem,
+a $\tau_K\uparrow\infty$ p.n. Oznaczmy przez $A^K$
+jego skonstruowaną wariację kwadratową.
+Dla każdego podziału mamy dokładną tożsamość
+\[
+V_t^\pi(M^{\tau_K})
+=V_{t\wedge\tau_K}^\pi(M^{\tau_{K+1}}).
+\]
+Zbieżność ucp po prawej stronie jest zachowana
+po zastąpieniu $t$ przez $t\wedge\tau_K$, ponieważ
+supremum błędu nie może się zwiększyć.
+Z jednoznaczności granicy ucp wynika więc
+$A^K_t=A^{K+1}_{t\wedge\tau_K}$ jednocześnie
+dla wszystkich $t$, poza jednym zbiorem zerowym.
+Na wspólnym zbiorze pełnej miary dla wszystkich $K$
+definiujemy $[M]_t$ jako stabilizującą się wartość
+$A^K_t$ dla dostatecznie dużego $K$ (gdy $t\le\tau_K$).
+Na dopełnieniu przyjmujemy zerową trajektorię.
+Na każdym zwartym przedziale, dla ustalonej trajektorii
+z tego zbioru pełnej miary, $[M]$ zgadza się
+z pewnym $A^K$, więc jest ciągły, niemalejący i skończony.
+Adaptacja wynika z tego, że w każdej ustalonej chwili
+jest granicą $\calF_t$-mierzalnych $A^K_t$,
+ze zmianą na zbiorze z $\calF_0$.
+Ponadto $[M]_{t\wedge\tau_K}=A^K_t$.
+W konsekwencji
+\[
+(M^2-[M])_{t\wedge\tau_K}
+=(M^{\tau_K}_t)^2-A^K_t
+\]
+jest martyngałem. To dowodzi, że $M^2-[M]$
+jest lokalnym martyngałem.
+Dla każdego $T>0$ i $\eta>0$ mamy
+\[
+\Prob\left(\sup_{t\le T}|V_t^\pi(M)-[M]_t|>\eta\right)
+\le \Prob(\tau_K<T)+
+\Prob\left(\sup_{t\le T}|V_t^\pi(M^{\tau_K})-A^K_t|>\eta\right).
+\]
+Najpierw przechodzimy z $|\pi|$ do zera przy ustalonym $K$,
+następnie z $K$ do nieskończoności.
+Otrzymujemy zbieżność ucp dla dowolnych ciągów podziałów.
 
 \emph{Krok 4: jednoznaczność.}
 Jeśli $A$ i $A'$ spełniają tezę, to $D=A-A'$ jest
-ciągłym lokalnym martyngałem o skończonej wariacji.
-Pokażemy, że każdy taki proces jest stały.
-Po zatrzymaniu przed przekroczeniem poziomu $K$ przez
-$|D|$ i wariację całkowitą możemy założyć, że
-$|D_t|\le K$ i $\operatorname{Var}_{[0,T]}(D)\le K$.
-Dla deterministycznego podziału ortogonalność przyrostów
-martyngału daje
-\[
-\E(D_T-D_0)^2=\sum_i\E(\Delta_iD)^2
-\le\E\left[\max_i|\Delta_iD|\,
-\operatorname{Var}_{[0,T]}(D)\right].
-\]
-Wyraz pod wartością oczekiwaną dąży do zera prawie
-na pewno i jest ograniczony przez $2K^2$.
-Zbieżność zdominowana daje $\E(D_T-D_0)^2=0$.
-Dowolność $T$ i lokalizacji dowodzi $D\equiv D_0=0$.
+ciągłym lokalnym martyngałem (różnicą dwóch lokalnych
+martyngałów po wspólnej lokalizacji)
+o skończonej wariacji na przedziałach zwartych,
+gdyż $A,A'$ są niemalejące i skończone.
+Z twierdzenia~\ref{thm:continuous-local-finite-variation}
+wynika, że $D$ jest nierozróżnialny od stałego procesu
+$D_0=0$. Stąd $A=A'$ z dokładnością do nierozróżnialności.
 \end{proof}
 
 \begin{uwaga}[Co dokładnie zostało udowodnione?]
@@ -300,10 +417,50 @@ lokalnych martyngałów nie wymagają w tym dowodzie
 całki Itô ani pełnego twierdzenia Dooba--Meyera.
 Konstrukcja używa jedynie skończonych sum przewidywalnych,
 ortogonalności przyrostów, zatrzymywania i lokalizacji.
-Dla procesów ze skokami trzeba osobno odróżnić sumę
-kwadratów skoków od jej przewidywalnej kompensacji.
+Dla procesów ze skokami trzeba osobno odróżnić
+wariację kwadratową (zawierającą kwadraty skoków)
+od jej przewidywalnej kompensacji; por. rozdział~\ref{ch:jump-mart}.
 \end{uwaga}
 
+
+\begin{twierdzenie}[Dodanie procesu o skończonej wariacji]
+\label{thm:finite-var-drift-bracket}
+Niech $X$ będzie procesem ciągłym mającym
+wariację kwadratową w sensie ucp, a $A$
+procesem ciągłym o trajektoriach lokalnie
+skończonej wariacji całkowitej p.n.
+Wtedy
+\[
+[X+A]=[X],\qquad [A]=0,
+\]
+a sumy mieszane $\sum_i\Delta_i^tX\Delta_i^tA$
+zbiegają do zera w ucp. W szczególności wynik
+dotyczy $X$ będącego ciągłym lokalnym martyngałem.
+\end{twierdzenie}
+\begin{proof}
+Na każdym $[0,T]$ lemat
+\ref{lem:finite-var-zero-quadratic} daje
+$\sup_{t\le T}V_t^\pi(A)\to0$ p.n. wzdłuż
+dowolnego ciągu podziałów o zanikającej średnicy.
+Z nierówności Cauchy'ego--Schwarza
+\[
+\sup_{t\le T}\left|\sum_i\Delta_i^tX\Delta_i^tA\right|
+\le
+\sqrt{\sup_{t\le T}V_t^\pi(X)}
+\sqrt{\sup_{t\le T}V_t^\pi(A)}.
+\]
+Pierwszy czynnik jest ograniczony według
+prawdopodobieństwa: z ucp supremum $V^\pi(X)$
+zbiega według prawdopodobieństwa do skończonego
+supremum ciągłego procesu $[X]$.
+Iloczyn z czynnikiem zbiegającym do zera
+według prawdopodobieństwa zbiega do zera
+według prawdopodobieństwa (najpierw ograniczamy
+pierwszy czynnik przez dużą stałą z dużym
+prawdopodobieństwem, a następnie przechodzimy
+do granicy dla drugiego).
+Rozwinięcie kwadratu przyrostu $X+A$ kończy dowód.
+\end{proof}
 
 \begin{przyklad}[Dodanie deterministycznego dryfu nie zmienia wariacji]
 Niech $W$ będzie procesem Wienera i $b\in\R$, a
@@ -331,12 +488,12 @@ rozróżnień wykorzystywanych później w rachunku It\^o.
 
 \begin{uwaga}[Dla ciągłego martyngału oba nawiasy się pokrywają]
 Proces $[M]$ dla ciągłego lokalnego martyngału jest adaptowany
-i ciągły, a zatem przewidywalny. Istotnie, na każdym przedziale
+i ciągły, a zatem przewidywalny (rozdział~\ref{ch:filtracje}). Istotnie, na każdym przedziale
 skończonym można go aproksymować punktowo procesami prostymi,
 które na $(k2^{-n},(k+1)2^{-n}]$ przyjmują znaną już w chwili
 $k2^{-n}$ wartość $[M]_{k2^{-n}}$; ich granica jest
 przewidywalna jako granica funkcji mierzalnych względem
-$\sigma$-ciała przewidywalnego. Różnica $M^2-[M]$
+$\sigma$-ciała przewidywalnego. Różnica $(M-M_0)^2-[M]$
 jest lokalnym martyngałem. W przyszłej ogólnej definicji
 przewidywalnego nawiasu, opartej na kompensatorze $[M]$,
 otrzymamy więc $\langle M\rangle=[M]$.
@@ -354,12 +511,16 @@ Jest to ciągły proces o skończonej wariacji lokalnej.
 \end{definicja}
 
 \begin{twierdzenie}[Wzór iloczynowy dla nawiasu]
+\label{thm:cross-bracket}
 Niech $M,N$ będą ciągłymi lokalnymi martyngałami
 z $M_0=N_0=0$. Wtedy
 $M_tN_t-[M,N]_t$ jest lokalnym martyngałem oraz
 $[M,N]$ jest granicą ucp sum mieszanych
-$\sum_i\Delta_iM\Delta_iN$ na dowolnych
-znikających podziałach deterministycznych.
+$\sum_i\Delta_i^tM\Delta_i^tN$ na dowolnych
+ciągach podziałów deterministycznych o średnicach
+zbiegających do zera, gdzie
+$\Delta_i^tM=M_{t\wedge t_{i+1}}-M_{t\wedge t_i}$
+i analogicznie dla $N$.
 Ponadto $[M,M]=[M]$ i
 $[aM+bN,K]=a[M,K]+b[N,K]$ dla stałych $a,b$.
 \end{twierdzenie}
@@ -375,8 +536,144 @@ $4\sum\Delta M\Delta N=
 \sum(\Delta M-\Delta N)^2$.
 Zbieżność ucp obu sum kwadratów daje drugą tezę.
 Dwuliniowość wynika z tej granicy, ponieważ
-sumy mieszane są dwuliniowe dla każdego podziału;
-pojedynczy nawias to przypadek $M=N$.
+sumy mieszane są symetryczne i dwuliniowe dla każdego podziału,
+a zatem ich granice ucp również (każda tożsamość zachodzi
+z dokładnością do nierozróżnialności).
+Dla $M=N$ sumy mieszane są sumami kwadratów,
+co daje $[M,M]=[M]$. Wszystkie tożsamości dotyczące
+przyrostów i kowariacji pozostają prawdziwe dla
+dowolnych wartości początkowych, po odjęciu $M_0,N_0$.
+\end{proof}
+
+\begin{twierdzenie}[Macierz kowariacji i nierówność Kunity--Watanabego]
+\label{thm:kunita-watanabe}
+Niech $M=(M^{(1)},\ldots,M^{(d)})$ będzie
+wektorem ciągłych lokalnych martyngałów.
+Macierz $C_t=([M^{(i)},M^{(j)}]_t)_{i,j=1}^d$
+jest symetryczna i jej przyrosty $C_t-C_s$
+dla $s\le t$ są dodatnio półokreślone,
+jednocześnie dla wszystkich $s,t$ p.n.
+Dla dwóch składowych, oznaczonych $U,V$, oraz
+dowolnych funkcji borelowskich $f,g$ na $[0,T]$
+zachodzi trajektoryjna nierówność
+\[
+\int_{[0,T]} |fg|\,\mathrm d|[U,V]|
+\le
+\left(\int_{[0,T]} |f|^2\,\mathrm d[U]\right)^{1/2}
+\left(\int_{[0,T]} |g|^2\,\mathrm d[V]\right)^{1/2},
+\]
+jeżeli obie całki po prawej są skończone.
+Zapis $\mathrm d[U]$ oznacza miarę Lebesgue'a--Stieltjesa
+trajektorii $[U]$, z zerową masą w zerze, a
+$\mathrm d|[U,V]|$ oznacza wariację całkowitą
+miary znakowanej indukowanej przez $[U,V]$.
+W szczególności
+\[
+\operatorname{Var}_{[s,t]}([U,V])
+\le\sqrt{([U]_t-[U]_s)([V]_t-[V]_s)}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla $a\in\Q^d$ z dwuliniowości nawiasu mamy
+$a^\top C_t a=[\sum_i a_i M^{(i)}]_t$.
+Przecinając zbiory pełnej miary dla przeliczalnie
+wielu $a$, otrzymujemy wszystkie te tożsamości
+jednocześnie w czasie. Prawa strona jest
+niemalejąca. Przez gęstość $\Q^d$ i ciągłość
+formy kwadratowej w $a$ przyrosty $C_t-C_s$
+są dodatnio półokreślone także dla dowolnego
+$a\in\R^d$.
+
+Ustalmy trajektorię z tego zbioru pełnej miary,
+a na $[0,T]$ oznaczmy przez $\mu,\nu,\gamma$
+miary Lebesgue'a--Stieltjesa odpowiednio
+$[U],[V],[U,V]$. Dwie pierwsze są nieujemne
+i skończone, trzecia znakowana i skończonej
+wariacji. Dla dowolnych $a,b\in\R$ miara
+$a^2\mu+2ab\gamma+b^2\nu$ jest nieujemna,
+gdyż odpowiada niemalejącej funkcji $[aU+bV]$.
+Stąd dla każdego zbioru borelowskiego $E$
+macierz z elementami $\mu(E),\gamma(E),\nu(E)$
+jest dodatnio półokreślona, a więc
+$|\gamma(E)|^2\le\mu(E)\nu(E)$.
+W szczególności $\gamma\ll\kappa=\mu+\nu$.
+Z twierdzenia Radona--Nikodyma oznaczmy
+$p=\mathrm d\mu/\mathrm d\kappa$,
+$q=\mathrm d\nu/\mathrm d\kappa$,
+$h=\mathrm d\gamma/\mathrm d\kappa$.
+Mamy $p,q\ge0$, $p+q=1$ $\kappa$-p.w.
+Dla wymiernych $a,b$ nieujemność powyższej
+miary daje $a^2p+2abh+b^2q\ge0$ $\kappa$-p.w.
+Po przecięciu przeliczalnej rodziny zbiorów
+pełnej miary i przejściu do rzeczywistych $a,b$
+dostajemy $|h|^2\le pq$.
+Wariacja całkowita $\gamma$ ma gęstość $|h|$
+względem $\kappa$ (wynika to z rozkładu na
+dodatnią i ujemną część gęstości).
+Zatem
+\[
+\int|fg|\,\mathrm d|\gamma|
+\le\int |f|\sqrt p\,|g|\sqrt q\,\mathrm d\kappa
+\le
+\left(\int|f|^2\,\mathrm d\mu\right)^{1/2}
+\left(\int|g|^2\,\mathrm d\nu\right)^{1/2}
+\]
+przez nierówność Cauchy'ego--Schwarza.
+Dla $f=g=\chi_{(s,t]}$ otrzymujemy oszacowanie
+wariacji na $[s,t]$, ponieważ miary nie mają atomów
+z uwagi na ciągłość funkcji.
+Argument jest trajektoryjny, więc obowiązuje
+także dla funkcji zależnych od $\omega$,
+o ile dla danej trajektorii są borelowskie.
+\end{proof}
+
+\begin{definicja}[Silna ortogonalność martyngałów]
+Ciągłe lokalne martyngały $M,N$ rozpoczynające
+się od zera nazywamy silnie ortogonalnymi, jeśli
+ich iloczyn $MN$ jest lokalnym martyngałem.
+\end{definicja}
+
+\begin{twierdzenie}[Ortogonalność a kowariacja]
+\label{thm:strong-orthogonality-bracket}
+Ciągłe lokalne martyngały $M,N$ z zerowymi
+wartościami początkowymi są silnie ortogonalne
+wtedy i tylko wtedy, gdy $[M,N]=0$
+z dokładnością do nierozróżnialności.
+Jeżeli są ponadto kwadratowo całkowalne
+na $[0,T]$, to
+$\E[M_tN_t]=0$ dla $t\le T$ oraz
+$\E[(M_t-M_s)(N_t-N_s)\mid\calF_s]=0$
+dla $s\le t\le T$.
+Sama bezwarunkowa ortogonalność w $L^2$
+w każdej chwili nie wystarcza do silnej ortogonalności.
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia~\ref{thm:cross-bracket} proces
+$MN-[M,N]$ jest lokalnym martyngałem.
+Jeśli $[M,N]=0$, otrzymujemy silną ortogonalność.
+Odwrotnie, jeśli $MN$ jest lokalnym martyngałem,
+to różnica $[M,N]$ jest ciągłym lokalnym martyngałem
+o lokalnie skończonej wariacji. Twierdzenie
+\ref{thm:continuous-local-finite-variation} daje
+$[M,N]=[M,N]_0=0$.
+W przypadku kwadratowo całkowalnym pozostałe
+równości wynikają z wniosku
+\ref{cor:conditional-cross-bracket}.
+Dla kontrprzykładu niech $W$ będzie procesem
+Wienera, a $\xi$ niezależną od całego $W$
+zmienną o wartościach $\pm1$ z równymi
+prawdopodobieństwami, ujawnioną w chwili zero.
+W uzupełnionej prawostronnie ciągłej filtracji
+zawierającej $\xi$ przyrosty Wienera pozostają
+niezależne od przeszłości (można wziąć iloczyn
+uzupełnionej filtracji naturalnej z dwupunktową
+przestrzenią zmiennej $\xi$).
+Procesy $M=W$, $N=\xi W$ są martyngałami
+kwadratowo całkowalnymi i
+$\E M_tN_t=\E\xi\,\E W_t^2=0$.
+Jednak dla każdej siatki sumy mieszane wynoszą
+$\xi V_t^\pi(W)$, więc $[M,N]_t=\xi t$,
+co nie jest zerowym procesem.
 \end{proof}
 
 \begin{wniosek}[Kowariacja ruchu Browna]
@@ -402,9 +699,12 @@ dla $AB$ wynika z dwuliniowości.
 
 \section{Warunkowa wariancja przyrostu i elementarna izometria}
 \begin{twierdzenie}[Wariancja warunkowa przez nawias]
-Niech $M$ będzie ciągłym, ograniczonym martyngałem
-z $M_0=0$ oraz $[M]$ jego wariacją kwadratową.
-Dla każdych $0\le s\le t$ zachodzi
+\label{thm:conditional-variance-bracket}
+Niech $M$ będzie ciągłym martyngałem na $[0,T]$
+z $M_T\in L^2$ oraz $M_0=0$.
+Wtedy $[M]_T\in L^1$, a $M^2-[M]$ jest
+martyngałem na $[0,T]$.
+Dla każdych $0\le s\le t\le T$ zachodzi
 \[
 \E[(M_t-M_s)^2\mid\calF_s]
 =\E[[M]_t-[M]_s\mid\calF_s].
@@ -412,10 +712,29 @@ Dla każdych $0\le s\le t$ zachodzi
 W szczególności $\E M_t^2=\E\bigl([M]_t\bigr)$.
 \end{twierdzenie}
 \begin{proof}
-W dowodzie twierdzenia~\ref{thm:general-bracket}
-wykazaliśmy, że $M^2-[M]$ jest martyngałem
-(również po lokalizacji, lecz ograniczenie $M$ daje
-tutaj całkowalność bez dalszych zabiegów).
+Dla $\tau_K=\inf\{t\ge0:|M_t|\ge K\}$
+(z konwencją $\inf\varnothing=\infty$ na $[0,T]$)
+proces $M^{\tau_K}$ jest ograniczonym martyngałem.
+Z twierdzenia~\ref{thm:general-bracket} i własności
+zatrzymywania nawiasu (twierdzenie~\ref{thm:stopped-bracket})
+wynika, że
+$M_{t\wedge\tau_K}^2-[M]_{t\wedge\tau_K}$
+jest martyngałem na $[0,T]$, rozpoczynającym się
+od zera. W szczególności
+$\E[M]_{t\wedge\tau_K}=\E M_{t\wedge\tau_K}^2$.
+Z nierówności Dooba (twierdzenie~\ref{thm:doob-cont})
+$\E\sup_{u\le T}|M_u|^2\le4\E M_T^2<\infty$.
+Kwadraty zatrzymanych wartości zbiegają więc w $L^1$
+do $M_t^2$ przez zbieżność zmajoryzowaną.
+Ponieważ $[M]$ jest niemalejący i $\tau_K$ rosną,
+zbieżność monotoniczna daje
+\[
+\E[M]_t=\lim_K\E[M]_{t\wedge\tau_K}=\E M_t^2<\infty.
+\]
+W szczególności $[M]_{t\wedge\tau_K}\to[M]_t$
+w $L^1$. Przechodząc do granicy w warunkowych
+równościach dla zatrzymanych martyngałów,
+uzyskujemy własność martyngałową $M^2-[M]$.
 Zatem
 $\E[M_t^2-M_s^2\mid\calF_s]
 =\E[[M]_t-[M]_s\mid\calF_s]$.
@@ -425,8 +744,78 @@ Rozwinięcie $(M_t-M_s)^2=M_t^2-M_s^2-2M_s(M_t-M_s)$
 daje tezę. Biorąc $s=0$, otrzymujemy równość średnich.
 \end{proof}
 
+\begin{twierdzenie}[Kryterium kwadratowej całkowalności przez nawias]
+\label{thm:bracket-l2-criterion}
+Niech $M$ będzie ciągłym lokalnym martyngałem
+z $M_0=0$ i niech $T<\infty$.
+Warunek $\E[M]_T<\infty$ jest równoważny temu,
+że $M$ jest martyngałem na $[0,T]$ z $M_T\in L^2$.
+W takim przypadku
+\[
+\E M_T^2=\E[M]_T,\qquad
+\E\sup_{t\le T}|M_t|^2\le4\E[M]_T.
+\]
+Ponadto każdy ciągły lokalny martyngał rozpoczynający
+się od zera jest lokalnie kwadratowo całkowalny.
+\end{twierdzenie}
+\begin{proof}
+Jedną implikację daje twierdzenie
+\ref{thm:conditional-variance-bracket}.
+Dla drugiej weźmy
+$\tau_n=\inf\{t:|M_t|\ge n\}$.
+Są to czasy lokalizujące z rozdziału~\ref{ch:mart-cont};
+procesy $M^{\tau_n}$ są ograniczonymi martyngałami.
+Z twierdzeń~\ref{thm:conditional-variance-bracket}
+i~\ref{thm:stopped-bracket} mamy
+\[
+\E M_{t\wedge\tau_n}^2
+=\E[M]_{t\wedge\tau_n}\le\E[M]_T
+\qquad (t\le T).
+\]
+Z lematu Fatou $M_t\in L^2$. Dla każdego ustalonego $t$
+rodzina zatrzymanych wartości jest jednostajnie
+całkowalna dzięki ograniczeniu w $L^2$, a zbieżność
+p.n. daje zbieżność w $L^1$. Przechodząc do granicy
+w warunkowych równościach martyngałowych,
+otrzymujemy własność martyngałową $M$ na $[0,T]$.
+Równość drugich momentów i oszacowanie supremum
+wynikają teraz z twierdzeń
+\ref{thm:conditional-variance-bracket}
+i~\ref{thm:doob-cont}.
+Ostatnia teza wynika wprost z ograniczoności
+martyngałów $M^{\tau_n}$.
+Dla niezerowej wartości początkowej ten argument
+stosujemy do $M-M_0$; lokalna kwadratowa
+całkowalność samego $M$ wymaga $M_0\in L^2$.
+\end{proof}
+
+\begin{wniosek}[Warunkowa kowariancja przyrostów]
+\label{cor:conditional-cross-bracket}
+Dla ciągłych martyngałów $M,N$ kwadratowo
+całkowalnych na $[0,T]$ z zerowymi wartościami
+początkowymi proces $MN-[M,N]$ jest martyngałem i
+\[
+\E[(M_t-M_s)(N_t-N_s)\mid\calF_s]
+=\E[[M,N]_t-[M,N]_s\mid\calF_s]
+\]
+dla $0\le s\le t\le T$. W szczególności
+$\E M_tN_t=\E[M,N]_t$.
+\end{wniosek}
+\begin{proof}
+Stosujemy twierdzenie
+\ref{thm:conditional-variance-bracket}
+do $M+N$ i $M-N$ oraz odejmujemy
+odpowiednie równości, dzieląc przez cztery.
+Całkowalność wynika również z nierówności
+Cauchy'ego--Schwarza dla iloczynu i z
+nierówności~\ref{thm:kunita-watanabe} dla wariacji
+kowariacji, gdyż $\E[M]_T,\E[N]_T<\infty$.
+\end{proof}
+
 \begin{wniosek}[Izometria elementarnych strategii]
-Przy założeniach poprzedniego twierdzenia niech
+\label{cor:elementary-bracket-isometry}
+Przy założeniach twierdzenia
+\ref{thm:conditional-variance-bracket} niech
 $0=t_0<\cdots<t_n=T$ i $H_i$ będą ograniczonymi
 $\calF_{t_i}$-mierzalnymi zmiennymi. Wtedy
 \[
@@ -439,10 +828,39 @@ $\calF_{t_i}$-mierzalnymi zmiennymi. Wtedy
 Stosujemy dyskretną izometrię z lematu
 \ref{lem:discrete-isometry}. Dla każdej komórki
 zastępujemy warunkowy drugi moment przyrostu przez
-warunkowy przyrost $[M]$, zgodnie z poprzednim
-twierdzeniem. Ponieważ $H_i^2$ jest
+warunkowy przyrost $[M]$, zgodnie z twierdzeniem
+\ref{thm:conditional-variance-bracket}. Ponieważ $H_i^2$ jest
 $\calF_{t_i}$-mierzalne, można je wyciągnąć przed
 warunkowanie, a następnie wziąć wartość oczekiwaną.
+\end{proof}
+
+\begin{wniosek}[Izometria mieszana elementarnych strategii]
+\label{cor:elementary-cross-isometry}
+Przy założeniach wniosku~\ref{cor:conditional-cross-bracket}
+ustalmy podział $0=t_0<\cdots<t_n=T$
+i niech $H_i,K_i$ będą ograniczonymi
+$\calF_{t_i}$-mierzalnymi zmiennymi.
+Wówczas
+\[
+\E\left[
+\left(\sum_i H_i\Delta_i M\right)
+\left(\sum_i K_i\Delta_i N\right)
+\right]
+=\E\sum_i H_iK_i
+([M,N]_{t_{i+1}}-[M,N]_{t_i}).
+\]
+\end{wniosek}
+\begin{proof}
+Po rozwinięciu iloczynu wyrazy dla różnych
+indeksów mają średnią zero, warunkując względem
+początku późniejszego przyrostu.
+Wyrazy diagonalne przekształcamy przez
+wniosek~\ref{cor:conditional-cross-bracket}
+i wyciągnięcie $H_iK_i$ przed warunkowanie.
+Całkowalność wszystkich wyrazów zapewniają
+ograniczenie współczynników, kwadratowa
+całkowalność martyngałów oraz oszacowanie
+wariacji z twierdzenia~\ref{thm:kunita-watanabe}.
 \end{proof}
 
 \begin{uwaga}[Gdzie w tej formule ukrywa się całka Itô?]
@@ -452,7 +870,7 @@ przyrostem $M_{t_{i+1}}-M_{t_i}$. Prawa strona
 mierzy ich kwadratowy koszt, ważony przyrostami
 wariacji kwadratowej. W tomie III rozszerzymy tę
 równość z procesów prostych na odpowiednie klasy
-procesów przewidywalnych przez domknięcie przestrzeni
+procesów przewidywalnych przez domknięcie podprzestrzeni w odpowiedniej przestrzeni
 Hilberta; właśnie wtedy pojawi się całka stochastyczna.
 \end{uwaga}
 
@@ -470,6 +888,7 @@ trajektorie mają nieskończoną wariację całkowitą.
 
 \section{Wariacja kwadratowa a czas zatrzymania}
 \begin{twierdzenie}[Wariacja kwadratowa procesu zatrzymanego]
+\label{thm:stopped-bracket}
 Jeśli $M$ jest ciągłym lokalnym martyngałem i
 $\tau$ czasem zatrzymania, to
 $[M^\tau]_t=[M]_{t\wedge\tau}$ dla $t\ge0$.
@@ -483,12 +902,43 @@ $V_t^\pi(M^\tau)=V_{t\wedge\tau}^\pi(M)$.
 Wynika to bezpośrednio z definicji: po chwili $\tau$
 proces zatrzymany jest stały, a w komórce zawierającej
 $\tau$ ostatni przyrost kończy się w $\tau$.
+Z twierdzenia~\ref{thm:local-mart-criteria} proces
+$M^\tau$ pozostaje lokalnym martyngałem.
 Z twierdzenia~\ref{thm:general-bracket} obie strony
 mają granice ucp, odpowiednio $[M^\tau]_t$ oraz
-$[M]_{t\wedge\tau}$. Jednoznaczność granicy według
+$[M]_{t\wedge\tau}$: dla prawej strony supremum
+błędu po zatrzymaniu nie przekracza supremum
+błędu na całym $[0,T]$. Jednoznaczność granicy według
 prawdopodobieństwa daje równość procesów.
 Przecięcie zdarzeń pełnej miary dla chwil wymiernych
 i ciągłość nawiasów zapewniają jednoczesność dla wszystkich $t$.
+\end{proof}
+
+\begin{wniosek}[Zatrzymywanie kowariacji w dwóch czasach]
+\label{cor:cross-stopped-bracket}
+Dla ciągłych lokalnych martyngałów $M,N$
+i czasów zatrzymania $\sigma,\tau$ zachodzi
+\[
+[M^\sigma,N^\tau]_t=[M,N]_{t\wedge\sigma\wedge\tau}.
+\]
+\end{wniosek}
+\begin{proof}
+Połóżmy $\rho=\sigma\wedge\tau$.
+Dla każdej siatki sumy mieszane dla $M^\sigma,N^\tau$
+zgadzają się z sumami dla $M^\rho,N^\rho$
+poza co najwyżej jedną komórką zawierającą $\rho$:
+przed $\rho$ oba przyrosty są niezatrzymane,
+po tej komórce co najmniej jeden jest zerowy.
+Różnica w komórce jest ograniczona przez iloczyn
+oscylacji obu trajektorii na komórkach siatki
+(z czynnikiem co najwyżej dwa).
+Na $[0,T]$ to ograniczenie dąży do zera p.n.
+z jednostajnej ciągłości. Dotyczy to także
+niedokończonej komórki przy dowolnym $t\le T$,
+więc błąd zanika jednostajnie.
+Granica ucp i polaryzacja, z zastosowaniem
+twierdzenia~\ref{thm:stopped-bracket} do $M+N$
+i $M-N$ zatrzymanych w $\rho$, dają żądaną równość.
 \end{proof}
 
 \begin{zadanie}[Brownowski martyngał i czas wyjścia z przedziału]
@@ -508,6 +958,640 @@ Otrzymujemy ponownie $\E\tau=a^2$, bez używania
 całki Itô.
 \end{zadanie}
 
+
+\section{Losowe podziały i zbieżność martyngałów}
+
+\begin{twierdzenie}[Wariacja kwadratowa na podziałach złożonych z czasów zatrzymania]
+\label{thm:bracket-random-partitions}
+Niech $M$ będzie ciągłym lokalnym martyngałem,
+$T>0$. Dla każdego $n$ niech
+$0=\sigma_0^n\le\cdots\le\sigma_{m_n}^n=T$
+będą czasami zatrzymania, gdzie $m_n$ jest
+deterministyczną liczbą naturalną. Dopuszczamy
+powtarzające się punkty. Załóżmy, że
+\[
+\delta_n=\max_{i<m_n}(\sigma_{i+1}^n-\sigma_i^n)
+\xrightarrow{\Prob}0.
+\]
+Wtedy
+\[
+\sup_{t\le T}\left|
+\sum_{i<m_n}(M_{t\wedge\sigma_{i+1}^n}
+-M_{t\wedge\sigma_i^n})^2-[M]_t
+\right|\xrightarrow{\Prob}0.
+\]
+Nie trzeba zakładać niezależności podziałów od procesu.
+Założenie, że ich punkty są czasami zatrzymania,
+zapewnia mierzalność współczynników w poniższym dowodzie.
+Nie rozciągamy twierdzenia na dowolne podziały wybierane
+z wykorzystaniem przyszłych wartości trajektorii.
+\end{twierdzenie}
+\begin{proof}
+Odejmujemy $M_0$ i najpierw zakładamy, że
+$|M_t|\le K$ na całym $[0,T]$. Dla ograniczonych
+czasów zatrzymania $\alpha\le\beta\le T$
+ograniczone próbkowanie opcjonalne
+(twierdzenie~\ref{thm:ost-cont}) dla martyngałów
+$M$ i $M^2-[M]$ daje
+\[
+\E[(M_\beta-M_\alpha)^2\mid\calF_\alpha]
+=\E[[M]_\beta-[M]_\alpha\mid\calF_\alpha].
+\]
+Stąd dla skończonego uporządkowanego ciągu czasów
+zatrzymania $(r_j)$ od $0$ do $T$ oraz ograniczonych
+$\calF_{r_j}$-mierzalnych $H_j$ proces
+\[
+J_t=\sum_j H_j(M_{t\wedge r_{j+1}}-M_{t\wedge r_j})
+\]
+jest ciągłym martyngałem i
+\[
+\E J_T^2=\E\sum_j H_j^2([M]_{r_{j+1}}-[M]_{r_j}).
+\]
+Istotnie, każdy składnik jest adaptowany, gdyż
+jest zerowy przed $r_j$, a na $\{r_j\le t\}$
+współczynnik $H_j$ jest znany w chwili $t$.
+Aby sprawdzić własność martyngałową dla $s\le t$,
+połóżmy $\alpha=r_j\vee s$ oraz
+$\beta=(t\wedge r_{j+1})\vee\alpha$.
+Różnica wartości składnika między $s$ i $t$
+jest równa $H_j(M_\beta-M_\alpha)$; gdy
+$r_j>t$ lub $r_{j+1}\le s$, obie strony są zerowe.
+Ponieważ $H_j$ jest $\calF_\alpha$-mierzalny
+i $\calF_s\subseteq\calF_\alpha$, próbkowanie
+opcjonalne i własność wieży dają warunkową
+średnią zero. Ortogonalność różnych przyrostów
+w skończonej sumie w chwili $T$ wynika przez
+warunkowanie względem początku późniejszego przyrostu.
+Warunkowa wariancja przyrostu daje izometrię.
+
+Porównujemy podział losowy $\sigma^n$ z podziałem
+deterministycznym $\pi_n$ o średnicy dążącej do zera.
+Porządkujemy ich połączone węzły, otrzymując
+wspólne rozdrobnienie $(r_j)$ o deterministycznej
+liczbie punktów. Statystyki pozycyjne skończonej
+rodziny czasów zatrzymania są czasami zatrzymania,
+gdyż zdarzenie, że $k$-ty najmniejszy czas nie
+przekracza $u$, oznacza, że co najmniej $k$
+czasów nie przekracza $u$.
+W różnicy sum
+$I_t^{\sigma^n}-I_t^{\pi_n}$ (z definicją $I$
+jak w dowodzie twierdzenia~\ref{thm:general-bracket})
+współczynniki na rozdrobnieniu to różnice
+wartości $M$ w ostatnich węzłach każdej siatki
+nie większych od $r_j$.
+Są $\calF_{r_j}$-mierzalne: zdarzenia
+$\{\sigma_i^n\le r_j\}$ należą do $\calF_{r_j}$,
+a na nich $M_{\sigma_i^n}=M_{\sigma_i^n\wedge r_j}$.
+To samo dotyczy węzłów deterministycznych.
+Przy powtórzonych węzłach puste przedziały
+nie wnoszą wkładu.
+Dla modułu współczynników mamy ograniczenie
+\[
+|H_j|\le D_n:=\omega_M(\delta_n)+\omega_M(|\pi_n|),
+\qquad
+\omega_M(h)=\sup_{\substack{u,v\in[0,T]\\|u-v|\le h}}
+|M_u-M_v|.
+\]
+Wielkość $D_n$ dąży do zera według
+prawdopodobieństwa: dla ustalonego $h>0$
+oddzielamy zdarzenie $\{\delta_n>h\}$ i korzystamy
+z jednostajnej ciągłości trajektorii przy $h\downarrow0$.
+Ponadto $D_n\le4K$.
+Izometria i nierówność Dooba dają
+\[
+\E\sup_{t\le T}|I_t^{\sigma^n}-I_t^{\pi_n}|^2
+\le4\E[D_n^2[M]_T]\longrightarrow0.
+\]
+Ostatnia granica wynika z $\E[M]_T<\infty$,
+ograniczoności $D_n$ i jego zbieżności według
+prawdopodobieństwa do zera: najpierw obcinamy
+$[M]_T$, a następnie używamy zbieżności
+ograniczonych zmiennych w $L^1$.
+Tożsamość teleskopowa
+$V_t^\sigma(M)=M_t^2-M_0^2-2I_t^\sigma$
+jest punktowa dla każdego podziału, również losowego.
+Zatem wynik deterministyczny i powyższe
+oszacowanie dają tezę dla ograniczonego $M$.
+W przypadku ogólnym stosujemy wynik do
+$M^{\tau_K}$, gdzie $\tau_K=\inf\{t:|M_t|\ge K\}$
+(po odjęciu $M_0$). Na $\{\tau_K\ge T\}$
+sumy i nawiasy są zgodne z niezatrzymanymi
+na całym $[0,T]$. Ponieważ
+$\Prob(\tau_K<T)\to0$, otrzymujemy tezę.
+\end{proof}
+
+\begin{twierdzenie}[Zbieżność na zdarzeniu skończoności nawiasu]
+\label{thm:bracket-finite-convergence}
+Niech $M$ będzie ciągłym lokalnym martyngałem
+z $M_0=0$ i niech
+$[M]_\infty=\lim_{t\to\infty}[M]_t\in[0,\infty]$.
+Wtedy, z dokładnością do zbioru zerowego,
+\[
+\{[M]_\infty<\infty\}
+=\{M_t\text{ ma skończoną granicę przy }t\to\infty\}.
+\]
+Jeżeli ponadto $\E[M]_\infty<\infty$, to
+$M$ jest martyngałem, istnieje $M_\infty\in L^2$,
+$M_t\to M_\infty$ w $L^2$ i p.n. oraz
+$\E M_\infty^2=\E[M]_\infty$.
+\end{twierdzenie}
+\begin{proof}
+Niech $\rho_k=\inf\{t:[M]_t\ge k\}$.
+Z ciągłości i adaptacji nawiasu są to czasy zatrzymania.
+Nawias procesu zatrzymanego wynosi
+$[M^{\rho_k}]_t=[M]_{t\wedge\rho_k}\le k$.
+Twierdzenie~\ref{thm:bracket-l2-criterion}
+daje martyngał ograniczony w $L^2$ na całej półprostej.
+Ze wniosku~\ref{cor:mart-cont-lp-convergence}
+ma on skończoną granicę p.n.
+Na $\{[M]_\infty<k\}$ mamy $\rho_k=\infty$,
+więc granicę ma sam $M$. Suma tych zdarzeń
+po $k\ge1$ daje jedną inkluzję.
+
+Dla odwrotnej inkluzji weźmy
+$\tau_k=\inf\{t:|M_t|\ge k\}$.
+Proces $M^{\tau_k}$ jest ograniczonym martyngałem
+i $\E[M]_{t\wedge\tau_k}
+=\E M_{t\wedge\tau_k}^2\le k^2$.
+Zbieżność monotoniczna daje
+$\E[M^{\tau_k}]_\infty\le k^2$, zatem jego
+nawias jest skończony p.n.
+Jeżeli $M$ ma skończoną granicę i ciągłą
+trajektorię, to $\sup_{t\ge0}|M_t|<\infty$.
+Dla dostatecznie dużego $k$ mamy wtedy
+$\tau_k=\infty$, a zatem $[M]_\infty<\infty$.
+Przecinamy przeliczalnie wiele zdarzeń pełnej
+miary dla procesów zatrzymanych.
+
+Wreszcie przy $\E[M]_\infty<\infty$ twierdzenie
+\ref{thm:bracket-l2-criterion} na każdym horyzoncie
+daje martyngał ograniczony w $L^2$.
+Z twierdzenia o zbieżności w $L^2$ dostajemy
+$M_\infty$ i zbieżność norm. Zatem
+$\E M_\infty^2=\lim_t\E M_t^2
+=\lim_t\E[M]_t=\E[M]_\infty$,
+gdzie ostatnia równość wynika ze zbieżności
+monotonicznej.
+\end{proof}
+
+\section{Charakteryzacja Lévy'ego ruchu Browna}
+
+\begin{twierdzenie}[Charakteryzacja Lévy'ego]
+\label{thm:levy-brownian-characterization}
+Niech $M=(M^{(1)},\ldots,M^{(d)})$ będzie
+wektorem ciągłych lokalnych martyngałów
+w filtracji spełniającej warunki zwykłe,
+$M_0=0$. Jeżeli
+\[
+[M^{(i)},M^{(j)}]_t=\delta_{ij}t
+\qquad (1\le i,j\le d),
+\]
+to $M$ jest standardowym $d$-wymiarowym ruchem
+Browna względem tej filtracji: dla $s<t$
+przyrost $M_t-M_s$ jest niezależny od $\calF_s$
+i ma rozkład normalny o średniej zero
+i macierzy kowariacji $(t-s)I_d$.
+Odwrotna implikacja wynika z twierdzenia
+\ref{thm:brownian-bracket} i wzoru kowariacji
+ruchu Browna.
+\end{twierdzenie}
+\begin{proof}
+Najpierw rozpatrzmy rzeczywisty ciągły lokalny
+martyngał $L$ z $L_0=0$ oraz $[L]_t=ct$,
+gdzie $c\ge0$. Z twierdzenia
+\ref{thm:bracket-l2-criterion} jest on martyngałem
+kwadratowo całkowalnym na każdym skończonym
+horyzoncie. Twierdzenie
+\ref{thm:conditional-variance-bracket} daje
+\[
+\E[(L_v-L_u)^2\mid\calF_u]=c(v-u).
+\]
+Niech $s<t$, $\theta\in\R$ i
+$f(x)=e^{i\theta x}$. Dla siatki
+$s=t_0<\cdots<t_m=t$ piszemy
+\[
+f(L_t)-f(L_s)=
+\sum_j f'(L_{t_j})\Delta_j L
++\tfrac12\sum_j f''(L_{t_j})(\Delta_j L)^2
++R_\pi .
+\]
+Z twierdzenia Taylora i ograniczoności
+$f'',f'''$ istnieje stała $C_\theta$ taka, że
+\[
+|R_\pi|\le C_\theta
+\min(1,\max_j|\Delta_j L|)
+\sum_j(\Delta_j L)^2.
+\]
+Używamy tu oszacowania reszty przez stałą
+razy $|\Delta_j L|^3$ oraz, niezależnie,
+przez stałą razy $|\Delta_j L|^2$.
+Wzdłuż ciągu siatek o zanikającej średnicy
+czynnik $\min(1,\max_j|\Delta_jL|)$ dąży
+do zera p.n. dzięki jednostajnej ciągłości.
+Drugi, $Q_\pi=\sum_j(\Delta_j L)^2$,
+zbiega według prawdopodobieństwa do $c(t-s)$
+na mocy konstrukcji nawiasu: dołączamy do siatek
+na $[s,t]$ drobne siatki na $[0,s]$
+i odejmujemy sumy do chwili $s$.
+Ponadto $\E Q_\pi=c(t-s)$ przez warunkową
+wariancję przyrostów. Nieujemność, zbieżność
+według prawdopodobieństwa i zbieżność średnich
+do średniej granicy dają zbieżność w $L^1$.
+Istotnie, pisząc $q=c(t-s)$, mamy
+$\E|Q_\pi-q|=\E Q_\pi+q-2\E\min(Q_\pi,q)$.
+Ostatnia wartość oczekiwana zbiega do $q$,
+gdyż minimum jest ograniczone przez $q$
+i zbiega według prawdopodobieństwa do $q$.
+Jest to ten sam argument co w dowodzie
+twierdzenia~\ref{thm:nonnegative-mart-convergence}.
+Stąd rodzina $Q_\pi$ wzdłuż rozważanego ciągu
+jest jednostajnie całkowalna.
+Iloczyn z ograniczonym czynnikiem dążącym
+do zera p.n. zbiega więc w $L^1$ do zera:
+odcinamy $Q_\pi$ na dużym poziomie,
+a dla ograniczonej części stosujemy zbieżność
+zmajoryzowaną. Otrzymujemy $\E|R_\pi|\to0$.
+
+Dla $A\in\calF_s$ wartość oczekiwana pierwszej sumy
+pomnożonej przez $\chi_A$ wynosi zero
+przez własność martyngałową.
+Warunkując drugą sumę względem $\calF_{t_j}$,
+otrzymujemy
+\[
+\E[\chi_A(f(L_t)-f(L_s))]
+=\tfrac c2\lim_{|\pi|\to0}
+\sum_j\E[\chi_A f''(L_{t_j})](t_{j+1}-t_j).
+\]
+Ograniczoność $f''$ i ciągłość trajektorii
+zapewniają zbieżność sum Riemanna i pozwalają
+przejść do wartości oczekiwanej.
+Równości dla funkcji zespolonych rozumiemy
+składowo. Ponieważ $f''=-\theta^2 f$,
+funkcja $g_A(u)=\E[\chi_A e^{i\theta L_u}]$
+jest ciągła i dla $u\ge s$ spełnia
+\[
+g_A(u)=g_A(s)-\tfrac12c\theta^2
+\int_s^u g_A(v)\,\mathrm d\lambda_1(v).
+\]
+Jest więc różniczkowalna i rozwiązując to
+elementarne równanie liniowe, dostajemy
+$g_A(t)=g_A(s)e^{-c\theta^2(t-s)/2}$.
+Dowolność $A$ identyfikuje warunkową
+wartość oczekiwaną:
+\[
+\E[e^{i\theta L_t}\mid\calF_s]
+=e^{i\theta L_s}e^{-c\theta^2(t-s)/2}.
+\]
+Mnożąc przez $\calF_s$-mierzalną zmienną
+$e^{-i\theta L_s}$, uzyskujemy
+warunkową funkcję charakterystyczną przyrostu.
+
+Dla $u\in\R^d$ stosujemy wynik rzeczywisty
+do $L=\sum_i u_i M^{(i)}$; dwuliniowość
+nawiasu daje $[L]_t=|u|^2t$. Zatem
+\[
+\E[e^{i u^\top(M_t-M_s)}\mid\calF_s]
+=e^{-|u|^2(t-s)/2}.
+\]
+Aby uzyskać niezależność bez wyboru wspólnych
+wersji warunkowych dla nieprzeliczalnie wielu $u$,
+ustalmy $A\in\calF_s$. Miara skończona
+$B\mapsto\Prob(A\cap\{M_t-M_s\in B\})$
+ma funkcję charakterystyczną
+$\Prob(A)e^{-|u|^2(t-s)/2}$ dla każdego $u$.
+Z jednoznaczności funkcji charakterystycznych
+jest równa $\Prob(A)$ razy gaussowska miara
+z macierzą kowariacji $(t-s)I_d$.
+To dowodzi niezależności i rozkładu przyrostu.
+Iterując niezależność względem $\calF_s$,
+otrzymujemy niezależność przyrostów na rozłącznych
+przedziałach; ciągłość i $M_0=0$ kończą dowód.
+\end{proof}
+
+\begin{uwaga}[Znaczenie założenia martyngałowego]
+Sama równość $[X]_t=t$ nie charakteryzuje
+procesu Wienera: dla $b\ne0$ proces $X_t=W_t+bt$
+ma ten sam nawias, lecz nie jest martyngałem
+w filtracji naturalnej ruchu Browna.
+Charakteryzacja Lévy'ego łączy informację
+o warunkowych średnich przyrostów z informacją
+o ich kwadratowej fluktuacji.
+Dowód powyżej nie wymaga wzoru It\^o;
+w tomie III uzyskamy narzędzia pozwalające
+zapisać podobny argument znacznie krócej.
+\end{uwaga}
+
+\section{Zmiana czasu i twierdzenie Dambisa--Dubinsa--Schwarza}
+
+\begin{lemat}[Stałość martyngału na płaskich odcinkach nawiasu]
+\label{lem:bracket-flat-interval}
+Niech $M$ będzie ciągłym lokalnym martyngałem
+z $M_0=0$ i $A=[M]$. Prawie na pewno
+jednocześnie dla wszystkich $0\le s\le t<\infty$
+zachodzi $A_s=A_t\Longrightarrow M_s=M_t$.
+\end{lemat}
+\begin{proof}
+Dla ustalonej nieujemnej chwili wymiernej $r$
+niech $\eta_r=\inf\{v\ge r:A_v>A_r\}$,
+z konwencją $\inf\varnothing=\infty$.
+Jest to czas zatrzymania: dla $t>r$ zdarzenie
+$\{\eta_r<t\}$ wyraża się przez istnienie
+wymiernego $q\in[r,t)$ z $A_q>A_r$,
+a prawostronna ciągłość filtracji daje
+$\{\eta_r\le t\}\in\calF_t$ także dla $t=r$.
+Ciągłość i monotoniczność $A$ dają
+$A_{v\wedge\eta_r}=A_r$ dla $v\ge r$.
+Proces $L_u=M_{(r+u)\wedge\eta_r}-M_r$,
+$u\ge0$, jest ciągłym lokalnym martyngałem
+w przesuniętej filtracji $(\calF_{r+u})$.
+Dokładniej, dla ciągu lokalizującego $(\tau_n)$
+procesu $M^{\eta_r}$ bierzemy
+$\zeta_n=(\tau_n-r)^+$ w przesuniętej filtracji.
+Na $\{\tau_n\le r\}$ proces $L^{\zeta_n}$
+jest zerowy, a na $\{\tau_n>r\}$
+jest równy przyrostowi prawdziwego martyngału
+$(M^{\eta_r})^{\tau_n}$ od chwili $r$.
+Zdarzenie $\{\tau_n>r\}$ należy do $\calF_r$,
+więc $L^{\zeta_n}$ jest martyngałem,
+a $\zeta_n\uparrow\infty$ p.n.
+Nawias $L$ wynosi
+$[L]_u=A_{(r+u)\wedge\eta_r}-A_r=0$:
+w sumach kwadratów na przesuniętym przedziale
+$[r,r+u]$ odejmujemy sumy do chwili $r$,
+wybierając podziały zawierające $r$, i stosujemy
+twierdzenie~\ref{thm:stopped-bracket}.
+Kryterium~\ref{thm:bracket-l2-criterion}
+daje $\E L_u^2=0$ dla każdego $u$.
+Ciągłość pozwala wnioskować, że $M$
+jest stały na $[r,\eta_r]$ (na całej
+półprostej od $r$, jeśli $\eta_r=\infty$).
+Przecinamy zbiory pełnej miary dla wszystkich
+wymiernych $r$. Jeżeli dla danej trajektorii
+$A_s=A_t$ i $s<t$, to dla każdego wymiernego
+$r\in(s,t)$ mamy $\eta_r\ge t$, a zatem
+$M_r=M_t$. Przechodząc z $r$ do $s$
+i korzystając z ciągłości, dostajemy $M_s=M_t$.
+\end{proof}
+
+\begin{twierdzenie}[Dambis--Dubins--Schwarz]
+\label{thm:dambis-dubins-schwarz}
+Niech $M$ będzie rzeczywistym ciągłym lokalnym
+martyngałem z $M_0=0$ w filtracji spełniającej
+warunki zwykłe, a $A=[M]$.
+Jeżeli $A_\infty=\infty$ p.n., to istnieje
+standardowy proces Wienera $B$ na tej samej
+przestrzeni probabilistycznej taki, że
+\[
+M_t=B_{A_t}\qquad(t\ge0)
+\]
+z dokładnością do nierozróżnialności.
+Można przyjąć
+$T_u=\inf\{t\ge0:A_t>u\}$ i $B_u=M_{T_u}$;
+proces $B$ jest procesem Wienera względem filtracji
+$(\calF_{T_u})$ po jej zwykłym uzupełnieniu.
+Bez założenia $A_\infty=\infty$ ta sama
+reprezentacja jest możliwa na rozszerzeniu
+przestrzeni probabilistycznej o niezależny
+proces Wienera.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: odwrotna zmiana czasu.}
+Oznaczmy $\zeta=A_\infty$ i zdefiniujmy $T_u$
+jak w tezie, przyjmując $\inf\varnothing=\infty$.
+Każdy $T_u$ jest czasem zatrzymania:
+$\{T_u<t\}=\bigcup_{q\in\Q\cap[0,t)}\{A_q>u\}$,
+a prawostronna ciągłość filtracji daje
+mierzalność $\{T_u\le t\}$.
+Czasy $T_u$ są niemalejące względem $u$.
+Na $\{u<\zeta\}$ mamy $T_u<\infty$ oraz
+$A_{T_u}=u$ dzięki ciągłości $A$.
+Na $\{u\ge\zeta\}$ mamy $T_u=\infty$.
+Z twierdzenia~\ref{thm:bracket-finite-convergence}
+istnieje skończona granica $M_\infty$
+na $\{\zeta<\infty\}$ p.n. Przyjmujemy ją tam
+jako wartość procesu w nieskończonej chwili
+i definiujemy
+\[
+C_u=
+\begin{cases}
+M_{T_u},&T_u<\infty,\\
+M_\infty,&T_u=\infty,
+\end{cases}
+\qquad \mathcal G_u=\calF_{T_u}.
+\]
+Wartość $M_\infty$ poza zdarzeniem jego
+skończoności można przyjąć równą zero.
+Mierzalność $C_u$ względem $\mathcal G_u$
+wynika z mierzalności wartości w czasach
+zatrzymania: $C_u$ jest granicą $M_{T_u\wedge n}$
+p.n., a na $\{T_u\le t\}$ jest równa
+$M_{T_u\wedge t}$, co daje test definicji
+$\calF_{T_u}$ także dla nieskończonego $T_u$.
+
+Pokażemy ciągłość $C$ trajektoryjnie.
+Pracujemy na wspólnym zbiorze pełnej miary
+z lematu~\ref{lem:bracket-flat-interval}
+i twierdzenia o zbieżności przy skończonym nawiasie.
+Dla $u<\zeta$ oraz $u_n\to u$ czasy $T_{u_n}$
+(dla dostatecznie dużego $n$) są ograniczone
+przez pewien skończony czas $T_v$ z $u<v<\zeta$.
+Każda granica podciągu tych czasów jest chwilą $r$
+z $A_r=u$ przez ciągłość $A$.
+Wszystkie takie chwile dają tę samą wartość $M_r$,
+gdyż $A$ jest niemalejący i $M$ jest stały na
+jego płaskich odcinkach. Zatem $C_{u_n}\to C_u$.
+Jeśli $0<\zeta<\infty$ i $u_n\uparrow\zeta$ od dołu,
+to albo $T_{u_n}\to\infty$, a wtedy
+$M_{T_{u_n}}\to M_\infty$, albo granica czasów
+jest skończona, powiedzmy $r$, i $A_r=\zeta$.
+W drugim przypadku $A$, a więc także $M$,
+jest stały od $r$ i $M_r=M_\infty$.
+Monotoniczność $T_u$ pozwala zastosować ten
+sam argument do dowolnego ciągu $u_n\to\zeta$
+od dołu. Po $\zeta$ proces $C$ jest stały.
+Jeśli $\zeta=0$, jest stale zerowy.
+Ponadto $C_0=0$ z lematu o płaskich odcinkach.
+Po zmianie na zbiorze zerowym z $\calF_0$
+możemy przyjąć wszędzie ciągłe trajektorie.
+
+\emph{Krok 2: własności martyngałowe zmienionego czasu.}
+Ustalmy $v<\infty$. Zatrzymany proces $N=M^{T_v}$
+ma nawias $[N]_t=A_{t\wedge T_v}\le v$.
+Twierdzenie~\ref{thm:bracket-l2-criterion}
+daje martyngał ograniczony w $L^2$ na całej
+półprostej. Ponadto przez nierówność Dooba
+i zbieżność monotoniczną
+$\E\sup_{t\ge0}|N_t|^2\le4v$.
+Proces $N^2-[N]$ jest martyngałem na każdym
+skończonym horyzoncie i jest klasy $(D)$,
+gdyż jego wartości w czasach zatrzymania
+są ograniczone przez całkowalną zmienną
+$\sup_{t\ge0}|N_t|^2+v$.
+Także $N$ jest klasy $(D)$.
+Oba procesy mają skończone granice p.n.
+(zbieżność $N$ wynika z ograniczenia w $L^2$,
+a $[N]$ jest ograniczony i niemalejący).
+Stosujemy próbkowanie dla klasy $(D)$
+(wniosek~\ref{cor:ost-class-d}, dla martyngału
+jednocześnie w obu kierunkach) do $T_u\le T_v$,
+$0\le u\le v$, dopuszczając nieskończone czasy.
+Ponieważ $N_{T_u}=C_u$ i $[N]_{T_u}=u\wedge\zeta$
+(z odpowiednią granicą w nieskończoności),
+otrzymujemy
+\[
+\E[C_v\mid\mathcal G_u]=C_u,\qquad
+\E[C_v^2-v\wedge\zeta\mid\mathcal G_u]
+=C_u^2-u\wedge\zeta.
+\]
+Zatem $C$ oraz $C^2-(u\wedge\zeta)$
+są martyngałami w filtracji $(\mathcal G_u)$.
+Zdarzenie $\{\zeta\le u\}=\{T_u=\infty\}$
+należy do $\mathcal G_u$:
+dla każdego skończonego $t$ jego przecięcie
+z $\{T_u\le t\}$ jest puste.
+Zatem $\zeta$ jest czasem zatrzymania
+w zmienionej filtracji.
+
+Możemy uzupełnić tę filtrację i zastąpić ją
+jej prawostronnie ciągłą wersją bez utraty
+powyższych własności martyngałowych.
+Istotnie dla ciągłego martyngału $Y$
+na skończonym horyzoncie $v$ mamy
+$Y_{u+1/n}=\E[Y_v\mid\mathcal G_{u+1/n}]$
+dla dostatecznie dużego $n$ przy $u<v$.
+Lemat o odwrotnych warunkowych wartościach
+oczekiwanych z rozdziału~\ref{ch:mart-cont}
+oraz ciągłość $Y$ dają
+$Y_u=\E[Y_v\mid\bigcap_n\mathcal G_{u+1/n}]$ p.n.
+Uzupełnienie o zbiory zerowe nie zmienia
+warunkowych wartości oczekiwanych p.n.
+Argument dotyczy zarówno $C$, jak i $C^2-u\wedge\zeta$.
+Z jednoznaczności nawiasu
+(twierdzenie~\ref{thm:general-bracket})
+wynika teraz $[C]_u=u\wedge\zeta$.
+
+\emph{Krok 3: nieskończony nawias i rozszerzenie.}
+Jeżeli $\zeta=\infty$ p.n., to $[C]_u=u$,
+więc charakteryzacja Lévy'ego
+(twierdzenie~\ref{thm:levy-brownian-characterization})
+daje proces Wienera $B=C$.
+W ogólnym przypadku na przestrzeni iloczynowej
+dołączamy niezależny standardowy proces Wienera $W$
+i rozszerzamy filtrację $\mathcal G$ o jego
+naturalną filtrację. Procesy $C,W,CW$ pozostają
+martyngałami: dla iloczynu weryfikujemy
+warunkowanie najpierw na prostokątach zdarzeń
+z obu niezależnych przestrzeni, a następnie
+na całym iloczynowym $\sigma$-ciele przez
+twierdzenie o klasie monotonicznej.
+Całkowalność iloczynu wynika z kwadratowej
+całkowalności na skończonych horyzontach.
+Tak samo zachowuje się martyngał
+$C^2-u\wedge\zeta$. Uzupełniamy i
+uprawostronniamy filtrację jak w kroku 2.
+Stąd $[C,W]=0$ na mocy
+twierdzenia~\ref{thm:strong-orthogonality-bracket}.
+Definiujemy
+\[
+B_u=C_u+W_u-W_{u\wedge\zeta}.
+\]
+Jest to ciągły lokalny martyngał rozpoczynający
+się od zera. Twierdzenie~\ref{thm:stopped-bracket}
+i wniosek~\ref{cor:cross-stopped-bracket} dają
+\[
+[W-W^\zeta]_u=u-u\wedge\zeta,\qquad
+[C,W-W^\zeta]_u=0.
+\]
+Z dwuliniowości $[B]_u=u$, więc ponownie
+charakteryzacja Lévy'ego daje proces Wienera.
+Do chwili $\zeta$ zachodzi $B_u=C_u$.
+
+\emph{Krok 4: powrót do pierwotnego czasu.}
+Dla każdej trajektorii ze wspólnego zbioru
+pełnej miary i każdego skończonego $t$ kładziemy
+$u=A_t$. Jeśli $u<\zeta$, to $T_u\ge t$
+i $A_{T_u}=A_t$. Lemat o płaskich odcinkach
+daje $M_{T_u}=M_t$. Jeśli $u=\zeta<\infty$,
+to $A$ jest stały od $t$, a zatem
+$M_t=M_\infty=C_\zeta$.
+W obu przypadkach $B_{A_t}=C_{A_t}=M_t$,
+jednocześnie dla wszystkich $t$.
+
+Zauważmy dodatkowo, że dla każdego ustalonego $t$
+zmienna $A_t$ jest czasem zatrzymania w filtracji
+zmienionego czasu (również po jej rozszerzeniu).
+Mamy bowiem $\{A_t\le u\}=\{T_u\ge t\}$,
+dzięki ciągłości i monotoniczności $A$.
+Zdarzenie po prawej należy do $\calF_{T_u}$:
+jego przecięcie z $\{T_u\le v\}$ jest puste
+dla $v<t$, a dla $v\ge t$ jest różnicą
+$\{T_u\le v\}\setminus\{T_u<t\}$,
+należącą do $\calF_v$.
+Stąd reprezentacja $B_{A_t}$ wykorzystuje
+czasy zatrzymania w zmienionej filtracji.
+\end{proof}
+
+\begin{uwaga}[Kiedy trzeba rozszerzyć przestrzeń?]
+Na przestrzeni probabilistycznej złożonej z jednego
+punktu proces $M\equiv0$ jest ciągłym martyngałem
+z $[M]_\infty=0$, lecz na tej przestrzeni
+nie istnieje standardowy proces Wienera:
+każda zmienna losowa jest stała, więc nie może
+mieć rozkładu $\Normal(0,1)$.
+W ogólności rozszerzenie przestrzeni w twierdzeniu
+\ref{thm:dambis-dubins-schwarz} jest zatem konieczne.
+Nie należy też wnioskować, że skonstruowany
+proces $B$ jest niezależny od losowego zegara $A$.
+Twierdzenie daje reprezentację przez zmianę czasu,
+nie taką niezależność.
+\end{uwaga}
+
+\begin{przyklad}[Czas deterministyczny z płaskim odcinkiem]
+Niech $W$ będzie procesem Wienera i
+\[
+a(t)=\begin{cases}
+t,&0\le t\le1,\\
+1,&1<t\le2,\\
+t-1,&t>2.
+\end{cases}
+\]
+Proces $M_t=W_{a(t)}$ jest martyngałem
+w filtracji $(\calF^W_{a(t)})_{t\ge0}$
+przez niezależność przyrostów Wienera.
+Jeżeli wyjściowa filtracja spełnia warunki zwykłe,
+to także ta deterministycznie zmieniona filtracja
+je spełnia: zupełność jest dziedziczona,
+a prawostronna ciągłość wynika z ciągłości
+i monotoniczności $a$ oraz prawostronnej
+ciągłości wyjściowej filtracji. Proces $M_t^2-a(t)$
+również jest martyngałem na mocy tej samej
+własności i wariancji przyrostów.
+Jednoznaczność nawiasu daje $[M]_t=a(t)$.
+Na $[1,2]$ zarówno nawias, jak i $M$
+są stałe. Odwrotna zmiana czasu dla $u=1$
+wybiera $T_1=2$, nie $1$, lecz
+$M_{T_1}=M_1=W_1$. Dla każdego $u\ge0$
+otrzymujemy $M_{T_u}=W_u$.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[x=1.6cm,y=1.2cm,>=Latex]
+\draw[->] (0,0)--(4.4,0) node[right] {$t$};
+\draw[->] (0,0)--(0,3.3) node[above] {$a(t)$};
+\draw[blue!75!black,very thick] (0,0)--(1,1)--(2,1)--(4,3);
+\draw[gray,dashed] (0,1)--(2,1)--(2,0);
+\draw[gray,densely dotted] (1,0)--(1,1);
+\fill[blue!75!black] (1,1) circle (1.6pt);
+\fill[blue!75!black] (2,1) circle (1.6pt);
+\node[left] at (0,1) {$u=1$};
+\node[below] at (1,0) {$1$};
+\node[below] at (2,0) {$T_1=2$};
+\node[above] at (1.5,1.08) {\small płaski odcinek};
+\end{tikzpicture}
+\par\smallskip\small Odwrotna zmiana czasu wybiera prawy
+koniec płaskiego odcinka nawiasu. Wartość martyngału
+nie zależy jednak od wyboru punktu na tym odcinku.
+\end{center}
 
 % ================================================================
 % ROZDZIAŁ 14. SKOKI, KOMPENSATORY, PODSUMOWANIE TOMU

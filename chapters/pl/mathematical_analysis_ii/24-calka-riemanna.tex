@@ -1,0 +1,1139 @@
+\chapter{Całka Riemanna}
+\label{ma2:ch:riemann-integral}
+
+Podstawową konstrukcję całki Riemanna na przedziale,
+równoważność sum Riemanna i Darboux, własności
+algebraiczne oraz przykłady omówiono w analizie
+matematycznej I:
+\atlasref{AM1-29::ma1:ch:riemann-integral}{całka Riemanna}.
+Tutaj przygotujemy jej rozszerzenie na prostokąty
+w $\R^n$. Zagadnienia całek iterowanych, zamiany
+zmiennych i całkowania po ogólniejszych zbiorach
+rozwiniemy w rozdziale poświęconym całkom wielokrotnym.
+Ogólną teorię całek o wartościach w przestrzeni Banacha
+pozostawiamy analizie funkcjonalnej.
+
+\section{Intuicja: sumowanie lokalnych wkładów}
+
+Całkowanie w wielu wymiarach nie polega na
+sumowaniu samych wartości funkcji. Każdej
+wartości przypisujemy wagę określającą rozmiar
+fragmentu dziedziny, który ta wartość reprezentuje.
+Niech $Q$ będzie prostokątem w $\R^n$, a $f:Q\to\R$
+funkcją ograniczoną. Jeżeli na małym prostokącie
+$C\subseteq Q$ funkcja $f$
+jest prawie stała, to jego wkład do całki
+(o ile całka istnieje) jest w przybliżeniu równy
+\[
+ f(\xi)|C|,\qquad \xi\in C.
+\]
+Na przykład jeśli $f$ jest gęstością masy
+płyty, to iloczyn gęstości i pola komórki
+przybliża masę jej fragmentu. Dla gęstości
+stałej przybliżenie jest dokładne.
+W trzech wymiarach zamiast pola podstawy
+występuje objętość komórki, a w wymiarze $n$
+iloczyn długości jej $n$ boków.
+
+Gdy $f\ge0$ jest funkcją dwóch zmiennych,
+ten sam iloczyn ma interpretację geometryczną:
+jest objętością prostopadłościanu o podstawie
+$C$ i wysokości $f(\xi)$.
+Sumując takie bryły, przybliżamy obszar
+\[
+ B_f=\{(x,y,z):(x,y)\in Q,\ 0\le z\le f(x,y)\}.
+\]
+W przypadku funkcji jednej zmiennej
+otrzymujemy prostokąty zamiast prostopadłościanów.
+W wyższych wymiarach rolę bryły pod wykresem
+pełni odpowiedni zbiór w $\R^{n+1}$.
+Związek granicy sum z miarą takiego zbioru
+uzasadnimy w twierdzeniu
+\ref{ma2:thm:riemann-subgraph-volume}.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(3.3cm,-.9cm)},y={(-2.2cm,-1.15cm)},z={(0cm,3.8cm)},>=stealth]
+ \fill[blue!9] (0,0,0)--(1,0,0)--(1,1,0)--(0,1,0)--cycle;
+ \foreach \i in {0,1,2,3}{
+  \foreach \j in {0,1,2,3}{
+   \pgfmathsetmacro{\u}{\i/4}
+   \pgfmathsetmacro{\v}{\j/4}
+   \pgfmathsetmacro{\U}{(\i+1)/4}
+   \pgfmathsetmacro{\V}{(\j+1)/4}
+   \draw[gray!55,thin] (\u,\v,0)--(\U,\v,0)--(\U,\V,0)--(\u,\V,0)--cycle;
+  }
+ }
+ \filldraw[fill=blue!25,draw=blue!65!black] (0,1,0)--(1,1,0)--(1,1,1)--(0,1,.6)--cycle;
+ \filldraw[fill=blue!35,draw=blue!65!black] (1,0,0)--(1,1,0)--(1,1,1)--(1,0,.7)--cycle;
+ \filldraw[fill=blue!15,draw=blue!65!black] (0,0,.3)--(1,0,.7)--(1,1,1)--(0,1,.6)--cycle;
+ \foreach \i in {1,2,3}{
+  \pgfmathsetmacro{\u}{\i/4}
+  \draw[blue!50,thin] (\u,0,{.3+.4*\u})--(\u,1,{.6+.4*\u});
+  \draw[blue!50,thin] (0,\u,{.3+.3*\u})--(1,\u,{.7+.3*\u});
+ }
+ \filldraw[fill=orange!55,draw=orange!85!black]
+ (.75,1,0)--(1,1,0)--(1,1,.825)--(.75,1,.825)--cycle;
+ \filldraw[fill=orange!72,draw=orange!85!black]
+ (1,.75,0)--(1,1,0)--(1,1,.825)--(1,.75,.825)--cycle;
+ \draw[orange!85!black,densely dashed,thick]
+ (.75,1,.825)--(.75,.75,.825)--(1,.75,.825);
+ \draw[orange!85!black,densely dashed,thick]
+ (.75,1,.825)--(1,1,.825)--(1,.75,.825);
+ \draw[->,gray!80!black] (0,0,0)--(1.25,0,0) node[right] {$x$};
+ \draw[->,gray!80!black] (0,0,0)--(0,1.25,0) node[left] {$y$};
+ \draw[->,gray!80!black] (0,0,0)--(0,0,1.18) node[above] {$z$};
+ \node[blue!70!black,above] at (.5,.5,.75) {$z=f(x,y)$};
+ \draw[orange!85!black,thin] (1,.88,.4)--(1.34,.88,.4) node[right] {$f(\xi)|C|$};
+\end{tikzpicture}
+\caption{Bryła pod dodatnim wykresem
+$f(x,y)=0{,}3+0{,}4x+0{,}3y$ na kwadracie
+jednostkowym i wyróżniona komórka
+$C=[3/4,1]^2$. Pomarańczowy
+prostopadłościan ma wysokość $f(3/4,3/4)=0{,}825$;
+jego niewidoczne górne krawędzie zaznaczono
+schematycznie linią przerywaną.}
+\label{ma2:fig:riemann-local-volume}
+\end{figure}
+
+Dla funkcji nieujemnej można na każdej
+komórce wybrać najmniejszą i największą
+możliwą wysokość: odpowiednio infimum
+i supremum funkcji. Pierwsza bryła mieści
+się pod wykresem, druga obejmuje cały
+fragment bryły pod wykresem. Różnica
+ich objętości jest iloczynem oscylacji
+funkcji i pola podstawy. Jeśli łączna
+różnica daje się uczynić dowolnie małą,
+obie metody prowadzą do tej samej wartości.
+To jest geometryczna treść kryterium Darboux.
+Nie wymagamy osiągania kresów przez
+dowolną funkcję ograniczoną.
+
+\paragraph{Funkcja zmieniająca znak.}
+Jeżeli $f$ przyjmuje również wartości ujemne,
+wkłady poniżej płaszczyzny podstawy
+odejmujemy zamiast dodawać. Całka jest
+wówczas bilansem, a nie zwykłą objętością
+geometryczną. Na przykład na $Q=[-1,1]\times[0,1]$
+funkcja $f(x,y)=x$ daje dwie przystające
+bryły po przeciwnych stronach płaszczyzny
+$z=0$. Ich wkłady wzajemnie się znoszą.
+Natomiast zastąpienie $f$ przez $|f|$
+powoduje dodanie obu objętości.
+Ścisły rachunek podamy po wprowadzeniu
+własności całki w przykładzie
+\ref{ma2:ex:riemann-signed-volume}.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(2.2cm,-.5cm)},y={(-1.5cm,-.8cm)},z={(0cm,2cm)},>=stealth]
+ \fill[gray!12] (-1,0,0)--(1,0,0)--(1,1,0)--(-1,1,0)--cycle;
+ \filldraw[fill=orange!45,draw=orange!85!black] (-1,1,0)--(-1,1,-1)--(0,1,0)--cycle;
+ \filldraw[fill=orange!22,draw=orange!85!black] (-1,0,0)--(-1,1,0)--(0,1,0)--(0,0,0)--cycle;
+ \draw[orange!85!black,densely dashed] (-1,1,-1)--(-1,0,-1)--(0,0,0);
+ \filldraw[fill=blue!30,draw=blue!75!black] (0,1,0)--(1,1,0)--(1,1,1)--cycle;
+ \filldraw[fill=blue!50,draw=blue!75!black] (1,0,0)--(1,1,0)--(1,1,1)--(1,0,1)--cycle;
+ \filldraw[fill=blue!18,draw=blue!75!black] (0,0,0)--(1,0,1)--(1,1,1)--(0,1,0)--cycle;
+ \draw[->,gray!80!black] (-1.15,0,0)--(1.25,0,0) node[right] {$x$};
+ \draw[->,gray!80!black] (0,0,0)--(0,1.2,0) node[left] {$y$};
+ \draw[->,gray!80!black] (0,0,-1.1)--(0,0,1.2) node[above] {$z$};
+ \node[orange!85!black,below] at (-.75,1,-.8) {$-1/2$};
+ \node[blue!75!black,above] at (.7,.5,.8) {$+1/2$};
+\end{tikzpicture}
+\caption{Całka funkcji $f(x,y)=x$ nad
+$[-1,1]\times[0,1]$: dodatni i ujemny
+wkład mają przeciwne znaki, choć obie
+bryły mają dodatnią objętość $1/2$.}
+\label{ma2:fig:riemann-signed-volume}
+\end{figure}
+
+Wersje interaktywne obu rysunków pozwalają obracać bryły
+oraz niezależnie ukrywać ich warstwy.
+
+\begin{lstlisting}[language=Python]
+import plotly.graph_objects as go
+
+faces = [(0,2,1),(0,3,2),(4,5,6),(4,6,7),
+    (0,1,5),(0,5,4),(1,2,6),(1,6,5),
+    (2,3,7),(2,7,6),(3,0,4),(3,4,7)]
+edges = [(0,1),(1,2),(2,3),(3,0),(4,5),(5,6),
+    (6,7),(7,4),(0,4),(1,5),(2,6),(3,7)]
+
+def add_solid(fig, v, faces, edges, color, name, opacity=1):
+    x,y,z = zip(*v)
+    i,j,k = zip(*faces)
+    fig.add_trace(go.Mesh3d(x=x,y=y,z=z,i=i,j=j,k=k,
+        color=color,opacity=opacity,flatshading=True,
+        name=name,showlegend=True))
+    pts = [p for a,b in edges for p in
+           (v[a],v[b],(None,None,None))]
+    x,y,z = zip(*pts)
+    fig.add_trace(go.Scatter3d(x=x,y=y,z=z,mode="lines",
+        line=dict(color=color,width=4),showlegend=False))
+
+def prism(a,b,c,d,f):
+    q = [(a,c),(b,c),(b,d),(a,d)]
+    return [(x,y,0) for x,y in q]+[(x,y,f(x,y)) for x,y in q]
+
+f = lambda x,y: .3+.4*x+.3*y
+fig = go.Figure()
+add_solid(fig,prism(0,1,0,1,f),faces,edges,
+          "#397db5","Bryla pod wykresem",.32)
+add_solid(fig,prism(.75,1,.75,1,lambda x,y:f(.75,.75)),
+          faces,edges,"#d97706","Lokalny wklad")
+fig.update_layout(scene_aspectmode="data")
+fig.write_html("am2_24_local_volume.html", include_plotlyjs=True)
+
+fig = go.Figure()
+faces = [(0,1,2),(3,5,4),(0,3,4),(0,4,1),
+         (1,4,5),(1,5,2),(2,5,3),(2,3,0)]
+edges = [(0,1),(1,2),(2,0),(3,4),(4,5),(5,3),
+         (0,3),(1,4),(2,5)]
+for a,color,name in [(-1,"#d97706","Wklad -1/2"),
+                      (1,"#397db5","Wklad +1/2")]:
+    v = [(0,0,0),(a,0,0),(a,0,a),
+         (0,1,0),(a,1,0),(a,1,a)]
+    add_solid(fig,v,faces,edges,color,name)
+fig.update_layout(scene_aspectmode="data")
+fig.write_html("am2_24_signed_volume.html", include_plotlyjs=True)
+\end{lstlisting}
+
+
+Warto od razu odróżnić całkowanie
+względem rozmiaru dziedziny od całkowania
+wzdłuż krzywej lub po powierzchni.
+Prostokąty w $\R^n$ mają $n$-wymiarową
+objętość. Na przykład odcinek $[0,1]\times\{0\}\times\{0\}$
+w $\R^3$ ma długość $1$, lecz zerową objętość
+trójwymiarową: zawiera się w prostokątach
+$[0,1]\times[-\varepsilon,\varepsilon]^2$
+o objętości $4\varepsilon^2$. Aby sumować wkłady wzdłuż
+takiej krzywej, należy używać długości,
+a dla powierzchni pola jej fragmentów.
+W kolejnych rozdziałach rolę właściwej
+miary pełnić będzie odpowiednio
+$\mathcal H^1$, $\mathcal H^2$ lub ogólnie
+$\mathcal H^k$; nie zastępujemy ich
+$n$-wymiarową miarą Lebesgue'a w przestrzeni
+otaczającej.
+
+\section{Podziały prostokąta i sumy Darboux}
+
+Ustalmy $n\ge1$ i prostokąt domknięty
+\[
+ Q=\prod_{j=1}^n[a_j,b_j],\qquad a_j<b_j.
+\]
+Przez objętość prostokąta rozumiemy liczbę
+$|Q|=\prod_{j=1}^n(b_j-a_j)$. Niech w każdym
+przedziale współrzędnościowym będzie dany podział
+$a_j=x_{j,0}<\cdots<x_{j,N_j}=b_j$.
+Ich rodzina $P$ wyznacza komórki
+\[
+ Q_\alpha=\prod_{j=1}^n
+ [x_{j,\alpha_j-1},x_{j,\alpha_j}],
+ \qquad 1\le\alpha_j\le N_j.
+\]
+Komórki są domknięte, pokrywają $Q$ i mają parami
+rozłączne wnętrza. Objętości spełniają
+\[
+ \sum_\alpha |Q_\alpha|
+ =\prod_{j=1}^n
+   \sum_{i=1}^{N_j}(x_{j,i}-x_{j,i-1})=|Q|.
+\]
+Równość wynika z rozdzielności mnożenia względem
+skończonych sum i teleskopowania w każdej współrzędnej.
+Przez średnicę podziału rozumiemy
+$\delta(P)=\max_{j,i}(x_{j,i}-x_{j,i-1})$;
+średnica euklidesowa każdej komórki nie przekracza
+$\sqrt n\,\delta(P)$.
+
+\begin{definicja}
+\label{ma2:def:darboux-box}
+Dla ograniczonej funkcji $f:Q\to\R$ definiujemy
+\[
+ \begin{aligned}
+ m_\alpha&=\inf_{Q_\alpha}f,\qquad
+ M_\alpha=\sup_{Q_\alpha}f,\\
+ L(f,P)&=\sum_\alpha m_\alpha|Q_\alpha|,\qquad
+ U(f,P)=\sum_\alpha M_\alpha|Q_\alpha|.
+ \end{aligned}
+\]
+Całka dolna i górna Darboux to odpowiednio
+$\underline I(f)=\sup_P L(f,P)$ oraz
+$\overline I(f)=\inf_P U(f,P)$.
+Funkcja jest całkowalna w sensie Riemanna na $Q$,
+gdy $\underline I(f)=\overline I(f)$.
+Wspólną wartość oznaczamy $I_Q(f)$.
+Na tym etapie definicja nie odwołuje się do miary
+Lebesgue'a. Notację $\int_Q f(x)\,\mathrm d\lambda_n(x)$
+rezerwujemy dla całki Lebesgue'a; równość obu
+całek uzasadnimy dalej.
+\end{definicja}
+
+\begin{stwierdzenie}[Kryterium Darboux]
+\label{ma2:prop:darboux-box}
+Niech $f:Q\to\R$ będzie ograniczona.
+Zachodzi $\underline I(f)\le\overline I(f)$.
+Funkcja $f$ jest całkowalna wtedy
+i tylko wtedy, gdy dla każdego $\varepsilon>0$
+istnieje podział $P$ taki, że
+$U(f,P)-L(f,P)<\varepsilon$.
+\end{stwierdzenie}
+\begin{proof}
+Rozdrobnienie podziału oznacza dodanie węzłów
+w dowolnych współrzędnych. Każda nowa komórka
+zawiera się w starej, więc jej infimum jest nie
+mniejsze, a supremum nie większe niż odpowiednie
+kresy w starej komórce. Suma objętości nowych
+komórek zawartych w starej jest równa jej
+objętości (na mocy wyżej wykazanej tożsamości).
+Stąd suma dolna nie maleje, a górna nie rośnie.
+Dla dwóch podziałów $P,T$ tworzymy wspólne
+rozdrobnienie $R$ przez sumę ich węzłów w każdej
+współrzędnej. Otrzymujemy
+\[
+ L(f,P)\le L(f,R)\le U(f,R)\le U(f,T).
+\]
+Przejście do kresów daje pierwszą tezę.
+Wszystkie kresy są skończone, bo $f$ jest ograniczona,
+a suma objętości komórek wynosi $|Q|$.
+Jeżeli całki dolna i górna są równe $I$, wybieramy
+$P,T$ z $L(f,P)>I-\varepsilon/2$ i
+$U(f,T)<I+\varepsilon/2$. Wspólne rozdrobnienie
+spełnia żądaną nierówność.
+Odwrotnie, dla każdego $P$ mamy
+$0\le\overline I(f)-\underline I(f)
+\le U(f,P)-L(f,P)$; dowolność $\varepsilon$
+kończy dowód.
+\end{proof}
+
+Dla nieujemnej funkcji dwóch zmiennych sumy
+Darboux mają interpretację objętości sum
+prostopadłościanów zawartych w bryle pod wykresem
+lub pokrywających tę bryłę.
+Dla funkcji ze znakiem są to objętości ze znakiem,
+nie zaś objętości geometryczne.
+
+\section{Sumy Riemanna i granica przy zagęszczaniu podziałów}
+
+\begin{definicja}
+\label{ma2:def:riemann-box-sum}
+Dla każdej komórki wybieramy znacznik
+$\xi_\alpha\in Q_\alpha$. Sumą Riemanna nazywamy
+\[
+ S(f,P,\xi)=\sum_\alpha f(\xi_\alpha)|Q_\alpha|.
+\]
+Istnienie granicy $I$ przy $\delta(P)\to0$ oznacza,
+że dla każdego $\varepsilon>0$ istnieje $\eta>0$
+takie, że dla wszystkich podziałów $P$ o
+$\delta(P)<\eta$ i wszystkich wyborów znaczników
+mamy $|S(f,P,\xi)-I|<\varepsilon$.
+\end{definicja}
+
+\begin{twierdzenie}
+\label{ma2:thm:riemann-darboux-box}
+Dla ograniczonej funkcji $f:Q\to\R$
+całkowalność w sensie definicji
+\ref{ma2:def:darboux-box} jest równoważna
+istnieniu skończonej granicy sum Riemanna
+z definicji \ref{ma2:def:riemann-box-sum}.
+Obie wartości są równe.
+\end{twierdzenie}
+\begin{proof}
+Niech $|f|\le M$. Gdy $M=0$, wszystkie sumy
+są zerowe, więc możemy przyjąć $M>0$.
+Załóżmy całkowalność i ustalmy $\varepsilon>0$.
+Wybierzmy podział $T$ spełniający
+$U(f,T)-L(f,T)<\varepsilon/2$.
+Niech $P$ będzie dowolnym podziałem. Nazwijmy
+komórkę $P$ złą, jeśli przecina hiperpłaszczyznę
+$x_j=t$, gdzie $t$ jest wewnętrznym węzłem $T$
+w $j$-tej współrzędnej. Niech $r_j$ oznacza
+liczbę tych węzłów. W danej współrzędnej
+każda komórka przecinająca $x_j=t$ ma swój
+$j$-ty przedział zawarty w
+$[t-\delta(P),t+\delta(P)]$.
+Suma długości wszystkich takich przedziałów
+nie przekracza $2\delta(P)$, bo ich wnętrza
+są rozłączne. Sumując po pozostałych
+współrzędnych i po węzłach, otrzymujemy
+\[
+ \sum_{\alpha:\,Q_\alpha\ \text{zła}}|Q_\alpha|
+ \le C_T\delta(P),\qquad
+ C_T=2\sum_{j=1}^n r_j\prod_{i\ne j}(b_i-a_i).
+\]
+Zastosowano tu oszacowanie sumy po sumie
+skończenie wielu rodzin komórek przez sumę
+oszacowań tych rodzin; wielokrotne zliczenie
+nie szkodzi, bo objętości są nieujemne.
+
+Niech $R$ będzie wspólnym rozdrobnieniem $P,T$.
+Dobre komórki $P$ nie są dzielone przez $T$,
+więc ich wkłady do sum dolnych i górnych
+pozostają niezmienione. Na złej komórce
+różnica między starą i nową sumą dolną
+oraz między starą i nową sumą górną
+nie przekracza $2M|Q_\alpha|$.
+Wobec tego
+\[
+ L(f,P)\ge L(f,R)-2MC_T\delta(P),\qquad
+ U(f,P)\le U(f,R)+2MC_T\delta(P).
+\]
+Ponieważ $R$ rozdrabnia $T$,
+$L(f,T)\le L(f,R)\le U(f,R)\le U(f,T)$.
+Ponadto $L(f,P)\le S(f,P,\xi)\le U(f,P)$.
+Całka $I_Q(f)$ i obie sumy dla $T$ różnią się
+o mniej niż $\varepsilon/2$, zatem
+\[
+ |S(f,P,\xi)-I_Q(f)|
+ <\varepsilon/2+2MC_T\delta(P).
+\]
+Jeżeli $C_T>0$, wystarczy
+$\delta(P)<\varepsilon/(4MC_T)$; jeżeli
+$C_T=0$, ostatni składnik jest zerowy.
+Oszacowanie nie zależy od znaczników.
+
+Odwrotnie, załóżmy istnienie granicy $I$.
+Dla dowolnego $\varepsilon>0$ wybieramy
+podział $P$ o tak małej średnicy, aby każda
+suma Riemanna różniła się od $I$ o mniej
+niż $\varepsilon/4$. Z definicji kresów
+w każdej komórce możemy wybrać znacznik
+$\xi_\alpha^-$ z
+$f(\xi_\alpha^-)<m_\alpha+\varepsilon/(4|Q|)$
+oraz $\xi_\alpha^+$ z
+$f(\xi_\alpha^+)>M_\alpha-\varepsilon/(4|Q|)$.
+Stąd
+\[
+ U(f,P)-L(f,P)
+ < S(f,P,\xi^+)-S(f,P,\xi^-)+\varepsilon/2
+ <\varepsilon.
+\]
+Kryterium Darboux daje całkowalność.
+Udowodniona pierwsza implikacja daje granicę
+$I_Q(f)$; jednoznaczność granicy (dla dowolnego
+ciągu podziałów o średnicy dążącej do zera)
+prowadzi do $I=I_Q(f)$.
+\end{proof}
+
+\section{Ciągłość i elementarne własności całki}
+
+\begin{twierdzenie}
+\label{ma2:thm:riemann-box-continuous}
+Każda funkcja ciągła $f:Q\to\R$ jest
+całkowalna w sensie Riemanna.
+\end{twierdzenie}
+\begin{proof}
+Zwartość $Q$ daje ograniczoność i jednostajną
+ciągłość $f$. Dla $\varepsilon>0$ wybieramy
+$\rho>0$ tak, by
+$|f(x)-f(y)|<\varepsilon/(2|Q|)$ dla
+$x,y\in Q$ o $\|x-y\|<\rho$.
+Podział z $\sqrt n\,\delta(P)<\rho$ spełnia
+$M_\alpha-m_\alpha\le\varepsilon/(2|Q|)$
+dla każdej komórki: wystarczy zastosować
+oszacowanie różnic do punktów, w których
+ciągła funkcja osiąga maksimum i minimum
+na zwartej komórce. Po przemnożeniu przez
+objętości i zsumowaniu dostajemy
+$U(f,P)-L(f,P)\le\varepsilon/2<\varepsilon$.
+Stwierdzenie \ref{ma2:prop:darboux-box} kończy dowód.
+\end{proof}
+
+\begin{twierdzenie}
+\label{ma2:thm:riemann-box-algebra}
+Funkcje całkowalne w sensie Riemanna na $Q$
+tworzą algebrę nad $\R$, zawierającą funkcje
+stałe i domkniętą na operację $f\mapsto |f|$.
+Całka $I_Q$ jest liniowa i monotoniczna, a
+\[
+ |I_Q(f)|\le I_Q(|f|)\le |Q|\,\|f\|_\infty.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla komórki $C$ oznaczmy oscylację funkcji
+$h$ przez $\operatorname{osc}_C h=\sup_C h-\inf_C h$.
+Jest ona równa $\sup_{x,y\in C}|h(x)-h(y)|$:
+jedna nierówność jest natychmiastowa z definicji
+kresów, a druga wynika z wyboru wartości dowolnie
+bliskich obu kresom.
+Dla ograniczonych $f,g$ z nierówności trójkąta
+oraz rozkładu
+$f(x)g(x)-f(y)g(y)=f(x)(g(x)-g(y))
++g(y)(f(x)-f(y))$ otrzymujemy
+\[
+ \begin{aligned}
+ \operatorname{osc}_C(\alpha f+\beta g)
+ &\le|\alpha|\operatorname{osc}_Cf+
+      |\beta|\operatorname{osc}_Cg,\\
+ \operatorname{osc}_C(fg)
+ &\le\|f\|_\infty\operatorname{osc}_Cg+
+      \|g\|_\infty\operatorname{osc}_Cf,\\
+ \operatorname{osc}_C|f|&\le\operatorname{osc}_Cf.
+ \end{aligned}
+\]
+Niech $f,g$ będą całkowalne, a $\alpha,\beta\in\R$.
+Ustalmy $\varepsilon>0$ i
+$K=1+|\alpha|+|\beta|+\|f\|_\infty+\|g\|_\infty$.
+Wybieramy dla każdej z funkcji podział o różnicy
+sum mniejszej od $\varepsilon/(2K)$, a następnie
+wspólne rozdrobnienie $P$. Dla każdej funkcji
+różnica sum pozostaje mniejsza od tej liczby.
+Mnożąc powyższe nierówności przez objętości
+komórek i sumując, dostajemy różnice sum
+dla $\alpha f+\beta g$, $fg$ i $|f|$ mniejsze
+od $\varepsilon$. Kryterium Darboux daje
+całkowalność wszystkich wymienionych funkcji.
+Funkcja stała $c$ ma dla każdego podziału
+równe sumy dolne i górne, obie równe $c|Q|$.
+Liniowość wynika z dokładnej liniowości
+sum Riemanna dla wspólnych znaczników
+i twierdzenia \ref{ma2:thm:riemann-darboux-box}.
+Jeśli $f\le g$, nierówność zachodzi dla
+wszystkich sum o tych samych znacznikach,
+więc zachodzi także dla granic.
+Stosując monotoniczność do
+$-|f|\le f\le |f|\le\|f\|_\infty$ i używając
+liniowości, uzyskujemy żądane oszacowanie.
+\end{proof}
+
+\begin{przyklad}[Bilans wkładów dodatnich i ujemnych]
+\label{ma2:ex:riemann-signed-volume}
+Dla funkcji $f(x,y)=x$ z rysunku
+\ref{ma2:fig:riemann-signed-volume}
+weźmy podział na $2N$ równych przedziałów
+na osi $x$ oraz $N$ na osi $y$,
+ze znacznikami w środkach komórek.
+Wkłady dla $x$ i $-x$ mają jednakowe
+pola podstaw i przeciwne wartości funkcji,
+więc suma Riemanna jest równa zero.
+Ciągłość i twierdzenie
+\ref{ma2:thm:riemann-darboux-box}
+dają $I_Q(f)=0$.
+Dla $|f|$ na każdej połowie prostokąta
+podstawy suma środkowa wynosi
+\[
+ \frac{1}{N}\sum_{i=1}^N\frac{i-1/2}{N}
+ =\frac12,
+\]
+ponieważ sumowanie po $N$ komórkach
+w kierunku $y$ daje czynnik $1$.
+Zatem $I_Q(|f|)=1$.
+Ogólnie dla funkcji całkowalnej $f$
+jej części $f^+=(|f|+f)/2$ i
+$f^-=(|f|-f)/2$ są całkowalne na mocy
+\ref{ma2:thm:riemann-box-algebra},
+a liniowość daje
+\[
+ I_Q(f)=I_Q(f^+)-I_Q(f^-),\qquad
+ I_Q(|f|)=I_Q(f^+)+I_Q(f^-).
+\]
+\end{przyklad}
+
+\begin{przyklad}[Iloczyn dwóch funkcji współrzędnościowych]
+\label{ma2:ex:riemann-box-xy}
+Na $Q=[0,1]^2$ funkcja $f(x,y)=xy$ jest ciągła.
+Dzielimy każdą oś na $N$ równych odcinków.
+Na komórce o indeksach $i,j$ funkcja jest
+niemalejąca w obu współrzędnych, więc
+\[
+ L(f,P_N)=\frac{1}{N^4}
+ \sum_{i,j=1}^N(i-1)(j-1)=\frac{(N-1)^2}{4N^2},
+ \qquad
+ U(f,P_N)=\frac{(N+1)^2}{4N^2}.
+\]
+Druga tożsamość wynika analogicznie z sumy
+$\sum_{i,j}ij=(N(N+1)/2)^2$.
+Różnica wynosi $1/N$, a obie sumy dążą
+do $1/4$. Zatem $I_Q(f)=1/4$.
+Nie użyliśmy tu twierdzenia Fubiniego:
+rozkład sumy skończonej jest czysto algebraiczny.
+\end{przyklad}
+
+\section{Addytywność i granice jednostajne}
+
+\begin{twierdzenie}[Addytywność względem podziału]
+\label{ma2:thm:riemann-box-additivity}
+Niech $P$ będzie podziałem prostokąta $Q$, a $f:Q\to\R$
+funkcją ograniczoną. Funkcja $f$ jest całkowalna na $Q$
+wtedy i tylko wtedy, gdy jej ograniczenia do wszystkich
+komórek $Q_\alpha$ są całkowalne. Wtedy
+\[
+ I_Q(f)=\sum_\alpha I_{Q_\alpha}(f|_{Q_\alpha}).
+\]
+\end{twierdzenie}
+\begin{proof}
+Ustalmy dowolne $\varepsilon>0$. Jeżeli $f$ jest
+całkowalna na $Q$, wybieramy podział
+o różnicy sum mniejszej od $\varepsilon$ i rozdrabniamy
+go wspólnie z $P$. Różnica sum na każdej komórce
+dla indukowanego podziału jest nieujemna i nie przekracza
+różnicy globalnej, będącej sumą tych różnic.
+Kryterium Darboux daje całkowalność każdego ograniczenia.
+
+Odwrotnie, niech $K$ będzie liczbą komórek $P$.
+W każdej wybieramy podział o różnicy sum mniejszej
+od $\varepsilon/K$. Do węzłów $P$ dodajemy wszystkie
+węzły tych podziałów w odpowiednich współrzędnych.
+Otrzymujemy globalny podział $R$, indukujący
+rozdrobnienie wybranego podziału na każdej komórce.
+Różnica sum dla $R$ jest mniejsza od $\varepsilon$,
+więc $f$ jest całkowalna.
+Zarówno $I_Q(f)$, jak i suma całek po komórkach
+należą do przedziału $[L(f,R),U(f,R)]$.
+Ich różnica bezwzględna nie przekracza $\varepsilon$;
+dowolność $\varepsilon$ daje równość.
+\end{proof}
+
+W szczególności ograniczenie funkcji całkowalnej
+do niedegenerowanego domkniętego podprostokąta
+jest całkowalne: wystarczy dodać jego końce
+współrzędnościowe do podziału $Q$. Prostokątom
+zdegenerowanym przypisujemy całkę zero dla każdej
+ograniczonej funkcji.
+
+\begin{twierdzenie}
+\label{ma2:thm:riemann-box-uniform}
+Przestrzeń $\mathcal R(Q)$ rzeczywistych funkcji
+całkowalnych w sensie Riemanna jest domkniętą
+podprzestrzenią przestrzeni Banacha funkcji
+ograniczonych z normą supremum.
+Funkcjonał $I_Q$ jest ciągły i ma normę $|Q|$.
+\end{twierdzenie}
+\begin{proof}
+Przestrzeń wszystkich funkcji ograniczonych
+$B(Q,\R)$ z normą supremum jest zupełna:
+jeżeli $(h_m)$ jest w niej ciągiem Cauchy'ego,
+to dla każdego $x\in Q$ ciąg $(h_m(x))$ jest
+ciągiem Cauchy'ego w $\R$. Określamy
+$h(x)=\lim_m h_m(x)$. Dla $\varepsilon>0$
+istnieje $m_0$, dla którego
+$|h_m(x)-h_k(x)|\le\varepsilon$ dla wszystkich
+$m,k\ge m_0$ oraz $x\in Q$. Przechodząc
+z $k$ do nieskończoności, otrzymujemy
+$|h_m(x)-h(x)|\le\varepsilon$ dla wszystkich $x$.
+W szczególności $h$ jest ograniczona, bo
+$|h(x)|\le\|h_{m_0}\|_\infty+\varepsilon$,
+oraz $h_m\to h$ jednostajnie.
+
+Jeżeli $f_m\in\mathcal R(Q)$ oraz
+$\|f_m-f\|_\infty\to0$ w $B(Q,\R)$,
+to dla każdej komórki $C$
+\[
+ \operatorname{osc}_C f
+ \le\operatorname{osc}_C f_m+2\|f-f_m\|_\infty.
+\]
+Wystarczy rozłożyć $f(x)-f(y)$ na $f_m(x)-f_m(y)$
+oraz dwie różnice między $f$ i $f_m$, zastosować
+nierówność trójkąta i wziąć supremum po $x,y\in C$.
+Dla $\varepsilon>0$ wybieramy $m$ z
+$2|Q|\|f-f_m\|_\infty<\varepsilon/2$, a następnie
+podział o różnicy sum dla $f_m$ mniejszej
+od $\varepsilon/2$. Sumując oszacowania oscylacji
+pomnożone przez objętości komórek, otrzymujemy
+kryterium Darboux dla $f$. Liniowość i oszacowanie
+$|I_Q(f)|\le |Q|\|f\|_\infty$ wynikają z twierdzenia
+\ref{ma2:thm:riemann-box-algebra}. Równość normy
+otrzymujemy na funkcji stałej $1$, gdyż
+$\|1\|_\infty=1$ oraz $I_Q(1)=|Q|$.
+Z udowodnionej domkniętości i zupełności
+$B(Q,\R)$ wynika, że $\mathcal R(Q)$
+jest przestrzenią Banacha.
+Ponadto
+\[
+ |I_Q(f_m)-I_Q(f)|\le|Q|\,\|f_m-f\|_\infty\to0.
+\]
+\end{proof}
+
+\section{Kryterium Lebesgue'a w wymiarze \texorpdfstring{$n$}{n}}
+
+W teorii miary dowiedziono jednowymiarowej wersji
+\atlasref{ME-08::thm:riemann-criterion}{kryterium Lebesgue'a}.
+Poniżej uzasadnimy wersję wielowymiarową.
+Korzystamy z istnienia i zupełności miary Lebesgue'a
+oraz jej wartości na półotwartych prostokątach
+(\atlasref{ME-04::thm:lebesgue-exists}{konstrukcja miary Lebesgue'a}).
+Brzeg ograniczonego prostokąta ma miarę zero:
+każdą jego ścianę można przykryć półotwartym
+prostokątem o dowolnie małej długości w kierunku
+prostopadłym i ustalonych skończonych długościach
+w pozostałych kierunkach. Skończona podaddytywność
+miary zewnętrznej daje tezę. W szczególności
+miara prostokąta domkniętego jest równa iloczynowi
+długości jego boków, gdyż różni się on od
+odpowiadającego prostokąta półotwartego o zbiór zerowy.
+
+\begin{definicja}
+\label{ma2:def:point-oscillation-box}
+Dla ograniczonej $f:Q\to\R$ i $x\in Q$ określamy
+oscylację punktową
+\[
+ \omega_f(x)=\inf_{r>0}\operatorname{osc}_{Q\cap B(x,r)}f.
+\]
+Ciągłość rozumiemy względem $Q$.
+\end{definicja}
+
+Funkcja jest ciągła w $x$ wtedy i tylko wtedy,
+gdy $\omega_f(x)=0$. Istotnie, ciągłość daje
+na dostatecznie małym względnym otoczeniu $x$
+nierówność $|f(y)-f(x)|<\varepsilon/3$,
+a stąd oscylację nie większą niż $2\varepsilon/3$.
+Odwrotnie, otoczenie zawierające $x$ o oscylacji
+mniejszej od $\varepsilon$ spełnia warunek ciągłości.
+Dla $t>0$ zbiór $D_t=\{x\in Q:\omega_f(x)\ge t\}$
+jest domknięty w $Q$: jeśli $\omega_f(x)<t$,
+wybieramy $r>0$ z oscylacją na $Q\cap B(x,r)$
+mniejszą od $t$. Dla każdego $y\in Q\cap B(x,r/2)$
+otoczenie $Q\cap B(y,r/2)$ jest zawarte w poprzednim,
+więc $\omega_f(y)<t$. Zatem $D_t$ jest zwarty,
+a zbiór wszystkich punktów nieciągłości $D(f)$
+jest borelowski, ponieważ
+\[
+ D(f)=\bigcup_{m=1}^\infty D_{1/m}.
+\]
+
+\begin{twierdzenie}[Kryterium Lebesgue'a]
+\label{ma2:thm:riemann-box-lebesgue-criterion}
+Funkcja ograniczona $f:Q\to\R$ jest całkowalna
+w sensie Riemanna wtedy i tylko wtedy, gdy
+$\lambda_n(D(f))=0$.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy całkowalność i ustalmy $t>0$.
+Niech $P$ będzie podziałem, a $H_P$ sumą brzegów
+jego komórek. Jeśli $x\in D_t\setminus H_P$,
+to pewne otoczenie $x$ jest zawarte w jedynej
+komórce $C$, do której wnętrza należy $x$.
+Wtedy $\operatorname{osc}_Cf\ge\omega_f(x)\ge t$.
+Ponieważ $\lambda_n(H_P)=0$, mamy
+\[
+ \lambda_n(D_t)\le
+ \sum_{C:\,\operatorname{osc}_Cf\ge t}|C|
+ \le\frac{U(f,P)-L(f,P)}{t}.
+\]
+Kryterium Darboux daje podziały o dowolnie
+małej prawej stronie, więc $\lambda_n(D_t)=0$.
+Przeliczalna podaddytywność daje $\lambda_n(D(f))=0$.
+
+Odwrotnie, niech $\lambda_n(D(f))=0$ i $|f|\le M$,
+gdzie $M>0$ (funkcja zerowa jest całkowalna).
+Dla $\varepsilon>0$ wybieramy $t=\varepsilon/(2|Q|)$.
+Zwarty $D_t$ ma miarę zero. Z regularności zewnętrznej
+(\atlasref{ME-04::thm:lebesgue-outer-regular}{regularność miary Lebesgue'a})
+istnieje otwarty $O\subset\R^n$ zawierający $D_t$
+z $\lambda_n(O)<\varepsilon/(4M)$.
+Dla każdego $x\in Q\setminus D_t$ wybieramy
+względnie otwarte otoczenie $V_x\subset Q$
+o oscylacji mniejszej od $t$.
+Zbiory $Q\cap O$ i wszystkie $V_x$ tworzą otwarte
+pokrycie zwartego $Q$. Wybieramy skończone podpokrycie.
+Ma ono liczbę Lebesgue'a $\ell>0$, czyli każdy
+podzbiór $Q$ o średnicy mniejszej od $\ell$
+jest zawarty w jednym z elementów podpokrycia.
+Istotnie, w przeciwnym razie istniałyby niepuste
+zbiory $A_m$ o średnicy mniejszej od $1/m$,
+niezawarte w żadnym elemencie podpokrycia.
+Wybór $x_m\in A_m$ i zbieżnego podciągu
+$x_{m_j}\to x\in Q$ prowadzi do sprzeczności:
+element podpokrycia zawierający $x$ zawiera
+jego względne otoczenie kuliste, a dla dużych $j$
+cały $A_{m_j}$ leży w tym otoczeniu.
+
+Wybieramy podział $P$ z $\sqrt n\,\delta(P)<\ell$.
+Komórki zawarte w $O$ mają łączną objętość
+nie większą niż $\lambda_n(O)$ (nakładanie się
+brzegów nie wpływa na miarę). Każda pozostała
+komórka jest zawarta w pewnym $V_x$ i ma
+oscylację mniejszą od $t$. Otrzymujemy
+\[
+ U(f,P)-L(f,P)\le 2M\lambda_n(O)+t|Q|<\varepsilon.
+\]
+Stosujemy kryterium Darboux.
+\end{proof}
+
+\begin{twierdzenie}[Zgodność całek]
+\label{ma2:thm:riemann-box-lebesgue}
+Jeżeli $f:Q\to\R$ jest całkowalna w sensie Riemanna,
+to jest mierzalna względem zupełnej miary Lebesgue'a
+i całkowalna w sensie Lebesgue'a. Ponadto
+\[
+ I_Q(f)=\int_Q f(x)\,\mathrm d\lambda_n(x).
+\]
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia \ref{ma2:thm:riemann-box-lebesgue-criterion}
+zbiór $D(f)$ jest borelowski i zerowy.
+Ograniczenie $f|_{Q\setminus D(f)}$ jest ciągłe
+w topologii podprzestrzeni. Dla dowolnego otwartego
+$V\subset\R$ jego przeciwobraz na $Q\setminus D(f)$
+jest przecięciem tego zbioru z otwartym podzbiorem $Q$,
+a więc jest borelowski w $Q$. Pozostała część
+$f^{-1}(V)$ jest podzbiorem $D(f)$ i jest mierzalna
+z zupełności. To daje mierzalność $f$.
+Ograniczoność i skończoność $\lambda_n(Q)$ dają
+całkowalność w sensie Lebesgue'a.
+
+Dla dowolnego podziału $P$ zastępujemy komórki
+rozłącznymi częściami półotwartymi, włączając
+prawy koniec ostatniego przedziału w każdej
+współrzędnej. Na tych częściach definiujemy
+funkcje proste $\ell_P,u_P$ o wartościach
+odpowiednio $m_\alpha,M_\alpha$ z domkniętych
+komórek. Wtedy $\ell_P\le f\le u_P$ na $Q$,
+a ich całki Lebesgue'a są równe sumom
+$L(f,P),U(f,P)$, gdyż brzegi są zerowe.
+Z monotoniczności całki
+\[
+ L(f,P)\le\int_Q f(x)\,\mathrm d\lambda_n(x)\le U(f,P).
+\]
+Biorąc kresy po $P$, otrzymujemy równość.
+\end{proof}
+
+Odwrotna implikacja nie zachodzi:
+$\chi_{\Q^n\cap Q}$ jest mierzalna i ma całkę
+Lebesgue'a zero, lecz w każdej komórce
+niedegenerowanej przyjmuje $0$ i $1$ (zarówno
+$\Q^n$, jak i jego dopełnienie są gęste).
+Jej dolna suma wynosi zero, a górna $|Q|$.
+Przykład ten pokazuje też, że dowolna zmiana
+wartości na zbiorze miary zero nie zachowuje
+całkowalności Riemanna, chociaż zachowuje
+całkowalność i wartość całki Lebesgue'a.
+
+\begin{wniosek}[Zmiana na zbiorze o zerowym domknięciu]
+\label{ma2:cor:riemann-box-null-change}
+Niech $f\in\mathcal R(Q)$, a $g:Q\to\R$
+będzie ograniczona. Jeżeli $f=g$ poza
+$E\subset Q$ oraz $\lambda_n(\overline E)=0$,
+to $g\in\mathcal R(Q)$ i $I_Q(g)=I_Q(f)$.
+\end{wniosek}
+\begin{proof}
+Domknięcie $E$ w $\R^n$ zawiera się w $Q$,
+gdyż $Q$ jest domknięty. Poza $\overline E$
+istnieje względne otoczenie, na którym $f=g$,
+zatem $D(g)\subset D(f)\cup\overline E$.
+Prawa strona jest zerowa na mocy
+twierdzenia \ref{ma2:thm:riemann-box-lebesgue-criterion}
+i założenia. Kryterium Lebesgue'a daje
+całkowalność $g$ w sensie Riemanna.
+Ponieważ $E$ ma miarę zero, funkcje są
+równe prawie wszędzie; równość całek
+wynika ze zgodności z całką Lebesgue'a
+(twierdzenie \ref{ma2:thm:riemann-box-lebesgue}).
+\end{proof}
+
+\section{Zawartość Jordana}
+
+Jednowymiarowy przypadek opisano w
+\atlasref{AM1-29::it:thm:jordan-criterion}{AM I, rozdział 29}.
+Zbiorem elementarnym nazywamy skończoną sumę
+ograniczonych prostokątów (dopuszczamy przedziały
+otwarte, domknięte, półotwarte i jednopunktowe
+w poszczególnych współrzędnych).
+Taki zbiór $E$ jest borelowski jako skończona
+suma produktów przedziałów borelowskich.
+Jego brzeg ma miarę zero, ponieważ zawiera
+się w sumie brzegów składników; dla każdego
+składnika, także zdegenerowanego, brzeg
+jest zawarty w skończonej sumie ograniczonych
+fragmentów hiperpłaszczyzn współrzędnościowych,
+które już wykazano jako zbiory zerowe. Jego objętość $|E|$ jest równa
+$\lambda_n(E)$. Można ją obliczyć przez wspólną
+siatkę wszystkich końców przedziałów: wnętrze
+każdej komórki jest zawarte w $E$ lub rozłączne
+z $E$, a pominięte brzegi mają miarę zero.
+
+\begin{definicja}
+\label{ma2:def:jordan-content}
+Zawartości wewnętrzna i zewnętrzna Jordana
+ograniczonego $A\subset\R^n$ to
+\[
+ c_*(A)=\sup_{E\subset A}|E|,\qquad
+ c^*(A)=\inf_{A\subset H}|H|,
+\]
+gdzie $E,H$ przebiegają zbiory elementarne
+(w tym pusty). Obie rodziny są niepuste,
+bo $\varnothing\subset A$ i $A$ jest ograniczony,
+a więc zawiera się w pewnym ograniczonym
+prostokącie. Z monotoniczności objętości
+mamy $0\le c_*(A)\le c^*(A)<\infty$.
+Zbiór jest mierzalny w sensie
+Jordana, gdy $c_*(A)=c^*(A)$. Wspólną wartość
+oznaczamy $c(A)$.
+\end{definicja}
+
+\begin{twierdzenie}
+\label{ma2:thm:jordan-criterion}
+Niech $A\subset Q$. Równoważne są warunki:
+\begin{enumerate}[label=(\roman*)]
+\item $A$ jest mierzalny w sensie Jordana;
+\item $\chi_A$ jest całkowalna w sensie Riemanna na $Q$;
+\item $\lambda_n(\partial A)=0$, gdzie brzeg jest
+brany w $\R^n$.
+\end{enumerate}
+Wówczas $A$ jest mierzalny w sensie Lebesgue'a i
+$c(A)=I_Q(\chi_A)=\lambda_n(A)$.
+\end{twierdzenie}
+\begin{proof}
+Dla podziału $P$ suma domkniętych komórek
+zawartych w $A$ jest elementarnym podzbiorem $A$,
+a suma komórek przecinających $A$ jest elementarnym
+nadzbiorem $A$. Ich objętości są odpowiednio
+$L(\chi_A,P)$ i $U(\chi_A,P)$, ponieważ wnętrza
+komórek są rozłączne, a brzegi zerowe. Zatem
+\[
+ L(\chi_A,P)\le c_*(A)\le c^*(A)\le U(\chi_A,P).
+\]
+Jeżeli zachodzi (ii), branie kresów daje (i)
+i $c(A)=I_Q(\chi_A)$.
+
+Jeżeli zachodzi (i), dla każdego $\varepsilon>0$
+istnieją elementarne $E\subset A\subset H$ z
+$|H|-|E|<\varepsilon$. Zachodzi
+\[
+ \partial A\subset (H\setminus E)\cup\partial E\cup\partial H:
+\]
+poza prawą stroną punkt leży albo we wnętrzu $E$,
+albo poza domknięciem $H$, więc nie należy do
+brzegu $A$. Brzegi $E,H$ są zerowe, zatem
+$\lambda_n(\partial A)\le |H|-|E|<\varepsilon$.
+Dowolność $\varepsilon$ daje (iii).
+
+Punkty nieciągłości $\chi_A$ w $Q$ tworzą względny
+brzeg $A$ w $Q$, gdyż ciągłość funkcji o wartościach
+w $\{0,1\}$ oznacza lokalną stałość. Brzeg względny
+jest zawarty w brzegu w $\R^n$, a poza $\partial Q$
+oba brzegi się pokrywają. Jeśli zachodzi (iii),
+twierdzenie \ref{ma2:thm:riemann-box-lebesgue-criterion}
+daje (ii). Z twierdzenia
+\ref{ma2:thm:riemann-box-lebesgue} wynika mierzalność
+$A$ i równość z miarą Lebesgue'a.
+\end{proof}
+
+Zbiory mierzalne w sensie Jordana zawarte w $Q$
+tworzą algebrę: dla skończonej sumy i przecięcia
+brzeg jest zawarty w sumie brzegów, a dla dopełnienia
+względnego może pojawić się dodatkowo $\partial Q$.
+Wynika to z lokalnej stałości funkcji charakterystycznych
+poza wymienionymi brzegami. Zawartość jest skończenie
+addytywna na rozłącznych zbiorach dzięki równości
+z miarą Lebesgue'a. Nie jest to $\sigma$-algebra:
+każdy punkt ma zerowy brzeg, ale przeliczalny gęsty
+zbiór $\Q^n\cap Q$ ma brzeg równy $Q$.
+Jego zawartość zewnętrzna Jordana jest równa $|Q|$:
+dla elementarnego $H\supset\Q^n\cap Q$ mamy
+$Q\subset\overline H$ i $\lambda_n(\overline H)=|H|$,
+bo $\partial H$ jest zerowy. Stąd $c^*(A)\ge|Q|$,
+a nierówność przeciwna wynika z wyboru $H=Q$.
+Zawartość wewnętrzna jest zerowa z monotoniczności
+miary Lebesgue'a.
+
+Zatem zawartość Jordana nie jest miarą zewnętrzną:
+dla $A=\Q^n\cap Q$ zawartość zewnętrzna jest dodatnia,
+choć każdy jego jednopunktowy składnik ma zawartość
+zewnętrzną zero. Przeliczalna podaddytywność
+nie zachodzi.
+
+\begin{przyklad}[Trójkąt]
+\label{ma2:ex:jordan-triangle}
+Niech $A=\{(x,y)\in[0,1]^2:x+y\le1\}$.
+Brzeg składa się z trzech odcinków. Odcinki osiowe
+są zerowe jako ściany prostokąta. Odcinek ukośny
+pokrywamy $N$ kwadratami o boku $1/N$,
+wybierając po jednym nad każdym z $N$ przedziałów
+podziału osi $x$. Łączna powierzchnia wynosi $1/N$,
+więc odcinek jest zerowy.
+Kryterium Jordana daje mierzalność $A$.
+
+Dla siatki $N\times N$, $N\ge2$, komórka
+o indeksach $1\le i,j\le N$ jest zawarta w $A$
+wtedy i tylko wtedy, gdy $i+j\le N$, a przecina
+$A$ wtedy i tylko wtedy, gdy $i+j\le N+2$.
+Pierwszych komórek jest
+$\sum_{i=1}^{N-1}(N-i)=N(N-1)/2$; w drugim
+przypadku wykluczone komórki spełniają
+$i+j\ge N+3$, czyli po podstawieniu
+$i'=N+1-i$, $j'=N+1-j$ spełniają
+$i'+j'\le N-1$. Ich liczba to
+$\sum_{i'=1}^{N-2}(N-1-i')=(N-1)(N-2)/2$
+(suma pusta dla $N=2$). Ponieważ każda
+komórka ma pole $1/N^2$, stąd
+\[
+ L(\chi_A,P_N)=\frac{N-1}{2N},\qquad
+ U(\chi_A,P_N)=1-\frac{(N-1)(N-2)}{2N^2}.
+\]
+Obie sumy dążą do $1/2$, więc $c(A)=1/2$.
+\end{przyklad}
+
+\begin{twierdzenie}[Objętość pod wykresem]
+\label{ma2:thm:riemann-subgraph-volume}
+Niech $f:Q\to[0,\infty)$ będzie ograniczona
+i całkowalna w sensie Riemanna.
+Wtedy zbiór
+\[
+ B_f=\{(x,t)\in Q\times\R:0\le t\le f(x)\}
+\]
+jest mierzalny w sensie Jordana w $\R^{n+1}$
+i
+\[
+ c(B_f)=I_Q(f).
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla podziału $P$ tworzymy zbiory elementarne
+\[
+ E_P=\bigcup_\alpha Q_\alpha\times[0,m_\alpha],
+ \qquad
+ H_P=\bigcup_\alpha Q_\alpha\times[0,M_\alpha].
+\]
+Z definicji kresów
+$E_P\subset B_f\subset H_P$.
+Bryły nad różnymi komórkami mogą przecinać
+się jedynie nad ich wspólnymi brzegami,
+czyli na zbiorach miary $(n+1)$-wymiarowej
+zero (fragmentach hiperpłaszczyzn).
+Ich objętości są zatem dokładnie
+$L(f,P)$ i $U(f,P)$, na mocy addytywności
+objętości zbiorów elementarnych.
+W konsekwencji
+\[
+ L(f,P)\le c_*(B_f)\le c^*(B_f)\le U(f,P).
+\]
+Całkowalność $f$ i przejście do kresów
+dają równość wszystkich granicznych wartości.
+Z \ref{ma2:thm:jordan-criterion}
+wynika ponadto
+$\lambda_{n+1}(B_f)=I_Q(f)$.
+\end{proof}
+Dla funkcji o dowolnym znaku stosujemy wynik
+oddzielnie do $f^+$ i $f^-$:
+całka jest różnicą objętości brył, a
+całka z $|f|$ ich sumą. W ten sposób
+intuicja z początku rozdziału uzyskuje
+ścisłe uzasadnienie bez korzystania
+z twierdzenia Fubiniego.
+
+\section{Geometryczna interpretacja sum Darboux}
+
+Na $[0,1]^2$ rozpatrzmy $f(x,y)=(1+x+y)/3$.
+Dla siatki $N\times N$ wysokości dolnych brył to
+$(1+(i-1)/N+(j-1)/N)/3$, a górnych
+$(1+i/N+j/N)/3$, ponieważ funkcja jest rosnąca
+w obu współrzędnych. Zatem
+\[
+ L(f,P_N)=\frac23-\frac{1}{3N},\qquad
+ U(f,P_N)=\frac23+\frac{1}{3N}.
+\]
+Istotnie, suma wszystkich $N^2$ składników
+$1/3$ po przemnożeniu przez $1/N^2$ daje $1/3$.
+Dla dolnej sumy wkład każdej współrzędnej
+wynosi $\sum_{i=1}^N(i-1)/(3N^2)=(N-1)/(6N)$,
+dla górnej analogicznie $(N+1)/(6N)$,
+co daje obie tożsamości.
+Dla $N=2$ otrzymujemy odpowiednio $1/2$ i $5/6$,
+a granicą obu sum jest $2/3$, czyli całka Riemanna.
+
+Na rysunku \ref{ma2:fig:darboux-boxes} przedstawiono
+obie sumy dla $N=2$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[name=lower,width=5.8cm,height=6cm,view={50}{28},axis lines=box,xmin=0,xmax=1,ymin=0,ymax=1,zmin=0,zmax=1.05,xlabel=$x$,ylabel=$y$,zlabel=$z$,xtick={0,0.5,1},ytick={0,0.5,1},ztick={0,0.5,1},tick label style={font=\scriptsize},title={Suma dolna},title style={font=\small},colormap name=viridis,point meta min=0,point meta max=1,z buffer=sort]
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.5] ({x},{y},{0.33333333});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.33333333] ({x},{0},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.33333333] ({x},{0.5},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.33333333] ({0},{x},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.33333333] ({0.5},{x},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0.5:1] ({x},{y},{0.50000000});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.50000000] ({x},{0.5},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.50000000] ({x},{1},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:0.50000000] ({0},{x},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:0.50000000] ({0.5},{x},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:0.5] ({x},{y},{0.50000000});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:0.50000000] ({x},{0},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:0.50000000] ({x},{0.5},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.50000000] ({0.5},{x},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.50000000] ({1},{x},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0.5:1] ({x},{y},{0.66666667});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:0.66666667] ({x},{0.5},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:0.66666667] ({x},{1},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:0.66666667] ({0.5},{x},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:0.66666667] ({1},{x},{y});
+\end{axis}
+\begin{axis}[name=upper,at={(lower.east)},anchor=west,xshift=0.25cm,width=5.8cm,height=6cm,view={50}{28},axis lines=box,xmin=0,xmax=1,ymin=0,ymax=1,zmin=0,zmax=1.05,xlabel=$x$,ylabel=$y$,zlabel=$z$,xtick={0,0.5,1},ytick={0,0.5,1},ztick={0,0.5,1},tick label style={font=\scriptsize},title={Suma górna},title style={font=\small},colormap name=viridis,point meta min=0,point meta max=1,z buffer=sort]
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.5] ({x},{y},{0.66666667});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.66666667] ({x},{0},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.66666667] ({x},{0.5},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.66666667] ({0},{x},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.66666667] ({0.5},{x},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0.5:1] ({x},{y},{0.83333333});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.83333333] ({x},{0.5},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.83333333] ({x},{1},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:0.83333333] ({0},{x},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:0.83333333] ({0.5},{x},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:0.5] ({x},{y},{0.83333333});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:0.83333333] ({x},{0},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:0.83333333] ({x},{0.5},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.83333333] ({0.5},{x},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0:0.5,domain y=0:0.83333333] ({1},{x},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0.5:1] ({x},{y},{1.00000000});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:1.00000000] ({x},{0.5},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:1.00000000] ({x},{1},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:1.00000000] ({0.5},{x},{y});
+\addplot3[surf,shader=flat,draw=black!55,line width=0.25pt,samples=2,samples y=2,domain=0.5:1,domain y=0:1.00000000] ({1},{x},{y});
+\end{axis}
+\end{tikzpicture}
+\caption{Dolna i górna suma Darboux funkcji
+$f(x,y)=(1+x+y)/3$ dla podziału $2\times2$.
+Pełne bryły z zaznaczonymi krawędziami;
+w obu panelach zachowano jednakową skalę osi.}
+\label{ma2:fig:darboux-boxes}
+\end{figure}
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+fig = make_subplots(rows=1, cols=2,
+    specs=[[{"type": "scene"}, {"type": "scene"}]],
+    subplot_titles=["Suma dolna", "Suma gorna"])
+tri = np.array([[0,2,1],[0,3,2],[4,5,6],[4,6,7],
+    [0,1,5],[0,5,4],[1,2,6],[1,6,5],
+    [2,3,7],[2,7,6],[3,0,4],[3,4,7]])
+edges = [(0,1),(1,2),(2,3),(3,0),(4,5),(5,6),
+    (6,7),(7,4),(0,4),(1,5),(2,6),(3,7)]
+for col in (1, 2):
+    for i in range(2):
+        for j in range(2):
+            x, y = i/2, j/2
+            X, Y = x+.5, y+.5
+            z = (1+x+y+(col-1))/3
+            pts = np.array([[x,y,0],[X,y,0],
+                [X,Y,0],[x,Y,0],[x,y,z],
+                [X,y,z],[X,Y,z],[x,Y,z]])
+            fig.add_trace(go.Mesh3d(x=pts[:,0],
+                y=pts[:,1], z=pts[:,2],
+                i=tri[:,0], j=tri[:,1], k=tri[:,2],
+                intensity=pts[:,2], colorscale="Viridis",
+                cmin=0, cmax=1, showscale=False,
+                flatshading=True, showlegend=False),
+                row=1, col=col)
+            lines = []
+            for u,v in edges:
+                lines += [pts[u], pts[v], [None]*3]
+            lines = np.array(lines, dtype=object)
+            fig.add_trace(go.Scatter3d(x=lines[:,0],
+                y=lines[:,1], z=lines[:,2],
+                mode="lines", line=dict(color="#333",width=3),
+                showlegend=False), row=1, col=col)
+fig.update_scenes(aspectmode="data",
+    xaxis=dict(range=[0,1],title="x"),
+    yaxis=dict(range=[0,1],title="y"),
+    zaxis=dict(range=[0,1.05],title="z"))
+fig.write_html("am2_24_darboux.html", include_plotlyjs=True)
+fig.show()
+\end{lstlisting}
+

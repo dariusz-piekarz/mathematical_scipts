@@ -1,0 +1,8 @@
+# Migracja Banacha–Tarskiego do AA-07 oraz wstępna kontrola Galois
+
+Stan porównania: 3ad8853f3ec5e04f2d3dbe235deafb6e547130ab; stan integracji: 51e661337f533a975cd5fcf725ebea8f63e89ff3.
+## Banach–Tarski
+AA-07 miał samodzielny pełny dowód konstrukcji grupy wolnej, algorytmu stosu, jednoznaczności redukcji, własności uniwersalnej i przeliczalności; nie miał pełnego dowodu paradoksu. Przeniesiono materiał BT-00 i BT-02–10, a siedem dawnych etykiet BT-01 zachowano przy równoważnych wynikach AA-07. Zachowano wszystkie 50 etykiet pierwotnego źródła. Usunięto 11 kanonicznych rozdziałów BT oraz osobny master i wpis katalogu. Pierwotne źródło w sources/pl pozostawiono jako archiwalny materiał porównawczy, nie jako aktywną książkę. Ujednolicono makra, terminologię, bibliografię i przykłady kontrolne. AA-07 pozostaje pojedynczym rozdziałem, bez renumerowania AA-08–72. Wszystkie lokalne odsyłacze istnieją, etykiety są unikalne w AA-07, środowiska są zbilansowane. Zaktualizowano regresje AA-07; CI i globalne kolizje etykiet wymagają potwierdzenia.
+
+## Teoria Galois — mapa pokrycia (jeszcze nie odbiór usunięcia)
+GA-00: AA-19–21; GA-01: AA-20–22; GA-02: AA-22–24,32; GA-03: AA-05,24,26; GA-04: AA-05,24,36; GA-05: AA-28,30; GA-06: AA-21,23,29,35; GA-07: AA-43–45; GA-08: AA-45; GA-09: AA-43,46–50. Sprawdzono rzeczywiste spisy sekcji i tytuły wyników, w tym cztery całki nieelementarne i równanie Airy'ego. Nie zakończono porównania wszystkich przykładów i szczegółów dowodów. Przed usunięciem GA należy zakończyć audyt, przenieść ewentualne różnice i zaktualizować topic_registry, testy test_galois_graph i test_cross_volume_reading_references oraz wyszukać pozostałe zależności. Nie usunięto GA w tej iteracji.

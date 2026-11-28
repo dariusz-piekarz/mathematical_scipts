@@ -1,0 +1,5 @@
+# Wspólny styl kodu w skryptach
+
+Wszystkie pliki główne w books/pl i preambuły eksportu Atlasu w application/config/preambles muszą korzystać z konfiguracji latex/pl/code-listings.tex. Styl skrypt pochodzi z tomu IV (Statystyka matematyczna): jasne tło, niebieskie słowa kluczowe, zielone komentarze, fioletowe napisy, numeracja i ramka. Kopie w preambułach są generowane, aby eksport LaTeX i samodzielna kompilacja nie wymagały dodatkowych plików. Aktualizacja: python tools/sync_code_listings.py --write; kontrola: python tools/sync_code_listings.py --check.
+
+Stosuj jawne language=Python lub language=Julia w lstlisting, także w lstinputlisting. Dopuszczalne aliasy pythonpde, python, julia zachowują zgodność historycznych plików. Nie nadpisuj kolorów lokalnie ani nie używaj verbatim dla kodu źródłowego tych języków. Verbatim pozostaje dozwolone dla wyników, logów i pseudokodu. Nie zmieniaj algorytmów ani treści matematycznej w migracji stylu. W audytach sprawdzaj kolorowanie i czytelność kodu w PDF.

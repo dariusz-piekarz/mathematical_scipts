@@ -1,0 +1,9 @@
+# MA1-17 — audyt potwierdzający 02
+HEAD aa46610 zawierał już raporty stabilizacji MA1-15, MA1-16 i rozdział 17 z raportem 01, dlatego nie powielano poprzednich iteracji.
+## Kontrola matematyczna
+001–004: poprawne kierunki nierówności, granice jednostronne jako kresy, skończoność w punktach wewnętrznych i końcach należących do dziedziny. Redukcja granicy w minus nieskończoności przez g(t)=-f(-t) poprawna.
+005–008: klasyfikacja punktów nieciągłości, rozłączność przedziałów skoków, iniekcja do N i teleskopowanie oszacowania skończonych sum poprawne. Punkty końcowe uwzględnione w przeliczalności.
+009–010,016: w przykładzie gęstych nieciągłości zastąpiono dolne oszacowanie skoku dokładną wartością. Wydzielono składnik k, wykazano ciągłość pozostałego szeregu w r_k poprzez dodatnią minimalną odległość od pozostałych pierwszych N punktów i oszacowanie ogona. Otrzymano J_f(r_k)=2^(-k), prawostronną ciągłość w [0,1) oraz sumę skoków równą 1=f(1)-f(0). Poza wyliczonymi punktami dowód ciągłości zachowano.
+011–015: kryterium Darboux uwzględnia obie możliwe luki i końce, dowód ciągłości odwrotności wykorzystuje przedziałowość dziedziny, a nie obrazu; przypadek malejący przez zmianę znaku. Dowód monotoniczności ciągłej iniekcji i wniosek o homeomorfizmie poprawne.
+## Kontrole techniczne
+CI 45470788462, job 138717875927 SUCCESS, log 159/159 testów, w tym 11 rozdziału, dwa przebiegi LaTeX (104 i 106 stron); brak Overfull/Underfull, ostrzeżenie o odsyłaczach tylko po pierwszym przebiegu. Artefakt 14958111037 istnieje, nie wykonano jeszcze kontroli wizualnej. Treść po poprawkach a3941a0, testy 8a99072, rejestr 19ddb72. Dodano kryterium MA1-17-016 oraz jedną metodę testową sprawdzającą skończone świadki dokładnego skoku, ciągłości prawostronnej i sumy przyrostów. W repozytorium 16 kryteriów, 12 metod rozdziału, 160 testów tomu. Nowe CI i PDF wymagają potwierdzenia. Lean nieuruchomiony. Status: w stabilizacji, nie rozpoczęto rozdziału 18.

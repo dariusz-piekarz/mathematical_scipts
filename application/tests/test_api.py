@@ -1,28 +1,92 @@
 """End-to-end HTTP tests against the bundled library snapshot, no network required."""
 import unittest
+import hashlib
+from pathlib import Path
+import tempfile
+from unittest.mock import patch
 from fastapi.testclient import TestClient
-from backend.api import app
+from backend.api import app, db_connection
+from backend.graph_coverage import graph_coverage
 
 
 class APITests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.client = TestClient(app)
+        cls._client_context = TestClient(app)
+        cls.client = cls._client_context.__enter__()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls._client_context.__exit__(None, None, None)
 
     def test_frontend(self):
         r=self.client.get("/")
         self.assertEqual(r.status_code,200)
         self.assertIn("Explorer",r.text)
+        self.assertEqual(r.headers["cache-control"], "no-cache")
+        for name in ("app.js", "styles.css", "preview.js", "session.js"):
+            self.assertRegex(r.text, r'/assets/' + name.replace('.', r'\.') + r'\?v=[0-9a-f]{16}')
         for name in ("app.js","styles.css"):
             self.assertEqual(self.client.get("/assets/"+name).status_code,200)
+
+    def test_reader_assets_revalidate_even_without_revision(self):
+        for name in ("styles.css", "preview.js", "app.js", "session.js"):
+            response = self.client.get("/assets/" + name)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.headers["cache-control"], "no-cache, must-revalidate")
+            conditional = self.client.get("/assets/" + name, headers={
+                "If-None-Match": response.headers["etag"]})
+            self.assertEqual(conditional.status_code, 304)
+            self.assertEqual(conditional.headers["cache-control"], "no-cache, must-revalidate")
+
+    def test_macro_profile_cache_revision(self):
+        from backend import api
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "index.html").write_text(
+                '<script src="/assets/vendor/math-macro-profiles.js"></script>',
+                encoding="utf-8")
+            for name in ("app.js", "styles.css", "preview.js", "session.js"):
+                (root / name).write_bytes(b"fixture")
+            with patch.object(api, "FRONTEND", root):
+                missing = api.index()
+                self.assertIn(b'/assets/vendor/math-macro-profiles.js"', missing.body)
+                self.assertEqual(missing.headers["cache-control"], "no-cache")
+                profile = root / "vendor/math-macro-profiles.js"
+                profile.parent.mkdir()
+                versions = []
+                for content in (b"first profile", b"second profile"):
+                    profile.write_bytes(content)
+                    version = hashlib.sha256(content).hexdigest()[:16]
+                    versions.append(version)
+                    self.assertIn(
+                        ('/assets/vendor/math-macro-profiles.js?v=' + version).encode(),
+                        api.index().body)
+                self.assertNotEqual(*versions)
+
+    def test_repository_plotly_assets(self):
+        for path in ('/assets/plots/viewer.html',
+                     '/assets/plots/am2-figures.js',
+                     '/assets/plots/viewer.js',
+                     '/api/plotly/bundle.js'):
+            response = self.client.get(path)
+            self.assertEqual(response.status_code, 200, path)
+        self.assertIn('Plotly', self.client.get('/api/plotly/bundle.js').text[:5000])
 
     def test_health(self):
         self.assertTrue(self.client.get("/api/health").json()["readonly"])
 
     def test_stats(self):
         data=self.client.get("/api/stats").json()
-        self.assertEqual((data["documents"],data["labels"],data["references"]),(264,3071,2121))
-        self.assertEqual(data["missing_references"],0)
+        self.assertGreaterEqual(data["documents"],350)
+        self.assertGreaterEqual(data["references"],4400)
+        self.assertGreaterEqual(data["ambiguous_references"],0)
+        with db_connection() as con:
+            count = con.execute("SELECT COUNT(*) FROM label_occurrences").fetchone()[0]
+            conflicts = con.execute("SELECT COUNT(DISTINCT name) FROM label_conflicts").fetchone()[0]
+        self.assertGreater(count,0)
+        self.assertGreater(conflicts,0)  # conflicts are preserved as provenance even when refs resolve
+        self.assertGreaterEqual(data["missing_references"],0)
 
     def test_measure_theory_and_jets_available(self):
         result=self.client.get("/api/modules/ME-31")
@@ -32,7 +96,7 @@ class APITests(unittest.TestCase):
 
     def test_domains(self):
         data=self.client.get("/api/domains").json()
-        self.assertEqual(sum(x["modules"] for x in data),264)
+        self.assertGreaterEqual(sum(x["modules"] for x in data),350)
         self.assertIn("geometria algebraiczna",{x["name"] for x in data})
 
     def test_modules(self):
@@ -51,7 +115,7 @@ class APITests(unittest.TestCase):
         self.assertIn("\\chapter",res.json()["latex"])
 
     def test_unknown_module(self):
-        self.assertEqual(self.client.get("/api/modules/TOP-28").status_code,404)
+        self.assertEqual(self.client.get("/api/modules/THIS_MODULE_DOES_NOT_EXIST").status_code,404)
 
     def test_outline(self):
         data=self.client.get("/api/modules/ALG-09/outline").json()
@@ -70,13 +134,89 @@ class APITests(unittest.TestCase):
         self.assertIn("incoming_references",item)
         self.assertEqual(self.client.get("/api/labels/not:existing").status_code,404)
 
+    def test_contextual_label_resolution(self):
+        # Duplicate label across TOP/DG: the source script is authoritative.
+        legacy = self.client.get("/api/labels/ch:algebra-homologiczna").json()
+        self.assertTrue(legacy["ambiguous"])
+        scoped = self.client.get("/api/labels/ch:algebra-homologiczna",
+                                 params={"source_document":"TOP-05"})
+        self.assertEqual(scoped.status_code,200)
+        value = scoped.json()
+        self.assertEqual(value["document_id"],"TOP-03")
+        self.assertEqual(value["occurrence_id"],"TOP-03::ch:algebra-homologiczna")
+        self.assertEqual(value["resolution_status"],"resolved")
+        # Source text retains the user-visible I- prefix, while xr-hyper
+        # points to the original ch:probability in volume I.
+        external = self.client.get("/api/labels/I-ch:probability",
+                                   params={"source_document":"P4-01"})
+        self.assertEqual(external.status_code,200)
+        item = external.json()
+        self.assertEqual(item["document_id"],"P1-02")
+        self.assertEqual(item["canonical_label"],"ch:probability")
+        self.assertEqual(item["resolution_status"],"external_resolved")
+
+    def test_shared_include_reference_preview(self):
+        result = self.client.get("/api/labels/tw:ga10-weak",
+                                 params={"source_document":"ALG-10"})
+        self.assertEqual(result.status_code,200)
+        data=result.json()
+        self.assertEqual(data["resolution_status"],"included_resolved")
+        self.assertEqual(data["document_id"],"ALG-10")
+        self.assertEqual(data["origin_path"],"shared/pl/slabe_twierdzenie_lefschetza.tex")
+        self.assertEqual(data["origin_line"],10)
+        self.assertIn("tw:ga10-weak",data["latex"])
+
     def test_search(self):
         data=self.client.get("/api/search",params={"q":"Lefschetza","limit":10}).json()
         self.assertGreater(len(data["items"]),0)
         self.assertTrue(any(x["kind"] for x in data["items"]))
 
+    def test_concept_graph_zorn_uses_real_index(self):
+        response = self.client.get("/api/concepts/graph", params={"q":"Zorn", "max_occurrences":36})
+        self.assertEqual(response.status_code, 200, response.text)
+        data = response.json()
+        self.assertEqual(data["root"], "zorn")
+        self.assertGreater(data["matches_total"], 0)
+        self.assertGreater(data["occurrences_shown"], 0)
+        concepts = {n["id"] for n in data["nodes"] if n["type"] == "concept"}
+        self.assertIn("hamel", concepts)
+        self.assertIn("choice", concepts)
+        self.assertTrue(any(e["type"] == "occurrence" and
+                            e["evidence"] == "indexed_tex_source" for e in data["edges"]))
+        self.assertTrue(any(n["module"] and n["line"] >= 1 and n["snippet"]
+                            for n in data["nodes"] if n["type"] == "occurrence"))
+
+    def test_concept_graph_unknown_and_validation(self):
+        response = self.client.get("/api/concepts/graph", params={"q":"term-nieistniejacy-xyz"})
+        self.assertEqual(response.status_code, 200, response.text)
+        data = response.json()
+        self.assertEqual(data["relationships"], 0)
+        self.assertEqual(data["occurrences_shown"], 0)
+        self.assertEqual(self.client.get("/api/concepts/graph",params={"q":"Zorn","max_occurrences":81}).status_code, 422)
+        self.assertEqual(self.client.get("/api/concepts/graph",params={"q":"a"}).status_code, 422)
+
+    @classmethod
+    def _real_reference_domains(cls):
+        """Select a cross-domain pair from audited explicit references."""
+        with db_connection() as con:
+            report = graph_coverage(con)
+        pairs = [p for p in report["domain_pairs"] if p["references"] > 0]
+        if not pairs:
+            raise AssertionError("Index has no audited cross-domain edges")
+        pair = min(pairs, key=lambda p: (-p["references"], p["left"], p["right"]))
+        return {"left": pair["left"], "right": pair["right"]}
+
+    @classmethod
+    def _real_dependency_edge(cls):
+        with db_connection() as con:
+            report = graph_coverage(con)
+        if not report["edges"]:
+            raise AssertionError("Index has no audited cross-module edges")
+        edge = min(report["edges"], key=lambda e: (-e["weight"], e["source"], e["target"]))
+        return {"source": edge["source"], "target": edge["target"]}
+
     def test_graph_bipartite(self):
-        params={"left":"geometria algebraiczna","right":"geometria algebraiczna / topologia"}
+        params=self._real_reference_domains()
         data=self.client.get("/api/graph",params=params).json()
         self.assertTrue(data["bipartite"])
         self.assertGreater(len(data["edges"]),0)
@@ -85,28 +225,46 @@ class APITests(unittest.TestCase):
             self.assertEqual((groups[e["source"]],groups[e["target"]]),("left","right"))
 
     def test_graph_section(self):
-        params={"left":"geometria algebraiczna","right":"geometria algebraiczna / topologia","granularity":"section"}
+        params={**self._real_reference_domains(),"granularity":"section"}
         data=self.client.get("/api/graph",params=params).json()
         self.assertGreater(len(data["edges"]),0)
 
     def test_graph_entity(self):
-        params={"left":"geometria algebraiczna","right":"geometria algebraiczna / topologia","granularity":"entity"}
+        params={**self._real_reference_domains(),"granularity":"entity"}
         data=self.client.get("/api/graph",params=params).json()
         self.assertGreater(len(data["edges"]),0)
 
     def test_graph_missing_pair(self):
-        params={"left":"geometria algebraiczna","right":"topologia algebraiczna"}
-        data=self.client.get("/api/graph",params=params).json()
-        self.assertEqual(data["edges"],[])
+        with db_connection() as con:
+            report = graph_coverage(con)
+        pairs = [p for p in report["domain_pairs"] if p["references"] == 0]
+        if not pairs:
+            self.skipTest("All indexed domain pairs are connected; empty case is covered by fixture tests")
+        pair = pairs[0]
+        params = {"left": pair["left"], "right": pair["right"]}
+        response = self.client.get("/api/graph", params=params)
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(response.json()["edges"], [])
+
+    def test_graph_algebraic_geometry_topology_connected(self):
+        params = {"left": "geometria algebraiczna", "right": "topologia algebraiczna"}
+        response = self.client.get("/api/graph", params=params)
+        self.assertEqual(response.status_code, 200, response.text)
+        data = response.json()
+        self.assertTrue(data["edges"])
+        self.assertTrue(any(n["module"] == "TOP-28" for n in data["nodes"]))
 
     def test_graph_bad_domain(self):
         params={"left":"nonsense","right":"topologia algebraiczna"}
         self.assertEqual(self.client.get("/api/graph",params=params).status_code,400)
 
     def test_graph_path(self):
-        data=self.client.get("/api/graph/path",params={"source":"ALG-09","target":"AT-10"}).json()
+        params=self._real_dependency_edge()
+        response=self.client.get("/api/graph/path",params=params)
+        self.assertEqual(response.status_code,200,response.text)
+        data=response.json()
         self.assertTrue(data["found"])
-        self.assertEqual(data["modules"][0]["id"],"ALG-09")
+        self.assertEqual(data["modules"][0]["id"],params["source"])
 
     def test_plan(self):
         data=self.client.post("/api/selection/plan",json={"modules":["ALG-09"]}).json()

@@ -1,0 +1,1298 @@
+\section{Logika kategorialna}\label{cat:sec:categorical-logic}
+
+Teoria kategorii pozwala interpretować formułę nie tylko jako zdanie prawdziwe lub fałszywe, lecz także jako podobiekt obiektu parametrów. Podstawianie odpowiada zmianie bazy, koniunkcja przecięciu podobiektów, a kwantyfikator egzystencjalny obrazowi odpowiedniej projekcji. W rozdziale~\ref{cat:sec:lawvere-theories} rozpatrywaliśmy kategorie termów teorii równościowych; teraz uwzględnimy również relacje, formuły i wynikanie. Wykorzystamy kategorie regularne z definicji~\ref{cat:def:barr-regular} oraz toposy elementarne z rozdziału~\ref{cat:sec:toposes}. Logika wewnętrzna nie musi być klasyczna: prawo wyłączonego środka zależy od kategorii, w której interpretujemy formuły.
+
+\subsection{Sygnatury, konteksty i fragmenty logiki}
+
+\begin{definicja}[Sygnatura wielosortowa i kontekst]\label{cat:def:cl-signature}
+Sygnatura finitarna wielosortowa składa się z trzech małych zbiorów: sortów, symboli funkcji o określonych skończonych ciągach sortów argumentów i jednym sorcie wartości oraz symboli relacji o określonych skończonych ciągach sortów argumentów. Dla każdego sortu ustalamy przeliczalny zbiór zmiennych; symbole relacji mogą być także zeroargumentowe, czyli oznaczać zdania atomowe. Symbol funkcji o zerowej liczbie argumentów jest stałą. Kontekstem $\vec x$ nazywamy skończony ciąg różnych zmiennych z przypisanymi sortami, zapisany jako $(x_1:S_1,\ldots,x_m:S_m)$. Termy tworzymy ze zmiennych i symboli funkcji zgodnie z sortami. Formuły atomowe to równości dwóch termów tego samego sortu i zastosowania symboli relacji do termów odpowiednich sortów.
+\end{definicja}
+
+Zapis $\varphi(\vec x)$ oznacza, że wszystkie zmienne wolne formuły należą do kontekstu $\vec x$; nie wymagamy, aby wszystkie zmienne kontekstu rzeczywiście występowały w formule. Dopuszczamy kontekst pusty. Podstawianie termów za zmienne wolne wykonujemy z unikaniem przechwytywania zmiennych związanych, w razie potrzeby zmieniając ich nazwy.
+
+\begin{definicja}[Formuły regularne i sekwenty]\label{cat:def:cl-regular-formulas}
+Formuły regularne otrzymujemy z formuł atomowych oraz $\top$ za pomocą skończonych koniunkcji i kwantyfikatorów egzystencjalnych. Sekwent regularny ma postać
+\[
+ \varphi\vdash_{\vec x}\psi,
+\]
+gdzie obie formuły są regularne w kontekście $\vec x$. Teoria regularna jest zbiorem takich sekwentów traktowanych jako aksjomaty. Fragment koherentny dopuszcza ponadto skończone alternatywy, w tym pustą alternatywę $\bot$. Fragment geometryczny dopuszcza małe alternatywy, przy zachowaniu skończonych koniunkcji i kwantyfikatorów egzystencjalnych.
+\end{definicja}
+
+Nie mylimy sekwentu z formułą implikacji: sekwent jest sądem o wynikaniu w ustalonym kontekście, natomiast implikacja może występować jako podformuła w szerszych fragmentach logiki. Formuły regularne nie zawierają w szczególności negacji ani kwantyfikacji ogólnej.
+
+\subsection{Semantyka w kategorii regularnej}
+
+\begin{definicja}[Struktura w kategorii regularnej]\label{cat:def:cl-structure}
+Niech $\mathcal E$ będzie kategorią regularną. Strukturą $M$ dla zadanej sygnatury nazywamy przypisanie każdemu sortowi $S$ obiektu $M_S$, każdemu symbolowi funkcji $f:S_1,\ldots,S_k\to S$ morfizmu
+\[
+ M_f:\prod_{j=1}^k M_{S_j}\longrightarrow M_S,
+\]
+a każdemu symbolowi relacji $R$ podobiektu $M_R\hookrightarrow\prod_{j=1}^k M_{S_j}$. Iloczyn pusty jest obiektem końcowym. Obiekt kontekstu $\vec x$ oznaczamy przez $M_{\vec x}=\prod_{j=1}^m M_{S_j}$.
+\end{definicja}
+
+Term $t$ sortu $S$ w kontekście $\vec x$ interpretujemy jako morfizm $\llbracket t\rrbracket_M:M_{\vec x}\to M_S$: zmienne są projekcjami, stałe są złożeniami morfizmu do obiektu końcowego z interpretacją stałej, a zastosowanie symbolu funkcji interpretujemy przez złożenie $M_f$ z morfizmem do iloczynu wyznaczonym przez interpretacje argumentów. Rekurencja po budowie termu zapewnia istnienie i jednoznaczność tej interpretacji po ustaleniu iloczynów.
+
+\begin{definicja}[Interpretacja formuły regularnej]\label{cat:def:cl-regular-semantics}
+Interpretacją formuły $\varphi$ w kontekście $\vec x$ jest podobiekt $\llbracket\varphi\rrbracket_{M,\vec x}$ obiektu $M_{\vec x}$, zdefiniowany rekurencyjnie:
+\begin{enumerate}
+ \item $\top$ odpowiada identyczności obiektu kontekstu.
+ \item Równość $t=u$ odpowiada equalizatorowi morfizmów interpretujących termy.
+ \item $R(t_1,\ldots,t_k)$ odpowiada zmianie bazy podobiektu $M_R$ wzdłuż morfizmu o składowych $\llbracket t_j\rrbracket_M$.
+ \item $\varphi\wedge\psi$ odpowiada przecięciu podobiektów, tj. ich iloczynowi włóknistemu nad obiektem kontekstu.
+ \item $\exists y:S\,\theta(\vec x,y)$ odpowiada obrazowi złożenia
+ \[
+ \llbracket\theta\rrbracket_{M,(\vec x,y)}
+ \hookrightarrow M_{\vec x}\times M_S
+ \xrightarrow{\pi} M_{\vec x}.
+ \]
+\end{enumerate}
+Struktura $M$ spełnia sekwent $\varphi\vdash_{\vec x}\psi$, jeżeli $\llbracket\varphi\rrbracket_{M,\vec x}\leq\llbracket\psi\rrbracket_{M,\vec x}$ w zbiorze uporządkowanym podobiektów. Model teorii regularnej jest strukturą spełniającą wszystkie jej aksjomaty.
+\end{definicja}
+
+W dalszym ciągu zakładamy, że rozpatrywane porządki podobiektów są zbiorami w ustalonym uniwersum. Dla małych kategorii wynika to z małości zbioru morfizmów; dla kategorii dużych jest to dodatkowe założenie o małości zbiorów klas podobiektów. Przez $\operatorname{Sub}_{\mathcal E}(X)$ oznaczamy klasy monomorfizmów do $X$ modulo izomorfizm nad $X$, uporządkowane przez faktoryzację. Równości podobiektów są więc równościami klas, a nie wymaganiami dosłownej równości wybranych obiektów. Obrazy w powyższej definicji istnieją na mocy twierdzenia~\ref{cat:thm:barr-image}. Nie wybieramy elementów włókien; kwantyfikator egzystencjalny jest określony bez odwołania do punktów obiektu.
+
+\begin{stwierdzenie}[Podstawianie i zmiana bazy]\label{cat:prop:cl-substitution}
+Niech $\vec t$ będzie ciągiem termów w kontekście $\vec z$, zgodnym z sortami kontekstu $\vec x$. Oznaczmy przez $h:M_{\vec z}\to M_{\vec x}$ morfizm o składowych interpretujących $\vec t$. Dla każdej formuły regularnej $\varphi$ w kontekście $\vec x$ zachodzi równość podobiektów
+\[
+ \llbracket\varphi[\vec t/\vec x]\rrbracket_{M,\vec z}
+ =h^*\llbracket\varphi\rrbracket_{M,\vec x}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Dla termu $u$ podstawianie odpowiada złożeniu $\llbracket u\rrbracket_M h$: dla zmiennych wynika to z definicji składowych $h$, a dla zastosowania symbolu funkcji z własności uniwersalnej iloczynu i założenia indukcyjnego dla argumentów. Równości, relacje, $\top$ i koniunkcje zachowują się zatem zgodnie z tezą przez własność uniwersalną equalizatorów i iloczynów włóknistych. W przypadku $\varphi=\exists y:S\,\theta$ zmieniamy w razie potrzeby nazwę zmiennej związanej $y$, tak aby nie należała do żadnego z kontekstów $\vec x,\vec z$ ani nie występowała w podstawianych termach. Dzięki temu rozszerzone konteksty $(\vec x,y)$ oraz $(\vec z,y)$ są poprawne także wtedy, gdy niektóre zmienne kontekstu $\vec z$ nie występują w żadnym podstawianym termie. Mamy kwadrat kartezjański
+\[
+\begin{array}{ccc}
+ M_{\vec z}\times M_S&\xrightarrow{h\times\id_{M_S}}&M_{\vec x}\times M_S\\
+ \downarrow&&\downarrow\\
+ M_{\vec z}&\xrightarrow{h}&M_{\vec x}.
+\end{array}
+\]
+Z założenia indukcyjnego interpretacja podstawionej formuły $\theta$ jest zmianą bazy interpretacji wyjściowej. Stabilność rozkładów na regularny epimorfizm i monomorfizm przy zmianie bazy (definicja~\ref{cat:def:barr-regular}, twierdzenie~\ref{cat:thm:barr-image}) oznacza, że obraz złożenia z projekcją po lewej jest zmianą bazy obrazu złożenia po prawej. Otrzymujemy tezę dla kwantyfikatora, co kończy indukcję.
+\end{proof}
+
+\begin{przyklad}[Semantyka w zbiorach]\label{cat:ex:cl-set-semantics}
+Rozważmy jeden sort $S$ interpretowany przez zbiór $\mathbb Z$ i relację $R(x,y)$ interpretowaną przez podzbiór par $(a,b)$ spełniających $a=2b$. Interpretacją $\exists y\,R(x,y)$ jest obraz projekcji tego podzbioru na pierwszą współrzędną, czyli $2\mathbb Z$. Formuła $R(x,y)\wedge R(x,z)$ interpretuje się jako przecięcie przeciwobrazów $R$ w $\mathbb Z^3$. Z równości $2y=2z$ wynika $y=z$, zatem spełniony jest sekwent
+\[
+ R(x,y)\wedge R(x,z)\vdash_{x,y,z} y=z.
+\]
+Sekwent $\top\vdash_x\exists y\,R(x,y)$ nie jest spełniony, ponieważ $1$ nie należy do obrazu projekcji. W kategorii zbiorów powyższa interpretacja odtwarza zwykłą semantykę formuł regularnych.
+\end{przyklad}
+
+\begin{stwierdzenie}[Semantyka jest zachowywana przez funktory regularne]\label{cat:prop:cl-regular-functors}
+Niech $F:\mathcal E\to\mathcal D$ będzie funktorem między kategoriami regularnymi, zachowującym skończone granice i regularne epimorfizmy. Wówczas $F$ przenosi strukturę $M$ na strukturę $FM$ i dla każdej formuły regularnej zachodzi
+\[
+ F(\llbracket\varphi\rrbracket_{M,\vec x})
+ =\llbracket\varphi\rrbracket_{FM,\vec x}
+\]
+jako równość podobiektów po kanonicznym utożsamieniu $F(M_{\vec x})\cong(FM)_{\vec x}$. W szczególności modele teorii regularnych przechodzą na modele tej samej teorii.
+\end{stwierdzenie}
+\begin{proof}
+Zachowywanie iloczynów umożliwia interpretację symboli funkcji, a zachowywanie monomorfizmów (przez kryterium diagonali) pozwala przenieść interpretacje relacji. Funktor zachowuje obrazy, ponieważ obraz jest częścią rozkładu na regularny epimorfizm i monomorfizm, a $F$ zachowuje obie klasy morfizmów. Jednoznaczność obrazu daje kanoniczne utożsamienie. Indukcja po termach wykorzystuje zachowywanie iloczynów, a indukcja po formułach wykorzystuje zachowywanie equalizatorów, zmian bazy, obiektu końcowego i obrazów. Jeżeli jeden podobiekt faktoryzuje się przez drugi, zastosowanie $F$ zachowuje tę faktoryzację, więc zachowuje spełnione sekwenty.
+\end{proof}
+
+\subsection{Rachunek sekwentów regularnych}
+
+Aby skonstruować kategorię z samej teorii $T$, musimy odróżnić dowodliwość od prawdziwości w ustalonym modelu. Poniżej opisujemy rachunek przez generatory i reguły domknięcia relacji wynikania. Wszystkie konteksty są skończone; przy łączeniu kontekstów zmieniamy nazwy zmiennych tak, aby były rozłączne.
+
+\begin{definicja}[Dowodliwość regularna]\label{cat:def:cl-regular-deduction}
+Piszemy $\varphi\vdash^T_{\vec x}\psi$, jeżeli sekwent należy do najmniejszej rodziny relacji spełniającej następujące warunki.
+\begin{enumerate}
+ \item W każdym kontekście relacja jest zwrotna i przechodnia oraz zawiera aksjomaty $T$. Formuła $\top$ jest elementem największym, a $\wedge$ jest kresem dolnym: z $\theta\vdash\varphi$ i $\theta\vdash\psi$ wynika $\theta\vdash\varphi\wedge\psi$, zaś $\varphi\wedge\psi\vdash\varphi,\psi$ oznacza dwa sekwenty.
+ \item Dowodliwość jest zachowywana przez poprawne sortowo podstawianie termów, w tym przez zmianę nazw i rozszerzenie kontekstu.
+ \item Dla każdej zmiennej $x$ zachodzi refleksywność równości $\top\vdash_x x=x$. Przez podstawienie otrzymujemy $\top\vdash_{\vec x}t=t$ dla każdego termu $t$ w kontekście $\vec x$. Obowiązuje także reguła zastępowania: dla termów $t,u$ tego samego sortu i formuły $\theta(\vec x,y)$, gdzie $y$ jest dodatkową zmienną tego sortu, a podstawianie nie przechwytuje zmiennych związanych,
+ \[
+ (t=u)\wedge\theta(\vec x,t)\vdash_{\vec x}\theta(\vec x,u).
+ \]
+ \item Dla $\alpha$ w kontekście $(\vec x,y)$ i $\beta$ w kontekście $\vec x$ obowiązuje reguła sprzężenia
+ \[
+ (\exists y\,\alpha)\vdash_{\vec x}\beta
+ \quad\Longleftrightarrow\quad
+ \alpha\vdash_{\vec x,y}\beta.
+ \]
+ Obie implikacje są regułami wnioskowania.
+ \item Obowiązuje reguła Frobeniusa, tj. oba kierunki sekwentu odpowiadającego równości
+ \[
+ \exists y\,(\alpha\wedge\beta)
+ \dashv\vdash_{\vec x}(\exists y\,\alpha)\wedge\beta,
+ \]
+ gdzie $y$ nie występuje wolno w $\beta$.
+\end{enumerate}
+W rachunku identyfikujemy formuły różniące się jedynie nazwami zmiennych związanych. Zapis $\dashv\vdash^T$ oznacza dowodliwość w obu kierunkach.
+\end{definicja}
+
+Przecięcie wszystkich rodzin relacji spełniających te warunki ponownie spełnia warunki, więc najmniejsza rodzina relacji istnieje. Reguła sprzężenia obejmuje wprowadzenie kwantyfikatora: $\alpha\vdash_{\vec x,y}\exists y\,\alpha$. Podstawienie termu $t$ za $y$ daje $\alpha[t/y]\vdash_{\vec x}\exists y\,\alpha$. Eliminacja pozwala usunąć świadka z kontekstu, gdy konkluzja nie zależy od niego. Dokładniej, jeśli $\gamma,\beta$ są w kontekście $\vec x$, to z $\gamma\wedge\alpha\vdash_{\vec x,y}\beta$ otrzymujemy $\gamma\wedge\exists y\,\alpha\vdash_{\vec x}\beta$: stosujemy sprzężenie do przesłanki $\gamma\wedge\alpha$, a następnie Frobeniusa. To właśnie ta wersja reguły uzasadnia poniższe rozumowania z lokalnym świadkiem, bez zakładania istnienia termu reprezentującego świadka. Wielokrotne kwantyfikowanie zapisujemy przez $\exists\vec y$; niezależne kwantyfikatory egzystencjalne można przestawiać, ponieważ obie kolejności są lewymi sprzężonymi do tego samego osłabienia kontekstu. Dla dowolnej zamiany parametrów zachodzi składniowa zgodność podstawiania z kwantyfikatorem (po zmianie nazw zmiennych związanych). Nie zakładamy niepustości sortów: w szczególności nie wprowadzamy reguły $\top\vdash\exists y\,\top$ bez odpowiedniego aksjomatu.
+
+\begin{stwierdzenie}[Poprawność rachunku regularnego]\label{cat:prop:cl-deduction-sound}
+Jeżeli $M$ jest modelem $T$ w kategorii regularnej i $\varphi\vdash^T_{\vec x}\psi$, to $\llbracket\varphi\rrbracket_{M,\vec x}\leq\llbracket\psi\rrbracket_{M,\vec x}$.
+\end{stwierdzenie}
+\begin{proof}
+Dla morfizmu $p:A\to B$ i podobiektu $U\hookrightarrow A$ oznaczmy przez $\exists_p U$ obraz złożenia $U\to A\to B$. Minimalność obrazu i własność uniwersalna iloczynu włóknistego dają
+\[
+ \exists_p U\leq V\ \Longleftrightarrow\ U\leq p^*V
+ \qquad(V\hookrightarrow B).
+\]
+Ponadto $\exists_p(U\wedge p^*V)=\exists_p U\wedge V$, gdyż rozkład obrazowy $U\to\exists_p U\to B$ po zmianie bazy wzdłuż $V\hookrightarrow B$ nadal jest rozkładem obrazowym przez twierdzenie~\ref{cat:thm:barr-image}. Są to interpretacje reguł sprzężenia i Frobeniusa dla projekcji. Pozostałe reguły wynikają z porządku podobiektów, własności uniwersalnej equalizatora (na nim interpretacje równych termów pokrywają się), oraz twierdzenia o podstawianiu~\ref{cat:prop:cl-substitution}. Rodzina sekwentów spełnionych w $M$ zawiera aksjomaty i jest domknięta na wszystkie reguły, zatem zawiera najmniejszą taką rodzinę.
+\end{proof}
+
+\subsection{Kategoria syntaktyczna teorii regularnej}
+
+\begin{definicja}[Relacja dowodliwie funkcjonalna]\label{cat:def:cl-functional-relation}
+Niech $\varphi(\vec x)$ i $\psi(\vec y)$ będą formułami regularnymi w rozłącznych kontekstach. Formuła $\theta(\vec x,\vec y)$ jest relacją dowodliwie funkcjonalną od $\varphi$ do $\psi$, jeżeli zachodzą trzy sekwenty w teorii $T$:
+\[
+\begin{aligned}
+ \theta&\vdash_{\vec x,\vec y}^T\varphi\wedge\psi,\\
+ \varphi&\vdash_{\vec x}^T\exists\vec y\,\theta,\\
+ \theta(\vec x,\vec y)\wedge\theta(\vec x,\vec y')
+ &\vdash_{\vec x,\vec y,\vec y'}^T\vec y=\vec y'.
+\end{aligned}
+\]
+Równość ciągów oznacza koniunkcję równości odpowiednich składowych, w przypadku pustego ciągu oznacza $\top$.
+\end{definicja}
+
+Warunki wyrażają kolejno ograniczenie dziedziny i przeciwdziedziny, totalność oraz jednoznaczność. Relacja nie musi być wykresem termu: na przykład operacja odwrotna do dowodliwie bijektywnego symbolu funkcji może być zdefiniowana przez odwrócenie jego wykresu bez dodawania nowego symbolu.
+
+\begin{definicja}[Kategoria syntaktyczna]\label{cat:def:cl-syntactic-category}
+Obiektami $\mathcal C_T$ są formuły w kontekstach $\{\vec x\mid\varphi\}$, z dokładnością do zmiany nazw zmiennych zachowującej kolejność i sorty kontekstu. Możemy ustalić kanoniczne nazwy zmiennych dla każdego ciągu sortów, aby uniknąć wyborów przy utożsamianiu kontekstów. Morfizmy są klasami relacji dowodliwie funkcjonalnych modulo $\dashv\vdash^T$ w połączonym kontekście dziedziny i przeciwdziedziny. Przy składaniu wybieramy rozłączne kopie wszystkich kontekstów i utożsamiamy jedynie dwie kopie kontekstu pośredniego. Identycznością obiektu $\{\vec x\mid\varphi\}$ jest relacja $\varphi(\vec x)\wedge(\vec x=\vec x')$. Dla morfizmów reprezentowanych przez $\theta(\vec x,\vec y)$ i $\rho(\vec y,\vec z)$ składanie definiujemy jako
+\[
+ (\rho\circ\theta)(\vec x,\vec z)
+ =\exists\vec y\,(\theta(\vec x,\vec y)\wedge\rho(\vec y,\vec z)).
+\]
+\end{definicja}
+
+\begin{stwierdzenie}\label{cat:prop:cl-syntactic-category}
+Powyższe konstrukcje określają małą kategorię.
+\end{stwierdzenie}
+\begin{proof}
+Weryfikujemy trzy warunki funkcjonalności złożenia. Ograniczenie wynika z ograniczenia obu relacji i eliminacji $\exists\vec y$. Dla totalności mamy $\theta\vdash_{\vec x,\vec y}^T\psi\vdash_{\vec x,\vec y}^T\exists\vec z\,\rho$, gdzie drugi sekwent jest rozszerzeniem kontekstu aksjomatu totalności $\rho$. Przez koniunkcję i Frobeniusa dostajemy
+\[
+ \theta\vdash_{\vec x,\vec y}^T
+ \theta\wedge\exists\vec z\,\rho
+ \dashv\vdash_{\vec x,\vec y}^T
+ \exists\vec z\,(\theta\wedge\rho).
+\]
+Monotoniczność kwantyfikacji i totalność $\theta$ dają
+\[
+ \varphi\vdash_{\vec x}^T\exists\vec y\,\theta
+ \vdash_{\vec x}^T\exists\vec y\,\exists\vec z\,(\theta\wedge\rho).
+\]
+Po przestawieniu kwantyfikatorów jest to totalność złożenia. Dla jednoznaczności dwóch wyników $\vec z,\vec z'$ eliminujemy oba kwantyfikatory, otrzymując świadków $\vec y,\vec y'$. Jednoznaczność $\theta$ daje $\vec y=\vec y'$, a zastępowanie i jednoznaczność $\rho$ dają $\vec z=\vec z'$. Wynik nie zależy od świadków, więc eliminacja kwantyfikatorów jest dopuszczalna. Wszystkie operacje zachowują dowodliwą równoważność formuł (monotoniczność $\exists$ wynika z reguły sprzężenia).
+ 
+Dla trzech relacji $\theta,\rho,\sigma$ oba złożenia są dowodliwie równoważne formule
+\[
+ \exists\vec y\,\exists\vec z\,
+ (\theta(\vec x,\vec y)\wedge\rho(\vec y,\vec z)\wedge\sigma(\vec z,\vec w)).
+\]
+Wynika to z Frobeniusa i możliwości przestawiania niezależnych kwantyfikatorów. Relacja identyczności jest funkcjonalna: ograniczenie przeciwdziedziny wynika z zastępowania, totalność z wyboru $\vec x'=\vec x$ (wprowadzenie kwantyfikatora z termami), a jednoznaczność z symetrii i przechodniości równości. Te ostatnie otrzymujemy z refleksywności i zastępowania, stosując je odpowiednio do predykatów $y=x$ i $x=y$. Składanie z identycznością daje wyjściową relację przez zastępowanie równych zmiennych w jednym kierunku i wprowadzenie świadka równego danej zmiennej w drugim. Małość wynika z małości sygnatury i skończonej budowy formuł.
+\end{proof}
+
+\begin{twierdzenie}[Regularność kategorii syntaktycznej]\label{cat:thm:cl-syntactic-regular}
+Kategoria $\mathcal C_T$ jest regularna. Podobiekty $\{\vec x\mid\varphi\}$ odpowiadają klasom formuł $\alpha$ z $\alpha\vdash^T_{\vec x}\varphi$, uporządkowanym przez dowodliwe wynikanie.
+\end{twierdzenie}
+\begin{proof}
+Obiekt końcowy to $\{\varnothing\mid\top\}$: jedyna relacja funkcjonalna do niego jest dowodliwie równoważna formule dziedziny. Iloczyn dwóch obiektów jest reprezentowany przez $\{(\vec x,\vec y)\mid\varphi\wedge\psi\}$ z projekcjami określonymi przez równości współrzędnych. Dla dwóch relacji wychodzących ze wspólnej dziedziny ich koniunkcja jest relacją do tego iloczynu; totalność wynika z kolejnego wprowadzania świadków, a jednoznaczność z jednoznaczności obu składowych. To daje własność uniwersalną. Equalizator równoległych relacji $\theta,\rho$ jest włożeniem obiektu
+\[
+ \{\vec x\mid\exists\vec y\,(\theta(\vec x,\vec y)\wedge\rho(\vec x,\vec y))\}
+ \longrightarrow\{\vec x\mid\varphi\}.
+\]
+Niech $\eta(\vec z,\vec x)$ będzie relacją funkcjonalną do dziedziny, a $E(\vec x)=\exists\vec y\,(\theta(\vec x,\vec y)\wedge\rho(\vec x,\vec y))$. Faktoryzacja przez wskazane włożenie oznacza $\eta\vdash E$. Jeżeli ten sekwent zachodzi, to pod warunkiem $\eta(\vec z,\vec x)$ istnieje wspólny wynik $\theta,\rho$ dla $\vec x$. Jednoznaczność obu relacji daje wtedy $\eta(\vec z,\vec x)\wedge\theta(\vec x,\vec y)\vdash\rho(\vec x,\vec y)$ oraz nierówność odwrotną z zamienionymi relacjami. Kwantyfikując po $\vec x$, otrzymujemy równość złożeń. Odwrotnie z $\eta(\vec z,\vec x)$ i totalności $\theta$ otrzymujemy świadka $\vec y$ z $\theta(\vec x,\vec y)$. Równość złożeń daje świadka $\vec x'$ z $\eta(\vec z,\vec x')\wedge\rho(\vec x',\vec y)$. Jednoznaczność $\eta$ daje $\vec x=\vec x'$, więc przez zastępowanie uzyskujemy $\rho(\vec x,\vec y)$. Eliminując świadków, otrzymujemy $\eta\vdash E$. Wymagana faktoryzacja istnieje zatem przez ograniczenie przeciwdziedziny relacji $\eta$, a jest jedyna przez monomorficzność włożenia, wykazaną poniżej. Dokładniej dla $\alpha\vdash_{\vec x}^T\varphi$ włożenie $i:\{\vec x\mid\alpha\}\to\{\vec x'\mid\varphi\}$ ma relację $\alpha(\vec x)\wedge(\vec x=\vec x')$. Dla dowolnej relacji funkcjonalnej $\eta(\vec z,\vec x)$ do $\alpha$ złożenie $i\eta$ jest reprezentowane przez $\eta(\vec z,\vec x')$: równoważność wynika z zastępowania i wprowadzenia świadka $\vec x=\vec x'$. Jeżeli dwa takie złożenia są równe, wyjściowe relacje są zatem dowodliwie równoważne. Dowodzi to monomorficzności włożeń. Uzyskaliśmy skończone granice.
+
+Dla morfizmu $\theta:\varphi\to\psi$ definiujemy $\iota(\vec y)=\exists\vec x\,\theta(\vec x,\vec y)$. Wtedy $\theta$ faktoryzuje się przez włożenie $\iota\to\psi$. Pierwszy morfizm $e:\varphi\to\iota$ jest dowodliwie surjektywny, tj. $\iota\vdash^T\exists\vec x\,\theta$. Pokażemy, że każdy dowodliwie surjektywny morfizm $e:\varphi\to\psi$ jest koequalizatorem swojej pary jądrowej. Para jądrowa ma dziedzinę
+\[
+ \{(\vec x,\vec x')\mid\exists\vec y\,(\theta(\vec x,\vec y)\wedge\theta(\vec x',\vec y))\}
+\]
+i dwie projekcje. Jeśli relacja $\eta:\varphi\to\chi$ zrównuje te projekcje, to dla dwóch świadków $\vec x,\vec x'$ o wspólnym obrazie w $\psi$ jej wyniki są dowodliwie równe. Definiujemy relację
+\[
+ \zeta(\vec y,\vec z)=\exists\vec x\,(\theta(\vec x,\vec y)\wedge\eta(\vec x,\vec z)).
+\]
+Surjektywność $e$ i totalność $\eta$ dają totalność $\zeta$; zrównanie projekcji i jednoznaczność $\eta$ dają jednoznaczność $\zeta$. Ograniczenie wynika z ograniczenia relacji składowych. Składanie $\zeta e$ ma relację
+\[
+ \exists\vec y\,\exists\vec x'\,
+ (\theta(\vec x,\vec y)\wedge\theta(\vec x',\vec y)\wedge\eta(\vec x',\vec z)).
+\]
+Jeżeli zachodzi przesłanka pod kwantyfikatorami, warunek zrównania projekcji daje $\eta(\vec x,\vec z)$, więc eliminacja świadków daje jeden kierunek. Odwrotnie z $\eta(\vec x,\vec z)$ wynika $\varphi(\vec x)$, a totalność $e$ dostarcza świadka $\vec y$; przyjmując $\vec x'=\vec x$ i stosując Frobeniusa, otrzymujemy drugi kierunek. Dla dowolnej innej faktoryzacji $\lambda e=\eta$ zachodzi $\theta(\vec x,\vec y)\wedge\lambda(\vec y,\vec z)\dashv\vdash^T\theta(\vec x,\vec y)\wedge\eta(\vec x,\vec z)$: jeden kierunek wynika ze wzoru składania, drugi z jednoznaczności $\theta$ i definicji złożenia. Kwantyfikujemy po $\vec x$ i stosujemy Frobeniusa oraz dowodliwą surjektywność $\theta$, otrzymując $\lambda\dashv\vdash^T\zeta$. Jest to własność koequalizatora, czyli $e$ jest regularnym epimorfizmem.
+
+Odwrotnie regularny epimorfizm $f$ musi mieć część monomorficzną powyższego rozkładu izomorficzną. Istotnie, jeśli $f=me$ jest koequalizatorem pewnej pary, monomorficzność $m$ oznacza, że $e$ zrównuje tę parę. Własność koequalizatora daje $d$ z $df=e$, a epimorficzność $f,e$ daje $md=\id$ i $dm=\id$. Zatem $\iota\dashv\vdash^T\psi$: dla włożenia $\iota\to\psi$ istnienie odwrotności daje sekwent $\psi\vdash^T\iota$ przez totalność odwrotnej relacji. Regularne epimorfizmy są więc dokładnie dowodliwie surjektywnymi morfizmami. Ich zmiana bazy jest dowodliwie surjektywna: dla każdej zmiennej w nowej bazie totalność morfizmu do starej bazy daje świadka obrazu, a surjektywność daje świadka w dziedzinie; obaj świadkowie spełniają formułę iloczynu włóknistego. Formalnie jest to kolejne zastosowanie totalności, Frobeniusa i eliminacji kwantyfikatorów. Otrzymujemy wszystkie warunki definicji~\ref{cat:def:barr-regular}.
+
+Wreszcie monomorfizm po rozłożeniu na regularny epimorfizm i włożenie ma część epimorficzną również monomorficzną, a monomorficzny koequalizator jest izomorfizmem (zrównuje tylko identyczne strzałki). Każdy podobiekt jest zatem reprezentowany przez włożenie formuły $\alpha$ spełniającej $\alpha\vdash^T_{\vec x}\varphi$. Faktoryzacja dwóch takich włożeń jest możliwa dokładnie wtedy, gdy pierwsza formuła dowodliwie pociąga drugą: relacja faktoryzująca musi zachować wszystkie współrzędne, a jej totalność daje wynikanie. Odwrotnie wynikanie definiuje włożenie przez równość współrzędnych.
+\end{proof}
+
+\subsection{Model syntaktyczny i własność uniwersalna}
+
+\begin{twierdzenie}[Model generyczny teorii regularnej]\label{cat:thm:cl-generic-model}
+W $\mathcal C_T$ istnieje model $G_T$ teorii $T$, w którym interpretacja formuły $\varphi(\vec x)$ jest podobiektem $\{\vec x\mid\varphi\}\hookrightarrow\{\vec x\mid\top\}$. W szczególności sekwent jest dowodliwy w $T$ wtedy i tylko wtedy, gdy jest spełniony w każdym modelu $T$ w każdej kategorii regularnej.
+\end{twierdzenie}
+\begin{proof}
+Sort $S$ interpretujemy przez $\{x:S\mid\top\}$, symbol funkcji przez wykres odpowiedniego termu, a symbol relacji przez włożenie obiektu zdefiniowanego formułą atomową. Iloczyny obiektów sortów są kontekstami z formułą $\top$. Indukcja po termach identyfikuje interpretację termu z jego wykresem; składanie wykresów odpowiada podstawianiu dzięki regułom równości. Z opisów granic, obrazów i podobiektów w twierdzeniu~\ref{cat:thm:cl-syntactic-regular} wynika rekurencyjnie podana interpretacja: equalizator wykresów jest równością termów, zmiana bazy relacji jest podstawieniem termów, przecięcie jest koniunkcją, a obraz projekcji jest egzystencjalnym domknięciem formuły. Dla kroku indukcji dotyczącego kwantyfikatora egzystencjalnego projekcja z obiektu formuły ma relację $\varphi(\vec x,y)\wedge(\vec x=\vec x')$, której obraz jest dowodliwie równoważny $\exists y\,\varphi(\vec x',y)$ przez zastępowanie równości.
+
+Aksjomaty $T$ są spełnione, ponieważ porządek podobiektów w kategorii syntaktycznej odpowiada dowodliwości. Ten sam argument pokazuje, że dowolny sekwent spełniony w $G_T$ jest dowodliwy. W drugą stronę stosujemy poprawność rachunku ze stwierdzenia~\ref{cat:prop:cl-deduction-sound}.
+\end{proof}
+
+\begin{twierdzenie}[Własność uniwersalna kategorii syntaktycznej]\label{cat:thm:cl-syntactic-universal}
+Dla kategorii regularnej $\mathcal E$ ewaluacja w modelu generycznym daje równoważność kategorii
+\[
+ \operatorname{Reg}(\mathcal C_T,\mathcal E)
+ \simeq \operatorname{Mod}_T(\mathcal E),
+ \qquad F\longmapsto F(G_T).
+\]
+Po lewej morfizmami są transformacje naturalne funktorów regularnych, a po prawej homomorfizmy modeli: rodziny morfizmów na sortach zgodne z operacjami i przenoszące relacje w relacje (nie muszą ich odzwierciedlać).
+\end{twierdzenie}
+\begin{proof}
+Niech $M$ będzie modelem w $\mathcal E$. Obiekt $\{\vec x\mid\varphi\}$ przyporządkowujemy obiektowi reprezentującemu interpretację podobiektu $\llbracket\varphi\rrbracket_{M,\vec x}$. Dla relacji funkcjonalnej $\theta$ poprawność rachunku zapewnia faktoryzację jej interpretacji przez iloczyn interpretacji $\varphi,\psi$. Otrzymujemy podobiekt $R\hookrightarrow A\times B$. Pierwsza projekcja $R\to A$ jest regularnym epimorfizmem przez warunek totalności i opis obrazu. Jest też monomorfizmem: na jej parze jądrowej druga współrzędna jest jednakowa przez warunek jednoznaczności, a włożenie w $A\times B$ jest monomorfizmem. Regularny epimorfizm będący monomorfizmem jest izomorfizmem, więc $R$ jest wykresem jednoznacznego morfizmu $A\to B$. Relacje równoważne dają ten sam morfizm. Relacja identyczności interpretuje się jako przekątna podobiektu $A$, a jej obie projekcje do $A$ są identyczne po kanonicznym utożsamieniu, więc $F_M$ zachowuje identyczności. Składanie wykresów przez obraz ich iloczynu włóknistego jest wykresem złożenia, ponieważ iloczyn włóknisty wykresów identyfikuje się z dziedziną pierwszego morfizmu. W ten sposób otrzymujemy funktor $F_M$.
+
+Opisy obiektu końcowego, iloczynów i equalizatorów w dowodzie twierdzenia~\ref{cat:thm:cl-syntactic-regular} po interpretacji dają odpowiadające granice w $\mathcal E$: w szczególności wspólny świadek w formule equalizatora odpowiada równości wartości dwóch morfizmów, gdyż wykresy obu mają izomorficzne projekcje na dziedzinę. Dowodliwa surjektywność daje pełny obraz, więc $F_M$ zachowuje regularne epimorfizmy. Jest zatem regularny.
+
+Homomorfizm modeli $h:M\to N$ zachowuje interpretacje formuł regularnych w sensie faktoryzacji morfizmu $\prod h_{S_i}$ ograniczonego do interpretacji $\varphi$ przez interpretację tej samej formuły w $N$. Dowodzimy tego indukcyjnie: dla atomów wynika ze zgodności z funkcjami i relacjami, dla koniunkcji z iloczynu włóknistego, a dla kwantyfikacji z minimalności obrazu. Dokładniej morfizm na dziedzinie projekcji przenosi interpretację formuły z dodatkową zmienną do analogicznego podobiektu w $N$. Złożenie do kontekstu $N$ faktoryzuje się przez obraz tej projekcji w $N$; regularny epimorfizm na obraz w $M$ pozwala zejść do tego obrazu przez własność koequalizatora pary jądrowej i monomorficzność obrazu w $N$. Otrzymujemy składowe transformacji $F_M\to F_N$. Naturalność względem relacji funkcjonalnej można zapisać jawnie: jeśli interpretacje tej relacji są wykresami $u:A\to B$ i $v:A'\to B'$, a morfizmy ograniczone do interpretacji formuł to $h_A:A\to A'$ i $h_B:B\to B'$, zachowywanie relacji oznacza faktoryzację $(h_A,h_Bu):A\to A'\times B'$ przez wykres $v$. Pierwsza projekcja wykresu $v$ jest izomorfizmem, więc druga składowa musi być równa $vh_A$. Otrzymujemy $h_Bu=vh_A$, czyli naturalność.
+
+Odwrotnie transformacja naturalna funktorów regularnych daje na sortach homomorfizm modeli: naturalność względem wykresów symboli funkcji i włożeń relacji daje dokładnie wymagane warunki. Naturalność względem projekcji wymusza jej składowe na kontekstach, a naturalność względem włożenia $\{\vec x\mid\varphi\}\hookrightarrow\{\vec x\mid\top\}$ wyznacza składową na każdym obiekcie jednoznacznie przez monomorficzność obrazu tego włożenia.
+
+Wreszcie $F_M(G_T)\cong M$ z konstrukcji. Dla regularnego $F$ stwierdzenie~\ref{cat:prop:cl-regular-functors} identyfikuje $F(\{\vec x\mid\varphi\})$ z interpretacją $\varphi$ w $F(G_T)$, a zachowanie wykresów daje zgodność tych izomorfizmów z morfizmami. W istocie do wykazania równoważności wystarczy pełna wierność i istotna surjektywność ewaluacji. Istotna surjektywność wynika z $F_M(G_T)\cong M$. Dla dowolnych regularnych $F,F'$ możemy przez wskazane izomorfizmy zastąpić je przez $F_{F(G_T)},F_{F'(G_T)}$; poprzedni argument o homomorfizmach modeli daje istnienie i jednoznaczność transformacji naturalnej o zadanych składowych na sortach. Jest to pełna wierność. Takie ujęcie nie wymaga jednoczesnego wyboru reprezentantów podobiektów dla klasy wszystkich modeli; przy konstrukcji konkretnego $F_M$ wystarczają wybory indeksowane małym zbiorem obiektów $\mathcal C_T$.
+\end{proof}
+
+\subsection{Rachunek podobiektów i kwantyfikacja egzystencjalna}
+
+Dotychczas kwantyfikowaliśmy po zmiennej sortu $S$, używając projekcji $M_{\vec x}\times M_S\to M_{\vec x}$. Obraz w kategorii regularnej pozwala jednak zdefiniować kwantyfikację wzdłuż dowolnego morfizmu. W ten sposób oddzielamy składnię formuł od własności ich interpretacji.
+
+\begin{definicja}[Zmiana bazy i obraz bezpośredni podobiektu]\label{cat:def:cl-subobject-operations}
+Niech $\mathcal E$ będzie kategorią regularną i $f:A\to B$ jej morfizmem. Na zbiorach uporządkowanych podobiektów definiujemy
+\[
+ f^*:\operatorname{Sub}(B)\to\operatorname{Sub}(A),
+ \qquad
+ \exists_f:\operatorname{Sub}(A)\to\operatorname{Sub}(B).
+\]
+Pierwszy funktor przypisuje podobiektowi jego zmianę bazy wzdłuż $f$, a drugi przypisuje podobiektowi $u:U\hookrightarrow A$ obraz morfizmu $fu$. Porządek podobiektów jest porządkiem faktoryzacji monomorfizmów. Obiekt reprezentujący podobiekt będziemy często oznaczać tym samym symbolem co sam podobiekt.
+\end{definicja}
+
+Obie operacje są monotoniczne: dla $f^*$ wynika to z własności uniwersalnej iloczynu włóknistego, a dla $\exists_f$ z minimalności obrazu (twierdzenie~\ref{cat:thm:barr-image}). Zmiana bazy zachowuje element największy i skończone przecięcia, ponieważ przeciągnięcie identyczności jest identycznością, a iterowane iloczyny włókniste dają przeciągnięcie przecięcia.
+
+\begin{twierdzenie}[Sprzężenie egzystencjalne]\label{cat:thm:cl-exists-adjoint}
+Dla dowolnego morfizmu $f:A\to B$ w kategorii regularnej zachodzi sprzężenie $\exists_f\dashv f^*$, czyli
+\[
+ \exists_f U\leq V\quad\Longleftrightarrow\quad U\leq f^*V
+ \qquad
+ (U\in\operatorname{Sub}(A),\ V\in\operatorname{Sub}(B)).
+\]
+Ponadto dla $g:B\to C$ zachodzą równości
+\[
+ (gf)^*=f^*g^*,\qquad \exists_{gf}=\exists_g\exists_f,
+ \qquad \exists_{\id_A}=\id_{\operatorname{Sub}(A)}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Pierwsza nierówność jest przez minimalność obrazu równoważna faktoryzacji $fu:U\to B$ przez monomorfizm reprezentujący $V$. Własność uniwersalna iloczynu włóknistego utożsamia tę faktoryzację z faktoryzacją $u$ przez $f^*V$. Zgodność zmian bazy ze składaniem wynika z własności uniwersalnej iterowanych iloczynów włóknistych. Dla dowolnego podobiektu $W$ obiektu $C$ otrzymujemy
+\[
+ \exists_g\exists_f U\leq W
+ \iff \exists_f U\leq g^*W
+ \iff U\leq f^*g^*W
+ \iff \exists_{gf}U\leq W.
+\]
+Podstawiając za $W$ oba porównywane podobiekty, dostajemy ich równość. Dla identyczności stosujemy ten sam argument, ponieważ jej zmiana bazy jest identycznością.
+\end{proof}
+
+Jednostka i kojednostka tego sprzężenia są nierównościami $U\leq f^*\exists_f U$ i $\exists_f f^*V\leq V$. Pierwsza wyraża możliwość wprowadzenia świadka, druga to, że istnienie świadka należącego do przeciwobrazu $V$ gwarantuje przynależność do $V$. Nie są one na ogół równościami: dla $f:\{0,1\}\to\{*\}$ i $U=\{0\}$ mamy $f^*\exists_f U=\{0,1\}$; dla włożenia $f:\varnothing\to\{*\}$ i $V=\{*\}$ mamy $\exists_f f^*V=\varnothing$.
+
+\begin{twierdzenie}[Warunek Becka--Chevalleya dla kwantyfikacji egzystencjalnej]\label{cat:thm:cl-exists-beck-chevalley}
+W przemiennym kwadracie kartezjańskim w kategorii regularnej
+\[
+\begin{array}{ccc}
+ A'&\xrightarrow{h}&A\\
+ {\scriptstyle f'}\downarrow&&\downarrow{\scriptstyle f}\\
+ B'&\xrightarrow{g}&B
+\end{array}
+\]
+zachodzi równość funktorów $\operatorname{Sub}(A)\to\operatorname{Sub}(B')$:
+\[
+ g^*\exists_f=\exists_{f'}h^*.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla $U\hookrightarrow A$ oznaczmy $U'=A'\times_A U$. Ponieważ $A'=B'\times_B A$, własność uniwersalna iloczynu włóknistego daje $U'\cong B'\times_B U$ nad $B'$. Rozkład obrazu $U\to I\hookrightarrow B$ morfizmu $U\to A\to B$ po zmianie bazy wzdłuż $g$ daje rozkład $U'\to B'\times_B I\hookrightarrow B'$ na regularny epimorfizm i monomorfizm. Jest to rozkład obrazowy przez twierdzenie~\ref{cat:thm:barr-image}. Oznacza to dokładnie $g^*\exists_f U=\exists_{f'}h^*U$.
+\end{proof}
+
+Dla projekcji $f:X\times S\to X$ i dowolnego morfizmu parametrów $g:Y\to X$ kwadrat z $A'=Y\times S$ jest kartezjański. Warunek Becka--Chevalleya oznacza więc, że podstawienie parametrów można wykonać przed kwantyfikacją lub po niej. Jest to kategorialny mechanizm użyty już w stwierdzeniu~\ref{cat:prop:cl-substitution}.
+
+\begin{twierdzenie}[Wzajemność Frobeniusa]\label{cat:thm:cl-frobenius}
+Dla $f:A\to B$ w kategorii regularnej oraz podobiektów $U$ obiektu $A$ i $V$ obiektu $B$ zachodzi
+\[
+ \exists_f(U\wedge f^*V)=(\exists_f U)\wedge V.
+\]
+\end{twierdzenie}
+\begin{proof}
+Niech $v:V\hookrightarrow B$ reprezentuje podobiekt $V$, a $I\hookrightarrow B$ reprezentuje $\exists_f U$. Po zmianie bazy rozkładu $U\twoheadrightarrow I\hookrightarrow B$ wzdłuż $v$ otrzymujemy regularny epimorfizm $U\times_B V\twoheadrightarrow I\times_B V$ i monomorfizm do $V$. Składając drugi morfizm z $v$, otrzymujemy monomorfizm do $B$, więc jest to rozkład obrazowy morfizmu $U\times_B V\to B$. Lewa strona wzoru jest obrazem tego morfizmu, gdyż $U\times_B V$ reprezentuje $U\wedge f^*V$. Prawa strona jest reprezentowana przez $I\times_B V\hookrightarrow B$. Jednoznaczność obrazu daje tezę.
+\end{proof}
+
+Dla projekcji odpowiada to formule
+\[
+ \exists y\,(\alpha(\vec x,y)\wedge\beta(\vec x))
+ \dashv\vdash
+ (\exists y\,\alpha(\vec x,y))\wedge\beta(\vec x),
+\]
+gdzie warunek niezależności $\beta$ od $y$ oznacza, że jej interpretacja na rozszerzonym kontekście jest zmianą bazy podobiektu z kontekstu $\vec x$. Nie należy mylić tego warunku z samym sprzężeniem $\exists_f\dashv f^*$: Frobenius wyraża dodatkową zgodność obrazu z przecięciami.
+
+\begin{wniosek}[Regularne epimorfizmy i wykrywanie inkluzji]\label{cat:cor:cl-regular-epi-subobjects}
+W kategorii regularnej morfizm $f:A\to B$ jest regularnym epimorfizmem wtedy i tylko wtedy, gdy $\exists_f\top_A=\top_B$. Równoważnie $\exists_f f^*=\id_{\operatorname{Sub}(B)}$. Równoważnie $f^*$ odzwierciedla porządek podobiektów.
+\end{wniosek}
+\begin{proof}
+Pierwszy warunek mówi, że część monomorficzna rozkładu obrazowego $f$ jest izomorfizmem; z jednoznaczności rozkładu jest to równoważne regularnej epimorficzności. Stosując wzajemność Frobeniusa do $U=\top_A$, mamy $\exists_f f^*V=(\exists_f\top_A)\wedge V$, więc pierwszy warunek daje drugi. Odwrotnie podstawiamy $V=\top_B$ i korzystamy z $f^*\top_B=\top_A$. Jeśli $\exists_f f^*=\id$ oraz $f^*V\leq f^*W$, zastosowanie monotonicznego $\exists_f$ daje $V\leq W$. Odwrotnie, jeśli $f^*$ odzwierciedla porządek, oznaczmy $I=\exists_f\top_A$. Jednostka sprzężenia daje $\top_A\leq f^*I$, więc $f^*\top_B=f^*I$. Odzwierciedlenie porządku daje $\top_B\leq I$, czyli pełny obraz $f$.
+\end{proof}
+
+\subsection{Kwantyfikacja ogólna w toposie elementarnym}
+
+W dowolnej kategorii ze skończonymi granicami zmiana bazy podobiektów istnieje, lecz nie musi mieć prawego sprzężonego, nawet jeśli kategoria jest regularna. Przykładem jest kategoria grup: skończone granice obliczamy na zbiorach z indukowanymi operacjami, rozkład obrazowy jest rozkładem na surjektywny homomorfizm i włożenie podgrupy, a surjekcje są stabilne przy zmianie bazy i są koequalizatorami swoich par jądrowych (homomorfizm stały na włóknach schodzi jednoznacznie do grupy obrazu). To daje regularność. Dla nietrywialnej grupy $G$ i morfizmu $f:G\to1$ porządek $\operatorname{Sub}(1)$ ma jeden element, którego przeciwobrazem jest całe $G$. Gdyby istniał $\forall_f$, dla właściwej podgrupy $U$ mielibyśmy $\top_1\leq\forall_f U$, ale nie $f^*\top_1\leq U$, wbrew sprzężeniu. W toposie elementarnym klasyfikator podobiektów i obiekty wykładnicze pozwalają skonstruować taki funktor. Korzystamy z definicji~\ref{cat:def:elementary-topos} i twierdzenia~\ref{cat:thm:elementary-heyting}.
+
+\begin{twierdzenie}[Kwantyfikator ogólny dla projekcji]\label{cat:thm:cl-forall-projection}
+Niech $\mathcal E$ będzie toposem elementarnym, $\Omega$ jego klasyfikatorem podobiektów, a $\pi:B\times K\to B$ projekcją. Funktor $\pi^*:\operatorname{Sub}(B)\to\operatorname{Sub}(B\times K)$ ma prawy sprzężony $\forall_\pi$. Dla każdego $g:B'\to B$ zachodzi ponadto
+\[
+ g^*\forall_\pi R=\forall_{\pi'}(g\times\id_K)^*R,
+\]
+gdzie $\pi':B'\times K\to B'$.
+\end{twierdzenie}
+\begin{proof}
+Dla podobiektu $R\hookrightarrow B\times K$ niech $r:B\times K\to\Omega$ będzie jego morfizmem charakterystycznym, a $\widetilde r:B\to\Omega^K$ jego transpozycją wykładniczą. Niech $t_K:1\to\Omega^K$ odpowiada morfizmowi $K\to1\xrightarrow{\mathrm{true}}\Omega$. Definiujemy $\forall_\pi R$ jako equalizator $\widetilde r$ i $t_K!_B$. Dla podobiektu $v:V\hookrightarrow B$ mamy
+\[
+\begin{aligned}
+ V\leq\forall_\pi R
+ &\iff\widetilde r v=t_K!_V\\
+ &\iff r(v\times\id_K)=\mathrm{true}\,!_{V\times K}\\
+ &\iff \pi^*V\leq R.
+\end{aligned}
+\]
+Druga równoważność wynika z bijekcji wykładniczej, a ostatnia z kwadratu klasyfikującego $R$. Otrzymaliśmy własność prawego sprzężonego, która zapewnia również monotoniczność. Po zmianie bazy $g$ transpozycja morfizmu charakterystycznego zmienia się na $\widetilde r g$, a morfizm stały na $t_K!_{B'}$. Przeciągnięcie equalizatora daje equalizator tych dwóch morfizmów. Jest to żądana zgodność z podstawianiem parametrów. Konstrukcja jest zgodna z użyciem kwantyfikacji w dowodzie twierdzenia~\ref{cat:thm:elementary-heyting}.
+\end{proof}
+
+\begin{twierdzenie}[Kwantyfikacja ogólna wzdłuż dowolnego morfizmu]\label{cat:thm:cl-forall-adjoint}
+Dla dowolnego morfizmu $f:A\to B$ toposu elementarnego istnieje prawy sprzężony $\forall_f$ do $f^*$ na podobiektach. Jeśli $\Gamma_f\hookrightarrow B\times A$ jest wykresem $f$ w kolejności współrzędnych $(f(a),a)$, a $\pi_B,\pi_A$ są projekcjami, to
+\[
+ \forall_f U=\forall_{\pi_B}(\Gamma_f\Rightarrow\pi_A^*U).
+\]
+\end{twierdzenie}
+\begin{proof}
+Wykres $j=(f,\id_A)$ jest monomorfizmem, gdyż $\pi_Aj=\id_A$. Dla podobiektów $U\hookrightarrow A$ i $V\hookrightarrow B$ mamy
+\[
+\begin{aligned}
+ V\leq\forall_{\pi_B}(\Gamma_f\Rightarrow\pi_A^*U)
+ &\iff \pi_B^*V\leq\Gamma_f\Rightarrow\pi_A^*U\\
+ &\iff \pi_B^*V\wedge\Gamma_f\leq\pi_A^*U\\
+ &\iff f^*V\leq U .
+\end{aligned}
+\]
+Pierwsza równoważność pochodzi z twierdzenia~\ref{cat:thm:cl-forall-projection}, druga z definicji implikacji w algebrze Heytinga. W ostatniej korzystamy z tego, że podobiekty zawarte w $\Gamma_f$ odpowiadają podobiektom $A$ przez składanie z $j$. Przecięcie $\pi_B^*V\wedge\Gamma_f$ odpowiada $j^*\pi_B^*V=f^*V$, zaś $j^*\pi_A^*U=U$. Uzyskujemy dokładnie warunek sprzężenia $f^*\dashv\forall_f$.
+\end{proof}
+
+W kategorii zbiorów wzór oznacza, że na pustym włóknie warunek ogólny jest automatycznie spełniony. W dowolnym toposie interpretujemy tę własność za pomocą zmiany bazy i sprzężenia, a nie wyłącznie za pomocą punktów globalnych: jeżeli przeciągnięcie $f$ do pewnego podobiektu $V\hookrightarrow B$ ma dziedzinę początkową, to $f^*V$ jest najmniejszym podobiektem $A$, zatem $V\leq\forall_f U$ dla każdego $U$. Dla złożenia $gf$ mamy $\forall_{gf}=\forall_g\forall_f$, ponieważ oba funktory są prawymi sprzężonymi do $f^*g^*$. Dla identyczności dostajemy $\forall_{\id_A}=\id_{\operatorname{Sub}(A)}$. Ponieważ $\forall_f$ jest prawym sprzężonym, zachowuje wszystkie istniejące kresy dolne, w szczególności element największy i skończone przecięcia.
+
+\begin{twierdzenie}[Warunek Becka--Chevalleya dla kwantyfikacji ogólnej]\label{cat:thm:cl-forall-beck-chevalley}
+W kwadracie kartezjańskim z twierdzenia~\ref{cat:thm:cl-exists-beck-chevalley}, w toposie elementarnym, zachodzi
+\[
+ g^*\forall_f=\forall_{f'}h^*.
+\]
+\end{twierdzenie}
+\begin{proof}
+Wykorzystamy konstrukcję kwantyfikacji ogólnej przez wykres, nie zakładając w tym dowodzie istnienia obrazów. Niech $R=(g\times\id_A)^*\Gamma_f\hookrightarrow B'\times A$. Z własności kwadratu kartezjańskiego monomorfizm $j'=(f',h):A'\to B'\times A$ reprezentuje $R$. Oznaczmy projekcje $B'\times A$ przez $p:B'\times A\to B'$ i $q:B'\times A\to A$. Warunek dla projekcji oraz zachowywanie implikacji przez zmianę bazy (twierdzenie~\ref{cat:thm:elementary-heyting}) dają
+\[
+ g^*\forall_f U
+ =\forall_p(R\Rightarrow q^*U).
+\]
+Dla $V'\hookrightarrow B'$ nierówność $V'\leq\forall_p(R\Rightarrow q^*U)$ jest równoważna $p^*V'\wedge R\leq q^*U$. Po przejściu do podobiektów $R$ i utożsamieniu $R$ z $A'$ otrzymujemy równoważny warunek $(f')^*V'\leq h^*U$, ponieważ $pj'=f'$ i $qj'=h$. Z własności prawego sprzężonego jest to równoważne $V'\leq\forall_{f'}h^*U$. Oba podobiekty $B'$ mają zatem te same ograniczenia dolne, więc są równe.
+\end{proof}
+
+Istnieje także krótszy argument w dowolnej kategorii regularnej, w której istnieją odpowiednie prawe sprzężenia. W kwadracie z twierdzenia~\ref{cat:thm:cl-exists-beck-chevalley} stosujemy lewy warunek Becka--Chevalleya do tego samego kwadratu z zamienionymi kierunkami poziomym i pionowym, czyli $f^*\exists_g=\exists_h(f')^*$. Dla $V\in\operatorname{Sub}(B')$ oraz $U\in\operatorname{Sub}(A)$ otrzymujemy
+\[
+\begin{aligned}
+ V\leq g^*\forall_f U
+ &\iff\exists_g V\leq\forall_f U\\
+ &\iff f^*\exists_g V\leq U\\
+ &\iff \exists_h(f')^*V\leq U\\
+ &\iff (f')^*V\leq h^*U\\
+ &\iff V\leq\forall_{f'}h^*U.
+\end{aligned}
+\]
+Zatem prawy warunek Becka--Chevalleya wynika z lewego warunku dla zamienionych kierunków i istnienia odpowiednich sprzężeń. Argument stosuje się także do kategorii geometrycznych, w których istnienie wszystkich tych sprzężeń wyprowadzimy poniżej.
+
+\begin{przyklad}[Trzy funktory na podobiektach zbiorów]\label{cat:ex:cl-quantifiers-set}
+Niech $A=\{a,b,c\}$, $B=\{0,1,2\}$ i $f(a)=f(b)=0$, $f(c)=1$. Dla $U=\{a,c\}$ mamy
+\[
+ \exists_f U=\{0,1\},\qquad \forall_f U=\{1,2\}.
+\]
+Istotnie, pierwszy zbiór zawiera dokładnie te wartości, których włókno ma co najmniej jeden element w $U$. Drugi zawiera dokładnie te wartości, których całe włókno jest zawarte w $U$, zatem także $2$, ponieważ $f^{-1}(\{2\})=\varnothing$. Wzory wynikają bezpośrednio ze sprzężeń z przeciwobrazem: $f[U]\subseteq V$ wtedy i tylko wtedy, gdy $U\subseteq f^{-1}(V)$, a $f^{-1}(V)\subseteq U$ wtedy i tylko wtedy, gdy każde włókno nad elementem $V$ jest zawarte w $U$. Nie zachodzi ogólnie nierówność $\forall_f U\leq\exists_f U$. W dowolnym toposie zachodzi ona jednak dla regularnego epimorfizmu $f$: z kojednostki $f^*\forall_f U\leq U$ oraz monotoniczności $\exists_f$ dostajemy $\exists_f f^*\forall_f U\leq\exists_f U$, a wniosek~\ref{cat:cor:cl-regular-epi-subobjects} utożsamia lewą stronę z $\forall_f U$.
+\end{przyklad}
+
+\begin{uwaga}[Dwoistość klasyczna a intuicjonistyczna]\label{cat:rem:cl-quantifier-duality}
+Jeżeli porządki podobiektów są algebrami Boole'a, zmiana bazy zachowuje dopełnienia, a oba sprzężenia istnieją, to
+\[
+ \forall_f U=\neg\exists_f(\neg U).
+\]
+Istotnie $V\leq\neg\exists_f\neg U$ jest równoważne $\exists_f\neg U\leq\neg V$, następnie $\neg U\leq f^*(\neg V)=\neg f^*V$, a wreszcie $f^*V\leq U$. W algebrach Heytinga bez prawa podwójnej negacji ten argument nie daje równoważności. Kwantyfikacja ogólna jest wtedy samodzielną operacją określoną przez sprzężenie, a nie skrótem zapisu z użyciem negacji. Kontrprzykład można otrzymać już dla $f=\id_X$: wtedy $\forall_f U=U$, natomiast $\neg\exists_f\neg U=\neg\neg U$. W toposie snopów na $\mathbb R$ dla podobiektu obiektu końcowego odpowiadającego $\mathbb R\setminus\{0\}$ te dwa podobiekty są różne, jak obliczymy w przykładzie~\ref{cat:ex:cl-open-truth}.
+\end{uwaga}
+
+\subsection{Logika wewnętrzna toposu elementarnego}
+
+Topos elementarny dostarcza semantyki intuicjonistycznej logiki pierwszego i wyższych rzędów. W odróżnieniu od semantyki w zbiorach nie wymagamy, aby każdy podobiekt miał dopełnienie. Wykorzystujemy standardowy wynik zewnętrzny: każdy topos elementarny jest kategorią regularną i egzaktą w sensie Barra, a każdy jego epimorfizm jest regularny (F.~Borceux, \emph{Some glances at topos theory}, stwierdzenie 3.20 i wniosek 3.21; por. również S.~Mac Lane, I.~Moerdijk, \emph{Sheaves in Geometry and Logic}, rozdział IV, twierdzenie 7.8 dotyczące epimorfizmów). Możemy zatem stosować zarówno konstrukcje obrazów z kategorii regularnych, jak i rachunek algebr Heytinga z twierdzenia~\ref{cat:thm:elementary-heyting}.
+
+\begin{definicja}[Interpretacja spójników i kwantyfikatorów intuicjonistycznych]\label{cat:def:cl-internal-logic}
+W toposie elementarnym $\mathcal E$ rozszerzamy definicję~\ref{cat:def:cl-regular-semantics}: dla podobiektów $P,Q$ interpretujących formuły w kontekście $X$ kładziemy
+\[
+\begin{aligned}
+ \llbracket\bot\rrbracket&=0_X,&
+ \llbracket\varphi\vee\psi\rrbracket&=P\vee Q,\\
+ \llbracket\varphi\Rightarrow\psi\rrbracket&=P\Rightarrow Q,&
+ \llbracket\neg\varphi\rrbracket&=P\Rightarrow0_X.
+\end{aligned}
+\]
+Jeżeli $R\hookrightarrow X\times S$ interpretuje $\theta(\vec x,y)$, a $\pi:X\times S\to X$ jest projekcją, to
+\[
+ \llbracket\exists y:S\,\theta\rrbracket=\exists_\pi R,\qquad
+ \llbracket\forall y:S\,\theta\rrbracket=\forall_\pi R.
+\]
+Zdanie w pustym kontekście interpretujemy jako podobiekt obiektu końcowego. Mówimy, że jest prawdziwe wewnętrznie, jeżeli jest to podobiekt największy.
+\end{definicja}
+
+Sekwent $\varphi\vdash_{\vec x}\psi$ jest spełniony dokładnie wtedy, gdy $P\leq Q$, czyli gdy $\llbracket\varphi\Rightarrow\psi\rrbracket=\top_X$. Ostatnia równoważność wynika z własności uniwersalnej implikacji po podstawieniu elementu największego za jej lewy argument testowy. Zdanie nieprawdziwe nie musi mieć prawdziwej negacji: negacja oznacza największy podobiekt rozłączny z interpretacją zdania, nie zewnętrzne stwierdzenie, że interpretacja nie jest elementem największym.
+
+\begin{stwierdzenie}[Podstawianie i reguły logiki intuicjonistycznej]\label{cat:prop:cl-internal-soundness}
+Interpretacja formuł pierwszego rzędu w toposie elementarnym jest zgodna z podstawianiem i spełnia intuicjonistyczne reguły rachunku sekwentów z równością. Nie wymaga aksjomatu niepustości sortów.
+\end{stwierdzenie}
+\begin{proof}
+Dla atomów i koniunkcji stosujemy stwierdzenie~\ref{cat:prop:cl-substitution}. Zmiana bazy zachowuje pozostałe operacje algebry Heytinga przez twierdzenie~\ref{cat:thm:elementary-heyting}, a dla obu kwantyfikatorów stosujemy twierdzenia~\ref{cat:thm:cl-exists-beck-chevalley} i~\ref{cat:thm:cl-forall-beck-chevalley} do kwadratów powstałych przez zmianę parametrów projekcji. To daje indukcję po wszystkich formułach.
+
+Reguły dotyczące koniunkcji i alternatywy są własnościami kresów dolnych i górnych. Reguła wprowadzania implikacji i reguła jej eliminacji wynikają z równoważności $R\wedge P\leq Q\iff R\leq(P\Rightarrow Q)$; dla falsum używamy $0_X\leq P$. Reguły obu kwantyfikatorów wynikają ze sprzężeń $\exists_\pi\dashv\pi^*\dashv\forall_\pi$. Dokładniej dla predykatu $R$ w rozszerzonym kontekście i predykatu $P$ w kontekście $X$ zachodzą $\exists_\pi R\leq P\iff R\leq\pi^*P$ oraz $P\leq\forall_\pi R\iff\pi^*P\leq R$. Jeżeli $t:X\to S$ jest interpretacją termu, to jego podstawienie oznacza zmianę bazy wzdłuż $j=(\id_X,t):X\to X\times S$. Przeciągnięcie nierówności $R\leq\pi^*\exists_\pi R$ oraz $\pi^*\forall_\pi R\leq R$ przez $j$ daje odpowiednio $j^*R\leq\exists_\pi R$ i $\forall_\pi R\leq j^*R$, ponieważ $\pi j=\id_X$. Są to reguły wprowadzenia egzystencji przez term i podstawienia termu pod kwantyfikatorem ogólnym. Reguła Frobeniusa umożliwia przeniesienie przesłanki niezależnej od zmiennej poza kwantyfikator egzystencjalny. Dla równości stosujemy argument z dowodu stwierdzenia~\ref{cat:prop:cl-deduction-sound}. Reguły strukturalne wynikają z porządku, skończonych przecięć i zgodności z podstawianiem. W ten sposób wszystkie standardowe reguły intuicjonistyczne zachowują spełnienie sekwentów (dla rachunku z dopuszczonymi pustymi sortami). Nie użyliśmy prawa wyłączonego środka.
+\end{proof}
+
+\subsection{Semantyka Kripkego--Joyala na przestrzeni topologicznej}
+
+Zaczniemy od toposu $\operatorname{Sh}(T)$ snopów zbiorów na przestrzeni topologicznej $T$. Model $M$ przypisuje sortom snopy, a symbole funkcji i relacji interpretuje przez morfizmy i podsnopy. Dla otwartego $U\subseteq T$ parametry $\vec a$ są rodziną przekrojów $a_i\in M_{S_i}(U)$. Interpretacja kontekstu jest snopem $X=M_{\vec x}$. Odpowiadający parametrom morfizm z reprezentowalnego snopu otwartego $U$ do $X$ istnieje przez lemat Yonedy (miejsce otwartych podzbiorów jest subkanoniczne na mocy stwierdzenia~\ref{cat:prop:topological-subcanonical}).
+
+\begin{definicja}[Wymuszanie formuły]\label{cat:def:cl-forcing}
+Piszemy $U\Vdash\varphi(\vec a)$, jeśli przekrój $\vec a\in X(U)$ należy do podsnopu $\llbracket\varphi\rrbracket\hookrightarrow X$. Równoważnie morfizm parametrów z reprezentowalnego snopu $U$ faktoryzuje się przez ten podobiekt.
+\end{definicja}
+
+Wymuszanie jest stabilne przy restrykcji do otwartych podzbiorów i lokalne względem pokryć: jeżeli $U=\bigcup_iU_i$ oraz $U_i\Vdash\varphi(\vec a|_{U_i})$ dla każdego $i$, to $U\Vdash\varphi(\vec a)$. Pierwsza własność wynika z tego, że interpretacja jest podsnopem. Dla drugiej lokalne przekroje podsnopu są zgodne, bo ich obrazy są restrykcjami jednego przekroju i włożenie podsnopu jest punktowo injektywne. Sklejenie w podsnopie daje przekrój o obrazie $\vec a$. W szczególności zbiór pusty wymusza każdą formułę przy jedynych parametrach, co odpowiada pustemu pokryciu.
+
+\begin{lemat}[Lokalny opis obrazu morfizmu snopów]\label{cat:lem:cl-sheaf-local-image}
+Dla morfizmu snopów $f:F\to G$ jego obrazem jest podsnop $I\subseteq G$ taki, że $s\in I(U)$ wtedy i tylko wtedy, gdy istnieje otwarte pokrycie $(U_i)_i$ zbioru $U$ i przekroje $t_i\in F(U_i)$ spełniające $f(t_i)=s|_{U_i}$.
+\end{lemat}
+\begin{proof}
+Warunek jest zachowywany przez restrykcję (przeciągamy pokrycie) i jest lokalny: jeśli zgodne przekroje spełniają warunek na elementach pokrycia, sklejamy je w $G$, a wszystkie lokalne pokrycia zebrane razem pokrywają $U$. Zatem $I$ jest podsnopem. Morfizm $f$ faktoryzuje się przez $I$, ponieważ jego wartości są w $I$ już na jednoelementowym pokryciu. Jeżeli $J\subseteq G$ jest dowolnym podsnopem, przez który faktoryzuje się $f$, to wszystkie przekroje z $I$ należą lokalnie do $J$, a z własności snopu także globalnie. Mamy $I\leq J$. Otrzymujemy najmniejszy podobiekt, a z twierdzenia~\ref{cat:thm:barr-image} jest on obrazem regularnym.
+\end{proof}
+
+\begin{twierdzenie}[Reguły Kripkego--Joyala dla snopów]\label{cat:thm:cl-kripke-joyal}
+Niech $\vec a$ będzie rodziną parametrów nad $U$. Wymuszanie formuł spełnia następujące równoważności (w formułach po prawej restrykcje parametrów do rozpatrywanego zbioru są domyślne).
+\begin{enumerate}
+ \item $U\Vdash\top$ zawsze, a $U\Vdash\bot$ dokładnie wtedy, gdy $U=\varnothing$.
+ \item $U\Vdash(t=u)(\vec a)$ dokładnie wtedy, gdy interpretacje termów są równe jako przekroje nad $U$; dla relacji atomowej wymagamy przynależności odpowiedniego przekroju do podsnopu relacji.
+ \item $U\Vdash\varphi\wedge\psi$ dokładnie wtedy, gdy $U\Vdash\varphi$ oraz $U\Vdash\psi$.
+ \item $U\Vdash\varphi\vee\psi$ dokładnie wtedy, gdy istnieje pokrycie $U=\bigcup_iU_i$, na każdym elemencie którego wymuszona jest co najmniej jedna z formuł $\varphi,\psi$ (wybór może zależeć od $i$).
+ \item $U\Vdash\varphi\Rightarrow\psi$ dokładnie wtedy, gdy dla każdego otwartego $V\subseteq U$, jeśli $V\Vdash\varphi$, to $V\Vdash\psi$. W szczególności $U\Vdash\neg\varphi$ dokładnie wtedy, gdy jedynym otwartym $V\subseteq U$ wymuszającym $\varphi$ jest zbiór pusty.
+ \item $U\Vdash\exists y:S\,\theta(\vec a,y)$ dokładnie wtedy, gdy istnieje pokrycie $U=\bigcup_iU_i$ oraz przekroje $b_i\in M_S(U_i)$ takie, że $U_i\Vdash\theta(\vec a|_{U_i},b_i)$.
+ \item $U\Vdash\forall y:S\,\theta(\vec a,y)$ dokładnie wtedy, gdy dla każdego otwartego $V\subseteq U$ i każdego $b\in M_S(V)$ mamy $V\Vdash\theta(\vec a|_V,b)$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Dla $\top,\bot$ stosujemy opis największego i najmniejszego podsnopu: najmniejszy ma pustą wartość na każdym niepustym otwartym i jedyny przekrój na zbiorze pustym. Atomy i koniunkcje wynikają bezpośrednio z punktowego obliczania skończonych granic snopów (twierdzenie~\ref{cat:thm:sheaf-limits}).
+
+Dla podsnopów $P,Q$ obiektu $X$ ich suma w porządku podobiektów składa się dokładnie z przekrojów należących lokalnie do $P$ lub do $Q$. Warunek określa podsnop, bo można ograniczać pokrycia i łączyć lokalne pokrycia; jest to najmniejszy podsnop zawierający $P,Q$ przez lokalność przynależności. Daje to regułę alternatywy.
+
+Niech $H$ składa się z przekrojów $a\in X(U)$ o własności: na każdym $V\subseteq U$, jeśli $a|_V\in P(V)$, to $a|_V\in Q(V)$. Własność jest zachowywana przez restrykcje. Jeżeli zachodzi na każdym elemencie pokrycia, to dla dowolnego $V$ z przesłanką $a|_V\in P(V)$ stosujemy ją na przecięciach $V$ z elementami pokrycia, po czym sklejamy przynależność do $Q$. Zatem $H$ jest podsnopem. Mamy $H\wedge P\leq Q$ (bierzemy $V=U$); każdy podsnop $L$ z $L\wedge P\leq Q$ zawiera się w $H$, gdyż jego przekroje po restrykcji nadal należą do $L$. Otrzymujemy $H=P\Rightarrow Q$. Dla negacji podstawiamy najmniejszy podsnop za $Q$.
+
+Reguła egzystencjalna wynika z lematu~\ref{cat:lem:cl-sheaf-local-image} dla projekcji interpretacji $\theta$. Dla kwantyfikacji ogólnej definiujemy $D$ jako rodzinę przekrojów $a\in X(U)$ spełniających warunek z punktu 7. Jest to podsnop: zachowywanie przez restrykcję jest natychmiastowe, a dla pokrycia i przekroju $b$ nad $V$ stosujemy warunek do $b$ ograniczonego na przecięcia $V$ z elementami pokrycia, po czym używamy lokalności wymuszania $\theta$. Dla dowolnego podsnopu $C\subseteq X$ warunek $C\leq D$ jest równoważny $\pi^*C\leq\llbracket\theta\rrbracket$: w jednym kierunku bierzemy $V=U$, w drugim stosujemy inkluzję do wszystkich restrykcji parametrów. Jest to własność prawego sprzężonego z twierdzenia~\ref{cat:thm:cl-forall-projection}. Zatem $D=\forall_\pi\llbracket\theta\rrbracket$.
+\end{proof}
+
+W szczególności nie wystarcza sprawdzanie kwantyfikatora ogólnego wyłącznie na przekrojach nad $U$: nowe przekroje mogą istnieć na mniejszych otwartych. Dla przykładu w toposie snopów na $\mathbb R$ weźmy sort $S$ interpretowany przez snop reprezentowalny niepustego właściwego otwartego zbioru $O$. Nie ma przekroju $S$ nad $\mathbb R$, ale istnieje przekrój nad $O$. Warunek $\forall x:S\,\bot$ byłby więc próżno spełniony przy sprawdzaniu jedynie przekrojów globalnych; w rzeczywistości $\mathbb R$ go nie wymusza, gdyż $O$ nie wymusza $\bot$. Podobnie prawdziwość alternatywy nie wymaga wyboru jednej strony na całym $U$, a prawdziwość zdania egzystencjalnego nie musi dostarczać globalnego świadka. Są to zasadnicze różnice względem semantyki w zbiorach. Por. S.~Mac Lane, I.~Moerdijk, \emph{Sheaves in Geometry and Logic}, rozdział VI.
+
+\subsection{Przykłady logiki lokalnej i zawodności praw klasycznych}
+
+\begin{przyklad}[Wyłączony środek i podwójna negacja]\label{cat:ex:cl-open-truth}
+W $\operatorname{Sh}(\mathbb R)$ niech $P$ będzie zdaniem reprezentowanym przez otwarty zbiór $O=\mathbb R\setminus\{0\}$, czyli podobiekt obiektu końcowego odpowiadający $O$. Z definicji wymuszania $U\Vdash P$ wtedy i tylko wtedy, gdy $U\subseteq O$. Istotnie, każdy podsnop obiektu końcowego ma na danym otwartym zbiorze albo jeden przekrój, albo żadnego. Rodzina otwartych zbiorów, na których ma przekrój, jest zamknięta na przechodzenie do mniejszych otwartych oraz na dowolne sumy dzięki warunkowi snopu. Jest więc dokładnie rodziną otwartych podzbiorów jej sumy. Odwrotnie każda taka rodzina definiuje podsnop obiektu końcowego. Uzasadnia to utożsamienie podobiektów obiektu końcowego z otwartymi podzbiorami przestrzeni, również dla otwartego zbioru pustego. Ponieważ każdy niepusty otwarty $U$ przecina $O$, tylko pusty zbiór wymusza $\neg P$. Zatem całe $\mathbb R$ wymusza $\neg\neg P$, ale nie wymusza $P$ ani $P\vee\neg P$. Dla alternatywy bowiem każdy element pokrycia wymuszający $\neg P$ musiałby być pusty, a każdy wymuszający $P$ musiałby być zawarty w $O$; takie pokrycie nie może pokryć zera.
+
+W rachunku otwartych zbiorów odpowiada to równościom
+\[
+ \neg O=\operatorname{int}(\mathbb R\setminus O)=\varnothing,
+ \qquad
+ \neg\neg O=\operatorname{int}(\overline O)=\mathbb R.
+\]
+Pierwsza formuła dla negacji dowolnego otwartego zbioru wynika z tego, że jest ona największym otwartym rozłącznym z tym zbiorem; druga wynika z dwukrotnego zastosowania pierwszej. Zob. również przykład~\ref{cat:ex:open-heyting}.
+\end{przyklad}
+
+\begin{przyklad}[Lokalna prawdziwość alternatywy]\label{cat:ex:cl-local-disjunction}
+W tym samym toposie niech $P,Q$ odpowiadają zbiorom $(-\infty,1)$ i $(-1,\infty)$. Ich suma jest całym $\mathbb R$, więc $\mathbb R\Vdash P\vee Q$. Jednak $\mathbb R$ nie wymusza ani $P$, ani $Q$ osobno. Reguła alternatywy z twierdzenia~\ref{cat:thm:cl-kripke-joyal} wyjaśnia to przez pokrycie dwoma otwartymi zbiorami, na których wymuszane są odpowiednie strony.
+\end{przyklad}
+
+\begin{przyklad}[Egzystencja bez globalnego świadka]\label{cat:ex:cl-local-existence}
+Na okręgu $T=S^1$ niech $F$ będzie snopem lokalnych przekrojów dwukrotnego nakrycia $p:S^1\to S^1$, $p(z)=z^2$. Dla otwartego $U\subseteq S^1$ definiujemy
+\[
+ F(U)=\{s:U\to S^1\text{ ciągłe}:p\circ s=j_U\},
+\]
+gdzie $j_U:U\hookrightarrow S^1$ jest włożeniem. Jest to snop, ponieważ zgodne ciągłe odwzorowania sklejają się i równanie $p\circ s=j_U$ jest lokalne. Nakrycie ma lokalne przekroje na dostatecznie małych łukach: wybierając na łuku ciągły argument $\theta$, otrzymujemy przekrój $e^{i\theta}\mapsto e^{i\theta/2}$. Zatem $S^1\Vdash\exists x:F\,\top$ przez regułę egzystencjalną.
+
+Nie istnieje natomiast przekrój globalny. Istotnie, gdyby $s:S^1\to S^1$ było takim przekrojem, ciągłą drogę $t\mapsto s(e^{it})$ dla $t\in[0,2\pi]$ można podnieść przez nakrycie $\mathbb R\to S^1$, $u\mapsto e^{iu}$, do ciągłej funkcji $u(t)$. Równanie $p(s(e^{it}))=e^{it}$ oznacza, że $2u(t)-t\in2\pi\mathbb Z$. Z ciągłości różnica ta jest stała, więc $u(2\pi)-u(0)=\pi$. Z drugiej strony $s(e^{2\pi i})=s(1)$ wymaga $u(2\pi)-u(0)\in2\pi\mathbb Z$. Sprzeczność. Korzystamy tu ze standardowej własności podnoszenia dróg przez nakrycie okręgu, którą można otrzymać przez podział przedziału na skończenie wiele podprzedziałów, na których droga ma ciągły argument, i dopasowanie kolejnych argumentów o wielokrotności $2\pi$. Tak więc $F(S^1)=\varnothing$. Kategorialnie morfizm $F\to1$ jest regularnym epimorfizmem, gdyż ma pełny obraz, ale nie ma prawej odwrotności. Prawdziwość zdania egzystencjalnego nie jest równoważna istnieniu morfizmu globalnego $1\to F$.
+\end{przyklad}
+
+\subsection{Logika wyższych rzędów i obiekty potęgowe}
+
+W toposie można kwantyfikować nie tylko po elementach ustalonego sortu, lecz także po funkcjach i predykatach. Dla obiektu $A$ obiekt potęgowy $PA=\Omega^A$ reprezentuje rodziny podobiektów $A$ zależne od parametrów; por. twierdzenie~\ref{cat:thm:power-object}.
+
+\begin{definicja}[Predykat uniwersalny]\label{cat:def:cl-membership}
+Niech $\operatorname{ev}:\Omega^A\times A\to\Omega$ będzie morfizmem ewaluacji. Podobiekt $\in_A\hookrightarrow PA\times A$ definiujemy przez przeciągnięcie $\mathrm{true}:1\to\Omega$ wzdłuż ewaluacji. Formuła $a\in S$, dla $a$ sortu $A$ i $S$ sortu $PA$, jest interpretowana przez ten podobiekt (po odpowiednim uporządkowaniu współrzędnych).
+\end{definicja}
+
+\begin{twierdzenie}[Rozumienie i ekstensjonalność predykatów]\label{cat:thm:cl-comprehension}
+Dla każdego podobiektu $R\hookrightarrow X\times A$ istnieje jedyny morfizm $r:X\to PA$, dla którego $R=(r\times\id_A)^*(\in_A)$. Ponadto w logice wewnętrznej ważny jest sekwent
+\[
+ \forall a:A\,((a\in S\Rightarrow a\in T)\wedge
+                 (a\in T\Rightarrow a\in S))
+ \ \vdash_{S,T:PA}\ S=T.
+\]
+\end{twierdzenie}
+\begin{proof}
+Morfizm charakterystyczny $\chi_R:X\times A\to\Omega$ ma jedyną transpozycję wykładniczą $r:X\to PA$. Równość $\operatorname{ev}(r\times\id_A)=\chi_R$ i własność uniwersalna klasyfikatora dają pierwszą tezę. Dla jednoznaczności równość podobiektów daje równość morfizmów charakterystycznych, a stąd równość transpozycji.
+
+Dla drugiej tezy niech $D\hookrightarrow PA\times PA$ interpretuje przesłankę sekwentu, a $s,t:D\to PA$ będą ograniczeniami projekcji. Własność kwantyfikatora ogólnego oznacza, że na $D\times A$ podobiekty klasyfikowane przez $\operatorname{ev}(s\times\id_A)$ i $\operatorname{ev}(t\times\id_A)$ zawierają się wzajemnie: używamy własności implikacji w algebrze Heytinga i obu składników koniunkcji. Są zatem równe, więc równe są ich morfizmy charakterystyczne. Z bijekcji wykładniczej wynika $s=t$. Włożenie $D\to PA\times PA$ faktoryzuje się przez diagonalę, która interpretuje równość $S=T$. Otrzymujemy sekwent.
+\end{proof}
+
+Konstrukcja rozumienia pozwala traktować $\{a:A\mid\varphi(\vec x,a)\}$ jako term sortu $PA$ w kontekście $\vec x$. Jeżeli występują dodatkowe parametry, stosujemy transpozycję morfizmu charakterystycznego na odpowiednim iloczynie. Podstawianie parametrów jest zgodne z tą konstrukcją przez naturalność klasyfikatora i transpozycji wykładniczej. Nie oznacza to przyjęcia nieograniczonego aksjomatu rozumienia teorii mnogości: każdy predykat dotyczy ustalonego obiektu $A$.
+
+\begin{stwierdzenie}[Jednoznaczny wybór a aksjomat wyboru]\label{cat:prop:cl-unique-choice}
+W toposie elementarnym relacja $R\hookrightarrow A\times B$ spełniająca wewnętrznie $\forall a:A\,\exists! b:B\,R(a,b)$ jest wykresem jedynego morfizmu $f:A\to B$. Nie wynika stąd analogiczny wniosek dla samego warunku $\forall a:A\,\exists b:B\,R(a,b)$.
+\end{stwierdzenie}
+\begin{proof}
+Zapis $\exists! b\,R(a,b)$ oznacza koniunkcję istnienia i warunku jednoznaczności
+\[
+ (\exists b\,R(a,b))\wedge
+ \forall b,b'\,((R(a,b)\wedge R(a,b'))\Rightarrow b=b').
+\]
+Prawdziwość pod kwantyfikatorem po $a$ jest przez sprzężenie równoważna spełnieniu obu warunków w kontekście $A$. Totalność mówi, że pierwsza projekcja $R\to A$ ma pełny obraz, czyli jest regularnym epimorfizmem. Jednoznaczność mówi, że dwa punkty uogólnione $R$ o tej samej pierwszej współrzędnej mają też tę samą drugą; formalnie na parze jądrowej pierwszej projekcji dwie drugie współrzędne są równe. Monomorficzność $R\hookrightarrow A\times B$ implikuje więc monomorficzność $R\to A$. Jest to izomorfizm, gdyż morfizm jednocześnie monomorficzny i regularnie epimorficzny jest izomorfizmem (por. dowód twierdzenia~\ref{cat:thm:cl-syntactic-regular}). Druga projekcja złożona z jego odwrotnością jest żądanym morfizmem, a jego wykres wyznacza go jednoznacznie.
+
+Dla samej totalności rozważamy $A=1$, $B=F$ i relację największą $R=1\times F$ w toposie z przykładu~\ref{cat:ex:cl-local-existence}. Relacja jest totalna, lecz nie istnieje morfizm $1\to F$. Jednoznaczny wybór jest zatem twierdzeniem intuicjonistycznym, podczas gdy ogólny aksjomat wyboru nakłada dodatkowy warunek na topos. W wersji kategorialnej, w której żądamy morfizmu wyboru dla każdej relacji totalnej między dowolnymi obiektami, warunek ten jest równoważny istnieniu prawej odwrotności każdego epimorfizmu: dla relacji totalnej stosujemy go do projekcji $R\to A$, a odwrotnie dla epimorfizmu $e:B\to A$ stosujemy wybór do relacji będącej wykresem $e$ z przestawionymi współrzędnymi. Regularność wszystkich epimorfizmów w toposie zapewnia totalność tej relacji. Nie utożsamiamy bez dodatkowych założeń tego z wewnętrznym zdaniem o lokalnym istnieniu funkcji wyboru.
+\end{proof}
+
+\subsection{Hiperdoktryny Lawvere'a}
+
+Dotychczas dla każdego kontekstu $X$ mieliśmy zbiór uporządkowany $\operatorname{Sub}(X)$ predykatów, a każdy morfizm kontekstów indukował zmianę bazy predykatów. Hiperdoktryna abstrahuje od konkretnego sposobu realizacji predykatów jako monomorfizmów. Pozwala oddzielić kategorię kontekstów od logiki, którą na tych kontekstach interpretujemy.
+
+\begin{definicja}[Doktryna z koniunkcją]\label{cat:def:cl-meet-doctrine}
+Niech $\mathcal B$ będzie kategorią ze skończonymi iloczynami. Doktryną z koniunkcją na $\mathcal B$ nazywamy funktor
+\[
+ P:\mathcal B^{\mathrm{op}}\longrightarrow\mathbf{Pos},
+\]
+którego wartości $P(X)$ mają element największy i skończone kresy dolne, a każdy morfizm $f:X\to Y$ indukuje monotoniczny funktor $f^*=P(f):P(Y)\to P(X)$ zachowujący te operacje. Przyjmujemy, że włókna są małe w odpowiednio ustalonym uniwersum.
+\end{definicja}
+
+Elementy $P(X)$ nazywamy predykatami w kontekście $X$. Ich porządek oznacza wynikanie. Kategoria $\mathbf{Pos}$ jest kategorią zbiorów częściowo uporządkowanych i odwzorowań monotonicznych. Traktując $\mathbf{Pos}$ jako 2-kategorię z transformacjami naturalnymi między funktorami monotonicznymi, zauważamy, że odwracalna transformacja między dwoma takimi funktorami o wspólnej dziedzinie i przeciwdziedzinie jest ich równością: w każdym punkcie daje dwie przeciwne nierówności, a antysymetria daje równość wartości. Dlatego koherencje pseudofunktora o wartościach w tej 2-kategorii sprowadzają się do równości. Zatem zapis funktorialny nie usuwa w tym przypadku istotnych danych koherencji. Używamy poniżej konwencji terminologicznej, w której przymiotnik regularna obejmuje także strukturę równości; w literaturze nazewnictwo doktryn elementarnych, egzystencjalnych i regularnych nie jest całkowicie jednolite.
+
+\begin{definicja}[Doktryna regularna]\label{cat:def:cl-regular-doctrine}
+Doktryna regularna jest doktryną z koniunkcją wyposażoną w następujące dane i własności.
+\begin{enumerate}
+ \item Dla każdej projekcji $\pi:X\times A\to X$ istnieje lewe sprzężenie $\exists_\pi\dashv\pi^*$, spełniające warunek Becka--Chevalleya dla kwadratów powstałych przez zmianę parametrów $g:Y\to X$, oraz wzajemność Frobeniusa:
+ \[
+ g^*\exists_\pi=\exists_{\pi'}(g\times\id_A)^*,
+ \qquad
+ \exists_\pi(\alpha\wedge\pi^*\beta)=(\exists_\pi\alpha)\wedge\beta,
+ \]
+ gdzie $\pi':Y\times A\to Y$ jest projekcją.
+ \item Dla każdego $A$ istnieje predykat równości $\delta_A\in P(A\times A)$ spełniający refleksywność i zastępowanie z parametrami. Dokładniej $\Delta_A^*\delta_A=\top_A$, a dla dowolnego $\gamma\in P(X\times A)$ zachodzi
+ \[
+ p_{12}^*\gamma\wedge p_{23}^*\delta_A\leq p_{13}^*\gamma
+ \quad\text{w }P(X\times A\times A),
+ \]
+ gdzie $p_{ij}$ są projekcjami na wskazane współrzędne.
+\end{enumerate}
+\end{definicja}
+
+Zastępowanie jest sformułowane z dowolnymi parametrami $X$, nie tylko dla predykatów jednej zmiennej. Jest to konieczne przy interpretacji relacji i kwantyfikatorów w kontekstach wielozmiennych. Nie żądamy, aby predykat równości wykrywał równość samych morfizmów kategorii bazowej: doktryna może utożsamiać termy logicznie, mimo że są różnymi morfizmami w bazie. Zapis $\delta_A(t,u)$ dla morfizmów $t,u:Z\to A$ oznacza $(t,u)^*\delta_A\in P(Z)$; podobnie zapis predykatu z argumentami oznacza przeciągnięcie wzdłuż morfizmu o tych składowych. Aksjomat zastępowania można zatem stosować także do termów, przeciągając jego nierówność wzdłuż odpowiedniego morfizmu do iloczynu.
+
+\begin{stwierdzenie}[Równość i sprzężenie wzdłuż diagonali]\label{cat:prop:cl-doctrine-equality}
+W doktrynie regularnej niech $d:X\times A\to X\times A\times A$ będzie morfizmem $(x,a)\mapsto(x,a,a)$. Lewym sprzężonym do $d^*$ jest funktor
+\[
+ \exists_d(\gamma)=p_{12}^*\gamma\wedge p_{23}^*\delta_A.
+\]
+W szczególności $\delta_A=\exists_{\Delta_A}\top_A$.
+\end{stwierdzenie}
+\begin{proof}
+Dla $\beta\in P(X\times A\times A)$ mamy
+\[
+ d^*(p_{12}^*\gamma\wedge p_{23}^*\delta_A)=\gamma
+\]
+przez refleksywność oraz zachowywanie koniunkcji przez zmianę bazy. Zatem $\exists_d\gamma\leq\beta$ implikuje $\gamma\leq d^*\beta$. Odwrotnie załóżmy $\gamma\leq d^*\beta$. Na $X\times A\times A$ otrzymujemy
+\[
+ p_{12}^*\gamma\wedge p_{23}^*\delta_A
+ \leq (dp_{12})^*\beta\wedge p_{23}^*\delta_A
+ \leq\beta.
+\]
+Druga nierówność jest zastępowaniem ostatniej zmiennej $a$ przez $a'$ w predykacie $\beta(x,a,-)$, z parametrami $(x,a)$. Formalnie stosujemy aksjomat zastępowania dla kontekstu parametrów $X\times A$ i przeciągamy go przez morfizm o współrzędnych $(x,a,a,a')$. Otrzymaliśmy warunek sprzężenia. Dla $X=1$ i $\gamma=\top_A$ wzór daje $\exists_{\Delta_A}\top_A=\delta_A$.
+\end{proof}
+
+W szczególności predykat równości jest jednoznacznie określony przez własność sprzężenia: lewy sprzężony w kategorii uporządkowanej, jeśli istnieje, jest jedyny. Z refleksywności i zastępowania wynikają także symetria i przechodniość $\delta_A$. Istotnie, stosując zastępowanie w jedynym zmiennym argumencie predykatu $\gamma(x,y)=\delta_A(y,x)$, otrzymujemy w kontekście $(a,a')$ nierówność $\delta_A(a,a)\wedge\delta_A(a,a')\leq\delta_A(a',a)$. Refleksywność upraszcza lewą stronę do $\delta_A(a,a')$. Zamiana współrzędnych daje przeciwną nierówność. Dla przechodniości stosujemy zastępowanie do $\gamma(x,y)=\delta_A(x,y)$ w kontekście $(a,b,c)$: $\delta_A(a,b)\wedge\delta_A(b,c)\leq\delta_A(a,c)$. Ponadto każdy morfizm $f:A\to B$ zachowuje równość logiczną: w predykacie $\gamma(x,y)=\delta_B(f(x),f(y))$ podstawiamy $y=x$ i zastępujemy $x$ przez $x'$ w drugim argumencie. Z refleksywności w $B$ dostajemy $\delta_A(x,x')\leq\delta_B(f(x),f(x'))$. Równość logiczna na iloczynie jest składowa:
+\[
+ \delta_{A\times B}((a,b),(a',b'))
+ =\delta_A(a,a')\wedge\delta_B(b,b').
+\]
+Nierówność od lewej do prawej wynika z zastosowania poprzedniej własności do obu projekcji. W drugą stronę z refleksywności $\delta_{A\times B}((a,b),(a,b))$ i zastępowania w kontekście parametrów $(a,b)$ otrzymujemy najpierw $\delta_{A\times B}((a,b),(a',b))$ pod warunkiem $\delta_A(a,a')$, a następnie $\delta_{A\times B}((a,b),(a',b'))$ pod dodatkowym warunkiem $\delta_B(b,b')$. Formalnie stosujemy aksjomat zastępowania do predykatów złożonych z morfizmami do iloczynu i przeciągamy nierówności do wspólnego kontekstu $(a,b,a',b')$.
+
+\begin{twierdzenie}[Kwantyfikacja wzdłuż dowolnego morfizmu doktryny]\label{cat:thm:cl-doctrine-exists}
+W doktrynie regularnej każdy morfizm $f:A\to B$ ma na predykatach lewy sprzężony $\exists_f\dashv f^*$, określony wzorem
+\[
+ \exists_f\alpha
+ =\exists_{\pi_B}\bigl(e_f\wedge\pi_A^*\alpha\bigr),
+ \qquad
+ e_f=(\pi_B,f\pi_A)^*\delta_B,
+\]
+gdzie $\pi_B:B\times A\to B$ i $\pi_A:B\times A\to A$ są projekcjami. Dla tych sprzężeń zachodzi wzajemność Frobeniusa.
+\end{twierdzenie}
+\begin{proof}
+Niech $\beta\in P(B)$. Z własności kwantyfikatora projekcyjnego mamy
+\[
+ \exists_f\alpha\leq\beta
+ \iff e_f\wedge\pi_A^*\alpha\leq\pi_B^*\beta.
+\]
+Jeżeli zachodzi prawa nierówność, przeciągamy ją wzdłuż $j=(f,\id_A):A\to B\times A$. Refleksywność daje $j^*e_f=\top_A$, zatem $\alpha\leq f^*\beta$. Odwrotnie z tej ostatniej nierówności wynika $\pi_A^*\alpha\leq(f\pi_A)^*\beta$. Na predykacie $e_f$ argumenty $f\pi_A$ i $\pi_B$ są logicznie równe, więc zastępowanie (i symetria równości) daje $e_f\wedge(f\pi_A)^*\beta\leq\pi_B^*\beta$. To dowodzi sprzężenia.
+
+Dla $\beta\in P(B)$ zastępowanie w obu kierunkach daje
+\[
+ e_f\wedge(f\pi_A)^*\beta=e_f\wedge\pi_B^*\beta.
+\]
+Podstawiając do definicji, korzystając z funktorialności zmiany bazy i Frobeniusa dla projekcji, otrzymujemy
+\[
+\begin{aligned}
+ \exists_f(\alpha\wedge f^*\beta)
+ &=\exists_{\pi_B}(e_f\wedge\pi_A^*\alpha\wedge(f\pi_A)^*\beta)\\
+ &=\exists_{\pi_B}(e_f\wedge\pi_A^*\alpha\wedge\pi_B^*\beta)\\
+ &=(\exists_f\alpha)\wedge\beta.
+\end{aligned}
+\]
+\end{proof}
+
+W ogólnej doktrynie regularnej nie twierdzimy automatycznie, że sprzężenia wzdłuż dowolnych morfizmów spełniają warunek Becka--Chevalleya dla wszystkich kwadratów kartezjańskich w bazie. Aby wyprowadzić taki wynik z powyższych aksjomatów, potrzebna jest dodatkowa zgodność logicznej równości z obiektami reprezentującymi odpowiednie granice. Dla doktryny podobiektów kategorii regularnej pełna zgodność zachodzi na mocy twierdzenia~\ref{cat:thm:cl-exists-beck-chevalley}.
+
+\begin{przyklad}[Beck--Chevalley dla projekcji nie wystarcza dla wszystkich kwadratów]\label{cat:ex:cl-doctrine-bc-failure}
+Na kategorii przestrzeni topologicznych definiujemy $P(X)=\mathcal P(\pi_0^{\mathrm{path}}(X))$, gdzie $\pi_0^{\mathrm{path}}(X)$ jest zbiorem składowych drogowych przestrzeni $X$. Dla morfizmu ciągłego $f$ zmiana bazy jest przeciwobrazem funkcji indukowanej na składowych drogowych. Funktor składowych drogowych zachowuje skończone iloczyny: dwie pary punktów należą do jednej składowej drogowej wtedy i tylko wtedy, gdy ich odpowiednie współrzędne są połączone drogami (w jednym kierunku stosujemy projekcje, w drugim bierzemy iloczyn dróg). Zachowuje także obiekt końcowy. Przenosimy więc doktrynę podobiektów zbiorów przez ten funktor, z równością oznaczającą przynależność do tej samej składowej drogowej. Wszystkie aksjomaty doktryny regularnej oraz hiperdoktryny pierwszego rzędu zachodzą: operacje logiczne i sprzężenia są operacjami na podzbiorach, a kwadraty zmiany parametrów dla projekcji przechodzą na takie same kwadraty iloczynów w zbiorach.
+
+Rozważmy jednak kwadrat kartezjański przestrzeni
+\[
+\begin{array}{ccc}
+ \varnothing&\longrightarrow&\{0\}\\
+ {\scriptstyle f'}\downarrow&&\downarrow{\scriptstyle f}\\
+ \{1\}&\xrightarrow{g}&\mathbb R,
+\end{array}
+\]
+gdzie $f,g$ są włożeniami punktów. Iloczyn włóknisty jest pusty. Niech $\alpha=\top_{\{0\}}$. Ponieważ $\mathbb R$ jest drogowo spójna, funkcja składowych indukowana przez $f$ jest bijekcją między zbiorami jednoelementowymi. Stąd $g^*\exists_f\alpha=\top_{\{1\}}$. Tymczasem $\exists_{f'}h^*\alpha$ jest pustym podzbiorem jednoelementowego zbioru składowych $\{1\}$, gdzie $h:\varnothing\to\{0\}$ oznacza górną strzałkę. Obie strony warunku Becka--Chevalleya są różne. Dla kwantyfikatora ogólnego w tym samym kwadracie wybieramy $\alpha=\bot_{\{0\}}$: wtedy $g^*\forall_f\alpha=\bot_{\{1\}}$, a $\forall_{f'}h^*\alpha=\top_{\{1\}}$ z powodu pustego włókna. Także prawy warunek Becka--Chevalleya zawodzi.
+\end{przyklad}
+
+\begin{definicja}[Hiperdoktryna pierwszego rzędu]\label{cat:def:cl-first-order-doctrine}
+Hiperdoktryną pierwszego rzędu nazywamy tutaj doktrynę regularną, w której każde $P(X)$ jest algebrą Heytinga, a zmiany bazy zachowują wszystkie jej operacje. Ponadto dla każdej projekcji $\pi:X\times A\to X$ istnieje prawe sprzężenie $\pi^*\dashv\forall_\pi$ spełniające warunek Becka--Chevalleya względem zmian parametrów. Jeżeli wszystkie włókna są algebrami Boole'a, mówimy o hiperdoktrynie boolowskiej.
+\end{definicja}
+
+W takiej hiperdoktrynie prawy sprzężony wzdłuż dowolnego $f:A\to B$ istnieje i jest określony przez
+\[
+ \forall_f\alpha=\forall_{\pi_B}(e_f\Rightarrow\pi_A^*\alpha).
+\]
+Istotnie, dla $\beta\in P(B)$ warunek $\beta\leq\forall_{\pi_B}(e_f\Rightarrow\pi_A^*\alpha)$ jest równoważny $\pi_B^*\beta\wedge e_f\leq\pi_A^*\alpha$ przez sprzężenie projekcyjne i własność implikacji. Przeciągnięcie wzdłuż $(f,\id_A)$ daje $f^*\beta\leq\alpha$. Odwrotnie z $f^*\beta\leq\alpha$ i zastępowania otrzymujemy $e_f\wedge\pi_B^*\beta\leq e_f\wedge(f\pi_A)^*\beta\leq\pi_A^*\alpha$. Dowodzi to żądanego sprzężenia. Tak jak dla lewego sprzężenia, warunek Becka--Chevalleya dla projekcji jest częścią definicji, ale nie utożsamiamy go z warunkiem dla wszystkich kwadratów kartezjańskich.
+
+\begin{stwierdzenie}[Przykłady hiperdoktryn]\label{cat:prop:cl-doctrine-examples}
+\begin{enumerate}
+ \item Dla kategorii regularnej $\mathcal E$ funktor $X\mapsto\operatorname{Sub}_{\mathcal E}(X)$ jest doktryną regularną.
+ \item Dla toposu elementarnego ta doktryna jest hiperdoktryną pierwszego rzędu.
+ \item Dla teorii regularnej $T$ istnieje doktryna formuł na kategorii kontekstów i podstawień. Jej włókno nad kontekstem $\vec x$ jest zbiorem klas formuł regularnych w $\vec x$ modulo dowodliwą równoważność; porządek jest dowodliwym wynikaniem.
+\end{enumerate}
+\end{stwierdzenie}
+\begin{proof}
+W pierwszym przypadku zmiana bazy zachowuje skończone kresy dolne, a kwantyfikacja projekcyjna, jej sprzężenie, warunek Becka--Chevalleya i Frobenius zostały udowodnione w twierdzeniach~\ref{cat:thm:cl-exists-adjoint}--\ref{cat:thm:cl-frobenius}. Równością jest podobiekt diagonalny. Refleksywność wynika z przeciągnięcia diagonali wzdłuż niej samej, a zastępowanie z tego, że na podobiekcie równości dwie projekcje na argument są równe. Dla toposu elementarnego stosujemy dodatkowo twierdzenia~\ref{cat:thm:elementary-heyting} i~\ref{cat:thm:cl-forall-projection}.
+
+W trzecim przypadku obiektami bazy są skończone konteksty, morfizmami $\vec z\to\vec x$ są ciągi termów w $\vec z$ o sortach kontekstu $\vec x$ modulo równoważność przez dowodliwe równości odpowiednich termów. Reguła zastępowania gwarantuje zgodność tej równoważności ze składaniem przez podstawianie. Kontekst pusty jest końcowy, a konkatenacja rozłącznych kontekstów jest iloczynem: ciąg termów do konkatenacji jest dokładnie parą ciągów do obu kontekstów. Przeciąganie formuły przez morfizm jest podstawieniem termów, dobrze określonym na klasach przez reguły podstawiania i zastępowania. Koniunkcja jest kresem dolnym, kwantyfikator egzystencjalny spełnia sprzężenie i Frobeniusa przez definicję~\ref{cat:def:cl-regular-deduction}. Warunek Becka--Chevalleya wynika z tego, że podstawianie parametrów przez termy w $\exists\vec y\,\varphi$ komutuje z kwantyfikacją po $\vec y$, po zmianie nazw zmiennych związanych. Równością dwóch ciągów jest koniunkcja równości odpowiednich składowych, spełniająca oba aksjomaty równości.
+\end{proof}
+
+\subsection{Predykat generyczny i rozumienie}
+
+\begin{definicja}[Predykat generyczny]\label{cat:def:cl-generic-predicate}
+Predykatem generycznym doktryny $P$ nazywamy parę $(\Omega_P,\mathsf{tr})$, gdzie $\Omega_P\in\mathcal B$, a $\mathsf{tr}\in P(\Omega_P)$, taką że dla każdego $\alpha\in P(X)$ istnieje morfizm $a:X\to\Omega_P$ z $\alpha=a^*\mathsf{tr}$. Jeżeli morfizm ten jest zawsze jedyny, mówimy o reprezentowalności predykatów przez $\Omega_P$.
+\end{definicja}
+
+Generyczność nie zakłada więc jednoznaczności klasyfikowania. Dokładniej rodzina funkcji $a\mapsto a^*\mathsf{tr}$ jest naturalna w $X$, ponieważ $(af)^*\mathsf{tr}=f^*(a^*\mathsf{tr})$. Generyczność oznacza jej punktową surjektywność, a reprezentowalność --- naturalną bijekcję między funktorem $\operatorname{Hom}_{\mathcal B}(-,\Omega_P)$ a funktorem $P$ po zapomnieniu porządków. Dla doktryny podobiektów toposu elementarnego klasyfikator podobiektów daje mocniejszą własność reprezentowalności. Wtedy $\mathsf{tr}$ jest podobiektem $\mathrm{true}:1\to\Omega$. Dla doktryny dowolnych predykatów nie utożsamiamy predykatu generycznego z klasyfikatorem monomorfizmów w bazie.
+
+\begin{definicja}[Rozumienie predykatu]\label{cat:def:cl-doctrine-comprehension}
+Rozumieniem predykatu $\alpha\in P(X)$ nazywamy morfizm $i_\alpha:\{\alpha\}\to X$ taki, że $i_\alpha^*\alpha=\top_{\{\alpha\}}$, uniwersalny wśród morfizmów $f:Y\to X$ o własności $f^*\alpha=\top_Y$. Uniwersalność oznacza istnienie jedynej faktoryzacji $f=i_\alpha u$. Rozumienia nazywamy pełnymi, gdy dla predykatów $\alpha,\beta\in P(X)$ zachodzi
+\[
+ \alpha\leq\beta\quad\Longleftrightarrow\quad i_\alpha^*\beta=\top_{\{\alpha\}}.
+\]
+\end{definicja}
+
+Każde rozumienie jest monomorfizmem: jeśli $i_\alpha u=i_\alpha v$, to ten wspólny morfizm spełnia warunek prawdziwości predykatu $\alpha$ po przeciągnięciu, a jednoznaczność faktoryzacji daje $u=v$. Rozumienia są stabilne przy zmianie bazy. Jeżeli istnieje iloczyn włóknisty $i_\alpha$ wzdłuż $g:Y\to X$, jego projekcja do $Y$ ma własność uniwersalną rozumienia $g^*\alpha$, gdyż $h^*g^*\alpha=\top$ dokładnie wtedy, gdy $gh$ faktoryzuje się przez $i_\alpha$. Odwrotnie jeżeli istnieje rozumienie $i_{g^*\alpha}$, to z tej samej równoważności wynika, że wraz z jedyną faktoryzacją $gi_{g^*\alpha}$ przez $i_\alpha$ tworzy ono kwadrat kartezjański: dowolna zgodna para strzałek wyznacza jedyną faktoryzację przez $i_{g^*\alpha}$, a jej zgodność z drugą składową wynika z monomorficzności $i_\alpha$. Istnienie wszystkich rozumień gwarantuje więc istnienie ich zmian bazy nawet wtedy, gdy kategoria bazowa nie ma wszystkich iloczynów włóknistych.
+
+\begin{stwierdzenie}[Rozumienia a podobiekty]\label{cat:prop:cl-comprehension-embedding}
+Jeżeli doktryna ma pełne rozumienia, to przyporządkowanie $\alpha\mapsto[i_\alpha]$ jest zanurzeniem porządkowym $P(X)\to\operatorname{Sub}_{\mathcal B}(X)$ dla każdego $X$. Jest zgodne ze zmianą bazy (odpowiednie iloczyny włókniste istnieją dzięki rozumieniom) i zachowuje element największy oraz koniunkcję.
+\end{stwierdzenie}
+\begin{proof}
+Faktoryzacja $i_\alpha$ przez $i_\beta$ jest równoważna prawdziwości $\beta$ po przeciągnięciu wzdłuż $i_\alpha$, z własności uniwersalnej rozumienia $\beta$. Z pełności rozumień jest to równoważne $\alpha\leq\beta$. Otrzymujemy zachowywanie i odzwierciedlanie porządku, a zatem injektywność. Zgodność ze zmianą bazy wynika z poprzedniego argumentu. Rozumieniem $\top_X$ jest identyczność $X$. Morfizm $h:Y\to X$ faktoryzuje się przez rozumienie $\alpha\wedge\beta$ wtedy i tylko wtedy, gdy $h^*(\alpha\wedge\beta)=\top_Y$, a przez zachowywanie koniunkcji jest to równoważne $h^*\alpha=h^*\beta=\top_Y$. Jest więc równoważne faktoryzacji przez oba rozumienia; ta własność uniwersalna charakteryzuje ich przecięcie (zapewnia także istnienie tego szczególnego iloczynu włóknistego).
+\end{proof}
+
+Doktryna podobiektów ma pełne rozumienia: rozumieniem podobiektu jest po prostu jego monomorfizm. Prawdziwość po przeciągnięciu oznacza faktoryzację przez ten monomorfizm, a pełność jest definicją porządku podobiektów. W abstrakcyjnej doktrynie nawet pełne rozumienia nie muszą reprezentować wszystkich monomorfizmów bazy; pozwalają natomiast rozpoznawać predykaty jako szczególną klasę podobiektów.
+
+\subsection{Hiperdoktryny i fibracje Grothendiecka}
+
+\begin{definicja}[Kategoria predykatów]\label{cat:def:cl-predicate-fibration}
+Dla doktryny $P:\mathcal B^{\mathrm{op}}\to\mathbf{Pos}$ definiujemy kategorię $\int P$. Obiektami są pary $(X,\alpha)$, gdzie $\alpha\in P(X)$. Morfizm $(X,\alpha)\to(Y,\beta)$ nad $f:X\to Y$ istnieje dokładnie wtedy, gdy $\alpha\leq f^*\beta$, i jest wtedy jedyny nad tym $f$. Funktor $p:\int P\to\mathcal B$ zapomina predykat.
+\end{definicja}
+
+Jest to szczególny przypadek konstrukcji Grothendiecka z definicji~\ref{cat:def:grothendieck-construction}. Składanie istnieje, ponieważ z $\alpha\leq f^*\beta$ i $\beta\leq g^*\gamma$ wynika przez monotoniczność $\alpha\leq f^*g^*\gamma=(gf)^*\gamma$. Identyczności pochodzą ze zwrotności porządku. Włókno nad $X$ jest dokładnie kategorią uporządkowaną $P(X)$, ponieważ morfizmy w nim leżą nad $\id_X$ i spełniają $\alpha\leq(\id_X)^*\beta=\beta$. Dla doktryny podobiektów całkowita kategoria jest równoważna kategorii monomorfizmów z przemiennymi kwadratami (nad kategorią ich przeciwdziedzin): dla ustalonego morfizmu przeciwdziedzin $f:X\to Y$ kwadrat z monomorfizmami reprezentującymi $\alpha,\beta$ istnieje dokładnie wtedy, gdy $\alpha\leq f^*\beta$, a jego górna strzałka jest wtedy jedyna.
+
+\begin{twierdzenie}[Fibracja i sprzężenia transportów]\label{cat:thm:cl-predicate-bifibration}
+Funktor $p:\int P\to\mathcal B$ jest rozszczepioną fibracją Grothendiecka. Podniesienie kartezjańskie nad $f:X\to Y$ do $(Y,\beta)$ ma postać
+\[
+ (X,f^*\beta)\longrightarrow(Y,\beta).
+\]
+Jeżeli każdy $f^*$ ma lewy sprzężony $\exists_f$, to $p$ jest również opfibracją, z podniesieniami kokartezjańskimi
+\[
+ (X,\alpha)\longrightarrow(Y,\exists_f\alpha).
+\]
+W szczególności kategoria predykatów doktryny regularnej jest bifibracją. Wybrane podniesienia kokartezjańskie również są zgodne z identycznościami i składaniem.
+\end{twierdzenie}
+\begin{proof}
+Niech $h:Z\to X$. Istnienie morfizmu $(Z,\gamma)\to(Y,\beta)$ nad $fh$ oznacza $\gamma\leq(fh)^*\beta=h^*f^*\beta$, a więc dokładnie istnienie morfizmu $(Z,\gamma)\to(X,f^*\beta)$ nad $h$. Jedyność morfizmów nad ustaloną strzałką bazy daje jednoznaczną faktoryzację, czyli kartezjańskość w sensie definicji~\ref{cat:def:ordinary-cartesian-arrow}. Wybrane podniesienia są zgodne z identycznościami i składaniem przez ścisłą funktorialność $P$; jest to rozszczepienie fibracji w sensie definicji~\ref{cat:def:split-grothendieck-fibration}.
+
+Dla podniesienia kokartezjańskiego jednostka sprzężenia zapewnia istnienie strzałki nad $f$. Niech $g:Y\to Z$. Morfizm $(X,\alpha)\to(Z,\gamma)$ nad $gf$ istnieje wtedy i tylko wtedy, gdy
+\[
+ \alpha\leq f^*g^*\gamma\iff\exists_f\alpha\leq g^*\gamma.
+\]
+Prawa nierówność oznacza istnienie jedynej strzałki $(Y,\exists_f\alpha)\to(Z,\gamma)$ nad $g$. Daje to własność kokartezjańską. Ponieważ lewe sprzężone w porządkach są jedyne, mamy $\exists_{\id_X}=\id_{P(X)}$ i $\exists_{gf}=\exists_g\exists_f$: oba funktory w drugiej równości są lewymi sprzężonymi do $f^*g^*$. Jedyność strzałek nad ustaloną strzałką bazy daje więc ścisłą zgodność wybranych podniesień kokartezjańskich z identycznościami i składaniem. W doktrynie regularnej lewe sprzężenia dla wszystkich morfizmów istnieją przez twierdzenie~\ref{cat:thm:cl-doctrine-exists}.
+\end{proof}
+
+Kwantyfikacja ogólna jest prawym sprzężonym do transportu kartezjańskiego, a nie transportem kokartezjańskim tej samej fibracji: ten ostatni odpowiada lewemu sprzężonemu. W ten sposób rozróżniamy trzy operacje $\exists_f$, $f^*$ i $\forall_f$ również na poziomie geometrii kategorii predykatów. Wzajemność Frobeniusa i warunki Becka--Chevalleya opisują dodatkową zgodność tej struktury z koniunkcją i zmianą parametrów.
+
+\begin{przyklad}[Doktryna rodzin wartości logicznych]\label{cat:ex:cl-heyting-valued-doctrine}
+Niech $H$ będzie zupełną algebrą Heytinga (tj. algebrą Heytinga będącą kratą zupełną) i niech $P(X)=H^X$ dla zbiorów $X$, z porządkiem i operacjami punktowymi. Dla funkcji $f:X\to Y$ definiujemy $f^*\beta=\beta\circ f$. Kwantyfikatory są dane wzorami
+\[
+ (\exists_f\alpha)(y)=\bigvee_{x:f(x)=y}\alpha(x),
+ \qquad
+ (\forall_f\alpha)(y)=\bigwedge_{x:f(x)=y}\alpha(x).
+\]
+Dla pustego włókna przyjmujemy odpowiednio $0_H$ i $1_H$. Warunek $\exists_f\alpha\leq\beta$ jest równoważny $\alpha(x)\leq\beta(f(x))$ dla wszystkich $x$, a $\beta\leq\forall_f\alpha$ jest równoważny $\beta(f(x))\leq\alpha(x)$ dla wszystkich $x$. To dowodzi obu sprzężeń. Kwadrat kartezjański zbiorów identyfikuje włókna nad $y'$ i jego obrazem w $Y$, skąd oba warunki Becka--Chevalleya dla dowolnego takiego kwadratu. Frobenius wynika z rozdzielności koniunkcji względem dowolnych sum w $H$: operacja $-\wedge b$ jest lewym sprzężonym do $b\Rightarrow-$, zatem zachowuje wszystkie kresy górne. Predykat równości przyjmuje $1_H$ na diagonali i $0_H$ poza nią; aksjomat zastępowania zachodzi punktowo. Otrzymujemy hiperdoktrynę pierwszego rzędu.
+
+Predykatem generycznym jest funkcja $\id_H:H\to H$ traktowana jako element $P(H)$, gdyż każdy $\alpha:X\to H$ jest jej przeciągnięciem wzdłuż samej siebie. Co więcej klasyfikująca funkcja jest jedyna: $\id_H\circ a=\alpha$ implikuje $a=\alpha$. Predykaty są zatem reprezentowalne mimo tego, że (jak zobaczymy) rozumienia nie muszą być pełne. Rozumieniem predykatu jest włożenie zbioru $\{x:\alpha(x)=1_H\}$ do $X$, ponieważ właśnie przez ten zbiór faktoryzują się funkcje czyniące $\alpha$ prawdziwym. Jeśli $H$ zawiera element $a$ różny od $0_H$ i $1_H$, rozumienia nie są pełne: nad zbiorem jednoelementowym stałe predykaty $a$ i $0_H$ mają to samo puste rozumienie, lecz nie są równe. Przykład odróżnia zatem predykaty abstrakcyjne od podobiektów bazy.
+\end{przyklad}
+
+\subsection{Kategorie koherentne i geometryczne}
+
+Logika regularna pozwala wyrazić koniunkcję i istnienie, ale nie pozwala bezpośrednio sformułować alternatywy. Aby interpretować alternatywy, potrzebujemy kresów górnych w porządkach podobiektów oraz ich zgodności z podstawianiem parametrów.
+
+\begin{definicja}[Kategoria koherentna i kategoria geometryczna]\label{cat:def:cl-coherent-category}
+Kategorię regularną $\mathcal E$ nazywamy koherentną, jeżeli każdy $\operatorname{Sub}_{\mathcal E}(X)$ ma skończone kresy górne, w tym element najmniejszy, a dla dowolnego morfizmu $f:X\to Y$ funktor $f^*$ zachowuje te kresy. Jeżeli zamiast skończonych kresów górnych istnieją wszystkie małe kresy górne i są zachowywane przez zmianę bazy, mówimy o kategorii geometrycznej. Przyjmujemy ustalony zakres małości. Funktor koherentny (odpowiednio geometryczny między kategoriami geometrycznymi) jest funktorem regularnym zachowującym wskazane kresy górne podobiektów: dla każdego $X$ indukuje monotoniczne odwzorowanie $\operatorname{Sub}_{\mathcal E}(X)\to\operatorname{Sub}_{\mathcal D}(F(X))$, wysyłające klasę $u:U\hookrightarrow X$ na klasę $F(u)$. Jest ono dobrze określone, ponieważ funktor regularny zachowuje monomorfizmy i izomorfizmy. To odwzorowanie ma zachowywać odpowiednie kresy górne, w tym kres pustej rodziny.
+\end{definicja}
+
+Nie mylimy kategorii geometrycznej z toposem Grothendiecka: pierwsza definicja dotyczy obrazów, skończonych granic i sum podobiektów, nie wymaga natomiast istnienia dowolnych kogranic obiektów ani klasyfikatora podobiektów. Podobnie nazwa funktor geometryczny w powyższym znaczeniu nie oznacza sama przez się morfizmu geometrycznego toposów z definicji~\ref{cat:def:geometric-morphism}.
+
+\begin{stwierdzenie}[Rozdzielność rachunku podobiektów]\label{cat:prop:cl-coherent-distributivity}
+W kategorii koherentnej skończone kresy dolne rozdzielają się względem skończonych kresów górnych. W kategorii geometrycznej zachodzi także rozdzielność względem dowolnych małych kresów górnych:
+\[
+ U\wedge\bigvee_{i\in I}V_i
+ =\bigvee_{i\in I}(U\wedge V_i)
+ \qquad(U,V_i\in\operatorname{Sub}(X)).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Niech $u:U\hookrightarrow X$ reprezentuje ustalony podobiekt. Zmiana bazy $u^*$ zachowuje rozpatrywane kresy górne z definicji. Lewe sprzężenie $\exists_u$ z twierdzenia~\ref{cat:thm:cl-exists-adjoint} również je zachowuje. Wzajemność Frobeniusa (twierdzenie~\ref{cat:thm:cl-frobenius}) daje $\exists_u u^*V=U\wedge V$, gdyż $\exists_u\top_U=U$. Wobec tego
+\[
+ \exists_u u^*\Bigl(\bigvee_iV_i\Bigr)
+ =\exists_u\Bigl(\bigvee_i u^*V_i\Bigr)
+ =\bigvee_i\exists_u u^*V_i.
+\]
+Po podstawieniu powyższego opisu obu stron dostajemy żądaną równość, także dla pustej rodziny.
+\end{proof}
+
+W szczególności porządki podobiektów w kategorii koherentnej są ograniczonymi kratami rozdzielnymi, a w kategorii geometrycznej są ramami (ang. \emph{frames}), tj. kratami zupełnymi, w których skończone przecięcia rozdzielają się względem dowolnych sum. Istnienie wszystkich kresów dolnych wynika w drugim przypadku z istnienia wszystkich kresów górnych: kres dolny jest kresem górnym zbioru wspólnych ograniczeń dolnych. Chociaż definicja kategorii geometrycznej nie wymienia zachowywania dowolnych kresów dolnych ani implikacji przez zmianę bazy, obie własności wynikają z regularności. Istotnie, $f^*$ jest prawym sprzężonym do $\exists_f$, więc zachowuje wszystkie istniejące kresy dolne. Implikacja w ramie jest dana przez
+\[
+ P\Rightarrow Q=\bigvee\{W:W\wedge P\leq Q\}.
+\]
+Rozdzielność gwarantuje, że $(P\Rightarrow Q)\wedge P\leq Q$, a definicja kresu górnego daje własność uniwersalną implikacji. Dla $f:A\to B$, $P,Q\in\operatorname{Sub}(B)$ oraz $V\in\operatorname{Sub}(A)$ otrzymujemy
+\[
+\begin{aligned}
+ V\leq f^*(P\Rightarrow Q)
+ &\iff\exists_f V\leq P\Rightarrow Q\\
+ &\iff(\exists_f V)\wedge P\leq Q\\
+ &\iff\exists_f(V\wedge f^*P)\leq Q\\
+ &\iff V\wedge f^*P\leq f^*Q\\
+ &\iff V\leq(f^*P\Rightarrow f^*Q).
+\end{aligned}
+\]
+Korzystamy tu ze sprzężenia oraz Frobeniusa. Antysymetria daje $f^*(P\Rightarrow Q)=f^*P\Rightarrow f^*Q$. Ponadto w kategorii geometrycznej istnieje prawy sprzężony do $f^*$, ponieważ $f^*$ zachowuje wszystkie małe kresy górne: definiujemy $\forall_f U=\bigvee\{V:f^*V\leq U\}$. Zachowywanie sum gwarantuje $f^*\forall_f U\leq U$, skąd wynika własność sprzężenia. Nie oznacza to, że dowolny funktor geometryczny między kategoriami geometrycznymi zachowuje implikację lub kwantyfikację ogólną: taki funktor nie jest na ogół zmianą bazy podobiektów w jednej kategorii.
+
+\begin{stwierdzenie}[Toposy jako kategorie koherentne i geometryczne]\label{cat:prop:cl-topos-geometric-category}
+Każdy topos elementarny jest kategorią koherentną. Każdy topos Grothendiecka jest kategorią geometryczną. W toposie Grothendiecka suma małej rodziny podobiektów $U_i\hookrightarrow X$ jest obrazem morfizmu
+\[
+ \coprod_{i\in I}U_i\longrightarrow X.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Regularność toposów elementarnych przytoczyliśmy na początku podsekcji o logice wewnętrznej. Skończone sumy podobiektów i ich stabilność wynikają z twierdzenia~\ref{cat:thm:elementary-heyting}.
+
+W toposie Grothendiecka istnieją małe koprodukty na mocy twierdzenia~\ref{cat:thm:sheaf-limits} i definicji~\ref{cat:def:grothendieck-topos}. Obraz wskazanego morfizmu zawiera każdy $U_i$, ponieważ każde włożenie faktoryzuje się przez koprodukt. Jeżeli $V\hookrightarrow X$ zawiera wszystkie $U_i$, własność uniwersalna koproduktu daje faktoryzację morfizmu z koproduktu przez $V$. Minimalność obrazu daje więc żądany kres górny.
+
+Pozostaje wykazać stabilność tych sum. Możemy przyjąć prezentację toposu jako kategorii snopów zbiorów na małym miejscu (definicja~\ref{cat:def:grothendieck-topos}). Dla presnopów sumy podobiektów oblicza się punktowo jako sumy podzbiorów. Są one stabilne przy punktowo obliczanych iloczynach włóknistych. Dla snopów $U_i\hookrightarrow X$ rozpatrzmy ich sumę presnopową $S\hookrightarrow X$. Snopifikacja $a$ zachowuje monomorfizmy, ponieważ zachowuje skończone granice (twierdzenie~\ref{cat:thm:sheafification-left-exact}). Podobiekt $aS\hookrightarrow X$ jest sumą w kategorii snopów: sprzężenie snopifikacji z włożeniem utożsamia faktoryzację $aS$ przez dowolny podsnop $V\hookrightarrow X$ z faktoryzacją $S$ przez $V$ w presnopach, a ta istnieje dokładnie wtedy, gdy $V$ zawiera wszystkie $U_i$. Dla morfizmu snopów $f:Y\to X$ włożenie snopów zachowuje granice i $a(f^*S)\cong f^*(aS)$ przez lewostronną dokładność $a$. Ponieważ $f^*S$ jest sumą presnopową przeciągnięć $U_i$, lewa strona jest sumą tych przeciągnięć w snopach. Dowodzi to stabilności, również dla pustej rodziny.
+\end{proof}
+
+\subsection{Semantyka i rachunek sekwentów koherentnych i geometrycznych}
+
+Rozszerzamy formuły regularne z definicji~\ref{cat:def:cl-regular-formulas} o alternatywy. Dla logiki koherentnej są one skończone, dla geometrycznej małe w ustalonym uniwersum. Zawsze dopuszczamy pustą alternatywę $\bot$. W przypadku infinitarnym formuły są dobrze ufundowanymi drzewami składniowymi: relacja bezpośredniego bycia podformułą jest dobrze ufundowana (indukcja po podformułach jest dopuszczalna), a wszystkie podformuły mają skończony kontekst zmiennych wolnych. Rodzina bezpośrednich podformuł w węźle alternatywy jest mała i wszystkie jej elementy rozpatrujemy w jednym skończonym kontekście. Nie dopuszczamy nieskończonych koniunkcji ani nieskończonych gałęzi składniowych, choć rangi drzew mogą być nieskończonymi liczbami porządkowymi.
+
+Dla precyzji można ustalić uniwersum Grothendiecka $\mathcal U$ zawierające sygnaturę i używać alternatyw o zbiorach indeksów w $\mathcal U$. Same drzewa kodujemy jako drzewa skończonych ciągów indeksów z oznaczeniami węzłów i odpowiednimi danymi składniowymi. Każde pojedyncze dobrze ufundowane drzewo jest małe: przez indukcję dobrze ufundowaną jego poddrzewa są małe, a połączenie małej rodziny małych poddrzew pozostaje małe. Zbiór wszystkich takich kodów można rozpatrywać w większym uniwersum. Po normalizacji poniżej otrzymamy jednak mały zbiór reprezentantów w samym $\mathcal U$.
+
+\begin{definicja}[Semantyka alternatywy]\label{cat:def:cl-geometric-semantics}
+W kategorii koherentnej lub geometrycznej interpretujemy dodatkowo
+\[
+ \llbracket\bigvee_{i\in I}\varphi_i\rrbracket_{M,\vec x}
+ =\bigvee_{i\in I}\llbracket\varphi_i\rrbracket_{M,\vec x}.
+\]
+W przypadku pustej rodziny jest to podobiekt najmniejszy. Pozostałe konstrukcje są interpretowane jak w definicji~\ref{cat:def:cl-regular-semantics}. Teoria odpowiedniego fragmentu jest zbiorem sekwentów tego fragmentu, a model spełnia je w porządku podobiektów.
+\end{definicja}
+
+\begin{definicja}[Dowodliwość koherentna i geometryczna]\label{cat:def:cl-geometric-deduction}
+Do rachunku z definicji~\ref{cat:def:cl-regular-deduction} dołączamy reguły dla alternatyw:
+\[
+ \varphi_j\vdash\bigvee_{i\in I}\varphi_i\quad(j\in I),
+ \qquad
+ \frac{(\varphi_i\vdash\psi)_{i\in I}}
+      {\bigvee_{i\in I}\varphi_i\vdash\psi}.
+\]
+Dołączamy również równoważność
+\[
+ \theta\wedge\bigvee_{i\in I}\varphi_i
+ \dashv\vdash
+ \bigvee_{i\in I}(\theta\wedge\varphi_i).
+\]
+Wszystkie formuły w tych regułach rozpatrujemy w tym samym kontekście. Dopuszczamy tylko rodziny alternatyw właściwe danemu fragmentowi. Reguła z pustą rodziną przesłanek daje $\bot\vdash\psi$.
+\end{definicja}
+
+Dowodliwość nadal określamy jako przecięcie wszystkich rodzin relacji spełniających reguły, teraz także z domknięciem na wskazane reguły infinitarne. Przecięcie jest domknięte także na regułę z wieloma przesłankami: jeśli każda przesłanka należy do przecięcia, to należy do każdej rodziny, a zatem konkluzja również należy do każdej rodziny. Pracujemy w większym uniwersum dla zbioru kodów rozpatrywanych wyrażeń, przy czym zakres alternatyw pozostaje ustalony przez $\mathcal U$.
+
+\begin{twierdzenie}[Poprawność i podstawianie]\label{cat:thm:cl-geometric-soundness}
+Rachunek koherentny jest poprawny w kategoriach koherentnych, a rachunek geometryczny w kategoriach geometrycznych. Interpretacja formuł obu fragmentów jest zgodna z podstawianiem parametrów.
+\end{twierdzenie}
+\begin{proof}
+Dowód stwierdzenia~\ref{cat:prop:cl-substitution} rozszerzamy o krok dla alternatywy: zmiana bazy zachowuje odpowiednie kresy górne z definicji kategorii koherentnej lub geometrycznej. W przypadku formuł infinitarnych stosujemy indukcję po dobrze ufundowanym drzewie składniowym. Reguły alternatywy są własnościami kresów górnych, a reguła rozdzielności wynika ze stwierdzenia~\ref{cat:prop:cl-coherent-distributivity}. Pozostałe reguły zachowują prawdziwość przez ten sam argument co w dowodzie stwierdzenia~\ref{cat:prop:cl-deduction-sound}. Rodzina sekwentów spełnionych w modelu zawiera aksjomaty teorii i jest domknięta na wszystkie reguły, więc zawiera relację dowodliwości.
+\end{proof}
+
+\begin{stwierdzenie}[Postać normalna formuł geometrycznych]\label{cat:prop:cl-geometric-normal-form}
+Każda formuła koherentna jest dowodliwie równoważna skończonej alternatywie formuł regularnych. Każda formuła geometryczna jest dowodliwie równoważna małej alternatywie formuł regularnych. Równoważności można uzyskać bez użycia dodatkowych aksjomatów teorii.
+\end{stwierdzenie}
+\begin{proof}
+Atomy i $\top$ są alternatywami o jednym składniku, a $\bot$ alternatywą pustą. Alternatywa alternatyw jest równoważna alternatywie wszystkich składników, gdyż obie mają te same ograniczenia górne w porządku dowodliwego wynikania. W przypadku koniunkcji dwóch alternatyw rozdzielność daje
+\[
+ \Bigl(\bigvee_i\alpha_i\Bigr)\wedge
+ \Bigl(\bigvee_j\beta_j\Bigr)
+ \dashv\vdash
+ \bigvee_{(i,j)}(\alpha_i\wedge\beta_j).
+\]
+Dla kwantyfikacji egzystencjalnej mamy
+\[
+ \exists y\,\bigvee_i\alpha_i
+ \dashv\vdash
+ \bigvee_i\exists y\,\alpha_i,
+\]
+ponieważ $\exists y$ jest lewym sprzężonym do osłabienia kontekstu w porządku formuł modulo dowodliwa równoważność (reguła sprzężenia). Lewy sprzężony zachowuje wszystkie istniejące kresy górne. Składniki po prawej stronie obu wzorów są regularne, jeżeli regularne były składniki wyjściowe. Indukcja po budowie formuły daje tezę. Możemy przy tym zdefiniować konkretną rodzinę formuł regularnych rekurencyjnie: atomowi lub $\top$ przypisujemy singleton, $\bot$ zbiór pusty, alternatywie sumę zbiorów rodzin jej składników, koniunkcji zbiór wszystkich koniunkcji par składników, a kwantyfikacji zbiór formuł otrzymanych przez skwantyfikowanie każdego składnika. Każdy krok jest zgodny z powyższymi równoważnościami, a usuwanie powtórzeń nie zmienia kresu górnego. Małość rodzin jest zachowywana przez małe sumy zbiorów indeksów i skończone iloczyny; w przypadku koherentnym wszystkie te rodziny pozostają skończone.
+\end{proof}
+
+W ustalonym kontekście istnieje tylko zbiór formuł regularnych, ponieważ sygnatura jest mała, a każda taka formuła jest skończona. Możemy więc reprezentować klasy formuł geometrycznych przez alternatywy indeksowane podzbiorami tego zbioru, usuwając powtórzenia i wybierając ustalone nazwy zmiennych związanych. Postać normalna nie jest na ogół jedyna: teoria może wymuszać dalsze równoważności między alternatywami.
+
+\subsection{Kategorie syntaktyczne fragmentów z alternatywą}
+
+\begin{twierdzenie}[Koherentna i geometryczna kategoria syntaktyczna]\label{cat:thm:cl-geometric-syntactic}
+Dla teorii koherentnej $T$ kategoria syntaktyczna $\mathcal C_T^{\mathrm{coh}}$ jest koherentna, a dla teorii geometrycznej $T$ kategoria $\mathcal C_T^{\mathrm{geom}}$ jest geometryczna (w odpowiednim zakresie małości). Obiekty, morfizmy i składanie definiujemy jak w definicji~\ref{cat:def:cl-syntactic-category}, używając formuł i dowodliwości danego fragmentu. Podobiekty obiektu $\{\vec x\mid\varphi\}$ są reprezentowane przez formuły $\alpha$ dowodliwie pociągające $\varphi$, a ich sumy są reprezentowane przez alternatywy.
+\end{twierdzenie}
+\begin{proof}
+Argumenty z dowodów stwierdzenia~\ref{cat:prop:cl-syntactic-category} i twierdzenia~\ref{cat:thm:cl-syntactic-regular} stosują się również do rozszerzonego rachunku. Wyjaśnijmy, dlaczego obecność alternatyw nie zmienia tych argumentów. Definicje relacji funkcjonalnej, identyczności i składania wykorzystują jedynie koniunkcję, równość, kwantyfikację egzystencjalną i dowodliwość. Ich własności wynikają wyłącznie z reguł regularnych stosowanych do dowolnych formuł rozpatrywanego fragmentu, a te reguły pozostają w mocy. W ten sam sposób obiekt końcowy, iloczyny, equalizatory i obrazy mają dokładnie te same formuły definiujące; dowody ich własności uniwersalnych nie wymagają eliminacji alternatywy ani ograniczenia rodzaju formuł używanych jako relacje. Dowodliwa surjektywność jest równoważna byciu regularnym epimorfizmem, a jej stabilność przy zmianie bazy wynika z tego samego rachunku świadków. Kategoria jest więc regularna, a porządek jej podobiektów ma podany opis. W przypadku geometrycznym mały zbiór reprezentantów obiektów i morfizmów uzyskujemy przez postać normalną ze stwierdzenia~\ref{cat:prop:cl-geometric-normal-form}. Istotnie zbiór skończonych kontekstów i formuł regularnych w każdym z nich jest mały w $\mathcal U$, a jego zbiór potęgowy także należy do $\mathcal U$. Każdy obiekt jest izomorficzny z obiektem reprezentowanym przez alternatywę z takiego zbioru: dowodliwie równoważne formuły w tym samym kontekście dają wzajemnie odwrotne włożenia. Każdy morfizm między wybranymi obiektami jest klasą alternatywy formuł regularnych w ustalonym połączonym kontekście, więc zbiór takich klas jest mały (można kodować klasę przez zbiór jej reprezentantów w małym zbiorze postaci normalnych). Wybieramy pełną podkategorię na małym zbiorze reprezentantów obiektów, równoważną wyjściowej kategorii. Granice, rozkłady obrazowe i porządki podobiektów przenoszą się przez równoważność; w szczególności zachowany jest zakres małości pokryć i sum, nie powiększamy go do większego uniwersum.
+
+Niech $(\alpha_i)_i$ będzie rodziną formuł pociągających $\varphi$. Reguła eliminacji alternatywy daje $\bigvee_i\alpha_i\vdash\varphi$. Reguły wprowadzania i eliminacji alternatywy oznaczają dokładnie własność najmniejszego wspólnego ograniczenia górnego. Aby wykazać stabilność przy zmianie bazy, niech $\theta(\vec z,\vec x)$ reprezentuje morfizm $\{\vec z\mid\psi\}\to\{\vec x\mid\varphi\}$. Przeciwobraz podobiektu $\alpha\vdash\varphi$ reprezentuje formuła
+\[
+ \exists\vec x\,(\theta(\vec z,\vec x)\wedge\alpha(\vec x)).
+\]
+Istotnie relacja funkcjonalna ograniczona przez $\alpha$ wyznacza iloczyn włóknisty: dla każdego $\vec z$ wynik morfizmu jest jednoznaczny, a faktoryzacja przez $\alpha$ jest możliwa dokładnie wtedy, gdy wynik ten spełnia $\alpha$. Formalnie stosujemy opis equalizatorów, iloczynów i obrazów z twierdzenia~\ref{cat:thm:cl-syntactic-regular}; projekcja na $\vec z$ z relacji ograniczonej przez $\alpha$ jest monomorfizmem przez jednoznaczność $\theta$, a jej obraz jest powyższą formułą. Dla alternatywy otrzymujemy więc
+\[
+\begin{aligned}
+ \exists\vec x\,(\theta\wedge\bigvee_i\alpha_i)
+ &\dashv\vdash \exists\vec x\,\bigvee_i(\theta\wedge\alpha_i)\\
+ &\dashv\vdash \bigvee_i\exists\vec x\,(\theta\wedge\alpha_i).
+\end{aligned}
+\]
+Pierwsza równoważność wynika z rozdzielności, druga z zachowywania kresów górnych przez lewe sprzężenie. To dowodzi stabilności wymaganych sum podobiektów.
+\end{proof}
+
+\begin{twierdzenie}[Model generyczny i własność uniwersalna]\label{cat:thm:cl-geometric-syntactic-universal}
+Jeżeli $T$ jest teorią koherentną i $\mathcal E$ kategorią koherentną, to
+\[
+ \operatorname{Coh}(\mathcal C_T^{\mathrm{coh}},\mathcal E)
+ \simeq\operatorname{Mod}_T(\mathcal E).
+\]
+Jeżeli $T$ jest teorią geometryczną i $\mathcal E$ kategorią geometryczną, to analogicznie
+\[
+ \operatorname{Geom}(\mathcal C_T^{\mathrm{geom}},\mathcal E)
+ \simeq\operatorname{Mod}_T(\mathcal E).
+\]
+Funktory po lewej zachowują strukturę odpowiedniego fragmentu, a ich morfizmami są transformacje naturalne. Po prawej morfizmami są homomorfizmy modeli.
+\end{twierdzenie}
+\begin{proof}
+Model generyczny konstruujemy jak w twierdzeniu~\ref{cat:thm:cl-generic-model}. Dodatkowy krok indukcji po formułach mówi, że interpretacja alternatywy jest sumą podobiektów; w kategorii syntaktycznej tę sumę reprezentuje właśnie alternatywa przez twierdzenie~\ref{cat:thm:cl-geometric-syntactic}. Zatem każda formuła interpretuje się jako odpowiednie włożenie, a model generyczny spełnia aksjomaty teorii.
+
+Dla modelu $M$ w $\mathcal E$ funktor interpretacji $F_M$ konstruujemy jak w dowodzie twierdzenia~\ref{cat:thm:cl-syntactic-universal}: funkcjonalna relacja interpretuje się jako wykres morfizmu, a konstrukcje skończonych granic i obrazów są zachowywane. Dodatkowo $F_M$ zachowuje sumy podobiektów: dla podobiektów obiektu $\{\vec x\mid\varphi\}$ wybieramy formuły $\alpha_i\vdash\varphi$ reprezentujące te podobiekty. Ich kres górny reprezentuje $\bigvee_i\alpha_i$. Interpretacje $\alpha_i$ są podobiektami interpretacji $\varphi$, a ich suma w tym obiekcie odpowiada ich sumie w obiekcie całego kontekstu: składanie z monomorfizmem interpretacji $\varphi$ utożsamia porządek jego podobiektów z przedziałem dolnym pod tym monomorfizmem. Z definicji~\ref{cat:def:cl-geometric-semantics} interpretacja $\bigvee_i\alpha_i$ jest więc żądaną sumą w interpretacji $\varphi$. Odwrotnie funktor regularny zachowujący odpowiednie sumy podobiektów zachowuje interpretację wszystkich formuł przez indukcję; stosujemy stwierdzenie~\ref{cat:prop:cl-regular-functors} z dodatkowym krokiem dla alternatywy. Otrzymujemy model i kanoniczny naturalny izomorfizm odtwarzający wyjściowy funktor.
+
+Pozostaje zgodność z morfizmami modeli. W dowodzie twierdzenia~\ref{cat:thm:cl-syntactic-universal} do indukcji zachowywania predykatów przez homomorfizm modelu dołączamy krok dla alternatywy. Niech $h:X\to Y$ będzie morfizmem kontekstów indukowanym przez homomorfizm, a $U_i,V_i$ interpretacjami składników w obu modelach. Jeżeli $U_i\leq h^*V_i$ dla wszystkich $i$, to
+\[
+ \bigvee_iU_i\leq h^*(\bigvee_iV_i),
+\]
+gdyż każdy $U_i$ jest zawarty w prawej stronie przez monotoniczność $h^*$. Zatem homomorfizmy zachowują interpretacje alternatyw. Reszta dowodu naturalności i jednoznaczności transformacji na obiektach formuł przebiega jak w twierdzeniu~\ref{cat:thm:cl-syntactic-universal}. Daje to obie równoważności.
+\end{proof}
+
+\begin{wniosek}[Zupełność kategorialna fragmentów pozytywnych]\label{cat:cor:cl-geometric-completeness}
+Sekwent koherentny (odpowiednio geometryczny) jest dowodliwy w teorii $T$ wtedy i tylko wtedy, gdy jest spełniony w każdym jej modelu w dowolnej kategorii koherentnej (odpowiednio geometrycznej).
+\end{wniosek}
+\begin{proof}
+Implikację od dowodliwości do spełnienia daje twierdzenie~\ref{cat:thm:cl-geometric-soundness}. W drugą stronę stosujemy założenie do modelu generycznego w odpowiedniej kategorii syntaktycznej. Jej porządek podobiektów odtwarza dowodliwość przez twierdzenie~\ref{cat:thm:cl-geometric-syntactic}.
+\end{proof}
+
+Nie jest to jeszcze twierdzenie o zupełności względem modeli w zbiorach. W szczególności dla teorii geometrycznych z nieskończonymi alternatywami nie wolno utożsamiać wszystkich modeli kategorialnych z modelami w zbiorach. Do porównania tych rodzajów semantyki powrócimy przy toposach klasyfikujących.
+
+\subsection{Niezmienniczość formuł geometrycznych względem obrazów odwrotnych}
+
+\begin{twierdzenie}[Transport modeli geometrycznych]\label{cat:thm:cl-geometric-inverse-image}
+Niech $f:\mathcal F\to\mathcal E$ będzie morfizmem geometrycznym toposów Grothendiecka, z obrazem odwrotnym $f^*:\mathcal E\to\mathcal F$. Dla każdej struktury $M$ w $\mathcal E$ i formuły geometrycznej $\varphi$ zachodzi kanoniczna równość podobiektów
+\[
+ f^*\llbracket\varphi\rrbracket_{M,\vec x}
+ =\llbracket\varphi\rrbracket_{f^*M,\vec x}
+\]
+po utożsamieniu obiektów kontekstu przez zachowywanie skończonych iloczynów. W szczególności $f^*$ przenosi modele teorii geometrycznej na modele tej samej teorii i homomorfizmy modeli na homomorfizmy.
+\end{twierdzenie}
+\begin{proof}
+Obraz odwrotny zachowuje skończone granice z definicji morfizmu geometrycznego oraz wszystkie małe kogranice jako lewy sprzężony. Zachowuje więc monomorfizmy przez kryterium diagonali, a regularne epimorfizmy jako koequalizatory. Zachowuje obrazy przez jednoznaczność rozkładów obrazowych. Z twierdzenia~\ref{cat:prop:cl-topos-geometric-category} suma podobiektów jest obrazem morfizmu z koproduktu, więc $f^*$ zachowuje również wszystkie małe sumy podobiektów. Stosujemy indukcję po formułach, jak w dowodzie twierdzenia~\ref{cat:thm:cl-geometric-syntactic-universal}: interpretacje atomów, koniunkcji i kwantyfikacji egzystencjalnej są zachowywane przez regularność, a alternatywy przez zachowywanie sum. Faktoryzacja monomorfizmów jest zachowywana przez dowolny funktor, więc spełnienie sekwentów jest zachowywane. Warunki zgodności homomorfizmu modeli z operacjami i relacjami są równościami morfizmów i faktoryzacjami przez podobiekty, a zatem także są zachowywane.
+\end{proof}
+
+\begin{przyklad}[Geometryczna teoria pierścieni lokalnych]\label{cat:ex:cl-local-rings}
+Rozważmy sygnaturę pierścieni przemiennych z jedynką i teorię równościową ich aksjomatów. Dołączamy sekwenty
+\[
+ (0=1)\vdash_{\varnothing}\bot,
+ \qquad
+ \top\vdash_x
+ (\exists y\,xy=1)\vee(\exists z\,(1-x)z=1).
+\]
+Są koherentne, a zatem geometryczne. W zbiorach ich modele są dokładnie niezerowymi pierścieniami lokalnymi. Istotnie, w pierścieniu lokalnym elementy nieodwracalne tworzą jedyny ideał maksymalny, więc $x$ i $1-x$ nie mogą oba należeć do niego. Odwrotnie, w niezerowym pierścieniu przemiennym każdy element nieodwracalny należy do pewnego ideału maksymalnego. Gdyby istniały dwa różne ideały maksymalne $\mathfrak m,\mathfrak n$, mielibyśmy $\mathfrak m+\mathfrak n=R$; można więc zapisać $1=x+y$ z $x\in\mathfrak m$ i $y\in\mathfrak n$. Ani $x$, ani $1-x=y$ nie byłyby odwracalne, wbrew aksjomatowi. Korzystamy tu z klasycznego twierdzenia o istnieniu ideału maksymalnego zawierającego dany ideał właściwy: rodzina ideałów właściwych zawierających dany ideał, uporządkowana przez inkluzję, spełnia założenia lematu Zorna, ponieważ suma łańcucha ideałów właściwych jest ideałem właściwym (nie zawiera $1$). Dla elementu nieodwracalnego $x$ ideał $(x)$ jest właściwy, a w pierścieniu niezerowym właściwy jest również ideał zerowy. Stąd zarówno istnienie ideału maksymalnego, jak i użyta charakterystyka elementów nieodwracalnych.
+
+W toposie snopów aksjomat dla $x$ ma znaczenie lokalne: dla każdego przekroju pierścienia na otwartym zbiorze istnieje pokrycie, na którego elementach $x$ lub $1-x$ posiada lokalną odwrotność. W szczególności snop rzeczywistych funkcji ciągłych na przestrzeni topologicznej spełnia ten aksjomat. Dla funkcji $a:U\to\mathbb R$ otwarte zbiory $\{a\neq0\}$ i $\{a\neq1\}$ pokrywają $U$; na pierwszym odwrotna jest funkcja $1/a$, na drugim $1/(1-a)$. Równość $0=1$ zachodzi wyłącznie na pustym otwartym zbiorze. Reguły Kripkego--Joyala z twierdzenia~\ref{cat:thm:cl-kripke-joyal} dają oba sekwenty, choć pierścień przekrojów na danym otwartym zbiorze nie musi być lokalny jako zwykły pierścień. Na przykład dla przestrzeni $\mathbb R$ i $U=\mathbb R$ funkcja $a(t)=t$ nie jest odwracalna, ponieważ znika w zerze, a $1-a$ nie jest odwracalna, ponieważ znika w jedynce. Aksjomat alternatywy zawodzi zatem w zwykłym pierścieniu $C(\mathbb R,\mathbb R)$, mimo że zachodzi wewnętrznie dla snopu funkcji ciągłych. Różnica polega dokładnie na lokalnym charakterze alternatywy.
+\end{przyklad}
+
+\begin{przyklad}[Obraz odwrotny nie musi zachowywać negacji]\label{cat:ex:cl-inverse-image-negation}
+Rozważmy punkt $0\in\mathbb R$ i odpowiadający mu morfizm geometryczny $\mathbf{Set}\to\operatorname{Sh}(\mathbb R)$ z obrazem odwrotnym $p^*$ danym przez źdźbło (przykład~\ref{cat:ex:topos-point}). Niech $P\hookrightarrow1$ odpowiada otwartemu zbiorowi $\mathbb R\setminus\{0\}$. W przykładzie~\ref{cat:ex:cl-open-truth} wykazaliśmy, że $\neg P=0_1$. Ponieważ żadne otwarte otoczenie zera nie jest zawarte w $\mathbb R\setminus\{0\}$, źdźbło $p^*P$ jest zbiorem pustym. Źdźbło $\neg P$ również jest puste, podczas gdy $\neg(p^*P)$ jest największym podobiektem zbioru jednoelementowego, czyli jest niepuste. Mamy
+\[
+ p^*(\neg P)\neq\neg(p^*P).
+\]
+Obraz odwrotny zachowuje zatem formuły geometryczne, ale nie musi zachowywać dowolnych formuł intuicjonistycznych. W szczególności nie można rozszerzyć twierdzenia~\ref{cat:thm:cl-geometric-inverse-image} na negację przez samo powołanie się na lewostronną dokładność.
+
+Niezachowywanie kwantyfikacji ogólnej widać również bez użycia negacji. Niech $N$ będzie snopem lokalnie stałych funkcji o wartościach w $\mathbb N_{\geq1}$ na $\mathbb R$, a $R\hookrightarrow N$ podsnopem funkcji $n:U\to\mathbb N_{\geq1}$ takich, że $|t|<1/n(t)$ dla wszystkich $t\in U$. Jest to podsnop: warunek jest lokalny i stabilny przy restrykcjach. Każdy element źdźbła $N_0\cong\mathbb N_{\geq1}$ należy do $R_0$, ponieważ stała funkcja o wartości $k$ spełnia warunek na $(-1/k,1/k)$. Stąd w zbiorach zdanie $\forall n\in N_0\,R_0(n)$ jest prawdziwe. Natomiast żadne otwarte otoczenie zera nie wymusza zdania $\forall n:N\,R(n)$: zawiera punkt $t\neq0$, a dla dostatecznie dużego $k$ stały przekrój $k$ na tym otoczeniu nie spełnia nierówności w $t$. Reguła kwantyfikacji ogólnej z twierdzenia~\ref{cat:thm:cl-kripke-joyal} wyklucza więc wymuszanie. Obraz odwrotny zdania ogólnego jest fałszywy, choć zdanie ogólne utworzone z przeniesionego predykatu jest prawdziwe.
+\end{przyklad}
+
+\subsection{Topologia syntaktyczna}
+
+\begin{definicja}[Rodzina pokrywająca w kategorii geometrycznej]\label{cat:def:cl-geometric-cover}
+Niech $\mathcal C$ będzie małą kategorią geometryczną. Małą rodzinę morfizmów $(u_i:U_i\to X)_{i\in I}$, w tym rodzinę pustą, nazywamy pokrywającą, jeżeli
+\[
+ \bigvee_{i\in I}\operatorname{im}(u_i)=\top_X.
+\]
+Sito na $X$ jest pokrywające, jeżeli zawiera taką rodzinę. W kategorii koherentnej stosujemy analogiczną definicję, wymagając skończonej rodziny pokrywającej.
+\end{definicja}
+
+Przyjmujemy małe kategorie i rodziny względem odpowiedniego uniwersum; dla kategorii syntaktycznej geometrycznej wybieramy małą kategorię równoważną, jak w twierdzeniu~\ref{cat:thm:cl-geometric-syntactic}. Jeżeli używamy dwóch uniwersów, kresy górne i rodziny muszą odpowiadać temu samemu zakresowi małości. W szczególności nie wymagamy istnienia alternatyw indeksowanych klasą właściwą.
+
+\begin{twierdzenie}[Topologia pokryć obrazowych]\label{cat:thm:cl-syntactic-topology}
+Rodziny pokrywające z definicji~\ref{cat:def:cl-geometric-cover} tworzą pretopologię i wyznaczają topologię Grothendiecka. Topologia ta jest subkanoniczna, to znaczy każdy presnop reprezentowalny jest snopem.
+\end{twierdzenie}
+\begin{proof}
+Identyczność pokrywa, ponieważ ma pełny obraz. Dla dowolnego $g:Y\to X$ przeciągnięcie rodziny $(u_i)$ ma obrazy $g^*\operatorname{im}(u_i)$ przez stabilność obrazów. Ich suma jest $g^*\top_X=\top_Y$ przez zachowywanie sum podobiektów. Jeżeli $(v_{ij}:V_{ij}\to U_i)_j$ pokrywa $U_i$, to
+\[
+ \bigvee_j\operatorname{im}(u_iv_{ij})
+ =\exists_{u_i}\Bigl(\bigvee_j\operatorname{im}(v_{ij})\Bigr)
+ =\exists_{u_i}\top_{U_i}
+ =\operatorname{im}(u_i).
+\]
+Pierwsza równość wynika ze składania lewych sprzężeń i zachowywania kresów górnych przez lewe sprzężenie (twierdzenie~\ref{cat:thm:cl-exists-adjoint}). Sumując po $i$, otrzymujemy pełny obraz rodziny złożonej. Dla pokryć koherentnych suma skończonej liczby skończonych rodzin pozostaje skończona; w przypadku geometrycznym małość rodziny złożonej wynika z domknięcia ustalonego uniwersum na małe sumy zbiorów indeksów.
+
+Można teraz bezpośrednio sprawdzić aksjomaty topologii Grothendiecka z definicji~\ref{cat:def:grothendieck-topology}. Sito maksymalne zawiera identyczność. Przeciwobraz sita pokrywającego zawiera przeciągnięcia rodziny pokrywającej. Dla aksjomatu lokalności wybieramy rodzinę $(u_i)$ w sicie pokrywającym, a w każdym przeciwobrazie rozpatrywanego sita wybieramy rodzinę $(v_{ij})$ pokrywającą $U_i$. Złożenia $u_iv_{ij}$ należą do rozpatrywanego sita i tworzą rodzinę pokrywającą. To daje aksjomat lokalności.
+
+Wykażemy subkanoniczność. Niech $(a_i:U_i\to Z)$ będzie zgodną rodziną morfizmów na pokryciu $(u_i:U_i\to X)$, czyli oba złożenia do $Z$ na każdym $U_i\times_X U_j$ są równe. Tworzymy podobiekty
+\[
+ R_i=\operatorname{im}\bigl((u_i,a_i):U_i\to X\times Z\bigr),
+ \qquad R=\bigvee_iR_i.
+\]
+Pierwsza projekcja $R\to X$ ma pełny obraz, ponieważ jej obraz zawiera wszystkie $\operatorname{im}(u_i)$. Jest także monomorfizmem. Aby to wykazać, w $X\times Z\times Z$ rozpatrujemy podobiekt
+\[
+ p_{12}^*R\wedge p_{13}^*R
+ =\bigvee_{i,j}(p_{12}^*R_i\wedge p_{13}^*R_j),
+\]
+gdzie równość pochodzi ze stabilności sum i rozdzielności (stwierdzenie~\ref{cat:prop:cl-coherent-distributivity}). Każdy składnik jest obrazem morfizmu
+\[
+ U_i\times_X U_j\longrightarrow X\times Z\times Z,\qquad
+ (u_i\pi_i,a_i\pi_i,a_j\pi_j).
+\]
+Istotnie, rozkłady obrazowe obu map do $X\times Z$ dają regularne epimorfizmy $U_i\to R_i$, $U_j\to R_j$, których iloczyn włóknisty nad $X$ jest regularnym epimorfizmem: rozkładamy go na dwie zmiany bazy i stosujemy stabilność oraz składanie regularnych epimorfizmów (stwierdzenie~\ref{cat:prop:barr-regular-epi-comp}). Obiekt $R_i\times_X R_j$ jest właśnie wskazanym przecięciem w $X\times Z\times Z$. Zgodność rodziny oznacza, że każdy z tych obrazów zawiera się w podobiekcie równości dwóch ostatnich współrzędnych. Zatem ich suma również się w nim zawiera. Na parze jądrowej $R\to X$ drugie współrzędne są równe, a z monomorficzności $R\hookrightarrow X\times Z$ wynika monomorficzność $R\to X$.
+
+Jako regularny epimorfizm i monomorfizm pierwsza projekcja jest izomorfizmem. Relacja $R$ jest więc wykresem morfizmu $a:X\to Z$: składamy odwrotność pierwszej projekcji z drugą projekcją. Ponieważ $(u_i,a_i)$ faktoryzuje się przez $R_i\hookrightarrow R$, a na wykresie druga projekcja jest złożeniem $a$ z pierwszą, otrzymujemy $au_i=a_i$. Jeżeli dwa morfizmy mają te same złożenia z $u_i$, ich equalizator zawiera wszystkie obrazy $\operatorname{im}(u_i)$, a więc jest pełnym podobiektem $X$. Morfizmy są równe. Dowodzi to warunku sklejania dla rodziny pokrywającej, także pustej. Dla sita pokrywającego ograniczamy zgodną rodzinę do zawartego w nim pokrycia. Dokładniej dla dowolnej strzałki $v:V\to X$ w sicie rozpatrujemy pokrycie $(V\times_X U_i\to V)_i$. Na każdym jego elemencie złożenie $av$ i przypisana strzałce $v$ składowa rodziny zgodnej są równe: oba są restrykcjami składowej na wspólnym złożeniu $V\times_X U_i\to X$. Udowodniona jednoznaczność sklejenia daje ich równość na $V$. Otrzymujemy warunek snopu dla sit z definicji~\ref{cat:def:site-sheaf}.
+\end{proof}
+
+Dla kategorii syntaktycznej $\mathcal C_T^{\mathrm{geom}}$ topologię tę oznaczamy przez $J_T$. Jeśli $u_i$ są reprezentowane przez relacje funkcjonalne $\theta_i(\vec y_i,\vec x)$ o wspólnej przeciwdziedzinie $\{\vec x\mid\varphi\}$, warunek pokrycia przyjmuje postać sekwentu
+\[
+ \varphi\vdash_{\vec x}^T
+ \bigvee_i\exists\vec y_i\,\theta_i(\vec y_i,\vec x).
+\]
+Jest to bezpośrednie tłumaczenie warunku pokrycia przez opis obrazów i alternatyw w kategorii syntaktycznej. Analogicznie definiujemy topologię koherentną na $\mathcal C_T^{\mathrm{coh}}$.
+
+\subsection{Twierdzenie Diaconescu i topos klasyfikujący}
+
+\begin{definicja}[Funktor ciągły do toposu]\label{cat:def:cl-site-continuous}
+Dla małego miejsca $(\mathcal C,J)$ i toposu Grothendiecka $\mathcal E$ funktor $F:\mathcal C\to\mathcal E$ nazywamy tutaj $J$-ciągłym, jeżeli dla każdego sita pokrywającego $S$ na $X$ rodzina $(F(u):F(U)\to F(X))_{u:U\to X\in S}$ jest wspólnie epimorficzna, tj. morfizm z koproduktu tych obiektów jest epimorfizmem. W toposie epimorfizmy są regularne. Dla topologii generowanej przez pretopologię wystarczy sprawdzać rodziny pokrywające pretopologii.
+\end{definicja}
+
+Ostatnie stwierdzenie dla rozpatrywanej topologii obrazowej wynika wprost z tego, że każde sito pokrywające zawiera rodzinę pokrywającą, a sito generowane przez taką rodzinę składa się ze strzałek faktoryzujących się przez jej składniki. Obrazy tych dodatkowych strzałek nie powiększają sumy obrazów składników.
+
+\begin{twierdzenie}[Diaconescu; wynik zewnętrzny]\label{cat:thm:cl-diaconescu}
+Niech $\mathcal C$ będzie małą kategorią ze skończonymi granicami, $J$ topologią Grothendiecka na $\mathcal C$, a $\mathcal E$ toposem Grothendiecka. Oznaczmy przez $l:\mathcal C\to\operatorname{Sh}(\mathcal C,J)$ funktor Yonedy złożony ze snopifikacją. Istnieje równoważność kategorii
+\[
+ \operatorname{Geom}(\mathcal E,\operatorname{Sh}(\mathcal C,J))
+ \simeq
+ \operatorname{Lex}_J(\mathcal C,\mathcal E),
+ \qquad f\longmapsto f^*l.
+\]
+Po prawej występują funktory zachowujące skończone granice i $J$-ciągłe oraz transformacje naturalne. Po lewej morfizmy między morfizmami geometrycznymi rozumiemy jako transformacje naturalne ich obrazów odwrotnych, w tym samym kierunku. Równoważność jest pseudonaturalna względem zmiany toposu $\mathcal E$.
+\end{twierdzenie}
+
+Korzystamy z twierdzenia Diaconescu w wersji dla miejsca ze skończonymi granicami, por. S.~Mac Lane, I.~Moerdijk, \emph{Sheaves in Geometry and Logic}, rozdział VII, \S7, oraz O.~Caramello, \emph{Theories, Sites, Toposes}, twierdzenie 2.1.11. Ogólna wersja posługuje się wewnętrznie płaskimi funktorami; dla kategorii ze skończonymi granicami płaskość jest równoważna zachowywaniu skończonych granic. Nie utożsamiamy płaskości z samą ciągłością względem topologii.
+
+Mechanizm twierdzenia można opisać następująco. Dla funktora $F:\mathcal C\to\mathcal E$ definiujemy funktor na presnopach wzorem
+\[
+ L_F(P)=\varinjlim_{(c,x)\in\int P}F(c),
+\]
+gdzie $\int P$ jest kategorią elementów presnopu. Strzałka $(c,x)\to(d,y)$ jest strzałką $u:c\to d$ taką, że $P(u)(y)=x$. Własność uniwersalna kogranicy daje sprzężenie z funktorem $R_F$ określonym przez $R_F(E)(c)=\operatorname{Hom}_{\mathcal E}(F(c),E)$. Istotnie, morfizm $L_F(P)\to E$ jest zgodną rodziną morfizmów $F(c)\to E$ dla elementów $x\in P(c)$, czyli dokładnie transformacją naturalną $P\to R_F(E)$. Funktor $L_F$ ograniczony do presnopów reprezentowalnych odtwarza $F$, ponieważ kategoria elementów $y(c)$ ma obiekt końcowy $(c,\id_c)$. Jeżeli $F$ zachowuje skończone granice i jest $J$-ciągły, można bezpośrednio wykazać, że $R_F(E)$ jest snopem. Zgodna rodzina na sicie pokrywającym $S$ na $c$ jest rodziną strzałek $F(d)\to E$ indeksowaną przez $u:d\to c$ w $S$. Dla dwóch takich strzałek $u,v$ zgodność daje równość na $F(d\times_c d')\cong F(d)\times_{F(c)}F(d')$. Rodzina $(F(u))_{u\in S}$ pokrywa $F(c)$ w sensie definicji~\ref{cat:def:cl-geometric-cover}, więc argument sklejania z twierdzenia~\ref{cat:thm:cl-syntactic-topology} w toposie $\mathcal E$ daje jedyny morfizm $F(c)\to E$ przedłużający rodzinę. Oznacza to warunek snopu. W konsekwencji sprzężenie $L_F\dashv R_F$ faktoryzuje się przez snopifikację $a_J$: dla presnopu $P$ i snopu $R_F(E)$ mamy naturalną bijekcję
+\[
+ \operatorname{Hom}(P,R_F(E))\cong\operatorname{Hom}(a_J P,R_F(E)),
+\]
+gdzie pierwszy zbiór morfizmów jest obliczany w presnopach, drugi w snopach. Z lematu Yonedy wynika $L_F(P)\cong L_F(i a_J P)$, gdzie $i$ jest włożeniem snopów. Lewostronną dokładność $L_F$ dla funktorów płaskich oraz pełną równoważność kategorii pozostawiamy jako treść zewnętrznego twierdzenia Diaconescu.
+
+\begin{stwierdzenie}[Ciągłość a zachowywanie struktury geometrycznej]\label{cat:prop:cl-continuous-geometric}
+Niech $\mathcal C$ będzie małą kategorią geometryczną, z topologią pokryć obrazowych, a $\mathcal E$ toposem Grothendiecka. Funktor $F:\mathcal C\to\mathcal E$ zachowujący skończone granice jest ciągły wtedy i tylko wtedy, gdy jest geometryczny w sensie definicji~\ref{cat:def:cl-coherent-category}. Analogicznie dla kategorii koherentnej i jej topologii koherentnej ciągłość jest równoważna koherentności funktora.
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $F$ zachowuje regularne epimorfizmy i skończone granice, zachowuje obrazy przez jednoznaczność rozkładów obrazowych. Jeżeli ponadto zachowuje odpowiednie sumy, wysyła każdą rodzinę pokrywającą na rodzinę o pełnej sumie obrazów. W toposie Grothendiecka jest to rodzina wspólnie epimorficzna przez stwierdzenie~\ref{cat:prop:cl-topos-geometric-category}.
+
+Odwrotnie każdy regularny epimorfizm jest jednoelementowym pokryciem. Ciągłość oznacza, że jego obraz przez $F$ jest epimorfizmem, a więc regularnym epimorfizmem w toposie. Funktor $F$ jest zatem regularny. Dla rodziny podobiektów $U_i\hookrightarrow X$ niech $U=\bigvee_iU_i$. Włożenia $U_i\hookrightarrow U$ tworzą pokrycie: ich suma w $U$ jest pełna, ponieważ składanie monomorfizmów z $U\hookrightarrow X$ utożsamia podobiekty $U$ z podobiektami $X$ zawartymi w $U$. Obrazy tej rodziny przez $F$ pokrywają $F(U)$. Ponieważ $F$ zachowuje monomorfizmy, $F(U)$ jest podobiektem $F(X)$ zawierającym wszystkie $F(U_i)$, a ich suma w $F(U)$ jest pełna. To oznacza $F(U)=\bigvee_iF(U_i)$ jako podobiekty $F(X)$, także dla pustej rodziny. Dowód działa w obu zakresach małości.
+\end{proof}
+
+\begin{definicja}[Topos klasyfikujący i model uniwersalny]\label{cat:def:cl-classifying-topos}
+Toposem klasyfikującym teorii geometrycznej $T$ nazywamy topos Grothendiecka $\mathcal B_T$ z modelem $U_T$ teorii $T$, taki że dla każdego toposu Grothendiecka $\mathcal E$ funktor
+\[
+ \operatorname{Geom}(\mathcal E,\mathcal B_T)
+ \longrightarrow \operatorname{Mod}_T(\mathcal E),
+ \qquad f\longmapsto f^*U_T
+\]
+jest równoważnością kategorii pseudonaturalną względem $\mathcal E$. Model $U_T$ nazywamy modelem uniwersalnym. Konwencja dotycząca morfizmów po lewej jest taka sama jak w twierdzeniu~\ref{cat:thm:cl-diaconescu}.
+\end{definicja}
+
+\begin{twierdzenie}[Istnienie toposu klasyfikującego]\label{cat:thm:cl-classifying-existence}
+Dla teorii geometrycznej $T$ w małej sygnaturze, z alternatywami indeksowanymi małymi zbiorami, topos $\operatorname{Sh}(\mathcal C_T^{\mathrm{geom}},J_T)$ (na małej prezentacji kategorii syntaktycznej) jest toposem klasyfikującym. Możemy przyjąć mały zbiór aksjomatów bez zmiany teorii: w każdym kontekście zastępujemy obie strony sekwentu ich postaciami normalnymi ze stwierdzenia~\ref{cat:prop:cl-geometric-normal-form}, a następnie usuwamy powtórzenia. Zbiór możliwych tak znormalizowanych sekwentów jest mały, a obie rodziny aksjomatów mają te same modele i tę samą relację dowodliwości. Dla teorii koherentnej można zamiast tego użyć koherentnej kategorii syntaktycznej i jej topologii koherentnej. Model uniwersalny otrzymuje się z modelu generycznego w kategorii syntaktycznej przez funktor Yonedy ze snopifikacją.
+\end{twierdzenie}
+\begin{proof}
+Niech $\mathcal C$ oznacza odpowiednią kategorię syntaktyczną. Jej topologia jest subkanoniczna przez twierdzenie~\ref{cat:thm:cl-syntactic-topology}, więc $l=a_Jy$ utożsamia się z funktorem Yonedy do snopów i jest w pełni wierny. Zachowuje skończone granice, ponieważ Yoneda i snopifikacja je zachowują. Jest ciągły: jest obrazem odwrotnym identyczności toposu zastosowanym do $l$ w twierdzeniu~\ref{cat:thm:cl-diaconescu}. Przez stwierdzenie~\ref{cat:prop:cl-continuous-geometric} zachowuje strukturę odpowiedniego fragmentu logiki. Wobec tego $U_T=l(G_T)$ jest modelem.
+
+Dla dowolnego toposu $\mathcal E$ składamy równoważności z twierdzenia~\ref{cat:thm:cl-diaconescu}, stwierdzenia~\ref{cat:prop:cl-continuous-geometric} oraz twierdzenia~\ref{cat:thm:cl-geometric-syntactic-universal}. W przypadku geometrycznym otrzymujemy
+\[
+ \operatorname{Geom}(\mathcal E,\operatorname{Sh}(\mathcal C,J))
+ \simeq\operatorname{Lex}_J(\mathcal C,\mathcal E)
+ =\operatorname{Geom}(\mathcal C,\mathcal E)
+ \simeq\operatorname{Mod}_T(\mathcal E),
+\]
+gdzie środkowy symbol $\operatorname{Geom}(\mathcal C,\mathcal E)$ oznacza funktory geometryczne między kategoriami, a pierwszy morfizmy geometryczne toposów. W przypadku koherentnym w środkowej kategorii używamy funktorów koherentnych. Obrazem $f$ jest $(f^*l)(G_T)=f^*U_T$. Pseudonaturalność wynika z pseudonaturalności twierdzenia Diaconescu i z tego, że obrazy odwrotne zachowują interpretacje formuł (twierdzenie~\ref{cat:thm:cl-geometric-inverse-image}); kanoniczne izomorfizmy interpretacji są zgodne ze składaniem przez jednoznaczność izomorfizmów granic i obrazów. To daje wymaganą własność.
+\end{proof}
+
+\begin{wniosek}[Jedyność toposu klasyfikującego]\label{cat:cor:cl-classifying-unique}
+Dwa toposy klasyfikujące tej samej teorii są równoważne jako toposy, a równoważność identyfikuje ich modele uniwersalne.
+\end{wniosek}
+\begin{proof}
+Niech $(\mathcal B,U)$ i $(\mathcal D,V)$ będą dwiema parami klasyfikującymi. Z własności uniwersalnej otrzymujemy $f:\mathcal B\to\mathcal D$ i $g:\mathcal D\to\mathcal B$ z $f^*V\cong U$ i $g^*U\cong V$. Zatem $(gf)^*U\cong U$ oraz $(fg)^*V\cong V$. Pełna wierność równoważności klasyfikujących daje odwracalne transformacje między odpowiednimi obrazami odwrotnymi złożeń i identyczności. Ponieważ obrazy odwrotne i ich prawe sprzężenia wyznaczają morfizmy geometryczne z dokładnością do izomorfizmu, otrzymujemy równoważność toposów.
+\end{proof}
+
+\begin{wniosek}[Zupełność względem modelu uniwersalnego]\label{cat:cor:cl-universal-completeness}
+Dla teorii geometrycznej $T$ sekwent geometryczny jest dowodliwy w $T$ w rachunku geometrycznym wtedy i tylko wtedy, gdy jest spełniony w modelu uniwersalnym w toposie klasyfikującym. Jeżeli $T$ początkowo jest koherentna, traktujemy ją w tej tezie jako teorię geometryczną; odrębna teza o dowodliwości koherentnej zostanie uzasadniona poniżej. W konsekwencji dowodliwość jest równoważna spełnieniu we wszystkich modelach $T$ w toposach Grothendiecka.
+\end{wniosek}
+\begin{proof}
+Poprawność daje pierwszą implikację. W toposie z twierdzenia~\ref{cat:thm:cl-classifying-existence} interpretacja każdej formuły jest obrazem interpretacji w modelu generycznym przez $l$, który zachowuje strukturę geometryczną. Pełna wierność $l$ oznacza, że faktoryzacja między dwoma takimi monomorfizmami w toposie pochodzi z faktoryzacji w kategorii syntaktycznej: pełność daje morfizm, a wierność odzwierciedla równość jego złożenia z włożeniem. Porządek podobiektów syntaktycznych odtwarza dowodliwość. Dla dowolnego innego modelu uniwersalnego korzystamy z wniosku~\ref{cat:cor:cl-classifying-unique}. Ostatnia teza wynika z zastosowania założenia do samego toposu klasyfikującego.
+\end{proof}
+
+\subsection{Równoważność Mority teorii geometrycznych}
+
+\begin{definicja}[Równoważność Mority]\label{cat:def:cl-morita}
+Dwie teorie geometryczne $T,S$ nazywamy równoważnymi w sensie Mority, jeżeli ich toposy klasyfikujące są równoważne jako toposy. Równoważnie istnieją równoważności kategorii modeli w każdym toposie Grothendiecka, pseudonaturalne względem obrazów odwrotnych morfizmów geometrycznych.
+\end{definicja}
+
+Uzasadnimy równoważność obu warunków. Równoważność toposów klasyfikujących indukuje przez składanie równoważności kategorii morfizmów geometrycznych z każdego toposu. Własność klasyfikująca przenosi je na modele, a pseudonaturalność wynika ze zgodności składania. Odwrotnie z pseudonaturalnych równoważności modeli i własności klasyfikującej otrzymujemy pseudonaturalną równoważność reprezentowanych funktorów
+\[
+ \operatorname{Geom}(-,\mathcal B_T)\simeq
+ \operatorname{Geom}(-,\mathcal B_S).
+\]
+Wartość tej równoważności na identyczności $\mathcal B_T$ daje morfizm $f:\mathcal B_T\to\mathcal B_S$, a wartość równoważności odwrotnej na identyczności $\mathcal B_S$ daje $g:\mathcal B_S\to\mathcal B_T$. Pseudonaturalność względem $f$ i $g$ identyfikuje obrazy dowolnego morfizmu z odpowiednim złożeniem z $f$ lub $g$. Izomorfizmy obu złożeń równoważności z identycznościami dają więc $gf\cong\id_{\mathcal B_T}$ i $fg\cong\id_{\mathcal B_S}$. Jest to argument reprezentowalności w wersji dwukategorialnej. Równoważność samych kategorii modeli w zbiorach bez informacji o zmianie bazy nie stanowi powyższego kryterium. Konkretny kontrprzykład otrzymamy z teorii z przykładu~\ref{cat:ex:cl-pointless-theory} oraz teorii sprzecznej z aksjomatem $\top\vdash\bot$: obie mają pustą kategorię modeli zbiorowych, ale tylko druga ma zdegenerowany topos klasyfikujący (jej model uniwersalny spełnia $\top\vdash\bot$).
+
+\begin{przyklad}[Dodanie sortu iloczynowego]\label{cat:ex:cl-morita-product}
+Niech $T$ będzie teorią geometryczną z sortami $A,B$. Rozszerzamy ją do $T'$ przez dodanie sortu $C$ i symboli projekcji $p:C\to A$, $q:C\to B$, z sekwentami
+\[
+ \top\vdash_{a:A,b:B}\exists c:C\,(p(c)=a\wedge q(c)=b),
+\]
+\[
+ p(c)=p(c')\wedge q(c)=q(c')\vdash_{c,c':C}c=c'.
+\]
+W każdym toposie Grothendiecka pierwsza formuła mówi, że $(p,q):C\to A\times B$ ma pełny obraz, a druga że jest monomorfizmem. Zatem jest izomorfizmem. Każdy model $T$ rozszerza się przez przyjęcie $C=A\times B$ z projekcjami. Homomorfizm modeli wyznacza składową na $C$ jednoznacznie przez własność uniwersalną iloczynu, a ta składowa istnieje dla dowolnego homomorfizmu wyjściowego. Funktor zapominający jest więc równoważnością kategorii modeli. Obrazy odwrotne zachowują iloczyny, toteż równoważności są pseudonaturalne. Teorie $T,T'$ są równoważne w sensie Mority mimo różnych sygnatur.
+\end{przyklad}
+
+\begin{przyklad}[Topos klasyfikujący teorię jednego zdania]\label{cat:ex:cl-proposition-classifier}
+Rozważmy teorię bez sortów, z jednym zerowym symbolem relacji $P$ i bez dodatkowych aksjomatów. Jej modele w toposie $\mathcal E$ to podobiekty $1_{\mathcal E}$; homomorfizmy są dokładnie inkluzjami tych podobiektów. Topos presnopów na kategorii $\mathbf 2=(0\to1)$ klasyfikuje tę teorię. Istotnie $\mathbf 2$ ma skończone granice (obiekt końcowy $1$, iloczyny dane minimum, equalizatory identycznych równoległych strzałek). Funktor zachowujący skończone granice wysyła $1$ na obiekt końcowy, a $0\to1$ na monomorfizm, gdyż zachowuje kwadrat diagonalny. Odwrotnie dowolny podobiekt obiektu końcowego wyznacza taki funktor: iloczyn podobiektu obiektu końcowego z nim samym identyfikuje się z nim przez monomorficzność, a pozostałe iloczyny i equalizatory są zachowywane wprost. Transformacje naturalne odpowiadają inkluzjom. Z twierdzenia Diaconescu dla topologii, w której pokrywają tylko sita maksymalne, otrzymujemy żądaną własność klasyfikującą. Model uniwersalny to włożenie presnopu reprezentowanego przez $0$ do presnopu reprezentowanego przez $1$. 
+\end{przyklad}
+
+\subsection{Punkty toposu klasyfikującego i modele w zbiorach}
+
+\begin{definicja}[Punkt i dostateczna rodzina punktów]\label{cat:def:cl-enough-points}
+Punktem toposu Grothendiecka $\mathcal B$ jest morfizm geometryczny $p:\mathbf{Set}\to\mathcal B$. Rodzina punktów jest dostateczna, jeżeli funktory $p^*:\mathcal B\to\mathbf{Set}$ są wspólnie konserwatywne: morfizm, którego obraz przez każdy z tych funktorów jest izomorfizmem, sam jest izomorfizmem. Mówimy, że topos ma dostatecznie wiele punktów, gdy istnieje taka rodzina. W przypadku toposu zdegenerowanego (tj. $0\cong1$) rodzina pusta jest dostateczna, ponieważ każdy morfizm jest izomorfizmem. Rzeczywiście dla każdego $X$ funktor $X\times-$ jest lewym sprzężonym do $(-)^X$, zatem zachowuje obiekt początkowy. Stąd $X\cong X\times1\cong X\times0\cong0$ i każdy obiekt jest początkowy. Między dowolnymi dwoma obiektami istnieje wtedy dokładnie jeden morfizm i jest on izomorfizmem. Dla toposu niezdegenerowanego rodzina dostateczna musi być niepusta: inaczej warunek konserwatywności oznaczałby w szczególności izomorficzność morfizmu $0\to1$.
+\end{definicja}
+
+Nie mylimy punktu toposu z elementem globalnym danego obiektu. W toposie snopów na przestrzeni topologicznej punkt przestrzeni indukuje punkt toposu, którego obrazem odwrotnym jest funktor źdźbła (przykład~\ref{cat:ex:topos-point}).
+
+\begin{stwierdzenie}[Punkty jako modele]\label{cat:prop:cl-points-models}
+Dla teorii geometrycznej $T$ istnieje równoważność
+\[
+ \operatorname{Geom}(\mathbf{Set},\mathcal B_T)
+ \simeq\operatorname{Mod}_T(\mathbf{Set}).
+\]
+Przyporządkowuje ona punktowi $p$ model $p^*U_T$, a transformacjom naturalnym obrazów odwrotnych homomorfizmy modeli. Jeżeli $\mathcal B_T$ ma dostatecznie wiele punktów, to dowodliwość sekwentu geometrycznego w $T$ jest równoważna jego spełnieniu we wszystkich modelach $T$ w zbiorach.
+\end{stwierdzenie}
+\begin{proof}
+Pierwsza teza jest własnością klasyfikującą dla $\mathcal E=\mathbf{Set}$. Dla drugiej niech $P,Q\hookrightarrow X$ będą interpretacjami przesłanki i konkluzji sekwentu w $U_T$. Jeżeli sekwent zachodzi we wszystkich modelach zbiorowych, to dla każdego punktu $p$ zachodzi $p^*P\leq p^*Q$ przez twierdzenie~\ref{cat:thm:cl-geometric-inverse-image}. Morfizm $P\wedge Q\to P$ staje się izomorfizmem po zastosowaniu każdego $p^*$, ponieważ te funktory zachowują skończone granice. Z konserwatywności rodziny punktów morfizm ten jest izomorfizmem. Oznacza to $P\leq Q$, a wniosek~\ref{cat:cor:cl-universal-completeness} daje dowodliwość. Implikacja odwrotna wynika z poprawności rachunku.
+\end{proof}
+
+\begin{twierdzenie}[Deligne; wynik zewnętrzny]\label{cat:thm:cl-deligne}
+Jeżeli małe miejsce ma skończone granice i każde sito pokrywające zawiera sito generowane przez skończoną rodzinę pokrywającą, to jego topos snopów ma dostatecznie wiele punktów.
+\end{twierdzenie}
+
+Jest to wersja twierdzenia Deligne'a dla miejsc koherentnych; zob. \emph{SGA 4}, exposé VI, dodatek 9, stwierdzenie 9.0. Przyjmujemy ten wynik w klasycznej metateorii z aksjomatem wyboru. Nie wynika on z samego istnienia klasyfikatora podobiektów ani ze zwykłego warunku snopu.
+
+\begin{wniosek}[Zupełność koherentna względem zbiorów]\label{cat:cor:cl-coherent-set-completeness}
+Dla teorii koherentnej $T$ sekwent koherentny jest dowodliwy w jej rachunku koherentnym wtedy i tylko wtedy, gdy jest spełniony we wszystkich jej modelach w zbiorach.
+\end{wniosek}
+\begin{proof}
+Topos klasyfikujący $T$ można zrealizować jako topos snopów na koherentnej kategorii syntaktycznej z topologią koherentną (twierdzenie~\ref{cat:thm:cl-classifying-existence}). Miejsce to ma skończone granice, a każde sito pokrywające zawiera skończoną rodzinę pokrywającą z definicji topologii. Stosujemy twierdzenie~\ref{cat:thm:cl-deligne}. Jak w dowodzie stwierdzenia~\ref{cat:prop:cl-points-models}, prawdziwość we wszystkich modelach zbiorowych daje prawdziwość w modelu uniwersalnym. Dla tej prezentacji funktor Yonedy jest w pełni wierny i koherentny, więc prawdziwość sekwentu koherentnego w modelu uniwersalnym oznacza jego dowodliwość już w koherentnej kategorii syntaktycznej. Odwrotna implikacja jest poprawnością.
+\end{proof}
+
+\begin{wniosek}[Konserwatywność rozszerzenia fragmentu koherentnego]\label{cat:cor:cl-coherent-conservative}
+Jeżeli teoria $T$ i sekwent $\sigma$ są koherentne, to dowodliwość $\sigma$ w rachunku geometrycznym z aksjomatów $T$ implikuje dowodliwość w rachunku koherentnym.
+\end{wniosek}
+\begin{proof}
+Poprawność rachunku geometrycznego daje spełnienie $\sigma$ w każdym modelu zbiorowym $T$, ponieważ kategoria zbiorów jest geometryczna. Wniosek~\ref{cat:cor:cl-coherent-set-completeness} daje dowód koherentny. Odwrotny kierunek jest bezpośredni, gdyż każda reguła koherentna jest szczególnym przypadkiem reguły geometrycznej.
+\end{proof}
+
+\subsection{Ograniczenia semantyki zbiorowej logiki geometrycznej}
+
+\begin{przyklad}[Geometryczna teoria bez modeli zbiorowych]\label{cat:ex:cl-pointless-theory}
+Niech $H$ będzie małą nietrywialną zupełną bezatomową algebrą Boole'a (zupełność rozumiemy względem tego samego uniwersum co alternatywy teorii). Można przyjąć algebrę regularnych otwartych podzbiorów $\mathbb R$, tj. otwartych $U$ spełniających $U=\operatorname{int}\overline U$. W tej algebrze przecięcie dwóch elementów jest zwykłym przecięciem, negacja $U$ to $\operatorname{int}(\mathbb R\setminus U)$, a kres górny rodziny to $\operatorname{int}\overline{\bigcup_iU_i}$. Korzystamy tu ze standardowego twierdzenia o boolizacji ramy przez podwójną negację (P.~T.~Johnstone, \emph{Stone Spaces}, rozdział II): elementy stałe podwójnej negacji tworzą zupełną algebrę Boole'a. Bezatomowość wynika stąd, że w każdym niepustym otwartym zbiorze można znaleźć dwa rozłączne niepuste otwarte przedziały o domknięciach zawartych w tym zbiorze.
+
+Rozważmy sygnaturę bez sortów, z zerowym symbolem relacji $P_b$ dla każdego $b\in H$. Przyjmijmy aksjomaty geometryczne (wszystkie w pustym kontekście)
+\[
+ P_1\dashv\vdash\top,\qquad P_0\dashv\vdash\bot,\qquad
+ P_{b\wedge c}\dashv\vdash P_b\wedge P_c,\qquad
+ P_{\bigvee_i b_i}\dashv\vdash\bigvee_iP_{b_i}.
+\]
+Ostatni schemat obejmuje wszystkie podzbiory małej algebry $H$. Modelem w toposie $\mathcal E$ jest dokładnie odwzorowanie zachowujące skończone kresy dolne i wszystkie małe kresy górne z $H$ do $\operatorname{Sub}_{\mathcal E}(1)$, tj. homomorfizm ram.
+
+Pokażemy, że nie istnieje taki homomorfizm $q:H\to\mathbf 2$. Gdyby istniał, niech
+\[
+ s=\bigvee\{b\in H:q(b)=0\},\qquad a=\neg s.
+\]
+Mamy $q(s)=0$, ponieważ $q$ zachowuje wszystkie kresy górne. Ponadto $q(a)=1$, gdyż $a\vee s=1$. W szczególności $a\neq0$. Jeżeli $0<c\leq a$, to $q(c)\neq0$: w przeciwnym razie $c\leq s$ oraz $c\leq\neg s$, skąd $c=0$. Gdyby $0<c<a$, także $d=a\wedge\neg c$ byłby niezerowy i zawarty w $a$, więc $q(c)=q(d)=1$. Tymczasem $c\wedge d=0$, a $q$ zachowuje przecięcia. Sprzeczność pokazuje, że $a$ jest atomem.
+
+Teoria ma jednak model w niezerowym toposie. Traktujemy $H$ jako kategorię uporządkowaną z pokryciami $(b_i\leq b)_i$ o $\bigvee_i b_i=b$. Jest to topologia Grothendiecka z twierdzenia~\ref{cat:thm:cl-syntactic-topology}: kategoria $H$ ma skończone granice, każdy morfizm jest monomorfizmem i rozkład obrazowy ma część epimorficzną będącą identycznością. Regularne epimorfizmy są dokładnie identycznościami, a suma podobiektów jest kresem górnym w $H$ i jest stabilna przy przecięciu. Topologia jest więc subkanoniczna.
+
+W toposie $\operatorname{Sh}(H,J)$ interpretujemy $P_b$ jako włożenie reprezentowalnego snopu $y(b)\hookrightarrow y(1)$. Funktor Yonedy do snopów zachowuje skończone granice i jest ciągły przez twierdzenie~\ref{cat:thm:cl-diaconescu}; zatem zachowuje małe sumy podobiektów przez stwierdzenie~\ref{cat:prop:cl-continuous-geometric}. Wszystkie aksjomaty są spełnione. Ponadto $y(0)$ jest obiektem początkowym: reprezentuje najmniejszy podobiekt obiektu końcowego, a w toposie snopów jest nim snop początkowy. Obiekt $y(1)$ jest końcowy. Nie są izomorficzne, gdyż Yoneda jest w pełni wierny i $0\neq1$ w $H$. Topos nie jest zdegenerowany. W konsekwencji sekwent $\top\vdash\bot$ nie jest dowodliwy w tej teorii, choć jest spełniony we wszystkich jej modelach w zbiorach (nie ma żadnego takiego modelu).
+\end{przyklad}
+
+Z własności klasyfikującej wynika, że topos klasyfikujący powyższej teorii nie ma punktów, ale nie jest zdegenerowany: gdyby jego obiekty początkowy i końcowy były izomorficzne, model uniwersalny spełniałby $\top\vdash\bot$, a więc sekwent byłby dowodliwy. Nie przeczy to twierdzeniu Deligne'a, ponieważ aksjomaty wykorzystują dowolne małe alternatywy.
+
+\subsection{Rozszerzenia teorii i podtoposy}
+
+\begin{definicja}[Rozszerzenie aksjomatyczne i podtopos]\label{cat:def:cl-quotient-subtopos}
+Rozszerzeniem aksjomatycznym teorii geometrycznej $T$ nazywamy teorię $T'$ w tej samej sygnaturze, otrzymaną przez dodanie sekwentów geometrycznych. Dwa takie rozszerzenia utożsamiamy, jeżeli mają te same dowodliwe sekwenty geometryczne. Podtoposem toposu $\mathcal B$ nazywamy klasę równoważności włożeń geometrycznych $i:\mathcal D\to\mathcal B$, czyli morfizmów geometrycznych z w pełni wiernym obrazem prostym $i_*$. Równoważność rozumiemy nad $\mathcal B$.
+\end{definicja}
+
+Podtopos nie jest dowolną pełną podkategorią: obraz prosty identyfikuje go z pełną podkategorią refleksyjną, której reflektor $i^*$ zachowuje skończone granice.
+
+\begin{stwierdzenie}[Dodanie aksjomatów jako wzmocnienie topologii]\label{cat:prop:cl-axioms-topology}
+Niech $(\mathcal C_T,J_T)$ będzie geometrycznym miejscem syntaktycznym $T$. Każdy nowy sekwent $\sigma=(\varphi\vdash_{\vec x}\psi)$ określa w $\mathcal C_T$ monomorfizm
+\[
+ m_\sigma:\{\vec x\mid\varphi\wedge\psi\}
+ \longrightarrow\{\vec x\mid\varphi\}.
+\]
+Niech $J'$ będzie najmniejszą topologią Grothendiecka zawierającą $J_T$, w której sita generowane przez $m_\sigma$ dla wszystkich nowych aksjomatów są pokrywające. Wtedy $\operatorname{Sh}(\mathcal C_T,J')$ jest toposem klasyfikującym $T'$, a jego włożenie do $\mathcal B_T$ klasyfikuje redukt modelu uniwersalnego $T'$ do teorii $T$.
+\end{stwierdzenie}
+\begin{proof}
+Najmniejsza topologia istnieje jako przecięcie wszystkich topologii spełniających warunki; rodzina nie jest pusta, bo można przyjąć topologię, w której każde sito pokrywa. Dla modelu $M$ teorii $T$ w toposie $\mathcal E$ odpowiadający mu funktor regularny i geometryczny $F_M:\mathcal C_T\to\mathcal E$ jest $J_T$-ciągły przez twierdzenie~\ref{cat:thm:cl-geometric-syntactic-universal} i stwierdzenie~\ref{cat:prop:cl-continuous-geometric}. Model spełnia $\sigma$ dokładnie wtedy, gdy interpretacja $m_\sigma$ jest izomorfizmem, co jest równoważne temu, że jest epimorfizmem, gdyż $F_M$ zachowuje monomorfizmy i wszystkie epimorfizmy w toposie są regularne. Jest to równoważne wspólnej epimorficzności obrazów strzałek w sicie generowanym przez $m_\sigma$.
+
+Dla dowolnego funktora $F:\mathcal C_T\to\mathcal E$ zachowującego skończone granice sita $S$, których obrazy $F(S)$ są wspólnie epimorficzne, tworzą topologię Grothendiecka. Sito maksymalne zawiera identyczność. Przy zmianie bazy wspólna epimorficzność jest zachowywana, gdyż pokrycie jest równoważne pełnej sumie obrazów, a obrazy i sumy są stabilne (stwierdzenie~\ref{cat:prop:cl-topos-geometric-category}); ponadto $F$ zachowuje iloczyny włókniste. Dla lokalności stosujemy rachunek z dowodu twierdzenia~\ref{cat:thm:cl-syntactic-topology} w toposie $\mathcal E$ do rodzin obrazów strzałek pokrywającego sita i jego lokalnych pokryć. Otrzymujemy wspólną epimorficzność złożonej rodziny. Stąd $F_M$ jest $J'$-ciągły dokładnie wtedy, gdy spełnia nowe aksjomaty.
+
+Twierdzenie Diaconescu dla $(\mathcal C_T,J')$ daje równoważność kategorii morfizmów geometrycznych do $\operatorname{Sh}(\mathcal C_T,J')$ z kategorią funktorów lewostronnie dokładnych i $J'$-ciągłych. Są to właśnie funktory odpowiadające modelom $T'$; na morfizmach ograniczamy tę samą równoważność, ponieważ kategoria modeli $T'$ jest pełną podkategorią kategorii modeli $T$. Równoważności są pseudonaturalne przez twierdzenie Diaconescu. Włożenie snopów dla $J'$ do snopów dla $J_T$ ma lewy sprzężony będący snopifikacją względem $J'$, która zachowuje skończone granice (twierdzenie~\ref{cat:thm:sheafification-left-exact}). Jest to włożenie geometryczne. Jego obraz odwrotny przenosi model uniwersalny $T$ na model uniwersalny $T'$, co wynika z konstrukcji równoważności przez restrykcję do kategorii syntaktycznej.
+\end{proof}
+
+\begin{twierdzenie}[Odpowiedniość rozszerzeń i podtoposów]\label{cat:thm:cl-quotient-subtopos}
+Rozszerzenia aksjomatyczne teorii geometrycznej $T$ modulo równoważność dowodliwości odpowiadają bijektywnie podtoposom $\mathcal B_T$. Mocniejsze teorie odpowiadają mniejszym podtoposom.
+\end{twierdzenie}
+
+Korzystamy z następującego standardowego wyniku zewnętrznego o miejscach: podtoposy $\operatorname{Sh}(\mathcal C,J)$ odpowiadają topologiom Grothendiecka $K$ na $\mathcal C$ zawierającym $J$, a włożenia są włożeniami kategorii snopów dla tych topologii. Zob. O.~Caramello, \emph{Theories, Sites, Toposes}, rozdział 3 (A duality theorem). Tam również znajduje się ogólna odpowiedniość rozszerzeń i podtoposów.
+
+\begin{proof}
+Stwierdzenie~\ref{cat:prop:cl-axioms-topology} konstruuje podtopos z dowolnego rozszerzenia. Niech odwrotnie $K\supseteq J_T$ odpowiada danemu podtoposowi. Dla każdego $K$-pokrywającego sita $S$ na obiekcie $\{\vec x\mid\varphi\}$ dodajemy do $T$ sekwent
+\[
+ \varphi\vdash_{\vec x}
+ \bigvee_{u\in S}\exists\vec y_u\,\theta_u(\vec y_u,\vec x),
+\]
+gdzie $\theta_u$ reprezentuje morfizm $u$. W razie potrzeby wybieramy reprezentantów w małej kategorii syntaktycznej. Sekwent ten oznacza w modelu dokładnie wspólną epimorficzność rodziny obrazów morfizmów $u$, ponieważ interpretacja egzystencjalna jest obrazem, a alternatywa sumą podobiektów. Model rozszerzonej teorii odpowiada zatem funktorowi zachowującemu skończone granice i $K$-ciągłemu. Przez twierdzenie Diaconescu topos $\operatorname{Sh}(\mathcal C_T,K)$ klasyfikuje tę teorię, z włożeniem do $\mathcal B_T$ zgodnym z zapominaniem nowych aksjomatów. To dowodzi surjektywności odpowiedniości.
+
+Jeżeli dwa rozszerzenia dają równoważne podtoposy nad $\mathcal B_T$, dla każdego toposu $\mathcal E$ ich modele jako modele $T$ są, z dokładnością do izomorfizmu, tymi samymi modelami: odpowiadają morfizmom $\mathcal E\to\mathcal B_T$ faktoryzującym się przez ten podtopos. Wniosek~\ref{cat:cor:cl-universal-completeness} zastosowany do obu rozszerzeń daje te same dowodliwe sekwenty. Odwrotnie równoważność dowodliwości daje te same modele w każdym toposie, więc własność klasyfikująca identyfikuje ich toposy nad $\mathcal B_T$. Dodawanie aksjomatów zwiększa topologię $J'$, a snopów dla mocniejszej topologii jest mniej. Odwrotnie włożenie mniejszego podtoposu przez większy oznacza, że każdy model odpowiadający mniejszemu spełnia sekwenty dowodliwe dla większego, więc przez zupełność teoria mniejszego jest mocniejsza.
+\end{proof}
+
+\begin{przyklad}[Wymuszenie prawdziwości zdania]\label{cat:ex:cl-quotient-proposition}
+W teorii jednego zdania $P$ z przykładu~\ref{cat:ex:cl-proposition-classifier} dodajmy aksjomat $\top\vdash P$. W prezentacji przez presnopy na $\mathbf 2=(0\to1)$ nowe pokrycie to sito generowane przez $0\to1$. Warunek snopu oznacza, że restrykcja $F(1)\to F(0)$ jest bijekcją: zgodna rodzina na sicie jest wyznaczona przez element $F(0)$. Przeciągnięcie tego sita wzdłuż $0\to1$ jest sitem maksymalnym. Na $0$ pozostawiamy wyłącznie sito maksymalne, a na $1$ sito maksymalne i sito generowane przez $0\to1$. Aksjomat lokalności dla tego ostatniego pokrycia mówi, że jeśli przeciwobraz rozpatrywanego sita wzdłuż $0\to1$ pokrywa $0$, to rozpatrywane sito zawiera $0\to1$, czyli pokrywa $1$. Aksjomaty topologii są więc spełnione i jest to najmniejsza wymagana topologia. Kategoria tych snopów jest równoważna $\mathbf{Set}$ przez ewaluację w $0$, z odwrotnym funktorem stałego diagramu. Jest to bezpośredni przykład wzmocnienia topologii przez aksjomat.
+\end{przyklad}
+
+\subsection{Relacja z klasyczną teorią modeli}
+
+W powyższych równoważnościach morfizmami modeli są homomorfizmy, nie z konieczności zanurzenia elementarne. Na przykład homomorfizm modeli teorii grup może utożsamiać elementy różniące się w dziedzinie. Formuły regularne, koherentne i geometryczne są zachowywane przez homomorfizmy, jak wykazano przy konstrukcji funktorów interpretacji. Negacja i kwantyfikacja ogólna nie mają tej własności dla dowolnych homomorfizmów. Nawet przy równoważności toposów klasyfikujących nie uzyskujemy automatycznie odpowiedniości dodatkowej struktury modeloteoretycznej, takiej jak elementarność zanurzeń, typy zupełne w ustalonej sygnaturze czy rząd Morleya. Trzeba określić, jakie dodatkowe dane są zachowywane.
+
+\begin{stwierdzenie}[Klasyczne zdania pierwszego rzędu jako aksjomaty koherentne po rozszerzeniu sygnatury]\label{cat:prop:cl-morleyization}
+Niech $T$ będzie klasyczną teorią pierwszego rzędu w małej sygnaturze. Można rozszerzyć sygnaturę do teorii koherentnej $T^{\mathrm m}$ tak, aby modele $T$ w zbiorach miały jednoznaczne rozszerzenia do modeli $T^{\mathrm m}$, a homomorfizmy tych rozszerzeń odpowiadały dokładnie zanurzeniom elementarnym modeli $T$.
+\end{stwierdzenie}
+\begin{proof}
+Dla każdej formuły pierwszego rzędu $\alpha(\vec x)$ w ustalonym kontekście dodajemy symbol relacji $R_\alpha(\vec x)$ i symbol $N_\alpha(\vec x)$, a także aksjomaty
+\[
+ \top\vdash_{\vec x}R_\alpha\vee N_\alpha,\qquad
+ R_\alpha\wedge N_\alpha\vdash_{\vec x}\bot.
+\]
+W zbiorach $N_\alpha$ musi być dopełnieniem $R_\alpha$. Dla formuły atomowej dodajemy oba kierunki $R_\alpha\dashv\vdash\alpha$, dla $\top,\bot$ analogiczne równoważności z odpowiednimi stałymi. Możemy ograniczyć pierwotne spójniki i kwantyfikatory do $\wedge,\neg,\exists$, ponieważ w logice klasycznej pozostałe są ich skrótami. Dodajemy
+\[
+ R_{\alpha\wedge\beta}\dashv\vdash R_\alpha\wedge R_\beta,\qquad
+ R_{\neg\alpha}\dashv\vdash N_\alpha,\qquad
+ R_{\exists y\,\alpha}\dashv\vdash\exists y\,R_\alpha.
+\]
+Wszystkie są sekwentami koherentnymi. Precyzyjnie indeksujemy nowe symbole parami $(\vec x,\alpha)$, gdzie $\vec x$ jest skończonym kontekstem zawierającym zmienne wolne $\alpha$; dla dowolnego poprawnego sortowo podstawienia $\vec t$ termów pierwotnej sygnatury w kontekście $\vec z$ możemy dodać sekwenty
+\[
+ R_{(\vec z,\alpha[\vec t/\vec x])}(\vec z)
+ \dashv\vdash_{\vec z}R_{(\vec x,\alpha)}(\vec t),
+ \qquad
+ N_{(\vec z,\alpha[\vec t/\vec x])}(\vec z)
+ \dashv\vdash_{\vec z}N_{(\vec x,\alpha)}(\vec t).
+\]
+Obejmują one zmianę nazw zmiennych i rozszerzenie kontekstu. W aksjomacie koniunkcji używamy wspólnego kontekstu obu podformuł, a w aksjomacie kwantyfikacji $\exists y\,\alpha$ po prawej używamy kontekstu rozszerzonego o $y$ (po zmianie jego nazwy, jeśli jest konieczna). Wszystkie te dodatkowe sekwenty są koherentne i są spełnione w kanonicznym rozszerzeniu każdego modelu zbiorowego przez zwykły lemat o podstawianiu. Indukcję po formułach przeprowadzamy jednocześnie we wszystkich ich kontekstach. Dla każdego zdania $\tau\in T$ dodajemy $\top\vdash_{\varnothing}R_\tau$. Dla teorii z niepustymi sortami dodajemy $\top\vdash_{\varnothing}\exists x:S\,\top$ dla każdego sortu $S$.
+
+Indukcja po formułach w modelu zbiorowym pokazuje, że $R_\alpha$ musi być dokładnie zbiorem krotek spełniających $\alpha$ w redukcie do wyjściowej sygnatury, a $N_\alpha$ jego dopełnieniem. Zatem redukt spełnia $T$ i rozszerzenie jest jednoznaczne. Odwrotnie interpretowanie dodatkowych symboli przez zbiory spełniania formuł i ich dopełnienia daje model $T^{\mathrm m}$ z dowolnego modelu $T$.
+
+Homomorfizm rozszerzeń zachowuje zarówno $R_\alpha$, jak i $N_\alpha$. Oznacza to, że każda formuła jest zachowywana i odzwierciedlana na wszystkich krotkach parametrów; w szczególności zachowanie dopełnienia równości zapewnia injektywność na każdym sorcie. Jest to warunek zanurzenia elementarnego. Odwrotnie zanurzenie elementarne zachowuje wszystkie dodatkowe relacje oraz pierwotne operacje i relacje, więc jest homomorfizmem rozszerzeń.
+\end{proof}
+
+Konstrukcję tę nazywa się morleyzacją teorii (ang. \emph{Morleyization}). Nie należy mylić jej z równoważnością Mority z definicji~\ref{cat:def:cl-morita}: powyższe twierdzenie dotyczy klasycznych modeli w zbiorach z określonymi morfizmami. Nawet dla teorii grup zwykły homomorfizm grup nie musi być homomorfizmem modeli po morleyzacji: morfizm z nietrywialnej grupy do grupy trywialnej nie zachowuje predykatu odpowiadającego formule $x\neq y$. W toposach nieboolowskich warunek posiadania dopełnień przez predykaty nakłada dodatkowe ograniczenia; nie otrzymujemy automatycznej równoważności ze wszystkimi intuicjonistycznymi modelami pierwotnej teorii.
+
+\begin{uwaga}[Podsumowanie zakresu]\label{cat:rem:cl-scope}
+Rachunek kategorialny łączy składnię z geometrią: kategorie syntaktyczne reprezentują modele, hiperdoktryny organizują predykaty i podstawianie, a toposy klasyfikujące reprezentują modele geometryczne względem zmian bazy. Punkty odpowiadają modelom zbiorowym, natomiast podtoposy odpowiadają rozszerzeniom aksjomatycznym. Teoria modeli w sensie klasycznym bada ponadto strukturę elementarną, typy i inne niezmienniki, których nie utożsamiamy z samą semantyką geometryczną.
+\end{uwaga}

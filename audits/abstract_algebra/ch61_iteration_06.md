@@ -1,0 +1,7 @@
+# AA-61 — stabilizacja potwierdzająca P: zamknięcie
+
+24 listopada 2026 r. Gałąź biblioteka-matematyczna-iteracja-6. Obowiązuje cykl D/P z 04251f9ac4adc7945f8ee71076c5755aaa5a842c; wcześniejsze audyty I–V realizują merytoryczną część obu etapów. Czyste audyty III–IV 2/2. Po korekcie V sprawdzono dokładną zgodność źródła z poprzednim blobem z wyjątkiem dwóch zamierzonych zmian składu: krótkiego nagłówka i wydzielenia wzoru Cartana. Blob końcowy 76c35df11718f562aa5a6cf121c7e0d4fdb9dcc0.
+
+CI 45387901864, head 3c2584be2ebb7256b6e22123822c2a388d7da8a5, job 138423548308: 132/132 success. Oba zestawy AA-61 (modele A,C i niezależny model G2) PASS, globalna bramka PASS: 61 rozdziałów, 1190 unikatowych etykiet, 778 wystąpień odsyłaczy, 441 unikatowych celów, zero brakujących i powielonych etykiet, 544 dowody. Artefakt 14916778780: PDF 394 strony. AA-61 fizyczne 390–394, drukowane 378–382. Wyrenderowano wszystkie pięć stron w PyMuPDF 1.5x i obejrzano każdą: poprawne nagłówki, wzór Cartana, rysunek rozkładu trójkątnego, odsyłacze i zakończenie przykładu sl3. Brak kolizji i obcięć. Log końcowy: 0 Overfull, 0 Underfull, 0 Warning:, 0 błędów !, 0 undefined references.
+
+Etapy D i P zaliczone. AA-61 STABILNY w ustalonym zakresie; AA-01–60 pozostają stabilne. AA-62 nieotwarty. Następny etap D: przygotowanie dowodu twierdzenia o prezentacji Serre'a i klasyfikacji, w spójnym zakresie rozdziału, bez zakładania jeszcze nieudowodnionych twierdzeń; jednoczesny pakiet audytów i regresji.

@@ -1,0 +1,118 @@
+name: PDE - chapter 02 audit
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/partial_differential_equations/02-charakterystyki-i-pde-pierwszego-rzedu.tex'
+      - 'chapters/pl/partial_differential_equations/33-eksperymenty-numeryczne-do-rozdzialow-2-32.tex'
+      - 'books/pl/partial_differential_equations.tex'
+      - 'catalog/partial_differential_equations_manifest.json'
+      - 'latex/pl/code-listings.tex'
+      - 'application/config/preambles/PDE.tex'
+      - 'tests/mathematical/partial_differential_equations/chapter-02/**'
+      - '.github/workflows/partial-differential-equations-ch02.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-ch02:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run executable regression checks
+        run: python3 tests/mathematical/partial_differential_equations/chapter-02/test_characteristics.py -v
+      - name: Check references and prepare standalone chapter
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          chapter = Path("chapters/pl/partial_differential_equations/02-charakterystyki-i-pde-pierwszego-rzedu.tex")
+          source = chapter.read_text(encoding="utf-8")
+          labels = re.findall(r"\\label\{([^}]+)\}", source)
+          refs = re.findall(r"\\(?:eqref|ref)\{([^}]+)\}", source)
+          assert len(labels) == len(set(labels)), "Duplicate labels"
+          external = {"chap:pde-code": Path("chapters/pl/partial_differential_equations/33-eksperymenty-numeryczne-do-rozdzialow-2-32.tex")}
+          for label, target in external.items():
+              assert target.read_text(encoding="utf-8").count(r"\label{" + label + "}") == 1, label
+          assert not set(labels) & set(external), "External label collides with local label"
+          assert set(refs) <= set(labels) | set(external), f"Missing targets: {set(refs)-set(labels)-set(external)}"
+          criteria = Path("tests/mathematical/partial_differential_equations/chapter-02/regression.md").read_text(encoding="utf-8")
+          rows = re.findall(r"(?m)^\| (PDE-02-\d{3}) \| ([^|]+) \|", criteria)
+          assert rows, "No regression criteria"
+          assert [row[0] for row in rows] == [f"PDE-02-{i:03}" for i in range(1, len(rows)+1)], "Missing or duplicate criterion IDs"
+          assert all(anchor.strip() in labels for _, anchor in rows), "Missing criterion anchor"
+          print(f"{len(rows)} semantic criterion anchors verified (not executed proofs)")
+          stack = []
+          for kind, env in re.findall(r"\\(begin|end)\{([^}]+)\}", source):
+              if kind == "begin":
+                  stack.append(env)
+              else:
+                  assert stack and stack.pop() == env, f"Unmatched end: {env}"
+          assert not stack, f"Unclosed environments: {stack}"
+          print(f"{len(labels)} distinct labels; {len(refs)} resolved reference occurrences")
+          book = Path("books/pl/partial_differential_equations.tex").read_text(encoding="utf-8")
+          assert book.count(r"\begin{document}") == 1
+          preamble = book.split(r"\begin{document}", 1)[0]
+          inputs = re.findall(r"\\input\{\.\./\.\./(chapters/pl/partial_differential_equations/[^}]+)\}", book)
+          import json
+          manifest = json.loads(Path("catalog/partial_differential_equations_manifest.json").read_text(encoding="utf-8"))
+          assert inputs == [row["path"] for row in manifest["chapters"]]
+          chapter_number = inputs.index(chapter.as_posix()) + 1
+          external_number = inputs.index(external["chap:pde-code"].as_posix()) + 1
+          canonical = Path("latex/pl/code-listings.tex").read_text(encoding="utf-8")
+          for name, text in (("book", preamble), ("Atlas", Path("application/config/preambles/PDE.tex").read_text(encoding="utf-8"))):
+              assert text.count(canonical) == 1, f"Stale code listings: {name}"
+          # The external reference is verified in the real target file and
+          # book ordering above. Supply its number without a hyperlink:
+          # this isolated PDF does not contain the target chapter or its page.
+          external_label = (r"\makeatletter" + "\n"
+                            + r"\@namedef{r@chap:pde-code}{{" + str(external_number)
+                            + r"}{}{Eksperymenty numeryczne}{}{}}" + "\n"
+                            + r"\makeatother")
+          print(f"Standalone chapter {chapter_number}; external target chapter {external_number} (number only)")
+          Path("books/pl/partial_differential_equations_ch02_ci.tex").write_text(
+              preamble + "\n" + external_label + "\n"
+              + r"\begin{document}" + "\n"
+              + r"\setcounter{chapter}{" + str(chapter_number-1) + "}\n"
+              + r"\input{../../chapters/pl/partial_differential_equations/02-charakterystyki-i-pde-pierwszego-rzedu.tex}"
+              + "\n" + r"\end{document}" + "\n",
+              encoding="utf-8",
+          )
+          PY
+      - name: Compile standalone chapter with canonical preamble
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: partial_differential_equations_ch02_ci.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Inspect diagnostics and render pages
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+          stem=books/pl/partial_differential_equations_ch02_ci
+          test -s "$stem.pdf"
+          test -s "$stem.log"
+          pdfinfo "$stem.pdf"
+          pdftotext -layout "$stem.pdf" "$stem.txt"
+          mkdir -p books/pl/pde_ch02_render
+          pdftoppm -r 120 -png "$stem.pdf" books/pl/pde_ch02_render/page
+          if grep -E 'Undefined control sequence|There were undefined references|LaTeX Warning: (Reference|Citation).*undefined|Overfull \\hbox|Missing character' "$stem.log"; then
+            echo 'Critical LaTeX diagnostics detected.'
+            exit 1
+          fi
+      - name: Upload compiled chapter and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pde-ch02-audit
+          path: |
+            books/pl/partial_differential_equations_ch02_ci.pdf
+            books/pl/partial_differential_equations_ch02_ci.log
+            books/pl/partial_differential_equations_ch02_ci.txt
+            books/pl/pde_ch02_render/
+          if-no-files-found: warn

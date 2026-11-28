@@ -1,0 +1,1084 @@
+\chapter{Najkrótsze drogi ważone: Dijkstra, Bellman--Ford, A* i hierarchie kontrakcji}
+\label{ch:tg-shortest-paths}
+
+W rozdziale \ref{ch:tg-bfs-dfs} algorytm BFS wyznacza
+najkrótsze drogi ze względu na liczbę krawędzi.
+Teraz kosztem drogi będzie suma jej wag.
+Poznamy algorytmy Dijkstry, Bellmana--Forda,
+Floyda--Warshalla i A*, wyszukiwanie dwukierunkowe
+oraz hierarchie kontrakcji (ang. \emph{Contraction Hierarchies}, CH).
+Nie ma algorytmu najszybszego na wszystkich grafach
+i przy wszystkich rodzajach zapytań.
+
+\section{Grafy ważone, odległość i relaksacja}
+\label{sec:tg-weighted-data}
+
+Niech $D=(V,A)$ będzie skończonym grafem skierowanym
+bez pętli i łuków równoległych, $n=|V|$, $m=|A|$ i niech
+$w\colon A\to\mathbb R$ będzie funkcją wag.
+Wagę spaceru $P=(v_0,\ldots,v_k)$ definiujemy jako
+$w(P)=\sum_{i=0}^{k-1}w(v_i,v_{i+1})$.
+Graf nieskierowany modelujemy dwoma przeciwnymi
+łukami tej samej wagi.
+
+\begin{definicja}[Odległość ważona]
+\label{def:tg-weighted-distance}
+Dla $s,t\in V$ niech $\delta(s,t)$ oznacza infimum
+wag skierowanych spacerów z $s$ do $t$.
+Gdy nie ma takiego spaceru, przyjmujemy $+\infty$.
+Jeśli istnieje cykl o ujemnej wadze osiągalny z $s$,
+z którego można dojść do $t$, infimum wynosi $-\infty$:
+spacer do cyklu, $k$ jego obiegów i dalszy spacer do $t$
+mają łączną wagę $a+kb$ dla pewnych $a\in\mathbb R$,
+$b<0$ i każdego całkowitego $k\geq0$.
+\end{definicja}
+
+\begin{lemat}[Realizacja odległości]
+\label{lem:tg-weighted-realization}
+Jeżeli $t$ jest osiągalny z $s$ i nie istnieje
+ujemny cykl leżący na spacerze z $s$ do $t$,
+to $\delta(s,t)$ jest kosztem pewnej
+ścieżki bez powtórzeń wierzchołków.
+\end{lemat}
+\begin{proof}
+Jeżeli spacer ma powtórzony wierzchołek, wybieramy
+najkrótszy niepusty fragment między dwoma wystąpieniami
+tego samego wierzchołka. Jego wnętrze nie zawiera
+powtórzeń, więc fragment jest cyklem skierowanym.
+Jest osiągalny z $s$ i można z niego dojść do $t$,
+a zatem ma wagę nieujemną. Usuwamy go bez
+zwiększania kosztu. Po skończonej liczbie
+usunięć otrzymamy ścieżkę prostą (dla $s=t$ może być pusta).
+Ponieważ graf ma skończenie wiele ścieżek prostych,
+istnieje najmniejsza ich waga. Jest ona nie większa od wagi
+dowolnego spaceru i sama jest wagą pewnego spaceru,
+więc równa się infimum $\delta(s,t)$.
+\end{proof}
+
+\begin{definicja}[Relaksacja łuku]
+\label{def:tg-weighted-relax}
+Mając wartości tymczasowe $d[v]$,
+dla łuku $u\to v$ wykonujemy
+$d[v]\gets\min\{d[v],d[u]+w(u,v)\}$;
+gdy następuje ścisła poprawa, ustawiamy
+rodzica $p[v]=u$.
+Początkowo $d[s]=0$, a dla $v\ne s$
+przyjmujemy $d[v]=+\infty$.
+\end{definicja}
+
+\begin{lemat}[Niezmiennik relaksacji]
+\label{lem:tg-weighted-walk}
+Każda skończona wartość $d[v]$
+otrzymana z powyższej inicjalizacji
+przez relaksacje jest kosztem
+rzeczywistego spaceru z $s$ do $v$.
+\end{lemat}
+\begin{proof}
+Indukcja po liczbie relaksacji.
+Wartość $d[s]=0$ odpowiada spacerowi
+pustemu. Każda nowa skończona wartość
+powstaje przez przedłużenie istniejącego
+spaceru do $u$ o łuk $u\to v$.
+\end{proof}
+
+\section{Algorytm Dijkstry}
+\label{sec:tg-weighted-dijkstra}
+
+Zakładamy $w(a)\geq0$ dla każdego $a\in A$.
+Utrzymujemy kolejkę priorytetową z kluczem $d[v]$.
+Pobieramy wierzchołek o najmniejszym kluczu,
+ustalamy jego odległość na stałe i relaksujemy
+wszystkie wychodzące łuki. W implementacji
+z powielanymi wpisami w kopcu pomijamy
+wpisy nieaktualne i wierzchołki już ustalone.
+
+\begin{twierdzenie}[Poprawność Dijkstry]
+\label{thm:tg-weighted-dijkstra}
+Dla skończonego grafu skierowanego
+o nieujemnych wagach i źródła $s\in V$ po ustaleniu
+wierzchołka $v$ zachodzi
+$d[v]=\delta(s,v)$. Po zakończeniu
+wszystkie odległości są prawidłowe,
+a wierzchołki nieosiągalne mają
+wartość $+\infty$.
+\end{twierdzenie}
+\begin{proof}
+Indukcja po liczbie ustalonych wierzchołków.
+Początkowo jedynie $s$ ma skończoną etykietę,
+więc jest ustalany jako pierwszy. Nieujemność wag
+i spacer pusty dają $d[s]=0=\delta(s,s)$.
+Gdyby kolejny ustalany wierzchołek $v$
+miał $d[v]>\delta(s,v)$, wybierzmy
+najkrótszą ścieżkę z $s$ do $v$
+i jej pierwszy nieustalony wierzchołek $y$.
+Jego poprzednik $x$ jest już ustalony.
+Każdy prefiks wybranej najkrótszej ścieżki jest
+najkrótszym spacerem do swego końca: tańszy spacer
+można byłoby połączyć z pozostałym fragmentem ścieżki,
+uzyskując tańszy spacer do $v$.
+Po relaksacji łuku $x\to y$ otrzymujemy zatem
+$d[y]\leq\delta(s,x)+w(x,y)=\delta(s,y)$.
+Lemat \ref{lem:tg-weighted-walk} daje
+równość. Nieujemne wagi dalszej części
+ścieżki prowadzą do
+$d[y]\leq\delta(s,v)<d[v]$,
+sprzecznie z wyborem najmniejszego
+klucza. Nieosiągalny wierzchołek
+nie może być odkryty przez relaksację;
+każdy osiągalny zostanie odkryty
+po przetworzeniu poprzednika na
+pewnej ścieżce z $s$.
+\end{proof}
+
+\begin{uwaga}[Odtwarzanie ścieżek i wagi zerowe]
+\label{rem:tg-dijkstra-parents}
+Jeżeli wszystkie wagi są równe jeden, odległości
+obliczone przez Dijkstrę są odległościami BFS
+(twierdzenie \ref{thm:tg-bfs-correct} i uwaga
+\ref{rem:tg-bfs-directed}); BFS nie potrzebuje
+wtedy kolejki priorytetowej.
+Dla ogólnych nieujemnych wag rodzica zmieniamy
+wyłącznie przy ścisłej poprawie etykiety, zgodnie
+z definicją \ref{def:tg-weighted-relax}.
+W Dijkstrze etykieta ustalonego wierzchołka jest
+już optymalna, więc nie może ulec ścisłej poprawie.
+Każdy rodzic został ustalony wcześniej niż jego
+dziecko; relaksacje wykonujemy bowiem tylko z
+ustalonych wierzchołków. Podążając za rodzicami,
+ściśle zmniejszamy kolejność ustalania i dochodzimy
+do $s$, jedynego odkrytego wierzchołka bez rodzica.
+Dla końcowych etykiet na każdej krawędzi rodzica
+zachodzi $d[v]=d[p[v]]+w(p[v],v)$, ponieważ etykieta
+rodzica była już ostateczna w chwili relaksacji.
+Sumowanie tych równości daje ścieżkę o wadze $d[v]$.
+Sam spadek wartości $d$ nie byłby poprawnym
+argumentem przy krawędziach o wadze zero.
+\end{uwaga}
+
+\begin{stwierdzenie}[Koszt Dijkstry]
+\label{prop:tg-weighted-dijkstra-cost}
+Dla list sąsiedztwa i kopca binarnego
+z powielanymi wpisami otrzymujemy
+$O(n+(n+m)\log(n+m+1))$ czasu
+i $O(n+m)$ pamięci pomocniczej.
+Jeśli kopiec obsługuje zmniejszanie klucza
+z jednym wpisem na wierzchołek,
+czas jest $O((n+m)\log(n+1))$,
+a pamięć pomocnicza $O(n)$.
+\end{stwierdzenie}
+\begin{proof}
+Każdy wierzchołek ustalamy co najwyżej raz,
+a każdy łuk relaksujemy co najwyżej raz.
+W pierwszym wariancie może powstać $O(n+m)$
+wpisów kopca, a w drugim najwyżej $n$.
+Złożoność operacji kopca jest
+logarytmiczna względem jego rozmiaru.
+\end{proof}
+
+\begin{przyklad}[Koszt a liczba krawędzi]
+\label{ex:tg-weighted-sample}
+Łuki $s\to a$, $s\to b$, $a\to b$,
+$a\to t$, $b\to t$ mają odpowiednio
+wagi $2,5,1,7,2$.
+Najtańsza droga $s\to a\to b\to t$
+ma koszt $5$. Krótsza pod względem
+liczby łuków droga $s\to b\to t$
+ma większy koszt $7$.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=.9]
+\node[tgBlueVertex] (s) at (0,0) {$s$};
+\node[tgVertex] (a) at (2,1.4) {$a$};
+\node[tgVertex] (b) at (4,0) {$b$};
+\node[tgTealVertex] (t) at (6,0) {$t$};
+\draw[tgTree,->] (s)--node[above left,font=\small] {$2$} (a);
+\draw[tgTree,->] (a)--node[above right,font=\small] {$1$} (b);
+\draw[tgTree,->] (b)--node[above,font=\small] {$2$} (t);
+\draw[tgGhost,->] (s)--node[below,font=\small] {$5$} (b);
+\draw[tgGhost,->] (a) to[bend left=30] node[above,font=\small] {$7$} (t);
+\end{tikzpicture}
+\caption{Najtańsza droga ważona ma koszt $5$,
+chociaż istnieje droga o mniejszej liczbie łuków.}
+\label{fig:tg-weighted-sample}
+\end{figure}
+
+\section{Bellman--Ford i cykle o ujemnej wadze}
+\label{sec:tg-weighted-bellman}
+
+Dopuszczamy wagi ujemne. Po inicjalizacji
+relaksujemy wszystkie łuki $n-1$ razy,
+a następnie wykonujemy dodatkową kontrolę.
+
+\begin{twierdzenie}[Bellman--Ford]
+\label{thm:tg-weighted-bellman}
+Niech $D=(V,A)$ będzie skończonym grafem skierowanym
+o rzeczywistych wagach, $s\in V$ i $n=|V|$, $m=|A|$.
+Jeżeli graf nie ma cyklu ujemnego
+osiągalnego z $s$, to po $n-1$
+pełnych przebiegach relaksacji
+otrzymujemy $d[v]=\delta(s,v)$.
+Jeśli dodatkowy przebieg pozwala
+zmniejszyć oszacowanie na
+osiągalnym łuku, to istnieje
+ujemny cykl osiągalny z $s$,
+i odwrotnie. Czas wynosi
+$O(nm+n)$, pamięć pomocnicza $O(n)$.
+\end{twierdzenie}
+\begin{proof}
+Po $k$ przebiegach dla każdej ścieżki
+o co najwyżej $k$ łukach jej koszt
+jest nie mniejszy od bieżącej etykiety
+na końcu ścieżki. Dla $k=0$ wynika to z inicjalizacji.
+Jeśli ścieżka ma dokładnie $k$ łuków i kończy się
+łukiem $u\to v$, to na początku $k$-tego przebiegu
+etykieta $d[u]$ nie przekracza wagi jej prefiksu
+na mocy założenia indukcyjnego. Etykiety nigdy
+nie rosną, więc podczas relaksacji ostatniego łuku
+$d[v]$ staje się nie większe od wagi całej ścieżki.
+Ścieżki krótsze niż $k$ są już uwzględnione
+na mocy założenia indukcyjnego.
+Przy braku ujemnych cykli wystarczy
+uwzględnić ścieżki proste z co
+najwyżej $n-1$ łukami.
+Z lematu \ref{lem:tg-weighted-walk}
+wynika wtedy równość.
+
+Jeżeli istnieje osiągalny cykl ujemny,
+po $n-1$ przebiegach jego wierzchołki
+mają skończone oszacowania.
+Gdyby żaden łuk tego cyklu nie
+umożliwiał poprawy, zsumowanie
+nierówności $d[v]\leq d[u]+w(u,v)$
+wzdłuż cyklu dałoby
+$0\leq w(C)<0$, sprzeczność.
+W przypadku braku cyklu ujemnego
+wszystkie wartości są już optymalne,
+więc relaksacja nie może ich poprawić.
+\end{proof}
+
+\begin{uwaga}[Odległości równe minus nieskończoności]
+Jeżeli istnieje osiągalny cykl ujemny,
+$-\infty$ otrzymują dokładnie
+te wierzchołki, do których można
+dojść z osiągalnego cyklu ujemnego.
+Nie oznacza to, że każda odległość
+od $s$ jest równa $-\infty$.
+\end{uwaga}
+
+\begin{twierdzenie}[Rozpoznawanie wszystkich odległości $-\infty$]
+\label{thm:tg-weighted-bellman-negative-reach}
+Niech $D=(V,A)$ będzie skończonym grafem
+skierowanym o rzeczywistych wagach,
+a $s\in V$. Wykonajmy $n-1$
+pełnych przebiegów relaksacji
+algorytmu Bellmana--Forda
+i oznaczmy otrzymane wartości przez $d$.
+Niech $Z$ będzie zbiorem wszystkich
+wierzchołków $v$, dla których istnieje
+łuk $u\to v$ taki, że
+$d[u]<+\infty$ oraz
+$d[u]+w(u,v)<d[v]$.
+Niech $R(Z)$ oznacza wszystkie
+wierzchołki osiągalne z pewnego
+wierzchołka $Z$ (łącznie z $Z$).
+Wówczas dla każdego $v\in V$
+zachodzi
+\[
+\delta(s,v)=-\infty
+\quad\Longleftrightarrow\quad
+v\in R(Z).
+\]
+Po oznaczeniu $R(Z)$ pozostałe
+osiągalne wierzchołki mają
+skończone, prawidłowe wartości
+$d[v]=\delta(s,v)$, a
+nieosiągalne mają $d[v]=+\infty$.
+Całość obliczamy w czasie
+$O(nm+n+m)$ i przy pamięci
+pomocniczej $O(n+m)$.
+\end{twierdzenie}
+
+\begin{proof}
+Zauważmy najpierw, że po $n-1$
+przebiegach wartość $d[v]$ nie
+przekracza kosztu żadnej
+ścieżki prostej z $s$ do $v$:
+każda taka ścieżka ma co najwyżej
+$n-1$ łuków, a indukcja użyta
+w dowodzie Twierdzenia
+\ref{thm:tg-weighted-bellman}
+nie wymaga braku cykli ujemnych.
+Jednocześnie każda skończona
+wartość $d[v]$ reprezentuje koszt
+rzeczywistego spaceru.
+
+Jeżeli $v\in Z$, to pewien
+spacer z $s$ do $u$, przedłużony
+łukiem $u\to v$, ma koszt
+ściśle mniejszy od $d[v]$,
+a zatem również mniejszy od
+kosztu każdej ścieżki prostej
+z $s$ do $v$. W tym spacerze
+musi występować cykl o ujemnym
+koszcie: gdyby wszystkie
+usuwane zamknięte fragmenty
+miały koszty nieujemne,
+ich usunięcie dałoby ścieżkę
+prostą o koszcie nie większym,
+sprzeczność. Cykl ten jest
+osiągalny z $s$, a z niego
+można dojść do $v$.
+To samo dotyczy każdego
+wierzchołka osiągalnego z $v$.
+Otrzymujemy
+$R(Z)\subseteq\{v:\delta(s,v)=-\infty\}$.
+
+W drugą stronę niech $C$ będzie
+cyklem ujemnym osiągalnym z $s$.
+Po $n-1$ przebiegach wszystkie
+jego wierzchołki mają skończone
+wartości. Przypuśćmy, że żaden
+łuk $u\to v$ należący do $C$
+nie spełnia
+$d[u]+w(u,v)<d[v]$.
+Dodanie nierówności
+$d[v]\leq d[u]+w(u,v)$
+po całym cyklu dałoby
+$0\leq w(C)<0$, sprzeczność.
+Zatem pewien wierzchołek
+cyklu należy do $Z$.
+Z tego wierzchołka można
+dojść do wszystkich innych
+wierzchołków cyklu, a następnie
+do każdego wierzchołka, którego
+odległość wynosi $-\infty$.
+To dowodzi inkluzji odwrotnej.
+
+Jeżeli $v$ nie należy do
+$R(Z)$ i jest osiągalny,
+nie istnieje ujemny cykl
+leżący na spacerze z $s$
+do $v$. Lemat
+\ref{lem:tg-weighted-realization}
+zapewnia więc najkrótszą
+ścieżkę prostą, której koszt
+jest już osiągnięty po
+$n-1$ przebiegach.
+Równość $d[v]=\delta(s,v)$
+wynika z niezmiennika
+relaksacji. Wierzchołki
+nieosiągalne pozostają z
+wartością $+\infty$.
+Zbiór $Z$ wyznaczamy jednym
+przeglądem łuków, a jego
+osiągalne domknięcie przez
+BFS lub DFS. Daje to
+zapowiedzianą złożoność.
+\end{proof}
+
+\begin{przyklad}[Ujemny cykl nie psuje każdej odległości]
+\label{ex:tg-weighted-negative-propagation}
+Niech łuki i ich wagi będą następujące:
+$s\to a$ (waga $1$), $a\to b$ (waga $-3$),
+$b\to a$ (waga $1$), $b\to c$ (waga $2$)
+oraz $s\to t$ (waga $5$).
+Cykl $a\to b\to a$ ma wagę $-2$.
+Wobec tego
+$\delta(s,a)=\delta(s,b)=\delta(s,c)=-\infty$,
+natomiast $\delta(s,t)=5$
+i $\delta(s,s)=0$.
+Algorytm oznaczający tylko wierzchołki
+\emph{samego} ujemnego cyklu przeoczyłby
+$c$; przeszukanie z $Z$ wyznacza
+również wszystkie dalsze wierzchołki.
+\end{przyklad}
+
+\begin{przyklad}
+Dla łuków $s\to a$ o wadze $3$,
+$s\to b$ o wadze $7$, $a\to b$
+o wadze $-5$ i $b\to t$ o wadze $2$
+mamy $\delta(s,b)=-2$ i $\delta(s,t)=0$.
+Dijkstra nie spełnia tutaj swoich założeń, choć w tym
+przykładzie może zwrócić poprawny wynik. Nie jest to
+kontrprzykład do poprawności algorytmu dla wag ujemnych.
+\end{przyklad}
+
+\section{Floyd--Warshall: wszystkie pary}
+\label{sec:tg-weighted-floyd}
+
+Przy numeracji wierzchołków $1,\ldots,n$
+ustawiamy $d^{(0)}_{ii}=0$ i
+$d^{(0)}_{ij}=w(i,j)$ dla istniejących łuków,
+a w pozostałych miejscach $+\infty$.
+Dla $k=1,\ldots,n$ wykonujemy
+\[
+d^{(k)}_{ij}=
+\min\{d^{(k-1)}_{ij},
+d^{(k-1)}_{ik}+d^{(k-1)}_{kj}\}.
+\]
+
+\begin{twierdzenie}[Floyd--Warshall]
+\label{thm:tg-weighted-floyd}
+Jeżeli nie ma cykli ujemnych,
+to $d^{(n)}_{ij}=\delta(i,j)$.
+Graf ma cykl ujemny wtedy i tylko
+wtedy, gdy wynikowa macierz ma
+ujemny element przekątnej.
+Koszt wynosi $O(n^3)$ czasu
+i $O(n^2)$ pamięci.
+\end{twierdzenie}
+\begin{proof}
+Indukcja po $k$: wartość $d^{(k)}_{ij}$
+jest minimalnym kosztem spaceru
+z $i$ do $j$ z wewnętrznymi
+wierzchołkami w $\{1,\ldots,k\}$,
+przy braku ujemnych cykli.
+Ścieżka optymalna albo pomija $k$,
+albo rozcina się w $k$ na dwa
+fragmenty, co daje rekurencję.
+Niezależnie od obecności ujemnych cykli każda
+skończona etykieta jest wagą pewnego spaceru.
+Wynika to przez indukcję z inicjalizacji i z faktu,
+że drugi składnik minimum jest wagą złożenia dwóch
+spacerów. Ujemny element przekątnej odpowiada zatem
+ujemnemu spacerowi zamkniętemu. Rozkładając go
+przez kolejne usuwanie cykli prostych, otrzymujemy
+co najmniej jeden cykl ujemny, gdyż suma ich wag
+jest ujemna.
+
+Odwrotnie, dla dowolnego prostego skierowanego
+cyklu lub ścieżki prostej od $i$ do $j$, której
+wewnętrzne wierzchołki mają numery co najwyżej $k$,
+etykieta $d^{(k)}_{ij}$ nie przekracza jej wagi.
+Dowód indukcyjny nie wymaga nieujemności cykli:
+dla $k=0$ mamy pojedynczy łuk lub spacer pusty.
+Jeśli wierzchołek $k$ nie jest wewnętrzny, korzystamy
+z pierwszego składnika minimum. W przeciwnym razie
+występuje wewnątrz dokładnie raz; rozcinamy w nim
+ścieżkę lub cykl na dwie ścieżki proste i stosujemy
+założenie indukcyjne do obu. Dla ujemnego cyklu
+zaczynającego się w $i$ otrzymujemy w szczególności
+$d^{(n)}_{ii}\leq w(C)<0$.
+
+Do obliczenia jednej warstwy potrzebujemy wyłącznie
+warstwy poprzedniej: dwie macierze zajmują $O(n^2)$
+pamięci, a każda z $n$ warstw wymaga $O(n^2)$ operacji.
+\end{proof}
+
+\section{Algorytm A* i poprawna heurystyka}
+\label{sec:tg-weighted-astar}
+
+Niech $w(a)\geq0$ i niech
+$t$ będzie ustalonym celem.
+Heurystyka $h\colon V\to\mathbb R_{\geq0}$
+z $h(t)=0$ jest \emph{dopuszczalna},
+gdy $h(v)\leq\delta(v,t)$
+dla wszystkich $v$ mogących
+dojść do $t$. Jest \emph{spójna},
+gdy $h(u)\leq w(u,v)+h(v)$
+dla każdego łuku $u\to v$.
+Spójność implikuje dopuszczalność: sumując nierówności
+wzdłuż dowolnej ścieżki od $v$ do $t$, otrzymujemy
+$h(v)\leq w(P)+h(t)=w(P)$, a następnie bierzemy infimum.
+
+Algorytm A* wybiera wierzchołki
+z kolejki według
+$f(v)=g(v)+h(v)$, gdzie
+$g(v)$ jest najlepszym dotąd
+kosztem od $s$ do $v$.
+Przy poprawie $g(v)$
+aktualizujemy też rodzica.
+Dla heurystyki spójnej
+możemy trwale zamknąć
+wierzchołek po pierwszym
+pobraniu z aktualnym kluczem.
+
+\begin{twierdzenie}[Poprawność A*]
+\label{thm:tg-weighted-astar}
+Niech $D=(V,A)$ będzie skończonym grafem skierowanym,
+$s,t\in V$, wagi będą nieujemne, a $h$
+będzie nieujemna i spójna,
+przy czym $h(t)=0$.
+Algorytm A* bez ponownego
+otwierania zamkniętych
+wierzchołków zwraca
+$\delta(s,t)$ albo
+stwierdza brak drogi.
+\end{twierdzenie}
+\begin{proof}
+Wprowadźmy zredukowane
+wagi $w_h(u,v)=w(u,v)+h(v)-h(u)$,
+które są nieujemne ze spójności.
+Wzdłuż dowolnego spaceru
+$P$ od $s$ do $v$ zachodzi
+$w_h(P)=w(P)+h(v)-h(s)$.
+Zatem najkrótsze drogi nie
+zmieniają się po redukcji.
+Klucz Dijkstry dla wag
+$w_h$ jest równy
+$g(v)+h(v)-h(s)$,
+czyli kluczowi A*
+pomniejszonemu o stałą $h(s)$.
+Również relaksacje są równoważne: jeśli
+$d_h(u)=g(u)+h(u)-h(s)$, to
+$d_h(u)+w_h(u,v)=g(u)+w(u,v)+h(v)-h(s)$.
+Zatem poprawa etykiety $d_h(v)$ zachodzi dokładnie
+wtedy, gdy poprawia się $g(v)$. Początkowe etykiety
+spełniają tę samą zależność. Przy jednakowej regule
+rozstrzygania remisów algorytmy wybierają więc
+wierzchołki w tej samej kolejności. Po ustaleniu $t$
+twierdzenie \ref{thm:tg-weighted-dijkstra} daje
+$d_h(t)=\delta(s,t)-h(s)$, a zatem $g(t)=\delta(s,t)$.
+Jeżeli kolejka opróżni się wcześniej, $t$ jest nieosiągalny,
+ponieważ redukcja nie zmienia zbioru łuków.
+\end{proof}
+
+\begin{uwaga}[Ponowne otwieranie]
+Jeżeli heurystyka jest
+dopuszczalna, ale niespójna,
+poprawa kosztu $g(v)$
+może nadejść po zamknięciu $v$.
+Dla zachowania dokładności
+trzeba wtedy ponownie
+otwierać wierzchołki.
+Nie wolno automatycznie
+stosować wariantu
+bez ponownych otwarć.
+Dla $h\equiv0$ A*
+redukuje się do Dijkstry.
+\end{uwaga}
+
+\begin{twierdzenie}[A* z ponownym otwieraniem]
+\label{thm:tg-weighted-astar-reopen}
+Niech $D=(V,A)$ będzie skończonym grafem skierowanym
+o nieujemnych wagach, $s,t\in V$, a $h$ heurystyką
+dopuszczalną, niekoniecznie spójną, z $h(t)=0$.
+Jeżeli po każdej ścisłej poprawie kosztu $g(v)$
+wierzchołek $v$ jest ponownie umieszczany w kolejce,
+a wpisy nieaktualne są pomijane, to A* zatrzymany
+po pobraniu celu z aktualnym kluczem znajduje
+koszt $\delta(s,t)$ lub stwierdza brak drogi.
+\end{twierdzenie}
+\begin{proof}
+Każda skończona wartość $g(v)$ jest kosztem spaceru,
+więc nie może być mniejsza od $\delta(s,v)$.
+Załóżmy, że cel $t$ jest osiągalny i że
+algorytm miałby pobrać $t$ z kosztem
+$g(t)>\delta(s,t)$. Wybierzmy najkrótszą ścieżkę
+$P=(s=v_0,\ldots,v_r=t)$. Na tej ścieżce
+istnieje wówczas wierzchołek $v_i$ oczekujący
+na przetworzenie z optymalnym kosztem
+$g(v_i)=\delta(s,v_i)$.
+Rozważmy stan tuż przed pobraniem celu i wybierzmy
+pierwszy indeks $i$, dla którego $v_i$ nie został jeszcze
+przetworzony z optymalną etykietą. Indeks istnieje,
+gdyż etykiety nie rosną, a bieżąca etykieta celu jest
+większa od optymalnej. Jeśli $i=0$, źródło ma od
+inicjalizacji optymalną etykietę zero. Jeśli $i>0$,
+to przy przetwarzaniu $v_{i-1}$ z optymalną etykietą
+relaksacja łuku do $v_i$ zapewniła
+$g(v_i)\leq\delta(s,v_{i-1})+w(v_{i-1},v_i)=\delta(s,v_i)$.
+Ostatnia równość wynika z optymalności prefiksów $P$.
+Niezmiennik relaksacji daje nierówność przeciwną.
+Od chwili uzyskania optymalnej etykiety nie mogła już
+nastąpić jej ścisła poprawa. Odpowiadający jej wpis
+został dodany przy inicjalizacji lub poprawie i nadal
+znajduje się w kolejce, gdyż inaczej $v_i$ zostałby
+przetworzony z optymalną etykietą, wbrew wyborowi $i$.
+Dopuszczalność heurystyki daje
+\[
+f(v_i)=\delta(s,v_i)+h(v_i)
+\leq\delta(s,v_i)+\delta(v_i,t)=\delta(s,t).
+\]
+Natomiast $f(t)=g(t)>\delta(s,t)$.
+Cel nie mógłby zatem zostać pobrany jako minimum
+kolejki, sprzeczność. Każda skuteczna poprawa ma świadectwo w postaci
+ścieżki prostej. Istotnie, indukcyjnie przechowujmy
+w dowodzie ścieżkę świadczącą o każdej wartości $g(u)$,
+której wszystkie prefiksy były wcześniej wartościami
+odpowiednich etykiet. Jeśli przedłużenie do $v$ powtarza
+wierzchołek $v$, jego koszt jest nie mniejszy od kosztu
+wcześniejszego prefiksu do $v$, gdyż wagi są nieujemne.
+Bieżąca etykieta $g(v)$ jest nie większa od tamtej
+wartości, więc ścisła poprawa jest niemożliwa.
+Każda skuteczna relaksacja zachowuje zatem własność
+świadectwa. Skończona liczba ścieżek prostych i ścisłość
+popraw gwarantują zakończenie algorytmu. Gdy kolejka
+jest pusta, każdy osiągalny wierzchołek musiał zostać
+odkryty: w przeciwnym razie pierwszy nieodkryty
+wierzchołek na ścieżce od $s$ zostałby odkryty przy
+przetwarzaniu poprzednika. Jeśli cel nie został pobrany,
+nie jest więc osiągalny.
+\end{proof}
+
+\begin{przyklad}[Dlaczego należy ponownie otwierać wierzchołki]
+\label{ex:tg-astar-reopen}
+Weźmy łuki $s\to a$ o wadze $4$,
+$s\to b$ o wadze $2$, $b\to a$ o wadze $1$,
+$a\to t$ o wadze $10$ i $b\to t$ o wadze $30$.
+Niech $h(s)=0$, $h(a)=0$, $h(b)=10$, $h(t)=0$.
+Heurystyka jest dopuszczalna, ponieważ
+$\delta(b,t)=11$ i $\delta(a,t)=10$,
+ale nie jest spójna: $h(b)>w(b,a)+h(a)$.
+Po rozwinięciu $s$ algorytm pobiera $a$ z kosztem
+$g(a)=4$, gdyż jego klucz wynosi $4$,
+podczas gdy klucz $b$ wynosi $12$.
+Następnie przetwarza $b$ i poprawia koszt
+$a$ do $3$. Wariant, który nie otwiera
+ponownie $a$, zwróci koszt $14$.
+Wariant poprawny jeszcze raz przetwarza $a$
+i zwraca koszt $13$, realizowany przez
+$s\to b\to a\to t$.
+\end{przyklad}
+
+\begin{przyklad}[Heurystyka euklidesowa]
+Jeżeli wierzchołki mają
+pozycje $x_v\in\mathbb R^2$
+i $w(u,v)\geq\|x_u-x_v\|_2$,
+to $h(v)=\|x_v-x_t\|_2$
+jest spójna na mocy
+nierówności trójkąta.
+Jeśli wagi mierzą czas jazdy, wystarczy założyć,
+że dla pewnego $M>0$ każdy łuk spełnia
+$w(u,v)\geq\|x_u-x_v\|_2/M$ (na przykład $M$
+jest górnym ograniczeniem prędkości).
+Wtedy $h(v)=\|x_v-x_t\|_2/M$ jest spójna
+na mocy tej samej nierówności trójkąta.
+\end{przyklad}
+
+\section{Potencjały i algorytm Johnsona dla wszystkich par}
+\label{sec:tg-weighted-johnson}
+
+\begin{twierdzenie}[Ważenie potencjałowe i algorytm Johnsona]
+\label{thm:tg-weighted-johnson}
+Niech $D=(V,A)$ będzie skończonym
+grafem skierowanym bez pętli,
+$|V|=n$, $|A|=m$, o rzeczywistych
+wagach $w:A\to\mathbb R$.
+Załóżmy, że $D$ nie zawiera
+skierowanego cyklu o ujemnej wadze.
+Dodajmy nowy wierzchołek $q$ i
+łuki $q\to v$ o wadze zero
+dla wszystkich $v\in V$,
+bez dodawania łuków do $q$.
+Oznaczmy przez
+$p(v):=\delta(q,v)$ odległości
+obliczone algorytmem Bellmana--Forda
+w rozszerzonym grafie.
+Wówczas:
+\begin{enumerate}[label=(\roman*)]
+\item każda liczba $p(v)$ jest skończona
+i dla każdego łuku $u\to v$ zachodzi
+$p(v)\le p(u)+w(u,v)$;
+\item nowe wagi
+$w_p(u,v):=w(u,v)+p(u)-p(v)$
+są nieujemne;
+\item dla dowolnych $s,t\in V$
+zachodzi równość
+\[
+\delta_w(s,t)
+=\delta_{w_p}(s,t)-p(s)+p(t),
+\]
+z zachowaniem wartości $+\infty$
+dla par niepołączonych drogą.
+\end{enumerate}
+Dlatego jednorazowy Bellman--Ford
+i po jednym uruchomieniu Dijkstry
+dla każdego $s\in V$
+wyznaczają wszystkie odległości.
+Przy listach sąsiedztwa i kopcu
+z operacją zmniejszania klucza
+otrzymujemy czas
+$O(n(n+m)\log(n+1))$ dla $n\ge2$;
+pamięć pomocnicza to $O(n+m)$
+poza macierzą $n^2$ wyników.
+Jeżeli występuje cykl ujemny,
+wstępny Bellman--Ford wykrywa
+go i nie stosujemy algorytmu
+Johnsona w tej postaci.
+\end{twierdzenie}
+
+\begin{proof}
+Nowy wierzchołek $q$ jest
+źródłem łuku o koszcie zero
+do każdego $v$, a zatem
+wszystkie wierzchołki są
+osiągalne z $q$.
+Ponieważ do $q$ nie prowadzą
+łuki, nowy graf nie ma
+cyklu ujemnego. Z
+Twierdzenia~\ref{thm:tg-weighted-bellman}
+wynika, że wszystkie $p(v)$
+są skończone i poprawne.
+Przedłużenie najkrótszego
+spaceru z $q$ do $u$
+o łuk $u\to v$ pokazuje,
+że $p(v)\le p(u)+w(u,v)$,
+co dowodzi (i) i nieujemności
+wag w (ii).
+
+Dla dowolnego spaceru
+$P=(s=v_0,v_1,\ldots,v_k=t)$
+sumowanie wag potencjałowych daje
+\[
+\begin{aligned}
+w_p(P)
+&=\sum_{i=0}^{k-1}
+\bigl(w(v_i,v_{i+1})
++p(v_i)-p(v_{i+1})\bigr)\\
+&=w(P)+p(s)-p(t).
+\end{aligned}
+\]
+Dla ustalonych końców
+zmiana kosztu jest stała,
+a zatem wszystkie porównania
+spacerów, w tym ich minimów,
+pozostają takie same.
+Nie zmienia się także
+osiągalność pary wierzchołków.
+W ten sposób otrzymujemy (iii).
+
+W rozszerzonym grafie jest
+$n+1$ wierzchołków i $m+n$
+łuków, więc wstępny
+Bellman--Ford wykonuje
+$O(n(n+m))$ operacji.
+Kolejne $n$ przebiegów
+Dijkstry dla nieujemnych wag
+$w_p$ zajmuje
+$O(n(n+m)\log(n+1))$ czasu.
+Potrzebujemy list sąsiedztwa,
+potencjałów i jednej
+kolejki Dijkstry, czyli
+$O(n+m)$ pamięci roboczej;
+zapis wszystkich wyników
+zajmuje dodatkowo $O(n^2)$.
+\end{proof}
+
+\begin{przyklad}[Rzeczywista ujemna krawędź i nieujemne wagi po redukcji]
+\label{ex:tg-weighted-johnson}
+Rozważmy łuki $s\to a$ o wadze $-2$,
+$s\to b$ o wadze $5$,
+$a\to b$ o wadze $1$
+oraz $b\to a$ o wadze $4$.
+Jedyny skierowany cykl ma wagę $5>0$.
+Po dodaniu nowego źródła $q$
+z łukami zerowymi dostajemy
+$p(s)=0$, $p(a)=-2$, $p(b)=-1$.
+Wagi po redukcji dla
+czterech wymienionych łuków
+wynoszą kolejno $0,6,0,5$,
+więc są nieujemne.
+Algorytm Dijkstry oblicza
+$\delta_{w_p}(s,b)=0$, a
+powrót do poprzednich wag daje
+$\delta_w(s,b)=0-p(s)+p(b)=-1$,
+zgodnie z drogą $s\to a\to b$.
+\end{przyklad}
+
+\section{Dwukierunkowy algorytm Dijkstry}
+\label{sec:tg-weighted-bidir}
+
+Dla zapytania $s\to t$
+prowadzimy Dijkstrę
+od $s$ po zwykłych
+łukach oraz od $t$
+po łukach odwróconych.
+Niech $d_F(v)$ i $d_B(v)$
+oznaczają znane koszty
+dojścia do $v$ odpowiednio
+z $s$ i wstecz z $t$.
+Gdy obie wartości są
+skończone, koszt
+$d_F(v)+d_B(v)$
+jest górnym ograniczeniem
+odległości od $s$ do $t$.
+Początkowo $d_F(s)=d_B(t)=0$, pozostałe etykiety
+mają wartość $+\infty$. Ustawiamy $\mu=0$ dla $s=t$,
+a w przeciwnym razie $\mu=+\infty$.
+Przy każdej zmianie etykiety w dowolnym kierunku
+aktualizujemy $\mu$ minimum z sumą $d_F(v)+d_B(v)$
+dla zmienionego wierzchołka $v$. W szczególności przy
+przeglądaniu łuku $u\to v$ w przód lub wstecz uwzględniamy
+kandydata $d_F(u)+w(u,v)+d_B(v)$: relaksacja zapewnia,
+że odpowiednia suma etykiet po tej operacji nie jest
+większa od kosztu kandydata.
+W każdym kroku wykonujemy pełne przetworzenie jednego
+wierzchołka w jednym z kierunków, pomijając nieaktualne
+wpisy oraz wpisy wierzchołków już ustalonych.
+Minimum pustej kolejki oznaczamy przez $+\infty$.
+
+\begin{stwierdzenie}[Kryterium zakończenia]
+\label{prop:tg-weighted-bidir}
+Niech $D=(V,A)$ będzie skończonym grafem skierowanym
+o nieujemnych wagach i $s,t\in V$.
+Dla opisanego algorytmu, gdy po pełnym przetworzeniu
+wierzchołka (lub po inicjalizacji) minima aktualnych
+kluczy w dwóch kolejkach są równe $k_F,k_B$,
+warunek $k_F+k_B\geq\mu$
+pozwala bezpiecznie
+zakończyć wyszukiwanie
+i zwrócić $\mu=\delta(s,t)$ (wartość $+\infty$
+oznacza brak spaceru). Warunek obejmuje również
+opróżnienie którejkolwiek kolejki.
+Samo pierwsze spotkanie
+frontów nie jest wystarczające.
+\end{stwierdzenie}
+\begin{proof}
+Każda skończona wartość $\mu$ jest kosztem rzeczywistego
+spaceru z $s$ do $t$, więc $\delta(s,t)\leq\mu$.
+Jeżeli $t$ jest nieosiągalny z $s$, żadna taka wartość
+nie może powstać i $\mu=+\infty$. Dalej rozważamy
+przypadek skończonej odległości.
+Przypuśćmy, że $\delta(s,t)<\mu$ i wybierzmy
+ścieżkę najkrótszą $P=(v_0=s,\ldots,v_r=t)$.
+Niech $S_F$ i $S_B$ oznaczają zbiory wierzchołków
+ustalonych odpowiednio przez przeszukiwanie od $s$
+i od $t$ po odwróconych łukach.
+Nie wszystkie wierzchołki $P$ mogą leżeć w $S_F$:
+w przeciwnym razie podczas przetwarzania $t$
+otrzymalibyśmy $\mu\leq\delta(s,t)$.
+Analogicznie nie wszystkie leżą w $S_B$.
+
+Niech $i$ będzie najmniejszym indeksem, dla którego
+$v_i\notin S_F$, a $j$ największym indeksem, dla
+którego $v_j\notin S_B$. Jeśli $i\leq j$, to po
+ustaleniu poprzednika $v_i$ (lub od samej inicjalizacji,
+gdy $i=0$) otrzymujemy
+$d_F(v_i)\leq w(v_0,\ldots,v_i)$.
+Podobnie
+$d_B(v_j)\leq w(v_j,\ldots,v_r)$.
+Ponieważ wszystkie wagi są nieujemne,
+\[
+k_F+k_B\leq d_F(v_i)+d_B(v_j)
+\leq w(P)=\delta(s,t)<\mu,
+\]
+co przeczy warunkowi zatrzymania.
+
+Niech więc $i>j$. Jeśli $i=j+1$,
+łuk $v_j\to v_{j+1}$ łączy wierzchołek
+ustalony od $s$ z wierzchołkiem ustalonym
+od $t$. Przy przeglądaniu tego łuku
+przez późniejsze z obu przeszukiwań
+aktualizacja kandydata daje
+$\mu\leq\delta(s,t)$, sprzeczność.
+Jeśli $i\geq j+2$, wierzchołek $v_{j+1}$
+należy do obu zbiorów ustalonych.
+Kandydat przechodzący przez ten wierzchołek
+również ma koszt co najwyżej $w(P)$.
+W każdym przypadku otrzymujemy sprzeczność,
+a więc $\mu=\delta(s,t)$.
+\end{proof}
+
+\section{Hierarchie kontrakcji: szybkie zapytania po przygotowaniu grafu}
+\label{sec:tg-weighted-ch}
+
+Opisujemy dokładną wersję
+dla skończonego grafu
+\emph{nieskierowanego}
+o \emph{dodatnich} wagach.
+Ustalmy bijekcję rang
+$\rho\colon V\to\{1,\ldots,n\}$.
+Kontraktujemy kolejne
+wierzchołki od
+najniższej rangi.
+Przy usuwaniu $v$,
+dla każdej pary jego
+aktualnych sąsiadów
+$u,z$ o wyższej
+randze dodajemy
+\emph{skrót} $uz$
+o wadze $w(u,v)+w(v,z)$,
+jeśli nie ma jeszcze
+krawędzi o wadze
+nie większej.
+Każdy skrót pamięta dwie konkretne krawędzie,
+które zastąpił, wraz z ich wagami w chwili utworzenia.
+Jeżeli później powstaje tańszy skrót między tymi
+samymi końcami, wcześniejszego zapisu nie usuwamy
+z danych służących do rozwijania skrótów.
+Odwołania skrótu prowadzą wyłącznie do krawędzi
+oryginalnych lub wcześniej utworzonych skrótów;
+rekurencyjne rozwijanie kończy się więc i zachowuje wagę.
+
+\begin{lemat}[Zachowanie odległości]
+\label{lem:tg-weighted-ch}
+Po kontrakcji wierzchołków
+o rangach $1,\ldots,k$
+odległości między
+pozostałymi wierzchołkami
+w grafie aktywnym są
+równe odległościom
+w grafie oryginalnym.
+\end{lemat}
+\begin{proof}
+Indukcja po $k$.
+Dla dwóch różnych pozostałych wierzchołków o skończonej
+odległości wybieramy najkrótszą ścieżkę w grafie aktywnym
+przed kontrakcją. Dodatniość wag pozwala wybrać ją prostą.
+Jeśli zawiera $v$, to $v$ jest wierzchołkiem wewnętrznym
+i występuje dokładnie raz, a jego sąsiedzi $u,z$ są różni.
+Fragment $u-v-z$ zastępujemy skrótem lub istniejącą
+krawędzią o nie większej wadze. Jeśli ścieżka pomija $v$,
+pozostaje dostępna. Odległość po kontrakcji nie wzrasta.
+Odwrotnie, każdą nową krawędź można zastąpić spacerem
+w poprzednim grafie o tej samej wadze. Każdy spacer
+po kontrakcji ma więc odpowiednik przed kontrakcją
+o tej samej wadze. Odległość nie maleje; argument ten
+wyklucza również powstanie połączenia między wcześniej
+nieosiągalnymi wierzchołkami. Dla równych końców obie
+odległości są zerowe.
+\end{proof}
+
+W grafie rozszerzonym
+zachowujemy wszystkie
+oryginalne krawędzie
+i dodane skróty.
+W grafie aktywnym wystarczy przechowywać najtańszą
+krawędź dla każdej pary aktywnych końców: zastąpienie
+droższej krawędzi nie zwiększa kosztu żadnego spaceru.
+W grafie rozszerzonym można analogicznie używać
+najtańszej krawędzi dla każdej pary końców, zachowując
+jej świadectwo rozwinięcia oraz wszystkie rekordy,
+do których ono się odwołuje. Wyszukiwanie
+prowadzimy tylko
+po łukach o
+\emph{rosnącej} randze,
+czyli w grafie
+$D_\uparrow$.
+Niech $d_\uparrow(u,v)$
+oznacza odległość
+w takim grafie
+skierowanym.
+
+\begin{twierdzenie}[Dokładne zapytanie CH]
+\label{thm:tg-weighted-ch-query}
+Dla dowolnych wierzchołków
+$s,t$ oryginalnego
+grafu zachodzi
+\[
+\delta(s,t)=
+\min_{x\in V}
+\{d_\uparrow(s,x)+d_\uparrow(t,x)\}.
+\]
+Dwie Dijkstry po
+łukach rosnącej rangi,
+z $s$ oraz z $t$,
+pozwalają obliczyć
+prawą stronę.
+\end{twierdzenie}
+\begin{proof}
+Dla każdego $x$ o skończonych obu odległościach
+wybieramy najkrótsze ścieżki w górę od $s$ i od $t$.
+Odwracamy drugą z nich, co jest dozwolone w grafie
+nieskierowanym, i łączymy obie w $x$.
+Otrzymujemy spacer od $s$ do $t$ w grafie rozszerzonym
+o wadze $d_\uparrow(s,x)+d_\uparrow(t,x)$.
+Rozwinięcie skrótów
+nie zmienia kosztu,
+więc prawa strona
+nie jest mniejsza
+od $\delta(s,t)$.
+
+Jeśli $t$ jest nieosiągalny z $s$, rozwijanie skrótów
+wyklucza istnienie skończonego kandydata, więc obie
+strony są równe $+\infty$. W przeciwnym razie
+weźmy ścieżkę najkrótszą.
+Jeśli jej ciąg rang
+ma lokalne minimum,
+to podczas kontrakcji
+odpowiedniego wierzchołka
+utworzono skrót między
+jego sąsiadami albo
+pozostawiono krawędź
+nie droższą.
+Zastąpmy ten fragment.
+Wybieramy za każdym razem lokalne minimum o najmniejszej
+randze. Krawędzie używane w danym kroku były dostępne
+w chwili kontrakcji tego minimum: oryginalne krawędzie
+istniały od początku, a wcześniej użyte skróty powstały
+przy kontrakcjach o niższej randze. Istotnie, po usunięciu
+minimum nowe lokalne minima mogą powstać tylko przy jego
+sąsiadach, mających wyższe rangi. Każde zastąpienie usuwa
+jeden wierzchołek ze ścieżki i nie zwiększa kosztu.
+Po skończonej liczbie kroków otrzymujemy ścieżkę bez
+lokalnego minimum rang. Ponieważ rangi są różne,
+następstwo spadku i wzrostu jest niemożliwe; rangi
+najpierw rosną, a potem maleją (jedna część może być pusta).
+Obie połowy od końców
+do wierzchołka
+o największej randze
+są ścieżkami w górę.
+Prawa strona nie
+przekracza więc
+$\delta(s,t)$.
+\end{proof}
+
+\begin{uwaga}[Koszt przygotowania]
+Wariant dodający wszystkie
+skróty jest dokładny, ale
+w najgorszym przypadku
+może stworzyć graf gęsty.
+Praktyczne CH ograniczają
+liczbę skrótów za pomocą
+poszukiwania ścieżek
+omijających kontraktowany
+wierzchołek i dobrze
+dobranej kolejności rang.
+Zmiana wag może wymagać
+przebudowy struktury.
+Nie jest to zatem
+uniwersalnie najszybsza
+metoda dla pojedynczego
+zapytania; jej siła
+tkwi często w wielu
+zapytaniach na
+tej samej sieci drogowej.
+\end{uwaga}
+
+\section{Porównanie i wybór algorytmu}
+\label{sec:tg-weighted-summary}
+
+\begin{itemize}[leftmargin=2em,itemsep=3pt]
+\item \textbf{BFS}: koszty jednostkowe, graf nieważony.
+\item \textbf{Dijkstra}: nieujemne wagi, jedno źródło
+      albo pojedyncza para wierzchołków.
+\item \textbf{Bellman--Ford}: dopuszczalne wagi ujemne,
+      wyznaczanie odległości i wykrywanie osiągalnych cykli ujemnych.
+\item \textbf{Floyd--Warshall}: odległości między
+      wszystkimi parami wierzchołków.
+\item \textbf{Johnson}: wszystkie pary, także wagi ujemne,
+      pod warunkiem braku cykli ujemnych.
+\item \textbf{A*}: jedno zapytanie do celu, nieujemne
+      wagi i dopuszczalna heurystyka; przy heurystyce
+      niespójnej konieczne jest ponowne otwieranie.
+\item \textbf{Dijkstra dwukierunkowy}: jedna para wierzchołków,
+      nieujemne wagi i przeszukiwanie wsteczne.
+\item \textbf{CH}: wiele zapytań na wstępnie przygotowanej
+      sieci o dodatnich wagach; czas przygotowania
+      i zajętość pamięci są częścią kosztu metody.
+\end{itemize}
+
+A* zwykle przetwarza mniej
+wierzchołków, gdy potrafimy
+podać informacyjną,
+dopuszczalną heurystykę.
+CH może oferować
+znacznie krótsze czasy
+zapytań na sieciach
+drogowych po kosztownym
+przygotowaniu indeksu.
+Każde porównanie
+wymaga rzeczywistych
+danych i benchmarku.
+
+\begin{uwaga}[Literatura]
+R. Geisberger, P. Sanders,
+D. Schultes, D. Delling,
+\emph{Contraction Hierarchies:
+Faster and Simpler Hierarchical
+Routing in Road Networks},
+WEA 2008.
+\end{uwaga}

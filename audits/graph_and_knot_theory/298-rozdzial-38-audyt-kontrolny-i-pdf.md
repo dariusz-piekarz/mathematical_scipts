@@ -1,0 +1,21 @@
+# GKT38 — kontrola matematyczna i odbiór PDF
+
+Źródło: `chapters/pl/graph_and_knot_theory/31-egzotyczna-czterorozmaitosc-parka-konstrukcja-i-topologia.tex`, blob `08250beaff3dc0d052e1631f62c0b2c6ccecabb0`, commit `ab2513efd2f934daf3776165713659c6005e523f`, 981 wierszy. Bez zmian względem poprzedniej kontroli. W bieżącym audycie przeczytano całe źródło; nie stwierdzono istotnej usterki matematycznej wymagającej edycji.
+
+Kontrola niezależna w SymPy: z jawnych klas h,e_i utworzono macierze kolumnowe sześciu sfer C_7 i siedmiu sfer włókna. Potwierdzono 36 wpisów macierzy Grama C_7, rangę 6 macierzy przecięć włókna, wektor krotności (1,2,3,2,1,2,1) i jego obraz f, 36 wpisów Q_7^{-1}, sześć minorów głównych, postać Smitha diag(1,1,1,1,1,49), prymitywność włączenia kraty sześciu sfer (wszystkie sześć niezerowych niezmienników Smitha równe co do modułu 1). Sprawdzono 36 zgodności formy splecenia -Q_7^{-1} modulo Z z relacjami meridianów (6,5,4,3,2,1) i wszystkie 49 klas względem warunku ortogonalności do metabolizera. Kontrola źródłowa: 21 etykiet, 13 różnych celów odsyłaczy jednoznacznie rozstrzygniętych w GKT33 i GKT38, 48 zagnieżdżonych środowisk LaTeX.
+
+CI 45781123628: full-book-pdf success. Pobrano artefakt 15097788683; PDF ma 398 stron, plik ostrzeżeń ma 0 bajtów. W PyMuPDF wyrenderowano i obejrzano wszystkie 9 stron GKT38 (PDF 357–365, drukowane 347–355). Cztery schematy czytelne; poprawiony dowód braku torsji na stronach drukowanych 353–354 ma prawidłowy skład. Nie stwierdzono istotnych usterek wizualnych. Globalny structural-audit, zadania algorytmów 45781123692, aplikacji 45781123644 i terminologii 45781123604 w chwili kontroli nadal oczekują; nie stwierdzamy pełnego PASS CI. Nie powtarzano w tym audycie weryfikacji publikacji Parka ani dowodu twierdzeń zewnętrznych. Odbiór całości pozostaje warunkowy do potwierdzenia pozostałych kontroli.
+
+## Dodatkowa niezależna kontrola odbiorcza
+
+Ponownie wykonano obliczenia w SymPy na macierzach klas w bazie h,e_1,...,e_13. Macierz sześciu klas A jest prymitywna (SNF: sześć jedynek). Macierz P=A^T J ma minor rzędu 6 o wartości bezwzględnej 1 w kolumnach (0,1,2,4,5,9). Rozwiązanie P x=0 względem tych kolumn daje całkowitą bazę N jądra o randze 8; bezpośrednio sprawdzono P N=0, det(N^T J N)=-49 i |det[A N]|=49. Potwierdzono ponownie macierze Grama C_7 (36/36) i afinicznego E_6 (49/49), odwrotność Q_7 (36/36), minory, SNF, relacje meridianów, 36 porównań formy splecenia modulo Z i 49 klas w teście metabolizera. Oryginalną pracę Parka arXiv:math/0311395v3 sprawdzono na renderach stron 6–8: zgodność klas, konfiguracji oraz dysku S_6. Ponownie rozpakowano artefakt 15097788683 i obejrzano trzy trójstronicowe rendery PDF 357–365: 398 stron całego PDF, plik ostrzeżeń 0 bajtów, brak dostrzeżonych usterek. Bez zmian w źródle rozdziału.
+
+Status CI w chwili tej kontroli: full-book-pdf: success; structural-audit: queued; finite-models: queued; chapter-pdf: queued; reader-ui: queued; index-and-test: queued; changed-latex: queued.
+
+## Odbiór końcowy 2026-11-27
+
+CI źródła: 45781123628 full-book-pdf i structural-audit success; 45781123692 finite-models i chapter-pdf success; 45781123604 changed-latex success. 45781123644 reader-ui success, index-and-test failure (Run application regression tests and classify every skip; Require successful chapter and graph coverage). Rozdział domknięty merytorycznie, redakcyjnie i w zakresie CI książki; pełne CI aplikacji niezaliczone. Stan 38/43 rozdziałów. Kolejny GKT39.
+
+## Domknięcie kontroli CI
+
+Ponowne odczytanie zadań: 45781123628 full-book-pdf i structural-audit — success; 45781123692 finite-models i chapter-pdf — success; 45781123604 changed-latex — success. Aplikacja 45781123644: reader-ui success, index-and-test failure (Run application regression tests and classify every skip; Require successful chapter and graph coverage). Odbiór GKT38 w zakresie matematyki, składu i dedykowanego CI GT zamknięty. Nie oznacza to pełnego PASS CI repozytorium. Źródło niezmienione. Następny GKT39.

@@ -1,0 +1,2938 @@
+\chapter{Logika modalna}\label{ch:ncl-modal}
+
+\section{Język modalny i jego interpretacja}
+
+W klasycznym rachunku zdań pytamy, czy zdanie jest
+prawdziwe. W logice modalnej możemy dodatkowo pytać,
+czy jest koniecznie prawdziwe lub czy jest możliwe.
+Znaczenie tych pojęć zależy od zastosowania: mogą
+dotyczyć możliwości logicznej, informacji posiadanych
+przez podmiot albo dostępnych stanów pewnego układu.
+W tym rozdziale badamy normalne zdaniowe logiki
+modalne od strony syntaktycznej. Pełną semantykę
+relacyjną oraz twierdzenia o pełności rozwiniemy
+w następnym rozdziale.
+
+\begin{definicja}[Język zdaniowej logiki modalnej]
+\label{def:ncl-modal-language}
+Niech $\mathrm{Var}$ będzie przeliczalnie nieskończonym
+zbiorem zmiennych zdaniowych. Zbiór formuł modalnych
+$\mathrm{Fm}_{\Box}$ definiujemy rekurencyjnie:
+\begin{itemize}
+\item każda zmienna $p\in\mathrm{Var}$ i stała $\bot$
+      są formułami;
+\item jeżeli $A,B$ są formułami, to
+      $(A\wedge B)$, $(A\vee B)$ i $(A\to B)$
+      są formułami;
+\item jeżeli $A$ jest formułą, to $\Box A$ jest formułą.
+\end{itemize}
+Stosujemy skróty
+\[
+ \neg A=A\to\bot,\qquad
+ \top=\neg\bot,\qquad
+ A\leftrightarrow B=(A\to B)\wedge(B\to A),\qquad
+ \Diamond A=\neg\Box\neg A.
+\]
+Operator $\Box$ nazywamy operatorem konieczności,
+a $\Diamond$ operatorem możliwości.
+\end{definicja}
+Spójniki zdaniowe są w tym rozdziale klasyczne.
+W szczególności nie używamy intuicjonistycznej
+negacji do definiowania operatora możliwości.
+Wyrażenia $\Box A$ oraz $\Diamond A$ nie są
+nowymi zmiennymi, lecz formułami utworzonymi
+z $A$.
+
+\begin{definicja}[Głębokość modalna]
+\label{def:ncl-modal-depth}
+Głębokość modalną $\operatorname{md}(A)$ formuły
+określamy przez
+\[
+\begin{aligned}
+ \operatorname{md}(p)&=\operatorname{md}(\bot)=0,\\
+ \operatorname{md}(A\circ B)
+ &=\max(\operatorname{md}(A),\operatorname{md}(B)),
+ \qquad \circ\in\{\wedge,\vee,\to\},\\
+ \operatorname{md}(\Box A)&=1+\operatorname{md}(A).
+\end{aligned}
+\]
+W szczególności $\operatorname{md}(\Diamond A)
+=1+\operatorname{md}(A)$, co wynika z definicji
+skrótu $\Diamond$.
+\end{definicja}
+
+\begin{przyklad}[Zakres operatorów modalnych]
+\label{ex:ncl-modal-scope}
+Formuła $\Box(p\to q)$ mówi o konieczności
+implikacji. Formuła $\Box p\to\Box q$ mówi,
+że konieczność $p$ pociąga konieczność $q$.
+Obie mają głębokość modalną $1$, ale nie są
+tym samym wyrażeniem.
+Natomiast $\Box\Diamond p$ ma głębokość $2$:
+wyraża konieczność możliwości $p$.
+Nie należy jej utożsamiać z $\Diamond\Box p$,
+czyli możliwością konieczności $p$.
+\end{przyklad}
+
+\begin{definicja}[Podstawienie modalne]
+\label{def:ncl-modal-substitution}
+Podstawienie $\sigma:\mathrm{Var}\to\mathrm{Fm}_{\Box}$
+rozszerzamy na formuły, zachowując stałą $\bot$,
+wszystkie spójniki dwuargumentowe i operator $\Box$.
+W szczególności
+\[
+ \sigma(\Box A)=\Box\sigma(A),\qquad
+ \sigma(\Diamond A)=\Diamond\sigma(A).
+\]
+Druga równość wynika z pierwszej i z zachowania
+spójników występujących w definicji $\Diamond$.
+\end{definicja}
+Podstawienie jest jednoczesne: formuł wstawionych
+za zmienne nie podstawiamy ponownie w tym samym
+kroku. Dla podstawień $\sigma,\tau$ ich złożenie
+na zmiennych określa wzór
+$(\tau\circ\sigma)(p)=\tau(\sigma(p))$.
+Indukcja po budowie formuły pokazuje, że
+$(\tau\circ\sigma)(A)=\tau(\sigma(A))$:
+dla zmiennych jest to definicja, dla stałej
+obie strony są $\bot$, a dla spójników i $\Box$
+korzystamy z hipotezy indukcyjnej dla argumentów.
+
+\section{Normalna logika modalna K}
+
+\begin{definicja}[System Hilberta K]
+\label{def:ncl-modal-K}
+System $\mathrm K$ ma następujące aksjomaty i reguły:
+\begin{enumerate}
+\item Wszystkie instancje klasycznych tautologii
+      zdaniowych przez podstawienia formuł modalnych.
+\item Schemat dystrybucji konieczności:
+\[
+ \tag{K}\label{eq:ncl-modal-axiom-K}
+ \Box(A\to B)\to(\Box A\to\Box B).
+\]
+\item Reguła modus ponens:
+\[
+ \frac{A\qquad A\to B}{B}.
+\]
+\item Reguła konieczności (necessitation):
+\[
+ \frac{A}{\Box A}\quad(\mathrm{Nec}),
+\]
+      stosowana do twierdzeń, czyli formuł
+      dowiedzionych bez dodatkowych przesłanek.
+\end{enumerate}
+Dowód twierdzenia jest skończonym ciągiem formuł,
+z których każda jest aksjomatem lub wynika
+z wcześniejszych wierszy przez jedną z reguł.
+Piszemy $\vdash_{\mathrm K}A$, gdy istnieje taki
+dowód o ostatnim wierszu $A$.
+\end{definicja}
+Schemat K pozwala przenosić konieczną implikację
+na konieczność jej członów. Nie daje jednak
+odwrotnej implikacji. W szczególności z samego
+$A\to B$ jako lokalnego założenia nie wolno
+przejść do $\Box(A\to B)$.
+
+\begin{definicja}[Normalna logika modalna]
+\label{def:ncl-modal-normal-logic}
+Normalną logiką modalną nazywamy zbiór $L$
+formuł modalnych zawierający wszystkie instancje
+klasycznych tautologii oraz wszystkie instancje K i domknięty
+względem modus ponens, reguły konieczności
+oraz dowolnych podstawień.
+Piszemy $\vdash_L A$, gdy $A\in L$.
+Nie wymagamy niesprzeczności: zbiór wszystkich
+formuł jest normalną logiką w tym sensie.
+\end{definicja}
+
+\begin{stwierdzenie}[Minimalność systemu K]
+\label{prop:ncl-modal-K-minimal}
+Zbiór twierdzeń systemu $\mathrm K$ jest najmniejszą
+normalną logiką modalną.
+\end{stwierdzenie}
+\begin{proof}
+Aksjomaty systemu są domknięte względem podstawień.
+Podstawiając formuły we wszystkich wierszach dowodu,
+otrzymujemy ponownie dowód: podstawienie zachowuje
+zarówno modus ponens, jak i przejście od $A$ do
+$\Box A$. Stąd zbiór twierdzeń K jest domknięty
+względem podstawień. Domknięcie względem dwóch
+pozostałych reguł wynika z możliwości połączenia
+dowodów i dopisania odpowiedniego wniosku.
+Jeżeli $L$ jest normalna, to indukcja po długości
+dowodu K pokazuje, że każdy jego wiersz należy
+do $L$. Zatem każdy normalny system zawiera
+wszystkie twierdzenia K.
+\end{proof}
+Dla dowolnej rodziny dodatkowych schematów
+aksjomatycznych piszemy $\mathrm K+\Sigma$ na
+oznaczenie najmniejszej normalnej logiki
+zawierającej te schematy. Istnieje ona jako
+przecięcie wszystkich normalnych logik
+zawierających $\Sigma$; rodzina ta jest niepusta,
+bo zawiera zbiór wszystkich formuł.
+Równoważnie bierzemy system Hilberta K
+z dodatkowymi instancjami schematów: powtarzając
+dowód minimalności otrzymujemy tę samą logikę.
+
+\section{Reguły pochodne i rachunek operatorów}
+
+\begin{twierdzenie}[Monotoniczność i zastępowanie równoważników]
+\label{thm:ncl-modal-monotonicity}
+W każdej normalnej logice modalnej $L$ zachodzą
+reguły pochodne
+\[
+\begin{aligned}
+ \vdash_L A\to B&\Longrightarrow
+                   \vdash_L\Box A\to\Box B,\\
+ \vdash_L A\to B&\Longrightarrow
+                   \vdash_L\Diamond A\to\Diamond B,\\
+ \vdash_L A\leftrightarrow B&\Longrightarrow
+                   \vdash_L\Box A\leftrightarrow\Box B,\\
+ \vdash_L A\leftrightarrow B&\Longrightarrow
+                   \vdash_L\Diamond A\leftrightarrow\Diamond B.
+\end{aligned}
+\]
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia $A\to B$ przez konieczność otrzymujemy
+$\Box(A\to B)$, a następnie przez K i modus ponens
+$\Box A\to\Box B$.
+Klasyczna kontrapozycja daje z $A\to B$
+twierdzenie $\neg B\to\neg A$.
+Pierwsza reguła zastosowana do niego daje
+$\Box\neg B\to\Box\neg A$.
+Ponowna kontrapozycja daje
+$\neg\Box\neg A\to\neg\Box\neg B$, czyli
+$\Diamond A\to\Diamond B$.
+Dwie ostatnie reguły wynikają z zastosowania
+dwóch pierwszych do obu kierunków równoważności
+i połączenia otrzymanych implikacji koniunkcją,
+co jest dozwolone przez klasyczne tautologie
+oraz modus ponens.
+\end{proof}
+
+\begin{wniosek}[Zastępowanie w kontekstach modalnych]
+\label{cor:ncl-modal-context-replacement}
+Niech $C[-]$ oznacza formułę z wyróżnionym miejscem
+na podformułę. Jeśli $\vdash_L A\leftrightarrow B$,
+to $\vdash_L C[A]\leftrightarrow C[B]$.
+\end{wniosek}
+\begin{proof}
+Indukujemy po budowie kontekstu.
+Dla samego wyróżnionego miejsca otrzymujemy
+założenie. Dla spójników klasycznych korzystamy
+z tautologii wyrażających zachowanie równoważności
+po zastąpieniu jednego argumentu.
+Dla kontekstu $\Box D[-]$ stosujemy hipotezę
+indukcyjną i trzecią regułę z poprzedniego
+twierdzenia. Skróty, w tym $\Diamond$, są objęte
+indukcją po rozwinięciu.
+\end{proof}
+
+\begin{twierdzenie}[Prawa normalnych operatorów modalnych]
+\label{thm:ncl-modal-normal-laws}
+W każdej normalnej logice modalnej dowodliwe są
+formuły
+\[
+\begin{gathered}
+ \Box\top,\qquad \neg\Diamond\bot,\\
+ \Box(A\wedge B)\leftrightarrow(\Box A\wedge\Box B),\\
+ \Diamond(A\vee B)\leftrightarrow
+                  (\Diamond A\vee\Diamond B),\\
+ (\Box A\vee\Box B)\to\Box(A\vee B),\\
+ \Diamond(A\wedge B)\to(\Diamond A\wedge\Diamond B),\\
+ \neg\Box A\leftrightarrow\Diamond\neg A,\qquad
+ \neg\Diamond A\leftrightarrow\Box\neg A.
+\end{gathered}
+\]
+\end{twierdzenie}
+\begin{proof}
+Z tautologii $\top$ przez regułę konieczności
+otrzymujemy $\Box\top$.
+Ponieważ $\Diamond\bot=\neg\Box\neg\bot
+=\neg\Box\top$, z twierdzenia $\Box\top$
+i klasycznej tautologii $C\to\neg\neg C$
+otrzymujemy $\neg\Diamond\bot$.
+
+Z tautologii $A\wedge B\to A$ oraz
+$A\wedge B\to B$ przez monotoniczność $\Box$
+otrzymujemy obie implikacje potrzebne do
+$\Box(A\wedge B)\to(\Box A\wedge\Box B)$.
+W drugą stronę stosujemy konieczność do tautologii
+$A\to(B\to A\wedge B)$, a następnie dwukrotnie K.
+Otrzymujemy kolejno
+\[
+ \Box A\to\Box(B\to A\wedge B),\qquad
+ \Box(B\to A\wedge B)\to
+       (\Box B\to\Box(A\wedge B)).
+\]
+Składanie implikacji i klasyczne przekształcenie
+$X\to(Y\to Z)$ w $(X\wedge Y)\to Z$ dają
+$(\Box A\wedge\Box B)\to\Box(A\wedge B)$.
+Równoważność dla możliwości sumy wynika z definicji
+$\Diamond$, praw de Morgana, zastępowania
+równoważników oraz właśnie udowodnionej
+równoważności dla $\Box$ i koniunkcji.
+
+Tautologie $A\to A\vee B$ i $B\to A\vee B$
+przenosimy przez $\Box$ i łączymy klasyczną
+eliminacją alternatywy. Analogicznie z implikacji
+$A\wedge B\to A$ i $A\wedge B\to B$ przez
+monotoniczność $\Diamond$ otrzymujemy implikację
+dla możliwości koniunkcji.
+Ostatnie dwie równoważności wynikają z definicji
+$\Diamond$, klasycznej podwójnej negacji i
+zastępowania równoważników pod $\Box$.
+\end{proof}
+Indukcja po liczbie członów rozszerza prawo
+konieczności koniunkcji na dowolną skończoną
+rodzinę formuł, a prawo możliwości alternatywy
+na dowolną skończoną alternatywę.
+Przypadki pustych rodzin to odpowiednio
+$\Box\top$ i $\neg\Diamond\bot$.
+
+\begin{stwierdzenie}[Modalny modus ponens]
+\label{prop:ncl-modal-mixed-mp}
+W każdej normalnej logice modalnej zachodzi
+\[
+ \vdash_L\Box(A\to B)\to(\Diamond A\to\Diamond B).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Z tautologii $(A\to B)\to(\neg B\to\neg A)$
+i monotoniczności $\Box$ otrzymujemy
+$\Box(A\to B)\to\Box(\neg B\to\neg A)$.
+Schemat K daje
+$\Box(\neg B\to\neg A)\to
+(\Box\neg B\to\Box\neg A)$.
+Składamy obie implikacje i stosujemy klasyczną
+kontrapozycję do implikacji w następniku.
+Wynik to
+$\Box(A\to B)\to
+(\neg\Box\neg A\to\neg\Box\neg B)$.
+\end{proof}
+
+\section{Podstawowe rozszerzenia aksjomatyczne}
+
+\begin{definicja}[Schematy D, T, B, 4 i 5]
+\label{def:ncl-modal-axiom-schemes}
+Rozważamy następujące schematy, w których $A$
+jest dowolną formułą modalną:
+\[
+\begin{array}{c|l}
+ \mathrm D&\Box A\to\Diamond A\\
+ \mathrm T&\Box A\to A\\
+ \mathrm B&A\to\Box\Diamond A\\
+ 4&\Box A\to\Box\Box A\\
+ 5&\Diamond A\to\Box\Diamond A.
+\end{array}
+\]
+Definiujemy logiki
+\[
+\begin{aligned}
+ \mathrm{KD}&=\mathrm K+\mathrm D,&
+ \mathrm T&=\mathrm K+\mathrm T,\\
+ \mathrm{KB}&=\mathrm K+\mathrm B,&
+ \mathrm{K4}&=\mathrm K+4,\\
+ \mathrm{K5}&=\mathrm K+5,&
+ \mathrm B&=\mathrm K+\mathrm T+\mathrm B,\\
+ \mathrm{S4}&=\mathrm K+\mathrm T+4,&
+ \mathrm{S5}&=\mathrm K+\mathrm T+5.
+\end{aligned}
+\]
+Po prawej stronie symbole D, T, B, 4, 5 oznaczają
+schematy; po lewej nazwy systemów. Oznaczenia
+$\mathrm{KB}$ i $\mathrm B$ rozróżniamy: drugi
+system ma dodatkowo schemat T.
+\end{definicja}
+
+Schemat D wyklucza konieczność zdania wraz
+z niemożliwością tego zdania.
+Schemat T wyraża faktywność konieczności.
+Schemat B pozwala z prawdziwości zdania przejść
+do konieczności jego możliwości.
+Schemat 4 wyraża przejście od konieczności
+do konieczności konieczności, a schemat 5
+od możliwości do konieczności możliwości.
+Są to intuicje syntaktyczne; ich dokładne znaczenie
+w kategoriach własności relacji dostępności
+zostanie udowodnione w rozdziale o semantyce Kripkego.
+
+\begin{stwierdzenie}[Dualne postacie schematów]
+\label{prop:ncl-modal-dual-axioms}
+W obecności K następujące pary schematów
+wyznaczają te same rozszerzenia:
+\[
+\begin{array}{c|l}
+ \mathrm D & \neg\Box\bot\\
+ \mathrm T & A\to\Diamond A\\
+ \mathrm B & \Diamond\Box A\to A\\
+ 4 & \Diamond\Diamond A\to\Diamond A\\
+ 5 & \Diamond\Box A\to\Box A .
+\end{array}
+\]
+\end{stwierdzenie}
+\begin{proof}
+D dla $A=\bot$ daje $\Box\bot\to\Diamond\bot$,
+a ponieważ $\neg\Diamond\bot$ jest twierdzeniem K,
+otrzymujemy $\neg\Box\bot$.
+Odwrotnie, z prawa konieczności koniunkcji i
+zastępowania równoważników mamy
+$(\Box A\wedge\Box\neg A)\to\Box\bot$.
+Z $\neg\Box\bot$ wynika więc
+$\Box A\to\neg\Box\neg A$, czyli D.
+Dla T podstawiamy $\neg A$ do schematu
+$\Box A\to A$, stosujemy kontrapozycję i
+eliminujemy podwójną negację, otrzymując
+$A\to\Diamond A$. Te same operacje zastosowane
+do postaci dualnej dają T.
+Dla B z instancji
+$\neg A\to\Box\Diamond\neg A$ przez
+kontrapozycję otrzymujemy
+$\neg\Box\Diamond\neg A\to A$ po uproszczeniu
+podwójnej negacji. Z definicji i praw dualności
+$\neg\Box\Diamond\neg A$ jest równoważne
+$\Diamond\Box A$. Odwrócenie argumentu
+daje pierwotny schemat B.
+Dla 4 kontrapozycja instancji
+$\Box\neg A\to\Box\Box\neg A$ daje
+$\Diamond\Diamond A\to\Diamond A$
+po zastosowaniu praw dualności.
+Dla 5 analogicznie kontrapozycja instancji
+$\Diamond\neg A\to\Box\Diamond\neg A$
+daje $\Diamond\Box A\to\Box A$.
+W dwóch ostatnich przypadkach ponowne
+podstawienie negacji i kontrapozycja dają
+schematy wyjściowe, ponieważ prawa dualności
+oraz podwójnej negacji są dowodliwe już w K.
+\end{proof}
+
+\begin{wniosek}[Faktywność pociąga D]
+\label{cor:ncl-modal-T-implies-D}
+Każda normalna logika zawierająca schemat T
+zawiera także D.
+\end{wniosek}
+\begin{proof}
+Z T mamy $\Box A\to A$, a z postaci dualnej T
+ze Stwierdzenia~\ref{prop:ncl-modal-dual-axioms}
+mamy $A\to\Diamond A$. Składamy implikacje,
+korzystając z klasycznej tautologii przechodniości
+implikacji i modus ponens.
+\end{proof}
+
+\section{Konsekwencja lokalna i globalna}
+
+\begin{definicja}[Dwie relacje konsekwencji syntaktycznej]
+\label{def:ncl-modal-local-global}
+Niech $L$ będzie normalną logiką modalną, a
+$\Gamma\subseteq\mathrm{Fm}_{\Box}$.
+Piszemy $\Gamma\vdash_L^{\mathrm{lok}} A$, jeśli
+istnieje skończony ciąg kończący się formułą $A$,
+którego każdy wiersz jest elementem $\Gamma$,
+twierdzeniem $L$ albo wynika z wcześniejszych
+wierszy przez modus ponens.
+Piszemy $\Gamma\vdash_L^{\mathrm{glob}} A$,
+jeśli dodatkowo wolno stosować regułę konieczności
+do każdego wcześniejszego wiersza, również do
+formuł uzyskanych z przesłanek.
+\end{definicja}
+W obu definicjach podstawienie nie jest regułą
+stosowaną do dowolnej przesłanki. Z faktu, że
+$p$ jest założeniem, nie wynika dowolna formuła
+$\sigma(p)$. Domknięcie logiki względem podstawień
+dotyczy zbioru twierdzeń $L$; własność strukturalna
+konsekwencji polega natomiast na jednoczesnym
+podstawieniu w przesłankach i wniosku.
+
+W konsekwencji lokalnej zakładamy prawdziwość
+przesłanek w aktualnym stanie. Konsekwencja
+globalna odpowiada założeniu ich prawdziwości
+we wszystkich stanach modelu. Jest to motywacja
+dla dwóch różnych rachunków syntaktycznych;
+ich semantyczną pełność rozważymy osobno.
+
+\begin{stwierdzenie}[Własności strukturalne obu konsekwencji]
+\label{prop:ncl-modal-consequence-structural}
+Dla każdej z relacji $\vdash_L^{\mathrm{lok}}$,
+$\vdash_L^{\mathrm{glob}}$ zachodzą:
+\begin{enumerate}
+\item zwrotność: $A\in\Gamma$ implikuje
+      $\Gamma\vdash A$;
+\item monotoniczność: z $\Gamma\subseteq\Delta$
+      i $\Gamma\vdash A$ wynika $\Delta\vdash A$;
+\item cięcie: jeżeli $\Gamma\vdash B$ dla każdego
+      $B\in\Delta$ oraz $\Delta\vdash A$, to
+      $\Gamma\vdash A$;
+\item skończoność: jeżeli $\Gamma\vdash A$,
+      to pewien skończony $\Gamma_0\subseteq\Gamma$
+      spełnia $\Gamma_0\vdash A$;
+\item strukturalność: $\Gamma\vdash A$ implikuje
+      $\sigma(\Gamma)\vdash\sigma(A)$.
+\end{enumerate}
+Ponadto
+\[
+ \varnothing\vdash_L^{\mathrm{lok}} A
+ \iff \varnothing\vdash_L^{\mathrm{glob}} A
+ \iff A\in L.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Zwrotność i monotoniczność wynikają wprost
+z definicji dowodu. Dla cięcia bierzemy dowód
+$A$ z $\Delta$ i dla każdej użytej w nim przesłanki
+$B\in\Delta$ wybieramy jej dowód z $\Gamma$.
+Dołączamy te skończenie liczne dowody przed
+dowodem $A$. Przy odtwarzaniu dowodu $A$
+pomijamy wiersze będące przesłankami z $\Delta$,
+a w każdym późniejszym zastosowaniu reguły
+odwołujemy się do ich wcześniejszych wystąpień
+w dołączonych dowodach z $\Gamma$.
+Pozostałe wiersze odtwarzamy przez dozwolone reguły.
+Jeśli ostatni wiersz jest już wcześniej uzyskany,
+możemy zakończyć dowód na jego wystąpieniu.
+W przypadku globalnym wszystkie zastosowania
+konieczności pozostają legalne, ponieważ
+dopuszczamy tę regułę także dla formuł
+uzyskanych z $\Gamma$.
+Skończoność wynika ze skończoności dowodu.
+Podstawiając jednocześnie we wszystkich wierszach,
+zachowujemy przynależność do zbioru twierdzeń $L$,
+modus ponens i, w przypadku globalnym, regułę
+konieczności.
+Dla pustego zbioru przesłanek indukcja po
+wierszach dowodu pokazuje, że każdy wiersz
+należy do $L$, ponieważ $L$ jest domknięta
+względem obu reguł. Odwrotnie każde twierdzenie
+$L$ jest jednoelementowym dowodem w obu rachunkach.
+\end{proof}
+
+\begin{twierdzenie}[Lokalne twierdzenie o dedukcji]
+\label{thm:ncl-modal-local-deduction}
+Dla dowolnego zbioru $\Gamma$ i formuł $A,B$
+zachodzi
+\[
+ \Gamma\cup\{A\}\vdash_L^{\mathrm{lok}} B
+ \iff \Gamma\vdash_L^{\mathrm{lok}} A\to B.
+\]
+\end{twierdzenie}
+\begin{proof}
+Kierunek od prawej do lewej wynika
+z monotoniczności oraz modus ponens.
+W drugim kierunku indukujemy po wierszach $C$
+lokalnego dowodu $B$ z $\Gamma\cup\{A\}$.
+Jeśli $C=A$, to $A\to C$ jest klasyczną
+tautologią.
+Jeśli $C\in\Gamma$ albo $C\in L$, to
+z $C$ i tautologii $C\to(A\to C)$ uzyskujemy
+$A\to C$ z $\Gamma$.
+Jeżeli $C$ wynika z wcześniejszych $D,D\to C$,
+to mamy z hipotezy indukcyjnej dowody
+$A\to D$ oraz $A\to(D\to C)$ z $\Gamma$.
+Stosujemy klasyczną tautologię
+\[
+ (A\to(D\to C))\to((A\to D)\to(A\to C))
+\]
+oraz dwukrotnie modus ponens.
+Nie występuje przypadek konieczności
+stosowanej do przesłanki: zastosowania
+konieczności w dowodach twierdzeń $L$
+są już zawarte w przypadku $C\in L$.
+\end{proof}
+
+\begin{wniosek}[Skończone przesłanki lokalne]
+\label{cor:ncl-modal-local-finite}
+Dla skończonego zbioru $\Delta$ i formuły $B$
+zachodzi
+\[
+ \Delta\vdash_L^{\mathrm{lok}} B
+ \iff
+ \vdash_L \left(\bigwedge_{A\in\Delta} A\right)\to B.
+\]
+Pusta koniunkcja jest równa $\top$.
+\end{wniosek}
+\begin{proof}
+Dla niepustej $\Delta$ możemy zastąpić wszystkie
+jej elementy ich koniunkcją: każdy składnik
+wynika z koniunkcji przez klasyczną tautologię
+i modus ponens, a koniunkcja wynika z jej
+składników przez iterowane wprowadzanie
+koniunkcji, które jest regułą pochodną rachunku
+klasycznego. Własność cięcia uzasadnia oba
+kierunki zamiany.
+Stosujemy Twierdzenie~\ref{thm:ncl-modal-local-deduction}
+dla $\Gamma=\varnothing$ oraz
+Stwierdzenie~\ref{prop:ncl-modal-consequence-structural}.
+Dla $\Delta=\varnothing$ korzystamy z dowodliwości
+$\top$ i równoważności $B\leftrightarrow(\top\to B)$.
+\end{proof}
+
+\subsection{Iteracje konieczności i dedukcja globalna}
+
+\begin{definicja}[Domknięcie przesłanek względem konieczności]
+\label{def:ncl-modal-box-closure}
+Piszemy $\Box^0 A=A$ oraz
+$\Box^{n+1}A=\Box(\Box^n A)$ dla $n\geq0$.
+Dla zbioru formuł $\Gamma$ określamy
+\[
+ \Gamma^\Box=\{\Box^n A:A\in\Gamma,\ n\geq0\},
+ \qquad
+ A^{[n]}=\bigwedge_{k=0}^n\Box^k A.
+\]
+\end{definicja}
+
+\begin{twierdzenie}[Redukcja konsekwencji globalnej do lokalnej]
+\label{thm:ncl-modal-global-local}
+Dla dowolnej normalnej logiki $L$ zachodzi
+\[
+ \Gamma\vdash_L^{\mathrm{glob}} B
+ \iff
+ \Gamma^\Box\vdash_L^{\mathrm{lok}} B.
+\]
+\end{twierdzenie}
+\begin{proof}
+Każda formuła $\Box^n A$ z $\Gamma^\Box$
+jest globalnie dowodliwa z $\Gamma$ przez
+$n$ zastosowań konieczności.
+Lokalny dowód z $\Gamma^\Box$ jest również
+dowodem globalnym z tego zbioru, więc przez
+cięcie otrzymujemy jeden kierunek.
+
+Dla odwrotnego kierunku zauważmy, że jeżeli
+$\Gamma^\Box\vdash_L^{\mathrm{lok}} C$, to
+$\Gamma^\Box\vdash_L^{\mathrm{lok}}\Box C$.
+Istotnie, lokalny dowód $C$ wykorzystuje
+skończenie wiele przesłanek $D_1,\ldots,D_m$
+z $\Gamma^\Box$. Wniosek~\ref{cor:ncl-modal-local-finite}
+daje
+\[
+ \vdash_L(D_1\wedge\cdots\wedge D_m)\to C.
+\]
+Przez monotoniczność konieczności otrzymujemy
+\[
+ \vdash_L\Box(D_1\wedge\cdots\wedge D_m)\to\Box C.
+\]
+Każda $\Box D_i$ należy do $\Gamma^\Box$.
+Prawo konieczności skończonej koniunkcji
+(Twierdzenie~\ref{thm:ncl-modal-normal-laws})
+pozwala z nich lokalnie uzyskać
+$\Box(D_1\wedge\cdots\wedge D_m)$, a następnie
+$\Box C$. Dla $m=0$ używamy twierdzenia
+$\Box\top$.
+Zatem lokalne konsekwencje $\Gamma^\Box$
+są domknięte względem konieczności.
+Indukcja po dowodzie globalnym z $\Gamma$
+pokazuje teraz, że każdy jego wiersz jest
+lokalnie dowodliwy z $\Gamma^\Box$:
+przesłanki należą do $\Gamma^\Box$, twierdzenia
+i modus ponens są dozwolone lokalnie, a przypadek
+konieczności obsługuje właśnie wykazana własność.
+\end{proof}
+
+\begin{twierdzenie}[Globalne twierdzenie o dedukcji]
+\label{thm:ncl-modal-global-deduction}
+Dla dowolnego zbioru $\Gamma$ i formuł $A,B$
+zachodzi
+\[
+ \Gamma\cup\{A\}\vdash_L^{\mathrm{glob}} B
+ \iff
+ \exists n\geq0\quad
+ \Gamma\vdash_L^{\mathrm{glob}} A^{[n]}\to B.
+\]
+Równoważnie po prawej stronie można przyjąć
+$\Gamma^\Box\vdash_L^{\mathrm{lok}} A^{[n]}\to B$.
+\end{twierdzenie}
+\begin{proof}
+Z Twierdzenia~\ref{thm:ncl-modal-global-local}
+lewa strona jest równoważna lokalnej dowodliwości
+$B$ z $\Gamma^\Box\cup\{\Box^k A:k\geq0\}$.
+Dowód wykorzystuje skończenie wiele iteracji
+$\Box^k A$. Wybieramy $n$ nie mniejsze od
+wszystkich ich wykładników (jeśli nie użyto
+żadnej, bierzemy $n=0$).
+Każda z wykorzystanych iteracji jest lokalną
+konsekwencją $A^{[n]}$ na mocy klasycznych
+tautologii eliminacji koniunkcji.
+Cięcie daje
+$\Gamma^\Box\cup\{A^{[n]}\}\vdash_L^{\mathrm{lok}}B$.
+Lokalne twierdzenie o dedukcji i redukcja
+konsekwencji globalnej do lokalnej dają
+obie wersje prawej strony.
+
+Odwrotnie, jeśli prawa strona zachodzi, to
+globalnie z $\Gamma\cup\{A\}$ dowodzimy
+każdej $\Box^k A$ dla $0\leq k\leq n$,
+a następnie ich koniunkcji. Z monotoniczności
+mamy również dowód $A^{[n]}\to B$ z tych
+samych przesłanek. Modus ponens daje $B$.
+\end{proof}
+
+\begin{wniosek}[Dedukcja globalna w K4 i S4]
+\label{cor:ncl-modal-global-deduction-K4}
+Jeżeli $L$ zawiera schemat 4, to
+\[
+ \Gamma\cup\{A\}\vdash_L^{\mathrm{glob}} B
+ \iff
+ \Gamma\vdash_L^{\mathrm{glob}}(A\wedge\Box A)\to B.
+\]
+Jeżeli ponadto $L$ zawiera T, to równoważnie
+$\Gamma\vdash_L^{\mathrm{glob}}\Box A\to B$.
+\end{wniosek}
+\begin{proof}
+Dla każdego $k\geq1$ mamy
+$\vdash_L\Box A\to\Box^k A$.
+Dowodzimy indukcyjnie: dla $k=1$ jest to
+tautologia, a przejście od $k$ do $k+1$
+wynika ze złożenia dotychczasowej implikacji
+z instancją 4 dla $\Box^{k-1}A$.
+Zatem $A\wedge\Box A$ pociąga każdą
+skończoną koniunkcję $A^{[n]}$, również
+dla $n=0$. Stosujemy
+Twierdzenie~\ref{thm:ncl-modal-global-deduction}.
+Odwrotny kierunek otrzymujemy z tego
+samego twierdzenia dla $n=1$.
+Przy T formuły $A\wedge\Box A$ i $\Box A$
+są dowodliwie równoważne.
+\end{proof}
+
+\subsection{Dlaczego rozróżnienie jest konieczne}
+
+Do kontrprzykładów wystarczy elementarna
+interpretacja relacyjna. Niech $W$ będzie
+niepustym zbiorem stanów, $R\subseteq W\times W$,
+a zmienne przyjmują dowolne podzbiory $W$.
+Spójniki klasyczne interpretujemy punktowo,
+a $\Box C$ jest prawdziwa w stanie $w$,
+gdy $C$ jest prawdziwa we wszystkich stanach
+$z$ spełniających $wRz$.
+Schemat K jest prawdziwy w każdym stanie:
+jeśli wszystkie dostępne stany spełniają
+$A\to B$ oraz wszystkie spełniają $A$,
+to wszystkie spełniają $B$.
+Tautologie są prawdziwe punktowo, a modus
+ponens zachowuje prawdziwość w danym stanie.
+Konieczność zachowuje prawdziwość we wszystkich
+stanach: gdy $C$ jest wszędzie prawdziwa, to
+$\Box C$ również. Indukcja po dowodach K daje
+zatem prawdziwość wszystkich twierdzeń K
+we wszystkich stanach każdego takiego modelu.
+W szczególności lokalny dowód z przesłanek
+zachowuje prawdziwość w stanie, w którym
+prawdziwe są wszystkie użyte przesłanki.
+Pełny rozwój tej semantyki pozostawiamy
+następnemu rozdziałowi.
+
+\begin{przyklad}[Konieczność nie jest lokalną regułą wnioskowania]
+\label{ex:ncl-modal-local-global-difference}
+Mamy $p\vdash_{\mathrm K}^{\mathrm{glob}}\Box p$
+przez jedno zastosowanie konieczności, lecz
+$p\nvdash_{\mathrm K}^{\mathrm{lok}}\Box p$.
+Rozważmy dwa stany $w,z$ z jedyną parą
+$wRz$ i niech $p$ będzie prawdziwe tylko w $w$.
+W stanie $w$ przesłanka jest prawdziwa,
+ale $\Box p$ jest fałszywa.
+W szczególności zwykłe twierdzenie o dedukcji
+nie zachodzi dla konsekwencji globalnej:
+$p\to\Box p$ nie jest twierdzeniem K,
+chociaż $p\vdash_{\mathrm K}^{\mathrm{glob}}\Box p$.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+\node[draw,circle,minimum size=10mm,fill=blue!10] (w) at (0,0) {$w$};
+\node[draw,circle,minimum size=10mm] (z) at (3,0) {$z$};
+\draw[->,thick] (w)--node[above] {$R$}(z);
+\node[below=4pt of w] {$p,\ \neg\Box p$};
+\node[below=4pt of z] {$\neg p$};
+\end{tikzpicture}
+\end{center}
+
+\begin{przyklad}[Brak jednolitego ograniczenia liczby iteracji w K]
+\label{ex:ncl-modal-global-no-uniform-bound}
+Dla każdego $n\geq0$ zachodzi
+$p\vdash_{\mathrm K}^{\mathrm{glob}}\Box^{n+1}p$,
+ale
+\[
+ \nvdash_{\mathrm K} p^{[n]}\to\Box^{n+1}p.
+\]
+Weźmy stany $0,1,\ldots,n+1$ z relacją
+$iRj$ wtedy i tylko wtedy, gdy $j=i+1$.
+Niech $p$ będzie prawdziwe w stanach
+$0,\ldots,n$, ale fałszywe w stanie $n+1$.
+Dla $0\leq k\leq n+1$ istnieje dokładnie jedna
+ścieżka długości $k$ z $0$, kończąca się w $k$.
+Indukcja po długości ścieżki, stosująca
+klauzulę $\Box$, daje, że $\Box^k p$ jest
+prawdziwa w $0$ dokładnie wtedy, gdy $p$
+jest prawdziwe w $k$.
+Zatem w $0$ prawdziwa jest cała koniunkcja
+$p^{[n]}$, ale fałszywa jest $\Box^{n+1}p$.
+Poprawność twierdzeń K w powyższej interpretacji
+wyklucza dowodliwość implikacji.
+Oznacza to, że liczba iteracji w globalnym
+twierdzeniu o dedukcji nie może być z góry
+ograniczona jedną liczbą niezależną od wniosku.
+\end{przyklad}
+
+\begin{wniosek}[Domknięcie teorii lokalnej i globalnej]
+\label{cor:ncl-modal-theory-closure}
+Niech $\operatorname{Cn}^{\mathrm{lok}}_L(\Gamma)$
+oraz $\operatorname{Cn}^{\mathrm{glob}}_L(\Gamma)$
+oznaczają zbiory odpowiednich konsekwencji.
+Oba operatory są ekstensywne, monotoniczne,
+idempotentne i finitarne. Ponadto
+\[
+ \operatorname{Cn}^{\mathrm{glob}}_L(\Gamma)
+ =\operatorname{Cn}^{\mathrm{lok}}_L(\Gamma^\Box).
+\]
+Zbiór domknięty względem konsekwencji lokalnej
+jest domknięty względem konsekwencji globalnej
+dokładnie wtedy, gdy jest domknięty względem
+operatora $\Box$.
+\end{wniosek}
+\begin{proof}
+Pierwsze cztery własności wynikają kolejno
+ze zwrotności, monotoniczności, cięcia wraz
+ze zwrotnością oraz skończoności
+(Stwierdzenie~\ref{prop:ncl-modal-consequence-structural}).
+Równość operatorów jest treścią
+Twierdzenia~\ref{thm:ncl-modal-global-local}.
+Jeżeli $T$ jest domknięty lokalnie i
+$A\in T$ pociąga $\Box A\in T$, to
+$T^\Box=T$, więc równość operatorów daje
+domknięcie globalne.
+Odwrotnie domknięcie globalne daje domknięcie
+względem $\Box$ bezpośrednio z reguły konieczności.
+\end{proof}
+
+\section{Hierarchia normalnych logik modalnych}
+
+Porównujemy logiki przez inkluzję ich zbiorów twierdzeń.
+Jeżeli $L_1\subseteq L_2$, każda formuła dowodliwa
+w $L_1$ jest dowodliwa również w $L_2$.
+Nie jest to porównanie liczby aksjomatów:
+różne zbiory aksjomatów mogą generować tę samą
+normalną logikę.
+
+\begin{lemat}[Zależności między B, T, 4 i 5]
+\label{lem:ncl-modal-axiom-dependencies}
+W normalnej logice modalnej zachodzą następujące
+zależności między schematami:
+\[
+\begin{aligned}
+ \mathrm T+5&\Longrightarrow\mathrm B,\\
+ \mathrm B+4&\Longrightarrow5,\\
+ \mathrm B+5&\Longrightarrow4.
+\end{aligned}
+\]
+Każda strzałka oznacza dowodliwość wszystkich
+instancji schematu po prawej stronie przy założeniu
+schematów po lewej.
+\end{lemat}
+\begin{proof}
+Dla pierwszej zależności bierzemy dualną postać T
+ze Stwierdzenia~\ref{prop:ncl-modal-dual-axioms}
+i schemat 5:
+\[
+ A\to\Diamond A,\qquad
+ \Diamond A\to\Box\Diamond A.
+\]
+Złożenie implikacji daje $A\to\Box\Diamond A$,
+czyli B.
+
+Dla drugiej stosujemy B do $\Diamond A$:
+\[
+ \Diamond A\to\Box\Diamond\Diamond A.
+\]
+Dualna postać 4 to $\Diamond\Diamond A\to\Diamond A$.
+Monotoniczność konieczności
+(Twierdzenie~\ref{thm:ncl-modal-monotonicity})
+daje
+$\Box\Diamond\Diamond A\to\Box\Diamond A$.
+Po złożeniu otrzymujemy 5.
+
+Dla trzeciej stosujemy B do $\Box A$:
+\[
+ \Box A\to\Box\Diamond\Box A.
+\]
+Dualna postać 5 to $\Diamond\Box A\to\Box A$.
+Przeniesienie jej przez konieczność daje
+$\Box\Diamond\Box A\to\Box\Box A$.
+Złożenie implikacji daje 4.
+We wszystkich trzech przypadkach złożenie
+jest uzasadnione klasyczną tautologią
+przechodniości implikacji i modus ponens.
+\end{proof}
+
+\begin{twierdzenie}[Alternatywne aksjomatyzacje S5]
+\label{thm:ncl-modal-S5-alternatives}
+Następujące logiki są równe:
+\[
+ \mathrm{S5}
+ =\mathrm K+\mathrm T+5
+ =\mathrm K+\mathrm T+\mathrm B+4
+ =\mathrm{S4}+5
+ =\mathrm B+5
+ =\mathrm K+\mathrm D+\mathrm B+4.
+\]
+\end{twierdzenie}
+\begin{proof}
+Pierwsza równość jest definicją S5.
+Z T i 5 otrzymujemy B, a z B i 5 otrzymujemy 4
+na mocy Lematu~\ref{lem:ncl-modal-axiom-dependencies}.
+Odwrotnie B i 4 dają 5. Stąd równość
+$\mathrm{S5}=\mathrm K+\mathrm T+\mathrm B+4$
+i, korzystając z definicji systemów,
+równości z $\mathrm{S4}+5$ oraz $\mathrm B+5$.
+
+Pozostaje ostatnia aksjomatyzacja.
+Wystarczy wyprowadzić T z D, B i 4,
+ponieważ B i 4 dają już 5.
+Z D dla $\Box A$ mamy
+$\Box\Box A\to\Diamond\Box A$,
+a z dualnej postaci B mamy
+$\Diamond\Box A\to A$.
+Z 4 otrzymujemy więc ciąg implikacji
+\[
+ \Box A\to\Box\Box A\to\Diamond\Box A\to A,
+\]
+który daje T w systemie $\mathrm K+\mathrm D+\mathrm B+4$.
+W przeciwnym kierunku T daje D na mocy
+Wniosku~\ref{cor:ncl-modal-T-implies-D}.
+\end{proof}
+
+\begin{uwaga}[D i B bez schematu 4]
+\label{rem:ncl-modal-DB-not-T}
+Same D i B nie wystarczają do wyprowadzenia T
+w normalnej logice. Istotnie,
+na ramie dwóch stanów połączonych w obie strony,
+bez pętli, D i B są ważne, lecz T zawodzi.
+Jest to rama $F_4$ z dowodu
+Twierdzenia~\ref{thm:ncl-modal-hierarchy}.
+Jeżeli $p$ jest prawdziwe tylko w stanie $1$,
+to w stanie $0$ zachodzi $\Box p$, lecz nie $p$.
+Ważność D i B wynika z
+Lematu~\ref{lem:ncl-modal-frame-sufficient}.
+Zatem w ostatniej aksjomatyzacji S5 w
+Twierdzeniu~\ref{thm:ncl-modal-S5-alternatives}
+schematu 4 nie można po prostu pominąć.
+\end{uwaga}
+
+\subsection{Skończone świadectwa ścisłości inkluzji}
+
+Do sprawdzania niedowodliwości użyjemy
+elementarnej interpretacji relacyjnej wprowadzonej
+przy Przykładzie~\ref{ex:ncl-modal-local-global-difference}.
+Nie rozwijamy tu jeszcze ogólnej teorii korespondencji
+ani pełności. Potrzebujemy jedynie kierunku
+od własności relacji do ważności odpowiedniego
+schematu.
+
+\begin{lemat}[Wystarczające warunki ważności schematów]
+\label{lem:ncl-modal-frame-sufficient}
+Niech $W$ będzie niepustym zbiorem stanów
+i $R$ relacją na $W$. Dla każdego wartościowania
+wszystkie instancje wskazanego schematu są
+prawdziwe w każdym stanie, jeśli $R$ ma
+odpowiednią własność:
+\[
+\begin{array}{c|l}
+ \mathrm D&\forall w\,\exists z\quad wRz\\
+ \mathrm T&\forall w\quad wRw\\
+ \mathrm B& wRz\Longrightarrow zRw\\
+ 4&wRz,\ zRu\Longrightarrow wRu\\
+ 5&wRz,\ wRu\Longrightarrow zRu.
+\end{array}
+\]
+\end{lemat}
+\begin{proof}
+Z klasycznej definicji możliwości wynika,
+że $\Diamond A$ jest prawdziwa w $w$ dokładnie
+wtedy, gdy istnieje $z$ z $wRz$, w którym
+$A$ jest prawdziwa.
+
+Dla D, jeżeli $\Box A$ jest prawdziwa w $w$,
+wybieramy dostępny stan $z$. W nim $A$ jest
+prawdziwa, więc w $w$ prawdziwa jest $\Diamond A$.
+Dla T wystarczy wybrać $z=w$.
+Dla B, jeżeli $A$ jest prawdziwa w $w$ i $wRz$,
+to $zRw$, więc $\Diamond A$ jest prawdziwa w $z$.
+Ponieważ $z$ było dowolnym dostępnym stanem,
+$\Box\Diamond A$ jest prawdziwa w $w$.
+Dla 4, jeśli $\Box A$ jest prawdziwa w $w$,
+to dla dowolnych $wRz$ i $zRu$ zachodzi $wRu$,
+a zatem $A$ jest prawdziwa w $u$.
+W konsekwencji $\Box A$ jest prawdziwa w każdym
+$z$ dostępnym z $w$.
+Dla 5, jeżeli $\Diamond A$ jest prawdziwa w $w$,
+wybieramy świadka $u$ z $wRu$, w którym $A$
+jest prawdziwa. Dla dowolnego $z$ z $wRz$
+mamy $zRu$, więc $\Diamond A$ jest prawdziwa w $z$.
+To daje $\Box\Diamond A$ w $w$.
+
+Poprawność K oraz zachowanie globalnej ważności
+przez obie reguły dowodzenia sprawiają,
+że na ramie spełniającej wymienione warunki
+ważne są wszystkie twierdzenia odpowiedniego
+rozszerzenia aksjomatycznego K, przez indukcję
+po dowodzie. Nie zakładamy twierdzenia o pełności.
+\end{proof}
+
+\begin{twierdzenie}[Ścisłe inkluzje podstawowych systemów]
+\label{thm:ncl-modal-hierarchy}
+Zachodzą ścisłe inkluzje
+\[
+\begin{gathered}
+ \mathrm K\subsetneq\mathrm{KD}\subsetneq\mathrm T,\\
+ \mathrm T\subsetneq\mathrm B\subsetneq\mathrm{S5},
+ \qquad
+ \mathrm T\subsetneq\mathrm{S4}\subsetneq\mathrm{S5}.
+\end{gathered}
+\]
+Systemy B i S4 są nieporównywalne.
+Ponadto $\mathrm K\subsetneq\mathrm{K4}$,
+$\mathrm K\subsetneq\mathrm{KB}$ i
+$\mathrm K\subsetneq\mathrm{K5}$,
+a systemy K4 i K5 są nieporównywalne.
+\end{twierdzenie}
+\begin{proof}
+Inkluzje bez założenia ścisłości wynikają z definicji,
+Wniosku~\ref{cor:ncl-modal-T-implies-D}
+oraz Twierdzenia~\ref{thm:ncl-modal-S5-alternatives}.
+Dla ścisłości i nieporównywalności podamy
+konkretne skończone ramy. W tabeli $R(i)$
+oznacza zbiór stanów dostępnych z $i$;
+stanami są dokładnie indeksy wymienionych wierszy
+relacji. Zapis $V(p)$ określa zbiór stanów,
+w których prawdziwe jest $p$. Kolumna $w$
+wskazuje stan, w którym dana instancja
+schematu dla $A=p$ jest fałszywa.
+\[
+\begin{array}{c|l|c|c|c|c}
+ & R(i) & \text{ważne} & \text{zawodzi}
+ &V(p)&w\\ \hline
+ F_0&R(0)=\varnothing&B,4,5&D&\{0\}&0\\
+ F_1&R(0)=R(1)=\{0\}&D,4,5&T&\{0\}&1\\
+ F_2&R(0)=\{0,1\},\ R(1)=\{1\}&T,4,D&B&\{0\}&0\\
+ F_3&
+ \begin{array}{l}R(0)=\{0,1\}\\
+ R(1)=\{0,1,2\}\\R(2)=\{1,2\}\end{array}
+ &T,B,D&4&\{0,1\}&0\\
+ F_4&R(0)=\{1\},\ R(1)=\{0\}&D,B&4&\{1\}&0\\
+ F_5&R(0)=\{1\},\ R(1)=\varnothing&4&B,5&\{0,1\}&0\\
+ F_6&
+ \begin{array}{l}R(0)=R(1)=\{0,1\}\\R(2)=\{0\}\end{array}
+ &D,5&4&\{0,2\}&2
+\end{array}
+\]
+W kolumnie ważności wymieniono potrzebne
+schematy, niekoniecznie wszystkie ważne na ramie.
+
+Sprawdzamy świadectwa w tabeli.
+Na $F_0$ mamy $\Box p$ prawdziwe próżniowo,
+a $\Diamond p$ fałszywe.
+Na $F_1$ stan $1$ widzi wyłącznie stan $0$,
+więc $\Box p$ jest prawdziwe, a $p$ fałszywe
+w stanie $1$.
+Na $F_2$ w stanie $0$ prawdziwe jest $p$,
+ale dostępny stan $1$ nie spełnia $\Diamond p$.
+Stąd $\Box\Diamond p$ jest fałszywe w $0$.
+Na $F_3$ w $0$ zachodzi $\Box p$,
+ale stan $1$ widzi stan $2$, gdzie $p$
+jest fałszywe, więc $\Box\Box p$ jest
+fałszywe w $0$.
+Na $F_4$ w $0$ zachodzi $\Box p$, lecz
+stan $1$ widzi $0$, gdzie $p$ jest fałszywe.
+Na $F_5$ zarówno $p$, jak i $\Diamond p$
+są prawdziwe w $0$, lecz stan $1$ nie ma
+żadnych następców i nie spełnia $\Diamond p$.
+Wobec tego B oraz 5 zawodzą w $0$.
+Na $F_6$ stan $2$ widzi tylko $0$, gdzie
+$p$ jest prawdziwe, jednak $0$ widzi również
+$1$, gdzie $p$ jest fałszywe. Zatem 4 zawodzi
+w stanie $2$.
+
+Własności relacji podane w kolumnie ważności
+sprawdza się bezpośrednio: $F_0$ ma pustą
+relację, $F_1$ ma wspólny jedyny następnik
+$0$, $F_2$ jest łańcuchem z pętlami, a $F_3$
+jest symetryczną drogą z pętlami.
+Rama $F_4$ jest symetryczna i seryjna,
+$F_5$ jest przechodnia, gdyż nie istnieją
+dwa następujące po sobie kroki.
+Na $F_6$ każdy następnik dowolnego stanu
+widzi wszystkich następców tego stanu:
+dla $0,1$ jest to zbiór $\{0,1\}$, a dla $2$
+jest to zbiór $\{0\}$. Stąd ważność 5.
+Stosujemy Lemat~\ref{lem:ncl-modal-frame-sufficient}.
+
+Ramy $F_0,F_1$ pokazują ścisłość pierwszych
+dwóch inkluzji. Rama $F_2$ oddziela T i S4
+od B oraz S5, a $F_3$ oddziela T i B od S4
+oraz S5. W szczególności B i S4 są
+nieporównywalne.
+Rama $F_4$ oddziela K od K4, a $F_5$
+oddziela K od KB i K5 oraz pokazuje, że
+5 nie jest twierdzeniem K4. Wreszcie
+$F_6$ pokazuje, że 4 nie jest twierdzeniem K5.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,node distance=12mm]
+\node (k) {$\mathrm K$};
+\node[above=of k] (kd) {$\mathrm{KD}$};
+\node[above=of kd] (t) {$\mathrm T$};
+\node[above left=13mm and 12mm of t] (b) {$\mathrm B$};
+\node[above right=13mm and 12mm of t] (s4) {$\mathrm{S4}$};
+\node[above=34mm of t] (s5) {$\mathrm{S5}$};
+\draw[->] (k)--(kd);
+\draw[->] (kd)--(t);
+\draw[->] (t)--(b);
+\draw[->] (t)--(s4);
+\draw[->] (b)--(s5);
+\draw[->] (s4)--(s5);
+\end{tikzpicture}
+\end{center}
+Strzałki przedstawiają ścisłą inkluzję wśród
+sześciu wymienionych systemów, nie wszystkie
+możliwe rozszerzenia normalnej logiki K.
+
+\begin{stwierdzenie}[Niezależność rozdzielności operatorów]
+\label{prop:ncl-modal-nondistributivity}
+W K nie są dowodliwe schematy
+\[
+ \Box(A\vee B)\to(\Box A\vee\Box B),
+ \qquad
+ (\Diamond A\wedge\Diamond B)\to\Diamond(A\wedge B).
+\]
+Nie są one dowodliwe nawet w S5.
+Także odwrotność aksjomatu K,
+\[
+ (\Box A\to\Box B)\to\Box(A\to B),
+\]
+nie jest twierdzeniem S5.
+\end{stwierdzenie}
+\begin{proof}
+Niech $W=\{0,1\}$, $R=W\times W$,
+$V(p)=\{0\}$ i $V(q)=\{1\}$.
+Relacja jest zwrotna i spełnia warunek
+schematu 5, więc wszystkie twierdzenia S5
+są ważne na tej ramie.
+W każdym stanie $p\vee q$ jest konieczne,
+ale ani $p$, ani $q$ nie jest konieczne.
+Z drugiej strony oba zdania są możliwe,
+lecz $p\wedge q$ nie jest możliwe.
+Obie implikacje zawodzą w każdym stanie.
+Dla odwrotności K na tej samej ramie wybierzmy
+$V(p)=\{0\}$ oraz $V(q)=\varnothing$.
+W każdym stanie $\Box p$ i $\Box q$ są fałszywe,
+więc $\Box p\to\Box q$ jest prawdziwa.
+Natomiast $p\to q$ jest fałszywa w stanie $0$,
+a oba stany widzą $0$. Stąd $\Box(p\to q)$
+jest fałszywa w każdym stanie.
+Odwrotność K nie jest więc ważna nawet w S5.
+\end{proof}
+
+\begin{wniosek}[Niesprzeczność podstawowych systemów]
+\label{cor:ncl-modal-basic-consistency}
+Wszystkie systemy zawarte w S5 są niesprzeczne
+w tym sensie, że nie dowodzą $\bot$.
+\end{wniosek}
+\begin{proof}
+Jednoelementowa rama z pętlą spełnia warunki
+T oraz 5. Wszystkie twierdzenia S5 są na niej
+ważne na mocy Lematu~\ref{lem:ncl-modal-frame-sufficient},
+a $\bot$ jest w jej jedynym stanie fałszywe.
+\end{proof}
+
+\section{Redukcja operatorów i postacie normalne}
+
+\subsection{Iteracje operatorów w S4}
+
+\begin{lemat}[Idempotentność i porządek operatorów S4]
+\label{lem:ncl-modal-S4-idempotence}
+W S4 zachodzą równoważności
+\[
+ \Box\Box A\leftrightarrow\Box A,\qquad
+ \Diamond\Diamond A\leftrightarrow\Diamond A
+\]
+oraz implikacje $\Box A\to A$ i $A\to\Diamond A$.
+\end{lemat}
+\begin{proof}
+Jedna implikacja pierwszej równoważności
+jest instancją 4, druga jest instancją T dla $\Box A$.
+Drugą równoważność uzyskujemy przez dualność.
+Ostatnie implikacje to T i jego postać dualna.
+\end{proof}
+W tej sekcji zapis $U\preceq_L V$ dla słów
+$U,V$ nad alfabetem $\{\Box,\Diamond\}$ oznacza
+$\vdash_L U(p)\to V(p)$, a zapis $U\equiv_L V$
+oznacza dowodliwość obu implikacji.
+Puste słowo $I$ działa identycznościowo.
+Składamy słowa od prawej do lewej, na przykład
+$\Box\Diamond$ działa jako $A\mapsto\Box(\Diamond A)$.
+Podstawienia i monotoniczność pozwalają
+składać nierówności z dowolnymi słowami
+z lewej i z prawej strony. Dokładniej,
+z $U\preceq_L V$ przez podstawienie $W(p)$ za $p$
+otrzymujemy $UW\preceq_L VW$, a przez
+iterowane zastosowanie monotoniczności
+otrzymujemy $WU\preceq_L WV$. W szczególności
+każdą dowodliwą równoważność słów można
+zastosować wewnątrz dłuższego słowa.
+
+\begin{twierdzenie}[Siedem operatorów S4]
+\label{thm:ncl-modal-S4-seven}
+Każde skończone słowo złożone z $\Box$ i $\Diamond$
+jest w S4 równoważne dokładnie jednemu z siedmiu słów
+\[
+ I,\quad\Box,\quad\Diamond,\quad
+ \Box\Diamond,\quad\Diamond\Box,\quad
+ \Box\Diamond\Box,\quad\Diamond\Box\Diamond.
+\]
+\end{twierdzenie}
+\begin{proof}
+Z poprzedniego lematu możemy usuwać powtórzenia
+sąsiednich jednakowych operatorów.
+Ponadto z $\Box\preceq I\preceq\Diamond$,
+monotoniczności i idempotentności dostajemy
+\[
+ \Box\Diamond\Box\Diamond
+ \preceq\Box\Diamond\Diamond
+ \equiv\Box\Diamond,
+ \qquad
+ \Box\Diamond\equiv\Box\Box\Diamond
+ \preceq\Box\Diamond\Box\Diamond.
+\]
+W pierwszym kroku stosujemy $\Box\preceq I$
+do trzeciego operatora, a w ostatnim
+$I\preceq\Diamond$ między dwiema występującymi
+obok siebie kopiami $\Box$.
+Przejście do dualnego słowa polega na zamianie
+$\Box$ z $\Diamond$: dla każdego słowa $U$
+indukcja po jego długości daje
+$\neg U(\neg A)\leftrightarrow U^{*}(A)$,
+gdzie $U^{*}$ powstaje przez tę zamianę.
+Stosujemy tu dualność i eliminację podwójnej
+negacji; dla pustego słowa jest to właśnie
+podwójna negacja.
+Zatem $\Box\Diamond\Box\Diamond\equiv\Box\Diamond$.
+Przez dualność otrzymujemy również
+$\Diamond\Box\Diamond\Box\equiv\Diamond\Box$.
+Każde słowo naprzemienne długości co najmniej
+cztery zawiera jeden z tych dwóch fragmentów.
+Każda redukcja skraca słowo, więc po skończenie
+wielu krokach otrzymujemy jedno z siedmiu słów.
+
+Dla jedyności podamy cztery skończone modele S4.
+Niech liczby w tabeli oznaczają stany, a $R(i)$
+zbiory następców. Wszystkie relacje są zwrotne
+i przechodnie, więc z
+Lematu~\ref{lem:ncl-modal-frame-sufficient}
+każde twierdzenie S4 jest w nich prawdziwe.
+\[
+\begin{array}{c|l|c}
+ &R(i)&V(p)\\ \hline
+ M_1&R(0)=\{0,1\},\ R(1)=\{1\}&\{0\}\\
+ M_2&R(0)=\{0,1\},\ R(1)=\{1\}&\{1\}\\
+ M_3&R(0)=R(1)=\{0,1\}&\{0\}\\
+ M_4&R(0)=\{0,1,2\},\
+ R(1)=\{1\},\ R(2)=\{2\}&\{1\}
+\end{array}
+\]
+Niech $[A]_M$ oznacza zbiór stanów modelu $M$,
+w których prawdziwa jest formuła $A$.
+Z klauzul konieczności i możliwości dostajemy:
+\[
+\begin{array}{c|cccc}
+ U &[U(p)]_{M_1}&[U(p)]_{M_2}&[U(p)]_{M_3}&[U(p)]_{M_4}\\ \hline
+ I&\{0\}&\{1\}&\{0\}&\{1\}\\
+ \Box&\varnothing&\{1\}&\varnothing&\{1\}\\
+ \Diamond&\{0\}&\{0,1\}&\{0,1\}&\{0,1\}\\
+ \Box\Diamond&\varnothing&\{0,1\}&\{0,1\}&\{1\}\\
+ \Diamond\Box&\varnothing&\{0,1\}&\varnothing&\{0,1\}\\
+ \Box\Diamond\Box&\varnothing&\{0,1\}&\varnothing&\{1\}\\
+ \Diamond\Box\Diamond&\varnothing&\{0,1\}&\{0,1\}&\{0,1\}
+\end{array}
+\]
+Na przykład w $M_4$ zbiór prawdziwości
+$\Diamond p$ to $\{0,1\}$, ale $0$ ma
+następnik $2$ spoza tego zbioru.
+Dlatego $\Box\Diamond p$ jest prawdziwa
+wyłącznie w $1$. Ponowne zastosowanie
+$\Diamond$ daje $\{0,1\}$.
+Pozostałe wpisy otrzymujemy tak samo, stosując
+klauzule od najbardziej wewnętrznego operatora.
+Wiersze tabeli są parami różne, zatem dla
+dowolnych dwóch różnych słów istnieje model
+S4, w którym ich wartości są różne.
+Poprawność S4 wyklucza ich dowodliwą równoważność.
+\end{proof}
+
+\begin{uwaga}[Redukcja słowa nie jest redukcją głębokości dowolnej formuły]
+\label{rem:ncl-modal-S4-depth}
+Twierdzenie~\ref{thm:ncl-modal-S4-seven} nie
+pozwala usunąć wszystkich zagnieżdżeń modalnych
+z dowolnej formuły S4. Nawet $\Box\Diamond p$
+nie jest równoważna w S4 żadnej formule
+głębokości co najwyżej jeden o zmiennej $p$.
+Istotnie, porównajmy korzeń dwuelementowego
+łańcucha (model $M_2$ powyżej) z korzeniem
+trójelementowej ramy rozgałęzionej (model $M_4$).
+W obu korzeniach $p$ jest fałszywe, a dostępne
+są stany o obu wartościach $p$.
+Każda formuła klasyczna o zmiennej $p$ zależy
+wyłącznie od wartości $p$, przez indukcję
+po spójnikach. Każda formuła głębokości jeden
+jest kombinacją boolowską takich formuł i ich
+konieczności. Ma więc tę samą wartość w obu
+korzeniach: dla konieczności formuły klasycznej
+istotny jest dokładnie zbiór dostępnych wartości $p$.
+Natomiast $\Box\Diamond p$ jest prawdziwa
+w korzeniu $M_2$, lecz fałszywa w korzeniu $M_4$.
+Wynika to z tabeli powyżej. Poprawność S4
+daje żądany kontrprzykład.
+Nie pomogłoby nawet dopuszczenie nowych zmiennych:
+gdyby istniała taka równoważność, przez
+jednoczesne podstawienie $\bot$ za wszystkie
+zmienne różne od $p$ uzyskalibyśmy równoważność
+z formułą o samej zmiennej $p$ i tej samej
+lub mniejszej głębokości.
+\end{uwaga}
+
+\subsection{Redukcja głębokości w S5}
+
+\begin{stwierdzenie}[Trzy operatory S5]
+\label{prop:ncl-modal-S5-three}
+W S5 każde słowo modalne jest równoważne
+jednemu z trzech słów $I,\Box,\Diamond$,
+które są parami nierównoważne.
+Każde niepuste słowo redukuje się do
+operatora położonego najbardziej na prawo.
+\end{stwierdzenie}
+\begin{proof}
+Idempotentność wynika z zawierania S4.
+Aksjomat 5 i T dla $\Diamond A$ dają
+$\Box\Diamond A\leftrightarrow\Diamond A$.
+Dualnie otrzymujemy
+$\Diamond\Box A\leftrightarrow\Box A$.
+Każdą parę sąsiednich operatorów można zatem
+zastąpić jej prawym operatorem, aż zostanie
+tylko jeden. Dla nierównoważności wybierzmy
+dwuelementową ramę z relacją pełną i $p$
+prawdziwym w dokładnie jednym stanie.
+Wtedy $\Box p$ ma pusty zbiór prawdziwości,
+$p$ ma jednoelementowy, a $\Diamond p$
+ma cały zbiór stanów. Jest to rama S5.
+\end{proof}
+
+\begin{lemat}[Stabilność formuł modalnych w S5]
+\label{lem:ncl-modal-S5-stability}
+Jeżeli $M$ ma postać $\Box C$ albo $\Diamond C$,
+to w S5 dowodliwe są
+$M\to\Box M$ oraz $\neg M\to\Box\neg M$.
+Każda kombinacja boolowska takich formuł
+i stałych również spełnia obie implikacje.
+\end{lemat}
+\begin{proof}
+Dla $M$ stosujemy odpowiednio 4 albo 5.
+Negacja $\Box C$ jest równoważna $\Diamond\neg C$,
+a negacja $\Diamond C$ jest równoważna
+$\Box\neg C$, więc ten sam argument stosuje się
+do negacji $M$, z użyciem zastępowania równoważników.
+
+Stałe spełniają obie implikacje, ponieważ
+$\Box\top$ jest twierdzeniem, a implikacja
+z poprzednikiem $\bot$ jest tautologią.
+Jeżeli $C\to\Box C$ i $D\to\Box D$ są
+twierdzeniami, to
+$C\wedge D\to\Box(C\wedge D)$ wynika
+z prawa konieczności koniunkcji.
+Analogicznie $C\vee D\to\Box(C\vee D)$
+wynika z $(\Box C\vee\Box D)\to\Box(C\vee D)$.
+Jeśli oba argumenty spełniają też warunek
+dla swoich negacji, to prawa de Morgana
+dają warunek dla negacji koniunkcji i alternatywy.
+Negacja zamienia oba warunki (z dokładnością
+do podwójnej negacji), a implikację wyrażamy
+przez negację i alternatywę.
+Indukcja po spójnikach kończy dowód.
+\end{proof}
+
+\begin{twierdzenie}[Redukcja głębokości modalnej w S5]
+\label{thm:ncl-modal-S5-depth-one}
+Każda formuła języka modalnego jest w S5
+dowodliwie równoważna formule głębokości
+modalnej co najwyżej jeden.
+Nowa formuła nie zawiera nowych zmiennych.
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po budowie formuły.
+Przypadki zmiennych, stałych i spójników
+klasycznych wynikają bezpośrednio
+z zastępowania równoważników.
+Rozważmy przypadek $\Box A$.
+Z hipotezy indukcyjnej wolno założyć,
+że $A$ ma głębokość co najwyżej jeden.
+Po rozwinięciu skrótów można traktować $A$
+jako klasyczną kombinację zmiennych i
+skończenie wielu podformuł modalnych
+$M_i=\Box C_i$, gdzie $C_i$ nie zawierają
+operatorów modalnych ($1\leq i\leq m$).
+Wybieramy listę różnych takich podformuł;
+wszystkie wystąpienia tej samej podformuły
+traktujemy jako jeden argument kombinacji.
+
+Dla $\varepsilon\in\{0,1\}^m$ niech $E_\varepsilon$
+będzie koniunkcją literałów $M_i$ dla
+$\varepsilon_i=1$ oraz $\neg M_i$ dla
+$\varepsilon_i=0$. Niech $A_\varepsilon$ powstaje
+przez jednoczesne zastąpienie tych modalnych
+podformuł odpowiednimi stałymi $\top,\bot$.
+Formuła $A_\varepsilon$ nie zawiera operatorów
+modalnych. Klasyczny rachunek zdań daje
+\[
+ \vdash E_\varepsilon\to(A\leftrightarrow A_\varepsilon),
+ \qquad \vdash\bigvee_\varepsilon E_\varepsilon.
+\]
+W pierwszej formule symbol $\vdash$ oznacza
+dowodliwość klasycznej instancji tautologii:
+przy ustalonej wartości każdego $M_i$
+obie formuły mają tę samą wartość.
+Druga formuła jest rozwinięciem koniunkcji
+praw wyłączonego środka dla $M_i$.
+
+Konieczność pierwszej formuły i schemat K
+dają w S5
+\[
+ \Box E_\varepsilon\to
+                  \Box(A\leftrightarrow A_\varepsilon).
+\]
+Z lematu o stabilności mamy
+$E_\varepsilon\to\Box E_\varepsilon$.
+Z K i prawa konieczności koniunkcji wynika
+$\Box(A\leftrightarrow A_\varepsilon)\to
+(\Box A\leftrightarrow\Box A_\varepsilon)$:
+rozbijamy równoważność na dwie implikacje
+i stosujemy K do każdej.
+Łącząc te wyniki otrzymujemy
+\[
+ \vdash_{\mathrm{S5}} E_\varepsilon\to
+              (\Box A\leftrightarrow\Box A_\varepsilon).
+\]
+Ponieważ alternatywa wszystkich $E_\varepsilon$
+jest twierdzeniem, klasyczne tautologie
+dają równoważność
+\[
+ \Box A\leftrightarrow
+ \bigvee_{\varepsilon\in\{0,1\}^m}
+      (E_\varepsilon\wedge\Box A_\varepsilon).
+\]
+Każdy składnik prawej strony ma głębokość
+co najwyżej jeden. Dla $m=0$ jedyna pusta
+koniunkcja jest równa $\top$, więc argument
+obejmuje też ten przypadek.
+Wszystkie zmienne pochodzą z wyjściowej formuły.
+\end{proof}
+
+\subsection{Kanoniczne postacie normalne S5}
+
+\begin{definicja}[Typ zdaniowy i typ modalny]
+\label{def:ncl-modal-S5-types}
+Ustalmy parami różne zmienne $p_1,\ldots,p_n$,
+gdzie $n\geq0$.
+Dla $t\in T_n=\{0,1\}^n$ niech
+\[
+ \chi_t=\bigwedge_{i=1}^{n}p_i^{t_i},
+ \qquad p_i^1=p_i,\quad p_i^0=\neg p_i.
+\]
+Typem modalnym nazywamy parę $(t,S)$, gdzie
+$\varnothing\ne S\subseteq T_n$ oraz $t\in S$.
+Odpowiada jej formuła
+\[
+ \theta_{t,S}=\chi_t\wedge
+       \bigwedge_{s\in S}\Diamond\chi_s\wedge
+       \Box\left(\bigvee_{s\in S}\chi_s\right).
+\]
+Dla $n=0$ zbiór $T_n$ zawiera jeden pusty typ,
+a jego koniunkcja $\chi_t$ jest równa $\top$.
+\end{definicja}
+Intuicyjnie $t$ określa wartości zmiennych
+w bieżącym stanie, a $S$ określa dokładnie
+zbiór typów dostępnych z tego stanu.
+Warunek $t\in S$ odpowiada zwrotności.
+
+\begin{lemat}[Rozkład na typy modalne]
+\label{lem:ncl-modal-S5-partition}
+W S5 alternatywa wszystkich $\theta_{t,S}$
+jest twierdzeniem, a koniunkcja dwóch różnych
+takich formuł pociąga $\bot$.
+Dla każdego typu modalnego $\theta_{t,S}$
+i każdej formuły klasycznej $C$ o ustalonych
+$n$ zmiennych zachodzi:
+\[
+\begin{array}{ll}
+ \theta_{t,S}\to C &\text{gdy }t\models C,\\
+ \theta_{t,S}\to\neg C &\text{gdy }t\not\models C,\\
+ \theta_{t,S}\to\Box C &\text{gdy }\forall s\in S:\ s\models C,\\
+ \theta_{t,S}\to\neg\Box C &\text{w przeciwnym przypadku}.
+\end{array}
+\]
+Wszystkie wskazane implikacje są twierdzeniami S5.
+\end{lemat}
+\begin{proof}
+Klasyczna alternatywa wszystkich $\chi_t$
+jest tautologią, a różne $\chi_t$ są wzajemnie
+sprzeczne. Dla każdego $S\subseteq T_n$ rozważmy
+\[
+ D_S=\bigwedge_{s\in S}\Diamond\chi_s
+      \wedge\bigwedge_{s\notin S}\neg\Diamond\chi_s.
+\]
+Alternatywa wszystkich $D_S$ jest tautologią
+zdaniową (względem formuł $\Diamond\chi_s$),
+a różne $D_S$ są wzajemnie sprzeczne.
+Z dualności i prawa konieczności koniunkcji,
+a także klasycznej równoważności
+$\bigwedge_{s\notin S}\neg\chi_s
+\leftrightarrow\bigvee_{s\in S}\chi_s$,
+wynika w K
+\[
+ D_S\leftrightarrow
+ \left(\bigwedge_{s\in S}\Diamond\chi_s\right)
+ \wedge\Box\left(\bigvee_{s\in S}\chi_s\right).
+\]
+Puste alternatywy i koniunkcje interpretujemy
+odpowiednio jako $\bot$ i $\top$.
+Z dualnej postaci T mamy
+$\chi_t\to\Diamond\chi_t$.
+W konsekwencji $\chi_t\wedge D_S$ pociąga
+sprzeczność, jeśli $t\notin S$.
+Rozdzielając koniunkcję dwóch wyczerpujących
+alternatyw $\bigvee_t\chi_t$ i $\bigvee_S D_S$,
+odrzucamy te sprzeczne składniki.
+Pozostaje alternatywa dokładnie tych
+$\chi_t\wedge D_S$, dla których $t\in S$.
+Z równoważności powyżej otrzymujemy
+alternatywę wszystkich $\theta_{t,S}$.
+Sprzeczność różnych typów wynika albo
+ze sprzeczności $\chi_t,\chi_{t'}$,
+albo ze sprzeczności $D_S,D_{S'}$.
+
+Pierwsze dwie implikacje w tezie są klasyczne,
+ponieważ $\chi_t$ ustala wszystkie zmienne.
+Jeżeli każde $s\in S$ spełnia $C$, to
+$\bigvee_{s\in S}\chi_s\to C$ jest tautologią.
+Monotoniczność konieczności i definicja
+$\theta_{t,S}$ dają $\theta_{t,S}\to\Box C$.
+Jeżeli pewne $s\in S$ nie spełnia $C$, to
+$\chi_s\to\neg C$ jest tautologią.
+Monotoniczność możliwości daje
+$\Diamond\chi_s\to\Diamond\neg C$,
+a dualność daje $\Diamond\neg C\leftrightarrow\neg\Box C$.
+Definicja typu daje ostatnią implikację.
+\end{proof}
+
+\begin{twierdzenie}[Jednoznaczna postać normalna S5]
+\label{thm:ncl-modal-S5-normal-form}
+Każda formuła o zmiennych spośród
+$p_1,\ldots,p_n$ jest w S5 równoważna
+alternatywie pewnego podzbioru formuł
+$\theta_{t,S}$. Podzbiór ten jest wyznaczony
+jednoznacznie.
+\end{twierdzenie}
+\begin{proof}
+Z Twierdzenia~\ref{thm:ncl-modal-S5-depth-one}
+możemy przyjąć głębokość formuły co najwyżej jeden.
+Wówczas jest ona kombinacją boolowską
+formuł klasycznych i formuł $\Box C$
+z klasycznymi $C$. Poprzedni lemat rozstrzyga
+każdy taki składnik przy założeniu
+$\theta_{t,S}$. Indukcja po spójnikach,
+z użyciem klasycznych tautologii, rozstrzyga
+całą kombinację: dla każdego typu modalnego
+dowodzimy albo $\theta_{t,S}\to A$,
+albo $\theta_{t,S}\to\neg A$.
+W pierwszym przypadku włączamy typ
+do zbioru $E$, w drugim go pomijamy.
+Z wyczerpującej alternatywy wszystkich typów
+oraz ich wzajemnej sprzeczności, przez
+klasyczny rachunek zdań, otrzymujemy
+\[
+ \vdash_{\mathrm{S5}} A\leftrightarrow
+                \bigvee_{(t,S)\in E}\theta_{t,S}.
+\]
+
+Aby wykazać jednoznaczność, dla dowolnego
+typu $(t,S)$ budujemy model o zbiorze stanów
+$S$, relacji pełnej $S\times S$
+i wartościowaniu, które w stanie $s$
+nadaje $p_i$ wartość $s_i$.
+Jest to rama S5. W stanie $t$ prawdziwa jest
+dokładnie formuła typu $\theta_{t,S}$:
+$\chi_t$ jest prawdziwa w bieżącym stanie,
+każdy typ z $S$ występuje w stanie dostępnym,
+a żaden typ spoza $S$ nie występuje.
+Jeśli dwie alternatywy różnią się wyborem
+choć jednego typu, mają różne wartości
+w odpowiadającym mu modelu.
+Poprawność S5 wyklucza ich równoważność.
+\end{proof}
+
+\begin{wniosek}[Skończoność fragmentów i algorytm S5]
+\label{cor:ncl-modal-S5-count}
+Niech $m=2^n$. Istnieje dokładnie
+$m2^{m-1}$ typów modalnych i
+\[
+ 2^{\,m2^{m-1}}
+\]
+klas formuł o zmiennych spośród $n$ ustalonych
+zmiennych modulo dowodliwą równoważność w S5.
+Dowodliwość w S5 jest rozstrzygalna.
+Jeśli formuła o $n$ zmiennych nie jest
+twierdzeniem S5, ma kontrmodel o relacji
+pełnej i co najwyżej $2^n$ stanach.
+\end{wniosek}
+\begin{proof}
+Dla każdego $t$ zbiór $S$ musi zawierać $t$,
+a pozostałe $m-1$ elementów można wybrać
+dowolnie. Daje to $m2^{m-1}$ par.
+Jednoznaczna postać normalna daje bijekcję
+między klasami formuł a podzbiorami zbioru
+tych par, również dla $n=0$.
+Aby rozstrzygnąć dowodliwość danej formuły,
+obliczamy jej wartość we wszystkich modelach
+z dowodu twierdzenia, w wyróżnionym stanie $t$.
+Jeżeli jest prawdziwa we wszystkich,
+jej postać normalna zawiera wszystkie typy
+i jest twierdzeniem. Jeśli w pewnym typie
+jest fałszywa, otrzymujemy kontrmodel
+z co najwyżej $m$ stanami.
+Rekurencyjne obliczanie wartości formuły
+w każdym skończonym modelu jest efektywne.
+Nie korzystamy tu z ogólnego twierdzenia
+o pełności logik modalnych.
+\end{proof}
+
+\begin{przyklad}[Jedna zmienna w S5]
+\label{ex:ncl-modal-S5-one-variable}
+Dla $n=1$ mamy dwa typy zdaniowe i cztery
+typy modalne. Ich formuły można uprościć
+w S5 do
+\[
+ \Box p,\qquad \Box\neg p,\qquad
+ p\wedge\Diamond\neg p,\qquad
+ \neg p\wedge\Diamond p.
+\]
+Istotnie, gdy $S=\{1\}$, konieczność $p$
+pociąga $p$ i $\Diamond p$ przez T i D;
+analogicznie dla $S=\{0\}$.
+Gdy $S=\{0,1\}$, formuła
+$\Box(p\vee\neg p)$ jest twierdzeniem,
+a możliwość bieżącego typu wynika z T
+w postaci dualnej. Pozostaje możliwość
+typu przeciwnego.
+Wszystkie cztery formuły są wzajemnie sprzeczne,
+a ich alternatywa jest twierdzeniem S5.
+Otrzymujemy dokładnie $2^4=16$ klas
+formuł jednej zmiennej.
+\end{przyklad}
+
+\section{Algebry Boole'a z operatorami modalnymi}
+
+\subsection{Podstawowe własności algebr modalnych}
+
+\begin{definicja}[Algebra modalna]
+\label{def:ncl-modal-algebra}
+Algebrą modalną nazywamy algebrę Boole'a
+$B=(B,\wedge,\vee,\neg,0,1)$ wyposażoną w
+operację jednoargumentową $\Box:B\to B$,
+która spełnia
+\[
+ \Box1=1,\qquad
+ \Box(a\wedge b)=\Box a\wedge\Box b.
+\]
+Operację dualną definiujemy przez
+$\Diamond a=\neg\Box\neg a$.
+Implikacja boolowska ma postać $a\to b=\neg a\vee b$.
+Dopuszczamy algebrę jednoelementową.
+Homomorfizm algebr modalnych jest homomorfizmem
+algebr Boole'a zachowującym $\Box$; automatycznie
+zachowuje także $\Diamond$.
+\end{definicja}
+Algebra Boole'a jest szczególną algebrą Heytinga,
+jak w Twierdzeniu~\ref{thm:ncl-heyting-boolean}.
+Przyjmujemy zatem ten sam porządek kratowy oraz
+tę samą implikację, lecz dodajemy do struktury
+dwa wzajemnie dualne operatory.
+Zachowanie skończonych kresów dolnych nie oznacza
+zachowania dowolnych kresów dolnych, nawet jeśli
+algebra Boole'a jest zupełna.
+
+\begin{stwierdzenie}[Równoważne opisy normalności]
+\label{prop:ncl-modal-algebra-normal}
+W algebrze Boole'a z operacją $\Box$ następujące
+warunki są równoważne:
+\begin{enumerate}
+\item $\Box1=1$ oraz $\Box(a\wedge b)=\Box a\wedge\Box b$.
+\item $\Box1=1$ oraz
+      $\Box(a\to b)\leq\Box a\to\Box b$.
+\item Operacja dualna spełnia $\Diamond0=0$ oraz
+      $\Diamond(a\vee b)=\Diamond a\vee\Diamond b$.
+\end{enumerate}
+W każdym z tych przypadków oba operatory są
+monotoniczne.
+\end{stwierdzenie}
+\begin{proof}
+Przy warunku 1 z $a\leq b$ wynika
+$\Box a=\Box(a\wedge b)=\Box a\wedge\Box b$,
+czyli monotoniczność. Z
+$a\wedge(a\to b)\leq b$ otrzymujemy więc
+$\Box a\wedge\Box(a\to b)\leq\Box b$,
+co przez residuację boolowską daje warunek 2.
+
+Przy warunku 2, jeśli $a\leq b$, to $a\to b=1$,
+zatem $1=\Box(a\to b)\leq\Box a\to\Box b$.
+Stąd $\Box a\leq\Box b$.
+Monotoniczność daje jedną nierówność
+$\Box(a\wedge b)\leq\Box a\wedge\Box b$.
+Z tożsamości $a\to(b\to(a\wedge b))=1$
+oraz dwukrotnego zastosowania warunku 2 mamy
+\[
+ \Box a\leq\Box(b\to(a\wedge b))
+        \leq\Box b\to\Box(a\wedge b).
+\]
+Residuacja daje odwrotną nierówność.
+Wobec tego zachodzi warunek 1.
+
+Równoważność 1 i 3 wynika bezpośrednio
+z dualności $\Diamond a=\neg\Box\neg a$
+i praw de Morgana. Monotoniczność $\Diamond$
+wynika z dwukrotnego zastosowania
+antymonotoniczności dopełnienia.
+\end{proof}
+
+\begin{przyklad}[Algebra modalna relacji]
+\label{ex:ncl-modal-complex-algebra}
+Niech $W$ będzie zbiorem, a $R\subseteq W\times W$.
+Na algebrze potęgowej $\mathcal P(W)$ definiujemy
+\[
+\begin{aligned}
+ \Box_R A&=\{w\in W:R(w)\subseteq A\},\\
+ \Diamond_R A&=\{w\in W:R(w)\cap A\ne\varnothing\},
+ \qquad R(w)=\{z:wRz\}.
+\end{aligned}
+\]
+Otrzymujemy algebrę modalną: każdy zbiór $R(w)$
+jest zawarty w $W$, a zawieranie się w przecięciu
+jest równoważne zawieraniu się w każdym z jego
+składników. Dualność operatorów wynika z
+\[
+ R(w)\not\subseteq W\setminus A
+ \iff R(w)\cap A\ne\varnothing.
+\]
+Co więcej, $\Box_R$ zachowuje dowolne przecięcia,
+a $\Diamond_R$ dowolne sumy, również puste.
+Nazywamy tę strukturę algebrą kompleksową relacji.
+\end{przyklad}
+
+\begin{przyklad}[Normalność bez zupełnej addytywności]
+\label{ex:ncl-modal-noncomplete-additivity}
+Niech $B=\mathcal P(\mathbb N)$ i określmy
+\[
+ \Box A=
+ \begin{cases}
+ \mathbb N,&\mathbb N\setminus A\text{ jest skończony},\\
+ \varnothing,&\text{w przeciwnym przypadku}.
+ \end{cases}
+\]
+Zbiór $\mathbb N$ ma skończone dopełnienie,
+a przecięcie dwóch zbiorów ma skończone
+dopełnienie dokładnie wtedy, gdy oba zbiory
+mają skończone dopełnienia. Zatem $\Box$
+zachowuje $1$ i skończone kresy dolne.
+Dla $A_n=\mathbb N\setminus\{n\}$ zachodzi jednak
+\[
+ \Box\left(\bigcap_{n\in\mathbb N}A_n\right)
+ =\Box\varnothing=\varnothing,\qquad
+ \bigcap_{n\in\mathbb N}\Box A_n=\mathbb N.
+\]
+Dualny operator $\Diamond$ nie zachowuje
+dowolnych sum. W szczególności nie istnieje
+relacja $R$ na $\mathbb N$, dla której
+$\Box=\Box_R$ na całej algebrze $\mathcal P(\mathbb N)$.
+\end{przyklad}
+
+\subsection{Wartościowania i aksjomaty algebraiczne}
+
+\begin{definicja}[Wartościowanie modalne]
+\label{def:ncl-modal-algebra-valuation}
+Przypisanie zmiennym elementów algebry modalnej
+rozszerzamy rekurencyjnie na wszystkie formuły
+przez działania boolowskie oraz
+$v(\Box A)=\Box v(A)$.
+Formuła $A$ jest ważna w algebrze $B$, jeśli
+$v(A)=1$ dla każdego wartościowania.
+Dla normalnej logiki $L$ przez $\mathcal V_L$
+oznaczamy klasę algebr modalnych, w których
+ważna jest każda formuła należąca do $L$.
+\end{definicja}
+
+\begin{stwierdzenie}[Algebraiczne postacie aksjomatów]
+\label{prop:ncl-modal-algebra-axioms}
+Ważność wszystkich instancji danego schematu
+jest równoważna odpowiadającemu mu warunkowi
+dla wszystkich $a\in B$:
+\[
+\begin{array}{c|l}
+ \mathrm D&\Box a\leq\Diamond a\\
+ \mathrm T&\Box a\leq a\\
+ \mathrm B&a\leq\Box\Diamond a\\
+ 4&\Box a\leq\Box\Box a\\
+ 5&\Diamond a\leq\Box\Diamond a.
+\end{array}
+\]
+Jeżeli $L=\mathrm K+\Sigma$, to $\mathcal V_L$
+składa się dokładnie z algebr modalnych
+spełniających warunki odpowiadające $\Sigma$
+(w ogólności równania $v(A)=1$ dla schematów
+$A\in\Sigma$ i wszystkich wartościowań).
+\end{stwierdzenie}
+\begin{proof}
+W algebrze Boole'a $a\to b=1$ dokładnie wtedy,
+gdy $a\leq b$. Podstawienie wartości zmiennej
+$p$ równych dowolnym $a\in B$ daje konieczność
+warunków. Ich zastosowanie do wartości formuły
+$A$ daje wystarczalność.
+
+Klasyczne tautologie przyjmują wartość $1$
+w każdej algebrze Boole'a. Można to uzasadnić
+rozkładem jedynki na skończone koniunkcje
+literałów dla zmiennych występujących w tautologii.
+Dokładniej, dla wartości argumentów $a_1,\ldots,a_n$
+i $t\in\{0,1\}^n$ niech $e_t$ będzie kresem dolnym
+elementów $a_i$, gdy $t_i=1$, oraz $\neg a_i$,
+gdy $t_i=0$. Rozdzielność i prawa dopełnienia dają
+$\bigvee_t e_t=1$. Dla każdej formuły klasycznej
+$C$ indukcja po spójnikach daje
+$e_t\wedge v(C)=e_t$, gdy $t\models C$, oraz
+$e_t\wedge v(C)=0$ w przeciwnym przypadku.
+Dla negacji wynika to z rozkładu
+$e_t=(e_t\wedge v(C))\vee(e_t\wedge\neg v(C))$,
+dla koniunkcji i alternatywy z praw kratowych,
+a dla implikacji z jej postaci boolowskiej.
+Dla tautologii wszystkie $e_t$ są więc
+nie większe od $v(C)$, skąd $1\leq v(C)$.
+Niektóre $e_t$ mogą być równe $0$.
+Instancję modalną tautologii otrzymujemy,
+przyjmując za argumenty wartości podstawionych
+formuł modalnych.
+Schemat K jest ważny z
+Stwierdzenia~\ref{prop:ncl-modal-algebra-normal}.
+Modus ponens zachowuje wartość $1$, ponieważ
+$1\to b=b$. Reguła konieczności zachowuje
+ważność, gdyż $\Box1=1$.
+Podstawienie zachowuje ważność: wartościowanie
+formuły po podstawieniu odpowiada wartościowaniu
+wyjściowej formuły, w którym zmienna przyjmuje
+wartość wstawionej formuły; dowód przebiega
+indukcyjnie po jej budowie.
+Indukcja po dowodach $L$ kończy argument.
+\end{proof}
+
+\subsection{Modalna algebra Lindenbauma--Tarskiego}
+
+\begin{twierdzenie}[Algebra formuł normalnej logiki modalnej]
+\label{thm:ncl-modal-lindenbaum}
+Niech $L$ będzie normalną logiką modalną.
+Na formułach określamy relację
+\[
+ A\equiv_L B\iff\vdash_L A\leftrightarrow B.
+\]
+Jest to kongruencja względem wszystkich spójników
+i operatora $\Box$. Iloraz $\mathfrak B_L$,
+z działaniami na klasach
+\[
+ [A]\wedge[B]=[A\wedge B],\quad
+ [A]\vee[B]=[A\vee B],\quad
+ \neg[A]=[\neg A],\quad \Box[A]=[\Box A],
+ \quad 0=[\bot],\ 1=[\top],
+\]
+jest algebrą modalną należącą do $\mathcal V_L$.
+Ponadto
+\[
+ [A]\leq[B]\iff\vdash_L A\to B,\qquad
+ [A]=1\iff\vdash_L A.
+\]
+\end{twierdzenie}
+\begin{proof}
+Klasyczne tautologie zapewniają zwrotność,
+symetrię i przechodniość $\equiv_L$.
+Zgodność ze spójnikami wynika z klasycznej
+zasady zastępowania równoważników, a zgodność
+z $\Box$ z
+Twierdzenia~\ref{thm:ncl-modal-monotonicity}.
+Relacja jest więc kongruencją.
+Tożsamości algebr Boole'a zachodzą na klasach,
+ponieważ ich formuły równoważności są
+klasycznymi tautologiami.
+Równości $\Box1=1$ oraz
+$\Box([A]\wedge[B])=\Box[A]\wedge\Box[B]$
+wynikają z Twierdzenia~\ref{thm:ncl-modal-normal-laws}.
+Porządek klas określa równość
+$[A]\wedge[B]=[A]$, która jest równoważna
+dowodliwości $A\to B$ przez klasyczne
+tautologie. Dla $[A]=1$ stosujemy ponadto
+dowodliwość $\top$ i równoważność
+$A\leftrightarrow(\top\to A)$.
+
+Pozostaje wykazać $\mathfrak B_L\in\mathcal V_L$.
+Dla dowolnego wartościowania $v$ i formuły
+$A\in L$ wybieramy reprezentanty klas
+$v(p)$ dla skończenie wielu zmiennych $p$
+występujących w $A$. Rozszerzamy ten wybór
+do podstawienia $\sigma$ (na pozostałych
+zmiennych możemy przyjąć identyczność).
+Indukcja po budowie formuły daje
+$v(A)=[\sigma(A)]$.
+Z domknięcia $L$ względem podstawień
+mamy $\sigma(A)\in L$, a więc $v(A)=1$.
+\end{proof}
+
+\begin{wniosek}[Pełność algebraiczna dla twierdzeń]
+\label{cor:ncl-modal-algebra-theorem-completeness}
+Dla każdej normalnej logiki modalnej $L$ zachodzi
+\[
+ \vdash_L A
+ \iff \forall B\in\mathcal V_L\ \forall v\quad v(A)=1.
+\]
+Algebra $\mathfrak B_L$ wraz z odwzorowaniem
+$p\mapsto[p]$ jest wolna w klasie $\mathcal V_L$
+na zbiorze zmiennych: każde przypisanie zmiennym
+elementów dowolnej algebry tej klasy przedłuża
+się jednoznacznie do homomorfizmu modalnego.
+Jest to odpowiednik własności uniwersalnej z
+Definicji~\ref{def:ncl-heyting-free}.
+Jeżeli $L$ jest niesprzeczna, klasy różnych
+zmiennych są różne. W przypadku sprzecznym
+$\mathfrak B_L$ jest jednoelementowa, podobnie
+jak każda algebra z $\mathcal V_L$.
+\end{wniosek}
+\begin{proof}
+Kierunek prosty wynika z definicji klasy
+$\mathcal V_L$. Dla odwrotnego przyjmujemy
+wartościowanie kanoniczne $v(p)=[p]$
+w $\mathfrak B_L$. Indukcja daje $v(A)=[A]$,
+a poprzednie twierdzenie identyfikuje
+warunek $[A]=1$ z dowodliwością.
+Jeśli $B\in\mathcal V_L$ i $v$ jest
+dowolnym wartościowaniem, to wzór
+$h([A])=v(A)$ jest dobrze określony:
+z $A\equiv_L B'$ wynika $v(A\leftrightarrow B')=1$,
+a więc $v(A)=v(B')$.
+Z definicji działań $h$ jest homomorfizmem
+modalnym. Jego jednoznaczność wynika z faktu,
+że klasy zmiennych generują $\mathfrak B_L$.
+Gdyby dla różnych zmiennych $p,q$ zachodziło
+$[p]=[q]$, to $p\leftrightarrow q$ należałaby do $L$.
+Podstawiając $\top$ za $p$ oraz $\bot$ za $q$,
+otrzymalibyśmy przez klasyczne tautologie
+$\bot\in L$. Zatem przy niesprzeczności
+odwzorowanie generatorów jest różnowartościowe.
+Jeżeli $\bot\in L$, każda algebra z $\mathcal V_L$
+spełnia $0=1$, a z klasycznej zasady wybuchu
+każda formuła należy do $L$.
+\end{proof}
+
+\subsection{Filtry modalne, kongruencje i ilorazy}
+
+\begin{definicja}[Filtr modalny]
+\label{def:ncl-modal-filter}
+Filtr $F$ kraty boolowskiej algebry modalnej
+nazywamy modalnym, jeśli
+$a\in F$ pociąga $\Box a\in F$.
+Filtr nie musi być właściwy.
+\end{definicja}
+
+\begin{twierdzenie}[Kongruencje algebr modalnych]
+\label{thm:ncl-modal-filter-congruence}
+Filtry modalne algebry $B$ odpowiadają
+bijektywnie jej kongruencjom modalnym.
+Odpowiedniość jest izomorfizmem porządkowym
+względem inkluzji.
+Dla filtru modalnego $F$ odpowiednia kongruencja
+ma postać
+\[
+ a\sim_F b
+ \iff (a\to b)\wedge(b\to a)\in F.
+\]
+Konstrukcja odwrotna przypisuje kongruencji
+klasę jedynki. Iloraz $B/F$ jest algebrą modalną,
+a rzutowanie na iloraz jest homomorfizmem modalnym.
+Jeżeli $B\in\mathcal V_L$, to $B/F\in\mathcal V_L$.
+\end{twierdzenie}
+\begin{proof}
+Dla zwykłego filtru kratowego relacja $\sim_F$
+jest kongruencją algebry Heytinga, a więc także
+algebry Boole'a, ponieważ dopełnienie jest
+pseudodopełnieniem. Korzystamy z
+Twierdzenia~\ref{thm:ncl-heyting-filter-congruence}.
+Otrzymany iloraz jest boolowski, ponieważ
+tożsamość $a\vee\neg a=1$ przechodzi na klasy.
+
+Jeśli $F$ jest modalny i $a\sim_F b$, to
+$a\to b,b\to a\in F$, a zatem
+$\Box(a\to b),\Box(b\to a)\in F$.
+Ze Stwierdzenia~\ref{prop:ncl-modal-algebra-normal}
+i domknięcia ku górze otrzymujemy
+$\Box a\to\Box b,\Box b\to\Box a\in F$.
+Stąd $\Box a\sim_F\Box b$.
+Operacja na ilorazie
+$\Box[a]=[\Box a]$ jest więc dobrze określona.
+Zachowuje jedynkę i skończone kresy dolne,
+ponieważ zachowuje je operacja na reprezentantach.
+
+Odwrotnie, jeśli $\theta$ jest kongruencją modalną,
+to jej klasa jedynki jest filtrem boolowskim
+z twierdzenia o kongruencjach Heytinga.
+Dla $a\,\theta\,1$ zachodzi
+$\Box a\,\theta\,\Box1=1$, więc filtr jest modalny.
+Obie konstrukcje są wzajemnie odwrotne na mocy
+tego samego twierdzenia.
+Jeżeli $F\subseteq G$, to z definicji
+$\sim_F\subseteq\sim_G$. Inkluzja kongruencji
+pociąga inkluzję ich klas jedynki,
+co dowodzi izomorfizmu porządkowego.
+
+Jeżeli $B\in\mathcal V_L$, to dla formuły $A\in L$
+i wartościowania w $B/F$ wybieramy reprezentanty
+wartości skończenie wielu zmiennych występujących
+w $A$. Homomorfizm ilorazowy przenosi
+wartość $A$ z $B$ na jej wartość w $B/F$;
+pierwsza jest jedynką, więc druga także.
+\end{proof}
+
+\begin{stwierdzenie}[Filtr modalny generowany przez zbiór]
+\label{prop:ncl-modal-generated-filter}
+Dla $S\subseteq B$ najmniejszy filtr modalny
+zawierający $S$ jest zwykłym filtrem kratowym
+generowanym przez
+\[
+ S^\Box=\{\Box^k a:a\in S,\ k\geq0\}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Każdy filtr modalny zawierający $S$ zawiera
+wszystkie iteracje, a więc również filtr
+kratowy generowany przez $S^\Box$.
+Oznaczmy ten ostatni filtr przez $F$.
+Z Lematu~\ref{lem:ncl-heyting-generated-filter}
+każdy $b\in F$ jest nie mniejszy od
+skończonej koniunkcji $d_1\wedge\cdots\wedge d_m$
+elementów $S^\Box$.
+Monotoniczność oraz zachowanie kresów dolnych
+dają
+\[
+ \Box d_1\wedge\cdots\wedge\Box d_m\leq\Box b.
+\]
+Każdy $\Box d_i$ nadal należy do $S^\Box$,
+więc $\Box b\in F$. Dla $m=0$ używamy
+$\Box1=1$. Zatem $F$ jest modalny.
+\end{proof}
+
+\begin{wniosek}[Generowanie filtru modalnego w S4]
+\label{cor:ncl-modal-S4-principal-filter}
+Jeżeli $B\in\mathcal V_{\mathrm{S4}}$, to filtr
+modalny generowany przez skończony zbiór
+$S\subseteq B$ ma postać
+\[
+ F=\{b\in B:\Box(\bigwedge S)\leq b\}.
+\]
+\end{wniosek}
+\begin{proof}
+Niech $u=\Box(\bigwedge S)$.
+Z normalności $u=\bigwedge_{a\in S}\Box a$,
+również gdy $S=\varnothing$.
+Każdy filtr modalny zawierający $S$ zawiera
+więc $u$. Odwrotnie $u\leq a$ dla każdego
+$a\in S$ przez T i własność kresu dolnego.
+Filtr główny generowany przez $u$ jest modalny:
+jeśli $u\leq b$, to $u=\Box u\leq\Box b$,
+gdzie idempotentność wynika z T i 4.
+Jest to zatem najmniejszy filtr modalny
+zawierający $S$.
+\end{proof}
+
+\subsection{Silna pełność algebraiczna obu konsekwencji}
+
+\begin{twierdzenie}[Semantyka filtrowa konsekwencji lokalnej]
+\label{thm:ncl-modal-local-algebra-completeness}
+Dla dowolnej normalnej logiki $L$, zbioru
+przesłanek $\Gamma$ i formuły $A$ równoważne są:
+\begin{enumerate}
+\item $\Gamma\vdash_L^{\mathrm{lok}}A$.
+\item Istnieje skończony $\Delta\subseteq\Gamma$
+      taki, że w każdej algebrze $B\in\mathcal V_L$
+      i dla każdego wartościowania $v$ zachodzi
+      \[
+       \bigwedge_{C\in\Delta}v(C)\leq v(A).
+      \]
+\item Dla każdej algebry $B\in\mathcal V_L$,
+      każdego filtru kratowego $F$ algebry $B$
+      i wartościowania $v$, jeśli $v(C)\in F$
+      dla wszystkich $C\in\Gamma$, to $v(A)\in F$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Skończoność dowodu i
+Wniosek~\ref{cor:ncl-modal-local-finite}
+dają z 1 twierdzenie
+$(\bigwedge_{C\in\Delta}C)\to A$.
+Jego ważność w $B\in\mathcal V_L$ i
+boolowska charakterystyka porządku dają 2.
+Z domknięcia filtru względem skończonych
+kresów dolnych i ku górze wynika 3.
+
+Dla odwrotnego kierunku przyjmijmy
+$\Gamma\nvdash_L^{\mathrm{lok}} A$.
+W $\mathfrak B_L$ bierzemy filtr kratowy
+$F$ generowany przez $\{[C]:C\in\Gamma\}$.
+Z Lematu~\ref{lem:ncl-heyting-generated-filter}
+i charakterystyki porządku w $\mathfrak B_L$
+mamy
+\[
+ [A]\in F
+ \iff\exists\Delta\subseteq\Gamma,\ \Delta\text{ skończony},
+ \quad\vdash_L\left(\bigwedge_{C\in\Delta}C\right)\to A.
+\]
+Prawa strona jest równoważna lokalnej dowodliwości
+$A$ z $\Gamma$ przez skończoność i
+Wniosek~\ref{cor:ncl-modal-local-finite}.
+Zatem $[A]\notin F$.
+Wartościowanie kanoniczne spełnia wszystkie
+przesłanki w sensie przynależności do $F$,
+lecz nie spełnia wniosku. Warunek 3 zawodzi.
+\end{proof}
+
+\begin{wniosek}[Ultrafiltry w konsekwencji lokalnej]
+\label{cor:ncl-modal-local-ultrafilters}
+W warunku 3
+Twierdzenia~\ref{thm:ncl-modal-local-algebra-completeness}
+wystarczy ograniczyć się do ultrafiltrów
+(tj. maksymalnych filtrów właściwych).
+\end{wniosek}
+\begin{proof}
+Jeżeli lokalna dowodliwość zawodzi, to filtr
+$F$ z dowodu twierdzenia nie zawiera $[A]$.
+Jest więc rozłączny z ideałem głównym
+$\downarrow[A]=\{b:b\leq[A]\}$: gdyby
+$b\in F$ i $b\leq[A]$, domknięcie ku górze
+dawałoby $[A]\in F$.
+Twierdzenie o oddzielaniu filtrów i ideałów
+(Twierdzenie~\ref{thm:ncl-heyting-prime-separation})
+daje filtr pierwszy $P$ zawierający $F$
+i rozłączny z $\downarrow[A]$.
+W algebrze Boole'a każdy filtr pierwszy
+jest maksymalnym filtrem właściwym:
+z $a\vee\neg a=1\in P$ wynika, że $a$
+lub $\neg a$ należy do $P$, a nie oba,
+gdyż $P$ jest właściwy.
+Każde właściwe rozszerzenie $P$ zawierałoby
+pewne $a\notin P$ i zarazem $\neg a\in P$,
+więc zawierałoby $0$, co jest sprzecznością.
+Wartościowanie kanoniczne wraz z ultrafiltrem
+$P$ daje żądany kontrprzykład.
+Kierunek od lokalnej dowodliwości do warunku
+dla ultrafiltrów jest szczególnym przypadkiem
+poprzedniego twierdzenia.
+\end{proof}
+
+\begin{twierdzenie}[Semantyka zachowania jedynki]
+\label{thm:ncl-modal-global-algebra-completeness}
+Dla dowolnej normalnej logiki $L$ równoważne są:
+\begin{enumerate}
+\item $\Gamma\vdash_L^{\mathrm{glob}}A$.
+\item W każdej algebrze $B\in\mathcal V_L$
+      i dla każdego wartościowania $v$,
+      jeśli $v(C)=1$ dla wszystkich $C\in\Gamma$,
+      to $v(A)=1$.
+\item W każdej takiej algebrze i dla każdego
+      filtru modalnego $F$ oraz wartościowania,
+      jeśli $v(C)\in F$ dla wszystkich $C\in\Gamma$,
+      to $v(A)\in F$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Dla 1 implikującego 3 indukujemy po dowodzie.
+Twierdzenia mają wartość $1\in F$.
+Modus ponens zachowuje przynależność do $F$,
+ponieważ $a\wedge(a\to b)\leq b$.
+Konieczność zachowuje przynależność z definicji
+filtru modalnego.
+Warunek 3 daje 2 przez wybór $F=\{1\}$,
+który jest filtrem modalnym z $\Box1=1$.
+
+Jeśli 1 nie zachodzi, to
+Twierdzenie~\ref{thm:ncl-modal-global-local}
+daje $\Gamma^\Box\nvdash_L^{\mathrm{lok}} A$.
+W algebrze $\mathfrak B_L$ bierzemy filtr
+modalny $F$ generowany przez $\{[C]:C\in\Gamma\}$.
+Ze Stwierdzenia~\ref{prop:ncl-modal-generated-filter}
+jest on filtrem kratowym generowanym przez
+klasy formuł $\Gamma^\Box$.
+Jak w dowodzie poprzedniego twierdzenia
+otrzymujemy $[A]\notin F$.
+Algebra ilorazowa $\mathfrak B_L/F$ należy
+do $\mathcal V_L$ z
+Twierdzenia~\ref{thm:ncl-modal-filter-congruence}.
+Wartościowanie $v(p)=\pi_F([p])$, gdzie $\pi_F$
+jest rzutowaniem ilorazowym, przyjmuje
+dla każdej przesłanki wartość $1$, lecz
+$v(A)\ne1$, ponieważ klasa jedynki rzutowania
+jest równa $F$. Zatem 2 nie zachodzi.
+\end{proof}
+
+Ważne jest rozróżnienie między dwiema
+semantykami algebraicznymi: sam warunek
+zachowania wartości $1$ w algebrze modalnej
+nie opisuje ogólnie konsekwencji lokalnej.
+Zawsze zachowuje on przejście od $A$ do $\Box A$,
+którego nie dopuszcza lokalne wnioskowanie
+z przesłanek (Przykład~\ref{ex:ncl-modal-local-global-difference}).
+Dla konsekwencji lokalnej potrzebujemy
+zwykłych filtrów lub nierówności algebraicznych,
+a dla globalnej filtrów modalnych lub zachowania
+jedynki.
+
+\begin{wniosek}[Teorie i filtry modalnej algebry formuł]
+\label{cor:ncl-modal-theories-filters}
+Zbiory domknięte względem konsekwencji lokalnej
+w $L$ odpowiadają bijektywnie filtrom kratowym
+$\mathfrak B_L$, a zbiory domknięte względem
+konsekwencji globalnej odpowiadają filtrom modalnym.
+Odpowiedniość ma postać
+\[
+ T\longmapsto F_T=\{[A]:A\in T\},\qquad
+ F\longmapsto T_F=\{A:[A]\in F\}.
+\]
+Obie konstrukcje zachowują inkluzję.
+\end{wniosek}
+\begin{proof}
+Jeżeli $T$ jest domknięty lokalnie, to zawiera
+$L$. Gdy $A\in T$ i $A\equiv_L B$, lokalny
+modus ponens daje $B\in T$, więc przynależność
+nie zależy od reprezentanta.
+Własności filtru wynikają z charakterystyki
+porządku oraz klasycznego wprowadzania koniunkcji.
+Odwrotnie, dla filtru $F$ i lokalnego dowodu
+z $T_F$ indukcja po wierszach pokazuje,
+że klasy wszystkich wierszy należą do $F$:
+twierdzenia dają $1$, a modus ponens zachowuje
+przynależność do filtru.
+Zatem $T_F$ jest domknięty lokalnie.
+Wzajemna odwrotność i zachowanie inkluzji
+wynikają wprost z definicji.
+Z Wniosku~\ref{cor:ncl-modal-theory-closure}
+domknięcie globalne jest równoważne
+domknięciu lokalnemu wraz z domknięciem
+względem $\Box$; to ostatnie odpowiada
+dokładnie modalności filtru.
+\end{proof}
+
+\section{Algebry wnętrza i domknięcia}
+
+\begin{definicja}[Algebra wnętrza]
+\label{def:ncl-modal-interior-algebra}
+Algebrą wnętrza nazywamy algebrę modalną $B$,
+w której dla każdego $a\in B$ zachodzą
+\[
+ \Box a\leq a,\qquad \Box\Box a=\Box a.
+\]
+Element $a$ nazywamy otwartym, jeśli $\Box a=a$,
+a domkniętym, jeśli $\Diamond a=a$.
+\end{definicja}
+
+\begin{stwierdzenie}[Algebraiczne aksjomaty S4]
+\label{prop:ncl-modal-interior-S4}
+Algebry wnętrza są dokładnie algebrami z klasy
+$\mathcal V_{\mathrm{S4}}$.
+Dualny operator $\Diamond$ spełnia aksjomaty
+domknięcia Kuratowskiego:
+\[
+ \Diamond0=0,\qquad a\leq\Diamond a,\qquad
+ \Diamond\Diamond a=\Diamond a,\qquad
+ \Diamond(a\vee b)=\Diamond a\vee\Diamond b.
+\]
+Odwrotnie każdy operator na algebrze Boole'a
+spełniający te cztery tożsamości i nierówności
+wyznacza algebrę wnętrza przez dualność.
+\end{stwierdzenie}
+\begin{proof}
+Ze Stwierdzenia~\ref{prop:ncl-modal-algebra-axioms}
+aksjomaty T i 4 odpowiadają nierównościom
+$\Box a\leq a$ oraz $\Box a\leq\Box\Box a$.
+Podstawienie $\Box a$ za $a$ w pierwszej
+nierówności daje nierówność odwrotną do drugiej,
+a więc idempotentność. Odwrotnie idempotentność
+daje warunek 4.
+Aksjomaty dla $\Diamond$ otrzymujemy przez
+dualność: dopełnienie odwraca porządek,
+zamienia $0$ z $1$ oraz kresy dolne z górnymi.
+W szczególności
+$\Diamond\Diamond a=\neg\Box\Box\neg a
+=\neg\Box\neg a=\Diamond a$.
+Te same przekształcenia w odwrotnym kierunku
+dają ostatnią tezę.
+\end{proof}
+
+\begin{lemat}[Największy element otwarty i najmniejszy domknięty]
+\label{lem:ncl-modal-interior-extremal}
+W algebrze wnętrza $\Box a$ jest największym
+elementem otwartym nie większym od $a$,
+a $\Diamond a$ najmniejszym elementem
+domkniętym nie mniejszym od $a$.
+Element $a$ jest otwarty wtedy i tylko wtedy,
+gdy $\neg a$ jest domknięty.
+\end{lemat}
+\begin{proof}
+Idempotentność pokazuje, że $\Box a$ jest
+otwarty, a T daje $\Box a\leq a$.
+Jeżeli $u=\Box u\leq a$, to monotoniczność
+daje $u=\Box u\leq\Box a$.
+Druga teza jest dualna do pierwszej.
+Równoważność ostatnia wynika z
+$\Diamond\neg a=\neg\Box a$.
+\end{proof}
+
+\begin{twierdzenie}[Algebra Heytinga elementów otwartych]
+\label{thm:ncl-modal-open-heyting}
+Niech $B$ będzie algebrą wnętrza. Zbiór
+\[
+ \mathcal O(B)=\{a\in B:\Box a=a\}
+\]
+z odziedziczonym porządkiem, działaniami
+$\wedge,\vee$ i stałymi $0,1$ jest algebrą
+Heytinga. Jej implikacja i negacja mają postać
+\[
+ a\to_{\mathcal O(B)}b=\Box(\neg a\vee b),
+ \qquad
+ \neg_{\mathcal O(B)}a=\Box\neg a.
+\]
+Jeżeli $B$ jest zupełna, to $\mathcal O(B)$
+jest zupełną algebrą Heytinga. Dla dowolnej
+rodziny $S\subseteq\mathcal O(B)$ zachodzi wtedy
+\[
+ \bigvee_{\mathcal O(B)}S=\bigvee_B S,
+ \qquad
+ \bigwedge_{\mathcal O(B)}S=\Box\bigwedge_B S.
+\]
+\end{twierdzenie}
+\begin{proof}
+Jedynka jest otwarta z normalności,
+a zero z nierówności $\Box0\leq0$.
+Zachowanie kresów dolnych daje domknięcie
+względem $\wedge$.
+Jeżeli $a,b$ są otwarte, to z monotoniczności
+$a=\Box a\leq\Box(a\vee b)$ oraz
+$b=\Box b\leq\Box(a\vee b)$.
+Zatem $a\vee b\leq\Box(a\vee b)\leq a\vee b$,
+co daje domknięcie względem $\vee$.
+
+Dla otwartych $a,b,c$ w algebrze Boole'a
+mamy $a\wedge c\leq b$ wtedy i tylko wtedy,
+gdy $c\leq\neg a\vee b$.
+Ponieważ $c$ jest otwarty, na mocy
+Lematu~\ref{lem:ncl-modal-interior-extremal}
+ostatni warunek jest równoważny
+$c\leq\Box(\neg a\vee b)$.
+Prawa strona jest otwarta przez idempotentność.
+Otrzymujemy zatem dokładnie residuację
+z Definicji~\ref{def:ncl-heyting}.
+Podstawienie $b=0$ daje wzór na negację.
+
+Jeśli istnieje kres górny $s=\bigvee_B S$,
+to dla każdego $a\in S$ mamy
+$a=\Box a\leq\Box s$. Stąd
+$s\leq\Box s\leq s$. Kres górny jest otwarty
+i pozostaje kresem górnym w podzbiorze.
+Jeśli istnieje $d=\bigwedge_B S$,
+to $\Box d$ jest otwartym ograniczeniem dolnym.
+Każde otwarte ograniczenie dolne $u$ spełnia
+$u\leq d$, a więc $u\leq\Box d$ z lematu.
+To dowodzi wzoru na kres dolny.
+Oba argumenty obejmują puste rodziny.
+\end{proof}
+
+\begin{przyklad}[Elementy otwarte nie tworzą na ogół podalgebry Boole'a]
+\label{ex:ncl-modal-open-not-boolean}
+Niech $W=\{r,s\}$, a $R=\{(r,r),(r,s),(s,s)\}$.
+Algebra kompleksowa relacji $R$ jest algebrą
+wnętrza, ponieważ $R$ jest zwrotna i przechodnia.
+Jej elementy otwarte to
+$\varnothing,\{s\},W$.
+Tworzą one trójelementowy łańcuch Heytinga
+z Przykładu~\ref{ex:ncl-heyting-three-chain}.
+Dopełnienie boolowskie $\{s\}$ jest równe
+$\{r\}$ i nie jest otwarte, natomiast
+negacja Heytinga $\Box\{r\}$ jest równa
+$\varnothing$.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+\node[draw,rounded corners,fill=blue!8] (z) at (0,0) {$\varnothing$};
+\node[draw,rounded corners] (r) at (-1.25,1.3) {$\{r\}$};
+\node[draw,rounded corners,fill=blue!8] (s) at (1.25,1.3) {$\{s\}$};
+\node[draw,rounded corners,fill=blue!8] (o) at (0,2.6) {$W$};
+\draw (z)--(r)--(o)--(s)--(z);
+\draw[->,dashed,red!70!black] (r) to[bend right=25]
+ node[left] {$\Box$} (z);
+\node at (0,-.65) {$\mathcal P(W)$};
+\node (h0) at (4,0) {$\varnothing$};
+\node (h1) at (4,1.3) {$\{s\}$};
+\node (h2) at (4,2.6) {$W$};
+\draw (h0)--(h1)--(h2);
+\node at (4,-.65) {$\mathcal O(B)$};
+\end{tikzpicture}
+\end{center}
+Na niebiesko zaznaczono punkty stałe wnętrza.
+Przejście do algebry Heytinga zachowuje porządek
+i działania kratowe na tych punktach,
+lecz zmienia negację.
+
+\begin{wniosek}[Reprezentacja algebr Heytinga przez elementy otwarte]
+\label{cor:ncl-modal-heyting-open-representation}
+Każda algebra Heytinga jest izomorficzna
+z algebrą elementów otwartych pewnej algebry
+wnętrza. Można ją także zanurzyć w algebrę
+elementów otwartych algebry kompleksowej
+relacji zwrotnej i przechodniej.
+Dla skończonej algebry Heytinga tę drugą
+reprezentację można wybrać jako izomorfizm
+ze wszystkimi elementami otwartymi skończonej
+algebry kompleksowej.
+\end{wniosek}
+\begin{proof}
+Dla algebry Heytinga $H$ weźmy
+$W=\operatorname{Spec}(H)$ z porządkiem inkluzji.
+Algebra kompleksowa relacji $\leq$ jest algebrą
+wnętrza, ponieważ relacja jest zwrotna
+i przechodnia. Z definicji
+$\Box_{\leq}U=U$ dokładnie wtedy, gdy $U$
+jest domknięty ku górze: z równości wynika,
+że każdy punkt $U$ ma wszystkich następców
+w $U$, a w przeciwnym kierunku korzystamy
+także ze zwrotności.
+Zatem $\mathcal O(\mathcal P(W))=\operatorname{Up}(W)$.
+Implikacja $\Box_{\leq}((W\setminus U)\cup V)$
+jest dokładnie implikacją z
+Przykładu~\ref{ex:ncl-heyting-upsets}.
+Twierdzenia~\ref{thm:ncl-heyting-prime-representation}
+i \ref{thm:ncl-heyting-finite-prime-representation}
+dają odpowiednio zanurzenie i izomorfizm
+w przypadku skończonym.
+Dopuszczenie pustego $W$ obejmuje algebrę trywialną.
+
+Aby otrzymać izomorfizm również w przypadku
+nieskończonym, wyposażamy $W$ w topologię
+spektrum z rozdziału o algebrach Heytinga.
+Na mocy Twierdzenia~\ref{thm:ncl-heyting-spectrum-esakia}
+jest to przestrzeń Esakii. W algebrze
+Boole'a $B_0=\operatorname{Clop}(W)$ wszystkich
+zbiorów otwarto-domkniętych bierzemy operator
+$\Box_{\leq}$ ograniczony do $B_0$.
+Dla $C\in B_0$ mamy
+\[
+ \Box_{\leq}C=W\setminus\downarrow(W\setminus C),
+\]
+gdzie $\downarrow D=\{x:\exists y\in D,\ x\leq y\}$.
+Z własności Esakii zbiór po prawej stronie
+jest otwarto-domknięty. Operator jest więc
+dobrze określony na $B_0$, a aksjomaty
+algebry wnętrza dziedziczymy z algebry
+kompleksowej $\mathcal P(W)$.
+Punkty stałe tego operatora to dokładnie
+otwarto-domknięte zbiory domknięte ku górze.
+Z Twierdzenia~\ref{thm:ncl-heyting-esakia-algebra}
+otrzymujemy izomorfizm algebr Heytinga
+$H\cong\mathcal O(B_0)$.
+Nie należy utożsamiać otwartości elementu
+w sensie $\Box_{\leq}$ z otwartością względem
+topologii spektrum: tutaj elementy $B_0$
+są już otwarto-domknięte topologicznie,
+a dodatkowy warunek $\Box_{\leq}C=C$
+oznacza domknięcie ku górze względem porządku.
+\end{proof}
+
+\section{Topologiczna interpretacja S4}
+
+\begin{definicja}[Topologiczny model modalny]
+\label{def:ncl-modal-topological-model}
+Niech $(X,\tau)$ będzie przestrzenią topologiczną.
+Wartościowanie zmiennych przyjmuje dowolne
+podzbiory $X$, niekoniecznie otwarte.
+Rozszerzamy je na formuły przez
+\[
+\begin{aligned}
+ v(\bot)&=\varnothing,&
+ v(\neg A)&=X\setminus v(A),\\
+ v(A\wedge B)&=v(A)\cap v(B),&
+ v(A\vee B)&=v(A)\cup v(B),\\
+ v(A\to B)&=(X\setminus v(A))\cup v(B),\\
+ v(\Box A)&=\operatorname{int}_X v(A),&
+ v(\Diamond A)&=\overline{v(A)}.
+\end{aligned}
+\]
+Piszemy $x\Vdash_v A$, gdy $x\in v(A)$.
+Formuła jest ważna w $X$, jeśli $v(A)=X$
+dla każdego wartościowania.
+\end{definicja}
+Ostatni wzór wynika z dualności wnętrza
+i domknięcia
+(Stwierdzenie~\ref{prop:topog-dualnosc-wnetrze-domkniecie}). W szczególności
+$x\Vdash_v\Box A$ wtedy i tylko wtedy, gdy
+istnieje otwarte otoczenie punktu $x$
+zawarte w $v(A)$; $x\Vdash_v\Diamond A$
+wtedy i tylko wtedy, gdy każde otwarte
+otoczenie $x$ przecina $v(A)$.
+Korzystamy z punktowych charakterystyk
+wnętrza i domknięcia z
+Twierdzenia~\ref{thm:topog-punktowa-charakteryzacja}.
+Nie jest to semantyka intuicjonistyczna
+z poprzedniego rozdziału: tutaj negacja
+i implikacja są boolowskie, a wnętrze
+jest osobnym operatorem modalnym.
+
+\begin{twierdzenie}[Kuratowski i algebry wnętrza zbiorów]
+\label{thm:ncl-modal-topological-kuratowski}
+Dla każdej topologii $\tau$ na $X$ algebra
+potęgowa $\mathcal P(X)$ z operatorem
+$\Box=\operatorname{int}_X$ jest algebrą wnętrza.
+Odwrotnie każdy operator wnętrza algebry
+wnętrza o nośniku $\mathcal P(X)$ jest
+operatorem wnętrza dokładnie jednej topologii.
+Topologia ta ma postać
+\[
+ \tau=\{U\subseteq X:\Box U=U\}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Wnętrze zachowuje $X$ i skończone przecięcia,
+jest nie większe od argumentu i idempotentne,
+ponieważ wnętrze jest największym zbiorem
+otwartym zawartym w argumencie. Stąd
+otrzymujemy algebrę wnętrza.
+
+Odwrotnie z
+Twierdzenia~\ref{thm:ncl-modal-open-heyting}
+wynika, że rodzina punktów stałych zawiera
+$\varnothing,X$ i jest zamknięta względem
+skończonych przecięć oraz dowolnych sum:
+algebra potęgowa jest zupełna, a jej kresy
+górne są sumami zbiorów.
+Rodzina $\tau$ jest więc topologią
+w sensie Definicji~\ref{def:topog-topologia}.
+Z Lematu~\ref{lem:ncl-modal-interior-extremal}
+operator $\Box A$ daje największy element
+$\tau$ zawarty w $A$, czyli jego wnętrze.
+Jednoznaczność wynika z tego, że w każdej
+topologii zbiory otwarte są dokładnie
+punktami stałymi operatora wnętrza.
+Przez dualność otrzymujemy również
+jednoznaczne odtworzenie topologii
+z operatora spełniającego aksjomaty
+domknięcia Kuratowskiego na $\mathcal P(X)$.
+\end{proof}
+
+\begin{wniosek}[Poprawność topologiczna S4]
+\label{cor:ncl-modal-S4-topological-soundness}
+Każde twierdzenie S4 jest ważne w każdej
+przestrzeni topologicznej.
+Ponadto lokalny dowód S4 zachowuje
+prawdziwość w punkcie, a globalny
+zachowuje prawdziwość na całej przestrzeni.
+\end{wniosek}
+\begin{proof}
+Topologiczne wartościowanie jest wartościowaniem
+w algebrze modalnej $\mathcal P(X)$ z wnętrzem.
+Poprzednie twierdzenie daje algebrę wnętrza,
+a Stwierdzenie~\ref{prop:ncl-modal-interior-S4}
+identyfikuje ją z elementem $\mathcal V_{\mathrm{S4}}$.
+Pełność algebraiczna dla twierdzeń daje
+w szczególności poprawność.
+Jeśli $\Gamma\vdash_{\mathrm{S4}}^{\mathrm{lok}}A$,
+to Twierdzenie~\ref{thm:ncl-modal-local-algebra-completeness}
+daje dla pewnej skończonej rodziny przesłanek
+$\Delta$ inkluzję
+$\bigcap_{C\in\Delta}v(C)\subseteq v(A)$,
+która zapewnia zachowanie prawdziwości w punkcie.
+Dla konsekwencji globalnej stosujemy
+Twierdzenie~\ref{thm:ncl-modal-global-algebra-completeness}
+do jedynki $X$.
+\end{proof}
+
+\begin{stwierdzenie}[Topologia Aleksandrowa relacji zwrotnej i przechodniej]
+\label{prop:ncl-modal-alexandrov}
+Niech $R$ będzie relacją zwrotną i przechodnią
+na $W$ (niekoniecznie antysymetryczną).
+Rodzina wszystkich zbiorów domkniętych ku górze
+względem $R$ jest topologią $\tau_R$.
+Dla każdego $A\subseteq W$ zachodzi
+\[
+ \operatorname{int}_{\tau_R} A=\Box_R A,\qquad
+ \operatorname{cl}_{\tau_R} A=\Diamond_R A.
+\]
+W szczególności wartościowania modalne w ramie
+$(W,R)$ i w przestrzeni $(W,\tau_R)$ dają
+te same zbiory prawdziwości wszystkich formuł.
+\end{stwierdzenie}
+\begin{proof}
+Zbiory $\varnothing,W$ są domknięte ku górze.
+Dowolne sumy i przecięcia takich zbiorów
+są nadal domknięte ku górze.
+Dla $w\in W$ zbiór $R(w)$ zawiera $w$
+przez zwrotność i jest domknięty ku górze
+przez przechodniość.
+Każdy otwarty zbiór zawierający $w$
+zawiera $R(w)$. Jest to więc najmniejsze
+otwarte otoczenie punktu $w$.
+Stąd $w\in\operatorname{int}_{\tau_R} A$
+dokładnie wtedy, gdy $R(w)\subseteq A$.
+Wzór na domknięcie wynika przez dualność.
+Wartościowania mają te same działania
+boolowskie i ten sam operator $\Box$,
+więc indukcja po formułach daje ostatnią tezę.
+\end{proof}
+
+\begin{przyklad}[Modalność na prostej rzeczywistej]
+\label{ex:ncl-modal-real-topology}
+Niech $X=\mathbb R$ ze zwykłą topologią
+oraz $v(p)=\mathbb Q$.
+Każdy niepusty otwarty przedział zawiera
+zarówno liczbę wymierną, jak i niewymierną.
+Stąd
+\[
+ v(\Box p)=\varnothing,\quad
+ v(\Diamond p)=\mathbb R,\quad
+ v(\Box\Diamond p)=\mathbb R,\quad
+ v(\Diamond\Box p)=\varnothing.
+\]
+Podobnie dla $A=(0,1]$ otrzymujemy
+\[
+ \operatorname{int}A=(0,1),\qquad
+ \overline A=[0,1].
+\]
+Formuła $p$ może być prawdziwa w punkcie
+niebędącym punktem wnętrza zbioru prawdziwości;
+w szczególności prawdziwość punktowa
+nie musi pociągać konieczności.
+\end{przyklad}
+
+\begin{stwierdzenie}[Topologiczne znaczenie aksjomatu 5]
+\label{prop:ncl-modal-topological-S5}
+Dla przestrzeni topologicznej $X$ równoważne są:
+\begin{enumerate}
+\item Schemat 5 jest ważny w $X$.
+\item Domknięcie każdego podzbioru $X$ jest otwarte.
+\item Każdy zbiór domknięty jest otwarty.
+\item Każdy zbiór otwarty jest domknięty.
+\item Topologia $X$ składa się ze wszystkich sum
+      elementów pewnego podziału zbioru $X$.
+\end{enumerate}
+\end{stwierdzenie}
+\begin{proof}
+Warunek 1 to nierówność
+$\overline A\subseteq\operatorname{int}\overline A$
+dla każdego $A\subseteq X$, która jest
+równoważna otwartości $\overline A$,
+gdyż wnętrze jest zawarte w argumencie.
+Daje to 2. Warunki 2 i 3 są równoważne:
+domknięcie jest zbiorem domkniętym,
+a każdy zbiór domknięty jest swoim domknięciem.
+Równoważność 3 i 4 wynika z dopełnienia.
+
+Przy warunku 4 dowolne przecięcie zbiorów
+otwartych jest otwarte: jego dopełnienie
+jest sumą zbiorów otwartych, więc otwartym,
+a na mocy założenia również domkniętym.
+Dla $x\in X$ niech $U_x$ będzie przecięciem
+wszystkich otwartych otoczeń $x$.
+Jest to otwarte otoczenie punktu $x$.
+Jeśli $y\in U_x$, to każde otwarte
+otoczenie punktu $x$ zawiera $y$.
+Gdyby pewne otwarte otoczenie $V$ punktu $y$
+nie zawierało $x$, jego dopełnienie byłoby
+otwartym otoczeniem $x$ niezawierającym $y$,
+co jest sprzecznością.
+Punkty $x,y$ należą zatem do dokładnie
+tych samych zbiorów otwartych i $U_x=U_y$.
+Jeśli $z\in U_x\cap U_y$, stosujemy tę
+równość dwukrotnie i otrzymujemy
+$U_x=U_z=U_y$.
+Rodzina różnych $U_x$ jest podziałem $X$.
+Każdy zbiór otwarty jest sumą tych $U_x$,
+których punkty zawiera, a każda taka suma
+jest otwarta. Daje to 5.
+Odwrotnie przy 5 dopełnienie dowolnej sumy
+elementów podziału jest sumą pozostałych
+elementów, więc jest otwarte. Otrzymujemy 4.
+Dla przestrzeni pustej podział jest pusty
+i wszystkie warunki zachodzą.
+\end{proof}
+
+W przestrzeni $\mathbb R$ schemat 5 nie jest
+ważny: dla $v(p)=\{0\}$ mamy
+$v(\Diamond p)=\{0\}$, ale
+$v(\Box\Diamond p)=\varnothing$.
+Nie należy więc utożsamiać wszystkich
+przestrzeni topologicznych z modelami S5.
+Jeżeli przestrzeń spełnia warunek $T_0$
+i warunki poprzedniego stwierdzenia, jej
+elementy podziału muszą być singletonami,
+ponieważ punkty tego samego elementu
+podziału należą do dokładnie tych samych
+zbiorów otwartych. Wówczas topologia
+jest dyskretna.
+
+\section{Translacja Gödla z logiki intuicjonistycznej do S4}
+
+\begin{definicja}[Translacja Gödla]
+\label{def:ncl-modal-goedel-translation}
+Dla formuł intuicjonistycznego rachunku zdań
+określamy translację $g$ do języka modalnego:
+\[
+\begin{aligned}
+ g(p)&=\Box p,& g(\bot)&=\bot,\\
+ g(A\wedge B)&=g(A)\wedge g(B),&
+ g(A\vee B)&=g(A)\vee g(B),\\
+ g(A\to B)&=\Box(g(A)\to g(B)).
+\end{aligned}
+\]
+Po prawej stronie wszystkie spójniki są
+klasycznymi spójnikami języka modalnego.
+Dla zbioru formuł $\Gamma$ oznaczamy
+$g[\Gamma]=\{g(A):A\in\Gamma\}$.
+\end{definicja}
+Negacja intuicjonistyczna jest skrótem $A\to\bot$,
+stąd $g(\neg A)=\Box\neg g(A)$.
+Translacja implikacji wykorzystuje dokładnie
+wzór na implikację w algebrze Heytinga elementów
+otwartych algebry wnętrza, podany w
+Twierdzeniu~\ref{thm:ncl-modal-open-heyting}.
+
+\begin{lemat}[Zgodność translacji z wartościowaniami]
+\label{lem:ncl-modal-goedel-valuation}
+Niech $B$ będzie algebrą wnętrza i niech $v$
+będzie wartościowaniem modalnym w $B$.
+Przypisanie $u(p)=\Box v(p)$ wyznacza
+wartościowanie intuicjonistyczne $u$ w
+$\mathcal O(B)$. Dla każdej formuły
+intuicjonistycznej $A$ zachodzi
+\[
+ u(A)=v(g(A)).
+\]
+W szczególności wartość $v(g(A))$ jest otwarta.
+\end{lemat}
+\begin{proof}
+Idempotentność operatora $\Box$ zapewnia,
+że $u(p)\in\mathcal O(B)$.
+Indukujemy po budowie formuły.
+Dla zmiennej teza jest definicją $u$,
+a dla $\bot$ obie wartości są równe $0$.
+Dla koniunkcji i alternatywy korzystamy
+z odziedziczenia obu działań kratowych
+przez $\mathcal O(B)$ oraz hipotezy indukcyjnej.
+Dla implikacji mamy z tej hipotezy
+i Twierdzenia~\ref{thm:ncl-modal-open-heyting}
+\[
+\begin{aligned}
+ u(A\to C)
+ &=u(A)\to_{\mathcal O(B)}u(C)\\
+ &=\Box(\neg u(A)\vee u(C))\\
+ &=\Box(\neg v(g(A))\vee v(g(C)))\\
+ &=v(\Box(g(A)\to g(C)))=v(g(A\to C)).
+\end{aligned}
+\]
+Wszystkie wartości $u$ należą z definicji
+do $\mathcal O(B)$, co daje ostatnią tezę.
+\end{proof}
+
+\begin{wniosek}[Stabilność formuł po translacji]
+\label{cor:ncl-modal-goedel-stability}
+Dla każdej formuły intuicjonistycznej $A$
+zachodzi
+\[
+ \vdash_{\mathrm{S4}}g(A)\leftrightarrow\Box g(A).
+\]
+\end{wniosek}
+\begin{proof}
+W każdej algebrze z klasy $\mathcal V_{\mathrm{S4}}$
+wartości formuł po translacji są otwarte
+na mocy Lematu~\ref{lem:ncl-modal-goedel-valuation}.
+Wartości obu członów równoważności są więc
+równe. Z pełności algebraicznej dla twierdzeń
+(Wniosek~\ref{cor:ncl-modal-algebra-theorem-completeness})
+otrzymujemy żądaną dowodliwość.
+\end{proof}
+
+\begin{twierdzenie}[Zachowanie i odzwierciedlanie konsekwencji]
+\label{thm:ncl-modal-goedel-embedding}
+Dla dowolnego zbioru formuł intuicjonistycznych
+$\Gamma$ i dowolnej formuły $A$ zachodzą
+równoważności (zapis $\vdash_{\mathrm I}$
+oznacza dowodliwość w IPC, jak w NCL-03)
+\[
+ \Gamma\vdash_{\mathrm I} A
+ \quad\Longleftrightarrow\quad
+ g[\Gamma]\vdash_{\mathrm{S4}}^{\mathrm{lok}}g(A)
+ \quad\Longleftrightarrow\quad
+ g[\Gamma]\vdash_{\mathrm{S4}}^{\mathrm{glob}}g(A).
+\]
+W szczególności
+\[
+ \vdash_{\mathrm I}A
+ \iff \vdash_{\mathrm{S4}}g(A).
+\]
+\end{twierdzenie}
+\begin{proof}
+Załóżmy $\Gamma\vdash_{\mathrm I}A$.
+Dowód wykorzystuje skończenie wiele przesłanek,
+tworzących zbiór $\Delta\subseteq\Gamma$.
+Niech $B$ będzie dowolną algebrą wnętrza,
+a $v$ dowolnym wartościowaniem modalnym.
+W algebrze Heytinga $\mathcal O(B)$ bierzemy
+wartościowanie $u(p)=\Box v(p)$.
+Poprawność algebraiczna IPC
+(Twierdzenie~\ref{thm:ncl-heyting-soundness})
+daje
+\[
+ \bigwedge_{C\in\Delta}u(C)\leq u(A).
+\]
+Z Lematu~\ref{lem:ncl-modal-goedel-valuation}
+i odziedziczenia skończonych kresów dolnych
+otrzymujemy w $B$
+\[
+ \bigwedge_{C\in\Delta}v(g(C))\leq v(g(A)).
+\]
+Z lokalnej pełności algebraicznej S4
+(Twierdzenie~\ref{thm:ncl-modal-local-algebra-completeness})
+wynika lokalna dowodliwość $g(A)$ z $g[\Gamma]$.
+
+Każdy dowód lokalny jest dowodem globalnym.
+Pozostaje więc wykazać, że dowodliwość globalna
+po translacji pociąga dowodliwość w IPC.
+Załóżmy przeciwnie, że
+$\Gamma\nvdash_{\mathrm I}A$.
+Z silnej pełności algebraicznej IPC
+(Twierdzenie~\ref{thm:ncl-heyting-strong-completeness})
+istnieje algebra Heytinga $H$ i wartościowanie
+$u$ takie, że
+\[
+ u(C)=1\quad(C\in\Gamma),\qquad u(A)\ne1.
+\]
+Na mocy Wniosku~\ref{cor:ncl-modal-heyting-open-representation}
+istnieje zanurzenie algebr Heytinga
+$e:H\to\mathcal O(B)$ do algebry elementów
+otwartych pewnej algebry wnętrza $B$.
+W $B$ definiujemy wartościowanie modalne przez
+$v(p)=e(u(p))$. Wartości zmiennych są otwarte,
+zatem $\Box v(p)=v(p)$.
+Zgodność translacji z wartościowaniami
+oraz zachowanie działań Heytinga przez $e$ dają
+\[
+ v(g(C))=e(u(C))
+\]
+dla każdej formuły $C$.
+W szczególności wszystkie przesłanki po
+translacji mają wartość $1$, lecz $g(A)$
+nie ma wartości $1$, ponieważ $e$ jest
+różnowartościowe i zachowuje jedynkę.
+Globalna poprawność algebraiczna
+(Twierdzenie~\ref{thm:ncl-modal-global-algebra-completeness})
+wyklucza globalną dowodliwość $g(A)$.
+To kończy dowód.
+\end{proof}
+W tej szczególnej klasie przesłanek różnica
+między konsekwencją lokalną i globalną
+zanika. Można to też wyjaśnić syntaktycznie:
+na mocy Wniosku~\ref{cor:ncl-modal-goedel-stability}
+każda formuła $g(C)$ pociąga lokalnie
+wszystkie swoje iteracje konieczności.
+Twierdzenie~\ref{thm:ncl-modal-global-local}
+pozwala zastąpić dowód globalny dowodem
+lokalnym z tymi iteracjami, a cięcie eliminuje
+dodatkowe przesłanki.
+
+\begin{wniosek}[Zanurzenie algebry formuł IPC]
+\label{cor:ncl-modal-goedel-lindenbaum}
+Niech $\mathfrak H$ będzie algebrą
+Lindenbauma--Tarskiego IPC, a
+$\mathfrak B_{\mathrm{S4}}$ modalną algebrą
+Lindenbauma--Tarskiego S4. Wzór
+\[
+ [A]_{\mathrm{IPC}}\longmapsto[g(A)]_{\mathrm{S4}}
+\]
+wyznacza zanurzenie algebr Heytinga
+$\mathfrak H\to\mathcal O(\mathfrak B_{\mathrm{S4}})$.
+\end{wniosek}
+\begin{proof}
+Jeżeli $A,B$ są równoważne w IPC, to obie
+implikacje $A\to B$ i $B\to A$ są twierdzeniami.
+Z Twierdzenia~\ref{thm:ncl-modal-goedel-embedding}
+ich translacje są twierdzeniami S4.
+Z T otrzymujemy dowodliwość
+$g(A)\to g(B)$ i $g(B)\to g(A)$.
+Wzór nie zależy zatem od reprezentanta.
+Odwrotnie, jeśli $g(A)$ i $g(B)$ są
+równoważne w S4, to reguła konieczności
+daje twierdzenia $\Box(g(A)\to g(B))$ oraz
+$\Box(g(B)\to g(A))$.
+Odzwierciedlanie dowodliwości w
+Twierdzeniu~\ref{thm:ncl-modal-goedel-embedding}
+daje równoważność $A$ i $B$ w IPC.
+Stąd różnowartościowość.
+Wartości obrazu są otwarte z
+Wniosku~\ref{cor:ncl-modal-goedel-stability}.
+Zachowanie $\wedge,\vee,0$ wynika z definicji
+translacji, a zachowanie implikacji ze wzoru
+na implikację elementów otwartych.
+Jedynkę reprezentuje $\bot\to\bot$,
+której translacja jest twierdzeniem S4,
+więc także jedynka jest zachowana.
+\end{proof}
+
+\begin{przyklad}[Prawo wyłączonego środka po translacji]
+\label{ex:ncl-modal-goedel-excluded-middle}
+Translacja prawa wyłączonego środka ma postać
+\[
+ g(p\vee\neg p)=\Box p\vee\Box\neg\Box p.
+\]
+Nie jest to twierdzenie S4, a więc również
+nie jest instancją klasycznej tautologii
+przez podstawienie formuł modalnych.
+Rozważmy ramę $W=\{r,s\}$ z relacją zwrotną
+oraz $rRs$, i niech $v(p)=\{s\}$.
+Zbiorem prawdziwości $\Box p$ jest $\{s\}$,
+natomiast zbiorem prawdziwości $\neg\Box p$
+jest $\{r\}$, którego wnętrze w topologii
+Aleksandrowa jest puste.
+Translacja jest więc fałszywa w $r$.
+Rama jest zwrotna i przechodnia, zatem
+poprawność S4 wyklucza dowodliwość tej formuły.
+Otrzymujemy jednocześnie znany kontrmodel
+dla prawa wyłączonego środka w IPC.
+\end{przyklad}
+
+\paragraph{Zakres dalszego rozdziału.}
+W tym rozdziale zbudowaliśmy syntaktykę
+normalnych logik modalnych, ich semantykę
+algebraiczną i podstawowe interpretacje
+topologiczne. W następnym rozdziale
+rozwiniemy systematycznie semantykę Kripkego:
+modele kanoniczne, lemat o prawdzie, pełność,
+korespondencję aksjomatów z własnościami relacji
+oraz filtrację. Rozróżnienie między semantyką
+algebraiczną i relacyjną jest istotne:
+pełność algebraiczna każdej normalnej logiki
+nie oznacza automatycznie jej pełności względem
+jakiejkolwiek klasy ram Kripkego.

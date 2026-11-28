@@ -1,0 +1,682 @@
+\chapter{Obrazy, przeciwobrazy i działania na funkcjach}\label{ch:function-operations}
+\section{Dlaczego trzeba rozróżniać obraz i przeciwobraz?}
+Funkcja przypisuje wartości argumentom. Możemy jednak pytać nie tylko o pojedyncze $f(a)$, lecz także o wszystkie wartości przyjmowane na danym podzbiorze oraz o wszystkie argumenty, których wartości wpadają do zadanego podzbioru przeciwdziedziny. Te dwie konstrukcje zachowują się inaczej.
+\begin{definicja}[Obraz i przeciwobraz]\label{def:image-preimage}
+Niech $f:A\to B$, $S\subseteq A$, $T\subseteq B$. \emph{Obrazem} $S$ jest $f[S]:=\{f(a):a\in S\}\subseteq B$, a \emph{przeciwobrazem} $T$ jest $f^{-1}[T]:=\{a\in A:f(a)\in T\}\subseteq A$.
+\end{definicja}
+\begin{przyklad}
+Dla $f:\R\to\R$, $f(x)=x^2$, mamy $f[[-2,1]]=[0,4]$, $f^{-1}[[1,4]]=[-2,-1]\cup[1,2]$ oraz $f^{-1}[(-\infty,0)]=\varnothing$. Przeciwobraz jest zdefiniowany, mimo że $f$ nie jest bijekcją.
+\end{przyklad}
+
+\begin{uwaga}[Proste testy i przypadki puste]
+Dla każdego $f:A\to B$ mamy $f[\varnothing]=\varnothing$,
+$f^{-1}[\varnothing]=\varnothing$, $f^{-1}[B]=A$ i
+$f[A]\subseteq B$. Ostatnie zawieranie może być ostre.
+Na przykład dla $f:\{1,2\}\to\{u,v,w\}$,
+$f(1)=u$, $f(2)=v$, mamy $f[A]=\{u,v\}$, ale
+$f^{-1}[\{w\}]=\varnothing$. Te równości wynikają z definicji,
+a nie z odwracalności funkcji.
+\end{uwaga}
+\begin{twierdzenie}[Monotoniczność obrazów i przeciwobrazów]
+\label{thm:images-monotone-xliv}
+Dla funkcji $f:A\to B$ i podzbiorów $S,U\subseteq A$,
+$T,V\subseteq B$ zachodzi
+\[
+ S\subseteq U\ \Longrightarrow\ f[S]\subseteq f[U],\qquad
+ T\subseteq V\ \Longrightarrow\ f^{-1}[T]\subseteq f^{-1}[V].
+\]
+\end{twierdzenie}
+\begin{proof}
+Jeśli $b\in f[S]$, to istnieje $s\in S$ z $f(s)=b$.
+Ponieważ $S\subseteq U$, mamy $s\in U$, a więc $b\in f[U]$.
+Jeśli $a\in f^{-1}[T]$, to $f(a)\in T\subseteq V$,
+stąd $a\in f^{-1}[V]$. W obu przypadkach dowiedliśmy
+zawierania przez sprawdzenie dowolnego elementu.
+\end{proof}
+
+\section{Prawa obrazów i przeciwobrazów}
+\begin{twierdzenie}[Suma, przecięcie i różnica]\label{thm:image-laws}
+Niech $f:A\to B$, $S,U\subseteq A$ i $T,V\subseteq B$. Wtedy
+\begin{align*}
+f[S\cup U]&=f[S]\cup f[U], & f[S\cap U]&\subseteq f[S]\cap f[U],\\
+f^{-1}[T\cup V]&=f^{-1}[T]\cup f^{-1}[V], &f^{-1}[T\cap V]&=f^{-1}[T]\cap f^{-1}[V],\\
+f^{-1}[B\setminus T]&=A\setminus f^{-1}[T].
+\end{align*}
+Jeżeli $f$ jest iniekcją, to $f[S\cap U]=f[S]\cap f[U]$ oraz $f[S\setminus U]=f[S]\setminus f[U]$.
+\end{twierdzenie}
+\begin{proof}
+Dla $b\in B$ warunek $b\in f[S\cup U]$ oznacza, że istnieje $a\in S\cup U$ z $f(a)=b$. Taki $a$ należy do $S$ lub $U$, czyli $b\in f[S]\cup f[U]$. Rozumowanie odwracalne dowodzi pierwszej równości. Jeśli $b\in f[S\cap U]$, istnieje $a\in S\cap U$ z $f(a)=b$, a więc $b$ należy do obu obrazów. To daje zawieranie.
+
+Dla każdego $a\in A$ zachodzi
+\[
+a\in f^{-1}[T\cap V]\iff f(a)\in T\cap V\iff (f(a)\in T\ \land\ f(a)\in V),
+\]
+co jest równoważne $a\in f^{-1}[T]\cap f^{-1}[V]$. Analogicznie zastąpienie spójnika $\land$ przez $\lor$ daje równość dla sumy. Ponadto $a\in f^{-1}[B\setminus T]$ wtedy i tylko wtedy, gdy $f(a)\notin T$, czyli $a\notin f^{-1}[T]$.
+
+Jeśli $f$ jest iniekcją i $b\in f[S]\cap f[U]$, istnieją $s\in S$, $u\in U$ z $f(s)=b=f(u)$. Iniekcja daje $s=u\in S\cap U$, stąd $b\in f[S\cap U]$. Dla różnicy: jeśli $b=f(s)$, $s\in S\setminus U$, to $b\notin f[U]$, bo $f(u)=f(s)$ wymuszałoby $u=s\in U$. Odwrotnie, jeśli $b\in f[S]\setminus f[U]$, wybieramy $s\in S$ z $f(s)=b$. Ponieważ $b\notin f[U]$, mamy $s\notin U$, a więc $b\in f[S\setminus U]$.
+\end{proof}
+\begin{przyklad}[Dlaczego obraz nie zachowuje przecięć]
+Niech $A=\{0,1\}$, $B=\{*\}$ i $f(0)=f(1)=*$. Dla $S=\{0\}$ i $U=\{1\}$ zachodzi $S\cap U=\varnothing$, więc $f[S\cap U]=\varnothing$, podczas gdy $f[S]\cap f[U]=\{*\}$. To samo pokazuje, że bez iniekcji nie można ogólnie oczekiwać zachowania różnic.
+\end{przyklad}
+
+
+\begin{twierdzenie}[Dokładny warunek zachowania przecięcia przez obraz]
+\label{thm:image-intersection-fibers-lxvi}
+Niech $f:A\to B$ i $S,U\subseteq A$. Wówczas
+$f[S\cap U]=f[S]\cap f[U]$ wtedy i tylko wtedy, gdy
+dla każdego $b\in B$ spełniającego
+$f^{-1}[\{b\}]\cap S\ne\varnothing$ oraz
+$f^{-1}[\{b\}]\cap U\ne\varnothing$ zachodzi
+$f^{-1}[\{b\}]\cap S\cap U\ne\varnothing$.
+Warunek ten dotyczy ustalonych $S,U$ i nie wymaga
+iniekcyjności całej funkcji.
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy $F_b=f^{-1}[\{b\}]$. Z definicji obrazu
+$b\in f[S]$ wtedy i tylko wtedy, gdy istnieje $s\in S$
+z $f(s)=b$, czyli $F_b\cap S\ne\varnothing$.
+Podobnie $b\in f[U]$ jest równoważne
+$F_b\cap U\ne\varnothing$, a $b\in f[S\cap U]$
+jest równoważne $F_b\cap S\cap U\ne\varnothing$.
+Zawsze $f[S\cap U]\subseteq f[S]\cap f[U]$.
+Zatem równość tych zbiorów zachodzi dokładnie wtedy,
+gdy każdy element prawej strony należy do lewej;
+po zastąpieniu przynależności otrzymanymi właśnie
+równoważnościami dostajemy warunek z tezy.
+Wszystkie świadki wybierane są osobno dla ustalonego $b$;
+nie używamy aksjomatu wyboru.
+\end{proof}
+\begin{przyklad}[Zachowanie przecięcia bez iniekcyjności]
+Niech $A=\{0,1,2\}$, $B=\{u,v\}$ oraz
+$f(0)=f(1)=u$, $f(2)=v$. Dla $S=\{0,2\}$ i
+$U=\{0,1\}$ mamy $S\cap U=\{0\}$,
+$f[S\cap U]=\{u\}$ oraz
+$f[S]\cap f[U]=\{u,v\}\cap\{u\}=\{u\}$.
+Funkcja nie jest iniekcją, a mimo to zachowuje to
+konkretne przecięcie. Natomiast dla $S'=\{0\}$ i
+$U'=\{1\}$ otrzymujemy $f[S'\cap U']=\varnothing$
+i $f[S']\cap f[U']=\{u\}$: włókno $F_u=\{0,1\}$
+spotyka oba zbiory, lecz nie ich przecięcie.
+\end{przyklad}
+
+\begin{twierdzenie}[Dowolne rodziny i ważny wyjątek pustej rodziny]
+\label{thm:images-arbitrary-families-xliv}
+Niech $f:A\to B$, $I$ będzie zbiorem indeksów,
+$(S_i)_{i\in I}$ rodziną podzbiorów $A$, a
+$(T_i)_{i\in I}$ rodziną podzbiorów $B$. Wówczas
+\begin{align*}
+ f\Big[\bigcup_{i\in I}S_i\Big]
+   &=\bigcup_{i\in I}f[S_i],\\
+ f^{-1}\Big[\bigcup_{i\in I}T_i\Big]
+   &=\bigcup_{i\in I}f^{-1}[T_i],\\
+ f^{-1}\Big[\bigcap_{i\in I}T_i\Big]
+   &=\bigcap_{i\in I}f^{-1}[T_i],\\
+ f\Big[\bigcap_{i\in I}S_i\Big]
+   &\subseteq\bigcap_{i\in I}f[S_i].
+\end{align*}
+Dla pustej rodziny podzbiorów $A$ przyjmujemy
+$\bigcap_{i\in\varnothing}S_i=A$, a dla pustej rodziny
+podzbiorów $B$: $\bigcap_{i\in\varnothing}T_i=B$.
+Jeśli $I\ne\varnothing$ i $f$ jest iniekcją, to ostatnie
+zawieranie jest równością. Jeśli $I=\varnothing$, ostatnia
+równość zachodzi dokładnie wtedy, gdy $f$ jest surjekcją.
+\end{twierdzenie}
+\begin{proof}
+(1) Element $b$ należy do obrazu sumy wtedy i tylko wtedy,
+gdy istnieją indeks $i\in I$ i $a\in S_i$ spełniające
+$f(a)=b$. Jest to równoważne istnieniu $i\in I$ z
+$b\in f[S_i]$, czyli przynależności do prawej strony.
+Działa to także dla $I=\varnothing$: obie strony są puste.
+
+(2) Element $a\in A$ należy do przeciwobrazu sumy wtedy
+i tylko wtedy, gdy $f(a)\in T_i$ dla pewnego $i\in I$.
+Jest to równoważne $a\in f^{-1}[T_i]$ dla pewnego $i$.
+
+(3) Analogicznie, $a$ należy do przeciwobrazu przecięcia
+wtedy i tylko wtedy, gdy $f(a)\in T_i$ dla \emph{każdego}
+$i\in I$, co jest równoważne przynależności do wszystkich
+$f^{-1}[T_i]$. Gdy $I$ jest pusty, oba warunki są
+prawdziwe dla każdego $a\in A$, ponieważ $f(a)\in B$;
+obie strony są więc równe $A$.
+
+(4) Jeżeli $b=f(a)$ dla pewnego $a$ należącego do
+wszystkich $S_i$, to dla każdego $i$ mamy $b\in f[S_i]$.
+Stąd zawieranie. Jeśli $I\ne\varnothing$, $f$ jest
+iniekcją i $b\in\bigcap_i f[S_i]$, to dla każdego $i$
+istnieje $a_i\in S_i$ z $f(a_i)=b$. Nie musimy jednocześnie
+wybierać wszystkich $a_i$: wybierzmy \emph{jeden} indeks
+$i_0\in I$ i jego świadka $a\in S_{i_0}$. Dla dowolnego
+$i\in I$ istnieje świadek $a_i\in S_i$; iniekcyjność
+daje $a_i=a$, więc $a\in S_i$. Zatem $a$ należy do
+wszystkich $S_i$ i $b\in f[\bigcap_i S_i]$.
+
+Jeśli natomiast $I=\varnothing$, lewa strona ostatniego
+zawierania jest $f[A]$, a prawa wynosi $B$. Ich równość
+jest równoważna surjekcyjności $f$.
+\end{proof}
+\begin{przyklad}[Pusta rodzina nie może zostać pominięta]
+Niech $A=\{1\}$, $B=\{u,v\}$ i $f(1)=u$.
+Funkcja jest iniekcją. Dla $I=\varnothing$ otrzymujemy
+$f[\bigcap_{i\in I}S_i]=f[A]=\{u\}$,
+natomiast $\bigcap_{i\in I}f[S_i]=B=\{u,v\}$.
+Zatem iniekcja \emph{nie wystarcza} do zachowania przecięcia
+pustej rodziny, mimo że zachowuje przecięcia wszystkich
+rodzin niepustych.
+\end{przyklad}
+
+\begin{twierdzenie}[Kiedy obraz zachowuje przecięcia i różnice?]
+\label{thm:image-injective-characterization-xliv}
+Dla funkcji $f:A\to B$ następujące trzy warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $f$ jest iniekcją;
+\item dla wszystkich $S,U\subseteq A$ mamy
+$f[S\cap U]=f[S]\cap f[U]$;
+\item dla wszystkich $S,U\subseteq A$ mamy
+$f[S\setminus U]=f[S]\setminus f[U]$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Implikacje (i)$\Rightarrow$(ii) oraz (i)$\Rightarrow$(iii)
+zostały udowodnione w Twierdzeniu~\ref{thm:image-laws}.
+Aby wykazać (ii)$\Rightarrow$(i), załóżmy $f(a)=f(a')$.
+Dla $S=\{a\}$ i $U=\{a'\}$ zbiór
+$f[S]\cap f[U]$ jest niepusty. Z (ii) wynika, że
+$S\cap U$ jest niepusty, ponieważ obraz pustego zbioru
+jest pusty. Stąd $a=a'$.
+Aby wykazać (iii)$\Rightarrow$(i), również załóżmy
+$f(a)=f(a')$. Gdyby $a\ne a'$, to dla
+$S=\{a\}$ i $U=\{a'\}$ mielibyśmy
+$f[S\setminus U]=\{f(a)\}$, a zarazem
+$f[S]\setminus f[U]=\varnothing$, co przeczy (iii).
+Zatem $a=a'$ i $f$ jest iniekcją.
+\end{proof}
+
+\begin{twierdzenie}[Zależność obrazu i przeciwobrazu]\label{thm:image-preimage-adjunction}
+Dla $f:A\to B$, $S\subseteq A$ i $T\subseteq B$ zachodzi
+\[
+f[S]\subseteq T\quad\Longleftrightarrow\quad S\subseteq f^{-1}[T].
+\]
+W szczególności $S\subseteq f^{-1}[f[S]]$ oraz $f[f^{-1}[T]]\subseteq T$. Pierwsze zawieranie jest równością dla wszystkich $S\subseteq A$ wtedy i tylko wtedy, gdy $f$ jest iniekcją; drugie zawieranie jest równością dla wszystkich $T\subseteq B$ wtedy i tylko wtedy, gdy $f$ jest surjekcją.
+\end{twierdzenie}
+\begin{proof}
+Warunek $f[S]\subseteq T$ oznacza: dla każdego $a\in S$ mamy $f(a)\in T$. Jest to dokładnie warunek $a\in f^{-1}[T]$ dla każdego $a\in S$, czyli $S\subseteq f^{-1}[T]$. Podstawienie $T=f[S]$ daje pierwsze zawieranie, a podstawienie $S=f^{-1}[T]$ drugie.
+
+Jeśli $f$ jest iniekcją i $a\in f^{-1}[f[S]]$, to $f(a)=f(s)$ dla pewnego $s\in S$, więc $a=s\in S$. Zatem zachodzi równość. Jeśli równość zachodzi dla każdego $S$, a $f(a)=f(a')$, to dla $S=\{a\}$ mamy $a'\in f^{-1}[f[S]]=S$, więc $a'=a$. Analogicznie, jeśli $f$ jest surjekcją, każdy $b\in T$ jest równy $f(a)$ dla pewnego $a$, który wtedy należy do $f^{-1}[T]$, więc $b\in f[f^{-1}[T]]$. Odwrotnie, stosując postulowaną równość do $T=B$, otrzymujemy $f[A]=B$, czyli surjekcję.
+\end{proof}
+
+\begin{twierdzenie}[Dokładne wzory na dwukrotne przechodzenie]
+\label{thm:image-preimage-exact-xliv}
+Niech $f:A\to B$, $S\subseteq A$ i $T\subseteq B$. Wtedy
+\[
+ f[f^{-1}[T]]=T\cap f[A],\qquad
+ f^{-1}[f[S]]=
+ \{a\in A:\exists s\in S\ \ f(a)=f(s)\}.
+\]
+Dla drugiej równości prawa strona jest sumą wszystkich włókien,
+które spotykają $S$. W szczególności jest to najmniejszy
+podzbiór $A$ będący sumą włókien $f$ i zawierający $S$.
+\end{twierdzenie}
+\begin{proof}
+Element $b\in B$ należy do $f[f^{-1}[T]]$ wtedy i tylko
+wtedy, gdy istnieje $a\in A$ spełniające $f(a)=b$ oraz
+$f(a)\in T$. Pierwsza część daje $b\in f[A]$, druga
+$b\in T$, zatem pierwsza równość wynika z ekstensjonalności.
+
+Element $a\in A$ należy do $f^{-1}[f[S]]$ wtedy i tylko
+wtedy, gdy $f(a)\in f[S]$, czyli istnieje $s\in S$ takie,
+że $f(s)=f(a)$. Jest to druga równość.
+Dla ostatniego stwierdzenia oznaczmy tę prawą stronę przez $C$.
+Każdy $s\in S$ należy do $C$ (możemy wziąć tego samego $s$
+jako świadka). Jeśli $a\in C$ i $f(a')=f(a)$, to ten sam
+świadek $s$ dowodzi $a'\in C$, więc $C$ jest sumą włókien.
+Jeśli $D\subseteq A$ jest dowolną sumą włókien zawierającą $S$,
+a $a\in C$, to istnieje $s\in S\subseteq D$ z $f(a)=f(s)$.
+Całe włókno zawierające $s$ leży w $D$, zatem $a\in D$.
+Dowodzi to minimalności $C$.
+\end{proof}
+\begin{przyklad}[Przeciwobraz obrazu jest zwykle większy]
+Dla $f:\R\to\R$, $f(x)=x^2$, weźmy $S=\{2\}$
+i $T=\{-1,1,4\}$. Wówczas $f[S]=\{4\}$, lecz
+$f^{-1}[f[S]]=\{-2,2\}$: do zbioru dochodzi argument $-2$
+o tej samej wartości funkcji. Ponadto $f^{-1}[T]=\{-2,-1,1,2\}$,
+zatem $f[f^{-1}[T]]=\{1,4\}=T\cap[0,\infty)$.
+Liczba $-1$ nie może należeć do obrazu funkcji kwadratowej.
+\end{przyklad}
+
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,every node/.style={font=\small},scale=1]
+  \draw[rounded corners,draw=gray!60] (-.7,-1.25) rectangle (.75,1.25);
+  \draw[rounded corners,draw=gray!60] (4.0,-1.25) rectangle (5.45,1.25);
+  \node at (0,1.52) {$A$}; \node at (4.72,1.52) {$B$};
+  \node (a) at (0,.75) {$-2$}; \node (b) at (0,-.1) {$2$};
+  \node (c) at (0,-.89) {$0$};
+  \node (d) at (4.72,.48) {$4$}; \node (e) at (4.72,-.75) {$0$};
+  \draw[->,blue!70!black] (a.east) -- (d.west);
+  \draw[->,blue!70!black] (b.east) -- (d.west);
+  \draw[->] (c.east) -- (e.west);
+  \node[anchor=north,align=center] at (2.37,-1.45)
+    {$S=\{2\}$,\quad$f[S]=\{4\}$,\\$f^{-1}[f[S]]=\{-2,2\}$};
+\end{tikzpicture}
+\caption{Przeciwobraz obrazu może zawierać więcej argumentów niż zbiór wyjściowy.}
+\label{fig:preimage-image-xliv}
+\end{figure}
+
+\section{Składanie funkcji i identyczność}
+\begin{definicja}[Złożenie]\label{def:composition}
+Dla funkcji $f:A\to B$ i $g:B\to C$ \emph{złożenie} $g\circ f:A\to C$ określamy przez $(g\circ f)(a)=g(f(a))$ dla $a\in A$.
+\end{definicja}
+\begin{twierdzenie}[Łączność i funkcje identycznościowe]\label{thm:composition-laws}
+Dla $f:A\to B$, $g:B\to C$, $h:C\to D$ zachodzi $h\circ(g\circ f)=(h\circ g)\circ f$, $f\circ\id_A=f$ i $\id_B\circ f=f$.
+\end{twierdzenie}
+\begin{proof}
+Dla każdego $a\in A$ obie strony pierwszej równości przyjmują wartość $h(g(f(a)))$. Funkcje mają tę samą dziedzinę i przeciwdziedzinę, a ich wartości są równe, więc są równe. Dla każdego $a\in A$ mamy $(f\circ\id_A)(a)=f(a)$ i $(\id_B\circ f)(a)=f(a)$, co dowodzi pozostałych równości.
+\end{proof}
+\begin{twierdzenie}[Iniekcja i surjekcja złożenia]\label{thm:composition-inj-surj}
+Niech $f:A\to B$, $g:B\to C$. Jeśli obie funkcje są iniekcjami, to $g\circ f$ jest iniekcją; jeśli obie są surjekcjami, to $g\circ f$ jest surjekcją. Ponadto jeśli $g\circ f$ jest iniekcją, to $f$ jest iniekcją, a jeśli $g\circ f$ jest surjekcją, to $g$ jest surjekcją.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $g(f(a))=g(f(a'))$, iniekcja $g$ daje $f(a)=f(a')$, a iniekcja $f$ daje $a=a'$. Jeśli $c\in C$, surjekcja $g$ daje $b\in B$ z $g(b)=c$, a surjekcja $f$ daje $a\in A$ z $f(a)=b$. Wtedy $(g\circ f)(a)=c$.
+
+Jeśli $g\circ f$ jest iniekcją i $f(a)=f(a')$, to $g(f(a))=g(f(a'))$, więc $a=a'$. Jeśli $g\circ f$ jest surjekcją i $c\in C$, istnieje $a\in A$ z $g(f(a))=c$; zatem $b=f(a)\in B$ jest przeciwobrazem $c$ przez $g$.
+\end{proof}
+\begin{przyklad}[Dlaczego odwrotne implikacje zawodzą]
+Niech $A=\{0\}$, $B=\{0,1\}$, $C=\{0\}$, $f(0)=0$ i $g(0)=g(1)=0$. Złożenie $g\circ f$ jest bijekcją, choć $f$ nie jest surjekcją, a $g$ nie jest iniekcją.
+\end{przyklad}
+
+\begin{twierdzenie}[Obraz złożenia]\label{thm:composition-image-xliv}
+Niech $f:A\to B$, $g:B\to C$, $S\subseteq A$. Wówczas
+$(g\circ f)[S]=g[f[S]]$.
+\end{twierdzenie}
+\begin{proof}
+Dla $c\in C$ przynależność $c\in(g\circ f)[S]$ oznacza,
+że istnieje $a\in S$ spełniające $g(f(a))=c$.
+Element $b=f(a)$ należy do $f[S]$ oraz spełnia $g(b)=c$,
+więc $c\in g[f[S]]$.
+Odwrotnie, jeśli $c\in g[f[S]]$, to istnieje $b\in f[S]$
+z $g(b)=c$. Z definicji obrazu istnieje $a\in S$ z $f(a)=b$.
+Wtedy $(g\circ f)(a)=g(f(a))=g(b)=c$, co daje pierwszą
+przynależność. Oba zawierania dowodzą równości.
+\end{proof}
+\begin{przyklad}[Obraz i przeciwobraz złożenia]
+Niech $A=\{-2,-1,0,1,2\}$, $B=\{0,1,4\}$,
+$C=\{0,1\}$, $f(x)=x^2$, $g(0)=g(4)=0$, $g(1)=1$.
+Dla $S=\{-2,-1\}$ mamy $f[S]=\{4,1\}$ i
+$g[f[S]]=\{0,1\}$; bezpośrednio $(g\circ f)(-2)=0$,
+$(g\circ f)(-1)=1$, zatem $(g\circ f)[S]=\{0,1\}$.
+Dla $T=\{1\}\subseteq C$ otrzymujemy
+$g^{-1}[T]=\{1\}$ oraz
+$f^{-1}[g^{-1}[T]]=\{-1,1\}$,
+co zgadza się z $(g\circ f)^{-1}[T]$.
+\end{przyklad}
+
+\begin{twierdzenie}[Przeciwobraz złożenia]\label{thm:composition-preimage}
+Jeżeli $f:A\to B$, $g:B\to C$ i $T\subseteq C$, to $(g\circ f)^{-1}[T]=f^{-1}[g^{-1}[T]]$.
+\end{twierdzenie}
+\begin{proof}
+Dla dowolnego $a\in A$ zachodzi $a\in(g\circ f)^{-1}[T]$ wtedy i tylko wtedy, gdy $g(f(a))\in T$, czyli $f(a)\in g^{-1}[T]$, co z kolei jest równoważne $a\in f^{-1}[g^{-1}[T]]$. Z ekstensjonalności otrzymujemy równość.
+\end{proof}
+
+\section{Zestawianie, sklejanie i iloczyn kartezjański funkcji}
+Samo składanie funkcji nie wyczerpuje naturalnych operacji. Często chcemy
+z dwóch funkcji o wspólnej dziedzinie zbudować jedną funkcję o wartościach
+w iloczynie kartezjańskim, skleić funkcje określone na różnych częściach
+zbioru albo połączyć niezależne funkcje działające na dwóch różnych osiach.
+
+\begin{definicja}[Zestawianie funkcji]\label{def:pairing-functions}
+Niech $f:A\to B$ i $g:A\to C$ będą funkcjami o tej samej dziedzinie.
+Oznaczenie $(f,g)$ rezerwujemy w tym podrozdziale dla funkcji
+zestawionej z $f$ i $g$. Gdy obie funkcje mają wspólną dziedzinę,
+możemy równocześnie obliczać ich wartości i zapisywać parę wyników.
+Nie chodzi o składanie funkcji: żadna funkcja nie jest tu stosowana po drugiej.
+Ich \emph{zestawieniem} nazywamy funkcję
+\[
+(f,g):A\to B\times C,
+\qquad
+(f,g)(a):=(f(a),g(a)).
+\]
+\end{definicja}
+
+\begin{twierdzenie}[Własność uniwersalna zestawienia]\label{thm:pairing-universal}
+Niech $f:A\to B$ i $g:A\to C$. Oznaczmy przez
+$\pi_B:B\times C\to B$ i $\pi_C:B\times C\to C$ rzuty,
+$\pi_B(b,c)=b$, $\pi_C(b,c)=c$. Wtedy
+\[
+\pi_B\circ(f,g)=f,
+\qquad
+\pi_C\circ(f,g)=g.
+\]
+Ponadto, jeżeli $h:A\to B\times C$ spełnia
+$\pi_B\circ h=f$ oraz $\pi_C\circ h=g$, to $h=(f,g)$.
+\end{twierdzenie}
+\begin{proof}
+Dla każdego $a\in A$ mamy
+\[
+(\pi_B\circ(f,g))(a)=\pi_B(f(a),g(a))=f(a)
+\]
+oraz analogicznie $(\pi_C\circ(f,g))(a)=g(a)$.
+Jeżeli $h$ ma tę samą własność, to dla każdego $a\in A$
+zapisać możemy $h(a)=(b_a,c_a)$ dla pewnych $b_a\in B$, $c_a\in C$.
+Z założeń wynika
+\[
+ b_a=\pi_B(h(a))=f(a),
+ \qquad
+ c_a=\pi_C(h(a))=g(a),
+\]
+a więc $h(a)=(f(a),g(a))=(f,g)(a)$. Zatem $h=(f,g)$.
+\end{proof}
+
+\begin{przyklad}
+Dla $f:\R\to\R$, $f(x)=x^2$, oraz $g:\R\to\R$, $g(x)=x+1$, zestawienie
+$(f,g):\R\to\R^2$ ma postać
+$x\mapsto(x^2,x+1)$. Nie należy go mylić z iloczynem funkcji w sensie
+mnożenia wartości ani z iloczynem kartezjańskim funkcji z Definicji~\ref{def:cartesian-product-functions}.
+\end{przyklad}
+
+\begin{definicja}[Sklejanie funkcji]\label{def:gluing-functions}
+Niech $A_1,A_2\subseteq X$, $f_1:A_1\to B$, $f_2:A_2\to B$.
+Mówimy, że funkcje \emph{zgadzają się na części wspólnej}, jeśli
+\[
+\forall x\in A_1\cap A_2\quad f_1(x)=f_2(x).
+\]
+Wtedy \emph{sklejeniem} $f_1$ i $f_2$ na $A_1\cup A_2$ nazywamy funkcję
+$h:A_1\cup A_2\to B$ daną wzorem
+\[
+ h(x)=\begin{cases}
+ f_1(x),&x\in A_1,\\
+ f_2(x),&x\in A_2.
+ \end{cases}
+\]
+\end{definicja}
+
+\begin{twierdzenie}[Kryterium sklejania]\label{thm:gluing-functions}
+Niech $X,B$ będą zbiorami, $A_1,A_2\subseteq X$, a
+$f_1:A_1\to B$ i $f_2:A_2\to B$ funkcjami.
+Sklejenie z Definicji~\ref{def:gluing-functions} jest dobrze określone wtedy i tylko wtedy,
+gdy $f_1$ i $f_2$ zgadzają się na $A_1\cap A_2$. W takim przypadku jest ono jedyną funkcją
+$h:A_1\cup A_2\to B$, której ograniczenia do $A_1$ i $A_2$ są równe odpowiednio $f_1$ i $f_2$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli istnieje funkcja $h$ o podanych ograniczeniach, to dla każdego $x\in A_1\cap A_2$
+mamy $f_1(x)=h(x)=f_2(x)$, więc zgodność na części wspólnej jest konieczna.
+Załóżmy odwrotnie, że $f_1$ i $f_2$ zgadzają się na $A_1\cap A_2$.
+Dla $x\in A_1\cup A_2$ chcemy zadać wartość $h(x)$ według wzoru z definicji.
+Jeżeli $x\in A_1\setminus A_2$ albo $x\in A_2\setminus A_1$, nie ma żadnej niejednoznaczności.
+Jeżeli zaś $x\in A_1\cap A_2$, oba wzory dają tę samą wartość z założenia, więc funkcja jest dobrze określona.
+Dla każdego $x\in A_1$ definicja $h$ daje $h(x)=f_1(x)$,
+a więc $h|_{A_1}=f_1$. Tak samo dla każdego $x\in A_2$
+mamy $h(x)=f_2(x)$, co daje $h|_{A_2}=f_2$.
+Równości te są zgodne również na przecięciu dziedzin,
+ponieważ założyliśmy $f_1(x)=f_2(x)$ dla takich $x$.
+Jeśli $k$ jest inną funkcją o tych samych ograniczeniach, to dla $x\in A_1\cup A_2$ mamy
+albo $x\in A_1$, skąd $k(x)=f_1(x)=h(x)$, albo $x\in A_2$, skąd $k(x)=f_2(x)=h(x)$.
+Zatem $k=h$.
+\end{proof}
+
+\begin{przyklad}[Sklejanie na półosiach]
+Funkcje $f_1:(-\infty,0]\to\R$, $f_1(x)=x^2$, oraz
+$f_2:[0,\infty)\to\R$, $f_2(x)=x^2$ zgadzają się w punkcie $0$,
+więc sklejają się do funkcji $h:\R\to\R$, $h(x)=x^2$.
+Natomiast funkcje $g_1:(-\infty,0]\to\R$, $g_1(x)=0$, oraz
+$g_2:[0,\infty)\to\R$, $g_2(x)=1$, nie sklejają się do funkcji
+na całej $\R$, bo na części wspólnej $\{0\}$
+przypisują różne wartości.
+\end{przyklad}
+
+
+\begin{twierdzenie}[Sklejanie dowolnej rodziny funkcji]
+\label{thm:gluing-family-xliv}
+Niech $I$ będzie zbiorem indeksów, $X,B$ zbiorami oraz
+$(A_i)_{i\in I}$ rodziną podzbiorów $X$. Dla każdego $i\in I$
+niech $f_i:A_i\to B$ będzie funkcją. Istnieje funkcja
+\[
+ h:\bigcup_{i\in I} A_i\longrightarrow B,
+ \qquad h|_{A_i}=f_i\quad(i\in I),
+\]
+wtedy i tylko wtedy, gdy dla wszystkich $i,j\in I$ oraz
+$x\in A_i\cap A_j$ mamy $f_i(x)=f_j(x)$.
+Wówczas $h$ jest jednoznaczna, a jej wykresem jest
+$\bigcup_{i\in I}G_{f_i}$. Dla $I=\varnothing$ jest to
+jedyna funkcja $\varnothing\to B$.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy, że $h$ istnieje. Jeśli $x\in A_i\cap A_j$,
+warunki ograniczenia dają $f_i(x)=h(x)=f_j(x)$,
+zatem zgodność jest konieczna.
+
+Odwrotnie, załóżmy zgodność na wszystkich częściach wspólnych.
+Rodzina wykresów $(G_{f_i})_{i\in I}$ jest rodziną zbiorów,
+więc jej suma $G=\bigcup_{i\in I}G_{f_i}$ jest zbiorem.
+Dla każdego $x\in\bigcup_i A_i$ istnieje indeks $i$
+z $x\in A_i$, stąd para $(x,f_i(x))\in G$ zapewnia istnienie
+wartości. Jeżeli $(x,b),(x,b')\in G$, to istnieją indeksy
+$i,j$ z $b=f_i(x)$ i $b'=f_j(x)$. Punkt $x$ należy
+wówczas do $A_i\cap A_j$, a więc $b=b'$ na mocy zgodności.
+Zatem $G$ jest wykresem funkcji $h$.
+Dla $x\in A_i$ definicja daje $h(x)=f_i(x)$,
+więc $h|_{A_i}=f_i$. Jeśli $k$ ma te same ograniczenia,
+to dla każdego $x$ wybieramy \emph{jeden} indeks $i$
+ze $x\in A_i$ i otrzymujemy $k(x)=f_i(x)=h(x)$.
+Nie dokonujemy jednoczesnego wyboru indeksu dla wszystkich $x$;
+sprawdzamy równość punktowo. Zatem $k=h$.
+Gdy $I=\varnothing$, dziedzina i suma wykresów są puste,
+a argument pozostaje poprawny.
+\end{proof}
+\begin{przyklad}[Trzy funkcje na nakładających się dziedzinach]
+Niech $A_1=\{1,2\}$, $A_2=\{2,3\}$, $A_3=\{3,4\}$,
+$B=\{0,1\}$. Ustalmy
+$f_1(1)=0$, $f_1(2)=1$,
+$f_2(2)=1$, $f_2(3)=0$,
+$f_3(3)=0$, $f_3(4)=1$.
+Na $A_1\cap A_2=\{2\}$ wartości wynoszą $1$,
+a na $A_2\cap A_3=\{3\}$ wynoszą $0$.
+Przecięcie $A_1\cap A_3$ jest puste, więc nie daje
+ograniczenia. Sklejona funkcja na $\{1,2,3,4\}$
+przyjmuje kolejno wartości $(0,1,0,1)$.
+Zmiana jedynie $f_3(3)$ na $1$ uniemożliwia sklejenie,
+ponieważ punktowi $3$ przypisano by dwie różne wartości.
+\end{przyklad}
+
+\begin{definicja}[Iloczyn kartezjański funkcji]\label{def:cartesian-product-functions}
+Niech $f:A\to B$ i $g:C\to D$. \emph{Iloczynem kartezjańskim funkcji}
+$f$ i $g$ nazywamy funkcję
+\[
+ f\times g:A\times C\to B\times D,
+ \qquad
+ (f\times g)(a,c):=(f(a),g(c)).
+\]
+\end{definicja}
+
+
+\begin{przyklad}[Zestawianie a iloczyn kartezjański]
+Weźmy $f:\R\to\R$, $f(x)=x+1$, oraz $g:\R\to\R$, $g(x)=2x$.
+Zestawienie $(f,g)$ przyjmuje \emph{jeden} argument i zwraca
+parę: $(f,g)(3)=(4,6)$. Iloczyn kartezjański $f\times g$
+przyjmuje natomiast \emph{parę} argumentów i zwraca parę:
+$(f\times g)(3,5)=(4,10)$.
+Dziedziny tych dwóch funkcji są różne: odpowiednio $\R$ i $\R^2$.
+Nie wolno więc utożsamiać tych konstrukcji.
+\end{przyklad}
+
+\begin{twierdzenie}[Podstawowe własności iloczynu funkcji]\label{thm:product-functions}
+Niech $f:A\to B$, $f_1:B\to E$, $g:C\to D$, $g_1:D\to F$.
+Wtedy
+\[
+ (f_1\times g_1)\circ(f\times g)=(f_1\circ f)\times(g_1\circ g).
+\]
+Jeżeli $f$ i $g$ są iniekcjami, to $f\times g$ jest iniekcją.
+Jeżeli $f$ i $g$ są surjekcjami, to $f\times g$ jest surjekcją.
+W szczególności iloczyn kartezjański bijekcji jest bijekcją.
+\end{twierdzenie}
+\begin{proof}
+Dla każdego $(a,c)\in A\times C$ mamy
+\[
+((f_1\times g_1)\circ(f\times g))(a,c)
+=(f_1\times g_1)(f(a),g(c))=(f_1(f(a)),g_1(g(c))),
+\]
+co jest dokładnie wartością funkcji $((f_1\circ f)\times(g_1\circ g))(a,c)$.
+To dowodzi pierwszej równości.
+
+Załóżmy teraz, że $f$ i $g$ są iniekcjami oraz
+$(f\times g)(a,c)=(f\times g)(a',c')$.
+Wtedy $(f(a),g(c))=(f(a'),g(c'))$, a zatem $f(a)=f(a')$ i $g(c)=g(c')$.
+Iniekcyjność daje $a=a'$ oraz $c=c'$, więc $(a,c)=(a',c')$.
+Jeśli zaś $f$ i $g$ są surjekcjami, to dla dowolnego $(b,d)\in B\times D$
+wybieramy $a\in A$ z $f(a)=b$ oraz $c\in C$ z $g(c)=d$.
+Wtedy $(f\times g)(a,c)=(b,d)$, więc $f\times g$ jest surjekcją.
+\end{proof}
+
+
+\begin{twierdzenie}[Kiedy iniekcyjność iloczynu daje iniekcyjność czynników?]
+\label{thm:product-converses-xliv}
+Niech $f:A\to B$ i $g:C\to D$ będą funkcjami.
+\begin{enumerate}[label=(\roman*)]
+\item Jeżeli $A\ne\varnothing$, $C\ne\varnothing$ i
+$f\times g$ jest iniekcją, to $f$ i $g$ są iniekcjami.
+\item Jeżeli $B\ne\varnothing$, $D\ne\varnothing$ i
+$f\times g$ jest surjekcją, to $f$ i $g$ są surjekcjami.
+\end{enumerate}
+Bez odpowiednich założeń o niepustości oba wnioski mogą być fałszywe.
+\end{twierdzenie}
+\begin{proof}
+(i) Ustalmy $c_0\in C$. Jeżeli $f(a)=f(a')$, to
+\[
+ (f\times g)(a,c_0)=(f(a),g(c_0))
+ =(f(a'),g(c_0))=(f\times g)(a',c_0).
+\]
+Iniekcja iloczynu daje $(a,c_0)=(a',c_0)$, czyli $a=a'$.
+Zatem $f$ jest iniekcją. Ustalając $a_0\in A$ i
+porównując $(f\times g)(a_0,c)$ z
+$(f\times g)(a_0,c')$, otrzymujemy analogicznie
+iniekcyjność $g$.
+
+(ii) Ustalmy $d_0\in D$. Dla dowolnego $b\in B$
+surjekcja $f\times g$ daje parę $(a,c)\in A\times C$
+taką, że $(f(a),g(c))=(b,d_0)$. W szczególności
+$f(a)=b$, więc $f$ jest surjekcją. Ustalając
+$b_0\in B$ i rozpatrując $(b_0,d)$ dla dowolnego
+$d\in D$, dostajemy surjekcyjność $g$.
+\end{proof}
+\begin{przyklad}[Puste czynniki iloczynu]
+Niech $f:\varnothing\to\{0\}$ będzie jedyną funkcją,
+a $g:\{0,1\}\to\{0\}$ będzie stała. Funkcja $g$
+nie jest iniekcją, ale $f\times g$ ma pustą dziedzinę,
+więc jest iniekcją. Z kolei dla
+$f:\varnothing\to\{0\}$ i $g:\varnothing\to\varnothing$
+iloczyn $f\times g:\varnothing\to\varnothing$ jest
+surjekcją, chociaż $f$ nią nie jest. Pustość czynnika
+powoduje, że iloczyn nie zachowuje informacji o czynniku.
+\end{przyklad}
+
+\section{Ograniczenia i przedłużenia}
+\begin{definicja}
+Jeśli $f:A\to B$ i $S\subseteq A$, to \emph{ograniczeniem} $f$ do $S$ nazywamy $f|_S:S\to B$, $f|_S(s)=f(s)$. Jeśli $A\subseteq D$ i $F:D\to B$ spełnia $F|_A=f$, nazywamy $F$ \emph{przedłużeniem} $f$.
+\end{definicja}
+\begin{przyklad}
+Funkcja $f:(0,\infty)\to\R$, $f(x)=1/x$, jest ograniczeniem funkcji $F:\R\setminus\{0\}\to\R$ o tym samym wzorze. Nie można jednak zadać wartości w punkcie $0$ przez ten sam wzór $1/x$, ponieważ wyrażenie $1/0$ nie jest określone. Istnieje za to przedłużenie w sensie teoriomnogościowym na całą $\R$: definiujemy $\widetilde F:\R\to\R$ przez $\widetilde F(x)=1/x$ dla $x\ne0$ i $\widetilde F(0)=0$. Rozróżniamy więc przedłużenie \emph{funkcji} od możliwości stosowania jednego wzoru w powiększonej dziedzinie.
+\end{przyklad}
+\begin{twierdzenie}[Przedłużenie na większą dziedzinę]\label{thm:extension-choice}
+Niech $A\subseteq D$ i $f:A\to B$. Jeżeli $D\setminus A=\varnothing$, to $f$ jest jedynym przedłużeniem na $D$. Jeżeli $D\setminus A\ne\varnothing$, to przedłużenie $D\to B$ istnieje wtedy i tylko wtedy, gdy $B\ne\varnothing$.
+\end{twierdzenie}
+\begin{proof}
+Gdy $D=A$, każde przedłużenie ma wszystkie wartości zadane przez $f$, więc jest równe $f$. Gdy $D\setminus A\ne\varnothing$ i istnieje przedłużenie $F$, wybieramy $d\in D\setminus A$, a wtedy $F(d)\in B$, zatem $B$ jest niepusty. Jeśli $B\ne\varnothing$, wybieramy \emph{jeden} element $b_0\in B$ i definiujemy $F(d)=f(d)$ dla $d\in A$ oraz $F(d)=b_0$ dla $d\in D\setminus A$. Funkcja jest określona jednoznacznie w każdym punkcie i przedłuża $f$. Nie jest tu potrzebny aksjomat wyboru: wybieramy jeden element z jednego niepustego zbioru.
+\end{proof}
+
+\begin{twierdzenie}[Ograniczenie i obrazy]\label{thm:restriction-images-xliv}
+Niech $f:A\to B$, $S\subseteq A$ i $T\subseteq B$.
+Dla ograniczenia $f|_S:S\to B$ zachodzi
+\[
+ (f|_S)[S]=f[S],\qquad
+ (f|_S)^{-1}[T]=S\cap f^{-1}[T].
+\]
+Jeśli $f$ jest iniekcją, to każde jego ograniczenie
+jest iniekcją. Surjekcyjność na $B$ nie musi się zachować.
+\end{twierdzenie}
+\begin{proof}
+Wartości funkcji $f|_S$ są dokładnie wartościami
+$f(s)$ dla $s\in S$, co daje pierwszą równość.
+Dla $s\in S$ zachodzi $s\in(f|_S)^{-1}[T]$
+wtedy i tylko wtedy, gdy $f(s)\in T$.
+Warunek ten jest równoważny $s\in S\cap f^{-1}[T]$,
+więc zbiory są równe. Jeśli $s,s'\in S$ i
+$f|_S(s)=f|_S(s')$, to $f(s)=f(s')$; iniekcja
+$f$ daje $s=s'$.
+\end{proof}
+\begin{przyklad}[Ograniczenie może zniszczyć surjekcję]
+Funkcja $f:\{1,2\}\to\{u,v\}$ określona przez
+$f(1)=u$, $f(2)=v$ jest bijekcją.
+Po ograniczeniu do $S=\{1\}$ obraz wynosi $\{u\}$,
+więc $f|_S:S\to\{u,v\}$ nie jest surjekcją,
+choć pozostaje iniekcją.
+\end{przyklad}
+
+\section{Funkcje na ilorazach i własność uniwersalna}
+\begin{twierdzenie}[Faktoryzacja przez iloraz]\label{thm:quotient-universal}
+Niech $\sim$ będzie relacją równoważności na $A$, $q:A\to A/{\sim}$ odwzorowaniem $q(a)=[a]$, a $f:A\to B$ funkcją. Następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $a\sim a'$ implikuje $f(a)=f(a')$ dla wszystkich $a,a'\in A$;
+\item istnieje funkcja $\bar f:A/{\sim}\to B$ taka, że $f=\bar f\circ q$.
+\end{enumerate}
+Jeśli $\bar f$ istnieje, jest jednoznaczna.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy (i). Dla każdej klasy $C\in A/{\sim}$ istnieje $a\in A$ z $C=[a]$. Definiujemy $\bar f(C)=f(a)$. Musimy wykazać, że definicja nie zależy od reprezentanta: jeżeli $C=[a']$, to $[a]=[a']$, skąd $a\sim a'$ na mocy Twierdzenia~\ref{thm:class-equality}. Z (i) otrzymujemy $f(a)=f(a')$. Zatem $\bar f$ jest funkcją, a dla każdego $a\in A$ mamy $(\bar f\circ q)(a)=\bar f([a])=f(a)$.
+
+Załóżmy (ii). Jeśli $a\sim a'$, to $[a]=[a']$, więc $f(a)=\bar f([a])=\bar f([a'])=f(a')$. Dla jednoznaczności niech $g$ także spełnia $f=g\circ q$. Dla dowolnej klasy $C=[a]$ zachodzi $g(C)=g(q(a))=f(a)=\bar f(C)$, więc $g=\bar f$.
+\end{proof}
+\begin{przyklad}[Reszty modulo $m$]
+Niech $m\in\N$, $m\ge2$, i niech $f:\Z\to\{0,\ldots,m-1\}$ przypisuje liczbie resztę z dzielenia przez $m$. Jeśli $a\equiv b\pmod m$, to $f(a)=f(b)$, więc istnieje dokładnie jedna funkcja $\bar f:\Z/{\equiv_m}\to\{0,\ldots,m-1\}$ taka, że $\bar f([a])=f(a)$. Jest ona bijekcją: każda reszta występuje, a różne klasy mają różne reszty.
+\end{przyklad}
+
+\begin{twierdzenie}[Iloraz przez równość wartości — wersja elementarna]
+\label{thm:first-isomorphism-functions-xliv}
+Niech $f:A\to B$ będzie dowolną funkcją. Określmy relację
+$\sim_f$ na $A$ wzorem
+\[
+ a\sim_f a'\quad\Longleftrightarrow\quad f(a)=f(a').
+\]
+Jest to relacja równoważności. Funkcja
+\[
+ \widetilde f:A/{\sim_f}\longrightarrow f[A],
+ \qquad \widetilde f([a])=f(a),
+\]
+jest dobrze określoną bijekcją. W szczególności
+$A/{\sim_f}$ i zbiór wartości $f$ mają tę samą moc,
+także gdy $A=\varnothing$.
+\end{twierdzenie}
+\begin{proof}
+(1) \emph{Relacja równoważności.} Dla każdego $a\in A$
+zachodzi $f(a)=f(a)$, więc $a\sim_f a$.
+Z $f(a)=f(a')$ wynika $f(a')=f(a)$, więc relacja jest
+symetryczna. Jeśli $f(a)=f(a')$ i $f(a')=f(a'')$,
+to $f(a)=f(a'')$, co daje przechodniość.
+
+(2) \emph{Dobrze określoność.} Każda klasa w ilorazie
+ma postać $[a]$ dla pewnego $a\in A$.
+Jeśli $[a]=[a']$, to $a\sim_f a'$ na mocy
+Twierdzenia~\ref{thm:class-equality}, a więc $f(a)=f(a')$.
+Zatem wynik nie zależy od reprezentanta klasy i należy do $f[A]$.
+
+(3) \emph{Iniekcyjność.} Jeśli
+$\widetilde f([a])=\widetilde f([a'])$, to
+$f(a)=f(a')$, czyli $a\sim_f a'$.
+Wobec tego $[a]=[a']$.
+
+(4) \emph{Surjekcyjność.} Dla każdego $b\in f[A]$
+istnieje $a\in A$ z $f(a)=b$. Zatem
+$\widetilde f([a])=b$.
+
+Gdy $A=\varnothing$, zarówno iloraz, jak i $f[A]$
+są puste, a jedyna funkcja między nimi jest bijekcją,
+więc również ten przypadek obejmuje teza.
+\end{proof}
+\begin{przyklad}[Iloraz funkcji o powtarzających się wartościach]
+Dla $A=\{-2,-1,0,1,2\}$ i $f:A\to\R$, $f(x)=x^2$,
+klasy relacji $\sim_f$ to $\{-2,2\}$, $\{-1,1\}$ i
+$\{0\}$. Zbiór wartości wynosi $f[A]=\{0,1,4\}$.
+Indukowana bijekcja przyporządkowuje tym klasom
+odpowiednio $4$, $1$ i $0$. To pokazuje, dlaczego
+odwzorowanie nieiniektywne może stać się bijekcją
+po utożsamieniu argumentów o tych samych wartościach.
+\end{przyklad}

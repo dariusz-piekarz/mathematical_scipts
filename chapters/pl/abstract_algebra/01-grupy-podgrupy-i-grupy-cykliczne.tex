@@ -1,0 +1,609 @@
+% AA-01 | Algebra abstrakcyjna | kanoniczny rozdzial: grupy
+% Zrodla i kontynuacja: TOP-02, BT-01. Zachowano oddzielnie wszystkie oryginalne moduly.
+\chapter{Grupy, podgrupy i grupy cykliczne}
+\label{aa:ch:grupy}
+
+\section{Dlaczego wprowadzamy grupy?}
+W arytmetyce dodajemy liczby całkowite, w geometrii składamy obroty,
+a w kombinatoryce składamy permutacje. Te działania są z pozoru różne,
+ale wszystkie pozwalają wykonywać kolejne operacje, nie troszcząc się
+o nawiasy, mają operację neutralną i pozwalają cofnąć każdą operację.
+\emph{Teoria grup} bada konsekwencje dokładnie tych własności, bez
+zakładania, że elementami grupy są liczby albo macierze.
+
+Przez $\mathbb N$ oznaczamy w tym rozdziale zbiór $\{0,1,2,\ldots\}$.
+Dla zbioru $X$ zapis $|X|$ oznacza liczbę jego elementów, jeśli jest skończony,
+a w ogólności jego moc. Funkcje składamy od prawej do lewej:
+$(f\circ g)(x)=f(g(x))$.
+
+\begin{definicja}[Działanie wewnętrzne, półgrupa i monoid]
+\label{aa:def:operacje}
+Niech $S$ będzie zbiorem. \emph{Działanie wewnętrzne} na $S$ to
+odwzorowanie $\star:S\times S\to S$. Para $(S,\star)$ jest
+\emph{półgrupą}, jeżeli $(x\star y)\star z=x\star(y\star z)$
+dla wszystkich $x,y,z\in S$. Jest \emph{monoidem}, gdy dodatkowo
+istnieje $e\in S$ takie, że $e\star x=x\star e=x$ dla każdego $x\in S$.
+\end{definicja}
+
+\begin{przyklad}[Gdzie kończy się monoid?]
+\label{aa:prz:monoidy}
+Zbiór $(\mathbb N,+)$ jest monoidem z elementem neutralnym $0$,
+lecz nie jest grupą: równanie $2+x=0$ nie ma rozwiązania w $\mathbb N$.
+Dla niepustego zbioru $X$ wszystkie funkcje $X\to X$ tworzą monoid
+ze składaniem, a elementem neutralnym jest $\operatorname{id}_X$.
+Funkcja stała na zbiorze co najmniej dwuelementowym nie posiada
+odwrotności względem składania: jej obraz ma jeden element,
+a obraz złożenia z dowolną funkcją nie może zawierać całego $X$.
+\end{przyklad}
+
+\begin{definicja}[Grupa]
+\label{aa:def:grupa}
+\emph{Grupą} nazywamy parę $(G,\cdot)$, gdzie $G$ jest zbiorem,
+$\cdot:G\times G\to G$ jest działaniem i zachodzą następujące warunki:
+\begin{enumerate}
+\item $(xy)z=x(yz)$ dla wszystkich $x,y,z\in G$ (łączność);
+\item istnieje $e\in G$ takie, że $ex=xe=x$ dla każdego $x\in G$
+(element neutralny);
+\item dla każdego $x\in G$ istnieje $y\in G$ takie, że $xy=yx=e$
+(element odwrotny).
+\end{enumerate}
+Grupa jest \emph{abelowa} (\emph{przemienna}), jeżeli ponadto $xy=yx$
+dla wszystkich $x,y\in G$. Jej \emph{rząd} to moc $|G|$;
+mówimy o grupie skończonej, gdy $|G|<\infty$.
+W grupie abelowej często stosujemy zapis addytywny $x+y$, $0$, $-x$.
+\end{definicja}
+
+\begin{lemat}[Jednoznaczność oraz podstawowe rachunki]
+\label{aa:lem:jedynka-odwrotnosc}
+Niech $G$ będzie grupą. Wówczas:
+\begin{enumerate}
+\item element neutralny jest jedyny i każdy $x\in G$ ma dokładnie
+jeden element odwrotny, oznaczany $x^{-1}$;
+\item dla $x,y\in G$ zachodzi $(xy)^{-1}=y^{-1}x^{-1}$ oraz
+$(x^{-1})^{-1}=x$;
+\item dla dowolnych $a,b,c\in G$ implikacje
+$ab=ac\Rightarrow b=c$ oraz $ba=ca\Rightarrow b=c$ są prawdziwe;
+\item równania $ax=b$ oraz $ya=b$ mają odpowiednio dokładnie jedno
+rozwiązanie $x=a^{-1}b$ oraz $y=ba^{-1}$.
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+Jeżeli $e$ i $f$ są neutralne, to z neutralności $e$ otrzymujemy
+$ef=f$, a z neutralności $f$ otrzymujemy $ef=e$. Zatem $e=f$.
+Jeśli $u$ i $v$ są odwrotnościami $x$, to
+$u=u(xv)=(ux)v=v$. Odwrotność jest więc jednoznaczna.
+
+Mamy $(xy)(y^{-1}x^{-1})=x(yy^{-1})x^{-1}=e$ oraz
+$(y^{-1}x^{-1})(xy)=y^{-1}(x^{-1}x)y=e$.
+Jednoznaczność odwrotności daje pierwszy wzór w (2).
+Ponieważ $xx^{-1}=x^{-1}x=e$, element $x$ jest odwrotnością
+$x^{-1}$, co daje drugi wzór.
+
+Jeżeli $ab=ac$, to mnożymy obie strony z lewej przez $a^{-1}$:
+$a^{-1}(ab)=a^{-1}(ac)$, więc po użyciu łączności $b=c$.
+Jeżeli $ba=ca$, to mnożymy obie strony z prawej przez $a^{-1}$:
+$(ba)a^{-1}=(ca)a^{-1}$, a więc $b=c$.
+Wreszcie $a(a^{-1}b)=b$ i $(ba^{-1})a=b$,
+a każde inne rozwiązanie odpowiedniego równania musi się z nim
+pokrywać na mocy wykazanej skracalności.
+\end{proof}
+
+\begin{uwaga}[Na co naprawdę pozwala łączność?]
+Zapis $abc$ nie wymaga nawiasów dzięki łączności, lecz zwykle
+$abc\ne acb$. Przestawienie czynników wymaga przemienności,
+której nie zakładamy. W szczególności $(ab)^{-1}$ ma odwróconą
+kolejność odwrotności. To rozróżnienie będzie kluczowe w grupach
+permutacji, w grupach macierzy i w grupach wolnych.
+\end{uwaga}
+
+\section{Potęgi, permutacje, macierze i symetrie}
+\begin{definicja}[Potęgi całkowite]
+Niech $G$ będzie grupą, a $g\in G$. Definiujemy $g^0=e$,
+$g^{n+1}=g^ng$ dla $n\ge0$ oraz $g^{-n}=(g^{-1})^n$
+dla $n>0$. W grupie addytywnej piszemy odpowiednio $ng$.
+\end{definicja}
+
+\begin{lemat}[Prawa działań na potęgach]
+\label{aa:lem:potegi}
+Niech $G$ będzie grupą. Dla każdego $g\in G$ i $m,n\in\mathbb Z$ zachodzą
+$g^{m+n}=g^mg^n$ oraz $(g^m)^n=g^{mn}$.
+Jeżeli $g,h\in G$ spełniają $gh=hg$, to $(gh)^n=g^nh^n$
+dla każdego $n\in\mathbb Z$.
+\end{lemat}
+\begin{proof}
+Najpierw indukcja po $n\ge0$ daje $g^{m+n}=g^mg^n$
+dla $m\ge0$. Dla $n>0$ elementy $g$ i $g^{-1}$ komutują, ponieważ
+$gg^{-1}=e=g^{-1}g$. Indukcja pokazuje zatem, że
+$g^n(g^{-1})^n=e=(g^{-1})^ng^n$; w szczególności
+$g^{-n}=(g^n)^{-1}$.
+Rozważmy teraz wszystkie znaki wykładników. Dla $a,b\ge0$
+możemy przepisać $g^ag^{-b}$ jako iloczyn $a$ czynników
+$g$ i $b$ czynników $g^{-1}$. Sąsiadujące pary $gg^{-1}$
+można usuwać. Jeśli $a\ge b$, pozostaje $g^{a-b}$;
+jeśli $a<b$, pozostaje $(g^{-1})^{b-a}=g^{a-b}$.
+Analogicznie $g^{-a}g^b=g^{b-a}$ (czynniki $g^{-1}g$
+też są równe $e$). Wreszcie
+$g^{-a}g^{-b}=(g^{-1})^{a+b}=g^{-(a+b)}$,
+bo dodatnie potęgi elementu $g^{-1}$ spełniają już
+udowodnione prawo. Łącznie obejmuje to wszystkie pary
+$m,n\in\mathbb Z$ i dowodzi $g^{m+n}=g^mg^n$. Dla $n\ge0$
+druga wynika przez indukcję z pierwszej:
+$(g^m)^{n+1}=g^{mn}g^m=g^{m(n+1)}$;
+dla $n=-q<0$, gdzie $q>0$, mamy
+$(g^m)^n=((g^m)^{-1})^q=(g^{-m})^q=g^{-mq}=g^{mn}$.
+Jeżeli $gh=hg$, to indukcja daje
+$(gh)^{n+1}=g^nh^ngh=g^{n+1}h^{n+1}$;
+ujemne potęgi uzyskujemy, odwracając równość i używając
+$(gh)^{-1}=g^{-1}h^{-1}$ (ostatnia równość wymaga przemienności).
+\end{proof}
+
+\begin{przyklad}[Grupy liczbowe]
+\label{aa:prz:liczbowe}
+$(\mathbb Z,+)$, $(\mathbb Q,+)$ i $(\mathbb R,+)$ są grupami
+abelowymi. Zbiór dodatnich liczb rzeczywistych $\mathbb R_{>0}$
+z mnożeniem także tworzy grupę; odwrotnością $t$ jest $1/t$.
+Natomiast $(\mathbb Z,\cdot)$ nie jest grupą, ponieważ $2$
+nie ma w $\mathbb Z$ odwrotności względem mnożenia.
+\end{przyklad}
+
+\begin{definicja}[Grupa permutacji]
+Dla zbioru $X$ oznaczamy przez $\operatorname{Sym}(X)$ grupę
+wszystkich bijekcji $X\to X$ ze składaniem. Dla $n\ge1$ i
+$X=\{1,\ldots,n\}$ używamy oznaczenia $S_n$.
+Dla liczby całkowitej $k\ge2$ i parami różnych $a_1,\ldots,a_k\in X$
+cykl $(a_1\,a_2\,\ldots\,a_k)$ wysyła $a_i$ na $a_{i+1}$
+(dla $i<k$), $a_k$ na $a_1$, a inne punkty pozostawia bez zmian.
+\end{definicja}
+
+\begin{przyklad}[Nieprzemienność w $S_3$]
+\label{aa:prz:s3}
+Niech $s=(1\,2)$ i $t=(2\,3)$. Wobec przyjętej konwencji
+składania najpierw wykonujemy permutację po prawej.
+Obliczenie $st$ daje $1\mapsto2$, $2\mapsto3$,
+$3\mapsto1$, czyli $st=(1\,2\,3)$. Natomiast
+$ts=(1\,3\,2)$, zatem $st\ne ts$.
+Wszystkie sześć elementów $S_3$ można wypisać jako
+$e,(1\,2),(1\,3),(2\,3),(1\,2\,3),(1\,3\,2)$.
+Widzimy wprost, że $|S_3|=6$ i grupa nie jest abelowa.
+\end{przyklad}
+
+\begin{definicja}[Znak permutacji i grupa alternująca]
+\label{aa:def:alternujaca}
+Niech $n\ge1$. Dla $\sigma\in S_n$ \emph{inwersją} nazywamy parę
+$(i,j)$ z $1\le i<j\le n$ i $\sigma(i)>\sigma(j)$.
+Liczbę inwersji oznaczamy $I(\sigma)$, a \emph{znak} permutacji
+definiujemy jako $\operatorname{sgn}(\sigma)=(-1)^{I(\sigma)}$.
+Permutacja jest \emph{parzysta}, jeżeli jej znak to $1$,
+a \emph{nieparzysta}, gdy jej znak to $-1$.
+Grupą \emph{alternującą} nazywamy
+$A_n=\{\sigma\in S_n:\operatorname{sgn}(\sigma)=1\}$.
+\end{definicja}
+
+\begin{lemat}[Znak iloczynu permutacji]
+\label{aa:lem:znak}
+Niech $n\ge1$. Dla $\sigma,\tau\in S_n$ mamy
+$\operatorname{sgn}(\sigma\tau)
+=\operatorname{sgn}(\sigma)\operatorname{sgn}(\tau)$.
+Zbiór $A_n$ jest podgrupą $S_n$. Jeśli $n\ge2$,
+to $|A_n|=n!/2$.
+\end{lemat}
+\begin{proof}
+Niech $s_i=(i\ i+1)$ oznacza transpozycję sąsiednich
+numerów. Pomnożenie permutacji $\sigma$ z prawej przez $s_i$
+zamienia w ciągu $\sigma(1),\ldots,\sigma(n)$ dwa sąsiednie
+wyrazy. Inwersja utworzona przez te wyrazy powstaje albo znika;
+liczba inwersji dotyczących trzeciego wyrazu pozostaje bez zmian,
+ponieważ oba zamieniane wyrazy stoją po tej samej stronie tego
+trzeciego wyrazu. Zatem liczba inwersji zmienia się dokładnie o $1$
+lub $-1$, a jej parzystość ulega odwróceniu. W szczególności
+$\operatorname{sgn}(\sigma s_i)=-\operatorname{sgn}(\sigma)$.
+
+Każdą permutację można otrzymać przez składanie transpozycji
+sąsiednich. Aby to zobaczyć, zaczynamy od dowolnego ciągu
+$\tau(1),\ldots,\tau(n)$ i zamieniamy sąsiednie wyrazy,
+które są w odwrotnej kolejności, aż ciąg stanie się rosnący.
+Jeżeli ciąg nie jest rosnący, istnieje w nim przynajmniej jedna
+para sąsiednich wyrazów w odwrotnej kolejności.
+Każdy taki krok zmniejsza liczbę inwersji dokładnie o $1$,
+więc procedura się kończy. Odwracając kolejne kroki,
+przedstawiamy $\tau$ jako iloczyn transpozycji sąsiednich.
+Jeżeli jest ich $m$, to $(-1)^m=\operatorname{sgn}(\tau)$,
+bo zaczynamy od permutacji identycznościowej, której znak to $1$.
+
+Przy składaniu $\sigma\tau$ możemy więc kolejno mnożyć
+$\sigma$ przez owe $m$ transpozycji. Znak zmienia się w każdym
+kroku, toteż
+$\operatorname{sgn}(\sigma\tau)
+=\operatorname{sgn}(\sigma)(-1)^m
+=\operatorname{sgn}(\sigma)\operatorname{sgn}(\tau)$.
+Ponadto każda transpozycja $(a\,b)$, gdzie $1\le a<b\le n$,
+ma dokładnie $2(b-a)-1$ inwersji: jedną parę $(a,b)$ oraz
+po dwie pary dla każdego z $b-a-1$ numerów pomiędzy $a$ i $b$.
+Jej znak wynosi więc $-1$, również gdy transponowane numery
+nie są sąsiednie.
+W szczególności iloczyn permutacji parzystych jest parzysty;
+ponadto z $\operatorname{sgn}(\sigma)\operatorname{sgn}(\sigma^{-1})=\operatorname{sgn}(e)=1$ wynika, że $\operatorname{sgn}(\sigma^{-1})=\operatorname{sgn}(\sigma)^{-1}$,
+więc również odwrotność permutacji parzystej jest parzysta.
+Identyczność ma znak $1$, zatem $A_n$ jest podgrupą.
+
+Dla $n\ge2$ ustalmy transpozycję $s=(1\ 2)$.
+Mnożenie z prawej przez $s$ jest bijekcją z $S_n$ na siebie,
+która zamienia znak permutacji. Daje więc bijekcję
+między permutacjami parzystymi i nieparzystymi.
+Ponieważ $|S_n|=n!$ (pierwszy obraz można wybrać na $n$
+sposobów, drugi na $n-1$, itd.), połowa elementów należy do $A_n$.
+\end{proof}
+
+\begin{przyklad}[Dwanaście elementów $A_4$]
+\label{aa:prz:a4-opis}
+W grupie $S_4$ mamy $24$ permutacje, więc
+$|A_4|=12$. Aby opisać je jawnie, zauważmy, że
+$3$-cykl jest iloczynem dwóch transpozycji, a iloczyn
+dwóch rozłącznych transpozycji także jest parzysty.
+Każdy cykl $(a\,b\,c)$ można zapisać jako
+$(a\,c)(a\,b)$, więc rzeczywiście jest parzysty.
+Takich $3$-cykli jest $4\cdot3\cdot2/3=8$:
+wybieramy trzy różne symbole i dzielimy przez trzy,
+ponieważ dokładnie trzy cykliczne przesunięcia zapisu
+$(a\,b\,c)$ oznaczają tę samą permutację.
+Iloczyny dwóch rozłącznych transpozycji to dokładnie
+$(1\,2)(3\,4)$, $(1\,3)(2\,4)$ i $(1\,4)(2\,3)$.
+Razem z identycznością daje to $1+8+3=12$ różnych
+permutacji parzystych, czyli całą grupę $A_4$.
+\end{przyklad}
+
+\begin{przyklad}[Grupy macierzowe]
+Niech $K$ będzie ciałem, a $n\ge1$.
+Macierze odwracalne stopnia $n$ nad $K$ tworzą grupę
+$\operatorname{GL}_n(K)$ z mnożeniem macierzy;
+macierz jednostkowa jest neutralna, a odwrotności istnieją
+z definicji. Dla każdego ciała $K$ i $n\ge2$ grupa ta nie jest abelowa.
+Istotnie, macierze
+$A=\begin{psmallmatrix}1&1\\0&1\end{psmallmatrix}$
+i $B=\begin{psmallmatrix}1&0\\1&1\end{psmallmatrix}$ mają wyznacznik $1$,
+a ich iloczyny wynoszą
+$AB=\begin{psmallmatrix}2&1\\1&1\end{psmallmatrix}$
+i $BA=\begin{psmallmatrix}1&1\\1&2\end{psmallmatrix}$.
+Nie są równe nad żadnym ciałem, ponieważ $2\ne1$ w $K$.
+Dla $n>2$ można do obu macierzy dołączyć blok jednostkowy
+stopnia $n-2$, otrzymując niekomutujące macierze w $\operatorname{GL}_n(K)$.
+Grupa $\operatorname{SL}_n(K)$
+składa się z macierzy o wyznaczniku $1$;
+ponieważ $\det(AB)=\det A\det B$ i
+$\det(A^{-1})=(\det A)^{-1}$, jest ona podgrupą $\operatorname{GL}_n(K)$.
+\end{przyklad}
+
+\begin{przyklad}[Symetrie kwadratu]
+\label{aa:prz:d4}
+Niech $r$ oznacza obrót kwadratu o $90^\circ$,
+a $s$ odbicie względem ustalonej osi symetrii przechodzącej
+przez środek. Mamy $r^4=e$, $s^2=e$ i $srs=r^{-1}$.
+Uzasadnijmy relację $srs=r^{-1}$. Oznaczmy kolejne wierzchołki
+przez $v_j=r^j(v_0)$, gdzie indeksy rozumiemy modulo $4$.
+Odbicie odwraca ich porządek cykliczny, zatem dla pewnego
+$c\in\{0,1,2,3\}$ zachodzi $s(v_j)=v_{c-j}$ dla każdego $j$.
+Wobec tego
+$(srs)(v_j)=s(r(v_{c-j}))=s(v_{c-j+1})=v_{j-1}=r^{-1}(v_j)$.
+Symetrie kwadratu są wyznaczone przez obrazy wierzchołków,
+więc $srs=r^{-1}$, a równoważnie $sr=r^{-1}s$.
+Stąd każde złożenie obrotów i odbić można przekształcić do
+postaci $r^j$ lub $r^js$, gdzie $0\le j<4$.
+Te osiem przekształceń jest różnych: cztery pierwsze zachowują
+orientację, a cztery pozostałe ją odwracają; w obrębie każdej
+czwórki różnią się obrazem wybranego wierzchołka.
+Każda symetria kwadratu jest wyznaczona przez obraz ustalonego
+wierzchołka (cztery możliwości) i obraz jednego z jego sąsiadów
+(dwie możliwości dla każdego wyboru), więc symetrii jest co
+najwyżej osiem. Otrzymujemy całą grupę symetrii kwadratu,
+czyli grupę dihedralną $D_4$ rzędu $8$.
+W szczególności $sr\ne rs$ (bo $r\ne r^{-1}$).
+\end{przyklad}
+
+\section{Podgrupy i generowanie}
+\begin{definicja}[Podgrupa]
+Niech $G$ będzie grupą. Podzbiór $H\subseteq G$ jest
+\emph{podgrupą}, co zapisujemy $H\le G$, jeżeli
+$H$ jest grupą z działaniem odziedziczonym z $G$.
+Podgrupę $H$ nazywamy \emph{właściwą}, gdy $H\ne G$.
+\end{definicja}
+
+\begin{twierdzenie}[Kryterium podgrupy]
+\label{aa:tw:kryterium-podgrupy}
+Niech $G$ będzie grupą, a $H\subseteq G$. Następujące
+warunki są równoważne:
+\begin{enumerate}
+\item $H$ jest podgrupą $G$;
+\item $H\ne\varnothing$ i dla każdych $x,y\in H$ zachodzi $xy^{-1}\in H$;
+\item $e\in H$ i $H$ jest zamknięte na mnożenie i branie odwrotności.
+\end{enumerate}
+Jeśli $H$ jest niepustym, skończonym podzbiorem $G$ zamkniętym na mnożenie,
+to $H$ także jest podgrupą.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $H$ jest podgrupą, to zawiera jej element neutralny.
+Neutralny element $H$ musi być równy $e$ w $G$:
+dla $h\in H$ mamy $e_Hh=h=eh$, więc skracalność w $G$
+daje $e_H=e$. Podobnie odwrotność elementu w $H$
+musi być jego odwrotnością w $G$. Stąd (1) implikuje (2).
+
+Załóżmy (2) i wybierzmy $h\in H$. Ponieważ $hh^{-1}=e$,
+mamy $e\in H$. Podstawiając $x=e$ i $y=h$ do (2),
+otrzymujemy $h^{-1}\in H$. Dla $x,y\in H$ wiemy już,
+że $y^{-1}\in H$, więc z (2) wynika $xy=x(y^{-1})^{-1}\in H$.
+To daje (3). Warunek (3) zapewnia wszystkie aksjomaty grupy
+na $H$ (łączność jest dziedziczona), czyli (1).
+
+Na koniec niech $H$ będzie skończony, niepusty i zamknięty
+na mnożenie. Dla ustalonego $h\in H$ wszystkie dodatnie
+potęgi $h,h^2,\ldots$ należą do $H$. Dwie z nich są równe,
+powiedzmy $h^i=h^j$ przy $1\le i<j$.
+Po pomnożeniu w $G$ przez $h^{-i}$ otrzymujemy $h^{j-i}=e$.
+Zatem $e\in H$ i $h^{-1}=h^{j-i-1}\in H$, gdzie
+przy $j-i=1$ wykładnik zero oznacza $e$.
+Ponieważ $h$ było dowolne, zachodzi (3).
+\end{proof}
+
+\begin{lemat}[Przecięcia podgrup]
+\label{aa:lem:przeciecia}
+Jeżeli $(H_i)_{i\in I}$ jest dowolną rodziną podgrup $G$,
+to $\bigcap_{i\in I}H_i$ jest podgrupą $G$.
+Dla $I=\varnothing$ przyjmujemy $\bigcap_{i\in I}H_i=G$.
+\end{lemat}
+\begin{proof}
+Każde $H_i$ zawiera $e$, więc przecięcie jest niepuste.
+Dla $x,y$ z przecięcia i każdego $i\in I$ mamy
+$x,y\in H_i$, a stąd $xy^{-1}\in H_i$.
+Zatem $xy^{-1}$ należy do przecięcia; stosujemy kryterium podgrupy.
+Dla rodziny pustej wynik jest z definicji równy $G$.
+\end{proof}
+
+\begin{definicja}[Podgrupa generowana przez zbiór]
+\label{aa:def:generatory}
+Niech $G$ będzie grupą, a $S\subseteq G$. Definiujemy $\langle S\rangle$ jako
+przecięcie wszystkich podgrup $G$ zawierających $S$.
+Jest to najmniejsza podgrupa zawierająca $S$.
+Dla $S=\{g_1,\ldots,g_k\}$, gdzie $k\ge1$, piszemy także
+$\langle g_1,\ldots,g_k\rangle$.
+\end{definicja}
+
+\begin{twierdzenie}[Opis elementów podgrupy generowanej]
+\label{aa:tw:slowa}
+Dla grupy $G$ i $S\subseteq G$ zbiór $\langle S\rangle$ składa się
+dokładnie ze wszystkich skończonych iloczynów
+$s_1^{\varepsilon_1}\cdots s_m^{\varepsilon_m}$,
+gdzie $m\ge0$, $s_i\in S$, $\varepsilon_i\in\{-1,1\}$,
+a iloczyn pusty ($m=0$) jest równy $e$.
+\end{twierdzenie}
+\begin{proof}
+Niech $W$ oznacza opisany zbiór iloczynów. Zawiera $e$
+i każdy element $s\in S$ (jako iloczyn długości jeden).
+Złączenie dwóch iloczynów daje iloczyn tego samego rodzaju.
+Odwrotność $s_1^{\varepsilon_1}\cdots s_m^{\varepsilon_m}$
+wynosi $s_m^{-\varepsilon_m}\cdots s_1^{-\varepsilon_1}$,
+więc także należy do $W$. Z kryterium podgrupy $W\le G$.
+Każda podgrupa zawierająca $S$ zawiera odwrotności jego
+elementów oraz wszystkie ich skończone iloczyny; zatem zawiera $W$.
+W szczególności $W$ jest zawarty we wszystkich podgrupach
+występujących w definicji $\langle S\rangle$, a sam jest jedną
+z nich. Stąd $W=\langle S\rangle$.
+\end{proof}
+
+\begin{przyklad}[Suma podgrup abelowych i iloczyn podgrup nieabelowych]
+W każdej grupie abelowej $(A,+)$ suma dwóch podgrup
+$H+K=\{h+k:h\in H,\ k\in K\}$ jest podgrupą:
+zawiera $0=0+0$, a różnica $(h+k)-(h' +k')$
+ma postać $(h-h')+(k-k')\in H+K$.
+W grupie addytywnej $\mathbb Z$ zbiory $2\mathbb Z$ i $3\mathbb Z$
+są podgrupami. Ich suma algebraiczna
+$2\mathbb Z+3\mathbb Z=\{2a+3b:a,b\in\mathbb Z\}$
+jest podgrupą i równa się $\mathbb Z$, ponieważ $1=-2+3$.
+W grupie nieabelowej iloczyn zbiorów $HK=\{hk:h\in H,k\in K\}$
+nie musi być podgrupą. W $S_3$ weźmy
+$H=\{e,(1\,2)\}$ oraz $K=\{e,(2\,3)\}$.
+Wtedy $HK=\{e,(1\,2),(2\,3),(1\,2\,3)\}$,
+a odwrotność $(1\,2\,3)$ to $(1\,3\,2)$, której nie ma w $HK$.
+Nie można więc bez sprawdzenia zamkniętości traktować $HK$ jak grupy.
+W przypadku grup nieabelowych pojęcie \emph{sumy podgrup}
+wymaga osobnej interpretacji: podstawową konstrukcją jest
+podgrupa $\langle H\cup K\rangle$, która zawsze istnieje,
+lecz nie musi być równa zbiorowi $HK$.
+\end{przyklad}
+
+\section{Grupy cykliczne i rząd elementu}
+\begin{definicja}[Podgrupa cykliczna i rząd elementu]
+\label{aa:def:rzad-elementu}
+Niech $G$ będzie grupą, a $g\in G$. Podgrupę $\langle g\rangle=\{g^n:n\in\mathbb Z\}$
+nazywamy \emph{cykliczną}. Jeżeli $\langle g\rangle=G$,
+mówimy, że $G$ jest cykliczna, a $g$ jest jej generatorem.
+\emph{Rzędem} $g$, oznaczanym $\operatorname{ord}(g)$,
+jest liczba elementów $\langle g\rangle$.
+\end{definicja}
+
+\begin{lemat}[Najmniejsza dodatnia potęga równa jedynce]
+\label{aa:lem:rzad-cykliczny}
+Niech $G$ będzie grupą, a $g\in G$.
+Jeżeli istnieje liczba całkowita $n\ge1$ z $g^n=e$, to zbiór dodatnich
+wykładników o tej własności ma najmniejszy element $d$,
+a wtedy dla wszystkich $m,a,b\in\mathbb Z$ zachodzą:
+\begin{enumerate}
+\item $g^m=e$ dokładnie wtedy, gdy $d\mid m$;
+\item $g^a=g^b$ dokładnie wtedy, gdy $a\equiv b\pmod d$;
+\item $\langle g\rangle=\{e,g,\ldots,g^{d-1}\}$ i
+$\operatorname{ord}(g)=d$.
+\end{enumerate}
+Jeżeli nie istnieje dodatnie $n$ z $g^n=e$, to wszystkie potęgi
+$g^m$, $m\in\mathbb Z$, są różne i $\operatorname{ord}(g)=\infty$.
+\end{lemat}
+\begin{proof}
+Niepusty zbiór dodatnich wykładników ma najmniejszy element $d$.
+Dla dowolnego $m\in\mathbb Z$ dzielimy $m$ z resztą:
+$m=qd+r$, $0\le r<d$. Ponieważ $g^d=e$, mamy
+$g^m=(g^d)^qg^r=g^r$. Gdyby $g^m=e$ i $r>0$,
+to $g^r=e$ przeczyłoby minimalności $d$.
+Zatem $r=0$, czyli $d\mid m$. Kierunek odwrotny jest jasny,
+bo $g^{qd}=e$. Równość $g^a=g^b$ po pomnożeniu przez $g^{-b}$
+jest równoważna $g^{a-b}=e$; zastosowanie (1) daje (2).
+Każda potęga równa się jednej z $d$ wymienionych w (3),
+a ich różność wynika z (2). W przypadku bez dodatniej
+potęgi równej $e$ równość dwóch różnych potęg dawałaby
+$g^{a-b}=e$; odwracając w razie potrzeby wykładnik,
+otrzymalibyśmy potęgę dodatnią równą $e$, sprzeczność.
+\end{proof}
+
+Przez \emph{izomorfizm grup} rozumiemy bijekcję między ich
+zbiorami elementów, która zachowuje odpowiednie działania.
+
+\begin{twierdzenie}[Klasyfikacja grup cyklicznych]
+\label{aa:tw:grupy-cykliczne}
+Każda grupa cykliczna $G=\langle g\rangle$ jest abelowa.
+Jeżeli $g$ ma rząd nieskończony, odwzorowanie
+$\mathbb Z\to G$, $n\mapsto g^n$, jest izomorfizmem
+(grupy $\mathbb Z$ rozumianej addytywnie).
+Jeżeli $g$ ma skończony rząd $d$, to wzór
+$[n]_d\mapsto g^n$ określa izomorfizm
+$\mathbb Z/d\mathbb Z\to G$, gdzie
+$[n]_d$ oznacza klasę reszt liczby $n$ modulo $d$.
+\end{twierdzenie}
+\begin{proof}
+Dla dowolnych $g^a,g^b\in G$ mamy
+$g^ag^b=g^{a+b}=g^{b+a}=g^bg^a$.
+Z własności potęg odwzorowanie $n\mapsto g^n$ zachowuje działanie,
+a z definicji generowania jest surjektywne. Przy rzędzie
+nieskończonym jest różnowartościowe, bo potęgi są różne.
+Przy rzędzie skończonym równość $g^a=g^b$ zachodzi dokładnie
+wtedy, gdy $d$ dzieli $a-b$, co jest równoważne równości klas
+$[a]_d=[b]_d$. To jednocześnie dowodzi, że wzór na klasach
+nie zależy od reprezentanta i jest różnowartościowy.
+Ponadto $g^{a+b}=g^ag^b$ zapewnia zachowanie dodawania klas
+w postaci mnożenia w $G$, a zatem odwzorowanie jest izomorfizmem.
+\end{proof}
+
+\begin{lemat}[Podgrupy $\mathbb Z$]
+\label{aa:lem:podgrupy-z}
+Każda podgrupa $H\le(\mathbb Z,+)$ ma postać $d\mathbb Z$
+dla dokładnie jednej liczby $d\in\mathbb N$.
+Gdy $H\ne\{0\}$, liczba $d$ jest najmniejszym dodatnim elementem $H$.
+\end{lemat}
+\begin{proof}
+Dla $H=\{0\}$ bierzemy $d=0$; tylko $d=0$ daje $d\mathbb Z=\{0\}$.
+Jeśli $H$ zawiera niezerową liczbę, to zawiera dodatnią
+(bo z $h\in H$ mamy $-h\in H$). Niech $d$ będzie najmniejszą
+dodatnią liczbą w $H$. Zamykanie podgrupy na dodawanie i
+przeciwne gwarantuje $d\mathbb Z\subseteq H$.
+Dla $h\in H$ dzielimy $h=qd+r$ z $0\le r<d$.
+Wtedy $r=h-qd\in H$. Minimalność $d$ daje $r=0$.
+Tak więc $h\in d\mathbb Z$ i $H=d\mathbb Z$.
+Jednoznaczność $d$ wynika z jego minimalności albo z $d=0$
+w przypadku trywialnym.
+\end{proof}
+
+\begin{twierdzenie}[Wszystkie podgrupy grupy cyklicznej]
+\label{aa:tw:podgrupy-cykliczne}
+Każda podgrupa grupy cyklicznej jest cykliczna.
+Dokładniej, jeśli $G=\langle g\rangle$ ma rząd $n<\infty$,
+to dla każdego dodatniego dzielnika $d$ liczby $n$ istnieje
+dokładnie jedna podgrupa rzędu $d$, mianowicie
+$\langle g^{n/d}\rangle$; innych podgrup nie ma.
+\end{twierdzenie}
+\begin{proof}
+Niech $\pi:\mathbb Z\to G$ będzie odwzorowaniem
+$\pi(m)=g^m$. Dla podgrupy $H\le G$ zbiór
+$\pi^{-1}(H)$ jest podgrupą $\mathbb Z$:
+zawiera $0$, ponieważ $g^0=e\in H$, a jeżeli
+$a,b\in\pi^{-1}(H)$, to $g^{a-b}=g^a(g^b)^{-1}\in H$,
+więc $a-b\in\pi^{-1}(H)$.
+Z poprzedniego lematu $\pi^{-1}(H)=k\mathbb Z$ dla pewnego $k\ge0$.
+Ponieważ $\pi$ jest surjektywne i $H$ jest podgrupą $G$,
+otrzymujemy $H=\pi(\pi^{-1}(H))
+=\{g^{kj}:j\in\mathbb Z\}=\langle g^k\rangle$.
+To dowodzi pierwszego zdania również przy nieskończonym rzędzie.
+
+Przy $|G|=n$ zbiór $\pi^{-1}(H)$ zawiera $n\mathbb Z$,
+bo $g^n=e\in H$. Zatem $k\ne0$ i $k$ dzieli $n$:
+rzeczywiście $n\in k\mathbb Z$.
+Wtedy $\langle g^k\rangle$ zawiera dokładnie
+$n/k$ elementów $e,g^k,\ldots,g^{(n/k-1)k}$,
+ponieważ dla $0\le i<j<n/k$ równość $g^{ik}=g^{jk}$
+prowadziłaby do $n\mid(j-i)k$, czyli $n/k\mid(j-i)$,
+co jest niemożliwe przy $0<j-i<n/k$. Ponadto
+$(g^k)^{n/k}=g^n=e$, więc dalsze potęgi się powtarzają.
+Jeżeli $|H|=d$, to $k=n/d$, co daje podany wzór i jednoznaczność.
+Odwrotnie, każdy dzielnik $d\mid n$ prowadzi do takiej podgrupy.
+\end{proof}
+
+% Ten lemat musi poprzedzać pierwsze użycie tożsamości Bézouta.
+\begin{lemat}[Tożsamość Bézouta]
+\label{aa:lem:bezout}
+Dla liczb całkowitych $a,b$, z których przynajmniej jedna
+jest niezerowa, istnieją $u,v\in\mathbb Z$ takie, że
+$ua+vb=\gcd(a,b)$.
+\end{lemat}
+\begin{proof}
+Rozważmy zbiór $I=\{ua+vb:u,v\in\mathbb Z\}$.
+Zawiera liczbę dodatnią: jeśli $a\ne0$, to $|a|\in I$,
+a w przeciwnym razie $|b|\in I$. Niech $d$ będzie najmniejszą
+dodatnią liczbą w $I$. Z definicji istnieją $u,v$ z $d=ua+vb$.
+Dzieląc $a$ przez $d$ otrzymujemy $a=qd+r$, gdzie $0\le r<d$.
+Ponieważ $a,d\in I$ oraz $I$ jest zamknięty na odejmowanie,
+mamy $r=a-qd\in I$. Minimalność $d$ wymusza $r=0$,
+więc $d\mid a$. Analogicznie $d\mid b$.
+Każdy wspólny dodatni dzielnik $c$ liczb $a,b$ dzieli też
+$ua+vb=d$, więc $c\le d$. Ponieważ $d$ samo jest
+wspólnym dodatnim dzielnikiem, jest największym z nich,
+czyli $d=\gcd(a,b)$.
+\end{proof}
+
+\begin{twierdzenie}[Rząd potęgi i generatory]
+\label{aa:tw:rzad-potegi}
+Niech $G$ będzie grupą i $g\in G$. Jeśli $\operatorname{ord}(g)=n<\infty$ i $k\in\mathbb Z$,
+to $\operatorname{ord}(g^k)=n/\gcd(n,k)$,
+przy konwencji $\gcd(n,0)=n$. W szczególności $g^k$ generuje
+$\langle g\rangle$ wtedy i tylko wtedy, gdy $\gcd(n,k)=1$.
+\end{twierdzenie}
+\begin{proof}
+Niech $d=\gcd(n,k)$; zapiszmy $n=dn'$ i $k=dk'$,
+gdzie $\gcd(n',k')=1$. Dla dodatniego $m$ warunek
+$(g^k)^m=e$ jest równoważny $n\mid km$, czyli $n'\mid k'm$.
+Ponieważ $n'$ i $k'$ są względnie pierwsze, to
+$n'\mid k'm$ dokładnie wtedy, gdy $n'\mid m$.
+Dla jasności: z tożsamości Bézouta $un'+vk'=1$
+po pomnożeniu przez $m$ wynika
+$m=un'm+vk'm$, więc podzielność $n'\mid k'm$
+pociąga $n'\mid m$. Najmniejszym dodatnim $m$ jest więc $n'$.
+Podgrupa $\langle g^k\rangle$ jest zawarta w $\langle g\rangle$.
+Ponieważ obie są skończone, zachodzi $\langle g^k\rangle=\langle g\rangle$
+dokładnie wtedy, gdy ich rzędy są równe, czyli gdy $n'=n$,
+a więc $d=1$.
+\end{proof}
+
+\begin{przyklad}[Wszystkie podgrupy i generatory $\mathbb Z/12\mathbb Z$]
+\label{aa:prz:z12}
+Grupa addytywna $\mathbb Z/12\mathbb Z$ jest cykliczna,
+generowana przez $[1]$. Jej podgrupy odpowiadają dodatnim dzielnikom
+$1,2,3,4,6,12$ liczby $12$:
+$\{[0]\}$, $\langle[6]\rangle$,
+$\langle[4]\rangle$, $\langle[3]\rangle$,
+$\langle[2]\rangle$ i cała grupa.
+Podgrupa $\langle[4]\rangle=\{[0],[4],[8]\}$ ma rząd $3$.
+Rząd $[8]$ wynosi $12/\gcd(12,8)=3$.
+Generatory całej grupy to $[1],[5],[7],[11]$,
+bo dokładnie te klasy mają reprezentantów względnie pierwszych z $12$.
+\end{przyklad}
+
+\begin{uwaga}[Granica wnioskowania]
+Wiemy już, że rząd grupy cyklicznej wyznacza możliwe rzędy jej
+podgrup. W dowolnej grupie skończonej, niekoniecznie cyklicznej,
+twierdzenie Lagrange'a daje warunek konieczny:
+rząd podgrupy dzieli rząd grupy. Nie każdy dzielnik
+rzędu grupy musi być rzędem jakiejś podgrupy; na przykład
+grupa $A_4$ rzędu $12$ nie ma podgrupy rzędu $6$
+(udowodnimy to po wprowadzeniu grup ilorazowych).
+\end{uwaga}
+
+\section{Podsumowanie zależności pojęć}
+Poznane przykłady pokazują trzy różne sytuacje: struktura może
+nie mieć odwrotności (monoid), mieć odwrotności, lecz nie być
+przemienna ($S_3$ i $D_4$), lub być przemienną grupą cykliczną.
+W następnym rozdziale zbadamy klasy elementów względem podgrupy.
+Z ich rozkładu wynika twierdzenie Lagrange'a, a z niego
+klasyczne twierdzenia arytmetyczne Eulera i Fermata.

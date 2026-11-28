@@ -1,0 +1,58 @@
+name: Functional analysis - chapter 26 audit
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/functional_analysis/26-*.tex'
+      - 'tools/tests/test_functional_analysis_ch26.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-ch26:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check chapter 26 Banach geometry regressions
+        run: python3 tools/tests/test_functional_analysis_ch26.py
+      - name: Prepare chapter context from the current AF inventory
+        id: context
+        run: python3 tools/prepare_functional_analysis_context.py 26
+      - name: Compile chapter 26 with complete 01-26 reference context
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: functional_analysis_ch26_context_ci.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Verify PDF, chapter heading, mathematical content and cross-references
+        run: |
+          if ! command -v pdfinfo >/dev/null || ! command -v pdftotext >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq poppler-utils
+          fi
+          test -s books/pl/functional_analysis_ch26_context_ci.pdf
+          test -s books/pl/functional_analysis_ch26_context_ci.log
+          if grep -E 'Undefined control sequence|There were undefined references|LaTeX Warning: (Reference|Citation).*undefined|Overfull \\hbox|Missing character' books/pl/functional_analysis_ch26_context_ci.log; then
+            echo 'Chapter 26 LaTeX diagnostics failed.'
+            exit 1
+          fi
+          pdfinfo books/pl/functional_analysis_ch26_context_ci.pdf
+          pdftotext -layout books/pl/functional_analysis_ch26_context_ci.pdf books/pl/functional_analysis_ch26_context_ci.txt
+          grep -q 'Geometria przestrzeni Banacha' books/pl/functional_analysis_ch26_context_ci.txt
+          grep -q 'Kanoniczne zanurzenie' books/pl/functional_analysis_ch26_context_ci.txt
+          grep -q 'Własność Schura' books/pl/functional_analysis_ch26_context_ci.txt
+      - name: Upload PDF and diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: functional-analysis-ch26-pdf
+          path: |
+            books/pl/functional_analysis_ch26_context_ci.pdf
+            books/pl/functional_analysis_ch26_context_ci.log
+            books/pl/functional_analysis_ch26_context_ci.txt
+          if-no-files-found: warn

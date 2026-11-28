@@ -1,0 +1,57 @@
+name: Mathematical analysis I validation
+on:
+  push:
+    paths:
+      - 'books/pl/mathematical_analysis_i.tex'
+      - 'chapters/pl/mathematical_analysis_i/**'
+      - 'tests/mathematical/mathematical_analysis_i/**'
+      - 'tools/tests/test_am1_36_*.py'
+      - '.github/workflows/mathematical_analysis_i.yml'
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+    paths:
+      - 'books/pl/mathematical_analysis_i.tex'
+      - 'chapters/pl/mathematical_analysis_i/**'
+      - 'tests/mathematical/mathematical_analysis_i/**'
+      - 'tools/tests/test_am1_36_*.py'
+      - '.github/workflows/mathematical_analysis_i.yml'
+  workflow_dispatch:
+# Coalesce superseded pending automatic runs, but let running audits finish.
+# Keep push/PR refs separate; manual runs retain their own independent group.
+concurrency:
+  group: atlas-am1-${{ (github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.draft && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'biblioteka-matematyczna-iteracja-6')) && format('isolated-{0}', github.run_id) || format('{0}-{1}', github.event_name, github.ref) }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    # The long-lived draft PR is already covered by scoped push checks.
+    # Run full PR validation again when it becomes ready for review.
+    if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.draft && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'biblioteka-matematyczna-iteracja-6') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regression tests
+        run: |
+          set -e
+          for chapter in tests/mathematical/mathematical_analysis_i/chapter-*; do
+            python3 -m unittest discover -s "$chapter" -p 'test_*.py' -v
+          done
+      - name: Chapter 36 regression tests
+        run: python3 -m unittest discover -s tools/tests -p 'test_am1_36_*.py' -v
+      - name: Install LaTeX
+        run: sudo apt-get update && sudo apt-get install -y texlive-latex-extra texlive-lang-polish lmodern
+      - name: Compile book
+        working-directory: books/pl
+        run: |
+          # At least two passes; allow the table of contents and references to settle.
+          for pass in 1 2 3 4 5; do
+            pdflatex -interaction=nonstopmode -halt-on-error mathematical_analysis_i.tex
+            if [ "$pass" -ge 2 ] && ! grep -Eq 'Label\(s\) may have changed|Rerun to get cross-references right|Rerun to get outlines right|There were undefined references' mathematical_analysis_i.log; then
+              break
+            fi
+          done
+          if grep -E 'There were undefined references|There were multiply-defined labels|LaTeX Warning: Reference .* undefined|destination with the same identifier|Label\(s\) may have changed|Rerun to get cross-references right|Rerun to get outlines right' mathematical_analysis_i.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mathematical-analysis-i
+          path: books/pl/mathematical_analysis_i.pdf

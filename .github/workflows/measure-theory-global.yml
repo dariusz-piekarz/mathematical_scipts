@@ -1,0 +1,79 @@
+name: Measure theory global regression gate
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/measure_theory/**"
+      - "books/pl/measure_theory.tex"
+      - "tools/tests/test_measure_theory*.py"
+      - "tools/test_measure_theory*.py"
+      - "tools/measure_theory_pdf_preflight.py"
+      - ".github/workflows/measure-theory-global.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: measure-theory-global-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run all persistent measure theory regression suites
+        run: python -m unittest discover -s tools/tests -p 'test_measure_theory*.py' -v
+      - name: Run earlier chapter standalone source and finite-model regressions
+        run: |
+          set -euo pipefail
+          for suite in tools/test_measure_theory*.py; do
+            case "$suite" in
+              *pdf_layout.py) echo "PDF-dependent suite: $suite (separate PDF gate)"; continue ;;
+            esac
+            echo "Running $suite"
+            python "$suite"
+          done
+
+  pdf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Polish LaTeX and PDF tools
+        run: |
+          sudo apt-get -o Acquire::Retries=3 update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=3 install -y --no-install-recommends latexmk lmodern texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-lang-polish poppler-utils
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PDF preflight dependency
+        run: python -m pip install PyMuPDF==1.26.7
+      - name: Compile complete book and report diagnostics
+        working-directory: books/pl
+        run: |
+          latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex
+          pdfinfo measure_theory.pdf
+          python - <<'PY'
+          from pathlib import Path
+          s=Path("measure_theory.log").read_text(errors="replace")
+          for term in ("Token not allowed in a PDF string", "Underfull", "Overfull", "Infinite glue shrinkage", "undefined references", "multiply defined"):
+              print(f"{term}: {s.count(term)}")
+          assert "Overfull" not in s
+          assert "undefined references" not in s
+          assert "multiply defined" not in s
+          PY
+      - name: Verify all rendered index entries and PDF destinations
+        run: python tools/measure_theory_pdf_preflight.py books/pl/measure_theory.pdf
+      - name: Archive complete PDF and compilation log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: measure-theory-global-pdf
+          if-no-files-found: warn
+          path: |
+            books/pl/measure_theory.pdf
+            books/pl/measure_theory.log

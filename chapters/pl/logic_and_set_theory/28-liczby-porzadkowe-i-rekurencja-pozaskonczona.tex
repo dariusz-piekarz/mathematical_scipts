@@ -1,0 +1,547 @@
+\chapter{Liczby porządkowe i rekurencja pozaskończona}\label{ch:ordinals}
+\chaptermark{Liczby porządkowe i rekurencja pozaskończona}
+
+\section{Od dobrych porządków do obiektów kanonicznych}
+Dwa dobrze uporządkowane zbiory mogą być izomorficzne, mimo że mają różne elementy. Chcemy reprezentować ich typy porządkowe konkretnymi zbiorami. W tym rozdziale pracujemy w ZF, o ile nie wskazano inaczej; przy konstrukcji liczb kardynalnych jako najmniejszych ordynałów danej mocy korzystamy z AC.
+\begin{definicja}[Zbiór przechodni i liczba porządkowa]\label{def:ordinal}
+Zbiór $X$ jest \emph{przechodni}, jeżeli $y\in x\in X$ implikuje $y\in X$. \emph{Liczbą porządkową} (ordynałem) nazywamy zbiór przechodni $\alpha$, na którym relacja $\in$ jest ścisłym dobrym porządkiem: jest przechodnia, dowolne dwa różne elementy są porównywalne i każdy niepusty podzbiór ma element najmniejszy względem $\in$.
+\end{definicja}
+\begin{przyklad}[Pierwsze ordynały]
+$0=\varnothing$, $1=\{0\}$, $2=\{0,1\}$, $3=\{0,1,2\}$ są ordynałami. Również $\omega$, skonstruowane w Twierdzeniu~\ref{thm:zf-omega},
+jest ordynałem: jego elementy to skończone ordynały von Neumanna.
+Lemat~\ref{lem:zf-vn-successor} dowodzi przechodniości $\omega$,
+a Twierdzenie~\ref{thm:zf-wellordered-omega} wraz
+z Lematem~\ref{lem:zf-initial-segments} pokazuje,
+że relacja $\in$ dobrze porządkuje $\omega$. Ordynał $\omega+1=\omega\cup\{\omega\}$ ma element największy, podczas gdy $\omega$ go nie ma. Dlatego te dwa porządki nie są izomorficzne, choć ich zbiory są równoliczne.
+\end{przyklad}
+\begin{lemat}[Elementy ordynału i odcinki początkowe]\label{lem:ordinal-segments}
+Jeżeli $\alpha$ jest ordynałem i $\beta\in\alpha$, to $\beta$ jest ordynałem oraz $\beta=\{\gamma\in\alpha:\gamma\in\beta\}$. Każdy właściwy odcinek początkowy $\alpha$ ma postać $\beta$ dla dokładnie jednego $\beta\in\alpha$.
+\end{lemat}
+\begin{proof}
+Ponieważ $\alpha$ jest przechodni, $\beta\subseteq\alpha$. Dla $\gamma\in\beta$ i $\delta\in\gamma$ przechodniość $\in$ na $\alpha$ daje $\delta\in\beta$; zatem $\beta$ jest przechodni. Ograniczenie dobrego porządku $\in$ z $\alpha$ do $\beta$ pozostaje dobrym porządkiem, więc $\beta$ jest ordynałem. Równość zbiorów wynika z $\beta\subseteq\alpha$. Jeśli $I$ jest właściwym odcinkiem początkowym, zbiór $\alpha\setminus I$ ma najmniejszy element $\beta$; wtedy $I=\{\gamma\in\alpha:\gamma\in\beta\}=\beta$. Jednoznaczność wynika z antysymetrii porządku liniowego.
+\end{proof}
+\begin{twierdzenie}[Porównanie ordynałów]\label{thm:ordinal-trichotomy}
+Dla dowolnych ordynałów $\alpha,\beta$ zachodzi dokładnie jedna z relacji $\alpha\in\beta$, $\alpha=\beta$, $\beta\in\alpha$.
+\end{twierdzenie}
+\begin{proof}
+Lemat~\ref{lem:choice-wellorder-comparison} porównuje dobre porządki $(\alpha,\in)$ i $(\beta,\in)$. Pokażemy najpierw, że izomorfizm $f$ ordynału $\alpha$ na odcinek początkowy ordynału $\beta$ musi być identycznością. Gdyby nie, weźmy najmniejsze $\gamma\in\alpha$ z $f(\gamma)\ne\gamma$. Dla każdego $\delta\in\gamma$ mamy $f(\delta)=\delta$, a izomorfizm przenosi zbiór poprzedników $\gamma$ na zbiór poprzedników $f(\gamma)$. Z Lematu~\ref{lem:ordinal-segments} otrzymujemy $\gamma=f(\gamma)$, sprzeczność. Izomorficzne ordynały są więc równe, a izomorfizm z właściwym odcinkiem daje odpowiednio $\alpha\in\beta$ lub $\beta\in\alpha$. Rozłączność wynika z asymetrii $\in$ na ordynałach i aksjomatu ufundowania.
+\end{proof}
+\begin{wniosek}[Następnik i supremum ordynałów]\label{cor:ordinal-sup}
+Dla ordynału $\alpha$ zbiór $\alpha+1:=\alpha\cup\{\alpha\}$ jest ordynałem i jest najmniejszym ordynałem większym od $\alpha$. Dla każdego zbioru $S$ ordynałów jego suma $\sup S:=\bigcup S$ jest ordynałem i najmniejszym wspólnym ograniczeniem górnym w porządku $\le$, gdzie $\alpha\le\beta$ oznacza $\alpha\subseteq\beta$.
+\end{wniosek}
+\begin{proof}
+\emph{Krok 1: zagnieżdżenie i suma.}
+Lemat~\ref{lem:ordinal-segments}
+i Twierdzenie~\ref{thm:ordinal-trichotomy}
+dają dla dowolnych ordynałów
+$\alpha,\beta$ zawieranie
+$\alpha\subseteq\beta$ lub
+$\beta\subseteq\alpha$.
+Połóżmy $\gamma:=\bigcup S$.
+Jeśli $x\in y\in\gamma$, to
+dla pewnego $\delta\in S$
+mamy $y\in\delta$; stąd
+$x\in\delta\subseteq\gamma$.
+Zatem $\gamma$ jest przechodni.
+Dla różnych $x,y\in\gamma$
+istnieją $\delta,\varepsilon\in S$
+z $x\in\delta$, $y\in\varepsilon$.
+Zagnieżdżenie tych dwóch ordynałów
+daje wspólny ordynał zawierający
+$x,y$, gdzie porównuje je relacja $\in$.
+Relacja $\in$ na $\gamma$
+jest więc ścisłym porządkiem liniowym.
+
+\emph{Krok 2: dobry porządek.}
+Jeśli $X\subseteq\gamma$ jest niepusty,
+ustalmy $x\in X$ i $\delta\in S$
+z $x\in\delta$. Niepusty zbiór
+$X\cap\delta$ ma najmniejszy
+element $m$, gdyż $\delta$ jest
+dobrze uporządkowany.
+Jeżeli $y\in X$ i $y\in m$,
+to $m\in\delta$ i przechodniość
+$\delta$ dają $y\in X\cap\delta$,
+wbrew minimalności $m$.
+Zatem $m$ jest najmniejszym
+elementem całego $X$.
+Dla $S=\varnothing$ mamy
+$\gamma=\varnothing$, również ordynał.
+
+\emph{Krok 3: supremum.}
+Z definicji sumy zbiorów
+każde $\delta\in S$ zawiera się
+w $\gamma$, a każdy ordynał
+zawierający wszystkie $\delta\in S$
+zawiera także $\gamma$.
+To dowodzi $\gamma=\sup S$.
+
+\emph{Krok 4: następnik.}
+Zbiór $\alpha+1:=\alpha\cup\{\alpha\}$
+jest przechodni: jeśli
+$y\in x\in\alpha+1$, to
+albo $x\in\alpha$ i $y\in\alpha$
+przez przechodniość $\alpha$,
+albo $x=\alpha$ i także
+$y\in\alpha$.
+Relacja $\in$ porządkuje liniowo
+$\alpha+1$: elementy $\alpha$
+są porównywalne i wszystkie
+poprzedzają $\alpha$.
+Niepusty podzbiór przecinający
+$\alpha$ ma minimum w $\alpha$,
+a jedyny niepusty podzbiór
+nieprzecinający $\alpha$ to
+$\{\alpha\}$.
+Zatem $\alpha+1$ jest ordynałem.
+Jeśli $\alpha<\eta$ dla ordynału
+$\eta$, to $\alpha\in\eta$,
+a z przechodniości $\eta$
+wynika $\alpha+1\subseteq\eta$.
+Nie ma więc ordynału
+ściśle pomiędzy $\alpha$ i $\alpha+1$.
+\end{proof}
+\begin{definicja}[Ordynały graniczne]\label{def:ordinal-limit}
+Ordynał $\lambda$ jest \emph{graniczny}, jeśli $\lambda\ne0$ i nie jest następnikiem żadnego ordynału. Wtedy $\lambda=\sup\{\beta:\beta<\lambda\}$. Przykładem jest $\omega$, podczas gdy $\omega+1$ jest następnikiem.
+\end{definicja}
+
+
+\begin{lemat}[Ordynały graniczne jako sumy poprzedników]
+\label{lem:ordinal-limit-union}
+Jeżeli $\lambda$ jest niezerowym ordynałem granicznym, to
+$\lambda=\bigcup_{\beta<\lambda}\beta$.
+Jeżeli $\lambda=\gamma+1$ jest następnikiem, to
+$\bigcup_{\beta<\lambda}\beta=\gamma$.
+\end{lemat}
+\begin{proof}
+Każdy $\beta\in\lambda$ jest podzbiorem $\lambda$
+na mocy Lematu~\ref{lem:ordinal-segments},
+zatem $U:=\bigcup_{\beta<\lambda}\beta\subseteq\lambda$.
+Załóżmy, że $\lambda$ jest graniczny i
+istnieje $x\in\lambda\setminus U$.
+Gdyby istniał $y\in\lambda$ z $x\in y$,
+to $x\in y\subseteq U$, sprzeczność.
+Zatem $x$ jest największym elementem
+dobrze uporządkowanego $\lambda$
+(właściwa liniowość relacji $\in$ wynika
+z definicji ordynału).
+Każdy $y\in\lambda$ jest więc równy $x$
+lub należy do $x$, skąd
+$\lambda=x\cup\{x\}=x+1$,
+wbrew założeniu graniczności.
+Stąd $\lambda=U$.
+
+Jeżeli $\lambda=\gamma+1$, każdy $\beta\in\lambda$
+należy do $\gamma$ lub jest równy $\gamma$,
+a więc $\beta\subseteq\gamma$.
+Z drugiej strony $\gamma\in\lambda$,
+więc $U=\gamma$.
+\end{proof}
+\begin{przyklad}[Pusta suma i pierwszy ordynał graniczny]
+\label{ex:ordinal-suprema}
+Dla pustego zbioru ordynałów
+$\sup\varnothing=\bigcup\varnothing=0$.
+Dla $S=\{1,3\}$ otrzymujemy $\sup S=3$,
+ponieważ $1\subseteq3$ i $1\cup3=3$.
+Ponadto $\sup\{n:n<\omega\}=\omega$:
+dla każdego $m\in\omega$ istnieje
+następnik $m+1\in\omega$ zawierający $m$.
+Natomiast
+$\sup\{\beta:\beta<\omega+1\}=\omega$,
+a nie $\omega+1$, zgodnie z lematem.
+\end{przyklad}
+
+\section{Indukcja pozaskończona}
+\begin{twierdzenie}[Zasada indukcji pozaskończonej]\label{thm:ordinal-induction}
+Niech $\alpha$ będzie ordynałem, a $P(\beta)$
+formułą języka ZF z ustalonymi parametrami
+i zmienną wolną $\beta$, rozważaną dla $\beta<\alpha$. Jeśli dla każdego $\beta<\alpha$ z założenia $P(\gamma)$ dla wszystkich $\gamma<\beta$ wynika $P(\beta)$, to $P(\beta)$ zachodzi dla wszystkich $\beta<\alpha$.
+\end{twierdzenie}
+\begin{proof}
+Gdyby istniał kontrprzykład, zbiór
+$E=\{\beta\in\alpha:\neg P(\beta)\}$
+istniałby przez separację i byłby niepusty. Niech $\beta$ będzie jego najmniejszym elementem. Wszystkie $\gamma<\beta$ spełniają $P$, a założenie kroku daje $P(\beta)$, sprzeczność.
+\end{proof}
+\begin{uwaga}[Trzy przypadki w praktyce]
+Wygodnie rozdziela się dowód na przypadek $0$, następnik $\beta+1$ i ordynał graniczny $\lambda$. Nie są to trzy niezależne aksjomaty: stanowią sposób sprawdzenia jednego warunku indukcji z poprzedniego twierdzenia.
+\end{uwaga}
+
+\section{Rekurencja pozaskończona}
+\begin{twierdzenie}[Rekurencja na ustalonym ordynale]\label{thm:ordinal-recursion}
+Niech $\alpha$ będzie ordynałem, a $F$ operacją klasową zdefiniowaną formułą teorii mnogości z ustalonymi parametrami, która każdej funkcji $g$ o dziedzinie będącej ordynałem $\beta<\alpha$ przypisuje dokładnie jeden zbiór $F(g)$. Wówczas istnieje dokładnie jedna funkcja $h$ o dziedzinie $\alpha$, dla której
+\[
+\forall\beta<\alpha\quad h(\beta)=F(h|_\beta).
+\]
+W dowodzie korzystamy ze schematu zastępowania; nie potrzeba aksjomatu wyboru.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: przybliżenia i ich zgodność.}
+Poprawnym przybliżeniem długości
+$\beta\le\alpha$ nazywamy funkcję
+$g$ o dziedzinie $\beta$ taką, że
+$g(\gamma)=F(g|_\gamma)$ dla każdego $\gamma<\beta$.
+Jest to własność wyrażalna formułą
+języka ZF z ustalonymi parametrami.
+Jeśli dwa przybliżenia $g,k$
+różniłyby się na wspólnej dziedzinie,
+istniałby najmniejszy punkt $\gamma$ różnicy.
+Wtedy $g|_\gamma=k|_\gamma$, więc
+\[
+g(\gamma)=F(g|_\gamma)=F(k|_\gamma)=k(\gamma),
+\]
+sprzeczność.
+Dla danej dziedziny istnieje co najwyżej
+jedno przybliżenie.
+
+\emph{Krok 2: indukcyjne istnienie.}
+Stosujemy indukcję pozaskończoną
+do ordynału $\alpha+1$, aby uwzględnić
+wszystkie $\beta\le\alpha$.
+Dla $\beta=0$ funkcja pusta jest przybliżeniem.
+Jeśli $\beta=\delta+1\le\alpha$,
+to z hipotezy indukcyjnej mamy
+jednoznaczne przybliżenie $g$
+o dziedzinie $\delta$.
+Ponieważ $\delta<\alpha$,
+operacja $F(g)$ jest określona
+i jest zbiorem.
+Funkcja $g\cup\{(\delta,F(g))\}$
+jest poprawnym przybliżeniem długości $\beta$.
+
+Niech $\beta\le\alpha$ będzie
+niezerowym ordynałem granicznym.
+Dla każdego $\delta<\beta$
+istnieje dokładnie jedno
+przybliżenie $g_\delta$ długości $\delta$.
+Ponieważ jest to przyporządkowanie
+jednoznacznie definiowalne formułą,
+schemat zastępowania daje zbiór
+$\mathcal G=\{g_\delta:\delta<\beta\}$.
+Poprzedni krok pokazuje zgodność
+przybliżeń, więc $g:=\bigcup\mathcal G$
+jest funkcją.
+Na mocy Lematu~\ref{lem:ordinal-limit-union}
+jej dziedzina jest równa
+$\bigcup_{\delta<\beta}\delta=\beta$.
+Dla $\gamma<\beta$ mamy
+$\gamma+1<\beta$ (gdyż $\beta$ jest graniczny),
+zatem $g|_{\gamma+1}=g_{\gamma+1}$.
+Poprawność tego przybliżenia
+daje $g(\gamma)=F(g|_\gamma)$.
+Wobec tego $g$ jest poprawne
+na całej dziedzinie $\beta$.
+
+\emph{Krok 3: zakończenie.}
+Indukcja daje poprawne przybliżenie
+$h$ długości $\alpha$.
+Spełnia ono wymagane równanie,
+a zgodność dowolnych poprawnych
+przybliżeń daje jego jednoznaczność.
+Ani w etapie następnikowym, ani granicznym
+nie dokonuje się nieskończonego
+wyboru spośród wielu dopuszczalnych wartości.
+\end{proof}
+\begin{przyklad}[Dodawanie ordynałów]\label{ex:ordinal-addition}
+Dla ustalonego ordynału $\alpha$ definiujemy
+\emph{sumę porządkową} rekurencyjnie
+po drugim argumencie:
+\[
+\alpha+0:=\alpha,\qquad
+\alpha+(\beta+1):=(\alpha+\beta)+1,
+\]
+a dla niezerowego ordynału granicznego $\lambda$:
+\[
+\alpha+\lambda:=\sup_{\beta<\lambda}(\alpha+\beta).
+\]
+Symbol $+1$ po prawej oznacza następnik ordynału
+z Wniosku~\ref{cor:ordinal-sup}.
+Są to trzy przypadki jednoznacznej operacji
+na dotychczas wyliczonych wartościach.
+Dla dowolnego ustalonego ordynału $\theta$
+Twierdzenie~\ref{thm:ordinal-recursion}
+konstruuje funkcję $\beta\mapsto\alpha+\beta$
+na $\beta<\theta$:
+operację klasową na \emph{wszystkich}
+funkcjach o dziedzinie $\beta$
+można zdefiniować tą samą regułą,
+a w przypadku niewłaściwych wartości
+zwracać umownie $0$.
+Indukcja zapewnia, że na konstruowanej funkcji
+wszystkie wartości są ordynałami.
+Jeśli $\theta<\theta'$, obie konstrukcje
+zgadzają się na wspólnej dziedzinie
+przez jednoznaczność rekurencji.
+
+Dla każdego $n\in\omega$ indukcja
+daje $1+n=n+1$:
+dla $n=0$ mamy $1+0=1$,
+a z $1+n=n+1$ otrzymujemy
+$1+(n+1)=(n+1)+1$.
+Wobec tego
+\[
+1+\omega=\sup_{n<\omega}(1+n)
+=\sup_{n<\omega}(n+1)=\omega.
+\]
+Natomiast $\omega+1>\omega$
+z definicji następnika.
+Dodawanie ordynałów nie jest więc przemienne.
+\end{przyklad}
+
+
+\begin{przyklad}[Hierarchia von Neumanna]
+\label{ex:ordinal-vn-hierarchy}
+Niech $\alpha$ będzie ordynałem z $4\le\alpha$.
+Definiujemy rekurencyjnie $V_\beta$ dla $\beta<\alpha$:
+$V_0:=\varnothing$,
+$V_{\delta+1}:=\mathcal P(V_\delta)$
+wtedy, gdy $\delta+1<\alpha$,
+oraz $V_\lambda:=\bigcup_{\beta<\lambda}V_\beta$
+dla niezerowych ordynałów granicznych $\lambda<\alpha$.
+Warunki na indeksy gwarantują, że
+każdy symbol po lewej stronie oznacza
+poziom należący do rozważanej rodziny.
+Twierdzenie~\ref{thm:ordinal-recursion}
+gwarantuje istnienie funkcji
+$\beta\mapsto V_\beta$ na ustalonym zbiorze
+indeksów $\alpha$.
+W każdym kroku otrzymujemy jednoznacznie zbiór,
+więc nie używamy aksjomatu wyboru.
+W szczególności
+$V_1=\{\varnothing\}$,
+$V_2=\{\varnothing,\{\varnothing\}\}$,
+a $V_3=\mathcal P(V_2)$ ma cztery elementy.
+W ZF nie zakładamy istnienia jednego zbioru
+zawierającego poziomy $V_\beta$ dla
+\emph{wszystkich} ordynałów $\beta$.
+\end{przyklad}
+
+\section{Mnożenie ordynałów i różnica względem arytmetyki mocy}
+
+\begin{definicja}[Iloczyn porządkowy ordynałów]
+\label{def:ordinal-multiplication}
+Dla dowolnych ordynałów $\alpha,\beta$
+iloczyn porządkowy $\alpha\cdot\beta$
+definiujemy rekurencyjnie po $\beta$:
+\[
+\alpha\cdot0:=0,\qquad
+\alpha\cdot(\beta+1):=(\alpha\cdot\beta)+\alpha,
+\]
+a dla niezerowego ordynału granicznego $\lambda$:
+\[
+\alpha\cdot\lambda:=\sup_{\beta<\lambda}
+(\alpha\cdot\beta).
+\]
+Wzór zawiera dodawanie \emph{ordynałów}
+z Przykładu~\ref{ex:ordinal-addition},
+a nie dodawanie mocy.
+Na każdym ustalonym odcinku ordynałów
+istnienie i jednoznaczność funkcji
+$\beta\mapsto\alpha\cdot\beta$
+wynikają z Twierdzenia~\ref{thm:ordinal-recursion}.
+Aby zastosować twierdzenie dokładnie w jego postaci,
+dla niepoprawnych przybliżeń (np. z wartościami
+niebędącymi ordynałami) definiujemy wartość
+pomocniczej operacji klasowej jako $0$.
+Na właściwych przybliżeniach rekurencja
+stosuje wypisane powyżej równania
+i indukcja zachowuje przynależność do ordynałów.
+Dzięki jednoznaczności wynik nie zależy
+od wybranego odcinka indeksów.
+\end{definicja}
+\begin{przyklad}[Nieprzemienność mnożenia ordynałów]
+\label{ex:ordinal-mul-noncommutative}
+Dla każdego $n\in\omega$ rekurencja
+daje $2\cdot n=2n$ w arytmetyce
+skończonych ordynałów, zatem
+$2\cdot\omega=\sup_{n<\omega}2n=\omega$.
+Natomiast
+$\omega\cdot2=(\omega\cdot1)+\omega
+=\omega+\omega>\omega$.
+Istotnie, $\omega+1$ należy do rodziny
+$\{\omega+n:n<\omega\}$,
+której supremum wynosi $\omega+\omega$,
+więc $\omega+\omega\ge\omega+1>\omega$.
+Odpowiada to ustawieniu drugiej kopii
+porządku $\omega$ po wszystkich punktach pierwszej.
+Wobec tego $2\cdot\omega\ne\omega\cdot2$,
+chociaż oba ordynały mają moc $\aleph_0$.
+W arytmetyce mocy
+$2\cdot\aleph_0=\aleph_0\cdot2=\aleph_0$
+(Twierdzenie~\ref{thm:card-n2}).
+\end{przyklad}
+
+\section{Liczby kardynalne jako ordynały początkowe}
+\begin{definicja}[Ordynał początkowy]\label{def:initial-ordinal}
+Ordynał $\kappa$ jest \emph{początkowy}, jeżeli żaden ordynał $\beta<\kappa$ nie jest z nim równoliczny. W ZFC \emph{liczbą kardynalną} zbioru $A$ nazywamy najmniejszy ordynał równoliczny z $A$ i oznaczamy $|A|$.
+\end{definicja}
+\begin{twierdzenie}[Istnienie reprezentanta kardynalnego]\label{thm:initial-exists}
+Przy założeniu ZFC każdy zbiór $A$ jest równoliczny z dokładnie jednym ordynałem początkowym.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: dobry porządek na $A$.}
+Na mocy Twierdzenia~\ref{thm:choice-wellorder}
+istnieje dobry porządek $\prec$ na $A$.
+Jest to jedyne miejsce w konstrukcji,
+w którym wykorzystujemy AC.
+Dalszy argument działa dla dowolnego ustalonego
+zbioru dobrze uporządkowanego $(W,\prec)$ w ZF.
+
+\emph{Krok 2: rekursja wzdłuż ustalonego dobrego porządku.}
+Dla $w\in W$ oznaczmy
+$W_{<w}:=\{v\in W:v\prec w\}$ oraz
+$W_{\le w}:=W_{<w}\cup\{w\}$.
+Chcemy skonstruować funkcję $r$ na $W$
+spełniającą
+\[
+r(w)=\{r(v):v\prec w\}.
+\tag{$*$}
+\]
+Poprawnym $w$-przybliżeniem nazwijmy funkcję
+$f$ o dziedzinie $W_{\le w}$,
+która dla każdego $t\preceq w$
+(tj. $t\prec w$ albo $t=w$) spełnia
+$f(t)=\{f(v):v\prec t\}$.
+Nie zakładamy istnienia wspólnego z góry
+zbioru $V$ dla wszystkich przybliżeń:
+warunek jest formułą ZF o wykresie funkcji.
+
+Dwa poprawne przybliżenia są zgodne
+na wspólnej dziedzinie.
+Gdyby się różniły, zbiór punktów niezgodności
+miałby najmniejszy element $t$.
+Wartości przy wszystkich $v\prec t$
+byłyby równe, toteż równanie ($*$)
+narzucałoby tę samą wartość w $t$,
+co przeczy wyborowi $t$.
+Na ustalonej dziedzinie istnieje więc
+co najwyżej jedno poprawne przybliżenie.
+
+Pokażemy indukcją po dobrym porządku $W$,
+że dla każdego $w\in W$ istnieje
+poprawne $w$-przybliżenie $f_w$.
+Załóżmy, że istnieje ono dla wszystkich $v\prec w$.
+Dzięki jednoznaczności schemat zastępowania
+daje zbiór
+$\mathcal F_w:=\{f_v:v\prec w\}$.
+Suma $u:=\bigcup\mathcal F_w$ jest funkcją:
+wszystkie składniki są zgodne.
+Jej dziedziną jest dokładnie $W_{<w}$,
+ponieważ każdy $t\prec w$ należy do
+dziedziny $f_t$, a żadna dziedzina
+$f_v$ nie zawiera elementów spoza $W_{<w}$.
+Dla każdego $t\prec w$ funkcja $u$
+zgadza się z $f_t$ na $W_{\le t}$,
+zatem spełnia równanie ($*$) w punkcie $t$.
+Kładziemy
+\[
+f_w:=u\cup\{(w,u[W_{<w}])\}.
+\]
+Nowy argument $w$ nie należał do
+dziedziny $u$, więc jest to funkcja
+na $W_{\le w}$ spełniająca ($*$).
+Dla najmniejszego $w$ mamy
+$\mathcal F_w=\varnothing$ i $u=\varnothing$,
+a więc konstrukcja obejmuje przypadek początkowy.
+
+Indukcja jest zasadna bez AC:
+jeżeli istniałby kontrprzykład w $W$,
+miałby element najmniejszy, dla którego
+wszystkie wcześniejsze przybliżenia
+już istnieją, co daje sprzeczność.
+Zastępowanie zbiera rodzinę
+$\{f_w:w\in W\}$ w zbiór.
+Jej suma $r:=\bigcup_{w\in W}f_w$
+jest funkcją o dziedzinie $W$
+spełniającą ($*$).
+Gdy $W=\varnothing$, bierzemy funkcję pustą.
+
+\emph{Krok 3: obraz funkcji jest ordynałem.}
+Dla $u\prec v$ zachodzi $r(u)\in r(v)$
+na mocy ($*$). Jeśli $r(u)=r(v)$
+dla różnych $u,v\in W$, to jeden
+z nich poprzedza drugi i otrzymujemy
+$r(u)\in r(u)$, wbrew aksjomatowi ufundowania.
+Zatem $r$ jest iniekcją.
+W drugą stronę, jeśli $r(u)\in r(v)$,
+to na mocy ($*$) istnieje $t\prec v$
+z $r(u)=r(t)$. Iniektywność daje
+$u=t\prec v$.
+Wykazaliśmy więc
+\[
+u\prec v\quad\Longleftrightarrow\quad
+r(u)\in r(v).
+\tag{$**$}
+\]
+
+Dla $w\in W$ zbiór
+$r(w)=\{r(v):v\prec w\}$ jest przechodni:
+jeżeli $x\in r(v)\in r(w)$,
+to dla pewnego $t\prec v\prec w$
+mamy $x=r(t)\in r(w)$.
+Na mocy ($**$) relacja $\in$
+na $r(w)$ jest dobrym porządkiem,
+przeniesionym z $W_{<w}$ przez iniekcję $r$.
+Zatem każde $r(w)$ jest ordynałem.
+Zbiór $\gamma:=r[W]$ istnieje
+przez zastępowanie, jest przechodni
+z równania ($*$) i jest dobrze
+uporządkowany przez $\in$
+na mocy ($**$).
+Jest więc ordynałem, a
+$r:W\to\gamma$ izomorfizmem
+porządkowym.
+Jednoznaczność $\gamma$ wynika
+z Twierdzenia~\ref{thm:ordinal-trichotomy}:
+jedyny izomorfizm dwóch ordynałów
+jest identycznością.
+
+\emph{Krok 4: najmniejszy reprezentant mocy.}
+Wracając do $W=A$, mamy ordynał
+$\alpha$ równoliczny z $A$.
+Zbiór
+\[
+E:=\{\beta\in\alpha+1:\beta\approx A\}
+\]
+istnieje przez separację i jest niepusty,
+ponieważ $\alpha\in E$.
+Dobry porządek na $\alpha+1$
+daje najmniejszy element $\kappa$ zbioru $E$.
+Jest on początkowy: gdyby
+$\beta<\kappa$ był równoliczny z $\kappa$,
+byłby również równoliczny z $A$,
+a zatem $\beta\in E$, wbrew
+minimalności $\kappa$.
+
+Jeżeli $\kappa'$ byłby innym ordynałem
+początkowym równolicznym z $A$,
+to Twierdzenie~\ref{thm:ordinal-trichotomy}
+dawałoby $\kappa<\kappa'$ lub $\kappa'<\kappa$.
+Mniejszy byłby równoliczny z większym,
+co przeczyłoby początkowości większego.
+Stąd reprezentant kardynalny
+istnieje i jest jednoznaczny.
+\end{proof}
+\begin{uwaga}[Dwie różne miary nieskończoności]
+Ordynał mierzy \emph{typ dobrego porządku}, liczba kardynalna — \emph{liczbę elementów}. Zbiory $\omega$ i $\omega+1$ są równoliczne:
+bijekcję $\omega\to\omega+1$ wyznaczają
+wzory $f(0)=\omega$ oraz $f(n+1)=n$.
+Nie są jednak izomorficzne jako dobre porządki,
+gdyż $\omega$ nie ma elementu największego,
+a $\omega+1$ ma.
+Najmniejszą nieskończoną liczbą kardynalną
+jest $\omega$, oznaczany również $\aleph_0$:
+każdy ordynał mniejszy od $\omega$
+jest skończony, a $\omega$ jest nieskończony,
+bo każdy jego element ma większy następnik.
+\end{uwaga}
+
+\section{Dlaczego zbiór wszystkich ordynałów nie istnieje?}
+\begin{twierdzenie}[Paradoks Burali-Forti]\label{thm:burali-forti}
+Nie istnieje zbiór $O$, którego elementami są dokładnie wszystkie ordynały.
+\end{twierdzenie}
+\begin{proof}
+Przypuśćmy, że taki zbiór $O$ istnieje. Suma $\gamma=\bigcup O$ jest ordynałem na mocy Wniosku~\ref{cor:ordinal-sup}. Z definicji $O$ wynika $\gamma\in O$, zatem $\gamma\subseteq\bigcup O=\gamma$, co jeszcze nie daje sprzeczności. Ale $\gamma+1$ również jest ordynałem, więc $\gamma+1\in O$ i $\gamma+1\subseteq\gamma$. Tymczasem $\gamma\in\gamma+1$, skąd $\gamma\in\gamma$, wbrew aksjomatowi ufundowania. Zatem $O$ nie jest zbiorem.
+\end{proof}
+\begin{uwaga}
+Wyrażenie „klasa wszystkich ordynałów” oznacza tu własność definiowalną formułą języka ZF, a nie dodatkowy obiekt, po którym wolno kwantyfikować w języku pierwszego rzędu.
+\end{uwaga}

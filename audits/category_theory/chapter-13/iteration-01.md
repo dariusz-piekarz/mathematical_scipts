@@ -1,0 +1,3 @@
+# CAT-13 — iteracja 01
+
+Blob wejściowy 136e5e7f91134b1672b6e866a095d1fdac193328. Dowód kryterium równoważności był poprawny, lecz wymagał rozpisania wyboru par, typów morfizmów, złożeń quasi-odwrotności, obu tożsamości podniesionej odwrotności i naturalności jednostki. Uściślono konwencję dużych kategorii: wybór w większym uniwersum lub mały model; nie zakładamy wyboru klasowego. Zachowano poprawkę pełności z niezależnymi izomorfizmami naturalnymi. Dodano twierdzenie o istnieniu szkieletu i jego jednoznaczności do izomorfizmu z dowodem. Zachowano cztery etykiety pierwotne, dodano jedną. Dodano pięć testów i rejestr kryteriów. Kontrola struktury JS PASS. Testy Python, CI i PDF jeszcze niezweryfikowane; Lean nie uruchamiano. Rozdział pozostaje otwarty do stabilizacji.

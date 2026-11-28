@@ -1,0 +1,422 @@
+name: General topology chapter validation
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/general_topology/**'
+      - 'books/pl/general_topology.tex'
+      - 'catalog/books.json'
+      - 'tools/tests/test_general_topology_integration.py'
+      - 'tools/tests/test_general_topology_global_audit.py'
+      - 'tools/tests/test_general_topology_cross_dependencies.py'
+      - 'tools/tests/test_general_topology_figure_sources.py'
+      - 'tools/tests/test_general_topology_ch02.py'
+      - 'tools/tests/test_general_topology_ch03.py'
+      - 'tools/tests/test_general_topology_ch04.py'
+      - 'tools/tests/test_general_topology_ch05.py'
+      - 'tools/tests/test_general_topology_ch06.py'
+      - 'tools/tests/test_general_topology_ch06_subnets.py'
+      - 'tools/tests/test_general_topology_ch07.py'
+      - 'tools/tests/test_general_topology_ch08.py'
+      - 'tools/tests/test_general_topology_ch09.py'
+      - 'tools/tests/test_general_topology_ch10.py'
+      - 'tools/tests/test_general_topology_ch11.py'
+      - 'tools/tests/test_general_topology_ch12.py'
+      - 'tools/tests/test_general_topology_ch13.py'
+      - 'tools/tests/test_general_topology_ch14.py'
+      - 'tools/tests/test_general_topology_ch15.py'
+      - 'tools/tests/test_general_topology_ch16.py'
+      - 'tools/tests/test_general_topology_ch17.py'
+      - 'tools/tests/test_general_topology_ch18.py'
+      - 'tools/tests/test_general_topology_ch19.py'
+      - 'tools/tests/test_general_topology_ch20.py'
+      - 'tools/tests/test_general_topology_ch21.py'
+      - 'tools/tests/test_general_topology_ch22.py'
+      - 'tools/tests/test_general_topology_ch23.py'
+      - 'tools/tests/test_general_topology_ch24.py'
+      - 'tools/tests/test_general_topology_ch25.py'
+      - 'tools/tests/test_general_topology_ch26.py'
+      - 'tools/validate_general_topology_ch10.sh'
+      - 'tools/validate_general_topology_ch11.sh'
+      - 'tools/validate_general_topology_ch12.sh'
+      - 'tools/validate_general_topology_ch09.sh'
+      - 'tools/validate_general_topology_ch08.sh'
+      - 'tools/validate_general_topology_ch07.sh'
+      - 'tools/validate_general_topology_ch06.sh'
+      - 'tools/validate_general_topology_ch05.sh'
+      - 'tools/validate_general_topology_ch03.sh'
+      - 'tools/validate_general_topology_ch04.sh'
+      - 'books/pl/general_topology_ch01.tex'
+      - 'books/pl/general_topology_ch02.tex'
+      - 'books/pl/general_topology_ch03.tex'
+      - 'books/pl/general_topology_ch04.tex'
+      - 'books/pl/general_topology_ch05.tex'
+      - 'books/pl/general_topology_ch06.tex'
+      - 'books/pl/general_topology_ch07.tex'
+      - 'books/pl/general_topology_ch08.tex'
+      - 'books/pl/general_topology_ch09.tex'
+      - 'books/pl/general_topology_ch10.tex'
+      - 'books/pl/general_topology_ch11.tex'
+      - 'books/pl/general_topology_ch12.tex'
+      - 'books/pl/general_topology_ch13.tex'
+      - 'books/pl/general_topology_ch14.tex'
+      - 'books/pl/general_topology_ch15.tex'
+      - 'books/pl/general_topology_ch16.tex'
+      - 'books/pl/general_topology_ch17.tex'
+      - 'books/pl/general_topology_ch18.tex'
+      - 'books/pl/general_topology_ch19.tex'
+      - 'books/pl/general_topology_ch20.tex'
+      - 'books/pl/general_topology_ch21.tex'
+      - 'books/pl/general_topology_ch22.tex'
+      - 'books/pl/general_topology_ch23.tex'
+      - 'books/pl/general_topology_ch24.tex'
+      - 'books/pl/general_topology_ch25.tex'
+      - 'books/pl/general_topology_ch26.tex'
+      - 'audits/general_topology/**'
+      - '.github/workflows/general-topology-chapter.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Validate catalog and chapter imports
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root = Path.cwd()
+          books = json.loads((root/'catalog/books.json').read_text(encoding='utf-8'))['books']
+          items = [b for b in books if b['id'] == 'general_topology']
+          assert len(items) == 1
+          book = items[0]
+          assert book['entrypoint'] == 'books/pl/general_topology.tex'
+          assert book['chapters'] == ['chapters/pl/general_topology/01-przestrzenie-topologiczne.tex', 'chapters/pl/general_topology/02-operacje-topologiczne-na-zbiorach.tex', 'chapters/pl/general_topology/03-odwzorowania-ciagle.tex', 'chapters/pl/general_topology/04-konstrukcje-przestrzeni-topologicznych.tex', 'chapters/pl/general_topology/05-aksjomaty-oddzielania.tex', 'chapters/pl/general_topology/06-zbieznosc-topologiczna.tex', 'chapters/pl/general_topology/07-zwartosc.tex', 'chapters/pl/general_topology/08-spojnosc.tex', 'chapters/pl/general_topology/09-aksjomaty-przeliczalnosci.tex', 'chapters/pl/general_topology/10-metryzowalnosc.tex', 'chapters/pl/general_topology/11-zupelnosc-i-twierdzenie-bairea.tex', 'chapters/pl/general_topology/12-przestrzenie-jednostajne.tex', 'chapters/pl/general_topology/13-zupelnosc-jednostajna-i-uzupelnienia.tex', 'chapters/pl/general_topology/14-zwartosc-lokalna.tex', 'chapters/pl/general_topology/15-parazwartosc-i-podzialy-jednosci.tex', 'chapters/pl/general_topology/16-funkcje-ciagle-i-uzwarcenia.tex', 'chapters/pl/general_topology/17-uzwarcenia-aleksandrowa-i-cecha-stonea.tex', 'chapters/pl/general_topology/18-przestrzenie-odwzorowan-i-topologia-zwarto-otwarta.tex', 'chapters/pl/general_topology/19-przestrzenie-polskie-i-zbiory-borelowskie.tex', 'chapters/pl/general_topology/20-zbiory-analityczne-i-operacja-suslina.tex', 'chapters/pl/general_topology/21-topologie-na-rodzinach-podzbiorow.tex', 'chapters/pl/general_topology/22-zbieznosc-kuratowskiego-wijsman-attouch-wets.tex', 'chapters/pl/general_topology/23-wymiar-topologiczny.tex', 'chapters/pl/general_topology/24-grupy-topologiczne-i-przestrzenie-jednorodne.tex', 'chapters/pl/general_topology/25-continua-i-ich-struktura.tex', 'chapters/pl/general_topology/26-twierdzenie-hahna-mazurkiewicza.tex']
+          source = (root/book['entrypoint']).read_text(encoding='utf-8')
+          for chapter in book['chapters']:
+              assert r'\input{../../' + chapter + '}' in source
+          for chapter in book['chapters']:
+              assert (root/chapter).is_file()
+          print('PASS chapter catalog and imports')
+          PY
+      - name: Independently test chapter finite models and references
+        run: python tools/tests/test_general_topology_integration.py
+      - name: Audit full topology chapter catalog, labels and terminology
+        run: python tools/tests/test_general_topology_global_audit.py
+      - name: Audit theorem dependency order and finite Cauchy filter models
+        run: python tools/tests/test_general_topology_cross_dependencies.py
+      - name: Verify caption labels and TikZ illustration inventory
+        run: python tools/tests/test_general_topology_figure_sources.py
+      - name: Verify Chapter 02 finite topological models
+        run: python tools/tests/test_general_topology_ch02.py
+      - name: Verify Chapter 03 continuous maps and embeddings
+        run: python tools/tests/test_general_topology_ch03.py
+      - name: Verify Chapter 04 constructions and quotients
+        run: python tools/tests/test_general_topology_ch04.py
+      - name: Verify Chapter 05 separation axioms and Tietze extension
+        run: python tools/tests/test_general_topology_ch05.py
+      - name: Verify Chapter 06 nets, filters and convergence
+        run: python tools/tests/test_general_topology_ch06.py
+      - name: Independently verify convergent subnets
+        run: python tools/tests/test_general_topology_ch06_subnets.py
+      - name: Verify Chapter 07 compactness, ultrafilters and Weierstrass
+        run: python tools/tests/test_general_topology_ch07.py
+      - name: Verify Chapter 08 connectedness and path-connectedness
+        run: python tools/tests/test_general_topology_ch08.py
+      - name: Verify Chapter 09 countability axioms and Lindelof property
+        run: python tools/tests/test_general_topology_ch09.py
+      - name: Verify Chapter 10 metrizability and metric products
+        run: python tools/tests/test_general_topology_ch10.py
+      - name: Verify Chapter 11 Baire theorem and completeness examples
+        run: python tools/tests/test_general_topology_ch11.py
+      - name: Verify Chapter 12 uniform structures and Cauchy nets
+        run: python tools/tests/test_general_topology_ch12.py
+      - name: Verify Chapter 13 uniform completions
+        run: python tools/tests/test_general_topology_ch13.py
+      - name: Verify Chapter 14 local compactness relocation
+        run: python tools/tests/test_general_topology_ch14.py
+      - name: Verify Chapter 15 paracompactness and partitions of unity
+        run: python tools/tests/test_general_topology_ch15.py
+      - name: Verify Chapter 16 compactifications and initial topology
+        run: python tools/tests/test_general_topology_ch16.py
+      - name: Verify Chapter 17 Aleksandrow and Cech-Stone compactifications
+        run: python tools/tests/test_general_topology_ch17.py
+      - name: Verify Chapter 18 compact-open topology and mapping spaces
+        run: python tools/tests/test_general_topology_ch18.py
+      - name: Verify Chapter 19 Polish spaces and Borel hierarchy
+        run: python tools/tests/test_general_topology_ch19.py
+      - name: Verify Chapter 20 analytic sets and Souslin models
+        run: python tools/tests/test_general_topology_ch20.py
+      - name: Verify Chapter 21 hyperspace finite models and references
+        run: python tools/tests/test_general_topology_ch21.py
+      - name: Verify Chapter 22 Kuratowski Wijsman Attouch-Wets models
+        run: python tools/tests/test_general_topology_ch22.py
+      - name: Verify Chapter 23 dimension and triangulation finite models
+        run: python tools/tests/test_general_topology_ch23.py
+      - name: Verify Chapter 24 group topology and quotient finite models
+        run: python tools/tests/test_general_topology_ch24.py
+      - name: Verify Chapter 25 continua and inverse-limit finite models
+        run: python tools/tests/test_general_topology_ch25.py
+      - name: Verify Chapter 26 Hahn-Mazurkiewicz finite models and references
+        run: python tools/tests/test_general_topology_ch26.py
+      - name: Build complete book PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 01 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch01.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 02 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch02.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 03 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch03.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 04 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch04.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 05 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch05.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 06 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch06.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 07 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch07.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 08 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch08.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 09 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch09.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 10 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch10.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 11 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch11.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 12 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch12.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 13 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch13.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 14 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch14.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 15 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch15.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 16 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch16.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 17 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch17.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 18 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch18.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 19 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch19.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 20 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch20.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 21 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch21.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 22 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch22.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 23 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch23.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 24 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch24.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 25 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch25.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 26 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch26.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Check PDF and LaTeX log
+        run: |
+          test -s books/pl/general_topology.pdf
+          test -s books/pl/general_topology_ch02.pdf
+          test -s books/pl/general_topology_ch03.pdf
+          test -s books/pl/general_topology_ch04.pdf
+          test -s books/pl/general_topology_ch05.pdf
+          test -s books/pl/general_topology_ch06.pdf
+          test -s books/pl/general_topology_ch07.pdf
+          test -s books/pl/general_topology_ch08.pdf
+          test -s books/pl/general_topology_ch09.pdf
+          test -s books/pl/general_topology_ch10.pdf
+          test -s books/pl/general_topology_ch11.pdf
+          test -s books/pl/general_topology_ch12.pdf
+          test -s books/pl/general_topology_ch13.pdf
+          test -s books/pl/general_topology_ch14.pdf
+          test -s books/pl/general_topology_ch15.pdf
+          test -s books/pl/general_topology_ch16.pdf
+          test -s books/pl/general_topology_ch17.pdf
+          test -s books/pl/general_topology_ch18.pdf
+          test -s books/pl/general_topology_ch19.pdf
+          test -s books/pl/general_topology_ch20.pdf
+          test -s books/pl/general_topology_ch21.pdf
+          test -s books/pl/general_topology_ch22.pdf
+          test -s books/pl/general_topology_ch23.pdf
+          test -s books/pl/general_topology_ch24.pdf
+          test -s books/pl/general_topology_ch25.pdf
+          test -s books/pl/general_topology_ch26.pdf
+          for log in books/pl/general_topology.log books/pl/general_topology_ch02.log books/pl/general_topology_ch03.log books/pl/general_topology_ch04.log books/pl/general_topology_ch05.log books/pl/general_topology_ch06.log books/pl/general_topology_ch07.log books/pl/general_topology_ch08.log books/pl/general_topology_ch09.log books/pl/general_topology_ch10.log books/pl/general_topology_ch11.log books/pl/general_topology_ch12.log books/pl/general_topology_ch13.log books/pl/general_topology_ch14.log books/pl/general_topology_ch15.log books/pl/general_topology_ch16.log books/pl/general_topology_ch17.log books/pl/general_topology_ch18.log books/pl/general_topology_ch19.log books/pl/general_topology_ch20.log books/pl/general_topology_ch21.log books/pl/general_topology_ch22.log books/pl/general_topology_ch23.log books/pl/general_topology_ch24.log books/pl/general_topology_ch25.log books/pl/general_topology_ch26.log; do
+            if grep -qE 'Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error' "$log"; then
+              grep -nE 'Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error' "$log"
+              exit 1
+            fi
+          done
+      - name: Upload compiled chapter PDF
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: general-topology-ch01-ch26
+          path: |
+            books/pl/general_topology.pdf
+            books/pl/general_topology.log
+            books/pl/general_topology_ch02.pdf
+            books/pl/general_topology_ch02.log
+            books/pl/general_topology_ch03.pdf
+            books/pl/general_topology_ch03.log
+            books/pl/general_topology_ch04.pdf
+            books/pl/general_topology_ch04.log
+            books/pl/general_topology_ch05.pdf
+            books/pl/general_topology_ch05.log
+            books/pl/general_topology_ch06.pdf
+            books/pl/general_topology_ch06.log
+            books/pl/general_topology_ch07.pdf
+            books/pl/general_topology_ch07.log
+            books/pl/general_topology_ch08.pdf
+            books/pl/general_topology_ch08.log
+            books/pl/general_topology_ch09.pdf
+            books/pl/general_topology_ch09.log
+            books/pl/general_topology_ch10.pdf
+            books/pl/general_topology_ch10.log
+            books/pl/general_topology_ch11.pdf
+            books/pl/general_topology_ch11.log
+            books/pl/general_topology_ch12.pdf
+            books/pl/general_topology_ch12.log
+            books/pl/general_topology_ch13.pdf
+            books/pl/general_topology_ch13.log
+            books/pl/general_topology_ch14.pdf
+            books/pl/general_topology_ch14.log
+            books/pl/general_topology_ch15.pdf
+            books/pl/general_topology_ch15.log
+            books/pl/general_topology_ch16.pdf
+            books/pl/general_topology_ch16.log
+            books/pl/general_topology_ch17.pdf
+            books/pl/general_topology_ch17.log
+            books/pl/general_topology_ch18.pdf
+            books/pl/general_topology_ch18.log
+            books/pl/general_topology_ch19.pdf
+            books/pl/general_topology_ch19.log
+            books/pl/general_topology_ch20.pdf
+            books/pl/general_topology_ch20.log
+            books/pl/general_topology_ch21.pdf
+            books/pl/general_topology_ch21.log
+            books/pl/general_topology_ch22.pdf
+            books/pl/general_topology_ch22.log
+            books/pl/general_topology_ch23.pdf
+            books/pl/general_topology_ch23.log
+            books/pl/general_topology_ch24.pdf
+            books/pl/general_topology_ch24.log
+            books/pl/general_topology_ch25.pdf
+            books/pl/general_topology_ch25.log
+            books/pl/general_topology_ch26.pdf
+            books/pl/general_topology_ch26.log
+          if-no-files-found: warn

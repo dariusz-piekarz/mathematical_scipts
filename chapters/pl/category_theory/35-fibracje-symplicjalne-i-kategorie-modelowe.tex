@@ -1,0 +1,532 @@
+\section{Fibracje symplicjalne i kategorie modelowe}\label{cat:sec:simplicial-model-categories}
+
+W rozdziale~\ref{cat:sec:simplicial-sets} rozważaliśmy przedłużanie morfizmów z rogów sympleksów, a w rozdziale~\ref{cat:sec:quasicategories} zastosowaliśmy tę własność do quasi-kategorii. Teraz przejdziemy od własności obiektów do własności morfizmów, a następnie do abstrakcyjnej teorii kategorii modelowych. Fibracje topologiczne i ich długie ciągi dokładne należą do topologii algebraicznej; nie powtarzamy tutaj ich konstrukcji.
+
+\subsection{Własności podnoszenia w dowolnej kategorii}
+
+\begin{definicja}[Własność podnoszenia]\label{cat:def:lifting-property}
+Niech $i:A\to B$ i $p:E\to Y$ będą morfizmami w kategorii $\mathcal C$. Piszemy $i\pitchfork p$, jeżeli dla każdej pary $a:A\to E$, $b:B\to Y$ spełniającej $pa=bi$ istnieje $l:B\to E$ taki, że
+\[
+ li=a,\qquad pl=b.
+\]
+Mówimy, że $i$ ma lewą własność podnoszenia względem $p$, albo równoważnie, że $p$ ma prawą własność podnoszenia względem $i$. Nie wymagamy jednoznaczności $l$.
+\end{definicja}
+
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (A) at (0,2.6) {$A$};
+ \node (E) at (4.4,2.6) {$E$};
+ \node (B) at (0,0) {$B$};
+ \node (Y) at (4.4,0) {$Y$};
+ \draw[->] (A)--node[above] {$a$}(E);
+ \draw[->] (A)--node[left] {$i$}(B);
+ \draw[->] (E)--node[right] {$p$}(Y);
+ \draw[->] (B)--node[below] {$b$}(Y);
+ \draw[->,dashed] (B)--node[above,sloped] {$l$}(E);
+\end{tikzpicture}
+\end{center}
+
+Dla klas morfizmów $\mathcal L,\mathcal R$ oznaczamy
+\[
+ {}^\pitchfork\mathcal R=\{i:\ \forall p\in\mathcal R\quad i\pitchfork p\},
+ \qquad
+ \mathcal L^\pitchfork=\{p:\ \forall i\in\mathcal L\quad i\pitchfork p\}.
+\]
+W szczególności $\mathcal L\subseteq{}^\pitchfork(\mathcal L^\pitchfork)$ oraz $\mathcal R\subseteq({}^\pitchfork\mathcal R)^\pitchfork$. Obie operacje odwracają inkluzje klas, ponieważ zwiększenie klasy morfizmów, względem których wymagamy podnoszenia, zwiększa liczbę warunków do spełnienia.
+
+\begin{stwierdzenie}[Składanie morfizmów z własnością podnoszenia]\label{cat:prop:lifting-composition}
+Klasy $\mathcal L^\pitchfork$ i $\vphantom{R}^\pitchfork\mathcal R$ zawierają wszystkie izomorfizmy i są domknięte względem składania.
+\end{stwierdzenie}
+\begin{proof}
+Dla izomorfizmu $i$ w kwadracie z definicji~\ref{cat:def:lifting-property} bierzemy $l=ai^{-1}$: mamy $li=a$ oraz $pl=pai^{-1}=bii^{-1}=b$. Dla izomorfizmu $p$ bierzemy $l=p^{-1}b$, co daje $pl=b$ i $li=p^{-1}bi=p^{-1}pa=a$.
+
+Niech $i:A\to B$, $j:B\to C$ mają lewą własność podnoszenia względem $p:E\to Y$. Dany kwadrat z $ji$ ma dane $a:A\to E$ i $b:C\to Y$ oraz $pa=bji$. Najpierw stosujemy $i\pitchfork p$ do $a,bj$, otrzymując $u:B\to E$ z $ui=a$, $pu=bj$. Równość $pu=bj$ jest dokładnie warunkiem przemienności następnego kwadratu, z lewym morfizmem $j$, górnym $u$, dolnym $b$ i prawym $p$. Z $j\pitchfork p$ otrzymujemy $l:C\to E$ z $lj=u$, $pl=b$. Stąd $lji=ui=a$.
+
+Dla $p:E\to Y$, $q:Y\to Z$ mających prawą własność podnoszenia względem $i:A\to B$ i danych $a:A\to E$, $b:B\to Z$ z $qpa=bi$ najpierw stosujemy $i\pitchfork q$ do $pa,b$. Otrzymujemy $v:B\to Y$ z $vi=pa$, $qv=b$. Równość $vi=pa$ zapewnia przemienność kwadratu z $i,p,a,v$. Stosując $i\pitchfork p$ do tego kwadratu, uzyskujemy $l:B\to E$ z $li=a$, $pl=v$, a więc $qpl=b$. Dowody działają dla każdego morfizmu z ustalonej klasy.
+\end{proof}
+
+\begin{stwierdzenie}[Zmiana bazy i kobazy]\label{cat:prop:lifting-base-change}
+Klasa $\mathcal L^\pitchfork$ jest domknięta względem istniejących zmian bazy (iloczynów włóknistych), a klasa $\vphantom{R}^\pitchfork\mathcal R$ względem istniejących zmian kobazy (sum amalgamowanych).
+\end{stwierdzenie}
+\begin{proof}
+Niech $p:E\to Y$ ma prawą własność podnoszenia względem $i:A\to B$, a $f:Y'\to Y$ będzie dowolnym morfizmem. Piszemy $E'=Y'\times_Y E$ z projekcjami $p':E'\to Y'$ i $r:E'\to E$. Dla kwadratu $p'a=bi$ z $a:A\to E'$ i $b:B\to Y'$ mamy $p(ra)=fp'a=fbi$. Z $i\pitchfork p$ dostajemy $t:B\to E$ z $ti=ra$, $pt=fb$. Własność uniwersalna iloczynu włóknistego daje $l:B\to E'$ z $p'l=b$ i $rl=t$. Ponieważ $p'li=bi=p'a$ oraz $rli=ti=ra$, jednoznaczność w tej własności uniwersalnej daje $li=a$.
+
+Dla drugiej tezy niech $i:A\to B$ ma lewą własność podnoszenia względem $p:E\to Y$. Weźmy sumę amalgamowaną $B'=B\amalg_A A'$ względem $f:A\to A'$ z morfizmami $r:B\to B'$ i $i':A'\to B'$. Dla $a:A'\to E$, $b:B'\to Y$ takich, że $pa=bi'$, mamy $paf=bi'f=bri$. Istnieje więc $t:B\to E$ z $ti=af$ i $pt=br$. Z własności uniwersalnej sumy amalgamowanej dostajemy $l:B'\to E$ z $li'=a$ i $lr=t$. Morfizmy $pl,b$ zgadzają się po prekompozycji z $r$, ponieważ $plr=pt=br$, oraz z $i'$, ponieważ $pli'=pa=bi'$. Jednoznaczność własności uniwersalnej sumy amalgamowanej daje $pl=b$. Argument stosujemy do każdego $p\in\mathcal R$; dowód zmiany bazy stosujemy do każdego $i\in\mathcal L$.
+\end{proof}
+
+\begin{definicja}[Retrakt morfizmu]\label{cat:def:arrow-retract}
+Morfizm $i:A\to B$ jest retraktem morfizmu $j:C\to D$, jeśli istnieją morfizmy $u:A\to C$, $v:B\to D$, $r:C\to A$, $s:D\to B$ takie, że
+\[
+ ju=vi,\qquad ir=sj,\qquad ru=\id_A,\qquad sv=\id_B.
+\]
+Jest to zwykły retrakt obiektu w kategorii morfizmów $\operatorname{Fun}([1],\mathcal C)$: pierwsze dwie równości oznaczają przemienność kwadratów $(u,v):i\to j$ i $(r,s):j\to i$, a ostatnie dwie oznaczają, że ich złożenie jest identycznością obiektu $i$ tej kategorii.
+\end{definicja}
+
+\begin{stwierdzenie}[Domknięcie względem retraktów]\label{cat:prop:lifting-retract}
+Obie klasy $\mathcal L^\pitchfork$ oraz $\vphantom{R}^\pitchfork\mathcal R$ są domknięte względem retraktów morfizmów.
+\end{stwierdzenie}
+\begin{proof}
+Niech $i$ będzie retraktem $j$ jak w definicji~\ref{cat:def:arrow-retract} i niech $j\pitchfork p$. Dla kwadratu $pa=bi$ mamy $par=bir=bsj$. Istnieje $t:D\to E$ z $tj=ar$, $pt=bs$. Definiujemy $l=tv$. Wtedy
+\[
+ li=tvi=tju=aru=a,\qquad pl=ptv=bsv=b.
+\]
+Zatem $i\pitchfork p$.
+
+Dla prawej własności niech $p:E\to Y$ będzie retraktem $q:E'\to Y'$ z morfizmami $u:E\to E'$, $v:Y\to Y'$, $r:E'\to E$, $s:Y'\to Y$ spełniającymi $qu=vp$, $pr=sq$, $ru=\id_E$, $sv=\id_Y$. Jeżeli $i\pitchfork q$ i $pa=bi$, to $qua=vbi$. Istnieje $t:B\to E'$ z $ti=ua$ i $qt=vb$. Dla $l=rt$ mamy $li=rua=a$ oraz $pl=sqt=svb=b$. Zatem $i\pitchfork p$.
+\end{proof}
+
+\subsection{Fibracje zbiorów symplicjalnych}
+
+W dalszej części oznaczamy przez $\mathbf{sSet}$ kategorię zbiorów symplicjalnych. Jej obiekty i morfizmy opisano w rozdziale~\ref{cat:sec:simplicial-sets}. Granice i kogranice małych diagramów $D:J\to\mathbf{sSet}$ obliczamy stopniowo w $\Set$. Dla granicy piszemy $L_n=\lim_{j\in J}D(j)_n$ z projekcjami $\pi_{j,n}$. Dla $\theta:[m]\to[n]$ rodzina $\theta^*_{D(j)}\pi_{j,n}$ jest stożkiem nad diagramem w stopniu $m$, gdyż morfizmy diagramu są naturalne. Indukuje więc jedyny operator $\theta_L^*:L_n\to L_m$ z $\pi_{j,m}\theta_L^*=\theta^*_{D(j)}\pi_{j,n}$. Dla kogranicy $C_n=\operatorname{colim}_{j\in J}D(j)_n$ z morfizmami $\iota_{j,n}$ operator $\theta_C^*:C_n\to C_m$ jest jedynym spełniającym $\theta_C^*\iota_{j,n}=\iota_{j,m}\theta_{D(j)}^*$. Tożsamości operatorów wynikają z jednoznaczności: dla złożenia dwóch morfizmów w $\Delta$ porównujemy oba operatory po złożeniu z każdą projekcją granicy lub po prekompozycji z każdym morfizmem do kogranicy. W ten sam sposób stopniowo indukowane morfizmy z dowolnego stożka do $L$ i z $C$ do dowolnego kostożka są naturalne. Zatem otrzymujemy granice i kogranice w $\mathbf{sSet}$. W szczególności morfizm $X\to Y$ jest monomorfizmem wtedy i tylko wtedy, gdy wszystkie jego składowe $X_n\to Y_n$ są injekcjami. Jeśli wszystkie składowe $f_n$ są injekcjami i $fg=fh$, to $f_ng_n=f_nh_n$, więc $g_n=h_n$ dla każdego $n$ i $g=h$. Odwrotnie, jeśli $f$ jest monomorfizmem i $f_n(x)=f_n(x')$, to morfizmy $\widehat x,\widehat{x'}:\Delta[n]\to X$ odpowiadające tym elementom przez lemat Yonedy (stwierdzenie~\ref{cat:prop:simplicial-yoneda}) mają równe złożenia z $f$. Monomorficzność daje $\widehat x=\widehat{x'}$, a ewaluacja na $\id_{[n]}$ daje $x=x'$.
+
+\begin{definicja}[Fibracje symplicjalne]\label{cat:def:simplicial-fibrations}
+Morfizm $p:X\to Y$ zbiorów symplicjalnych nazywamy:
+\begin{enumerate}
+ \item fibracją Kana, jeśli ma prawą własność podnoszenia względem wszystkich włożeń $\Lambda^k[n]\to\Delta[n]$ dla $n\geq1$, $0\leq k\leq n$;
+ \item fibracją wewnętrzną, jeśli ma tę własność dla $n\geq2$, $0<k<n$;
+ \item lewą fibracją, jeśli ma tę własność dla $n\geq1$, $0\leq k<n$;
+ \item prawą fibracją, jeśli ma tę własność dla $n\geq1$, $0<k\leq n$.
+\end{enumerate}
+\end{definicja}
+Każda fibracja Kana jest lewą i prawą fibracją, a każda lewa lub prawa fibracja jest fibracją wewnętrzną. Morfizm jest fibracją Kana wtedy i tylko wtedy, gdy jest zarazem lewą i prawą fibracją, ponieważ sumą obu rodzin indeksów jest rodzina wszystkich rogów.
+
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (A) at (0,2.8) {$\Lambda^k[n]$};
+ \node (E) at (4.8,2.8) {$X$};
+ \node (B) at (0,0) {$\Delta[n]$};
+ \node (Y) at (4.8,0) {$Y$};
+ \draw[->] (A)--node[above] {$a$}(E);
+ \draw[{Hooks[right]}-{Stealth}] (A)--(B);
+ \draw[->] (E)--node[right] {$p$}(Y);
+ \draw[->] (B)--node[below] {$b$}(Y);
+ \draw[->,dashed] (B)--node[above,sloped] {$l$}(E);
+\end{tikzpicture}
+\end{center}
+Różnica względem warunku na obiekt polega na tym, że nie wybieramy dowolnego wypełnienia rogu w $X$, lecz takie, którego obraz przez $p$ jest zadanym sympleksem $b$.
+
+\begin{stwierdzenie}[Postać stopniowa warunku podnoszenia]\label{cat:prop:relative-horn-condition}
+Niech $n\geq1$ i $0\leq k\leq n$. Prawa własność podnoszenia $p:X\to Y$ względem $\Lambda^k[n]\to\Delta[n]$ jest równoważna następującemu warunkowi: dla każdego $y\in Y_n$ i każdej rodziny $x_i\in X_{n-1}$ indeksowanej przez $i\in\{0,\ldots,n\}\setminus\{k\}$, spełniającej
+\[
+ d_i x_j=d_{j-1}x_i\quad(i<j,\ i,j\ne k),\qquad
+ p_{n-1}(x_i)=d_i y\quad(i\ne k),
+\]
+istnieje $x\in X_n$ z $d_i x=x_i$ dla $i\ne k$ i $p_n(x)=y$. Dla $n=1$ pierwszy warunek jest pusty.
+\end{stwierdzenie}
+\begin{proof}
+Morfizm $\Delta[n]\to Y$ odpowiada $y\in Y_n$. Morfizm $\Lambda^k[n]\to X$ odpowiada rodzinie zgodnych ścian na mocy stwierdzenia~\ref{cat:prop:simplicial-compatible-faces}. Przemienność kwadratu podnoszenia oznacza, że dwa morfizmy z rogu do $Y$ są równe. Ponieważ róg jest sumą zadanych ścian, wystarczy i trzeba sprawdzić równość ich ograniczeń, czyli $p_{n-1}(x_i)=d_i y$. Morfizm podnoszący odpowiada $x\in X_n$. Przemienność dwóch trójkątów oznacza dokładnie pozostałe równości.
+\end{proof}
+
+\begin{stwierdzenie}[Włókna i obiekty]\label{cat:prop:simplicial-fibration-fibers}
+Niech $y\in Y_0$. Włókno $X_y=X\times_Y\{y\}$ fibracji Kana jest kompleksem Kana, a włókno fibracji wewnętrznej jest quasi-kategorią. Morfizm $X\to\Delta[0]$ jest fibracją Kana wtedy i tylko wtedy, gdy $X$ jest kompleksem Kana, oraz fibracją wewnętrzną wtedy i tylko wtedy, gdy $X$ jest quasi-kategorią. Jeżeli $p:X\to Y$ jest fibracją wewnętrzną i $Y$ jest quasi-kategorią, to $X$ jest quasi-kategorią; analogicznie dla fibracji i kompleksów Kana.
+\end{stwierdzenie}
+\begin{proof}
+Morfizm do $\Delta[0]$ jest jedyny, ponieważ w każdym stopniu $\Delta[0]$ ma dokładnie jeden element. Każdy kwadrat podnoszenia dla $X\to\Delta[0]$ jest więc po prostu morfizmem z rogu do $X$, a morfizm podnoszący jest jego wypełnieniem. Daje to obie charakteryzacje.
+
+W stopniu $n$ włókno $X_y$ składa się z tych $x\in X_n$, dla których $p_n(x)$ jest stałym $n$-sympleksem w $y$ (obraz $y$ przez operator jedynego morfizmu $[n]\to[0]$). Naturalność $p$ zapewnia, że operatory zachowują ten podzbiór. Projekcja $X_y\to\{y\}$ ma odpowiednią własność podnoszenia przez stwierdzenie~\ref{cat:prop:lifting-base-change}. Ponieważ $\{y\}\cong\Delta[0]$, stosujemy powyższe charakteryzacje. Ostatnie zdania wynikają z domknięcia względem składania (stwierdzenie~\ref{cat:prop:lifting-composition}), zastosowanego do $X\to Y\to\Delta[0]$.
+\end{proof}
+
+\begin{przyklad}[Rzuty]\label{cat:ex:simplicial-product-fibration}
+Jeżeli $K$ jest kompleksem Kana, to dla dowolnego $Y$ rzut $Y\times K\to Y$ jest fibracją Kana. Jest to zmiana bazy morfizmu $K\to\Delta[0]$ przez $Y\to\Delta[0]$. Gdy $K$ jest quasi-kategorią, ten sam argument daje fibrację wewnętrzną. W szczególności dowolny iloczyn małej rodziny kompleksów Kana jest kompleksem Kana: dla rogu w iloczynie wybieramy wypełnienie każdej składowej i bierzemy odpowiadający im sympleks iloczynu. Korzystamy tu z aksjomatu wyboru. Pusty iloczyn jest $\Delta[0]$, który ma jednoznaczne wypełnienia wszystkich rogów. Jeśli iloczyn jest pustym zbiorem symplicjalnym, warunek Kana zachodzi w sposób pusty, gdyż każdy rozważany róg ma co najmniej jeden wierzchołek.
+\end{przyklad}
+
+\subsection{Fibracje na nerwach kategorii}
+
+\begin{stwierdzenie}\label{cat:prop:nerve-inner-fibration}
+Dla dowolnego funktora $F:\mathcal C\to\mathcal D$ małych kategorii morfizm $N(F)$ jest fibracją wewnętrzną.
+\end{stwierdzenie}
+\begin{proof}
+Rozważmy kwadrat podnoszenia dla rogu wewnętrznego. Na mocy twierdzenia~\ref{cat:thm:nerve-inner-horns} róg w $N(\mathcal C)$ ma jednoznaczne wypełnienie $u$. Jego obraz $N(F)(u)$ w $N(\mathcal D)$ ma te same ściany rogu co zadany sympleks $v$ w $N(\mathcal D)$, gdyż kwadrat jest przemienny. Twierdzenie o jednoznaczności wypełnień w $N(\mathcal D)$ daje $N(F)(u)=v$. Zatem $u$ jest wymaganym względnym wypełnieniem.
+\end{proof}
+
+\begin{definicja}[Izofibracja kategorii zwykłych]\label{cat:def:ordinary-isofibration}
+Funktor $F:\mathcal C\to\mathcal D$ jest izofibracją, jeśli dla każdego obiektu $c\in\mathcal C$ i każdego izomorfizmu $\alpha:F(c)\to d$ w $\mathcal D$ istnieją obiekt $c'\in\mathcal C$ i izomorfizm $a:c\to c'$ z $F(c')=d$ oraz $F(a)=\alpha$.
+\end{definicja}
+Równoważnie możemy wymagać podnoszenia izomorfizmu $\alpha:d\to F(c)$ z zadanym celem $c$: podnosząc $\alpha^{-1}:F(c)\to d$, uzyskujemy $a:c\to c'$ z $F(a)=\alpha^{-1}$ i $F(c')=d$. Morfizm $a^{-1}:c'\to c$ podnosi $\alpha$, ponieważ funktor zachowuje odwrotności. W przeciwnym kierunku stosujemy tę samą konstrukcję do odwrotności izomorfizmu o zadanym źródle.
+
+\begin{twierdzenie}[Fibracje Kana na nerwach grupoidów]\label{cat:thm:nerve-groupoid-isofibration}
+Niech $\mathcal G,\mathcal H$ będą małymi grupoidami i $F:\mathcal G\to\mathcal H$ funktorem. Wtedy $N(F)$ jest fibracją Kana wtedy i tylko wtedy, gdy $F$ jest izofibracją.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $N(F)$ jest fibracją Kana, to dla $c\in\mathcal G$ i izomorfizmu $\alpha:F(c)\to d$ rozważamy kwadrat z lewym morfizmem $\Lambda^0[1]\to\Delta[1]$. Róg $\Lambda^0[1]$ to wierzchołek $0$, którego obrazem jest $c$, a dolnym sympleksem jest $\alpha$. Podniesienie daje morfizm $a:c\to c'$ z $F(a)=\alpha$ i $F(c')=d$. Morfizm $a$ jest izomorfizmem, gdyż $\mathcal G$ jest grupoidem.
+
+Odwrotnie, załóżmy, że $F$ jest izofibracją. W wymiarze $1$ róg z zadanym źródłem podnosimy bezpośrednio przez definicję izofibracji; róg z zadanym celem podnosimy, stosując ją do odwrotności dolnej krawędzi i odwracając otrzymany morfizm.
+
+Dla $n\geq2$ róg w $N(\mathcal G)$ ma jednoznaczne wypełnienie: dla rogów wewnętrznych wynika to z twierdzenia~\ref{cat:thm:nerve-inner-horns}, a dla zewnętrznych z twierdzenia~\ref{cat:thm:nerve-kan-groupoid} i jego dowodu jednoznaczności w wymiarach co najmniej $2$. Obraz wypełnienia i zadany dolny sympleks w $N(\mathcal H)$ wypełniają ten sam róg, więc są równe przez tę samą jednoznaczność w grupoidzie $\mathcal H$. Otrzymujemy względne wypełnienie dla każdego rogu.
+\end{proof}
+
+\begin{przyklad}\label{cat:ex:inner-not-kan-fibration}
+Morfizm $N([1])\to\Delta[0]$ jest fibracją wewnętrzną, ale nie jest fibracją Kana, gdyż $N([1])$ nie jest kompleksem Kana (przykład~\ref{cat:ex:nerve-not-kan}). Co więcej, inkluzja grupoidu jednoobiektowego z jedynym morfizmem do grupoidu o dwóch obiektach i dokładnie jednym morfizmie dla każdej uporządkowanej pary obiektów nie jest izofibracją: izomorfizm od obiektu należącego do obrazu do drugiego obiektu nie może zostać podniesiony. Oba nerwy są kompleksami Kana, lecz morfizm między nimi nie jest fibracją Kana.
+\end{przyklad}
+
+\subsection{Podnoszenie względem brzegów}
+
+\begin{definicja}[Morfizm z własnością podnoszenia względem brzegów]\label{cat:def:boundary-injective}
+Powiemy, że $p:X\to Y$ ma prawą własność podnoszenia względem brzegów, jeśli $b_n\pitchfork p$ dla wszystkich $n\geq0$, gdzie $b_n:\partial\Delta[n]\hookrightarrow\Delta[n]$ oznacza kanoniczne włożenie. W wymiarze zero brzeg jest pusty, więc warunek wymusza surjektywność $p_0$.
+\end{definicja}
+
+\begin{stwierdzenie}\label{cat:prop:boundary-lifting-kan}
+Każdy morfizm z prawą własnością podnoszenia względem brzegów jest fibracją Kana.
+\end{stwierdzenie}
+\begin{proof}
+Niech będzie zadany kwadrat podnoszenia dla rogu $\Lambda^k[n]$, $n\geq1$. Oznaczmy górny morfizm przez $a$, dolny przez $b:\Delta[n]\to Y$. Brakująca ściana $\delta^k:\Delta[n-1]\to\Delta[n]$ przecina róg dokładnie w obrazie swojego brzegu. Rzeczywiście, w stopniu $m$ sympleks tej ściany ma postać $\delta^k\theta$ dla jedynego $\theta:[m]\to[n-1]$. Z definicji rogu (definicja~\ref{cat:def:simplicial-boundary-horn}) należy do $\Lambda^k[n]_m$ wtedy i tylko wtedy, gdy istnieje $i\ne k$ nienależące do obrazu $\delta^k\theta$. Ponieważ $\delta^k$ jest bijekcją na $[n]\setminus\{k\}$, jest to równoważne niesurjektywności $\theta$, a więc $\theta\in\partial\Delta[n-1]_m$. Dla $n=1$ morfizm do $[0]$ jest zawsze surjekcją, więc przecięcie jest puste.
+
+Mamy więc kwadrat podnoszenia z $\partial\Delta[n-1]\to\Delta[n-1]$, którego górnym morfizmem jest ograniczenie $a$ do przecięcia, a dolnym $b\delta^k$. Wybieramy podniesienie $c:\Delta[n-1]\to X$. Zgodność $c$ i $a$ na przecięciu pozwala skleić je w morfizm $a':\partial\Delta[n]\to X$: w każdym stopniu brzeg jest sumą podzbiorów odpowiadających rogowi i brakującej ścianie, zaś naturalność sklejonego morfizmu wynika z naturalności obu ograniczeń. Mamy $pa'=b|_{\partial\Delta[n]}$, ponieważ ta równość zachodzi na obu podzbiorach. Drugi raz stosujemy własność podnoszenia względem brzegu, teraz w wymiarze $n$, uzyskując $l:\Delta[n]\to X$ z $pl=b$ i $l|_{\partial\Delta[n]}=a'$. W szczególności $l|_{\Lambda^k[n]}=a$.
+\end{proof}
+
+
+\subsection{Słabe systemy faktoryzacji}
+
+\begin{definicja}[Słaby system faktoryzacji]\label{cat:def:weak-factorization-system}
+Parę klas morfizmów $(\mathcal L,\mathcal R)$ nazywamy słabym systemem faktoryzacji, jeśli
+\[
+ \mathcal L={}^{\pitchfork}\mathcal R,\qquad
+ \mathcal R=\mathcal L^\pitchfork
+\]
+oraz każdy morfizm $f:A\to B$ ma faktoryzację $f=pi$, gdzie $i:A\to E$ należy do $\mathcal L$, a $p:E\to B$ należy do $\mathcal R$. Nie zakładamy jednoznaczności faktoryzacji ani podniesień.
+\end{definicja}
+
+\begin{lemat}[Argument retraktu]\label{cat:lem:factorization-retract}
+Niech $f=pi$ będzie faktoryzacją $A\xrightarrow{i}E\xrightarrow{p}B$.
+Jeżeli $f\pitchfork p$, to $f$ jest retraktem $i$ w kategorii morfizmów. Jeżeli $i\pitchfork f$, to $f$ jest retraktem $p$.
+\end{lemat}
+\begin{proof}
+W pierwszym przypadku stosujemy własność podnoszenia do kwadratu o lewej krawędzi $f$, prawej $p$, górnej $i$ i dolnej $\id_B$. Kwadrat jest przemienny, ponieważ $pi=f=\id_B f$. Otrzymujemy $l:B\to E$ z $lf=i$ i $pl=\id_B$. Pary $(\id_A,l):f\to i$ oraz $(\id_A,p):i\to f$ są morfizmami w kategorii morfizmów, gdyż $i=lf$ oraz $f=pi$. Ich złożenie od $f$ do $f$ ma składowe $\id_A,pl=\id_B$.
+
+W drugim przypadku bierzemy kwadrat o lewej krawędzi $i$, prawej $f$, górnej $\id_A$ i dolnej $p$. Przemienność wynika z $f\id_A=f=pi$. Podniesienie $r:E\to A$ spełnia $ri=\id_A$ i $fr=p$. Pary $(i,\id_B):f\to p$ i $(r,\id_B):p\to f$ są morfizmami, a ich złożenie od $f$ do $f$ jest identycznością.
+\end{proof}
+
+\begin{stwierdzenie}[Kryterium słabego systemu faktoryzacji]\label{cat:prop:wfs-criterion}
+Załóżmy, że $\mathcal L$ i $\mathcal R$ są domknięte względem retraktów, każdy morfizm z $\mathcal L$ ma lewą własność podnoszenia względem każdego morfizmu z $\mathcal R$ i każdy morfizm ma faktoryzację $pi$ z $i\in\mathcal L$, $p\in\mathcal R$. Wówczas $(\mathcal L,\mathcal R)$ jest słabym systemem faktoryzacji.
+\end{stwierdzenie}
+\begin{proof}
+Z założenia $\mathcal L\subseteq{}^\pitchfork\mathcal R$ i $\mathcal R\subseteq\mathcal L^\pitchfork$. Dla $f\in{}^\pitchfork\mathcal R$ wybieramy faktoryzację $f=pi$ jak w założeniu. Mamy $f\pitchfork p$, więc $f$ jest retraktem $i\in\mathcal L$ przez lemat~\ref{cat:lem:factorization-retract}. Stąd $f\in\mathcal L$. Jeżeli natomiast $f\in\mathcal L^\pitchfork$, to $i\pitchfork f$ i ten sam lemat daje, że $f$ jest retraktem $p\in\mathcal R$. Zatem $f\in\mathcal R$.
+\end{proof}
+
+\subsection{Argument małego obiektu dla zbiorów symplicjalnych}
+
+Niech $I$ będzie zbiorem monomorfizmów w $\mathbf{sSet}$. W tej części wystarczy przypadek, w którym dziedzina każdego $j:A\to B$ z $I$ ma skończenie wiele sympleksów niezdegenerowanych. Przykładami są rodziny
+\[
+ I_{\partial}=\{\partial\Delta[n]\hookrightarrow\Delta[n]:n\geq0\},
+ \qquad
+ I_{\Lambda}=\{\Lambda^k[n]\hookrightarrow\Delta[n]:n\geq1,\ 0\leq k\leq n\}.
+\]
+W reprezentowalnym zbiorze symplicjalnym $\Delta[n]$ sympleksy niezdegenerowane odpowiadają injekcjom do $[n]$. Istotnie, morfizm niemalejący $\theta:[m]\to[n]$ rozkłada się na surjekcję i injekcję (twierdzenie~\ref{cat:thm:delta-factorization}); jeżeli $\theta$ nie jest injekcją, to surjekcja w tym rozkładzie nie jest identycznością i $\theta$ jest degeneracją sympleksu niższego wymiaru. Injekcja nie może być taką degeneracją, ponieważ złożenie przez nieinjektywną surjekcję nie jest injektywne. Injekcji do $[n]$ jest łącznie $2^{n+1}-1$, po jednej dla każdego niepustego podzbioru $[n]$. Dla dowolnego podzbioru symplicjalnego $K\subseteq\Delta[n]$ degeneracja sympleksu należącego do $K$ może być rozłożona wewnątrz $K$: jeśli $u=\sigma^*v$ dla surjekcji $\sigma$, wybieramy jej sekcję $\tau$ i mamy $v=\tau^*u\in K$. Zatem niezdegenerowane sympleksy $K$ są dokładnie tymi spośród niezdegenerowanych sympleksów $\Delta[n]$, które należą do $K$.
+
+\begin{lemat}[Małość względem ciągów monomorfizmów]\label{cat:lem:simplicial-finite-smallness}
+Jeżeli $A$ ma skończenie wiele sympleksów niezdegenerowanych, a
+\[
+ Z_0\hookrightarrow Z_1\hookrightarrow Z_2\hookrightarrow\cdots
+\]
+jest ciągiem monomorfizmów zbiorów symplicjalnych, to każdy morfizm $A\to\operatorname{colim}_{r<\omega}Z_r$ faktoryzuje się przez pewne $Z_r$. Jeżeli dwa morfizmy $A\to Z_r$ mają ten sam obraz w kogranicy, są równe.
+\end{lemat}
+\begin{proof}
+Oznaczmy kogranicę przez $Z$. W każdym stopniu obliczamy ją jako sumę rosnących zbiorów po utożsamieniu $Z_r$ z jego obrazem w $Z$. Włożenia są monomorfizmami: w stopniu $n$ dwa elementy z $(Z_r)_n$ mają ten sam obraz w kogranicy wtedy i tylko wtedy, gdy ich obrazy są równe w pewnym $(Z_t)_n$ dla $t\geq r$. Przejścia do tego stopnia ciągu są złożeniami injekcji, zatem elementy wyjściowe są równe. To uzasadnia utożsamienie każdego $Z_r$ z jego obrazem w $Z$.
+
+Niech $f:A\to Z$. Dla każdego niezdegenerowanego sympleksu $a$ wybieramy indeks $r_a$ taki, że $f(a)$ należy do obrazu $Z_{r_a}$. Z powodu skończoności zbioru tych sympleksów istnieje jeden indeks $r$ nie mniejszy od wszystkich $r_a$ (dla pustego $A$ bierzemy $r=0$). Każdy sympleks $A$ jest degeneracją sympleksu niezdegenerowanego na mocy lematu~\ref{cat:lem:ez-degeneracy}. Obraz $Z_r$ jest podzbiorem symplicjalnym $Z$, więc zawiera wszystkie $f(a)$, również dla zdegenerowanych $a$. Ograniczając przeciwdziedziny składowych $f$, otrzymujemy morfizm $A\to Z_r$; naturalność wynika z tego, że operatory $Z_r$ są ograniczeniami operatorów $Z$. Ostatnia teza wynika z monomorficzności włożenia $Z_r\to Z$. Ogólniej, jeśli $A\to Z_r$ i $A\to Z_s$ mają ten sam obraz w $Z$, to po przejściu do $Z_{\max(r,s)}$ są równe. Otrzymujemy zatem bijekcję $\operatorname{colim}_{r<\omega}\Hom_{\mathbf{sSet}}(A,Z_r)\cong\Hom_{\mathbf{sSet}}(A,Z)$ indukowaną przez włożenia.
+\end{proof}
+
+\begin{definicja}[Morfizmy komórkowe względem $I$]\label{cat:def:relative-cell-complex}
+Morfizm nazywamy względnym kompleksem komórkowym względem $I$, jeżeli jest złożeniem pozaskończonym zmian kobazy koproduktów morfizmów z $I$. Dokładniej: istnieje funktor z porządku liczby porządkowej $\lambda+1$, o wartościach $Z_\alpha$ i morfizmach przejścia $z_{\alpha\beta}:Z_\alpha\to Z_\beta$ dla $\alpha\leq\beta\leq\lambda$. Dla każdej niezerowej granicznej $\beta$ morfizmy $z_{\alpha\beta}$ ($\alpha<\beta$) wyznaczają kogranicę, a dla każdego $\alpha<\lambda$ morfizm $z_{\alpha,\alpha+1}$ jest zmianą kobazy koproduktu małej rodziny morfizmów z $I$. Rozważany morfizm to $Z_0\to Z_\lambda$, z dokładnością do izomorfizmu w kategorii morfizmów.
+\end{definicja}
+
+\begin{lemat}[Podnoszenie dla kompleksów komórkowych]\label{cat:lem:cell-lifting}
+Jeżeli $p\in I^\pitchfork$, to każdy względny kompleks komórkowy względem $I$ ma lewą własność podnoszenia względem $p$.
+\end{lemat}
+\begin{proof}
+Koprodukt morfizmów z $I$ ma lewą własność podnoszenia względem $p$: jeśli $a:\coprod_t A_t\to E$ i $b:\coprod_t B_t\to Y$ dają kwadrat z $\coprod_t j_t$, to ich ograniczenia $a_t,b_t$ spełniają $pa_t=b_tj_t$. Wybieramy $l_t:B_t\to E$ z $l_tj_t=a_t$ i $pl_t=b_t$, a następnie morfizm $l:\coprod_t B_t\to E$ indukowany przez rodzinę $l_t$. Równości $l(\coprod_t j_t)=a$ i $pl=b$ wynikają z ich sprawdzenia na każdym składniku. Wybór podniesień korzysta z aksjomatu wyboru, a dla pustej rodziny obie równości zachodzą przez jednoznaczność morfizmu z obiektu początkowego. Zmiana kobazy zachowuje tę własność na mocy stwierdzenia~\ref{cat:prop:lifting-base-change}.
+
+Dla kwadratu z lewym morfizmem $z_{0\lambda}$, górnym $a:Z_0\to E$ i dolnym $b:Z_\lambda\to Y$, budujemy morfizmy $l_\alpha:Z_\alpha\to E$ spełniające $pl_\alpha=bz_{\alpha\lambda}$ oraz $l_\beta z_{\alpha\beta}=l_\alpha$ dla $\alpha\leq\beta$. Zaczynamy od $l_0=a$; przemienność wyjściowego kwadratu daje pierwszy warunek. Na etapie następnikowym mamy $pl_\alpha=bz_{\alpha+1,\lambda}z_{\alpha,\alpha+1}$, więc własność podnoszenia $z_{\alpha,\alpha+1}\pitchfork p$ daje $l_{\alpha+1}$ z $l_{\alpha+1}z_{\alpha,\alpha+1}=l_\alpha$ oraz $pl_{\alpha+1}=bz_{\alpha+1,\lambda}$. Zgodność z wcześniejszymi etapami wynika z funktorialności morfizmów przejścia. Na etapie granicznym $\beta$ istnieje jedyny $l_\beta$ taki, że $l_\beta z_{\alpha\beta}=l_\alpha$ dla $\alpha<\beta$. Ponieważ $pl_\beta z_{\alpha\beta}=pl_\alpha=bz_{\alpha\lambda}=bz_{\beta\lambda}z_{\alpha\beta}$, jednoznaczność w kogranicy daje $pl_\beta=bz_{\beta\lambda}$. Rekursja pozaskończona z wyborem podniesień daje $l_\lambda$ z $l_\lambda z_{0\lambda}=a$ i $pl_\lambda=b$. Dla $\lambda=0$ lewy morfizm jest identycznością (z dokładnością do izomorfizmu w kategorii morfizmów). Własność podnoszenia jest niezmiennicza względem takich izomorfizmów, co wynika ze stwierdzenia~\ref{cat:prop:lifting-composition}.
+\end{proof}
+
+\begin{twierdzenie}[Argument małego obiektu w wersji przeliczalnej]\label{cat:thm:small-object-sset}
+Niech $I$ będzie zbiorem monomorfizmów zbiorów symplicjalnych, których dziedziny mają skończenie wiele sympleksów niezdegenerowanych. Każdy morfizm $f:X\to Y$ ma faktoryzację $f=pi$, w której $i$ jest względnym kompleksem komórkowym względem $I$ (wystarcza ciąg długości $\omega$), a $p\in I^\pitchfork$. Para
+\[
+ ({}^\pitchfork(I^\pitchfork),I^\pitchfork)
+\]
+jest słabym systemem faktoryzacji. Każdy morfizm z lewej klasy jest retraktem względnego kompleksu komórkowego względem $I$.
+\end{twierdzenie}
+\begin{proof}
+Zaczynamy od $X_0=X$ oraz $f_0=f$. Dla każdego $r\geq0$ tworzymy zbiór $S_r$ wszystkich trójek $(j,a,b)$, gdzie $j:A_j\to B_j$ należy do $I$, $a:A_j\to X_r$, $b:B_j\to Y$ oraz $f_ra=bj$. Jest to zbiór, ponieważ $I$ jest zbiorem, a kategoria zbiorów symplicjalnych jest lokalnie mała. Tworzymy sumę amalgamowaną
+\[
+ X_{r+1}=X_r\amalg_{\coprod_{(j,a,b)\in S_r}A_j}
+                       \coprod_{(j,a,b)\in S_r}B_j,
+\]
+gdzie górne morfizmy do $X_r$ są dane przez $a$, a drugi morfizm z koproduktu dziedzin przez $j$ na każdym składniku. Własność uniwersalna tej sumy amalgamowanej daje $f_{r+1}:X_{r+1}\to Y$, którego ograniczenie do $X_r$ to $f_r$, a do każdego $B_j$ to $b$. Dokładniej, oznaczając morfizm przejścia przez $t_r:X_r\to X_{r+1}$ i morfizm z danego składnika przez $c_{j,a,b}:B_j\to X_{r+1}$, mamy
+\[
+ c_{j,a,b}j=t_ra,\qquad
+ f_{r+1}c_{j,a,b}=b,\qquad f_{r+1}t_r=f_r.
+\]
+Pierwsza równość wynika z przemienności kwadratu sumy amalgamowanej, dwie następne z konstrukcji $f_{r+1}$. Zatem każdy kwadrat z $S_r$ ma podniesienie po przejściu do $X_{r+1}$.
+
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (A) at (0,2.4) {$\coprod_{S_r}A_j$};
+ \node (X) at (5,2.4) {$X_r$};
+ \node (B) at (0,0) {$\coprod_{S_r}B_j$};
+ \node (Z) at (5,0) {$X_{r+1}$};
+ \node (Y) at (8,-1.7) {$Y$};
+ \draw[->] (A)--node[above] {$\coprod a$}(X);
+ \draw[{Hooks[right]}-{Stealth}] (A)--node[left] {$\coprod j$}(B);
+ \draw[{Hooks[right]}-{Stealth}] (X)--(Z);
+ \draw[->] (B)--(Z);
+ \draw[->] (Z)--node[above,sloped] {$f_{r+1}$}(Y);
+ \draw[->] (X) to[bend left=22] node[right] {$f_r$}(Y);
+ \draw[->] (B) to[bend right=15] node[below] {$\coprod b$}(Y);
+ \node at (2.5,1.1) {$\mathrm{PO}$};
+\end{tikzpicture}
+\end{center}
+
+Każdy $X_r\to X_{r+1}$ jest monomorfizmem: koprodukt monomorfizmów jest stopniowo injekcją, a zmiana kobazy injekcji zbiorów $U\hookrightarrow V$ przez funkcję $U\to W$ jest injekcją $W\hookrightarrow W\amalg_U V$. Istotnie, po utożsamieniu $U$ z podzbiorem $V$ zbiór po prawej jest izomorficzny z rozłączną sumą $W\amalg(V\setminus U)$, gdzie elementy $U$ przechodzą na swoje obrazy w $W$. Stosujemy ten rachunek w każdym stopniu.
+
+Niech $X_\omega=\operatorname{colim}_{r<\omega}X_r$, a $p:X_\omega\to Y$ będzie indukowany przez zgodne $f_r$. Oznaczamy przez $i:X\to X_\omega$ morfizm kanoniczny. Mamy $pi=f$, a $i$ jest względnym kompleksem komórkowym. Sprawdzimy $p\in I^\pitchfork$. Dla dowolnego kwadratu $pa=bj$ z $j:A_j\to B_j$ w $I$ i $a:A_j\to X_\omega$ lemat~\ref{cat:lem:simplicial-finite-smallness} daje faktoryzację $a$ przez $a_r:A_j\to X_r$. Ponieważ $p|_{X_r}=f_r$, mamy $f_ra_r=bj$, a więc $(j,a_r,b)\in S_r$. Oznaczmy włożenia do kogranicy przez $t_{r,\omega}$. Morfizm $l=t_{r+1,\omega}c_{j,a_r,b}:B_j\to X_\omega$ spełnia
+\[
+ lj=t_{r+1,\omega}t_ra_r=t_{r,\omega}a_r=a,\qquad
+ pl=f_{r+1}c_{j,a_r,b}=b.
+\]
+Jest więc podniesieniem wyjściowego kwadratu.
+
+Z lematu~\ref{cat:lem:cell-lifting} mamy $i\in{}^\pitchfork(I^\pitchfork)$. Obie klasy są domknięte względem retraktów na mocy stwierdzenia~\ref{cat:prop:lifting-retract} i mają wzajemną własność podnoszenia. Zatem stwierdzenie~\ref{cat:prop:wfs-criterion} daje słaby system faktoryzacji. Jeżeli $f$ należy do lewej klasy, to dla skonstruowanej faktoryzacji $f\pitchfork p$, więc lemat~\ref{cat:lem:factorization-retract} daje, że $f$ jest retraktem $i$.
+\end{proof}
+
+\begin{wniosek}[Systemy generowane przez rogi]\label{cat:cor:horn-wfs}
+Fibracje Kana, fibracje wewnętrzne, lewe i prawe fibracje są prawymi klasami słabych systemów faktoryzacji generowanych odpowiednio przez wszystkie rogi, rogi wewnętrzne, rogi z $k<n$ oraz rogi z $k>0$.
+\end{wniosek}
+\begin{proof}
+Każda z wymienionych rodzin jest zbiorem monomorfizmów o dziedzinach mających skończenie wiele niezdegenerowanych sympleksów. Stosujemy twierdzenie~\ref{cat:thm:small-object-sset} i definicję~\ref{cat:def:simplicial-fibrations}.
+\end{proof}
+
+\begin{definicja}[Morfizmy anodyniczne]\label{cat:def:anodyne}
+Morfizm zbiorów symplicjalnych nazywamy anodynicznym, jeśli ma lewą własność podnoszenia względem wszystkich fibracji Kana. Wewnętrznie anodyniczny morfizm ma lewą własność podnoszenia względem wszystkich fibracji wewnętrznych. Lewostronnie i prawostronnie anodyniczne morfizmy definiujemy analogicznie względem lewych i prawych fibracji.
+\end{definicja}
+Każdy z tych morfizmów jest retraktem odpowiedniego względnego kompleksu komórkowego przez twierdzenie~\ref{cat:thm:small-object-sset}. Odwrotnie, każdy taki retrakt należy do odpowiedniej lewej klasy przez lemat~\ref{cat:lem:cell-lifting} i stwierdzenie~\ref{cat:prop:lifting-retract}. Wszystkie te morfizmy są monomorfizmami: morfizmy przejścia na etapach następnikowych są stopniowo injekcjami (rachunek sumy amalgamowanej w dowodzie argumentu małego obiektu). Na etapie granicznym kogranicę injekcji można stopniowo utożsamić z rosnącą sumą ich obrazów; dwa elementy mają ten sam obraz w kogranicy dokładnie wtedy, gdy ich obrazy w pewnym wspólnym późniejszym etapie są równe. Indukcja pozaskończona daje injektywność wszystkich przejść. Wreszcie retrakt monomorfizmu jest monomorfizmem. Dla ostatniego faktu, jeśli $f$ jest retraktem $g$ z kwadratami jak w definicji~\ref{cat:def:arrow-retract} i $fa=fb$, to $gua=vfa=vfb=gub$, skąd $ua=ub$ i $a=b$ po złożeniu z $r$.
+
+\subsection{Aksjomaty kategorii modelowych}
+
+\begin{definicja}[Kategoria modelowa]\label{cat:def:model-category}
+Kategorią modelową nazywamy kategorię $\mathcal M$ mającą wszystkie małe granice i kogranice, wyposażoną w klasy morfizmów $\mathcal W$, $\mathcal C$, $\mathcal F$, nazywane odpowiednio słabymi równoważnościami, kofibracjami i fibracjami, spełniające następujące warunki:
+\begin{enumerate}
+ \item każda z trzech klas zawiera izomorfizmy i jest domknięta względem retraktów;
+ \item jeżeli dla składanych morfizmów $f,g$ dwa spośród $f,g,gf$ należą do $\mathcal W$, to trzeci również należy do $\mathcal W$ (własność dwóch z trzech);
+ \item każda kofibracja ma lewą własność podnoszenia względem fibracji należących do $\mathcal W$, a każda kofibracja należąca do $\mathcal W$ ma lewą własność podnoszenia względem każdej fibracji;
+ \item każdy morfizm $f$ ma obie faktoryzacje
+ \[
+ f=pi=qj,\quad
+ i\in\mathcal C,\ p\in\mathcal F\cap\mathcal W,\quad
+ j\in\mathcal C\cap\mathcal W,\ q\in\mathcal F.
+ \]
+\end{enumerate}
+W tej konwencji nie wymagamy wyboru funktorialnych faktoryzacji. Kofibracje i fibracje należące do $\mathcal W$ nazywamy odpowiednio trywialnymi kofibracjami i trywialnymi fibracjami.
+\end{definicja}
+
+\begin{stwierdzenie}[Dwa słabe systemy faktoryzacji]\label{cat:prop:model-wfs}
+W kategorii modelowej parami słabych systemów faktoryzacji są
+\[
+ (\mathcal C,\mathcal F\cap\mathcal W),\qquad
+ (\mathcal C\cap\mathcal W,\mathcal F).
+\]
+Odwrotnie, jeśli w kategorii z małymi granicami i kogranicami $\mathcal W$ zawiera izomorfizmy, jest domknięta względem retraktów i spełnia własność dwóch z trzech, a obie wskazane pary są słabymi systemami faktoryzacji, to otrzymujemy kategorię modelową.
+\end{stwierdzenie}
+\begin{proof}
+Dla pierwszego kierunku w obu parach klasy są domknięte względem retraktów, aksjomat podnoszenia daje wzajemną własność podnoszenia, a aksjomat faktoryzacji daje rozkład każdego morfizmu. Stosujemy stwierdzenie~\ref{cat:prop:wfs-criterion}. Dla drugiego kierunku z równości $\mathcal C={}^\pitchfork(\mathcal F\cap\mathcal W)$ oraz $\mathcal F=(\mathcal C\cap\mathcal W)^\pitchfork$ wynika, że klasy $\mathcal C$ i $\mathcal F$ zawierają izomorfizmy i są domknięte względem retraktów na mocy stwierdzeń~\ref{cat:prop:lifting-composition} i~\ref{cat:prop:lifting-retract}. Pierwszy system daje podnoszenie kofibracji względem trywialnych fibracji oraz faktoryzację $f=pi$, drugi daje podnoszenie trywialnych kofibracji względem fibracji oraz faktoryzację $f=qj$. Własność dwóch z trzech i domknięcie $\mathcal W$ względem retraktów są założeniami. Otrzymujemy wszystkie aksjomaty z definicji~\ref{cat:def:model-category}.
+\end{proof}
+
+\begin{definicja}[Obiekty kofibrantne i fibrantne]\label{cat:def:cofibrant-fibrant}
+Niech $0$ i $1$ oznaczają odpowiednio obiekt początkowy i końcowy kategorii modelowej. Obiekt $X$ jest kofibrantny, jeśli $0\to X$ jest kofibracją, i fibrantny, jeśli $X\to1$ jest fibracją. Obiekt zarazem kofibrantny i fibrantny nazywamy bifibrantnym.
+\end{definicja}
+
+\begin{wniosek}[Zastąpienia]\label{cat:cor:model-replacements}
+Każdy obiekt $X$ ma trywialną fibrację $QX\to X$ z obiektu kofibrantnego oraz trywialną kofibrację $X\to RX$ do obiektu fibrantnego. Jeżeli $X$ jest kofibrantny, to tak skonstruowany $RX$ jest bifibrantny. Jeżeli $X$ jest fibrantny, to $QX$ jest bifibrantny.
+\end{wniosek}
+\begin{proof}
+Faktoryzujemy $0\to X$ przez kofibrację $0\to QX$ i trywialną fibrację $QX\to X$, a $X\to1$ przez trywialną kofibrację $X\to RX$ i fibrację $RX\to1$. Jeżeli $0\to X$ jest kofibracją, to złożenie $0\to X\to RX$ jest kofibracją, ponieważ lewa klasa pierwszego systemu jest domknięta względem składania. Jeżeli $X\to1$ jest fibracją, to złożenie $QX\to X\to1$ jest fibracją przez domknięcie prawej klasy drugiego systemu. W szczególności każdy obiekt jest połączony z obiektem bifibrantnym zygzakiem słabych równoważności $X\leftarrow QX\to RQX$.
+\end{proof}
+
+\begin{przyklad}[Dyskretna struktura modelowa]\label{cat:ex:discrete-model-structure}
+W każdej kategorii z małymi granicami i kogranicami można przyjąć za $\mathcal W$ izomorfizmy, a za $\mathcal C$ i $\mathcal F$ wszystkie morfizmy. Izomorfizmy spełniają własność dwóch z trzech: jeżeli $f$ i $g$ są izomorfizmami, to $gf$ ma odwrotność $f^{-1}g^{-1}$; jeżeli $f$ i $gf$ są izomorfizmami, to $g=(gf)f^{-1}$ jest izomorfizmem, a jeżeli $g$ i $gf$ są izomorfizmami, to $f=g^{-1}(gf)$ jest izomorfizmem. Retrakt izomorfizmu $g:C\to D$ przez dane $u,v,r,s$ z definicji~\ref{cat:def:arrow-retract} jest izomorfizmem: odwrotnością $f$ jest $rg^{-1}v$, gdyż $rg^{-1}vf=rg^{-1}gu=ru=\id$ oraz $frg^{-1}v=sgg^{-1}v=sv=\id$. Własności podnoszenia wynikają ze stwierdzenia~\ref{cat:prop:lifting-composition}, a faktoryzacje to $f=\id_B f=f\id_A$ dla $f:A\to B$. Wszystkie obiekty są bifibrantne.
+\end{przyklad}
+
+
+\subsection{Cylindry, obiekty dróg i homotopie}
+
+\begin{definicja}[Obiekt cylindryczny i obiekt dróg]\label{cat:def:model-cylinder-path}
+Dobrym obiektem cylindrycznym dla $A$ nazywamy faktoryzację morfizmu składającego koprodukt
+\[
+ A\amalg A\xrightarrow{[i_0,i_1]}C A\xrightarrow{q}A,
+ \qquad qi_0=qi_1=\id_A,
+\]
+w której $[i_0,i_1]$ jest kofibracją, a $q$ słabą równoważnością.
+Dobrym obiektem dróg dla $B$ nazywamy faktoryzację przekątnej
+\[
+ B\xrightarrow{j}P B\xrightarrow{(p_0,p_1)}B\times B,
+ \qquad p_0j=p_1j=\id_B,
+\]
+w której $j$ jest słabą równoważnością, a $(p_0,p_1)$ fibracją.
+\end{definicja}
+Obie faktoryzacje istnieją na mocy aksjomatów modelowych; możemy nawet wybrać $q$ jako trywialną fibrację i $j$ jako trywialną kofibrację. W tej części rozważamy homotopie wyłącznie przez dobre obiekty cylindryczne i dobre obiekty dróg.
+
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (a) at (0,1.8) {$A$};
+ \node (b) at (0,0) {$A$};
+ \node (c) at (3.4,.9) {$CA$};
+ \node (d) at (6.6,.9) {$B$};
+ \draw[->] (a)--node[above] {$i_0$}(c);
+ \draw[->] (b)--node[below] {$i_1$}(c);
+ \draw[->] (c)--node[above] {$H$}(d);
+ \draw[->] (a) to[bend left=22] node[above] {$f$}(d);
+ \draw[->] (b) to[bend right=22] node[below] {$g$}(d);
+\end{tikzpicture}
+
+\medskip
+\begin{tikzpicture}[>=stealth]
+ \node (a) at (0,.9) {$A$};
+ \node (c) at (2.1,.9) {$PB$};
+ \node (d) at (4.4,1.8) {$B$};
+ \node (e) at (4.4,0) {$B$};
+ \draw[->] (a)--node[above] {$K$}(c);
+ \draw[->] (c)--node[above] {$p_0$}(d);
+ \draw[->] (c)--node[below] {$p_1$}(e);
+\end{tikzpicture}
+\end{center}
+
+\begin{definicja}[Lewa i prawa homotopia modelowa]\label{cat:def:model-homotopies}
+Morfizmy $f,g:A\to B$ są lewostronnie homotopijne, jeśli dla pewnego dobrego cylindra $CA$ istnieje $H:CA\to B$ z $Hi_0=f$ i $Hi_1=g$. Są prawostronnie homotopijne, jeśli dla pewnego dobrego obiektu dróg $PB$ istnieje $K:A\to PB$ z $p_0K=f$ i $p_1K=g$.
+\end{definicja}
+Nie należy utożsamiać tych definicji z homotopią krawędzi pojedynczej quasi-kategorii z definicji~\ref{cat:def:edge-homotopies}. Tutaj porównujemy morfizmy w kategorii modelowej i korzystamy z jej struktury.
+
+\begin{lemat}[Końce cylindra i projekcje dróg]\label{cat:lem:model-cylinder-endpoints}
+Jeśli $A$ jest kofibrantny, oba $i_0,i_1:A\to CA$ są trywialnymi kofibracjami. Jeżeli $B$ jest fibrantny, oba $p_0,p_1:PB\to B$ są trywialnymi fibracjami.
+\end{lemat}
+\begin{proof}
+Włożenie każdego składnika $A\to A\amalg A$ jest zmianą kobazy kofibracji $0\to A$. Jest więc kofibracją, podobnie jak jego złożenie z $[i_0,i_1]$. Korzystamy z domknięcia kofibracji względem zmian kobazy i składania, wynikającego z pierwszego systemu faktoryzacji w stwierdzeniu~\ref{cat:prop:model-wfs}. Ponieważ $qi_t=\id_A$ i $q\in\mathcal W$, własność dwóch z trzech daje $i_t\in\mathcal W$ dla $t=0,1$.
+Dla $B$ fibrantnego obie projekcje $B\times B\to B$ są zmianami bazy fibracji $B\to1$. Ich złożenia z $(p_0,p_1)$ są fibracjami na mocy domknięcia prawej klasy drugiego systemu faktoryzacji względem zmian bazy i składania. Z $p_tj=\id_B$ i $j\in\mathcal W$ wynika $p_t\in\mathcal W$.
+\end{proof}
+
+\begin{stwierdzenie}[Porównanie homotopii]\label{cat:prop:model-left-right}
+Jeżeli $A$ jest kofibrantny, a $B$ fibrantny, to lewa i prawa homotopia morfizmów $A\to B$ są równoważne. Można je badać z wykorzystaniem dowolnego dobrego cylindra $CA$ i dowolnego dobrego obiektu dróg $PB$.
+\end{stwierdzenie}
+\begin{proof}
+Załóżmy, że $H:CA\to B$ jest lewą homotopią od $f$ do $g$. Dla dowolnego dobrego obiektu dróg $PB$ rozważamy kwadrat z lewą krawędzią $i_0:A\to CA$, prawą $(p_0,p_1):PB\to B\times B$, górnym morfizmem $jf$ i dolnym morfizmem $(fq,H)$. Jest przemienny, gdyż $(fq,H)i_0=(f,f)=(p_0,p_1)jf$. Krawędź $i_0$ jest trywialną kofibracją przez lemat~\ref{cat:lem:model-cylinder-endpoints}. Podniesienie $l:CA\to PB$ spełnia $li_0=jf$ oraz $(p_0,p_1)l=(fq,H)$. Dla $K=li_1$ otrzymujemy $p_0K=fqi_1=f$ oraz $p_1K=Hi_1=g$.
+
+Załóżmy odwrotnie, że $K:A\to PB$ jest prawą homotopią. Dla dowolnego dobrego cylindra $CA$ rozważamy kwadrat z lewą krawędzią $[i_0,i_1]$, prawą $p_0:PB\to B$, górnym morfizmem $[jf,K]:A\amalg A\to PB$ i dolnym $fq:CA\to B$. Kwadrat jest przemienny, ponieważ $p_0[jf,K]=[p_0jf,p_0K]=[f,f]=fq[i_0,i_1]$. Krawędź $p_0$ jest trywialną fibracją przez lemat~\ref{cat:lem:model-cylinder-endpoints}. Podniesienie $l:CA\to PB$ ma $li_0=jf$, $li_1=K$. Morfizm $H=p_1l$ spełnia $Hi_0=p_1jf=f$ oraz $Hi_1=p_1K=g$.
+
+Pierwsza konstrukcja pozwala przejść od lewej homotopii do prawej w dowolnym dobrym obiekcie dróg, a druga od prawej do lewej w dowolnym dobrym cylindrze. Stąd wynika również niezależność od obu wyborów.
+\end{proof}
+
+\begin{stwierdzenie}[Klasy homotopii]\label{cat:prop:model-homotopy-congruence}
+Dla kofibrantnego $A$ i fibrantnego $B$ wspólna relacja homotopii $\sim$ na $\Hom_{\mathcal M}(A,B)$ jest relacją równoważności. Na pełnej podkategorii $\mathcal M_{cf}$ obiektów bifibrantnych jest zgodna ze składaniem.
+\end{stwierdzenie}
+\begin{proof}
+Zwrotność daje $fq:CA\to B$. Symetrię otrzymujemy przez zamianę oznaczeń $i_0,i_1$ w dobrym cylindrze; jest to nadal kofibracja, ponieważ zamiana składników jest izomorfizmem koproduktu.
+
+Dla przechodniości niech $H:CA\to B$ i $H':C'A\to B$ będą homotopiami odpowiednio od $f$ do $g$ i od $g$ do $h$. Sklejamy cylindry przez koniec $i_1$ pierwszego i początek $i'_0$ drugiego, otrzymując $T=CA\amalg_A C'A$. Zgodność $Hi_1=H'i'_0=g$ daje morfizm $T\to B$. Projekcje $q:CA\to A$ i $q':C'A\to A$ również są zgodne na wspólnym $A$, dają więc $t:T\to A$.
+
+Włożenie $CA\to T$ jest zmianą kobazy trywialnej kofibracji $i'_0$ (lemat~\ref{cat:lem:model-cylinder-endpoints}), zatem należy do $\mathcal W$. Z równości $t|_{CA}=q$ i własności dwóch z trzech wynika $t\in\mathcal W$. Zewnętrzny morfizm $A\amalg A\to T$ jest kofibracją: faktoryzujemy go przez $CA\amalg A$ w następujący sposób. Najpierw włączamy pierwszy $A$ do $CA$ przez $i_0$, pozostawiając drugi $A$ bez zmian. Następnie $CA\amalg A\to T$ jest zmianą kobazy kofibracji $[i'_0,i'_1]:A\amalg A\to C'A$ przez morfizm $A\amalg A\to CA\amalg A$ o składowych $i_1$ (złożonym z włożeniem $CA$ do koproduktu) i włożeniu drugiego składnika. Aby sprawdzić własność sumy amalgamowanej, zauważmy, że zgodne morfizmy $CA\amalg A\to Z$ i $C'A\to Z$ są dokładnie parami $u:CA\to Z$, $v:C'A\to Z$ spełniającymi $ui_1=vi'_0$: wartość na drugim składniku $A$ musi wynosić $vi'_1$. Takie pary wyznaczają jednoznacznie morfizm z $T$. Pierwszy etap jest koproduktem kofibracji $i_0$ i identyczności (koprodukty kofibracji zachowują lewą własność podnoszenia), drugi zmianą kobazy kofibracji. Złożenie jest kofibracją. Oznaczmy włożenia przez $u:CA\to T$ i $v:C'A\to T$. Zewnętrzne końce to $ui_0$ i $vi'_1$, a $tui_0=qi_0=\id_A$ i $tvi'_1=q'i'_1=\id_A$. Stąd $T$ z morfizmem $t$ jest dobrym cylindrem, a sklejony morfizm $T\to B$ ma na zewnętrznych końcach wartości $Hi_0=f$ i $H'i'_1=h$.
+
+Postkompozycja zachowuje lewą homotopię, ponieważ wystarczy postkomponować $H$ z zadanym morfizmem. Prekompozycja zachowuje prawą homotopię przez prekompozycję $K$. Jeśli wszystkie obiekty są bifibrantne, możemy przechodzić między obiema relacjami dzięki stwierdzeniu~\ref{cat:prop:model-left-right}. Zatem zmiana obu czynników na homotopijne nie zmienia klasy złożenia.
+\end{proof}
+
+\subsection{Kategoria homotopii i twierdzenie Whiteheada}
+
+Stosujemy pojęcie lokalizacji z definicji~\ref{cat:def:categorical-localization}. Kategorię homotopii kategorii modelowej $\mathcal M$ oznaczamy przez $\operatorname{Ho}(\mathcal M)=\mathcal M[\mathcal W^{-1}]$, a morfizm kanoniczny przez $\gamma$. W razie potrzeby rozważamy konstrukcję lokalizacji w większym uniwersum; podstawowe twierdzenie poniżej zapewnia lokalną małość w pierwotnym uniwersum. Jeżeli $f,g$ są lewostronnie homotopijne przez cylinder, to $\gamma(i_0)=\gamma(q)^{-1}=\gamma(i_1)$, więc $\gamma(f)=\gamma(g)$. Dla prawej homotopii analogicznie $\gamma(p_0)=\gamma(j)^{-1}=\gamma(p_1)$.
+
+\begin{twierdzenie}[Podstawowe twierdzenie o kategorii homotopii; wynik zewnętrzny]\label{cat:thm:model-homotopy-category}
+Niech $\mathcal M$ będzie lokalnie małą kategorią modelową. Włączenie pełnej podkategorii obiektów bifibrantnych indukuje równoważność
+\[
+ \mathcal M_{cf}/{\sim}\ \simeq\ \operatorname{Ho}(\mathcal M).
+\]
+Dla kofibrantnego $A$ i fibrantnego $B$ mamy naturalną identyfikację
+\[
+ \Hom_{\operatorname{Ho}(\mathcal M)}(\gamma A,\gamma B)
+ \cong \Hom_{\mathcal M}(A,B)/{\sim}.
+\]
+Ponadto $\gamma(f)$ jest izomorfizmem wtedy i tylko wtedy, gdy $f\in\mathcal W$.
+\end{twierdzenie}
+Zob. M.~Hovey, \emph{Model Categories}, Mathematical Surveys and Monographs, t.~63, AMS, 1999, twierdzenie 1.2.10. Hovey zakłada funktorialne faktoryzacje; dla przyjętej tutaj konwencji bez tego dodatkowego założenia zob. również W.~G.~Dwyer, J.~Spaliński, \emph{Homotopy theories and model categories}, Handbook of Algebraic Topology, North-Holland, 1995, s.~73--126, sekcje 4--6, w szczególności twierdzenie 6.2 o lokalizacji. Dowód pełnego twierdzenia o lokalizacji przytaczamy przez odsyłacz. Istotna surjektywność wskazanego funktora wynika już z zygzaka $X\leftarrow QX\to RQX$ z wniosku~\ref{cat:cor:model-replacements}. Własność pełności i wierności oraz implikacja od odwracalności $\gamma(f)$ do $f\in\mathcal W$ wymagają dalszych argumentów.
+
+\begin{wniosek}[Modelowe twierdzenie Whiteheada]\label{cat:cor:model-whitehead}
+Morfizm $f:A\to B$ między obiektami bifibrantnymi jest słabą równoważnością wtedy i tylko wtedy, gdy istnieje $g:B\to A$ z $gf\sim\id_A$ i $fg\sim\id_B$.
+\end{wniosek}
+\begin{proof}
+Jeśli $f\in\mathcal W$, to $\gamma(f)$ jest odwracalny. Z pełności funktora w twierdzeniu~\ref{cat:thm:model-homotopy-category} istnieje reprezentant $g$ odwrotności. Wierność i zachowywanie składania dają $[gf]=[\id_A]$, $[fg]=[\id_B]$. Odwrotnie, homotopie dają równości w lokalizacji, a więc $\gamma(g)$ jest odwrotnością $\gamma(f)$. Ostatnia teza twierdzenia daje $f\in\mathcal W$.
+\end{proof}
+
+Dla dowolnych $X,Y$ możemy obliczać morfizmy kategorii homotopii jako klasy homotopii morfizmów $QX\to RY$. Istotnie, $\gamma(QX)\cong\gamma(X)$ i $\gamma(Y)\cong\gamma(RY)$, a $QX$ jest kofibrantny i $RY$ fibrantny. Nie utożsamiamy natomiast morfizmów lokalizacji ze zwykłymi morfizmami $X\to Y$ bez takich założeń.
+
+\subsection{Sprzężenia Quillena}
+
+\begin{definicja}[Sprzężenie Quillena]\label{cat:def:quillen-adjunction}
+Sprzężenie $L:\mathcal M\rightleftarrows\mathcal N:R$ między kategoriami modelowymi jest sprzężeniem Quillena, jeśli $L$ zachowuje kofibracje i trywialne kofibracje. Funktor $L$ nazywamy lewym funktorem Quillena, a $R$ prawym funktorem Quillena.
+\end{definicja}
+
+\begin{stwierdzenie}[Kryterium przez prawy funktor]\label{cat:prop:quillen-right-criterion}
+Sprzężenie $L\dashv R$ jest sprzężeniem Quillena wtedy i tylko wtedy, gdy $R$ zachowuje fibracje i trywialne fibracje.
+\end{stwierdzenie}
+\begin{proof}
+Dla $i:A\to B$ w $\mathcal M$ i $p:E\to Y$ w $\mathcal N$ mamy
+\[
+ Li\pitchfork p\quad\Longleftrightarrow\quad i\pitchfork Rp.
+\]
+Oznaczmy przez $a^\sharp:A\to RE$ morfizm sprzężony z $a:LA\to E$, analogicznie $b^\sharp:B\to RY$ dla $b:LB\to Y$. Z naturalności bijekcji mamy $(pa)^\sharp=Rp\,a^\sharp$ i $(bLi)^\sharp=b^\sharp i$. Zatem kwadrat $pa=bLi$ odpowiada dokładnie kwadratowi $Rp\,a^\sharp=b^\sharp i$. Dla $l:LB\to E$ równości $lLi=a$ i $pl=b$ odpowiadają równościom $l^\sharp i=a^\sharp$ oraz $Rp\,l^\sharp=b^\sharp$. Bijekcja między zbiorami podniesień daje równoważność własności podnoszenia.
+
+Jeżeli $L$ zachowuje kofibracje, to dla trywialnej fibracji $p$ w $\mathcal N$ mamy $Li\pitchfork p$ dla każdej kofibracji $i$ w $\mathcal M$. Stąd $Rp$ ma prawą własność podnoszenia względem wszystkich kofibracji, czyli jest trywialną fibracją przez stwierdzenie~\ref{cat:prop:model-wfs}. Jeżeli $L$ zachowuje trywialne kofibracje, analogicznie $Rp$ jest fibracją dla każdej fibracji $p$. Odwrotnie, jeśli $R$ zachowuje trywialne fibracje, to $Li$ ma lewą własność podnoszenia względem każdej trywialnej fibracji, gdy $i$ jest kofibracją; jest więc kofibracją. Zachowywanie fibracji przez $R$ analogicznie daje zachowywanie trywialnych kofibracji przez $L$.
+\end{proof}
+
+\begin{lemat}[Lemat Browna dla obiektów kofibrantnych]\label{cat:lem:brown-cofibrant}
+Niech $T:\mathcal M_{c}\to\mathcal N$ będzie funktorem określonym na pełnej podkategorii obiektów kofibrantnych, który zachowuje trywialne kofibracje między takimi obiektami jako słabe równoważności. Wtedy zachowuje wszystkie słabe równoważności między obiektami kofibrantnymi.
+\end{lemat}
+\begin{proof}
+Niech $f:A\to B$ będzie słabą równoważnością między obiektami kofibrantnymi. Faktoryzujemy $[f,\id_B]:A\amalg B\to B$ jako kofibrację $i:A\amalg B\to C$ i trywialną fibrację $p:C\to B$. Włożenia $A,B\to A\amalg B$ są kofibracjami, jako zmiany kobazy odpowiednio $0\to B$ i $0\to A$. Tak więc oba ograniczenia $i_A:A\to C$, $i_B:B\to C$ są kofibracjami. Obiekt $C$ jest kofibrantny, gdyż $0\to A\to C$ jest kofibracją. Z $pi_A=f$, $pi_B=\id_B$ i $p\in\mathcal W$ wynika $i_A,i_B\in\mathcal W$. Z założenia $T(i_A),T(i_B)$ są słabymi równoważnościami. Z $T(p)T(i_B)=\id_{T(B)}$ wynika, że $T(p)$ jest słabą równoważnością, a zatem również $T(f)=T(p)T(i_A)$.
+\end{proof}
+Przez zastosowanie lematu w kategoriach przeciwnych otrzymujemy wersję dla obiektów fibrantnych i trywialnych fibracji: zamiana kierunków wymienia kofibracje z fibracjami, granice z kogranicami oraz lewe własności podnoszenia z prawymi, a słabe równoważności pozostają wyróżnioną klasą.
+
+\begin{stwierdzenie}\label{cat:prop:quillen-brown}
+Lewy funktor Quillena zachowuje obiekty kofibrantne i słabe równoważności między nimi, a prawy funktor Quillena zachowuje obiekty fibrantne i słabe równoważności między nimi.
+\end{stwierdzenie}
+\begin{proof}
+Lewy funktor sprzężony zachowuje obiekt początkowy z dokładnością do izomorfizmu. Zatem obraz kofibracji $0\to X$ daje kofibrację z obiektu początkowego do $LX$. Zachowywanie słabych równoważności między obiektami kofibrantnymi wynika z lematu~\ref{cat:lem:brown-cofibrant}. Prawy funktor sprzężony zachowuje obiekt końcowy, a na mocy stwierdzenia~\ref{cat:prop:quillen-right-criterion} fibracje i trywialne fibracje. Stosujemy dualną wersję lematu Browna.
+\end{proof}
+
+\begin{twierdzenie}[Sprzężenie pochodne Quillena; wynik zewnętrzny]\label{cat:thm:quillen-derived-adjunction}
+Sprzężenie Quillena $L\dashv R$ indukuje sprzężenie
+\[
+ \mathbb L L:\operatorname{Ho}(\mathcal M)
+ \rightleftarrows\operatorname{Ho}(\mathcal N):\mathbb R R.
+\]
+Na obiektach funktory te obliczamy jako $\gamma_{\mathcal N}LQX$ i $\gamma_{\mathcal M}R(Y^{\mathrm f})$, gdzie $Y^{\mathrm f}$ jest wybranym zastąpieniem fibrantnym w $\mathcal N$.
+\end{twierdzenie}
+Zob. M.~Hovey, \emph{Model Categories}, sekcja 1.3, w szczególności definicja 1.3.6 i lemat 1.3.10. W konwencji bez funktorialnych faktoryzacji zastąpienia można wybrać na obiektach, a morfizmy indukowane na lokalizacjach określić za pomocą równoważności kategorii homotopii pełnych podkategorii obiektów kofibrantnych i fibrantnych; zob. również Dwyer--Spaliński, twierdzenie 9.7. Rachunek na obiektach kofibrantnych $A$ i fibrantnych $B$ wyjaśnia postać sprzężenia:
+\[
+\begin{aligned}
+ \Hom_{\operatorname{Ho}(\mathcal N)}(\gamma_{\mathcal N}LA,\gamma_{\mathcal N}B)
+ &\cong\Hom_{\mathcal N}(LA,B)/{\sim}\\
+ &\cong\Hom_{\mathcal M}(A,RB)/{\sim}\\
+ &\cong\Hom_{\operatorname{Ho}(\mathcal M)}(\gamma_{\mathcal M}A,\gamma_{\mathcal M}RB).
+\end{aligned}
+\]
+Środkowa bijekcja jest indukowana przez zwykłe sprzężenie. Istotnie, $L$ przenosi dobry cylinder kofibrantnego $A$ na dobry cylinder $LA$: zachowuje koprodukty, kofibracje, a morfizm $CA\to A$ jest słabą równoważnością obiektów kofibrantnych, ponieważ $A\amalg A$ jest kofibrantny (składamy $0\to A$ z włożeniem składnika), a następnie $A\amalg A\to CA$ jest kofibracją. Stosujemy stwierdzenie~\ref{cat:prop:quillen-brown}. Odwrotnie, dla prawej homotopii w $\mathcal N$ możemy użyć dobrego obiektu dróg dla fibrantnego $B$, którego obraz przez $R$ jest dobrym obiektem dróg dla $RB$ (zachowanie iloczynów, fibracji i słabych równoważności między obiektami fibrantnymi). Istotnie, $B\times B$ jest fibrantny, ponieważ jego projekcja do $B$ jest fibracją i $B\to1$ jest fibracją; $PB$ jest fibrantny przez złożenie $(p_0,p_1)$ z morfizmem $B\times B\to1$. Dokładniej, homotopia $H:A^{\mathrm{cyl}}\to RB$ odpowiada przez sprzężenie homotopii $LA^{\mathrm{cyl}}\to B$; homotopia $K:LA\to PB$ odpowiada homotopii $A\to RPB$. Stwierdzenie~\ref{cat:prop:model-left-right} pozwala wybrać odpowiednią stronę homotopii. Dzięki temu zwykłe bijekcje sprzężenia schodzą do klas. Pełną konstrukcję funktorów pochodnych i ich naturalność względem morfizmów lokalizacji pozostawiamy cytowanemu twierdzeniu.
+
+\begin{definicja}[Równoważność Quillena]\label{cat:def:quillen-equivalence}
+Sprzężenie Quillena $L\dashv R$ nazywamy równoważnością Quillena, jeśli indukowane sprzężenie pochodne jest równoważnością kategorii.
+\end{definicja}
+Nie wymaga to, aby samo sprzężenie $L\dashv R$ było równoważnością kategorii. Standardowe kryterium (M.~Hovey, \emph{Model Categories}, definicja 1.3.12 i propozycja 1.3.13; Dwyer--Spaliński, twierdzenie 9.7) mówi, że dla każdego kofibrantnego $A$ i fibrantnego $B$ morfizm $LA\to B$ jest słabą równoważnością wtedy i tylko wtedy, gdy odpowiadający mu morfizm $A\to RB$ nią jest. Kryterium dotyczy wszystkich takich par i morfizmów, a nie tylko jednostki i kojednostki przed zastąpieniami.
+
+\subsection{Dwie struktury modelowe na zbiorach symplicjalnych}
+
+\begin{twierdzenie}[Struktura Kana--Quillena; wynik zewnętrzny]\label{cat:thm:kan-quillen-model}
+Na $\mathbf{sSet}$ istnieje struktura modelowa, w której kofibracjami są monomorfizmy, fibracjami fibracje Kana, a słabymi równoważnościami morfizmy, których realizacje geometryczne są słabymi równoważnościami homotopijnymi przestrzeni topologicznych (bijekcja na składowych łukowych i izomorfizmy grup homotopii przy każdym punkcie bazowym). W tej strukturze trywialne fibracje są dokładnie morfizmami z prawą własnością podnoszenia względem brzegów $\partial\Delta[n]\hookrightarrow\Delta[n]$ dla $n\geq0$.
+\end{twierdzenie}
+Jest to klasyczne twierdzenie o strukturze modelowej na zbiorach symplicjalnych; zob. M.~Hovey, \emph{Model Categories}, definicja 3.2.1, propozycja 3.2.2 oraz twierdzenie 3.6.5. Konstrukcja faktoryzacji przez rogi z twierdzenia~\ref{cat:thm:small-object-sset} stanowi część tego wyniku, ale sama nie dowodzi aksjomatów dla określonej klasy słabych równoważności. Potrzebne jest powiązanie wypełnień symplicjalnych z homotopią realizacji geometrycznej.
+
+\begin{twierdzenie}[Struktura Joyala; wynik zewnętrzny]\label{cat:thm:joyal-model}
+Na $\mathbf{sSet}$ istnieje struktura modelowa Joyala, której kofibracjami są monomorfizmy, a obiektami fibrantnymi quasi-kategorie. Słabe równoważności nazywa się równoważnościami kategorialnymi; między quasi-kategoriami są to dokładnie równoważności w sensie definicji~\ref{cat:def:quasicat-functor-equivalence}. Trywialne fibracje są morfizmami z prawą własnością podnoszenia względem brzegów.
+\end{twierdzenie}
+Zob. A.~Joyal, \emph{The model structure for quasi-categories}, Joyal's CatLab, oraz J.~Lurie, \emph{Higher Topos Theory}, Princeton University Press, 2009, twierdzenie 2.2.5.1 (struktura modelowa) oraz twierdzenie 2.4.6.1 (obiekty fibrantne). Porównanie klas homotopii z klasami równoważności funktorów do quasi-kategorii daje propozycja 2.2.5.7. Każdy morfizm wewnętrznie anodyniczny jest trywialną kofibracją tej struktury, ale nie każda fibracja wewnętrzna jest fibracją Joyala. Fibracje Joyala między quasi-kategoriami można scharakteryzować jako fibracje wewnętrzne podnoszące równoważności z zadanym źródłem; por. \emph{Higher Topos Theory}, wniosek 2.4.6.5. Wyniki te przyjmujemy z literatury. Przykład~\ref{cat:ex:inner-not-kan-fibration} z inkluzją grupoidu jednoobiektowego do grupoidu dwóch obiektów jest również przykładem fibracji wewnętrznej, która nie jest fibracją Joyala: nie podnosi izomorfizmu wychodzącego z obiektu obrazu, a izomorfizmy w nerwie są dokładnie równoważnościami.
+
+W obu strukturach wszystkie obiekty są kofibrantne, ponieważ włożenie pustego zbioru symplicjalnego jest stopniowo injekcją. Trywialne fibracje obu struktur pokrywają się, co jest konieczną konsekwencją wspólnej klasy kofibracji i pierwszego słabego systemu faktoryzacji ze stwierdzenia~\ref{cat:prop:model-wfs}.
+
+\begin{przyklad}[Różnica słabych równoważności]\label{cat:ex:kan-joyal-difference}
+Morfizm $\Delta[1]\to\Delta[0]$ jest słabą równoważnością w strukturze Kana--Quillena: realizacje to przedział i punkt, a przedział ściąga się do punktu przez homotopię $(s,t)\mapsto(1-t)s$. Nie jest równoważnością kategorialną. Oba zbiory symplicjalne są nerwami kategorii zwykłych, odpowiednio $[1]$ i $[0]$, więc są quasi-kategoriami. Gdyby ten morfizm był równoważnością kategorialną, indukowany funktor kategorii homotopii byłby równoważnością kategorii zwykłych. Na mocy wniosku~\ref{cat:cor:homotopy-nerve} oznaczałoby to równoważność $[1]\to[0]$. Jednak $\Hom_{[1]}(1,0)=\varnothing$, podczas gdy zbiór morfizmów od jedynego obiektu $[0]$ do siebie jest singletonem. Funktor nie jest pełny, zatem nie może być równoważnością.
+\end{przyklad}
+Różnica ta tłumaczy, dlaczego zastąpienie quasi-kategorii kompleksem Kana nie zachowuje na ogół całej informacji o nieodwracalnych morfizmach. Struktura Kana--Quillena służy do badania typów homotopijnych przestrzeni, a struktura Joyala do badania quasi-kategorii i ich równoważności.

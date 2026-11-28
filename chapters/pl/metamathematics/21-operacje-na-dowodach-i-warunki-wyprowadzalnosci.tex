@@ -1,0 +1,569 @@
+\chapter{Operacje na dowodach i warunki wyprowadzalności}\label{ch:derivability-proof}
+
+\section{Dlaczego nie wystarczy sprawdzać pojedynczych dowodów?}
+W rozdziale~\ref{ch:tarski-truth} wprowadziliśmy trzy warunki
+Hilberta--Bernaysa--Löba, oznaczone (D1)--(D3).
+Pierwszy z nich mówi, że do \emph{konkretnego} dowodu możemy
+przypisać arytmetyczny dowód zdania o jego istnieniu. Pozostałe
+dwa dotyczą natomiast \emph{dowolnych kodów dowodów}, także tych,
+które przyjmują niestandardowe wartości w modelach teorii. Musimy więc
+w samej arytmetyce uzasadnić poprawność operacji na kodach.
+
+Przez cały rozdział ustalamy efektywnie aksjomatyzowalną teorię
+$T\supseteq\mathrm{PA}$ w języku arytmetyki oraz \emph{konkretny}
+predykat $\operatorname{Prf}_T(p,x)$ z Lematu~\ref{res:7:7}.
+Kod $p$ zawiera dowód, świadectwa rozpoznania aksjomatów i
+certyfikat poprawnego przebiegu jego weryfikatora. Zgodnie
+z przyjętą tam konstrukcją $\operatorname{Prf}_T$ jest formułą $\Delta_0$.
+Stąd $\operatorname{Bew}_T(x):=\exists p\,\operatorname{Prf}_T(p,x)$
+jest formułą $\Sigma_1$.
+
+\begin{uwaga}[Dlaczego własność $\Delta_0$ wymaga dodatkowego uzasadnienia?]
+Z faktu, że pewna relacja jest pierwotnie rekurencyjna, \emph{nie wynika
+bez dalszego argumentu}, że jej wykres można przedstawić formułą
+$\Delta_0$ w samym języku $\{0,S,+,\cdot\}$. W niniejszym
+predykacie kod $p$ zawiera nie tylko wiersze dowodu, lecz także
+świadectwa weryfikacji, a ich składniki i ślady obliczenia są
+ograniczone przez rozmiar kodu. Weryfikacja takiego
+\emph{certyfikowanego} napisu sprowadza się do ograniczonych
+kwantyfikatorów po jego częściach. Właśnie z tego dodatkowego
+sposobu kodowania, a nie ze słowa „obliczalny”, pochodzi
+przyjęta postać $\Delta_0$. Alternatywnie wystarcza reprezentacja
+$\Sigma_1$ predykatu dowodu, jeżeli dla niej osobno udowodnimy
+wymagane wewnętrzne operacje na kodach.
+\end{uwaga}
+
+Przy wyborze prezentacji $T$ ustalamy dodatkowo, że aksjomaty
+$\mathrm{PA}$ otrzymują osobny, łatwo sprawdzalny rodzaj
+certyfikatu. Jest to dozwolone: jeśli $T\supseteq\mathrm{PA}$
+w sensie zbioru twierdzeń, dołączenie wszystkich aksjomatów
+PA do wyliczenia aksjomatów $T$ nie zmienia dowodliwych zdań.
+Dzięki oznaczeniu ich typu kod dowodu PA można przekształcić
+w kod dowodu $T$ za pomocą funkcji pierwotnie rekurencyjnej.
+Ta konwencja jest częścią \emph{wyboru standardowego
+predykatu dowodu}; nie zakładamy, że każda formuła
+rozpoznająca dowody spełnia analogiczne własności.
+
+\begin{uwaga}[Liczba, numerał i kod składni]
+Jeżeli $a=\ulcorner\varphi\urcorner$ jest \emph{liczbą naturalną},
+to $\overline a$ jest \emph{termem} arytmetyki. Zapis
+$\operatorname{Bew}_T(\overline a)$ jest zdaniem, a
+$T\vdash\operatorname{Bew}_T(\overline a)$ stwierdzeniem
+metamatematycznym, że istnieje jego dowód. Gdy w poniższych
+wzorach występuje funkcja obliczeniowa $m(p,q)$, rozumiemy ją
+jako skrót definicyjny dla reprezentującej ją formuły;
+nie dopisujemy nowego symbolu funkcyjnego do
+$\mathcal L_{\mathrm{ar}}$ bez definicji.
+\end{uwaga}
+
+\section{Kodowanie ciągów o zmiennej długości w PA}
+Przy czytaniu kolejnych dowodów warto pamiętać zasadniczą różnicę:
+możliwość zakodowania \emph{każdego jednego} skończonego ciągu
+w metateorii nie daje automatycznie formuły, która
+w $\mathrm{PA}$ zapewnia kod \emph{dla każdej długości}.
+Potrzebny jest dowód indukcyjny.
+
+\begin{lemat}[Dołączanie jednego wyrazu do kodu ciągu]
+\label{lem:xi-append-beta}
+Niech $\beta(a,b,i)$ oznacza funkcję odczytu z
+Lematu~\ref{res:7:4}. Istnieje formuła arytmetyczna
+opisująca dopisanie wyrazu $c$ do ciągu o długości $n$,
+dla której $\mathrm{PA}$ dowodzi
+\[
+\forall a\,\forall b\,\forall n\,\forall c\;\exists a'\,\exists b'
+\left(\left[\forall i<n\;\beta(a',b',i)=\beta(a,b,i)\right]
+\land\beta(a',b',n)=c\right).
+\]
+Równość $\beta(u,v,i)=w$ jest skrótem formuły
+$B(u,v,i,w)$ z Lematu~\ref{res:7:4}. W~PA istnienie i
+jednoznaczność takiego $w$ wynikają z dzielenia z resztą;
+nie traktujemy $\beta$ jako pierwotnego symbolu języka.
+\end{lemat}
+\begin{proof}
+W $\mathrm{PA}$ mamy dzielenie z resztą, istnienie
+wspólnych wielokrotności skończonej rodziny liczb i
+chińskie twierdzenie o resztach; ich dowody uzyskuje się
+z algorytmu Euklidesa i indukcji. Wyjaśnimy konkretną
+konstrukcję, a nie tylko istnienie kodu.
+
+Dla $i<n$ niech $r_i:=\beta(a,b,i)$, a $r_n:=c$.
+Istnienie odczytów $r_i$ i ich jednoznaczność są dowodliwe
+w PA, więc przez indukcję i rekurencję na skończonych listach
+możemy utworzyć ich maksimum $R$ oraz liczbę
+$b':=(n+1)!(R+1)$. Arytmetyka PA dowodzi, że $b'>r_i$
+i że każda dodatnia liczba nie większa od $n+1$ dzieli
+$(n+1)!$, a zatem również $b'$. Ustalamy
+$m_i:=1+(i+1)b'$ dla $i\le n$. Liczby $m_i$ są parami
+względnie pierwsze: wspólny dzielnik $m_i$ i $m_j$ dzieli
+$(j-i)b'$ i jest względnie pierwszy z $b'$, a więc dzieli
+$j-i$; ponieważ $j-i$ dzieli $b'$, musi być równy $1$.
+Dodatkowo $r_i<m_i$, ponieważ $r_i\le R$ oraz
+$m_i\ge 1+b'>R$.
+
+Chińskie twierdzenie o resztach zapewnia $a'$ takie, że
+$a'\equiv r_i\pmod {m_i}$ dla wszystkich $i\le n$.
+Formalizacja nie ogranicza się do ustalonych numerałów:
+prowadzimy w PA indukcję po liczbie $k$ już uwzględnionych
+kongruencji. Jeśli $a_k$ spełnia pierwsze $k$ kongruencji,
+a $P_k=\prod_{i<k}m_i$, to $P_k$ i $m_k$ są względnie
+pierwsze (każdy $m_i$ jest względnie pierwszy z $m_k$).
+W PA algorytm Euklidesa uzasadnia istnienie współczynników
+Bézouta, a więc odwrotności $P_k$ modulo $m_k$.
+Wybieramy resztę $0\le v<m_k$ spełniającą
+$P_kv\equiv r_k-a_k\pmod{m_k}$ i kładziemy
+$a_{k+1}:=a_k+P_kv$, redukując wynik modulo $P_km_k$.
+Wtedy $a_{k+1}$ spełnia wszystkie pierwsze $k+1$
+kongruencje. Istnienie odpowiednich reszt, współczynników
+i iloczynów dla każdego $k\le n+1$ jest dowodliwe przez
+indukcję PA, a nie przez nieskończoną listę instancji.
+Otrzymujemy kod $a'$ dla \emph{dowolnego} $n$.
+Warunki na reszty dają tezę z definicji funkcji $\beta$.
+\end{proof}
+
+\begin{uwaga}[Co było tu naprawdę istotne?]
+Indukcja odbywała się w teorii $\mathrm{PA}$ po \emph{zmiennej}
+liczbie kongruencji. W $Q$ wykazywaliśmy tylko konstrukcje
+na ustalonych numerałach. Tego dodatkowego użycia indukcji
+nie wolno przenosić do $Q$ bez dowodu.
+\end{uwaga}
+
+\begin{lemat}[Funkcje pierwotnie rekurencyjne w PA]
+\label{lem:xi-pr-in-pa}
+Dla każdej funkcji pierwotnie rekurencyjnej
+$f:\N^k\to\N$ można wybrać formułę $F_f(\vec x,y)$
+taką, że $\mathrm{PA}\vdash\forall\vec x\,\exists!y\,F_f(\vec x,y)$.
+Arytmetyka Peana dowodzi także równań definiujących $f$.
+\end{lemat}
+\begin{proof}
+Dowód prowadzimy indukcją po konstrukcji funkcji
+pierwotnie rekurencyjnej. Funkcje bazowe (zero, następnik
+i rzuty) są reprezentowane przez równania, których
+istnienie i jednoznaczność wartości są bezpośrednie.
+Jeżeli $f(\vec x)=g(h_1(\vec x),\ldots,h_r(\vec x))$,
+to z dowodliwej totalności każdego $h_i$ otrzymujemy
+wartości $z_i$, a z totalności $g$ wartość $y$;
+jednoznaczność kolejnych wartości daje jednoznaczność $y$.
+
+Pozostaje rekursja prosta:
+$f(\vec x,0)=g(\vec x)$,
+$f(\vec x,S(n))=h(\vec x,n,f(\vec x,n))$.
+Nie używamy w formule symboli funkcyjnych $g,h$, lecz
+ich reprezentacji $G(\vec x,z)$ i $H(\vec x,i,z,w)$.
+Formuła $F_f(\vec x,n,y)$ stwierdza istnienie kodu ciągu
+o długości $n+1$, którego wyraz początkowy $z_0$
+spełnia $G(\vec x,z_0)$, ostatni jest równy $y$, a
+$H(\vec x,i,z_i,z_{i+1})$ zachodzi dla każdego $i<n$.
+Wszystkie odczyty $z_i$ wyrażamy formułą $B$; warunek
+$\forall i<n$ jest ograniczony. Przy ustalonym $\vec x$
+stosujemy schemat indukcji PA do zdania, że taki kod
+istnieje dla długości $n+1$. Dla $n=0$ wystarcza
+udowodniona totalność $G$. W kroku indukcyjnym totalność
+$H$ dostarcza wyraz $z_{n+1}$, a
+Lemat~\ref{lem:xi-append-beta} zapewnia jego dopisanie.
+Dla dwóch kodów spełniających te same warunki indukcja
+po $i\le n$ i jednoznaczność $G,H$ dają równość ich
+$i$-tych wyrazów; w szczególności równe są wyniki $y$.
+Tak PA dowodzi istnienia, jednoznaczności i równań
+rekurencji dla formuły $F_f$.
+\end{proof}
+
+\section{Formalne łączenie dwóch dowodów}
+Gdy mamy dowód $\varphi\to\psi$ oraz osobny dowód
+$\varphi$, reguła eliminacji implikacji pozwala dopisać
+wiersz $\psi$. Na kartce wygląda to prosto. Musimy
+jednak upewnić się, że \emph{ta sama operacja działa
+na kodach dowolnej długości}, i że $\mathrm{PA}$
+może potwierdzić jej poprawność.
+
+\begin{lemat}[Formalizacja modus ponens]\label{lem:xi-formal-mp}
+Niech $T\supseteq\mathrm{PA}$ będzie efektywnie
+aksjomatyzowalna. Dla ustalonych zdań $\varphi,\psi$
+można skonstruować funkcję pierwotnie rekurencyjną
+$m_{\varphi,\psi}:\N^2\to\N$, reprezentowaną w PA
+przez formułę $M_{\varphi,\psi}(p,q,r)$, taką że
+$\mathrm{PA}\vdash\forall p\,\forall q\,\exists!r\,
+M_{\varphi,\psi}(p,q,r)$ oraz
+\[
+\mathrm{PA}\vdash\forall p\,\forall q\,\forall r\;\bigl(
+ M_{\varphi,\psi}(p,q,r)\land
+\operatorname{Prf}_T(p,\overline{\ulcorner\varphi\to\psi\urcorner})
+\land\operatorname{Prf}_T(q,\overline{\ulcorner\varphi\urcorner})
+\to\operatorname{Prf}_T(r,
+\overline{\ulcorner\psi\urcorner})\bigr).
+\]
+Zapis $\operatorname{Prf}_T(m_{\varphi,\psi}(p,q),x)$
+można stosować jedynie w rozszerzeniu definicyjnym PA;
+w pierwotnym języku oznacza podstawienie wyniku opisanego
+przez $M_{\varphi,\psi}$.
+\end{lemat}
+\begin{proof}
+\emph{Konstrukcja algorytmu.} Dekodujemy z $p$ i $q$
+kompletne dowody, łącznie z certyfikatami aksjomatów.
+Następnie: (1) kopiujemy wszystkie wiersze pierwszego
+dowodu; (2) kopiujemy wiersze drugiego, przesuwając
+o stałą długość pierwszego dowodu numery wszystkich
+odwołań do poprzednich wierszy; (3) dopisujemy
+wiersz $\psi$, wskazując dwa końcowe wiersze jako
+podstawy reguły eliminacji implikacji; (4) tworzymy
+certyfikat akceptacji nowego kodu przez weryfikator.
+Na niepoprawnych wejściach algorytm oddaje ustalony
+kod zastępczy. Odczyty, przepisanie wierszy oraz
+przesunięcia wskaźników wykonuje się przez rekursję
+ograniczoną długością wejściowych list; są to operacje
+pierwotnie rekurencyjne. Weryfikator $V_T$ z Lematu~\ref{res:6:5} jest
+funkcją pierwotnie rekurencyjną. \emph{Wybieramy}
+realizujący go program otrzymany konstrukcyjnie z jego
+schematu pierwotnie rekurencyjnego, a nie dowolny
+program obliczający tę samą funkcję. Dla funkcji
+bazowych czas działania takiej realizacji ma oszacowanie
+pierwotnie rekurencyjne; przy składaniu sumujemy
+oszacowania wykonywanych podprogramów, a przy rekursji
+prostej tworzymy ograniczenie kolejnych czasów przez
+rekursję prostą po jej liczniku. Indukcja po \emph{tym
+konkretnym schemacie} daje więc pierwotnie rekurencyjne
+ograniczenie liczby kroków, a w konsekwencji pierwotnie
+rekurencyjne wytwarzanie pełnego śladu. Tak powstaje
+certyfikat akceptacji nowego dowodu. Dla arbitralnego
+programu obliczającego funkcję pierwotnie rekurencyjną
+czas działania nie musi być pierwotnie rekurencyjny;
+wybór realizacji jest zatem istotny.
+
+\emph{Dowód wewnątrz PA.} Nie wystarcza stwierdzenie,
+że operacja działa na wszystkich zwykłych liczbach.
+Definiujemy w arytmetyce następujący niezmiennik
+dla $j$ kopiowanych wierszy: „każdy z pierwszych $j$
+wierszy jest poprawnie uzasadniony, a wskaźniki
+wcześniejszych przesłanek są przesunięte zgodnie
+z długością poprzedniego fragmentu”. Przypadek $j=0$
+jest pusty. W kroku indukcyjnym rozróżniamy, czy
+kopiowany wiersz jest aksjomatem, czy wynikiem
+reguły. W pierwszym przypadku zachowujemy
+jego świadectwo pochodzenia z wyliczenia aksjomatów,
+a w drugim wykorzystujemy założoną poprawność
+jego przesłanek i przesunięcie ich wskaźników.
+Ostatni nowy wiersz przechodzi test eliminacji implikacji.
+Lematy o kodowaniu ciągów i funkcji pierwotnie
+rekurencyjnych gwarantują, że PA potrafi zbudować
+kod całej listy oraz ślad jej weryfikacji.
+W ten sposób indukcja \emph{po zmiennej liczbie
+wierszy} daje w PA dokładnie podaną implikację.
+\end{proof}
+
+\begin{przyklad}[Jak odczytać twierdzenie o kodach?]
+Załóżmy, że $p$ koduje dowód „jeśli $A$, to $B$”,
+a $q$ koduje dowód $A$. Funkcja $m(p,q)$ tworzy
+\emph{nowy} kod zawierający oba fragmenty i dodatkowy
+krok prowadzący do $B$. Lemat~\ref{lem:xi-formal-mp}
+nie twierdzi, że $A$ jest prawdziwe wyłącznie dlatego,
+że ktoś zapisał symbol $p$: mówi, że \emph{jeżeli oba
+kody przechodzą formalne testy poprawności}, to
+kod otrzymany przez ich połączenie również przechodzi
+taki test. To odróżnia regułę od jej dowolnego użycia.
+\end{przyklad}
+
+\begin{twierdzenie}[Warunek (D2)]\label{thm:xi-d2}
+Dla standardowego predykatu dowodliwości $\Box$
+teorii $T\supseteq\mathrm{PA}$ zachodzi dla
+wszystkich zdań $\varphi,\psi$:
+\[
+T\vdash\Box(\varphi\to\psi)\to
+(\Box\varphi\to\Box\psi).
+\]
+\end{twierdzenie}
+\begin{proof}
+Niech $g=\ulcorner\varphi\urcorner$,
+$h=\ulcorner\psi\urcorner$ oraz
+$k=\ulcorner\varphi\to\psi\urcorner$.
+Lemat~\ref{lem:xi-formal-mp} daje w $\mathrm{PA}$
+implikację, że jeśli istnieją $p$ i $q$ spełniające
+$\operatorname{Prf}_T(p,\overline k)$ i
+$\operatorname{Prf}_T(q,\overline g)$, to
+istnieje kod dowodu zdania o kodzie $h$.
+Po zastosowaniu wprowadzenia kwantyfikatora egzystencjalnego
+i twierdzenia o dedukcji otrzymujemy
+\[
+\mathrm{PA}\vdash
+(\exists p\,\operatorname{Prf}_T(p,\overline k))\to
+\bigl((\exists q\,\operatorname{Prf}_T(q,\overline g))\to
+\exists r\,\operatorname{Prf}_T(r,\overline h)\bigr).
+\]
+Po rozwinięciu definicji $\Box$ jest to dokładnie (D2).
+Ponieważ $T\supseteq\mathrm{PA}$, ten sam dowód
+jest dostępny w $T$.
+\end{proof}
+
+\section{Jednolita wersja rozstrzygania formuł ograniczonych}
+Z (D1) nie otrzymamy (D3) przez zwykłe podstawienie.
+(D1) dotyczy rzeczywistego dowodu wybranego zdania,
+a (D3) musi być \emph{jednym dowodem w PA} implikacji
+zawierającej kwantyfikator egzystencjalny po kodach.
+
+\begin{lemat}[Sformalizowana prawdziwość $\Delta_0$]
+\label{lem:xi-delta-proofcompiler}
+Niech $\delta(\vec x)$ będzie ustaloną formułą $\Delta_0$.
+Istnieje funkcja pierwotnie rekurencyjna $b_\delta^+$,
+która dla standardowego $\vec n$ z
+$\mathfrak N\models\delta(\overline{\vec n})$
+wytwarza kod dowodu zdania $\delta(\overline{\vec n})$.
+Ponadto dla tego samego, \emph{jednego} algorytmu
+konstrukcji $\mathrm{PA}$ dowodzi zależności jednolitej
+\[
+\forall\vec x\;\bigl(\delta(\vec x)\to
+\operatorname{Prf}_T\bigl(b_\delta^+(\vec x),
+\operatorname{inst}_\delta(\vec x)\bigr)\bigr),
+\]
+gdzie $\operatorname{inst}_\delta(\vec n)$ jest kodem
+napisu $\delta(\overline{\vec n})$. Funkcja podstawiania
+numerałów jest pierwotnie rekurencyjna na mocy
+Lematu~\ref{res:6:5}; funkcja $b_\delta^+$ jest totalna,
+także na wejściach, dla których $\delta$ jest fałszywa
+(wtedy jej wynik nie musi być kodem poprawnego dowodu).
+Funkcje w wyświetlonym wzorze są oznaczeniami
+w rozszerzeniu definicyjnym PA. Dokładniej: jeśli
+$F_\delta^+(\vec x,p)$ i $I_\delta(\vec x,z)$
+reprezentują odpowiednio wykresy $b_\delta^+$ oraz
+$\operatorname{inst}_\delta$, to w pierwotnym języku
+arytmetyki twierdzenie przyjmuje postać
+\[
+\mathrm{PA}\vdash\forall\vec x\,\forall p\,\forall z\;\bigl(
+[\delta(\vec x)\land F_\delta^+(\vec x,p)\land
+ I_\delta(\vec x,z)]\to\operatorname{Prf}_T(p,z)\bigr).
+\]
+Istnienie i jednoznaczność wyników reprezentowanych funkcji
+są dowodliwe w PA na mocy Lematu~\ref{lem:xi-pr-in-pa}.
+\end{lemat}
+\begin{proof}
+W metateorii stosujemy indukcję \emph{po budowie
+ustalonej formuły $\delta$}. Wzmocnimy niezmiennik
+indukcji: konstruujemy równocześnie \emph{dwa} totalne
+kompilatory pierwotnie rekurencyjne $b_\delta^+$
+i $b_\delta^-$, dla których PA dowodzi
+\[
+\begin{aligned}
+\delta(\vec x)&\to
+ \operatorname{Prf}_T(b_\delta^+(\vec x),
+              \operatorname{inst}_\delta(\vec x)),\\
+\neg\delta(\vec x)&\to
+ \operatorname{Prf}_T(b_\delta^-(\vec x),
+              \operatorname{inst}_{\neg\delta}(\vec x)).
+\end{aligned}
+\]
+Obie implikacje rozumiemy jako formuły rozszerzenia
+definicyjnego PA; w pierwotnym języku zastępujemy każdy
+występujący symbol funkcji przez reprezentującą go formułę
+wykresu i używamy dowodliwej jednoznaczności jego wartości.
+Wprowadzenie drugiego kompilatora jest konieczne: przy negacji
+potrzebny jest dowód fałszywości podformuły, a nie tylko
+dowód podformuły prawdziwej. Dla obu polaryzacji funkcje
+pozostają totalne, także poza odpowiednią gałęzią warunku.
+W każdym kroku uzasadniamy jednolicie poprawność programu
+\emph{wewnątrz} PA.
+
+\emph{Formuły atomowe.} Dla każdego podstawienia
+numerałów do termów obliczamy ich wartości,
+a następnie produkujemy skończone uzasadnienie
+z aksjomatów dodawania, mnożenia i następnika.
+Jeżeli atomem jest równość, rozstrzygamy ją
+przez porównanie wynikowych numerałów; jeśli
+jest relacją $<$, korzystamy z definicji porządku.
+Dla nierównej pary wartości program tworzy dowód
+nierówności, a dla nieprawdziwego porównania
+program tworzy dowód jego negacji. W PA poprawność
+tych \emph{obu} procedur dla wszystkich parametrów
+wynika z indukcji po liczbie wykonywanych operacji,
+a nie z osobnych sprawdzeń.
+
+\emph{Spójniki.} Przy negacji zamieniamy role
+kompilatorów dodatniego i ujemnego, dołączając
+odpowiedni krok klasycznego rachunku zdań. Dla
+koniunkcji prawdziwej łączymy dwa dowody składników;
+przy jej fałszywości wystarczy dowód negacji jednego
+składnika. Analogicznie dla alternatywy. Dla implikacji
+$\eta\to\theta$ gałąź dodatnia korzysta z dowodu
+$\neg\eta$ albo $\theta$, a gałąź ujemna łączy dowody
+$\eta$ i $\neg\theta$ i stosuje odpowiednią tautologię
+rachunku zdań. Wybór gałęzi opiera się na pierwotnie
+rekurencyjnej procedurze rozstrzygania ustalonej formuły
+$\Delta_0$. Wszystkie operacje na kodach dowodów są
+pierwotnie rekurencyjne, a PA dowodzi ich poprawności
+przez indukcję po długości przepisanych dowodów,
+jak w Lemacie~\ref{lem:xi-formal-mp}.
+
+\emph{Kwantyfikatory ograniczone.} Kwantyfikatory
+z ograniczeniem $u\le t$ najpierw rozwijamy zgodnie
+z Definicją~\ref{res:4:6} do przypadku $u<t$ oraz
+jednej dodatkowej instancji $u=t$; dlatego wystarcza
+rozpatrzyć ograniczenie ostre. Jeśli
+$\delta(\vec x)=\exists u<t(\vec x)\,\eta(\vec x,u)$,
+to dla danych $\vec n$ obliczamy
+$k=t(\overline{\vec n})$ i badamy kolejno
+$u=0,\ldots,k-1$. Jeśli istnieje świadek,
+wybieramy najmniejszy i dołączamy odpowiedni
+dowód instancji $\eta(\overline{\vec n},\overline u)$,
+dowód nierówności $\overline u<t(\overline{\vec n})$
+oraz wprowadzenie kwantyfikatora. Dla
+$\forall u<t(\vec x)\,\eta(\vec x,u)$ w przypadku
+prawdziwym łączymy $k$ dowodów poszczególnych
+instancji. W przypadku fałszywym znajdujemy
+konkretny indeks $j<k$ i dołączamy dowód
+$\neg\eta(\overline{\vec n},\overline j)$.
+Dla fałszywej formuły z kwantyfikatorem egzystencjalnym
+łączymy natomiast dowody negacji \emph{wszystkich}
+$k$ instancji. W ten sposób otrzymujemy także
+kompilator ujemny dla obu typów kwantyfikatorów.
+W każdym przypadku kompilator dołącza również dowód
+równości $t(\overline{\vec n})=\overline k$,
+skonstruowany z obliczenia wartości termu $t$.
+Bez tego kroku dowód ograniczony przez numerał
+$\overline k$ nie byłby jeszcze dowodem formuły
+z oryginalnym ograniczeniem $t(\overline{\vec n})$.
+Podstawienie równych termów zapewnia odpowiednie
+przeniesienie ograniczenia.
+Przejście od listy instancji do zdania z ograniczonym
+kwantyfikatorem jest formalizowane w PA przez
+indukcję po \emph{zmiennym} $k$. Dla konkretnego $k$
+można wyprowadzić z aksjomatów PA zdanie
+$u<\overline k\to(u=\overline0\lor\cdots\lor
+u=\overline{k-1})$ (dla $k=0$ otrzymujemy sprzeczność
+z $u<0$). Z dowodów $k$ instancji, po podstawieniu
+równości w każdym przypadku, tworzymy dowód
+$\forall u<\overline k\,\eta$; ten sam schemat
+z dowodami negacji daje dowód
+$\forall u<\overline k\,\neg\eta$, a przez prawa
+logiki klasycznej --- zaprzeczenie ograniczonego
+kwantyfikatora egzystencjalnego. Dla fałszywej formuły
+ograniczonej uniwersalnie lub prawdziwej egzystencjalnie
+wystarcza jeden świadek oraz odpowiednia reguła logiczna.
+Operacja tworzenia dowodu rozkładu skończonego przedziału
+ma kod wyznaczany pierwotnie rekurencyjnie z $k$.
+Indukcja w PA formalizuje jej poprawność i sprawdzanie
+całego wygenerowanego kodu dla zmiennego $k$;
+nie zastępujemy jej nieskończoną rodziną dowodów
+dla oddzielnych numerałów. Dla ustalonego $k$
+wykorzystujemy także Lemat~\ref{res:4:4}, lecz sam ten lemat
+nie zastępuje indukcji po zmiennym $k$ w PA.
+Lemat~\ref{lem:xi-append-beta} gwarantuje możliwość
+wydłużania kodu listy. W ten sposób dowód jednolity
+nie jest tylko nieskończoną rodziną oddzielnych
+dowodów dla kolejnych numerałów.
+
+Cała procedura jest pierwotnie rekurencyjna,
+ponieważ dla ustalonej $\delta$ stosuje jedynie
+skończoną liczbę zagnieżdżonych pętli ograniczonych
+i pierwotnie rekurencyjne operacje na kodach.
+Uzyskany dowód jest początkowo dowodem w PA;
+ponieważ $T\supseteq\mathrm{PA}$, można
+jednolicie przeliczyć go na pełny kod dowodu $T$
+z certyfikatami jego aksjomatów. PA formalizuje
+tę konwersję. Otrzymujemy tezę.
+\end{proof}
+
+\begin{lemat}[Sformalizowana $\Sigma_1$-zupełność]
+\label{lem:xi-formal-sigma1}
+Dla ustalonej formuły $\Sigma_1$ postaci
+$\sigma(\vec x)=\exists\vec u\,\delta(\vec x,\vec u)$,
+gdzie $\delta$ jest $\Delta_0$, zachodzi
+\[
+\mathrm{PA}\vdash\forall\vec x\;
+\bigl(\sigma(\vec x)\to
+\operatorname{Bew}_T(\operatorname{inst}_\sigma(\vec x))\bigr).
+\]
+W szczególności dla zdania $\sigma$:
+$\mathrm{PA}\vdash\sigma\to
+\operatorname{Bew}_T(\overline{\ulcorner\sigma\urcorner})$.
+\end{lemat}
+\begin{proof}
+Dla danych $\vec x,\vec u$ załóżmy
+$\delta(\vec x,\vec u)$. Poprzedni lemat
+dostarcza kod poprawnego dowodu
+$\delta(\overline{\vec x},\overline{\vec u})$.
+Kolejno dołączamy do niego wprowadzenia
+kwantyfikatorów egzystencjalnych po wszystkich
+zmiennych $\vec u$, otrzymując kod dowodu
+$\sigma(\overline{\vec x})$. Ta operacja kodowa
+jest pierwotnie rekurencyjna, a PA dowodzi jej
+poprawności, zatem
+\[
+\mathrm{PA}\vdash
+\forall\vec x\,\forall\vec u\;\left(
+\delta(\vec x,\vec u)\to\exists p\,
+\operatorname{Prf}_T(p,\operatorname{inst}_\sigma(\vec x))
+\right).
+\]
+Wprowadzając kwantyfikatory egzystencjalne
+po $\vec u$ po lewej stronie implikacji,
+uzyskujemy $\sigma(\vec x)\to
+\operatorname{Bew}_T(\operatorname{inst}_\sigma(\vec x))$.
+To jest \emph{jedno} twierdzenie PA, również wtedy,
+gdy wartości parametrów w modelu są niestandardowe.
+\end{proof}
+
+\begin{twierdzenie}[Warunki (D1)--(D3) dla $T$]
+\label{thm:xi-hbl-verified}
+Dla każdej efektywnie aksjomatyzowalnej teorii
+$T\supseteq\mathrm{PA}$ ustalony standardowy
+predykat dowodliwości z Lematu~\ref{res:7:7}
+spełnia wszystkie warunki (D1)--(D3) z
+Definicji~\ref{def:hilbert-bernays-loeb}.
+\end{twierdzenie}
+\begin{proof}
+(D1) został udowodniony w Lemacie
+\ref{lem:d1-provability}.
+Warunek (D2) to Twierdzenie~\ref{thm:xi-d2}.
+Dla (D3) ustalmy zdanie $\varphi$ i niech
+$g:=\ulcorner\varphi\urcorner$. Ponieważ
+$\operatorname{Bew}_T(x)$ jest $\Sigma_1$,
+zdanie $\sigma:=\operatorname{Bew}_T(\overline g)$
+ma postać $\Sigma_1$. Z Lematu
+\ref{lem:xi-formal-sigma1} otrzymujemy
+\[
+\mathrm{PA}\vdash
+\operatorname{Bew}_T(\overline g)\to
+\operatorname{Bew}_T\left(
+\overline{\ulcorner\operatorname{Bew}_T(\overline g)\urcorner}
+\right).
+\]
+Pierwsza strona to $\Box\varphi$,
+a druga to $\Box\Box\varphi$. Zatem (D3)
+jest dowodliwe już w PA, więc także w $T$.
+\end{proof}
+
+
+\begin{przyklad}[Czym różni się dowód od jego kodu?]
+Ustalmy dwie formalne dedukcje: pierwsza kończy się zdaniem $P$,
+a druga kończy się zdaniem $P\to Q$. Ich teksty są obiektami
+skończonymi, więc można je zakodować liczbami $q$ i $p$.
+Metamatematycznie potrafimy połączyć teksty i dopisać regułę
+modus ponens. To daje kod $m(p,q)$. Warunek (D2) mówi więcej:
+\emph{ta sama operacja łączenia przechodzi dowód poprawności
+wewnątrz arytmetyki}, ze zmiennymi $p,q$, a nie tylko po
+wybraniu dwóch konkretnych liczb. Rozdzielenie tych poziomów
+jest konieczne: skończona lista sprawdzonych przykładów nie
+jest dowodem jednego zdania z dwoma kwantyfikatorami ogólnymi.
+\end{przyklad}
+
+\section{Czego nie wolno wyciągać z (D1)--(D3)?}
+\begin{przyklad}[Trzy twierdzenia, trzy znaczenia]
+Niech $\varphi$ oznacza konkretną równość
+$\overline1+\overline1=\overline2$.
+(D1) mówi, że mając formalny dowód tej równości,
+można skonstruować dowód zdania $\Box\varphi$.
+(D2) mówi, że teoria uzasadnia łączenie dowodów
+implikacji i jej poprzednika. (D3) mówi,
+że teoria potrafi formalnie potwierdzać istnienie
+dowodu zdania o istnieniu dowodu.
+Żaden z tych warunków nie jest zasadą
+$\Box\varphi\to\varphi$ dla każdego $\varphi$.
+\end{przyklad}
+
+\begin{uwaga}[Dlaczego wybór predykatu jest istotny?]
+Formuły zgodne na liczbach \emph{standardowych}
+nie muszą być dowodliwie równoważne w PA.
+Dlatego (D2) i (D3) są twierdzeniami
+\emph{o ustalonej reprezentacji kodu dowodu},
+a nie o dowolnej formule z odpowiednim zbiorem
+wartości prawdziwych w $\mathfrak N$.
+W szczególności predykat Rossera z
+Definicji~\ref{def:rosser-predicate} nie otrzymuje
+tych własności automatycznie.
+\end{uwaga}

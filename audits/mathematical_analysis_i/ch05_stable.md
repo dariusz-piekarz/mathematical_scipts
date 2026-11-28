@@ -1,0 +1,2 @@
+# MA1-05 — stabilny
+Blob 8c2905ea778667102e05d6b495d4121963db1c7a; 13 kryteriów z audytu 02. CI 45411267029: 32/32 testów (3+7+7+6+9), dwa przebiegi LaTeX, 34 strony, artefakt 14928831295. Terminologia 45411223707 i Atlas 45411223849: sukces. Obejrzano strony fizyczne 29–34, powiększono strony 32–33 z oboma rysunkami: brak widocznych kolizji, etykieta a czytelna, rysunki nie przecinają twierdzeń ani dowodów. Formalizacja Lean nieuruchomiona. Stabilny w zakresie wykonanych kontroli.

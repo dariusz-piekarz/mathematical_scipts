@@ -1,0 +1,307 @@
+\chapter{Ciągi w przestrzeniach metrycznych}
+\label{ma1:ch:metric-sequences}
+
+Zbieżność będziemy badać od razu w przestrzeniach metrycznych. W ten sposób jeden dowód obejmie ciągi rzeczywiste, zespolone, wektorowe oraz ciągi funkcji. Własności wykorzystujące porządek liczb rzeczywistych będą formułowane osobno. Rozdział o zbieżności w Topologii ogólnej przedstawia szerszy kontekst topologiczny; tutaj interesują nas przede wszystkim oszacowania ilościowe. Ciągi Cauchy'ego i podciągi rozwiniemy systematycznie w następnym rozdziale.
+
+\section{Metryka i kule}
+\begin{definicja}
+\label{ma1:def:metric}
+Metryką na zbiorze $X$ nazywamy odwzorowanie $d:X\times X\to[0,+\infty)$ spełniające dla wszystkich $x,y,z\in X$ warunki:
+\begin{enumerate}[label=(\roman*)]
+\item $d(x,y)=0$ wtedy i tylko wtedy, gdy $x=y$;
+\item $d(x,y)=d(y,x)$;
+\item $d(x,z)\le d(x,y)+d(y,z)$.
+\end{enumerate}
+Parę $(X,d)$ nazywamy przestrzenią metryczną. Dla $x\in X$ i rzeczywistego $r>0$ definiujemy kulę otwartą $B_d(x,r)=\{y\in X:d(x,y)<r\}$ i kulę domkniętą $\overline B_d(x,r)=\{y\in X:d(x,y)\le r\}$.
+\end{definicja}
+Nazwy kul odnoszą się do topologii wyznaczonej przez metrykę, omawianej szczegółowo w Topologii ogólnej. Kula domknięta nie musi być domknięciem kuli otwartej o tym samym środku i promieniu: w metryce dyskretnej na zbiorze mającym co najmniej dwa elementy $B_d(x,1)=\{x\}$, natomiast $\overline B_d(x,1)=X$. W tej metryce singleton jest domknięty, ponieważ jego dopełnienie jest otwarte. Na tym etapie korzystamy bezpośrednio z nierówności definiujących kule. Dla $Y\subseteq X$ ograniczenie metryki $d$ do $Y\times Y$ również spełnia wszystkie trzy aksjomaty. Parę $(Y,d|_{Y\times Y})$ nazywamy podprzestrzenią metryczną.
+
+\begin{przyklad}
+\label{ma1:ex:basic-metrics}
+Na $\R$ metryką jest $d(x,y)=|x-y|$, a na $\C$ metryką jest $d(z,w)=|z-w|$. Wszystkie aksjomaty wynikają z własności wartości bezwzględnej i modułu (por. twierdzenie \ref{ma1:thm:complex-modulus}).
+Na dowolnym zbiorze $X$ metryka dyskretna ma postać $d(x,x)=0$ oraz $d(x,y)=1$ dla $x\ne y$. Nierówność trójkąta dla $x=z$ jest oczywista, a dla $x\ne z$ przynajmniej jedna z nierówności $x\ne y$, $y\ne z$ zachodzi, więc $d(x,y)+d(y,z)\ge1=d(x,z)$.
+\end{przyklad}
+
+\begin{przyklad}[Metryki na przestrzeni wektorów]
+\label{ma1:ex:vector-metrics}
+Dla ustalonego $m\in\N_+$ i dowolnych $x=(x_1,\ldots,x_m)$, $y=(y_1,\ldots,y_m)$ w $\R^m$ definiujemy
+\[
+ d_1(x,y)=\sum_{j=1}^m|x_j-y_j|,\qquad
+ d_\infty(x,y)=\max_{1\le j\le m}|x_j-y_j|.
+\]
+Obie funkcje są nieujemne i symetryczne; każda zeruje się dokładnie wtedy, gdy wszystkie różnice współrzędnych są zerowe. Dla dowolnego $z=(z_1,\ldots,z_m)\in\R^m$ w przypadku $d_1$ sumujemy nierówności $|x_j-z_j|\le |x_j-y_j|+|y_j-z_j|$. Dla $d_\infty$ prawa strona każdej z tych nierówności jest nie większa niż $d_\infty(x,y)+d_\infty(y,z)$; bierzemy maksimum po $j$. Otrzymujemy nierówności trójkąta. Ponadto
+\[
+ d_\infty(x,y)\le d_1(x,y)\le m d_\infty(x,y).
+\]
+Pierwsza nierówność wynika z nieujemności składników, druga z ograniczenia każdego składnika przez maksimum.
+
+Dopełnijmy ten przykład o zwykłą metrykę euklidesową
+\[
+ d_2(x,y)=\sqrt{\sum_{j=1}^m(x_j-y_j)^2}.
+\]
+Nieujemność, symetria i warunek zerowania wynikają z własności kwadratów i pierwiastka. Dla dowolnych wektorów $u,v\in\R^m$ mamy tożsamość
+\[
+ \left(\sum_{j=1}^m u_j^2\right)\left(\sum_{j=1}^m v_j^2\right)
+ -\left(\sum_{j=1}^m u_jv_j\right)^2
+ =\sum_{1\le j<k\le m}(u_jv_k-u_kv_j)^2\ge0.
+\]
+Równość wynika z rozwinięcia obu iloczynów: wyrazy o jednakowych indeksach się redukują, a dla każdej pary $j<k$ pozostaje kwadrat po prawej stronie. Zatem $\sum_j u_jv_j\le\sqrt{\sum_j u_j^2}\sqrt{\sum_j v_j^2}$. Podstawiając $u=x-y$ i $v=y-z$ oraz rozwijając sumę kwadratów, otrzymujemy $d_2(x,z)^2\le(d_2(x,y)+d_2(y,z))^2$. Nieujemność obu stron przed podniesieniem do kwadratu daje nierówność trójkąta.
+Ponadto $d_\infty(x,y)\le d_2(x,y)\le\sqrt m\,d_\infty(x,y)$: kwadrat największej różnicy jest jednym ze składników sumy, a każdy składnik jest nie większy od $d_\infty(x,y)^2$.
+\end{przyklad}
+
+\begin{lemat}[Oszacowania odległości]
+\label{ma1:lem:distance-estimates}
+Niech $(X,d)$ będzie przestrzenią metryczną. Dla wszystkich $x,y,u,v\in X$ zachodzi
+\[
+ |d(x,u)-d(y,v)|\le d(x,y)+d(u,v).
+\]
+W szczególności $|d(x,u)-d(y,u)|\le d(x,y)$.
+\end{lemat}
+\begin{proof}
+Z dwukrotnego zastosowania nierówności trójkąta mamy $d(x,u)\le d(x,y)+d(y,v)+d(v,u)$, zatem $d(x,u)-d(y,v)\le d(x,y)+d(u,v)$. Zamieniając $(x,u)$ z $(y,v)$ i korzystając z symetrii metryki, otrzymujemy oszacowanie przeciwnej różnicy. Razem dają tezę. Dla $v=u$ drugi składnik po prawej stronie jest zerowy.
+\end{proof}
+
+\section{Definicja zbieżności}
+\begin{definicja}
+\label{ma1:def:sequence-convergence}
+Ciągiem w zbiorze $X$ nazywamy odwzorowanie $x:\N_+\to X$, którego wartość w $n$ oznaczamy przez $x_n$. Piszemy $(x_n)_{n\ge1}$. Niech $(X,d)$ będzie przestrzenią metryczną. Ciąg $(x_n)_{n\ge1}$ jest zbieżny do punktu $a\in X$, jeżeli
+\[
+ \forall\varepsilon\in\R_{>0}\quad\exists N\in\N_+\quad
+ \forall n\in\N_+\quad(n\ge N\Rightarrow d(x_n,a)<\varepsilon).
+\]
+Piszemy $x_n\to a$ lub $\lim_{n\to\infty}x_n=a$ (jednoznaczność granicy wykażemy w twierdzeniu \ref{ma1:thm:unique-limit}). Ciąg nazywamy zbieżnym, jeśli istnieje $a\in X$ spełniające ten warunek; w przeciwnym razie jest rozbieżny.
+\end{definicja}
+Kwantyfikator egzystencjalny określający $N$ znajduje się po kwantyfikatorze ogólnym po $\varepsilon$: indeks $N$ może zależeć od dokładności. Dla ustalonej dokładności ten sam $N$ musi działać dla wszystkich $n\ge N$. Granica nie musi być wyrazem ciągu.
+
+\begin{przyklad}
+\label{ma1:ex:inverse-sequence}
+W $\R$ ciąg $x_n=1/n$ jest zbieżny do zera. Dla danego $\varepsilon>0$ wybieramy $N=\lfloor1/\varepsilon\rfloor+1$. Wtedy $N>1/\varepsilon$, więc dla $n\ge N$ mamy $|x_n|=1/n\le1/N<\varepsilon$.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=6cm,y=1cm,>=Stealth]
+\fill[blue!9] (-.3,-.36) rectangle (.3,.36);
+\draw[->] (-.42,0)--(1.17,0) node[right] {$t$};
+\draw[dashed,gray] (-.3,-.45)--(-.3,.45) (.3,-.45)--(.3,.45);
+\node[below] at (-.3,-.45) {$-\varepsilon$};
+\node[below] at (.3,-.45) {$\varepsilon$};
+\fill (0,0) circle (1.8pt) node[below left] {$0$};
+\foreach \n in {1,2,3}{
+  \fill[orange!85!black] ({1/\n},0) circle (2pt);
+}
+\node[above] at (1,.10) {$x_1$};
+\node[above] at (.5,.10) {$x_2$};
+\node[above right] at ({1/3},.45) {$x_3$};
+\draw[gray] ({1/3},.08)--({1/3},.45);
+\foreach \n in {4,5,6,8,10,14,20}{
+  \fill[blue!65!black] ({1/\n},0) circle (1.35pt);
+}
+\node[above] at (0,.50) {$B(0,\varepsilon)$};
+\node[below] at (.14,-.78) {$n\ge4$};
+\end{tikzpicture}
+\caption{Dla $x_n=1/n$ i $\varepsilon=3/10$ można wybrać $N=4$. Wszystkie wyrazy o indeksach co najmniej $4$ należą do kuli wokół zera.}
+\label{ma1:fig:epsilon-sequence}
+\end{figure}
+\FloatBarrier
+
+\begin{stwierdzenie}
+\label{ma1:prop:convergence-criteria}
+Niech $(x_n)$ będzie ciągiem w przestrzeni metrycznej $(X,d)$ i $a\in X$. Następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $x_n\to a$;
+\item dla każdego $\varepsilon>0$ zbiór $\{n\in\N_+:x_n\notin B_d(a,\varepsilon)\}$ jest skończony;
+\item dla każdego $k\in\N_+$ istnieje $N_k\in\N_+$ takie, że $d(x_n,a)<1/k$ dla wszystkich $n\ge N_k$;
+\item rzeczywisty ciąg $(d(x_n,a))$ jest zbieżny do zera w metryce wartości bezwzględnej.
+\end{enumerate}
+\end{stwierdzenie}
+\begin{proof}
+Ustalmy $\varepsilon>0$. Jeśli (i) zachodzi, wszystkie indeksy z (ii) są mniejsze od pewnego $N$, więc tworzą zbiór skończony. Odwrotnie, jeśli zbiór złych indeksów jest niepusty i skończony, wybieramy $N$ większe od jego maksimum; jeśli jest pusty, wystarcza $N=1$. To daje (i).
+Warunek (iii) wynika z (i), biorąc $\varepsilon=1/k$. Jeśli (iii) zachodzi, dla danego $\varepsilon>0$ z własności Archimedesa wybieramy $k$ z $1/k<\varepsilon$. Dla $n\ge N_k$ otrzymujemy $d(x_n,a)<\varepsilon$. Wreszcie (iv) jest dokładnie warunkiem (i), ponieważ $|d(x_n,a)-0|=d(x_n,a)$.
+\end{proof}
+
+\begin{stwierdzenie}[Zaprzeczenie zbieżności]
+\label{ma1:prop:nonconvergence}
+Niech $(x_n)$ będzie ciągiem w przestrzeni metrycznej $(X,d)$ i $a\in X$. Ciąg nie jest zbieżny do $a$ wtedy i tylko wtedy, gdy
+\[
+ \exists\varepsilon>0\quad\forall N\in\N_+\quad
+ \exists n\in\N_+\quad(n\ge N\ \land\ d(x_n,a)\ge\varepsilon).
+\]
+Ciąg jest rozbieżny wtedy i tylko wtedy, gdy ten warunek zachodzi dla każdego $a\in X$.
+\end{stwierdzenie}
+\begin{proof}
+Negujemy kolejno kwantyfikatory definicji \ref{ma1:def:sequence-convergence}. Zaprzeczeniem implikacji $n\ge N\Rightarrow d(x_n,a)<\varepsilon$ jest koniunkcja $n\ge N$ oraz $d(x_n,a)\ge\varepsilon$. Zaprzeczenie istnienia granicy oznacza, że żaden punkt przestrzeni nie spełnia definicji.
+\end{proof}
+
+\begin{przyklad}
+W metryce dyskretnej $x_n\to a$ dokładnie wtedy, gdy od pewnego indeksu $x_n=a$. W jedną stronę wystarczy zastosować definicję do $\varepsilon=1/2$, w drugą wszystkie późne odległości są zerowe. W szczególności na $\R$ ciąg $1/n$ zbiega do zera w zwykłej metryce, ale nie jest zbieżny w metryce dyskretnej, ponieważ jego wyrazy są parami różne, więc ciąg nie może być stały od pewnego indeksu.
+\end{przyklad}
+
+\section{Jednoznaczność granicy i ograniczoność}
+\begin{twierdzenie}
+\label{ma1:thm:unique-limit}
+Ciąg w dowolnej przestrzeni metrycznej ma co najwyżej jedną granicę.
+\end{twierdzenie}
+\begin{proof}
+Niech $x_n\to a$ i $x_n\to b$. Gdyby $a\ne b$, to $r=d(a,b)>0$. Dla $\varepsilon=r/3$ istnieją $N_a,N_b$ takie, że odpowiednie odległości są mniejsze od $r/3$. Wybierając $n\ge\max(N_a,N_b)$, otrzymujemy
+$r\le d(a,x_n)+d(x_n,b)<2r/3$, sprzeczność.
+\end{proof}
+
+\begin{definicja}
+\label{ma1:def:bounded-metric-set}
+Podzbiór $A$ niepustej przestrzeni metrycznej $(X,d)$ nazywamy ograniczonym, jeśli istnieją $p\in X$ oraz $R>0$ w $\R$ takie, że $A\subseteq B_d(p,R)$. Ciąg nazywamy ograniczonym, jeśli zbiór jego wyrazów jest ograniczony.
+\end{definicja}
+Jeśli $A\subseteq B_d(p,R)$ i $q\in X$, to $d(x,q)\le d(x,p)+d(p,q)<R+d(p,q)$ dla każdego $x\in A$. Własność ograniczoności nie zależy zatem od wyboru środka kuli. W szczególności dla $K=\R$ lub $K=\C$ i metryki modułu ograniczoność ciągu $(x_n)$ jest równoważna istnieniu $M>0$ z $|x_n|\le M$ dla wszystkich $n$: jako środek można wybrać $0$, a przy ograniczeniu nieostrym wystarczy powiększyć promień do $M+1$.
+\begin{twierdzenie}
+\label{ma1:thm:convergent-bounded}
+Każdy ciąg zbieżny w przestrzeni metrycznej jest ograniczony.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $x_n\to a$, wybieramy $N$ z $d(x_n,a)<1$ dla $n\ge N$. Niech
+$R=1+\max(\{1\}\cup\{d(x_j,a):1\le j<N\})$. Maksimum istnieje, ponieważ zbiór jest skończony i niepusty, także dla $N=1$. Wtedy każdy wyraz ciągu należy do $B_d(a,R)$.
+\end{proof}
+\begin{przyklad}
+Ciąg $(-1)^n$ w $\R$ jest ograniczony, ale rozbieżny: gdyby zbiegał do $a$, dla $\varepsilon=1/2$ wszystkie dostatecznie późne wyrazy należałyby do kuli wokół $a$. Można jednak wybrać dwa takie indeksy o przeciwnej parzystości. Nierówność trójkąta dałaby $2=|1-(-1)|<1$, sprzeczność.
+\end{przyklad}
+
+\begin{twierdzenie}[Zbieżność odległości]
+\label{ma1:thm:distance-limit}
+Jeżeli $(x_n)$ i $(y_n)$ są ciągami w przestrzeni metrycznej $(X,d)$ oraz $x_n\to x$, $y_n\to y$, to rzeczywisty ciąg $d(x_n,y_n)$ jest zbieżny do $d(x,y)$.
+\end{twierdzenie}
+\begin{proof}
+Z lematu \ref{ma1:lem:distance-estimates} mamy $|d(x_n,y_n)-d(x,y)|\le d(x_n,x)+d(y_n,y)$. Dla $\varepsilon>0$ wybieramy indeksy zapewniające, że każdy z dwóch składników jest mniejszy od $\varepsilon/2$. Od maksimum tych indeksów różnica jest mniejsza od $\varepsilon$.
+\end{proof}
+\begin{wniosek}
+\label{ma1:cor:asymptotic-equivalence}
+Jeśli $x_n\to x$ oraz $d(x_n,y_n)\to0$ dla ciągów w tej samej przestrzeni metrycznej, to $y_n\to x$.
+\end{wniosek}
+\begin{proof}
+Dla $\varepsilon>0$ wybieramy wspólny dostatecznie duży indeks, od którego $d(x_n,y_n)<\varepsilon/2$ oraz $d(x_n,x)<\varepsilon/2$. Wtedy $d(y_n,x)\le d(y_n,x_n)+d(x_n,x)<\varepsilon$.
+\end{proof}
+
+\section{Porównywanie metryk i zbieżność współrzędnych}
+\begin{twierdzenie}
+\label{ma1:thm:comparable-metrics}
+Niech $d,\rho$ będą metrykami na zbiorze $X$. Jeżeli istnieją rzeczywiste stałe $c,C>0$ takie, że $c\,d(x,y)\le\rho(x,y)\le C\,d(x,y)$ dla wszystkich $x,y\in X$, to dla dowolnego ciągu $(x_n)$ i punktu $a\in X$ zbieżność $x_n\to a$ w metryce $d$ jest równoważna zbieżności do $a$ w metryce $\rho$.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $x_n\to a$ w metryce $d$, to dla danej $\varepsilon>0$ od pewnego indeksu $d(x_n,a)<\varepsilon/C$. Wówczas $\rho(x_n,a)\le C d(x_n,a)<\varepsilon$. Odwrotnie, jeżeli ciąg zbiega do $a$ w metryce $\rho$, to od pewnego indeksu $\rho(x_n,a)<c\varepsilon$, skąd $d(x_n,a)\le \rho(x_n,a)/c<\varepsilon$.
+\end{proof}
+\begin{twierdzenie}
+\label{ma1:thm:finite-coordinate-convergence}
+Niech $m\in\N_+$, a $(X_j,d_j)$ dla $1\le j\le m$ będą przestrzeniami metrycznymi. Na $X=\prod_{j=1}^m X_j$ funkcje
+\[
+ D_1(x,y)=\sum_{j=1}^m d_j(x_j,y_j),\qquad
+ D_\infty(x,y)=\max_{1\le j\le m} d_j(x_j,y_j)
+\]
+są metrykami. Dla dowolnego ciągu $(x^{(n)})$ w $X$ i $a=(a_1,\ldots,a_m)\in X$ ciąg ten zbiega do $a$ w każdej z tych metryk wtedy i tylko wtedy, gdy $x_j^{(n)}\to a_j$ w $(X_j,d_j)$ dla każdego $j$.
+\end{twierdzenie}
+\begin{proof}
+Nieujemność i symetria obu funkcji wynikają z odpowiednich własności $d_j$. Suma i maksimum nieujemnych liczb są zerowe dokładnie wtedy, gdy każdy składnik jest zerowy, a więc gdy $x_j=y_j$ dla wszystkich $j$. Sumując nierówności trójkąta dla $d_j$, otrzymujemy nierówność trójkąta dla $D_1$. Dla $D_\infty$ mamy dla każdego $j$
+$d_j(x_j,z_j)\le d_j(x_j,y_j)+d_j(y_j,z_j)\le D_\infty(x,y)+D_\infty(y,z)$; bierzemy maksimum. Ponadto $D_\infty\le D_1\le mD_\infty$, więc na mocy twierdzenia \ref{ma1:thm:comparable-metrics} wystarczy rozpatrzyć $D_\infty$.
+
+Jeśli $x^{(n)}\to a$ w $D_\infty$, to $d_j(x_j^{(n)},a_j)\le D_\infty(x^{(n)},a)$ dla każdego $j$, więc każdy ciąg współrzędnych jest zbieżny. Odwrotnie, dla $\varepsilon>0$ i każdego $j$ wybieramy $N_j$ z $d_j(x_j^{(n)},a_j)<\varepsilon$ dla $n\ge N_j$. Ponieważ współrzędnych jest skończenie wiele, istnieje $N=\max_{1\le j\le m}N_j$. Dla każdego $n\ge N$ wszystkie odległości współrzędnych są mniejsze od $\varepsilon$, a zatem ich maksimum też jest mniejsze od $\varepsilon$.
+\end{proof}
+\begin{przyklad}
+W $\C$ zbieżność $z_n=a_n+b_n\mathrm i\to a+b\mathrm i$ jest równoważna zbieżności $a_n\to a$ oraz $b_n\to b$. Istotnie, dla $z,w\in\C$ z własności modułu wynika
+\[
+ \max(|\operatorname{Re}(z-w)|,|\operatorname{Im}(z-w)|)
+ \le |z-w|
+ \le |\operatorname{Re}(z-w)|+|\operatorname{Im}(z-w)|.
+\]
+Prawa nierówność wynika z nierówności trójkąta dla rozkładu $z-w$ na część rzeczywistą i urojoną. Zatem metryka modułu jest porównywalna z $D_\infty$ (stałe $1$ i $2$). Możemy zastosować poprzednie twierdzenia.
+\end{przyklad}
+\begin{przyklad}[Dlaczego skończona liczba współrzędnych jest istotna?]
+Niech $X$ będzie zbiorem ograniczonych ciągów rzeczywistych $u=(u_j)_{j\ge1}$, z metryką $D(u,v)=\sup_{j\ge1}|u_j-v_j|$. Jeśli $|u_j|\le M$ i $|v_j|\le L$ dla wszystkich $j$ i pewnych rzeczywistych $M,L>0$, to $|u_j-v_j|\le M+L$. Supremum istnieje w $\R$ jako kres niepustego zbioru ograniczonego z góry. Nieujemność i symetria wynikają z własności wartości bezwzględnej. Jeśli $D(u,v)=0$, to dla każdego $j$ zachodzi $0\le |u_j-v_j|\le D(u,v)=0$, zatem $u=v$; odwrotnie dla $u=v$ wszystkie różnice są zerowe. Dla nierówności trójkąta każda różnica $|u_j-w_j|$ jest ograniczona przez $D(u,v)+D(v,w)$, więc również jej supremum.
+Niech $e^{(n)}$ będzie ciągiem, którego $n$-ta współrzędna wynosi $1$, a wszystkie pozostałe $0$. Dla każdego ustalonego $j$ ciąg $e_j^{(n)}$ od indeksu $j+1$ jest zerowy. Mimo to $D(e^{(n)},0)=1$ dla wszystkich $n$. Gdyby $e^{(n)}$ zbiegał w $D$ do pewnego $u$, to dla każdego ustalonego $j$ mielibyśmy $|e_j^{(n)}-u_j|\le D(e^{(n)},u)\to0$. Jednoznaczność granicy rzeczywistej i $e_j^{(n)}\to0$ dawałyby $u_j=0$ dla każdego $j$, a więc $u=0$. Jest to niemożliwe ze względu na stałą odległość $1$ od zera. Zatem ciąg jest rozbieżny w $D$, mimo zbieżności wszystkich współrzędnych. Nie ma tu wspólnego indeksu odpowiedniego dla wszystkich współrzędnych.
+\end{przyklad}
+
+\section{Przykłady obliczeniowe i zależność od przestrzeni}
+\begin{twierdzenie}[Nierówność Bernoulliego]
+\label{ma1:thm:bernoulli-natural}
+Dla $x\ge-1$ oraz każdej liczby całkowitej $n\ge1$ zachodzi
+\[
+ (1+x)^n\ge1+nx.
+\]
+Równość zachodzi dokładnie wtedy, gdy $n=1$ lub $x=0$.
+\end{twierdzenie}
+\begin{proof}
+Dla $n=1$ obie strony są równe. Załóżmy nierówność dla $n\ge1$. Ponieważ $1+x\ge0$, mnożenie przez ten czynnik zachowuje kierunek nierówności:
+\[
+ (1+x)^{n+1}\ge(1+nx)(1+x)
+ =1+(n+1)x+nx^2\ge1+(n+1)x.
+\]
+Ostatnia nierówność jest ostra dla $x\ne0$, ponieważ $n>0$. Indukcja daje tezę oraz ścisłość dla każdego $n\ge2$ i $x\ne0$. Dla $x=0$ obie strony wynoszą $1$.
+\end{proof}
+Wersję z wykładnikiem rzeczywistym wyprowadzimy później z wypukłości funkcji potęgowych (twierdzenie \ref{ma1:thm:bernoulli-real}).
+\begin{przyklad}
+\label{ma1:ex:geometric-sequence}
+Dla $q\in\C$ takiego, że $|q|<1$, ciąg $q^n$ zbiega do $0$. Jeśli $q=0$, jest to oczywiste. W przeciwnym razie $r=1/|q|-1>0$. Z nierówności Bernoulliego \ref{ma1:thm:bernoulli-natural} otrzymujemy $(1+r)^n\ge 1+nr$.
+Z multiplikatywności modułu przez indukcję mamy $|q^n|=|q|^n$ dla każdego $n\ge1$. Stąd $|q^n|=(1+r)^{-n}\le 1/(1+nr)$. Dla dowolnego $\varepsilon>0$ wybieramy $N>1/(r\varepsilon)$ i dla $n\ge N$ otrzymujemy $|q^n|<\varepsilon$.
+Jeżeli $|q|>1$, to dla $r=|q|-1>0$ mamy $|q^n|\ge1+nr$, więc ciąg jest nieograniczony i nie może być zbieżny.
+Jeżeli $|q|=1$ i $q=1$, ciąg jest stały. Jeśli $|q|=1$, lecz $q\ne1$, to $|q^{n+1}-q^n|=|q-1|>0$ dla każdego $n$. Gdyby $q^n\to a$, dla $\varepsilon=|q-1|/3>0$ istniałby indeks $N$ taki, że $|q^k-a|<\varepsilon$ dla wszystkich $k\ge N$. Dla $n\ge N$ zarówno $n$, jak i $n+1$ spełniają ten warunek. Wtedy $|q-1|=|q^{n+1}-q^n|\le |q^{n+1}-a|+|q^n-a|<2|q-1|/3$, sprzeczność. Wyczerpaliśmy wszystkie przypadki.
+\end{przyklad}
+\begin{przyklad}
+W przestrzeni $\R$ ciąg $1/n$ zbiega do zera. W podprzestrzeni $X=(0,1]$ z tą samą metryką ciąg nie ma granicy: każda granica w $X$ byłaby także granicą w $\R$, a jedyną granicą w $\R$ jest $0\notin X$. Zbieżność zależy więc nie tylko od odległości, lecz również od zbioru dopuszczalnych punktów granicznych.
+\end{przyklad}
+\begin{przyklad}
+Niech $X$ będzie zbiorem funkcji ograniczonych $f:[0,1]\to\R$. Definiujemy $d(f,g)=\sup_{t\in[0,1]}|f(t)-g(t)|$. Jest to metryka: dowód jest taki sam jak dla ograniczonych ciągów, z supremum po $t$. Dla $f_n(t)=t/n$ mamy $d(f_n,0)=1/n$, gdyż $|t/n|\le1/n$ i równość zachodzi dla $t=1$. Zatem $(f_n)$ zbiega do funkcji zerowej w tej metryce. Jest to przykład zbieżności jednostajnej, którą rozwiniemy w tomie II.
+\end{przyklad}
+
+\section{Rachunek granic w ciałach rzeczywistym i zespolonym}
+\begin{twierdzenie}[Działania na ciągach zbieżnych]
+\label{ma1:thm:limit-arithmetic}
+Niech $K\in\{\R,\C\}$ i niech $(x_n)$, $(y_n)$ będą ciągami w $K$ zbieżnymi odpowiednio do $x,y\in K$ w metryce modułu. Dla każdego $\lambda\in K$ zachodzą
+\[
+ x_n+y_n\to x+y,\quad \lambda x_n\to\lambda x,\quad
+ x_ny_n\to xy.
+\]
+Jeżeli $y\ne0$, to istnieje $N_0\in\N_+$ takie, że $y_n\ne0$ dla $n\ge N_0$, a ciąg ilorazów $x_n/y_n$, określony dla $n\ge N_0$, zbiega do $x/y$ w tym sensie, że dla każdego $\varepsilon>0$ istnieje $N\ge N_0$ takie, że $|x_n/y_n-x/y|<\varepsilon$ dla wszystkich $n\ge N$. Dowolne uzupełnienie jego skończenie wielu początkowych wyrazów nie zmienia granicy.
+\end{twierdzenie}
+\begin{proof}
+Dla sumy korzystamy z oszacowania
+$|(x_n+y_n)-(x+y)|\le|x_n-x|+|y_n-y|$; od wspólnego indeksu oba składniki są mniejsze od $\varepsilon/2$. Dla $\lambda=0$ ciąg wielokrotności jest zerowy, a dla $\lambda\ne0$ korzystamy z $|\lambda x_n-\lambda x|=|\lambda||x_n-x|$ i wybieramy indeks dla dokładności $\varepsilon/|\lambda|$.
+
+Z twierdzenia \ref{ma1:thm:convergent-bounded} istnieje rzeczywiste $M\ge1$ takie, że $|x_n|\le M$ dla wszystkich $n$; powiększamy $M$, aby również $|y|\le M$. Wówczas
+\[
+ |x_ny_n-xy|
+ \le |x_n||y_n-y|+|y||x_n-x|
+ \le M(|y_n-y|+|x_n-x|).
+\]
+Dla $\varepsilon>0$ wybieramy wspólny indeks dla dokładności $\varepsilon/(2M)$ obu różnic. Otrzymujemy zbieżność iloczynu.
+
+Jeśli $y\ne0$, dla dostatecznie dużych $n$ mamy $|y_n-y|<|y|/2$. Nierówność odwrotna trójkąta daje $|y_n|\ge|y|-|y_n-y|>|y|/2$. Dla tych indeksów zachodzi
+\[
+ \left|\frac1{y_n}-\frac1y\right|
+ =\frac{|y_n-y|}{|y_n||y|}
+ \le\frac{2}{|y|^2}|y_n-y|.
+\]
+Dla danej $\varepsilon>0$ wystarczy dodatkowo wymagać $|y_n-y|<\varepsilon|y|^2/2$. Mamy więc zbieżność odwrotności, a z twierdzenia o iloczynie zbieżność ilorazu. Definicja zbieżności nie zależy od skończenie wielu początkowych wyrazów, ponieważ indeks $N$ możemy zawsze zwiększyć.
+\end{proof}
+\begin{przyklad}
+Dla $n\ge1$ liczba $2n+\mathrm i$ jest niezerowa i
+\[
+ \frac{3n+1}{2n+\mathrm i}
+ =\frac{3+1/n}{2+\mathrm i/n}\longrightarrow \frac32.
+\]
+Nie wyciągamy wniosku o granicy ilorazu, gdy granica mianownika jest zerowa: ilorazy ciągów $1/n$ i $1/n$ wynoszą $1$, ilorazy $1/n^2$ i $1/n$ wynoszą $1/n\to0$, a ilorazy $1/n$ i $1/n^2$ wynoszą $n$ i są nieograniczone. W każdym z tych przypadków oba ciągi mają granicę zero.
+\end{przyklad}
+\begin{twierdzenie}[Porządek i twierdzenie o trzech ciągach]
+\label{ma1:thm:sequence-squeeze}
+Niech $(a_n)$, $(b_n)$, $(c_n)$ będą ciągami rzeczywistymi, a $a,b,l\in\R$.
+\begin{enumerate}[label=(\roman*)]
+\item Jeżeli $a_n\to a$, $b_n\to b$ oraz od pewnego indeksu $a_n\le b_n$, to $a\le b$.
+\item Jeżeli od pewnego indeksu $a_n\le c_n\le b_n$ oraz $a_n\to l$ i $b_n\to l$, to $c_n\to l$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Dla (i) przypuśćmy, że $a>b$. Niech $\varepsilon=(a-b)/3$. Od dostatecznie dużego indeksu, od którego obowiązuje również $a_n\le b_n$, mamy $a_n>a-\varepsilon>b+\varepsilon>b_n$, sprzeczność.
+Dla (ii), przy danym $\varepsilon>0$, od wspólnego indeksu zachodzą $l-\varepsilon<a_n\le c_n\le b_n<l+\varepsilon$. Stąd $|c_n-l|<\varepsilon$.
+\end{proof}
+\begin{przyklad}
+Z nierówności $-1/n\le(-1)^n/n\le1/n$ i twierdzenia \ref{ma1:thm:sequence-squeeze} wynika $(-1)^n/n\to0$. Ścisłe nierówności między wyrazami nie muszą przechodzić na granice: $0<1/n$ dla każdego $n$, lecz obie granice są równe.
+\end{przyklad}
+
+\begin{uwaga}
+Rachunek granic wykorzystuje strukturę ciała, a twierdzenie o trzech ciągach również porządek. Nie są to twierdzenia o dowolnej przestrzeni metrycznej. W następnym rozdziale wrócimy do ogólnego ujęcia i zbadamy podciągi, warunek Cauchy'ego oraz rolę zupełności.
+\end{uwaga}

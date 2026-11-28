@@ -1,0 +1,1224 @@
+\chapter[Reakcja--dyfuzja i fale biegnące]{Równania reakcji--dyfuzji, fale biegnące, dynamika długoczasowa i niestabilność Turinga}
+\label{chap:pde27}
+
+\section{Mechanizmy reakcji i dyfuzji: zakres rozdziału}
+Rozważamy skalarne równanie
+\begin{equation}\label{eq:pde27-main}
+ u_t=D\Delta u+f(u),\qquad D>0,
+\end{equation}
+gdzie dyfuzja wygładza rozkład przestrzenny, a reakcja opisuje
+lokalną dynamikę. Badamy zarówno torus
+$\T_L^d=(\R/L\mathbb Z)^d$, jak i prostą $\R$.
+Na torusie stosujemy periodyczne warunki brzegowe;
+na prostej badamy fronty $u(t,x)=U(x-ct)$.
+Nawet dla $f\in C^\infty(\R)$ rozwiązanie
+nie musi istnieć dla wszystkich czasów (por. rozdział~\ref{chap:pde25}).
+W szczególności nie wolno wyprowadzać zachowania długoczasowego
+z samego twierdzenia o lokalnym istnieniu.
+
+W obliczeniach dla modelu Fishera--KPP użyjemy
+$f(s)=rs(1-s)$, $r>0$. Rozwiązanie z zakresu $0\le u\le1$
+pozostaje w tym przedziale, mimo że $f$ nie jest monotoniczna
+na całej osi. Jest to zastosowanie zasady porównania,
+nie monotoniczności funkcji $f$.
+
+\section{Istnienie, ciągłość względem danych i zasada porównania}
+\begin{twierdzenie}[Istnienie lokalne i alternatywa eksplozji]\label{thm:pde27-local}
+Niech $L,D>0$, $d\ge1$, $f\in C^1(\R)$ oraz
+$u_0\in C(\T_L^d)$. Istnieje dokładnie jedno maksymalne
+rozwiązanie łagodne $u\in C([0,T_{\max});C(\T_L^d))$
+równania~\eqref{eq:pde27-main} z $u(0)=u_0$.
+Dla każdego $T<T_{\max}$ zachodzi wzór Duhamela
+\[
+ u(t)=S_D(t)u_0+\int_0^tS_D(t-s)f(u(s))\,\mathrm d\lambda_1(s),
+ \qquad S_D(t)=e^{tD\Delta}.
+\]
+Jeżeli $T_{\max}<\infty$, to
+$\|u(t)\|_{\infty}\to\infty$ przy $t\uparrow T_{\max}$.
+Jeśli $u,v$ są rozwiązaniami o wartościach w $[-M,M]$
+na $[0,T]$, to dla $K=\max_{|s|\le M}|f'(s)|$ mamy
+\[
+ \|u(t)-v(t)\|_{\infty}\le e^{Kt}\|u_0-v_0\|_{\infty},
+ \qquad 0\le t\le T.
+\]
+\end{twierdzenie}
+\begin{proof}
+Na przestrzeni Banacha $X_T=C([0,T];C(\T_L^d))$
+z normą $\|w\|_{X_T}=\sup_{0\le t\le T}\|w(t)\|_\infty$
+rozważamy operator $\mathcal F$ prawej strony wzoru Duhamela,
+w którym całka jest całką Bochnera w $C(\T_L^d)$.
+Półgrupa cieplna jest silnie ciągła, dodatnia
+i kontraktywna w normie maksimum; wynika to
+z Lematu~\ref{lem:pde25-heat} przez skalowanie
+w Stwierdzeniu~\ref{prop:pde-v44-torus-scaling}.
+Dla $w\in X_T$ funkcja $s\mapsto f(w(s))$ jest ciągła
+w normie maksimum, ponieważ zakres $w$ jest ograniczony,
+a $f$ jest na nim lipschitzowska (stosujemy ograniczenie
+pochodnej na przedziale zawierającym zakres).
+Dla ustalonego $t$ funkcja podcałkowa jest ciągła
+w normie: przy zmianie $s$ rozdzielamy różnicę na
+zmianę wektora $f(w(s))$, kontrolowaną przez
+kontraktywność, i zmianę parametru półgrupy
+przy ustalonym wektorze, kontrolowaną przez
+silną ciągłość. Jest więc całkowalna w sensie Bochnera.
+Silna ciągłość półgrupy i jej kontraktywność dają
+ciągłość całki względem $t$ (przez zbieżność
+zmajoryzowaną na wspólnej części przedziałów całkowania
+i oszacowanie całki na ich różnicy).
+Zatem $\mathcal F$ przyjmuje wartości w $X_T$.
+
+Ustalmy $M>\|u_0\|_\infty+1$ i oznaczmy
+$F_M=\max_{|s|\le M}|f(s)|$, $K_M=\max_{|s|\le M}|f'(s)|$.
+Dla $w,z$ z domkniętej kuli o promieniu $M$ mamy
+\[
+ \|\mathcal Fw\|_{X_T}\le\|u_0\|_\infty+TF_M,\qquad
+ \|\mathcal Fw-\mathcal Fz\|_{X_T}
+ \le TK_M\|w-z\|_{X_T}.
+\]
+Wybieramy $T>0$ tak, by $TF_M\le M-\|u_0\|_\infty$
+i $TK_M<1$. Kula jest zupełna, więc twierdzenie
+Banacha o punkcie stałym daje rozwiązanie.
+Jednoznaczność w całej klasie rozwiązań łagodnych
+wynika z oszacowania Gronwalla poniżej, zastosowanego
+na dowolnym wspólnym zwartym przedziale istnienia.
+Definiujemy $T_{\max}$ jako supremum prawych
+końców przedziałów istnienia. Jednoznaczność
+zapewnia zgodność na przecięciach, więc dla
+$t<T_{\max}$ wartość $u(t)$ wybieramy z dowolnego
+rozwiązania istniejącego na przedziale zawierającym $t$.
+Tak otrzymana funkcja jest ciągła i spełnia wzór
+Duhamela na każdym zwartym przedziale w $[0,T_{\max})$.
+Nie dopuszcza przedłużenia poza $T_{\max}$ z definicji
+tego supremum.
+Wzór Duhamela można rozpocząć w dowolnej chwili
+$t_0<T_{\max}$:
+\[
+ u(t_0+t)=S_D(t)u(t_0)+
+ \int_0^t S_D(t-s)f(u(t_0+s))\,\mathrm d\lambda_1(s).
+\]
+Otrzymujemy go przez rozdzielenie pierwotnej całki
+w chwili $t_0$ i użycie własności półgrupy.
+Czas lokalnego istnienia można wybrać jednostajnie
+dla danych o ograniczonej normie: dla
+$\|u(t_0)\|_\infty\le B$ przyjmujemy $M=B+2$
+i stosujemy powyższe warunki na $T$.
+Nie zależy on od momentu rozpoczęcia ewolucji. Gdyby przy skończonym $T_{\max}$
+norma rozwiązania była ograniczona wzdłuż pewnego ciągu
+tendującego do $T_{\max}$, można by uruchamiać kontrakcję
+od tych chwil na wspólnym przedziale o dodatniej długości,
+sprzecznie z maksymalnością. To dowodzi alternatywy.
+Dla różnicy $w=u-v$ wzór Duhamela i twierdzenie o wartości
+średniej dają
+$\|w(t)\|_\infty\le\|w(0)\|_\infty+
+K\int_0^t\|w(s)\|_\infty\,\mathrm d\lambda_1(s)$.
+Lemat Gronwalla kończy dowód stabilności.
+\end{proof}
+
+
+\begin{stwierdzenie}[Skalowanie półgrupy cieplnej na torusie]
+\label{prop:pde-v44-torus-scaling}
+Niech $L,D>0$ i $d\ge1$. Dla $v\in C(\T_L^d)$ połóżmy
+$(Rv)(\theta)=v(L\theta/(2\pi))$, $\theta\in\T^d$.
+Wówczas $R:C(\T_L^d)\to C(\T^d)$ jest liniową
+izometrią na całą przestrzeń i
+\begin{equation}\label{eq:pde-v44-torus-scale}
+ R\,e^{tD\Delta_x}\,R^{-1}
+ =e^{\,tD(2\pi/L)^2\Delta_\theta},\qquad t\ge0.
+\end{equation}
+Po podstawieniu $\tau=D(2\pi/L)^2t$ oraz
+$w(\tau,\theta)=u(t,L\theta/(2\pi))$ równanie
+$u_t=D\Delta_xu+f(u)$ przyjmuje postać
+$w_\tau=\Delta_\theta w+\bigl[D(2\pi/L)^2\bigr]^{-1}f(w)$.
+W konsekwencji konstrukcja lokalna i alternatywa eksplozji
+z rozdziału~\ref{chap:pde25} stosują się do twierdzenia
+\ref{thm:pde27-local} po tej zmianie zmiennych.
+\end{stwierdzenie}
+\begin{proof}
+Skalowanie argumentu jest dobrze określone na klasach
+modulo odpowiedni okres, a odwrotność ma postać
+$(R^{-1}w)(x)=w(2\pi x/L)$. Obie normy maksimum
+są równe, ponieważ zmiana zmiennych jest bijekcją torusów.
+Przyjmujemy $\T^d=(\R/2\pi\mathbb Z)^d$.
+Z reguły łańcuchowej dla funkcji gładkiej
+$R(\Delta_xv)=(2\pi/L)^2\Delta_\theta(Rv)$.
+Dla wielomianów trygonometrycznych tożsamość półgrup
+wynika także z działania na każdej częstotliwości
+$k\in\mathbb Z^d$: obie strony mnożą współczynnik
+Fouriera przez $\exp[-tD(2\pi/L)^2|k|^2]$.
+Gęstość wielomianów trygonometrycznych w $C(\T^d)$
+i kontraktywność półgrup rozszerzają równość na każdą
+funkcję ciągłą. Zmiana czasu daje ostatni wzór.
+Zmiana czasu we wzorze Duhamela daje tę samą
+transformację także dla rozwiązań łagodnych.
+Ponieważ zmodyfikowana nieliniowość nadal należy do
+$C^1(\R)$, stosujemy Twierdzenie~\ref{thm:pde25-local}.
+Ponadto Twierdzenie~\ref{thm:pde25-parabolic-regularity}
+daje dla $0<a<T<T_{\max}$
+\[
+ u\in C([a,T];C^2(\T_L^d))\cap C^1([a,T];C(\T_L^d)),
+\]
+a równanie~\eqref{eq:pde27-main} jest spełnione
+klasycznie dla dodatnich czasów.
+\end{proof}
+
+
+\begin{twierdzenie}[Zasada porównania i przedziały niezmiennicze]
+\label{thm:pde27-comparison}
+Niech $T>0$, $f\in C^1(\R)$, a $u,v$ będą
+rozwiązaniami z Twierdzenia~\ref{thm:pde27-local},
+istniejącymi na $[0,T]$.
+Jeżeli $u_0\le v_0$, to $u(t,\cdot)\le v(t,\cdot)$
+dla każdego $0\le t\le T$. Jeśli $a\le b$,
+$f(a)\ge0$ i $f(b)\le0$, to dane $a\le u_0\le b$
+implikują $a\le u(t,\cdot)\le b$ na całym
+przedziale istnienia; wówczas $T_{\max}=\infty$.
+\end{twierdzenie}
+\begin{proof}
+Dzięki regularności dla dodatnich czasów, wykazanej
+po Stwierdzeniu~\ref{prop:pde-v44-torus-scaling},
+nie potrzebujemy gładkich danych początkowych.
+Różnica $w=u-v$ spełnia
+$w_t-D\Delta w=q(t,x)w$, gdzie
+\[
+ q(t,x)=\int_0^1 f'\bigl(v(t,x)+\theta(u(t,x)-v(t,x))\bigr)
+ \,\mathrm d\lambda_1(\theta).
+\]
+Współczynnik $q$ jest ciągły i ograniczony na
+$[0,T]\times\T_L^d$, gdyż $u,v$ są ciągłe na tym zbiorze.
+Wybierzmy $K>\sup q$ i połóżmy $z=e^{-Kt}w$.
+Wtedy $z_t-D\Delta z=(q-K)z$ dla $t>0$.
+Gdyby $z$ przyjmowała wartość dodatnią, na zwartym
+walcu $[0,T]\times\T_L^d$ osiągałaby dodatnie maksimum
+w $(t_*,x_*)$ z $t_*>0$, ponieważ $z(0,\cdot)\le0$.
+W tym punkcie $z_t\ge0$ (pochodna lewostronna,
+jeśli $t_*=T$) i $\Delta z\le0$, natomiast
+$(q-K)z<0$. Sprzeczność daje $z\le0$, czyli $u\le v$.
+
+Ten sam argument działa, gdy $u$ jest podrozwiązaniem,
+a $v$ nadrozwiązaniem, ciągłymi do chwili $0$
+i klasycznymi dla $t>0$: równanie dla $z$
+zastępujemy nierównością $z_t-D\Delta z\le(q-K)z$.
+Stałe $a,b$ są odpowiednio pod- i nadrozwiązaniami,
+gdyż $0\le f(a)$ i $0\ge f(b)$. Porównujemy je z $u$
+na każdym zwartym przedziale jego istnienia.
+Przedział $[a,b]$ jest niezmienniczy, a ograniczenie normy
+wyklucza skończony czas maksymalny.
+\end{proof}
+
+\begin{kontrprzyklad}[Porównanie nie wymaga $f'\ge0$]
+Dla $f(s)=s(1-s)$ pochodna $f'(s)=1-2s$
+jest ujemna na $(1/2,\infty)$.
+Mimo to zasada porównania działa, ponieważ różnica
+$f(u)-f(v)$ ma postać $a(t,x)(u-v)$ z ograniczonym
+współczynnikiem na każdym ograniczonym przedziale czasu.
+Dla układów reakcji--dyfuzji takie porównanie
+składowa po składowej na ogół nie zachodzi bez
+warunku kooperatywności.
+\end{kontrprzyklad}
+
+\section{Równanie Fishera--KPP: zbieżność do stanu nasycenia na torusie}
+\begin{twierdzenie}[Zbieżność do stanu nasycenia]\label{thm:pde27-kpp-torus}
+Niech $u_0\in C(\T_L^d)$, $0\le u_0\le1$ i
+$u_0\not\equiv0$. Dla $D,r>0$ jedyne rozwiązanie
+zagadnienia
+$u_t=D\Delta u+ru(1-u)$ z danymi $u_0$
+istnieje globalnie i
+\[
+ \lim_{t\to\infty}\|u(t,\cdot)-1\|_{C(\T_L^d)}=0.
+\]
+Jeśli $u_0\equiv0$, to $u(t,\cdot)\equiv0$.
+\end{twierdzenie}
+\begin{proof}
+Porównanie ze stałymi rozwiązaniami $0$ i $1$
+daje $0\le u\le1$ i istnienie globalne.
+Dla $t>0$ półgrupa $S_D(t)$ ma dodatnie jądro
+periodyczne względem miary Lebesgue'a:
+\[
+ K_{D,t}^L(z)=\sum_{k\in\mathbb Z^d}
+ (4\pi Dt)^{-d/2}\exp\left(-\frac{|z+Lk|^2}{4Dt}\right).
+\]
+Wzór wynika z Lematu~\ref{lem:pde25-heat}
+przez zmianę skali, łącznie z jakobianem miary.
+Dokładnie, dla $b=L/(2\pi)$ i $a=D/b^2$ mamy
+$K_{D,t}^L(z)=b^{-d}K_{at}(z/b)$, gdzie $K_{at}$
+jest jądrem na torusie o okresie $2\pi$.
+Wstawiając wzór na $K_{at}$, otrzymujemy powyższy
+szereg. Miara na torusie jest miarą Lebesgue'a
+na kostce fundamentalnej (nie jest unormowana
+do masy $1$). Całka z samego jądra wynosi $1$.
+Szereg jest jednostajnie zbieżny dla ustalonego $t>0$
+na kostce fundamentalnej i wszystkie składniki są
+dodatnie. Ponieważ $u_0$ jest nieujemna, ciągła
+i niezerowa, jest dodatnia na zbiorze dodatniej miary.
+Stąd $S_D(t)u_0>0$ punktowo.
+Wzór Duhamela z nieujemnym źródłem $ru(1-u)$ daje
+$u(t,\cdot)\ge S_D(t)u_0$, więc dla każdego $t_0>0$
+funkcja $u(t_0,\cdot)$ jest ściśle dodatnia. Zwarta przestrzeń
+$\T_L^d$ zapewnia minimum $m_0>0$.
+Niech $y'=ry(1-y)$ i $z'=rz(1-z)$,
+$y(t_0)=m_0$, $z(t_0)=\max u(t_0,\cdot)\le1$.
+Porównanie daje $y(t)\le u(t,x)\le z(t)$.
+Z jawnego rozwiązania równania logistycznego
+\[
+ y(t)=\frac{1}{1+(m_0^{-1}-1)e^{-r(t-t_0)}}
+\]
+wynika $y(t)\uparrow1$ (dla $m_0=1$ funkcja
+jest stale równa $1$), podczas gdy $z(t)\le1$.
+Wzór na $y$ sprawdzamy przez różniczkowanie
+i podstawienie warunku początkowego; analogiczny
+wzór obowiązuje dla $z$. Porównanie jest dopuszczalne
+na każdym skończonym przedziale po chwili $t_0$,
+gdyż oba rozwiązania skalarne są globalne.
+Mamy $\|1-u(t)\|_\infty\le1-y(t)\to0$.
+Dla $u_0\equiv0$ teza wynika z jednoznaczności.
+\end{proof}
+
+\begin{uwaga}[Dlaczego torus, a nie cała prosta?]
+Na $\R$ rozwiązanie wychodzące z danych o zwartym nośniku
+nie zbiega jednostajnie do $1$ na całej prostej
+przy $t\to\infty$: dla każdego skończonego $t>0$
+rozwiązanie dąży do zera przy $|x|\to\infty$, co
+wynika z oszacowania gaussowskiego w dowodzie
+Twierdzenia~\ref{thm:pde27-spreading-upper}
+(dla $0\le u_0\le1$). W szczególności
+$\|1-u(t)\|_\infty=1$. Właściwą asymptotyką jest
+\emph{propagacja frontu}, z którą zapoznamy się dalej.
+\end{uwaga}
+
+
+\begin{wniosek}[Ilościowa zbieżność rozwiązania Fishera--KPP na torusie]
+\label{cor:pde27-kpp-rate}
+Przy hipotezach twierdzenia~\ref{thm:pde27-kpp-torus}
+niech $t_0>0$ i
+$m_{t_0}=\min_{x\in\T_L^d}(S_D(t_0)u_0)(x)>0$.
+Wówczas dla wszystkich $t\ge t_0$
+\begin{equation}\label{eq:pde27-kpp-rate}
+ \|1-u(t,\cdot)\|_\infty\le
+ \frac{1-m_{t_0}}{m_{t_0}}e^{-r(t-t_0)}.
+\end{equation}
+Ponadto jeśli $K_{D,t_0}^L$ oznacza dodatnie
+periodyczne jądro cieplne na $\T_L^d$, to
+\[
+ m_{t_0}\ge\left(\min_{z\in\T_L^d}K_{D,t_0}^L(z)\right)
+ \int_{\T_L^d}u_0(x)\,\mathrm d\lambda_d(x)>0.
+\]
+\end{wniosek}
+\begin{proof}
+Nieujemne źródło $ru(1-u)$ i wzór Duhamela dają
+$u(t_0)\ge S_D(t_0)u_0$, stąd
+$\min u(t_0)\ge m_{t_0}>0$.
+Rozwiązanie skalarnego równania
+$y'=ry(1-y)$ z $y(t_0)=m_{t_0}$ wynosi
+$y(t)=(1+(m_{t_0}^{-1}-1)e^{-r(t-t_0)})^{-1}$.
+Porównanie ze stałym w przestrzeni rozwiązaniem $y$
+i nadrozwiązaniem $1$ daje
+$0\le1-u(t,x)\le1-y(t)$.
+Ponieważ $1-(1+a)^{-1}=a/(1+a)\le a$
+dla $a\ge0$, otrzymujemy~\eqref{eq:pde27-kpp-rate}.
+Ostatnia nierówność wynika bezpośrednio z dodatniości
+i ciągłości jądra na zwartym torusie.
+\end{proof}
+
+
+\section{Fale biegnące: od PDE do układu równań zwyczajnych}
+Niech $d=1$ i rozważmy równanie
+$u_t=Du_{xx}+ru(1-u)$ na $\R$.
+Dla postaci fali biegnącej $u(t,x)=U(z)$, $z=x-ct$,
+mamy $u_t=-cU'$, $u_x=U'$ oraz $u_{xx}=U''$,
+a zatem otrzymujemy równanie profilu
+\begin{equation}\label{eq:pde27-wave}
+ DU''+cU'+rU(1-U)=0.
+\end{equation}
+Szukamy funkcji $U\in C^2(\R)$, dla której
+$U(-\infty)=1$, $U(+\infty)=0$ i $U'<0$.
+Parametr $c$ jest prędkością ze znakiem:
+dla $c>0$ profil przemieszcza się w prawo,
+dla $c<0$ w lewo, a dla $c=0$ jest nieruchomy. Sama zamiana zmiennych
+nie dowodzi jeszcze istnienia takiego profilu.
+
+\begin{lemat}[Obszar niezmienniczy dla układu profilowego]
+\label{lem:pde27-wedge}
+Niech $D,r>0$, $c\ge2\sqrt{Dr}$ oraz
+\[
+ k=\frac{c-\sqrt{c^2-4Dr}}{2D}
+   =\frac{2r}{c+\sqrt{c^2-4Dr}}>0.
+\]
+Wtedy obszar
+$\mathcal W=\{(U,q):0<U<1,\ 0<q<kU\}$
+jest dodatnio niezmienniczy dla układu
+\begin{equation}\label{eq:pde27-phase}
+ U'=-q,\qquad q'=-\frac cD q+\frac rD U(1-U).
+\end{equation}
+Oznacza to, że trajektorie rozpoczynające się w $\mathcal W$
+pozostają w nim dla dodatnich czasów istnienia.
+Ponadto rozwiązanie wychodzące z punktu
+$U(0)=1-\delta$, $q(0)=0$, gdzie $0<\delta<1/2$,
+zachowuje $0<U<1$, $0<q<kU$ dla $z>0$ i
+spełnia $U(z)\to0$, $q(z)\to0$ przy $z\to\infty$.
+\end{lemat}
+\begin{proof}
+Podstawienie $q=-U'$ w równaniu profilu
+~\eqref{eq:pde27-wave} daje układ~\eqref{eq:pde27-phase}
+i odwrotnie: z pierwszego równania wynika
+$U\in C^2$, a drugie po podstawieniu $q=-U'$
+daje równanie profilu.
+Na brzegu $q=0$, gdy $0<U<1$, mamy
+$q'=rU(1-U)/D>0$. Na brzegu $q=kU$ otrzymujemy
+\[
+ (q-kU)'=\bigl(k^2-\tfrac cDk+\tfrac rD(1-U)\bigr)U
+ =-\tfrac rD U^2<0,
+\]
+ponieważ $k^2-(c/D)k+r/D=0$.
+Uzasadnijmy brak pierwszego wyjścia z obszaru.
+Dopóki trajektoria pozostaje w $\mathcal W$, mamy
+$U'<0$ oraz $U'+kU>0$. Stąd
+$U(0)e^{-kz}\le U(z)\le U(0)<1$.
+Jeżeli pierwszy kontakt z brzegiem nastąpiłby
+w skończonej chwili $z_*>0$, to przez ciągłość
+powyższe oszacowanie obowiązywałoby również
+w chwili $z_*$ i
+wykluczałoby brzegi $U=0$ i $U=1$.
+Przy pierwszym kontakcie z $q=0$ od strony $q>0$
+musiałoby zachodzić $q'(z_*)\le0$, wbrew
+$q'(z_*)=rU(z_*)(1-U(z_*))/D>0$.
+Przy pierwszym kontakcie z $q=kU$ od strony $q-kU<0$
+musiałoby zachodzić $(q-kU)'(z_*)\ge0$, wbrew
+obliczonej ujemnej wartości.
+Trajektoria pozostaje zatem w $\mathcal W$.
+Pole wektorowe jest wielomianowe, więc jest lokalnie
+lipschitzowskie; ograniczoność trajektorii w zwartym
+domknięciu $\mathcal W$ wyklucza skończony maksymalny
+czas istnienia (lokalny czas istnienia można wybrać
+jednostajnie dla danych z tego zwartego zbioru).
+Dla danych $U(0)=1-\delta$, $q(0)=0$ mamy
+$q'(0)>0$ i $q(0)-kU(0)<0$. Ciągłość daje
+$0<U<1$ i $0<q<kU$ dla dostatecznie małych $z>0$,
+po czym stosujemy poprzedni argument.
+Dla trajektorii wychodzącej z $(1-\delta,0)$
+funkcja $U$ jest ściśle malejąca dla $z>0$.
+Ma więc granicę $\ell\ge0$, przy czym
+$\ell\le U(1)<1-\delta$. Ponieważ $q=-U'\ge0$,
+$\int_0^\infty q(z)\,\mathrm d\lambda_1(z)
+=U(0)-\ell<\infty$, przez twierdzenie Newtona--Leibniza
+na przedziałach skończonych i przejście do granicy.
+Pochodna $q'$ jest ograniczona w $\mathcal W$,
+więc $q$ jest jednostajnie ciągła.
+Gdyby $q$ nie dążyła do zera, istniałby ciąg
+$z_j\to\infty$ z $q(z_j)\ge\varepsilon>0$.
+Jednostajna ciągłość dawałaby wspólny promień $\rho>0$
+taki, że $q\ge\varepsilon/2$ na przedziałach
+$[z_j-\rho,z_j+\rho]$. Wybierając rozłączny
+podciąg tych przedziałów, otrzymalibyśmy nieskończoną
+całkę z $q$. Zatem $q(z)\to0$. Gdyby $\ell>0$, drugie
+równanie~\eqref{eq:pde27-phase} prowadziłoby do
+$q'(z)\to r\ell(1-\ell)/D>0$, co jest sprzeczne
+z $q(z)\to0$. W konsekwencji $\ell=0$.
+\end{proof}
+
+\begin{twierdzenie}[Prędkości fal biegnących równania Fishera--KPP]
+\label{thm:pde27-wave}
+Niech $D,r>0$. Dla każdej $c\ge2\sqrt{Dr}$
+istnieje $U\in C^2(\R)$ spełniająca
+\eqref{eq:pde27-wave}, $0<U<1$, $U'<0$ oraz
+$U(-\infty)=1$, $U(+\infty)=0$.
+Natomiast dla żadnej $c<2\sqrt{Dr}$
+taki profil nie istnieje. W szczególności
+minimalna prędkość monotonicznej fali wynosi
+$c_*=2\sqrt{Dr}$.
+\end{twierdzenie}
+\begin{proof}
+\textbf{Krok 1: skonstruowanie pełnej trajektorii.}
+Ustalmy $c\ge2\sqrt{Dr}$ i $k$ z
+lematu~\ref{lem:pde27-wedge}. Dla $\delta\downarrow0$
+rozważmy rozwiązania $(U_\delta,q_\delta)$
+rozpoczynające się w $(1-\delta,0)$.
+Każda trajektoria osiąga poziom $U=1/2$ dokładnie raz
+na mocy ciągłości, ścisłego malenia i granicy zero;
+niech $t_\delta>0$ oznacza odpowiedni czas.
+Pokażemy, że $t_\delta\to\infty$.
+Kładziemy $v=1-U$ i korzystamy z równań
+$v'=q$, $q'=-(c/D)q+(r/D)(1-v)v\le(r/D)v$.
+Dla $v,q\ge0$ dostajemy
+$(v+q)'\le C(v+q)$ z $C=\max\{1,r/D\}$,
+a zatem $v(t)+q(t)\le\delta e^{Ct}$.
+Gdy $U(t_\delta)=1/2$, mamy $v(t_\delta)=1/2$,
+więc $t_\delta\ge C^{-1}\log(1/(2\delta))\to\infty$.
+
+Przesuwamy trajektorie: $\widetilde U_\delta(z)
+=U_\delta(t_\delta+z)$, analogicznie dla $q$.
+Są one określone na $(-t_\delta,\infty)$,
+mają wartości w zwartym domknięciu $\mathcal W$
+i jednostajnie ograniczone pochodne.
+Oznaczmy przez $F$ pole wektorowe układu
+~\eqref{eq:pde27-phase}. Jest ono klasy $C^\infty$,
+więc na zwartym domknięciu $\mathcal W$ zarówno $F$,
+jak i $DF$ są ograniczone. Dla przesuniętych trajektorii
+$Y_\delta=(\widetilde U_\delta,\widetilde q_\delta)$
+mamy $Y_\delta'=F(Y_\delta)$ i
+$Y_\delta''=DF(Y_\delta)F(Y_\delta)$.
+Zatem na każdym $[-m,m]$ dla dostatecznie małych $\delta$
+funkcje i ich pierwsze pochodne są jednostajnie
+ograniczone i jednakowo ciągłe.
+Wybierając najpierw ciąg $\delta_j\downarrow0$,
+stosujemy twierdzenie Arzeli--Ascolego do par
+$(Y_{\delta_j},Y_{\delta_j}')$ na $[-m,m]$
+i wydzielamy podciąg diagonalny po $m\in\mathbb N$.
+Jednostajna zbieżność funkcji i pochodnych
+oraz twierdzenie Newtona--Leibniza dają zbieżność
+w $C^1_{\mathrm{loc}}(\R)$. Przechodząc do granicy
+w $Y_\delta'=F(Y_\delta)$, otrzymujemy pełną
+trajektorię $(U,q)$ układu~\eqref{eq:pde27-phase}
+o wartościach w $\overline{\mathcal W}$, z $U(0)=1/2$. Ponieważ $q\ge0$ i $U'=-q$,
+$U$ jest nierosnąca i ma granice $\ell_\pm$
+przy $z\to\pm\infty$. Analogicznie jak w lemacie,
+całkowalność $q$ na obu półprostych i jego
+jednostajna ciągłość implikują $q(z)\to0$
+na obu krańcach: dokładniej,
+$\int_0^\infty q(z)\,\mathrm d\lambda_1(z)=1/2-\ell_+$ oraz
+$\int_{-\infty}^0 q(z)\,\mathrm d\lambda_1(z)=\ell_--1/2$.
+Ograniczenie $q'$ wynika z ograniczoności pola
+wektorowego na $\overline{\mathcal W}$.
+Drugie równanie układu daje
+$q'(z)\to (r/D)\ell_\pm(1-\ell_\pm)$
+przy $z\to\pm\infty$. Gdyby któraś z tych granic
+była dodatnia, to $q'$ byłaby ograniczona od dołu
+przez dodatnią stałą na odpowiedniej półprostej.
+Całkowanie nierówności na dowolnie długim odcinku
+przeczyłoby ograniczoności $q$. Stąd
+$\ell_\pm(1-\ell_\pm)=0$.
+Z $U(0)=1/2$ i monotoniczności wynika
+$\ell_-=1$, $\ell_+=0$.
+Gdyby $U(z_0)=0$ lub $U(z_0)=1$, to $U$
+osiągałaby odpowiednio minimum lub maksimum
+w punkcie wewnętrznym prostej, a zatem $q(z_0)=0$.
+Oba punkty $(0,0)$ i $(1,0)$ są równowagami
+układu. Jednoznaczność rozwiązania zagadnienia
+początkowego w obu kierunkach czasu wymuszałaby
+trajektorię stałą, wbrew $U(0)=1/2$.
+Zatem $0<U<1$ na całej prostej.
+Gdyby $q(z_0)=0$ przy $0<U(z_0)<1$,
+to $q'(z_0)>0$, co jest niemożliwe przy $q\ge0$
+na całej prostej: w punkcie minimum
+różniczkowalna funkcja $q$ musiałaby mieć
+pochodną zerową. Analogicznie, gdyby
+$q(z_0)=kU(z_0)$, to funkcja $q-kU\le0$
+osiągałaby maksimum w $z_0$, ale jej pochodna
+wynosiłaby $-rU(z_0)^2/D<0$.
+Stąd $0<q<kU$, w szczególności $U'<0$.
+Z układu wynika $U\in C^2(\R)$ i
+równanie~\eqref{eq:pde27-wave}.
+
+\textbf{Krok 2: wykluczenie prędkości mniejszych od krytycznej.}
+Jeżeli $c\le0$, po podstawieniu $q=-U'>0$
+do~\eqref{eq:pde27-phase} otrzymujemy $q'>0$,
+a to przeczy jednocześnie całkowalności
+$\int_\R q(z)\,\mathrm d\lambda_1(z)=1$
+(wynika to z granic $U$ i $q=-U'$):
+dla dowolnego $a\in\R$ mamy wówczas
+$q(z)\ge q(a)>0$ dla $z\ge a$, co przeczy
+skończoności całki.
+Niech teraz $0<c<2\sqrt{Dr}$. Dla $z$ dostatecznie dużych
+$U(z)$ jest tak małe, że
+$\mu(z)=\frac rD(1-U(z))-\frac{c^2}{4D^2}\ge\kappa^2>0$.
+Po podstawieniu $y(z)=e^{cz/(2D)}U(z)>0$
+równanie~\eqref{eq:pde27-wave} przyjmuje postać
+$y''+\mu(z)y=0$. Istotnie, pisząc
+$U=e^{-cz/(2D)}y$, dostajemy
+\[
+ DU''+cU'=e^{-cz/(2D)}
+ \left(Dy''-\frac{c^2}{4D}y\right),
+\]
+a składnik reakcji po podzieleniu przez
+$De^{-cz/(2D)}$ ma postać $(r/D)(1-U)y$.
+Możemy wybrać na przykład
+$\kappa^2=\frac12(r/D-c^2/(4D^2))>0$,
+a następnie $a$ tak duże, by
+$(r/D)U(z)\le\kappa^2$ dla $z\ge a$.
+Na przedziale $[a,a+\pi/\kappa]$, gdzie $a$ jest
+dostatecznie duże, mnożymy równanie przez
+$\sin(\kappa(z-a))$ i całkujemy względem $z$.
+Niech $b=a+\pi/\kappa$ i
+$\phi(z)=\sin(\kappa(z-a))$.
+Ponieważ $\phi(a)=\phi(b)=0$, $\phi''=-\kappa^2\phi$,
+$\phi'(a)=\kappa$, $\phi'(b)=-\kappa$, mamy
+\[
+ \int_a^b(y''+\kappa^2y)\phi\,\mathrm d\lambda_1(z)
+ =[y'\phi-y\phi']_a^b.
+\]
+Po podstawieniu wartości brzegowych dostajemy
+\[
+ \int_a^{a+\pi/\kappa}(y''+\kappa^2y)
+ \sin(\kappa(z-a))\,\mathrm d\lambda_1(z)
+ =\kappa\bigl(y(a)+y(a+\pi/\kappa)\bigr)>0.
+\]
+Tymczasem $y''+\kappa^2y=-(\mu-\kappa^2)y\le0$,
+a sinus jest nieujemny na całym przedziale.
+Sprzeczność kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Jawna fala o prędkości $5/\sqrt6$]
+\label{ex:pde27-explicit}
+Dla $D=r=1$ i $c=5/\sqrt6$ profil
+\[
+ U(z)=\frac{1}{(1+e^{z/\sqrt6})^2}
+\]
+rozwiązuje~\eqref{eq:pde27-wave} i spełnia
+$U(-\infty)=1$, $U(+\infty)=0$, $U'<0$.
+Podstawiając $w=e^{z/\sqrt6}$ mamy
+$U'=-2w/(\sqrt6(1+w)^3)$ oraz
+$U''=-w/(3(1+w)^3)+w^2/(1+w)^4$;
+po sprowadzeniu do wspólnego mianownika $(1+w)^4$
+licznik wyrażenia $U''+(5/\sqrt6)U'+U(1-U)$
+wynosi
+$-\frac13 w(1+w)+w^2-\frac53w(1+w)+2w+w^2=0$.
+Znak $U'$ i granice wynikają bezpośrednio ze wzoru.
+Dla ogólnych $D,r>0$ piszemy
+$U(z)=V(\sqrt{r/D}\,z)$, gdzie $V$ jest powyższym
+profilem dla $D=r=1$. Po podstawieniu i podzieleniu
+przez $r$ równanie profilu ma postać
+$V''+(c/\sqrt{Dr})V'+V(1-V)=0$.
+Wybór $c=(5/\sqrt6)\sqrt{Dr}$ daje zatem
+rozwiązanie
+\[
+ U(z)=\left(1+\exp\left(\sqrt{\frac r{6D}}\,z\right)\right)^{-2}.
+\]
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex]
+ \begin{scope}[x=4.8cm,y=4.0cm]
+  \fill[blue!9] (0,0)--(1,0)--(1,.8164966)--cycle;
+  \draw[->] (-.04,0)--(1.13,0) node[right] {$U$};
+  \draw[->] (0,-.035)--(0,1.02) node[above] {$q$};
+  \draw[blue!70!black,thick] (0,0)--(1,.8164966)
+    node[above left] {$q=kU$};
+  \draw[dashed] (1,0)--(1,.8164966);
+  \draw[->,thick] (.5,0)--(.5,.12);
+  \draw[->,thick] (.68,.5552177)--(.61,.44);
+  \draw[->,thick] (1,.45)--(.93,.307);
+  \draw[red!75!black,very thick,domain=0:1,samples=101]
+    plot (\x,{2/sqrt(6)*\x*(1-sqrt(\x))});
+  \draw[red!75!black,->,thick] (.56,{2/sqrt(6)*.56*(1-sqrt(.56))})
+    --(.46,{2/sqrt(6)*.46*(1-sqrt(.46))});
+  \fill (0,0) circle (1.3pt) node[below left] {$0$};
+  \fill (1,0) circle (1.3pt) node[below] {$1$};
+  \node at (.52,.96) {Obszar fazowy};
+ \end{scope}
+ \begin{scope}[xshift=9cm,x=.43cm,y=3.0cm]
+  \draw[->] (-6.5,0)--(6.7,0) node[right] {$z$};
+  \draw[->] (0,-.05)--(0,1.19) node[above] {$U$};
+  \draw[dashed,gray] (-6.3,1)--(6.3,1);
+  \node[left] at (0,1) {$1$};
+  \draw[red!75!black,very thick,domain=-6.3:6.3,samples=101]
+    plot (\x,{1/(1+exp(\x/sqrt(6)))^2});
+  \node[below] at (-6,0) {$-6$};
+  \node[below] at (6,0) {$6$};
+  \node at (0,1.36) {Profil fali};
+ \end{scope}
+\end{tikzpicture}
+
+\small Rysunek: obszar niezmienniczy $\mathcal W$ i jawna
+trajektoria $q=(2/\sqrt6)U(1-\sqrt U)$ (czerwona)
+dla $D=r=1$, $c=5/\sqrt6$, $k=2/\sqrt6$.
+Po prawej odpowiadający jej profil $U(z)$.
+\end{center}
+
+\section{Granice propagacji na prostej}
+\begin{twierdzenie}[Górne oszacowanie prędkości ekspansji]
+\label{thm:pde27-spreading-upper}
+Niech $D,r>0$, a $u_0\in C_c(\R)$ spełnia
+$0\le u_0\le1$. W przestrzeni $\operatorname{BUC}(\R)$ rzeczywistych
+ograniczonych funkcji jednostajnie ciągłych istnieje
+dokładnie jedno globalne rozwiązanie łagodne
+$u\in C([0,\infty);\operatorname{BUC}(\R))$
+równania $u_t=Du_{xx}+ru(1-u)$ z danymi $u_0$.
+Spełnia ono $0\le u\le1$.
+Wówczas dla każdej $c>2\sqrt{Dr}$ istnieją
+stałe $C,\gamma>0$, zależne od $c,u_0,D,r$, takie, że
+\[
+ \sup_{|x|\ge ct}u(t,x)\le C e^{-\gamma t}
+ \quad\text{dla wszystkich }t\ge0.
+\]
+\end{twierdzenie}
+\begin{proof}
+\textbf{Istnienie i porównanie na prostej.}
+Przestrzeń $\operatorname{BUC}(\R)$ jest domkniętą
+podprzestrzenią przestrzeni funkcji ograniczonych
+z normą supremum, a więc jest przestrzenią Banacha.
+Dla $t>0$ oznaczmy przez $S_D(t)$ splot z jądrem
+$G_{Dt}(x)=(4\pi Dt)^{-1/2}\exp(-x^2/(4Dt))$,
+a $S_D(0)=I$. Jądro jest nieujemne i ma całkę $1$.
+Z tożsamości splotowej jąder Gaussa wynika własność
+półgrupy; całkowanie daje kontraktywność, dodatniość
+i zachowanie stałych. Rozwiązanie łagodne na $[0,T]$
+oznacza tutaj funkcję $u\in C([0,T];\operatorname{BUC}(\R))$
+spełniającą
+\[
+ u(t)=S_D(t)u_0+\int_0^t S_D(t-s)f(u(s))\,
+ \mathrm d\lambda_1(s),\qquad f(s)=rs(1-s).
+\]
+Całka jest całką Bochnera w $\operatorname{BUC}(\R)$. Splot zachowuje jednostajną
+ciągłość, ponieważ
+$\|S_D(t)v(\cdot+h)-S_D(t)v\|_\infty
+\le\|v(\cdot+h)-v\|_\infty$.
+Silna ciągłość przy $t=0$ wynika z rozdzielenia
+całki z $G_{Dt}(y)(v(x-y)-v(x))$ na $|y|<\eta$
+i $|y|\ge\eta$. Jeśli
+$\omega_v(\eta)=\sup_{|h|\le\eta}\|v(\cdot+h)-v\|_\infty$,
+to
+\[
+ \|S_D(t)v-v\|_\infty
+ \le\omega_v(\eta)+2\|v\|_\infty
+ \int_{|y|\ge\eta}G_{Dt}(y)\,\mathrm d\lambda_1(y).
+\]
+Dla ustalonego $\eta>0$ ostatnia całka dąży do zera
+przez podstawienie $y=\sqrt{Dt}\,z$ i całkowalność
+jądra Gaussa. Następnie przechodzimy z $\eta\downarrow0$,
+korzystając z jednostajnej ciągłości $v$.
+Silna ciągłość w pozostałych chwilach wynika
+z własności półgrupy i kontraktywności.
+
+Niech $\pi(s)=\min\{1,\max\{0,s\}\}$ oraz
+$g(s)=r\pi(s)(1-\pi(s))$. Funkcja $g$ jest globalnie
+lipschitzowska ze stałą $r$. Dla każdego $T>0$
+na $C([0,T];\operatorname{BUC}(\R))$ rozważamy
+operator
+\[
+ (\mathcal Pv)(t)=e^{-rt}S_D(t)u_0+
+ \int_0^t e^{-r(t-s)}S_D(t-s)
+       (g(v(s))+rv(s))\,\mathrm d\lambda_1(s).
+\]
+Ciągłość całki i kontrakcję uzasadniamy tak samo
+jak w dowodzie Twierdzenia~\ref{thm:pde27-local}.
+Dla $2rT<1$ operator jest kontrakcją na całej
+przestrzeni, ponieważ $g(s)+rs$ ma stałą
+Lipschitza co najwyżej $2r$. Funkcja $g(s)+rs$
+jest niemalejąca z nierówności Lipschitza.
+Stąd $\mathcal P$ zachowuje porządek punktowy.
+Dla funkcji stale równych $0$ i $1$ mamy
+$\mathcal P0\ge0$ oraz $\mathcal P1\le1$,
+ponieważ $0\le u_0\le1$, $g(0)=g(1)=0$
+i $S_D(t)$ zachowuje stałe.
+Iteracje Picarda rozpoczęte od zera pozostają
+w przedziale $[0,1]$; ich granica również.
+Powtarzamy konstrukcję na kolejnych przedziałach
+tej samej długości $\tau$, gdzie $2r\tau<1$.
+Na każdym kroku danymi początkowymi są wartości
+rozwiązania z końca poprzedniego przedziału, nadal
+należące do przedziału $[0,1]$.
+Sklejenie spełnia wzór całkowy z półgrupą
+$e^{-rt}S_D(t)$ od chwili $0$: rozdzielamy całkę
+w chwili sklejenia, a składnik z wcześniejszego
+przedziału przenosimy przez półgrupę.
+Indukcja daje rozwiązanie globalne.
+
+W przedziale $[0,1]$ funkcja $g$ jest równa
+$f(s)=rs(1-s)$. Wzór z $\mathcal P$ jest równoważny
+zwykłemu wzorowi Duhamela z półgrupą $S_D$.
+Istotnie, dla dowolnej rzeczywistej stałej $a$
+mamy
+\[
+ e^{at}S_D(t)=S_D(t)+a\int_0^t
+ S_D(t-s)e^{as}S_D(s)\,\mathrm d\lambda_1(s).
+\]
+Oznaczmy $T_a(t)=e^{at}S_D(t)$ i
+$h(s)=f(u(s))-au(s)$. Jeżeli
+$u(t)=T_a(t)u_0+\int_0^t T_a(t-s)h(s)\,
+\mathrm d\lambda_1(s)$, to po podstawieniu
+tożsamości dla $T_a$ dostajemy
+\[
+ \begin{aligned}
+ u(t)={}&S_D(t)u_0+
+   \int_0^t S_D(t-s)h(s)\,\mathrm d\lambda_1(s)\\
+ &+a\int_0^t S_D(t-v)
+   \left(T_a(v)u_0+
+     \int_0^v T_a(v-s)h(s)\,\mathrm d\lambda_1(s)\right)
+     \mathrm d\lambda_1(v).
+ \end{aligned}
+\]
+Zamiana kolejności całkowania jest dopuszczalna
+na mocy twierdzenia Fubiniego dla całek Bochnera:
+funkcje podcałkowe są ciągłe w normie i ograniczone
+na zwartym trójkącie $0\le s\le v\le t$.
+Wyrażenie w nawiasie jest równe $u(v)$, więc
+po połączeniu obu całek otrzymujemy zwykły wzór
+Duhamela z reakcją $h+au=f(u)$.
+Odwrotna transformacja wynika z tego samego
+rachunku z półgrupą $T_a$ w roli wyjściowej
+i stałą $-a$, ponieważ $e^{-at}T_a(t)=S_D(t)$.
+Jednoznaczność w całej klasie rozwiązań łagodnych
+dla $f$ wynika z oszacowania Gronwalla na każdym
+skończonym przedziale $[0,T]$. Istotnie, ciągłość
+w normie $\operatorname{BUC}$ daje wspólną granicę
+$M$ norm obu rozwiązań na tym przedziale.
+Odejmując zwykłe wzory Duhamela, otrzymujemy
+\[
+ \|u(t)-v(t)\|_\infty\le\|u_0-v_0\|_\infty+
+ r(1+2M)\int_0^t\|u(s)-v(s)\|_\infty\,
+ \mathrm d\lambda_1(s).
+\]
+Dla równych danych początkowych prawa strona
+po zastosowaniu lematu Gronwalla daje zero.
+
+\textbf{Oszacowanie gaussowskie.}
+Stosujemy powyższą transformację z $a=r$.
+Ponieważ $f(u)-ru=-ru^2$, otrzymujemy
+\[
+ u(t)=e^{rt}S_D(t)u_0-
+ r\int_0^t e^{r(t-s)}S_D(t-s)u(s)^2\,
+                       \mathrm d\lambda_1(s).
+\]
+Dodatniość półgrupy i wcześniej wykazane
+$0\le u\le1$ dają
+\[
+ 0\le u(t,x)\le e^{rt}\int_{\R}
+ \frac{e^{-(x-y)^2/(4Dt)}}{\sqrt{4\pi Dt}}u_0(y)\,\mathrm d\lambda_1(y),
+ \qquad t>0.
+\]
+Wybierzmy $R>0$ tak, aby $\supp u_0\subset[-R,R]$,
+oraz liczbę $c_0$ z $2\sqrt{Dr}<c_0<c$.
+Niech $t_0=\max\{1,R/(c-c_0)\}$. Dla $t\ge t_0$
+i $|x|\ge ct$ zachodzi $|x-y|\ge c_0t$
+dla każdego $y\in\supp u_0$. Stąd
+\[
+ u(t,x)\le\frac{\|u_0\|_{L^1(\R)}}{\sqrt{4\pi Dt}}
+ \exp\!\left(-\left(\frac{c_0^2}{4D}-r\right)t\right).
+\]
+Liczba $\gamma=c_0^2/(4D)-r$ jest dodatnia,
+a czynnik $t^{-1/2}\le1$ dla $t\ge t_0$.
+Na odcinku $0\le t<t_0$ korzystamy z $u\le1$.
+Wystarczy więc przyjąć
+$C=\max\{e^{\gamma t_0},\|u_0\|_{L^1}/\sqrt{4\pi D}\}$,
+co daje żądane oszacowanie dla wszystkich $t\ge0$.
+\end{proof}
+
+\begin{uwaga}[Co udowodniono, a czego nie]
+Twierdzenie~\ref{thm:pde27-spreading-upper} daje wyłącznie
+górne oszacowanie szybkości rozprzestrzeniania się.
+Dopasowana dolna granica prędkości i pełne twierdzenie
+o asymptotyce rozwiązania na całej prostej wymagają
+osobnej konstrukcji podrozwiązań. Nie wynikają
+same z istnienia fal ani z powyższej bariery.
+\end{uwaga}
+
+\section{Funkcjonały Lapunowa i równanie Allena--Cahna}
+\begin{twierdzenie}[Dyssypacja energii i stany graniczne]
+\label{thm:pde27-allen}
+Niech $D,L>0$, $d\ge1$, a
+$u_0\in C(\T_L^d)\cap H^1(\T_L^d)$.
+Istnieje dokładnie jedno globalne rozwiązanie łagodne
+$u$ równania $u_t=D\Delta u+u-u^3$ z danymi $u_0$.
+Jest ono klasyczne dla dodatnich czasów.
+Dla funkcjonału
+\[
+ E(u)=\int_{\T_L^d}\left(\frac D2|\nabla u|^2
+ +\frac14(u^2-1)^2\right)\,\mathrm d\lambda_d(x)
+\]
+zachodzi dla $t\ge0$ tożsamość
+$E(u(t))+\int_0^t\|u_s(s)\|_2^2\,\mathrm d\lambda_1(s)=E(u_0)$.
+Ponadto istnieje ciąg $t_n\to\infty$ i funkcja
+$u_\infty\in H^1(\T_L^d)$ takie, że
+$u(t_n)\to u_\infty$ silnie w $H^1$ i
+$-D\Delta u_\infty=u_\infty-u_\infty^3$
+w sensie słabym. Nie twierdzimy bez dodatkowych
+założeń o zbieżności całej trajektorii do jednego
+stanu stacjonarnego.
+\end{twierdzenie}
+\begin{proof}
+Z Twierdzenia~\ref{thm:pde27-local} istnieje
+jednoznaczne maksymalne rozwiązanie łagodne.
+Wybieramy $M\ge\max\{1,\|u_0\|_\infty\}$.
+Stałe $-M$ i $M$ są odpowiednio podrozwiązaniem
+i nadrozwiązaniem, gdyż $f(-M)=-M+M^3\ge0$
+i $f(M)=M-M^3\le0$. Z zasady porównania
+otrzymujemy $|u(t,x)|\le M$ i globalność.
+Aby uzasadnić tożsamość energii bez dodatkowych
+założeń o mieszanych pochodnych, stosujemy
+Stwierdzenie~\ref{prop:pde-v44-torus-scaling}.
+Oznaczmy $a=D(2\pi/L)^2$, $b=L/(2\pi)$,
+$\tau=at$ i $w(\tau,\theta)=u(t,b\theta)$.
+Wówczas $w_\tau=\Delta_\theta w-\widetilde V'(w)$,
+gdzie $\widetilde V(s)=(s^2-1)^2/(4a)$.
+Dane $w(0)$ należą do $C(\T^d)\cap H^1(\T^d)$,
+ponieważ liniowe skalowanie zachowuje te przestrzenie.
+Stosujemy Twierdzenie~\ref{thm:pde25-energy},
+z funkcjonałem
+$\widetilde E(w)=\int_{\T^d}
+(\frac12|\nabla_\theta w|^2+\widetilde V(w))
+\,\mathrm d\lambda_d(\theta)$.
+Zmiana zmiennych i reguła łańcuchowa dają
+\[
+ E(u(t))=ab^d\widetilde E(w(at)),\qquad
+ \|u_t(t)\|_2^2=a^2b^d\|w_\tau(at)\|_2^2.
+\]
+Mnożąc tożsamość energii dla $w$ przez $ab^d$
+i podstawiając $\sigma=as$ w całce czasowej,
+otrzymujemy dokładnie żądaną tożsamość dla $u$,
+również od chwili $0$.
+W szczególności
+$\|\nabla u(t)\|_2^2\le2E(u_0)/D$ oraz
+$\|u(t)\|_2^2\le M^2L^d$. Zatem
+$\sup_{t\ge0}\|u(t)\|_{H^1}<\infty$.
+Ponieważ energia jest nieujemna,
+$\int_0^\infty\|u_t(t)\|_2^2\,\mathrm d\lambda_1(t)
+\le E(u_0)$ na mocy zbieżności monotonicznej.
+Dla każdego $n\ge1$ wybieramy $t_n\in[n,n+1]$
+takie, że
+$\|u_t(t_n)\|_2^2\le\int_n^{n+1}\|u_t(s)\|_2^2
+\,\mathrm d\lambda_1(s)$.
+Jest to możliwe dzięki ciągłości funkcji podcałkowej
+dla dodatnich czasów. Prawa strona dąży do zera
+z całkowalności na półprostej.
+Słaba zwartość ograniczonych ciągów w przestrzeni
+Hilberta $H^1$ oraz zwarte zanurzenie
+$H^1(\T_L^d)\hookrightarrow L^2(\T_L^d)$
+pozwalają po przejściu do podciągu założyć
+$u(t_n)\rightharpoonup u_\infty$ w $H^1$ i
+$u(t_n)\to u_\infty$ w $L^2$.
+Zwartość tego zanurzenia można uzasadnić bezpośrednio
+za pomocą bazy Fouriera na torusie: dla
+$e_k(x)=L^{-d/2}\exp(2\pi i k\cdot x/L)$
+i $\mu_k=(2\pi/L)^2|k|^2$ tożsamość Parsevala daje
+\[
+ \sum_{|k|>N}|\langle v,e_k\rangle_{L^2}|^2
+ \le \frac{\|\nabla v\|_2^2}{(2\pi/L)^2N^2}
+ \qquad(N\ge1).
+\]
+Ogon jest więc jednostajnie mały na zbiorach
+ograniczonych w $H^1$, a projekcja na skończenie
+wiele częstotliwości ma względnie zwarty obraz.
+Stąd względna zwartość w $L^2$; granica silna
+musi być równa granicy słabej w $H^1$ dzięki
+ciągłości zanurzenia. Z silnej zbieżności w $L^2$
+możemy wybrać dalszy
+podciąg zbieżny prawie wszędzie; stąd $|u_\infty|\le M$
+prawie wszędzie. Funkcja $f(s)=s-s^3$ jest
+lipschitzowska na $[-M,M]$ ze stałą co najwyżej
+$1+3M^2$, więc
+$\|f(u(t_n))-f(u_\infty)\|_2
+\le(1+3M^2)\|u(t_n)-u_\infty\|_2\to0$.
+Dla każdej $\varphi\in H^1(\T_L^d)$ równanie
+w chwili $t_n>0$ daje
+\[
+ D\int_{\T_L^d}\nabla u(t_n)\cdot\nabla\varphi\,
+                         \mathrm d\lambda_d(x)
+ =\int_{\T_L^d}(f(u(t_n))-u_t(t_n))\varphi\,
+                         \mathrm d\lambda_d(x).
+\]
+Lewa strona zbiega dzięki słabej zbieżności
+gradientów, prawa dzięki silnej zbieżności w $L^2$
+i zanikaniu $\|u_t(t_n)\|_2$.
+Otrzymujemy słabą postać równania stacjonarnego
+dla $u_\infty$. Odejmujemy ją od równania dla
+$u(t_n)$ i testujemy różnicą $w_n=u(t_n)-u_\infty$,
+należącą do $H^1$. Dostajemy
+\[
+ D\|\nabla w_n\|_2^2
+ =\int_{\T_L^d}
+ [f(u(t_n))-f(u_\infty)-u_t(t_n)]w_n\,
+ \mathrm d\lambda_d(x).
+\]
+Moduł prawej strony jest nie większy niż
+$(\|f(u(t_n))-f(u_\infty)\|_2+\|u_t(t_n)\|_2)
+\|w_n\|_2$, a więc dąży do zera. Ponieważ $D>0$,
+mamy $\|\nabla w_n\|_2\to0$. Wraz z wcześniejszą
+zbieżnością w $L^2$ daje to silną zbieżność w $H^1$.
+Ponadto $E(u(t_n))\to E(u_\infty)$:
+część gradientowa zbiega dzięki silnej zbieżności
+w $H^1$, a część potencjalna dzięki ograniczeniu
+wartości przez $M$ i lipschitzowskości potencjału
+na $[-M,M]$ (na torusie zbieżność w $L^2$
+implikuje zbieżność w $L^1$).
+Ponieważ $E(u(t))$ jest nierosnąca i nieujemna,
+otrzymujemy także $E(u_\infty)=\lim_{t\to\infty}E(u(t))$.
+\end{proof}
+
+\section{Układy i niestabilność Turinga}
+Dla wektorowej funkcji $U=(u_1,u_2)^{\mathsf T}$
+rozważamy $U_t=\mathcal D\Delta U+F(U)$,
+gdzie $F\in C^1(\R^2;\R^2)$,
+$\mathcal D=\operatorname{diag}(D_1,D_2)$, $D_i>0$.
+Stan jednorodny $U_*$ spełnia $F(U_*)=0$.
+Po podstawieniu $U=U_*+\varepsilon V$
+i podzieleniu równania przez $\varepsilon$
+składnik reakcji przyjmuje postać
+$\varepsilon^{-1}(F(U_*+\varepsilon V)-F(U_*))$.
+Z różniczkowalności $F$ jego granicą jest $JV$,
+gdzie $J=DF(U_*)$. Dla ograniczonych perturbacji
+$V$ zbieżność jest jednostajna względem zmiennej
+przestrzennej: po podzieleniu reszty rozwinięcia
+Frécheta przez $\varepsilon$ jej moduł jest ograniczony
+przez $\|V\|_\infty$ razy moduł ciągłości $DF$
+na kuli o promieniu $|\varepsilon|\|V\|_\infty$
+wokół $U_*$. Linearyzacja ma więc postać
+$V_t=\mathcal D\Delta V+JV$.
+W odróżnieniu od przypadku skalarnego dyfuzja może
+wywołać niestabilność stanu stabilnego dla samego ODE:
+w przypadku skalarnym ujemny współczynnik linearyzacji
+$f'(u_*)<0$ przechodzi na modzie o wartości własnej
+$\mu\ge0$ operatora $-\Delta$ w jeszcze mniejszy
+współczynnik $f'(u_*)-D\mu$.
+
+
+\begin{twierdzenie}[Kryterium liniowej niestabilności Turinga]
+\label{thm:pde27-turing-general}
+Niech $J=\begin{psmallmatrix}a&b\\c&d\end{psmallmatrix}$
+będzie rzeczywistą macierzą $2\times2$ oraz
+$\mathcal D=\operatorname{diag}(D_1,D_2)$, $D_1,D_2>0$.
+Załóżmy $\operatorname{tr}J<0$ i $\det J>0$,
+tak że jednorodny układ liniowy $V_t=JV$ jest
+asymptotycznie stabilny. Dla $\mu>0$ macierz
+$J-\mu\mathcal D$ ma wartość własną o dodatniej
+części rzeczywistej wtedy i tylko wtedy, gdy
+\begin{equation}\label{eq:pde27-turing-poly}
+ D_1D_2\mu^2-(D_2a+D_1d)\mu+\det J<0.
+\end{equation}
+Takie $\mu>0$ istnieje wtedy i tylko wtedy, gdy
+\[
+ S:=D_2a+D_1d>0,\qquad S^2>4D_1D_2\det J.
+\]
+Na torusie lub ograniczonym obszarze Lipschitzowskim
+z jednorodnym warunkiem Neumanna występowanie
+wykładniczo rosnącego modu jest równoważne temu,
+że co najmniej jedna dodatnia wartość własna
+$\mu_k$ operatora $-\Delta$ spełnia
+\eqref{eq:pde27-turing-poly}; warunki na $S$ i wyróżnik
+nie wystarczają bez tego warunku spektralnego.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $-\Delta\phi=\mu\phi$ i
+$V(t,x)=v(t)\phi(x)$, gdzie $v(t)\in\R^2$,
+to podstawienie do równania liniowego daje
+$v'=(J-\mu\mathcal D)v$. Oznaczamy tę macierz
+przez $M_\mu$.
+Z hipotez wynika
+$\operatorname{tr}M_\mu=\operatorname{tr}J-
+\mu(D_1+D_2)<0$. Dla rzeczywistej macierzy $2\times2$
+o ujemnym śladzie dodatnią część rzeczywistą
+wartości własnej otrzymujemy dokładnie przy
+$\det M_\mu<0$: wartości własne są wtedy
+rzeczywiste i mają przeciwne znaki.
+Jeśli wyznacznik jest dodatni, to rzeczywiste
+pierwiastki mają ten sam znak, a ich ujemna suma
+wymusza oba znaki ujemne; dla pary zespolonej
+sprzężonej część rzeczywista jest połową śladu.
+Przy wyznaczniku zerowym pierwiastki to $0$
+i $\operatorname{tr}M_\mu<0$. Są różne, więc
+mod jest ograniczony, lecz nie asymptotycznie stabilny.
+Zatem dodatni wykładnik wzrostu zachodzi dokładnie
+dla ujemnego wyznacznika. Rachunek
+\[
+ \det M_\mu=(a-D_1\mu)(d-D_2\mu)-bc
+ =D_1D_2\mu^2-(D_2a+D_1d)\mu+\det J
+\]
+daje wielomian z~\eqref{eq:pde27-turing-poly}.
+Jeżeli $S\le0$, wszystkie składniki trójmianu
+są nieujemne dla $\mu>0$, a wyraz wolny jest dodatni.
+Jeżeli $S>0$, minimum na dodatniej półosi
+jest osiągane w $\mu_0=S/(2D_1D_2)$ i wynosi
+$\det J-S^2/(4D_1D_2)$. Jest ujemne dokładnie
+przy dodatnim wyróżniku. Wtedy oba pierwiastki
+są dodatnie, bo mają dodatnią sumę i iloczyn.
+
+Na torusie $\T_L^d$ funkcje
+$\exp(2\pi i k\cdot x/L)$, $k\in\mathbb Z^d$,
+tworzą po normalizacji bazę ortonormalną w $L^2$
+i odpowiadają wartościom
+$\mu_k=(2\pi/L)^2|k|^2$. Dla warunku Neumanna
+na ograniczonym obszarze Lipschitzowskim analogiczny
+rozkład daje baza funkcji własnych realizacji $-\Delta$
+(Twierdzenie~\ref{thm:pde18-neumann})
+z formą $\int_\Omega\nabla v\cdot\nabla w\,
+\mathrm d\lambda_d(x)$ na $H^1(\Omega)$.
+Oznaczmy przez $Q$ torus $\T_L^d$ albo obszar $\Omega$.
+Wybieramy rzeczywistą ortonormalną bazę własną
+$(\phi_k)$ w $L^2(Q)$ (na torusie można użyć
+sinusów i cosinusów zamiast wykładników zespolonych).
+Dla danych $V_0\in L^2(Q;\R^2)$ oznaczmy
+$v_k(0)=\int_Q V_0(x)\phi_k(x)\,\mathrm d\lambda_d(x)$.
+W szczególności $\sum_k|v_k(0)|^2=\|V_0\|_2^2$.
+Testowanie liniowego równania przez $\phi_k$
+w każdej składowej prowadzi do
+$v_k(t)=e^{tM_{\mu_k}}v_k(0)$.
+Równanie rozumiemy w realizacji Neumanna
+lub periodycznej; funkcje własne należą do
+dziedziny odpowiedniego operatora.
+Każdy współczynnik ewoluuje niezależnie, zatem
+rosnący wykładniczo
+mod istnieje dokładnie przy ujemnym wyznaczniku
+dla co najmniej jednej dopuszczalnej wartości $\mu_k$.
+Dla normy operatorowej macierzy względem normy
+euklidesowej i każdego $\mu\ge0$ zachodzi
+\[
+ \tfrac12\frac{\mathrm d}{\mathrm dt}|v|^2
+ =v\cdot Jv-\mu v\cdot\mathcal D v
+ \le(\|J\|-\mu\min\{D_1,D_2\})|v|^2,
+\]
+więc wszystkie dostatecznie wysokie mody
+zanikają wykładniczo z jednostajnym oszacowaniem.
+Dokładniej, jeśli $D_{\min}=\min\{D_1,D_2\}$,
+to dla $\mu\ge(\|J\|+1)/D_{\min}$ mamy
+$|v(t)|\le e^{-t}|v(0)|$ z nierówności Gronwalla.
+Pozostało tylko skończenie wiele wartości własnych
+(z krotnościami). Gdy żaden mod nie ma dodatniego
+wykładnika wzrostu, macierze tych modów mają
+albo widmo w lewej półpłaszczyźnie otwartej
+(i wykładniczo zanikające wykładniki macierzowe),
+albo proste zero i ujemną wartość własną.
+Ich wykładniki macierzowe są wtedy ograniczone
+jednostajnie w czasie. Jeśli wszystkie wyznaczniki
+są dodatnie, dla skończonej rodziny można wybrać
+wspólne stałe $C,\gamma>0$ z oszacowaniem
+$\|e^{tM_{\mu_k}}\|\le Ce^{-\gamma t}$.
+Nawet dla powtórzonej ujemnej wartości własnej
+czynnik wielomianowy stopnia co najwyżej jeden
+jest pochłaniany przez wolniej zanikającą wykładniczą.
+
+Oszacowania wysokich i skończenie wielu niskich
+modów zapewniają zbieżność szeregu
+$\sum_k\phi_k e^{tM_{\mu_k}}v_k(0)$ w $L^2$,
+jednostajnie na każdym zwartym przedziale czasu
+(także w przypadku rosnącego modu).
+W istocie normy ogonów kontroluje tożsamość
+Parsevala oraz wspólne ograniczenie
+$\|e^{tM_{\mu_k}}\|$ na tym przedziale.
+Szereg określa ciągłą ewolucję w $L^2$.
+Aby uzasadnić, że jest to rozwiązanie równania,
+oznaczmy przez $A$ nieujemną realizację $-\Delta$.
+Dziedzina $A$ w bazie własnej jest opisana warunkiem
+$\sum_k\mu_k^2|v_k|^2<\infty$ (dla każdej składowej).
+Wzmocnijmy oszacowanie wysokich modów:
+dla $\mu_k\ge2\|J\|/D_{\min}$ zachodzi
+\[
+ |v_k(t)|\le e^{-\mu_k D_{\min}t/2}|v_k(0)|.
+\]
+Dla ustalonego $\varepsilon>0$ funkcje
+$\mu\mapsto\mu e^{-\mu D_{\min}\varepsilon/2}$
+oraz $\mu\mapsto(1+\mu)e^{-\mu D_{\min}\varepsilon/2}$
+są ograniczone na $[0,\infty)$.
+Ponieważ $\|M_{\mu_k}\|\le\|J\|+\mu_k\|\mathcal D\|$,
+na każdym $[\varepsilon,T]$ zarówno szereg dla
+$AV(t)$, jak i szereg pochodnych czasowych
+zbiegają jednostajnie w $L^2$ na mocy Parsevala.
+Z domkniętości $A$ i twierdzenia Newtona--Leibniza
+wynika $V(t)\in\operatorname{Dom}(A)^2$,
+różniczkowalność w $L^2$ dla $t>0$ oraz
+$V_t=-\mathcal D AV+JV$. Warunek początkowy
+jest spełniony w normie $L^2$.
+Jednoznaczność w tej klasie wynika z jednoznaczności
+układów dla wszystkich współczynników.
+W przypadku bez rosnących modów Parseval daje
+ograniczoność ewolucji dla $t\ge0$, a gdy wszystkie
+wyznaczniki są dodatnie, jej wykładniczy zanik
+w $L^2$.
+\end{proof}
+
+\begin{uwaga}[Przedział niestabilnych częstości przestrzennych]
+Jeżeli warunki z poprzedniego twierdzenia są spełnione,
+istnieją wykładniczo rosnące rozwiązania modalne
+dokładnie dla
+$\mu\in(\mu_-,\mu_+)$, gdzie
+$\mu_\pm=(S\pm\sqrt{S^2-4D_1D_2\det J})/(2D_1D_2)$.
+Na torusie należy więc sprawdzić, czy
+$\mu_-<(2\pi/L)^2|k|^2<\mu_+$ dla pewnego $k\ne0$.
+Dla jednakowych współczynników dyfuzji $D_1=D_2=D$
+mamy $M_\mu=J-\mu DI$, a jego wartości własne
+powstają z wartości własnych $J$ przez odjęcie
+$\mu D$; destabilizacja dyfuzyjna nie jest możliwa.
+W przykładzie poniżej $S=7$, $D_1D_2=10$ i
+$\det J=1$, więc wyróżnik wynosi $9$,
+$\mu_-=1/5$ i $\mu_+=1/2$.
+Wybór $\mu_1=3/10$ rzeczywiście trafia do tego przedziału.
+\end{uwaga}
+
+
+\begin{stwierdzenie}[Kryterium niestabilności konkretnego modu]
+\label{prop:pde27-turing}
+Niech $\Omega=(0,L)$, na końcach niech obowiązują
+jednorodne warunki Neumanna, oraz
+\[
+ J=\begin{pmatrix}1&-2\\2&-3\end{pmatrix},\qquad
+ \mathcal D=\begin{pmatrix}1&0\\0&10\end{pmatrix}.
+\]
+Macierz $J$ jest stabilna w sensie liniowym dla ODE
+$\dot V=JV$: obie jej wartości własne wynoszą $-1$.
+Jeżeli $L=\pi/\sqrt{3/10}$, to odpowiedni
+jednomodowy układ reakcji--dyfuzji ma dodatnią
+rzeczywistą wartość własną. W szczególności
+zero jest liniowo niestabilne dla PDE, mimo
+stabilności przestrzennie jednorodnej dynamiki.
+\end{stwierdzenie}
+\begin{proof}
+Funkcje $\cos(n\pi x/L)$ są funkcjami własnymi
+laplasjanu Neumanna z wartościami $-\mu_n$,
+$\mu_n=(n\pi/L)^2$. Na takim modzie ewolucja
+jest wyznaczona przez macierz $J-\mu_n\mathcal D$.
+Dla $n=0$ mamy
+$\operatorname{tr}J=-2$, $\det J=1$, więc
+wielomian charakterystyczny jest $(\lambda+1)^2$.
+Macierz $J+I$ jest niezerowa i $(J+I)^2=0$,
+więc $e^{tJ}=e^{-t}(I+t(J+I))\to0$, także
+mimo braku diagonalizowalności.
+Dla $n=1$, $\mu_1=3/10$, otrzymujemy
+\[
+ \operatorname{tr}(J-\mu_1\mathcal D)=-\frac{53}{10},
+ \qquad \det(J-\mu_1\mathcal D)
+ =1-7\frac3{10}+10\frac9{100}=-\frac15.
+\]
+Ujemny wyznacznik oznacza jedną dodatnią i jedną
+ujemną rzeczywistą wartość własną. Dodatnia wartość własna wynosi
+$\lambda_+=(-53+\sqrt{2889})/20>0$.
+Jeżeli $v\ne0$ jest odpowiadającym jej rzeczywistym
+wektorem własnym, to
+$V(t,x)=e^{\lambda_+t}v\cos(\pi x/L)$
+jest rzeczywistym rozwiązaniem liniowego PDE
+z warunkiem Neumanna, rosnącym wykładniczo.
+Ponieważ $\mu_n=(3/10)n^2$, jedynie $n=1$
+należy do przedziału $(1/5,1/2)$.
+To dowodzi twierdzenia.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[x=11cm,y=2.1cm,>=Latex]
+ \fill[red!10] (.2,-.33) rectangle (.5,0);
+ \draw[->] (-.025,0)--(.74,0) node[right] {$\mu$};
+ \draw[->] (0,-.36)--(0,1.35) node[above] {$\det M_\mu$};
+ \draw[blue!75!black,thick,domain=0:.69,samples=101]
+  plot (\x,{10*\x*\x-7*\x+1});
+ \draw[densely dashed,gray] (.2,-.30)--(.2,0);
+ \draw[densely dashed,gray] (.5,-.30)--(.5,0);
+ \fill (.2,0) circle (1.5pt) node[above left] {$\mu_-$};
+ \fill (.5,0) circle (1.5pt) node[above right] {$\mu_+$};
+ \draw[red!75!black,dashed] (.3,0)--(.3,-.2);
+ \fill[red!75!black] (.3,-.2) circle (2pt);
+ \node[below,red!75!black] at (.3,-.34) {$\mu_1=3/10$};
+ \node[left] at (0,1) {$1$};
+\end{tikzpicture}
+
+\small Rysunek: trójmian $\det M_\mu=10\mu^2-7\mu+1$.
+Zacieniowany przedział odpowiada ujemnemu wyznacznikowi;
+jedyny dodatni mod Neumanna w tym przedziale to $\mu_1$.
+\end{center}
+
+\begin{uwaga}[Stabilność liniowa a nieliniowa]
+Powyższy rachunek dowodzi niestabilności
+\emph{zlinearyzowanego} PDE. Aby wnioskować o
+nieliniowej niestabilności układu
+$U_t=\mathcal D\Delta U+F(U)$, trzeba dodatkowo
+sprecyzować regularność $F$ oraz zastosować
+twierdzenie o niestabilności ze spektralnej wartości
+własnej o dodatniej części rzeczywistej.
+Takiego twierdzenia nie ukrywamy w argumencie liniowym.
+\end{uwaga}
+
+\section{Podsumowanie pojęciowe}
+Monotoniczność operatorów z rozdziału~\ref{chap:pde26}
+prowadziła do istnienia nieliniowych rozwiązań eliptycznych.
+W obecnym rozdziale kluczową rolę odgrywają
+\emph{porównanie} i \emph{dynamika półgrupy}.
+W skalarnej teorii KPP dyfuzja i reakcja prowadzą
+do frontu o minimalnej prędkości $2\sqrt{Dr}$;
+w układach z różnymi współczynnikami dyfuzji
+mogą natomiast powstawać niestabilne mody przestrzenne.
+Tych dwóch mechanizmów nie należy utożsamiać.
+

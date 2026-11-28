@@ -1,0 +1,817 @@
+% AA-11 | Algebra abstrakcyjna | Iteracja VI
+\chapter{Pierścienie wielomianów i kryteria nierozkładalności}
+\chaptermark{Wielomiany i nierozkładalność}
+\label{aa:ch:wielomiany}
+
+\section{Dlaczego rozróżniamy wielomian i funkcję wielomianową?}
+Wielomian jest formalną skończoną sumą współczynników i potęg
+symbolu $x$. Jego wartość w danym elemencie pierścienia otrzymujemy
+przez podstawienie, lecz wielomian nie jest z definicji funkcją.
+To rozróżnienie jest ważne już nad ciałami skończonymi.
+
+\begin{definicja}[Pierścień wielomianów jednej zmiennej]
+\label{aa:def:poly-ring}
+Niech $R$ będzie przemiennym pierścieniem z jedynką.
+Elementem $R[x]$ jest ciąg $(a_0,a_1,\ldots)$ elementów $R$,
+w którym tylko skończenie wiele współczynników jest niezerowych.
+Zapisujemy go jako $f=\sum_{j=0}^n a_jx^j$.
+Dodawanie jest współczynnikowe, natomiast współczynnik przy $x^k$
+iloczynu $fg$ jest równy $\sum_{i+j=k}a_i b_j$.
+Wielomian zerowy ma wszystkie współczynniki równe zeru.
+Jeśli $f\ne0$, jego \emph{stopniem} jest największy indeks
+niezerowego współczynnika, a \emph{współczynnikiem wiodącym}
+--- współczynnik o tym indeksie. Wielomian jest \emph{unormowany},
+gdy jego współczynnik wiodący jest równy $1_R$.
+\end{definicja}
+
+\begin{lemat}[Aksjomaty pierścienia wielomianów]
+\label{aa:lem:poly-ring-axioms}
+Dla każdego przemiennego pierścienia $R$ z jedynką
+wzory podane w Definicji~\ref{aa:def:poly-ring}
+wyznaczają przemienny pierścień $R[x]$ z jedynką.
+Odwzorowanie $a\mapsto(a,0,0,\ldots)$ jest zanurzeniem
+pierścieni $R\to R[x]$ (także dla pierścienia zerowego).
+\end{lemat}
+\begin{proof}
+Suma dwóch ciągów o skończonym nośniku ma skończony
+nośnik. Jeżeli któryś z czynników jest wielomianem
+zerowym, ich iloczyn jest zerowy. W przeciwnym razie
+współczynniki iloczynu przy $x^k$ dla $k$ większego
+od sumy największych niezerowych indeksów obu czynników
+są zerowe. Zatem iloczyn także ma skończony nośnik.
+Aksjomaty dodawania wynikają współczynnikowo z aksjomatów
+$(R,+)$; elementem zerowym jest ciąg zerowy.
+Przy mnożeniu przemienność wynika z wymiany indeksów
+$i,j$ w sumie $\sum_{i+j=k}a_ib_j$. Przy łączności
+współczynnik przy $x^k$ iloczynu $(fg)h$ ma postać
+$\sum_{i+j+\ell=k} a_i b_j c_\ell$, tak samo
+jak współczynnik przy $x^k$ iloczynu $f(gh)$.
+Wszystkie sumy są skończone, zatem wolno zmienić kolejność
+sumowania. Ciąg $(1_R,0,\ldots)$ jest jedynką,
+a równość $f(g+h)=fg+fh$ można sprawdzić przy każdym
+współczynniku, stosując rozdzielność w $R$.
+Stałe wielomiany zachowują oba działania i jedynkę.
+Jeśli dwa stałe wielomiany są równe, ich współczynniki
+przy $x^0$ są równe, więc odwzorowanie jest różnowartościowe
+również dla pierścienia zerowego.
+\end{proof}
+
+\begin{lemat}[Stopień iloczynu nad dziedziną]
+\label{aa:lem:poly-degree}
+Niech $R$ będzie dziedziną całkowitości i niech
+$f,g\in R[x]$ będą niezerowe. Wówczas
+$\deg(fg)=\deg f+\deg g$. Jednostkami pierścienia $R[x]$
+są dokładnie wielomiany stałe, których jedyny współczynnik
+jest jednostką w $R$.
+\end{lemat}
+\begin{proof}
+Niech $n=\deg f$, $m=\deg g$ oraz $a_n,b_m$ będą
+współczynnikami wiodącymi. Przy potędze $x^{n+m}$ w iloczynie
+może wystąpić tylko składnik $a_nb_m$. Jest on niezerowy,
+ponieważ $R$ nie ma dzielników zera. Wyższe współczynniki są
+zerowe, gdyż nie istnieje para indeksów $i\le n$, $j\le m$
+z sumą większą niż $n+m$. To dowodzi wzoru na stopień.
+Jeśli $fg=1_R$, obydwa czynniki są niezerowe, a suma
+ich stopni jest zerem. Oba stopnie wynoszą zatem zero,
+więc $f,g$ są stałe i ich współczynniki są wzajemnymi
+odwrotnościami. Odwrotnie, każda stała jednostka $R$
+jest jednostką $R[x]$.
+\end{proof}
+
+\begin{definicja}[Wartość wielomianu]
+\label{aa:def:poly-evaluation}
+Niech $R$ będzie przemiennym pierścieniem z jedynką,
+$a\in R$ oraz $f=\sum_{j=0}^n c_jx^j\in R[x]$.
+Definiujemy
+$f(a)=\sum_{j=0}^n c_ja^j$. Odwzorowanie
+$\operatorname{ev}_a:R[x]\to R$, $f\mapsto f(a)$,
+nazywamy \emph{homomorfizmem podstawienia}.
+Jest on rzeczywiście homomorfizmem: wzór na współczynniki
+iloczynu i rozdzielność w $R$ dają
+$(fg)(a)=f(a)g(a)$, a zgodność z dodawaniem i jedynką
+wynika bezpośrednio z definicji.
+\end{definicja}
+\begin{lemat}[Własność uniwersalna pierścienia wielomianów]
+\label{aa:lem:poly-universal}
+Niech $R,S$ będą przemiennymi pierścieniami z jedynką,
+$\varphi:R\to S$ homomorfizmem pierścieni i $s\in S$.
+Istnieje dokładnie jeden homomorfizm pierścieni
+$\widetilde\varphi:R[x]\to S$, którego ograniczenie
+do $R$ jest równe $\varphi$ oraz dla którego
+$\widetilde\varphi(x)=s$. Ma on postać
+$\widetilde\varphi(\sum_j a_jx^j)=\sum_j\varphi(a_j)s^j$.
+\end{lemat}
+\begin{proof}
+Homomorfizm musi spełniać podany wzór, ponieważ zachowuje
+sumy, iloczyny i jedynkę. Wzór jest dobrze określony:
+każdy wielomian ma dokładnie jeden skończony zestaw współczynników.
+Zachowanie dodawania wynika ze współczynnikowego dodawania.
+Dla mnożenia mamy, z przemienności w $S$,
+\[
+ \sum_k\varphi\Bigl(\sum_{i+j=k}a_i b_j\Bigr)s^k
+ =\sum_{i,j}\varphi(a_i)s^i\varphi(b_j)s^j,
+\]
+co jest iloczynem obrazów dwóch wielomianów.
+Obraz stałej $1_R$ jest $1_S$. Otrzymaliśmy homomorfizm;
+jego jednoznaczność została wykazana na początku.
+\end{proof}
+
+\begin{przyklad}[Dwa różne wielomiany wyznaczające tę samą funkcję]
+\label{aa:prz:poly-finite-field}
+W ciele $\mathbb F_p=\mathbb Z/p\mathbb Z$,
+gdzie $p$ jest liczbą pierwszą, wielomian $x^p-x$
+nie jest wielomianem zerowym: ma dwa niezerowe współczynniki.
+Jednak dla każdej klasy $a\in\mathbb F_p$ zachodzi
+$a^p=a$, na mocy małego twierdzenia Fermata dla $a\ne0$
+i bezpośrednio dla $a=0$. Funkcja zadana przez $x^p-x$
+jest więc identycznie zerowa. Tym samym różne wielomiany
+nie muszą wyznaczać różnych funkcji na ciele skończonym.
+\end{przyklad}
+
+
+
+\section{Dzielenie z resztą, pierwiastki i czynniki liniowe}
+\begin{twierdzenie}[Dzielenie wielomianów przez wielomian o współczynniku wiodącym odwracalnym]
+\label{aa:tw:poly-division}
+Niech $R$ będzie przemiennym pierścieniem z jedynką,
+$f,g\in R[x]$, $g\ne0$, a współczynnik wiodący $g$
+niech będzie jednostką $R$. Istnieją dokładnie jedne
+$q,r\in R[x]$ takie, że $f=qg+r$ oraz $r=0$ albo
+$\deg r<\deg g$. W szczególności twierdzenie zachodzi
+dla dowolnego $g\ne0$ nad ciałem $K$.
+\end{twierdzenie}
+\begin{proof}
+Niech $d=\deg g$ i niech $u$ będzie odwracalnym
+współczynnikiem wiodącym $g$.
+Zaczynamy od $f_0=f$ i $q_0=0$. Jeśli $f_0=0$
+lub $\deg f_0<d$, kończymy. W przeciwnym razie,
+przy $\deg f_0=n$ i współczynniku wiodącym $a$,
+odejmujemy wielomian $au^{-1}x^{n-d}g$ i dopisujemy
+$au^{-1}x^{n-d}$ do ilorazu. Współczynnik przy
+$x^n$ znika, więc stopień nowej reszty jest mniejszy
+od $n$. Procedura kończy się po skończonej liczbie kroków,
+bo stopnie niezerowych reszt są nieujemnymi liczbami całkowitymi
+i ściśle maleją. Sumując wykonane odejmowania,
+otrzymujemy $f=qg+r$ z wymaganym ograniczeniem.
+
+Dla jednoznaczności załóżmy, że
+$f=qg+r=q'g+r'$ z $\deg r,\deg r'<d$ dla niezerowych
+reszt. Wtedy $(q-q')g=r'-r$. Jeśli $q\ne q'$,
+wyraz wiodący $(q-q')g$ jest niezerowy: współczynnik
+wiodący $g$ jest jednostką, więc nie może wyzerować
+niezerowego współczynnika wiodącego $q-q'$.
+Stąd $\deg((q-q')g)=\deg(q-q')+d\ge d$,
+co jest sprzeczne z tym, że $r'-r$ jest wielomianem
+zerowym albo ma stopień mniejszy niż $d$. Zatem
+$q=q'$ i $r=r'$. 
+\end{proof}
+
+\begin{wniosek}[Twierdzenie o czynniku liniowym]
+\label{aa:wn:poly-factor}
+Jeśli $R$ jest przemiennym pierścieniem z jedynką,
+$f\in R[x]$ i $a\in R$, to $f(a)=0$ wtedy i tylko wtedy,
+gdy $x-a$ dzieli $f$ w $R[x]$.
+\end{wniosek}
+\begin{proof}
+Jeśli $R$ jest pierścieniem zerowym, to $a=0_R$,
+$f=0_{R[x]}$ i $x-a=0_{R[x]}$; zachodzą zarówno
+$f(a)=0_R$, jak i $(x-a)\mid f$, gdyż $0=0\cdot0$. Załóżmy zatem,
+że $R$ jest niezerowy. Wtedy $x-a$ jest niezerowym
+wielomianem o współczynniku wiodącym $1_R$,
+więc poprzednie twierdzenie daje $f=(x-a)q+r$,
+gdzie $r$ jest stałą. Po podstawieniu $x=a$ dostajemy
+$f(a)=r$. Zatem $f(a)=0$ jest równoważne $r=0$,
+czyli podzielności przez $x-a$.
+\end{proof}
+
+\begin{twierdzenie}[Ograniczenie liczby pierwiastków]
+\label{aa:tw:poly-roots}
+Jeżeli $R$ jest dziedziną całkowitości, a
+$f\in R[x]$ niezerowym wielomianem stopnia $n$, to
+$f$ ma co najwyżej $n$ różnych pierwiastków w $R$.
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po $n$. Dla $n=0$ niezerowa stała
+nie ma pierwiastków. Niech $n\ge1$. Jeśli $f$ nie ma
+pierwiastków, twierdzenie zachodzi. W przeciwnym razie
+wybierzmy pierwiastek $a$. Z wniosku poprzedniego wynika
+$f=(x-a)g$, a porównanie stopni daje $\deg g=n-1$.
+Jeśli $b$ jest innym pierwiastkiem $f$, to
+$0=f(b)=(b-a)g(b)$. Ponieważ $b-a\ne0$ i $R$ nie
+ma dzielników zera, otrzymujemy $g(b)=0$.
+Z założenia indukcyjnego wielomian $g$ ma najwyżej
+$n-1$ różnych pierwiastków, a dodanie $a$ daje
+co najwyżej $n$ pierwiastków $f$.
+\end{proof}
+
+\begin{twierdzenie}[Funkcje wielomianowe na ciele skończonym]
+\label{aa:tw:finite-field-polynomial-functions}
+Dla liczby pierwszej $p$ każda funkcja
+$F:\mathbb F_p\to\mathbb F_p$ jest zadana przez
+dokładnie jeden wielomian zerowy lub stopnia mniejszego niż $p$.
+Jądro homomorfizmu
+\[
+ \Theta:\mathbb F_p[x]\longrightarrow
+ \{F:\mathbb F_p\to\mathbb F_p\},\qquad
+ \Theta(f)(a)=f(a),
+\]
+gdzie po prawej działania wykonuje się punktowo,
+jest ideałem $(x^p-x)$.
+\end{twierdzenie}
+\begin{proof}
+Dla $a\in\mathbb F_p$ rozważmy wielomian Lagrange'a
+$L_a(x)=\prod_{b\in\mathbb F_p,\,b\ne a}
+ (x-b)/(a-b)$. Wszystkie mianowniki są niezerowe,
+więc odwracalne. Mamy $L_a(a)=1$ oraz $L_a(b)=0$
+dla $b\ne a$. Wielomian
+$P_F(x)=\sum_{a\in\mathbb F_p}F(a)L_a(x)$
+ma stopień co najwyżej $p-1$ i spełnia
+$P_F(b)=F(b)$ dla każdego $b\in\mathbb F_p$.
+
+Jeżeli dwa wielomiany stopnia mniejszego niż $p$
+wyznaczają tę samą funkcję, ich różnica ma co najmniej
+$p$ różnych pierwiastków. Na mocy
+Twierdzenia~\ref{aa:tw:poly-roots} ta różnica musi być
+wielomianem zerowym.
+
+Wielomian $x^p-x$ zeruje się we wszystkich punktach,
+więc jego wszystkie wielokrotności należą do jądra.
+Dla dowolnego $f$ dzielenie z resztą przez unormowany
+$x^p-x$ daje $f=q(x^p-x)+r$ z $r=0$ lub
+$\deg r<p$. Jeśli $f$ jest w jądrze, to $r$
+zeruje się we wszystkich $p$ punktach, a więc $r=0$.
+Odwrotne zawieranie jest oczywiste, co kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Dlaczego nie można opuścić założenia o dziedzinie]
+\label{aa:prz:poly-roots-z8}
+W $\mathbb Z/8\mathbb Z$ wielomian $x^2-1$
+ma cztery różne pierwiastki: $[1],[3],[5],[7]$.
+Nie przeczy to twierdzeniu, ponieważ pierścień
+$\mathbb Z/8\mathbb Z$ nie jest dziedziną całkowitości.
+Różnica wynika z zerowania iloczynu $(b-a)g(b)$
+przy obu niezerowych czynnikach.
+\end{przyklad}
+
+\begin{wniosek}[Wielomian nad nieskończoną dziedziną jest określony przez wartości]
+\label{aa:wn:poly-evaluation-infinite-domain}
+Niech $R$ będzie nieskończoną dziedziną całkowitości.
+Jeśli $f,g\in R[x]$ spełniają $f(a)=g(a)$ dla każdego
+$a\in R$, to $f=g$. Równoważnie, odwzorowanie przypisujące
+wielomianowi jego funkcję wartości na $R$ jest różnowartościowe.
+\end{wniosek}
+\begin{proof}
+Połóżmy $h=f-g$. Z założenia $h(a)=0$ dla każdego
+$a\in R$. Gdyby $h\ne0$, to wielomian $h$ miałby
+skończony stopień $n$ i, na mocy
+Twierdzenia~\ref{aa:tw:poly-roots}, najwyżej $n$
+różnych pierwiastków w $R$. Tymczasem każdy element
+nieskończonego zbioru $R$ byłby jego pierwiastkiem.
+Otrzymana sprzeczność daje $h=0$, czyli $f=g$.
+\end{proof}
+\begin{uwaga}
+Założenia o nieskończoności i braku dzielników zera
+pełnią różne funkcje. Nad ciałem skończonym odwzorowanie
+wartościowania może nie być różnowartościowe
+(Przykład~\ref{aa:prz:poly-finite-field}); w pierścieniu
+z dzielnikami zera zawodzi oszacowanie liczby pierwiastków
+(Przykład~\ref{aa:prz:poly-roots-z8}).
+\end{uwaga}
+
+\section{Wielomiany pierwotne i lemat Gaussa}
+\begin{definicja}[Ciało ułamków]
+\label{aa:def:fracfield}
+Niech $R$ będzie dziedziną całkowitości. Jej
+\emph{ciałem ułamków} jest ciało $K=\operatorname{Frac}(R)$
+przedstawione przez klasy par $(a,b)$, gdzie $a\in R$
+i $b\in R\setminus\{0\}$, przy relacji
+$(a,b)\sim(c,d)$ wtedy i tylko wtedy, gdy $ad=bc$.
+Klasę pary $(a,b)$ oznaczamy $a/b$.
+Dodawanie i mnożenie ułamków wyznaczają wzory
+$a/b+c/d=(ad+bc)/(bd)$ oraz $(a/b)(c/d)=ac/(bd)$.
+Odwzorowanie $R\to K$, $a\mapsto a/1$, jest zanurzeniem.
+\end{definicja}
+
+\begin{lemat}[Uzasadnienie konstrukcji ciała ułamków]
+\label{aa:lem:fracfield-well-defined}
+Niech $R$ będzie dziedziną całkowitości. Relacja
+$(a,b)\sim(c,d)$, określona przez $ad=bc$ na
+$R\times(R\setminus\{0\})$, jest relacją równoważności.
+Wzory na dodawanie i mnożenie ułamków nie zależą od
+wyboru przedstawicieli, a zbiór klas z tymi działaniami
+jest ciałem zawierającym izomorficzną kopię $R$.
+\end{lemat}
+\begin{proof}
+Zwrotność i symetria są bezpośrednie. Jeśli
+$ad=bc$ oraz $cf=de$, to $adf=bcf=bde$.
+Ponieważ $d\ne0$ i $R$ nie ma dzielników zera,
+możemy skrócić $d$, otrzymując $af=be$;
+to dowodzi przechodniości.
+
+Sprawdźmy niezależność dodawania od przedstawicieli.
+Załóżmy $ab'=a'b$ i $cd'=c'd$ z niezerowymi
+$b,b',d,d'$. Wówczas
+\[
+ (ad+bc)b'd'=ab'dd'+bb'cd'
+             =a'bd'd+bb'c'd
+             =(a'd'+b'c')bd.
+\]
+Stąd $(ad+bc)/(bd)=(a'd'+b'c')/(b'd')$.
+Dla mnożenia odpowiednia równość ma postać
+$acb'd'=(ab')(cd')=(a'b)(c'd)=a'c'bd$.
+Mianowniki $bd$ są niezerowe, gdyż $R$ jest dziedziną.
+
+Łączność, przemienność i rozdzielność sprowadzają się
+po rozwinięciu liczników do odpowiednich własności $R$.
+Dla przykładu
+$(a/b+c/d)+e/f=(adf+bcf+ebd)/(bdf)$, niezależnie
+od nawiasowania. Zerem jest $0/1$, jedynką $1/1$,
+a przeciwnym do $a/b$ element $(-a)/b$.
+Z równości $a/b=0/1$ wynika $a=0$.
+Jeśli $a\ne0$, to $b/a$ jest poprawnym ułamkiem
+i $(a/b)(b/a)=1/1$. Zatem otrzymujemy ciało.
+Ponadto $a\mapsto a/1$ zachowuje działania i jest
+różnowartościowe, bo $a/1=c/1$ wymusza $a=c$.
+Dalsze własności tej konstrukcji omawiamy w
+dalszej części skryptu.
+\end{proof}
+
+\begin{definicja}[Zawartość wielomianu]
+\label{aa:def:poly-content}
+Niech $R$ będzie dziedziną z jednoznacznym rozkładem
+na czynniki i niech $f=\sum_{j=0}^n a_jx^j\in R[x]$
+będzie niezerowy. \emph{Zawartością} $f$ nazywamy
+największy wspólny dzielnik jego niezerowych współczynników,
+wyznaczony z dokładnością do stowarzyszenia; oznaczamy go
+$c(f)$. Wielomian $f$ jest \emph{pierwotny}, gdy $c(f)$
+jest jednostką, czyli żaden element pierwszy nie dzieli
+wszystkich współczynników $f$. W szczególności
+$f=c(f)f_0$ dla pewnego pierwotnego $f_0\in R[x]$.
+\end{definicja}
+
+\begin{lemat}[Iloczyn wielomianów pierwotnych]
+\label{aa:lem:gauss-primitive}
+Niech $R$ będzie dziedziną z jednoznacznym rozkładem
+na czynniki. Jeżeli $f,g\in R[x]$ są pierwotne,
+to $fg$ jest pierwotny.
+\end{lemat}
+\begin{proof}
+Przypuśćmy, że $fg$ nie jest pierwotny. Wtedy
+istnieje element pierwszy $p\in R$ dzielący każdy
+współczynnik iloczynu. Ponieważ $p$ jest pierwszy,
+ideał $(p)$ jest pierwszy: jeśli $ab\in(p)$, to
+$p\mid ab$, zatem $p\mid a$ lub $p\mid b$.
+Na mocy kryterium z rozdziału~\ref{aa:ch:pierscienie}
+iloraz $R/(p)$ jest dziedziną całkowitości.
+Zredukujmy współczynniki $f,g$ modulo $(p)$.
+Otrzymamy wielomiany $\bar f,\bar g\in(R/(p))[x]$.
+Pierwotność oznacza, że przynajmniej jeden współczynnik
+każdego z nich nie jest podzielny przez $p$,
+więc $\bar f\ne0$ i $\bar g\ne0$.
+Ale wszystkie współczynniki $fg$ są podzielne przez $p$,
+więc $\bar f\bar g=0$. To niemożliwe w pierścieniu
+wielomianów nad dziedziną całkowitości na mocy
+Lematu~\ref{aa:lem:poly-degree}. Otrzymujemy sprzeczność.
+\end{proof}
+
+\begin{twierdzenie}[Lemat Gaussa o zawartości]
+\label{aa:tw:gauss-content}
+Niech $R$ będzie dziedziną z jednoznacznym rozkładem
+na czynniki i niech $f,g\in R[x]$ będą niezerowe.
+Wówczas $c(fg)\sim c(f)c(g)$, gdzie $\sim$ oznacza
+stowarzyszenie w $R$.
+\end{twierdzenie}
+\begin{proof}
+Wybierzmy zawartości $c(f),c(g)$ i zapiszmy
+$f=c(f)f_0$, $g=c(g)g_0$ z pierwotnymi $f_0,g_0$.
+Wtedy $fg=c(f)c(g)(f_0g_0)$.
+Poprzedni lemat mówi, że $f_0g_0$ jest pierwotny.
+Zatem największy wspólny dzielnik współczynników iloczynu
+jest stowarzyszony z $c(f)c(g)$, co daje tezę.
+\end{proof}
+
+\begin{lemat}[Usuwanie mianowników z rozkładu]
+\label{aa:lem:gauss-denominators}
+Niech $R$ będzie dziedziną z jednoznacznym rozkładem
+na czynniki, $K=\operatorname{Frac}(R)$, a
+$f\in R[x]$ wielomianem pierwotnym. Jeżeli
+$f=gh$ dla wielomianów $g,h\in K[x]$ o dodatnich stopniach,
+to istnieją wielomiany $g_0,h_0\in R[x]$ o dodatnich
+stopniach takie, że $f=g_0h_0$.
+\end{lemat}
+\begin{proof}
+Każdy niezerowy wielomian $g\in K[x]$ można zapisać
+jako $g=\alpha G$, gdzie $\alpha\in K^\times$,
+a $G\in R[x]$ jest pierwotny: najpierw mnożymy przez
+wspólny niezerowy mianownik współczynników, a potem
+dzielimy uzyskany wielomian przez jego zawartość.
+Podobnie $h=\beta H$ z pierwotnym $H\in R[x]$.
+Zatem $f=\lambda GH$, gdzie $\lambda=\alpha\beta\in K^\times$,
+a $GH$ jest pierwotny na mocy Lematu~\ref{aa:lem:gauss-primitive}.
+
+Zapiszmy $\lambda=a/b$ z $a,b\in R$, $b\ne0$,
+przy czym $a$ i $b$ nie mają wspólnego czynnika nierozkładalnego.
+Z równości $bf=aGH$ wynika, że $b$ dzieli każdy
+współczynnik wielomianu $aGH$. Jeśli $b$ nie byłby
+jednostką, miałby czynnik pierwszy $p$. Wówczas $p$
+dzieliłby każdy współczynnik $aGH$; ponieważ $p\nmid a$,
+pierwszość $p$ wymuszałaby, że $p$ dzieli wszystkie
+współczynniki $GH$, wbrew pierwotności $GH$.
+Stąd $b$ jest jednostką, czyli $\lambda\in R$.
+Jeśli $\lambda$ nie byłaby jednostką, dowolny jej
+czynnik pierwszy dzieliłby wszystkie współczynniki $f$,
+co przeczyłoby pierwotności $f$. Ostatecznie
+$\lambda\in R^\times$ i $f=(\lambda G)H$ jest rozkładem
+w $R[x]$ na dwa wielomiany dodatniego stopnia.
+\end{proof}
+
+\begin{lemat}[Pierwotne wielomiany stowarzyszone nad ciałem ułamków]
+\label{aa:lem:primitive-associates}
+Niech $R$ będzie dziedziną z jednoznacznym rozkładem
+na czynniki, a $K=\operatorname{Frac}(R)$.
+Jeżeli dwa niezerowe pierwotne wielomiany
+$f,g\in R[x]$ spełniają $f=\lambda g$ dla
+pewnego $\lambda\in K^\times$, to $\lambda\in R^\times$.
+\end{lemat}
+\begin{proof}
+Wybierzmy $\lambda=a/b$, gdzie $a,b\in R$ są
+niezerowe i nie mają wspólnego czynnika nierozkładalnego.
+Równość $bf=ag$ zachodzi współczynnikowo.
+Gdyby $b$ nie było jednostką, dowolny czynnik pierwszy
+$p\mid b$ dzieliłby każdy współczynnik $ag$.
+Ponieważ $p\nmid a$, każdy współczynnik $g$ byłby
+podzielny przez $p$, wbrew pierwotności $g$.
+Zatem $b\in R^\times$ i $\lambda\in R$.
+Gdyby $a$ nie było jednostką, pewien czynnik pierwszy
+$p\mid a$ dzieliłby wszystkie współczynniki $bf$,
+a ponieważ $p\nmid b$, również wszystkie współczynniki
+$f$, znów sprzecznie z pierwotnością.
+Ostatecznie $a,b\in R^\times$, a więc $\lambda\in R^\times$.
+\end{proof}
+
+\begin{twierdzenie}[Kryterium nierozkładalności Gaussa]
+\label{aa:tw:gauss-irreducibility}
+Niech $R$ będzie dziedziną z jednoznacznym rozkładem
+na czynniki, $K=\operatorname{Frac}(R)$, a
+$f\in R[x]$ pierwotnym wielomianem dodatniego stopnia.
+Wówczas $f$ jest nierozkładalny w $R[x]$ wtedy i tylko
+wtedy, gdy jest nierozkładalny w $K[x]$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $f$ rozkłada się na dwa czynniki dodatniego stopnia
+w $K[x]$, to poprzedni lemat daje taki sam rodzaj rozkładu
+w $R[x]$, więc $f$ nie jest nierozkładalny w $R[x]$.
+
+Odwrotnie, przypuśćmy, że $f=uv$ w $R[x]$, gdzie
+$u,v$ są niejednostkami $R[x]$. Gdyby jeden z nich
+był stały, byłby nieodwracalnym elementem $R$, który
+dzieliłby wszystkie współczynniki $f$. To przeczy
+pierwotności. Zatem $u$ i $v$ mają dodatnie stopnie,
+więc stanowią właściwy rozkład $f$ także w $K[x]$.
+W ten sposób dowiedliśmy obu implikacji.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Gaussa o pierścieniu wielomianów]
+\label{aa:tw:ufd-polynomial}
+Jeżeli $R$ jest dziedziną z jednoznacznym rozkładem
+na czynniki, to pierścień $R[x]$ także jest dziedziną
+z jednoznacznym rozkładem na czynniki. W konsekwencji,
+jeżeli $K$ jest ciałem, to $K[x_1,\ldots,x_n]$
+ma jednoznaczny rozkład na czynniki dla każdego $n\ge1$.
+\end{twierdzenie}
+\begin{proof}
+Pierścień $R[x]$ jest dziedziną całkowitości na mocy
+Lematu~\ref{aa:lem:poly-degree}. Ustalmy
+$K=\operatorname{Frac}(R)$. Niezerowy wielomian
+$f\in R[x]$ zapisujemy jako $f=c(f)f_0$,
+gdzie $f_0$ jest pierwotny. Element $c(f)$ rozkłada się
+w $R$ na czynniki nierozkładalne, jeśli nie jest jednostką.
+Z kolei $K[x]$ jest dziedziną euklidesową
+(Rozdział~\ref{aa:ch:podzielnosc}), a więc ma
+jednoznaczny rozkład na czynniki. Rozłóżmy $f_0$ w $K[x]$
+na wielomiany nierozkładalne, przy czym dla stałego
+pierwotnego $f_0$ przyjmujemy pusty iloczyn i $r=0$.
+Wybierając dla każdego czynnika pierwotnego reprezentanta
+w $R[x]$, otrzymujemy $f_0=\lambda g_1\cdots g_r$
+z pierwotnymi $g_i\in R[x]$ i $\lambda\in K^\times$.
+Dla $r=0$ mamy $f_0=\lambda\in R^\times$.
+Lemat~\ref{aa:lem:primitive-associates}, zastosowany do
+pierwotnych $f_0$ oraz $g_1\cdots g_r$, pokazuje,
+że $\lambda\in R^\times$.
+Z kryterium nierozkładalności Gaussa każdy $g_i$ jest
+nierozkładalny w $R[x]$. W ten sposób otrzymaliśmy
+istnienie rozkładu na czynniki nierozkładalne.
+
+Sprawdźmy jednoznaczność. W każdym rozkładzie na czynniki
+nierozkładalne w $R[x]$ czynniki stałe odpowiadają
+czynnikom nierozkładalnym zawartości $c(f)$; pozostałe
+czynniki mają dodatnie stopnie i muszą być pierwotne,
+gdyż niezerowa niejednostka dzieląca wszystkie ich
+współczynniki dawałaby właściwy rozkład.
+Takie czynniki są nierozkładalne również w $K[x]$.
+Jednoznaczność rozkładu zawartości w $R$ i rozkładu
+w $K[x]$ zapewnia sparowanie czynników.
+Jeśli dwa pierwotne wielomiany różnią się mnożnikiem
+$\lambda\in K^\times$, to na mocy
+Lematu~\ref{aa:lem:primitive-associates} mamy
+$\lambda\in R^\times$. Czynniki odpowiadają sobie
+zatem z dokładnością do jednostek $R[x]$.
+
+Wreszcie ciało $K$ samo jest dziedziną z jednoznacznym
+rozkładem, a powtarzając wykazany wynik kolejno dla
+$K[x_1]$, $K[x_1][x_2]$, $\ldots$ otrzymujemy tezę
+o dowolnej skończonej liczbie zmiennych.
+\end{proof}
+
+\begin{przyklad}[Jednoznaczny rozkład bez główności wszystkich ideałów]
+\label{aa:prz:ufd-not-pid}
+Dla dowolnego ciała $K$ pierścień $K[x,y]$ ma
+jednoznaczny rozkład na czynniki na mocy poprzedniego
+twierdzenia. Jednak ideał $(x,y)$ nie jest główny:
+wykazaliśmy to już szczegółowo w
+Przykładzie~\ref{aa:prz:two-polynomials-not-pid}.
+Oznacza to, że implikacja
+„dziedzina z jednoznacznym rozkładem na czynniki
+$\Rightarrow$ dziedzina ideałów głównych” jest fałszywa.
+\end{przyklad}
+
+\section{Kryterium Eisensteina i badanie redukcji modulo liczbę pierwszą}
+\begin{twierdzenie}[Kryterium Eisensteina]
+\label{aa:tw:eisenstein}
+Niech $R$ będzie dziedziną z jednoznacznym rozkładem
+na czynniki, $K=\operatorname{Frac}(R)$, a
+$f=a_nx^n+\cdots+a_1x+a_0\in R[x]$ wielomianem
+stopnia $n\ge1$. Załóżmy, że istnieje element pierwszy
+$p\in R$ taki, że $p\nmid a_n$, $p\mid a_j$ dla
+$0\le j<n$ oraz $p^2\nmid a_0$.
+Wtedy $f$ jest nierozkładalny w $K[x]$.
+\end{twierdzenie}
+\begin{proof}
+Niech $c=c(f)$ będzie wybraną zawartością $f$
+i niech $f_0=f/c\in R[x]$. Z warunku
+$p\nmid a_n$ wynika $p\nmid c$, a $f_0$ jest pierwotny.
+Ponieważ $a_j=c\,b_j$, gdzie $b_j$ jest współczynnikiem
+$f_0$, oraz $p\nmid c$, pierwszość $p$ pokazuje,
+że $f_0$ spełnia wszystkie trzy warunki kryterium:
+$p$ pozostaje dzielnikiem niższych współczynników,
+nie dzieli współczynnika wiodącego, a $p^2$ nie dzieli
+wyrazu wolnego, ponieważ $p\nmid c$.
+
+Gdyby $f$ był rozkładalny w $K[x]$, byłby rozkładalny
+także $f_0$. Z kryterium nierozkładalności Gaussa
+otrzymalibyśmy $f_0=gh$ w $R[x]$, gdzie obydwa czynniki
+mają dodatnie stopnie. Zredukujmy współczynniki modulo
+ideał $(p)$. Ponieważ $R/(p)$ jest dziedziną,
+redukcja daje równość
+$\overline g\,\overline h=\overline{a_n/c}\,x^n$.
+Współczynnik wiodący po prawej jest niezerowy,
+a oba czynniki po lewej mają dodatnie stopnie:
+ich współczynniki wiodące nie mogą być podzielne przez
+$p$, gdyż ich iloczyn jest współczynnikiem wiodącym $f_0$.
+
+W dziedzinie całkowitości każdy dzielnik monomianu
+$c x^n$ z $c\ne0$ jest sam monomianem z niezerowym
+współczynnikiem. Można to także zobaczyć bezpośrednio:
+jeśli $\bar g$ miałby niezerowy wyraz niższego stopnia,
+to jego najniższy niezerowy współczynnik, pomnożony
+przez najniższy niezerowy współczynnik $\bar h$,
+dałby niezerowy wyraz iloczynu o wykładniku mniejszym
+niż $n$. Zatem $\bar g$ i $\bar h$ są monomianami
+dodatnich stopni. Ich wyrazy wolne są więc zerowe,
+co oznacza $p\mid g(0)$ i $p\mid h(0)$. Wtedy
+$p^2\mid g(0)h(0)=f_0(0)$, sprzecznie z założeniem.
+Stąd $f$ jest nierozkładalny w $K[x]$.
+\end{proof}
+
+\begin{przyklad}[Wielomiany $x^n-p$]
+\label{aa:prz:xn-p}
+Dla liczby pierwszej $p$ i $n\ge1$ wielomian
+$x^n-p\in\mathbb Z[x]$ spełnia kryterium Eisensteina
+z elementem pierwszym $p$. Współczynnik wiodący
+wynosi $1$, wszystkie pozostałe współczynniki
+są podzielne przez $p$, a $p^2$ nie dzieli wyrazu
+wolnego $-p$. Zatem $x^n-p$ jest nierozkładalny
+nad $\mathbb Q$. W szczególności $x^3-2$ jest
+wielomianem minimalnym liczby $\sqrt[3]{2}$ nad $\mathbb Q$.
+\end{przyklad}
+
+\begin{przyklad}[Zmiana zmiennej ujawniająca kryterium]
+\label{aa:prz:x4plus1}
+Wielomian $f(x)=x^4+1$ nie spełnia wprost kryterium
+Eisensteina z liczbą pierwszą $2$, ponieważ jego
+wyraz wolny nie jest podzielny przez $2$. Rozważmy jednak
+$f(x+1)=x^4+4x^3+6x^2+4x+2$.
+Wszystkie współczynniki oprócz wiodącego są parzyste,
+a $4$ nie dzieli wyrazu wolnego $2$.
+Kryterium Eisensteina daje nierozkładalność $f(x+1)$
+w $\mathbb Q[x]$. Odwzorowanie
+$\mathbb Q[x]\to\mathbb Q[x]$, $g(x)\mapsto g(x+1)$,
+jest automorfizmem pierścieni o odwrotności
+$h(x)\mapsto h(x-1)$. Automorfizm zachowuje jednostki
+i właściwe rozkłady; dlatego także $x^4+1$ jest
+nierozkładalny nad $\mathbb Q$.
+\end{przyklad}
+
+\begin{twierdzenie}[Kryterium nierozkładalności przez redukcję modulo $p$]
+\label{aa:tw:modp-irred}
+Niech $f\in\mathbb Z[x]$ będzie pierwotnym wielomianem
+dodatniego stopnia, a $p$ liczbą pierwszą, która nie
+dzieli współczynnika wiodącego $f$. Jeśli wielomian
+$\bar f\in\mathbb F_p[x]$ otrzymany przez redukcję
+współczynników modulo $p$ jest nierozkładalny, to
+$f$ jest nierozkładalny nad $\mathbb Q$.
+\end{twierdzenie}
+\begin{proof}
+Gdyby $f$ był rozkładalny nad $\mathbb Q$, lemat
+Gaussa dostarczyłby właściwego rozkładu
+$f=gh$ z $g,h\in\mathbb Z[x]$ dodatnich stopni.
+Współczynniki wiodące $g$ i $h$ mnożą się do
+współczynnika wiodącego $f$, który nie jest podzielny
+przez $p$. Żaden z tych dwóch współczynników nie jest
+więc podzielny przez $p$. Po redukcji modulo $p$
+stopnie $\bar g,\bar h$ pozostają dodatnie i nie zmieniają
+się, a $\bar f=\bar g\bar h$ stanowi właściwy rozkład
+w $\mathbb F_p[x]$. Sprzeczność dowodzi tezy.
+\end{proof}
+
+\begin{przyklad}[Kryterium redukcyjne jest jednostronne]
+\label{aa:prz:modp-not-necessary}
+Wielomian $x^2+1$ jest nierozkładalny nad $\mathbb Q$:
+gdyby rozkładał się na czynniki liniowe, miałby pierwiastek
+w $\mathbb Q$, a równanie $x^2=-1$ nie ma rozwiązania
+nawet w $\mathbb R$. Tymczasem modulo $2$ mamy
+$x^2+1=(x+1)^2$ w $\mathbb F_2[x]$.
+Rozkładalność redukcji nie oznacza zatem
+rozkładalności oryginalnego wielomianu.
+\end{przyklad}
+
+\begin{przyklad}[Nierozkładalność stopnia trzeciego wykazana modulo $2$]
+\label{aa:prz:cubic-mod2-irreducibility}
+Weźmy $f(x)=x^3+x+1\in\mathbb Z[x]$.
+Współczynnik wiodący $1$ nie jest podzielny przez $2$.
+Redukcja $\bar f\in\mathbb F_2[x]$ nie ma pierwiastków:
+$\bar f(0)=1$, $\bar f(1)=1+1+1=1$.
+Wielomian stopnia $3$ nad ciałem jest rozkładalny
+wtedy i tylko wtedy, gdy ma czynnik stopnia $1$:
+przy rozkładzie na dwa czynniki dodatniego stopnia
+ich stopnie sumują się do $3$, więc jeden wynosi $1$.
+Brak pierwiastków oznacza zatem, że $\bar f$
+jest nierozkładalny. Kryterium redukcyjne daje
+nierozkładalność $x^3+x+1$ nad $\mathbb Q$.
+\end{przyklad}
+
+\begin{przyklad}[Dlaczego trzeba zachować stopień przy redukcji]
+\label{aa:prz:modp-leading-coefficient-necessary}
+Wielomian $f(x)=2x^2+3x+1$ jest pierwotny:
+jego współczynniki mają największy wspólny dzielnik
+równy $1$. Mimo to $f$ rozkłada się nad
+$\mathbb Q$ jako
+$f(x)=(2x+1)(x+1)$, gdzie oba czynniki mają
+stopień dodatni. Redukcja modulo $2$ daje natomiast
+$\bar f(x)=x+1\in\mathbb F_2[x]$, który jest
+nierozkładalny jako wielomian stopnia pierwszego.
+Nie ma sprzeczności z
+Twierdzeniem~\ref{aa:tw:modp-irred}: liczba $2$
+dzieli współczynnik wiodący $f$, więc stopień
+spada z dwóch do jednego. Po redukcji pierwszy
+czynnik rozkładu staje się stałą $1$.
+\end{przyklad}
+
+\section{Pierwiastki wymierne i analiza konkretnych wielomianów}
+\begin{twierdzenie}[Twierdzenie o pierwiastkach wymiernych]
+\label{aa:tw:rational-root}
+Niech $f=a_nx^n+\cdots+a_1x+a_0\in\mathbb Z[x]$
+będzie wielomianem stopnia $n\ge1$ i niech $a_n\ne0$.
+Jeśli $u/v\in\mathbb Q$ jest pierwiastkiem $f$,
+gdzie $u\in\mathbb Z$, $v\in\mathbb N$ jest dodatnie
+oraz $\gcd(u,v)=1$, to $u\mid a_0$ i $v\mid a_n$.
+W przypadku $u=0$ pierwszy warunek oznacza $a_0=0$.
+\end{twierdzenie}
+\begin{proof}
+Równość $f(u/v)=0$ po pomnożeniu przez $v^n$
+daje
+\[
+ a_nu^n+a_{n-1}u^{n-1}v+\cdots+a_1uv^{n-1}+a_0v^n=0.
+\]
+Wyłączając pierwszy składnik, stwierdzamy, że
+$v$ dzieli $a_nu^n$. Ponieważ $\gcd(u,v)=1$,
+żaden element pierwszy dzielący $v$ nie dzieli $u$.
+Lemat Euklidesa zastosowany wielokrotnie do potęg
+czynników pierwszych $v$ daje $v\mid a_n$.
+Analogicznie po wyłączeniu ostatniego składnika
+otrzymujemy $u\mid a_0v^n$. Jeżeli $u\ne0$,
+to $\gcd(u,v)=1$ daje $u\mid a_0$. Jeżeli $u=0$,
+równość $f(0)=0$ oznacza $a_0=0$.
+\end{proof}
+
+\begin{przyklad}[Od listy kandydatów do pełnego rozkładu]
+\label{aa:prz:rational-root-cubic}
+Rozważmy $f(x)=2x^3-3x+1$. Każdy pierwiastek wymierny
+w postaci nieskracalnej ma licznik dzielący $1$
+i dodatni mianownik dzielący $2$. Kandydatami są
+$\pm1$, $\pm\tfrac12$. Podstawienie $x=1$ daje
+$f(1)=2-3+1=0$, więc z twierdzenia o czynniku liniowym
+wiemy, że $x-1$ dzieli $f$.
+Dzielenie wielomianów daje
+$f(x)=(x-1)(2x^2+2x-1)$.
+Równanie kwadratowe $2x^2+2x-1=0$ ma pierwiastki
+$(-1\pm\sqrt3)/2$. Zatem otrzymaliśmy wszystkie
+pierwiastki nad $\mathbb R$. Czynnika kwadratowego
+nie można rozłożyć nad $\mathbb Q$, ponieważ
+$\sqrt3\notin\mathbb Q$: gdyby $\sqrt3=m/n$
+dla względnie pierwszych $m,n\in\mathbb Z$, $n\ne0$,
+to $m^2=3n^2$. Stąd $3\mid m$, zatem po zapisaniu
+$m=3k$ także $3\mid n$; byłaby to sprzeczność
+z $\gcd(m,n)=1$.
+\end{przyklad}
+
+\begin{przyklad}[Brak pierwiastków wymiernych nie wystarcza w stopniu czwartym]
+\label{aa:prz:rational-root-insufficient}
+Wielomian $f(x)=x^4+4$ nie ma pierwiastków rzeczywistych,
+ponieważ $x^4+4>0$ dla każdego $x\in\mathbb R$,
+a więc nie ma też pierwiastków wymiernych.
+Mimo to w $\mathbb Q[x]$ jest rozkładalny:
+\[
+ x^4+4=(x^2+2)^2-(2x)^2
+       =(x^2-2x+2)(x^2+2x+2).
+\]
+Oba czynniki są niestałe. Twierdzenie o pierwiastkach
+wymiernych pozwala więc wykluczyć rozkład stopnia $2$
+lub $3$ (wtedy rozkład musi mieć czynnik liniowy),
+lecz samo w sobie nie dowodzi nierozkładalności
+wielomianów stopnia co najmniej $4$.
+\end{przyklad}
+
+\section{Pierścienie wielomianów wielu zmiennych i ich ilorazy}
+\begin{definicja}[Pierścień wielomianów wielu zmiennych]
+\label{aa:def:multi-polynomial}
+Niech $R$ będzie przemiennym pierścieniem z jedynką
+i niech $n\ge1$ będzie liczbą całkowitą.
+Przyjmujemy $R[x_1]$ z Definicji~\ref{aa:def:poly-ring},
+a dla $n\ge2$ definiujemy indukcyjnie
+$R[x_1,\ldots,x_n]=(R[x_1,\ldots,x_{n-1}])[x_n]$.
+Jego elementy są skończonymi sumami
+$a_{\alpha}x_1^{\alpha_1}\cdots x_n^{\alpha_n}$,
+gdzie $a_{\alpha}\in R$, a $\alpha_i\in\mathbb N_0$.
+\end{definicja}
+
+\begin{twierdzenie}[Pierścień współrzędnych paraboli]
+\label{aa:tw:parabola-quotient}
+Niech $K$ będzie ciałem. Homomorfizm pierścieni
+$\psi:K[x,y]\to K[x]$, zadany wzorem
+$\psi(F(x,y))=F(x,x^2)$, jest surjektywny, a jego
+jądrem jest ideał $(y-x^2)$. W szczególności
+$K[x,y]/(y-x^2)\cong K[x]$.
+\end{twierdzenie}
+\begin{proof}
+Homomorfizm $\psi$ zachowuje sumy i iloczyny, ponieważ
+jest podstawieniem, a jedynkę wysyła na jedynkę.
+Jest surjektywny: każdy $h(x)\in K[x]$ jest obrazem
+tego samego wielomianu traktowanego jako element
+$K[x,y]$ niezależny od $y$.
+
+Ponadto $\psi(y-x^2)=0$, więc ideał $(y-x^2)$ jest
+zawarty w jądrze $\psi$. Aby udowodnić odwrotne
+zawieranie, potraktujmy $F\in K[x,y]$ jako wielomian
+zmiennej $y$ o współczynnikach z pierścienia $K[x]$.
+Wielomian $y-x^2$ jest unormowany względem $y$.
+Twierdzenie~\ref{aa:tw:poly-division} daje jednoznacznie
+$F(x,y)=Q(x,y)(y-x^2)+H(x)$, ponieważ reszta ma
+stopień względem $y$ mniejszy niż jeden.
+Po podstawieniu $y=x^2$ otrzymujemy
+$F(x,x^2)=H(x)$. Jeżeli $F\in\ker\psi$, to $H=0$
+i $F\in(y-x^2)$. Mamy więc równość jądra i ideału.
+Pierwsze twierdzenie o izomorfizmie pierścieni
+(Rozdział~\ref{aa:ch:pierscienie}) daje wówczas
+$K[x,y]/(y-x^2)\cong K[x]$.
+\end{proof}
+
+\begin{przyklad}[Równania opisujące ten sam zbiór nie muszą dawać tych samych pierścieni]
+\label{aa:prz:poly-nilpotent-double}
+W pierścieniu $\mathbb R[x]$ rozważmy ideały
+$(x)$ oraz $(x^2)$. Zbiory rzeczywistych zer wielomianów
+$x$ i $x^2$ są identyczne: w obu przypadkach składają
+się z jednego punktu $0$. Jednak
+$\mathbb R[x]/(x)\cong\mathbb R$ jest ciałem,
+natomiast w $\mathbb R[x]/(x^2)$ klasa $x+(x^2)$ jest
+niezerowa i nilpotentna stopnia dwa.
+Niezerowość tej klasy wynika z faktu, że $x$ nie jest
+wielokrotnością $x^2$. Oba pierścienie nie mogą być
+izomorficzne: izomorfizm zachowywałby niezerowe elementy
+nilpotentne, których w ciele nie ma. W następnym rozdziale
+wyjaśnimy ten przykład za pomocą pierwiastnika ideału.
+\end{przyklad}
+
+\begin{uwaga}[Przejście do teorii Galois]
+\label{aa:uw:poly-galois}
+Kryteria nierozkładalności rozstrzygają, kiedy iloraz
+$K[x]/(f)$ jest ciałem: na mocy
+Twierdzenia~\ref{aa:tw:prime-max-quotient} zachodzi to
+dokładnie wtedy, gdy ideał $(f)$ jest maksymalny.
+W $K[x]$ nierozkładalność wielomianu $f$ dodatniego
+stopnia jest równoważna maksymalności ideału $(f)$;
+wynika to z algorytmu Euklidesa, który daje
+odwrotność klasy każdego wielomianu $g$ niepodzielnego
+przez $f$. Ta obserwacja pozwoli konstruować
+rozszerzenia ciał i przejść do teorii Galois.
+\end{uwaga}

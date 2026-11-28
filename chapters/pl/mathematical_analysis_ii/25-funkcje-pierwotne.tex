@@ -1,0 +1,977 @@
+\chapter{Funkcje pierwotne i podstawowe twierdzenie rachunku całkowego}
+\label{ma2:ch:primitives}
+
+Definicję skalarnej funkcji pierwotnej, jednoznaczność
+z dokładnością do stałej, tablicę funkcji pierwotnych
+i warunki konieczne ich istnienia omówiono w
+\atlasref{AM1-28::ma1:ch:primitives}{analizie matematycznej I}.
+Z kolei podstawowe twierdzenie rachunku całkowego
+i wzór Newtona--Leibniza w przypadku skalarnym
+znajdują się w
+\atlasref{AM1-29::ma1:thm:riemann-fundamental}{AM I, rozdział 29}.
+Nie będziemy powtarzać metod obliczania całek
+nieoznaczonych z tomu I.
+Naszym celem jest ujęcie funkcji pierwotnej jako
+rozwiązania równania różniczkowego o zadanej
+pochodnej w przestrzeni Banacha oraz jako obrazu
+funkcji przez ciągły operator całkowania.
+W rozdziale \ref{ma2:ch:limits-calculus} wprowadziliśmy
+już sumy Riemanna dla funkcji wektorowych,
+a w rozdziale \ref{ma2:ch:mean-value} korzystaliśmy
+ze wzoru całkowego na przyrost. Tu uzupełnimy
+zależności potrzebne do konstrukcji funkcji pierwotnych;
+ogólniejsze rodzaje całek wektorowych pozostawimy
+\atlasref{FA-15B::sec:integral-vector15b}{analizie funkcjonalnej}.
+Po zakończeniu rachunku różniczkowego wrócimy do
+całkowania skalarnego w przestrzeni euklidesowej.
+
+\section{Intuicja: akumulacja i chwilowa szybkość zmian}
+
+W AM I
+(\atlasref{AM1-29::ma1:ch:riemann-integral}{całka Riemanna})
+interpretowaliśmy całkę jako granicę sum lokalnych
+wkładów. Teraz zmieniamy punkt widzenia:
+zamiast ustalać oba końce przedziału, obserwujemy,
+jak wartość całki zmienia się wraz z położeniem
+jej górnego końca.
+
+Niech $a<b$ i niech $f:[a,b]\to\R$ będzie ciągła. Funkcja
+akumulacji o punkcie początkowym $a$ to
+\[
+ A(x)=\int_a^x f(t)\,\mathrm dt,\qquad x\in[a,b].
+\]
+W tym rozdziale zapis z $\mathrm dt$ oznacza
+całkę Riemanna (również w przypadku wartości
+w przestrzeni Banacha). Dla funkcji skalarnej
+całkowalnej w sensie Riemanna na przedziale
+jest ona zgodna z całką względem $\lambda_1$
+na mocy zgodności całek Riemanna i Lebesgue'a
+(wersję wielowymiarową podamy w
+\ref{ma2:thm:riemann-box-lebesgue}).
+
+Jeżeli $f$ jest nieujemna, $A(x)$ mierzy pole
+obszaru pod wykresem $f$ od $a$ do $x$
+(zob. \ref{ma2:thm:riemann-subgraph-volume}).
+Jeżeli $f$ zmienia znak, jest to bilans pól.
+Dla $a\le x\le y\le b$ różnica $A(y)-A(x)$
+jest wkładem zgromadzonym wyłącznie między
+$x$ i $y$: z addytywności całki
+(\atlasref{AM1-29::ma1:thm:riemann-additivity}{addytywność całki Riemanna})
+$A(y)-A(x)=\int_x^y f(t)\,\mathrm dt$.
+Nie należy mylić tego przyrostu z całką
+z samej funkcji $A$ po przedziale $[x,y]$.
+
+Przykładowo, jeśli $f$ oznacza szybkość
+dopływu cieczy do zbiornika (objętość na
+jednostkę czasu), to $A$ opisuje zmianę
+objętości od ustalonej chwili. Wypływowi
+odpowiadają ujemne wartości $f$.
+Dodając objętość początkową $v$, otrzymujemy
+$F(x)=v+A(x)$. Zmiana $v$ przesuwa wykres
+$F$, ale nie zmienia szybkości dopływu.
+Analogicznie dla ciągłej prędkości ruchu
+wzdłuż prostej całka daje przemieszczenie,
+a nie całkowitą przebytą drogę; tę ostatnią
+opisuje całka z modułu prędkości. Ścisłe
+uzasadnienie wzoru na długość krzywej
+klasy $C^1$ podamy w rozdziale
+\ref{ma2:ch:rectifiable-curves}.
+
+\paragraph{Dlaczego pochodna funkcji akumulacji jest równa
+funkcji podcałkowej?}
+Ustalmy $x\in(a,b)$. Dla małego $h>0$
+z $x+h\le b$ nowy fragment obszaru
+pod wykresem ma szerokość $h$ i wysokość
+bliską $f(x)$. Jego pole ze znakiem jest
+zatem bliskie $hf(x)$. W konsekwencji
+\[
+ \frac{A(x+h)-A(x)}h
+ =\frac1h\int_x^{x+h}f(t)\,\mathrm dt
+ \approx f(x).
+\]
+Ściśle, różnica między średnią wartością
+na krótkim przedziale a wartością $f(x)$
+jest ograniczona przez
+$\sup_{|t-x|\le |h|,\ t\in[a,b]}|f(t)-f(x)|$.
+Oszacowanie wynika z monotoniczności
+całki i oszacowania jej modułu przez
+całkę z modułu (\atlasref{AM1-29::ma1:thm:riemann-order}{własności porządkowe całki Riemanna}),
+zastosowanych na krótkim przedziale.
+Ciągłość w $x$ daje zbieżność tego
+oszacowania do zera; dla $h<0$ odwracamy
+granice całki. Dowód w przestrzeni Banacha
+podamy w twierdzeniu \ref{ma2:thm:primitive-ftc}.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=3.0cm,y=1.65cm,>=stealth]
+ \begin{scope}
+  \fill[blue!20] (0,0)--(1.15,2.3)--(1.15,0)--cycle;
+  \fill[orange!50] (1.15,0)--(1.15,2.3)--(1.55,3.1)--(1.55,0)--cycle;
+  \draw[->,gray!80!black] (-.08,0)--(1.85,0) node[right] {$t$};
+  \draw[->,gray!80!black] (0,-.08)--(0,3.55) node[above] {$f(t)$};
+  \draw[blue!75!black,very thick] (0,0)--(1.75,3.5);
+  \draw[densely dashed,gray] (1.15,0)--(1.15,2.3);
+  \draw[densely dashed,gray] (1.55,0)--(1.55,3.1);
+  \draw[orange!85!black,densely dashed] (1.15,2.3)--(1.55,2.3);
+  \node[below] at (0,0) {$0$};
+  \node[below] at (1.15,0) {$x$};
+  \node[below] at (1.55,0) {$x+h$};
+  \node[blue!75!black] at (.76,.55) {$A(x)$};
+  \node[orange!85!black,rotate=90] at (1.35,1.05) {$\Delta A$};
+  \node[above right] at (1.55,3.1) {$2t$};
+ \end{scope}
+ \begin{scope}[xshift=6.7cm]
+  \draw[->,gray!80!black] (-.08,0)--(1.85,0) node[right] {$t$};
+  \draw[->,gray!80!black] (0,-.08)--(0,3.55) node[above] {$A(t)$};
+  \draw[blue!75!black,very thick,domain=0:1.75,samples=50] plot (\x,{\x*\x});
+  \draw[orange!85!black,thick] (1.15,1.3225)--(1.55,2.4025);
+  \draw[gray,densely dashed] (1.15,0)--(1.15,1.3225);
+  \draw[gray,densely dashed] (1.55,0)--(1.55,2.4025);
+  \fill[blue!75!black] (1.15,1.3225) circle (1.4pt);
+  \fill[blue!75!black] (1.55,2.4025) circle (1.4pt);
+  \node[below] at (1.15,0) {$x$};
+  \node[below] at (1.55,0) {$x+h$};
+  \node[blue!75!black,above left] at (1.75,3.0625) {$t^2$};
+ \end{scope}
+\end{tikzpicture}
+\caption{Dla $f(t)=2t$ na $[0,2]$ funkcja akumulacji
+wynosi $A(t)=t^2$. Pomarańczowe pole po lewej
+jest przyrostem $A(x+h)-A(x)$; po prawej
+iloraz tego przyrostu przez $h$ jest
+współczynnikiem kierunkowym siecznej.
+Przy $h\to0$ sieczna przechodzi w styczną
+o współczynniku $2x$.}
+\label{ma2:fig:primitive-accumulation}
+\end{figure}
+
+\paragraph{Całka oznaczona a całka nieoznaczona.}
+Całka oznaczona $\int_a^b f(t)\,\mathrm dt$
+jest pojedynczą liczbą, natomiast funkcja
+akumulacji $A$ przypisuje liczbę każdemu
+$x$ z przedziału. Całka nieoznaczona
+$\int f(t)\,\mathrm dt$ jest tradycyjnym
+oznaczeniem rodziny funkcji pierwotnych
+$A+C$, $C\in\R$, o ile funkcja pierwotna
+istnieje. Nie jest to całka względem miary
+po nieokreślonym zbiorze.
+Na spójnym przedziale wybór wartości
+początkowej ustala stałą jednoznacznie.
+
+Podstawowe twierdzenie rachunku całkowego
+łączy zatem dwa kierunki rozumowania:
+z chwilowej szybkości zmian odtwarzamy
+zmianę całkowitą, a różniczkując funkcję
+akumulacji, odzyskujemy szybkość zmian
+w punktach ciągłości funkcji podcałkowej.
+Wzór Newtona--Leibniza będzie uzasadniony
+w twierdzeniu \ref{ma2:thm:primitive-newton-leibniz}.
+Później zobaczymy w klasycznej skalarnej wersji
+dla $G\in C^1([a,b],\R)$ jednowymiarowy
+przypadek ogólnego twierdzenia Stokesa.
+Przy orientacji przedziału od $a$ do $b$
+punkt $b$ otrzymuje znak dodatni, a $a$
+ujemny, co symbolicznie zapisujemy
+$\partial[a,b]=\{b\}-\{a\}$. Całka formy
+stopnia zero (funkcji $G$) po takim
+zorientowanym brzegu to $G(b)-G(a)$,
+a różniczka zewnętrzna $G$ to
+$\mathrm dG=G'(t)\,\mathrm dt$.
+Wzór
+\[
+ \int_{[a,b]}\mathrm dG
+ =\int_{\partial[a,b]}G=G(b)-G(a)
+\]
+jest zatem zapowiedzią ogólnej zasady.
+Nie utożsamiamy tu zorientowanej całki
+po brzegu z całką względem dodatniej
+miary liczącej $\mathcal H^0$. Taka
+całka z $G$ po dwupunktowym zbiorze
+byłaby sumą $G(a)+G(b)$.
+
+\begin{przyklad}[Akumulacja ze znakiem i zmiana monotoniczności]
+\label{ma2:ex:primitive-signed-accumulation}
+Dla $f(t)=1-2t$ na $[0,1]$ mamy
+$A(x)=x-x^2$, na mocy wzoru
+Newtona--Leibniza
+(\ref{ma2:thm:primitive-newton-leibniz}),
+gdyż pochodna $x-x^2$ to $1-2x$.
+Funkcja $A$ rośnie do $x=1/2$ i następnie
+maleje, ponieważ jej pochodna zmienia
+znak z dodatniego na ujemny.
+Maksymalna zgromadzona wartość wynosi $1/4$.
+Jednak $A(1)=A(0)=0$: dodatni wkład
+z pierwszej połowy przedziału jest równy
+co do modułu ujemnemu wkładowi z drugiej.
+Całka z modułu funkcji wynosi
+\[
+ \int_0^1|1-2t|\,\mathrm dt
+ =\int_0^{1/2}(1-2t)\,\mathrm dt
+ +\int_{1/2}^1(2t-1)\,\mathrm dt
+ =\frac12.
+\]
+Jest to przykład różnicy między bilansem
+netto a sumą modułów lokalnych wkładów.
+\end{przyklad}
+
+\section{Funkcja pierwotna krzywej}
+
+Niech $E$ będzie rzeczywistą lub zespoloną
+przestrzenią Banacha, a $J\subseteq\R$
+niepustym otwartym przedziałem.
+Zmienna niezależna jest zawsze rzeczywista.
+W przypadku zespolonego $E$ pochodną krzywej
+rozumiemy jako granicę ilorazów różnicowych
+dla rzeczywistych przyrostów.
+
+\begin{definicja}
+\label{ma2:def:vector-primitive}
+Funkcję różniczkowalną $F:J\to E$ nazywamy
+funkcją pierwotną $f:J\to E$, gdy
+$F'(t)=f(t)$ dla każdego $t\in J$.
+Różniczka Frécheta krzywej $F$ w punkcie $t$
+jest odwzorowaniem $DF(t):\R\to E$,
+$DF(t)h=hF'(t)$.
+\end{definicja}
+
+Ostatnia równość wynika z definicji różniczki:
+\[
+ \frac{\|F(t+h)-F(t)-hF'(t)\|}{|h|}
+ =\left\|\frac{F(t+h)-F(t)}h-F'(t)\right\|
+ \longrightarrow0.
+\]
+Odwrotnie, dla różniczki $A:\R\to E$ mamy
+$Ah=hA(1)$, więc istnienie różniczki pociąga
+istnienie pochodnej $F'(t)=A(1)$.
+Odwzorowanie $A\mapsto A(1)$ jest liniowe
+i ma odwrotność $v\mapsto(h\mapsto hv)$.
+Ponadto
+\[
+ \|A\|=\sup_{|h|\le1}\|hA(1)\|=\|A(1)\|,
+\]
+gdyż supremum jest osiągane dla $h=1$.
+Otrzymujemy zatem kanoniczny izometryczny
+izomorfizm $\mathcal L(\R,E)\cong E$.
+Jeżeli $E$ jest zespolona, w symbolu
+$\mathcal L(\R,E)$ chodzi o odwzorowania
+rzeczywiście liniowe; przestrzeń tych
+odwzorowań można dodatkowo wyposażyć
+w mnożenie przez skalar zespolony
+$(zA)(h)=zA(h)$. Wtedy wskazany izomorfizm
+jest również zespolono-liniowy.
+
+\begin{stwierdzenie}
+\label{ma2:prop:primitive-uniqueness}
+Jeżeli $F,G:J\to E$ są funkcjami pierwotnymi
+tej samej funkcji $f$, to $F-G$ jest stała.
+Jeżeli istnieje jedna funkcja pierwotna $F$,
+to wszystkie mają postać $F+c$, $c\in E$.
+Dla $t_0\in J$ i $v\in E$ istnieje wtedy
+dokładnie jedna funkcja pierwotna przyjmująca
+w $t_0$ wartość $v$.
+\end{stwierdzenie}
+\begin{proof}
+Dla $s<t$ w $J$ funkcja $H=F-G$ jest
+ciągła na $[s,t]$ jako różniczkowalna
+i ma pochodną $H'=f-f=0$.
+Stosujemy oszacowanie przyrostu
+\ref{ma2:lem:vector-increment} do $H$
+na $[s,t]$, z $M=0$. Dostajemy
+$\|H(t)-H(s)\|\le0$, więc $H(t)=H(s)$.
+Dodanie stałej nie zmienia pochodnej.
+Wartość w $t_0$ wymusza
+$c=v-F(t_0)$, a ten wybór rzeczywiście daje
+żądaną funkcję.
+\end{proof}
+
+Jeżeli dziedziną jest dowolny otwarty podzbiór
+$\R$, to jego składowe spójności są otwartymi
+przedziałami, a stałą można wybierać niezależnie
+na każdej składowej.
+W szczególności funkcja pierwotna na
+$\R\setminus\{0\}$ nie musi różnić się od innej
+funkcji pierwotnej o jedną wspólną stałą.
+
+\section{Całka po podprzedziale}
+
+W tej sekcji ustalamy $a<b$.
+Przypomnijmy, że całkowalność Riemanna
+$f:[a,b]\to E$ oznacza zbieżność w normie
+wszystkich sum
+\[
+ R(f,P)=\sum_{j=1}^m(t_j-t_{j-1})f(\xi_j),
+ \qquad \xi_j\in[t_{j-1},t_j],
+\]
+przy średnicy podziału dążącej do zera, jednostajnie
+względem wyboru punktów pośrednich.
+Ograniczoność funkcji całkowalnej wykazano
+w rozdziale \ref{ma2:ch:limits-calculus}.
+Dla funkcji ciągłych istnienie całki zapewnia
+zupełność przestrzeni Banacha (por.
+\ref{ma2:lem:ftc-banach} i odsyłacz do AF 15A
+w rozdziale \ref{ma2:ch:limits-calculus}).
+
+\begin{lemat}[Kryterium Cauchy'ego dla sum Riemanna]
+\label{ma2:lem:primitive-cauchy}
+Funkcja $f:[a,b]\to E$ jest całkowalna w sensie
+Riemanna wtedy i tylko wtedy, gdy dla każdego
+$\varepsilon>0$ istnieje $\delta>0$ takie, że
+\[
+ \|R(f,P)-R(f,T)\|<\varepsilon
+\]
+dla wszystkich podziałów z punktami pośrednimi
+$P,T$ o średnicach mniejszych od $\delta$.
+\end{lemat}
+\begin{proof}
+Jeżeli całka istnieje, wybieramy $\delta$
+tak, aby obie sumy różniły się od całki
+o mniej niż $\varepsilon/2$, i stosujemy
+nierówność trójkąta.
+
+Odwrotnie, wybierzmy ciąg podziałów $P_m$
+o średnicach dążących do zera, z dowolnymi
+punktami pośrednimi. Warunek Cauchy'ego
+daje zbieżność $R(f,P_m)\to I\in E$
+dzięki zupełności $E$.
+Dla $\varepsilon>0$ bierzemy $\delta$
+z warunku Cauchy'ego dla $\varepsilon/2$.
+Wybieramy $m$ z $|P_m|<\delta$ i
+$\|R(f,P_m)-I\|<\varepsilon/2$.
+Wtedy dla każdego $P$ o $|P|<\delta$
+\[
+ \|R(f,P)-I\|
+ \le\|R(f,P)-R(f,P_m)\|+\|R(f,P_m)-I\|
+ <\varepsilon.
+\]
+To jest definicja całkowalności.
+\end{proof}
+
+\begin{twierdzenie}[Ograniczenie i addytywność]
+\label{ma2:thm:primitive-subinterval}
+Jeżeli $f:[a,b]\to E$ jest całkowalna w sensie
+Riemanna, to jej ograniczenie do każdego
+podprzedziału domkniętego jest całkowalne.
+Dla $a\le u\le v\le w\le b$ zachodzi
+\[
+ \int_u^w f(t)\,\mathrm dt
+ =\int_u^v f(t)\,\mathrm dt+\int_v^w f(t)\,\mathrm dt.
+\]
+Jeżeli $a\le u\le v\le b$, to
+\[
+ \left\|\int_u^v f(t)\,\mathrm dt\right\|
+ \le(v-u)\sup_{t\in[u,v]}\|f(t)\|.
+\]
+Całce na przedziale jednopunktowym przypisujemy
+wartość zero.
+\end{twierdzenie}
+\begin{proof}
+Niech $a\le u<v\le b$ i $\varepsilon>0$.
+Wybierzmy $\delta>0$ z kryterium Cauchy'ego
+dla $f$ i $\varepsilon$. Dla dowolnych
+dwóch podziałów z punktami pośrednimi $P,T$
+przedziału $[u,v]$ o średnicach mniejszych
+od $\delta$ uzupełnijmy oba tymi samymi
+podziałami z punktami pośrednimi na $[a,u]$
+i $[v,b]$ (pomijamy przedziały jednopunktowe).
+Możemy wybrać te dodatkowe podziały o
+średnicach mniejszych od $\delta$, na przykład
+dzieląc każdy z przedziałów na dostatecznie
+wiele równych części. Złożone podziały
+$P',T'$ całego $[a,b]$ też mają średnice
+mniejsze od $\delta$. Wkłady z przedziałów
+zewnętrznych znoszą się w różnicy sum, więc
+\[
+ \|R(f|_{[u,v]},P)-R(f|_{[u,v]},T)\|
+ =\|R(f,P')-R(f,T')\|<\varepsilon.
+\]
+Lemat \ref{ma2:lem:primitive-cauchy} daje
+całkowalność ograniczenia.
+
+Dla $u<v<w$ wybieramy ciągi podziałów
+$[u,v]$ i $[v,w]$ o średnicach dążących do zera.
+Ich złożenie jest podziałem $[u,w]$
+o średnicy równej maksimum obu średnic.
+Suma Riemanna dla złożenia jest dokładnie
+sumą dwóch sum lokalnych. Przejście do granicy
+daje addytywność. Gdy $u=v$ lub $v=w$,
+równość wynika z konwencji całki zerowej.
+
+Dla dowolnego podziału $[u,v]$ nierówność
+trójkąta daje
+\[
+ \|R(f,P)\|\le
+ \sum_j(t_j-t_{j-1})\|f(\xi_j)\|
+ \le(v-u)\sup_{t\in[u,v]}\|f(t)\|.
+\]
+Przechodzimy do granicy, korzystając
+z ciągłości normy.
+\end{proof}
+
+Dla $u>v$ definiujemy całkę z odwróconymi granicami
+jako $-\int_v^u f(t)\,\mathrm dt$.
+Dzięki udowodnionej addytywności dla uporządkowanych
+punktów równość
+$\int_u^w f=\int_u^v f+\int_v^w f$
+zachodzi przy dowolnej kolejności końców:
+wystarczy zapisać każdą całkę jako różnicę
+dwóch całek z ustalonego lewego końca $a$.
+Liniowość wynika z liniowości sum dla wspólnych
+podziałów i przejścia do granicy.
+Dla funkcji stałej o wartości $v$ każda suma
+Riemanna na $[u,v_1]$ jest równa $(v_1-u)v$,
+a więc taka jest również jej całka.
+Jeżeli $L:E\to F$ jest ciągłym odwzorowaniem
+liniowym między przestrzeniami Banacha
+nad tym samym ciałem (lub rzeczywiście
+liniowym po ograniczeniu skalarów do $\R$),
+to
+\[
+ \int_a^b L(f(t))\,\mathrm dt
+ =L\left(\int_a^b f(t)\,\mathrm dt\right).
+\]
+Istotnie, $R(L\circ f,P)=L(R(f,P))$ dla każdego
+podziału, a ciągłość $L$ pozwala przejść do granicy.
+To rozumowanie wykazuje zarazem całkowalność
+$L\circ f$.
+
+\section{Całka jako funkcja górnej granicy}
+
+\begin{twierdzenie}[Podstawowe twierdzenie rachunku całkowego]
+\label{ma2:thm:primitive-ftc}
+Niech $f:[a,b]\to E$ będzie całkowalna
+w sensie Riemanna, $t_0\in[a,b]$ i $v\in E$.
+Funkcja
+\[
+ F(x)=v+\int_{t_0}^x f(t)\,\mathrm dt
+\]
+jest Lipschitzowska na $[a,b]$ ze stałą
+$\sup_{t\in[a,b]}\|f(t)\|$.
+W każdym punkcie ciągłości $f$ we wnętrzu
+przedziału zachodzi $F'(x)=f(x)$.
+Na końcach analogiczna teza dotyczy pochodnych
+jednostronnych przy odpowiedniej ciągłości $f$.
+\end{twierdzenie}
+\begin{proof}
+Z addytywności i oszacowania w twierdzeniu
+\ref{ma2:thm:primitive-subinterval} mamy
+\[
+ \|F(y)-F(x)\|\le |y-x|\sup_{t\in[a,b]}\|f(t)\|.
+\]
+Niech $x$ będzie punktem ciągłości $f$.
+Dla $h\ne0$, $x+h\in[a,b]$, odejmujemy
+całkę funkcji stałej $f(x)$, uzyskując
+\[
+ \frac{F(x+h)-F(x)}h-f(x)
+ =\frac1h\int_x^{x+h}(f(t)-f(x))\,\mathrm dt.
+\]
+Norma prawej strony nie przekracza
+\[
+ \sup_{\substack{t\in[a,b]\\|t-x|\le |h|}}
+ \|f(t)-f(x)\|.
+\]
+Oszacowanie jest poprawne również dla $h<0$,
+ponieważ odwrócenie granic zmienia znak,
+a dzielenie przez $h$ zmienia normę przez
+czynnik $1/|h|$. Dla dowolnego $\varepsilon>0$
+ciągłość $f$ w $x$ daje $\delta>0$ tak, że
+$\|f(t)-f(x)\|<\varepsilon/2$ dla
+$|t-x|<\delta$. Jeżeli $|h|<\delta$,
+supremum nie przekracza $\varepsilon/2$.
+To dowodzi tezy, również przy dopuszczalnych
+przyrostach jednostronnych na końcach.
+\end{proof}
+
+\begin{wniosek}
+\label{ma2:cor:primitive-exists}
+Każda ciągła funkcja $f:J\to E$ ma funkcję
+pierwotną klasy $C^1$, a dla danych
+$t_0\in J$, $v\in E$ jedyną taką funkcją
+spełniającą $F(t_0)=v$ jest
+\[
+ F(x)=v+\int_{t_0}^x f(t)\,\mathrm dt.
+\]
+\end{wniosek}
+\begin{proof}
+Każdy domknięty odcinek o końcach w $J$
+jest zawarty w $J$. Ograniczenie $f$
+do niego jest ciągłe, więc całka istnieje
+w przestrzeni Banacha.
+Dla dowolnego $x\in J$ wybieramy domknięty
+odcinek w $J$ zawierający $x$ we wnętrzu
+oraz $t_0$. Poprzednie twierdzenie daje
+$F'(x)=f(x)$. Ciągłość pochodnej wynika
+z ciągłości $f$, a jednoznaczność ze
+stwierdzenia \ref{ma2:prop:primitive-uniqueness}.
+\end{proof}
+
+\begin{przyklad}[Funkcja całkowalna bez funkcji pierwotnej]
+\label{ma2:ex:primitive-jump}
+Niech $e\ne0$ w $E$. Dla
+\[
+ f(t)=
+ \begin{cases}0,&t<0,\\ e,&t\ge0,\end{cases}
+ \quad -1\le t\le1,
+\]
+funkcja $f$ jest całkowalna: jest iloczynem
+funkcji skalarnej o jednej nieciągłości
+(\atlasref{AM1-29::ma1:thm:riemann-finite-discontinuities}{kryterium całkowalności})
+i ustalonego wektora (sumy Riemanna są
+iloczynami odpowiednich sum skalarnych i $e$).
+Jej całka od zera wynosi $F(t)=\max(t,0)e$;
+wartość w pojedynczym punkcie nie wpływa na
+całkę skalarną
+(\atlasref{AM1-29::ma1:cor:riemann-finite-changes}{zmiany skończone}).
+W zerze funkcja $F$ ma różne pochodne
+jednostronne, odpowiednio $0$ oraz $e$.
+Co więcej, $f$ nie ma funkcji pierwotnej
+na $(-1,1)$: hipotetyczna funkcja $G$
+byłaby stała na $(-1,0)$ i równa $te+c$
+na $(0,1)$, z jednoznaczności funkcji pierwotnych.
+Ciągłość w zerze wymusza tę samą stałą po obu
+stronach, a różniczkowalność w zerze jest
+wtedy niemożliwa.
+\end{przyklad}
+
+\section{Wzór Newtona--Leibniza dla całkowalnej pochodnej}
+
+\begin{twierdzenie}
+\label{ma2:thm:primitive-newton-leibniz}
+Niech $a<b$, $G:[a,b]\to E$ będzie ciągła
+na $[a,b]$ i różniczkowalna w $(a,b)$,
+a $f:[a,b]\to E$ całkowalna w sensie Riemanna
+i taka, że $G'(t)=f(t)$ dla $a<t<b$.
+Wówczas
+\[
+ G(b)-G(a)=\int_a^b f(t)\,\mathrm dt.
+\]
+Nie zakładamy ciągłości pochodnej ani jej
+istnienia na końcach przedziału.
+\end{twierdzenie}
+\begin{proof}
+Traktujemy $E$ jako rzeczywistą przestrzeń
+Banacha, także gdy jest zespolona. Niech
+$\ell:E\to\R$ będzie dowolnym ciągłym
+rzeczywistym funkcjonałem liniowym.
+Funkcja $\ell\circ G$ jest ciągła na $[a,b]$,
+różniczkowalna w $(a,b)$, a
+$(\ell\circ G)'(t)=\ell(f(t))$, ponieważ
+$\ell$ jest ciągła i liniowa.
+Funkcja $\ell\circ f$ jest całkowalna,
+co wynika z przemienności całki z ciągłym
+operatorem liniowym, wykazanej po twierdzeniu
+\ref{ma2:thm:primitive-subinterval}.
+Skalarny wzór Newtona--Leibniza
+(\atlasref{AM1-29::ma1:thm:newton-leibniz}{AM I, rozdział 29})
+daje
+\[
+ \ell(G(b)-G(a))
+ =\int_a^b\ell(f(t))\,\mathrm dt
+ =\ell\left(\int_a^b f(t)\,\mathrm dt\right).
+\]
+Gdyby różnica obu wektorów była niezerowa,
+twierdzenie Hahna--Banacha dawałoby rzeczywisty
+funkcjonał liniowy ciągły o normie $1$,
+przyjmujący na tej różnicy wartość równą
+jej normie (por. dowód lematu
+\ref{ma2:lem:vector-increment}).
+Otrzymalibyśmy sprzeczność, więc oba wektory
+są równe.
+\end{proof}
+
+Powyższy dowód nie wymaga wektorowego
+odpowiednika równości Lagrange'a w jednym
+punkcie pośrednim. Taka równość na ogół
+nie zachodzi (rozdział \ref{ma2:ch:mean-value}).
+Jeżeli $G$ jest klasy $C^1$ na $[a,b]$
+z ciągłymi pochodnymi jednostronnymi na
+końcach, to jej pochodna jest całkowalna
+i twierdzenie obejmuje lemat
+\ref{ma2:lem:ftc-banach}.
+
+\begin{przyklad}[Nieciągła pochodna całkowalna]
+\label{ma2:ex:primitive-discontinuous-derivative}
+Niech $e\in E$ będzie niezerowy i
+\[
+ G(t)=
+ \begin{cases}
+ t^2\sin(1/t)e,&t\ne0,\\
+ 0,&t=0.
+ \end{cases}
+\]
+Funkcja jest różniczkowalna na $\R$, a
+\[
+ f(t)=G'(t)=
+ \begin{cases}
+ (2t\sin(1/t)-\cos(1/t))e,&t\ne0,\\
+ 0,&t=0.
+ \end{cases}
+\]
+W zerze iloraz różnicowy to
+$t\sin(1/t)e$, którego norma nie przekracza
+$|t|\|e\|$, więc pochodna istnieje i jest zerowa.
+Pochodna nie jest ciągła w zerze, bo dla
+$t_k=1/(2\pi k)$ mamy $f(t_k)=-e$.
+Na $[-1,1]$ skalarna funkcja mnożąca $e$
+jest ograniczona przez $3$ w module,
+gdyż $|2t\sin(1/t)-\cos(1/t)|\le2|t|+1$.
+Jest ciągła poza zerem, a zatem całkowalna
+w sensie Riemanna
+(\atlasref{AM1-29::ma1:thm:riemann-finite-discontinuities}{kryterium skończonej liczby nieciągłości}).
+Jej iloczyn przez $e$ jest całkowalny
+wektorowo przez liniowość i ciągłość
+odwzorowania $r\mapsto re$.
+Twierdzenie \ref{ma2:thm:primitive-newton-leibniz}
+daje
+\[
+ \int_{-1}^1 f(t)\,\mathrm dt
+ =G(1)-G(-1)=2\sin(1)e.
+\]
+Przykład pokazuje, że ciągłość funkcji
+podcałkowej jest warunkiem dostatecznym,
+ale nie koniecznym istnienia funkcji pierwotnej.
+\end{przyklad}
+
+\section{Operator całkowania i operator różniczkowania}
+
+Dla $a<b$ oznaczmy $L=b-a$.
+Przestrzeń $C([a,b],E)$ wyposażamy w normę
+$\|f\|_\infty=\sup_{t\in[a,b]}\|f(t)\|$.
+Na przestrzeni $C^1([a,b],E)$ przyjmujemy
+normę
+\[
+ \|F\|_{C^1}=\|F\|_\infty+\|F'\|_\infty,
+\]
+gdzie pochodne na końcach rozumiemy
+jednostronnie, a $F'$ jest ciągła na $[a,b]$.
+Niech
+\[
+ C^1_a([a,b],E)=\{F\in C^1([a,b],E):F(a)=0\}.
+\]
+
+\begin{twierdzenie}
+\label{ma2:thm:primitive-operator}
+Odwzorowanie
+\[
+ V:C([a,b],E)\to C^1_a([a,b],E),
+ \qquad (Vf)(x)=\int_a^x f(t)\,\mathrm dt,
+\]
+jest ograniczonym izomorfizmem liniowym
+przestrzeni Banacha, którego odwrotnością
+jest operator różniczkowania
+$D:C^1_a([a,b],E)\to C([a,b],E)$,
+$DF=F'$. Jeżeli $E\ne\{0\}$, to
+\[
+ \|V\|_{C\to C^1}=L+1,\qquad
+ \|V\|_{C\to C}=L,\qquad
+ \|D\|_{C^1_a\to C}=1.
+\]
+W drugiej normie traktujemy $Vf$ jako
+element $C([a,b],E)$.
+\end{twierdzenie}
+\begin{proof}
+Przestrzeń $C([a,b],E)$ jest zupełna:
+ciąg Cauchy'ego w normie supremum ma
+granicę punktową w $E$ przez zupełność;
+przejście do granicy w oszacowaniu
+Cauchy'ego daje zbieżność jednostajną,
+a granica jednostajna funkcji ciągłych
+jest ciągła.
+
+Jeżeli $(F_m)$ jest ciągiem Cauchy'ego
+w normie $C^1$, to istnieją ciągłe $F,f$
+takie, że $F_m\to F$ oraz $F'_m\to f$
+jednostajnie. Z wzoru Newtona--Leibniza
+\[
+ F_m(x)=F_m(a)+\int_a^xF'_m(t)\,\mathrm dt.
+\]
+Z twierdzenia \ref{ma2:thm:primitive-subinterval}
+norma różnicy całek nie przekracza
+$L\|F'_m-f\|_\infty$, więc przechodząc do
+granicy otrzymujemy
+$F(x)=F(a)+\int_a^x f(t)\,\mathrm dt$.
+Twierdzenie \ref{ma2:thm:primitive-ftc}
+daje $F'=f$ z ciągłości $f$.
+Tym samym $F_m\to F$ w normie $C^1$,
+co dowodzi zupełności.
+Warunek $F(a)=0$ jest zachowany przy
+zbieżności jednostajnej, zatem $C^1_a$
+jest domkniętą podprzestrzenią.
+
+Liniowość $V$ wynika z liniowości całki.
+Ponieważ $(Vf)'=f$ i $(Vf)(a)=0$,
+mamy $DV=\operatorname{id}$.
+Dla $F\in C^1_a$ wzór Newtona--Leibniza
+daje $VDF=F$, więc operatory są wzajemnie
+odwrotne.
+Oszacowania
+\[
+ \|Vf\|_\infty\le L\|f\|_\infty,\qquad
+ \|Vf\|_{C^1}\le(L+1)\|f\|_\infty,\qquad
+ \|DF\|_\infty\le\|F\|_{C^1}
+\]
+dowodzą ciągłości obu operatorów.
+Jeśli $E\ne\{0\}$, wybieramy $e\in E$
+o normie $1$ i $f(t)=e$.
+Wtedy $(Vf)(x)=(x-a)e$, a obie górne
+granice norm $V$ są osiągnięte.
+Aby wykazać równość $\|D\|=1$, dla
+$n\ge1$ połóżmy $F_n(x)=n^{-1}\sin(n(x-a))e$.
+Mamy $F_n(a)=0$, $\|F_n\|_\infty\le1/n$
+oraz $F'_n(x)=\cos(n(x-a))e$.
+Ponieważ $F'_n(a)=e$, zachodzi
+$\|F'_n\|_\infty=1$. Zatem
+\[
+ 1\ge\|D\|\ge
+ \frac{\|DF_n\|_\infty}{\|F_n\|_{C^1}}
+ \ge\frac{1}{1+1/n}\longrightarrow1.
+\]
+To kończy dowód. Dla $E=\{0\}$ wszystkie
+trzy normy operatorowe są zerowe.
+\end{proof}
+
+Operator
+\[
+ C^1([a,b],E)\to E\times C([a,b],E),
+ \qquad F\mapsto(F(a),F')
+\]
+jest również izomorfizmem przestrzeni
+Banacha, z odwrotnością
+$(v,f)\mapsto v+Vf$.
+Dla normy sumy na produkcie ograniczoność
+pierwszego operatora wynika z
+$\|F(a)\|+\|F'\|_\infty\le\|F\|_{C^1}$,
+a drugiego z
+$\|v+Vf\|_{C^1}\le\|v\|+(L+1)\|f\|_\infty$.
+Opis ten oddziela stałą całkowania od pochodnej.
+
+\section{Całkowanie przez części}
+
+\begin{twierdzenie}
+\label{ma2:thm:primitive-parts}
+Niech $E_1,E_2,F$ będą przestrzeniami Banacha
+nad tym samym ciałem, a
+$B:E_1\times E_2\to F$ ciągłym odwzorowaniem
+dwuliniowym. Jeżeli $u:[a,b]\to E_1$
+oraz $v:[a,b]\to E_2$ są klasy $C^1$,
+to
+\[
+ \begin{aligned}
+ \int_a^b B(u(t),v'(t))\,\mathrm dt
+ ={}&B(u(b),v(b))-B(u(a),v(a))\\
+ &-\int_a^b B(u'(t),v(t))\,\mathrm dt .
+ \end{aligned}
+\]
+\end{twierdzenie}
+\begin{proof}
+Ciągłość $B$ w $(0,0)$ daje $\delta>0$
+takie, że $\|B(x,y)\|\le1$ dla
+$\|x\|,\|y\|<\delta$. Dla niezerowych
+$x,y$ stosujemy to oszacowanie do
+$\delta x/(2\|x\|)$ i $\delta y/(2\|y\|)$.
+Dwuliniowość daje
+$\|B(x,y)\|\le4\delta^{-2}\|x\|\|y\|$.
+Jeśli któryś argument jest zerem, teza
+wynika z dwuliniowości. Otrzymujemy
+więc oszacowanie wymagane w twierdzeniu
+\ref{ma2:thm:frechet-bilinear}.
+W przypadku zespolonym rozpatrujemy je
+również jako odwzorowanie rzeczywiście
+dwuliniowe. Z reguły różniczkowania
+odwzorowań dwuliniowych
+\ref{ma2:thm:frechet-bilinear} wynika
+\[
+ \frac{\mathrm d}{\mathrm dt}B(u(t),v(t))
+ =B(u'(t),v(t))+B(u(t),v'(t)).
+\]
+Oba składniki prawej strony są ciągłe,
+więc całkowalne w przestrzeni Banacha $F$.
+Stosujemy twierdzenie
+\ref{ma2:thm:primitive-newton-leibniz}
+i liniowość całki, po czym przenosimy
+pierwszy składnik na drugą stronę.
+\end{proof}
+
+Wybierając $B(r,y)=ry$ dla skalarnej
+funkcji $u$ (o wartościach w ciele skalarów
+$E$ lub w $\R$ po ograniczeniu skalarów)
+i wektorowej $v$, otrzymujemy
+zwykłą regułę całkowania przez części
+dla funkcji wektorowej. W algebrze Banacha
+można przyjąć $B(x,y)=xy$; kolejności
+czynników nie wolno wówczas zamieniać.
+
+\begin{przyklad}
+\label{ma2:ex:primitive-parts}
+Niech $u_0,u_1\in E$, $f(t)=u_0+tu_1$
+i $g(t)=-\cos(t)$, więc $g'(t)=\sin(t)$.
+Z całkowania przez części dla mnożenia
+skalarnego, przy $f'(t)=u_1$, otrzymujemy
+\[
+ \begin{aligned}
+ \int_0^\pi \sin(t)f(t)\,\mathrm dt
+ &=[-\cos(t)f(t)]_0^\pi
+   +\int_0^\pi\cos(t)u_1\,\mathrm dt\\
+ &=f(\pi)+f(0)+[\sin(t)]_0^\pi u_1
+ =2u_0+\pi u_1.
+ \end{aligned}
+\]
+Niezależnie, rozdzielając składniki
+i stosując skalarne całkowanie przez części, mamy
+\[
+ \begin{aligned}
+ \int_0^\pi \sin(t) f(t)\,\mathrm dt
+ &=2u_0+\left(\int_0^\pi t\sin(t)\,\mathrm dt\right)u_1\\
+ &=2u_0+\pi u_1,
+ \end{aligned}
+\]
+gdyż
+$\int_0^\pi t\sin(t)\,\mathrm dt
+=[-t\cos(t)+\sin(t)]_0^\pi=\pi$.
+Wyciąganie ustalonych wektorów przed
+całkę wynika z przemienności całki z
+odwzorowaniem liniowym $r\mapsto ru_i$.
+\end{przyklad}
+
+\section{Całkowanie przez podstawienie}
+
+\begin{twierdzenie}
+\label{ma2:thm:primitive-substitution}
+Niech $J\subseteq\R$ będzie otwartym
+przedziałem, $f:J\to E$ ciągła,
+a $\varphi:[a,b]\to J$ klasy $C^1$.
+Wtedy
+\[
+ \int_a^b f(\varphi(t))\varphi'(t)\,\mathrm dt
+ =\int_{\varphi(a)}^{\varphi(b)}f(s)\,\mathrm ds.
+\]
+Nie wymaga się monotoniczności $\varphi$.
+\end{twierdzenie}
+\begin{proof}
+Z wniosku \ref{ma2:cor:primitive-exists}
+istnieje funkcja pierwotna $F:J\to E$
+klasy $C^1$ o $F'=f$.
+Reguła łańcuchowa
+\ref{ma2:thm:frechet-chain} (dla
+zespolonego $E$ traktowanego jako
+rzeczywista przestrzeń Banacha) daje
+$(F\circ\varphi)'(t)=f(\varphi(t))\varphi'(t)$.
+Funkcja po prawej jest ciągła, więc
+całkowalna. Z twierdzenia
+\ref{ma2:thm:primitive-newton-leibniz}
+jej całka wynosi $F(\varphi(b))-F(\varphi(a))$.
+Ponowne zastosowanie tego twierdzenia
+do $F$ na przedziale między $\varphi(a)$
+i $\varphi(b)$, z uwzględnieniem orientacji,
+daje prawą stronę żądanej równości.
+Jeżeli końce są równe, obie całki są zerowe.
+\end{proof}
+
+\begin{przyklad}[Podstawienie niemonotoniczne]
+\label{ma2:ex:primitive-nonmonotone}
+Niech $e\in E$ i $f(s)=se$, a
+$\varphi(t)=\sin(t)$ dla $t\in[0,\pi]$.
+Funkcja $\varphi$ nie jest monotoniczna,
+ale poprzednie twierdzenie daje
+\[
+ \int_0^\pi \sin(t)\cos(t)e\,\mathrm dt
+ =\int_0^0 se\,\mathrm ds=0.
+\]
+Bezpośrednio funkcją pierwotną jest
+$\sin^2(t)e/2$. Przyrost na $[0,\pi/2]$
+wynosi $e/2$, a na $[\pi/2,\pi]$ wynosi
+$-e/2$, więc oba wkłady się znoszą.
+Nie należy zastępować $\varphi'$ przez
+$|\varphi'|$ w tym wzorze, gdyż całka
+jest zorientowana. Dla $e\ne0$ taka
+zamiana dałaby
+$\int_0^\pi\sin(t)|\cos(t)|e\,\mathrm dt=e$,
+ponieważ oba wkłady miałyby wtedy
+ten sam znak i wartość $e/2$.
+Na rysunku \ref{ma2:fig:primitive-substitution}
+zacieniowano oba obszary o równych polach.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=11cm,height=5.8cm,xmin=0,xmax=3.141593,
+ymin=-0.65,ymax=1.15,axis lines=middle,
+xlabel=$t$,ylabel={},xtick={0,1.570796,3.141593},
+xticklabels={$0$,$\pi/2$,$\pi$},
+legend style={at={(0.5,-0.18)},anchor=north,legend columns=2,/tikz/every even column/.append style={column sep=0.4cm}},
+samples=121,domain=0:3.141593]
+\addplot[forget plot,fill=blue!20,draw=none,domain=0:1.570796]
+{sin(deg(x))*cos(deg(x))}\closedcycle;
+\addplot[forget plot,fill=orange!25,draw=none,domain=1.570796:3.141593]
+{sin(deg(x))*cos(deg(x))}\closedcycle;
+\addplot[blue!75!black,thick]{sin(deg(x))};
+\addlegendentry{$\varphi(t)=\sin t$}
+\addplot[red!75!black,thick]{sin(deg(x))*cos(deg(x))};
+\addlegendentry{$\sin t\cos t$}
+\end{axis}
+\end{tikzpicture}
+\caption{Podstawienie niemonotoniczne z przykładu
+\ref{ma2:ex:primitive-nonmonotone}. Dodatni i ujemny
+wkład skalarny mają równe moduły.}
+\label{ma2:fig:primitive-substitution}
+\end{figure}
+
+\section{Rozróżnienie zakresów twierdzeń}
+
+Wynik o pochodnej całki z ruchomą granicą
+dotyczy punktów ciągłości funkcji podcałkowej,
+ale nie mówi, że w pozostałych punktach
+pochodna nie może istnieć. Przykład
+\ref{ma2:ex:primitive-discontinuous-derivative}
+pokazuje, że może istnieć i być równa
+funkcji podcałkowej również w punkcie
+nieciągłości. Natomiast przykład
+\ref{ma2:ex:primitive-jump} pokazuje, że
+całkowalność Riemanna nie wystarcza do
+istnienia funkcji pierwotnej na całym
+przedziale.
+
+Wzór Newtona--Leibniza w postaci twierdzenia
+\ref{ma2:thm:primitive-newton-leibniz}
+wymaga istnienia funkcji pierwotnej oraz
+całkowalności jej pochodnej; sama różniczkowalność
+$G$ nie zapewnia tej całkowalności.
+
+\begin{przyklad}[Wartość w punkcie nieciągłości i brak całkowalności pochodnej]
+\label{ma2:ex:primitive-scope}
+Niech $e\ne0$ w $E$. Funkcja
+$f(t)=\chi_{\{0\}}(t)e$ na $[-1,1]$
+jest całkowalna w sensie Riemanna
+i ma całkę zero na każdym podprzedziale,
+ponieważ skalarna funkcja charakterystyczna
+punktu ma całkę zero
+(\atlasref{AM1-29::ma1:cor:riemann-finite-changes}{zmiany skończone}).
+Funkcja $F(x)=\int_0^x f(t)\,\mathrm dt$
+jest zatem identycznie zerowa i
+$F'(0)=0\ne f(0)$. Istnienie pochodnej
+całki w punkcie nieciągłości nie zapewnia
+więc równości z funkcją podcałkową.
+
+Z kolei niech $G(0)=0$, a dla $t\ne0$
+niech $G(t)=t^2\sin(1/t^2)e$.
+Iloraz różnicowy w zerze ma normę
+nie większą niż $|t|\|e\|$, więc $G'(0)=0$.
+Dla $t\ne0$ reguła iloczynu i reguła
+łańcuchowa dają
+\[
+ G'(t)=\bigl(2t\sin(1/t^2)
+             -2t^{-1}\cos(1/t^2)\bigr)e.
+\]
+Dla $t_n=(2\pi n)^{-1/2}$ mamy
+$G'(t_n)=-2t_n^{-1}e$, zatem norma
+pochodnej jest nieograniczona na $[-1,1]$.
+Nie jest ona całkowalna w sensie Riemanna
+(por. ograniczoność funkcji całkowalnych
+w rozdziale \ref{ma2:ch:limits-calculus}).
+\end{przyklad}
+
+Ogólniejsze całki funkcji wektorowych znajdują się
+w \atlasref{FA-15B::sec:integral-vector15b}{analizie funkcjonalnej}.
+Przechodzimy teraz do całki Lebesgue'a w przestrzeni
+euklidesowej, całek na zbiorach oraz zastosowań
+geometrycznych.

@@ -1,0 +1,1257 @@
+\section{\texorpdfstring{Kategorie DG i kategorie $A_\infty$}{Kategorie DG i kategorie A-infty}}\label{cat:sec:dg-a-infty}
+
+W kategorii homotopijnej kompleksów (rozdział~\ref{cat:sec:triangulated-derived}) zachowujemy jedynie klasy homotopii morfizmów kompleksów. Możemy zachować znacznie więcej informacji: wszystkie morfizmy jednorodne, ich różniczkę oraz składanie zgodne z regułą Leibniza. Tak otrzymujemy kategorię różniczkową z gradacją, w skrócie kategorię DG (ang.\ differential graded category). Jest to szczególny przypadek kategorii wzbogaconej (definicja~\ref{cat:def:enriched-category}). Kategorie $A_\infty$ pozwalają dodatkowo zastąpić ścisłą łączność przez spójny układ homotopii wyższych rzędów. W dalszym ciągu używamy gradacji kohomologicznej, czyli różniczek stopnia $+1$.
+
+\subsection{Kompleksy i reguła znaków Koszula}
+
+Niech $k$ będzie przemiennym pierścieniem z jedynką. Przez kompleks rozumiemy kompleks kohomologiczny $k$-modułów, a przez $|x|$ stopień elementu jednorodnego $x$.
+
+\begin{definicja}[Iloczyn tensorowy kompleksów]\label{cat:def:dg-tensor-complex}
+Dla kompleksów $V,W$ definiujemy
+\[
+ (V\otimes_k W)^n=\bigoplus_{p+q=n}V^p\otimes_k W^q,
+ \qquad
+ d(v\otimes w)=d_Vv\otimes w+(-1)^{|v|}v\otimes d_Ww.
+\]
+Jednostką jest kompleks $k$ skoncentrowany w stopniu zerowym. Symetria jest zadana wzorem
+\[
+ \tau_{V,W}(v\otimes w)=(-1)^{|v||w|}w\otimes v.
+\]
+\end{definicja}
+
+\begin{stwierdzenie}[Symetryczna struktura monoidalna kompleksów]\label{cat:prop:dg-tensor-monoidal}
+Powyższe konstrukcje wraz z kanonicznymi izomorfizmami łączności i jednostki wyznaczają symetryczną kategorię monoidalną $\mathrm{Ch}(k)$ kompleksów i morfizmów kompleksów.
+\end{stwierdzenie}
+\begin{proof}
+Dla $|v|=p$ otrzymujemy
+\[
+\begin{aligned}
+ d^2(v\otimes w)
+ &=d_V^2v\otimes w+
+ ((-1)^{p+1}+(-1)^p)d_Vv\otimes d_Ww
+ +v\otimes d_W^2w=0.
+\end{aligned}
+\]
+Różniczka jest dobrze określona na iloczynach tensorowych modułów, ponieważ oba składniki są $k$-dwuliniowe w ustalonych stopniach. Element sumy prostej ma skończony nośnik, zatem różniczka jest określona również dla kompleksów nieograniczonych.
+
+Dla jednorodnych $v,w,z$ różniczki obu nawiasowań iloczynu tensorowego trzech kompleksów mają po kanonicznym utożsamieniu postać
+\[
+ d_Vv\otimes w\otimes z+
+ (-1)^{|v|}v\otimes d_Ww\otimes z+
+ (-1)^{|v|+|w|}v\otimes w\otimes d_Zz.
+\]
+Stąd izomorfizm łączności jest morfizmem kompleksów. Podobnie izomorfizmy jednostki zachowują różniczki. Dla $|w|=q$ mamy
+\[
+\begin{aligned}
+ d\tau(v\otimes w)
+ &=(-1)^{pq}d_Ww\otimes v+
+   (-1)^{pq+q}w\otimes d_Vv,\\
+ \tau d(v\otimes w)
+ &=(-1)^{(p+1)q}w\otimes d_Vv+
+   (-1)^{p+p(q+1)}d_Ww\otimes v.
+\end{aligned}
+\]
+Współczynniki odpowiednich składników są równe, więc $\tau$ jest morfizmem kompleksów. Złożenie dwóch symetrii mnoży tensor przez $(-1)^{2pq}=1$. W obu diagramach sześciokątnych znaki są zgodne, ponieważ $p(q+r)=pq+pr$ i $(p+q)r=pr+qr$. Pięciokąt łączności oraz trójkąt jednostki są przemienne: na prostych tensorach wszystkie drogi jedynie zmieniają nawiasowanie lub usuwają czynnik jednostkowy. Proste tensory generują odpowiednie moduły, więc równości zachodzą wszędzie.
+\end{proof}
+
+Dla jednorodnych odwzorowań stopni $|f|,|g|$ między modułami z gradacją stosujemy regułę Koszula
+\begin{equation}\label{cat:eq:dg-koszul-tensor}
+ (f\otimes g)(v\otimes w)=(-1)^{|g||v|}f(v)\otimes g(w).
+\end{equation}
+Zastosowanie wzoru dwa razy daje
+\[
+ (f'\otimes g')(f\otimes g)
+ =(-1)^{|g'||f|}(f'f\otimes g'g),
+\]
+ponieważ całkowity wykładnik po lewej wynosi
+$|g||v|+|g'|(|v|+|f|)$, a po prawej
+$|g'||f|+(|g|+|g'|)|v|$.
+
+\subsection{Wewnętrzny kompleks morfizmów}
+
+\begin{definicja}[Kompleks morfizmów]\label{cat:def:dg-hom-complex}
+Dla kompleksów $V,W$ definiujemy
+\[
+ \underline{\Hom}_k(V,W)^n=
+ \prod_{p\in\mathbb Z}\Hom_k(V^p,W^{p+n}).
+\]
+Dla morfizmu jednorodnego $f$ stopnia $n$ różniczka jest dana przez
+\begin{equation}\label{cat:eq:dg-hom-differential}
+ Df=d_W f-(-1)^n f d_V.
+\end{equation}
+\end{definicja}
+
+W definicji używamy iloczynu, a nie sumy prostej: morfizm jednorodny może mieć niezerowe składowe w nieskończenie wielu stopniach. Nie zakładamy, że kompleksy są ograniczone.
+
+\begin{stwierdzenie}[Różniczka morfizmów i składanie]\label{cat:prop:dg-hom-leibniz}
+Kompleks morfizmów ma $D^2=0$. Dla jednorodnych $f:U\to V$ i $g:V\to W$ zachodzi
+\[
+ D(gf)=(Dg)f+(-1)^{|g|}g(Df).
+\]
+Identyczności są cyklami stopnia zerowego.
+\end{stwierdzenie}
+\begin{proof}
+Dla $|f|=n$ obliczamy
+\[
+\begin{aligned}
+ D^2f
+ &=d_W(d_W f-(-1)^nf d_V)
+    -(-1)^{n+1}(d_W f-(-1)^nf d_V)d_V\\
+ &=d_W^2 f-
+   \bigl((-1)^n+(-1)^{n+1}\bigr)d_W f d_V-fd_V^2=0.
+\end{aligned}
+\]
+Jeżeli $|g|=m$, to
+\[
+\begin{aligned}
+ (Dg)f+(-1)^m g(Df)
+ &=d_Wgf-(-1)^m gd_Vf
+   +(-1)^m gd_Vf-(-1)^{m+n}gfd_U\\
+ &=D(gf).
+\end{aligned}
+\]
+Wreszcie $D(\id_V)=d_V-d_V=0$.
+\end{proof}
+
+\begin{twierdzenie}[Sprzężenie tensor--Hom]\label{cat:thm:dg-tensor-hom}
+Istnieje naturalny izomorfizm kompleksów
+\[
+ \underline{\Hom}_k(U\otimes_k V,W)
+ \cong
+ \underline{\Hom}_k(U,\underline{\Hom}_k(V,W)).
+\]
+W szczególności $\mathrm{Ch}(k)$ jest symetryczną kategorią monoidalnie domkniętą.
+\end{twierdzenie}
+\begin{proof}
+Morfizmowi jednorodnemu $F$ stopnia $n$ przypisujemy $\Phi(F)$ przez
+$\Phi(F)(u)(v)=F(u\otimes v)$. Dla $|u|=p$ odwzorowanie $\Phi(F)(u)$ ma stopień $n+p$. Odwrotnie, dla jednorodnego $G:U\to\underline{\Hom}_k(V,W)$ stopnia $n$ wzór $u\otimes v\mapsto G(u)(v)$ jest dwuliniowy w poszczególnych stopniach, więc określa morfizm $U\otimes_k V\to W$ stopnia $n$. Obie operacje są wzajemnie odwrotne na prostych tensorach, które generują moduły.
+
+Dla jednorodnych $u,v$ mamy
+\[
+\begin{aligned}
+ (D\Phi(F))(u)(v)
+ &=d_W F(u\otimes v)
+ -(-1)^{n+|u|}F(u\otimes d_Vv)
+ -(-1)^nF(d_Uu\otimes v)\\
+ &=\Phi(DF)(u)(v).
+\end{aligned}
+\]
+Otrzymujemy izomorfizm kompleksów. Naturalność względem morfizmów kompleksów w każdej zmiennej wynika przez podstawienie do wzoru $\Phi(F)(u)(v)=F(u\otimes v)$. Biorąc cykle stopnia zerowego, otrzymujemy naturalną bijekcję zbiorów morfizmów kompleksów, która jest żądanym sprzężeniem.
+\end{proof}
+
+\subsection{Kategorie DG i funktory DG}
+
+\begin{definicja}[Kategoria DG]\label{cat:def:dg-category}
+Kategorią DG nad $k$ nazywamy kategorię wzbogaconą w $\mathrm{Ch}(k)$. Jawnie, składa się ona z klasy obiektów, kompleksów $\mathcal C(X,Y)$, morfizmów kompleksów
+\[
+ \mathcal C(Y,Z)\otimes_k\mathcal C(X,Y)
+ \longrightarrow\mathcal C(X,Z),\quad g\otimes f\longmapsto gf
+\]
+oraz jednostek $\id_X\in Z^0\mathcal C(X,X)$, spełniających aksjomaty łączności i jednostki. Różniczka spełnia regułę Leibniza
+\[
+ d(gf)=(dg)f+(-1)^{|g|}g(df)
+\]
+dla jednorodnych morfizmów. Tu $Z^n K=\ker(d:K^n\to K^{n+1})$.
+\end{definicja}
+
+Reguła Leibniza jest dokładnie warunkiem, aby składanie było morfizmem kompleksów względem definicji~\ref{cat:def:dg-tensor-complex}.
+
+\begin{przyklad}[Kategoria DG kompleksów]\label{cat:ex:dg-complexes}
+Obiekty to kompleksy $k$-modułów, a kompleksy morfizmów są dane definicją~\ref{cat:def:dg-hom-complex}. Składanie jest zwykłym składaniem odwzorowań jednorodnych; jego stopnie dodają się. Stwierdzenie~\ref{cat:prop:dg-hom-leibniz} daje zgodność składania z różniczką i domkniętość jednostek. Łączność i prawa jednostki wynikają z odpowiednich własności składania funkcji. Otrzymaną kategorię oznaczamy przez $\mathcal{C}_{\mathrm{dg}}(k)$.
+\end{przyklad}
+
+\begin{przyklad}[Algebra DG jako kategoria jednoobiektowa]\label{cat:ex:dg-one-object}
+Jednoobiektowa kategoria DG jest tym samym co unitalna łączna algebra DG $A$: jej jedyny kompleks morfizmów to $A$, składanie to mnożenie, a jednostka to $1\in Z^0(A)$. W przeciwnym kierunku każda taka algebra określa kategorię DG o jednym obiekcie. Aksjomaty obu struktur są identyczne po tych utożsamieniach. Na przykład algebra z gradacją i różniczką zerową jest algebrą DG, jeśli jej mnożenie zachowuje stopnie.
+\end{przyklad}
+
+\begin{definicja}[Funktor DG]\label{cat:def:dg-functor}
+Funktor DG $F:\mathcal C\to\mathcal D$ składa się z odwzorowania obiektów i morfizmów kompleksów
+\[
+ F_{X,Y}:\mathcal C(X,Y)\longrightarrow\mathcal D(FX,FY)
+\]
+zachowujących składanie i jednostki. Złożenie funktorów DG jest określone przez składanie odpowiednich odwzorowań obiektów i kompleksów morfizmów.
+\end{definicja}
+
+\subsection{Kategorie cykli i kohomologii}
+
+\begin{definicja}[Kategorie \texorpdfstring{$Z^0(\mathcal C)$ i $H^0(\mathcal C)$}{cykli i kohomologii}]\label{cat:def:dg-h-zero}
+Dla kategorii DG $\mathcal C$ definiujemy kategorie o tych samych obiektach, co $\mathcal C$, i zbiorach morfizmów
+\[
+ Z^0(\mathcal C)(X,Y)=Z^0\mathcal C(X,Y),\qquad
+ H^0(\mathcal C)(X,Y)=H^0\mathcal C(X,Y).
+\]
+Składanie w pierwszej kategorii jest odziedziczone, a w drugiej dane przez $[g][f]=[gf]$.
+\end{definicja}
+
+\begin{stwierdzenie}[Dobre określenie składania]\label{cat:prop:dg-cohomology-composition}
+Konstrukcje $Z^0$ i $H^0$ są funktorialne względem funktorów DG. Ogólniej grupy $H^n\mathcal C(X,Y)$ tworzą kategorię z gradacją, ze składaniem stopnia zerowego.
+\end{stwierdzenie}
+\begin{proof}
+Dla cykli jednorodnych $g,f$ reguła Leibniza daje $d(gf)=0$. Jeżeli $f=da$ i $g$ jest cyklem, to $d(ga)=(-1)^{|g|}gda$, więc $gf$ jest brzegiem. Jeżeli $g=db$ i $f$ jest cyklem, to $d(bf)=(db)f$, więc również $gf$ jest brzegiem. Z dwuliniowości wynika niezależność klasy $[gf]$ od obu reprezentantów. Łączność i jednostki przechodzą do klas, a stopień złożenia wynosi $|g|+|f|$. Funktor DG zachowuje cykle i brzegi, gdyż komutuje z różniczką, oraz zachowuje składanie i jednostki, więc indukuje żądane funktory.
+\end{proof}
+
+\begin{stwierdzenie}[Odzyskanie kategorii homotopijnej]\label{cat:prop:dg-homotopy-category}
+Zachodzą kanoniczne izomorfizmy kategorii
+\[
+ Z^0(\mathcal C_{\mathrm{dg}}(k))\cong\mathrm{Ch}(k),
+ \qquad
+ H^0(\mathcal C_{\mathrm{dg}}(k))\cong K(k),
+\]
+gdzie $K(k)$ oznacza kategorię homotopijną kompleksów $k$-modułów z rozdziału~\ref{cat:sec:triangulated-derived}.
+\end{stwierdzenie}
+\begin{proof}
+Morfizm stopnia zerowego jest cyklem dokładnie wtedy, gdy $d_Wf=fd_V$, czyli jest morfizmem kompleksów. Dla $h$ stopnia $-1$ mamy $Dh=d_Wh+hd_V$. Różnica $f-g$ dwóch morfizmów kompleksów jest brzegiem dokładnie wtedy, gdy $f-g=d_Wh+hd_V$, co jest definicją homotopii (równanie~\eqref{cat:eq:cochain-homotopy}). Oba utożsamienia są identycznością na obiektach, są bijekcjami na zbiorach morfizmów i zachowują składanie przez stwierdzenie~\ref{cat:prop:dg-cohomology-composition}.
+\end{proof}
+
+\begin{stwierdzenie}[Wyższe kohomologie kompleksu morfizmów]\label{cat:prop:dg-hom-shift}
+Dla wszystkich $n\in\mathbb Z$ istnieje naturalny izomorfizm $k$-modułów
+\[
+ H^n\underline{\Hom}_k(V,W)
+ \cong \Hom_{K(k)}(V,W[n]),
+\]
+gdzie $W[n]^p=W^{p+n}$ i $d_{W[n]}=(-1)^n d_W$.
+\end{stwierdzenie}
+\begin{proof}
+Przyjmujemy konwencję przesunięcia z definicji~\ref{cat:def:complex-shift}. Jednorodne $f$ stopnia $n$ można traktować jako morfizm stopnia zerowego $V\to W[n]$. Warunek $Df=0$ oznacza $d_Wf=(-1)^nf d_V$, równoważnie $d_{W[n]}f=fd_V$. Jeżeli $a$ ma stopień $n-1$, to
+\[
+ Da=d_Wa+(-1)^n a d_V
+ =(-1)^n(d_{W[n]}a+a d_V).
+\]
+Zatem brzegi stopnia $n$ odpowiadają morfizmom homotopijnym z zerem, ponieważ mnożenie homotopii przez $(-1)^n$ jest odwracalne. Otrzymujemy izomorfizm na ilorazach. Naturalność względem morfizmów kompleksów stopnia zerowego wynika z tego, że utożsamienie nie zmienia składowych odwzorowania i komutuje ze składaniem. Morfizmy homotopijne indukują te same odwzorowania na kohomologii przez regułę Leibniza.
+\end{proof}
+
+\begin{przyklad}[Kompleks ściągalny i jego endomorfizmy]\label{cat:ex:dg-contractible}
+Niech $V$ będzie kompleksem ściągalnym, czyli istnieje $h:V\to V$ stopnia $-1$ z $Dh=\id_V$. Dla każdego kompleksu $W$ oba kompleksy $\underline{\Hom}_k(W,V)$ i $\underline{\Hom}_k(V,W)$ są ściągalne. W pierwszym przypadku definiujemy homotopię $T(f)=hf$. Reguła Leibniza daje $D(hf)=f-hDf$, a zatem $DT+TD=\id$. W drugim przypadku dla $|g|=n$ kładziemy $T(g)=(-1)^ngh$. Wtedy
+\[
+ D(T(g))=(-1)^n(Dg)h+g,\qquad
+ T(Dg)=(-1)^{n+1}(Dg)h,
+\]
+więc znowu $DT+TD=\id$. W szczególności wszystkie ich kohomologie znikają. Otrzymujemy jawne kontrakcje całych kompleksów morfizmów. Znikanie kohomologii obu tych kompleksów dla wszystkich kompleksów $W$ jest równoważne temu, że $V$ jest obiektem zerowym w kategorii homotopijnej: w jedną stronę korzystamy z powyższych kontrakcji, a w drugą z $H^0\underline{\Hom}_k(V,V)=0$, co daje $\id_V=Dh$ dla pewnego $h$ stopnia $-1$.
+\end{przyklad}
+
+\subsection{Kategoria przeciwna DG i iloczyn tensorowy kategorii DG}
+
+\begin{definicja}[Kategoria przeciwna DG]\label{cat:def:dg-opposite}
+Kategoria $\mathcal C^{\mathrm{op}}$ ma te same obiekty co $\mathcal C$, kompleksy $\mathcal C^{\mathrm{op}}(X,Y)=\mathcal C(Y,X)$ z niezmienioną różniczką, a dla $f:X\to Y$, $g:Y\to Z$ rozumianych jako morfizmy przeciwne definiujemy
+\[
+ g\circ_{\mathrm{op}} f=(-1)^{|f||g|}fg,
+\]
+gdzie po prawej stronie składamy w $\mathcal C$.
+\end{definicja}
+
+\begin{stwierdzenie}[Poprawność kategorii przeciwnej]\label{cat:prop:dg-opposite}
+Definicja~\ref{cat:def:dg-opposite} określa kategorię DG. Zachodzą $(\mathcal C^{\mathrm{op}})^{\mathrm{op}}=\mathcal C$ i $H^0(\mathcal C^{\mathrm{op}})=H^0(\mathcal C)^{\mathrm{op}}$ przy kanonicznych utożsamieniach.
+\end{stwierdzenie}
+\begin{proof}
+Niech $|f|=p$, $|g|=q$, $|h|=r$. Oba nawiasowania przeciwnego złożenia trzech morfizmów dają $fgh$ ze znakiem $(-1)^{pq+pr+qr}$, gdyż $(p+q)r+pq=p(q+r)+qr$. Jednostki mają stopień zerowy, więc nie wprowadzają znaku. Reguła Leibniza przyjmuje postać
+\[
+\begin{aligned}
+ d(g\circ_{\mathrm{op}}f)
+ &=(-1)^{pq}\bigl((df)g+(-1)^pf(dg)\bigr),\\
+ (dg)\circ_{\mathrm{op}}f+(-1)^qg\circ_{\mathrm{op}}(df)
+ &=(-1)^{p(q+1)}f(dg)
+ +(-1)^{q+(p+1)q}(df)g.
+\end{aligned}
+\]
+Wykładniki odpowiadających sobie składników są równe modulo $2$. Przejście dwa razy do kategorii przeciwnej mnoży każdy znak przez samego siebie. W stopniu zerowym znak wynosi $1$, co daje ostatnie utożsamienie.
+\end{proof}
+
+\begin{definicja}[Iloczyn tensorowy kategorii DG]\label{cat:def:dg-category-tensor}
+Dla kategorii DG $\mathcal C,\mathcal D$ nad tym samym $k$ obiektami $\mathcal C\otimes_k\mathcal D$ są pary $(X,Y)$. Kompleksy morfizmów definiujemy przez
+\[
+ (\mathcal C\otimes_k\mathcal D)((X,Y),(X',Y'))
+ =\mathcal C(X,X')\otimes_k\mathcal D(Y,Y').
+\]
+Składanie na jednorodnych prostych tensorach to
+\[
+ (f'\otimes g')(f\otimes g)
+ =(-1)^{|g'||f|}(f'f\otimes g'g).
+\]
+Jednostką obiektu $(X,Y)$ jest $\id_X\otimes\id_Y$.
+\end{definicja}
+
+\begin{stwierdzenie}[Poprawność iloczynu tensorowego]\label{cat:prop:dg-category-tensor}
+Powyższa konstrukcja określa kategorię DG.
+\end{stwierdzenie}
+\begin{proof}
+Składanie jest złożeniem morfizmów kompleksów: najpierw używamy symetrii z definicji~\ref{cat:def:dg-tensor-complex}, aby przestawić środkowe czynniki w tensorze $f'\otimes g'\otimes f\otimes g$, a następnie składamy w obu kategoriach. Zatem jest morfizmem kompleksów. Dla trzech kolejnych tensorów $f\otimes g,f'\otimes g',f''\otimes g''$ oba nawiasowania składania dają $(f''f'f)\otimes(g''g'g)$ ze znakiem
+\[
+ (-1)^{|g'||f|+|g''||f|+|g''||f'|}.
+\]
+Wynika to z dodawania stopni i dwukrotnego zastosowania wzoru z definicji. Jednostki są cyklami, bo oba ich czynniki są cyklami; ich stopień jest zerowy, więc składanie z jednostką nie zmienia znaku. Powyższe rachunki rozszerzają się liniowo, ponieważ proste tensory generują odpowiednie moduły.
+\end{proof}
+
+\subsection{Quasi-równoważności}
+
+\begin{definicja}[Quasi-równoważność kategorii DG]\label{cat:def:dg-quasi-equivalence}
+Funktor DG $F:\mathcal C\to\mathcal D$ nazywamy quasi-równoważnością, jeżeli:
+\begin{enumerate}
+ \item $F_{X,Y}$ jest quasi-izomorfizmem kompleksów dla każdej pary $X,Y$, czyli indukuje izomorfizmy we wszystkich stopniach kohomologii;
+ \item $H^0(F):H^0(\mathcal C)\to H^0(\mathcal D)$ jest istotnie surjektywny na obiektach.
+\end{enumerate}
+\end{definicja}
+
+\begin{stwierdzenie}[Quasi-równoważność a kategoria homotopijna]\label{cat:prop:dg-quasi-equivalence-h0}
+Quasi-równoważność indukuje równoważność kategorii $H^0$. Złożenie quasi-równoważności jest quasi-równoważnością. Odwrotna implikacja, od równoważności $H^0$ do quasi-równoważności, jest na ogół fałszywa.
+\end{stwierdzenie}
+\begin{proof}
+Pierwszy warunek definicji w stopniu zerowym oznacza pełność i wierność $H^0(F)$; drugi oznacza istotną surjektywność. Są to kryteria równoważności kategorii. Złożenie quasi-izomorfizmów jest quasi-izomorfizmem, gdyż we wszystkich stopniach indukuje złożenie izomorfizmów. Złożenie funktorów istotnie surjektywnych jest istotnie surjektywne: obiekt w ostatniej kategorii jest izomorficzny z obrazem obiektu pośredniego, który z kolei jest izomorficzny z obrazem obiektu początkowego.
+
+Dla kontrprzykładu niech $k$ będzie niezerowym pierścieniem przemiennym, a $A=k\oplus k\varepsilon$ z $|\varepsilon|=1$, $\varepsilon^2=0$ i różniczką zerową. Inkluzja $k\to A$ określa funktor między jednoobiektowymi kategoriami DG. W stopniu zerowym jest izomorfizmem, więc indukuje izomorfizm kategorii $H^0$. W stopniu pierwszym indukuje jednak $0\to k\varepsilon$, co nie jest izomorfizmem. Funktor nie jest zatem quasi-równoważnością.
+\end{proof}
+
+\subsection{Prawe moduły DG}
+
+Od tej chwili zakładamy, że $\mathcal C$ jest małą kategorią DG nad $k$. Małość zapewnia, że rodziny składowych morfizmów modułów i sumy generatorów indeksowane przez obiekty $\mathcal C$ są zbiorami.
+
+\begin{definicja}[Prawy moduł DG]\label{cat:def:dg-module}
+Prawy moduł DG $M$ nad $\mathcal C$ jest rodziną kompleksów $M(X)$ wraz z morfizmami kompleksów
+\[
+ M(Y)\otimes_k\mathcal C(X,Y)\longrightarrow M(X),
+ \qquad m\otimes f\longmapsto mf,
+\]
+spełniającymi $(mg)f=m(gf)$ dla $m\in M(Z)$, $g\in\mathcal C(Y,Z)$, $f\in\mathcal C(X,Y)$ oraz $m\id_X=m$ dla $m\in M(X)$. W szczególności dla jednorodnych elementów mamy
+\[
+ d_M(mf)=(d_Mm)f+(-1)^{|m|}m(df).
+\]
+Morfizm jednorodny $u:M\to N$ stopnia $n$ jest rodziną odwzorowań $k$-liniowych $u_X:M(X)\to N(X)$ stopnia $n$, spełniających $u_X(mf)=u_Y(m)f$. Nie wymagamy od niego komutowania z różniczką.
+\end{definicja}
+
+Konwencja braku znaku w prawostronnej liniowości morfizmów jest istotna dla dalszych wzorów. W opisie przez funktory DG odpowiada ona warunkowi wzbogaconej naturalności dla morfizmu stopnia $n$: $u_X F_M(f^{\mathrm{op}})=(-1)^{n|f|}F_N(f^{\mathrm{op}})u_Y$. Istotnie, na elemencie $m$ stopnia $p$ lewa strona ma wartość $(-1)^{p|f|}u_X(mf)$, a prawa $(-1)^{n|f|+(p+n)|f|}u_Y(m)f=(-1)^{p|f|}u_Y(m)f$. Prawy moduł można równoważnie opisać jako funktor DG $\mathcal C^{\mathrm{op}}\to\mathcal C_{\mathrm{dg}}(k)$. Dla jednorodnego $f\in\mathcal C(X,Y)$ jego obraz działa na $m\in M(Y)$ wzorem $F(f^{\mathrm{op}})(m)=(-1)^{|m||f|}mf$. Z reguły Leibniza wynika
+\[
+ D(F(f^{\mathrm{op}}))(m)=(-1)^{|m|(|f|+1)}m(df).
+\]
+Istotnie, po rozwinięciu różniczki składniki zawierające $(d_Mm)f$ znoszą się, ponieważ ich współczynniki to $(-1)^{|m||f|}$ i $-(-1)^{|f|+(|m|+1)|f|}$. Dla $g\in\mathcal C(Y,Z)$ złożenie $F(f^{\mathrm{op}})F(g^{\mathrm{op}})$ daje na $m\in M(Z)$ znak
+$(-1)^{|m||g|+(|m|+|g|)|f|}$ przy $m(gf)$. Jest to znak obrazu $f^{\mathrm{op}}\circ_{\mathrm{op}}g^{\mathrm{op}}$ zgodnie z definicją~\ref{cat:def:dg-opposite}. Jednostka działa bez znaku. Odwrócenie wzoru, $mf=(-1)^{|m||f|}F(f^{\mathrm{op}})(m)$, daje działanie modułowe; te same równości odczytane w przeciwnym kierunku zapewniają jego aksjomaty.
+
+\begin{stwierdzenie}[Kategoria DG modułów]\label{cat:prop:dg-module-category}
+Jednorodne morfizmy prawych modułów DG tworzą kompleksy $\underline{\Hom}_{\mathcal C}(M,N)$ z różniczką $Du=d_Nu-(-1)^{|u|}ud_M$. Ze składaniem składowym tworzą kategorię DG $\mathrm{Mod}_{\mathrm{dg}}(\mathcal C)$.
+\end{stwierdzenie}
+\begin{proof}
+Dla $|u|=n$ sprawdzamy domknięcie na różniczkę:
+\[
+\begin{aligned}
+ (Du)(mf)
+ &=d_N(u(m)f)-(-1)^nu((d_Mm)f+(-1)^{|m|}m(df))\\
+ &=(d_Nu(m)-(-1)^nu(d_Mm))f\\
+ &\quad+\bigl((-1)^{|m|+n}-(-1)^{n+|m|}\bigr)u(m)df\\
+ &=(Du)(m)f .
+\end{aligned}
+\]
+Zatem $Du$ jest prawostronnie liniowy stopnia $n+1$. Złożenia morfizmów jednorodnych również są prawostronnie liniowe, gdyż $v(u(mf))=v(u(m)f)=v(u(m))f$. Identyczności spełniają tę samą własność. Pozostałe warunki, w tym $D^2=0$ i reguła Leibniza dla składania, zachodzą składowo przez stwierdzenie~\ref{cat:prop:dg-hom-leibniz}.
+\end{proof}
+
+\subsection{Lemat Yonedy DG}
+
+\begin{definicja}[Moduł reprezentowalny DG]\label{cat:def:dg-representable}
+Dla $X\in\mathcal C$ prawy moduł $h_X$ definiujemy przez $h_X(Y)=\mathcal C(Y,X)$ z działaniem przez składanie. Różniczka pochodzi z kompleksu morfizmów kategorii $\mathcal C$.
+\end{definicja}
+
+\begin{twierdzenie}[Lemat Yonedy DG]\label{cat:thm:dg-yoneda}
+Dla dowolnego prawego modułu DG $M$ i obiektu $X$ istnieje naturalny izomorfizm kompleksów
+\[
+ \underline{\Hom}_{\mathcal C}(h_X,M)\xrightarrow{\ \sim\ } M(X),
+ \qquad u\longmapsto u_X(\id_X).
+\]
+\end{twierdzenie}
+\begin{proof}
+Łączność, jednostki i reguła Leibniza w $\mathcal C$ zapewniają, że $h_X$ jest modułem DG. Dla $m\in M(X)^n$ definiujemy morfizm $u^m_Y:\mathcal C(Y,X)\to M(Y)$ wzorem $u^m_Y(f)=mf$. Jest on stopnia $n$ i prawostronnie liniowy, ponieważ $(mf)g=m(fg)$. Mamy $u^m_X(\id_X)=m$. Odwrotnie, dla jednorodnego $u:h_X\to M$ i $f:Y\to X$ prawostronna liniowość daje
+\[
+ u_Y(f)=u_Y(\id_X f)=u_X(\id_X)f.
+\]
+Dowodzi to wzajemnej odwrotności obu konstrukcji w każdym stopniu. Ponadto
+\[
+ (Du)_X(\id_X)=d_M(u_X(\id_X))-(-1)^n u_X(d\id_X)
+ =d_M(u_X(\id_X)),
+\]
+więc izomorfizm komutuje z różniczką. Dla morfizmu modułów $v:M\to N$ stopnia zerowego zachodzi $(vu)_X(\id_X)=v_X(u_X(\id_X))$. Dla cyklu $a:X'\to X$ stopnia zerowego prekompozycja z morfizmem $h_{X'}\to h_X$ zadanym przez $f\mapsto af$ odpowiada działaniu $m\mapsto ma$. Te równości dowodzą naturalności względem morfizmów stopnia zerowego; wzory ewaluacji i działania zachodzą również dla morfizmów jednorodnych dowolnego stopnia.
+\end{proof}
+
+\begin{wniosek}[Zanurzenie Yonedy DG]\label{cat:cor:dg-yoneda-embedding}
+Przyporządkowanie $X\mapsto h_X$, $a\mapsto (f\mapsto af)$ jest funktorem DG
+\[
+ h:\mathcal C\longrightarrow\mathrm{Mod}_{\mathrm{dg}}(\mathcal C)
+\]
+indukującym izomorfizmy wszystkich kompleksów morfizmów.
+\end{wniosek}
+\begin{proof}
+Dla $|a|=n$ morfizm $h(a)$ jest stopnia $n$ i prawostronnie liniowy przez łączność składania. Schemat jego działania na składowej w obiekcie $U$ ma postać
+\[
+ \mathcal C(U,X)\xrightarrow{\ h(a)_U\ }\mathcal C(U,Y),
+ \qquad f\longmapsto af.
+\] Reguła Leibniza daje
+\[
+ D(h(a))(f)=d(af)-(-1)^na(df)=(da)f,
+\]
+czyli $D(h(a))=h(da)$. Łączność składania i jednostki dowodzą funktorialności. Dla $M=h_Y$ izomorfizm z twierdzenia~\ref{cat:thm:dg-yoneda} jest odwrotnością morfizmu kompleksów $h:\mathcal C(X,Y)\to\underline{\Hom}_{\mathcal C}(h_X,h_Y)$, ponieważ ewaluacja $h(a)$ na $\id_X$ daje $a$.
+\end{proof}
+
+\subsection{Przesunięcia, stożki i kategoria pochodna modułów DG}
+
+Dla modułu $M$ i liczby całkowitej $s$ przyjmujemy konwencję $M[s](X)^n=M(X)^{n+s}$, $d_{M[s]}=(-1)^sd_M$. Działanie prawostronne pozostaje bez zmian. Jeśli $m$ ma stopień $n$ w przesuniętym module, to w module wyjściowym ma stopień $n+s$, zatem
+\[
+ d_{M[s]}(mf)=(-1)^s(d_Mm)f+(-1)^{s+n+s}m(df)
+ =(d_{M[s]}m)f+(-1)^n m(df).
+\]
+W ten sposób przesunięcie jest znów modułem DG.
+
+Dla zamkniętego morfizmu $u:M\to N$ stopnia zerowego definiujemy stożek, stosując konstrukcję~\ref{cat:def:mapping-cone} składowo:
+\[
+ \operatorname{Cone}(u)=N\oplus M[1],
+ \qquad
+ d(y,x)=(d_Ny+u(x),-d_Mx).
+\]
+Działanie jest składowe. Różniczka jest stopnia $+1$, jej kwadrat jest zerowy, ponieważ $d_Nu=ud_M$, a reguła Leibniza wynika z reguł dla $N,M[1]$ i z prawostronnej liniowości $u$. W szczególności dla pary $(y,x)$ stopnia $n$ pierwszy składnik różniczki $(y,x)f$ ma postać $(d_Ny+u(x))f+(-1)^ny(df)$, drugi zaś $(-d_Mx)f+(-1)^nx(df)$.
+
+\begin{definicja}[Quasi-izomorfizm modułów i kategoria pochodna]\label{cat:def:dg-module-derived}
+Morfizm modułów DG oznacza odtąd cykl stopnia zerowego w kompleksie morfizmów, chyba że określono inny stopień. Moduł $M$ jest acykliczny, jeśli $H^n(M(X))=0$ dla każdego $X$ i $n$. Morfizm $u:M\to N$ jest quasi-izomorfizmem, jeśli każde $u_X$ jest quasi-izomorfizmem kompleksów.
+
+Kategorię homotopijną modułów oznaczamy przez $K(\mathcal C)=H^0(\mathrm{Mod}_{\mathrm{dg}}(\mathcal C))$. Kategoria pochodna $D(\mathcal C)$ to lokalizacja $K(\mathcal C)$ względem klas quasi-izomorfizmów. Na tym etapie lokalizację można rozumieć w większym uniwersum; poniższa konstrukcja rezolucji pokaże, że ma ona małe zbiory morfizmów.
+\end{definicja}
+
+Morfizmy homotopijne indukują te same odwzorowania kohomologii składowej, bo brzeg stopnia zerowego ma postać $d_Nh+hd_M$ dla $h$ stopnia $-1$. Quasi-izomorfizmy są więc dobrze określone w kategorii $K(\mathcal C)$. Na mocy długiego ciągu kohomologii stożka (twierdzenie~\ref{cat:thm:cone-les}) morfizm jest quasi-izomorfizmem dokładnie wtedy, gdy jego stożek jest acykliczny.
+
+\subsection{Moduły półswobodne i homotopijnie rzutowe}
+
+\begin{definicja}[Moduł półswobodny]\label{cat:def:dg-semifree}
+Prawy moduł DG $P$ nazywamy półswobodnym, jeśli ma rosnący ciąg podmodułów DG
+\[
+ 0=P_{-1}\subseteq P_0\subseteq P_1\subseteq\cdots,
+ \qquad P=\bigcup_{j\geq0}P_j,
+\]
+taki, że dla każdego $j$ istnieje rozkład modułów z gradacją
+\[
+ P_j=P_{j-1}\oplus\bigoplus_{\lambda\in I_j} h_{X_\lambda}[-n_\lambda],
+\]
+przy czym różniczka wyróżnionego generatora $e_\lambda=\id_{X_\lambda}$ stopnia $n_\lambda$ w nowym składniku należy do $P_{j-1}(X_\lambda)$. Rozkład nie musi być rozkładem kompleksów. W ilorazie $P_j/P_{j-1}$ nowe generatory są cyklami, więc jest on sumą prostą przesuniętych modułów reprezentowalnych jako moduł DG.
+\end{definicja}
+
+W tej definicji używamy filtracji indeksowanej liczbami naturalnymi; wystarcza ona do konstrukcji poniższych rezolucji. W literaturze dopuszcza się również filtracje pozaskończone.
+
+Jednorodny element $e\in P(X)^n$ wyznacza prawostronnie liniowy morfizm modułów z gradacją $h_X[-n]\to P$ przez $f\mapsto ef$. Jeśli $de=0$, jest on morfizmem kompleksów, ponieważ $d(ef)=(-1)^ne(df)$, a różniczka na $h_X[-n]$ to $(-1)^nd$. Jeśli natomiast $de=z$, to różniczka na składniku generowanym przez $e$ ma postać $d(ef)=zf+(-1)^ne(df)$.
+
+\begin{twierdzenie}[Istnienie rezolucji półswobodnej]\label{cat:thm:dg-semifree-resolution}
+Dla każdego prawego modułu DG $M$ istnieje quasi-izomorfizm $p:P\to M$ z modułu półswobodnego. Można wybrać filtrację tak, że każde ograniczenie $p_j=p|_{P_j}:P_j\to M$ jest surjektywne w kohomologii składowej we wszystkich stopniach.
+\end{twierdzenie}
+\begin{proof}
+Dla każdego obiektu $X$, stopnia $n$ i cyklu $m\in Z^nM(X)$ bierzemy kopię $h_X[-n]$ z generatorem $e_m$ stopnia $n$ i tworzymy ich sumę prostą $P_0$. Mapę $p_0:P_0\to M$ określamy przez $p_0(e_m f)=mf$. Jest morfizmem DG, ponieważ $dm=0$ i różniczka przesuniętego modułu reprezentowalnego ma znak $(-1)^n$. Każdy cykl $m$ jest obrazem cyklu $e_m$, więc $H^n(p_0(X))$ jest surjekcją.
+
+Załóżmy, że zbudowano $P_j$ i $p_j:P_j\to M$. Dla każdej trójki $(X,z,t)$, gdzie $z\in Z^nP_j(X)$ oraz $t\in M(X)^{n-1}$ spełniają $d_Mt=p_j(z)$, dodajemy generator $e_{z,t}$ stopnia $n-1$ na obiekcie $X$. Jako moduł z gradacją $P_{j+1}$ to suma $P_j$ i wszystkich odpowiadających kopii $h_X[1-n]$. Różniczkę na nowym składniku określamy wzorem
+\[
+ d(e_{z,t}f)=zf+(-1)^{n-1}e_{z,t}(df).
+\]
+Jest to dobrze określona mapa na każdym składniku reprezentowalnym, ponieważ prawa strona jest $k$-liniowa w $f$. Dla $f$ jednorodnego mamy
+\[
+ d^2(e_{z,t}f)
+ = (dz)f+\bigl((-1)^n+(-1)^{n-1}\bigr)z(df)
+   + e_{z,t}d^2f=0.
+\]
+Regułę Leibniza sprawdzamy dla kolejnego morfizmu $g$ przez rozwinięcie $d(e_{z,t}(fg))$ i użycie $d(fg)=(df)g+(-1)^{|f|}f(dg)$. Otrzymujemy
+\[
+ d(e_{z,t}(fg))=d(e_{z,t}f)g+(-1)^{n-1+|f|}(e_{z,t}f)(dg).
+\]
+Na starym składniku różniczka pozostaje bez zmian, więc $P_{j+1}$ jest modułem DG. Rozszerzamy $p_j$ przez $p_{j+1}(e_{z,t}f)=tf$. Jest to morfizm DG, gdyż
+\[
+ d_M(tf)=p_j(z)f+(-1)^{n-1}t(df)
+ =p_{j+1}(d(e_{z,t}f)).
+\]
+
+Niech $P=\bigcup_{j\geq0}P_j$ będzie sumą rosnącego ciągu podmodułów, z różniczką i morfizmem $p$ odziedziczonymi z etapów. Nie jest to suma prosta etapów $P_j$. Każdy element należy do pewnego $P_j$, więc wszystkie działania i różniczka są dobrze określone; filtracja jest półswobodna. Surjektywność na kohomologii zachodzi nadal, gdyż cykle z $P_0$ podnoszą wszystkie cykle $M$. Jeśli cykl $z\in P(X)^n$ ma obraz będący brzegiem, to należy do pewnego $P_j(X)$ i jest tam cyklem (inkluzje etapów są injektywne). Wybieramy $t$ z $dt=p_j(z)$. Na etapie $P_{j+1}$ dodaliśmy generator $e_{z,t}$ z różniczką $z$. Zatem $[z]=0$ w $H^nP(X)$. Dowodzi to injektywności i kończy dowód.
+\end{proof}
+
+\begin{definicja}[Moduł homotopijnie rzutowy]\label{cat:def:dg-h-projective}
+Moduł DG $P$ nazywamy homotopijnie rzutowym (również K-rzutowym), jeśli dla każdego acyklicznego modułu $N$ kompleks $\underline{\Hom}_{\mathcal C}(P,N)$ jest acykliczny.
+\end{definicja}
+
+\begin{twierdzenie}[Moduły półswobodne są homotopijnie rzutowe]\label{cat:thm:dg-semifree-h-projective}
+Każdy moduł półswobodny jest homotopijnie rzutowy. W szczególności moduły reprezentowalne są homotopijnie rzutowe.
+\end{twierdzenie}
+\begin{proof}
+Niech $u:P\to N$ będzie cyklem stopnia $r$ w kompleksie morfizmów, gdzie $N$ jest acykliczny. Skonstruujemy prawostronnie liniowy morfizm $h:P\to N$ stopnia $r-1$ taki, że $Dh=u$. Na $P_{-1}=0$ istnieje jedyny taki morfizm.
+
+Załóżmy, że zdefiniowano $h$ na $P_{j-1}$ i że $Dh=u$ na tym podmodule. Dla nowego generatora $e$ stopnia $n$ na obiekcie $X$ oznaczmy $z=de\in P_{j-1}(X)^{n+1}$. Poszukiwane równanie na $e$ to
+\[
+ d_Nh(e)=u(e)+(-1)^{r-1}h(z).
+\]
+Prawa strona jest cyklem stopnia $n+r$ w $N(X)$: z $Du=0$ wynika $d_Nu(e)=(-1)^ru(z)$, a z $Dh=u$ na $P_{j-1}$ i $dz=0$ mamy $d_Nh(z)=u(z)$. Suma tych dwóch składników z odpowiednimi znakami jest zerowa. Acykliczność $N(X)$ daje więc element $w\in N(X)^{n+r-1}$ o różniczce równej prawej stronie. Kładziemy $h(e)=w$ i rozszerzamy na cały nowy składnik przez $h(ef)=wf$.
+
+Morfizm $Dh-u$ jest prawostronnie liniowy przez stwierdzenie~\ref{cat:prop:dg-module-category}. Zeruje się na nowych generatorach oraz na $P_{j-1}$, zatem na całym $P_j$. Wybieramy takie rozszerzenia dla wszystkich generatorów każdego etapu i otrzymujemy zgodny ciąg morfizmów. Ich zgodne rozszerzenie na sumę rosnącego ciągu podmodułów daje dobrze określony $h$ na $P$ z $Dh=u$. Dowolny cykl jest więc brzegiem. Moduł reprezentowalny jest półswobodny z jednym generatorem w stopniu zerowym; można też użyć bezpośrednio lematu Yonedy DG.
+\end{proof}
+
+\begin{stwierdzenie}[Morfizmy z modułu homotopijnie rzutowego]\label{cat:prop:dg-h-projective-qiso}
+Jeżeli $P$ jest homotopijnie rzutowy i $v:M\to N$ jest quasi-izomorfizmem, to
+\[
+ \underline{\Hom}_{\mathcal C}(P,v):
+ \underline{\Hom}_{\mathcal C}(P,M)
+ \longrightarrow\underline{\Hom}_{\mathcal C}(P,N)
+\]
+jest quasi-izomorfizmem.
+\end{stwierdzenie}
+\begin{proof}
+Dla morfizmu stopnia $r$ do $\operatorname{Cone}(v)$ zapisujemy jego współrzędne jako $(a,b)$, gdzie $a:P\to N$ ma stopień $r$, a $b:P\to M$ stopień $r+1$. Prawostronna liniowość jest równoważna prawostronnej liniowości obu współrzędnych, ponieważ przesunięcie nie zmienia działania. Różniczka w kompleksie morfizmów ma postać
+\[
+ (a,b)\longmapsto(Da+vb,-Db).
+\]
+Istotnie, w drugiej współrzędnej otrzymujemy $-d_Mb-(-1)^rb d_P=-Db$, gdyż $|b|=r+1$. To dokładnie różniczka stożka $\underline{\Hom}_{\mathcal C}(P,v)$. Stożek $v$ jest acykliczny, więc jego kompleks morfizmów z $P$ jest acykliczny. Kryterium stożka daje żądaną tezę.
+\end{proof}
+
+\subsection{Model kategorii pochodnej}
+
+\begin{twierdzenie}[Kategoria pochodna przez moduły homotopijnie rzutowe]\label{cat:thm:dg-derived-h-projective}
+Niech $K_{\mathrm{hp}}(\mathcal C)$ będzie pełną podkategorią $K(\mathcal C)$ na modułach homotopijnie rzutowych. Lokalizacja indukuje równoważność
+\[
+ K_{\mathrm{hp}}(\mathcal C)\xrightarrow{\ \sim\ }D(\mathcal C).
+\]
+Jeżeli $P$ jest homotopijnie rzutowy, to dla dowolnego $M$ i $r\in\mathbb Z$ istnieje naturalny izomorfizm
+\[
+ \Hom_{D(\mathcal C)}(P,M[r])
+ \cong H^r\underline{\Hom}_{\mathcal C}(P,M).
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla każdego $M$ wybieramy quasi-izomorfizm $p_M:P_M\to M$ z modułu homotopijnie rzutowego. Istnienie takiego morfizmu zapewniają twierdzenia~\ref{cat:thm:dg-semifree-resolution} i~\ref{cat:thm:dg-semifree-h-projective}. W przypadku modułu już homotopijnie rzutowego wybieramy $P_M=M$, $p_M=\id_M$, nawet gdy $M$ nie jest półswobodny. W ustalonym większym uniwersum można dokonać tych wyborów jednocześnie. Stwierdzenie~\ref{cat:prop:dg-h-projective-qiso} daje bijekcję
+\[
+ \Hom_K(P_M,P_N)\xrightarrow{(p_N)_*}\Hom_K(P_M,N),
+\]
+gdzie odtąd skróty $K$ i $D$ oznaczają odpowiednio $K(\mathcal C)$ i $D(\mathcal C)$. Dla $[f]:M\to N$ definiujemy $Q([f]):P_M\to P_N$ jako jedyny morfizm w $K$ spełniający $p_N Q([f])=[f]p_M$. Z jednoznaczności wynika $Q(\id_M)=\id_{P_M}$ i $Q([g][f])=Q([g])Q([f])$: w drugim przypadku oba morfizmy po złożeniu z $p_L$ dają $[g][f]p_M$. Odwzorowanie na morfizmach jest również $k$-liniowe: jest złożeniem liniowego odwzorowania $[f]\mapsto [f]p_M$ i odwrotności liniowej bijekcji $(p_N)_*$. Mamy więc $k$-liniowy funktor $Q:K\to K_{\mathrm{hp}}$ oraz naturalną transformację $p:IQ\to\id_K$, gdzie $I$ jest włożeniem.
+
+Jeżeli $[f]$ jest quasi-izomorfizmem, to $Q([f])$ jest quasi-izomorfizmem, gdyż równość $p_N Q([f])=[f]p_M$ daje w każdym stopniu kohomologii składowej złożenia izomorfizmów. Każdy quasi-izomorfizm $a:P\to R$ między modułami homotopijnie rzutowymi jest izomorfizmem w $K$. Zastosowanie stwierdzenia~\ref{cat:prop:dg-h-projective-qiso} z dziedziną $R$ daje $b:R\to P$ w $K$ z $ab=\id_R$. Następnie zastosowanie go z dziedziną $P$ daje injektywność $a_*:\Hom_K(P,P)\to\Hom_K(P,R)$. Ponieważ $aba=a=a\id_P$, wynika $ba=\id_P$.
+
+Z własności uniwersalnej lokalizacji $L:K\to D(\mathcal C)$ funktor $Q$ faktoryzuje się przez $\overline Q:D(\mathcal C)\to K_{\mathrm{hp}}$. Ograniczenie $LI$ ma quasi-odwrotność $\overline Q$: z naszego wyboru rezolucji $QI=\id$ na obiektach i morfizmach. Transformacja $Lp$ ma izomorficzne składowe, gdyż $L$ odwraca quasi-izomorfizmy. Jest naturalna także względem odwrotności morfizmów lokalizowanych: z przemienności kwadratu dla odwracalnego morfizmu wynika przemienność kwadratu dla jego odwrotności. Ponieważ morfizmy lokalizacji są generowane przez obrazy morfizmów $K$ i formalne odwrotności, otrzymujemy naturalny izomorfizm $LI\overline Q\cong\id_{D(\mathcal C)}$.
+
+W szczególności dla $P$ homotopijnie rzutowego odwzorowanie $\Hom_K(P,M)\to\Hom_{D(\mathcal C)}(P,M)$ jest bijekcją: porównujemy je z analogicznym odwzorowaniem dla $P_M$, które jest bijekcją przez równoważność, używając bijekcji indukowanej przez $p_M$ po lewej i izomorfizmu $L(p_M)$ po prawej. Równoważność $\overline Q$ pozwala już na tym etapie przenieść strukturę $k$-liniową z $K_{\mathrm{hp}}$ na $D$: na każdym zbiorze morfizmów przenosimy działania przez bijekcję indukowaną przez $\overline Q$. Składanie jest wtedy $k$-dwuliniowe przez funktorialność i dwuliniowość w $K_{\mathrm{hp}}$, a $L$ jest $k$-liniowy, ponieważ $\overline QL=Q$ i $Q$ jest $k$-liniowy. Zastępując $M$ przez $M[r]$, otrzymujemy naturalny izomorfizm $k$-modułów $\Hom_K(P,M[r])\to\Hom_D(P,M[r])$. W szczególności nie korzystamy tu jeszcze z późniejszego dowodu triangulacji $D$. Tak jak w dowodzie stwierdzenia~\ref{cat:prop:dg-hom-shift}, cykle stopnia $r$ są morfizmami do $M[r]$, a brzegi odpowiadają homotopiom z dokładnością do znaku $(-1)^r$. Różnica polega jedynie na wymaganiu prawostronnej liniowości, którego przesunięcie nie zmienia. Daje to podany izomorfizm. Jest naturalny względem morfizmów w $K$, a w drugiej zmiennej również w lokalizacji, ponieważ oba funktory odwracają quasi-izomorfizmy. Wszystkie zbiory morfizmów $D(\mathcal C)$ są małe, gdyż równoważność identyfikuje je ze zbiorami morfizmów w $K_{\mathrm{hp}}$.
+\end{proof}
+
+\begin{wniosek}[Pochodny lemat Yonedy]\label{cat:cor:dg-derived-yoneda}
+Dla $X\in\mathcal C$, modułu DG $M$ i $n\in\mathbb Z$ zachodzi naturalny izomorfizm
+\[
+ \Hom_{D(\mathcal C)}(h_X,M[n])\cong H^nM(X).
+\]
+W szczególności
+$\Hom_{D(\mathcal C)}(h_X,h_Y[n])\cong H^n\mathcal C(X,Y)$.
+\end{wniosek}
+\begin{proof}
+Moduł $h_X$ jest homotopijnie rzutowy przez twierdzenie~\ref{cat:thm:dg-semifree-h-projective}. Stosujemy twierdzenie~\ref{cat:thm:dg-derived-h-projective}, a następnie lemat Yonedy DG (twierdzenie~\ref{cat:thm:dg-yoneda}) i bierzemy kohomologię stopnia $n$. Druga teza wynika z definicji $h_Y$. Naturalność wynika z naturalności obu izomorfizmów.
+\end{proof}
+
+\begin{przyklad}[Jednoobiektowa kategoria DG]\label{cat:ex:dg-algebra-derived}
+Dla jednoobiektowej kategorii DG odpowiadającej algebrze DG $A$ moduły z definicji~\ref{cat:def:dg-module} są dokładnie prawymi modułami DG nad $A$. Moduł reprezentowalny jest regularnym prawym modułem $A_A$. W szczególności $\Hom_{D(A)}(A,M[n])\cong H^n(M)$, a dla $M=A$ otrzymujemy wszystkie grupy kohomologii algebry. Gdy $A=k$ w stopniu zerowym, odzyskujemy zwykłą kategorię pochodną kompleksów $k$-modułów: warunki liniowości i quasi-izomorfizmu są wówczas dokładnie warunkami z rozdziału~\ref{cat:sec:triangulated-derived}.
+\end{przyklad}
+
+\subsection{Struktura triangulowana kategorii modułów DG}
+
+\begin{twierdzenie}[Triangulacja kategorii homotopijnej i pochodnej]\label{cat:thm:dg-module-triangulated}
+Kategoria $K(\mathcal C)$ jest triangulowana, z przesunięciem i trójkątami izomorficznymi do trójkątów stożków. Pełna podkategoria modułów acyklicznych jest triangulowana i domknięta na składniki proste. Kategoria pochodna $D(\mathcal C)$ jest jej ilorazem Verdiera, a funktor lokalizacji jest dokładny.
+\end{twierdzenie}
+\begin{proof}
+Kategoria $K(\mathcal C)$ jest addytywna: sumy proste dwóch modułów, obiekt zerowy i macierze morfizmów są określone składowo. Morfizmy homotopijne z zerem tworzą podmoduły modułów cykli stopnia zerowego i są zgodne ze składaniem przez stwierdzenie~\ref{cat:prop:dg-cohomology-composition}. Przesunięcie zachowuje działanie prawostronne, a na cyklach stopnia zerowego przesuwa składowe bez znaku. Jeżeli $f-g=d_Nh+hd_M$, to po przesunięciu o $s$ homotopię określamy przez $h_s^n=(-1)^s h^{n+s}$; wtedy $d_{N[s]}h_s+h_sd_{M[s]}$ ma składowe $(d_Nh+hd_M)^{n+s}$, czyli jest równe $f[s]-g[s]$. Stąd przesunięcie daje autoizomorfizm kategorii homotopijnej.
+
+Przenosimy dowód twierdzenia~\ref{cat:thm:homotopy-triangulated} o triangulacji kategorii homotopijnej kompleksów. W tym celu należy sprawdzić, że wszystkie macierze w tym dowodzie są morfizmami modułów z gradacją odpowiedniego stopnia. Włożenia, projekcje i identyczności sum prostych oraz ich przesunięć są prawostronnie liniowe, gdyż działanie na przesunięciu nie zmienia się. Macierze zbudowane ze złożeń, sum i przeciwieństw takich strzałek, morfizmów modułów oraz homotopii są również prawostronnie liniowe. W szczególności dla TR3, jeżeli $b f-f'a=dH+Hd$ dla kwadratu morfizmów $a,b$ między dziedzinami i przeciwdziedzinami $f,f'$, to macierz $(y,x)\mapsto(by+Hx,ax)$ jest morfizmem $\operatorname{Cone}(f)\to\operatorname{Cone}(f')$: równość różniczek sprowadza się do podanego równania homotopii. Dla TR4, gdy $h=gf$, morfizmy
+\[
+ \operatorname{Cone}(f)\xrightarrow{(y,x)\mapsto(gy,x)}
+ \operatorname{Cone}(h)\xrightarrow{(z,x)\mapsto(z,fx)}
+ \operatorname{Cone}(g)
+\]
+są prawostronnie liniowe. Również morfizmy i homotopie między stożkiem pierwszej z tych strzałek i $\operatorname{Cone}(g)$ w dowodzie przywołanego twierdzenia są prawostronnie liniowe, ponieważ ich współrzędne są jedynie sumami współrzędnych wejściowych i ich obrazów przez $f$. Wszystkie równości różniczek i homotopii sprawdza się więc składowo dokładnie jak w tym dowodzie; otrzymujemy TR1--TR4 w $K(\mathcal C)$, a nie tylko po zapomnieniu działania modułowego.
+
+Acykliczność jest niezmiennicza względem przesunięć i izomorfizmów w $K(\mathcal C)$. Dla każdego obiektu $X$ ewaluacja $M\mapsto M(X)$ zachowuje stożki i przesunięcia, a długi ciąg kohomologii stożka (twierdzenie~\ref{cat:thm:cone-les}) daje acykliczność trzeciego obiektu trójkąta, jeśli dwa pozostałe są acykliczne. Jeżeli $N$ jest składnikiem prostym $M$ w kategorii homotopijnej, to $H^nN(X)$ jest składnikiem prostym $H^nM(X)$, zatem acykliczność $M$ implikuje acykliczność $N$.
+
+Morfizmy o acyklicznym stożku są dokładnie quasi-izomorfizmami. Twierdzenie o ilorazie Verdiera~\ref{cat:thm:verdier-quotient} daje więc żądaną strukturę triangulowaną lokalizacji. Lokalna małość wynika niezależnie z twierdzenia~\ref{cat:thm:dg-derived-h-projective}.
+\end{proof}
+
+\begin{stwierdzenie}[Domknięcie modułów homotopijnie rzutowych]\label{cat:prop:dg-hp-triangulated}
+Moduły homotopijnie rzutowe są domknięte na przesunięcia, stożki morfizmów zamkniętych stopnia zerowego, dowolne małe sumy proste oraz składniki proste w $K(\mathcal C)$. W konsekwencji pełna podkategoria DG $\mathrm{HP}_{\mathrm{dg}}(\mathcal C)$ na tych modułach ma kategorię homotopijną triangulowaną i równoważność
+\[
+ H^0(\mathrm{HP}_{\mathrm{dg}}(\mathcal C))\simeq D(\mathcal C)
+\]
+jest dokładna.
+\end{stwierdzenie}
+\begin{proof}
+Dla acyklicznego $N$ warunek homotopijnej rzutowości $P$ jest równoważny znikaniu wszystkich $\Hom_K(P,N[r])$: utożsamienie cykli i brzegów z morfizmami i homotopiami do przesuniętego modułu zostało uzasadnione w twierdzeniu~\ref{cat:thm:dg-derived-h-projective}. Dla $P[s]$ te grupy utożsamiają się z $\Hom_K(P,N[r-s])$, zatem znikają. Dla stożka $P\to Q$ stosujemy długi ciąg reprezentowalnego funktora kontrawariantnego $\Hom_K(-,N[r])$ do trójkąta stożka. Gdy $P,Q$ są homotopijnie rzutowe, grupy sąsiadujące z $\Hom_K(\operatorname{Cone}(P\to Q),N[r])$ znikają, więc ta grupa też znika. Analogicznie, jeżeli $P$ jest retraktem $Q$ w $K$, to $\Hom_K(P,N[r])$ jest retraktem $\Hom_K(Q,N[r])$, więc dziedziczy znikanie.
+
+Dla rodziny $(P_i)_{i\in I}$ mamy izomorfizm kompleksów
+\[
+ \underline{\Hom}_{\mathcal C}\left(\bigoplus_iP_i,N\right)
+ \cong\prod_i\underline{\Hom}_{\mathcal C}(P_i,N).
+\]
+Morfizm jednorodny z sumy prostej jest bowiem jednoznacznie dany przez jego ograniczenia do składników, a różniczka komutuje z tymi ograniczeniami. Produkt acyklicznych kompleksów modułów jest acykliczny: cykl jest rodziną cykli, dla każdego z nich wybieramy przeciwobraz przez różniczkę, a rodzina tych przeciwobrazów jest przeciwobrazem wyjściowego cyklu. Zatem suma modułów homotopijnie rzutowych jest homotopijnie rzutowa.
+
+Domknięcie na przesunięcia i stożki daje pełną podkategorię triangulowaną kategorii homotopijnej przez stwierdzenie~\ref{cat:prop:triangulated-subcategory}. Włożenie oraz lokalizacja zachowują trójkąty i przesunięcia, a równoważność wynika z twierdzenia~\ref{cat:thm:dg-derived-h-projective}.
+\end{proof}
+
+\begin{wniosek}[Koprodukty w kategorii pochodnej]\label{cat:cor:dg-derived-coproduct}
+Małe koprodukty w $D(\mathcal C)$ są reprezentowane przez składowe sumy proste modułów DG.
+\end{wniosek}
+\begin{proof}
+Niech $p_i:P_i\to M_i$ będą rezolucjami półswobodnymi. Suma $\bigoplus_i p_i$ jest quasi-izomorfizmem, gdyż kohomologia komutuje z sumami prostymi kompleksów modułów: elementy mają skończony nośnik, a warunki bycia cyklem i brzegiem sprawdza się składowo. Moduł $\bigoplus_i P_i$ jest homotopijnie rzutowy przez stwierdzenie~\ref{cat:prop:dg-hp-triangulated}. Dla każdego $N$ otrzymujemy bijekcje
+\[
+\begin{aligned}
+ \Hom_D\left(\bigoplus_iM_i,N\right)
+ &\cong\Hom_K\left(\bigoplus_iP_i,N\right)\\
+ &\cong\prod_i\Hom_K(P_i,N)
+ \cong\prod_i\Hom_D(M_i,N).
+\end{aligned}
+\]
+Środkowa bijekcja wynika z rozkładu kompleksu morfizmów z sumy prostej i z faktu, że kohomologia produktu jest produktem kohomologii (cykle i brzegi obliczamy składowo). Bijekcje są zgodne z włożeniami składników, więc dają własność uniwersalną koproduktu.
+\end{proof}
+
+\subsection{Kategorie pretriangulowane}
+
+\begin{definicja}[Kategoria pretriangulowana DG]\label{cat:def:dg-pretriangulated}
+Małą kategorię DG $\mathcal C$ nazywamy pretriangulowaną, jeśli istotny obraz zanurzenia
+\[
+ H^0(h):H^0(\mathcal C)\longrightarrow
+ H^0(\mathrm{Mod}_{\mathrm{dg}}(\mathcal C))
+\]
+z lematu Yonedy DG zawiera obiekt zerowy i jest domknięty na przesunięcia w obu kierunkach oraz stożki morfizmów. Jawnie wymagamy, aby moduł zerowy, wszystkie $h_X[s]$ oraz $\operatorname{Cone}(h(f))$ dla cykli $f\in Z^0\mathcal C(X,Y)$ były izomorficzne w kategorii homotopijnej modułów z pewnymi modułami reprezentowalnymi.
+\end{definicja}
+
+Izomorfizm w kategorii homotopijnej jest równoważnością homotopijną, niekoniecznie izomorfizmem samych modułów DG. Jeśli powyższe obiekty można reprezentować przez ścisłe izomorfizmy modułów DG, otrzymujemy silniejszy warunek, nazywany ścisłą pretriangulowalnością (w literaturze występują też inne konwencje nazewnictwa).
+
+\begin{twierdzenie}[Kategoria homotopijna kategorii pretriangulowanej]\label{cat:thm:dg-pretriangulated-h0}
+Jeżeli $\mathcal C$ jest pretriangulowana, to $H^0(\mathcal C)$ ma strukturę triangulowaną przeniesioną przez zanurzenie Yonedy. Funktor $H^0(\mathcal C)\to D(\mathcal C)$ zadany przez $X\mapsto h_X$ jest pełnym, wiernym funktorem dokładnym.
+\end{twierdzenie}
+\begin{proof}
+Z wniosku~\ref{cat:cor:dg-yoneda-embedding} wynika pełność i wierność $H^0(h)$. Jego istotny obraz jest pełną podkategorią $K(\mathcal C)$, zawierającą obiekt zerowy i zamkniętą na przesunięcia oraz stożki. Rzeczywiście, dowolny morfizm między obiektami obrazu po wybraniu izomorfizmów z $h_X,h_Y$ pochodzi od klasy cyklu $f$ przez pełność. Jego stożek jest izomorficzny z $\operatorname{Cone}(h(f))$: stosujemy TR3 do kwadratu izomorfizmów na pierwszych dwóch obiektach, a wniosek~\ref{cat:cor:triangle-two-isos} daje izomorfizm trzecich. Domknięcie na sumy proste dwóch obiektów również wynika z tych założeń, gdyż dla zerowego morfizmu $h_X[-1]\to h_Y$ stożek to $h_Y\oplus h_X$.
+
+Na mocy stwierdzenia~\ref{cat:prop:triangulated-subcategory} istotny obraz jest triangulowany. Przenosimy tę strukturę przez równoważność $H^0(h)$ z jego obrazem: przesunięcie jest złożeniem zanurzenia, przesunięcia obrazu i quasi-odwrotności, a trójkąty wyróżnione to trójkąty, których obrazy są wyróżnione po uwzględnieniu izomorfizmu przesunięć. Aksjomaty TR1--TR4 przenoszą się przez pełność, wierność i istotną surjektywność. Moduły reprezentowalne są homotopijnie rzutowe, więc lokalizacja $K\to D$ nie zmienia zbiorów morfizmów między nimi przez twierdzenie~\ref{cat:thm:dg-derived-h-projective}. Jest dokładna przez twierdzenie~\ref{cat:thm:dg-module-triangulated}. To dowodzi ostatniej tezy.
+\end{proof}
+
+\begin{przyklad}[Przesunięcia i stożki reprezentowalne]\label{cat:ex:dg-complexes-pretriangulated}
+Kategoria DG kompleksów jest pretriangulowana (w odpowiednim uniwersum; dla małej pełnej podkategorii wystarczy domknięcie na kompleks zerowy, przesunięcia i stożki). Istotnie, dla kompleksów $U,V$ mamy izomorfizm modułów DG $h_{V[s]}\cong h_V[s]$, zadany przez utożsamienie składowych jednorodnych odwzorowań. Różniczka w stopniu $r$ po lewej wynosi
+\[
+ (-1)^s d_V f-(-1)^r f d_U
+ =(-1)^s\bigl(d_Vf-(-1)^{r+s}fd_U\bigr),
+\]
+czyli różniczkę po prawej. Działanie przez prekompozycję pozostaje niezmienione. Dla morfizmu kompleksów $v:V\to W$ kompleks
+$\underline{\Hom}_k(U,\operatorname{Cone}(v))$ jest izomorficzny z $\operatorname{Cone}(\underline{\Hom}_k(U,v))$ przez rozkład składowych. Rachunek różniczki jest dokładnie rachunkiem $(a,b)\mapsto(Da+vb,-Db)$ ze stwierdzenia~\ref{cat:prop:dg-h-projective-qiso}. Izomorfizmy te zachowują działanie przez prekompozycję, gdyż są zadane współrzędnie. Kompleks zerowy reprezentuje moduł zerowy. W tym przypadku odzyskujemy triangulację kategorii $K(k)$.
+\end{przyklad}
+
+\begin{definicja}[Wzbogacenie DG kategorii triangulowanej]\label{cat:def:dg-enhancement}
+Wzbogaceniem DG $k$-liniowej kategorii triangulowanej $\mathcal T$ nazywamy pretriangulowaną kategorię DG $\mathcal E$ wraz z $k$-liniową dokładną równoważnością $H^0(\mathcal E)\simeq\mathcal T$. Warunki małości rozumiemy w odpowiednio dobranych uniwersach.
+\end{definicja}
+
+Na przykład $\mathrm{HP}_{\mathrm{dg}}(\mathcal C)$ jest wzbogaceniem DG kategorii $D(\mathcal C)$ przez stwierdzenie~\ref{cat:prop:dg-hp-triangulated}. Pretriangulowalność wynika z tego samego rachunku reprezentowalności przesunięć i stożków co w przykładzie~\ref{cat:ex:dg-complexes-pretriangulated}: zamiast wszystkich jednorodnych odwzorowań używamy odwzorowań prawostronnie liniowych, a rozkład współrzędnych i przesunięcia nie zmieniają liniowości. Kategoria DG zachowuje całe kompleksy morfizmów, a nie tylko grupy klas homotopii. Samo istnienie wzbogacenia nie jest stwierdzeniem o jego jednoznaczności.
+
+\subsection{Moduły doskonałe i zwarte generatory}
+
+\begin{definicja}[Zwartość i generowanie]\label{cat:def:dg-compact}
+W kategorii triangulowanej $\mathcal T$ z małymi koproduktami obiekt $P$ nazywamy zwartym, jeśli dla każdej małej rodziny $(M_i)$ kanoniczne odwzorowanie
+\[
+ \bigoplus_i\Hom_{\mathcal T}(P,M_i)
+ \longrightarrow \Hom_{\mathcal T}(P,\bigoplus_i M_i)
+\]
+jest izomorfizmem. Rodzina obiektów $(G_\lambda)$ wykrywa obiekt zerowy, jeśli z warunków
+$\Hom_{\mathcal T}(G_\lambda,M[n])=0$ dla wszystkich $\lambda,n$ wynika $M\cong0$. Rodzinę obiektów zwartych, która wykrywa obiekt zerowy w powyższym sensie, nazywamy rodziną zwartych generatorów.
+\end{definicja}
+
+\begin{definicja}[Moduł doskonały]\label{cat:def:dg-perfect}
+Przez $\operatorname{per}(\mathcal C)$ oznaczamy najmniejszą pełną podkategorię $D(\mathcal C)$ zawierającą wszystkie $h_X$, domkniętą na izomorfizmy, przesunięcia, stożki, skończone sumy proste i retrakty. Moduł reprezentujący obiekt tej podkategorii nazywamy doskonałym (ang.\ perfect). Podkategorię taką nazywamy grubą podkategorią triangulowaną (ang.\ thick subcategory).
+\end{definicja}
+
+\begin{twierdzenie}[Zwarte generatory reprezentowalne]\label{cat:thm:dg-compact-generators}
+Rodzina $(h_X)_{X\in\Ob\mathcal C}$ jest rodziną zwartych generatorów $D(\mathcal C)$. Każdy moduł doskonały reprezentuje obiekt zwarty.
+\end{twierdzenie}
+\begin{proof}
+Z pochodnego lematu Yonedy~\ref{cat:cor:dg-derived-yoneda} i wniosku~\ref{cat:cor:dg-derived-coproduct} otrzymujemy
+\[
+\begin{aligned}
+ \Hom_D(h_X,\bigoplus_i M_i)
+ &\cong H^0\left(\bigoplus_i M_i(X)\right)\\
+ &\cong\bigoplus_i H^0(M_i(X))
+ \cong\bigoplus_i\Hom_D(h_X,M_i).
+\end{aligned}
+\]
+Izomorfizmy są zgodne z włożeniami składników dzięki naturalności lematu Yonedy, więc $h_X$ jest zwarty. Jeśli $\Hom_D(h_X,M[n])=0$ dla każdego $X,n$, to $M$ jest acykliczny przez ten sam lemat. Mapa $0\to M$ jest zatem quasi-izomorfizmem, czyli $M\cong0$ w $D$.
+
+Obiekty zwarte tworzą grubą podkategorię triangulowaną. Przesunięcie komutuje z koproduktami, ponieważ jest auto-równoważnością, więc zwartość zachowuje się po przesunięciu. Skończone sumy proste zachowują zwartość, gdyż skończony produkt grup abelowych jest sumą prostą i komutuje z dowolnymi sumami prostymi. Jeśli $P$ jest retraktem $Q$, to kanoniczne odwzorowanie w definicji zwartości dla $P$ jest retraktem odpowiedniego odwzorowania dla $Q$, zatem jest izomorfizmem, gdy to ostatnie jest izomorfizmem.
+
+Dla trójkąta wyróżnionego $P\to Q\to R\to P[1]$ stosujemy $\Hom_D(-,M_i)$ i bierzemy sumę prostą długich ciągów dokładnych. Porównujemy z długim ciągiem $\Hom_D(-,\bigoplus_i M_i)$ przez kanoniczne odwzorowania. Sumy proste grup są dokładne. Jeśli $P,Q$ są zwarte, cztery sąsiadujące strzałki wokół porównania dla $R$ są izomorfizmami (uwzględniamy przesunięcia $P,Q$). Lemat o pięciu morfizmach (twierdzenie~\ref{cat:thm:five-lemma}) daje izomorfizm dla $R$. To dowodzi domknięcia na stożki. Z definicji $\operatorname{per}(\mathcal C)$ wszystkie jej obiekty są więc zwarte.
+\end{proof}
+
+\subsection{Skończone moduły półswobodne}
+
+\begin{definicja}[Skończona prezentacja półswobodna]\label{cat:def:dg-finite-semifree}
+Moduł półswobodny nazywamy skończonym półswobodnym, gdy w pewnej filtracji z definicji~\ref{cat:def:dg-semifree} występuje łącznie skończona liczba generatorów. Wtedy filtrację można zakończyć po skończenie wielu etapach.
+\end{definicja}
+
+\begin{lemat}[Ciąg rozkładalny po pominięciu różniczki]\label{cat:lem:dg-graded-split-triangle}
+Jeżeli ciąg modułów DG
+\[
+ 0\longrightarrow U\xrightarrow{i}V\xrightarrow{q}W\longrightarrow0
+\]
+jest dokładny składowo i rozkłada się w kategorii modułów z gradacją, to jest źródłem trójkąta wyróżnionego $U\to V\to W\to U[1]$ w $D(\mathcal C)$. Jeżeli dodatkowo $U,V,W$ są homotopijnie rzutowe, trójkąt jest wyróżniony również w $K_{\mathrm{hp}}(\mathcal C)$.
+\end{lemat}
+\begin{proof}
+Morfizm $\operatorname{Cone}(i)\to W$ zadany przez $(v,u)\mapsto q(v)$ komutuje z różniczką, gdyż $qi=0$. Jest składowo surjektywny. Jego jądro jest izomorficzne z $\operatorname{Cone}(\id_U)$: identyfikujemy pierwszą współrzędną jądra z $U$ przez $i$, a drugą pozostawiamy w $U[1]$. Różniczka ma wtedy postać $(x,y)\mapsto(d_Ux+y,-d_Uy)$. Homotopia $H(x,y)=(0,x)$ spełnia $dH+Hd=\id$, jest prawostronnie liniowa i stopnia $-1$. Jądro jest acykliczne. Długi ciąg kohomologii dokładnego ciągu kompleksów w każdym obiekcie daje quasi-izomorficzność $\operatorname{Cone}(i)\to W$. Stąd trójkąt stożka w $D$ jest izomorficzny z żądanym trójkątem, przy czym ostatnią strzałkę przenosimy przez odwrotność tego quasi-izomorfizmu w $D$. Jeśli $U,V,W$ są homotopijnie rzutowe, to również stożek jest homotopijnie rzutowy, a quasi-izomorfizm jest równoważnością homotopijną przez dowód twierdzenia~\ref{cat:thm:dg-derived-h-projective}. Otrzymujemy zatem trójkąt już w $K_{\mathrm{hp}}$. Założenie rozkładalności po pominięciu różniczki jest wygodne dla zastosowań poniżej, choć sam pierwszy wniosek potrzebuje jedynie dokładności składowej.
+\end{proof}
+
+\begin{stwierdzenie}[Skończone moduły półswobodne są doskonałe]\label{cat:prop:dg-finite-semifree-perfect}
+Każdy skończony moduł półswobodny jest doskonały. Dowolny jego retrakt w $D(\mathcal C)$ jest doskonały.
+\end{stwierdzenie}
+\begin{proof}
+Dla kolejnych etapów filtracji mamy rozkładalne po pominięciu różniczki ciągi
+\[
+ 0\to P_{j-1}\to P_j\to
+       \bigoplus_{\lambda\in I_j}h_{X_\lambda}[-n_\lambda]\to0.
+\]
+Lemat~\ref{cat:lem:dg-graded-split-triangle} daje trójkąty wyróżnione. Ostatni wyraz należy do $\operatorname{per}(\mathcal C)$, ponieważ $I_j$ jest skończony. Zaczynając od $P_{-1}=0$ i rotując trójkąt, wnioskujemy kolejno, że $P_j$ należy do $\operatorname{per}(\mathcal C)$. Po skończenie wielu etapach otrzymujemy $P$. Teza o retraktach jest częścią definicji podkategorii doskonałej.
+\end{proof}
+
+\subsection{Teleskop ciągu modułów}
+
+\begin{lemat}[Teleskop filtracji półswobodnej]\label{cat:lem:dg-semifree-telescope}
+Niech $P=\bigcup_{j\geq0}P_j$ będzie modułem półswobodnym z wyróżnioną filtracją i inkluzjami $i_j:P_j\to P_{j+1}$. Niech $B=\bigoplus_{j\geq0}P_j$, a $s:B\to B$ wysyła $j$-ty składnik do $(j+1)$-go przez $i_j$. Istnieje trójkąt wyróżniony w $D(\mathcal C)$
+\[
+ B\xrightarrow{\id-s}B\longrightarrow P\longrightarrow B[1],
+\]
+w którym druga strzałka jest sumą inkluzji do $P$. Jeśli $T$ jest zwarty w $D(\mathcal C)$, to kanoniczne odwzorowanie
+\[
+ \varinjlim_j\Hom_D(T,P_j)\longrightarrow\Hom_D(T,P)
+\]
+jest izomorfizmem.
+\end{lemat}
+\begin{proof}
+Mamy składowo dokładny ciąg $0\to B\xrightarrow{\id-s}B\to P\to0$. Injektywność pierwszej strzałki wynika przez sprawdzenie kolejnych współrzędnych: gdy $(\id-s)x=0$, zerowa jest pierwsza współrzędna, a potem indukcyjnie wszystkie pozostałe. Ostatnia strzałka jest surjektywna, ponieważ każdy element $P$ należy do pewnego etapu. Aby sprawdzić jądro, niech $b=(b_0,\ldots,b_N,0,\ldots)$ ma sumę zerową w $P$. Definiujemy $x_0=b_0$, $x_j=b_j+i_{j-1}x_{j-1}$ dla $1\leq j\leq N$. Obraz $x_N$ w $P$ jest sumą wyjściowych elementów, czyli zerem. Injektywność $P_N\to P$ daje $x_N=0$. Kładziemy pozostałe współrzędne $x_j=0$; wtedy $(\id-s)x=b$. Ciąg rozkłada się po pominięciu różniczki: każdy wyróżniony generator $P$ możemy umieścić w składniku $P_j$ odpowiadającym etapowi jego dodania, co definiuje prawostronnie liniowy morfizm $P\to B$ w gradacji, będący sekcją surjekcji $B\to P$. Lemat~\ref{cat:lem:dg-graded-split-triangle} daje trójkąt.
+
+Stosujemy $\Hom_D(T,-)$ i zwartość $T$ do obu sum prostych oraz ich przesunięć. Otrzymujemy fragment długiego ciągu
+\[
+\begin{aligned}
+ \bigoplus_j\Hom_D(T,P_j)&\xrightarrow{\id-s_*}
+ \bigoplus_j\Hom_D(T,P_j)\to\Hom_D(T,P)\\
+ &\to\bigoplus_j\Hom_D(T,P_j[1])
+ \xrightarrow{\id-s_*}\bigoplus_j\Hom_D(T,P_j[1]).
+\end{aligned}
+\]
+Oba odwzorowania $\id-s_*$ są injektywne przez ten sam argument kolejnych współrzędnych, nawet gdy strzałki między grupami nie są injektywne. Stąd środkowa grupa jest koequalizatorem $\id-s_*$ i zera, czyli granicą induktywną grup $\Hom_D(T,P_j)$. Ostatnia identyfikacja wynika z prezentacji granicy induktywnej jako sumy prostej modulo relacje utożsamiające element z jego obrazem na następnym etapie. Jest to właśnie kanoniczne odwzorowanie do $\Hom_D(T,P)$.
+\end{proof}
+
+\subsection{Charakteryzacja obiektów zwartych}
+
+\begin{twierdzenie}[Moduły doskonałe a obiekty zwarte]\label{cat:thm:dg-perfect-compact}
+Dla małej kategorii DG $\mathcal C$ następujące warunki dla obiektu $T$ kategorii $D(\mathcal C)$ są równoważne:
+\begin{enumerate}
+ \item $T$ jest zwarty;
+ \item $T$ jest retraktem skończonego modułu półswobodnego w $D(\mathcal C)$;
+ \item $T$ należy do $\operatorname{per}(\mathcal C)$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Implikacje $2\Rightarrow3\Rightarrow1$ wynikają ze stwierdzenia~\ref{cat:prop:dg-finite-semifree-perfect} i twierdzenia~\ref{cat:thm:dg-compact-generators}. Dowiedziemy $1\Rightarrow2$.
+
+Wybieramy rezolucję półswobodną $P\to T$ (dla modułu reprezentującego $T$). W kategorii pochodnej jest ona izomorfizmem. Z lematu~\ref{cat:lem:dg-semifree-telescope} wynika, że jego odwrotność $T\to P$ faktoryzuje się przez pewien etap $P_j$. Etap ten może mieć nieskończenie wiele generatorów; trzeba jeszcze zredukować ich liczbę.
+
+Ustalmy wyróżnione generatory filtracji. Każdy generator $e$ ma różniczkę należącą do skończonej sumy składników reprezentowalnych wcześniejszych etapów: jest to konsekwencja definicji sumy prostej. Wybieramy skończony zbiór tych wcześniejszych generatorów jako zbiór zależności $e$. Dla skończonego zbioru generatorów etapów od $0$ do $j$ domykamy go na zależności, dodając zależności ich zależności itd. Proces kończy się po najwyżej $j+1$ krokach, ponieważ każda zależność zmniejsza numer etapu. Otrzymany zbiór pozostaje skończony. Niech $\mathscr F_j$ będzie zbiorem wszystkich skończonych zbiorów generatorów etapów do $j$, domkniętych na tak wybrane zależności, uporządkowanym przez inkluzję. Jest to zbiór skierowany (suma dwóch takich zbiorów znów jest domknięta), zawierający zbiór pusty.
+
+Dla $S\in\mathscr F_j$ przez $P_S$ oznaczamy podmoduł z gradacją generowany przez wybrane składniki reprezentowalne. Jest to podmoduł DG: różniczka każdego generatora leży w podmodule, a reguła Leibniza daje to samo dla elementów $ef$. Jest skończonym modułem półswobodnym, z filtracją odziedziczoną z $P_j$. Pokażemy indukcyjnie dla każdego $r\in\mathbb Z$, że
+\begin{equation}\label{cat:eq:dg-finite-cell-factorization}
+ \varinjlim_{S\in\mathscr F_j}\Hom_D(T,P_S[r])
+ \xrightarrow{\ \sim\ }\Hom_D(T,P_j[r]).
+\end{equation}
+Przyjmujemy $\mathscr F_{-1}=\{\varnothing\}$ i $P_\varnothing=0$. Dla $j=-1$ obie strony są zerowe. Dla $j=0$ różniczki wszystkich wyróżnionych generatorów są zerowe, więc $P_0$ jest sumą reprezentowalnych przesuniętych modułów. Zwartość $T$ identyfikuje morfizmy do tej sumy z sumą prostą morfizmów do poszczególnych składników. Każdy element tej sumy ma skończony nośnik i równość dwóch elementów można sprawdzić w sumie nad skończoną sumą ich nośników. Otrzymujemy~\eqref{cat:eq:dg-finite-cell-factorization}.
+
+Dla $j>0$ oznaczamy przez $S_{<j}$ część $S$ na wcześniejszych etapach i przez $S_j$ część na etapie $j$. Mamy diagramy składowo dokładnych ciągów modułów DG
+\[
+\begin{array}{ccccc}
+ P_{S_{<j}}&\longrightarrow&P_S&\longrightarrow&
+ \displaystyle\bigoplus_{\lambda\in S_j}h_{X_\lambda}[-n_\lambda]\\
+ \downarrow&&\downarrow&&\downarrow\\
+ P_{j-1}&\longrightarrow&P_j&\longrightarrow&
+ \displaystyle\bigoplus_{\lambda\in I_j}h_{X_\lambda}[-n_\lambda].
+\end{array}
+\]
+Wiersze po dołączeniu zer na końcach rozkładają się w gradacji. Dają trójkąty przez lemat~\ref{cat:lem:dg-graded-split-triangle}. Ostatnie strzałki tych trójkątów są naturalne względem inkluzji: morfizm stożków jest określony współrzędnie przez inkluzje pierwszych dwóch obiektów i komutuje z quasi-izomorfizmami do ilorazów, użytymi w dowodzie lematu. Po zastosowaniu $\Hom_D(T,-[r])$ mamy więc przemienne diagramy długich ciągów dokładnych.
+
+Bierzemy granicę induktywną górnych ciągów względem $\mathscr F_j$, w kategorii $k$-modułów, a nie w kategorii pochodnej. Skierowane granice induktywne modułów zachowują dokładność: można je skonstruować z par (indeks, element), utożsamiając dwie pary, jeśli ich obrazy są równe na wspólnym większym etapie. Skierowanie zapewnia przechodniość tej relacji oraz możliwość dodawania elementów po przejściu do wspólnego etapu. W szczególności każdy element granicy ma reprezentanta na pewnym etapie, a jego znikanie oznacza znikanie obrazu na pewnym późniejszym etapie. Dla elementu jądra przechodzimy do takiego późniejszego etapu, korzystamy z dokładności tamtego ciągu i przenosimy otrzymany przeciwobraz do granicy. To daje dokładność granicy.
+
+Porównanie dla lewych wyrazów jest izomorfizmem przez założenie indukcyjne: każdy skończony domknięty zbiór wcześniejszych generatorów należy też do $\mathscr F_j$, a dla dowolnego $S\in\mathscr F_j$ zbiór $S_{<j}$ należy do $\mathscr F_{j-1}$. Przejścia przez te dwa przyporządkowania dają odwrotne identyfikacje granic, ponieważ $S_{<j}\subseteq S$ i obie strony mają ten sam wcześniejszy podmoduł. Porównanie dla prawych wyrazów jest izomorfizmem przez zwartość $T$: każdy skończony zbiór generatorów etapu $j$ zawiera się w pewnym $S_j$ (domykamy na zależności), a dowolne dwa takie wybory można powiększyć do ich sumy. W szczególności granica induktywna skończonych sum grup morfizmów jest pełną sumą prostą tych grup. Oba porównania są izomorfizmami dla wszystkich przesunięć $r$. Dokładniej, oznaczając prawy wyraz górnego trójkąta przez $Q_S$, stosujemy lemat o pięciu morfizmach (twierdzenie~\ref{cat:thm:five-lemma}) do porównania granicy induktywnej fragmentów
+\[
+\begin{aligned}
+ \Hom_D(T,Q_S[r-1])&\longrightarrow\Hom_D(T,P_{S_{<j}}[r])
+ \longrightarrow\Hom_D(T,P_S[r])\\
+ &\longrightarrow\Hom_D(T,Q_S[r])
+ \longrightarrow\Hom_D(T,P_{S_{<j}}[r+1])
+\end{aligned}
+\]
+z odpowiednim fragmentem dla $P_{j-1},P_j$ i $Q=P_j/P_{j-1}$. Cztery skrajne porównania są izomorfizmami na mocy poprzedniego akapitu. Stąd środkowe porównanie~\eqref{cat:eq:dg-finite-cell-factorization} jest izomorfizmem.
+
+Z~\eqref{cat:eq:dg-finite-cell-factorization} dla $r=0$ wynika, że morfizm $T\to P_j$ otrzymany na początku dowodu faktoryzuje się przez pewien skończony $P_S$. Złożenie
+\[
+ T\longrightarrow P_S\longrightarrow P_j
+ \longrightarrow P\longrightarrow T
+\]
+jest identycznością w $D(\mathcal C)$ z wyboru wyjściowej faktoryzacji. Zatem $T$ jest retraktem skończonego modułu półswobodnego. To kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Zwykły pierścień i algebra DG]\label{cat:ex:dg-perfect-algebra}
+Dla jednoobiektowej kategorii DG odpowiadającej algebrze DG $A$ otrzymujemy $D(A)$ z jednym zwartym generatorem $A$. Obiekty doskonałe to retrakty modułów zbudowanych ze skończenie wielu przesuniętych kopii $A$ przez kolejne dołączanie generatorów z różniczką w już zbudowanej części. W szczególności gdy $A=k$ jest ciałem skoncentrowanym w stopniu zerowym, obiekt $M$ jest doskonały wtedy i tylko wtedy, gdy suma $\bigoplus_n H^n(M)$ ma skończony wymiar.
+
+Dla implikacji wprost korzystamy z twierdzenia~\ref{cat:thm:dg-perfect-compact}: skończony moduł półswobodny nad $k$ ma skończony łączny wymiar w gradacji, a kohomologia retraktu jest retraktem jego kohomologii. Dla implikacji odwrotnej wybieramy w każdym $H^n(M)$ bazę i reprezentujące jej elementy cykle. Morfizm sumy przesuniętych kopii $k$ do $M$ wysyłający generatory na te cykle jest quasi-izomorfizmem, bo indukuje izomorfizm na wybranych bazach kohomologii. Łączna liczba generatorów jest skończona, zatem $M$ jest doskonały. Dla dowolnego pierścienia $k$ argument z wyborem baz nie musi działać, ponieważ moduły kohomologii nie muszą być swobodne.
+\end{przyklad}
+
+\subsection{Koalgebra tensorowa i zawieszenie}
+
+Przechodzimy do struktur, w których łączność zachodzi z dokładnością do wyższych homotopii. Punktem odniesienia są operady łączne z rozdziału~\ref{cat:sec:operads}. Dla modułu z gradacją $A$ oznaczamy przez $sA=A[1]$ jego zawieszenie: odwzorowanie $s:A\to sA$ ma stopień $-1$. W tej części najpierw używamy samej gradacji, a różniczkę wprowadzimy jako składnik operacji. W szczególności nie utożsamiamy automatycznie operacji $sds^{-1}$ z różniczką przesuniętego kompleksu, która według wcześniejszej konwencji wynosi $-sds^{-1}$.
+
+\begin{definicja}[Zredukowana koalgebra tensorowa]\label{cat:def:ainfty-tensor-coalgebra}
+Dla modułu z gradacją $V$ przyjmujemy
+\[
+ T^c(V)=\bigoplus_{n\geq1} V^{\otimes n},\qquad
+ \Delta(v_1\otimes\cdots\otimes v_n)
+ =\sum_{j=1}^{n-1}
+ (v_1\otimes\cdots\otimes v_j)\otimes
+ (v_{j+1}\otimes\cdots\otimes v_n).
+\]
+Jest to koalgebra bez kojednostki, czyli niekojednostkowa wersja komonoidu z definicji~\ref{cat:def:comonoid-object} w kategorii $k$-modułów z gradacją. W dalszym ciągu słowo koprodukcja oznacza tutaj morfizm $\Delta$ koalgebry, a nie koprodukt w sensie ogólnej teorii kategorii. Przez $\pi:T^c(V)\to V$ oznaczamy projekcję na składnik długości jeden.
+\end{definicja}
+
+Kołączność wynika z tego, że obie iterowane koprodukcje sumują po wszystkich dwóch cięciach słowa na trzy niepuste części. Elementy pierwotne (jądro $\Delta$) tworzą dokładnie $V$: na składniku długości $n\geq2$ projekcja koprodukcji na $V\otimes V^{\otimes(n-1)}$ jest kanonicznym izomorfizmem. Każdy element ma skończony nośnik względem długości i jego dostatecznie wysoka iterowana koprodukcja jest zerowa.
+
+\begin{twierdzenie}[Koderivacje koalgebry tensorowej]\label{cat:thm:ainfty-coderivation}
+Dla rodziny jednorodnych map $b_n:V^{\otimes n}\to V$ wspólnego stopnia $q$ istnieje dokładnie jedna koderivacja $b:T^c(V)\to T^c(V)$ stopnia $q$ taka, że $\pi b|_{V^{\otimes n}}=b_n$. Koderivacją nazywamy mapę spełniającą
+\[
+ \Delta b=(b\otimes\id+\id\otimes b)\Delta
+\]
+z regułą znaków Koszula z~\eqref{cat:eq:dg-koszul-tensor}. Każda potęga tensorowa o wykładniku zero w takim zapisie oznacza pominięcie odpowiednich czynników. Jej wzór to
+\begin{equation}\label{cat:eq:ainfty-coderivation-extension}
+ b|_{V^{\otimes n}}
+ =\sum_{r+t+j=n,\ j\geq1}
+ \id^{\otimes r}\otimes b_j\otimes\id^{\otimes t}.
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Na słowie długości $n$ suma jest skończona, a każdy składnik ma długość $n-j+1$, więc wzór określa mapę do sumy prostej. Na tensorze jednorodnym znak składnika jest $(-1)^{q(|v_1|+\cdots+|v_r|)}$. Po zastosowaniu $\Delta$ do wyniku wybieramy cięcie, które nie przecina bloku zastąpionego przez $b_j$. Jeśli cięcie leży za tym blokiem, otrzymujemy składnik $(b\otimes\id)\Delta$. Jeśli leży przed nim, otrzymujemy składnik $(\id\otimes b)\Delta$; dla cięcia po $i$ czynnikach, gdzie $i\leq r$, znak tensorowego działania $\id\otimes b$ wynosi $(-1)^{q\sum_{a=1}^i|v_a|}$, a znak wstawienia $b_j$ w prawej części wynosi $(-1)^{q\sum_{a=i+1}^r|v_a|}$. Ich iloczyn jest równy $(-1)^{q\sum_{a=1}^r|v_a|}$. W obu przypadkach łączny znak jest znakiem z podanego wzoru. To sprawdza równanie koderivacji.
+
+Projekcja na długość jeden pozostawia jedynie składnik $b_n$. Dla jednoznaczności niech $c$ będzie różnicą dwóch koderivacji o tych samych projekcjach. Jeśli $c$ zeruje się na słowach długości mniejszej niż $n$, to $\Delta c$ zeruje się na słowach długości $n$, ponieważ wszystkie części ich koprodukcji mają mniejszą długość. Zatem wartości $c$ na tych słowach należą do $V$, ale ich projekcja na $V$ jest zerowa. Dla $n=1$ ten sam argument działa z pustą koprodukcją. Indukcja daje $c=0$.
+\end{proof}
+
+\begin{twierdzenie}[Morfizmy koalgebr tensorowych]\label{cat:thm:ainfty-coalgebra-map}
+Rodzina map stopnia zerowego $F_n:V^{\otimes n}\to W$ określa dokładnie jeden morfizm koalgebr z gradacją $F:T^c(V)\to T^c(W)$ z $\pi F|_{V^{\otimes n}}=F_n$. Wzór ma postać
+\begin{equation}\label{cat:eq:ainfty-coalgebra-extension}
+ F|_{V^{\otimes n}}=
+ \sum_{j_1+\cdots+j_\ell=n,\ j_a\geq1}
+ F_{j_1}\otimes\cdots\otimes F_{j_\ell}.
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Suma biegnie po wszystkich uporządkowanych rozkładach $n$ na dodatnie liczby całkowite. Koprodukcja wyniku wybiera granicę pomiędzy dwoma blokami; jest to dokładnie to samo co wybranie najpierw cięcia słowa, a potem rozkładów obu części. Wszystkie $F_j$ mają stopień zerowy, więc nie powstają dodatkowe znaki. Otrzymujemy $\Delta F=(F\otimes F)\Delta$. Projekcja na długość jeden pozostawia tylko $F_n$. Dwa morfizmy o tych samych projekcjach, zgodne na długościach mniejszych niż $n$, mają na długości $n$ różnicę o zerowej koprodukcji. Różnica jest więc pierwotna i ma zerową projekcję na $W$, czyli jest zerowa. Indukcja kończy dowód.
+\end{proof}
+
+\begin{lemat}[Koderivacje względem morfizmu]\label{cat:lem:ainfty-relative-coderivation}
+Niech $F:T^c(V)\to T^c(W)$ będzie morfizmem koalgebr stopnia zerowego. Jeśli mapa $E$ stopnia $q$ spełnia
+\[
+ \Delta E=(E\otimes F+F\otimes E)\Delta,
+\]
+to jest wyznaczona przez rodzinę $\pi E|_{V^{\otimes n}}$. Jeżeli składowe tej rodziny dla $n<N$ są zerowe, to $E$ zeruje się na słowach długości mniejszej niż $N$, a na długości $N$ przyjmuje wartości w $W$.
+\end{lemat}
+\begin{proof}
+Stosujemy indukcję tak jak w dowodzie jednoznaczności koderivacji. Jeśli $E$ zeruje się na mniejszych długościach, prawa strona równania dla $\Delta E$ jest zerowa na długości $n$, a więc $E$ przyjmuje tam wartości w $W$. Jej wartość jest wtedy dokładnie równa projekcji $\pi E$. Dla różnicy dwóch map spełniających to samo równanie otrzymujemy również jednoznaczność.
+\end{proof}
+
+\subsection{\texorpdfstring{Algebry $A_\infty$}{Algebry A-infty} i tożsamości Stasheffa}
+
+\begin{definicja}[Algebra $A_\infty$ bez krzywizny]\label{cat:def:ainfty-algebra}
+Algebrą $A_\infty$ na module z gradacją $A$ nazywamy rodzinę map
+\[
+ b_n:(sA)^{\otimes n}\to sA,\qquad |b_n|=1,\quad n\geq1,
+\]
+których koderivacja $b$ z twierdzenia~\ref{cat:thm:ainfty-coderivation} spełnia $b^2=0$. Parę $(T^c(sA),b)$ nazywamy zredukowaną konstrukcją barową. Nie wprowadzamy operacji arności zerowej ani nie wymagamy na razie jednostki.
+
+Operacje niezawieszone $m_n:A^{\otimes n}\to A$ określamy jednoznacznie przez
+\[
+ b_n=s\,m_n\,(s^{-1})^{\otimes n}.
+\]
+W szczególności $|m_n|=2-n$. Iloczyny tensorowe jednorodnych map w tym wzorze są rozumiane ze znakami Koszula. Na jednorodnych elementach oznacza to jawnie
+\[
+ b_n(sx_1,\ldots,sx_n)
+ =(-1)^{\sum_{a=1}^n(n-a)(|x_a|-1)}
+ s\,m_n(x_1,\ldots,x_n).
+\]
+Istotnie, każda z $n-a$ kopii mapy $s^{-1}$ stojących na prawo od $sx_a$ ma stopień jeden i wnosi czynnik $(-1)^{|sx_a|}$. Wzór ten określa także jednoznacznie operacje niezawieszone: po obu stronach odwracamy izomorfizm $s$ i mnożymy przez ten sam znak.
+\end{definicja}
+
+\begin{twierdzenie}[Tożsamości Stasheffa w konwencji zawieszonej]\label{cat:thm:ainfty-stasheff}
+Warunek $b^2=0$ jest równoważny rodzinie tożsamości
+\begin{equation}\label{cat:eq:ainfty-stasheff}
+ \sum_{r+j+t=n,\ j\geq1}
+ b_{r+1+t}(\id^{\otimes r}\otimes b_j\otimes\id^{\otimes t})=0,
+ \qquad n\geq1.
+\end{equation}
+W zapisie na jednorodnych elementach znak w składniku jest
+$(-1)^{|v_1|+\cdots+|v_r|}$, gdzie $v_a\in sA$.
+\end{twierdzenie}
+\begin{proof}
+Kwadrat koderivacji stopnia jeden jest koderivacją stopnia dwa: po dwukrotnym użyciu równania koderivacji otrzymujemy
+\[
+ \Delta b^2=(b^2\otimes\id+b\otimes b-b\otimes b+
+ \id\otimes b^2)\Delta.
+\]
+Znaki mieszanych składników wynikają z reguły składania tensorów jednorodnych map. Ich suma znika nad dowolnym pierścieniem, również w charakterystyce dwa. Przez jednoznaczność koderivacji $b^2=0$ wtedy i tylko wtedy, gdy wszystkie projekcje $\pi b^2|_{(sA)^{\otimes n}}$ są zerowe. Z wzoru~\eqref{cat:eq:ainfty-coderivation-extension} pierwsze zastosowanie $b$ zastępuje blok długości $j$ jednym czynnikiem; drugie zastosowanie, po projekcji na długość jeden, używa $b_{r+1+t}$ na całym pozostałym słowie. Otrzymujemy dokładnie~\eqref{cat:eq:ainfty-stasheff}.
+\end{proof}
+
+\begin{wniosek}[Tożsamości w konwencji niezawieszonej]\label{cat:cor:ainfty-unsuspended}
+Przy przyjętej definicji $b_n=s m_n(s^{-1})^{\otimes n}$ tożsamości Stasheffa równoważne są równaniom
+\begin{equation}\label{cat:eq:ainfty-unsuspended}
+ \sum_{r+j+t=n,\ j\geq1}(-1)^{t+jr}
+ m_{r+1+t}(\id^{\otimes r}\otimes m_j\otimes\id^{\otimes t})=0.
+\end{equation}
+Iloczyny tensorowe map w tym równaniu nadal podlegają regule Koszula.
+\end{wniosek}
+\begin{proof}
+Niech $u_a=|sx_a|=|x_a|-1$ oraz $S_n=\sum_{a=1}^n(n-a)u_a$. W składniku o indeksach $r,j,t$ wzoru~\eqref{cat:eq:ainfty-stasheff} znak wstawienia $b_j$ ma wykładnik $\sum_{a\leq r}u_a$. Znak usunięcia zawieszeń wewnątrz bloku ma wykładnik $\sum_{a=r+1}^{r+j}(r+j-a)u_a$. W zewnętrznym $b_{r+1+t}$ stopień zawieszonego wyniku bloku wynosi $1+\sum_{a=r+1}^{r+j}u_a$. Po zsumowaniu wykładników czynników przed blokiem, wewnątrz bloku i za blokiem otrzymujemy całkowity wykładnik
+\[
+ S_n+(2-j)\sum_{a\leq r}u_a+t.
+\]
+Rzeczywiście, przed blokiem wagi zewnętrzne zmniejszają się o $j-1$, lecz dochodzi znak wstawienia; wewnątrz bloku wagi wewnętrzne i zewnętrzne sumują się do $n-a$, a dodatkowy stopień jeden wnosi $t$. Za blokiem wagi są niezmienione. Natomiast znak wstawienia niezawieszonego $m_j$ jest równy $(-1)^{(2-j)\sum_{a\leq r}|x_a|}$. Różnica wykładników modulo $2$, po usunięciu wspólnego czynnika $(-1)^{S_n}$, jest równa $t-(2-j)r\equiv t+jr$. Po odwróceniu $s$ otrzymujemy~\eqref{cat:eq:ainfty-unsuspended}. Proste tensory jednorodne generują moduł, więc równoważność zachodzi dla całych map.
+\end{proof}
+
+Dla $n=1,2$ tożsamości mają postać
+\[
+ b_1^2=0,\qquad b_1b_2+b_2(b_1\otimes\id+\id\otimes b_1)=0.
+\]
+Po usunięciu zawieszeń dają $m_1^2=0$ i
+\[
+ m_1m_2(x,y)=m_2(m_1x,y)+(-1)^{|x|}m_2(x,m_1y).
+\]
+Istotnie, dla $|x|=p$ mamy $b_1(sx)=s m_1x$ i $b_2(sx,sy)=(-1)^{p-1}s m_2(x,y)$. Trzy składniki tożsamości arności dwa na $sx\otimes sy$ to kolejno
+\[
+\begin{aligned}
+ b_1b_2(sx,sy)&=(-1)^{p-1}s\,m_1m_2(x,y),\\
+ b_2(b_1\otimes\id)(sx,sy)&=(-1)^p s\,m_2(m_1x,y),\\
+ b_2(\id\otimes b_1)(sx,sy)&=s\,m_2(x,m_1y).
+\end{aligned}
+\]
+W ostatnim wierszu znak od zastosowania $b_1$ do drugiego czynnika i znak od $b_2$ są równe $(-1)^{p-1}$, więc ich iloczyn wynosi jeden. Podzielenie przez wspólny znak $(-1)^{p-1}$ daje regułę Leibniza.
+
+Dla $n=3$ mamy
+\begin{equation}\label{cat:eq:ainfty-arity-three}
+ b_2(b_2\otimes\id+\id\otimes b_2)
+ =-b_1b_3-b_3(b_1\otimes\id\otimes\id+
+ \id\otimes b_1\otimes\id+\id\otimes\id\otimes b_1).
+\end{equation}
+Jest to homotopia łączności w konwencji zawieszonej. W szczególności na cyklach $b_1$ prawa strona jest brzegiem. Operacja $m_2$ indukuje łączne mnożenie na kohomologii $H(A,m_1)$: reguła Leibniza zapewnia dobre określenie na klasach, a na $sx,sy,sz$ lewa strona~\eqref{cat:eq:ainfty-arity-three} jest
+\[
+ (-1)^{|y|}s\bigl(m_2(m_2(x,y),z)-m_2(x,m_2(y,z))\bigr).
+\]
+Istotnie, dla $|x|=p$ i $|y|=q$ wykładnik znaku pierwszego składnika wynosi $(p-1)+(p+q-1)\equiv q\pmod2$, a drugiego $(p-1)+(q-1)+(p-1)\equiv q-1\pmod2$. Jeżeli $m_1x=m_1y=m_1z=0$, wszystkie składniki prawej strony zawierające $b_1$ wewnątrz $b_3$ znikają. Pozostały składnik jest brzegiem $-b_1b_3(sx,sy,sz)$, czyli po usunięciu zawieszenia brzegiem dla $m_1$. Stąd łączność na klasach kohomologii.
+
+\begin{stwierdzenie}[Algebry DG jako algebry $A_\infty$]\label{cat:prop:ainfty-dg}
+Algebry DG bez wymaganej jednostki odpowiadają dokładnie algebrom $A_\infty$ z $m_n=0$ dla wszystkich $n\geq3$. Jednostkę można zachować jako ścisłą jednostkę.
+\end{stwierdzenie}
+\begin{proof}
+W tej sytuacji jedyne potencjalnie niezerowe sumy w~\eqref{cat:eq:ainfty-stasheff} mają arności $1,2,3$, ponieważ zarówno operacja wewnętrzna, jak i zewnętrzna muszą mieć arność co najwyżej dwa. Pierwsze dwa równania są równaniem różniczki i regułą Leibniza, a trzecie jest przez powyższy rachunek równoważne ścisłej łączności. Odwrotnie, te trzy własności algebry DG dają wszystkie tożsamości. Jeżeli algebra DG ma jednostkę, spełnia ona warunki ścisłej jednostki podane poniżej.
+\end{proof}
+
+\begin{definicja}[Jednostka i minimalność]\label{cat:def:ainfty-unit-minimal}
+Algebra $A_\infty$ jest minimalna, jeśli $m_1=0$. Jest ściśle unitalna, jeśli ma element $1\in A^0$ z $m_1(1)=0$, $m_2(1,x)=x=m_2(x,1)$, a wszystkie $m_n$ dla $n\geq3$ zerują się, gdy którykolwiek argument jest równy $1$. Jest kohomologicznie unitalna, jeśli algebra kohomologii z mnożeniem indukowanym przez $m_2$ ma jednostkę.
+\end{definicja}
+
+Ścisła jednostka wyznacza jednostkę w kohomologii przez przejście do klas, lecz nie należy utożsamiać tych dwóch warunków.
+
+\begin{przyklad}[Nietrywialna operacja wyższego rzędu]\label{cat:ex:ainfty-higher-operation}
+Niech $k$ będzie niezerowym ciałem, $A=ka\oplus kc$, $|a|=1$, $|c|=2$. Na $sA$ definiujemy $b_3(sa,sa,sa)=sc$, pozostałe wartości na tensorach bazowych jako zero oraz $b_n=0$ dla $n\neq3$. Mapa ma stopień jeden, ponieważ $|sa|=0$ i $|sc|=1$. Jedyna potencjalnie niezerowa tożsamość w~\eqref{cat:eq:ainfty-stasheff} ma arność pięć. Każdy jej składnik jest jednak zerowy: wewnętrzne $b_3$ albo jest zerowe, albo wytwarza $sc$, a zewnętrzne $b_3$ zeruje się na każdym tensorze z takim czynnikiem. Otrzymujemy minimalną algebrę $A_\infty$ z $m_2=0$ i niezerowym $m_3$, która w tej prezentacji nie jest algebrą DG. Przykład nie ma jednostki i służy wyłącznie ilustracji operacji wyższej arności.
+\end{przyklad}
+
+\subsection{\texorpdfstring{Funktory i morfizmy $A_\infty$}{Funktory i morfizmy A-infty}}
+
+\begin{definicja}[Morfizm algebr $A_\infty$]\label{cat:def:ainfty-morphism}
+Morfizmem algebr $A_\infty$ z $A$ do $B$ nazywamy morfizm koalgebr barowych $F:T^c(sA)\to T^c(sB)$ stopnia zerowego spełniający $b_B F=F b_A$. Jego składowe $F_n:(sA)^{\otimes n}\to sB$ mają stopień zerowy. Niezawieszone składowe $f_n$ określa równanie $F_n=s f_n(s^{-1})^{\otimes n}$, więc $|f_n|=1-n$. Morfizm jest ścisły, jeśli $F_n=0$ dla $n\geq2$. Jest quasi-izomorfizmem, jeśli $f_1$ jest quasi-izomorfizmem kompleksów $(A,m_1)$ i $(B,m_1)$.
+\end{definicja}
+
+\begin{stwierdzenie}[Równania morfizmu i składanie]\label{cat:prop:ainfty-morphism-equations}
+Warunek $b_B F=F b_A$ jest równoważny równaniom
+\begin{equation}\label{cat:eq:ainfty-morphism}
+ \sum_{j_1+\cdots+j_\ell=n}
+ (b_B)_\ell(F_{j_1}\otimes\cdots\otimes F_{j_\ell})
+ =
+ \sum_{r+j+t=n}F_{r+1+t}
+ (\id^{\otimes r}\otimes(b_A)_j\otimes\id^{\otimes t}),
+\end{equation}
+gdzie wszystkie $j_a,j$ są dodatnie. Składowe złożenia $GF$ są dane przez
+\[
+ (GF)_n=\sum_{j_1+\cdots+j_\ell=n}
+ G_\ell(F_{j_1}\otimes\cdots\otimes F_{j_\ell}).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Różnica $E=b_B F-Fb_A$ spełnia równanie względnej koderivacji z lematu~\ref{cat:lem:ainfty-relative-coderivation}. Istotnie, używając $\Delta F=(F\otimes F)\Delta$ i równań obu koderivacji, otrzymujemy
+\[
+ \Delta E=(E\otimes F+F\otimes E)\Delta.
+\]
+Zatem $E=0$ wtedy i tylko wtedy, gdy wszystkie jego projekcje na długość jeden są zerowe. Wstawienie wzorów~\eqref{cat:eq:ainfty-coderivation-extension} i~\eqref{cat:eq:ainfty-coalgebra-extension} daje~\eqref{cat:eq:ainfty-morphism}. Wzór składania wynika przez projekcję $GF$ na długość jeden. Składanie jest łączne, ponieważ jest składaniem map koalgebr; zachowuje zgodność z różniczkami. Identyczność ma składową $F_1=\id$ i pozostałe składowe zerowe.
+\end{proof}
+
+Równanie arności jeden mówi, że $f_1$ jest morfizmem kompleksów. Równanie arności dwa pokazuje, że na kohomologii zachowuje mnożenie: dla cykli $x,y$ w $sA$ różnica $(b_B)_2(F_1x,F_1y)-F_1(b_A)_2(x,y)$ jest przeciwieństwem brzegu $(b_B)_1F_2(x,y)$. Znaki przy usuwaniu zawieszeń po obu stronach są równe, gdyż $F_1$ zachowuje stopień. Zatem quasi-izomorfizm indukuje izomorfizm algebr kohomologii. W kategorii kohomologicznie unitalnych algebr ograniczamy się do morfizmów zachowujących jednostkę w kohomologii. W szczególności każdy quasi-izomorfizm między takimi algebrami automatycznie zachowuje tę jednostkę: bijektywny homomorfizm algebr przenosi jednostkę na element działający jednostkowo na całej algebrze docelowej. Ścisłość morfizmu (zanikanie $F_n$ dla $n\geq2$) jest innym warunkiem niż ścisła unitalność. Ta ostatnia oznacza $f_1(1_A)=1_B$ oraz zanikanie $f_n$ dla $n\geq2$, gdy którykolwiek argument jest jednostką. Dla ścisłych morfizmów między algebrami DG równania arności jeden i dwa są dokładnie warunkami zachowania różniczki i mnożenia.
+
+\begin{stwierdzenie}[Odwracalność morfizmu o odwracalnej pierwszej składowej]\label{cat:prop:ainfty-inverse}
+Jeżeli $F:A\to B$ jest morfizmem $A_\infty$ i $F_1:sA\to sB$ jest izomorfizmem modułów z gradacją, to $F$ jest izomorfizmem $A_\infty$.
+\end{stwierdzenie}
+\begin{proof}
+Morfizm koalgebr zachowuje filtrację według długości. Na składniku długości $n$ jego składowa długości $n$ to $F_1^{\otimes n}$, będąca izomorfizmem. Wszystkie pozostałe składowe zmniejszają długość. Stąd jego ograniczenie do słów długości co najwyżej $n$ jest izomorfizmem na odpowiednią część koalgebry docelowej dla każdego $n$:  rozwiązujemy równanie $F(x)=y$ kolejno od najwyższej współrzędnej długości, odejmując jej obraz i schodząc do niższych długości. Odwrotności na etapach są zgodne, bo rozwiązanie jest jedyne; dają odwrotność $G$ na sumie prostej. Z $\Delta F=(F\otimes F)\Delta$ przez złożenie z $G$ oraz $G\otimes G$ wynika $\Delta G=(G\otimes G)\Delta$. Z równania $b_B F=F b_A$ wynika $G b_B=b_A G$. Zatem $G$ jest morfizmem $A_\infty$ i odwrotnością $F$.
+\end{proof}
+
+\begin{wniosek}[Quasi-izomorfizmy minimalnych algebr]\label{cat:cor:ainfty-minimal-iso}
+Quasi-izomorfizm między minimalnymi algebrami $A_\infty$ jest izomorfizmem $A_\infty$.
+\end{wniosek}
+\begin{proof}
+Ponieważ $m_1=0$ po obu stronach, kohomologie są samymi modułami z gradacją, a pierwsza składowa quasi-izomorfizmu jest izomorfizmem. Stosujemy stwierdzenie~\ref{cat:prop:ainfty-inverse}.
+\end{proof}
+
+\subsection{\texorpdfstring{Kategorie $A_\infty$}{Kategorie A-infty}}
+
+\begin{definicja}[Kategoria $A_\infty$]\label{cat:def:ainfty-category}
+Kategoria $A_\infty$ nad $k$ składa się z obiektów, modułów z gradacją $\mathcal A(X,Y)$ i map stopnia jeden
+\[
+ b_n:s\mathcal A(X_{n-1},X_n)\otimes\cdots\otimes
+ s\mathcal A(X_0,X_1)\to s\mathcal A(X_0,X_n)
+\]
+dla wszystkich ciągów obiektów $X_0,\ldots,X_n$, $n\geq1$. Mapy spełniają~\eqref{cat:eq:ainfty-stasheff} na każdym słowie złożonym ze składalnych morfizmów, z zachowaniem podanej kolejności czynników (morfizm stosowany najpóźniej znajduje się z lewej strony). Jednostki ścisłe i kohomologiczne definiujemy obiekt po obiekcie, analogicznie do definicji~\ref{cat:def:ainfty-unit-minimal}. W przypadku jednostek kohomologicznych wymagamy, by klasy jednostek działały jako jednostki dla wszystkich odpowiednich klas morfizmów.
+\end{definicja}
+
+W przypadku małej kategorii wszystkie wzory koalgebrowe można odczytać z zachowaniem źródeł i celów: dla każdego $n$ bierzemy sumę prostą tensorów po ciągach obiektów i dopuszczamy jedynie składalne słowa. Dla kategorii większych argumenty stosujemy lokalnie do słów lub przechodzimy do większego uniwersum. Rozcięcie słowa daje dwa słowa o wspólnym obiekcie na końcu i początku. Operacje blokowe zachowują oba skrajne obiekty bloku. Dlatego dowody twierdzeń~\ref{cat:thm:ainfty-coderivation}--\ref{cat:thm:ainfty-stasheff} działają bez zmian, po rozbiciu na odpowiednie ciągi obiektów. W szczególności operacja $m_1$ jest różniczką w każdym kompleksie morfizmów, a $m_2$ indukuje łączne składanie na kohomologii. Dla kategorii kohomologicznie unitalnej otrzymujemy zwykłą kategorię $H^0(\mathcal A)$ oraz kategorię z gradacją $H^*(\mathcal A)$. Kategorie DG z części pierwszej są ściśle unitalnymi kategoriami $A_\infty$ z zerowymi operacjami wyższych arności, przez stwierdzenie~\ref{cat:prop:ainfty-dg} zastosowane do składalnych słów.
+
+\begin{definicja}[Funktor $A_\infty$ i quasi-równoważność]\label{cat:def:ainfty-functor}
+Funktor $A_\infty$ $F:\mathcal A\to\mathcal B$ składa się z odwzorowania obiektów i map stopnia zerowego $F_n$ na składalnych słowach zawieszonych morfizmów, z wartościami w $s\mathcal B(FX_0,FX_n)$. Wymagamy równań~\eqref{cat:eq:ainfty-morphism}. Dla kategorii kohomologicznie unitalnych wymagamy zachowania jednostek w kohomologii. Dla kategorii kohomologicznie unitalnych funktor nazywamy quasi-równoważnością, jeśli jego pierwsze składowe indukują izomorfizmy we wszystkich stopniach kohomologii kompleksów morfizmów i $H^0(F)$ jest istotnie surjektywny. Ograniczenie do kategorii kohomologicznie unitalnych jest tu istotne: bez jednostek $H^0$ nie musi być kategorią w zwykłym sensie, więc nie możemy bez dodatkowej konwencji mówić o jej izomorfizmach obiektów.
+\end{definicja}
+
+Złożenie funktorów określamy wzorem ze stwierdzenia~\ref{cat:prop:ainfty-morphism-equations}, z uwzględnieniem odwzorowań obiektów. Pierwsza składowa złożenia jest złożeniem pierwszych składowych, więc quasi-równoważności są zamknięte na składanie. Na mocy równania arności dwa $H^0(F)$ jest funktorem, a dla quasi-równoważności jest pełny, wierny i istotnie surjektywny. W szczególności indukuje równoważność kategorii. Dla funktorów DG jest to dokładnie definicja~\ref{cat:def:dg-quasi-equivalence}.
+
+\subsection{Modele minimalne nad ciałem}
+
+Od tego miejsca zakładamy, że $k$ jest ciałem. Nie zakładamy skończonego wymiaru ani ograniczoności gradacji. Najpierw dowodzimy twierdzenia o przeniesieniu struktury bez wymagania ścisłych jednostek; dla struktur kohomologicznie unitalnych otrzymamy model kohomologicznie unitalny.
+
+\begin{lemat}[Rozkład kompleksu nad ciałem]\label{cat:lem:ainfty-contraction}
+Dla kompleksu $(V,d)$ nad ciałem i $H=H^*(V,d)$ traktowanego z zerową różniczką istnieją mapy $i:H\to V$, $p:V\to H$ stopnia zerowego i $h:V\to V$ stopnia $-1$ takie, że
+\[
+ pi=\id_H,\quad di=0,\quad pd=0,\quad
+ dh+hd=\id_V-ip,\quad hi=0,\quad ph=0,\quad h^2=0.
+\]
+Morfizm $i$ wybiera reprezentantów klas kohomologii.
+\end{lemat}
+\begin{proof}
+W każdym stopniu wybieramy dopełnienia $B^n=\im d^{n-1}$ w $Z^n=\ker d^n$ oraz $Z^n$ w $V^n$. Otrzymujemy rozkład $V^n=B^n\oplus H_0^n\oplus L^n$, gdzie $H_0^n\cong H^n(V)$. Różniczka ogranicza się do izomorfizmu $d:L^n\to B^{n+1}$: jest injektywna przez $L^n\cap Z^n=0$, a surjektywna, ponieważ każdy przeciwobraz brzegu można rozłożyć na cykl i element $L^n$. Mapa $i$ jest włożeniem wybranych reprezentantów, $p$ projekcją na ich klasy, a $h$ odwrotnością tej różniczki na składnikach $B^{n+1}$ i zerem na $H_0^{n+1},L^{n+1}$. Równanie $dh+hd=\id-ip$ sprawdza się na trzech składnikach: obie strony są identycznością na $B,L$ oraz zerem na $H_0$. Pozostałe warunki wynikają z definicji map.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie o modelu minimalnym Kadeishviliego]\label{cat:thm:ainfty-minimal-model}
+Niech $A$ będzie algebrą $A_\infty$ nad ciałem. Na $H=H^*(A,m_1)$ istnieje minimalna struktura $A_\infty$, której $m_2$ jest mnożeniem indukowanym w kohomologii, i quasi-izomorfizm $I:H\to A$ indukujący identyczność w kohomologii. Jeśli $A$ jest kohomologicznie unitalna, to $H$ jest kohomologicznie unitalna i $I$ zachowuje jednostki w kohomologii.
+\end{twierdzenie}
+\begin{proof}
+Pracujemy w gradacji zawieszonej. Piszemy $V=sA$, $W=H^*(V,b_1)$, utożsamiając $W$ z $sH$. Lemat~\ref{cat:lem:ainfty-contraction} stosujemy do $d=b_1$ i wybieramy $i,p,h$. Niech $b$ będzie koderivacją struktury $A$. Poszukujemy koderivacji $B$ na $T^c(W)$ stopnia jeden z $B_1=0$ oraz morfizmu koalgebr $I:T^c(W)\to T^c(V)$ z $I_1=i$, tak aby $B^2=0$ i $bI=IB$.
+
+Konstrukcję prowadzimy indukcyjnie po arności $n$. Dla $n=1$ warunki wynikają z $di=0$ i $B_1=0$. Załóżmy, że zdefiniowano składowe arności mniejszych niż $n$ i oba równania zachodzą na słowach tych długości. Tymczasowo przyjmujemy wszystkie pozostałe składowe równe zeru. Niech
+\[
+ E=bI-IB,\qquad e_n=\pi E|_{W^{\otimes n}}.
+\]
+Mapa $E$ jest względną koderivacją względem $I$ jak w dowodzie stwierdzenia~\ref{cat:prop:ainfty-morphism-equations}. Z lematu~\ref{cat:lem:ainfty-relative-coderivation} zeruje się na mniejszych długościach i przyjmuje na długości $n$ wartości w $V$. Analogicznie $B^2$ jest koderivacją (twierdzenie~\ref{cat:thm:ainfty-stasheff}) i na długości $n$ przyjmuje wartości w $W$.
+
+Z definicji $E$ oraz $b^2=0$ otrzymujemy tożsamość map
+\begin{equation}\label{cat:eq:ainfty-transfer-obstruction}
+ bE+EB=-IB^2.
+\end{equation}
+Na słowach długości $n$ mapa $EB$ jest zerowa, bo $B_1=0$, więc $B$ zmniejsza długość, a $E$ zeruje się na mniejszych długościach. Zatem po projekcji równanie~\eqref{cat:eq:ainfty-transfer-obstruction} przyjmuje postać
+\[
+ d e_n=-i c_n,\qquad c_n=\pi B^2|_{W^{\otimes n}}.
+\]
+Po zastosowaniu $p$ mamy $0=-c_n$, ponieważ $pd=0$ i $pi=\id_W$. Stąd $c_n=0$ oraz $d e_n=0$. Poniższy diagram przedstawia dane kontrakcji używane na każdym etapie konstrukcji (strzałka $h$ jest stopnia $-1$):
+\[
+\begin{tikzpicture}[>=Stealth,baseline=(w.base)]
+ \node (w) at (0,0) {$W$};
+ \node (v) at (5,0) {$V$};
+ \draw[->] (w) to[bend left=22] node[above] {$i$} (v);
+ \draw[->] (v) to[bend left=22] node[below] {$p$} (w);
+ \draw[->] (v) edge[loop right,looseness=8,min distance=10mm] node[right] {$h$} (v);
+ \node at (2.5,-1.7) {$pi=\id_W,\quad dh+hd=\id_V-ip$};
+\end{tikzpicture}
+\]
+
+Definiujemy teraz
+\begin{equation}\label{cat:eq:ainfty-transfer-recursion}
+ B_n=p e_n,\qquad I_n=-h e_n.
+\end{equation}
+Modyfikacja nie zmienia projekcji $B^2$ w arności $n$, gdyż każde pojawienie się nowej składowej $B_n$ w tej arności musiałoby być połączone z $B_1=0$. Projekcje na długość jeden dla wszystkich mniejszych arności również pozostają zerowe. Ponieważ kwadrat nowej koderivacji jest koderivacją, lemat~\ref{cat:lem:ainfty-relative-coderivation} dla $F=\id$ gwarantuje, że nowy kwadrat zeruje się na wszystkich słowach długości co najwyżej $n$, a nie tylko po projekcji. Natomiast projekcja nowego defektu $bI-IB$ w arności $n$ wynosi
+\[
+ e_n+d I_n-i B_n=e_n-dh e_n-ip e_n=0
+\]
+przez $dh+hd=\id-ip$ i $de_n=0$. Nie ma innych nowych składników: w tej arności pojawienie się $I_n$ po lewej łączy się tylko z $b_1$, a po prawej tylko z $B_1=0$; pojawienie się $B_n$ łączy się tylko z $I_1$. Wszystkie równania na mniejszych długościach pozostają niezmienione. Lemat o względnej koderivacji daje więc zerowanie defektu na długości $n$.
+
+Po wykonaniu indukcji dla wszystkich $n$ otrzymujemy żądane mapy na sumach prostych, gdyż dla ustalonej długości wszystkie wzory zawierają skończenie wiele składników. W arności dwa, przed modyfikacją, $e_2=b_2(i\otimes i)$, więc $B_2=p b_2(i\otimes i)$. Po usunięciu zawieszeń jest to dokładnie mnożenie indukowane przez $m_2$ w kohomologii: znaki zawieszenia są takie same na reprezentantach, gdyż $i,p$ zachowują stopnie. Pierwsza składowa $I_1=i$ wybiera reprezentantów klas, zatem indukuje identyczność na kohomologii. Jeśli istnieje jednostka kohomologiczna, mnożenie $m_2$ na $H$ ma tę samą jednostkę, a $I_1$ przenosi ją na tę samą klasę. To kończy dowód.
+\end{proof}
+
+\subsection{Jednoznaczność modelu minimalnego}
+
+\begin{lemat}[Homotopia na potęgach tensorowych]\label{cat:lem:ainfty-tensor-contraction}
+Dla danych $i,p,h$ z lematu~\ref{cat:lem:ainfty-contraction} i różniczki tensorowej $d^{(n)}$ na $V^{\otimes n}$ definiujemy
+\[
+ h^{(n)}=\sum_{r=0}^{n-1}
+ (ip)^{\otimes r}\otimes h\otimes\id^{\otimes(n-1-r)}.
+\]
+Zachodzą równania
+\[
+ d^{(n)}h^{(n)}+h^{(n)}d^{(n)}
+ =\id_{V^{\otimes n}}-(ip)^{\otimes n},\qquad
+ h^{(n)}i^{\otimes n}=0.
+\]
+\end{lemat}
+\begin{proof}
+Różniczka kompleksu morfizmów spełnia
+$D(f\otimes g)=Df\otimes g+(-1)^{|f|}f\otimes Dg$ dla jednorodnych map. Aby to sprawdzić, niech $|f|=a$, $|g|=b$, $|x|=p$. W definicji~\eqref{cat:eq:dg-hom-differential}, stosowanej do tensorów kompleksów, rozwinięcie na $x\otimes y$ daje
+\[
+\begin{aligned}
+ D(f\otimes g)(x\otimes y)
+ &=(-1)^{bp}d(fx)\otimes gy
+   +(-1)^{bp+p+a}fx\otimes d(gy)\\
+ &\quad-(-1)^{a+b+b(p+1)}f(dx)\otimes gy
+   -(-1)^{a+b+p+bp}fx\otimes g(dy)\\
+ &=(-1)^{bp}(Df)(x)\otimes gy
+   +(-1)^{a+(b+1)p}fx\otimes(Dg)(y).
+\end{aligned}
+\]
+Ostatni wiersz to właśnie wartość prawej strony żądanego wzoru zgodnie z~\eqref{cat:eq:dg-koszul-tensor}. Ponieważ $ip,\id$ są cyklami stopnia zerowego, a $Dh=\id-ip$, różniczka $h^{(n)}$ jest sumą
+\[
+ \sum_{r=0}^{n-1}(ip)^{\otimes r}\otimes
+ (\id-ip)\otimes\id^{\otimes(n-1-r)}.
+\]
+Po rozwinięciu kolejne składniki teleskopują do $\id-(ip)^{\otimes n}$. Ponieważ $h^{(n)}$ ma stopień $-1$, jego różniczka w kompleksie morfizmów to lewa strona żądanego równania. Druga własność wynika składnik po składniku z $hi=0$.
+\end{proof}
+
+\begin{twierdzenie}[Retrakcja modelu minimalnego i jednoznaczność]\label{cat:thm:ainfty-minimal-unique}
+Dla modelu $I:H\to A$ skonstruowanego w twierdzeniu~\ref{cat:thm:ainfty-minimal-model} istnieje morfizm $A_\infty$ $P:A\to H$ z $PI=\id_H$ i pierwszą składową $P_1=p$ w zapisie zawieszonym. W konsekwencji każdy inny minimalny model $J:H'\to A$, będący quasi-izomorfizmem, jest izomorficzny z $H$ jako algebra $A_\infty$.
+\end{twierdzenie}
+\begin{proof}
+Niech $V,W,b,B,i,p,h$ oznaczają te same dane co w dowodzie istnienia. Budujemy składowe morfizmu koalgebr $P:T^c(V)\to T^c(W)$ tak, aby
+\[
+ BP=Pb,\qquad PI=\id_{T^c(W)}.
+\]
+Dla arności jeden przyjmujemy $P_1=p$; wtedy $pd=0$, $pi=\id_W$. Załóżmy, że równania zachodzą na długościach mniejszych niż $n$. Tymczasowo przyjmijmy składowe $P_j=0$ dla $j\geq n$ i zdefiniujmy
+\[
+ E=BP-Pb,\qquad e_n=\pi E|_{V^{\otimes n}}.
+\]
+Mapa $E$ jest względną koderivacją względem $P$, więc znika na mniejszych długościach i na długości $n$ ma wartości w $W$. Ponieważ $B^2=b^2=0$, mamy $BE+Eb=0$. Na długości $n$ składnik $BE$ znika, bo $B_1=0$, a w $Eb$ jedynie część $b$ zachowująca długość może być niezerowa po zastosowaniu $E$. Ta część to różniczka tensorowa $d^{(n)}$ pochodząca od $b_1=d$. Otrzymujemy
+\[
+ e_n d^{(n)}=0.
+\]
+
+Ponadto, korzystając z $bI=IB$, mamy $EI=B(PI)-(PI)B$. Na długościach mniejszych niż $n$ złożenie $PI$ jest identycznością. Na długości $n$ różnica $PI-\id$ ma wartości w $W$: wynika to z porównania koprodukcji dwóch morfizmów koalgebr zgodnych na mniejszych długościach. Zatem $B(PI-\id)$ znika na tej długości, ponieważ $B_1=0$, a $(PI-\id)B$ znika, ponieważ $B$ zmniejsza długość. Stąd $EI=0$ na długości $n$. W projekcji na $W$ tylko składnik $i^{\otimes n}$ w $I$ może wnieść wkład, zatem $e_n i^{\otimes n}=0$.
+
+Lemat~\ref{cat:lem:ainfty-tensor-contraction} daje
+\[
+ e_n=e_n(\id-(ip)^{\otimes n})
+ =e_n h^{(n)} d^{(n)},
+\]
+gdyż $e_n i^{\otimes n}=0$ oraz $e_n d^{(n)}=0$. Wybieramy wstępnie $P_n=e_n h^{(n)}$, mapę stopnia zerowego. Projekcja defektu $BP-Pb$ w arności $n$ zmienia się o $-P_n d^{(n)}$ (składnik $B_1P_n$ jest zerowy), więc staje się zerowa.
+
+Niech teraz $u_n=\pi(PI-\id)|_{W^{\otimes n}}$ dla tego wstępnego wyboru. Zastępujemy $P_n$ przez
+\[
+ P_n-u_n p^{\otimes n}.
+\]
+Ponieważ $pd=0$, każdy składnik z różniczką jednego czynnika w złożeniu $p^{\otimes n}d^{(n)}$ jest zerowy, a więc $p^{\otimes n}d^{(n)}=0$. Korekta nie zmienia zerowania defektu $BP-Pb$. W projekcji $PI$ na długość jeden zmiana jest równa $-u_n p^{\otimes n}i^{\otimes n}=-u_n$. Stąd również $PI-\id$ ma zerową projekcję w arności $n$. Na niższych długościach nic się nie zmienia. Z lematu~\ref{cat:lem:ainfty-relative-coderivation} oraz argumentu jednoznaczności morfizmów koalgebr z twierdzenia~\ref{cat:thm:ainfty-coalgebra-map} wynika, że oba równania zachodzą na długości $n$. Indukcja daje $P$.
+
+Dla innego modelu minimalnego $J:H'\to A$ złożenie $PJ$ jest quasi-izomorfizmem: jego pierwsza składowa jest złożeniem $p$ i pierwszej składowej $J$, a oba indukują izomorfizmy kohomologii. Ponieważ oba modele są minimalne, wniosek~\ref{cat:cor:ainfty-minimal-iso} pokazuje, że $PJ$ jest izomorfizmem $A_\infty$. W przypadku modeli kohomologicznie unitalnych zarówno $P$, jak i $PJ$ zachowują jednostki w kohomologii, ponieważ są quasi-izomorfizmami, a ich odwzorowania kohomologii są bijektywnymi homomorfizmami algebr. To dowodzi jednoznaczności z dokładnością do izomorfizmu, a nie kanonicznego wyboru modelu.
+\end{proof}
+
+\begin{wniosek}[Minimalny model kategorii $A_\infty$]\label{cat:cor:ainfty-category-minimal}
+Mała kategoria $A_\infty$ nad ciałem ma minimalny model o tym samym zbiorze obiektów i modułach morfizmów $H^*\mathcal A(X,Y)$. Istnieje funktor z modelu do $\mathcal A$, będący identycznością na obiektach i indukujący identyczności kohomologii morfizmów. Jeśli $\mathcal A$ jest kohomologicznie unitalna, model również ma tę własność, a ten funktor jest quasi-równoważnością.
+\end{wniosek}
+\begin{proof}
+Wybieramy rozkład z lematu~\ref{cat:lem:ainfty-contraction} oddzielnie dla każdego zawieszonego kompleksu morfizmów. Indukcję z twierdzenia~\ref{cat:thm:ainfty-minimal-model} wykonujemy dla składalnych słów. Defekt $e_n$ przyjmuje wartości w kompleksie morfizmów między skrajnymi obiektami, więc możemy zastosować właśnie $p$ i $h$ wybrane dla tego kompleksu. Operacje w równaniu~\eqref{cat:eq:ainfty-transfer-obstruction} nie zmieniają skrajnych obiektów; dowód zerowania defektu działa zatem dla każdego ciągu obiektów. Mnożenie na kohomologii jest odziedziczonym składaniem, więc zachowuje wszystkie jednostki kohomologiczne. Pierwsze składowe są quasi-izomorfizmami, a funktor na obiektach jest identycznością; w przypadku kohomologicznie unitalnym daje to quasi-równoważność.
+\end{proof}
+
+\subsection{Ścisłe jednostki w przeniesieniu struktury}
+
+W zapisie zawieszonym ścisła jednostka $u=s1$ ma stopień $-1$ i spełnia
+\[
+ b_1(u)=0,\quad b_2(u,v)=-v,\quad b_2(v,u)=(-1)^{|v|}v,
+ \qquad b_n(\ldots,u,\ldots)=0\quad(n\geq3).
+\]
+Znaki wynikają bezpośrednio z definicji $b_2=s m_2(s^{-1})^{\otimes2}$.
+
+\begin{lemat}[Znormalizowany defekt morfizmu]\label{cat:lem:ainfty-normalized-defect}
+Niech dane operacje na zawieszonych modułach $V,W$ spełniają warunki ścisłej jednostki, choć nie muszą jeszcze spełniać wszystkich tożsamości Stasheffa. Niech składowe $F_j$ stopnia zerowego spełniają $F_1(u_V)=u_W$ oraz $F_j(\ldots,u_V,\ldots)=0$ dla $2\leq j<n$. Przyjmijmy $F_j=0$ dla $j\geq n$, gdzie $n\geq2$. Wtedy projekcja defektu $b_WF-Fb_V$ na długość jeden w arności $n$ zeruje się na każdym tensorze zawierającym jednostkę $u_V$.
+\end{lemat}
+\begin{proof}
+Dla $n=2$ jedyne składniki to $(b_W)_2(F_1\otimes F_1)-F_1(b_V)_2$, ponieważ $F_2=0$. Na tensorze z jednostką oba wyrażenia mają tę samą wartość: $-F_1(v)$ albo $(-1)^{|v|}F_1(v)$ zależnie od położenia jednostki, ponieważ $F_1$ zachowuje stopień i przenosi $u_V$ na $u_W$.
+
+Niech $n\geq3$ i ustalmy pozycję $k$ wyróżnionej jednostki w jednorodnym słowie $v_1,\ldots,v_n$. W projekcji $b_WF$ na długość jeden każdy niezerowy składnik musi zawierać jednostkę jako osobny blok $F_1(u_V)=u_W$: większy blok zawierający ją znika przez założenie o $F_j$. Zewnętrzna operacja musi mieć arność dwa, gdyż wyższe operacje z jednostką są zerowe. Jest to możliwe tylko wtedy, gdy $k=1$ lub $k=n$. Dla $k=1$ otrzymujemy $-F_{n-1}(v_2,\ldots,v_n)$, dla $k=n$ zaś
+\[
+ (-1)^{\sum_{a=1}^{n-1}|v_a|}F_{n-1}(v_1,\ldots,v_{n-1}).
+\]
+Nie ma dodatkowego znaku od map $F_j$, ponieważ mają stopień zerowy.
+
+W projekcji $Fb_V$ każdy potencjalnie niezerowy składnik musi włączyć wyróżnioną jednostkę do bloku operacji wewnętrznej: w przeciwnym razie pozostaje ona argumentem $F_\ell$ dla $\ell\geq2$ i składnik znika. Operacja arności jeden zeruje jednostkę, a operacje arności co najmniej trzy z jednostką są zerowe. Pozostaje zatem wyłącznie operacja $(b_V)_2$ na jednostce i jej sąsiedzie. Jeśli $1<k<n$, dwa takie składniki mają odpowiednio znaki
+\[
+ (-1)^{\sum_{a<k-1}|v_a|+|v_{k-1}|},
+ \qquad -(-1)^{\sum_{a<k}|v_a|}.
+\]
+W obu przypadkach pozostałe słowo jest słowem wyjściowym z pominiętą jednostką. Znaki są przeciwne, więc suma znika. Jeśli $k=1$ lub $k=n$, pozostaje jeden składnik, dokładnie równy odpowiedniemu składnikowi projekcji $b_WF$ wyliczonemu wyżej. Argument działa także przy wielu jednostkach, gdyż wyróżniamy jedną z nich i pozostałe traktujemy jak zwykłe jednorodne argumenty. Różnica obu projekcji jest więc zerowa.
+\end{proof}
+
+\begin{twierdzenie}[Ściśle unitalny model minimalny]\label{cat:thm:ainfty-strict-unit-transfer}
+Niech $A$ będzie ściśle unitalną algebrą $A_\infty$ nad ciałem i niech $[1_A]\neq0$ w $H^0(A)$. Model minimalny z twierdzenia~\ref{cat:thm:ainfty-minimal-model} oraz oba morfizmy $I:H\to A$ i $P:A\to H$ z twierdzenia~\ref{cat:thm:ainfty-minimal-unique} można wybrać jako ściśle unitalne, z $PI=\id_H$.
+\end{twierdzenie}
+\begin{proof}
+W zawieszonym kompleksie $V=sA$ wybieramy w lemacie~\ref{cat:lem:ainfty-contraction} dopełnienie przestrzeni brzegów w cyklach zawierające $u_A=s1_A$. Jest to możliwe, ponieważ jego klasa $u_H$ jest niezerowa: rozszerzamy bazę brzegów wraz z $u_A$ do bazy cykli. Otrzymujemy $i(u_H)=u_A$, $p(u_A)=u_H$, $h(u_A)=0$.
+
+Dla arności dwa rekurencja~\eqref{cat:eq:ainfty-transfer-recursion} używa $e_2=b_2(i\otimes i)$. Na tensorach z jednostką wartości $e_2$ są równe $-i(v)$ lub $(-1)^{|v|}i(v)$. Z $pi=\id$ oraz $hi=0$ wynika więc, że $B_2$ ma poprawne wartości na jednostce, a $I_2$ znika. Załóżmy dla $n\geq3$, że $B_j$ dla $3\leq j<n$ oraz $I_j$ dla $2\leq j<n$ zerują się na tensorach z jednostką. Składowe tymczasowo przyjęte jako zero także spełniają warunki ścisłych jednostek. Lemat~\ref{cat:lem:ainfty-normalized-defect} zastosowany do $I$ pokazuje, że przeszkoda $e_n$ zeruje się na takich tensorach. Zatem również $B_n=pe_n$ i $I_n=-he_n$ mają tę własność. Indukcja daje ściśle unitalny model i morfizm $I$.
+
+Dla konstrukcji $P$ przyjmujemy $P_1=p$, a w każdej arności $n\geq2$ stosujemy ten sam lemat do defektu $BP-Pb$, jeśli poprzednie składowe $P_j$ są znormalizowane. Mapa $h^{(n)}$ z lematu~\ref{cat:lem:ainfty-tensor-contraction} przenosi tensor zawierający jednostkę na sumę tensorów nadal zawierających jednostkę: składnik z $h$ na tej pozycji jest zerowy, a pozostałe składniki mają na niej $\id$ lub $ip$, które zachowują $u_A$. Dlatego wstępna składowa $P_n=e_n h^{(n)}$ zeruje się na takich tensorach.
+
+Korekta $P_n-u_n p^{\otimes n}$ z dowodu twierdzenia~\ref{cat:thm:ainfty-minimal-unique} także jest znormalizowana. Istotnie, $u_n=\pi(PI-\id)|_{W^{\otimes n}}$ znika na słowach z jednostką: w rozkładzie na bloki każde $I_j$ z $j\geq2$ zawierające jednostkę znika, a jeśli jednostka jest osobnym blokiem $I_1$, to zewnętrzne $P_\ell$ z $\ell\geq2$ znika. Składnik z $\ell=1$ znika przez $I_n$, a projekcja identyczności dla $n\geq2$ jest zerowa. Ponieważ $p$ zachowuje jednostkę, korekta nie zmienia znormalizowania. Indukcja daje ścisłą unitalność $P$, zachowując równania $BP=Pb$ i $PI=\id$.
+\end{proof}
+
+\begin{uwaga}[Zakres twierdzenia o modelu minimalnym]\label{cat:rem:ainfty-minimal-scope}
+Warunku $[1_A]\neq0$ w twierdzeniu~\ref{cat:thm:ainfty-strict-unit-transfer} nie można bezkarnie usunąć, jeśli wymagamy ściśle unitalnego morfizmu $H\to A$. Jeżeli $1_A=m_1(t)$, to każdy cykl $x$ jest brzegiem: z reguły Leibniza wynika $m_1(m_2(t,x))=x$. Wtedy $H=0$, a liniowy morfizm pierwszej składowej z $H$ nie może wysłać zera na niezerową jednostkę $A$. Na przykład algebra zewnętrzna nad generatorem $t$ stopnia $-1$ z $dt=1$ jest niezerową acykliczną algebrą DG; różniczka jest dobrze określona, ponieważ $d(t^2)=t-t=0$. Ogólne twierdzenie o modelu minimalnym bez wymogu ścisłej unitalności nadal obowiązuje. Dla kategorii $A_\infty$ wersję ściśle unitalną uzyskujemy analogicznie, jeżeli każda klasa jednostki obiektu jest niezerowa: wybieramy kontrakcje zachowujące jednostki w kompleksach endomorfizmów, a dowód lematu o defekcie stosujemy do składalnych słów. Nad przemiennym pierścieniem konstrukcje pozostają poprawne, jeżeli istnieją odpowiednie dane kontrakcji; ich istnienie nie jest automatyczne.
+\end{uwaga}
+
+\subsection{Przykład modelu minimalnego i formalność}
+
+\begin{definicja}[Formalność algebry DG]\label{cat:def:dg-formality}
+Algebra DG $A$ jest formalna, jeżeli łączy ją z jej algebrą kohomologii $H^*(A)$ o zerowej różniczce zygzak quasi-izomorfizmów algebr DG. Ogólniej algebra $A_\infty$ jest formalna w sensie $A_\infty$, jeśli łączy ją z jej algebrą kohomologii, wyposażoną w $m_2$ i zerowe pozostałe operacje, zygzak quasi-izomorfizmów $A_\infty$. W obu definicjach zygzak jest skończony, a strzałki mogą mieć dowolny kierunek. Formalność DG implikuje formalność $A_\infty$, ponieważ każdy morfizm DG jest ścisłym morfizmem $A_\infty$.
+\end{definicja}
+
+\begin{stwierdzenie}[Kryterium formalności $A_\infty$]\label{cat:prop:ainfty-formality-minimal}
+Nad ciałem algebra $A_\infty$ jest formalna (w sensie zygzaka quasi-izomorfizmów $A_\infty$ z definicji~\ref{cat:def:dg-formality}) wtedy i tylko wtedy, gdy jej model minimalny jest izomorficzny jako algebra $A_\infty$ z jej algebrą kohomologii wyposażoną wyłącznie w $m_2$.
+\end{stwierdzenie}
+\begin{proof}
+Niech $F:A\to A'$ będzie quasi-izomorfizmem $A_\infty$. Wybieramy modele minimalne $I:H\to A$ i $I':H'\to A'$ oraz retrakcję $P':A'\to H'$ z twierdzenia~\ref{cat:thm:ainfty-minimal-unique}. Złożenie $P'FI:H\to H'$ jest quasi-izomorfizmem, gdyż jego pierwsza składowa jest złożeniem trzech quasi-izomorfizmów kompleksów. Między minimalnymi algebrami taki morfizm jest izomorfizmem przez wniosek~\ref{cat:cor:ainfty-minimal-iso}. Zatem każdy odcinek zygzaka daje izomorfizm modeli minimalnych, niezależnie od kierunku odcinka. Gdy algebra jest formalna, otrzymujemy izomorfizm jej modelu minimalnego z modelem minimalnym kohomologii o zerowej różniczce. Jako ten ostatni model możemy wybrać samą algebrę kohomologii i identyczność. Odwrotnie, taki izomorfizm modeli wraz z $I:H\to A$ daje wymagany zygzak. To dowodzi równoważności.
+\end{proof}
+
+\begin{przyklad}[Nieformalna algebra DG o nietrywialnej operacji trójargumentowej]\label{cat:ex:ainfty-nonformal-exterior}
+Niech $k$ będzie ciałem charakterystyki różnej od dwóch i niech
+\[
+ A=\bigwedge_k(x,y,z),\qquad |x|=|y|=|z|=1,\qquad dx=dy=0,\quad dz=xy.
+\]
+Różniczkę rozszerzamy przez regułę Leibniza. Jest dobrze określona na algebrze zewnętrznej: dla relacji $z^2=0$ otrzymujemy $d(z^2)=xyz-zxy=0$, dla relacji $xz+zx=0$ oraz $yz+zy=0$ otrzymujemy wyrażenia zerowe z powodu $x^2=y^2=0$. Relacje zawierające wyłącznie $x,y$ są oczywiście zachowane. Kwadrat różniczki jest derivacją stopnia dwa i zeruje się na generatorach (mieszane składniki znoszą się przez regułę Leibniza), więc $d^2=0$ na całej algebrze.
+
+Bazy kohomologii otrzymujemy z bazy $1,x,y,z,xy,xz,yz,xyz$. Jedyną niezerową wartością różniczki na tej bazie jest $dz=xy$: na przykład $d(xz)=-x^2y=0$, $d(yz)=-yxy=0$, a $d(xyz)=(xy)^2=0$. Stąd
+\[
+ H^0(A)=k,\quad H^1(A)=k[x]\oplus k[y],\quad
+ H^2(A)=k[xz]\oplus k[yz],\quad H^3(A)=k[xyz].
+\]
+Pozostałe grupy znikają. Wszystkie iloczyny dwóch elementów stopnia jeden w kohomologii są zerowe, bo $xy$ jest brzegiem.
+
+Wybieramy reprezentantów powyższych klas i kontrakcję w zapisie zawieszonym z $h(sxy)=sz$, zerową na pozostałych elementach zawieszonej bazy. Piszemy $a=s[x]$, $b=s[y]$; oba mają stopień zero. Rekurencja~\eqref{cat:eq:ainfty-transfer-recursion} daje
+\[
+ B_2(a,a)=B_2(a,b)=0,\qquad
+ I_2(a,a)=0,\quad I_2(a,b)=-sz,
+\]
+ponieważ $b_2(sx,sy)=sxy$ i $p(sxy)=0$. W arności trzy, przed wyznaczeniem $B_3,I_3$, defekt na $(a,a,b)$ wynosi
+\[
+\begin{aligned}
+ e_3(a,a,b)&=b_2(i(a),I_2(a,b))
+ +b_2(I_2(a,a),i(b))\\
+ &\quad-I_2(B_2(a,a),b)-I_2(a,B_2(a,b))\\
+ &=-s(xz).
+\end{aligned}
+\]
+Nie ma składnika $b_3$ w algebrze DG, a znak wstawienia $B_2$ po pierwszym argumencie jest dodatni, ponieważ $|a|=0$. Zatem $B_3(a,a,b)=-s[xz]\neq0$. Po usunięciu zawieszeń (wszystkie trzy argumenty mają stopień jeden) otrzymujemy
+\[
+ m_3^H([x],[x],[y])=-[xz]\neq0.
+\]
+
+Pokażemy, że tej operacji nie można usunąć przez izomorfizm $A_\infty$ z algebrą kohomologii wyposażoną wyłącznie w $m_2$. Załóżmy, że istnieje taki izomorfizm $F$ od tej ścisłej algebry do skonstruowanego modelu. Obie algebry są minimalne, więc w równaniu morfizmu arności trzy nie występują składniki z różniczką. Dla trzech argumentów stopnia jeden w niezawieszonym zapisie (stopnia zero po zawieszeniu) składowe $F_2$ mają wartości również w zawieszonej części stopnia zero. Wszystkie składniki zawierające mnożenie dwóch elementów tej części znikają po obu stronach, gdyż wszystkie iloczyny dwóch klas stopnia jeden są zerowe. Wyjściowa operacja trójargumentowa jest zerowa. Pozostaje więc
+\[
+ B_3(F_1(v_1),F_1(v_2),F_1(v_3))=0
+\]
+dla wszystkich zawieszonych argumentów stopnia zero. Pierwsza składowa izomorfizmu jest bijekcją w każdym stopniu, więc $B_3$ musiałaby znikać na wszystkich takich argumentach. Przeczy temu obliczona wartość $B_3(a,a,b)$. Na mocy stwierdzenia~\ref{cat:prop:ainfty-formality-minimal} algebra $A$ nie jest formalna nawet w sensie $A_\infty$, a zatem nie jest formalna w sensie DG.
+\end{przyklad}
+

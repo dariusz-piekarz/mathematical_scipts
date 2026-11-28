@@ -1,0 +1,9 @@
+# MA1 — audyt końcowy 04: istnienie KS i kryteria miarowe
+
+CI 45635875214, commit 3410ec0d34c4f859cf1d076a758a757274396799, job 139281030240: wszystkie kroki SUCCESS, 481 testów w 37 grupach, PDF 277/282 stron. Drugi przebieg: pozostają Overfull 1.74243pt i 0.59775pt oraz Label(s) may have changed. Nie wykonano inspekcji wizualnej tego PDF.
+
+Audyt matematyczny: twierdzenia o istnieniu KS dla par regulowana/BV i BV/regulowana, oszacowanie sumowania przez części, rozkład BV, kanoniczna miara Stieltjesa, całkowalność względem miary integratora niemalejącego, dominacja przez miarę wahania, punktowe odchylenia, porównanie kryteriów miarowych, dokładny defekt miary wahania, kryterium bezwzględne przy założeniu mierzalności oraz twierdzenia graniczne (wiersze 1723–2039 wersji 041a496e812698f701c1628d1c4482cd4c093c6b). Nie wykryto fałszywej tezy w tym zakresie. Uzupełniono dowody: ograniczoność funkcji regulowanej, jawny wybór dokładności w dowodzie istnienia KS, regularność zewnętrzna dla uzupełnionej miary przez borelowskie obwiednie, zachowanie mierzalności i całkowalności przy dominacji miar na uzupełnieniach (16b91c4f3e5268c34806a3552585635d0c479346).
+
+Korekta składu na podstawie konkretnych fragmentów logu, nie tylko numerów wierszy: przeniesiono wzór definicyjny RS i poprawkę skokową do osobnych wzorów (7ac0b706ece0053050f59ed740b9022b76e2ae20). Blob 90a51302b2cdce851a70d7ea3151b2ba8b87cfae, 2564 wiersze, 128 etykiet bez duplikatów, zgodność środowisk i odsyłaczy w rozdziale; jedyny odsyłacz poza nim wskazuje MA1-29. Nie dodano nowych tematów ani testów, Lean nie uruchamiano.
+
+CI po ostatnich poprawkach 45636436826: queued w chwili kontroli. Nie potwierdzono usunięcia ostrzeżeń. Następnie niezależny audyt nowych uzasadnień, dalsza kontrola KS (rozkład Lebesgue'a, całkowanie przez części, pierwotna, podstawienie, kwadratury i granice) oraz aktualny PDF, w tym sprawdzenie stabilizacji etykiet po kompilacji. Bramka końcowa otwarta.

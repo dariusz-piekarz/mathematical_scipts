@@ -1,0 +1,15 @@
+# Moduł 15B — audyt 41 (bloki 11–12/12, poprawkowy, 0/2)
+
+Data: 24 listopada 2026. Gałąź biblioteka-matematyczna-iteracja-6. Punkt wyjścia: raport 40 e16b421848418262d28418332518b0104f9fce4b.
+
+## Matematyka i deduplikacja
+20 zamian w ostatnich dwóch podsekcjach. Różniczkowanie całek z parametrem: jawne dziedziny, jeden ustalony rodzaj całkowalności, kwantyfikatory zbiorów wyjątkowych zależnych od przyrostu, redukcja Pettisa do Dunforda i Gelfanda do skalaryzacji, rozpisanie oszacowania normy całki przez całkowalną normę reszty dla każdego typu całki, jednostajność po A, wyższe pochodne z wykorzystaniem Newtona–Leibniza z 15A i jawna zbieżność norm całek pochodnych. Sobolew: klasy równości prawie wszędzie, osadzenie Lp w L1 przez Höldera i przypadek p=infty, istnienie całek z funkcjami testowymi, bezwzględna ciągłość skalaryzacji G, uzasadnienie w=f-G w L1, dokładne oszacowanie rodziny normującej z Hahna–Banacha, rozróżnienie samej bezwzględnej ciągłości krzywej od W^{1,1} w przestrzeni bez RNP i powiązanie z wcześniejszym twierdzeniem o reprezentacji. W końcowej uwadze o Pettisie w przestrzeniach lokalnie wypukłych określono miarę i ciało oraz wykorzystano istniejący kontrprzykład c0 zamiast powtarzać dowód.
+
+Porównano rozdział 8 teorii miary (thm:differentiating-integrals): skalarne twierdzenie wymaga różniczkowalności na otoczeniu i majoranty pochodnych, wersja 15B zakłada pochodną w jednym punkcie i majorantę ilorazów różnicowych lub reszt, nie jest więc powieleniem tego twierdzenia. W PDE rozdział 9 (thm:pde9-ac) dotyczy skalarnego W^{1,p}; wersja wektorowa wymaga wspólnego zbioru wyjątkowego i nie zakłada RNP, zachowano jej dowód. Rozdział 20 PDE stosuje całki Bochnera w równaniach ewolucyjnych, nie powtarza tej charakterystyki. Zakres zamknięty.
+
+## Technika
+Poprzednie CI 45367808274, job 138353994590, 34/34 testów, 9/9 etapów, trzy przebiegi pdflatex, 145 stron, 1414248 bajtów, artefakt 14906319780. Diagnostyka zaliczona. Nie wykonywano nowych oględzin PDF.
+Źródło commit 9a3f3e802f34220a90638c7136d1a3e1815c6343, blob 62c973dc416dca2cc81a2556d632aa441b4a2aae, 3421 wierszy, zachowano 59 etykiet, poprawne zagnieżdżenie środowisk. Testy commit 84ec684bceb86d1564c0b8be0c3315f1f7e51e5e, blob d5c751e51f2dccbce4e75498061f97710e2cc5d0, 36 testów; nowe kontrakty, 72 dokładne oszacowania normy reszty ilorazów różnicowych dla wszystkich podzbiorów trzech atomów, 91 par końców odcinków krzywej odcinkami afinicznej i dwie kontrole dla każdej pary (równość przyrostu z całką pochodnej i oszacowanie normy). Nowe CI: [{"id":45370013859,"status":"in_progress","conclusion":null}]. Nie deklarować zaliczenia przed potwierdzeniem.
+
+## Decyzja
+Wszystkie 12/12 bloków poddane audytowi poprawkowemu; stabilizacja 15B nadal 0/2. Kolejny audyt 42: pełna kontrola po poprawkach, spójność zależności, testy i wizualny przegląd całego modułu w najnowszym poprawnie skompilowanym PDF. Przy braku koniecznych zmian 1/2; drugi pełny czysty audyt 2/2. Jeżeli potrzebne poprawki, pozostaje 0/2. Dopiero po stabilizacji przejść do 16. Rozdziały 14,15,15A stabilne. Nie rozszerzać zakresu.

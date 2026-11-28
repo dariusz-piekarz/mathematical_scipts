@@ -1,0 +1,3054 @@
+\chapter[Transformata Fouriera i dystrybucje temperowane]{Transformata Fouriera, przestrzeń Schwartza i dystrybucje temperowane}
+\label{chap:pde-fourier-Rd}
+
+\providecommand{\atlasref}[2]{#2}
+
+Rozdział~\ref{chap:pde-distributions} pozwolił różniczkować funkcje
+niegładkie i rozwiązywać równania o stałych współczynnikach za pomocą
+rozwiązań fundamentalnych. Transformata Fouriera realizuje komplementarny
+pomysł: zamienia pochodne na mnożenie przez wielomiany. Na całej
+$\R^d$ nie możemy jednak bez zastrzeżeń używać klasycznej transformaty
+całkowej dla wszystkich dystrybucji. Potrzebujemy więc przestrzeni
+Schwartza $\mathcal S(\R^d)$ i jej przestrzeni sprzężonej $\mathcal S'(\R^d)$.
+
+W całym rozdziale $d\ge1$, całki na $\R^d$ są liczone względem
+miary Lebesgue'a $\lambda_d$, a wielowskaźniki należą do $\N_0^d$.
+Dla funkcji całkowalnych przyjmujemy \emph{nieunitarną}
+konwencję
+\begin{equation}\label{eq:pde8-convention}
+ \widehat f(\xi)=\mathcal F f(\xi)
+ =\int_{\R^d}e^{-ix\cdot\xi}f(x)\,\mathrm d\lambda_d(x),\qquad
+ \mathcal F^{-1}g(x)=(2\pi)^{-d}
+ \int_{\R^d}e^{ix\cdot\xi}g(\xi)\,\mathrm d\lambda_d(\xi).
+\end{equation}
+Obie całki są bezwzględnie zbieżne dla
+$f,g\in L^1(\R^d)$ w każdym punkcie odpowiedniej
+przestrzeni zmiennych, ponieważ moduły czynników
+wykładniczych są równe $1$. Na razie symbol
+$\mathcal F^{-1}$ oznacza podaną całkę
+dla $g\in L^1(\R^d)$; fakt, że jest to odwzorowanie
+odwrotne do $\mathcal F$ na przestrzeni Schwartza,
+wykażemy później.
+Współczynniki $(2\pi)^{-d}$ zależą od konwencji i nie będą
+pomijane. W szczególności nie będziemy bez przeliczenia używać
+wzorów wyprowadzonych dla transformaty unitarnej.
+Nie należy też utożsamiać tej transformaty całkowej na $\R^d$
+z dyskretnymi współczynnikami szeregów Fouriera z
+rozdziału~\ref{chap:pde-fourier}: te ostatnie są uśredniane
+przez czynnik $(2\pi)^{-d}$.
+
+\section{Przestrzeń Schwartza: po co wymagać szybkiego zaniku?}
+\label{sec:pde8-schwartz}
+
+\begin{definicja}[Przestrzeń Schwartza]
+\label{def:pde8-schwartz}
+Dla wielowskaźników $\alpha,\beta\in\N_0^d$ piszemy
+$|\alpha|=\sum_{j=1}^d\alpha_j$ oraz
+$x^\alpha=\prod_{j=1}^d x_j^{\alpha_j}$, a także
+$\partial^\beta=\partial_1^{\beta_1}\cdots\partial_d^{\beta_d}$,
+przyjmując $x_j^0=1$ także dla $x_j=0$.
+Przestrzenią Schwartza na $\R^d$ nazywamy
+\[
+ \mathcal S(\R^d)=\bigl\{f\in C^\infty(\R^d;\C):
+ p_{\alpha,\beta}(f)<\infty
+ \text{ dla wszystkich }\alpha,\beta\in\N_0^d\bigr\},
+\]
+gdzie
+\[
+ p_{\alpha,\beta}(f)=\sup_{x\in\R^d}
+ |x^\alpha\partial^\beta f(x)|.
+\]
+Wyposażamy ją w topologię wyznaczoną przez przeliczalną
+rodzinę półnorm $p_{\alpha,\beta}$. Zbieżność $f_n\to f$
+w $\mathcal S$ oznacza zbieżność do zera wszystkich
+półnorm $p_{\alpha,\beta}(f_n-f)$.
+\end{definicja}
+
+Jest to zespolona przestrzeń wektorowa, ponieważ
+liniowość pochodnych i nierówność trójkąta dają
+$p_{\alpha,\beta}(af+bg)\le
+|a|p_{\alpha,\beta}(f)+|b|p_{\alpha,\beta}(g)$.
+Ta sama nierówność i jednorodność uzasadniają
+własności półnorm. Rodzina rozdziela punkty,
+gdyż $p_{0,0}(f)=0$ oznacza $f=0$.
+Skończone przecięcia kul półnormowych
+$\{f:p_{\alpha,\beta}(f)<r\}$, $r>0$,
+tworzą bazę otoczeń zera. Kule te są wypukłe
+z nierówności trójkąta i jednorodności półnorm,
+więc topologia jest lokalnie wypukła.
+Rozdzielanie punktów zapewnia jej własność Hausdorffa.
+
+\begin{lemat}[Równoważne półnormy i operacje]
+\label{lem:pde8-seminorms}
+Dla $N,m\in\N_0$ połóżmy
+\[
+ q_{N,m}(f)=\max_{|\beta|\le m}
+ \sup_{x\in\R^d}(1+|x|)^N|\partial^\beta f(x)|.
+\]
+Rodzina $q_{N,m}$ określa tę samą topologię co
+$p_{\alpha,\beta}$. Mnożenie przez $x_j$ oraz
+różniczkowanie $\partial_j$ są ciągłymi operatorami
+liniowymi $\mathcal S\to\mathcal S$.
+Ponadto $\mathcal S(\R^d)\subset L^1(\R^d)\cap L^2(\R^d)$,
+a oba włożenia są ciągłe.
+\end{lemat}
+\begin{proof}
+Ponieważ $|x^\alpha|\le(1+|x|)^{|\alpha|}$, mamy
+$p_{\alpha,\beta}(f)\le q_{|\alpha|,|\beta|}(f)$.
+Odwrotnie, z $|x|\le\sum_{j=1}^d|x_j|$ i wzoru
+wielomianowego dostajemy
+\[
+ (1+|x|)^N\le
+ \sum_{|\alpha|\le N}
+ \frac{N!}{(N-|\alpha|)!\alpha!}|x^\alpha|,
+ \qquad \alpha!=\prod_{j=1}^d\alpha_j!.
+\]
+Mnożąc przez $|\partial^\beta f(x)|$, biorąc
+supremum względem $x$ i maksimum po $|\beta|\le m$,
+ograniczamy $q_{N,m}$ przez skończoną sumę półnorm
+$p_{\alpha,\beta}$ z podanymi współczynnikami.
+Obie rodziny wyznaczają więc tę samą topologię.
+
+Z reguły Leibniza, dla wektora jednostkowego
+$e_j$, mamy
+\[
+ \partial^\beta(x_j f)
+ =x_j\partial^\beta f+\beta_j\partial^{\beta-e_j}f,
+\]
+gdzie drugi składnik pomijamy dla $\beta_j=0$.
+Stąd
+\[
+ \begin{aligned}
+ q_{N,m}(x_j f)&\le q_{N+1,m}(f)+m q_{N,m}(f),\\
+ q_{N,m}(\partial_j f)&\le q_{N,m+1}(f).
+ \end{aligned}
+\]
+Skończoność prawych stron zapewnia, że obrazy
+należą do $\mathcal S$, a oszacowania dla każdej
+półnormy dają ciągłość.
+
+Dla $p=1,2$ wybieramy $N$ tak, aby $Np>d$.
+Wtedy
+\[
+ \|f\|_{L^p}\le C_{d,N,p}q_{N,0}(f),
+ \qquad
+ C_{d,N,p}^p=\int_{\R^d}(1+|x|)^{-Np}
+ \,\mathrm d\lambda_d(x)<\infty.
+\]
+Istotnie, na kuli jednostkowej całka jest skończona,
+a poza nią całkowanie radialne sprowadza oszacowanie
+do stałej razy $\int_1^\infty r^{d-1-Np}\,
+\mathrm d\lambda_1(r)$, która jest skończona dla $Np>d$.
+W wymiarze jeden całkujemy osobno na obu półprostych.
+Daje to oba włożenia i ich ciągłość.
+\end{proof}
+
+Równoważne półnormy wyjaśniają szybki zanik:
+dla każdego $N,\beta$ mamy
+\[
+ (1+|x|)^N|\partial^\beta f(x)|
+ \le\frac{q_{N+1,|\beta|}(f)}{1+|x|}
+ \longrightarrow 0\qquad (|x|\to\infty).
+\]
+Funkcja $e^{-|x|^2}$ należy do $\mathcal S$:
+każda jej pochodna ma postać
+$P_\beta(x)e^{-|x|^2}$ z wielomianem $P_\beta$.
+Indukcja zaczyna się od $P_0=1$, a różniczkowanie
+daje $P_{\beta+e_j}=\partial_j P_\beta-2x_jP_\beta$.
+Dla każdej potęgi $k\ge0$ funkcja
+$r^k e^{-r^2}$ jest ograniczona na $[0,\infty)$
+i dąży do zera w nieskończoności (wykładnik
+dominuje potęgi, jak w konstrukcji funkcji
+testowej z sekcji~\ref{sec:pde7-tests}).
+Każda funkcja z $C_c^\infty(\R^d)$ również należy
+do $\mathcal S$, bo jej pochodne znikają poza
+wspólnym zwartym nośnikiem.
+Natomiast $(1+|x|^2)^{-1}$ nie należy do $\mathcal S$
+w żadnym wymiarze $d\ge1$: dla
+$x=te_1$ mamy $t^3/(1+t^2)\to+\infty$
+przy $t\to+\infty$, więc $p_{3e_1,0}$ jest nieskończona.
+
+\begin{stwierdzenie}[Zupełność przestrzeni Schwartza]
+Przestrzeń $\mathcal S(\R^d)$ jest przestrzenią Frécheta,
+czyli zupełną metryzowalną przestrzenią lokalnie wypukłą.
+\end{stwierdzenie}
+\begin{proof}
+Rosnąca rodzina $Q_n=q_{n,n}$, $n\in\N_0$, wyznacza
+tę samą topologię, ponieważ każda $q_{N,m}$ jest
+ograniczona przez $Q_{\max\{N,m\}}$.
+Metryka niezmiennicza względem przesunięć
+\[
+ D(f,g)=\sum_{n=0}^{\infty}2^{-n-1}
+ \min\{1,Q_n(f-g)\}
+\]
+wyznacza tę topologię. Istotnie, nierówność
+trójkąta wynika z półnorm i podaddytywności
+$\min\{1,t\}$, a $Q_0$ rozdziela punkty.
+Dla $0<\delta<1$ warunek
+$D(f,g)<2^{-n-1}\delta$ daje $Q_n(f-g)<\delta$.
+Odwrotnie, wybieramy $M$ z ogonem szeregu wag
+mniejszym niż $\delta/2$; gdy $Q_M(f-g)<\delta/2$,
+pierwsze $M+1$ składników mają sumę mniejszą
+niż $\delta/2$, więc $D(f,g)<\delta$.
+Te oszacowania charakteryzują również ciągi Cauchy'ego.
+
+Niech $(f_\ell)$ będzie ciągiem Cauchy'ego w tej
+metryce. Dla każdego $\beta$ ciąg
+$\partial^\beta f_\ell$ spełnia jednostajny
+warunek Cauchy'ego na $\R^d$ dzięki $Q_{|\beta|}$.
+Ma zatem jednostajną granicę $g_\beta$, ciągłą
+na $\R^d$. Dla każdego $x\in\R^d$, $t\in\R$
+i $j\in\{1,\ldots,d\}$ mamy
+\[
+ \partial^\beta f_\ell(x+te_j)-\partial^\beta f_\ell(x)
+ =t\int_0^1\partial^{\beta+e_j}f_\ell(x+ste_j)
+ \,\mathrm d\lambda_1(s).
+\]
+Przechodzimy do granicy dzięki jednostajnej zbieżności
+na odcinku. Zapis z całką po $[0,1]$
+obowiązuje również dla $t<0$.
+Po przejściu do granicy otrzymujemy
+\[
+ \frac{g_\beta(x+te_j)-g_\beta(x)}{t}
+ =\int_0^1g_{\beta+e_j}(x+ste_j)
+ \,\mathrm d\lambda_1(s)\qquad(t\ne0).
+\]
+Ciągłość $g_{\beta+e_j}$ zapewnia jednostajną
+zbieżność funkcji podcałkowych względem $s\in[0,1]$
+do $g_{\beta+e_j}(x)$ przy $t\to0$.
+Stąd $\partial_j g_\beta=g_{\beta+e_j}$.
+Indukcyjnie $f:=g_0$ jest gładka i
+$\partial^\beta f=g_\beta$.
+
+Ustalmy $n$ i $\varepsilon>0$. Dla
+$\ell,k$ od pewnego indeksu mamy
+$Q_n(f_\ell-f_k)<\varepsilon$. Dla każdego
+$x$ i $|\beta|\le n$ przechodzimy z $k$
+do nieskończoności w nierówności
+\[
+ (1+|x|)^n|\partial^\beta f_\ell(x)
+              -\partial^\beta f_k(x)|<\varepsilon.
+\]
+Biorąc supremum i maksimum po przejściu do
+granicy, otrzymujemy $Q_n(f_\ell-f)\le\varepsilon$.
+W szczególności $Q_n(f)\le Q_n(f_\ell)+\varepsilon$
+jest skończona. Ponieważ $n$ było dowolne,
+$f\in\mathcal S$ i $f_\ell\to f$ we wszystkich
+półnormach, a więc i w metryce $D$.
+\end{proof}
+
+\begin{twierdzenie}[Gęstość funkcji o zwartym nośniku]
+\label{thm:pde8-density}
+Przestrzeń $C_c^\infty(\R^d)$ jest gęsta w $\mathcal S(\R^d)$.
+Jest też gęsta w $L^p(\R^d)$ dla $1\le p<\infty$.
+\end{twierdzenie}
+\begin{proof}
+Wybierzmy funkcję odcinającą
+$\psi\in C_c^\infty(\R^d)$ z $0\le\psi\le1$,
+$\psi=1$ na $B_1(0)$ i $\psi=0$ poza $B_2(0)$.
+Można przyjąć $\psi=\chi_{B_{3/2}(0)}*\rho_{1/4}$,
+gdzie $\rho_\varepsilon$ jest przybliżoną jedynką
+z sekcji~\ref{sec:pde7-mollifiers}.
+Funkcja $\chi_{B_{3/2}(0)}$ należy do $L^1$
+i wyznacza dystrybucję regularną na $\R^d$.
+Jej splot z $\rho_{1/4}$ jest więc gładki
+na całej $\R^d$ z twierdzenia
+~\ref{thm:pde7-mollify}.
+Nieujemność jądra i jego całka $1$ dają
+$0\le\psi\le1$; dla $|x|\le1$ i $|y|\le1/4$
+mamy $|x-y|<3/2$, a dla $|x|\ge2$ mamy
+$|x-y|>3/2$. Stąd żądane wartości i zwarty nośnik.
+
+Dla $f\in\mathcal S$ i $R\ge1$ określamy
+$f_R(x)=\psi(x/R)f(x)\in C_c^\infty(\R^d)$.
+Niech $\psi_R(x)=\psi(x/R)$.
+Wszystkie pochodne $1-\psi_R$, włącznie z rzędem
+zero, znikają dla $|x|<R$. Dla $|\gamma|>0$
+ich moduły są ograniczone przez
+$R^{-|\gamma|}\|\partial^\gamma\psi\|_\infty$;
+dla $\gamma=0$ przez $1$.
+Stosujemy wielowskaźnikową regułę Leibniza:
+\[
+ \partial^\beta(f-f_R)
+ =\sum_{\gamma\le\beta}\binom{\beta}{\gamma}
+ \partial^\gamma(1-\psi_R)\partial^{\beta-\gamma}f,
+\]
+gdzie $\gamma\le\beta$ oznacza nierówności
+we wszystkich współrzędnych, a
+$\binom{\beta}{\gamma}=\prod_j\binom{\beta_j}{\gamma_j}$.
+Dla $|x|\ge R$ zachodzi
+$(1+|x|)^N\le (1+R)^{-1}(1+|x|)^{N+1}$.
+Zatem dla $|\beta|\le m$ każdy składnik po
+pomnożeniu przez $(1+|x|)^N$ jest ograniczony
+przez odpowiednią stałą zależną od $\psi,\beta,\gamma$
+razy $(1+R)^{-1}q_{N+1,m}(f)$.
+Sumując skończenie wiele składników, dostajemy
+\[
+ q_{N,m}(f-f_R)\le
+ \frac{C_{\psi,m}}{1+R}q_{N+1,m}(f)
+ \longrightarrow0.
+\]
+To daje gęstość w $\mathcal S$.
+
+Dla $u\in L^p(\R^d)$, $1\le p<\infty$,
+niech $v_R=u\chi_{B_R(0)}$. Z całkowalności
+$|u|^p$ wynika
+\[
+ \|u-v_R\|_{L^p}^p
+ =\int_{\R^d\setminus B_R(0)}|u(x)|^p
+ \,\mathrm d\lambda_d(x)\longrightarrow0.
+\]
+Dla ustalonego $R$ funkcja $v_R$ należy
+do $L^1$ dzięki nierówności Höldera na kuli
+o skończonej mierze (dla $p=1$ bezpośrednio).
+Wobec tego wyznacza dystrybucję regularną,
+a twierdzenie~\ref{thm:pde7-mollify} daje
+gładkość funkcji $v_R*\rho_\varepsilon$ na $\R^d$
+i dla $0<\varepsilon<1$ znika poza
+$\overline{B_{R+1}(0)}$: jeśli $|x|>R+1$,
+to dla $|y|\le R$ mamy $|x-y|>1>\varepsilon$.
+Z twierdzenia~\ref{thm:pde7-approx-id}
+na zwartym zbiorze $\overline{B_{R+1}(0)}$
+wynika
+\[
+ \|v_R*\rho_\varepsilon-v_R\|_{L^p(\R^d)}
+ \longrightarrow0\qquad(\varepsilon\downarrow0),
+\]
+ponieważ obie funkcje znikają poza tym zbiorem.
+Dla dowolnego $\delta>0$ wybieramy najpierw
+$R$ z $\|u-v_R\|_p<\delta/2$, następnie
+$\varepsilon$ z błędem wygładzania mniejszym
+niż $\delta/2$. Nierówność trójkąta daje
+aproksymację $u$ z błędem mniejszym niż $\delta$
+przez funkcję gładką o zwartym nośniku.
+\end{proof}
+
+\section{Transformata Fouriera na przestrzeni Schwartza}
+\label{sec:pde8-transform}
+
+\begin{twierdzenie}[Różniczkowanie i mnożenie]
+\label{thm:pde8-rules}
+Jeżeli $f\in\mathcal S(\R^d)$, to $\widehat f\in\mathcal S(\R^d)$
+oraz dla każdego $\alpha\in\N_0^d$
+\begin{equation}\label{eq:pde8-rules}
+ \mathcal F(\partial^\alpha f)(\xi)=(i\xi)^\alpha\widehat f(\xi),
+ \qquad \mathcal F(x^\alpha f)(\xi)=i^{|\alpha|}
+ \partial_\xi^\alpha\widehat f(\xi).
+\end{equation}
+Ponadto $\mathcal F:\mathcal S(\R^d)\to\mathcal S(\R^d)$
+jest ciągłym operatorem liniowym.
+\end{twierdzenie}
+\begin{proof}
+Z lematu~\ref{lem:pde8-seminorms} wynika, że
+$x^\beta f$ i $\partial^\beta f$ należą do
+$\mathcal S(\R^d)$, a więc do $L^1(\R^d)$,
+dla każdego wielowskaźnika $\beta$.
+W szczególności całka definiująca $\widehat f$
+jest bezwzględnie zbieżna.
+
+Uzasadnijmy najpierw różniczkowanie względem $\xi$.
+Dla $t\in\R$ mamy
+\[
+ |e^{-it}-1|
+ =\left|t\int_0^1(-i)e^{-ist}\,\mathrm d\lambda_1(s)\right|
+ \le |t|.
+\]
+Dla $h\ne0$ iloraz różnicowy
+\[
+ \frac{\widehat f(\xi+he_j)-\widehat f(\xi)}h
+ =\int_{\R^d}e^{-ix\cdot\xi}
+ \frac{e^{-ihx_j}-1}{h}f(x)\,\mathrm d\lambda_d(x)
+\]
+ma funkcję podcałkową ograniczoną co do modułu
+przez całkowalną funkcję $|x_j f(x)|$.
+Z twierdzenia o zbieżności zmajoryzowanej
+otrzymujemy
+\[
+ \partial_{\xi_j}\widehat f(\xi)
+ =\int_{\R^d}(-ix_j)e^{-ix\cdot\xi}f(x)
+ \,\mathrm d\lambda_d(x).
+\]
+Ponieważ $x^\beta f\in L^1$ dla każdego $\beta$,
+ten sam argument można zastosować do kolejnych
+pochodnych. Indukcyjnie
+\[
+ \partial_\xi^\beta\widehat f(\xi)
+ =(-i)^{|\beta|}\mathcal F(x^\beta f)(\xi).
+\]
+Każda z tych pochodnych jest ciągła: dla
+$\xi_n\to\xi$ stosujemy twierdzenie o zbieżności
+zmajoryzowanej z majorantą $|x^\beta f(x)|$.
+Zatem $\widehat f\in C^\infty(\R^d;\C)$.
+Mnożąc powyższą tożsamość przez $i^{|\beta|}$,
+uzyskujemy drugą równość w~\eqref{eq:pde8-rules}.
+
+Dla pierwszej równości ustalamy $j$ i pozostałe
+współrzędne $x$. Całkowanie przez części względem
+$x_j$ na przedziale $[-R,R]$ daje
+\[
+ \begin{aligned}
+ \int_{-R}^R e^{-ix\cdot\xi}\partial_j f(x)
+ \,\mathrm d\lambda_1(x_j)
+ &=\left[e^{-ix\cdot\xi}f(x)\right]_{x_j=-R}^{x_j=R}\\
+ &\quad+i\xi_j\int_{-R}^R e^{-ix\cdot\xi}f(x)
+ \,\mathrm d\lambda_1(x_j).
+ \end{aligned}
+\]
+Dla ustalonych pozostałych współrzędnych wyraz
+brzegowy dąży do zera, ponieważ
+$|f(x)|\le q_{1,0}(f)/(1+|x|)$.
+Całki po prostej są bezwzględnie zbieżne dzięki
+oszacowaniom $|f(x)|,|\partial_j f(x)|
+\le q_{2,1}(f)(1+|x_j|)^{-2}$.
+Po przejściu do granicy $R\to\infty$ całkujemy
+względem pozostałych współrzędnych, stosując
+twierdzenie Fubiniego: $f,\partial_j f\in L^1(\R^d)$.
+Dla $d=1$ nie ma dodatkowego całkowania.
+Otrzymujemy $\mathcal F(\partial_j f)=i\xi_j\widehat f$.
+Ponieważ każda pochodna $f$ należy do $\mathcal S$,
+iteracja daje pierwszą równość w~\eqref{eq:pde8-rules}.
+
+Pozostaje wykazać skończoność półnorm transformaty
+i jej ciągłość. Łącząc obie uzyskane tożsamości,
+otrzymujemy dla dowolnych $\alpha,\beta\in\N_0^d$
+\[
+ \xi^\alpha\partial_\xi^\beta\widehat f(\xi)
+ =i^{-|\alpha|}(-i)^{|\beta|}
+ \mathcal F\bigl(\partial^\alpha(x^\beta f)\bigr)(\xi).
+\]
+Dla $v\in L^1(\R^d)$ zachodzi
+$|\widehat v(\xi)|\le\|v\|_{L^1}$, ponieważ moduł
+czynnika wykładniczego wynosi $1$.
+Ustalmy całkowite $N>d$ i oznaczmy przez
+$C_{d,N,1}$ stałą z lematu~\ref{lem:pde8-seminorms}.
+Z wielowskaźnikowej reguły Leibniza wynika
+\[
+ \begin{aligned}
+ p_{\alpha,\beta}(\widehat f)
+ &\le \|\partial^\alpha(x^\beta f)\|_{L^1}\\
+ &\le C_{d,N,1}
+ \sum_{\substack{\gamma\le\alpha\\\gamma\le\beta}}
+ \binom{\alpha}{\gamma}
+ \frac{\beta!}{(\beta-\gamma)!}
+ q_{N+|\beta|-|\gamma|,\,|\alpha-\gamma|}(f).
+ \end{aligned}
+\]
+Tutaj pochodna $\partial^\gamma x^\beta$
+jest zerowa, jeśli $\gamma\not\le\beta$;
+w przeciwnym razie jest równa
+$\beta!x^{\beta-\gamma}/(\beta-\gamma)!$.
+Każda półnorma po prawej stronie jest
+ograniczona przez $q_{N+|\beta|,|\alpha|}(f)$.
+W konsekwencji istnieje skończona stała
+$C_{\alpha,\beta,d,N}$, niezależna od $f$, taka że
+\[
+ p_{\alpha,\beta}(\widehat f)
+ \le C_{\alpha,\beta,d,N}q_{N+|\beta|,|\alpha|}(f).
+\]
+Wszystkie półnormy $\widehat f$ są zatem skończone,
+czyli $\widehat f\in\mathcal S$. Liniowość wynika
+z liniowości całki, a uzyskane oszacowania
+każdej półnormy dają ciągłość operatora.
+\end{proof}
+
+\begin{stwierdzenie}[Lemat Riemanna--Lebesgue'a]
+\label{prop:pde8-RL}
+Jeśli $f\in L^1(\R^d)$, to $\widehat f$ jest ograniczona,
+jednostajnie ciągła i $\widehat f(\xi)\to0$
+przy $|\xi|\to\infty$.
+\end{stwierdzenie}
+\begin{proof}
+Całka definiująca $\widehat f$ nie zależy od wyboru
+reprezentanta klasy $f$ i daje
+$|\widehat f(\xi)|\le\|f\|_{L^1}$.
+Dla $\xi,h\in\R^d$ mamy
+\[
+ |\widehat f(\xi+h)-\widehat f(\xi)|
+ \le\int_{\R^d}|e^{-ix\cdot h}-1|\,|f(x)|
+ \,\mathrm d\lambda_d(x).
+\]
+Prawa strona nie zależy od $\xi$ i dąży do zera
+dla $h\to0$: funkcja podcałkowa dąży punktowo
+do zera i jest ograniczona przez $2|f(x)|$.
+Twierdzenie o zbieżności zmajoryzowanej daje
+więc jednostajną ciągłość.
+
+Ustalmy $\varepsilon>0$. Z twierdzenia
+~\ref{thm:pde8-density} wybieramy
+$g\in C_c^\infty(\R^d)$ z
+$\|f-g\|_{L^1}<\varepsilon/2$.
+Ponieważ $g\in\mathcal S(\R^d)$, poprzednie
+twierdzenie daje $\widehat g\in\mathcal S(\R^d)$.
+Istnieje zatem $R>0$ takie, że
+$|\widehat g(\xi)|<\varepsilon/2$ dla $|\xi|>R$.
+Dla tych $\xi$ z liniowości i oszacowania
+transformaty funkcji całkowalnej wynika
+\[
+ |\widehat f(\xi)|
+ \le\|f-g\|_{L^1}+|\widehat g(\xi)|<\varepsilon.
+\]
+Dowodzi to zaniku w nieskończoności.
+\end{proof}
+
+\section{Transformata funkcji Gaussa i wzór odwrócenia}
+\label{sec:pde8-inversion}
+
+\begin{lemat}[Transformata funkcji Gaussa]
+\label{lem:pde8-gauss}
+Dla $a>0$ i $\xi\in\R^d$ zachodzi
+\begin{equation}\label{eq:pde8-gauss}
+ \mathcal F(e^{-a|x|^2})(\xi)
+ =\left(\frac\pi a\right)^{d/2}e^{-|\xi|^2/(4a)}.
+\end{equation}
+\end{lemat}
+\begin{proof}
+W wymiarze jeden niech $g_a(x)=e^{-ax^2}$.
+Funkcja ta należy do $\mathcal S(\R)$:
+argument z sekcji~\ref{sec:pde8-schwartz} stosuje się
+z rekurencją wielomianów
+$P_{k+1}(x)=P_k'(x)-2axP_k(x)$.
+Niech $I=\widehat{g_a}$. Ponieważ
+$g_a'=-2axg_a$, tożsamości~\eqref{eq:pde8-rules}
+dają
+\[
+ i\xi I(\xi)=\widehat{g_a'}(\xi)
+ =-2a\mathcal F(xg_a)(\xi)=-2aiI'(\xi).
+\]
+Stąd $I'(\xi)=-\xi I(\xi)/(2a)$ i
+\[
+ \frac{\mathrm d}{\mathrm d\xi}
+ \left(e^{\xi^2/(4a)}I(\xi)\right)=0.
+\]
+Zatem $I(\xi)=I(0)e^{-\xi^2/(4a)}$.
+
+Dla wyznaczenia $I(0)$ oznaczmy
+$J=\int_\R e^{-t^2}\,\mathrm d\lambda_1(t)$.
+Jest to liczba dodatnia i skończona, ponieważ
+dla $|t|\ge1$ mamy $e^{-t^2}\le e^{-|t|}$.
+Z twierdzenia Tonellego oraz całkowania w
+zmiennych biegunowych na $\R^2$ otrzymujemy
+\[
+ J^2=\int_{\R^2}e^{-(x^2+y^2)}\,\mathrm d\lambda_2(x,y)
+ =2\pi\int_0^\infty e^{-r^2}r\,\mathrm d\lambda_1(r)
+ =\pi\int_0^\infty e^{-v}\,\mathrm d\lambda_1(v)
+ =\pi,
+\]
+gdzie zastosowaliśmy podstawienie $v=r^2$.
+Ponieważ $J>0$, mamy $J=\sqrt\pi$.
+Podstawienie $t=\sqrt a\,x$ daje
+$I(0)=a^{-1/2}J=\sqrt{\pi/a}$.
+Nie korzystaliśmy tu ze wzoru odwrócenia.
+
+W wymiarze $d$ funkcja podcałkowa jest
+iloczynem czynników jednowymiarowych, a całka
+z jej modułu jest skończona i wynosi
+$(\pi/a)^{d/2}$ (Tonelli). Z twierdzenia
+Fubiniego wynika
+\[
+ \begin{aligned}
+ \mathcal F(e^{-a|x|^2})(\xi)
+ &=\prod_{j=1}^d
+ \int_\R e^{-ax_j^2}e^{-ix_j\xi_j}\,
+ \mathrm d\lambda_1(x_j)\\
+ &=\left(\frac{\pi}{a}\right)^{d/2}
+ e^{-|\xi|^2/(4a)}.
+ \end{aligned}
+\]
+\end{proof}
+
+\begin{twierdzenie}[Odwrócenie transformaty]
+\label{thm:pde8-inversion}
+Dla $f\in\mathcal S(\R^d)$ zachodzi
+\[
+ f(x)=(2\pi)^{-d}\int_{\R^d}e^{ix\cdot\xi}
+ \widehat f(\xi)\,\mathrm d\lambda_d(\xi),
+ \qquad x\in\R^d.
+\]
+Zatem $\mathcal F$ jest topologicznym automorfizmem
+$\mathcal S(\R^d)$, którego odwrotność podano w
+\eqref{eq:pde8-convention}.
+\end{twierdzenie}
+\begin{proof}
+Dla $\varepsilon>0$ określmy
+\[
+ I_\varepsilon(x)=(2\pi)^{-d}\int_{\R^d}
+ e^{ix\cdot\xi}e^{-\varepsilon|\xi|^2/2}
+ \widehat f(\xi)\,\mathrm d\lambda_d(\xi).
+\]
+Po wstawieniu definicji $\widehat f$ całka
+podwójna jest bezwzględnie zbieżna, ponieważ
+całka z modułu (bez stałej $(2\pi)^{-d}$) wynosi
+\[
+ \|f\|_{L^1}
+ \int_{\R^d}e^{-\varepsilon|\xi|^2/2}
+ \,\mathrm d\lambda_d(\xi)
+ =\|f\|_{L^1}(2\pi/\varepsilon)^{d/2}<\infty.
+\]
+Stosując Fubiniego i lemat~\ref{lem:pde8-gauss}
+z $a=\varepsilon/2$, otrzymujemy
+\[
+ \begin{aligned}
+ I_\varepsilon(x)
+ &=\int_{\R^d}f(y)G_\varepsilon(x-y)
+ \,\mathrm d\lambda_d(y),\\
+ G_\varepsilon(z)
+ &:=(2\pi)^{-d}\int_{\R^d}e^{iz\cdot\xi}
+ e^{-\varepsilon|\xi|^2/2}\,\mathrm d\lambda_d(\xi)\\
+ &=(2\pi\varepsilon)^{-d/2}
+ e^{-|z|^2/(2\varepsilon)}.
+ \end{aligned}
+\]
+Jądro jest nieujemne, a obliczona w lemacie
+~\ref{lem:pde8-gauss} całka Gaussa daje
+\[
+ \int_{\R^d}G_\varepsilon(z)\,\mathrm d\lambda_d(z)
+ =(2\pi\varepsilon)^{-d/2}(2\pi\varepsilon)^{d/2}=1.
+\] Nie ma jednak zwartego
+nośnika, dlatego uzasadnimy jego własność
+przybliżonej jedynki bezpośrednio.
+
+Po podstawieniu $y=x-\sqrt\varepsilon\,z$ mamy
+\[
+ I_\varepsilon(x)-f(x)
+ =\int_{\R^d}G_1(z)
+ \bigl(f(x-\sqrt\varepsilon\,z)-f(x)\bigr)
+ \,\mathrm d\lambda_d(z).
+\]
+Niech $M=\sup_{x\in\R^d}|\nabla f(x)|<\infty$,
+gdzie dla gradientu zespolonego stosujemy
+normę euklidesową. Dla $h\in\R^d$ podstawowe twierdzenie
+rachunku całkowego wzdłuż odcinka daje
+\[
+ f(x-h)-f(x)
+ =-\int_0^1\sum_{j=1}^d h_j\partial_j f(x-th)
+ \,\mathrm d\lambda_1(t).
+\]
+Z nierówności Cauchy'ego--Schwarza dla
+skończonej sumy wynika
+$|f(x-h)-f(x)|\le M|h|$.
+W konsekwencji
+\[
+ \sup_x|I_\varepsilon(x)-f(x)|
+ \le M\sqrt\varepsilon
+ \int_{\R^d}|z|G_1(z)\,\mathrm d\lambda_d(z)
+ \longrightarrow0.
+\]
+Całka z pierwszego momentu jest skończona
+dzięki wykładniczemu zanikowi Gaussa
+(w zmiennych biegunowych wystarcza całkowalność
+$r^d e^{-r^2/2}$ na $(0,\infty)$; dla $d=1$
+całkujemy na obu półprostych).
+
+Z drugiej strony $\widehat f\in L^1$ na mocy
+twierdzenia~\ref{thm:pde8-rules} i
+lematu~\ref{lem:pde8-seminorms}. Mamy
+\[
+ \begin{aligned}
+ &\sup_x\left| I_\varepsilon(x)
+ -(2\pi)^{-d}\int_{\R^d}e^{ix\cdot\xi}
+ \widehat f(\xi)\,\mathrm d\lambda_d(\xi)\right|\\
+ &\quad\le (2\pi)^{-d}\int_{\R^d}
+ (1-e^{-\varepsilon|\xi|^2/2})|\widehat f(\xi)|
+ \,\mathrm d\lambda_d(\xi)\longrightarrow0
+ \end{aligned}
+\]
+z twierdzenia o zbieżności zmajoryzowanej
+z majorantą $(2\pi)^{-d}|\widehat f(\xi)|$.
+Obie granice są więc równe, co dowodzi wzoru.
+
+Sprawdźmy jeszcze odwracalność w obu kierunkach.
+Niech $\mathcal R f(x)=f(-x)$. Z reguły łańcuchowej
+$\partial^\beta(\mathcal R f)(x)
+=(-1)^{|\beta|}(\partial^\beta f)(-x)$.
+Po podstawieniu $y=-x$ w supremum dostajemy
+$p_{\alpha,\beta}(\mathcal R f)=p_{\alpha,\beta}(f)$.
+Operator $\mathcal R$ jest więc ciągły,
+spełnia $\mathcal R^2=I$
+i komutuje z $\mathcal F$:
+podstawienie $y=-x$ daje
+$\mathcal F(\mathcal R f)(\xi)=\widehat f(-\xi)$.
+Operator określony całką odwrotną to
+$\mathcal G=(2\pi)^{-d}\mathcal R\mathcal F$,
+więc odwzorowuje $\mathcal S$ ciągle w siebie.
+Udowodniony wzór mówi $\mathcal G\mathcal F=I$,
+a komutowanie $\mathcal R$ i $\mathcal F$ daje
+$\mathcal F\mathcal G=\mathcal G\mathcal F=I$.
+Zatem $\mathcal G=\mathcal F^{-1}$ i oba
+operatory są ciągłe. Otrzymujemy ponadto
+$\mathcal F^2=(2\pi)^d\mathcal R$:
+istotnie, $\mathcal G\mathcal F=I$ oznacza
+$(2\pi)^{-d}\mathcal R\mathcal F^2=I$,
+a $\mathcal R^2=I$ pozwala usunąć odbicie.
+\end{proof}
+
+\begin{wniosek}[Wzory na splot i iloczyn]
+\label{cor:pde8-convolution}
+Dla $f,g\in\mathcal S(\R^d)$ funkcje $f*g$ oraz
+$fg$ należą do $\mathcal S(\R^d)$ i
+\[
+ \widehat{f*g}=\widehat f\,\widehat g,\qquad
+ \widehat{fg}=(2\pi)^{-d}(\widehat f*\widehat g).
+\]
+\end{wniosek}
+\begin{proof}
+Przyjmujemy $(f*g)(x)=\int_{\R^d}f(y)g(x-y)
+\,\mathrm d\lambda_d(y)$. Całka jest bezwzględnie
+zbieżna dla każdego $x$, ponieważ $f\in L^1$,
+a $g$ jest ograniczona.
+Różniczkowanie pod całką daje
+$\partial^\beta(f*g)=f*(\partial^\beta g)$:
+ilorazy różnicowe są zmajoryzowane przez
+$|f(y)|$ razy normę supremum odpowiedniej
+pochodnej $g$ wyższego rzędu, a ciągłość każdej
+pochodnej wynika z tej samej metody z majorantą
+$|f(y)|\|\partial^\beta g\|_\infty$.
+Z nierówności
+$1+|x|\le(1+|y|)(1+|x-y|)$ wynika
+\[
+ q_{N,m}(f*g)
+ \le q_{N,m}(g)
+ \int_{\R^d}(1+|y|)^N|f(y)|\,\mathrm d\lambda_d(y).
+\]
+Ostatnia całka jest skończona, gdyż dla
+całkowitego $L>d$ funkcja podcałkowa jest
+ograniczona przez $q_{N+L,0}(f)(1+|y|)^{-L}$.
+Zatem $f*g\in\mathcal S$.
+Z reguły Leibniza, rozdzielając wagę
+$(1+|x|)^N$ na pierwszy czynnik,
+otrzymujemy także
+$q_{N,m}(fg)\le 2^m q_{N,m}(f)q_{0,m}(g)$,
+więc $fg\in\mathcal S$.
+
+Całka podwójna z modułu $f(y)g(x-y)$
+wynosi $\|f\|_{L^1}\|g\|_{L^1}$ dzięki
+niezmienniczości miary względem przesunięć
+i twierdzeniu Tonellego. Zatem Fubini
+i podstawienie $z=x-y$ dają
+\[
+ \begin{aligned}
+ \widehat{f*g}(\xi)
+ &=\int_{\R^d}f(y)
+ \int_{\R^d}e^{-ix\cdot\xi}g(x-y)
+ \,\mathrm d\lambda_d(x)\,\mathrm d\lambda_d(y)\\
+ &=\int_{\R^d}e^{-iy\cdot\xi}f(y)
+ \widehat g(\xi)\,\mathrm d\lambda_d(y)
+ =\widehat f(\xi)\widehat g(\xi).
+ \end{aligned}
+\]
+Dla drugiej tożsamości podstawiamy wzór
+odwrócenia dla $g$. Bezwzględną całkowalność
+całki podwójnej zapewnia
+$\|f\|_{L^1}\|\widehat g\|_{L^1}<\infty$.
+Stąd
+\[
+ \begin{aligned}
+ \widehat{fg}(\xi)
+ &=(2\pi)^{-d}\int_{\R^d}\widehat g(\eta)
+ \int_{\R^d}e^{-ix\cdot(\xi-\eta)}f(x)
+ \,\mathrm d\lambda_d(x)\,\mathrm d\lambda_d(\eta)\\
+ &=(2\pi)^{-d}\int_{\R^d}
+ \widehat f(\xi-\eta)\widehat g(\eta)
+ \,\mathrm d\lambda_d(\eta)
+ =(2\pi)^{-d}(\widehat f*\widehat g)(\xi).
+ \end{aligned}
+\]
+W przyjętej konwencji czynnik $(2\pi)^{-d}$
+występuje we wzorze na transformatę iloczynu,
+a nie splotu.
+\end{proof}
+
+\section[Twierdzenie Plancherela i przestrzeń L2]{Twierdzenie Plancherela i przestrzeń $L^2$}
+\label{sec:pde8-plancherel}
+
+\begin{twierdzenie}[Tożsamość Parsevala--Plancherela]
+\label{thm:pde8-plancherel}
+Dla $f,g\in\mathcal S(\R^d)$ zachodzi
+\begin{equation}\label{eq:pde8-parseval}
+ \int_{\R^d}f(x)\overline{g(x)}\,\mathrm d\lambda_d(x)
+ =(2\pi)^{-d}\int_{\R^d}\widehat f(\xi)
+ \overline{\widehat g(\xi)}\,\mathrm d\lambda_d(\xi).
+\end{equation}
+Transformata Fouriera ma jednoznaczne ciągłe
+przedłużenie liniowe
+$\mathcal F:L^2(\R^d)\to L^2(\R^d)$.
+Dla każdego $f\in L^2(\R^d)$ zachodzi
+\[
+ \|\widehat f\|_2=(2\pi)^{d/2}\|f\|_2.
+\]
+Operator $(2\pi)^{-d/2}\mathcal F$ jest unitarny.
+Tożsamość~\eqref{eq:pde8-parseval} obowiązuje
+również dla dowolnych $f,g\in L^2(\R^d)$.
+\end{twierdzenie}
+\begin{proof}
+Ze wzoru odwrócenia z twierdzenia
+~\ref{thm:pde8-inversion} mamy
+\[
+ \overline{g(x)}=(2\pi)^{-d}\int_{\R^d}
+ e^{-ix\cdot\xi}\overline{\widehat g(\xi)}
+ \,\mathrm d\lambda_d(\xi).
+\]
+Po pomnożeniu przez $f(x)$ całka podwójna
+jest bezwzględnie zbieżna, ponieważ całka
+z modułu, bez czynnika $(2\pi)^{-d}$, wynosi
+$\|f\|_1\|\widehat g\|_1<\infty$.
+Stąd z twierdzenia Fubiniego
+\[
+ \begin{aligned}
+ \int_{\R^d}f(x)\overline{g(x)}\,\mathrm d\lambda_d(x)
+ &=(2\pi)^{-d}\int_{\R^d}
+ \overline{\widehat g(\xi)}
+ \int_{\R^d}e^{-ix\cdot\xi}f(x)
+ \,\mathrm d\lambda_d(x)\,\mathrm d\lambda_d(\xi)\\
+ &=(2\pi)^{-d}\int_{\R^d}
+ \widehat f(\xi)\overline{\widehat g(\xi)}
+ \,\mathrm d\lambda_d(\xi).
+ \end{aligned}
+\]
+W szczególności dla $f=g$ otrzymujemy
+$\|\widehat f\|_2^2=(2\pi)^d\|f\|_2^2$.
+W zespolonej przestrzeni Hilberta $L^2(\R^d)$
+przyjmujemy iloczyn skalarny liniowy względem
+pierwszego argumentu,
+$\langle f,g\rangle_2=\int_{\R^d}f(x)\overline{g(x)}
+\,\mathrm d\lambda_d(x)$.
+
+Oznaczmy przez $U_0=(2\pi)^{-d/2}\mathcal F$
+operator na $\mathcal S$. Jest on liniową izometrią
+w normie $L^2$. Dla dowolnego $f\in L^2$
+wybieramy ciąg $f_n\in\mathcal S$ z
+$\|f_n-f\|_2\to0$, korzystając z twierdzenia
+~\ref{thm:pde8-density}. Wówczas
+\[
+ \|U_0f_n-U_0f_k\|_2=\|f_n-f_k\|_2.
+\]
+Ciąg $(U_0f_n)$ jest ciągiem Cauchy'ego,
+więc ma granicę w zupełnej przestrzeni $L^2$.
+Definiujemy $Uf=\lim_n U_0f_n$ w $L^2$.
+Jeśli $g_n\in\mathcal S$ jest innym ciągiem
+aproksymującym $f$, to
+$\|U_0f_n-U_0g_n\|_2=\|f_n-g_n\|_2
+\le\|f_n-f\|_2+\|f-g_n\|_2\to0$.
+Definicja nie zależy więc od wyboru ciągu.
+
+Dla $f,g\in L^2$, $a,b\in\C$ wybieramy
+ciągi $f_n,g_n\in\mathcal S$ zbiegające
+w $L^2$ odpowiednio do $f,g$.
+Ciąg $af_n+bg_n$ zbiega do $af+bg$
+z nierówności trójkąta. Z definicji $U$
+i liniowości $U_0$ mamy
+\[
+ U(af+bg)=\lim_n U_0(af_n+bg_n)
+ =aUf+bUg.
+\]
+Ciągłość normy daje
+$\|Uf\|_2=\lim_n\|U_0f_n\|_2
+=\lim_n\|f_n\|_2=\|f\|_2$.
+Operator $U$ przedłuża $U_0$ (dla $f\in\mathcal S$
+można wziąć ciąg stały), a jednoznaczność
+ciągłego przedłużenia wynika z gęstości $\mathcal S$:
+dla każdego innego ciągłego przedłużenia $V$
+mamy $Vf=\lim_n Vf_n=\lim_n U_0f_n=Uf$.
+
+Obraz $U(L^2)$ jest domknięty: jeśli $Uf_n\to h$
+w $L^2$, to $(f_n)$ jest ciągiem Cauchy'ego
+dzięki izometryczności $U$. Istnieje zatem
+$f\in L^2$ z $f_n\to f$, a ciągłość $U$ daje
+$h=Uf$. Zarazem $U(\mathcal S)=\mathcal S$,
+gdyż $\mathcal F$ jest automorfizmem $\mathcal S$
+i mnożenie przez niezerową stałą nie zmienia
+tej przestrzeni. Obraz $U(L^2)$ zawiera więc
+gęsty podzbiór $\mathcal S$, a będąc domknięty,
+jest całym $L^2$.
+
+Dla $f,g\in L^2$ wybierzmy $f_n,g_n\in\mathcal S$
+zbiegające do nich w normie $L^2$.
+Z nierówności Cauchy'ego--Schwarza wynika
+\[
+ |\langle f_n,g_n\rangle_2-\langle f,g\rangle_2|
+ \le\|f_n-f\|_2\|g_n\|_2+\|f\|_2\|g_n-g\|_2
+ \longrightarrow0,
+\]
+ponieważ ciąg $(\|g_n\|_2)$ jest ograniczony.
+Analogiczne oszacowanie dla $Uf_n,Ug_n$
+uzasadnia przejście do granicy w tożsamości
+$\langle U_0f_n,U_0g_n\rangle_2
+=\langle f_n,g_n\rangle_2$.
+Zatem $U$ zachowuje iloczyn skalarny i jest
+surjektywny, czyli jest operatorem unitarnym.
+Przyjmując $\mathcal F=(2\pi)^{d/2}U$ na $L^2$,
+otrzymujemy wszystkie twierdzone własności.
+\end{proof}
+
+Operator odwrotny na $L^2$ ma postać
+\[
+ \mathcal F^{-1}=(2\pi)^{-d}\mathcal R\mathcal F,
+ \qquad \mathcal R f(x)=f(-x).
+\]
+Rzeczywiście, $\mathcal R$ jest izometrią $L^2$
+na mocy podstawienia $y=-x$. Obie strony
+tożsamości są ciągłe na $L^2$ i pokrywają się
+na gęstej przestrzeni $\mathcal S$ dzięki
+twierdzeniu~\ref{thm:pde8-inversion}.
+Także równość $\mathcal F^2=(2\pi)^d\mathcal R$
+przenosi się z $\mathcal S$ na $L^2$,
+ponieważ oba operatory są ciągłe na $L^2$
+i $\mathcal S$ jest w nim gęsta.
+
+\begin{stwierdzenie}[Zgodność transformaty całkowej i przedłużenia]
+Jeśli $f\in L^1(\R^d)\cap L^2(\R^d)$, to
+transformata określona całką
+\eqref{eq:pde8-convention} jest reprezentantem
+klasy $\mathcal Ff\in L^2$ z twierdzenia
+Plancherela. Analogiczna zgodność zachodzi
+dla transformaty odwrotnej.
+\end{stwierdzenie}
+\begin{proof}
+Potrzebujemy aproksymacji jednocześnie w obu normach.
+Dla $R>0$ połóżmy $v_R=f\chi_{B_R(0)}$.
+Z całkowalności $|f|$ i $|f|^2$ wynika
+$\|f-v_R\|_1+\|f-v_R\|_2\to0$.
+Dla ustalonego $R$ wygładzamy $v_R$ przez
+jądro $\rho_\varepsilon$ z sekcji
+~\ref{sec:pde7-mollifiers}. Tak jak w dowodzie
+twierdzenia~\ref{thm:pde8-density},
+$v_R*\rho_\varepsilon\in C_c^\infty(\R^d)$,
+a dla $0<\varepsilon<1$ obie funkcje
+$v_R$ i $v_R*\rho_\varepsilon$ znikają
+prawie wszędzie poza $\overline{B_{R+1}(0)}$.
+Twierdzenie~\ref{thm:pde7-approx-id} dla
+$p=1$ i $p=2$ daje zatem zbieżność w obu
+normach globalnych. Dla $n\ge1$ wybieramy
+najpierw $R_n$ tak, aby suma obu błędów
+obcięcia była mniejsza niż $1/(2n)$.
+Dla ustalonego $R_n$ wybieramy następnie
+$0<\varepsilon_n<1$ tak, aby suma obu
+błędów wygładzania była mniejsza niż $1/(2n)$.
+Dla $f_n=v_{R_n}*\rho_{\varepsilon_n}$
+nierówność trójkąta w obu normach daje
+$\|f-f_n\|_1+\|f-f_n\|_2<1/n$.
+
+Oznaczmy przez $h$ transformatę całkową $f$,
+a przez $H$ jej transformatę w sensie $L^2$.
+Z oszacowania dla transformaty całkowej
+mamy $\|\widehat f_n-h\|_\infty\le\|f_n-f\|_1\to0$.
+Z twierdzenia Plancherela
+$\|\widehat f_n-H\|_2=(2\pi)^{d/2}\|f_n-f\|_2\to0$.
+Dla każdej kuli $B_R(0)$ otrzymujemy więc
+\[
+ \|H-h\|_{L^2(B_R(0))}
+ \le\|H-\widehat f_n\|_2
+ +\lambda_d(B_R(0))^{1/2}\|\widehat f_n-h\|_\infty
+ \longrightarrow0.
+\]
+Funkcje $H,h$ są zatem równe prawie wszędzie
+na każdej takiej kuli, a przeliczalne pokrycie
+$\R^d$ kulami o całkowitych promieniach daje
+$H=h$ prawie wszędzie na całej przestrzeni.
+Dla odwrotności stosujemy wykazaną tożsamość
+$\mathcal F^{-1}=(2\pi)^{-d}\mathcal R\mathcal F$
+oraz tę samą tożsamość dla całek na $L^1$.
+\end{proof}
+
+\begin{uwaga}[Właściwe znaczenie całki dla $L^2$]
+Jeśli $f\in L^2\setminus L^1$, zapis $\widehat f$
+oznacza przedłużenie operatora z twierdzenia
+Plancherela, a nie automatycznie zbieżną całkę
+z~\eqref{eq:pde8-convention}.
+Dla każdego $R>0$ funkcja
+$f_R=f\chi_{B_R(0)}$ należy do $L^1\cap L^2$,
+gdyż $\|f_R\|_1\le
+\lambda_d(B_R(0))^{1/2}\|f\|_2$.
+Ponadto $\|f_R-f\|_2^2
+=\int_{\R^d\setminus B_R(0)}|f|^2\,\mathrm d\lambda_d
+\to0$ z całkowalności $|f|^2$.
+Twierdzenie o zgodności transformat
+utożsamia $\widehat{f_R}$ z całką po kuli,
+a ciągłość transformaty na $L^2$ daje
+\[
+ \widehat f
+ =\lim_{R\to\infty}^{L^2}
+ \int_{B_R(0)} e^{-ix\cdot\xi}f(x)
+ \,\mathrm d\lambda_d(x).
+\]
+Nie jest to twierdzenie o zbieżności punktowej
+tej rodziny całek.
+
+Na przykład $f(x)=(1+|x|)^{-3/4}$ na $\R$ spełnia
+\[
+ \int_\R |f(x)|^2\,\mathrm d\lambda_1(x)
+ =2\int_0^\infty(1+x)^{-3/2}\,\mathrm d\lambda_1(x)=4,
+\]
+lecz $\int_\R |f(x)|\,\mathrm d\lambda_1(x)=+\infty$,
+bo całka $\int_0^\infty(1+x)^{-3/4}\,\mathrm d\lambda_1(x)$
+jest rozbieżna. W szczególności całka Fouriera
+dla $\xi=0$ jest rozbieżna, mimo że transformata
+w sensie $L^2$ istnieje jako klasa funkcji.
+\end{uwaga}
+
+\section[Dystrybucje temperowane]{Dystrybucje temperowane: przestrzeń sprzężona do $\mathcal S$}
+\label{sec:pde8-tempered}
+
+\begin{definicja}[Dystrybucja temperowana]
+\label{def:pde8-tempered}
+Przestrzenią dystrybucji temperowanych $\mathcal S'(\R^d)$
+nazywamy ciągłą przestrzeń sprzężoną do $\mathcal S(\R^d)$,
+złożoną ze wszystkich ciągłych zespolonych funkcjonałów
+liniowych $T:\mathcal S(\R^d)\to\C$.
+Działanie funkcjonału zapisujemy jako
+$\langle T,\varphi\rangle=T(\varphi)$.
+Jest ono liniowe względem $\varphi$, bez sprzężenia
+zespolonego, zgodnie z konwencją rozdziału
+~\ref{chap:pde-distributions}.
+Zbieżność $T_n\to T$ w sensie dystrybucji temperowanych
+oznacza zbieżność
+\[
+ \langle T_n,\varphi\rangle\to\langle T,\varphi\rangle
+ \qquad\text{dla każdego }\varphi\in\mathcal S(\R^d).
+\]
+Jest to zbieżność w topologii słabej*,
+czyli $\sigma(\mathcal S',\mathcal S)$, wyznaczonej
+przez półnormy $T\mapsto|\langle T,\varphi\rangle|$,
+po jednej dla każdego $\varphi\in\mathcal S$.
+Zbieżność we wszystkich tych półnormach nie jest
+warunkiem zbieżności jednostajnej względem testów.
+\end{definicja}
+
+\begin{twierdzenie}[Globalne oszacowanie dystrybucji temperowanej]
+\label{thm:pde8-growth}
+Funkcjonał liniowy $T$ na $\mathcal S(\R^d)$ jest ciągły
+dokładnie wtedy, gdy istnieją $C>0$ i $N,m\in\N_0$ takie, że
+\begin{equation}\label{eq:pde8-growth}
+ |\langle T,\varphi\rangle|\le C\,q_{N,m}(\varphi)
+ \qquad(\varphi\in\mathcal S(\R^d)).
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Jeśli $T$ jest ciągły, to przeciwobraz zbioru
+$\{z\in\C:|z|<1\}$ jest otoczeniem zera.
+Z definicji topologii wyznaczonej przez półnormy
+istnieje skończona rodzina warunków
+$q_{N_j,m_j}(\varphi)<r_j$, gdzie $r_j>0$,
+których jednoczesne spełnienie zapewnia
+$|\langle T,\varphi\rangle|<1$.
+Wybieramy $N=\max_j N_j$, $m=\max_j m_j$
+i $r=\min_j r_j>0$.
+Ponieważ $q_{N_j,m_j}\le q_{N,m}$, wystarcza
+$q_{N,m}(\varphi)<r$.
+Dla $\varphi\ne0$ mamy $q_{N,m}(\varphi)>0$,
+gdyż $q_{N,m}(\varphi)\ge\|\varphi\|_\infty$.
+Stosując powyższy warunek do
+$r\varphi/(2q_{N,m}(\varphi))$, otrzymujemy
+\[
+ |\langle T,\varphi\rangle|
+ <\frac{2}{r}q_{N,m}(\varphi).
+\]
+Dla $\varphi=0$ nierówność nieostra zachodzi
+z liniowości. To daje~\eqref{eq:pde8-growth}.
+Odwrotnie, jeśli zachodzi~\eqref{eq:pde8-growth},
+to dla dowolnego $\eta>0$ warunek
+$q_{N,m}(\varphi)<\eta/C$ pociąga
+$|T(\varphi)|<\eta$. Funkcjonał jest więc ciągły
+w zerze, a z liniowości ciągły w każdym punkcie.
+\end{proof}
+
+\begin{stwierdzenie}[Granice dystrybucji temperowanych]
+Jeśli $T_n\in\mathcal S'(\R^d)$ i dla każdego
+$\varphi\in\mathcal S(\R^d)$ istnieje skończona
+granica $T(\varphi)=\lim_n T_n(\varphi)$,
+to $T\in\mathcal S'(\R^d)$. Co więcej, istnieją
+$C>0$ oraz $N,m\in\N_0$ wspólne dla całego ciągu,
+takie że
+\[
+ |T_n(\varphi)|\le C q_{N,m}(\varphi)
+ \qquad(n\ge1,\ \varphi\in\mathcal S(\R^d)).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Dla $k\ge1$ określmy zbiory
+\[
+ A_k=\{\varphi\in\mathcal S:
+ |T_n(\varphi)|\le k\text{ dla każdego }n\ge1\}.
+\]
+Są one domknięte jako przecięcia domkniętych
+przeciwobrazów zbioru $\{z:|z|\le k\}$ przez
+ciągłe funkcjonały $T_n$. Ich suma jest równa
+$\mathcal S$, ponieważ każdy zbieżny ciąg
+liczb zespolonych jest ograniczony.
+Topologię $\mathcal S$ wyznacza zupełna metryka
+$D$ z sekcji~\ref{sec:pde8-schwartz},
+więc z twierdzenia Baire'a pewien $A_k$
+ma niepuste wnętrze. Istnieją zatem
+$\varphi_0\in A_k$, $r>0$ i $N,m\in\N_0$
+takie, że $q_{N,m}(\psi)<r$ pociąga
+$\varphi_0+\psi\in A_k$. Możemy użyć jednej
+półnormy dzięki monotoniczności rodziny
+$q_{N,m}$, tak jak w poprzednim dowodzie.
+Wtedy dla każdego $n$
+\[
+ |T_n(\psi)|\le
+ |T_n(\varphi_0+\psi)|+|T_n(\varphi_0)|\le2k.
+\]
+Dla $\varphi\ne0$ podstawiamy
+$\psi=r\varphi/(2q_{N,m}(\varphi))$,
+uzyskując $|T_n(\varphi)|\le(4k/r)q_{N,m}(\varphi)$.
+Dla $\varphi=0$ oszacowanie jest oczywiste.
+Przechodząc do granicy, dostajemy tę samą
+nierówność dla $T$. Dla $a,b\in\C$ oraz
+$\varphi,\psi\in\mathcal S$ mamy
+\[
+ T(a\varphi+b\psi)=\lim_n T_n(a\varphi+b\psi)
+ =aT(\varphi)+bT(\psi).
+\]
+Funkcjonał $T$ jest zatem liniowy, a wspólne
+oszacowanie i twierdzenie~\ref{thm:pde8-growth}
+dają jego ciągłość.
+\end{proof}
+
+\begin{uwaga}[Relacja między $\mathcal D'$ a $\mathcal S'$]
+Ograniczenie $T\in\mathcal S'(\R^d)$ do
+$C_c^\infty(\R^d)$ jest dystrybucją.
+Istotnie, jeśli $\supp\varphi\subset K$ dla
+niepustego zbioru zwartego $K$, to każda
+pochodna $\varphi$ znika poza $K$ (funkcja
+jest tam lokalnie zerowa). Stąd
+\[
+ q_{N,m}(\varphi)
+ \le (1+\max_{x\in K}|x|)^N
+ \max_{|\beta|\le m}\sup_{x\in K}
+ |\partial^\beta\varphi(x)|.
+\]
+Dla $K=\varnothing$ jedyną taką funkcją jest
+funkcja zerowa. Globalne oszacowanie
+~\eqref{eq:pde8-growth} daje zatem lokalne
+oszacowanie z twierdzenia
+~\ref{thm:pde7-local-order}.
+Odwzorowanie ograniczenia
+$\mathcal S'\to\mathcal D'$ jest liniowe
+i iniektywne: jeśli dwa ciągłe funkcjonały
+na $\mathcal S$ zgadzają się na $C_c^\infty$,
+to zgadzają się na całej $\mathcal S$
+dzięki gęstości z twierdzenia~\ref{thm:pde8-density}.
+Możemy więc utożsamiać $\mathcal S'$
+z podprzestrzenią $\mathcal D'$.
+Dystrybucja jest temperowana dokładnie wtedy,
+gdy posiada ciągłe przedłużenie z $C_c^\infty$
+na $\mathcal S$; takie przedłużenie jest jednoznaczne.
+Nie wszystkie dystrybucje są temperowane,
+jak pokaże ostatni z poniższych przykładów.
+W szczególności transformata Fouriera dowolnej
+dystrybucji z $\mathcal D'$ nie ma automatycznie
+sensu w rachunku, który zbudujemy dla $\mathcal S'$.
+\end{uwaga}
+
+\begin{przyklad}[Obiekty temperowane i nietemperowane]
+\begin{enumerate}
+\item Niech $f$ będzie funkcją mierzalną spełniającą
+$|f(x)|\le C(1+|x|)^M$ prawie wszędzie,
+gdzie $C>0$, $M\in\N_0$.
+Definiujemy
+\[
+ \langle T_f,\varphi\rangle
+ =\int_{\R^d}f(x)\varphi(x)\,\mathrm d\lambda_d(x).
+\]
+Dla całkowitego $L>d$ prawie wszędzie zachodzi
+\[
+ |f(x)\varphi(x)|
+ \le C(1+|x|)^M q_{M+L,0}(\varphi)
+              (1+|x|)^{-M-L}.
+\]
+Całkując to oszacowanie, otrzymujemy
+\[
+ \int_{\R^d}|f(x)\varphi(x)|\,\mathrm d\lambda_d(x)
+ \le C C_{d,L,1}\,q_{M+L,0}(\varphi),
+\]
+gdzie $C_{d,L,1}$ jest stałą z lematu
+~\ref{lem:pde8-seminorms}.
+Całka jest zatem bezwzględnie zbieżna,
+a liniowy funkcjonał $T_f$ jest ciągły
+z twierdzenia~\ref{thm:pde8-growth}.
+Należą tu wielomiany, stałe i funkcje istotnie
+ograniczone. Punktowe oszacowanie wielomianowe
+jest warunkiem wystarczającym, nie definicją
+temperowaności funkcji.
+
+\item Każda funkcja $f\in L^p(\R^d)$,
+$1\le p\le\infty$, również określa
+dystrybucję temperowaną. Niech $p'$ będzie
+wykładnikiem sprzężonym, czyli
+$1/p+1/p'=1$ z konwencją $1/\infty=0$.
+Z nierówności Höldera mamy
+$|\langle T_f,\varphi\rangle|\le
+\|f\|_p\|\varphi\|_{p'}$.
+Jeśli $p'<\infty$, wybieramy całkowite $N$
+takie, że $Np'>d$. Z tego samego całkowania
+radialnego co w lemacie~\ref{lem:pde8-seminorms}
+wynika $\|\varphi\|_{p'}\le
+C_{d,N,p'}q_{N,0}(\varphi)$, gdzie
+$C_{d,N,p'}^{p'}=\int_{\R^d}(1+|x|)^{-Np'}
+\,\mathrm d\lambda_d(x)<\infty$.
+Jeśli $p'=\infty$, mamy
+$\|\varphi\|_\infty=q_{0,0}(\varphi)$.
+W obu przypadkach otrzymujemy ciągłość.
+W szczególności każda funkcja z $L^2$
+może być traktowana jako dystrybucja temperowana,
+co wykorzystamy przy porównywaniu transformat Fouriera.
+
+\item Dla $a\in\R^d$ oraz $\alpha\in\N_0^d$ wzór
+\[
+ \langle\partial^\alpha\delta_a,\varphi\rangle
+ =(-1)^{|\alpha|}\partial^\alpha\varphi(a)
+\]
+określa ciągłe przedłużenie pochodnej delty
+na $\mathcal S$. Istotnie, moduł prawej strony
+jest ograniczony przez $q_{0,|\alpha|}(\varphi)$.
+Przypadek $\alpha=0$ daje samą deltę.
+
+\item Każda dystrybucja $T\in\mathcal D'(\R^d)$
+o zwartym nośniku $K$ jest temperowana.
+Wybieramy $R\ge1$ takie, że $K\subset B_R(0)$
+i funkcję odcinającą $\psi_R(x)=\psi(x/R)$
+z dowodu twierdzenia~\ref{thm:pde8-density}.
+Jest ona równa $1$ na otoczeniu $K$.
+Dla $\varphi\in\mathcal S$ określamy
+\[
+ \langle\widetilde T,\varphi\rangle
+ =\langle T,\psi_R\varphi\rangle.
+\]
+Iloczyn $\psi_R\varphi$ jest gładki
+i ma nośnik w ustalonym zbiorze zwartym
+$K_1=\overline{B_{2R}(0)}$.
+Stosując twierdzenie~\ref{thm:pde7-local-order}
+do $K_1$, otrzymujemy pewne
+$C>0$ i $m\in\N_0$ takie, że
+\[
+ \begin{aligned}
+ |\langle\widetilde T,\varphi\rangle|
+ &\le C\max_{|\beta|\le m}\sup_{x\in K_1}
+ |\partial^\beta(\psi_R\varphi)(x)|\\
+ &\le C\,2^m q_{0,m}(\psi_R)q_{0,m}(\varphi).
+ \end{aligned}
+\]
+Druga nierówność wynika z wielowskaźnikowej
+reguły Leibniza. Wobec tego $\widetilde T$
+jest ciągły na $\mathcal S$.
+Jeśli $\varphi\in C_c^\infty$, to
+$(1-\psi_R)\varphi$ jest testem o nośniku
+rozłącznym z $K$. Z definicji nośnika
+dystrybucji (sekcja~\ref{sec:pde7-support})
+wynika $\langle T,(1-\psi_R)\varphi\rangle=0$.
+Zatem $\widetilde T$ rzeczywiście przedłuża $T$.
+Nie zależy od wyboru funkcji odcinającej,
+ponieważ ciągłe przedłużenie jest jednoznaczne.
+
+\item Dystrybucja regularna wyznaczona przez
+$f(x)=e^{|x|^2}$ na $\R^d$ nie jest temperowana.
+Funkcja $f$ jest lokalnie całkowalna, więc
+określa dystrybucję na $C_c^\infty$.
+Załóżmy, że ma ona ciągłe przedłużenie
+$\widetilde T$ na $\mathcal S$.
+Dla $R\ge1$ bierzemy
+$\varphi_R(x)=\psi_R(x)e^{-|x|^2/2}$,
+gdzie $\psi_R$ jest funkcją z dowodu
+twierdzenia~\ref{thm:pde8-density}.
+Funkcja $e^{-|x|^2/2}$ należy do $\mathcal S$,
+a konstrukcja aproksymacji w tym dowodzie
+daje $\varphi_R\to e^{-|x|^2/2}$ w $\mathcal S$.
+Z ciągłości $\widetilde T$ wynikałaby
+zbieżność $\widetilde T(\varphi_R)$
+do skończonej liczby. Tymczasem
+$0\le\psi_R\le1$, $\psi_R=1$ na $B_R(0)$
+i $\varphi_R\in C_c^\infty$, więc
+\[
+ \begin{aligned}
+ \langle\widetilde T,\varphi_R\rangle
+ &=\int_{\R^d}\psi_R(x)e^{|x|^2/2}
+ \,\mathrm d\lambda_d(x)\\
+ &\ge\lambda_d(B_R(0))
+ =R^d\lambda_d(B_1(0))\longrightarrow+\infty.
+ \end{aligned}
+\]
+Jest to sprzeczność.
+\end{enumerate}
+\end{przyklad}
+
+\section{Transformata Fouriera dystrybucji temperowanych}
+\label{sec:pde8-fourier-distributions}
+
+\begin{definicja}[Transformata na $\mathcal S'$]
+\label{def:pde8-distFT}
+Dla $T\in\mathcal S'(\R^d)$ definiujemy $\widehat T\in\mathcal S'(\R^d)$
+przez \emph{transpozycję} operatora $\mathcal F$:
+\[
+ \langle\widehat T,\varphi\rangle
+ =\langle T,\widehat\varphi\rangle,
+ \qquad\varphi\in\mathcal S(\R^d).
+\]
+Analogicznie definiujemy $\mathcal F^{-1}T$ przez
+$\langle\mathcal F^{-1}T,\varphi\rangle
+=\langle T,\mathcal F^{-1}\varphi\rangle$.
+\end{definicja}
+
+Definicja jest poprawna: z twierdzeń
+~\ref{thm:pde8-rules} i~\ref{thm:pde8-inversion}
+wynika ciągłość obu operatorów na $\mathcal S$,
+więc ich złożenia z $T$ są ciągłymi funkcjonałami
+liniowymi. Nie stosujemy sprzężenia zespolonego:
+jest to transpozycja względem liniowego działania
+dystrybucji, nie operator sprzężony w przestrzeni Hilberta.
+
+\begin{stwierdzenie}[Zgodność trzech definicji transformaty]
+Jeśli $f\in L^1(\R^d)$, to
+$\mathcal F T_f=T_{\widehat f}$, gdzie po prawej
+stronie używamy transformaty całkowej.
+Jeśli $f\in L^2(\R^d)$, to ta sama równość
+zachodzi dla transformaty z twierdzenia Plancherela.
+\end{stwierdzenie}
+\begin{proof}
+Dla $f\in L^1$ i $\varphi\in\mathcal S$
+całka podwójna z modułu
+$f(x)e^{-ix\cdot\xi}\varphi(\xi)$ wynosi
+$\|f\|_1\|\varphi\|_1<\infty$.
+Podstawiamy definicję $\widehat\varphi$ i stosujemy
+twierdzenie Fubiniego, otrzymując
+\[
+ \begin{aligned}
+ \langle\widehat{T_f},\varphi\rangle
+ &=\int_{\R^d}f(x)\widehat\varphi(x)
+ \,\mathrm d\lambda_d(x)\\
+ &=\int_{\R^d}\widehat f(\xi)\varphi(\xi)
+ \,\mathrm d\lambda_d(\xi).
+ \end{aligned}
+\]
+Funkcja $\widehat f$ jest ograniczona, więc
+wyznacza dystrybucję temperowaną.
+Dla $f\in L^2$ wybieramy $f_n\in\mathcal S$
+zbiegające do $f$ w $L^2$ dzięki twierdzeniu
+~\ref{thm:pde8-density}.
+Z twierdzenia~\ref{thm:pde8-plancherel}
+wynika $\widehat f_n\to\widehat f$ w $L^2$.
+Dla każdego testu $\varphi$ obie różnice działań
+szacujemy przez nierówność Cauchy'ego--Schwarza:
+\[
+ \begin{aligned}
+ |\langle T_{f_n}-T_f,\widehat\varphi\rangle|
+ &\le\|f_n-f\|_2\|\widehat\varphi\|_2,\\
+ |\langle T_{\widehat f_n}-T_{\widehat f},\varphi\rangle|
+ &\le\|\widehat f_n-\widehat f\|_2\|\varphi\|_2.
+ \end{aligned}
+\]
+Prawie wszędzie określone funkcje $L^2$
+wyznaczają funkcjonały temperowane na mocy
+sekcji~\ref{sec:pde8-tempered}. Przechodząc
+do granicy w udowodnionej równości dla $f_n$,
+otrzymujemy tezę.
+\end{proof}
+
+Pochodne dystrybucji temperowanych definiujemy
+przez $\langle\partial_j T,\varphi\rangle
+=-\langle T,\partial_j\varphi\rangle$.
+Są temperowane dzięki ciągłości różniczkowania
+na $\mathcal S$. Ogólniej, jeśli $a\in C^\infty(\R^d)$
+i dla każdej pochodnej istnieją
+$C_\gamma>0$, $M_\gamma\in\N_0$ z
+$|\partial^\gamma a(x)|\le C_\gamma(1+|x|)^{M_\gamma}$,
+to mnożenie przez $a$ jest ciągłe na $\mathcal S$.
+Dla $m\in\N_0$ bierzemy
+$M=\max_{|\gamma|\le m} M_\gamma$ i
+$C=\max_{|\gamma|\le m} C_\gamma$.
+Dla $|\beta|\le m$ reguła Leibniza daje
+\[
+ \begin{aligned}
+ &(1+|x|)^N|\partial^\beta(a\varphi)(x)|\\
+ &\quad\le
+ \sum_{\gamma\le\beta}\binom{\beta}{\gamma}
+ C(1+|x|)^{N+M}|\partial^{\beta-\gamma}\varphi(x)|\\
+ &\quad\le C\,2^{|\beta|}q_{N+M,m}(\varphi).
+ \end{aligned}
+\]
+Biorąc supremum po $x$ i maksimum po $\beta$,
+otrzymujemy
+$q_{N,m}(a\varphi)\le 2^m C q_{N+M,m}(\varphi)$.
+Definiujemy więc $aT$ przez
+$\langle aT,\varphi\rangle=\langle T,a\varphi\rangle$.
+Te definicje zgadzają się z rachunkiem
+na $\mathcal D'$ po ograniczeniu do testów
+o zwartym nośniku. W szczególności można
+mnożyć przez wielomiany oraz funkcje Schwartza;
+dowolna funkcja gładka nie musi zachowywać
+przestrzeni $\mathcal S$.
+
+Topologiczne wzmocnienie poniższego wyniku, obejmujące ciągłość transformacji i jej odwrotności w topologii słabej i silnej, podano w \atlasref{DT-10::thm:fourier-auto-tempered22}{DT-10: transformacja Fouriera jako automorfizm topologiczny}.
+
+\begin{twierdzenie}[Rachunek na $\mathcal S'$]
+\label{thm:pde8-dist-rules}
+Transformata $\mathcal F:\mathcal S'\to\mathcal S'$ jest
+liniowym automorfizmem, którego odwrotnością jest
+$\mathcal F^{-1}$. Dla $T\in\mathcal S'(\R^d)$ i
+$\alpha\in\N_0^d$ zachodzi
+\[
+ \mathcal F(\partial^\alpha T)=(i\xi)^\alpha\widehat T,
+ \qquad \mathcal F(x^\alpha T)=i^{|\alpha|}
+ \partial_\xi^\alpha\widehat T.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla każdego testu $\varphi\in\mathcal S$ mamy
+\[
+ \begin{aligned}
+ \langle\mathcal F^{-1}\mathcal FT,\varphi\rangle
+ &=\langle T,\mathcal F\mathcal F^{-1}\varphi\rangle
+ =\langle T,\varphi\rangle,\\
+ \langle\mathcal F\mathcal F^{-1}T,\varphi\rangle
+ &=\langle T,\mathcal F^{-1}\mathcal F\varphi\rangle
+ =\langle T,\varphi\rangle.
+ \end{aligned}
+\]
+Liniowość wynika z definicji. Oba operatory
+zachowują zbieżność słabą*: dla $T_n\to T$
+testujemy $T_n$ odpowiednio przez ustaloną
+funkcję $\mathcal F\varphi$ lub $\mathcal F^{-1}\varphi$.
+Zatem są również ciągłe w topologii słabej*,
+ponieważ każdy funkcjonał współrzędny po złożeniu
+z nimi jest funkcjonałem współrzędnym tej topologii.
+Dla pierwszej równości korzystamy z
+$\partial_{x_j}\widehat\varphi(x)
+=\mathcal F(-i\xi_j\varphi)(x)$,
+co wynika z tożsamości~\eqref{eq:pde8-rules}
+z odpowiednio nazwanymi zmiennymi.
+Dla testu $\varphi$ liczymy
+\[
+ \langle\widehat{\partial_jT},\varphi\rangle
+ =-\langle T,\partial_j\widehat\varphi\rangle
+ =\langle T,\widehat{i\xi_j\varphi}\rangle
+ =\langle i\xi_j\widehat T,\varphi\rangle.
+\]
+Dla drugiej tożsamości korzystamy z równości
+$\mathcal F(\partial_{\xi_j}\varphi)(x)
+=ix_j\widehat\varphi(x)$:
+\[
+ \begin{aligned}
+ \langle\mathcal F(x_jT),\varphi\rangle
+ &=\langle T,x_j\widehat\varphi\rangle\\
+ &=-i\langle T,\mathcal F(\partial_{\xi_j}\varphi)\rangle\\
+ &=-i\langle\widehat T,\partial_{\xi_j}\varphi\rangle
+ =i\langle\partial_{\xi_j}\widehat T,\varphi\rangle.
+ \end{aligned}
+\]
+Iteracja daje oba wzory dla wielowskaźników,
+ponieważ pochodne i mnożenia współrzędniowe
+odpowiedniego rodzaju komutują.
+\end{proof}
+
+\begin{przyklad}[Cztery transformaty podstawowe]
+\label{ex:pde8-four}
+W $\mathcal S'(\R^d)$ zachodzą wzory
+\[
+ \widehat{\delta_0}=1,\quad
+ \widehat 1=(2\pi)^d\delta_0,\quad
+ \widehat{\delta_a}(\xi)=e^{-ia\cdot\xi},\quad
+ \mathcal F(e^{ia\cdot x})=(2\pi)^d\delta_a.
+\]
+Dla dowolnego $a\in\R^d$ i testu $\varphi$ mamy
+\[
+ \langle\widehat{\delta_a},\varphi\rangle
+ =\widehat\varphi(a)
+ =\int_{\R^d}e^{-ia\cdot\xi}\varphi(\xi)
+ \,\mathrm d\lambda_d(\xi).
+\]
+Przy $a=0$ otrzymujemy $\widehat{\delta_0}=1$.
+Natomiast wzór odwrócenia dla $\varphi$ daje
+\[
+ \langle\mathcal F(e^{ia\cdot x}),\varphi\rangle
+ =\int_{\R^d}e^{ia\cdot x}\widehat\varphi(x)
+ \,\mathrm d\lambda_d(x)
+ =(2\pi)^d\varphi(a).
+\]
+W szczególności przy $a=0$ mamy
+$\widehat1=(2\pi)^d\delta_0$. Obie całki
+są bezwzględnie zbieżne, ponieważ
+$\varphi,\widehat\varphi\in L^1$.
+Równości po prawej należy rozumieć \emph{dystrybucyjnie},
+a nie jako zwykłe całki bezwzględnie zbieżne.
+\end{przyklad}
+
+\begin{twierdzenie}[Splot dystrybucji temperowanej z funkcją Schwartza]
+\label{thm:pde8-convol-temp}
+Niech $T\in\mathcal S'(\R^d)$ i $\varphi\in\mathcal S(\R^d)$.
+Funkcja $(T*\varphi)(x):=\langle T(y),\varphi(x-y)\rangle$
+jest gładka, ma wzrost co najwyżej wielomianowy
+(wraz z każdą ustaloną pochodną) i wyznacza dystrybucję
+temperowaną. Ponadto
+$\mathcal F(T*\varphi)=\widehat T\,\widehat\varphi$ w $\mathcal S'$.
+\end{twierdzenie}
+\begin{proof}
+Niech $F_x(y)=\varphi(x-y)$.
+Dla wielowskaźników $\alpha,\beta$ zachodzi
+\[
+ \partial_y^\beta\partial_x^\alpha F_x(y)
+ =(-1)^{|\beta|}(\partial^{\alpha+\beta}\varphi)(x-y).
+\]
+Z tej równości oraz nierówności $(1+|y|)\le(1+|x|)(1+|x-y|)$
+wynika dla każdego wielowskaźnika $\alpha$
+\[
+ q_{N,m}(\partial_x^\alpha F_x)
+ \le(1+|x|)^N q_{N,m+|\alpha|}(\varphi).
+\]
+W szczególności wszystkie te funkcje należą do
+$\mathcal S$. Dla $|h|\le1$ i $h\ne0$ podstawowe
+twierdzenie rachunku całkowego, zastosowane
+dwukrotnie wzdłuż kierunku $e_j$, daje
+\[
+ \frac{\partial_x^\alpha F_{x+he_j}
+       -\partial_x^\alpha F_x}{h}
+ -\partial_x^{\alpha+e_j}F_x
+ =h\int_0^1(1-t)\partial_x^{\alpha+2e_j}F_{x+the_j}
+ \,\mathrm d\lambda_1(t).
+\]
+Po różniczkowaniu względem $y$ i oszacowaniu
+wagą wynika stąd
+\[
+ q_{N,m}(\text{różnica po lewej})
+ \le \tfrac{|h|}{2}(2+|x|)^N
+ q_{N,m+|\alpha|+2}(\varphi).
+\]
+Dla dowolnego $h\in\R^d$ z $|h|\le1$
+podstawowe twierdzenie rachunku całkowego
+wzdłuż odcinka od $x$ do $x+h$ daje
+\[
+ \partial_x^\alpha F_{x+h}-\partial_x^\alpha F_x
+ =\int_0^1\sum_{j=1}^d h_j
+ \partial_x^{\alpha+e_j}F_{x+th}\,\mathrm d\lambda_1(t).
+\]
+Tożsamość rozumiemy punktowo względem $y$.
+Po oszacowaniu pochodnych względem $y$
+otrzymujemy
+\[
+ \begin{aligned}
+ &q_{N,m}(\partial_x^\alpha F_{x+h}
+             -\partial_x^\alpha F_x)\\
+ &\quad\le \sqrt d\,|h|(2+|x|)^N
+ q_{N,m+|\alpha|+1}(\varphi),
+ \end{aligned}
+\]
+gdzie użyliśmy $\sum_j|h_j|\le\sqrt d\,|h|$.
+To dowodzi ciągłości w każdej półnormie.
+Z ciągłości $T$ możemy więc różniczkować
+indukcyjnie:
+$\partial_x^\alpha(T*\varphi)(x)
+=\langle T,\partial_x^\alpha F_x\rangle$.
+Jeśli $C,N,m$ są stałymi z globalnego oszacowania
+~\eqref{eq:pde8-growth} dla $T$, to
+\[
+ |\partial_x^\alpha(T*\varphi)(x)|
+ \le C(1+|x|)^N q_{N,m+|\alpha|}(\varphi).
+\]
+Jest to gładka funkcja o wzroście wielomianowym
+wraz z pochodnymi, a dla $\alpha=0$ oszacowanie
+zapewnia temperowaność jej dystrybucji regularnej.
+Dla dowodu tożsamości Fouriera ustalmy
+$\psi\in\mathcal S(\R^d)$ i oznaczmy
+$A_x(y)=F_x(y)\widehat\psi(x)$.
+W każdej półnormie mamy oszacowanie
+\[
+ q_{N,m}(A_x)\le(1+|x|)^N
+ q_{N,m}(\varphi)|\widehat\psi(x)|.
+\]
+Prawa strona jest całkowalna względem $x$,
+ponieważ $\widehat\psi\in\mathcal S$.
+Niech $Q_R=[-R,R]^d$ i
+$B_R(y)=\int_{Q_R}A_x(y)\,\mathrm d\lambda_d(x)$.
+Różniczkowanie całki względem $y$ uzasadnia
+twierdzenie o zbieżności zmajoryzowanej:
+iloraz różnicowy pochodnej $\partial_y^\beta A_x$
+jest ograniczony przez
+$\|\partial^{\beta+e_j}\varphi\|_\infty
+|\widehat\psi(x)|$.
+Ta majoranta jest całkowalna nawet na całej $\R^d$.
+Analogicznie, używając majoranty z pochodną rzędu
+$|\beta|$, uzasadniamy ciągłość otrzymanej pochodnej.
+Indukcyjnie
+\[
+ \partial_y^\beta B_R(y)=\int_{Q_R}
+ (-1)^{|\beta|}\partial^\beta\varphi(x-y)
+ \widehat\psi(x)\,\mathrm d\lambda_d(x).
+\]
+Otrzymane
+półnormy $B_R$ są skończone przez powyższe
+oszacowanie, więc $B_R\in\mathcal S$.
+Dla $x,z\in Q_R$ mamy
+\[
+ \begin{aligned}
+ q_{N,m}(A_x-A_z)
+ &\le |\widehat\psi(x)|q_{N,m}(F_x-F_z)\\
+ &\quad+|\widehat\psi(x)-\widehat\psi(z)|q_{N,m}(F_z).
+ \end{aligned}
+\]
+Ciągłość $\widehat\psi$, ciągłość $F_x$ w półnormach
+i oszacowanie $q_{N,m}(F_z)$ dowodzą ciągłości
+$x\mapsto A_x$ w każdej półnormie, a zwartość
+$Q_R$ daje jednostajną ciągłość w tej półnormie.
+Dla podziału $Q_R$ na prostokąty o średnicy
+co najwyżej $\delta$ błąd sumy Riemanna
+w półnormie $q_{N,m}$ nie przekracza
+$\lambda_d(Q_R)$ razy
+\[
+ \sup_{\substack{x,z\in Q_R\\|x-z|\le\delta}}
+ q_{N,m}(A_x-A_z),
+\]
+co dąży do zera przy $\delta\downarrow0$.
+Ciągłość $T$ pozwala przejść do granicy sum,
+a po stronie skalarnej całkujemy funkcję ciągłą
+$x\mapsto\langle T,A_x\rangle$. Otrzymujemy
+$\langle T,B_R\rangle=\int_{Q_R}\langle T,A_x\rangle
+\,\mathrm d\lambda_d(x)$.
+
+Niech $B(y)=\int_{\R^d}A_x(y)\,\mathrm d\lambda_d(x)$.
+Całka i każda jej pochodna względem $y$ istnieją
+dzięki ograniczoności pochodnych $\varphi$
+i całkowalności $\widehat\psi$. Oszacowanie wag
+daje $B\in\mathcal S$ oraz
+\[
+ q_{N,m}(B-B_R)\le q_{N,m}(\varphi)
+ \int_{\R^d\setminus Q_R}(1+|x|)^N
+ |\widehat\psi(x)|\,\mathrm d\lambda_d(x)\to0.
+\]
+Zatem $B_R\to B$ w $\mathcal S$.
+Całka skalarna po całej przestrzeni jest
+bezwzględnie zbieżna przez oszacowanie
+wzrostu $T*\varphi$ i szybki zanik $\widehat\psi$.
+Przechodząc do granicy w równości na $Q_R$,
+dostajemy
+\[
+ \langle\mathcal F(T*\varphi),\psi\rangle
+ =\int_{\R^d}(T*\varphi)(x)\widehat\psi(x)
+ \,\mathrm d\lambda_d(x)
+ =\langle T,B\rangle.
+\]
+Po podstawieniu $z=x-y$ i użyciu wzoru
+$\widehat\psi(x)=\int_{\R^d}e^{-ix\cdot\xi}\psi(\xi)
+\,\mathrm d\lambda_d(\xi)$ liczymy, stosując Fubiniego
+(całka podwójna z modułu dla ustalonego $y$
+wynosi $\|\varphi\|_1\|\psi\|_1$),
+\[
+ \int_{\R^d}\varphi(x-y)\widehat\psi(x)
+ \,\mathrm d\lambda_d(x)
+ =\int_{\R^d}e^{-iy\cdot\xi}\widehat\varphi(\xi)
+ \psi(\xi)\,\mathrm d\lambda_d(\xi)
+ =\mathcal F(\widehat\varphi\,\psi)(y).
+\]
+Stąd $\langle\mathcal F(T*\varphi),\psi\rangle
+=\langle T,\mathcal F(\widehat\varphi\psi)\rangle
+=\langle\widehat T,\widehat\varphi\psi\rangle$,
+czyli $\mathcal F(T*\varphi)=\widehat T\,\widehat\varphi$.
+W szczególności nie pojawia się dodatkowy czynnik
+$(2\pi)^{-d}$: w naszej konwencji dotyczy on
+transformaty \emph{iloczynu} funkcji, a nie splotu.
+\end{proof}
+
+\section{Mnożniki Fouriera: kiedy operator jest ograniczony?}
+\label{sec:pde8-multipliers}
+
+\begin{twierdzenie}[Mnożnik w $L^2$]
+\label{thm:pde8-multiplier}
+Niech $m:\R^d\to\C$ będzie funkcją mierzalną i
+istotnie ograniczoną. Dla $f\in L^2(\R^d)$ istnieje
+dokładnie jedna klasa $T_mf\in L^2(\R^d)$ spełniająca
+$\widehat{T_mf}=m\widehat f$ w sensie $L^2$.
+Operator $T_m$ jest liniowy i ograniczony oraz
+\[
+ \|T_m\|_{L^2\to L^2}=\|m\|_{L^\infty}.
+\]
+Odwrotnie, jeśli $m$ jest mierzalna i skończona
+prawie wszędzie, a ograniczony operator liniowy
+$A:L^2\to L^2$ spełnia $\widehat{Af}=m\widehat f$
+dla każdego $f\in L^2$ takiego, że
+$m\widehat f\in L^2$, to $m\in L^\infty$
+oraz $A=T_m$.
+\end{twierdzenie}
+\begin{proof}
+Niech $M=\|m\|_{L^\infty}$. Z definicji istotnego
+supremum dla każdego $k\ge1$ zbiór
+$\{|m|>M+1/k\}$ ma miarę zero.
+Ich przeliczalna suma jest zbiorem $\{|m|>M\}$,
+więc $|m|\le M$ prawie wszędzie.
+Dla $h\in L^2$ funkcja $mh$ jest więc kwadratowalna
+i spełnia $\|mh\|_2\le M\|h\|_2$.
+Mnożenie nie zależy od wyboru reprezentantów
+klas funkcji $m$ i $h$.
+Z twierdzenia~\ref{thm:pde8-plancherel}
+transformata Fouriera na $L^2$ jest bijekcją.
+Możemy zatem określić
+\[
+ T_mf=\mathcal F^{-1}(m\widehat f).
+\]
+Jest to jedyna klasa spełniająca warunek
+z tezy, a liniowość wynika z liniowości
+wszystkich trzech operatorów w tym złożeniu.
+Stosując dwukrotnie twierdzenie Plancherela,
+otrzymujemy
+\[
+ \|T_mf\|_2=(2\pi)^{-d/2}\|m\widehat f\|_2
+ \le M(2\pi)^{-d/2}\|\widehat f\|_2
+ =M\|f\|_2.
+\]
+Stąd $\|T_m\|\le M$.
+
+Gdy $M=0$, funkcja $m$ jest zerowa prawie
+wszędzie i $T_m=0$, co daje równość norm.
+Załóżmy $M>0$ i ustalmy $0<\varepsilon<M$.
+Z definicji istotnego supremum zbiór
+$E_\varepsilon=\{\xi:|m(\xi)|>M-\varepsilon\}$
+ma dodatnią miarę: gdyby miał miarę zero,
+$M-\varepsilon$ byłoby istotnym ograniczeniem
+z góry dla $|m|$, wbrew definicji $M$.
+Ponieważ $\R^d=\bigcup_{n\ge1}B_n(0)$,
+dla pewnego $n$ zbiór
+$E=E_\varepsilon\cap B_n(0)$ ma dodatnią
+i skończoną miarę. Niech
+\[
+ h=\frac{\chi_E}{\lambda_d(E)^{1/2}},
+ \qquad f=\mathcal F^{-1}h.
+\]
+Wówczas $\|h\|_2=1$ i
+$\|f\|_2=(2\pi)^{-d/2}>0$. Ponadto
+\[
+ \|mh\|_2^2
+ =\frac1{\lambda_d(E)}\int_E|m(\xi)|^2
+ \,\mathrm d\lambda_d(\xi)
+ \ge(M-\varepsilon)^2.
+\]
+W konsekwencji
+$\|T_mf\|_2/\|f\|_2=\|mh\|_2\ge M-\varepsilon$.
+Przechodząc z $\varepsilon$ do zera,
+otrzymujemy $\|T_m\|\ge M$.
+
+Dla implikacji odwrotnej połóżmy $C=\|A\|$.
+Jeśli zbiór $\{|m|>C+\varepsilon\}$ dla pewnego
+$\varepsilon>0$ ma dodatnią miarę, to z
+prawie wszędzie skończoności $m$ wynika, że
+z dokładnością do zbioru miary zero jest on
+przeliczalną sumą poniższych zbiorów po $n\ge1$.
+Dodatnia miara sumy oznacza, że dla pewnego $n$ zbiór
+\[
+ E=\{\xi:C+\varepsilon<|m(\xi)|\le n\}
+       \cap B_n(0)
+\]
+ma dodatnią miarę. Ma też miarę skończoną.
+Wybierając $f=\mathcal F^{-1}\chi_E$,
+mamy $m\widehat f\in L^2$ dzięki ograniczeniu
+$|m|\le n$ na $E$. Z założenia i Plancherela
+wynika wtedy
+\[
+ \frac{\|Af\|_2}{\|f\|_2}
+ =\frac{\|m\chi_E\|_2}{\|\chi_E\|_2}
+ \ge C+\varepsilon>C,
+\]
+co przeczy definicji normy operatorowej.
+Zatem dla każdego $\varepsilon>0$ zbiór
+$\{|m|>C+\varepsilon\}$ ma miarę zero.
+Biorąc przeliczalną sumę dla
+$\varepsilon=1/k$, $k\ge1$, dostajemy
+$|m|\le C$ prawie wszędzie. Tym samym
+$m\in L^\infty$, a warunek na $A$ obowiązuje
+już dla wszystkich $f\in L^2$.
+Jednoznaczność daje $A=T_m$.
+\end{proof}
+
+\begin{wniosek}[Rachunek ograniczonych mnożników]
+Dla $m,n\in L^\infty(\R^d)$ i $a,b\in\C$ zachodzi
+\[
+ T_{am+bn}=aT_m+bT_n,\qquad
+ T_mT_n=T_{mn},\qquad T_1=I,\qquad
+ T_m^*=T_{\overline m}.
+\]
+Gwiazdka oznacza operator sprzężony w zespolonej
+przestrzeni Hilberta $L^2$.
+\end{wniosek}
+\begin{proof}
+Dla $f\in L^2$ z definicji mnożników mamy
+\[
+ \begin{aligned}
+ \mathcal F(aT_mf+bT_nf)&=(am+bn)\widehat f,\\
+ \mathcal F(T_mT_nf)&=m\mathcal F(T_nf)=mn\widehat f,\\
+ \mathcal F(T_1f)&=\widehat f.
+ \end{aligned}
+\]
+Wszystkie symbole po prawej stronie są istotnie
+ograniczone. Równości operatorów wynikają
+z iniektywności transformaty na $L^2$.
+Dla $f,g\in L^2$ tożsamość
+~\eqref{eq:pde8-parseval} daje
+\[
+ \begin{aligned}
+ \langle T_m f,g\rangle_2
+ &=(2\pi)^{-d}\int_{\R^d}m(\xi)\widehat f(\xi)
+       \overline{\widehat g(\xi)}\,\mathrm d\lambda_d(\xi)\\
+ &=(2\pi)^{-d}\int_{\R^d}\widehat f(\xi)
+       \overline{\overline{m(\xi)}\widehat g(\xi)}
+       \,\mathrm d\lambda_d(\xi)\\
+ &=\langle f,T_{\overline m}g\rangle_2.
+ \end{aligned}
+\]
+Całki są bezwzględnie zbieżne przez nierówność
+Cauchy'ego--Schwarza i istotną ograniczoność $m$.
+To dowodzi równości operatorów sprzężonych.
+\end{proof}
+
+\begin{przyklad}[Transformata Riesza w $L^2$]
+Dla $1\le j\le d$ połóżmy
+$m_j(\xi)=-i\xi_j/|\xi|$ dla $\xi\ne0$ i $m_j(0)=0$.
+Twierdzenie~\ref{thm:pde8-multiplier} definiuje
+ograniczony operator $R_j=T_{m_j}:L^2\to L^2$,
+zwany transformatą Riesza.
+Mamy $|m_j(\xi)|\le1$. Dla każdego
+$0<\varepsilon<1$ zbiór
+$\{\xi\ne0:|m_j(\xi)|>1-\varepsilon\}$
+zawiera otwartą kulę o dodatnim promieniu
+wokół $e_j$: funkcja $|\xi_j|/|\xi|$ jest
+ciągła w otoczeniu $e_j$ i przyjmuje tam
+wartość $1$ w punkcie $e_j$.
+Zatem $\|m_j\|_\infty=1$ i w konsekwencji
+$\|R_j\|_{L^2\to L^2}=1$, także dla $d=1$.
+
+Ponieważ $\overline{m_j}=-m_j$ oraz dla
+$\xi\ne0$ zachodzą
+\[
+ \sum_{j=1}^d |m_j(\xi)|^2=1,\qquad
+ \sum_{j=1}^d m_j(\xi)^2=-1,
+\]
+z rachunku mnożników otrzymujemy
+\[
+ R_j^*=-R_j,\qquad
+ \sum_{j=1}^d R_j^2=-I,\qquad
+ \sum_{j=1}^d\|R_j f\|_2^2=\|f\|_2^2.
+\]
+Ostatnia tożsamość wynika również bezpośrednio
+z Plancherela:
+\[
+ \sum_{j=1}^d\|R_j f\|_2^2
+ =(2\pi)^{-d}\int_{\R^d}
+ \left(\sum_{j=1}^d|m_j(\xi)|^2\right)
+ |\widehat f(\xi)|^2\,\mathrm d\lambda_d(\xi)
+ =\|f\|_2^2.
+\]
+Wartość mnożnika w pojedynczym punkcie $\xi=0$
+nie zmienia operatora na $L^2$, ponieważ
+$\lambda_d(\{0\})=0$. Nie oznacza to jednak,
+że można przez ten sam symbol mnożyć dowolną
+dystrybucję temperowaną: wzdłuż $\xi=te_j$
+symbol przyjmuje wartość $-i$ dla $t>0$
+oraz $i$ dla $t<0$. Nie ma więc ciągłego
+przedłużenia do zera i nie spełnia warunku
+mnożenia dystrybucji z poprzedniej sekcji.
+Na przykład dla testu $\varphi$ z $\varphi(0)\ne0$
+iloczyn $m_j\varphi$ nie jest ciągły w zerze,
+a zatem nie należy do $\mathcal S$.
+\end{przyklad}
+
+\begin{uwaga}[Zakres twierdzenia o mnożnikach]
+Kryterium istotnej ograniczoności symbolu
+dotyczy normy $L^2$ i korzysta z twierdzenia
+Plancherela. Dla $p\ne2$ powyższy dowód
+nie daje twierdzenia o ograniczoności
+na $L^p$. W szczególności nie należy
+wyciągać z niego wniosku o ograniczoności
+transformat Riesza w normach $L^1$ lub
+$L^\infty$. Badanie mnożników na $L^p$
+dla $1<p<\infty$ wymaga dalszych narzędzi
+analizy harmonicznej; nie będziemy tu
+korzystać z nieudowodnionych wyników tej teorii.
+\end{uwaga}
+
+\section{Zastosowanie I: równanie ciepła i równanie falowe}
+\label{sec:pde8-evolution}
+
+\begin{twierdzenie}[Rozwiązania ewolucyjne poprzez transformatę]
+\label{thm:pde8-evolution}
+Niech $\kappa,c>0$ i $f,g\in\mathcal S(\R^d)$.
+Wtedy funkcje
+\begin{align*}
+ u(t,x)&=\mathcal F^{-1}
+ \bigl(e^{-\kappa t|\xi|^2}\widehat f(\xi)\bigr)(x),&&t\ge0,\\
+ v(t,x)&=\mathcal F^{-1}\biggl(
+ \cos(ct|\xi|)\widehat f(\xi)
+ +\frac{\sin(ct|\xi|)}{c|\xi|}\widehat g(\xi)
+ \biggr)(x),&&t\in\R,
+\end{align*}
+gdzie iloraz w $\xi=0$ definiujemy przez wartość graniczną $t$,
+są gładkimi rozwiązaniami odpowiednio zagadnień
+$u_t-\kappa\Delta u=0$, $u(0,\cdot)=f$ oraz
+$v_{tt}-c^2\Delta v=0$, $v(0,\cdot)=f$, $v_t(0,\cdot)=g$.
+Gładkość $u$ w chwili $t=0$ rozumiemy jako istnienie
+i ciągłość wszystkich pochodnych od strony $t\ge0$.
+Odwzorowania $t\mapsto u(t,\cdot)$ i $t\mapsto v(t,\cdot)$
+są gładkie z wartościami w $\mathcal S$.
+Rozwiązania są jednoznaczne odpowiednio w klasach
+$C^1([0,\infty);\mathcal S)$ i $C^2(\R;\mathcal S)$,
+gdzie pochodną w zerze na półprostej rozumiemy prawostronnie.
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy $r=|\xi|$ i wprowadźmy symbole
+\[
+ H_t(\xi)=e^{-\kappa tr^2},\qquad
+ C_t(\xi)=\cos(ctr),\qquad
+ S_t(\xi)=\frac{\sin(ctr)}{cr}
+ \quad(r>0),\qquad S_t(0)=t.
+\]
+Najpierw uzasadnimy ich regularność i oszacowania.
+Dla $0\le t\le A$ każda mieszana pochodna
+$\partial_t^k\partial_\xi^\alpha H_t$
+jest iloczynem $H_t$ i wielomianu w $t,\xi$.
+Istotnie, zaczynamy od wielomianu $1$,
+a różniczkowanie iloczynu $PH_t$
+względem $t$ daje $(\partial_tP-\kappa r^2P)H_t$,
+względem $\xi_j$ zaś
+$(\partial_{\xi_j}P-2\kappa t\xi_jP)H_t$.
+Na $[0,A]$ mamy $|H_t|\le1$, więc każda taka
+pochodna jest ograniczona przez
+$K(1+r)^M$, ze stałymi zależnymi od rzędu
+pochodnej i $A$. Nie twierdzimy tego dla $t<0$.
+
+Dla symboli falowych w całej przestrzeni
+obowiązują rozwinięcia
+\[
+ C_t(\xi)=\sum_{n=0}^\infty
+ \frac{(-1)^n(ct)^{2n}(r^2)^n}{(2n)!},
+ \qquad
+ S_t(\xi)=\sum_{n=0}^\infty
+ \frac{(-1)^nc^{2n}t^{2n+1}(r^2)^n}{(2n+1)!}.
+\]
+Są to szeregi potęgowe w $t$ i $s=r^2$.
+Na prostokącie $|t|\le A$, $|s|\le B$
+po $k$ różniczkowaniach względem $t$
+i $\ell$ względem $s$ każdy niezerowy wyraz
+obu szeregów jest co do modułu ograniczony
+przez
+\[
+ K(1+n)^{k+\ell}\frac{D^n}{(2n)!},
+ \qquad
+ D=\max\{1,c^2\}\max\{1,A\}^2\max\{1,B\},
+\]
+gdzie $K$ zależy tylko od $A,k,\ell$.
+Istotnie, pochodna potęgi $t^{2n}$ lub
+$t^{2n+1}$ wprowadza czynnik co najwyżej
+$(2n+1)^k$, a pochodna $s^n$ czynnik
+co najwyżej $(1+n)^\ell$. Pozostałe potęgi
+szacujemy przez $\max\{1,A\}^{2n+1}$
+i $\max\{1,B\}^n$.
+Iloraz kolejnych wyrazów szeregu majorującego
+dąży do zera dzięki mianownikowi $(2n)!$.
+Kryterium Weierstrassa daje jednostajną zbieżność
+na każdym takim prostokącie, również dla
+wszystkich szeregów pochodnych.
+Twierdzenie o różniczkowaniu szeregu funkcji
+z jednostajnie zbieżnymi szeregami pochodnych,
+stosowane kolejno względem obu zmiennych,
+uzasadnia gładkość ich sum.
+Po podstawieniu $s=\sum_j\xi_j^2$ dostajemy
+gładkość obu symboli także dla $\xi=0$
+oraz ograniczoność wszystkich mieszanych
+pochodnych na $[-A,A]\times\overline{B_1(0)}$.
+
+Dla $r\ge1$ pochodne radialne względem $r$
+i pochodne względem $t$ funkcji
+$\cos(ctr)$ oraz $(cr)^{-1}\sin(ctr)$
+są skończonymi sumami iloczynów potęg $t,r$,
+stałych i funkcji $\sin(ctr),\cos(ctr)$.
+Wynika to indukcyjnie z reguły Leibniza
+oraz pochodnych funkcji trygonometrycznych
+i potęg $r$; dopuszczalne są ujemne potęgi $r$.
+Na $|t|\le A$, $r\ge1$ są więc ograniczone
+przez stałe razy nieujemne potęgi $r$.
+Dla dowolnego niezerowego wielowskaźnika $\beta$
+funkcja $\partial_\xi^\beta r$ jest jednorodna
+stopnia $1-|\beta|$: różniczkując tożsamość
+$|\lambda\xi|=\lambda|\xi|$ dla $\lambda>0$
+i $\xi\ne0$, otrzymujemy
+$\lambda^{|\beta|}(\partial^\beta r)(\lambda\xi)
+=\lambda(\partial^\beta r)(\xi)$. Jej moduł na sferze jednostkowej
+jest ograniczony dzięki gładkości poza zerem
+i zwartości sfery. Stąd
+$|\partial_\xi^\beta r|\le K_\beta r^{1-|\beta|}$,
+a więc jest ograniczona dla $r\ge1$.
+Iterowana reguła łańcuchowa wyraża pochodne
+względem $\xi$ symboli falowych jako skończone
+sumy iloczynów pochodnych radialnych i pochodnych $r$.
+Łącznie z oszacowaniami na kuli daje to dla
+każdego $k,\alpha$ stałe $K,M$ takie, że
+\[
+ |\partial_t^k\partial_\xi^\alpha C_t(\xi)|
+ +|\partial_t^k\partial_\xi^\alpha S_t(\xi)|
+ \le K(1+|\xi|)^M\qquad (|t|\le A).
+\]
+
+Pokażmy teraz, dlaczego te oszacowania
+wystarczają do różniczkowania w przestrzeni Schwartza.
+Dla dowolnego z trzech symboli $a_t$,
+$w\in\mathcal S$, $k,N,m\in\N_0$ i ustalonego
+zwartego przedziału czasu w dopuszczalnej dziedzinie
+reguła Leibniza daje
+\[
+ q_{N,m}\bigl((\partial_t^k a_t)w\bigr)
+ \le 2^m K q_{N+M,m}(w),
+\]
+gdzie $K,M$ dobieramy wspólnie dla wszystkich
+pochodnych symbolu względem $\xi$ rzędu
+co najwyżej $m$. To oszacowanie jest jednostajne
+w czasie na wybranym przedziale.
+Podstawowe twierdzenie rachunku całkowego
+względem $t$ daje, dla $t,t+h$ w tym przedziale,
+\[
+ q_{N,m}\bigl((\partial_t^k a_{t+h}
+             -\partial_t^k a_t)w\bigr)
+ \le |h|\sup_\tau q_{N,m}\bigl((\partial_t^{k+1}a_\tau)w\bigr),
+\]
+gdzie supremum bierzemy po odcinku łączącym $t$ i $t+h$.
+Stosując wzór z resztą całkową punktowo
+względem $\xi$, dla $h\ne0$ mamy
+\[
+ \frac{\partial_t^k a_{t+h}-\partial_t^k a_t}{h}
+ -\partial_t^{k+1}a_t
+ =h\int_0^1(1-\theta)\partial_t^{k+2}a_{t+\theta h}
+ \,\mathrm d\lambda_1(\theta).
+\]
+Po pomnożeniu przez $w$ i oszacowaniu
+każdej pochodnej względem $\xi$ dostajemy
+\[
+ \begin{aligned}
+ &q_{N,m}\left(
+ \left(\frac{\partial_t^k a_{t+h}-\partial_t^k a_t}{h}
+ -\partial_t^{k+1}a_t\right)w\right)\\
+ &\qquad\le\frac{|h|}{2}\sup_\tau
+ q_{N,m}\bigl((\partial_t^{k+2}a_\tau)w\bigr).
+ \end{aligned}
+\]
+Wszystkie prawe strony są skończone
+i dążą do zera z $h$.
+Zatem odwzorowanie $t\mapsto a_tw$
+jest gładkie w topologii $\mathcal S$,
+z pochodnymi $(\partial_t^k a_t)w$;
+dla $H_t$ w $t=0$ bierzemy $h>0$.
+
+Ustalmy
+$U(t)=H_t\widehat f$ oraz
+$V(t)=C_t\widehat f+S_t\widehat g$.
+Są to gładkie odwzorowania do $\mathcal S$,
+gdyż $\widehat f,\widehat g\in\mathcal S$
+na mocy twierdzenia~\ref{thm:pde8-rules}.
+Ciągłość $\mathcal F^{-1}$ z twierdzenia
+~\ref{thm:pde8-inversion} pozwala przenosić
+ją przez granice ilorazów różnicowych
+i daje gładkość $u=\mathcal F^{-1}U$,
+$v=\mathcal F^{-1}V$ w topologii $\mathcal S$.
+Niech $z$ oznacza $u$ lub $v$.
+Dla dowolnego $k,\alpha$ oznaczmy
+$Z(t,x)=\partial_x^\alpha(\partial_t^k z(t,\cdot))(x)$,
+gdzie pochodną czasową bierzemy w topologii $\mathcal S$.
+Działanie $\partial_x^\alpha$ jest ciągłe
+na $\mathcal S$ z lematu~\ref{lem:pde8-seminorms},
+a ewaluacja w punkcie jest ciągła przez półnormę
+$q_{0,0}$. Zatem $Z$ jest odpowiednią pochodną
+mieszaną w sensie punktowym. Dla $(t,x)\to(t_0,x_0)$
+mamy
+\[
+ \begin{aligned}
+ |Z(t,x)-Z(t_0,x_0)|
+ &\le q_{0,|\alpha|}(\partial_t^k z(t,\cdot)
+                       -\partial_t^k z(t_0,\cdot))\\
+ &\quad+|Z(t_0,x)-Z(t_0,x_0)|\longrightarrow0.
+ \end{aligned}
+\]
+Pierwszy składnik dąży do zera przez ciągłość
+w topologii $\mathcal S$, drugi przez ciągłość
+funkcji przestrzennej. Dowodzi to wspólnej
+gładkości czasoprzestrzennej.
+
+Bezpośrednie różniczkowanie symboli daje
+\[
+ \partial_t H_t=-\kappa r^2 H_t,\quad
+ \partial_t^2 C_t=-c^2r^2 C_t,\quad
+ \partial_t^2 S_t=-c^2r^2 S_t.
+\]
+Równości falowe przy $r=0$ wynikają z
+$C_t(0)=1$ i $S_t(0)=t$.
+Ponadto $H_0=C_0=1$, $S_0=0$,
+$\partial_t C_0=0$, $\partial_t S_0=1$.
+Zatem $U_t=-\kappa r^2U$ oraz
+$V_{tt}=-c^2r^2V$. Ponieważ
+$\mathcal F(\Delta w)=-|\xi|^2\widehat w$
+dla $w\in\mathcal S$ na mocy
+~\eqref{eq:pde8-rules}, iniektywność transformaty
+daje $u_t-\kappa\Delta u=0$ i
+$v_{tt}-c^2\Delta v=0$.
+Wartości symboli i ich pochodnych w chwili
+początkowej dają zadane dane przez odwrócenie.
+
+Dla jednoznaczności weźmy dowolne rozwiązania
+w wymienionych klasach. Ciągłość $\mathcal F$
+pozwala transformować ich pochodne czasowe.
+Dla każdej ustalonej $\xi$ otrzymujemy
+skalarne równania
+$\partial_t\widehat u=-\kappa r^2\widehat u$ oraz
+$\partial_{tt}\widehat v=-c^2r^2\widehat v$
+z odpowiednimi przetransformowanymi danymi.
+Dla pierwszego równania
+$\partial_t(e^{\kappa tr^2}\widehat u(t,\xi))=0$,
+więc $e^{\kappa tr^2}\widehat u(t,\xi)=\widehat f(\xi)$
+z warunku początkowego. Daje to jednoznacznie
+$\widehat u(t,\xi)=H_t(\xi)\widehat f(\xi)$.
+Dla drugiego przy $r>0$ funkcje $C_t$ i $S_t$
+rozwiązują równanie z danymi odpowiednio $(1,0)$
+i $(0,1)$. Różnica dwóch rozwiązań z tymi samymi
+danymi spełnia $w''+c^2r^2w=0$, $w(0)=w'(0)=0$.
+Pochodna $|w'|^2+c^2r^2|w|^2$ jest równa
+$2\operatorname{Re}((w''+c^2r^2w)\overline{w'})=0$.
+Zerowa wartość początkowa i $r>0$ dają $w=0$.
+Przy $r=0$ równanie jest $w''=0$, więc z danych
+również otrzymujemy jednoznaczność, a rozwiązanie
+ma postać $\widehat f(0)+t\widehat g(0)$.
+Iniektywność $\mathcal F$ kończy dowód.
+\end{proof}
+
+\begin{uwaga}[Zgodność z jądrem cieplnym]
+Dla $t>0$ stosujemy lemat~\ref{lem:pde8-gauss}
+z parametrem $a=\kappa t$ oraz wzór
+$\mathcal F^{-1}=(2\pi)^{-d}\mathcal R\mathcal F$
+z twierdzenia~\ref{thm:pde8-inversion}.
+Parzystość Gaussa daje
+\[
+ \begin{aligned}
+ \mathcal F^{-1}H_t(x)
+ &=(2\pi)^{-d}(\pi/(\kappa t))^{d/2}
+ e^{-|x|^2/(4\kappa t)}\\
+ &=(4\pi\kappa t)^{-d/2}e^{-|x|^2/(4\kappa t)}
+ =\Gamma_\kappa(t,x).
+ \end{aligned}
+\]
+Obie funkcje $H_t$ i $\Gamma_\kappa(t,\cdot)$
+należą do $\mathcal S$, zatem wzór na transformatę
+splotu z wniosku~\ref{cor:pde8-convolution}
+i iniektywność dają $u(t,\cdot)=
+\Gamma_\kappa(t,\cdot)*f$. Otrzymujemy dokładnie
+jądro z rozdziału~\ref{chap:pde-heat}.
+\end{uwaga}
+
+\begin{uwaga}[Dwie różne skale propagacji]
+Równanie ciepła działa w częstotliwościach przez
+$H_t(\xi)=e^{-\kappa t|\xi|^2}$: dla każdego
+ustalonego $t>0$ i $N\in\N_0$ funkcja
+$(1+|\xi|)^N H_t(\xi)$ jest ograniczona
+i dąży do zera w nieskończoności.
+Równanie falowe używa $C_t$ i $S_t$.
+Dla $t\ne0$ symbol $C_t$ nie dąży do zera
+przy $|\xi|\to\infty$: wystarczy wziąć
+$\xi_n=(2\pi n/(c|t|))e_1$.
+Symbol $S_t$ spełnia dla $\xi\ne0$
+$|S_t(\xi)|\le1/(c|\xi|)$, co nie daje
+zaniku szybszego od wszystkich potęg:
+dla $\xi_n=((\pi/2+2\pi n)/(c|t|))e_1$
+mamy $|\xi_n|\,|S_t(\xi_n)|=1/c$.
+Nie ma zatem analogicznego tłumienia wszystkich
+wysokich częstotliwości jak w równaniu ciepła.
+Jest to spektralna wersja zjawisk z rozdziałów
+~\ref{chap:pde-heat} i~\ref{chap:pde-wave}.
+\end{uwaga}
+
+\section[Potencjały Bessela i przestrzenie Sobolewa]{Potencjały Bessela i pierwsze przestrzenie $H^s$}
+\label{sec:pde8-bessel}
+
+Dla $s\in\R$ połóżmy $b_s(\xi)=(1+|\xi|^2)^{s/2}$.
+Najpierw uzasadnimy, że $b_s$ jest dopuszczalnym
+mnożnikiem dystrybucji temperowanych.
+Każda jego pochodna jest skończoną sumą wyrazów
+postaci
+\[
+ P(\xi)(1+|\xi|^2)^{s/2-k},
+ \qquad k\in\N_0,
+\]
+gdzie $P$ jest wielomianem. Dla pochodnej rzędu
+zero mamy $P=1$, $k=0$. Różniczkowanie takiego
+wyrazu względem $\xi_j$ daje
+\[
+ (\partial_j P)b_{s-2k}
+ +(s-2k)\xi_j P b_{s-2k-2},
+\]
+co uzasadnia indukcję.
+Dla dowolnego rzeczywistego $a$ mamy
+$(1+|\xi|^2)^{a/2}\le(1+|\xi|)^{\max\{a,0\}}$:
+dla $a\le0$ lewa strona nie przekracza $1$,
+a dla $a>0$ korzystamy z
+$\sqrt{1+|\xi|^2}\le1+|\xi|$.
+Każda pochodna $b_s$ ma zatem wzrost co najwyżej
+wielomianowy (można zwiększyć wykładnik do
+liczby całkowitej). Na mocy rachunku mnożników
+z sekcji~\ref{sec:pde8-fourier-distributions}
+mnożenie przez $b_s$ działa na $\mathcal S$
+i na $\mathcal S'$.
+
+\begin{definicja}[Przestrzeń Sobolewa typu Bessela]
+\label{def:pde8-Hs}
+Dla dowolnego $s\in\R$ definiujemy
+\[
+ H^s(\R^d)=\bigl\{u\in\mathcal S'(\R^d):
+ b_s\widehat u=T_h\text{ dla pewnego }
+ h\in L^2(\R^d)\bigr\}.
+\]
+Z liniowości transformaty i mnożenia przez $b_s$
+oraz liniowości odwzorowania $h\mapsto T_h$
+wynika, że $H^s$ jest zespoloną podprzestrzenią
+wektorową $\mathcal S'$.
+Funkcja $h$ jest określona jednoznacznie jako
+klasa $L^2$ dzięki iniektywności odwzorowania
+funkcji lokalnie całkowalnych w dystrybucje.
+Definiujemy
+$\|u\|_{H^s}=(2\pi)^{-d/2}\|h\|_2$.
+Mnożąc równość $b_s\widehat u=T_h$ przez
+$b_{-s}$, otrzymujemy dla $\varphi\in\mathcal S$
+\[
+ \langle\widehat u,\varphi\rangle
+ =\langle T_h,b_{-s}\varphi\rangle
+ =\int_{\R^d}b_{-s}(\xi)h(\xi)\varphi(\xi)
+ \,\mathrm d\lambda_d(\xi).
+\]
+Całka jest bezwzględnie zbieżna z nierówności
+Cauchy'ego--Schwarza, ponieważ $h\in L^2$
+i $b_{-s}\varphi\in\mathcal S\subset L^2$.
+Zatem $\widehat u=T_{b_{-s}h}$ i możemy zapisać
+\[
+ \|u\|_{H^s}^2=(2\pi)^{-d}\int_{\R^d}
+ (1+|\xi|^2)^s|\widehat u(\xi)|^2\,
+ \mathrm d\lambda_d(\xi),
+\]
+gdzie pod całką $\widehat u$ oznacza funkcję
+$b_{-s}h$, lokalnie należącą do $L^2$.
+Iloczyn jest lokalnie kwadratowalny, ponieważ
+$b_{-s}$ jest ograniczony na każdym zbiorze zwartym.
+Operator
+\[
+ J^s u=(I-\Delta)^{s/2}u
+ :=\mathcal F^{-1}(b_s\widehat u)
+\]
+określamy na $\mathcal S'$ przez mnożnik Fouriera,
+a nie przez formalne potęgowanie operatora
+różniczkowego.
+Dla ujemnego $s$ element $H^s$ może być
+dystrybucją nieregularną; wymóg $L^2$ dotyczy
+ważonej transformaty, a nie samego $u$.
+\end{definicja}
+
+Z równości $b_sb_t=b_{s+t}$ wynika
+$J^sJ^t=J^{s+t}$ i $J^0=I$, a więc
+$(J^s)^{-1}=J^{-s}$ na $\mathcal S'$.
+Istotnie, mnożenie dystrybucji przez dwa takie
+symbole odpowiada mnożeniu testu przez ich iloczyn.
+Dla $s=2$ mamy $b_2=1+|\xi|^2$, toteż
+$J^2=I-\Delta$ dzięki twierdzeniu
+~\ref{thm:pde8-dist-rules}.
+
+Dla $m\in\N_0$ zapis $W^{m,2}(\R^d)$ oznacza
+przestrzeń funkcji $u\in L^2(\R^d)$, których
+wszystkie pochodne słabe $\partial^\alpha u$,
+$|\alpha|\le m$, należą do $L^2$.
+Przyjmujemy normę
+\[
+ \|u\|_{W^{m,2}}^2=\sum_{|\alpha|\le m}
+ \|\partial^\alpha u\|_2^2,
+\]
+włączając $\partial^0u=u$.
+
+\begin{uwaga}[Szeregi Fouriera na torusie a transformata Fouriera na $\R^d$]
+Rozdział~\ref{chap:pde-fourier} pracował na torusie
+oraz na przedziałach i prostokątach, stosując
+szeregi Fouriera lub rozwinięcia względem
+funkcji własnych. Na torusie o okresie $2\pi$
+w każdej współrzędnej częstości należą do $\mathbb Z^d$,
+a współczynniki Fouriera mają czynnik $(2\pi)^{-d}$.
+Tutaj pracujemy na $\R^d$, gdzie $\xi$ zmienia
+się w sposób ciągły i pojawia się całka Fouriera
+z konwencją~\eqref{eq:pde8-convention}.
+Normy okresowe zależą od przyjętej miary;
+w obecnym rozdziale stosujemy nieznormalizowaną
+miarę Lebesgue'a na $\R^d$.
+\end{uwaga}
+
+\begin{twierdzenie}[Podstawowe własności $H^s$]
+\label{thm:pde8-Hs}
+Dla dowolnych $s,t\in\R$ zachodzą:
+\begin{enumerate}
+\item $H^s(\R^d)$ jest przestrzenią Hilberta, a
+ $J^s:H^s\to L^2$ jest izometrycznym izomorfizmem
+ na całą przestrzeń $L^2$.
+\item Jeśli $s\ge t$, to $H^s\hookrightarrow H^t$
+ ciągle i $\|u\|_{H^t}\le\|u\|_{H^s}$.
+\item Dla $\alpha\in\N_0^d$, $\partial^\alpha:H^s\to
+ H^{s-|\alpha|}$ jest ograniczony, z normą
+ operatorową co najwyżej $1$.
+\item Dla $m\in\N_0$ zachodzi $H^m(\R^d)=W^{m,2}(\R^d)$
+ ze wzajemnie równoważnymi normami, po utożsamieniu
+ funkcji z dystrybucjami regularnymi.
+\item $\mathcal S(\R^d)$ jest gęsta w $H^s(\R^d)$.
+ Ponadto $J^t:H^s\to H^{s-t}$ jest izometrycznym
+ izomorfizmem na całą przestrzeń $H^{s-t}$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Niech $u\in H^s$ i $b_s\widehat u=T_h$,
+gdzie $h\in L^2$. Niech $v=\mathcal F^{-1}h$
+w sensie $L^2$. Zgodność transformat na $L^2$
+i $\mathcal S'$ z sekcji
+~\ref{sec:pde8-fourier-distributions}
+daje $\mathcal FT_v=T_h$, a odwracalność
+na $\mathcal S'$ daje $J^su=T_v$.
+Wobec tego $J^s$ przyjmuje wartości w $L^2$
+i z twierdzenia~\ref{thm:pde8-plancherel}
+otrzymujemy
+\[
+ \|J^s u\|_2=(2\pi)^{-d/2}\|b_s\widehat u\|_2
+ =\|u\|_{H^s}.
+\]
+Zapis normy pośrodku oznacza normę reprezentanta
+$h$ z definicji. Dla dowolnego $v\in L^2$
+traktujemy $v$ jako dystrybucję temperowaną
+i określamy $u=J^{-s}v$. Wówczas
+$b_s\widehat u=\widehat v\in L^2$, a $J^su=v$.
+Iniektywność $J^s$ wynika z istnienia $J^{-s}$.
+Iloczyn skalarny definiujemy przez
+\[
+ \langle u,v\rangle_{H^s}
+ =\langle J^s u,J^s v\rangle_2.
+\]
+Liniowość $J^s$ i własności iloczynu skalarnego
+na $L^2$ dają liniowość względem pierwszego
+argumentu, antyliniowość względem drugiego
+i symetrię hermitowską.
+Ponadto $\langle u,u\rangle_{H^s}=\|J^su\|_2^2$
+jest nieujemne, a równość z zerem daje $J^su=0$
+i stąd $u=0$ dzięki iniektywności.
+Iloczyn skalarny wyznacza podaną normę.
+Jeśli $(u_n)$ jest ciągiem Cauchy'ego w $H^s$,
+to $(J^su_n)$ jest ciągiem Cauchy'ego w $L^2$
+i ma tam granicę $v$. Dla $u=J^{-s}v$ mamy
+$\|u_n-u\|_{H^s}=\|J^s u_n-v\|_2\to0$.
+Stąd zupełność i pierwsza teza.
+
+Jeśli $s\ge t$, to $0<b_{t-s}\le1$ i
+$b_t\widehat u=b_{t-s}(b_s\widehat u)$.
+Prawa strona jest reprezentowana przez funkcję
+$L^2$, a jej norma jest nie większa niż norma
+$b_s\widehat u$. Daje to drugą tezę.
+
+Dla dowolnego wielowskaźnika $\alpha$ mamy
+na mocy twierdzenia~\ref{thm:pde8-dist-rules}
+\[
+ b_{s-|\alpha|}\mathcal F(\partial^\alpha u)
+ =b_{-|\alpha|}(i\xi)^\alpha b_s\widehat u.
+\]
+Moduł mnożnika po prawej stronie nie przekracza
+$1$, ponieważ
+$|\xi^\alpha|\le(1+|\xi|^2)^{|\alpha|/2}$.
+Zatem $\partial^\alpha u\in H^{s-|\alpha|}$
+i $\|\partial^\alpha u\|_{H^{s-|\alpha|}}
+\le\|u\|_{H^s}$.
+
+Niech teraz $m\in\N_0$. Z rozwinięcia
+wielomianowego otrzymujemy
+\[
+ (1+|\xi|^2)^m
+ =\sum_{|\alpha|\le m}c_\alpha|\xi^\alpha|^2,
+ \qquad c_\alpha=\frac{m!}{(m-|\alpha|)!\alpha!}.
+\]
+Każde $c_\alpha$ jest dodatnią liczbą całkowitą,
+a z podstawienia $\xi=(1,\ldots,1)$ wynika
+$\sum_{|\alpha|\le m}c_\alpha=(d+1)^m$.
+W szczególności
+\[
+ \sum_{|\alpha|\le m}|\xi^\alpha|^2
+ \le (1+|\xi|^2)^m
+ \le (d+1)^m\sum_{|\alpha|\le m}|\xi^\alpha|^2.
+\]
+Jeśli $u\in H^m$, to z drugiej i trzeciej tezy
+wynika, że $\partial^\alpha u\in H^{m-|\alpha|}$
+dla $|\alpha|\le m$ (włącznie z $\alpha=0$).
+Ponieważ $m-|\alpha|\ge0$, drugą tezę
+stosujemy z wykładnikami $m-|\alpha|$ i $0$.
+Zatem wszystkie te pochodne należą do $H^0=L^2$.
+Utożsamienie $H^0=L^2$ wynika z pierwszej tezy
+dla $s=0$, ponieważ $J^0=I$.
+Po ograniczeniu do testów o zwartym nośniku
+pochodne dystrybucyjne reprezentowane przez
+funkcje $L^2$ są pochodnymi słabymi w sensie
+rozdziału~\ref{chap:pde-distributions}.
+A zatem $u\in W^{m,2}$.
+
+Odwrotnie, dla $u\in W^{m,2}$ każda słaba
+pochodna $v_\alpha=\partial^\alpha u$ należy
+do $L^2$. Równość dystrybucyjna
+$\partial^\alpha T_u=T_{v_\alpha}$ zachodzi
+na $\mathcal D$, więc zachodzi też na $\mathcal S$:
+obie strony są temperowane, a ograniczenie
+$\mathcal S'\to\mathcal D'$ jest iniektywne.
+Po transformacji dostajemy
+$(i\xi)^\alpha\widehat u=\widehat v_\alpha$
+jako dystrybucje temperowane.
+Lewą stronę reprezentuje funkcja lokalnie
+całkowalna, ponieważ $\widehat u\in L^2$
+i wielomian jest ograniczony na zwartych zbiorach.
+Z iniektywności dystrybucji regularnych
+równość obowiązuje prawie wszędzie.
+Stąd z Plancherela i skończonej sumy
+\[
+ (2\pi)^{-d}\int_{\R^d}
+ \left(\sum_{|\alpha|\le m}|\xi^\alpha|^2\right)
+ |\widehat u(\xi)|^2\,\mathrm d\lambda_d(\xi)
+ =\sum_{|\alpha|\le m}\|v_\alpha\|_2^2<\infty.
+\]
+Porównanie wielomianów daje $u\in H^m$.
+Ten sam rachunek obowiązuje dla $u\in H^m$,
+ponieważ wykazaliśmy już przynależność
+do $W^{m,2}$. W obu kierunkach otrzymujemy
+\[
+ \|u\|_{W^{m,2}}\le\|u\|_{H^m}
+ \le(d+1)^{m/2}\|u\|_{W^{m,2}}.
+\]
+
+Na koniec $J^s$ i $J^{-s}$ odwzorowują
+$\mathcal S$ w siebie, ponieważ transformata
+i odwrotność zachowują $\mathcal S$,
+a symbole $b_s,b_{-s}$ są dopuszczalnymi
+mnożnikami. Każda funkcja Schwartza należy
+do $H^s$, gdyż $b_s\widehat u\in\mathcal S\subset L^2$.
+Dla $u\in H^s$ wybieramy $v_n\in\mathcal S$
+zbiegające do $J^su$ w $L^2$ na mocy
+twierdzenia~\ref{thm:pde8-density}. Wtedy
+$u_n=J^{-s}v_n\in\mathcal S$ i
+$\|u_n-u\|_{H^s}=\|v_n-J^su\|_2\to0$.
+Dla dowolnego $t$ mamy ponadto
+$b_{s-t}\mathcal F(J^tu)=b_s\widehat u$,
+więc $\|J^tu\|_{H^{s-t}}=\|u\|_{H^s}$.
+Dla $v\in H^{s-t}$ stosujemy tę samą tożsamość
+z wykładnikami $s-t$ i $-t$, otrzymując
+$J^{-t}v\in H^s$.
+Ponieważ $J^tJ^{-t}v=v$ i $J^{-t}J^tu=u$,
+operator $J^{-t}$ jest odwrotnością na całym
+$H^{s-t}$.
+\end{proof}
+
+\begin{wniosek}[Kiedy delta należy do ujemnej przestrzeni Sobolewa?]
+\label{cor:pde8-delta-Hs}
+Dla $s\in\R$ zachodzi
+\[
+ \delta_0\in H^s(\R^d)\quad\Longleftrightarrow\quad
+ s<-\frac d2.
+\]
+\end{wniosek}
+\begin{proof}
+Z przykładu~\ref{ex:pde8-four} mamy
+$\widehat{\delta_0}=1$ jako dystrybucję regularną.
+Wobec tego $b_s\widehat{\delta_0}$ jest
+reprezentowana przez funkcję $b_s$.
+Z iniektywności dystrybucji regularnych
+warunek przynależności do $H^s$ jest równoważny
+\[
+ \int_{\R^d}(1+|\xi|^2)^s\,
+ \mathrm d\lambda_d(\xi)<\infty.
+\]
+Na domkniętej kuli jednostkowej funkcja podcałkowa
+jest ciągła i ograniczona. Dla $r\ge1$ zachodzi
+\[
+ \min\{1,2^s\}r^{2s}\le(1+r^2)^s
+ \le\max\{1,2^s\}r^{2s}.
+\]
+Dla $d\ge2$ całkowanie radialne poza kulą
+sprowadza zatem warunek do skończoności
+$\int_1^\infty r^{2s+d-1}\,\mathrm d\lambda_1(r)$;
+dla $d=1$ całkujemy osobno na obu półprostych
+i otrzymujemy ten sam warunek z $d=1$.
+Całka potęgowa jest skończona dokładnie wtedy,
+gdy $2s+d-1<-1$, czyli $s<-d/2$.
+Dla $s=-d/2$ jest to całka z $r^{-1}$,
+rozbieżna logarytmicznie. W szczególności
+$H^s$ dla $s<-d/2$ zawiera dystrybucję
+niereprezentowaną przez funkcję lokalnie całkowalną:
+nieregularność $\delta_0$ wykazano w rozdziale
+~\ref{chap:pde-distributions}.
+\end{proof}
+
+\section{Zastosowanie II: eliptyczne równanie z parametrem}
+\label{sec:pde8-elliptic}
+
+\begin{twierdzenie}[Równanie Yukawy--Helmholtza]
+\label{thm:pde8-helmholtz}
+Niech $a>0$ i $s\in\R$. Dla każdego
+$f\in H^s(\R^d)$ istnieje dokładnie jedno
+$u\in\mathcal S'(\R^d)$ spełniające
+$(-\Delta+a^2)u=f$ w sensie dystrybucji.
+Rozwiązanie należy do $H^{s+2}(\R^d)$ oraz
+\[
+ \widehat u(\xi)=\frac{\widehat f(\xi)}{|\xi|^2+a^2},
+ \qquad
+ \|u\|_{H^{s+2}}\le C_a\|f\|_{H^s},
+ \qquad C_a=\max\{1,a^{-2}\}.
+\]
+Stała $C_a$ jest optymalna dla norm z definicji
+~\ref{def:pde8-Hs}.
+W szczególności dla $f\in L^2(\R^d)$
+otrzymujemy $u\in H^2(\R^d)=W^{2,2}(\R^d)$
+oraz $\|u\|_{H^2}\le C_a\|f\|_2$.
+\end{twierdzenie}
+\begin{proof}
+Niech $p_a(\xi)=|\xi|^2+a^2$ i
+$m_a(\xi)=p_a(\xi)^{-1}$. Obie funkcje są gładkie,
+ponieważ $p_a\ge a^2>0$.
+Każda pochodna $m_a$ jest skończoną sumą
+wyrazów $P(\xi)p_a(\xi)^{-k}$, gdzie $P$
+jest wielomianem, a $k\ge1$ jest całkowite.
+Różniczkowanie takiego wyrazu względem $\xi_j$
+daje
+\[
+ (\partial_jP)p_a^{-k}
+ -2k\xi_jPp_a^{-k-1},
+\]
+co dowodzi tej własności indukcyjnie, zaczynając
+od $P=1$, $k=1$. Ponieważ $p_a^{-k}\le a^{-2k}$,
+każda pochodna $m_a$ ma wzrost co najwyżej
+wielomianowy. Z sekcji
+~\ref{sec:pde8-fourier-distributions} wynika
+więc, że obie funkcje są dopuszczalnymi mnożnikami
+na $\mathcal S'$. Ich iloczyn wynosi $1$,
+toteż mnożenie przez nie daje wzajemnie odwrotne
+operatory na $\mathcal S'$.
+
+Z twierdzenia~\ref{thm:pde8-dist-rules} mamy
+$\mathcal F((-\Delta+a^2)u)=p_a\widehat u$.
+Dlatego dla każdego $f\in\mathcal S'$ równanie
+jest równoważne $p_a\widehat u=\widehat f$,
+a po pomnożeniu przez $m_a$ otrzymujemy
+jednoznacznie $\widehat u=m_a\widehat f$.
+Odwrotnie, dystrybucja
+$u=\mathcal F^{-1}(m_a\widehat f)$ istnieje
+i spełnia równanie przez $p_am_a=1$.
+Równość na $\mathcal S'$ daje również równość
+na $\mathcal D'$ po ograniczeniu do testów
+o zwartym nośniku. Jeśli równanie przy
+$u,f\in\mathcal S'$ sformułowano w $\mathcal D'$,
+to dzięki iniektywności ograniczenia
+$\mathcal S'\to\mathcal D'$ jest ono równoważne
+równości na $\mathcal S'$.
+
+Dla $f\in H^s$ niech $h=b_s\widehat f\in L^2$,
+w oznaczeniach poprzedniej sekcji.
+Wówczas
+\[
+ b_{s+2}\widehat u
+ =\frac{1+|\xi|^2}{|\xi|^2+a^2}h.
+\]
+Dla $r\ge0$ mamy
+\[
+ \frac{1+r^2}{r^2+a^2}
+ =1+\frac{1-a^2}{r^2+a^2}
+ \le\max\{1,a^{-2}\}=C_a.
+\]
+Istotnie, jeśli $a\ge1$, iloraz jest nie większy
+niż $1$; jeśli $a<1$, to $r^2+a^2\ge a^2$
+daje górne ograniczenie $a^{-2}$.
+Zatem $b_{s+2}\widehat u\in L^2$ i
+\[
+ \begin{aligned}
+ \|u\|_{H^{s+2}}
+ &=(2\pi)^{-d/2}
+ \left\|\frac{1+|\xi|^2}{|\xi|^2+a^2}h\right\|_2\\
+ &\le C_a(2\pi)^{-d/2}\|h\|_2
+ =C_a\|f\|_{H^s}.
+ \end{aligned}
+\]
+Dla wykazania optymalności oznaczmy
+$R_a(\xi)=(1+|\xi|^2)/p_a(\xi)$.
+Jeśli $a<1$, funkcja $R_a$ jest ciągła
+i $R_a(0)=a^{-2}$. Dla dowolnego
+$\varepsilon>0$ przyjmuje więc wartości
+większe niż $a^{-2}-\varepsilon$
+na pewnej kuli o dodatniej mierze.
+Jeśli $a>1$, to $R_a(\xi)\to1$
+przy $|\xi|\to\infty$; wybieramy wówczas
+ograniczony pierścień o dodatniej mierze,
+na którym $R_a>1-\varepsilon$.
+Dla $a=1$ mamy $R_a=1$ wszędzie.
+W każdym przypadku
+$\|R_a\|_{L^\infty}=C_a$.
+Odwzorowanie $f\mapsto b_s\widehat f$
+jest, z dokładnością do stałej $(2\pi)^{d/2}$,
+izometrycznym izomorfizmem $H^s$ na $L^2$
+na mocy twierdzenia~\ref{thm:pde8-Hs}
+i Plancherela. Analogiczne stwierdzenie
+obowiązuje dla $u\mapsto b_{s+2}\widehat u$.
+Dla niezerowych danych $f$ stosunek norm wynosi
+\[
+ \frac{\|u\|_{H^{s+2}}}{\|f\|_{H^s}}
+ =\frac{\|R_a h\|_2}{\|h\|_2}.
+\]
+Każde niezerowe $h\in L^2$ odpowiada pewnym
+danym $f$ dzięki wspomnianemu izomorfizmowi.
+Gdy $a\ne1$, bierzemy $0<\varepsilon<C_a$
+i $h=\chi_E/\lambda_d(E)^{1/2}$, gdzie $E$
+jest jedną z wybranych kul lub pierścieni
+o dodatniej i skończonej mierze.
+Wówczas $\|h\|_2=1$ i $\|R_a h\|_2\ge
+C_a-\varepsilon$. Przechodząc z $\varepsilon$
+do zera, otrzymujemy optymalność $C_a$.
+Dla $a=1$ stosunek norm wynosi $1$ dla
+każdych niezerowych danych.
+Przypadek $s=0$ wynika z równości $H^0=L^2$
+oraz $H^2=W^{2,2}$.
+\end{proof}
+
+\begin{stwierdzenie}[Rozwiązywalność równania Poissona w $H^2$]
+Dla $f\in L^2(\R^d)$ równanie $-\Delta u=f$
+ma rozwiązanie w $H^2(\R^d)$ dokładnie wtedy, gdy
+\[
+ \int_{|\xi|<1}|\xi|^{-4}|\widehat f(\xi)|^2
+ \,\mathrm d\lambda_d(\xi)<\infty.
+\]
+W takim przypadku rozwiązanie jest jednoznaczne
+w $H^2$ i jego transformata jest równa
+$|\xi|^{-2}\widehat f(\xi)$ prawie wszędzie.
+\end{stwierdzenie}
+\begin{proof}
+Jeśli $u\in H^2$ spełnia równanie, to
+$|\xi|^2\widehat u=\widehat f$
+jako dystrybucje temperowane. Obie strony
+są reprezentowane przez funkcje $L^2$,
+ponieważ $|\xi|^2\le1+|\xi|^2$.
+Iniektywność odwzorowania funkcji w dystrybucje
+daje równość prawie wszędzie, a poza $\{0\}$
+możemy podzielić przez $|\xi|^2$.
+Ponieważ $\widehat u\in L^2$, otrzymujemy
+podany warunek konieczny.
+
+Odwrotnie, załóżmy ten warunek i połóżmy
+$w(\xi)=|\xi|^{-2}\widehat f(\xi)$
+dla $\xi\ne0$ oraz $w(0)=0$.
+Dla $0<|\xi|<1$ mamy
+$(1+|\xi|^2)^2\le4$, a dla $|\xi|\ge1$
+mamy $(1+|\xi|^2)/|\xi|^2\le2$.
+Stąd
+\[
+ \begin{aligned}
+ \int_{\R^d}(1+|\xi|^2)^2|w(\xi)|^2
+ \,\mathrm d\lambda_d(\xi)
+ &\le4\int_{|\xi|<1}|\xi|^{-4}|\widehat f(\xi)|^2
+ \,\mathrm d\lambda_d(\xi)\\
+ &\quad+4\|\widehat f\|_2^2<\infty.
+ \end{aligned}
+\]
+W szczególności $w\in L^2$, więc istnieje
+$u=\mathcal F^{-1}w\in L^2$. Zgodność
+transformat na $L^2$ i $\mathcal S'$ daje
+$\widehat u=T_w$ jako dystrybucję temperowaną.
+Powyższe oszacowanie daje $b_2w\in L^2$,
+czyli $u\in H^2$. Ponadto
+$|\xi|^2 w=\widehat f$ prawie wszędzie.
+Na mocy reguł różniczkowania transformaty
+$\mathcal F(-\Delta u)=\mathcal Ff$ w $\mathcal S'$,
+więc z iniektywności otrzymujemy równanie.
+Dla dwóch rozwiązań ich różnica ma transformatę
+$L^2$ zerową poza $\{0\}$, a zbiór ten ma
+miarę zero. Iniektywność transformaty na $L^2$
+daje jednoznaczność.
+\end{proof}
+
+\begin{uwaga}[Dlaczego przypadek $a=0$ jest inny?]
+Dla $f\in\mathcal S$ z $\widehat f(0)\ne0$
+ciągłość $\widehat f$ daje $\delta\in(0,1)$
+i $c_0>0$ takie, że
+$|\widehat f(\xi)|\ge c_0$ dla $|\xi|<\delta$.
+Ponieważ $\widehat f$ jest również ograniczona,
+na przekłutej kuli $B_\delta(0)$ mamy
+\[
+ c_0^2|\xi|^{-4}\le|\xi|^{-4}|\widehat f(\xi)|^2
+ \le\|\widehat f\|_\infty^2|\xi|^{-4}.
+\]
+Poza tą kulą, lecz wewnątrz $B_1(0)$,
+całkę z $|\xi|^{-4}|\widehat f|^2$
+ogranicza $\delta^{-4}\|\widehat f\|_2^2$.
+Zatem warunek z poprzedniego stwierdzenia
+jest równoważny całkowalności $|\xi|^{-4}$
+w otoczeniu zera.
+W wymiarze $d\ge2$ całka radialna sprowadza się
+do dodatniej stałej razy
+$\int_0^\delta r^{d-5}\,\mathrm d\lambda_1(r)$.
+Dla $d=1$ otrzymujemy ten sam wykładnik,
+całkując na obu półprostych.
+Całka jest rozbieżna dla $d\le4$
+(w przypadku $d=4$ logarytmicznie)
+i skończona dla $d\ge5$.
+Zatem dla takich danych rozwiązanie w $H^2$
+istnieje dokładnie w wymiarach $d\ge5$.
+
+Dla ogólnych danych $L^2$ przeszkoda pozostaje
+w każdym wymiarze. Przykładowo funkcja
+\[
+ h(\xi)=
+ \begin{cases}
+ |\xi|^{1-d/2},&0<|\xi|<1,\\
+ 0,&\text{w pozostałych punktach}.
+ \end{cases}
+\]
+należy do $L^2$, ponieważ jej kwadrat daje
+w całkowaniu radialnym potęgę
+$r^{2-d+d-1}=r$, całkowalną przy zerze
+(dla $d=1$ całkujemy na obu półprostych).
+Natomiast całka z $|\xi|^{-4}|h(\xi)|^2$
+na kuli jednostkowej jest rozbieżna,
+gdyż odpowiada potędze $r^{-3}$.
+Dla $f=\mathcal F^{-1}h\in L^2$
+nie istnieje więc rozwiązanie w $H^2$.
+
+Nawet na zbiorze danych, dla których rozwiązanie
+w $H^2$ istnieje, nie ma wspólnego oszacowania
+$\|u\|_{H^2}\le C\|f\|_2$.
+Dla $n\ge1$ wybierzmy
+$E_n=\{\xi:1/(2n)<|\xi|<1/n\}$
+i $h_n=\chi_{E_n}/\lambda_d(E_n)^{1/2}$.
+Mamy $\|h_n\|_2=1$, a dzielenie przez $|\xi|^2$
+jest ograniczone na każdym ustalonym $E_n$,
+więc $f_n=\mathcal F^{-1}h_n$ spełnia warunek
+rozwiązywalności. Dla odpowiadającego $u_n$ mamy
+\[
+ \frac{\|u_n\|_{H^2}}{\|f_n\|_2}
+ =\left\|\frac{1+|\xi|^2}{|\xi|^2}h_n\right\|_2
+ \ge n^2\longrightarrow+\infty.
+\]
+Ostatnia nierówność wynika stąd, że na $E_n$
+mamy $(1+|\xi|^2)/|\xi|^2\ge n^2$,
+a $\|h_n\|_2=1$.
+Przyczyną jest osobliwość w niskich
+częstotliwościach, a nie brak kontroli
+częstotliwości wysokich.
+
+Brak rozwiązania w $H^2$ nie oznacza braku
+rozwiązania dystrybucyjnego. Dla
+$f\in C_c^\infty$ rozdział
+~\ref{chap:pde-distributions} konstruuje
+rozwiązanie za pomocą rozwiązania fundamentalnego
+operatora $-\Delta$. Nie przypisujemy tej
+konstrukcji automatycznie wszystkim danym $L^2$.
+W szerszych klasach rozwiązań nie ma też
+automatycznej jednoznaczności: do rozwiązania
+można dodać dowolny wielomian harmoniczny,
+na przykład stałą, która nie należy do $L^2$,
+jeśli jest niezerowa.
+\end{uwaga}
+
+\section{Zasada nieoznaczoności jako konsekwencja Plancherela}
+\label{sec:pde8-uncertainty}
+
+\begin{twierdzenie}[Nierówność Heisenberga w jednej współrzędnej]
+\label{thm:pde8-uncertainty}
+Jeśli $0\ne f\in\mathcal S(\R^d)$ i $1\le j\le d$, to
+\[
+ \|x_jf\|_{L^2}\,\|\xi_j\widehat f\|_{L^2}
+ \ge\frac12\,\|f\|_{L^2}\,\|\widehat f\|_{L^2}.
+\]
+Stała $1/2$ jest optymalna. Równość zachodzi
+dokładnie wtedy, gdy dla pewnego $\lambda>0$
+funkcja $f$ ma postać
+\[
+ f(x)=e^{-\lambda x_j^2/2}\,g(x'),
+\]
+gdzie dla $d>1$ przez $x'$ oznaczamy pozostałe
+$d-1$ współrzędnych, a $g\in\mathcal S(\R^{d-1})$
+jest niezerowa. Dla $d=1$ czynnik $g(x')$
+zastępujemy niezerową stałą zespoloną.
+\end{twierdzenie}
+\begin{proof}
+Najpierw zauważmy, że $|f|^2=f\overline f$,
+a także $x_j|f|^2$ należą do $\mathcal S$.
+Sprzężenie zespolone nie zmienia półnorm,
+a mnożenie funkcji Schwartza i mnożenie przez
+współrzędną zachowują $\mathcal S$ na mocy
+wniosku~\ref{cor:pde8-convolution} i lematu
+~\ref{lem:pde8-seminorms}.
+W szczególności $\partial_j(x_j|f|^2)\in L^1$.
+Dla ustalonych pozostałych współrzędnych
+podstawowe twierdzenie rachunku całkowego daje
+\[
+ \int_{-R}^R\partial_j(x_j|f(x)|^2)
+ \,\mathrm d\lambda_1(x_j)
+ =\left[x_j|f(x)|^2\right]_{x_j=-R}^{x_j=R}.
+\]
+Prawa strona dąży do zera dla $R\to\infty$,
+ponieważ dla $|x_j|=R$ mamy
+\[
+ |x_j||f(x)|^2
+ \le R\,q_{1,0}(f)^2(1+R)^{-2}.
+\]
+Dla $d>1$ dzięki całkowalności pochodnej
+na $\R^d$ twierdzenie Fubiniego zapewnia, że
+dla prawie każdego $x'$ pochodna ta jest
+bezwzględnie całkowalna na prostej zmiennej $x_j$.
+Na takim przekroju całka po $[-R,R]$ zbiega
+do całki po $\R$ z twierdzenia o zbieżności
+zmajoryzowanej, z majorantą
+$|\partial_j(x_j|f|^2)|$ na przekroju.
+Z oszacowania składnika brzegowego wynika,
+że ta całka po $\R$ jest zerowa. Fubini
+pozwala teraz całkować tę równość względem $x'$.
+Dla $d=1$ przechodzimy do granicy bezpośrednio,
+ponieważ pochodna jest w $L^1(\R)$.
+Otrzymujemy
+\[
+ \int_{\R^d}\partial_j(x_j|f|^2)
+ \,\mathrm d\lambda_d(x)=0.
+\]
+Z reguły Leibniza
+\[
+ \partial_j(x_j|f|^2)
+ =|f|^2+2\operatorname{Re}(x_j\overline f\,\partial_j f).
+\]
+Oba składniki są całkowalne: dla drugiego
+wynika to z nierówności Cauchy'ego--Schwarza
+dla $x_jf,\partial_j f\in L^2$.
+W konsekwencji
+\[
+ \begin{aligned}
+ \|f\|_2^2
+ &=-2\operatorname{Re}
+ \int_{\R^d}x_j\overline f(x)\,\partial_j f(x)
+ \,\mathrm d\lambda_d(x)\\
+ &\le 2\left|
+ \int_{\R^d}x_j\overline f(x)\,\partial_j f(x)
+ \,\mathrm d\lambda_d(x)\right|\\
+ &\le 2\|x_j f\|_2\|\partial_j f\|_2.
+ \end{aligned}
+\]
+Z tożsamości~\eqref{eq:pde8-rules}
+i twierdzenia~\ref{thm:pde8-plancherel} mamy
+\[
+ \|\partial_j f\|_2
+ =(2\pi)^{-d/2}\|\xi_j\widehat f\|_2,
+ \qquad
+ \|f\|_2=(2\pi)^{-d/2}\|\widehat f\|_2.
+\]
+Po podstawieniu otrzymujemy
+\[
+ \|f\|_2^2\le
+ 2(2\pi)^{-d/2}\|x_jf\|_2\|\xi_j\widehat f\|_2.
+\]
+Mnożąc przez $(2\pi)^{d/2}/2$ i korzystając
+z $(2\pi)^{d/2}\|f\|_2=\|\widehat f\|_2$,
+otrzymujemy tezę.
+
+Ustalmy teraz warunek równości. Ponieważ
+$\|f\|_2>0$, powyższe oszacowanie pokazuje,
+że zarówno $x_jf$, jak i $\partial_j f$
+mają dodatnie normy $L^2$.
+Równość w nierówności Heisenberga jest
+równoważna równości w obu nierównościach
+w powyższym łańcuchu.
+Równość w nierówności Cauchy'ego--Schwarza
+oznacza liniową zależność obu wektorów w $L^2$:
+$\partial_j f=cx_jf$ dla pewnego $c\in\C$.
+Istotnie, dla $p=\partial_j f$, $q=x_jf$
+oraz $c=\langle p,q\rangle_2/\|q\|_2^2$
+mamy
+\[
+ \|p-cq\|_2^2
+ =\|p\|_2^2-\frac{|\langle p,q\rangle_2|^2}{\|q\|_2^2}.
+\]
+Równość w nierówności Cauchy'ego--Schwarza
+daje zatem $p=cq$ w $L^2$, a zależność ta
+jest również wystarczająca dla równości.
+Wtedy
+\[
+ \int_{\R^d}x_j\overline f\,\partial_j f
+ \,\mathrm d\lambda_d(x)=c\|x_jf\|_2^2.
+\]
+Równość w pierwszej nierówności wymaga,
+by liczba po lewej stronie była rzeczywista
+i ujemna (jej część rzeczywista wynosi
+$-\|f\|_2^2/2$). Stąd $c=-\lambda$
+dla pewnego $\lambda>0$.
+Ponieważ $\partial_j f$ i $x_j f$ są ciągłe,
+ich równość prawie wszędzie daje równość
+w każdym punkcie: niezerowa różnica w punkcie
+byłaby niezerowa na pewnej otwartej kuli
+o dodatniej mierze.
+Dla ustalonych $x'$ otrzymujemy więc
+\[
+ \partial_j\bigl(e^{\lambda x_j^2/2}f(x)\bigr)=0,
+\]
+czyli $f(x)=e^{-\lambda x_j^2/2}g(x')$,
+gdzie $g(x')=f(x)|_{x_j=0}$.
+Dla $d>1$ funkcja $g$ jest gładka jako
+ograniczenie funkcji gładkiej do hiperpłaszczyzny.
+Jeśli $\alpha',\beta'\in\N_0^{d-1}$,
+to przez $\alpha,\beta\in\N_0^d$ oznaczmy
+wielowskaźniki powstałe przez wstawienie
+zera na $j$-tej pozycji.
+Wtedy
+\[
+ \sup_{x'\in\R^{d-1}}
+ |(x')^{\alpha'}\partial^{\beta'}g(x')|
+ \le p_{\alpha,\beta}(f)<\infty.
+\]
+Zatem $g\in\mathcal S(\R^{d-1})$ i $g\ne0$,
+bo w przeciwnym razie wzór na $f$ dawałby
+$f=0$. Dla $d=1$ tym samym argumentem
+otrzymujemy niezerową stałą $f(0)$.
+
+Odwrotnie, dla dowolnej $\lambda>0$ i takiej
+niezerowej $g$ funkcja
+$f(x)=e^{-\lambda x_j^2/2}g(x')$ należy
+do $\mathcal S$. Dla $d>1$, oznaczając
+$G(t)=e^{-\lambda t^2/2}$, mamy
+\[
+ p_{\alpha,\beta}(f)=
+ p_{\alpha_j,\beta_j}(G)\,
+ p_{\alpha',\beta'}(g)<\infty,
+\]
+gdzie $\alpha',\beta'$ powstają przez
+usunięcie $j$-tej współrzędnej.
+Wynika to z rozdzielenia pochodnych i wag
+oraz supremum niezależnych nieujemnych czynników.
+Dla $d=1$ wystarcza przynależność Gaussa do $\mathcal S$.
+Niezerowość $f$ wynika z niezerowości $g$.
+Spełnia $\partial_j f=-\lambda x_j f$,
+więc obie nierówności w dowodzie stają się
+równościami. Takie funkcje istnieją w każdym
+wymiarze, na przykład $f(x)=e^{-|x|^2/2}$.
+Zatem stałej $1/2$ nie można zwiększyć.
+\end{proof}
+
+\begin{wniosek}[Nierówność z przesuniętymi środkami]
+Dla $f\in\mathcal S(\R^d)$ i dowolnych $a,b\in\R$
+mamy
+\[
+ \|(x_j-a)f\|_2\,\|(\xi_j-b)\widehat f\|_2
+ \ge\tfrac12\|f\|_2\|\widehat f\|_2.
+\]
+\end{wniosek}
+\begin{proof}
+Dla $e_j$ oznaczającego $j$-ty wektor
+bazy standardowej połóżmy
+$h(x)=e^{-ibx_j}f(x+ae_j)$.
+Przesunięcie zachowuje $\mathcal S$ przez
+nierówność $1+|x|\le(1+|a|)(1+|x+ae_j|)$,
+a mnożenie przez $e^{-ibx_j}$ zachowuje
+$\mathcal S$, gdyż wszystkie pochodne
+mnożnika są ograniczone.
+Ponieważ $h\in\mathcal S\subset L^1$,
+podstawienie $y=x+ae_j$ w całce Fouriera daje
+\[
+ \begin{aligned}
+ \widehat h(\xi)
+ &=\int_{\R^d}e^{-ix\cdot(\xi+be_j)}
+ f(x+ae_j)\,\mathrm d\lambda_d(x)\\
+ &=e^{ia(\xi_j+b)}
+ \int_{\R^d}e^{-iy\cdot(\xi+be_j)}f(y)
+ \,\mathrm d\lambda_d(y)\\
+ &=e^{ia(\xi_j+b)}\widehat f(\xi+be_j).
+ \end{aligned}
+\]
+Czynniki wykładnicze mają moduł $1$,
+a miara Lebesgue'a jest niezmiennicza
+względem przesunięć. Stąd
+\[
+ \begin{aligned}
+ \|h\|_2&=\|f\|_2,&
+ \|x_jh\|_2&=\|(x_j-a)f\|_2,\\
+ \|\widehat h\|_2&=\|\widehat f\|_2,&
+ \|\xi_j\widehat h\|_2&=\|(\xi_j-b)\widehat f\|_2.
+ \end{aligned}
+\]
+Dla $f\ne0$ stosujemy twierdzenie
+~\ref{thm:pde8-uncertainty} do $h$;
+dla $f=0$ nierówność jest oczywista.
+\end{proof}
+
+Dla $f\ne0$ można w szczególności wybrać
+\[
+ a=\frac{\int_{\R^d}x_j|f(x)|^2\,
+ \mathrm d\lambda_d(x)}{\|f\|_2^2},
+ \qquad
+ b=\frac{\int_{\R^d}\xi_j|\widehat f(\xi)|^2\,
+ \mathrm d\lambda_d(\xi)}{\|\widehat f\|_2^2}.
+\]
+Całki są bezwzględnie zbieżne, ponieważ
+\[
+ \begin{aligned}
+ \int_{\R^d}|x_j||f(x)|^2\,\mathrm d\lambda_d(x)
+ &\le\|x_jf\|_2\|f\|_2,\\
+ \int_{\R^d}|\xi_j||\widehat f(\xi)|^2\,
+ \mathrm d\lambda_d(\xi)
+ &\le\|\xi_j\widehat f\|_2\|\widehat f\|_2.
+ \end{aligned}
+\]
+Oba mianowniki są dodatnie z niezerowości $f$
+i twierdzenia Plancherela. Liczby $a,b$ są
+rzeczywiste, a obie niżej wymienione gęstości
+mają całkę $1$ z definicji normy $L^2$.
+Drugie momenty są skończone, ponieważ
+$x_jf,\xi_j\widehat f\in L^2$.
+Jeśli $\sigma_x^2$ i $\sigma_\xi^2$
+oznaczają wariancje $j$-tej współrzędnej
+względem miar probabilistycznych o gęstościach
+$|f|^2/\|f\|_2^2$ oraz
+$|\widehat f|^2/\|\widehat f\|_2^2$, to
+\[
+ \sigma_x=\frac{\|(x_j-a)f\|_2}{\|f\|_2},
+ \qquad
+ \sigma_\xi=\frac{\|(\xi_j-b)\widehat f\|_2}
+ {\|\widehat f\|_2}.
+\]
+Z poprzedniego wniosku dostajemy
+$\sigma_x\sigma_\xi\ge1/2$.
+Stała odpowiada konwencji~\eqref{eq:pde8-convention},
+w której wykładnik transformaty to $-ix\cdot\xi$.
+
+\section{Podsumowanie i zakres dalszych zagadnień}
+Transformata Fouriera jest ciągłym automorfizmem
+przestrzeni Schwartza (twierdzenie
+~\ref{thm:pde8-inversion}) i automorfizmem
+jej ciągłej przestrzeni sprzężonej, ciągłym
+wraz z odwrotnością w topologii słabej*
+(twierdzenie~\ref{thm:pde8-dist-rules}).
+Na $L^2(\R^d)$ dopiero operator
+$(2\pi)^{-d/2}\mathcal F$ jest unitarny
+przy naszej konwencji (twierdzenie
+~\ref{thm:pde8-plancherel}).
+Mierzalny symbol, skończony prawie wszędzie,
+wyznacza ograniczony mnożnik na $L^2$
+dokładnie wtedy, gdy jest istotnie ograniczony
+(w sensie przedłużenia z dziedziny naturalnej;
+twierdzenie~\ref{thm:pde8-multiplier}).
+Nie wynika stąd
+analogiczna charakterystyka mnożników $L^p$
+dla $p\ne2$ ani możliwość mnożenia
+dowolnych dystrybucji przez taki symbol.
+
+Transformata Fouriera jest podstawowym narzędziem
+badania wielu liniowych PDE o stałych
+współczynnikach, lecz sama nie zapewnia
+rozwiązywalności ani jednoznaczności
+w dowolnej klasie funkcji. W przypadku
+$-\Delta+a^2$ z $a>0$ uzyskaliśmy
+regularność o dwa rzędy w skali Sobolewa
+(twierdzenie~\ref{thm:pde8-helmholtz}),
+podczas gdy dla równania Poissona
+dla danych $L^2$ i rozwiązań w $H^2$
+występuje dodatkowy warunek całkowalności
+przy zerowej częstotliwości
+(sekcja~\ref{sec:pde8-elliptic}).
+Metoda ta nie rozwiązuje automatycznie
+problemów brzegowych ani równań
+ze zmiennymi współczynnikami.
+W następnych rozdziałach zbudujemy
+systematycznie przestrzenie Sobolewa
+na obszarach i ich twierdzenia o zanurzeniach.
+W ten sposób domkniemy łańcuch pojęciowy
+rozpoczęty w rozdziale
+~\ref{chap:pde-distributions}: od słabych
+pochodnych, przez narzędzia Fouriera
+na całej przestrzeni, do funkcjonałowej
+teorii $W^{k,p}(\Omega)$ potrzebnej
+dla metod wariacyjnych i zagadnień brzegowych.

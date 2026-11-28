@@ -1,0 +1,287 @@
+\section{Kategorie monoidalne, symetryczne i domknięte}\label{cat:sec:monoidal}
+
+Dotychczas iloczyn obiektów był wyróżniany przez własność uniwersalną (definicja~\ref{def:produkt}). W wielu kategoriach potrzebujemy jednak innej operacji dwuargumentowej: na przykład iloczyn tensorowy modułów nie jest na ogół ich iloczynem kategorialnym. Przejdziemy od konkretnych izomorfizmów tensorowych do aksjomatów opisujących ich wzajemną zgodność.
+
+\subsection{Struktura monoidalna i aksjomaty koherencji}
+\begin{definicja}[Kategoria monoidalna]\label{cat:def:monoidal}
+Kategorią monoidalną nazywamy kategorię $\mathcal C$ z bifunktorem $\otimes:\mathcal C\times\mathcal C\to\mathcal C$, obiektem $I$ oraz izomorfizmami naturalnymi
+\[
+\begin{aligned}
+\alpha_{A,B,C}&:(A\otimes B)\otimes C\longrightarrow A\otimes(B\otimes C),\\
+\lambda_A&:I\otimes A\longrightarrow A,\\
+\rho_A&:A\otimes I\longrightarrow A.
+\end{aligned}
+\]
+Wymagamy dwóch aksjomatów koherencji. Aksjomat pięciokąta ma postać
+\begin{equation}\label{cat:eq:pentagon}
+\begin{aligned}
+&\alpha_{A,B,C\otimes D}\circ\alpha_{A\otimes B,C,D}\\
+&=(\id_A\otimes\alpha_{B,C,D})\circ\alpha_{A,B\otimes C,D}
+\circ(\alpha_{A,B,C}\otimes\id_D).
+\end{aligned}
+\end{equation}
+Obie strony są morfizmami $((A\otimes B)\otimes C)\otimes D\to A\otimes(B\otimes(C\otimes D))$.
+Aksjomat trójkąta ma postać
+\begin{equation}\label{cat:eq:triangle-monoidal}
+(\id_A\otimes\lambda_B)\circ\alpha_{A,I,B}=\rho_A\otimes\id_B,
+\end{equation}
+gdzie obie strony prowadzą z $(A\otimes I)\otimes B$ do $A\otimes B$.
+\end{definicja}
+
+Naturalność $\alpha$ oznacza dla $f:A\to A'$, $g:B\to B'$, $h:C\to C'$ równość
+\[
+\alpha_{A',B',C'}\circ((f\otimes g)\otimes h)
+=(f\otimes(g\otimes h))\circ\alpha_{A,B,C}.
+\]
+Analogicznie $\lambda_{A'}(\id_I\otimes f)=f\lambda_A$ i $\rho_{A'}(f\otimes\id_I)=f\rho_A$. Bifunktorialność (definicja~\ref{cat:def:bifunctor}) wymaga $\id_A\otimes\id_B=\id_{A\otimes B}$ oraz
+\[
+(f'\otimes g')\circ(f\otimes g)=(f'\circ f)\otimes(g'\circ g)
+\]
+dla składanych par morfizmów.
+
+Pięciokąt można odczytać jako dwie drogi pomiędzy pięcioma nawiasowaniami czterech czynników. Dla czytelności zapisujemy je osobno, z pełnymi typami obiektów pośrednich:
+\[
+\begin{aligned}
+((A\otimes B)\otimes C)\otimes D
+&\xrightarrow{\alpha_{A\otimes B,C,D}}(A\otimes B)\otimes(C\otimes D)\\
+&\xrightarrow{\alpha_{A,B,C\otimes D}}A\otimes(B\otimes(C\otimes D)),
+\end{aligned}
+\]
+oraz
+\[
+\begin{aligned}
+((A\otimes B)\otimes C)\otimes D
+&\xrightarrow{\alpha_{A,B,C}\otimes\id_D}(A\otimes(B\otimes C))\otimes D\\
+&\xrightarrow{\alpha_{A,B\otimes C,D}} A\otimes((B\otimes C)\otimes D)\\
+&\xrightarrow{\id_A\otimes\alpha_{B,C,D}} A\otimes(B\otimes(C\otimes D)).
+\end{aligned}
+\]
+Równoważnie, obie drogi w rzeczywistym pięciokącie przemiennym są równe:
+\begin{center}
+\begin{tikzpicture}[>=stealth,every node/.style={font=\small}]
+ \node (s) at (0,4) {$((A\otimes B)\otimes C)\otimes D$};
+ \node (l) at (-3.25,2.4) {$(A\otimes(B\otimes C))\otimes D$};
+ \node (r) at (3.25,2.4) {$(A\otimes B)\otimes(C\otimes D)$};
+ \node (m) at (-2.5,0.3) {$A\otimes((B\otimes C)\otimes D)$};
+ \node (e) at (2.5,0.3) {$A\otimes(B\otimes(C\otimes D))$};
+ \draw[->] (s) -- node[above left] {$\alpha_{A,B,C}\otimes\id_D$} (l);
+ \draw[->] (s) -- node[above right] {$\alpha_{A\otimes B,C,D}$} (r);
+ \draw[->] (l) -- node[left] {$\alpha_{A,B\otimes C,D}$} (m);
+ \draw[->] (m) -- node[below] {$\id_A\otimes\alpha_{B,C,D}$} (e);
+ \draw[->] (r) -- node[right] {$\alpha_{A,B,C\otimes D}$} (e);
+\end{tikzpicture}
+\end{center}
+Trójkąt ma następujący diagram:
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+\node (a) at (0,1.9) {$(A\otimes I)\otimes B$};
+\node (b) at (6.4,1.9) {$A\otimes(I\otimes B)$};
+\node (c) at (3.2,0) {$A\otimes B$};
+\draw[->] (a) -- node[above] {$\alpha_{A,I,B}$} (b);
+\draw[->] (a) -- node[below left] {$\rho_A\otimes\id_B$} (c);
+\draw[->] (b) -- node[below right] {$\id_A\otimes\lambda_B$} (c);
+\end{tikzpicture}
+\end{center}
+Same izomorfizmy łączności i jednostki nie wystarczają: potrzebna jest zgodność ich złożeń.
+
+\begin{definicja}[Ścisła kategoria monoidalna]\label{cat:def:strict-monoidal}
+Kategoria monoidalna jest ścisła, gdy $\otimes$ jest łączny i ma jednostkę $I$ na poziomie obiektów i morfizmów, a $\alpha,\lambda,\rho$ są identycznościami.
+\end{definicja}
+
+\begin{przyklad}[Endofunktory i składanie]\label{cat:ex:endofunctor-monoidal}
+Dla małej kategorii $\mathcal C$ kategoria $[\mathcal C,\mathcal C]$ endofunktorów jest ścisła monoidalna. Przyjmujemy $F\otimes G=F\circ G$, $I=\id_{\mathcal C}$. Dla transformacji $\eta:F\Rightarrow F'$ i $\theta:G\Rightarrow G'$ iloczynem jest złożenie poziome $\eta\ast\theta:FG\Rightarrow F'G'$ z definicji~\ref{cat:def:horizontal}. Prawo wymiany (twierdzenie~\ref{cat:thm:interchange}) daje bifunktorialność, a stwierdzenie~\ref{cat:prop:horizontal-assoc} daje ścisłą łączność i jednostki. Zatem pięciokąt i trójkąt składają się z identyczności.
+\end{przyklad}
+
+\begin{twierdzenie}[Struktura kartezjańska]\label{cat:thm:cartesian-monoidal}
+Każda kategoria z wybranymi iloczynami binarnymi i obiektem końcowym $1$ ma strukturę monoidalną dla $\otimes=\times$ oraz $I=1$.
+\end{twierdzenie}
+\begin{proof}
+Bifunktor iloczynu otrzymujemy ze stwierdzenia~\ref{cat:prop:product-functor}. Zarówno $(A\times B)\times C$, jak i $A\times(B\times C)$ reprezentują iloczyn trzech obiektów: morfizm do dowolnego z nich jest jednoznacznie wyznaczony przez trzy składowe. To daje kanoniczny izomorfizm $\alpha$ zachowujący wszystkie trzy rzuty (twierdzenie~\ref{tw:produkt-unique}). Rzuty $\lambda_A:1\times A\to A$ i $\rho_A:A\times1\to A$ są izomorfizmami: odwrotności to odpowiednio $\langle !_A,\id_A\rangle$ oraz $\langle\id_A,!_A\rangle$, gdzie $!_A:A\to1$ jest jedynym morfizmem. Złożenia z rzutami pokazują, że są to odwrotności z obu stron.
+
+Obie strony równania naturalności $\alpha$ mają po złożeniu z odpowiednimi rzutami na $A',B',C'$ składowe $f p_A$, $g p_B$, $h p_C$, gdzie $p_A,p_B,p_C$ są rzutami z obiektu wyjściowego. Jednoznaczność morfizmu do iloczynu daje naturalność. Naturalność $\lambda,\rho$ jest warunkiem zachowania odpowiedniego rzutu przez $f\times\id$ lub $\id\times f$.
+
+W pięciokącie każde zastosowanie $\alpha$ zachowuje rzuty na czynniki, więc obie drogi mają po złożeniu z czterema końcowymi rzutami odpowiednio $p_A,p_B,p_C,p_D$. Obiekt końcowy diagramu jest iterowanym iloczynem czterech obiektów; jednoznaczność morfizmu o tych składowych daje \eqref{cat:eq:pentagon}. W trójkącie obie drogi zachowują rzuty na $A,B$, a więc są równe przez własność uniwersalną $A\times B$. Otrzymujemy \eqref{cat:eq:triangle-monoidal}.
+\end{proof}
+
+\begin{twierdzenie}[Struktura tensorowa modułów]\label{cat:thm:module-monoidal}
+Niech $R$ będzie przemiennym pierścieniem z jedynką. Kategoria unitarnych $R$-modułów z iloczynem $\otimes_R$ i jednostką $R$ jest monoidalna.
+\end{twierdzenie}
+\begin{proof}
+Wykorzystujemy konstrukcję iloczynu tensorowego, w szczególności \atlasref{AA-18::aa:tw:tensor-universal}{AA-18: własność uniwersalna}, \atlasref{AA-18::aa:tw:tensor-sym-assoc}{AA-18: łączność i symetria} oraz \atlasref{AA-18::aa:tw:tensor-unit}{AA-18: jednostka}. Izomorfizmy $\alpha,\lambda,\rho$ działają na tensorach prostych przez
+\[
+(m\otimes n)\otimes p\mapsto m\otimes(n\otimes p),\quad
+r\otimes m\mapsto rm,\quad m\otimes r\mapsto rm .
+\]
+Ich dobre określenie i odwracalność wynika z przytoczonych twierdzeń. Bifunktorialność wykazano w przykładzie~\ref{cat:ex:tensor-bifunctor}.
+
+Sprawdzimy pozostałe aksjomaty. Dla homomorfizmów $f,g,h$ obie strony naturalności $\alpha$ wysyłają $(m\otimes n)\otimes p$ na $f(m)\otimes(g(n)\otimes h(p))$. Naturalność $\lambda$ wynika z $f(rm)=rf(m)$, a dla $\rho$ działa ten sam rachunek. Tensory proste generują odpowiednie moduły, więc te równości zachodzą dla wszystkich elementów.
+
+W pięciokącie droga z dwoma zastosowaniami $\alpha$ prowadzi przez
+\[
+((m\otimes n)\otimes p)\otimes q
+\longmapsto (m\otimes n)\otimes(p\otimes q)
+\longmapsto m\otimes(n\otimes(p\otimes q)).
+\]
+Droga z trzema zastosowaniami ma kolejno wartości
+\[
+\begin{aligned}
+((m\otimes n)\otimes p)\otimes q
+&\longmapsto(m\otimes(n\otimes p))\otimes q\\
+&\longmapsto m\otimes((n\otimes p)\otimes q)\\
+&\longmapsto m\otimes(n\otimes(p\otimes q)).
+\end{aligned}
+\]
+Iterowane tensory proste generują moduł wyjściowy: rozwijamy każdy czynnik kolejno jako skończoną sumę tensorów prostych i korzystamy z dwuliniowości. Obie drogi są liniowe i równe na tych generatorach, więc są równe. W trójkącie pierwsza droga daje $m\otimes(rn)$, a druga $(rm)\otimes n$. Równość jest relacją zbilansowania (por. \atlasref{AA-18::aa:def:tensor-balanced}{AA-18: odwzorowania zbilansowane}). Znów wystarczy równość na generatorach.
+\end{proof}
+
+\subsection{Plecenie i symetria}
+\begin{definicja}[Kategoria monoidalna z pleceniem i symetryczna]\label{cat:def:braided-symmetric}
+Plecenie jest izomorfizmem naturalnym $c_{A,B}:A\otimes B\to B\otimes A$ spełniającym dwa aksjomaty sześciokąta:
+\begin{align*}
+\alpha_{B,C,A}\,c_{A,B\otimes C}\,\alpha_{A,B,C}
+&=(\id_B\otimes c_{A,C})\,\alpha_{B,A,C}\,(c_{A,B}\otimes\id_C),\\
+\alpha^{-1}_{C,A,B}\,c_{A\otimes B,C}\,\alpha^{-1}_{A,B,C}
+&=(c_{A,C}\otimes\id_B)\,\alpha^{-1}_{A,C,B}\,(\id_A\otimes c_{B,C}).
+\end{align*}
+W pierwszym równaniu obie strony prowadzą z $(A\otimes B)\otimes C$ do $B\otimes(C\otimes A)$, w drugim z $A\otimes(B\otimes C)$ do $(C\otimes A)\otimes B$. Składamy od prawej do lewej.
+Kategoria monoidalna z pleceniem jest symetryczna, jeśli dodatkowo $c_{B,A}\circ c_{A,B}=\id_{A\otimes B}$.
+\end{definicja}
+Pierwszy aksjomat sześciokąta:
+\begin{center}
+\begin{tikzpicture}[>=stealth,every node/.style={font=\small}]
+ \node (s) at (0,4.6) {$(A\otimes B)\otimes C$};
+ \node (l) at (-3.1,3.05) {$A\otimes(B\otimes C)$};
+ \node (r) at (3.1,3.05) {$(B\otimes A)\otimes C$};
+ \node (ll) at (-3.1,1.3) {$(B\otimes C)\otimes A$};
+ \node (rr) at (3.1,1.3) {$B\otimes(A\otimes C)$};
+ \node (e) at (0,0) {$B\otimes(C\otimes A)$};
+ \draw[->] (s) -- node[above left] {$\alpha_{A,B,C}$} (l);
+ \draw[->] (s) -- node[above right] {$c_{A,B}\otimes\id_C$} (r);
+ \draw[->] (l) -- node[left] {$c_{A,B\otimes C}$} (ll);
+ \draw[->] (r) -- node[right] {$\alpha_{B,A,C}$} (rr);
+ \draw[->] (ll) -- node[below left] {$\alpha_{B,C,A}$} (e);
+ \draw[->] (rr) -- node[below right] {$\id_B\otimes c_{A,C}$} (e);
+\end{tikzpicture}
+\end{center}
+Drugi aksjomat sześciokąta:
+\begin{center}
+\begin{tikzpicture}[>=stealth,every node/.style={font=\small}]
+ \node (s) at (0,4.6) {$A\otimes(B\otimes C)$};
+ \node (l) at (-3.1,3.05) {$(A\otimes B)\otimes C$};
+ \node (r) at (3.1,3.05) {$A\otimes(C\otimes B)$};
+ \node (ll) at (-3.1,1.3) {$C\otimes(A\otimes B)$};
+ \node (rr) at (3.1,1.3) {$(A\otimes C)\otimes B$};
+ \node (e) at (0,0) {$(C\otimes A)\otimes B$};
+ \draw[->] (s) -- node[above left] {$\alpha^{-1}_{A,B,C}$} (l);
+ \draw[->] (s) -- node[above right] {$\id_A\otimes c_{B,C}$} (r);
+ \draw[->] (l) -- node[left] {$c_{A\otimes B,C}$} (ll);
+ \draw[->] (r) -- node[right] {$\alpha^{-1}_{A,C,B}$} (rr);
+ \draw[->] (ll) -- node[below left] {$\alpha^{-1}_{C,A,B}$} (e);
+ \draw[->] (rr) -- node[below right] {$c_{A,C}\otimes\id_B$} (e);
+\end{tikzpicture}
+\end{center}
+
+\begin{stwierdzenie}[Symetria w przykładach kartezjańskich i tensorowych]\label{cat:prop:cartesian-tensor-symmetry}
+Struktury z twierdzeń~\ref{cat:thm:cartesian-monoidal} i \ref{cat:thm:module-monoidal} są symetryczne.
+\end{stwierdzenie}
+\begin{proof}
+W przypadku kartezjańskim bierzemy $c_{A,B}=\langle p_B,p_A\rangle$. Dwa złożenia zamian zachowują oba rzuty, więc są identycznościami. Naturalność wynika z tego, że obie drogi dla $f:A\to A'$ i $g:B\to B'$ mają składowe $g p_B$ oraz $f p_A$. Pierwszy sześciokąt daje po obu drogach uporządkowane składowe $B,C,A$, drugi $C,A,B$, z zachowaniem rzutów na poszczególne czynniki. Jednoznaczność morfizmów do iloczynu dowodzi obu równości.
+
+W przypadku modułów stosujemy izomorfizm $c_{M,N}(m\otimes n)=n\otimes m$ z \atlasref{AA-18::aa:tw:tensor-sym-assoc}{AA-18}. Naturalność sprawdzamy na tensorach prostych: obie drogi dają $g(n)\otimes f(m)$. W pierwszym sześciokącie obie drogi wysyłają $(m\otimes n)\otimes p$ na $n\otimes(p\otimes m)$; w drugim obie wysyłają $m\otimes(n\otimes p)$ na $(p\otimes m)\otimes n$. Podwójna zamiana daje $m\otimes n$. Liniowość i generowanie przez tensory proste kończą dowód.
+\end{proof}
+
+\begin{przyklad}[Symetria przestrzeni z gradacją]\label{cat:ex:graded-symmetry}
+Dla $\mathbb Z$-stopniowanych przestrzeni wektorowych nad ciałem $k$ i odwzorowań zachowujących stopień rozważamy standardowy iloczyn tensorowy z gradacją $(V\otimes W)_n=\bigoplus_{p+q=n}V_p\otimes W_q$. Jednostką jest $k$ w stopniu zero. Łączność i jednostki są odziedziczone z iloczynu tensorowego, zachowują stopień, a ich aksjomaty wynikają z twierdzenia~\ref{cat:thm:module-monoidal}.
+Na jednorodnych wektorach $v\in V_p,w\in W_q$ definiujemy
+\[
+c(v\otimes w)=(-1)^{pq}w\otimes v.
+\]
+Wzór na każdej parze składowych stopniowanych jest dwuliniowy i daje liniowe odwzorowanie z sumy prostej; zachowuje stopień $p+q$. Naturalność wynika z zachowywania stopni przez morfizmy. Dwukrotna zamiana daje czynnik $(-1)^{2pq}=1$, więc $c$ jest izomorfizmem i spełnia symetrię. Dla trzeciego jednorodnego wektora stopnia $r$ pierwszy sześciokąt daje znaki $(-1)^{p(q+r)}$ i $(-1)^{pq+pr}$, drugi $(-1)^{(p+q)r}$ i $(-1)^{pr+qr}$. Znaki są równe, a kolejność tensorów po obu drogach taka sama. Jednorodne tensory proste generują rozpatrywane moduły, więc oba sześciokąty zachodzą. W charakterystyce $2$ wszystkie te znaki są równe $1$.
+\end{przyklad}
+
+\begin{przyklad}[Plecenie, które nie jest symetrią]\label{cat:ex:nonsymmetric-braiding}
+Na kategorii $\mathbb Z$-stopniowanych przestrzeni wektorowych nad $k$ z poprzedniego przykładu ustalmy $q\in k^\times$. Dla jednorodnych $v\in V_p$, $w\in W_r$ określmy
+\[
+c^q_{V,W}(v\otimes w)=q^{pr}w\otimes v.
+\]
+Ponieważ $q$ jest odwracalne, wykładniki ujemne są dopuszczalne. Jak poprzednio wzór rozszerza się liniowo na sumę prostą składowych, zachowuje stopień i jest naturalny względem odwzorowań stopnia zero. Odwrotność $c^q_{V,W}$ wysyła $w\otimes v$ na $q^{-pr}v\otimes w$. Dla trzeciego wektora stopnia $s$ oba sześciokąty wynikają z równości $q^{p(r+s)}=q^{pr}q^{ps}$ i $q^{(p+r)s}=q^{ps}q^{rs}$; kolejność czynników jest taka sama jak przy zwykłej zamianie. Zatem jest to plecenie.
+Natomiast
+\[
+c^q_{W,V}c^q_{V,W}(v\otimes w)=q^{2pr}v\otimes w.
+\]
+Jeśli $q^2=1$, to jest to identyczność na wszystkich jednorodnych tensorach prostych. Jeśli $q^2\neq1$, bierzemy dwie kopie $k$ skupione w stopniu $1$; na ich niezerowym tensorze generatorów podwójna zamiana mnoży przez $q^2\neq1$. Otrzymujemy plecenie symetryczne dokładnie wtedy, gdy $q^2=1$. Na przykład dla $k=\mathbb Q$ i $q=2$ nie jest ono symetrią.
+\end{przyklad}
+
+\subsection{Domkniętość monoidalna}
+\begin{definicja}[Prawa domkniętość monoidalna]\label{cat:def:monoidal-closed}
+Kategoria monoidalna jest prawostronnie domknięta, gdy dla każdego $A$ funktor $-\otimes A$ ma prawe sprzężenie $[A,-]$. Oznacza to naturalną bijekcję
+\[
+\Hom_{\mathcal C}(X\otimes A,B)\cong\Hom_{\mathcal C}(X,[A,B]).
+\]
+Obiekt $[A,B]$ nazywamy wewnętrznym obiektem Hom. W kategorii symetrycznej domkniętość z jednej strony pociąga domkniętość z drugiej: symetria daje naturalny izomorfizm $A\otimes-\cong-\otimes A$, więc powyższe bijekcje można złożyć z bijekcjami indukowanymi przez ten izomorfizm.
+\end{definicja}
+
+\begin{przyklad}[Domkniętość kartezjańska i tensorowa]\label{cat:ex:closed-monoidal}
+W kategorii kartezjańsko domkniętej $[A,B]=B^A$ (definicja~\ref{def:exponential}, twierdzenie~\ref{cat:thm:exp-naturality}). W kategorii modułów nad przemiennym pierścieniem $R$ przyjmujemy $[A,B]=\operatorname{Hom}_R(A,B)$ z punktowymi działaniami modułu. Naturalną bijekcję wyznaczają wzory
+\[
+\Phi(f)(x)(a)=f(x\otimes a),\qquad
+\Psi(g)(x\otimes a)=g(x)(a).
+\]
+Ich dobre określenie i wzajemną odwrotność daje \atlasref{AA-18::aa:tw:tensor-hom-adjunction}{AA-18: sprzężenie tensor--Hom}. Dla $u:X'\to X$, $v:B\to B'$ naturalność sprawdzamy bezpośrednio:
+\[
+\Phi(vf(u\otimes\id_A))(x')(a)=v(f(u(x')\otimes a)).
+\]
+Jest to dokładnie wartość złożenia $\operatorname{Hom}_R(A,v)\circ\Phi(f)\circ u$ w $x'$ i $a$. W ten sposób uzyskujemy sprzężenie, nie tylko bijekcję poszczególnych zbiorów. Nie potrzeba skończonej wymiarowości ani skończonego generowania modułów.
+\end{przyklad}
+
+\begin{stwierdzenie}[Ewaluacja i transpozycja]\label{cat:prop:internal-hom-eval}
+W lokalnie małej prawostronnie domkniętej kategorii monoidalnej ustalmy $A,B$. Istnieje morfizm $\ev_{A,B}:[A,B]\otimes A\to B$ taki, że dla każdego $f:X\otimes A\to B$ istnieje dokładnie jeden $\widehat f:X\to[A,B]$ z
+\[
+\ev_{A,B}\circ(\widehat f\otimes\id_A)=f.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Oznaczmy bijekcję sprzężenia przez $\Phi_{X,B}$, a jej odwrotność przez $\Psi_{X,B}$. Definiujemy $\ev_{A,B}=\Psi_{[A,B],B}(\id_{[A,B]})$. Dla $u:X\to[A,B]$ naturalność $\Psi$ w pierwszej zmiennej daje
+\[
+\Psi_{X,B}(u)=
+\Psi_{[A,B],B}(\id_{[A,B]})\circ(u\otimes\id_A).
+\]
+Wybór $u=\Phi_{X,B}(f)$ daje istnienie, ponieważ $\Psi_{X,B}\Phi_{X,B}(f)=f$. Jeżeli $u$ spełnia tę samą równość, to $\Psi_{X,B}(u)=f$, więc po zastosowaniu $\Phi_{X,B}$ otrzymujemy $u=\Phi_{X,B}(f)$. W szczególności ewaluacja jest kojednostką sprzężenia $-\otimes A\dashv[A,-]$ w obiekcie $B$.
+\end{proof}
+
+\begin{stwierdzenie}[Bifunktor wewnętrznego Hom]\label{cat:prop:internal-hom-bifunctor}
+Przy wybranych prawych sprzężeniach w poprzednim stwierdzeniu wewnętrzny Hom wyznacza bifunktor
+\[
+[-,-]:\mathcal C^{\op}\times\mathcal C\to\mathcal C.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Dla $a:A'\to A$ i $b:B\to B'$ definiujemy $[a,b]:[A,B]\to[A',B']$ jako jedyną transpozycję morfizmu
+\[
+[A,B]\otimes A'\xrightarrow{\id_{[A,B]}\otimes a}
+[A,B]\otimes A\xrightarrow{\ev_{A,B}}B\xrightarrow{b}B'.
+\]
+Stąd $\ev_{A',B'}([a,b]\otimes\id_{A'})=b\ev_{A,B}(\id_{[A,B]}\otimes a)$. Dla identyczności po obu stronach definicji transpozycji otrzymujemy $\ev_{A,B}$, więc $[\id_A,\id_B]=\id_{[A,B]}$ przez jednoznaczność.
+
+Niech ponadto $a':A''\to A'$ i $b':B'\to B''$. Z bifunktorialności iloczynu monoidalnego i równości definiującej $[a,b]$ mamy
+\[
+\begin{aligned}
+&\ev_{A'',B''}(([a',b']\circ[a,b])\otimes\id_{A''})\\
+&=b'\ev_{A',B'}(\id_{[A',B']}\otimes a')([a,b]\otimes\id_{A''})\\
+&=b'\ev_{A',B'}([a,b]\otimes\id_{A'})(\id_{[A,B]}\otimes a')\\
+&=b'b\ev_{A,B}(\id_{[A,B]}\otimes(a\circ a')).
+\end{aligned}
+\]
+Jest to równość charakteryzująca $[a\circ a',b'\circ b]$, więc jednoznaczność transpozycji daje prawo składania. Dla $a=\id_A$ konstrukcja pokrywa się z działaniem wybranego prawego sprzężenia na morfizmach $b$: wynika to z naturalności jego kojednostki oraz jednoznaczności transpozycji.
+\end{proof}
+
+\begin{stwierdzenie}[Zachowywanie kogranic przez iloczyn monoidalny]\label{cat:prop:closed-colimits}
+W prawostronnie domkniętej kategorii monoidalnej funktor $-\otimes A$ zachowuje istniejące małe kogranice. W przypadku symetrycznym dotyczy to także $A\otimes-$.
+\end{stwierdzenie}
+\begin{proof}
+Z definicji~\ref{cat:def:monoidal-closed} jest to lewe sprzężenie. Stosujemy twierdzenie~\ref{tw:adjoints-preserve}. W przypadku symetrycznym drugi funktor jest naturalnie izomorficzny z pierwszym; izomorfizmy przenoszą własność uniwersalną kogranicy.
+\end{proof}
+
+\begin{uwaga}
+Koherencja dla dowolnie długich wyrażeń monoidalnych, funktory monoidalne, obiekty monoidalne oraz obiekty posiadające dualność wymagają dalszych definicji i twierdzeń. Powyższe przykłady dowodzą konkretnych aksjomatów pięciokąta i trójkąta, a nie ogólnego twierdzenia Mac Lane'a o koherencji. W dalszej części omówimy je oddzielnie.
+\end{uwaga}

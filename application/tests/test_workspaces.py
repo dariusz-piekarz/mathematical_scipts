@@ -22,9 +22,11 @@ class WorkspaceTests(unittest.TestCase):
             "MATLIB_SAVED_ROOT": str(Path(self.tmp.name) / "saved")})
         self.env.start()
         self.addCleanup(self.env.stop)
-        self.client = TestClient(app)
+        self._client_context = TestClient(app)
+        self.client = self._client_context.__enter__()
+        self.addCleanup(self._client_context.__exit__, None, None, None)
         self.archive = b"test-zip-content"
-        self.manifest = {"title": "Test project", "modules": ["BT-00"]}
+        self.manifest = {"title": "Test project", "modules": ["AA-01"]}
 
     def test_unsaved_draft_removed_at_x_close(self):
         item = workspaces.stage_project(self.archive, self.manifest)
@@ -67,7 +69,7 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual(self.client.get("/api/drafts/invalid/download").status_code, 404)
 
     def test_create_draft_api(self):
-        res = self.client.post('/api/drafts',json={"modules":["BT-00"],"title":"Example","entities":[],"closure_depth":0})
+        res = self.client.post('/api/drafts',json={"modules":["AA-01"],"title":"Example","entities":[],"closure_depth":0})
         self.assertEqual(res.status_code,200,res.text)
         doc=res.json()
         self.assertGreater(doc["size_bytes"],1000)

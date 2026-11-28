@@ -5,8 +5,9 @@ const $ = id => document.getElementById(id);
 const state = {
   domains:[], modules:[], outlines:new Map(), expandedDomains:new Set(), expandedModules:new Set(),
   currentModule:null, currentEntity:null, currentData:null, selected:new Map(),
-  tab:"reader", granularity:"module", simplified:false, tooltipData:null,
-  tooltipKey:0, graph:null, renderEpoch:0, draftSession:null,
+  tab:"reader", granularity:"module", simplified:true, tooltipData:null, leanEpoch:0, leanFragment:null, leanRunner:null, leanCatalog:null, leanCatalogLoading:false, leanCatalogEpoch:0,
+  leanChapterReportEpoch:0, leanTranscriptionEpoch:0, leanTranscriptionBusy:false,
+  tooltipKey:0, graph:null, graphCoverage:null, graphEpoch:0, graphLoading:false, pathEpoch:0, conceptGraph:null, conceptEpoch:0, conceptRequest:null, renderEpoch:0, draftSession:null,
 };
 const titleOr = item => item.title || item.subtype || item.kind || item.id;
 const tr = s => String(s ?? "");
@@ -20,24 +21,94 @@ async function api(path, options={}) {
   if(!response.ok){let desc="HTTP "+response.status;try{desc=(await response.json()).detail || desc;}catch(_){}throw new Error(desc);}
   return response.json();
 }
-function activateTab(name){
+function activateTab(name,{fromReaderNavigation=false}={}){
+  // A deliberate tab change supersedes an unfinished chapter/label lookup.
+  // Successful reader navigation itself must retain its own request epoch.
+  if(!fromReaderNavigation)++state.renderEpoch;
+  dismissSearch();
   state.tab=name;
   document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
-  for(const k of ["reader","graph","selection"])$("view-"+k).classList.toggle("hidden",k!==name);
+  for(const k of ["reader","lean","graph","concepts","selection"])$("view-"+k).classList.toggle("hidden",k!==name);
   if(name==="selection")renderSelection();
-  if(name==="graph" && !state.graph)loadGraph();
+  if(name==="lean" && !state.leanCatalog && !state.leanCatalogLoading)loadLeanCatalog();
+  if(name==="graph" && !state.graph && !state.graphCoverage && !state.graphLoading)loadGraph();
+  if(name==="concepts" && !state.conceptGraph && !state.conceptRequest)loadConceptGraph();
   closeTip();
 }
 function toggleDomain(domain){state.expandedDomains.has(domain)?state.expandedDomains.delete(domain):state.expandedDomains.add(domain);renderTree();}
-async function toggleModule(id){
-  if(state.expandedModules.has(id)){state.expandedModules.delete(id);renderTree();return;}
-  state.expandedModules.add(id);
-  if(!state.outlines.has(id)){
-    try{const data=await api(`/api/modules/${encodeURIComponent(id)}/outline`);state.outlines.set(id,data.entities);}catch(e){toast(e.message);}
+const outlineRequests=new Map(), COLLAPSED_OUTLINE_LIMIT=32;
+function touchOutline(id){
+  if(!state.outlines.has(id))return false;
+  const rows=state.outlines.get(id);
+  state.outlines.delete(id);state.outlines.set(id,rows);
+  return true;
+}
+function pruneCollapsedOutlines(){
+  // Expanded chapters retain their structure, even when their domain is
+  // temporarily hidden. Pending requests have a separate lifetime.
+  const collapsed=[...state.outlines.keys()].filter(id=>!state.expandedModules.has(id));
+  for(let i=0;i<collapsed.length-COLLAPSED_OUTLINE_LIMIT;i++){
+    const id=collapsed[i];
+    state.outlines.delete(id);
+    for(const mode of ["section","object"])outlinePages.delete(JSON.stringify([id,mode]));
   }
+}
+async function toggleModule(id){
+  if(state.expandedModules.has(id)){
+    state.expandedModules.delete(id);touchOutline(id);pruneCollapsedOutlines();renderTree();return;
+  }
+  state.expandedModules.add(id);
   renderTree();
+  if(touchOutline(id))return;
+  let request=outlineRequests.get(id);
+  if(!request){
+    request=api(`/api/modules/${encodeURIComponent(id)}/outline`).then(data=>{
+      if(!Array.isArray(data.entities))throw new Error("Nieprawidłowa struktura rozdziału.");
+      state.outlines.set(id,data.entities);
+      pruneCollapsedOutlines();
+    }).catch(e=>{
+      // A failed load must be retryable with one click, not collapse+expand.
+      if(state.expandedModules.delete(id))toast(e.message);
+    }).finally(()=>{
+      outlineRequests.delete(id);
+      // A collapsed or hidden branch does not need a DOM rebuild.
+      const module=state.modules.find(m=>m.id===id);
+      if(module && state.expandedDomains.has(module.domain) &&
+         state.granularity!=="module" && (state.expandedModules.has(id)||!state.outlines.has(id)))renderTree();
+    });
+    outlineRequests.set(id,request);
+  }
+  await request;
+}
+function expandOutlineFromCaret(id){
+  // The caret must reveal structure even in the default chapter-only mode.
+  if(state.granularity==="module"){
+    state.granularity="section";
+    $("granularity").value="section";
+    if(state.expandedModules.has(id)){renderTree();return;}
+  }
+  return toggleModule(id);
 }
 function typeIcon(kind){return ({chapter:"C",section:"§",subsection:"§",subsubsection:"§",theorem:"T",definition:"D",proof:"P",example:"E",exercise:"Z",remark:"U",equation:"∑",figure:"▧"})[kind] || "·";}
+const outlinePages=new Map(), OUTLINE_PAGE_SIZE=300;
+const outlineHeadings=new Set(["part","chapter","section","subsection","subsubsection","paragraph","subparagraph"]);
+function outlinePage(rows,granularity,requested=0){
+  const visible=granularity==="section"?rows.filter(e=>outlineHeadings.has(e.kind)):rows;
+  const total=visible.length,totalPages=Math.max(1,Math.ceil(total/OUTLINE_PAGE_SIZE));
+  const page=Math.min(totalPages-1,Math.max(0,Number.isSafeInteger(requested)?requested:0));
+  const start=page*OUTLINE_PAGE_SIZE;
+  return {items:visible.slice(start,start+OUTLINE_PAGE_SIZE),page,totalPages,total,start};
+}
+function refreshTreeSelection(domain){
+  if(!state.expandedDomains.has(domain)){
+    state.expandedDomains.add(domain);renderTree();return;
+  }
+  // Selection changes alone must not replace the tree or lose its focus.
+  for(const line of $("tree").querySelectorAll("[data-tree-module]"))
+    line.classList.toggle("active",line.dataset.treeModule===state.currentModule);
+  for(const line of $("tree").querySelectorAll("[data-tree-entity]"))
+    line.classList.toggle("active",line.dataset.treeEntity===state.currentEntity);
+}
 function renderTree(){
   const tree=$("tree");tree.replaceChildren();
   for(const domain of state.domains){
@@ -48,10 +119,11 @@ function renderTree(){
     head.addEventListener("click",()=>toggleDomain(domain.name));group.append(head);
     if(expanded){
       for(const m of state.modules.filter(x=>x.domain===domain.name)){
-        const line=node("div",{className:"module-line"+(state.currentModule===m.id?" active":"")});
-        const caret=node("button",{className:"chev",title:"Rozwiń strukturę rozdziału","aria-label":"Rozwiń "+m.id},state.expandedModules.has(m.id)?"▾":"▸");
+        const line=node("div",{className:"module-line"+(state.currentModule===m.id?" active":""),"data-tree-module":m.id});
+        const isExpanded=state.granularity!=="module"&&state.expandedModules.has(m.id);
+        const caret=node("button",{className:"chev",title:(isExpanded?"Zwiń":"Rozwiń")+" strukturę rozdziału","aria-label":(isExpanded?"Zwiń ":"Rozwiń ")+m.id,"aria-expanded":String(isExpanded)},isExpanded?"▾":"▸");
         caret.style.border="0";caret.style.background="transparent";caret.style.padding="0";
-        caret.addEventListener("click",e=>{e.stopPropagation();toggleModule(m.id);});
+        caret.addEventListener("click",e=>{e.stopPropagation();expandOutlineFromCaret(m.id);});
         const trigger=node("button",{className:"module-name",title:m.title},crop(m.title,72));
         trigger.style.cssText="border:0;background:none;text-align:left;padding:0;color:inherit;cursor:pointer";
         trigger.addEventListener("click",()=>{openModule(m.id);if(state.granularity!=="module"&&!state.expandedModules.has(m.id))toggleModule(m.id);});
@@ -59,14 +131,39 @@ function renderTree(){
         if(state.expandedModules.has(m.id)&&state.granularity!=="module"){
           const branch=node("div",{className:"outline-list"});
           const rows=state.outlines.get(m.id)||[];
-          let shown=0;
-          for(const e of rows){
-            const heading=["part","chapter","section","subsection","subsubsection","paragraph","subparagraph"].includes(e.kind);
-            if(state.granularity==="section"&&!heading)continue;
-            if(shown++>300){branch.append(node("div",{className:"explorer-description"},"Dalsze obiekty: użyj wyszukiwarki."));break;}
-            const line=node("button",{className:"outline-row"+(state.currentEntity===e.id?" active":""),role:"treeitem",title:e.title||e.excerpt});
+          const key=JSON.stringify([m.id,state.granularity]);
+          const {items,page,totalPages,total,start}=outlinePage(rows,state.granularity,outlinePages.get(key));
+          for(const e of items){
+            const line=node("button",{className:"outline-row"+(state.currentEntity===e.id?" active":""),role:"treeitem",title:e.title||e.excerpt,"data-tree-entity":e.id});
             line.append(node("span",{className:"outline-type"},typeIcon(e.kind)),node("span",{className:"outline-name"},crop(e.title || e.excerpt || e.kind,73)));
             line.addEventListener("click",()=>openEntity(e.id));branch.append(line);
+          }
+          if(totalPages>1){
+            function changePage(next,focusDirection){
+              outlinePages.set(key,next);
+              renderTree();
+              // Start at the new page, rather than jumping past its first
+              // objects to the bottom pager. Keep the keyboard in the branch.
+              const pager=[...tree.querySelectorAll(".outline-pagination")].find(el=>el.dataset.pageKey===key);
+              const button=pager?.querySelector(`[data-direction="${focusDirection}"]:not(:disabled)`)||pager?.querySelector("button:not(:disabled)");
+              button?.focus({preventScroll:true});
+              pager?.scrollIntoView({block:"start"});
+            }
+            function makePager(position){
+              const controls=node("div",{className:"outline-pagination",role:"group","aria-label":position==="top"?"Strony struktury rozdziału (góra)":"Strony struktury rozdziału (dół)"});
+              controls.dataset.pageKey=key;
+              controls.dataset.position=position;
+              const label=node("span",position==="top"?{"aria-live":"polite"}:{},`${start+1}–${start+items.length} / ${total}`);
+              const prev=node("button",{type:"button",className:"ghost-btn","data-direction":"prev","aria-label":"Poprzednia strona obiektów"},"←");
+              const next=node("button",{type:"button",className:"ghost-btn","data-direction":"next","aria-label":"Następna strona obiektów"},"→");
+              prev.disabled=page===0;next.disabled=page+1===totalPages;
+              prev.addEventListener("click",()=>changePage(page-1,"prev"));
+              next.addEventListener("click",()=>changePage(page+1,"next"));
+              controls.append(prev,label,next);
+              return controls;
+            }
+            branch.prepend(makePager("top"));
+            branch.append(makePager("bottom"));
           }
           group.append(branch);
         }
@@ -76,69 +173,294 @@ function renderTree(){
   }
 }
 async function openModule(id,full=false){
+  const epoch=++state.renderEpoch;
   try{
-    const epoch=++state.renderEpoch;const data=await api(`/api/modules/${encodeURIComponent(id)}${full?'?full=true':''}`);
+    const data=await api(`/api/modules/${encodeURIComponent(id)}${full?'?full=true':''}`);
     if(epoch!==state.renderEpoch)return;
+    // Opening a different chapter starts at its beginning. Expanding the
+    // current preview to its full text should not deliberately reset scroll.
+    const resetScroll=!full||state.currentModule!==id||state.currentEntity!==null;
     state.currentModule=id;state.currentEntity=null;state.currentData=data;
-    state.expandedDomains.add(data.module.domain);renderTree();renderReader();activateTab("reader");
-    $("explorer").classList.remove("visible");
-  }catch(e){toast(e.message);}
+    refreshTreeSelection(data.module.domain);renderReader();activateTab("reader",{fromReaderNavigation:true});
+    if(resetScroll)$("view-reader").scrollTop=0;
+    if(explorerMedia.matches)setExplorerVisible(false);
+  }catch(e){if(epoch===state.renderEpoch)toast(e.message);}
 }
 async function openEntity(id,full=false){
+  const epoch=++state.renderEpoch;
   try{
-    const epoch=++state.renderEpoch;const data=await api(`/api/entities/${encodeURIComponent(id)}${full?'?full=true':''}`);
+    const data=await api(`/api/entities/${encodeURIComponent(id)}${full?'?full=true':''}`);
     if(epoch!==state.renderEpoch)return;
+    const resetScroll=!full||state.currentModule!==data.entity.document_id||state.currentEntity!==id;
     state.currentModule=data.entity.document_id;state.currentEntity=id;state.currentData=data;
-    state.expandedDomains.add(data.domain);renderTree();renderReader();activateTab("reader");
-    $("explorer").classList.remove("visible");
-  }catch(e){toast(e.message);}
+    refreshTreeSelection(data.domain);renderReader();activateTab("reader",{fromReaderNavigation:true});
+    if(resetScroll)$("view-reader").scrollTop=0;
+    if(explorerMedia.matches)setExplorerVisible(false);
+  }catch(e){if(epoch===state.renderEpoch)toast(e.message);}
+}
+// Bound completed descriptions independently of in-flight requests so an
+// eviction cannot duplicate a pending lookup or orphan its consumers.
+const REFERENCE_CACHE_LIMIT=2048;
+const referenceDescriptions=new Map(), referencePending=new Map(), referenceBatches=new Map();
+function settleReferenceDescription(item,value){
+  const promise=referencePending.get(item.key);
+  referencePending.delete(item.key);
+  if(value!==null && promise){
+    referenceDescriptions.set(item.key,promise);
+    while(referenceDescriptions.size>REFERENCE_CACHE_LIMIT)
+      referenceDescriptions.delete(referenceDescriptions.keys().next().value);
+  }
+  item.resolve(value);
+}
+function describeReference(label,sourceDocument){
+  const key=JSON.stringify([sourceDocument,label]);
+  if(referencePending.has(key))return referencePending.get(key);
+  if(referenceDescriptions.has(key)){
+    const cached=referenceDescriptions.get(key);
+    referenceDescriptions.delete(key);referenceDescriptions.set(key,cached);
+    return cached;
+  }
+  const promise=new Promise(resolve=>{
+    let batch=referenceBatches.get(sourceDocument);
+    if(!batch){
+      batch=[];referenceBatches.set(sourceDocument,batch);
+      setTimeout(async()=>{
+        referenceBatches.delete(sourceDocument);
+        for(let start=0;start<batch.length;start+=200){
+          const part=batch.slice(start,start+200);
+          try{
+            const result=await api('/api/references/descriptions',{method:'POST',body:JSON.stringify({source_document:sourceDocument,labels:part.map(item=>item.label)})});
+            const items=result?.items;
+            for(const item of part){
+              const value=items && typeof items==='object' && !Array.isArray(items) &&
+                Object.prototype.hasOwnProperty.call(items,item.label)?items[item.label]:null;
+              if(!value || typeof value!=='object' || Array.isArray(value) ||
+                !(value.missing===true || value.ambiguous===true ||
+                  (typeof value.document_id==='string' && value.document_id.length>0))){
+                settleReferenceDescription(item,null);
+              }else settleReferenceDescription(item,value);
+            }
+          }catch(_){part.forEach(item=>settleReferenceDescription(item,null));}
+        }
+      },0);
+    }
+    batch.push({label,key,resolve});
+  });
+  referencePending.set(key,promise);return promise;
+}
+let hoveredReferenceAnchor=null,referenceTipHovered=false;
+function scheduleCloseTip(anchor){
+  const key=state.tooltipKey;
+  setTimeout(()=>{
+    if(key===state.tooltipKey && state.tooltipAnchor===anchor &&
+       hoveredReferenceAnchor!==anchor && document.activeElement!==anchor &&
+       !referenceTipHovered && !$("referenceTip").contains(document.activeElement))closeTip();
+  },240);
+}
+function createReferenceLink(label,sourceDocument,{caption=null,command='ref',sourceView=false}={}){
+  const button=node('button',{className:'ref-link',type:'button',title:'Podgląd odsyłacza: '+label},caption||(sourceView?label:'Odsyłacz…'));
+  button.dataset.reference=label;
+  button.addEventListener('mouseenter',()=>{
+    hoveredReferenceAnchor=button;previewLabel(label,button,sourceDocument);
+  });
+  button.addEventListener('focus',()=>previewLabel(label,button,sourceDocument));
+  button.addEventListener('mouseleave',()=>{
+    if(hoveredReferenceAnchor===button)hoveredReferenceAnchor=null;
+    scheduleCloseTip(button);
+  });
+  button.addEventListener('blur',()=>scheduleCloseTip(button));
+  button.addEventListener('click',()=>openLabel(label,sourceDocument,button));
+  if(!sourceView)describeReference(label,sourceDocument).then(result=>{
+    if(!result||!button.isConnected)return;
+    button.classList.toggle('ref-missing',Boolean(result.missing));
+    button.classList.toggle('ref-ambiguous',Boolean(result.ambiguous));
+    const kinds={chapter:'rozdział',section:'sekcja',subsection:'podsekcja',theorem:'twierdzenie',lemma:'lemat',definition:'definicja',example:'przykład',equation:'równanie',figure:'rysunek',proof:'dowód',remark:'uwaga'};
+    const location=result.document_id+(result.line?' · wiersz '+result.line:'');
+    if(!caption){
+      const title=result.entity_title||((result.kind==='chapter'||!result.entity_id)?result.title:null);
+      button.textContent=result.missing?'Brak celu odsyłacza':result.ambiguous?'Wybierz cel odsyłacza':title?'„'+title+'”'+(result.document_id!==sourceDocument?' ('+result.document_id+')':''):(command==='eqref'?'równanie':kinds[result.kind]||'fragment')+' ('+location+')';
+    }
+    button.title=(result.missing?'Brak etykiety w indeksie':result.ambiguous?'Etykieta występuje w kilku rozdziałach':(result.entity_title||result.title||'Fragment')+' · '+location)+'\nEtykieta: '+label;
+    if(typeof window.renderMathInElement==='function')window.renderMathInElement(button,{delimiters:[{left:'$',right:'$',display:false},{left:'\\(',right:'\\)',display:false}],macros:previewMacros(caption?sourceDocument:result.document_id),trust:false,throwOnError:true,errorCallback:()=>{}});
+  });
+  return button;
 }
 function showRefs(container,latex){
-  container.replaceChildren();const regex=/\\(ref|eqref|pageref|autoref|nameref|cref|Cref|vref|Vref)\s*\{([^{}]+)\}/g;
+  const fragment=document.createDocumentFragment();const regex=/\\(ref|eqref|pageref|autoref|nameref|cref|Cref|vref|Vref|atlasref)\*?\s*\{([^{}]+)\}|\\(hyperref)\s*\[([^\[\]]+)\]/g;
   let last=0, match;
   while((match=regex.exec(latex))){
-    if(match.index>last)container.append(document.createTextNode(latex.slice(last,match.index)));
-    container.append(document.createTextNode("\\"+match[1]+"{"));
-    const refs=match[2].split(",");
+    if(match.index>last)fragment.append(document.createTextNode(latex.slice(last,match.index)));
+    const command=match[1]||match[3], square=command==='hyperref';
+    const rawLabels=square?match[4]:match[2];
+    fragment.append(document.createTextNode(match[0].slice(0,match[0].indexOf(square?'[':'{')+1)));
+    const refs=square||command==='atlasref'?[rawLabels]:rawLabels.split(",");
     refs.forEach((raw,i)=>{
-      if(i)container.append(document.createTextNode(","));
-      const lab=raw.trim();if(!lab){container.append(document.createTextNode(raw));return;}
-      const b=node("button",{className:"ref-link",title:"Podgląd etykiety: "+lab},lab);
-      b.addEventListener("mouseenter",()=>previewLabel(lab,b));
-      b.addEventListener("focus",()=>previewLabel(lab,b));
-      b.addEventListener("mouseleave",()=>{setTimeout(()=>{if(!$("referenceTip").matches(":hover"))closeTip();},240);});
-      b.addEventListener("click",()=>openLabel(lab));container.append(b);
+      if(i)fragment.append(document.createTextNode(","));
+      const lab=raw.trim(), sourceDocument=state.currentModule;if(!lab){fragment.append(document.createTextNode(raw));return;}
+      fragment.append(document.createTextNode(raw.slice(0,raw.length-raw.trimStart().length)));
+      fragment.append(createReferenceLink(lab,sourceDocument,{sourceView:true,command}));
+      fragment.append(document.createTextNode(raw.slice(raw.trimEnd().length)));
     });
-    container.append(document.createTextNode("}"));last=regex.lastIndex;
+    fragment.append(document.createTextNode(square?"]":"}"));last=regex.lastIndex;
   }
-  if(last<latex.length)container.append(document.createTextNode(latex.slice(last)));
+  if(last<latex.length)fragment.append(document.createTextNode(latex.slice(last)));
+  container.replaceChildren(fragment);
+}
+function sourceLineCount(latex){
+  if(!latex.length)return 0;
+  let count=latex.endsWith("\n")?0:1;
+  for(let i=latex.indexOf("\n");i!==-1;i=latex.indexOf("\n",i+1))count++;
+  return count;
+}
+function updateCurrentSelectionButton(){
+  const data=state.currentData;if(!data)return;
+  const key=data.entity?"entity:"+data.entity.id:"module:"+state.currentModule;
+  $("addCurrent").textContent=state.selected.has(key)?"✓ W zestawie":"+ Do zestawu";
 }
 function renderReader(){
   const data=state.currentData;if(!data)return;
+  // Rebuilding the source/preview invalidates reference anchors in both panes.
+  closeTip();
   $("readerEmpty").classList.add("hidden");$("readerContent").classList.remove("hidden");
   const entity=Boolean(data.entity);const mod=state.modules.find(m=>m.id===state.currentModule);
   $("docBreadcrumb").textContent=(mod?.domain||data.domain||"")+" / "+state.currentModule+(entity?" / "+data.entity.kind:"");
   $("docTitle").textContent=entity?(data.entity.title||data.module_title||data.entity.kind):(data.module.title);
   $("docMeta").textContent=entity?`Wiersze ${data.entity.start_line}–${data.entity.end_line} · ${data.module_title}`:"Pełny moduł · "+data.module.path;
-  $("readerKind").textContent=entity?"Fragment · "+data.entity.kind:"Źródło LaTeX — rozdział";
   $("readSize").textContent=(data.full_length||0).toLocaleString("pl-PL")+" znaków";
   $("showFull").classList.toggle("hidden",!data.truncated);
-  $("addCurrent").textContent=state.selected.has((entity?"entity:":"module:")+(entity?data.entity.id:state.currentModule))?"✓ W zestawie":"+ Do zestawu";
+  const firstLine=entity?data.entity.start_line:1;
+  $("rangeStart").value=firstLine;
+  // A terminal newline ends the last source line; it is not an extra line.
+  const lineCount=sourceLineCount(data.latex);
+  $("rangeEnd").value=firstLine+Math.max(0,lineCount-1);
+  updateCurrentSelectionButton();
   showRefs($("latexSource"),data.latex);
-  renderSimplified(data.latex);
+  updateReaderMode();
+}
+// Both panes belong to the same current fragment. Switching visibility
+// must not rebuild its source, reset line fields or discard selection.
+function updateReaderMode(){
+  const data=state.currentData;if(!data)return;
+  closeTip();
+  $("readerKind").textContent=state.simplified?(data.entity?"Podgląd fragmentu":"Podgląd rozdziału"):"Źródło LaTeX";
+  if(state.simplified) renderSimplified(data.latex);
+  else $("mathPreviewStatus")?.classList.add("hidden");
   $("latexSource").classList.toggle("hidden",state.simplified);
   $("simplified").classList.toggle("hidden",!state.simplified);
-  $("togglePreview").textContent=state.simplified?"Pokaż LaTeX":"Podgląd uproszczony";
+  updateReaderFrameStatus();
+  document.querySelector('.fragment-toolbar').classList.toggle('hidden',state.simplified);
+  $("togglePreview").textContent=state.simplified?"Pokaż źródło LaTeX":"Wróć do podglądu";
+  $("togglePreview").setAttribute('aria-pressed',String(!state.simplified));
 }
-function renderSimplified(latex){
-  // Deliberately not a full TeX renderer: strip document structure, retain math delimiters.
-  const stripped=latex.replace(/\\label\s*\{[^}]*\}/g,"")
-    .replace(/\\(?:begin|end)\s*\{[^}]*\}(?:\[[^\]]*\])?/g,"\n")
-    .replace(/\\(?:chapter|section|subsection|subsubsection|paragraph)\*?(?:\[[^\]]*\])?\s*\{([^{}]*)\}/g,"\n\n$1\n")
-    .replace(/\\(?:emph|textbf|textit)\s*\{([^{}]*)\}/g,"$1")
-    .replace(/\n{4,}/g,"\n\n");
-  const box=$("simplified");box.textContent=stripped;
-  if(window.renderMathInElement){try{window.renderMathInElement(box,{delimiters:[{left:"$$",right:"$$",display:true},{left:"\\[",right:"\\]",display:true},{left:"$",right:"$",display:false},{left:"\\(",right:"\\)",display:false}],throwOnError:false});}catch(_){}}
+// A visible count makes a stale renderer or missing stylesheet diagnosable
+// without asking readers to inspect the DOM or assume a successful update.
+function updateReaderFrameStatus(){
+  const status=$("readerFrameStatus");
+  if(!status)return;
+  status.classList.toggle("hidden",!state.simplified);
+  if(!state.simplified)return;
+  const box=$("simplified");
+  const frames=[...box.querySelectorAll(".preview-statement")];
+  const labelled=[...box.querySelectorAll(".preview-block-title")].filter(
+    el=>!/^Dowód(?:\s|$)/.test(el.textContent));
+  const rendered=frames.filter(el=>{
+    const css=getComputedStyle(el);
+    return css.borderTopStyle==="solid" && parseFloat(css.borderTopWidth)>=2 &&
+      parseFloat(css.borderTopLeftRadius)>=12;
+  }).length;
+  const mismatch=rendered!==frames.length || (labelled.length>0 && frames.length===0);
+  status.textContent=mismatch?"Ramki: błąd stylów":"Ramki: "+rendered;
+  status.title=mismatch?"Nieaktualne lub niezgodne pliki czytnika. Zamknij Atlas i uruchom go z aktualnego repozytorium.":"Liczba widocznie obramowanych obiektów w podglądzie";
+}
+function toggleReaderMode(){
+  if(!state.currentData)return;
+  state.simplified=!state.simplified;updateReaderMode();
+}
+// Render standard math without executing document preambles or HTML.
+const displayEnvironments = ["equation","equation*","align","align*","alignat","alignat*","gather","gather*","CD"];
+const mathEnvironments = new Set([...displayEnvironments,"aligned","alignedat","gathered","split","cases","dcases","matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix","smallmatrix","array","multline","multline*"]);
+function previewMacros(moduleId){
+  const id=String(moduleId||"");
+  const prefix=id.split("-")[0];
+  const profiles=window.atlasMathMacroProfiles;
+  return {...(profiles?.[prefix]||{}),...(id!==prefix?profiles?.[id]||{}:{})};
+}
+// Curated static previews, matched against the entire TikZ source (not a chapter number).
+// Never execute TeX or trust HTML supplied by chapter content.
+const atlasTikzPreviews = new Map([
+  [
+    "\\begin{tikzpicture}[>=Stealth,scale=.92]\n \\draw[->] (-3.3,-1.35)--(3.8,-1.35) node[right] {$x_1$};\n \\draw[->] (-3.1,-1.55)--(-3.1,2.5) node[above] {$x_2$};\n \\draw[very thick] plot[domain=-2.55:2.9,samples=60]\n   (\\x,{-.48+.08*\\x+.025*\\x*\\x});\n \\node[below] at (2.75,-.15) {$\\Sigma$};\n \\foreach \\x in {-1.75,-.65,.55,1.65} {\n   \\pgfmathsetmacro{\\yy}{-.48+.08*\\x+.025*\\x*\\x}\n   \\draw[blue!65!black,thick,->]\n     ({\\x-.13},{\\yy-.50})--({\\x+.48},{\\yy+1.85});\n   \\fill (\\x,\\yy) circle (1.5pt);\n }\n \\pgfmathsetmacro{\\yyzero}{-.48+.08*.55+.025*.55*.55}\n \\fill[red!70!black] (.55,\\yyzero) circle (2.4pt);\n \\node[below right] at (.55,\\yyzero) {$x_0$};\n \\node[above] at (1.0,1.75) {charakterystyki};\n\\end{tikzpicture}",
+    {
+      "file": "pde02-characteristics.svg",
+      "alt": "Krzywa początkowa i charakterystyki"
+    }
+  ],
+  [
+    "\\begin{tikzpicture}[>=Stealth,scale=.86]\n \\draw[->] (-3.4,0)--(3.6,0) node[right] {$x$};\n \\draw[gray,->] (0,-.12)--(0,3.75) node[above,black] {$t$};\n \\draw[densely dashed] (-3.1,3.1)--(3.35,3.1)\n   node[right] {$t=T_*=1$};\n \\foreach \\xi in {-2.4,-1.6,-.8,-.4,.4,.8,1.6,2.4} {\n  \\pgfmathsetmacro{\\dd}{-(exp(2*\\xi)-1)/(exp(2*\\xi)+1)}\n  \\draw[blue!65!black,thick] (\\xi,0)--({\\xi+\\dd},3.1);\n }\n \\fill[red!70!black] (0,3.1) circle (2pt);\n \\node[below] at (0,0) {$0$};\n \\node[align=left,anchor=west] at (3.1,1.45)\n   {zbliżanie się\\\\charakterystyk};\n\\end{tikzpicture}",
+    {
+      "file": "pde02-burgers.svg",
+      "alt": "Zbliżanie się charakterystyk równania Burgersa"
+    }
+  ],
+  [
+    "\\begin{tikzpicture}[x=3.1cm,y=0.7cm,>=Stealth]\n  \\fill[blue!8] (-1,0) rectangle (0,1.35);\n  \\fill[orange!13] (0,0) rectangle (1,1.35);\n  \\draw[thick] (-1,0) rectangle (1,1.35);\n  \\draw[thick,dashed] (0,0)--(0,1.35);\n  \\node at (-.52,.87) {$a_-=1$};\n  \\node at (.52,.87) {$a_+=4$};\n  \\node at (-.52,.38) {ośrodek I};\n  \\node at (.52,.38) {ośrodek II};\n  \\draw[->] (-1.15,-.24)--(1.18,-.24) node[right] {$x$};\n  \\foreach \\x/\\lab in {-1/-1,0/0,1/1}{\n    \\draw (\\x,-.31)--(\\x,-.17);\\node[below] at (\\x,-.31) {$\\lab$};}\n  \\node[above] at (0,1.35) {interfejs};\n\\end{tikzpicture}",
+    {
+      "file": "pde13-interface.svg",
+      "alt": "Dwa ośrodki z różnymi współczynnikami"
+    }
+  ],
+  [
+    "\\begin{tikzpicture}[x=3.1cm,y=5cm,>=Stealth]\n \\draw[->] (-1.12,0)--(1.13,0) node[right] {$x$};\n \\draw[->] (0,-.035)--(0,.29) node[above] {$u(x)$};\n \\draw[dashed,gray] (-1,.2)--(0,.2);\n \\node[left] at (-1,.2) {$1/5$};\n \\draw[blue!75!black,very thick,domain=-1:0,samples=61]\n plot (\\x,{-\\x*\\x/2-3*\\x/10+1/5});\n \\draw[orange!85!black,very thick,domain=0:1,samples=61]\n plot (\\x,{-\\x*\\x/8-3*\\x/40+1/5});\n \\foreach \\x in {-1,1}{\\draw (\\x,.008)--(\\x,-.008);\n \\node[below] at (\\x,-.008) {$\\x$};}\n \\node[below right] at (0,0) {$0$};\n \\fill (0,.2) circle[radius=1.5pt];\n \\fill (-.3,.245) circle[radius=1.5pt];\n \\node[above left] at (-.3,.245) {$x=-3/10$};\n\\end{tikzpicture}",
+    {
+      "file": "pde13-solution.svg",
+      "alt": "Dokładne rozwiązanie zagadnienia transmisyjnego"
+    }
+  ]
+]);
+function renderMathPreview(box,latex,moduleId){
+  buildProsePreview(box,latex,moduleId);
+  if(typeof window.renderMathInElement!=="function"){
+    return ["Renderer wzorów jest niedostępny. Uruchom scripts/install_math_renderer.py i odśwież stronę."].filter(Boolean).join(" ");
+  }
+  let errors=0;
+  try{
+    window.renderMathInElement(box,{
+      delimiters:[
+        {left:"$$",right:"$$",display:true},
+        {left:"\\[",right:"\\]",display:true},
+        {left:"\\(",right:"\\)",display:false},
+        ...displayEnvironments.map(name=>({left:"\\begin{"+name+"}",right:"\\end{"+name+"}",display:true})),
+        {left:"$",right:"$",display:false}
+      ],
+      macros:previewMacros(moduleId),
+      // Labels belong to the manuscript index; KaTeX does not implement \label.
+      // Remove them only from the renderer input, preserving canonical source.
+      preProcess:math=>math.replace(/\\label\s*\{[^{}]*\}/g,""),
+      trust:false,throwOnError:true,maxExpand:1000,maxSize:20,
+      errorCallback:()=>{errors++;}
+    });
+  }catch(error){
+    buildProsePreview(box,latex,moduleId);
+    console.warn("Math preview:",error);
+    return ["Nie udało się złożyć podglądu wzorów. Wyświetlam źródło."].filter(Boolean).join(" ");
+  }
+  return [errors?"Nie złożono "+errors+" fragmentów matematycznych; pozostawiono ich źródło.":""].filter(Boolean).join(" ");
+}
+// Retain only the current rendered fragment; do not accumulate chapter DOMs.
+let lastMathPreview=null;
+function renderSimplified(latex,moduleId=state.currentModule){
+  const status=$("mathPreviewStatus"), box=$("simplified");
+  const renderer=window.renderMathInElement, profiles=window.atlasMathMacroProfiles;
+  const cached=lastMathPreview;
+  let message;
+  if(cached && cached.box===box && cached.latex===latex && cached.moduleId===moduleId &&
+      cached.renderer===renderer && cached.profiles===profiles){
+    message=cached.message;
+  }else{
+    message=renderMathPreview(box,latex,moduleId);
+    lastMathPreview={box,latex,moduleId,renderer,profiles,message};
+  }
+  if(status){status.textContent=message;status.classList.toggle("hidden",!message);}
 }
 function addCurrent(){
   const d=state.currentData;if(!d)return;
@@ -146,79 +468,272 @@ function addCurrent(){
   const key=(isEntity?"entity:":"module:")+id;
   if(state.selected.has(key)){state.selected.delete(key);toast("Usunięto z zestawu.");}
   else{state.selected.set(key,{id,kind:isEntity?"entity":"module",title:isEntity?(d.entity.title||d.entity.kind):d.module.title,module:state.currentModule});toast("Dodano do zestawu.");}
-  renderReader();renderSelection();
+  updateCurrentSelectionButton();renderSelection();
 }
-async function previewLabel(label,anchor){
+function addLineRange(startLine,endLine){
+  const module=state.currentModule;
+  if(!module||!Number.isSafeInteger(startLine)||!Number.isSafeInteger(endLine)||
+     startLine<1||endLine<startLine){toast("Podaj poprawny zakres wierszy.");return;}
+  const key="lines:"+module+":"+startLine+"-"+endLine;
+  if(state.selected.has(key)){toast("Ten wycinek jest już w zestawie.");return;}
+  state.selected.set(key,{
+    id:key,kind:"lines",module,start_line:startLine,end_line:endLine,
+    title:"Wiersze "+startLine+"–"+endLine+" · "+module
+  });
+  renderSelection();toast("Dodano wycinek do zestawu.");
+}
+// The generator and Lean must resolve text selections to the same absolute,
+// whole-line coordinates of the canonical indexed module (not display offsets).
+function selectedReaderWholeLines(){
+  const data=state.currentData,source=$("latexSource"),sel=window.getSelection();
+  if(!data||!state.currentModule||state.simplified||!sel||sel.isCollapsed||!sel.rangeCount)return null;
+  const range=sel.getRangeAt(0);
+  if(!source.contains(range.startContainer)||!source.contains(range.endContainer))return null;
+  const prefix=range.cloneRange();
+  prefix.selectNodeContents(source);
+  prefix.setEnd(range.startContainer,range.startOffset);
+  const start=prefix.toString().length,end=start+range.toString().length;
+  if(end<=start||end>data.latex.length)return null;
+  const first=data.entity?data.entity.start_line:1;
+  const countNewlines=text=>(text.match(/\n/g)||[]).length;
+  const startLine=first+countNewlines(data.latex.slice(0,start));
+  const endLine=first+countNewlines(data.latex.slice(0,end-1));
+  if(!Number.isSafeInteger(startLine)||!Number.isSafeInteger(endLine)||endLine<startLine)return null;
+  return {module_id:state.currentModule,start_line:startLine,end_line:endLine};
+}
+function addExcerpt(){
+  const lines=selectedReaderWholeLines();
+  if(!lines){toast("Zaznacz poprawny fragment w źródle LaTeX.");return;}
+  addLineRange(lines.start_line,lines.end_line);
+  window.getSelection().removeAllRanges();
+}
+function addRange(){
+  addLineRange(Number($("rangeStart").value),Number($("rangeEnd").value));
+}
+function referenceTipPosition(anchor,width,height,viewportWidth,viewportHeight){
+  const margin=8,gap=8;
+  const maxLeft=Math.max(margin,viewportWidth-width-margin);
+  const maxTop=Math.max(margin,viewportHeight-height-margin);
+  const below=anchor.bottom+gap,above=anchor.top-gap-height;
+  const preferred=below+height<=viewportHeight-margin?below:
+    above>=margin?above:
+    viewportHeight-anchor.bottom>=anchor.top?below:above;
+  return {left:Math.max(margin,Math.min(maxLeft,anchor.left)),
+          top:Math.max(margin,Math.min(maxTop,preferred))};
+}
+let tooltipAnchorRect=null;
+function positionReferenceTip(anchor){
+  const r=anchor.getBoundingClientRect(), tip=$("referenceTip");
+  tooltipAnchorRect={left:r.left,top:r.top,right:r.right,bottom:r.bottom};
+  tip.classList.remove("hidden");
+  const bounds=tip.getBoundingClientRect();
+  const p=referenceTipPosition(r,bounds.width,bounds.height,window.innerWidth,window.innerHeight);
+  tip.style.left=p.left+"px";tip.style.top=p.top+"px";
+}
+function dismissTipOnReaderScroll(event){
+  // A scroll event may arrive after hover (e.g. scrollIntoView), even
+  // though the anchor was already measured at its final position.
+  const anchor=state.tooltipAnchor;
+  if(!anchor||$("referenceTip").contains(event.target))return;
+  if(!anchor.isConnected||!tooltipAnchorRect){closeTip();return;}
+  const rect=anchor.getBoundingClientRect();
+  if(["left","top","right","bottom"].some(k=>Math.abs(rect[k]-tooltipAnchorRect[k])>0.5))closeTip();
+}
+async function previewLabel(label,anchor,sourceDocument=null){
+  if(!anchor?.isConnected)return;
   const request=++state.tooltipKey;
+  state.tooltipAnchor=anchor;
+  state.tooltipData=null;
+  // Do not leave a stale result on screen while the next request is pending.
+  const body=$("tipBody");body.replaceChildren();
+  body.append(node("p",{className:"tip-meta"},"Ładowanie etykiety: "+label));
+  $("tipOpen").disabled=true;
+  positionReferenceTip(anchor);
   try{
-    const result=await api(`/api/labels/${encodeURIComponent(label)}`);
+    const result=await api(`/api/labels/${encodeURIComponent(label)}`+(sourceDocument?`?source_document=${encodeURIComponent(sourceDocument)}`:""));
     if(request!==state.tooltipKey)return;
-    state.tooltipData=result;
-    const body=$("tipBody");body.replaceChildren();
-    body.append(node("h3",{},result.entity_title || result.title || label));
-    body.append(node("p",{className:"tip-meta"},`${label} · ${result.document_id} · wiersz ${result.line}`));
-    body.append(node("div",{className:"tip-code"},crop(result.latex,1100)));
-    const r=anchor.getBoundingClientRect();const tip=$("referenceTip");tip.classList.remove("hidden");
-    tip.style.left=Math.max(8,Math.min(window.innerWidth-448,r.left))+"px";
-    tip.style.top=Math.max(8,Math.min(window.innerHeight-tip.offsetHeight-12,r.bottom+8))+"px";
-  }catch(e){if(request===state.tooltipKey)toast(e.message);}
+    if(!anchor.isConnected){closeTip();return;}
+    // The request context is authoritative even when the fallback API
+    // response omits source_document (e.g. a globally unique label).
+    state.tooltipData={...result,name:label,source_document:sourceDocument??null};
+    $("tipOpen").disabled=Boolean(result.ambiguous);
+    body.replaceChildren();
+    if(result.ambiguous){
+      body.append(node("h3",{},"Etykieta występuje w kilku rozdziałach"));
+      body.append(node("p",{className:"tip-meta"},`${label} · wybierz właściwy rozdział`));
+      for(const choice of result.candidates){
+        const target=node("button",{className:"ref-choice"},`${choice.document_id}: ${choice.title} (wiersz ${choice.line})`);
+        target.addEventListener("click",()=>{closeTip();if(choice.entity_id)openEntity(choice.entity_id);else openLabel(choice.document_id+'::'+label);});
+        body.append(target);
+      }
+    }else{
+      body.append(node("h3",{},result.entity_title || result.title || label));
+      body.append(node("p",{className:"tip-meta"},`${label} · ${result.document_id} · wiersz ${result.line}`));
+      const preview=node("div",{className:"tip-code"});
+      body.append(preview);
+      const message=renderMathPreview(preview,result.latex||"",result.document_id);
+      if(message)body.append(node("p",{className:"tip-meta"},message));
+    }
+    positionReferenceTip(anchor);
+  }catch(e){
+    if(request!==state.tooltipKey)return;
+    if(!anchor.isConnected){closeTip();return;}
+    state.tooltipData=null;
+    $("tipOpen").disabled=true;
+    body.replaceChildren();
+    body.append(node("h3",{},"Nie znaleziono cytowanej etykiety"));
+    body.append(node("p",{className:"tip-meta"},label));
+    body.append(node("p",{},e.message));
+    positionReferenceTip(anchor);
+  }
 }
-function closeTip(){state.tooltipKey++;state.tooltipData=null;$("referenceTip").classList.add("hidden");}
-async function openLabel(label){
+function closeTip(){state.tooltipKey++;state.tooltipData=null;state.tooltipAnchor=null;tooltipAnchorRect=null;referenceTipHovered=false;hoveredReferenceAnchor=null;$("referenceTip").classList.add("hidden");}
+async function openLabel(label,sourceDocument=null,anchor=null){
+  const epoch=++state.renderEpoch;
   try{
-    const result=state.tooltipData?.name===label?state.tooltipData:await api(`/api/labels/${encodeURIComponent(label)}`);
-    closeTip();if(result.entity_id)await openEntity(result.entity_id);else await openModule(result.document_id);
-  }catch(e){toast(e.message);}
+    const result=state.tooltipData?.name===label && ((state.tooltipData.source_document??null)===(sourceDocument??null))?state.tooltipData:await api(`/api/labels/${encodeURIComponent(label)}`+(sourceDocument?`?source_document=${encodeURIComponent(sourceDocument)}`:""));
+    if(epoch!==state.renderEpoch)return;
+    if(result.ambiguous){await previewLabel(label,anchor||state.tooltipAnchor||$('docTitle'),sourceDocument);return;}
+    closeTip();
+    if(result.entity_id)await openEntity(result.entity_id);else await openModule(result.document_id);
+  }catch(e){if(epoch===state.renderEpoch)toast(e.message);}
+}
+function openPreviewedReference(){
+  const target=state.tooltipData;
+  if(!target||target.ambiguous)return;
+  // Never substitute the chapter currently in the reader for a global
+  // lookup or a reference opened from a different chapter's preview.
+  return openLabel(target.name,target.source_document??null,state.tooltipAnchor);
+}
+let searchEpoch=0, searchTask;
+function dismissSearch(){
+  clearTimeout(searchTask);
+  ++searchEpoch;
+  $("searchResults").classList.add("hidden");
+}
+function handleSearchResultKey(event){
+  const list=$("searchResults"), input=$("searchInput");
+  if(list.classList.contains("hidden"))return;
+  const buttons=[...list.querySelectorAll("button:not(:disabled)")];
+  const index=buttons.indexOf(document.activeElement);
+  if(event.key==="Escape"){
+    event.preventDefault();dismissSearch();input.focus();return;
+  }
+  if(!buttons.length)return;
+  let next;
+  if(event.key==="ArrowDown")next=index<0?0:Math.min(index+1,buttons.length-1);
+  else if(event.key==="ArrowUp")next=index<0?buttons.length-1:index-1;
+  else if(index>=0&&event.key==="Home")next=0;
+  else if(index>=0&&event.key==="End")next=buttons.length-1;
+  else return;
+  event.preventDefault();
+  if(next<0)input.focus();else buttons[next].focus();
+}
+function dismissSearchOutside(event){
+  if(!event.target.closest?.(".header-search"))dismissSearch();
 }
 function setupSearch(){
-  const input=$("searchInput");let task;
-  input.addEventListener("input",()=>{clearTimeout(task);const q=input.value.trim();if(q.length<2){$("searchResults").classList.add("hidden");return;}task=setTimeout(()=>performSearch(q),240);});
-  input.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();clearTimeout(task);performSearch(input.value.trim());}if(e.key==="Escape")$("searchResults").classList.add("hidden");});
-  document.addEventListener("click",e=>{if(!e.target.closest(".header-search"))$("searchResults").classList.add("hidden");});
+  const input=$("searchInput");
+  input.addEventListener("input",()=>{
+    dismissSearch();
+    const q=input.value.trim();
+    if(q.length>=2)searchTask=setTimeout(()=>performSearch(q),240);
+  });
+  input.addEventListener("keydown",e=>{
+    if(e.key==="Enter"){e.preventDefault();dismissSearch();performSearch(input.value.trim());}
+    if(e.key==="Escape"&&$("searchResults").classList.contains("hidden"))dismissSearch();
+    else handleSearchResultKey(e);
+  });
+  $("searchResults").addEventListener("keydown",handleSearchResultKey);
+  document.addEventListener("click",dismissSearchOutside);
+  // Tab and programmatic focus changes must cancel outstanding searches
+  // too; focus moving between the input and result buttons stays inside.
+  document.addEventListener("focusin",dismissSearchOutside);
 }
 async function performSearch(q){
-  if(!q)return;
+  if(!q||$("searchInput").value.trim()!==q)return;
+  const epoch=++searchEpoch;
   try{
     const result=await api(`/api/search?q=${encodeURIComponent(q)}&limit=25`);
-    if($("searchInput").value.trim()!==q)return;
+    if(epoch!==searchEpoch||$("searchInput").value.trim()!==q)return;
     const list=$("searchResults");list.replaceChildren();
+    const graphButton=node("button",{className:"search-hit search-concept-action"},"Zbuduj graf pojęcia: "+q);
+    graphButton.addEventListener("click",()=>{dismissSearch();openConceptSearch(q);});
+    list.append(graphButton);
     if(!result.items.length)list.append(node("p",{className:"empty-sub"},"Nie znaleziono dopasowań."));
     for(const e of result.items){
       const b=node("button",{className:"search-hit"});b.append(node("strong",{},crop(e.title||e.excerpt,95)),node("small",{},`${e.document_id} · ${e.kind} · wiersz ${e.start_line}`));
-      b.addEventListener("click",()=>{if(e.kind==="module")openModule(e.id);else openEntity(e.id);list.classList.add("hidden");});list.append(b);
+      b.addEventListener("click",()=>{if(e.kind==="module")openModule(e.id);else openEntity(e.id);dismissSearch();});list.append(b);
     }
     list.classList.remove("hidden");
-  }catch(e){toast(e.message);}
+  }catch(e){if(epoch===searchEpoch&&$("searchInput").value.trim()===q)toast(e.message);}
+}
+function moveSelected(key,step){
+  const entries=[...state.selected.entries()];
+  const index=entries.findIndex(([k])=>k===key),next=index+step;
+  if(index<0||next<0||next>=entries.length)return;
+  [entries[index],entries[next]]=[entries[next],entries[index]];
+  state.selected=new Map(entries);renderSelection();
 }
 function renderSelection(){
   const list=$("selectionList");list.replaceChildren();
   $("selectedCount").textContent=state.selected.size+" elementów";
-  if(!state.selected.size){list.append(node("div",{className:"empty-sub"},"Zestaw jest pusty. Wybierz moduły lub fragmenty z Czytnika."));return;}
-  for(const [key,x] of state.selected){
+  if(!state.selected.size){
+    list.append(node("div",{className:"empty-sub"},"Zestaw jest pusty. Wybierz rozdział, obiekt lub zaznacz wiersze LaTeX w Czytniku."));
+    return;
+  }
+  const keys=[...state.selected.keys()];
+  for(const [index,key] of keys.entries()){
+    const x=state.selected.get(key);
     const line=node("div",{className:"selection-item"});const info=node("div");
-    info.append(node("strong",{},x.title),node("small",{},`${x.kind==="module"?"Rozdział":"Fragment"} · ${x.module} · ${x.id}`));
-    const del=node("button",{title:"Usuń z zestawu"},"×");del.addEventListener("click",()=>{state.selected.delete(key);renderSelection();if(state.currentData)renderReader();});
-    line.append(info,del);list.append(line);
+    const kind=x.kind==="module"?"Rozdział":x.kind==="lines"?"Wycinek wierszy":"Obiekt";
+    const ref=x.kind==="lines"?("wiersze "+x.start_line+"–"+x.end_line):x.id;
+    info.append(node("strong",{},x.title),node("small",{},kind+" · "+x.module+" · "+ref));
+    const controls=node("div",{className:"selection-controls"});
+    const up=node("button",{title:"Przesuń wyżej","aria-label":"Przesuń wyżej"},"↑");
+    up.disabled=index===0;up.addEventListener("click",()=>moveSelected(key,-1));
+    const down=node("button",{title:"Przesuń niżej","aria-label":"Przesuń niżej"},"↓");
+    down.disabled=index===keys.length-1;down.addEventListener("click",()=>moveSelected(key,1));
+    const del=node("button",{title:"Usuń z zestawu","aria-label":"Usuń z zestawu"},"×");
+    del.addEventListener("click",()=>{state.selected.delete(key);renderSelection();updateCurrentSelectionButton();});
+    controls.append(up,down,del);line.append(info,controls);list.append(line);
   }
 }
-function selectedManifest(){return {format:"matlib-selection-v1",modules:[...state.selected.values()].filter(x=>x.kind==="module").map(x=>x.id),entities:[...state.selected.values()].filter(x=>x.kind==="entity").map(x=>x.id)};}
+function selectedManifest(){
+  const selected=[...state.selected.values()];
+  return {
+    format:"matlib-selection-v2",
+    items:selected.map(x=>x.kind==="lines"?
+      {kind:"lines",module:x.module,start_line:x.start_line,end_line:x.end_line}:
+      {kind:x.kind,id:x.id}),
+    modules:selected.filter(x=>x.kind==="module").map(x=>x.id),
+    entities:selected.filter(x=>x.kind==="entity").map(x=>x.id)
+  };
+}
 function downloadManifest(){
-  const blob=new Blob([JSON.stringify(selectedManifest(),null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);
-  const a=node("a",{download:"biblioteka_zestaw.json",href:url});document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  const manifest={...selectedManifest(),title:$("generatorTitle").value.trim(),
+                  closure_depth:Number($("generatorClosure").value)};
+  const blob=new Blob([JSON.stringify(manifest,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=node("a",{download:"biblioteka_zestaw.json",href:url});
+  document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function generationPayload(){
-  return {...selectedManifest(),title:$('generatorTitle').value.trim() || 'Mój skrypt matematyczny',closure_depth:Number($('generatorClosure').value)};
+  const {modules,entities,...selection}=selectedManifest();
+  return {...selection,title:$("generatorTitle").value.trim()||"Mój skrypt matematyczny",
+          closure_depth:Number($("generatorClosure").value)};
 }
 async function checkSelection(){
   const payload=generationPayload();
-  if(!payload.modules.length&&!payload.entities.length){toast('Wybierz rozdział lub obiekt.');return;}
+  if(!payload.items.length){toast('Wybierz rozdział lub obiekt.');return;}
   try{
     const result=await api('/api/generate/manifest',{method:'POST',body:JSON.stringify(payload)});
     const root=$('planResult');root.replaceChildren();const card=node('div',{className:'plan-card'});
     card.append(node('h3',{},'Weryfikacja generatora'));
     card.append(node('p',{},`${result.modules.length} modułów · ${result.references_internal} odsyłaczy wewnętrznych · ${result.references_external} odsyłaczy przez xr-hyper · ${Object.keys(result.external_targets).length} plików referencyjnych.`));
     if(result.preamble_warning)card.append(node('p',{},result.preamble_warning));
-    if(Object.keys(result.fragments).length)card.append(node('p',{},'Fragmenty: sprawdzono odsyłacze tylko w wybranych obiektach. Semantyczna samowystarczalność wymaga audytu.'));
+    if(Object.keys(result.fragments).length)card.append(node('p',{},'Fragmenty: sprawdzono odsyłacze wewnątrz wybranych zakresów. Kontekst matematyczny i kompletność środowisk LaTeX wymagają weryfikacji.'));
     if(Object.keys(result.external_targets).length){
       const ul=node('ul');for(const [mod,labels] of Object.entries(result.external_targets))ul.append(node('li',{},`${mod}: ${labels.join(', ')}`));
       card.append(node('strong',{},'Dokumenty referencyjne:'),ul);
@@ -229,7 +744,7 @@ async function checkSelection(){
 }
 async function generateZip(){
   const payload=generationPayload();
-  if(!payload.modules.length&&!payload.entities.length){toast('Wybierz rozdział lub obiekt.');return;}
+  if(!payload.items.length){toast('Wybierz rozdział lub obiekt.');return;}
   const button=$('generateZip');button.disabled=true;button.textContent='Generowanie…';
   try{
     const response=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
@@ -242,7 +757,7 @@ async function generateZip(){
 
 async function createDraft(){
   const payload=generationPayload();
-  if(!payload.modules.length&&!payload.entities.length){toast('Wybierz rozdział lub obiekt.');return;}
+  if(!payload.items.length){toast('Wybierz rozdział lub obiekt.');return;}
   const button=$('createDraft');button.disabled=true;button.textContent='Tworzenie szkicu…';
   try{
     const url='/api/drafts'+(state.draftSession?'?session_id='+encodeURIComponent(state.draftSession):'');
@@ -300,15 +815,66 @@ async function loadGraph(){
   if(!state.domains.length)return;
   const left=$("graphLeft").value,right=$("graphRight").value;
   const level=$("graphLevel").value;
+  const epoch=++state.graphEpoch;state.graphLoading=true;
   try{
     const data=await api(`/api/graph?left=${encodeURIComponent(left)}&right=${encodeURIComponent(right)}&granularity=${level}&min_weight=${Number($("graphMin").value)||1}&max_edges=65`);
-    state.graph=data;$("graphSummary").textContent=`${data.nodes.length} węzłów · ${data.edges.length} par powiązanych odsyłaczami${data.truncated?" · widok ograniczony do 65 par":""} · źródło: jawne odsyłacze LaTeX`;
+    if(epoch!==state.graphEpoch)return;
+    state.graph=data;state.graphCoverage=null;$("graphSummary").textContent=`${data.nodes.length} węzłów · ${data.edges.length} par powiązanych odsyłaczami${data.truncated?" · widok ograniczony do 65 par":""} · źródło: jawne odsyłacze LaTeX (bez rozróżniania kierunku)`;
     renderGraph(data);
-  }catch(e){toast(e.message);}
+  }catch(e){if(epoch===state.graphEpoch)toast(e.message);}
+  finally{if(epoch===state.graphEpoch)state.graphLoading=false;}
+}
+async function loadGlobalGraphCoverage(){
+  const epoch=++state.graphEpoch;state.graphLoading=true;
+  try{
+    const data=await api("/api/graph/coverage");
+    if(epoch!==state.graphEpoch)return;
+    state.graphCoverage=data;state.graph=null;
+    const host=$("graphCanvas"),s=data.summary;
+    if(state.cy){state.cy.destroy();state.cy=null;}
+    host.replaceChildren();host.style.height="";
+    $("graphSummary").textContent=`${s.indexed_chapters} rozdziałów · ${s.domains} dziedzin · ${s.cross_linked_chapters} rozdziałów z odsyłaczami między dziedzinami · ${s.connected_domain_pairs}/${s.domain_pairs} bezpośrednio połączonych par dziedzin · ${s.isolated_chapters} izolowanych rozdziałów`;
+    if(data.catalog)host.append(node("p",{},`Katalog: ${data.catalog.expected} rozdziałów · brak w indeksie: ${data.catalog.missing.length} · rozbieżne ścieżki: ${data.catalog.path_mismatches.length}`));
+    if(data.reading_audit){
+      const audit=data.reading_audit;
+      host.append(node("p",{id:"globalReadingAudit"},`Odsyłacze tematyczne: ${audit.checked} sprawdzonych · błędne: ${audit.invalid}`));
+      if(audit.invalid){
+        const issues=node("details");issues.append(node("summary",{},"Błędne odsyłacze tematyczne"));
+        for(const issue of audit.issues){
+          const b=node("button",{type:"button"},`${issue.source}:${issue.line} → ${issue.label} · ${issue.reason}`);
+          b.addEventListener("click",()=>openModule(issue.source));
+          const line=node("div");line.append(b);issues.append(line);
+        }
+        host.append(issues);
+      }
+    }
+    host.append(node("h3",{},"Graf dziedzin — wybierz parę, aby zobaczyć rozdziały"));
+    const pairs=node("div",{className:"global-graph-pairs"});
+    for(const p of data.domain_pairs.filter(p=>p.references).sort((a,b)=>b.references-a.references)){
+      const button=node("button",{type:"button"},`${p.left} ↔ ${p.right} · ${p.references}`);
+      button.addEventListener("click",()=>{$("graphLeft").value=p.left;$("graphRight").value=p.right;loadGraph();});
+      pairs.append(button);
+    }
+    host.append(pairs);
+    const missing=node("details");missing.append(node("summary",{},`Pary bez bezpośrednich odsyłaczy (${s.domain_pairs-s.connected_domain_pairs})`));
+    for(const p of data.domain_pairs.filter(p=>!p.references))missing.append(node("div",{},`${p.left} ↔ ${p.right}`));
+    host.append(missing);
+    const queue=node("details");
+    const chapters=data.chapters.filter(c=>!c.cross_incoming&&!c.cross_outgoing);
+    queue.append(node("summary",{},`Rozdziały bez powiązań między dziedzinami (${chapters.length})`));
+    for(const c of chapters){
+      const b=node("button",{type:"button"},`${c.id} · ${c.title}${c.isolated?" · izolowany":""}`);
+      b.addEventListener("click",()=>openModule(c.id));
+      const line=node("div");line.append(b);queue.append(line);
+    }
+    host.append(queue);
+  }catch(e){if(epoch===state.graphEpoch)toast(e.message);}
+  finally{if(epoch===state.graphEpoch)state.graphLoading=false;}
 }
 function openGraphNode(n){if(n.entity_id && n.entity_id!==n.module)openEntity(n.entity_id);else openModule(n.module);}
 function renderGraph(data){
-  const host=$("graphCanvas");host.replaceChildren();
+  if(state.cy){state.cy.destroy();state.cy=null;}
+  const host=$("graphCanvas");host.replaceChildren();host.style.height="";
   if(!data.edges.length){host.append(node("div",{className:"empty-sub"},"Brak bezpośrednich odsyłaczy między tymi dziedzinami. Nie oznacza to braku powiązań matematycznych."));return;}
   const left=data.nodes.filter(n=>n.side==="left"),right=data.nodes.filter(n=>n.side==="right");
   const nRows=Math.max(left.length,right.length,5);
@@ -321,7 +887,7 @@ function renderGraph(data){
     const positions={};left.forEach((n,i)=>positions[n.id]={x:110,y:60+i*48});right.forEach((n,i)=>positions[n.id]={x:690,y:60+i*48});
     try{
       const cy=window.cytoscape({container:host,elements,layout:{name:"preset",positions,fit:true,padding:50},
-        style:[{selector:"node",style:{"shape":"round-rectangle","width":"label","height":36,"padding":"12px","background-color":"#d4edf0","border-color":"#66a4af","border-width":1,"label":"data(label)","color":"#17465a","font-size":12}},{selector:'node[side="right"]',style:{"background-color":"#e8ecf9","border-color":"#aaaed4"}},{selector:"edge",style:{"width":"mapData(weight,1,20,1,5)","line-color":"#a4bdc8","opacity":.64,"curve-style":"bezier","target-arrow-shape":"triangle","target-arrow-color":"#91aabb"}}],userZoomingEnabled:true,boxSelectionEnabled:false});
+        style:[{selector:"node",style:{"shape":"round-rectangle","width":"label","height":36,"padding":"12px","background-color":"#d4edf0","border-color":"#66a4af","border-width":1,"label":"data(label)","color":"#17465a","font-size":12}},{selector:'node[side="right"]',style:{"background-color":"#e8ecf9","border-color":"#aaaed4"}},{selector:"edge",style:{"width":"mapData(weight,1,20,1,5)","line-color":"#a4bdc8","opacity":.64,"curve-style":"bezier","target-arrow-shape":"none"}}],userZoomingEnabled:true,boxSelectionEnabled:false});
       cy.on("tap","node",event=>openGraphNode(event.target.data("original")));
       state.cy=cy;return;
     }catch(e){host.replaceChildren();}
@@ -345,26 +911,669 @@ function renderGraph(data){
   host.append(svg);
 }
 async function findPath(){
+  const epoch=++state.pathEpoch;
   const source=$("pathFrom").value.trim(),target=$("pathTo").value.trim();
   if(!source||!target){toast("Wpisz dwa identyfikatory modułów.");return;}
   try{
     const data=await api(`/api/graph/path?source=${encodeURIComponent(source)}&target=${encodeURIComponent(target)}`);
+    if(epoch!==state.pathEpoch || $("pathFrom").value.trim()!==source || $("pathTo").value.trim()!==target)return;
     const box=$("pathResult");box.replaceChildren();
     if(!data.found){box.textContent="Nie istnieje ścieżka złożona z jawnych odsyłaczy między tymi modułami.";return;}
     box.append(document.createTextNode("Ścieżka o długości "+data.steps.length+": "));
     data.modules.forEach((m,i)=>{if(i)box.append(document.createTextNode(" → "));const btn=node("button",{title:m.title},m.id);btn.addEventListener("click",()=>openModule(m.id));box.append(btn);});
-  }catch(e){toast(e.message);}
+  }catch(e){if(epoch===state.pathEpoch && $("pathFrom").value.trim()===source && $("pathTo").value.trim()===target)toast(e.message);}
+}
+
+function openConceptSearch(term){
+  $("conceptSearch").value=term;
+  activateTab("concepts");
+  loadConceptGraph();
+}
+function invalidateConceptGraph(message="Zmieniono zapytanie. Utwórz graf."){
+  ++state.conceptEpoch;state.conceptRequest=null;state.conceptGraph=null;
+  for(const id of ["conceptCanvas","conceptRelations","conceptEvidence"])$(id).replaceChildren();
+  $("conceptSummary").textContent=message;
+}
+function loadConceptGraph(){
+  const q=$("conceptSearch").value.trim(),count=Number($("conceptLimit").value);
+  if(q.length<2){
+    invalidateConceptGraph("Wpisz co najmniej dwa znaki.");
+    toast("Wpisz co najmniej dwa znaki.");return;
+  }
+  const key=JSON.stringify([q,count]);
+  if(state.conceptRequest?.key===key)return state.conceptRequest.promise;
+  invalidateConceptGraph("Wyszukiwanie wystąpień pojęcia: "+q+"…");
+  const epoch=state.conceptEpoch,request={key,promise:null};
+  state.conceptRequest=request;
+  const isCurrent=()=>epoch===state.conceptEpoch &&
+    $("conceptSearch").value.trim()===q && Number($("conceptLimit").value)===count;
+  request.promise=(async()=>{
+    try{
+      const data=await api("/api/concepts/graph?q="+encodeURIComponent(q)+"&max_occurrences="+count);
+      if(!isCurrent())return;
+      renderConceptGraph(data);
+      renderConceptEvidence(data);
+      state.conceptGraph=data;
+      $("conceptSummary").textContent=data.matches_total+" dopasowań tekstowych · "+
+        data.occurrences_shown+" widocznych wystąpień · "+
+        data.relationships+" zweryfikowanych relacji katalogowych"+
+        (data.truncated?" · ograniczono liczbę wyników":"");
+    }catch(e){
+      if(!isCurrent())return;
+      invalidateConceptGraph("Nie można zbudować grafu.");
+      toast(e.message);
+    }finally{
+      if(state.conceptRequest===request)state.conceptRequest=null;
+    }
+  })();
+  return request.promise;
+}
+function openConceptNode(n){
+  if(n.type==="concept"){
+    $("conceptSearch").value=n.term;
+    loadConceptGraph();
+  }else if(n.entity_id){
+    openEntity(n.entity_id);
+  }else if(n.module){
+    openModule(n.module);
+  }
+}
+function renderConceptGraph(data){
+  const host=$("conceptCanvas");host.replaceChildren();
+  const concepts=data.nodes.filter(n=>n.type==="concept");
+  const occurrences=data.nodes.filter(n=>n.type==="occurrence");
+  const root=concepts.find(c=>c.id===data.root);
+  if(!root)return;
+  const ordered=[root,...concepts.filter(c=>c.id!==data.root)];
+  const positions={};positions[root.id]={x:35,y:70};
+  let y=70;
+  const groups=[];
+  for(const concept of ordered){
+    const entries=occurrences.filter(o=>o.concept===concept.id);
+    const height=Math.max(75,entries.length*54);
+    const center=y+(height-54)/2;
+    if(concept.id!==root.id)positions[concept.id]={x:330,y:center};
+    entries.forEach((o,i)=>positions[o.id]={x:690,y:y+i*54});
+    groups.push({concept,entries,start:y,height});
+    y+=height+35;
+  }
+  const totalHeight=Math.max(410,y+20),W=1120,NS="http://www.w3.org/2000/svg";
+  const svgEl=(tag,attrs={},content)=>{
+    const el=document.createElementNS(NS,tag);
+    for(const [key,value] of Object.entries(attrs))el.setAttribute(key,String(value));
+    if(content!==undefined)el.textContent=String(content);
+    return el;
+  };
+  const svg=svgEl("svg",{viewBox:"0 0 "+W+" "+totalHeight,
+    height:totalHeight,role:"group","aria-label":"Graf pojęć: "+data.query});
+  const defs=svgEl("defs");
+  const marker=svgEl("marker",{id:"concept-arrow",viewBox:"0 0 10 10",refX:"9",refY:"5",
+    markerWidth:"6",markerHeight:"6",orient:"auto-start-reverse"});
+  marker.append(svgEl("path",{d:"M 0 0 L 10 5 L 0 10 z",fill:"#278397"}));
+  defs.append(marker);svg.append(defs);
+  for(const group of groups){
+    if(group.concept.id===data.root)continue;
+    const separator=svgEl("line",{x1:298,y1:group.start-18,x2:1090,
+      y2:group.start-18,stroke:"#e8edf2","stroke-width":1});
+    svg.append(separator);
+  }
+  for(const edge of data.edges){
+    const a=positions[edge.source],b=positions[edge.target];
+    if(!a||!b)continue;
+    const isOccurrence=edge.type==="occurrence";
+    const aWidth=a.x===690?392:244;
+    const bWidth=b.x===690?392:244;
+    const forward=a.x<=b.x;
+    const x1=forward?a.x+aWidth:a.x,x2=forward?b.x:b.x+bWidth,y1=a.y,y2=b.y;
+    const mid=(x1+x2)/2;
+    const path=svgEl("path",{d:"M "+x1+" "+y1+" C "+mid+" "+y1+", "+mid+" "+y2+", "+x2+" "+y2,
+      fill:"none",stroke:isOccurrence?"#a6b4c7":"#278397",
+      "stroke-width":isOccurrence?1.5:2.2,"stroke-dasharray":isOccurrence?"5 5":"none",
+      opacity:isOccurrence?".65":".85"});
+    if(!isOccurrence)path.setAttribute("marker-end","url(#concept-arrow)");
+    if(edge.type==="equivalent")path.setAttribute("marker-start","url(#concept-arrow)");
+    path.append(svgEl("title",{},edge.label+(edge.explanation?": "+edge.explanation:"")));
+    svg.append(path);
+  }
+  for(const n of data.nodes){
+    const pos=positions[n.id];if(!pos)continue;
+    const concept=n.type==="concept",isRoot=n.id===data.root,w=concept?244:392;
+    const group=svgEl("g",{class:"concept-svg-node",tabindex:"0",role:"button",
+      "aria-label":concept?n.label+" — pokaż powiązania":n.module+", "+n.label+", wiersz "+n.line});
+    group.append(svgEl("rect",{x:pos.x,y:pos.y-21,width:w,height:42,rx:9,
+      fill:isRoot?"#d5edf0":concept?"#e7eafb":"#ffffff",
+      stroke:isRoot?"#157b8b":concept?"#a9b3dc":"#b7cad7","stroke-width":isRoot?2:1.2}));
+    group.append(svgEl("text",{x:pos.x+11,y:pos.y+(concept?4:-3),fill:"#29475d",
+      "font-size":concept?13:12,"font-weight":concept?"700":"600"},
+      crop(concept?n.label:(n.module+" · "+n.label),concept?32:48)));
+    if(!concept)group.append(svgEl("text",{x:pos.x+11,y:pos.y+13,
+      fill:"#8192a3","font-size":10},
+      "Wiersz "+n.line+" · "+crop(n.matched,31)));
+    if(concept)group.append(svgEl("title",{},n.label+" · "+n.modules_total+" rozdziałów"));
+    else group.append(svgEl("title",{},n.snippet));
+    group.addEventListener("click",()=>openConceptNode(n));
+    group.addEventListener("keydown",e=>{
+      if(e.key==="Enter"||e.key===" "){e.preventDefault();openConceptNode(n);}
+    });
+    svg.append(group);
+  }
+  host.append(svg);
+  if(!occurrences.length)host.append(node("p",{className:"empty-sub"},
+    "Nie znaleziono tekstowych wystąpień w zaindeksowanych rozdziałach. Relacje katalogowe nie oznaczają obecności w tekście."));
+}
+function renderConceptEvidence(data){
+  const relations=$("conceptRelations");relations.replaceChildren();
+  const evidence=$("conceptEvidence");evidence.replaceChildren();
+  const all=new Map(data.nodes.filter(n=>n.type==="concept").map(n=>[n.id,n]));
+  const relationEdges=data.edges.filter(e=>e.type!=="occurrence");
+  if(relationEdges.length){
+    const heading=node("h2",{className:"small-heading"},"Relacje matematyczne");
+    relations.append(heading);
+    for(const edge of relationEdges){
+      const a=all.get(edge.source),b=all.get(edge.target);
+      const line=node("div",{className:"concept-relation"});
+      line.append(node("strong",{},(a?a.label:edge.source)+" "+
+        (edge.type==="equivalent"?"⇔":"⇒")+" "+(b?b.label:edge.target)));
+      line.append(node("small",{},edge.label+" · "+edge.explanation));
+      relations.append(line);
+    }
+  }
+  for(const concept of data.nodes.filter(n=>n.type==="concept")){
+    const entries=data.nodes.filter(n=>n.type==="occurrence"&&n.concept===concept.id);
+    const section=node("section",{className:"concept-group"});
+    section.append(node("h3",{},concept.label+" · "+concept.modules_total+
+      " rozdziałów · "+concept.matches_total+" dopasowań"));
+    if(!entries.length)section.append(node("p",{className:"concept-empty"},"Brak poświadczonych wystąpień w aktualnym indeksie."));
+    for(const item of entries){
+      const button=node("button",{className:"concept-occurrence"});
+      button.append(node("strong",{},item.module+" · "+(item.label||item.module_title)));
+      button.append(node("small",{},item.domain+" · wiersz "+item.line+" · „"+item.matched+"”"));
+      button.append(node("span",{},item.snippet));
+      button.addEventListener("click",()=>openConceptNode(item));
+      section.append(button);
+    }
+    evidence.append(section);
+  }
+}
+
+
+/* Lean 4: exact indexed source -> registered formalization. No client code execution. */
+const leanStatementLabels={
+  unreviewed:"Nieprzejrzana",needs_review:"Wymaga przeglądu",approved:"Zatwierdzona dla wskazanej wersji źródła"
+};
+const leanFormalizationLabels={
+  missing:"Brak formalizacji",draft:"Szkic (bez SHA źródła)",
+  ready:"Źródło przypięte",stale:"Powiązanie nieaktualne"
+};
+const leanProofLabels={
+  not_run:"Nie uruchomiono",compiled:"Lean skompilował kod",
+  failed:"Błąd Lean",timeout:"Przekroczony czas",
+  toolchain_unavailable:"Brak Lean/lake",blocked:"Uruchomienie zablokowane"
+};
+
+async function loadLeanCatalog(){
+  if(state.leanCatalogLoading)return;
+  const epoch=++state.leanCatalogEpoch;
+  state.leanCatalogLoading=true;
+  $("leanCatalogSummary").textContent="Odczytywanie rejestru formalizacji…";
+  $("leanCatalogList").replaceChildren();
+  try{
+    const data=await api("/api/lean/catalog");
+    if(epoch!==state.leanCatalogEpoch)return;
+    state.leanCatalog=data;
+    renderLeanCatalog();
+  }catch(err){
+    if(epoch!==state.leanCatalogEpoch)return;
+    state.leanCatalog=null;
+    $("leanCatalogSummary").textContent="Nie można wczytać katalogu: "+err.message;
+  }finally{
+    if(epoch===state.leanCatalogEpoch)state.leanCatalogLoading=false;
+  }
+}
+function renderLeanCatalog(){
+  const data=state.leanCatalog;
+  if(!data)return;
+  $("leanCatalogSummary").textContent=
+    data.total+" formalizacji · "+data.ready+" przypiętych źródeł · "+
+    data.draft+" roboczych · "+data.stale+" nieaktualnych. "+
+    "Kompilację sprawdzaj osobno dla wybranego twierdzenia.";
+  const query=$("leanCatalogSearch").value.trim().toLocaleLowerCase("pl-PL");
+  const filter=$("leanCatalogFilter").value;
+  const items=data.items.filter(item=>
+    (filter==="all"||item.formalization_status===filter)&&
+    [item.source_module,item.source_label,item.formalization_id,
+      ...(item.lean_theorems||[])].join(" ").toLocaleLowerCase("pl-PL").includes(query)
+  );
+  const list=$("leanCatalogList");list.replaceChildren();
+  if(!items.length){
+    list.append(node("p",{className:"empty-sub"},"Brak pasujących formalizacji."));
+    return;
+  }
+  for(const item of items){
+    const b=node("button",{className:"lean-catalog-entry",type:"button"});
+    const status=leanFormalizationLabels[item.formalization_status]||item.formalization_status;
+    const review=leanStatementLabels[item.statement_status]||item.statement_status;
+    const indexIssue={
+      invalid_label_binding:"Błędne położenie etykiety w indeksie",
+      ambiguous_label:"Niejednoznaczna etykieta",
+      unlinked_label:"Brak etykiety w indeksie",
+      corrupt_document:"Uszkodzony indeks rozdziału",
+      missing_document:"Brak indeksowanego rozdziału"
+    }[item.index_status];
+    b.append(
+      node("strong",{},item.source_module+" · "+item.source_label),
+      node("small",{},item.lean_theorem+" · "+status+" · "+review+
+        (indexIssue?" · "+indexIssue:""))
+    );
+    if(!item.source_entity_id){
+      b.disabled=true;
+      b.title="Brak jednoznacznego powiązania: "+item.index_status;
+    }else{
+      b.addEventListener("click",()=>loadLeanFragment({entity_id:item.source_entity_id}));
+    }
+    list.append(b);
+  }
+}
+function clearLeanChapterReport(){
+  ++state.leanChapterReportEpoch;
+  $("leanChapterReportSummary").textContent="Wybierz rozdział i pobierz aktualny raport.";
+  $("leanChapterReportItems").replaceChildren();
+}
+async function loadLeanChapterReport(){
+  const moduleId=$("leanChapterModule").value.trim();
+  clearLeanChapterReport();
+  const epoch=state.leanChapterReportEpoch;
+  const summary=$("leanChapterReportSummary"),list=$("leanChapterReportItems");
+  if(!moduleId){summary.textContent="Podaj identyfikator rozdziału.";return;}
+  summary.textContent="Wczytywanie raportu "+moduleId+"…";
+  try{
+    const report=await api("/api/lean/chapter-report?module_id="+encodeURIComponent(moduleId));
+    if(epoch!==state.leanChapterReportEpoch)return;
+    if(report.report_schema_version!==1||report.source_module!==moduleId||
+       report.scope!=="manifest_and_index_only"||report.certificate!==false||
+       report.proof_status_included!==false||report.run_history_checked!==false||
+       report.dependency_fingerprint_checked!==false||!Array.isArray(report.items)){
+      throw new Error("Nieobsługiwany format raportu.");
+    }
+    summary.textContent=moduleId+" · indeks: "+report.source_index_status+
+      " · "+report.total+" rejestracji · "+report.ready+" przypiętych · "+
+      report.draft+" roboczych · "+report.stale+" nieaktualnych · "+
+      report.statement_approved+" zatwierdzonych stwierdzeń z przypiętym źródłem. "+
+      "SHA-256 źródła: "+(report.source_document_sha256||"niepotwierdzony")+
+      ". Raport nie sprawdza kompilacji, historii uruchomień ani zależności i nie jest certyfikatem.";
+    if(!report.items.length)list.append(node("p",{className:"empty-sub"},"Brak rejestracji dla tego rozdziału."));
+    for(const entry of report.items){
+      list.append(node("p",{className:"doc-meta"},entry.source_label+" · "+
+        entry.lean_theorem+" · "+(leanFormalizationLabels[entry.formalization_status]||entry.formalization_status)+
+        " · "+(leanStatementLabels[entry.statement_status]||entry.statement_status)+
+        " · indeks: "+entry.index_status));
+    }
+  }catch(err){
+    if(epoch!==state.leanChapterReportEpoch)return;
+    list.replaceChildren();
+    summary.textContent="Nie można wczytać raportu: "+err.message;
+  }
+}
+function canPrepareLeanTranscription(item){
+  return !!item && item.source_linkage==="exact_entity" &&
+    typeof item.source_entity==="string" && !!item.source_entity &&
+    Array.isArray(item.source_labels) && item.source_labels.length===1 &&
+    /^[a-f0-9]{64}$/.test(item.source_sha256||"") &&
+    typeof item.source_latex==="string";
+}
+function resetLeanTranscription(item=null){
+  ++state.leanTranscriptionEpoch;
+  state.leanTranscriptionBusy=false;
+  $("leanTranscriptionConsent").checked=false;
+  $("leanTranscriptionConsent").disabled=!canPrepareLeanTranscription(item);
+  $("leanTranscriptionPrepare").disabled=true;
+  $("leanTranscriptionPackage").textContent="";
+  $("leanTranscriptionStatus").textContent=canPrepareLeanTranscription(item)?
+    "Wymagana zgoda na lokalne przygotowanie pełnego twierdzenia; typ i etykietę sprawdzi serwer.":
+    "Wybierz pojedynczy obiekt z jednoznaczną etykietą (pełne twierdzenie).";
+}
+function updateLeanTranscriptionConsent(){
+  $("leanTranscriptionPrepare").disabled=state.leanTranscriptionBusy||
+    !canPrepareLeanTranscription(state.leanFragment)||!$("leanTranscriptionConsent").checked;
+}
+function validLeanTranscription(p,item){
+  const digest=x=>typeof x==="string"&&/^[a-f0-9]{64}$/.test(x);
+  return !!p && p.schema_version===1 && p.status==="prepared" && p.experimental===true &&
+    p.source_scope==="indexed_snapshot_only" && p.source_module===item.source_module &&
+    p.source_entity===item.source_entity && p.source_label===item.source_labels[0] &&
+    p.start_line===item.start_line && p.end_line===item.end_line &&
+    p.source_sha256===item.source_sha256 && p.source_latex===item.source_latex &&
+    p.source_bytes===new TextEncoder().encode(item.source_latex).length &&
+    p.source_bytes<=32768 && digest(p.source_document_sha256) &&
+    digest(p.source_binding_sha256) && digest(p.request_id) &&
+    p.candidate_status==="not_generated" && p.lean_code===null &&
+    p.statement_status==="unreviewed" && p.proof_status==="not_run" &&
+    p.certificate===false && p.external_provider===null &&
+    p.external_transfer_allowed===false && p.license_status==="unreviewed" &&
+    p.external_budget_minor_units===0 && p.external_cost_minor_units===0 &&
+    p.registry_written===false && p.canonical_source_written===false;
+}
+async function prepareLeanTranscription(){
+  const item=state.leanFragment;
+  if(state.leanTranscriptionBusy||!canPrepareLeanTranscription(item)||!$("leanTranscriptionConsent").checked)return;
+  const epoch=++state.leanTranscriptionEpoch,fragmentEpoch=state.leanEpoch;
+  const current=()=>epoch===state.leanTranscriptionEpoch&&fragmentEpoch===state.leanEpoch&&item===state.leanFragment;
+  state.leanTranscriptionBusy=true;
+  $("leanTranscriptionConsent").checked=false;
+  $("leanTranscriptionConsent").disabled=true;
+  updateLeanTranscriptionConsent();
+  $("leanTranscriptionPackage").textContent="";
+  $("leanTranscriptionStatus").textContent="Przygotowywanie pakietu lokalnego…";
+  try{
+    const p=await api("/api/lean/transcription/prepare",{method:"POST",body:JSON.stringify({
+      entity_id:item.source_entity,expected_source_sha256:item.source_sha256,consent:true})});
+    if(!current())return;
+    if(!validLeanTranscription(p,item))throw new Error("Niezgodny format lub pochodzenie pakietu.");
+    $("leanTranscriptionStatus").textContent="Przygotowano pakiet lokalny. Nie wygenerowano kodu Lean; nie uruchomiono kompilacji. Licencja niezweryfikowana, transfer zewnętrzny zabroniony, koszt zewnętrzny 0.";
+    $("leanTranscriptionPackage").textContent=JSON.stringify(p,null,2);
+  }catch(err){
+    if(!current())return;
+    $("leanTranscriptionPackage").textContent="";
+    $("leanTranscriptionStatus").textContent="Nie można przygotować pakietu: "+err.message;
+  }finally{
+    if(current()){
+      state.leanTranscriptionBusy=false;
+      $("leanTranscriptionConsent").disabled=false;
+      updateLeanTranscriptionConsent();
+    }
+  }
+}
+async function loadLeanFragment(query){
+  const epoch=++state.leanEpoch;state.leanFragment=null;resetLeanTranscription();activateTab("lean");
+  $("leanDependencies").classList.add("hidden");
+  $("leanDependencyGraph").replaceChildren();
+  $("leanInspect").disabled=true;
+  $("leanInspection").textContent="Nie wykonano inspekcji deklaracji.";
+  $("leanResult").classList.add("hidden");$("leanEmpty").classList.remove("hidden");
+  $("leanEmpty").textContent="Odczytywanie źródła i formalizacji…";
+  try {
+    const result=await api("/api/lean/fragment?"+new URLSearchParams(query));
+    if(epoch!==state.leanEpoch)return;
+    state.leanFragment=result;state.leanRunner=null;resetLeanTranscription(result);
+    renderLeanFragment(result);
+    if(result.formalization_id)loadLeanDependencies(result,epoch);
+    try{
+      const available=await api("/api/lean/status");
+      if(epoch!==state.leanEpoch)return;
+      state.leanRunner=available;
+      const message=!available.runner_enabled?
+        "Uruchamianie wyłączone. W lokalnym serwerze ustaw MATLIB_LEAN_RUN=1.":
+        !available.lake_available?
+        "Brak lake/Lean 4 w PATH. Zainstaluj elan i przygotuj Mathlib.":
+        "Dostępny lokalny runner Lean 4 · "+(available.toolchain||"wersja nieznana");
+      $("leanRunnerInfo").textContent=message;
+      $("leanRun").disabled=!available.ready||!result.formalization_id||result.formalization_status==="stale";
+      $("leanInspect").disabled=!available.ready||!result.formalization_id||result.formalization_status!=="ready";
+    }catch(err){$("leanRunnerInfo").textContent=err.message;$("leanRun").disabled=true;}
+  }catch(err){
+    if(epoch!==state.leanEpoch)return;
+    $("leanEmpty").textContent="Nie można otworzyć fragmentu: "+err.message;toast(err.message);
+  }
+}
+function renderLeanFragment(result){
+  $("leanEmpty").classList.add("hidden");$("leanResult").classList.remove("hidden");
+  const scopeNote=result.source_linkage==="proof_of_adjacent_theorem"?
+    " · Kod dotyczy twierdzenia poprzedzającego ten dowód, nie automatycznej transkrypcji rozumowania.":
+    result.source_linkage==="contains_theorem"?
+    " · Kod dotyczy twierdzenia zawartego w zaznaczeniu.":"";
+  $("leanSourceInfo").textContent=result.source_module+" · wiersze "+result.start_line+
+    "–"+result.end_line+(result.source_labels.length?" · "+result.source_labels.join(", "):"")+scopeNote+
+    (result.lean_theorems?.length?" · Twierdzenia Lean: "+result.lean_theorems.join(", "):"")+
+    (result.source_document_sha256?" · SHA256 źródła: "+result.source_document_sha256.slice(0,12)+"…":"");
+  $("leanLatex").textContent=result.source_latex;
+  $("leanCode").textContent=result.lean_code||"Brak powiązanej formalizacji Lean dla tego fragmentu.";
+  const statuses=$("leanStatuses");statuses.replaceChildren();
+  for(const [name,label] of [
+    ["statement_status","Zgodność stwierdzenia"],
+    ["formalization_status","Formalizacja"],
+    ["proof_status","Sprawdzenie Lean"]
+  ]){
+    const card=node("div",{className:"lean-status"});
+    const val=result[name],mapped=name==="statement_status"?leanStatementLabels:
+      name==="formalization_status"?leanFormalizationLabels:leanProofLabels;
+    card.append(node("small",{},label),node("strong",{},mapped[val]||val));
+    statuses.append(card);
+  }
+  const note=result.formalization_id?
+    "Identyfikator: "+result.formalization_id+" · "+(result.lean_theorem||""):
+    "Brak kodu. Nie wygenerowano ani nie uruchomiono żadnego dowodu.";
+  $("leanRunnerInfo").textContent=note;
+  if(result.run_cached){
+    $("leanLog").textContent="Ostatnie uruchomienie: "+(result.last_run_at||"czas nieznany")+
+      "\n"+(result.last_run_detail||"")+
+      (result.last_run_log?"\n"+result.last_run_log:"")+
+      "\nUwaga: kompilacja nie jest certyfikatem zgodności z LaTeX-em.";
+  }else if(result.previous_run_outdated){
+    $("leanLog").textContent="Poprzedni wynik Lean unieważniono: zmienił się LaTeX, kod Lean lub konfiguracja narzędzi. Uruchom Lean ponownie.";
+  }else if(result.run_record_invalid){
+    $("leanLog").textContent="Zapis ostatniego uruchomienia jest nieczytelny. Wymagane ponowne sprawdzenie.";
+  }else{
+    $("leanLog").textContent="Nie uruchomiono. Kompilacja Lean i zgodność tłumaczenia są oceniane oddzielnie.";
+  }
+  $("leanRun").disabled=true;
+}
+
+function renderLeanDependencies(data){
+  const graph=$("leanDependencyGraph");
+  graph.replaceChildren();
+  const groups=[
+    ["Źródło LaTeX",data.nodes.filter(n=>n.kind==="latex_statement")],
+    ["Deklaracje z rejestru",data.nodes.filter(n=>n.kind==="registered_declaration")],
+    ["Plik Lean",data.nodes.filter(n=>n.kind==="lean_file")],
+    ["Jawne importy",data.nodes.filter(n=>n.kind==="imported_module")]
+  ];
+  groups.forEach(([title,entries],i)=>{
+    if(i)graph.append(node("span",{className:"lean-dep-arrow","aria-hidden":"true"},"→"));
+    const layer=node("div",{className:"lean-dep-column"});
+    layer.append(node("h3",{},title));
+    if(!entries.length)layer.append(node("span",{className:"lean-dep-node"},"Brak jawnych importów."));
+    for(const entry of entries){
+      const navigable=i===0 && data.source_entity_id && data.index_status==="ok";
+      const el=node(navigable?"button":"span",{className:"lean-dep-node"},entry.label);
+      if(navigable){
+        el.type="button";
+        el.title="Otwórz źródłowe twierdzenie w Czytniku";
+        el.addEventListener("click",()=>openEntity(data.source_entity_id));
+      }
+      layer.append(el);
+    }
+    graph.append(layer);
+  });
+  $("leanDependencyStatus").textContent=
+    data.nodes.length+" węzłów · "+data.edges.length+
+    " zadeklarowanych połączeń · stan źródła: "+
+    (leanFormalizationLabels[data.formalization_status]||data.formalization_status)+".";
+  $("leanDependencyLimitations").textContent=data.limitations;
+  $("leanInspect").disabled=!state.leanRunner?.ready||state.leanFragment?.formalization_status!=="ready";
+}
+async function loadLeanDependencies(item,epoch){
+  const panel=$("leanDependencies");
+  panel.classList.remove("hidden");
+  $("leanDependencyStatus").textContent="Odczytywanie zadeklarowanych powiązań…";
+  $("leanDependencyLimitations").textContent="";
+  try{
+    const result=await api("/api/lean/dependencies?"+
+      new URLSearchParams({formalization_id:item.formalization_id}));
+    if(!isCurrentLeanRun(epoch,item))return;
+    renderLeanDependencies(result);
+  }catch(err){
+    if(!isCurrentLeanRun(epoch,item))return;
+    $("leanDependencyStatus").textContent="Nie można wczytać grafu: "+err.message;
+    $("leanDependencyGraph").replaceChildren();
+    $("leanDependencyLimitations").textContent=
+      "Brak grafu nie stanowi oceny poprawności matematycznej.";
+  }
+}
+
+function renderLeanInspection(result){
+  const target=$("leanInspection");
+  target.replaceChildren();
+  if(result.inspection_status!=="complete"){
+    target.append(node("p",{},"Inspekcja: "+result.inspection_status+" · "+(result.detail||"brak wyniku")));
+    return;
+  }
+  target.append(node("p",{},result.detail));
+  const names=Object.keys(result.constants).sort();
+  for(const name of names){
+    const group=node("section",{className:"lean-constant-group"});
+    const values=result.constants[name];
+    group.append(node("h3",{},name+" · "+values.length+" stałych"));
+    const categorized=result.type_constants&&result.value_constants;
+    const buckets=categorized?[
+      ["Typ (założenia i teza)",result.type_constants[name]||[]],
+      ["Wartość / dowód",result.value_constants[name]||[]]
+    ]:[["Wszystkie referencje",values]];
+    for(const [label,refs] of buckets){
+      if(categorized)group.append(node("h4",{},label+" · "+refs.length));
+      const list=node("ul");
+      for(const value of refs){
+        const li=node("li",{},value);
+        // A constant name can be navigated only when exactly one current catalog
+        // registration declares it. This is a UI association, not proof equivalence.
+        const candidates=(state.leanCatalog?.items||[]).filter(entry=>
+          entry.index_status==="ok"&&entry.formalization_status!=="stale"&&
+          entry.source_entity_id&&
+          (entry.lean_theorems||[entry.lean_theorem]).includes(value));
+        if(candidates.length===1){
+          const match=candidates[0];
+          const link=node("button",{className:"lean-dep-constant-link"},value);
+          link.type="button";
+          link.title="Otwórz powiązaną formalizację: "+match.source_module+" · "+match.source_label;
+          link.addEventListener("click",()=>loadLeanFragment({entity_id:match.source_entity_id}));
+          li.replaceChildren(link);
+        }
+        list.append(li);
+      }
+      group.append(list);
+    }
+    target.append(group);
+  }
+  const snapshot=result.inspection_snapshot_sha256;
+  target.append(node("p",{className:"doc-meta"},
+    "Metoda: "+result.extraction_method+" · "+
+    (result.type_constants?"Referencje bezpośrednie z typu i wartości, bez domknięcia przechodniego · ":"")+
+    (typeof snapshot==="string"&&/^[0-9a-f]{64}$/.test(snapshot)?
+      "Identyfikator migawki danych: "+snapshot.slice(0,16)+" (nie jest certyfikatem) · ":"")+
+    "certyfikat: NIE."));
+}
+async function inspectLeanConstants(){
+  const item=state.leanFragment,epoch=state.leanEpoch,runner=state.leanRunner;
+  if(!item?.formalization_id||!runner?.ready||item.formalization_status!=="ready")return;
+  const button=$("leanInspect");
+  button.disabled=true;button.textContent="Analizowanie w Lean…";
+  $("leanInspection").textContent="Trwa lokalna inspekcja wyrażeń Lean…";
+  try{
+    const result=await api("/api/lean/dependencies/inspect",{
+      method:"POST",body:JSON.stringify({formalization_id:item.formalization_id,classify_references:true})});
+    if(!isCurrentLeanRun(epoch,item))return;
+    renderLeanInspection(result);
+  }catch(err){
+    if(isCurrentLeanRun(epoch,item))
+      $("leanInspection").textContent="Nie wykonano inspekcji: "+err.message;
+  }finally{
+    if(isCurrentLeanRun(epoch,item)){
+      button.textContent="Odczytaj stałe przez Lean";
+      button.disabled=!state.leanRunner?.ready||item.formalization_status!=="ready";
+    }
+  }
+}
+function openLeanCurrent(){
+  if(!state.currentData){toast("Najpierw wybierz obiekt w Czytniku.");return;}
+  if(state.currentEntity){loadLeanFragment({entity_id:state.currentEntity});return;}
+  const a=Number($("rangeStart").value),b=Number($("rangeEnd").value);
+  if(!Number.isSafeInteger(a)||!Number.isSafeInteger(b)||b<a||b-a>300){
+    toast("Dla całego rozdziału wybierz najwyżej 301 wierszy lub otwórz twierdzenie z Explorera.");return;
+  }
+  loadLeanFragment({module_id:state.currentModule,start_line:a,end_line:b});
+}
+function openLeanSelection(){
+  const lines=selectedReaderWholeLines();
+  if(!lines){toast("Zaznacz dokładny fragment w źródle LaTeX.");return;}
+  if(lines.end_line-lines.start_line>300){
+    toast("Dla Lean wybierz najwyżej 301 pełnych wierszy.");return;
+  }
+  window.getSelection().removeAllRanges();
+  loadLeanFragment(lines);
+}
+// Guard asynchronous Lean results by both selection epoch and exact fragment.
+function isCurrentLeanRun(epoch,item){
+  return epoch===state.leanEpoch && state.leanFragment===item;
+}
+async function runLeanFormalization(){
+  const item=state.leanFragment;
+  const epoch=state.leanEpoch;
+  if(!item?.formalization_id||!state.leanRunner?.ready)return;
+  const button=$("leanRun");
+  button.disabled=true;button.textContent="Sprawdzanie…";
+  $("leanLog").textContent="Uruchamianie lokalnego Lean 4…";
+  try{
+    const r=await api("/api/lean/run",{
+      method:"POST",body:JSON.stringify({formalization_id:item.formalization_id})});
+    if(!isCurrentLeanRun(epoch,item))return;
+    item.proof_status=r.proof_status;
+    item.run_cached=Boolean(r.run_record_saved);
+    item.last_run_at=r.last_run_at||null;
+    item.last_run_detail=r.detail||"";
+    item.last_run_log=r.log||"";
+    renderLeanFragment(item);
+    $("leanLog").textContent=(r.detail||"")+"\n"+(r.log||"")+
+      (r.run_record_warning?"\n"+r.run_record_warning:"");
+    $("leanRunnerInfo").textContent="Zakończono sprawdzanie kodu Lean. Zgodność z oryginalnym twierdzeniem wymaga osobnego przeglądu.";
+    if(r.proof_status==="compiled"&&!r.certificate){
+      $("leanRunnerInfo").textContent+=" Brak certyfikatu matematycznej zgodności.";
+    }
+  }catch(e){
+    if(isCurrentLeanRun(epoch,item))$("leanLog").textContent="Błąd sprawdzania: "+e.message;
+  }finally{
+    if(isCurrentLeanRun(epoch,item)){
+      button.textContent="Uruchom Lean";
+      button.disabled=!state.leanRunner?.ready||item.formalization_status==="stale";
+    }
+  }
+}
+
+// The API deliberately caps each page at 500. Fetch the complete inventory,
+// not merely the first page, so Explorer and Lean selectors agree with the index.
+async function loadAllModules(){
+  const items=[], ids=new Set();
+  const limit=500;
+  let expectedTotal=null;
+  for(let offset=0;;){
+    const page=await api(`/api/modules?limit=${limit}&offset=${offset}`);
+    if(!Array.isArray(page.items)||!Number.isSafeInteger(page.total)||page.total<0)
+      throw new Error("Nieprawidłowa odpowiedź indeksu rozdziałów.");
+    if(expectedTotal===null)expectedTotal=page.total;
+    if(page.total!==expectedTotal)
+      throw new Error("Indeks rozdziałów zmienił się podczas pobierania. Odśwież aplikację.");
+    for(const item of page.items){
+      if(ids.has(item.id))throw new Error("Niespójny indeks rozdziałów: powtórzony identyfikator "+item.id);
+      ids.add(item.id);items.push(item);
+    }
+    if(items.length===page.total)return items;
+    if(items.length>page.total||page.items.length===0)
+      throw new Error("Niepełny indeks rozdziałów. Odśwież aplikację.");
+    offset+=page.items.length;
+  }
 }
 async function init(){
   try{
-    const [domains,mods,stats]=await Promise.all([api("/api/domains"),api("/api/modules?limit=500"),api("/api/stats")]);
-    state.domains=domains;state.modules=mods.items;
+    const [domains,modules,stats]=await Promise.all([api("/api/domains"),loadAllModules(),api("/api/stats")]);
+    if(modules.length!==stats.documents||domains.reduce((sum,d)=>sum+d.modules,0)!==modules.length)
+      throw new Error("Niespójna liczba rozdziałów w indeksie. Odśwież aplikację.");
+    state.domains=domains;state.modules=modules;
+    $("leanChapterModuleOptions").replaceChildren();
+    for(const m of state.modules)$("leanChapterModuleOptions").append(node("option",{value:m.id}));
     $("dbStatus").textContent="Baza połączona";$("dbStatus").classList.add("connected");
     $("statPill").textContent=stats.documents+" rozdziałów";
     for(const n of ["graphLeft","graphRight"])setSelect($(n),domains);
     const a=domains.find(d=>d.name==="geometria algebraiczna"),b=domains.find(d=>d.name==="geometria algebraiczna / topologia");
     $("graphLeft").value=(a||domains[0]).name;$("graphRight").value=(b||domains.at(-1)).name;
-    state.expandedDomains.add($("graphLeft").value);
+    // A new page starts with every Explorer branch collapsed.
     renderTree();renderSelection();await showSavedProjects();
   }catch(e){$("dbStatus").textContent="Brak indeksu";toast(e.message);}
 }
@@ -372,22 +1581,156 @@ function listeners(){
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>activateTab(b.dataset.tab)));
   $("granularity").addEventListener("change",e=>{state.granularity=e.target.value;renderTree();});
   $("addCurrent").addEventListener("click",addCurrent);
+  $("openLeanCurrent").addEventListener("click",openLeanCurrent);
+  $("openLeanSelection").addEventListener("click",openLeanSelection);
+  $("leanRun").addEventListener("click",runLeanFormalization);
+  $("leanTranscriptionConsent").addEventListener("change",updateLeanTranscriptionConsent);
+  $("leanTranscriptionPrepare").addEventListener("click",prepareLeanTranscription);
+  $("leanInspect").addEventListener("click",inspectLeanConstants);
+  $("leanCatalogRefresh").addEventListener("click",()=>{state.leanCatalog=null;loadLeanCatalog();});
+  $("leanCatalogSearch").addEventListener("input",renderLeanCatalog);
+  $("leanCatalogFilter").addEventListener("change",renderLeanCatalog);
+  $("leanChapterModule").addEventListener("input",clearLeanChapterReport);
+  $("leanChapterReportLoad").addEventListener("click",loadLeanChapterReport);
+  $("leanChapterReportCurrent").addEventListener("click",()=>{
+    $("leanChapterModule").value=state.currentModule||"";loadLeanChapterReport();
+  });
+  $("addExcerpt").addEventListener("click",addExcerpt);
+  $("addRange").addEventListener("click",addRange);
   $("openFirst").addEventListener("click",()=>{if(state.modules.length)openModule(state.modules[0].id);});
   $("openGraphQuick").addEventListener("click",()=>activateTab("graph"));
-  $("togglePreview").addEventListener("click",()=>{state.simplified=!state.simplified;renderReader();});
+  $("togglePreview").addEventListener("click",toggleReaderMode);
   $("showFull").addEventListener("click",()=>{if(state.currentEntity)openEntity(state.currentEntity,true);else if(state.currentModule)openModule(state.currentModule,true);});
   $("closeTip").addEventListener("click",closeTip);
-  $("tipOpen").addEventListener("click",()=>{const x=state.tooltipData;if(x)openLabel(x.name);});
-  $("referenceTip").addEventListener("mouseleave",closeTip);
+  $("tipOpen").addEventListener("click",openPreviewedReference);
+  $("referenceTip").addEventListener("mouseenter",()=>{referenceTipHovered=true;});
+  $("referenceTip").addEventListener("mouseleave",()=>{
+    referenceTipHovered=false;
+    if(state.tooltipAnchor)scheduleCloseTip(state.tooltipAnchor);
+  });
+  $("referenceTip").addEventListener("focusout",()=>{
+    if(state.tooltipAnchor)scheduleCloseTip(state.tooltipAnchor);
+  });
+  $("view-reader").addEventListener("scroll",dismissTipOnReaderScroll,true);
+  window.addEventListener("resize",()=>{if(state.tooltipAnchor)closeTip();});
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeTip();});
-  $("drawGraph").addEventListener("click",loadGraph);$("findPath").addEventListener("click",findPath);
+  $("drawGraph").addEventListener("click",loadGraph);$("globalGraphCoverage").addEventListener("click",loadGlobalGraphCoverage);$("findPath").addEventListener("click",findPath);
+  $("drawConceptGraph").addEventListener("click",loadConceptGraph);
+  $("conceptSearch").addEventListener("input",()=>invalidateConceptGraph());
+  $("conceptSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();loadConceptGraph();}});
+  $("conceptLimit").addEventListener("change",()=>{if(state.tab==="concepts")loadConceptGraph();});
   $("checkSelection").addEventListener("click",checkSelection);$("generateZip").addEventListener("click",generateZip);$("createDraft").addEventListener("click",createDraft);$("saveManifest").addEventListener("click",downloadManifest);
   window.addEventListener("pagehide",event=>{if(!event.persisted)closeUnsavedDraft();});
+  // Some browsers do not dispatch pagehide when a tab is closed; keep an idempotent fallback.
+  window.addEventListener("beforeunload",closeUnsavedDraft);
   setInterval(()=>{if(state.draftSession)fetch("/api/drafts/"+encodeURIComponent(state.draftSession)+"/heartbeat",{method:"POST"}).catch(()=>{});},15*60*1000);
-  $("clearSelection").addEventListener("click",()=>{state.selected.clear();renderSelection();if(state.currentData)renderReader();$("planResult").replaceChildren();});
-  $("showExplorer").addEventListener("click",()=>$("explorer").classList.add("visible"));
-  $("closeExplorer").addEventListener("click",()=>$("explorer").classList.remove("visible"));
+  $("clearSelection").addEventListener("click",()=>{state.selected.clear();renderSelection();updateCurrentSelectionButton();$("planResult").replaceChildren();});
+  $("showExplorer").addEventListener("click",()=>setExplorerVisible(!explorerIsVisible()));
+  $("closeExplorer").addEventListener("click",()=>setExplorerVisible(false));
   setupSearch();
 }
-listeners();init();
-
+function syncThemeButton(){
+  const dark=document.documentElement.dataset.theme==='dark';
+  for(const button of [$('themeToggle'),$('readingTheme')]){
+    button.textContent=dark?'☀ Jasny motyw':'☾ Ciemny motyw';
+    button.setAttribute('aria-pressed',String(dark));
+    button.setAttribute('aria-label',dark?'Włącz jasny motyw':'Włącz ciemny motyw');
+  }
+}
+function toggleTheme(){
+  const theme=document.documentElement.dataset.theme==='dark'?'light':'dark';
+  document.documentElement.dataset.theme=theme;
+  try{localStorage.setItem('atlas-theme',theme);}catch(_){}
+  syncThemeButton();
+}
+$('themeToggle').addEventListener('click',toggleTheme);
+$('readingTheme').addEventListener('click',toggleTheme);
+const explorerMedia=matchMedia('(max-width:780px)');
+// Explorer visibility is page-local, never a saved reading preference.
+let explorerHidden=true, readingMode=false, ownedFullscreen=false;
+try{localStorage.removeItem('atlas-explorer-hidden');}catch(_){}
+function explorerIsVisible(){return explorerMedia.matches?$('explorer').classList.contains('visible'):!explorerHidden;}
+function syncExplorer(){
+  document.documentElement.classList.toggle('explorer-hidden',explorerHidden);
+  const visible=explorerIsVisible();
+  $('showExplorer').textContent=visible?'Ukryj Explorer':'Pokaż Explorer';
+  $('showExplorer').setAttribute('aria-expanded',String(visible));
+  $('explorer').inert=!visible||readingMode;
+}
+function setExplorerVisible(visible){
+  if(explorerMedia.matches)$('explorer').classList.toggle('visible',visible);
+  else{
+    explorerHidden=!visible;
+  }
+  syncExplorer();
+  if(!visible)$('showExplorer').focus({preventScroll:true});
+}
+explorerMedia.addEventListener('change',()=>{$('explorer').classList.remove('visible');syncExplorer();});
+function setReadingMode(enabled){
+  if(enabled)dismissSearch();
+  readingMode=enabled;
+  document.documentElement.classList.toggle('reading-mode',enabled);
+  $('readingMode').textContent=enabled?'⛶ Zakończ pełny ekran':'⛶ Pełny ekran';
+  $('readingMode').setAttribute('aria-pressed',String(enabled));
+  $('readingTheme').classList.toggle('hidden',!enabled);
+  syncExplorer();closeTip();
+}
+let fullscreenEntryPending=false, fullscreenExitPending=false;
+async function leaveReadingMode(){
+  setReadingMode(false);
+  const shell=document.querySelector('.app-shell');
+  if(ownedFullscreen && document.fullscreenElement===shell && !fullscreenExitPending){
+    fullscreenExitPending=true;
+    try{
+      await document.exitFullscreen();
+      ownedFullscreen=false;
+    }catch(_){
+      // A refused exit must not leave the reader in an inaccessible state.
+      ownedFullscreen=document.fullscreenElement===shell;
+      if(ownedFullscreen)setReadingMode(true);
+    }finally{fullscreenExitPending=false;}
+  }
+  $('readingMode').focus({preventScroll:true});
+}
+async function enterReadingMode(){
+  setReadingMode(true);
+  const shell=document.querySelector('.app-shell');
+  if(fullscreenEntryPending||fullscreenExitPending||document.fullscreenElement||!shell.requestFullscreen)return;
+  fullscreenEntryPending=true;
+  try{
+    await shell.requestFullscreen();
+    ownedFullscreen=document.fullscreenElement===shell;
+    // Escape or the toggle may have been used while entry was pending.
+    if(ownedFullscreen&&!readingMode)await leaveReadingMode();
+  }catch(_){/* Reading layout also works without the Fullscreen API. */}
+  finally{fullscreenEntryPending=false;}
+}
+$('readingMode').addEventListener('click',()=>{
+  if(readingMode)return leaveReadingMode();
+  return enterReadingMode();
+});
+document.addEventListener('fullscreenchange',()=>{
+  if(ownedFullscreen&&document.fullscreenElement!==document.querySelector('.app-shell')){
+    ownedFullscreen=false;
+    // An exit we initiated already applied the requested layout.
+    if(!fullscreenExitPending)setReadingMode(false);
+  }
+});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&readingMode){event.preventDefault();leaveReadingMode();}});
+syncExplorer();
+let readerScale=100;
+function setReaderScale(value,persist=true){
+  readerScale=Math.max(80,Math.min(180,Number.isFinite(Number(value))?Math.round(Number(value)/10)*10:100));
+  document.documentElement.style.setProperty('--reader-scale',String(readerScale/100));
+  $('textSizeReset').textContent=readerScale+'%';
+  $('textSizeDown').disabled=readerScale===80;
+  $('textSizeUp').disabled=readerScale===180;
+  if(persist)try{localStorage.setItem('atlas-reader-scale',String(readerScale));}catch(_){}
+}
+$('textSizeDown').addEventListener('click',()=>setReaderScale(readerScale-10));
+$('textSizeUp').addEventListener('click',()=>setReaderScale(readerScale+10));
+$('textSizeReset').addEventListener('click',()=>setReaderScale(100));
+let savedReaderScale=100;
+try{savedReaderScale=Number(localStorage.getItem('atlas-reader-scale')||100);}catch(_){}
+setReaderScale(savedReaderScale,false);
+syncThemeButton();listeners();init();

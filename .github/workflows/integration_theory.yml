@@ -1,0 +1,26 @@
+name: Migrated integration theory regressions
+on:
+  push:
+    paths:
+      - 'chapters/pl/mathematical_analysis_i/**'
+      - 'chapters/pl/measure_theory/**'
+      - 'chapters/pl/functional_analysis/**'
+      - 'tests/mathematical/integration_theory/**'
+      - '.github/workflows/integration_theory.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: migrated-integration-${{ github.event_name == 'workflow_dispatch' && format('manual-{0}', github.run_id) || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run preserved integration regressions against migrated material
+        run: |
+          set -e
+          for chapter in tests/mathematical/integration_theory/chapter-*; do
+            python3 -m unittest discover -s "$chapter" -p 'test_*.py' -v
+          done

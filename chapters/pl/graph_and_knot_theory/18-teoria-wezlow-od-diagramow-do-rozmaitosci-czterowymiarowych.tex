@@ -43,7 +43,7 @@ $x\in N$. Samo założenie injektywności różniczki definiuje
 znaczeniu. Jeżeli $N$ jest zwarte, injektywna immersja
 $N\to M$ do rozmaitości Hausdorffa jest zanurzeniem.
 Odwołując się do kategorii topologicznej, przez zanurzenie
-lokalnie płaskie rozumiemy \emph{lokally flat embedding}.
+lokalnie płaskie rozumiemy \emph{locally flat embedding}.
 \end{uwaga}
 
 
@@ -139,10 +139,17 @@ Kolor oznacza przynależność do jednej składowej splotu.
 \section{Diagramy i ruchy Reidemeistera}
 \label{sec:kt-diagramy}
 
-Wybierzmy standardowe rzutowanie $\pi\colon\mathbb R^3\to\mathbb R^2$.
+Wybierzmy współrzędne $(x,y,h)$ w $\mathbb R^3$ oraz rzutowanie
+$\pi(x,y,h)=(x,y)$. Wysokość $h$ rośnie w stronę obserwatora,
+a płaszczyznę orientujemy przez bazę $(\partial_x,\partial_y)$.
+Ustalamy konwencję, w której baza
+$(\partial_x,\partial_y,\partial_h)$ jest ujemnie zorientowana
+względem orientacji $S^3$; jest to istotne dla znaku liczby
+splecenia i przyjętej niżej konwencji skrzyżowań.
 Po dowolnie małym zaburzeniu zanurzenia możemy założyć, że $\pi|_K$
-jest immersją poza skończoną liczbą punktów podwójnych, że wszystkie
-przecięcia są poprzeczne oraz że nie występują punkty potrójne.
+jest immersją w każdym punkcie dziedziny, a jej obraz ma
+skończenie wiele poprzecznych punktów podwójnych i nie ma
+punktów potrójnych.
 Zaznaczając przy każdym punkcie podwójnym, które z dwóch włókien
 leży wyżej, otrzymujemy \emph{diagram węzła}. Odcinek przebiegający
 pod drugim rysujemy z krótką przerwą. Rozważania są identyczne dla
@@ -225,22 +232,25 @@ w którym używamy parametrycznej transwersalności.
   \node[text=ktInk,font=\footnotesize\bfseries] at (-3.32,1.62) {R I: pętla};
   \draw[ktBlue,line width=2.8pt] (-5.3,-1)--(-5.3,1);
   \draw[->,ktTeal,line width=2pt] (-4.75,0)--(-3.95,0);
-  \draw[ktBlue,line width=2.8pt] (-2.4,-1) .. controls (-2.7,-.2)
-    and (-1.75,-.4) .. (-1.55,.18)
-    .. controls (-1.4,.83) and (-2.65,1.4) .. (-2.8,.45)
-    .. controls (-2.9,-.2) and (-2.4,-.65) .. (-2.4,1);
+  % Jedyne skrzyżowanie R I leży w lokalnym punkcie (0,0).
+  % Przerwa na pionowym pasmie oznacza przejście pod spodem.
+  \begin{scope}[shift={(-2.4,0)}]
+    \draw[ktBlue,line width=2.8pt] (0,-1)--(0,-.16);
+    \draw[ktBlue,line width=2.8pt,rounded corners=5pt]
+      (0,.16)--(0,.65)--(.65,.65)--(.65,.28)
+      --(-.65,-.28)--(-.78,.65)--(0,1);
+  \end{scope}
   \node[text=ktInk,font=\footnotesize\bfseries] at (2.64,1.62) {R II: dwa skrzyżowania};
   \draw[ktCoral,line width=2.8pt] (.3,-1)--(.3,1);
   \draw[ktBlue,line width=2.8pt] (1.0,-1)--(1.0,1);
   \draw[->,ktTeal,line width=2pt] (1.5,0)--(2.32,0);
+  % Dwa rzeczywiste przecięcia: czerwone pasmo przechodzi
+  % nad niebieskim w obu miejscach (przeciwne znaki).
+  \draw[ktBlue,line width=2.8pt] (3.9,-1)--(3.9,1);
+  \draw[white,line width=6.5pt] (2.9,-1)
+    .. controls (4.65,-.65) and (4.65,.65) .. (2.9,1);
   \draw[ktCoral,line width=2.8pt] (2.9,-1)
-    .. controls (4.6,-.8) and (4.7,-.25) .. (3.9,.05)
-    .. controls (3.0,.32) and (2.8,.8) .. (2.9,1);
-  \draw[ktBlue,line width=2.8pt] (3.7,-1)--(3.7,1);
-  \draw[white,line width=6pt] (3.95,.035)
-    .. controls (3.78,.12) and (3.57,.22) .. (3.46,.26);
-  \draw[ktCoral,line width=2.8pt] (3.95,.035)
-    .. controls (3.78,.12) and (3.57,.22) .. (3.46,.26);
+    .. controls (4.65,-.65) and (4.65,.65) .. (2.9,1);
   \node[text=ktInk,font=\footnotesize] at (0,-1.52)
     {Schematy lokalne: izotopia w przestrzeni nie wymaga przecinania pasm.};
 \end{tikzpicture}
@@ -286,7 +296,8 @@ Znak punktu przecięcia wyznaczamy przez orientacje $F$, $K_2$ i $S^3$.
 \end{definicja}
 
 Istnienie powierzchni $F$ zostanie udowodnione konstruktywnie
-w części poświęconej algorytmowi Seiferta. Następująca własność
+w części poświęconej algorytmowi Seiferta (sekcja \ref{sec:kt-seifert}).
+Następująca własność
 pokazuje, że definicja nie zależy od wyboru $F$.
 
 \begin{stwierdzenie}
@@ -304,10 +315,27 @@ trójwymiarowego. Algebraiczne przecięcie brzegu łańcucha z zamkniętą
 krzywą $K_2$ wynosi zero, a więc $F\cdot K_2=F'\cdot K_2$.
 Dla symetrii wybieramy powierzchnie $F_1,F_2$ z brzegami
 $K_1,K_2$ i ustawiamy je poprzecznie. Ich przecięcie jest
-zorientowaną jednowymiarową rozmaitością z brzegiem, a rachunek
-orientacji na końcach tego przecięcia daje
+zorientowaną jednowymiarową rozmaitością z brzegiem.
+Orientujemy przecięcie tak, aby uporządkowana para
+dodatnich normalnych $(n_2,n_1)$ do $F_2,F_1$ wraz
+z dodatnim wektorem stycznym do przecięcia dawała
+orientację $S^3$. Reguła brzegu dla przecięć
+zorientowanych daje w tej konwencji
+\[
+\partial(F_1\cap F_2)=(K_1\cap F_2)-(F_1\cap K_2).
+\]
+Suma współczynników brzegu zwartej zorientowanej
+rozmaitości jednowymiarowej wynosi zero (każdy przedział
+ma jeden koniec dodatni i jeden ujemny, okrąg nie ma brzegu).
+Ponadto zamiana krzywej i powierzchni w liczbie
+przecięcia nie zmienia znaku, ponieważ zamiana
+jednego wektora stycznego z dwoma daje czynnik
+$(-1)^{1\cdot 2}=1$. Otrzymujemy
 $F_1\cdot K_2=F_2\cdot K_1$. Niezmienniczość przy izotopii wynika z
-zachowania algebraicznej liczby przecięć w rodzinie poprzecznej.
+przeniesienia powierzchni $F$ i krzywej $K_2$ przez ten sam
+dyfeomorfizm otoczenia. Dyfeomorfizm izotopijny z identycznością
+zachowuje orientację $S^3$, więc zachowuje również wszystkie
+znaki przecięć.
 \end{proof}
 
 \begin{twierdzenie}[Wzór diagramowy]
@@ -322,30 +350,45 @@ jest parzysta.
 \end{twierdzenie}
 
 \begin{proof}
-Oznaczmy prawą stronę wzoru przez $I(D)$. W ruchu $\mathrm{R I}$
-na jednej składowej nie powstaje skrzyżowanie międzyskładowe.
-W ruchu $\mathrm{R II}$ dwa ewentualne skrzyżowania różnych
-składowych mają przeciwne znaki. Ruch $\mathrm{R III}$ nie
-zmienia znaków ani par składowych uczestniczących w
-skrzyżowaniach. Zatem $I(D)$ zależy tylko od izotopii splotu.
+Wybierzmy poziom $h_0$ niższy od wszystkich punktów obu
+składowych. Parametryzujemy $K_1$ zgodnie z orientacją jako
+$s\mapsto (x(s),y(s),h(s))$ i rozważamy łańcuch powierzchniowy
+opisany przez
+\[
+P(s,u)=(x(s),y(s),h_0+u(h(s)-h_0)),\qquad 0\leq u\leq1.
+\]
+Orientujemy cylinder przez kolejność $(\partial_u,\partial_s)$,
+aby jego górny brzeg był równy $K_1$ z daną orientacją.
+Dolny brzeg domykamy zorientowanym łańcuchem dwuwymiarowym
+w płaszczyźnie $h=h_0$; taki łańcuch istnieje, ponieważ
+płaszczyzna jest kontraktowalna. Łańcuch domykający nie przecina
+$K_2$. Otrzymany łańcuch $C$ ma brzeg $K_1$; argument
+homologiczny z poprzedniego dowodu daje
+$C\cdot K_2=F\cdot K_2$ dla dowolnej powierzchni Seiferta $F$.
 
-Zmienienie jednego skrzyżowania między $K_1$ i $K_2$
-zmienia $I(D)$ o $1$ albo $-1$. Taka sama zmiana zachodzi
-w $F\cdot K_2$: w małej kuli realizującej zmianę
-skrzyżowania krzywa $K_2$ przechodzi na przeciwną stronę
-powierzchni rozpiętej na $K_1$, przekraczając ją dokładnie
-raz z odpowiednim znakiem. Zmiana skrzyżowania wewnątrz
-jednej składowej nie wpływa na żadną z obu wielkości.
-
-Dowolny splot dwóch składowych można uczynić rozdzielnym
-przez skończony ciąg zmian skrzyżowań: wybieramy najpierw
-kolejność składowych, przeprowadzamy jedną z nich zawsze
-ponad drugą, a następnie umieszczamy je w rozłącznych kulach.
-Dla splotu rozdzielnego mamy $I(D)=0$ i
-$\operatorname{lk}(K_1,K_2)=0$. Cofając zmiany skrzyżowań,
-wnioskujemy, że obie wielkości są równe dla wyjściowego
-splotu. Ponieważ liczba splecenia jest całkowita, suma znaków
-międzyskładowych jest parzysta.
+Przecięcia cylindra z $K_2$ odpowiadają dokładnie
+skrzyżowaniom, w których $K_1$ przechodzi nad $K_2$.
+Są poprzeczne, ponieważ rzuty obu wektorów stycznych
+są liniowo niezależne. Niech $v_1,v_2$ oznaczają te rzuty.
+Wektor $\partial_u P$ jest dodatnią wielokrotnością
+$\partial_h$. Wyznacznik trzech kolumn
+$(\partial_u P,\partial_s P,K_2')$ we współrzędnych
+$(x,y,h)$ ma znak $\det(v_1,v_2)$.
+Ponieważ współrzędne są ujemnie zorientowane w $S^3$,
+znak przecięcia wynosi
+$-\operatorname{sgn}\det(v_1,v_2)
+=\operatorname{sgn}\det(v_2,v_1)=\varepsilon(c)$.
+Stąd
+\[
+\operatorname{lk}(K_1,K_2)
+=\sum_{c:\,K_1\text{ nad }K_2}\varepsilon(c).
+\]
+Zamieniając role składowych, otrzymujemy analogiczną sumę
+po skrzyżowaniach, w których $K_2$ przechodzi nad $K_1$.
+Symetria liczby splecenia pokazuje, że obie sumy są równe.
+Ich dodanie daje $2\operatorname{lk}(K_1,K_2)$,
+czyli żądany wzór. Całkowitość liczby splecenia dowodzi
+parzystości sumy znaków.
 \end{proof}
 
 \begin{przyklad}
@@ -367,15 +410,34 @@ poszczególnych składowych.
 \end{twierdzenie}
 
 \begin{proof}
-Przestrzeń $X_L$ jest homotopijnie równoważna $S^3\setminus L$.
+Przestrzeń $X_L$ jest deformacyjnym retraktem
+$S^3\setminus L$: w każdej przebitej rurce
+$S^1\times(D^2\setminus\{0\})$ przesuwamy punkt
+$(\theta,z)$ do $(\theta,z/|z|)$ homotopią
+$(\theta,((1-u)+u/|z|)z)$ dla $u\in[0,1]$.
+Homotopia jest identycznością na brzegu rurki,
+więc przedłuża się przez identyczność na $X_L$.
 Z dualności Alexandera otrzymujemy
 $\widetilde H_i(S^3\setminus L;\mathbb Z)
 \cong\widetilde H^{2-i}(L;\mathbb Z)$.
 Dla $i=1$ prawa strona jest $H^1(L;\mathbb Z)\cong\mathbb Z^r$.
-Meridian otaczający $K_i$ ma liczbę splecenia jeden z $K_i$
-i zero z pozostałymi składowymi. Homomorfizm przypisujący
-klasie pętli jej $r$ liczb splecenia identyfikuje więc
-meridiany z bazą standardową, kończąc dowód.
+Liczbę splecenia z $K_i$ przedłużamy liniowo
+na cykle jednowymiarowe w $X_L$. Jeśli dwa cykle
+różnią się brzegiem łańcucha dwuwymiarowego w $X_L$,
+to różnica ich liczb splecenia z $K_i$ jest liczbą
+przecięcia tego łańcucha z $K_i$, równą zero.
+Wynika to z niezależności liczby przecięcia od wyboru
+łańcucha ograniczającego cykl w $S^3$.
+Otrzymujemy zatem dobrze określony homomorfizm
+$H_1(X_L;\mathbb Z)\to\mathbb Z^r$.
+Meridian otaczający $K_i$ ogranicza dysk poprzeczny
+do $K_i$ w jednym dodatnim punkcie, rozłączny
+z pozostałymi składowymi. Jego obrazem jest $i$-ty
+wektor bazy standardowej. Homomorfizm jest więc
+surjektywny. Ponieważ jego dziedzina i przeciwdziedzina
+są wolnymi grupami abelowymi tej samej skończonej
+rangi $r$, jest także injektywny. W szczególności
+klasy meridianów tworzą bazę.
 \end{proof}
 
 \section{Grupa węzła i prezentacja Wirtingera}
@@ -417,15 +479,40 @@ meridianem łuku górnego, a $x_k,x_j$ oznaczają meridiany
 górnego jest sprzężeniem, zatem $x_j=x_i^{\pm1}x_kx_i^{\mp1}$.
 Twierdzenie van Kampena pokazuje, że nie ma innych relacji.
 
-Żeby wyjaśnić redundancję, wybierzmy sferę obejmującą
-cały diagram oraz jeden wspólny punkt bazowy dla meridianów.
-Odpowiadające skrzyżowaniom relacje są brzegami
-komórek dwuwymiarowych standardowego kompleksu Wirtingera.
-Suma tych komórek tworzy zamkniętą powierzchnię po uwzględnieniu
-orientacji łuków; stąd jedna relacja jest konsekwencją
-pozostałych. Formalnie można usunąć jedną komórkę, nie
-zmieniając $\pi_1$; pozostaje prezentacja o $n$ generatorach
-i $n-1$ relacjach. Dla diagramu węzła bez skrzyżowań
+Redundancja jednej relacji wymaga dodatkowego
+argumentu globalnego; nie wynika z samego faktu,
+że wszystkie relacje są sprzężeniami meridianów.
+W standardowym komórkowym dowodzie twierdzenia
+van Kampena wybieramy wspólny punkt bazowy powyżej
+diagramu oraz drogi łączące go z meridianami.
+Kolejne relacje $r_1,\ldots,r_n$ są słowami
+brzegowymi komórek dwuwymiarowych.
+Zewnętrzny obszar diagramu i zamykająca go
+komórka trójwymiarowa dostarczają
+\emph{sferycznej tożsamości między relacjami}:
+po dobraniu dróg bazowych istnieją słowa $w_j$
+oraz znaki $\varepsilon_j\in\{-1,1\}$, dla których
+\[
+w_1r_1^{\varepsilon_1}w_1^{-1}
+\cdots
+w_nr_n^{\varepsilon_n}w_n^{-1}=1
+\]
+w grupie wolnej na meridianach.
+Każda relacja występuje tutaj dokładnie raz
+(z dokładnością do sprzężenia i odwrócenia).
+Z tożsamości tej wynika, że dowolny jeden
+relator należy do domknięcia normalnego
+pozostałych, co uzasadnia jego usunięcie
+bez zmiany prezentowanej grupy.
+
+Sama konstrukcja sferycznej tożsamości jest
+standardowym geometrycznym lematem w dowodzie
+prezentacji Wirtingera, wymagającym śledzenia
+komórek w komplementarnych obszarach diagramu.
+Przyjmujemy ten lemat z klasycznego dowodu
+van Kampena; nie utożsamiamy go z naiwnym
+sumowaniem komórek dwuwymiarowych.
+Dla diagramu bez skrzyżowań
 grupa jest bezpośrednio równa $\mathbb Z$.
 \end{proof}
 
@@ -440,9 +527,15 @@ wybierać tę samą abelianizację wszystkich meridianów.
 \end{uwaga}
 
 \begin{przyklad}[Trójlistnik]
-Dla standardowego trójskrzyżowaniowego diagramu trójlistnika
-prezentacja Wirtingera upraszcza się do
-$G_T\cong\langle a,b\mid aba=bab\rangle$.
+Dla standardowego trójskrzyżowaniowego diagramu jednego
+z odbić trójlistnika numerujemy łuki cyklicznie jako $a,b,c$;
+relacje Wirtingera można zapisać
+$c=aba^{-1}$, $a=bcb^{-1}$ oraz $b=cac^{-1}$.
+Trzeci relator jest zbędny na mocy twierdzenia Wirtingera.
+Eliminując $c$ z drugiej relacji, otrzymujemy
+$a=baba^{-1}b^{-1}$, czyli $aba=bab$ po pomnożeniu
+obu stron z prawej przez $ba$.
+Stąd $G_T\cong\langle a,b\mid aba=bab\rangle$.
 Warto rozwinąć algebraicznie przejście do bardziej symetrycznej
 prezentacji
 $\langle x,y\mid x^2=y^3\rangle$.
@@ -483,13 +576,91 @@ do jednej składowej daje $H_1\cong\mathbb Z$, generowaną
 przez meridian.
 \end{proof}
 
+\begin{definicja}[Meridian, preferowana długość i dane peryferyjne]
+\label{def:kt-peripheral}
+Niech $K\subset S^3$ będzie zorientowanym węzłem,
+$N(K)$ jego domkniętym otoczeniem tubularnym,
+a $X_K=S^3\setminus\operatorname{int}N(K)$.
+Na torusie $\partial X_K=\partial N(K)$
+wybieramy dodatnio zorientowany
+\emph{meridian} $\mu$, czyli krzywą prostą
+ograniczającą dysk w $N(K)$ i mającą
+$\operatorname{lk}(\mu,K)=1$.
+\emph{Preferowaną długością} (ang. \emph{preferred
+longitude}) nazywamy klasę pierwotną
+$\lambda\in H_1(\partial X_K;\mathbb Z)$,
+która odpowiada orientacji $K$ przy rzutowaniu
+na rdzeń $N(K)$ i ma
+$\operatorname{lk}(\lambda,K)=0$.
+Po wyborze punktów bazowych i ścieżek
+do $\partial X_K$ odpowiadające im
+elementy $\mu,\lambda\in\pi_1(X_K)$
+tworzą parę \emph{peryferyjną}
+(z dokładnością do jednoczesnego sprzężenia).
+\end{definicja}
+
+\begin{stwierdzenie}[Homologia torusa peryferyjnego]
+\label{thm:kt-peripheral-homology}
+Przy oznaczeniach poprzedniej definicji
+klasy $[\mu],[\lambda]$ tworzą bazę
+$H_1(\partial X_K;\mathbb Z)\cong\mathbb Z^2$.
+Homomorfizm
+$H_1(\partial X_K;\mathbb Z)\to
+H_1(X_K;\mathbb Z)\cong\mathbb Z$
+wysyła $[\mu]$ na generator, a $[\lambda]$ na zero.
+\end{stwierdzenie}
+
+\begin{proof}
+Otoczenie $N(K)$ jest torusem pełnym.
+Wybierzmy powierzchnię Seiferta $F$ węzła.
+Najpierw bierzemy dostatecznie małe otoczenie tubularne
+$K$, w którym $F$ ma postać kołnierza brzegu.
+Dla dowolnego ustalonego otoczenia $N(K)$ możemy
+przenieść tę sytuację przez izotopię otoczeń tubularnych,
+zachowując rdzeń. Wówczas $F\cap X_K$ ma w brzegu
+jedną krzywą na $\partial N(K)$ równoległą do $K$.
+Ta krzywa jest pierwotna i ma
+liczbę splecenia zero z $K$, więc reprezentuje
+preferowaną długość $\lambda$.
+Jej klasa zeruje się w $H_1(X_K)$,
+bo jest brzegiem właściwej części $F\cap X_K$.
+Z kolei meridian przecina $F$ algebraicznie
+raz i reprezentuje generator $H_1(X_K)$
+na mocy twierdzenia o homologii
+uzupełnienia splotu.
+W trywializacji $N(K)\cong S^1\times D^2$
+niech $\lambda_0$ będzie klasą $S^1\times\{z\}$
+dla $z\in\partial D^2$, z orientacją rdzenia.
+Wtedy $([\mu],\lambda_0)$ jest bazą homologii torusa,
+a rzutowanie na rdzeń wysyła $\lambda_0$ na generator
+i $[\mu]$ na zero. Każda klasa rzutująca się na
+dodatni generator jest więc postaci
+$\lambda_0+k[\mu]$, $k\in\mathbb Z$.
+Jej liczba splecenia z $K$ wynosi
+$\operatorname{lk}(\lambda_0,K)+k$.
+Istnieje dokładnie jedna wartość
+$k=-\operatorname{lk}(\lambda_0,K)$, dla której
+liczba splecenia znika. To dowodzi istnienia
+i jednoznaczności preferowanej długości jako klasy.
+Macierz przejścia od bazy $([\mu],\lambda_0)$
+do $([\mu],[\lambda])$ ma wyznacznik jeden,
+więc również te klasy tworzą bazę.
+\end{proof}
+
 \begin{uwaga}[Dlaczego sama grupa nie wystarcza]
-Grupa $G_K$ jest niezwykle silnym niezmiennikiem, jednak do
-odtworzenia pełnej struktury uzupełnienia naturalnie dodaje się
-dane \emph{peryferyjne}: wyróżnioną klasę sprzężoności meridianu
-i długości (longitude). Przykładowo różne węzły torusowe mogą
-mieć grupy abstrakcyjnie powiązane, a badanie włożenia podgrupy
-peryferyjnej oddziela informacje gubione przy samej abelianizacji.
+Grupa $G_K$ jest silnym niezmiennikiem, jednak
+do odtworzenia pełnej struktury uzupełnienia
+naturalnie dodaje się dane peryferyjne:
+klasę sprzężoności obrazu
+$\pi_1(\partial X_K)\to G_K$
+oraz wyróżnione klasy meridianu i długości.
+Para elementów peryferyjnych komutuje,
+ponieważ pochodzi z grupy
+$\pi_1(\partial X_K)\cong\mathbb Z^2$.
+Sama abelianizacja $G_K$ zapamiętuje meridian,
+lecz zeruje preferowaną długość, przez co
+gubi informację o sposobie wklejenia
+brzegowego torusa.
 \end{uwaga}
 
 \section{Kolorowania Foxa i wyznacznik węzła}
@@ -521,17 +692,30 @@ węzła nie zależy od diagramu i jest niezmiennikiem węzła.
 \begin{proof}
 Rozważmy lokalnie trzy ruchy Reidemeistera. W ruchu $\mathrm{R I}$
 dodany łuk $b$ ma kolor $a$, gdyż $2a=a+b$ implikuje $b=a$.
-W ruchu $\mathrm{R II}$ kolor nowego łuku jest jednoznacznie
-wyznaczony przez dwa stare kolory; druga relacja odzyskuje
-kolor wyjściowy.
+W ruchu $\mathrm{R II}$ jedno pasmo przechodzi nad drugim
+w obu skrzyżowaniach. Jeżeli jego kolor wynosi $b$,
+a kolor pasma dolnego przed ruchem wynosi $a$, to
+kolor między skrzyżowaniami musi wynosić $2b-a$,
+a po drugim skrzyżowaniu $2b-(2b-a)=a$.
+Wobec tego każde kolorowanie przed ruchem przedłuża
+się jednoznacznie, a każde kolorowanie po ruchu
+ogranicza się do kolorowania przed ruchem.
 W ruchu $\mathrm{R III}$ dwie kolejności propagowania kolorów
 prowadzą do tej samej wartości: definiując $R_b(a)=2b-a$,
 obliczamy $R_c(R_b(a))=a+2(c-b)$ oraz
-$R_{R_c(b)}(R_c(a))=a+2(c-b)$. Są to dokładnie dwie
-możliwe kolejności przejścia przez trzy pasma. Każde $R_b$
-jest inwolucją, ponieważ $R_b(R_b(a))=a$; nigdzie nie
-trzeba dzielić przez dwa. W ten sposób ruchy indukują
-wzajemnie odwrotne bijekcje zbiorów kolorowań.
+$R_{R_c(b)}(R_c(a))=a+2(c-b)$. Oznaczmy przez $c$ kolor pasma najwyższego, przez $b$
+kolor pasma środkowego przed przejściem pod najwyższym,
+a przez $a$ początkowy kolor pasma najniższego.
+Po obu stronach ruchu najwyższe pasmo zachowuje kolor
+$c$, środkowe kończy z kolorem $R_c(b)$, a najniższe
+ma kolor końcowy dany jedną z dwóch obliczonych wartości.
+Wszystkie kolory wewnętrzne są jednoznacznie wyznaczone.
+Każde $R_b$ jest inwolucją, ponieważ $R_b(R_b(a))=a$,
+więc można propagować kolor również od przeciwnego końca
+pasma. Z tego powodu ten sam rachunek obejmuje odwrócenie
+kierunków odczytu i odbicia lokalnego diagramu;
+nigdzie nie trzeba dzielić przez dwa. W ten sposób
+ruchy indukują wzajemnie odwrotne bijekcje zbiorów kolorowań.
 \end{proof}
 
 \begin{przyklad}[Trójlistnik jest nietrywialny]
@@ -545,8 +729,8 @@ Zatem trójlistnik nie jest równoważny węzłowi trywialnemu.
 \end{przyklad}
 
 \begin{definicja}[Wyznacznik węzła]
-Dla węzła $K\subset S^3$ wybieramy diagram $D$ o $n$ łukach
-i $n$ skrzyżowaniach. Niech $A_D$ będzie całkowitą macierzą
+Dla węzła $K\subset S^3$ wybieramy diagram $D$ o $n\geq1$
+skrzyżowaniach i $n$ łukach Wirtingera. Niech $A_D$ będzie całkowitą macierzą
 relacji $2b-a-c=0$, gdzie kolumny odpowiadają łukom, a wiersze
 skrzyżowaniom. Po skreśleniu dowolnego jednego wiersza i jednej
 kolumny otrzymujemy macierz $(n-1)\times(n-1)$, której wyznacznik
@@ -555,8 +739,18 @@ Dla węzła trywialnego przyjmujemy $\det(U)=1$.
 \end{definicja}
 
 Niezależność od skreślonego wiersza i kolumny oraz od diagramu
-można wykazać, wykorzystując związki macierzy Foxa z wielomianem
-Alexandera. Otrzymamy poniżej wzór $\det(K)=|\Delta_K(-1)|$.
+wynika z opisu macierzy Foxa--Alexandera
+(sekcja \ref{sec:kt-fox-calculus}).
+Dla relatora $r=x_bx_ax_b^{-1}x_c^{-1}$ po abelianizacji
+i podstawieniu $t=-1$ pochodne względem $x_b,x_a,x_c$
+dają odpowiednio $2,-1,-1$. Dla sprzężenia przez
+$x_b^{-1}$ otrzymujemy te same współczynniki:
+pochodne relatora $x_b^{-1}x_ax_bx_c^{-1}$ po podstawieniu
+$t=-1$ również wynoszą $2,-1,-1$. Jeśli generatory
+się powtarzają, ich wkłady dodajemy.
+Z algorytmu Wirtingera dla wielomianu Alexandera wynika
+zatem $\det(K)=|\Delta_K(-1)|$; mnożnik $\pm t^k$
+po podstawieniu $t=-1$ nie zmienia wartości bezwzględnej.
 
 \begin{przyklad}
 Dla trójlistnika macierz relacji może mieć postać
@@ -579,9 +773,26 @@ istnieje nietrywialne $p$-kolorowanie.
 \begin{proof}
 Niech $A_D$ będzie macierzą relacji kolorowania, a
 $B$ otrzymamy, usuwając jeden wiersz i jedną kolumnę.
-Usunięta relacja jest zależna od pozostałych, natomiast
-usuniętą współrzędną można ustawić na zero, odejmując
-od wszystkich kolorów wspólną stałą. Zatem kolorowania
+Uzasadnijmy najpierw, że usunięcie relacji nie zmienia
+zbioru kolorowań, również dla złożonego modułu $n$.
+W grupie półprostej
+$(\mathbb Z/n\mathbb Z)\rtimes\{1,-1\}$ stosujemy mnożenie
+\[
+(a,\epsilon)(b,\eta)=(a+\epsilon b,\epsilon\eta).
+\]
+Element $s_a=(a,-1)$ jest inwolucją, a
+$s_b s_a s_b^{-1}=s_{2b-a}$. Dotyczy to także $n=2$,
+gdy działanie przez zmianę znaku jest trywialne.
+Przypisanie generatorowi Wirtingera o kolorze $a$
+elementu $s_a$ spełnia relację w skrzyżowaniu dokładnie
+wtedy, gdy $2b=a+c$ w $\mathbb Z/n\mathbb Z$.
+Jeżeli spełniono wszystkie relacje poza jedną, to
+homomorfizm z grupy wolnej wysyła pozostałe relatory
+na jedność. Z redundancji relatora Wirtingera wynika,
+że także opuszczony relator ma obraz równy jedności.
+A zatem brakująca relacja kolorowania również zachodzi.
+Usuniętą współrzędną można natomiast ustawić na zero,
+odejmując od wszystkich kolorów wspólną stałą. Zatem kolorowania
 modulo kolorowania stałe są identyfikowane z
 $\ker(B\bmod n)$. Macierz $B$ jest kwadratowa i
 $|\det B|=\det(K)$. Jeśli $\gcd(n,\det B)=1$,
@@ -626,16 +837,38 @@ W szczególności $g(K)\leq(1-s(D)+c(D))/2$.
 Przy każdym skrzyżowaniu wygładzamy oba przecinające się łuki
 w jedyny sposób zgodny z ich orientacjami. Powstaje skończona
 rodzina rozłącznych, zorientowanych okręgów na płaszczyźnie.
-Każdy okrąg wypełniamy dyskiem, umieszczając dyski na różnych
-wysokościach wtedy, gdy są zagnieżdżone. W otoczeniu każdego
-oryginalnego skrzyżowania przytwierdzamy do dwóch odpowiednich
-dysków skręcone pasmo, które odtwarza lokalny przebieg nad i pod.
+Każdy okrąg wypełniamy dyskiem na poziomie poniżej
+płaszczyzny diagramu i łączymy jego brzeg z okręgiem
+w diagramie pionowym kołnierzem. Poziomy wybieramy tak,
+aby dysk ograniczony okręgiem zewnętrznym leżał niżej
+niż dyski okręgów zawartych w jego wnętrzu.
+Kołnierze mają rozłączne rzuty, a kołnierz okręgu
+wewnętrznego nie sięga do niżej położonego dysku
+zewnętrznego. Dyski z kołnierzami są więc parami rozłączne.
+W parami rozłącznych małych otoczeniach pierwotnych
+skrzyżowań dołączamy skręcone pasma po stronie powyżej
+płaszczyzny diagramu, łącząc odpowiednie odcinki brzegu.
+W każdym takim otoczeniu wybieramy znak półskrętu tak,
+aby dwie krawędzie pasma odtworzyły kolejność nad i pod
+w skrzyżowaniu. Pasma są rozłączne poza miejscami
+przytwierdzenia do dysków; wygładzamy naroża w tych miejscach.
 Powstaje gładko zanurzona, zorientowana powierzchnia $F_D$.
-Zgodność orientacji na jej fragmentach wynika z zastosowanego
-zorientowanego wygładzenia. Jej brzeg jest izotopijny z $K$.
+Orientujemy każdy dysk z kołnierzem zgodnie z orientacją
+jego okręgu Seiferta. Przy przytwierdzeniu prostokątnego
+pasma jego orientacja indukuje na obu odcinkach
+przytwierdzenia kierunki przeciwne do kierunków brzegu
+dysków: właśnie tę zgodność zapewnia wybór wygładzenia
+zachowującego orientację. Orientacje sklejają się więc
+do orientacji całej powierzchni, której brzeg ma
+orientację pierwotnego diagramu. Po odtworzeniu
+skrzyżowań brzeg jest izotopijny z $K$. Rozszerzenie
+izotopii brzegu na otoczenie przenosi w razie potrzeby
+powierzchnię na powierzchnię o brzegu dokładnie $K$.
 Ponieważ diagram węzła jest spójny jako graf, układ dysków
 i pasm również jest spójny. Zaczynając od $s(D)$ dysków
-i dołączając $c(D)$ jednowymiarowych uchwytów, otrzymujemy
+i dołączając $c(D)$ uchwytów indeksu jeden (każdy prostokąt
+jest sklejony z poprzednią powierzchnią wzdłuż dwóch
+rozłącznych przedziałów), otrzymujemy
 $\chi(F_D)=s(D)-c(D)$. Dla spójnej orientowalnej powierzchni
 z jednym brzegiem $\chi(F_D)=1-2g(F_D)$, co daje podany wzór.
 \end{proof}
@@ -652,10 +885,12 @@ z jednym brzegiem $\chi(F_D)=1-2g(F_D)$, co daje podany wzór.
   \draw[->,very thick,ktTeal] (-1.3,0)--(.25,0);
   \node[text=ktTeal,font=\footnotesize] at (-.53,.3) {wygładź};
   \begin{scope}[shift={(2.4,0)}]
-    \draw[ktBlue,line width=2.9pt,-{Stealth[length=2.7mm]}]
-       (-.85,-.9) .. controls (-.85,.05) and (-.3,.22) .. (-.3,.9);
-    \draw[ktCoral,line width=2.9pt,-{Stealth[length=2.7mm]}]
-       (.85,.9) .. controls (.85,-.05) and (.3,-.22) .. (.3,-.9);
+    % GKT-25-SEIFERT-FIG-01: both left endpoints are incoming,
+    % both right endpoints are outgoing; oriented smoothing is horizontal.
+    \draw[ktTeal,line width=2.9pt,-{Stealth[length=2.7mm]}]
+       (-.9,.9) .. controls (-.45,.18) and (.45,.18) .. (.9,.9);
+    \draw[ktTeal,line width=2.9pt,-{Stealth[length=2.7mm]}]
+       (-.9,-.9) .. controls (-.45,-.18) and (.45,-.18) .. (.9,-.9);
   \end{scope}
   \node[font=\footnotesize,text=ktInk] at (0,-1.5)
     {Po wygładzeniu nie ma skrzyżowania; pasma służą później do odbudowania powierzchni.};
@@ -715,6 +950,22 @@ W drugą stronę standardowy okrąg ogranicza dysk, którego obraz
 przy izotopii ogranicza $K$.
 \end{proof}
 
+\begin{definicja}[Gładki rodzaj czterowymiarowy i węzeł typu slice]
+\label{def:kt-four-ball-genus}
+Niech $K\subset S^3=\partial B^4$ będzie węzłem.
+Przez $g_4^{\mathrm{sm}}(K)$ oznaczamy najmniejszy rodzaj
+zwartej, spójnej, zorientowanej, gładko i właściwie
+zanurzonej powierzchni $F\subset B^4$ z jednym brzegiem
+$\partial F=K$. Przy brzegu żądamy standardowego
+kołnierza produktu. Węzeł nazywamy
+\emph{gładko typu slice}, jeżeli
+$g_4^{\mathrm{sm}}(K)=0$, czyli gdy ogranicza
+gładko i właściwie zanurzony dysk w $B^4$.
+Przesunięcie powierzchni Seiferta do kołnierza
+$S^3\times[0,\varepsilon)\subset B^4$
+pokazuje, że $g_4^{\mathrm{sm}}(K)\le g(K)$.
+\end{definicja}
+
 \section{Macierz Seiferta i wielomian Alexandera}
 \label{sec:kt-alexander}
 
@@ -741,13 +992,32 @@ na $H_1(F;\mathbb Z)$. W szczególności $\det(V-V^T)=1$.
 \end{stwierdzenie}
 
 \begin{proof}
-Różnica $\operatorname{lk}(\alpha_i^+,\alpha_j)
--\operatorname{lk}(\alpha_j^+,\alpha_i)$ równa się algebraicznej
-liczbie przecięć krzywych $\alpha_i$ i $\alpha_j$ na powierzchni
-(z ewentualną wspólną zmianą znaku zależnie od orientacji).
-Jest to lokalny rachunek: gdy dwie krzywe przecinają się
-poprzecznie, odpowiednie dwa przesunięcia tworzą jedno
-skrzyżowanie liczone z właściwym znakiem. Dla spójnej
+Wybierzmy normalną dodatnią tak, aby uporządkowanie
+(normalna, dodatnia baza styczna do $F$) dawało orientację $S^3$.
+Przesunięcia w kołnierzu $F\times[-\eta,\eta]$ oznaczamy
+przez $\alpha_i^\pm$. Forma Seiferta zależy tylko od klas:
+jeśli cykl na $F$ jest brzegiem łańcucha, jego przesunięcie
+jest brzegiem przesuniętego łańcucha rozłącznego z $F$.
+Analogicznie zmiana drugiej klasy nie wpływa na splecenie,
+dzięki jego symetrii. Możemy więc wybrać reprezentantów
+przecinających się poprzecznie.
+W kołnierzu przesuwamy jednocześnie obie krzywe w kierunku
+ujemnej normalnej, z poziomów $(0,\eta)$ na $(-\eta,0)$.
+Izotopia tych rozłącznych krzywych i symetria splecenia dają
+$\operatorname{lk}(\alpha_j^+,\alpha_i)
+=\operatorname{lk}(\alpha_i^-,\alpha_j)$.
+Niech $C_i$ będzie cylindrem nad $\alpha_i$, z orientacją
+(normalna, styczna do $\alpha_i$). Jego brzeg jest równy
+$\alpha_i^+-\alpha_i^-$. Z definicji liczby splecenia
+i niezmienniczości względem wyboru łańcucha ograniczającego
+otrzymujemy
+\[
+v_{ij}-v_{ji}=C_i\cdot\alpha_j.
+\]
+W każdym punkcie przecięcia znak wyznacza uporządkowanie
+(normalna, styczna do $\alpha_i$, styczna do $\alpha_j$).
+Jest to dokładnie znak przecięcia krzywych na $F$.
+Odwrócenie konwencji normalnej zmienia wspólny znak. Dla spójnej
 orientowanej powierzchni rodzaju $g$ z jednym brzegiem
 postać przecięcia ma w bazie symplektycznej macierz
 $\begin{psmallmatrix}0&I_g\\-I_g&0\end{psmallmatrix}$,
@@ -782,9 +1052,12 @@ wyznaczonym przez epimorfizm
 $\pi_1(X_K)\to H_1(X_K;\mathbb Z)\cong\mathbb Z$.
 Grupa $H_1(\widetilde X_K;\mathbb Z)$ jest modułem nad
 $\Lambda:=\mathbb Z[t,t^{-1}]$, przy czym $t$ działa przez
-wybrany generator grupy przekształceń pokładowych. Dla
-macierzy Seiferta $V$ moduł ten posiada kwadratową macierz
-prezentacji $tV-V^T$. Stąd $\Delta_K(t)$ jest niezmiennikiem
+generator grupy przekształceń pokładowych odpowiadający
+ujemnemu meridianowi, gdy dodatnia normalna do powierzchni
+Seiferta jest wyznaczona przez orientację $S^3$.
+Dla macierzy Seiferta $V$ moduł ten posiada kwadratową
+macierz prezentacji $tV-V^T$. Przy wyborze przeciwnego
+generatora macierz prezentacji to $tV^T-V$. Stąd $\Delta_K(t)$ jest niezmiennikiem
 węzła z dokładnością do $\pm t^k$.
 \end{twierdzenie}
 
@@ -797,31 +1070,61 @@ Nieskończone nakrycie cykliczne $\widetilde X_K$ otrzymujemy,
 klejąc kopie $Y_j$, $j\in\mathbb Z$, tak, by strona
 $F_+$ kopii $Y_j$ była utożsamiona ze stroną $F_-$
 kopii $Y_{j+1}$. Działanie $t$ przesuwa numer $j$ o jeden.
+Przy tej numeracji przejście od strony dodatniej do ujemnej
+zwiększa numer kopii, więc $t$ odpowiada ujemnemu meridianowi
+(względem orientacji normalnej z dowodu o postaci przecięcia).
+Jeśli wybieramy dodatni meridian jako generator nakrycia,
+zamieniamy $t$ na $t^{-1}$.
 
 Zapiszmy ciąg Mayera--Vietorisa nad
 $\Lambda=\mathbb Z[t,t^{-1}]$:
 \[
-H_1(F)\otimes\Lambda\xrightarrow{\;t(i_+)_*-(i_-)_*\;}
+H_1(F)\otimes\Lambda\xrightarrow{\;t(i_-)_*-(i_+)_*\;}
 H_1(Y)\otimes\Lambda\longrightarrow
 H_1(\widetilde X_K)\longrightarrow
 H_0(F)\otimes\Lambda\xrightarrow{\;t-1\;}
 H_0(Y)\otimes\Lambda.
 \]
-Powierzchnia $F$ i rozcięta przestrzeń $Y$ są spójne.
-Ponieważ $\Lambda$ jest dziedziną całkowitości, mnożenie
-przez $t-1$ jest injekcją. Z dokładności otrzymujemy
+Znak i położenie czynnika $t$ wynikają ze sklejenia:
+włączenie wspólnej powierzchni między $Y_0$ i $Y_1$
+do $Y_1$ daje $t(i_-)_*$, a do $Y_0$ daje $(i_+)_*$.
+Łańcuchy mają skończone nośniki, więc sumy po kopiach
+utożsamiają się z iloczynami tensorowymi przez $\Lambda$.
+Powierzchnia $F$ jest spójna. Rozciętą przestrzeń $Y$
+można utożsamić, po wygładzeniu naroży i zmianie kołnierzy
+przy $\partial F$, z zewnętrzem regularnego otoczenia $F$
+w $S^3$: otoczenie składa się z rurki przy $K$ i dwustronnego
+kołnierza właściwej części $F\cap X_K$.
+Dopełnienie $F$ deformacyjnie retraktuje się na to zewnętrze,
+przez odsunięcie punktów w regularnym otoczeniu do jego brzegu.
+Dualność Alexandera i $H^2(F;\mathbb Z)=0$ pokazują,
+że $Y$ jest spójne. Ponieważ $\Lambda$ jest dziedziną
+całkowitości, mnożenie przez $t-1$ jest injekcją.
+Z dokładności otrzymujemy
 $H_1(\widetilde X_K)\cong\operatorname{coker}
-(t(i_+)_*-(i_-)_*)$.
+(t(i_-)_*-(i_+)_*)$.
 
-Aby obliczyć macierz tej mapy, zauważmy, że $Y$ jest
-homologicznie równoważne dopełnieniu powierzchni Seiferta.
-Dualność Alexandera daje
+Dualność Alexandera daje ponadto
 $H_1(Y;\mathbb Z)\cong H^1(F;\mathbb Z)\cong\mathbb Z^{2g}$.
-Wybierzmy bazę $[\alpha_1],\dots,[\alpha_{2g}]$ w $H_1(F)$,
-a w $H_1(Y)$ bazę dualną, mierzoną za pomocą liczby splecenia
-z tymi krzywymi. Macierze dwóch włożeń są wtedy macierzami
-formy Seiferta $V$ i $V^T$ (zależnie od ustalenia numeracji
-stron). Stąd macierz homomorfizmu wynosi $tV-V^T$.
+Izomorfizm ten identyfikuje klasę cyklu w $Y$ z funkcjonałem
+splecenia z cyklami na $F$. Wybieramy więc bazę
+$\beta_1,\dots,\beta_{2g}$ taką, że
+$\operatorname{lk}(\beta_j,\alpha_k)=\delta_{jk}$.
+W konwencji kolumnowej $k$-ta współrzędna obrazu $\alpha_j$
+przez $(i_+)_*$ wynosi
+$\operatorname{lk}(\alpha_j^+,\alpha_k)=v_{jk}$,
+a przez $(i_-)_*$ wynosi
+$\operatorname{lk}(\alpha_j^-,\alpha_k)
+=\operatorname{lk}(\alpha_k^+,\alpha_j)=v_{kj}$.
+Macierze tych dwóch odwzorowań to zatem odpowiednio
+$V^T$ i $V$. Macierz różnicy w ciągu dokładnym jest
+$tV-V^T$, zgodnie z tezą dla wybranego generatora.
+Dla przeciwnego generatora macierz prezentacji otrzymujemy
+przez podstawienie $t^{-1}$ zamiast $t$; po pomnożeniu
+przez jednostkę $-t$ jest to $tV^T-V$.
+Nie utożsamiamy tu automatycznie modułów prezentowanych
+przez macierz i jej transpozycję: dla wielomianu wystarcza
+równość ich wyznaczników.
 
 Zmiana bazy nie zmienia modułu zdefiniowanego topologicznie.
 Ponieważ $\det(V-V^T)=1$, wyznacznik $\det(tV-V^T)$
@@ -847,10 +1150,20 @@ $\deg_{\max}\Delta_K-\deg_{\min}\Delta_K$, nie przekracza $2g(K)$.
 \begin{proof}
 Z twierdzenia o postaci przecięcia
 $\Delta_K(1)=\det(V-V^T)=1$ dla przyjętej reprezentacji.
-Przy $2g\times2g$ otrzymujemy
-$\det(t^{-1}V-V^T)=t^{-2g}\det(V-tV^T)
-=t^{-2g}\det(tV-V^T)$, gdyż wyznacznik jest niezmienniczy
-przy transpozycji. Daje to symetrię. Wzór na wyznacznik
+Oznaczmy $P(t)=\det(tV-V^T)$. Ponieważ rozmiar
+macierzy jest parzysty, transpozycja i zmiana znaku
+wszystkich wierszy dają
+\[
+P(t^{-1})=t^{-2g}\det(V-tV^T)=t^{-2g}P(t).
+\]
+Wobec tego $Q(t):=t^{-g}P(t)$ spełnia $Q(t^{-1})=Q(t)$
+oraz $Q(1)=1$. Istnieje więc normalizacja symetryczna.
+Jeśli drugi reprezentant spełniający oba warunki ma
+postać $\varepsilon t^k Q(t)$, to podstawienie $t=1$
+daje $\varepsilon=1$, a symetria implikuje
+$(t^k-t^{-k})Q(t)=0$. Ponieważ $Q(1)=1$, jest to
+niezerowy wielomian Laurenta, więc $k=0$.
+Normalizacja symetryczna jest zatem jednoznaczna. Wzór na wyznacznik
 węzła wynika z identyfikacji macierzy Foxa przy $t=-1$
 z odpowiednią prezentacją modułu Alexandera; jest to standardowa
 redukcja relacji Wirtingera. Nieparzystość wynika z kongruencji
@@ -885,8 +1198,9 @@ V_T+V_T^T=
 \]
 której wartości własne wynoszą $1$ i $3$. Są dodatnie,
 zatem $\sigma(T)=2$. W szczególności trójlistnik nie jest
-amfichiralny, a z nierówności sygnaturowej otrzymujemy od razu
-$g_4^{\mathrm{sm}}(T)\ge 1$.
+amfichiralny, a z klasycznej nierówności sygnaturowej,
+sformułowanej w Twierdzeniu~\ref{thm:kt-signature-four-genus},
+otrzymujemy $g_4^{\mathrm{sm}}(T)\ge 1$.
 
 Dla węzła ósemkowego można wziąć macierz
 $V_8=\begin{psmallmatrix}1&0\\-1&-1\end{psmallmatrix}$. Otrzymujemy
@@ -914,7 +1228,12 @@ ale różnią się wielomianem Alexandera, wyznacznikiem i sygnaturą.
 Równość $\Delta_K(t)=1$ nie pociąga za sobą trywialności węzła.
 Istnieją nietrywialne węzły o trywialnym wielomianie Alexandera;
 przykładowo odpowiednie satelity typu Whiteheada. Wielomian
-Alexandera nie rozróżnia też węzła od jego odbicia lustrzanego.
+Alexandera nie rozróżnia też węzła od jego odbicia lustrzanego:
+macierz Seiferta odbicia wynosi $-V^T$ (rachunek orientacji
+podajemy w sekcji \ref{sec:kt-sygnatura}), a
+$\det(t(-V^T)-(-V^T)^T)=\det(-(tV-V^T)^T)
+=\det(tV-V^T)$,
+gdyż rozmiar macierzy jest parzysty.
 Potrzebujemy zatem dalszych niezmienników.
 \end{uwaga}
 
@@ -926,27 +1245,47 @@ gdzie $P\in GL_{2g}(\mathbb Z)$. Przy elementarnym
 powiększeniu powierzchni Seiferta macierz można, po
 odpowiedniej zmianie bazy, zapisać jako
 \[
-V'=\begin{pmatrix}V&0&0\\ u^T&0&0\\v^T&1&0\end{pmatrix}
+V'=\begin{pmatrix}V&u&0\\ v^T&z&0\\0&1&0\end{pmatrix}
 \quad\text{lub}\quad
-V'=\begin{pmatrix}V&u&v\\0&0&1\\0&0&0\end{pmatrix},
+V'=\begin{pmatrix}V&u&0\\v^T&z&1\\0&0&0\end{pmatrix},
 \]
-gdzie $u,v\in\mathbb Z^{2g}$. W obu przypadkach
+gdzie $u,v\in\mathbb Z^{2g}$ są wektorami kolumnowymi,
+a $z\in\mathbb Z$. W obu przypadkach
 $\det(tV'-{V'}^T)$ różni się od $\det(tV-V^T)$
 co najwyżej przez czynnik będący jednostką w
 $\mathbb Z[t,t^{-1}]$.
 \end{stwierdzenie}
 
 \begin{proof}
-Przy zmianie bazy biliniowa forma Seiferta jest mnożona
+Przy zmianie bazy macierz dwuliniowej formy Seiferta jest mnożona
 przez $P^T$ i $P$, zatem
 $\det(tP^TVP-P^TV^TP)=(\det P)^2\det(tV-V^T)
-=\det(tV-V^T)$. Dla pierwszej macierzy $V'$ rozwijamy
-$\det(tV'-{V'}^T)$ kolejno względem ostatniej kolumny
-i ostatniego wiersza; otrzymujemy czynnik $t$ (z
-możliwym znakiem zależnym od kolejności bazy) razy
-$\det(tV-V^T)$. Dla drugiej postaci otrzymujemy
-analogicznie czynnik $t$. Są one jednostkami w pierścieniu
-wielomianów Laurenta.
+=\det(tV-V^T)$. Dla pierwszej postaci ostatnia kolumna macierzy
+$tV'-{V'}^T$ ma jeden niezerowy element $-1$
+w przedostatnim wierszu, a jej ostatni wiersz
+ma jeden niezerowy element $t$ w przedostatniej
+kolumnie. Oznaczmy rozmiar powiększonej macierzy przez $N=2g+2$.
+Rozwijając wyznacznik względem ostatniej kolumny,
+otrzymujemy czynnik $(-1)^{(N-1)+N}(-1)=1$.
+W pozostałej macierzy ostatni wiersz ma jedyny
+niezerowy element $t$ na ostatniej pozycji,
+więc drugie rozwinięcie daje czynnik $t$ bez
+dodatkowej zmiany znaku. Pozostaje macierz
+$tV-V^T$. Otrzymujemy dokładnie
+$\det(tV'-{V'}^T)=t\det(tV-V^T)$.
+Dla drugiej postaci odpowiednie elementy
+wynoszą $t$ oraz $-1$: pierwsze rozwinięcie
+daje czynnik $-t$, a drugie $-1$.
+Ich iloczyn ponownie wynosi $t$.
+Argument obejmuje także $g=0$, przy konwencji
+wyznacznika pustej macierzy równego jeden. Wektory $u,v$ i liczba $z$ nie wpływają
+na ten rachunek. Czynnik $t$ jest jednostką
+pierścienia $\mathbb Z[t,t^{-1}]$.
+Zera w ostatniej kolumnie, odpowiednio
+w ostatnim wierszu, są niezbędne: dopuszczenie
+tam dowolnych wektorów nie jest ogólnie
+elementarnym powiększeniem i może zmienić
+wielomian Alexandera poza mnożeniem przez jednostkę.
 Twierdzenie o $S$-równoważności stwierdza, że wszystkie macierze
 Seiferta tego samego węzła można połączyć skończonym
 ciągiem takich operacji i ich odwrotności. Ten ostatni
@@ -977,9 +1316,26 @@ $\partial_i(1)=0$ oraz
 $\partial_i(x_j^{-1})=-x_j^{-1}\delta_{ij}$.
 \end{definicja}
 
-Różnicą w stosunku do zwykłej pochodnej jest reguła
-Leibniza: drugi składnik jest mnożony przez $u$, a nie
-przez pochodną $u$ razy $v$. Operacja ta jest naturalną
+Istnienie i jednoznaczność pochodnej wynikają z postaci
+zredukowanej słów. Dla słowa $w=l_1\cdots l_m$ w literach
+$l_k=x_j^{\pm1}$ kładziemy
+\[
+\partial_i(w)=\sum_{k=1}^m l_1\cdots l_{k-1}\partial_i(l_k),
+\]
+przy czym wartości na literach są podane w definicji.
+Usunięcie sąsiednich liter $l,l^{-1}$ nie zmienia sumy:
+ich wkład wynosi, po wyłączeniu wspólnego prefiksu,
+$\partial_i(l)+l\partial_i(l^{-1})=0$,
+a prefiksy późniejszych liter pozostają równe w grupie.
+Wzór jest więc dobrze określony i przez podział sumy
+spełnia regułę Leibniza. Ta reguła wymusza podany wzór
+na każdym słowie, co dowodzi jednoznaczności;
+następnie przedłużamy odwzorowanie $\mathbb Z$-liniowo.
+Dla dowolnych elementów $u,v$ pierścienia grupowego
+reguła przyjmuje postać
+$\partial_i(uv)=\partial_i(u)\epsilon(v)+u\partial_i(v)$,
+gdzie $\epsilon$ jest augmentacją (sumą współczynników).
+Wynika to z rozwinięcia obu stron przez liniowość. Operacja ta jest naturalną
 pochodną w wolnym rachunku różniczkowym, dopasowaną
 do algebry grupy.
 
@@ -1015,8 +1371,8 @@ nad pierścieniem $\Lambda=\mathbb Z[t,t^{-1}]$.
 Niech $D$ będzie diagramem zorientowanego węzła
 $K\subset S^3$ o $n\geq1$ skrzyżowaniach.
 Z prezentacji Wirtingera wybierzmy $n$ generatorów
-$x_1,\dots,x_n$ i $n-1$ niezależnych relacji
-$r_1,\dots,r_{n-1}$. Niech
+$x_1,\dots,x_n$ i pozostawmy $n-1$ relatorów
+$r_1,\dots,r_{n-1}$ po usunięciu jednego zbędnego relatora. Niech
 $\phi(x_j)=t$ dla wszystkich $j$. Zbudujmy macierz
 $A=(\phi(\partial_jr_i))$ rozmiaru $(n-1)\times n$.
 Po skreśleniu dowolnej jednej kolumny otrzymujemy
@@ -1047,22 +1403,53 @@ transpozycją macierzy pochodnych Foxa. Istotnie, śledząc
 brzeg podniesionej komórki odpowiadającej słowu
 $r_i$, każdą literę $x_j$ odczytujemy z wagą równą obrazowi
 prefiksu tego słowa w $\Lambda$. Jest to dokładnie reguła
-Leibniza pochodnej Foxa; litera odwrotna wnosi wagę ujemną.
+Leibniza pochodnej Foxa. Dokładniej, jeśli obraz
+prefiksu przed literą $x_j$ wynosi $t^h$, to wkład
+wynosi $t^h$, a dla litery $x_j^{-1}$ wynosi
+$-t^{h-1}$: podniesioną krawędź przechodzimy
+w przeciwnym kierunku, od poziomu $h$ do $h-1$.
+Sumując te wkłady, otrzymujemy odpowiednią współrzędną
+brzegu komórki.
 Fundamentalna tożsamość Foxa implikuje
 $\partial_1\partial_2=0$. Dlatego po utożsamieniu
 $\ker\partial_1$ z $\Lambda^{n-1}$ macierz
 $\partial_2$ jest transpozycją $A^{(j)}$.
+Można też bezpośrednio sprawdzić niezależność
+wyboru skreślanej kolumny. Z fundamentalnej
+tożsamości Foxa dla każdego relatora wynika
+$(t-1)\sum_j A_{ij}=0$, ponieważ $\phi(r_i)=1$.
+Stąd suma wszystkich kolumn $A$ jest zerowa.
+Jeśli $j\ne k$, to w minorze bez kolumny $j$
+zastępujemy kolumnę $k$ przez ujemną sumę
+wszystkich pozostałych kolumn wraz z kolumną $j$.
+Z wieloliniowości wyznacznika pozostaje tylko
+składnik z kolumną $j$, gdyż pozostałe dają
+powtórzoną kolumnę. Po uporządkowaniu kolumn
+otrzymujemy minor bez kolumny $k$, z dokładnością
+do znaku. Dla $n=1$ jedyny minor jest pusty.
 
 W pierwszej homologii mamy
 $H_1(\widetilde X_K;\mathbb Z)=\ker\partial_1/
-\operatorname{im}\partial_2$. Standardowy kompleks
-Wirtingera odtwarza pierwszy typ homotopii dopełnienia,
-więc oblicza tę samą pierwszą homologię co nakrycie.
+\operatorname{im}\partial_2$. Kompleks prezentacji i $X_K$ mają tę samą grupę
+fundamentalną $G_K$, a grupy fundamentalne ich nakryć
+odpowiadają tej samej podgrupie $\ker\phi$.
+Twierdzenie Hurewicza w stopniu pierwszym identyfikuje
+obie pierwsze homologie z abelianizacją $\ker\phi$.
+Działanie generatora przekształceń pokładowych
+odpowiada w obu przypadkach temu samemu sprzężeniu
+przez element o obrazie $t$ (przy zgodnym wyborze konwencji).
+Zmiana takiego elementu o element $\ker\phi$ daje tylko
+sprzężenie wewnętrzne, trywialne po abelianizacji.
+Otrzymujemy zatem izomorfizm $\Lambda$-modułów;
+nie potrzeba równoważności homotopijnej całych kompleksów.
 Zatem moduł Alexandera ma prezentację $A^{(j)}$
 (z dokładnością do transpozycji), a jego wielomianem
-rzędu zerowego jest $\det A^{(j)}$. W połączeniu z
-poprzednim twierdzeniem daje to
-$\det A^{(j)}\doteq\Delta_K(t)$.
+rzędu zerowego jest $\det A^{(j)}$. W połączeniu z twierdzeniem o nakryciu cyklicznym
+daje to $\det A^{(j)}\doteq\Delta_K(t)$:
+jeśli generator $t$ odpowiada przeciwnej numeracji kopii
+niż w tamtym dowodzie, podstawiamy $t^{-1}$, co nie zmienia
+klasy wielomianu na mocy udowodnionej symetrii
+$\Delta_K(t^{-1})\doteq\Delta_K(t)$.
 \end{proof}
 
 \begin{przyklad}[Pełne obliczenie dla trójlistnika]
@@ -1123,30 +1510,52 @@ potęgi $z$, a jego wyraz stały wynosi jeden.
 \end{twierdzenie}
 
 \begin{proof}[Zarys indukcji skein]
-Dla splotów wprowadzamy symetrycznie unormowany wielomian
-Alexandera z uwzględnieniem liczby składowych; jego wartości
-mogą należeć do $\mathbb Z[t^{1/2},t^{-1/2}]$. Relacja
+Dla splotów stosujemy normalizację wielomianu
+Alexandera zgodną z relacją skein, której wartości
+mogą należeć do $\mathbb Z[t^{1/2},t^{-1/2}]$.
+Nie zakładamy niezmienniczości tej normalizacji
+przy $t\mapsto t^{-1}$ dla splotów wieloskładowych;
+na węzłach jest to normalizacja symetryczna. Relacja
 Alexandera--Conwaya ma postać
 $\Delta_{L_+}(t)-\Delta_{L_-}(t)=
 (t^{1/2}-t^{-1/2})\Delta_{L_0}(t)$.
-Można ją uzyskać bezpośrednio z dwóch macierzy Seiferta
-różniących się lokalnym uchwytem w otoczeniu skrzyżowania
-lub z odpowiednich macierzy prezentacji modułu Alexandera.
-Po podstawieniu $z=t^{1/2}-t^{-1/2}$ przyjmuje ona dokładnie
+Istnienie wielomianu Conwaya i twierdzenie o tej
+normalizacji wielomianu Alexandera dla splotów wraz
+z relacją skein przyjmujemy jako klasyczne wyniki
+Alexandera--Conwaya. Nie wyprowadzamy ich tutaj
+z lokalnej konstrukcji macierzy Seiferta. Po podstawieniu
+$z=t^{1/2}-t^{-1/2}$ relacja przyjmuje dokładnie
 postać relacji Conwaya.
 
 Wyjaśnijmy jednoznaczność rekurencji. Dla diagramu splotu
 wybieramy punkty bazowe na składowych i kolejność tych
 składowych. Zmieniając skrzyżowania, w których po raz
 pierwszy przechodzimy dołem podczas śledzenia diagramu,
-uzyskujemy diagram splotu rozdzielnego. Każdą taką zmianę
+uzyskujemy diagram splotu trywialnego (diagram zstępujący). Każdą taką zmianę
 wyrażamy relacją skein, przy czym wygładzenie zmniejsza
 liczbę skrzyżowań. Indukcja po liczbie skrzyżowań, wraz
 z wartością $1$ na węźle trywialnym i $0$ na splotach
 rozdzielnych o co najmniej dwóch składowych, wyznacza
-wielomian jednoznacznie. Dla węzła relacja symetrii
-wielomianu Alexandera odpowiada niezmienniczości po
-zamianie $z$ na $-z$, skąd znikają potęgi nieparzyste.
+wielomian jednoznacznie. Dokładniej, różnica dwóch
+funkcji spełniających tę samą relację i te same warunki
+normalizacji nie zmienia się przy zmianie skrzyżowania,
+jeśli znika już na diagramach o mniejszej liczbie
+skrzyżowań. Znika na diagramie zstępującym, a zatem
+także na diagramie wyjściowym. Ten sam argument działa
+nad pierścieniem Laurenta w $u=t^{1/2}$ z mnożnikiem
+$u-u^{-1}$. Funkcje $\Delta_L(u^2)$ i $\nabla_L(u-u^{-1})$
+spełniają w nim tę samą relację i te same wartości
+na splotach trywialnych. Są więc równe. Podstawienie $z=u-u^{-1}$, gdzie $u=t^{1/2}$,
+jest injektywne na pierścieniu $\mathbb Z[z]$:
+dla wielomianu niezerowego stopnia $d$ współczynnik
+przy $u^d$ po podstawieniu jest jego współczynnikiem
+wiodącym. Zamiana $u$ na $u^{-1}$ zmienia $z$ na $-z$.
+Symetria $\Delta_K^{\mathrm{sym}}$ daje więc
+$\nabla_K(z)=\nabla_K(-z)$. W pierścieniu
+$\mathbb Z[z]$ oznacza to zerowanie wszystkich
+współczynników przy potęgach nieparzystych.
+Po podstawieniu $t=1$, $u=1$, mamy
+$\nabla_K(0)=\Delta_K^{\mathrm{sym}}(1)=1$.
 \end{proof}
 
 \begin{definicja}[Forma kwadratowa i niezmiennik Arfa]
@@ -1214,39 +1623,161 @@ symplektycznej i powierzchni $F$.
 \end{stwierdzenie}
 
 \begin{proof}
-Dla dwóch poprzecznych krzywych $\alpha,\beta\subset F$
-reprezentant klasy $[\alpha]+[\beta]$ otrzymujemy przez
-lokalne wygładzenie punktów przecięcia. Przy obliczaniu
-samosplecenia pojawiają się składniki diagonalne
-$q_F([\alpha])$, $q_F([\beta])$ oraz suma dwóch składników
-mieszanych. Modulo dwa te ostatnie są równe algebraicznej
-liczbie przecięć krzywych, stąd wzór kwadratowy.
+Ponieważ $H_1(F;\mathbb Z)$ jest wolna, każdą klasę
+modulo dwa podnosimy do klasy całkowitej. W bazie
+całkowitej forma Seiferta daje $q_F(x)=x^TVx\bmod 2$.
+Jeśli podniesienie $x$ zastąpimy przez $x+2y$,
+różnica wartości całkowitych wynosi
+$2y^TVx+2x^TVy+4y^TVy$, a więc jest parzysta.
+Wartość jest zatem dobrze określona. Ponadto
+\[
+q_F(x+y)-q_F(x)-q_F(y)
+=x^T(V+V^T)y\bmod 2.
+\]
+Modulo dwa macierze $V+V^T$ i $V-V^T$ są równe.
+Na mocy stwierdzenia o postaci przecięcia ostatnia
+wartość jest równa $x\cdot y$.
 
 Niezależność sumy $\sum_iq_F(a_i)q_F(b_i)$ od bazy
-symplektycznej wynika dokładnie z lematu
-\ref{lem:tg-arf-gauss}: jego lewa strona jest określona
-bez użycia jakiejkolwiek bazy.
-Przy zmianie powierzchni Seiferta macierze są związane
-$S$-równoważnością. Elementarne powiększenie dodaje parę
-hiperboliczną, dla której składnik formy Arfa wynosi zero.
-Zmiany bazy i takie powiększenia nie zmieniają więc wyniku.
+symplektycznej wynika z Lematu~\ref{lem:tg-arf-gauss}.
+
+Sprawdźmy teraz jawnie niezmienniczość przy elementarnym
+powiększeniu macierzy Seiferta. Jeżeli $V$ reprezentuje
+formę Seiferta, to w wybranych współrzędnych
+$q_V(x)=x^TVx\pmod2$. Dla obu postaci powiększenia
+macierzy $V'$ podanych w poprzedniej części rozdziału,
+z wektorami $u,v$ i liczbą $z$, otrzymujemy
+dla $(x,s,t)\in\mathbb F_2^{2g}\oplus\mathbb F_2^2$
+ten sam wzór
+\[
+q_{V'}(x,s,t)
+=q_V(x)+s(u+v)^Tx+zs^2+st.
+\]
+Podstawienie liniowe
+$t'=t+(u+v)^Tx+zs$
+jest odwracalne nad $\mathbb F_2$ i daje
+$q_{V'}(x,s,t)=q_V(x)+st'$.
+Zatem forma kwadratowa po powiększeniu
+jest izometryczna z sumą ortogonalną starej
+formy oraz płaszczyzny hiperbolicznej
+$q_H(s,t')=st'$. Jej niezmiennik Arfa wynosi
+zero, ponieważ $q_H(1,0)=q_H(0,1)=0$.
+Wobec Lematu~\ref{lem:tg-arf-gauss} dodanie tej
+płaszczyzny nie zmienia niezmiennika Arfa.
+Zmiana bazy indukuje izometrię form kwadratowych.
+
+Korzystamy na końcu z klasycznego twierdzenia
+o $S$-równoważności macierzy Seiferta tego samego
+węzła, przyjętego w sekcji \ref{sec:kt-alexander}. Wykonany rachunek uzasadnia, dlaczego
+operacje generujące tę równoważność nie zmieniają
+wartości niezmiennika Arfa.
 \end{proof}
 
-\begin{stwierdzenie}
-Niech $K\subset S^3$ będzie węzłem, a
-$\nabla_K(z)=1+a_2z^2+a_4z^4+\cdots$.
-Wtedy $\operatorname{Arf}(K)\equiv a_2\pmod2$.
-Ponadto jeśli $K$ jest gładko slice, to
-$\operatorname{Arf}(K)=0$.
-\end{stwierdzenie}
+\begin{twierdzenie}[Kryterium Conwaya dla Arfa i slicowość;
+wyniki klasyczne]
+\label{thm:kt-arf-conway-slice}
+Niech $K\subset S^3$ będzie zorientowanym węzłem,
+a $\nabla_K(z)=1+a_2z^2+a_4z^4+\cdots$
+jego wielomianem Conwaya. Wówczas
+$\operatorname{Arf}(K)\equiv a_2\pmod2$.
+Jeżeli ponadto $K$ ogranicza gładko właściwie
+zanurzony dysk w $B^4$ (czyli jest gładko typu slice
+w sensie Definicji~\ref{def:kt-four-ball-genus}),
+to $\operatorname{Arf}(K)=0$.
+\end{twierdzenie}
 
-\begin{uwaga}
-Zerowanie niezmiennika Arfa jest warunkiem koniecznym
-slicowości, ale nie wystarczającym. Niezmiennik ten
-jest znacznie słabszy niż $\tau$ czy $s$, lecz
-ma ważne znaczenie w teorii form kwadratowych
-nad ciałem dwuelementowym i w czterowymiarowej
-teorii chirurgii.
+\begin{proof}[Rachunek algebraiczny i twierdzenie o metabolizerze]
+Najpierw udowodnimy algebraiczne kryterium modulo osiem.
+Wybierzmy całkowitą bazę symplektyczną postaci przecięcia
+w kolejności $(a_1,b_1,\ldots,a_g,b_g)$ i zapiszmy
+$M=V+V^T$. Pracujemy w pierścieniu $\mathbb Z/8\mathbb Z$.
+Macierz $M$ modulo dwa jest sumą bloków
+$\begin{psmallmatrix}0&1\\1&0\end{psmallmatrix}$.
+Pierwszy blok diagonalny ma postać
+$D=\begin{psmallmatrix}2a&b\\b&2c\end{psmallmatrix}$,
+gdzie $b$ jest nieparzyste. Mamy
+$\det D=4ac-b^2\equiv-1+4ac\pmod8$,
+zatem $D$ jest odwracalna w tym pierścieniu.
+Zapiszmy $M=\begin{psmallmatrix}D&B\\B^T&C\end{psmallmatrix}$.
+Wszystkie współczynniki $B$ są parzyste.
+Eliminacja blokowa daje
+$\det M=\det D\,\det(C-B^TD^{-1}B)$.
+W $D^{-1}$ przekątna jest parzysta, gdyż
+$D^{-1}=(\det D)^{-1}\begin{psmallmatrix}2c&-b\\-b&2a\end{psmallmatrix}$.
+Dla kolumny $(2r,2s)^T$ macierzy $B$ jej wkład
+do przekątnej $B^TD^{-1}B$ jest więc wielokrotnością
+ośmiu: składniki diagonalne są podzielne przez osiem,
+a składnik mieszany zawiera czynnik $2(2r)(2s)$.
+Pozostałe współczynniki $B^TD^{-1}B$ są podzielne
+przez cztery. Po eliminacji pozostałe bloki zachowują
+zatem parzystości swoich współczynników oraz wartości
+na przekątnej modulo osiem. Możemy powtórzyć rachunek
+dla kolejnych par, nie zmieniając wartości $q_F(a_i)$
+ani $q_F(b_i)$ odczytywanych z połówek przekątnej modulo dwa.
+Otrzymujemy
+\[
+\det M\equiv(-1)^g
+\left(1-4\sum_{i=1}^g q_F(a_i)q_F(b_i)\right)\pmod8,
+\]
+ponieważ iloczyny dwóch składników podzielnych przez
+cztery znikają modulo osiem. W normalizacji symetrycznej
+$\Delta_K^{\mathrm{sym}}(t)=t^{-g}\det(tV-V^T)$,
+więc $\Delta_K^{\mathrm{sym}}(-1)=(-1)^g\det M$.
+W konsekwencji
+$\Delta_K^{\mathrm{sym}}(-1)\equiv
+1-4\operatorname{Arf}(K)\pmod8$.
+
+Dla części dotyczącej węzłów typu slice przyjmujemy
+klasyczne twierdzenie topologiczne: forma Seiferta
+takiego węzła ma metabolizer (bezpośredni składnik
+rangi $g$, na którym forma Seiferta znika), którego
+redukcja modulo dwa jest podprzestrzenią lagranżowską
+i na której $q_F$ znika.
+
+Z równości
+$\Delta_K^{\mathrm{sym}}(t)=
+\nabla_K(t^{1/2}-t^{-1/2})$
+i podstawienia $t=-1$ otrzymujemy
+$z^2=t+t^{-1}-2=-4$, zatem
+\[
+\Delta_K^{\mathrm{sym}}(-1)
+=1-4a_2+16a_4-\cdots
+\equiv1-4a_2\pmod8.
+\]
+Jeżeli $a_2$ jest parzyste, ostatnia liczba
+jest równa $1$ modulo $8$;
+jeżeli nieparzyste, jest równa $5$ modulo $8$.
+Z udowodnionego kryterium modulo osiem dostajemy
+$\operatorname{Arf}(K)\equiv a_2\pmod2$.
+
+Dla drugiej części zauważmy, że forma
+kwadratowa na przestrzeni symplektycznej
+wymiaru $2g$, która znika na podprzestrzeni
+lagranżowskiej, ma niezmiennik Arfa równy zero.
+Istotnie, bazę $a_1,\ldots,a_g$ tej podprzestrzeni
+można uzupełnić do bazy symplektycznej. Z niezdegenerowania
+postaci $\omega$ wybieramy wektory $b_i$ takie, że
+$\omega(a_j,b_i)=\delta_{ji}$. Kolejno dla $i<j$
+zastępujemy $b_j$ przez $b_j+\omega(b_i,b_j)a_i$.
+Operacja zeruje $\omega(b_i,b_j)$, nie zmienia parowań
+z żadnym $a_k$ ani parowań z wcześniej ustalonymi
+$b_k$, $k<i$. Po wszystkich operacjach parowania
+między wektorami $b_i$ znikają, a z parowań z $a_j$
+wynika liniowa niezależność całej rodziny.
+W tej bazie otrzymujemy $q_F(a_i)=0$ dla każdego $i$,
+a więc $\sum_iq_F(a_i)q_F(b_i)=0$.
+Korzystając z przyjętego twierdzenia o metabolizerze,
+kończymy dowód.
+\end{proof}
+
+\begin{uwaga}[Zakres dowodu]
+Powyżej udowodniono algebraiczne kryterium modulo osiem,
+rachunek kongruencji Conwaya i wniosek dla formy
+kwadratowej z podprzestrzenią lagranżowską zerowania.
+Twierdzenie o metabolizerze węzła typu slice
+pozostaje jawnym wynikiem zewnętrznym.
+Zerowanie niezmiennika Arfa jest warunkiem
+koniecznym slicowości, ale nie wystarczającym.
 \end{uwaga}
 
 \begin{przyklad}
@@ -1276,9 +1807,21 @@ powierzchni i bazy.
 \end{definicja}
 
 Niezależność od powierzchni wynika z $S$-równoważności macierzy
-Seiferta: zmiana bazy zachowuje sygnaturę przez prawo
-bezwładności Sylvestera, a elementarne powiększenia odpowiadają
-dodaniu składnika hiperbolicznego o sygnaturze zero.
+Seiferta. Zmiana bazy zachowuje sygnaturę na mocy prawa
+bezwładności Sylvestera. Dla obu elementarnych powiększeń
+macierzy Seiferta symetryzacja ma postać
+\[
+\begin{pmatrix}M&w&0\\w^T&2z&1\\0&1&0\end{pmatrix},
+\qquad M=V+V^T,\quad w=u+v.
+\]
+Odpowiada jej forma kwadratowa rzeczywista
+$x^TMx+2s w^Tx+2zs^2+2st$.
+Odwracalna zmiana współrzędnych $t'=t+w^Tx+zs$
+przekształca ją w $x^TMx+2st'$.
+Ostatni składnik ma macierz
+$\begin{psmallmatrix}0&1\\1&0\end{psmallmatrix}$,
+o wartościach własnych $1,-1$, a więc sygnaturze zero.
+Obie operacje oraz ich odwrotności zachowują sygnaturę.
 
 \begin{stwierdzenie}
 Niech $K\subset S^3$ będzie węzłem. Wówczas
@@ -1291,9 +1834,14 @@ $\sigma(\overline K)=-\sigma(K)$.
 Macierz $V+V^T$ ma rozmiar $2g(F)$, a sygnatura symetrycznej
 macierzy wymiaru $2g(F)$ ma wartość bezwzględną nie większą
 od $2g(F)$. Minimalizując po powierzchniach, dostajemy pierwszą
-nierówność. Przy odbiciu lustrzanym macierz Seiferta zmienia się,
-z dokładnością do odpowiedniej zmiany bazy, na $-V^T$;
-symetryzacja zmienia znak, co daje drugą równość.
+nierówność. Dyfeomorfizm odwracający orientację otoczenia
+i przenoszący orientację powierzchni zamienia dodatnią
+normalną na ujemną oraz zmienia znak liczby splecenia.
+W przeniesionej bazie współczynnik macierzy odbicia jest
+więc równy $-\operatorname{lk}(\alpha_i^-,\alpha_j)
+=-v_{ji}$, zgodnie z rachunkiem w sekcji
+\ref{sec:kt-alexander}. Macierz Seiferta odbicia wynosi
+$-V^T$; symetryzacja zmienia znak, co daje drugą równość.
 \end{proof}
 
 \begin{przyklad}
@@ -1306,15 +1854,68 @@ amfichiralny. Dla $V_8$ macierz symetryczna ma jedną wartość
 dodatnią i jedną ujemną, a więc $\sigma(4_1)=0$.
 \end{przyklad}
 
+\begin{twierdzenie}[Nierówność sygnaturowa dla rodzaju czterowymiarowego;
+wynik przyjmowany]
+\label{thm:kt-signature-four-genus}
+Dla każdego węzła $K\subset S^3$ zachodzi
+\[
+|\sigma(K)|\le 2g_4^{\mathrm{sm}}(K).
+\]
+W szczególności węzeł gładko typu slice ma
+sygnaturę równą zero.
+\end{twierdzenie}
+
+\begin{uwaga}[Zakres dowodu nierówności]
+Powyższa nierówność nie wynika z samej
+definicji macierzy Seiferta ani z ograniczenia
+$|\sigma(K)|\le2g(K)$: jej dowód wykorzystuje
+czterowymiarową topologię, np. sygnaturę
+dwukrotnego nakrycia $B^4$ rozgałęzionego
+wzdłuż właściwie zanurzonej powierzchni
+o brzegu $K$ oraz oszacowanie rzędu jego
+formy przecięcia. Jest to klasyczny
+wynik Murasugiego, przyjmowany tutaj
+z literatury. Użycie tej nierówności
+w przykładzie trójlistnika nie jest
+przedstawiane jako dowód z poprzednich
+stwierdzeń o rodzaju trójwymiarowym.
+\end{uwaga}
+
 \begin{uwaga}[Sygnatury Levine'a--Tristrama]
 Pełniejszy układ niezmienników uzyskuje się z hermitowskich
 macierzy $H_\omega:=(1-\omega)V+(1-\overline\omega)V^T$
-dla $\omega\in S^1\setminus\{1\}$. Ich sygnatury, gdy macierz
-jest niezdegenerowana, definiują funkcję sygnatur węzła.
+dla $\omega\in S^1\setminus\{1\}$.
+Ich sygnatury są niezmiennikami również wtedy, gdy
+macierz jest osobliwa (zerowe wartości własne nie
+wchodzą do sygnatury). Przy zmianie bazy stosujemy
+prawo bezwładności dla form hermitowskich.
+Niech $c=1-\omega$. Po elementarnym powiększeniu
+macierz hermitowska ma postać
+\[
+\begin{pmatrix}H_\omega&w&0\\w^*&d&\beta\\0&\overline\beta&0\end{pmatrix},
+\]
+gdzie $w=cu+\overline c v$, $d=(c+\overline c)z\in\mathbb R$,
+a $\beta\in\{c,\overline c\}$ jest niezerowa.
+Jej forma kwadratowa na $(x,s,t)$ to
+$x^*H_\omega x+2\operatorname{Re}(x^*ws)
++d|s|^2+2\operatorname{Re}(\overline s\beta t)$.
+Zmiana współrzędnych
+$t'=\beta t+w^*x+\tfrac d2 s$ jest odwracalna
+i daje $x^*H_\omega x+2\operatorname{Re}(\overline s t')$.
+Dodany blok ma wartości własne $1,-1$, więc
+sygnatura nie zmienia się. Twierdzenie o $S$-równoważności
+zapewnia niezależność od powierzchni.
 Dla $\omega=-1$ otrzymujemy
 $H_{-1}=2(V+V^T)$, a więc sygnaturę klasyczną.
-Przy pierwiastkach wielomianu Alexandera na okręgu jednostkowym
-mogą pojawiać się skoki funkcji sygnatur.
+Ponieważ $1-\omega=-\omega(1-\overline\omega)$,
+mamy $H_\omega=-(1-\overline\omega)(\omega V-V^T)$.
+Poza punktem $1$ macierz jest zatem osobliwa dokładnie
+w pierwiastkach wielomianu Alexandera na okręgu
+jednostkowym. Na każdym łuku, na którym jest odwracalna,
+ciągłość rzeczywistych wartości własnych zapewnia
+stałość sygnatury: żadna wartość własna nie może
+zmienić znaku bez przejścia przez zero. Przy
+pierwiastkach mogą pojawiać się skoki.
 \end{uwaga}
 
 \section{Wielomian Jonesa i nawias Kauffmana}
@@ -1384,7 +1985,12 @@ wygładzeniu. Wówczas
 \langle D\rangle=\sum_s A^{a(s)-b(s)}
 (-A^2-A^{-2})^{|s|-1}.
 \]
-To pierwszy całkowicie jawny wzór obliczeniowy.
+Każdy wybór wygładzenia na wszystkich skrzyżowaniach
+występuje dokładnie raz, niezależnie od kolejności
+rozwijania rekurencji. Wzór dowodzi więc również, że
+nawias jest dobrze określony. Izotopia płaszczyzny
+przenosi stany bijektywnie i zachowuje ich współczynniki
+oraz liczbę okręgów.
 
 \begin{stwierdzenie}
 Nawias Kauffmana jest niezmienny przy ruchach Reidemeistera
@@ -1394,30 +2000,122 @@ $-A^3$ lub $-A^{-3}$, przy zgodnej konwencji znaku skrzyżowania.
 \end{stwierdzenie}
 
 \begin{proof}
-Sprawdzenie pierwszego ruchu polega na jednorazowym rozwinięciu
-skrzyżowania i użyciu relacji dla dodatkowego okręgu:
+W przyjętej konwencji znaku dodatnie skrzyżowanie
+ma zorientowane wygładzenie typu A, a ujemne typu B.
+Istotnie, gdy oba pasma są skierowane w dół, a pasmo
+górne biegnie od lewego górnego do prawego dolnego
+końca, wyznacznik uporządkowanej pary stycznych
+(pasmo dolne, pasmo górne) jest dodatni.
+Wygładzenie pionowe zachowuje orientacje i jest typu A.
+Odwrócenie orientacji jednego pasma zmienia znak
+i zamienia wygładzenie zachowujące orientacje;
+zamiana pasma górnego z dolnym również zmienia znak
+i zamienia oznaczenia A i B. Odwrócenie obu orientacji
+nie zmienia ani znaku, ani rodzaju wygładzenia.
+
+W ruchu $\mathrm{R I}$ zorientowane wygładzenie
+oddziela jeden mały okrąg od reszty łuku, a drugie
+wygładzenie pozostawia sam łuk. Dla dodatniego skrętu
+mnożnik nawiasu wynosi więc
 $A(-A^2-A^{-2})+A^{-1}=-A^3$.
-Dla przeciwnego skrętu analogiczny rachunek daje $-A^{-3}$.
-Dla ruchu $\mathrm{R II}$ rozwijamy dwa skrzyżowania. Cztery
-stany wygładzenia grupują się w dwa typy połączenia końców;
-współczynniki upraszczają się przy
-$\delta=-A^2-A^{-2}$, gdyż $A^2+\delta+A^{-2}=0$.
-W ruchu $\mathrm{R III}$ rozwinięcie jednego z trzech
-skrzyżowań po obu stronach redukuje sprawdzenie do równości
-dwóch diagramów związanych ruchami płaskimi i $\mathrm{R II}$.
-Są to skończone rachunki lokalne, niezależne od reszty diagramu;
-przy szczegółowym rozwinięciu trzeba zachować tę samą konwencję
-wygładzeń A i B na wszystkich obrazach lokalnych.
+Dla ujemnego skrętu otrzymujemy
+$A^{-1}(-A^2-A^{-2})+A=-A^{-3}$.
+
+Aby dokładnie sprawdzić ruchy $\mathrm{R II}$ i
+$\mathrm{R III}$, przejdźmy do lokalnej algebry
+diagramów o odpowiednio dwóch i trzech pasmach.
+Oznaczmy przez $1$ diagram pionowych pasm,
+a przez $e_i$ diagram wygładzenia łączącego
+pasma $i$ oraz $i+1$ na górze i na dole.
+Składanie diagramów polega na ustawianiu ich
+jeden nad drugim; zamknięta pętla wewnętrzna
+daje czynnik $\delta=-A^2-A^{-2}$.
+Bezpośrednie sklejenie daje relacje
+\[
+e_i^2=\delta e_i,\qquad
+e_1e_2e_1=e_1,\qquad
+e_2e_1e_2=e_2.
+\]
+Lokalne dodatnie i ujemne skrzyżowania
+przy orientacji obu pasm w dół reprezentują odpowiednio
+$b_i=A1+A^{-1}e_i$ oraz
+$b_i^{-1}=A^{-1}1+Ae_i$.
+Dla dwóch pasm obliczamy
+\[
+b_ib_i^{-1}
+=1+(A^2+A^{-2}+\delta)e_i=1.
+\]
+Iloczyn w odwrotnej kolejności jest taki sam,
+bo oba czynniki są kombinacjami liniowymi $1,e_i$.
+To daje oba warianty ruchu $\mathrm{R II}$. Nawias
+nie korzysta z orientacji pasm, zatem dla tej
+lokalnej kontroli można skierować oba pasma wzdłuż
+wspólnego kierunku ruchu; przypadki przeciwnych
+orientacji dają te same diagramy niezorientowane.
+
+Dla trzech pasm rozwijamy trzy czynniki i,
+korzystając z relacji $e_i^2=\delta e_i$,
+$e_1e_2e_1=e_1$, otrzymujemy
+\[
+\begin{aligned}
+b_1b_2b_1
+&=A^3 1
++A(2e_1+e_2)
++A^{-1}(e_1e_2+e_2e_1+\delta e_1)
++A^{-3}e_1\\
+&=A^3 1+A(e_1+e_2)
++A^{-1}(e_1e_2+e_2e_1).
+\end{aligned}
+\]
+Zamieniając indeksy $1$ i $2$ oraz stosując
+$e_2e_1e_2=e_2$, dostajemy dokładnie ten
+sam wynik dla $b_2b_1b_2$.
+A więc $b_1b_2b_1=b_2b_1b_2$.
+Sprawdźmy również warianty z mieszanymi znakami.
+W otoczeniu potrójnego punktu rzutowania wybieramy
+kierunek nieprostopadły do żadnej z trzech stycznych.
+Po ewentualnym odwróceniu orientacji niezorientowanych
+pasm i lokalnym wyprostowaniu możemy odczytać obie
+strony ruchu jako trzypasmowe warkocze.
+Oznaczmy $x=b_1$, $y=b_2$.
+Trzy pasma mają ścisły porządek wysokości; dla ich
+kolejności początkowej $1,2,3$ znaki $p,q,r$ odpowiadają
+porównaniom par $(1,2),(1,3),(2,3)$.
+Po obu stronach ruchu porównujemy te same pary
+w odwrotnej kolejności, więc potrzebujemy równości
+$x^p y^q x^r=y^r x^q y^p$.
+Spośród ośmiu trójek znaków wykluczamy
+$(+,-,+)$ i $(-,+,-)$, bo oznaczałyby cykliczny
+porządek wysokości. Mnożąc $xyx=yxy$ z lewej przez $y^{-1}$
+i z prawej przez $x^{-1}$, a następnie w osobnym
+rachunku z lewej przez $x^{-1}$ i z prawej
+przez $y^{-1}$, otrzymujemy
+\[
+xyx^{-1}=y^{-1}xy,\qquad
+x^{-1}yx=yxy^{-1}.
+\]
+Odwrócenie obu tych równości daje jeszcze
+$xy^{-1}x^{-1}=y^{-1}x^{-1}y$ oraz
+$x^{-1}y^{-1}x=yx^{-1}y^{-1}$.
+Odwrócenie wyjściowej relacji daje przypadek
+wszystkich trzech znaków ujemnych.
+Sprawdziliśmy w ten sposób wszystkie sześć
+porządków wysokości. Każda z tych równości jest lokalną równością
+diagramów z tymi samymi końcami pasm, toteż
+pozostaje prawdziwa po dołączeniu dowolnej
+pozostałej części diagramu i jego zamknięciu.
+Dowiedliśmy niezmienniczości nawiasu przy
+obu ruchach bez odwołania do niewypisanych
+rachunków na rysunkach.
 \end{proof}
 
 \begin{definicja}[Wielomian Jonesa]
 Niech $D$ będzie zorientowanym diagramem węzła lub splotu
 $L\subset S^3$, a $w(D)$ jego skrętem. Kładziemy
 $f_D(A):=(-A^3)^{-w(D)}\langle D\rangle$.
-Następnie definiujemy $V_L(t):=f_D(t^{-1/4})$,
-rozumiejąc wynik jako wielomian Laurenta w $t^{1/2}$.
-Dla węzła przy typowej normalizacji wykładniki są całkowite;
-dla splotów mogą występować połówkowe.
+Następnie definiujemy $V_L(t):=f_D(t^{-1/4})$.
+Poniżej uzasadnimy, że dla węzła jest to wielomian
+Laurenta w $t$, a dla splotu w $t^{1/2}$.
 \end{definicja}
 
 \begin{twierdzenie}
@@ -1438,10 +2136,50 @@ Dla $\mathrm{R II}$ i $\mathrm{R III}$ nie zmienia się ani
 nawias, ani skręt. Dla $\mathrm{R I}$ mnożnik $-A^{\pm3}$
 w nawiasie skraca się z przyrostem $(-A^3)^{-w(D)}$.
 Twierdzenie Reidemeistera zapewnia niezależność od diagramu.
-Relację skein otrzymujemy, rozwijając lokalnie skrzyżowanie
-dla $L_+$ i $L_-$ oraz eliminując oba wygładzenia z
-uwzględnieniem różnicy ich skrętów. Po podstawieniu
-$t=A^{-4}$ otrzymujemy wskazaną tożsamość.
+Uzasadnijmy też wykładniki po podstawieniu $t=A^{-4}$.
+Niech $r$ oznacza liczbę składowych splotu,
+$c$ liczbę skrzyżowań, a $s_0$ liczbę okręgów stanu
+całkowicie zorientowanego wygładzenia.
+Każde takie wygładzenie łączy dwie składowe albo rozcina
+jedną na dwie (w trakcie procesu liczymy zamknięte
+krzywe, także te z jeszcze niewygładzonymi skrzyżowaniami).
+Zatem $s_0\equiv r+c\pmod2$.
+W tym stanie różnica liczby wygładzeń A i B wynosi $w(D)$.
+Wkład do $f_D$ ma wszystkie wykładniki przystające
+modulo cztery do $-2w(D)+2(s_0-1)$, gdyż
+$\delta=-A^2-A^{-2}$ ma oba wykładniki równe
+$2$ modulo cztery. Ponieważ $c\equiv w(D)\pmod2$,
+ta reszta wynosi $2(r-1)$ modulo cztery.
+Zmiana jednego wygładzenia w stanie zmienia różnicę
+liczby A i B o dwa oraz liczbę okręgów o jeden:
+poza małym dyskiem pozostałe wygładzone łuki tworzą
+jedno z dwóch nieprzecinających się połączeń czterech
+końców. Zmiana połączenia skleja dwa okręgi lub
+rozdziela jeden okrąg. Reszta wykładników modulo
+cztery nie zmienia się. Dotyczy to zatem wszystkich
+stanów. Po podstawieniu $A=t^{-1/4}$ wykładniki są
+całkowite dla nieparzystego $r$, a dla parzystego $r$
+należą do $\mathbb Z+\tfrac12$.
+
+Pozostaje relacja skein. Oznaczmy przez $S$ nawias
+zorientowanego wygładzenia, przez $B$ nawias drugiego
+wygładzenia, a przez $w_0$ skręt diagramu poza dyskiem.
+Niech $C=(-A^3)^{-w_0}$. Z ustalonej konwencji wynika
+\[
+\begin{aligned}
+f_{L_+}&=-A^{-3}C(AS+A^{-1}B),\\
+f_{L_-}&=-A^3 C(A^{-1}S+AB),\\
+f_{L_0}&=CS.
+\end{aligned}
+\]
+Wobec tego
+\[
+A^4 f_{L_+}-A^{-4}f_{L_-}
+=C(-A^2 S-B+A^{-2}S+B)
+=(A^{-2}-A^2)f_{L_0}.
+\]
+Podstawiając $t=A^{-4}$, otrzymujemy dokładnie relację
+$t^{-1}V_{L_+}-tV_{L_-}=(t^{1/2}-t^{-1/2})V_{L_0}$.
 \end{proof}
 
 \begin{uwaga}[Orientacje i konwencje]
@@ -1471,9 +2209,19 @@ $1$ diagram identyczności, a przez $e$ element z jednym połączeniem
 między pasmami. Dla generatora warkoczowego mamy wzór
 $b=A1+A^{-1}e$, relację $e^2=\delta e$ oraz
 $\delta=-A^2-A^{-2}$.
-Rozwijając $b^3$, dostajemy
+Z relacji $e^2=\delta e$ otrzymujemy
 \[
-b^3=A^3 1+(A-A^{-3}+A^{-7})e.
+b^2=A^2 1+(2+A^{-2}\delta)e
+=A^2 1+(1-A^{-4})e.
+\]
+Mnożąc przez $b$, dostajemy
+\[
+\begin{aligned}
+b^3
+&=A^3 1+
+\bigl(A+A(1-A^{-4})+A^{-1}(1-A^{-4})\delta\bigr)e\\
+&=A^3 1+(A-A^{-3}+A^{-7})e.
+\end{aligned}
 \]
 Po domknięciu warkocza diagram $1$ daje dwa okręgi, natomiast
 $e$ daje jeden okrąg. Z definicji nawiasu Kauffmana wynika zatem
@@ -1531,12 +2279,23 @@ Każdy warkocz można zaburzyć tak, aby jego rzut na płaszczyznę
 poziomej i pionowej współrzędnej rzutowania miał skończenie wiele
 skrzyżowań rozdzielonych wysokością. Odczytanie ich w kolejności
 daje słowo w generatorach $\sigma_i^{\pm1}$.
-W rodzinie izotopii ogólnego położenia zmiany słowa pochodzą
-z odwrócenia sąsiednich skrzyżowań, jeśli dotyczą rozłącznych
-par pasm, oraz z lokalnego ruchu trzech pasm. Dają one
-dokładnie relacje komutacji i relację Artina. Szczegółowe
-uzasadnienie zgodności z izotopią względną względem końców
-wymaga argumentu o transwersalności.
+W rodzinie izotopii ogólnego położenia występują trzy
+rodzaje zmian słowa. Dwa skrzyżowania rozłącznych par
+pasm mogą zamienić kolejność, dając relację komutacji.
+Styczność rzutów dwóch pasm tworzy lub usuwa parę
+$\sigma_i^\varepsilon\sigma_i^{-\varepsilon}$,
+co odpowiada skracaniu słowa w grupie wolnej.
+Potrójne przecięcie rzutów daje relację Artina lub
+jeden z jej mieszanych wariantów, które wyprowadziliśmy
+z relacji warkoczowej w dowodzie niezmienniczości nawiasu
+Kauffmana (sekcja \ref{sec:kt-jones}).
+Ruch $\mathrm{R I}$ nie jest możliwy, ponieważ rzut
+każdego pasma pozostaje monotoniczny wzdłuż osi warkocza.
+Każda z wymienionych zmian ma realizację przez izotopię
+warkocza. Argument, że po zaburzeniu rodziny są to
+wszystkie zdarzenia, wymaga twierdzenia o transwersalności
+względnej względem końców; przyjmujemy tutaj ten
+standardowy krok geometryczny dowodu Artina.
 \end{proof}
 
 \begin{definicja}[Domknięcie warkocza]
@@ -1544,6 +2303,9 @@ Dla $\beta\in B_n$ \emph{domknięciem} $\widehat\beta\subset S^3$
 nazywamy splot otrzymany przez połączenie każdego końca
 górnego z odpowiadającym mu początkiem dolnym rozłącznymi
 łukami biegnącymi poza cylindrem zawierającym warkocz.
+Wybieramy standardowe łuki domykające bez dodatkowych
+skrzyżowań i zawiązań (równoważnie: utożsamiamy przekroje
+cylindra, tworząc torus pełny standardowo zanurzony w $S^3$).
 \end{definicja}
 
 \begin{twierdzenie}[Alexander]
@@ -1586,35 +2348,39 @@ w teorii reprezentacji algebr Temperleya--Lieba i Hecke'go.
 
 \begin{center}
 \begin{tikzpicture}[line cap=round,scale=.95]
-  \begin{scope}[shift={(-2.5,0)}]
-    \fill[ktBlue!6,rounded corners=5pt] (-1.35,-.7) rectangle (1.35,2.85);
-    \draw[draw=ktBlue,line width=2.4pt] (-0.45,2.45) .. controls (-1.45,2.65) and (-1.45,0.0) .. (-0.45,0.0);
-    \draw[draw=ktCoral,line width=2.4pt] ( 0.45,2.45) .. controls ( 1.45,2.65) and ( 1.45,0.0) .. ( 0.45,0.0);
-    \foreach \yy in {2.4,1.6,0.8}{
-      \draw[draw=ktBlue,line width=2.4pt] (-0.45,\yy)--(0.45,\yy-0.65);
-      \draw[draw=ktCoral,line width=2.4pt] ( 0.45,\yy)--(0.12,\yy-0.24);
-      \draw[draw=ktCoral,line width=2.4pt] (-0.12,\yy-0.41)--(-0.45,\yy-0.65);
+  \begin{scope}[shift={(-2.65,0)}]
+    \fill[ktBlue!6,rounded corners=5pt] (-1.65,-.45) rectangle (1.65,3.05);
+    % Trzy dodatnie skrzyżowania; jedna składowa ma jeden kolor.
+    \foreach \y in {2.4,1.6,.8}{
+      \draw[ktBlue,line width=2.4pt] (-.45,\y)--(.45,{\y-.8});
+      \draw[ktBlue,line width=2.4pt]
+        (.45,\y)--(.12,{\y-.8*11/30});
+      \draw[ktBlue,line width=2.4pt]
+        (-.12,{\y-.8*19/30})--(-.45,{\y-.8});
     }
-    \foreach \yt/\yb in {2.45/2.4,1.75/1.6,0.95/0.8}{
-      \draw[ktTeal,line width=2.4pt] (-0.45,\yb)--(-0.45,\yt);
-      \draw[ktGold,line width=2.4pt] ( 0.45,\yb)--( 0.45,\yt);
-    }
-    \node at (0,-.47) {$\widehat{\sigma_1^3}$: trójlistnik};
+    \draw[ktBlue,line width=2.4pt] (-.45,2.4)
+       .. controls (-1.65,2.85) and (-1.65,-.45) .. (-.45,0);
+    \draw[ktBlue,line width=2.4pt] (.45,2.4)
+       .. controls (1.65,2.85) and (1.65,-.45) .. (.45,0);
+    \node[font=\small,text=ktInk,align=center] at (0,-.92)
+       {$\widehat{\sigma_1^3}$: trójlistnik\\jedna składowa};
   \end{scope}
-  \begin{scope}[shift={(2.4,0)}]
-    \fill[ktCoral!6,rounded corners=5pt] (-1.35,-.7) rectangle (1.35,2.85);
-    \draw[ktPurple,line width=2.4pt] (-0.45,1.65) .. controls (-1.3,1.95) and (-1.3,0.0) .. (-0.45,0.0);
-    \draw[ktCoral,line width=2.4pt] ( 0.45,1.65) .. controls ( 1.3,1.95) and ( 1.3,0.0) .. ( 0.45,0.0);
-    \foreach \yy in {1.6,0.8}{
-      \draw[ktPurple,line width=2.4pt] (-0.45,\yy)--(0.45,\yy-0.65);
-      \draw[ktCoral,line width=2.4pt] (0.45,\yy)--(0.12,\yy-0.24);
-      \draw[ktCoral,line width=2.4pt] (-0.12,\yy-0.41)--(-0.45,\yy-0.65);
+  \begin{scope}[shift={(2.65,0)}]
+    \fill[ktCoral!6,rounded corners=5pt] (-1.65,-.45) rectangle (1.65,3.05);
+    % Kolory śledzą składowe, a nie pozycje pasm.
+    \foreach \y/\overcol/\undercol in {2.4/ktPurple/ktCoral,1.2/ktCoral/ktPurple}{
+      \draw[draw=\overcol,line width=2.4pt] (-.45,\y)--(.45,{\y-1.2});
+      \draw[draw=\undercol,line width=2.4pt]
+        (.45,\y)--(.12,{\y-1.2*11/30});
+      \draw[draw=\undercol,line width=2.4pt]
+        (-.12,{\y-1.2*19/30})--(-.45,{\y-1.2});
     }
-    \foreach \yt/\yb in {1.65/1.6,0.95/0.8}{
-      \draw[ktTeal,line width=2.4pt] (-0.45,\yb)--(-0.45,\yt);
-      \draw[ktGold,line width=2.4pt] (0.45,\yb)--(0.45,\yt);
-    }
-    \node at (0,-.47) {$\widehat{\sigma_1^2}$: splot Hopfa};
+    \draw[ktPurple,line width=2.4pt] (-.45,2.4)
+       .. controls (-1.65,2.85) and (-1.65,-.45) .. (-.45,0);
+    \draw[ktCoral,line width=2.4pt] (.45,2.4)
+       .. controls (1.65,2.85) and (1.65,-.45) .. (.45,0);
+    \node[font=\small,text=ktInk,align=center] at (0,-.92)
+       {$\widehat{\sigma_1^2}$: splot Hopfa\\dwie składowe};
   \end{scope}
 \end{tikzpicture}
 \end{center}
@@ -1623,7 +2389,11 @@ w teorii reprezentacji algebr Temperleya--Lieba i Hecke'go.
 Domknięcie warkocza $\sigma_1^3\in B_2\cong\mathbb Z$
 jest jednym z dwóch trójlistników. Domknięcie
 $\sigma_1^{-3}$ jest jego odbiciem lustrzanym.
-Dla $\sigma_1^{2k+1}$ otrzymujemy węzeł torusowy
+Liczba składowych domknięcia jest liczbą cykli permutacji
+końców: śledzenie jednej składowej odpowiada kolejnym
+iteracjom tej permutacji aż do powrotu do punktu wyjścia.
+Dla $\sigma_1^{2k}$ są więc dwie składowe, a dla
+$\sigma_1^{2k+1}$ jedna. W tym drugim przypadku otrzymujemy węzeł torusowy
 $T(2,2k+1)$, z orientacją zależną od konwencji znaków.
 \end{przyklad}
 
@@ -1632,11 +2402,16 @@ $T(2,2k+1)$, z orientacją zależną od konwencji znaków.
 
 \begin{definicja}[Suma spójna]
 Niech $K_1,K_2\subset S^3$ będą zorientowanymi węzłami.
-Wybieramy dwie rozłączne kule $B_1,B_2$, których przecięcia
-z odpowiednimi węzłami są trywialnymi, właściwie zanurzonymi
-łukami. Usuwamy wnętrza tych łuków i łączymy ich cztery końce
-dwoma rozłącznymi łukami zgodnie z orientacjami. Otrzymany
-węzeł oznaczamy $K_1\#K_2$ i nazywamy \emph{sumą spójną}.
+Rozpatrujemy najpierw węzły w dwóch osobnych kopiach
+$S^3$. W każdej wybieramy małą kulę $B_i$, której przecięcie
+z $K_i$ jest standardowym właściwie zanurzonym łukiem.
+Usuwamy wnętrza kul i sklejamy sfery brzegowe przez
+dyfeomorfizm odwracający orientacje brzegów, identyfikujący
+dwie pary końców tak, aby orientacje pozostałych łuków
+były zgodne. Po wygładzeniu w miejscach sklejenia otrzymujemy
+węzeł w $S^3\#S^3\cong S^3$, oznaczany przez $K_1\#K_2$.
+Nie chodzi o dołączenie dowolnych dwóch łuków w $S^3$,
+które mogłyby wprowadzać dodatkowe zawiązania.
 Węzeł jest \emph{pierwszy}, jeśli jest nietrywialny i z równości
 $K=K_1\#K_2$ wynika, że jeden ze składników jest trywialny.
 \end{definicja}
@@ -1650,13 +2425,34 @@ $\sigma(K_1\#K_2)=\sigma(K_1)+\sigma(K_2)$.
 \end{stwierdzenie}
 
 \begin{proof}
-Niezależność od punktów połączenia wynika z możliwości
-przesuwania krótkich łuków wzdłuż zorientowanych składników.
-Łączność i przemienność uzyskujemy przez zmianę położenia
-kul łączących. Z powierzchni Seiferta $F_1,F_2$ budujemy
+Małe kule z trywialnymi łukami można przenosić wzdłuż
+zorientowanych składników przy użyciu kołnierzy i otoczeń
+tubularnych. W konstrukcji geometrycznej używamy standardowych
+sklejeń tych kul; niezależność od wyborów i przemienność
+są klasycznymi własnościami sumy spójnej zorientowanych
+węzłów. Łączność odpowiada sklejeniu trzech kolejnych
+fragmentów niezależnie od nawiasowania, a węzeł trywialny
+daje z powrotem usunięty trywialny łuk. Przyjmujemy tutaj
+standardowy lemat topologiczny o niezależności sklejenia
+i nie utożsamiamy go z dowodem własności niezmienników. Z powierzchni Seiferta $F_1,F_2$ budujemy
 powierzchnię $F_1\mathbin{\natural}F_2$ przez sumę brzegową.
 W odpowiedniej bazie jej macierz Seiferta jest blokowo diagonalna:
-$V=V_1\oplus V_2$. Otrzymujemy zatem
+$V=V_1\oplus V_2$. Istotnie, pasmo sumy brzegowej
+łączy dwie różne powierzchnie. Pokrywamy sumę brzegową
+dwoma zbiorami otwartymi w tej powierzchni, obejmującymi
+odpowiednio $F_1$ i $F_2$ oraz nieco więcej niż połowę pasma.
+Każdy z nich retraktuje się deformacyjnie na odpowiednią
+powierzchnię, a ich przecięcie jest kontraktowalne.
+W ciągu Mayera--Vietorisa homomorfizm na $H_0$ z przecięcia
+do sumy grup $H_0$ obu zbiorów jest injektywny, ponieważ
+wszystkie trzy zbiory są spójne. Stąd włączenia indukują
+izomorfizm $H_1(F_1\mathbin{\natural}F_2;\mathbb Z)
+\cong H_1(F_1;\mathbb Z)\oplus H_1(F_2;\mathbb Z)$.
+Reprezentanty klas i ich przesunięcia można wybrać wewnątrz
+dwóch rozłącznych kul zawierających odpowiednie fragmenty
+powierzchni; liczby splecenia między kulami są zerowe,
+bo cykl w jednej kuli ogranicza w niej łańcuch.
+Otrzymujemy zatem
 $\det(tV-V^T)=\det(tV_1-V_1^T)\det(tV_2-V_2^T)$
 i analogiczną addytywność sygnatury symetryzacji.
 \end{proof}
@@ -1696,36 +2492,96 @@ Niech teraz $F$ będzie powierzchnią Seiferta minimalnego rodzaju
 dla $K_1\#K_2$. Wybierzmy sferę dekomponującą
 $S\subset S^3$, która spotyka węzeł dokładnie w dwóch
 punktach i rozdziela odpowiednie składniki. Ustawiamy $F$
-i $S$ poprzecznie. Powierzchnia $F\cap S$ jest sumą
+i $S$ poprzecznie. Przecięcie $F\cap S$ jest jednowymiarową rozmaitością z brzegiem, sumą
 okręgów oraz właściwie zanurzonych łuków z końcami w dwóch
 punktach $S\cap\partial F$; jedyny taki łuk musi łączyć
 te punkty.
 
-Eliminujemy składowe okręgowe metodą najbardziej wewnętrznego
-dysku. Jeśli okrąg $C\subset F\cap S$ ogranicza dysk na
-$F$, wybieramy dysk najbardziej wewnętrzny i usuwamy
-$C$ przez izotopię. Gdy pozostałby okrąg istotny na $F$,
-to rozcinając sferę $S$ wzdłuż najbardziej wewnętrznego
-okręgu na $S$ i stosując nieściśliwość powierzchni
-minimalnego rodzaju w zewnętrzu węzła, uzyskalibyśmy
-sprzeczność. Wykorzystaliśmy tu standardowy lemat:
-\emph{powierzchnia Seiferta minimalnego rodzaju jest
-nieściśliwa w zewnętrzu węzła}. Jego dowód polega na
-kompresji: istotny dysk kompresujący zmniejsza rodzaj,
-nie zmieniając zadanej składowej brzegu.
+Wykażemy dokładniej, dlaczego można usunąć okręgi
+przecięcia bez naruszania dwóch punktów $S\cap K$.
+Każdy taki okrąg $C\subset F\cap S$ jest rozłączny z $K$.
+Po nieznacznym przesunięciu $C$ w kierunku normalnym do
+$F$ otrzymujemy krzywą $C^+$ rozłączną z $F$,
+a więc $\operatorname{lk}(C,K)=F\cdot C^+=0$.
+Tymczasem $S\setminus K$ jest dwukrotnie nakłutą sferą,
+czyli otwartym pierścieniem. Gdyby $C$ był na nim
+istotnym okręgiem, oddzielałby dwa punkty $S\cap K$.
+Jeden z dysków ograniczonych przez $C$ na $S$
+przecinałby wtedy $K$ poprzecznie w jednym punkcie,
+co dawałoby $\operatorname{lk}(C,K)=\pm1$.
+Jest to sprzeczność. Zatem każdy okrąg składowy
+$F\cap S$ ogranicza dysk w $S\setminus K$.
 
-Po usunięciu okręgów $F\cap S$ pozostaje jeden łuk.
-Rozcinamy $F$ wzdłuż tego łuku, a brzegi powstałe na
-sferze zaślepiamy odpowiednimi dyskami po obu stronach
-$S$. Dostajemy dwie powierzchnie Seiferta $F_1',F_2'$
-dla $K_1,K_2$. Rozcięcie wzdłuż łuku zwiększa
-charakterystykę Eulera o jeden:
-$\chi(F_1')+\chi(F_2')=\chi(F)+1$.
-Ponieważ wszystkie trzy powierzchnie są spójne i mają
-po jednej składowej brzegu, daje to
+Wybierzmy taki okrąg najbardziej wewnętrzny,
+aby wnętrze dysku $D\subset S\setminus K$
+było rozłączne z $F$. Jeżeli $C=\partial D$
+nie ogranicza dysku na $F$, dysk $D$ jest
+dyskiem kompresującym powierzchnię $F$
+w zewnętrzu węzła. Jest to niemożliwe,
+gdyż powierzchnia Seiferta minimalnego rodzaju
+jest nieściśliwa. Istotnie, kompresja polega na
+usunięciu pierścienia wokół $C$ i wklejeniu dwóch
+rozłącznych kopii dysku $D$, z zachowaniem orientacji.
+Zwiększa ona charakterystykę Eulera o dwa.
+Jeśli $C$ nie rozdziela $F$, nowa powierzchnia pozostaje
+spójna, ma brzeg $K$ i rodzaj $g(F)-1$.
+Jeśli $C$ rozdziela $F$, otrzymujemy powierzchnię
+z brzegiem $K$ oraz powierzchnię zamkniętą.
+Suma ich rodzajów wynosi $g(F)$. Zamknięta składowa
+ma rodzaj co najmniej jeden: w przeciwnym razie
+odcięta część przed wklejeniem dysku byłaby dyskiem,
+wbrew istotności $C$. Odrzucając zamkniętą składową,
+otrzymujemy powierzchnię Seiferta mniejszego rodzaju.
+Oba przypadki przeczą minimalności.
+Jeżeli natomiast $C$ ogranicza dysk $D_F\subset F$,
+nie potrzebujemy izotopii przez kulę ograniczoną
+przez $D\cup D_F$. Zastępujemy dysk $D_F$
+przez kopię dysku $D$ lekko odsuniętą od $S$
+na stronę zajętą przez $F\setminus D_F$ przy $C$,
+a następnie wygładzamy złączenie. Wnętrze $D$
+jest rozłączne z $F$, więc odpowiednio małe
+odsunięcie i wygładzenie daje zanurzoną powierzchnię.
+Zastąpienie dysku dyskiem zachowuje rodzaj, spójność
+i brzeg $K$, usuwa $C$ oraz wszystkie okręgi
+leżące w $D_F$, nie dodając nowych przecięć.
+Nie twierdzimy, że powierzchnie przed i po tej
+operacji są izotopijne. Powtarzamy procedurę dla
+skończonej liczby okręgów.
+
+Po usunięciu okręgów $F\cap S$ pozostaje
+dokładnie jeden łuk o końcach $S\cap K$.
+Rozcięcie $F$ wzdłuż tego właściwie
+zanurzonego łuku daje powierzchnie po obu
+stronach sfery dekomponującej. Dołączając
+odpowiednie fragmenty małego kołnierza
+sfery, otrzymujemy powierzchnie Seiferta
+$F_1',F_2'$ dla $K_1,K_2$.
+Każda z dwóch części ma jedną składową brzegu:
+składa się ona z fragmentu $K$ po danej stronie
+sfery i kopii łuku przecięcia. Każda część jest
+spójna, gdyż ewentualna dodatkowa składowa
+nie spotykałaby łuku przecięcia, a zatem byłaby
+także osobną składową $F$.
+Odwrotnością rozcięcia jest sklejenie dwóch kopii
+łuku, czyli przedziału o charakterystyce Eulera
+równej jeden. Addytywność charakterystyki Eulera
+przy sklejaniu daje
+$\chi(F)=\chi(F_1')+\chi(F_2')-1$.
+Wobec wzoru $\chi(F_i')=1-2g(F_i')$
+otrzymujemy
 $g(F)=g(F_1')+g(F_2')\ge g(K_1)+g(K_2)$.
-W połączeniu z poprzednią nierównością kończy to dowód.
+Z poprzednią nierównością daje to równość.
 \end{proof}
+
+W szczególności istnienie skończonego rozkładu na czynniki
+pierwsze w twierdzeniu Schuberta wynika teraz z indukcji
+względem rodzaju. Węzeł nietrywialny ma dodatni rodzaj.
+Jeśli nie jest pierwszy, rozkłada się na dwa nietrywialne
+węzły, z których każdy ma na mocy addytywności
+ściśle mniejszy rodzaj. Stosujemy do nich założenie
+indukcyjne. Węzeł rodzaju jeden musi być pierwszy.
+Jednoznaczność rozkładu pozostaje odrębną częścią
+twierdzenia Schuberta, przyjmowaną z literatury.
 
 \section{Węzły torusowe, włóknistość i rodzaj}
 \label{sec:kt-torusowe}
@@ -1759,16 +2615,48 @@ Dodatni warkocz $\beta=(\sigma_1\dots\sigma_{p-1})^q$
 ma domknięcie równe $T(p,q)$. Ma $(p-1)q$ skrzyżowań
 i $p$ okręgów Seiferta, więc algorytm Seiferta daje
 powierzchnię rodzaju $(1-p+(p-1)q)/2=(p-1)(q-1)/2$.
-Dla oszacowania z dołu obliczamy z prezentacji grupy
-węzła (lub z odpowiedniej macierzy Seiferta) wielomian
+Dla oszacowania z dołu użyjemy prezentacji
+$\langle a,b\mid a^pb^{-q}=1\rangle$.
+Abelianizacja wysyła $a$ na $t^q$ i $b$ na $t^p$,
+ponieważ $p[a]=q[b]$ oraz $\gcd(p,q)=1$.
+W kompleksie nakrycia cyklicznego mamy
 \[
-\Delta_{T(p,q)}(t)=
-\frac{(t^{pq}-1)(t-1)}{(t^p-1)(t^q-1)}
+\partial_1=(t^q-1,\ t^p-1),\qquad
+\partial_2=\begin{pmatrix}
+\sum_{j=0}^{p-1}t^{qj}\\
+-\sum_{j=0}^{q-1}t^{pj}
+\end{pmatrix},
 \]
-z dokładnością do jednostki $\pm t^k$.
-Licznik i mianownik skracają się do wielomianu o szerokości
-wykładników $(p-1)(q-1)$, ponieważ po redukcji stopień
-wynosi $pq+1-p-q$. Z nierówności
+gdzie druga macierz wynika z pochodnych Foxa relatora.
+Niech $P=(t^p-1)/(t-1)$ oraz $Q=(t^q-1)/(t-1)$.
+W $\Lambda=\mathbb Z[t,t^{-1}]$ elementy $P,Q$
+nie mają wspólnego nierozkładalnego dzielnika:
+są moniczne, a ich wspólne zespolone pierwiastki
+musiałyby być jednocześnie $p$-tymi i $q$-tymi
+pierwiastkami jedności różnymi od $1$.
+Pierścień $\Lambda$ jest z jednoznacznym rozkładem,
+więc z $Qu+Pv=0$ wynika $u=Ph$, $v=-Qh$
+dla pewnego $h\in\Lambda$.
+Jądro $\partial_1$ jest zatem wolne na $(P,-Q)^T$.
+Ponieważ $\partial_1\partial_2=0$, druga macierz
+jest wielokrotnością tego generatora. Porównanie
+pierwszych współrzędnych daje mnożnik
+\[
+h(t)=\frac{(t^{pq}-1)(t-1)}{(t^p-1)(t^q-1)}.
+\]
+W szczególności moduł Alexandera jest izomorficzny
+z $\Lambda/(h)$ i $\Delta_{T(p,q)}(t)\doteq h(t)$.
+Mnożnik $h$ jest zwykłym wielomianem. Istotnie,
+$Ph=\sum_{j=0}^{p-1}t^{qj}$ w $\Lambda$ i $P(0)=1$.
+Gdyby najniższy wykładnik w $h$ był ujemny, to
+w iloczynie $Ph$ współczynnik przy tym wykładniku
+byłby równy niezerowemu najniższemu współczynnikowi
+$h$. Prawa strona nie ma jednak ujemnych potęg.
+Stąd $h\in\mathbb Z[t]$.
+Ta ostatnia suma ma wyraz stały $1$,
+podobnie jak $P$, więc $h(0)=1$.
+Stopień $h$ wynosi $pq+1-p-q=(p-1)(q-1)$,
+co jest też szerokością jego wykładników. Z nierówności
 $\operatorname{span}\Delta_K\leq2g(K)$ otrzymujemy
 $g(T(p,q))\geq(p-1)(q-1)/2$.
 \end{proof}
@@ -1787,31 +2675,53 @@ Dyfeomorfizm $\varphi$ nazywamy \emph{monodromią}.
 
 \begin{twierdzenie}
 Jeżeli $K\subset S^3$ jest węzłem włóknistym, to jego
-wielomian Alexandera jest jednomianowy na obu krańcach,
+wielomian Alexandera ma jednostkowe współczynniki skrajne,
 tzn. współczynniki przy najwyższej i najniższej potędze
 $t$ są równe $\pm1$. Każdy węzeł torusowy jest włóknisty.
 \end{twierdzenie}
 
 \begin{proof}[Uzasadnienie pierwszej tezy]
-Dla węzła włóknistego nakrycie nieskończenie cykliczne
-uzupełnienia jest homotopijnie równoważne włóknu $F$.
+Dla węzła włóknistego projekcja na $S^1$ indukuje
+epimorfizm grup fundamentalnych (włókno jest spójne).
+Ponieważ abelianizacja grupy węzła jest izomorficzna
+z $\mathbb Z$, jądro tego epimorfizmu jest jądrem
+abelianizacji. Cofnięcie wiązki wzdłuż nakrycia
+$\mathbb R\to S^1$ daje zatem nakrycie nieskończenie
+cykliczne, trywialne jako wiązka nad $\mathbb R$,
+o przestrzeni całkowitej $F\times\mathbb R$.
+Jest ona homotopijnie równoważna włóknu $F$.
 Na $H_1(F;\mathbb Z)$ działanie generatora przekształceń
 pokładowych jest dane przez automorfizm całkowity
-$\varphi_*\in GL_{2g}(\mathbb Z)$. Wielomian Alexandera
-jest, z dokładnością do jednostki, wielomianem
-charakterystycznym tego automorfizmu:
+$\varphi_*\in GL_{2g}(\mathbb Z)$. Wybieramy generator nakrycia odpowiadający $\varphi_*$
+(zamiana generatora odwraca zmienną).
+Jeśli $M=\varphi_*$, to moduł ma prezentację $tI-M$:
+w ilorazie $\Lambda^{2g}/(tI-M)\Lambda^{2g}$
+każdą potęgę $t$ można zastąpić odpowiednią potęgą $M$,
+również dla wykładników ujemnych, gdyż $M$ jest odwracalna
+nad $\mathbb Z$. Każda klasa ma więc reprezentanta
+stałego. Odwzorowanie
+$E(\sum_jt^jx_j)=\sum_j M^jx_j$
+zeruje obraz $tI-M$, ponieważ dla dowolnego $y\in\Lambda^{2g}$
+mamy $E(ty)=ME(y)=E(My)$. Zatem $E$ przechodzi
+na iloraz i na wektorach stałych jest identycznością.
+Dowodzi to jednoznaczności stałego reprezentanta
+i daje izomorfizm modułów, gdy na $\mathbb Z^{2g}$
+zmienna $t$ działa przez $M$.
+Wielomian Alexandera jest zatem, z dokładnością do
+jednostki, wielomianem charakterystycznym automorfizmu:
 $\Delta_K(t)\doteq\det(tI-\varphi_*)$.
 Jego najwyższy współczynnik wynosi jeden, a wyraz wolny
 $\det(-\varphi_*)=\pm1$. Włóknistość węzłów torusowych
 wynika z opisu ich uzupełnień jako rozwarstwienia z monodromią;
-pełny dowód można otrzymać przez analizę osobliwości
-$f(z,w)=z^p+w^q$ i fibration Milnora na małej sferze
-w $\mathbb C^2$.
+korzystamy tu z klasycznego twierdzenia o rozwłóknieniu
+Milnora dla osobliwości $f(z,w)=z^p+w^q$ na małej
+sferze w $\mathbb C^2$. Jest to jawnie przyjęty wynik,
+a nie konsekwencja samej moniczności wielomianu.
 \end{proof}
 
 \begin{uwaga}
-Jednomianowość wielomianu Alexandera jest warunkiem koniecznym,
-ale nie wystarczającym włóknistości. Później zobaczymy, że
+Jednostkowe współczynniki skrajne wielomianu Alexandera
+są warunkiem koniecznym, ale nie wystarczającym włóknistości. Później zobaczymy, że
 homologia Floera węzła pozwala rozpoznawać włóknistość,
 a nie tylko wykrywać tę przeszkodę.
 \end{uwaga}

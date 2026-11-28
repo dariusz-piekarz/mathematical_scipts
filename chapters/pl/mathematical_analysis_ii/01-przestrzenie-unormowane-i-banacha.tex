@@ -1,0 +1,578 @@
+% Adaptacja AF-12 i AM I-07; oryginalne etykiety zachowane.
+\chapter{Przestrzenie unormowane i przestrzenie Banacha}
+\label{ma2:ch:normed}
+\providecommand{\K}{\mathbb K}
+Niech $\K\in\{\R,\C\}$. Zakładamy znajomość elementarnej
+algebry liniowej, ciągów i zupełności metrycznej z tomu I.
+\section{Norma i przestrzeń Banacha}
+\begin{definicja}[Przestrzeń unormowana i przestrzeń Banacha]
+\label{def:banach12}
+Przestrzenią unormowaną nazywamy parę $(E,\|\cdot\|)$, gdzie $E$
+jest przestrzenią wektorową nad $\K$, a odwzorowanie
+$\|\cdot\|:E\to[0,\infty)$ spełnia dla wszystkich $x,y\in E$
+i $\alpha\in\K$ warunki
+$\|x\|=0\iff x=0$, $\|\alpha x\|=|\alpha|\|x\|$ oraz
+$\|x+y\|\le\|x\|+\|y\|$. Przestrzeń unormowaną nazywamy
+\emph{przestrzenią Banacha}, jeżeli jest zupełna względem metryki
+$d(x,y)=\|x-y\|$.
+\end{definicja}
+
+\paragraph{Rysunek 3D: Kule jednostkowe różnych norm.}
+Brzegi kul jednostkowych w $\R^3$ dla norm
+$\|x\|_1=\sum_{i=1}^3|x_i|$, $\|x\|_2=(\sum_{i=1}^3x_i^2)^{1/2}$
+oraz $\|x\|_\infty=\max_i|x_i|$ to odpowiednio ośmiościan,
+sfera i brzeg sześcianu. Dla wektora jednostkowego $d$
+w normie euklidesowej punkt $d/\|d\|_p$ należy do brzegu
+kuli normy $p$ na mocy jednorodności. Używamy tej
+parametryzacji do porównania kształtów.
+Kod wymaga bibliotek NumPy i Plotly; zapisuje samodzielny
+interaktywny plik HTML.
+Rysunek \ref{ma2:fig:norm-balls-3d} przedstawia wersję statyczną.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{scope}[xshift=0cm]
+\begin{axis}[width=4.7cm,height=5.1cm,view={135}{27},axis equal image,axis lines=box,grid=major,major grid style={draw=gray!22},axis line style={gray!65},tick style={gray!65},xmin=-1.1,xmax=1.1,ymin=-1.1,ymax=1.1,zmin=-1.1,zmax=1.1,xtick={-1,0,1},ytick={-1,0,1},ztick={-1,0,1},tick label style={font=\scriptsize},label style={font=\scriptsize},xlabel=$x$,ylabel=$y$,zlabel=$z$,title={$\|\cdot\|_1$},colormap name=viridis,point meta min=-1,point meta max=1]
+\addplot3[patch,patch type=triangle,shader=flat,draw=black!80,line width=.65pt,z buffer=sort] coordinates {(-1,0,0) (0,-1,0) (0,0,-1) (-1,0,0) (0,-1,0) (0,0,1) (-1,0,0) (0,1,0) (0,0,-1) (-1,0,0) (0,1,0) (0,0,1) (1,0,0) (0,-1,0) (0,0,-1) (1,0,0) (0,-1,0) (0,0,1) (1,0,0) (0,1,0) (0,0,-1) (1,0,0) (0,1,0) (0,0,1)};
+\end{axis}
+\end{scope}
+\begin{scope}[xshift=4.7cm]
+\begin{axis}[width=4.7cm,height=5.1cm,view={135}{27},axis equal image,axis lines=box,grid=major,major grid style={draw=gray!22},axis line style={gray!65},tick style={gray!65},xmin=-1.1,xmax=1.1,ymin=-1.1,ymax=1.1,zmin=-1.1,zmax=1.1,xtick={-1,0,1},ytick={-1,0,1},ztick={-1,0,1},tick label style={font=\scriptsize},label style={font=\scriptsize},xlabel=$x$,ylabel=$y$,zlabel=$z$,title={$\|\cdot\|_2$},colormap name=viridis,point meta min=-1,point meta max=1]
+\addplot3[surf,shader=interp,draw=none,z buffer=sort,domain=0:360,domain y=0:180,samples=49,samples y=25] ({sin(y)*cos(x)/(1)},{sin(y)*sin(x)/(1)},{cos(y)/(1)});
+\end{axis}
+\end{scope}
+\begin{scope}[xshift=9.4cm]
+\begin{axis}[width=4.7cm,height=5.1cm,view={135}{27},axis equal image,axis lines=box,grid=major,major grid style={draw=gray!22},axis line style={gray!65},tick style={gray!65},xmin=-1.1,xmax=1.1,ymin=-1.1,ymax=1.1,zmin=-1.1,zmax=1.1,xtick={-1,0,1},ytick={-1,0,1},ztick={-1,0,1},tick label style={font=\scriptsize},label style={font=\scriptsize},xlabel=$x$,ylabel=$y$,zlabel=$z$,title={$\|\cdot\|_\infty$},colormap name=viridis,point meta min=-1,point meta max=1]
+\addplot3[patch,patch type=rectangle,shader=flat,draw=black!80,line width=.65pt,z buffer=sort] coordinates {(-1,-1,-1) (-1,1,-1) (-1,1,1) (-1,-1,1) (1,-1,-1) (1,1,-1) (1,1,1) (1,-1,1) (-1,-1,-1) (1,-1,-1) (1,-1,1) (-1,-1,1) (-1,1,-1) (1,1,-1) (1,1,1) (-1,1,1) (-1,-1,-1) (1,-1,-1) (1,1,-1) (-1,1,-1) (-1,-1,1) (1,-1,1) (1,1,1) (-1,1,1)};
+\end{axis}
+\end{scope}
+\end{tikzpicture}
+\caption{Brzegi kul jednostkowych trzech norm: ośmiościan, sfera i sześcian. Rzut ortograficzny we wspólnej skali. Ciemne linie wyróżniają rzeczywiste krawędzie wielościanów; sfera nie ma krawędzi.}
+\label{ma2:fig:norm-balls-3d}
+\end{figure}
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+t, a = np.meshgrid(np.linspace(0, 2*np.pi, 121),
+                   np.linspace(0, np.pi, 61))
+D = np.array([np.sin(a)*np.cos(t),
+              np.sin(a)*np.sin(t), np.cos(a)])
+# Dokladne sciany i krawedzie wieloscianow.
+oct_v = np.array([
+    [-1,0,0], [1,0,0], [0,-1,0], [0,1,0],
+    [0,0,-1], [0,0,1]
+])
+oct_f = np.array([
+    [0,4,2], [0,2,5], [0,3,4], [0,5,3],
+    [1,2,4], [1,5,2], [1,4,3], [1,3,5]
+])
+cube_v = np.array([
+    [-1,-1,-1], [-1,-1,1], [-1,1,-1], [-1,1,1],
+    [1,-1,-1], [1,-1,1], [1,1,-1], [1,1,1]
+])
+cube_f = np.array([
+    [0,1,3], [0,3,2], [4,6,7], [4,7,5],
+    [0,4,5], [0,5,1], [2,3,7], [2,7,6],
+    [0,2,6], [0,6,4], [1,5,7], [1,7,3]
+])
+oct_e = [
+    [0,2], [0,3], [0,4], [0,5],
+    [1,2], [1,3], [1,4], [1,5],
+    [2,4], [2,5], [3,4], [3,5]
+]
+cube_e = [
+    [0,1], [0,2], [0,4], [1,3],
+    [1,5], [2,3], [2,6], [3,7],
+    [4,5], [4,6], [5,7], [6,7]
+]
+fig = make_subplots(rows=1, cols=3,
+    specs=[[{"type": "scene"}]*3],
+    subplot_titles=["l1", "l2", "l-infinity"])
+
+def add_poly(v, f, edges, col):
+    fig.add_trace(go.Mesh3d(
+        x=v[:, 0], y=v[:, 1], z=v[:, 2],
+        i=f[:, 0], j=f[:, 1], k=f[:, 2],
+        intensity=v[:, 2], colorscale="Viridis",
+        cmin=-1, cmax=1, flatshading=True,
+        showscale=False, showlegend=False),
+        row=1, col=col)
+    xyz = [[q for a, b in edges
+            for q in (v[a, k], v[b, k], None)]
+           for k in range(3)]
+    fig.add_trace(go.Scatter3d(
+        x=xyz[0], y=xyz[1], z=xyz[2], mode="lines",
+        line=dict(color="#222222", width=5),
+        hoverinfo="skip", showlegend=False),
+        row=1, col=col)
+
+add_poly(oct_v, oct_f, oct_e, 1)
+X, Y, Z = D/np.sqrt(np.sum(D**2, axis=0))
+fig.add_trace(go.Surface(x=X, y=Y, z=Z,
+    colorscale="Viridis", cmin=-1, cmax=1,
+    showscale=False), row=1, col=2)
+add_poly(cube_v, cube_f, cube_e, 3)
+fig.update_scenes(aspectmode="cube",
+    xaxis=dict(range=[-1.1, 1.1], title="x"),
+    yaxis=dict(range=[-1.1, 1.1], title="y"),
+    zaxis=dict(range=[-1.1, 1.1], title="z"))
+axis_style = dict(showbackground=True,
+    backgroundcolor="#f5f6f7", gridcolor="#d5dbe0",
+    zerolinecolor="#b0b8bf", showspikes=False)
+fig.update_scenes(xaxis=axis_style, yaxis=axis_style,
+                  zaxis=axis_style)
+fig.write_html("am2_01_norm_balls.html", include_plotlyjs=True)
+fig.show()
+\end{lstlisting}
+
+\section{Metryka, równoważność norm i zupełność}
+\begin{twierdzenie}
+\label{ma2:thm:metric}
+Norma wyznacza metrykę $d(x,y)=\|x-y\|$. Norma jest ciągła,
+a dodawanie i mnożenie przez skalar są ciągłe w topologiach
+produktowych.
+\end{twierdzenie}
+\begin{proof}
+Dla $x,y,z\in E$ mamy $d(x,y)\ge0$ oraz
+$d(x,y)=0\iff x-y=0\iff x=y$. Jednorodność daje
+$d(y,x)=\|-(x-y)\|=d(x,y)$, a nierówność trójkąta daje
+$d(x,z)=\|(x-y)+(y-z)\|\le d(x,y)+d(y,z)$.
+Z $\|x\|\le\|x-y\|+\|y\|$ oraz nierówności z zamienionymi
+$x,y$ otrzymujemy $|\|x\|-\|y\||\le\|x-y\|$.
+Jeśli $x_n\to x$, $y_n\to y$, to
+$\|x_n+y_n-x-y\|\le\|x_n-x\|+\|y_n-y\|\to0$.
+Jeżeli $\alpha_n\to\alpha$, ciąg $(|\alpha_n|)$ jest
+ograniczony przez $M$ i
+$\|\alpha_n x_n-\alpha x\|\le M\|x_n-x\|+|\alpha_n-\alpha|\|x\|\to0$.
+Na produktach $E\times E$ i $\K\times E$ można użyć metryki
+maksimum odpowiednich metryk czynników. Zbieżność w takiej
+metryce jest równoważna zbieżności obu współrzędnych.
+Kryterium ciągowe ciągłości dla przestrzeni metrycznych
+z tomu I daje zatem ciągłość obu działań.
+\end{proof}
+\begin{twierdzenie}[Równoważność norm]
+\label{ma2:thm:equiv}
+Jeżeli dla norm $p,q$ na $E$ istnieją $a,b>0$ z
+$a p(x)\le q(x)\le b p(x)$ dla każdego $x\in E$, to normy
+wyznaczają te same topologie, zbieżności i ciągi Cauchy'ego.
+Zupełność jednej jest równoważna zupełności drugiej.
+\end{twierdzenie}
+\begin{proof}
+Inkluzje $B_p(x,r/b)\subseteq B_q(x,r)$ i
+$B_q(x,ar)\subseteq B_p(x,r)$ zachodzą dla każdego $x\in E$
+i $r>0$: pierwsza wynika z $q(y-x)\le bp(y-x)$, a druga
+z $p(y-x)\le q(y-x)/a$. Każdy zbiór otwarty względem jednej
+normy zawiera wokół każdego swego punktu kulę względem drugiej,
+więc topologie są równe.
+Jeżeli $p(x_n-x)\to0$, to $q(x_n-x)\le bp(x_n-x)\to0$;
+odwrotnie $p(x_n-x)\le q(x_n-x)/a\to0$.
+Dla $\varepsilon>0$ warunek Cauchy'ego względem $p$ z
+dokładnością $\varepsilon/b$ daje $q(x_n-x_m)<\varepsilon$
+dla wszystkich dostatecznie dużych $m,n$. Odwrotnie stosujemy
+warunek Cauchy'ego względem $q$ z dokładnością $a\varepsilon$
+i dolne oszacowanie $ap(x_n-x_m)\le q(x_n-x_m)$. Jeśli jedna norma jest zupełna,
+każdy ciąg Cauchy'ego w drugiej ma granicę w pierwszej,
+a zatem także w drugiej.
+\end{proof}
+\begin{twierdzenie}[Wymiar skończony]
+\label{ma2:thm:finite}
+W skończenie wymiarowej przestrzeni wszystkie normy są
+równoważne i przestrzeń jest zupełna względem każdej z nich.
+\end{twierdzenie}
+\begin{proof}
+Dla przestrzeni zerowej tezy wynikają z istnienia wyłącznie
+wektora zerowego. Dla wymiaru $d\ge1$ wybieramy bazę
+$(e_j)_{j=1}^d$ i izomorfizm $Tz=\sum_j z_je_j$ z $\K^d$.
+Dla dowolnej normy $p$ nierówność trójkąta i jednorodność dają
+\[
+ p(Tz)\le\sum_{j=1}^d |z_j|p(e_j)\le C\max_j|z_j|,
+ \qquad C=\sum_{j=1}^d p(e_j)>0.
+\]
+Stała jest dodatnia, ponieważ wektory bazy są niezerowe.
+Z odwrotnej nierówności trójkąta i liniowości $T$ wynika
+$|p(Tz)-p(Tw)|\le p(T(z-w))\le C\max_j|z_j-w_j|$.
+Funkcja $z\mapsto p(Tz)$ jest więc ciągła w metryce euklidesowej,
+bo $\max_j|z_j-w_j|\le(\sum_j|z_j-w_j|^2)^{1/2}$.
+Sfera $S=\{z\in\K^d:\max_j|z_j|=1\}$ jest niepusta
+(zawiera pierwszy wektor standardowy), domknięta jako
+przeciwobraz $\{1\}$ przez ciągłe maksimum modułów
+i ograniczona euklidesowo przez $\sqrt d$.
+Z twierdzenia Heinego--Borela, dla $\C^d$ po utożsamieniu
+z $\R^{2d}$, jest zwarta. Ciągła funkcja $z\mapsto p(Tz)$
+osiąga więc minimum $c$ na $S$. Gdyby $c=0$, pewne
+$z\in S$ spełniałoby $Tz=0$, a różnowartościowość $T$
+dawałaby $z=0\notin S$. Zatem $c>0$.
+Skalowanie każdego niezerowego $z$ do tej sfery daje
+$c\max_j|z_j|\le p(Tz)$; dla $z=0$ nierówność też zachodzi.
+Dla drugiej normy $q$ analogicznie otrzymujemy stałe $c',C'>0$.
+Połączenie oszacowań daje
+$(c'/C)p(Tz)\le q(Tz)\le(C'/c)p(Tz)$, a ponieważ $T$
+jest surjekcją, normy są równoważne.
+Jeśli $(Tz_n)$ jest ciągiem Cauchy'ego w normie $p$, to
+$|(z_n-z_m)_j|\le c^{-1}p(Tz_n-Tz_m)$ dla każdego $j$.
+Zatem każda współrzędna $z_n$ jest ciągiem Cauchy'ego w $\K$.
+Z zupełności $\K$ każda współrzędna ma granicę $z_j$.
+Dla $\varepsilon>0$ i każdego $j=1,\ldots,d$ istnieje $N_j$
+takie, że $|(z_n-z)_j|<\varepsilon$ dla $n\ge N_j$.
+Dla $n\ge\max_j N_j$ wszystkie te nierówności zachodzą
+jednocześnie, więc $\max_j|(z_n-z)_j|\to0$.
+Górne oszacowanie daje $p(Tz_n-Tz)\to0$.
+\end{proof}
+
+\section{Operatory liniowe}
+\begin{stwierdzenie}[Norma operatora i przestrzeń sprzężona]
+\label{prop:operator-norm12}
+Niech $E,F$ będą przestrzeniami unormowanymi nad tym samym
+ciałem $\K$. Operator liniowy $T:E\to F$ jest ciągły wtedy
+i tylko wtedy, gdy istnieje $C\ge0$ takie, że
+$\|Tx\|_F\le C\|x\|_E$ dla każdego $x\in E$.
+Przestrzeń $\mathcal L(E,F)$ wszystkich takich operatorów,
+z normą $\|T\|=\sup_{\|x\|_E\le1}\|Tx\|_F$, jest przestrzenią
+unormowaną. Jeżeli $F$ jest przestrzenią Banacha, to również
+$\mathcal L(E,F)$ jest przestrzenią Banacha.
+W szczególności $E'=\mathcal L(E,\K)$ jest zawsze przestrzenią
+Banacha, nawet gdy $E$ nie jest zupełna.
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $T$ jest ciągłe w zerze, istnieje $\delta>0$ takie,
+że $\|y\|_E<\delta$ implikuje $\|Ty\|_F<1$.
+Dla $x\ne0$ stosujemy to do $y=\delta x/(2\|x\|_E)$
+i otrzymujemy $\|Tx\|_F\le(2/\delta)\|x\|_E$.
+Dla $x=0$ oszacowanie wynika z liniowości.
+Odwrotnie, oszacowanie $\|Tx\|\le C\|x\|$ implikuje
+$\|Tx-Ty\|\le C\|x-y\|$, a więc ciągłość.
+Supremum w definicji normy istnieje, bo kula zawiera zero
+i wartości są ograniczone przez $C$. Skalując $x\ne0$
+do wektora o normie $1$, otrzymujemy $\|Tx\|\le\|T\|\|x\|$;
+dla $x=0$ nierówność również zachodzi.
+Zatem $\|T\|=0$ wymusza $T=0$; operator zerowy ma normę zero.
+Dla $S,T\in\mathcal L(E,F)$ i $\alpha\in\K$ operatory $S+T$
+oraz $\alpha T$ są liniowe, a oszacowania
+\[
+ \|(S+T)x\|_F\le(\|S\|+\|T\|)\|x\|_E,\qquad
+ \|(\alpha T)x\|_F\le|\alpha|\|T\|\|x\|_E
+\]
+zapewniają ich ciągłość. Pierwsze oszacowanie na kuli jednostkowej
+daje $\|S+T\|\le\|S\|+\|T\|$. Dla $\alpha\ne0$ dodatni
+czynnik $|\alpha|$ można wynieść przed supremum:
+$\|\alpha T\|=|\alpha|\|T\|$; dla $\alpha=0$ obie strony
+są zerowe. W ten sposób sprawdziliśmy wszystkie aksjomaty normy.
+
+Załóżmy teraz, że $F$ jest przestrzenią Banacha.
+Jeśli $(T_n)$ jest ciągiem Cauchy'ego w normie operatorowej,
+to dla każdego $x\in E$ ciąg $(T_nx)$ jest Cauchy'ego w $F$, ponieważ
+$\|T_nx-T_mx\|\le\|T_n-T_m\|\|x\|$.
+Dla każdego $x\in E$ definiujemy $Tx=\lim_nT_nx$,
+korzystając z istnienia i jednoznaczności granicy w $F$.
+Dla $\alpha,\beta\in\K$ oraz $x,y\in E$ z liniowości $T_n$
+i ciągłości działań (twierdzenie \ref{ma2:thm:metric}) mamy
+\[
+ T(\alpha x+\beta y)=\lim_n(\alpha T_nx+\beta T_ny)
+ =\alpha Tx+\beta Ty.
+\]
+Ustalmy
+$\varepsilon>0$ i wybierzmy $N$ tak, że
+$\|T_n-T_m\|<\varepsilon$ dla $m,n\ge N$.
+Po przejściu do granicy $m\to\infty$ otrzymujemy
+$\|(T_n-T)x\|\le\varepsilon\|x\|$ dla $n\ge N$.
+Dla $n=N$ dostajemy
+$\|Tx\|_F\le\|T_Nx\|_F+\|(T-T_N)x\|_F
+\le(\|T_N\|+\varepsilon)\|x\|_E$,
+więc $T$ jest ciągły. Biorąc supremum dla $\|x\|_E\le1$,
+otrzymujemy $\|T_n-T\|\le\varepsilon$ dla $n\ge N$.
+Ponieważ dokładność $\varepsilon>0$ była dowolna, daje to
+zbieżność w normie operatorowej. Wreszcie ciało $\K$ jest
+zupełne w normie modułu (tom I), więc można podstawić
+$F=\K$ i otrzymać zupełność $E'$.
+\end{proof}
+
+\begin{twierdzenie}[Zupełność podprzestrzeni]
+\label{ma2:thm:closed}
+Zupełna podprzestrzeń liniowa $Y$ przestrzeni unormowanej $E$
+jest domknięta. Jeśli $E$ jest przestrzenią Banacha, to każda
+domknięta podprzestrzeń liniowa $Y$ jest przestrzenią Banacha
+z normą indukowaną.
+\end{twierdzenie}
+\begin{proof}
+Niech $Y$ będzie zupełna, a $(y_n)$ ciągiem w $Y$ zbieżnym
+w $E$ do $x$. Jest to ciąg Cauchy'ego w $E$, a zatem również
+w $Y$, ponieważ normy różnic są takie same. Istnieje więc
+$y\in Y$ z $y_n\to y$ w $Y$, czyli też w $E$.
+Jednoznaczność granicy daje $x=y\in Y$. Kryterium ciągowe
+domkniętości w przestrzeni metrycznej daje pierwszą tezę.
+Jeśli $E$ jest zupełna i $Y$ domknięta, każdy ciąg Cauchy'ego
+w $Y$ jest ciągiem Cauchy'ego w $E$; ma granicę w $E$,
+która z domkniętości należy do $Y$. Ta sama norma różnic
+daje zbieżność w $Y$.
+\end{proof}
+\begin{przyklad}[Normy w przestrzeni współrzędnych]
+Dla $d\ge1$ i $x\in\K^d$ określamy
+$\|x\|_1=\sum_{j=1}^d|x_j|$ i $\|x\|_\infty=\max_j|x_j|$.
+Obie funkcje przyjmują nieujemne wartości, są jednorodne
+z własności modułu i zerują się dokładnie wtedy, gdy każda
+współrzędna jest zerowa. Sumowanie nierówności trójkąta dla modułu daje
+nierówność trójkąta dla normy sumy, a wzięcie maksimum
+w oszacowaniu $|x_j+y_j|\le\|x\|_\infty+\|y\|_\infty$
+daje ją dla normy maksimum.
+Każdy składnik sumy nie przekracza maksimum, stąd
+$\|x\|_\infty\le\|x\|_1\le d\|x\|_\infty$.
+\end{przyklad}
+\begin{center}
+\begin{tikzpicture}
+\foreach \offset/\name in {0/1,4.6/2,9.2/{\infty}}{
+\begin{scope}[xshift=\offset cm]
+\begin{axis}[width=4.5cm,height=4.5cm,axis equal image,axis lines=box,grid=major,major grid style={draw=gray!22},xmin=-1.2,xmax=1.2,ymin=-1.2,ymax=1.2,xtick={-1,0,1},ytick={-1,0,1},tick label style={font=\scriptsize},title={$\|\cdot\|_{\name}$}]
+\ifdim\offset pt=0pt
+\addplot[fill=teal!25,draw=black!80,very thick] coordinates {(1,0) (0,1) (-1,0) (0,-1) (1,0)} \closedcycle;
+\else
+\ifdim\offset pt=4.6pt
+\addplot[fill=teal!25,draw=teal!60!black,thick,domain=0:360,samples=121] ({cos(x)},{sin(x)}) \closedcycle;
+\else
+\addplot[fill=teal!25,draw=black!80,very thick] coordinates {(-1,-1) (1,-1) (1,1) (-1,1) (-1,-1)} \closedcycle;
+\fi\fi
+\end{axis}
+\end{scope}}
+\end{tikzpicture}
+
+\small Domknięte kule jednostkowe w $\R^2$ dla normy
+sumy, normy euklidesowej i normy maksimum.
+\end{center}
+Dla normy euklidesowej $\|x\|_2=(\sum_j|x_j|^2)^{1/2}$
+mamy
+\[
+ \|x+y\|_2^2
+ =\|x\|_2^2+2\operatorname{Re}\sum_j x_j\overline{y_j}
+  +\|y\|_2^2
+ \le(\|x\|_2+\|y\|_2)^2,
+\]
+gdzie zastosowaliśmy nierówność Cauchy'ego--Schwarza
+do dwóch wektorów w $\K^d$ ze standardowym iloczynem skalarnym
+(w przypadku rzeczywistym sprzężenie jest identycznością).
+Biorąc nieujemny pierwiastek, otrzymujemy nierówność trójkąta.
+Jednorodność wynika z $|\alpha x_j|^2=|\alpha|^2|x_j|^2$,
+a zerowanie sumy nieujemnych składników jest równoważne
+zerowaniu wszystkich współrzędnych.
+
+\section{Przestrzenie ciągowe}
+
+\begin{definicja}[Przestrzenie $\ell^p$, $c_0$ i $\ell^\infty$]
+\label{def:sequence-spaces12}
+Dla $1\le p<\infty$ określamy
+$\ell^p=\{x=(x_n)_{n\ge1}\in\K^{\N}:\sum_{n\ge1}|x_n|^p<\infty\}$
+i $\|x\|_p=(\sum_{n\ge1}|x_n|^p)^{1/p}$.
+Ponadto $\ell^\infty$ jest przestrzenią ciągów ograniczonych
+z normą $\|x\|_\infty=\sup_{n\ge1}|x_n|$, a $c_0$ oznacza
+podprzestrzeń ciągów zbieżnych do zera, z tą samą normą.
+Przez $c_{00}$ oznaczamy przestrzeń ciągów o skończonym nośniku.
+\end{definicja}
+
+\begin{lemat}[Nierówność H\"oldera dla ciągów]
+\label{lem:holder-seq12}
+Dla $1<p<\infty$, $q=p/(p-1)$, $x\in\ell^p$ i $y\in\ell^q$
+zachodzi
+$\sum_{n\ge1}|x_ny_n|\le\|x\|_p\|y\|_q$.
+Dla $p=1$, $q=\infty$, ta sama nierówność jest prawdziwa.
+\end{lemat}
+\begin{proof}
+Dla $a,b\ge0$ udowodnimy nierówność Younga
+$ab\le a^p/p+b^q/q$ dla $p>1$. Gdy $b=0$, wynika ona z
+nieujemności $a^p/p$. Niech $b>0$. Funkcja
+$g(t)=t^p/p-tb$ na $[0,\infty)$ jest ciągła, a dla $t>0$
+mamy $g'(t)=t^{p-1}-b$. Pochodna jest ujemna dla
+$0<t<b^{1/(p-1)}$ i dodatnia dla $t>b^{1/(p-1)}$.
+Z twierdzenia o wartości średniej i ciągłości w zerze
+funkcja osiąga minimum w $t_0=b^{1/(p-1)}$.
+Ponieważ $t_0^p=t_0b=b^q$ oraz $1/p+1/q=1$,
+mamy $g(t_0)=-b^q/q$. Stąd $g(a)\ge-b^q/q$,
+co po przestawieniu daje nierówność Younga.
+Jeżeli jedno z wyrażeń $\|x\|_p,\|y\|_q$ wynosi zero,
+wszystkie współrzędne odpowiedniego ciągu są zerowe,
+więc teza zachodzi. W przeciwnym przypadku dla $p>1$
+podstawiamy $a=|x_n|/\|x\|_p$ i $b=|y_n|/\|y\|_q$.
+Sumując po $n=1,\ldots,N$, otrzymujemy
+\[
+ \frac{\sum_{n=1}^N|x_ny_n|}{\|x\|_p\|y\|_q}
+ \le\frac{\sum_{n=1}^N|x_n|^p}{p\|x\|_p^p}
+ +\frac{\sum_{n=1}^N|y_n|^q}{q\|y\|_q^q}
+ \le\frac1p+\frac1q=1.
+\]
+Sumy częściowe po lewej są niemalejące i ograniczone,
+więc mają skończoną granicę. Mnożąc nierówność graniczną
+przez dodatni iloczyn, otrzymujemy tezę.
+Dla $p=1$, $q=\infty$ sumujemy oszacowania
+$|x_ny_n|\le |x_n|\|y\|_\infty$ i przechodzimy do granicy
+niemalejących sum częściowych.
+\end{proof}
+
+\begin{twierdzenie}[Zupełność klasycznych przestrzeni ciągowych]
+\label{thm:seq-banach12}
+Dla każdego $1\le p\le\infty$ przestrzeń $\ell^p$ jest przestrzenią Banacha.
+Przestrzeń $c_0$ jest domkniętą podprzestrzenią $\ell^\infty$,
+a zatem także przestrzenią Banacha. Ponadto $c_{00}$ jest gęste
+w $\ell^p$ dla $1\le p<\infty$ i w $c_0$, lecz nie jest gęste
+w $\ell^\infty$.
+\end{twierdzenie}
+\begin{proof}
+Dla $p=\infty$ zbiór jest przestrzenią liniową, gdyż
+dla ograniczonych $x,y$ ciąg $x+y$ jest ograniczony przez
+$\|x\|_\infty+\|y\|_\infty$, a $\alpha x$ przez
+$|\alpha|\|x\|_\infty$. Norma supremum jest normą: nieujemność i
+rozdzielanie punktów wynikają z modułu, jednorodność z
+$|\alpha x_j|=|\alpha||x_j|$, a nierówność trójkąta z
+$|x_j+y_j|\le\|x\|_\infty+\|y\|_\infty$ dla każdego $j$.
+Dla $p<\infty$ wyrażenie $\|x\|_p$ jest nieujemne,
+a jego zerowanie oznacza zerowanie wszystkich składników
+$|x_j|^p$, czyli $x=0$ (i odwrotnie).
+Z $\sum_j|\alpha x_j|^p=|\alpha|^p\sum_j|x_j|^p$
+wynika domknięcie na mnożenie przez skalar i jednorodność,
+także dla $\alpha=0$. Dla $p=1$ sumowanie nierówności $|x_j+y_j|\le|x_j|+|y_j|$
+pokazuje, że $x+y\in\ell^1$ i $\|x+y\|_1\le\|x\|_1+\|y\|_1$.
+Dla $p>1$ wypukłość $t\mapsto t^p$ na $[0,\infty)$ daje
+$|x_j+y_j|^p\le2^{p-1}(|x_j|^p+|y_j|^p)$, więc $z=x+y\in\ell^p$.
+Niech $q=p/(p-1)$ i $w_j=|z_j|^{p-1}$.
+Ponieważ $(p-1)q=p$, zachodzi
+$\sum_j |w_j|^q=\sum_j|z_j|^p<\infty$.
+Stąd $w\in\ell^q$ oraz
+$\|w\|_q=(\sum_j|z_j|^p)^{1/q}=\|z\|_p^{p-1}$.
+Nierówność punktowa
+$|z_j|^p=|z_j|w_j\le (|x_j|+|y_j|)w_j$
+oraz lemat \ref{lem:holder-seq12}, zastosowany do par
+$x,w$ i $y,w$, dają
+\[
+ \|z\|_p^p\le\sum_j|x_j|w_j+\sum_j|y_j|w_j
+ \le(\|x\|_p+\|y\|_p)\|z\|_p^{p-1}.
+\]
+Gdy $\|z\|_p=0$, nierówność trójkąta wynika z nieujemności
+prawej strony; inaczej dzielimy przez $\|z\|_p^{p-1}>0$.
+Wykazaliśmy również domknięcie na dodawanie; domknięcie na
+mnożenie przez skalar wynika z jednorodności.
+Niech $(x^{(n)})$ będzie ciągiem Cauchy'ego w $\ell^p$.
+Dla każdego $j$ zachodzi
+$|x_j^{(n)}-x_j^{(m)}|\le\|x^{(n)}-x^{(m)}\|_p$.
+Z zupełności $\K$ istnieje $x_j=\lim_m x_j^{(m)}$.
+Ustalmy $\varepsilon>0$ i $N$ tak, że norma różnicy jest
+mniejsza niż $\varepsilon/2$ dla $m,n\ge N$.
+Dla $p<\infty$ i dowolnego $J\ge1$ mamy
+\[
+ \sum_{j=1}^J|x_j^{(n)}-x_j^{(m)}|^p\le(\varepsilon/2)^p.
+\]
+Przechodząc do granicy $m\to\infty$ w skończonej sumie,
+a następnie do granicy niemalejących sum po $J$, dostajemy
+$x^{(n)}-x\in\ell^p$ oraz
+$\|x^{(n)}-x\|_p\le\varepsilon/2$ dla $n\ge N$.
+Dla $p=\infty$ przechodzimy do granicy w każdej nierówności
+$|x_j^{(n)}-x_j^{(m)}|\le\varepsilon/2$, po czym bierzemy
+supremum po $j$; otrzymujemy identyczne oszacowanie.
+W obu przypadkach $x=x^{(N)}-(x^{(N)}-x)\in\ell^p$,
+a oszacowanie daje zbieżność w normie.
+Niech $x^{(n)}\in c_0$ i $x^{(n)}\to x$ w normie supremum.
+Dla ustalonego $\varepsilon>0$
+wybieramy $n$ z $\|x-x^{(n)}\|_\infty<\varepsilon/2$
+oraz $J$ z $|x_j^{(n)}|<\varepsilon/2$ dla $j\ge J$.
+Wówczas $|x_j|<\varepsilon$ dla $j\ge J$, więc $x\in c_0$.
+Każdy ciąg zbieżny do zera jest ograniczony, a suma dwóch takich
+ciągów i ich wielokrotności skalarne również zbiegają do zera.
+Zatem $c_0$ jest podprzestrzenią liniową $\ell^\infty$,
+a powyższe kryterium ciągowe wykazuje jej domkniętość.
+Z twierdzenia \ref{ma2:thm:closed} wynika zupełność $c_0$.
+Zbiór $c_{00}$ jest podprzestrzenią liniową zarówno $c_0$,
+jak i każdej $\ell^p$, ponieważ suma dwóch skończonych
+nośników jest skończona, a mnożenie przez skalar nie
+powiększa nośnika.
+Obcięcie $x$ po $J$ współrzędnych daje $x^{[J]}\in c_{00}$.
+Dla $p<\infty$ norma różnicy wynosi
+$(\sum_{j>J}|x_j|^p)^{1/p}\to0$, a dla $x\in c_0$
+wynosi $\sup_{j>J}|x_j|\to0$. Dla $u=(1,1,\ldots)$
+i każdego $v\in c_{00}$ pewna współrzędna $v_j$ jest zerowa,
+więc $\|u-v\|_\infty\ge1$, co wyklucza gęstość w $\ell^\infty$.
+\end{proof}
+
+\begin{przyklad}[Niezupełna przestrzeń unormowana]
+Przestrzeń $c_{00}$ z normą supremum nie jest zupełna.
+Niech $x^{(n)}=(1,1/2,\ldots,1/n,0,\ldots)$.
+Dla $m>n$ jedyne niezerowe współrzędne różnicy
+$x^{(m)}-x^{(n)}$ mają indeksy $n<j\le m$ i wartości $1/j$,
+więc norma różnicy wynosi $1/(n+1)$.
+Dla $\varepsilon>0$ wybieramy $N$ z $1/(N+1)<\varepsilon$.
+Dla $m,n\ge N$ uwzględniamy także $m=n$ i symetrię
+w przypadku $m<n$, otrzymując warunek Cauchy'ego.
+W $\ell^\infty$ ciąg ten zbiega do $x=(1/j)_{j\ge1}$,
+ponieważ $\|x-x^{(n)}\|_\infty=1/(n+1)\to0$.
+Gdyby miał granicę w $c_{00}$, miałby ją również
+w $\ell^\infty$, ponieważ norma jest indukowana.
+Jednoznaczność granicy wymuszałaby jej równość z $(1/j)_{j\ge1}$,
+który ma nieskończony nośnik i nie należy do $c_{00}$.
+\end{przyklad}
+
+\section{Przestrzenie funkcji ograniczonych i ciągłych}
+\begin{twierdzenie}
+\label{ma2:thm:bounded}
+Niech $S$ będzie niepustym zbiorem, a $E$ przestrzenią unormowaną.
+Przestrzeń $B(S,E)$ funkcji ograniczonych z normą
+$\|f\|_\infty=\sup_{s\in S}\|f(s)\|$ jest unormowana
+i jest przestrzenią Banacha wtedy i tylko wtedy, gdy $E$ jest
+przestrzenią Banacha.
+\end{twierdzenie}
+\begin{proof}
+Suma i iloczyn przez skalar są ograniczone na mocy
+$\|f(s)+g(s)\|\le\|f\|_\infty+\|g\|_\infty$ i jednorodności.
+Supremum jest skończone i nieujemne; gdy wynosi zero,
+$f(s)=0$ dla każdego $s$; odwrotnie funkcja zerowa ma normę zero.
+Dla $\alpha\ne0$ mamy
+$\sup_s\|\alpha f(s)\|=|\alpha|\sup_s\|f(s)\|$,
+ponieważ mnożenie przez dodatnią liczbę zachowuje supremum.
+Dla $\alpha=0$ obie strony są zerowe.
+Biorąc supremum w oszacowaniu punktowym sumy,
+otrzymujemy $\|f+g\|_\infty\le\|f\|_\infty+\|g\|_\infty$.
+Jeśli $E$ jest zupełna i $(f_n)$ jest ciągiem Cauchy'ego,
+to dla każdego $s$ ciąg $(f_n(s))$ jest ciągiem Cauchy'ego,
+gdyż $\|f_n(s)-f_m(s)\|\le\|f_n-f_m\|_\infty$.
+Definiujemy $f(s)=\lim_n f_n(s)$.
+Dla $\varepsilon>0$ istnieje $N$ z
+$\|f_n-f_m\|_\infty<\varepsilon/2$ dla $m,n\ge N$.
+Dla każdego $s$ i $n\ge N$, przechodząc do granicy $m\to\infty$,
+korzystając z ciągłości normy (twierdzenie \ref{ma2:thm:metric}),
+mamy $\|f_n(s)-f(s)\|\le\varepsilon/2$.
+Dla $n=N$ wynika stąd $\|f(s)\|\le\|f_N\|_\infty+\varepsilon/2$,
+więc $f\in B(S,E)$. Biorąc supremum, otrzymujemy
+$\|f_n-f\|_\infty\le\varepsilon/2$.
+Odwrotnie, jeśli $B(S,E)$ jest zupełna, ciągowi Cauchy'ego
+$(x_n)$ w $E$ przypisujemy funkcje stałe $f_n(s)=x_n$.
+Z $\|f_n-f_m\|_\infty=\|x_n-x_m\|$ wynika, że mają granicę
+$f$ w $B(S,E)$. Dla ustalonego $s_0\in S$ mamy
+$\|x_n-f(s_0)\|\le\|f_n-f\|_\infty\to0$.
+\end{proof}
+\begin{twierdzenie}
+\label{ma2:thm:continuous}
+Jeśli $K$ jest niepustą zwartą przestrzenią metryczną,
+a $E$ przestrzenią Banacha, to $C(K,E)$ z normą supremum
+jest przestrzenią Banacha.
+\end{twierdzenie}
+\begin{proof}
+Ciągła funkcja $s\mapsto\|f(s)\|$ osiąga maksimum na $K$,
+więc każda funkcja ciągła $f:K\to E$ jest ograniczona.
+Z twierdzenia \ref{ma2:thm:metric} dodawanie i mnożenie
+przez ustalony skalar są ciągłe w $E$. Zatem sumy funkcji
+ciągłych $K\to E$ i ich wielokrotności skalarne są ciągłe
+jako złożenia ciągłych odwzorowań; funkcja zerowa też
+jest ciągła. W konsekwencji $C(K,E)$ jest podprzestrzenią
+liniową $B(K,E)$ i ma normę indukowaną. Niech $f_n\in C(K,E)$ oraz
+$\|f_n-f\|_\infty\to0$. Dla $s_0\in K$ i $\varepsilon>0$
+wybieramy $n$ z $\|f_n-f\|_\infty<\varepsilon/3$.
+Z ciągłości $f_n$ w $s_0$ istnieje $\delta>0$ takie, że
+$d(s,s_0)<\delta$ implikuje
+$\|f_n(s)-f_n(s_0)\|<\varepsilon/3$.
+Wtedy
+\[
+ \|f(s)-f(s_0)\|
+ \le\|f(s)-f_n(s)\|+\|f_n(s)-f_n(s_0)\|
+      +\|f_n(s_0)-f(s_0)\|<\varepsilon.
+\]
+Zatem $f$ jest ciągła. Każdy ciąg Cauchy'ego w $C(K,E)$
+ma z twierdzenia \ref{ma2:thm:bounded} granicę w $B(K,E)$,
+która na mocy powyższego argumentu należy do $C(K,E)$.
+\end{proof}

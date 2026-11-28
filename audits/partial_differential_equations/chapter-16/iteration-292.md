@@ -1,0 +1,7 @@
+# RRC 16 — iteracja 292: kontrola poprawki typograficznej
+
+Porównano rzeczywiste źródło po poprawce (blob 2970995cf79c7a0e9fe27fcb42a979497d8b6e4d, 1904 wiersze) z wersją po trzeciej lekturze (03474f39ddc0242e8692db1f8bd3d128a782b17d). Jedyny zmieniony fragment od wiersza 989: dwa wzory śródtekstowe zastąpiono blokami eksponowanymi. Po pominięciu delimiterów matematycznych i białych znaków tekst i wzory są identyczne; nie ma zmian tez, dowodów, etykiet ani odsyłaczy. Sprawdzono pary delimitera (86 otwarć i 86 zamknięć), stos środowisk, 30 unikatowych etykiet, 79 odsyłaczy do 42 celów. Makra R, C, N, diver i supp są obecne zarówno w preambule książki, jak i Atlasu. Kontrola statyczna bez nowych usterek.
+
+Porównano pełne, nieucięte drzewa Git commitu 431ea808c02b610e5fcc2e57df5daa12e5c476ca i aktualnej gałęzi: wszystkie 13 kontrolowanych plików wejściowych dedykowanego workflow (8 rozdziałów, książka, manifest, listingi, preambuła Atlasu, workflow) ma identyczne identyfikatory blobów.
+
+Przebieg 45976114789, job 140428136384: queued podczas końcowego odczytu, brak artefaktu. Nie można jeszcze potwierdzić usunięcia przepełnienia wiersza na podstawie logu ani wykonać końcowej kontroli wizualnej. Nie uruchamiano powtórnego przebiegu, nie modyfikowano rozdziału. Kolejny etap: wynik istniejącego przebiegu i kontrola stron PDF, bez udostępniania podglądu użytkownikowi zgodnie z dyspozycją.

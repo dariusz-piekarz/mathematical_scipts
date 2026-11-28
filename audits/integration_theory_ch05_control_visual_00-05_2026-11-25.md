@@ -1,0 +1,9 @@
+# IT-05 — kontrola stabilizacyjna i kontrola wizualna IT-00–05
+
+Sprawdzone źródło IT-05: cd9ce349de276d4b54ff76b1454bbc9306c5ae84. Ponowna kontrola wszystkich ośmiu kryteriów IT-05-001–008: porządek funkcji porównawczych, oba znaki mianowników i przypadki znacznika na końcu, obwiednie L,B i K na lukach, skończoność miar przez sumowalność oscylacji, bezatomowość i zbiory zerowe (uzupełnienie), jednostajna zbieżność korekt, oba kierunki Perron=HK, odtwarzanie pochodnych, przykład Dirichleta i funkcje kawałkami C^1. Sprawdzono zależności w IT-04, 08, 10, 11, 13. Brak nowych istotnych luk w sprawdzonym zakresie. Bez zmian źródła. 8 etykiet, 10 różnych lokalnych odsyłaczy z IT-05 — wszystkie mają cele; środowiska sparowane. Testy nie zastępują dowodów.
+
+CI 45624930831, job 139242489515, SHA 2c5849d4ad053580a7586f41a8daa4098078924b: 34/34 regresji (IT-05 5/5), dwukrotna kompilacja, końcowe sprawdzenie odsyłaczy PASS. PDF 131 stron, 1235844 bajtów, artefakt 15027572894. Drobne ostrzeżenia Overfull (3.89328pt, 0.59775pt) i Underfull (1194) w logu, nie są błędami kompilacji.
+
+Kontrola wizualna: pobrano rzeczywisty artefakt CI, odczytano spis treści i wyrenderowano strony PDF 4–34 (31 stron) w PyMuPDF w skali 1.25, następnie obejrzano wszystkie obrazy (arkusze 4–7, 8–11, 12–15, 16–19, 20–23, 24–27, 28–31, 32–34). Zakres obejmuje IT-00, 01, 02, 03, 04 i 05, z fragmentem początku IT-06 na s. 34. Sprawdzono układ, rysunki Darboux/Thomae i cechowania, wzory, nagłówki i przejścia stron. Nie zaobserwowano istotnych nakładających się, uciętych lub nieczytelnych elementów. Nie jest to kontrola wszystkich 131 stron; pozostały zakres PDF oraz drobne ostrzeżenia typograficzne całego tomu do końcowej kontroli. Nie wykonywano Lean.
+
+Wniosek: kontrola IT-05 bez nowych istotnych usterek, CI i kontrola wizualna rozdziałów 00–05 potwierdzone dla wskazanego artefaktu. Następny rozdział IT-06.

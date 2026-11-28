@@ -1,0 +1,11 @@
+# MA1-08 — iteracja rozwojowo-stabilizacyjna 01
+Po stabilizacji MA1-07 (dc8b934) utworzono MA1-08, dodano do tomu i katalogu. Treść po poprawkach 5b82634, blob 6172f9e516734c2574ef667a7ea7ac0713b12901, 214 wierszy.
+## Audyt matematyczny
+001: definicja zbieżności rozszerzonej, wszystkie przypadki kresu monotonicznego, odwracanie porządku; kontrprzykład nieograniczoności bez granicy nieskończonej.
+002–003: inkluzje ogonów, oszacowanie alfa_N <= beta_M ze wspólnego indeksu, niezmienniczość po zmianie skończonego początku; sprawdzono dokładne kresy dla obu parzystości N.
+004: kod rysunku TikZ, współrzędne punktów i zmian schodków sprawdzone rachunkowo; przesunięto etykiety dla czytelności. Nie obejrzano jeszcze skompilowanego rysunku.
+005–007: ścisłe progi i jednoznaczność także przy nieskończonych końcach, dopisano bezpośrednie uzasadnienie negacji. Konstrukcje podciągów dla skończonego L, L=+infty i L=-infty; jawny pierwszy indeks i wybór najmniejszych świadków, granica dolna przez negację. Wykluczono granice podciągów poza [l,L]. Uzupełniono argument równości l=L=a przy skończonej granicy; oba przypadki nieskończone i obie implikacje sprawdzone.
+008–011: nierówności od pewnego indeksu, negacja, wszystkie cztery nierówności sumy przez oszacowania ogonów i odejmowanie, trzy przypadki skalara rzeczywistego, równości dla składnika zbieżnego, iloczyny przy nieujemności i ograniczoności, kontrprzykłady przy opuszczeniu założeń. Własności arytmetyczne świadomie ograniczono do ciągów rzeczywistych ograniczonych, bez nieokreślonej arytmetyki nieskończoności.
+012: przykłady nieograniczone, metryczne kryterium zbieżności przez limsup odległości. Nie rozpoczynano szeregów.
+## Kontrole techniczne
+Ponownie pobrano pliki: 15 etykiet, bez powtórzeń i nierozwiązanych ref, zgodne środowiska, obecność w pliku głównym i katalogu, identyczne preambuły Atlasu i tomu. Brak przymiotnika hiperrealny i jego odmian w ośmiu rozdziałach. Testy f796880, kryteria a627958: 7 nowych testów, 12 kryteriów, 57 testów tomu łącznie. CI 45425765268 (treść), 45425765118 (Atlas), 45425765146 (terminologia) i 45425840088 (rozszerzone testy) w kolejce. Nie deklarujemy wyników nowych testów ani kontroli składu PDF; Lean nieuruchomiony. Status w stabilizacji, następna iteracja potwierdzająca.

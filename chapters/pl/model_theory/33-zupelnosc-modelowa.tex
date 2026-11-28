@@ -1,0 +1,2321 @@
+\chapter{Zupełność modelowa}
+\label{ch:mod-model-completeness}
+\section{Motywacja i podstawowe pojęcia}
+Eliminacja kwantyfikatorów pozwala badać wszystkie formuły
+za pomocą atomów i spójników. W wielu teoriach wystarczy
+jednak słabsza własność: aby zanurzenie jednego modelu
+w drugi było elementarne, nie musimy eliminować wszystkich
+kwantyfikatorów, lecz wystarczy odpowiednio kontrolować
+formuły egzystencjalne.
+
+W całym rozdziale pracujemy w logice pierwszego rzędu
+z równością i w ZFC. Uniwersa struktur są niepuste.
+Stosujemy konwencję stałych logicznych $\top,\bot$
+z rozdziału \ref{ch:mod-qe}.
+Przez zanurzenie rozumiemy izomorfizm na podstrukturę
+obrazu (z zachowaniem i odbijaniem relacji), a nie
+dowolny różnowartościowy homomorfizm. Pojęcia
+podstruktury i elementarności pochodzą z definicji
+\ref{def:model-substructure} oraz
+\ref{def:model-elementary-substructure}.
+
+\begin{definicja}[Zupełność modelowa]
+\label{def:mod-model-complete}
+Spełnialną teorię $T$ nazywamy modelowo zupełną, jeżeli
+dla dowolnych modeli $\mathfrak M,\mathfrak N\models T$
+każde zanurzenie $\mathfrak M\to\mathfrak N$ jest
+elementarne. Równoważnie, jeżeli
+$\mathfrak M\subseteq\mathfrak N$ są modelami $T$,
+to $\mathfrak M\preccurlyeq\mathfrak N$.
+\end{definicja}
+
+Równoważność obu zapisów wynika z niezmienniczości
+prawdziwości formuł względem izomorfizmów
+(twierdzenie \ref{thm:model-iso-invariance}):
+dowolne zanurzenie jest złożeniem izomorfizmu na obraz
+i inkluzji obrazu w strukturę docelową.
+
+Zupełność modelowa nie jest tym samym co zupełność teorii.
+Zupełność dotyczy rozstrzygania zdań, natomiast zupełność
+modelowa dotyczy zanurzeń oraz formuł z parametrami.
+Nie należy też mylić obu własności z twierdzeniem
+o pełności rachunku logicznego.
+
+\begin{wniosek}
+\label{cor:mod-mc-qe}
+Każda teoria z eliminacją kwantyfikatorów jest
+modelowo zupełna.
+\end{wniosek}
+\begin{proof}
+Jest to pierwsza część wniosku
+\ref{cor:mod-qe-consequences}: podstruktura zachowuje
+formuły bez kwantyfikatorów, a eliminacja przenosi
+tę zgodność na wszystkie formuły.
+\end{proof}
+
+\begin{przyklad}[Zupełność modelowa bez zupełności]
+\label{ex:mod-mc-incomplete}
+Teoria wszystkich ciał algebraicznie domkniętych
+w języku pierścieni jest modelowo zupełna na mocy
+twierdzenia \ref{thm:mod-qe-acf} i wniosku
+\ref{cor:mod-mc-qe}. Nie jest jednak zupełna:
+zdanie $1+1=0$ zachodzi w algebraicznym domknięciu
+ciała dwuelementowego, lecz nie zachodzi w $\mathbb C$.
+\end{przyklad}
+
+\begin{przyklad}[Zupełność bez zupełności modelowej]
+\label{ex:mod-complete-not-mc}
+Teoria $\operatorname{Th}(\mathbb Z,<)$ jest zupełna,
+ale nie jest modelowo zupełna. Odwzorowanie
+$f:\mathbb Z\to\mathbb Z$, $f(n)=2n$, jest zanurzeniem
+porządków liniowych. W dziedzinie formuła
+$\exists y\,(x<y\land y<z)$ jest fałszywa przy $(0,1)$,
+a w przeciwdziedzinie jest prawdziwa przy $(f(0),f(1))=(0,2)$,
+ze świadkiem $1$. Zanurzenie nie jest więc elementarne.
+\end{przyklad}
+
+\section{Formuły egzystencjalne i domknięcie egzystencjalne}
+\begin{definicja}[Formuły egzystencjalne i uniwersalne]
+\label{def:mod-mc-existential-universal}
+Formułę nazywamy egzystencjalną, jeśli ma postać
+$\exists\bar y\,\theta(\bar x,\bar y)$, gdzie $\theta$
+nie zawiera kwantyfikatorów, a uniwersalną, jeśli ma
+postać $\forall\bar y\,\theta(\bar x,\bar y)$.
+Lista $\bar y$ może być pusta.
+W obu przypadkach zmienne związane są parami różne
+i różne od wskazanych zmiennych wolnych $\bar x$.
+Lista $\bar x$ może być pusta; obejmuje wszystkie
+zmienne wolne rozważanej formuły, ale nie każda jej
+zmienna musi wystąpić w macierzy.
+\end{definicja}
+
+W macierzy dopuszczamy negacje atomów, w przeciwieństwie
+do formuł pozytywnych egzystencjalnych, omawianych
+w definicji \ref{def:model-positive-existential}.
+Zachowanie tych ostatnich przez homomorfizmy nie jest
+tym samym co zachowanie wszystkich formuł egzystencjalnych
+przez zanurzenia.
+
+\begin{lemat}[Zachowanie przy inkluzjach]
+\label{lem:mod-mc-preservation}
+Niech $\mathfrak M\subseteq\mathfrak N$ i $\bar a\in M^n$.
+Jeżeli $\varphi(\bar x)$ jest egzystencjalna, to
+\[
+\mathfrak M\models\varphi(\bar a)
+\ \Longrightarrow\
+\mathfrak N\models\varphi(\bar a).
+\]
+Jeżeli $\psi(\bar x)$ jest uniwersalna, to
+\[
+\mathfrak N\models\psi(\bar a)
+\ \Longrightarrow\
+\mathfrak M\models\psi(\bar a).
+\]
+\end{lemat}
+\begin{proof}
+Wartości termów i prawdziwość atomów przy argumentach
+z $M$ są zgodne w obu strukturach na mocy definicji
+podstruktury. Spójniki zachowują zgodność, więc
+macierz bez kwantyfikatorów ma w obu strukturach
+tę samą wartość przy takich argumentach.
+Każdy świadek egzystencjalny w $M$ jest zatem świadkiem
+w $N$. Dla formuły uniwersalnej ograniczamy wszystkie
+wartości zmiennych związanych z $N$ do $M$.
+\end{proof}
+
+\begin{definicja}[Podstruktura egzystencjalnie domknięta]
+\label{def:mod-mc-existential-closure}
+Piszemy $\mathfrak M\preccurlyeq_{\exists}\mathfrak N$,
+jeżeli $\mathfrak M\subseteq\mathfrak N$ i dla każdej
+formuły egzystencjalnej $\varphi(\bar x)$ oraz każdej
+krotki $\bar a$ z $M$ zachodzi
+\[
+\mathfrak N\models\varphi(\bar a)
+\ \Longrightarrow\
+\mathfrak M\models\varphi(\bar a).
+\]
+Mówimy wtedy, że $\mathfrak M$ jest egzystencjalnie
+domknięta w $\mathfrak N$.
+Jeżeli $\mathfrak M$ jest modelem teorii $T$ i
+$\mathfrak M\preccurlyeq_{\exists}\mathfrak N$ dla każdego
+rozszerzenia $\mathfrak N\supseteq\mathfrak M$
+będącego modelem $T$, nazywamy
+$\mathfrak M$ egzystencjalnie domkniętym modelem $T$.
+\end{definicja}
+
+Z lematu \ref{lem:mod-mc-preservation} wynika, że
+$\preccurlyeq_{\exists}$ oznacza zgodność prawdziwości
+wszystkich formuł egzystencjalnych przy parametrach
+z mniejszej struktury. Jest też równoważna zgodności
+wszystkich formuł uniwersalnych, ponieważ negacja
+formuły uniwersalnej jest równoważna egzystencjalnej
+z zanegowaną macierzą i odwrotnie.
+
+\section{Diagramy i kryterium Robinsona}
+W dowodach wykorzystamy diagramy struktur. Diagram
+elementarny omawiano w związku z realizacją typów
+w rozszerzeniach elementarnych (twierdzenie
+\ref{thm:mod-type-elementary-extension}).
+
+\begin{definicja}[Diagram bez kwantyfikatorów i diagram elementarny]
+\label{def:mod-mc-diagrams}
+Dla struktury $\mathfrak M$ rozszerzamy język o świeżą
+stałą $c_a$ dla każdego $a\in M$, interpretowaną jako $a$.
+Diagram bez kwantyfikatorów $\operatorname{Diag}(\mathfrak M)$
+jest zbiorem wszystkich zdań bez kwantyfikatorów
+prawdziwych w tak rozszerzonej strukturze.
+Diagram elementarny $\operatorname{ED}(\mathfrak M)$
+jest zbiorem wszystkich prawdziwych zdań rozszerzonego
+języka, bez ograniczenia na kwantyfikatory.
+\end{definicja}
+
+\begin{lemat}[Własność diagramów]
+\label{lem:mod-mc-diagram-embedding}
+Jeśli $\mathfrak D$ jest modelem diagramu
+$\operatorname{Diag}(\mathfrak M)$, odwzorowanie
+$a\mapsto c_a^{\mathfrak D}$ jest zanurzeniem
+$\mathfrak M$ w redukt $\mathfrak D$ do języka pierwotnego.
+Jeśli $\mathfrak D$ jest modelem
+$\operatorname{ED}(\mathfrak M)$, to zanurzenie
+jest elementarne. Odwrotnie każde zanurzenie
+(odpowiednio elementarne) daje model właściwego diagramu
+przez interpretowanie nowych stałych obrazami elementów.
+\end{lemat}
+\begin{proof}
+Dla różnych $a,b$ diagram zawiera $c_a\ne c_b$,
+więc odwzorowanie jest różnowartościowe. Dla każdej
+stałej języka pierwotnego zawiera równość z nazwą
+jej wartości w $\mathfrak M$. Dla symbolu funkcyjnego
+$f$ i argumentów $\bar a$ zawiera równość
+$f(c_{\bar a})=c_{f^{\mathfrak M}(\bar a)}$.
+Dla symbolu relacyjnego zawiera atom lub jego negację
+zależnie od prawdziwości w $\mathfrak M$. Są to dokładnie
+warunki izomorfizmu na podstrukturę obrazu.
+W przypadku symbolu relacyjnego o arności zero,
+jeżeli język go dopuszcza, diagram ustala bezpośrednio
+jego wartość logiczną. Zgodność wszystkich atomów
+daje zgodność każdej formuły bez kwantyfikatorów,
+przez indukcję po spójnikach.
+
+W przypadku diagramu elementarnego dla każdej
+formuły z parametrami diagram zawiera odpowiednie
+zdanie lub jego negację. Semantyka podstawienia
+(twierdzenie \ref{thm:sem-substitution}) daje zachowanie
+i odbijanie prawdziwości formuły przy obrazach parametrów,
+czyli elementarność.
+Odwrotna implikacja wynika z zachowania formuł bez
+kwantyfikatorów przez zanurzenie lub wszystkich
+formuł przez zanurzenie elementarne.
+\end{proof}
+
+\begin{lemat}[Przedłużenie zanurzenia do rozszerzenia elementarnego]
+\label{lem:mod-mc-robinson-diagram}
+Dla $\mathfrak M\subseteq\mathfrak N$ równoważne są warunki:
+\begin{enumerate}[label=(\roman*)]
+\item $\mathfrak M\preccurlyeq_{\exists}\mathfrak N$;
+\item istnieje rozszerzenie elementarne
+$\mathfrak M'\succeq\mathfrak M$ i zanurzenie
+$f:\mathfrak N\to\mathfrak M'$ ustalające każdy element $M$.
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+Załóżmy (i). Nazwy elementów $M$ w obu diagramach
+wybieramy identycznie i rozważamy teorię
+\[
+\operatorname{ED}(\mathfrak M)
+\cup\operatorname{Diag}(\mathfrak N).
+\]
+Każdy jej skończony fragment ma model: wybrane zdania
+z drugiego diagramu tworzą koniunkcję bez kwantyfikatorów
+$\theta(\bar c,\bar d)$, gdzie $\bar c$ są nazwami
+elementów $M$, a $\bar d$ nazwami skończenie wielu
+elementów $N\setminus M$. Zastępując nazwy $\bar d$
+świeżymi zmiennymi $\bar y$, otrzymujemy formułę
+$\exists\bar y\,\theta(\bar c,\bar y)$ prawdziwą
+w $\mathfrak N$. Domknięcie egzystencjalne przenosi
+ją na $\mathfrak M$. Interpretujemy zatem nazwy
+$\bar d$ odpowiednimi świadkami w $M$, a pozostałe
+nowe nazwy dowolnymi elementami $M$.
+Przy nazwach z $M$ interpretowanych standardowo
+wszystkie zdania diagramu elementarnego pozostają
+prawdziwe. Zwartość (twierdzenie \ref{thm:compactness})
+daje model całej teorii.
+
+Na mocy lematu \ref{lem:mod-mc-diagram-embedding}
+uzyskujemy elementarne zanurzenie $\mathfrak M$ i
+zanurzenie $\mathfrak N$ w ten sam redukt, zgodne na $M$.
+Przenosząc strukturę reduktu wzdłuż bijekcji, która
+utożsamia obraz $a\in M$ z samym $a$, a pozostałe
+elementy wysyła na świeże elementy spoza $M$, uzyskujemy
+rzeczywiste rozszerzenie elementarne $\mathfrak M'$
+oraz wymagane $f$. Świeży zbiór odpowiedniej mocy
+można wybrać jako zbiór liczb porządkowych większych
+od rangi $M$.
+
+Odwrotnie, jeśli formuła egzystencjalna z parametrami
+z $M$ jest prawdziwa w $\mathfrak N$, jej prawdziwość
+przenosi się przez $f$ do $\mathfrak M'$ na mocy
+lematu \ref{lem:mod-mc-preservation} i niezmienniczości
+względem izomorfizmów. Parametry pozostają niezmienione.
+Elementarność $\mathfrak M\preccurlyeq\mathfrak M'$
+przenosi formułę do $\mathfrak M$, co daje (i).
+\end{proof}
+
+\begin{twierdzenie}[Kryterium Robinsona]
+\label{thm:mod-mc-robinson}
+Dla spełnialnej teorii $T$ równoważne są warunki:
+\begin{enumerate}[label=(\roman*)]
+\item $T$ jest modelowo zupełna;
+\item każdy model $T$ jest egzystencjalnie domkniętym
+modelem $T$;
+\item dla dowolnych modeli $\mathfrak M\subseteq\mathfrak N$
+teorii $T$ zachodzi $\mathfrak M\preccurlyeq_{\exists}\mathfrak N$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Implikacja (i)$\Rightarrow$(ii) wynika z definicji
+elementarności, a równoważność (ii) i (iii) jest
+bezpośrednim przepisaniem kwantyfikatorów w definicji
+domknięcia egzystencjalnego.
+
+Załóżmy (iii) i ustalmy modele
+$\mathfrak M_0=\mathfrak M\subseteq\mathfrak N_0=\mathfrak N$.
+Z lematu \ref{lem:mod-mc-robinson-diagram} otrzymujemy
+rozszerzenie elementarne $\mathfrak M_1$ struktury
+$\mathfrak M_0$ oraz zanurzenie $\mathfrak N_0$ w
+$\mathfrak M_1$ ustalające $M_0$. Przenosząc strukturę
+$\mathfrak M_1$ na izomorficzną kopię, możemy założyć,
+że $\mathfrak N_0\subseteq\mathfrak M_1$, przy zachowaniu
+$\mathfrak M_0\preccurlyeq\mathfrak M_1$.
+Ponieważ $\mathfrak M_1$ jest modelem $T$, ponownie
+stosujemy (iii), tym razem do
+$\mathfrak N_0\subseteq\mathfrak M_1$, i konstruujemy
+$\mathfrak N_1\succeq\mathfrak N_0$ zawierającą
+$\mathfrak M_1$. Powtarzamy naprzemiennie konstrukcję:
+\[
+\mathfrak M_0\subseteq\mathfrak N_0
+\subseteq\mathfrak M_1\subseteq\mathfrak N_1
+\subseteq\mathfrak M_2\subseteq\cdots,
+\]
+przy czym dla każdego $i\in\N$
+\[
+\mathfrak M_i\preccurlyeq\mathfrak M_{i+1},
+\qquad
+\mathfrak N_i\preccurlyeq\mathfrak N_{i+1}.
+\]
+Wybory kolejnych rozszerzeń można ograniczyć do
+zbioru: na mocy dolnego twierdzenia Löwenheima--Skolema
+każde rozszerzenie elementarne w konstrukcji można
+zmniejszyć do podstruktury elementarnej zawierającej
+obraz większego z dotychczasowych modeli i o mocy
+nie większej niż
+$\mu=\max(\aleph_0,|\mathcal L|,|N_0|)$
+(twierdzenie \ref{thm:downward-ls}).
+Jeżeli $\mathfrak M_i$ jest elementarna w dużym
+rozszerzeniu, a wybrana podstruktura elementarna
+tego rozszerzenia zawiera $\mathfrak M_i$, to
+$\mathfrak M_i$ jest elementarna także w wybranej
+podstrukturze: obie zgadzają się z dużym modelem
+co do formuł z parametrami z $M_i$.
+Tak samo postępujemy w kroku dla $\mathfrak N_i$.
+Przenosimy nowe elementy do kolejnych rozłącznych
+zbiorów mocy $\mu$, rozłącznych też z $N_0$.
+Wtedy aksjomat wyboru pozwala ustalić wybór rozszerzenia
+na każdym etapie w obrębie zbioru struktur
+na podzbiorach ustalonej sumy tych zbiorów.
+
+Oba ciągi mają tę samą strukturę sumy $\mathfrak U$,
+ponieważ przeplatają się i ich interpretacje są zgodne
+na wcześniejszych uniwersach. Z lematu o sumach łańcuchów
+elementarnych \ref{lem:mod-saturation-chain} wynika
+\[
+\mathfrak M_0\preccurlyeq\mathfrak U,
+\qquad \mathfrak N_0\preccurlyeq\mathfrak U.
+\]
+Dla dowolnej formuły z parametrami z $M_0$ jej
+prawdziwość w $\mathfrak M_0$ i $\mathfrak N_0$
+jest więc równoważna prawdziwości w $\mathfrak U$.
+Stąd $\mathfrak M_0\preccurlyeq\mathfrak N_0$,
+co dowodzi (i).
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,x=1cm,y=1cm]
+\foreach \x/\i in {0/0,3/1,6/2}{
+ \node[draw,rounded corners,minimum width=1.1cm] (m\i) at (\x,1.8) {$\mathfrak M_{\i}$};
+ \node[draw,rounded corners,minimum width=1.1cm] (n\i) at (\x+1,0) {$\mathfrak N_{\i}$};
+ \draw[->,gray] (m\i)--node[left,inner sep=1pt] {$\subseteq$}(n\i);
+}
+\foreach \i/\j in {0/1,1/2}{
+ \draw[->,blue!65!black,thick] (m\i)--node[above] {$\preccurlyeq$}(m\j);
+ \draw[->,blue!65!black,thick] (n\i)--node[below] {$\preccurlyeq$}(n\j);
+ \draw[->,gray] (n\i)--node[right,inner sep=1pt] {$\subseteq$}(m\j);
+}
+\node[draw,rounded corners] (u) at (9,0.9) {$\mathfrak U$};
+\draw[->,blue!65!black,dashed] (m2)--(u);
+\draw[->,blue!65!black,dashed] (n2)--(u);
+\end{tikzpicture}
+\caption{Przeplatające się łańcuchy w dowodzie kryterium
+Robinsona. Niebieskie strzałki oznaczają elementarność.}
+\label{fig:mod-mc-robinson-chain}
+\end{figure}
+
+Rysunek \ref{fig:mod-mc-robinson-chain} przedstawia
+konstrukcję z dowodu twierdzenia \ref{thm:mod-mc-robinson}.
+Istotne jest to, że samo domknięcie egzystencjalne jednej
+podstruktury nie musi oznaczać jej elementarności.
+Kryterium dotyczy wszystkich par modeli teorii, dzięki
+czemu konstrukcję można powtarzać.
+
+\begin{przyklad}[Domknięcie egzystencjalne bez elementarności]
+\label{ex:mod-mc-ec-not-elementary}
+W języku $\{<\}$ niech
+$\mathfrak M=(\Q,<)$, a $\mathfrak N$ będzie porządkiem
+otrzymanym przez dodanie jednego nowego największego
+elementu $t$ do $\Q$.
+Wtedy $\mathfrak M\preccurlyeq_{\exists}\mathfrak N$,
+ale $\mathfrak M\not\preccurlyeq\mathfrak N$.
+Co więcej, w $\mathfrak M$ i $\mathfrak N$ zachodzą
+dokładnie te same zdania egzystencjalne.
+\end{przyklad}
+\begin{proof}
+Niech formuła egzystencjalna
+$\exists\bar y\,\theta(\bar a,\bar y)$ z parametrami
+$\bar a$ z $\Q$ zachodzi w $\mathfrak N$.
+Wybieramy krotkę świadków $\bar b$.
+Jeżeli żadna współrzędna $\bar b$ nie jest równa $t$,
+to wszystkie parametry i świadkowie należą do $\Q$,
+więc macierz zachodzi również w $\mathfrak M$.
+W przeciwnym razie wybieramy liczbę wymierną $q$
+większą od wszystkich wymiernych współrzędnych
+$\bar a,\bar b$ (jeżeli ich nie ma, wybieramy $q=0$).
+Zastępujemy każdą współrzędną równą $t$ przez $q$.
+W ten sposób zachowujemy wszystkie równości
+i porównania w połączonej krotce, a więc również
+prawdziwość macierzy bez kwantyfikatorów.
+Otrzymujemy świadków w $\mathfrak M$.
+Z definicji zachodzi domknięcie egzystencjalne;
+w szczególności oba porządki zgadzają się co do
+zdań egzystencjalnych, przez lemat
+\ref{lem:mod-mc-preservation}.
+Jednak zdanie
+$\exists x\,\forall y\,\neg(x<y)$
+jest prawdziwe w $\mathfrak N$, ze świadkiem $t$,
+a fałszywe w $\mathfrak M$, ponieważ dla każdego
+$x\in\Q$ mamy $x<x+1$.
+Inkluzja nie jest więc elementarna.
+\end{proof}
+
+\section{Charakterystyka przez równoważniki egzystencjalne}
+\begin{lemat}[Diagram a typ egzystencjalny]
+\label{lem:mod-mc-existential-type}
+Niech $\mathfrak M,\mathfrak N$ będą strukturami
+tego samego języka, a $\bar a,\bar b$ skończonymi
+krotkami tej samej długości.
+Jeżeli każda formuła egzystencjalna prawdziwa przy
+$\bar a$ w $\mathfrak M$ jest prawdziwa przy $\bar b$
+w $\mathfrak N$, to istnieje rozszerzenie elementarne
+$\mathfrak N'\succeq\mathfrak N$ i zanurzenie
+$f:\mathfrak M\to\mathfrak N'$ wysyłające $\bar a$
+na $\bar b$. Odwrotnie, istnienie takiego zanurzenia
+implikuje wskazane zachowanie formuł egzystencjalnych.
+Dopuszczamy również krotki puste.
+\end{lemat}
+\begin{proof}
+Najpierw zauważmy, że obie krotki mają ten sam układ
+równości, ponieważ równości i ich negacje są formułami
+egzystencjalnymi z pustą listą kwantyfikatorów.
+Możemy więc spójnie utożsamić nazwy odpowiadających
+sobie współrzędnych w diagramach
+$\operatorname{Diag}(\mathfrak M)$ i
+$\operatorname{ED}(\mathfrak N)$, pozostawiając wszystkie
+pozostałe nazwy rozłączne.
+
+Skończony fragment diagramu $\mathfrak M$ jest
+koniunkcją bez kwantyfikatorów dotyczącą nazw
+współrzędnych $\bar a$ i skończenie wielu innych
+elementów. Zastępujemy te inne nazwy świeżymi zmiennymi
+i wiążemy je egzystencjalnie. Otrzymana formuła
+egzystencjalna jest prawdziwa przy $\bar a$,
+więc z założenia także przy $\bar b$ w $\mathfrak N$.
+Jej świadkowie pozwalają zinterpretować dodatkowe
+nazwy diagramu $\mathfrak M$ w $\mathfrak N$,
+nie zmieniając interpretacji nazw z diagramu
+elementarnego $\mathfrak N$.
+W konsekwencji każdy skończony fragment sumy diagramów
+ma model. Zwartość daje model całej sumy, a lemat
+\ref{lem:mod-mc-diagram-embedding} daje dwa zanurzenia
+(z których zanurzenie $\mathfrak N$ jest elementarne)
+zgodne na wskazanych nazwach.
+Jak w dowodzie lematu \ref{lem:mod-mc-robinson-diagram}
+przenosimy wspólną strukturę na izomorficzną kopię
+zawierającą rzeczywiście $\mathfrak N$ jako podstrukturę
+elementarną.
+
+Odwrotnie, jeśli istnieje takie $f$, to formuła
+egzystencjalna prawdziwa przy $\bar a$ w $\mathfrak M$
+jest prawdziwa przy $f(\bar a)=\bar b$ w $\mathfrak N'$
+przez lemat \ref{lem:mod-mc-preservation}, zastosowany
+do obrazu zanurzenia. Elementarność
+$\mathfrak N\preccurlyeq\mathfrak N'$ przenosi jej
+prawdziwość do $\mathfrak N$. W przypadku pustych
+krotek w diagramach nie utożsamiamy żadnych nowych
+nazw i argument daje ten sam wniosek dla zdań.
+\end{proof}
+
+\begin{twierdzenie}[Zupełność modelowa a formuły egzystencjalne]
+\label{thm:mod-mc-existential-formulas}
+Dla spełnialnej teorii $T$ równoważne są warunki:
+\begin{enumerate}[label=(\roman*)]
+\item $T$ jest modelowo zupełna;
+\item każda formuła jest równoważna modulo $T$ formule
+egzystencjalnej bez dodatkowych zmiennych wolnych;
+\item każda formuła jest równoważna modulo $T$ formule
+uniwersalnej bez dodatkowych zmiennych wolnych.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Załóżmy (i), ustalmy formułę $\varphi(\bar x)$
+i jej realizację $\bar a$ w pewnym modelu
+$\mathfrak M\models T$. Niech $p$ będzie zbiorem
+wszystkich formuł egzystencjalnych w liście zmiennych
+$\bar x$, prawdziwych przy $\bar a$.
+Twierdzimy, że $p$ wymusza $\varphi$ modulo $T$.
+Istotnie, gdyby $\bar b$ w pewnym modelu
+$\mathfrak N\models T$ realizowała $p$, ale nie
+$\varphi$, to lemat \ref{lem:mod-mc-existential-type}
+dałby zanurzenie $\mathfrak M$ w rozszerzenie
+elementarne $\mathfrak N'$ modelu $\mathfrak N$,
+wysyłające $\bar a$ na $\bar b$.
+Oba modele spełniają $T$, więc z (i) zanurzenie
+jest elementarne. Prawdziwość $\varphi$ przenosi się
+na $\bar b$ w $\mathfrak N'$ i następnie w $\mathfrak N$,
+co jest sprzecznością.
+
+Po dodaniu świeżych nazw $\bar c$ dla wolnych zmiennych
+teoria
+\[
+T\cup\{\eta(\bar c):\eta\in p\}
+\cup\{\neg\varphi(\bar c)\}
+\]
+jest niespełnialna. Zwartość daje skończony fragment
+$p_0\subseteq p$ wymuszający $\varphi$ modulo $T$.
+Koniunkcja formuł z $p_0$ jest równoważna formule
+egzystencjalnej: przemianowujemy związane zmienne
+w członach na parami rozłączne listy, a następnie
+przenosimy wszystkie kwantyfikatory egzystencjalne
+przed koniunkcję macierzy. Równoważność wynika z tego,
+że świadków dla poszczególnych członów można wybrać
+niezależnie przy tym samym wartościowaniu zmiennych
+wolnych. Dla $p_0=\varnothing$ przyjmujemy $\top$.
+Uzyskana formuła egzystencjalna jest prawdziwa
+przy $\bar a$ i implikuje $\varphi$ modulo $T$.
+
+Niech $\Theta$ będzie zbiorem wszystkich formuł
+egzystencjalnych w liście $\bar x$ implikujących
+$\varphi$ modulo $T$. Każda realizacja $\varphi$
+w modelu $T$ spełnia pewną formułę z $\Theta$,
+co właśnie wykazaliśmy. Zatem teoria
+\[
+T\cup\{\varphi(\bar c)\}
+\cup\{\neg\theta(\bar c):\theta\in\Theta\}
+\]
+jest niespełnialna. Zwartość daje skończoną alternatywę
+formuł z $\Theta$ równoważną $\varphi$ modulo $T$.
+Taka alternatywa jest równoważna formule egzystencjalnej:
+po przemianowaniu zmiennych przenosimy wszystkie
+kwantyfikatory przed alternatywę macierzy.
+Jeśli jeden człon jest prawdziwy, dla jego zmiennych
+wybieramy świadków, a dla pozostałych dowolne
+elementy niepustego uniwersum. Implikacja odwrotna
+wynika z prawdziwości co najmniej jednego członu
+macierzy. Pusta alternatywa to $\bot$.
+Otrzymujemy (ii), również w przypadku zdań.
+
+Warunki (ii) i (iii) są równoważne: stosujemy odpowiednią
+własność do negacji formuły, a następnie przenosimy
+negację przez blok kwantyfikatorów, zamieniając
+egzystencjalne na uniwersalne lub odwrotnie.
+
+Na koniec załóżmy (ii) i niech
+$\mathfrak M\subseteq\mathfrak N$ będą modelami $T$.
+Jeśli $\mathfrak M\models\varphi(\bar a)$, stosujemy
+egzystencjalny równoważnik $\varphi$ i lemat
+\ref{lem:mod-mc-preservation}, otrzymując
+$\mathfrak N\models\varphi(\bar a)$.
+Jeśli $\mathfrak M\not\models\varphi(\bar a)$,
+stosujemy ten sam argument do $\neg\varphi$,
+otrzymując $\mathfrak N\not\models\varphi(\bar a)$.
+Zatem inkluzja jest elementarna i zachodzi (i).
+\end{proof}
+
+\begin{przyklad}[Zupełność modelowa bez eliminacji kwantyfikatorów]
+\label{ex:mod-mc-no-qe}
+Niech $T$ będzie zupełną teorią struktury $(\R,0,1,+,-,\cdot)$
+w języku pierścieni bez symbolu porządku.
+W każdym modelu $T$ relacja
+\[
+a<b\quad\Longleftrightarrow\quad
+\exists z\,(z\ne0\land z^2=b-a)
+\]
+jest jedynym rozszerzeniem o porządek, które daje
+model teorii ciał rzeczywiście domkniętych.
+Aby to uzasadnić, tłumaczymy wszystkie zdania
+języka uporządkowanych pierścieni przez podstawienie
+powyższej definicji za atomy porządku, używając
+świeżych zmiennych związanych. Indukcja po formułach
+daje zgodność prawdziwości z rozwinięciem struktury.
+W $\R$ definicja jest zgodna ze zwykłym porządkiem,
+zatem tłumaczenia aksjomatów ciał rzeczywiście
+domkniętych (lemat \ref{lem:mod-qe-rcf-axioms})
+należą do $T$. W każdym modelu $T$ zdefiniowana
+relacja daje więc ciało rzeczywiście domknięte.
+Jedyność porządku wynika z przykładu
+\ref{ex:mod-qe-rcf-square}: dodatniość jest tam
+równoważna byciu niezerowym kwadratem.
+
+Każde zanurzenie modeli $T$ zachowuje dodatniość,
+bo zachowuje niezerowe kwadraty. Odbija ją również:
+jeżeli $a\ne0$ nie jest dodatni, to $-a$ jest dodatni,
+więc jego obraz jest dodatni, a obraz $a$ ujemny.
+Element zerowy nie jest dodatni w żadnym z modeli.
+Zanurzenie jest zatem zanurzeniem uporządkowanych ciał.
+Eliminacja kwantyfikatorów dla ciał rzeczywiście
+domkniętych (twierdzenie \ref{thm:mod-qe-rcf})
+daje elementarność w języku z porządkiem,
+a więc także w redukcie. Teoria $T$ jest modelowo zupełna.
+
+Nie ma ona jednak eliminacji kwantyfikatorów w języku
+pierścieni. W standardowym modelu $\R$ weźmy liczbę
+przestępną $t>0$. Zarówno $t$, jak i $-t$ są przestępne
+nad $\Q$: gdyby niezerowy wielomian o współczynnikach
+wymiernych zerował się w $-t$, to po zmianie znaku
+zmiennej otrzymalibyśmy niezerowy wielomian zerujący
+się w $t$. Istnienie dodatniej liczby przestępnej
+wynika z nieprzeliczalności $\R$ oraz przeliczalności
+zbioru liczb algebraicznych (jest sumą skończonych
+zbiorów pierwiastków przeliczalnej rodziny niezerowych
+wielomianów wymiernych).
+Każdy atom w jednej zmiennej jest równością wielomianową
+o współczynnikach całkowitych; w obu punktach
+zachodzi dokładnie wtedy, gdy różnica wielomianów
+jest wielomianem zerowym. Krotki $(t)$ i $(-t)$
+mają więc ten sam typ bez kwantyfikatorów.
+Rozróżnia je formuła $\exists z\,(z^2=x)$, prawdziwa
+przy $t$ i fałszywa przy $-t$.
+Z kryterium \ref{thm:mod-qe-semantic} wynika brak
+eliminacji kwantyfikatorów w języku pierścieni.
+\end{przyklad}
+
+\begin{wniosek}[Test dla zupełności modelowej]
+\label{cor:mod-mc-neg-existential}
+Aby wykazać zupełność modelową spełnialnej teorii $T$,
+wystarczy wykazać, że negacja każdej formuły
+egzystencjalnej jest równoważna modulo $T$ formule
+egzystencjalnej bez dodatkowych zmiennych wolnych.
+Warunek ten jest również konieczny.
+\end{wniosek}
+\begin{proof}
+Konieczność wynika z twierdzenia
+\ref{thm:mod-mc-existential-formulas}.
+Dla dostateczności stosujemy indukcję po budowie
+formuły. Atomy są już egzystencjalne, z pustym
+blokiem kwantyfikatorów. Koniunkcje i alternatywy
+egzystencjalnych równoważników zastępujemy
+egzystencjalnymi formułami w postaci opisanej
+w dowodzie twierdzenia
+\ref{thm:mod-mc-existential-formulas}.
+Negację obsługujemy za pomocą założenia.
+Kwantyfikator egzystencjalny dołączamy do bloku
+egzystencjalnego po ewentualnej zmianie nazw
+zmiennych związanych. Kwantyfikator uniwersalny
+wyrażamy przez negację, kwantyfikator egzystencjalny
+i negację. Pozostałe klasyczne spójniki wyrażamy
+przez negację, koniunkcję i alternatywę.
+Wszystkie kroki zachowują równoważność modulo $T$
+i nie wprowadzają nowych zmiennych wolnych.
+Każda formuła ma zatem równoważnik egzystencjalny,
+więc stosujemy to samo twierdzenie.
+\end{proof}
+
+\section{Teorie uniwersalne}
+\begin{definicja}[Konsekwencje uniwersalne]
+\label{def:mod-mc-universal-theory}
+Dla teorii $T$ oznaczamy przez $T_{\forall}$ zbiór
+wszystkich zdań uniwersalnych będących konsekwencjami
+semantycznymi $T$. Teorię nazywamy uniwersalną,
+jeżeli można ją aksjomatyzować zdaniami uniwersalnymi,
+czyli ma ona te same modele co pewien zbiór takich zdań.
+Równoważnie, $T$ i $T_{\forall}$ mają te same modele.
+\end{definicja}
+
+Ostatnia równoważność wynika z tego, że każdy
+aksjomat uniwersalny dowolnej teorii równoważnej
+semantycznie $T$ należy do $T_{\forall}$,
+a każdy model $T$ spełnia wszystkie jej konsekwencje.
+Jeżeli odwrotnie $T$ oraz $T_{\forall}$ mają te same
+modele, to sam zbiór $T_{\forall}$ stanowi poszukiwaną
+aksjomatyzację.
+Rozróżniamy syntaktyczną postać aksjomatów od
+aksjomatyzowalności: teoria uniwersalna może zawierać
+także zdania o innej postaci syntaktycznej.
+
+\begin{twierdzenie}[Zanurzanie w modele teorii]
+\label{thm:mod-mc-universal-embedding}
+Niech $T$ będzie spełnialną teorią i $\mathfrak A$
+strukturą jej języka. Następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $\mathfrak A\models T_{\forall}$;
+\item istnieje model $\mathfrak B\models T$ zawierający
+$\mathfrak A$ jako podstrukturę.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Jeżeli zachodzi (ii), to każde zdanie z $T_{\forall}$
+jest prawdziwe w $\mathfrak B$, a więc również
+w $\mathfrak A$ na mocy twierdzenia
+\ref{thm:model-universal-substructure}.
+
+Załóżmy (i). Wykażemy spełnialność teorii
+\[
+T\cup\operatorname{Diag}(\mathfrak A).
+\]
+Gdyby nie miała modelu, zwartość dałaby skończony
+fragment diagramu, którego koniunkcję oznaczamy
+przez $\theta(c_{a_1},\ldots,c_{a_n})$, sprzeczną z $T$.
+Wszystkie występujące świeże nazwy elementów
+$\mathfrak A$ zastępujemy parami różnymi zmiennymi
+$\bar x$, uzyskując formułę bez kwantyfikatorów
+$\theta(\bar x)$ języka pierwotnego.
+Niespełnialność oznacza
+\[
+T\models\forall\bar x\,\neg\theta(\bar x):
+\]
+gdyby w modelu $T$ istniała krotka spełniająca
+$\theta$, można by zinterpretować nowe nazwy
+jej współrzędnymi i otrzymać model $T$ wraz
+z wybranym fragmentem diagramu. Nazwy niewystępujące
+w tym fragmencie interpretujemy dowolnie.
+Powyższe zdanie należy do $T_{\forall}$, ale jest
+fałszywe w $\mathfrak A$, ponieważ
+$\mathfrak A\models\theta(\bar a)$. Sprzeczność.
+
+Zatem suma teorii i diagramu ma model. Lemat
+\ref{lem:mod-mc-diagram-embedding} daje zanurzenie
+$\mathfrak A$ w redukt tego modelu. Przenosząc
+redukt na izomorficzną kopię utożsamiającą
+obraz $a$ z $a$ i używając świeżych elementów
+dla reszty uniwersum, otrzymujemy (ii).
+Argument obejmuje przypadek $n=0$, kiedy
+nie dodajemy kwantyfikatorów.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie o zachowaniu przy podstrukturach]
+\label{thm:mod-mc-universal-preservation}
+Spełnialna teoria $T$ jest uniwersalna dokładnie wtedy,
+gdy każda niepusta podstruktura dowolnego modelu $T$
+jest modelem $T$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $T$ jest uniwersalna, jej aksjomaty zachowują
+prawdziwość przy przejściu do podstruktury na mocy
+twierdzenia \ref{thm:model-universal-substructure}.
+Odwrotnie, niech klasa modeli $T$ będzie domknięta
+na podstruktury. Każdy model $T_{\forall}$ jest
+podstrukturą pewnego modelu $T$ na mocy twierdzenia
+\ref{thm:mod-mc-universal-embedding}, a więc
+sam spełnia $T$. Ponieważ każdy model $T$ spełnia
+$T_{\forall}$, obie teorie mają te same modele.
+\end{proof}
+
+\begin{przyklad}[Ciała a dziedziny całkowitości]
+\label{ex:mod-mc-fields-universal}
+W języku pierścieni z jedynką teoria ciał nie jest
+uniwersalna. Pierścień $\mathbb Z$ jest podstrukturą
+ciała $\Q$, ale nie jest ciałem: element $2$ nie ma
+odwrotności w $\mathbb Z$. Z twierdzenia
+\ref{thm:mod-mc-universal-preservation} wynika brak
+aksjomatyzacji uniwersalnej.
+
+Klasa modeli uniwersalnych konsekwencji teorii ciał
+składa się dokładnie z dziedzin całkowitości.
+Istotnie, podstruktura ciała w tym języku jest
+pierścieniem przemiennym z $1\ne0$ bez dzielników
+zera. Odwrotnie, każda dziedzina całkowitości $D$
+zanurza się w ciało swoich ułamków: jego elementy
+reprezentujemy przez pary $(a,b)$ z $a,b\in D$, $b\ne0$,
+identyfikując $(a,b)$ z $(c,d)$, gdy $ad=bc$.
+Zanurzenie jest dane przez $a\mapsto[(a,1)]$,
+a niezerowy ułamek $[(a,b)]$ ma odwrotność $[(b,a)]$.
+Dla pełności przypomnijmy uzasadnienie tej konstrukcji.
+Przechodniość relacji równoważności wynika z tego,
+że z $ad=bc$ i $cf=de$ otrzymujemy $adf=bde$,
+a po skróceniu przez niezerowe $d$ mamy $af=be$.
+Zwrotność i symetria są bezpośrednie.
+Działania definiujemy wzorami
+\[
+[(a,b)]+[(c,d)]=[(ad+bc,bd)],
+\qquad
+[(a,b)]\,[(c,d)]=[(ac,bd)].
+\]
+Mianowniki są niezerowe. Jeśli $ab'=a'b$ oraz
+$cd'=c'd$, to
+\[
+\begin{aligned}
+(ad+bc)b'd'&=(a'd'+b'c')bd,\\
+acb'd'&=a'c'bd,
+\end{aligned}
+\]
+co wynika z rozdzielności i podstawienia obu równości.
+Działania są zatem dobrze określone.
+Aksjomaty pierścienia wynikają z działań w $D$:
+dla dowolnej skończonej listy ułamków można
+sprowadzić je do wspólnego niezerowego mianownika;
+po rozwinięciu działań obie strony odpowiedniej
+tożsamości pierścieniowej mają, po pomnożeniu
+przez wspólny mianownik, równe liczniki na mocy
+aksjomatów $D$. Zero i jedynka to odpowiednio
+$[(0,1)]$ i $[(1,1)]$, różne, gdyż $0\ne1$ w $D$.
+Element $[(a,b)]$ jest zerem dokładnie wtedy,
+gdy $a=0$, a gdy $a\ne0$, wskazana odwrotność
+jest dobrze określona i ich iloczyn to
+$[(ab,ba)]=[(1,1)]$.
+Zanurzenie jest różnowartościowe, ponieważ
+$[(a,1)]=[(c,1)]$ implikuje $a=c$,
+oraz zachowuje stałe i działania przez podane wzory.
+Stosujemy twierdzenie \ref{thm:mod-mc-universal-embedding}.
+\end{przyklad}
+
+\section{Teorie uniwersalno-egzystencjalne}
+\begin{definicja}[Zdania uniwersalno-egzystencjalne]
+\label{def:mod-mc-forall-exists}
+Zdaniem uniwersalno-egzystencjalnym nazywamy zdanie
+postaci
+\[
+\forall\bar x\,\exists\bar y\,\theta(\bar x,\bar y),
+\]
+gdzie macierz $\theta$ nie zawiera kwantyfikatorów,
+a listy zmiennych są skończone, rozłączne, bez powtórzeń
+i obejmują wszystkie zmienne wolne macierzy.
+Każda z list może być pusta. Zbiór wszystkich takich konsekwencji teorii
+$T$ oznaczamy przez $T_{\forall\exists}$.
+Teorię nazywamy uniwersalno-egzystencjalną, jeżeli
+ma aksjomatyzację zdaniami tej postaci, czyli ma
+te same modele co $T_{\forall\exists}$.
+\end{definicja}
+
+\begin{lemat}[Zachowanie przy sumach łańcuchów]
+\label{lem:mod-mc-chain-preservation}
+Niech $(\mathfrak M_i)_{i<\delta}$ będzie niepustym
+rosnącym łańcuchem podstruktur, indeksowanym liczbą
+porządkową $\delta>0$. Jeżeli każde $\mathfrak M_i$
+spełnia zdanie uniwersalno-egzystencjalne $\sigma$,
+to spełnia je również struktura sumy
+$\mathfrak U=\bigcup_{i<\delta}\mathfrak M_i$.
+\end{lemat}
+\begin{proof}
+Na sumie uniwersów interpretujemy stałe i funkcje
+zgodnie z interpretacjami w członach łańcucha.
+Każda skończona krotka elementów sumy należy
+do pewnego wspólnego członu, ponieważ maksimum
+skończonego zbioru indeksów jest indeksem łańcucha.
+Wartości funkcji i relacji na tej krotce nie zależą
+od wyboru członu, dzięki inkluzjom podstruktur.
+Dla symboli o arności zero wybieramy dowolny człon;
+ich interpretacje są zgodne. Otrzymujemy strukturę
+$\mathfrak U$ zawierającą każdy człon jako podstrukturę.
+
+Niech $\sigma=\forall\bar x\,\exists\bar y\,\theta$.
+Dla dowolnej krotki $\bar a$ z sumy wybieramy człon
+$\mathfrak M_i$ zawierający wszystkie jej współrzędne
+(gdy krotka jest pusta, dowolny człon). Ponieważ
+$\mathfrak M_i\models\sigma$, istnieje krotka
+$\bar b$ w tym członie spełniająca
+$\theta(\bar a,\bar b)$. Prawdziwość macierzy bez
+kwantyfikatorów zachowuje się w strukturze sumy
+na mocy definicji podstruktury, jak w lemacie
+\ref{lem:mod-mc-preservation}. Zatem $\bar b$ jest
+świadkiem w sumie. Ponieważ $\bar a$ była dowolna,
+otrzymujemy $\mathfrak U\models\sigma$.
+\end{proof}
+
+\begin{lemat}[Rozszerzenie spełniające teorię]
+\label{lem:mod-mc-forall-exists-extension}
+Dla spełnialnej teorii $T$ oraz struktury
+$\mathfrak A$ jej języka równoważne są warunki:
+\begin{enumerate}[label=(\roman*)]
+\item $\mathfrak A\models T_{\forall\exists}$;
+\item istnieje $\mathfrak B\models T$ taka, że
+$\mathfrak A\preccurlyeq_{\exists}\mathfrak B$.
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+Jeżeli zachodzi (ii), to dla dowolnego zdania
+$\forall\bar x\,\exists\bar y\,\theta$ z
+$T_{\forall\exists}$ i dowolnej krotki $\bar a$ z $A$
+mamy $\mathfrak B\models\exists\bar y\,\theta(\bar a,\bar y)$.
+Z domknięcia egzystencjalnego ta formuła zachodzi
+w $\mathfrak A$, więc $\mathfrak A$ spełnia całe zdanie.
+Dotyczy to także pustej krotki i pustego bloku
+egzystencjalnego. Otrzymujemy (i).
+
+Załóżmy (i). Niech $\operatorname{UD}(\mathfrak A)$ oznacza
+zbiór wszystkich zdań uniwersalnych prawdziwych
+w strukturze $\mathfrak A$ z nazwami wszystkich
+jej elementów. Zawiera on cały diagram bez
+kwantyfikatorów, ponieważ dopuszczamy pusty
+blok uniwersalny.
+
+Twierdzimy, że $T\cup\operatorname{UD}(\mathfrak A)$
+jest spełnialna. Gdyby nie, zwartość dałaby skończony
+fragment diagramu uniwersalnego sprzeczny z $T$.
+Po przemianowaniu zmiennych związanych na rozłączne
+listy koniunkcję tego fragmentu można zapisać jako
+\[
+\forall\bar y\,\theta(\bar c,\bar y),
+\]
+gdzie $\theta$ nie zawiera kwantyfikatorów.
+Jest to równoważność semantyczna: w niepustym
+uniwersum jednoczesna uniwersalna prawdziwość
+każdej z macierzy jest równoważna prawdziwości
+ich koniunkcji przy wszystkich wartościach
+połączonej listy zmiennych.
+Nazwy $\bar c$ są dokładnie świeżymi stałymi
+występującymi w skończonym fragmencie; zastępujemy je
+świeżymi zmiennymi $\bar x$, rozłącznymi z listą
+$\bar y$. Niespełnialność oznacza
+\[
+T\models\forall\bar x\,\exists\bar y\,
+\neg\theta(\bar x,\bar y).
+\]
+Rzeczywiście, gdyby jakiś model $T$ miał krotkę
+$\bar a$ z $\forall\bar y\,\theta(\bar a,\bar y)$,
+interpretacja świeżych nazw przez tę krotkę
+spełniałaby fragment diagramu wraz z $T$.
+Otrzymane zdanie uniwersalno-egzystencjalne należy
+do $T_{\forall\exists}$, lecz jest fałszywe
+w $\mathfrak A$ przy krotce rzeczywistych wartości
+nazw $\bar c$. Sprzeczność.
+
+Model sumy teorii i diagramu uniwersalnego zawiera,
+po przeniesieniu struktury wzdłuż izomorfizmu,
+$\mathfrak A$ jako podstrukturę, na mocy lematu
+\ref{lem:mod-mc-diagram-embedding}.
+Niech $\mathfrak B$ będzie tak uzyskanym reduktem.
+Każda formuła uniwersalna z parametrami z $A$
+prawdziwa w $\mathfrak A$ jest prawdziwa w $\mathfrak B$,
+ponieważ odpowiednie zdanie z nazwami należy
+do diagramu uniwersalnego. Jeżeli więc formuła
+egzystencjalna z parametrami z $A$ byłaby prawdziwa
+w $\mathfrak B$ i fałszywa w $\mathfrak A$, jej
+negacja miałaby uniwersalny równoważnik prawdziwy
+w $\mathfrak A$, a zatem również w $\mathfrak B$,
+co daje sprzeczność. To dowodzi
+$\mathfrak A\preccurlyeq_{\exists}\mathfrak B$.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Changa--Łosia--Suszki]
+\label{thm:mod-mc-inductive}
+Dla spełnialnej teorii $T$ równoważne są warunki:
+\begin{enumerate}[label=(\roman*)]
+\item $T$ jest uniwersalno-egzystencjalna;
+\item suma każdego niepustego rosnącego łańcucha
+modeli $T$ jest modelem $T$;
+\item suma każdego rosnącego ciągu modeli $T$
+indeksowanego przez $\N$ jest modelem $T$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Implikacja (i)$\Rightarrow$(ii) wynika z lematu
+\ref{lem:mod-mc-chain-preservation} zastosowanego
+do każdego aksjomatu. Implikacja (ii)$\Rightarrow$(iii)
+jest natychmiastowa.
+
+Załóżmy (iii) i niech
+$\mathfrak A_0\models T_{\forall\exists}$.
+Z lematu \ref{lem:mod-mc-forall-exists-extension}
+bierzemy $\mathfrak B_0\models T$ z
+$\mathfrak A_0\preccurlyeq_{\exists}\mathfrak B_0$.
+Lemat \ref{lem:mod-mc-robinson-diagram} pozwala
+zanurzyć $\mathfrak B_0$ nad $\mathfrak A_0$
+w rozszerzenie elementarne $\mathfrak A_1$ struktury
+$\mathfrak A_0$. Jak w dowodzie kryterium Robinsona
+\ref{thm:mod-mc-robinson} utożsamiamy obraz
+$\mathfrak B_0$ z nią samą, zachowując inkluzję
+elementarną $\mathfrak A_0\preccurlyeq\mathfrak A_1$.
+Ponieważ $\mathfrak A_1$ nadal spełnia
+$T_{\forall\exists}$, możemy powtórzyć konstrukcję:
+\[
+\mathfrak A_0\subseteq\mathfrak B_0
+\subseteq\mathfrak A_1\subseteq\mathfrak B_1
+\subseteq\mathfrak A_2\subseteq\cdots,
+\qquad
+\mathfrak A_i\preccurlyeq\mathfrak A_{i+1},
+\quad \mathfrak B_i\models T.
+\]
+Aby formalnie uzasadnić rekurencyjne wybory,
+stosujemy dolne twierdzenie Löwenheima--Skolema
+do modeli otrzymanych z obu lematów, zachowując
+uniwersum poprzedniej struktury. Można ograniczyć
+moce wszystkich członów przez
+$\max(\aleph_0,|\mathcal L|,|A_0|)$ na mocy
+twierdzenia \ref{thm:downward-ls}.
+Podstruktura elementarna zawierająca poprzedni
+człon zachowuje jego domknięcie egzystencjalne,
+gdy zachodziło ono w większym modelu, ponieważ
+formuły egzystencjalne z jego parametrami mają
+w obu rozszerzeniach tę samą prawdziwość.
+Przenosimy nowe elementy do ustalonych rozłącznych
+zbiorów odpowiedniej mocy. Jak w dowodzie kryterium
+Robinsona wybory odbywają się wtedy w obrębie zbioru.
+
+Niech $\mathfrak U$ będzie sumą przeplatających
+się łańcuchów. Z założenia (iii), zastosowanego
+do ciągu $(\mathfrak B_i)$, mamy $\mathfrak U\models T$.
+Z lematu \ref{lem:mod-saturation-chain}, zastosowanego
+do łańcucha elementarnego $(\mathfrak A_i)$,
+mamy $\mathfrak A_0\preccurlyeq\mathfrak U$.
+Stąd $\mathfrak A_0\models T$. Dowolny model
+$T_{\forall\exists}$ spełnia więc $T$, a odwrotna
+inkluzja klas modeli wynika z definicji konsekwencji.
+Otrzymujemy (i).
+\end{proof}
+
+\begin{wniosek}[Zupełność modelowa a aksjomatyzacja]
+\label{cor:mod-mc-inductive}
+Każda spełnialna teoria modelowo zupełna ma
+aksjomatyzację uniwersalno-egzystencjalną.
+\end{wniosek}
+\begin{proof}
+W rosnącym ciągu modeli teorii modelowo zupełnej
+każda inkluzja jest elementarna. Z lematu
+\ref{lem:mod-saturation-chain} suma ciągu jest
+rozszerzeniem elementarnym pierwszego modelu,
+więc także modelem teorii. Stosujemy twierdzenie
+\ref{thm:mod-mc-inductive}.
+\end{proof}
+
+\begin{przyklad}[Implikacja odwrotna jest fałszywa]
+\label{ex:mod-mc-inductive-not-mc}
+Teoria wszystkich porządków liniowych w języku $\{<\}$
+jest uniwersalna: aksjomaty irrefleksyjności,
+przechodniości i porównywalności różnych elementów
+mają postać uniwersalną z macierzami bez kwantyfikatorów.
+Jest więc również uniwersalno-egzystencjalna,
+z pustym blokiem egzystencjalnym.
+Nie jest modelowo zupełna: inkluzja
+$(\mathbb Z,<)\subseteq(\Q,<)$ nie jest elementarna,
+gdyż w $\Q$ istnieje element między $0$ i $1$,
+a w $\mathbb Z$ takiego elementu nie ma.
+\end{przyklad}
+
+\begin{przyklad}[Teoria uniwersalno-egzystencjalna nieuniwersalna]
+\label{ex:mod-mc-inductive-not-universal}
+Teoria gęstych porządków liniowych bez elementów
+krańcowych jest uniwersalno-egzystencjalna. Oprócz
+uniwersalnych aksjomatów porządku liniowego wystarczą
+zdania
+\[
+\begin{gathered}
+\forall x\,\forall y\,\exists z\,
+(\neg(x<y)\lor(x<z\land z<y)),\\
+\forall x\,\exists u\,\exists v\,(u<x\land x<v).
+\end{gathered}
+\]
+Pierwsze wyraża gęstość, ponieważ jeśli $x<y$,
+wymaga świadka między nimi, a w przeciwnym razie
+dowolny element jest świadkiem. Drugie wyraża brak
+elementów krańcowych. Teoria nie jest uniwersalna:
+jednopunktowa podstruktura $(\Q,<)$ nie spełnia
+aksjomatu braku elementów krańcowych.
+Z twierdzenia \ref{thm:mod-qe-dlo} oraz wniosku
+\ref{cor:mod-mc-qe} teoria ta jest modelowo zupełna.
+\end{przyklad}
+
+\section{Istnienie rozszerzeń egzystencjalnie domkniętych}
+
+\begin{twierdzenie}[Istnienie modelu egzystencjalnie domkniętego]
+\label{thm:mod-mc-ec-extension}
+Niech $T$ będzie spełnialną teorią uniwersalno-egzystencjalną
+w języku $\mathcal L$, a $\mathfrak M\models T$.
+Istnieje rozszerzenie $\mathfrak E\supseteq\mathfrak M$,
+które jest egzystencjalnie domkniętym modelem $T$.
+Można przy tym zapewnić ograniczenie
+\[
+|E|\leq\max(\aleph_0,|\mathcal L|,|M|).
+\]
+Nie twierdzimy, że inkluzja
+$\mathfrak M\subseteq\mathfrak E$ jest elementarna
+ani że jest egzystencjalnie domknięta.
+\end{twierdzenie}
+\begin{proof}
+Niech $\mu=\max(\aleph_0,|\mathcal L|,|M|)$.
+Najpierw opiszemy pojedynczy etap dla dowolnego modelu
+$\mathfrak A\models T$ mocy co najwyżej $\mu$.
+Rozpatrujemy wszystkie zdania egzystencjalne w języku
+$\mathcal L(A)$, otrzymanym przez dodanie nazw elementów
+$A$. Obejmują one każdą formułę egzystencjalną języka
+$\mathcal L$ po zastąpieniu jej zmiennych wolnych
+nazwami dowolnej krotki z $A$. Jest ich co najwyżej $\mu$:
+rozszerzony alfabet ma moc co najwyżej $\mu$, a każda
+formuła jest skończonym ciągiem symboli, więc stosujemy
+lemat \ref{lem:ls-formula-count} do języka z nazwami.
+Ustalamy wyliczenie $(\varphi_\alpha)_{\alpha<\tau}$
+tych formuł, gdzie $\tau\leq\mu$ jest liczbą porządkową
+(utożsamiamy moc $\mu$ z jej początkową liczbą porządkową).
+Przy ocenie zdań w rozszerzeniach nazwy zawsze
+oznaczają pierwotne elementy $A$.
+
+Konstruujemy rosnący łańcuch
+$(\mathfrak A_\alpha)_{\alpha\leq\tau}$ modeli $T$
+o mocy co najwyżej $\mu$, zaczynając od
+$\mathfrak A_0=\mathfrak A$. Na etapie następnikowym
+rozpatrujemy $\varphi_\alpha$.
+Jeżeli istnieje rozszerzenie $\mathfrak B$ modelu
+$\mathfrak A_\alpha$, będące modelem $T$, w którym
+$\varphi_\alpha$ jest prawdziwa, wybieramy takie
+rozszerzenie jako $\mathfrak A_{\alpha+1}$,
+z dodatkowym ograniczeniem mocy.
+Można je zapewnić: na mocy dolnego twierdzenia
+Löwenheima--Skolema \ref{thm:downward-ls} wybieramy
+podstrukturę elementarną $\mathfrak B$ zawierającą
+$A_\alpha$ i o mocy co najwyżej $\mu$.
+Ponieważ jest elementarna, spełnia $T$ oraz
+$\varphi_\alpha$ przy nazwanych parametrach.
+Jeżeli żadne rozszerzenie będące modelem $T$
+nie spełnia $\varphi_\alpha$, kładziemy
+$\mathfrak A_{\alpha+1}=\mathfrak A_\alpha$.
+
+Na niezerowym etapie granicznym $\beta\leq\tau$
+przyjmujemy
+\[
+\mathfrak A_\beta=\bigcup_{\alpha<\beta}\mathfrak A_\alpha.
+\]
+Jest to model $T$ na mocy twierdzenia
+\ref{thm:mod-mc-inductive}. Jego moc nie przekracza
+$\mu$, ponieważ $\beta\leq\mu$ oraz
+$\mu\cdot\mu=\mu$ dla nieskończonej mocy $\mu$.
+
+Wyjaśnijmy również, że wybory w tej rekurencji
+można ograniczyć do zbioru. Przydzielamy każdemu
+etapowi następnikowemu rozłączny zbiór nowych
+elementów mocy $\mu$, rozłączny z $A$.
+Jeśli wybieramy właściwe rozszerzenie, przenosimy
+je na izomorficzną kopię ustalającą $A_\alpha$
+i umieszczającą pozostałe elementy w przydzielonym
+zbiorze. Jest to możliwe dzięki ograniczeniu mocy.
+Cała konstrukcja zachodzi w obrębie struktur
+na podzbiorach ustalonej sumy zbiorów, która ma
+moc co najwyżej $\mu$. Struktury danego języka
+na podzbiorach ustalonego zbioru tworzą zbiór:
+interpretacje symboli są funkcjami i relacjami
+na odpowiednich skończonych potęgach tego zbioru.
+Możemy więc dobrze uporządkować zbiór kandydatów
+i na każdym etapie wybierać pierwszy dopuszczalny
+model, korzystając z aksjomatu wyboru i rekurencji
+pozaskończonej. Wyliczenie formuł także odbywa się
+w zbiorze. Nie dokonujemy wyboru z klasy właściwej.
+
+Otrzymany model $\mathfrak A'=\mathfrak A_\tau$
+ma następującą własność: jeżeli formuła egzystencjalna
+$\varphi$ z parametrami z $A$ jest prawdziwa
+w jakimś rozszerzeniu $\mathfrak A'$ będącym modelem $T$,
+to jest prawdziwa już w $\mathfrak A'$.
+Istotnie, niech $\alpha$ będzie indeksem tej formuły.
+Wskazane rozszerzenie $\mathfrak A'$ jest również
+rozszerzeniem $\mathfrak A_\alpha$, więc na etapie
+$\alpha$ istniał dopuszczalny model realizujący
+$\varphi_\alpha$. Został wybrany model
+$\mathfrak A_{\alpha+1}$, w którym formuła była
+prawdziwa. Ponieważ jest egzystencjalna, jej
+prawdziwość zachowuje się aż do $\mathfrak A'$
+na mocy lematu \ref{lem:mod-mc-preservation}.
+To dowodzi własności pojedynczego etapu.
+
+Jednokrotne wykonanie etapu nie wystarcza, ponieważ
+w $\mathfrak A'$ mogą pojawić się nowe parametry.
+Powtarzamy zatem etap dla kolejnych modeli, poczynając
+od $\mathfrak M^{(0)}=\mathfrak M$:
+\[
+\mathfrak M^{(0)}\subseteq\mathfrak M^{(1)}
+\subseteq\mathfrak M^{(2)}\subseteq\cdots,
+\]
+gdzie $\mathfrak M^{(n+1)}$ otrzymujemy z
+$\mathfrak M^{(n)}$ przez opisany etap. W każdym etapie
+stosujemy osobny zapas świeżych elementów; łącznie
+wystarcza zbiór mocy $\aleph_0\cdot\mu\cdot\mu=\mu$.
+Dobrze porządkując zbiór kandydatów oraz zbiór
+formuł z nazwami z całego zapasu i $M$, uzasadniamy
+wszystkie wybory w tej konstrukcji przeliczalnej.
+Kładziemy
+\[
+\mathfrak E=\bigcup_{n<\omega}\mathfrak M^{(n)}.
+\]
+Ponownie z twierdzenia \ref{thm:mod-mc-inductive}
+wynika $\mathfrak E\models T$ i mamy $|E|\leq\mu$.
+
+Niech $\mathfrak N\models T$ będzie dowolnym
+rozszerzeniem $\mathfrak E$, a $\varphi(\bar a)$
+formułą egzystencjalną z parametrami z $E$,
+prawdziwą w $\mathfrak N$.
+Skończona krotka $\bar a$ leży w pewnym
+$M^{(n)}$. Ponieważ $\mathfrak N$ rozszerza również
+$\mathfrak M^{(n+1)}$, własność pojedynczego etapu
+zapewnia prawdziwość $\varphi(\bar a)$ już w
+$\mathfrak M^{(n+1)}$. Lemat
+\ref{lem:mod-mc-preservation} przenosi ją do
+$\mathfrak E$. Z definicji
+\ref{def:mod-mc-existential-closure} model
+$\mathfrak E$ jest egzystencjalnie domknięty w
+każdym swoim rozszerzeniu będącym modelem $T$.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,x=1cm,y=1cm]
+\foreach \x/\i in {0/0,3/1,6/2}{
+ \node[draw,rounded corners,minimum width=1.5cm]
+  (m\i) at (\x,0) {$\mathfrak M^{(\i)}$};
+}
+\draw[->,thick] (m0)--node[above,font=\small] {etap 0}(m1);
+\draw[->,thick] (m1)--node[above,font=\small] {etap 1}(m2);
+\node at (7.6,0) {$\cdots$};
+\node[draw,rounded corners] (e) at (9,0) {$\mathfrak E$};
+\draw[->,thick,dashed] (m2)--(7.1,0);
+\draw[->,thick,dashed] (8,0)--(e);
+\node[align=center,text width=3cm,font=\small] at (1.5,-1)
+ {formuły z parametrami z $M^{(0)}$};
+\node[align=center,text width=3cm,font=\small] at (4.5,-1)
+ {formuły z parametrami z $M^{(1)}$};
+\end{tikzpicture}
+\caption{Kolejne etapy konstrukcji rozszerzenia
+egzystencjalnie domkniętego. W każdym etapie obsługujemy
+formuły z parametrami z modelu początkowego tego etapu.}
+\label{fig:mod-mc-ec-construction}
+\end{figure}
+
+Rysunek \ref{fig:mod-mc-ec-construction} ilustruje
+zewnętrzny ciąg konstrukcji z twierdzenia
+\ref{thm:mod-mc-ec-extension}. Każda formuła egzystencjalna
+z parametrami z modelu sumy jest rozpatrywana na pewnym
+skończonym etapie zewnętrznym.
+
+\begin{uwaga}[Dlaczego nie realizujemy wszystkich formuł naraz?]
+\label{rem:mod-mc-ec-compatible}
+Formuła może być realizowalna w pewnym rozszerzeniu
+danego modelu, ale nie w każdym dalszym rozszerzeniu
+innego modelu uzyskanego po wcześniejszych wyborach.
+Nie zakładamy wspólnego rozszerzenia wszystkich
+kandydatów. Dla przykładu rozważmy teorię uniwersalną
+w języku z relacją dwuargumentową $R$ i aksjomatem
+\[
+\forall u\,\forall v\,\forall w\,\forall z\,
+((R(u,v)\land R(w,z))\to v=z).
+\]
+Niech model początkowy ma dwa różne elementy $a,b$
+i pustą relację $R$. Formuły
+$\exists u\,R(u,a)$ i $\exists u\,R(u,b)$
+można zrealizować osobno, dodając świeży element
+$u$ i odpowiednią pojedynczą parę do relacji.
+Nie można ich jednak zrealizować łącznie,
+bo aksjomat wymuszałby $a=b$.
+Na każdym etapie pytamy więc o realizowalność
+w rozszerzeniu \emph{aktualnego} modelu.
+Wystarcza to, ponieważ rozszerzenie modelu końcowego
+jest także rozszerzeniem wszystkich modeli pośrednich.
+\end{uwaga}
+
+\begin{przyklad}[Bez hipotezy o sumach łańcuchów]
+\label{ex:mod-mc-no-ec}
+Niech $T$ będzie teorią porządków liniowych
+mających element największy, w języku $\{<\}$.
+Teoria jest spełnialna, lecz nie ma żadnego
+egzystencjalnie domkniętego modelu.
+Jeśli $\mathfrak A\models T$ i $a$ jest jego
+elementem największym, dodajemy świeży element
+$t$ większy od wszystkich elementów $A$.
+Otrzymujemy model $T$ rozszerzający $\mathfrak A$,
+w którym $\exists y\,(a<y)$ jest prawdziwa,
+chociaż jest fałszywa w $\mathfrak A$.
+To wyklucza domknięcie egzystencjalne dowolnego
+modelu $T$.
+
+Nie przeczy to twierdzeniu
+\ref{thm:mod-mc-ec-extension}, gdyż teoria nie jest
+uniwersalno-egzystencjalna. Istotnie, porządki
+na zbiorach $\{0,\ldots,n\}$ dla $n\in\N$
+są modelami $T$ i tworzą rosnący ciąg podstruktur,
+ale ich suma $(\N,<)$ nie ma elementu największego.
+Stosujemy twierdzenie \ref{thm:mod-mc-inductive}.
+\end{przyklad}
+
+\begin{przyklad}[Domknięcie egzystencjalne porządków liniowych]
+\label{ex:mod-mc-ec-dlo}
+Egzystencjalnie domknięte modele teorii wszystkich
+porządków liniowych są dokładnie gęstymi porządkami
+liniowymi bez elementów krańcowych.
+\begin{proof}
+Niech $\mathfrak A$ będzie porządkiem liniowym.
+Możemy zanurzyć go w gęsty porządek bez elementów
+krańcowych na $A\times\Q$ z porządkiem leksykograficznym:
+\[
+(a,q)<(b,r)
+\quad\Longleftrightarrow\quad
+a<b\ \lor\ (a=b\land q<r).
+\]
+Jest to porządek liniowy, ponieważ o porównaniu
+decyduje pierwsza różna współrzędna, a liniowość
+i przechodniość porządków obu współrzędnych
+zapewniają te własności porządku par.
+Jeżeli pierwsze współrzędne są równe, między
+dwoma różnymi punktami wybieramy punkt o tej samej
+pierwszej współrzędnej i wymiernej drugiej współrzędnej
+pomiędzy danymi. Jeżeli $a<b$, to między
+$(a,q)$ i $(b,r)$ leży $(a,q+1)$.
+Brak elementów krańcowych wynika z istnienia
+$(a,q-1)$ i $(a,q+1)$ dla każdego $(a,q)$.
+Odwzorowanie $a\mapsto(a,0)$ jest zanurzeniem;
+przenosimy strukturę par na rzeczywiste rozszerzenie
+$\mathfrak A$.
+
+Jeżeli $\mathfrak A$ jest egzystencjalnie domknięta
+w klasie porządków liniowych, z powyższego rozszerzenia
+przenosimy formuły
+$\exists z\,(a<z\land z<b)$ dla $a<b$ oraz
+$\exists u\,(u<a)$ i $\exists v\,(a<v)$.
+Dają one gęstość i brak elementów krańcowych.
+
+Odwrotnie, niech $\mathfrak A$ będzie gęstym porządkiem
+bez elementów krańcowych i niech $\mathfrak B$
+będzie dowolnym rozszerzającym ją porządkiem liniowym.
+Opisaną konstrukcją rozszerzamy $\mathfrak B$
+do gęstego porządku bez elementów krańcowych
+$\mathfrak C$. Obie struktury $\mathfrak A$ i
+$\mathfrak C$ są modelami tej samej teorii z eliminacją
+kwantyfikatorów (twierdzenie \ref{thm:mod-qe-dlo}),
+więc $\mathfrak A\preccurlyeq\mathfrak C$ na mocy
+wniosku \ref{cor:mod-mc-qe}. Jeżeli formuła egzystencjalna
+z parametrami z $A$ zachodzi w $\mathfrak B$, zachodzi
+w $\mathfrak C$ przez lemat \ref{lem:mod-mc-preservation},
+a następnie w $\mathfrak A$ przez elementarność.
+To daje żądane domknięcie egzystencjalne.
+\end{proof}
+\end{przyklad}
+
+\begin{przyklad}[Grafy i własność przedłużania]
+\label{ex:mod-mc-ec-graphs}
+Niech $T_{\mathrm G}$ będzie teorią grafów prostych
+nieskierowanych w języku z dwuargumentową relacją $R$,
+gdzie aksjomaty wymagają symetrii i irrefleksyjności.
+Model $\mathfrak G\models T_{\mathrm G}$ jest
+egzystencjalnie domknięty wtedy i tylko wtedy,
+gdy dla dowolnych rozłącznych skończonych podzbiorów
+$U,V\subseteq G$ istnieje $w\in G\setminus(U\cup V)$,
+który jest połączony z każdym elementem $U$
+i nie jest połączony z żadnym elementem $V$.
+\begin{proof}
+Aksjomaty symetrii i irrefleksyjności są uniwersalne.
+Jeśli $\mathfrak G$ jest egzystencjalnie domknięty,
+możemy rozpatrzyć rozszerzenie grafu przez dodanie
+jednego świeżego wierzchołka połączonego dokładnie
+z wierzchołkami $U$ (i z żadnymi innymi starymi).
+Relację rozszerzamy symetrycznie, nie dodając pętli.
+W rozszerzeniu zachodzi formuła egzystencjalna
+\[
+\exists w\left(
+\bigwedge_{a\in U\cup V}w\ne a
+\land\bigwedge_{a\in U}R(w,a)
+\land\bigwedge_{b\in V}\neg R(w,b)
+\right).
+\]
+Zatem zachodzi także w $\mathfrak G$.
+
+Odwrotnie, załóżmy własność przedłużania i niech
+$\mathfrak H\models T_{\mathrm G}$ rozszerza $\mathfrak G$.
+Niech $\exists\bar y\,\theta(\bar a,\bar y)$,
+gdzie $\theta$ nie zawiera kwantyfikatorów i
+$\bar a$ pochodzi z $G$, będzie prawdziwa w $\mathfrak H$.
+Wybieramy krotkę świadków $\bar b$ w $\mathfrak H$.
+Chcemy przenieść skończony graf indukowany przez
+współrzędne $(\bar a,\bar b)$ do $\mathfrak G$,
+ustalając współrzędne $\bar a$.
+
+Najpierw ustalamy identyczności wszystkich różnych
+elementów występujących w $\bar a$.
+Pozostałe różne elementy krotki $\bar b$ rozpatrujemy
+po kolei. Załóżmy, że wybrano już różne obrazy
+dotychczasowych elementów i zachowano wszystkie
+krawędzie oraz ich brak. Dla kolejnego elementu $b$
+dzielimy dotychczasowe obrazy na zbiór $U$ obrazów
+sąsiadów $b$ i zbiór $V$ obrazów pozostałych elementów.
+Własność przedłużania daje nowy wierzchołek różny
+od wszystkich dotychczasowych, o dokładnie wymaganej
+relacji do nich. W ten sposób rozszerzamy zanurzenie
+skończonego grafu. Powtarzające się współrzędne
+wysyłamy na ten sam obraz.
+Po skończonej liczbie kroków otrzymujemy krotkę
+$\bar b'$ w $G$ o tym samym układzie równości
+i relacji $R$ co $\bar b$ razem z $\bar a$.
+Ponieważ w języku grafów są to wszystkie atomy,
+a stałe logiczne mają ustalone wartości, każda formuła bez
+kwantyfikatorów zachowuje wartość logiczną.
+W szczególności $\mathfrak G\models\theta(\bar a,\bar b')$.
+To dowodzi egzystencjalnego domknięcia.
+\end{proof}
+\end{przyklad}
+
+Własność przedłużania z przykładu
+\ref{ex:mod-mc-ec-graphs} można aksjomatyzować:
+dla każdej pary nieujemnych liczb całkowitych
+$m,n$ zapisujemy zdanie wymagające świadka dla
+$m+n$ parami różnych parametrów, z których pierwsze
+$m$ ma być połączonych ze świadkiem, a pozostałe
+$n$ nie. W przypadku $m=n=0$ żądamy jedynie
+istnienia elementu. Z twierdzenia
+\ref{thm:mod-mc-ec-extension} wynika istnienie
+takich grafów i możliwość rozszerzenia dowolnego
+grafu prostego do grafu spełniającego schemat.
+\section{Towarzysze modelowi}
+\begin{definicja}[Towarzysz modelowy]
+\label{def:mod-mc-companion}
+Niech $T$ będzie spełnialną teorią języka $\mathcal L$.
+Teorię $T^*$ tego samego języka nazywamy towarzyszem
+modelowym (ang. \emph{model companion}) teorii $T$,
+jeżeli $T^*$ jest spełnialna, modelowo zupełna oraz
+\[
+T^*_{\forall}=T_{\forall}.
+\]
+Równość dotyczy zbiorów konsekwencji semantycznych,
+a nie wybranych zbiorów aksjomatów.
+\end{definicja}
+
+\begin{lemat}[Wzajemne zanurzenia]
+\label{lem:mod-mc-mutual-embedding}
+Dla dwóch spełnialnych teorii $T,S$ tego samego języka
+równość $T_{\forall}=S_{\forall}$ jest równoważna
+łącznemu spełnieniu następujących dwóch warunków:
+\begin{enumerate}
+\item każdy model $T$ zanurza się w pewien model $S$;
+\item każdy model $S$ zanurza się w pewien model $T$.
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+Jeżeli konsekwencje uniwersalne są identyczne,
+każdy model jednej teorii spełnia uniwersalne
+konsekwencje drugiej. Twierdzenie
+\ref{thm:mod-mc-universal-embedding} daje oba
+wymagane zanurzenia.
+Odwrotnie, niech $\sigma$ będzie uniwersalną
+konsekwencją $S$ i niech $\mathfrak A\models T$.
+Zanurzamy $\mathfrak A$ w model $S$.
+Z zachowania zdań uniwersalnych przy podstrukturach
+(twierdzenie \ref{thm:model-universal-substructure})
+oraz niezmienniczości względem izomorfizmów wynika
+$\mathfrak A\models\sigma$. Stąd
+$S_{\forall}\subseteq T_{\forall}$. Zamiana ról
+teorii daje odwrotną inkluzję.
+\end{proof}
+
+Towarzysz modelowy nie musi być rozszerzeniem teorii
+wyjściowej nawet w sensie semantycznym, tj. nie musi
+mieć wyłącznie modeli teorii wyjściowej. Własność
+wzajemnych zanurzeń mówi jedynie, że modele obu
+teorii można rozszerzać do modeli drugiej teorii.
+Dla teorii uniwersalno-egzystencjalnych uzyskamy
+silniejszy wynik.
+
+\begin{twierdzenie}[Jednoznaczność towarzysza modelowego]
+\label{thm:mod-mc-companion-unique}
+Jeśli teoria $T$ ma dwóch towarzyszy modelowych
+$S_1,S_2$, to $S_1$ i $S_2$ mają te same modele.
+W szczególności ich domknięcia na konsekwencję
+semantyczną są identyczne.
+\end{twierdzenie}
+\begin{proof}
+Mamy $(S_1)_{\forall}=T_{\forall}=(S_2)_{\forall}$.
+Niech $\mathfrak A_0\models S_1$. Na mocy lematu
+\ref{lem:mod-mc-mutual-embedding} możemy kolejno
+rozszerzać modele obu teorii, uzyskując
+\[
+\mathfrak A_0\subseteq\mathfrak B_0
+\subseteq\mathfrak A_1\subseteq\mathfrak B_1
+\subseteq\cdots,
+\]
+gdzie $\mathfrak A_i\models S_1$, a
+$\mathfrak B_i\models S_2$. W każdym kroku zamieniamy
+zanurzenie na inkluzję przez przeniesienie struktury
+na kopię ustalającą poprzedni model.
+Dolne twierdzenie Löwenheima--Skolema
+\ref{thm:downward-ls} pozwala ograniczyć moce wszystkich
+członów przez $\mu=\max(\aleph_0,|\mathcal L|,|A_0|)$,
+wybierając podstrukturę elementarną kolejnego modelu
+zawierającą poprzedni. Wybory można więc przeprowadzić
+w obrębie zbioru struktur, z rozłącznymi zapasami nowych
+elementów, jak w dowodzie twierdzenia
+\ref{thm:mod-mc-ec-extension}.
+
+Z zupełności modelowej $S_1$ i $S_2$ wynika
+$\mathfrak A_i\preccurlyeq\mathfrak A_{i+1}$
+oraz $\mathfrak B_i\preccurlyeq\mathfrak B_{i+1}$.
+Oba łańcuchy mają tę samą strukturę sumy $\mathfrak U$.
+Na mocy lematu \ref{lem:mod-saturation-chain}
+$\mathfrak U\models S_2$ oraz
+$\mathfrak A_0\preccurlyeq\mathfrak U$.
+W szczególności $\mathfrak A_0\models S_2$.
+Zamiana ról $S_1,S_2$ dowodzi odwrotnej inkluzji
+klas modeli.
+\end{proof}
+
+\begin{lemat}[Towarzysz teorii uniwersalno-egzystencjalnej]
+\label{lem:mod-mc-companion-extension}
+Jeśli $T$ jest uniwersalno-egzystencjalna i ma
+towarzysza modelowego $T^*$, to każdy model $T^*$
+jest modelem $T$.
+\end{lemat}
+\begin{proof}
+Niech $\mathfrak A_0\models T^*$. Jak w poprzednim
+dowodzie, wzajemne zanurzenia dają przeplatające się
+łańcuchy
+\[
+\mathfrak A_0\subseteq\mathfrak B_0
+\subseteq\mathfrak A_1\subseteq\mathfrak B_1
+\subseteq\cdots
+\]
+z $\mathfrak A_i\models T^*$ i $\mathfrak B_i\models T$.
+Moce i wybory kontrolujemy tak samo jak w dowodzie
+twierdzenia \ref{thm:mod-mc-companion-unique}.
+Zupełność modelowa $T^*$ zapewnia elementarność
+łańcucha $(\mathfrak A_i)$.
+Jego suma $\mathfrak U$ jest także sumą rosnącego
+łańcucha $(\mathfrak B_i)$, którego inkluzje nie
+muszą być elementarne.
+Z twierdzenia \ref{thm:mod-mc-inductive} mamy jednak
+$\mathfrak U\models T$. Ponieważ
+$\mathfrak A_0\preccurlyeq\mathfrak U$ na mocy
+lematu o sumach łańcuchów elementarnych
+\ref{lem:mod-saturation-chain}, otrzymujemy
+$\mathfrak A_0\models T$.
+\end{proof}
+
+\begin{twierdzenie}[Towarzysz modelowy a domknięcie egzystencjalne]
+\label{thm:mod-mc-companion-ec}
+Niech $T$ będzie spełnialną teorią
+uniwersalno-egzystencjalną. Następujące warunki
+są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $T$ ma towarzysza modelowego;
+\item klasa egzystencjalnie domkniętych modeli $T$
+jest klasą modeli pewnej teorii pierwszego rzędu
+w języku $T$.
+\end{enumerate}
+Jeżeli te warunki zachodzą, modele towarzysza
+modelowego są dokładnie egzystencjalnie domkniętymi
+modelami $T$.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy (i) i niech $T^*$ będzie towarzyszem.
+Z lematu \ref{lem:mod-mc-companion-extension}
+każdy model $T^*$ jest modelem $T$.
+
+Niech $\mathfrak A\models T^*$, a
+$\mathfrak B\models T$ będzie rozszerzeniem
+$\mathfrak A$. Z lematu \ref{lem:mod-mc-mutual-embedding}
+istnieje rozszerzenie $\mathfrak C\supseteq\mathfrak B$
+będące modelem $T^*$.
+Ponieważ $\mathfrak A,\mathfrak C\models T^*$,
+zupełność modelowa daje
+$\mathfrak A\preccurlyeq\mathfrak C$.
+Jeżeli formuła egzystencjalna z parametrami z $A$
+jest prawdziwa w $\mathfrak B$, jest prawdziwa
+w $\mathfrak C$ na mocy lematu
+\ref{lem:mod-mc-preservation}, a następnie
+w $\mathfrak A$ przez elementarność.
+Zatem $\mathfrak A$ jest egzystencjalnie domkniętym
+modelem $T$.
+
+Odwrotnie, niech $\mathfrak A$ będzie egzystencjalnie
+domkniętym modelem $T$. Rozszerzamy ją do modelu
+$\mathfrak C\models T^*$ przy użyciu wzajemnych
+zanurzeń. Z lematu \ref{lem:mod-mc-companion-extension}
+$\mathfrak C\models T$, więc
+$\mathfrak A\preccurlyeq_{\exists}\mathfrak C$.
+Teoria $T^*$ ma aksjomatyzację
+uniwersalno-egzystencjalną na mocy wniosku
+\ref{cor:mod-mc-inductive}.
+Każdy taki aksjomat
+$\forall\bar x\,\exists\bar y\,\theta(\bar x,\bar y)$
+zachodzi w $\mathfrak A$: dla dowolnej krotki
+$\bar a$ z $A$ formuła egzystencjalna
+$\exists\bar y\,\theta(\bar a,\bar y)$ jest
+prawdziwa w $\mathfrak C$, więc jest prawdziwa
+w $\mathfrak A$ przez domknięcie egzystencjalne.
+Dotyczy to również pustych bloków kwantyfikatorów.
+Stąd $\mathfrak A\models T^*$.
+Udowodniliśmy charakterystykę modeli towarzysza
+i w szczególności (ii).
+
+Załóżmy teraz (ii). Niech $S$ będzie teorią
+aksjomatyzującą dokładnie egzystencjalnie domknięte
+modele $T$. Jest spełnialna na mocy twierdzenia
+\ref{thm:mod-mc-ec-extension}, ponieważ $T$ jest
+spełnialna i uniwersalno-egzystencjalna.
+Każdy model $T$ ma rozszerzenie będące modelem $S$,
+a każdy model $S$ jest modelem $T$.
+Lemat \ref{lem:mod-mc-mutual-embedding} daje więc
+$S_{\forall}=T_{\forall}$.
+Jeśli $\mathfrak A\subseteq\mathfrak B$ są modelami $S$,
+to $\mathfrak A$ jest egzystencjalnie domkniętym
+modelem $T$, a $\mathfrak B\models T$.
+W konsekwencji $\mathfrak A\preccurlyeq_{\exists}
+\mathfrak B$. Kryterium Robinsona
+\ref{thm:mod-mc-robinson} daje zupełność modelową $S$.
+Zatem $S$ jest towarzyszem modelowym $T$.
+\end{proof}
+
+\begin{wniosek}[Redukcja do konsekwencji uniwersalnych]
+\label{cor:mod-mc-companion-universal}
+Spełnialna teoria $T$ ma towarzysza modelowego dokładnie
+wtedy, gdy $T_{\forall}$ ma towarzysza modelowego.
+W takim przypadku są to te same teorie z dokładnością
+do równoważności semantycznej.
+\end{wniosek}
+\begin{proof}
+Każde zdanie uniwersalne wynikające z $T_{\forall}$
+wynika z $T$, ponieważ każdy model $T$ spełnia
+$T_{\forall}$. Odwrotnie każde zdanie z $T_{\forall}$
+jest oczywiście konsekwencją $T_{\forall}$.
+Stąd $(T_{\forall})_{\forall}=T_{\forall}$.
+Definicja \ref{def:mod-mc-companion} daje zatem
+dokładnie te same warunki dla towarzysza obu teorii,
+a twierdzenie \ref{thm:mod-mc-companion-unique}
+zapewnia jednoznaczność.
+\end{proof}
+
+Wniosek ten pozwala w przypadku dowolnej spełnialnej
+teorii $T$ badać istnienie towarzysza przez klasę
+egzystencjalnie domkniętych modeli $T_{\forall}$.
+Teoria $T_{\forall}$ jest uniwersalna, więc także
+uniwersalno-egzystencjalna, a zatem można zastosować
+twierdzenie \ref{thm:mod-mc-companion-ec}.
+Nie należy natomiast bez dodatkowych hipotez
+utożsamiać tej klasy z egzystencjalnie domkniętymi
+modelami samej teorii $T$.
+
+\begin{przyklad}[Towarzysz, który nie rozszerza teorii wyjściowej]
+\label{ex:mod-mc-companion-not-extension}
+Niech $T$ będzie teorią porządków liniowych mających
+element największy, a $S$ teorią wszystkich porządków
+liniowych. Każdy model $T$ jest modelem $S$.
+Każdy model $S$ można rozszerzyć do modelu $T$
+przez dodanie nowego elementu większego od wszystkich
+dotychczasowych. Z lematu
+\ref{lem:mod-mc-mutual-embedding} wynika
+$T_{\forall}=S_{\forall}$. Ponieważ $S$ jest
+uniwersalna (przykład \ref{ex:mod-mc-inductive-not-mc}),
+ma te same modele co $T_{\forall}$.
+Egzystencjalnie domknięte modele $S$ to dokładnie
+gęste porządki bez elementów krańcowych na mocy
+przykładu \ref{ex:mod-mc-ec-dlo}. Z twierdzenia
+\ref{thm:mod-mc-companion-ec} i wniosku
+\ref{cor:mod-mc-companion-universal} ich teoria
+jest towarzyszem modelowym zarówno $S$, jak i $T$.
+
+Żaden model tego towarzysza nie jest modelem $T$,
+ponieważ nie ma elementu największego.
+Co więcej, jak wykazano w przykładzie
+\ref{ex:mod-mc-no-ec}, sama teoria $T$ nie ma
+żadnych modeli egzystencjalnie domkniętych.
+Pokazuje to konieczność hipotezy o aksjomatyzacji
+uniwersalno-egzystencjalnej w twierdzeniu
+\ref{thm:mod-mc-companion-ec}.
+\end{przyklad}
+
+\begin{wniosek}[Zupełność towarzysza modelowego]
+\label{cor:mod-mc-companion-complete}
+Niech $T$ ma towarzysza modelowego $T^*$. Wówczas
+następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $T^*$ jest zupełna;
+\item dowolne dwa modele $T$ można zanurzyć w jeden
+model $T$;
+\item dowolne dwa modele $T^*$ można zanurzyć w jeden
+model $T^*$.
+\end{enumerate}
+Warunek (ii) nazywa się własnością wspólnego zanurzenia
+(ang. \emph{joint embedding property}).
+\end{wniosek}
+\begin{proof}
+Załóżmy (i). Dwa modele $T^*$ zgadzają się co do
+wszystkich zdań, w szczególności egzystencjalnych.
+Lemat \ref{lem:mod-mc-existential-type} dla pustych
+krotek daje zanurzenie pierwszego modelu w rozszerzenie
+elementarne drugiego. To rozszerzenie jest modelem
+$T^*$ i zawiera drugi model, więc zachodzi (iii).
+
+Załóżmy (iii). Dwa dowolne modele $T$ zanurzamy
+najpierw w modele $T^*$, korzystając z lematu
+\ref{lem:mod-mc-mutual-embedding}. Z (iii) te dwa
+modele zanurzają się w jeden model $T^*$, który
+następnie zanurzamy w model $T$. Złożenia zanurzeń
+dają (ii).
+
+Załóżmy (ii). Odwracamy role teorii w poprzednim
+argumencie: dwa modele $T^*$ zanurzamy w modele $T$,
+te w jeden model $T$, a ten w model $T^*$.
+Otrzymujemy (iii). Ponieważ $T^*$ jest modelowo
+zupełna, oba zanurzenia z (iii) są elementarne,
+a zatem ich dziedziny zgadzają się co do wszystkich
+zdań, których prawdziwość można odczytać we wspólnym
+modelu. Wobec spełnialności $T^*$ daje to (i).
+\end{proof}
+
+\begin{przyklad}[Towarzysz teorii porządków liniowych]
+\label{ex:mod-mc-companion-dlo}
+Towarzyszem modelowym teorii wszystkich porządków
+liniowych jest teoria gęstych porządków liniowych
+bez elementów krańcowych. Istotnie, teoria porządków
+liniowych jest uniwersalna, a w przykładzie
+\ref{ex:mod-mc-ec-dlo} scharakteryzowaliśmy jej
+egzystencjalnie domknięte modele. Twierdzenie
+\ref{thm:mod-mc-companion-ec} daje tezę.
+\end{przyklad}
+
+\begin{przyklad}[Towarzysz teorii grafów prostych]
+\label{ex:mod-mc-companion-graphs}
+Niech $T_{\mathrm G}$ będzie teorią grafów prostych
+nieskierowanych z przykładu \ref{ex:mod-mc-ec-graphs}.
+Jej towarzyszem modelowym jest teoria
+$T_{\mathrm G}^*$ otrzymana przez dodanie dla wszystkich
+$m,n\geq0$ aksjomatów przedłużania:
+\[
+\begin{aligned}
+\forall\bar u\,\forall\bar v\,\exists w\,\bigg(
+ &\neg D(\bar u,\bar v)\\
+ {}\lor{}&
+ \Big(\bigwedge_{a\in(\bar u,\bar v)}w\ne a
+ \land\bigwedge_{i=1}^{m}R(w,u_i)\\
+ &{}\land\bigwedge_{j=1}^{n}\neg R(w,v_j)\Big)\bigg).
+\end{aligned}
+\]
+Tutaj $\bar u=(u_1,\ldots,u_m)$,
+$\bar v=(v_1,\ldots,v_n)$ i $D(\bar u,\bar v)$
+oznacza koniunkcję nierówności między wszystkimi
+parami różnych pozycji połączonej listy zmiennych.
+Koniunkcja indeksowana przez $(\bar u,\bar v)$
+obejmuje wszystkie jej pozycje, nie zaś elementy
+jakiegoś ustalonego grafu.
+Jeśli lista parametrów nie ma powtórzeń, aksjomat
+wymaga świadka o odpowiednim układzie sąsiedztwa.
+W przeciwnym razie dowolny element jest świadkiem,
+ponieważ uniwersum jest niepuste.
+Dla pustej listy aksjomat sprowadza się do
+$\exists w\,\top$.
+
+Modele teorii $T_{\mathrm G}$ wraz z tym schematem
+są dokładnie egzystencjalnie domkniętymi grafami
+na mocy przykładu
+\ref{ex:mod-mc-ec-graphs}. Ponieważ $T_{\mathrm G}$
+jest uniwersalna, twierdzenie
+\ref{thm:mod-mc-companion-ec} daje istnienie
+towarzysza modelowego $T_{\mathrm G}^*$.
+\end{przyklad}
+
+\begin{wniosek}[Eliminacja kwantyfikatorów w teorii grafu Rado]
+\label{cor:mod-mc-rado-qe}
+Teoria $T_{\mathrm G}^*$ ma eliminację kwantyfikatorów
+i jest zupełna. Ma też model przeliczalny.
+\end{wniosek}
+\begin{proof}
+Niech $\mathfrak A,\mathfrak B\models T_{\mathrm G}^*$
+oraz niech $\bar a,\bar b$ mają ten sam typ
+bez kwantyfikatorów. Krotki mają ten sam układ
+równości i krawędzi, ponieważ w tym języku atomy
+są równościami zmiennych i formułami $R(x_i,x_j)$.
+Dla $a\in A$ należącego do krotki $\bar a$
+wybieramy odpowiadającą współrzędną $\bar b$.
+Wybór jest spójny dzięki zgodności równości.
+Jeżeli $a$ jest nowym elementem, dzielimy zbiór
+różnych współrzędnych $\bar b$ na zbiór $U$ obrazów
+sąsiadów $a$ i zbiór $V$ obrazów pozostałych
+współrzędnych. Aksjomat przedłużania daje
+$b\in B\setminus(U\cup V)$ o wymaganym układzie
+krawędzi. Symetria i irrefleksyjność relacji
+zapewniają także zgodność atomów z zamienioną
+kolejnością argumentów i atomów postaci $R(a,a)$.
+Rozszerzone krotki mają więc ten sam typ
+bez kwantyfikatorów. Gdy krotki są puste,
+wybieramy dowolny element $B$.
+Twierdzenie \ref{thm:mod-qe-forth} daje eliminację
+kwantyfikatorów.
+
+W języku grafów nie ma stałych, symboli funkcyjnych
+ani relacji o arności zero, więc każde zdanie
+bez kwantyfikatorów jest kombinacją logiczną
+$\top,\bot$. Na mocy wniosku
+\ref{cor:mod-qe-consequences} teoria jest zupełna.
+Istnienie modelu o mocy co najwyżej $\aleph_0$
+wynika z twierdzenia \ref{thm:mod-mc-ec-extension}
+zastosowanego do jednopunktowego grafu.
+Każdy model schematu jest nieskończony: dla dowolnego
+skończonego zbioru $V$ stosujemy własność przedłużania
+z $U=\varnothing$, otrzymując element poza $V$.
+Uzyskany model jest zatem przeliczalnie nieskończony.
+
+Można również wykazać zupełność bez odwoływania się
+do eliminacji kwantyfikatorów: dwa dowolne grafy proste
+zanurzają się w ich sumę rozłączną, w której nie dodajemy
+krawędzi pomiędzy składnikami. Relacja na każdym
+składniku pozostaje niezmieniona, więc są to zanurzenia.
+Teoria $T_{\mathrm G}$ ma zatem własność wspólnego
+zanurzenia i wniosek \ref{cor:mod-mc-companion-complete}
+daje zupełność jej towarzysza.
+\end{proof}
+
+Przeliczalny model teorii $T_{\mathrm G}^*$ jest
+nazywany grafem Rado. Jego jednoznaczność z dokładnością
+do izomorfizmu wykażemy przy omawianiu kategoryczności.
+Tutaj istotne jest to, że własność przedłużania
+jednocześnie opisuje domknięcie egzystencjalne,
+aksjomatyzuje towarzysza modelowego i umożliwia
+eliminację kwantyfikatorów.
+
+\section{Uzupełnienia modelowe i amalgamacja}
+W tej części przyjmujemy, że $T$ jest spełnialną teorią
+uniwersalną. W przypadku ogólniejszych teorii rozważa
+się również inne konwencje definicji uzupełnienia
+modelowego. Poniżej jawnie rozróżniamy zupełność nad
+niepustym modelem $T$ od eliminacji kwantyfikatorów
+obejmującej także zdania w językach bez termów domkniętych.
+
+\begin{definicja}[Uzupełnienie modelowe]
+\label{def:mod-mc-completion}
+Towarzysza modelowego $T^*$ teorii uniwersalnej $T$
+nazywamy jej uzupełnieniem modelowym
+(ang. \emph{model completion}), jeżeli dla każdego
+$\mathfrak A\models T$ teoria
+\[
+T^*\cup\operatorname{Diag}(\mathfrak A)
+\]
+jest zupełna w języku rozszerzonym o nazwy elementów $A$.
+Zupełność rozumiemy wraz ze spełnialnością tej teorii.
+\end{definicja}
+
+Z lematu \ref{lem:mod-mc-companion-extension}
+wynika, że każdy model $T^*$ jest modelem $T$,
+ponieważ teoria uniwersalna jest także
+uniwersalno-egzystencjalna.
+Spełnialność teorii z diagramem jest zapewniona
+przez wzajemne zanurzenia
+(lemat \ref{lem:mod-mc-mutual-embedding}).
+Warunek zupełności oznacza, że wszystkie rozszerzenia
+danego modelu $T$ do modeli $T^*$ są elementarnie
+równoważne w języku z nazwami tego modelu.
+W szczególności nie wymagamy izomorfizmu takich
+rozszerzeń ani ich jednakowej mocy.
+
+\begin{definicja}[Własność amalgamacji]
+\label{def:mod-mc-amalgamation}
+Mówimy, że teoria $T$ ma własność amalgamacji, jeżeli
+dla dowolnych modeli $\mathfrak A,\mathfrak B,\mathfrak C$
+teorii $T$ i zanurzeń
+$f:\mathfrak A\to\mathfrak B$, $g:\mathfrak A\to\mathfrak C$
+istnieją model $\mathfrak D\models T$ i zanurzenia
+$h:\mathfrak B\to\mathfrak D$, $k:\mathfrak C\to\mathfrak D$
+takie, że $h\circ f=k\circ g$.
+Jeżeli można dodatkowo wymagać
+\[
+h(B)\cap k(C)=h(f(A)),
+\]
+mówimy o silnej własności amalgamacji.
+\end{definicja}
+
+Dzięki zastąpieniu struktur izomorficznymi kopiami
+możemy w dowodach zakładać, że $f,g$ są inkluzjami
+oraz $B\cap C=A$. Robimy to, pozostawiając elementy
+$A$ bez zmian, a pozostałe elementy obu uniwersów
+zastępując rozłącznymi zbiorami świeżych elementów.
+Zanurzenia amalgamujące muszą się zgadzać na $A$,
+lecz w zwykłej amalgamacji mogą utożsamiać również
+inne elementy obu rozszerzeń.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth]
+\node (a) at (0,0) {$\mathfrak A$};
+\node (b) at (-2,1.5) {$\mathfrak B$};
+\node (c) at (2,1.5) {$\mathfrak C$};
+\node (d) at (0,3) {$\mathfrak D$};
+\draw[->,thick] (a)--node[left] {$f$}(b);
+\draw[->,thick] (a)--node[right] {$g$}(c);
+\draw[->,thick,blue!65!black] (b)--node[left] {$h$}(d);
+\draw[->,thick,blue!65!black] (c)--node[right] {$k$}(d);
+\end{tikzpicture}
+\caption{Amalgamacja dwóch zanurzeń. Obie drogi
+z $\mathfrak A$ do $\mathfrak D$ dają to samo zanurzenie.}
+\label{fig:mod-mc-amalgamation}
+\end{figure}
+
+Rysunek \ref{fig:mod-mc-amalgamation} przedstawia
+warunek przemienności z definicji
+\ref{def:mod-mc-amalgamation}. Nie jest to żądanie
+uniwersalnej własności koproduktu z utożsamieniem:
+wymagamy istnienia wspólnego modelu i zanurzeń,
+a nie jego jednoznaczności ani własności faktoryzacji
+innych takich diagramów.
+
+\begin{twierdzenie}[Uzupełnienie modelowe a amalgamacja]
+\label{thm:mod-mc-completion-ap}
+Niech $T$ będzie teorią uniwersalną mającą towarzysza
+modelowego $T^*$. Wówczas $T^*$ jest uzupełnieniem
+modelowym $T$ dokładnie wtedy, gdy $T$ ma własność
+amalgamacji.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy własność amalgamacji i ustalmy
+$\mathfrak A\models T$. Rozważmy dwa modele
+teorii $T^*\cup\operatorname{Diag}(\mathfrak A)$.
+Na mocy lematu \ref{lem:mod-mc-diagram-embedding}
+ich redukty $\mathfrak B,\mathfrak C$ zawierają
+zanurzone kopie $\mathfrak A$. Po przeniesieniu
+struktur przyjmujemy, że oba zawierają dosłownie
+$\mathfrak A$ i nazwy elementów $A$ są interpretowane
+standardowo. Ponieważ $\mathfrak B,\mathfrak C$
+są modelami $T$, amalgamujemy je nad $\mathfrak A$
+w pewnym modelu $\mathfrak D\models T$.
+Rozszerzamy $\mathfrak D$ do modelu
+$\mathfrak E\models T^*$, korzystając z lematu
+\ref{lem:mod-mc-mutual-embedding}.
+Złożenia zanurzeń z inkluzją w $\mathfrak E$
+są zanurzeniami modeli $T^*$, więc są elementarne.
+Zgadzają się one na $A$.
+Każde zdanie w języku z nazwami elementów $A$
+ma więc tę samą wartość logiczną w obu modelach:
+można ją odczytać w $\mathfrak E$ przy wspólnych
+obrazach elementów $A$. Ponieważ teoria z diagramem
+jest spełnialna, jest zupełna.
+
+Odwrotnie, załóżmy zupełność teorii
+$S=T^*\cup\operatorname{Diag}(\mathfrak A)$
+dla każdego modelu $\mathfrak A$ teorii $T$.
+Ustalmy rozszerzenia $\mathfrak B,\mathfrak C$ modelu
+$\mathfrak A$, będące modelami $T$.
+Najpierw zastępujemy oba rozszerzenia izomorficznymi
+kopiami ustalającymi $A$, tak aby $B\cap C=A$.
+Nazwy elementów $A$ wybieramy wspólne w diagramach,
+a nazwy elementów spoza $A$ wybieramy rozłącznie.
+Wszystkie te nazwy są świeże względem $\mathcal L$.
+Twierdzimy, że teoria
+\[
+S\cup\operatorname{Diag}(\mathfrak B)
+\cup\operatorname{Diag}(\mathfrak C)
+\]
+jest spełnialna. Każdy z dwóch diagramów osobno jest
+zgodny z $S$, ponieważ odpowiedni model rozszerza
+się do modelu $T^*$.
+
+Niech $\theta_B(\bar c,\bar d)$ i
+$\theta_C(\bar c,\bar e)$ będą koniunkcjami dowolnych
+skończonych fragmentów obu diagramów. Nazwy $\bar c$
+pochodzą z $A$, natomiast listy $\bar d,\bar e$
+są rozłączne i nie występują w języku $S$.
+Zgodność każdego diagramu z $S$ oznacza, że
+w pewnych modelach $S$ zachodzą zdania
+\[
+\exists\bar y\,\theta_B(\bar c,\bar y),
+\qquad
+\exists\bar z\,\theta_C(\bar c,\bar z)
+\]
+odpowiednio. Ponieważ $S$ jest zupełna, oba zdania
+zachodzą w każdym modelu $S$. W jednym takim modelu
+wybieramy świadków obu formuł i interpretujemy nimi
+nazwy $\bar d,\bar e$. Rozłączność list nazw zapewnia
+niezależność tych interpretacji. Nie wymagamy,
+aby świadkowie obu formuł byli różni od siebie:
+właśnie dlatego ten argument daje zwykłą
+amalgamację, a niekoniecznie silną. Pozostałe dodatkowe
+nazwy interpretujemy dowolnie. Każdy skończony fragment
+sumy teorii i diagramów ma zatem model.
+Zwartość daje model całej sumy, a własność diagramów
+daje zanurzenia $\mathfrak B,\mathfrak C$
+zgodne na $A$. Redukt wspólnego modelu spełnia $T^*$,
+a więc także $T$. To jest żądana amalgamacja.
+\end{proof}
+
+\section{Amalgamacja a eliminacja kwantyfikatorów}
+\begin{lemat}[Zupełność nad nazwanymi elementami]
+\label{lem:mod-mc-qe-completion}
+Jeżeli $T$ jest uniwersalna, a jej towarzysz
+modelowy $T^*$ ma eliminację kwantyfikatorów,
+to $T^*$ jest uzupełnieniem modelowym $T$.
+\end{lemat}
+\begin{proof}
+Ustalmy $\mathfrak A\models T$.
+W dowolnym modelu $T^*\cup\operatorname{Diag}(\mathfrak A)$
+prawdziwość zdań bez kwantyfikatorów z nazwami elementów
+$A$ jest wyznaczona przez diagram $\mathfrak A$:
+dla każdego takiego zdania diagram zawiera je lub
+jego negację.
+Dowolne zdanie rozszerzonego języka zawiera tylko
+skończenie wiele nowych nazw. Zastępujemy je
+świeżymi zmiennymi wolnymi, stosujemy eliminację
+kwantyfikatorów w $T^*$, a następnie podstawiamy
+ponownie nazwy. Uzyskany równoważnik bez kwantyfikatorów
+ma ustaloną wartość logiczną we wszystkich modelach
+teorii z diagramem. To dowodzi jej zupełności.
+\end{proof}
+
+\begin{twierdzenie}[Eliminacja kwantyfikatorów nad niepustymi krotkami]
+\label{thm:mod-mc-ap-qe-tuples}
+Niech $T$ będzie teorią uniwersalną mającą towarzysza
+modelowego $T^*$ i własność amalgamacji.
+Dla każdej formuły $\varphi(\bar x)$ z ustaloną
+niepustą listą zmiennych $\bar x$ zawierającą wszystkie
+zmienne wolne $\varphi$ istnieje równoważnik bez
+kwantyfikatorów $\psi(\bar x)$ modulo $T^*$.
+\end{twierdzenie}
+\begin{proof}
+Niech $\mathfrak M,\mathfrak N\models T^*$ i niech
+niepuste skończone krotki $\bar a,\bar b$ mają ten
+sam typ bez kwantyfikatorów. Z lematu
+\ref{lem:mod-qe-generated-substructures} wynika,
+że generowane przez nie podstruktury są izomorficzne
+przez odwzorowanie wysyłające $\bar a$ na $\bar b$.
+Obie podstruktury są modelami $T$, ponieważ $T$
+jest uniwersalna (twierdzenie
+\ref{thm:mod-mc-universal-preservation}).
+Traktujemy jedną z nich jako wspólną bazę amalgamacji,
+z drugim zanurzeniem złożonym z izomorfizmu i inkluzji.
+Własność amalgamacji daje wspólny model $T$,
+w którym obrazy obu krotek są równe.
+Rozszerzamy go do modelu $T^*$.
+Zupełność modelowa $T^*$ zapewnia elementarność
+obu zanurzeń modeli $T^*$ w ten model.
+Stąd $\bar a,\bar b$ zgadzają się co do wszystkich
+formuł przy ustalonej liście zmiennych.
+
+Stosujemy argument zwartości z dowodu twierdzenia
+\ref{thm:mod-qe-semantic} do ustalonej niepustej
+listy $\bar x$. Dla każdej realizacji $\varphi(\bar x)$
+jej typ bez kwantyfikatorów wymusza $\varphi$ modulo $T^*$,
+bo w przeciwnym razie mielibyśmy dwie zgodne krotki
+o różnych wartościach logicznych $\varphi$.
+Zwartość daje skończoną koniunkcję z tego typu
+implikującą $\varphi$. Zbiór wszystkich koniunkcji
+formuł bez kwantyfikatorów implikujących $\varphi$
+pokrywa realizacje $\varphi$ we wszystkich modelach
+$T^*$; ponowne zastosowanie zwartości daje skończoną
+alternatywę równoważną $\varphi$.
+Jeśli $\varphi$ nie ma żadnej realizacji, równoważnikiem
+jest $\bot$. W tym argumencie nie wybieramy realizacji
+z klasy wszystkich modeli.
+Wszystkie formuły otrzymane w konstrukcji mają
+zmienne wolne jedynie w ustalonej liście $\bar x$.
+\end{proof}
+
+\begin{uwaga}[Zdanie a formuła z niewykorzystaną zmienną]
+\label{rem:mod-mc-dummy-variable}
+Twierdzenie \ref{thm:mod-mc-ap-qe-tuples} pozwala
+dla zdania $\sigma$ znaleźć formułę bez kwantyfikatorów
+$\psi(x)$, równoważną $\sigma$ przy każdym wartościowaniu
+$x$, jeżeli dopuścimy w liście zmiennych dodatkową
+zmienną $x$. Nie oznacza to jednak, że istnieje
+równoważne \emph{zdanie} bez kwantyfikatorów.
+Jeśli w języku jest term domknięty $t$, możemy
+podstawić $t$ za $x$ i uzyskać takie zdanie
+na mocy twierdzenia \ref{thm:sem-substitution}.
+Bez termu domkniętego ten argument nie działa.
+Przy pełnej eliminacji kwantyfikatorów wymagamy
+równoważnika bez dodatkowych zmiennych wolnych,
+zgodnie z definicją \ref{def:mod-qe}.
+\end{uwaga}
+
+\begin{twierdzenie}[Pełne kryterium amalgamacji]
+\label{thm:mod-mc-ap-qe}
+Niech $T$ będzie teorią uniwersalną mającą towarzysza
+modelowego $T^*$. Następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $T^*$ ma eliminację kwantyfikatorów
+(z uwzględnieniem zdań);
+\item $T$ ma własność amalgamacji i każde dwa modele
+$T^*$ zgadzające się co do wszystkich zdań bez
+kwantyfikatorów można zanurzyć w jeden model $T$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Z (i) wynika własność amalgamacji na mocy lematu
+\ref{lem:mod-mc-qe-completion} i twierdzenia
+\ref{thm:mod-mc-completion-ap}.
+Dwa modele $T^*$ zgodne co do zdań bez kwantyfikatorów
+są wówczas elementarnie równoważne. Zatem wszystkie
+zdania egzystencjalne prawdziwe w pierwszym modelu
+są prawdziwe w drugim. Stosujemy lemat
+\ref{lem:mod-mc-existential-type} do pustych krotek.
+Otrzymujemy wspólny model $T^*$ (rozszerzenie
+elementarne drugiego modelu), a więc także model $T$,
+w którym zanurzają się oba modele.
+
+Załóżmy (ii). Dla niepustych krotek zgodność
+typów bez kwantyfikatorów daje zgodność wszystkich
+formuł, jak w dowodzie twierdzenia
+\ref{thm:mod-mc-ap-qe-tuples}.
+Dla pustych krotek rozpatrujemy modele zgodne
+co do zdań bez kwantyfikatorów. Z założenia zanurzamy
+je w jeden model $T$, a ten rozszerzamy do modelu $T^*$.
+Zupełność modelowa zapewnia elementarność
+obu złożonych zanurzeń, więc oba modele zgadzają
+się co do wszystkich zdań. Kryterium
+\ref{thm:mod-qe-semantic} daje pełną eliminację.
+\end{proof}
+
+\begin{wniosek}[Dwa ważne przypadki]
+\label{cor:mod-mc-ap-qe-standard}
+Jeżeli $T$ jest uniwersalna i ma towarzysza modelowego
+$T^*$, a ponadto język zawiera term domknięty lub
+$T^*$ jest zupełna, to następujące warunki są
+równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $T^*$ jest uzupełnieniem modelowym $T$;
+\item $T$ ma własność amalgamacji;
+\item $T^*$ ma eliminację kwantyfikatorów.
+\end{enumerate}
+\end{wniosek}
+\begin{proof}
+Z twierdzenia \ref{thm:mod-mc-completion-ap}
+wynika równoważność (i) i (ii), a lemat
+\ref{lem:mod-mc-qe-completion} daje (iii)$\Rightarrow$(i).
+Pozostaje (ii)$\Rightarrow$(iii).
+Jeżeli język zawiera term domknięty, modele
+zgodne co do zdań bez kwantyfikatorów mają
+izomorficzne niepuste podstruktury generowane
+przez pustą krotkę (por. lemat
+\ref{lem:mod-qe-generated-substructures}).
+Są to modele $T$, więc można zastosować amalgamację.
+Jeżeli natomiast $T^*$ jest zupełna, dowolne dwa
+jej modele są elementarnie równoważne i można
+je zanurzyć w jeden model $T^*$ przez lemat
+\ref{lem:mod-mc-existential-type} dla pustych krotek.
+W obu przypadkach spełniona jest dodatkowa hipoteza
+twierdzenia \ref{thm:mod-mc-ap-qe}.
+\end{proof}
+
+\begin{przyklad}[Dlaczego trzeba uwzględnić zdania?]
+\label{ex:mod-mc-ap-empty}
+Rozważmy język z jednym jednoargumentowym symbolem
+relacyjnym $P$ i teorię uniwersalną $T$ z aksjomatem
+\[
+\forall x\,\forall y\,(P(x)\leftrightarrow P(y)).
+\]
+Jej modele są niepustymi zbiorami, w których $P$
+jest całym uniwersum lub zbiorem pustym.
+Niech $T^*$ powstanie przez dodanie zdań
+wymagających co najmniej $n$ różnych elementów
+dla każdego $n\geq1$.
+
+Każdy model $T$ można rozszerzyć do modelu $T^*$
+przez dodanie elementów o tej samej wartości $P$.
+Każdy model $T^*$ jest modelem $T$, więc obie teorie
+mają te same konsekwencje uniwersalne na mocy lematu
+\ref{lem:mod-mc-mutual-embedding}.
+Każde zanurzenie modeli $T^*$ zachowuje wartość $P$:
+uniwersum dziedziny jest niepuste, a $P$ jest
+jednorodne w obu modelach. Po usunięciu symbolu $P$
+jest to zanurzenie nieskończonych struktur języka
+samej równości, a więc jest elementarne na mocy
+twierdzenia \ref{thm:mod-qe-equality}.
+Dla ustalonej wspólnej wartości $P$ każdą formułę
+języka z $P$ można tłumaczyć na język samej równości,
+zastępując atomy $P(x)$ odpowiednio przez $x=x$
+lub $\neg(x=x)$. Indukcja po formułach daje zgodność
+prawdziwości. Zatem zanurzenie jest elementarne
+również w języku z $P$, co dowodzi zupełności
+modelowej $T^*$.
+
+Teoria $T$ ma nawet silną własność amalgamacji:
+dwa rozszerzenia niepustego wspólnego modelu
+muszą mieć tę samą wartość $P$.
+Bierzemy rozłączne kopie poza wspólnym uniwersum,
+łączymy je i nadajemy wszystkim elementom tę wartość.
+Z twierdzenia \ref{thm:mod-mc-completion-ap}
+$T^*$ jest uzupełnieniem modelowym $T$.
+Nie ma jednak eliminacji kwantyfikatorów w sensie
+przyjętym w tym skrypcie, obejmującym zdania.
+W języku nie ma termów domkniętych ani relacji
+o arności zero, więc każde zdanie bez kwantyfikatorów
+jest kombinacją $\top,\bot$.
+Zdanie $\exists x\,P(x)$ rozróżnia dwa modele $T^*$
+o różnych wartościach $P$, a zatem nie ma takiego
+równoważnika. Niepustość wspólnej bazy amalgamacji
+jest tutaj istotna.
+\end{przyklad}
+
+\section{Przykłady amalgamacji i jej braku}
+\begin{przyklad}[Amalgamacja bez silnej amalgamacji]
+\label{ex:mod-mc-ap-not-strong}
+Niech $T$ będzie teorią uniwersalną w języku
+z jednoargumentową relacją $P$, z aksjomatem
+\[
+\forall x\,\forall y\,((P(x)\land P(y))\to x=y).
+\]
+Teoria ma własność amalgamacji, lecz nie ma
+silnej własności amalgamacji.
+\end{przyklad}
+\begin{proof}
+Niech $B\cap C=A$ po zastąpieniu modeli
+izomorficznymi kopiami. Jeżeli w sumie $B\cup C$
+relacja $P^B\cup P^C$ ma co najwyżej jeden element,
+ta suma wraz z relacją jest żądaną amalgamacją.
+Ograniczenia relacji do $B$ i $C$ pozostają
+niezmienione, ponieważ na $A$ są zgodne.
+
+W przeciwnym razie istnieją dwa różne elementy
+$b\in P^B$ oraz $c\in P^C$. Żaden nie należy do $A$:
+gdyby na przykład $b\in A$, to $b\in P^C$ i z aksjomatu
+w $\mathfrak C$ wynikałoby $b=c$.
+W zbiorze $B\cup C$ utożsamiamy jedynie $b$ i $c$,
+pozostawiając wszystkie inne klasy równoważności
+jednoelementowe. Interpretujemy $P$ jako zbiór
+składający się z jednej klasy $[b]=[c]$.
+Odwzorowania ilorazowe ograniczone do $B$ i $C$
+są różnowartościowe, gdyż jedyne utożsamienie
+dotyczy elementów należących do różnych stron
+poza $A$. Zachowują i odbijają $P$ oraz zgadzają się
+na $A$. Otrzymujemy model $T$ i amalgamację.
+
+Aby wykluczyć silną amalgamację, bierzemy
+$A=\{a\}$ z $P^A=\varnothing$ oraz rozszerzenia
+$B=\{a,b\}$, $C=\{a,c\}$ z $P^B=\{b\}$,
+$P^C=\{c\}$, gdzie $a,b,c$ są parami różne.
+W każdym modelu amalgamującym obrazy $b,c$
+muszą być równe na mocy aksjomatu, a ich wspólny
+obraz nie może być obrazem $a$ z uwagi na
+różnowartościowość zanurzeń. Przecięcie obrazów
+jest więc większe od obrazu $A$.
+\end{proof}
+
+\begin{przyklad}[Grafy proste]
+\label{ex:mod-mc-graphs-ap}
+Teoria grafów prostych ma silną własność amalgamacji.
+Dla dwóch grafów rozszerzających wspólny graf
+$\mathfrak A$ zastępujemy je kopiami z $B\cap C=A$.
+Na $D=B\cup C$ kładziemy $R^D=R^B\cup R^C$.
+Relacja jest symetryczna i irrefleksyjna, ponieważ
+każda z dwóch relacji ma te własności.
+Jeżeli oba końce krawędzi z $R^C$ należą do $B$,
+to należą do $A$, a zatem krawędź należy już
+do $R^B$, ponieważ $\mathfrak A$ jest podstrukturą
+obu grafów. W konsekwencji ograniczenie $R^D$
+do $B^2$ to dokładnie $R^B$; analogicznie dla $C^2$.
+Inkluzje są więc zanurzeniami i mają przecięcie $A$.
+Towarzysz modelowy grafów prostych z przykładu
+\ref{ex:mod-mc-companion-graphs} jest ich uzupełnieniem
+modelowym na mocy twierdzenia
+\ref{thm:mod-mc-completion-ap}.
+\end{przyklad}
+
+\begin{przyklad}[Porządki liniowe]
+\label{ex:mod-mc-orders-ap}
+Teoria porządków liniowych ma silną własność amalgamacji.
+Niech $\mathfrak A$ będzie wspólną podstrukturą
+porządków $\mathfrak B,\mathfrak C$, z $B\cap C=A$.
+Na $D=B\cup C$ rozważmy relację będącą przechodnim
+domknięciem sumy obu ścisłych porządków.
+Każde porównanie w tym domknięciu odpowiada skończonej
+niepustej drodze rosnących kroków, z których każdy
+pochodzi z jednego z porządków.
+
+Jeżeli końce takiej drogi należą do $B$, każdy
+maksymalny odcinek drogi przechodzący przez
+$C\setminus A$ ma końce w $A$: przejście między
+$B$ i $C$ jest możliwe tylko we wspólnym uniwersum.
+Odcinek ten zastępujemy pojedynczym krokiem w $B$,
+ponieważ przechodniość porządku $C$ daje porównanie
+jego końców, a oba porządki zgadzają się na $A$.
+Każdy krok pochodzący z $C$, którego oba końce
+należą do $B$, ma oba końce w $A$, więc również
+jest krokiem porządku $B$.
+Otrzymana niepusta droga w $B$ daje porównanie
+jej końców w pierwotnym porządku $B$.
+Analogicznie dla końców należących do $C$.
+W szczególności nie ma drogi od elementu do niego
+samego, gdyż każdy element należy do $B$ lub $C$,
+a pierwotne porządki są irrefleksyjne.
+Przechodnie domknięcie jest zatem ścisłym porządkiem
+częściowym, którego ograniczenia do $B,C$ są
+pierwotnymi porządkami.
+
+Każdy ścisły porządek częściowy można rozszerzyć
+do ścisłego porządku liniowego na tym samym zbiorze.
+Dla przypomnienia stosujemy lemat Zorna do zbioru
+ścisłych porządków częściowych rozszerzających
+ustalony porządek, uporządkowanego przez inkluzję.
+Suma łańcucha jest ponownie ścisłym porządkiem
+częściowym (każde dwa kroki leżą w jednym członie);
+dla pustego łańcucha ograniczeniem górnym jest
+porządek początkowy. Lemat Zorna daje więc porządek
+maksymalny.
+Gdyby maksymalny porządek nie porównywał $x,y$,
+dodanie $x<y$ i wzięcie przechodniego domknięcia
+nie tworzyłoby cyklu: z cyklu zawierającego nowy
+krok można wyodrębnić drogę od $y$ do $x$ po starych
+krokach, sprzeczną z nieporównywalnością.
+Otrzymalibyśmy właściwe rozszerzenie porządku,
+co przeczy maksymalności.
+
+Tak uzyskany porządek liniowy na $D$ nadal ma
+pierwotne ograniczenia do $B,C$: każde porównanie
+różnych elementów w każdym z tych zbiorów było
+już rozstrzygnięte. Inkluzje są zanurzeniami,
+a ich obrazy przecinają się dokładnie w $A$.
+Towarzysz teorii porządków liniowych, czyli DLO
+(przykład \ref{ex:mod-mc-companion-dlo}), jest
+zatem jej uzupełnieniem modelowym.
+\end{przyklad}
+
+\begin{przyklad}[Towarzysz bez uzupełnienia modelowego]
+\label{ex:mod-mc-no-ap}
+Niech $S=\operatorname{Th}(\R,0,1,+,-,\cdot)$
+w języku pierścieni, a $T=S_{\forall}$.
+Z przykładu \ref{ex:mod-mc-no-qe} wiemy, że $S$
+jest modelowo zupełna, ale nie ma eliminacji
+kwantyfikatorów. Z definicji $S$ jest towarzyszem
+modelowym $T$, ponieważ $T_{\forall}=S_{\forall}$.
+Ponieważ język zawiera stałą $0$, z wniosku
+\ref{cor:mod-mc-ap-qe-standard} wynika, że $T$
+nie ma własności amalgamacji i $S$ nie jest
+uzupełnieniem modelowym $T$.
+
+Można także wskazać konkretną przeszkodę amalgamacji.
+Niech $\mathfrak A$ będzie pierścieniem
+$\mathbb Z[X]$. Wybieramy dodatnią liczbę przestępną
+$t\in\R$ jak w przykładzie \ref{ex:mod-mc-no-qe}.
+Podstawienia $X\mapsto t$ i $X\mapsto -t$ są
+zanurzeniami $\mathfrak A$ w dwa egzemplarze $\R$,
+ponieważ żaden niezerowy wielomian całkowity
+nie zeruje się w $t$ ani w $-t$.
+Z twierdzenia \ref{thm:mod-mc-universal-embedding}
+$\mathfrak A\models T$, a oba egzemplarze $\R$
+są modelami $T$. Gdyby istniała amalgamacja w
+modelu $\mathfrak D\models T$, można by rozszerzyć
+$\mathfrak D$ do modelu $S$.
+W tym modelu wspólny obraz $X$ byłby niezerowym
+kwadratem, ponieważ w pierwszym egzemplarzu $\R$
+jest nim $t$. Jego przeciwny element byłby również
+niezerowym kwadratem, ponieważ w drugim egzemplarzu
+obrazem $-X$ jest $t$. Jest to niemożliwe w modelu
+$S$, który, jak wykazano w przykładzie
+\ref{ex:mod-mc-no-qe}, ma porządek ciała rzeczywiście
+domkniętego. W takim porządku niezerowy kwadrat
+jest dodatni, a jego przeciwny element ujemny.
+\end{przyklad}
+
+Zupełność modelowa, towarzysze i uzupełnienia modelowe
+pozwalają zatem oddzielić zachowanie formuł w modelach
+danej teorii od możliwości rozszerzania jej modeli
+oraz uzgadniania rozszerzeń nad wspólną bazą.
+W dalszych rozdziałach wykorzystamy te pojęcia
+do badania modeli pierwszych, kategoryczności
+i własności zbiorów definiowalnych.
+
+
+

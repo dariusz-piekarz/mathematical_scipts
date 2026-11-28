@@ -1,0 +1,156 @@
+name: PDE - chapter 25 audit
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/partial_differential_equations/06-metody-fouriera-i-rozdzielenie-zmiennych.tex'
+      - 'chapters/pl/partial_differential_equations/14-zasady-maksimum-i-teoria-potencjalu.tex'
+      - 'chapters/pl/partial_differential_equations/18-widmo-operatorow-eliptycznych.tex'
+      - 'chapters/pl/partial_differential_equations/27-reakcja-dyfuzja-i-fale-biegnace.tex'
+      - 'chapters/pl/partial_differential_equations/25-rownania-polliniowe-i-eksplozja.tex'
+      - 'books/pl/partial_differential_equations.tex'
+      - 'catalog/partial_differential_equations_manifest.json'
+      - 'latex/pl/code-listings.tex'
+      - 'application/config/preambles/PDE.tex'
+      - '.github/workflows/partial-differential-equations-ch25.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-ch25:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check references and prepare standalone chapter
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          chapter = Path("chapters/pl/partial_differential_equations/25-rownania-polliniowe-i-eksplozja.tex")
+          source = chapter.read_text(encoding="utf-8")
+          labels = re.findall(r"\\label\{([^}]+)\}", source)
+          refs = re.findall(r"\\(?:eqref|ref)\{([^}]+)\}", source)
+          assert len(labels) == len(set(labels)), "Duplicate labels"
+          root = Path("chapters/pl/partial_differential_equations")
+          dependencies = [p for p in root.glob("*.tex") if p.name[:2] in
+                          {"06", "14", "18", "27"}]
+          external = {}
+          for target in dependencies:
+              target_labels = re.findall(r"\\label\{([^}]+)\}", target.read_text(encoding="utf-8"))
+              for label in set(refs)-set(labels):
+                  if label in target_labels:
+                      assert label not in external, f"Ambiguous target: {label}"
+                      external[label] = target
+          for label, target in external.items():
+              assert target.read_text(encoding="utf-8").count(r"\label{" + label + "}") == 1, label
+          assert not set(labels) & set(external), "External label collides with local label"
+          assert set(refs) <= set(labels) | set(external), f"Missing targets: {set(refs)-set(labels)-set(external)}"
+          stack = []
+          for kind, env in re.findall(r"\\(begin|end)\{([^}]+)\}", source):
+              if kind == "begin":
+                  stack.append(env)
+              else:
+                  assert stack and stack.pop() == env, f"Unmatched end: {env}"
+          assert not stack, f"Unclosed environments: {stack}"
+          print(f"{len(labels)} distinct labels; {len(refs)} resolved reference occurrences")
+          book = Path("books/pl/partial_differential_equations.tex").read_text(encoding="utf-8")
+          assert book.count(r"\begin{document}") == 1
+          preamble = book.split(r"\begin{document}", 1)[0]
+          inputs = re.findall(r"\\input\{\.\./\.\./(chapters/pl/partial_differential_equations/[^}]+)\}", book)
+          import json
+          manifest = json.loads(Path("catalog/partial_differential_equations_manifest.json").read_text(encoding="utf-8"))
+          assert inputs == [row["path"] for row in manifest["chapters"]]
+          chapter_number = inputs.index(chapter.as_posix()) + 1
+          assert chapter_number == 25
+          external_numbers = {label: inputs.index(path.as_posix()) + 1 for label, path in external.items()}
+          canonical = Path("latex/pl/code-listings.tex").read_text(encoding="utf-8")
+          for name, text in (("book", preamble), ("Atlas", Path("application/config/preambles/PDE.tex").read_text(encoding="utf-8"))):
+              assert text.count(canonical) == 1, f"Stale code listings: {name}"
+          # Generate genuine reference numbers using LaTeX itself.
+          dependency_inputs = "\n".join(
+              r"\setcounter{chapter}{" + str(inputs.index(p.as_posix())) + "}\n"
+              + r"\input{../../" + p.as_posix() + "}"
+              for p in sorted(set(external.values()))
+          )
+          Path("books/pl/pde25_dependencies.tex").write_text(
+              preamble + "\n" + r"\begin{document}" + "\n"
+              + dependency_inputs + "\n" + r"\end{document}" + "\n",
+              encoding="utf-8",
+          )
+          Path("books/pl/pde25_external.json").write_text(json.dumps(sorted(external)))
+          Path("books/pl/partial_differential_equations_ch25_ci.tex").write_text(
+              preamble + "\n" + r"\begin{document}" + "\n"
+              + r"\setcounter{chapter}{24}" + "\n"
+              + r"\input{../../" + chapter.as_posix() + "}" + "\n"
+              + r"\end{document}" + "\n", encoding="utf-8")
+          PY
+      - name: Compile dependency chapters for real reference numbers
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: pde25_dependencies.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Transfer verified external reference numbers
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, re
+          root = Path("books/pl")
+          wanted = set(json.loads((root / "pde25_external.json").read_text()))
+          aux = (root / "pde25_dependencies.aux").read_text(encoding="utf-8")
+          records = {}
+          for label, number in re.findall(r"\\newlabel\{([^}]+)\}\{\{([^{}]*)\}", aux):
+              if label in wanted:
+                  assert label not in records and number, label
+                  records[label] = number
+          assert set(records) == wanted, wanted-set(records)
+          standalone = root / "partial_differential_equations_ch25_ci.tex"
+          source = standalone.read_text(encoding="utf-8")
+          external_labels = "\n".join([r"\makeatletter"] + [
+              r"\@namedef{r@" + label + "}{{" + number + r"}{}{}{}{}}"
+              for label, number in sorted(records.items())
+          ] + [r"\makeatother"])
+          standalone.write_text(source.replace(r"\begin{document}",
+              external_labels + "\n" + r"\begin{document}", 1), encoding="utf-8")
+          print(f"Resolved {len(records)} external labels")
+          PY
+      - name: Compile standalone chapter with canonical preamble
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: partial_differential_equations_ch25_ci.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Inspect diagnostics and render pages
+        run: |
+          if ! command -v pdftoppm >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq poppler-utils
+          fi
+          stem=books/pl/partial_differential_equations_ch25_ci
+          test -s "$stem.pdf"
+          test -s "$stem.log"
+          pdfinfo "$stem.pdf"
+          pdftotext -layout "$stem.pdf" "$stem.txt"
+          mkdir -p books/pl/pde_ch25_render
+          pdftoppm -r 120 -png "$stem.pdf" books/pl/pde_ch25_render/page
+          if grep -E 'Undefined control sequence|There were undefined references|LaTeX Warning: (Reference|Citation).*undefined|Overfull \\hbox|Missing character' "$stem.log"; then
+            echo 'Critical LaTeX diagnostics detected.'
+            exit 1
+          fi
+      - name: Upload compiled chapter and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pde-ch25-audit
+          path: |
+            books/pl/partial_differential_equations_ch25_ci.pdf
+            books/pl/partial_differential_equations_ch25_ci.log
+            books/pl/partial_differential_equations_ch25_ci.txt
+            books/pl/pde_ch25_render/
+          if-no-files-found: warn
+

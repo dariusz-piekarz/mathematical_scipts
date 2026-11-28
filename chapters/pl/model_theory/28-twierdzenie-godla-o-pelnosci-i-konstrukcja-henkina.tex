@@ -1,0 +1,450 @@
+\chapter{Twierdzenie Gödla o pełności i konstrukcja Henkina}
+\label{ch:completeness}
+
+\section{O co naprawdę chodzi w pełności?}
+W rozdziale~\ref{ch:soundness-fol} udowodniliśmy, że każdy formalny dowód prowadzi do konsekwencji semantycznej. Pozostało pytanie odwrotne: czy każda formuła, której nie sposób obalić żadnym modelem spełniającym przesłanki, ma formalny dowód? Okazuje się, że w klasycznej logice pierwszego rzędu odpowiedź jest twierdząca. Jest to \emph{twierdzenie Gödla o pełności}, nie należy go jednak mylić z późniejszymi twierdzeniami Gödla \emph{o niezupełności} teorii arytmetycznych. Pierwsze dotyczy mocy reguł czystej logiki, drugie ograniczeń efektywnie aksjomatyzowanych teorii o odpowiedniej sile.
+
+\begin{definicja}[Niesprzeczność syntaktyczna]\label{def:henkin-consistency}
+Niech $\mathcal L$ będzie językiem pierwszego rzędu z równością, a $T$ zbiorem zdań języka $\mathcal L$. Jak w poprzednich rozdziałach, wszystkie rozważane struktury mają niepuste uniwersa. Mówimy, że $T$ jest \emph{syntaktycznie niesprzeczny}, jeżeli $T\nvdash_{\mathrm{ND}}\bot$. W przeciwnym przypadku nazywamy $T$ sprzecznym. Symbol $\bot$ jest skrótem ustalonego zdania sprzecznego zdefiniowanym w rozdziale~\ref{ch:natural-deduction}.
+\end{definicja}
+
+\begin{uwaga}[Dlaczego zaczynamy od zbiorów zdań?]
+Dla zdań prawda w strukturze nie zależy od wartościowania. W dowodzie konstrukcyjnym będziemy dodawać nowe symbole stałych, a następnie tworzyć \emph{model termowy}. Pod koniec rozdziału wyjaśnimy starannie, jak wynik dla zdań przenieść na dowolne formuły ze zmiennymi wolnymi.
+\end{uwaga}
+
+\begin{twierdzenie}[Twierdzenie o istnieniu modelu]\label{thm:henkin-model-existence}
+Niech $\mathcal L$ będzie dowolnym językiem pierwszego rzędu z równością, a $T$ zbiorem zdań języka $\mathcal L$. Jeśli $T$ jest syntaktycznie niesprzeczny, to istnieje struktura $\mathfrak M$ o niepustym uniwersum taka, że $\mathfrak M\models T$.
+\end{twierdzenie}
+
+W kolejnych sekcjach skonstruujemy taką strukturę. To będzie główny wynik, z którego wyprowadzimy pełność. Pracujemy w zwykłej metateorii zbiorów z aksjomatem wyboru (ZFC); dla języków przeliczalnych wskażemy także elementarną konstrukcję niewymagającą lematu Kuratowskiego--Zorna.
+
+\section{Cztery fakty o dowodach, które będą potrzebne}
+\begin{lemat}[Skończone wsparcie sprzeczności]\label{lem:henkin-finite-contradiction}
+Jeśli $T\vdash_{\mathrm{ND}}\bot$, to istnieje skończony zbiór $T_0\subseteq T$ taki, że $T_0\vdash_{\mathrm{ND}}\bot$.
+\end{lemat}
+\begin{proof}
+Jest to szczególny przypadek Twierdzenia~\ref{thm:nd-finite-support}. Drzewo dowodu ma skończenie wiele liści, zatem tylko skończenie wiele różnych zdań z $T$ może wystąpić w nim jako nierozładowane założenia. Te same reguły tworzą dowód sprzeczności już z tych zdań.
+\end{proof}
+
+\begin{lemat}[Dodanie zdania i negacji]\label{lem:henkin-extension-neg}
+Niech $S$ będzie niesprzecznym zbiorem zdań, a $\sigma$ zdaniem tego samego języka. Jeśli $S\cup\{\sigma\}$ jest sprzeczny, to $S\vdash_{\mathrm{ND}}\neg\sigma$. Jeżeli ponadto $S\cup\{\neg\sigma\}$ jest sprzeczny, to również $S$ jest sprzeczny.
+\end{lemat}
+\begin{proof}
+Pierwsza część: z $S$ oraz dodatkowego otwartego założenia $\sigma$ istnieje dowód $\bot$. Reguła $\neg I$ rozładowuje $\sigma$ i daje $S\vdash\neg\sigma$. Dla drugiej części analogicznie otrzymujemy $S\vdash\neg\neg\sigma$. Z $\neg\neg\sigma$ przez klasyczny dowód nie wprost uzyskujemy $\sigma$, a zestawiając $\sigma$ i $\neg\sigma$ otrzymujemy $\bot$. W ten sposób z samego $S$ powstał dowód sprzeczności.
+\end{proof}
+
+\begin{lemat}[Negacja kwantyfikatora]\label{lem:henkin-quant-duality}
+Dla każdej formuły $\varphi(x)$, w której $x$ jest wyróżnioną zmienną, w dedukcji naturalnej z rozdziału~\ref{ch:natural-deduction} dają się bez założeń wyprowadzić oba kierunki równoważności
+\[
+\neg\forall x\,\varphi(x)\quad\longleftrightarrow\quad\exists x\,\neg\varphi(x).
+\]
+Wszystkie użyte podstawienia wymagają zwykłych warunków unikania przechwycenia zmiennych.
+\end{lemat}
+\begin{proof}
+Załóżmy $\exists x\,\neg\varphi(x)$ i tymczasowo $\forall x\,\varphi(x)$. Wybieramy zmienną $y$ niewystępującą w ogóle w $\varphi$ ani w pozostałych otwartych założeniach. W poddedukcji reguły $\exists E$ przyjmujemy $\neg\varphi[x:=y]$. Przez $\forall E$ z drugiego założenia otrzymujemy $\varphi[x:=y]$, a następnie przez $\neg E$ dostajemy $\bot$. Ponieważ $y$ nie występuje we wniosku $\bot$ ani w pozostałych otwartych założeniach, możemy zastosować $\exists E$ i rozładować założenie o świadku. Dopiero teraz reguła $\neg I$ rozładowuje $\forall x\,\varphi$ i daje $\neg\forall x\,\varphi$ z jedynego pozostałego założenia $\exists x\,\neg\varphi$.
+
+W przeciwnym kierunku załóżmy $\neg\forall x\,\varphi(x)$ i chwilowo $\neg\exists x\,\neg\varphi(x)$. Wybieramy $y$ niewystępującą w ogóle w napisie $\varphi$ ani wolno w żadnym z tych dwóch założeń. Z tymczasowego $\neg\varphi[x:=y]$ reguła $\exists I$ daje $\exists x\,\neg\varphi(x)$, a z przyjętą negacją prowadzi do $\bot$. Reguła $\mathrm{RAA}$ rozładowuje założenie $\neg\varphi[x:=y]$ i daje $\varphi[x:=y]$. Zmienna $y$ nie występuje wolno w żadnym z pozostałych otwartych założeń, więc $\forall I$ daje $\forall y\,\varphi[x:=y]$. Jest to dopuszczalne przemianowanie $\forall x\,\varphi(x)$: stosując $\forall E$ z termem $x$, a potem $\forall I$ dla $x$ (które nie jest wolne w otwartych założeniach), uzyskujemy $\forall x\,\varphi(x)$. Sprzeczność z pierwszym założeniem pozwala rozładować $\neg\exists x\,\neg\varphi(x)$ regułą $\mathrm{RAA}$, co daje $\exists x\,\neg\varphi(x)$.
+
+Rozładowując po kolei pozostałe założenia regułą $\to I$, otrzymujemy oba kierunki żądanej równoważności.
+\end{proof}
+
+\begin{lemat}[Zastąpienie nowej stałej świeżą zmienną]\label{lem:henkin-constant-to-variable}
+Niech $c$ będzie nowym symbolem stałej, niewystępującym w języku zdań zbioru $S$. Załóżmy, że w języku rozszerzonym istnieje skończona dedukcja z $S$ zdania $\theta(c)$. Wówczas dla zmiennej $y$, wybranej jako nieobecna w całej tej dedukcji, można skonstruować dedukcję z $S$ formuły $\theta(y)$ otrzymanej przez zamianę wystąpień $c$ na $y$.
+\end{lemat}
+\begin{proof}
+Wybieramy $y$ niewystępującą nigdzie w skończonym drzewie dowodu, także jako zmienna związana i jako parametr którejś reguły kwantyfikatora. Jest to możliwe, bo zmiennych mamy nieskończenie wiele. W każdym termie i formule drzewa zamieniamy $c$ na $y$. Ponieważ żaden kwantyfikator nie wiąże $y$, nie dochodzi do przechwycenia zmiennej. Kroki dla spójników i równości pozostają przykładami tych samych reguł. W przypadku $\forall I$ uogólniana zmienna nie jest $y$, a zamiana $c$ na $y$ nie dodaje jej wystąpień do otwartych założeń, więc warunek uboczny pozostaje spełniony. W przypadku $\exists E$ zmienna świeża użyta w oryginalnym kroku różni się od $y$, więc również nie traci świeżości po tej zamianie. To uzasadnia indukcyjnie każdy węzeł nowego drzewa. Ponieważ żadne zdanie z $S$ nie zawierało $c$, wszystkie nierozładowane założenia nadal są zdaniami z $S$.
+\end{proof}
+
+\section{Świadkowie Henkina: od istnienia do nazwy}
+Zdanie $\exists x\,\varphi(x)$ mówi, że istnieje pewien element, ale nie musi podawać termu, który go nazywa. Chcemy dodać symbol stałej $c_{\varphi}$ wraz z warunkiem: „jeśli taki element istnieje, to $c_{\varphi}$ jest jednym z nich”. To nie oznacza, że sami wybieramy element już istniejącego modelu --- model dopiero zbudujemy.
+
+\begin{definicja}[Aksjomat świadka]\label{def:henkin-witness-axiom}
+Niech $\exists x\,\varphi(x)$ będzie \emph{zdaniem} w danym języku, przy czym jedyną ewentualną wolną zmienną w $\varphi$ jest $x$. Dodajemy nową stałą $c_{\varphi}$ i zdanie
+\[
+H_{\varphi}:\qquad (\exists x\,\varphi(x))\to\varphi(c_{\varphi}).
+\]
+Nazywamy je \emph{aksjomatem świadka Henkina}. Różnym zdaniom egzystencjalnym przypisujemy różne nowe symbole stałych.
+\end{definicja}
+
+\begin{lemat}[Dodanie jednego świadka zachowuje niesprzeczność]\label{lem:henkin-one-witness}
+Jeśli $S$ jest niesprzecznym zbiorem zdań języka $\mathcal L$, $\exists x\,\varphi(x)$ zdaniem tego języka i $c$ nowym symbolem stałej, to $S\cup\{(\exists x\,\varphi(x))\to\varphi(c)\}$ jest niesprzeczny w języku $\mathcal L\cup\{c\}$.
+\end{lemat}
+\begin{proof}
+Niech $A:=\exists x\,\varphi(x)$ i $B:=\varphi[x:=c]$. Załóżmy przeciwnie, że z $S\cup\{A\to B\}$ można wyprowadzić $\bot$ w języku rozszerzonym. Reguła $\neg I$ daje wtedy dowód $S\vdash_{\mathrm{ND}}\neg(A\to B)$ w tym języku. Wybierzmy zmienną $y$ nieobecną w całym otrzymanym drzewie oraz w napisie $\varphi$. Lemat~\ref{lem:henkin-constant-to-variable} daje w języku wyjściowym $\mathcal L$ dowód
+\[
+S\vdash_{\mathrm{ND}}\neg\bigl(A\to\varphi[x:=y]\bigr).
+\]
+Pokażemy już wyłącznie regułami dedukcji naturalnej, że z $S$ wynika sprzeczność.
+
+Najpierw przyjmijmy tymczasowo $\neg A$. Z dodatkowego założenia $A$ otrzymujemy $\bot$ przez $\neg E$, stąd $\varphi[x:=y]$ przez $\bot E$; rozładowując $A$ przez $\to I$, dostajemy $A\to\varphi[x:=y]$. Przeczy to wyprowadzonej negacji implikacji, więc $\mathrm{RAA}$ rozładowuje $\neg A$ i daje $S\vdash_{\mathrm{ND}}A$.
+
+Następnie przyjmijmy tymczasowo $\varphi[x:=y]$. Z pomocniczego założenia $A$ przez $\to I$ otrzymujemy $A\to\varphi[x:=y]$, znowu sprzeczne z jego negacją. Reguła $\neg I$ rozładowuje $\varphi[x:=y]$ i daje $S\vdash_{\mathrm{ND}}\neg\varphi[x:=y]$. Ponieważ $y$ nie występuje wolno w żadnym zdaniu z $S$, reguła $\forall I$ daje $S\vdash_{\mathrm{ND}}\forall y\,\neg\varphi[x:=y]$.
+
+Wybieramy nową zmienną $z$ nieobecną w $\varphi$ ani w otwartych założeniach. W poddedukcji z tymczasowego $\varphi[x:=z]$ eliminacja $\forall E$ daje $\neg\varphi[x:=z]$, więc $\neg E$ daje $\bot$. Wniosek i pozostałe otwarte założenia są niezależne od $z$, dlatego $\exists E$, zastosowane do $A$, rozładowuje założenie świadka i daje $S\vdash_{\mathrm{ND}}\bot$ w pierwotnym języku $\mathcal L$. Jest to sprzeczne z niesprzecznością $S$.
+\end{proof}
+
+\begin{lemat}[Jednoczesne dodanie świadków dla jednego języka]\label{lem:henkin-all-witnesses}
+Niech $S$ będzie niesprzecznym zbiorem zdań języka $\mathcal L$. Dla \emph{każdego} egzystencjalnego zdania $\exists x\,\varphi(x)$ tego języka wprowadźmy różną stałą $c_{\varphi}$ spoza $\mathcal L$ i aksjomat $H_{\varphi}$ z Definicji~\ref{def:henkin-witness-axiom}. Wtedy zbiór $S$ powiększony o wszystkie te aksjomaty jest niesprzeczny.
+\end{lemat}
+\begin{proof}
+Gdyby rozszerzony zbiór był sprzeczny, Lemat~\ref{lem:henkin-finite-contradiction} pozwoliłby wskazać skończoną listę użytych nowych aksjomatów $H_{\varphi_1},\ldots,H_{\varphi_m}$. Dodajmy je po jednym. W chwili dodawania $H_{\varphi_k}$ symbol $c_{\varphi_k}$ nie występuje ani w $S$, ani w poprzednich aksjomatach, ponieważ wszystkie formuły $\varphi_j$ były napisane w \emph{starym} języku i symbole $c_{\varphi_j}$ są parami różne. Lemat~\ref{lem:henkin-one-witness} mówi zatem, że każdy krok zachowuje niesprzeczność. Po $m$ krokach wciąż mamy zbiór niesprzeczny, co przeczy założeniu o istniejącym dowodzie $\bot$.
+\end{proof}
+
+
+\begin{przyklad}[Świadek nie jest wcześniej wybranym elementem]\label{ex:henkin-witness-47}
+Rozważmy język z jednoargumentowym symbolem relacyjnym $P$ i teorię
+$S=\{\exists x\,P(x)\}$. Dołączamy nową stałą $c$ i zdanie
+$H=(\exists x\,P(x))\to P(c)$. W każdej strukturze spełniającej
+$S\cup\{H\}$ zachodzi $P(c)$, ponieważ przesłanka implikacji jest
+prawdziwa. Nie znaczy to jednak, że $S$ już przed rozszerzeniem
+wskazywała konkretny element: w strukturze o uniwersum $\{a,b\}$
+i $P^{\mathfrak A}=\{a,b\}$ możemy interpretować $c$ jako $a$ albo
+jako $b$. Obie interpretacje spełniają $H$.
+Jeżeli natomiast $P^{\mathfrak B}=\varnothing$, to $H$ jest prawdziwe
+niezależnie od interpretacji $c$, gdyż jego poprzednik jest fałszywy.
+W tym drugim przypadku sam aksjomat świadka nie wymusza istnienia
+elementu o własności $P$.
+\end{przyklad}
+
+\section{Dlaczego potrzebujemy wielu etapów?}\label{sec:henkin-stages}
+W aksjomatach dodanych na pierwszym etapie pojawiają się nowe stałe, a przy ich użyciu można zbudować \emph{nowe} zdania egzystencjalne. One też potrzebują świadków. Dlatego jednorazowe dołączenie nazw nie wystarczy.
+
+\begin{definicja}[Łańcuch rozszerzeń Henkina]\label{def:henkin-chain}
+Dla dowolnego języka $\mathcal L$ i niesprzecznego zbioru jego zdań $T$ wykonujemy następującą konstrukcję:
+\begin{enumerate}[label=(\roman*)]
+\item Wprowadzamy jeden nowy symbol stałej $d$ i kładziemy $\mathcal L_0=\mathcal L\cup\{d\}$, $T_0=T$.
+\item Znając $\mathcal L_n$ i $T_n$, dla każdego zdania egzystencjalnego języka $\mathcal L_n$ dodajemy osobną świeżą stałą i odpowiadający jej aksjomat świadka. Otrzymujemy język $\mathcal L_{n+1}$ i zbiór zdań $T_{n+1}$.
+\item Definiujemy $\mathcal L_{\infty}=\bigcup_{n\in\N}\mathcal L_n$ oraz $T_{\infty}=\bigcup_{n\in\N}T_n$.
+\end{enumerate}
+Każdy skończony napis języka $\mathcal L_{\infty}$ korzysta tylko ze skończenie wielu symboli, zatem należy do pewnego $\mathcal L_n$.
+\end{definicja}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  stage/.style={draw,rounded corners=2pt,inner xsep=9pt,inner ysep=5pt},
+  >=Stealth,node distance=13mm
+]
+\node[stage] (l0) {$({\mathcal L}_0,T_0)$};
+\node[stage,right=27mm of l0] (l1) {$({\mathcal L}_1,T_1)$};
+\node[stage,right=27mm of l1] (l2) {$({\mathcal L}_2,T_2)$};
+\node[right=12mm of l2] (dots) {$\cdots$};
+\draw[->] (l0) -- node[above=2mm,font=\scriptsize]{świadkowie} (l1);
+\draw[->] (l1) -- node[above=2mm,font=\scriptsize]{nowe świadki} (l2);
+\draw[->,dotted] (l2) -- (dots);
+\node[below=11mm of l1,font=\small] {$\mathcal L_{\infty}=\bigcup_{n\in\N}\mathcal L_n,\qquad
+T_{\infty}=\bigcup_{n\in\N}T_n$};
+\end{tikzpicture}
+\caption{Schemat kolejnych rozszerzeń języka i teorii; strzałka kropkowana oznacza przejście do sumy wszystkich etapów.}
+\label{fig:henkin-chain}
+\end{figure}
+
+\begin{twierdzenie}[Niesprzeczność i własność świadków]\label{thm:henkin-chain-properties}
+Dla powyższej konstrukcji zachodzą dwa fakty:
+\begin{enumerate}[label=(\roman*)]
+\item $T_{\infty}$ jest syntaktycznie niesprzeczny.
+\item Dla każdego egzystencjalnego zdania $\exists x\,\varphi(x)$ języka $\mathcal L_{\infty}$ istnieje term domknięty $c$ taki, że $T_{\infty}$ zawiera zdanie $(\exists x\,\varphi(x))\to\varphi(c)$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Zbiór $T_0$ jest niesprzeczny: samo dołączenie nieużywanej stałej $d$ nie wprowadza nowego dowodu sprzeczności, bo z takiego skończonego dowodu można byłoby zastąpić $d$ świeżą zmienną jak w Lemacie~\ref{lem:henkin-constant-to-variable}. Indukcyjnie, jeśli $T_n$ jest niesprzeczny, to Lemat~\ref{lem:henkin-all-witnesses} zapewnia niesprzeczność $T_{n+1}$. Przypuśćmy teraz, że z $T_{\infty}$ da się wyprowadzić $\bot$. Dowód jest skończony, więc używa tylko skończenie wielu zdań $T_{\infty}$; wszystkie te zdania należą do jednego $T_n$, co dawałoby sprzeczność $T_n$. To dowodzi (i).
+
+Niech $\exists x\,\varphi(x)$ będzie zdaniem w $\mathcal L_{\infty}$. Ma skończoną długość, zatem wszystkie użyte w nim symbole należą już do pewnego $\mathcal L_n$. Na etapie $n+1$ dodaliśmy dla niego nową stałą $c$ i aksjomat świadka. Ten aksjomat należy do $T_{n+1}$, a więc także do $T_{\infty}$. Otrzymujemy (ii).
+\end{proof}
+
+\begin{przyklad}[Dwa etapy nadawania nazw świadkom]
+Rozważmy język z jednoargumentowymi symbolami relacyjnymi $P,Q$ oraz
+$T=\{\exists x\,P(x),\ \forall x\,(P(x)\to Q(x))\}$.
+Teoria jest niesprzeczna: w strukturze o uniwersum $\{a\}$ interpretujemy oba predykaty jako $\{a\}$.
+Na pierwszym etapie możemy dołączyć stałą $c_P$ i zdanie
+$(\exists x\,P(x))\to P(c_P)$. Z $T$ i tego aksjomatu przez $\to E$
+otrzymujemy $P(c_P)$, a z $\forall x\,(P(x)\to Q(x))$ przez $\forall E$ otrzymujemy
+$P(c_P)\to Q(c_P)$, więc także $Q(c_P)$.
+W skonstruowanym później modelu termowym klasa $[c_P]$ spełnia oba predykaty.
+Nie wybieraliśmy wcześniej konkretnego elementu: stała nazywa świadka dopiero w konstruowanym modelu.
+
+Po pierwszym etapie w języku występuje również zdanie
+$\exists x\,(x=c_P)$, którego nie było w języku wyjściowym.
+Jest ono prawdziwe w każdej strukturze z interpretacją $c_P$, lecz w opisanej pełnej konstrukcji Henkina otrzymuje własny aksjomat świadka w następnym etapie.
+To pokazuje, dlaczego jeden etap nie zapewnia własności świadków dla wszystkich zdań języka rozszerzonego.
+\end{przyklad}
+
+\section{Uzupełnienie do teorii maksymalnej}\label{sec:henkin-lindenbaum}
+Samo $T_{\infty}$ może nie rozstrzygać każdego zdania. Chcemy powiększyć je do niesprzecznego zbioru, w którym dla każdego zdania $\sigma$ występuje dokładnie jedna z formuł $\sigma$, $\neg\sigma$. Ten krok nie jest dodatkową interpretacją prawdy: to własność syntaktycznego zbioru formuł.
+
+\begin{definicja}[Maksymalny zbiór niesprzeczny]\label{def:henkin-max-consistent}
+Zbiór zdań $\Delta$ danego języka jest \emph{maksymalnie niesprzeczny}, gdy jest niesprzeczny i każde jego właściwe rozszerzenie przez choć jedno nowe zdanie jest sprzeczne.
+\end{definicja}
+
+\begin{lemat}[Lemat Lindenbauma dla języka przeliczalnego]\label{lem:henkin-lindenbaum-countable}
+Niech język $\mathcal L$ ma przeliczalnie wiele symboli, a $S$ będzie niesprzecznym zbiorem jego zdań. Wtedy istnieje maksymalnie niesprzeczny zbiór zdań $\Delta\supseteq S$.
+\end{lemat}
+\begin{proof}
+Wszystkich skończonych napisów nad przeliczalnym alfabetem jest przeliczalnie wiele: dla każdej długości zbiór napisów jest przeliczalny, a łączymy przeliczalnie wiele długości. W szczególności można wypisać wszystkie zdania języka jako $\sigma_0,\sigma_1,\ldots$ (powtórzenia są nieszkodliwe). Kładziemy $S_0=S$. Na etapie $n$ badamy $\sigma_n$: jeśli $S_n\cup\{\sigma_n\}$ jest niesprzeczny, ustalamy $S_{n+1}=S_n\cup\{\sigma_n\}$; w przeciwnym wypadku ustalamy $S_{n+1}=S_n\cup\{\neg\sigma_n\}$. W tym drugim przypadku Lemat~\ref{lem:henkin-extension-neg} gwarantuje niesprzeczność wybranej gałęzi. Zbiór $\Delta=\bigcup_n S_n$ jest niesprzeczny, ponieważ każdy ewentualny skończony dowód sprzeczności byłby zawarty już w pewnym $S_n$. Dla każdego zdania $\sigma_n$ zbiór $\Delta$ zawiera $\sigma_n$ albo $\neg\sigma_n$, więc dołączenie zdania spoza $\Delta$ wprowadziłoby parę sprzecznych zdań. To jest żądana maksymalność.
+\end{proof}
+
+\begin{uwaga}[Języki o dowolnej liczbie symboli i aksjomat wyboru]\label{rem:henkin-zorn}
+Dla dowolnego (także nieprzeliczalnego) języka stosujemy \emph{lemat Kuratowskiego--Zorna}: jeżeli częściowo uporządkowany zbiór ma własność, że każdy jego łańcuch ma ograniczenie górne w tym zbiorze, to istnieje w nim element maksymalny. Jest to konsekwencja aksjomatu wyboru, którego pełną teorię rozwiniemy w części zbiorowej skryptu. Tu zastosowanie jest konkretne: porządkujemy przez zawieranie wszystkie niesprzeczne zbiory zdań zawierające $T_{\infty}$. Rozważmy najpierw niepusty łańcuch $\mathcal C$. Jego suma $U=\bigcup\mathcal C$ zawiera $T_{\infty}$. Gdyby $U\vdash_{\mathrm{ND}}\bot$, skończony dowód używałby skończenie wielu zdań $\sigma_1,\ldots,\sigma_r$; każde z nich należy do któregoś $S_i\in\mathcal C$. Skończenie wiele elementów łańcucha ma największy element względem zawierania, zatem jeden zbiór z $\mathcal C$ zawiera wszystkie $\sigma_i$ i byłby sprzeczny. Stąd $U$ jest niesprzecznym ograniczeniem górnym. Dla pustego łańcucha ograniczeniem górnym jest $T_{\infty}$, nie zaś suma pustej rodziny. Lemat Kuratowskiego--Zorna daje więc maksymalny element $\Delta$. W ten sposób dalsza konstrukcja działa dla \emph{każdego} języka. W przypadku przeliczalnym nie trzeba korzystać z tego lematu, ponieważ poprzedni dowód podał bezpośredni przepis budowania $\Delta$. Jeżeli początkowy język był przeliczalny, każdy $\mathcal L_n$ i ich suma $\mathcal L_{\infty}$ pozostają przeliczalne, więc możemy zastosować właśnie ten przepis.
+\end{uwaga}
+
+\begin{lemat}[Własności maksymalnej teorii]\label{lem:henkin-max-properties}
+Niech $\Delta$ będzie maksymalnie niesprzecznym zbiorem zdań. Wtedy dla każdego zdania $\sigma$:
+\begin{enumerate}[label=(\roman*)]
+\item dokładnie jedno z $\sigma$, $\neg\sigma$ należy do $\Delta$;
+\item jeśli $\Delta\vdash_{\mathrm{ND}}\sigma$, to $\sigma\in\Delta$;
+\item jeśli $\sigma\to\tau\in\Delta$ i $\sigma\in\Delta$, to $\tau\in\Delta$.
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+Jeśli $\sigma\notin\Delta$, to na mocy maksymalności $\Delta\cup\{\sigma\}$ jest sprzeczny. Z Lematu~\ref{lem:henkin-extension-neg} wynika $\Delta\vdash\neg\sigma$. Dołączenie zdania, które ma już dowód z $\Delta$, nie może stworzyć nowej sprzeczności: w hipotetycznym dowodzie $\bot$ każde użycie nowej przesłanki zastąpilibyśmy jej dowodem z $\Delta$. Z maksymalności wynika więc $\neg\sigma\in\Delta$. Gdyby należały obie formuły, przez $\neg E$ mielibyśmy $\Delta\vdash\bot$, sprzecznie z założeniem. To dowodzi (i). To samo rozumowanie o zastępowaniu nowej przesłanki jej dowodem dowodzi (ii). W (iii) reguła $\to E$ daje $\Delta\vdash\tau$, po czym używamy (ii).
+\end{proof}
+
+\section{Model termowy i równość}\label{sec:henkin-term-model}
+Niech $\Delta\supseteq T_{\infty}$ będzie maksymalnie niesprzecznym zbiorem zdań języka $\mathcal L_{\infty}$. Każdy obiekt modelu będziemy reprezentować przez \emph{term domknięty} tego języka. Musimy jednak utożsamiać termy, których równość jest dowodliwa z $\Delta$.
+
+\begin{definicja}[Równoważność termów]\label{def:henkin-term-equivalence}
+Dla termów domkniętych $t,u$ języka $\mathcal L_{\infty}$ definiujemy
+\[
+t\sim_{\Delta}u\quad\Longleftrightarrow\quad\Delta\vdash_{\mathrm{ND}}t=u.
+\]
+Przez $[t]$ oznaczamy klasę równoważności termu $t$ względem tej relacji.
+\end{definicja}
+
+\begin{lemat}[Równość termów jest zgodna z operacjami]\label{lem:henkin-congruence}
+Relacja $\sim_{\Delta}$ jest równoważnością. Jeżeli $t_i\sim_{\Delta}u_i$ dla $i=1,\ldots,n$, to dla każdego $n$-argumentowego symbolu funkcyjnego $f$ zachodzi
+$f(t_1,\ldots,t_n)\sim_{\Delta}f(u_1,\ldots,u_n)$.
+Dla symbolu relacyjnego $R$ mamy równoważność
+\[
+R(t_1,\ldots,t_n)\in\Delta
+\quad\Longleftrightarrow\quad
+R(u_1,\ldots,u_n)\in\Delta.
+\]
+\end{lemat}
+\begin{proof}
+Zwrotność wynika z reguły $=I$, a symetrię wyprowadziliśmy już z $=E$ w rozdziale~\ref{ch:natural-deduction}. Dla przechodniości niech $t,u,v$ będą termami domkniętymi i $z$ zmienną, która nie występuje w tych termach. Regułę $=E$ stosujemy do $u=v$ oraz $\theta[z:=u]$, gdzie $\theta(z)$ ma postać $t=z$. Z przesłanek $t=u$ i $u=v$ otrzymujemy $\theta[z:=v]$, czyli $t=v$. Zatem $\sim_{\Delta}$ jest równoważnością.
+
+Niech $F_i:=f(u_1,\ldots,u_i,t_{i+1},\ldots,t_n)$ dla $i=0,\ldots,n$. Dla każdego $i=1,\ldots,n$ dobieramy zmienną $z$ nieobecną w żadnym z termów domkniętych i rozważamy formułę
+\[
+\theta_i(z):\quad F_{i-1}=f(u_1,\ldots,u_{i-1},z,t_{i+1},\ldots,t_n).
+\]
+Refleksyjność daje równość $F_{i-1}=F_{i-1}$, która jest dokładnie formułą $\theta_i[z:=t_i]$. Z $t_i=u_i$ i reguły $=E$ otrzymujemy $\theta_i[z:=u_i]$, czyli $F_{i-1}=F_i$. Składając te równości przez przechodniość, dostajemy $F_0=F_n$, a więc zgodność symbolu funkcyjnego z $\sim_{\Delta}$. Dla symbolu relacyjnego bierzemy w $i$-tym kroku $\rho_i(z):=R(u_1,\ldots,u_{i-1},z,t_{i+1},\ldots,t_n)$. Z $R(t_1,\ldots,t_n)$ i kolejnych $t_i=u_i$ reguła $=E$ daje $R(u_1,\ldots,u_n)$. Zamkniętość $\Delta$ na dowody wynika z Lematu~\ref{lem:henkin-max-properties}; w przeciwnym kierunku stosujemy symetrię każdej równości i wykonujemy analogiczne kroki w odwrotnej kolejności.
+\end{proof}
+
+\begin{definicja}[Konstrukcja modelu termowego]\label{def:henkin-term-model}
+Niech $\operatorname{CTerm}(\mathcal L_{\infty})$ oznacza zbiór wszystkich termów domkniętych języka $\mathcal L_{\infty}$. Definiujemy strukturę $\mathfrak M$ języka $\mathcal L_{\infty}$ następująco:
+\begin{enumerate}[label=(\roman*)]
+\item jej uniwersum jest $M=\operatorname{CTerm}(\mathcal L_{\infty})/{\sim_{\Delta}}$;
+\item dla symbolu stałej $c$ kładziemy $c^{\mathfrak M}=[c]$;
+\item dla symbolu funkcyjnego $f$ arności $n$ kładziemy
+\[
+f^{\mathfrak M}([t_1],\ldots,[t_n])=[f(t_1,\ldots,t_n)];
+\]
+\item dla symbolu relacyjnego $R$ arności $n$ ustalamy
+\[
+([t_1],\ldots,[t_n])\in R^{\mathfrak M}
+\quad\Longleftrightarrow\quad R(t_1,\ldots,t_n)\in\Delta.
+\]
+\end{enumerate}
+\end{definicja}
+
+\begin{uwaga}[Dlaczego definicja ma sens?]\label{rem:henkin-well-defined}
+Zbiór $M$ jest niepusty, ponieważ w $\mathcal L_0$ umieściliśmy stałą $d$ i klasa $[d]$ jest jego elementem. Jeżeli przedstawimy tę samą klasę przez inny term, to Lemat~\ref{lem:henkin-congruence} gwarantuje identyczny wynik funkcji i identyczną ocenę prawdziwości atomu relacyjnego. Bez tego sprawdzenia wzory nie definiowałyby funkcji i relacji na \emph{klasach} termów.
+\end{uwaga}
+
+\begin{przyklad}[Dlaczego trzeba ilorazować termy]
+Załóżmy, że język zawiera stałe $a,b$, jednoargumentowy symbol funkcyjny $f$
+oraz jednoargumentowy symbol relacyjny $P$, a $a=b\in\Delta$.
+Reguła $=E$ daje $f(a)=f(b)$ oraz oba kierunki
+$P(a)\leftrightarrow P(b)$. Dlatego $[a]=[b]$ i $[f(a)]=[f(b)]$.
+Gdyby uniwersum składało się z samych napisów $a,b,f(a),f(b)$,
+a równość była identycznością napisów, zdanie $a=b$ byłoby fałszywe
+mimo przynależności do $\Delta$.
+Iloraz przez $\sim_{\Delta}$ usuwa tę przeszkodę.
+\end{przyklad}
+
+\section{Lemat o prawdzie: najważniejszy krok}\label{sec:henkin-truth-lemma}
+W całej tej sekcji zapis $\mathfrak M\models\varphi[s]$ oznacza,
+że formuła $\varphi$ jest spełniona w strukturze $\mathfrak M$
+przy wartościowaniu $s$, zgodnie z Definicją~\ref{def:sem-satisfaction}.
+Zapis $\varphi[\bar x:=\bar t]$ jest skrótem \emph{jednoczesnego}
+podstawienia termów $\bar t$ za odpowiednie \emph{wolne}
+wystąpienia zmiennych $\bar x$. Tutaj podstawiane termy są domknięte,
+więc nie mogą ulec związaniu przez kwantyfikator.
+
+\begin{przyklad}[Jak czytać lemat o prawdzie]
+Jeżeli $P$ jest jednoargumentowym symbolem relacyjnym,
+$a$ jest nową stałą, a $s(x)=[a]$, to równoważność
+$\mathfrak M\models P(x)[s]\iff P(a)\in\Delta$
+ma bardzo konkretny sens. Lewa strona mówi:
+„element modelu reprezentowany przez term $a$ należy do
+interpretacji relacji $P$”. Prawa mówi: „zdanie $P(a)$
+znajduje się w maksymalnej teorii $\Delta$”.
+Lemat o prawdzie orzeka, że obie metody odczytania zgadzają się.
+\end{przyklad}
+Uzasadnimy, że skonstruowany model interpretuje formuły dokładnie tak, jak przewiduje teoria $\Delta$.
+
+\begin{lemat}[Wartości termów w modelu termowym]\label{lem:henkin-term-values}
+Niech $t$ będzie termem ze zmiennymi wolnymi wśród $x_1,\ldots,x_k$, a $s$ wartościowaniem w $\mathfrak M$ takim, że $s(x_i)=[u_i]$ dla termów domkniętych $u_i$. Wtedy
+\[
+t^{\mathfrak M}[s]=[t[x_1:=u_1,\ldots,x_k:=u_k]].
+\]
+\end{lemat}
+\begin{proof}
+Indukcja po budowie termu. Dla zmiennej $x_i$ prawa strona wynosi $[u_i]=s(x_i)$; dla stałej $c$ obie strony są równe $[c]$. Gdy $t=f(t_1,\ldots,t_n)$, stosujemy założenie indukcyjne do wszystkich $t_i$, a następnie definicję $f^{\mathfrak M}$. Otrzymujemy dokładnie klasę termu powstałego przez wskazane podstawienie. Wszystkie podstawiane termy są domknięte, więc nie występuje problem przechwycenia zmiennych.
+\end{proof}
+
+\begin{twierdzenie}[Lemat o prawdzie]\label{thm:henkin-truth}
+Niech $\varphi$ będzie formułą języka $\mathcal L_{\infty}$ o zmiennych wolnych wśród $x_1,\ldots,x_k$. Niech $u_1,\ldots,u_k$ będą termami domkniętymi i $s$ wartościowaniem w $\mathfrak M$ spełniającym $s(x_i)=[u_i]$. Wtedy
+\[
+\mathfrak M\models\varphi[s]
+\quad\Longleftrightarrow\quad
+\varphi[x_1:=u_1,\ldots,x_k:=u_k]\in\Delta.
+\]
+W szczególności dla każdego zdania $\sigma$ zachodzi $\mathfrak M\models\sigma$ wtedy i tylko wtedy, gdy $\sigma\in\Delta$.
+\end{twierdzenie}
+\begin{proof}
+Dowodzimy tezy indukcyjnie po budowie $\varphi$. Dla atomu $t=v$ Lemat~\ref{lem:henkin-term-values} pokazuje, że wartości termów są równe wtedy i tylko wtedy, gdy ich podstawione wersje należą do tej samej klasy, czyli gdy $\Delta\vdash t[\bar u]=v[\bar u]$. Z zamkniętości $\Delta$ na dowody dostajemy równoważność z przynależnością atomu $t[\bar u]=v[\bar u]$ do $\Delta$. Dla atomu $R(t_1,\ldots,t_n)$ wynik jest bezpośrednią konsekwencją definicji $R^{\mathfrak M}$.
+
+Rozważmy negację $\neg\psi$. Z hipotezy indukcyjnej
+$\mathfrak M\models\psi[s]$ dokładnie wtedy, gdy
+$\psi[\bar u]\in\Delta$. Z Lematu~\ref{lem:henkin-max-properties}
+dokładnie jedna z formuł $\psi[\bar u]$ i
+$\neg\psi[\bar u]$ należy do $\Delta$.
+Zatem semantyczna negacja odpowiada syntaktycznej negacji.
+
+Sprawdźmy wszystkie spójniki binarne, aby nie ukrywać
+żadnego kroku za słowem „analogicznie”. Dla koniunkcji
+$\psi\land\theta$ przynależność do $\Delta$ wymusza
+przynależność obu składników przez $\land E_1$ i $\land E_2$;
+na odwrót, dwa składniki z $\Delta$ dają koniunkcję przez
+$\land I$. Dla alternatywy: jeśli w $\Delta$ jest jeden
+składnik, to jest także ich alternatywa przez $\lor I$.
+Jeżeli zaś alternatywa należy do $\Delta$, lecz żaden składnik
+nie należy, to z maksymalności $\Delta$ obie negacje
+$\neg\psi$ i $\neg\theta$ należą do $\Delta$;
+reguła $\lor E$, stosowana do obu gałęzi,
+prowadziłaby wtedy do sprzeczności. To niemożliwe.
+Zatem alternatywa należy do $\Delta$ dokładnie wtedy,
+gdy należy co najmniej jeden z jej członów.
+
+Dla implikacji $\psi\to\theta$ rozpatrzmy dwa przypadki.
+Jeżeli $\psi\notin\Delta$, to $\neg\psi\in\Delta$,
+a z $\neg\psi$ możemy formalnie wyprowadzić
+$\psi\to\theta$: tymczasowe założenie $\psi$
+daje sprzeczność z $\neg\psi$,
+ze sprzeczności otrzymujemy $\theta$ i rozładowujemy
+$\psi$. Jeśli $\theta\in\Delta$, to również
+otrzymujemy $\psi\to\theta$, wprowadzając implikację
+z niewykorzystanym założeniem $\psi$.
+Odwrotnie, jeśli $\psi\to\theta\in\Delta$
+i $\psi\in\Delta$, reguła $\to E$ daje
+$\theta\in\Delta$. Stąd implikacja należy do $\Delta$
+dokładnie wtedy, gdy poprzednik nie należy do $\Delta$
+lub należy do niego następnik.
+Wreszcie $\psi\leftrightarrow\theta$ należy do $\Delta$
+dokładnie wtedy, gdy należą do niego obie implikacje
+$\psi\to\theta$ i $\theta\to\psi$, co wynika z
+reguł $\leftrightarrow I$ i $\leftrightarrow E$.
+W każdym przypadku odtworzyliśmy dokładnie klasyczną
+tabelę prawdziwości odpowiedniego spójnika;
+hipoteza indukcyjna kończy więc dowód kroku dla formuł złożonych.
+
+Niech teraz $\varphi$ ma postać $\exists x\,\psi(x,\bar z)$, gdzie $\bar z$ symbolizuje pozostałe zmienne wolne. Po zastąpieniu $\bar z$ termami domkniętymi $\bar u$ otrzymujemy zdanie $\exists x\,\psi(x,\bar u)$. Jeśli $\mathfrak M\models(\exists x\,\psi(x,\bar z))[s]$, istnieje $a\in M$ spełniający formułę $\psi$ przy zmianie wartościowania $x\mapsto a$. Każdy $a$ ma postać $[t]$ dla pewnego termu domkniętego $t$. Założenie indukcyjne daje $\psi(t,\bar u)\in\Delta$. Reguła $\exists I$ i zamkniętość $\Delta$ na dowody dają $\exists x\,\psi(x,\bar u)\in\Delta$. Odwrotnie, jeśli to zdanie egzystencjalne należy do $\Delta$, własność świadków z Twierdzenia~\ref{thm:henkin-chain-properties} dostarcza stałej $c$ i zdania $(\exists x\,\psi(x,\bar u))\to\psi(c,\bar u)$ w $\Delta$. Reguła $\to E$ daje $\psi(c,\bar u)\in\Delta$. Z hipotezy indukcyjnej $\mathfrak M\models\psi[s[x\mapsto[c]]]$, skąd $\mathfrak M\models(\exists x\,\psi)[s]$.
+
+Rozpatrzmy teraz formułę $\forall x\,\psi(x,\bar z)$.
+Jeśli $\forall x\,\psi(x,\bar u)\in\Delta$, to dla
+każdego termu domkniętego $t$ reguła $\forall E$
+daje $\psi(t,\bar u)\in\Delta$.
+Z hipotezy indukcyjnej $\mathfrak M\models\psi[s[x\mapsto[t]]]$.
+Ponieważ \emph{każdy} element $M$ jest klasą jakiegoś
+termu domkniętego, otrzymujemy
+$\mathfrak M\models(\forall x\,\psi(x,\bar z))[s]$.
+
+Odwrotnie, przypuśćmy, że formuła uniwersalna jest
+spełniona w modelu, ale zdanie
+$\forall x\,\psi(x,\bar u)$ \emph{nie} należy do $\Delta$.
+Maksymalność $\Delta$ daje
+$\neg\forall x\,\psi(x,\bar u)\in\Delta$.
+Na mocy Lematu~\ref{lem:henkin-quant-duality}
+w $\Delta$ należy wtedy również
+$\exists x\,\neg\psi(x,\bar u)$.
+Własność świadków pozwala wybrać nową stałą $c$
+i otrzymać $\neg\psi(c,\bar u)\in\Delta$.
+Z już sprawdzonego przypadku negacji oraz hipotezy
+indukcyjnej wynika
+$\mathfrak M\not\models\psi[s[x\mapsto[c]]]$.
+To przeczy założeniu
+$\mathfrak M\models(\forall x\,\psi)[s]$.
+Zatem zdanie uniwersalne musi należeć do $\Delta$.
+Przypadki atomowe, wszystkie spójniki i oba kwantyfikatory
+zostały rozpatrzone; indukcja jest zakończona.
+\end{proof}
+
+\begin{proof}[Dowód Twierdzenia~\ref{thm:henkin-model-existence}]
+Z niesprzecznego $T$ otrzymaliśmy niesprzeczne $T_{\infty}$, następnie maksymalnie niesprzeczną teorię $\Delta\supseteq T_{\infty}$, a na końcu model termowy $\mathfrak M$. Dla każdego $\sigma\in T$ mamy $\sigma\in\Delta$. Z Lematu o prawdzie wynika $\mathfrak M\models\sigma$. Ponieważ $\sigma$ było dowolne, $\mathfrak M\models T$. Struktura języka rozszerzonego po zapomnieniu nowych stałych daje model w języku wyjściowym $\mathcal L$.
+\end{proof}
+
+\begin{przyklad}[Jak lemat o prawdzie działa dla formuły z kwantyfikatorem]
+Niech $R$ będzie jednoargumentowym symbolem relacyjnym.
+Rozważmy zdanie $\forall x\,R(x)$ w języku $\mathcal L_{\infty}$.
+Jeżeli należy do $\Delta$, to dla każdego termu domkniętego $t$
+również $R(t)\in\Delta$ przez $\forall E$ i zamkniętość $\Delta$ na dowody.
+Każdy element modelu jest klasą $[t]$, więc $\mathfrak M\models\forall x\,R(x)$.
+Jeżeli natomiast $\forall x\,R(x)\notin\Delta$, to
+$\neg\forall x\,R(x)\in\Delta$, a stąd
+$\exists x\,\neg R(x)\in\Delta$.
+Własność świadków dostarcza stałej $c$ z $\neg R(c)\in\Delta$;
+klasa $[c]$ obala zdanie uniwersalne w modelu.
+Oba kierunki są rozpatrzone oddzielnie, a fakt, że każdy element ma nazwę,
+wynika z konstrukcji uniwersum $M$.
+\end{przyklad}
+
+\section{Od istnienia modelu do pełności}\label{sec:henkin-completeness}
+\begin{twierdzenie}[Pełność dla zbiorów zdań]\label{thm:henkin-completeness-sentences}
+Niech $T$ będzie zbiorem zdań, a $\sigma$ zdaniem tego samego dowolnego języka pierwszego rzędu z równością. Jeśli $T\models\sigma$, to $T\vdash_{\mathrm{ND}}\sigma$.
+\end{twierdzenie}
+\begin{proof}
+Przypuśćmy, że $T\nvdash\sigma$. Wówczas $T\cup\{\neg\sigma\}$ jest niesprzeczny: gdyby był sprzeczny, reguła klasycznego dowodu nie wprost (RAA) pozwoliłaby rozładować $\neg\sigma$ i uzyskać $T\vdash\sigma$. Na mocy Twierdzenia~\ref{thm:henkin-model-existence} istnieje model $\mathfrak M$ zbioru $T\cup\{\neg\sigma\}$. Spełnia on każde zdanie z $T$, ale nie spełnia $\sigma$. To przeczy $T\models\sigma$. Zatem $T\vdash\sigma$.
+\end{proof}
+
+\begin{lemat}[Zamiana wolnych zmiennych na parametry]\label{lem:henkin-parameters}
+Niech $\Gamma$ będzie zbiorem formuł, a $\varphi$ formułą języka $\mathcal L$. Dla każdej zmiennej wolnej w którymś z tych napisów wprowadźmy osobną nową stałą $d_x$. Przez $\Gamma^d$ i $\varphi^d$ oznaczmy wyniki \emph{wyłącznie wolnych} wystąpień $x$ przez $d_x$. Wtedy
+\[
+\Gamma^d\vdash_{\mathrm{ND}}\varphi^d
+\quad\Longrightarrow\quad
+\Gamma\vdash_{\mathrm{ND}}\varphi.
+\]
+\end{lemat}
+\begin{proof}
+Niech $D$ będzie skończonym drzewem dowodu $\Gamma^d\vdash_{\mathrm{ND}}\varphi^d$ w języku rozszerzonym. Oznaczmy przez $C=\{d_{x_1},\ldots,d_{x_m}\}$ zbiór nowych stałych rzeczywiście występujących w $D$; jest on skończony. Wszystkie wykorzystane otwarte przesłanki należą do $\Gamma^d$, czyli są zdaniami, i w $D$ występuje jedynie skończenie wiele pomocniczych zmiennych.
+
+Najpierw uzasadnijmy dopuszczalność przemianowania zmiennych, na którą będziemy się powoływać. Z reguł $\forall E$, $\forall I$ można, przy świeżej zmiennej $z$, przeprowadzić dowody obu kierunków między $\forall x\,\alpha$ oraz $\forall z\,\alpha[x:=z]$: w jedną stronę instancjujemy pierwszy kwantyfikator przez $z$ i uogólniamy na $z$; w drugą stronę analogicznie podstawiamy $x$ i uogólniamy na $x$. Dla $\exists$ analogiczne dwa kierunki uzyskujemy, otwierając świadka regułą $\exists E$, a następnie stosując $\exists I$, po czym rozładowując świadka. W każdym z tych przekształceń zmienną nową wybieramy poza wszystkimi formułami i otwartymi założeniami danego fragmentu. Indukcja po budowie kontekstu formuły z użyciem pozostałych reguł pozwala uzyskać dowody obu kierunków dla dowolnej dopuszczalnej zmiany nazwy zmiennej związanej. Nie przyjmujemy więc przemianowania jako dodatkowej reguły bez uzasadnienia.
+
+W drzewie $D$ kolejno zmieniamy na nowe nazwy wszystkie zmienne związane i własne kroków $\forall I$ oraz $\exists E$, które mogłyby kolidować z $x_1,\ldots,x_m$. Przemianowanie zmiennej własnej w całej odpowiedniej poddedukcji jest poprawne, o ile nowa nazwa nie występuje w żadnym jej pozostałym otwartym założeniu, we wniosku $\exists E$ ani w przesłance głównej; można to zapewnić, wybierając nazwy spoza całego skończonego drzewa. Przy $\forall I$ nowa nazwa pozostaje niewolna w otwartych założeniach. Gdy nazwa występuje w podformule wiązanej innym kwantyfikatorem, stosujemy poprzednio uzasadnione przemianowanie zmiennej związanej. Po wykonaniu tych skończenie wielu operacji żaden kwantyfikator ani warunek świeżości nie koliduje z $x_i$.
+
+Zastępujemy teraz równocześnie w całym drzewie każde wystąpienie stałej $d_{x_i}$ zmienną $x_i$. Dla podstawień termów zachowujemy dopuszczalność, ponieważ żadna ze zmiennych $x_i$ nie zostaje przechwycona. W krokach $\forall I$ uogólniana zmienna nie jest żadną z $x_i$, a w $\exists E$ zmienna świadka nie jest żadną z nich; zatem nowe wolne wystąpienia $x_i$ nie naruszają warunków ubocznych. Reguły zdaniowe i reguły równości są zachowane po jednolitej zamianie w całych formułach i termach. Otrzymujemy poprawny dowód z przesłanek będących dopuszczalnymi przemianowaniami pierwotnych formuł z $\Gamma$, którego wniosek jest dopuszczalnym przemianowaniem $\varphi$. Wprowadzając w miejscach użycia przesłanek dowody odpowiednich kierunków równoważności z poprzedniego akapitu i postępując tak samo przy wniosku, dostajemy dosłownie dowód $\Gamma\vdash_{\mathrm{ND}}\varphi$.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Gödla o pełności logiki pierwszego rzędu]\label{thm:godel-completeness}
+Dla dowolnego języka pierwszego rzędu z równością, dowolnego zbioru formuł $\Gamma$ i dowolnej formuły $\varphi$ zachodzi
+\[
+\Gamma\models\varphi\quad\Longleftrightarrow\quad\Gamma\vdash_{\mathrm{ND}}\varphi.
+\]
+Z lewej strony $\models$ dotyczy wszystkich struktur \emph{i wartościowań}, zgodnie z Definicją~\ref{def:soundness-entailment-formulas}.
+\end{twierdzenie}
+\begin{proof}
+Implikacja od prawej do lewej jest Twierdzeniem o poprawności~\ref{thm:soundness}. Załóżmy teraz $\Gamma\models\varphi$. Dodajmy nowe stałe $d_x$ i utwórzmy zdania $\Gamma^d,\varphi^d$ z Lematu~\ref{lem:henkin-parameters}. W każdej strukturze rozszerzonego języka interpretacje $d_x$ wyznaczają wartościowanie zmiennych $x$. Dlatego spełnianie $\Gamma^d$ pociąga spełnianie $\varphi^d$; inaczej po przypisaniu każdej zmiennej $x$ wartości $d_x$ otrzymalibyśmy kontrprzykład dla $\Gamma\models\varphi$. Zatem $\Gamma^d\models\varphi^d$. Pełność dla zdań z Twierdzenia~\ref{thm:henkin-completeness-sentences} daje $\Gamma^d\vdash\varphi^d$. Lemat~\ref{lem:henkin-parameters} pozwala wrócić do języka wyjściowego: $\Gamma\vdash\varphi$.
+\end{proof}
+
+\begin{przyklad}[Wniosek z dwóch kwantyfikatorów]
+Nie wolno z samego $\exists x\,P(x)$ wywnioskować
+$\exists x\,Q(x)$: konieczna jest dodatkowa przesłanka,
+że każdy obiekt mający cechę $P$ ma również cechę $Q$.
+Wyjaśnimy osobno rolę obu założeń i użycie świeżej zmiennej.
+Rozważmy zbiór założeń\, $T=\{\forall x(P(x)\to Q(x)),\ \exists x P(x)\}$.\par\noindent\ignorespaces
+Zbiór $T$ semantycznie implikuje $\exists x Q(x)$. W dowolnej strukturze, w której oba założenia są prawdziwe, drugi warunek daje świadka $a$ z $P(a)$, pierwszy daje $P(a)\to Q(a)$, więc zachodzi $Q(a)$. Twierdzenie o pełności gwarantuje istnienie formalnego dowodu; możemy go też rozpisać wprost: z $\exists x P(x)$ bierzemy w poddedukcji świeże $P(y)$, z $\forall x(P(x)\to Q(x))$ otrzymujemy $P(y)\to Q(y)$, przez $\to E$ uzyskujemy $Q(y)$, przez $\exists I$ uzyskujemy $\exists x Q(x)$ i na końcu rozładowujemy $P(y)$ przez $\exists E$.
+\end{przyklad}
+
+\begin{uwaga}[Dlaczego nie jest to twierdzenie o niezupełności?]
+W pełności mówimy o wszystkich \emph{logicznych konsekwencjach} ustalonych przesłanek. Nie twierdzimy, że każda teoria $T$ rozstrzyga każde zdanie $\sigma$ (tj. że $T\vdash\sigma$ lub $T\vdash\neg\sigma$). Teorie arytmetyczne mogą nie rozstrzygać zdań, ponieważ istnieją różne modele tej samej teorii. Własności tej nie należy mylić z niedoskonałością rachunku logicznego.
+\end{uwaga}

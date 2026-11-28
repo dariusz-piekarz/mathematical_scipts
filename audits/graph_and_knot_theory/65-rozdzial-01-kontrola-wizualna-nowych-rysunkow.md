@@ -1,0 +1,5 @@
+# Rozdział 01 — audyt indywidualny 07
+
+2026-11-24. Przebieg 45348132434 nadal instalował TeX; artefakt pełnego PDF niedostępny. Lokalnie dostępny pdfLaTeX, polski babel i TikZ. Bezpośredni git ls-remote w środowisku lokalnym nie działa (DNS), dlatego pobrano źródło rozdziału i preambułę przez GitHub, a trzy nowe rysunki skopiowano do samodzielnego dokumentu z oryginalnym formatem A4, marginesami, fontami i stylami TikZ. Kompilacja zakończona bez ostrzeżeń i overfull/underfull, wyrenderowano stronę i obejrzano ją. Podgraf i zamiana dwóch krawędzi czytelne. W graniastosłupie trójkątnym krótkie krawędzie między okręgami wierzchołków były słabo widoczne. Zwiększono rozstaw wierzchołków i obniżono podpisy obu paneli; zachowano dokładnie zbiór krawędzi. Ponowna lokalna kompilacja i oględziny: wszystkie trzy nowe rysunki czytelne, brak nachodzących podpisów; brak ostrzeżeń TeX. Poprawka zapisana w SHA 185f2efb570bb05b7b1c93226535f86b7107c212.
+
+To kontrola wyodrębnionych rysunków, nie kompilacja całego rozdziału ani książki. Nadal wymagany pełny PDF z aktualnym blobem, kontrola łamania i wszystkich stron rozdziału. Status OTWARTY; rozdział 02 nietknięty.

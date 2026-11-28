@@ -1,0 +1,191 @@
+name: Atlas - immutable SHA 2+1 stabilization
+
+# Push is deliberately narrow: ordinary mathematics audits must not restart
+# three real pinned Lean/Mathlib suites. Later candidates are explicit inputs.
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - ".github/workflows/atlas-stabilization.yml"
+      - "application/config/atlas_validation_request.json"
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: "Exact 40-character SHA already on biblioteka-matematyczna-iteracja-6"
+        required: true
+        type: string
+      fragment:
+        description: "Single fragment under audit, for example L1.1"
+        required: true
+        default: "L1.1"
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+# One sequentional Atlas validation stream per branch. A different push SHA
+# must not launch another three expensive real Mathlib audits concurrently.
+# Keep an active run; GitHub retains only the latest pending replacement.
+concurrency:
+  group: atlas-stabilization-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    outputs:
+      sha: ${{ steps.validate.outputs.sha }}
+      fragment: ${{ steps.validate.outputs.fragment }}
+    steps:
+      - name: Checkout branch with full ancestry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Resolve branch-local request and verify commit ancestry
+        id: validate
+        working-directory: application
+        env:
+          ATLAS_EVENT: ${{ github.event_name }}
+          ATLAS_DISPATCH_SHA: ${{ inputs.candidate_sha }}
+          ATLAS_DISPATCH_FRAGMENT: ${{ inputs.fragment }}
+        run: python -m scripts.atlas_validation_select --request config/atlas_validation_request.json --event "$ATLAS_EVENT" --dispatch-sha "$ATLAS_DISPATCH_SHA" --dispatch-fragment "$ATLAS_DISPATCH_FRAGMENT" --output "$GITHUB_OUTPUT"
+
+  application_1:
+    name: "application independent pass 1"
+    needs: prepare
+    uses: ./.github/workflows/mathematical-library-app.yml
+    with:
+      candidate_sha: ${{ needs.prepare.outputs.sha }}
+      validation_pass: "1"
+
+  fast_1:
+    name: "fast independent pass 1"
+    needs: prepare
+    uses: ./.github/workflows/lean-inspection-fast.yml
+    with:
+      candidate_sha: ${{ needs.prepare.outputs.sha }}
+      validation_pass: "1"
+
+  lean_1:
+    name: "lean independent pass 1"
+    needs: prepare
+    uses: ./.github/workflows/lean-formalization.yml
+    with:
+      candidate_sha: ${{ needs.prepare.outputs.sha }}
+      validation_pass: "1"
+
+  application_2:
+    name: "application independent pass 2"
+    needs: [prepare, application_1, fast_1, lean_1]
+    uses: ./.github/workflows/mathematical-library-app.yml
+    with:
+      candidate_sha: ${{ needs.prepare.outputs.sha }}
+      validation_pass: "2"
+
+  fast_2:
+    name: "fast independent pass 2"
+    needs: [prepare, application_1, fast_1, lean_1]
+    uses: ./.github/workflows/lean-inspection-fast.yml
+    with:
+      candidate_sha: ${{ needs.prepare.outputs.sha }}
+      validation_pass: "2"
+
+  lean_2:
+    name: "lean independent pass 2"
+    needs: [prepare, application_1, fast_1, lean_1]
+    uses: ./.github/workflows/lean-formalization.yml
+    with:
+      candidate_sha: ${{ needs.prepare.outputs.sha }}
+      validation_pass: "2"
+
+  skeptical_contract:
+    needs: [prepare, application_2, fast_2, lean_2]
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+      - name: Challenge forged SHA, skipped tests and missing CI evidence
+        working-directory: application
+        run: python -m unittest tests.test_atlas_validation_gate -v
+      - name: Declare scope of skeptical technical check
+        run: |
+          echo "This independently tests fail-closed gate behavior."
+          echo "An actual independent reviewer approval is still required for stable."
+
+  application_3:
+    name: "application independent pass 3"
+    needs: [prepare, application_2, fast_2, lean_2, skeptical_contract]
+    uses: ./.github/workflows/mathematical-library-app.yml
+    with:
+      candidate_sha: ${{ needs.prepare.outputs.sha }}
+      validation_pass: "3"
+
+  fast_3:
+    name: "fast independent pass 3"
+    needs: [prepare, application_2, fast_2, lean_2, skeptical_contract]
+    uses: ./.github/workflows/lean-inspection-fast.yml
+    with:
+      candidate_sha: ${{ needs.prepare.outputs.sha }}
+      validation_pass: "3"
+
+  lean_3:
+    name: "lean independent pass 3"
+    needs: [prepare, application_2, fast_2, lean_2, skeptical_contract]
+    uses: ./.github/workflows/lean-formalization.yml
+    with:
+      candidate_sha: ${{ needs.prepare.outputs.sha }}
+      validation_pass: "3"
+
+  evidence:
+    if: ${{ always() }}
+    needs: [prepare, application_1, fast_1, lean_1, application_2, fast_2, lean_2, application_3, fast_3, lean_3, skeptical_contract]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout immutable gate code
+        if: ${{ needs.prepare.result == 'success' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+      - name: Checkout review record from the control commit, not the audited candidate
+        if: ${{ needs.prepare.result == 'success' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: .atlas-control
+      - name: Download named outcomes for every independent pass
+        if: ${{ needs.prepare.result == 'success' }}
+        uses: actions/download-artifact@v4
+        with:
+          pattern: atlas-unittest-*
+          path: .atlas-evidence
+          merge-multiple: false
+      - name: Validate all evidence and write status
+        if: ${{ always() && needs.prepare.result == 'success' }}
+        env:
+          CANDIDATE_SHA: ${{ needs.prepare.outputs.sha }}
+          FRAGMENT: ${{ needs.prepare.outputs.fragment }}
+          APP_RESULT: ${{ (needs.application_1.result == 'success' && needs.application_2.result == 'success' && needs.application_3.result == 'success') && 'success' || 'failure' }}
+          NATIVE_RESULT: ${{ (needs.fast_1.result == 'success' && needs.fast_2.result == 'success' && needs.fast_3.result == 'success') && 'success' || 'failure' }}
+          LEAN_RESULT: ${{ (needs.lean_1.result == 'success' && needs.lean_2.result == 'success' && needs.lean_3.result == 'success') && 'success' || 'failure' }}
+          SKEPTIC_RESULT: ${{ needs.skeptical_contract.result }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          review_args=()
+          if [[ -f .atlas-control/application/config/atlas_skeptical_review.json ]]; then
+            review_args=(--review .atlas-control/application/config/atlas_skeptical_review.json)
+          fi
+          python application/scripts/atlas_validation_gate.py gate --sha "$CANDIDATE_SHA" --fragment "$FRAGMENT" --reports .atlas-evidence "${review_args[@]}" --application "$APP_RESULT" --native "$NATIVE_RESULT" --lean "$LEAN_RESULT" --skeptic "$SKEPTIC_RESULT" --output application/data/atlas_validation_status.json
+      - name: Upload explicit non-certificate status
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-validation-status
+          path: application/data/atlas_validation_status.json
+          if-no-files-found: warn

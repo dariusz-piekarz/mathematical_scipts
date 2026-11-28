@@ -1,0 +1,35 @@
+# AM II 03 — audyt otwarty
+
+## Źródła i zakres
+AM I 10: kryterium Leibniza, przykład i rysunek szeregu naprzemiennego harmonicznego, części dodatnia i ujemna, pełny dowód twierdzenia Riemanna (dowolna suma rzeczywista, obie nieskończoności, oscylacje), przykład przestawienia harmonicznego. Zachowano sześć oryginalnych etykiet importowanych wyników i rysunku; definicja części dodatniej/ujemnej ma nową etykietę, ponieważ definicję zbieżności warunkowej uogólniono osobno. AF 27: rozwinięcie kryterium permutacji i sum skończonych, bez konieczności zakładania ogólnej zupełności sieci. Nowe twierdzenia o ograniczonych mnożnikach, równoważności w skończonym wymiarze, kontrprzykład w l2. Rozróżniono dwa znaczenia zbieżności warunkowej w nieskończonym wymiarze. Ogólne twierdzenie Dvoretzky'ego–Rogersa wymieniono jako wynik poza zakresem dowodu, nie używa się go w żadnym dowodzie.
+
+## Pierwszy audyt szczegółowy
+Wersja początkowa bd54a1f321d9d7536bb078db88e6dd317f02094d — 426 wierszy.
+Wersja po poprawkach 41ec40cf1b509e4ff228e2c8a50ff686dadacedc — 449 wierszy.
+Doprecyzowano znaczenie zbieżności warunkowej, hipotezy przestawienia szeregu bezwzględnie zbieżnego w przestrzeni niezupełnej, oszacowanie reszty bez założenia zupełności, kryterium Cauchy'ego, indeksy sum częściowych podszeregu, pomocniczą notację teleskopową i rozkład mnożników rzeczywistych oraz zespolonych, uzasadnienie skończonego oszacowania współrzędnościowego. Zachowano dotychczasowe etykiety; rozdziały 01 i 02 bez zmian.
+
+Kontrola statyczna: 449 wierszy, 14 etykiet, 15 wystąpień odwołań, 7 dowodów, 3 przykłady, 1 rysunek. Brak duplikatów etykiet w obrębie AM II i brak lokalnych odsyłaczy bez celu, zbilansowane środowiska. Rejestracja rozdziału w entrypoincie i katalogu wykonana.
+
+Status OTWARTY; czyste audyty 0/2. Konieczny dalszy przegląd dowodów, kompilacja i kontrola wizualna PDF. Nie rozpoczynać rozdziału 04 przed stabilizacją.
+
+## Drugi audyt szczegółowy — 2841f196a0251ec117e2bd0e25b01eeee8834248
+
+Doprecyzowano dziedziny definicji i hipotezy, zależność progu k0 od N w dowodzie przestawień, oznaczenia granic w kryterium Leibniza i odsyłacz do rysunku, indeksy sum częściowych w konstrukcji permutacji oraz sformułowanie twierdzenia o częściach dodatniej i ujemnej. Dodano odwołanie do kontrprzykładu c00 z rozdziału 02 dla warunku sum skończonych bez zupełności. Rozpisano oszacowanie dla mnożników z [0,1], rozkład skalarów i oszacowania ze stałymi 2 dla ciała rzeczywistego i 4 dla zespolonego. Udowodniono równoważne kryterium zbieżności wszystkich szeregów ze znakami +/-1 oraz jednostajną zbieżność ogonów względem wszystkich mnożników o module co najwyżej 1. Sprecyzowano treść twierdzenia Dvoretzky'ego–Rogersa jako wynik niewykorzystywany, bez dowodu. Nie modyfikowano rozdziałów 01–02.
+
+Kontrola statyczna: 524 wiersze, 15 etykiet, 20 wystąpień odwołań, 8 dowodów, 3 przykłady i 1 rysunek; 0 duplikatów etykiet w AM II, 0 lokalnych odsyłaczy bez celu, zbilansowane środowiska. Zachowano wszystkie dotychczasowe etykiety. W chwili rozpoczęcia iteracji CI #45668099034 dla 41ec40c było w kolejce. CI nowej wersji i kontrola wizualna PDF jeszcze niepotwierdzone. Status OTWARTY; licznik czystych audytów 0/2. Następnie ponowny przegląd całego rozdziału bez rozszerzania zakresu, o ile nie zostaną wykryte rzeczywiste braki, i końcowa walidacja. Nie przechodzić do rozdziału 04.
+
+## Pierwszy czysty audyt stabilizacyjny — 2841f196a0251ec117e2bd0e25b01eeee8834248
+
+Ponownie przeczytano 524 wiersze, 6 sekcji, 8 dowodów i 3 przykłady. Kontrola ręczna: permutacje i suma norm, przypadek niezupełnej przestrzeni z istniejącą sumą, kryterium Leibniza i N=0, części dodatnia i ujemna, konstrukcje Riemanna (dowolny cel rzeczywisty, obie nieskończoności i oscylacje, wykorzystanie zer), przestawienie harmonicznego z sumą 3S/2, wszystkie implikacje kryterium sum skończonych, indeksy bloków i surjektywność permutacji, miejsce użycia zupełności, oszacowania mnożników i przypadek M=0, kryterium znaków i jednostajne zanikanie reszt, wymiar zerowy i przypadek zespolony, przykład l2. Nie wykryto nowych istotnych błędów ani luk. Bez zmian treści.
+
+Kontrola statyczna PASS: 49 etykiet w trzech rozdziałach AM II, 0 duplikatów wewnątrz tomu, 20 wystąpień odwołań w rozdziale 03, 0 brakujących lokalnych celów, zbilansowane środowiska wszystkich trzech rozdziałów; katalog i entrypoint zgodne. Bloby 01 i 02 niezmienione, 03: 4b5767c23ec23ff68126c22b326ff2eb1e4bd599; entrypoint: c8bbaf8783e0f04adb786212f1978ca560043473. CI #45668389555 i #45668379070 nadal queued podczas kontroli. Kompilacja i kontrola wizualna PDF niezaliczone. Nie badano interfejsu Atlasu ani Lean. Twierdzenie Dvoretzky'ego–Rogersa pozostaje wzmianką bez dowodu, niewykorzystywaną w innych dowodach.
+
+Licznik czystych audytów matematyczno-redakcyjnych 1/2. Status OTWARTY do audytu kontrolnego, kompilacji i kontroli PDF. Nie rozpoczynać rozdziału 04.
+
+## Końcowy audyt kontrolny — stabilizacja rozdziału 03
+
+Wersja: blob 4b5767c23ec23ff68126c22b326ff2eb1e4bd599, 524 wiersze. Drugi ręczny przebieg kontrolny wszystkich sześciu sekcji, ośmiu dowodów i trzech przykładów, bez nowych istotnych błędów matematycznych ani luk. Sprawdzono w szczególności monotoniczność i ograniczenia podciągów w kryterium Leibniza oraz oszacowania dla obu parzystości i N=0; rozbieżność części dodatniej i ujemnej; pierwsze przekroczenia progów w twierdzeniu Riemanna, wykorzystanie wszystkich indeksów wraz z zerami, kontrolę sum wewnątrz bloków, obie nieskończoności i oscylację; równość sum norm przy permutacji; konstrukcje rozbieżnych permutacji i podszeregów w negacji warunku ogonowego; przejście od zbieżności zwykłej do sieci sum skończonych, zupełność; teleskopowy rozkład mnożników, rozkład rzeczywisty i zespolony, jednolitość ogonów, kryterium znaków; wymiar zerowy, zespolone współrzędne i kontrprzykład l2. Nie zmieniono treści rozdziału.
+
+Kontrola strukturalna PASS: 49 etykiet w trzech rozdziałach, 45 wystąpień lokalnych odwołań, 0 duplikatów wewnątrz tomu i 0 brakujących celów, środowiska zbilansowane, katalog i entrypoint zgodne. Porównano wszystkie trzy pliki rozdziałowe i entrypoint z commitem 2841f196a0251ec117e2bd0e25b01eeee8834248; wszystkie cztery bloby identyczne. CI #45668389555 i #45668379070: completed/success dla tego commita. Artefakt 15049655591 pobrano, rozpakowano, wyrenderowano wszystkie 22 strony PDF przez pdftoppm w 110 dpi i obejrzano sześć plansz, obejmujących wszystkie strony. Rozdział 03 zajmuje strony numerowane 13–20; rysunek 3.1 na stronie 15 jest czytelny i odpowiada sumom parzystym i nieparzystym, spis treści obejmuje trzy rozdziały. Brak widocznych kolizji, obcięć lub niepoprawnych odsyłaczy w składzie. Kontrola wizualna PASS w zakresie układu. Nie badano interfejsu Atlasu ani Lean. Twierdzenie Dvoretzky'ego–Rogersa pozostaje przytoczone bez dowodu, nie jest przesłanką pozostałych dowodów.
+
+Czyste audyty 2/2. Status USTABILIZOWANY w zakresie matematyczno-redakcyjnym, kompilacji i kontroli wizualnej PDF. Następny rozdział 04 — Iloczyny Cauchy'ego.

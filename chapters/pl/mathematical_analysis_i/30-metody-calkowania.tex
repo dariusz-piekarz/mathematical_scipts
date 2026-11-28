@@ -1,0 +1,279 @@
+\chapter{Metody całkowania}
+\label{ma1:ch:integration-methods}
+
+Znamy już definicję funkcji pierwotnej (rozdział \ref{ma1:ch:primitives}) oraz całki Riemanna (rozdział \ref{ma1:ch:riemann-integral}). W tym rozdziale wyprowadzimy metody obliczeniowe z reguł różniczkowania i wzoru Newtona--Leibniza. W całkach nieoznaczonych pracujemy na ustalonym otwartym przedziale, na którym wszystkie używane funkcje są określone; stałą całkowania dodajemy po zakończeniu rachunków. Na rozłącznej dziedzinie stałe mogą być różne (stwierdzenie \ref{ma1:prop:primitive-components}).
+
+\section{Całkowanie przez części}
+\begin{twierdzenie}
+\label{ma1:thm:integration-by-parts}
+Niech $u,v$ będą różniczkowalne na otwartym przedziale $I$. Jeżeli $u'v$ ma funkcję pierwotną $H$, to $uv'$ ma funkcję pierwotną $uv-H$. Symbolicznie
+\[
+ \int u(x)v'(x)\,\dd x
+ =u(x)v(x)-\int u'(x)v(x)\,\dd x.
+\]
+Jeżeli $a<b$ oraz $u,v$ są ciągłe na $[a,b]$, różniczkowalne we wnętrzu, a funkcje $u'v,uv'$ mają całkowalne w sensie Riemanna przedłużenia na $[a,b]$, to
+\[
+ \int_a^b uv'\,\dd x=[uv]_a^b-\int_a^b u'v\,\dd x.
+\]
+W szczególności wzór zachodzi dla $u,v$ klasy $C^1$ na $[a,b]$.
+\end{twierdzenie}
+\begin{proof}
+Reguła iloczynu \ref{ma1:thm:derivative-algebra} daje $(uv)'=u'v+uv'$. Zatem $(uv-H)'=uv'$; wszystkie funkcje pierwotne różnią się o stałą na $I$. W wersji oznaczonej suma obu przedłużeń jest całkowalna z liniowości i pokrywa się z pochodną $uv$ we wnętrzu. Funkcja $uv$ jest ciągła na $[a,b]$, więc wzór Newtona--Leibniza \ref{ma1:thm:newton-leibniz} daje całkę tej sumy równą $u(b)v(b)-u(a)v(a)$. Rozdzielamy sumę na mocy liniowości całki (twierdzenie \ref{ma1:thm:riemann-algebra}). Wybór wartości przedłużeń w punktach $a,b$ nie wpływa na wynik, zgodnie z wnioskiem \ref{ma1:cor:riemann-finite-changes}. Dla funkcji klasy $C^1$ pochodne są ciągłe (z jednostronnymi wartościami na końcach), więc obie funkcje podcałkowe są ciągłe i całkowalne.
+\end{proof}
+\begin{przyklad}
+\label{ma1:ex:parts-log}
+Na $(0,\infty)$ wybieramy $u=\log x$, $v=x$. Ponieważ $u'=1/x$, $v'=1$, mamy
+\[
+ \int\log x\,\dd x=x\log x-\int1\,\dd x=x\log x-x+C.
+\]
+Pochodna $x\log x-x$ to $\log x+1-1=\log x$. W szczególności $\int_1^e\log x\,\dd x=[x\log x-x]_1^e=1$.
+\end{przyklad}
+\begin{przyklad}
+\label{ma1:ex:parts-exp-trig}
+Obliczymy $I=\int e^x\cos x\,\dd x$ oraz $J=\int e^x\sin x\,\dd x$. Aby rachunki na stałych były jednoznaczne, ustalmy $x_0=0$ i oznaczmy przez $I(x),J(x)$ całki od $0$ do $x$. Wzór przez części (oraz orientacja całki) daje
+\[
+ I(x)=e^x\cos x-1+J(x),\qquad
+ J(x)=e^x\sin x-I(x).
+\]
+Podstawiając drugą równość do pierwszej, mamy $2I(x)=e^x(\cos x+\sin x)-1$. Stąd
+\[
+ \int e^x\cos x\,\dd x=\tfrac12 e^x(\cos x+\sin x)+C.
+\]
+Analogicznie z drugiej równości dostajemy
+$\int e^x\sin x\,\dd x=\tfrac12e^x(\sin x-\cos x)+C$.
+Różniczkowanie pierwszego wyrażenia daje $\tfrac12e^x(\cos x+\sin x-\sin x+\cos x)=e^x\cos x$; pochodna drugiego wyrażenia wynosi $\tfrac12e^x(\sin x-\cos x+\cos x+\sin x)=e^x\sin x$.
+\end{przyklad}
+
+\section{Całkowanie przez podstawienie}
+\begin{twierdzenie}
+\label{ma1:thm:integration-substitution}
+Niech $\varphi:J\to I$ będzie różniczkowalna na otwartym przedziale $J$, a $F'=f$ na otwartym przedziale $I$. Wtedy
+\[
+ \int f(\varphi(t))\varphi'(t)\,\dd t=F(\varphi(t))+C.
+\]
+Jeżeli $f$ jest ciągła na otwartym przedziale $I$, $\alpha<\beta$ oraz $\varphi:[\alpha,\beta]\to I$ jest klasy $C^1$, to
+\[
+ \int_\alpha^\beta f(\varphi(t))\varphi'(t)\,\dd t
+ =\int_{\varphi(\alpha)}^{\varphi(\beta)} f(x)\,\dd x.
+\]
+Nie zakładamy monotoniczności $\varphi$ ani niezerowości $\varphi'$.
+\end{twierdzenie}
+\begin{proof}
+Reguła łańcuchowa \ref{ma1:thm:chain-rule} daje $(F\circ\varphi)'(t)=f(\varphi(t))\varphi'(t)$, co dowodzi pierwszej tezy, z uwzględnieniem dowolnej stałej na przedziale $J$ (twierdzenie \ref{ma1:thm:primitive-uniqueness}). Dla drugiej korzystamy z istnienia funkcji pierwotnej $F$ funkcji ciągłej (wniosek \ref{ma1:cor:continuous-primitive-existence}). Złożenie jest ciągłe na $[\alpha,\beta]$ i różniczkowalne we wnętrzu; jego pochodna ma ciągłe przedłużenie $f(\varphi(t))\varphi'(t)$ na przedział domknięty. Newton--Leibniz daje lewą stronę równą $F(\varphi(\beta))-F(\varphi(\alpha))$. Odcinek o końcach $\varphi(\alpha),\varphi(\beta)$ zawiera się w $I$, więc $f$ jest na nim ciągła i całkowalna. Ten sam wzór wraz z konwencją orientacji daje identyczną wartość po prawej stronie, również gdy końce obrazu są równe.
+\end{proof}
+Zapis $x=\varphi(t)$, $\dd x=\varphi'(t)\dd t$ jest skrótem reguły łańcuchowej, a nie dzieleniem przez nieskończenie małe liczby. Dokładniej, dla dowolnego przyrostu $h$ różniczka funkcji $\varphi$ w punkcie $t$ przyjmuje wartość $\varphi'(t)h$. Gdy chcemy po wykonaniu rachunku wrócić do zmiennej $x$ przez $t=\varphi^{-1}(x)$, wybieramy przedział, na którym $\varphi$ jest odwracalna. Jeśli dodatkowo potrzebujemy pochodnej odwrotności, sprawdzamy niezerowość $\varphi'$ (twierdzenie \ref{ma1:thm:inverse-derivative}).
+
+\begin{przyklad}
+\label{ma1:ex:substitution-basic}
+Dla $x\in\R$ mamy
+\[
+ \int\frac{2x}{1+x^2}\,\dd x=\log(1+x^2)+C.
+\]
+Istotnie, argument $1+x^2$ jest dodatni, a pochodna logarytmu złożonego wynosi $2x/(1+x^2)$. W całce oznaczonej
+\[
+ \int_0^1\frac{2x}{1+x^2}\,\dd x
+ =\int_1^2\frac{\dd t}{t}=\log2.
+\]
+Natomiast $\int_{-1}^1 2x/(1+x^2)\,\dd x=\int_2^2\dd t/t=0$. Podstawienie $t=1+x^2$ nie jest iniektywne na $[-1,1]$, lecz wzór oznaczony nie wymaga iniektywności.
+\end{przyklad}
+
+\section{Funkcje wymierne i ułamki proste}
+\begin{twierdzenie}[Rozkład na ułamki proste]
+\label{ma1:thm:partial-fractions}
+Niech $P,Q$ będą wielomianami rzeczywistymi, $Q\ne0$. Po dzieleniu wielomianów zapisujemy $P/Q=W+R/Q$, gdzie $\deg R<\deg Q$ (lub $R=0$). Rozkładamy mianownik nad $\R$ na czynniki liniowe i nierozkładalne kwadratowe:
+\[
+ Q=c\prod_i(x-a_i)^{m_i}\prod_j q_j(x)^{n_j},
+ \qquad q_j(x)=x^2+b_jx+c_j,\quad b_j^2-4c_j<0,
+\]
+gdzie różne czynniki są parami względnie pierwsze, wykładniki są dodatnimi liczbami całkowitymi, $c\ne0$. Wówczas istnieje dokładnie jeden rozkład
+\[
+ \frac{R}{Q}
+ =\sum_i\sum_{k=1}^{m_i}\frac{A_{ik}}{(x-a_i)^k}
+ +\sum_j\sum_{k=1}^{n_j}\frac{B_{jk}x+C_{jk}}{q_j(x)^k}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Korzystamy z twierdzenia podstawowego algebry (każdy wielomian zespolony dodatniego stopnia ma pierwiastek) jako znanego wyniku algebry, którego dowód nie należy do tego tomu. Dla wielomianu rzeczywistego pierwiastki nierzeczywiste występują w parach sprzężonych z równymi krotnościami: wynika to ze sprzężenia tożsamości rozkładu na czynniki liniowe nad $\C$. Iloczyn $(x-z)(x-\overline z)$ ma współczynniki rzeczywiste i wyróżnik $-4(\operatorname{Im}z)^2<0$. Otrzymujemy wskazany rozkład.
+
+Jeżeli $Q$ jest stały, część właściwa znika i teza jest pusta. W przeciwnym przypadku niech $N=\deg Q$. Po pomnożeniu prawej strony przez $Q$ otrzymujemy $N=\sum_i m_i+2\sum_j n_j$ wielomianów (dla czynnika liniowego $m_i$, dla kwadratowego $2n_j$), każdy stopnia mniejszego od $N$. Istotnie, składnik $Q/p^k$ pomnożony przez jednomian stopnia $j<\deg p$ ma stopień $N-k\deg p+j<N$. Wykażemy ich liniową niezależność. W zapisie ogólnym niech $p$ będzie jednym z nierozkładalnych czynników mianownika o krotności $m$. Zgrupujmy składniki z mianownikami $p^k$ w postaci
+\[
+ \frac{D_1}{p}+\cdots+\frac{D_m}{p^m},
+ \qquad \deg D_k<\deg p,
+\]
+gdzie zerowe $D_k$ są dozwolone. Jeżeli kombinacja wszystkich składników po pomnożeniu przez $Q$ jest wielomianem zerowym, to modulo $p$ wszystkie składniki z wyjątkiem $(Q/p^m)D_m$ znikają. Ponieważ $p$ i $Q/p^m$ są względnie pierwsze, tożsamość Bézouta dla wielomianów daje $p\mid D_m$. Stopień $D_m$ jest mniejszy od stopnia $p$, więc $D_m=0$. Dla pełnego kroku indukcyjnego załóżmy, że $D_m=\cdots=D_{r+1}=0$, gdzie $1\le r\le m$. W tożsamości po pomnożeniu przez $Q$ składniki związane z $p$ mają postać
+\[
+ (Q/p^m)\sum_{k=1}^{r}p^{m-k}D_k,
+\]
+a wszystkie składniki związane z innymi czynnikami są podzielne przez $p^m$. Dzielimy tożsamość przez $p^{m-r}$ i redukujemy modulo $p$. Zostaje $(Q/p^m)D_r\equiv0\pmod p$, gdyż dla $k<r$ pozostaje czynnik $p^{r-k}$, a dla pozostałych mianowników czynnik $p^r$. Z tożsamości Bézouta wynika $p\mid D_r$, więc $D_r=0$. Indukcja zstępująca daje $D_k=0$ dla wszystkich $k$. Argument działa osobno dla każdego czynnika $p$. To dowodzi niezależności.
+
+Przestrzeń wielomianów stopnia mniejszego od $N$ ma wymiar $N$, gdyż $1,x,\ldots,x^{N-1}$ stanowią bazę. Zatem otrzymane $N$ niezależnych wielomianów także stanowi bazę. Wielomian $R$ ma w niej dokładnie jedno przedstawienie; dzieląc przez $Q$ na zbiorze $Q(x)\ne0$, otrzymujemy tezę.
+\end{proof}
+W praktyce mnożymy rozkład przez mianownik i porównujemy współczynniki. Dowody dzielenia z resztą i tożsamości Bézouta dla wielomianów znajdują się odpowiednio w rozdziałach 11 i 10 skryptu \emph{Algebra abstrakcyjna}, w sekcjach o dzieleniu wielomianów i algorytmie Euklidesa.
+
+\begin{przyklad}
+\label{ma1:ex:partial-fractions}
+Dla $x\notin\{-1,1\}$ szukamy rozkładu
+\[
+ \frac{2x+3}{(x-1)^2(x+1)}
+ =\frac A{x-1}+\frac B{(x-1)^2}+\frac C{x+1}.
+\]
+Po pomnożeniu przez mianownik otrzymujemy
+$2x+3=A(x^2-1)+B(x+1)+C(x-1)^2$.
+Dla $x=1$ mamy $5=2B$, a dla $x=-1$ mamy $1=4C$; porównanie współczynników przy $x^2$ daje $A+C=0$. Zatem $B=5/2$, $C=1/4$, $A=-1/4$. Współczynnik przy $x$ wynosi $B-2C=2$, a wyraz stały $-A+B+C=3$, więc tożsamość jest sprawdzona. Całkując,
+\[
+ \int\frac{2x+3}{(x-1)^2(x+1)}\,\dd x
+ =-\tfrac14\log|x-1|-\frac{5}{2(x-1)}
+   +\tfrac14\log|x+1|+C_0.
+\]
+Każdy składnik różniczkuje się do odpowiedniego ułamka. Stała $C_0$ jest niezależna na każdym z trzech przedziałów dziedziny.
+\end{przyklad}
+
+Dla czynników liniowych stosujemy wzory z tablicy \ref{ma1:prop:primitive-table}. W przypadku $q(x)=x^2+bx+c$ o ujemnym wyróżniku piszemy
+\[
+ q(x)=t^2+d^2,\quad t=x+b/2,\quad d=\sqrt{c-b^2/4}>0,
+ \qquad Bx+C=\tfrac B2 q'(x)+(C-Bb/2).
+\]
+Ponieważ $q(x)=t^2+d^2>0$ dla każdego $x$, pierwsza część licznika daje przez podstawienie $s=q(x)$ (bez konieczności odwracania $q$) funkcję pierwotną $\tfrac B2\log q(x)$ dla $k=1$ i $\tfrac B{2(1-k)}q(x)^{1-k}$ dla $k\ge2$. Pozostała część prowadzi do całek
+\[
+ I_k'(t)=\frac{1}{(t^2+d^2)^k},\qquad k\ge1.
+\]
+Przez $I_k$ rozumiemy jedną wybraną funkcję pierwotną. Wybieramy $I_1(t)=d^{-1}\arctan(t/d)$; jego pochodna wynosi $d^{-2}/(1+t^2/d^2)=(t^2+d^2)^{-1}$. Dla $k\ge2$ różniczkujemy
+\[
+ \left(\frac{t}{(t^2+d^2)^{k-1}}\right)'
+ =\frac{(3-2k)t^2+d^2}{(t^2+d^2)^k}
+ =\frac{3-2k}{(t^2+d^2)^{k-1}}
+  +\frac{2(k-1)d^2}{(t^2+d^2)^k}.
+\]
+Przenosząc pierwszy składnik i dzieląc przez niezerowe $2(k-1)d^2$, otrzymujemy wzór rekurencyjny
+\begin{equation}
+ \label{ma1:eq:quadratic-reduction}
+ I_k(t)=\frac{t}{2(k-1)d^2(t^2+d^2)^{k-1}}
+ +\frac{2k-3}{2(k-1)d^2}I_{k-1}(t).
+\end{equation}
+Wybieramy w nim po jednej funkcji pierwotnej; na końcu dodajemy dowolną stałą. Rekurencja kończy się na $I_1$. W połączeniu z rozkładem na ułamki proste dowodzi to, że każda rzeczywista funkcja wymierna ma elementarną funkcję pierwotną na każdym przedziale, na którym mianownik nie znika.
+
+\begin{przyklad}
+\label{ma1:ex:quadratic-reduction}
+Dla $k=2$, $d=1$ otrzymujemy
+\[
+ \int\frac{\dd x}{(1+x^2)^2}
+ =\frac{x}{2(1+x^2)}+\frac12\arctan x+C.
+\]
+Sprawdzenie: pochodna prawej strony bez stałej to
+$(1-x^2)/(2(1+x^2)^2)+1/(2(1+x^2))=1/(1+x^2)^2$.
+\end{przyklad}
+
+\section{Całki trygonometryczne}
+\begin{przyklad}
+\label{ma1:ex:trigonometric-powers}
+Rozważamy iloczyny $\sin^m x\cos^n x$ dla nieujemnych całkowitych $m,n$ (potęga o wykładniku zero oznacza funkcję stałą $1$). Jeżeli wykładnik sinusa jest nieparzysty, wydzielamy jeden czynnik $\sin x$ i zastępujemy pozostałą parzystą potęgę przez potęgę $1-\cos^2x$. Na przykład
+\[
+ \int\sin^3x\cos^2x\,\dd x
+ =-\int(1-t^2)t^2\,\dd t
+ =-\frac{\cos^3x}{3}+\frac{\cos^5x}{5}+C,
+ \quad t=\cos x.
+\]
+Reguła łańcuchowa uzasadnia to podstawienie na całej $\R$ bez odwracania cosinusa: pochodna wyniku to $\sin x(\cos^2x-\cos^4x)=\sin^3x\cos^2x$. Gdy wykładnik cosinusa jest nieparzysty, wydzielamy $\cos x$ i podstawiamy $t=\sin x$. Gdy oba wykładniki są parzyste, używamy wzorów $\sin^2x=(1-\cos2x)/2$, $\cos^2x=(1+\cos2x)/2$, wynikających ze wzorów dodawania \ref{ma1:thm:trig-addition}. Przykładowo
+$\int\sin^2x\,\dd x=x/2-\sin(2x)/4+C$.
+\end{przyklad}
+
+\begin{twierdzenie}[Podstawienie uniwersalne]
+\label{ma1:thm:weierstrass-substitution}
+Na każdym przedziale $((2k-1)\pi,(2k+1)\pi)$, $k\in\Z$, podstawienie $t=\tan(x/2)$ daje
+\[
+ \sin x=\frac{2t}{1+t^2},\qquad
+ \cos x=\frac{1-t^2}{1+t^2},\qquad
+ \dd x=\frac{2}{1+t^2}\,\dd t.
+\]
+W szczególności całka funkcji wymiernej dwóch zmiennych $R(\sin x,\cos x)$ sprowadza się do całki funkcji wymiernej $t$ na przedziałach, gdzie mianownik jest niezerowy.
+\end{twierdzenie}
+\begin{proof}
+Mamy $\cos(x/2)\ne0$ i $1+\tan^2(x/2)=1/\cos^2(x/2)$. Ze wzorów na podwojony argument otrzymujemy $\sin x=2\sin(x/2)\cos(x/2)=2t/(1+t^2)$ oraz $\cos x=\cos^2(x/2)-\sin^2(x/2)=(1-t^2)/(1+t^2)$. Pochodna $t$ względem $x$ wynosi $(1+t^2)/2>0$. Na wskazanym przedziale $x/2-k\pi\in(-\pi/2,\pi/2)$. Z okresowości tangensa i jego odwracalności na tym przedziale (twierdzenie \ref{ma1:thm:tan-inverse}) wynika, że $t$ przyjmuje wszystkie wartości rzeczywiste dokładnie raz; odwrotność ma postać $x=2\arctan t+2k\pi$. Różniczkując ją, otrzymujemy trzeci wzór. Po podstawieniu do ilorazu wielomianów w $\sin x,\cos x$ i pomnożeniu przez $2/(1+t^2)$ dostajemy funkcję wymierną $t$, o ile pierwotny mianownik nie znika.
+\end{proof}
+Punkty $x=(2k+1)\pi$ nie należą do dziedziny podstawienia, nawet gdy funkcja podcałkowa jest w nich określona. Nie są automatycznie osobliwościami tej funkcji. Przy całce oznaczonej z ciągłą funkcją można rozdzielić przedział w takich punktach i skorzystać z granic funkcji pierwotnej lub wybrać inne podstawienie. Nie wolno traktować skoku gałęzi $\arctan$ jako skoku funkcji pierwotnej ciągłej funkcji podcałkowej.
+
+\begin{przyklad}
+\label{ma1:ex:weierstrass}
+Na $(-\pi,\pi)$ obliczamy
+\[
+ \int\frac{\dd x}{2+\cos x}
+ =\int\frac{2\,\dd t}{3+t^2}
+ =\frac{2}{\sqrt3}\arctan\frac{\tan(x/2)}{\sqrt3}+C.
+\]
+Istotnie, $2+\cos x=(3+t^2)/(1+t^2)$, a pochodna $2\arctan(t/\sqrt3)/\sqrt3$ względem $t$ wynosi $2/(3+t^2)$. Całka od $0$ do $\pi/2$ wynosi $2\arctan(1/\sqrt3)/\sqrt3$. Na całej $\R$ funkcja podcałkowa jest ciągła, lecz powyższy zapis wymaga zmiany stałej przy przejściu do kolejnej gałęzi. Na przedziale $((2k-1)\pi,(2k+1)\pi)$ część bez stałej ma granice $-\pi/\sqrt3$ na lewym końcu i $\pi/\sqrt3$ na prawym końcu. Aby wartości sąsiednich gałęzi zgadzały się, trzeba więc wybrać $C_{k+1}=C_k+2\pi/\sqrt3$. Na przykład $C_k=2k\pi/\sqrt3$ daje funkcję ciągłą po uzupełnieniu jej wartości w punktach $(2k+1)\pi$. Jej pochodna poza tymi punktami jest równa $1/(2+\cos x)$. W punkcie sklejenia $c=(2k+1)\pi$ stosujemy twierdzenie Lagrange'a do odcinka o końcach $c,c+h$: iloraz różnicowy jest równy $1/(2+\cos \xi_h)$ dla $\xi_h$ między końcami, więc dąży do $1/(2+\cos c)=1$. Otrzymujemy funkcję pierwotną na całej $\R$.
+\end{przyklad}
+
+\section{Podstawienia trygonometryczne i hiperboliczne}
+Dla $a>0$ pierwiastki kwadratowe upraszczamy, korzystając z tożsamości $\sin^2t+\cos^2t=1$ oraz $\cosh^2t-\sinh^2t=1$ (rozdział \ref{ma1:ch:elementary-functions}). Wybór zakresu parametru jest częścią podstawienia.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.05,>=Stealth]
+ \coordinate (O) at (0,0); \coordinate (A) at (3,0); \coordinate (B) at (3,1.8);
+ \draw[thick] (O)--(A)--(B)--cycle;
+ \draw (2.75,0)--(2.75,.25)--(3,.25);
+ \draw[blue!65!black] (.65,0) arc[start angle=0,end angle=30.9638,radius=.65];
+ \node at (.96,.26) {$t$};
+ \node[below] at (1.5,0) {$\sqrt{a^2-x^2}$};
+ \node[right] at (3,.9) {$x$};
+ \node[above left] at (1.5,.9) {$a$};
+ \node[align=center] at (1.5,-.8) {$x=a\sin t$};
+\end{tikzpicture}
+
+\small Rysunek: dla $0<x<a$ trójkąt ilustruje podstawienie $x=a\sin t$. Dla ujemnych $x$ korzystamy z tego samego wzoru algebraicznego na $-\pi/2<t<0$; długości boków trójkąta nie są wtedy ujemne.
+\end{center}
+\begin{przyklad}
+\label{ma1:ex:trig-root-substitution}
+Dla $a>0$, na $(-a,a)$ podstawiamy $x=a\sin t$, $-\pi/2<t<\pi/2$. Mamy $\dd x=a\cos t\,\dd t$ i $\sqrt{a^2-x^2}=a|\cos t|=a\cos t$, bo $\cos t>0$. Zatem
+\[
+ \int\sqrt{a^2-x^2}\,\dd x
+ =a^2\int\cos^2t\,\dd t
+ =\frac{a^2}{2}t+\frac{a^2}{4}\sin2t+C.
+\]
+Ponieważ $t=\arcsin(x/a)$, $\sin2t=2(x/a)\sqrt{a^2-x^2}/a$, otrzymujemy
+\[
+ \frac{x}{2}\sqrt{a^2-x^2}+\frac{a^2}{2}\arcsin(x/a)+C.
+\]
+Pochodna pierwszego składnika to $\tfrac12\sqrt{a^2-x^2}-x^2/(2\sqrt{a^2-x^2})$, a drugiego $a^2/(2\sqrt{a^2-x^2})$. Ich suma wynosi $\sqrt{a^2-x^2}$. Funkcja pierwotna przedłuża się ciągle na $[-a,a]$, a funkcja podcałkowa jest tam ciągła. Newton--Leibniz daje $\int_{-a}^a\sqrt{a^2-x^2}\,\dd x=\pi a^2/2$.
+\end{przyklad}
+\begin{przyklad}
+\label{ma1:ex:hyperbolic-root-substitution}
+Niech $a>0$. Dla $\sqrt{a^2+x^2}$ stosujemy $x=a\sinh t$, $t\in\R$. Wtedy $\dd x=a\cosh t\,\dd t$, $\sqrt{a^2+x^2}=a\cosh t$, ponieważ $\cosh t>0$. Stąd
+\[
+ \int\frac{\dd x}{\sqrt{a^2+x^2}}
+ =\int\dd t=\operatorname{arsinh}(x/a)+C.
+\]
+Pochodna prawej strony to $(1/a)/\sqrt{1+(x/a)^2}=1/\sqrt{a^2+x^2}$.
+Dla $\sqrt{x^2-a^2}$ na $x>a$ wybieramy $x=a\cosh t$, $t>0$. Mamy $\dd x=a\sinh t\,\dd t$ i $\sqrt{x^2-a^2}=a\sinh t>0$. Dostajemy
+\[
+ \int\frac{\dd x}{\sqrt{x^2-a^2}}
+ =\operatorname{arcosh}(x/a)+C,\qquad x>a.
+\]
+Na $x<-a$ podstawienie $x=-a\cosh t$, $t>0$, daje $\dd x=-a\sinh t\,\dd t$, a pierwiastek nadal wynosi $a\sinh t$. Wynikiem jest $-\operatorname{arcosh}(-x/a)+C$. Różniczkując obie gałęzie za pomocą wzorów \ref{ma1:thm:hyperbolic-derivatives}, otrzymujemy $1/\sqrt{x^2-a^2}$.
+\end{przyklad}
+
+\section{Wzory rekurencyjne i wybór metody}
+\begin{twierdzenie}
+\label{ma1:thm:sine-reduction}
+Niech $S_n$ oznacza wybraną funkcję pierwotną $\sin^n x$ dla całkowitego $n\ge0$. Można przyjąć $S_0=x$, $S_1=-\cos x$, a dla $n\ge2$
+\[
+ S_n(x)=-\frac{\sin^{n-1}x\cos x}{n}+\frac{n-1}{n}S_{n-2}(x).
+\]
+\end{twierdzenie}
+\begin{proof}
+Z reguły iloczynu i $\cos^2x=1-\sin^2x$ mamy
+\[
+ \begin{split}
+ (\sin^{n-1}x\cos x)'
+ &=(n-1)\sin^{n-2}x\cos^2x-\sin^nx\\
+ &=(n-1)\sin^{n-2}x-n\sin^nx.
+ \end{split}
+\]
+Rozwiązując tę równość względem $\sin^nx$, dostajemy pochodną wyrażenia z tezy, gdy $S_{n-2}'=\sin^{n-2}x$. Przypadki bazowe wynikają z tablicy funkcji pierwotnych. Rekurencja zmniejsza wykładnik o dwa, więc kończy się na jednym z nich.
+\end{proof}
+Dla $n=4$ otrzymujemy
+\[
+ S_4=-\tfrac14\sin^3x\cos x-\tfrac38\sin x\cos x+\tfrac38 x.
+\]
+W szczególności $\int_0^{\pi/2}\sin^4x\,\dd x=3\pi/16$, ponieważ oba składniki zawierające $\sin x\cos x$ znikają na obu końcach.
+
+Przy wyborze metody warto najpierw sprawdzić dziedzinę i uprościć funkcję podcałkową. Jeżeli rozpoznajemy pochodną złożenia, stosujemy podstawienie; jeżeli różniczkowanie jednego czynnika upraszcza iloczyn, rozważamy całkowanie przez części. Dla funkcji wymiernej używamy dzielenia wielomianów i ułamków prostych, a dla odpowiednich pierwiastków podstawień z poprzedniej sekcji. Wynik nieoznaczony weryfikujemy przez różniczkowanie na całym wybranym przedziale. W całce oznaczonej sprawdzamy dodatkowo hipotezy całkowalności, granice i orientację. Nie zastępujemy całki niewłaściwej zwykłym podstawieniem do wzoru Newtona--Leibniza; przypadki nieograniczone wymagają osobnej definicji.

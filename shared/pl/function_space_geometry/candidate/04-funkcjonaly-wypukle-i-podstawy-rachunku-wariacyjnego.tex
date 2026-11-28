@@ -1,0 +1,675 @@
+% Wersja źródłowa: audyt II, jednostka 16
+
+\section{Funkcjonały wypukłe i podstawy rachunku wariacyjnego}
+\label{sec:wariacyjny16}
+
+\providecommand{\atlasref}[2]{#2}
+
+
+\subsection{Od pochodnej Frécheta do problemu minimum}
+
+\noindent\emph{Powiązanie tematyczne w Bibliotece matematycznej:} \atlasref{AM1-25::ma1:def:convex-function}{AM1-25: wypukłość funkcji jednej zmiennej}.
+
+
+W poprzednich rozdziałach badaliśmy lokalną strukturę funkcji
+różniczkowalnych na przestrzeniach Banacha. Rachunek wariacyjny pyta
+o istnienie i charakter minimizatorów funkcjonału $J:E\to\R$,
+często na nieskończenie wymiarowej przestrzeni funkcji.
+W tym rozdziale $H$ oznacza rzeczywistą przestrzeń Hilberta,
+a $E$ rzeczywistą przestrzeń Banacha. Pisząc $\langle\cdot,\cdot\rangle$
+w $H$, przyjmujemy liniowość w pierwszym argumencie.
+
+\begin{definicja}[Wypukłość funkcjonału]
+\label{def:convex-fun16}
+Niech $E$ będzie rzeczywistą przestrzenią liniową,
+a $C\subseteq E$ zbiorem wypukłym.
+Funkcjonał $J:C\to(-\infty,+\infty]$ nazywamy
+\emph{wypukłym}, jeżeli
+$J((1-t)x+ty)\le(1-t)J(x)+tJ(y)$ dla wszystkich $x,y\in C$
+i $0<t<1$. Dla $t=0,1$ przyjmujemy równość, bez
+mnożenia zera przez nieskończoność.
+Funkcjonał nazywamy \emph{właściwym}, gdy jego dziedzina
+efektywna $\operatorname{dom}J=\{x\in C:J(x)<+\infty\}$
+jest niepusta. Z wypukłości $J$ wynika wypukłość
+$\operatorname{dom}J$, ponieważ kombinacja wypukła
+dwóch skończonych wartości jest skończona.
+Funkcjonał wypukły jest \emph{ściśle wypukły}, jeśli nierówność
+jest ostra dla różnych $x,y\in\operatorname{dom}J$
+i $0<t<1$. W przypadku funkcjonału rzeczywistego
+$\operatorname{dom}J=C$.
+\end{definicja}
+
+\begin{twierdzenie}[Nierówność styczna]
+\label{thm:convex-derivative16}
+Niech $E$ będzie rzeczywistą przestrzenią Banacha,
+$U\subseteq E$ niepustym otwartym zbiorem wypukłym, a
+$J:U\to\R$ funkcjonałem różniczkowalnym w sensie
+Frécheta w każdym punkcie $U$.
+Następujące warunki są równoważne:
+\begin{enumerate}
+\item $J$ jest wypukły na $U$;
+\item $J(y)\ge J(x)+DJ(x)(y-x)$ dla wszystkich $x,y\in U$.
+\end{enumerate}
+Jeżeli $DJ(x_0)=0$, gdzie $x_0\in U$, a $J$ jest wypukły,
+to $x_0$ jest globalnym minimizatorem $J$ na $U$.
+Odwrotnie, jeśli $x_0$ jest lokalnym minimizatorem
+różniczkowalnego $J$ i $x_0\in U$, to $DJ(x_0)=0$.
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonych $x,y\in U$ niech
+$\phi(t)=J(x+t(y-x))$, $0\le t\le1$.
+Jeżeli $J$ jest wypukły, to dla $0<t\le1$
+z definicji wypukłości
+$[\phi(t)-\phi(0)]/t\le\phi(1)-\phi(0)$.
+Z reguły łańcuchowej (Twierdzenie~\ref{thm:chain14})
+pochodna $\phi$ w zerze wynosi $DJ(x)(y-x)$
+(otwartość $U$ pozwala przedłużyć parametr nieco poza zero).
+Przechodząc z $t\downarrow0$, otrzymujemy
+$DJ(x)(y-x)\le J(y)-J(x)$.
+
+Odwrotnie, ustalmy $x,y\in U$, $0<t<1$ i
+$z=(1-t)x+ty\in U$.
+Nierówność z punktu 2 daje
+$J(x)\ge J(z)+DJ(z)(x-z)$ oraz
+$J(y)\ge J(z)+DJ(z)(y-z)$.
+Mnożąc je odpowiednio przez $1-t$ i $t$ oraz dodając,
+otrzymujemy
+\[
+ (1-t)J(x)+tJ(y)\ge J(z)+DJ(z)((1-t)x+ty-z)=J(z).
+\]
+Dla $t=0,1$ zachodzi równość, więc $J$ jest wypukły.
+Jeżeli $DJ(x_0)=0$, nierówność styczna zapewnia
+$J(y)\ge J(x_0)$. Jeśli zaś $x_0$ jest lokalnym minimum,
+dla każdego $h\in E$ i dostatecznie małych $|t|$
+punkt $x_0+th$ należy do $U$ i do otoczenia lokalnego
+minimum. Funkcja $t\mapsto J(x_0+th)$ ma zatem
+minimum w zerze, a jej pochodna w zerze, równa
+$DJ(x_0)h$, musi znikać. Ponieważ dotyczy to
+każdego $h\in E$, mamy $DJ(x_0)=0$.
+\end{proof}
+
+\begin{definicja}[Silna wypukłość]
+\label{def:strong-convex16}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta
+i $\mu>0$. Funkcjonał $J:H\to\R$ jest
+$\mu$-silnie wypukły, jeśli $x\mapsto J(x)-\frac\mu2\|x\|^2$
+jest wypukły.
+\end{definicja}
+
+\begin{stwierdzenie}[Koercywność z silnej wypukłości]
+\label{prop:strong-coercive16}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta,
+$\mu>0$, a $J:H\to\R$ funkcjonałem $\mu$-silnie wypukłym
+i różniczkowalnym w sensie Frécheta na $H$. Wtedy dla $x,y\in H$
+zachodzi
+\[
+J(y)\ge J(x)+DJ(x)(y-x)+\frac\mu2\|y-x\|^2.
+\]
+W szczególności $J$ jest koercywny, tj.
+$J(y)\to+\infty$, gdy $\|y\|\to\infty$,
+i ma co najwyżej jeden minimizator.
+\end{stwierdzenie}
+\begin{proof}
+Stosujemy Twierdzenie~\ref{thm:convex-derivative16}
+do funkcjonału $G(z)=J(z)-\mu\|z\|^2/2$.
+Z rozwinięcia
+$\|x+h\|^2=\|x\|^2+2\langle x,h\rangle+\|h\|^2$
+wynika $DG(x)h=DJ(x)h-\mu\langle x,h\rangle$.
+Nierówność styczna dla $G$ daje
+\[
+ J(y)-\tfrac\mu2\|y\|^2
+ \ge J(x)-\tfrac\mu2\|x\|^2
+       +DJ(x)(y-x)-\mu\langle x,y-x\rangle .
+\]
+Po przeniesieniu składników kwadratowych na prawą stronę
+i wykorzystaniu tożsamości
+$\|y\|^2-\|x\|^2-2\langle x,y-x\rangle=\|y-x\|^2$
+otrzymujemy żądaną nierówność.
+Dla $x=0$ mamy
+$J(y)\ge J(0)-\|DJ(0)\|\|y\|+\mu\|y\|^2/2$,
+co zapewnia koercywność. Jeżeli $x\ne y$ są minimizatorami,
+to wypukłość $G$ przy $t=1/2$ i tożsamość
+$\tfrac12(\|x\|^2+\|y\|^2)-\|(x+y)/2\|^2
+=\|x-y\|^2/4$ dają
+$J((x+y)/2)\le [J(x)+J(y)]/2-\mu\|x-y\|^2/8$,
+sprzecznie z minimalnością.
+\end{proof}
+
+\begin{przyklad}[Jednostajne dolne oszacowanie hesjanu i silna wypukłość]
+\label{ex:variational-hessian16}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta
+i $J\in C^2(H,\R)$. Jeżeli istnieje $\mu>0$ takie, że
+$D^2J(x)[h,h]\ge\mu\|h\|^2$ dla wszystkich $x,h\in H$,
+to $J$ jest $\mu$-silnie wypukły.
+Istotnie, dla $x,y\in H$ i $h=y-x$ funkcja
+$\phi(t)=J(x+th)-\frac\mu2\|x+th\|^2$
+ma drugą pochodną
+$\phi''(t)=D^2J(x+th)[h,h]-\mu\|h\|^2\ge0$.
+Zatem $\phi'$ jest niemalejąca. Dla $0<t<1$
+z twierdzenia o wartości średniej na $[0,t]$ i $[t,1]$
+wynika
+$(\phi(t)-\phi(0))/t\le(\phi(1)-\phi(t))/(1-t)$.
+Po pomnożeniu przez $t(1-t)$ i uporządkowaniu
+otrzymujemy $\phi(t)\le(1-t)\phi(0)+t\phi(1)$,
+czyli wypukłość funkcjonału $J-\mu\|\cdot\|^2/2$.
+Sama dodatnia określoność $D^2J(0)$, nawet wraz
+z $DJ(0)=0$, nie gwarantuje lokalnego minimum:
+\hyperref[ex:positive-hessian15]{kontrprzykład w rozdziale 15}
+podaje dokładnie taki funkcjonał na $\ell^2$.
+\end{przyklad}
+
+\subsection{Zbieżność słaba i metoda bezpośrednia}
+
+\begin{definicja}[Półciągłość z dołu i koercywność]
+\label{def:weak-lsc16}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta,
+$C\subseteq H$ niepustym zbiorem i $J:C\to(-\infty,+\infty]$.
+Funkcjonał $J$ jest \emph{słabo półciągły z dołu}, jeśli dla każdej sieci
+$(x_\alpha)$ w $C$ zbieżnej do $x\in C$ w topologii
+słabej $\sigma(H,H')$ zachodzi
+$J(x)\le\liminf_\alpha J(x_\alpha)$, gdzie
+$\liminf_\alpha J(x_\alpha)=
+\sup_\alpha\inf_{\beta\ge\alpha}J(x_\beta)$.
+Równoważnie, każdy zbiór podpoziomowy
+$\{x\in C:J(x)\le a\}$, $a\in\R$, jest domknięty
+w topologii słabej indukowanej na $C$.
+Istotnie, warunek dla sieci zapewnia, że granica sieci
+z podpoziomu nadal należy do tego podpoziomu.
+Odwrotnie, gdyby $\liminf_\alpha J(x_\alpha)<J(x)$,
+można byłoby wybrać rzeczywiste $a$ ściśle pomiędzy
+tymi wartościami. Otwarte dopełnienie podpoziomu
+zawiera $x$, więc od pewnego indeksu $J(x_\alpha)>a$,
+co wymusza $\liminf_\alpha J(x_\alpha)\ge a$,
+sprzecznie z wyborem $a$.
+Analogicznie definiuje się półciągłość z dołu
+w topologii normowej.
+Funkcjonał jest \emph{koercywny na $C$}, jeśli dla
+każdego $a\in\R$ istnieje $R>0$ takie, że
+$J(x)>a$ dla każdego $x\in C$ o $\|x\|>R$.
+Równoważnie, wszystkie podpoziomy są ograniczone.
+\end{definicja}
+
+\begin{lemat}[Podpoziomowe zbiory wypukłe]
+\label{lem:convex-weaklsc16}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta,
+a $J:H\to(-\infty,+\infty]$ funkcjonałem wypukłym
+i półciągłym z dołu w topologii normowej.
+Wtedy $J$ jest słabo półciągły z dołu.
+\end{lemat}
+\begin{proof}
+Dla każdego $a\in\R$ zbiór $C_a=\{x\in H:J(x)\le a\}$
+jest normowo domknięty przez półciągłość z dołu
+i wypukły przez wypukłość $J$. Z Wniosku~\ref{cor:weak-convex-closure}
+o równości domknięć zbioru wypukłego wynika,
+że każdy normowo domknięty zbiór wypukły jest
+domknięty także w topologii słabej. Zatem wszystkie $C_a$
+są słabo domknięte, co daje tezę.
+\end{proof}
+
+\begin{lemat}[Słaba zbieżność podciągu w przestrzeni Hilberta]
+\label{lem:hilbert-weakseq16}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta,
+a $(x_n)$ ciągiem ograniczonym w $H$.
+Istnieje podciąg $(x_{n_k})$ i $x\in H$ takie,
+że $x_{n_k}\to x$ słabo w $H$.
+Nie zakładamy ośrodkowości całej przestrzeni $H$.
+\end{lemat}
+\begin{proof}
+Niech $M=\sup_n\|x_n\|<\infty$ i
+$H_0=\overline{\operatorname{lin}\{x_n:n\in\N\}}$.
+Przestrzeń $H_0$ jest ośrodkowa, ponieważ skończone
+kombinacje liniowe $x_n$ o współczynnikach wymiernych
+tworzą w niej przeliczalny zbiór gęsty. Jest również
+przestrzenią Hilberta jako domknięta podprzestrzeń $H$.
+Jeśli $H_0=\{0\}$, cały ciąg jest zerowy i teza zachodzi.
+W przeciwnym razie wybieramy bazę ortonormalną $(e_j)$
+skończoną lub przeliczalnie nieskończoną.
+Dla każdego $j$ ciąg $\langle x_n,e_j\rangle$ jest ograniczony.
+Z twierdzenia Bolzana--Weierstrassa wybieramy podciąg,
+na którym pierwsza współrzędna ma granicę. Z niego
+wybieramy podciąg dla drugiej współrzędnej i tak dalej.
+W przypadku skończonej bazy ostatni podciąg ma
+wszystkie wymagane granice. W przypadku nieskończonej
+bazy wybieramy $k$-ty wyraz $k$-tego podciągu.
+Indeksy tak wybranego ciągu rosną, a jego ogon
+od $k=j$ jest podciągiem $j$-tego podciągu, więc
+$j$-ta współrzędna jest zbieżna dla każdego $j$.
+
+Na przestrzeni skończonych kombinacji wektorów $e_j$
+definiujemy $L(v)=\lim_k\langle x_{n_k},v\rangle$.
+Istnienie granicy wynika z jej istnienia na każdym $e_j$,
+a $|L(v)|\le M\|v\|$. Funkcjonał $L$ przedłuża się
+jednoznacznie na $H_0$ jako ciągły funkcjonał liniowy.
+Z twierdzenia Riesza istnieje $x\in H_0$ takie,
+że $L(v)=\langle x,v\rangle$ dla $v\in H_0$.
+Ponieważ $\|x\|=\|L\|\le M$, dla dowolnego $v\in H_0$
+i skończonej kombinacji $w$ wektorów $e_j$ zachodzi
+\[
+ |\langle x_{n_k}-x,v\rangle|
+ \le 2M\|v-w\|+|\langle x_{n_k}-x,w\rangle|.
+\]
+Dla $\varepsilon>0$ wybieramy $w$ tak, aby pierwszy
+składnik był mniejszy od $\varepsilon/2$, a następnie
+$k$ dostatecznie duże, aby drugi składnik był mniejszy
+od $\varepsilon/2$. Gdy $M=0$, ciąg jest zerowy.
+Otrzymujemy zbieżność $\langle x_{n_k},v\rangle
+\to\langle x,v\rangle$ dla każdego $v\in H_0$.
+Dla $v\in H_0^\perp$ obie strony są zerowe.
+Dla dowolnego $v\in H$ stosujemy rozkład
+$H=H_0\oplus H_0^\perp$ z Twierdzenia~\ref{thm:orth-decomposition13}.
+Z twierdzenia Riesza każdy ciągły funkcjonał liniowy
+na $H$ jest dany przez iloczyn skalarny z takim $v$.
+Otrzymana zbieżność jest więc zbieżnością słabą w $H$.
+\end{proof}
+
+\begin{twierdzenie}[Metoda bezpośrednia w przestrzeni Hilberta]
+\label{thm:direct-method16}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta,
+$C\subseteq H$ niepustym, normowo domkniętym i wypukłym
+zbiorem, a $J:C\to(-\infty,+\infty]$ funkcjonałem,
+który jest właściwy (tzn. przyjmuje przynajmniej jedną
+wartość skończoną), ograniczony z dołu, koercywny na $C$
+i półciągły z dołu dla topologii słabej indukowanej na $C$.
+Wtedy istnieje $u\in C$ takie, że
+$J(u)=\inf_{v\in C}J(v)$.
+Jeżeli dodatkowo $J$ jest ściśle wypukły,
+minimizator jest jedyny.
+\end{twierdzenie}
+\begin{proof}
+Niech $m=\inf_C J$, który jest skończony na mocy
+właściwości i ograniczoności z dołu. Dla każdego $n\ge1$ z definicji infimum wybieramy
+$u_n\in C$ takie, że $m\le J(u_n)<m+1/n$.
+Wszystkie $u_n$ należą do podpoziomu $\{v\in C:J(v)\le m+1\}$,
+który jest ograniczony z koercywności. Zatem
+$(u_n)$ jest ograniczonym ciągiem w $H$.
+Na mocy Lematu~\ref{lem:hilbert-weakseq16}
+pewien podciąg $u_{n_k}\to u$ słabo w $H$.
+Ponieważ $C$ jest normowo domknięty i wypukły,
+jest również słabo domknięty na mocy
+Wniosku~\ref{cor:weak-convex-closure}, więc $u\in C$.
+Słaba półciągłość z dołu daje
+$J(u)\le\liminf_k J(u_{n_k})=m$; z definicji infimum
+zachodzi też $J(u)\ge m$. Jeśli dodatkowo $J$ jest
+ściśle wypukły i $u\ne v$ są minimizatorami, to
+$J(u)=J(v)=m$ jest skończone, a $(u+v)/2\in C$.
+Zatem $J((u+v)/2)<m$, co przeczy definicji $m$.
+\end{proof}
+
+\begin{uwaga}[Czego nie daje sama koercywność?]
+\label{rem:coercive16}
+W nieskończenie wymiarowej przestrzeni Hilberta
+domknięta kula jednostkowa nie jest zwarta w normie:
+zawiera ciąg ortonormalny, którego różne wyrazy
+są odległe o $\sqrt2$, więc żaden jego podciąg
+nie jest zbieżny w normie.
+Sama ciągłość normowa i koercywność funkcjonału
+nie dają zatem zwartości podpoziomu potrzebnej
+do bezpośredniego zastosowania twierdzenia Weierstrassa. W twierdzeniu wykorzystaliśmy
+słabą zbieżność podciągów i słabą półciągłość z dołu.
+W ogólnej przestrzeni Banacha naturalną rolę przestrzeni
+Hilberta przejmują przestrzenie refleksywne.
+W rozdziale 26 udowodnimy ogólną wersję twierdzenia
+o słabo zbieżnym podciągu ciągu ograniczonego.
+Powyższy elementarny dowód w przestrzeni Hilberta
+nie wymaga tej późniejszej teorii.
+\end{uwaga}
+
+\subsection{Subgradienty i odwzorowanie proksymalne}
+
+\begin{definicja}[Subgradient i subróżniczka]
+\label{def:subgrad16}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta,
+$J:H\to(-\infty,+\infty]$ właściwym funkcjonałem wypukłym,
+a $u\in H$ punktem takim,
+że $J(u)<+\infty$. Wektor $p\in H$ nazywamy
+\emph{subgradientem} $J$ w $u$, jeśli
+$J(v)\ge J(u)+\langle p,v-u\rangle$ dla każdego $v\in H$.
+Zbiór wszystkich subgradientów oznaczamy $\partial J(u)$
+i nazywamy \emph{subróżniczką} $J$ w $u$.
+Dla $J(u)=+\infty$ przyjmujemy $\partial J(u)=\varnothing$.
+\end{definicja}
+
+\begin{stwierdzenie}[Warunek optymalności i monotoniczność]
+\label{prop:subgrad16}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta,
+a $J:H\to(-\infty,+\infty]$ właściwym funkcjonałem wypukłym.
+Dla każdego $u\in H$ punkt $u$ minimalizuje $J$ wtedy
+i tylko wtedy, gdy $0\in\partial J(u)$. Jeśli $u,v\in H$,
+$p\in\partial J(u)$ oraz $q\in\partial J(v)$, to
+$\langle p-q,u-v\rangle\ge0$.
+Jeżeli dla $u\in H$ funkcjonał $J$ jest skończony
+na otoczeniu $u$ i różniczkowalny w sensie Frécheta w $u$,
+to $\partial J(u)=\{\nabla J(u)\}$, gdzie $\nabla J(u)\in H$
+jest jedynym wektorem spełniającym
+$DJ(u)h=\langle\nabla J(u),h\rangle$ dla każdego $h\in H$.
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $u$ minimalizuje $J$, to $J(u)$ jest skończone,
+gdyż $J$ jest właściwy. Nierówność $J(v)\ge J(u)$
+dla każdego $v\in H$ oznacza dokładnie, że $0\in\partial J(u)$.
+Odwrotnie, przynależność $0\in\partial J(u)$ daje tę
+nierówność, a więc globalną minimalność.
+Z nierówności subgradientowych
+$J(v)\ge J(u)+\langle p,v-u\rangle$ i
+$J(u)\ge J(v)+\langle q,u-v\rangle$,
+po dodaniu i skróceniu skończonych wartości $J(u),J(v)$
+otrzymujemy $0\ge\langle p,v-u\rangle+\langle q,u-v\rangle
+=-\langle p-q,u-v\rangle$, czyli monotoniczność.
+Jeśli $J$ jest różniczkowalny, to dla $p\in\partial J(u)$
+dla $h\in H$ podstawiamy $v=u+th$ przy dostatecznie małym
+$|t|>0$. Po podzieleniu nierówności przez $t>0$ mamy
+$(J(u+th)-J(u))/t\ge\langle p,h\rangle$, zaś dla $t<0$
+nierówność ma przeciwny zwrot. Oba ilorazy różnicowe
+dążą do $DJ(u)h$, więc $\langle p,h\rangle=DJ(u)h$.
+Ponieważ $h\in H$ było dowolne, z jednoznaczności
+reprezentacji Riesza wynika $p=\nabla J(u)$.
+Odwrotnie, dla $v$ z dziedziny efektywnej $J$ i $0<t<1$
+wypukłość daje
+$(J(u+t(v-u))-J(u))/t\le J(v)-J(u)$.
+Przechodząc z $t$ do zera, otrzymujemy
+$DJ(u)(v-u)\le J(v)-J(u)$.
+Dla $J(v)=+\infty$ nierówność zachodzi automatycznie.
+Reprezentacja Riesza daje zatem $\nabla J(u)\in\partial J(u)$.
+\end{proof}
+
+\begin{przyklad}[Subróżniczka normy w Hilbercie]
+\label{ex:norm-subgrad16}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta
+i $J:H\to\R$, $J(x)=\|x\|$. Wówczas
+$\partial J(0)=\{p:\|p\|\le1\}$ i
+$\partial J(x)=\{x/\|x\|\}$ dla $x\ne0$.
+Jeżeli $\|p\|\le1$, to $\langle p,v\rangle\le\|v\|$
+dla każdego $v\in H$, zatem $p\in\partial J(0)$.
+Odwrotnie, dla $p\in\partial J(0)$, podstawiając $v=p$,
+otrzymujemy $\|p\|^2\le\|p\|$, czyli $\|p\|\le1$.
+Dla $x\ne0$ reguła łańcuchowa zastosowana do
+$\|x\|=\sqrt{\langle x,x\rangle}$ daje
+$DJ(x)h=\langle x,h\rangle/\|x\|$.
+Stwierdzenie~\ref{prop:subgrad16} daje drugi wzór.
+W ogólnej przestrzeni Banacha analogiczny subgradient normy
+jest funkcjonałem z przestrzeni dualnej, a jego istnienie
+dla $x\ne0$ zapewnia twierdzenie Hahna--Banacha.
+\end{przyklad}
+
+\begin{twierdzenie}[Odwzorowanie proksymalne]
+\label{thm:prox16}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta,
+a $J:H\to(-\infty,+\infty]$ właściwym, wypukłym,
+normowo półciągłym z dołu i ograniczonym z dołu funkcjonałem,
+a $\lambda>0$. Dla każdego $y\in H$ istnieje dokładnie
+jeden punkt $u=\operatorname{prox}_{\lambda J}(y)$
+minimalizujący funkcjonał
+$v\mapsto J(v)+\|v-y\|^2/(2\lambda)$.
+Dla każdego $u,y\in H$ zachodzi równoważność
+$u=\operatorname{prox}_{\lambda J}(y)$ wtedy i tylko wtedy,
+gdy $y-u\in\lambda\partial J(u)$.
+Ponadto odwzorowanie
+$\operatorname{prox}_{\lambda J}:H\to H$ jest
+nieekspansywne:
+$\|\operatorname{prox}_{\lambda J}(y)-
+\operatorname{prox}_{\lambda J}(z)\|\le\|y-z\|$.
+\end{twierdzenie}
+\begin{proof}
+Funkcjonał $\Phi_y(v)=J(v)+\|v-y\|^2/(2\lambda)$
+jest właściwy, wypukły i normowo półciągły z dołu,
+a więc słabo półciągły z dołu na mocy
+Lematu~\ref{lem:convex-weaklsc16}.
+Jeżeli $J(v)\ge m$ dla każdego $v\in H$, to
+$\Phi_y(v)\ge m+\|v-y\|^2/(2\lambda)\ge m$.
+Nierówność $\|v-y\|\ge\|v\|-\|y\|$ zapewnia koercywność.
+Dla różnych $v,w$ z dziedziny efektywnej i $0<t<1$,
+z wypukłości $J$ i tożsamości kwadratowej wynika
+$\Phi_y((1-t)v+tw)\le(1-t)\Phi_y(v)+t\Phi_y(w)
+-t(1-t)\|v-w\|^2/(2\lambda)$.
+Zatem $\Phi_y$ jest ściśle wypukły.
+Twierdzenie~\ref{thm:direct-method16} dla $C=H$
+daje jednoznaczny minimizator $u$.
+
+Jeśli $u$ minimalizuje $\Phi_y$, to dla $v$ z
+$J(v)<+\infty$ i $0<t<1$, z wypukłości $J$
+oraz minimalności mamy
+\[
+0\le\Phi_y(u+t(v-u))-\Phi_y(u)
+\le t[J(v)-J(u)]+\frac t\lambda\langle u-y,v-u\rangle
++\frac{t^2}{2\lambda}\|v-u\|^2.
+\]
+Po podzieleniu przez $t$ i przejściu z $t$ do zera
+otrzymujemy $J(v)\ge J(u)+\langle(y-u)/\lambda,v-u\rangle$.
+Dla $J(v)=+\infty$ nierówność subgradientowa jest
+automatyczna, a więc $(y-u)/\lambda\in\partial J(u)$.
+Odwrotnie, jeśli $(y-u)/\lambda\in\partial J(u)$,
+to $J(u)<+\infty$. Dla $v$ z dziedziny efektywnej
+rozwijamy $\|v-y\|^2=\|u-y\|^2+
+2\langle u-y,v-u\rangle+\|v-u\|^2$ i dostajemy
+\[
+\Phi_y(v)-\Phi_y(u)
+\ge\langle (y-u)/\lambda,v-u\rangle+
+\lambda^{-1}\langle u-y,v-u\rangle+
+\frac{\|v-u\|^2}{2\lambda}
+=\frac{\|v-u\|^2}{2\lambda}.
+\]
+Poza dziedziną efektywną $\Phi_y(v)=+\infty$, więc
+także tam $\Phi_y(v)\ge\Phi_y(u)$. To zapewnia minimalność.
+
+Niech $u=\operatorname{prox}_{\lambda J}(y)$ oraz
+$v=\operatorname{prox}_{\lambda J}(z)$.
+Monotoniczność subróżniczki daje
+$\langle (y-u)-(z-v),u-v\rangle\ge0$.
+Stąd $\|u-v\|^2\le\langle y-z,u-v\rangle
+\le\|y-z\|\,\|u-v\|$,
+co po podzieleniu przez $\|u-v\|$ (gdy $u\ne v$)
+daje tezę. Gdy $u=v$, nierówność jest oczywista.
+\end{proof}
+
+\subsection{Przykład: słabe zagadnienie brzegowe}
+
+Niech $\lambda$ oznacza miarę Lebesgue'a na $[0,1]$.
+Wprowadzamy przestrzeń $H_0^1(0,1)$ przez opis elementarny:
+\[
+H_0^1(0,1)=\left\{u:[0,1]\to\R:\ 
+\begin{array}{l}
+\exists v\in L^2(0,1;\R),\ \int_0^1 v(t)\,\mathrm dt=0,\\
+u(x)=\int_0^x v(t)\,\mathrm dt\quad\text{dla każdego }x\in[0,1]
+\end{array}\right\}.
+\]
+Z nierówności Cauchy'ego--Schwarza mamy
+$\|v\|_{L^1}\le\|v\|_{L^2}$, zatem całka określająca $u$
+jest niezależna od reprezentanta klasy $v$ w $L^2$.
+Z twierdzenia o całce nieoznaczonej Lebesgue'a
+funkcje $u$ są absolutnie ciągłe i $u'=v$ prawie wszędzie,
+a ze wzoru całkowego i warunku zerowej całki wynikają
+warunki brzegowe $u(0)=u(1)=0$. Przyjmujemy
+$\langle u,w\rangle_H=\int_0^1u'(t)w'(t)\,\mathrm dt$.
+Odwzorowanie $u\mapsto u'$ jest liniową izometrią
+$H_0^1(0,1)$ na domkniętą podprzestrzeń
+$\{v\in L^2(0,1):\int_0^1v(t)\,\mathrm dt=0\}$,
+przy czym podprzestrzeń ta jest jądrem ciągłego funkcjonału
+$v\mapsto\int_0^1v(t)\,\mathrm dt$ (jego norma jest co najwyżej $1$
+na mocy nierówności Cauchy'ego--Schwarza).
+Surjektywność izometrii wynika z definicji $H_0^1(0,1)$,
+a iniektywność z warunku $u(0)=0$ i wzoru całkowego.
+Jako domknięta podprzestrzeń przestrzeni Hilberta $L^2(0,1)$
+jej obraz jest zupełny, więc $H_0^1(0,1)$ jest przestrzenią Hilberta.
+
+\begin{lemat}[Nierówność Poincarégo na odcinku]
+\label{lem:poincare16}
+Dla każdego $u\in H_0^1(0,1)$ zachodzi
+$\|u\|_{L^2}\le2^{-1/2}\|u'\|_{L^2}$.
+\end{lemat}
+\begin{proof}
+Ponieważ $u(x)=\int_0^xu'(t)\,\mathrm dt$,
+nierówność Cauchy'ego--Schwarza daje
+$|u(x)|^2\le x\int_0^x|u'(t)|^2\,\mathrm dt
+\le x\|u'\|_{L^2}^2$.
+Całkując po $x\in[0,1]$, otrzymujemy
+$\|u\|_{L^2}^2\le\frac12\|u'\|_{L^2}^2$.
+\end{proof}
+
+\begin{twierdzenie}[Zasada minimalizacji dla problemu Dirichleta]
+\label{thm:dirichlet16}
+Niech $f\in L^2(0,1;\R)$. Na $H=H_0^1(0,1)$
+określmy funkcjonał
+\[
+J(u)=\frac12\int_0^1|u'(t)|^2\,\mathrm dt
+-\int_0^1 f(t)u(t)\,\mathrm dt.
+\]
+Istnieje dokładnie jeden minimizator $u\in H$ funkcjonału $J$.
+Jest on dokładnie jedynym elementem $H$ spełniającym
+równanie słabe
+\[
+\int_0^1u'(t)v'(t)\,\mathrm dt
+=\int_0^1f(t)v(t)\,\mathrm dt\qquad(v\in H).
+\]
+Dla $f(t)=1$ rozwiązaniem jest $u(t)=t(1-t)/2$.
+\end{twierdzenie}
+\begin{proof}
+Niech $\ell(u)=\int_0^1 f(t)u(t)\,\mathrm dt$.
+Z Lematu~\ref{lem:poincare16} i nierówności Cauchy'ego--Schwarza
+mamy $|\ell(u)|\le2^{-1/2}\|f\|_{L^2}\|u\|_H$,
+więc $\ell$ jest ciągłym funkcjonałem liniowym na $H$.
+Ponieważ $J(u)=\|u\|_H^2/2-\ell(u)$, jest on ciągły.
+Dla $u,w\in H$ i $0<t<1$ liniowość $\ell$ oraz
+rozwinięcie kwadratu normy dają
+\[
+(1-t)J(u)+tJ(w)-J((1-t)u+tw)
+=\tfrac12t(1-t)\|u-w\|_H^2.
+\]
+Prawa strona jest dodatnia dla $u\ne w$, więc $J$
+jest ściśle wypukły. Z oszacowania $\ell$ wynika
+$J(u)\ge\frac12\|u\|_H^2-
+2^{-1/2}\|f\|_{L^2}\|u\|_H$, więc jest koercywny
+i ograniczony z dołu (dla $a=2^{-1/2}\|f\|_{L^2}$
+i $r=\|u\|_H$ mamy $r^2/2-ar=(r-a)^2/2-a^2/2\ge-a^2/2$).
+Z Lematu~\ref{lem:convex-weaklsc16}, ponieważ $J$ jest
+wypukły i normowo ciągły, jest słabo półciągły z dołu.
+Twierdzenie~\ref{thm:direct-method16} daje minimizator,
+a ścisła wypukłość zapewnia jego jednoznaczność.
+
+Dla $h\in H$ rozwinięcie kwadratu daje
+\[
+J(u+h)-J(u)=\langle u,h\rangle_H-\int_0^1 f(t)h(t)\,\mathrm dt
++\tfrac12\|h\|_H^2.
+\]
+Część liniowa jest ograniczona przez
+$(\|u\|_H+2^{-1/2}\|f\|_{L^2})\|h\|_H$,
+a reszta podzielona przez $\|h\|_H$ dąży do zera.
+Zatem $J$ jest różniczkowalny Frécheta, a jego pochodna ma postać
+$DJ(u)v=\int_0^1u'(t)v'(t)\,\mathrm dt-
+\int_0^1 f(t)v(t)\,\mathrm dt$.
+Twierdzenie~\ref{thm:convex-derivative16} daje
+równoważność $DJ(u)=0$ i globalnej minimalności.
+Jeśli $f\equiv1$, funkcja $u(t)=t(1-t)/2$ spełnia
+$u(0)=u(1)=0$ oraz $u''(t)=-1$. Ponieważ $u'\in L^2(0,1)$
+i $\int_0^1u'(t)\,\mathrm dt=u(1)-u(0)=0$, mamy $u\in H$.
+Dla absolutnie ciągłego $v\in H$ iloczyn $u'v$ jest
+absolutnie ciągły i ma pochodną $u''v+u'v'$ prawie wszędzie.
+Całkując i korzystając z $v(0)=v(1)=0$, otrzymujemy
+$\int_0^1u'v'\,\mathrm dt=[u'v]_0^1-\int_0^1u''v\,\mathrm dt
+=\int_0^1v\,\mathrm dt$.
+Przez jednoznaczność jest to szukane rozwiązanie.
+\end{proof}
+
+\subsection{Wypukłe maksima i twierdzenie Kreina--Milmana}
+
+Twierdzenie Kreina--Milmana (Twierdzenie~\ref{thm:krein-milman})
+i zasada maksimum Bauera (Wniosek~\ref{cor:bauer9}) orzekają,
+że niepusty zwarty wypukły podzbiór przestrzeni lokalnie wypukłej
+Hausdorffa jest domkniętą otoczką wypukłą swoich punktów
+ekstremalnych, a każda wypukła i półciągła z góry funkcja
+rzeczywista na tym zbiorze osiąga maksimum w punkcie ekstremalnym. Ich rola w optymalizacji jest odmienna od metody bezpośredniej:
+\emph{zwartość wypukłego zbioru} daje możliwość badania maksimum
+funkcjonału wypukłego na punktach ekstremalnych,
+natomiast \emph{koercywność i słaba półciągłość z dołu}
+służą do znajdowania minimum.
+
+\begin{stwierdzenie}[Maksimum funkcjonału afinicznego]
+\label{prop:affine-extreme16}
+Niech $E$ będzie lokalnie wypukłą przestrzenią liniową
+topologiczną Hausdorffa nad $\K$, gdzie $\K=\R$ lub $\K=\C$,
+$K\subseteq E$ niepustym, zwartym i wypukłym zbiorem,
+a $A:K\to\R$ ciągłą funkcją afiniczną,
+czyli $A((1-t)x+ty)=(1-t)A(x)+tA(y)$
+dla wszystkich $x,y\in K$ i $t\in[0,1]$.
+Wtedy istnieje punkt ekstremalny $e\in K$, w którym
+$A$ osiąga maksimum, oraz (być może inny) punkt ekstremalny,
+w którym osiąga minimum.
+\end{stwierdzenie}
+\begin{proof}
+Funkcje $A$ i $-A$ są wypukłe i ciągłe,
+więc zastosowanie zasady maksimum Bauera do obu daje tezę.
+\end{proof}
+
+\begin{przyklad}[Miary prawdopodobieństwa i ich punkty ekstremalne]
+\label{ex:prob-measures16}
+Niech $K$ będzie niepustą zwartą przestrzenią metryczną,
+a $\mathcal P(K)$ zbiorem borelowskich miar probabilistycznych na $K$.
+Niech $C(K;\R)$ będzie przestrzenią rzeczywistych funkcji
+ciągłych z normą supremum. Na mocy twierdzenia
+Riesza--Markowa--Kakutaniego (por. rozdziały 20 i 21
+skryptu \emph{Miara i całka}) identyfikujemy $\mathcal P(K)$
+z dodatnimi funkcjonałami liniowymi na $C(K;\R)$,
+przyjmującymi wartość $1$ na funkcji stałej $1$.
+Wszystkie skończone miary borelowskie na zwartej przestrzeni
+metrycznej są regularne, więc reprezentacja obejmuje każdą
+miarę z $\mathcal P(K)$.
+
+Dla takiego funkcjonału $L$ z nierówności
+$-\|\varphi\|_\infty 1\le\varphi\le\|\varphi\|_\infty 1$
+i dodatniości wynika $|L(\varphi)|\le\|\varphi\|_\infty$.
+Ponieważ $L(1)=1$, mamy $\|L\|=1$.
+W topologii słabej-* $\sigma(C(K;\R)',C(K;\R))$
+warunek $L(1)=1$ oraz każdy warunek $L(\varphi)\ge0$
+dla $\varphi\in C(K;\R)$, $\varphi\ge0$, określają zbiory
+domknięte, gdyż ewaluacje $L\mapsto L(\varphi)$ są ciągłe.
+Ich przecięcie jest domkniętym podzbiorem słabo-* zwartej
+kuli jednostkowej (Wniosek~\ref{cor:alaoglu-norm}),
+a więc jest zwarte. Jest także wypukłe, gdyż dodatniość
+i normalizacja są zachowane przez kombinacje wypukłe.
+
+Punktami ekstremalnymi $\mathcal P(K)$ są dokładnie
+miary Diraca $\delta_x$, $x\in K$.
+Dla $\delta_x=t\mu+(1-t)\nu$, $0<t<1$, dodatniość
+miar i równość ich mas wymuszają
+$\mu(K\setminus\{x\})=\nu(K\setminus\{x\})=0$,
+więc $\mu=\nu=\delta_x$.
+Jeśli natomiast $\mu$ nie jest miarą Diraca,
+istnieje zbiór borelowski $B$ o $0<\mu(B)<1$.
+Aby to wykazać, niech $S$ oznacza nośnik $\mu$, czyli zbiór
+punktów, których każde otwarte otoczenie ma dodatnią miarę.
+Ponieważ zwarta przestrzeń metryczna ma przeliczalną bazę,
+$K\setminus S$ jest sumą przeliczalnie wielu elementów bazy
+o mierze zero. Stąd $\mu(K\setminus S)=0$ i $\mu(S)=1$.
+Gdyby $S=\{x\}$, mielibyśmy $\mu=\delta_x$.
+Zatem $S$ zawiera dwa różne punkty $x,y$.
+Wybieramy ich rozłączne otwarte otoczenia $B,U$.
+Z definicji nośnika $\mu(B)>0$ oraz $\mu(U)>0$,
+więc $\mu(B)\le1-\mu(U)<1$.
+
+Dla każdego borelowskiego $A\subseteq K$ określamy
+$\mu_B(A)=\mu(A\cap B)/\mu(B)$ oraz
+$\mu_{K\setminus B}(A)=\mu(A\setminus B)/(1-\mu(B))$.
+Są to miary probabilistyczne, przy czym
+$\mu_B(B)=1$ i $\mu_{K\setminus B}(B)=0$, zatem są różne.
+Dla każdego $A$ suma $\mu(A\cap B)+\mu(A\setminus B)$
+jest równa $\mu(A)$, więc
+$\mu=\mu(B)\,\mu_B+(1-\mu(B))\,\mu_{K\setminus B}$.
+Jest to nietrywialna kombinacja wypukła, zatem $\mu$
+nie jest punktem ekstremalnym.
+Twierdzenie Kreina--Milmana stwierdza więc, że
+$\mathcal P(K)$ jest słabo-* domkniętą otoczką wypukłą
+rodziny $\{\delta_x:x\in K\}$.
+W szczególności dla $\varphi\in C(K;\R)$
+maksimum funkcjonału $\mu\mapsto\int_K\varphi(x)\,\mathrm d\mu(x)$
+można osiągnąć na pewnej mierze Diraca: funkcjonał ten
+jest afiniczny i słabo-* ciągły jako ewaluacja na $\varphi$,
+więc stosuje się Stwierdzenie~\ref{prop:affine-extreme16}.
+\end{przyklad}
+
+\begin{uwaga}[Dalsza perspektywa]
+Twierdzenie Kreina--Milmana jest rezultatem o \emph{zwartych
+zbiorach wypukłych} w ogólnych przestrzeniach lokalnie wypukłych,
+a nie jedynie o kulach jednostkowych przestrzeni Banacha.
+Z kolei subróżniczki i operatory proksymalne prowadzą
+do teorii operatorów monotonicznych i metod minimalizacji,
+co wykracza poza podstawowy zakres obecnego rozdziału.
+\end{uwaga}

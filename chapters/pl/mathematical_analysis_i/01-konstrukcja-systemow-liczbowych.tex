@@ -1,0 +1,148 @@
+\chapter{Konstrukcja systemów liczbowych}
+\label{ma1:ch:number-systems}
+\textbf{Cel rozdziału.} Zbudujemy kolejno liczby naturalne, całkowite i wymierne. Każde rozszerzenie odpowiada na konkretny problem: odejmowanie nie zawsze jest wykonalne w liczbach naturalnych, a dzielenie przez liczbę niezerową nie zawsze jest wykonalne w liczbach całkowitych. Na końcu wskażemy, dlaczego nawet ciało liczb wymiernych nie wystarcza do analizy.
+
+\section{Liczby naturalne}
+\label{ma1:sec:naturals}
+Przyjmujemy konwencję $\N=\{0,1,2,\ldots\}$ oraz $\N_+=\N\setminus\{0\}$.
+W języku teorii mnogości można przyjąć $0=\varnothing$ i $S(n)=n\cup\{n\}$. Aksjomat nieskończoności zapewnia istnienie zbioru induktywnego; jego najmniejszy podzbiór induktywny otrzymujemy jako przecięcie wszystkich jego podzbiorów zawierających $0$ i zamkniętych na $S$. Jest to zbiór $\N$. Korzystamy z aksjomatów Peana oraz twierdzenia o rekursji na $\N$ (podstawy teoriomnogościowe znajdują się w skrypcie Logika matematyczna i teoria mnogości).
+\begin{definicja}[Aksjomaty Peana]
+\label{ma1:def:peano}
+Strukturą Peana nazywamy trójkę $(N,0,S)$, gdzie $N$ jest zbiorem, $0\in N$, $S\colon N\to N$ jest iniekcją, $0\notin S(N)$, a każdy podzbiór $N$ zawierający $0$ i zamknięty na $S$ jest równy $N$.
+\end{definicja}
+\begin{twierdzenie}[Jednoznaczność struktury Peana]
+Niech $(N,0,S)$ i $(N',0',S')$ będą strukturami Peana. Istnieje dokładnie jedna bijekcja $f\colon N\to N'$ taka, że $f(0)=0'$ oraz $f(S(n))=S'(f(n))$ dla każdego $n\in N$. Indukcja w aksjomatach dotyczy wszystkich podzbiorów, nie tylko podzbiorów definiowalnych formułami pierwszego rzędu.
+\end{twierdzenie}
+\begin{proof}
+Twierdzenie o rekursji daje odwzorowanie $f$ określone przez $f(0)=0'$ i $f(S(n))=S'(f(n))$. Analogicznie konstruujemy $g$ w przeciwnym kierunku. Mamy $g(f(0))=g(0')=0$. Jeśli $g(f(n))=n$, to $g(f(S(n)))=g(S'(f(n)))=S(g(f(n)))=S(n)$. Indukcja daje $g\circ f=\operatorname{id}_N$. Zamieniając role struktur, otrzymujemy $f\circ g=\operatorname{id}_{N'}$. Zatem $f$ jest bijekcją. Jeżeli $h$ jest innym takim odwzorowaniem, to $h(0)=f(0)$, a z $h(n)=f(n)$ wynika $h(S(n))=S'(h(n))=f(S(n))$. Indukcja kończy dowód.
+\end{proof}
+\begin{definicja}[Działania]
+\label{ma1:def:nat-operations}
+Dla $a,b\in\N$ definiujemy rekurencyjnie
+\[
+a+0=a,\quad a+S(b)=S(a+b),\qquad
+a\cdot0=0,\quad a\cdot S(b)=ab+a.
+\]
+Piszemy $1=S(0)$.
+\end{definicja}
+\begin{twierdzenie}[Prawa działań w liczbach naturalnych]
+\label{ma1:thm:nat-laws}
+Dodawanie i mnożenie są przemienne i łączne, mają odpowiednio elementy neutralne $0$ i $1$, a mnożenie jest rozdzielne względem dodawania. Ponadto dla wszystkich $a,b,c\in\N$ równość $a+c=b+c$ pociąga $a=b$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw indukcja względem $b$ daje $0+b=b$ oraz $S(a)+b=S(a+b)$: dla $b=0$ wynika to z definicji, a przejście do $S(b)$ polega na zastosowaniu $S$ do obu stron. Stąd indukcja względem $b$ daje przemienność: $a+0=0+a$ oraz $a+S(b)=S(a+b)=S(b+a)=S(b)+a$. Łączność dowodzimy indukcyjnie względem $c$: przypadek $c=0$ jest bezpośredni, a
+$(a+b)+S(c)=S((a+b)+c)=S(a+(b+c))=a+(b+S(c))$.
+Skracanie dodawania wynika z indukcji względem $c$: dla $c=0$ jest oczywiste, a dla $S(c)$ iniektywność $S$ sprowadza równość do $a+c=b+c$.
+
+Z definicji dodawania mamy $n+1=n+S(0)=S(n+0)=S(n)$ dla każdego $n\in\N$. Dla mnożenia indukcja daje $0b=0$: przypadek $b=0$ wynika z definicji mnożenia, a krok to $0S(b)=0b+0=0$. Mamy $a1=a0+a=a$. Rozdzielność $a(b+c)=ab+ac$ wynika przez indukcję względem $c$: dla $c=0$ obie strony są równe $ab$, a krok to
+$a(b+S(c))=aS(b+c)=a(b+c)+a=ab+(ac+a)=ab+aS(c)$.
+Indukcja względem $b$ daje $S(a)b=ab+b$: dla $b=0$ obie strony są zerem, a krok to
+$S(a)S(b)=S(a)b+S(a)=ab+b+a+1=aS(b)+S(b)$,
+gdzie korzystamy z już udowodnionych praw dodawania oraz $S(n)=n+1$.
+Przemienność mnożenia wynika teraz z indukcji: $a0=0a$, a
+$aS(b)=ab+a=ba+a=S(b)a$. Rozdzielność z drugiej strony wynika z przemienności. Łączność dowodzimy indukcyjnie względem $c$: dla $0$ obie strony są zerem, a
+$(ab)S(c)=(ab)c+ab=a(bc)+ab=a(bc+b)=a(bS(c))$.
+Przemienność daje również $1a=a$.
+\end{proof}
+\begin{definicja}[Porządek naturalny]
+Dla $a,b\in\N$ kładziemy $a\le b$ wtedy i tylko wtedy, gdy istnieje $k\in\N$ takie, że $b=a+k$. Piszemy $a<b$, gdy $a\le b$ i $a\ne b$.
+\end{definicja}
+\begin{twierdzenie}
+\label{ma1:thm:nat-order}
+Porządek naturalny jest liniowy. Jeżeli $a<b$, to $a+c<b+c$ dla każdego $c\in\N$, a dla $c>0$ także $ac<bc$. Każdy niepusty podzbiór $\N$ ma element najmniejszy.
+\end{twierdzenie}
+\begin{proof}
+Każda liczba naturalna jest zerem albo następnikiem: zbiór liczb tej postaci zawiera zero i jest zamknięty na następnik. Żadna suma $a+S(b)=S(a+b)$ nie jest zerem. Zatem $k+l=0$ wymusza $k=l=0$ (korzystamy też z przemienności). Zwrotność wynika z $a+0=a$, przechodniość z łączności, a antysymetria z $a+k+l=a$, skracania i powyższej obserwacji.
+Liniowość dowodzimy indukcją względem $a$, dla wszystkich $b$: dla $a=0$ mamy $0\le b$. Dla $S(a)$ przypadek $b=0$ jest oczywisty; dla $b=S(t)$ porównujemy $a$ i $t$, a równość $t=a+k$ daje $S(t)=S(a)+k$, i analogicznie w drugą stronę.
+Jeżeli $a<b$, to $b=a+k$ dla pewnego $k\ne0$. Stąd $b+c=(a+c)+k$, a równość $b+c=a+c$ wymuszałaby $k=0$ przez skracanie. Zatem $a+c<b+c$. Dla $c>0$ mamy $kc>0$: pisząc $c=S(t)$, otrzymujemy $kc=kt+k$, co nie może być zerem. Zatem $bc=ac+kc>ac$.
+Wreszcie niech $A\subseteq\N$ będzie niepusty i nie ma elementu najmniejszego. Indukcyjnie pokażemy, że żaden element nie większy od $n$ nie należy do $A$. Dla $n=0$ wynika to z minimalności zera. Jeżeli wszystkie liczby nie większe od $n$ leżą poza $A$, to $S(n)$ także nie należy do $A$, gdyż w przeciwnym razie byłby najmniejszy. Używamy tu faktu, że $m<S(n)$ pociąga $m\le n$: z $S(n)=m+S(k)=S(m+k)$ wynika $n=m+k$. Indukcja przeczy niepustości $A$.
+\end{proof}
+
+\section{Liczby całkowite}
+\label{ma1:sec:integers}
+Parę $(a,b)$ interpretujemy jako formalną różnicę $a-b$, zanim odejmowanie zostanie zdefiniowane.
+\begin{definicja}
+\label{ma1:def:integer-quotient}
+Na $\N^2$ definiujemy $(a,b)\sim(c,d)$ wtedy i tylko wtedy, gdy $a+d=b+c$. Kładziemy $\Z=\N^2/{\sim}$ i oznaczamy klasę przez $[a,b]$.
+\end{definicja}
+\begin{lemat}
+Relacja $\sim$ jest relacją równoważności.
+\end{lemat}
+\begin{proof}
+Zwrotność i symetria wynikają z przemienności dodawania i symetrii równości. Jeżeli $a+d=b+c$ oraz $c+f=d+e$, to dodanie równości daje $a+f+c+d=b+e+c+d$. Skracając $c+d$, otrzymujemy $a+f=b+e$.
+\end{proof}
+\begin{definicja}[Działania na klasach]
+\label{ma1:def:integer-operations}
+Kładziemy $[a,b]+[c,d]=[a+c,b+d]$, $[a,b][c,d]=[ac+bd,ad+bc]$ oraz $-[a,b]=[b,a]$.
+\end{definicja}
+\begin{lemat}[Niezależność od reprezentantów]
+\label{ma1:lem:integer-well-defined}
+Wszystkie powyższe działania są dobrze określone.
+\end{lemat}
+\begin{proof}
+Niech $a+b'=b+a'$. Dla dodawania mamy $(a+c)+(b'+d)=(b+d)+(a'+c)$. Dla mnożenia wystarczy sprawdzić
+$(ac+bd)+(a'd+b'c)=(ad+bc)+(a'c+b'd)$.
+Lewa strona to $(a+b')c+(b+a')d$, prawa to $(b+a')c+(a+b')d$, więc są równe. Przemienność obu wzorów pozwala zmienić również drugi reprezentant. Dla negacji warunek $b+a'=a+b'$ jest dokładnie warunkiem wyjściowym z odwróconymi stronami.
+\end{proof}
+\begin{twierdzenie}
+\label{ma1:thm:integer-ring}
+$\Z$ jest pierścieniem przemiennym z jedynką $[1,0]$; odwzorowanie $n\mapsto[n,0]$ jest iniekcją zachowującą działania.
+\end{twierdzenie}
+\begin{proof}
+Łączność dodawania wynika z dodawania współrzędnych, a przemienność obu działań z ich wzorów. Zero to $[0,0]$; suma $[a,b]+[b,a]=[a+b,b+a]$ jest zerem. Mnożenie przez $[1,0]$ daje $[a,b]$. Dla łączności mnożenia obliczamy obie współrzędne iloczynu trzech klas $[a,b],[c,d],[e,f]$: pierwsza to $ace+bde+adf+bcf$, druga to $acf+bdf+ade+bce$, niezależnie od nawiasowania. Rozdzielność wynika z rozwinięcia
+$[a,b][c+e,d+f]=[ac+ae+bd+bf,ad+af+bc+be]$,
+co po przegrupowaniu jest sumą dwóch iloczynów. Wreszcie $[n,0]=[m,0]$ dokładnie wtedy, gdy $n=m$, a zachowanie działań wynika bezpośrednio ze wzorów.
+\end{proof}
+\begin{twierdzenie}[Porządek liczb całkowitych]
+\label{ma1:thm:integer-order}
+Relacja $[a,b]\le[c,d]$ określona przez $a+d\le b+c$ jest dobrze określonym porządkiem liniowym zgodnym z dodawaniem i mnożeniem przez elementy dodatnie. Pierścień $\Z$ nie ma dzielników zera.
+\end{twierdzenie}
+\begin{proof}
+Każda klasa ma postać $[n,0]$ albo $[0,n]$: jeśli $a=b+n$, to $[a,b]=[n,0]$, a jeśli $b=a+n$, to $[a,b]=[0,n]$. Wspólna klasa obu postaci musi być zerem, ponieważ $n+m=0$ wymusza $n=m=0$. W każdej z postaci parametr jest jednoznaczny: $[n,0]=[m,0]$ i $[0,n]=[0,m]$ są na mocy definicji równoważne równości $n=m$.
+Niech $P=\{[n,0]:n>0\}$. Każdy niezerowy element leży dokładnie w jednym ze zbiorów $P,-P$. Zbiór $P$ jest zamknięty na dodawanie i mnożenie przez twierdzenie o porządku naturalnym. Definiujemy $x\le y$, gdy $y-x\in P\cup\{0\}$. Ponieważ $y-x=[c+b,d+a]$, warunek ten jest równoważny $a+d\le b+c$. Definicja przez klasy zapewnia niezależność od reprezentantów. Zwrotność wynika z $x-x=0$, antysymetria z rozłączności $P,-P$, przechodniość z zamknięcia $P$ na dodawanie, a liniowość z podziału na znaki. Różnica $(y+z)-(x+z)=y-x$ dowodzi zgodności z dodawaniem. Dla $z\in P$ i $x<y$ mamy $yz-xz=(y-x)z\in P$. Jeżeli $x,y\ne0$, to istnieją $\varepsilon,\delta\in\{1,-1\}$ takie, że $\varepsilon x,\delta y\in P$. Ich iloczyn $\varepsilon\delta xy$ należy do $P$, więc $xy\ne0$. Użyte prawa znaków wynikają z rozdzielności: $xy+(-x)y=(x+(-x))y=0y=0$, gdzie $0y=0$ wynika ze skrócenia w równości $0y=(0+0)y=0y+0y$. Analogicznie $x(-y)=-(xy)$.
+\end{proof}
+\begin{przyklad}
+$[2,5]=[0,3]$, a $[2,5][4,1]=[13,22]=[0,9]$. Konstrukcja daje zatem $(-3)\cdot3=-9$ bez wcześniejszego zakładania praw działań na liczbach ujemnych.
+\end{przyklad}
+
+\section{Liczby wymierne}
+\label{ma1:sec:rationals}
+Ogólna konstrukcja ciała ułamków znajduje się w rozdziale 19 algebry abstrakcyjnej. Tutaj wykorzystujemy dodatnie mianowniki, aby od razu otrzymać porządek potrzebny w analizie.
+\begin{definicja}
+\label{ma1:def:rational-quotient}
+Identyfikujemy $\N$ z jej obrazem w $\Z$ przez $n\mapsto[n,0]$. Zanurzenie zachowuje i odzwierciedla porządek, ponieważ $[n,0]\le[m,0]$ dokładnie wtedy, gdy $n\le m$. Na $\Z\times\N_+$ definiujemy $(a,b)\approx(c,d)$ wtedy i tylko wtedy, gdy $ad=bc$. Liczbę wymierną definiujemy jako klasę tej relacji, oznaczaną $a/b$; zbiór klas oznaczamy $\Q$.
+\end{definicja}
+\begin{lemat}
+Relacja $\approx$ jest relacją równoważności.
+\end{lemat}
+\begin{proof}
+Zwrotność i symetria są bezpośrednie. Jeśli $ad=bc$ oraz $cf=de$, to $adf=bcf=bde$. Ponieważ $d>0$, mamy $d\ne0$. Równość $adf=bde$ daje $d(af-be)=0$; brak dzielników zera w $\Z$ wymusza $af=be$.
+\end{proof}
+\begin{twierdzenie}[Ciało liczb wymiernych]
+\label{ma1:thm:rational-field}
+Działania $a/b+c/d=(ad+bc)/(bd)$ i $(a/b)(c/d)=ac/(bd)$ są dobrze określone i czynią $\Q$ ciałem. Odwzorowanie $a\mapsto a/1$ jest iniekcją zachowującą działania.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $ab'=a'b$, to $(ad+bc)b'd=(a'd+b'c)bd$ oraz $(ac)b'd=(a'c)bd$, co wynika z pomnożenia równości $ab'=a'b$ przez odpowiednie czynniki i rozdzielności. Z przemienności wzorów wynika niezależność od drugiego reprezentanta.
+Przemienność jest bezpośrednia. Dla trzech ułamków $a/b,c/d,e/f$ obie kolejności nawiasowania sumy prowadzą do $(adf+bcf+bde)/(bdf)$, a iloczynu do $ace/(bdf)$. Rozdzielność sprawdzamy sprowadzając oba wyrażenia do wspólnego mianownika: $(a/b)(c/d+e/f)=(acf+ade)/(bdf)$, a suma iloczynów ma licznik $abcf+abde$ i mianownik $b^2df$, więc reprezentuje tę samą klasę. Elementy neutralne to $0/1$ i $1/1$, różne od siebie. Element przeciwny do $a/b$ to $(-a)/b$. Jeżeli $a\ne0$, odwrotność to $b/a$ dla $a>0$ i $(-b)/(-a)$ dla $a<0$; oba wzory mają dodatni mianownik i dają iloczyn $1/1$. Iniektywność zanurzenia wynika z $a/1=c/1$ wtedy i tylko wtedy, gdy $a=c$, a zachowanie działań ze wzorów.
+\end{proof}
+\begin{twierdzenie}[Porządek i gęstość]
+\label{ma1:thm:rational-order}
+Relacja $a/b\le c/d$ wtedy i tylko wtedy, gdy $ad\le bc$, jest porządkiem liniowym czyniącym $\Q$ ciałem uporządkowanym. Między dwiema różnymi liczbami wymiernymi znajduje się liczba wymierna. Ponadto dla każdego $q\in\Q$ istnieje $n\in\N$ takie, że $n>q$.
+\end{twierdzenie}
+\begin{proof}
+Z $ab'=a'b$ i dodatniości mianowników wynika, że liczniki $a,a'$ mają ten sam znak: mnożenie przez liczbę dodatnią zachowuje znak i nie zeruje elementu niezerowego. Zatem dodatniość klasy jest dobrze określona. Klasy dodatnie są zamknięte na dodawanie i mnożenie, ponieważ ich liczniki i mianowniki są dodatnie. Każda klasa niezerowa ma dokładnie jeden znak. Definiując $x\le y$ przez nieujemność $y-x$, otrzymujemy porządek liniowy i zgodność z działaniami dokładnie jak w dowodzie dla $\Z$ (różnica nie zmienia się przy wspólnym przesunięciu, a mnożenie różnicy przez dodatni element zachowuje dodatniość). Ponieważ $c/d-a/b=(bc-ad)/(bd)$, uzyskujemy żądane kryterium. W szczególności $a/1\le c/1$ wtedy i tylko wtedy, gdy $a\le c$ w $\Z$. Od tej chwili utożsamiamy $\Z$ z jego obrazem w $\Q$.
+Jeżeli $x<y$, to $z=(x+y)/2$ spełnia $z-x=(y-x)/2>0$ oraz $y-z=(y-x)/2>0$. Dla $q=a/b$ i $a\ge0$ przyjmujemy $n=a+1$ (licznik identyfikujemy z liczbą naturalną); wówczas $nb\ge n>a$. Dla $a<0$ wystarczy $n=0$.
+\end{proof}
+\begin{przyklad}[Niewystarczalność liczb wymiernych]
+\label{ma1:ex:sqrt-two}
+Nie istnieje $q\in\Q$ takie, że $q^2=2$. Gdyby istniało, wybierzmy spośród wszystkich jego reprezentantów $a/b$ reprezentanta o najmniejszym dodatnim mianowniku (zasada dobrego uporządkowania). Z $a^2=2b^2$ wynika, że $a$ jest parzyste, gdyż kwadrat liczby nieparzystej $2k+1$ wynosi $2(2k^2+2k)+1$. Piszemy $a=2c$; wtedy $b^2=2c^2$, więc również $b=2d$ dla $d>0$. Ułamek $c/d$ reprezentuje to samo $q$, lecz $d<b$, sprzeczność. Użyta klasyfikacja parzystości dla liczb naturalnych wynika z indukcji (następnik liczby parzystej jest nieparzysty, a następnik nieparzystej jest parzysty); dla liczb ujemnych wynika przez zmianę znaku.
+\end{przyklad}
+\begin{uwaga}
+\label{ma1:rem:rational-incomplete}
+Dla niepustego zbioru $B\subseteq\Q$ ograniczeniem górnym jest liczba $u\in\Q$ taka, że $b\le u$ dla każdego $b\in B$. Kresem górnym $\sup B$ nazywamy najmniejsze ograniczenie górne, o ile istnieje. Zupełność porządku oznacza tutaj istnienie kresu górnego każdego niepustego zbioru ograniczonego z góry. Gęstość porządku $\Q$ nie jest zupełnością. Istotnie, zbiór $A=\{q\in\Q:q\ge0,\ q^2<2\}$ jest niepusty (zawiera $1$) i ograniczony z góry przez $2$: gdy $q\ge2$, mamy $q^2-4=(q-2)(q+2)\ge0$, więc $q^2\ge4>2$. Pokażemy, że $A$ nie ma kresu górnego w $\Q$. Gdyby $s=\sup A$ w $\Q$, mielibyśmy $1\le s\le2$. Niech $t=(2s+2)/(s+2)$. Wówczas
+\[
+t-s=\frac{2-s^2}{s+2},\qquad t^2-2=\frac{2(s^2-2)}{(s+2)^2}.
+\]
+Jeśli $s^2<2$, to $t>s$ oraz $0<t$ i $t^2<2$, więc $t\in A$, wbrew temu, że $s$ jest ograniczeniem górnym. Jeśli $s^2>2$, to $0<t<s$ oraz $t^2>2$. Dla każdego $q\in A$ mamy $q<t$, gdyż $q\ge t$ dawałoby $q^2-t^2=(q-t)(q+t)\ge0$, a więc $q^2\ge t^2>2$. Zatem $t$ jest mniejszym ograniczeniem górnym, sprzeczność. Przypadek $s^2=2$ wyklucza poprzedni przykład. W kolejnym rozdziale skonstruujemy $\R$ i wykażemy własność kresu górnego. Dopiero po konstrukcji $\R$ będziemy wprowadzać metryki o wartościach rzeczywistych.
+\end{uwaga}

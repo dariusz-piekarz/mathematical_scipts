@@ -1,0 +1,402 @@
+name: Atlas - real rootless Docker preflight
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - ".github/workflows/atlas-rootless-probe.yml"
+      - "application/scripts/lean_rootless_ci_probe.py"
+      - "application/backend/lean_draft_transport.py"
+      - "application/backend/lean_draft_runner.py"
+      - "application/tests/test_lean_draft_transport.py"
+      - "application/scripts/lean_rootless_compiler_probe.py"
+      - "application/scripts/lean_offline_fixture.py"
+      - "application/scripts/lean_full_import_probe.py"
+      - "application/scripts/lean_scoped_payload_probe.py"
+      - "application/tests/test_lean_scoped_payload_probe.py"
+      - "application/tests/test_lean_full_import_probe.py"
+      - "application/tests/test_lean_offline_fixture.py"
+      - "application/scripts/lean_mathlib_source_probe.py"
+      - "application/scripts/lean_artifact_manifest.py"
+      - "application/lean/mathlib-source-lock.json"
+      - "application/lean/lakefile.toml"
+      - "application/tests/test_lean_rootless_compiler_probe.py"
+      - "application/lean/lean-toolchain"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: atlas-rootless-probe-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  rootless-preflight:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Verify checkout
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - name: Install dedicated rootless test prerequisites
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends uidmap dbus-user-session slirp4netns fuse-overlayfs busybox-static ca-certificates curl gnupg zstd strace
+          if ! command -v dockerd-rootless-setuptool.sh >/dev/null; then
+            # The hosted image does not necessarily configure Docker's APT source.
+            sudo install -m 0755 -d /etc/apt/keyrings
+            key="$(mktemp)"
+            curl --fail --silent --show-error --location https://download.docker.com/linux/ubuntu/gpg -o "$key"
+            fingerprint="$(gpg --batch --show-keys --with-colons "$key" | awk -F: '$1=="fpr" {print $10; exit}')"
+            test "$fingerprint" = "9DC858229FC7DD38854AE2D88D81803C0EBFCD88"
+            sudo install -m 0644 "$key" /etc/apt/keyrings/atlas-docker.asc
+            rm -f "$key"
+            . /etc/os-release
+            printf 'deb [arch=%s signed-by=/etc/apt/keyrings/atlas-docker.asc] https://download.docker.com/linux/ubuntu %s stable\n' "$(dpkg --print-architecture)" "$VERSION_CODENAME" | sudo tee /etc/apt/sources.list.d/atlas-docker.list
+            sudo apt-get update -qq
+            engine_version="$(dpkg-query -W -f='${Version}' docker-ce)"
+            sudo apt-get install -y --no-install-recommends "docker-ce-rootless-extras=$engine_version"
+          fi
+          command -v dockerd-rootless-setuptool.sh
+          /usr/bin/docker --version
+          dpkg-query -W busybox-static uidmap
+          test "$(id -u)" -ne 0
+          test -f /sys/fs/cgroup/cgroup.controllers
+          grep -q "^$(id -un):" /etc/subuid
+          grep -q "^$(id -un):" /etc/subgid
+          # Rootless Docker needs delegated cgroup v2 controllers, not merely
+          # a cgroup v2 mount. Scope the runtime drop-in to this CI user.
+          # https://docs.docker.com/engine/security/rootless/tips/
+          unit="user@$(id -u).service"
+          sudo install -d -m 0755 "/run/systemd/system/$unit.d"
+          printf '[Service]\nDelegate=cpu cpuset io memory pids\n' | sudo tee "/run/systemd/system/$unit.d/atlas-delegate.conf"
+          # Preserve diagnostics if a hosted runner cannot start its user manager.
+          runtime_unit="user-runtime-dir@$(id -u).service"
+          trap 'sudo systemctl status "$unit" "$runtime_unit" --no-pager || true; sudo journalctl -b -u "$unit" -u "$runtime_unit" -n 80 --no-pager || true' ERR
+          sudo systemctl daemon-reload
+          # Establish the runtime directory and keep the manager alive across
+          # restart before touching an existing session.
+          sudo loginctl enable-linger "$(id -un)"
+          sudo systemctl start "$runtime_unit"
+          has_required_controllers() {
+            local cg controller
+            cg="$(systemctl show -p ControlGroup --value "$unit")"
+            test -n "$cg" && test -r "/sys/fs/cgroup$cg/cgroup.controllers" || return 1
+            for controller in cpu memory pids; do
+              grep -qw "$controller" "/sys/fs/cgroup$cg/cgroup.controllers" || return 1
+            done
+          }
+          if sudo systemctl is-active --quiet "$unit"; then
+            if ! has_required_controllers; then
+              cg="$(systemctl show -p ControlGroup --value "$unit")"
+              test -n "$cg"
+              self_cg="$(awk -F: '$1 == "0" {print $3}' /proc/self/cgroup)"
+              case "$self_cg" in
+                "$cg"|"$cg/"*) echo "CI process is inside user manager; refusing restart"; exit 1 ;;
+              esac
+              sudo systemctl restart "$unit"
+            fi
+          else
+            sudo systemctl start "$unit"
+          fi
+          # The actual daemon capability check in Python remains mandatory.
+          test -S "/run/user/$(id -u)/bus"
+          cg="$(systemctl show -p ControlGroup --value "$unit")"
+          test -n "$cg"
+          systemctl show -p Delegate -p ControlGroup "$unit"
+          cat "/sys/fs/cgroup$cg/cgroup.controllers"
+          for controller in cpu memory pids; do
+            grep -qw "$controller" "/sys/fs/cgroup$cg/cgroup.controllers"
+          done
+      - name: Start dedicated user-owned Docker daemon
+        shell: bash
+        run: |
+          set -euo pipefail
+          export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+          export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
+          dockerd-rootless-setuptool.sh install --force
+          systemctl --user start docker.service
+          test -S "$XDG_RUNTIME_DIR/docker.sock"
+          test ! -L "$XDG_RUNTIME_DIR/docker.sock"
+          test ! -L "$XDG_RUNTIME_DIR"
+          test "$(stat -c %u "$XDG_RUNTIME_DIR")" = "$(id -u)"
+          test "$(stat -c %u "$XDG_RUNTIME_DIR/docker.sock")" = "$(id -u)"
+          stat -c '%F %a uid=%u %n' "$XDG_RUNTIME_DIR" "$XDG_RUNTIME_DIR/docker.sock"
+          # Restrict this dedicated CI daemon's socket, not the application guard.
+          chmod 0700 "$XDG_RUNTIME_DIR"
+          chmod 0600 "$XDG_RUNTIME_DIR/docker.sock"
+          stat -c '%F %a uid=%u %n' "$XDG_RUNTIME_DIR" "$XDG_RUNTIME_DIR/docker.sock"
+          /usr/bin/docker --host "unix://$XDG_RUNTIME_DIR/docker.sock" version
+      - name: Check actual container metadata through application transport
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          export ATLAS_ROOTLESS_REPORT_PATH="$RUNNER_TEMP/atlas-rootless-report.json"
+          export ATLAS_ROOTLESS_FAILURE_REPORT_PATH="$RUNNER_TEMP/atlas-rootless-failure.json"
+          python3 -m scripts.lean_rootless_ci_probe
+      - name: Revalidate persisted runtime report independently
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m scripts.lean_rootless_ci_probe --validate-report "$RUNNER_TEMP/atlas-rootless-report.json"
+      - name: Upload validated runtime report
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-rootless-report-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/atlas-rootless-report.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Validate diagnostic report after failure
+        if: failure()
+        id: diagnostic
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          report="$RUNNER_TEMP/atlas-rootless-failure.json"
+          if [[ ! -e "$report" && ! -L "$report" ]]; then
+            echo "Diagnostic report unavailable; run remains failed"
+            exit 0
+          fi
+          python3 -m scripts.lean_rootless_ci_probe --validate-failure-report "$report"
+          echo "valid=true" >> "$GITHUB_OUTPUT"
+      - name: Upload validated diagnostic report
+        if: failure() && steps.diagnostic.outputs.valid == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-rootless-failure-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/atlas-rootless-failure.json
+          if-no-files-found: error
+          retention-days: 30
+      # Deliberately fail only the report destination, after the real fixtures.
+      # A tolerated step failure is never sufficient: the following gates must
+      # observe the exact failure, diagnostic state and absence of success.
+      - name: Controlled failed report publication
+        id: negative_report
+        continue-on-error: true
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$(mktemp -d "$RUNNER_TEMP/atlas-negative.XXXXXXXX")"
+          echo "ATLAS_NEGATIVE_WORK=$work" >> "$GITHUB_ENV"
+          export ATLAS_ROOTLESS_REPORT_PATH="$work/missing-success/report.json"
+          export ATLAS_ROOTLESS_FAILURE_REPORT_PATH="$work/failure.json"
+          python3 -m scripts.lean_rootless_ci_probe 2>&1 | tee "$work/probe.log"
+      - name: Independently validate controlled failure report
+        env:
+          PROBE_OUTCOME: ${{ steps.negative_report.outcome }}
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$PROBE_OUTCOME" = failure
+          test ! -e "$ATLAS_NEGATIVE_WORK/missing-success/report.json"
+          grep -q '^ATLAS_ROOTLESS_OUTPUT ' "$ATLAS_NEGATIVE_WORK/probe.log"
+          grep -Fxq 'ATLAS_ROOTLESS_FAILURE_REPORT_WRITTEN' "$ATLAS_NEGATIVE_WORK/probe.log"
+          python3 -m scripts.lean_rootless_ci_probe --validate-failure-report "$ATLAS_NEGATIVE_WORK/failure.json"
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          from scripts.lean_rootless_ci_probe import read_failure_report
+          report = read_failure_report(Path(os.environ["ATLAS_NEGATIVE_WORK"]) / "failure.json",
+                                       expected_sha=os.environ["GITHUB_SHA"])
+          if report["failed_stage"] != "finalize" or set(report["cases"].values()) != {"passed"}:
+              raise SystemExit("Unexpected diagnostic failure stage")
+          PY
+          if python3 -m scripts.lean_rootless_ci_probe --validate-report "$ATLAS_NEGATIVE_WORK/failure.json"; then
+            echo "Diagnostic promoted to success" >&2
+            exit 1
+          fi
+          echo ATLAS_NEGATIVE_REPORT_CONFIRMED
+      - name: Upload controlled failure diagnostic evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-rootless-negative-report-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ env.ATLAS_NEGATIVE_WORK }}/failure.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Controlled unavailable diagnostic report
+        id: negative_missing
+        continue-on-error: true
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$(mktemp -d "$RUNNER_TEMP/atlas-negative-missing.XXXXXXXX")"
+          echo "ATLAS_MISSING_WORK=$work" >> "$GITHUB_ENV"
+          export ATLAS_ROOTLESS_REPORT_PATH="$work/missing-success/report.json"
+          export ATLAS_ROOTLESS_FAILURE_REPORT_PATH="$work/missing-diagnostic/failure.json"
+          python3 -m scripts.lean_rootless_ci_probe 2>&1 | tee "$work/probe.log"
+      - name: Require fail-closed result without diagnostic file
+        env:
+          PROBE_OUTCOME: ${{ steps.negative_missing.outcome }}
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$PROBE_OUTCOME" = failure
+          test ! -e "$ATLAS_MISSING_WORK/missing-success/report.json"
+          test ! -e "$ATLAS_MISSING_WORK/missing-diagnostic/failure.json"
+          grep -q '^ATLAS_ROOTLESS_OUTPUT ' "$ATLAS_MISSING_WORK/probe.log"
+          grep -Fxq 'ATLAS_ROOTLESS_FAILURE_REPORT_UNAVAILABLE' "$ATLAS_MISSING_WORK/probe.log"
+          grep -q '^FileNotFoundError:.*missing-success/report.json' "$ATLAS_MISSING_WORK/probe.log"
+          if python3 -m scripts.lean_rootless_ci_probe --validate-report "$ATLAS_MISSING_WORK/missing-success/report.json"; then
+            echo "Missing report accepted" >&2
+            exit 1
+          fi
+          echo ATLAS_NEGATIVE_MISSING_CONFIRMED
+      - name: Fetch fixed official Lean release on CI host
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location --proto '=https' --max-time 300 \
+            https://github.com/leanprover/lean4/releases/download/v4.26.0/lean-4.26.0-linux.tar.zst \
+            -o "$RUNNER_TEMP/atlas-lean-4.26.0-linux.tar.zst"
+          printf '%s  %s\n' 873c252b1c6b1392e5720ad8d5a137aabbe72c9f96a930fdb5a1dd1ddc5da454 \
+            "$RUNNER_TEMP/atlas-lean-4.26.0-linux.tar.zst" | sha256sum --check
+      - name: Compile fixed trusted Lean core fixture through rootless transport
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m scripts.lean_rootless_compiler_probe | tee "$RUNNER_TEMP/atlas-rootless-lean-core.log"
+          grep -q '^ATLAS_ROOTLESS_LEAN_CORE ' "$RUNNER_TEMP/atlas-rootless-lean-core.log"
+          grep -q '^ATLAS_ROOTLESS_LEAN_REJECTED ' "$RUNNER_TEMP/atlas-rootless-lean-core.log"
+      - name: Independently validate persisted fixed Lean report
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m scripts.lean_rootless_compiler_probe --validate-report-pair "$RUNNER_TEMP/atlas-rootless-lean-core.json" "$RUNNER_TEMP/atlas-rootless-lean-rejected.json"
+      - name: Upload fixed Lean core fixture evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-rootless-lean-core-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/atlas-rootless-lean-core.log
+            ${{ runner.temp }}/atlas-rootless-lean-core.json
+            ${{ runner.temp }}/atlas-rootless-lean-rejected.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Prepare pinned Mathlib dependencies on the CI host
+        working-directory: application/lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          toolchain="$RUNNER_TEMP/atlas-offline-host-toolchain"
+          mkdir "$toolchain"
+          tar --zstd -xf "$RUNNER_TEMP/atlas-lean-4.26.0-linux.tar.zst" -C "$toolchain"
+          export PATH="$toolchain/lean-4.26.0-linux/bin:$PATH"
+          lake --version
+          lake update
+          lake exe cache get
+          test "$(git -C .lake/packages/mathlib rev-parse HEAD)" = "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67"
+      - name: Verify offline fixture contracts on native Linux
+        working-directory: application
+        run: python3 -m unittest tests.test_lean_offline_fixture tests.test_lean_artifact_manifest tests.test_lean_scoped_payload_probe -v
+      - name: Observe and compile one fixed Mathlib fixture without container network
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m scripts.lean_offline_fixture 2>&1 | tee "$RUNNER_TEMP/atlas-mathlib-offline.log"
+          grep -q '^ATLAS_MATHLIB_OFFLINE_FIXTURE ' "$RUNNER_TEMP/atlas-mathlib-offline.log"
+          grep -q '^ATLAS_MATHLIB_OFFLINE_REJECTED ' "$RUNNER_TEMP/atlas-mathlib-offline.log"
+          digest="$(sha256sum "$RUNNER_TEMP/atlas-mathlib-offline-manifest.json" | cut -d ' ' -f1)"
+          echo "ATLAS_OFFLINE_MANIFEST_SHA=$digest" >> "$GITHUB_ENV"
+          rejected_digest="$(sha256sum "$RUNNER_TEMP/atlas-mathlib-offline-rejected-manifest.json" | cut -d ' ' -f1)"
+          echo "ATLAS_OFFLINE_REJECTED_MANIFEST_SHA=$rejected_digest" >> "$GITHUB_ENV"
+      - name: Independently validate persisted Mathlib fixture evidence
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m scripts.lean_offline_fixture \
+            --validate-report "$RUNNER_TEMP/atlas-mathlib-offline-report.json" \
+            --manifest "$RUNNER_TEMP/atlas-mathlib-offline-manifest.json" \
+            --origins "$RUNNER_TEMP/atlas-mathlib-offline-origins.json" \
+            --expected-manifest-sha256 "$ATLAS_OFFLINE_MANIFEST_SHA"
+          python3 -m scripts.lean_offline_fixture --validate-report-pair \
+            --evidence-directory "$RUNNER_TEMP" \
+            --expected-manifest-sha256 "$ATLAS_OFFLINE_MANIFEST_SHA" \
+            --expected-rejected-manifest-sha256 "$ATLAS_OFFLINE_REJECTED_MANIFEST_SHA"
+      - name: Measure full Mathlib import on trusted CI host
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest tests.test_lean_full_import_probe -v
+          python3 -m scripts.lean_full_import_probe | tee "$RUNNER_TEMP/atlas-full-mathlib-measurement.log"
+          grep -q '^ATLAS_FULL_MATHLIB_MEASUREMENT ' "$RUNNER_TEMP/atlas-full-mathlib-measurement.log"
+      - name: Compile fixed scoped Mathlib fixture without container network
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m scripts.lean_offline_fixture --profile scoped 2>&1 | tee "$RUNNER_TEMP/atlas-mathlib-scoped.log"
+          grep -q '^ATLAS_MATHLIB_SCOPED_FIXTURE ' "$RUNNER_TEMP/atlas-mathlib-scoped.log"
+          grep -q '^ATLAS_MATHLIB_SCOPED_REJECTED ' "$RUNNER_TEMP/atlas-mathlib-scoped.log"
+          grep -q '^ATLAS_SCOPED_PAYLOAD_PROBE ' "$RUNNER_TEMP/atlas-mathlib-scoped.log"
+          python3 -c 'import json,sys; from pathlib import Path; r=json.loads(Path(sys.argv[1]).read_text()); assert r["repair_loop"]["outcome"]=="repair_compiled"; assert [x["exit_code"] for x in r["repair_loop"]["attempts"]]==[1,1,0]' "$RUNNER_TEMP/atlas-mathlib-scoped-payload-report.json"
+          digest="$(sha256sum "$RUNNER_TEMP/atlas-mathlib-scoped-manifest.json" | cut -d ' ' -f1)"
+          rejected_digest="$(sha256sum "$RUNNER_TEMP/atlas-mathlib-scoped-rejected-manifest.json" | cut -d ' ' -f1)"
+          echo "ATLAS_SCOPED_MANIFEST_SHA=$digest" >> "$GITHUB_ENV"
+          echo "ATLAS_SCOPED_REJECTED_MANIFEST_SHA=$rejected_digest" >> "$GITHUB_ENV"
+          payload_digest="$(sha256sum "$RUNNER_TEMP/atlas-mathlib-scoped-payload-manifest.json" | cut -d ' ' -f1)"
+          echo "ATLAS_SCOPED_PAYLOAD_MANIFEST_SHA=$payload_digest" >> "$GITHUB_ENV"
+          report_digest="$(sha256sum "$RUNNER_TEMP/atlas-mathlib-scoped-payload-report.json" | cut -d ' ' -f1)"
+          echo "ATLAS_SCOPED_PAYLOAD_REPORT_SHA=$report_digest" >> "$GITHUB_ENV"
+      - name: Independently validate persisted scoped Mathlib fixture evidence
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m scripts.lean_offline_fixture --profile scoped --validate-report-pair \
+            --evidence-directory "$RUNNER_TEMP" \
+            --expected-manifest-sha256 "$ATLAS_SCOPED_MANIFEST_SHA" \
+            --expected-rejected-manifest-sha256 "$ATLAS_SCOPED_REJECTED_MANIFEST_SHA"
+          python3 -m scripts.lean_scoped_payload_probe \
+            --evidence-directory "$RUNNER_TEMP" \
+            --expected-manifest-sha256 "$ATLAS_SCOPED_PAYLOAD_MANIFEST_SHA" \
+            --expected-baseline-sha256 "$ATLAS_SCOPED_MANIFEST_SHA" \
+            --expected-report-sha256 "$ATLAS_SCOPED_PAYLOAD_REPORT_SHA"
+      - name: Retain scoped Mathlib offline fixture evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-mathlib-offline-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/atlas-mathlib-offline.log
+            ${{ runner.temp }}/atlas-mathlib-offline-manifest.json
+            ${{ runner.temp }}/atlas-mathlib-offline-origins.json
+            ${{ runner.temp }}/atlas-mathlib-offline-report.json
+            ${{ runner.temp }}/atlas-mathlib-offline-rejected-manifest.json
+            ${{ runner.temp }}/atlas-mathlib-offline-rejected-origins.json
+            ${{ runner.temp }}/atlas-mathlib-offline-rejected-report.json
+            ${{ runner.temp }}/atlas-full-mathlib-measurement.json
+            ${{ runner.temp }}/atlas-full-mathlib-measurement.log
+            ${{ runner.temp }}/atlas-mathlib-scoped.log
+            ${{ runner.temp }}/atlas-mathlib-scoped-*.json
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Stop test daemon
+        if: always()
+        shell: bash
+        run: |
+          export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+          export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
+          systemctl --user stop docker.service || true

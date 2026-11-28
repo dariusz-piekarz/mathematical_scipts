@@ -1,0 +1,15 @@
+# Rozdział 14 — audyt 22 (poprawkowy, 0/2)
+
+Data: 24 listopada 2026. Gałąź biblioteka-matematyczna-iteracja-6.
+Punkt wyjścia: audyt 21, raport 4c3b97aaf9ab0567b532051e6eccf11f2b5865f5. Źródło 4d1688c83f898df4d2f3f0a4cdbaa353242ffb7a, testy 57d96256979075b09958c6a2927daa16d4f239ae.
+
+## Kontrola
+Ponownie przeczytano cały rozdział, weryfikując definicje i kwantyfikatory, przykłady w R2, normę l1, regułę łańcuchową, sumy Riemanna, twierdzenie o ciągłej pochodnej Gâteaux, rachunek w przestrzeni Hilberta, zespoloną różniczkowalność, pochodne słabe oraz rachunek Bastianiego. Argumenty o istnieniu całki Riemanna, surjektywności operatora samosprzężonego z dolnym ograniczeniem i minimizatorze energii są poprawne. Nie znaleziono błędnej tezy.
+Dziesięć miejsc wymagających korekty: jawne kwantyfikatory dla kierunków w l1 i funkcji kwadratowej; wskazanie punktu x, przestrzeni operatorów zespolenie liniowych i normowego warunku reszty w definicji zespolonej pochodnej Frécheta; kwantyfikatory dla x' oraz y w twierdzeniu o pochodnych skalarnych; poprawka składni przykładu w l2, rozwinięcie argumentu z reprezentacją Riesza; jawne parowanie c0 z l1 i granica sum częściowych; szczegółowy rachunek pochodnej skalarnej funkcji pomocniczej g_t w dowodzie Bastianiego (jednorodność daje czynnik t, który skraca się po zastosowaniu Newtona–Leibniza). Nie dodawano nowych tematów.
+
+## Technika
+CI wejściowej wersji: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45353027827, job 138303918994, 9/9 kroków, 21/21 testów, trzy przebiegi pdflatex, 137 stron kontekstu 01–17. Pobrano artefakt 14900992953, sprawdzono log (jedno znane underfull hbox, brak overfull, niezdefiniowanych odsyłaczy, brakujących znaków i niezdefiniowanych poleceń) oraz render stron 78–86, w tym rysunek na stronie 80. Brak widocznych kolizji i obcięć. Oględziny dotyczą wersji sprzed audytu 22.
+Źródło po korektach: commit 4f11c5749aac58447e41d6e91935159b835b6696, blob 49b8c98236e924281d4b7ee756bbe6213025f165, 486 wierszy, 36 etykiet zachowanych w kolejności, 15 dowodów, poprawne zagnieżdżenie środowisk. Testy niezmienione, 21. Nowego CI jeszcze nie potwierdzono. Odczyt przebiegów: [{"id":45353538962,"name":"Functional analysis - module 15B audit","status":"in_progress","conclusion":null},{"id":45353538784,"name":"Functional analysis - chapter 14 audit","status":"in_progress","conclusion":null},{"id":45353538698,"name":"Functional analysis - module 15A audit","status":"in_progress","conclusion":null},{"id":45353538780,"name":"Polish mathematical terminology","status":"in_progress","conclusion":null},{"id":45353538708,"name":"Mathematical library application checks","status":"in_progress","conclusion":null},{"id":45353538709,"name":"Functional analysis - chapter 15 audit","status":"in_progress","conclusion":null}].
+
+## Decyzja
+Audyt poprawkowy: 14 = 0/2. Następny audyt 23 nadal rozdziału 14. Kolejność 15, 15A, 15B, 16 i dalsze bez zmian; zakres nowych tematów pozostaje zamknięty.

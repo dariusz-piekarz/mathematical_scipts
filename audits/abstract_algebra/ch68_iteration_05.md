@@ -1,0 +1,11 @@
+# AA-68 — audyt V: zamknięcie etapów D/P
+
+24 listopada 2026 r. Źródło AA-68 3189372249d8768dc9ea731fa3518d8e8cb35800 zgodne z audytami II–IV i z przebiegiem CI. W tych audytach skontrolowano wszystkie cztery dowody, przykład rzędu jeden, zależności AA-65–67 i zakończenie eliminacji trójkątnej. Nie ma otwartej usterki matematycznej. Nie zmieniano źródła rozdziału.
+
+CI 45475570053, job 138734766238, head 5f86a2b51612ea1bd716f1edfa534ca0171bfd0c: 147/147 success, w tym pełny pakiet 4788 testów repozytorium oraz 12 poprawionych testów przekrojowych. Wcześniejsze runy 45475195502, 45475269441, 45475522936 również success. Globalna bramka AA-01–68 PASS: 68 rozdziałów, 581 dowodów, 307 twierdzeń, 172 lematy, 68 wniosków, 355 przykładów, 1256 unikatowych etykiet, 901 wystąpień odsyłaczy, 487 różnych celów, 0 nierozwiązanych odsyłaczy i powielonych etykiet, 0 brakujących lub źle uporządkowanych rozdziałów.
+
+Ponownie pobrano oba trwałe skrypty JS z aktualnej gałęzi; ich bloby odpowiadają zielonemu CI (c6d56326ae652d79135454b97303127609daffb0 i e75e9438e33de3dc52c88279a09e6378674bd3bc). Wszystkie cztery regresje rzeczywiście wykonano: CH-01 PASS (441 iloczynów, 9261 współczynników); CH-02 PASS (121 iloczynów, 25586 odbić); CH-03 PASS (108 przypadków, 1730 kroków); CH-04 PASS (28 modeli A2, 714 tablic, 696 kroków, 63 kombinacje orbit). Lean nieuruchamiany.
+
+Pobrano artefakt 14960255792 (AA68.zip) i rozpakowano PDF oraz log. PDF 428 stron, 2908220 bajtów, SHA-256 c5884ffaadd99d7a95e7b05a0536691690f07bdc0fb7042d16bb86c391d048df. Zakładki wskazują początek AA-68 na fizycznej stronie 425. Wyrenderowano PyMuPDF w skali 1.45 wszystkie cztery strony fizyczne 425–428 (drukowane 412–415) i obejrzano każdą osobno: czytelne tytuły, wzory i odsyłacze, brak obcięć, nałożeń lub przekroczeń marginesów. Strona 428 zawiera jedynie końcowy akapit; pozostawiono naturalny podział stron bez sztucznego ścieśniania tekstu. Log: 0 Overfull, 0 Underfull, 0 Warning:, 0 undefined references, 0 linii rozpoczynających się !.
+
+AA-68 STABILNY w ustalonym zakresie; etapy D/P zaliczone. AA-69 nieotwarty; następny etap D: wzór charakterów Weyla (wraz z wymaganymi lematami i tożsamością mianownika; zakres rozdzielić, jeśli pełny dowód wymaga większego materiału). Nie zmieniano pozostałych skryptów.

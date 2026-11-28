@@ -1,0 +1,3 @@
+ # PDE-03 — kontrola CI i składu po iteracji 37
+
+2026-11-24. Run 45457851380, job 138672036390 completed/success na ebf04422839f991e6a08dbf9778a82edb1510646. Log: Ran 7 tests, OK; bramka kompilacji przeszła. Artefakt 14950687662, izolowany PDF 21 stron. Wyrenderowano wszystkie strony w PyMuPDF 0.85x i obejrzano cztery plansze: 1–6,7–12,13–18,19–21. Rysunek inwersji sferycznej i tłumienia modów Fouriera czytelne na planszach, bez widocznych obcięć; ostatnia strona zawiera krótkie podsumowanie. Zewnętrzne odsyłacze tylko numeryczne zgodnie z poprzednim raportem. Nie jest to kontrola całej książki ani pełny audyt matematyczny. Bez zmian źródła 697407ee628ed254cfc86a38cac5a13e72a721e5. Nadal otwarta stabilizacja PDE-03.

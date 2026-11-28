@@ -1,0 +1,851 @@
+\chapter{Algorytmy przepływowe: Ford--Fulkerson, Edmonds--Karp i Dinic}
+\label{ch:tg-flow-algorithms}
+
+W rozdziale \ref{ch:tg-menger} wprowadziliśmy sieci przepływowe,
+przepustowości resztowe, przekroje oddzielające $s$ od $t$ i udowodniliśmy twierdzenie
+o maksymalnym przepływie i minimalnym przekroju dla
+przepustowości całkowitych (twierdzenie \ref{thm:tg-maxflow}).
+Obecnie zajmiemy się \emph{algorytmiczną} stroną zagadnienia:
+wyborem ścieżek powiększających, ograniczeniami czasu
+oraz certyfikatem optymalności.
+Rozdział \ref{ch:tg-bfs-dfs} dostarcza BFS i DFS, których
+użyjemy jako podstawowych procedur.
+
+\section{Sieci i niezmiennik przepływu}
+\label{sec:tg-flow-model}
+
+Niech $D=(V,A)$ będzie skończoną siecią skierowaną bez pętli
+z różnymi wierzchołkami $s,t\in V$ oraz
+przepustowościami $c:A\to\mathbb R_{\geq0}$.
+Oznaczamy $n=|V|$, $m=|A|$.
+Przepływ $f$ spełnia $0\leq f(a)\leq c(a)$ dla każdego łuku
+oraz prawo zachowania przepływu w $V\setminus\{s,t\}$.
+Jego wartość $|f|$ oznacza bilans wypływu ze źródła,
+jak w rozdziale \ref{ch:tg-menger}.
+Dopuszczamy zarówno łuki $u\to v$, jak i $v\to u$:
+są to \emph{dwa różne łuki oryginalne}.
+Przechowujemy je oddzielnie, również jeśli ich
+przejścia resztowe mają te same końce. Jeśli dopuszczamy
+łuki równoległe, każdy łuk ma własny identyfikator,
+a zapis $(u,v)$ określa jedynie jego początek i koniec.
+Dla $S\subseteq V$ przez pojemność przekroju
+$c(S,V\setminus S)$ rozumiemy sumę przepustowości
+wszystkich oryginalnych łuków prowadzących z $S$ do
+$V\setminus S$. Terminy \emph{pojemność resztowa}
+i \emph{przepustowość resztowa} mają tutaj to samo znaczenie.
+
+\begin{definicja}[Przejścia resztowe i ścieżka powiększająca]
+\label{def:tg-flow-residual}
+Dla oryginalnego łuku $a=(u,v)$ o pojemności $c(a)$
+i przepływie $f(a)$ wprowadzamy przejście resztowe
+\emph{w przód} $u\to v$ o pojemności $c(a)-f(a)$
+oraz przejście \emph{wstecz} $v\to u$ o pojemności $f(a)$.
+Zachowujemy informację, z którego oryginalnego łuku
+pochodzi dane przejście; zerowe pojemności można pominąć.
+\emph{Ścieżką powiększającą} jest prosta skierowana
+ścieżka od $s$ do $t$ z dodatnimi pojemnościami
+resztowymi na każdym kroku.
+Jej \emph{wąskim gardłem} nazywamy minimum tych pojemności.
+\end{definicja}
+
+\begin{lemat}[Powiększenie zachowuje dopuszczalność]
+\label{lem:tg-flow-augment}
+Niech $f$ będzie przepływem dopuszczalnym,
+a $P$ ścieżką powiększającą o wąskim gardle
+$\varepsilon>0$. Zwiększenie przepływu o
+$\varepsilon$ na łukach oryginalnych użytych w przód
+i zmniejszenie go o $\varepsilon$ na łukach użytych
+wstecz daje przepływ dopuszczalny $f'$,
+dla którego $|f'|=|f|+\varepsilon$.
+\end{lemat}
+\begin{proof}
+Każdy krok w przód ma przepustowość resztową
+$c(a)-f(a)\geq\varepsilon$, więc po aktualizacji
+nadal $f'(a)\leq c(a)$. Na przejściu wstecz użytym przez $P$ mamy
+$f(a)\geq\varepsilon$, więc przepływ nie staje się
+ujemny. Aktualizacja w przód nie narusza dolnego
+ograniczenia, a aktualizacja wstecz nie narusza
+górnego ograniczenia przepustowości. Prostota ścieżki gwarantuje, że żaden oryginalny łuk
+nie jest aktualizowany dwukrotnie: użycie obu jego
+przejść resztowych wymagałoby powtórzenia wierzchołka.
+Niezależnie od tego, czy krok resztowy $u\to v$ jest
+przejściem w przód czy wstecz, aktualizacja zwiększa
+bilans wypływu w $u$ o $\varepsilon$ i zmniejsza go
+w $v$ o $\varepsilon$. W każdym wewnętrznym wierzchołku
+$P$ zmiany od kroku wchodzącego i wychodzącego
+sumują się więc do zera.
+W źródle bilans wypływu rośnie o $\varepsilon$,
+a w ujściu maleje o tę samą wartość.
+\end{proof}
+
+\begin{twierdzenie}[Resztowy certyfikat optymalności]
+\label{thm:tg-flow-certificate}
+Niech $D=(V,A)$ będzie skończoną siecią skierowaną
+bez pętli, $s,t\in V$, $s\ne t$, $c:A\to\mathbb R_{\geq0}$,
+a $f$ przepływem dopuszczalnym od $s$ do $t$.
+Wówczas następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $f$ ma maksymalną wartość;
+\item w sieci resztowej $f$ nie istnieje ścieżka
+      powiększająca z $s$ do $t$;
+\item istnieje przekrój $S\subset V$ z
+      $s\in S$, $t\notin S$, dla którego
+      $|f|=c(S,V\setminus S)$.
+\end{enumerate}
+W takim przypadku $S$ można wybrać jako zbiór
+wierzchołków osiągalnych z $s$ w sieci resztowej.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli istnieje ścieżka powiększająca,
+lemat \ref{lem:tg-flow-augment} pozwala
+ściśle zwiększyć wartość przepływu. Zatem (i)
+implikuje (ii). Załóżmy (ii), a przez $S$ oznaczmy
+zbiór wierzchołków osiągalnych z $s$
+po dodatnich przejściach resztowych.
+Wtedy $s\in S$, $t\notin S$.
+Każdy oryginalny łuk z $S$ do $V\setminus S$
+jest nasycony, ponieważ inaczej istniałoby
+dodatnie przejście resztowe na zewnątrz $S$.
+Każdy oryginalny łuk w przeciwnym kierunku
+ma przepływ zero, ponieważ jego dodatnie
+przejście wstecz prowadziłoby poza $S$.
+Sumując bilanse wypływu po wierzchołkach $S$,
+otrzymujemy (por. lemat \ref{lem:tg-cutbound})
+\[
+|f|=\sum_{a:S\to V\setminus S}f(a)
+-\sum_{a:V\setminus S\to S}f(a).
+\]
+Łuki wewnętrzne w $S$ wnoszą dwa przeciwne
+składniki, a jedynym niezerowym bilansem w $S$
+może być bilans źródła. Każdy łuk równoległy
+liczymy osobno. Z nasycenia łuków wychodzących
+i zerowego przepływu na wchodzących wynika
+$|f|=c(S,V\setminus S)$, czyli (iii).
+Dla dowolnego innego przepływu dopuszczalnego
+$g$ ta sama tożsamość oraz nierówności
+$0\leq g(a)\leq c(a)$ dają
+$|g|\leq c(S,V\setminus S)=|f|$.
+Dowodzi to (iii)$\Rightarrow$(i).
+\end{proof}
+
+\begin{wniosek}[Twierdzenie o maksymalnym przepływie
+i minimalnym przekroju dla przepustowości rzeczywistych]
+\label{cor:tg-flow-real-mincut}
+Niech $D=(V,A)$ będzie skończoną siecią skierowaną
+bez pętli, $s,t\in V$, $s\ne t$ i
+$c:A\to\mathbb R_{\geq0}$. Wówczas istnieje
+przepływ maksymalny od $s$ do $t$ i zachodzi
+\[
+\max_f |f|=\min_{\substack{s\in S\subseteq V\\t\notin S}}
+c(S,V\setminus S).
+\]
+Maksimum bierzemy po wszystkich przepływach
+dopuszczalnych od $s$ do $t$.
+\end{wniosek}
+\begin{proof}
+Zbiór wszystkich dopuszczalnych przepływów
+jest niepusty, ponieważ zawiera przepływ zerowy.
+Jest przecięciem prostopadłościanu
+$\prod_{a\in A}[0,c(a)]$ z podprzestrzenią
+liniową wyznaczoną przez równania zachowania przepływu.
+Jest zatem domkniętym i ograniczonym podzbiorem
+skończenie wymiarowej przestrzeni $\mathbb R^A$,
+a więc jest zwarty.
+Liniowa funkcja $f\mapsto |f|$ osiąga na nim
+maksimum. Dla przepływu maksymalnego
+twierdzenie \ref{thm:tg-flow-certificate}
+dostarcza przekroju o równej pojemności,
+a lemat \ref{lem:tg-cutbound} daje nierówność
+dla wszystkich innych przepływów i przekrojów.
+\end{proof}
+
+\begin{twierdzenie}[Całkowity rozkład przepływu i drogi rozłączne krawędziowo]
+\label{thm:tg-flow-integral-paths}
+Niech $D=(V,A)$ będzie skończoną siecią skierowaną bez pętli,
+z różnymi wierzchołkami $s,t$ i nieujemnymi całkowitymi
+przepustowościami $c(a)$. Niech $f$ będzie dopuszczalnym
+przepływem całkowitoliczbowym o nieujemnej wartości
+$k=|f|\geq0$.
+Wówczas istnieją skierowane proste ścieżki
+$P_1,\ldots,P_\ell$ od $s$ do $t$,
+dodatnie liczby całkowite $q_1,\ldots,q_\ell$
+oraz skończona rodzina skierowanych cykli prostych
+$C_1,\ldots,C_h$ o dodatnich całkowitych
+współczynnikach $b_j$, takie że
+\[
+ f=\sum_{i=1}^{\ell}q_i\chi_{P_i}
+   +\sum_{j=1}^{h}b_j\chi_{C_j},
+ \qquad \sum_{i=1}^{\ell}q_i=k.
+\]
+Dla łuku $a\in A$ symbole $\chi_P(a)$ i $\chi_C(a)$
+oznaczają funkcje charakterystyczne odpowiednich
+zbiorów łuków. Jeśli ponadto wszystkie przepustowości
+wynoszą $0$ albo $1$, niech $D_+$ oznacza podgraf
+o zbiorze wierzchołków $V$, utworzony z łuków
+o przepustowości $1$. Wówczas istnieje rodzina
+$k$ parami rozłącznych krawędziowo ścieżek
+skierowanych od $s$ do $t$ w $D_+$.
+Maksymalna liczba takich ścieżek w $D_+$
+jest równa najmniejszej liczbie łuków $D_+$,
+których usunięcie niszczy wszystkie drogi skierowane
+od $s$ do $t$ w $D_+$.
+\end{twierdzenie}
+\begin{proof}
+Przypuśćmy najpierw, że $k>0$, i rozważmy
+podgraf złożony z łuków, na których $f(a)>0$.
+Pokażemy, że zawiera on ścieżkę skierowaną
+od $s$ do $t$. W przeciwnym razie zbiór $S$
+wierzchołków osiągalnych z $s$ po takich łukach
+nie zawierałby $t$, a żaden łuk
+$S\to V\setminus S$ nie niósłby dodatniego
+przepływu. Z tożsamości przepływu przez przekrój
+otrzymalibyśmy
+\[
+k=\sum_{a\colon S\to V\setminus S}f(a)
+  -\sum_{a\colon V\setminus S\to S}f(a)\leq0,
+\]
+sprzeczność. Wybierzmy więc prostą ścieżkę $P$
+z dodatnim przepływem na każdym łuku. Oznaczmy
+bieżącą wartość przepływu przez $r>0$ i połóżmy
+\[
+q=\min\{r,\min_{a\in P}f(a)\}.
+\]
+Liczba $q$ jest całkowita i dodatnia.
+Warunek $q\leq r$ zapobiega zmianie znaku wartości
+przepływu przy usuwaniu ścieżki, nawet gdy
+w sieci występuje cyrkulacja.
+
+Odjęcie $q\chi_P$ zachowuje
+nieujemność i ograniczenia przepustowości:
+na łukach $P$ mamy $q\leq f(a)$, a na pozostałych
+przepływ pozostaje bez zmian. W każdym wewnętrznym
+wierzchołku $P$ zmniejszamy wpływ i wypływ
+o tę samą wartość. W źródle odejmujemy $q$
+od bilansu wypływu, w ujściu zaś dodajemy $q$.
+Otrzymany przepływ jest dopuszczalny i ma
+wartość $r-q$.
+Powtarzamy ten krok, aż wartość stanie się zerowa.
+Każdy krok albo kończy tę fazę (gdy $q=r$),
+albo zeruje przepływ na co najmniej jednym łuku.
+Wartości na łukach nie rosną, więc liczba kroków
+jest skończona.
+
+Pozostały nieujemny przepływ całkowitoliczbowy
+o wartości zero jest cyrkulacją. Bilans wypływu
+w $s$ jest zerowy z definicji wartości, a suma
+bilansów wszystkich wierzchołków wynosi zero,
+gdyż każdy łuk wnosi dwa przeciwne składniki.
+Ponieważ pozostałe wierzchołki poza $t$ mają
+bilans zero, także $t$ ma bilans zero.
+Jeżeli cyrkulacja jest niezerowa, wybierzmy
+łuk o dodatnim przepływie i rozpocznijmy nim spacer.
+W każdym osiągniętym wierzchołku dodatni wpływ
+wymusza dodatni wypływ. Spacer można więc kontynuować
+aż do pierwszego powtórzenia wierzchołka; fragment
+między jego dwoma wystąpieniami jest cyklem prostym.
+Odejmujemy minimalny dodatni przepływ na łukach
+tego cyklu. W każdym jego wierzchołku wpływ
+i wypływ zmniejszają się o tę samą liczbę,
+więc pozostały przepływ nadal jest cyrkulacją. Także tutaj każdy krok
+zeruje co najmniej jeden łuk, więc
+po skończonej liczbie kroków otrzymujemy zero.
+Dodając odjęte składniki, odtwarzamy początkowy
+przepływ $f$ na każdym łuku. Suma współczynników
+ścieżek wynosi $k$, ponieważ ich odjęcie zmniejszyło
+wartość z $k$ do zera, a cykle mają bilans zerowy.
+Dla $k=0$ rodzina ścieżek jest pusta.
+
+Gdy wszystkie $c(a)\in\{0,1\}$,
+na każdym łuku $f(a)\leq1$. Stąd
+wszystkie współczynniki $q_i,b_j$
+są równe $1$, a ścieżki $P_i$
+nie mają wspólnych łuków.
+Ponieważ żadna dodatnia część przepływu
+nie przechodzi przez łuk o przepustowości $0$,
+wszystkie te ścieżki leżą w $D_+$.
+Ich liczba wynosi $k$.
+Odwrotnie, każda rodzina $k$
+parami rozłącznych krawędziowo
+ścieżek w $D_+$ wyznacza dopuszczalny
+przepływ o wartości $k$.
+Każda taka ścieżka musi przejść z $S$ do
+$V\setminus S$ co najmniej jednym łukiem $D_+$.
+Z rozłączności krawędziowej wynika, że wybrane
+łuki dla różnych ścieżek są różne. Liczba
+ścieżek nie przekracza więc pojemności przekroju.
+Dla przepustowości $0$ lub $1$
+pojemność przekroju jest dokładnie
+liczbą jego łuków należących do $D_+$.
+Twierdzenie o maksymalnym przepływie
+i minimalnym przekroju
+\ref{cor:tg-flow-real-mincut}
+daje zatem przekrój o liczbie takich łuków
+równej maksymalnej wartości
+przepływu; maksimum osiągamy
+przepływem całkowitoliczbowym
+na mocy algorytmu Forda--Fulkersona
+z Twierdzenia~\ref{thm:tg-flow-ff-integer}.
+Po usunięciu tych łuków
+nie ma drogi od $s$ do $t$ w $D_+$.
+Z drugiej strony każdy zbiór usuwanych łuków,
+który niszczy wszystkie takie drogi, musi zawierać
+co najmniej jeden łuk z każdej ścieżki rodziny
+otrzymanej z maksymalnego przepływu.
+Rozłączność tej rodziny wymusza co najmniej tyle
+usuwanych łuków, ile wynosi wartość maksimum.
+Dowodzi to równości z minimalną licznością
+dowolnego zbioru rozcinającego.
+Nie można w tym wniosku liczyć dróg
+używających łuków o przepustowości $0$.
+\end{proof}
+
+\begin{przyklad}[Cyrkulacja przechodząca przez źródło i ujście]
+Niech sieć ma dwa przeciwne łuki $s\to t$ oraz $t\to s$
+o przepustowościach odpowiednio $2$ i $1$.
+Dla przepływu nasycającego oba łuki wartość wynosi $1$.
+Ścieżka $s\to t$ niesie jednak dwie jednostki.
+Odjęcie dwóch jednostek dałoby wartość $-1$.
+Odejmujemy więc jedną jednostkę, a pozostały przepływ
+jest cyrkulacją o wartości zero na cyklu $s\to t\to s$.
+\end{przyklad}
+
+\begin{przyklad}[Dwie rozłączne drogi mimo łuku poprzecznego]
+\label{ex:tg-flow-integral-paths}
+Niech sieć ma łuki
+$s\to a$, $s\to b$, $a\to t$, $b\to t$
+i $a\to b$, wszystkie o przepustowości $1$.
+Istnieją dwie rozłączne krawędziowo drogi
+$s\to a\to t$ i $s\to b\to t$.
+Przekrój $S=\{s\}$ ma dokładnie dwa łuki,
+więc maksymalna liczba rozłącznych dróg
+jest równa $2$. W szczególności
+łuk poprzeczny $a\to b$ nie zmienia
+tej liczby.
+\end{przyklad}
+
+\section{Ford--Fulkerson: wybór dowolnej ścieżki}
+\label{sec:tg-flow-ff}
+
+Schemat Forda--Fulkersona rozpoczyna od
+przepływu zerowego. Dopóki istnieje ścieżka
+powiększająca, wybiera \emph{dowolną} taką
+ścieżkę i przesyła przez nią jej wąskie gardło.
+Można szukać ścieżki za pomocą DFS, BFS
+albo inną regułą. Po zakończeniu optymalność
+wynika z twierdzenia \ref{thm:tg-flow-certificate}.
+
+\begin{twierdzenie}[Zakończenie przy przepustowościach całkowitych]
+\label{thm:tg-flow-ff-integer}
+Jeżeli wszystkie przepustowości są nieujemnymi
+liczbami całkowitymi, to schemat Forda--Fulkersona
+z dowolnym wyborem ścieżki powiększającej,
+rozpoczęty od przepływu zerowego,
+zatrzymuje się z przepływem maksymalnym.
+Jego liczba powiększeń jest nie większa niż
+$C_s:=\sum_{a:\,s\to v}c(a)$, gdzie sumujemy
+po wszystkich łukach wychodzących z $s$.
+Przy znalezieniu ścieżki za pomocą DFS
+czas wynosi $O((n+m)(C_s+1))$.
+Jest to ograniczenie pseudowielomianowe:
+zależy od wartości liczbowej $C_s$, a nie od
+długości jej zapisu binarnego.
+\end{twierdzenie}
+\begin{proof}
+Z lematu \ref{lem:tg-flow-augment} przepływy
+pozostają dopuszczalne. Indukcja pokazuje, że
+są całkowitoliczbowe, ponieważ wszystkie
+pojemności resztowe i wąskie gardła
+są całkowite. Każde powiększenie zwiększa
+wartość o co najmniej $1$, a ta jest
+ograniczona przez $C_s$, na mocy
+lematu \ref{lem:tg-cutbound} dla $S=\{s\}$.
+Po najwyżej $C_s$ powiększeniach algorytm
+musi się zatrzymać. Wówczas brak ścieżki
+resztowej daje optymalność.
+Budowa list resztowych i jedno ich przeszukanie
+kosztują $O(n+m)$, a aktualizacja prostej ścieżki
+kosztuje $O(n)$. Do co najwyżej $C_s$ udanych
+przeszukań dochodzi ostatnie, nieudane przeszukanie
+potwierdzające brak ścieżki. Stąd zapowiedziane
+ograniczenie liczby operacji arytmetycznych.
+\end{proof}
+
+\begin{przyklad}[Wiele powiększeń przy dużych przepustowościach]
+\label{ex:tg-flow-ff-pseudopoly}
+Niech $N\geq1$ będzie liczbą całkowitą. W sieci
+z wierzchołkami $s,a,b,t$ przyjmijmy przepustowość
+$N$ na czterech łukach $s\to a$, $s\to b$,
+$a\to t$, $b\to t$ oraz przepustowość $1$
+na łuku $a\to b$. Innych łuków nie ma.
+
+Wybierajmy naprzemiennie ścieżki $s\to a\to b\to t$
+oraz $s\to b\to a\to t$, w drugiej z nich używając
+przejścia resztowego wstecz względem $a\to b$.
+Po $2j$ powiększeniach ($0\leq j\leq N$) na każdym
+z czterech zewnętrznych łuków płynie $j$ jednostek,
+a na $a\to b$ przepływ jest zerowy. Istotnie, dla
+$j<N$ pierwsza ścieżka przesyła jedną jednostkę,
+nasycając $a\to b$. Druga przesyła także jedną
+jednostkę i zeruje przepływ na tym łuku.
+Przepływ na wszystkich zewnętrznych łukach zwiększa
+się w rezultacie z $j$ do $j+1$.
+
+Otrzymujemy dokładnie $2N$ powiększeń i maksymalny
+przepływ wartości $2N$, równej pojemności przekroju
+$\{s\}$. Przy $N=2^k$ długość zapisu przepustowości
+wynosi $O(k+1)$, lecz liczba powiększeń jest
+wykładnicza względem $k$. Natomiast wybór dwóch
+ścieżek $s\to a\to t$ i $s\to b\to t$ pozwala
+osiągnąć ten sam wynik po dwóch powiększeniach.
+Przykład pokazuje znaczenie reguły wyboru ścieżki.
+\end{przyklad}
+
+\begin{uwaga}[Pojemności wymierne i niewymierne]
+Jeśli wszystkie przepustowości są wymierne,
+wybieramy dodatnią liczbę całkowitą $L$ będącą
+wspólną wielokrotnością ich mianowników.
+Zastąpienie $c$ przez $Lc$ i $f$ przez $Lf$
+mnoży wszystkie przepustowości resztowe oraz
+wąskie gardła przez $L$, nie zmieniając zbioru
+dodatnich przejść. Każdemu przebiegowi w sieci
+wyjściowej odpowiada zatem przebieg całkowitoliczbowy.
+Otrzymujemy zakończenie po co najwyżej $LC_s$
+powiększeniach, lecz nie jest to ograniczenie
+silnie wielomianowe.
+Przy rzeczywistych pojemnościach niewymiernych
+niektóre sposoby wybierania ścieżek
+mogą prowadzić do nieskończonego ciągu powiększeń.
+Nie można zatem utożsamiać dowolnego wyboru ścieżek
+z bezwarunkowo kończącym się algorytmem.
+
+\end{uwaga}
+
+\section{Po co potrzebne są przejścia wsteczne?}
+\label{sec:tg-flow-backward}
+
+\begin{przyklad}[Zmiana wcześniejszej decyzji]
+\label{ex:tg-flow-cancel}
+Rozważmy sieć o wierzchołkach $\{s,a,b,t\}$
+i pojemnościach $1$ na łukach
+$s\to a$, $s\to b$, $a\to b$, $a\to t$ i $b\to t$.
+Jeśli pierwszy wybór to ścieżka
+$s\to a\to b\to t$, wysyłamy jednostkę.
+Pozornie nie ma już wolnej drogi z $s$ do $t$
+po samych oryginalnych łukach.
+W sieci resztowej istnieje jednak ścieżka
+$s\to b\to a\to t$,
+gdzie krok $b\to a$ jest przejściem
+\emph{wstecz} odpowiadającym oryginalnemu
+łukowi $a\to b$. Drugie powiększenie zeruje
+przepływ $a\to b$ i daje ostatecznie
+jednostkę na $s\to a\to t$
+oraz jednostkę na $s\to b\to t$.
+Wartość przepływu wynosi $2$ i jest maksymalna,
+ponieważ przekrój $\{s\}$ ma pojemność $2$.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=.95]
+\node[tgBlueVertex] (s) at (-3,0) {$s$};
+\node[tgTealVertex] (a) at (0,1.35) {$a$};
+\node[tgTealVertex] (b) at (0,-1.35) {$b$};
+\node[tgBlueVertex] (t) at (3,0) {$t$};
+\draw[tgTree,->] (s)--node[above left,font=\small] {$1$} (a);
+\draw[tgTree,->] (s)--node[below left,font=\small] {$1$} (b);
+\draw[tgTree,->] (a)--node[above right,font=\small] {$1$} (t);
+\draw[tgTree,->] (b)--node[below right,font=\small] {$1$} (t);
+\draw[tgAccent,->] (a)--node[right,font=\small] {$1$} (b);
+\end{tikzpicture}
+\caption{Sieć o przepływie maksymalnym $2$.
+Łuk $a\to b$ może mieć dodatni przepływ na pierwszym
+etapie, lecz w rozwiązaniu maksymalnym jest zerowy.
+Przejście wsteczne $b\to a$ umożliwia korektę.}
+\label{fig:tg-flow-backward}
+\end{figure}
+
+\section{Edmonds--Karp: najkrótsza ścieżka powiększająca}
+\label{sec:tg-flow-ek}
+
+Algorytm Edmondsa--Karpa to Ford--Fulkerson,
+w którym każdą ścieżkę powiększającą wyznaczamy
+przez BFS w aktualnej sieci resztowej.
+Wszystkie przejścia resztowe traktujemy
+jako łuki długości $1$, niezależnie
+od ich przepustowości. Pamiętamy
+identyfikator \emph{konkretnego} przejścia,
+aby rozróżnić łuki przeciwne i równoległe.
+
+\begin{lemat}[Monotoniczność odległości resztowych]
+\label{lem:tg-flow-ek-levels}
+Niech $d_f(v)$ oznacza minimalną liczbę łuków
+na ścieżce z $s$ do $v$ w sieci resztowej
+przepływu $f$, z wartością $+\infty$ dla
+wierzchołków nieosiągalnych.
+Jeśli $f'$ powstał przez powiększenie
+wzdłuż ścieżki najkrótszej w liczbie łuków,
+to $d_{f'}(v)\geq d_f(v)$ dla każdego $v\in V$.
+\end{lemat}
+\begin{proof}
+Przypuśćmy, że teza jest fałszywa,
+i wybierzmy wierzchołek $v$ o najmniejszej
+nowej odległości $d_{f'}(v)$ spośród tych,
+których odległość się zmniejszyła.
+Wybierzmy poprzednik $u$ na najkrótszej
+nowej ścieżce do $v$. Wtedy
+$d_{f'}(u)=d_{f'}(v)-1$ oraz
+$d_{f'}(u)\geq d_f(u)$ na mocy
+minimalności wyboru $v$.
+Wierzchołek $v$ nie jest źródłem, a $d_f(u)$
+jest skończone, ponieważ $d_f(u)\leq d_{f'}(u)<+\infty$.
+Jeśli konkretne przejście $u\to v$ miało dodatnią
+przepustowość już przed powiększeniem,
+mamy $d_f(v)\leq d_f(u)+1
+\leq d_{f'}(u)+1=d_{f'}(v)$,
+sprzeczność (w tym gdy $d_f(v)=+\infty$).
+Jeśli przejście pojawiło się dopiero
+po powiększeniu, jest sprzężonym przejściem
+odwrotnym (w przód lub wstecz)
+do pewnego przejścia $v\to u$
+wykorzystanego na wybranej najkrótszej
+ścieżce powiększającej. Stąd
+$d_f(u)=d_f(v)+1$, a zatem
+$d_{f'}(v)=d_{f'}(u)+1
+\geq d_f(u)+1=d_f(v)+2$,
+znów sprzeczność.
+\end{proof}
+
+\begin{twierdzenie}[Edmonds--Karp]
+\label{thm:tg-flow-ek}
+Dla każdej skończonej sieci o rzeczywistych
+nieujemnych przepustowościach algorytm
+Edmondsa--Karpa kończy działanie
+po $O(nm)$ powiększeniach
+i zwraca przepływ maksymalny
+wraz z przekrojem minimalnym.
+Dla reprezentacji listowej czas wynosi
+$O\bigl(nm(n+m)+n+m\bigr)$;
+w szczególności $O(nm^2)$,
+gdy $m\geq n$.
+Nie wymaga całkowitości przepustowości.
+\end{twierdzenie}
+\begin{proof}
+Każde powiększenie nasyca przynajmniej
+jedno przejście resztowe $e=(u,v)$.
+Na ścieżce wyznaczonej przez BFS
+zachodzi $d_f(v)=d_f(u)+1$.
+Aby \emph{to samo przejście} $e$
+mogło być nasycone powtórnie,
+jego pojemność musi zostać
+wcześniej zwiększona przez
+powiększenie wykorzystujące
+przejście odwrotne $v\to u$.
+Niech $d_1$ oznacza odległości tuż przed pierwszym
+nasyceniem $e$, a $d_2$ odległości tuż przed
+późniejszym użyciem jego sprzężonego przejścia.
+Mamy $d_1(v)=d_1(u)+1$ oraz $d_2(u)=d_2(v)+1$.
+Z lematu \ref{lem:tg-flow-ek-levels} otrzymujemy
+$d_2(v)\geq d_1(v)$, a stąd
+$d_2(u)\geq d_1(u)+2$.
+Przed następnym nasyceniem $e$ odległość do $u$
+nie może być mniejsza od $d_2(u)$.
+Zatem pomiędzy kolejnymi nasyceniami tego samego
+rekordu resztowego wzrasta o co najmniej $2$.
+Dopóki $u$ jest osiągalny,
+odległość ta jest mniejsza niż $n$.
+Dlatego to samo przejście
+może stać się krytyczne
+co najwyżej $O(n)$ razy.
+Ponieważ przejść resztowych
+z przypisanym oryginalnym łukiem
+jest co najwyżej $2m$,
+liczba powiększeń wynosi $O(nm)$.
+Każde BFS kosztuje $O(n+m)$, a odtworzenie
+ścieżki z identyfikatorów przejść i aktualizacja
+przepływu kosztują $O(n)$. Uwzględniając ostatnie
+BFS bez ścieżki, otrzymujemy
+$O((nm+1)(n+m))$ operacji.
+Dla $m\geq n$ mamy $n+m\leq 2m$,
+co daje $O(nm^2)$.
+Algorytm kończy się więc
+także dla przepustowości rzeczywistych,
+a twierdzenie \ref{thm:tg-flow-certificate}
+daje wartość maksymalną
+i przekrój minimalny.
+\end{proof}
+
+\section{Algorytm Dinica: sieć warstwowa i przepływ blokujący}
+\label{sec:tg-flow-dinic}
+
+Algorytm Dinica ogranicza liczbę uruchomień BFS
+przez wykonywanie wielu powiększeń przepływu
+w obrębie jednej sieci warstwowej.
+
+\begin{definicja}[Sieć warstwowa]
+\label{def:tg-flow-level}
+Dla aktualnego przepływu $f$
+wyznaczamy BFS od $s$ w sieci resztowej;
+niech $\ell(v)$ oznacza liczbę łuków
+najkrótszej resztowej ścieżki $s\to v$,
+a dla wierzchołków nieosiągalnych niech
+$\ell(v)=+\infty$.
+\emph{Sieć warstwowa} zawiera
+tylko dodatnie przejścia resztowe
+$u\to v$ spełniające
+$\ell(u)<+\infty$ oraz $\ell(v)=\ell(u)+1$.
+Warunek skończoności wyklucza łuki między
+nieosiągalnymi wierzchołkami.
+Gdy $t$ jest nieosiągalny, algorytm kończy działanie.
+\end{definicja}
+
+\begin{definicja}[Przepływ blokujący]
+\label{def:tg-flow-blocking}
+Niech $f$ będzie przepływem dopuszczalnym,
+a $L$ jego siecią warstwową z przepustowościami
+resztowymi ustalonymi na początku fazy.
+Przepływ dopuszczalny $g$ od $s$ do $t$ w $L$
+nazywamy \emph{blokującym}, jeśli każda ścieżka
+od $s$ do $t$ w $L$ zawiera przejście nasycone
+przez $g$. Równoważnie: po zastosowaniu $g$
+do przepływu $f$ nie pozostaje żadna ścieżka
+od $s$ do $t$ złożona z dodatnich przejść
+pierwotnej sieci warstwowej. Nie wymagamy
+maksymalności $g$ w sieci warstwowej.
+\end{definicja}
+
+Jedna \emph{faza Dinica} tworzy sieć warstwową
+przez BFS, a następnie wyznacza przepływ
+blokujący, uruchamiając DFS po krawędziach
+prowadzących o jedną warstwę wyżej.
+Dla każdego wierzchołka przechowujemy
+wskaźnik następnego niezbadanego przejścia
+(\emph{current arc}). Po nasyceniu przejścia
+lub wykazaniu, że nie daje już drogi do $t$,
+wskaźnik przesuwamy dalej.
+W kolejnej fazie wyznaczamy nowe warstwy.
+
+\begin{lemat}[Wzrost odległości do ujścia]
+\label{lem:tg-flow-dinic-distance}
+Po zakończeniu fazy Dinica, jeśli
+$t$ pozostaje osiągalny resztowo,
+to jego nowa odległość od $s$
+jest \emph{ściśle większa}
+od odległości na początku fazy.
+\end{lemat}
+\begin{proof}
+Niech $\ell$ oznacza odległości ustalone na początku
+fazy. Każde początkowe dodatnie przejście $u\to v$
+o skończonej $\ell(u)$ spełnia
+$\ell(v)\leq\ell(u)+1<+\infty$ na mocy własności BFS.
+Nowe dodatnie przejścia mogą powstać jedynie jako
+sprzężone odwrotności użytych przejść warstwowych,
+a zatem prowadzą z warstwy $j+1$ do warstwy $j$.
+Własność $\ell(v)\leq\ell(u)+1$ dla skończonej
+$\ell(u)$ zachodzi więc przez całą fazę.
+
+Wzdłuż dowolnej resztowej ścieżki po fazie,
+zaczynającej się w $s$, wszystkie stare odległości
+są skończone (indukcja od $\ell(s)=0$),
+a każdy krok zwiększa starą odległość o co najwyżej
+jeden. Każda taka ścieżka do $t$ ma zatem długość
+co najmniej $\ell(t)$. Jeśli ma dokładnie $\ell(t)$
+przejść, to każde z nich musi zwiększać starą
+odległość dokładnie o jeden. Żadne nie jest nowo
+utworzonym przejściem odwrotnym.
+Byłaby to zatem dodatnia
+ścieżka w pozostałej sieci warstwowej,
+sprzecznie z definicją
+przepływu blokującego.
+\end{proof}
+
+\begin{twierdzenie}[Zakończenie i złożoność Dinica]
+\label{thm:tg-flow-dinic}
+Dla skończonej sieci o $n\geq2$ wierzchołkach,
+$m$ łukach i nieujemnych przepustowościach
+rzeczywistych algorytm Dinica
+kończy działanie po najwyżej $n-1$
+fazach z ujściem osiągalnym
+i zwraca przepływ maksymalny.
+W standardowej implementacji
+z listami sąsiedztwa i wskaźnikami
+\emph{current arc} czas wynosi
+$O\bigl(n^2(m+1)\bigr)$,
+a pamięć $O(n+m)$.
+Dla $m\geq1$ odpowiada to
+klasycznemu oszacowaniu $O(n^2m)$.
+\end{twierdzenie}
+\begin{proof}
+Odległość $\ell(t)$ do
+osiągalnego ujścia należy
+do $\{1,\ldots,n-1\}$.
+Na mocy lematu
+\ref{lem:tg-flow-dinic-distance}
+rośnie ściśle po każdej fazie,
+zatem liczba faz z osiągalnym
+ujściem nie przekracza $n-1$.
+Po ich zakończeniu brak ścieżki
+powiększającej daje optymalność.
+
+Uzasadnijmy koszt jednej fazy.
+Budowa warstw przez BFS
+zajmuje $O(n+m)$.
+W obrębie sieci warstwowej dodatnie pojemności
+przejść warstwowych mogą jedynie maleć.
+Jeżeli DFS wyczerpie wszystkie drogi z danego
+wierzchołka do $t$, późniejsze powiększenia nie
+mogą ich odtworzyć. Wskaźnik można zatem trwale
+przesunąć po nasyceniu przejścia lub po nieudanym
+wywołaniu dla jego końca. Łączna liczba przesunięć
+wskaźników i nieudanych prób jest $O(n+m)$.
+Udane zejścia DFS liczymy osobno, w koszcie ścieżek
+powiększających. Ponawiamy DFS od $s$, aż nie znajdzie
+żadnej dodatniej ścieżki warstwowej; wówczas z definicji
+uzyskaliśmy przepływ blokujący.
+Każde skuteczne powiększenie
+w obrębie danej fazy
+nasyca co najmniej jedno
+przejście warstwowe,
+które nie odzyskuje
+pojemności w tej fazie:
+przejścia odwrotne
+prowadzą do wcześniejszej
+warstwy i nie są używane.
+Dla każdego oryginalnego łuku co najwyżej jedno
+z jego dwóch sprzężonych przejść może być warstwowe,
+gdyż drugie prowadzi w przeciwnym kierunku.
+Jest więc co najwyżej $m$ takich powiększeń,
+z których każde wymaga
+$O(n)$ aktualizacji
+na ścieżce. Otrzymujemy
+$O(nm+n+m)$ czasu
+na fazę oraz
+$O(n+m)$ pamięci.
+Pomnożenie przez co najwyżej $n-1$ faz i dodanie
+kosztu końcowego BFS daje
+$O(n(nm+n+m)+n+m)=O(n^2(m+1))$.
+Tablice poziomów i wskaźników oraz stos DFS
+zajmują $O(n)$ pamięci, a listy sprzężonych
+przejść $O(n+m)$.
+\end{proof}
+
+\section{Certyfikat, przykład liczbowy i uwagi implementacyjne}
+\label{sec:tg-flow-example}
+
+\begin{przyklad}[Przepływ $5$ i przekrój minimalny]
+\label{ex:tg-flow-cut-five}
+Niech $V=\{s,a,b,t\}$
+oraz przepustowości
+$c(s,a)=3$, $c(s,b)=2$,
+$c(a,b)=1$, $c(a,t)=2$,
+$c(b,t)=3$.
+Przepływ
+$f(s,a)=3$, $f(s,b)=2$,
+$f(a,b)=1$, $f(a,t)=2$,
+$f(b,t)=3$
+jest dopuszczalny:
+w $a$ wpływa $3$,
+a wypływa $1+2=3$;
+w $b$ wpływa $2+1=3$,
+a wypływa $3$.
+Ma wartość $5$.
+Przekrój $S=\{s\}$ ma pojemność
+$c(s,a)+c(s,b)=5$.
+Wobec lematu \ref{lem:tg-cutbound}
+przepływ jest maksymalny,
+a ten przekrój minimalny.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=.92]
+\node[tgBlueVertex] (s) at (-3,0) {$s$};
+\node[tgTealVertex] (a) at (0,1.45) {$a$};
+\node[tgTealVertex] (b) at (0,-1.45) {$b$};
+\node[tgBlueVertex] (t) at (3,0) {$t$};
+\draw[tgTree,->] (s)--node[above left,font=\small] {$3$} (a);
+\draw[tgTree,->] (s)--node[below left,font=\small] {$2$} (b);
+\draw[tgTree,->] (a)--node[above right,font=\small] {$2$} (t);
+\draw[tgTree,->] (b)--node[below right,font=\small] {$3$} (t);
+\draw[tgEdge,->] (a)--node[right,font=\small] {$1$} (b);
+\draw[tgAccent,densely dashed] (-2.48,-1.8)--(-2.48,1.8);
+\end{tikzpicture}
+\caption{Sieć o maksymalnym przepływie $5$.
+Liczby przy łukach są ich przepustowościami.
+Przerywana pionowa linia oddziela $S=\{s\}$;
+przecinają ją łuki o łącznej pojemności $5$.}
+\label{fig:tg-flow-cut-five}
+\end{figure}
+
+\begin{stwierdzenie}[Sposób odzyskania przekroju minimalnego]
+\label{prop:tg-flow-recover-cut}
+Po zakończeniu Edmondsa--Karpa lub Dinica
+wykonajmy BFS z $s$ po dodatnich przejściach
+resztowych i oznaczmy zbiór osiągalnych
+wierzchołków przez $S$.
+Wówczas $S$ wyznacza przekrój minimalny,
+a jego pojemność równa jest
+wartości znalezionego przepływu.
+Koszt tej czynności jest $O(n+m)$.
+\end{stwierdzenie}
+\begin{proof}
+Brak resztowej ścieżki do $t$
+i twierdzenie \ref{thm:tg-flow-certificate}
+dają minimalność i równość.
+Stosujemy skierowaną wersję BFS z uwagi
+\ref{rem:tg-bfs-directed}: przeglądamy wyłącznie
+dodatnie przejścia wychodzące z aktualnego wierzchołka.
+BFS przegląda co najwyżej
+$2m$ przejść i $n$ wierzchołków.
+\end{proof}
+
+\begin{uwaga}[Reprezentacja i arytmetyka]
+W implementacji dodajemy dla każdego łuku
+dwa sprzężone rekordy resztowe:
+rekord w przód i rekord wstecz,
+z indeksami wskazującymi wzajemnie
+na siebie. Zapobiega to błędom
+przy równoległych przejściach i
+oryginalnych łukach przeciwnych.
+Pojemności całkowite warto przechowywać
+w typie liczbowym o odpowiednim zakresie;
+dla dokładnych ułamków można używać
+liczb wymiernych. Przy arytmetyce
+zmiennopozycyjnej porównywanie
+pojemności z zerem i błędy zaokrągleń
+wymagają odrębnej analizy numerycznej.
+Wszystkie dowody powyżej odnoszą się
+do \emph{dokładnej} arytmetyki rzeczywistej.
+\end{uwaga}
+
+\section{Porównanie algorytmów}
+\label{sec:tg-flow-summary}
+
+Dla $n=|V|$ i $m=|A|$
+otrzymaliśmy następujące rozróżnienie:
+\begin{itemize}[leftmargin=2em,itemsep=3pt]
+\item \textbf{Ford--Fulkerson}: prosta idea;
+      dla przepustowości całkowitych
+      liczba powiększeń jest ograniczona przez wartość
+      maksymalnego przepływu, a dla dowolnych
+      pojemności rzeczywistych bez
+      ograniczenia wyboru ścieżek
+      może nie kończyć działania.
+\item \textbf{Edmonds--Karp}: wybór ścieżki BFS,
+      gwarantowana wielomianowa liczba
+      powiększeń dla dowolnych pojemności
+      rzeczywistych; czas
+      $O(nm(n+m)+n+m)$.
+\item \textbf{Dinic}: BFS warstwowy i
+      przepływ blokujący;
+      czas $O(n^2(m+1))$
+      i pamięć $O(n+m)$.
+\end{itemize}
+
+Podstawą poprawności każdego kończącego
+się algorytmu jest ten sam certyfikat:
+brak ścieżki powiększającej
+i przekrój $S$ o pojemności
+równej wartości przepływu.
+Przy wyborze implementacji
+istotne są także liczby łuków,
+przepustowości i struktura sieci.

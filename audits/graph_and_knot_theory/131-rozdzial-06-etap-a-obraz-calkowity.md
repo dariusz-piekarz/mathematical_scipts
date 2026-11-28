@@ -1,0 +1,7 @@
+# Rozdział 06 (drukowany 13) — etap A, obraz całkowity operatora brzegowego
+
+2026-11-24. Ponowna kontrola źródła d94f3cd0a9815c70d09856cac6787b8a2884d3fa. Commit b36ec4ac2e1eac3d2b7c7efa9f5ba2dd525c87c1, blob 521f218ca21818de5abff284fef8ae32e9777797: jawna definicja wszystkich operatorów brzegowych i grup homologii, dokładny argument liścia niepustego nośnika cyklu w lesie, ujednolicenie nazwy przestrzeni przekrojów.
+
+W bieżącej iteracji rzeczywiście wykonano niezależną enumerację JS wszystkich grafów prostych n=1..4, wszystkich orientacji ich krawędzi i wszystkich prawych stron b z {-1,0,1}^V. Algorytm eliminacji liści lasu rozpinającego zweryfikował równoważność istnienia całkowitego rozwiązania Bx=b i warunku zerowej sumy w każdej składowej, w tym izolowanych wierzchołkach; dla każdej dopuszczalnej prawej strony sprawdzono bezpośrednio Bx=b. PASS: 75 grafów, 760 orientacji, 59808 prawych stron, 12728 dopuszczalnych przypadków. Trwała regresja Python TG06-IMG-01 zapisana w 60a0659f8247e3373b16bd54d9a35e394cd1f711, blob 9214d15b0474ef78c3dfa0089df69de8d5d2247f. Nie deklaruje się wykonania nowej funkcji Python przed logiem CI.
+
+Poprzedni pełny CI 45406762245 in_progress, pozostałe 45406817510, 45406762387, 45406762574, 45406762484 queued. Nowe źródło: 45407319850, 45407320021, 45407319970, 45407319829 queued; nowe testy 45407380838 queued. Brak aktualnego PDF do oględzin. Etap A niezamknięty technicznie; po zakończeniu CI zweryfikować logi, pobrać aktualny PDF, obejrzeć rozdział i dopiero wtedy przejść do B. Nie resetować postępu.

@@ -1,0 +1,5 @@
+# Rozdział 38 — audyt indywidualny 03
+
+2026-11-24. CI audytu 101: 45376426882 (pełna książka), 45376465611 (algorytmy), 45376492533 success. Log job 138383960717: PASS nonnegative directed exhaustive 4113; seeded negative 1750; TG38-FW-01 independent simple-cycle oracle 4113; A* 1190; CH all rank orders 760.
+
+Źródło 49b9857624901bbcbd3ad4bbb602368d734ed9cc: jawna inicjalizacja mu dla s=t, aktualizacja sum etykiet i kandydatów przez łuk, minima pustych kolejek, pełne przetwarzanie przed testem stopu; równoważność relaksacji A* z Dijkstrą i odzyskanie odległości; niezmienne rekordy skrótów CH i rozwinięcie dowodu zachowania odległości także dla par nieosiągalnych oraz równych końców. TG38-BIDIR-01 (b4cf9aeb28802e9c26bcf0a3bdb7622331ef2e56): istniejący test wszystkich 4113 nieujemnie ważonych digrafów i wszystkich par uruchamia cztery harmonogramy kierunków (minimum, tylko przód, tylko tył, naprzemiennie). Nowe CI i PDF niepotwierdzone. Bez rozszerzania zakresu. Status OTWARTY; następnie kontrola CI i PDF, pozostałe szczegóły dowodów i przykładów.

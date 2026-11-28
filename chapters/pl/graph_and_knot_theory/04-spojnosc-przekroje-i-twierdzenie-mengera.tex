@@ -1,8 +1,8 @@
 \chapter{Spójność, przekroje i twierdzenie Mengera}
 \label{ch:tg-menger}
 
-Spójność mówi jedynie, czy istnieje choć jedna ścieżka między
-wierzchołkami. W zagadnieniach geometrycznych i kombinatorycznych
+Spójność grafu o niepustym zbiorze wierzchołków mówi,
+czy każdą parę wierzchołków łączy choć jedna ścieżka. W zagadnieniach geometrycznych i kombinatorycznych
 potrzebujemy często informacji silniejszej: \emph{ile wzajemnie
 niezależnych ścieżek} łączy dwa punkty? Twierdzenie Mengera
 wiąże odpowiedź z najmniejszą liczbą krawędzi albo wierzchołków,
@@ -11,30 +11,37 @@ które trzeba usunąć, aby przerwać połączenie.
 \section{Przekroje krawędziowe i separatory wierzchołkowe}
 \label{sec:tg-cuts}
 
-\begin{definicja}[Przekrój krawędziowy]
-Niech $G=(V,E)$ będzie grafem prostym, a
-$\varnothing\ne S\subsetneq V$. \emph{Przekrojem krawędziowym}
-wyznaczonym przez $S$ nazywamy zbiór
-$\delta_G(S):=\{uv\in E:u\in S,\ v\in V\setminus S\}$.
-Dla różnych wierzchołków $s,t$ zbiór krawędzi $F\subseteq E$
+Przekroje krawędziowe $\delta_G(S)$ rozumiemy zgodnie
+z definicją \ref{def:tg-tree-edge-cut} w rozdziale
+\ref{ch:tg-drzewa}. W niniejszym rozdziale, gdy mówimy
+o rozdzieleniu grafu na dwie części, rozważamy nietrywialne
+podziały, tj. $\varnothing\ne S\subsetneq V$.
+
+\begin{definicja}[Separator krawędziowy]
+Niech $G=(V,E)$ będzie skończonym grafem prostym.
+Dla różnych wierzchołków $s,t\in V$ zbiór krawędzi $F\subseteq E$
 nazywamy \emph{separatorem krawędziowym $s,t$}, jeśli
 w grafie $G-F$ nie ma ścieżki z $s$ do $t$.
 \end{definicja}
 
 \begin{definicja}[Spójność krawędziowa i wierzchołkowa]
-Niech $G=(V,E)$ będzie spójnym grafem prostym z $|V|\ge2$.
-\emph{Spójnością krawędziową} $\lambda(G)$ nazywamy
+Niech $G=(V,E)$ będzie skończonym grafem prostym.
+Jeżeli $G$ jest spójny i $|V|\ge2$, to
+\emph{spójnością krawędziową} $\lambda(G)$ nazywamy
 najmniejszą liczbę krawędzi, których usunięcie rozspójnia $G$.
 \emph{Spójnością wierzchołkową} $\kappa(G)$ nazywamy
 najmniejszą liczbę wierzchołków, których usunięcie
 rozspójnia $G$ lub pozostawia graf z jednym wierzchołkiem.
-Dla grafu niespójnego przyjmujemy $\lambda(G)=\kappa(G)=0$,
+Dla grafu niespójnego (w tym grafu zerowego)
+przyjmujemy $\lambda(G)=\kappa(G)=0$,
 a dla $K_1$ obie liczby definiujemy jako zero.
 \end{definicja}
 
-Warunek dotyczący grafu jednoelementowego pozwala
-otrzymać $\kappa(K_n)=n-1$. Inaczej dla grafu pełnego
-nie byłoby żadnego zbioru rozspajającego w zwykłym sensie.
+Warunek dotyczący pozostawienia jednego wierzchołka pozwala
+otrzymać $\kappa(K_n)=n-1$ dla $n\ge1$.
+Dla $n\ge2$ usunięcie mniej niż $n-1$ wierzchołków
+pozostawia bowiem graf pełny z co najmniej dwoma
+wierzchołkami, a taki graf jest spójny.
 
 \begin{stwierdzenie}
 \label{prop:tg-lambda-cut}
@@ -65,7 +72,10 @@ grafu prostego $G=(V,E)$. Zbiór $U\subseteq V\setminus\{s,t\}$
 nazywamy \emph{separatorem wierzchołkowym $s,t$}, jeśli
 w $G-U$ nie istnieje ścieżka z $s$ do $t$.
 Liczbę $\kappa_G(s,t)$ definiujemy jako najmniejszą
-moc takiego separatora.
+moc takiego separatora. Minimum istnieje: zbiór
+$V\setminus\{s,t\}$ jest separatorem, gdyż $st\notin E$.
+Jeśli $s,t$ należą do różnych składowych, pusty zbiór
+jest separatorem i $\kappa_G(s,t)=0$.
 \end{definicja}
 
 Warunek niesąsiadowania jest istotny: gdy $st\in E$,
@@ -115,11 +125,14 @@ $c(S,V\setminus S):=\sum_{(u,v)\in A,\,u\in S,\,v\notin S}c(u,v)$.
 W tej i następnych definicjach sumujemy po łukach
 wskazanej orientacji. Jeśli w sieci są oba łuki $u\to v$
 i $v\to u$, traktujemy je jako różne elementy.
+Symbol $|f|$ oznacza wartość przepływu, a nie jej wartość
+bezwzględną. W szczególności dla dowolnego przepływu
+dopuszczalnego wartość ta może być ujemna.
 
 \begin{lemat}[Wartość przepływu przez przekrój]
 \label{lem:tg-cutbound}
-Niech $f$ będzie przepływem w skończonej sieci z końcami
-$s,t$. Dla dowolnego $S\subseteq V$ z $s\in S$ i $t\notin S$
+Niech $f$ będzie przepływem w skończonej sieci
+$(D,s,t,c)$, gdzie $D=(V,A)$. Dla dowolnego $S\subseteq V$ z $s\in S$ i $t\notin S$
 zachodzi
 \[
 |f|=\sum_{\substack{(u,v)\in A\\u\in S,\,v\notin S}}f(u,v)
@@ -137,29 +150,48 @@ redukuje. Pozostają jedynie łuki wychodzące z $S$
 i wchodzące do $S$, z przeciwnymi znakami. Daje to równość.
 Nierówność wynika z nieujemności przepływu na łukach
 wchodzących i ograniczeń $f\le c$ na łukach wychodzących.
+Dokładniej, różnica między pojemnością przekroju
+a wartością przepływu jest równa
+\[
+c(S,V\setminus S)-|f|
+=\sum_{\substack{(u,v)\in A\\u\in S,\,v\notin S}}
+(c(u,v)-f(u,v))
++\sum_{\substack{(u,v)\in A\\u\notin S,\,v\in S}}f(u,v).
+\]
+Wszystkie składniki są nieujemne. Ponieważ sumy
+są skończone, równość zachodzi dokładnie wtedy,
+gdy każdy łuk wychodzący z $S$ jest nasycony,
+a przepływ na każdym łuku wchodzącym do $S$
+jest zerowy. Nie wymaga to całkowitości
+przepustowości ani wartości przepływu.
 \end{proof}
 
 \begin{definicja}[Sieć resztowa]
-Dla przepływu $f$ i oryginalnego łuku $a=(u,v)$
+Niech $f$ będzie przepływem w sieci $(D,s,t,c)$.
+Dla każdego oryginalnego łuku $a=(u,v)$
 wprowadzamy dwie możliwości zmiany: przejście $u\to v$
 o \emph{pojemności resztowej} $c(a)-f(a)$ oraz przejście
 $v\to u$ o pojemności resztowej $f(a)$. Pomijamy
 przejścia o zerowej pojemności. Różne łuki oryginalne
 mogą dawać równoległe przejścia resztowe; pozostają one
 rozróżnione. \emph{Ścieżką powiększającą} nazywamy
-skierowaną ścieżkę z $s$ do $t$ w takiej sieci resztowej.
+skierowaną ścieżkę z $s$ do $t$ w takiej sieci resztowej,
+z parami różnymi wierzchołkami i z jawnym wyborem
+identyfikatora każdego przejścia resztowego.
 \end{definicja}
 
 \begin{twierdzenie}[Maksymalny przepływ -- minimalny przekrój]
 \label{thm:tg-maxflow}
-Niech $D=(V,A)$ będzie skończoną siecią przepływową,
-a $c:A\to\mathbb Z_{\ge0}$ funkcją całkowitoliczbowych
-przepustowości. Wtedy istnieje całkowitoliczbowy przepływ
-maksymalny $f$ i zachodzi
+Niech $(D,s,t,c)$ będzie skończoną siecią przepływową,
+gdzie $D=(V,A)$, a $c:A\to\mathbb Z_{\ge0}$ jest funkcją
+całkowitoliczbowych przepustowości. Wtedy istnieje
+całkowitoliczbowy przepływ maksymalny i zachodzi
 \[
 \max_f |f|=\min_{\substack{s\in S\subseteq V\\t\notin S}}
- c(S,V\setminus S).
+ c(S,V\setminus S),
 \]
+gdzie maksimum przebiega po wszystkich dopuszczalnych
+przepływach rzeczywistych w tej sieci.
 \end{twierdzenie}
 
 \begin{proof}[Dowód przez ścieżki powiększające]
@@ -169,11 +201,21 @@ $\varepsilon$ jako najmniejszą dodatnią pojemność resztową
 na tej ścieżce. Na oryginalnych łukach odpowiadających
 krokom w przód zwiększamy przepływ o $\varepsilon$,
 a na łukach odpowiadających krokom wstecz zmniejszamy
-go o $\varepsilon$. Każdy przepływ pośredni spełnia
-ograniczenia przepustowości. W wierzchołkach wewnętrznych
-ścieżki dodane i odjęte wartości kompensują się,
-więc równowaga zostaje zachowana. Wartość przepływu
-zwiększa się dokładnie o $\varepsilon$.
+go o $\varepsilon$. Ponieważ ścieżka nie powtarza
+wierzchołków, nie wykorzystuje obu przejść odpowiadających
+temu samemu łukowi oryginalnemu ani tego samego przejścia
+dwukrotnie. Każda zmiana jest zatem dopuszczalna na mocy
+definicji $\varepsilon$: w przód mamy $f(a)+\varepsilon
+\le c(a)$, a wstecz $f(a)-\varepsilon\ge0$.
+Dla przejścia resztowego od $u$ do $v$ bilans
+(odpływ minus dopływ) zwiększa się o $\varepsilon$
+w $u$ i zmniejsza o $\varepsilon$ w $v$, niezależnie
+od tego, czy zwiększamy przepływ na łuku $u\to v$,
+czy zmniejszamy go na łuku $v\to u$.
+W każdym wierzchołku wewnętrznym zmiany bilansu
+się znoszą. Bilans w $s$ wzrasta o $\varepsilon$,
+a bilans w $t$ maleje o $\varepsilon$. W szczególności
+wartość przepływu zwiększa się dokładnie o $\varepsilon$.
 
 Przy pojemnościach całkowitych również wszystkie przepływy
 pośrednie i pojemności resztowe są całkowite, toteż
@@ -201,6 +243,14 @@ Znaleźliśmy przepływ i przekrój, dla których występuje
 równość, zatem są one odpowiednio maksymalne i minimalne.
 Każdy przepływ w konstrukcji jest całkowitoliczbowy.
 \end{proof}
+
+\begin{uwaga}[Dalsze uogólnienia przepływów]
+Wniosek \ref{cor:tg-flow-real-mincut} rozszerza twierdzenie
+\ref{thm:tg-maxflow} na nieujemne przepustowości rzeczywiste.
+Algorytmy i rozkład przepływu całkowitoliczbowego na ścieżki
+oraz cykle przedstawiono w rozdziale \ref{ch:tg-flow-algorithms},
+w szczególności w twierdzeniu \ref{thm:tg-flow-integral-paths}.
+\end{uwaga}
 
 \begin{przyklad}[Rachunek przepływu i przekroju]
 Rozważmy sieć z łukami $s\to a$, $s\to b$, $a\to t$,
@@ -250,7 +300,8 @@ krawędziowego $s,t$.
 \begin{twierdzenie}[Menger, wersja krawędziowa]
 \label{thm:tg-menger-edge}
 Dla dowolnego skończonego grafu prostego $G=(V,E)$
-i różnych wierzchołków $s,t\in V$ zachodzi
+i różnych wierzchołków $s,t\in V$, przy oznaczeniach
+z powyższej definicji, zachodzi
 $\rho_E(s,t)=\lambda_G(s,t)$.
 \end{twierdzenie}
 
@@ -266,36 +317,57 @@ o pojemności $1$. Każdy przekrój $S$ tej sieci ma
 pojemność równą $|\delta_G(S)|$: dla każdej krawędzi
 przekraczającej granicę $S$ dokładnie jeden z dwóch
 łuków wychodzi z $S$. Zatem najmniejsza pojemność
-przekroju jest równa $\lambda_G(s,t)$.
+przekroju jest równa $\lambda_G(s,t)$:
+każdy taki przekrój jest separatorem, a dla dowolnego
+separatora $F$ zbiór $S$ wierzchołków osiągalnych z $s$
+w $G-F$ nie zawiera $t$ i spełnia $\delta_G(S)\subseteq F$.
 
 Na mocy twierdzenia \ref{thm:tg-maxflow} istnieje
 całkowitoliczbowy przepływ tej wartości. Jeśli na
 obu przeciwnych łukach jakiejś krawędzi płynie
-jednostka, usuwamy oba te przepływy. Równowaga
-we wszystkich wierzchołkach i wartość całego
-przepływu się nie zmieniają, a wzdłuż każdej
-krawędzi nieskierowanej przepływ jest teraz
-jednokierunkowy albo zerowy.
+jednostka, zmniejszamy oba te przepływy do zera.
+W każdym z dwóch końców krawędzi zmniejszają się
+o jeden zarówno dopływ, jak i odpływ; bilans
+w żadnym wierzchołku, w tym w $s$ i $t$, się nie
+zmienia. Wartość przepływu pozostaje więc taka
+sama, a ograniczenia przepustowości nadal zachodzą.
+Wykonując tę operację dla wszystkich takich par
+łuków, otrzymujemy przepływ, który wzdłuż każdej
+krawędzi nieskierowanej jest jednokierunkowy albo
+zerowy.
 
 Rozłóżmy pozostały całkowity przepływ na ścieżki
 i cykle, uzasadniając dokładnie ten krok. Jeśli w grafie
 łuków o dodatnim przepływie istnieje skierowany cykl,
 zmniejszamy przepływ na każdym jego łuku o najmniejszą
-z występujących tam dodatnich wartości. Zachowuje to
-równowagę w każdym wierzchołku i wartość całego przepływu,
-a usuwa co najmniej jeden dodatni łuk. Po skończenie wielu
-takich operacjach pozostaje przepływ dodatni wyłącznie
+z występujących tam dodatnich wartości. Jest ona
+całkowita, więc całkowitoliczbowość zostaje zachowana.
+Każdy wierzchołek tego cyklu traci jednakową wielkość
+dopływu i odpływu, zatem nie zmienia się żaden bilans,
+ani wartość przepływu. Przepływ pozostaje dopuszczalny,
+a co najmniej jeden dodatni łuk przestaje być dodatni.
+Żaden nowy dodatni łuk nie powstaje. Po skończonej liczbie
+takich operacji pozostaje przepływ dodatni wyłącznie
 na skierowanym grafie acyklicznym.
 Jeśli jego wartość jest dodatnia, z $s$ wychodzi łuk
 o dodatnim przepływie. Przechodzimy po takich łukach.
-Nie możemy się zapętlić z powodu acykliczności ani
-zatrzymać w wierzchołku wewnętrznym: dodatni dopływ
-i zachowanie przepływu wymuszają dodatni odpływ.
-Dochodzimy zatem do $t$, otrzymując skierowaną ścieżkę.
-Odejmujemy od niej jeden (całkowitoliczbowy) przepływ
-jednostkowy i powtarzamy. Po dokładnie $|f|$ krokach
-wartość przepływu jest zerowa, a pozostałe ewentualne
-cykle można pominąć. Otrzymaliśmy $|f|$ ścieżek $s$--$t$.
+Zatrzymujemy się przy pierwszym osiągnięciu $t$.
+Nie możemy wrócić do $s$ ani powtórzyć innego
+wierzchołka, gdyż dodatnie łuki tworzą graf acykliczny.
+Nie możemy też zakończyć w wierzchołku różnym od $s,t$:
+dodatni dopływ i zachowanie przepływu wymuszają
+tam dodatni odpływ. Skończoność grafu zapewnia więc
+dotarcie do $t$. Na każdym łuku uzyskanej ścieżki
+zmniejszamy przepływ o jeden. Całkowitoliczbowość
+zapewnia nieujemność nowych wartości, równowaga
+w wierzchołkach wewnętrznych pozostaje zachowana,
+a wartość przepływu maleje dokładnie o jeden.
+Dodatnie łuki nadal tworzą graf acykliczny, ponieważ
+żaden nowy dodatni łuk nie powstaje. Powtarzając
+ten krok, otrzymujemy dokładnie tyle ścieżek $s$--$t$,
+ile wynosiła początkowa wartość $|f|$.
+Pozostały przepływ o wartości zero nie jest potrzebny
+do konstrukcji tych ścieżek.
 Ponieważ każdy łuk ma przepływ co najwyżej $1$,
 a przeciwne łuki tej samej krawędzi zostały skasowane,
 otrzymane ścieżki nie mają wspólnych krawędzi.
@@ -323,12 +395,15 @@ liczbę krawędzi rozspajających graf.
 
 \begin{definicja}[Ścieżki wewnętrznie rozłączne]
 Niech $s,t$ będą różnymi wierzchołkami grafu $G$.
-Ścieżki $P_1,\dots,P_k$ z $s$ do $t$ nazywamy
+Parami różne ścieżki $P_1,\dots,P_k$ z $s$ do $t$ nazywamy
 \emph{wewnętrznie wierzchołkowo rozłącznymi}, jeżeli
 żadne dwie z nich nie mają wspólnego wierzchołka
 poza ewentualnie wspólnymi końcami $s,t$.
 Niech $\rho_V(s,t)$ będzie największą możliwą
-liczbą takich ścieżek.
+liczbą takich ścieżek. Dopuszczamy rodzinę pustą,
+więc jeśli $s,t$ nie łączy żadna ścieżka, liczba ta
+wynosi zero. Minimum separatorów wierzchołkowych
+rozważamy tylko dla niesąsiadujących końców.
 \end{definicja}
 
 \begin{twierdzenie}[Menger, wersja wierzchołkowa]
@@ -361,12 +436,21 @@ $M:=|V|+1$.
 
 Ponieważ $s$ i $t$ nie sąsiadują, usunięcie wszystkich
 pozostałych wierzchołków oddziela $s$ od $t$.
-Istnieje zatem przekrój sieci o pojemności co najwyżej
-$|V|-2<M$, utworzony przez łuki $v^-\to v^+$.
+W sieci wybierzmy zbiór
+$S_0=\{s\}\cup\{v^-:v\in V\setminus\{s,t\}\}$.
+Wszystkie łuki wychodzące z $s$ prowadzą do wejść
+należących do $S_0$, a z każdego $v^-$ wychodzi
+jedynie łuk $v^-\to v^+$.
+Zatem łukami wychodzącymi z $S_0$ są dokładnie
+$|V|-2$ łuki o pojemności $1$. Otrzymaliśmy
+przekrój o pojemności $|V|-2<M$.
 Każdy przekrój minimalny ma pojemność mniejszą niż $M$,
 więc nie przecina żadnego z łuków o pojemności $M$.
-W takim przekroju przecinamy wyłącznie łuki
-$v^-\to v^+$ o pojemności $1$.
+W takim przekroju wszystkie łuki wychodzące
+z jego zbioru $S$ są postaci $v^-\to v^+$
+i mają pojemność $1$. Nie ma ograniczenia
+na łuki wchodzące do $S$: nie wnoszą one
+nic do pojemności przekroju.
 
 Odpowiadające im wierzchołki tworzą separator
 $s,t$ w grafie wyjściowym: gdyby po ich usunięciu
@@ -377,21 +461,41 @@ $U\subseteq V\setminus\{s,t\}$ możemy zbudować
 przekrój sieci o pojemności co najwyżej $|U|$:
 usuwamy łuki $v^-\to v^+$ dla $v\in U$ i bierzemy
 zbiór wierzchołków osiągalnych z $s$ w pozostałej
-sieci; przez jego granicę mogą przechodzić
-jedynie usunięte łuki o pojemności $1$.
+sieci. W tej pozostałej sieci nie ma skierowanej
+ścieżki od $s$ do $t$: przejście przez wewnętrzny
+wierzchołek $v$ wymaga łuku $v^-\to v^+$,
+więc taka ścieżka rzutowałaby się na spacer od $s$ do $t$
+w $G-U$, wbrew własności separatora.
+Zbiór osiągalny zawiera zatem $s$, lecz nie zawiera $t$.
+Każdy łuk oryginalnej sieci wychodzący z tego zbioru
+musiał zostać usunięty, gdyż inaczej jego koniec
+byłby osiągalny. Są to łuki o pojemności $1$,
+w liczbie co najwyżej $|U|$.
 Stąd minimalna pojemność przekroju sieci jest
 równa $\kappa_G(s,t)$.
 
 Twierdzenie \ref{thm:tg-maxflow} daje całkowitoliczbowy
-przepływ tej wartości. Rozkład przepływu na ścieżki
-jednostkowe i cykle przeprowadzamy tak samo jak
-w dowodzie wersji krawędziowej. Każda jednostkowa
+przepływ tej wartości. Stosujemy argument usuwania cykli i odejmowania
+jednostkowych przepływów wzdłuż ścieżek z dowodu
+twierdzenia \ref{thm:tg-menger-edge}. Nie wymaga
+on jednostkowych pojemności wszystkich łuków:
+usunięcie cyklu nie zmienia bilansów, a dodatni
+całkowity przepływ na każdym łuku ścieżki pozwala
+odjąć jednostkę. Przy dodatniej pozostałej wartości
+istnieje kolejna ścieżka w acyklicznym nośniku.
+Otrzymujemy zatem dokładnie $\kappa_G(s,t)$
+ścieżek jednostkowych (por. także twierdzenie
+\ref{thm:tg-flow-integral-paths}). Każda jednostkowa
 ścieżka przechodząca przez wierzchołek $v\ne s,t$
 musi użyć łuku $v^-\to v^+$, a jego pojemność wynosi $1$.
 Zatem różne ścieżki nie mogą mieć wspólnego wierzchołka
 wewnętrznego. Po zapomnieniu orientacji łuków
-i pominięciu sztucznych wierzchołków $v^\pm$
-otrzymujemy $\kappa_G(s,t)$ wewnętrznie rozłącznych
+i utożsamieniu każdej pary $v^-,v^+$ z $v$
+otrzymujemy ścieżki, a nie tylko spacery:
+każde przejście przez $v$ zawiera oba wierzchołki
+$v^-,v^+$ kolejno, a ścieżka w sieci nie powtarza
+żadnego z nich. Końce $s,t$ także nie są powtarzane.
+Otrzymujemy więc $\kappa_G(s,t)$ wewnętrznie rozłącznych
 ścieżek $s$--$t$ w $G$. Wraz z pierwszą nierównością
 to kończy dowód.
 \end{proof}
@@ -403,7 +507,7 @@ to kończy dowód.
  \node[tgRedVertex] (po) at (1.2,0) {$v^+$};
  \node[tgBlueVertex] (w) at (3.2,0) {$w$};
  \draw[tgEdge,-{Stealth[length=2.6mm]}] (u)--(mi);
- \draw[tgAccent,-{Stealth[length=2.6mm]}] (mi)--node[above,font=\footnotesize] {pojemność $1$}(po);
+ \draw[tgAccent,-{Stealth[length=2.6mm]}] (mi)--node[above=7pt,font=\footnotesize] {pojemność $1$}(po);
  \draw[tgEdge,-{Stealth[length=2.6mm]}] (po)--(w);
  \node[text=tgNavy,font=\footnotesize] at (.42,-.69)
     {przejście przez $v$ zużywa jedną jednostkę pojemności};
@@ -439,6 +543,76 @@ zwiększają liczbę niezależnych tras.
 \end{tikzpicture}
 \end{center}
 
+\begin{wniosek}[Globalna wersja wierzchołkowa twierdzenia Mengera]
+\label{cor:tg-menger-global-vertex}
+Niech $G=(V,E)$ będzie skończonym spójnym grafem prostym
+z $|V|\ge2$. Dla różnych $s,t\in V$ niech $\rho_V(s,t)$
+oznacza największą liczność rodziny parami różnych,
+wewnętrznie wierzchołkowo rozłącznych ścieżek od $s$ do $t$.
+Wówczas
+\[
+\kappa(G)=\min_{\substack{s,t\in V\\s\ne t}}\rho_V(s,t).
+\]
+\end{wniosek}
+
+\begin{proof}
+Najpierw ustalmy dowolne różne $s,t\in V$.
+Jeżeli $st\notin E$, to każdy separator wierzchołkowy
+$s,t$ rozspaja cały graf, więc
+$\kappa(G)\le\kappa_G(s,t)=\rho_V(s,t)$
+na mocy twierdzenia~\ref{thm:tg-menger-vertex}.
+
+Jeżeli $st\in E$, niech $H=G-st$ oznacza graf otrzymany
+przez usunięcie tylko krawędzi $st$. Jedyną ścieżką
+od $s$ do $t$ w $G$ wykorzystującą tę krawędź jest
+ścieżka długości jeden: w przeciwnym razie któryś
+z końców musiałby wystąpić ponownie. Każda inna
+ścieżka należy do $H$. Ścieżkę długości jeden
+możemy dołączyć do każdej rodziny wewnętrznie rozłącznych
+ścieżek w $H$, gdyż nie ma wierzchołków wewnętrznych.
+Stąd, stosując wersję lokalną w $H$, dostajemy
+$\rho_V(s,t)=1+\kappa_H(s,t)$.
+Wybierzmy separator $U$ dla $s,t$ w $H$
+o mocy $\kappa_H(s,t)$. Jeśli $V\setminus U=\{s,t\}$,
+to $\kappa(G)\le |V|-1=|U|+1$.
+W przeciwnym razie wybierzmy
+$w\in V\setminus(U\cup\{s,t\})$.
+Jeśli $w$ należy do składowej $s$ w $H-U$, to
+po usunięciu $U\cup\{s\}$ w $G$ wierzchołki $w,t$
+leżą w różnych składowych: dodatkowa krawędź $st$
+została usunięta wraz z $s$, a w $H-U$ nie istniała
+ścieżka łącząca te składowe.
+Jeśli $w$ nie należy do składowej $s$, to
+po usunięciu $U\cup\{t\}$ wierzchołki $w,s$
+leżą w różnych składowych z tego samego powodu.
+W obu przypadkach $\kappa(G)\le |U|+1=\rho_V(s,t)$.
+Udowodniliśmy dolne ograniczenie dla każdej pary.
+
+Dla nierówności przeciwnej rozważmy najpierw graf
+niepełny. Istnieją w nim niesąsiadujące wierzchołki,
+a usunięcie pozostałych $|V|-2$ wierzchołków rozspaja
+graf. Mamy więc $\kappa(G)\le |V|-2$.
+Wybierzmy zbiór $U$ o mocy $\kappa(G)$ realizujący
+minimum z definicji. Ponieważ po jego usunięciu
+pozostają co najmniej dwa wierzchołki, graf $G-U$
+musi być niespójny. Wybierzmy $s,t$ z różnych jego
+składowych. Nie sąsiadują one w $G$, ponieważ ich
+ewentualna krawędź pozostałaby w $G-U$.
+Zbiór $U$ jest ich separatorem, więc
+$\rho_V(s,t)=\kappa_G(s,t)\le |U|=\kappa(G)$.
+
+Jeżeli $G=K_n$, gdzie $n=|V|\ge2$, to
+$\kappa(G)=n-1$. Dla każdej pary $s,t$ bierzemy
+ścieżkę $st$ oraz $n-2$ ścieżek $s,v,t$,
+po jednej dla każdego $v\in V\setminus\{s,t\}$.
+Są one parami wewnętrznie rozłączne. Więcej niż
+$n-1$ takich ścieżek nie może istnieć, gdyż
+poza jedyną ścieżką długości jeden każda z nich
+zużywa co najmniej jeden z $n-2$ dostępnych
+wierzchołków wewnętrznych. Zatem również w tym
+przypadku minimum wynosi $\kappa(G)$.
+\end{proof}
+
 \section{Ile spójności zapewnia graf?}
 \label{sec:tg-whitney}
 
@@ -446,21 +620,17 @@ zwiększają liczbę niezależnych tras.
 \label{thm:tg-whitney}
 Niech $G$ będzie skończonym spójnym grafem prostym
 o co najmniej dwóch wierzchołkach. Wówczas
-\[
-\kappa(G)\le\lambda(G)\le\delta(G).
-\]
+$\kappa(G)\le\lambda(G)\le\delta(G)$.
 \end{twierdzenie}
 
 \begin{proof}
-Najpierw udowodnimy nierówność $\kappa(G)\le\delta(G)$.
 Wybierzmy wierzchołek $v$ o stopniu minimalnym
-$d(v)=\delta(G)$ i usuńmy jego wszystkich sąsiadów.
-W pozostałym grafie $v$ jest izolowany. Jeżeli pozostał
-jeszcze inny wierzchołek, graf jest niespójny.
-Jeżeli natomiast pozostał tylko $v$, to usunęliśmy
-$|V|-1=\delta(G)$ wierzchołków i uzyskaliśmy
-graf jednoelementowy. W obu przypadkach z definicji
-spójności wierzchołkowej $\kappa(G)\le\delta(G)$.
+$d_G(v)=\delta(G)$. Po usunięciu jego $\delta(G)$
+sąsiadów $v$ jest izolowany: graf jest niespójny,
+jeśli pozostał jeszcze inny wierzchołek, albo
+jednoelementowy w przeciwnym razie. Z definicji
+spójności wierzchołkowej w obu przypadkach
+$\kappa(G)\le\delta(G)$.
 
 Niech teraz $k=\lambda(G)$ i wybierzmy zbiór
 $\varnothing\ne S\subsetneq V$ taki, że
@@ -498,10 +668,54 @@ wynika ze stwierdzenia \ref{prop:tg-lambda-cut}.
 
 \begin{przyklad}
 Dla cyklu $C_n$ przy $n\ge3$ mamy
-$\kappa(C_n)=\lambda(C_n)=\delta(C_n)=2$.
-Dla drzewa z co najmniej dwoma wierzchołkami mamy
-$\lambda(G)=1$, a przy $|V|\ge3$ również $\kappa(G)=1$.
-Dla grafu pełnego $K_n$ z $n\ge2$ wszystkie trzy
-liczby są równe $n-1$.
+$\delta(C_n)=2$. Usunięcie jednej krawędzi pozostawia
+ścieżkę rozpinającą, a usunięcie jednego wierzchołka
+pozostawia spójną ścieżkę z co najmniej dwoma
+wierzchołkami. Stąd $\lambda(C_n),\kappa(C_n)\ge2$,
+a z nierówności Whitneya obie liczby są równe $2$.
+
+Dla drzewa $G$ z co najmniej dwoma wierzchołkami
+każda krawędź jest mostem, więc $\lambda(G)=1$.
+Drzewo jest spójne i ma co najmniej dwa wierzchołki,
+zatem $\kappa(G)\ge1$; nierówności Whitneya dają
+$\kappa(G)=1$. Ponieważ drzewo ma liść, także
+$\delta(G)=1$.
+
+Dla grafu pełnego $K_n$ z $n\ge2$ już wykazaliśmy
+$\kappa(K_n)=n-1$, a $\delta(K_n)=n-1$.
+Nierówności Whitneya dają więc również
+$\lambda(K_n)=n-1$.
 \end{przyklad}
 
+\begin{przyklad}[Ostre nierówności Whitneya]
+\label{ex:tg-whitney-strict}
+Niech $G$ powstanie z dwóch rozłącznych kopii $K_4$
+o zbiorach wierzchołków $A=\{a_1,a_2,a_3,a_4\}$
+i $B=\{b_1,b_2,b_3,b_4\}$ przez dodanie wierzchołka
+$z$ oraz czterech krawędzi $za_1,za_2,zb_1,zb_2$.
+Nie dodajemy innych krawędzi. Wykażemy, że
+$\kappa(G)=1<\lambda(G)=2<\delta(G)=3$.
+Graf jest spójny, lecz usunięcie $z$
+pozostawia dwie rozłączne kopie $K_4$,
+więc $\kappa(G)=1$.
+Usunięcie $za_1,za_2$ oddziela $A$ od reszty grafu,
+zatem $\lambda(G)\le2$. Żadna pojedyncza krawędź
+nie jest jednak mostem. Każda krawędź wewnątrz
+$A$ lub $B$ leży na trójkącie w odpowiedniej
+kopii $K_4$. Krawędzie $za_1,za_2$ leżą na
+trójkącie o wierzchołkach $z,a_1,a_2$,
+a krawędzie $zb_1,zb_2$ na trójkącie
+o wierzchołkach $z,b_1,b_2$. Usunięcie krawędzi
+leżącej na cyklu nie rozspaja grafu, więc
+$\lambda(G)\ge2$.
+Wreszcie wierzchołki $a_3,a_4,b_3,b_4$ mają stopień
+$3$, a pozostałe wierzchołki, w tym $z$, mają stopień
+$4$. Otrzymujemy $\delta(G)=3$.
+
+Dla dwóch trójkątów o wspólnym wierzchołku mamy $\kappa=1$
+(usunięcie tego wierzchołka) oraz $\lambda=\delta=2$
+(brak mostów i stopień minimalny $2$).
+Dwie kopie $K_4$ połączone jednym mostem mają
+$\kappa=\lambda=1$ (spójność i nierówności Whitneya)
+oraz $\delta=3$.
+\end{przyklad}

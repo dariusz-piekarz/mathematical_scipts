@@ -1,0 +1,215 @@
+name: Mathematical library application checks
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "application/**"
+      # Progress log records existing evidence; editing it alone must not queue CI.
+      - "!application/docs/ATLAS_DEVELOPMENT_PROGRESS.md"
+      - "chapters/pl/**"
+      - "catalog/books.json"
+      # Exact portable preamble mirrors also depend on these canonical sources.
+      - "books/pl/mathematical_analysis_ii.tex"
+      - "books/pl/integration_theory.tex"
+      - "books/pl/general_topology.tex"
+      - "books/pl/graph_and_knot_theory.tex"
+      - "books/pl/category_theory.tex"
+      - "books/pl/linear_algebra.tex"
+      - "books/pl/logic_and_set_theory.tex"
+      - "books/pl/measure_theory.tex"
+      - ".github/workflows/mathematical-library-app.yml"
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      candidate_sha:
+        description: "Full immutable commit SHA to test"
+        required: true
+        type: string
+      validation_pass:
+        description: "Independent validation pass ID"
+        required: true
+        type: string
+
+
+# Coalesce obsolete queued push checks on the same branch. Never share the
+# group with pinned 2+1 passes or separately requested manual validation.
+# Running checks finish; only superseded pending standalone pushes coalesce.
+concurrency:
+  group: atlas-app-${{ !inputs.candidate_sha && github.event_name == 'push' && github.ref || format('{0}-{1}', github.run_id, inputs.validation_pass || 'manual') }}
+  cancel-in-progress: false
+
+jobs:
+  reader-ui:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: application
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha || github.sha }}
+      - name: Require exact pinned checkout identity in reader
+        env:
+          EXPECTED_SHA: ${{ inputs.candidate_sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install reader and rendering dependencies
+        run: |
+          python -m pip install -r requirements.txt playwright
+          python -m playwright install --with-deps chromium
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends texlive-latex-extra texlive-fonts-recommended texlive-lang-polish texlive-science lmodern poppler-utils
+          for package in lmodern.sty mathrsfs.sty stmaryrd.sty; do
+            test -n "$(kpsewhich "$package")" || { echo "Missing TeX package: $package"; exit 1; }
+          done
+          python scripts/install_math_renderer.py
+      # The index-and-test job does not install TeX. Execute the exact
+      # classified tex_host regression here and reject any skip.
+      - name: Compile local theorem environment with real pdfLaTeX
+        run: |
+          python - <<'PY'
+          import sys
+          import unittest
+          suite = unittest.defaultTestLoader.loadTestsFromName(
+              "tests.test_local_theorem_compilation.LocalTheoremCompilationTests.test_local_environment_compiles_without_import"
+          )
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          sys.exit(0 if result.wasSuccessful() and result.testsRun == 1 and not result.skipped else 1)
+          PY
+      - name: Index canonical chapters for real reader tests
+        shell: bash
+        run: |
+          set +e
+          python backend/latex_parser.py index --source ../chapters/pl --recursive --db data/biblioteka.db --aliases config/ALIASY_PO_SCALENIACH.json --report data/reader_ci_index.json
+          result=$?
+          set -e
+          test "$result" = 0 || test "$result" = 2
+      - name: Verify real reading controls, fullscreen, references and TikZ images
+        run: python -m scripts.check_reader_ui --figures
+      - name: Verify last-page shutdown, reload and saved projects
+        run: python tests/browser_desktop_lifecycle.py
+  index-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: application
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha || github.sha }}
+      - name: Require exact pinned checkout identity
+        env:
+          EXPECTED_SHA: ${{ inputs.candidate_sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: application/requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt httpx
+          python scripts/install_math_renderer.py
+      - name: Audit reader macro coverage across canonical chapters
+        run: python -m scripts.audit_math_macros --root .. --out data/math_macro_coverage.json
+      - name: Build SQLite index from canonical chapters
+        shell: bash
+        run: |
+          mkdir -p data
+          set +e
+          python backend/latex_parser.py index \
+            --source ../chapters/pl \
+            --recursive \
+            --db data/biblioteka.db \
+            --aliases config/ALIASY_PO_SCALENIACH.json \
+            --report data/ci_index_report.json
+          result=$?
+          set -e
+          # Exit 2 denotes reported unresolved/ambiguous references.
+          # The report is retained for investigation; unexpected failures fail CI.
+          if [[ "$result" != 0 && "$result" != 2 ]]; then
+            exit "$result"
+          fi
+      - name: Benchmark paired full Lean chapter reports on real index
+        run: python scripts/benchmark_lean_chapter_report.py --samples 6 --output data/lean_chapter_report_benchmark.json
+      - name: Upload chapter report benchmark
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-chapter-report-benchmark-${{ inputs.validation_pass || 'standalone' }}
+          path: application/data/lean_chapter_report_benchmark.json
+          if-no-files-found: error
+      - name: Audit all unresolved references and label provenance
+        run: |
+          python scripts/audit_reference_provenance.py --db data/biblioteka.db --out data/reference_provenance_audit
+      - name: List unresolved references for mathematical review
+        run: python scripts/triage_unresolved_refs.py --db data/biblioteka.db --out data/unresolved_reference_triage
+      - name: Track complete 36-chapter geometry import coverage
+        run: python scripts/dg_import_coverage.py --db data/biblioteka.db --out data/dg_import_coverage.json
+      - name: Audit repository-wide chapter and graph coverage
+        id: graph-coverage
+        # Preserve the failure at the final gate, while still collecting
+        # application and browser results when manuscript links are broken.
+        continue-on-error: true
+        run: python -m scripts.audit_graph_coverage --db data/biblioteka.db --catalog ../catalog/books.json --out data/graph_coverage.json
+      - name: Report coordinate chart terminology in all TeX sources
+        run: python scripts/audit_chart_terminology.py --root .. --report data/chart_terminology.json --strict
+      - name: Upload complete reference/provenance audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-provenance-audit
+          path: |
+            application/data/reference_provenance_audit.json
+            application/data/reference_provenance_audit.md
+            application/data/dg_import_coverage.json
+            application/data/unresolved_reference_triage.json
+            application/data/unresolved_reference_triage.md
+            application/data/chart_terminology.json
+            application/data/graph_coverage.json
+            application/data/math_macro_coverage.json
+          if-no-files-found: warn
+      - name: Run application regression tests and classify every skip
+        env:
+          ATLAS_CANDIDATE_SHA: ${{ inputs.candidate_sha || github.sha }}
+          ATLAS_VALIDATION_PASS: ${{ inputs.validation_pass || 'standalone' }}
+        run: python -W default -m scripts.atlas_ci_report --start tests --output data/report.json --candidate-sha "$ATLAS_CANDIDATE_SHA" --pass-id "$ATLAS_VALIDATION_PASS"
+      - name: Upload named unittest and skip evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-unittest-${{ inputs.validation_pass || 'standalone' }}
+          path: application/data/report.json
+          if-no-files-found: warn
+      - name: Compile-check browser smoke scripts
+        run: python -m py_compile tests/browser_ci_e2e.py tests/browser_e2e.py tests/browser_workspace_e2e.py
+      - name: Install Chromium for browser smoke test
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Test real browser Explorer, reader and graph
+        run: python tests/browser_ci_e2e.py
+      - name: Test browser draft save and page-leave cleanup
+        run: python tests/browser_workspace_e2e.py
+      - name: Reject newly broken references outside the reviewed pending baseline
+        run: |
+          python scripts/triage_unresolved_refs.py \
+            --db data/biblioteka.db \
+            --out data/unresolved_reference_triage \
+            --fail-on-unclassified
+      - name: Upload parser report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: library-index-report
+          path: application/data/ci_index_report.json
+          if-no-files-found: ignore
+      - name: Require successful chapter and graph coverage
+        if: ${{ always() && steps.graph-coverage.outcome == 'failure' }}
+        run: |
+          echo "::error::Chapter or graph coverage failed. See reference-provenance-audit; application test results are reported separately."
+          exit 1

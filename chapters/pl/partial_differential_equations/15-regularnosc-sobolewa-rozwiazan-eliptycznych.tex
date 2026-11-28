@@ -1,0 +1,1456 @@
+\chapter[Regularność Sobolewa rozwiązań eliptycznych]{Regularność Sobolewa rozwiązań eliptycznych: ilorazy różnicowe, oszacowania wewnętrzne i brzegowe}
+\label{chap:pde15}
+
+W rozdziale~\ref{chap:pde13} skonstruowaliśmy rozwiązania słabe
+$u\in H^1$. Teraz zbadamy, kiedy równanie pozwala odzyskać drugie
+pochodne $u$ w $L^2$. Równanie można różniczkować w sensie
+dystrybucyjnym, ale nie wolno z góry zakładać, że powstałe
+pochodne są reprezentowane przez funkcje z $L^2$, ani stosować
+do nich rachunku właściwego funkcjom o nieudowodnionej jeszcze
+regularności. Trudność tę ominiemy dzięki ilorazom różnicowym,
+których zastosowanie wymaga jedynie $H^1$. W końcowej części
+kontrprzykłady pokażą, że w ogólności nie można poprzestać
+na ograniczoności współczynników i lipschitzowskości brzegu.
+
+W całym rozdziale $d\ge1$, a obszarem w $\R^d$ nazywamy niepusty,
+otwarty i spójny podzbiór $\R^d$. Dla otwartych zbiorów
+$U,V$ zapis $U\Subset V$ oznacza, że $\overline U$ jest zwartym
+podzbiorem $V$. Symbole $H^k(U)=W^{k,2}(U)$ oraz
+$\|\cdot\|_{2,U}=\|\cdot\|_{L^2(U)}$ mają znaczenie ustalone
+w rozdziale~\ref{chap:pde-sobolev}. Całki po $U$ zapisujemy względem
+miary Lebesgue'a $\mathrm d\lambda_d(x)$.
+
+\section{Eliptyczność a możliwość różniczkowania rozwiązań}
+\label{sec:pde15-model}
+Rozważamy równanie w postaci dywergencyjnej
+\begin{equation}\label{eq:pde15-basic}
+ -\diver(A\nabla u)=f\qquad\text{w }\Omega,
+\end{equation}
+gdzie $\Omega\subset\R^d$ jest obszarem, $A=(a_{ij})$ ma współczynniki
+rzeczywiste, a $f\in L^2_{\mathrm{loc}}(\Omega)$.
+W całym rozdziale funkcje $u,f$ i funkcje testowe są rzeczywiste.
+
+\begin{definicja}[Jednostajna eliptyczność i rozwiązanie słabe]
+\label{def:pde15-elliptic}
+Mówimy, że $A\in L^\infty_{\mathrm{loc}}(\Omega;\R^{d\times d})$
+jest jednostajnie eliptyczna i ograniczona na mierzalnym
+$U\subset\Omega$, jeżeli istnieją $\lambda,\Lambda>0$
+oraz zbiór $E\subset U$ pełnej miary w $U$ takie, że
+dla każdego $x\in E$ i każdego $\xi\in\R^d$ zachodzi
+$\xi^{\mathsf T}A(x)\xi\ge\lambda|\xi|^2$ oraz
+$|A(x)\xi|\le\Lambda|\xi|$. Nie wymagamy symetrii $A$.
+Funkcja $u\in H^1_{\mathrm{loc}}(\Omega)$ jest rozwiązaniem słabym
+równania~\eqref{eq:pde15-basic}, jeżeli dla każdego
+$\varphi\in C_c^\infty(\Omega)$ zachodzi
+\[
+ \int_\Omega A\nabla u\cdot\nabla\varphi\,\mathrm d\lambda_d(x)
+ =\int_\Omega f\varphi\,\mathrm d\lambda_d(x).
+\]
+Równość rozciąga się na funkcje $\varphi\in H^1(\Omega)$
+o zwartym nośniku $K\subset\Omega$. Istotnie, wybieramy
+otwarty $W\Subset\Omega$ zawierający $K$ i funkcję
+$\psi\in C_c^\infty(W)$ równą $1$ w otoczeniu $K$.
+Z lematu~\ref{lem:pde9-compact-product} dla $\psi\varphi=\varphi$
+otrzymujemy ciąg $\varphi_n\in C_c^\infty(W)$ zbieżny do
+$\varphi$ w $H^1(W)$. Ponieważ $A$ jest ograniczona na $W$,
+a $\nabla u,f\in L^2(W)$, mamy
+\[
+ \left|\int_W A\nabla u\cdot\nabla(\varphi_n-\varphi)\,
+ \mathrm d\lambda_d(x)\right|
+ \le \|A\|_{\infty,W}\|\nabla u\|_{2,W}
+       \|\nabla(\varphi_n-\varphi)\|_{2,W},
+\]
+\[
+ \left|\int_W f(\varphi_n-\varphi)\,\mathrm d\lambda_d(x)\right|
+ \le \|f\|_{2,W}\|\varphi_n-\varphi\|_{2,W}.
+\]
+Obie prawe strony dążą do zera, co uzasadnia przejście
+do granicy w równaniu słabym.
+\end{definicja}
+
+\begin{uwaga}[Dlaczego samo $A\in L^\infty$ nie wystarcza?]
+Jeżeli $u\in H^1_{\mathrm{loc}}(\Omega)$ oraz
+$A\in L^\infty_{\mathrm{loc}}(\Omega;\R^{d\times d})$,
+to z tych założeń wynika $A\nabla u\in L^2_{\mathrm{loc}}$.
+Wyrażenie $\diver(A\nabla u)$ jest poprawnie określoną
+dystrybucją, a dla rozwiązania równania~\eqref{eq:pde15-basic}
+jest reprezentowane przez $-f$. Nie wynika stąd jednak
+$D^2u\in L^2_{\mathrm{loc}}$, nawet przy jednostajnej
+eliptyczności (kontrprzykład~\ref{ex:pde15-jump}).
+W poniższym twierdzeniu jako dodatkową hipotezę
+przyjmiemy $A\in W^{1,\infty}_{\mathrm{loc}}$.
+\end{uwaga}
+
+\section{Ilorazy różnicowe i ich podstawowe własności}
+\label{sec:pde15-differences}
+Dla $1\le j\le d$ i $h\ne0$ wprowadzamy
+$\delta_h^jv(x)=\bigl(v(x+he_j)-v(x)\bigr)/h$, o ile oba punkty
+należą do zbioru, na którym określona jest $v$.
+
+\begin{lemat}[Oszacowania i całkowanie przez części]
+\label{lem:pde15-difference}
+Niech $U\subset\R^d$ będzie otwarty. Dla $h\ne0$ i ustalonego
+$j$ oznaczamy $U_h=U\cap(U-he_j)$.
+Jeżeli $v\in H^1(U)$, $K\subset U$ jest niepusty i zwarty oraz
+$|h|<\operatorname{dist}(K,\R^d\setminus U)$
+(przy $U=\R^d$ przyjmujemy odległość równą $+\infty$),
+to $\|\delta_h^jv\|_{L^2(K)}\le\|\partial_jv\|_{L^2(U)}$.
+Jeżeli $v\in L^2_{\mathrm{loc}}(U)$, $w\in L^2(U)$ ma
+zwarty nośnik $K\subset U$ i $K+he_j\subset U$, to
+\[
+ \int_{U_h}(\delta_h^jv)w\,\mathrm d\lambda_d(x)
+ =-\int_U v(\delta_{-h}^jw)\,\mathrm d\lambda_d(x),
+\]
+gdzie po prawej $w$ przedłużamy przez zero poza $U$.
+Nie wymagamy zwartego nośnika $v$. Dla
+$v\in H^1_{\mathrm{loc}}(U)$ zachodzi ponadto
+$\delta_h^jv\in H^1_{\mathrm{loc}}(U_h)$ i
+$\partial_k(\delta_h^jv)=\delta_h^j(\partial_kv)$
+w $U_h$ dla $1\le k\le d$.
+\end{lemat}
+\begin{proof}
+Dla funkcji gładkiej podstawowe twierdzenie rachunku całkowego
+wzdłuż odcinka (również dla $h<0$) daje
+$\delta_h^jv(x)=\int_0^1\partial_jv(x+the_j)\,
+\mathrm d\lambda_1(t)$. Każdy przesunięty zbiór
+$K+the_j$ jest zawarty w $U$. Z nierówności Cauchy'ego--Schwarza,
+twierdzenia Tonellego i niezmienniczości miary Lebesgue'a
+względem translacji otrzymujemy
+\[
+ \int_K|\delta_h^jv(x)|^2\,\mathrm d\lambda_d(x)
+ \le\int_0^1\int_{K+the_j}|\partial_jv(y)|^2\,
+ \mathrm d\lambda_d(y)\,\mathrm d\lambda_1(t)
+ \le\int_U|\partial_jv(y)|^2\,\mathrm d\lambda_d(y).
+\]
+Dla ogólnej funkcji Sobolewa zbiór
+$S=\{x+the_j:x\in K,\ 0\le t\le1\}$ jest zwarty jako obraz
+$K\times[0,1]$ przez odwzorowanie ciągłe i zawarty w $U$.
+Wybieramy otwarty $W$ taki, że $S\subset W\Subset U$.
+Z twierdzenia~\ref{thm:pde9-mollify} otrzymujemy funkcje
+gładkie $v_n$ na $W$, zbieżne do $v$ w $H^1(W)$.
+Dla ustalonego $h$ mamy
+\[
+ \|\delta_h^j(v_n-v)\|_{2,K}
+ \le |h|^{-1}(\|v_n-v\|_{2,K+he_j}
+                  +\|v_n-v\|_{2,K})
+ \le 2|h|^{-1}\|v_n-v\|_{2,W}\longrightarrow0.
+\]
+Stosując poprzedni rachunek do $v_n$ na $W$, a następnie
+przechodząc do granicy, dostajemy
+$\|\delta_h^jv\|_{2,K}\le\|\partial_jv\|_{2,W}
+\le\|\partial_jv\|_{2,U}$.
+
+W drugiej tożsamości wszystkie całki istnieją z nierówności
+Cauchy'ego--Schwarza, ponieważ $v$ jest lokalnie kwadratowo
+całkowalna, a $K$ oraz $K+he_j$ są zwarte w $U$.
+Mamy $K\subset U_h$. Po przedłużeniu $w$ przez zero
+podstawienie $y=x+he_j$ daje
+\[
+ \int_{U_h}(\delta_h^jv)w\,\mathrm d\lambda_d(x)
+ =\frac1h\int_U v(y)\bigl(w(y-he_j)-w(y)\bigr)
+ \,\mathrm d\lambda_d(y)
+ =-\int_U v\,\delta_{-h}^jw\,\mathrm d\lambda_d.
+\]
+Wreszcie dla $\zeta\in C_c^\infty(U_h)$, po przedłużeniu
+jej przez zero, z tej samej tożsamości otrzymujemy
+\begin{align*}
+ \int_{U_h}\delta_h^jv\,\partial_k\zeta\,\mathrm d\lambda_d
+ &=-\int_U v\,\partial_k(\delta_{-h}^j\zeta)\,\mathrm d\lambda_d\\
+ &=\int_U \partial_kv\,\delta_{-h}^j\zeta\,\mathrm d\lambda_d\\
+ &=-\int_{U_h}\delta_h^j(\partial_kv)\zeta\,\mathrm d\lambda_d.
+\end{align*}
+Na każdym zwartym podzbiorze $U_h$ obie translacje
+$v$ i $\partial_kv$ są kwadratowo całkowalne.
+Ostatnia tożsamość daje więc postulowaną słabą pochodną.
+\end{proof}
+
+\begin{lemat}[Kryterium istnienia słabej pochodnej]
+\label{lem:pde15-criterion}
+Niech $U\subset\R^d$ będzie otwarty i $v\in L^2_{\mathrm{loc}}(U)$.
+Jeśli dla każdego niepustego zwartego $K\subset U$ istnieją
+$C_K,h_K>0$ takie, że $K+he_j\subset U$ oraz
+$\|\delta_h^jv\|_{L^2(K)}\le C_K$ dla $0<|h|<h_K$, to
+$\partial_jv\in L^2_{\mathrm{loc}}(U)$ i
+$\|\partial_jv\|_{L^2(K)}\le C_{K'}$ dla zwartych
+$K,K'\subset U$ spełniających $K\subset\operatorname{int}K'$.
+\end{lemat}
+\begin{proof}
+Ustalmy takie $K,K'$. Wybieramy otwarty $V$ z
+$K\subset V\subset\overline V\subset\operatorname{int}K'$;
+jest to możliwe dzięki zwartości $K$ i otwartości
+$\operatorname{int}K'$. Dla dowolnego ciągu niezerowych
+$h_n\to0$ z $|h_n|<h_{K'}$ mamy
+$\|\delta_{h_n}^jv\|_{2,V}\le C_{K'}$.
+Z twierdzenia o słabej ciągowej zwartości ograniczonych
+ciągów w przestrzeni Hilberta $L^2(V)$ wybieramy podciąg
+(oznaczany tak samo), dla którego
+$\delta_{h_n}^jv\rightharpoonup w$ w $L^2(V)$.
+Dla $\varphi\in C_c^\infty(V)$ stosujemy poprzedni lemat
+dla dostatecznie małych $|h_n|$:
+\[
+ \int_V\delta_{h_n}^jv\,\varphi\,\mathrm d\lambda_d
+ =-\int_U v\,\delta_{-h_n}^j\varphi\,\mathrm d\lambda_d .
+\]
+Nośniki $\delta_{-h_n}^j\varphi$ dla dużych $n$
+leżą w jednym zwartym podzbiorze $V$.
+Z podstawowego twierdzenia rachunku całkowego i jednostajnej
+ciągłości $\partial_j\varphi$ na $\R^d$ wynika jednostajna
+zbieżność $\delta_{-h_n}^j\varphi\to\partial_j\varphi$,
+a z ograniczenia nośników także zbieżność w $L^2(V)$.
+Z nierówności Cauchy'ego--Schwarza prawa strona zbiega do
+$-\int_V v\partial_j\varphi\,\mathrm d\lambda_d$;
+lewa zbiega do $\int_V w\varphi\,\mathrm d\lambda_d$
+na mocy słabej zbieżności. Stąd $w$ reprezentuje
+$\partial_jv$ na $V$. Półciągłość normy przy słabej zbieżności
+daje
+\[
+ \|w\|_{2,K}\le\|w\|_{2,V}
+ \le\liminf_n\|\delta_{h_n}^jv\|_{2,V}\le C_{K'}.
+\]
+Każdy punkt $U$ ma takie otoczenie $V$. Na przecięciach
+reprezentanty są równe prawie wszędzie z jednoznaczności
+dystrybucji regularnych (stwierdzenie~\ref{prop:pde7-injective}).
+Wybierając przeliczalne podpokrycie tych otoczeń (przestrzeń
+euklidesowa ma przeliczalną bazę), otrzymujemy jeden
+mierzalny reprezentant $\partial_jv$, lokalnie kwadratowo
+całkowalny. Istotnie, każdy zwarty podzbiór $U$ pokrywają
+skończenie liczne z tych otoczeń i na każdym z nich
+odpowiednia całka kwadratu jest skończona.
+\end{proof}
+
+\section[Wewnętrzna regularność Sobolewa drugiego rzędu]{Wewnętrzna regularność $H^2$}
+\label{sec:pde15-h2}
+\begin{twierdzenie}[Wewnętrzna regularność drugiego rzędu]
+\label{thm:pde15-h2}
+Niech $\Omega\subset\R^d$ będzie obszarem,
+$A\in W^{1,\infty}_{\mathrm{loc}}(\Omega;\R^{d\times d})$ będzie
+jednostajnie eliptyczna i ograniczona na zwartych podzbiorach,
+$f\in L^2_{\mathrm{loc}}(\Omega)$, a $u\in H^1_{\mathrm{loc}}(\Omega)$
+rozwiązaniem słabym równania~\eqref{eq:pde15-basic}.
+Wówczas $u\in H^2_{\mathrm{loc}}(\Omega)$. Dla każdych
+niepustych otwartych zbiorów $U,V$ takich, że
+$U\Subset V\Subset\Omega$, zachodzi
+\begin{equation}\label{eq:pde15-h2-est}
+ \|u\|_{H^2(U)}\le C\bigl(\|f\|_{L^2(V)}
+ +\|u\|_{H^1(V)}\bigr),
+\end{equation}
+gdzie $C$ zależy od $U,V,d$, stałych eliptyczności na $V$
+oraz $\|A\|_{W^{1,\infty}(V)}$.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: dziedziny przesunięć i równanie różnicowe.}
+Wybieramy $\eta\in C_c^\infty(V)$ taką, że
+$0\le\eta\le1$ i $\eta=1$ w otoczeniu $\overline U$.
+Niech $K=\operatorname{supp}\eta$ i wybierzmy $\rho>0$ tak,
+aby $K+\overline{B_{2\rho}(0)}\subset V$.
+Ustalamy $j\in\{1,\ldots,d\}$ i $0<|h|<\rho$.
+Oznaczamy $V_h=V\cap(V-he_j)$ i $w_h=\delta_h^ju$ na $V_h$.
+Z lematu~\ref{lem:pde15-difference} mamy
+$w_h\in H^1_{\mathrm{loc}}(V_h)$ oraz
+$\nabla w_h=\delta_h^j\nabla u$.
+W szczególności $K\Subset V_h$.
+
+Dla $\varphi\in C_c^\infty(V_h)$ funkcja
+$-\delta_{-h}^j\varphi$ (po przedłużeniu $\varphi$
+przez zero) jest gładkim testem o zwartym nośniku w $V$.
+Podstawiamy ją do równania słabego
+i stosujemy dyskretne całkowanie przez części
+z lematu~\ref{lem:pde15-difference}, osobno do każdej
+składowej pola $A\nabla u$ oraz do $f$.
+Otrzymujemy
+\[
+ \int_{V_h}\delta_h^j(A\nabla u)\cdot\nabla\varphi\,
+ \mathrm d\lambda_d(x)
+ =\int_{V_h}(\delta_h^jf)\varphi\,\mathrm d\lambda_d(x).
+\]
+Rozwinięcie różnicy iloczynu daje prawie wszędzie w $V_h$
+\[
+ \delta_h^j(A\nabla u)(x)
+ =A(x)\nabla w_h(x)
+   +(\delta_h^jA)(x)\nabla u(x+he_j).
+\]
+Po przeniesieniu drugiego składnika uzyskujemy
+\begin{equation}\label{eq:pde15-diff-eq}
+ \begin{aligned}
+ \int_{V_h} A\nabla w_h\cdot\nabla\varphi\,\mathrm d\lambda_d(x)
+ &=\int_{V_h}(\delta_h^jf)\varphi\,\mathrm d\lambda_d(x)\\
+ &\quad-\int_{V_h}(\delta_h^jA)(x)\nabla u(x+he_j)
+       \cdot\nabla\varphi\,\mathrm d\lambda_d(x).
+ \end{aligned}
+\end{equation}
+Dla ustalonego $h$ współczynniki $\delta_h^jA$ są ograniczone,
+a $\delta_h^jf$ i $\nabla w_h$ należą do $L^2(V_h)$
+(z oszacowania norm obu translacji przez normy na $V$).
+Zatem obie strony równania są ciągłe względem normy
+$H^1(V_h)$. Na mocy lematu~\ref{lem:pde9-compact-product}
+funkcję $\varphi=\eta^2w_h$ można aproksymować testami
+gładkimi o nośnikach w ustalonym zwartym podzbiorze $V_h$.
+Jej przedłużenie przez zero na $\R^d$ należy do
+$H^1(\R^d)$, a słaby gradient jest przedłużeniem przez zero
+pola
+\[
+ \nabla\varphi=\eta^2\nabla w_h+2\eta w_h\nabla\eta.
+\]
+Wolno więc użyć tej funkcji w~\eqref{eq:pde15-diff-eq}.
+
+\emph{Krok 2: jednostajna kontrola różnic współczynników.}
+Niech $D=\|\partial_jA\|_{L^\infty(V;\mathrm{op})}$,
+gdzie używamy normy operatorowej macierzy. Dla ustalonego
+$h$ mamy $|\delta_h^jA(x)|_{\mathrm{op}}\le D$ prawie
+wszędzie na $K$. Istotnie, wygładzamy $A$ przez splot
+na otoczeniu zwartego zbioru $K+\overline{B_\rho(0)}$
+zawartego w $V$. Dla dostatecznie małego parametru
+jądro nieujemne o całce $1$ i komutacja pochodnych
+ze splotem (twierdzenie~\ref{thm:pde7-mollify})
+dają $\|\partial_j A_\varepsilon(x)\|_{\mathrm{op}}\le D$
+na tym otoczeniu. Całkując po odcinku od $x$ do $x+he_j$,
+otrzymujemy analogiczne ograniczenie dla
+$\delta_h^j A_\varepsilon(x)$. Z twierdzenia
+~\ref{thm:pde9-mollify} dla $p=2$ (na relatywnie zwartym
+otoczeniu) mamy zbieżność $A_\varepsilon$ do $A$ w $L^2$
+na $K$ i $K+he_j$. W konsekwencji
+$\delta_h^j A_\varepsilon\to\delta_h^j A$ w $L^2(K)$.
+Po przejściu do podciągu zbieżnego prawie wszędzie
+otrzymujemy żądane ograniczenie. Stała $D$ nie zależy od $h$.
+
+\emph{Krok 3: oszacowanie energetyczne.}
+Oznaczmy
+\[
+ X=\|\eta\nabla w_h\|_{2,V_h},\quad
+ Y=\|\nabla u\|_{2,V},\quad F=\|f\|_{2,V},
+ \quad M=\|\nabla\eta\|_\infty .
+\]
+Lemat~\ref{lem:pde15-difference} i niezmienniczość miary
+względem translacji dają
+$\|w_h\|_{2,K}\le Y$ oraz
+$\|\nabla u(\cdot+he_j)\|_{2,K}
+=\|\nabla u\|_{2,K+he_j}\le Y$.
+Ponieważ $0\le\eta\le1$,
+\[
+ \|\nabla\varphi\|_{2,V_h}\le X+2MY.
+\]
+Nie szacujemy normy $\delta_h^jf$ przez stałą niezależną
+od $h$, gdyż $f$ może nie mieć żadnej słabej pochodnej.
+Zamiast tego, na mocy dyskretnego całkowania przez części,
+\[
+ \left|\int_{V_h}(\delta_h^jf)\varphi\,\mathrm d\lambda_d(x)\right|
+ =\left|\int_V f\,\delta_{-h}^j\varphi\,\mathrm d\lambda_d(x)\right|
+ \le F\|\partial_j\varphi\|_{2,V_h}
+ \le F(X+2MY).
+\]
+W przedostatniej nierówności zastosowaliśmy oszacowanie
+ilorazu różnicowego z lematu~\ref{lem:pde15-difference}
+do przedłużenia $\varphi$ przez zero na $\R^d$:
+biorąc rosnące zwarte kule i przechodząc do granicy,
+dostajemy oszacowanie na całej $\R^d$ przez normę
+$\partial_j\varphi$, która znika poza $K$.
+
+Rozwijając lewą stronę~\eqref{eq:pde15-diff-eq}
+i korzystając z eliptyczności na $V$, otrzymujemy
+\[
+ \lambda X^2
+ \le 2\Lambda MXY+F(X+2MY)+DY(X+2MY).
+\]
+Pierwszy składnik oszacowano przez Cauchy'ego--Schwarza
+i $|A\xi|\le\Lambda|\xi|$, ostatni przez ograniczenie
+$\delta_h^j A$ i normę przesuniętego gradientu na $K$.
+Nie wykorzystujemy symetrii macierzy $A$.
+Kładąc $T=F+(2\Lambda M+D)Y$, otrzymujemy
+$\lambda X^2\le TX+2MY(F+DY)$.
+Nierówność Younga daje
+$TX\le\lambda X^2/2+T^2/(2\lambda)$, zatem
+\[
+ X^2\le \frac{T^2}{\lambda^2}
+       +\frac{4M}{\lambda}Y(F+DY)
+ \le C_1(F^2+Y^2).
+\]
+Ostatnia nierówność wynika z
+$(a+b)^2\le2a^2+2b^2$ oraz $2FY\le F^2+Y^2$;
+$C_1$ zależy wyłącznie od $\lambda,\Lambda,M,D$.
+Wybierając maksimum po skończenie wielu kierunkach $j$,
+możemy przyjąć jedną stałą $C_1$ niezależną od $j,h$.
+
+\emph{Krok 4: odzyskanie drugich słabych pochodnych.}
+Ponieważ $\eta=1$ na $U$, dla każdego $j,k$ mamy
+\[
+ \|\delta_h^j\partial_ku\|_{2,U}^2
+ =\|\partial_kw_h\|_{2,U}^2\le C_1(F^2+Y^2).
+\]
+Ustalmy $j,k$ i ciąg niezerowych $h_n\to0$ z $|h_n|<\rho$.
+Z ograniczoności w przestrzeni Hilberta $L^2(U)$
+wybieramy słabo zbieżny podciąg. Dla każdego
+$\zeta\in C_c^\infty(U)$ dyskretne całkowanie przez części
+oraz zbieżność $\delta_{-h_n}^j\zeta\to\partial_j\zeta$
+w $L^2(U)$ (z nośnikami w $U$ dla dużych $n$)
+identyfikują granicę słabą z $\partial_j\partial_ku$
+dokładnie jak w dowodzie lematu~\ref{lem:pde15-criterion}.
+Półciągłość normy daje
+$\|\partial_j\partial_ku\|_{2,U}^2\le C_1(F^2+Y^2)$.
+Dotyczy to wszystkich $d^2$ par indeksów, więc $u\in H^2(U)$.
+Dodając normy pochodnych rzędów zero i jeden, otrzymujemy
+\[
+ \|u\|_{H^2(U)}^2
+ \le\|u\|_{H^1(V)}^2+d^2C_1
+       \bigl(\|f\|_{2,V}^2+\|\nabla u\|_{2,V}^2\bigr).
+\]
+Po wyciągnięciu pierwiastka dostajemy
+~\eqref{eq:pde15-h2-est}. Wybór $U,V$ był dowolny,
+więc $u\in H^2_{\mathrm{loc}}(\Omega)$.
+\end{proof}
+
+\begin{uwaga}[Zależność od $V$ w oszacowaniu]
+Wszystkie przesunięcia użyte do oszacowania normy
+na $U$ mieszczą się w $V$. Nie jest potrzebna wypukłość
+ani regularność brzegu $V$. Stała zależy między innymi
+od normy gradientu wybranej funkcji odcinającej,
+która może wzrastać przy zmniejszaniu odstępu
+między $\overline U$ i $\R^d\setminus V$.
+\end{uwaga}
+
+\section{Oszacowanie Caccioppolego z prawą stroną}
+\label{sec:pde15-caccioppoli}
+\begin{stwierdzenie}[Wersja niejednorodna]
+Niech $r>0$, $B_{2r}(x_0)\Subset\Omega$,
+$A\in L^\infty(B_{2r};\R^{d\times d})$ spełnia warunki
+eliptyczności i ograniczoności z definicji~\ref{def:pde15-elliptic},
+$f\in L^2(B_{2r})$, a $u\in H^1(B_{2r})$ jest słabym
+rozwiązaniem $-\diver(A\nabla u)=f$. Istnieje $C=C(d,\lambda,\Lambda)>0$
+taka, że dla każdego $k\in\R$
+\[
+ \int_{B_r}|\nabla u|^2\,\mathrm d\lambda_d(x)
+ \le C\left(r^{-2}\int_{B_{2r}}|u-k|^2\,\mathrm d\lambda_d(x)
+ +r^2\int_{B_{2r}}|f|^2\,\mathrm d\lambda_d(x)\right).
+\]
+W szczególności można wziąć $k=0$ lub średnią $u$ po $B_{2r}$.
+\end{stwierdzenie}
+\begin{proof}
+Wszystkie kule mają środek $x_0$. Kładziemy $v=u-k$;
+ponieważ $\nabla v=\nabla u$, funkcja $v$ spełnia to samo
+równanie słabe. Wybieramy $\eta\in C_c^\infty(B_{2r})$,
+$0\le\eta\le1$, równą $1$ na $B_r$ i spełniającą
+$|\nabla\eta|\le C_0/r$, jak w dowodzie twierdzenia
+~\ref{thm:pde14-caccioppoli}. Stała $C_0$ jest niezależna
+od $r$ i $x_0$. Z lematu~\ref{lem:pde9-compact-product}
+funkcja $\varphi=\eta^2v$ należy do $H^1_0(B_{2r})$
+i może być aproksymowana gładkimi testami w $H^1$.
+Ciągłość obu stron równania słabego, jak w definicji
+~\ref{def:pde15-elliptic}, pozwala użyć $\varphi$ jako testu.
+Rozwijając jej gradient, otrzymujemy
+\[
+ \int_{B_{2r}}\eta^2 A\nabla u\cdot\nabla u\,\mathrm d\lambda_d(x)
+ =\int_{B_{2r}}f\eta^2v\,\mathrm d\lambda_d(x)
+ -2\int_{B_{2r}}\eta v A\nabla u\cdot\nabla\eta\,\mathrm d\lambda_d(x).
+\]
+Oznaczmy $X=\|\eta\nabla u\|_{2,B_{2r}}$,
+$Y=\|v\|_{2,B_{2r}}$ i $F=\|f\|_{2,B_{2r}}$.
+Eliptyczność, ograniczoność $A$ i nierówność
+Cauchy'ego--Schwarza dają
+\[
+ \lambda X^2\le FY+2\Lambda C_0r^{-1}XY.
+\]
+W szczególności nie musimy stosować nierówności
+Poincarégo do $\eta v$. Z nierówności Younga mamy
+\[
+ FY\le\tfrac12 r^2 F^2+\tfrac12 r^{-2}Y^2,\qquad
+ 2\Lambda C_0r^{-1}XY
+ \le\tfrac{\lambda}{2}X^2+
+       \tfrac{2\Lambda^2 C_0^2}{\lambda r^2}Y^2.
+\]
+Przenosząc $\lambda X^2/2$ na lewą stronę, otrzymujemy
+\[
+ X^2\le \lambda^{-1}r^2 F^2+
+ \left(\lambda^{-1}+\frac{4\Lambda^2 C_0^2}{\lambda^2}\right)
+ r^{-2}Y^2.
+\]
+Ponieważ $\eta=1$ na $B_r$, daje to tezę z
+$C=\lambda^{-1}+4\Lambda^2C_0^2/\lambda^2$.
+Średnia $u$ na $B_{2r}$ minimalizuje $Y^2$ względem $k$,
+jak wykazano w dowodzie twierdzenia~\ref{thm:pde14-caccioppoli}.
+\end{proof}
+
+\section{Regularność wyższych rzędów i bootstrap}
+\label{sec:pde15-bootstrap}
+\begin{twierdzenie}[Wewnętrzny bootstrap Sobolewa]
+\label{thm:pde15-bootstrap}
+Niech $m\in\N_0$, $\Omega\subset\R^d$ będzie obszarem,
+$A\in W^{m+1,\infty}_{\mathrm{loc}}(\Omega;\R^{d\times d})$
+będzie jednostajnie eliptyczna i ograniczona na zwartych
+podzbiorach, $f\in H^m_{\mathrm{loc}}(\Omega)$,
+a $u\in H^1_{\mathrm{loc}}(\Omega)$ niech spełnia
+$-\diver(A\nabla u)=f$ słabo. Wtedy
+$u\in H^{m+2}_{\mathrm{loc}}(\Omega)$.
+Dla niepustych otwartych zbiorów $U\Subset V\Subset\Omega$
+istnieje $C>0$ takie, że
+\[
+ \|u\|_{H^{m+2}(U)}
+ \le C(\|f\|_{H^m(V)}+\|u\|_{H^1(V)}).
+\]
+Stała zależy od $m,d$, $U,V$, stałych eliptyczności na $V$
+i normy $A$ w $W^{m+1,\infty}(V)$.
+\end{twierdzenie}
+\begin{proof}
+Dowodzimy indukcyjnie jednocześnie regularności i oszacowania.
+Dla $m=0$ jest to twierdzenie~\ref{thm:pde15-h2}.
+Niech $m\ge1$ i załóżmy oba wnioski dla $m-1$.
+Ponieważ obecne założenia implikują założenia dla $m-1$,
+mamy $u\in H^{m+1}_{\mathrm{loc}}(\Omega)$.
+
+\emph{Krok 1: różniczkowanie dystrybucyjne iloczynu.}
+Ustalmy wielowskaźnik $\alpha$, $|\alpha|=m$, i połóżmy
+$v_\alpha=\partial^\alpha u\in H^1_{\mathrm{loc}}(\Omega)$.
+Uzasadnimy wzór Leibniza dla $A\nabla u$.
+Jeżeli $a\in W^{1,\infty}(W)$ oraz $z\in H^1(W)$,
+gdzie $W\Subset\Omega$ jest otwarty, to obie funkcje
+należą do $H^1(W)$, gdyż $W$ ma skończoną miarę.
+Z twierdzenia~\ref{thm:pde9-products} dla $p=q=2$
+otrzymujemy słabą regułę iloczynu
+$\partial_j(az)=(\partial_j a)z+a\partial_j z$.
+Iloczyn i oba składniki pochodnej należą do $L^2(W)$,
+ponieważ $a,\partial_j a\in L^\infty(W)$.
+Stąd $az\in H^1(W)$ i
+\[
+ \|az\|_{H^1(W)}
+ \le C_d\|a\|_{W^{1,\infty}(W)}\|z\|_{H^1(W)}.
+\]
+Stosujemy ten argument składowo również do macierzy.
+Powtarzając regułę iloczynu, dla $|\gamma|\le m$ dostajemy
+dystrybucyjnie
+\[
+ \partial^\gamma(A\nabla u)=
+ \sum_{\beta\le\gamma}\binom{\gamma}{\beta}
+ (\partial^\beta A)\nabla\partial^{\gamma-\beta}u .
+\]
+Istotnie, dla $|\gamma|<m$ każdy składnik ma oba czynniki
+o regularności wystarczającej do kolejnego zastosowania
+reguły: $\partial^\beta A\in W^{1,\infty}(W)$ i
+$\nabla\partial^{\gamma-\beta}u\in H^1(W)$.
+Po zróżniczkowaniu względem jednej współrzędnej
+współczynniki sumują się według tożsamości Pascala
+dla odpowiedniej składowej wielowskaźnika.
+Wszystkie potrzebne pochodne istnieją już na mocy
+założenia indukcyjnego, nie zakładamy więc z góry
+regularności $H^{m+2}$.
+
+\emph{Krok 2: równanie dla pochodnej i regularność.}
+Ponieważ pochodne dystrybucyjne są przemienne,
+z równania wyjściowego i powyższego wzoru wynika
+\[
+ -\diver(A\nabla v_\alpha)=\partial^\alpha f+\diver Q_\alpha,
+ \qquad
+ Q_\alpha=\sum_{0<\beta\le\alpha}\binom{\alpha}{\beta}
+ (\partial^\beta A)\nabla\partial^{\alpha-\beta}u .
+\]
+Dla $0<\beta\le\alpha$ mamy
+$\partial^\beta A\in W^{1,\infty}_{\mathrm{loc}}$
+oraz $\nabla\partial^{\alpha-\beta}u\in
+H^{|\beta|}_{\mathrm{loc}}\subset H^1_{\mathrm{loc}}$.
+Z oszacowania iloczynu z kroku 1 wynika dla każdego
+$W\Subset\Omega$
+\[
+ \|Q_\alpha\|_{H^1(W)}
+ \le C_{d,m}\|A\|_{W^{m+1,\infty}(W)}\|u\|_{H^{m+1}(W)}.
+\]
+Dywergencja pola $H^1(W;\R^d)$ należy do $L^2(W)$
+i jej norma nie przekracza $\sqrt d$ razy normy
+macierzy pierwszych pochodnych w $L^2(W)$
+(z nierówności Cauchy'ego--Schwarza dla sumy $d$ składników).
+Zatem prawa strona $F_\alpha=\partial^\alpha f+\diver Q_\alpha$
+jest lokalnie kwadratowo całkowalna.
+Twierdzenie~\ref{thm:pde15-h2} zastosowane do $v_\alpha$
+daje $v_\alpha\in H^2_{\mathrm{loc}}(\Omega)$.
+Każdy wielowskaźnik długości $m+2$ jest sumą
+wielowskaźnika długości $m$ i wielowskaźnika długości $2$,
+więc wraz z założeniem indukcyjnym daje to
+$u\in H^{m+2}_{\mathrm{loc}}(\Omega)$.
+
+\emph{Krok 3: oszacowanie normy.}
+Dla ustalonych $U,V$ wybieramy otwarty zbiór $W$ taki,
+że $U\Subset W\Subset V$. Wtedy twierdzenie
+~\ref{thm:pde15-h2} oraz oszacowanie $Q_\alpha$ dają
+\[
+ \|v_\alpha\|_{H^2(U)}
+ \le C_1(\|F_\alpha\|_{2,W}+\|v_\alpha\|_{H^1(W)})
+ \le C_2(\|f\|_{H^m(W)}+\|u\|_{H^{m+1}(W)}).
+\]
+Stałe są niezależne od $u,f$; maksimum po skończenie wielu
+$\alpha$ można przyjąć jako wspólną stałą.
+Z oszacowania indukcyjnego dla pary $W,V$ mamy
+\[
+ \|u\|_{H^{m+1}(W)}
+ \le C_3(\|f\|_{H^{m-1}(V)}+\|u\|_{H^1(V)}).
+\]
+Normy $f$ na $W$ i rzędu $m-1$ na $V$ nie przekraczają
+$\|f\|_{H^m(V)}$. Sumując kwadraty oszacowań
+$\|v_\alpha\|_{H^2(U)}$ oraz dodając oszacowanie indukcyjne
+dla pochodnych niższych rzędów, otrzymujemy tezę
+po wyciągnięciu pierwiastka. Liczba wielowskaźników
+zależy tylko od $d,m$; wybór $W$ zależy od $U,V$.
+To zamyka indukcję również dla zależności stałych.
+\end{proof}
+
+\begin{wniosek}[Gładkość wewnętrzna]
+Jeżeli $A\in C^\infty(\Omega;\R^{d\times d})$ jest lokalnie
+jednostajnie eliptyczna, $f\in C^\infty(\Omega)$ i
+$u\in H^1_{\mathrm{loc}}(\Omega)$ jest słabym rozwiązaniem,
+to klasa $u$ ma jedyny gładki reprezentant na $\Omega$.
+Reprezentant ten spełnia równanie również klasycznie.
+\end{wniosek}
+\begin{proof}
+Każda pochodna współczynników i prawej strony jest
+ograniczona na domknięciu zbioru $V\Subset\Omega$.
+Poprzednie twierdzenie stosujemy dla każdego $m$
+i otrzymujemy $u\in H^k_{\mathrm{loc}}(\Omega)$
+dla wszystkich $k\in\N$.
+Ustalmy kulę $B\Subset\Omega$. Dla $d\ge2$ zastosujemy
+twierdzenie~\ref{thm:pde10-domain-embed} do wszystkich
+słabych pochodnych na $B$. Jeżeli wszystkie należą do
+$L^p(B)$ dla pewnego skończonego $p\ge2$, to wszystkie
+należą do $W^{1,p}(B)$, bo ich kolejne słabe pochodne
+również należą do $L^p(B)$. Gdy $p<d$, możemy zastąpić
+$p$ przez $dp/(d-p)$, czyli zmniejszyć $1/p$ o $1/d$.
+Po skończenie wielu krokach osiągamy $p\ge d$;
+jeśli $p=d$, stosujemy zanurzenie do $L^{d+1}(B)$.
+W ten sposób wszystkie pochodne należą do $L^p(B)$
+dla pewnego $p>d$, więc $u\in W^{k,p}(B)$ dla każdego $k$.
+Wniosek~\ref{cor:pde10-Morrey-domain} daje dla każdego
+$\ell\ge0$ reprezentanta klasy $C^\ell$ na $B$.
+Dla $d=1$ stosujemy do każdej pochodnej na przedziale $B$
+jednowymiarowe twierdzenie o reprezentancie Sobolewa
+(w szczególności wniosek~\ref{cor:pde9-trace-oneD}):
+każda pochodna jest ciągła, a reprezentant poprzedniej
+jest absolutnie ciągły i ma tę pochodną prawie wszędzie.
+Podstawowe twierdzenie rachunku całkowego daje wtedy
+klasyczną pochodną równą ciągłemu reprezentantowi.
+Iteracja daje gładkość. W obu przypadkach ciągłe
+reprezentanty tej samej klasy są równe punktowo na
+przecięciach otwartych zbiorów, gdyż są równe prawie
+wszędzie. Sklejamy je więc do jednego reprezentanta
+$C^\infty(\Omega)$. Różnica $-\diver(A\nabla u)-f$
+dla tego reprezentanta jest gładka i generuje dystrybucję
+zerową; z ciągłości i iniektywności dystrybucji regularnych
+(stwierdzenie~\ref{prop:pde7-injective}) znika wszędzie.
+\end{proof}
+
+\section{Regularność przy brzegu: metoda spłaszczania}
+\label{sec:pde15-boundary}
+
+\begin{lemat}[Forma dywergencyjna po spłaszczeniu brzegu]
+\label{lem:pde15-flatten}
+Niech $V,W\subset\R^d$ będą zbiorami otwartymi i
+$\Phi:W\to V$ będzie dyfeomorfizmem klasy $C^{1,1}$
+(tj. klasy $C^1$ z lokalnie lipschitzowską pochodną).
+Piszemy $J=D\Phi$ i $q=|\det J|$. Jeżeli
+$u\in H^1_{\mathrm{loc}}(V)$ jest słabym rozwiązaniem
+$-\diver(A\nabla u)=f$ na $V$, gdzie
+$A\in W^{1,\infty}_{\mathrm{loc}}(V;\R^{d\times d})$
+i $f\in L^2_{\mathrm{loc}}(V)$, to
+$v=u\circ\Phi\in H^1_{\mathrm{loc}}(W)$ i spełnia równanie
+$-\diver(B\nabla v)=F$ słabo, gdzie
+\[
+ B(y)=q(y)J(y)^{-1}A(\Phi(y))J(y)^{-\mathsf T},
+ \qquad F(y)=q(y)f(\Phi(y)).
+\]
+Mamy $B\in W^{1,\infty}_{\mathrm{loc}}(W)$ i
+$F\in L^2_{\mathrm{loc}}(W)$.
+Jeżeli na mierzalnym $E\subset W$ zachodzą ograniczenia
+$\|J\|_{\mathrm{op}}\le M$, $\|J^{-1}\|_{\mathrm{op}}\le N$
+i na $\Phi(E)$ macierz $A$ spełnia warunki z definicji
+~\ref{def:pde15-elliptic} ze stałymi $\lambda,\Lambda$,
+to na $E$ macierz $B$ spełnia te same warunki ze stałymi
+$\lambda'= \lambda/(N^d M^2)$ i
+$\Lambda'=\Lambda M^d N^2$.
+Jeżeli powyższe ograniczenia $M,N$ zachodzą na całym $W$,
+to składanie z $\Phi$ jest ograniczonym operatorem
+$H^1(V)\to H^1(W)$ oraz $F\in L^2(W)$ dla $f\in L^2(V)$.
+Jeżeli dodatkowo wszystkie drugie słabe pochodne $\Phi$
+należą do $L^\infty(W)$, to składanie z $\Phi$ jest
+ograniczone również $H^2(V)\to H^2(W)$.
+Oba twierdzenia o składaniu dotyczą dowolnych funkcji
+z odpowiedniej przestrzeni Sobolewa, niezależnie od równania. Analogiczne twierdzenia stosują się
+do $\Phi^{-1}$ przy odpowiednich ograniczeniach jej pochodnych.
+\end{lemat}
+\begin{proof}
+\emph{Krok 1: słaba reguła łańcuchowa.}
+Z klasycznej zmiany zmiennych dla dyfeomorfizmu $C^1$
+wynika zachowywanie zbiorów miary zero przez $\Phi$
+i $\Phi^{-1}$ (na zwartych podzbiorach wyznaczniki
+obu zmian zmiennych są ograniczone, a zbiory otwarte
+można wyczerpać przeliczalnie zbiorami zwartymi).
+Obie mapy zachowują też mierzalność Lebesgue'a,
+ponieważ są homeomorfizmami i zachowują zbiory miary zero.
+Złożenie jest więc dobrze określone dla klas funkcji
+równych prawie wszędzie. W tym kroku nie używamy równania. Niech $W_0\Subset W$
+będzie otwarty. Zwartość $\Phi(\overline{W_0})\subset V$
+pozwala wybrać otwarty $V_0\Subset V$ zawierający ten obraz.
+Na $\overline{W_0}$ macierze $J,J^{-1}$ są ograniczone
+i $q$ jest oddzielone od zera. Jeżeli $M,N$ są ich
+odpowiednimi ograniczeniami, to z oszacowań wartości
+osobliwych mamy $N^{-d}\le q\le M^d$.
+Dla każdej funkcji $z\in L^2(V_0)$ wzór zmiany zmiennych daje
+\[
+ \|z\circ\Phi\|_{2,W_0}^2
+ =\int_{\Phi(W_0)}|z(x)|^2
+        q(\Phi^{-1}(x))^{-1}\,\mathrm d\lambda_d(x)
+ \le N^d\|z\|_{2,V_0}^2.
+\]
+Oszacowanie stosuje się składowo także do pól wektorowych.
+Z twierdzenia~\ref{thm:pde9-mollify} wybieramy funkcje
+$u_n$ gładkie na $V_0$, zbieżne do $u$ w $H^1(V_0)$.
+Klasyczna reguła łańcuchowa daje
+$\nabla(u_n\circ\Phi)=J^{\mathsf T}(\nabla u_n)\circ\Phi$.
+Powyższe oszacowanie zapewnia zbieżność złożeń w $L^2(W_0)$
+do $v=u\circ\Phi$ i ich gradientów do
+$J^{\mathsf T}(\nabla u)\circ\Phi$ w $L^2(W_0)$.
+Przechodząc do granicy w tożsamości definiującej słabe
+pochodne, otrzymujemy
+\[
+ \nabla v=J^{\mathsf T}(\nabla u)\circ\Phi,
+ \qquad (\nabla u)\circ\Phi=J^{-\mathsf T}\nabla v.
+\]
+Ponieważ $W_0$ był dowolny, wzory zachodzą lokalnie
+na całym $W$. Przy globalnych ograniczeniach $M,N$
+ten sam wzór zmiany zmiennych na $W$ daje
+\[
+ \|v\|_{2,W}\le N^{d/2}\|u\|_{2,V},\qquad
+ \|\nabla v\|_{2,W}\le MN^{d/2}\|\nabla u\|_{2,V}.
+\]
+W szczególności $v\in H^1(W)$ dla $u\in H^1(V)$.
+
+\emph{Krok 2: transformacja równania.}
+Dla $\psi\in C_c^\infty(W)$ funkcja
+$\varphi=\psi\circ\Phi^{-1}$ jest klasy $C^1$,
+ma zwarty nośnik w $V$ i należy do $H^1(V)$.
+Wolno jej użyć na mocy rozszerzenia klasy testów
+z definicji~\ref{def:pde15-elliptic}. Reguła łańcuchowa
+daje $(\nabla\varphi)\circ\Phi=J^{-\mathsf T}\nabla\psi$.
+W równaniu słabym zmieniamy zmienne $x=\Phi(y)$:
+\[
+ \int_W q\bigl(A(\Phi)J^{-\mathsf T}\nabla v\bigr)
+      \cdot J^{-\mathsf T}\nabla\psi\,\mathrm d\lambda_d(y)
+ =\int_W q(f\circ\Phi)\psi\,\mathrm d\lambda_d(y).
+\]
+Z tożsamości $a\cdot J^{-\mathsf T}b=(J^{-1}a)\cdot b$
+otrzymujemy dokładnie $\int_W B\nabla v\cdot\nabla\psi
+\,\mathrm d\lambda_d(y)=\int_W F\psi\,\mathrm d\lambda_d(y)$.
+Ponadto przy ograniczeniach $M,N$ na $W_0$ mamy
+\[
+ \|F\|_{2,W_0}^2
+ =\int_{\Phi(W_0)}q(\Phi^{-1}(x))|f(x)|^2\,\mathrm d\lambda_d(x)
+ \le M^d\|f\|_{2,\Phi(W_0)}^2.
+\]
+To daje lokalną kwadratową całkowalność $F$, a dla
+globalnego $M$ również oszacowanie na całym $W$.
+
+\emph{Krok 3: eliptyczność i regularność współczynników.}
+Na $E$ mamy prawie wszędzie, dla każdego $\xi\in\R^d$,
+\[
+ \xi^{\mathsf T}B\xi
+ =q(J^{-\mathsf T}\xi)^{\mathsf T}A(\Phi)(J^{-\mathsf T}\xi)
+ \ge N^{-d}\lambda M^{-2}|\xi|^2,
+ \qquad |B\xi|\le M^d N^2\Lambda|\xi|.
+\]
+W pierwszej nierówności użyto
+$|\xi|=|J^{\mathsf T}J^{-\mathsf T}\xi|
+\le M|J^{-\mathsf T}\xi|$. Zbiór wyjątkowy dla $A$
+po przeniesieniu przez $\Phi^{-1}$ pozostaje zbiorem miary
+zero, wspólnym dla wszystkich $\xi$; symetria $A$
+nie jest potrzebna.
+
+Lokalnie współczynniki $A$ mają lipschitzowskie
+reprezentanty: dla $d\ge2$ stosujemy
+twierdzenie~\ref{thm:pde10-domain-embed} na małych kulach
+z $p=\infty$, a dla $d=1$ jednowymiarową teorię Sobolewa.
+Na przecięciach reprezentanty zgadzają się punktowo,
+gdyż są ciągłe i równe prawie wszędzie.
+Złożenie $A\circ\Phi$ jest lokalnie lipschitzowskie,
+ponieważ $\Phi$ jest lokalnie lipschitzowska jako
+odwzorowanie klasy $C^1$. Macierz $J$ jest lokalnie
+lipschitzowska z założenia; wyznacznik jest wielomianem
+jej współczynników, a wartość bezwzględna jest
+lipschitzowska. Macierz odwrotna jest lokalnie
+lipschitzowska na mocy tożsamości
+\[
+ J(y)^{-1}-J(z)^{-1}
+ =J(y)^{-1}(J(z)-J(y))J(z)^{-1}
+\]
+i lokalnej ograniczoności $J^{-1}$.
+W konsekwencji wszystkie czynniki we wzorze na $B$
+są lokalnie lipschitzowskie. Uzasadnijmy bezpośrednio
+potrzebną implikację: jeżeli skalarna funkcja $b$ jest
+lipschitzowska ze stałą $L_b$ na otwartej kostce
+$Q\Subset W$, to na każdym odcinku w $Q$ równoległym
+do $e_i$ jej restrykcja jest lipschitzowska, a więc
+absolutnie ciągła i ma pochodną prawie wszędzie,
+o module nieprzekraczającym $L_b$
+(twierdzenie~\ref{thm:pde9-ac}). Pochodną przekroju
+można reprezentować przez mierzalną funkcję $g_i$,
+biorąc granicę ilorazów różnicowych o krokach $1/n$
+tam, gdzie istnieje, i zero poza tym zbiorem.
+Dla $\theta\in C_c^\infty(Q)$ całkowanie przez części
+na odcinkach i twierdzenie Fubiniego dają
+\[
+ \int_Q b\,\partial_i\theta\,\mathrm d\lambda_d
+ =-\int_Q g_i\theta\,\mathrm d\lambda_d,
+ \qquad |g_i|\le L_b\quad\text{prawie wszędzie}.
+\]
+Ponieważ $b$ jest ograniczona na $Q$, mamy
+$b\in W^{1,\infty}(Q)$. Stosujemy ten argument do
+składowych $B$ na dostatecznie małych kostkach;
+jednoznaczność pochodnych dystrybucyjnych na przecięciach
+i skończone pokrycie każdego zwartego podzbioru
+dają $B\in W^{1,\infty}_{\mathrm{loc}}(W)$.
+
+\emph{Krok 4: przenoszenie regularności drugiego rzędu.}
+Dla $u\in H^2_{\mathrm{loc}}(V)$ stosujemy krok 1
+także do każdej składowej $\partial_i u$. Z reguły
+iloczynu dla mnożnika $W^{1,\infty}$ udowodnionej
+w dowodzie twierdzenia~\ref{thm:pde15-bootstrap} wynika
+\[
+ \partial_{ab}v
+ =\sum_{i,k=1}^d(\partial_{ik}u)\circ\Phi\,
+       \partial_a\Phi_i\,\partial_b\Phi_k
+   +\sum_{i=1}^d(\partial_i u)\circ\Phi\,\partial_{ab}\Phi_i.
+\]
+Wszystkie składniki są lokalnie kwadratowo całkowalne,
+więc $v\in H^2_{\mathrm{loc}}(W)$.
+Jeżeli $M,N$ i $L=\|D^2\Phi\|_\infty$ są skończone
+na całym $W$, wzór zmiany zmiennych z kroku 1
+i powyższa skończona suma dają
+\[
+ \|D^2 v\|_{2,W}
+ \le C_d N^{d/2}
+      \bigl(M^2\|D^2u\|_{2,V}+L\|\nabla u\|_{2,V}\bigr).
+\]
+Wraz z oszacowaniem $H^1$ dowodzi to ograniczoności
+składania w $H^2$. Dla odwrotnej zmiany zmiennych
+powtarzamy argument z $\Phi^{-1}$.
+\end{proof}
+
+\begin{lemat}[Oszacowanie pochodnych stycznych w półkuli]
+\label{lem:pde15-tangential}
+Niech $d\ge2$, $B_s^+=\{x\in\R^d:|x|<s,\ x_d>0\}$ dla $s>0$,
+$A\in W^{1,\infty}(B_2^+;\R^{d\times d})$ będzie
+jednostajnie eliptyczna i ograniczona ze stałymi
+$\lambda,\Lambda$ z definicji~\ref{def:pde15-elliptic},
+$f\in L^2(B_2^+)$ oraz $v\in H^1(B_2^+)$ niech spełnia
+\[
+ \int_{B_2^+}A\nabla v\cdot\nabla\varphi\,\mathrm d\lambda_d(x)
+ =\int_{B_2^+}f\varphi\,\mathrm d\lambda_d(x)
+ \quad(\varphi\in H_0^1(B_2^+)).
+\]
+Jeżeli ślad $v$ na płaskiej części brzegu
+$\{x_d=0,|x|<2\}$ wynosi zero prawie wszędzie
+względem miary powierzchniowej, to dla każdego $1\le j<d$
+$\partial_j\nabla v\in L^2(B_1^+;\R^d)$ i
+\[
+ \|\partial_j\nabla v\|_{L^2(B_1^+)}
+ \le C\bigl(\|f\|_{L^2(B_2^+)}+\|v\|_{H^1(B_2^+)}\bigr),
+\]
+gdzie $C$ zależy od $d$, $\lambda,\Lambda$ oraz
+$\|A\|_{W^{1,\infty}(B_2^+)}$.
+\end{lemat}
+\begin{proof}
+\emph{Krok 1: przesunięcia styczne i ślad.}
+Piszemy $D=B_2^+$, $D_0=B_{7/4}^+$, $S=B_{3/2}^+$.
+Ustalamy $j<d$ i $0<|h|<1/8$. Jeżeli $x\in D_0$
+i $|t|\le1$, to $x+the_j\in D$, gdyż
+$x_d>0$ nie zmienia się, a $|x+the_j|<7/4+1/8<2$.
+Wybieramy $\eta\in C_c^\infty(B_{3/2})$ taką, że
+$0\le\eta\le1$ i $\eta=1$ na $B_1$.
+Kładziemy $w_h=\delta_h^jv$ na $D_0$.
+Z lematu~\ref{lem:pde15-difference} oraz oszacowania
+norm translacji przez normy na $D$ wynika
+$w_h\in H^1(D_0)$, $\nabla w_h=\delta_h^j\nabla v$.
+
+Półkule są ograniczonymi obszarami Lipschitzowskimi
+(również na przecięciu płaszczyzny ze sferą).
+Z wniosku~\ref{cor:pde10-density-boundary} wybieramy
+$v_n\in C_c^\infty(\R^d)$ zbieżne do $v$ w $H^1(D)$
+po ograniczeniu do $D$. Dla ustalonego $h$ mamy
+$\delta_h^jv_n\to w_h$ w $H^1(D_0)$, ponieważ norma
+każdej różnicy przesuniętych funkcji i ich gradientów
+jest ograniczona przez $2/|h|$ razy normę różnicy w $H^1(D)$.
+Niech $P_s=\{(x',0):|x'|<s\}$.
+Z ciągłości śladu (twierdzenie~\ref{thm:pde10-trace})
+wynika $\|v_n\|_{L^2(P_2)}\to0$. Przesunięcie $P_{7/4}$
+o $he_j$ mieści się w $P_2$, a miara na płaszczyźnie
+jest niezmiennicza względem translacji. Stąd
+\[
+ \|\delta_h^jv_n\|_{L^2(P_{7/4})}
+ \le \frac{2}{|h|}\|v_n\|_{L^2(P_2)}\longrightarrow0.
+\]
+Ponownie z ciągłości śladu, tym razem na $D_0$, wynika
+$\operatorname{Tr}w_h=0$ na $P_{7/4}$.
+
+\emph{Krok 2: dopuszczalność testów.}
+Definiujemy $p=\eta^2w_h$ na $D_0$ i przyjmujemy $p=0$
+na $D\setminus D_0$. Funkcje
+$p_n=\eta^2\delta_h^jv_n$ są gładkie na $\R^d$,
+znikają poza $B_{3/2}$ i na $D$ zbiegają do $p$
+w $H^1(D)$: na $D_0$ wynika to z reguły iloczynu
+~\ref{thm:pde9-products} i zbieżności z kroku 1,
+a poza $D_0$ wszystkie $p_n$ oraz ich gradienty znikają.
+W szczególności $p\in H^1(D)$ i
+$\nabla p=\eta^2\nabla w_h+2\eta w_h\nabla\eta$
+na $D_0$, zaś poza $S$ gradient znika prawie wszędzie.
+Ślad $p_n$ na sferycznej części brzegu $D$ jest zerowy,
+a na $P_2$ jego norma dąży do zera na mocy oszacowania
+śladu $\delta_h^jv_n$ z kroku 1. Przecięcie obu części
+brzegu ma zerową miarę powierzchniową (jest sferą
+wymiaru $d-2$). Z ciągłości śladu otrzymujemy
+$\operatorname{Tr}p=0$ na całym brzegu $D$, a z twierdzenia
+~\ref{thm:pde10-trace-zero} wynika $p\in H_0^1(D)$.
+Niech $\widetilde p$ będzie jego przedłużeniem przez zero
+na $\R^d$. Z twierdzenia~\ref{thm:pde9-zero-extension}
+mamy $\widetilde p\in H^1(\R^d)$, a jego słabe
+pochodne są przedłużeniami pochodnych $p$ przez zero.
+
+Wykażemy, że $\varphi=-\delta_{-h}^j\widetilde p|_D$
+należy do $H_0^1(D)$. Z definicji tej przestrzeni
+istnieje $q_n\in C_c^\infty(D)$ zbieżny do $p$ w $H^1(D)$.
+Mnożymy $q_n$ przez ustaloną funkcję
+$\zeta\in C_c^\infty(B_{7/4})$ równą $1$
+na otoczeniu $\overline{B_{3/2}}$; zbieżność zostaje
+zachowana, ponieważ $\zeta p=p$. Po przedłużeniu
+przez zero na $\R^d$ otrzymujemy gładkie funkcje
+o zwartych nośnikach w $D_0$, zbieżne do $\widetilde p$
+w $H^1(\R^d)$ na mocy twierdzenia o przedłużeniu przez zero.
+Ich ilorazy $-\delta_{-h}^j(\zeta q_n)$ mają nośniki
+zwarte w $D$, gdyż przesunięcia są styczne i
+$7/4+|h|<2$. Dla ustalonego $h$ są zbieżne do
+$-\delta_{-h}^j\widetilde p$ w $H^1(\R^d)$
+przez ograniczoność translacji w tej normie.
+Po ograniczeniu do $D$ otrzymujemy tezę.
+
+\emph{Krok 3: równanie różnicowe.}
+Testujemy równanie funkcją $\varphi$ z kroku 2.
+Dyskretne całkowanie przez części wykonujemy na $\R^d$,
+przedłużając $A\nabla v$ i $f$ przez zero jako funkcje $L^2$.
+Dla dowolnych dwóch funkcji $L^2(\R^d)$ tożsamość
+dyskretnego całkowania przez części wynika bez założenia
+o nośnikach z podstawienia i nierówności Cauchy'ego--Schwarza.
+Ponieważ $p$ i $\nabla p$ znikają poza $\overline S$
+(z dokładnością do zbioru miary zero), a $S+he_j\subset D$,
+na ich nośnikach ilorazy przedłużonych pól są ilorazami
+pierwotnych pól w $D$. Otrzymujemy
+\[
+ \int_{D_0}\delta_h^j(A\nabla v)\cdot\nabla p\,\mathrm d\lambda_d(x)
+ =\int_{D_0}(\delta_h^jf)p\,\mathrm d\lambda_d(x).
+\]
+Korzystając z rozwinięcia różnicy iloczynu
+z dowodu twierdzenia~\ref{thm:pde15-h2}, dostajemy
+\[
+ \begin{aligned}
+ \int_{D_0}A\nabla w_h\cdot\nabla p\,\mathrm d\lambda_d(x)
+ &=\int_{D_0}(\delta_h^jf)p\,\mathrm d\lambda_d(x)\\
+ &\quad-\int_{D_0}(\delta_h^jA)\nabla v(\cdot+he_j)
+          \cdot\nabla p\,\mathrm d\lambda_d(x).
+ \end{aligned}
+\]
+Przedłużenie pól jako funkcji $L^2$ jest tu wyłącznie
+zabiegiem rachunkowym. Nie twierdzimy, że przedłużone
+równanie zachodzi dystrybucyjnie poza $D$.
+
+\emph{Krok 4: oszacowania jednostajne aż do płaskiego brzegu.}
+Dla $x\in S$ i $0\le t\le1$ punkt $x+the_j$ należy
+do $D$. Stosując do $v_n$ rachunek z dowodu lematu
+~\ref{lem:pde15-difference} (całkowanie po $S$,
+Cauchy'ego--Schwarza i translację), otrzymujemy
+\[
+ \|\delta_h^jv_n\|_{2,S}^2
+ \le\int_0^1\int_{S+the_j}|\partial_jv_n(y)|^2\,
+       \mathrm d\lambda_d(y)\,\mathrm d\lambda_1(t)
+ \le\|\partial_jv_n\|_{2,D}^2.
+\]
+Przechodząc do granicy przy ustalonym $h$, dostajemy
+$\|w_h\|_{2,S}\le\|\partial_jv\|_{2,D}$.
+Nie zakładamy dodatniej odległości $S$ od płaskiego brzegu.
+Analogicznie przez translację
+$\|\nabla v(\cdot+he_j)\|_{2,S}\le\|\nabla v\|_{2,D}$.
+
+Niech $L_j=\|\partial_jA\|_{L^\infty(D;\mathrm{op})}$.
+Dla każdego zwartego podzbioru $K\subset S$ zbiór
+odcinków $\{x+the_j:x\in K,\ 0\le t\le1\}$ jest
+zwarty i zawarty w $D$. Wygładzając $A$ na jego otoczeniu
+i przechodząc do granicy w $L^2(K)$ tak jak w kroku 2
+dowodu twierdzenia~\ref{thm:pde15-h2}, dostajemy
+$|\delta_h^jA|_{\mathrm{op}}\le L_j$ prawie wszędzie na $K$.
+Wyczerpując $S$ przeliczalnym rosnącym ciągiem zbiorów
+zwartych, otrzymujemy tę nierówność prawie wszędzie
+na $S$, ze stałą niezależną od $h$.
+
+Oznaczmy $X=\|\eta\nabla w_h\|_{2,D_0}$,
+$Y=\|\nabla v\|_{2,D}$, $F=\|f\|_{2,D}$ i $M=\|\nabla\eta\|_\infty$.
+Z rozwinięcia gradientu $p$ mamy
+$\|\nabla p\|_{2,D}\le X+2MY$. W składniku z prawą stroną
+stosujemy dyskretne całkowanie przez części i oszacowanie
+ilorazu różnicowego przedłużenia $\widetilde p$
+na całej $\R^d$ z lematu~\ref{lem:pde15-difference}
+(przez wyczerpanie kulami):
+\[
+ \left|\int_{D_0}(\delta_h^jf)p\,\mathrm d\lambda_d(x)\right|
+ =\left|\int_D f\,\delta_{-h}^j\widetilde p\,\mathrm d\lambda_d(x)\right|
+ \le F\|\partial_j p\|_{2,D}\le F(X+2MY).
+\]
+Z eliptyczności i Cauchy'ego--Schwarza w równaniu
+różnicowym, po rozwinięciu $\nabla p$, wynika
+\[
+ \lambda X^2\le 2\Lambda MXY+F(X+2MY)+L_jY(X+2MY).
+\]
+Jest to dokładnie nierówność z kroku 3 dowodu
+twierdzenia~\ref{thm:pde15-h2} z $D$ zastąpionym
+w oznaczeniu normy pochodnej współczynników przez $L_j$.
+Stosując ten sam rachunek Younga, otrzymujemy
+$X^2\le C_1(F^2+Y^2)$, gdzie $C_1$ zależy wyłącznie
+od $\lambda,\Lambda,M,L_j$. Można przyjąć wspólną stałą
+dla wszystkich skończenie wielu kierunków stycznych.
+
+\emph{Krok 5: granica słaba.}
+Ponieważ $\eta=1$ na $B_1$, mamy
+\[
+ \|\delta_h^j\partial_kv\|_{2,B_1^+}^2
+ \le C_1(F^2+Y^2)\qquad(1\le k\le d).
+\]
+Dla ustalonych $j,k$ i ciągu niezerowych $h_n\to0$
+wybieramy słabo zbieżny podciąg w $L^2(B_1^+)$.
+Dla testu $\theta\in C_c^\infty(B_1^+)$
+dyskretne całkowanie przez części daje dla dużych $n$
+\[
+ \int_{B_1^+}(\delta_{h_n}^j\partial_kv)\theta\,
+       \mathrm d\lambda_d(x)
+ =-\int_{B_1^+}\partial_kv\,\delta_{-h_n}^j\theta\,
+       \mathrm d\lambda_d(x).
+\]
+Ilorazy testu zbiegają do $\partial_j\theta$ w $L^2$,
+jak w dowodzie lematu~\ref{lem:pde15-criterion}.
+Granica słaba reprezentuje więc $\partial_j\partial_kv$
+na całej $B_1^+$, a nie tylko na zbiorach oddalonych
+od płaskiego brzegu. Półciągłość normy i sumowanie
+kwadratów po $k$ dają tezę z odpowiednio powiększoną
+stałą $C$. Nie odzyskujemy w tym lemacie pochodnej
+$\partial_{dd}v$; będzie ona wyznaczona z równania.
+\end{proof}
+
+\begin{twierdzenie}[Globalne oszacowanie $H^2$ dla Dirichleta]
+\label{thm:pde15-boundary}
+Niech $\Omega\subset\R^d$ będzie ograniczonym obszarem
+klasy $C^{1,1}$, $A\in W^{1,\infty}(\Omega;\R^{d\times d})$
+będzie jednostajnie eliptyczna i ograniczona, a
+$f\in L^2(\Omega)$. Jeżeli $u\in H_0^1(\Omega)$ spełnia
+$-\diver(A\nabla u)=f$ słabo, to $u\in H^2(\Omega)$ oraz
+\begin{equation}\label{eq:pde15-boundary}
+ \|u\|_{H^2(\Omega)}\le C\bigl(\|f\|_{L^2(\Omega)}
+ +\|u\|_{H^1(\Omega)}\bigr),
+\end{equation}
+gdzie $C$ zależy od $d,\Omega$, stałych eliptyczności
+i $\|A\|_{W^{1,\infty}(\Omega)}$.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: przypadek jednowymiarowy.}
+Jeżeli $d=1$, to $\Omega$ jest ograniczonym przedziałem,
+a równanie ma postać $-(au')'=f$, gdzie $a\ge\lambda>0$
+prawie wszędzie. Strumień $q=au'$ należy do $L^2(\Omega)$
+i ma słabą pochodną $q'=-f\in L^2(\Omega)$,
+więc $q\in H^1(\Omega)$. Jednowymiarowy reprezentant
+$a$ jest lipschitzowski i nie mniejszy niż $\lambda$;
+stąd $1/a\in W^{1,\infty}(\Omega)$ i
+$\|(1/a)'\|_\infty\le\lambda^{-2}\|a'\|_\infty$.
+Z reguły iloczynu dla mnożnika $W^{1,\infty}$
+(z dowodu twierdzenia~\ref{thm:pde15-bootstrap})
+otrzymujemy $u'=q/a\in H^1(\Omega)$ i
+\[
+ \|u''\|_2\le\lambda^{-1}\|f\|_2+
+ \lambda^{-2}\|a'\|_\infty\Lambda\|u'\|_2.
+\]
+To dowodzi tezy dla $d=1$ bez map brzegowych.
+Dalej zakładamy $d\ge2$.
+
+\emph{Krok 2: mapy brzegowe i ślad.}
+Dla każdego $p\in\partial\Omega$ istnieją współrzędne
+otrzymane przez translację i przekształcenie ortogonalne,
+w których $p=0$, a $\Omega$ w otoczeniu $p$ jest
+nad wykresem $x_d=\gamma(x')$, gdzie $\gamma(0)=0$
+i $\gamma$ jest klasy $C^{1,1}$.
+Wybieramy $r>0$ tak małe, aby odwzorowanie
+\[
+ \Phi(y)=(ry',\gamma(ry')+ry_d),\qquad y\in B_2,
+\]
+w tych współrzędnych było określone na otoczeniu
+$\overline{B_2}$ i jego obraz mieścił się w otoczeniu,
+w którym obowiązuje opis obszaru przez wykres.
+W pierwotnych współrzędnych do tego wzoru dołączamy
+odwrotne przekształcenie sztywne.
+Odwzorowanie jest dyfeomorfizmem klasy $C^{1,1}$:
+współrzędne odwrotne w układzie wykresu mają postać
+$y'=x'/r$, $y_d=(x_d-\gamma(x'))/r$.
+W szczególności $\Phi(B_2)\cap\Omega=\Phi(B_2^+)$,
+$\Phi(0)=p$, a moduł wyznacznika $D\Phi$ wynosi $r^d$.
+Macierze $J=D\Phi$, $J^{-1}$ i drugie słabe pochodne
+obu zmian współrzędnych są ograniczone na rozważanych
+zbiorach, ze stałymi zależnymi od wybranej mapy.
+
+Niech $V=\Phi(B_2^+)$ i $v=u\circ\Phi$ na $B_2^+$.
+Z lematu~\ref{lem:pde15-flatten} wynika $v\in H^1(B_2^+)$
+oraz
+\[
+ -\diver(B\nabla v)=F,\qquad
+ B=|\det J|J^{-1}(A\circ\Phi)J^{-\mathsf T},\qquad
+ F=|\det J|(f\circ\Phi).
+\]
+Macierz $B$ jest jednostajnie eliptyczna i ograniczona
+ze stałymi podanymi w tym lemacie. Ponadto
+$B\in W^{1,\infty}(B_2^+)$, nie tylko lokalnie.
+Istotnie, składowe $A\circ\Phi$ są ograniczone,
+a z udowodnionej w lemacie słabej reguły łańcuchowej
+dla składowych $A$ ich gradienty są ograniczone przez
+$\|J\|_\infty\|\nabla A\|_{\infty,V}$.
+Możemy użyć reguły $H^1$, ponieważ $V$ ma skończoną
+miarę i $A\in W^{1,\infty}(V)$.
+Pozostałe czynniki w definicji $B$ mają ograniczone
+słabe pochodne: wynika to z jawnych wzorów na $J$,
+$J^{-1}$ i stałego modułu wyznacznika.
+Reguła iloczynu z twierdzenia~\ref{thm:pde9-products}
+daje globalną regularność $B$ i kontrolę jej normy
+przez normę $A$ oraz stałe mapy. Również
+\[
+ \|v\|_{H^1(B_2^+)}+\|F\|_{2,B_2^+}
+ \le C_\Phi\bigl(\|u\|_{H^1(V)}+\|f\|_{2,V}\bigr).
+\]
+Z ciągłości obu stron równania słabego i definicji
+$H_0^1(B_2^+)$ tożsamość dla testów gładkich
+rozciąga się na wszystkie testy z tej przestrzeni.
+
+Uzasadnimy zerowy ślad na płaskiej części brzegu.
+Ponieważ $u\in H_0^1(\Omega)$, istnieje ciąg
+$u_n\in C_c^\infty(\Omega)$ zbieżny do $u$ w $H^1(\Omega)$.
+Przedłużamy $u_n$ przez zero jako funkcje gładkie
+na całej $\R^d$. Z oszacowania składania wynika
+$u_n\circ\Phi\to v$ w $H^1(B_2^+)$.
+Funkcje $u_n\circ\Phi$ są klasy $C^1$ w otoczeniu
+domkniętej półkuli i znikają na jej płaskim brzegu,
+którego obraz należy do $\partial\Omega$.
+Operator śladu z twierdzenia~\ref{thm:pde10-trace}
+jest zgodny z restrykcją również dla takich funkcji
+$C^1$: wygładzamy je w otoczeniu domknięcia,
+otrzymując zbieżność w $C^1$ na domknięciu,
+a więc w $H^1$ oraz jednostajnie na brzegu.
+Przechodząc do granicy przez ciągłość śladu,
+otrzymujemy $\operatorname{Tr}v=0$ na płaskiej części
+brzegu $B_2^+$.
+
+\emph{Krok 3: pochodne styczne.}
+Stosujemy lemat~\ref{lem:pde15-tangential} bezpośrednio
+do równania w $B_2^+$. Otrzymujemy dla $i<d$
+\[
+ \|\partial_i\nabla v\|_{2,B_1^+}
+ \le C_\Phi\bigl(\|f\|_{2,V}+\|u\|_{H^1(V)}\bigr).
+\]
+Stała uwzględnia tu także eliptyczność i normę
+$W^{1,\infty}$ macierzy $A$. Przemienność słabych
+pochodnych daje ponadto $\partial_d\partial_jv\in L^2(B_1^+)$
+dla $j<d$. W szczególności $\partial_jv\in H^1(B_1^+)$
+dla każdego $j<d$, z odpowiednim oszacowaniem normy.
+
+\emph{Krok 4: druga pochodna normalna przez strumień.}
+Nie wolno z góry mnożyć dystrybucji $\partial_{dd}v$
+przez współczynnik jedynie lipschitzowski.
+Zamiast tego oznaczmy $q_i=\sum_{j=1}^d b_{ij}\partial_jv$
+dla $1\le i\le d$, gdzie $B=(b_{ij})$.
+Każde $q_i$ należy do $L^2(B_1^+)$.
+Dla $i<d$ mamy
+\[
+ \partial_i q_i=\sum_{j=1}^d
+ \bigl((\partial_i b_{ij})\partial_jv+
+             b_{ij}\partial_i\partial_jv\bigr)
+ \quad\text{w }L^2(B_1^+).
+\]
+Reguła ta wymaga jedynie słabej pochodnej w kierunku $i$.
+Uzasadniamy ją lokalnym wygładzaniem obu czynników
+na otoczeniu nośnika testu: wygładzone współczynniki
+i ich pochodne są jednostajnie ograniczone i zbiegają
+lokalnie w $L^2$, a po podciągu prawie wszędzie;
+wygładzona funkcja $\partial_jv$ i jej pochodna
+w kierunku $i$ zbiegają lokalnie w $L^2$
+na mocy twierdzenia~\ref{thm:pde7-approx-id}
+i komutacji splotu z pochodną.
+W klasycznej regule iloczynu można zatem przejść
+do granicy w $L^2$ przez nierówność trójkąta
+i zbieżność zmajoryzowaną.
+Ten sam argument daje $\partial_i q_d\in L^2(B_1^+)$
+dla $i<d$. Z równania dystrybucyjnego otrzymujemy
+\[
+ \partial_d q_d=-F-\sum_{i<d}\partial_i q_i
+ \quad\text{w }L^2(B_1^+).
+\]
+W konsekwencji $q_d\in H^1(B_1^+)$.
+Powyższe wzory i ograniczenia współczynników dają
+\[
+ \|q_d\|_{H^1(B_1^+)}
+ \le C\left(\|F\|_{2,B_1^+}+\|v\|_{H^1(B_1^+)}
+              +\sum_{i<d}\|\partial_i\nabla v\|_{2,B_1^+}\right).
+\]
+Jednocześnie $s=\sum_{j<d}b_{dj}\partial_jv\in H^1(B_1^+)$
+z reguły iloczynu dla mnożników $W^{1,\infty}$,
+gdyż wszystkie $\partial_jv$ dla $j<d$ należą już do $H^1$.
+Norma $s$ ma oszacowanie przez tę samą prawą stronę.
+Eliptyczność daje $b_{dd}\ge\lambda'>0$ prawie wszędzie.
+Funkcja $b_{dd}^{-1}$ należy do $W^{1,\infty}(B_1^+)$:
+stosujemy twierdzenie~\ref{thm:pde9-chain} do gładkiej
+funkcji na $\R$ o ograniczonej pochodnej, równej $t^{-1}$
+dla $t\ge\lambda'$ (przedłużenie poniżej $\lambda'$
+można wykonać przez gładkie odcięcie na $t>\lambda'/2$).
+Otrzymujemy
+$\partial_i(b_{dd}^{-1})=-b_{dd}^{-2}\partial_i b_{dd}$.
+Z algebraicznej tożsamości prawie wszędzie
+\[
+ \partial_dv=b_{dd}^{-1}(q_d-s)
+\]
+i reguły iloczynu wynika $\partial_dv\in H^1(B_1^+)$.
+W szczególności $\partial_{dd}v\in L^2(B_1^+)$ i
+\[
+ \|v\|_{H^2(B_1^+)}
+ \le C\left(\|F\|_{2,B_1^+}+\|v\|_{H^1(B_1^+)}
+              +\sum_{i<d}\|\partial_i\nabla v\|_{2,B_1^+}\right).
+\]
+Oszacowania z poprzednich kroków kontrolują prawą stronę
+przez $C_\Phi(\|f\|_{2,V}+\|u\|_{H^1(V)})$.
+
+\emph{Krok 5: powrót do pierwotnych współrzędnych.}
+Stosujemy oszacowanie składania w $H^2$
+z lematu~\ref{lem:pde15-flatten} do odwrotnej mapy
+na $\Phi(B_1^+)$. Otrzymujemy
+\[
+ \|u\|_{H^2(\Phi(B_1^+))}
+ \le C_\Phi(\|f\|_{2,\Phi(B_2^+)}
+                 +\|u\|_{H^1(\Phi(B_2^+))}).
+\]
+Zwartość $\partial\Omega$ pozwala wybrać skończenie wiele
+takich map $\Phi_1,\ldots,\Phi_N$, dla których otwarte
+zbiory $\Phi_i(B_1)$ pokrywają brzeg.
+Zbiór $\overline\Omega\setminus\bigcup_{i=1}^N\Phi_i(B_1)$
+jest zwarty i zawarty w $\Omega$.
+Jeżeli jest niepusty, pokrywamy go skończenie wieloma
+kulami $B_{\rho_j}(z_j)$ takimi, że
+$B_{2\rho_j}(z_j)\Subset\Omega$.
+Na każdej stosujemy twierdzenie~\ref{thm:pde15-h2}.
+Tym samym otrzymujemy skończone pokrycie $\Omega$
+przez zbiory, na których słabe pochodne rzędu drugiego
+są w $L^2$ z oszacowanymi normami.
+Zgadza się ich identyfikacja na przecięciach,
+ponieważ reprezentują tę samą pochodną dystrybucyjną.
+Lokalna regularność wewnętrzna zapewnia już
+$u\in H^2_{\mathrm{loc}}(\Omega)$, więc wystarczy
+oszacować całkę kwadratu każdej drugiej pochodnej
+na całym $\Omega$ przez sumę całek na zbiorach pokrycia.
+Suma jest skończona, a każda z norm lokalnych
+jest ograniczona przez stałą razy
+$\|f\|_{2,\Omega}+\|u\|_{H^1(\Omega)}$.
+Po zsumowaniu kwadratów i wyciągnięciu pierwiastka
+otrzymujemy~\eqref{eq:pde15-boundary}. Pokrycie i mapy
+wybieramy niezależnie od $u,f$; zależność stałej
+jest dokładnie taka jak w tezie.
+\end{proof}
+
+\begin{uwaga}[Oszacowanie przez samą prawą stronę]
+Przy jednorodnym warunku Dirichleta można usunąć
+$\|u\|_{H^1}$ z prawej strony~\eqref{eq:pde15-boundary}.
+Wolno wziąć $u$ jako test przez gęstość
+$C_c^\infty(\Omega)$ w $H_0^1(\Omega)$ i ciągłość obu
+stron. Eliptyczność i nierówność Poincarégo
+(wniosek~\ref{cor:pde10-Poincare}) dają
+\[
+ \lambda\|\nabla u\|_2^2
+ \le\int_\Omega fu\,\mathrm d\lambda_d(x)
+ \le C_P\|f\|_2\|\nabla u\|_2.
+\]
+Jeśli $\|\nabla u\|_2=0$, to $u=0$ z Poincarégo;
+w przeciwnym razie dzielimy przez tę normę.
+W obu przypadkach $\|\nabla u\|_2\le C_P\lambda^{-1}\|f\|_2$,
+a następnie $\|u\|_{H^1}\le C'\|f\|_2$.
+Wobec tego $\|u\|_{H^2}\le C''\|f\|_2$.
+\end{uwaga}
+
+\begin{uwaga}[Niejednorodne dane Dirichleta]
+Przy tych samych założeniach na $\Omega,A,f$ niech
+$u\in H^1(\Omega)$ będzie rozwiązaniem słabym,
+$\operatorname{Tr}u=g$. Załóżmy, że istnieje
+$G\in H^2(\Omega)$ takie, że $\operatorname{Tr}G=g$.
+Z twierdzenia~\ref{thm:pde10-trace-zero} wynika
+$v=u-G\in H_0^1(\Omega)$. Dystrybucyjnie
+\[
+ -\diver(A\nabla v)=f+\diver(A\nabla G).
+\]
+Z reguły iloczynu dla mnożników $W^{1,\infty}$
+mamy $A\nabla G\in H^1(\Omega;\R^d)$, zatem
+$\|\diver(A\nabla G)\|_2\le C_d\|A\|_{W^{1,\infty}}
+\|G\|_{H^2}$. Twierdzenie~\ref{thm:pde15-boundary}
+oraz poprzednia uwaga dają $v\in H^2(\Omega)$ i
+\[
+ \|u\|_{H^2(\Omega)}
+ \le C\bigl(\|f\|_{2,\Omega}+\|G\|_{H^2(\Omega)}\bigr).
+\]
+Warunek na $g$ można również sformułować w przestrzeni
+śladów wyższego rzędu; wymaga to odrębnego twierdzenia
+o operatorze śladu.
+\end{uwaga}
+
+\begin{uwaga}[Granica obowiązywania identyfikacji dziedziny]
+Dla $A=I$ twierdzenie~\ref{thm:pde15-boundary}
+wyjaśnia identyfikację $D(-\Delta_D)=H^2(\Omega)\cap
+H_0^1(\Omega)$ na obszarze klasy $C^{1,1}$, zapowiedzianą
+w uwadze~\ref{rem:pde12-corners}.
+Istotnie, z dystrybucyjnej charakterystyki dziedziny
+w definicji~\ref{def:pde12-laplacian} wynika, że
+$u\in D(-\Delta_D)$ wtedy i tylko wtedy, gdy
+$u\in H_0^1(\Omega)$ i $-\Delta u\in L^2(\Omega)$.
+Inkluzja $H^2(\Omega)\cap H_0^1(\Omega)\subset D(-\Delta_D)$
+jest bezpośrednia; inkluzję odwrotną daje globalna
+regularność z $f=-\Delta_Du$.
+Na ogólnym obszarze Lipschitzowskim taka identyfikacja
+może być fałszywa; nie wolno jej używać w argumentach
+spektralnych bez odpowiednich dodatkowych założeń.
+\end{uwaga}
+
+\section{Dwa kontrprzykłady: współczynniki i geometria brzegu}
+\label{sec:pde15-counterexamples}
+\begin{kontrprzyklad}[Skok współczynnika: $H^1$ bez $H^2$]
+\label{ex:pde15-jump}
+Na $\Omega=(-1,1)$ połóżmy
+\[
+ a(x)=\begin{cases}1,&x<0,\\2,&x\ge0,\end{cases}
+ \qquad
+ u(x)=\begin{cases}x,&x\le0,\\x/2,&x>0.\end{cases}
+\]
+Mamy $1\le a\le2$, więc operator jest jednostajnie
+eliptyczny i ma ograniczone współczynniki.
+Funkcja $u$ jest ciągła, przedziałami afiniczna
+i lipschitzowska. Dla $\varphi\in C_c^\infty((-1,1))$
+całkowanie przez części na obu przedziałach daje
+\[
+ \int_{-1}^1 u\varphi'\,\mathrm d\lambda_1
+ =-\int_{-1}^0\varphi\,\mathrm d\lambda_1
+  -\tfrac12\int_0^1\varphi\,\mathrm d\lambda_1,
+\]
+gdyż składniki brzegowe w zerze znikają.
+Zatem $u\in H^1(\Omega)$, a jej słaba pochodna
+jest równa $1$ dla $x<0$ i $1/2$ dla $x>0$.
+Mamy $au'=1$ prawie wszędzie, wobec czego
+$\int_\Omega au'\varphi'\,\mathrm d\lambda_1
+=\int_\Omega\varphi'\,\mathrm d\lambda_1=0$.
+Otrzymujemy słabe rozwiązanie $-(au')'=0$.
+Jednak
+\[
+ \langle u'',\varphi\rangle
+ =-\int_{-1}^0\varphi'\,\mathrm d\lambda_1
+  -\tfrac12\int_0^1\varphi'\,\mathrm d\lambda_1
+ =-\tfrac12\varphi(0).
+\]
+Stąd $u''=-\tfrac12\delta_0$ dystrybucyjnie.
+Dystrybucji tej nie reprezentuje funkcja z $L^2_{\mathrm{loc}}$:
+gdyby $g$ była takim reprezentantem, to dla ustalonej
+$\zeta\in C_c^\infty((-1,1))$ z $\zeta(0)=1$
+oraz $\zeta_\varepsilon(x)=\zeta(x/\varepsilon)$,
+$0<\varepsilon<1/2$, mielibyśmy
+\[
+ \tfrac12
+ =\left|\int_\Omega g\zeta_\varepsilon\,\mathrm d\lambda_1\right|
+ \le \|g\|_{2,(-1/2,1/2)}\varepsilon^{1/2}
+       \|\zeta\|_{2,(-1,1)}\longrightarrow0.
+\]
+To sprzeczność, więc $u\notin H^2_{\mathrm{loc}}(\Omega)$.
+Podobne obliczenie dla $a$ daje $a'=\delta_0$,
+zatem $a\notin W^{1,\infty}_{\mathrm{loc}}(\Omega)$.
+Samo ograniczenie i eliptyczność współczynników
+nie gwarantują nawet lokalnej regularności drugiego rzędu.
+\end{kontrprzyklad}
+
+\begin{kontrprzyklad}[Narożnik wklęsły]
+\label{ex:pde15-corner}
+Korzystamy z konstrukcji dla dowolnego kąta
+$\omega\in(\pi,2\pi)$, przeprowadzonej szczegółowo
+w uwadze~\ref{rem:pde12-corners}. Wybieramy
+$\omega=3\pi/2$, czyli $\beta=\pi/\omega=2/3$, oraz
+ograniczony obszar Lipschitzowski
+\[
+ \Omega=\{(r\cos\theta,r\sin\theta):0<r<1,\
+                      0<\theta<3\pi/2\}.
+\]
+Lipschitzowskość także w wierzchołku i w punktach
+przecięcia łuku z odcinkami uzasadniono w tej uwadze.
+Niech $w(r,\theta)=r^{2/3}\sin(2\theta/3)$ i niech
+$\eta$ będzie gładkim odcięciem radialnym równym $1$
+dla $r\le1/3$ oraz $0$ dla $r\ge2/3$.
+Kładziemy $u=\eta w$.
+Z rachunku w przywołanej uwadze mamy
+$\Delta w=0$ we wnętrzu sektora i
+$|\nabla w|^2=(4/9)r^{-2/3}$.
+Całkowalność $u$ i $\nabla u$ w kwadracie oraz
+zerowy ślad uzyskujemy dokładnie przez odcięcie
+wierzchołka opisane w uwadze~\ref{rem:pde12-corners}:
+błąd kwadratu normy składnika z gradientem odcięcia
+jest rzędu $\varepsilon^{4/3}$.
+Stąd $u\in H_0^1(\Omega)$.
+Funkcja
+$f=-2\nabla\eta\cdot\nabla w-w\Delta\eta$
+jest ograniczona i znika poza pierścieniem
+$1/3\le r\le2/3$, zatem $f\in L^2(\Omega)$.
+Mamy $-\Delta u=f$ również dystrybucyjnie, gdyż
+wierzchołek nie należy do otwartego zbioru $\Omega$,
+a $u$ jest gładka w jego wnętrzu.
+
+Dla $r<1/3$ druga pochodna radialna wynosi
+$\partial_r^2u=-\tfrac29 r^{-4/3}\sin(2\theta/3)$.
+Na podsektorze $3\pi/8<\theta<9\pi/8$
+moduł sinusa jest nie mniejszy niż $1/\sqrt2$.
+Jeżeli $e_r$ jest jednostkowym wektorem radialnym,
+to $\partial_r^2u=e_r^{\mathsf T}(D^2u)e_r$,
+a zatem $|\partial_r^2u|\le |D^2u|_{\mathrm F}$,
+gdzie po prawej jest norma Frobeniusa.
+Dla $0<\varepsilon<1/3$ otrzymujemy
+\[
+ \int_{\Omega\cap B_\varepsilon(0)}|D^2u|_{\mathrm F}^2\,
+             \mathrm d\lambda_2(x)
+ \ge c\int_0^\varepsilon r^{-5/3}\,\mathrm d\lambda_1(r)
+ =+\infty,
+\]
+z $c>0$. Drugie słabe pochodne, gdyby należały do $L^2$,
+musiałyby zgadzać się z klasycznymi we wnętrzu.
+Zatem $u\notin H^2(\Omega)$ mimo stałych współczynników
+operatora, prawej strony z $L^2$ i zerowego śladu.
+Regularność wewnętrzna nie przeczy temu przykładowi:
+$u$ jest gładka we wnętrzu, lecz jej drugie pochodne
+nie są kwadratowo całkowalne w otoczeniu narożnika.
+\end{kontrprzyklad}
+
+\section{Wnioski i zakres dalszych twierdzeń}
+\label{sec:pde15-summary}
+Twierdzenie~\ref{thm:pde15-h2} daje wewnętrzną regularność
+$H^2$ słabych rozwiązań przy lokalnej jednostajnej
+eliptyczności, współczynnikach $W^{1,\infty}_{\mathrm{loc}}$
+i prawej stronie z $L^2_{\mathrm{loc}}$; nie trzeba zakładać
+istnienia klasycznych drugich pochodnych rozwiązania.
+Kontrprzykład~\ref{ex:pde15-jump} pokazuje, że zastąpienie
+regularności współczynników samą ograniczonością
+może zniszczyć ten wniosek.
+
+W twierdzeniu~\ref{thm:pde15-boundary} wystarczającymi
+założeniami dla globalnego oszacowania są: ograniczony
+obszar klasy $C^{1,1}$, jednostajna eliptyczność,
+$A\in W^{1,\infty}(\Omega;\R^{d\times d})$,
+$f\in L^2(\Omega)$ i $u\in H_0^1(\Omega)$.
+Przy niejednorodnych danych wystarczy, aby rozwiązanie
+słabe $u\in H^1(\Omega)$ miało ślad równy śladowi
+pewnej funkcji z $H^2(\Omega)$, jak wykazano po tym
+twierdzeniu. Są to warunki wystarczające, nie warunki
+konieczne dla regularności poszczególnych rozwiązań.
+Kontrprzykład~\ref{ex:pde15-corner} pokazuje, że
+sam brzeg Lipschitzowski nie wystarcza w ogólności.
+
+W kolejnym rozdziale przejdziemy od oszacowań $L^2$ do
+regularności $W^{2,p}$ oraz oszacowań Schaudera.
+Nie należy przy tym mylić regularności Sobolewa z analitycznością:
+gładkość zarówno współczynników, jak i prawej strony
+przy lokalnej jednostajnej eliptyczności daje gładki
+reprezentant rozwiązania we wnętrzu, zgodnie z wnioskiem
+z twierdzenia~\ref{thm:pde15-bootstrap}. Gładkość
+nie implikuje jednak analityczności.

@@ -1,0 +1,45 @@
+name: Global code listings style
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'latex/pl/code-listings.tex'
+      - 'books/pl/*.tex'
+      - 'application/config/preambles/*.tex'
+      - 'tools/sync_code_listings.py'
+      - 'tools/tests/fixtures/code_listings_preview.tex'
+      - '.github/workflows/global-code-listings.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  listings:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify all book and Atlas preambles use the canonical style
+        run: python3 tools/sync_code_listings.py --check
+      - name: Compile Python and Julia listings with pdflatex
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: tools/tests/fixtures/code_listings_preview.tex
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Inspect compilation diagnostics
+        run: |
+          pdf=$(find . -name code_listings_preview.pdf -print -quit)
+          log=$(find . -name code_listings_preview.log -print -quit)
+          test -n "$pdf" && test -s "$pdf" && test -n "$log" && test -s "$log"
+          if grep -E 'Undefined control sequence|Package Listings Error|Overfull \\hbox|Missing character' "$log"; then
+            exit 1
+          fi
+      - name: Upload code preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: global-code-listings-preview
+          path: |
+            **/code_listings_preview.pdf
+            **/code_listings_preview.log

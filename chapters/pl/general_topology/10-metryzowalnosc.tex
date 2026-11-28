@@ -1,0 +1,768 @@
+\chapter{Metryzowalność przestrzeni topologicznych}
+\label{ch:topog-metryzowalnosc}
+
+\noindent\textbf{Cel rozdziału.}
+Topologia przestrzeni metrycznej jest określona przez odległość,
+lecz nie każda przestrzeń topologiczna posiada zgodną z topologią
+metrykę. Ustalimy, jakie warunki są konieczne, a następnie
+udowodnimy \emph{twierdzenie Urysohna o metryzowalności}:
+przestrzeń regularna, spełniająca $T_1$ i drugi aksjomat
+przeliczalności, jest metryzowalna. Nie ograniczymy się do
+samego sformułowania: skonstruujemy rozdzielającą rodzinę funkcji
+ciągłych i wyprowadzimy z niej metrykę. Dalej omówimy
+metryzowalność podprzestrzeni i przeliczalnych iloczynów,
+a także kontrprzykłady dotyczące iloczynów nieprzeliczalnych
+i ilorazów.
+
+\section{Metryki, pseudometryki i topologia wyznaczona przez odległość}
+\label{sec:topog-metryki-definicje}
+
+\begin{definicja}[Pseudometryka i metryka]
+\label{def:topog-pseudometryka-metryka}
+Niech $X$ będzie zbiorem. \emph{Pseudometryką} na $X$
+nazywamy odwzorowanie $d\colon X\times X\to[0,\infty)$,
+które dla wszystkich $x,y,z\in X$ spełnia
+\begin{enumerate}[label=(\roman*)]
+\item $d(x,x)=0$;
+\item $d(x,y)=d(y,x)$;
+\item $d(x,z)\le d(x,y)+d(y,z)$.
+\end{enumerate}
+Jeżeli ponadto $d(x,y)=0$ implikuje $x=y$, to $d$ jest
+\emph{metryką}. Dla $x\in X$ i $r>0$ definiujemy kulę
+$B_d(x,r)=\{y\in X:d(x,y)<r\}$.
+Topologię generowaną przez wszystkie takie kule oznaczamy
+$\tau_d$.
+\end{definicja}
+
+\begin{stwierdzenie}[Kule tworzą bazę]
+\label{prop:topog-baza-kul}
+Dla każdej pseudometryki $d$ na zbiorze $X$ rodzina
+$\{B_d(x,r):x\in X,\ r>0\}$ jest bazą pewnej topologii
+$\tau_d$. Dla każdego $x\in X$ rodzina
+$\{B_d(x,1/n):n\in\mathbb N,\ n\ge1\}$ jest bazą otwartych
+otoczeń $x$ w $\tau_d$.
+\end{stwierdzenie}
+\begin{proof}
+Każdy punkt $x$ należy do $B_d(x,1)$, więc kule pokrywają
+$X$; dla $X=\varnothing$ warunek jest pusty. Niech
+$z\in B_d(x,r)\cap B_d(y,s)$. Liczba
+$\delta=\min\{r-d(x,z),s-d(y,z)\}$ jest dodatnia.
+Dla $w\in B_d(z,\delta)$ nierówność trójkąta daje
+$d(x,w)\le d(x,z)+d(z,w)<r$ i analogicznie $d(y,w)<s$.
+Stąd $B_d(z,\delta)$ mieści się w przecięciu kul, co jest
+kryterium bazy topologii z rozdziału~01.
+
+Jeśli $U\in\tau_d$ i $x\in U$, to istnieje $r>0$ z
+$B_d(x,r)\subseteq U$: z bazowości mamy wprawdzie początkowo
+$x\in B_d(z,s)\subseteq U$, lecz kula
+$B_d(x,s-d(z,x))$ leży w $B_d(z,s)$. Wybierając
+$n$ z $1/n<r$, otrzymujemy $B_d(x,1/n)\subseteq U$.
+\end{proof}
+
+\begin{definicja}[Metryzowalność]
+\label{def:topog-metryzowalnosc}
+Przestrzeń topologiczna $(X,\tau)$ jest \emph{metryzowalna},
+jeżeli istnieje metryka $d$ na $X$, dla której $\tau=\tau_d$.
+Taką metrykę nazywamy \emph{zgodną z topologią}.
+Pojęcie nie odnosi się do konkretnego wzoru na odległość,
+lecz do istnienia przynajmniej jednej zgodnej metryki.
+\end{definicja}
+
+\begin{przyklad}[Różnica między metryką a pseudometryką]
+\label{ex:topog-pseudometryka-r2}
+Na $\R^2$ funkcja
+$p((x,y),(u,v))=|x-u|$ jest pseudometryką: nieujemność,
+symetria i nierówność trójkąta wynikają z analogicznych
+własności wartości bezwzględnej. Nie jest metryką, ponieważ
+$p((0,0),(0,1))=0$. Każda kula $p$ jest pionowym pasem
+$\{(u,v):|u-x|<r\}$, więc punkty o jednakowej pierwszej
+współrzędnej należą dokładnie do tych samych zbiorów otwartych
+$\tau_p$. W szczególności $\tau_p$ nie spełnia $T_0$.
+Natomiast odległość euklidesowa na $\R^2$ jest metryką
+i wyznacza zwykłą topologię euklidesową.
+\end{przyklad}
+
+\begin{stwierdzenie}[Warunki konieczne metryzowalności]
+\label{prop:topog-metryka-t3-pierwszy}
+Każda przestrzeń metryzowalna spełnia aksjomat $T_3$
+oraz pierwszy aksjomat przeliczalności.
+\end{stwierdzenie}
+\begin{proof}
+Niech $d$ będzie zgodną metryką. Pierwszy aksjomat
+przeliczalności wynika z poprzedniego stwierdzenia o kulach.
+Dla $x\ne y$ kula $B_d(x,d(x,y)/2)$ nie zawiera $y$;
+ponieważ wszystkie kule są otwarte, singletony są domknięte:
+$X\setminus\{y\}=\bigcup_{x\ne y} B_d(x,d(x,y)/2)$.
+Otrzymujemy $T_1$.
+
+Aby wykazać regularność, ustalmy domknięty $F\subseteq X$
+i $x\notin F$. Zbiór $X\setminus F$ jest otwarty,
+więc istnieje $r>0$ takie, że $B_d(x,r)\cap F=\varnothing$.
+Pokażemy, że $\overline{B_d(x,r/3)}\subseteq B_d(x,2r/3)$.
+Jeśli $y$ należy do lewego zbioru, to dla dowolnego
+$\varepsilon>0$ istnieje $z\in B_d(x,r/3)$
+z $d(y,z)<\varepsilon$; stąd
+$d(x,y)<r/3+\varepsilon$.
+Przechodząc z $\varepsilon\downarrow0$, otrzymujemy
+$d(x,y)\le r/3<2r/3$. Zatem otwarte zbiory
+$B_d(x,r/3)$ i $X\setminus\overline{B_d(x,r/3)}$
+rozdzielają punkt $x$ i domknięty $F$. Jest to regularność,
+a wraz z $T_1$ daje $T_3$.
+\end{proof}
+
+\begin{uwaga}[Ograniczenie warunków koniecznych]
+Przestrzeń metryzowalna nie musi spełniać drugiego aksjomatu
+przeliczalności. Niech $X$ będzie nieprzeliczalnym zbiorem,
+a $d$ jego metryką dyskretną: $d(x,y)=0$ dla $x=y$
+i $d(x,y)=1$ dla $x\ne y$. Dla każdej bazy $\mathcal A$
+topologii $\tau_d$ i każdego $x\in X$, ponieważ
+$\{x\}$ jest otwarty, istnieje $A\in\mathcal A$ z
+$x\in A\subseteq\{x\}$. Wtedy $A=\{x\}$, zatem
+każda baza zawiera wszystkie singletony i jest
+nieprzeliczalna.
+\end{uwaga}
+
+\section{Metryki zgodne i podprzestrzenie}
+\label{sec:topog-metryki-zgodne}
+
+\begin{stwierdzenie}[Metryki o tych samych zbiorach otwartych]
+\label{prop:topog-min-metryka}
+Niech $d$ będzie metryką na zbiorze $X$ i niech
+$\widehat d(x,y)=\min\{1,d(x,y)\}$.
+Wtedy $\widehat d$ również jest metryką,
+$\tau_{\widehat d}=\tau_d$ oraz $\widehat d\le1$.
+\end{stwierdzenie}
+\begin{proof}
+Dodatniość i symetria są oczywiste. Dla $a,b\ge0$
+zachodzi
+$\min\{1,a+b\}\le\min\{1,a\}+\min\{1,b\}$:
+jeżeli $a\ge1$ lub $b\ge1$, prawa strona jest co najmniej
+$1$; w przeciwnym razie prawa strona wynosi $a+b$.
+Stosując tę nierówność i nierówność trójkąta dla $d$,
+uzyskujemy ją także dla $\widehat d$.
+Dla każdego $0<r\le1$ i każdego $x$ zachodzi
+$B_{\widehat d}(x,r)=B_d(x,r)$.
+Kule o promieniach $1/n$, $n\ge2$, są bazami otoczeń
+punktów w obu topologiach, więc topologie są równe.
+\end{proof}
+
+\begin{twierdzenie}[Dziedziczenie metryzowalności]
+\label{thm:topog-metryzowalnosc-podprzestrzenie}
+Niech $(X,\tau)$ będzie przestrzenią metryzowalną,
+a $A\subseteq X$ jej podprzestrzenią. Wtedy topologia
+podprzestrzeni na $A$ jest metryzowalna.
+\end{twierdzenie}
+\begin{proof}
+Wybierzmy zgodną metrykę $d$ na $X$ i rozważmy jej
+ograniczenie $d_A=d|_{A\times A}$. Wszystkie aksjomaty
+metryki przechodzą na podzbiór. Dla $a\in A$ i $r>0$
+mamy $B_{d_A}(a,r)=A\cap B_d(a,r)$.
+Jeżeli $U\subseteq A$ jest otwarty w topologii podprzestrzeni,
+ma postać $A\cap V$ dla otwartego $V\subseteq X$;
+każdy jego punkt leży w odpowiedniej kuli $B_{d_A}(a,r)$.
+Odwrotnie, każda taka kula jest względnie otwarta.
+Zatem $\tau_{d_A}=\tau|_A$.
+\end{proof}
+
+\begin{stwierdzenie}[Przenoszenie metryki przez homeomorfizm]
+\label{prop:topog-metryzowalnosc-homeo}
+Jeżeli $h\colon X\to Y$ jest homeomorfizmem przestrzeni
+topologicznych i $Y$ ma zgodną metrykę $d$, to
+$d_h(x,x')=d(h(x),h(x'))$ jest metryką zgodną z topologią $X$.
+\end{stwierdzenie}
+\begin{proof}
+Z różnowartościowości $h$ wynika dodatnia określoność,
+a pozostałe aksjomaty dziedziczą się z $d$.
+Dla $x\in X$ zachodzi
+$B_{d_h}(x,r)=h^{-1}(B_d(h(x),r))$.
+Ponieważ $h$ jest homeomorfizmem, przeciwobrazy kul
+stanowią bazę topologii $X$.
+\end{proof}
+
+\section{Od regularności do normalności}
+\label{sec:topog-t3-drugi-normalna}
+
+Kluczowy etap konstrukcji metryki polega na otrzymaniu
+\emph{przeliczalnie wielu} funkcji ciągłych rozdzielających
+punkty i zbiory domknięte. Posłużymy się lematem Urysohna
+udowodnionym w rozdziale~05. Wcześniej musimy uzasadnić
+normalność, ponieważ regularność sama jej nie gwarantuje.
+
+\begin{lemat}[Regularność i własność Lindelöfa dają normalność]
+\label{lem:topog-t3-lindelof-normalna}
+Niech $X$ będzie przestrzenią regularną spełniającą
+własność Lindelöfa. Wtedy $X$ jest normalna. Jeżeli
+ponadto $X$ spełnia $T_1$, to spełnia $T_4$.
+\end{lemat}
+\begin{proof}
+Niech $F,G\subseteq X$ będą rozłącznymi zbiorami
+domkniętymi. Jeżeli jeden z nich jest pusty, wystarczy
+para $\varnothing,X$ ustawiona we właściwej kolejności.
+Załóżmy więc, że oba są niepuste.
+
+Dla każdego $x\in F$ regularność oraz kryterium zwężania
+otoczeń z rozdziału~05 zapewniają otwarty $U_x\ni x$ taki,
+że $\overline{U_x}\cap G=\varnothing$. Ponieważ zamknięta
+podprzestrzeń przestrzeni Lindelöfa również spełnia
+własność Lindelöfa (rozdział~09), możemy wybrać
+ciąg $U_1,U_2,\ldots$ tych zbiorów pokrywający $F$.
+Jeżeli podpokrycie jest skończone, powtarzamy jego elementy.
+Analogicznie otrzymujemy otwarte $V_1,V_2,\ldots$ pokrywające
+$G$ i spełniające $\overline{V_n}\cap F=\varnothing$.
+
+Definiujemy zbiory otwarte
+\[
+U=\bigcup_{n\ge1}\left(U_n\setminus\bigcup_{k=1}^n
+\overline{V_k}\right),\qquad
+V=\bigcup_{n\ge1}\left(V_n\setminus\bigcup_{k=1}^n
+\overline{U_k}\right).
+\]
+Każda różnica występująca po prawej jest otwarta,
+bo odejmujemy skończoną sumę zbiorów domkniętych.
+Dla $x\in F$ wybieramy $n$ z $x\in U_n$;
+ponieważ $F\cap\overline{V_k}=\varnothing$ dla każdego $k$,
+$x$ należy do $n$-tego składnika sumy definiującej $U$.
+Stąd $F\subseteq U$. Symetrycznie $G\subseteq V$.
+
+Pokażemy, że $U\cap V=\varnothing$. Gdyby $z\in U\cap V$,
+istniałyby $n,m$ takie, że
+$z\in U_n\setminus\bigcup_{k\le n}\overline{V_k}$
+i $z\in V_m\setminus\bigcup_{k\le m}\overline{U_k}$.
+Jeżeli $n\le m$, to $z\in U_n\subseteq\overline{U_n}$,
+ale drugi warunek wyklucza przynależność do
+$\overline{U_n}$. Jeżeli $m\le n$, otrzymujemy
+analogiczną sprzeczność, korzystając z
+$z\in V_m\subseteq\overline{V_m}$.
+Tak więc $F$ i $G$ mają rozłączne otwarte otoczenia.
+Otrzymaliśmy normalność, a wraz z $T_1$ — aksjomat $T_4$.
+\end{proof}
+
+\begin{wniosek}[Drugi aksjomat przeliczalności i $T_3$]
+\label{cor:topog-drugi-t3-t4}
+Każda przestrzeń spełniająca $T_3$ i drugi aksjomat
+przeliczalności spełnia $T_4$.
+\end{wniosek}
+\begin{proof}
+Z rozdziału~09 wynika, że drugi aksjomat przeliczalności
+implikuje własność Lindelöfa. Aksjomat $T_3$ oznacza
+regularność wraz z $T_1$. Stosujemy poprzedni lemat.
+\end{proof}
+
+\section{Twierdzenie Urysohna o metryzowalności}
+\label{sec:topog-urysohn-metryzowalnosc}
+
+\begin{twierdzenie}[Twierdzenie Urysohna o metryzowalności]
+\label{thm:topog-urysohn-metryzowalnosc}
+Niech $X$ będzie przestrzenią topologiczną spełniającą
+aksjomat $T_3$ i drugi aksjomat przeliczalności.
+Wówczas istnieje metryka $d$ na $X$ wyznaczająca
+dokładnie jego wyjściową topologię.
+\end{twierdzenie}
+\begin{proof}
+\textbf{Przypadki co najwyżej jednoelementowe.}
+Jeśli $X=\varnothing$ lub $X$ ma jeden punkt, to
+jedyna funkcja $d\colon X\times X\to[0,\infty)$
+o wartości $0$ jest metryką, a wyznaczona przez nią
+topologia jest jedyną możliwą topologią na $X$.
+Dalej zakładamy, że $X$ ma co najmniej dwa punkty.
+
+\textbf{Krok 1: przeliczalna rodzina par otwartych.}
+Niech $\mathcal B$ będzie co najwyżej przeliczalną
+bazą topologii $X$; można ją uznać za niepustą.
+Rozważmy rodzinę
+\[
+\mathcal P=\{(B,C)\in\mathcal B\times\mathcal B:
+\overline B\subseteq C\}.
+\]
+Rodzina $\mathcal P$ jest co najwyżej przeliczalna,
+ponieważ jest podzbiorem iloczynu dwóch zbiorów
+co najwyżej przeliczalnych.
+
+Wykażemy, że dla każdego $x\in X$ i każdego
+otwartego $O\ni x$ istnieje $(B,C)\in\mathcal P$ takie, że
+\[
+ x\in B\subseteq\overline B\subseteq C\subseteq O.
+\]
+Z bazowości $\mathcal B$ wybieramy $C\in\mathcal B$
+z $x\in C\subseteq O$. Regularność i kryterium zwężania
+otoczeń z rozdziału~05 dają otwarty $W$ z
+$x\in W\subseteq\overline W\subseteq C$.
+Ponownie z bazowości wybieramy $B\in\mathcal B$
+z $x\in B\subseteq W$. Wtedy
+$\overline B\subseteq\overline W\subseteq C$,
+więc $(B,C)\in\mathcal P$. Ponieważ możemy
+przyjąć $O=X\setminus\{y\}$ dla $x\ne y$ (aksjomat
+$T_1$), rodzina $\mathcal P$ jest niepusta.
+
+\textbf{Krok 2: funkcje oddzielające.}
+Na mocy poprzedniego wniosku $X$ jest $T_4$.
+Dla każdej pary $(B,C)\in\mathcal P$ zbiory
+$\overline B$ i $X\setminus C$ są domknięte i rozłączne.
+Lemat Urysohna z rozdziału~05 dostarcza zatem
+funkcji ciągłej
+$u_{B,C}\colon X\to[0,1]$ takiej, że
+$u_{B,C}=0$ na $\overline B$ i $u_{B,C}=1$
+na $X\setminus C$.
+Wybieramy takie funkcje dla wszystkich par
+z $\mathcal P$. Jest ich co najwyżej przeliczalnie wiele;
+możemy ułożyć je w ciąg $(f_n)_{n\ge1}$,
+powtarzając elementy, jeśli rodzina jest skończona.
+Każda funkcja $f_n$ jest ciągła i przyjmuje wartości w $[0,1]$.
+
+\textbf{Krok 3: konstrukcja i aksjomaty metryki.}
+Dla $x,y\in X$ definiujemy
+\[
+ d(x,y)=\sum_{n=1}^{\infty}2^{-n}|f_n(x)-f_n(y)|.
+\]
+Szereg jest zbieżny, ponieważ jego wyrazy są
+nieujemne i nie większe od $2^{-n}$, a
+$\sum_{n\ge1}2^{-n}=1$. Otrzymujemy więc
+$0\le d(x,y)\le1$, symetrię i $d(x,x)=0$.
+Dla $x,y,z\in X$ nierówność trójkąta dla wartości
+bezwzględnej, zastosowana do każdego składnika,
+daje dla wszystkich $N$
+\[
+\sum_{n=1}^{N}2^{-n}|f_n(x)-f_n(z)|
+\le\sum_{n=1}^{N}2^{-n}|f_n(x)-f_n(y)|
++\sum_{n=1}^{N}2^{-n}|f_n(y)-f_n(z)|.
+\]
+Po przejściu do granicy otrzymujemy
+$d(x,z)\le d(x,y)+d(y,z)$.
+
+Pozostała dodatnia określoność. Dla $x\ne y$
+wybieramy w kroku 1 parę $(B,C)$ z
+$x\in B$ i $C\subseteq X\setminus\{y\}$.
+Odpowiednia funkcja $u_{B,C}=f_n$ spełnia
+$f_n(x)=0$ i $f_n(y)=1$. Wobec tego
+$d(x,y)\ge2^{-n}>0$. Zatem $d$ jest metryką.
+
+\textbf{Krok 4: każda kula metryczna jest otwarta w $X$.}
+Ustalmy $x\in X$ i $\varepsilon>0$. Wybierzmy $N$
+tak duże, aby $\sum_{n>N}2^{-n}=2^{-N}<\varepsilon/2$.
+Dla każdego $n\le N$, z ciągłości $f_n$ w punkcie $x$
+zbiór
+$W_n=\{y\in X:|f_n(y)-f_n(x)|<\varepsilon/2\}$
+jest otwarty i zawiera $x$. Zbiór
+$W=\bigcap_{n=1}^{N}W_n$ jest otwartym otoczeniem $x$.
+Dla $y\in W$ mamy
+\[
+ d(x,y)\le\sum_{n=1}^{N}2^{-n}|f_n(x)-f_n(y)|
++\sum_{n>N}2^{-n}<\varepsilon/2+\varepsilon/2
+=\varepsilon.
+\]
+A zatem $x\in W\subseteq B_d(x,\varepsilon)$.
+Wykażmy teraz otwartość całej kuli, a nie tylko istnienie
+otwartego otoczenia jej środka. Jeśli
+$y\in B_d(x,\varepsilon)$, to
+$\delta=\varepsilon-d(x,y)>0$. Powtarzając poprzednią
+konstrukcję z punktem $y$ i promieniem $\delta$,
+znajdujemy otwarty zbiór $W_y$ z
+$y\in W_y\subseteq B_d(y,\delta)$.
+Z nierówności trójkąta
+$B_d(y,\delta)\subseteq B_d(x,\varepsilon)$.
+Każdy punkt kuli ma więc zawarte w niej otwarte
+otoczenie, czyli kula jest otwarta w początkowej
+topologii. W konsekwencji $\tau_d\subseteq\tau$.
+
+\pagebreak[4]
+\textbf{Krok 5: każdy zbiór otwarty w $X$ jest otwarty
+w metryce $d$.}
+Niech $O\in\tau$ i $x\in O$. W kroku 1 znaleźliśmy
+$(B,C)\in\mathcal P$ z $x\in B\subseteq C\subseteq O$.
+Dla pewnego $n$ funkcja $f_n$ równa jest $0$ na $B$
+i $1$ na $X\setminus C$. Jeśli $y\in X\setminus O$,
+to $y\in X\setminus C$ oraz
+$d(x,y)\ge2^{-n}|f_n(x)-f_n(y)|=2^{-n}$.
+Wynika stąd
+$B_d(x,2^{-n})\subseteq O$.
+Ponieważ $x\in O$ był dowolny, $O\in\tau_d$,
+czyli $\tau\subseteq\tau_d$.
+
+Ostatecznie $\tau=\tau_d$, co kończy dowód.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth, node distance=8mm,
+ node/.style={draw,rounded corners=2pt,fill=blue!6,align=center,
+ font=\small,text width=10.4cm,inner sep=6pt}]
+\node[node] (a) {Baza $\mathcal B$ i regularność: dla $x\in O$
+ dobieramy $B,C\in\mathcal B$ z $x\in B\subseteq\overline B\subseteq C\subseteq O$};
+\node[node,below=of a] (b) {Normalność i lemat Urysohna:
+ $f_{B,C}|_{\overline B}=0$, $f_{B,C}|_{X\setminus C}=1$};
+\node[node,below=of b] (c) {$\displaystyle
+ d(x,y)=\sum_{n\ge1}2^{-n}|f_n(x)-f_n(y)|$};
+\node[node,below=of c] (d) {Metryka rozdziela punkty, a
+ $\tau_d=\tau$};
+\draw[->,thick,blue!65!black] (a)--(b);
+\draw[->,thick,blue!65!black] (b)--(c);
+\draw[->,thick,blue!65!black] (c)--(d);
+\end{tikzpicture}
+\caption{Etapy konstrukcji metryki w twierdzeniu Urysohna.
+Przeliczalność bazy zapewnia, że do sumy wystarczy
+ciąg funkcji $f_n$.}
+\label{fig:topog-urysohn-metryka-schemat}
+\end{figure}
+
+\begin{wniosek}[Kryterium metryzowalności w klasie z drugim aksjomatem przeliczalności]
+\label{cor:topog-drugi-metryzowalna-iff-t3}
+Niech $X$ spełnia drugi aksjomat przeliczalności.
+Wtedy $X$ jest metryzowalna wtedy i tylko wtedy, gdy
+spełnia $T_3$.
+\end{wniosek}
+\begin{proof}
+Jeżeli $X$ jest metryzowalna, to spełnia $T_3$
+na mocy stwierdzenia \ref{prop:topog-metryka-t3-pierwszy}.
+Odwrotna implikacja jest właśnie twierdzeniem
+\ref{thm:topog-urysohn-metryzowalnosc}.
+\end{proof}
+
+\section{Kostka przeliczalna i przeliczalne iloczyny}
+\label{sec:topog-metryzowalnosc-iloczyny}
+
+\begin{twierdzenie}[Metryka na kostce przeliczalnej]
+\label{thm:topog-metryka-kostka-przeliczalna}
+Na $K=[0,1]^{\mathbb N}$ funkcja
+\[
+\rho(a,b)=\sum_{n=1}^{\infty}2^{-n}|a_n-b_n|,
+\qquad a=(a_n),\ b=(b_n)\in K,
+\]
+jest metryką. Topologia $\tau_\rho$ jest dokładnie
+topologią iloczynu na $K$.
+\end{twierdzenie}
+\begin{proof}
+Zbieżność szeregu oraz aksjomaty metryki wynikają jak
+w kroku 3 dowodu twierdzenia Urysohna, przyjmując
+$f_n(a)=a_n$. Każde $a\ne b$ różni się na pewnej
+współrzędnej $n$, więc $\rho(a,b)\ge2^{-n}|a_n-b_n|>0$.
+
+Ustalmy $a\in K$ i $\varepsilon>0$.
+Dobierzmy $N$ z $2^{-N}<\varepsilon/2$.
+W topologii iloczynu jest otwarte otoczenie
+\[
+W=\{b\in K:|a_n-b_n|<\varepsilon/2
+\text{ dla }1\le n\le N\}.
+\]
+Dla $b\in W$ suma pierwszych $N$ wyrazów definiujących
+$\rho(a,b)$ jest mniejsza od $\varepsilon/2$,
+a pozostałe wyrazy sumują się do co najwyżej $2^{-N}$.
+Zatem $a\in W\subseteq B_\rho(a,\varepsilon)$.
+Dla dowolnego $b\in B_\rho(a,\varepsilon)$
+ponawiamy konstrukcję z promieniem
+$\delta=\varepsilon-\rho(a,b)>0$ i środkiem $b$.
+Otrzymujemy otwarty w topologii iloczynu zbiór
+$W_b$ z $b\in W_b\subseteq B_\rho(b,\delta)$,
+a nierówność trójkąta daje
+$B_\rho(b,\delta)\subseteq B_\rho(a,\varepsilon)$.
+Kula jest więc otwarta w topologii iloczynu,
+czyli $\tau_\rho\subseteq\tau_{\mathrm{ilocz}}$.
+
+Odwrotnie, niech $O$ będzie bazowym otwartym
+otoczeniem $a$ w topologii iloczynu. Istnieje skończony
+$F\subseteq\mathbb N$ i względnie otwarte
+$O_n\subseteq[0,1]$, $n\in F$, takie, że
+$a_n\in O_n$ i
+$\{b\in K:b_n\in O_n\text{ dla }n\in F\}\subseteq O$.
+Dla każdego $n\in F$ wybieramy $\delta_n>0$,
+aby $\{t\in[0,1]:|t-a_n|<\delta_n\}\subseteq O_n$.
+Jeśli $F\ne\varnothing$, przyjmijmy
+$\delta=\min_{n\in F}2^{-n}\delta_n>0$.
+Z $\rho(a,b)<\delta$ otrzymujemy, dla każdego $n\in F$,
+$2^{-n}|a_n-b_n|\le\rho(a,b)<\delta\le2^{-n}\delta_n$.
+Stąd $b_n\in O_n$, czyli $B_\rho(a,\delta)\subseteq O$.
+Gdy $F=\varnothing$, możemy wziąć dowolne $\delta>0$,
+ponieważ bazowy cylinder jest wtedy całym $K$.
+Wynika stąd $\tau_{\mathrm{ilocz}}\subseteq\tau_\rho$.
+\end{proof}
+
+\begin{wniosek}[Reprezentacja w kostce Hilberta]
+\label{cor:topog-urysohn-kostka-hilberta}
+Każda przestrzeń $X$ spełniająca $T_3$ i drugi aksjomat
+przeliczalności jest homeomorficzna z podprzestrzenią
+kostki $[0,1]^{\mathbb N}$.
+\end{wniosek}
+\begin{proof}
+Jeśli $X$ jest pusta, jej obraz pusty jest podprzestrzenią
+kostki; dla przestrzeni jednoelementowej wystarcza odwzorowanie
+stałe do ustalonego punktu kostki, które jest homeomorfizmem
+na swój obraz.
+
+Dla pozostałych przestrzeni wybierzmy funkcje $f_n$
+z dowodu twierdzenia \ref{thm:topog-urysohn-metryzowalnosc}
+i połóżmy
+$\Phi(x)=(f_1(x),f_2(x),\ldots)$.
+Wówczas dla wszystkich $x,y\in X$
+\[
+\rho(\Phi(x),\Phi(y))
+=\sum_{n\ge1}2^{-n}|f_n(x)-f_n(y)|=d(x,y).
+\]
+Równość ta i metryczna charakteryzacja topologii
+wykazana wyżej dowodzą, że $\Phi$ jest izometrią
+z $(X,d)$ na $\Phi(X)$ z metryką ograniczoną z $\rho$.
+Izometria jest różnowartościowa i zachowuje kule,
+więc jest homeomorfizmem na swój obraz.
+\end{proof}
+
+\begin{twierdzenie}[Przeliczalne iloczyny przestrzeni metryzowalnych]
+\label{thm:topog-przeliczalny-iloczyn-metryzowalny}
+Niech $(X_n,\tau_n)$, $n\ge1$, będą przestrzeniami
+metryzowalnymi. Wtedy iloczyn
+$X=\prod_{n\ge1}X_n$, z topologią iloczynu,
+jest metryzowalny. Konkretną zgodną metrykę można
+skonstruować z dowolnych metryk $d_n$ zgodnych z $\tau_n$:
+\[
+D(x,y)=\sum_{n=1}^{\infty}
+2^{-n}\min\{1,d_n(x_n,y_n)\}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Jeżeli którykolwiek $X_n$ jest pusty, iloczyn jest pusty
+i twierdzenie jest natychmiastowe. Zakładamy dalej,
+że wszystkie czynniki są niepuste.
+Niech $\widehat d_n=\min\{1,d_n\}$.
+Poprzednie stwierdzenie
+\ref{prop:topog-min-metryka} pokazuje, że każda
+$\widehat d_n$ jest zgodną metryką ograniczoną przez $1$.
+
+Szereg definiujący $D$ zbiega, ponieważ jego wyrazy
+są ograniczone przez $2^{-n}$. Symetria, zerowanie
+na przekątnej oraz nierówność trójkąta wynikają ze
+zsumowania odpowiednich własności $\widehat d_n$.
+Jeśli $x\ne y$, istnieje $k$ z $x_k\ne y_k$,
+więc $D(x,y)\ge2^{-k}\widehat d_k(x_k,y_k)>0$.
+Stąd $D$ jest metryką.
+
+Ustalmy $x\in X$ i $\varepsilon>0$.
+Wybierzmy $N$ tak, aby $2^{-N}<\varepsilon/2$.
+Cylinder
+\[
+W=\{y\in X:\widehat d_n(x_n,y_n)<\varepsilon/2
+\text{ dla }1\le n\le N\}
+\]
+jest otwartym otoczeniem $x$ w topologii iloczynu,
+a dla $y\in W$ mamy $D(x,y)<\varepsilon$,
+jak w dowodzie twierdzenia o kostce przeliczalnej.
+W ten sposób każde $x\in X$ i każdy promień
+$\varepsilon>0$ mają otwarte otoczenie $W$
+zawarte w $B_D(x,\varepsilon)$. Aby stwierdzić,
+że cała kula jest otwarta, dla dowolnego
+$z\in B_D(x,\varepsilon)$ stosujemy ten sam argument
+z promieniem $\varepsilon-D(x,z)$ i środkiem $z$.
+Nierówność trójkąta zapewnia
+$B_D(z,\varepsilon-D(x,z))\subseteq B_D(x,\varepsilon)$.
+Stąd $\tau_D\subseteq\tau_{\mathrm{ilocz}}$.
+
+Dla odwrotnej inkluzji rozważmy bazowy cylinder
+$O=\prod_{n\ge1}O_n$ zawierający $x$,
+gdzie $O_n$ jest otwarty w $X_n$, a $O_n=X_n$
+poza pewnym skończonym zbiorem indeksów $F$.
+Dla każdego $n\in F$ istnieje $r_n>0$ z
+$B_{d_n}(x_n,r_n)\subseteq O_n$.
+Przyjmijmy $\delta_n=\min\{1/2,r_n\}$.
+Jeśli $D(x,y)<\delta=\min_{n\in F}2^{-n}\delta_n$,
+to $\widehat d_n(x_n,y_n)<\delta_n<1$ i w konsekwencji
+$d_n(x_n,y_n)=\widehat d_n(x_n,y_n)<r_n$ dla $n\in F$.
+Tak więc $B_D(x,\delta)\subseteq O$.
+Jeżeli $F=\varnothing$, cylinder jest całym $X$
+i można przyjąć dowolny promień. Otrzymujemy
+$\tau_{\mathrm{ilocz}}\subseteq\tau_D$, a więc
+równość obu topologii.
+\end{proof}
+
+\begin{wniosek}[Zwarte przestrzenie Hausdorffa]
+\label{cor:topog-zwarta-hausdorff-metryzowalna}
+Niech $X$ będzie zwartą przestrzenią Hausdorffa.
+Wtedy $X$ jest metryzowalna wtedy i tylko wtedy, gdy
+spełnia drugi aksjomat przeliczalności.
+\end{wniosek}
+\begin{proof}
+Jeżeli $X$ spełnia drugi aksjomat przeliczalności,
+to na mocy rozdziału~07 zwarta przestrzeń Hausdorffa
+jest normalna i $T_1$, a więc spełnia $T_3$.
+Stosujemy twierdzenie Urysohna o metryzowalności.
+
+Załóżmy teraz, że $X$ jest metryzowalna i wybierzmy
+zgodną metrykę $d$. Dla każdego $n\ge1$ rodzina
+$\{B_d(x,1/n):x\in X\}$ jest otwartym pokryciem $X$.
+Ze zwartości możemy wybrać skończoną rodzinę
+punktów $F_n\subseteq X$ taką, że
+$X=\bigcup_{a\in F_n}B_d(a,1/n)$.
+Jeśli $X$ jest pusta, te rodziny mogą być puste.
+Zbiór $D=\bigcup_{n\ge1}F_n$ jest co najwyżej
+przeliczalny. Jest gęsty w $X$: dla każdego
+$x\in X$ i dowolnej kuli $B_d(x,r)$ wybierzmy
+$n$ z $2/n<r$ oraz $a\in F_n$ z $d(x,a)<1/n<r$.
+Zatem $D\cap B_d(x,r)\ne\varnothing$.
+W rozdziale~09 udowodniliśmy, że ośrodkowość
+przestrzeni metrycznej implikuje drugi aksjomat
+przeliczalności. Stosujemy ten wynik do $(X,d)$.
+\end{proof}
+
+\section{Kontrprzykłady i granice twierdzeń}
+\label{sec:topog-metryzowalnosc-kontrprzyklady}
+
+\begin{przyklad}[Prosta Sorgenfreya: warunki konieczne nie wystarczają]
+\label{ex:topog-sorgenfrey-niemetryzowalna}
+Niech $S$ oznacza prostą Sorgenfreya z bazą
+$\{[a,b):a<b\}$, omawianą w rozdziale~09.
+Przestrzeń $S$ spełnia pierwszy aksjomat przeliczalności,
+jest ośrodkowa i ma własność Lindelöfa, ale nie spełnia
+drugiego aksjomatu przeliczalności; wszystkie te własności
+zostały udowodnione w rozdziale~09.
+
+Ponadto $S$ jest regularna i $T_1$: baza składa się
+ze zbiorów zarazem otwartych i domkniętych.
+Rzeczywiście dopełnienie $[a,b)$ jest sumą
+$(-\infty,a)$ i $[b,\infty)$, a oba zbiory są otwarte
+w topologii Sorgenfreya: pierwszy jest sumą bazowych
+przedziałów $[x,a)$, $x<a$, a drugi sumą przedziałów
+$[b,c)$ dla $c>b$ (w szczególności $[b,b+1)$,
+$[b,b+2)$ itd. pokrywają $[b,\infty)$).
+Dla dowolnego otwartego $O\ni x$ możemy dobrać
+bazowy $B$ z $x\in B\subseteq O$, a
+$\overline B=B\subseteq O$, więc kryterium
+zwężania otoczeń z rozdziału~05 daje regularność.
+Singletony są domknięte, ponieważ zwykła topologia
+euklidesowa, spełniająca $T_1$, jest słabsza od
+Sorgenfreya.
+
+Gdyby $S$ była metryzowalna, jej ośrodkowość
+implikowałaby drugi aksjomat przeliczalności,
+na mocy twierdzenia o przestrzeniach metrycznych
+z rozdziału~09. Prowadzi to do sprzeczności.
+Zatem $S$ nie jest metryzowalna,
+mimo spełniania $T_3$, pierwszego aksjomatu
+przeliczalności i własności Lindelöfa.
+\end{przyklad}
+
+\begin{przyklad}[Nieprzeliczalna kostka]
+\label{ex:topog-kostka-nieprzeliczalna}
+Niech $I$ będzie zbiorem nieprzeliczalnym i
+$K=[0,1]^I$ ma topologię iloczynu.
+Na mocy twierdzenia Tychonoffa z rozdziału~07
+$K$ jest zwarta; jest także Hausdorffa, gdyż każdy
+czynnik $[0,1]$ jest Hausdorffa, a różniące się punkty
+iloczynu można rozdzielić otoczeniami w jednej
+współrzędnej.
+
+Pokażemy, że $K$ nie spełnia nawet pierwszego
+aksjomatu przeliczalności. Niech $0=(0)_{i\in I}$.
+Przypuśćmy, że $(N_n)_{n\ge1}$ jest przeliczalną
+bazą otoczeń $0$. Dla każdego $n$ wybierzmy
+bazowy otwarty cylinder $W_n$ taki, że
+$0\in W_n\subseteq N_n$. Istnieje skończony
+zbiór współrzędnych $F_n\subseteq I$, poza którym
+$W_n$ nie nakłada żadnych ograniczeń.
+Suma $F=\bigcup_{n\ge1}F_n$ jest przeliczalna,
+więc możemy wybrać $j\in I\setminus F$.
+
+Zbiór $O_j=\{x\in K:x_j<1/2\}$ jest otwartym
+otoczeniem $0$ w topologii iloczynu.
+Istniałoby $n$ z $N_n\subseteq O_j$,
+a wówczas $W_n\subseteq O_j$.
+Ponieważ jednak $j\notin F_n$, punkt $z\in K$
+zdefiniowany przez $z_j=1$ i $z_i=0$ dla $i\ne j$
+należy do $W_n$, ale nie należy do $O_j$.
+To sprzeczność.
+
+Skoro każda przestrzeń metryzowalna spełnia
+pierwszy aksjomat przeliczalności, $K$ nie jest
+metryzowalna. W ten sposób otrzymujemy zwartą
+przestrzeń Hausdorffa, która nie jest metryzowalna.
+\end{przyklad}
+
+\clearpage
+\begin{przyklad}[Iloraz przestrzeni metryzowalnej nie musi być metryzowalny]
+\label{ex:topog-iloraz-dwa-poczatki}
+Weźmy rozłączną sumę dwóch kopii prostej rzeczywistej,
+$Y=\R\times\{0,1\}$, z topologią sumy rozłącznej.
+Jest metryzowalna: na $Y$ można zadać metrykę
+\[
+\delta((x,i),(y,j))=
+\begin{cases}
+\min\{1,|x-y|\},&i=j,\\
+2,&i\ne j.
+\end{cases}
+\]
+Nierówność trójkąta wynika z nierówności trójkąta
+w każdej kopii oraz faktu, że każda odległość między
+różnymi kopiami wynosi $2$, podczas gdy odległość
+wewnątrz kopii nie przekracza $1$.
+Topologia tej metryki jest sumą rozłączną: kule
+o promieniu mniejszym od $1$ zawierają punkty tylko
+jednej kopii i wyznaczają w niej zwykłą topologię.
+
+Utożsammy $(t,0)$ z $(t,1)$ dla każdego $t\ne0$,
+ale pozostawmy rozróżnione początki $(0,0)$ i $(0,1)$.
+Niech $q\colon Y\to Z$ będzie odwzorowaniem ilorazowym.
+Oznaczmy $o_0=q(0,0)$ i $o_1=q(0,1)$; mamy $o_0\ne o_1$.
+Jeśli $U,V\subseteq Z$ są otwartymi otoczeniami
+odpowiednio $o_0$ i $o_1$, to przeciwobrazy
+$q^{-1}(U)$ i $q^{-1}(V)$ są otwarte w $Y$,
+zawierając odpowiednio $(0,0)$ i $(0,1)$.
+Istnieje więc $\varepsilon>0$ takie, że
+$(t,0)\in q^{-1}(U)$ i $(t,1)\in q^{-1}(V)$
+dla każdego $0<t<\varepsilon$.
+Ponieważ $q(t,0)=q(t,1)$ dla $t\ne0$, otrzymujemy
+$U\cap V\ne\varnothing$. Zatem dwóch początków
+nie można rozdzielić rozłącznymi zbiorami otwartymi:
+$Z$ nie jest Hausdorffa, a więc nie jest metryzowalna.
+\end{przyklad}
+
+\section{Zestawienie implikacji i zakresu założeń}
+\label{sec:topog-metryzowalnosc-zestawienie}
+
+\begin{stwierdzenie}[Podsumowanie kryteriów]
+\label{prop:topog-metryzowalnosc-zestawienie}
+Dla każdej przestrzeni topologicznej $X$ zachodzą następujące
+stwierdzenia.
+\begin{enumerate}[label=(\roman*)]
+\item Jeśli $X$ jest metryzowalna, to spełnia $T_3$
+i pierwszy aksjomat przeliczalności.
+\item Jeśli $X$ spełnia $T_3$ i drugi aksjomat przeliczalności,
+to jest metryzowalna.
+\item Każda podprzestrzeń metryzowalnej przestrzeni
+jest metryzowalna; to samo dotyczy przeliczalnego
+iloczynu przestrzeni metryzowalnych.
+\item Jeżeli $X$ jest zwarta i Hausdorffa, to
+metryzowalność jest równoważna spełnianiu
+drugiego aksjomatu przeliczalności.
+\end{enumerate}
+Żadnego z warunków $T_3$, pierwszego aksjomatu
+przeliczalności, ośrodkowości i własności Lindelöfa
+nie można, nawet po połączeniu wszystkich czterech,
+użyć jako zamiennika drugiego aksjomatu przeliczalności
+w twierdzeniu Urysohna.
+\end{stwierdzenie}
+\begin{proof}
+Punkty (i)--(iv) są dokładnie wynikami
+\ref{prop:topog-metryka-t3-pierwszy},
+\ref{thm:topog-urysohn-metryzowalnosc},
+\ref{thm:topog-metryzowalnosc-podprzestrzenie},
+\ref{thm:topog-przeliczalny-iloczyn-metryzowalny}
+i \ref{cor:topog-zwarta-hausdorff-metryzowalna}.
+Ostatnią uwagę uzasadnia prosta Sorgenfreya z przykładu
+\ref{ex:topog-sorgenfrey-niemetryzowalna}.
+\end{proof}
+
+\begin{uwaga}[Granice zakresu rozdziału]
+Rozważaliśmy metryzowalność topologiczną,
+nie zaś zupełność konkretnej metryki. Ta sama topologia
+może pochodzić od wielu metryk o różnych własnościach
+metrycznych. Na przykład na $\R$ zarówno
+$d(x,y)=|x-y|$, jak i
+$d'(x,y)=|\arctan(x)-\arctan(y)|$
+indukują topologię euklidesową. Dla $d'$ wynika to
+z faktu, że $\arctan\colon\R\to(-\pi/2,\pi/2)$
+jest homeomorfizmem: jest ciągła, ściśle rosnąca,
+a funkcja odwrotna $\tan$ jest ciągła na podanym
+przedziale. Metryka $d'$ jest więc metryką przeniesioną
+przez homeomorfizm na podprzestrzeń prostej metrycznej,
+zgodnie ze stwierdzeniem
+\ref{prop:topog-metryzowalnosc-homeo}.
+Nie jest jednak zupełna: ciąg $x_n=n$ jest ciągiem
+Cauchy'ego w metryce $d'$ (bo $\arctan(n)$ jest zbieżny),
+natomiast nie ma granicy w $\R$ w żadnej z tych
+równoważnych topologii. Metryzowalności nie wolno więc
+utożsamiać ze zupełną metryzowalnością.
+\end{uwaga}

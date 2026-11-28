@@ -1,0 +1,3 @@
+# CAT-15 — iteracja 01
+
+Blob wejściowy 7a913058d13c95a6f4ee105517037ca741fa45c6. Doprecyzowano definicję, naturalność i diagramy aksjomatów, listy, monoid wolny, kowariantny funktor potęgowy (także puste rodziny), monadę braku wyniku oraz naturalność mnożenia monady ze sprzężenia. Zastąpiono skrótową uwagę o Kleislim pełną konstrukcją kategorii i dowodem sprzężenia. Dodano kategorię Eilenberga–Moore'a, sprzężenie wolna algebra–zapominanie i przykład algebr list jako monoidów z dowodem. Zachowano 4 pierwotnych etykiet, dodano 6. Kontrola struktury JS PASS. Dodano 5 testów Python i rejestr. CI, wykonanie testów i PDF wymagają potwierdzenia. Lean nie uruchamiano. Rozdział otwarty do stabilizacji.

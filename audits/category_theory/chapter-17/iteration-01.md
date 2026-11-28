@@ -1,0 +1,3 @@
+# CAT-17 — audyt I
+
+Źródło wejściowe 15db4123ae986f728b1e17acee9a6d1bf54665cc. Rozpisano własności uniwersalne iloczynu i koproduktu w Set, Grp, Top, Vect oraz posetach; dowód ewaluacji w iloczynie wolnym i kryterium przemienności obrazów dla iloczynu prostego. Uściślono morfizmy posetu, funktor Cayleya oraz dowód jednoznaczności iloczynu. Dodano przykład iloczynu i koproduktu w Rel oraz pełną klasyfikację naturalnych operacji liniowych dwóch zmiennych. Zachowano etykietę sec:przekrojowe; cztery nowe etykiety. Kontrola strukturalna JS PASS. Dodano cztery testy i rejestr; wykonanie Python, kompilacja i PDF jeszcze niepotwierdzone. Lean nie uruchamiano. CAT-16 zamknięty w niezależnym audycie V przez równoległe iteracje; nie powtarzano pracy.

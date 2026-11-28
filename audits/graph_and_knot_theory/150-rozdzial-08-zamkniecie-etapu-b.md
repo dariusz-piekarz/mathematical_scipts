@@ -1,0 +1,7 @@
+# Rozdział 08 (drukowany 15) — zamknięcie etapu B
+
+2026-11-24. Odczytano plan 118, raporty 148–149 i catalog/books.json. Aktualny blob rozdziału d00bbb3acf2e939817c454da9b90e7037bac4029 zgodny z raportem 149. Wszystkie cztery przebiegi dla SHA f1b92f81d20569de1394f4d634b82c0ef11b2d92 zakończone sukcesem: 45445121290 (aplikacja), 45445121378 (algorytmy), 45445121294 (pełna książka), 45445121328 (terminologia). Zadania PDF 138626647872 i structural-audit 138626648578 success. Log potwierdza TG08-FOREST-01 (150,2046,720,482), TG08-RAY-01 (86,482,7130,628,1026,86), TG08-DIR-01 (150,2196,654,2196), TG08-SPEC-01 (75,368).
+
+Pobrano artefakt 14944834047 dokładnego SHA, rozpakowano PDF i logi. 327 stron, plik ostrzeżeń 0 bajtów. Zakładki wyznaczają strony fizyczne 124–134 (drukowane 114–124). Wyrenderowano wszystkie 11 stron w PyMuPDF przy skali 1.15 i obejrzano sześć plansz p124, p126, p128, p130, p132, p134. Tezy 15.1.3, 15.3.2 i 15.7.3 w całości na jednej stronie; sekcja 15.8 w całości na ostatniej stronie. Trzy rysunki czytelne, bez widocznych kolizji i obcięć; nie stwierdzono potrzeby dalszej korekty. Nie zmieniano źródła matematycznego ani testów.
+
+Etap B ZAMKNIĘTY w zakresie wykonanych kontroli; 15 drukowanych rozdziałów zamkniętych. Punkt wznowienia: etap A drukowanego rozdziału 16, plik 09-grafy-planarne-sciany-i-wzor-eulera.tex. Nie powtarzać zakończonych kontroli bez nowej przesłanki.

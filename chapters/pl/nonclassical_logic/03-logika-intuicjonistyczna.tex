@@ -1,0 +1,2337 @@
+\chapter{Logika intuicjonistyczna}\label{ch:ncl-intuitionistic}
+
+\section{Motywacja i interpretacja konstruktywna}
+
+W logice klasycznej zdanie jest prawdziwe albo fałszywe
+w danym wartościowaniu. Logika intuicjonistyczna
+rozróżnia natomiast posiadanie dowodu zdania od
+niemożności uzyskania jego dowodu. Nie utożsamiamy
+braku dowodu $\varphi$ z dowodem $\neg\varphi$.
+Nie jest to kolejna trójwartościowa tablica spójników
+w sensie Definicji~\ref{def:ncl-matrix}: informację
+o dowodach można rozszerzać, a znaczenie implikacji
+zależy od sposobu takiego rozszerzania.
+
+\begin{definicja}[Język zdaniowy]
+\label{def:ncl-ipc-language}
+Formuły języka intuicjonistycznego rachunku zdań
+(IPC) budujemy z ustalonego nieskończonego zbioru
+zmiennych zdaniowych, stałej $\bot$ oraz spójników
+$\wedge,\vee,\to$. Przyjmujemy skróty
+\[
+ \neg\varphi:=\varphi\to\bot,\qquad
+ \top:=\bot\to\bot,\qquad
+ \varphi\leftrightarrow\psi:=
+ (\varphi\to\psi)\wedge(\psi\to\varphi).
+\]
+\end{definicja}
+
+\subsection{Interpretacja Brouwera--Heytinga--Kołmogorowa}
+Interpretacja BHK opisuje konstrukcje uzasadniające
+poszczególne formuły. Jest to motywacja dla reguł
+dowodowych, nie przyjęta tutaj formalna definicja
+relacji konsekwencji.
+\begin{itemize}
+\item Dowód $\varphi\wedge\psi$ składa się z dowodu
+      $\varphi$ i dowodu $\psi$.
+\item Dowód $\varphi\vee\psi$ wskazuje, który człon
+      alternatywy został dowiedziony, oraz zawiera jego dowód.
+\item Dowód $\varphi\to\psi$ jest konstrukcją
+      przekształcającą dowolny dowód $\varphi$
+      w dowód $\psi$.
+\item $\bot$ nie ma konstruktywnego uzasadnienia.
+      Dowód $\neg\varphi$ przekształca hipotetyczny
+      dowód $\varphi$ w dowód sprzeczności.
+\end{itemize}
+W szczególności dowód $\neg\neg\varphi$ nie dostarcza
+bezpośrednio dowodu $\varphi$: pozwala odrzucić
+każdą hipotetyczną konstrukcję dowodu $\neg\varphi$.
+Formalną różnicę między tymi zdaniami pokażemy
+za pomocą semantyki Kripkego.
+
+\begin{przyklad}[Konstruktywna alternatywa]
+\label{ex:ncl-bhk-disjunction}
+Niech $\varphi$ wyraża własność obiektu, której
+nie rozstrzygnęliśmy. Sam fakt, że nie mamy dowodu
+$\varphi$, nie daje konstrukcji dowodu $\neg\varphi$.
+Nie dostarcza więc również dowodu
+$\varphi\vee\neg\varphi$ w interpretacji BHK.
+Jeśli jednak mamy procedurę rozstrzygającą daną
+własność wraz z uzasadnieniem wyniku, jej zastosowanie
+może dostarczyć dowodu tej konkretnej alternatywy.
+Nie oznacza to, że logika intuicjonistyczna odrzuca
+wszystkie instancje prawa wyłączonego środka.
+\end{przyklad}
+
+\section{Dedukcja naturalna}
+
+\begin{definicja}[Intuicjonistyczna dedukcja naturalna]
+\label{def:ncl-ipc-natural-deduction}
+Przez $\Gamma\vdash_{\mathrm I}\varphi$ rozumiemy
+istnienie skończonego wyprowadzenia $\varphi$,
+którego otwarte założenia należą do zbioru $\Gamma$.
+Reguła założenia pozwala użyć każdej formuły
+z aktualnego kontekstu. Reguły wprowadzania
+i eliminacji spójników mają postać
+\[
+ \frac{\varphi\qquad\psi}{\varphi\wedge\psi}
+ \ (\wedge I),\qquad
+ \frac{\varphi\wedge\psi}{\varphi}\ (\wedge E_1),
+ \qquad
+ \frac{\varphi\wedge\psi}{\psi}\ (\wedge E_2),
+\]
+\[
+ \frac{\varphi}{\varphi\vee\psi}\ (\vee I_1),
+ \qquad
+ \frac{\psi}{\varphi\vee\psi}\ (\vee I_2),
+\]
+\[
+ \frac{\varphi\vee\psi\qquad
+       \begin{matrix}[\varphi]^i\\\vdots\\\theta\end{matrix}
+       \qquad
+       \begin{matrix}[\psi]^j\\\vdots\\\theta\end{matrix}}
+      {\theta}\ (\vee E_{i,j}),
+\]
+\[
+ \frac{\begin{matrix}[\varphi]^i\\\vdots\\\psi\end{matrix}}
+      {\varphi\to\psi}\ (\to I_i),
+ \qquad
+ \frac{\varphi\to\psi\qquad\varphi}{\psi}\ (\to E),
+ \qquad
+ \frac{\bot}{\varphi}\ (\bot E).
+\]
+Nawiasy kwadratowe oznaczają założenia tymczasowe,
+a indeksy identyfikują wystąpienia zamykane przez
+daną regułę. Wolno zamknąć zero wystąpień założenia.
+W regule $\vee E$ zamykamy tylko wskazane założenia
+w odpowiednich dwóch podwyprowadzeniach.
+Pozostałe otwarte założenia pozostają otwarte.
+\end{definicja}
+Reguła $\bot E$ zachowuje zasadę eksplozji.
+Usunięcie tej reguły prowadzi do logiki minimalnej,
+której nie utożsamiamy z IPC.
+Nie przyjmujemy klasycznej reguły pozwalającej
+wnioskować $\varphi$ z $\neg\neg\varphi$.
+
+\begin{stwierdzenie}[Własności strukturalne dedukcji]
+\label{prop:ncl-ipc-structural}
+Relacja $\vdash_{\mathrm I}$ jest zwrotna względem
+założeń, monotoniczna i niezmiennicza względem
+jednolitych podstawień. Spełnia również regułę:
+\[
+ \Gamma\vdash_{\mathrm I}\delta\quad(\delta\in\Delta),
+ \qquad \Delta\vdash_{\mathrm I}\varphi
+ \quad\Longrightarrow\quad
+ \Gamma\vdash_{\mathrm I}\varphi.
+\]
+Każde wyprowadzenie wykorzystuje skończenie wiele
+otwartych założeń.
+\end{stwierdzenie}
+\begin{proof}
+Zwrotność wynika z reguły założenia, a monotoniczność
+z tego, że powiększenie zbioru dozwolonych otwartych
+założeń nie zmienia wyprowadzenia.
+Przy jednolitym podstawieniu zastępujemy wszystkie
+formuły ich obrazami, zachowując strukturę drzewa
+oraz indeksy zamykanych wystąpień założeń.
+Każdy schemat reguły pozostaje instancją tej samej reguły.
+W szczególności $\bot$ pozostaje stałą.
+
+Dla ostatniej reguły weźmy skończone wyprowadzenie
+$\varphi$ z $\Delta$. Każdy jego otwarty liść
+oznaczony $\delta$ zastępujemy kopią wyprowadzenia
+$\delta$ z $\Gamma$. Przed podstawieniem zmieniamy
+indeksy zamykanych założeń na świeże, aby żadna
+reguła wyprowadzenia zewnętrznego nie zamknęła
+przypadkowo otwartego założenia dołączonej kopii.
+Otrzymujemy skończone drzewo, którego otwarte
+założenia należą do $\Gamma$.
+Skończoność wykorzystywanych założeń wynika
+ze skończonej liczby liści drzewa.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie o dedukcji]
+\label{thm:ncl-ipc-deduction}
+Dla dowolnego zbioru formuł $\Gamma$ zachodzi
+\[
+ \Gamma\cup\{\varphi\}\vdash_{\mathrm I}\psi
+ \iff \Gamma\vdash_{\mathrm I}\varphi\to\psi.
+\]
+\end{twierdzenie}
+\begin{proof}
+Jeżeli istnieje wyprowadzenie $\psi$ z
+$\Gamma\cup\{\varphi\}$, oznaczamy wszystkie jego
+otwarte wystąpienia założenia $\varphi$ świeżym
+indeksem i zamykamy je regułą $\to I$.
+Pozostałe otwarte założenia należą do $\Gamma$.
+Jeżeli nie ma wystąpień $\varphi$, stosujemy
+wprowadzenie implikacji z pustym zbiorem zamykanych
+wystąpień.
+
+Odwrotnie do wyprowadzenia $\varphi\to\psi$ z
+$\Gamma$ dołączamy założenie $\varphi$ i stosujemy
+$\to E$. Otrzymane wyprowadzenie ma otwarte
+założenia w $\Gamma\cup\{\varphi\}$.
+\end{proof}
+
+\begin{przyklad}[Podstawowe wyprowadzenia]
+\label{ex:ncl-ipc-basic-proofs}
+W IPC zachodzą między innymi
+\[
+ \vdash_{\mathrm I}\varphi\to\varphi,\qquad
+ \vdash_{\mathrm I}\varphi\to(\psi\to\varphi),
+ \qquad
+ \vdash_{\mathrm I}\varphi\to\neg\neg\varphi.
+\]
+Pierwsze wyprowadzenie otrzymujemy, zamykając
+założenie $\varphi$. W drugim zaczynamy od
+$\varphi$, wprowadzamy $\psi\to\varphi$ bez
+używania założenia $\psi$, a następnie zamykamy
+$\varphi$. Trzecie ma postać
+\[
+ \frac{
+   \frac{
+     \frac{[\varphi]^1\qquad[\varphi\to\bot]^2}
+          {\bot}\ (\to E)
+   }{(\varphi\to\bot)\to\bot}\ (\to I_2)
+ }{\varphi\to((\varphi\to\bot)\to\bot)}\ (\to I_1).
+\]
+Zewnętrzne wprowadzenie implikacji zamyka założenie $\varphi$,
+a wewnętrzne zamyka założenie $\neg\varphi$.
+\end{przyklad}
+
+\begin{stwierdzenie}[Potrójna negacja i osłabiona alternatywa]
+\label{prop:ncl-ipc-triple-negation}
+W IPC zachodzi
+\[
+ \vdash_{\mathrm I}\neg\neg\neg\varphi
+       \leftrightarrow\neg\varphi,\qquad
+ \vdash_{\mathrm I}\neg\neg(\varphi\vee\neg\varphi).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Kierunek $\neg\varphi\to\neg\neg\neg\varphi$
+jest instancją poprzedniego przykładu.
+Dla drugiego kierunku zakładamy
+$\neg\neg\neg\varphi$ i $\varphi$.
+Z $\varphi$ uzyskujemy $\neg\neg\varphi$,
+a przez eliminację implikacji otrzymujemy $\bot$.
+Zamykając kolejno założenia $\varphi$ oraz
+$\neg\neg\neg\varphi$, dostajemy żądaną implikację.
+Łączymy obie implikacje regułą $\wedge I$.
+
+Niech teraz $h=\neg(\varphi\vee\neg\varphi)$
+będzie założeniem. Z dodatkowego założenia
+$\varphi$ otrzymujemy $\varphi\vee\neg\varphi$
+przez $\vee I_1$, a z $h$ otrzymujemy $\bot$.
+Zamykając dodatkowe założenie, uzyskujemy
+$\neg\varphi$ przy nadal otwartym $h$.
+Stosując $\vee I_2$ oraz $h$, otrzymujemy ponownie
+$\bot$. Zamykamy $h$, co daje
+$\neg\neg(\varphi\vee\neg\varphi)$.
+\end{proof}
+
+\begin{stwierdzenie}[Intuicjonistyczne prawa de Morgana]
+\label{prop:ncl-ipc-demorgan}
+W IPC zachodzą
+\[
+ \vdash_{\mathrm I}\neg(\varphi\vee\psi)
+       \leftrightarrow(\neg\varphi\wedge\neg\psi),
+ \qquad
+ \vdash_{\mathrm I}(\neg\varphi\vee\neg\psi)
+       \to\neg(\varphi\wedge\psi).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Z założenia $\neg(\varphi\vee\psi)$ oraz
+dodatkowego założenia $\varphi$ uzyskujemy
+$\varphi\vee\psi$ i $\bot$. Zamknięcie $\varphi$
+daje $\neg\varphi$. Analogicznie otrzymujemy
+$\neg\psi$. Wprowadzamy koniunkcję i zamykamy
+pierwotne założenie.
+Odwrotnie z $\neg\varphi\wedge\neg\psi$
+uzyskujemy oba człony. Z dodatkowego założenia
+$\varphi\vee\psi$ przez $\vee E$ uzyskujemy
+$\bot$: w pierwszym podwyprowadzeniu stosujemy
+$\neg\varphi$ do $\varphi$, w drugim
+$\neg\psi$ do $\psi$. Zamykamy kolejno
+założenie alternatywy i założenie koniunkcji.
+
+Dla drugiej tezy zakładamy $\neg\varphi\vee\neg\psi$
+oraz $\varphi\wedge\psi$. Z koniunkcji
+uzyskujemy $\varphi$ i $\psi$.
+Eliminacja alternatywy daje $\bot$ w obu przypadkach:
+$\neg\varphi$ w połączeniu z $\varphi$ oraz
+$\neg\psi$ w połączeniu z $\psi$.
+Zamykamy oba pierwotne założenia w odpowiedniej
+kolejności, otrzymując żądaną implikację.
+\end{proof}
+Implikacji odwrotnej w drugim prawie de Morgana
+nie można ogólnie wyprowadzić w IPC. Kontrmodel
+podamy po wprowadzeniu semantyki Kripkego.
+
+\section{Rachunek Hilberta}
+
+\begin{definicja}[Schematy aksjomatów IPC]
+\label{def:ncl-ipc-hilbert}
+W języku z Definicji~\ref{def:ncl-ipc-language}
+rozważamy następujące schematy aksjomatów.
+Przyjmujemy, że $\wedge,\vee$ wiążą silniej niż $\to$;
+w pozostałych przypadkach stosujemy nawiasy.
+\begin{align*}
+ \mathrm{H1}\quad &\alpha\to(\beta\to\alpha),\\
+ \mathrm{H2}\quad &(\alpha\to(\beta\to\gamma))
+          \to((\alpha\to\beta)\to(\alpha\to\gamma)),\\
+ \mathrm{H3}\quad &\alpha\wedge\beta\to\alpha,\\
+ \mathrm{H4}\quad &\alpha\wedge\beta\to\beta,\\
+ \mathrm{H5}\quad &\alpha\to(\beta\to\alpha\wedge\beta),\\
+ \mathrm{H6}\quad &\alpha\to\alpha\vee\beta,\\
+ \mathrm{H7}\quad &\beta\to\alpha\vee\beta,\\
+ \mathrm{H8}\quad &(\alpha\to\gamma)\to
+       ((\beta\to\gamma)\to((\alpha\vee\beta)\to\gamma)),\\
+ \mathrm{H9}\quad &\bot\to\alpha.
+\end{align*}
+Litery greckie oznaczają dowolne formuły. Jedyną
+regułą wnioskowania jest modus ponens:
+\[
+ \frac{\alpha\qquad \alpha\to\beta}{\beta}.
+\]
+Dowodem $\varphi$ z $\Gamma$ jest skończony ciąg
+formuł zakończony $\varphi$, w którym każda formuła
+jest przesłanką z $\Gamma$, instancją schematu
+aksjomatu albo wynikiem modus ponens zastosowanego
+do dwóch wcześniejszych formuł. Istnienie takiego
+dowodu zapisujemy $\Gamma\vdash_{\mathrm H}\varphi$.
+\end{definicja}
+Nie dodajemy jako reguły podstawienia dowolnego
+dowiedzionego zdania z przesłanek przy zachowaniu
+tych samych przesłanek. Jednolite podstawienie
+przekształca bowiem również przesłanki. Dla dowodów
+bez przesłanek jest ono dopuszczalne bez ograniczeń.
+
+\begin{lemat}[Identyczność w rachunku Hilberta]
+\label{lem:ncl-ipc-hilbert-identity}
+Dla każdej formuły $\alpha$ mamy
+$\vdash_{\mathrm H}\alpha\to\alpha$.
+\end{lemat}
+\begin{proof}
+Poniżej podajemy cały dowód; numery przy modus ponens
+wskazują dwie wcześniej uzyskane formuły.
+\[
+\begin{array}{rll}
+1.&\alpha\to((\alpha\to\alpha)\to\alpha)&\mathrm{H1}\\
+2.&\alpha\to(\alpha\to\alpha)&\mathrm{H1}\\
+3.&(\alpha\to((\alpha\to\alpha)\to\alpha))\to&\\[-2pt]
+  &\quad((\alpha\to(\alpha\to\alpha))\to
+           (\alpha\to\alpha))&\mathrm{H2}\\
+4.&(\alpha\to(\alpha\to\alpha))\to
+           (\alpha\to\alpha)&\mathrm{MP}\ (1,3)\\
+5.&\alpha\to\alpha&\mathrm{MP}\ (2,4).
+\end{array}
+\]
+W trzecim wierszu w schemacie H2 podstawiono
+$\beta=\alpha\to\alpha$ oraz $\gamma=\alpha$.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie o dedukcji dla rachunku Hilberta]
+\label{thm:ncl-ipc-hilbert-deduction}
+Dla dowolnego zbioru formuł $\Gamma$ zachodzi
+\[
+ \Gamma\cup\{\alpha\}\vdash_{\mathrm H}\beta
+ \iff \Gamma\vdash_{\mathrm H}\alpha\to\beta.
+\]
+\end{twierdzenie}
+\begin{proof}
+Niech $\beta_1,\ldots,\beta_n=\beta$ będzie dowodem
+z $\Gamma\cup\{\alpha\}$. Indukcyjnie po kolejnych
+wierszach dowodu konstruujemy dowody
+$\Gamma\vdash_{\mathrm H}\alpha\to\beta_i$.
+
+Jeśli $\beta_i=\alpha$, stosujemy
+Lemat~\ref{lem:ncl-ipc-hilbert-identity}.
+Jeżeli $\beta_i$ jest aksjomatem lub należy do
+$\Gamma$, to $\Gamma\vdash_{\mathrm H}\beta_i$.
+Schemat H1 daje $\beta_i\to(\alpha\to\beta_i)$,
+a modus ponens daje żądaną formułę.
+
+W pozostałym przypadku wcześniejsze wiersze
+zawierają $\delta$ i $\delta\to\beta_i$.
+Z hipotezy indukcyjnej mamy dowody
+$\alpha\to\delta$ i $\alpha\to(\delta\to\beta_i)$
+z $\Gamma$. Instancja H2
+\[
+ (\alpha\to(\delta\to\beta_i))\to
+ ((\alpha\to\delta)\to(\alpha\to\beta_i))
+\]
+oraz dwa zastosowania modus ponens dają
+$\alpha\to\beta_i$. Wszystkie używane dowody
+można połączyć w jeden skończony ciąg, ponieważ
+każde odwołanie dotyczy wcześniej otrzymanego
+wyniku. Indukcja daje tezę dla $\beta_n$.
+
+Odwrotnie do dowodu $\alpha\to\beta$ z $\Gamma$
+dopisujemy przesłankę $\alpha$ i wynik modus ponens
+$\beta$. Jest to dowód z $\Gamma\cup\{\alpha\}$.
+\end{proof}
+
+\begin{stwierdzenie}[Własności strukturalne rachunku Hilberta]
+\label{prop:ncl-ipc-hilbert-structural}
+Relacja $\vdash_{\mathrm H}$ jest zwrotna względem
+założeń, monotoniczna, niezmiennicza względem
+jednolitych podstawień i spełnia regułę cięcia
+z Stwierdzenia~\ref{prop:ncl-ipc-structural}.
+Ponadto każdy dowód z $\Gamma$ jest dowodem
+z pewnego skończonego $\Gamma_0\subseteq\Gamma$.
+\end{stwierdzenie}
+\begin{proof}
+Założenie samo jest dopuszczalnym dowodem,
+a zwiększenie zbioru przesłanek nie zmienia
+legalności żadnego wiersza dowodu.
+Jednolite podstawienie zachowuje instancje
+schematów H1--H9 i zastosowania modus ponens;
+wiersze pochodzące z $\Gamma$ przechodzą
+w wiersze pochodzące z $\sigma(\Gamma)$.
+
+Jeżeli $\Delta\vdash_{\mathrm H}\varphi$
+oraz $\Gamma\vdash_{\mathrm H}\delta$ dla
+każdego $\delta\in\Delta$, to dla skończenie wielu
+przesłanek $\delta$ użytych w dowodzie $\varphi$
+dołączamy na początku ich dowody z $\Gamma$.
+Następnie odtwarzamy wiersze dowodu $\varphi$,
+pomijając te przesłanki, które już uzyskaliśmy.
+Modus ponens odwołuje się nadal do wcześniejszych
+wierszy. Formuła $\varphi$ występuje w otrzymanym
+ciągu. Jeżeli ostatni wiersz pierwotnego dowodu
+był pominiętą przesłanką, $\varphi$ mogła pojawić
+się wcześniej; obcinamy wtedy ciąg bezpośrednio
+po jej wystąpieniu. Otrzymujemy dowód $\varphi$ z $\Gamma$.
+Ostatnia teza wynika wprost ze skończoności ciągu.
+\end{proof}
+
+\begin{twierdzenie}[Równoważność dwóch rachunków IPC]
+\label{thm:ncl-ipc-hilbert-equivalence}
+Dla dowolnego zbioru formuł $\Gamma$ i formuły
+$\varphi$ zachodzi
+\[
+ \Gamma\vdash_{\mathrm H}\varphi
+ \iff \Gamma\vdash_{\mathrm I}\varphi.
+\]
+\end{twierdzenie}
+\begin{proof}
+Najpierw pokażemy, że każdy schemat H1--H9 ma
+wyprowadzenie w dedukcji naturalnej bez otwartych
+założeń. Schemat H1 występuje w
+Przykładzie~\ref{ex:ncl-ipc-basic-proofs}.
+Dla H2 otwieramy kolejno założenia
+\[
+ \alpha\to(\beta\to\gamma),\qquad
+ \alpha\to\beta,\qquad \alpha.
+\]
+Z pierwszego i trzeciego otrzymujemy $\beta\to\gamma$,
+z drugiego i trzeciego $\beta$, a z obu wyników
+$\gamma$. Zamknięcie założeń w odwrotnej kolejności
+daje dokładnie H2.
+Schematy H3 i H4 otrzymujemy przez eliminację
+koniunkcji i wprowadzenie implikacji. Dla H5
+z założeń $\alpha,\beta$ wprowadzamy koniunkcję
+i zamykamy najpierw $\beta$, potem $\alpha$.
+Schematy H6 i H7 wynikają z wprowadzania alternatywy
+oraz wprowadzania implikacji.
+
+Dla H8 zakładamy $\alpha\to\gamma$,
+$\beta\to\gamma$ oraz $\alpha\vee\beta$.
+W pierwszym podwyprowadzeniu z tymczasowego
+założenia $\alpha$ i pierwszej implikacji
+otrzymujemy $\gamma$, w drugim analogicznie
+z $\beta$ i drugiej implikacji.
+Eliminacja alternatywy zamyka oba tymczasowe
+założenia. Trzy wprowadzenia implikacji
+w odwrotnej kolejności zamykają pozostałe
+założenia i dają H8. Schemat H9 wynika z reguły
+$\bot E$ i zamknięcia założenia $\bot$.
+Ponieważ modus ponens jest regułą $\to E$,
+indukcja po ciągu dowodu Hilberta daje kierunek
+od lewej do prawej.
+
+Dla kierunku odwrotnego indukujemy po drzewie
+dedukcji naturalnej, biorąc dla każdego
+podwyprowadzenia zbiór jego otwartych założeń.
+Liść będący założeniem jest dowodem Hilberta
+z tego założenia. W każdym kroku możemy powiększyć
+zbiory przesłanek podwyprowadzeń do wspólnego
+kontekstu, korzystając z monotoniczności
+(Stwierdzenie~\ref{prop:ncl-ipc-hilbert-structural}).
+
+Reguły $\wedge E_1,\wedge E_2$ realizujemy przez
+H3, H4 i modus ponens. Dla $\wedge I$ stosujemy
+H5 i dwa razy modus ponens; reguły $\vee I_1$,
+$\vee I_2$ realizują H6 i H7. Reguła $\bot E$
+odpowiada H9 i modus ponens, a $\to E$ jest
+modus ponens.
+
+Dla $\to I$ hipoteza indukcyjna daje
+$\Gamma\cup\{\alpha\}\vdash_{\mathrm H}\beta$,
+gdzie $\Gamma$ jest zbiorem założeń pozostających
+otwartych po tym kroku. Stosujemy
+Twierdzenie~\ref{thm:ncl-ipc-hilbert-deduction}.
+Dotyczy to również zamknięcia zerowej liczby wystąpień
+oraz sytuacji, w której niektóre wystąpienia
+$\alpha$ pozostają otwarte.
+
+Dla $\vee E$ niech $\Gamma$ będzie zbiorem
+wszystkich założeń pozostających otwartych
+po zastosowaniu reguły. Hipoteza indukcyjna
+i monotoniczność dają
+\[
+ \Gamma\vdash_{\mathrm H}\alpha\vee\beta,\qquad
+ \Gamma\cup\{\alpha\}\vdash_{\mathrm H}\gamma,\qquad
+ \Gamma\cup\{\beta\}\vdash_{\mathrm H}\gamma.
+\]
+Dwukrotne zastosowanie twierdzenia o dedukcji daje
+$\Gamma\vdash_{\mathrm H}\alpha\to\gamma$ oraz
+$\Gamma\vdash_{\mathrm H}\beta\to\gamma$.
+Schemat H8 i trzy zastosowania modus ponens
+dają $\Gamma\vdash_{\mathrm H}\gamma$.
+Rozpatrzyliśmy wszystkie reguły dedukcji naturalnej,
+co kończy indukcję.
+\end{proof}
+
+Od tej chwili można korzystać z obu rachunków
+zamiennie: dedukcja naturalna jest wygodna przy
+lokalnych konstrukcjach dowodów, a rachunek Hilberta
+przy badaniu zbiorów domkniętych na konsekwencję.
+Na mocy powyższej równoważności twierdzenia o IPC
+udowodnione w jednym rachunku obowiązują również
+w drugim.
+
+\begin{przyklad}[Wewnętrzny sylogizm hipotetyczny]
+\label{ex:ncl-ipc-hilbert-transitivity}
+W obu rachunkach dowodliwa jest formuła
+\[
+ (\alpha\to\beta)\to
+ ((\beta\to\gamma)\to(\alpha\to\gamma)).
+\]
+W rachunku Hilberta z założeń
+$\alpha\to\beta,\beta\to\gamma,\alpha$
+dwukrotnie stosujemy modus ponens, uzyskując
+najpierw $\beta$, potem $\gamma$.
+Trzykrotne zastosowanie
+Twierdzenia~\ref{thm:ncl-ipc-hilbert-deduction}
+usuwa kolejno $\alpha$, $\beta\to\gamma$ oraz
+$\alpha\to\beta$. Przykład pokazuje, jak twierdzenie
+o dedukcji zastępuje ręczne rozpisywanie wszystkich
+instancji H1 i H2.
+\end{przyklad}
+
+\section{Semantyka Kripkego dla IPC}
+
+\begin{definicja}[Rama i model Kripkego]
+\label{def:ncl-ipc-kripke}
+Ramą Kripkego dla IPC nazywamy niepusty zbiór
+częściowo uporządkowany $(W,\leq)$. Elementy $W$
+nazywamy światami lub stanami informacji.
+Model Kripkego to trójka $\mathcal M=(W,\leq,V)$,
+w której każdej zmiennej zdaniowej $p$
+przypisano zbiór $V(p)\subseteq W$ domknięty ku górze:
+\[
+ w\in V(p),\quad w\leq v\quad\Longrightarrow\quad
+ v\in V(p).
+\]
+Ramę nazywamy ukorzenioną, jeśli ma element najmniejszy.
+\end{definicja}
+Relacja $w\leq v$ oznacza, że stan $v$ zawiera
+co najmniej tyle informacji co stan $w$.
+Nie jest to porządek wartości logicznych z poprzedniego
+rozdziału. Porównujemy stany, nie wartości formuł.
+Dwa nieporównywalne stany mogą przedstawiać
+różne możliwe sposoby rozszerzenia informacji.
+
+\begin{definicja}[Relacja wymuszania]
+\label{def:ncl-ipc-forcing}
+Dla ustalonego modelu $\mathcal M$ definiujemy
+rekurencyjnie relację $w\Vdash\varphi$:
+\[
+\begin{aligned}
+ w\Vdash p &\iff w\in V(p),\\
+ w\not\Vdash\bot &\quad\text{dla każdego }w\in W,\\
+ w\Vdash\varphi\wedge\psi
+ &\iff w\Vdash\varphi\text{ i }w\Vdash\psi,\\
+ w\Vdash\varphi\vee\psi
+ &\iff w\Vdash\varphi\text{ lub }w\Vdash\psi,\\
+ w\Vdash\varphi\to\psi
+ &\iff \forall v\geq w\
+ (v\Vdash\varphi\ \Longrightarrow\ v\Vdash\psi).
+\end{aligned}
+\]
+Zapis $w\not\Vdash\varphi$ oznacza niezachodzenie
+relacji wymuszania, nie zaś wymuszanie negacji.
+\end{definicja}
+W definicji implikacji kwantyfikujemy także po $w$,
+ponieważ porządek jest zwrotny. W szczególności
+nie wystarczy sprawdzić, czy w aktualnym stanie
+wymuszanie przesłanki pociąga wymuszanie wniosku:
+należy uwzględnić wszystkie stany większe od niego.
+
+\begin{lemat}[Trwałość wymuszania]
+\label{lem:ncl-ipc-persistence}
+Dla każdej formuły $\varphi$ i modelu Kripkego
+zachodzi
+\[
+ w\leq v,\quad w\Vdash\varphi\quad\Longrightarrow\quad
+ v\Vdash\varphi.
+\]
+\end{lemat}
+\begin{proof}
+Indukujemy po budowie formuły.
+Dla zmiennych teza wynika z domknięcia $V(p)$
+ku górze, a dla $\bot$ założenia nie mogą zachodzić.
+Dla koniunkcji stosujemy hipotezę indukcyjną
+do obu członów, a dla alternatywy do członu
+wymuszanego w $w$.
+Niech $w\Vdash\alpha\to\beta$ oraz $w\leq v$.
+Jeżeli $u\geq v$ i $u\Vdash\alpha$, to $u\geq w$
+na mocy przechodniości porządku, więc $u\Vdash\beta$.
+To jest dokładnie warunek $v\Vdash\alpha\to\beta$.
+\end{proof}
+Zatem również zbiór światów wymuszających dowolną
+formułę jest domknięty ku górze. Dopełnienie tego
+zbioru jest domknięte ku dołowi: jeśli $v$ nie
+wymusza formuły, żaden świat $w\leq v$ jej nie wymusza,
+gdyż w przeciwnym razie trwałość dawałaby sprzeczność.
+
+\begin{stwierdzenie}[Negacja i podwójna negacja]
+\label{prop:ncl-ipc-kripke-negation}
+W dowolnym modelu zachodzą równoważności
+\[
+\begin{aligned}
+ w\Vdash\neg\varphi
+ &\iff \forall v\geq w\quad v\not\Vdash\varphi,\\
+ w\Vdash\neg\neg\varphi
+ &\iff \forall v\geq w\ \exists u\geq v
+                  \quad u\Vdash\varphi.
+\end{aligned}
+\]
+Każdy świat wymusza $\top$.
+\end{stwierdzenie}
+\begin{proof}
+Pierwsza równoważność wynika z definicji
+$\neg\varphi=\varphi\to\bot$ i faktu, że
+żaden świat nie wymusza $\bot$.
+Stosując ją do $\neg\varphi$, otrzymujemy
+\[
+ w\Vdash\neg\neg\varphi
+ \iff \forall v\geq w\quad v\not\Vdash\neg\varphi.
+\]
+Niezachodzenie warunku
+$\forall u\geq v\ (u\not\Vdash\varphi)$
+jest równoważne istnieniu $u\geq v$ wymuszającego
+$\varphi$. Rozumowanie odbywa się w klasycznym
+metajęzyku, w którym definiujemy modele.
+Wreszcie warunek wymuszania $\bot\to\bot$
+zachodzi w każdym świecie.
+\end{proof}
+Podwójna negacja wyraża więc możliwość osiągnięcia
+stanu wymuszającego formułę z każdego przyszłego
+stanu, a nie jej wymuszanie już teraz.
+
+\begin{stwierdzenie}[Ograniczenie do stożka górnego]
+\label{prop:ncl-ipc-generated-submodel}
+Niech $w\in W$ i $W_w=\{v\in W:w\leq v\}$.
+Ograniczenie modelu do $W_w$ z odziedziczonym
+porządkiem i wartościowaniem $V_w(p)=V(p)\cap W_w$
+jest modelem ukorzenionym o korzeniu $w$.
+Dla każdego $v\in W_w$ wymuszanie formuł w tym
+modelu pokrywa się z wymuszaniem w modelu wyjściowym.
+\end{stwierdzenie}
+\begin{proof}
+Zbiór $W_w$ jest domknięty ku górze, a ograniczenia
+wartościowań zachowują tę własność względem
+odziedziczonego porządku.
+Dla zmiennych i $\bot$ zgodność wymuszania
+wynika wprost z definicji, a dla koniunkcji
+i alternatywy z hipotezy indukcyjnej.
+Dla implikacji zauważamy, że jeśli $v\in W_w$,
+to wszystkie światy $u\geq v$ nadal należą do $W_w$.
+W obu modelach kwantyfikujemy zatem po tym samym
+zbiorze światów i stosujemy hipotezę indukcyjną
+do obu argumentów implikacji.
+\end{proof}
+
+\subsection{Konsekwencja i poprawność rachunku}
+
+\begin{definicja}[Konsekwencja Kripkego]
+\label{def:ncl-ipc-kripke-consequence}
+Piszemy $\Gamma\models_{\mathrm K}\varphi$, jeśli
+dla każdego modelu Kripkego $\mathcal M$
+i każdego jego świata $w$ zachodzi
+\[
+ (\forall\gamma\in\Gamma\quad w\Vdash\gamma)
+ \quad\Longrightarrow\quad w\Vdash\varphi.
+\]
+Formułę nazywamy ważną, jeśli
+$\varnothing\models_{\mathrm K}\varphi$.
+\end{definicja}
+Jest to konsekwencja lokalna, czyli sprawdzamy
+wszystkie przesłanki i wniosek w tym samym świecie.
+Na mocy Stwierdzenia~\ref{prop:ncl-ipc-generated-submodel}
+wystarczy rozpatrywać korzenie wszystkich modeli
+ukorzenionych: każdy kontrmodel w dowolnym świecie
+można ograniczyć do jego stożka górnego.
+
+\begin{twierdzenie}[Poprawność IPC względem semantyki Kripkego]
+\label{thm:ncl-ipc-kripke-soundness}
+Dla dowolnego zbioru formuł $\Gamma$ i formuły
+$\varphi$ zachodzi
+\[
+ \Gamma\vdash_{\mathrm I}\varphi
+ \quad\Longrightarrow\quad
+ \Gamma\models_{\mathrm K}\varphi.
+\]
+Na mocy Twierdzenia~\ref{thm:ncl-ipc-hilbert-equivalence}
+ta sama teza obowiązuje dla $\vdash_{\mathrm H}$.
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po drzewie dedukcji naturalnej.
+Dla każdego podwyprowadzenia dowodzimy, że w
+dowolnym świecie dowolnego modelu wymuszanie
+wszystkich jego otwartych założeń pociąga wymuszanie
+wniosku. Dla liścia będącego założeniem teza
+jest natychmiastowa.
+
+Reguły $\wedge I,\wedge E_1,\wedge E_2$ oraz
+$\vee I_1,\vee I_2$ są poprawne na mocy
+odpowiednich warunków z
+Definicji~\ref{def:ncl-ipc-forcing}.
+Jeżeli $w$ wymusza otwarte założenia wniosku
+reguły $\vee E$, to z hipotezy indukcyjnej
+wymusza $\alpha\vee\beta$. Zatem wymusza
+$\alpha$ lub $\beta$. W pierwszym przypadku
+hipotezę indukcyjną stosujemy do podwyprowadzenia
+z dodatkowym założeniem $\alpha$, w drugim
+do podwyprowadzenia z założeniem $\beta$.
+W obu przypadkach otrzymujemy wymuszanie
+wspólnego wniosku w $w$.
+
+Dla $\to E$ używamy zwrotności porządku:
+jeśli $w\Vdash\alpha\to\beta$ i $w\Vdash\alpha$,
+to $w\Vdash\beta$.
+Dla $\to I$ niech $\Delta$ oznacza założenia
+pozostające otwarte po zamknięciu wskazanych
+wystąpień $\alpha$. Ustalmy świat $w$
+wymuszający wszystkie formuły z $\Delta$.
+Niech $v\geq w$ oraz $v\Vdash\alpha$.
+Na mocy Lematu~\ref{lem:ncl-ipc-persistence}
+świat $v$ nadal wymusza wszystkie formuły z $\Delta$.
+Hipoteza indukcyjna dla podwyprowadzenia
+$\beta$ z otwartymi założeniami należącymi
+do $\Delta\cup\{\alpha\}$ daje $v\Vdash\beta$.
+Ponieważ $v$ był dowolny, mamy
+$w\Vdash\alpha\to\beta$.
+Argument obejmuje również zamykanie zerowej liczby
+wystąpień założenia.
+
+W przypadku $\bot E$ nie istnieje świat wymuszający
+wszystkie otwarte założenia podwyprowadzenia $\bot$:
+w przeciwnym razie z hipotezy indukcyjnej
+wymuszałby $\bot$. Implikacja semantyczna
+dla wniosku tej reguły zachodzi więc próżniowo.
+Rozpatrzyliśmy wszystkie reguły rachunku.
+\end{proof}
+
+\subsection{Kontrmodele dla zasad klasycznych}
+
+\begin{przyklad}[Wyłączony środek i eliminacja podwójnej negacji]
+\label{ex:ncl-ipc-two-world-countermodel}
+Rozważmy ramę $W=\{w_0,w_1\}$ z $w_0<w_1$
+oraz $V(p)=\{w_1\}$. Inne zmienne mogą mieć
+puste zbiory wymuszania.
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+\node[draw,rounded corners,minimum width=3.0cm,
+ minimum height=0.85cm] (w0) at (0,0)
+ {$w_0:\ p\ \text{niewymuszane}$};
+\node[draw,rounded corners,minimum width=3.0cm,
+ minimum height=0.85cm,fill=blue!8] (w1) at (0,1.8)
+ {$w_1:\ p$};
+\draw[->,thick] (w0)--(w1);
+\end{tikzpicture}
+\end{center}
+Strzałka oznacza przejście do większego świata;
+pętle zwrotności pomijamy na rysunkach.
+Mamy $w_0\not\Vdash p$ oraz
+$w_0\not\Vdash\neg p$, ponieważ $w_1\Vdash p$.
+Stąd
+\[
+ w_0\not\Vdash p\vee\neg p.
+\]
+Natomiast każdy świat $v\geq w_0$ ma rozszerzenie
+$w_1$ wymuszające $p$. Na mocy
+Stwierdzenia~\ref{prop:ncl-ipc-kripke-negation}
+otrzymujemy $w_0\Vdash\neg\neg p$.
+Ponieważ $w_0\not\Vdash p$, mamy
+$w_0\not\Vdash\neg\neg p\to p$.
+Z twierdzenia o poprawności wynika, że żadna
+z tych dwóch zasad nie jest twierdzeniem IPC.
+\end{przyklad}
+
+\begin{przyklad}[Rozgałęzienie i drugie prawo de Morgana]
+\label{ex:ncl-ipc-fork-countermodel}
+Niech $W=\{r,a,b\}$, gdzie $r<a$ i $r<b$,
+a $a,b$ są nieporównywalne i maksymalne.
+Przyjmijmy $V(p)=\{a\}$ i $V(q)=\{b\}$.
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+\node[draw,rounded corners,minimum width=1.5cm]
+ (r) at (0,0) {$r:\ \varnothing$};
+\node[draw,rounded corners,fill=blue!8,minimum width=1.5cm]
+ (a) at (-1.9,1.8) {$a:\ p$};
+\node[draw,rounded corners,fill=blue!8,minimum width=1.5cm]
+ (b) at (1.9,1.8) {$b:\ q$};
+\draw[->,thick] (r)--(a);
+\draw[->,thick] (r)--(b);
+\end{tikzpicture}
+\end{center}
+Węzły opisujemy tu wyłącznie przez wymuszane
+zmienne spośród $p,q$. Żaden świat nie wymusza
+$p\wedge q$, więc $r\Vdash\neg(p\wedge q)$.
+Jednocześnie $a\Vdash p$ i $b\Vdash q$ dają
+$r\not\Vdash\neg p$ oraz $r\not\Vdash\neg q$.
+W rezultacie
+\[
+ r\not\Vdash
+ \neg(p\wedge q)\to(\neg p\vee\neg q).
+\]
+To jest zapowiedziany kontrmodel do odwrotności
+drugiej implikacji ze
+Stwierdzenia~\ref{prop:ncl-ipc-demorgan}.
+
+Ten sam model obala zasadę prelinearności
+$(p\to q)\vee(q\to p)$: świat $a$ wymusza $p$,
+ale nie $q$, a świat $b$ wymusza $q$, ale nie $p$.
+Zatem korzeń nie wymusza żadnej z dwóch implikacji.
+Zasada ta występowała wcześniej jako aksjomat
+logik rozmytych typu MTL, lecz nie należy do IPC.
+\end{przyklad}
+
+\begin{stwierdzenie}[Światy maksymalne a logika klasyczna]
+\label{prop:ncl-ipc-maximal-classical}
+Jeżeli $w$ jest światem maksymalnym w modelu Kripkego,
+to istnieje klasyczne wartościowanie $e_w$ takie, że
+dla każdej formuły $\varphi$
+\[
+ w\Vdash\varphi\iff e_w(\varphi)=1.
+\]
+W szczególności modele jednoświatowe dają dokładnie
+klasyczną semantykę zdaniową w rozważanym języku.
+\end{stwierdzenie}
+\begin{proof}
+Definiujemy $e_w(p)=1$ wtedy i tylko wtedy,
+gdy $w\in V(p)$, oraz $e_w(\bot)=0$.
+Dla zmiennych i stałej teza jest natychmiastowa,
+a dla koniunkcji i alternatywy wynika z hipotezy
+indukcyjnej. Ponieważ jedynym światem $v\geq w$
+jest $w$, warunek wymuszania implikacji upraszcza
+się do
+\[
+ w\not\Vdash\alpha\quad\text{lub}\quad w\Vdash\beta,
+\]
+co przez hipotezę indukcyjną jest dokładnie
+klasyczną tablicą implikacji.
+Odwrotnie każde klasyczne wartościowanie można
+zrealizować na ramie jednoelementowej, wybierając
+$V(p)=\{w\}$ dla zmiennych prawdziwych oraz
+$V(p)=\varnothing$ dla pozostałych.
+\end{proof}
+
+\begin{wniosek}[IPC jako właściwy fragment konsekwencji klasycznej]
+\label{cor:ncl-ipc-classical-inclusion}
+Jeżeli $\Gamma\vdash_{\mathrm I}\varphi$,
+to $\Gamma\models_{\mathrm{CL}}\varphi$.
+Inkluzja relacji konsekwencji jest właściwa,
+nawet dla zbioru pustego przesłanek.
+\end{wniosek}
+\begin{proof}
+Z Twierdzenia~\ref{thm:ncl-ipc-kripke-soundness}
+konsekwencja zachodzi w każdym modelu jednoświatowym.
+Stwierdzenie~\ref{prop:ncl-ipc-maximal-classical}
+pozwala utożsamić te modele z wartościowaniami
+klasycznymi. Właściwość inkluzji wynika z
+Przykładu~\ref{ex:ncl-ipc-two-world-countermodel},
+gdyż $p\vee\neg p$ jest tautologią klasyczną,
+ale nie twierdzeniem IPC.
+\end{proof}
+
+\section{Model kanoniczny i silna pełność}
+
+W dalszym ciągu piszemy $\Gamma\vdash\varphi$,
+gdy $\Gamma\vdash_{\mathrm I}\varphi$, równoważnie
+$\Gamma\vdash_{\mathrm H}\varphi$, na mocy
+Twierdzenia~\ref{thm:ncl-ipc-hilbert-equivalence}.
+Naszym celem jest konstrukcja kontrmodelu dla każdej
+niedowodliwej konsekwencji, również wtedy, gdy
+zbiór przesłanek jest nieskończony.
+
+\subsection{Teorie pierwsze}
+
+\begin{definicja}[Teorie i teorie pierwsze]
+\label{def:ncl-ipc-prime-theory}
+Niech $\mathrm{Fm}$ oznacza zbiór wszystkich formuł
+języka IPC. Dla $X\subseteq\mathrm{Fm}$ określamy
+jego domknięcie dedukcyjne
+\[
+ \operatorname{Cn}(X)=\{\varphi:X\vdash\varphi\}.
+\]
+Teorią nazywamy zbiór $T\subseteq\mathrm{Fm}$
+taki, że $\operatorname{Cn}(T)=T$.
+Teoria jest niesprzeczna, jeśli $\bot\notin T$.
+Teorią pierwszą nazywamy niesprzeczną teorię $T$
+spełniającą warunek
+\[
+ \alpha\vee\beta\in T
+ \quad\Longrightarrow\quad
+ \alpha\in T\ \text{lub}\ \beta\in T.
+\]
+\end{definicja}
+Pierwszość dotyczy alternatywy, a nie maksymalności
+w rodzinie wszystkich niesprzecznych teorii.
+Nie wymagamy, aby dla każdej formuły $\alpha$
+do teorii należała $\alpha$ lub $\neg\alpha$.
+
+\begin{lemat}[Domknięcie dedukcyjne]
+\label{lem:ncl-ipc-deductive-closure}
+Operator $\operatorname{Cn}$ jest ekstensywny,
+monotoniczny i idempotentny. Ponadto
+\[
+ \operatorname{Cn}(X)=
+ \bigcup_{\substack{F\subseteq X\\ F\text{ skończony}}}
+ \operatorname{Cn}(F).
+\]
+Każda teoria zawiera wszystkie twierdzenia IPC
+i jest zamknięta względem modus ponens. Teoria
+zawierająca $\bot$ jest równa $\mathrm{Fm}$.
+\end{lemat}
+\begin{proof}
+Ekstensywność i monotoniczność wynikają z własności
+strukturalnych rachunku
+(Stwierdzenie~\ref{prop:ncl-ipc-structural}).
+Jeżeli $\operatorname{Cn}(X)\vdash\varphi$, to
+dla każdej przesłanki $\delta\in\operatorname{Cn}(X)$
+mamy $X\vdash\delta$; reguła cięcia daje $X\vdash\varphi$.
+Stąd $\operatorname{Cn}(\operatorname{Cn}(X))
+\subseteq\operatorname{Cn}(X)$, a odwrotna inkluzja
+wynika z ekstensywności.
+Wzór na sumę domknięć wynika ze skończoności
+liczby otwartych założeń w każdym dowodzie
+oraz z monotoniczności.
+
+Jeśli $\vdash\varphi$, to $T\vdash\varphi$,
+więc $\varphi\in T$ dla każdej teorii $T$.
+Jeśli $\alpha,\alpha\to\beta\in T$, to
+$T\vdash\beta$ przez eliminację implikacji,
+więc $\beta\in T$. Analogicznie, jeżeli $\bot\in T$,
+to $T\vdash\varphi$ dla dowolnej $\varphi$ przez
+regułę $\bot E$. Wtedy $T=\mathrm{Fm}$.
+\end{proof}
+
+\begin{twierdzenie}[Lemat Lindenbauma o rozszerzeniu do teorii pierwszej]
+\label{thm:ncl-ipc-prime-extension}
+Jeśli $X\subseteq\mathrm{Fm}$ oraz $X\nvdash\theta$,
+to istnieje teoria pierwsza $T$ taka, że
+\[
+ X\subseteq T,\qquad \theta\notin T.
+\]
+\end{twierdzenie}
+\begin{proof}
+Rozważmy rodzinę
+\[
+ \mathcal P=\{Y\subseteq\mathrm{Fm}:
+                     X\subseteq Y,\ Y\nvdash\theta\},
+\]
+uporządkowaną przez inkluzję.
+Jest ona niepusta, ponieważ $X\in\mathcal P$.
+Dla niepustego łańcucha $\mathcal C\subseteq\mathcal P$
+połóżmy $U=\bigcup_{Y\in\mathcal C}Y$.
+Mamy $X\subseteq U$. Gdyby $U\vdash\theta$,
+istniałby skończony zbiór użytych przesłanek
+$F\subseteq U$ z $F\vdash\theta$.
+Każdy element $F$ należy do pewnego elementu
+łańcucha, a skończenie wiele elementów łańcucha
+ma wśród siebie element największy.
+Stąd istnieje $Y\in\mathcal C$ z $F\subseteq Y$;
+jeśli $F=\varnothing$, wybieramy dowolny element
+niepustego łańcucha. Monotoniczność dawałaby
+$Y\vdash\theta$, wbrew definicji $\mathcal P$.
+Zatem $U\in\mathcal P$ i jest ograniczeniem górnym
+łańcucha. Łańcuch pusty ma ograniczenie górne $X$.
+Z lematu Kuratowskiego--Zorna
+(Twierdzenie~\ref{thm:choice-zorn} w logice i teorii
+mnogości) otrzymujemy element maksymalny $T$.
+
+Mamy $T\nvdash\theta$. Domknięcie
+$\operatorname{Cn}(T)$ także nie dowodzi $\theta$:
+gdyby dowodziło, reguła cięcia dałaby $T\vdash\theta$.
+Ponieważ $T\subseteq\operatorname{Cn}(T)$,
+maksymalność $T$ wymusza
+$T=\operatorname{Cn}(T)$. Jest to więc teoria,
+a $\theta\notin T$. Ponadto $\bot\notin T$,
+gdyż w przeciwnym razie $\theta\in T$ na mocy
+Lematu~\ref{lem:ncl-ipc-deductive-closure}.
+
+Pozostaje dowieść pierwszości. Załóżmy
+$\alpha\vee\beta\in T$, ale $\alpha\notin T$
+oraz $\beta\notin T$. Z maksymalności wynika
+\[
+ T\cup\{\alpha\}\vdash\theta,\qquad
+ T\cup\{\beta\}\vdash\theta.
+\]
+Istotnie, oba rozszerzenia są właściwe i zawierają
+$X$, więc nie mogą należeć do $\mathcal P$.
+Twierdzenie o dedukcji
+(Twierdzenie~\ref{thm:ncl-ipc-deduction})
+daje $T\vdash\alpha\to\theta$ oraz
+$T\vdash\beta\to\theta$.
+Obie implikacje należą do $T$. Instancja H8
+z Definicji~\ref{def:ncl-ipc-hilbert} i trzy
+zastosowania modus ponens, z użyciem
+$\alpha\vee\beta\in T$, dają $T\vdash\theta$.
+Sprzeczność dowodzi pierwszości.
+\end{proof}
+W przypadku przeliczalnego języka można uniknąć
+bezpośredniego stosowania lematu Kuratowskiego--Zorna:
+enumerujemy wszystkie formuły i kolejno dołączamy
+formułę, o ile po jej dołączeniu nadal nie można
+dowieść $\theta$. Suma otrzymanego rosnącego ciągu
+zbiorów nie dowodzi $\theta$ dzięki skończoności
+dowodów. Każda pominięta formuła już w chwili
+rozpatrywania umożliwiała wyprowadzenie $\theta$,
+więc przez monotoniczność umożliwia je również
+po dołączeniu do sumy. Suma jest zatem maksymalna
+w rodzinie $\mathcal P$. Jest to konstrukcja
+w klasycznym metajęzyku; nie zakładamy na tym
+etapie algorytmu rozstrzygającego dowodliwość.
+
+\begin{lemat}[Własności teorii pierwszych]
+\label{lem:ncl-ipc-prime-properties}
+Dla teorii pierwszej $T$ zachodzą równoważności
+\[
+\begin{aligned}
+ \alpha\wedge\beta\in T
+ &\iff \alpha\in T\ \text{i}\ \beta\in T,\\
+ \alpha\vee\beta\in T
+ &\iff \alpha\in T\ \text{lub}\ \beta\in T,\\
+ \alpha\to\beta\in T
+ &\iff \forall S\supseteq T\
+      (S\text{ pierwsza},\ \alpha\in S
+        \ \Longrightarrow\ \beta\in S).
+\end{aligned}
+\]
+\end{lemat}
+\begin{proof}
+Pierwsza równoważność wynika z reguł wprowadzania
+i eliminacji koniunkcji oraz domknięcia dedukcyjnego.
+W drugiej kierunek od lewej do prawej jest
+pierwszością, a odwrotny wynika z reguł
+wprowadzania alternatywy.
+
+Jeżeli $\alpha\to\beta\in T$ i $S$ jest teorią
+pierwszą zawierającą $T$ oraz $\alpha$, to
+$\alpha\to\beta\in S$, więc $\beta\in S$
+na mocy modus ponens.
+Odwrotnie załóżmy $\alpha\to\beta\notin T$.
+Ponieważ $T$ jest teorią,
+$T\nvdash\alpha\to\beta$. Z twierdzenia o dedukcji
+wynika
+$T\cup\{\alpha\}\nvdash\beta$.
+Stosujemy Twierdzenie~\ref{thm:ncl-ipc-prime-extension}
+do $X=T\cup\{\alpha\}$ i $\theta=\beta$.
+Otrzymujemy teorię pierwszą $S\supseteq T$
+z $\alpha\in S$ i $\beta\notin S$.
+Jest to kontrprzykład do warunku po prawej stronie,
+co kończy dowód.
+\end{proof}
+Ostatnia równoważność wyjaśnia, dlaczego w semantyce
+Kripkego definicja implikacji kwantyfikuje po
+wszystkich rozszerzeniach aktualnego świata.
+Brak implikacji w teorii nie musi oznaczać, że
+jej poprzednik już należy do tej teorii, lecz
+istnieje odpowiednie rozszerzenie, w którym
+poprzednik należy, a następnik nie należy.
+
+\subsection{Konstrukcja modelu kanonicznego}
+
+\begin{definicja}[Model kanoniczny IPC]
+\label{def:ncl-ipc-canonical-model}
+Niech $W_{\mathrm c}$ będzie zbiorem wszystkich teorii
+pierwszych IPC, uporządkowanym przez inkluzję.
+Dla każdej zmiennej zdaniowej $p$ określamy
+\[
+ V_{\mathrm c}(p)=\{T\in W_{\mathrm c}:p\in T\}.
+\]
+Model $\mathcal M_{\mathrm c}=
+(W_{\mathrm c},\subseteq,V_{\mathrm c})$
+nazywamy modelem kanonicznym IPC.
+\end{definicja}
+Zbiór $W_{\mathrm c}$ jest podzbiorem
+zbioru potęgowego $\mathcal P(\mathrm{Fm})$. Jest niepusty: z poprawności
+(Twierdzenie~\ref{thm:ncl-ipc-kripke-soundness})
+i istnienia modelu jednoświatowego wynika
+$\varnothing\nvdash\bot$. Stosując lemat Lindenbauma
+do $X=\varnothing$ i $\theta=\bot$, otrzymujemy
+teorię pierwszą. Inkluzja jest częściowym porządkiem,
+a $V_{\mathrm c}(p)$ jest domknięty ku górze:
+jeśli $p\in T\subseteq S$, to $p\in S$.
+Konstrukcja spełnia zatem wszystkie warunki
+Definicji~\ref{def:ncl-ipc-kripke}.
+
+\begin{twierdzenie}[Lemat o prawdzie w modelu kanonicznym]
+\label{thm:ncl-ipc-truth-lemma}
+Dla dowolnej teorii pierwszej $T$ oraz dowolnej
+formuły $\varphi$ zachodzi
+\[
+ T\Vdash_{\mathcal M_{\mathrm c}}\varphi
+ \quad\Longleftrightarrow\quad \varphi\in T.
+\]
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po budowie $\varphi$, dowodząc tezy
+jednocześnie dla wszystkich światów modelu.
+Dla zmiennej jest to definicja $V_{\mathrm c}$.
+Dla $\bot$ żadna strona równoważności nie zachodzi:
+żaden świat nie wymusza $\bot$, a teorie pierwsze
+są niesprzeczne.
+
+Dla koniunkcji $\alpha\wedge\beta$ warunek
+wymuszania jest równoważny wymuszaniu obu
+argumentów. Z hipotezy indukcyjnej i
+Lematu~\ref{lem:ncl-ipc-prime-properties} oznacza to
+dokładnie $\alpha\wedge\beta\in T$.
+Analogicznie dla alternatywy korzystamy z pierwszości
+oraz obu reguł wprowadzania alternatywy.
+
+Dla implikacji mamy kolejno
+\[
+\begin{aligned}
+ T\Vdash_{\mathcal M_{\mathrm c}}\alpha\to\beta
+ &\iff \forall S\in W_{\mathrm c},\ S\supseteq T:\\
+ &\qquad (S\Vdash_{\mathcal M_{\mathrm c}}\alpha
+       \Longrightarrow S\Vdash_{\mathcal M_{\mathrm c}}\beta)\\
+ &\iff \forall S\in W_{\mathrm c},\ S\supseteq T:\\
+ &\qquad (\alpha\in S\Longrightarrow\beta\in S)\\
+ &\iff \alpha\to\beta\in T.
+\end{aligned}
+\]
+Druga równoważność wynika z hipotezy indukcyjnej
+stosowanej w dowolnym świecie $S$, a ostatnia
+z Lematu~\ref{lem:ncl-ipc-prime-properties}.
+To kończy indukcję.
+\end{proof}
+
+\begin{twierdzenie}[Silna pełność IPC względem modeli Kripkego]
+\label{thm:ncl-ipc-strong-completeness}
+Dla dowolnego, również nieskończonego, zbioru
+formuł $\Gamma$ oraz formuły $\varphi$ zachodzi
+\[
+ \Gamma\vdash_{\mathrm I}\varphi
+ \iff \Gamma\vdash_{\mathrm H}\varphi
+ \iff \Gamma\models_{\mathrm K}\varphi.
+\]
+Jeżeli $\Gamma\nvdash_{\mathrm I}\varphi$, istnieje
+ukorzeniony model Kripkego, którego korzeń wymusza
+wszystkie formuły z $\Gamma$, lecz nie wymusza
+$\varphi$.
+\end{twierdzenie}
+\begin{proof}
+Pierwszą równoważność daje
+Twierdzenie~\ref{thm:ncl-ipc-hilbert-equivalence},
+a kierunek od dowodliwości do konsekwencji
+semantycznej wynika z
+Twierdzenia~\ref{thm:ncl-ipc-kripke-soundness}.
+
+Załóżmy $\Gamma\nvdash_{\mathrm I}\varphi$.
+Z lematu Lindenbauma
+(Twierdzenie~\ref{thm:ncl-ipc-prime-extension})
+istnieje teoria pierwsza $T\supseteq\Gamma$
+z $\varphi\notin T$. Lemat o prawdzie
+(Twierdzenie~\ref{thm:ncl-ipc-truth-lemma})
+daje $T\Vdash\gamma$ dla każdego $\gamma\in\Gamma$
+oraz $T\not\Vdash\varphi$ w modelu kanonicznym.
+Jest to kontrmodel dla konsekwencji.
+Ograniczając model do stożka górnego $T$,
+na mocy Stwierdzenia~\ref{prop:ncl-ipc-generated-submodel}
+otrzymujemy kontrmodel ukorzeniony bez zmiany
+wymuszania w $T$.
+\end{proof}
+Przymiotnik \emph{silna} wskazuje, że twierdzenie
+dotyczy dowolnych zbiorów przesłanek, a nie jedynie
+formuł bez przesłanek. Nie wynika z niego jeszcze
+istnienie kontrmodelu skończonego: model kanoniczny
+może być nieskończony.
+
+\begin{wniosek}[Zwartość konsekwencji Kripkego]
+\label{cor:ncl-ipc-compactness}
+Jeżeli $\Gamma\models_{\mathrm K}\varphi$, to istnieje
+skończony $\Gamma_0\subseteq\Gamma$ taki, że
+$\Gamma_0\models_{\mathrm K}\varphi$.
+\end{wniosek}
+\begin{proof}
+Silna pełność daje $\Gamma\vdash_{\mathrm I}\varphi$.
+Skończony dowód wykorzystuje skończenie wiele
+przesłanek $\Gamma_0$ na mocy
+Stwierdzenia~\ref{prop:ncl-ipc-structural}.
+Poprawność daje $\Gamma_0\models_{\mathrm K}\varphi$.
+\end{proof}
+
+\begin{wniosek}[Niesprzeczność i spełnialność]
+\label{cor:ncl-ipc-consistency-satisfiability}
+Zbiór formuł $\Gamma$ jest spełnialny w pewnym
+świecie modelu Kripkego wtedy i tylko wtedy,
+gdy $\Gamma\nvdash_{\mathrm I}\bot$.
+W szczególności jeżeli każdy skończony podzbiór
+$\Gamma$ jest spełnialny, to $\Gamma$ jest spełnialny.
+\end{wniosek}
+\begin{proof}
+Żaden świat nie wymusza $\bot$, więc
+$\Gamma\models_{\mathrm K}\bot$ zachodzi dokładnie
+wtedy, gdy nie istnieje świat wymuszający
+wszystkie formuły z $\Gamma$. Stosujemy
+Twierdzenie~\ref{thm:ncl-ipc-strong-completeness}
+do wniosku $\bot$.
+Gdyby $\Gamma$ nie był spełnialny, zwartość
+konsekwencji dla wniosku $\bot$ dawałaby skończony
+niespełnialny podzbiór $\Gamma_0$, wbrew założeniu.
+\end{proof}
+
+\begin{przyklad}[Teoria pierwsza nie musi być maksymalnie niesprzeczna]
+\label{ex:ncl-ipc-prime-not-maximal}
+W modelu dwupunktowym z
+Przykładu~\ref{ex:ncl-ipc-two-world-countermodel}
+dla $i=0,1$ określamy
+\[
+ T_i=\{\varphi:w_i\Vdash\varphi\}.
+\]
+Każdy $T_i$ jest teorią: jeśli $T_i\vdash\varphi$,
+to poprawność IPC daje $w_i\Vdash\varphi$,
+a ekstensywność daje przeciwną inkluzję domknięcia.
+Ponieważ $\bot$ nie jest wymuszane, teoria jest
+niesprzeczna; pierwszość wynika bezpośrednio
+z warunku wymuszania alternatywy.
+Z trwałości wymuszania mamy $T_0\subseteq T_1$.
+Inkluzja jest właściwa, gdyż $p\in T_1\setminus T_0$.
+W szczególności $T_0$ jest teorią pierwszą, ale
+nie jest maksymalnym zbiorem niesprzecznym.
+Nie należy do niej ani $p$, ani $\neg p$.
+\end{przyklad}
+
+\section{Filtracja i własność modelu skończonego}
+
+Twierdzenie o silnej pełności pozwala znaleźć kontrmodel
+każdej niedowodliwej konsekwencji, lecz nie ogranicza
+liczby jego światów. Dla skończonego zbioru rozważanych
+formuł można jednak utożsamić światy, których nie
+odróżnia żadna z tych formuł. Trzeba przy tym zachować
+nie tylko wartości zmiennych, ale również informację
+istotną dla wymuszania implikacji.
+
+\begin{definicja}[Zbiory podformuł]
+\label{def:ncl-ipc-subformulas}
+Zbiór $\operatorname{Sub}(\varphi)$ podformuł formuły
+$\varphi$ zawiera samą $\varphi$ oraz wszystkie
+podformuły jej bezpośrednich argumentów.
+Dla zmiennej i stałej $\bot$ jest to zbiór jednoelementowy.
+Dla zbioru formuł $E$ przyjmujemy
+\[
+ \operatorname{Sub}(E)=
+ \bigcup_{\varphi\in E}\operatorname{Sub}(\varphi).
+\]
+Zbiór $\Sigma$ jest domknięty względem podformuł,
+jeśli $\varphi\in\Sigma$ implikuje
+$\operatorname{Sub}(\varphi)\subseteq\Sigma$.
+Skróty takie jak $\neg,\top,\leftrightarrow$
+rozwijamy przed wyznaczeniem podformuł.
+\end{definicja}
+Każda formuła ma skończenie wiele podformuł,
+co wynika z indukcji po jej skończonym drzewie
+składniowym. W szczególności dla skończonego $E$
+zbiór $\operatorname{Sub}(E)$ jest skończony
+i domknięty względem podformuł.
+
+\begin{definicja}[Filtracja przez profile wymuszania]
+\label{def:ncl-ipc-filtration}
+Niech $\mathcal M=(W,\leq,V)$ będzie modelem Kripkego
+oraz niech $\Sigma$ będzie skończonym zbiorem formuł
+domkniętym względem podformuł.
+Dla $w\in W$ definiujemy profil
+\[
+ t_\Sigma(w)=\{\psi\in\Sigma:w\Vdash_{\mathcal M}\psi\}.
+\]
+Określamy model filtracyjny
+$\mathcal M_\Sigma=(W_\Sigma,\subseteq,V_\Sigma)$,
+gdzie
+\[
+ W_\Sigma=\{t_\Sigma(w):w\in W\},\qquad
+ V_\Sigma(p)=
+ \begin{cases}
+  \{S\in W_\Sigma:p\in S\},&p\in\Sigma,\\
+  \varnothing,&p\notin\Sigma.
+ \end{cases}
+\]
+\end{definicja}
+Model jest dobrze określony: $W_\Sigma$ jest niepusty,
+inkluzja jest częściowym porządkiem, a każdy
+$V_\Sigma(p)$ jest domknięty ku górze.
+Ponieważ $W_\Sigma\subseteq\mathcal P(\Sigma)$,
+mamy
+\[
+ 1\leq |W_\Sigma|\leq 2^{|\Sigma|}.
+\]
+Z Lematu~\ref{lem:ncl-ipc-persistence} wynika, że
+$w\leq v$ pociąga $t_\Sigma(w)\subseteq t_\Sigma(v)$.
+Filtracja może jednak wprowadzać porównania profili
+światów, które pierwotnie nie były porównywalne.
+Nie definiujemy porządku ilorazowego przez samo
+istnienie porównywalnych reprezentantów: taka
+relacja nie musi być przechodnia. Przykładowo
+weźmy dwa rozłączne łańcuchy $a<b$ i $c<d$,
+$\Sigma=\{p,q\}$, $V(p)=\{b,c,d\}$ oraz $V(q)=\{d\}$.
+Profile $a,b,c,d$ są odpowiednio równe
+$\varnothing,\{p\},\{p\},\{p,q\}$.
+Porównywalni reprezentanci istnieją dla par
+$(\varnothing,\{p\})$ oraz $(\{p\},\{p,q\})$,
+lecz nie dla $(\varnothing,\{p,q\})$,
+gdyż $a$ i $d$ są nieporównywalne.
+Jeśli model wyjściowy ma korzeń $r$, to
+$t_\Sigma(r)$ jest elementem najmniejszym modelu
+filtracyjnego.
+
+\begin{twierdzenie}[Lemat o filtracji]
+\label{thm:ncl-ipc-filtration}
+Dla każdej $\varphi\in\Sigma$ i każdego $w\in W$
+zachodzi
+\[
+ w\Vdash_{\mathcal M}\varphi
+ \iff t_\Sigma(w)\Vdash_{\mathcal M_\Sigma}\varphi.
+\]
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po budowie $\varphi$, jednocześnie
+dla wszystkich światów modelu wyjściowego.
+Wszystkie podformuły używane w indukcji należą
+do $\Sigma$.
+
+Dla zmiennej $p\in\Sigma$ mamy
+$w\Vdash_{\mathcal M}p$ dokładnie wtedy, gdy
+$p\in t_\Sigma(w)$, czyli wtedy, gdy
+$t_\Sigma(w)\in V_\Sigma(p)$.
+Dla $\bot$ obie strony równoważności są fałszywe.
+Dla koniunkcji i alternatywy stosujemy odpowiednie
+klauzule wymuszania oraz hipotezę indukcyjną
+do obu argumentów.
+
+Niech $\varphi=\alpha\to\beta$.
+Załóżmy najpierw $w\Vdash_{\mathcal M}\alpha\to\beta$.
+Niech $S\in W_\Sigma$ będzie dowolnym profilem
+z $t_\Sigma(w)\subseteq S$ i
+$S\Vdash_{\mathcal M_\Sigma}\alpha$.
+Wybieramy $v\in W$ takie, że $S=t_\Sigma(v)$.
+Ponieważ $\alpha\to\beta\in\Sigma$ i należy
+do $t_\Sigma(w)$, należy również do $S$.
+Zatem $v\Vdash_{\mathcal M}\alpha\to\beta$.
+Z hipotezy indukcyjnej dla $\alpha$ mamy
+$v\Vdash_{\mathcal M}\alpha$.
+Zwrotność porządku daje $v\Vdash_{\mathcal M}\beta$,
+a hipoteza indukcyjna dla $\beta$ daje
+$S\Vdash_{\mathcal M_\Sigma}\beta$.
+Dowolność $S$ dowodzi
+$t_\Sigma(w)\Vdash_{\mathcal M_\Sigma}\alpha\to\beta$.
+
+Odwrotnie, jeśli $w\not\Vdash_{\mathcal M}\alpha\to\beta$,
+to istnieje $v\geq w$ takie, że
+$v\Vdash_{\mathcal M}\alpha$ oraz
+$v\not\Vdash_{\mathcal M}\beta$.
+Trwałość wymuszania wszystkich formuł z $\Sigma$
+daje $t_\Sigma(w)\subseteq t_\Sigma(v)$.
+Z hipotezy indukcyjnej wynika, że
+$t_\Sigma(v)$ wymusza $\alpha$, lecz nie wymusza
+$\beta$ w modelu filtracyjnym.
+Jest to świadek niewymuszania implikacji w
+$t_\Sigma(w)$. Otrzymujemy drugą implikację
+i kończymy indukcję.
+\end{proof}
+Istotny jest pierwszy kierunek dla implikacji:
+nowe porównania nie tworzą kontrprzykładu, ponieważ
+profil pamięta również samą formułę implikacyjną.
+
+\begin{przyklad}[Utożsamianie światów o jednakowym profilu]
+\label{ex:ncl-ipc-filtration}
+Niech $W=\{r,a,b\}$, gdzie $r<a$, $r<b$,
+a $a,b$ są nieporównywalne. Przyjmijmy
+$V(p)=\{a,b\}$ oraz $V(q)=\{a\}$.
+Dla zbioru $\Sigma=\{p,\neg p,\bot\}$ mamy
+\[
+ t_\Sigma(r)=\varnothing,\qquad
+ t_\Sigma(a)=t_\Sigma(b)=\{p\}.
+\]
+Rzeczywiście, żaden świat nie wymusza $\bot$,
+a każdy świat ma rozszerzenie wymuszające $p$,
+więc żaden nie wymusza $\neg p$.
+Światy $a,b$ różnią się wymuszaniem $q$, lecz
+formuła $q$ nie należy do $\Sigma$.
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+\node[draw,rounded corners] (r) at (0,0) {$r:\ \varnothing$};
+\node[draw,rounded corners,fill=blue!8] (a) at (-1.6,1.8) {$a:\ p,q$};
+\node[draw,rounded corners,fill=blue!8] (b) at (1.6,1.8) {$b:\ p$};
+\draw[->,thick] (r)--(a);
+\draw[->,thick] (r)--(b);
+\node at (3.0,0.9) {$\longmapsto$};
+\node[draw,rounded corners] (r2) at (5.0,0) {$\varnothing$};
+\node[draw,rounded corners,fill=blue!8] (t2) at (5.0,1.8) {$\{p\}$};
+\draw[->,thick] (r2)--(t2);
+\end{tikzpicture}
+\end{center}
+W modelu po lewej podpisy przedstawiają wymuszane
+zmienne spośród $p,q$, a po prawej całe profile
+względem $\Sigma$. Filtracja redukuje liczbę światów
+z trzech do dwóch. Zachowuje wymuszanie $p$,
+$\neg p$ i $\bot$, ale nie musi zachowywać
+wymuszania formuł spoza $\Sigma$.
+\end{przyklad}
+
+\begin{twierdzenie}[Własność modelu skończonego IPC]
+\label{thm:ncl-ipc-finite-model-property}
+Niech $\Gamma$ będzie skończonym zbiorem formuł
+i niech $\varphi$ będzie formułą. Połóżmy
+$\Sigma=\operatorname{Sub}(\Gamma\cup\{\varphi\})$.
+Jeżeli $\Gamma\nvdash_{\mathrm I}\varphi$, to istnieje
+skończony ukorzeniony model Kripkego o co najwyżej
+$2^{|\Sigma|}$ światach, którego korzeń wymusza
+wszystkie przesłanki z $\Gamma$, lecz nie wymusza
+$\varphi$.
+\end{twierdzenie}
+\begin{proof}
+Silna pełność
+(Twierdzenie~\ref{thm:ncl-ipc-strong-completeness})
+daje ukorzeniony kontrmodel $\mathcal M$ z korzeniem
+$r$. Filtrujemy go przez $\Sigma$.
+Model filtracyjny ma korzeń $t_\Sigma(r)$ i nie
+więcej niż $2^{|\Sigma|}$ światów, jak wynika
+z Definicji~\ref{def:ncl-ipc-filtration} i następujących
+po niej uwag.
+Ponieważ $\Gamma\cup\{\varphi\}\subseteq\Sigma$,
+Twierdzenie~\ref{thm:ncl-ipc-filtration}
+zachowuje wymuszanie wszystkich przesłanek
+i niewymuszanie wniosku w obrazie korzenia.
+\end{proof}
+
+\begin{wniosek}[Pełność względem modeli skończonych]
+\label{cor:ncl-ipc-finite-completeness}
+Dla skończonego $\Gamma$ mamy
+\[
+ \Gamma\vdash_{\mathrm I}\varphi
+ \iff \Gamma\models_{\mathrm K,fin}\varphi,
+\]
+gdzie konsekwencję po prawej stronie definiujemy
+jak w Definicji~\ref{def:ncl-ipc-kripke-consequence},
+ograniczając się do modeli o skończonej liczbie światów.
+\end{wniosek}
+\begin{proof}
+Kierunek prosty wynika z poprawności IPC, gdyż
+każdy model skończony jest modelem Kripkego.
+Dla kierunku odwrotnego stosujemy kontrapozycję
+Twierdzenia~\ref{thm:ncl-ipc-finite-model-property}.
+\end{proof}
+Skończoność $\Gamma$ jest istotna: silna pełność
+względem wszystkich modeli nie zachodzi względem
+samych modeli skończonych.
+
+\begin{przyklad}[Brak silnej pełności względem modeli skończonych]
+\label{ex:ncl-ipc-no-strong-finite-completeness}
+Dla parami różnych zmiennych $q,p_1,p_2,\ldots$ połóżmy
+\[
+ \Gamma=\bigcup_{i\geq1}
+ \{p_i\to p_{i+1},\ (p_{i+1}\to p_i)\to q\}.
+\]
+Wtedy $\Gamma\models_{\mathrm K,fin}q$, lecz
+$\Gamma\not\models_{\mathrm K}q$.
+\end{przyklad}
+\begin{proof}
+Przypuśćmy, że w modelu skończonym świat $w$ wymusza
+$\Gamma$, lecz nie wymusza $q$. Ograniczmy model do
+stożka górnego $W_w$ zgodnie ze
+Stwierdzeniem~\ref{prop:ncl-ipc-generated-submodel}.
+Niech $U_i=\{v\in W_w:v\Vdash p_i\}$.
+Z $w\Vdash p_i\to p_{i+1}$ wynika
+$U_i\subseteq U_{i+1}$. Inkluzja jest właściwa:
+gdyby $U_{i+1}\subseteq U_i$, mielibyśmy
+$w\Vdash p_{i+1}\to p_i$, a z drugiej przesłanki
+i zwrotności porządku wynikałoby $w\Vdash q$.
+Dostajemy nieskończony ściśle rosnący ciąg podzbiorów
+skończonego $W_w$, co jest niemożliwe.
+
+Dla kontrmodelu nieskończonego przyjmijmy korzeń $r$
+oraz parami nieporównywalne światy maksymalne
+$a_1,a_2,\ldots$ powyżej $r$. Niech
+\[
+ V(p_i)=\{a_1,\ldots,a_i\},\qquad
+ V(q)=\{a_j:j\geq1\}.
+\]
+Wszystkie wartościowania są domknięte ku górze.
+Inkluzje $V(p_i)\subseteq V(p_{i+1})$ dają
+$r\Vdash p_i\to p_{i+1}$.
+Świat $a_{i+1}$ świadczy o tym, że korzeń nie
+wymusza $p_{i+1}\to p_i$. Każdy świat różny od
+korzenia wymusza $q$, zatem
+$r\Vdash(p_{i+1}\to p_i)\to q$.
+Mamy jednak $r\not\Vdash q$. To daje kontrmodel,
+a poprawność IPC pokazuje również
+$\Gamma\nvdash_{\mathrm I}q$.
+\end{proof}
+Konsekwencja względem modeli skończonych nie jest
+więc zwarta: w przeciwnym razie skończony
+$\Gamma_0\subseteq\Gamma$ spełniałby
+$\Gamma_0\models_{\mathrm K,fin}q$, skąd przez
+Wniosek~\ref{cor:ncl-ipc-finite-completeness}
+wynikałoby $\Gamma_0\vdash_{\mathrm I}q$,
+wbrew monotoniczności i powyższemu kontrmodelowi.
+
+\subsection{Rozstrzygalność}
+
+\begin{twierdzenie}[Algorytm rozstrzygania IPC]
+\label{thm:ncl-ipc-decidability}
+W standardowej efektywnej prezentacji języka
+zdaniowego dla skończonego zbioru przesłanek $\Gamma$
+można rozstrzygnąć, czy
+$\Gamma\vdash_{\mathrm I}\varphi$.
+W szczególności zbiór twierdzeń IPC jest rozstrzygalny.
+\end{twierdzenie}
+\begin{proof}
+Obliczamy $\Sigma=\operatorname{Sub}
+(\Gamma\cup\{\varphi\})$, liczbę $s=|\Sigma|$,
+ograniczenie $N=2^s$ oraz skończony zbiór $P$
+zmiennych występujących w przesłankach i wniosku.
+
+Dla $n=1,\ldots,N$ rozpatrujemy wszystkie relacje
+binarne na zbiorze $\{1,\ldots,n\}$.
+Odrzucamy relacje, które nie są zwrotne,
+antysymetryczne i przechodnie, a następnie
+te porządki, które nie mają elementu najmniejszego.
+Dla każdego pozostałego porządku rozpatrujemy
+wszystkie przyporządkowania zmiennym z $P$
+zbiorów domkniętych ku górze; pozostałym zmiennym
+przypisujemy zbiór pusty.
+
+W każdym z otrzymanych modeli obliczamy rekurencyjnie
+wymuszanie wszystkich formuł z $\Sigma$,
+w kolejności od podformuł do formuł złożonych.
+Dla implikacji $\alpha\to\beta$ i świata $i$
+sprawdzamy wszystkie światy $j\geq i$:
+żaden nie może wymuszać $\alpha$ bez wymuszania
+$\beta$. Sprawdzamy, czy korzeń wymusza wszystkie
+przesłanki i nie wymusza wniosku.
+
+Jeśli znajdziemy taki model, poprawność IPC
+daje odpowiedź przeczącą. Jeśli wyczerpiemy wszystkie
+modele bez znalezienia kontrmodelu, odpowiadamy
+twierdząco na mocy
+Twierdzenia~\ref{thm:ncl-ipc-finite-model-property}.
+Każdy skończony model o co najwyżej $N$ światach
+można przenumerować do jednego z rozpatrywanych
+zbiorów nośnych, a wymuszanie rozważanych formuł
+nie zależy od wartościowania zmiennych spoza $P$,
+co wynika z indukcji po budowie formuły.
+Wszystkie pętle przebiegają skończone zbiory,
+więc algorytm zawsze się kończy.
+\end{proof}
+
+\begin{stwierdzenie}[Oszacowanie kosztu enumeracji]
+\label{prop:ncl-ipc-enumeration-complexity}
+Niech $s=|\Sigma|$, $k=|P|$ oraz $N=2^s$
+jak w dowodzie poprzedniego twierdzenia.
+Liczba rozpatrywanych par relacji i wartościowań
+przed odrzuceniem niedopuszczalnych kandydatów
+jest ograniczona przez
+\[
+ \sum_{n=1}^N 2^{n^2+kn}\leq N2^{N^2+kN}.
+\]
+Po jednorazowym wyznaczeniu listy różnych podformuł
+wraz z indeksami ich bezpośrednich argumentów,
+przy reprezentacji relacji i zbiorów wymuszania
+za pomocą tablic boolowskich koszt sprawdzenia
+kandydata można ograniczyć przez
+$O(n^3+(s+k)n^2)$ operacji boolowskich.
+\end{stwierdzenie}
+\begin{proof}
+Relacja na $n$ elementach jest podzbiorem
+zbioru $n^2$ uporządkowanych par, więc mamy
+$2^{n^2}$ możliwości. Każda z $k$ zmiennych
+może otrzymać jeden z $2^n$ podzbiorów,
+co daje $2^{kn}$ przyporządkowań.
+Każdy składnik sumy jest co najwyżej równy
+ostatniemu.
+
+Zwrotność i antysymetrię sprawdzamy w czasie
+$O(n^2)$, przechodniość przez sprawdzenie
+wszystkich trójek w czasie $O(n^3)$.
+Istnienie korzenia oraz domknięcie ku górze
+wartościowań wymagają odpowiednio $O(n^2)$
+i $O(kn^2)$ operacji.
+Dla każdej podformuły wystarczy obliczyć jej
+zbiór wymuszania w modelu. Koniunkcja i alternatywa
+wymagają $O(n)$ operacji, implikacja wymaga
+sprawdzenia co najwyżej $n^2$ par światów.
+Wartości $\bot$ i zmiennych są bezpośrednio
+dostępne. Ponieważ argumenty spójników zostały
+obliczone wcześniej, cały ten etap kosztuje
+$O(sn^2)$. Dodanie kosztów daje tezę.
+\end{proof}
+Otrzymujemy skończony, lecz bardzo kosztowny
+algorytm. Ponieważ $N=2^s$ i $k\leq s$,
+podane oszacowanie jest podwójnie wykładnicze
+w $s$. Nie jest to dolne ograniczenie złożoności
+problemu ani twierdzenie o optymalności algorytmu.
+Do praktycznego wyszukiwania dowodów potrzebne
+są bardziej oszczędne procedury.
+
+\section{Własność alternatywy}
+
+\begin{lemat}[Dołączanie wspólnego korzenia]
+\label{lem:ncl-ipc-root-amalgamation}
+Niech $\mathcal M_1=(W_1,\leq_1,V_1)$ i
+$\mathcal M_2=(W_2,\leq_2,V_2)$ będą modelami
+Kripkego o rozłącznych zbiorach światów.
+Istnieje model ukorzeniony $\mathcal M$ na zbiorze
+$W=W_1\cup W_2\cup\{r\}$, gdzie $r\notin W_1\cup W_2$,
+który zachowuje wymuszanie wszystkich formuł
+w światach obu modeli wyjściowych.
+\end{lemat}
+\begin{proof}
+Zachowujemy porządki $\leq_i$ w obrębie $W_i$,
+nie wprowadzamy porównań między elementami
+$W_1$ i $W_2$ oraz przyjmujemy $r\leq w$
+dla każdego $w\in W$. Jest to częściowy porządek:
+zwrotność i antysymetria wynikają z własności
+porządków wyjściowych oraz faktu, że żaden świat
+różny od $r$ nie jest mniejszy od $r$;
+przechodniość sprawdzamy w obrębie jednej
+składowej albo dla relacji zaczynającej się w $r$.
+Element $r$ jest najmniejszy.
+
+Dla każdej zmiennej $p$ przyjmujemy
+$V(p)=V_1(p)\cup V_2(p)$. Wartościowanie jest
+domknięte ku górze: jeżeli $w\in V(p)$, to
+$w$ należy do jednej ze składowych, a wszystkie
+jego rozszerzenia pozostają w tej samej składowej.
+Stosujemy domknięcie ku górze w odpowiednim
+modelu wyjściowym.
+
+Dla $w\in W_i$ zbiór jego rozszerzeń w nowym
+modelu jest identyczny jak w $\mathcal M_i$.
+Wymuszanie zmiennych i $\bot$ nie zmienia się,
+a indukcja po budowie formuły daje zachowanie
+koniunkcji, alternatywy i implikacji. W przypadku
+implikacji używamy właśnie równości zbiorów
+rozszerzeń i hipotezy indukcyjnej dla argumentów.
+\end{proof}
+Jeżeli nośniki modeli nie są rozłączne, najpierw
+zastępujemy je rozłącznymi kopiami, np.
+$W_i\times\{i\}$, przenosząc porządki i wartościowania
+wzdłuż naturalnych bijekcji. Indukcja po formułach
+pokazuje, że takie przeniesienie zachowuje wymuszanie.
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+\node[draw,rounded corners] (r) at (0,0) {$r$};
+\node[draw,rounded corners,minimum width=2.3cm,
+ minimum height=1.1cm,fill=blue!6] (m1) at (-2,2)
+ {$\mathcal M_1$};
+\node[draw,rounded corners,minimum width=2.3cm,
+ minimum height=1.1cm,fill=blue!6] (m2) at (2,2)
+ {$\mathcal M_2$};
+\draw[->,thick] (r)--(m1);
+\draw[->,thick] (r)--(m2);
+\end{tikzpicture}
+\end{center}
+Rysunek przedstawia składowe schematycznie:
+$r$ jest mniejszy od każdego świata w obu modelach,
+a światy z różnych składowych pozostają nieporównywalne.
+
+\begin{twierdzenie}[Własność alternatywy IPC]
+\label{thm:ncl-ipc-disjunction-property}
+Jeśli $\vdash_{\mathrm I}\alpha\vee\beta$, to
+$\vdash_{\mathrm I}\alpha$ lub $\vdash_{\mathrm I}\beta$.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy przeciwnie, że $\nvdash_{\mathrm I}\alpha$
+oraz $\nvdash_{\mathrm I}\beta$. Z pełności
+(Twierdzenie~\ref{thm:ncl-ipc-strong-completeness})
+otrzymujemy ukorzenione modele $\mathcal M_1$
+i $\mathcal M_2$ z korzeniami $w_1,w_2$ takimi, że
+$w_1\not\Vdash\alpha$ i $w_2\not\Vdash\beta$.
+Zastępujemy modele rozłącznymi kopiami i stosujemy
+Lemat~\ref{lem:ncl-ipc-root-amalgamation}.
+W otrzymanym modelu $r\leq w_1$ i $r\leq w_2$,
+a niewymuszanie odpowiednich formuł w $w_1,w_2$
+zostało zachowane.
+Gdyby $r\Vdash\alpha$, trwałość wymuszania
+(Lemat~\ref{lem:ncl-ipc-persistence}) dawałaby
+$w_1\Vdash\alpha$. Analogicznie $r\Vdash\beta$
+pociągałoby $w_2\Vdash\beta$.
+Zatem korzeń nie wymusza żadnego członu alternatywy,
+czyli $r\not\Vdash\alpha\vee\beta$.
+Poprawność IPC
+(Twierdzenie~\ref{thm:ncl-ipc-kripke-soundness})
+daje $\nvdash_{\mathrm I}\alpha\vee\beta$.
+Jest to kontrapozycja tezy.
+\end{proof}
+
+\begin{wniosek}[Skończone alternatywy i teoria twierdzeń]
+\label{cor:ncl-ipc-theorem-prime}
+Dla $n\geq1$ z
+$\vdash_{\mathrm I}\bigvee_{j=1}^n\alpha_j$
+wynika istnienie $j$ z $\vdash_{\mathrm I}\alpha_j$.
+Ponadto teoria wszystkich twierdzeń IPC,
+$\operatorname{Cn}(\varnothing)$, jest pierwsza.
+\end{wniosek}
+\begin{proof}
+Skończoną alternatywę definiujemy rekurencyjnie,
+dołączając kolejne człony z prawej strony.
+Dla $n=1$ teza jest oczywista, a krok indukcyjny
+wynika z Twierdzenia~\ref{thm:ncl-ipc-disjunction-property}
+i hipotezy indukcyjnej dla alternatywy $n-1$ członów.
+Z Lematu~\ref{lem:ncl-ipc-deductive-closure}
+zbiór twierdzeń jest teorią, z poprawności nie
+zawiera $\bot$, a własność alternatywy daje
+pierwszość.
+\end{proof}
+W szczególności model kanoniczny
+z Definicji~\ref{def:ncl-ipc-canonical-model}
+ma korzeń: każda teoria pierwsza zawiera wszystkie
+twierdzenia IPC, a ich zbiór sam jest teorią pierwszą.
+
+\begin{przyklad}[Ograniczenia własności alternatywy]
+\label{ex:ncl-ipc-relative-disjunction}
+Nie można zastąpić pustego zbioru przesłanek
+dowolnym zbiorem $\Gamma$ i wnioskować z
+$\Gamma\vdash_{\mathrm I}p\vee q$, że
+$\Gamma\vdash_{\mathrm I}p$ lub $\Gamma\vdash_{\mathrm I}q$.
+Dla różnych zmiennych $p,q$ wystarczy wziąć
+$\Gamma=\{p\vee q\}$. Konsekwencja z alternatywą
+jest natychmiastowa z reguły założenia.
+Model jednoświatowy z $p$ fałszywym i $q$ prawdziwym
+obala pierwszą z pozostałych konsekwencji,
+a model z zamienionymi wartościami obala drugą.
+Z poprawności żadna z nich nie jest dowodliwa.
+\end{przyklad}
+
+\subsection{Przesłanki Harropa i reguły dopuszczalne}
+
+\begin{definicja}[Formuły Harropa]
+\label{def:ncl-ipc-harrop}
+Klasę formuł Harropa definiujemy rekurencyjnie:
+zmienne zdaniowe i $\bot$ do niej należą; jeśli
+$H_1,H_2$ są formułami Harropa, to $H_1\wedge H_2$
+jest formułą Harropa; jeśli $H$ jest formułą Harropa,
+a $A$ dowolną formułą IPC, to $A\to H$ jest formułą
+Harropa. Nie dodajemy innych reguł konstrukcji.
+\end{definicja}
+Każda negacja jest formułą Harropa, niezależnie
+od budowy jej argumentu. Alternatywy mogą występować
+wewnątrz poprzedników implikacji.
+
+\begin{lemat}[Zachowanie formuł Harropa przy dołączaniu korzenia]
+\label{lem:ncl-ipc-harrop-joining}
+Niech modele w Lemacie~\ref{lem:ncl-ipc-root-amalgamation}
+mają korzenie $r_1,r_2$. Modyfikujemy wartościowanie
+w nowym korzeniu $r$, przyjmując
+\[
+ r\Vdash p\iff r_1\Vdash p\ \text{i}\ r_2\Vdash p
+\]
+dla każdej zmiennej $p$. Wówczas otrzymujemy model
+Kripkego zachowujący wymuszanie w obu składowych,
+a dla każdej formuły Harropa $H$ mamy
+\[
+ r\Vdash H\iff (r_1\Vdash H\ \text{i}\ r_2\Vdash H).
+\]
+\end{lemat}
+\begin{proof}
+Zmodyfikowane wartościowanie jest domknięte ku górze:
+jeśli $r$ wymusza zmienną, to wymuszają ją oba stare
+korzenie, a z trwałości wszystkie stare światy.
+W starych światach nie zmienia się wartościowanie ani
+zbiór rozszerzeń, więc indukcja jak w
+Lemacie~\ref{lem:ncl-ipc-root-amalgamation} zachowuje
+w nich wymuszanie wszystkich formuł.
+
+Kierunek prosty równoważności wynika z trwałości.
+Kierunek odwrotny dowodzimy indukcją po konstrukcji
+$H$. Dla zmiennych jest to definicja nowego
+wartościowania, dla $\bot$ założenie o wymuszaniu
+przez oba korzenie jest niemożliwe, a dla koniunkcji
+stosujemy hipotezę indukcyjną do obu członów.
+
+Niech $H=A\to H_0$, gdzie $H_0$ jest formułą
+Harropa, i załóżmy, że oba stare korzenie wymuszają
+$H$. Rozpatrzmy dowolny świat $v\geq r$ wymuszający
+$A$. Jeżeli $v$ jest starym światem, leży nad jednym
+ze starych korzeni, więc z trwałości i klauzuli
+implikacji wynika $v\Vdash H_0$.
+Jeżeli $v=r$, to oba stare korzenie wymuszają $A$
+przez trwałość, a z założenia wymuszają $A\to H_0$.
+Wymuszają zatem $H_0$, więc z hipotezy indukcyjnej
+$r\Vdash H_0$. W obu przypadkach otrzymujemy
+$v\Vdash H_0$, czyli $r\Vdash A\to H_0$.
+\end{proof}
+
+\begin{twierdzenie}[Własność alternatywy z przesłankami Harropa]
+\label{thm:ncl-ipc-harrop-disjunction}
+Jeżeli każda formuła zbioru $\Gamma$ jest formułą
+Harropa, to
+\[
+ \Gamma\vdash_{\mathrm I}\alpha\vee\beta
+ \quad\Longrightarrow\quad
+ \Gamma\vdash_{\mathrm I}\alpha\ \text{lub}\
+ \Gamma\vdash_{\mathrm I}\beta.
+\]
+Zbiór $\Gamma$ nie musi być skończony.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli żadna z dwóch konsekwencji po prawej stronie
+nie zachodzi, to silna pełność
+(Twierdzenie~\ref{thm:ncl-ipc-strong-completeness})
+daje dwa ukorzenione kontrmodele, których korzenie
+wymuszają wszystkie formuły z $\Gamma$ i nie
+wymuszają odpowiednio $\alpha$ i $\beta$.
+Po zastąpieniu modeli rozłącznymi kopiami
+i dołączeniu wspólnego korzenia zgodnie z
+Lematem~\ref{lem:ncl-ipc-harrop-joining}
+nowy korzeń wymusza wszystkie formuły z $\Gamma$.
+Nie wymusza żadnego członu alternatywy przez
+trwałość, więc nie wymusza także alternatywy.
+Poprawność IPC daje żądaną kontrapozycję.
+\end{proof}
+
+\begin{definicja}[Reguła dopuszczalna i reguła wyprowadzalna]
+\label{def:ncl-ipc-admissible-rule}
+Niech $A_1,\ldots,A_m,B$ będą formułami.
+Regułę $A_1,\ldots,A_m/B$ nazywamy dopuszczalną,
+jeżeli dla każdego jednolitego podstawienia $\sigma$
+formuł za zmienne zdaniowe zachodzi
+\[
+ \bigl(\forall i=1,\ldots,m\
+           \vdash_{\mathrm I}\sigma(A_i)\bigr)
+ \ \Longrightarrow\ \vdash_{\mathrm I}\sigma(B).
+\]
+Regułę nazywamy wyprowadzalną, jeżeli
+$\{A_1,\ldots,A_m\}\vdash_{\mathrm I}B$.
+\end{definicja}
+Każda reguła wyprowadzalna jest dopuszczalna:
+jednolite podstawienie w skończonym wyprowadzeniu
+zachowuje poprawność każdego zastosowania reguły
+dedukcji naturalnej, włącznie z zamykaniem założeń
+(przy zachowaniu oznaczeń ich wystąpień).
+Jeżeli podstawione przesłanki są twierdzeniami,
+reguła cięcia daje dowód podstawionego wniosku
+bez otwartych założeń. Obie użyte własności
+strukturalne udowodniono w
+Stwierdzeniu~\ref{prop:ncl-ipc-structural}.
+
+\begin{przyklad}[Reguła Harropa]
+\label{ex:ncl-ipc-harrop-rule}
+Reguła
+\[
+ \frac{\neg p\to(q\vee s)}
+ {(\neg p\to q)\vee(\neg p\to s)}
+\]
+jest dopuszczalna w IPC, lecz nie jest wyprowadzalna.
+\end{przyklad}
+\begin{proof}
+Niech $\sigma$ będzie dowolnym podstawieniem,
+a $A=\sigma(p)$, $B=\sigma(q)$ i $C=\sigma(s)$.
+Jeżeli $\vdash_{\mathrm I}\neg A\to(B\vee C)$,
+to $\{\neg A\}\vdash_{\mathrm I}B\vee C$.
+Ponieważ $\neg A$ jest formułą Harropa,
+Twierdzenie~\ref{thm:ncl-ipc-harrop-disjunction}
+daje $\{\neg A\}\vdash_{\mathrm I}B$
+lub $\{\neg A\}\vdash_{\mathrm I}C$. Wprowadzając
+implikację, a następnie alternatywę, otrzymujemy
+twierdzenie $(\neg A\to B)\vee(\neg A\to C)$.
+
+Dla niewyprowadzalności rozważamy ramę o korzeniu $r$
+i trzech nieporównywalnych światach maksymalnych
+$a,b,c$ nad $r$. Dla trzech różnych zmiennych $p,q,s$ przyjmujemy
+$V(p)=\{c\}$, $V(q)=\{a\}$, $V(s)=\{b\}$.
+Negację $\neg p$ wymuszają dokładnie $a,b$:
+korzeń ma rozszerzenie $c$ wymuszające $p$,
+a $c$ sam wymusza $p$.
+Oba światy wymuszające $\neg p$ wymuszają $q\vee s$,
+więc $r\Vdash\neg p\to(q\vee s)$.
+Jednak $b$ jest świadkiem niewymuszania
+$\neg p\to q$ w $r$, a $a$ świadkiem niewymuszania
+$\neg p\to s$ w $r$. Korzeń nie wymusza zatem
+wniosku reguły. Poprawność IPC wyklucza
+wyprowadzalność.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+\node[draw,rounded corners] (r) at (0,0) {$r$};
+\node[draw,rounded corners,fill=blue!8] (a) at (-2,1.8) {$a:\ q$};
+\node[draw,rounded corners,fill=blue!8] (b) at (0,1.8) {$b:\ s$};
+\node[draw,rounded corners,fill=blue!8] (c) at (2,1.8) {$c:\ p$};
+\draw[->,thick] (r)--(a);
+\draw[->,thick] (r)--(b);
+\draw[->,thick] (r)--(c);
+\end{tikzpicture}
+\end{center}
+Podpisy wskazują wymuszane zmienne spośród $p,q,s$;
+w korzeniu żadna z nich nie jest wymuszana.
+Rozróżnienie jest istotne: dopuszczalność pozwala
+przechodzić między twierdzeniami, ale sama w sobie
+nie uzasadnia zastosowania reguły pod dowolnymi
+otwartymi założeniami.
+
+\section{Translacja negatywna logiki klasycznej}
+
+\subsection{Klasyczne rozszerzenie dedukcji naturalnej}
+
+Do intuicjonistycznej dedukcji naturalnej dołączamy
+regułę eliminacji podwójnej negacji
+\[
+ \frac{\neg\neg\alpha}{\alpha}\ (\mathrm{DNE}).
+\]
+Otrzymaną relację dowodliwości oznaczamy
+$\vdash_{\mathrm C}$.
+
+\begin{stwierdzenie}[Równoważność dwóch klasycznych zasad]
+\label{prop:ncl-ipc-dne-lem-equivalence}
+Dołączenie do IPC reguły DNE jest równoważne
+dołączeniu wszystkich instancji schematu
+$\alpha\vee\neg\alpha$ jako dodatkowych aksjomatów.
+\end{stwierdzenie}
+\begin{proof}
+W Stwierdzeniu~\ref{prop:ncl-ipc-triple-negation}
+udowodniliśmy $\vdash_{\mathrm I}
+\neg\neg(\alpha\vee\neg\alpha)$.
+Zastosowanie DNE daje prawo wyłączonego środka.
+Odwrotnie, mając $\neg\neg\alpha$, rozpatrujemy
+dwa przypadki z aksjomatu $\alpha\vee\neg\alpha$.
+W pierwszym $\alpha$ jest założeniem;
+w drugim z $\neg\alpha$ i $\neg\neg\alpha$
+otrzymujemy $\bot$, a następnie $\alpha$
+przez $\bot E$. Reguła $\vee E$ daje $\alpha$,
+zamykając oba założenia przypadków.
+\end{proof}
+
+\begin{twierdzenie}[Pełność klasycznego rozszerzenia]
+\label{thm:ncl-ipc-classical-extension}
+Dla dowolnego zbioru formuł $\Gamma$ zachodzi
+$\Gamma\vdash_{\mathrm C}\varphi$ wtedy i tylko wtedy,
+gdy $\Gamma\models_{\mathrm{CL}}\varphi$.
+\end{twierdzenie}
+\begin{proof}
+Poprawność wynika z poprawności IPC dla modeli
+jednoświatowych i z klasycznej tablicy negacji,
+która uzasadnia DNE. Dokładniej, indukcję
+z dowodu Twierdzenia~\ref{thm:ncl-ipc-kripke-soundness}
+ograniczamy do takich modeli, a dodatkowy krok
+DNE jest poprawny dzięki klasycznej interpretacji
+ze Stwierdzenia~\ref{prop:ncl-ipc-maximal-classical}.
+
+Dla pełności, korzystając ze zwartości klasycznej
+konsekwencji (dwuelementowa macierz,
+Twierdzenie~\ref{thm:ncl-finite-matrix-compactness}),
+możemy założyć, że $\Gamma$ jest skończony.
+Niech $p_1,\ldots,p_n$ będą wszystkimi zmiennymi
+w przesłankach i wniosku.
+Dla klasycznego wartościowania $e$ tych zmiennych
+określamy zbiór literałów
+\[
+ L_e=\{p_j:e(p_j)=1\}\cup
+     \{\neg p_j:e(p_j)=0\}.
+\]
+Indukcja po budowie dowolnej formuły $\psi$
+o zmiennych spośród $p_1,\ldots,p_n$ daje:
+jeśli $e(\psi)=1$, to $L_e\vdash_{\mathrm I}\psi$;
+jeśli $e(\psi)=0$, to $L_e\vdash_{\mathrm I}\neg\psi$.
+Dla zmiennych jest to definicja $L_e$, a dla $\bot$
+korzystamy z $\vdash_{\mathrm I}\bot\to\bot$.
+
+Dla koniunkcji przy wartości $1$ oba argumenty
+są dowodliwe z $L_e$, więc stosujemy $\wedge I$.
+Przy wartości $0$ co najmniej jeden argument
+ma dowodliwą negację; dodatkowe założenie
+koniunkcji daje ten argument i sprzeczność.
+Zamykając założenie koniunkcji przez $\to I$,
+otrzymujemy jej negację.
+Dla alternatywy o wartości $1$ stosujemy
+$\vee I$ do prawdziwego argumentu. Jeśli
+alternatywa ma wartość $0$, negacje obu
+argumentów są dowodliwe; z dodatkowego
+założenia alternatywy przez $\vee E$ uzyskujemy
+$\bot$ i zamykamy to założenie.
+
+Dla implikacji o wartości $1$ albo jej następnik
+jest prawdziwy i można go dowieść niezależnie
+od dodatkowego założenia poprzednika, albo
+poprzednik jest fałszywy. W drugim przypadku
+z jego dowodliwej negacji i dodatkowego
+założenia poprzednika otrzymujemy $\bot$,
+a zatem następnik przez $\bot E$.
+W obu sytuacjach $\to I$ daje implikację.
+Jeśli implikacja ma wartość $0$, jej poprzednik
+jest prawdziwy, a następnik fałszywy.
+Dodatkowe założenie implikacji wraz z poprzednikiem
+daje następnik, sprzeczny z jego dowodliwą negacją.
+Zamknięcie założenia daje negację implikacji.
+Indukcja jest zakończona.
+
+Dla każdego $e$ otrzymujemy teraz
+$\Gamma\cup L_e\vdash_{\mathrm I}\varphi$.
+Jeśli wszystkie przesłanki mają wartość $1$,
+to $e(\varphi)=1$ z założonej konsekwencji,
+więc wystarczy powyższa indukcja.
+Jeżeli pewna $\gamma\in\Gamma$ ma wartość $0$,
+to $L_e\vdash_{\mathrm I}\neg\gamma$ i założenie
+$\gamma$ daje sprzeczność, a stąd $\varphi$.
+
+W klasycznym rozszerzeniu dysponujemy każdą
+alternatywą $p_j\vee\neg p_j$ na mocy
+Stwierdzenia~\ref{prop:ncl-ipc-dne-lem-equivalence}.
+Łączymy dowody odpowiadające wartościowaniom
+różniącym się tylko wartością $p_n$, stosując
+$\vee E$ do $p_n\vee\neg p_n$.
+Usuwa to literał dotyczący $p_n$.
+Powtarzamy procedurę dla $p_{n-1},\ldots,p_1$.
+Otrzymujemy $\Gamma\vdash_{\mathrm C}\varphi$.
+Jeśli $n=0$, jedyny zbiór literałów jest pusty,
+więc etap usuwania założeń nie jest potrzebny.
+\end{proof}
+
+\subsection{Formuły stabilne}
+
+\begin{definicja}[Stabilność względem podwójnej negacji]
+\label{def:ncl-ipc-stable}
+Formułę $\alpha$ nazywamy stabilną, jeśli
+$\vdash_{\mathrm I}\neg\neg\alpha\to\alpha$.
+\end{definicja}
+
+\begin{lemat}[Operacje zachowujące stabilność]
+\label{lem:ncl-ipc-stability-closure}
+Formuła $\bot$ oraz każda formuła $\neg\alpha$
+są stabilne. Jeżeli $\alpha,\beta$ są stabilne,
+to $\alpha\wedge\beta$ jest stabilna.
+Jeżeli $\beta$ jest stabilna, to
+$\alpha\to\beta$ jest stabilna dla dowolnej $\alpha$.
+\end{lemat}
+\begin{proof}
+Z $\neg\neg\bot=(\bot\to\bot)\to\bot$ oraz
+twierdzenia $\bot\to\bot$ otrzymujemy $\bot$,
+a następnie zamykamy założenie.
+Stabilność $\neg\alpha$ wynika z prawa potrójnej
+negacji (Stwierdzenie~\ref{prop:ncl-ipc-triple-negation}).
+
+Załóżmy $\neg\neg(\alpha\wedge\beta)$.
+Dodatkowe założenie $\neg\alpha$ prowadzi do
+$\neg(\alpha\wedge\beta)$: z hipotetycznej
+koniunkcji uzyskujemy $\alpha$ i sprzeczność.
+Zatem $\neg\alpha$ prowadzi do $\bot$,
+a zamknięcie tego założenia daje $\neg\neg\alpha$.
+Analogicznie otrzymujemy $\neg\neg\beta$.
+Stabilność obu argumentów daje $\alpha,\beta$,
+a wprowadzenie koniunkcji i zamknięcie
+pierwotnego założenia dowodzą tezy.
+
+Niech teraz $\beta$ będzie stabilna.
+Zakładamy $\neg\neg(\alpha\to\beta)$ oraz $\alpha$.
+Jeżeli dodatkowo założymy $\neg\beta$,
+to hipotetyczna implikacja $\alpha\to\beta$
+prowadzi do sprzeczności z $\neg\beta$.
+Otrzymujemy więc $\neg(\alpha\to\beta)$,
+sprzeczne z pierwszym założeniem.
+Zamknięcie $\neg\beta$ daje $\neg\neg\beta$,
+a stabilność $\beta$ daje $\beta$.
+Zamykamy kolejno $\alpha$ oraz
+$\neg\neg(\alpha\to\beta)$, co daje stabilność
+implikacji.
+\end{proof}
+
+\subsection{Translacja Gödla--Gentzena}
+
+\begin{definicja}[Translacja negatywna]
+\label{def:ncl-ipc-negative-translation}
+Każdej formule $\varphi$ przypisujemy formułę
+$\varphi^N$ określoną rekurencyjnie:
+\[
+\begin{aligned}
+ p^N&=\neg\neg p, & \bot^N&=\bot,\\
+ (\alpha\wedge\beta)^N&=\alpha^N\wedge\beta^N,&
+ (\alpha\to\beta)^N&=\alpha^N\to\beta^N,\\
+ (\alpha\vee\beta)^N&=\neg(\neg\alpha^N\wedge
+                                      \neg\beta^N).
+\end{aligned}
+\]
+W szczególności, rozwijając skrót negacji,
+otrzymujemy $(\neg\alpha)^N=\neg\alpha^N$.
+Dla zbioru formuł $\Gamma$ przyjmujemy
+$\Gamma^N=\{\gamma^N:\gamma\in\Gamma\}$.
+\end{definicja}
+Na mocy pierwszego intuicjonistycznego prawa
+de Morgana (Stwierdzenie~\ref{prop:ncl-ipc-demorgan})
+translacja alternatywy jest intuicjonistycznie
+równoważna $\neg\neg(\alpha^N\vee\beta^N)$.
+W przyjętej wersji każda przetłumaczona formuła
+po rozwinięciu skrótów nie zawiera alternatywy.
+
+\begin{lemat}[Stabilność i klasyczna równoważność translacji]
+\label{lem:ncl-ipc-negative-stability}
+Dla każdej formuły $\varphi$ zachodzą:
+\[
+ \vdash_{\mathrm I}\neg\neg\varphi^N\to\varphi^N,
+ \qquad
+ \models_{\mathrm{CL}}\varphi\leftrightarrow\varphi^N.
+\]
+\end{lemat}
+\begin{proof}
+Dla pierwszej tezy indukujemy po budowie formuły.
+Translacja zmiennej jest negacją formuły $\neg p$,
+a translacja $\bot$ jest stabilna na mocy
+Lematu~\ref{lem:ncl-ipc-stability-closure}.
+Koniunkcja i implikacja zachowują stabilność
+zgodnie z tym lematem, natomiast translacja
+alternatywy jest negacją, więc także jest stabilna.
+
+Dla drugiej tezy w każdym klasycznym wartościowaniu
+$p$ i $\neg\neg p$ mają tę samą wartość, a $\bot$
+nie zmienia się. Koniunkcja i implikacja zachowują
+równość wartości argumentów. Dla alternatywy
+korzystamy z klasycznej równoważności
+$\neg(\neg A\wedge\neg B)\leftrightarrow A\vee B$,
+wynikającej z tablic negacji i koniunkcji.
+Indukcja daje tezę.
+\end{proof}
+
+\begin{twierdzenie}[Translacja Gödla--Gentzena]
+\label{thm:ncl-ipc-godel-gentzen}
+Dla dowolnego zbioru formuł $\Gamma$ oraz formuły
+$\varphi$ zachodzi
+\[
+ \Gamma\models_{\mathrm{CL}}\varphi
+ \quad\Longleftrightarrow\quad
+ \Gamma^N\vdash_{\mathrm I}\varphi^N.
+\]
+\end{twierdzenie}
+\begin{proof}
+Z Twierdzenia~\ref{thm:ncl-ipc-classical-extension}
+wystarczy dla kierunku prostego wykazać, że
+$\Gamma\vdash_{\mathrm C}\varphi$ implikuje
+$\Gamma^N\vdash_{\mathrm I}\varphi^N$.
+Indukujemy po drzewie klasycznej dedukcji naturalnej.
+Otwarte założenia każdego podwyprowadzenia
+zastępujemy ich translacjami. Jeżeli różne
+formuły mają tę samą translację, zachowujemy
+oznaczenia zamykanych wystąpień założeń.
+
+Reguła założenia oraz reguły dotyczące
+$\wedge,\to,\bot$ przechodzą bezpośrednio
+w odpowiednie reguły intuicjonistyczne, ponieważ
+translacja zachowuje te spójniki i stałą.
+Reguła DNE przechodzi w wnioskowanie
+z $\neg\neg\alpha^N$ do $\alpha^N$, dozwolone
+na mocy Lematu~\ref{lem:ncl-ipc-negative-stability}.
+
+Dla wprowadzenia alternatywy mamy z indukcji
+wyprowadzenie $A=\alpha^N$ albo $B=\beta^N$.
+Zakładając $\neg A\wedge\neg B$, otrzymujemy
+odpowiednio $\neg A$ albo $\neg B$ oraz $\bot$.
+Zamykając to założenie, uzyskujemy
+$\neg(\neg A\wedge\neg B)$, czyli translację
+alternatywy.
+
+Pozostaje eliminacja alternatywy. Niech
+$A=\alpha^N$, $B=\beta^N$, $C=\gamma^N$,
+a $\Delta$ niech oznacza sumę zbiorów translacji
+założeń pozostających otwartych po regule.
+Hipoteza indukcyjna i monotoniczność dają
+\[
+ \Delta\vdash_{\mathrm I}\neg(\neg A\wedge\neg B),
+ \qquad
+ \Delta\cup\{A\}\vdash_{\mathrm I}C,\qquad
+ \Delta\cup\{B\}\vdash_{\mathrm I}C.
+\]
+Zakładamy tymczasowo $\neg C$.
+Z dodatkowego założenia $A$ otrzymujemy $C$
+z pierwszego dowodu przypadku, a następnie $\bot$.
+Zamykając $A$, otrzymujemy $\neg A$.
+Analogicznie z drugiego dowodu przypadku
+otrzymujemy $\neg B$.
+Koniunkcja $\neg A\wedge\neg B$ jest sprzeczna
+z translacją alternatywy, więc otrzymujemy $\bot$.
+Zamknięcie założenia $\neg C$ daje $\neg\neg C$
+przy założeniach z $\Delta$.
+Stabilność $C$ pozwala uzyskać $C$.
+Tak odtwarzamy regułę $\vee E$ dla translacji.
+Rozpatrzyliśmy wszystkie reguły rachunku klasycznego.
+
+Dla kierunku odwrotnego, jeżeli
+$\Gamma^N\vdash_{\mathrm I}\varphi^N$, to
+Wniosek~\ref{cor:ncl-ipc-classical-inclusion}
+daje $\Gamma^N\models_{\mathrm{CL}}\varphi^N$.
+Każde klasyczne wartościowanie nadaje formule
+i jej translacji tę samą wartość na mocy
+Lematu~\ref{lem:ncl-ipc-negative-stability}.
+Zatem każde klasyczne wartościowanie spełniające
+$\Gamma$ spełnia $\Gamma^N$, a więc $\varphi^N$
+i tym samym $\varphi$.
+\end{proof}
+
+\begin{przyklad}[Translacja prawa wyłączonego środka]
+\label{ex:ncl-ipc-negative-lem}
+Dla zmiennej $p$ mamy
+\[
+ (p\vee\neg p)^N=
+ \neg\bigl(\neg\neg\neg p\wedge
+                  \neg\neg\neg\neg p\bigr).
+\]
+Wzór wynika bezpośrednio z
+$p^N=\neg\neg p$, $(\neg p)^N=\neg\neg\neg p$
+i definicji translacji alternatywy.
+Wewnętrzna koniunkcja ma postać $D\wedge\neg D$
+dla $D=\neg\neg\neg p$. Jej negacja jest
+dowodliwa intuicjonistycznie: z koniunkcji
+otrzymujemy oba człony, z nich $\bot$, a następnie
+zamykamy założenie koniunkcji.
+Samo $p\vee\neg p$ nie jest twierdzeniem IPC
+(Przykład~\ref{ex:ncl-ipc-two-world-countermodel}).
+Translacja zachowuje więc klasyczną dowodliwość
+nie przez utożsamienie obu logik, lecz przez
+zmianę postaci formuł.
+\end{przyklad}
+
+\subsection{Twierdzenie Gliwienki}
+
+\begin{lemat}[Podwójna negacja w modelu skończonym]
+\label{lem:ncl-ipc-finite-maximal-negation}
+Jeżeli $\mathcal M$ jest skończonym modelem Kripkego
+i $w$ jest jego światem, to
+\[
+ w\Vdash\neg\neg\alpha
+ \iff \forall m\geq w\
+ (m\text{ maksymalny}\ \Longrightarrow\ m\Vdash\alpha).
+\]
+\end{lemat}
+\begin{proof}
+Jeżeli $w\Vdash\neg\neg\alpha$ i $m\geq w$ jest
+maksymalny, to ze Stwierdzenia~\ref{prop:ncl-ipc-kripke-negation}
+istnieje $u\geq m$ wymuszający $\alpha$. Maksymalność
+wymusza $u=m$.
+Odwrotnie, dla każdego $v\geq w$ w skończonym porządku
+istnieje element maksymalny $m\geq v$: zaczynając od
+$v$, przechodzimy do elementów ściśle większych, dopóki
+jest to możliwe. Proces musi się zakończyć i końcowy
+element jest maksymalny w całym porządku. Z założenia
+$m\Vdash\alpha$, więc ponownie stosujemy
+Stwierdzenie~\ref{prop:ncl-ipc-kripke-negation}.
+\end{proof}
+Dowód działa również w modelu nieskończonym, jeśli
+każdy świat ma rozszerzenie maksymalne. Bez tego
+warunku kierunek odwrotny może zawodzić:
+w ramie $(\mathbb N,\leq)$ z $V(p)=\varnothing$
+nie ma światów maksymalnych, więc warunek po prawej
+stronie równoważności zachodzi próżniowo w każdym
+świecie. Jednak żaden świat nie wymusza
+$\neg\neg p$, gdyż żadne jego rozszerzenie nie
+wymusza $p$
+(Stwierdzenie~\ref{prop:ncl-ipc-kripke-negation}).
+
+\begin{twierdzenie}[Twierdzenie Gliwienki dla rachunku zdań]
+\label{thm:ncl-ipc-glivenko}
+Dla każdej formuły zdaniowej $\varphi$ zachodzi
+\[
+ \models_{\mathrm{CL}}\varphi
+ \iff \vdash_{\mathrm I}\neg\neg\varphi.
+\]
+Ogólniej, dla dowolnego zbioru przesłanek $\Gamma$
+zachodzi
+\[
+ \Gamma\models_{\mathrm{CL}}\varphi
+ \iff \Gamma\vdash_{\mathrm I}\neg\neg\varphi
+ \iff \{\neg\neg\gamma:\gamma\in\Gamma\}
+                  \vdash_{\mathrm I}\neg\neg\varphi.
+\]
+\end{twierdzenie}
+\begin{proof}
+Załóżmy $\Gamma\models_{\mathrm{CL}}\varphi$.
+Ze zwartości klasycznej konsekwencji
+(Twierdzenie~\ref{thm:ncl-finite-matrix-compactness})
+wybieramy skończony $\Gamma_0\subseteq\Gamma$
+taki, że $\Gamma_0\models_{\mathrm{CL}}\varphi$.
+Rozważmy dowolny skończony model Kripkego i świat $w$
+wymuszający $\neg\neg\gamma$ dla każdego
+$\gamma\in\Gamma_0$. Z poprzedniego lematu każdy
+maksymalny świat $m\geq w$ wymusza wszystkie
+$\gamma\in\Gamma_0$. W takim świecie wymuszanie
+jest klasycznym wartościowaniem na mocy
+Stwierdzenia~\ref{prop:ncl-ipc-maximal-classical}.
+Klasyczna konsekwencja daje $m\Vdash\varphi$.
+Ponowne zastosowanie poprzedniego lematu daje
+$w\Vdash\neg\neg\varphi$.
+Pełność dla skończonych przesłanek względem modeli
+skończonych (Wniosek~\ref{cor:ncl-ipc-finite-completeness})
+daje
+\[
+ \{\neg\neg\gamma:\gamma\in\Gamma_0\}
+ \vdash_{\mathrm I}\neg\neg\varphi.
+\]
+Monotoniczność daje trzeci warunek twierdzenia.
+Ponieważ $\vdash_{\mathrm I}\gamma\to\neg\neg\gamma$
+(Przykład~\ref{ex:ncl-ipc-basic-proofs}), z każdej
+przesłanki $\gamma$ możemy wyprowadzić jej podwójną
+negację. Reguła cięcia daje drugi warunek.
+Odwrotnie, z $\Gamma\vdash_{\mathrm I}\neg\neg\varphi$
+wynika $\Gamma\models_{\mathrm{CL}}\neg\neg\varphi$
+na mocy Wniosku~\ref{cor:ncl-ipc-classical-inclusion}.
+Klasyczne wartościowania nie odróżniają $\varphi$
+od $\neg\neg\varphi$, więc otrzymujemy pierwszy warunek.
+Pierwsza równoważność twierdzenia jest szczególnym
+przypadkiem dla $\Gamma=\varnothing$.
+Nie można w tych równoważnościach usunąć podwójnej
+negacji wniosku: dla $\Gamma=\varnothing$ oraz
+$\varphi=p\vee\neg p$ otrzymalibyśmy wówczas
+niedowodliwą zasadę z
+Przykładu~\ref{ex:ncl-ipc-two-world-countermodel}.
+\end{proof}
+
+\begin{wniosek}[Porównanie dwóch translacji negatywnych]
+\label{cor:ncl-ipc-negative-translation-equivalence}
+W zdaniowym IPC dla każdej formuły $\varphi$ mamy
+\[
+ \vdash_{\mathrm I}\varphi^N\leftrightarrow\neg\neg\varphi.
+\]
+\end{wniosek}
+\begin{proof}
+W skończonym modelu Kripkego stabilność $\varphi^N$
+(Lemat~\ref{lem:ncl-ipc-negative-stability}) i poprawność
+dają $w\Vdash\varphi^N$ wtedy i tylko wtedy,
+gdy $w\Vdash\neg\neg\varphi^N$; kierunek prosty
+wynika z dowodliwości wprowadzenia podwójnej
+negacji (Przykład~\ref{ex:ncl-ipc-basic-proofs}).
+Z Lematu~\ref{lem:ncl-ipc-finite-maximal-negation}
+ostatni warunek oznacza wymuszanie $\varphi^N$ we
+wszystkich maksymalnych światach nad $w$.
+W każdym z nich $\varphi^N$ i $\varphi$ mają tę samą
+wartość klasyczną na mocy
+Lematu~\ref{lem:ncl-ipc-negative-stability} oraz
+Stwierdzenia~\ref{prop:ncl-ipc-maximal-classical}.
+Zatem warunek ten jest równoważny
+$w\Vdash\neg\neg\varphi$.
+Ponieważ równoważność wymuszania zachodzi
+w każdym świecie każdego modelu skończonego,
+oba kierunki implikacji są w tych modelach ważne.
+Z pełności względem modeli skończonych otrzymujemy
+dowody obu implikacji, a wprowadzenie koniunkcji
+daje tezę.
+\end{proof}
+Wyniki te dotyczą rachunku zdań. Nie przenosimy
+samego twierdzenia Gliwienki w tej postaci na
+rachunek predykatów: obecność kwantyfikatorów wymaga
+odrębnej analizy translacji.

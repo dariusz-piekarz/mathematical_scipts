@@ -1,0 +1,85 @@
+name: AT-DG-AG cross-volume dependency and label audit
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/algebraic_topology/**"
+      - "chapters/pl/differential_geometry_and_topology/**"
+      - "chapters/pl/algebraic_geometry/**"
+      - "shared/pl/**"
+      - "books/pl/algebraic_topology.tex"
+      - "books/pl/differential_geometry_and_topology.tex"
+      - "books/pl/algebraic_geometry.tex"
+      - "application/scripts/audit_cross_volume_geometry_topology.py"
+      - "application/tests/test_cross_volume_geometry_topology.py"
+      - ".github/workflows/global-geometry-topology-audit.yml"
+  workflow_dispatch:
+
+jobs:
+  audit-unmerged-volumes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify provenance and source-independent shared proof labels
+        run: python3 -m unittest discover -s application/tests -p 'test_cross_volume_geometry_topology.py' -v
+      - name: Compute deterministic three-book dependency and collision manifest
+        run: |
+          python3 application/scripts/audit_cross_volume_geometry_topology.py \
+            --out application/data/cross_volume_geometry_topology_audit.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          x = json.loads(Path("application/data/cross_volume_geometry_topology_audit.json").read_text(encoding="utf8"))
+          print("STRUCTURAL_SUMMARY:", json.dumps(x["summary"], ensure_ascii=False))
+          for a in x["cross_volume_conflicts"][:15]:
+              print("REVIEW_LABEL:", a["label"], a["source_files"])
+          PY
+      - name: Publish exact manifest for future reconciliation
+        uses: actions/upload-artifact@v4
+        with:
+          name: at-dg-ag-dependency-label-provenance
+          path: application/data/cross_volume_geometry_topology_audit.json
+          if-no-files-found: error
+
+  compile-AG-book-with-canonical-shared-proofs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install LaTeX and PDF inspection tools
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-pictures texlive-lang-polish texlive-fonts-recommended lmodern poppler-utils
+      - name: Compile AG-00–10 and verify shared theorem references
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error algebraic_geometry.tex > ag_cross_pass1.log
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error algebraic_geometry.tex > ag_cross_pass2.log
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error algebraic_geometry.tex > ag_cross_pass3.log
+          test -s algebraic_geometry.pdf
+          if grep -Eq 'There were undefined references|LaTeX Warning: Reference .* undefined|undefined citations' ag_cross_pass3.log; then
+            echo "Unresolved AG book references"; exit 1
+          fi
+          if grep -E 'Overfull \\hbox' ag_cross_pass3.log; then
+            echo "Overfull horizontal box in AG book"; exit 1
+          fi
+          if grep -Eq 'LaTeX Warning: Label\(s\) may have changed|Rerun to get cross-references right' ag_cross_pass3.log; then
+            echo "Cross-references still unstable in AG book"; exit 1
+          fi
+          pdfinfo algebraic_geometry.pdf | grep -E '^Pages:'
+      - name: Upload original independent AG PDF and TeX logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: algebraic-geometry-cross-volume-shared-proofs
+          path: |
+            books/pl/algebraic_geometry.pdf
+            books/pl/ag_cross_pass1.log
+            books/pl/ag_cross_pass2.log
+            books/pl/ag_cross_pass3.log
+          if-no-files-found: warn

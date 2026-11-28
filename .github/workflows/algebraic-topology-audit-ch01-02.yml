@@ -1,0 +1,57 @@
+name: Algebraic topology chapters 01-02 TeX audit
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/algebraic_topology/01-jezyk-i-podstawowe-konstrukcje-topologiczne.tex"
+      - "chapters/pl/algebraic_topology/02-podstawy-algebry-abstrakcyjnej-grupy-pierscienie-i-moduly.tex"
+      - ".github/workflows/algebraic-topology-audit-ch01-02.yml"
+  workflow_dispatch:
+
+jobs:
+  compile-two-chapters:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install LaTeX dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-pictures texlive-lang-polish texlive-fonts-recommended lmodern poppler-utils
+      - name: Prepare isolated two-chapter document using canonical preamble
+        working-directory: books/pl
+        run: |
+          sed '/^\\begin{document}/,$d' algebraic_topology.tex > audit_at_01_02.tex
+          cat >> audit_at_01_02.tex <<'TEX'
+          \begin{document}
+          \tableofcontents
+          \input{../../chapters/pl/algebraic_topology/01-jezyk-i-podstawowe-konstrukcje-topologiczne.tex}
+          \input{../../chapters/pl/algebraic_topology/02-podstawy-algebry-abstrakcyjnej-grupy-pierscienie-i-moduly.tex}
+          \end{document}
+          TEX
+      - name: Compile twice and validate links and overfull boxes
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error audit_at_01_02.tex > audit_at_01_02_pass1.log
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error audit_at_01_02.tex > audit_at_01_02_pass2.log
+          test -s audit_at_01_02.pdf
+          if grep -Eq 'There were undefined references|LaTeX Warning: Reference .* undefined|undefined citations' audit_at_01_02_pass2.log; then
+            echo "Unresolved reference or citation"; exit 1
+          fi
+          if grep -E 'Overfull \\hbox' audit_at_01_02_pass2.log; then
+            echo "Overfull TeX box found"; exit 1
+          fi
+          pdfinfo audit_at_01_02.pdf | grep -E '^Pages:'
+      - name: Upload PDF and compilation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: algebraic-topology-audit-ch01-02-pdf
+          path: |
+            books/pl/audit_at_01_02.pdf
+            books/pl/audit_at_01_02.log
+            books/pl/audit_at_01_02_pass1.log
+            books/pl/audit_at_01_02_pass2.log
+          if-no-files-found: warn

@@ -1,0 +1,7 @@
+# Rozdział 02 — audyt indywidualny 01
+
+2026-11-24. Rozdział 01 zamknięty raportem 71. Rozdział 02: źródło przed zmianami fae9c050126b9d5b163e5b197b4097650ea0cf13; poprawki commit a7af5fa6e5af0ade02a379e86e86a86586bafc52, blob d945a55f0d90e6fe375462f9e4982521b4d30cdd.
+
+Przejrzano całe źródło. Uzupełniono dowód acykliczności drzewa BFS: argument największego poziomu na hipotetycznym cyklu i dwóch rodziców, nie samo malejące h w kierunku korzenia. Uzupełniono uzasadnienie, że usunięcie krawędzi tworzy najwyżej dwie składowe wewnątrz pierwotnej składowej (droga od wierzchołka do końca usuwanej krawędzi). W lemacie rozkładu parzystego zbioru krawędzi sprecyzowano pierwszy powtórzony wierzchołek i wykluczenie cyklu długości 1/2. Poprawiono błędne sformułowanie o niepustym lesie: chodzi o las zawierający krawędź, nie las izolowanych wierzchołków. Definicja drzewa rozpinającego stosowalna do wszystkich skończonych grafów prostych, bez założenia spójności, która jest wnioskiem z istnienia. Jawna dziedzina rodzica, przynależność e do E(G) w dualności fundamentalnej, kwantyfikacja n,m,c; literówka dr łewo.
+
+Status OTWARTY. Następny audyt: konwencja przekroju nietrywialnego i grafu zerowego, szczegóły dowodów jednoznaczności dróg i poziomów BFS, sprawdzenie rysunków w pełnym PDF, niezależne testy baz cykli/przekrojów. Warto rozważyć przykład różnicy symetrycznej cykli dającej kilka rozłącznych cykli oraz las rozpinający i formułę dla niespójnych grafów. Nie rozpoczynać 03 przed stabilizacją 02. Nowe CI jeszcze niepotwierdzone.

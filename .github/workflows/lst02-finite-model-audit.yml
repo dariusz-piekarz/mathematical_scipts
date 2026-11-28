@@ -1,0 +1,77 @@
+name: LST-02 finite-model audit (diagnostic, no certificate)
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "application/docs/review_evidence/lst02_finite_model_audit.py"
+      - "application/docs/review_evidence/test_lst02_finite_model_audit.py"
+      - ".github/workflows/lst02-finite-model-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  finite-model-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exactly triggering source revision
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Run tests with and without Python assert optimization
+        working-directory: application/docs/review_evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s . -p 'test_lst02_*.py' -v
+          python -O -m unittest discover -s . -p 'test_lst02_*.py' -v
+          python -OO -m unittest discover -s . -p 'test_lst02_*.py' -v
+
+      - name: Compare evidence across normal, optimized and docstring-stripped Python
+        working-directory: application/docs/review_evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python lst02_finite_model_audit.py > finite-model-normal.json
+          python -O lst02_finite_model_audit.py > finite-model-optimized.json
+          python -OO lst02_finite_model_audit.py > finite-model-optimized-oo.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          names = (
+              "finite-model-normal.json",
+              "finite-model-optimized.json",
+              "finite-model-optimized-oo.json",
+          )
+          results = [json.loads(Path(name).read_text(encoding="utf-8")) for name in names]
+          first = results[0]
+          if any(result != first for result in results[1:]):
+              raise SystemExit("Audit results differ between Python optimization modes")
+          if first.get("certificate") is not False or first.get("status") != "passed":
+              raise SystemExit("Non-certification and successful status are mandatory")
+          if first.get("unary", {}).get("unary_predicates") != 31:
+              raise SystemExit("Incomplete unary audit")
+          if first.get("binary", {}).get("binary_predicates") != 689:
+              raise SystemExit("Incomplete binary audit")
+          if first.get("binary", {}).get("reverse_mixed_counterexamples") != 201:
+              raise SystemExit("Unexpected count of reverse-implication countermodels")
+          if first.get("negative_controls", {}).get("deliberately_false_claims_rejected") != 3:
+              raise SystemExit("Deliberately false statements were not rejected")
+          print("LST-02 diagnostic check PASS; 3 optimizer modes; certificate=false")
+          PY
+
+      - name: Upload non-certifying finite-model evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lst02-finite-model-audit
+          path: application/docs/review_evidence/finite-model-*.json
+          if-no-files-found: warn

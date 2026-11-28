@@ -1,0 +1,765 @@
+\chapter{Podstawy wymuszania i modele generyczne}\label{ch:forcing-foundations}
+\chaptermark{Podstawy wymuszania}
+\section{Motywacja i założenia metateoretyczne}
+W Rozdziale~\ref{ch:constructible} zbudowaliśmy uniwersum
+konstruowalne $L$, ograniczając zbiory do tych, które dają się
+zdefiniować na kolejnych etapach hierarchii. Wymuszanie służy
+odwrotnemu zadaniu: chcemy rozszerzyć model teorii mnogości
+o nowy obiekt, zachowując możliwie wiele aksjomatów.
+Najprostszy przykład polega na dodaniu ciągu binarnego
+przez stopniowe ustalanie jego skończonych fragmentów.
+
+\begin{uwaga}[Model wyjściowy]\label{rem:forcing-background}
+W rozdziale pracujemy w zewnętrznym uniwersum ZFC i zakładamy,
+że istnieje przeliczalny tranzytywny model zbiorowy
+$M\models\mathrm{ZFC}$. Przeliczalność jest własnością
+zewnętrzną, nie orzeczeniem modelu $M$ o sobie samym.
+Tranzytywność oznacza
+$\forall x\in M\ \forall y\in x\ (y\in M)$.
+Istnienie takiego modelu nie wynika z samej syntaktycznej
+niesprzeczności ZFC. W szczególności poniższych konstrukcji
+nie wolno bez dalszego argumentu traktować jako dowodu
+względnej niesprzeczności ZFC i niezależności CH.
+\end{uwaga}
+
+\section{Warunki i zgodność informacji}
+\begin{definicja}[Pojęcie wymuszania]\label{def:forcing-poset}
+\emph{Pojęciem wymuszania} nazywamy niepusty zbiór
+$\mathbb P$ z relacją $\leq$, która jest zwrotna
+i przechodnia. Napis $q\leq p$ oznacza, że $q$ jest
+\emph{silniejszym} warunkiem od $p$.
+Nie wymagamy antysymetrii ani istnienia
+elementu największego. Gdy istnieje warunek
+$1_{\mathbb P}$ spełniający
+$p\leq1_{\mathbb P}$ dla każdego $p\in\mathbb P$,
+nazywamy go \emph{warunkiem największym}.
+Jego istnienie będziemy zakładać osobno
+w definicjach nazw kanonicznych i rozszerzenia
+generycznego. W szczególności w poniższym lemacie
+Rasiowej--Sikorskiego wolno rozpatrywać
+pojęcia wymuszania bez
+elementu największego.
+\end{definicja}
+
+\begin{definicja}[Zgodność i antyłańcuch]\label{def:forcing-compatible}
+Niech $(\mathbb P,\leq)$ będzie pojęciem wymuszania.
+Warunki $p,q\in\mathbb P$ są zgodne, co zapisujemy
+$p\parallel q$, jeżeli istnieje $r\in\mathbb P$
+takie, że $r\leq p$ i $r\leq q$.
+W przeciwnym przypadku piszemy $p\perp q$.
+Zbiór $A\subseteq\mathbb P$ jest antyłańcuchem,
+gdy jego dwa różne elementy są niezgodne.
+\end{definicja}
+
+\begin{przyklad}[Skończone przybliżenia ciągu binarnego]
+\label{ex:cohen-poset}
+Niech $\operatorname{Fn}(\omega,2)$ oznacza zbiór
+wszystkich funkcji częściowych
+$p:F\to\{0,1\}$ o skończonej dziedzinie
+$F\subseteq\omega$. Definiujemy
+\[
+ \mathbb P_{\mathrm C}:=\operatorname{Fn}(\omega,2),
+ \qquad q\leq p\iff q\supseteq p.
+\]
+Największym elementem jest funkcja pusta.
+Jeżeli $M$ jest tranzytywnym modelem ZFC, to
+$\operatorname{Fn}(\omega,2)^M
+=\operatorname{Fn}(\omega,2)$ w otaczającym uniwersum.
+Istotnie, każda skończona funkcja
+$p\colon F\to\{0,1\}$ jest zbudowana ze
+skończenie wielu liczb naturalnych oraz
+uporządkowanych par; wszystkie te obiekty
+i ich skończony zbiór należą do $M$.
+W drugą stronę skończoność funkcji należącej
+do $M$ jest absolutna, ponieważ $M$
+jest tranzytywny. Dzięki tej obserwacji
+nie trzeba odróżniać warunków Cohena
+obliczanych w $M$ od warunków zewnętrznych.
+
+Warunki $p,q$ są zgodne wtedy i tylko wtedy,
+gdy zgadzają się na części wspólnej dziedzin:
+w takim przypadku ich suma jako funkcji
+$p\cup q$ jest wspólnym wzmocnieniem.
+Na przykład
+$\{(0,0),(3,1)\}$ i $\{(1,1),(3,1)\}$
+są zgodne, natomiast
+$\{(3,0)\}\perp\{(3,1)\}$.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+ level distance=14mm,
+ sibling distance=39mm,
+ every node/.style={draw,rounded corners,inner sep=3pt,font=\small},
+ edge from parent/.style={draw,-{Stealth[length=1.8mm]}}
+]
+\node {$\varnothing$}
+ child {node {$\{(0,0)\}$}
+   child {node {$\{(0,0),(1,0)\}$}}
+   child {node {$\{(0,0),(1,1)\}$}}}
+ child {node {$\{(0,1)\}$}
+   child {node {$\{(0,1),(1,0)\}$}}
+   child {node {$\{(0,1),(1,1)\}$}}};
+\end{tikzpicture}
+\caption{Sześć przykładowych wzmocnień warunków Cohena.
+Kierunek w dół oznacza silniejsze warunki.}
+\label{fig:forcing-cohen-tree}
+\end{figure}
+
+\begin{lemat}[Monotoniczność niezgodności]
+\label{lem:forcing-compatibility}
+Niech $(\mathbb P,\leq)$ będzie pojęciem wymuszania.
+Dla dowolnych $p,q,r,p',q'\in\mathbb P$ zachodzą
+następujące implikacje:
+\[
+ p\perp q\text{ i }r\leq p\ \Longrightarrow\ r\perp q,
+ \qquad
+ p\parallel q,\ p\leq p',\ q\leq q'
+ \ \Longrightarrow\ p'\parallel q'.
+\]
+\end{lemat}
+\begin{proof}
+Gdyby $r\parallel q$, wspólne wzmocnienie
+$s\leq r,q$ spełniałoby też $s\leq p,q$,
+wbrew niezgodności. Jeśli natomiast $s\leq p,q$
+oraz $p\leq p'$ i $q\leq q'$, to z przechodniości
+$s\leq p',q'$, co dowodzi drugiego stwierdzenia.
+\end{proof}
+
+\section{Filtry i zbiory gęste}
+\begin{definicja}[Filtr]\label{def:forcing-filter}
+Filtr w pojęciu wymuszania $(\mathbb P,\leq)$ to niepusty
+zbiór $G\subseteq\mathbb P$, który jest domknięty
+ku słabszym warunkom i skierowany ku silniejszym:
+\begin{enumerate}
+\item jeśli $p\in G$ i $p\leq q$, to $q\in G$;
+\item jeśli $p,q\in G$, istnieje $r\in G$ z $r\leq p,q$.
+\end{enumerate}
+\end{definicja}
+
+\begin{definicja}[Gęstość]\label{def:forcing-dense}
+Niech $(\mathbb P,\leq)$ będzie pojęciem wymuszania.
+Zbiór $D\subseteq\mathbb P$ jest \emph{gęsty},
+jeśli $\forall p\in\mathbb P\;\exists q\in D\ (q\leq p)$.
+Nazywamy go \emph{otwartym w porządku},
+jeżeli $p\in D$ i $q\leq p$ implikują $q\in D$.
+\end{definicja}
+
+\begin{lemat}[Otwarte domknięcie zbioru gęstego]
+\label{lem:forcing-open-dense}
+Niech $(\mathbb P,\leq)$ będzie pojęciem
+wymuszania i $D\subseteq\mathbb P$ zbiorem gęstym.
+Wtedy
+$D^\downarrow=\{p\in\mathbb P:
+\exists q\in D\ (p\leq q)\}$
+jest gęsty i otwarty w porządku.
+Dla dowolnego filtru $G\subseteq\mathbb P$ zachodzi
+$G\cap D\ne\varnothing$ wtedy i tylko wtedy,
+gdy $G\cap D^\downarrow\ne\varnothing$.
+\end{lemat}
+\begin{proof}
+Jeśli $p\in\mathbb P$, gęstość daje
+$q\in D$ z $q\leq p$. Zatem $q\in D^\downarrow$,
+więc jest gęsty. Gdy $r\leq p\in D^\downarrow$
+oraz $p\leq q\in D$, to $r\leq q$, więc
+$r\in D^\downarrow$. Jedna implikacja dotycząca
+filtrów wynika z $D\subseteq D^\downarrow$.
+Dla drugiej, z $p\in G\cap D^\downarrow$
+wybieramy $q\in D$ z $p\leq q$; wtedy
+$q\in G\cap D$, ponieważ filtr jest
+domknięty ku słabszym warunkom.
+\end{proof}
+
+\begin{definicja}[Filtr generyczny]\label{def:forcing-generic}
+Niech $M$ będzie tranzytywnym modelem ZFC,
+$(\mathbb P,\leq)\in M$ pojęciem wymuszania.
+Filtr $G\subseteq\mathbb P$ nazywamy
+\emph{$M$-generycznym}, jeśli dla każdego
+gęstego $D\subseteq\mathbb P$ należącego do
+$M$ zachodzi $G\cap D\ne\varnothing$.
+Nie wymagamy $G\in M$. Gęstość $D\in M$ jest
+absolutna, gdyż wszystkie kwantyfikatory
+biegną po $\mathbb P\subseteq M$.
+\end{definicja}
+
+\begin{lemat}[Generyczność rozstrzyga zgodność]
+\label{lem:forcing-generic-decision}
+Niech $M$ będzie tranzytywnym modelem ZFC,
+$(\mathbb P,\leq)\in M$ pojęciem wymuszania,
+a $G\subseteq\mathbb P$ filtrem $M$-generycznym.
+Wtedy dla każdego $p\in\mathbb P$ dokładnie
+jedna z możliwości zachodzi:
+$p\in G$ albo istnieje $q\in G$ niezgodny z $p$.
+\end{lemat}
+\begin{proof}
+Z tranzytywności $p\in M$. Zbiór
+$D_p=\{q\in\mathbb P:q\leq p\text{ lub }q\perp p\}$
+należy do $M$ i jest gęsty. Dla każdego $r$
+albo $r\perp p$, albo istnieje wspólne
+wzmocnienie $s\leq r,p$. Generyczność
+daje $q\in G\cap D_p$. Jeśli $q\leq p$,
+to $p\in G$ przez domknięcie ku słabszym
+warunkom. W drugim przypadku $q\perp p$.
+Oba przypadki nie mogą zachodzić razem,
+gdyż dwa elementy filtru są zgodne.
+\end{proof}
+
+\section{Lemat Rasiowej--Sikorskiego}
+\begin{twierdzenie}[Lemat Rasiowej--Sikorskiego]
+\label{thm:rasiowa-sikorski}
+Niech $(\mathbb P,\leq)$ będzie dowolnym
+niepustym pojęciem wymuszania, niekoniecznie
+przeliczalnym, $(D_n)_{n\in\omega}$ ciągiem
+gęstych podzbiorów $\mathbb P$, a
+$p_*\in\mathbb P$. W ZFC istnieje
+filtr $G\subseteq\mathbb P$ zawierający
+$p_*$ i przecinający każdy zbiór $D_n$.
+\end{twierdzenie}
+\begin{proof}
+Na mocy aksjomatu wyboru ustalmy
+\emph{dobre uporządkowanie} $\prec$ zbioru
+$\mathbb P$; nie zakładamy jego przeliczalności.
+Definiujemy $p_0=p_*$, a następnie $p_{n+1}$
+jako $\prec$-najmniejszy element niepustego
+zbioru $\{q\in D_n:q\leq p_n\}$.
+Gęstość $D_n$ zapewnia niepustość tego zbioru.
+Dzięki ustalonemu dobremu uporządkowaniu
+rekurencja jednoznacznie określa ciąg
+$(p_n)_{n\in\omega}$ z $p_{n+1}\leq p_n$.
+Niech
+\[
+ G=\{q\in\mathbb P:\exists n\in\omega\ (p_n\leq q)\}.
+\]
+Zbiór zawiera $p_0$, więc jest niepusty.
+Jeżeli $q\in G$ i $q\leq r$,
+to $p_n\leq q\leq r$ dla pewnego $n$,
+czyli $r\in G$. Jeśli $q,r\in G$
+i $p_n\leq q$, $p_m\leq r$, to
+$p_{\max(m,n)}\in G$ jest wspólnym
+wzmocnieniem obu warunków. Zatem $G$
+jest filtrem. Ponieważ $p_{n+1}\in G\cap D_n$,
+przecina wszystkie wskazane zbiory.
+\end{proof}
+
+\begin{wniosek}[Filtr generyczny nad modelem przeliczalnym]
+\label{cor:countable-generic}
+Jeżeli $M$ jest przeliczalnym tranzytywnym
+modelem ZFC, $(\mathbb P,\leq)\in M$
+i $p_*\in\mathbb P$, to istnieje zewnętrzny
+filtr $M$-generyczny zawierający $p_*$.
+\end{wniosek}
+\begin{proof}
+Ponieważ $M$ jest zewnętrznie przeliczalny,
+również rodzina
+\[
+ \mathcal D_M=
+ \{D\in M:D\subseteq\mathbb P
+              \text{ i }D\text{ jest gęsty}\}
+\]
+jest zewnętrznie przeliczalna.
+Nie jest pusta, gdyż
+$\mathbb P\in\mathcal D_M$.
+Wyliczmy ją \emph{w otaczającym uniwersum}
+jako $(D_n)_{n\in\omega}$,
+powtarzając elementy, jeśli rodzina jest skończona.
+Twierdzenie~\ref{thm:rasiowa-sikorski}
+daje filtr zawierający $p_*$ i przecinający
+każdy $D\in\mathcal D_M$, a więc $M$-generyczny.
+Nie trzeba ponownie zakładać przeliczalności
+samego $\mathbb P$; w tym zastosowaniu wynika ona
+już z tranzytywności i przeliczalności $M$.
+\end{proof}
+
+\begin{uwaga}[Zewnętrzna perspektywa]
+\label{rem:forcing-external-generic}
+Wyliczenie gęstych zbiorów należących do $M$
+jest dokonane na zewnątrz i nie musi należeć
+do samego $M$. Nie dowodzi więc istnienia
+generycznego filtru jako elementu $M$.
+Nie wymaga też przecięcia wszystkich
+gęstych zbiorów zewnętrznego uniwersum.
+W przypadku wymuszania Cohena
+otrzymamy poniżej przykład, w którym
+\emph{żaden} filtr $M$-generyczny
+nie może być elementem $M$:
+gdyby $G\in M$, to także $\bigcup G\in M$
+z aksjomatu sumy, podczas gdy
+poniższe twierdzenie o ciągu Cohena
+wykazuje przeciwną własność.
+\end{uwaga}
+
+\section{Generyczny ciąg Cohena}
+\begin{lemat}[Rozstrzygnięcie kolejnych współrzędnych]
+\label{lem:cohen-coordinates}
+Niech $\mathbb P_{\mathrm C}=\operatorname{Fn}(\omega,2)$
+będzie pojęciem wymuszania Cohena, uporządkowanym
+przez odwrotne zawieranie funkcji.
+Dla każdego $n\in\omega$ zbiór
+\[
+ D_n=\{p\in\operatorname{Fn}(\omega,2):
+                         n\in\operatorname{dom}p\}
+\]
+jest gęsty i otwarty w porządku.
+\end{lemat}
+\begin{proof}
+Jeśli $n\in\operatorname{dom}p$,
+to sam $p$ należy do $D_n$.
+W przeciwnym razie $q=p\cup\{(n,0)\}$
+spełnia $q\leq p$ i $q\in D_n$.
+Wzmocnienie warunku nie usuwa wartości
+już określonych, co dowodzi otwartości
+w porządku.
+\end{proof}
+
+\begin{twierdzenie}[Generyczny ciąg Cohena]
+\label{thm:cohen-new-real}
+Niech $M$ będzie przeliczalnym
+tranzytywnym modelem ZFC,
+$\mathbb P_{\mathrm C}=\operatorname{Fn}(\omega,2)$
+pojęciem wymuszania obliczanym w $M$
+i $G$ filtrem $M$-generycznym.
+Wtedy
+\[
+ c_G=\bigcup G:\omega\longrightarrow\{0,1\}
+\]
+jest funkcją całkowitą i $c_G\notin M$.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok pierwszy: $c_G$ jest funkcją.}
+Dla $p,q\in G$ skierowanie filtru daje
+$r\in G$ z $r\leq p,q$. Ponieważ
+$r$ przedłuża obie funkcje, $p,q$
+zgadzają się na wspólnej dziedzinie.
+Dotyczy to \emph{każdej} pary warunków z $G$,
+więc także suma całej rodziny,
+$c_G=\bigcup G$, jest funkcją.
+
+\emph{Krok drugi: dziedziną jest $\omega$.}
+Dla każdego $n\in\omega$ zbiór $D_n$
+z Lematu~\ref{lem:cohen-coordinates}
+należy do $M$ przez wyróżnianie,
+ponieważ $n\in\omega\subseteq M$.
+Jest też gęsty, więc istnieje
+$p_n\in G\cap D_n$. Zatem
+$n\in\operatorname{dom}c_G$.
+Wynika stąd, że $c_G$ jest
+funkcją całkowitą na $\omega$.
+
+\emph{Krok trzeci: $c_G$ jest nowy.}
+Ustalmy dowolny ciąg $x\in M$
+o dziedzinie $\omega$ i wartościach
+w $\{0,1\}$. Definiujemy
+\[
+ E_x=\{p\in\mathbb P_{\mathrm C}:
+   \exists n\in\operatorname{dom}p\
+                          (p(n)\ne x(n))\}.
+\]
+Zbiór $E_x$ należy do $M$, ponieważ
+$x\in M$ i jest określony przez wyróżnianie.
+Jest gęsty: dla dowolnego $p$
+wybieramy najmniejsze
+$n\notin\operatorname{dom}p$ i określamy
+$q=p\cup\{(n,1-x(n))\}$.
+Wtedy $q\leq p$ i $q\in E_x$.
+Generyczność daje $q\in G\cap E_x$,
+zatem $c_G(n)\ne x(n)$ dla pewnego $n$.
+Ponieważ $x$ było dowolne, $c_G\notin M$.
+\end{proof}
+
+\begin{przyklad}[Odtwarzanie filtru z generycznego ciągu]
+\label{ex:cohen-filter-recovery}
+Dla filtru $G$ z
+Twierdzenia~\ref{thm:cohen-new-real}
+zachodzi dokładna równość
+\[
+ G=\{p\in\mathbb P_{\mathrm C}:p\subseteq c_G\}.
+\]
+Zawieranie w jedną stronę wynika
+z definicji sumy. Dla drugiej
+ustalmy skończony $p\subseteq c_G$.
+Dla każdego $n\in\operatorname{dom}p$
+istnieje $q_n\in G$ określający
+wartość $c_G(n)$; w szczególności
+$q_n(n)=p(n)$. Skończenie wiele
+zastosowań skierowania filtru
+daje wspólne wzmocnienie
+$r\in G$ wszystkich $q_n$.
+Wtedy $r\leq p$ i stąd $p\in G$.
+Dla pustego $p$ wystarcza fakt,
+że filtr zawiera warunek największy.
+\end{przyklad}
+
+\section{Gęste podporządki i równoważne opisy}
+\begin{definicja}[Gęsty podporządek]
+\label{def:forcing-dense-suborder}
+Niech $(\mathbb P,\leq)$ będzie pojęciem wymuszania.
+Gdy $\mathbb Q\subseteq\mathbb P$,
+relacja na $\mathbb Q$ jest
+ograniczeniem relacji na $\mathbb P$
+oraz dla każdego $p\in\mathbb P$
+istnieje $q\in\mathbb Q$ z $q\leq p$,
+mówimy, że $\mathbb Q$ jest
+\emph{gęstym podporządkiem} $\mathbb P$.
+\end{definicja}
+
+\begin{twierdzenie}[Filtr z gęstego podporządku]
+\label{thm:forcing-dense-suborder}
+Niech $M$ będzie tranzytywnym modelem ZFC,
+$(\mathbb P,\leq)\in M$, $\mathbb Q\in M$
+gęstym podporządkiem $\mathbb P$,
+a $H\subseteq\mathbb Q$ filtrem
+$M$-generycznym w $\mathbb Q$.
+Wtedy
+\[
+ G=\{p\in\mathbb P:\exists q\in H\ (q\leq p)\}
+\]
+jest filtrem $M$-generycznym w $\mathbb P$.
+\end{twierdzenie}
+\begin{proof}
+Z niepustości $H$ wynika niepustość $G$.
+Jeśli $p\in G$ i $p\leq r$, to
+$q\in H$ świadczący o $p\in G$
+spełnia również $q\leq r$.
+Dla $p,r\in G$ wybierzmy
+$q_p,q_r\in H$ z $q_p\leq p$
+i $q_r\leq r$. Skierowanie $H$
+daje $s\in H$ z $s\leq q_p,q_r$,
+a więc $s\in G$ oraz $s\leq p,r$.
+Pokazuje to, że $G$ jest filtrem.
+
+Niech $D\in M$ będzie gęsty
+w $\mathbb P$. Wówczas
+\[
+ D_{\mathbb Q}=
+ \{q\in\mathbb Q:\exists p\in D\ (q\leq p)\}
+\]
+należy do $M$ przez wyróżnianie.
+Dla dowolnego $q_0\in\mathbb Q$
+gęstość $D$ daje $p\in D$ z
+$p\leq q_0$, a gęstość $\mathbb Q$
+w $\mathbb P$ daje $q\in\mathbb Q$
+z $q\leq p$. Stąd
+$q\leq q_0$ i $q\in D_{\mathbb Q}$.
+Zatem $D_{\mathbb Q}$ jest gęsty
+w $\mathbb Q$, więc istnieje
+$q\in H\cap D_{\mathbb Q}$.
+Wybierzmy $p\in D$ z $q\leq p$.
+Wtedy $p\in G\cap D$, co dowodzi
+generyczności $G$.
+\end{proof}
+
+\begin{przyklad}[Drzewo $2^{<\omega}$ jako podporządek]
+\label{ex:forcing-binary-tree}
+Zbiór $2^{<\omega}$ skończonych
+ciągów binarnych utożsamiamy
+z funkcjami o dziedzinie
+$\{0,\dots,n-1\}$ dla pewnego $n$.
+Z porządkiem przez przedłużanie
+jest on gęstym podporządkiem
+$\operatorname{Fn}(\omega,2)$.
+Rzeczywiście, dla dowolnego
+skończonego warunku $p$ ustalamy
+$N$ większe od wszystkich argumentów
+z $\operatorname{dom}p$ (gdy jest pusta,
+bierzemy $N=0$). Funkcję $p$
+uzupełniamy zerami na brakujących
+współrzędnych mniejszych od $N$,
+otrzymując $s\in2^N$ z $s\supseteq p$.
+Twierdzenie~\ref{thm:forcing-dense-suborder}
+przenosi generyczny filtr z drzewa
+na pełne wymuszanie Cohena.
+\end{przyklad}
+
+\section{Nazwy wymuszania}
+Przyszły obiekt rozszerzenia możemy opisywać
+przed wyborem filtru za pomocą nazw. Nazwa jest
+zbiorem par: jej pierwsza współrzędna to
+inna nazwa, a druga to warunek mówiący,
+kiedy dany element ma należeć do interpretacji.
+
+\begin{definicja}[Hierarchia nazw]\label{def:forcing-names}
+Niech $\mathbb P$ będzie pojęciem wymuszania.
+Dla każdej liczby porządkowej $\alpha$ określamy
+rekurencyjnie
+\[
+ N_0=\varnothing,\qquad
+ N_{\alpha+1}=\mathcal P(N_\alpha\times\mathbb P),
+ \qquad
+ N_\lambda=\bigcup_{\beta<\lambda}N_\beta
+ \quad(\lambda\text{ graniczna}).
+\]
+Zbiór $\tau$ jest \emph{nazwą $\mathbb P$},
+jeżeli $\tau\in N_\alpha$ dla pewnego $\alpha$.
+Każdy element nazwy ma postać $(\sigma,p)$,
+gdzie $p\in\mathbb P$ i $\sigma$
+jest nazwą z wcześniejszego poziomu.
+\end{definicja}
+
+\begin{uwaga}[Ranga nazwy i ograniczoność rang]
+\label{rem:forcing-name-rank}
+Hierarchii $N_\alpha$ nie utożsamiamy
+z hierarchią von Neumanna $V_\alpha$.
+Jest ona rosnąca: $N_\alpha\subseteq N_\beta$
+dla $\alpha\leq\beta$, co wynika
+przez indukcję pozaskończoną z definicji.
+Jeżeli $\tau\in N_{\alpha+1}$, to
+$\tau\subseteq N_\alpha\times\mathbb P$;
+pierwsze współrzędne par w $\tau$
+należą zatem do wcześniejszego poziomu.
+
+Uzasadnijmy również, że dowolny
+\emph{zbiór} par $(\sigma,p)$,
+gdzie $\sigma$ jest nazwą, a $p\in\mathbb P$,
+sam jest nazwą. Każda nazwa $\sigma$
+ma najmniejszy indeks $\rho(\sigma)$
+spełniający $\sigma\in N_{\rho(\sigma)}$.
+Schemat zastępowania zapewnia, że
+indeksy $\rho(\sigma)$ pierwszych
+współrzędnych rozważanych par
+tworzą zbiór liczb porządkowych.
+Wybierając liczbę porządkową $\alpha$
+większą od wszystkich tych indeksów,
+otrzymujemy dla rozważanego zbioru
+$X\subseteq N_\alpha\times\mathbb P$,
+a więc $X\in N_{\alpha+1}$.
+W szczególności jest to uzasadnienie,
+że $\dot G$ i $\dot C$ są nazwami,
+a nie tylko zbiorami par nazw i warunków.
+
+Wyjaśnijmy też \emph{absolutność bycia nazwą}.
+Jeżeli $M$ jest tranzytywnym modelem ZFC,
+$\mathbb P\in M$ i $\tau\in M$, to
+$\tau$ jest nazwą w otaczającym uniwersum
+dokładnie wtedy, gdy $M$ uznaje ją za nazwę.
+Dowód prowadzimy indukcyjnie po zwykłej randze
+zbioru $\tau$. Dla każdej pary
+$(\sigma,p)\in\tau$ jej pierwszy składnik
+$\sigma$ należy do $M$ i ma mniejszą
+rangę niż $\tau$; warunek $p\in\mathbb P$
+jest absolutny. Z założenia indukcyjnego
+bycie nazwą dla tych $\sigma$ jest absolutne.
+Jeśli wszystkie są nazwami, model $M$
+zbiera przez zastępowanie ich wewnętrzne
+rangi nazw i wybiera wspólny poziom
+$N_\alpha^M$, do którego należą.
+Otrzymuje wtedy
+$\tau\in N_{\alpha+1}^M$.
+Implikacja odwrotna wynika z tej samej
+indukcji i z tranzytywności $M$.
+Wobec tego w definicji $M[G]$
+wybór nazw spośród elementów $M$
+nie ukrywa niezgodności między
+wewnętrznym i zewnętrznym pojęciem nazwy.
+\end{uwaga}
+
+\begin{definicja}[Wartość nazwy]\label{def:forcing-valuation}
+Niech $(\mathbb P,\leq)$ będzie pojęciem wymuszania.
+Dla nazwy $\tau$ względem $\mathbb P$
+i filtru $G\subseteq\mathbb P$
+jej \emph{interpretację} definiujemy rekurencyjnie:
+\[
+ \tau^G=
+ \{\sigma^G:\exists p\in G\
+                      ((\sigma,p)\in\tau)\}.
+\]
+\end{definicja}
+
+\begin{lemat}[Istnienie i jednoznaczność interpretacji]
+\label{lem:forcing-valuation-exists}
+Niech $(\mathbb P,\leq)$ będzie pojęciem
+wymuszania, $\tau$ nazwą $\mathbb P$,
+a $G\subseteq\mathbb P$ filtrem.
+Wtedy $\tau^G$ istnieje i jest
+jednoznacznie określonym zbiorem.
+\end{lemat}
+\begin{proof}
+Indukujemy po najmniejszym poziomie
+hierarchii nazw zawierającym $\tau$.
+Dla nazwy pustej wartość jest pusta.
+Jeżeli $\tau\in N_{\alpha+1}$,
+każda pierwsza współrzędna $\sigma$
+pary z $\tau$ należy do $N_\alpha$,
+a jej wartość istnieje z założenia
+indukcyjnego. Wyróżnianie wybiera
+pary $(\sigma,p)\in\tau$ z $p\in G$,
+a zastępowanie zbiera wartości $\sigma^G$.
+Jednoznaczność wynika z tego samego
+wzoru. Na etapie granicznym każda nazwa
+pochodzi z wcześniejszego poziomu.
+\end{proof}
+
+\begin{definicja}[Nazwa kanoniczna]
+\label{def:forcing-check}
+Zakładając, że $\mathbb P$ ma największy
+warunek $1_{\mathbb P}$, dla każdego zbioru $x$
+określamy przez rekurencję po przynależności
+\[
+ \check x=\{(\check y,1_{\mathbb P}):y\in x\}.
+\]
+Jeśli $x,\mathbb P\in M$ i $M$ jest
+tranzytywnym modelem ZFC, to $\check x\in M$:
+ta sama rekurencja jest wykonywana w $M$,
+a jej rozwiązanie jest jednoznaczne.
+\end{definicja}
+
+\begin{lemat}[Interpretacja nazwy kanonicznej]
+\label{lem:forcing-check-evaluation}
+Niech $\mathbb P$ będzie pojęciem wymuszania
+z największym warunkiem $1_{\mathbb P}$.
+Dla każdego zbioru $x$ i każdego
+filtru $G\subseteq\mathbb P$ zachodzi
+$(\check x)^G=x$.
+\end{lemat}
+\begin{proof}
+Każdy niepusty filtr zawiera
+$1_{\mathbb P}$, bo z $p\in G$
+i $p\leq1_{\mathbb P}$ otrzymujemy
+$1_{\mathbb P}\in G$.
+Indukcja po przynależności pozwala
+założyć $(\check y)^G=y$ dla $y\in x$.
+Wówczas
+\[
+ (\check x)^G
+ =\{(\check y)^G:y\in x\}
+ =\{y:y\in x\}=x.
+\]
+\end{proof}
+
+\begin{definicja}[Nazwa filtru]\label{def:forcing-dot-g}
+Dla pojęcia wymuszania $\mathbb P$
+z największym warunkiem definiujemy
+\[
+ \dot G=\{(\check p,p):p\in\mathbb P\}.
+\]
+Jest to nazwa $\mathbb P$: jest zbiorem
+par nazw kanonicznych i warunków,
+a ich rangi są wspólnie ograniczone,
+ponieważ $\mathbb P$ jest zbiorem.
+\end{definicja}
+\begin{lemat}[Wartość nazwy filtru]
+\label{lem:forcing-dot-g-evaluation}
+Niech $\mathbb P$ będzie pojęciem wymuszania
+z największym warunkiem $1_{\mathbb P}$,
+a $G\subseteq\mathbb P$ filtrem.
+Wtedy $(\dot G)^G=G$.
+\end{lemat}
+\begin{proof}
+Korzystając z
+Lematu~\ref{lem:forcing-check-evaluation},
+obliczamy
+\[
+ (\dot G)^G
+ =\{(\check p)^G:p\in G\}
+ =\{p:p\in G\}=G.
+\]
+\end{proof}
+
+\section{Rozszerzenie generyczne}
+\begin{definicja}[Model zinterpretowanych nazw]
+\label{def:forcing-extension}
+Niech $M$ będzie tranzytywnym modelem ZFC,
+$(\mathbb P,\leq)\in M$ pojęciem wymuszania
+z największym warunkiem, a $G$ filtrem
+$M$-generycznym. Definiujemy
+\[
+ M[G]=\{\tau^G:\tau\in M,\
+                    \tau\text{ jest nazwą }\mathbb P\}.
+\]
+Jest to na razie \emph{zbiór interpretacji nazw},
+bez założenia, że spełnia wszystkie aksjomaty ZFC.
+\end{definicja}
+
+\begin{twierdzenie}[Pierwsze własności rozszerzenia generycznego]
+\label{thm:forcing-extension-first}
+Niech $M$ będzie tranzytywnym modelem ZFC,
+$(\mathbb P,\leq)\in M$ pojęciem wymuszania
+z największym warunkiem, a $G\subseteq\mathbb P$
+filtrem $M$-generycznym. Wówczas zbiór
+$M[G]$ z Definicji~\ref{def:forcing-extension}
+jest tranzytywny i spełnia
+$M\subseteq M[G]$ oraz $G\in M[G]$.
+\end{twierdzenie}
+\begin{proof}
+\emph{Istnienie.}
+Ponieważ $M$ jest zbiorem, można
+wyróżnić jego elementy będące nazwami.
+Lemat~\ref{lem:forcing-valuation-exists}
+oraz zastępowanie zapewniają, że
+wartości tych nazw tworzą zbiór $M[G]$.
+
+\emph{Tranzytywność.}
+Niech $x=\tau^G\in M[G]$ oraz $y\in x$.
+Istnieją $\sigma$ i $p\in G$ takie, że
+$(\sigma,p)\in\tau$ oraz $y=\sigma^G$.
+Ponieważ $\tau\in M$ i $M$ jest
+tranzytywny, para $(\sigma,p)$ należy
+do $M$, a więc również $\sigma\in M$.
+Dlatego $y=\sigma^G\in M[G]$.
+
+\emph{Model wyjściowy.}
+Dla $x\in M$ nazwa $\check x$
+należy do $M$. Na mocy
+Lematu~\ref{lem:forcing-check-evaluation}
+mamy $x=(\check x)^G\in M[G]$.
+
+\emph{Filtr generyczny.}
+Wewnątrz $M$ funkcja
+$p\mapsto\check p$ jest definiowalna,
+więc zastępowanie daje
+$\dot G=\{(\check p,p):p\in\mathbb P\}\in M$.
+Lemat~\ref{lem:forcing-dot-g-evaluation}
+zapewnia $G=(\dot G)^G\in M[G]$.
+\end{proof}
+
+\begin{przyklad}[Nazwa generycznego podzbioru $\omega$]
+\label{ex:forcing-cohen-name}
+Niech $M$ będzie przeliczalnym tranzytywnym
+modelem ZFC, niech
+$\mathbb P_{\mathrm C}=\operatorname{Fn}(\omega,2)\in M$
+będzie pojęciem wymuszania Cohena,
+a $G\subseteq\mathbb P_{\mathrm C}$ filtrem
+$M$-generycznym. Określmy
+\[
+ \dot C=\{(\check n,p):
+ p\in\mathbb P_{\mathrm C},\
+ n\in\operatorname{dom}p,\ p(n)=1\}.
+\]
+Jest to rzeczywiście nazwa: pierwsze
+współrzędne par są nazwami $\check n$,
+a ich rangi tworzą zbiór i są ograniczone
+przez pewną liczbę porządkową.
+Nazwa należy do $M$ przez zastępowanie
+i wyróżnianie, wykonane wewnątrz $M$.
+Jej wartość względem
+filtru $M$-generycznego $G$ jest równa
+\[
+ (\dot C)^G
+ =\{n\in\omega:\exists p\in G\
+    (n\in\operatorname{dom}p,\ p(n)=1)\}
+ =\{n:c_G(n)=1\}.
+\]
+Gdyby ten zbiór należał do $M$,
+to w $M$ istniałaby również jego funkcja
+charakterystyczna, równa $c_G$.
+Byłoby to sprzeczne z
+Twierdzeniem~\ref{thm:cohen-new-real}.
+Tak więc stary model zawiera nazwę
+nowego zbioru, ale nie sam zbiór.
+\end{przyklad}
+
+\begin{uwaga}[Granica zakresu bieżącego rozdziału]
+\label{rem:forcing-next}
+Udowodniliśmy tranzytywność $M[G]$,
+zawieranie $M\subseteq M[G]$ oraz
+przynależność $G\in M[G]$, lecz
+\emph{nie udowodniliśmy} jeszcze
+$M[G]\models\mathrm{ZFC}$.
+Do tego będą potrzebne: relacja
+$p\Vdash\varphi$, lemat definiowalności,
+lemat prawdy i pełne twierdzenie
+o wymuszaniu. Dopiero wówczas wolno
+prowadzić argumenty o względnej
+niesprzeczności hipotezy continuum
+i jej negacji.
+\end{uwaga}

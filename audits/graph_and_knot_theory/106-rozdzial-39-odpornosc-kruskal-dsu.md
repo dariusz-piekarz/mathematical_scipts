@@ -1,0 +1,5 @@
+# Rozdział 39 — audyt indywidualny 02
+
+2026-11-24. CI audytu 105: 45379097062 finite-models 138393114304 i chapter-pdf 138393115113 success; pełna książka 45379060121 success. Log potwierdza 4166 grafów enumerowanych (korekta liczby 4167 z raportu 105), 490 grafów losowanych oraz PASS TG39-CERT-01.
+
+Źródło 0ea5629eb64573a22a158311d7be1f2cafe617e4, blob 7438d5b838cf5846e4a2b7465d6275fbcf9b1ca0: dziesięć korekt, w tym samodzielne założenia i osiąganie minimum luki, porównanie wszystkich trzech drzew w przykładzie granicznym, indukcja Kruskala po wszystkich rozpatrzonych krawędziach i monotoniczność składowych, końcowa równość lasów, skończoność zbioru DSU, dowód zachowania podziału z przypadkiem tego samego korzenia oraz jawny koszt find/union. TG39-GAP-01 (620985ba03fbbbcbd568d84f17d1e24e0a7e4d2d): dokładna arytmetyka przez podwojenie wag, enumeracja wierzchołków pudeł perturbacji ściśle wewnątrz granicy oraz przykład utraty jednoznaczności na granicy. Nowe CI jeszcze niepotwierdzone. Zakres bez rozszerzeń. Status OTWARTY; następnie kontrola CI, pozostałych dowodów i PDF.

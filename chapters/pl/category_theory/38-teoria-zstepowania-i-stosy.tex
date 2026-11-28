@@ -1,0 +1,591 @@
+\section{Teoria zstępowania i stosy}\label{cat:sec:descent-stacks}
+
+Warunek snopu z rozdziału~\ref{cat:sec:grothendieck-topologies} pozwala sklejać lokalne sekcje, które są równe na przecięciach. Gdy lokalne dane są obiektami kategorii, np. przestrzeniami wektorowymi, wiązkami lub modułami, zamiast równości obiektów na przecięciach naturalnie pojawiają się izomorfizmy. Izomorfizmy te muszą spełniać warunek zgodności na potrójnych przecięciach. Teoria zstępowania (ang. \emph{descent theory}) bada, kiedy takie dane pochodzą od jednego obiektu globalnego i w jakim sensie obiekt ten jest jednoznaczny.
+
+Korzystamy z języka fibracji Grothendiecka i pseudofunktorów z rozdziału~\ref{cat:sec:cartesian-fibrations}. Najpierw przedstawimy konstrukcję dla ścisłych funktorów kontrawariantnych; następnie uwzględnimy izomorfizmy koherencji i warunek stosu na miejscu Grothendiecka.
+
+\subsection{Dane zstępowania dla rodziny morfizmów}
+
+Niech $\mathcal B$ będzie kategorią mającą iloczyny włókniste i niech $F:\mathcal B^{\mathrm{op}}\to\cat{Cat}$ będzie funktorem. Pracujemy w ustalonych uniwersach i przyjmujemy aksjomat wyboru; w szczególności gdy wybieramy faktoryzację dla każdego elementu sita, sito traktujemy jako małe w odpowiednim uniwersum. Dla $f:V\to U$ piszemy $f^*=F(f):F(U)\to F(V)$. W tym podrozdziale mamy ścisłe równości $\id_U^*=\id_{F(U)}$ i $(fg)^*=g^*f^*$; nie zakładamy ich dla ogólnych pseudofunktorów.
+
+Ustalmy rodzinę $\mathcal U=(u_i:U_i\to U)_{i\in I}$ indeksowaną zbiorem $I$. Kładziemy $U_{ij}=U_i\times_U U_j$ oraz $U_{ijk}=U_i\times_U U_j\times_U U_k$, z wybranymi iloczynami włóknistymi i ich rzutami. Symbole $\pi_1,\pi_2$ oznaczają rzuty z $U_{ij}$ na odpowiednio pierwszy i drugi czynnik, rozróżniając pozycje nawet wtedy, gdy $i=j$. Na $U_{ijk}$ symbole $\pi_{12},\pi_{23},\pi_{13}$ oznaczają rzuty do odpowiednich podwójnych iloczynów, a $\pi_1,\pi_2,\pi_3$ rzuty do pojedynczych czynników. Równości między złożeniami tych rzutów wynikają z ich własności uniwersalnych.
+
+\begin{definicja}[Dane zstępowania]\label{cat:def:descent-datum}
+Danymi zstępowania dla $F$ względem rodziny $\mathcal U$ nazywamy rodzinę obiektów $x_i\in F(U_i)$ oraz izomorfizmów
+\[
+ \theta_{ij}:\pi_2^*x_j\longrightarrow\pi_1^*x_i
+ \qquad\text{w } F(U_{ij}),
+\]
+spełniających warunek diagonalny $\delta_i^*\theta_{ii}=\id_{x_i}$, gdzie $\delta_i:U_i\to U_{ii}$ jest diagonalą, oraz warunek kocyklu
+\[
+ \pi_{12}^*\theta_{ij}\circ\pi_{23}^*\theta_{jk}
+ =\pi_{13}^*\theta_{ik}\qquad\text{w }F(U_{ijk}).
+\]
+Morfizm między danymi $(x_i,\theta_{ij})$ i $(y_i,\psi_{ij})$ jest rodziną $h_i:x_i\to y_i$, dla której
+\[
+ \psi_{ij}\circ\pi_2^*h_j=\pi_1^*h_i\circ\theta_{ij}
+ \qquad\text{w }F(U_{ij}).
+\]
+\end{definicja}
+
+Warunek kocyklu jest dobrze określony: po użyciu równości złożeń rzutów mamy diagram w $F(U_{ijk})$
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (z) at (0,0) {$\pi_3^*x_k$};
+ \node (y) at (5,0) {$\pi_2^*x_j$};
+ \node (x) at (2.5,-2) {$\pi_1^*x_i$};
+ \draw[->] (z)--node[above] {$\pi_{23}^*\theta_{jk}$}(y);
+ \draw[->] (y)--node[right] {$\pi_{12}^*\theta_{ij}$}(x);
+ \draw[->] (z)--node[left] {$\pi_{13}^*\theta_{ik}$}(x);
+\end{tikzpicture}
+\end{center}
+Wymagamy jego przemienności. Dla przejścia z $U_{ij}$ do $U_{ji}$ oznaczmy przez $s_{ij}$ izomorfizm zamieniający czynniki.
+
+\begin{stwierdzenie}[Odwrócenie izomorfizmu przejścia]\label{cat:prop:descent-inverse}
+Z warunków diagonalnego i kocyklu wynika
+\[
+ s_{ij}^*\theta_{ji}=\theta_{ij}^{-1}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Niech $a:U_{ij}\to U_{iji}$ będzie morfizmem o składowych $(\pi_1,\pi_2,\pi_1)$. Istnieje i jest jednoznaczny przez własność uniwersalną iloczynu włóknistego, gdyż wszystkie składowe mają to samo złożenie do $U$. Mamy $\pi_{12}a=\id_{U_{ij}}$, $\pi_{23}a=s_{ij}$ i $\pi_{13}a=\delta_i\pi_1$. Stosując $a^*$ do warunku kocyklu dla $(i,j,i)$, otrzymujemy
+\[
+ \theta_{ij}\circ s_{ij}^*\theta_{ji}
+ =\pi_1^*\delta_i^*\theta_{ii}
+ =\id_{\pi_1^*x_i}.
+\]
+Ponieważ $\theta_{ij}$ jest izomorfizmem, złożenie z jego odwrotnością daje tezę.
+\end{proof}
+
+Dane zstępowania wraz z powyższymi morfizmami tworzą kategorię, którą oznaczamy $\operatorname{Desc}_F(\mathcal U)$. Identyczności spełniają warunek morfizmu. Dla dwóch kolejnych morfizmów $h:(x,\theta)\to(y,\psi)$ i $g:(y,\psi)\to(z,\omega)$ mamy
+\[
+ \omega_{ij}\pi_2^*(g_jh_j)
+ =\pi_1^*g_i\,\psi_{ij}\pi_2^*h_j
+ =\pi_1^*(g_ih_i)\theta_{ij},
+\]
+więc złożenie składowe jest morfizmem danych zstępowania. Aksjomaty kategorii wynikają z aksjomatów w kategoriach $F(U_i)$.
+
+\begin{stwierdzenie}[Funktor porównawczy]\label{cat:prop:descent-comparison}
+Istnieje funktor
+\[
+ D_{\mathcal U}:F(U)\longrightarrow\operatorname{Desc}_F(\mathcal U),
+\]
+przypisujący obiektowi $x$ rodzinę $(u_i^*x)_i$ z identycznościowymi izomorfizmami przejścia, a morfizmowi $h$ rodzinę $(u_i^*h)_i$.
+\end{stwierdzenie}
+\begin{proof}
+Równość $u_i\pi_1=u_j\pi_2$ daje ścisłą równość $\pi_1^*u_i^*x=\pi_2^*u_j^*x$, więc wskazane identyczności są poprawnie określone. Warunki diagonalny i kocyklu stają się równaniami identyczności. Dla $h:x\to y$ mamy $\pi_1^*u_i^*h=\pi_2^*u_j^*h$, co daje warunek morfizmu danych zstępowania. Zachowywanie identyczności i składania wynika z funktorialności wszystkich $u_i^*$.
+\end{proof}
+
+\begin{definicja}[Zstępowanie i efektywne zstępowanie]\label{cat:def:effective-descent}
+Rodzinę $\mathcal U$ nazywamy rodziną zstępowania dla $F$, gdy $D_{\mathcal U}$ jest pełny i wierny, a rodziną efektywnego zstępowania, gdy $D_{\mathcal U}$ jest równoważnością kategorii. Dane zstępowania nazywamy efektywnymi, gdy są izomorficzne z obrazem pewnego obiektu $F(U)$.
+\end{definicja}
+
+Pełność i wierność wyrażają jednoznaczne sklejanie morfizmów; istotna surjektywność wyraża możliwość sklejenia obiektów. Jeżeli $D_{\mathcal U}$ jest pełny i wierny, to dla dwóch obiektów globalnych $x,y$ oraz ustalonego izomorfizmu $\varphi:D_{\mathcal U}x\to D_{\mathcal U}y$ istnieje dokładnie jeden izomorfizm $h:x\to y$ indukujący $\varphi$. Istnienie i jednoznaczność morfizmu wynikają z pełności i wierności. Stosując pełność do $\varphi^{-1}$, otrzymujemy $g:y\to x$; wierność daje $gh=\id_x$ i $hg=\id_y$. Nie twierdzimy, że $x,y$ są dosłownie tym samym obiektem.
+
+\subsection{Związek z warunkiem snopu}
+
+Dla zbioru $S$ oznaczamy przez $\operatorname{Disc}(S)$ kategorię dyskretną, której obiektami są elementy $S$, a jedynymi morfizmami są identyczności.
+
+\begin{stwierdzenie}[Snop jako przypadek dyskretny]\label{cat:prop:descent-discrete-sheaf}
+Niech $H:\mathcal B^{\mathrm{op}}\to\Set$ będzie presnopem i $F=\operatorname{Disc}\circ H$. Wówczas $D_{\mathcal U}$ jest równoważnością dokładnie wtedy, gdy funkcja
+\[
+ H(U)\longrightarrow
+ \left\{(x_i)_i\in\prod_i H(U_i):
+            \pi_1^*x_i=\pi_2^*x_j\text{ dla wszystkich }i,j\right\},
+ \qquad x\longmapsto(u_i^*x)_i
+\]
+jest bijekcją.
+\end{stwierdzenie}
+\begin{proof}
+W kategorii dyskretnej izomorfizm między dwoma obiektami istnieje dokładnie wtedy, gdy są one równe, i jest wówczas jedyny. Dlatego izomorfizmy $\theta_{ij}$ istnieją dokładnie dla rodzin spełniających wskazane równania; warunki diagonalny i kocyklu są wtedy automatyczne. Podobnie morfizm danych zstępowania istnieje tylko pomiędzy równymi rodzinami i jest identycznością. Kategoria danych zstępowania jest zatem dyskretną kategorią zgodnych rodzin. Funktor między kategoriami dyskretnymi jest pełny i wierny dokładnie wtedy, gdy funkcja na obiektach jest injekcją, oraz istotnie surjektywny dokładnie wtedy, gdy jest surjekcją. Zastosowanie tych kryteriów do $D_{\mathcal U}$ daje tezę.
+\end{proof}
+
+Jeżeli rodzina $\mathcal U$ generuje sito pokrywające $S$ na $U$, zgodne rodziny w powyższym wzorze odpowiadają naturalnym transformacjom $S\to H$. Istotnie, dla morfizmu $f:V\to U$ w $S$ wybieramy faktoryzację $f=u_i g$ i przypisujemy mu $g^*x_i$. Jeśli również $f=u_jh$, to istnieje morfizm $(g,h):V\to U_{ij}$; zastosowanie jego transportu do równania zgodności daje $g^*x_i=h^*x_j$. Przypisanie jest niezależne od faktoryzacji i naturalne względem prekompozycji, ponieważ $H$ jest funktorem. Odwrotnie, naturalna transformacja przypisuje $u_i$ element $x_i$; jej naturalność dla obu rzutów z $U_{ij}$ daje równanie zgodności. Obie konstrukcje są wzajemnie odwrotne. Jest to dokładnie warunek snopu z definicji~\ref{cat:def:site-sheaf}.
+
+\subsection{Efektywne zstępowanie zbiorów wzdłuż surjekcji}
+
+Rozważmy funkcję $u:V\to U$ i kategorię $\Set/U$ obiektów nad $U$. Jej obiekt $A\to U$ ma włókna $A_t$ dla $t\in U$, a morfizmy są funkcjami zachowującymi włókna. Równoważnie korzystamy z kategorii rodzin zbiorów $\Set^U$, gdzie $U$ jest kategorią dyskretną. Funktor $F$ przypisuje zbiorowi $U$ kategorię $\Set^U$, a funkcji $u:V\to U$ funktor prekompozycji, czyli $(u^*A)_v=A_{u(v)}$. W tym modelu transporty są ścisłe. Identyfikację z kategorią przekrojową otrzymujemy przez sumę rozłączną rodziny i przez branie włókien; obie konstrukcje są wzajemnie odwrotne z dokładnością do naturalnych izomorfizmów.
+
+Dane zstępowania dla rodziny złożonej z $u$ to zbiory $A_v$ oraz bijekcje
+\[
+ \theta_{vw}:A_w\longrightarrow A_v
+ \qquad(u(v)=u(w)),
+\]
+takie że $\theta_{vv}=\id$ i $\theta_{vw}\theta_{wz}=\theta_{vz}$, gdy $u(v)=u(w)=u(z)$.
+
+\begin{twierdzenie}[Efektywne zstępowanie zbiorów]\label{cat:thm:set-effective-descent}
+Dla funkcji $u:V\to U$ funktor porównawczy dla powyższego funktora $F$ jest równoważnością kategorii wtedy i tylko wtedy, gdy $u$ jest surjekcją.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy, że $u$ jest surjekcją. Dla danych zstępowania tworzymy zbiór $E=\coprod_{v\in V}A_v$, którego elementy zapisujemy jako $(v,a)$, $a\in A_v$. Definiujemy relację
+\[
+ (v,a)\sim(w,b)\quad\Longleftrightarrow\quad
+ u(v)=u(w)\ \text{ i }\ a=\theta_{vw}(b).
+\]
+Relacja jest zwrotna przez warunek diagonalny. Jeżeli $(v,a)\sim(w,b)$, to $b=\theta_{wv}(a)$, ponieważ warunek kocyklu daje $\theta_{wv}\theta_{vw}=\theta_{ww}=\id$. Jeżeli ponadto $(w,b)\sim(z,c)$, to $a=\theta_{vw}\theta_{wz}(c)=\theta_{vz}(c)$ i wszystkie trzy elementy mają ten sam obraz w $U$. Otrzymujemy symetrię i przechodniość.
+
+Niech $B=E/{\sim}$ z funkcją $B\to U$ daną przez $[(v,a)]\mapsto u(v)$, dobrze określoną z definicji relacji. Dla $v\in V$ definiujemy
+\[
+ \beta_v:A_v\longrightarrow B_{u(v)},\qquad
+ a\longmapsto[(v,a)].
+\]
+Funkcja jest injektywna, ponieważ $[(v,a)]=[(v,b)]$ implikuje $a=\theta_{vv}(b)=b$. Jest też surjektywna: jeżeli $[(w,b)]\in B_{u(v)}$, to $u(w)=u(v)$ i $[(w,b)]=[(v,\theta_{vw}(b))]$. Wreszcie $\beta_v\theta_{vw}=\beta_w$, więc rodzina $\beta_v$ jest morfizmem danych zstępowania do $D_u(B)$. Każda składowa jest bijekcją, a składowe odwrotne również spełniają warunek morfizmu (otrzymujemy go przez złożenie równania zgodności z odwrotnościami). Stąd istotna surjektywność $D_u$.
+
+Aby wykazać pełność i wierność, niech $B,C$ będą rodzinami na $U$. Morfizm $D_u(B)\to D_u(C)$ jest rodziną funkcji $h_v:B_{u(v)}\to C_{u(v)}$ spełniających $h_v=h_w$ dla $u(v)=u(w)$. Dla każdego $t\in U$ istnieje $v$ z $u(v)=t$. Definiujemy $h_t$ jako jedyną funkcję występującą w niepustej rodzinie $\{h_v:u(v)=t\}$; jej jednoznaczność wynika z warunku zgodności. Otrzymana rodzina $h=(h_t)_t$ jest morfizmem $B\to C$, którego obraz to rodzina $(h_v)_v$. Każda inna rodzina o tym obrazie ma te same składowe, ponieważ $u$ jest surjektywna. To daje pełność i wierność.
+
+Odwrotnie, jeśli $u$ nie jest surjekcją, wybierzmy $t_0\in U\setminus u(V)$. Niech $B_t=\{*\}$ dla wszystkich $t$, $C_{t_0}=\{0,1\}$, a $C_t=\{*\}$ dla pozostałych $t$. Istnieją dwa różne morfizmy $B\to C$, różniące się wartością w składowej $t_0$. Ich obrazy przez $D_u$ są równe, bo żadna składowa nad $V$ nie widzi $t_0$. Funktor $D_u$ nie jest wierny, a zatem nie jest równoważnością.
+\end{proof}
+
+\begin{przyklad}[Sklejenie dwóch kopii zbioru]\label{cat:ex:set-descent-two-copies}
+Niech $U=\{*\}$, $V=\{1,2\}$, a $u$ będzie jedyną funkcją. Dane zstępowania składają się z dwóch zbiorów $A_1,A_2$ i bijekcji $\theta:A_2\to A_1$; pozostałe izomorfizmy to identyczności i $\theta^{-1}$. Iloraz z dowodu twierdzenia~\ref{cat:thm:set-effective-descent} utożsamia $(2,b)$ z $(1,\theta(b))$. Zbiór globalny jest więc kanonicznie izomorficzny z $A_1$ (i z $A_2$ za pomocą $\theta$). Nawet gdy $A_1,A_2$ są rozłącznymi zbiorami, dane mogą być efektywne: wymagana jest zgodność przez izomorfizm, a nie równość lokalnych obiektów.
+\end{przyklad}
+
+\begin{wniosek}[Rodziny wspólnie surjektywne]\label{cat:cor:set-family-descent}
+Dla rodziny funkcji $(u_i:U_i\to U)_{i\in I}$ i funktora $F(U)=\Set^U$ efektywne zstępowanie zachodzi dokładnie wtedy, gdy $\bigcup_i u_i(U_i)=U$.
+\end{wniosek}
+\begin{proof}
+Niech $V=\coprod_i U_i$ i $u:V\to U$ będzie funkcją daną przez $u(i,t)=u_i(t)$. Rodzina zbiorów nad $V$ jest dokładnie rodziną zbiorów $A_{i,t}$ dla $t\in U_i$. Ponieważ
+\[
+ V\times_U V\cong\coprod_{i,j}(U_i\times_U U_j),
+\]
+izomorfizmy przejścia dla $u$ odpowiadają dokładnie izomorfizmom przejścia dla rodziny $(u_i)_i$. Analogiczny rozkład potrójnego iloczynu włóknistego, przez przypisanie trzem elementom ich indeksów i współrzędnych, utożsamia warunki kocyklu. Warunki diagonalne oraz równania dla morfizmów są te same składowo. Otrzymujemy izomorfizm kategorii danych zstępowania, zgodny z funktorami porównawczymi. Teza wynika z twierdzenia~\ref{cat:thm:set-effective-descent}, ponieważ $u$ jest surjekcją dokładnie przy podanym warunku. Dla $I=\varnothing$ mamy $V=\varnothing$, więc efektywne zstępowanie zachodzi wtedy i tylko wtedy, gdy $U=\varnothing$.
+\end{proof}
+
+\subsection{Zstępowanie w fibracji Grothendiecka}
+
+Niech $p:\mathcal E\to\mathcal B$ będzie fibracją Grothendiecka. Włókno nad $U$ oznaczamy przez $\mathcal E_U$. Wybieramy podniesienia kartezjańskie $\lambda_{f,x}:f^*x\to x$ nad $f:V\to U$ jak w definicji~\ref{cat:def:grothendieck-fibration}. Porównania transportów $c_{f,g}:f^*g^*\Rightarrow(gf)^*$ i $e_U:\id\Rightarrow(\id_U)^*$ są określone przez twierdzenie~\ref{cat:thm:reindexing-pseudofunctor}. Poniższa konstrukcja nie wymaga rozszczepienia fibracji.
+
+Dla rodziny $\mathcal U=(u_i:U_i\to U)_i$ używamy iloczynów włóknistych i oznaczeń z definicji~\ref{cat:def:descent-datum}. Niech $v_{ij}:U_{ij}\to U$ oznacza wspólne złożenie $u_i\pi_1=u_j\pi_2$.
+
+\begin{definicja}[Dane zstępowania w fibracji]\label{cat:def:fibered-descent}
+Dane zstępowania składają się z obiektów $x_i\in\mathcal E_{U_i}$ oraz pionowych izomorfizmów
+\[
+ \theta_{ij}:\pi_2^*x_j\longrightarrow\pi_1^*x_i.
+\]
+Dla $a:V\to U_{ij}$ definiujemy izomorfizm
+\[
+ \theta_{ij}[a]=c_{a,\pi_1,x_i}\,a^*(\theta_{ij})\,
+                         c_{a,\pi_2,x_j}^{-1}
+ :(\pi_2a)^*x_j\longrightarrow(\pi_1a)^*x_i.
+\]
+Warunek diagonalny ma postać $\theta_{ii}[\delta_i]=\id_{(\id_{U_i})^*x_i}$, a warunek kocyklu
+\[
+ \theta_{ij}[\pi_{12}]\theta_{jk}[\pi_{23}]
+ =\theta_{ik}[\pi_{13}].
+\]
+Morfizmy są rodzinami pionowych morfizmów $h_i:x_i\to y_i$, spełniającymi $\psi_{ij}\pi_2^*h_j=\pi_1^*h_i\theta_{ij}$.
+\end{definicja}
+
+Warunek diagonalny można równoważnie zapisać na obiekcie $x_i$ przez sprzężenie izomorfizmem $e_{U_i,x_i}$. Jeżeli transporty są ścisłe i porównania identycznościowe, otrzymujemy definicję~\ref{cat:def:descent-datum}. Morfizmy składają się składowo: dowód jest taki sam jak w przypadku ścisłym, ponieważ każdy pojedynczy transport jest zwykłym funktorem.
+
+\begin{stwierdzenie}[Porównanie po dalszej zmianie bazy]\label{cat:prop:descent-transport-coherence}
+Niech $\vartheta:f^*x\to g^*y$ będzie morfizmem w $\mathcal E_V$, gdzie $f:V\to U$, $g:V\to W$, $x\in\mathcal E_U$, $y\in\mathcal E_W$. Dla $a:T\to V$ i $b:S\to T$ kładziemy
+\[
+ \vartheta[a]=c_{a,g,y}\,a^*(\vartheta)\,c_{a,f,x}^{-1}.
+\]
+Wówczas $\vartheta[a][b]=\vartheta[ab]$, przy czym po pierwszym transporcie stosujemy definicję do morfizmów $fa$ i $ga$. Ponadto transport zachowuje identyczności i składanie odpowiednio typowanych morfizmów.
+\end{stwierdzenie}
+\begin{proof}
+Rozwijając dwukrotny transport, dostajemy
+\[
+ c_{b,ga,y}\,b^*(c_{a,g,y})\,b^*a^*(\vartheta)\,
+ b^*(c_{a,f,x}^{-1})\,c_{b,fa,x}^{-1}.
+\]
+Z równania koherencji~\eqref{cat:eq:transport-associativity} dwa lewe czynniki są równe $c_{ab,g,y}c_{b,a,g^*y}$. Dwa prawe czynniki są odwrotnością $c_{b,fa,x}b^*(c_{a,f,x})$, a zatem są równe $c_{b,a,f^*x}^{-1}c_{ab,f,x}^{-1}$. Naturalność $c_{b,a}$ daje
+\[
+ c_{b,a,g^*y}\,b^*a^*(\vartheta)\,c_{b,a,f^*x}^{-1}
+ =(ab)^*(\vartheta).
+\]
+Po podstawieniu otrzymujemy $\vartheta[ab]$. Dla transportu wzdłuż $\id_V$ równania jednostki dają $c_{\id_V,g,y}=e_{V,g^*y}^{-1}$ i $c_{\id_V,f,x}^{-1}=e_{V,f^*x}$. Z naturalności $e_V$ wynika więc $\vartheta[\id_V]=\vartheta$. Przy składaniu dwóch morfizmów środkowe czynniki porównawcze skracają się wzajemnie, a $a^*$ zachowuje składanie. Dla identyczności porównanie i jego odwrotność również się skracają.
+\end{proof}
+
+\begin{stwierdzenie}[Globalne dane zstępowania w fibracji]\label{cat:prop:fibered-descent-comparison}
+Dla $x\in\mathcal E_U$ rodzina $x_i=u_i^*x$ z izomorfizmami
+\[
+ \theta_{ij}=c_{\pi_1,u_i,x}^{-1}c_{\pi_2,u_j,x}
+\]
+jest danymi zstępowania. Przypisanie tych danych do $x$ oraz rodziny $(u_i^*h)_i$ do pionowego morfizmu $h$ określa funktor porównawczy.
+\end{stwierdzenie}
+\begin{proof}
+Oba porównania w definicji $\theta_{ij}$ mają przeciwdziedzinę $v_{ij}^*x$, więc złożenie jest dobrze określone. Dla $a:T\to U_{ij}$ z równania koherencji otrzymujemy
+\[
+ \theta_{ij}[a]=c_{\pi_1a,u_i,x}^{-1}c_{\pi_2a,u_j,x}.
+\]
+Istotnie, dla $r=1,2$ oraz $u_{i_1}=u_i$, $u_{i_2}=u_j$ równanie koherencji ma postać
+\[
+ c_{\pi_ra,u_{i_r},x}c_{a,\pi_r,u_{i_r}^*x}
+ =c_{a,v_{ij},x}a^*(c_{\pi_r,u_{i_r},x}).
+\]
+Stąd $c_{a,\pi_r,u_{i_r}^*x}a^*(c_{\pi_r,u_{i_r},x}^{-1})
+ =c_{\pi_ra,u_{i_r},x}^{-1}c_{a,v_{ij},x}$.
+Podstawiając ten wzór dla $r=1$ i jego odwrotność dla $r=2$ do definicji $\theta_{ij}[a]$, skracamy wspólny czynnik $c_{a,v_{ij},x}$ i otrzymujemy żądane równanie. Dla $a=\delta_i$ oba porównania są takie same, co daje warunek diagonalny. Na $U_{ijk}$ mamy zatem
+\[
+ \theta_{ij}[\pi_{12}]\theta_{jk}[\pi_{23}]
+ =(c_{\pi_1,u_i,x}^{-1}c_{\pi_2,u_j,x})
+   (c_{\pi_2,u_j,x}^{-1}c_{\pi_3,u_k,x})
+ =\theta_{ik}[\pi_{13}].
+\]
+Naturalność porównań względem $h:x\to y$ daje zgodność morfizmów lokalnych z przejściami. Funktorialność wynika z funktorialności transportów.
+\end{proof}
+
+\subsection{Opis niezależny od wyboru podniesień}
+
+Dla sita $R$ na $U$ traktujemy $R$ jako pełną podkategorię $\mathcal B/U$ złożoną z morfizmów należących do sita. Funktor dziedziny $d_R:R\to\mathcal B$ wysyła $f:V\to U$ na $V$, a morfizm $a:f\to g$ na morfizm bazowy $a$ spełniający $ga=f$.
+
+\begin{definicja}[Kartezjańska sekcja nad sitem]\label{cat:def:descent-sieve-section}
+Przez $\operatorname{Cart}(R,\mathcal E)$ oznaczamy kategorię funktorów $s:R\to\mathcal E$, takich że $ps=d_R$ i każdy morfizm $s(a)$ jest kartezjański. Morfizmy są transformacjami naturalnymi $\alpha:s\Rightarrow t$ o pionowych składowych, czyli $p(\alpha_f)=\id_{d_R(f)}$.
+\end{definicja}
+
+Jest to definicja niewykorzystująca żadnego wyboru podniesień. Dla obiektu $x\in\mathcal E_U$ wybrane podniesienia określają sekcję $s_x(f)=f^*x$, gdzie dla $a:f\to g$ morfizm $s_x(a)$ jest jedynym morfizmem nad $a$ spełniającym $\lambda_{g,x}s_x(a)=\lambda_{f,x}$. Istnienie i jednoznaczność daje kartezjańskość $\lambda_{g,x}$; kartezjańskość $s_x(a)$ wynika ze stwierdzenia~\ref{cat:prop:cartesian-composition}. Identyczności i składanie zachodzą przez jednoznaczność po złożeniu z odpowiednim $\lambda$. Pionowy morfizm $h:x\to y$ daje naturalną transformację o składowych $f^*h$: obie strony równania naturalności mają po złożeniu z $\lambda_{g,y}$ wartość $h\lambda_{f,x}$. Otrzymujemy funktor $D_R:\mathcal E_U\to\operatorname{Cart}(R,\mathcal E)$. Dwa wybory podniesień dają naturalnie izomorficzne funktory: jedyne pionowe izomorfizmy między podniesieniami są naturalne względem morfizmów sita i względem $x$, ponownie przez jednoznaczność faktoryzacji.
+
+\begin{stwierdzenie}[Sito maksymalne]\label{cat:prop:descent-maximal-sieve}
+Dla sita maksymalnego $h_U=\mathcal B/U$ funktor $D_{h_U}$ jest równoważnością kategorii.
+\end{stwierdzenie}
+\begin{proof}
+Funktor ewaluacji $\operatorname{ev}_{\id_U}$ przypisuje sekcji $s$ obiekt $s(\id_U)$ i transformacji jej składową w $\id_U$. Złożenie $\operatorname{ev}_{\id_U}D_{h_U}$ jest naturalnie izomorficzne z identycznością przez porównanie jednostkowe $e_U$. Dla dowolnej sekcji $s$ i $f:V\to U$ istnieje jedyny morfizm $f\to\id_U$ w kategorii przekrojowej, o składowej bazowej $f$. Jego obraz $s(f)\to s(\id_U)$ jest kartezjański. Porównując go z wybranym podniesieniem $\lambda_{f,s(\id_U)}$, otrzymujemy jedyny pionowy izomorfizm $s(f)\to f^*s(\id_U)$. Izomorfizmy te są naturalne względem $f$: dla morfizmu $a:f\to g$ obie strony równania naturalności po złożeniu z $\lambda_{g,s(\id_U)}$ są obrazem jedynego morfizmu $f\to\id_U$. Są również naturalne względem transformacji sekcji, ponieważ jej naturalność dla morfizmu $f\to\id_U$ daje wymaganą równość po złożeniu z podniesieniem. Otrzymujemy naturalny izomorfizm $\id\Rightarrow D_{h_U}\operatorname{ev}_{\id_U}$, co kończy dowód.
+\end{proof}
+
+\begin{twierdzenie}[Porównanie opisu przez rodzinę i przez sito]\label{cat:thm:descent-family-sieve}
+Jeżeli $\mathcal B$ ma iloczyny włókniste, a $R$ jest sitem generowanym przez rodzinę $\mathcal U=(u_i)_i$, to kategoria $\operatorname{Cart}(R,\mathcal E)$ jest równoważna kategorii danych zstępowania z definicji~\ref{cat:def:fibered-descent}. Równoważność identyfikuje funktory porównawcze z dokładnością do naturalnego izomorfizmu.
+\end{twierdzenie}
+\begin{proof}
+Dla sekcji $s$ bierzemy $x_i=s(u_i)$. Na $U_{ij}$ obiekt $s(v_{ij})$ ma kartezjańskie morfizmy do $x_i,x_j$ nad $\pi_1,\pi_2$, otrzymane z morfizmów w sicie. Porównanie z wybranymi podniesieniami daje pionowe izomorfizmy
+\[
+ l_{ij,1}:s(v_{ij})\longrightarrow\pi_1^*x_i,\qquad
+ l_{ij,2}:s(v_{ij})\longrightarrow\pi_2^*x_j.
+\]
+Definiujemy $\theta_{ij}=l_{ij,1}l_{ij,2}^{-1}$. Na potrójnym iloczynie włóknistym porównujemy wspólny obiekt sekcji z trzema transportami $\pi_1^*x_i,\pi_2^*x_j,\pi_3^*x_k$. Oznaczmy otrzymane izomorfizmy przez $L_1,L_2,L_3$. Z jednoznaczności kartezjańskiej faktoryzacji i równania~\eqref{cat:eq:transport-comparison} wynika $\theta_{ij}[\pi_{12}]=L_1L_2^{-1}$: obie składowe porównania są uzyskane przez złożenie podniesień nad odpowiednimi rzutami. Analogicznie dostajemy $L_2L_3^{-1}$ i $L_1L_3^{-1}$ dla pozostałych par, więc kocykl zachodzi. Na przekątnej obie porównywane strzałki sekcji są tym samym morfizmem, co daje warunek diagonalny. Naturalna transformacja sekcji daje rodzinę $h_i$ spełniającą zgodność z $\theta_{ij}$ przez naturalność dla obu rzutów. Dokładniej, dla transformacji $\alpha:s\Rightarrow t$ oznaczmy porównania dla $s,t$ przez $l^s_r,l^t_r$ ($r=1,2$), a jej składowe nad $u_i,u_j$ przez $h_i,h_j$. Naturalność $\alpha$ i jednoznaczność faktoryzacji przez podniesienie nad $\pi_r$ dają $\pi_1^*h_i\,l^s_1=l^t_1\alpha_{v_{ij}}$ i $\pi_2^*h_j\,l^s_2=l^t_2\alpha_{v_{ij}}$. Stąd
+\[
+ \pi_1^*h_i\,l^s_1(l^s_2)^{-1}
+ =l^t_1\alpha_{v_{ij}}(l^s_2)^{-1}
+ =l^t_1(l^t_2)^{-1}\pi_2^*h_j.
+\]
+To jest warunek morfizmu danych zstępowania. Ewaluacja transformacji na obiektach $u_i$ zachowuje identyczności i składanie, więc otrzymujemy funktor $K$.
+
+Dla danych zstępowania $(x_i,\theta_{ij})$ wybieramy raz dla całego sita (niezależnie od danych) dla każdego $f:V\to U$ w $R$ jedną faktoryzację $f=u_{i(f)}b_f$. Faktoryzacja obejmuje indeks $i(f)$ oraz morfizm $b_f$: jeśli dwa elementy rodziny pokrywającej są tym samym morfizmem, nadal rozróżniamy ich indeksy. Kładziemy $s(f)=b_f^*x_{i(f)}$. Aby opisać morfizmy i sprawdzić funktorialność, dla dowolnych dwóch faktoryzacji $f=u_i b=u_j c$ definiujemy
+\[
+ T_{b,c}=\theta_{ij}[(b,c)]:c^*x_j\longrightarrow b^*x_i,
+\]
+gdzie $(b,c):V\to U_{ij}$ jest wyznaczony przez własność uniwersalną. W zapisie $T_{b,c}$ pomijamy indeksy faktoryzacji; w szczególności $T_{b,b}=\id$ odnosi się do dwóch identycznych faktoryzacji wraz z indeksem, nie tylko do równości morfizmów bazowych. Warunek kocyklu, zastosowany po transporcie przez $(b,c,d):V\to U_{ijk}$ i stwierdzenie~\ref{cat:prop:descent-transport-coherence}, daje $T_{b,c}T_{c,d}=T_{b,d}$. Warunek diagonalny daje $T_{b,b}=\id$ przez faktoryzację $(b,b)=\delta_i b$ i to samo stwierdzenie. Dla $a:W\to V$ mamy dodatkowo
+\[
+ T_{ba,ca}=c_{a,b,x_i}\,a^*(T_{b,c})\,c_{a,c,x_j}^{-1}.
+\]
+Jest to bezpośrednio równanie o dalszej zmianie bazy.
+
+Dla morfizmu $a:f\to g$ w $R$ (czyli $ga=f$) definiujemy
+\[
+ s(a)=\lambda_{a,b_g^*x_{i(g)}}\,
+       c_{a,b_g,x_{i(g)}}^{-1} T_{b_ga,b_f}.
+\]
+Pierwsze dwa czynniki po $T$ mają dziedzinę $(b_ga)^*x_{i(g)}$ i przeciwdziedzinę $s(g)$, a ich złożenie jest kartezjańskie nad $a$. Ponieważ $T$ jest pionowym izomorfizmem, cały morfizm jest kartezjański.
+
+Dla sprawdzenia składania niech $a:f\to g$ i $d:g\to h$. Wygodnie oznaczyć składową pionową $s(a)$ względem $\lambda_{a,s(g)}$ przez
+\[
+ A=c_{a,b_g}^{-1}T_{b_ga,b_f},\qquad
+ B=c_{d,b_h}^{-1}T_{b_hd,b_g}
+\]
+dla $s(d)$. Pomijamy indeks obiektu przy porównaniach, gdy wynika z typów. Składowa pionowa $s(d)s(a)$ względem podniesienia nad $da$ to $c_{a,d}a^*(B)A$, zgodnie z równaniem~\eqref{cat:eq:transport-comparison} i naturalnością podniesień. Stosując równanie dla $T$ po zmianie bazy, dostajemy
+\[
+\begin{aligned}
+ c_{a,d}a^*(B)A
+ &=c_{a,d}a^*(c_{d,b_h}^{-1})\,
+   c_{a,b_hd}^{-1}T_{b_hda,b_ga}T_{b_ga,b_f}\\
+ &=c_{da,b_h}^{-1}T_{b_hda,b_f}.
+\end{aligned}
+\]
+W pierwszej równości skróciły się czynniki $c_{a,b_g}$ i jego odwrotność, w drugiej użyliśmy koherencji porównań oraz kocyklu dla $T$. To jest składowa pionowa $s(da)$. Dla $a=\id$ mamy $T_{b_f,b_f}=\id$ oraz $c_{\id,b_f}^{-1}=e_{V,b_f^*x_{i(f)}}$, więc z równania jednostki podniesień $s(\id)=\id$. Otrzymujemy sekcję.
+
+Dla morfizmu danych $h_i:x_i\to y_i$ bierzemy na $f$ morfizm $b_f^*h_{i(f)}$. Oznaczmy odpowiadające sobie przejścia przez $T^x_{b,c},T^y_{b,c}$. Transport równania dla $h_i$ i naturalność porównań dają
+\[
+ b^*h_i\,T^x_{b,c}=T^y_{b,c}\,c^*h_j
+ \qquad(f=u_i b=u_j c).
+\]
+Dla $a:f\to g$ obliczamy, pisząc $i=i(g)$ i $j=i(f)$,
+\[
+\begin{aligned}
+ b_g^*h_i\,s_x(a)
+ &=b_g^*h_i\,\lambda_{a,b_g^*x_i}
+       (c^x_{a,b_g})^{-1}T^x_{b_ga,b_f}\\
+ &=\lambda_{a,b_g^*y_i}(c^y_{a,b_g})^{-1}
+       (b_ga)^*h_i\,T^x_{b_ga,b_f}\\
+ &=\lambda_{a,b_g^*y_i}(c^y_{a,b_g})^{-1}
+       T^y_{b_ga,b_f}\,b_f^*h_j\\
+ &=s_y(a)b_f^*h_j.
+\end{aligned}
+\]
+W drugiej równości stosujemy kolejno naturalność podniesienia i naturalność $c_{a,b_g}$, w trzeciej powyższe równanie dla $T$. To jest naturalność transformacji. Konstrukcja zachowuje identyczności i składanie składowo, więc określa funktor $L$.
+
+Dla danych $(x_i,\theta_{ij})$ porównujemy $K L(x_i,\theta_{ij})$ z danymi wyjściowymi. Dla dowolnej faktoryzacji $f=u_i b$ wprowadzamy kartezjański morfizm
+\[
+ J_b(f)=\lambda_{b,x_i}T_{b,b_f}:s(f)\longrightarrow x_i.
+\]
+Na $u_i$ bierzemy faktoryzację z identycznością i otrzymujemy pionowy izomorfizm
+\[
+ \kappa_i=J_{\id_{U_i}}(u_i)=e_{U_i,x_i}^{-1}T_{\id_{U_i},b_{u_i}}
+ :s(u_i)\longrightarrow x_i.
+\]
+Jeżeli $a:f\to g$ i $g=u_i b$, to
+\[
+\begin{aligned}
+ J_b(g)s(a)
+ &=\lambda_{b,x_i}T_{b,b_g}
+   \lambda_{a,b_g^*x_{i(g)}}c_{a,b_g}^{-1}T_{b_ga,b_f}\\
+ &=\lambda_{ba,x_i}c_{a,b,x_i}\,
+   a^*(T_{b,b_g})c_{a,b_g}^{-1}T_{b_ga,b_f}\\
+ &=\lambda_{ba,x_i}T_{ba,b_ga}T_{b_ga,b_f}\\
+ &=J_{ba}(f).
+\end{aligned}
+\]
+Druga równość wynika z naturalności podniesień i ich porównania, trzecia z równania transportu $T$, ostatnia z kocyklu. W szczególności dla $v=v_{ij}$ i morfizmu $\pi_1:v\to u_i$ mamy $\kappa_i s(\pi_1)=J_{\pi_1}(v)$. Jeżeli $l'_1:s(v)\to\pi_1^*s(u_i)$ jest porównaniem użytym przez funktor $K$, to po złożeniu z $\lambda_{\pi_1,x_i}$ oba morfizmy $\pi_1^*\kappa_i\,l'_1$ i $T_{\pi_1,b_v}$ dają $J_{\pi_1}(v)$. Jednoznaczność kartezjańska daje ich równość. Analogicznie $\pi_2^*\kappa_j\,l'_2=T_{\pi_2,b_v}$. Ponieważ nowe przejście jest $\theta'_{ij}=l'_1(l'_2)^{-1}$, otrzymujemy
+\[
+ \pi_1^*\kappa_i\,\theta'_{ij}
+ =T_{\pi_1,b_v}T_{b_v,\pi_2}\,\pi_2^*\kappa_j
+ =\theta_{ij}\,\pi_2^*\kappa_j.
+\]
+W ostatnim kroku używamy $T_{\pi_1,\pi_2}=\theta_{ij}[\id_{U_{ij}}]=\theta_{ij}$. Dowodzi to, że $\kappa$ jest izomorfizmem danych zstępowania. Naturalność względem morfizmów danych wynika z ich zgodności z $T$ i naturalności $e$.
+
+Dla sekcji $s$ i faktoryzacji $f=u_i b$ oznaczmy przez $l_b(f):s(f)\to b^*s(u_i)$ jedyny pionowy izomorfizm porównujący kartezjański morfizm $s(b:f\to u_i)$ z podniesieniem $\lambda_{b,s(u_i)}$. Dla $a:f\to g$ i faktoryzacji $g=u_i b$ jednoznaczność po złożeniu z $\lambda_{ba,s(u_i)}$ daje
+\[
+ l_{ba}(f)=c_{a,b,s(u_i)}\,a^*(l_b(g))\,l_a^g,
+\]
+gdzie $l_a^g:s(f)\to a^*s(g)$ jest porównaniem $s(a)$ z podniesieniem. Rzeczywiście, po złożeniu prawej strony z podniesieniem otrzymujemy $s(b)s(a)=s(ba)$ dzięki naturalności podniesień. Stosując ten wzór do obu rzutów $v_{ij}\to u_i,u_j$ i do morfizmu $(b,c):f\to v_{ij}$, otrzymujemy $l_b(f)l_c(f)^{-1}=T_{b,c}$ dla danych $K(s)$. Izomorfizm $\ell_f=l_{b_f}(f):s(f)\to LK(s)(f)$ jest naturalny, gdyż
+\[
+\begin{aligned}
+ LK(s)(a)\ell_f
+ &=\lambda_{a,b_g^*s(u_{i(g)})}c_{a,b_g}^{-1}
+       T_{b_ga,b_f}l_{b_f}(f)\\
+ &=\lambda_{a,b_g^*s(u_{i(g)})}c_{a,b_g}^{-1}l_{b_ga}(f)\\
+ &=l_{b_g}(g)s(a).
+\end{aligned}
+\]
+Ostatnia równość wynika z powyższego wzoru dla $l_{ba}$ i naturalności podniesienia nad $a$. Naturalność względem transformacji sekcji wynika z naturalności dla morfizmu $f\to u_i$. Otrzymujemy naturalne izomorfizmy $KL\cong\id$ i $\id\cong LK$. Jeżeli rodzina jest pusta, to generowane sito jest puste; zarówno kategoria danych, jak i kategoria sekcji nad pustym sitem są kategoriami końcowymi, a funktory porównawcze są jedynymi funktorami do tych kategorii. Nie wymaga to istnienia żadnego obiektu w $\mathcal E_U$. Dla sekcji pochodzącej od obiektu globalnego porównania na $U_{ij}$ są dokładnie porównaniami z twierdzenia~\ref{cat:prop:fibered-descent-comparison}, zatem $K D_R\cong D_{\mathcal U}$.
+\end{proof}
+
+\subsection{Prestosy i stosy na miejscu Grothendiecka}
+
+Niech $(\mathcal B,J)$ będzie małym miejscem w sensie definicji~\ref{cat:def:grothendieck-topology}, a $p:\mathcal E\to\mathcal B$ fibracją o lokalnie małych włóknach; przy większych kategoriach ustalamy odpowiednie uniwersa.
+
+\begin{definicja}[Prestos i stos]\label{cat:def:prestack-stack}
+Fibrację $p$ nazywamy prestosem, jeżeli dla każdego $U\in\mathcal B$ i każdego sita pokrywającego $R\in J(U)$ funktor $D_R$ jest pełny i wierny. Nazywamy ją stosem, jeżeli dla wszystkich takich sit $D_R$ jest równoważnością kategorii. Stos w grupoidach to stos, którego wszystkie włókna są grupoidami.
+\end{definicja}
+
+Terminologia nie jest jednolita: niektórzy autorzy nazywają prestosem dowolną fibrację lub pseudofunktor, a dodatkowy warunek pełności i wierności nazywają rozdzielonością. Tutaj przyjmujemy definicję~\ref{cat:def:prestack-stack}. Twierdzenie~\ref{cat:thm:descent-family-sieve} pozwala sprawdzać warunki za pomocą rodzin pokrywających, gdy istnieją iloczyny włókniste. Na małym miejscu każde sito jest generowane przez rodzinę wszystkich swoich morfizmów.
+
+Dla $x,y\in\mathcal E_U$ definiujemy presnop morfizmów na kategorii przekrojowej $\mathcal B/U$ przez
+\[
+ \mathcal H_{x,y}(f:V\to U)
+ =\Hom_{\mathcal E_V}(f^*x,f^*y).
+\]
+Dla $a:f\to g$ transport jest dany wzorem
+\[
+ \mathcal H_{x,y}(a)(h)
+ =c_{a,g,y}\,a^*(h)\,c_{a,g,x}^{-1}.
+\]
+Zgodność ze składaniem wynika ze stwierdzenia~\ref{cat:prop:descent-transport-coherence}; dla identyczności korzystamy z równania jednostki $c_{\id,g}=e^{-1}$ i naturalności $e$. Jest to więc presnop zbiorów.
+
+Topologię na kategorii przekrojowej określamy następująco: sito na obiekcie $f:V\to U$ pokrywa, jeżeli odpowiadające mu sito morfizmów do $V$ należy do $J(V)$. Odpowiedniość sit wynika z faktu, że morfizm do $f$ w kategorii przekrojowej jest jednoznacznie wyznaczony przez morfizm $a:W\to V$ (jego dziedziną jest $fa$). Dokładniej, sito maksymalne na $f$ odpowiada situ maksymalnemu na $V$. Jeżeli $b:g\to f$ jest morfizmem w kategorii przekrojowej o składowej bazowej $b:W\to V$, to przeciwobraz sita na $f$ odpowiada przeciwobrazowi sita na $V$ wzdłuż $b$: w obu przypadkach należą do niego dokładnie morfizmy $a:T\to W$, dla których $ba$ należy do pierwotnego sita. Warunek lokalności również przenosi się, ponieważ morfizmy do $f$ i ich dalsze złożenia są dokładnie morfizmami do $V$ i ich dalszymi złożeniami. Wszystkie trzy aksjomaty topologii Grothendiecka wynikają więc z aksjomatów $J$.
+
+\begin{twierdzenie}[Kryterium prestosu przez snopy morfizmów]\label{cat:thm:prestack-hom-sheaf}
+Fibracja $p$ jest prestosem wtedy i tylko wtedy, gdy dla każdego $U$ i każdych $x,y\in\mathcal E_U$ presnop $\mathcal H_{x,y}$ jest snopem na $\mathcal B/U$.
+\end{twierdzenie}
+\begin{proof}
+Dla sita $R$ na $U$ morfizm $D_R(x)\to D_R(y)$ jest rodziną pionowych morfizmów $h_f:f^*x\to f^*y$, naturalną względem morfizmów $a:f\to g$ w $R$. Równanie naturalności jest równoważne
+\[
+ h_f=c_{a,g,y}\,a^*(h_g)\,c_{a,g,x}^{-1}.
+\]
+Istotnie, morfizm sekcji $s_x(a)$ to $\lambda_{a,g^*x}c_{a,g,x}^{-1}$, ponieważ jego złożenie z $\lambda_{g,x}$ daje $\lambda_{f,x}$. Analogiczny wzór zachodzi dla $y$. Równanie naturalności $h_gs_x(a)=s_y(a)h_f$ przyjmuje zatem postać
+\[
+ \lambda_{a,g^*y}\,a^*(h_g)c_{a,g,x}^{-1}
+ =\lambda_{a,g^*y}\,c_{a,g,y}^{-1}h_f.
+\]
+Obie składowe po podniesieniu są pionowe, więc jednoznaczność kartezjańskiej faktoryzacji pozwala skrócić $\lambda_{a,g^*y}$. Złożenie z $c_{a,g,y}$ daje żądane równanie. Odwrotnie, to równanie po złożeniu z odpowiednimi porównaniami i podniesieniem daje naturalność. Otrzymujemy dokładnie zgodną rodzinę sekcji presnopu $\mathcal H_{x,y}$ nad sitem na obiekcie $\id_U$ w $\mathcal B/U$. Sekcje nad $\id_U$ są kanonicznie identyfikowane z $\Hom_{\mathcal E_U}(x,y)$ przez bijekcję $h\mapsto e_{U,y}h e_{U,x}^{-1}$. Ograniczenie tej sekcji wzdłuż $f:V\to U$ daje $f^*h$: po podstawieniu do wzoru na transport korzystamy z równania $c_{f,\id_U,y}f^*(e_{U,y})=\id_{f^*y}$ i analogicznego równania dla $x$. Funkcja ograniczenia jest więc bijekcją wtedy i tylko wtedy, gdy $D_R$ indukuje bijekcję na tym zbiorze morfizmów.
+
+Jeżeli wszystkie $\mathcal H_{x,y}$ są snopami, stosujemy ten warunek do $\id_U$ i wszystkich sit pokrywających, uzyskując pełność i wierność. Odwrotnie, załóżmy, że $p$ jest prestosem. Dla dowolnego $g:V\to U$ presnop $\mathcal H_{x,y}$ ograniczony do kategorii obiektów nad $g$ jest naturalnie izomorficzny z $\mathcal H_{g^*x,g^*y}$ na $\mathcal B/V$. Na morfizmie $a:W\to V$ izomorfizm jest dany przez $h\mapsto c_{a,g,y}^{-1}h c_{a,g,x}$. Aby sprawdzić naturalność, dla $b:T\to W$ i $h:(ga)^*x\to(ga)^*y$ oznaczmy ten izomorfizm przez $\Phi_a$. Równanie koherencji daje
+\[
+ c_{ab,g,y}^{-1}c_{b,ga,y}
+ =c_{b,a,g^*y}\,b^*(c_{a,g,y}^{-1}),
+ \qquad
+ c_{b,ga,x}^{-1}c_{ab,g,x}
+ =b^*(c_{a,g,x})c_{b,a,g^*x}^{-1}.
+\]
+Wobec tego
+\[
+\begin{aligned}
+ \Phi_{ab}(h[b])
+ &=c_{ab,g,y}^{-1}c_{b,ga,y}\,b^*(h)\,
+       c_{b,ga,x}^{-1}c_{ab,g,x}\\
+ &=c_{b,a,g^*y}\,b^*(\Phi_a(h))\,c_{b,a,g^*x}^{-1}.
+\end{aligned}
+\]
+Prawa strona jest dokładnie ograniczeniem w presnopie $\mathcal H_{g^*x,g^*y}$. Każda $\Phi_a$ jest bijekcją, ponieważ oba porównania są izomorfizmami. Pełność i wierność $D_S$ dla każdego sita pokrywającego $S$ na $V$ dają z pierwszej części warunek snopu na $g$. Ponieważ $g$ było dowolne, presnop jest snopem na całej kategorii przekrojowej.
+\end{proof}
+
+\begin{wniosek}[Lokalne wykrywanie izomorfizmów]\label{cat:cor:prestack-local-isomorphisms}
+Jeżeli $p$ jest prestosem, a pionowy morfizm $h:x\to y$ nad $U$ po każdym transporcie wzdłuż morfizmu sita pokrywającego $R$ staje się izomorfizmem, to $h$ jest izomorfizmem.
+\end{wniosek}
+\begin{proof}
+Morfizm $D_R(h)$ jest izomorfizmem, ponieważ jego wszystkie składowe są izomorfizmami, a odwrotności składowe tworzą transformację naturalną. Pełność daje pionowy morfizm $g:y\to x$, którego obraz jest odwrotnością $D_R(h)$. Wierność daje $gh=\id_x$ i $hg=\id_y$.
+\end{proof}
+
+\subsection{Sklejanie wiązek wektorowych}
+
+Niech $X$ będzie przestrzenią topologiczną, a $\mathcal B$ kategorią jej zbiorów otwartych z inkluzjami i topologią pokryć otwartych. Iloczyn włóknisty dwóch zbiorów otwartych nad trzecim jest ich przecięciem. Dla ciała $\mathbb k=\mathbb R$ lub $\mathbb C$ i ustalonego $r\geq0$ oznaczamy przez $\operatorname{Vect}_r(U)$ kategorię topologicznych wiązek wektorowych rangi $r$ nad $U$, z ciągłymi morfizmami nad identycznością bazy, liniowymi we włóknach. Ograniczenia wiązek do zbiorów otwartych określają pseudofunktor, a jego konstrukcja Grothendiecka daje fibrację.
+
+\begin{twierdzenie}[Stos wiązek wektorowych]\label{cat:thm:vector-bundle-stack}
+Fibracja związana z $\operatorname{Vect}_r$ jest stosem na miejscu otwartych podzbiorów $X$. To samo zachodzi po ograniczeniu morfizmów do izomorfizmów, kiedy otrzymujemy stos w grupoidach.
+\end{twierdzenie}
+\begin{proof}
+Niech $(U_i)_{i\in I}$ będzie pokryciem otwartym $U$. Dla dwóch wiązek $E,F$ nad $U$ morfizm danych zstępowania ich ograniczeń jest rodziną morfizmów $h_i:E|_{U_i}\to F|_{U_i}$ zgodnych na przecięciach. Definiujemy $h(e)=h_i(e)$ dla $e$ leżącego nad punktem $U_i$. Zgodność daje niezależność od wyboru $i$. Porównania transportów dla ograniczeń wiązek są tutaj kanonicznymi identyfikacjami przestrzeni nad przecięciami; po tych identyfikacjach równanie morfizmu danych zstępowania jest zwykłą równością ograniczeń. Zbiory $E|_{U_i}$ są otwarte w przestrzeni całkowitej $E$ i pokrywają ją, więc $h$ jest ciągły: przeciwobraz zbioru otwartego jest sumą przeciwobrazów przez $h_i$ w tych otwartych podzbiorach. Morfizm jest liniowy we włóknach, ponieważ każdy $h_i$ ma tę własność. Jednoznaczność jest punktowa. Otrzymujemy pełność i wierność funktora porównawczego.
+
+Niech teraz dane zstępowania składają się z wiązek $p_i:E_i\to U_i$ oraz izomorfizmów $\theta_{ij}:E_j|_{U_i\cap U_j}\to E_i|_{U_i\cap U_j}$. Na sumie rozłącznej $\coprod_i E_i$ definiujemy relację
+\[
+ (i,e)\sim(j,f)\quad\Longleftrightarrow\quad
+ p_i(e)=p_j(f)\in U_i\cap U_j,\qquad
+ e=\theta_{ij}(f).
+\]
+Jest to relacja równoważności: zwrotność wynika z $\theta_{ii}=\id$, symetria z $\theta_{ij}^{-1}=\theta_{ji}$, a przechodniość z $\theta_{ij}\theta_{jk}=\theta_{ik}$. Kładziemy $E=(\coprod_iE_i)/{\sim}$ z topologią ilorazową. Funkcja $p:E\to U$, dana przez $p([(i,e)])=p_i(e)$, jest dobrze określona i ciągła, ponieważ jej złożenie z rzutem ilorazowym jest ciągłe na każdym składniku sumy rozłącznej.
+
+Niech $j_i:E_i\to E$ będzie naturalnym morfizmem. Jest różnowartościowy, ponieważ $\theta_{ii}=\id$, i jego obraz to $p^{-1}(U_i)$: każda klasa nad punktem $U_i$ ma reprezentanta w $E_i$ przez odpowiednie $\theta_{ij}$. Ponadto $j_i$ jest otwarty. Dla otwartego $W\subseteq E_i$ pełny przeciwobraz $j_i(W)$ w składniku $E_j$ wynosi
+\[
+ \theta_{ji}(W\cap p_i^{-1}(U_j)).
+\]
+Jest otwarty w $E_j|_{U_i\cap U_j}$, a ten zbiór jest otwarty w $E_j$. Definicja topologii ilorazowej daje otwartość $j_i(W)$ w $E$. Ciągły, różnowartościowy i otwarty morfizm $j_i$ jest więc homeomorfizmem na $p^{-1}(U_i)$.
+
+Na włóknie $E_t$ przenosimy strukturę przestrzeni wektorowej przez dowolną bijekcję $(j_i)_t:(E_i)_t\to E_t$. Jeżeli $t$ należy również do $U_j$, to $(j_i)_t\theta_{ij,t}=(j_j)_t$, a $\theta_{ij,t}$ jest izomorfizmem liniowym. Struktura nie zależy zatem od wyboru. Lokalne trywializacje $E_i$ przeniesione przez $j_i$ są lokalnymi trywializacjami $E$ i są liniowe we włóknach. Operacje dodawania i mnożenia przez skalar są ciągłe, ponieważ ich ograniczenia do zbiorów nad $U_i$ są ciągłe po identyfikacji przez $j_i$, a te zbiory stanowią pokrycia otwarte odpowiednich dziedzin. Sekcja zerowa jest również ciągła, ponieważ na każdym $U_i$ jest złożeniem lokalnej sekcji zerowej z $j_i$. Jeżeli w definicji wiązki wymagamy, aby przestrzeń całkowita była Hausdorffa, to zakładamy, że $X$ jest Hausdorffa. Dwa punkty $E$ nad różnymi punktami bazy rozdzielamy przeciwobrazami rozłącznych otoczeń w bazie; dwa różne punkty nad tym samym punktem rozdzielamy w otwartym zbiorze lokalnej trywializacji, który jest przestrzenią Hausdorffa. W ten sposób $E$ jest wiązką wektorową rangi $r$. Bez założenia Hausdorffa o bazie używamy definicji wiązki niewymagającej aksjomatu Hausdorffa od przestrzeni całkowitej. Izomorfizmy $j_i$ spełniają $j_i\theta_{ij}=j_j$, więc dane są efektywne.
+
+Dla pokrycia pustego bazy pustej istnieje z dokładnością do izomorfizmu jedyna wiązka nad zbiorem pustym i jedyny morfizm między dowolnymi dwiema takimi wiązkami. Argument obejmuje zatem również ten przypadek. Twierdzenie~\ref{cat:thm:descent-family-sieve} przenosi wynik na sita pokrywające. Jeśli ograniczymy morfizmy do izomorfizmów, sklejenie lokalnych izomorfizmów pozostaje izomorfizmem: sklejamy także ich odwrotności, które są zgodne na przecięciach, a złożenia są identycznościami lokalnie, więc globalnie. Istotna surjektywność nie zmienia się.
+\end{proof}
+
+\begin{przyklad}[Wiązka zadana funkcjami przejścia]\label{cat:ex:bundle-transition-cocycle}
+Dla pokrycia $(U_i)_i$ i ciągłych funkcji $g_{ij}:U_i\cap U_j\to\operatorname{GL}_r(\mathbb k)$ spełniających $g_{ii}=I_r$ i $g_{ij}g_{jk}=g_{ik}$ na potrójnych przecięciach kładziemy $E_i=U_i\times\mathbb k^r$ oraz
+\[
+ \theta_{ij}(t,v)=(t,g_{ij}(t)v).
+\]
+Dla $r\geq1$ ciągłość odwrotności macierzy na $\operatorname{GL}_r(\mathbb k)$ wynika ze wzoru przez macierz dołączoną i niezerowy wyznacznik; dla $r=0$ grupa $\operatorname{GL}_0(\mathbb k)$ jest jednopunktowa. Zatem $\theta_{ij}$ są izomorfizmami wiązek, a równania macierzowe są dokładnie warunkami danych zstępowania. Twierdzenie~\ref{cat:thm:vector-bundle-stack} daje wiązkę globalną.
+
+Jeżeli $g_{ij}$ i $g'_{ij}$ są dwiema takimi rodzinami dla tego samego pokrycia, to izomorfizm pomiędzy sklejonymi wiązkami jest równoważny rodzinie ciągłych funkcji $h_i:U_i\to\operatorname{GL}_r(\mathbb k)$ spełniających $h_i g_{ij}=g'_{ij}h_j$. Istotnie, morfizm lokalny między wiązkami trywialnymi jest mnożeniem przez macierz $h_i(t)$, której kolumny są obrazami standardowych wektorów bazowych i zależą ciągle od $t$. Warunek zgodności jest warunkiem morfizmu danych zstępowania; pełność i wierność funktora porównawczego dają jednoznaczne sklejenie.
+\end{przyklad}
+
+\subsection{Torsory i stosy ilorazowe}
+
+Niech $G$ będzie grupą topologiczną (dla zwykłej grupy możemy przyjąć topologię dyskretną).
+
+\begin{definicja}[Torsor nad przestrzenią topologiczną]\label{cat:def:topological-torsor}
+Prawym $G$-torsorem nad $U$ nazywamy przestrzeń $P$ z ciągłą funkcją $p:P\to U$ i ciągłym prawym działaniem $G$ zachowującym włókna, takimi że każdy punkt $U$ ma otwarte otoczenie $V$, na którym istnieje $G$-równoważny homeomorfizm nad $V$
+\[
+ P|_V\cong V\times G,
+\]
+gdzie działanie po prawej stronie jest mnożeniem z prawej w drugim czynniku. Morfizmy torsorów są ciągłymi funkcjami nad bazą zachowującymi działanie.
+\end{definicja}
+Każde włókno jest niepustym zbiorem z wolnym i przechodnim działaniem $G$. Warunek lokalnej trywialności jest dodatkowym warunkiem topologicznym, którego nie zastępujemy samą wolnością i przechodniością na włóknach.
+
+\begin{stwierdzenie}[Morfizmy torsorów są izomorfizmami]\label{cat:prop:torsor-morphisms-iso}
+Każdy morfizm dwóch $G$-torsorów nad tą samą bazą jest izomorfizmem.
+\end{stwierdzenie}
+\begin{proof}
+Wybierzmy wspólne pokrycie otwarte, na którym oba torsory są trywialne. W tych trywializacjach morfizm $h$ ma postać $(t,g)\mapsto(t,a(t)g)$: jeżeli $h(t,e)=(t,a(t))$, to z zachowywania prawego działania dostajemy $h(t,g)=h((t,e)g)=h(t,e)g$. Funkcja $a$ jest ciągła jako złożenie $t\mapsto(t,e)$, $h$ i rzutu na $G$. Odwrotność ma postać $(t,g)\mapsto(t,a(t)^{-1}g)$ i jest ciągła dzięki ciągłości odwracania w $G$. Na przecięciach lokalne odwrotności zgadzają się jako odwrotności tego samego morfizmu włókien. Sklejają się w ciągły morfizm odwrotny, zachowujący działanie i bazę.
+\end{proof}
+
+\begin{twierdzenie}[Stos torsorów]\label{cat:thm:torsor-stack}
+Grupoidy prawych $G$-torsorów nad otwartymi podzbiorami $X$ z ograniczeniami tworzą stos w grupoidach, oznaczany $BG$.
+\end{twierdzenie}
+\begin{proof}
+Morfizmy sklejają się punktowo i ciągle na pokryciu otwartym przestrzeni całkowitej. Zgodność z działaniem jest równaniem punktowym, więc pozostaje prawdziwa po sklejeniu. To daje pełność i wierność.
+
+Dla danych zstępowania $(P_i,\theta_{ij})$ tworzymy sumę rozłączną i iloraz, utożsamiając $(j,z)$ z $(i,\theta_{ij}(z))$ nad wspólnym punktem. Relacja jest równoważnością z tych samych trzech równań co w dowodzie twierdzenia~\ref{cat:thm:vector-bundle-stack}. Również ten sam argument otwartości obrazów podzbiorów przez $j_i$ (wykorzystujący wyłącznie homeomorfizmy przejścia) daje homeomorfizmy $P_i\cong P|_{U_i}$. Działanie określamy przez $[(i,z)]g=[(i,zg)]$. Jeżeli $z=\theta_{ij}(w)$, to $zg=\theta_{ij}(wg)$ z równoważności izomorfizmów przejścia, zatem działanie jest dobrze określone. Aksjomaty działania zachodzą na reprezentantach, a ciągłość sprawdzamy na otwartych podzbiorach $P|_{U_i}\times G$ pokrywających $P\times G$. Trywializacje lokalne $P_i$ przenoszą się na $P$, więc jest on torsorem. Morfizmy $j_i$ są zgodne z działaniem, zatem realizują dane zstępowania. Dla pustej bazy wynik jest analogiczny do wiązek. Stosujemy twierdzenie~\ref{cat:thm:descent-family-sieve} oraz stwierdzenie~\ref{cat:prop:torsor-morphisms-iso}.
+\end{proof}
+
+\begin{przyklad}[Prestos, który nie jest stosem]\label{cat:ex:trivial-torsor-prestack}
+Niech $X=S^1=\{z\in\mathbb C:|z|=1\}$, a $G=\{1,-1\}$ z topologią dyskretną. Rozważamy pełne podgrupoidy stosu $BG$ złożone z torsorów izomorficznych z trywialnym torsorem $U\times G$ nad każdym otwartym $U\subseteq X$. Ograniczenie torsora trywialnego jest trywialne, więc podgrupoidy określają fibrację. Jest ona prestosem: dla dwóch jej obiektów presnop morfizmów jest ten sam co w $BG$, ponieważ podgrupoidy są pełne, i jest snopem przez twierdzenie~\ref{cat:thm:prestack-hom-sheaf}.
+
+Nie jest jednak stosem. Rozważmy $P=S^1$ z rzutem $p(z)=z^2$ i prawym działaniem $z\cdot g=zg$. Na dostatecznie krótkim otwartym łuku $V$ istnieje ciągła funkcja $s:V\to S^1$ taka, że $s(t)^2=t$: zapisujemy $t=\exp(i\theta)$ przy ciągłym wyborze argumentu na łuku i kładziemy $s(t)=\exp(i\theta/2)$. Funkcja $(t,g)\mapsto s(t)g$ daje trywializację $P|_V$. Jej odwrotność jest ciągła, ponieważ ma postać $z\mapsto(z^2,z/s(z^2))$, a druga współrzędna należy do dyskretnego podzbioru $G\subseteq S^1$. Zatem $P$ jest torsorem. Nie jest globalnie trywialny, ponieważ $S^1$ jest spójny, podczas gdy $S^1\times G$ jest niespójny. Na pokryciu krótkimi łukami ograniczenia $P$ należą do podgrupoidów torsorów trywialnych i wraz z kanonicznymi przejściami dają dane zstępowania. Gdyby były efektywne w tym prestosie, istniałby trywialny torsor $Q$ z izomorficznymi danymi lokalnymi. Pełność i wierność funktora porównawczego w $BG$ dałaby izomorfizm $Q\cong P$, sprzecznie z niespójnością przestrzeni całkowitej $Q$. Jest to konkretne rozróżnienie sklejania morfizmów od efektywnego sklejania obiektów.
+\end{przyklad}
+
+Niech $Y$ będzie przestrzenią topologiczną z ciągłym lewym działaniem $G$. 
+
+\begin{definicja}[Stos ilorazowy]\label{cat:def:quotient-stack}
+Nad $U$ rozważamy grupoid obiektów $(P,\varphi)$, gdzie $P$ jest prawym $G$-torsorem nad $U$, a $\varphi:P\to Y$ jest ciągła i spełnia
+\[
+ \varphi(pg)=g^{-1}\varphi(p).
+\]
+Morfizm $(P,\varphi)\to(Q,\psi)$ jest morfizmem torsorów $h:P\to Q$ spełniającym $\psi h=\varphi$. Ograniczenia określają pseudofunktor na miejscu otwartych podzbiorów. Oznaczamy go $[Y/G]$.
+\end{definicja}
+
+\begin{stwierdzenie}\label{cat:prop:quotient-stack-descent}
+Pseudofunktor $[Y/G]$ określa stos w grupoidach.
+\end{stwierdzenie}
+\begin{proof}
+Dla danych zstępowania lokalne torsory sklejają się w torsor $P$ przez twierdzenie~\ref{cat:thm:torsor-stack}. Oznaczmy izomorfizmy lokalne przez $j_i:P_i\to P|_{U_i}$. Równania $\varphi_i\theta_{ij}=\varphi_j$ dają zgodność funkcji $\varphi_i j_i^{-1}$ na przecięciach. Sklejają się one w ciągłą funkcję $\varphi:P\to Y$, ponieważ zbiory $P|_{U_i}$ są otwarte. Równanie $\varphi(pg)=g^{-1}\varphi(p)$ zachodzi na każdym z nich i stąd globalnie. Izomorfizmy $j_i$ realizują dane także w grupoidzie par. Morfizmy torsorów sklejają się jednoznacznie, a warunek $\psi h=\varphi$ zachodzi globalnie, skoro zachodzi na pokryciu. To daje pełność i wierność. Odwrotność morfizmu torsorów również zachowuje funkcję do $Y$, bo z $\psi h=\varphi$ wynika $\varphi h^{-1}=\psi$.
+\end{proof}
+
+Rozważając tę samą konstrukcję na miejscu przestrzeni jednopunktowej (nie zakładamy, że punkt jest obiektem miejsca otwartych podzbiorów dowolnego $X$), widzimy, że każdy torsor nad punktem jest izomorficzny z $G$: wybieramy punkt $p_0$ i identyfikujemy $g\mapsto p_0g$. Funkcja $\varphi$ jest wtedy wyznaczona przez $y=\varphi(p_0)$ i ma postać $g\mapsto g^{-1}y$. Morfizm między dwoma tak opisanymi obiektami jest mnożeniem z lewej przez $a\in G$, a warunek zgodności przy $g=e$ daje $a^{-1}y'=y$, czyli $y'=ay$. Otrzymujemy równoważność z grupoidem działania: obiekty to punkty $Y$, morfizmy $y\to y'$ to elementy $a$ spełniające $ay=y'$, a składanie morfizmów odpowiada mnożeniu $b a$ dla kolejnych strzałek oznaczonych $a,b$. Funktor z grupoidu działania wybiera torsor $G$ dla każdego $y$ i funkcję $g\mapsto g^{-1}y$. Powyższy opis morfizmów dowodzi jego pełności i wierności, a trywialność torsorów nad punktem daje istotną surjektywność. Jego zbiór klas izomorfizmu jest zbiorem orbit, ale grupa automorfizmów obiektu $y$ jest stabilizatorem $G_y$. Stos ilorazowy zachowuje więc informację o symetriach, której nie ma w samym zbiorze orbit.
+
+W szczególności dla przestrzeni jednopunktowej $Y=*$ z trywialnym działaniem otrzymujemy $[*/G]\cong BG$ jako stosy na dowolnej przestrzeni bazowej $X$: funkcja torsora do $*$ jest jedyna, a warunek jej zachowania automatyczny. Ponadto grupa automorfizmów trywialnego torsora nad punktem jest izomorficzna z $G$ przez mnożenia z lewej. Gdy $G$ jest nietrywialna, grupoid ten nie jest równoważny kategorii dyskretnej z jednym obiektem.
+
+\subsection{Stosyfikacja}
+
+Stosyfikacja jest odpowiednikiem snopifikacji, lecz warunek lokalnego sklejania obiektów wyrażony jest za pomocą równoważności kategorii. Podamy precyzyjne sformułowanie dla fibracji w grupoidach. Pracujemy na małym miejscu Grothendiecka i w ustalonych uniwersach, tak aby rozważane kategorie danych miały odpowiedni rozmiar.
+
+\begin{definicja}[Lokalna równoważność fibracji w grupoidach]\label{cat:def:local-equivalence-stacks}
+Niech $A:F\to H$ będzie funktorem kartezjańskim nad miejscem. Nazywamy go lokalną równoważnością, jeżeli:
+\begin{enumerate}
+\item dla każdego $U$ i $x,y\in F(U)$ morfizm presnopów morfizmów na $\mathcal B/U$
+\[
+ \mathcal H^F_{x,y}\longrightarrow\mathcal H^H_{Ax,Ay}
+\]
+indukuje izomorfizm po snopifikacji;
+\item dla każdego $z\in H(U)$ istnieje sito pokrywające $R$ na $U$ takie, że dla każdego $f:V\to U$ z $R$ obiekt $f^*z$ jest izomorficzny z obrazem pewnego obiektu $F(V)$.
+\end{enumerate}
+\end{definicja}
+
+Oznaczmy porównanie $A(f^*x)\to f^*(Ax)$ przez $k_{f,x}$. Jest to jedyny pionowy izomorfizm, którego złożenie z podniesieniem w $H$ daje obraz podniesienia w $F$, zgodnie ze stwierdzeniem~\ref{cat:prop:cartesian-functor-pseudonatural}. Morfizm presnopów w pierwszym warunku jest na $f$ dany przez $h\mapsto k_{f,y}A(h)k_{f,x}^{-1}$. Dla $a:g\to f$ w kategorii przekrojowej koherencja porównań mówi, że
+\[
+ k_{fa,x} A(c^F_{a,f,x})
+ =c^H_{a,f,Ax}\,a^*(k_{f,x})\,k_{a,f^*x}.
+\]
+Wobec naturalności $k_{a,-}$ podstawienie tego równania i jego odwrotności do obrazu $h[a]$ daje
+\[
+ k_{fa,y} A(h[a])k_{fa,x}^{-1}
+ = c^H_{a,f,Ay}\,a^*(k_{f,y}A(h)k_{f,x}^{-1})\,
+                  (c^H_{a,f,Ax})^{-1}.
+\]
+Prawa strona jest ograniczeniem obrazu $h$, co dowodzi naturalności. Pierwszy warunek opisuje lokalne istnienie i jednoznaczność morfizmów w sensie kryterium snopifikacji z twierdzenia~\ref{cat:thm:local-sheafification-isomorphism}; drugi opisuje lokalne istnienie obiektów.
+
+\begin{twierdzenie}[Lokalna równoważność między stosami]\label{cat:thm:local-equivalence-stacks}
+Lokalna równoważność $A:F\to H$ między stosami w grupoidach indukuje równoważność $F(U)\to H(U)$ dla każdego $U$.
+\end{twierdzenie}
+\begin{proof}
+Presnopy morfizmów obu stosów są snopami przez twierdzenie~\ref{cat:thm:prestack-hom-sheaf}. Pierwszy warunek lokalnej równoważności jest więc izomorfizmem samych presnopów. W szczególności na obiekcie $\id_U$ daje bijekcję zbiorów morfizmów (po kanonicznych identyfikacjach transportu wzdłuż identyczności). Funktor $A_U$ jest pełny i wierny.
+
+Dla $z\in H(U)$ wybieramy sito $R$ i dla każdego $f:V\to U$ w $R$ obiekt $x_f\in F(V)$ wraz z izomorfizmem $\alpha_f:A(x_f)\to f^*z$. Dla morfizmu $a:f\to g$ w $R$ definiujemy kartezjański morfizm $A(x_f)\to A(x_g)$ jako
+\[
+ \alpha_g^{-1}s_z(a)\alpha_f,
+\]
+gdzie $s_z$ jest sekcją ograniczeń $z$. Jest kartezjański, gdyż $s_z(a)$ jest kartezjański, a $\alpha_f,\alpha_g$ są pionowymi izomorfizmami. Wybieramy podniesienie $\lambda_{a,x_g}:a^*x_g\to x_g$ w $F$. Jego obraz przez $A$ jest kartezjański. Z własności uniwersalnej uzyskujemy jedyny pionowy morfizm $A(x_f)\to A(a^*x_g)$, którego złożenie z $A(\lambda_{a,x_g})$ daje wskazany morfizm. Jest on izomorfizmem przez porównanie dwóch podniesień kartezjańskich. Pełność i wierność $A_V$ podnoszą ten pionowy izomorfizm do jedynego pionowego izomorfizmu $x_f\to a^*x_g$. Po złożeniu z $\lambda_{a,x_g}$ otrzymujemy kartezjański morfizm $s(a):x_f\to x_g$.
+
+Morfizm $s(a)$ jest jedynym morfizmem nad $a$ o wskazanym obrazie przez $A$: każdy taki morfizm rozkłada się przez $\lambda_{a,x_g}$ na składową pionową, a ta jest wyznaczona przez kartezjańskość obrazu podniesienia i wierność na włóknie. Obrazy przez $A$ zachowują identyczności i składanie, ponieważ po sprzężeniu przez $\alpha_f$ są morfizmami funktora $s_z$. Jednoznaczność daje zatem aksjomaty funktora dla $s$. Otrzymujemy sekcję kartezjańską nad $R$. Ponieważ $F$ jest stosem, istnieje $x\in F(U)$ i izomorfizm $D_R(x)\cong s$. Stosując $A$ do izomorfizmu $D_R(x)\cong s$, otrzymujemy izomorfizm $A D_R(x)\cong A s$. Porównania $k_{f,x}$ tworzą naturalny izomorfizm $A D_R(x)\cong D_R(Ax)$, ponieważ obie sekcje mają podniesienia kartezjańskie do $Ax$. Z definicji $s(a)$ izomorfizmy $\alpha_f$ tworzą transformację naturalną $A s\cong D_R(z)$. Złożenie tych trzech izomorfizmów daje $D_R(Ax)\cong D_R(z)$ w $H$. Pełność i wierność funktora porównawczego $H$ podnoszą go do izomorfizmu $Ax\cong z$. Funktor $A_U$ jest istotnie surjektywny, a więc jest równoważnością.
+\end{proof}
+
+\begin{twierdzenie}[Stosyfikacja; wynik zewnętrzny]\label{cat:thm:stackification}
+Dla fibracji w grupoidach $F$ nad małym miejscem Grothendiecka istnieje stos w grupoidach $aF$ i funktor kartezjański $\eta:F\to aF$, będący lokalną równoważnością. Dla każdego stosu w grupoidach $S$ prekompozycja z $\eta$ określa równoważność grupoidów
+\[
+ \operatorname{Hom}_{\mathrm{cart}}(aF,S)
+ \longrightarrow \operatorname{Hom}_{\mathrm{cart}}(F,S).
+\]
+Obiektami tych grupoidów są funktory kartezjańskie nad bazą, a morfizmami pionowe transformacje naturalne.
+\end{twierdzenie}
+Nie dowodzimy ogólnego twierdzenia o stosyfikacji; por. \emph{Stacks Project}, rozdział \emph{Stacks}, sekcje 8.8--8.9, w szczególności lematy 8.9.1 (tag 02ZP), 8.9.2 (tag 0436) oraz 8.8.3 (tag 04W9). Jest to własność uniwersalna w sensie 2-kategorialnym: wymaga równoważności grupoidów morfizmów, nie bijekcji zbiorów funktorów. Z niej wynika jednoznaczność stosyfikacji z dokładnością do równoważności zgodnej z jednostkami: dla dwóch stosyfikacji używamy ich własności uniwersalnych do przedłużenia każdej jednostki przez drugą, otrzymując funktory w obu kierunkach. Ich złożenia po prekompozycji z odpowiednią jednostką są izomorficzne z tą jednostką. Pełność i wierność funktorów prekompozycji podnoszą te izomorfizmy do izomorfizmów złożeń z identycznościami.
+
+\begin{przyklad}[Stosyfikacja grupoidu działania]\label{cat:ex:quotient-stackification}
+Dla ciągłego lewego działania $G$ na $Y$ rozważmy presnop grupoidów $\mathcal A$ na zbiorach otwartych. Obiektami $\mathcal A(U)$ są ciągłe funkcje $y:U\to Y$, a morfizmami $y\to y'$ ciągłe funkcje $g:U\to G$ spełniające $y'(t)=g(t)y(t)$. Składanie i odwrotności są punktowe. Funktor
+\[
+ \mathcal A(U)\longrightarrow [Y/G](U)
+\]
+przypisuje $y$ parę $(U\times G,\varphi_y)$, gdzie $\varphi_y(t,h)=h^{-1}y(t)$, a morfizmowi $g$ przypisuje $(t,h)\mapsto(t,g(t)h)$. Jest on pełny i wierny, ponieważ każdy morfizm trywialnych torsorów ma dokładnie tę postać, a warunek zachowania funkcji do $Y$ jest równaniem $y'=gy$. W szczególności $\mathcal A$ jest prestosem: dla ustalonych funkcji $y,y'$ zgodne lokalne morfizmy są ciągłymi funkcjami do $G$, które sklejają się jednoznacznie w ciągłą funkcję $g$. Równanie $y'=gy$ jest spełnione punktowo, więc po sklejeniu pozostaje prawdziwe. To jest warunek snopu morfizmów z twierdzenia~\ref{cat:thm:prestack-hom-sheaf}.
+
+Każdy obiekt $[Y/G](U)$ jest lokalnie w obrazie tego funktora: na otwartym zbiorze $V$ wybieramy trywializację torsora, a $y(t)$ definiujemy jako wartość $\varphi$ na obrazie $(t,e)$. Zgodność względem działania daje wtedy wzór $\varphi(t,h)=h^{-1}y(t)$. Funktor jest zgodny z ograniczeniami z dokładnością do kanonicznych izomorfizmów, więc jest lokalną równoważnością. Z twierdzenia~\ref{cat:thm:stackification} przedłużamy go do $a\mathcal A\to[Y/G]$. Ten funktor jest lokalną równoważnością: lokalnie obiekty $a\mathcal A$ pochodzą z $\mathcal A$, a morfizmy pomiędzy takimi lokalnymi reprezentantami są identyfikowane po snopifikacji przez obie lokalne równoważności. Dokładniej, niech $x,y\in a\mathcal A(U)$, a $B:a\mathcal A\to[Y/G]$ będzie przedłużeniem. Przecinamy dwa sita pokrywające, na których odpowiednio $x$ i $y$ są izomorficzne z obrazami przez $\eta$; przecięcie pokrywa na mocy lematu~\ref{cat:lem:covering-refinement}. Dla $f:V\to U$ z tego przecięcia wybieramy reprezentanty $x_0,y_0\in\mathcal A(V)$. Snopy morfizmów między $f^*x,f^*y$ identyfikujemy przez sprzężenie z izomorfizmami reprezentantów. Na tych snopach morfizm indukowany przez $B$ jest izomorfizmem: po prekompozycji z izomorfizmem indukowanym przez $\eta$ na snopifikacjach presnopów morfizmów otrzymujemy izomorfizm indukowany przez $B\eta$, naturalnie izomorficzny z pierwotnym funktorem $\mathcal A\to[Y/G]$. 
+
+Izomorfizm snopów można sprawdzać lokalnie. Istotnie, dla dowolnego $g:W\to U$ przeciwobraz powyższego sita pokrywa $W$. Dwie sekcje o równych obrazach są na nim równe przez lokalną injektywność, a więc są równe globalnie przez rozdzieloność snopu. Dla dowolnej sekcji w przeciwdziedzinie jej ograniczenia mają jednoznaczne lokalne przeciwobrazy przez lokalną bijektywność. Są one zgodne ze wszystkimi dalszymi ograniczeniami przez jednoznaczność i naturalność. Warunek snopu skleja je w globalny przeciwobraz, którego obraz jest sekcją wyjściową przez rozdzieloność. Dowodzi to izomorfizmu snopów morfizmów indukowanego przez $B$. Istotna surjektywność lokalna wynika już z lokalnej surjektywności $\mathcal A\to[Y/G]$. Twierdzenie~\ref{cat:thm:local-equivalence-stacks} daje równoważność na każdym włóknie. W tym sensie stos ilorazowy jest stosyfikacją grupoidu działania.
+\end{przyklad}
+
+Warunek stosu różni się zatem od warunku snopu w dwóch istotnych miejscach: zgodność obiektów jest opisana izomorfizmami spełniającymi kocykl, a jednoznaczność obiektu globalnego dotyczy izomorfizmu zgodnego z danymi lokalnymi. Przykłady torsorów i stosów ilorazowych pokazują, dlaczego zastępowanie kategorii samymi zbiorami klas izomorfizmu może utracić informację potrzebną do sklejania.

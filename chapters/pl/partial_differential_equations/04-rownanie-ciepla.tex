@@ -1,0 +1,1860 @@
+\chapter[Równanie ciepła]{Równanie ciepła: jądro Gaussa, maksimum, wygładzanie i ewolucja}
+\label{chap:pde-heat}
+
+W poprzednim rozdziale warunek $\Delta u=0$ wymuszał silną
+sztywność funkcji. Teraz badamy równanie, w którym laplasjan
+steruje zmianą w czasie:
+\begin{equation}\label{eq:pde4-heat}
+ \partial_tu(t,x)-\kappa\Delta_xu(t,x)=f(t,x),\qquad
+ t>0,\quad x\in\R^n,\quad \kappa>0.
+\end{equation}
+Gdy $f=0$, równanie opisuje swobodną dyfuzję. Fundamentalne pytania
+są odmienne niż dla równania Laplace'a: jak odzyskać rozwiązanie
+z profilu początkowego, jakie informacje zostają zachowane i dlaczego
+każdy dodatni czas poprawia regularność? Wyprowadzimy rozwiązanie
+całego zagadnienia Cauchy'ego, zasady maksimum, formułę Duhamela,
+bilanse energii i przykłady pokazujące, że bez określenia klasy
+rozwiązań nawet jednoznaczność może zawieść.
+
+W całym rozdziale $n\geq1$ jest liczbą całkowitą,
+$\kappa>0$, a funkcje skalarne są rzeczywiste, o ile
+nie zaznaczono inaczej. Przez $\lambda_k$ oznaczamy
+miarę Lebesgue'a w $\R^k$ dla $k\geq1$.
+Dla $1\leq p<\infty$ symbole $L^p(\R^n)$ i $\|\cdot\|_p$
+oznaczają przestrzeń klas funkcji mierzalnych
+o całkowalnej $p$-tej potędze modułu oraz jej normę.
+Przestrzeń $L^\infty(\R^n)$ składa się z klas funkcji
+istotnie ograniczonych, a jej normą jest istotne
+supremum modułu. Przez $\mathrm{BUC}(\R^n)$ oznaczamy
+przestrzeń funkcji ograniczonych i jednostajnie
+ciągłych z normą supremum. W dalszych twierdzeniach
+\emph{silna ciągłość} oznacza zbieżność w normie danej
+przestrzeni, a nie tylko punktową ani słabą. Będziemy korzystać z elementarnych
+twierdzeń o całkowaniu: Fubiniego--Tonellego, zbieżności
+zdominowanej, nierówności Minkowskiego i ciągłości przesunięć
+w $L^p$; w rozdziałach o analizie funkcjonalnej wrócimy
+do ich szerszego kontekstu.
+
+\section{Jądro Gaussa: skąd bierze się rozwiązanie?}
+\label{sec:pde4-gauss}
+
+\begin{definicja}[Jądro cieplne]
+\label{def:pde4-kernel}
+Niech $n\geq1$ i $\kappa>0$. Dla $t>0$ oraz $x\in\R^n$
+definiujemy
+\begin{equation}\label{eq:pde4-kernel}
+ \Gamma_\kappa(t,x)=\frac{1}{(4\pi\kappa t)^{n/2}}
+ \exp\!\left(-\frac{|x|^2}{4\kappa t}\right).
+\end{equation}
+Zapis $\Gamma_\kappa(t)*g$ oznacza splot w zmiennej przestrzennej:
+$(\Gamma_\kappa(t)*g)(x)=\int_{\R^n}\Gamma_\kappa(t,x-y)g(y)
+\,\mathrm d\lambda_n(y)$, jeżeli całka ma sens.
+\end{definicja}
+
+\begin{twierdzenie}[Równanie, normalizacja i skalowanie]
+\label{thm:pde4-gauss-basic}
+Dla każdego $n\geq1$, $\kappa>0$, $t>0$ zachodzi:
+$\Gamma_\kappa(t,x)>0$,
+$(\partial_t-\kappa\Delta_x)\Gamma_\kappa(t,x)=0$
+dla $x\in\R^n$, oraz
+\begin{equation}\label{eq:pde4-normalize}
+ \int_{\R^n}\Gamma_\kappa(t,x)\,\mathrm d\lambda_n(x)=1.
+\end{equation}
+Ponadto $\Gamma_\kappa(t,x)=t^{-n/2}\Gamma_\kappa(1,x/\sqrt t)$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $n\geq1$, $\kappa>0$ i oznaczmy
+$\Gamma=\Gamma_\kappa$. Funkcja $\Gamma$ jest
+dodatnia i klasy $C^\infty$ na $(0,\infty)\times\R^n$.
+Różniczkując oba czynniki w jej definicji, otrzymujemy
+\[
+ \partial_t\Gamma(t,x)=
+ \left(-\frac n{2t}+\frac{|x|^2}{4\kappa t^2}\right)
+ \Gamma(t,x),\qquad
+ \partial_{x_j}\Gamma(t,x)=-\frac{x_j}{2\kappa t}\Gamma(t,x).
+\]
+Ponowne różniczkowanie względem $x_j$ daje
+\[
+ \partial_{x_j}^2\Gamma(t,x)
+ =\left(\frac{x_j^2}{4\kappa^2t^2}
+ -\frac1{2\kappa t}\right)\Gamma(t,x).
+\]
+Sumując względem $j=1,\ldots,n$ i mnożąc przez
+$\kappa$, dostajemy $\kappa\Delta_x\Gamma=\partial_t\Gamma$.
+
+Dla normalizacji oznaczmy
+$I=\int_\R e^{-z^2}\,\mathrm d\lambda_1(z)$.
+Całka jest skończona, ponieważ dla $|z|\geq1$
+mamy $e^{-z^2}\leq e^{-|z|}$.
+Z twierdzenia Tonellego i zmiany zmiennych
+we współrzędnych biegunowych w $\R^2$ wynika
+\[
+ I^2=\int_{\R^2}e^{-|z|^2}\,\mathrm d\lambda_2(z)
+ =2\pi\int_0^\infty e^{-r^2}r\,\mathrm d\lambda_1(r)
+ =\pi.
+\]
+Ponieważ $I>0$, mamy $I=\sqrt\pi$.
+Ponowne zastosowanie twierdzenia Tonellego
+do iloczynu $n$ funkcji jednowymiarowych daje
+$\int_{\R^n}e^{-|z|^2}\,\mathrm d\lambda_n(z)=\pi^{n/2}$.
+Podstawienie $x=\sqrt{4\kappa t}\,z$, którego
+jakobian ma moduł $(4\kappa t)^{n/2}$, daje
+\[
+ \int_{\R^n}\Gamma_\kappa(t,x)\,\mathrm d\lambda_n(x)
+ =(4\pi\kappa t)^{-n/2}(4\kappa t)^{n/2}\pi^{n/2}
+ =1.
+\]
+Wreszcie wstawienie $x/\sqrt t$ do wzoru na
+$\Gamma_\kappa(1,\cdot)$ daje dokładnie
+$t^{n/2}\Gamma_\kappa(t,x)$.
+\end{proof}
+
+\begin{uwaga}[Skalowanie paraboliczne]
+Niech $u$ będzie klasy $C^{1,2}$ na
+$(0,\infty)\times\R^n$ (jedna ciągła pochodna
+czasowa i ciągłe pochodne przestrzenne do rzędu
+drugiego) i niech $\partial_tu-\kappa\Delta_xu=0$.
+Dla $\rho>0$ połóżmy $u_\rho(t,x)=u(\rho^2t,\rho x)$.
+Reguła łańcuchowa daje
+\[
+ (\partial_t-\kappa\Delta_x)u_\rho(t,x)
+ =\rho^2(\partial_tu-\kappa\Delta_xu)(\rho^2t,\rho x)=0.
+\]
+Czas skaluje się zatem jak kwadrat odległości,
+w odróżnieniu od skali falowej $t\sim|x|$.
+
+Skalowanie sugeruje poszukiwanie rozwiązania o stałej
+masie w postaci $v(t,x)=t^{-n/2}F(x/\sqrt t)$.
+Dla $z=x/\sqrt t$ rachunek daje
+\[
+ (\partial_t-\kappa\Delta_x)v(t,x)
+ =-t^{-n/2-1}
+ \left(\kappa\Delta F(z)+\tfrac12 z\cdot\nabla F(z)
+ +\tfrac n2 F(z)\right).
+\]
+Wyrażenie w nawiasie jest dywergencją pola
+$\kappa\nabla F(z)+zF(z)/2$.
+Wystarczy więc znaleźć profil spełniający
+$\kappa\nabla F(z)+zF(z)/2=0$.
+Dla $F\in C^1(\R^n)$ jest to równoważne
+$\nabla(e^{|z|^2/(4\kappa)}F(z))=0$, czyli
+$F(z)=C e^{-|z|^2/(4\kappa)}$.
+Warunek jednostkowej masy daje
+$C=(4\pi\kappa)^{-n/2}$.
+Otrzymujemy jądro Gaussa. Nie twierdzimy, że każde
+rozwiązanie równania dla profilu musi spełniać ten
+silniejszy warunek zerowania pola; jest on tutaj
+wystarczającą metodą konstrukcji szukanego jądra.
+\end{uwaga}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,x=1.15cm,y=3.8cm]
+ \draw[->] (-3.2,0)--(3.55,0) node[right] {$x$};
+ \draw[->] (0,0)--(0,1.04) node[above] {$\Gamma_1(t,x)$};
+ \draw[blue!70!black,thick,domain=-3:3,samples=110]
+   plot (\x,{1/sqrt(4*pi*.12)*exp(-\x*\x/(4*.12))});
+ \draw[red!70!black,thick,domain=-3:3,samples=110]
+   plot (\x,{1/sqrt(4*pi*.45)*exp(-\x*\x/(4*.45))});
+ \draw[green!45!black,thick,domain=-3:3,samples=110]
+   plot (\x,{1/sqrt(4*pi*1.1)*exp(-\x*\x/(4*1.1))});
+ \node[blue!70!black,anchor=west] at (1.5,.79) {$t=0{,}12$};
+ \node[red!70!black,anchor=west] at (1.5,.68) {$t=0{,}45$};
+ \node[green!45!black,anchor=west] at (1.5,.57) {$t=1{,}1$};
+\end{tikzpicture}
+\par\smallskip\small
+Jądro cieplne w wymiarze jeden ($\kappa=1$): profil
+staje się niższy i szerszy, lecz całkowita masa pozostaje równa $1$.
+\end{center}
+
+\section{Własność półgrupy i przybliżona jedność}
+\label{sec:pde4-semigroup}
+
+\begin{lemat}[Składanie jąder Gaussa]
+\label{lem:pde4-convolution}
+Dla $n\geq1$, $\kappa>0$ oraz $s,t>0$ zachodzi
+$\Gamma_\kappa(t)*\Gamma_\kappa(s)=\Gamma_\kappa(t+s)$.
+\end{lemat}
+\begin{proof}
+Ustalmy $x\in\R^n$. Całka definiująca splot
+jest skończona, ponieważ jedno jądro jest ograniczone,
+a drugie ma całkę $1$. Rozwinięcie kwadratów daje
+\[
+ \frac{|x-y|^2}{t}+\frac{|y|^2}{s}
+ =\frac{t+s}{ts}\left|y-\frac{s}{t+s}x\right|^2
+ +\frac{|x|^2}{t+s}.
+\]
+Oznaczmy $a=ts/(t+s)>0$. Po podstawieniu
+$z=y-sx/(t+s)$ otrzymujemy
+\[
+ \begin{aligned}
+ (\Gamma_\kappa(t)*\Gamma_\kappa(s))(x)
+ &=\frac{e^{-|x|^2/(4\kappa(t+s))}}
+ {(4\pi\kappa)^n(ts)^{n/2}}
+ \int_{\R^n}e^{-|z|^2/(4\kappa a)}
+ \,\mathrm d\lambda_n(z)\\
+ &=\frac{(4\pi\kappa a)^{n/2}}
+ {(4\pi\kappa)^n(ts)^{n/2}}
+ e^{-|x|^2/(4\kappa(t+s))}\\
+ &=\frac{e^{-|x|^2/(4\kappa(t+s))}}
+ {(4\pi\kappa(t+s))^{n/2}}
+ =\Gamma_\kappa(t+s,x).
+ \end{aligned}
+\]
+W drugiej równości wykorzystaliśmy normalizację
+jądra w chwili $a$, a w trzeciej tożsamość
+$a/(ts)=1/(t+s)$.
+\end{proof}
+
+\begin{twierdzenie}[Przybliżona jedność]
+\label{thm:pde4-approx-identity}
+Niech $n\geq1$, $\kappa>0$. Dla $g\in\mathrm{BUC}(\R^n)$
+funkcje $P_tg:=\Gamma_\kappa(t)*g$ spełniają
+$\|P_tg-g\|_\infty\to0$ przy $t\downarrow0$.
+Dla $1\leq p<\infty$ i $g\in L^p(\R^n)$ zachodzi
+$\|P_tg-g\|_p\to0$ przy $t\downarrow0$.
+Dla każdej $g\in L^p$ ($1\leq p\leq\infty$),
+$\|P_tg\|_p\leq\|g\|_p$ dla $t>0$.
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonego $t>0$ jądro $\Gamma_\kappa(t,\cdot)$
+należy do każdego $L^q(\R^n)$, $1\leq q\leq\infty$:
+jest ograniczone, całkowalne, a dla $q<\infty$
+można oszacować jego $q$-tą potęgę przez
+$\|\Gamma_\kappa(t,\cdot)\|_\infty^{q-1}$
+razy samo jądro. Dla $g\in L^p(\R^n)$
+nierówność Höldera z wykładnikiem sprzężonym $q$
+($1/p+1/q=1$) daje więc bezwzględną zbieżność
+całki definiującej $P_tg(x)$ dla każdego $x$.
+Wynik nie zależy od wyboru reprezentanta klasy $g$,
+ponieważ translacja zbioru miary zero ma miarę zero.
+
+Potrzebujemy najpierw oszacowania ogona jądra.
+Dla każdego $\delta>0$, korzystając ze skalowania
+z twierdzenia~\ref{thm:pde4-gauss-basic}, mamy
+\[
+ \int_{|y|\geq\delta}\Gamma_\kappa(t,y)\,
+ \mathrm d\lambda_n(y)
+ =\int_{|z|\geq\delta/\sqrt t}\Gamma_\kappa(1,z)\,
+ \mathrm d\lambda_n(z)\longrightarrow0
+ \quad(t\downarrow0).
+\]
+Istotnie, funkcje charakterystyczne tych zbiorów
+dążą punktowo do zera, a funkcją dominującą
+jest całkowalne jądro $\Gamma_\kappa(1,\cdot)$.
+
+Dla $g\in\mathrm{BUC}(\R^n)$ normalizacja daje
+\[
+ |P_tg(x)-g(x)|\leq
+ \int_{\R^n}\Gamma_\kappa(t,y)|g(x-y)-g(x)|
+ \,\mathrm d\lambda_n(y).
+\]
+Ustalmy $\eps>0$ i wybierzmy $\delta>0$ tak,
+aby $|g(x-y)-g(x)|<\eps$ dla $|y|<\delta$
+i wszystkich $x\in\R^n$. Dzieląc całkę na
+$|y|<\delta$ oraz $|y|\geq\delta$, otrzymujemy
+\[
+ \|P_tg-g\|_\infty\leq\eps+
+ 2\|g\|_\infty\int_{|y|\geq\delta}\Gamma_\kappa(t,y)
+ \,\mathrm d\lambda_n(y).
+\]
+Granica górna przy $t\downarrow0$ nie przekracza
+$\eps$, a dowolność $\eps$ daje żądaną zbieżność.
+
+Niech teraz $1\leq p<\infty$. Przesunięcie
+$\tau_yg=g(\cdot-y)$ jest izometrią $L^p(\R^n)$.
+Dla $g\in C_c^\infty(\R^n)$ zbieżność
+$\|\tau_yg-g\|_p\to0$ przy $y\to0$ wynika
+z jednostajnej ciągłości i wspólnego ograniczonego
+nośnika dla $|y|\leq1$.
+Dla dowolnego $g\in L^p$ wybieramy
+$\phi\in C_c^\infty(\R^n)$ z $\|g-\phi\|_p<\eps$,
+korzystając z gęstości tej klasy, i otrzymujemy
+$\|\tau_yg-g\|_p\leq2\eps+\|\tau_y\phi-\phi\|_p$.
+Zatem przesunięcia są ciągłe w normie $L^p$.
+
+Nierówność całkowa Minkowskiego i normalizacja
+jądra dają
+\[
+ \begin{aligned}
+ \|P_tg\|_p&\leq\int_{\R^n}\Gamma_\kappa(t,y)
+                  \|\tau_yg\|_p\,\mathrm d\lambda_n(y)=\|g\|_p,\\
+ \|P_tg-g\|_p&\leq\int_{\R^n}\Gamma_\kappa(t,y)
+                  \|\tau_yg-g\|_p\,\mathrm d\lambda_n(y).
+ \end{aligned}
+\]
+Prawe strony są skończone, ponieważ
+$\|\tau_yg-g\|_p\leq2\|g\|_p$.
+Dla $\eps>0$ z ciągłości przesunięć wybieramy
+$\delta>0$ tak, aby $\|\tau_yg-g\|_p<\eps$
+dla $|y|<\delta$. Dzieląc drugą całkę jak poprzednio,
+dostajemy granicę górną nie większą niż $\eps$.
+Dowolność $\eps$ kończy dowód.
+
+Dla $p=\infty$ nierówność kontrakcji wynika
+bezpośrednio z $|g(x-y)|\leq\|g\|_\infty$
+dla prawie wszystkich $y$ oraz normalizacji jądra.
+\end{proof}
+
+Ustalmy $\kappa>0$ i oznaczmy $P_0g=g$.
+Dla $s,t>0$ i $g\in L^p$, $1\leq p\leq\infty$,
+podwójna całka używana w $P_tP_sg(x)$ jest
+bezwzględnie zbieżna. Istotnie, twierdzenie Tonellego
+dla całki z $|g|$ oraz lemat~\ref{lem:pde4-convolution}
+dają
+\[
+ \int_{\R^n}\int_{\R^n}\Gamma_\kappa(t,y)
+ \Gamma_\kappa(s,z)|g(x-y-z)|\,
+ \mathrm d\lambda_n(z)\,\mathrm d\lambda_n(y)
+ =P_{t+s}|g|(x)<\infty.
+\]
+Można zatem zastosować twierdzenie Fubiniego
+i otrzymać $P_tP_sg=P_{t+s}g$. Ta sama równość
+zachodzi dla $s=0$ lub $t=0$ z definicji $P_0$.
+
+Jeśli $g\in\mathrm{BUC}(\R^n)$, to
+\[
+ |P_tg(x+h)-P_tg(x)|
+ \leq\sup_{z\in\R^n}|g(z+h)-g(z)|,
+\]
+co pokazuje, że $P_t$ zachowuje $\mathrm{BUC}$
+i jest w niej kontrakcją.
+W przestrzeni $X=L^p(\R^n)$ dla $1\leq p<\infty$
+albo $X=\mathrm{BUC}(\R^n)$ dla $g\in X$ mamy
+\[
+ \|P_tg-P_sg\|_X\leq\|P_{t-s}g-g\|_X
+ \qquad(0\leq s\leq t).
+\]
+Wynika to z własności półgrupy i kontrakcji
+$P_s$. Twierdzenie~\ref{thm:pde4-approx-identity}
+daje zatem ciągłość odwzorowania $t\mapsto P_tg$
+w normie $X$ na $[0,\infty)$, również z lewej
+strony w każdym punkcie dodatnim.
+
+Na $L^\infty(\R^n)$ silna ciągłość w chwili zero
+nie musi zachodzić. Istotnie, niech
+$g(x)=\chi_{\{x_1>0\}}(x)$.
+Z symetrii jądra względem zmiany znaku pierwszej
+współrzędnej mamy $P_tg(0)=1/2$ dla każdego $t>0$.
+Ponadto
+\[
+ P_tg(x)=\int_{\{y_1<x_1\}}\Gamma_\kappa(t,y)\,
+ \mathrm d\lambda_n(y),
+\]
+więc funkcja po lewej jest ciągła w $x$ dzięki
+twierdzeniu o zbieżności zdominowanej (hiperpłaszczyzna
+$y_1=x_1$ ma miarę Lebesgue'a zero).
+Dla każdego $\eta>0$ na pewnej półkuli
+$B_\delta(0)\cap\{x_1>0\}$ dodatniej miary
+zachodzi $|P_tg(x)-1/2|<\eta$ i $g(x)=1$.
+Stąd $\|P_tg-g\|_\infty\geq1/2-\eta$,
+a dowolność $\eta$ daje
+$\|P_tg-g\|_\infty\geq1/2$ dla każdego $t>0$.
+Przestrzeń $\mathrm{BUC}$ jest więc naturalną
+przestrzenią danych ograniczonych dla silnie
+ciągłej półgrupy cieplnej.
+
+\section{Zagadnienie Cauchy'ego na całej przestrzeni}
+\label{sec:pde4-cauchy}
+
+\begin{twierdzenie}[Jawne rozwiązanie z danych początkowych]
+\label{thm:pde4-cauchy}
+Niech $n\geq1$, $\kappa>0$ i $g\in\mathrm{BUC}(\R^n)$.
+Definiujemy dla $t>0$,
+\begin{equation}\label{eq:pde4-cauchy}
+ u(t,x)=\int_{\R^n}\Gamma_\kappa(t,x-y)g(y)
+ \,\mathrm d\lambda_n(y),\qquad u(0,x)=g(x).
+\end{equation}
+Wówczas $u\in C([0,\infty);\mathrm{BUC}(\R^n))$,
+$u\in C^\infty((0,\infty)\times\R^n)$,
+$u_t-\kappa\Delta_xu=0$ dla $t>0$ oraz
+$\sup_{t\geq0}\|u(t,\cdot)\|_\infty\leq\|g\|_\infty$.
+Ponadto $g\geq0$ implikuje $u\geq0$.
+Jest to jedyne rozwiązanie z klasy
+$C^{1,2}((0,T]\times\R^n)\cap C([0,T]\times\R^n)$,
+ograniczone na $[0,T]\times\R^n$, o tych danych,
+dla każdego ustalonego $T>0$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $\kappa>0$ i zapiszmy $\Gamma=\Gamma_\kappa$.
+Dla każdego $t>0$ całka w~\eqref{eq:pde4-cauchy}
+jest bezwzględnie zbieżna, gdyż $g$ jest ograniczona,
+a jądro ma całkę $1$. Wykażmy gładkość rozwiązania
+we wszystkich zmiennych dla dodatnich czasów.
+
+Dla każdej liczby całkowitej $m\geq0$ oraz
+wielowskaźnika $\alpha\in\mathbb N_0^n$ pochodna
+$\partial_t^mD_z^\alpha\Gamma(t,z)$ jest postaci
+$A_{m,\alpha}(t,z)\Gamma(t,z)$, gdzie $A_{m,\alpha}$
+jest wielomianem względem $z$ o współczynnikach
+gładkich dla $t>0$. Istotnie, zaczynamy od $A_{0,0}=1$.
+Różniczkowanie wyrażenia $A\Gamma$ daje odpowiednio
+\[
+ \begin{aligned}
+ \partial_{z_j}(A\Gamma)
+ &=\left(\partial_{z_j}A-\frac{z_j}{2\kappa t}A\right)\Gamma,\\
+ \partial_t(A\Gamma)
+ &=\left(\partial_tA+
+ \left(-\frac n{2t}+\frac{|z|^2}{4\kappa t^2}\right)A\right)\Gamma.
+ \end{aligned}
+\]
+Obie operacje zachowują opisaną postać, co dowodzi
+jej dla wszystkich pochodnych przez indukcję.
+
+Ustalmy $0<a<b<\infty$ i $L>0$ oraz rozważmy
+$(t,x)\in[a,b]\times\overline{B_L(0)}$.
+Dla ustalonej pochodnej istnieją stała $C>0$
+i liczba całkowita $d\geq0$, niezależne od $t,x,y$,
+takie, że $|A_{m,\alpha}(t,x-y)|\leq C(1+|x-y|)^d$.
+Wynika to z ograniczoności skończonej liczby
+współczynników wielomianu na $[a,b]$.
+Ponadto z nierówności
+$|y|^2\leq2|x-y|^2+2|x|^2$ dostajemy
+$|x-y|^2\geq |y|^2/2-L^2$. W konsekwencji
+\[
+ e^{-|x-y|^2/(4\kappa t)}
+ \leq e^{-|x-y|^2/(4\kappa b)}
+ \leq e^{L^2/(4\kappa b)}e^{-|y|^2/(8\kappa b)}.
+\]
+Ponieważ $(4\pi\kappa t)^{-n/2}\leq(4\pi\kappa a)^{-n/2}$
+i $|x-y|\leq L+|y|$, istnieje stała $C'>0$ taka,
+że na rozważanym zbiorze
+\[
+ |\partial_t^mD_x^\alpha\Gamma(t,x-y)g(y)|
+ \leq C'\|g\|_\infty(1+|y|)^d
+       e^{-|y|^2/(8\kappa b)}.
+\]
+Prawa strona jest całkowalna w $\R^n$, ponieważ
+każdy wielomian wzrostu promieniowego jest
+całkowalny po pomnożeniu przez taką funkcję Gaussa.
+
+Na wnętrzu wskazanego cylindra ilorazy różnicowe
+są zdominowane przez oszacowanie odpowiedniej
+pochodnej następnego rzędu, na mocy twierdzenia
+o wartości średniej. Twierdzenie o zbieżności
+zdominowanej uzasadnia zarówno różniczkowanie
+pod całką, jak i ciągłość otrzymanych pochodnych.
+Dowolność $a,b,L$ daje $u\in C^\infty((0,\infty)\times\R^n)$
+i dla $t>0$ wzór
+\[
+ \partial_t^mD_x^\alpha u(t,x)
+ =\int_{\R^n}\partial_t^mD_x^\alpha\Gamma(t,x-y)
+ g(y)\,\mathrm d\lambda_n(y).
+\]
+Stąd, stosując twierdzenie~\ref{thm:pde4-gauss-basic},
+otrzymujemy
+$(\partial_t-\kappa\Delta_x)u(t,x)=0$.
+
+Z poprzedniej sekcji wiemy, że $P_t$ zachowuje
+przestrzeń $\mathrm{BUC}$ oraz że $t\mapsto P_tg$
+jest ciągłe w jej normie na $[0,\infty)$,
+gdzie $P_0g=g$. W szczególności $u(t,\cdot)\to g$
+jednostajnie na $\R^n$ przy $t\downarrow0$.
+Uzasadnijmy również ciągłość łączną: dla $s\geq0$,
+$x_0\in\R^n$ i $(t,x)\to(s,x_0)$, $t\geq0$, mamy
+\[
+ |u(t,x)-u(s,x_0)|\leq
+ \|P_tg-P_sg\|_\infty+
+ |P_sg(x)-P_sg(x_0)|\longrightarrow0.
+\]
+Pierwszy składnik znika dzięki ciągłości normowej,
+a drugi dzięki ciągłości funkcji $P_sg$.
+
+Kontrakcyjność daje $\|u(t,\cdot)\|_\infty\leq\|g\|_\infty$
+również dla $t=0$. Jeżeli $g\geq0$, to $u\geq0$
+dzięki dodatniości jądra. Na każdym przedziale
+$[0,T]$ skonstruowana funkcja należy więc do klasy
+wymaganej w tezie o jednoznaczności.
+Twierdzenie~\ref{thm:pde4-global-uniqueness},
+udowodnione poniżej przy użyciu zasady maksimum,
+zapewnia jednoznaczność w tej klasie. Jego dowód
+nie korzysta z obecnej reprezentacji całkowej.
+\end{proof}
+
+\begin{wniosek}[Natychmiastowe rozchodzenie się zaburzenia]
+\label{cor:pde4-positive}
+Niech $n\geq1$, $\kappa>0$, a
+$g\in C_c(\R^n)$ będzie nieujemna i nierówna identycznie
+zeru. Wówczas rozwiązanie~\eqref{eq:pde4-cauchy}
+ma własność $u(t,x)>0$ dla każdego $t>0$, $x\in\R^n$.
+\end{wniosek}
+\begin{proof}
+Funkcja ciągła o zwartym nośniku jest ograniczona
+i jednostajnie ciągła na $\R^n$, więc spełnia
+założenia twierdzenia~\ref{thm:pde4-cauchy}.
+Ponieważ $g$ jest nieujemna i nie jest identycznie
+zerowa, istnieje $y_0\in\R^n$ takie, że $g(y_0)>0$.
+Z ciągłości wybieramy $r>0$ i $c=g(y_0)/2>0$
+tak, aby $g\geq c$ na $\overline{B_r(y_0)}$.
+Dla ustalonego $t>0$ i $x\in\R^n$ funkcja
+$y\mapsto\Gamma_\kappa(t,x-y)$ jest ciągła
+i ściśle dodatnia, a więc osiąga dodatnie minimum
+$m_{t,x}$ na tej zwartej kuli.
+Nieujemność $g$ na całej przestrzeni daje
+\[
+ u(t,x)\geq c\int_{B_r(y_0)}
+ \Gamma_\kappa(t,x-y)\,\mathrm d\lambda_n(y)
+ \geq c\,m_{t,x}\lambda_n(B_r(y_0))>0.
+\]
+W szczególności zwarty nośnik nieujemnych,
+niezerowych danych początkowych nie pociąga
+za sobą ograniczonego nośnika rozwiązania
+w żadnej dodatniej chwili. Nie twierdzimy tu,
+że dane zmieniające znak dają rozwiązanie dodatnie.
+\end{proof}
+
+\begin{stwierdzenie}[Zachowanie masy i tłumienie norm]
+\label{prop:pde4-mass}
+Niech $n\geq1$, $\kappa>0$, $t>0$.
+Dla $g\in L^1(\R^n)$ zachodzi
+\begin{equation}\label{eq:pde4-mass}
+ \int_{\R^n}(P_tg)(x)\,\mathrm d\lambda_n(x)
+ =\int_{\R^n}g(x)\,\mathrm d\lambda_n(x).
+\end{equation}
+Dla $g\in L^1(\R^n)$ zachodzi również
+\begin{equation}\label{eq:pde4-L1Linf}
+ \|P_tg\|_\infty\leq (4\pi\kappa t)^{-n/2}\|g\|_1,
+ \qquad
+ \|P_tg\|_2\leq (8\pi\kappa t)^{-n/4}\|g\|_1.
+\end{equation}
+\end{stwierdzenie}
+\begin{proof}
+Niech $g\in L^1(\R^n)$ i ustalmy $t>0$.
+Twierdzenie Tonellego dla nieujemnej funkcji
+podcałkowej oraz normalizacja jądra dają
+\[
+ \begin{aligned}
+ &\int_{\R^n}\int_{\R^n}\Gamma_\kappa(t,x-y)|g(y)|
+       \,\mathrm d\lambda_n(y)\,\mathrm d\lambda_n(x)\\
+ &\quad=\int_{\R^n}|g(y)|
+   \left(\int_{\R^n}\Gamma_\kappa(t,x-y)\,
+                 \mathrm d\lambda_n(x)\right)\mathrm d\lambda_n(y)
+ =\|g\|_1.
+ \end{aligned}
+\]
+Wewnętrzna całka ma wartość $1$ dzięki niezmienniczości
+miary Lebesgue'a względem przesunięć.
+W szczególności podwójna całka z $g$ zamiast
+$|g|$ jest bezwzględnie zbieżna. Stosując
+twierdzenie Fubiniego otrzymujemy
+\[
+ \int_{\R^n}P_tg(x)\,\mathrm d\lambda_n(x)
+ =\int_{\R^n}g(y)\,\mathrm d\lambda_n(y),
+\]
+czyli~\eqref{eq:pde4-mass}. Jest to zachowanie
+całki z funkcji, również dla danych zmieniających
+znak. Jeśli $g\geq0$ prawie wszędzie, dodatniość
+jądra daje $P_tg\geq0$ i stąd
+$\|P_tg\|_1=\|g\|_1$. Dla dowolnych danych
+$|P_tg|\leq P_t|g|$, co daje tylko kontrakcję
+w normie $L^1$.
+
+Maksimum jądra jest osiągane w zerze:
+$\Gamma_\kappa(t,0)=(4\pi\kappa t)^{-n/2}$.
+Zatem dla każdego $x\in\R^n$ zachodzi
+\[
+ |P_tg(x)|\leq(4\pi\kappa t)^{-n/2}\|g\|_1.
+\]
+Biorąc istotne supremum po $x$, otrzymujemy
+pierwszą nierówność w~\eqref{eq:pde4-L1Linf}.
+
+Dla drugiej obliczamy normę jądra wprost.
+Korzystając z całki Gaussa, mamy
+\[
+ \begin{aligned}
+ \|\Gamma_\kappa(t,\cdot)\|_2^2
+ &=(4\pi\kappa t)^{-n}
+ \int_{\R^n}e^{-|x|^2/(2\kappa t)}\,\mathrm d\lambda_n(x)\\
+ &=(4\pi\kappa t)^{-n}(2\pi\kappa t)^{n/2}
+ =(8\pi\kappa t)^{-n/2}.
+ \end{aligned}
+\]
+Z niezmienniczości normy względem przesunięć
+i całkowej nierówności Minkowskiego wynika
+\[
+ \begin{aligned}
+ \|P_tg\|_2
+ &\leq\int_{\R^n}|g(y)|
+       \|\Gamma_\kappa(t,\cdot-y)\|_2\,\mathrm d\lambda_n(y)\\
+ &= (8\pi\kappa t)^{-n/4}\|g\|_1.
+ \end{aligned}
+\]
+Prawa strona jest skończona dla $g\in L^1$,
+co zarazem uzasadnia, że $P_tg\in L^2$.
+\end{proof}
+
+\section{Paraboliczna zasada maksimum i jednoznaczność}
+\label{sec:pde4-maximum}
+
+Niech $\Omega\subset\R^n$ będzie obszarem ograniczonym,
+a $T>0$. Wprowadzamy cylinder $Q_T=(0,T)\times\Omega$,
+jego domknięcie $\overline{Q_T}=[0,T]\times\overline\Omega$
+oraz \emph{brzeg paraboliczny}
+\[
+ \partial_pQ_T=(\{0\}\times\overline\Omega)
+ \cup([0,T]\times\partial\Omega).
+\]
+Brzeg paraboliczny obejmuje dolną podstawę i ścianę
+boczną cylindra, ale nie obejmuje punktów
+$\{T\}\times\Omega$. To właśnie na brzegu parabolicznym
+kontrolujemy dane rozwiązania w zagadnieniu postępowym;
+na górnej podstawie nie zadaje się niezależnych danych.
+
+Przez $C^{1,2}((0,T]\times\Omega)$ rozumiemy tutaj
+funkcje o ciągłej pochodnej czasowej i ciągłych
+pochodnych przestrzennych do rzędu drugiego
+na wskazanym zbiorze; w chwili $T$ pochodna czasowa
+jest rozumiana jako pochodna lewostronna.
+Nie zakładamy istnienia pochodnych na brzegu
+przestrzennym ani w chwili początkowej.
+
+\begin{twierdzenie}[Słaba paraboliczna zasada maksimum]
+\label{thm:pde4-max}
+Niech $n\geq1$, $\Omega\subset\R^n$ będzie obszarem
+ograniczonym, $T>0$, $\kappa>0$, a
+$u\in C([0,T]\times\overline\Omega)\cap
+C^{1,2}((0,T]\times\Omega)$ będzie funkcją rzeczywistą
+spełniającą
+$\partial_tu-\kappa\Delta_xu\leq0$
+na $(0,T]\times\Omega$.
+Wówczas
+\begin{equation}\label{eq:pde4-max}
+ \max_{[0,T]\times\overline\Omega}u
+ \leq \max_{\partial_pQ_T}u.
+\end{equation}
+W konsekwencji, jeśli funkcje $u_1,u_2$ z tej samej
+klasy spełniają
+$(\partial_t-\kappa\Delta_x)u_1
+\leq(\partial_t-\kappa\Delta_x)u_2$
+na $(0,T]\times\Omega$ oraz $u_1\leq u_2$
+na $\partial_pQ_T$, to $u_1\leq u_2$
+na całym $\overline{Q_T}$.
+W szczególności rozwiązania tego samego równania
+z tymi samymi danymi na brzegu parabolicznym
+są jednoznaczne w podanej klasie.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $\eps>0$ i połóżmy $v(t,x)=u(t,x)-\eps t$.
+Funkcja $v$ ma tę samą regularność co $u$ oraz spełnia
+\[
+ \partial_tv-\kappa\Delta_xv
+ =\partial_tu-\kappa\Delta_xu-\eps\leq-\eps<0.
+\]
+Ponieważ $\Omega$ jest ograniczony,
+$\overline{Q_T}$ jest zwarty. Funkcja $v$ osiąga
+więc na nim maksimum. Przypuśćmy, że pewien
+punkt maksimum $(t_0,x_0)$ nie należy do
+$\partial_pQ_T$. Wówczas $0<t_0\leq T$ i $x_0\in\Omega$.
+Funkcja $x\mapsto v(t_0,x)$ osiąga maksimum
+lokalne w punkcie wewnętrznym $x_0$. Stąd
+$\nabla_xv(t_0,x_0)=0$, jej hesjan przestrzenny
+jest niedodatnio określony i w szczególności
+$\Delta_xv(t_0,x_0)\leq0$.
+
+Jeśli $t_0<T$, funkcja $t\mapsto v(t,x_0)$
+ma maksimum w punkcie wewnętrznym przedziału
+$(0,T)$, a więc $\partial_tv(t_0,x_0)=0$.
+Jeśli natomiast $t_0=T$, dla każdego dostatecznie
+małego $h>0$ mamy
+\[
+ \frac{v(T,x_0)-v(T-h,x_0)}{h}\geq0.
+\]
+Przechodząc z $h$ do zera otrzymujemy
+$\partial_tv(T,x_0)\geq0$ w sensie pochodnej
+lewostronnej. W obu przypadkach
+$(\partial_t-\kappa\Delta_x)v(t_0,x_0)\geq0$,
+co przeczy ścisłej nierówności dla $v$.
+
+Każdy punkt maksimum $v$ należy zatem do brzegu
+parabolicznego. Na tym brzegu $v\leq u$, gdyż
+$t\geq0$, a na całym domkniętym cylindrze
+$u=v+\eps t\leq v+\eps T$. Otrzymujemy
+\[
+ \max_{\overline{Q_T}}u
+ \leq\max_{\overline{Q_T}}v+\eps T
+ =\max_{\partial_pQ_T}v+\eps T
+ \leq\max_{\partial_pQ_T}u+\eps T.
+\]
+Dowolność $\eps>0$ daje~\eqref{eq:pde4-max}.
+Nie użyliśmy żadnego założenia o gładkości
+brzegu przestrzennego $\Omega$.
+
+Dla porównania funkcji $u_1,u_2$ stosujemy
+wykazaną nierówność do $w=u_1-u_2$.
+Z założeń wynika
+$(\partial_t-\kappa\Delta_x)w\leq0$
+oraz $w\leq0$ na brzegu parabolicznym, więc $w\leq0$
+na $\overline{Q_T}$. Jeżeli obie funkcje spełniają
+to samo równanie i mają te same dane, stosujemy
+porównanie także w odwrotnym kierunku.
+\end{proof}
+
+\begin{twierdzenie}[Jednoznaczność w klasie rozwiązań ograniczonych]
+\label{thm:pde4-global-uniqueness}
+Niech $n\geq1$, $\kappa>0$, $T>0$. Jeśli
+$u,v\in C([0,T]\times\R^n)\cap
+C^{1,2}((0,T]\times\R^n)$ są rzeczywistymi
+funkcjami ograniczonymi na $[0,T]\times\R^n$,
+spełniają
+\[
+ \partial_tu-\kappa\Delta_xu=0,\qquad
+ \partial_tv-\kappa\Delta_xv=0
+ \quad\text{na }(0,T]\times\R^n,
+\]
+to zachodzi oszacowanie stabilności względem
+danych początkowych
+\[
+ \sup_{(t,x)\in[0,T]\times\R^n}|u(t,x)-v(t,x)|
+ \leq\sup_{x\in\R^n}|u(0,x)-v(0,x)|.
+\]
+W szczególności, jeśli $u(0,x)=v(0,x)$ dla wszystkich
+$x\in\R^n$, to $u=v$ na $[0,T]\times\R^n$.
+\end{twierdzenie}
+\begin{proof}
+Niech $w=u-v$ i oznaczmy
+$M=\sup_{[0,T]\times\R^n}|w|<\infty$ oraz
+$A=\sup_{\R^n}|w(0,\cdot)|\leq M$.
+Funkcja $w$ spełnia jednorodne równanie ciepła.
+Nie możemy jednak bezpośrednio zastosować
+twierdzenia~\ref{thm:pde4-max} do całej przestrzeni,
+gdyż cylinder jest nieograniczony.
+
+Dla $\eps>0$ wprowadzamy funkcję
+$b_\eps(t,x)=\eps(|x|^2+2n\kappa t)$.
+Ponieważ $\Delta_x|x|^2=2n$, zachodzi
+\[
+ \partial_tb_\eps=2n\kappa\eps
+ =\kappa\Delta_xb_\eps.
+\]
+Funkcja $b_\eps$ jest więc dokładnym rozwiązaniem
+równania ciepła. Jest nieujemna dla $t\geq0$
+i rośnie kwadratowo wraz z $|x|$.
+Ustalmy dowolny punkt $(t_*,x_*)\in[0,T]\times\R^n$.
+Dla danego $\eps>0$ wybierzmy $R>0$ tak, aby
+$R>|x_*|$ i $\eps R^2>M$.
+
+Na cylindrze $[0,T]\times\overline{B_R(0)}$
+rozważamy $w_\eps=w-A-b_\eps$.
+Funkcja ta jest ciągła na domknięciu cylindra,
+ma wymaganą regularność wewnątrz i na górnej
+podstawie oraz spełnia
+$(\partial_t-\kappa\Delta_x)w_\eps=0$.
+Na dolnej podstawie mamy
+\[
+ w_\eps(0,x)=w(0,x)-A-\eps|x|^2\leq0
+ \qquad(x\in\overline{B_R(0)}).
+\]
+Na ścianie bocznej dla $0\leq t\leq T$ i $|x|=R$
+otrzymujemy
+$w_\eps(t,x)\leq M-A-\eps R^2<0$.
+Twierdzenie~\ref{thm:pde4-max} daje więc
+$w_\eps\leq0$ na całym domkniętym cylindrze.
+W szczególności
+\[
+ w(t_*,x_*)\leq A+\eps(|x_*|^2+2n\kappa t_*).
+\]
+Chociaż promień $R$ zależy od $\eps$, powyższe
+oszacowanie w ustalonym punkcie zachodzi dla
+każdego $\eps>0$. Przechodząc z $\eps$ do zera,
+otrzymujemy $w(t_*,x_*)\leq A$.
+
+Stosujemy ten sam argument do $-w$, dla którego
+stałe $M$ i $A$ są takie same. Otrzymujemy
+$-w(t_*,x_*)\leq A$. Punkt był dowolny, zatem
+$|w|\leq A$ na $[0,T]\times\R^n$, co dowodzi
+oszacowania. Dla zgodnych danych początkowych
+$A=0$, więc $w=0$.
+Dowód nie korzysta z reprezentacji rozwiązania
+za pomocą splotu z jądrem Gaussa.
+\end{proof}
+
+\begin{uwaga}[Dlaczego trzeba podać klasę rozwiązań?]
+Ograniczoność na całym $[0,T]\times\R^n$ jest
+w powyższym dowodzie istotna: pozwala dla danego
+$\eps$ wybrać promień kuli niezależny od czasu,
+na której ścianie bocznej dominuje bariera.
+Nie należy utożsamiać tego założenia z samą
+ograniczonością na zbiorach zwartych, która
+wynika już z ciągłości rozwiązania.
+Pod koniec rozdziału przedstawimy niezerowe
+rozwiązanie jednorodnego równania ciepła z zerowymi
+danymi początkowymi, niespełniające globalnego
+warunku ograniczoności.
+\end{uwaga}
+
+\section{Wygładzanie i analityczność przestrzenna}
+\label{sec:pde4-smoothing}
+
+\begin{twierdzenie}[Oszacowania pochodnych]
+\label{thm:pde4-smoothing}
+Niech $n\geq1$, $\kappa>0$, $g\in L^\infty(\R^n)$,
+a $u(t,x)=P_tg(x)$ dla $t>0$.
+Dla każdego wielowskaźnika $\alpha\in\mathbb N_0^n$
+istnieje stała $C_{\alpha,n}>0$, niezależna od
+$g,t,\kappa$, taka że dla każdego $t>0$
+\begin{equation}\label{eq:pde4-derivative}
+ \|\partial_x^\alpha u(t,\cdot)\|_\infty
+ \leq C_{\alpha,n}(\kappa t)^{-|\alpha|/2}\|g\|_\infty.
+\end{equation}
+Co więcej, dla każdego ustalonego $t>0$ funkcja
+$x\mapsto u(t,x)$ przedłuża się do funkcji holomorficznej
+$U_t$ na $\C^n$, spełniającej
+\[
+ |U_t(x+i\eta)|\leq
+ e^{|\eta|^2/(4\kappa t)}\|g\|_\infty
+ \qquad(x,\eta\in\R^n).
+\]
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy $a=\kappa t$ i $K(z)=(4\pi)^{-n/2}e^{-|z|^2/4}$
+dla $z\in\R^n$. Wówczas $\Gamma_\kappa(t,x)=a^{-n/2}K(x/\sqrt a)$.
+Dla wielowskaźnika $\alpha=(\alpha_1,\ldots,\alpha_n)$
+o długości $|\alpha|=\sum_j\alpha_j$ reguła łańcuchowa daje
+\[
+ \partial_x^\alpha\Gamma_\kappa(t,x)
+ =a^{-(n+|\alpha|)/2}(\partial^\alpha K)(x/\sqrt a).
+\]
+Ponieważ $\partial_{z_j}K=-z_jK/2$, indukcyjnie otrzymujemy
+$\partial^\alpha K=Q_\alpha K$, gdzie $Q_0=1$ oraz
+$Q_{\alpha+e_j}=\partial_{z_j}Q_\alpha-z_jQ_\alpha/2$;
+$e_j$ jest $j$-tym wektorem standardowej bazy.
+Wielomian $Q_\alpha$ ma niezerowy składnik jednorodny
+najwyższego stopnia $(-1/2)^{|\alpha|}z^\alpha$.
+Zatem $C_{\alpha,n}=\|\partial^\alpha K\|_1$ jest
+skończone i dodatnie. Podstawienie $x=\sqrt a\,z$
+daje $\|\partial_x^\alpha\Gamma_\kappa(t,\cdot)\|_1
+=a^{-|\alpha|/2}C_{\alpha,n}$.
+Argument dominacji z dowodu twierdzenia
+\ref{thm:pde4-cauchy} wymaga tylko istotnej
+ograniczoności $g$, nie jej ciągłości: wybieramy
+ograniczonego reprezentanta klasy. Wolno więc
+różniczkować splot dowolną liczbę razy dla $t>0$.
+Z niezmienniczości miary Lebesgue'a względem przesunięć
+otrzymujemy
+\[
+ |\partial_x^\alpha u(t,x)|
+ \leq\|g\|_\infty\int_{\R^n}
+ |\partial_x^\alpha\Gamma_\kappa(t,x-y)|\,\mathrm d\lambda_n(y)
+ =a^{-|\alpha|/2}C_{\alpha,n}\|g\|_\infty.
+\]
+Biorąc supremum otrzymujemy~\eqref{eq:pde4-derivative}.
+
+Dla ustalonego $t>0$ definiujemy
+\[
+ U_t(z)=\int_{\R^n}E(z,y)g(y)\,\mathrm d\lambda_n(y),
+ \qquad
+ E(z,y)=\frac1{(4\pi a)^{n/2}}
+ \exp\!\left(-\frac{\sum_{j=1}^n(z_j-y_j)^2}{4a}\right).
+\]
+W wykładniku występuje suma kwadratów zespolonych,
+a nie kwadrat normy hermitowskiej. Dla $z=x+i\eta$
+mamy $\operatorname{Re}\sum_j(z_j-y_j)^2=|x-y|^2-|\eta|^2$,
+więc $|E(x+i\eta,y)|=e^{|\eta|^2/(4a)}\Gamma_\kappa(t,x-y)$.
+Normalizacja jądra daje bezwzględną zbieżność
+całki dla każdego $z$ oraz oszacowanie podane w tezie.
+
+Dla każdego $y$ funkcja $E(\cdot,y)$ jest holomorficzna
+na $\C^n$. Jeżeli $|\operatorname{Re}z|,|\operatorname{Im}z|\leq L$,
+to z $|x-y|^2\geq |y|^2/2-L^2$ wynika
+\[
+ |E(z,y)|\leq(4\pi a)^{-n/2}e^{L^2/(2a)}e^{-|y|^2/(8a)}.
+\]
+Ponadto
+\[
+ \begin{aligned}
+ \partial_{z_j}E&=-\frac{z_j-y_j}{2a}E,\\
+ \partial_{z_k}\partial_{z_j}E
+ &=\left(\frac{(z_j-y_j)(z_k-y_k)}{4a^2}
+ -\frac{\delta_{jk}}{2a}\right)E,
+ \end{aligned}
+\]
+gdzie $\delta_{jk}=1$ dla $j=k$ i $0$ w przeciwnym
+przypadku. Funkcję $E$ i obie grupy pochodnych,
+pomnożone przez $g(y)$, dominuje na wskazanym
+zbiorze jedna całkowalna funkcja postaci
+$C\|g\|_\infty(1+|y|)^2e^{-|y|^2/(8a)}$.
+
+Ustalmy $z_0\in\C^n$ i wybierzmy $L$ tak duże,
+aby odcinki $z_0+sh$, $0\leq s\leq1$, $|h|\leq1$,
+mieściły się w rozważanym zbiorze. Wzór Taylora
+z resztą całkową dla funkcji $s\mapsto E(z_0+sh,y)$ daje
+\[
+ \begin{aligned}
+ E(z_0+h,y)-E(z_0,y)
+ &=\sum_j\partial_{z_j}E(z_0,y)h_j\\
+ &\quad+\int_0^1(1-s)\sum_{j,k}
+ \partial_{z_j}\partial_{z_k}E(z_0+sh,y)h_jh_k\,
+ \mathrm d\lambda_1(s).
+ \end{aligned}
+\]
+Ponieważ $\sum_{j,k}|h_jh_k|\leq n|h|^2$,
+moduł reszty pomnożonej przez $g$ jest ograniczony
+przez całkowalną majorantę razy $|h|^2$. Po całkowaniu
+otrzymujemy
+\[
+ U_t(z_0+h)=U_t(z_0)+\sum_jh_j
+ \int_{\R^n}\partial_{z_j}E(z_0,y)g(y)\,\mathrm d\lambda_n(y)
+ +O(|h|^2).
+\]
+Wyraz liniowy jest zespolono-liniowy względem $h$.
+Funkcja $U_t$ jest różniczkowalna w sensie Frécheta
+nad $\C$ w każdym punkcie $\C^n$, a zatem holomorficzna.
+Jej ograniczenie do $\R^n$ jest równe $P_tg$,
+w szczególności jest rzeczywiście analityczne.
+\end{proof}
+
+\begin{przyklad}[Wygasanie wysokich częstości]
+Niech $\xi\in\R^n$ i $g(x)=\cos(\xi\cdot x)$.
+Funkcja $g$ należy do $\mathrm{BUC}(\R^n)$,
+gdyż jest ograniczona i ma ograniczony gradient.
+Połóżmy $u(t,x)=e^{-\kappa|\xi|^2t}\cos(\xi\cdot x)$.
+Mamy $\partial_tu=-\kappa|\xi|^2u$ oraz
+$\partial_{x_j}^2u=-\xi_j^2u$, więc
+$\partial_tu-\kappa\Delta_xu=0$. Funkcja jest gładka,
+spełnia dane początkowe i jest ograniczona przez $1$
+na całym $[0,\infty)\times\R^n$. Z twierdzeń
+\ref{thm:pde4-cauchy} i~\ref{thm:pde4-global-uniqueness}
+wynika $u(t,\cdot)=P_tg$. Dla ustalonego $t>0$
+mnożnik $e^{-\kappa t|\xi|^2}$ maleje wykładniczo
+względem kwadratu normy częstości przestrzennej.
+Dla $\xi=0$ rozwiązanie jest stałe i nie zanika.
+\end{przyklad}
+
+\begin{lemat}[Generator półgrupy cieplnej na gładkich danych]
+\label{lem:pde-v31-heat-generator}
+Niech $n\geq1$, $\kappa>0$ oraz
+$h\in C^2(\R^n)$, przy czym $h$ i wszystkie pochodne
+przestrzenne rzędu co najwyżej dwa są ograniczone
+i jednostajnie ciągłe na $\R^n$.
+Wtedy dla $t>0$ zachodzi
+\begin{equation}\label{eq:pde-v31-heat-generator}
+ P_th-h=\kappa\int_0^t P_s(\Delta h)\,\mathrm d\lambda_1(s),
+ \qquad
+ \lim_{t\downarrow0}\left\|\frac{P_th-h}{t}
+                 -\kappa\Delta h\right\|_\infty=0.
+\end{equation}
+Całkę rozumiemy punktowo lub, równoważnie, jako
+całkę funkcji ciągłej o wartościach w $\mathrm{BUC}(\R^n)$.
+\end{lemat}
+\begin{proof}
+Dla $s>0$ mamy $P_sh(x)=\int_{\R^n}\Gamma_\kappa(s,z)
+h(x-z)\,\mathrm d\lambda_n(z)$. Różniczkując pod
+całką względem $x$ do rzędu drugiego, korzystamy
+z ograniczoności pochodnych $h$ i całkowalności
+jądra: ilorazy różnicowe są zdominowane przez
+jądro pomnożone przez supremum odpowiedniej pochodnej $h$.
+Otrzymujemy $\Delta_xP_sh=P_s(\Delta h)$.
+Z twierdzenia~\ref{thm:pde4-cauchy} wynika więc
+$\partial_sP_sh=\kappa\Delta_xP_sh=\kappa P_s(\Delta h)$.
+
+Alternatywnie można przenieść laplasjan z jądra
+na dane. Ustalmy $s>0$, $x\in\R^n$ i oznaczmy
+$K_x(y)=\Gamma_\kappa(s,x-y)$. Mamy
+$\Delta_x K_x=\Delta_y K_x$. Całkowanie przez części
+na $B_R(0)$ daje
+\[
+ \int_{B_R}(h\Delta_y K_x-K_x\Delta h)\,\mathrm d\lambda_n
+ =\int_{\partial B_R}(h\partial_\nu K_x-K_x\partial_\nu h)
+ \,\mathrm d\sigma.
+\]
+Dla $R>|x|$ moduł całki brzegowej jest nie większy niż
+\[
+ \begin{aligned}
+ &\sigma(S^{n-1})R^{n-1}(4\pi\kappa s)^{-n/2}
+ e^{-(R-|x|)^2/(4\kappa s)}\\
+ &\qquad{}\cdot\left(\|h\|_\infty\frac{R+|x|}{2\kappa s}
+ +\|\nabla h\|_\infty\right).
+ \end{aligned}
+\]
+W wymiarze jeden przyjmujemy $\sigma(S^0)=2$,
+a całka brzegowa jest sumą po końcach przedziału.
+Oszacowanie dąży do zera przy $R\to\infty$.
+Całki objętościowe są bezwzględnie zbieżne,
+gdyż $h,\Delta h$ są ograniczone, a jądro
+i jego pochodne są całkowalne. Przejście do granicy
+daje tę samą tożsamość $\Delta_xP_sh=P_s(\Delta h)$.
+
+Dla $0<\delta<t$ całkujemy punktowo równanie
+względem czasu, otrzymując
+\[
+ P_th(x)-P_\delta h(x)
+ =\kappa\int_\delta^t P_s(\Delta h)(x)\,\mathrm d\lambda_1(s).
+\]
+Ponieważ $\Delta h\in\mathrm{BUC}$, odwzorowanie
+$s\mapsto P_s(\Delta h)$ jest ciągłe w normie
+na $[0,t]$. Jego całka w tej przestrzeni istnieje
+jako granica sum Riemanna; ciągłość funkcjonałów
+obliczania wartości w punkcie daje zgodność z całką
+punktową. Mamy
+$\|\int_0^\delta P_s(\Delta h)\,\mathrm d\lambda_1(s)\|_\infty
+\leq\delta\|\Delta h\|_\infty$ oraz
+$P_\delta h\to h$ w normie supremum.
+Przejście z $\delta$ do zera daje pierwszą równość.
+
+Dzieląc ją przez $t$ i odejmując $\kappa\Delta h$,
+otrzymujemy
+\[
+ \left\|\frac{P_th-h}{t}-\kappa\Delta h\right\|_\infty
+ \leq\kappa\sup_{0\leq s\leq t}
+ \|P_s(\Delta h)-\Delta h\|_\infty
+ \longrightarrow0\quad(t\downarrow0).
+\]
+Ostatnia granica wynika z silnej ciągłości półgrupy.
+Dla tych danych generator półgrupy na $\mathrm{BUC}$
+działa zatem jako $\kappa\Delta$; nie charakteryzujemy
+tutaj całej jego dziedziny.
+\end{proof}
+
+\section{Wymuszenie: zasada Duhamela}
+\label{sec:pde4-duhamel}
+
+\begin{twierdzenie}[Wzór Duhamela]
+\label{thm:pde4-duhamel}
+Niech $T>0$, $n\geq1$, $\kappa>0$, $g\in C_c^\infty(\R^n)$,
+a $f\in C^\infty([0,T]\times\R^n)$ ma tę własność, że
+$f$ i wszystkie jej pochodne względem $x$ i $t$ są
+ograniczone, a nośniki $f(t,\cdot)$ są zawarte
+we wspólnym zbiorze zwartym $K\subset\R^n$
+dla $0\leq t\leq T$. Pochodne czasowe na końcach
+przedziału rozumiemy jednostronnie.
+Wtedy funkcja
+\begin{equation}\label{eq:pde4-duhamel}
+ u(t,x)=P_tg(x)+\int_0^t(P_{t-s}f(s,\cdot))(x)
+ \,\mathrm d\lambda_1(s),\quad 0\leq t\leq T,
+\end{equation}
+przy konwencji $P_0h=h$, jest klasy $C^{1,2}$
+na $[0,T]\times\R^n$, spełnia
+$\partial_tu-\kappa\Delta_xu=f$ oraz $u(0,\cdot)=g$.
+Równanie zachodzi również w chwili $0$ w sensie
+prawostronnej pochodnej czasowej oraz w chwili $T$
+w sensie pochodnej lewostronnej. Ponadto
+\begin{equation}\label{eq:pde4-duhamel-bound}
+ \|u(t,\cdot)\|_\infty\leq\|g\|_\infty+
+ \int_0^t\|f(s,\cdot)\|_\infty\,\mathrm d\lambda_1(s).
+\end{equation}
+Jest to jedyne rozwiązanie ograniczone na
+$[0,T]\times\R^n$ w klasie
+$C([0,T]\times\R^n)\cap C^{1,2}((0,T]\times\R^n)$
+z tymi danymi.
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy $X=\mathrm{BUC}(\R^n)$ z normą supremum
+oraz $F_\alpha(s)=D_x^\alpha f(s,\cdot)$ dla
+$\alpha\in\mathbb N_0^n$; w szczególności $F_0(s)=f(s,\cdot)$.
+Dla każdego $\alpha$ funkcja $F_\alpha(s)$ należy do $X$,
+ponieważ jest ograniczona i ma ograniczony gradient.
+Z ograniczoności pochodnej mieszanej
+$\partial_sD_x^\alpha f$ otrzymujemy
+\[
+ \|F_\alpha(s)-F_\alpha(s')\|_\infty
+ \leq |s-s'|\sup_{[0,T]\times\R^n}
+                  |\partial_tD_x^\alpha f|.
+\]
+Odwzorowania $F_\alpha:[0,T]\to X$ są więc ciągłe.
+Analogiczne warunki przestrzenne spełnia każda
+pochodna $g$.
+
+Najpierw uzasadnijmy ciągłość funkcji podcałkowych
+w normie $X$ również przy $s=t$. Dla $r,r'\geq0$
+oraz $h,h'\in X$ kontrakcyjność daje
+\[
+ \|P_rh-P_{r'}h'\|_\infty
+ \leq\|h-h'\|_\infty+\|P_rh'-P_{r'}h'\|_\infty.
+\]
+Drugi składnik dąży do zera dla $r\to r'$
+przy ustalonym $h'$, dzięki silnej ciągłości półgrupy.
+Wynika stąd łączna ciągłość odwzorowania
+$(r,h)\mapsto P_rh$ w $[0,\infty)\times X$.
+W szczególności dla każdego $\alpha$ funkcja
+\[
+ H_\alpha(t,s)=P_{t-s}F_\alpha(s),
+ \qquad (t,s)\in D_T:=\{(t,s):0\leq s\leq t\leq T\},
+\]
+jest ciągła w normie $X$ na zwartym trójkącie $D_T$.
+Na przekątnej $s=t$ ma wartość $F_\alpha(t)$.
+W konsekwencji jest jednostajnie ciągła i ograniczona
+na $D_T$. Całki względem $s$ istnieją w $X$ jako
+całki funkcji ciągłych i zgadzają się z całkami
+punktowymi po obliczeniu wartości w dowolnym $x$.
+
+Dla $r>0$ przenosimy pochodne przestrzenne splotu
+na dane, jak w dowodzie lematu
+\ref{lem:pde-v31-heat-generator}. Ograniczoność
+odpowiednich pochodnych i całkowalność jądra
+uzasadniają ten rachunek przez zbieżność zdominowaną.
+Dla $r=0$ ta sama tożsamość wynika z definicji $P_0$.
+Zatem
+$D_x^\alpha(P_rf(s,\cdot))=P_rF_\alpha(s)$
+oraz $D_x^\alpha P_rg=P_rD^\alpha g$.
+Przy różniczkowaniu całki w~\eqref{eq:pde4-duhamel}
+ilorazy różnicowe są ograniczone niezależnie
+od $s$ przez supremum odpowiedniej pochodnej
+następnego rzędu funkcji $f$ na całym pasku,
+na mocy twierdzenia o wartości średniej
+i kontrakcyjności $P_{t-s}$.
+Dla każdego $t$ dostajemy
+\[
+ D_x^\alpha u(t,\cdot)
+ =P_tD^\alpha g+\int_0^t H_\alpha(t,s)\,
+                       \mathrm d\lambda_1(s).
+\]
+Odwzorowanie po prawej stronie jest ciągłe
+w normie $X$ względem $t$: dla $t,t'$ porównujemy
+całki na $[0,\min(t,t')]$ przez jednostajną ciągłość
+$H_\alpha$ i na pozostałym przedziale przez jego
+długość $|t-t'|$ razy ograniczenie $H_\alpha$.
+W szczególności w chwili $0$ pochodne przestrzenne
+mają wartości $D^\alpha g$.
+
+Pozostaje różniczkowanie względem czasu. Oznaczmy
+$F=F_0$, $G(s)=\Delta_x f(s,\cdot)$ oraz
+$V(t)=\int_0^tP_{t-s}F(s)\,\mathrm d\lambda_1(s)$.
+Z lematu~\ref{lem:pde-v31-heat-generator}
+i własności półgrupy wynika dla $0\leq r_1\leq r_2$
+oraz $0\leq s\leq T$ tożsamość w $X$
+\[
+ P_{r_2}F(s)-P_{r_1}F(s)
+ =\kappa\int_{r_1}^{r_2}P_qG(s)\,\mathrm d\lambda_1(q).
+\]
+Istotnie, stosujemy lemat dla $h=F(s)$,
+odejmując tożsamości dla $r_2$ i $r_1$;
+przy $r_1=0$ korzystamy z $P_0F(s)=F(s)$.
+Nie pojawia się więc osobliwość przy $r_1=0$.
+
+Dla $0\leq t<T$ i $0<\tau\leq T-t$ mamy
+\[
+ \begin{aligned}
+ \frac{V(t+\tau)-V(t)}{\tau}
+ &=\frac{\kappa}{\tau}\int_0^t
+       \int_{t-s}^{t+\tau-s}P_qG(s)\,
+       \mathrm d\lambda_1(q)\,\mathrm d\lambda_1(s)\\
+ &\quad+\frac1{\tau}\int_t^{t+\tau}P_{t+\tau-s}F(s)\,
+                                  \mathrm d\lambda_1(s).
+ \end{aligned}
+\]
+Odwzorowanie $(q,s)\mapsto P_qG(s)$ jest
+ciągłe w normie $X$ na zwartym prostokącie
+$[0,T]\times[0,T]$, a zatem jednostajnie ciągłe.
+Moduł w normie różnicy między pierwszym składnikiem
+a $\kappa\int_0^tP_{t-s}G(s)\,\mathrm d\lambda_1(s)$
+jest ograniczony przez $\kappa t$ razy supremum
+$\|P_qG(s)-P_{t-s}G(s)\|_\infty$ dla
+$0\leq s\leq t$ i $|q-(t-s)|\leq\tau$,
+$q\in[0,T]$. Oszacowanie to dąży do zera.
+Drugi składnik dąży w $X$ do $F(t)$,
+ponieważ dla $s\in[t,t+\tau]$ mamy
+$0\leq t+\tau-s\leq\tau$ oraz $|s-t|\leq\tau$.
+Łączna ciągłość w $(r,s)$ uzasadnia tę granicę
+również dla $t=0$.
+
+Dla $0<t\leq T$ i $0<\tau\leq t$ analogicznie
+rozpisujemy iloraz lewostronny:
+\[
+ \begin{aligned}
+ \frac{V(t)-V(t-\tau)}{\tau}
+ &=\frac{\kappa}{\tau}\int_0^{t-\tau}
+      \int_{t-\tau-s}^{t-s}P_qG(s)\,
+       \mathrm d\lambda_1(q)\,\mathrm d\lambda_1(s)\\
+ &\quad+\frac1{\tau}\int_{t-\tau}^tP_{t-s}F(s)\,
+                                   \mathrm d\lambda_1(s).
+ \end{aligned}
+\]
+Pierwszy składnik ma tę samą granicę: oprócz
+jednostajnej ciągłości używamy oszacowania brakującej
+całki na $[t-\tau,t]$ przez
+$\kappa\tau\sup_{s\in[0,T]}\|G(s)\|_\infty$.
+Drugi składnik dąży do $F(t)$.
+Otrzymujemy dla wszystkich $t\in[0,T]$
+(z odpowiednimi pochodnymi jednostronnymi na końcach)
+\[
+ V'(t)=F(t)+\kappa\int_0^tP_{t-s}G(s)\,
+                     \mathrm d\lambda_1(s)
+      =F(t)+\kappa\Delta_xV(t).
+\]
+Pochodna ta jest ciągła w normie $X$ na $[0,T]$
+dzięki wcześniej wykazanej ciągłości całek.
+W szczególności $V'(0)=F(0)$.
+
+Lemat~\ref{lem:pde-v31-heat-generator} daje również
+$\frac{\mathrm d}{\mathrm dt}P_tg=\kappa P_t\Delta g$
+w normie $X$ (dla $t=0$ prawostronnie).
+Sumując tożsamości, dostajemy
+$\partial_tu-\kappa\Delta_xu=f$ i $u(0,\cdot)=g$,
+a w chwili początkowej
+$\partial_tu(0,\cdot)=\kappa\Delta g+F(0)$.
+Ciągłość w normie $X$ funkcji $u$, jej pochodnej
+czasowej oraz pochodnych przestrzennych do rzędu
+drugiego daje ich ciągłość łączną w $(t,x)$,
+przez tę samą nierówność trójkąta, której użyto
+w dowodzie twierdzenia~\ref{thm:pde4-cauchy}.
+Stąd wynika deklarowana regularność.
+
+Oszacowanie~\eqref{eq:pde4-duhamel-bound} wynika
+z kontrakcyjności $P_r$ oraz nierówności trójkąta
+dla całki w $X$. Prawa strona jest ograniczona
+na $[0,T]$. Różnica dowolnych dwóch ograniczonych
+rozwiązań z tym samym wymuszeniem i danymi
+początkowymi spełnia jednorodne równanie ciepła
+z zerowymi danymi; twierdzenie
+\ref{thm:pde4-global-uniqueness} daje jej zerowanie.
+\end{proof}
+
+\begin{przyklad}[Źródło stałe w czasie]
+Niech $T>0$, $n\geq1$, $\kappa>0$,
+$f(t,x)=h(x)$ dla $h\in C_c^\infty(\R^n)$ oraz
+$g=0$. Wzór~\eqref{eq:pde4-duhamel}, po podstawieniu
+$r=t-s$, daje
+\[
+ u(t,x)=\int_0^tP_rh(x)\,\mathrm d\lambda_1(r).
+\]
+Ciągłość $r\mapsto P_rh$ w normie supremum daje
+$\partial_tu=P_th$, także prawostronnie w $0$.
+Przeniesienie laplasjanu pod całkę oraz na dane,
+uzasadnione ograniczonością drugich pochodnych $h$,
+prowadzi do
+\[
+ \kappa\Delta_xu=\kappa\int_0^tP_r\Delta h\,
+                       \mathrm d\lambda_1(r)=P_th-h
+\]
+na mocy lematu~\ref{lem:pde-v31-heat-generator}.
+Zatem $\partial_tu-\kappa\Delta_xu=h$,
+$u(0,\cdot)=0$ i $\partial_tu(0,\cdot)=h$.
+Ponadto $\|u(t,\cdot)\|_\infty\leq t\|h\|_\infty$.
+\end{przyklad}
+
+\section{Dyfuzja w obszarze ograniczonym: energia i widmo}
+\label{sec:pde4-bounded}
+
+Na obszarze ograniczonym wzór splotowy na całej
+przestrzeni na ogół nie spełnia zadanych warunków
+brzegowych. Warunki Dirichleta określają temperaturę
+na brzegu, a warunki Neumanna --- jej pochodną
+normalną, związaną ze strumieniem ciepła przez brzeg.
+W tej sekcji wyprowadzimy podstawowe wnioski
+dla jednorodnego warunku Dirichleta
+\emph{przy założeniu istnienia dostatecznie gładkiego
+rozwiązania}. Ogólną teorię istnienia oprzemy później
+na przestrzeniach Sobolewa i półgrupach operatorów.
+
+\begin{twierdzenie}[Bilans energii]
+\label{thm:pde4-energy}
+Niech $n\geq1$, $\Omega\subset\R^n$ będzie obszarem
+ograniczonym o brzegu klasy $C^1$, $T>0$, $\kappa>0$.
+Niech $u\in C^{1,2}([0,T]\times\overline\Omega)$
+będzie funkcją rzeczywistą, spełniającą
+$\partial_tu-\kappa\Delta_xu=0$ na $(0,T)\times\Omega$
+oraz $u=0$ na $[0,T]\times\partial\Omega$.
+Przez podaną klasę regularności rozumiemy, że funkcja
+i wskazane pochodne przedłużają się ciągle na
+domknięty cylinder, z jednostronnymi pochodnymi
+czasowymi na końcach przedziału.
+Wówczas dla $0\leq t\leq T$
+\begin{equation}\label{eq:pde4-energy}
+ \frac12\int_\Omega |u(t,x)|^2\,\mathrm d\lambda_n(x)
+ +\kappa\int_0^t\!\int_\Omega|\nabla_xu(s,x)|^2
+ \,\mathrm d\lambda_n(x)\,\mathrm d\lambda_1(s)
+ =\frac12\int_\Omega|u(0,x)|^2\,\mathrm d\lambda_n(x).
+\end{equation}
+W szczególności $t\mapsto\|u(t,\cdot)\|_{L^2(\Omega)}$
+jest nierosnąca. W powyższej klasie rozwiązanie
+z zadanymi danymi początkowymi i zerowym warunkiem
+Dirichleta jest jednoznaczne.
+\end{twierdzenie}
+\begin{proof}
+Połóżmy $E(t)=\frac12\int_\Omega |u(t,x)|^2
+\,\mathrm d\lambda_n(x)$. Na zwartym zbiorze
+$[0,T]\times\overline\Omega$ funkcje $u$ i $\partial_tu$
+są ciągłe i ograniczone. Ilorazy różnicowe
+$\frac12u(t,x)^2$ względem czasu są zdominowane
+przez $\sup|u|\sup|\partial_tu|$, a $\lambda_n(\Omega)$
+jest skończona. Z twierdzenia o zbieżności zdominowanej
+wynika zatem $E\in C^1([0,T])$, przy jednostronnych
+pochodnych na końcach, oraz
+$E'(t)=\int_\Omega u(t,x)\partial_tu(t,x)
+\,\mathrm d\lambda_n(x)$.
+Dla $0<t<T$ podstawiamy równanie ciepła
+i stosujemy pierwszą tożsamość Greena
+\eqref{eq:pde3-green1} dla ustalonego $t$:
+\[
+ \begin{aligned}
+ E'(t)
+ &=\kappa\int_\Omega u(t,x)\Delta_x u(t,x)
+             \,\mathrm d\lambda_n(x)\\
+ &=-\kappa\int_\Omega|\nabla_xu(t,x)|^2\,\mathrm d\lambda_n(x)\\
+ &\quad+\kappa\int_{\partial\Omega}
+ u(t,\zeta)\partial_\nu u(t,\zeta)\,\mathrm d\sigma(\zeta).
+ \end{aligned}
+\]
+Tutaj $\nu$ jest jednostkową normalną zewnętrzną,
+a $\sigma$ miarą powierzchniową.
+W wymiarze $n=1$ ograniczony obszar jest przedziałem
+$(a,b)$; ten sam rachunek wynika bezpośrednio
+z jednowymiarowego całkowania przez części,
+z wyrazem brzegowym
+$\kappa[u(t,x)\partial_xu(t,x)]_{x=a}^{x=b}$.
+W obu przypadkach wyraz brzegowy znika
+dzięki warunkowi Dirichleta.
+
+Funkcja $t\mapsto\int_\Omega|\nabla_xu(t,x)|^2
+\,\mathrm d\lambda_n(x)$ jest ciągła na $[0,T]$,
+co wynika z ciągłości i ograniczoności gradientu
+na domkniętym cylindrze. Mamy więc
+\[
+ E'(t)=-\kappa\|\nabla_xu(t,\cdot)\|_{L^2(\Omega)}^2.
+\]
+Równość przedłuża się przez ciągłość do końców
+przedziału. Całkując względem czasu od $0$ do $t$,
+otrzymujemy~\eqref{eq:pde4-energy}.
+Ponieważ $E'\leq0$, energia i norma rozwiązania
+są nierosnące.
+
+Jeżeli $u_1,u_2$ spełniają założenia twierdzenia
+i mają te same dane początkowe, to $w=u_1-u_2$
+spełnia te same warunki z zerowymi danymi.
+Bilans energii daje $E_w(t)=0$ dla każdego $t$,
+ponieważ obie całki po lewej stronie
+są nieujemne, a prawa strona znika.
+Gdyby $w(t,x_0)\ne0$ w pewnym $x_0\in\Omega$,
+ciągłość dawałaby kulę wewnętrzną, na której
+$|w(t,\cdot)|$ jest ograniczona z dołu przez
+dodatnią stałą. Przeczyłoby to zerowej normie
+$L^2(\Omega)$. Stąd $w=0$ w cylindrze, a na jego
+brzegu przestrzennym również z warunku Dirichleta.
+\end{proof}
+
+\begin{lemat}[Elementarna nierówność Poincarégo w obszarze ograniczonym]
+\label{lem:pde4-poincare}
+Niech $n\geq1$, $L>0$ i $\Omega\subset(-L,L)^n$
+będzie obszarem ograniczonym o brzegu klasy $C^1$.
+Jeżeli $v\in C^1(\overline\Omega)$ jest rzeczywista
+i $v|_{\partial\Omega}=0$, to
+\begin{equation}\label{eq:pde4-poincare}
+ \int_\Omega |v(x)|^2\,\mathrm d\lambda_n(x)
+ \leq4L^2\int_\Omega|\nabla v(x)|^2\,\mathrm d\lambda_n(x).
+\end{equation}
+\end{lemat}
+\begin{proof}
+Przedłużamy $v$ przez zero do domkniętego sześcianu
+$\overline Q=[-L,L]^n$, otrzymując funkcję $V$.
+Jest ona ciągła: w punktach brzegu $\Omega$
+wartości funkcji $v$ dążą do zera, a poza
+$\overline\Omega$ przedłużenie jest lokalnie zerowe.
+Wprowadzamy również mierzalną funkcję $W$ na $Q$,
+równą $\partial_{x_1}v$ w $\Omega$ i zeru poza
+$\Omega$. Jest ona ograniczona, gdyż pochodna
+$v$ jest ciągła na zwartym zbiorze $\overline\Omega$.
+
+Dla $n\geq2$ ustalmy $x'\in(-L,L)^{n-1}$
+i rozważmy otwarty podzbiór prostej
+$I_{x'}=\{s\in(-L,L):(s,x')\in\Omega\}$.
+Jest on sumą co najwyżej przeliczalnej rodziny
+parami rozłącznych przedziałów otwartych $(a_j,b_j)$.
+Każdy ich koniec odpowiada punktowi $\partial\Omega$,
+również gdy jest równy $-L$ lub $L$:
+jest granicą punktów $\Omega$, ale nie należy
+do $\Omega$. Na każdej takiej składowej funkcja
+$s\mapsto v(s,x')$ jest klasy $C^1$, a jej wartości
+na obu końcach są zerowe. Z twierdzenia podstawowego
+rachunku całkowego, najpierw na podprzedziałach
+zwartych w $(a_j,b_j)$, a następnie przez
+ciągłość na końcach i ograniczoność pochodnej,
+wynika
+\[
+ \int_{a_j}^{b_j}W(s,x')\,\mathrm d\lambda_1(s)=0,
+ \qquad
+ \int_{a_j}^{q}W(s,x')\,\mathrm d\lambda_1(s)=V(q,x')
+ \quad(a_j<q<b_j).
+\]
+Dla dowolnego $q\in[-L,L]$ możemy rozłożyć całkę
+po $[-L,q]$ na przecięcia z tymi składowymi,
+ponieważ $W=0$ poza $I_{x'}$, a całka jest
+bezwzględnie zbieżna. Wszystkie całe składowe
+dają wkład zerowy; co najwyżej jedna składowa
+zawiera $q$ i daje wkład $V(q,x')$.
+Jeśli $q\notin I_{x'}$, wszystkie wkłady są zerowe,
+zgodnie z definicją $V$. Otrzymujemy w każdym przypadku
+\[
+ V(q,x')=\int_{-L}^{q}W(s,x')\,\mathrm d\lambda_1(s).
+\]
+W szczególności funkcja $q\mapsto V(q,x')$ jest
+absolutnie ciągła na $[-L,L]$ i ma pochodną
+równą $W(\cdot,x')$ prawie wszędzie.
+Argument nie wymaga, by przekrój miał skończenie
+wiele składowych.
+
+Z nierówności Cauchy'ego--Schwarza dostajemy
+dla każdego $q\in[-L,L]$
+\[
+ |V(q,x')|^2\leq 2L
+ \int_{-L}^L|W(s,x')|^2\,\mathrm d\lambda_1(s).
+\]
+Całkując względem $q$ na przedziale długości $2L$
+i następnie względem $x'$ na $(-L,L)^{n-1}$,
+na mocy twierdzenia Tonellego otrzymujemy
+\[
+ \int_Q |V|^2\,\mathrm d\lambda_n
+ \leq4L^2\int_Q|W|^2\,\mathrm d\lambda_n.
+\]
+Dla $n=1$ stosujemy bezpośrednio ten sam argument
+na przedziale $[-L,L]$, bez zmiennej $x'$.
+Z definicji przedłużeń całki po $Q$ są równe
+odpowiednim całkom po $\Omega$, a
+$|\partial_{x_1}v|^2\leq|\nabla v|^2$.
+To daje~\eqref{eq:pde4-poincare}.
+\end{proof}
+
+\begin{wniosek}[Wykładniczy zanik energii przy warunku Dirichleta]
+\label{cor:pde4-exponential}
+Niech $n\geq1$, $T,L,\kappa>0$ i niech
+$\Omega\subset(-L,L)^n$ będzie obszarem ograniczonym
+o brzegu klasy $C^1$.
+Niech $u\in C^{1,2}([0,T]\times\overline\Omega)$
+będzie rzeczywistym rozwiązaniem równania
+$\partial_tu-\kappa\Delta_xu=0$ na $(0,T)\times\Omega$
+z $u=0$ na $[0,T]\times\partial\Omega$.
+Wówczas
+\begin{equation}\label{eq:pde4-exponential}
+ \|u(t,\cdot)\|_{L^2(\Omega)}\leq
+ \exp\!\left(-\frac{\kappa t}{4L^2}\right)
+ \|u(0,\cdot)\|_{L^2(\Omega)}\qquad(0\leq t\leq T).
+\end{equation}
+\end{wniosek}
+\begin{proof}
+Niech $E(t)=\frac12\|u(t,\cdot)\|_{L^2(\Omega)}^2$.
+Dla każdego ustalonego $t$ funkcja $u(t,\cdot)$
+spełnia założenia lematu~\ref{lem:pde4-poincare}.
+Z bilansu energii i~\eqref{eq:pde4-poincare} wynika
+\[
+ E'(t)=-\kappa\|\nabla_xu(t,\cdot)\|_{L^2(\Omega)}^2
+ \leq-\frac{\kappa}{4L^2}\|u(t,\cdot)\|_{L^2(\Omega)}^2
+ =-\frac{\kappa}{2L^2}E(t).
+\]
+Wobec tego pochodna funkcji
+$t\mapsto e^{\kappa t/(2L^2)}E(t)$ jest niedodatnia.
+Porównując jej wartości w chwilach $0$ i $t$,
+otrzymujemy $E(t)\leq e^{-\kappa t/(2L^2)}E(0)$.
+Ponieważ $E\geq0$, mnożymy nierówność przez $2$
+i pierwiastkujemy, dostając~\eqref{eq:pde4-exponential}.
+Zanik wykładniczy dotyczy zarówno energii, jak
+i normy $L^2$, ale wykładnik dla normy jest o połowę
+mniejszy niż dla energii. Nie twierdzimy,
+że stała otrzymana z elementarnej nierówności
+Poincarégo jest optymalna.
+\end{proof}
+
+\begin{przyklad}[Mody własne na odcinku]
+Niech $\Omega=(0,L)$, gdzie $L>0$, oraz $\kappa>0$.
+Dla każdego całkowitego $m\geq1$ określamy
+$\phi_m(x)=\sin(m\pi x/L)$ i $\lambda_m=(m\pi/L)^2$.
+Mamy $\phi_m''=-\lambda_m\phi_m$ oraz
+$\phi_m(0)=\phi_m(L)=0$.
+Funkcja
+\[
+ u_m(t,x)=e^{-\kappa\lambda_m t}\phi_m(x)
+\]
+spełnia $\partial_tu_m=-\kappa\lambda_m u_m$
+i $\partial_x^2u_m=-\lambda_m u_m$, zatem
+rozwiązuje równanie ciepła, znika na brzegu
+i przyjmuje w chwili $0$ dane $\phi_m$.
+Ponieważ $\sin^2\theta=(1-\cos(2\theta))/2$,
+mamy $\|\phi_m\|_{L^2(0,L)}^2=L/2$.
+Stąd
+\[
+ \|u_m(t,\cdot)\|_{L^2(0,L)}^2
+ =\frac L2 e^{-2\kappa\lambda_m t},\qquad
+ \|\partial_xu_m(t,\cdot)\|_{L^2(0,L)}^2
+ =\lambda_m\frac L2 e^{-2\kappa\lambda_m t}.
+\]
+Różniczkując połowę pierwszej równości względem
+czasu, otrzymujemy dokładnie bilans energii
+z twierdzenia~\ref{thm:pde4-energy}.
+W szczególności większe $\lambda_m$ odpowiadają
+szybszemu zanikowi amplitudy.
+
+Z liniowości równania dla każdego $N\geq1$
+i $c_1,\ldots,c_N\in\R$ funkcja
+$\sum_{m=1}^N c_m u_m$ również jest rozwiązaniem,
+z danymi początkowymi $\sum_{m=1}^N c_m\phi_m$.
+Jego jednoznaczność wynika z bilansu energii.
+Ogólne rozwinięcia w szereg funkcji własnych
+laplasjanu wymagają ponadto uzasadnienia
+zbieżności i możliwości różniczkowania szeregu;
+wrócimy do nich po wprowadzeniu teorii Fouriera.
+\end{przyklad}
+
+\section{Zachowanie dla dużych czasów i nieodwracalność}
+\label{sec:pde4-large-time}
+
+\begin{twierdzenie}[Zanik na całej przestrzeni]
+\label{thm:pde4-large-time}
+Niech $n\geq1$, $\kappa>0$.
+Jeśli $g\in L^1(\R^n)$, to $\|P_tg\|_\infty\to0$
+przy $t\to\infty$.
+Jeśli $g\in L^2(\R^n)$, to $\|P_tg\|_2\to0$
+przy $t\to\infty$.
+\end{twierdzenie}
+\begin{proof}
+Dla $g\in L^1(\R^n)$ pierwsze oszacowanie
+w~\eqref{eq:pde4-L1Linf} daje
+\[
+ 0\leq\|P_tg\|_\infty\leq
+ (4\pi\kappa t)^{-n/2}\|g\|_1\longrightarrow0,
+\]
+ponieważ $n\geq1$ i $\kappa>0$.
+Jeżeli $g\in L^1(\R^n)\cap L^2(\R^n)$, drugie
+oszacowanie w~\eqref{eq:pde4-L1Linf} daje
+\[
+ 0\leq\|P_tg\|_2\leq
+ (8\pi\kappa t)^{-n/4}\|g\|_1\longrightarrow0.
+\]
+
+Niech teraz $g\in L^2(\R^n)$ będzie dowolna.
+Ustalmy $\eps>0$. Z gęstości $C_c^\infty(\R^n)$
+w $L^2(\R^n)$ wybieramy $h\in C_c^\infty(\R^n)$
+takie, że $\|g-h\|_2<\eps/2$.
+Funkcja $h$ należy również do $L^1(\R^n)$,
+więc istnieje $T_\eps>0$ takie, że
+$\|P_th\|_2<\eps/2$ dla wszystkich $t\geq T_\eps$.
+Z liniowości i kontrakcyjności $P_t$ w $L^2$,
+wykazanej w twierdzeniu~\ref{thm:pde4-approx-identity},
+otrzymujemy dla $t\geq T_\eps$
+\[
+ \|P_tg\|_2
+ \leq\|P_t(g-h)\|_2+\|P_th\|_2
+ \leq\|g-h\|_2+\|P_th\|_2<\eps.
+\]
+Dowolność $\eps$ daje żądaną zbieżność.
+Argument wymaga tylko aproksymacji danych w $L^2$,
+nie zakłada ich całkowalności w $L^1$.
+\end{proof}
+
+Należy odróżnić silny zanik dla każdego ustalonego
+$g\in L^2$ od zaniku normy operatorowej półgrupy
+na $L^2$. Powyższy dowód nie daje wspólnego tempa
+zaniku dla wszystkich danych o normie $1$.
+Istotnie, ustalmy niezerową funkcję
+$h\in C_c^\infty(\R^n)$ z $\|h\|_2=1$ i dla $R>0$
+połóżmy $h_R(x)=R^{-n/2}h(x/R)$.
+Zmiana zmiennych $x=Ry$ daje $\|h_R\|_2=1$.
+Ze skalowania jądra i podstawienia $y=Rz$ w splocie
+wynika
+\[
+ (P_th_R)(x)=R^{-n/2}(P_{t/R^2}h)(x/R).
+\]
+Zatem $\|P_th_R\|_2=\|P_{t/R^2}h\|_2\to1$
+przy $R\to\infty$ dla każdego ustalonego $t>0$,
+na mocy silnej ciągłości w chwili zero.
+W połączeniu z kontrakcyjnością daje to
+$\|P_t\|_{L^2\to L^2}=1$ dla każdego $t\geq0$.
+Na całej przestrzeni nie otrzymujemy więc
+jednolitego wykładniczego zaniku analogicznego
+do oszacowania~\eqref{eq:pde4-exponential}
+na ograniczonym obszarze z warunkiem Dirichleta.
+
+Zanik nie musi zachodzić także dla ogólnych danych
+ograniczonych: dla $g\equiv1$ normalizacja jądra
+daje $P_tg\equiv1$. Z kolei dla nieujemnego
+$g\in L^1(\R^n)$, $g\not=0$ w $L^1$, norma $L^1$
+pozostaje stała z własności zachowania masy
+\eqref{eq:pde4-mass}. Zanik normy supremum
+dla takich danych nie oznacza zaniku całkowitej masy.
+
+\begin{kontrprzyklad}[Wsteczne równanie ciepła jest niestabilne]
+\label{ex:pde4-backward}
+Niech $\Omega=(0,\pi)$, $\kappa=1$ i $T>0$.
+Rozważmy przestrzeń $S$ skończonych kombinacji
+liniowych funkcji $\phi_m(x)=\sin(mx)$,
+gdzie $m\geq1$ jest liczbą całkowitą.
+Z przykładu modów własnych oraz jednoznaczności
+w twierdzeniu~\ref{thm:pde4-energy} wynika, że
+odwzorowanie ewolucji od chwili $0$ do $T$ na $S$
+jest dobrze określone i ma postać
+\[
+ A_T\left(\sum_{m=1}^N c_m\phi_m\right)
+ =\sum_{m=1}^N e^{-m^2T}c_m\phi_m.
+\]
+Funkcje $\phi_m$ są liniowo niezależne:
+z tożsamości
+$2\sin(mx)\sin(kx)=\cos((m-k)x)-\cos((m+k)x)$
+otrzymujemy dla $m\ne k$
+$\int_0^\pi\phi_m(x)\phi_k(x)\,\mathrm d\lambda_1(x)=0$,
+a $\|\phi_m\|_{L^2(0,\pi)}^2=\pi/2$.
+Ponieważ wszystkie mnożniki $e^{-m^2T}$ są dodatnie,
+$A_T:S\to S$ jest liniową bijekcją.
+
+Dla danych początkowych $\phi_m$ mamy
+$u_m(t,x)=e^{-m^2t}\sin(mx)$.
+Stąd
+\[
+ \|\phi_m\|_\infty=1,\qquad
+ \|A_T\phi_m\|_\infty=e^{-m^2T}\longrightarrow0.
+\]
+Jeżeli $v_m=A_T\phi_m$, to $v_m\to0$ w normie
+supremum, natomiast $A_T^{-1}v_m=\phi_m$
+nie dąży do zera w tej normie.
+Odwrotne odwzorowanie $A_T^{-1}:S\to S$
+jest więc nieciągłe w zerze względem normy supremum.
+
+Również w normie $L^2(0,\pi)$ mamy
+\[
+ \|v_m\|_2=e^{-m^2T}\sqrt{\pi/2}\longrightarrow0,
+ \qquad \|A_T^{-1}v_m\|_2=\sqrt{\pi/2}.
+\]
+W obu normach iloraz
+$\|A_T^{-1}v_m\|/\|v_m\|=e^{m^2T}$ jest
+nieograniczony. Nawet ograniczenie do dziedziny $S$
+nie pozwala więc uzyskać ciągłego odwracania.
+Każde odwrotne odwzorowanie na większej klasie
+danych końcowych, zgodne z odwracaniem tych modów,
+musiałoby ograniczać się do $A_T^{-1}$ na $S$,
+a zatem również nie mogłoby być ciągłe w zerze
+w żadnej z tych dwóch norm.
+
+Jest to przykład niestabilności w sensie Hadamarda:
+nawet w klasie, w której istnienie i jednoznaczność
+odwrócenia są zapewnione, ciągła zależność danych
+początkowych od końcowych zawodzi.
+Nie wynika stąd, że dwa różne dane z $S$
+prowadzą do tego samego profilu końcowego.
+Termin nieodwracalność oznacza tu brak stabilnego
+odwracania w rozpatrywanych normach, nie brak
+algebraicznej odwrotności na obrazie ewolucji.
+\end{kontrprzyklad}
+
+\section{Nieoczekiwana niejednoznaczność: przykład Tychonoffa}
+\label{sec:pde4-tychonoff}
+
+Powyższa jednoznaczność wymagała ograniczoności
+rozwiązania w całym cylindrze czasoprzestrzennym.
+Pokażemy teraz, że nie jest to wyłącznie techniczny
+warunek dowodu.
+
+\begin{twierdzenie}[Istnienie niezerowego rozwiązania o zerowych danych]
+\label{thm:pde4-tychonoff}
+Istnieje niezerowa funkcja
+$u\in C^\infty([0,\infty)\times\R)$
+spełniająca $u_t=u_{xx}$ dla $t>0$, $x\in\R$,
+przy czym $u(0,x)=0$ dla wszystkich $x\in\R$.
+Funkcja ta nie może być ograniczona na żadnym
+cylindrze $[0,T]\times\R$ z $T>0$.
+\end{twierdzenie}
+\begin{proof}
+Niech $h(t)=e^{-1/t^2}$ dla $t>0$ i $h(t)=0$
+dla $t\leq0$. Na dodatniej półosi funkcja $h$
+jest klasy $C^\infty$. Najpierw definiujemy formalnie
+szereg, a następnie uzasadnimy jego zbieżność
+i gładkość sumy także przy $t=0$. Kładziemy
+\begin{equation}\label{eq:pde4-tychonoff}
+ u(t,x)=\sum_{k=0}^\infty\frac{h^{(k)}(t)}{(2k)!}
+ x^{2k}\quad(t>0),\qquad u(0,x)=0.
+\end{equation}
+Uzasadnijmy najpierw oszacowanie pochodnych $h$.
+Dla $t>0$ i $z=a+ib$ spełniającego $|z-t|\leq t/4$
+mamy $a\geq3t/4$, $|b|\leq t/4$ oraz $|z|\leq5t/4$.
+Wobec tego
+\[
+ \operatorname{Re}\frac1{z^2}
+ =\frac{a^2-b^2}{|z|^4}
+ \geq\frac{t^2/2}{(5t/4)^4}
+ =\frac{128}{625t^2}.
+\]
+Możemy przyjąć $c=128/625>0$, niezależne od $t$.
+Funkcja $z\mapsto e^{-1/z^2}$ jest holomorficzna
+na otoczeniu domkniętego dysku o środku $t$
+i promieniu $t/4$, gdyż dysk nie zawiera zera.
+Na jego brzegu moduł tej funkcji nie przekracza
+$e^{-c/t^2}$. Oszacowanie Cauchy'ego na tym okręgu
+daje dla każdego całkowitego $k\geq0$
+\begin{equation}\label{eq:pde4-tychonoff-est}
+ |h^{(k)}(t)|\leq k!\left(\frac4t\right)^k
+ e^{-c/t^2},\qquad k\geq0.
+\end{equation}
+Ponieważ $\binom{2k}{k}\geq1$, mamy $(2k)!\geq(k!)^2$.
+Dla każdego $A>0$ i $|x|\leq A$
+otrzymujemy
+\[
+ |u(t,x)|\leq e^{-c/t^2}
+ \sum_{k=0}^\infty\frac{(4A^2/t)^k}{k!}
+ =\exp\!\left(-\frac c{t^2}+\frac{4A^2}t\right).
+\]
+Majoranta wykładnicza jest skończona dla każdego
+$t>0$, więc szereg definiujący $u$ jest bezwzględnie
+zbieżny. Oszacowanie dowodzi także jednostajnej
+zbieżności $u(t,\cdot)$ do zera na $[-A,A]$
+przy $t\downarrow0$.
+
+Uzasadnijmy dokładniej oszacowanie wszystkich pochodnych.
+Dla ustalonych $p,q\in\mathbb N_0$ oraz $2k\geq q$ mamy
+\[
+ \partial_t^p\partial_x^q
+ \left(\frac{h^{(k)}(t)x^{2k}}{(2k)!}\right)
+ =\frac{h^{(k+p)}(t)x^{2k-q}}{(2k-q)!}.
+\]
+Jeżeli $2k<q$, pochodna jest identycznie zerowa.
+Wybierzmy $B=\max\{1,A\}$ dla $|x|\leq A$.
+Oszacowanie~\eqref{eq:pde4-tychonoff-est} daje
+\[
+ \left|\frac{h^{(k+p)}(t)x^{2k-q}}{(2k-q)!}\right|
+ \le e^{-c/t^2}\left(\frac4t\right)^p
+ \frac{(k+p)!}{(2k-q)!}
+ \left(\frac{4B^2}{t}\right)^k.
+\]
+Dla $k\geq1$ i $2k\geq q$ mamy
+\[
+ \frac{(k+p)!}{(2k-q)!}
+ =\frac{(k+p)!}{k!}\frac{k!}{(2k)!}
+   \frac{(2k)!}{(2k-q)!}
+ \leq\frac{(k+p)^p(2k)^q}{k!}
+ \leq C_{p,q}\frac{(1+k)^{p+q}}{k!},
+\]
+gdzie pusty iloczyn ma wartość $1$.
+Dla $k=0$ dopuszczalny jest tylko przypadek $q=0$;
+zwiększamy wtedy stałą tak, by obejmowała $p!$.
+
+Dla $m\in\mathbb N_0$ i $z\geq0$ mamy
+$\sum_{k\geq0}(1+k)^m z^k/k!=Q_m(z)e^z$,
+gdzie $Q_0=1$ oraz
+$Q_{m+1}=(1+z)Q_m+zQ_m'$.
+Istotnie, stosujemy operator $1+z\partial_z$
+do szeregu, co jest dozwolone, gdyż ma on
+nieskończony promień zbieżności (z kryterium ilorazowego).
+Rekurencja pokazuje, że $Q_m$ ma stopień $m$
+i nieujemne współczynniki, więc
+$Q_m(z)\leq C_m(1+z)^m$ dla $z\geq0$.
+Stąd
+cały szereg pochodnych jest ograniczony na
+$0<t\le1$, $|x|\le A$ przez
+\[
+ C_{p,q,A}t^{-p}(1+t^{-1})^{p+q}
+ \exp\left(-\frac c{t^2}+\frac{4B^2}{t}\right).
+\]
+Najpierw uzasadnijmy różniczkowanie dla $t>0$.
+Na prostokącie $[a,b]\times[-A,A]$, $0<a<b$,
+każdy składnik szeregu pochodnych jest ograniczony
+przez
+\[
+ C_{p,q}(4/a)^p
+ \frac{(1+k)^{p+q}}{k!}(4B^2/a)^k .
+\]
+Szereg tych majorant jest zbieżny z kryterium
+ilorazowego. Kryterium Weierstrassa daje więc
+jednostajną zbieżność każdego szeregu pochodnych
+na takim prostokącie. Twierdzenie o różniczkowaniu
+szeregów funkcyjnych, stosowane kolejno na mniejszych
+otwartych prostokątach, daje $u\in C^\infty$
+dla $t>0$ i identyfikuje każdą jej pochodną
+$\partial_t^p\partial_x^q u$ z odpowiednim szeregiem.
+
+Sprawdźmy teraz gładkość w chwili zero.
+Dla dostatecznie małych $t>0$, konkretnie
+$t\leq c/(8B^2)$, mamy
+$-c/t^2+4B^2/t\leq-c/(2t^2)$.
+Dla każdego $N\geq0$ i ustalonych $p,q,A$
+otrzymujemy z wcześniejszego oszacowania
+\[
+ \sup_{|x|\leq A}|\partial_t^p\partial_x^q u(t,x)|
+ =o(t^N)\qquad(t\downarrow0),
+\]
+gdyż wykładniczy czynnik $e^{-c/(2t^2)}$
+zanika szybciej od każdej potęgi $t$.
+
+Przedłużmy $u$ przez zero na $t<0$ i oznaczmy
+dla każdego $p,q$ przez $U_{p,q}$ funkcję równą
+$\partial_t^p\partial_x^q u$ dla $t>0$ oraz zeru
+dla $t\leq0$. Każda $U_{p,q}$ jest ciągła
+na $\R^2$ dzięki lokalnie jednostajnemu oszacowaniu
+z $N=0$. W punkcie $(0,x)$ iloraz różnicowy
+$U_{p,q}$ względem czasu od lewej jest zerowy,
+a od prawej dąży do zera na mocy oszacowania
+z $N=1$. Względem $x$ pochodna w chwili zero
+jest zerowa, ponieważ $U_{p,q}(0,\cdot)\equiv0$.
+Stąd na całej $\R^2$
+\[
+ \partial_tU_{p,q}=U_{p+1,q},\qquad
+ \partial_xU_{p,q}=U_{p,q+1}.
+\]
+Indukcyjnie wynika, że $U_{0,0}$ jest klasy
+$C^\infty(\R^2)$ i wszystkie jej pochodne
+znikają na $\{0\}\times\R$.
+W szczególności jej ograniczenie do $t\geq0$
+ma wymaganą gładkość.
+
+Dla $t>0$ różniczkowanie wyraz po wyrazie daje
+\[
+ \begin{aligned}
+ u_t(t,x)&=\sum_{k=0}^\infty
+     \frac{h^{(k+1)}(t)}{(2k)!}x^{2k},\\
+ u_{xx}(t,x)&=\sum_{k=1}^\infty
+     \frac{h^{(k)}(t)}{(2k-2)!}x^{2k-2}\\
+ &=\sum_{j=0}^\infty\frac{h^{(j+1)}(t)}{(2j)!}x^{2j}.
+ \end{aligned}
+\]
+Zatem $u_t=u_{xx}$, również przy $t=0$,
+gdzie obie pochodne znikają.
+Wreszcie $u(t,0)=h(t)>0$ dla każdego $t>0$,
+więc nie jest to rozwiązanie zerowe.
+Gdyby było ograniczone na pewnym cylindrze $[0,T]\times\R$,
+twierdzenie~\ref{thm:pde4-global-uniqueness}
+wymusiłoby $u=0$, co jest sprzeczne z $u(t,0)>0$.
+\end{proof}
+
+\begin{uwaga}[Co ten kontrprzykład rzeczywiście oznacza?]
+Twierdzenie~\ref{thm:pde4-global-uniqueness}
+zapewnia jednoznaczność w klasie rozwiązań
+ograniczonych na każdym pasku $[0,T]\times\R^n$.
+Istnieją również twierdzenia o jednoznaczności
+przy innych warunkach wzrostu, których tutaj
+nie formułujemy. Przykład Tychonoffa pokazuje,
+że sama gładkość na domkniętym pasku i zerowe
+dane początkowe nie wystarczają.
+Nie wynika z niego, że każde rozwiązanie
+nieograniczone prowadzi do niejednoznaczności.
+Ponieważ rozwiązanie i wszystkie jego pochodne
+znikają w chwili zero, a $u(t,0)>0$ dla $t>0$,
+nie jest ono analityczne względem czasu
+w otoczeniu chwili początkowej.
+Nie przeczy to twierdzeniu o analityczności
+przestrzennej splotu z jądrem Gaussa.
+\end{uwaga}
+
+\section{Podsumowanie i związek z kolejnym rozdziałem}
+\label{sec:pde4-summary}
+
+Kluczowe mechanizmy równania ciepła są widoczne
+w~\eqref{eq:pde4-kernel}: dodatniość jądra daje
+zachowanie porządku dla rozwiązań splotowych
+i natychmiastową propagację niezerowych danych
+nieujemnych o zwartym nośniku. Normalizacja
+zapewnia zachowanie całki dla danych z $L^1$,
+a skalowanie Gaussa wyjaśnia oszacowania zaniku.
+Półgrupa jest silnie ciągła na $L^p$ dla $p<\infty$
+($p\geq1$) oraz na $\mathrm{BUC}$, lecz nie na
+całym $L^\infty$.
+
+Jawny wzór rozwiązuje jednorodne zagadnienie
+Cauchy'ego z danymi w $\mathrm{BUC}$, a wzór
+Duhamela obejmuje niejednorodne równanie przy
+podanych założeniach gładkości danych i wymuszenia.
+Jednoznaczność klasycznych rozwiązań na całej
+przestrzeni wymaga określenia klasy rozwiązań:
+dla funkcji ograniczonych na każdym pasku
+czasowym zapewnia ją zasada maksimum, natomiast bez
+kontroli wzrostu przykład Tychonoffa daje
+niejednoznaczność.
+
+Dla obszarów ograniczonych wyprowadziliśmy bilans
+energii i wykładniczy zanik normy przy jednorodnym
+warunku Dirichleta, zakładając istnienie odpowiednio
+gładkiego rozwiązania. Nie stanowi to jeszcze
+ogólnego twierdzenia o istnieniu.
+Na całej przestrzeni silny zanik w $L^2$ nie oznacza
+zaniku normy operatorowej półgrupy. Wygładzanie
+przestrzenne oraz tłumienie wysokich częstości
+prowadzą do niestabilności odtwarzania danych
+początkowych; nie oznacza ona braku algebraicznej
+odwrotności na przestrzeni skończonych sum modów.
+W następnym rozdziale porównamy te fakty z równaniem
+falowym, gdzie propagacja ma skończoną prędkość,
+a klasyczna energia ma inny charakter.
+
+
+% Rozdział 5. Równanie falowe.

@@ -1,0 +1,9 @@
+# Audyt 268 — rozdział drukowany 27 (TG20), końcowy etap C
+
+2026-11-25. Zweryfikowany blob 66775f0f54c3de15dc8da58d2d878e0dc046fed5, commit źródłowy 0056125ce86f8a3d73b9fb4d477395289aaf763c. Porównanie z 9300bcb18ce94b598ce498e1548bc66a9e222241 wykazało wyłącznie raporty 266 i 267 w zakresie grafów. Ponownie odczytano wszystkie 12 dowodów i sprawdzono ich hipotezy, orientacje, przejścia w ciągach dokładnych, rozszczepienie nakrycia, normalizację, znak formy splecenia, kongruencje i odwrotności. Brak nowych usterek wymagających zmiany źródła. Zewnętrzne głębokie twierdzenia pozostają jawnie przyjęte.
+
+Niezależny lokalny Python/SymPy: dokładna postać Smitha dla 9 modeli nakryć. Trójlistnik d=2: Z/3, d=3: (Z/2)^2, d=6 i 12: Z^2; ósemka d=2: Z/5, d=3: (Z/4)^2, d=4: Z/3 + Z/15; węzeł trywialny d=2,6: 0. Pierwsza próba napotkała ograniczenie biblioteki Kroneckera dla pustej macierzy, ponowiono z jawną macierzą 0x0 i wszystkie 9 asercji PASS. Dwa automorfizmy Z/3 nie utożsamiają form -1/3 i +1/3 (PASS). Wyniki algebraiczne nie zastępują dowodów topologicznych.
+
+CI 45653854145 i 45653853936: wszystkie 4 zadania i ich kroki success. Ponownie zweryfikowano istniejący artefakt 15041079070 (368 stron, 0 bajtów pliku ostrzeżeń), TOC rozdziału 27 strony fizyczne 242–255. Kontrola B wszystkich 14 stron zachowana, niezależnie ponownie wyrenderowano i obejrzano strony fizyczne 243 i 247 (rysunki torusa i nachylenia); czytelne, bez usterek. Globalna kontrola 44/44 źródeł i 718 etykiet, 381 odsyłaczy, zero błędów wg raportu 267. Brak zmian źródłowych w C.
+
+Rozdział 27 STABILNY w tej wersji, etap A/B/C i techniczne bramki zamknięte. Licznik 27/43 numerowanych rozdziałów (historycznie 27/44 przy liczeniu pliku wprowadzającego). Nie oznacza ponownego audytu wcześniejszych rozdziałów od zera. Następny drukowany rozdział 28: Grafy rozkładów JSJ i grupy trójrozmaitości.

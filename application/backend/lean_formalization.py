@@ -1,0 +1,516 @@
+"""Read-only links from indexed LaTeX fragments to trusted, registered Lean files.
+
+No client-supplied Lean code or filesystem path is executed. The runner is opt-in and
+is intended for a local, trusted application process, not an internet-exposed service.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import subprocess
+from typing import Any
+import sqlite3
+
+from fastapi import HTTPException
+
+from backend import lean_cgroup, lean_results, lean_process, lean_run_lock, lean_source_provenance, lean_windows_job
+
+LEAN_ROOT = Path(__file__).resolve().parents[1] / "lean"
+MAX_SOURCE_CHARS = 30000
+MAX_LEAN_CHARS = 60000
+MAX_CANONICAL_TEX_BYTES = 16 * 1024 * 1024  # fail closed on abnormal physical TeX
+TIMEOUT_SECONDS = 40
+VALID_ID = re.compile(r"^[a-zA-Z0-9_-]{1,100}$")
+VALID_THEOREM = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_'.]*$")
+
+
+def _registry(lean_root: Path = LEAN_ROOT) -> list[dict[str, Any]]:
+    file = lean_root / "manifest.json"
+    if not file.is_file():
+        return []
+    try:
+        raw = json.loads(file.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise HTTPException(503, f"Nie można odczytać rejestru formalizacji: {exc}") from exc
+    if not isinstance(raw, dict) or not isinstance(raw.get("items"), list):
+        raise HTTPException(503, "Niepoprawny format rejestru formalizacji.")
+    results: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for item in raw["items"]:
+        if not isinstance(item, dict) or not VALID_ID.fullmatch(str(item.get("id", ""))):
+            raise HTTPException(503, "Niepoprawny identyfikator formalizacji.")
+        if item["id"] in seen:
+            raise HTTPException(503, "Powtórzony identyfikator formalizacji.")
+        seen.add(item["id"])
+        rel = item.get("lean_file")
+        if not isinstance(rel, str) or not rel.endswith(".lean"):
+            raise HTTPException(503, "Niepoprawny plik Lean.")
+        target = (lean_root / rel).resolve()
+        if not target.is_relative_to((lean_root / "src").resolve()) or not target.is_file():
+            raise HTTPException(503, "Plik Lean musi istnieć w katalogu src/ rejestru.")
+        if not isinstance(item.get("source_module"), str) or not isinstance(item.get("source_label"), str):
+            raise HTTPException(503, "Brak identyfikatora źródła LaTeX.")
+        if not VALID_THEOREM.fullmatch(str(item.get("lean_theorem", ""))):
+            raise HTTPException(503, "Niepoprawna nazwa twierdzenia Lean.")
+        members = item.get("lean_theorems", [item["lean_theorem"]])
+        if (not isinstance(members, list) or not members
+                or not all(isinstance(n, str) and VALID_THEOREM.fullmatch(n) for n in members)
+                or len(members) != len(set(members)) or item["lean_theorem"] not in members):
+            raise HTTPException(503, "Niepoprawna lista twierdzeń składających się na formalizację.")
+        if item.get("statement_status") == "approved" and item.get("source_document_sha256") is None:
+            raise HTTPException(503, "Zatwierdzone powiązanie wymaga przypiętego SHA256 źródła.")
+        if item.get("statement_status") not in {"unreviewed", "needs_review", "approved"}:
+            raise HTTPException(503, "Niepoprawny status zgodności stwierdzenia.")
+        source_path = item.get("source_document_path")
+        if source_path is not None and (
+                not isinstance(source_path, str) or not source_path.startswith("chapters/pl/")
+                or not source_path.endswith(".tex")):
+            raise HTTPException(503, "Niepoprawna ścieżka kanonicznego źródła LaTeX.")
+        digest = item.get("source_document_sha256")
+        if digest is not None and not re.fullmatch(r"[0-9a-f]{64}", str(digest)):
+            raise HTTPException(503, "Niepoprawny SHA256 źródła LaTeX.")
+        results.append({**item, "_file": target})
+    return results
+
+
+
+def _checked_entity_span(source: str, entity: sqlite3.Row) -> tuple[int, int]:
+    """Fail closed when indexed entity offsets and line numbers disagree.
+
+    A valid whole-document digest is not sufficient to authenticate a selected
+    fragment: corrupt entity metadata can otherwise attach the correct theorem
+    label to an unrelated slice of that document.
+    """
+    start, end = entity["start_offset"], entity["end_offset"]
+    first, last = entity["start_line"], entity["end_line"]
+    if (type(start) is not int or type(end) is not int
+            or type(first) is not int or type(last) is not int
+            or not (0 <= start < end <= len(source))
+            or first != source.count("\n", 0, start) + 1
+            or last != source.count("\n", 0, end - 1) + 1):
+        raise HTTPException(409, "Niespójne przesunięcia lub numery wierszy obiektu w indeksie.")
+    return start, end
+
+def _find_source(con: sqlite3.Connection, *, entity_id: str | None,
+                 module_id: str | None, start_line: int | None, end_line: int | None):
+    if entity_id:
+        if module_id is not None or start_line is not None or end_line is not None:
+            raise HTTPException(400, "Wybierz obiekt albo zakres wierszy, nie oba.")
+        e = con.execute(
+            "SELECT id,document_id,kind,title,start_line,end_line,start_offset,end_offset "
+            "FROM entities WHERE id=?", (entity_id,)
+        ).fetchone()
+        if e is None:
+            raise HTTPException(404, "Nieznany obiekt matematyczny.")
+        d = con.execute("SELECT id,title,sha256,content FROM documents WHERE id=?",
+                        (e["document_id"],)).fetchone()
+        if d is None:
+            raise HTTPException(404, "Nie znaleziono rozdziału.")
+        if not isinstance(d["content"], str):
+            raise HTTPException(409, "Brak tekstowej treści rozdziału w indeksie.")
+        begin, finish = _checked_entity_span(d["content"], e)
+        content = d["content"][begin:finish]
+        labels = [row[0] for row in con.execute(
+            "SELECT name FROM labels WHERE entity_id=? ORDER BY offset", (entity_id,))]
+        linkage = "exact_entity"
+        # In a conventional TeX source, a proof immediately follows its theorem.
+        # Never link a proof to an unrelated earlier theorem across other text.
+        if e["kind"] == "proof" and not labels:
+            previous = con.execute(
+                "SELECT id,start_offset,end_offset,start_line,end_line FROM entities "
+                "WHERE document_id=? AND kind='theorem' "
+                "AND end_offset<=? ORDER BY end_offset DESC LIMIT 1",
+                (d["id"], begin)).fetchone()
+            if previous:
+                _checked_entity_span(d["content"], previous)
+            if previous and not d["content"][previous["end_offset"]:begin].strip():
+                labels = [row[0] for row in con.execute(
+                    "SELECT name FROM labels WHERE entity_id=? ORDER BY offset",
+                    (previous["id"],))]
+                if labels:
+                    linkage = "proof_of_adjacent_theorem"
+        return d, content, labels, e["start_line"], e["end_line"], entity_id, linkage
+    if not module_id or start_line is None or end_line is None:
+        raise HTTPException(400, "Podaj entity_id albo module_id wraz z start_line i end_line.")
+    if (type(start_line) is not int or type(end_line) is not int
+            or not (1 <= start_line <= end_line and end_line - start_line <= 300)):
+        raise HTTPException(400, "Zakres musi zawierać od 1 do 301 pełnych wierszy.")
+    d = con.execute("SELECT id,title,sha256,content FROM documents WHERE id=?",
+                    (module_id,)).fetchone()
+    if d is None:
+        raise HTTPException(404, "Nieznany moduł.")
+    if not isinstance(d["content"], str):
+        raise HTTPException(409, "Brak tekstowej treści rozdziału w indeksie.")
+    lines = d["content"].splitlines(keepends=True)
+    if end_line > len(lines):
+        raise HTTPException(400, "Zakres wykracza poza rozdział.")
+    content = "".join(lines[start_line-1:end_line])
+    # Link only if the selected range contains the COMPLETE source theorem.
+    entities = con.execute(
+        "SELECT id,start_offset,end_offset,start_line,end_line FROM entities "
+        "WHERE document_id=? AND kind='theorem' "
+        "AND start_line>=? AND end_line<=?",
+        (module_id, start_line, end_line)).fetchall()
+    for entity in entities:
+        _checked_entity_span(d["content"], entity)
+    ids = [row["id"] for row in entities]
+    labels = []
+    for eid in ids:
+        labels.extend(row[0] for row in con.execute(
+            "SELECT name FROM labels WHERE entity_id=? ORDER BY offset", (eid,)))
+    return d, content, labels, start_line, end_line, None, "contains_theorem"
+
+
+def _source_file_current(item: dict[str, Any], digest: str, lean_root: Path) -> bool:
+    """Recheck checked-out canonical TeX, even when the SQLite index was not rebuilt."""
+    rel = item.get("source_document_path")
+    if rel is None:
+        return True  # Legacy unpinned test manifests; CI requires path for approved entries.
+    repo = lean_root.resolve().parents[1]
+    allowed = (repo / "chapters" / "pl").resolve()
+    path = (repo / rel).resolve()
+    if not path.is_relative_to(allowed) or not path.is_file():
+        return False
+    # Canonical chapter files come from a local checkout, but their physical
+    # bytes may change independently from the SQLite index. Never load the
+    # entire on-disk file into RAM for this read-only provenance check.
+    try:
+        if path.stat().st_size > MAX_CANONICAL_TEX_BYTES:
+            return False
+        current = hashlib.sha256()
+        count = 0
+        with path.open("rb") as source:
+            while chunk := source.read(64 * 1024):
+                count += len(chunk)
+                if count > MAX_CANONICAL_TEX_BYTES:
+                    return False
+                current.update(chunk)
+        return current.hexdigest() == digest
+    except OSError:
+        return False
+
+
+def _matches(item: dict[str, Any], d: sqlite3.Row, labels: list[str]) -> bool:
+    return item["source_module"] == d["id"] and item["source_label"] in labels
+
+
+def _results_override(lean_root: Path, results_root: Path | None) -> Path | None:
+    """Keep alternate Lean roots in tests isolated from the application run history."""
+    if results_root is not None:
+        return results_root
+    return lean_root.parent / "lean_runs" if lean_root.resolve() != LEAN_ROOT.resolve() else None
+
+
+def fragment(con: sqlite3.Connection, *, entity_id: str | None = None,
+             module_id: str | None = None, start_line: int | None = None,
+             end_line: int | None = None, lean_root: Path = LEAN_ROOT,
+             results_root: Path | None = None) -> dict[str, Any]:
+    d, content, labels, first, last, eid, linkage = _find_source(
+        con, entity_id=entity_id, module_id=module_id,
+        start_line=start_line, end_line=end_line)
+    if len(content) > MAX_SOURCE_CHARS:
+        raise HTTPException(413, "Fragment LaTeX jest zbyt duży. Wybierz mniejszy zakres.")
+    # Do not present a mapping as current when the indexed source is corrupted.
+    if (not isinstance(d["content"], str) or
+            hashlib.sha256(d["content"].encode("utf-8")).hexdigest() != d["sha256"]):
+        raise HTTPException(409, "Niezgodność treści rozdziału z SHA256 w indeksie.")
+    matches = [r for r in _registry(lean_root) if _matches(r, d, labels)]
+    if len(matches) > 1:
+        raise HTTPException(409, "Wiele formalizacji pasuje do tego fragmentu; wymagane rozstrzygnięcie.")
+    base = {"source_module": d["id"], "source_entity": eid, "source_linkage": linkage,
+            "source_labels": labels, "start_line": first, "end_line": last,
+            "source_latex": content, "source_sha256": hashlib.sha256(content.encode("utf-8")).hexdigest(),
+            "formalization_status": "missing", "statement_status": "unreviewed",
+            "proof_status": "not_run", "lean_code": None, "formalization_id": None,
+            "lean_theorem": None, "certificate": False}
+    if not matches:
+        return base
+    item = matches[0]
+    index_status, linked_entity = lean_source_provenance.owner_status(
+        con, item["source_module"], item["source_label"], d["content"])
+    if index_status != "ok":
+        raise HTTPException(409, "Niepoprawne powiązanie etykiety z obiektem: " + index_status)
+    # Exact objects must not inherit the label of a different indexed entity.
+    if linkage == "exact_entity" and linked_entity != eid:
+        raise HTTPException(409, "Etykieta należy do innego obiektu matematycznego.")
+    binding = lean_source_provenance.indexed_binding(
+        con, item["source_module"], item["source_label"], linked_entity)
+    if binding is None:
+        raise HTTPException(409, "Powiązanie etykiety zmieniło się podczas odczytu.")
+    binding_sha256 = lean_source_provenance.binding_sha256(
+        item["source_module"], item["source_label"], binding)
+    sha_ok = item.get("source_document_sha256") == d["sha256"] if item.get("source_document_sha256") else None
+    if sha_ok is not False and not _source_file_current(item, d["sha256"], lean_root):
+        sha_ok = False
+    # Bound *bytes before decoding*. Path.read_text() first allocated the
+    # entire physical Lean file and only then enforced MAX_LEAN_CHARS.
+    # UTF-8 occupies at most 4 bytes per Unicode code point, so this byte
+    # bound never rejects a previously valid <= MAX_LEAN_CHARS text solely
+    # because it contains multibyte characters.
+    try:
+        with item["_file"].open("rb") as source:
+            lean_bytes = source.read(MAX_LEAN_CHARS * 4 + 1)
+    except OSError as exc:
+        raise HTTPException(503, "Nie można odczytać zarejestrowanego pliku Lean.") from exc
+    if len(lean_bytes) > MAX_LEAN_CHARS * 4:
+        raise HTTPException(413, "Zarejestrowany plik Lean jest zbyt duży.")
+    try:
+        content_lean = lean_bytes.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise HTTPException(503, "Niepoprawne kodowanie UTF-8 pliku Lean.") from exc
+    if len(content_lean) > MAX_LEAN_CHARS:
+        raise HTTPException(413, "Zarejestrowany plik Lean jest zbyt duży.")
+    base.update({"formalization_id": item["id"], "lean_theorem": item["lean_theorem"],
+                 "lean_theorems": item.get("lean_theorems", [item["lean_theorem"]]),
+                 "source_document_sha256": item.get("source_document_sha256"),
+                 "lean_code": content_lean,
+                 "statement_status": "needs_review" if sha_ok is False else item["statement_status"],
+                 "formalization_status": "stale" if sha_ok is False else "ready" if sha_ok else "draft",
+                 "source_pinned": sha_ok is not None,
+                 "lean_file": item["lean_file"]})
+    if sha_ok is False:
+        return base
+    try:
+        fingerprint = lean_results.fingerprint(
+            d["sha256"], item["_file"], lean_root, binding_sha256)
+        run_info = lean_results.last_run(
+            item["id"], fingerprint,
+            results_root=_results_override(lean_root, results_root))
+        base.update(run_info)
+    except (OSError, ValueError) as exc:
+        base["run_record_invalid"] = True
+        base["run_record_error"] = str(exc)[:300]
+    return base
+
+
+def availability(lean_root: Path = LEAN_ROOT) -> dict[str, Any]:
+    lake = shutil.which("lake")
+    enabled = os.environ.get("MATLIB_LEAN_RUN") == "1"
+    try:
+        memory_mb = lean_process.configured_memory_limit_mb()
+        memory_error = None
+    except ValueError as exc:
+        memory_mb, memory_error = None, str(exc)
+    memory_supported = lean_process.memory_limit_supported()
+    memory_ready = memory_error is None and (memory_mb is None or memory_supported)
+    try:
+        total_mb = lean_cgroup.configured_total_memory_mb()
+        total_error = None
+    except ValueError as exc:
+        total_mb, total_error = None, str(exc)
+    total_supported = lean_cgroup.available() or lean_windows_job.available()
+    total_ready = total_error is None and (total_mb is None or total_supported)
+    return {"runner_enabled": enabled, "lake_available": bool(lake),
+            "ready": enabled and bool(lake) and memory_ready and total_ready
+            and (lean_root / "lakefile.toml").is_file(),
+            "memory_limit_mb": memory_mb,
+            "memory_limit_enforced": memory_mb is not None and memory_supported,
+            "memory_limit_supported": memory_supported,
+            "total_memory_limit_mb": total_mb,
+            "total_memory_limit_supported": total_supported,
+            "total_memory_limit_error": total_error if total_error is not None else
+            ("Brak cgroup v2 lub Windows Job Objects dla łącznego limitu pamięci." if total_mb is not None
+             and not total_supported else None),
+            "memory_limit_error": memory_error if memory_error is not None else
+            ("Nieobsługiwany system limitu pamięci." if memory_mb is not None
+             and not memory_supported else None),
+            "toolchain": (lean_root / "lean-toolchain").read_text(encoding="utf-8").strip()
+            if (lean_root / "lean-toolchain").exists() else None,
+            "registered_formalizations": len(_registry(lean_root))}
+
+
+def run(con: sqlite3.Connection, formalization_id: str,
+        lean_root: Path = LEAN_ROOT,
+        results_root: Path | None = None) -> dict[str, Any]:
+    if not VALID_ID.fullmatch(formalization_id):
+        raise HTTPException(400, "Niepoprawny identyfikator.")
+    matches = [i for i in _registry(lean_root) if i["id"] == formalization_id]
+    if not matches:
+        raise HTTPException(404, "Nieznana formalizacja.")
+    item = matches[0]
+    d = con.execute("SELECT id,sha256,content FROM documents WHERE id=?",
+                    (item["source_module"],)).fetchone()
+    if d is None:
+        raise HTTPException(409, "Rozdział źródłowy nie znajduje się w indeksie.")
+    # An index SHA alone is not proof that the indexed bytes still match it.
+    # Fail closed before spawning Lean if the database is inconsistent.
+    if (not isinstance(d["content"], str) or
+            hashlib.sha256(d["content"].encode("utf-8")).hexdigest() != d["sha256"]):
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": "Niezgodność treści rozdziału z SHA256 w indeksie.",
+                "certificate": False}
+    index_status, owner_id = lean_source_provenance.owner_status(
+        con, item["source_module"], item["source_label"], d["content"])
+    if index_status != "ok":
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": "Niepoprawne powiązanie źródła: " + index_status,
+                "certificate": False}
+    binding_before = lean_source_provenance.indexed_binding(
+        con, item["source_module"], item["source_label"], owner_id)
+    if binding_before is None:
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": "Powiązanie źródła zmieniło się podczas odczytu.",
+                "certificate": False}
+    binding_sha256 = lean_source_provenance.binding_sha256(
+        item["source_module"], item["source_label"], binding_before)
+    if ((item.get("source_document_sha256") and item["source_document_sha256"] != d["sha256"])
+            or not _source_file_current(item, d["sha256"], lean_root)):
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": "Źródło LaTeX zmieniło się od czasu powiązania formalizacji.",
+                "certificate": False}
+    if os.environ.get("MATLIB_LEAN_RUN") != "1":
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": "Uruchamianie lokalne jest wyłączone. Ustaw MATLIB_LEAN_RUN=1.",
+                "certificate": False}
+    try:
+        memory_mb = lean_process.configured_memory_limit_mb()
+    except ValueError as exc:
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": str(exc), "certificate": False}
+    if memory_mb is not None and not lean_process.memory_limit_supported():
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": "Nie można wymusić limitu pamięci na tym systemie.",
+                "certificate": False}
+    try:
+        total_mb = lean_cgroup.configured_total_memory_mb()
+    except ValueError as exc:
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": str(exc), "certificate": False}
+    if total_mb is not None and not (
+            lean_cgroup.available() or lean_windows_job.available()):
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": "Brak cgroup v2 lub Windows Job Objects dla łącznego limitu pamięci.",
+                "certificate": False}
+    if shutil.which("lake") is None:
+        return {"formalization_id": formalization_id, "proof_status": "toolchain_unavailable",
+                "detail": "Nie znaleziono polecenia lake (Lean 4).", "certificate": False}
+    # A registered path is trusted only if local repository authors have reviewed it.
+    # This is NOT a security boundary against a malicious .lean file.
+    try:
+        fingerprint = lean_results.fingerprint(
+            d["sha256"], item["_file"], lean_root, binding_sha256)
+    except ValueError as exc:
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": "Nie można zweryfikować zależności Lean: " + str(exc)[:250],
+                "certificate": False}
+    except OSError as exc:
+        raise HTTPException(503, f"Nie można obliczyć wersji formalizacji: {exc}") from exc
+
+    def finish(status: str, detail: str, log: str = "") -> dict[str, Any]:
+        result = {"formalization_id": formalization_id, "proof_status": status,
+                  "detail": detail, "log": log, "statement_status": item["statement_status"],
+                  "certificate": False}
+        # A rebuild may change labels or entity spans without modifying the
+        # canonical document hash. Refuse a result from that index generation.
+        latest = con.execute(
+            "SELECT sha256,content FROM documents WHERE id=?", (item["source_module"],)
+        ).fetchone()
+        if (latest is None or latest["sha256"] != d["sha256"]
+                or latest["content"] != d["content"]):
+            return {**result, "proof_status": "blocked",
+                    "detail": "Indeks rozdziału zmienił się podczas uruchomienia Lean.",
+                    "run_record_saved": False}
+        current_status, current_owner = lean_source_provenance.owner_status(
+            con, item["source_module"], item["source_label"], latest["content"])
+        if (current_status != "ok" or current_owner != owner_id
+                or lean_source_provenance.indexed_binding(
+                    con, item["source_module"], item["source_label"], current_owner
+                ) != binding_before):
+            return {**result, "proof_status": "blocked",
+                    "detail": "Powiązanie twierdzenia zmieniło się podczas uruchomienia Lean.",
+                    "run_record_saved": False}
+        try:
+            after = lean_results.fingerprint(
+                d["sha256"], item["_file"], lean_root, binding_sha256)
+            if after != fingerprint or not _source_file_current(item, d["sha256"], lean_root):
+                return {**result, "proof_status": "blocked",
+                        "detail": "Zmiana plików formalizacji podczas pracy Lean; wynik unieważniony.",
+                        "run_record_saved": False}
+        except (OSError, ValueError) as exc:
+            # A successful exit code is not trustworthy if the dependency
+            # snapshot can no longer be verified after that execution.
+            return {**result, "proof_status": "blocked",
+                    "detail": "Nie można ponownie zweryfikować zależności Lean.",
+                    "run_record_saved": False, "run_record_warning": str(exc)[:250]}
+        try:
+            saved = lean_results.save_run(
+                formalization_id, fingerprint, proof_status=status, detail=detail,
+                log=log, results_root=_results_override(lean_root, results_root))
+            result["run_record_saved"] = True
+            result["last_run_at"] = saved["finished_at"]
+        except (OSError, ValueError) as exc:
+            result["run_record_saved"] = False
+            result["run_record_warning"] = "Nie udało się zapisać historii uruchomienia: " + str(exc)[:250]
+        return result
+
+    command = ["lake", "env", "lean", str(item["_file"].relative_to(lean_root))]
+    try:
+        # Lock spans execution and persistence. Multiple workers in one checkout
+        # must not start overlapping memory-intensive compilers or race on results.
+        with lean_run_lock.exclusive(lean_root):
+            # The initial checks happened before acquiring the OS runner lock.
+            # Revalidate live source ownership, manifest/toolchain and Lean
+            # bytes immediately before launch; do not execute a file that was
+            # swapped while this request waited for another compilation.
+            latest = con.execute(
+                "SELECT sha256,content FROM documents WHERE id=?",
+                (item["source_module"],)
+            ).fetchone()
+            if (latest is None or latest["sha256"] != d["sha256"]
+                    or latest["content"] != d["content"]):
+                return {"formalization_id": formalization_id,
+                        "proof_status": "blocked",
+                        "detail": "Indeks rozdziału zmienił się przed uruchomieniem Lean.",
+                        "certificate": False}
+            current_status, current_owner = lean_source_provenance.owner_status(
+                con, item["source_module"], item["source_label"], latest["content"])
+            if (current_status != "ok" or current_owner != owner_id or
+                    lean_source_provenance.indexed_binding(
+                        con, item["source_module"], item["source_label"], current_owner
+                    ) != binding_before):
+                return {"formalization_id": formalization_id,
+                        "proof_status": "blocked",
+                        "detail": "Powiązanie twierdzenia zmieniło się przed uruchomieniem Lean.",
+                        "certificate": False}
+            try:
+                locked_fingerprint = lean_results.fingerprint(
+                    d["sha256"], item["_file"], lean_root, binding_sha256)
+                if (locked_fingerprint != fingerprint or
+                        not _source_file_current(item, d["sha256"], lean_root)):
+                    return {"formalization_id": formalization_id,
+                            "proof_status": "blocked",
+                            "detail": "Pliki Lean lub zależności zmieniły się przed uruchomieniem.",
+                            "certificate": False}
+            except (OSError, ValueError):
+                return {"formalization_id": formalization_id,
+                        "proof_status": "blocked",
+                        "detail": "Nie można ponownie zweryfikować środowiska Lean.",
+                        "certificate": False}
+            try:
+                returncode, log, timed_out = lean_process.execute_registered(
+                    command, lean_root, timeout=TIMEOUT_SECONDS,
+                    memory_limit_mb=memory_mb, total_memory_mb=total_mb)
+            except (lean_cgroup.CgroupUnavailable, lean_windows_job.JobUnavailable,
+                    lean_process.MemoryLimitUnavailable) as exc:
+                return {"formalization_id": formalization_id, "proof_status": "blocked",
+                        "detail": str(exc), "certificate": False}
+            except RuntimeError as exc:
+                return finish("failed", "Niekompletny odczyt wyniku procesu Lean.",
+                              str(exc)[:500])
+            except OSError as exc:
+                return {"formalization_id": formalization_id,
+                        "proof_status": "toolchain_unavailable",
+                        "detail": str(exc), "certificate": False}
+            if timed_out:
+                return finish("timeout", f"Lean przekroczył limit {TIMEOUT_SECONDS} s.",
+                              log)
+            # Success does not prove statement equivalence or absence of axioms.
+            return finish("compiled" if returncode == 0 else "failed",
+                          f"Lean zakończył pracę z kodem {returncode}.", log)
+    except (lean_run_lock.RunnerBusy, lean_run_lock.RunnerLockUnavailable) as exc:
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": str(exc), "certificate": False}

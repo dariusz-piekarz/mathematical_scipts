@@ -1,0 +1,5 @@
+# GT — audyt globalny zależności i powtórzeń, etap 1
+
+Na źródłach z 0ee0f001fa32868ac84e76959d170f3cbdf9161d porównano 336 różnych par rozdziałów: 105 w bloku 01–08,37–43; 91 w bloku 09–22; 66 w bloku 23–34; 74 wybrane pary między blokami. Po usunięciu komentarzy, TikZ, listingów i komend TeX porównano okna 18 słów; próg 6 wspólnych różnych okien. Zero par powyżej progu. Nie jest to pełna kontrola powtórzeń znaczeniowych ani wszystkich 820 par rozdziałów.
+
+Porównano sformułowania i hipotezy twierdzeń o przepływach całkowitych i rzeczywistych, Hodge'u w grafie i kompleksie symplicjalnym oraz konstrukcji drzewa i drzewa dualnego w teorii Formana. Sprawdzono konwencję laplasjanu regularnego L=d*mathcal L. Brak sprzeczności w tym zakresie. Dodano trzy uwagi z precyzyjnymi odsyłaczami w źródłach 04,06,11, zachowując istniejące dowody i etykiety. CI 45977107733 pozostawało queued podczas odczytu. Nie wykonano pełnej kompilacji ani globalnej kontroli semantycznej. Pozostaje 484 nieporównanych par numerowanych rozdziałów oraz odrębna kontrola terminologii i PDF.

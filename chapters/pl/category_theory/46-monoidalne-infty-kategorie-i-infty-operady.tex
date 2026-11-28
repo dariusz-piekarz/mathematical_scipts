@@ -1,0 +1,1331 @@
+\section{Monoidalne \texorpdfstring{$\infty$-kategorie i $\infty$-operady}{kategorie wyższe i operady wyższe}}\label{cat:sec:infty-monoidal-operads}
+
+W rozdziałach~\ref{cat:sec:monoidal} i~\ref{cat:sec:coherence} poznaliśmy zwykłe kategorie monoidalne oraz ich prawa koherencji. Rozdział~\ref{cat:sec:operads} wprowadził operady, które opisują operacje wieloargumentowe, ich podstawianie i symetrie. W $\infty$-kategorii nie wystarczy zastąpić równości łączności pojedynczą homotopią: potrzebujemy również zgodności pomiędzy homotopiami, zgodności wyższych rzędów i ich funktorialności. Zakodujemy te dane za pomocą odpowiednich funktorów do nerwów kategorii indeksujących. Wykorzystamy fibracje kokartezjańskie z rozdziału~\ref{cat:sec:cartesian-fibrations} oraz teorię kategorii prezentowalnych z rozdziału~\ref{cat:sec:presentable-infty-bousfield}.
+
+\subsection{Skończone zbiory punktowane: morfizmy aktywne i inercyjne}
+
+\begin{definicja}[Kategoria skończonych zbiorów punktowanych]\label{cat:def:infty-finpointed}
+Przez $\mathrm{Fin}_*$ oznaczamy szkielet kategorii skończonych zbiorów z wyróżnionym punktem i funkcji zachowujących ten punkt. Jego obiektami są
+\[
+ \langle n\rangle=\{*,1,\ldots,n\},\qquad n\geq0.
+\]
+Morfizm $f:\langle m\rangle\to\langle n\rangle$ nazywamy aktywnym, jeśli $f^{-1}(*)=\{*\}$, a inercyjnym, jeśli dla każdego $1\leq j\leq n$ zbiór $f^{-1}(j)$ jest jednoelementowy. Dla $1\leq j\leq n$ przez $\rho^j:\langle n\rangle\to\langle1\rangle$ oznaczamy morfizm inercyjny wysyłający $j$ na $1$, a wszystkie pozostałe elementy na $*$. Przez $\mu_n:\langle n\rangle\to\langle1\rangle$ oznaczamy morfizm aktywny wysyłający wszystkie elementy różne od $*$ na $1$.
+\end{definicja}
+
+Intuicyjnie, morfizm inercyjny wybiera i porządkuje argumenty, a morfizm aktywny rozdziela wszystkie argumenty pomiędzy operacje. Zbiór $f^{-1}(j)$ to lista argumentów potrzebnych do utworzenia $j$-tego wyniku. Pusty zbiór argumentów odpowiada operacji zeroargumentowej. W szczególności $\mu_0$ jest aktywny, a jedyny morfizm $\langle n\rangle\to\langle0\rangle$ jest inercyjny.
+
+\begin{przyklad}[Wybieranie i łączenie argumentów]\label{cat:ex:infty-finpointed-factor}
+Niech $f:\langle4\rangle\to\langle2\rangle$ będzie zadany przez $f(1)=f(3)=2$, $f(2)=1$, $f(4)=*$. Najpierw usuwamy czwarty argument, a następnie grupujemy trzy pozostałe. Odpowiada temu rozkład $f=a i$:
+\[
+\begin{tikzpicture}[>=Stealth,baseline=(b.base),scale=.87,transform shape]
+ \node (a) at (0,0) {$\langle4\rangle$};
+ \node (b) at (4,0) {$\langle3\rangle$};
+ \node (c) at (8,0) {$\langle2\rangle$};
+ \draw[->] (a)--node[above]{$i$ inercyjny}(b);
+ \draw[->] (b)--node[above]{$a$ aktywny}(c);
+ \node[align=center] at (2,-.85) {$4\mapsto *$\\$1,2,3\mapsto1,2,3$};
+ \node[align=center] at (6,-.85) {$1,3\mapsto2$\\$2\mapsto1$};
+\end{tikzpicture}
+\]
+W przypadku operacji na obiektach monoidalnych wynikami byłyby $X_2$ oraz $X_1\otimes X_3$, a $X_4$ nie bierze udziału w żadnym wyniku. Nie oznacza to istnienia morfizmu $X_4\to\mathbb 1$ w wyjściowej kategorii monoidalnej: usunięcie argumentu zachodzi w kategorii operatorów, nie w samej kategorii obiektów.
+\end{przyklad}
+
+\begin{stwierdzenie}[Rozkład inercyjno-aktywny]\label{cat:prop:infty-finpointed-factor}
+Każdy morfizm w $\mathrm{Fin}_*$ jest złożeniem morfizmu inercyjnego, a następnie aktywnego. Rozkład jest jednoznaczny z dokładnością do jednoznacznego izomorfizmu obiektu pośredniego. Ponadto dla każdego przemiennego kwadratu
+\[
+\begin{tikzpicture}[>=Stealth,baseline=(a.base)]
+ \node (a) at (0,2) {$A$};
+ \node (b) at (4,2) {$C$};
+ \node (c) at (0,0) {$B$};
+ \node (d) at (4,0) {$D$};
+ \draw[->] (a)--node[above]{$u$}(b);
+ \draw[->] (a)--node[left]{$i$}(c);
+ \draw[->] (b)--node[right]{$a$}(d);
+ \draw[->] (c)--node[below]{$v$}(d);
+ \draw[dashed,->] (c)--node[above left]{$h$}(b);
+\end{tikzpicture}
+\]
+z $i$ inercyjnym i $a$ aktywnym istnieje dokładnie jeden morfizm $h$ czyniący oba trójkąty przemiennymi.
+\end{stwierdzenie}
+\begin{proof}
+Dla $f:A\to D$ bierzemy punktowany podzbiór $B=\{*\}\cup\{x\in A:f(x)\neq *\}$ zbioru $A$. Oba składniki tej sumy są rozłączne. Morfizm $i:A\to B$ zachowuje każdy element tej drugiej części i wysyła pozostałe na punkt wyróżniony. Jest inercyjny. Ograniczenie $a=f|_B$ jest aktywne. W dowolnym innym takim rozkładzie $f=a'i'$ warunek aktywności daje $(i')^{-1}(*)=f^{-1}(*)$, natomiast inercyjność $i'$ daje bijekcję pomiędzy pozostałymi elementami $A$ i elementami różnymi od punktu wyróżnionego obiektu pośredniego. Ta bijekcja wyznacza jedyny izomorfizm porównujący rozkłady. Zastąpienie zbiorów przez reprezentantów szkieletu nie zmienia argumentu.
+
+Dla kwadratu z tezy definiujemy $h(*)=*$, a dla $b\neq *$ kładziemy $h(b)=u(x)$, gdzie $x$ jest jedynym elementem $i^{-1}(b)$. Wtedy $ah(b)=au(x)=vi(x)=v(b)$. Jeśli $i(x)=*$, to $au(x)=*$, a aktywność $a$ wymusza $u(x)=*$. Stąd również w tym przypadku $hi(x)=u(x)$. Mamy więc $hi=u$ i $ah=v$. Jednoznaczność wynika z surjektywności $i$, ponieważ każdy element różny od punktu wyróżnionego ma dokładnie jeden przeciwobraz, a punkt wyróżniony ma co najmniej jeden.
+\end{proof}
+
+\subsection{Definicja \texorpdfstring{$\infty$-operady}{operady wyższej}}
+
+Dla funktora $p:\mathcal O^\otimes\to N\mathrm{Fin}_*$ i obiektów $X,Y$ nad odpowiednio $\langle m\rangle,\langle n\rangle$ oznaczamy przez
+\[
+ \operatorname{Map}^{f}_{\mathcal O^\otimes}(X,Y)
+\]
+homotopijne włókno odwzorowania przestrzeni odwzorowań indukowanego przez $p$ nad morfizmem $f:\langle m\rangle\to\langle n\rangle$. Ponieważ przestrzenie odwzorowań w nerwie zwykłej kategorii są dyskretne z dokładnością do równoważności (przykład~\ref{cat:ex:mapping-ordinary}), można równoważnie traktować to włókno jako sumę składowych odwzorowań nad $f$.
+
+\begin{definicja}[$\infty$-operada]\label{cat:def:infty-operad}
+Fibrację wewnętrzną $p:\mathcal O^\otimes\to N\mathrm{Fin}_*$ pomiędzy $\infty$-kategoriami nazywamy $\infty$-operadą, jeśli spełnia następujące warunki.
+\begin{enumerate}
+ \item Każdy morfizm inercyjny $f:\langle m\rangle\to\langle n\rangle$ ma $p$-kokartezjańskie podniesienie z dowolnego obiektu nad $\langle m\rangle$. Takie podniesienia nazywamy morfizmami inercyjnymi $\mathcal O^\otimes$.
+ \item Dla $Y$ nad $\langle n\rangle$ wybierzmy morfizmy inercyjne $Y\to Y_j$ nad $\rho^j$. Dla każdego $X$ nad $\langle m\rangle$ i każdego $f:\langle m\rangle\to\langle n\rangle$ składanie z tymi morfizmami indukuje równoważność
+ \begin{equation}\label{cat:eq:infty-operad-mapping}
+ \operatorname{Map}^{f}_{\mathcal O^\otimes}(X,Y)
+ \simeq\prod_{j=1}^n
+ \operatorname{Map}^{\rho^j f}_{\mathcal O^\otimes}(X,Y_j).
+ \end{equation}
+ \item Dla każdej rodziny $Y_1,\ldots,Y_n$ obiektów włókna $\mathcal O^\otimes_{\langle1\rangle}$ istnieje obiekt $Y$ nad $\langle n\rangle$ z morfizmami inercyjnymi $Y\to Y_j$ nad $\rho^j$.
+\end{enumerate}
+Dopuszczamy $n=0$, a pusty produkt przestrzeni jest przestrzenią punktową. Włókno $\mathcal O=\mathcal O^\otimes_{\langle1\rangle}$ nazywamy kategorią barw $\infty$-operady.
+\end{definicja}
+
+Jest to definicja Luriego (\emph{Higher Algebra}, definicja 2.1.1.10, \url{https://www.math.ias.edu/~lurie/papers/HA.pdf}). Warunek 1 daje możliwość wybierania argumentów, warunek 2 mówi, że operacje o wielu wynikach są rozpoznawane przez ich poszczególne wyniki, a warunek 3 zapewnia możliwość zgromadzenia dowolnej skończonej listy barw. Nie wymagamy podniesień kokartezjańskich wszystkich morfizmów aktywnych; taki dodatkowy warunek będzie charakteryzował symetryczne kategorie monoidalne.
+
+\begin{stwierdzenie}[Warunek Segala na włóknach]\label{cat:prop:infty-operad-segal}
+Dla każdej $\infty$-operady istnieje równoważność
+\begin{equation}\label{cat:eq:infty-operad-segal}
+ \mathcal O^\otimes_{\langle n\rangle}\simeq\mathcal O^n
+\end{equation}
+indukowana przez transport kokartezjański wzdłuż $\rho^1,\ldots,\rho^n$. W szczególności włókno nad $\langle0\rangle$ jest równoważne kategorii końcowej.
+\end{stwierdzenie}
+\begin{proof}
+Ograniczenie $p$ do nerwu podkategorii morfizmów inercyjnych jest fibracją kokartezjańską; warunek 1 daje wymagane podniesienia, a warunek kokartezjański jest zachowywany po zmianie bazy. Przez twierdzenie o prostowaniu i odprostowywaniu~\ref{cat:thm:straightening-unstraightening} transport daje funktory $\rho^j_!$ na włóknach, określone z dokładnością do koherentnej równoważności. Rozważmy ich produkt. Dla $X,Y$ nad $\langle n\rangle$ niech $X\to X_j$ i $Y\to Y_j$ będą wybranymi podniesieniami. Z warunku 2 dla $f=\id_{\langle n\rangle}$ mamy
+\[
+ \operatorname{Map}_{\mathcal O^\otimes_{\langle n\rangle}}(X,Y)
+ \simeq\prod_{j=1}^n\operatorname{Map}^{\rho^j}(X,Y_j).
+\]
+Przez kokartezjańskość $X\to X_j$ każdy czynnik po prawej jest równoważny $\operatorname{Map}_{\mathcal O}(X_j,Y_j)$: własność uniwersalna morfizmu kokartezjańskiego identyfikuje odwzorowania nad $\rho^j$ z odwzorowaniami nad $\id_{\langle1\rangle}$ wychodzącymi z $X_j$. Równoważności są naturalne i dają właśnie morfizm przestrzeni odwzorowań indukowany przez produkt funktorów $\rho^j_!$. Funktor ten jest więc pełny i wierny w sensie homotopijnym. Warunek 3 daje istotną surjektywność. Kryterium~\ref{cat:thm:quasicat-equivalence-criterion} daje tezę. Dla $n=0$ warunek 3 daje obiekt we włóknie, a warunek 2 pokazuje, że przestrzeń odwzorowań między dowolną parą obiektów jest ściągalna. Z tego samego kryterium włókno jest równoważne kategorii końcowej.
+\end{proof}
+
+\begin{definicja}[Przestrzeń operacji wieloargumentowych]\label{cat:def:infty-operad-multimap}
+Dla barw $X_1,\ldots,X_n,Y$ wybieramy obiekt $\mathbf X$ nad $\langle n\rangle$ odpowiadający $(X_1,\ldots,X_n)$ w równoważności~\eqref{cat:eq:infty-operad-segal}. Przestrzenią operacji wieloargumentowych nazywamy
+\[
+ \operatorname{Mul}_{\mathcal O}(X_1,\ldots,X_n;Y)
+ =\operatorname{Map}^{\mu_n}_{\mathcal O^\otimes}(\mathbf X,Y).
+\]
+Wybór $\mathbf X$ wraz z identyfikacjami jego składowych jest określony z dokładnością do ściągalnej przestrzeni wyborów: jest to homotopijne włókno równoważności maksymalnych $\infty$-grupoidów indukowanej przez~\eqref{cat:eq:infty-operad-segal} nad zadaną listą. Obejmuje ono wybór obiektu i równoważności jego obrazu z listą, nie samo ścisłe włókno funktora. W szczególności przestrzeń operacji jest określona z dokładnością do równoważności.
+\end{definicja}
+
+Dla $n=1$ morfizm $\mu_1$ jest identycznością, więc $\operatorname{Mul}_{\mathcal O}(X;Y)\simeq\operatorname{Map}_{\mathcal O}(X,Y)$. Dla $n=0$ otrzymujemy przestrzeń operacji bez argumentów. Na tym etapie nie zakładamy, że przestrzeń operacji wieloargumentowych jest reprezentowana przez iloczyn tensorowy barw; to właśnie odróżnia ogólną operadę od kategorii monoidalnej.
+
+\subsection{Kategoria operatorów zwykłej operady}
+
+Niech $P$ będzie małą symetryczną operadą wielobarwną w zbiorach w sensie definicji~\ref{cat:def:colored-operad}. Przyjmujemy zapis $P((X_i)_{i\in I};Y)$ dla operacji o wejściach indeksowanych skończonym zbiorem $I$, z barwami $X_i$, i wyjściu $Y$. Zmiana indeksów działa zgodnie z aksjomatem przenumerowania. Dzięki temu przy podstawianiu operacji nie musimy wybierać dodatkowej permutacji porządkującej bloki wejść.
+
+\begin{definicja}[Kategoria operatorów]\label{cat:def:infty-operad-operator-category}
+Obiektami $P^\otimes$ są skończone listy $\mathbf X=(X_1,\ldots,X_m)$ barw operady $P$, w tym lista pusta. Morfizm $\mathbf X\to\mathbf Y=(Y_1,\ldots,Y_n)$ składa się z morfizmu $f:\langle m\rangle\to\langle n\rangle$ w $\mathrm{Fin}_*$ oraz rodziny
+\[
+ \alpha_j\in P((X_i)_{i\in f^{-1}(j)};Y_j),
+ \qquad 1\leq j\leq n.
+\]
+Morfizmy nad różnymi $f$ traktujemy jako różne, nawet gdy zbiory operacji są jednoelementowe. Oznaczamy zatem
+\begin{equation}\label{cat:eq:infty-operator-hom}
+ \Hom_{P^\otimes}(\mathbf X,\mathbf Y)=
+ \coprod_{f:\langle m\rangle\to\langle n\rangle}
+ \prod_{j=1}^n P((X_i)_{i\in f^{-1}(j)};Y_j).
+\end{equation}
+Rzutowanie na $f$ oraz przypisanie $\mathbf X\mapsto\langle m\rangle$ określają funktor $p:P^\otimes\to\mathrm{Fin}_*$ po wprowadzeniu składania opisanego poniżej.
+\end{definicja}
+
+Niech $(f,\alpha):\mathbf X\to\mathbf Y$ i $(g,\beta):\mathbf Y\to\mathbf Z$ będą morfizmami, gdzie $\mathbf Z=(Z_1,\ldots,Z_l)$. Definiujemy ich złożenie jako $(gf,\gamma)$, gdzie
+\begin{equation}\label{cat:eq:infty-operator-composition}
+ \gamma_k=\beta_k\bigl((\alpha_j)_{j\in g^{-1}(k)}\bigr),
+ \qquad 1\leq k\leq l.
+\end{equation}
+Podstawienie ma jako zbiór wejść rozłączną sumę $\coprod_{j\in g^{-1}(k)} f^{-1}(j)$. Kanoniczna bijekcja
+\[
+ \coprod_{j\in g^{-1}(k)} f^{-1}(j)
+ \longrightarrow (gf)^{-1}(k),\qquad (j,i)\longmapsto i
+\]
+pozwala przenumerować wynik. Jest ona bijekcją, ponieważ $k\neq *$ i dla każdego $i$ z $gf(i)=k$ jedynym możliwym indeksem pośrednim jest $j=f(i)\neq *$. Operacje $\alpha_j$ dla $g(j)=*$ nie są używane. Gdy $g^{-1}(k)=\varnothing$, podstawienie jest operacją zeroargumentową $\beta_k$.
+
+\begin{stwierdzenie}[Poprawność konstrukcji]\label{cat:prop:infty-operator-category}
+Wzory~\eqref{cat:eq:infty-operator-hom} i~\eqref{cat:eq:infty-operator-composition} definiują kategorię $P^\otimes$ i funktor $p$ do $\mathrm{Fin}_*$. Włókno nad $\langle1\rangle$ jest kategorią barw z operacjami jednoargumentowymi jako morfizmami.
+\end{stwierdzenie}
+\begin{proof}
+Identyczność listy $\mathbf X$ leży nad $\id_{\langle m\rangle}$ i ma składowe $1_{X_i}$. Podstawienie tych jednostek do dowolnej operacji daje tę operację; podstawienie dowolnej operacji do jednostki jej barwy wyjściowej również jej nie zmienia. Obie tożsamości jednostkowe wynikają zatem z aksjomatów operady. Dla listy pustej rodzina składowych jest pusta i stanowi jedyny element pustego produktu.
+
+Dla trzech składanych morfizmów $(f,\alpha),(g,\beta),(h,\chi)$ oraz indeksu wyjściowego $r\neq *$ oba sposoby składania mają zbiór wejść
+\[
+ (hgf)^{-1}(r)
+ \cong\coprod_{k\in h^{-1}(r)}
+       \coprod_{j\in g^{-1}(k)} f^{-1}(j).
+\]
+Przy obu nawiasowaniach bijekcja do lewej strony wysyła trójkę indeksów $(k,j,i)$ na $i$. Pierwsze nawiasowanie daje podstawienie operacji $\alpha_j$ do $\beta_k$, a następnie otrzymanych operacji do $\chi_r$. Drugie nawiasowanie najpierw podstawia $\beta_k$ do $\chi_r$, a potem $\alpha_j$ do wynikowej operacji. Aksjomat łączności podstawień daje równość po powyższym przenumerowaniu, a zgodność z przenumerowaniami gwarantuje niezależność od wykonania bijekcji w jednym lub dwóch krokach. Nie pojawiają się dodatkowe składniki odpowiadające indeksom wysłanym na $*$, ponieważ każdy indeks w tej rozłącznej sumie ma obraz $r\neq *$. Wszystkie składowe są więc równe, a morfizmy bazowe są identyczne przez łączność składania funkcji. To dowodzi łączności w $P^\otimes$.
+
+Funktor $p$ zachowuje identyczności i składanie wprost z definicji. Włókno nad $\langle1\rangle$ zawiera listy jednoelementowe i morfizmy nad identycznością; wzór~\eqref{cat:eq:infty-operator-hom} ograniczony do tej identyczności daje $P(X;Y)$, a wzór~\eqref{cat:eq:infty-operator-composition} daje podstawienie jednoargumentowe.
+\end{proof}
+
+\begin{stwierdzenie}[Kanoniczne podniesienia inercyjne]\label{cat:prop:infty-operator-inert}
+Dla inercyjnego $f:\langle m\rangle\to\langle n\rangle$ i listy $\mathbf X$ oznaczmy przez $i_j$ jedyny element $f^{-1}(j)$. Istnieje $p$-kokartezjański morfizm
+\[
+ u_f:\mathbf X\longrightarrow (X_{i_1},\ldots,X_{i_n})
+\]
+nad $f$ ze składowymi $1_{X_{i_j}}$.
+\end{stwierdzenie}
+\begin{proof}
+Piszemy $\mathbf X'=(X_{i_j})_{j=1}^n$. Zgodnie z definicją~\ref{cat:def:ordinary-cocartesian-arrow} należy wykazać, że dla każdego $g:\langle n\rangle\to\langle l\rangle$ i każdej listy $\mathbf Z$ składanie z $u_f$ daje bijekcję
+\[
+ \Hom^g_{P^\otimes}(\mathbf X',\mathbf Z)
+ \longrightarrow \Hom^{gf}_{P^\otimes}(\mathbf X,\mathbf Z).
+\]
+Indeks górny oznacza tutaj zbiór morfizmów nad wskazaną funkcją. Dla każdego $k\neq *$ funkcja $j\mapsto i_j$ jest bijekcją $g^{-1}(k)\to(gf)^{-1}(k)$: inercyjność daje jednoznacznego poprzednika każdego $j$, zaś żaden element wysłany przez $f$ na $*$ nie może trafić przez $gf$ na $k$. Na składowej $k$ składanie z $u_f$ podstawia wyłącznie jednostki barw $X_{i_j}$, a następnie zmienia indeksy przez tę bijekcję. Pierwsza czynność zachowuje operację przez aksjomat jednostki, druga jest bijekcją przez aksjomat przenumerowania, z odwrotnością zadaną przez odwrotną bijekcję. Produkt tych bijekcji jest bijekcją, także gdy jest pusty. To jest dokładnie własność uniwersalna morfizmu kokartezjańskiego.
+\end{proof}
+
+\begin{twierdzenie}[Nerw operady klasycznej]\label{cat:thm:infty-operad-classical-nerve}
+Nerw funktora $p:P^\otimes\to\mathrm{Fin}_*$ jest $\infty$-operadą. Jej przestrzenie operacji wieloargumentowych są dyskretne i zachodzi naturalna równoważność
+\[
+ \operatorname{Mul}_{NP}(X_1,\ldots,X_n;Y)
+ \simeq P(X_1,\ldots,X_n;Y)_{\mathrm{dysk}},
+\]
+gdzie $NP$ oznacza $\infty$-operadę zbudowaną z $N(P^\otimes)$, a indeks $\mathrm{dysk}$ oznacza przestrzeń dyskretną odpowiadającą zbiorowi.
+\end{twierdzenie}
+\begin{proof}
+Nerwy kategorii zwykłych są quasi-kategoriami. Ponadto nerw dowolnego funktora między kategoriami zwykłymi jest fibracją wewnętrzną: dla rogu wewnętrznego w nerwie źródła istnieje jedyne wypełnienie, a jego obraz w nerwie celu musi być zadanym wypełnieniem rogu przez jednoznaczność wypełnień w nerwie kategorii zwykłej (twierdzenie~\ref{cat:thm:nerve-inner-horns}). W szczególności $Np$ jest fibracją wewnętrzną, jak wymaga definicja~\ref{cat:def:infty-operad}. Dualna postać stwierdzenia~\ref{cat:prop:cartesian-nerve} identyfikuje kokartezjańskie morfizmy zwykłe z kokartezjańskimi krawędziami ich nerwu. Zatem stwierdzenie~\ref{cat:prop:infty-operator-inert} daje pierwszy warunek definicji~\ref{cat:def:infty-operad}.
+
+Dla listy $\mathbf Y$ nad $\langle n\rangle$ kanoniczne podniesienie $\rho^j$ jest morfizmem $\mathbf Y\to(Y_j)$, którego jedyną składową jest $1_{Y_j}$. Składanie $(f,\alpha)$ z tym podniesieniem zachowuje jedynie $\alpha_j$, ponieważ $(\rho^j f)^{-1}(1)=f^{-1}(j)$ i podstawienie do jednostki zachowuje operację. Na zbiorach morfizmów porównanie~\eqref{cat:eq:infty-operad-mapping} jest więc bijekcją
+\[
+ \prod_{j=1}^n P((X_i)_{i\in f^{-1}(j)};Y_j)
+ \longrightarrow
+ \prod_{j=1}^n\Hom^{\rho^j f}_{P^\otimes}(\mathbf X,(Y_j))
+\]
+zadaną przez projekcje na składowe. Przestrzenie odwzorowań w nerwie są dyskretne z dokładnością do równoważności, zgodnie z przykładem~\ref{cat:ex:mapping-ordinary}; ich włókna nad $f$ odpowiadają dokładnie zbiorom morfizmów nad $f$. Bijekcja daje zatem równoważność przestrzeni. Inny wybór kokartezjańskich podniesień daje izomorficzne obiekty docelowe i te same porównania z dokładnością do równoważności przez ich własność uniwersalną. To wykazuje drugi warunek.
+
+Dla dowolnej rodziny barw $Y_1,\ldots,Y_n$ lista tych barw wraz z kanonicznymi podniesieniami $\rho^j$ spełnia trzeci warunek. Dla $n=0$ wybieramy listę pustą. Wreszcie dla $f=\mu_n$ mamy $\mu_n^{-1}(1)=\{1,\ldots,n\}$, więc wzór~\eqref{cat:eq:infty-operator-hom} identyfikuje zbiór morfizmów nad $\mu_n$ dokładnie z operacjami $P(X_1,\ldots,X_n;Y)$. To daje ostatnią równoważność, naturalną względem operacji jednoargumentowych i zgodną z podstawieniami na mocy~\eqref{cat:eq:infty-operator-composition}.
+\end{proof}
+
+\begin{przyklad}[Operada przemienna i operada asocjatywna]\label{cat:ex:infty-operad-com-ass}
+Dla operady przemiennej $\mathrm{Com}$ z jedną barwą i jedną operacją każdej arności (przykład~\ref{cat:ex:com-operad}) nad każdym $f$ istnieje dokładnie jeden morfizm kategorii operatorów. Obiekt nad $\langle n\rangle$ także jest jedyny, więc $p:\mathrm{Com}^\otimes\to\mathrm{Fin}_*$ jest izomorfizmem. Otrzymujemy $\infty$-operadę $N\mathrm{Fin}_*$ z identycznością jako funktorem strukturalnym.
+
+Dla symetrycznej operady asocjatywnej $\mathrm{Ass}$ z przykładu~\ref{cat:ex:symmetric-as-operad} operacja na skończonym zbiorze wejść to wybór liniowego porządku tych wejść. Morfizm nad $f$ składa się więc z wyboru liniowego porządku każdego $f^{-1}(j)$ dla $j\neq *$. Przy składaniu porządkujemy bloki według porządku operacji zewnętrznej, a w każdym bloku zachowujemy porządek operacji wewnętrznej. Nad $\mu_2$ istnieją dwie operacje, odpowiadające słowom $x_1x_2$ i $x_2x_1$, w przeciwieństwie do pojedynczej operacji w $\mathrm{Com}$. Funktor zapominający porządki jest morfizmem operad i zachowuje kanoniczne podniesienia inercyjne (każde ich niepuste włókno jest jednoelementowe). Pokazuje to na poziomie kategorii operatorów różnicę między mnożeniem łącznym a łącznym i przemiennym.
+\end{przyklad}
+
+\subsection{Symetryczne monoidalne \texorpdfstring{$\infty$-kategorie}{kategorie wyższe}}
+
+\begin{definicja}[Symetryczna monoidalna $\infty$-kategoria]\label{cat:def:infty-symmetric-monoidal}
+Symetryczną monoidalną $\infty$-kategorią nazywamy $\infty$-operadę $p:\mathcal C^\otimes\to N\mathrm{Fin}_*$, której funktor strukturalny jest fibracją kokartezjańską. Jej kategorią obiektów jest $\mathcal C=\mathcal C^\otimes_{\langle1\rangle}$.
+\end{definicja}
+
+W odróżnieniu od ogólnej $\infty$-operady możemy teraz transportować listę obiektów wzdłuż każdego morfizmu bazy, także aktywnego. Nie zakładamy, że otrzymane iloczyny są iloczynami kategorialnymi ani że jednostka monoidalna jest obiektem końcowym.
+
+\begin{twierdzenie}[Opis przez diagram Segala]\label{cat:thm:infty-symmetric-segal}
+Przez prostowanie symetrycznej monoidalnej $\infty$-kategorii otrzymujemy funktor
+\[
+ F:N\mathrm{Fin}_*\longrightarrow\mathbf{Cat}_{\infty},
+ \qquad F(\langle n\rangle)\simeq F(\langle1\rangle)^n,
+\]
+przy czym równoważność jest indukowana przez $F(\rho^1),\ldots,F(\rho^n)$ i obejmuje $n=0$. Odwrotnie, każdy taki funktor po rozprostowaniu daje symetryczną monoidalną $\infty$-kategorię.
+\end{twierdzenie}
+\begin{proof}
+Pierwsza część jest twierdzeniem~\ref{cat:thm:straightening-unstraightening} wraz ze stwierdzeniem~\ref{cat:prop:infty-operad-segal}. Odwrotnie, rozprostowanie $F$ daje fibrację kokartezjańską $p$, więc pierwszy warunek definicji~\ref{cat:def:infty-operad} jest automatyczny. Dla $X$ nad $\langle m\rangle$, $Y$ nad $\langle n\rangle$ i $f:\langle m\rangle\to\langle n\rangle$ własność uniwersalna podniesienia kokartezjańskiego daje
+\[
+ \operatorname{Map}^{f}(X,Y)
+ \simeq \operatorname{Map}_{F(\langle n\rangle)}(F(f)X,Y).
+\]
+Warunek Segala identyfikuje przestrzeń po prawej z produktem przestrzeni
+\[
+ \operatorname{Map}_{F(\langle1\rangle)}
+   (F(\rho^j)F(f)X,F(\rho^j)Y).
+\]
+Koherentna funktorialność $F$ identyfikuje pierwszy argument z $F(\rho^j f)X$. Stosując ponownie własność uniwersalną podniesienia kokartezjańskiego, otrzymujemy $\operatorname{Map}^{\rho^j f}(X,Y_j)$. Z naturalności transportu wynika, że porównanie jest zadane przez składanie z podniesieniami $Y\to Y_j$, a nie tylko przez abstrakcyjną równoważność obu przestrzeni. Daje to drugi aksjomat $\infty$-operady. Istotna surjektywność równoważności Segala daje trzeci aksjomat; jeżeli składowe są jedynie równoważne zadanym obiektom, składamy podniesienia z tymi równoważnościami we włóknie, co zachowuje kokartezjańskość. Dla $n=0$ włókno docelowe jest końcowe z dokładnością do równoważności, a produkt przestrzeni odwzorowań w drugim aksjomacie jest pusty.
+\end{proof}
+
+\begin{definicja}[Iloczyny tensorowe i jednostka]\label{cat:def:infty-monoidal-tensor}
+Dla $n\geq0$ definiujemy $n$-argumentowy iloczyn tensorowy jako złożenie
+\[
+ \mathcal C^n \simeq \mathcal C^\otimes_{\langle n\rangle}
+ \xrightarrow{(\mu_n)_!}\mathcal C.
+\]
+Piszemy $\bigotimes_{i=1}^n X_i$ na jego wartość. Dla $n=2$ otrzymujemy bifunktor $\otimes$, dla $n=0$ obiekt jednostkowy $\mathbb 1$, a dla $n=1$ funktor równoważny identyczności. Wybory quasi-odwrotności w równoważnościach Segala oraz podniesień kokartezjańskich są określone z dokładnością do koherentnej równoważności.
+\end{definicja}
+
+\begin{stwierdzenie}[Reprezentowalność operacji]\label{cat:prop:infty-monoidal-representable}
+W symetrycznej monoidalnej $\infty$-kategorii zachodzą naturalne równoważności
+\[
+ \operatorname{Mul}_{\mathcal C}(X_1,\ldots,X_n;Y)
+ \simeq \operatorname{Map}_{\mathcal C}
+ \left(\bigotimes_{i=1}^nX_i,Y\right).
+\]
+Dla dowolnego $f:\langle m\rangle\to\langle n\rangle$ transport $f_!$ w identyfikacjach Segala ma $j$-tą składową równoważną $\bigotimes_{i\in f^{-1}(j)} X_i$, z jednostką dla pustego włókna.
+\end{stwierdzenie}
+\begin{proof}
+Wybierzmy listę $\mathbf X$ w odpowiednim włóknie. Podniesienie kokartezjańskie nad $\mu_n$ o źródle $\mathbf X$ ma cel równoważny iloczynowi tensorowemu z definicji. Składanie z tym podniesieniem identyfikuje przestrzeń morfizmów nad identycznością celu z przestrzenią morfizmów nad $\mu_n$. Jest to pierwsza teza, naturalna w argumentach przez prostowanie.
+
+Dla drugiej tezy zauważmy, że $\rho^j f$ rozkłada się jako wybór wszystkich elementów $f^{-1}(j)$, czyli pewien morfizm inercyjny $r_j:\langle m\rangle\to\langle k_j\rangle$, a następnie $\mu_{k_j}$, gdzie $k_j=|f^{-1}(j)|$. Transport wzdłuż $r_j$ jest w identyfikacjach Segala wyborem odpowiednich składowych: złożenie $r_j$ z każdą projekcją inercyjną jest projekcją na właściwy argument. Następnie transport wzdłuż $\mu_{k_j}$ daje ich iloczyn tensorowy. Funktorialność transportu daje $\rho^j_! f_!\simeq(\rho^j f)_!\simeq(\mu_{k_j})_!(r_j)_!$. Zmiana numeracji wybranego zbioru wejść daje porównanie przez transport wzdłuż permutacji; nie zmienia typu równoważności otrzymanego obiektu. Gdy $k_j=0$, transport przechodzi przez włókno końcowe nad $\langle0\rangle$ i daje jednostkę.
+\end{proof}
+
+\begin{stwierdzenie}[Łączność, jednostka i symetria]\label{cat:prop:infty-monoidal-coherence}
+Transport wyznacza naturalne równoważności
+\[
+\begin{aligned}
+ (X\otimes Y)\otimes Z&\simeq X\otimes(Y\otimes Z),\\
+ \mathbb 1\otimes X&\simeq X\simeq X\otimes\mathbb 1,\\
+ X\otimes Y&\simeq Y\otimes X.
+\end{aligned}
+\]
+Równoważności te mają koherencje wyższych rzędów indukowane przez funktor $F$ z twierdzenia~\ref{cat:thm:infty-symmetric-segal}. W szczególności indukują zwykłą symetryczną strukturę monoidalną na $h\mathcal C$.
+\end{stwierdzenie}
+\begin{proof}
+Dwa morfizmy $a,b:\langle3\rangle\to\langle2\rangle$ zadane przez włókna odpowiednio $(\{1,2\},\{3\})$ oraz $(\{1\},\{2,3\})$ spełniają $\mu_2 a=\mu_3=\mu_2 b$. Stąd w $\infty$-kategorii funktorów, po zastosowaniu równoważności Segala, otrzymujemy diagram
+\[
+\begin{tikzpicture}[>=Stealth,baseline=(b.base)]
+ \node (a) at (-4,0) {$(X\otimes Y)\otimes Z$};
+ \node (b) at (0,1.4) {$\mu_{3!}(X,Y,Z)$};
+ \node (c) at (4,0) {$X\otimes(Y\otimes Z)$};
+ \draw[->] (a)--node[above left]{$\simeq$}(b);
+ \draw[->] (c)--node[above right]{$\simeq$}(b);
+ \draw[dashed,->] (a)--node[below]{łączność}(c);
+\end{tikzpicture}
+\]
+Strzałki ukośne wynikają z koherentnej funktorialności transportu oraz stwierdzenia~\ref{cat:prop:infty-monoidal-representable}; złożenie pierwszej z odwrotnością drugiej jest równoważnością łączności. Dwa morfizmy $\langle1\rangle\to\langle2\rangle$ wysyłające jedyny argument odpowiednio na drugi i pierwszy element różny od punktu wyróżnionego, po złożeniu z $\mu_2$, dają identyczność $\langle1\rangle$. Ich transporty dają pary $(\mathbb 1,X)$ i $(X,\mathbb 1)$, co daje równoważności jednostkowe. Transpozycja $\tau$ na $\langle2\rangle$ spełnia $\mu_2\tau=\mu_2$; jej transport zamienia składowe i daje symetrię.
+
+Wyjaśnijmy źródło koherencji. Każde nawiasowanie iloczynu $n$ obiektów odpowiada łańcuchowi morfizmów grupujących argumenty, którego złożeniem jest $\mu_n$. Łańcuch wraz z wszystkimi złożeniami jest sympleksem nerwu bazy. Jego obraz przez $F$ zawiera nie tylko porównania pomiędzy transportami złożonymi i transportem wzdłuż złożenia, ale także homotopie między tymi porównaniami. Usuwanie pośredniego etapu grupowania odpowiada ścianie tego sympleksu. Zgodność porównań z kolejnymi usunięciami wynika z tożsamości symplicjalnych. Dla czterech argumentów porównujemy w ten sposób pięć nawiasowań przez transport wzdłuż $\mu_4$; każda krawędź pięciokąta jest, z dokładnością do homotopii, złożeniem porównania z $\mu_{4!}$ oraz odwrotności porównania dla drugiego nawiasowania. Obie drogi w pięciokącie są więc homotopijne. Dla trójkąta jednostki zaczynamy od morfizmu $\langle2\rangle\to\langle3\rangle$ wysyłającego $1$ na $1$ i $2$ na $3$. Złożenia z oboma morfizmami grupującymi są identycznością na $\langle2\rangle$, a dalsze złożenie to $\mu_2$. Porównania transportów dają zatem po obu stronach trójkąta to samo porównanie z $\mu_{2!}$. Dla symetrii dwukrotna transpozycja jest identycznością. W pierwszym sześciokącie zamiana bloku $(2,3)$ z argumentem $1$ oraz kolejne zamiany argumentu $1$ z $2$ i z $3$ wyznaczają to samo przenumerowanie $(1,2,3)\mapsto(2,3,1)$, zapisane jako kolejność wynikowych argumentów. W drugim sześciokącie analogicznie otrzymujemy kolejność $(3,1,2)$. Po złożeniu z $\mu_3$ wszystkie te morfizmy dają $\mu_3$. Koherentna funktorialność porównuje obie drogi przez transport wzdłuż tego samego morfizmu, dając wymagane homotopie. Po przejściu do $h\mathcal C$ te homotopie stają się równościami morfizmów. Otrzymujemy zatem strukturę z definicji~\ref{cat:def:monoidal} i~\ref{cat:def:braided-symmetric}, w szczególności aksjomaty~\eqref{cat:eq:pentagon} i~\eqref{cat:eq:triangle-monoidal}. Nie jest to stwierdzenie, że te skończenie liczne równania wystarczą do odzyskania struktury wyższej: pełne dane są zawarte w $F$, nie w samym $h\mathcal C$.
+\end{proof}
+
+\begin{przyklad}[Nerw zwykłej symetrycznej kategorii monoidalnej]\label{cat:ex:infty-monoidal-ordinary}
+Niech $\mathcal V$ będzie małą zwykłą symetryczną kategorią monoidalną. Tworzymy operadę wielobarwną o barwach będących obiektami $\mathcal V$ i operacjach
+\[
+ P(X_1,\ldots,X_n;Y)=
+ \Hom_{\mathcal V}(X_1\otimes\cdots\otimes X_n,Y).
+\]
+Dla każdej arności ustalamy nawiasowanie iloczynu, dla arności jeden przyjmujemy sam argument, a dla pustej listy jednostkę. Podstawienie jest iloczynem tensorowym morfizmów wewnętrznych, poprzedzonym izomorfizmem grupowania wejść i zakończonym morfizmem zewnętrznym. Aksjomaty tej operady wynikają z bifunktorialności iloczynu i twierdzeń o koherencji~\ref{cat:thm:mac-lane-coherence} oraz~\ref{cat:thm:symmetric-coherence}: obie drogi w aksjomacie łączności mają tę samą permutację wejść i to samo złożenie morfizmów po identyfikacji nawiasowań, a jednostki są identycznościami obiektów.
+
+Przez twierdzenie~\ref{cat:thm:infty-operad-classical-nerve} nerw $P^\otimes$ jest $\infty$-operadą. Dla dowolnego $f:\langle m\rangle\to\langle n\rangle$ podniesienie z listy $\mathbf X$ ma cel $(U_1,\ldots,U_n)$, gdzie $U_j=\bigotimes_{i\in f^{-1}(j)} X_i$, i składowe będące identycznościami $U_j$. Jest kokartezjańskie: dla dowolnego $g$ i listy docelowej $\mathbf Z$ składanie z nim na $k$-tej składowej identyfikuje
+\[
+ \Hom_{\mathcal V}\left(\bigotimes_{j\in g^{-1}(k)}U_j,Z_k\right)
+ \quad\text{z}\quad
+ \Hom_{\mathcal V}\left(\bigotimes_{i\in(gf)^{-1}(k)}X_i,Z_k\right)
+\]
+przez prekompozycję z kanonicznym izomorfizmem grupowania i przenumerowania. Jest to bijekcja, także dla pustego włókna, przez koherencję jednostki. Produkt bijekcji daje kryterium kokartezjańskości. Funktor $p$ jest więc opfibracją Grothendiecka, a jego nerw fibracją kokartezjańską przez wniosek~\ref{cat:cor:grothendieck-nerve-fibration}. Otrzymujemy symetryczną monoidalną $\infty$-kategorię, której włókno nad $\langle1\rangle$ jest $N\mathcal V$ i której iloczyn tensorowy odzyskuje pierwotny iloczyn przez powyższy opis transportu.
+\end{przyklad}
+
+\subsection{Niesymetryczne monoidalne \texorpdfstring{$\infty$-kategorie}{kategorie wyższe}}
+
+W przypadku niesymetrycznym kolejność argumentów jest częścią danych. Zamiast dowolnych funkcji między zbiorami punktowanymi użyjemy kategorii $\Delta^{\mathrm{op}}$, gdzie $\Delta$ jest kategorią sympleksów z definicji~\ref{cat:def:simplex-category}. Przypomnijmy, że $[n]=\{0,\ldots,n\}$, a morfizmy w $\Delta$ zachowują porządek.
+
+\begin{definicja}[Morfizmy aktywne i inercyjne w $\Delta$]\label{cat:def:infty-delta-active-inert}
+Morfizm $\alpha:[m]\to[n]$ w $\Delta$ jest aktywny, jeśli $\alpha(0)=0$ i $\alpha(m)=n$. Jest inercyjny, jeśli $\alpha(j)=\alpha(0)+j$ dla każdego $j$. W $\Delta^{\mathrm{op}}$ stosujemy te same nazwy do morfizmów przeciwnych. W szczególności dla $1\leq j\leq n$ oznaczamy przez $r^j:[n]\to[1]$ w $\Delta^{\mathrm{op}}$ przeciwieństwo włożenia $[1]\to[n]$ o wartościach $j-1,j$. Przez $b_n:[n]\to[1]$ oznaczamy przeciwieństwo morfizmu $[1]\to[n]$ wybierającego końce $0,n$; jest on aktywny, także gdy $n=0$.
+\end{definicja}
+
+\begin{stwierdzenie}[Rozkład morfizmów w $\Delta$]\label{cat:prop:infty-delta-active-inert}
+Każdy morfizm w $\Delta$ jest złożeniem morfizmu aktywnego, a następnie inercyjnego, w sposób jednoznaczny. W $\Delta^{\mathrm{op}}$ kolejność jest odwrotna.
+\end{stwierdzenie}
+\begin{proof}
+Dla $\alpha:[m]\to[n]$ połóżmy $s=\alpha(0)$ i $t=\alpha(m)$, gdzie $s\leq t$. Morfizm $a:[m]\to[t-s]$, $a(j)=\alpha(j)-s$, jest aktywny, a $i:[t-s]\to[n]$, $i(k)=s+k$, jest inercyjny. Mamy $\alpha=ia$. Jeśli $\alpha=i'a'$ z $a'$ aktywnym i $i'$ inercyjnym, obraz pierwszego i ostatniego punktu przez $\alpha$ jest zarazem pierwszym i ostatnim punktem przedziału będącego obrazem $i'$. Wyznacza to $i'$ i jego dziedzinę jako $i$ i $[t-s]$. Ponieważ $i$ jest injektywny, $a'=a$. W przypadku $s=t$ przedział pośredni ma jeden element; rachunek nadal obowiązuje. Przejście do kategorii przeciwnej odwraca kolejność składania.
+\end{proof}
+
+\begin{definicja}[Niesymetryczna monoidalna $\infty$-kategoria]\label{cat:def:infty-nonsymmetric-monoidal}
+Niesymetryczną (lub asocjatywną) monoidalną $\infty$-kategorią nazywamy fibrację kokartezjańską
+\[
+ q:\mathcal C^\otimes\longrightarrow N(\Delta^{\mathrm{op}})
+\]
+taką, że transporty wzdłuż $r^j$ indukują równoważności
+\begin{equation}\label{cat:eq:infty-nonsymmetric-segal}
+ \mathcal C^\otimes_{[n]}\simeq
+ \prod_{j=1}^n\mathcal C^\otimes_{[1]}.
+\end{equation}
+Dla $n=0$ żądamy równoważności włókna z kategorią końcową. Przez $\mathcal C$ oznaczamy włókno nad $[1]$.
+\end{definicja}
+
+Przez twierdzenie~\ref{cat:thm:straightening-unstraightening} jest to równoważnie funktor $F:N(\Delta^{\mathrm{op}})\to\mathbf{Cat}_{\infty}$ spełniający warunek~\eqref{cat:eq:infty-nonsymmetric-segal}. Definicja jest standardową definicją monoidalnej $\infty$-kategorii przez obiekt symplicjalny Segala (J.~Lurie, \emph{Higher Algebra}, \S4.1.1). Własność Segala dotyczy tutaj kategorii, nie tylko zbiorów obiektów ani przestrzeni. Inaczej niż w~\ref{cat:def:infty-symmetric-monoidal} nie ma w bazie transpozycji dwóch argumentów.
+
+\begin{stwierdzenie}[Transport przez uporządkowane bloki]\label{cat:prop:infty-nonsymmetric-transport}
+Iloczyn $n$ argumentów w niesymetrycznej monoidalnej $\infty$-kategorii definiujemy jako transport $(b_n)_!$ po identyfikacji $\mathcal C^\otimes_{[n]}\simeq\mathcal C^n$. Dla morfizmu $u:[n]\to[m]$ w $\Delta^{\mathrm{op}}$ odpowiadającego $\alpha:[m]\to[n]$ w $\Delta$ transport jest równoważny funktorowi o składowych
+\begin{equation}\label{cat:eq:infty-ordered-blocks}
+ (u_!\mathbf X)_j\simeq
+ X_{\alpha(j-1)+1}\otimes\cdots\otimes X_{\alpha(j)},
+ \qquad 1\leq j\leq m,
+\end{equation}
+gdzie pusty blok daje jednostkę. Argumenty przed $\alpha(0)+1$ i po $\alpha(m)$ nie są używane.
+\end{stwierdzenie}
+\begin{proof}
+Złożenie $r^j u$ w $\Delta^{\mathrm{op}}$ jest przeciwieństwem morfizmu $[1]\to[n]$ o wartościach $s=\alpha(j-1)$ i $t=\alpha(j)$. W $\Delta$ ten morfizm rozkłada się jako wybór końców $[1]\to[t-s]$ oraz włożenie przedziału $[t-s]\to[n]$, $k\mapsto s+k$. Po przejściu do kategorii przeciwnej otrzymujemy najpierw transport wybierający przedział argumentów $X_{s+1},\ldots,X_t$, ponieważ złożenie z każdą projekcją $r^k$ wybiera odpowiedni argument, a następnie transport $(b_{t-s})_!$. Funktorialność $F$ daje~\eqref{cat:eq:infty-ordered-blocks}, naturalnie w $\mathbf X$. Dla $t=s$ pierwszy transport prowadzi do włókna końcowego nad $[0]$, zatem drugi daje jednostkę.
+\end{proof}
+
+\begin{przyklad}[Ściany i degeneracje jako operacje monoidalne]\label{cat:ex:infty-nonsymmetric-faces}
+Morfizmy ścian $d_i:[n]\to[n-1]$ w $\Delta^{\mathrm{op}}$ są przeciwieństwami injekcji pomijających $i$. Dla $0<i<n$ transport łączy $X_i,X_{i+1}$ w ich iloczyn w tej kolejności. Ściany $d_0$ i $d_n$ usuwają odpowiednio pierwszy i ostatni argument. Morfizm degeneracji $s_i:[n]\to[n+1]$ jest przeciwieństwem surjekcji powtarzającej $i$, więc wstawia jednostkę między $X_i$ a $X_{i+1}$ (na końcu listy, jeśli $i=n$, i na początku, jeśli $i=0$). Wszystkie te formuły wynikają bezpośrednio z długości przedziałów we wzorze~\eqref{cat:eq:infty-ordered-blocks}.
+
+Dla trzech argumentów tożsamość symplicjalna $d_1d_2=d_1d_1$ daje naturalną równoważność
+\[
+ X_1\otimes(X_2\otimes X_3)
+ \simeq (X_1\otimes X_2)\otimes X_3.
+\]
+Tożsamości $d_1s_0=\id=d_1s_1$ na $[1]$ dają oba prawa jednostkowe. Koherencja tych porównań wynika z obrazów wyższych sympleksów nerwu $\Delta^{\mathrm{op}}$, analogicznie do argumentu ze stwierdzenia~\ref{cat:prop:infty-monoidal-coherence}. Po przejściu do kategorii homotopii otrzymujemy zwykłą kategorię monoidalną. Nie otrzymujemy jednak symetrii: w $\Delta$ nie ma nieidentycznościowych automorfizmów obiektów.
+\end{przyklad}
+
+\subsection{Zapominanie symetrii i porównanie obu modeli}
+
+\begin{definicja}[Funktor uporządkowanych bloków]\label{cat:def:infty-delta-finpointed}
+Definiujemy $J:\Delta^{\mathrm{op}}\to\mathrm{Fin}_*$ przez $J([n])=\langle n\rangle$. Dla $u:[n]\to[m]$ odpowiadającego $\alpha:[m]\to[n]$ kładziemy $J(u)(*)=*$ oraz
+\[
+ J(u)(i)=
+ \begin{cases}
+ j,&\alpha(j-1)<i\leq\alpha(j),\quad 1\leq j\leq m,\\
+ *,&i\leq\alpha(0)\text{ lub }i>\alpha(m).
+ \end{cases}
+\]
+Przedziały w pierwszym wierszu są rozłączne, a ich suma daje wszystkie pozostałe indeksy; wzór określa więc funkcję.
+\end{definicja}
+
+\begin{stwierdzenie}[Własności funktora $J$]\label{cat:prop:infty-delta-finpointed}
+Przypisanie $J$ jest funktorem, zachowuje morfizmy aktywne i inercyjne oraz spełnia $J(r^j)=\rho^j$ i $J(b_n)=\mu_n$. Nie jest ani pełne, ani wierne.
+\end{stwierdzenie}
+\begin{proof}
+Dla identyczności $\alpha=\id_{[n]}$ każdy przedział ma długość jeden i $J(u)=\id_{\langle n\rangle}$. Niech $v:[m]\to[l]$ odpowiada $\beta:[l]\to[m]$. Indeks $i$ trafia przez $J(v)J(u)$ na $k\neq *$ dokładnie wtedy, gdy istnieje $j$ takie, że
+\[
+ \beta(k-1)<j\leq\beta(k),
+ \qquad \alpha(j-1)<i\leq\alpha(j).
+\]
+Przedziały z drugiego warunku, dla kolejnych $j$ z pierwszego, mają rozłączną sumę równą przedziałowi
+\[
+ \alpha(\beta(k-1))<i\leq\alpha(\beta(k)).
+\]
+Równość jest ważna także dla pustego przedziału i dla powtarzających się wartości $\alpha$. Jest to dokładnie warunek $J(vu)(i)=k$. Obie funkcje zachowują punkt wyróżniony; dla pozostałych indeksów, które nie trafiają na żaden $k\neq *$, obie mają wartość $*$. To dowodzi funktorialności.
+
+Aktywność $\alpha$ oznacza, że wszystkie indeksy $1,\ldots,n$ trafiają do przedziałów, więc $J(u)$ jest aktywny. Gdy $\alpha(j)=s+j$, każdy przedział ma jeden element, stąd $J(u)$ jest inercyjny. Dla $r^j$ jedynym niepustym włóknem jest $\{j\}$, a dla $b_n$ jedyne włókno nad $1$ to $\{1,\ldots,n\}$. Dostajemy żądane wzory. Funktor nie jest pełny: transpozycja na $\langle2\rangle$ nie jest jego obrazem, ponieważ niepuste włókna morfizmu $J(u)$ są ustawione w porządku rosnącym względem indeksów wyjściowych. Funktor nie jest również wierny: dwa różne morfizmy $[0]\to[1]$ w $\Delta$, wybierające odpowiednio $0$ i $1$, po przejściu do kategorii przeciwnej mają ten sam obraz, czyli jedyny morfizm $\langle1\rangle\to\langle0\rangle$.
+\end{proof}
+
+\begin{wniosek}[Ograniczenie struktury symetrycznej]\label{cat:cor:infty-forget-symmetry}
+Każda symetryczna monoidalna $\infty$-kategoria wyznacza niesymetryczną monoidalną $\infty$-kategorię przez zmianę bazy
+\[
+\begin{tikzpicture}[>=Stealth,baseline=(a.base)]
+ \node (a) at (0,1.9) {$\mathcal C^\otimes\times_{N\mathrm{Fin}_*}N(\Delta^{\mathrm{op}})$};
+ \node (b) at (8,1.9) {$\mathcal C^\otimes$};
+ \node (c) at (0,0) {$N(\Delta^{\mathrm{op}})$};
+ \node (d) at (8,0) {$N\mathrm{Fin}_*$};
+ \draw[->] (a)--(b);
+ \draw[->] (a)--(c);
+ \draw[->] (b)--node[right]{$p$}(d);
+ \draw[->] (c)--node[below]{$NJ$}(d);
+ \node at (2.1,1.5) {$\lrcorner$};
+\end{tikzpicture}
+\]
+Jej kategoria obiektów, iloczyn i jednostka są równoważne odpowiednim danym struktury symetrycznej.
+\end{wniosek}
+\begin{proof}
+Fibracje kokartezjańskie są zachowywane przez zmianę bazy (dualna postać stwierdzenia~\ref{cat:prop:cartesian-fibration-pullback}). Prostowanie identyfikuje zmianę bazy z prekompozycją $F\circ NJ$. Ponieważ $J([n])=\langle n\rangle$ i $J(r^j)=\rho^j$, warunki Segala są identyczne. Wreszcie $J(b_n)=\mu_n$ daje zgodność wszystkich uporządkowanych iloczynów, także jednostki dla $n=0$. Ograniczony diagram zachowuje koherencje łączności i jednostki, lecz nie obejmuje transportów wzdłuż dowolnych permutacji. Samo ograniczenie nie dostarcza danych symetrii; ponadto nie każda niesymetryczna struktura monoidalna jest ograniczeniem symetrycznej, jak pokazuje następny przykład.
+\end{proof}
+
+\begin{przyklad}[Kategoria endofunktorów]\label{cat:ex:infty-nonsymmetric-endofunctors}
+Niech $\mathcal A$ będzie zwykłą małą kategorią dyskretną o dwóch obiektach $a,b$. Kategoria $\operatorname{Fun}(\mathcal A,\mathcal A)$ jest dyskretna i ma cztery obiekty odpowiadające funkcjom $\{a,b\}\to\{a,b\}$. Składanie endofunktorów jest ściśle łączne, a identyczność jest jednostką. Daje to diagram nad $\Delta^{\mathrm{op}}$ o wartościach $\operatorname{Fun}(\mathcal A,\mathcal A)^n$ i morfizmach określonych przez składanie kolejnych bloków według~\eqref{cat:eq:infty-ordered-blocks}. Własność funktorialności wynika z łączności składania i praw jednostkowych, ponieważ przy złożeniu dwóch funkcji w $\Delta^{\mathrm{op}}$ bloki składają się w większe przedziały dokładnie tak jak w dowodzie stwierdzenia~\ref{cat:prop:infty-delta-finpointed}. Po wzięciu nerwów i rozprostowaniu dostajemy monoidalną $\infty$-kategorię. Jednak dla stałych endofunktorów $c_a,c_b$ mamy $c_a\circ c_b=c_a$ oraz $c_b\circ c_a=c_b$. Nie istnieje równoważność między tymi obiektami, gdyż kategoria jest dyskretna i $a\neq b$. Nie może zatem istnieć symetria zgodna z tym iloczynem. Jest to prosty kontrprzykład do odwrotności wniosku~\ref{cat:cor:infty-forget-symmetry}.
+\end{przyklad}
+
+\subsection{Morfizmy operad i funktory monoidalne}
+
+\begin{definicja}[Morfizm $\infty$-operad]\label{cat:def:infty-operad-morphism}
+Morfizmem $\infty$-operad $\mathcal O^\otimes\to\mathcal P^\otimes$ nazywamy funktor nad $N\mathrm{Fin}_*$ zachowujący morfizmy inercyjne, czyli krawędzie kokartezjańskie nad morfizmami inercyjnymi bazy. Przez $\operatorname{Fun}_{\mathrm{Op}}(\mathcal O^\otimes,\mathcal P^\otimes)$ oznaczamy pełną podkategorię kategorii funktorów nad $N\mathrm{Fin}_*$ na tych obiektach. Morfizmy tej kategorii są transformacjami naturalnymi nad identycznością bazy; nie wymagamy, by ich składowe były równoważnościami.
+\end{definicja}
+
+Jest to definicja morfizmu operad z \emph{Higher Algebra}, definicja 2.1.2.7. W modelu zbiorów symplicjalnych kategoria funktorów nad bazą ma $k$-sympleksy dane przez funktory $\mathcal O^\otimes\times\Delta[k]\to\mathcal P^\otimes$, których złożenie z funktorem strukturalnym jest projekcją na $\mathcal O^\otimes$ i jej funktorem strukturalnym. Wyróżniamy te sympleksy, których wszystkie wierzchołki zachowują morfizmy inercyjne. Używamy modeli fibracji wewnętrznych; ich kategorie funktorów nad bazą są quasi-kategoriami przez własność podnoszenia rogów wewnętrznych (por. \emph{Higher Topos Theory}, \S2.3.2).
+
+\begin{stwierdzenie}[Działanie na operacjach]\label{cat:prop:infty-operad-morphism-mul}
+Jeśli $F^\otimes:\mathcal O^\otimes\to\mathcal P^\otimes$ jest morfizmem operad, to jego ograniczenie $F$ do włókna nad $\langle1\rangle$ indukuje naturalne odwzorowania
+\[
+ \operatorname{Mul}_{\mathcal O}(X_1,\ldots,X_n;Y)
+ \longrightarrow
+ \operatorname{Mul}_{\mathcal P}(FX_1,\ldots,FX_n;FY)
+\]
+zgodne z jednostkami, podstawieniami i przenumerowaniem wejść wraz z ich koherencjami.
+\end{stwierdzenie}
+\begin{proof}
+Dla listy $\mathbf X$ odpowiadającej $(X_i)$ zastosowanie $F^\otimes$ do podniesień nad $\rho^j$ daje podniesienia inercyjne $F^\otimes\mathbf X\to FX_j$. W identyfikacji Segala obraz listy jest więc listą $(FX_i)$ z dokładnością do równoważności. Funktor nad bazą daje odwzorowanie włókien przestrzeni odwzorowań nad $\mu_n$, co jest żądanym odwzorowaniem. Identyczności odpowiadają jednostkom jednoargumentowym; są zachowywane przez funktor. Podstawienie operacji w kategorii operatorów opisujemy przez morfizm nad funkcją aktywną grupującą argumenty, a następnie nad $\mu_m$ łączącą otrzymane wyniki. Drugi aksjomat z definicji~\ref{cat:def:infty-operad} pozwala zebrać poszczególne operacje grupujące w jeden morfizm: każdą z nich rozszerzamy do całej listy przez prekompozycję z inercyjnym podniesieniem wyboru odpowiedniego bloku. Własność kokartezjańska identyfikuje przestrzenie takich rozszerzeń z pierwotnymi przestrzeniami operacji. Składanie tych morfizmów jest zachowywane przez $F^\otimes$ wraz z homotopiami wyznaczonymi przez obrazy sympleksów. Przenumerowanie jest transportem wzdłuż inercyjnej bijekcji bazy, więc również jest zachowywane. To uzasadnia zgodność na poziomie przestrzeni i ich koherencji, nie tylko klas homotopii operacji.
+\end{proof}
+
+\begin{definicja}[Funktor monoidalny typu lax i funktor silny]\label{cat:def:infty-lax-monoidal}
+Dla symetrycznych monoidalnych $\infty$-kategorii funktor symetryczny monoidalny typu lax to morfizm ich $\infty$-operad. Nazywamy go silnym symetrycznym funktorem monoidalnym, jeśli zachowuje wszystkie krawędzie kokartezjańskie, nie tylko inercyjne. Dla niesymetrycznych monoidalnych $\infty$-kategorii przyjmujemy te same warunki dla funktora nad $N(\Delta^{\mathrm{op}})$ i morfizmów inercyjnych z definicji~\ref{cat:def:infty-delta-active-inert}. Przez monoidalną transformację naturalną rozumiemy transformację funktorów całkowitych nad identycznością odpowiedniej bazy.
+\end{definicja}
+
+\begin{stwierdzenie}[Morfizmy strukturalne i kryterium silności]\label{cat:prop:infty-lax-structure}
+Niech $F^\otimes:\mathcal C^\otimes\to\mathcal D^\otimes$ będzie funktorem monoidalnym typu lax, a $F$ jego ograniczeniem do kategorii obiektów. Otrzymujemy naturalne morfizmy
+\begin{equation}\label{cat:eq:infty-lax-comparison}
+ \phi_n(X_1,\ldots,X_n):
+ \bigotimes_{i=1}^{n}FX_i\longrightarrow
+ F\left(\bigotimes_{i=1}^{n}X_i\right),\qquad n\geq0.
+\end{equation}
+Dla $n=0$ jest to $\mathbb 1_{\mathcal D}\to F(\mathbb 1_{\mathcal C})$. Funktor $F^\otimes$ jest silny wtedy i tylko wtedy, gdy wszystkie $\phi_n$ są równoważnościami; wystarczy sprawdzić $\phi_0$ i $\phi_2$.
+\end{stwierdzenie}
+\begin{proof}
+Oznaczmy przez $b$ morfizm $\mu_n$ w przypadku symetrycznym i $b_n$ w przypadku niesymetrycznym. Wybierzmy podniesienie kokartezjańskie $u:\mathbf X\to b_!\mathbf X$ w $\mathcal C^\otimes$ nad $b$. Obraz $F^\otimes u$ jest morfizmem nad $b$ o źródle odpowiadającym liście $(FX_i)$ dzięki zachowywaniu podniesień inercyjnych. W $\mathcal D^\otimes$ wybierzmy podniesienie kokartezjańskie $v:F^\otimes\mathbf X\to b_!F^\otimes\mathbf X$. Jego własność uniwersalna daje faktoryzację $F^\otimes u$ przez $v$:
+\[
+\begin{tikzpicture}[>=Stealth,baseline=(a.base),scale=.9,transform shape]
+ \node (a) at (-4,1.5) {$F^\otimes\mathbf X$};
+ \node (b) at (0,0) {$\bigotimes_i FX_i$};
+ \node (c) at (4,1.5) {$F(\bigotimes_i X_i)$};
+ \draw[->] (a)--node[above]{$F^\otimes u$}(c);
+ \draw[->] (a)--node[below left]{$v$}(b);
+ \draw[->] (b)--node[below right]{$\phi_n$}(c);
+\end{tikzpicture}
+\]
+Prawa strzałka leży nad identycznością. Przestrzeń faktoryzacji wraz z homotopią złożenia jest ściągalna, ponieważ składanie z $v$ daje równoważność odpowiednich przestrzeni odwzorowań. Naturalność $\phi_n$ można sprawdzić przez zastosowanie tej samej faktoryzacji do diagramów: w prostowaniu transport jest funktorem, a kokartezjańskie podniesienia są jego naturalnymi strzałkami. Porównanie uzyskujemy jako transformację $b_!F^\otimes\to F^\otimes b_!$ na włóknie źródłowym. Dla $n=1$ jest ona równoważnością, gdyż $b$ jest identycznością.
+
+Morfizm $F^\otimes u$ jest kokartezjański dokładnie wtedy, gdy $\phi_n$ jest równoważnością. W jedną stronę dwa podniesienia kokartezjańskie o tym samym źródle i morfizmie bazowym mają równoważne cele przez jednoznaczność faktoryzacji; w drugą składanie podniesienia z równoważnością we włóknie zachowuje jego własność uniwersalną. Dla dowolnego morfizmu bazowego $f$ analogiczna faktoryzacja daje porównanie $f_!F^\otimes\mathbf X\to F^\otimes(f_!\mathbf X)$ we włóknie docelowym. Po projekcji na jego $j$-tą składową jest ono równoważne $\phi_{k_j}$ dla odpowiedniego bloku $k_j$ argumentów. Istotnie, złożenie z projekcją inercyjną rozkłada się jako wybór bloku i jego połączenie, jak w dowodach stwierdzeń~\ref{cat:prop:infty-monoidal-representable} i~\ref{cat:prop:infty-nonsymmetric-transport}; $F^\otimes$ zachowuje pierwszy transport, a porównanie drugiego jest właśnie~\eqref{cat:eq:infty-lax-comparison}. Złożenie porównań jest zgodne z porównaniem dla złożenia, ponieważ oba opisują faktoryzację tej samej strzałki przez podniesienie kokartezjańskie. Warunek Segala wykrywa równoważności składowo. Wynika stąd, że równoważność wszystkich $\phi_n$ jest równoważna silności.
+
+Dla $n\geq3$ morfizm łączący $n$ argumentów rozkładamy na morfizm grupujący pierwsze $n-1$ argumentów, pozostawiający ostatni jako singleton, a następnie morfizm łączący dwa argumenty. Porównanie dla pierwszego etapu, po identyfikacji Segala, ma składowe $\phi_{n-1}$ i $\phi_1$, a dla drugiego jest $\phi_2$. Jeśli oba etapy są zachowywane kokartezjańsko, to również ich złożenie. Indukcja od $n=2$ daje wszystkie dodatnie arności, a $\phi_0$ rozstrzyga arność zerową. To kończy dowód.
+\end{proof}
+
+\begin{stwierdzenie}[Składanie i transformacje monoidalne]\label{cat:prop:infty-lax-composition}
+Dla funktorów typu lax $F^\otimes,G^\otimes$ o morfizmach strukturalnych $\phi_n,\gamma_n$ złożenie ma morfizmy strukturalne naturalnie homotopijne do
+\[
+ G(\phi_n)\circ\gamma_n(FX_1,\ldots,FX_n).
+\]
+Jeśli oba funktory są silne, złożenie jest silne. Dla monoidalnej transformacji $\eta:F^\otimes\to H^\otimes$ o strukturach $\phi_n,\theta_n$ otrzymujemy homotopie
+\[
+ \eta_{\bigotimes_i X_i}\phi_n
+ \simeq\theta_n\bigl(\bigotimes_i\eta_{X_i}\bigr).
+\]
+Transformacja jest równoważnością w kategorii funktorów monoidalnych dokładnie wtedy, gdy jej ograniczenie do włókna jednoargumentowego jest punktowo równoważnością.
+\end{stwierdzenie}
+\begin{proof}
+Stosujemy faktoryzację z dowodu stwierdzenia~\ref{cat:prop:infty-lax-structure}. Obraz podniesienia przez $F^\otimes$ faktoryzuje się przez podniesienie w $\mathcal D^\otimes$ i $\phi_n$. Po zastosowaniu $G^\otimes$ obraz tego drugiego podniesienia faktoryzuje się przez podniesienie w trzeciej kategorii i $\gamma_n$. Otrzymujemy więc $G(\phi_n)\gamma_n$ jako porównanie dla złożenia przez jednoznaczność faktoryzacji. Silność zachowuje się także bezpośrednio przez definicję.
+
+Transformacja nad bazą ma na każdej liście składową we włóknie. Postać tej składowej wyznacza naturalność względem projekcji inercyjnych: w równoważności Segala jest to lista $(\eta_{X_i})$. Naturalność względem podniesienia łączącego argumenty daje homotopię dwóch złożeń od $F^\otimes\mathbf X$ do $H(\bigotimes_i X_i)$. Faktoryzując przez podniesienie w $\mathcal D^\otimes$ i stosując równoważność przestrzeni odwzorowań z kokartezjańskości, dostajemy wyświetloną homotopię w kategorii obiektów. Dla $n=0$ lista składowych jest pusta, a jej obraz pod transportem jest identycznością jednostki z dokładnością do homotopii. Wyższe koherencje pochodzą z naturalności na wszystkich sympleksach.
+
+Jeżeli ograniczenie $\eta$ do włókna jednoargumentowego jest punktowo równoważnością, to dla każdej listy jest nią również na mocy równoważności Segala. Twierdzenie~\ref{cat:thm:quasicat-pointwise-equivalence} daje równoważność w kategorii wszystkich funktorów. Aby uzasadnić również równoważność nad bazą, zauważmy, że nerw bazy jest nerwem zwykłej kategorii bez nieidentycznościowych automorfizmów w przypadku $\Delta^{\mathrm{op}}$, a w przypadku $\mathrm{Fin}_*$ może mieć automorfizmy. W obu przypadkach przestrzenie odwzorowań w kategorii funktorów do nerwu bazy są dyskretne z dokładnością do równoważności. Kategoria funktorów nad bazą jest ścisłym włóknem fibracji wewnętrznej indukowanej przez funktor strukturalny. W tym przypadku równoważność nad identycznością bazy jest wykrywana w kategorii całkowitej: odwrotność i homotopie jednostkowe można wybrać nad identycznością, korzystając z podnoszenia rogów wewnętrznych oraz jednoznaczności wypełnień rogów wewnętrznych w nerwie zwykłej kategorii. Równoważnie stosujemy kryterium punktowej równoważności w kategorii przekrojów fibracji wewnętrznej nad nerwem zwykłej kategorii. Pełna podkategoria na funktorach monoidalnych zawiera obie strony i zachowuje tę równoważność. Implikacja odwrotna wynika z ograniczenia do włókna.
+\end{proof}
+
+\begin{przyklad}[Odzyskanie klasycznych funktorów monoidalnych]\label{cat:ex:infty-lax-ordinary}
+Niech $\mathcal V,\mathcal W$ będą zwykłymi małymi symetrycznymi kategoriami monoidalnymi i niech ich nerwy monoidalne będą zbudowane jak w przykładzie~\ref{cat:ex:infty-monoidal-ordinary}. Klasyczny funktor symetryczny typu lax $F:\mathcal V\to\mathcal W$ wyznacza funktor nad $\mathrm{Fin}_*$ działający na listach składowo. Morfizm nad $f$ o składowych
+\[
+ a_j:\bigotimes_{i\in f^{-1}(j)} X_i\longrightarrow Y_j
+\]
+przechodzi na morfizm o składowych
+\[
+ \bigotimes_{i\in f^{-1}(j)} FX_i
+ \xrightarrow{\phi_{|f^{-1}(j)|}}
+ F\left(\bigotimes_{i\in f^{-1}(j)}X_i\right)
+ \xrightarrow{F(a_j)} FY_j.
+\]
+Morfizmy $\phi_n$ otrzymujemy przez iterowanie $\phi_2$ z klasycznej definicji~\ref{cat:def:lax-monoidal}, z $\phi_0$ dla pustego iloczynu i $\phi_1=\id$. Aksjomaty łączności i jednostki pozwalają zmienić grupowanie na dowolne inne nawiasowanie, zaś zgodność z symetrią pozwala przenumerować wejścia: wystarczy iterować porównania dla trzech argumentów i dla zamian sąsiednich czynników, korzystając z koherencji z rozdziału~\ref{cat:sec:coherence}. Przy składaniu morfizmów nad $f,g$ naturalność $\phi$ względem składowych $a_j$ i zgodność z grupowaniem identyfikują otrzymaną składową z obrazem złożenia operacji we wzorze~\eqref{cat:eq:infty-operator-composition}. Identyczności są zachowywane, ponieważ $\phi_1=\id$. Kanoniczne podniesienia inercyjne mają tylko jednoargumentowe identyczności, zatem są zachowywane. Po wzięciu nerwu otrzymujemy funktor monoidalny typu lax w sensie~\ref{cat:def:infty-lax-monoidal}.
+
+Odwrotnie, dla takiego funktora między nerwami przestrzenie morfizmów są dyskretne i homotopie koherencji stają się równościami. Porównania~\eqref{cat:eq:infty-lax-comparison} w arnościach $0,2$ oraz zgodność porównań ze składaniem dają klasyczne równania łączności, jednostki i symetrii. Po utożsamieniu obrazów list za pomocą kanonicznych podniesień inercyjnych działanie funktora na każdym morfizmie jest wyznaczone przez powyższy wzór: faktoryzujemy go przez kokartezjańskie podniesienie i składowe jednoargumentowe we włóknie. Otrzymujemy zatem klasyczną strukturę lax z dokładnością do naturalnego izomorfizmu nad bazą. W przypadku silnym porównania są izomorfizmami przez stwierdzenie~\ref{cat:prop:infty-lax-structure}.
+\end{przyklad}
+
+\subsection{Algebry nad \texorpdfstring{$\infty$-operadami}{operadami wyższymi}}
+
+\begin{definicja}[Algebra nad $\infty$-operadą]\label{cat:def:infty-operad-algebra}
+Niech $\mathcal O^\otimes$ będzie $\infty$-operadą, a $\mathcal C^\otimes$ symetryczną monoidalną $\infty$-kategorią. $\infty$-kategorią algebr nad $\mathcal O$ w $\mathcal C$ nazywamy
+\[
+ \operatorname{Alg}_{\mathcal O}(\mathcal C)
+ =\operatorname{Fun}_{\mathrm{Op}}(\mathcal O^\otimes,\mathcal C^\otimes).
+\]
+Obiekt tej kategorii jest morfizmem operad $A^\otimes$ w sensie definicji~\ref{cat:def:infty-operad-morphism}. Morfizm algebr jest transformacją naturalną nad bazą. Nie wymagamy, aby $A^\otimes$ zachowywał wszystkie krawędzie kokartezjańskie, nawet gdy takie krawędzie istnieją w operadzie źródłowej.
+\end{definicja}
+
+Przez $A$ oznaczamy ograniczenie $A^\otimes$ do kategorii barw $\mathcal O$. Ze stwierdzeń~\ref{cat:prop:infty-operad-morphism-mul} i~\ref{cat:prop:infty-monoidal-representable} otrzymujemy naturalne odwzorowania przestrzeni
+\begin{equation}\label{cat:eq:infty-algebra-action}
+ \operatorname{Mul}_{\mathcal O}(c_1,\ldots,c_n;d)
+ \longrightarrow
+ \operatorname{Map}_{\mathcal C}
+ (A(c_1)\otimes\cdots\otimes A(c_n),A(d)).
+\end{equation}
+Każda operacja daje więc morfizm o odpowiedniej arności. Dla arności zero otrzymujemy morfizmy $\mathbb 1\to A(d)$. Ścieżki pomiędzy operacjami dają homotopie między morfizmami, a wyższe sympleksy dają wyższe homotopie. Zgodność z podstawieniami wynika z funktorialności $A^\otimes$. Sama rodzina odwzorowań~\eqref{cat:eq:infty-algebra-action} bez koherentnej zgodności z podstawieniami nie stanowi definicji algebry.
+
+\begin{stwierdzenie}[Wykrywanie równoważności algebr]\label{cat:prop:infty-algebra-equivalences}
+Morfizm $\eta:A^\otimes\to B^\otimes$ w $\operatorname{Alg}_{\mathcal O}(\mathcal C)$ jest równoważnością wtedy i tylko wtedy, gdy $\eta_c:A(c)\to B(c)$ jest równoważnością dla każdej barwy $c$.
+\end{stwierdzenie}
+\begin{proof}
+Dla dowolnego obiektu $\mathbf c$ nad $\langle n\rangle$ wybieramy jego podniesienia inercyjne $\mathbf c\to c_j$ nad $\rho^j$. Naturalność $\eta$ względem tych krawędzi i zachowywanie ich przez obie algebry pokazują, że w równoważności Segala składowa $\eta_{\mathbf c}$ odpowiada rodzinie $(\eta_{c_j})_{j=1}^n$. Jeżeli składowe na barwach są równoważnościami, to składowa na $\mathbf c$ jest równoważnością we włóknie (dla $n=0$ włókno jest końcowe). Jest więc również równoważnością w kategorii całkowitej. Z kryterium punktowej równoważności transformacji nad bazą, użytego w stwierdzeniu~\ref{cat:prop:infty-lax-composition}, wynika równoważność w kategorii funktorów nad bazą, a następnie w pełnej podkategorii algebr. Odwrotnie, ograniczenie do włókna nad $\langle1\rangle$ jest funktorem, a ewaluacja w barwie $c$ zachowuje równoważności.
+\end{proof}
+
+\begin{stwierdzenie}[Zmiana operady i zmiana kategorii docelowej]\label{cat:prop:infty-algebra-change}
+Morfizm operad $u:\mathcal O^\otimes\to\mathcal P^\otimes$ indukuje funktor ograniczenia
+\[
+ u^*:\operatorname{Alg}_{\mathcal P}(\mathcal C)
+ \longrightarrow\operatorname{Alg}_{\mathcal O}(\mathcal C).
+\]
+Symetryczny funktor monoidalny typu lax $F^\otimes:\mathcal C^\otimes\to\mathcal D^\otimes$ indukuje funktor
+\[
+ F_*:\operatorname{Alg}_{\mathcal O}(\mathcal C)
+ \longrightarrow\operatorname{Alg}_{\mathcal O}(\mathcal D).
+\]
+Obie konstrukcje komutują z dokładnością do naturalnej równoważności.
+\end{stwierdzenie}
+\begin{proof}
+Pierwsza konstrukcja jest prekompozycją z $u$, a druga postkompozycją z $F^\otimes$. Złożenia zachowują bazę i krawędzie inercyjne, ponieważ każdy z czynników je zachowuje. Te same operacje na diagramach definiują działanie na transformacjach i wyższych sympleksach kategorii algebr. Równość $(F^\otimes A^\otimes)u=F^\otimes(A^\otimes u)$ w modelu funktorów daje żądaną zgodność. Dla operacji $\alpha$ o wejściach $c_1,\ldots,c_n$ i wyjściu $d$ działanie $F_*A$ otrzymujemy przez złożenie
+\[
+ \bigotimes_i FA(c_i)
+ \xrightarrow{\phi_n} F\left(\bigotimes_i A(c_i)\right)
+ \xrightarrow{F(A(\alpha))} FA(d).
+\]
+Wzór wynika z faktoryzacji przez podniesienie kokartezjańskie w dowodzie stwierdzenia~\ref{cat:prop:infty-lax-structure}. Pokazuje w szczególności, dlaczego wystarcza struktura lax, a nie silna.
+\end{proof}
+
+\subsection{Algebry asocjatywne i przemienne}
+
+Oznaczmy przez $\mathrm{Ass}^\otimes_\infty$ i $\mathrm{Com}^\otimes_\infty$ nerwy kategorii operatorów klasycznych operad $\mathrm{Ass}$ i $\mathrm{Com}$ z przykładu~\ref{cat:ex:infty-operad-com-ass}. Druga z nich jest izomorficzna z $N\mathrm{Fin}_*$ nad samą sobą. Pierwsza pamięta liniowe porządki włókien morfizmów, nawet gdy przestrzenie jej operacji są dyskretne.
+
+\begin{definicja}[Algebra asocjatywna i algebra przemienna]\label{cat:def:infty-ass-com-algebra}
+Dla symetrycznej monoidalnej $\infty$-kategorii $\mathcal C$ kładziemy
+\[
+ \operatorname{Alg}(\mathcal C)
+ =\operatorname{Alg}_{\mathrm{Ass}_\infty}(\mathcal C),
+ \qquad
+ \operatorname{CAlg}(\mathcal C)
+ =\operatorname{Alg}_{\mathrm{Com}_\infty}(\mathcal C).
+\]
+Algebra przemienna jest zatem przekrojem $\mathcal C^\otimes\to N\mathrm{Fin}_*$ zachowującym morfizmy inercyjne. Dla niesymetrycznej monoidalnej $\infty$-kategorii definiujemy algebrę asocjatywną jako przekrój $\mathcal C^\otimes\to N(\Delta^{\mathrm{op}})$ zachowujący morfizmy inercyjne, a morfizmy takich algebr jako transformacje nad bazą.
+\end{definicja}
+
+W symetrycznym przypadku oba opisy algebry asocjatywnej są zgodne po ograniczeniu struktury monoidalnej wzdłuż $J$ z definicji~\ref{cat:def:infty-delta-finpointed}. Korzystamy tu ze standardowego twierdzenia porównawczego dla operady asocjatywnej i niesymetrycznych operad (\emph{Higher Algebra}, \S4.1.1 oraz \S4.1.2); nie wynika ono tylko z faktu, że $J$ zachowuje morfizmy inercyjne. Na poziomie zwykłych kategorii operatorów można zobaczyć jego mechanizm: $J$ podnosi się do $\mathrm{Ass}^\otimes$ przez wyposażenie każdego przedziału wejść w naturalny porządek. Dowolny morfizm w $\mathrm{Ass}^\otimes$ można przedstawić przez przenumerowanie wejść, a następnie morfizm o uporządkowanych przedziałach: najpierw ustawiamy argumenty należące do kolejnych włókien wyjściowych w zadanych porządkach, a argumenty odrzucane umieszczamy na końcu. Długości kolejnych włókien wyznaczają kolejne różnice wartości monotonicznego morfizmu w $\Delta$; puste włókna odpowiadają powtórzonym wartościom. Przenumerowanie argumentów odrzucanych nie musi być jednoznaczne. W $\infty$-kategoriach porównanie wymaga zgodności tych przedstawień z całą strukturą wyższych sympleksów, dlatego przyjmujemy wskazany wynik zewnętrzny.
+
+\begin{stwierdzenie}[Mnożenie, jednostka i koherencje]\label{cat:prop:infty-algebra-multiplication}
+Algebra asocjatywna ma obiekt bazowy $A$, jednostkę $e:\mathbb 1\to A$ i mnożenie $m:A\otimes A\to A$. Oznaczmy przez $\alpha=\alpha_{A,A,A}$ równoważność łączności skierowaną od $(A\otimes A)\otimes A$ do $A\otimes(A\otimes A)$, a przez $\lambda_A,\rho_A$ odpowiednio lewą i prawą równoważność jednostkową. Istnieją homotopie
+\[
+ m(m\otimes\id_A)\simeq m(\id_A\otimes m)\alpha,\qquad
+ m(e\otimes\id_A)\simeq\lambda_A,\qquad
+ m(\id_A\otimes e)\simeq\rho_A.
+\]
+Algebra przemienna ma ponadto homotopię $m\tau\simeq m$, gdzie $\tau$ jest symetrią na $A\otimes A$. Wszystkie te homotopie są częścią koherentnej struktury wyższej. W szczególności $A$ wyznacza monoid (odpowiednio monoid przemienny) w $h\mathcal C$.
+\end{stwierdzenie}
+\begin{proof}
+W przypadku asocjatywnym korzystamy z operacji o uporządkowanych wejściach $1,\ldots,n$; w przypadku przemiennym z jedynej operacji arności $n$. Z~\eqref{cat:eq:infty-algebra-action} dla $n=0,2$ otrzymujemy $e,m$. W opisie niesymetrycznym uzyskujemy je z obrazów $b_0,b_2$ przez faktoryzację względem podniesienia kokartezjańskiego. Dla trzech wejść oba podstawienia operacji dwuargumentowej, z jednej strony do pierwszego argumentu, z drugiej do drugiego, dają tę samą operację z porządkiem $1,2,3$. Obrazy odpowiednich trójkątów składania przez $A^\otimes$ dają homotopie porównujące oba złożenia z obrazem tej operacji. Po zastosowaniu reprezentowalności przestrzeni operacji i równoważności łączności iloczynu tensorowego otrzymujemy pierwszą wyświetloną homotopię. Analogicznie podstawienie operacji zeroargumentowej w jedno z wejść mnożenia daje jednostkę jednoargumentową, co daje pozostałe dwie homotopie. W przypadku przemiennym operacja dwuargumentowa jest niezmiennicza względem transpozycji, a obraz odpowiedniego składania w kategorii operatorów daje homotopię $m\tau\simeq m$.
+
+Obrazy dłuższych łańcuchów podstawień przez $A^\otimes$ zawierają homotopie pomiędzy uzyskanymi homotopiami, ponieważ funktor zachowuje wszystkie ściany i degeneracje sympleksów. Przejście do kategorii homotopii zamienia powyższe homotopie w równości, czyli aksjomaty z definicji~\ref{cat:def:monoid-object}, uzupełnione o przemienność w przypadku symetrycznym. Odwrotnej implikacji nie zakładamy: monoid w $h\mathcal C$ sam w sobie nie zawiera wyboru tych homotopii ani ich wyższych koherencji.
+\end{proof}
+
+\begin{przyklad}[Algebry w nerwie zwykłej kategorii]\label{cat:ex:infty-algebra-ordinary}
+Niech $\mathcal V$ będzie zwykłą symetryczną kategorią monoidalną i niech $P$ będzie klasyczną symetryczną operadą wielobarwną. Dla nerwu monoidalnego z przykładu~\ref{cat:ex:infty-monoidal-ordinary} zachodzi równoważność
+\[
+ \operatorname{Alg}_{NP}(N\mathcal V)
+ \simeq N(\operatorname{Alg}_{P}(\mathcal V)),
+\]
+gdzie po prawej stronie algebry klasyczne mają rodziny obiektów $A_c$ i morfizmów $P$-operacji z wartościami w $\mathcal V$.
+\end{przyklad}
+\begin{proof}
+Dla klasycznej algebry przypisujemy liście barw $(c_i)$ listę $(A_{c_i})$. Morfizm kategorii operatorów nad $f$ o składowych $\alpha_j$ przechodzi na morfizm nad $f$ o składowych
+\[
+ \bigotimes_{i\in f^{-1}(j)} A_{c_i}
+ \longrightarrow A_{d_j}
+\]
+zadanych przez działanie $\alpha_j$. Zgodność działania z podstawieniami, jednostkami i przenumerowaniem wejść daje funktorialność według wzoru~\eqref{cat:eq:infty-operator-composition}; podniesienia inercyjne przechodzą na kanoniczne podniesienia inercyjne, gdyż ich składowe to jednostki. Transformacja klasycznych algebr daje transformację na listach składowo. Naturalność względem dowolnego morfizmu operatorów jest dokładnie zgodnością z działaniem wszystkich $\alpha_j$.
+
+Odwrotnie, funktor między nerwami zwykłych kategorii jest nerwem zwykłego funktora. Dla każdego $n$ zachowywanie inercyjnych projekcji identyfikuje obraz listy z listą obrazów jej barw przez izomorfizm we włóknie. Używając tych izomorfizmów możemy zastąpić funktor izomorficznym funktorem, który działa na listach składowo i zachowuje kanoniczne projekcje. Jego działanie na operacjach nad $\mu_n$ daje klasyczne morfizmy działania, a równania składania dają ich aksjomaty. Działanie na wszystkich morfizmach operatorów jest już wyznaczone przez projekcje na składowe oraz inercyjny wybór bloku wejść. Transformacje naturalne są wyznaczone przez składowe na barwach, ponieważ naturalność względem projekcji inercyjnych wymusza ich składowe na listach. Naturalność względem operacji nad $\mu_n$ jest warunkiem morfizmu algebr, a pozostałe warunki wynikają z powyższej dekompozycji morfizmów. Otrzymujemy zatem równoważność zwykłych kategorii. Własność kategorii funktorów między nerwami z~\ref{cat:prop:quasicat-functor-nerve} identyfikuje również wszystkie wyższe sympleksy z nerwem tej kategorii, także po ograniczeniu do funktorów i transformacji nad bazą. To daje żądaną równoważność.
+\end{proof}
+
+W szczególności dla zwykłej kategorii zbiorów z iloczynem kartezjańskim algebry asocjatywne i przemienne są odpowiednio zwykłymi monoidami i monoidami przemiennymi. Dla kategorii przestrzeni wektorowych z iloczynem tensorowym otrzymujemy zwykłe algebry łączne z jednością i algebry przemienne z jednością (por. przykłady z rozdziałów~\ref{cat:sec:monoids-duality} oraz~\ref{cat:sec:operads}). Te przykłady dotyczą nerwów kategorii zwykłych, nie ich lokalizacji pochodnych: w kategoriach pochodnych operacje i ich zgodności mogą zawierać nietrywialne informacje wyższe.
+
+\subsection{Operady typu \texorpdfstring{$E_d$}{Ed} i ich przestrzenie operacji}
+
+Przypomnijmy operadę małych sześcianów $E_d$ z definicji~\ref{cat:def:little-cubes-operad}. Aby nie utożsamiać operady topologicznej z jej nerwem operadowym, przez $\mathbb E_d^\otimes$ będziemy oznaczać $\infty$-operadę uzyskaną z $E_d$ w następujący sposób.
+
+\begin{definicja}[Nerw operadowy operady symplicjalnej]\label{cat:def:infty-simplicial-operadic-nerve}
+Dla małej symetrycznej operady wielobarwnej $P$ w zbiorach symplicjalnych, której wszystkie przestrzenie operacji są kompleksami Kana, tworzymy kategorię symplicjalną $P^\otimes$ o obiektach będących listami barw i zbiorach symplicjalnych morfizmów
+\[
+ P^\otimes(\mathbf X,\mathbf Y)=
+ \coprod_{f:\langle m\rangle\to\langle n\rangle}
+ \prod_{j=1}^nP((X_i)_{i\in f^{-1}(j)};Y_j).
+\]
+Składanie określamy przez podstawienia, dokładnie jak we wzorze~\eqref{cat:eq:infty-operator-composition}, teraz za pomocą morfizmów zbiorów symplicjalnych. Nerwem operadowym $P$ nazywamy nerw homotopijnie koherentny tej kategorii symplicjalnej wraz z rzutem do $N\mathrm{Fin}_*$.
+\end{definicja}
+
+\begin{twierdzenie}[Nerw operadowy; wynik zewnętrzny]\label{cat:thm:infty-simplicial-operadic-nerve}
+Nerw operadowy operady symplicjalnej z kompleksami Kana jako przestrzeniami operacji jest $\infty$-operadą. Przestrzenie operacji wieloargumentowych odzyskują, z dokładnością do równoważności, odpowiednie kompleksy Kana operady $P$. Dla operady topologicznej stosujemy tę konstrukcję do operady symplicjalnej otrzymanej przez funktor zbioru symplicjalnego singularnego.
+\end{twierdzenie}
+
+Źródło: J.~Lurie, \emph{Higher Algebra}, \S2.1.1, w szczególności stwierdzenie 2.1.1.27. Wyjaśnijmy mechanizm wyniku. Skończone produkty i sumy rozłączne kompleksów Kana są kompleksami Kana, więc kategoria symplicjalna operatorów jest lokalnie fibrantna. Kanoniczne wybory podlist mają składowe jednostkowe, a składanie z nimi indukuje izomorfizmy odpowiednich zbiorów symplicjalnych morfizmów nad wskazanymi funkcjami bazy, przez ten sam rachunek przenumerowań co w dowodzie stwierdzenia~\ref{cat:prop:infty-operator-inert}. Twierdzenie o nerwie homotopijnie koherentnym przenosi te własności na przestrzenie odwzorowań i podniesienia kokartezjańskie. Własność tę stosujemy do operady z kompleksami Kana; nie wystarcza sam nerw kategorii homotopii, gdyż taka zamiana utraciłaby wszystkie dodatnie grupy homotopii operacji. Puste zbiory operacji także są kompleksami Kana (nie istnieje odwzorowanie rogu do pustego zbioru symplicjalnego), więc brak operacji dla niektórych profili nie narusza założenia. Funktor singularny zachowuje skończone produkty, ponieważ odwzorowanie z sympleksu topologicznego do produktu jest rodziną odwzorowań do jego czynników. Zachowuje zatem podstawienia, a jego wartości są kompleksami Kana.
+
+\begin{stwierdzenie}[Równoważności arnościowe]\label{cat:prop:infty-operad-arity-equivalence}
+Morfizm operad symplicjalnych o tej samej rodzinie barw, który jest równoważnością homotopijną na każdej przestrzeni operacji (dopuszczamy też słabe równoważności kompleksów Kana), indukuje równoważność ich $\infty$-operad. Prekompozycja z tą równoważnością indukuje równoważność kategorii algebr w dowolnej symetrycznej monoidalnej $\infty$-kategorii.
+\end{stwierdzenie}
+\begin{proof}
+Na przestrzeniach odwzorowań kategorii operatorów morfizm jest sumą rozłączną skończonych produktów równoważności nad poszczególnymi funkcjami punktowanymi, więc sam jest równoważnością. W nerwie operadowym odpowiadają one przestrzeniom odwzorowań przez twierdzenie~\ref{cat:thm:infty-simplicial-operadic-nerve} i opis składowych nad funkcjami bazy. Obiekty to te same listy barw, więc funktor jest również istotnie surjektywny. Kryterium~\ref{cat:thm:quasicat-equivalence-criterion} daje równoważność kategorii całkowitych. Funktor jest nad bazą i zachowuje inercyjne podniesienia, ponieważ zachowuje jednostki. Odwrotność w kategorii nad bazą również zachowuje inercyjne podniesienia: ich własność uniwersalną wyrażają przestrzenie odwzorowań nad ustalonymi morfizmami bazy, a równoważność nad bazą zachowuje i odbija te własności. Otrzymujemy zatem równoważność operad. Prekompozycje z równoważnością i jej odwrotnością dają wzajemnie odwrotne równoważności kategorii funktorów nad bazą; ograniczają się do pełnych podkategorii funktorów zachowujących morfizmy inercyjne.
+\end{proof}
+
+\begin{stwierdzenie}[Konfiguracje środków sześcianów]\label{cat:prop:infty-little-cubes-config}
+Dla $d\geq1$ i $n\geq0$ odwzorowanie przypisujące układowi małych sześcianów ich środki
+\[
+ E_d(n)\longrightarrow
+ \operatorname{Conf}_n((0,1)^d)
+ =\{(c_1,\ldots,c_n):c_i\in(0,1)^d,\ c_i\neq c_j\text{ dla }i\neq j\}
+\]
+jest równoważnością homotopijną przestrzeni, zgodną z działaniem grupy permutacji. Dla $n=0$ obie strony są przestrzeniami jednopunktowymi.
+\end{stwierdzenie}
+\begin{proof}
+Środki rozłącznych otwartych prostopadłościanów są różne, więc odwzorowanie jest dobrze określone i ciągłe w parametrach afinicznych. Dla konfiguracji $c=(c_i)$ o $n\geq1$ definiujemy dodatnią liczbę
+\[
+ \varepsilon(c)=\frac14\min\left(
+ \{c_{ij},1-c_{ij}:1\leq i\leq n,\ 1\leq j\leq d\}
+ \cup\{\|c_i-c_k\|_\infty:1\leq i<k\leq n\}\right).
+\]
+Minimum skończonej niepustej rodziny dodatnich ciągłych funkcji jest dodatnie i ciągłe. Prostopadłościany o środkach $c_i$ i wszystkich połowach długości boków równych $\varepsilon(c)$ mieszczą się w $(0,1)^d$. Dla każdej pary środków istnieje współrzędna, w której ich odległość jest co najmniej $4\varepsilon(c)$, zatem prostopadłościany są rozłączne. Otrzymujemy ciągłą sekcję odwzorowania środków.
+
+Niech $h_{ij}>0$ będą początkowymi połowami długości boków układu. Zachowując środki, zmniejszamy każdą z nich liniowo do $\min(h_{ij},\varepsilon(c))$. W tym etapie każdy obraz jest zawarty w początkowym obrazie, więc układ pozostaje rozłączny. Następnie zmieniamy liniowo te wartości na $\varepsilon(c)$. Tym razem każdy obraz pozostaje zawarty w odpowiednim obrazie kanonicznym o połowach długości $\varepsilon(c)$, więc rozłączność również jest zachowana. Oba etapy mają wspólną wartość na końcu pierwszego i początku drugiego; tworzą ciągłą homotopię w parametrach, od identyczności do złożenia sekcji z odwzorowaniem środków. Jeżeli układ jest już kanoniczny, oba etapy są stałe. Minimum i wszystkie zmiany długości są niezmiennicze względem przenumerowania środków, więc otrzymujemy nawet ekwiwariantną deformację na obraz sekcji. Nie twierdzimy, że sekcja lub deformacja zachowują podstawienia operadowe. W szczególności otrzymujemy równoważności przestrzeni w każdej arności, ale nie utożsamiamy w ten sposób operady $E_d$ z rodziną przestrzeni konfiguracji wyposażoną w niezadaną strukturę operadową.
+\end{proof}
+
+\begin{wniosek}[Operacje dwuargumentowe]\label{cat:cor:infty-little-cubes-binary}
+Dla $d\geq1$ zachodzi
+\[
+ E_d(2)\simeq S^{d-1}.
+\]
+Transpozycji wejść odpowiada, z dokładnością do ekwiwariantnej równoważności homotopijnej, odwzorowanie antypodyczne sfery.
+\end{wniosek}
+\begin{proof}
+Wybierzmy homeomorfizm $(0,1)\to\mathbb R$, na przykład $t\mapsto\tan(\pi(t-1/2))$, i zastosujmy go współrzędnie. Otrzymujemy homeomorfizm przestrzeni konfiguracji w $(0,1)^d$ na przestrzeń konfiguracji w $\mathbb R^d$, zgodny z zamianą punktów. Następnie odwzorowanie
+\[
+ (x,y)\longmapsto ((x+y)/2,y-x)
+\]
+daje homeomorfizm $\operatorname{Conf}_2(\mathbb R^d)\cong\mathbb R^d\times(\mathbb R^d\setminus\{0\})$ z odwrotnością $(a,v)\mapsto(a-v/2,a+v/2)$. Zamiana punktów odpowiada $(a,v)\mapsto(a,-v)$. Pierwszy czynnik ściągamy liniowo do zera, a drugi deformujemy radialnie na sferę przez $v\mapsto ((1-t)+t/\|v\|)v$. Obie deformacje komutują z zamianą punktów. Stosujemy stwierdzenie~\ref{cat:prop:infty-little-cubes-config}.
+\end{proof}
+
+Dla $d=1$ otrzymujemy dwa składniki odpowiadające dwóm porządkom wejść. Dla $d=2$ przestrzeń operacji jest spójna drogowo, lecz ma typ homotopijny okręgu. Droga od operacji do operacji z zamienionymi wejściami wyznacza homotopię przemienności działania na algebrze, jednak pętle w przestrzeni operacji stanowią dodatkowe dane. Dla $d\geq3$ przestrzeń operacji dwuargumentowych jest jednospójna, lecz nie jest ściągalna. Nie wyprowadzamy z tego samego opisu arności dwa wszystkich koherencji wyższych arności.
+
+\subsection{Hierarchia algebr \texorpdfstring{$E_d$}{Ed} i addytywność Dunna}
+
+\begin{definicja}[Algebra typu $E_d$]\label{cat:def:infty-en-algebra}
+Niech $\mathbb E_d^\otimes$ będzie nerwem operadowym operady symplicjalnej otrzymanej przez zastosowanie funktora singularnego do operady małych $d$-wymiarowych sześcianów. Algebrą typu $E_d$ w symetrycznej monoidalnej $\infty$-kategorii $\mathcal C$ nazywamy obiekt $\operatorname{Alg}_{\mathbb E_d}(\mathcal C)$. Przez $\mathbb E_\infty^\otimes$ oznaczamy $\infty$-operadę przemienną $\mathrm{Com}_\infty^\otimes$, równoważnie nerw operadowy operady Barratta--Ecclesa z przykładu~\ref{cat:ex:barratt-eccles}.
+\end{definicja}
+
+\begin{stwierdzenie}[Ograniczenia struktur]\label{cat:prop:infty-en-restrictions}
+Istnieją morfizmy $\mathbb E_d^\otimes\to\mathbb E_{d+1}^\otimes$ i $\mathbb E_d^\otimes\to\mathbb E_\infty^\otimes$, zgodne ze składaniem. Indukują one ciąg funktorów zapominających
+\[
+ \operatorname{CAlg}(\mathcal C)\longrightarrow\cdots
+ \longrightarrow\operatorname{Alg}_{\mathbb E_3}(\mathcal C)
+ \longrightarrow\operatorname{Alg}_{\mathbb E_2}(\mathcal C)
+ \longrightarrow\operatorname{Alg}(\mathcal C).
+\]
+Ponadto dla $d\geq2$ każda algebra typu $E_d$ wyznacza monoid przemienny w $h\mathcal C$.
+\end{stwierdzenie}
+\begin{proof}
+Na operadach topologicznych stosujemy $e_i\mapsto e_i\times\id_{(0,1)}$. Rozłączność obrazów pozostaje zachowana, a równość $(e_i\times\id)(f_{ij}\times\id)=(e_if_{ij})\times\id$ dowodzi zgodności z podstawieniami. Jednostki i przenumerowania są zachowywane, a morfizmy do operady przemiennej są jedynymi możliwymi morfizmami do jednopunktowych przestrzeni operacji. Stosując nerw operadowy i stwierdzenie~\ref{cat:prop:infty-algebra-change}, otrzymujemy funktory ograniczenia. Twierdzenie~\ref{cat:thm:little-intervals-associative} i stwierdzenie~\ref{cat:prop:infty-operad-arity-equivalence} dają $\mathbb E_1^\otimes\simeq\mathrm{Ass}_\infty^\otimes$. Analogicznie stwierdzenie~\ref{cat:prop:barratt-eccles} daje równoważność nerwu operadowego operady Barratta--Ecclesa z $\mathrm{Com}_\infty^\otimes$ przez morfizm do operady jednopunktowej. To uzasadnia oznaczenia w ciągu.
+
+Dla $d\geq2$ przestrzeń $E_d(2)$ jest spójna drogowo przez wniosek~\ref{cat:cor:infty-little-cubes-binary}. Wybierzmy operację dwuargumentową pochodzącą z $E_1(2)$ oraz drogę łączącą ją z operacją o zamienionych wejściach. Zgodność z przenumerowaniem i odwzorowanie przestrzeni operacji~\eqref{cat:eq:infty-algebra-action} dają homotopię $m\simeq m\tau$. Ograniczenie do $E_1$ daje strukturę monoidu w $h\mathcal C$ przez stwierdzenie~\ref{cat:prop:infty-algebra-multiplication}; otrzymana homotopia daje przemienność w tej kategorii. Nie wynika stąd istnienie struktury $E_\infty$ na pierwotnej algebrze.
+\end{proof}
+
+\begin{twierdzenie}[Addytywność Dunna; wynik zewnętrzny]\label{cat:thm:infty-dunn-additivity}
+Dla $d,e\geq1$ zachodzi równoważność $\infty$-operad
+\[
+ \mathbb E_d^\otimes\otimes_{\mathrm{BV}}\mathbb E_e^\otimes
+ \simeq\mathbb E_{d+e}^\otimes.
+\]
+Symbol $\otimes_{\mathrm{BV}}$ oznacza homotopijny iloczyn tensorowy operad Boardmana--Vogta, charakteryzowany przez własność uniwersalną dla bifunktorów operadowych. W szczególności dla symetrycznej monoidalnej $\infty$-kategorii $\mathcal C$ zachodzi równoważność
+\begin{equation}\label{cat:eq:infty-dunn-algebras}
+ \operatorname{Alg}_{\mathbb E_{d+e}}(\mathcal C)
+ \simeq
+ \operatorname{Alg}_{\mathbb E_d}
+ \bigl(\operatorname{Alg}_{\mathbb E_e}(\mathcal C)\bigr).
+\end{equation}
+Kategoria wewnętrznych algebr ma tutaj symetryczną strukturę monoidalną indukowaną składowo przez strukturę $\mathcal C$.
+\end{twierdzenie}
+
+Źródło: J.~Lurie, \emph{Higher Algebra}, twierdzenie 5.1.2.2 (addytywność Dunna) oraz \S2.2.5 (własność uniwersalna iloczynu operad). Jest to głęboki wynik zewnętrzny. Bifunktor operadowy koduje dwie rodziny operacji działające na wspólnej rodzinie obiektów, z koherentną zgodnością zamiany kolejności obu działań. Geometrycznie układ sześcianów w $d$ współrzędnych oraz układ w $e$ współrzędnych tworzą w przestrzeni o wymiarze $d+e$ układ wszystkich ich produktów kartezjańskich; podstawienia w obu rodzinach współrzędnych komutują po przenumerowaniu. Twierdzenie Dunna identyfikuje operadę reprezentującą te koherentne dane z $\mathbb E_{d+e}^\otimes$. Formuła~\eqref{cat:eq:infty-dunn-algebras} jest interpretacją tej własności uniwersalnej w kategorii algebr: każda zewnętrzna operacja jest morfizmem algebr wewnętrznych, z wszystkimi wyższymi zgodnościami. Punktowa struktura monoidalna na kategoriach algebr wynika z diagonalnego użycia każdej operacji na obu czynnikach oraz symetrii w $\mathcal C$; korzystamy tu również z ogólnej teorii operadowych iloczynów tensorowych z \S2.2.5 cytowanej książki. Nie mylimy tego wyniku ze stwierdzeniem o zwykłym, niepochodnym iloczynie tensorowym operad topologicznych, który nie musi zachowywać słabych równoważności arnościowych.
+
+\begin{przyklad}[Argument Eckmanna--Hiltona]\label{cat:ex:infty-eckmann-hilton}
+W przypadku zwykłych zbiorów z iloczynem kartezjańskim monoid w kategorii monoidów ma dwie operacje $\cdot$ i $\star$ oraz jednostki $e_\cdot,e_\star$. Ponieważ zewnętrzna jednostka jest homomorfizmem monoidów z monoidu jednoelementowego, mamy $e_\star=e_\cdot=e$. Zewnętrzne mnożenie jest homomorfizmem względem wewnętrznego, więc
+\[
+ (a\cdot b)\star(c\cdot d)=(a\star c)\cdot(b\star d).
+\]
+Wstawiając jednostki, otrzymujemy
+\[
+ a\star b=(a\cdot e)\star(e\cdot b)
+ =(a\star e)\cdot(e\star b)=a\cdot b,
+\]
+a także
+\[
+ a\star b=(e\cdot a)\star(b\cdot e)
+ =(e\star b)\cdot(a\star e)=b\cdot a.
+\]
+Obie operacje są zatem równe i przemienne. W $\infty$-kategoriach analogiczne relacje są koherentnymi homotopiami, a nie równościami. Addytywność dla $d=e=1$ identyfikuje podwójnie asocjatywną strukturę z algebrą $E_2$, a nie w ogólności z algebrą $E_\infty$. Różnicę na poziomie operad widać już w przestrzeniach operacji arności dwa: $\mathbb E_2(2)$ ma typ homotopijny $S^1$, natomiast $\mathbb E_\infty(2)$ jest ściągalna. Tutaj zapis $\mathbb E_d(2)$ oznacza przestrzeń operacji dwuargumentowych odpowiedniej operady, a nie jej kategorię całkowitą. Zatem nie są to równoważne jednobarwne $\infty$-operady.
+\end{przyklad}
+
+\subsection{Modele DG i \texorpdfstring{$A_\infty$}{A-infty} algebr wyższych}
+
+Ustalamy ciało $k$ i konwencję kompleksów kohomologicznych z rozdziału~\ref{cat:sec:dg-a-infty}. Przez $\mathcal D_\infty(k)$ rozumiemy lokalizację $\infty$-kategorii $N(\operatorname{Ch}(k))$ względem quasi-izomorfizmów, a nie nerw jej kategorii homotopii. Lokalizacja ta zachowuje wyższe dane o przestrzeniach odwzorowań; por. definicja~\ref{cat:def:derived-infty-dg-modules} i przypadek algebry DG $k$. Iloczyn tensorowy kompleksów wraz z regułą znaków Koszula (stwierdzenie~\ref{cat:prop:dg-tensor-monoidal}) indukuje symetryczną strukturę monoidalną na tej lokalizacji.
+
+\begin{lemat}[Zgodność iloczynu tensorowego z quasi-izomorfizmami nad ciałem]\label{cat:lem:infty-dg-tensor-qiso}
+Jeżeli $f:A\to B$ jest quasi-izomorfizmem kompleksów przestrzeni wektorowych nad $k$, to dla dowolnego kompleksu $C$ morfizm $f\otimes\id_C$ jest quasi-izomorfizmem, także dla kompleksów nieograniczonych.
+\end{lemat}
+\begin{proof}
+Każdy acykliczny kompleks $K$ nad ciałem jest ściągalny homotopijnie. Istotnie, w każdym stopniu wybieramy dopełnienie $L^j$ przestrzeni cykli $Z^j(K)$ w $K^j$. Acykliczność oznacza, że $d:L^j\to Z^{j+1}(K)$ jest izomorfizmem. Definiujemy $h:K^j\to K^{j-1}$ jako odwrotność tego izomorfizmu na $Z^j(K)$ i zero na $L^j$. Wtedy $dh+hd=\id_K$, co sprawdzamy osobno na obu składnikach rozkładu.
+
+Na $K\otimes C$ definiujemy homotopię $H(x\otimes y)=h(x)\otimes y$. Dla jednorodnego $x$ mamy
+\[
+ (dH+Hd)(x\otimes y)
+ =(dh+hd)x\otimes y+
+ \bigl((-1)^{|x|-1}+(-1)^{|x|}\bigr)h(x)\otimes dy
+ =x\otimes y.
+\]
+Rachunek działa na sumach prostych stopni kompleksu tensorowego, bez żadnego założenia ograniczoności. Stosujemy go do acyklicznego stożka $K=\operatorname{Cone}(f)$. Rozkład stopni i reguła znaków dla przesunięcia identyfikują $\operatorname{Cone}(f)\otimes C$ ze stożkiem $f\otimes\id_C$: na składnikach $B\otimes C$ i $A[1]\otimes C$ identyfikacja jest kanoniczna, a różniczki są zgodne, ponieważ przesunięcie pierwszego czynnika zmienia znak jego różniczki i znak członu zawierającego $d_C$. Stożek jest zatem acykliczny, co przez długi ciąg kohomologii oznacza, że $f\otimes\id_C$ jest quasi-izomorfizmem.
+\end{proof}
+
+W szczególności iterowane iloczyny tensorowe zachowują quasi-izomorfizmy osobno w każdym argumencie. Stosujemy symetryczną lokalizację monoidalną kompleksów (wynik zewnętrzny: J.~Lurie, \emph{Higher Algebra}, \S4.1.3 i \S7.1.4). Jej własność uniwersalna przenosi strukturę monoidalną wraz z koherencjami na lokalizację; nie wystarcza do tego samo zdefiniowanie bifunktora na kategorii homotopii. Obliczanie pochodnego iloczynu tensorowego przez zwykły iloczyn kompleksów jest w tym przypadku uzasadnione lematem~\ref{cat:lem:infty-dg-tensor-qiso}.
+
+\begin{twierdzenie}[Rektyfikacja algebr asocjatywnych; wynik zewnętrzny]\label{cat:thm:infty-associative-rectification}
+Niech $\operatorname{DGA}_k$ oznacza zwykłą kategorię asocjatywnych algebr DG z jednością, z morfizmami zachowującymi jedność i różniczkę, a $W$ klasę quasi-izomorfizmów. Zachodzi równoważność
+\begin{equation}\label{cat:eq:infty-associative-rectification}
+ N(\operatorname{DGA}_k)[W^{-1}]_\infty
+ \simeq \operatorname{Alg}(\mathcal D_\infty(k)).
+\end{equation}
+Równoważność jest zgodna z zapominaniem struktury algebraicznej do $\mathcal D_\infty(k)$. Nie wymagamy charakterystyki zerowej.
+\end{twierdzenie}
+
+Korzystamy z twierdzeń o rektyfikacji algebr asocjatywnych w monoidalnych kategoriach modelowych (\emph{Higher Algebra}, \S4.1.4 i \S7.1.4; por. V.~Hinich, \emph{Rectification of Algebras and Modules}, Documenta Mathematica 20 (2015), 879--926, \url{https://arxiv.org/abs/1311.4130}). Lewa strona jest lokalizacją wyższej kategorii: wynik nie mówi, że zwykła kategoria $\operatorname{DGA}_k$ jest równoważna kategorii algebr wyższych przed odwróceniem quasi-izomorfizmów. Funktor porównawczy otrzymujemy, przenosząc ścisłe mnożenie i jednostkę do lokalizacji monoidalnej. Pełna wierność w sensie przestrzeni odwzorowań i istotna surjektywność tego funktora to właśnie nieelementarne tezy twierdzenia rektyfikacyjnego. W standardowym modelu rzutowym na kompleksach nad ciałem wszystkie obiekty są kofibrantne: acykliczne kompleksy są ściągalne, więc kompleksy są $K$-rzutowe, a ich składowe są rzutowe. Operada asocjatywna w kompleksach ma w arności $n$ moduł regularny $k[\mathfrak S_n]$ w stopniu zero (w tym $k$ w arności zero). Dlatego nie pojawia się przeszkoda wynikająca z nierozszczepialnych działań grup symetrycznych na operacjach asocjatywnych. W twierdzeniu Hinicha stosuje się dopuszczalne rezolucje operadowe; asocjatywny przypadek obejmuje ścisłe algebry właśnie dzięki swobodnym modułom arnościowym. To są warunki umożliwiające zastosowanie twierdzenia zewnętrznego, a nie samodzielny dowód rektyfikacji.
+
+\begin{uwaga}[Algebry DG a algebra na kohomologii]\label{cat:rem:infty-rectification-not-formality}
+Rektyfikacja nie jest formalnością algebry. Nawet jeśli algebra $E_1$ ma model DG, nie oznacza to, że jej model DG jest quasi-izomorficzny z własną algebrą kohomologii wyposażoną w różniczkę zerową. Pojęcie formalności i jego kryterium w języku minimalnych struktur $A_\infty$ omówiliśmy w definicji~\ref{cat:def:dg-formality} i stwierdzeniu~\ref{cat:prop:ainfty-formality-minimal}.
+\end{uwaga}
+
+\begin{stwierdzenie}[Rola wyższych mnożeń w modelu minimalnym]\label{cat:prop:infty-ainfty-model}
+Niech $A$ będzie algebrą DG nad ciałem, z jednostką reprezentującą niezerową klasę kohomologii. Możemy przenieść strukturę na $H^\bullet(A)$ tak, aby otrzymać minimalną ściśle unitalną algebrę $A_\infty$, wraz z quasi-izomorfizmem $A_\infty$ do $A$. Jej działanie $m_2$ jest zwykłym iloczynem na kohomologii, ale działania $m_n$ dla $n\geq3$ mogą być istotne.
+\end{stwierdzenie}
+\begin{proof}
+Wybieramy rozkład $A^j=B^j\oplus H^j\oplus L^j$, gdzie $B^j$ jest przestrzenią kobrzegów, $B^j\oplus H^j$ przestrzenią cykli, a $d:L^j\to B^{j+1}$ jest izomorfizmem. Ponieważ klasa jednostki jest niezerowa, możemy wybrać $H^0$ zawierające jednostkę. Włożenie reprezentantów $i$, projekcja $p$ i homotopia $h$ odwrotna do $d$ na $B^\bullet$ dają kontrakcję na kohomologię, z $h(1)=0$, $hi=ph=h^2=0$. Stosujemy twierdzenie o modelu minimalnym~\ref{cat:thm:ainfty-minimal-model} i twierdzenie o transferze ścisłej jednostki~\ref{cat:thm:ainfty-strict-unit-transfer}. Otrzymujemy $m_1=0$ i $m_2=p\,m_A(i\otimes i)$, czyli iloczyn klas kohomologii, oraz quasi-izomorfizm o pierwszej składowej $i$. Działania wyższe nie muszą znikać; przykład~\ref{cat:ex:ainfty-nonformal-exterior} pokazuje konkretną nieformalną algebrę DG. Gdyby można było zawsze usunąć wszystkie wyższe działania przez izomorfizm minimalnych algebr $A_\infty$, kryterium~\ref{cat:prop:ainfty-formality-minimal} wymuszałoby formalność także w tym przykładzie.
+\end{proof}
+
+W terminologii operadowej działania $m_n$ stopnia $2-n$ i tożsamości Stasheffa (twierdzenie~\ref{cat:thm:ainfty-stasheff}) opisują model algebr asocjatywnych z koherencjami zapisanymi w kompleksach. Porównanie z~\eqref{cat:eq:infty-associative-rectification} opiera się na operadowej rezolucji operady asocjatywnej i twierdzeniach rektyfikacyjnych. Dokładniej, jeśli $Q\to\mathrm{Ass}_k$ jest dopuszczalną kofibrantną rezolucją unitalnej operady asocjatywnej w kompleksach, to rozszerzenie i ograniczenie struktury wzdłuż tej strzałki indukują równoważność lokalizacji
+\[
+ N(\operatorname{Alg}_{Q}(\operatorname{Ch}(k)))[W^{-1}]_\infty
+ \simeq N(\operatorname{DGA}_k)[W^{-1}]_\infty.
+\]
+Tutaj $W$ oznacza w obu kategoriach morfizmy będące quasi-izomorfizmami kompleksów bazowych. Korzystamy z twierdzeń o zmianie operady w teorii Hinicha, nie z formalnej własności zwykłego rozszerzenia struktury. W wersji bez jednostki standardowa operada Stasheffa jest rezolucją operady asocjatywnej bez jednostki; w wersji unitalnej trzeba jawnie uwzględnić jednostkę przy wyborze rezolucji. Klasyczne ścisłe morfizmy algebr nad rezolucją i morfizmy $A_\infty$ z rozdziału~\ref{cat:sec:dg-a-infty} z wyższymi składowymi to różne prezentacje, które należy porównywać po odpowiedniej lokalizacji. Nie zakładamy bez dowodu, że operada opisująca ściśle unitalne działania $A_\infty$ jest wybraną kofibrantną rezolucją. W szczególności nie utożsamiamy przestrzeni odwzorowań między algebrami wyższymi ze zwykłym zbiorem rodzin składowych morfizmów $A_\infty$.
+
+\subsection{Rektyfikacja przemienna i rola charakterystyki}
+
+\begin{twierdzenie}[Rektyfikacja przemienna w charakterystyce zerowej; wynik zewnętrzny]\label{cat:thm:infty-commutative-rectification}
+Jeżeli $k$ jest ciałem charakterystyki zero, a $\operatorname{CDGA}_k$ oznacza kategorię przemiennych w sensie stopniowanym algebr DG z jednością, to
+\[
+ N(\operatorname{CDGA}_k)[W^{-1}]_\infty
+ \simeq \operatorname{CAlg}(\mathcal D_\infty(k)).
+\]
+Równoważność jest zgodna z funktorami zapominającymi. Nie można w tym twierdzeniu bez dodatkowych zmian zastąpić założenia o charakterystyce zerowej dowolną charakterystyką.
+\end{twierdzenie}
+
+Źródło: J.~Lurie, \emph{Higher Algebra}, stwierdzenia 7.1.4.10--7.1.4.11, oraz V.~Hinich, \emph{Rectification of Algebras and Modules}. Założenie o charakterystyce jest istotne, ponieważ przemienność wprowadza działania grup symetrycznych i potrzebę obliczania ich pochodnych koinwariantów. Wyjaśnimy algebraiczną różnicę między sytuacjami, nie zastępując dowodu rektyfikacji samym rachunkiem koinwariantów.
+
+\begin{lemat}[Dokładność koinwariantów]\label{cat:lem:infty-coinvariants-maschke}
+Niech $G$ będzie skończoną grupą i niech $|G|$ będzie odwracalne w $k$. Funktor koinwariantów $M\mapsto M_G$ na $k[G]$-modułach jest dokładny. Dla dowolnego kompleksu $M$ takich modułów zwykłe koinwarianty obliczają również pochodne koinwarianty.
+\end{lemat}
+\begin{proof}
+Oznaczmy przez $M_G$ iloraz $M$ przez przestrzeń rozpiętą przez elementy $gm-m$. Operator uśredniania
+\[
+ P(m)=\frac{1}{|G|}\sum_{g\in G} gm
+\]
+ma obraz $M^G$, jest identycznością na $M^G$ i zeruje każdą różnicę $gm-m$. Indukuje więc morfizm $M_G\to M^G$. Złożenie z naturalnym odwzorowaniem $M^G\to M_G$ jest identycznością w obu kierunkach: w ilorazie $[P(m)]=[m]$, a na niezmiennikach $P(m)=m$. Funktor niezmienników jest lewostronnie dokładny, a dla surjekcji $M\to N$ i niezmiennika $n\in N^G$ wybieramy poprzednik $m$; jego uśrednienie $P(m)$ jest niezmienniczym poprzednikiem $n$. Zatem niezmienniki, a przez naturalny izomorfizm również koinwarianty, są dokładne. Dokładność daje $H^j(M_G)\cong H^j(M)_G$, więc koinwarianty zachowują quasi-izomorfizmy kompleksów. W szczególności zastosowanie ich do rezolucji używanej do obliczenia funktora pochodnego daje ten sam obiekt w kategorii pochodnej.
+\end{proof}
+
+Dla $G=\mathfrak S_n$ w charakterystyce zero wszystkie liczby $n!$ są odwracalne. W zwykłej algebrze symetrycznej na kompleksie $V$ składowa jednorodna arności $n$ to $(V^{\otimes n})_{\mathfrak S_n}$, z działaniem zgodnym ze znakami Koszula. Lemat~\ref{cat:lem:infty-dg-tensor-qiso} oraz lemat~\ref{cat:lem:infty-coinvariants-maschke} pokazują, że te składowe zachowują quasi-izomorfizmy w charakterystyce zero. Sumy proste kompleksów przestrzeni wektorowych są dokładne, ponieważ cykle i kobrzegi obliczają się składowo. W konsekwencji cała zwykła algebra symetryczna zachowuje quasi-izomorfizmy w tym przypadku.
+
+\begin{przyklad}[Acykliczna para generatorów w charakterystyce dodatniej]\label{cat:ex:infty-positive-char-symmetric}
+Niech $k$ ma nieparzystą charakterystykę $p>0$. Rozważmy acykliczny kompleks $V=kx\oplus ky$ z $|x|=0$, $|y|=1$, $dx=y$, $dy=0$. Zwykła wolna przemienna algebra DG ma postać
+\[
+ \operatorname{Sym}(V)=k[x]\otimes_k\Lambda(y).
+\]
+Ponieważ $y$ ma stopień nieparzysty i $2$ jest odwracalne, przemienność stopniowana daje $y^2=0$. Reguła Leibniza daje dla $n\geq1$
+\[
+ d(x^n)=n x^{n-1}y,\qquad d(x^n y)=0.
+\]
+Pierwszy wzór wynika indukcyjnie z $|x|=0$, drugi z $y^2=0$. Zatem $x^p$ jest niezerowym cyklem stopnia zero. Nie może być kobrzegiem, ponieważ kompleks nie ma składników stopnia $-1$. Dokładniej dla wielomianu $f(x)$ mamy $df=f'(x)y$, a $f'=0$ dokładnie wtedy, gdy wszystkie wykładniki o niezerowych współczynnikach są podzielne przez $p$. Stąd
+\[
+ H^0(\operatorname{Sym}(V))=k[x^p].
+\]
+Quasi-izomorfizm $V\to0$ nie przechodzi więc przez $\operatorname{Sym}$ na quasi-izomorfizm $\operatorname{Sym}(V)\to k$, ponieważ klasa $x^p$ trafia na zero. Jest to przeszkoda dla prostego zastosowania zwykłego funktora wolnej algebry przemiennej w dodatniej charakterystyce. Sam ten rachunek dowodzi niezachowywania quasi-izomorfizmów, a nie jeszcze niemożliwości rektyfikacji każdego konkretnego obiektu. W charakterystyce dwa analogiczna przeszkoda występuje dla $x^2$: przy konwencji przemienności stopniowanej bez osobnego warunku zerowania nieparzystych kwadratów wolna algebra jest $k[x,y]$, a różniczka ma postać $d(x^ny^m)=nx^{n-1}y^{m+1}$. Przy konwencji z warunkiem $y^2=0$ otrzymujemy $k[x]\otimes\Lambda(y)$. W obu przypadkach $x^2$ jest niezerowym cyklem stopnia zero i brak składnika stopnia $-1$ wyklucza, by był kobrzegiem. Rozróżnienie konwencji nie wpływa więc na ten kontrprzykład.
+\end{przyklad}
+
+\begin{przyklad}[Koinwarianty pochodne w charakterystyce dwa]\label{cat:ex:infty-positive-char-derived-orbits}
+Niech $k=\mathbb F_2$ i $G=\mathfrak S_2=\{1,s\}$. W algebrze grupowej $k[G]$ połóżmy $t=1+s$. Mamy $t^2=0$ i $k[G]\cong k[t]/(t^2)$. Kompleks
+\[
+ \cdots\xrightarrow{t} k[G]\xrightarrow{t}k[G]
+ \xrightarrow{t}k[G]\longrightarrow k\longrightarrow0
+\]
+jest wolną rezolucją trywialnego modułu $k$, gdzie ostatni morfizm jest augmentacją. Istotnie, jądro i obraz mnożenia przez $t$ są równe ideałowi $(t)$, a jądro augmentacji to również $(t)$. Po zastosowaniu $k\otimes_{k[G]}-$ wszystkie różniczki stają się zerowe, bo $t$ działa trywialnie na $k$. Otrzymujemy
+\[
+ \operatorname{Tor}^{k[G]}_i(k,k)\cong k
+ \quad\text{dla każdego }i\geq0.
+\]
+Zwykłe koinwarianty dają tylko $k$ w stopniu zero, natomiast pochodne koinwarianty mają nietrywialne kohomologie w stopniach $-i$ dla wszystkich $i\geq0$. Obliczenie to pokazuje, jakie informacje homotopijne są tracone, jeżeli w definicjach wyższych operacji przemiennych zastąpimy koinwarianty pochodne zwykłymi. W dalszej części przy wolnych algebrach wrócimy do związku z wyższymi potęgami symetrycznymi.
+\end{przyklad}
+
+\subsection{Moduły i bimoduły nad algebrami asocjatywnymi}
+
+W tej części niech $\mathcal C$ będzie symetryczną monoidalną $\infty$-kategorią. Zastosujemy wielobarwne operady z rozdziału~\ref{cat:sec:operads}, ale będziemy rozpatrywać ich algebry w sensie definicji~\ref{cat:def:infty-operad-algebra}. Wszystkie struktury modułowe są unitalne.
+
+\begin{definicja}[Operada lewostronnego działania]\label{cat:def:infty-left-module-operad}
+Niech $\mathrm{LM}$ będzie niesymetryczną operadą o barwach $a,m$, z dokładnie jedną operacją o każdym profilu
+\[
+ (a^r;a),\qquad (a^r,m;m),\qquad r\geq0,
+\]
+i pustymi zbiorami operacji w pozostałych profilach. Zapis $a^r$ oznacza listę $r$ powtórzeń barwy $a$. Symetryzujemy tę operadę, tzn. operacją na skończonym zbiorze wejść jest wybór takiego ich liniowego porządku, w którym profil jest jednym z powyższych. Podstawienie jest porządkiem blokowym. Przez $\mathrm{LM}^\otimes_\infty$ oznaczamy nerw operadowy tej symetrycznej operady w zbiorach; analogicznie oznaczamy nerwy operad $\mathrm{RM}$ i $\mathrm{BM}$. W szczególności profil $(m;m)$ zawiera jednostkę barwy $m$, natomiast profil pusty z wyjściem $m$ nie zawiera żadnej operacji: nie wymagamy wyboru wyróżnionego elementu modułu.
+\end{definicja}
+
+Poprawność podstawień niesymetrycznych wykazano w przykładzie~\ref{cat:ex:colored-monoid-action}. W wersji symetrycznej po podstawieniu porządkujemy bloki według porządku zewnętrznego, a wejścia wewnątrz bloków według ich porządków; otrzymany profil pozostaje dozwolony. Trzy poziomy podstawienia dają ten sam leksykograficzny porządek wejść niezależnie od sposobu grupowania, co dowodzi łączności; singletony dają jednostki. Przez twierdzenie~\ref{cat:thm:infty-operad-classical-nerve} otrzymujemy $\infty$-operadę. Analogicznie $\mathrm{RM}$ ma profile $(b^r;b)$ oraz $(m,b^r;m)$ i opisuje prawostronne działanie. Pełne podoperady na pojedynczej barwie algebraicznej są operadami asocjatywnymi; ograniczenie do tych barw daje funktory używane do definiowania włókien modułowych.
+
+\begin{definicja}[Operada bimodułów]\label{cat:def:infty-bimodule-operad}
+Operadę $\mathrm{BM}$ tworzymy w ten sam sposób z trzema barwami $a,b,m$ oraz dozwolonymi uporządkowanymi profilami
+\[
+ (a^r;a),\quad (b^s;b),\quad(a^r,m,b^s;m),
+ \qquad r,s\geq0.
+\]
+Algebra nad jej nerwem operadowym jest trójką $(A,M,B)$ z koherentnymi działaniami algebr $A$ z lewej strony i $B$ z prawej. Dla ustalonych algebr $A,B$ definiujemy
+\[
+ {}_A\operatorname{BMod}_B(\mathcal C)
+ =
+ \operatorname{Alg}_{\mathrm{BM}_\infty}(\mathcal C)
+ \times_{\operatorname{Alg}(\mathcal C)^2}\{(A,B)\},
+\]
+gdzie bierzemy iloczyn włóknisty w $\infty$-kategorii kategorii, a funktor do $\operatorname{Alg}(\mathcal C)^2$ zapomina barwę $m$. Analogicznie $\operatorname{LMod}_A(\mathcal C)$ i $\operatorname{RMod}_B(\mathcal C)$ są włóknami funktorów zapominających barwę modułową w operadach $\mathrm{LM}$ i $\mathrm{RM}$.
+\end{definicja}
+
+Poprawność operady $\mathrm{BM}$ wynika z tego, że przy podstawieniu do profilu z wyjściem $m$ jedyny blok z wejściem $m$ pozostaje pomiędzy blokami złożonymi wyłącznie z barwy $a$ i blokami wyłącznie z barwy $b$. Jednostki i łączność porządków blokowych działają jak dla $\mathrm{LM}$. Wybranie włókna w kategorii wyższej uwzględnia identyfikacje algebr brzegowych z $A,B$ wraz z koherencjami. Nie chodzi o dowolne morfizmy bimodułów, przy których wolno zmieniać również te algebry.
+
+\begin{stwierdzenie}[Działania i ich zgodność]\label{cat:prop:infty-bimodule-actions}
+Bimoduł $(A,M,B)$ daje morfizmy $\ell:A\otimes M\to M$, $r:M\otimes B\to M$ oraz koherentne homotopie łączności, jednostki i zgodności obu działań. W szczególności po zastosowaniu równoważności łączności iloczynu tensorowego zachodzi
+\[
+ r(\ell\otimes\id_B)\simeq
+ \ell(\id_A\otimes r)\alpha_{A,M,B}.
+\]
+W przypadku nerwu zwykłej kategorii symetrycznej monoidalnej odzyskujemy zwykłe bimoduły i ich morfizmy.
+\end{stwierdzenie}
+\begin{proof}
+Działania są obrazami operacji o profilach $(a,m;m)$ i $(m,b;m)$. Dwa podstawienia tych operacji dają tę samą operację o uporządkowanym profilu $(a,m,b;m)$. Zgodność z podstawieniami w sensie stwierdzenia~\ref{cat:prop:infty-operad-morphism-mul} daje homotopię ich obrazów. Dla profili $(a,a,m;m)$ i $(m,b,b;m)$ porównujemy podstawienie mnożenia algebry z iterowanym działaniem. Podstawienie operacji zeroargumentowej o wyjściu $a$ do profilu $(a,m;m)$, a odpowiednio operacji o wyjściu $b$ do profilu $(m,b;m)$, daje jednostkę jednoargumentową profilu $(m;m)$. Stąd wynika prawo jednostki obu działań. Wyższe koherencje są obrazami łańcuchów podstawień przez funktor operadowy.
+
+W przypadku nerwów zwykłych kategorii stosujemy przykład~\ref{cat:ex:infty-algebra-ordinary}. W zwykłej kategorii wszystkie operacje o profilu $(a^r,m,b^s;m)$ są wyznaczone przez iterowanie mnożeń i działań; równania łączności i jednostki oraz przemienność działań zapewniają niezależność od grupowania i kolejności stosowania lewego i prawego działania. Morfizm zachowujący te działania zachowuje wszystkie ich iteracje. Włókno nad ustalonymi algebrami jest równoważne nerwowi zwykłej kategorii bimodułów: identyfikacje algebr brzegowych w homotopijnym włóknie są izomorfizmami i można przenieść po nich działania na ustalone algebry. Morfizmy po takim przeniesieniu mają na algebrach brzegowych identyczności.
+\end{proof}
+
+\subsection{Konstrukcja barowa i względny iloczyn tensorowy}
+
+Zakładamy odtąd, że $\mathcal C$ ma realizacje geometryczne obiektów symplicjalnych oraz że iloczyn tensorowy zachowuje je osobno w obu zmiennych. Realizacja geometryczna obiektu symplicjalnego $X_\bullet:N(\Delta^{\mathrm{op}})\to\mathcal C$ oznacza tutaj jego kogranicę w $\mathcal C$, niekoniecznie realizację w przestrzeniach topologicznych.
+
+\begin{definicja}[Dwustronna konstrukcja barowa]\label{cat:def:infty-two-sided-bar}
+Dla algebry asocjatywnej $B$, prawego $B$-modułu $M$ i lewego $B$-modułu $N$ dwustronna konstrukcja barowa $\operatorname{Bar}_B(M,N)_\bullet$ jest obiektem symplicjalnym o składnikach
+\begin{equation}\label{cat:eq:infty-bar-terms}
+ \operatorname{Bar}_B(M,N)_q=M\otimes B^{\otimes q}\otimes N.
+\end{equation}
+Dla $q\geq1$ ściana $d_0$ stosuje prawe działanie na $M$, ściana $d_q$ stosuje lewe działanie na $N$, a $d_i$ dla $0<i<q$ mnoży $i$-ty i $(i+1)$-szy czynnik $B$. Degeneracja $s_i$ dla $0\leq i\leq q$ wstawia jednostkę $B$ po $i$ czynnikach $B$. Koherentny obiekt symplicjalny z tymi danymi jest wyznaczony przez operadową konstrukcję barową.
+\end{definicja}
+
+Wzory na ściany i degeneracje określają zwykły obiekt symplicjalny w przypadku ścisłych działań. W przypadku wyższym nie wystarczy wskazać strzałek i homotopii między parami ich złożeń. Korzystamy z konstrukcji koherentnego obiektu symplicjalnego w \emph{Higher Algebra}, \S4.4.2 (konstrukcja 4.4.2.7). W ścisłym przypadku wszystkie tożsamości symplicjalne można sprawdzić, traktując wyrazy diagramu jako uporządkowane listy czynników. Dla $i<j$ relacja $d_i d_j=d_{j-1}d_i$ porównuje usuwanie dwóch separatorów. Jeśli separatorom odpowiadają rozłączne pary czynników, złożenia są równe przez bifunktorialność iloczynu tensorowego. Dla sąsiednich separatorów wewnętrznych stosujemy łączność mnożenia $B$; na lewym i prawym krańcu stosujemy odpowiednie prawo łączności działania modułowego. Relacja $s_i s_j=s_{j+1}s_i$ dla $i\leq j$ wstawia dwie jednostki w te same miejsca. Relacje mieszane
+\[
+ d_i s_j=
+ \begin{cases}
+ s_{j-1}d_i,&i<j,\\
+ \id,&i=j\ \text{lub}\ i=j+1,\\
+ s_j d_{i-1},&i>j+1
+ \end{cases}
+\]
+wynikają z komutowania wstawienia jednostki z operacją na innych czynnikach lub z odpowiedniego prawa jednostki, gdy usuwany separator przylega do wstawionej jednostki. W zwykłej kategorii monoidalnej, która nie jest ścisła, używamy ponadto twierdzenia o koherencji~\ref{cat:thm:mac-lane-coherence}. W przypadku wyższym operadowa konstrukcja zapewnia zgodność tych porównań z dłuższymi złożeniami.
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=.85,transform shape]
+ \node (x) at (-4,0) {$M\otimes B\otimes B\otimes N$};
+ \node (y) at (1,0) {$M\otimes B\otimes N$};
+ \node (z) at (5.5,0) {$M\otimes N$};
+ \draw[->] (x) to[bend left=27] node[above]{$d_0$} (y);
+ \draw[->] (x)--node[above]{$d_1$}(y);
+ \draw[->] (x) to[bend right=27] node[below]{$d_2$}(y);
+ \draw[->] (y) to[bend left=20] node[above]{$d_0$} (z);
+ \draw[->] (y) to[bend right=20] node[below]{$d_1$} (z);
+\end{tikzpicture}
+\end{center}
+Rysunek pokazuje ściany w pierwszych trzech stopniach; degeneracje oraz wyższe sympleksy są również częścią konstrukcji.
+
+\begin{definicja}[Względny iloczyn tensorowy]\label{cat:def:infty-relative-tensor}
+Względnym iloczynem tensorowym prawego i lewego $B$-modułu nazywamy
+\begin{equation}\label{cat:eq:infty-relative-tensor}
+ M\otimes_B N=
+ \left|\operatorname{Bar}_B(M,N)_\bullet\right|
+ =\varinjlim_{[q]\in\Delta^{\mathrm{op}}}M\otimes B^{\otimes q}\otimes N.
+\end{equation}
+\end{definicja}
+
+W szczególności dla obiektu $T\in\mathcal C$ własność uniwersalna kogranicy daje
+\[
+ \operatorname{Map}_{\mathcal C}(M\otimes_B N,T)
+ \simeq\varprojlim_{[q]\in\Delta}
+ \operatorname{Map}_{\mathcal C}(M\otimes B^{\otimes q}\otimes N,T).
+\]
+Prawa strona jest przestrzenią koherentnych rodzin odwzorowań zgodnych z całym diagramem barowym. Punkt tej granicy daje przez projekcję na stopień zero morfizm $M\otimes N\to T$. Koherencja z obydwiema ścianami ze stopnia jeden daje homotopię pomiędzy złożeniami z prawym i lewym działaniem na $M\otimes B\otimes N$. Wyższe stopnie narzucają zgodność tej homotopii z mnożeniem, jednostką i pozostałymi operacjami. Sam wybór homotopii w stopniu jeden nie zastępuje granicy całego diagramu.
+
+\begin{stwierdzenie}[Zewnętrzne działania]\label{cat:prop:infty-bar-bimodule}
+Jeżeli $M$ jest $(A,B)$-bimodułem, a $N$ jest $(B,D)$-bimodułem, to $M\otimes_B N$ jest naturalnie $(A,D)$-bimodułem. Konstrukcja jest funktorialna w obu modułach.
+\end{stwierdzenie}
+\begin{proof}
+W stopniu $q$ zewnętrzne działania na $M\otimes B^{\otimes q}\otimes N$ pochodzą z działania $A$ na pierwszym czynniku oraz $D$ na ostatnim. Zgodność tych działań z działaniami $B$ pozwala traktować konstrukcję barową jako obiekt symplicjalny w kategorii $(A,D)$-bimodułów. Pełną koherentną konstrukcję takiego diagramu daje operadowa konstrukcja barowa z \emph{Higher Algebra}, \S4.4.2. Jej realizację można obliczać na obiektach bazowych: korzystamy tutaj z twierdzenia o tworzeniu realizacji geometrycznych przez funktory zapominające dla bimodułów (\emph{Higher Algebra}, stwierdzenie 4.3.3.9). Założenie o zachowywaniu realizacji osobno w obu zmiennych zapewnia, że zastosowanie $A\otimes-$ lub $-\otimes D$ do realizacji jest realizacją odpowiedniego diagramu działań. Zewnętrzne działania i wszystkie ich koherencje przechodzą zatem na kogranicę; funktorialność konstrukcji barowej i kogranicy daje funktorialność iloczynu.
+\end{proof}
+
+\begin{stwierdzenie}[Jednostka względnego iloczynu tensorowego]\label{cat:prop:infty-relative-tensor-unit}
+Dla prawego $B$-modułu $M$ i lewego $B$-modułu $N$ istnieją naturalne równoważności
+\[
+ M\otimes_B B\simeq M,\qquad B\otimes_B N\simeq N,
+\]
+indukowane przez działania. Jeżeli występują dodatkowe zewnętrzne działania, są to równoważności odpowiednich bimodułów.
+\end{stwierdzenie}
+\begin{proof}
+Dla pierwszej równoważności augmentujemy $\operatorname{Bar}_B(M,B)_\bullet$ przez $M$ za pomocą iterowanego prawego działania. W stopniu $q$ dodatkowa degeneracja wstawia jednostkę po ostatnim czynniku $B$; w stopniu $-1$ jest to $M\to M\otimes B$. Ostatnia ściana po tej degeneracji daje identyczność przez prawo jednostki, pozostałe ściany i degeneracje komutują z wstawieniem jednostki z odpowiednio przesuniętymi indeksami. W ścisłym zapisie dla $q\geq0$ i dodatkowej degeneracji $t_q$ mamy $d_{q+1}t_q=\id$ oraz $d_i t_q=t_{q-1}d_i$ dla $0\leq i\leq q$, gdzie w stopniu zero $d_0$ po prawej jest augmentacją. W stopniu $-1$ dodatkowo $d_0t_{-1}=\id_M$ przez prawo jednostki. Dla zwykłych degeneracji mamy $s_i t_q=t_{q+1}s_i$ dla $0\leq i\leq q$, a $s_{q+1}t_q=t_{q+1}t_q$. Ostatnia relacja dla $q=-1$ oznacza $s_0t_{-1}=t_0t_{-1}$, czyli dwa sposoby wstawienia dwóch jednostek. W wersji wyższej jednostka i podstawienia operadowe dają koherentne rozszerzenie diagramu o tę dodatkową degenerację, czyli rozszczepiony augmentowany obiekt symplicjalny (po odwróceniu porządku indeksów dla degeneracji końcowej).
+
+Stosujemy twierdzenie o rozszczepionych augmentowanych obiektach symplicjalnych: ich augmentacja jest absolutną kogranicą (\emph{Higher Algebra}, \S4.7.2). Daje ono pierwszą równoważność. Dla $\operatorname{Bar}_B(B,N)$ wstawiamy jednostkę przed pierwszym czynnikiem; otrzymujemy analogiczne rozszczepienie i drugą równoważność. Jeżeli są dodatkowe działania, augmentacje są morfizmami bimodułów przez zgodność działań. Równoważność na obiektach bazowych wykrywa równoważność bimodułów przez stwierdzenie~\ref{cat:prop:infty-algebra-equivalences}, zastosowane przy ustalonych algebrach brzegowych. Nie wymagamy, aby dodatkowe degeneracje same zachowywały wszystkie te działania.
+\end{proof}
+
+\begin{twierdzenie}[Łączność względnego iloczynu tensorowego]\label{cat:thm:infty-relative-tensor-assoc}
+Niech $M,N,P$ będą odpowiednio $(A,B)$-, $(B,D)$- i $(D,E)$-bimodułami. Istnieje naturalna równoważność $(A,E)$-bimodułów
+\[
+ (M\otimes_B N)\otimes_D P
+ \simeq M\otimes_B(N\otimes_D P).
+\]
+\end{twierdzenie}
+\begin{proof}
+Rozważmy dwusymplicjalny obiekt barowy o wyrazach
+\[
+ X_{p,q}=M\otimes B^{\otimes p}\otimes N
+              \otimes D^{\otimes q}\otimes P.
+\]
+Ściany i degeneracje w obu kierunkach są odpowiednimi działaniami i mnożeniami. Współdziałanie obu kierunków na $N$ wynika z jego struktury bimodułowej. Koherentny diagram jest iterowaną konstrukcją barową, którą operadowa konstrukcja z \S4.4.2 \emph{Higher Algebra} zapewnia z uwzględnieniem obu kierunków i zewnętrznych działań. Ponieważ iloczyn tensorowy zachowuje realizacje osobno w każdej zmiennej, realizując najpierw względem $p$, a następnie względem $q$, otrzymujemy lewą stronę, natomiast odwracając kolejność, prawą stronę. Obie iterowane kogranice są równoważne kogranicy po kategorii iloczynowej. Aby to uzasadnić, stosujemy $\operatorname{Map}_{\mathcal C}(-,T)$ dla dowolnego $T$: obie iterowane granice przestrzeni odwzorowań są granicą po iloczynie kategorii indeksujących przez własność uniwersalną granicy. Ponieważ obie iterowane kogranice istnieją, własność uniwersalna uzasadnia również istnienie kogranicy po kategorii iloczynowej bez dodatkowego założenia o wszystkich małych kogranicach. Porównanie jest naturalne w $T$, więc daje równoważność obiektów. Ten sam argument stosujemy w kategorii $(A,E)$-bimodułów: iterowane realizacje istnieją i są tworzone przez funktor zapominający, przez stwierdzenie~\ref{cat:prop:infty-bar-bimodule} i przytoczone tam twierdzenie o realizacjach. Otrzymujemy zatem równoważność bimodułów. Argument iteruje się dla dłuższych łańcuchów: różne kolejności realizacji porównujemy z jedną kogranicą wielosymplicjalną, a zgodność porównań wynika z jej własności uniwersalnej.
+\end{proof}
+
+W szczególności kategoria $(B,B)$-bimodułów ma monoidalną strukturę z iloczynem $\otimes_B$ i jednostką $B$ (pełna konstrukcja koherentna: \emph{Higher Algebra}, stwierdzenie 4.4.3.12). Nie zakładamy przemienności $B$, dlatego struktura ta nie musi być symetryczna. Równoważności powyżej są wyższymi odpowiednikami rachunku bimodułów w rozdziale~\ref{cat:sec:derived-localization-morita}, zwłaszcza stwierdzeń~\ref{cat:prop:morita-bimodule-assoc} i~\ref{cat:prop:morita-derived-composition}.
+
+\begin{przyklad}[Wyższe grupy Tor w iloczynie względnym]\label{cat:ex:infty-relative-tensor-dual-numbers}
+Niech $k$ będzie ciałem, $B=k[\varepsilon]/(\varepsilon^2)$ algebrą skupioną w stopniu zero, a $M=N=k$ modułami przez augmentację $\varepsilon\mapsto0$. W $\mathcal D_\infty(k)$ względny iloczyn tensorowy $M\otimes_B N$ odpowiada pochodnemu iloczynowi tensorowemu $k\otimes_B^{\mathbf L}k$. Istotnie, barowa rezolucja lewego modułu $k$ ma w stopniu symplicjalnym $q$ postać $B\otimes_k B^{\otimes q}\otimes_k k$. Jest złożona z wolnych lewych $B$-modułów, a jej augmentacja po zapomnieniu działania $B$ jest rozszczepiona przez wstawienie jednostki z lewej strony. Znormalizowany kompleks barowy jest więc rezolucją rzutową. Dokładniej, w nieznormalizowanym kompleksie z różniczką $\partial_q=\sum_{i=0}^q(-1)^id_i$ dodatkowa degeneracja początkowa $t$ spełnia $\partial t+t\partial=\id$ (na składnikach po zapomnieniu działania). Wynika to z relacji $d_0t=\id$ i $d_{i+1}t=td_i$, dzięki którym wszystkie pozostałe wyrazy sumy znoszą się parami. Mamy zatem dokładność augmentowanego kompleksu. Normalizacja jest składnikiem prostym w każdym stopniu w kategorii $B$-modułów, a część zdegenerowana jest acykliczna, na mocy standardowego twierdzenia o normalizacji kompleksu symplicjalnego modułów (twierdzenie Dolda--Kana). Składniki znormalizowane pozostają rzutowe jako składniki proste wolnych modułów. Dokładność nie wymaga, aby kontrakcja była $B$-liniowa. Po zastosowaniu $k\otimes_B-$ otrzymujemy dokładnie dwustronny kompleks barowy. Realizacja obiektu symplicjalnego kompleksów skupionych w stopniu zero jest reprezentowana przez jego znormalizowany kompleks ze stopniem symplicjalnym $q$ umieszczonym w stopniu kohomologicznym $-q$; korzystamy tu ze standardowego twierdzenia Dolda--Kana i jego interpretacji pochodnej.
+
+Do obliczenia tej samej pochodnej konstrukcji możemy użyć prostszej wolnej rezolucji
+\[
+ \cdots\xrightarrow{\varepsilon}B
+ \xrightarrow{\varepsilon}B\xrightarrow{\varepsilon}B
+ \longrightarrow k\longrightarrow0.
+\]
+Jądro i obraz mnożenia przez $\varepsilon$ są równe $k\varepsilon$, które jest również jądrem augmentacji. Po zastosowaniu $k\otimes_B-$ wszystkie różniczki znikają, ponieważ $\varepsilon$ działa przez zero. W rezultacie
+\[
+ H^{-q}(k\otimes_B^{\mathbf L}k)\cong
+ \operatorname{Tor}^{B}_q(k,k)\cong k
+ \quad(q\geq0).
+\]
+Zwykły iloczyn $k\otimes_B k$ jest natomiast równy $k$ i nie zawiera kohomologii w ujemnych stopniach. Zastąpienie całego diagramu barowego zwykłym koequalizatorem jego dwóch ścian w stopniu jeden utraciłoby zatem wyższe informacje.
+\end{przyklad}
+
+\subsection{Prezentowalne monoidalne \texorpdfstring{$\infty$-kategorie}{kategorie wyższe}}
+
+\begin{definicja}[Zgodność iloczynu tensorowego z prezentowalnością]\label{cat:def:infty-presentable-monoidal}
+Symetryczną monoidalną $\infty$-kategorię $\mathcal C^\otimes$ nazywamy prezentowalną monoidalną, jeśli $\mathcal C$ jest prezentowalna w sensie definicji~\ref{cat:def:infty-presentable}, a iloczyn tensorowy zachowuje wszystkie małe kogranice osobno w obu zmiennych.
+\end{definicja}
+
+Warunek dotyczy osobno każdego argumentu, nie zachowywania wszystkich kogranic przez funktor $\otimes:\mathcal C\times\mathcal C\to\mathcal C$ jako całość. Na przykład w kategorii przestrzeni z iloczynem kartezjańskim koprodukt par $(*,\varnothing)$ i $(\varnothing,*)$ jest parą $(*,*)$, której iloczyn jest punktem, natomiast koprodukt iloczynów obu par jest pusty. Iloczyn kartezjański zachowuje jednak kogranice osobno w obu zmiennych, jak uzasadnimy w przykładzie~\ref{cat:ex:infty-presentable-monoidal-closed}. Zgodność z kogranicami osobno implikuje, że iloczyn z obiektem początkowym jest początkowy. Zapewnia też hipotezy dotyczące realizacji geometrycznych użyte w konstrukcji barowej z definicji~\ref{cat:def:infty-relative-tensor}.
+
+\begin{twierdzenie}[Wewnętrzny obiekt odwzorowań]\label{cat:thm:infty-presentable-closed}
+Niech $\mathcal C$ będzie prezentowalną symetryczną monoidalną $\infty$-kategorią w sensie definicji~\ref{cat:def:infty-presentable-monoidal}. Istnieje bifunktor
+\[
+ [-,-]:\mathcal C^{\mathrm{op}}\times\mathcal C\longrightarrow\mathcal C
+\]
+oraz naturalne równoważności przestrzeni
+\begin{equation}\label{cat:eq:infty-internal-hom}
+ \operatorname{Map}_{\mathcal C}(Z\otimes X,Y)
+ \simeq \operatorname{Map}_{\mathcal C}(Z,[X,Y]).
+\end{equation}
+W szczególności $\mathcal C$ jest domknięta monoidalnie, w wyższym odpowiedniku definicji~\ref{cat:def:monoidal-closed}.
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonego $X$ funktor $-\otimes X$ zachowuje wszystkie małe kogranice, więc z twierdzenia~\ref{cat:thm:infty-presentable-adjoint} ma prawego sprzężonego $[X,-]$. Aby uzyskać funktorialność jednocześnie w obu argumentach, rozważamy funktor
+\[
+ (X,Y)\longmapsto
+ \bigl(Z\longmapsto\operatorname{Map}_{\mathcal C}(Z\otimes X,Y)\bigr)
+\]
+z $\mathcal C^{\mathrm{op}}\times\mathcal C$ do kategorii presnopów przestrzeni na $\mathcal C$ (w razie potrzeby powiększamy uniwersum). Jest to funktor dzięki bifunktorialności iloczynu tensorowego i przestrzeni odwzorowań. Każda jego wartość jest reprezentowalna przez obiekt $[X,Y]$, jak wynika z istnienia prawego sprzężonego. Wyższe twierdzenie Yonedy (por. rozdział~\ref{cat:sec:presentable-infty-bousfield}, gdzie korzystamy z pełnej wierności włożenia Yonedy przy konstrukcji $\operatorname{Ind}$) identyfikuje $\mathcal C$ z pełną podkategorią presnopów reprezentowalnych. Przez quasi-odwrotność tej równoważności otrzymujemy bifunktor $[-,-]$ i naturalność~\eqref{cat:eq:infty-internal-hom} we wszystkich trzech argumentach. W szczególności wybory prawych sprzężonych nie wymagają niezależnego, niekoherentnego wyboru ich działania na morfizmach.
+\end{proof}
+
+\begin{stwierdzenie}[Rachunek wewnętrznych obiektów odwzorowań]\label{cat:prop:infty-internal-hom-laws}
+Zachodzą naturalne równoważności
+\[
+ [\mathbb 1,Y]\simeq Y,\qquad
+ [X\otimes Y,Z]\simeq[X,[Y,Z]].
+\]
+Funktor $[X,-]$ zachowuje małe granice, a funktor $[-,Y]$ zamienia małe kogranice na granice. Jeśli $0$ jest obiektem początkowym, to $[0,Y]$ jest obiektem końcowym.
+\end{stwierdzenie}
+\begin{proof}
+Dla pierwszej równoważności mamy $\operatorname{Map}(T,[\mathbb 1,Y])\simeq\operatorname{Map}(T\otimes\mathbb 1,Y)\simeq\operatorname{Map}(T,Y)$. Dla drugiej stosujemy kolejno~\eqref{cat:eq:infty-internal-hom} i łączność:
+\[
+\begin{aligned}
+ \operatorname{Map}(T,[X,[Y,Z]])
+ &\simeq\operatorname{Map}(T\otimes X,[Y,Z])\\
+ &\simeq\operatorname{Map}((T\otimes X)\otimes Y,Z)\\
+ &\simeq\operatorname{Map}(T,[X\otimes Y,Z]).
+\end{aligned}
+\]
+Obie równoważności wynikają z twierdzenia Yonedy. Funktor $[X,-]$ jest prawym sprzężonym, więc zachowuje granice przez stwierdzenie~\ref{cat:prop:infty-adjoint-preservation}. Dla diagramu $(X_i)$ korzystamy z zachowywania kogranic przez $T\otimes-$:
+\[
+\begin{aligned}
+ \operatorname{Map}(T,[\varinjlim_i X_i,Y])
+ &\simeq\operatorname{Map}(\varinjlim_i(T\otimes X_i),Y)\\
+ &\simeq\varprojlim_i\operatorname{Map}(T\otimes X_i,Y)\\
+ &\simeq\operatorname{Map}(T,\varprojlim_i[X_i,Y]).
+\end{aligned}
+\]
+Równoważności są naturalne w $T$; przez twierdzenie Yonedy otrzymujemy kanoniczne porównanie $[\varinjlim_i X_i,Y]\simeq\varprojlim_i[X_i,Y]$. Jeśli diagram $(X_i)$ jest indeksowany przez $I$, granice po prawej są indeksowane przez $I^{\mathrm{op}}$, ponieważ pierwszy argument wewnętrznego obiektu odwzorowań jest kontrawariantny. Diagram pusty daje ostatnią tezę.
+\end{proof}
+
+\begin{przyklad}[Przestrzenie i kompleksy]\label{cat:ex:infty-presentable-monoidal-closed}
+W kategorii przestrzeni $\mathcal S$ iloczynem monoidalnym może być iloczyn kartezjański. Sprzężenie z obiektem przestrzeni odwzorowań ma postać $\operatorname{Map}(T\times X,Y)\simeq\operatorname{Map}(T,\operatorname{Map}(X,Y))$. Wynika ono z kartezjańskiej domkniętości kompleksów Kana w $\infty$-kategorii przestrzeni (w modelu symplicjalnym z wykładniczego sprzężenia zbiorów symplicjalnych). Iloczyn z ustaloną przestrzenią jest więc lewym sprzężonym i zachowuje kogranice. Jednostką jest przestrzeń punktowa, a wewnętrzny obiekt odwzorowań jest zwykłą przestrzenią odwzorowań w sensie homotopijnym.
+
+W $\mathcal D_\infty(k)$ dla ciała $k$ pochodny iloczyn tensorowy obliczamy na kompleksach przez lemat~\ref{cat:lem:infty-dg-tensor-qiso}. Wewnętrzny obiekt odwzorowań reprezentuje kompleks $\operatorname{Hom}^\bullet_k(X,Y)$ z różniczką z definicji~\ref{cat:def:dg-hom-complex}. Istotnie, dla jednorodnego $f$ stopnia $n$ różniczka w kompleksie Hom ma postać $D(f)=d_Y f-(-1)^n f d_X$. Jeśli $Y$ ma kontrakcję $h_Y$, to $H(f)=h_Y f$ spełnia
+\[
+ (DH+HD)(f)=(d_Yh_Y+h_Yd_Y)f=f,
+\]
+gdyż człony zawierające $d_X$ mają przeciwne znaki. Jeśli kontrakcję $h_X$ ma $X$, kładziemy $H(f)=(-1)^n f h_X$; wówczas
+\[
+ (DH+HD)(f)=f(h_Xd_X+d_Xh_X)=f,
+\]
+gdyż znoszą się człony zawierające $d_Y$. Ponieważ acykliczne kompleksy nad ciałem są ściągalne, quasi-izomorfizmy kompleksów nad ciałem są równoważnościami homotopijnymi (przez kryterium stożka). Kompleks Hom zachowuje równoważności homotopijne, co wynika z tych samych wzorów zastosowanych do homotopii między morfizmami, więc zachowuje quasi-izomorfizmy w obu argumentach. Sprzężenie tensor--Hom z twierdzenia~\ref{cat:thm:dg-tensor-hom} przechodzi na lokalizacje przez twierdzenie o pochodnym sprzężeniu Quillena: dla ustalonego $X$ funktor $-\otimes X$ zachowuje kofibracje (są to monomorfizmy stopniowe nad ciałem) i trywialne kofibracje przez lemat~\ref{cat:lem:infty-dg-tensor-qiso}. Wszystkie obiekty są fibrantne i kofibrantne w standardowej rzutowej strukturze modelowej, toteż pochodne funktory są reprezentowane przez zwykły iloczyn tensorowy i zwykły kompleks Hom. W konsekwencji iloczyn tensorowy zachowuje kogranice osobno i jest zgodny z prezentowalnością $\mathcal D_\infty(k)$.
+\end{przyklad}
+
+\subsection{Monoidalne lokalizacje refleksyjne}
+
+Niech $L:\mathcal C\rightleftarrows\mathcal D:i$ będzie dostępną lokalizacją refleksyjną prezentowalnej symetrycznej monoidalnej $\infty$-kategorii w sensie definicji~\ref{cat:def:infty-presentable-monoidal}, z jednostką $\eta:\id\to iL$. Piszemy $W=\{f:Lf\text{ jest równoważnością}\}$. Zgodnie z rozdziałem~\ref{cat:sec:presentable-infty-bousfield} utożsamiamy $\mathcal D$ z pełną podkategorią obiektów lokalnych.
+
+\begin{stwierdzenie}[Kryterium zgodności z iloczynem tensorowym]\label{cat:prop:infty-monoidal-localization-criterion}
+Następujące warunki są równoważne:
+\begin{enumerate}
+ \item dla każdego $f\in W$ i $X\in\mathcal C$ mamy $X\otimes f\in W$;
+ \item dla każdego $X\in\mathcal C$ i każdego obiektu lokalnego $Y$ obiekt $[X,Y]$ jest lokalny;
+ \item dla każdego $X,Z\in\mathcal C$ morfizm $X\otimes\eta_Z$ należy do $W$.
+\end{enumerate}
+\end{stwierdzenie}
+\begin{proof}
+Z twierdzenia o lokalizacji refleksyjnej (stwierdzenie~\ref{cat:prop:infty-bousfield-unit} i dowód w~\ref{cat:prop:infty-bousfield-small-generation}) wynika, że $f$ należy do $W$ dokładnie wtedy, gdy prekompozycja z $f$ indukuje równoważność przestrzeni odwzorowań do każdego obiektu lokalnego. Ponadto obiekt $T$ jest lokalny dokładnie wtedy, gdy jest ortogonalny w tym sensie do wszystkich $f\in W$. Dla drugiego kryterium wystarczy nawet ortogonalność do $\eta_T$: z równoważności
+\[
+ \operatorname{Map}(iLT,T)\longrightarrow\operatorname{Map}(T,T)
+\]
+otrzymujemy morfizm $r:iLT\to T$ z $r\eta_T\simeq\id_T$. Naturalność jednostki daje $\eta_T r\simeq iL(r)\eta_{iLT}$. Obie strzałki $iL(\eta_T)$ i $\eta_{iLT}$ są równoważnościami i są homotopijne przez stwierdzenie~\ref{cat:prop:infty-bousfield-unit}, natomiast $iL(r)iL(\eta_T)\simeq\id_{iLT}$. Stąd $\eta_T r\simeq\id_{iLT}$, więc $\eta_T$ jest równoważnością i $T$ jest lokalny.
+
+Jeśli zachodzi 1, to dla $f:U\to V$ w $W$ i lokalnego $Y$ morfizm
+\[
+ \operatorname{Map}(V,[X,Y])
+ \longrightarrow\operatorname{Map}(U,[X,Y])
+\]
+jest przez sprzężenie~\eqref{cat:eq:infty-internal-hom} utożsamiony z prekompozycją z $f\otimes X$ w przestrzeniach odwzorowań do $Y$. Symetria i warunek 1 dają równoważność, więc $[X,Y]$ jest lokalny. Odwrotnie, jeśli zachodzi 2, ten sam rachunek pokazuje, że $X\otimes f$ jest ortogonalny do wszystkich obiektów lokalnych, zatem należy do $W$. Implikacja $1\Rightarrow3$ wynika z $\eta_Z\in W$. Załóżmy 3. Dla dowolnego lokalnego $Y$ prekompozycja z $\eta_Z$ w przestrzeniach odwzorowań do $[X,Y]$ jest równoważnością, ponieważ odpowiada prekompozycji z $\eta_Z\otimes X$ do $Y$. Wybierając $Z=[X,Y]$, otrzymujemy lokalność $[X,Y]$ przez kryterium z pierwszego akapitu. Stąd $3\Rightarrow2$.
+\end{proof}
+
+\begin{twierdzenie}[Monoidalna lokalizacja; wynik zewnętrzny]\label{cat:thm:infty-monoidal-localization}
+Jeśli zachodzą warunki stwierdzenia~\ref{cat:prop:infty-monoidal-localization-criterion}, to $\mathcal D$ otrzymuje symetryczną strukturę monoidalną, dla której $L$ jest silnym symetrycznym funktorem monoidalnym. Iloczyn i jednostka są dane przez
+\[
+ Y\otimes_{\mathcal D} Z\simeq L(iY\otimes iZ),
+ \qquad \mathbb 1_{\mathcal D}\simeq L(\mathbb 1_{\mathcal C}).
+\]
+Struktura ta ma własność uniwersalną lokalizacji monoidalnej: prekompozycja z $L$ identyfikuje silne symetryczne funktory monoidalne z $\mathcal D$ do dowolnej symetrycznej monoidalnej $\infty$-kategorii $\mathcal E$ z pełną podkategorią takich funktorów z $\mathcal C$ do $\mathcal E$, które odwracają $W$.
+\end{twierdzenie}
+
+Korzystamy z twierdzenia o symetrycznych monoidalnych lokalizacjach z \emph{Higher Algebra}, \S2.2.1, w szczególności stwierdzenia 2.2.1.9. Hipoteza wymagana w tym wyniku to zgodność lokalizacji z operacjami monoidalnymi: iloczyn tensorowy dowolnego obiektu z morfizmem odwracanym przez lokalizację ma być ponownie odwracany. Dokładnie ten warunek sprawdziliśmy powyżej. W szczególności morfizm $X\otimes Z\to iLX\otimes iLZ$ indukowany przez obie jednostki należy do $W$: jest złożeniem $\eta_X\otimes\id_Z$ oraz $\id_{iLX}\otimes\eta_Z$, z których każdy należy do $W$. Stąd kanoniczne porównanie $L(X\otimes Z)\to L(iLX\otimes iLZ)$ jest równoważnością. Wzór na iloczyn wynika z silnej monoidalności $L$ i równoważności $LiY\simeq Y$; analogicznie dla jednostki. Sam wzór na obiekt iloczynu, bez twierdzenia o monoidalnej lokalizacji, nie zapewniałby koherencji wyższych rzędów.
+
+\begin{wniosek}[Prezentowalność i domkniętość kategorii lokalnej]\label{cat:cor:infty-monoidal-localization-closed}
+W warunkach twierdzenia~\ref{cat:thm:infty-monoidal-localization} kategoria $\mathcal D$ jest prezentowalna monoidalnie. Dla $Y,Z\in\mathcal D$ jej wewnętrzny obiekt odwzorowań jest dany przez
+\[
+ i[Y,Z]_{\mathcal D}\simeq [iY,iZ]_{\mathcal C}.
+\]
+\end{wniosek}
+\begin{proof}
+Prezentowalność $\mathcal D$ wynika z dostępności lokalizacji i charakterystyki w twierdzeniu~\ref{cat:thm:infty-bousfield-existence} wraz ze stwierdzeniem~\ref{cat:prop:infty-bousfield-small-generation}. Dla diagramu $(Z_j)$ w $\mathcal D$ i ustalonego $Y$ mamy
+\[
+ \varinjlim\nolimits_{\mathcal D} Z_j\simeq
+ L(\varinjlim\nolimits_{\mathcal C}iZ_j).
+\]
+Własność tę uzasadnia sprzężenie $L\dashv i$. Przez silną monoidalność $L$ oraz zachowywanie kogranic przez iloczyn w $\mathcal C$ otrzymujemy
+\[
+\begin{aligned}
+ Y\otimes_{\mathcal D}\varinjlim\nolimits_{\mathcal D}Z_j
+ &\simeq L(iY\otimes\varinjlim\nolimits_{\mathcal C}iZ_j)\\
+ &\simeq L(\varinjlim\nolimits_{\mathcal C}(iY\otimes iZ_j))\\
+ &\simeq \varinjlim\nolimits_{\mathcal D}(Y\otimes_{\mathcal D}Z_j).
+\end{aligned}
+\]
+Symetria daje zachowywanie kogranic w drugim argumencie. Kategoria $\mathcal D$ spełnia więc definicję~\ref{cat:def:infty-presentable-monoidal}. Obiekt $[iY,iZ]_{\mathcal C}$ jest lokalny przez stwierdzenie~\ref{cat:prop:infty-monoidal-localization-criterion}. Dla $T\in\mathcal D$ zachodzą równoważności
+\[
+\begin{aligned}
+ \operatorname{Map}_{\mathcal D}(T\otimes_{\mathcal D}Y,Z)
+ &\simeq\operatorname{Map}_{\mathcal C}(iT\otimes iY,iZ)\\
+ &\simeq\operatorname{Map}_{\mathcal C}(iT,[iY,iZ]_{\mathcal C}).
+\end{aligned}
+\]
+Pierwsza pochodzi z definicji lokalnego iloczynu i sprzężenia, druga z domkniętości $\mathcal C$. Pełna wierność $i$ i twierdzenie Yonedy dają wzór na wewnętrzny obiekt odwzorowań.
+\end{proof}
+
+\begin{stwierdzenie}[Prawy sprzężony i jednostka lokalizacji]\label{cat:prop:infty-monoidal-localization-idempotent}
+W warunkach twierdzenia~\ref{cat:thm:infty-monoidal-localization} funktor $i$ ma kanoniczną strukturę symetryczną monoidalną typu lax, a obiekt $E=i(\mathbb 1_{\mathcal D})$ ma strukturę algebry przemiennej w $\mathcal C$. Jeśli dodatkowo $\mathcal C$ jest stabilna, jej jednostka generuje ją lokalizująco, a lokalizacja jest dokładna i typu smashing, to $iLX\simeq X\otimes E$ i mnożenie $E\otimes E\to E$ jest równoważnością.
+\end{stwierdzenie}
+\begin{proof}
+Prawy sprzężony silnego funktora monoidalnego ma kanoniczną strukturę lax (wynik zewnętrzny: \emph{Higher Algebra}, \S7.3.2). Morfizmy strukturalne można opisać jawnie: $iY\otimes iZ\to i(Y\otimes_{\mathcal D} Z)$ jest sprzężony do
+\[
+ L(iY\otimes iZ)\simeq LiY\otimes_{\mathcal D} LiZ
+ \xrightarrow{\epsilon_Y\otimes\epsilon_Z}Y\otimes_{\mathcal D}Z,
+\]
+gdzie $\epsilon$ jest kojednostką. Morfizm jednostkowy jest $\eta_{\mathbb 1_{\mathcal C}}$ po identyfikacji $L(\mathbb 1_{\mathcal C})\simeq\mathbb 1_{\mathcal D}$. Ponieważ kojednostka jest równoważnością, morfizm binarny jest też morfizmem lokalizacji obiektu $iY\otimes iZ$; nie musi być równoważnością w $\mathcal C$. Wynik o sprzężeniach monoidalnych zapewnia ich pełne koherencje. Jednostka $\mathcal D$ ma kanoniczną strukturę algebry przemiennej (wszystkie jej iloczyny są identyfikowane z nią przez koherencję). Stwierdzenie~\ref{cat:prop:infty-algebra-change} przenosi tę strukturę przez $i$ na $E$.
+
+Przy dodatkowych założeniach twierdzenie~\ref{cat:thm:infty-bousfield-smashing-tensor} daje naturalną równoważność $iLX\simeq X\otimes E$, zgodną z jednostką, i równoważność $\id_E\otimes\eta_{\mathbb 1}:E\simeq E\otimes\mathbb 1\to E\otimes E$. Prawo jednostki otrzymanej algebry mówi, że złożenie tej ostatniej strzałki z mnożeniem $m:E\otimes E\to E$ jest homotopijne z $\id_E$. Ponieważ pierwsza strzałka jest równoważnością, $m$ jest jej odwrotnością z dokładnością do homotopii. W ten sposób uzupełniamy wynik z CAT-45 o koherentną strukturę przemiennej algebry idempotentnej.
+\end{proof}
+
+\begin{przyklad}[Odwrócenie liczby pierwszej]\label{cat:ex:infty-monoidal-localization-prime}
+W przykładzie~\ref{cat:ex:infty-bousfield-prime-inversion} rozważaliśmy lokalizację $\mathcal D_\infty(\mathbb Z)$ przez pochodny iloczyn tensorowy z $\mathbb Z[1/p]$. Jeśli $f$ jest odwracany przez ten funktor, to dla każdego $X$ mamy
+\[
+ (X\otimes^{\mathbf L}f)\otimes^{\mathbf L}\mathbb Z[1/p]
+ \simeq X\otimes^{\mathbf L}(f\otimes^{\mathbf L}\mathbb Z[1/p]),
+\]
+a prawa strona jest równoważnością przez funktorialność iloczynu tensorowego. Zatem lokalizacja jest monoidalna przez stwierdzenie~\ref{cat:prop:infty-monoidal-localization-criterion}. Jej algebra idempotentna to $\mathbb Z[1/p]$ z naturalnym mnożeniem. Pochodny iloczyn $\mathbb Z[1/p]\otimes^{\mathbf L}_{\mathbb Z}\mathbb Z[1/p]$ jest równoważny $\mathbb Z[1/p]$, ponieważ moduł $\mathbb Z[1/p]$ jest płaski, a zwykłe mnożenie lokalizacji jest izomorfizmem. Na mocy poprzedniego stwierdzenia ten konkretny izomorfizm jest częścią koherentnej struktury algebry przemiennej, a nie tylko izomorfizmem kompleksów.
+\end{przyklad}
+
+\subsection{Wolne algebry i homotopijne orbity}
+
+Niech $\mathcal C$ będzie prezentowalną symetryczną monoidalną $\infty$-kategorią w sensie definicji~\ref{cat:def:infty-presentable-monoidal}. Rozpatrujemy małe operady.
+
+\begin{definicja}[Homotopijne orbity i działanie przestrzeni]\label{cat:def:infty-homotopy-orbits}
+Dla małej grupy $G$ oznaczamy przez $BG$ nerw kategorii z jednym obiektem i grupą automorfizmów $G$. Działanie $G$ na obiekcie $X$ jest diagramem $BG\to\mathcal C$ wraz z identyfikacją jego wartości na jedynym obiekcie z $X$. Homotopijne orbity tego działania to kogranica
+\[
+ X_{hG}=\varinjlim_{BG}X.
+\]
+Dla małej przestrzeni $K$ i $X\in\mathcal C$ oznaczamy przez $K\odot X$ kogranicę stałego diagramu o wartości $X$, indeksowanego przez $K$ jako $\infty$-grupoid. Z własności uniwersalnej kogranicy otrzymujemy naturalną równoważność
+\[
+ \operatorname{Map}_{\mathcal C}(K\odot X,Y)
+ \simeq\operatorname{Map}_{\mathcal S}(K,\operatorname{Map}_{\mathcal C}(X,Y)).
+\]
+Istotnie, zastosowanie kontrawariantnego funktora przestrzeni odwzorowań do kogranicy definiującej $K\odot X$ daje granicę stałego diagramu o wartości $\operatorname{Map}_{\mathcal C}(X,Y)$ po $K^{\mathrm{op}}$. Dla dowolnej przestrzeni $Z$ taka granica jest równoważna $\operatorname{Map}_{\mathcal S}(K,Z)$, ponieważ $K^{\mathrm{op}}\simeq K$ jako grupoidy, a kogranica stałego diagramu punktu po grupoidzie odzyskuje jego typ homotopijny.
+\end{definicja}
+
+Jeśli $K$ jest dyskretna, $K\odot X$ jest koproduktem kopii $X$. Jeśli jest ściągalna, daje obiekt równoważny $X$. Symetria monoidalna wyznacza koherentne działanie $\mathfrak S_n$ na $X^{\otimes n}$. Jeżeli $P$ jest operadą symplicjalną o przestrzeniach operacji będących kompleksami Kana, na $P(n)\odot X^{\otimes n}$ używamy działania diagonalnego, w którym prawe działanie na operacjach przekształcamy w lewe przez odwrócenie permutacji. Przy konwencji lewego działania permutacji na argumentach oznacza to działanie $\sigma:(p,v)\mapsto(p\sigma^{-1},\sigma v)$, zapisane symbolicznie na operacji i liście argumentów. Relacja ekwiwariantności działania operady identyfikuje zastosowanie operacji $p\sigma^{-1}$ do listy $\sigma v$ z zastosowaniem $p$ do $v$. Zapis ten opisuje zgodność operacji; w $\mathcal C$ nie zakładamy istnienia elementów obiektów.
+
+\begin{twierdzenie}[Wolna algebra; wynik zewnętrzny]\label{cat:thm:infty-free-operad-algebra}
+Niech $\mathcal O^\otimes$ będzie nerwem operadowym małej jednobarwnej operady symplicjalnej $P$, której przestrzenie operacji są kompleksami Kana (definicja~\ref{cat:def:infty-simplicial-operadic-nerve}). Funktor zapominający $U:\operatorname{Alg}_{\mathcal O}(\mathcal C)\to\mathcal C$ ma lewego sprzężonego $F_{\mathcal O}$. Obiekt bazowy wolnej algebry jest dany naturalną równoważnością
+\begin{equation}\label{cat:eq:infty-free-operad-algebra}
+ UF_{\mathcal O}(X)\simeq
+ \coprod_{n\geq0}\bigl(P(n)\odot X^{\otimes n}\bigr)_{h\mathfrak S_n}.
+\end{equation}
+Składowa arności zero używa $X^{\otimes0}=\mathbb 1$. Jednostka sprzężenia pochodzi z jednostki operady w arności jeden. Własność uniwersalna jest równoważnością przestrzeni odwzorowań
+\[
+ \operatorname{Map}_{\operatorname{Alg}_{\mathcal O}(\mathcal C)}
+ (F_{\mathcal O}(X),A)
+ \simeq \operatorname{Map}_{\mathcal C}(X,UA).
+\]
+\end{twierdzenie}
+
+Korzystamy z teorii wolnych algebr konstruowanych jako operadowe rozszerzenia Kana (\emph{Higher Algebra}, \S3.1.3, w szczególności stwierdzenie 3.1.3.13). Opis indeksowania operacji prowadzi do koproduktu po arnościach i kogranic po grupoidach przenumerowań. Wyjaśnijmy mechanizm wzoru. Mnożenie monady wolnej algebry odpowiada podstawianiu operacji do operacji: dla zewnętrznej arności $r$ i wewnętrznych arności $n_1,\ldots,n_r$ podstawienie daje operację arności $\sum_i n_i$, a iloczyn wszystkich czynników $X$ jest identyfikowany z iloczynem tej arności przez koherencję monoidalną. Zachowywanie kogranic przez iloczyn tensorowy osobno pozwala rozszerzyć takie morfizmy na koprodukty, działania przestrzeni i homotopijne orbity. Aksjomaty operady zapewniają zgodność z przenumerowaniami i iterowanym podstawianiem. Dla morfizmu $g:X\to UA$ jego rozszerzenie na składnik arności $n$ pochodzi z działania $P(n)$ na $A$ po zastosowaniu $g^{\otimes n}$. Zgodność z przenumerowaniem umożliwia przejście do homotopijnych orbit. Twierdzenie o operadowym rozszerzeniu Kana zapewnia koherentną strukturę algebry i pełną własność uniwersalną, nie tylko konstrukcję rozszerzenia na klasach homotopii. W szczególności nie potrzeba założenia, że działania grup symetrycznych na $P(n)$ są swobodne: właśnie homotopijne orbity w~\eqref{cat:eq:infty-free-operad-algebra} uwzględniają stabilizatory i wyższe dane homotopijne.
+
+\begin{wniosek}[Algebra tensorowa i wyższa algebra symetryczna]\label{cat:cor:infty-free-ass-com}
+Dla algebr asocjatywnych i przemiennych wzór~\eqref{cat:eq:infty-free-operad-algebra} przyjmuje odpowiednio postać
+\[
+ \begin{aligned}
+ UF_{\mathrm{Ass}}(X)&\simeq\coprod_{n\geq0}X^{\otimes n},\\
+ UF_{\mathrm{Com}}(X)&\simeq\coprod_{n\geq0}(X^{\otimes n})_{h\mathfrak S_n}.
+ \end{aligned}
+\]
+W szczególności wyższą $n$-tą potęgą symetryczną jest $\operatorname{Sym}^n_\infty(X)=(X^{\otimes n})_{h\mathfrak S_n}$.
+\end{wniosek}
+\begin{proof}
+Przestrzeń operacji asocjatywnych arności $n$ jest dyskretnym zbiorem wszystkich liniowych porządków wejść, na którym $\mathfrak S_n$ działa swobodnie i przechodnio (przykład~\ref{cat:ex:infty-operad-com-ass}). Homotopijne orbity diagonalnego działania na koprodukcie indeksowanym przez taki torsor dają $X^{\otimes n}$: po wyborze jednego porządku diagram jest indukowany z diagramu na kategorii końcowej, a kogranica lewego rozszerzenia Kana jest kogranicą diagramu wyjściowego. Dla operady przemiennej $P(n)$ jest punktem, a więc $P(n)\odot X^{\otimes n}\simeq X^{\otimes n}$ z działaniem permutacji czynników. Otrzymujemy drugą formułę. Obejmuje to $n=0$, kiedy grupa jest trywialna.
+\end{proof}
+
+\begin{przyklad}[Potęgi symetryczne w kategorii pochodnej]\label{cat:ex:infty-free-sym-derived}
+W $\mathcal D_\infty(k)$ dla kompleksu $V$ ze ścisłym działaniem skończonej grupy $G$ homotopijne orbity reprezentuje pochodny iloczyn tensorowy $k\otimes_{k[G]}^{\mathbf L}V$, gdzie przy lewym działaniu na $V$ bierzemy trywialny prawy moduł $k$. Aby zobaczyć zgodność modeli, rozważmy diagram barowy z definicji~\ref{cat:def:infty-relative-tensor}, którego wyrazy mają postać $k\otimes_k k[G]^{\otimes q}\otimes_k V\cong\bigoplus_{G^q} V$. W zapisie $(g_1,\ldots,g_q;v)$ ściana początkowa usuwa $g_1$ (augmentacja), ściany wewnętrzne zastępują parę sąsiednich elementów ich iloczynem, a ściana końcowa zastępuje $v$ przez $g_qv$ i usuwa $g_q$. Degeneracje wstawiają element neutralny. Jest to standardowy symplicjalny model kogranicy działania (symplicjalne zastąpienie diagramu po $BG$). Po normalizacji i totalizacji za pomocą sum prostych otrzymujemy kompleks obliczający $k\otimes_{k[G]}^{\mathbf L}V$: standardowa rezolucja barowa trywialnego prawego modułu $k$ jest ograniczona z góry w stopniach kohomologicznych i składa się z modułów wolnych, więc jest $K$-płaska. To ostatnie zapewnia poprawność obliczenia także dla nieograniczonego $V$. Dla działania permutacji na zwykłym kompleksie tensorowym możemy użyć jego ścisłego modelu ze znakami Koszula. Otrzymujemy
+\[
+ \operatorname{Sym}^n_\infty(V)\simeq
+ k\otimes_{k[\mathfrak S_n]}^{\mathbf L}V^{\otimes n}.
+\]
+W charakterystyce zero lemat~\ref{cat:lem:infty-coinvariants-maschke} identyfikuje te obiekty ze zwykłymi potęgami symetrycznymi kompleksów. W charakterystyce dwa dla $V=k[0]$ działanie $\mathfrak S_2$ jest trywialne. Obliczenie w przykładzie~\ref{cat:ex:infty-positive-char-derived-orbits} daje $H^{-q}(\operatorname{Sym}^2_\infty(k))\cong k$ dla każdego $q\geq0$, podczas gdy zwykła druga potęga symetryczna $k$ jest skupiona w stopniu zero. Zatem już jeden składnik wolnej algebry wyższej może różnić się od odpowiedniego składnika klasycznej wolnej algebry DG.
+\end{przyklad}
+
+\subsection{Prezentowalność i monadyczność kategorii algebr}
+
+\begin{definicja}[Kategoria indeksująca typu sifted]\label{cat:def:infty-sifted}
+Małą $\infty$-kategorię $I$ nazywamy typu \emph{sifted}, jeśli jest niepusta i funktor diagonalny $I\to I\times I$ jest końcowy (w znaczeniu funktorów końcowych dla kogranic). Równoważnie kogranice po $I$ komutują ze skończonymi iloczynami przestrzeni. Dla tej równoważności, ściągalności typu homotopijnego $I$ oraz faktu, że kategorie filtrowane i $N(\Delta^{\mathrm{op}})$ są tego typu, korzystamy z \emph{Higher Topos Theory}, \S5.5.8.
+\end{definicja}
+
+\begin{lemat}[Iloczyny tensorowe diagramów indeksowanych tą samą kategorią]\label{cat:lem:infty-sifted-tensor}
+Jeśli $I$ jest typu sifted i $X^1,\ldots,X^n:I\to\mathcal C$ są diagramami, to
+\[
+ \varinjlim_{i\in I}\bigotimes_{j=1}^n X^j_i
+ \simeq\bigotimes_{j=1}^n\varinjlim_{i\in I}X^j_i.
+\]
+\end{lemat}
+\begin{proof}
+Dla $n\geq1$ zachowywanie kogranic w każdej zmiennej identyfikuje prawą stronę z kogranicą diagramu $(i_1,\ldots,i_n)\mapsto\bigotimes_j X^j_{i_j}$ po $I^n$. Końcowość wszystkich dodatnich skończonych diagonali $I\to I^n$ wynika przez iterowanie diagonali podwójnej i zachowywanie końcowości przez produkty i składanie. Końcowość identyfikuje tę kogranicę z lewą stroną, a porównanie jest kanoniczne i naturalne w diagramach. Dla $n=0$ lewa strona jest kogranicą stałego diagramu jednostki. Taka kogranica jest równoważna $|I|\odot\mathbb 1$, gdzie $|I|$ jest lokalizacją względem wszystkich morfizmów, czyli typem homotopijnym $I$: po zastosowaniu przestrzeni odwzorowań do dowolnego obiektu oba wyrażenia dają granicę stałego diagramu przestrzeni. Ponieważ $I$ jest typu sifted, $|I|$ jest ściągalna, więc $|I|\odot\mathbb 1\simeq\mathbb 1$ przez definicję~\ref{cat:def:infty-homotopy-orbits}.
+\end{proof}
+
+\begin{twierdzenie}[Granice, kogranice i prezentowalność algebr; wynik zewnętrzny]\label{cat:thm:infty-algebra-presentability}
+Dla małej jednobarwnej $\infty$-operady $\mathcal O$ oraz prezentowalnej symetrycznej monoidalnej $\infty$-kategorii $\mathcal C$ kategoria $\operatorname{Alg}_{\mathcal O}(\mathcal C)$ jest prezentowalna. Funktor zapominający tworzy małe granice oraz kogranice indeksowane kategoriami typu sifted i jest konserwatywny. W szczególności tworzy kogranice filtrowane i realizacje geometryczne. Dla operad wielobarwnych analogiczne twierdzenie o granicach i kogranicach dotyczy obliczania ich na wszystkich barwach.
+\end{twierdzenie}
+
+Źródło: J.~Lurie, \emph{Higher Algebra}, \S3.2.2--3.2.3, w szczególności stwierdzenie 3.2.3.1 dla kogranic typu sifted. Wyjaśnijmy warunek o kogranicach. Dla diagramu algebr $A_i$ i obiektu bazowego $A=\varinjlim_i UA_i$ lemat~\ref{cat:lem:infty-sifted-tensor} pozwala przenieść $n$-argumentowe operacje na $A$, gdyż $A^{\otimes n}$ jest kogranicą $(UA_i)^{\otimes n}$ po tej samej kategorii. Dla granicy $A=\varprojlim_i UA_i$ morfizmy z $A^{\otimes n}$ do $(UA_i)^{\otimes n}$ i następnie do $UA_i$ dają morfizm do granicy. Pełne twierdzenie operadowe zapewnia koherencje i własności uniwersalne tych konstrukcji. Konserwatywność wynika również bezpośrednio ze stwierdzenia~\ref{cat:prop:infty-algebra-equivalences}. Nie twierdzimy, że funktor zapominający tworzy wszystkie kogranice: już w prezentowalnej kartezjańskiej monoidalnej kategorii przestrzeni koprodukt dwóch początkowych algebr asocjatywnych jest algebrą początkową, której przestrzeń bazowa jest punktem (wolna algebra asocjatywna na przestrzeni pustej, przez wniosek~\ref{cat:cor:infty-free-ass-com}). Koprodukt dwóch punktów w przestrzeniach ma natomiast dwie składowe spójne.
+
+\begin{definicja}[Monada w $\infty$-kategorii]\label{cat:def:infty-monad}
+Monada na $\mathcal C$ jest algebrą asocjatywną w monoidalnej $\infty$-kategorii $\operatorname{Fun}(\mathcal C,\mathcal C)$ z iloczynem danym przez składanie. Zawiera więc endofunktor $T$, jednostkę $\id\to T$ i mnożenie $TT\to T$, razem z wyższymi koherencjami. Jej kategorią algebr Eilenberga--Moore'a jest kategoria lewych modułów nad $T$ dla działania endofunktorów na $\mathcal C$ przez ewaluację. Dla sprzężenia $F:\mathcal C\rightleftarrows\mathcal D:U$ z jednostką $\eta$ i kojednostką $\epsilon$ monada $UF$ ma mnożenie
+\[
+ UFUF\xrightarrow{U\epsilon F}UF
+\]
+i jednostkę $\eta$. Funktor porównawczy przypisuje obiektowi $D\in\mathcal D$ obiekt $UD$ z działaniem $UFUD\xrightarrow{U\epsilon_D}UD$. Koherencje pochodzą z koherentnego sprzężenia, a nie tylko z dwóch tożsamości trójkątnych w kategorii homotopii. Sprzężenie nazywamy monadycznym, gdy funktor ten jest równoważnością.
+\end{definicja}
+
+Jest to wyższy odpowiednik konstrukcji z rozdziału~\ref{cat:sec:monadicity}. Korzystamy z teorii monad i modułów dla działania monoidalnego z \emph{Higher Algebra}, \S4.7.3; zapis poprzez moduły nie oznacza, że $\mathcal C$ sama musi posiadać strukturę monoidalną.
+
+\begin{twierdzenie}[Twierdzenie Barra--Becka--Luriego; wynik zewnętrzny]\label{cat:thm:infty-barr-beck}
+Niech $F:\mathcal C\rightleftarrows\mathcal D:U$ będzie sprzężeniem. Jeśli $U$ jest konserwatywny, a każdy obiekt symplicjalny w $\mathcal D$, którego obraz przez $U$ dopuszcza rozszczepione rozszerzenie augmentowane, ma realizację zachowywaną przez $U$, to sprzężenie jest monadyczne. W szczególności wystarcza istnienie wszystkich realizacji w obu kategoriach i zachowywanie ich przez $U$.
+\end{twierdzenie}
+
+Źródło: \emph{Higher Algebra}, twierdzenie 4.7.3.5. Rozszczepienie oznacza koherentne dodatkowe degeneracje, podobnie jak w dowodzie stwierdzenia~\ref{cat:prop:infty-relative-tensor-unit}. To założenie zastępuje klasyczny warunek dotyczący rozszczepionych koequalizatorów z twierdzenia~\ref{cat:thm:beck-monadicity}; w wyższej kategorii sam koequalizator dwóch strzałek nie zawiera pełnych danych potrzebnych do rekonstrukcji algebry.
+
+\begin{wniosek}[Monadyczność wolnych algebr]\label{cat:cor:infty-free-algebra-monadic}
+W warunkach twierdzenia~\ref{cat:thm:infty-free-operad-algebra} sprzężenie $F_{\mathcal O}\dashv U$ jest monadyczne. Jego monada ma endofunktor dany wzorem~\eqref{cat:eq:infty-free-operad-algebra}, jednostkę pochodzącą z operady oraz mnożenie pochodzące z podstawień.
+\end{wniosek}
+\begin{proof}
+Istnienie sprzężenia daje twierdzenie~\ref{cat:thm:infty-free-operad-algebra}. Konserwatywność $U$ oraz istnienie i zachowywanie realizacji wynikają z twierdzenia~\ref{cat:thm:infty-algebra-presentability}. Stosujemy twierdzenie~\ref{cat:thm:infty-barr-beck}. Opis mnożenia wynika z interpretacji kojednostki $F_{\mathcal O}UA\to A$ jako działania operacji na $A$: dla $A=F_{\mathcal O}(X)$ oznacza to podstawienie operacji w operację zewnętrzną. Koherencja jest koherencją monady sprzężenia.
+\end{proof}
+
+\subsection{Wolne moduły i monadyczność}
+
+\begin{twierdzenie}[Kategoria modułów; wynik zewnętrzny]\label{cat:thm:infty-free-module}
+Dla algebry asocjatywnej $A$ w prezentowalnej symetrycznej monoidalnej $\infty$-kategorii $\mathcal C$ kategoria $\operatorname{LMod}_A(\mathcal C)$ jest prezentowalna. Funktor zapominający $U_A$ tworzy małe granice i kogranice oraz ma lewego sprzężonego $X\mapsto A\otimes X$, z działaniem danym przez mnożenie $A$. Zachodzi
+\[
+ \operatorname{Map}_{\operatorname{LMod}_A(\mathcal C)}
+ (A\otimes X,M)\simeq\operatorname{Map}_{\mathcal C}(X,U_AM).
+\]
+\end{twierdzenie}
+
+Korzystamy z \emph{Higher Algebra}, \S4.2.3--4.2.4 (granice, kogranice i wolne moduły). Morfizm do $M$ odpowiada morfizmowi $g:X\to U_AM$ przez rozszerzenie $\ell_M(\id_A\otimes g)$, a ograniczenie używa jednostki $\mathbb 1\to A$. Pełna własność uniwersalna dotyczy przestrzeni odwzorowań, a nie tylko ich składowych. W przeciwieństwie do ogólnych operacji algebraicznych działanie ustalonej algebry jest jednoargumentowe względem zmiennego modułu. Dlatego $A\otimes-$ zachowuje wszystkie małe kogranice, nie tylko kogranice typu sifted, i tworzenie kogranic przez $U_A$ nie wymaga warunku końcowości diagonali.
+
+\begin{wniosek}[Monadyczność i zwartość wolnych modułów]\label{cat:cor:infty-module-monadic}
+Sprzężenie wolnego i zapominającego funktora modułów jest monadyczne, z monadą $A\otimes-$. Jeżeli $X$ jest $\kappa$-zwarty w $\mathcal C$, to wolny moduł $A\otimes X$ jest $\kappa$-zwarty w $\operatorname{LMod}_A(\mathcal C)$. Jeżeli rodzina $\mathcal G$ wykrywa równoważności przez przestrzenie $\operatorname{Map}_{\mathcal C}(G,-)$, to wolne moduły $A\otimes G$ dla $G\in\mathcal G$ wykrywają równoważności modułów.
+\end{wniosek}
+\begin{proof}
+Funktor $U_A$ jest konserwatywny przez kryterium równoważności algebr zastosowane do operady $\mathrm{LM}$ przy ustalonej algebrze $A$. Twierdzenie~\ref{cat:thm:infty-free-module} zapewnia pozostałe założenia twierdzenia~\ref{cat:thm:infty-barr-beck}. Monada jest złożeniem wolnego i zapominającego funktora, a jej mnożenie jest indukowane przez mnożenie $A$. Dla małego $\kappa$-filtrowanego diagramu modułów $M_i$ mamy
+\[
+\begin{aligned}
+ \operatorname{Map}_{\operatorname{LMod}_A}(A\otimes X,\varinjlim_i M_i)
+ &\simeq \operatorname{Map}_{\mathcal C}(X,\varinjlim_i U_AM_i)\\
+ &\simeq\varinjlim_i\operatorname{Map}_{\mathcal C}(X,U_AM_i)\\
+ &\simeq\varinjlim_i\operatorname{Map}_{\operatorname{LMod}_A}(A\otimes X,M_i).
+\end{aligned}
+\]
+Pierwsza równoważność używa tworzenia kogranic i sprzężenia, druga zwartości $X$, a trzecia sprzężenia. Dla morfizmu modułów $f$ równoważności $\operatorname{Map}(A\otimes G,f)$ są przez sprzężenie równoważnościami $\operatorname{Map}(G,U_Af)$. Założenie o $\mathcal G$ daje równoważność $U_Af$, a konserwatywność daje równoważność $f$.
+\end{proof}
+
+\subsection{Przykłady przekrojowe}
+
+\begin{przyklad}[Wolna algebra przemienna na punkcie w przestrzeniach]\label{cat:ex:infty-free-comm-point}
+W prezentowalnej kartezjańskiej monoidalnej $\infty$-kategorii $\mathcal S$ wolna algebra przemienna na przestrzeni jednopunktowej ma obiekt bazowy
+\[
+ UF_{\mathrm{Com}}(*)\simeq\coprod_{n\geq0}B\mathfrak S_n.
+\]
+Rzeczywiście, każda potęga kartezjańska punktu jest punktem, a jego homotopijne orbity względem grupy $G$ są przestrzenią $BG$: kogranica stałego diagramu punktu po grupoidzie $BG$ odzyskuje ten grupoid jako przestrzeń. Stosujemy wniosek~\ref{cat:cor:infty-free-ass-com}. Składowa $n=2$ ma nietrywialną grupę podstawową $\mathfrak S_2$, ponieważ $BG$ jest nerwem grupoidu o jednej klasie obiektów i automorfizmach $G$. Tymczasem zwykły wolny monoid przemienny na jednym generatorze, traktowany jako przestrzeń dyskretna, ma po jednej składowej punktowej dla każdego $n\geq0$. Obie konstrukcje mają ten sam monoid składowych spójnych $\mathbb N$, ale różne przestrzenie bazowe. Mnożenie wolnej algebry wyższej na składowych $n,m$ jest indukowane przez homomorfizm blokowy $\mathfrak S_n\times\mathfrak S_m\to\mathfrak S_{n+m}$: odpowiada on zestawieniu dwóch rodzin wejść. Zgodność kolejnych zestawień jest zakodowana przez podstawienia w operadzie przemiennej.
+\end{przyklad}
+
+\begin{przyklad}[Stabilność kategorii modułów]\label{cat:ex:infty-stable-module-category}
+Niech $\mathcal C$ będzie stabilną prezentowalną symetryczną monoidalną $\infty$-kategorią, a $A$ jej algebrą asocjatywną. Wtedy $\operatorname{LMod}_A(\mathcal C)$ jest stabilna. Istotnie, przez twierdzenie~\ref{cat:thm:infty-free-module} ma małe granice i kogranice, obiekty początkowy i końcowy mają jako obiekt bazowy obiekt zerowy $\mathcal C$, a kanoniczny morfizm między nimi jest równoważnością przez konserwatywność funktora zapominającego. Kwadrat modułów jest kartezjański lub kokartezjański dokładnie wtedy, gdy jest taki po zapomnieniu działania: funktor zapominający tworzy odpowiednią granicę lub kogranicę, a równoważność obiektu porównawczego wykrywa konserwatywność. Ponieważ w $\mathcal C$ obie własności kwadratu są równoważne, otrzymujemy stabilność z definicji~\ref{cat:def:stable-infty-category}.
+
+Jeżeli dodatkowo jednostka $\mathbb 1$ jest zwarta i generuje $\mathcal C$ lokalizująco, to regularny lewy moduł $A$ jest zwarty i generuje kategorię modułów lokalizująco. Zwartość wynika z wniosku~\ref{cat:cor:infty-module-monadic} dla $\kappa=\aleph_0$, ponieważ $A\simeq A\otimes\mathbb 1$. Aby uzasadnić generowanie, niech $\mathcal L$ będzie najmniejszą pełną stabilną podkategorią domkniętą na małe kogranice i zawierającą $A$. Wolny funktor $F_A$ jest lewym sprzężonym, więc zachowuje kogranice i jest dokładny (wniosek~\ref{cat:cor:stable-adjoint-exact}). Podkategoria obiektów $X$ takich, że $F_A(X)\in\mathcal L$, jest stabilna, domknięta na kogranice i zawiera $\mathbb 1$. Jest zatem całą $\mathcal C$. Każdy moduł $M$ jest realizacją augmentowanej rezolucji barowej sprzężenia wolnego i zapominającego funktora, o wyrazach $(F_AU_A)^{q+1}M$. Po zastosowaniu $U_A$ rezolucja ma wyrazy $T^{q+1}X$, gdzie $T=U_AF_A$ i $X=U_AM$. Ściany dla $0\leq i<q$ stosują mnożenie monady do pary sąsiednich wystąpień $T$, ostatnia ściana stosuje działanie $TX\to X$ w najbardziej wewnętrznym argumencie; degeneracje wstawiają jednostkę monady. Dodatkowa degeneracja początkowa ma postać $\eta_{T^{q+1}X}:T^{q+1}X\to T^{q+2}X$, a w stopniu $-1$ jest to $\eta_X$. Pierwsza ściana po dodatkowej degeneracji daje identyczność przez prawo jednostki monady (w stopniu $-1$ przez prawo jednostki działania). Pozostałe relacje wynikają z naturalności jednostki i jej zgodności z działaniem. Koherentne rozszerzenie o te degeneracje jest częścią konstrukcji monadycznej rezolucji z \emph{Higher Algebra}, \S4.7.3; stąd rozszczepienie po zastosowaniu $U_A$. Tworzenie realizacji i konserwatywność $U_A$ pokazują, że augmentacja realizacji do $M$ jest równoważnością. Wszystkie wyrazy rezolucji są wolnymi modułami, a więc należą do $\mathcal L$. Domkniętość na realizacje daje $M\in\mathcal L$. To dowodzi generowania.
+
+W przypadku $\mathcal C=\mathcal D_\infty(k)$ i algebry DG $A$ otrzymujemy w ten sposób wyższy odpowiednik generowania przez regularny moduł w teorii DG z rozdziału~\ref{cat:sec:dg-a-infty}. Porównanie modeli modułów DG z modułami operadowymi wymaga twierdzenia rektyfikacyjnego dla modułów (Hinich, \emph{Rectification of Algebras and Modules}); nie wynika tylko z porównania kategorii homotopii.
+\end{przyklad}
+
+\begin{stwierdzenie}[Moduły nad idempotentną algebrą]\label{cat:prop:infty-idempotent-algebra-modules}
+Niech $E$ będzie algebrą przemienną w prezentowalnej symetrycznej monoidalnej $\infty$-kategorii $\mathcal C$, której mnożenie $E\otimes E\to E$ jest równoważnością. Wtedy funktor zapominający $\operatorname{LMod}_E(\mathcal C)\to\mathcal C$ jest pełny i wierny, a jego istotny obraz składa się dokładnie z obiektów $X$, dla których morfizm jednostkowy
+\[
+ X\simeq\mathbb 1\otimes X\xrightarrow{e\otimes\id_X}E\otimes X
+\]
+jest równoważnością. Funktor $E\otimes-$ jest refleksją na tę podkategorię.
+\end{stwierdzenie}
+\begin{proof}
+Przez wniosek~\ref{cat:cor:infty-module-monadic} monadą sprzężenia wolnego i zapominającego funktora jest $T=E\otimes-$, z mnożeniem $\mu_X:T^2X\to TX$ indukowanym przez mnożenie $E$. Mnożenie monady jest równoważnością. Prawa jednostki monady dają, z dokładnością do homotopii,
+\[
+ T\eta_X\simeq\eta_{TX}\simeq\mu_X^{-1}.
+\]
+Dla algebry monady o działaniu $a:TX\to X$ mamy $a\eta_X\simeq\id_X$. Po zastosowaniu $T$ wynika stąd $Ta\simeq(T\eta_X)^{-1}\simeq\mu_X$. Naturalność jednostki daje
+\[
+ \eta_Xa\simeq Ta\,\eta_{TX}\simeq\mu_X\mu_X^{-1}\simeq\id_{TX}.
+\]
+Zatem $\eta_X$ i $a$ są wzajemnie odwrotnymi równoważnościami. W szczególności działanie każdego modułu $E$ jest równoważnością.
+
+Kojednostka sprzężenia $F_EU_E M\to M$ ma na obiektach bazowych właśnie działanie $a$, jest więc równoważnością przez konserwatywność $U_E$. Dla modułów $M,N$ sprzężenie i równoważność kojednostki dają naturalne równoważności $\operatorname{Map}_{\operatorname{LMod}_E}(M,N)\simeq\operatorname{Map}_{\operatorname{LMod}_E}(F_EU_EM,N)\simeq\operatorname{Map}_{\mathcal C}(U_EM,U_EN)$. Ich złożenie jest działaniem $U_E$ na przestrzeniach odwzorowań przez tożsamość trójkątną, a więc $U_E$ jest pełny i wierny. Jeżeli $\eta_X$ jest równoważnością, obiekt $X$ jest równoważny obiektowi bazowemu wolnego modułu $F_E X$. Odwrotnie, dla każdego obiektu w istotnym obrazie wykazaliśmy równoważność $\eta_X$. Sprzężenie i pełna wierność identyfikują $T$ z refleksją na ten obraz.
+\end{proof}
+
+W szczególności dla lokalizacji typu smashing spełniającej hipotezy stwierdzenia~\ref{cat:prop:infty-monoidal-localization-idempotent} kategoria lokalna jest równoważna kategorii modułów nad $E=iL(\mathbb 1)$: obie są pełnymi podkategoriami $\mathcal C$ o tych samych obiektach lokalnych, ponieważ jednostka lokalizacji odpowiada jednostce $E\otimes-$. Jest to konkretne połączenie teorii prezentowalności i lokalizacji z teorią algebr i modułów wyższych. Nie zakładamy tego opisu dla dowolnej lokalizacji refleksyjnej.
+
+\begin{uwaga}[Powiązania i zakres rozdziału]\label{cat:rem:infty-monoidal-scope}
+Rozdział łączy klasyczną teorię kategorii monoidalnych i operad (rozdziały~\ref{cat:sec:monoidal}, \ref{cat:sec:coherence}, \ref{cat:sec:operads}) z teorią fibracji kokartezjańskich, algebr wyższych, modeli DG i $A_\infty$ oraz prezentowalności. W szczególności konstrukcja barowa rozszerza rachunek pochodnych bimodułów z rozdziału~\ref{cat:sec:derived-localization-morita}, a algebry idempotentne uzupełniają opis lokalizacji z rozdziału~\ref{cat:sec:presentable-infty-bousfield}. Twierdzenia o prostowaniu, rektyfikacji, addytywności Dunna i operadowych rozszerzeniach Kana pozostają wynikami zewnętrznymi. Nie utożsamiamy danych w kategorii homotopii z pełną strukturą koherentną. Teoria wyższych toposów i snopów oraz dalsze zagadnienia dotyczące kategorii tensorowych wymagają osobnego rozwinięcia.
+\end{uwaga}

@@ -1,0 +1,73 @@
+name: Algebraic geometry global book and legacy monolith audit
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/algebraic_geometry/**'
+      - 'shared/pl/rozdmuchanie_punktu_normalna.tex'
+      - 'shared/pl/rozdmuchanie_punktu_kohomologia.tex'
+      - 'shared/pl/slabe_twierdzenie_lefschetza.tex'
+      - 'sources/pl/geometria_algebraiczna(1).tex'
+      - 'books/pl/algebraic_geometry.tex'
+      - 'tools/tests/test_algebraic_geometry_*.py'
+      - '.github/workflows/algebraic-geometry-global-audit.yml'
+  workflow_dispatch:
+
+jobs:
+  global-algebraic-geometry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify the Polish terminology policy
+        run: python3 tools/normalize_polish_terminology.py --check
+      - name: Run all ALG chapter regressions and global sync checks
+        run: python3 -m unittest discover -s tools/tests -p 'test_algebraic_geometry_*.py' -v
+      - name: Prepare legacy monolith driver
+        run: cp 'sources/pl/geometria_algebraiczna(1).tex' books/pl/algebraic_geometry_monolith_audit.tex
+      - name: Compile canonical modular book
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: algebraic_geometry.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Compile legacy monolith independently
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: algebraic_geometry_monolith_audit.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Verify both PDFs and logs
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          for name in ('algebraic_geometry', 'algebraic_geometry_monolith_audit'):
+              root = Path('books/pl') / name
+              pdf, log = root.with_suffix('.pdf'), root.with_suffix('.log')
+              assert pdf.is_file() and pdf.stat().st_size > 10000, pdf
+              assert log.is_file(), log
+              s = log.read_text(encoding='utf-8', errors='replace')
+              for pattern in (
+                  r'LaTeX Warning: Reference .* undefined',
+                  r'LaTeX Warning: Citation .* undefined',
+                  r'There were undefined references',
+                  r'Rerun to get cross-references right',
+                  r'(?m)^! ',
+              ):
+                  assert not re.search(pattern, s), (name, pattern)
+              print(f'{name}: {pdf.stat().st_size} bytes, reference check PASS')
+          PY
+      - name: Archive both PDFs and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: algebraic-geometry-global-audit
+          path: |
+            books/pl/algebraic_geometry.pdf
+            books/pl/algebraic_geometry.log
+            books/pl/algebraic_geometry_monolith_audit.pdf
+            books/pl/algebraic_geometry_monolith_audit.log
+          if-no-files-found: warn

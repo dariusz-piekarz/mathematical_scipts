@@ -1,0 +1,504 @@
+\setcounter{section}{31}
+\section{Rozkład Calderóna--Zygmunda i interpolacja}
+\label{sec:dt-calderon-zygmund}
+\providecommand{\atlasref}[2]{#2}
+Por. \atlasref{PDE-16::lem:pde16-cz-decomp}{RRC-16: rozkład Calderóna--Zygmunda}
+oraz \atlasref{ME-25::cor:cubes-differentiation-25}{ME-25: różniczkowanie po kostkach}.
+\subsection{Aproksymacja w przestrzeniach Lebesgue'a}
+
+\begin{twierdzenie}[Gęstość funkcji testowych]
+\label{thm:dt-test-density}
+Dla $1\le p<\infty$ funkcje $C_c^\infty(\R^d)$
+są gęste w $L^p(\R^d)$.
+\end{twierdzenie}
+\begin{proof}
+Obcięcie funkcji do kuli i do ograniczonych wartości
+zbiega do niej w $L^p$ przez zbieżność zmajoryzowaną.
+Na zbiorze skończonej miary ograniczoną funkcję
+można aproksymować jednostajnie funkcjami prostymi
+(oddzielnie część rzeczywistą i urojoną).
+Dla mierzalnego ograniczonego zbioru $E$ regularność
+miary Lebesgue'a daje zwarty $F\subset E$ oraz
+ograniczony otwarty $O\supset E$ z
+$\lambda_d(O\setminus F)<\eta$ dla dowolnego $\eta>0$.
+Gdy $F\ne\varnothing$, wybieramy $r>0$ z
+$2r<\operatorname{dist}(F,\R^d\setminus O)$.
+Niech $\rho$ będzie nieujemną gładką funkcją o nośniku
+w $B(0,r/2)$ i całce $1$. Funkcja
+$\psi=\chi_{\{x:\operatorname{dist}(x,F)<r\}}*\rho$
+jest gładka na mocy twierdzenia \ref{thm:smoothing21},
+ma wartości w $[0,1]$, jest równa $1$ na $F$
+i ma zwarty nośnik w $O$. Gdy $F=\varnothing$,
+bierzemy $\psi=0$. W obu przypadkach
+$\|\chi_E-\psi\|_p^p\le\lambda_d(O\setminus F)<\eta$.
+Aproksymując każdy składnik funkcji prostej i używając
+nierówności trójkąta, otrzymujemy tezę.
+\end{proof}
+
+\begin{twierdzenie}[Aproksymacja jedności w $L^p$]
+\label{thm:dt-approx-lp}
+Niech $1\le p<\infty$, $f\in L^p(\R^d)$ i niech
+$\rho_\varepsilon$ będzie standardową aproksymacją
+jedności z definicji \ref{def:mollifier21}.
+Wtedy $\|f*\rho_\varepsilon-f\|_p\to0$.
+Jeżeli $f$ ma zwarty nośnik, to $f*\rho_\varepsilon$
+jest funkcją testową.
+\end{twierdzenie}
+\begin{proof}
+Najpierw dla $v\in C_c^\infty$ mamy
+$\|v(\cdot-y)-v\|_p\to0$ przy $y\to0$:
+dla $|y|\le1$ różnica ma nośnik w jednym zbiorze
+zwartym, a jednostajna ciągłość daje zbieżność
+jednostajną. Dla dowolnego $f\in L^p$
+i takiej funkcji $v$ nierówność trójkąta
+oraz niezmienniczość normy względem translacji dają
+\[
+ \|f(\cdot-y)-f\|_p\le2\|f-v\|_p+\|v(\cdot-y)-v\|_p.
+\]
+Gęstość z twierdzenia \ref{thm:dt-test-density}
+dowodzi ciągłości translacji w normie $L^p$.
+Nierówność Jensena dla probabilistycznej miary
+$\rho_\varepsilon(y)\,\mathrm d\lambda_d(y)$
+i twierdzenie Tonellego dają
+\[
+ \|f*\rho_\varepsilon-f\|_p^p
+ \le \int_{\R^d}\rho_\varepsilon(y)
+            \|f(\cdot-y)-f\|_p^p\,\mathrm d\lambda_d(y)
+ \le\sup_{|y|\le\varepsilon}\|f(\cdot-y)-f\|_p^p.
+\]
+Lewa strona jest dobrze określona: zastosowanie
+Jensena i Tonellego do modułu $f(\cdot-y)$
+pokazuje, że splot istnieje prawie wszędzie
+i należy do $L^p$. Ostatnie supremum dąży do zera
+przez ciągłość translacji w zerze.
+W przypadku zwartego nośnika gładkość i zwartość
+nośnika splotu wynikają z twierdzenia
+\ref{thm:smoothing21}.
+\end{proof}
+
+\subsection{Rozkład dyadyczny}
+\begin{lemat}[Rozkład Calderóna--Zygmunda]
+\label{lem:dt-cz-cz-decomp}
+Niech $f\in L^1(\R^d)\cap L^2(\R^d)$ i $s>0$. Istnieje
+co najwyżej przeliczalna rodzina parami rozłącznych półotwartych
+kostek dyadycznych $Q_k$ oraz rozkład $f=g+\sum_k b_k$
+zbieżny w $L^1$ i $L^2$, taki że
+\begin{enumerate}[label=(\roman*)]
+\item $|g|\le 2^ds$ prawie wszędzie i $\|g\|_1\le\|f\|_1$;
+\item $b_k=0$ prawie wszędzie poza $Q_k$,
+ $\int_{Q_k} b_k\,\mathrm d\lambda_d=0$,
+ $\sum_k\|b_k\|_1\le2\|f\|_1$;
+\item $\sum_k|Q_k|\le s^{-1}\|f\|_1$ oraz
+ $\|g\|_2^2\le 2^ds\|f\|_1$.
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+Ustalamy siatkę kostek $2^m(k+[0,1)^d)$,
+gdzie $m\in\mathbb Z$, $k\in\mathbb Z^d$.
+Dwie kostki z tej siatki są rozłączne lub jedna
+zawiera się w drugiej. Każda ma jedynego rodzica
+o dwukrotnie większym boku. Dla $w\in L^1$
+i $s>0$ nazywamy kostkę złą, jeśli średnia $|w|$
+na niej przekracza $s$. Każda zła kostka zawiera
+się w maksymalnej złej kostce: w łańcuchu rodziców
+objętości rosną do nieskończoności, a średnie
+nie przekraczają $\|w\|_1/|Q|$, więc tylko skończenie
+wiele z nich może być złych. Maksymalne złe kostki
+są parami rozłączne. Oznaczając przez $M_{\mathrm{dy}}w(x)$
+supremum średnich $|w|$ po kostkach dyadycznych
+zawierających $x$, dostajemy
+\[
+ \lambda_d(\{M_{\mathrm{dy}}w>s\})
+ =\sum_{Q\ \mathrm{maks.}}|Q|
+ \le s^{-1}\sum_{Q\ \mathrm{maks.}}\int_Q|w|\,\mathrm d\lambda_d
+ \le s^{-1}\|w\|_1.
+\]
+Supremum jest mierzalne, gdyż siatka jest przeliczalna.
+
+Uzasadnijmy także różniczkowanie całek po tych kostkach.
+Niech $Q_n(x)$ oznacza jedyną kostkę o boku $2^{-n}$
+zawierającą $x$ i $A_n w(x)$ średnią $w$ na $Q_n(x)$.
+Dla $v\in C_c^\infty(\R^d)$ mamy $A_nv(x)\to v(x)$
+w każdym punkcie przez ciągłość i średnicę kostki dążącą
+do zera. Dla dowolnego $w\in L^1$ wybieramy
+mierzalnego reprezentanta; zachodzi prawie wszędzie
+\[
+ \limsup_n |A_nw(x)-w(x)|
+ \le M_{\mathrm{dy}}(w-v)(x)+|w(x)-v(x)|.
+\]
+Miara zbioru, gdzie lewa strona przekracza $\tau>0$,
+jest więc ograniczona przez $4\|w-v\|_1/\tau$,
+na mocy powyższej nierówności i nierówności Czebyszewa.
+Z gęstości $C_c^\infty$ w $L^1$
+(twierdzenie~\ref{thm:dt-test-density}) miara ta wynosi zero.
+Biorąc $\tau=1/l$ dla $l\in\N$, otrzymujemy
+$A_nw\to w$ prawie wszędzie.
+
+Wracamy do $w=f$ i oznaczamy maksymalne złe kostki
+przez $Q_k$. Ich rodzice nie są źli, więc
+\[
+ s<\frac1{|Q_k|}\int_{Q_k}|f|\,\mathrm d\lambda_d
+ \le 2^ds.
+\]
+Poza sumą tych kostek wszystkie średnie $|f|$ są
+nie większe niż $s$; zastosowane do $|f|$ różniczkowanie
+daje $|f|\le s$ prawie wszędzie. Kładziemy
+$g=f$ poza kostkami oraz $g=f_{Q_k}$ na $Q_k$, gdzie
+$f_{Q_k}=|Q_k|^{-1}\int_{Q_k}f\,\mathrm d\lambda_d$,
+a $b_k=(f-f_{Q_k})\chi_{Q_k}$.
+Z definicji średniej wynika zerowa całka $b_k$.
+Ponadto $|f_{Q_k}|\le 2^ds$ i
+\[
+ \|g\|_1
+ \le\int_{\R^d\setminus\bigcup_k Q_k}|f|\,\mathrm d\lambda_d
+    +\sum_k\int_{Q_k}|f|\,\mathrm d\lambda_d
+ =\|f\|_1,\qquad
+ \|b_k\|_1\le2\int_{Q_k}|f|\,\mathrm d\lambda_d.
+\]
+Otrzymujemy $\|g\|_2^2\le2^ds\|f\|_1$ oraz
+oszacowanie sumy norm $b_k$. Oszacowanie objętości
+wynika z nierówności dla $M_{\mathrm{dy}}f$.
+Każdy $b_k$ należy do $L^2$, a punktowo prawie wszędzie
+$\sum_k b_k=f-g$, przy czym w każdym punkcie co najwyżej
+jeden składnik jest niezerowy.
+Dla $q=1,2$ z rozłączności i twierdzenia Tonellego
+\[
+ \sum_k\|b_k\|_q^q=\|f-g\|_q^q<\infty .
+\]
+Potęga $q$ normy ogona jest sumą odpowiednich potęg
+norm, więc szeregi zbiegają w obu przestrzeniach.
+Wybierając reprezentanta $b_k$ równego zero poza $Q_k$,
+mamy jego nośnik topologiczny zawarty w $\overline{Q_k}$,
+niekoniecznie w samej półotwartej kostce.
+\end{proof}
+
+\subsection{Oszacowanie słabego typu}
+\begin{twierdzenie}[Słaby typ $(1,1)$ operatora Calderóna--Zygmunda]
+\label{thm:dt-cz-weak11}
+Niech $d\ge1$ i $K\in C^1(\R^d\setminus\{0\};\C)$
+spełnia $|K(x)|\le A|x|^{-d}$ i
+$|\nabla K(x)|\le A|x|^{-d-1}$, gdzie $A>0$.
+Niech $T:L^2(\R^d)\to L^2(\R^d)$ będzie ograniczonym
+operatorem liniowym, którego działanie dla każdego
+$f\in C_c^\infty(\R^d)$ poza $\supp f$ jest dane przez
+zwykłą całkę $\int K(x-y)f(y)\,\mathrm d\lambda_d(y)$
+prawie wszędzie.
+Istnieje $C>0$, zależna tylko od $d,A,\|T\|_{2\to2}$,
+taka, że dla każdego $f\in L^1\cap L^2$ i $t>0$ zachodzi
+\begin{equation}\label{eq:dt-cz-weak11}
+ \lambda_d\bigl(\{x:|Tf(x)|>t\}\bigr)
+ \le \frac{C}{t}\,\|f\|_{L^1(\R^d)}.
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Stosujemy lemat~\ref{lem:dt-cz-cz-decomp} z $s=t$.
+W dowodzie litera $C$ może oznaczać różne dodatnie
+stałe zależne wyłącznie od podanych parametrów.
+Niech $Q_k^*$ oznacza domkniętą kostkę o tym samym środku
+$c_k$ co $Q_k$ i boku $3\sqrt d\,\ell_k$,
+gdzie $\ell_k$ jest bokiem $Q_k$. Dla
+$E=\bigcup_k Q_k^*$ mamy
+$|E|\le(3\sqrt d)^d\sum_k|Q_k|\le C\|f\|_1/t$.
+Dla części dobrej nierówność Czebyszewa i
+ograniczoność $T$ na $L^2$ dają
+\[
+ \lambda_d(\{|Tg|>t/2\})
+ \le 4t^{-2}\|Tg\|_2^2
+ \le Ct^{-1}\|f\|_1.
+\]
+
+Uzasadnijmy reprezentację przedłużonego operatora $T$
+dla $b_k$, które nie muszą być gładkie.
+Wygładzamy $b_k$ standardowymi jądrami
+$\rho_\varepsilon$ o nośnikach w $B_\varepsilon(0)$.
+Funkcje $b_k*\rho_\varepsilon\in C_c^\infty$
+zbiegają do $b_k$ w $L^1$ i $L^2$; wynika to
+z twierdzenia~\ref{thm:dt-approx-lp} na ustalonym
+zwartym otoczeniu $\overline{Q_k}$, gdyż wszystkie
+nośniki są w nim zawarte dla małych $\varepsilon$.
+Z ciągłości $T$ na $L^2$ i wyboru podciągu
+$T(b_k*\rho_\varepsilon)\to Tb_k$ prawie wszędzie.
+Dla ustalonego $x\notin Q_k^*$ odległość od
+$\overline{Q_k}$ jest dodatnia; dla małych
+$\varepsilon$ jądro $K(x-y)$ jest ograniczone
+na wspólnym zwartym otoczeniu nośników.
+Zbieżność w $L^1$ daje tam granicę zwykłych całek.
+Stąd dla prawie każdego $x\notin Q_k^*$, dzięki zerowej
+całce $b_k$,
+\[
+ Tb_k(x)=\int_{Q_k}[K(x-y)-K(x-c_k)]
+ b_k(y)\,\mathrm d\lambda_d(y).
+\]
+Dla $y\in Q_k$ mamy $|y-c_k|\le\sqrt d\,\ell_k/2$,
+a dla $x\notin Q_k^*$ zachodzi
+$|x-c_k|\ge3\sqrt d\,\ell_k/2$.
+Każdy punkt odcinka od $x-c_k$ do $x-y$ ma więc
+moduł co najmniej $2|x-c_k|/3$. Stosując podstawowe
+twierdzenie rachunku całkowego wzdłuż odcinka oraz
+oszacowanie gradientu jądra, dostajemy
+\[
+ |Tb_k(x)|\le C\int_{Q_k}
+ \frac{|y-c_k|\,|b_k(y)|}{|x-c_k|^{d+1}}
+ \,\mathrm d\lambda_d(y)
+ \le C\ell_k |x-c_k|^{-d-1}\|b_k\|_1.
+\]
+Całkując i powiększając zbiór całkowania do
+$\{|x-c_k|\ge3\sqrt d\,\ell_k/2\}$, otrzymujemy
+\[
+ \int_{\R^d\setminus Q_k^*}|Tb_k|\,\mathrm d\lambda_d
+ \le C\ell_k\|b_k\|_1
+ \int_{3\sqrt d\,\ell_k/2}^\infty r^{-2}\,\mathrm d\lambda_1(r)
+ \le C\|b_k\|_1.
+\]
+Dla skończonych sum nierówność trójkąta daje
+$\int_{\R^d\setminus E}|T(\sum_{k\le N}b_k)|
+\,\mathrm d\lambda_d\le C\sum_k\|b_k\|_1$.
+Ponieważ $\sum_{k\le N}b_k\to f-g$ w $L^2$,
+obrazy zbiegają w $L^2$ do $T(f-g)$.
+Wybieramy podciąg zbieżny prawie wszędzie
+i stosujemy lemat Fatou. Otrzymujemy
+\[
+ \int_{\R^d\setminus E}|T(f-g)|\,\mathrm d\lambda_d
+ \le C\sum_k\|b_k\|_1\le C\|f\|_1.
+\]
+Z liniowości $Tf=Tg+T(f-g)$ prawie wszędzie.
+Zbiór $\{|Tf|>t\}$ zawiera się z dokładnością
+do zbioru miary zero w sumie $E$,
+$\{|Tg|>t/2\}$ i
+$\{x\notin E:|T(f-g)(x)|>t/2\}$.
+Ostatnią miarę szacujemy przez $2/t$ razy
+poprzednią całkę. To kończy dowód.
+\end{proof}
+
+\subsection{Interpolacja i oszacowania w przestrzeniach Lebesgue'a}
+\begin{lemat}[Interpolacja Marcinkiewicza pomiędzy słabym $L^1$ i silnym $L^2$]
+\label{lem:dt-cz-interp}
+Niech $T$ będzie ograniczonym operatorem liniowym
+na $L^2(\R^d)$, spełniającym oszacowanie słabego typu
+$(1,1)$ na $L^1\cap L^2$ ze stałą $C_1$.
+Dla każdego $1<p<2$ jego ograniczenie do
+$L^1\cap L^2\cap L^p$ spełnia
+$\|Tf\|_p\le C_p\|f\|_p$, gdzie $C_p$ zależy również
+od stałych obu oszacowań. Ma ono jednoznaczne
+ograniczone przedłużenie na $L^p$.
+\end{lemat}
+\begin{proof}
+Dla $f\in L^1\cap L^2\cap L^p$ i $t>0$ kładziemy
+$f_t^{>}=f\chi_{\{|f|>t\}}$ i
+$f_t^{\le}=f\chi_{\{|f|\le t\}}$.
+Obie funkcje należą do $L^1\cap L^2$.
+Z liniowości i nierówności trójkąta wynika
+$\{|Tf|>2t\}\subset\{|Tf_t^{>}|>t\}
+\cup\{|Tf_t^{\le}|>t\}$ z dokładnością do zbioru
+miary zero. Oznaczając $\|T\|_{L^2\to L^2}=C_2$,
+otrzymujemy
+\[
+ \lambda_d(\{|Tf|>2t\})
+ \le \frac{C_1}{t}\int_{\{|f|>t\}}|f|\,\mathrm d\lambda_d
+ +\frac{C_2^2}{t^2}\int_{\{|f|\le t\}}|f|^2\,\mathrm d\lambda_d .
+\]
+Tożsamość
+$|Tf(x)|^p=\int_0^{|Tf(x)|}p s^{p-1}\,\mathrm d\lambda_1(s)$
+i twierdzenie Tonellego dają tożsamość warstwową
+\[
+ \|Tf\|_p^p=p\int_0^\infty s^{p-1}
+ \lambda_d(\{|Tf|>s\})\,\mathrm d\lambda_1(s)
+\]
+również wtedy, gdy początkowo obie strony są nieskończone.
+Po podstawieniu $s=2t$ i użyciu Tonellego otrzymujemy
+\[
+ \begin{aligned}
+ \|Tf\|_p^p
+ &\le p2^p C_1\int_{\{|f|>0\}} |f(x)|
+       \int_0^{|f(x)|}t^{p-2}\,\mathrm d\lambda_1(t)
+       \,\mathrm d\lambda_d(x)\\
+ &\quad+p2^p C_2^2\int_{\{|f|>0\}} |f(x)|^2
+       \int_{|f(x)|}^\infty t^{p-3}\,\mathrm d\lambda_1(t)
+       \,\mathrm d\lambda_d(x)\\
+ &=p2^p\left(\frac{C_1}{p-1}+\frac{C_2^2}{2-p}\right)
+   \|f\|_p^p .
+ \end{aligned}
+\]
+Punkty $f=0$ pomijamy, gdyż pierwotne całki po $t$
+są w nich zerowe. Warunki $p>1$ i $p<2$ odpowiadają
+zbieżności obu całek wewnętrznych.
+Gęstość $C_c^\infty$ w $L^p$
+(twierdzenie~\ref{thm:dt-test-density}) i zupełność $L^p$
+dają jednoznaczne przedłużenie.
+Jest ono zgodne z wyjściowym operatorem $T$ na
+$L^2\cap L^p$: dla $f$ z tej przestrzeni funkcje
+$f_n=f\chi_{B_n(0)}\chi_{\{|f|\le n\}}$
+należą do $L^1\cap L^2\cap L^p$ i zbiegają do $f$
+w obu normach przez zbieżność zmajoryzowaną.
+Ich obrazy zbiegają w $L^2$ do $Tf$ oraz w $L^p$
+do wartości przedłużenia. Z obu zbieżności wybieramy
+wspólny podciąg zbieżny prawie wszędzie, więc granice
+są równe prawie wszędzie.
+\end{proof}
+
+
+\begin{twierdzenie}[Ograniczoność w $L^p$ dla $1<p<\infty$]
+\label{thm:dt-cz-general-lp}
+Przy hipotezach twierdzenia \ref{thm:dt-cz-weak11}
+operator $T$ ma dla każdego $1<p<\infty$ jednoznaczne
+ograniczone przedłużenie z $L^2\cap L^p$ na $L^p$,
+zgodne z działaniem na $L^2$ na wspólnej dziedzinie.
+\end{twierdzenie}
+\begin{proof}
+Dla $1<p<2$ wynik daje lemat
+\ref{lem:dt-cz-interp} zastosowany do oszacowania
+\ref{thm:dt-cz-weak11}; dla $p=2$ jest to założenie.
+Dla $2<p<\infty$ oznaczmy $q=p/(p-1)$.
+Operator sprzężony $T^*$ na $L^2$ jest ograniczony
+i spełnia hipotezy twierdzenia \ref{thm:dt-cz-weak11}
+z jądrem $K^*(z)=\overline{K(-z)}$.
+Istotnie, dla testów $f,h$ o rozłącznych nośnikach
+z definicji sprzężenia oraz reprezentacji $Th$ mamy
+\[
+ \langle T^*f,h\rangle_2
+ =\int_{\R^d}\int_{\R^d}f(y)
+ \overline{K(y-x)}\,\overline{h(x)}
+ \,\mathrm d\lambda_d(y)\,\mathrm d\lambda_d(x).
+\]
+Twierdzenie Fubiniego ma zastosowanie, gdyż nośniki
+są zwarte i oddalone od siebie o dodatnią odległość.
+Dla ustalonego $f$ równość zachodzi dla każdego testu
+$h$ o nośniku w otwartym dopełnieniu $\supp f$.
+Na tym zbiorze funkcja
+$x\mapsto\int K^*(x-y)f(y)\,\mathrm d\lambda_d(y)$
+jest lokalnie całkowalna, ponieważ na każdym jego
+zwartym podzbiorze jądro jest jednostajnie ograniczone
+dla $y\in\supp f$. Z jednoznaczności dystrybucji
+regularnych (stwierdzenie \ref{prop:regular-injective19})
+wynika żądana reprezentacja prawie wszędzie.
+Oszacowania $K^*$ i jego gradientu wynikają
+bezpośrednio z odpowiednich oszacowań $K$.
+Wobec tego $T^*$ jest ograniczony w $L^q$
+na mocy pierwszej części dowodu.
+
+Dla $f\in L^2\cap L^p$ oraz $h\in L^2\cap L^q$
+otrzymujemy
+\[
+ |\langle Tf,h\rangle_2|
+ =|\langle f,T^*h\rangle_2|
+ \le\|f\|_p\|T^*h\|_q
+ \le C_q\|f\|_p\|h\|_q.
+\]
+Aby nie zakładać z góry przynależności $Tf$ do $L^p$,
+połóżmy $v=Tf\in L^2$ i
+$E_n=B_n(0)\cap\{|v|\le n\}$. Funkcja
+$h_n=\chi_{E_n}|v|^{p-2}v$ należy do $L^2\cap L^q$,
+gdyż jest ograniczona i ma nośnik skończonej miary.
+Dla $a_n=\int_{E_n}|v|^p\,\mathrm d\lambda_d$ mamy
+$\langle v,h_n\rangle_2=a_n$ oraz $\|h_n\|_q=a_n^{1/q}$.
+Oszacowanie daje $a_n^{1/p}\le C_q\|f\|_p$
+(gdy $a_n=0$, nierówność jest automatyczna).
+Z twierdzenia o zbieżności monotonicznej dostajemy
+$\|Tf\|_p\le C_q\|f\|_p$.
+Gęstość $L^2\cap L^p$ w $L^p$ wynika z obcinania
+do kul i ograniczonych wartości. Zupełność $L^p$
+daje jednoznaczne przedłużenie; jest ono zgodne
+na $L^2\cap L^p$ z konstrukcji.
+\end{proof}
+
+\begin{uwaga}
+Powyższe twierdzenie dotyczy przedłużenia operatora,
+który już jest ograniczony w $L^2$ i ma reprezentację
+jądrową poza nośnikiem. Nie wynika z niego automatycznie
+istnienie granicy głównych wartości prawie wszędzie
+dla dowolnej funkcji $L^p$. Do tego potrzebna jest
+osobna kontrola obciętych operatorów.
+\end{uwaga}
+
+\subsection{Zastosowanie do potencjału Newtona i przypadki końcowe}
+\begin{twierdzenie}[Oszacowanie Calderóna--Zygmunda dla laplasjanu]
+\label{thm:dt-cz-cz}
+Niech $d\ge2$ i $1<p<\infty$. Dla
+$f\in C_c^\infty(\R^d)$ oraz $u=\Gamma*f$ zachodzi
+\begin{equation}\label{eq:dt-cz-cz}
+ \|D^2u\|_{L^p(\R^d)}\le C_{d,p}\|f\|_{L^p(\R^d)}.
+\end{equation}
+Oszacowanie przedłuża operator $f\mapsto D^2(\Gamma*f)$
+do $L^p$; nie oznacza ono, że samo $u$ musi należeć
+do $L^p(\R^d)$.
+\end{twierdzenie}
+\begin{proof}
+Jądra $K_{ij}$ i operatory $T_{ij}$ spełniają hipotezy
+twierdzenia~\ref{thm:dt-cz-weak11}: oszacowania jądra
+wykazaliśmy przy wzorze \eqref{eq:dt-cz-kernel}, reprezentacja
+poza nośnikiem wynika z definicji głównej wartości,
+a ograniczoność w $L^2$ z lematu~\ref{lem:dt-cz-l2}.
+Z ogólnego twierdzenia~\ref{thm:dt-cz-general-lp}
+wynika więc, dla każdego $1<p<\infty$,
+$\|T_{ij}f\|_p\le C_{d,p}\|f\|_p$.
+Stałą możemy wybrać wspólną dla wszystkich $i,j$,
+ponieważ dla ustalonego $d$ jest tylko skończenie wiele par.
+Ze wzoru~\eqref{eq:dt-cz-repr} mamy
+$\|\partial_{ij}u\|_p\le(C_{d,p}+1/d)\|f\|_p$.
+Norma Frobeniusa hesjanu jest punktowo nie większa
+niż suma modułów jego $d^2$ składowych, więc nierówność
+trójkąta w $L^p$ daje~\eqref{eq:dt-cz-cz}.
+Gęstość testów (twierdzenie~\ref{thm:dt-test-density})
+i zupełność przestrzeni pól macierzowych $L^p$
+zapewniają jednoznaczne ograniczone przedłużenie.
+\end{proof}
+
+\begin{uwaga}[Dlaczego przypadki $1$ i $\infty$ są osobne?]
+\label{rem:dt-cz-endpoints}
+Silne oszacowanie $L^1\to L^1$ jest fałszywe nawet
+dla gładkich danych. Istotnie, wybierzmy
+$f\in C_c^\infty(B_1(0))$, $f\ge0$, $\int f\,\mathrm d\lambda_d=1$.
+Dla $|x|>2$ mamy
+\[
+ |T_{12}f(x)-K_{12}(x)|
+ \le C_d|x|^{-d-1}\int |y|f(y)\,\mathrm d\lambda_d(y)
+ \le C_d|x|^{-d-1}.
+\]
+Wynika to z oszacowania gradientu jądra na odcinku
+od $x$ do $x-y$, którego punkty mają moduł co najmniej
+$|x|/2$. Na pewnym otwartym fragmencie sfery wokół
+$(e_1+e_2)/\sqrt2$ mamy $K_{12}(\theta)\ge c_d>0$.
+Dzięki jednorodności, dla odpowiednio dużego $r$ i takich
+$\theta$, $T_{12}f(r\theta)\ge(c_d/2)r^{-d}$.
+Całka po tym stożku jest rozbieżna, ponieważ
+$\int_R^\infty r^{-1}\,\mathrm d\lambda_1(r)=\infty$.
+Ponieważ $\partial_{12}(\Gamma*f)=T_{12}f$,
+nie zachodzi też silne oszacowanie Hessianu w $L^1$.
+Oszacowanie~\eqref{eq:dt-cz-weak11} jest słabszym
+oszacowaniem końcowym.
+
+Dla końca $p=\infty$ w wymiarze $d=2$ weźmy
+$f=\chi_{(0,1)^2}$ i $u=\Gamma*f$.
+Poza domkniętym kwadratem wolno różniczkować pod całką
+(lokalnie odległość od nośnika jest dodatnia).
+Dla $x=(-t,-t)$, $0<t<1/8$, otrzymujemy
+\[
+ \partial_{12}u(x)=\frac1\pi
+ \int_{(0,1)^2}
+ \frac{(t+y_1)(t+y_2)}
+ {((t+y_1)^2+(t+y_2)^2)^2}\,\mathrm d\lambda_2(y).
+\]
+Całkowana funkcja jest nieujemna. Na podsektorze
+$\pi/6<\theta<\pi/3$, $2t<r<1/2$, gdzie
+$y=(r\cos\theta,r\sin\theta)$, obie współrzędne $y$
+są co najmniej $r/2$, a $|x-y|\le r+\sqrt2t\le2r$.
+Stąd całkowana funkcja jest nie mniejsza niż $c r^{-2}$,
+z $c>0$ niezależnym od $t$. Zatem
+$\partial_{12}u(-t,-t)\ge c'\log(1/(4t))\to+\infty$.
+Pochodna jest ciągła w otwartym dopełnieniu kwadratu,
+więc każda dostatecznie duża wartość daje także
+przekroczenie zadanego progu na otwartym zbiorze
+dodatniej miary. Jest to brak ograniczoności istotnej,
+a nie jedynie rozbieżność na ciągu punktów.
+Przykład można przenieść na gładkie dane: wygładzenia
+$f_\varepsilon=f*\rho_\varepsilon$ mają normę
+$L^\infty$ nie większą niż $1$, a w każdym ustalonym
+punkcie poza domkniętym kwadratem
+$\partial_{12}(\Gamma*f_\varepsilon)$ zbiega
+do powyższej całki dzięki zbieżności w $L^1$
+i temu, że dla dostatecznie małych $\varepsilon$
+wszystkie nośniki leżą w ustalonym zwartym otoczeniu
+kwadratu, oddalonym od rozważanego punktu.
+Jednostajne oszacowanie $L^\infty$ dla gładkich danych
+prowadziłoby zatem do sprzeczności.
+\end{uwaga}

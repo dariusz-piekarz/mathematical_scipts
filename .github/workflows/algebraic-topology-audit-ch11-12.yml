@@ -1,0 +1,68 @@
+name: Algebraic topology chapters 11-12 TeX audit
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/algebraic_topology/11-*.tex"
+      - "chapters/pl/algebraic_topology/12-*.tex"
+      - "application/tests/test_topology_chapters_11_12.py"
+      - ".github/workflows/algebraic-topology-audit-ch11-12.yml"
+  workflow_dispatch:
+
+jobs:
+  compile-reviewed-pair-with-prerequisite-chapters:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install LaTeX and PDF inspection utilities
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-pictures texlive-lang-polish texlive-fonts-recommended lmodern poppler-utils
+      - name: Assemble twelve-chapter dependency-complete audit
+        working-directory: books/pl
+        run: |
+          sed '/^\\begin{document}/,$d' algebraic_topology.tex > audit_at_11_12.tex
+          cat >> audit_at_11_12.tex <<'TEX'
+          \begin{document}
+          \tableofcontents
+          \input{../../chapters/pl/algebraic_topology/01-jezyk-i-podstawowe-konstrukcje-topologiczne.tex}
+          \input{../../chapters/pl/algebraic_topology/02-podstawy-algebry-abstrakcyjnej-grupy-pierscienie-i-moduly.tex}
+          \input{../../chapters/pl/algebraic_topology/03-algebra-homologiczna-moduly-kompleksy-i-ko-homologie.tex}
+          \input{../../chapters/pl/algebraic_topology/04-homotopia-nakrycia-i-komorkowe-modele-przestrzeni.tex}
+          \input{../../chapters/pl/algebraic_topology/05-homologia-przestrzeni.tex}
+          \input{../../chapters/pl/algebraic_topology/06-wyzsze-grupy-homotopii-i-zwiazek-z-homologia.tex}
+          \input{../../chapters/pl/algebraic_topology/07-fibracje-i-dlugi-ciag-homotopii.tex}
+          \input{../../chapters/pl/algebraic_topology/08-kohomologia-singularna-i-iloczyn-kubkowy.tex}
+          \input{../../chapters/pl/algebraic_topology/09-formy-rozniczkowe-orientacja-i-kohomologia-de-rhama.tex}
+          \input{../../chapters/pl/algebraic_topology/10-homologia-i-kohomologia-c-echa-od-pokryc-do-granic-przestrzeni.tex}
+          \input{../../chapters/pl/algebraic_topology/11-przeciecia-dualnosc-i-klasy-charakterystyczne.tex}
+          \input{../../chapters/pl/algebraic_topology/12-ciagi-spektralne-od-filtracji-do-fibracji-serre-a.tex}
+          \end{document}
+          TEX
+      - name: Twice compile LaTeX and fail on broken references or overfull boxes
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error audit_at_11_12.tex > audit_at_11_12_pass1.log
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error audit_at_11_12.tex > audit_at_11_12_pass2.log
+          test -s audit_at_11_12.pdf
+          if grep -Eq 'There were undefined references|LaTeX Warning: Reference .* undefined|undefined citations' audit_at_11_12_pass2.log; then
+            echo "Unresolved reference or citation"; exit 1
+          fi
+          if grep -E 'Overfull \\hbox' audit_at_11_12_pass2.log; then
+            echo "Overfull horizontal TeX box found"; exit 1
+          fi
+          pdfinfo audit_at_11_12.pdf | grep -E '^Pages:'
+      - name: Upload PDF and compilation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: algebraic-topology-audit-ch11-12-pdf
+          path: |
+            books/pl/audit_at_11_12.pdf
+            books/pl/audit_at_11_12.log
+            books/pl/audit_at_11_12_pass1.log
+            books/pl/audit_at_11_12_pass2.log
+          if-no-files-found: warn

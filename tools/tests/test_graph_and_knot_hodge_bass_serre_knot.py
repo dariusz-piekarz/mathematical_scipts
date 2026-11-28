@@ -1,0 +1,765 @@
+#!/usr/bin/env python3
+"""Independent finite audit models for historical graph/knot chapters 16--18.
+
+Pure standard library. Checks cochain Hodge rank with weighted inner products,
+Cayley graph balls and C2*C3 Bass--Serre tree cosets, Laurent determinant
+identities for Seifert stabilization, Fox colorings, Jones normalization,
+and Arf Gauss sums. Finite arithmetic is NOT proof of cited global theorems.
+"""
+from fractions import Fraction
+from itertools import combinations, permutations, product
+from math import gcd
+from pathlib import Path
+
+ROOT=Path(__file__).resolve().parents[2]
+DIR=ROOT/"chapters/pl/graph_and_knot_theory"
+
+
+def rank_q(mat):
+    if not mat: return 0
+    a=[[Fraction(x) for x in row] for row in mat]
+    n=len(a);m=len(a[0]);i=0
+    for j in range(m):
+        k=next((k for k in range(i,n) if a[k][j]),None)
+        if k is None:continue
+        a[i],a[k]=a[k],a[i]
+        pivot=a[i][j]
+        a[i]=[v/pivot for v in a[i]]
+        for k in range(n):
+            if k!=i and a[k][j]:
+                ratio=a[k][j]
+                a[k]=[x-ratio*y for x,y in zip(a[k],a[i])]
+        i+=1
+        if i==n:break
+    return i
+
+
+def transpose(a):
+    return [list(x) for x in zip(*a)] if a else []
+
+
+def matmul(a,b):
+    if not a:return []
+    if not b:return [[] for _ in a]
+    assert len(a[0])==len(b)
+    bt=transpose(b)
+    return [[sum(x*y for x,y in zip(row,col)) for col in bt] for row in a]
+
+
+def matsum(a,b):
+    return [[x+y for x,y in zip(row,other)] for row,other in zip(a,b)]
+
+
+def check_hodge(facets):
+    # Independent chain matrices over Q; compare Hodge kernels to Betti numbers.
+    S={tuple(sorted(sub)) for facet in facets
+       for k in range(1,len(facet)+1) for sub in combinations(facet,k)}
+    vs=sorted(x for x in S if len(x)==1)
+    es=sorted(x for x in S if len(x)==2)
+    fs=sorted(x for x in S if len(x)==3)
+    index_v={x:i for i,x in enumerate(vs)}
+    index_e={x:i for i,x in enumerate(es)}
+    B1=[[int(v[0]==e[1])-int(v[0]==e[0]) for e in es] for v in vs]
+    B2=[[sum((-1)**i for i,face in enumerate(combinations(f,2))
+             if face==e) for f in fs] for e in es]
+    # For each ordered triangle (a,b,c), ∂[abc]=[bc]-[ac]+[ab].
+    B2=[[sum((1 if i!=1 else -1) for i,face
+             in enumerate(((f[1],f[2]),(f[0],f[2]),(f[0],f[1])))
+             if face==e) for f in fs] for e in es]
+    assert matmul(B1,B2)==[[0]*len(fs) for _ in vs]
+    r1=rank_q(B1);r2=rank_q(B2)
+    b1=len(es)-r1-r2
+    # Weighted adjoints δ0=W0^-1 B1 W1, δ1=W1^-1 B2 W2.
+    # Δ1 = B1^T δ0 + δ1 B2^T.
+    for weights in (False,True):
+        w0=[(i+2 if weights else 1) for i in range(len(vs))]
+        w1=[(i+3 if weights else 1) for i in range(len(es))]
+        w2=[(i+4 if weights else 1) for i in range(len(fs))]
+        delta0=[[Fraction(B1[i][j]*w1[j],w0[i])
+                 for j in range(len(es))] for i in range(len(vs))]
+        delta1=[[Fraction(B2[i][j]*w2[j],w1[i])
+                 for j in range(len(fs))] for i in range(len(es))]
+        upper=matmul(transpose(B1),delta0)
+        lower=matmul(delta1,transpose(B2)) if fs else [
+            [0]*len(es) for _ in es]
+        lap=matsum(upper,lower)
+        assert len(es)-rank_q(lap)==b1
+        # Weighted self-adjointness: W1Δ1 is symmetric.
+        weighted=[[w1[i]*lap[i][j] for j in range(len(es))]
+                  for i in range(len(es))]
+        assert weighted==transpose(weighted)
+        for seed in range(4):
+            x=[(-1)**(i+seed)*((i+seed)%3) for i in range(len(es))]
+            assert sum(x[i]*weighted[i][j]*x[j]
+                       for i in range(len(es)) for j in range(len(es)))>=0
+    return len(es),b1
+
+
+def reduce_word(word):
+    out=[]
+    for s in word:
+        if out and out[-1]==-s:out.pop()
+        else:out.append(s)
+    return tuple(out)
+
+
+def cayley_free_ball(rank,depth):
+    alphabet=tuple(x for i in range(1,rank+1) for x in (i,-i))
+    words={()}
+    frontier={()}
+    for _ in range(depth):
+        nxt={reduce_word(w+(s,)) for w in frontier for s in alphabet}
+        words|=nxt
+        frontier=nxt
+    edges={tuple(sorted((w,reduce_word(w+(s,)))))
+           for w in words for s in alphabet if reduce_word(w+(s,)) in words}
+    # Every non-root word has a unique parent obtained by deleting its last letter.
+    assert len(edges)==len(words)-1
+    assert all((w[:-1],w) in edges or (w,w[:-1]) in edges
+               for w in words if w)
+    return len(words)
+
+
+def multiply_syllable(word,typ,val):
+    mod=2 if typ=="A" else 3
+    if val==0:return tuple(word)
+    w=list(word)
+    if w and w[-1][0]==typ:
+        new=(w[-1][1]+val)%mod
+        w.pop()
+        if new:w.append((typ,new))
+    else:w.append((typ,val))
+    return tuple(w)
+
+
+def c2c3_tree_ball(depth=5):
+    words={()};frontier={()}
+    letters=(("A",1),("B",1),("B",2))
+    for _ in range(depth):
+        nxt={multiply_syllable(w,*s) for w in frontier for s in letters}
+        words|=nxt;frontier=nxt
+    # Edge labeled g joins cosets gA and gB; canonical coset representative
+    # removes the final syllable if it belongs to its corresponding subgroup.
+    def coset(g,typ):
+        return (typ, g[:-1] if g and g[-1][0]==typ else g)
+    edges={(coset(w,"A"),coset(w,"B")) for w in words}
+    vertices={v for edge in edges for v in edge}
+    # The finite ball is a tree; interior degrees equal [C2:1]=2 and [C3:1]=3.
+    assert len(edges)==len(vertices)-1
+    incident={v:0 for v in vertices}
+    for a,b in edges:incident[a]+=1;incident[b]+=1
+    assert all(incident[v]==(2 if v[0]=="A" else 3)
+               for v in vertices if len(v[1])<=depth-1)
+    return len(vertices),len(edges)
+
+
+def check_bs12_cosets():
+    """GKT-24-BS12-PY-01: exact finite affine coset model; not a faithfulness proof."""
+    from fractions import Fraction as Q
+    from itertools import product
+    from collections import deque
+
+    def p(k): return Q(2)**k
+    def mul(g,h):
+        r,k=g; s,l=h
+        return r+p(k)*s,k+l
+    def cos(g,m=1):
+        r,k=g
+        return r%(m*p(k)),k
+    def edge(g,sgn):
+        return cos(g),cos(mul(g,(Q(0),-sgn)))
+    def rev(g,sgn):
+        return mul(g,(Q(0),-sgn)),-sgn
+
+    samples=[(Q(i,8),k) for i in range(-16,17) for k in range(-4,5)]
+    translations=[(Q(i,4),k) for i in range(-4,5) for k in range(-2,3)]
+    counts=dict(representatives=0,reversals=0,translations=0,incidences=0)
+    for g,sgn in product(samples,[1,-1]):
+        m=1 if sgn==1 else 2
+        a,b=edge(g,sgn)
+        for n in range(-5,6):
+            h=mul(g,(Q(m*n),0))
+            assert cos(h,m)==cos(g,m)
+            assert edge(h,sgn)==(a,b)
+            counts['representatives']+=1
+        h,t=rev(g,sgn)
+        assert edge(h,t)==(b,a)
+        assert rev(h,t)==(g,sgn)
+        counts['reversals']+=1
+        for u in translations:
+            assert edge(mul(u,g),sgn)==(cos(mul(u,a)),cos(mul(u,b)))
+            counts['translations']+=1
+
+    def nbr(v):
+        r,k=v
+        return {cos((r,k-1)),cos((r,k+1)),cos((r+p(k),k+1))}
+    root=(Q(0),0); d={root:0}; q=deque([root]); edges=set()
+    while q:
+        v=q.popleft(); ns=nbr(v)
+        assert len(ns)==3
+        for w in ns:
+            assert v in nbr(w)
+            counts['incidences']+=1
+            if d[v]<9 and w not in d:
+                d[w]=d[v]+1; q.append(w)
+            if w in d: edges.add(frozenset([v,w]))
+    assert len(d)==1+3*(2**9-1)
+    assert len(edges)==len(d)-1
+    assert counts == dict(representatives=6534, reversals=594, translations=26730, incidences=4602)
+    return counts, len(d), len(edges)
+
+
+def poly_add(a,b):
+    out=dict(a)
+    for k,v in b.items():out[k]=out.get(k,0)+v
+    return {k:v for k,v in out.items() if v}
+
+
+def poly_mul(a,b):
+    out={}
+    for i,v in a.items():
+        for j,w in b.items():out[i+j]=out.get(i+j,0)+v*w
+    return {k:v for k,v in out.items() if v}
+
+
+def poly_scale(a,c):
+    return {k:v*c for k,v in a.items() if v*c}
+
+
+def poly_det(matrix):
+    n=len(matrix)
+    if not n:return {0:1}
+    total={}
+    for perm in permutations(range(n)):
+        inversions=sum(perm[i]>perm[j] for i in range(n) for j in range(i+1,n))
+        value={0:1}
+        for i in range(n):value=poly_mul(value,matrix[i][perm[i]])
+        total=poly_add(total,poly_scale(value,-1 if inversions%2 else 1))
+    return total
+
+
+def alexander_matrix(V):
+    n=len(V)
+    return [[poly_add({1:V[i][j]},{0:-V[j][i]})
+             for j in range(n)] for i in range(n)]
+
+
+def shifted(poly,k):
+    return {degree+k:val for degree,val in poly.items()}
+
+
+def enlarged(V,u,v,z,form):
+    n=len(V)
+    rows=[list(row)+[u[i],0] for i,row in enumerate(V)]
+    rows.append(list(v)+[z,0 if form==0 else 1])
+    rows.append([0]*n+[1 if form==0 else 0,0])
+    return rows
+
+
+def old_wrong_enlargement(V,u,v,form):
+    n=len(V)
+    if form==0:
+        rows=[list(row)+[0,0] for row in V]
+        rows.append(list(u)+[0,0]);rows.append(list(v)+[1,0])
+    else:
+        rows=[list(row)+[u[i],v[i]] for i,row in enumerate(V)]
+        rows.append([0]*n+[0,1]);rows.append([0]*n+[0,0])
+    return rows
+
+
+def check_seifert_alexander():
+    examples=(
+        [[1,0],[-1,1]],
+        [[1,0],[-1,-1]],
+        [[1,0,0,0],[-1,1,0,0],[0,0,1,0],[0,0,-1,1]],
+        [])
+    count=0
+    for V in examples:
+        n=len(V)
+        delta=poly_det(alexander_matrix(V))
+        for mode in (0,1):
+            for seed in (-2,-1,0,1,2):
+                u=[(i+1)*seed for i in range(n)]
+                v=[(i+2)*(seed-1) for i in range(n)]
+                for z in (-2,0,3):
+                    ext=enlarged(V,u,v,z,mode)
+                    assert poly_det(alexander_matrix(ext))==shifted(delta,1)
+                    count+=1
+    trefoil=examples[0]; fig8=examples[1]
+    assert poly_det(alexander_matrix(trefoil))=={2:1,1:-1,0:1}
+    assert poly_det(alexander_matrix(fig8))=={2:-1,1:3,0:-1}
+    assert sum(v*(-1)**k for k,v in poly_det(alexander_matrix(trefoil)).items())==3
+    assert sum(v*(-1)**k for k,v in poly_det(alexander_matrix(fig8)).items())==-5
+    # Regression: the two PREVIOUSLY printed matrix shapes were wrong.
+    for mode in (0,1):
+        bad=old_wrong_enlargement(trefoil,[1,0],[1,0],mode)
+        assert poly_det(alexander_matrix(bad))=={2:1}
+        assert poly_det(alexander_matrix(bad))!=shifted(
+            poly_det(alexander_matrix(trefoil)),1)
+    return count
+
+
+def check_fox_coloring():
+    # Trefoil: 2a=b+c, 2b=a+c, 2c=a+b (mod n).
+    counts=[]
+    for n in range(2,14):
+        count=sum((2*a-b-c)%n==0 and
+                  (2*b-a-c)%n==0 and
+                  (2*c-a-b)%n==0
+                  for a,b,c in product(range(n),repeat=3))
+        assert count==n*gcd(n,3), (n,count)
+        counts.append((n,count))
+    return counts
+
+
+def check_jones_trefoil():
+    # Two-strand Temperley--Lieb: e²=δe, b=A1+A^-1e.
+    delta={2:-1,-2:-1}
+    b=({1:1},{-1:1})
+    def multiply(x,y):
+        a=poly_mul(x[0],y[0])
+        mixed=poly_add(poly_mul(x[0],y[1]),poly_mul(x[1],y[0]))
+        mixed=poly_add(mixed,poly_mul(delta,poly_mul(x[1],y[1])))
+        return a,mixed
+    cube=multiply(multiply(b,b),b)
+    bracket=poly_add(poly_mul(cube[0],delta),cube[1])
+    assert bracket=={5:-1,-3:-1,-7:1}
+    normalized=shifted(poly_scale(bracket,-1),-9)
+    assert normalized=={-4:1,-12:1,-16:-1}
+    # substituting t=A^-4 gives V(t)=t+t³-t⁴.
+    assert {(-e)//4:v for e,v in normalized.items()}=={1:1,3:1,4:-1}
+    return bracket
+
+
+
+def tl_reduce(word):
+    """Reduce the 3-strand Temperley--Lieb basis word to (scalar, basis)."""
+    w=list(word);scalar={0:1}
+    while True:
+        updated=False
+        for i in range(len(w)-1):
+            if w[i]==w[i+1]:
+                scalar=poly_mul(scalar,{2:-1,-2:-1})  # e_i²=δe_i
+                w=w[:i]+w[i+1:]
+                updated=True
+                break
+        if updated:continue
+        for i in range(len(w)-2):
+            if w[i]==w[i+2] and w[i]!=w[i+1]:
+                w=w[:i+1]+w[i+3:]  # e1 e2 e1=e1, e2 e1 e2=e2
+                updated=True
+                break
+        if not updated:break
+    assert tuple(w) in ((),(1,),(2,),(1,2),(2,1)),w
+    return scalar,tuple(w)
+
+
+def tl_add(a,b):
+    out=dict(a)
+    for basis,coefficient in b.items():
+        out[basis]=poly_add(out.get(basis,{}),coefficient)
+    return {basis:v for basis,v in out.items() if v}
+
+
+def tl_mul(a,b):
+    result={}
+    for wa,pa in a.items():
+        for wb,pb in b.items():
+            scalar,word=tl_reduce(wa+wb)
+            term=poly_mul(poly_mul(pa,pb),scalar)
+            result[word]=poly_add(result.get(word,{}),term)
+    return {word:v for word,v in result.items() if v}
+
+
+def check_tl_reidemeister():
+    identity={():{0:1}}
+    braids={i:{():{1:1},(i,):{-1:1}} for i in (1,2)}
+    inverses={i:{():{-1:1},(i,):{1:1}} for i in (1,2)}
+    for i in (1,2):
+        assert tl_mul(braids[i],inverses[i])==identity
+        assert tl_mul(inverses[i],braids[i])==identity
+    left=tl_mul(tl_mul(braids[1],braids[2]),braids[1])
+    right=tl_mul(tl_mul(braids[2],braids[1]),braids[2])
+    assert left==right
+    assert left=={
+        (): {3:1},
+        (1,): {1:1},
+        (2,): {1:1},
+        (1,2): {-1:1},
+        (2,1): {-1:1},
+    },left
+    return len(left)
+
+
+def check_arf_gauss():
+    cases=0
+    for g in (1,2):
+        for coefficients in product((0,1),repeat=2*g):
+            val=0
+            for x in product((0,1),repeat=2*g):
+                q=sum(x[2*i]*x[2*i+1]+coefficients[2*i]*x[2*i]+
+                      coefficients[2*i+1]*x[2*i+1] for i in range(g))%2
+                val+=(-1)**q
+            arf=sum(coefficients[2*i]*coefficients[2*i+1]
+                    for i in range(g))%2
+            assert val==(2**g)*(-1 if arf else 1)
+            cases+=1
+    return cases
+
+
+
+def check_arf_enlargement_isometry():
+    """Independent brute force over F2; checks every input to the shear isometry."""
+    matrices=[
+        [],[[1,0],[-1,1]],[[1,0],[-1,-1]],
+        [[1,0,0,0],[-1,1,0,0],[0,0,1,0],[0,0,-1,1]],
+    ]
+    checked=0
+    def q(matrix,vector):
+        return sum(vector[i]*matrix[i][j]*vector[j]
+                   for i in range(len(vector)) for j in range(len(vector)))%2
+    for V in matrices:
+        n=len(V)
+        for u in product(range(2),repeat=n):
+            for v in product(range(2),repeat=n):
+                for z in (0,1):
+                    for mode in (0,1):
+                        Vp=enlarged(V,list(u),list(v),z,mode)
+                        for x in product(range(2),repeat=n):
+                            for sb,tb in product(range(2),repeat=2):
+                                shear=(tb+sum((u[i]+v[i])*x[i]
+                                              for i in range(n))+z*sb)%2
+                                assert q(Vp,x+(sb,tb))==(q(V,x)+sb*shear)%2
+                                checked+=1
+    return checked
+
+
+def check_conway_arf_congruence():
+    """Algebraic consequence Δsym(-1)=∇(2i), modulo 8."""
+    tests=0
+    for a2 in range(-10,11):
+        for a4 in (-3,0,4):
+            for a6 in (-2,0,3):
+                delta=1-4*a2+16*a4-64*a6
+                assert delta%8==(1-4*(a2%2))%8
+                assert ((delta%8==1) == (a2%2==0))
+                tests+=1
+    return tests
+
+
+def check_crossing_orientation():
+    """GKT-25-LINK-SIGN-01: finite exact determinant checks for oriented cylinder."""
+    vectors = list(product(range(-2, 3), repeat=2))
+    count = 0
+    for (a, b), (c, d) in product(vectors, repeat=2):
+        plane = a*d-b*c
+        if not plane:
+            continue
+        for height, k, l in product((1, 2, 5), (-2, 0, 3), (-3, 0, 2)):
+            # Columns (P_u, P_s, K2'), ambient basis negatively oriented.
+            det = 0*(b*l-d*k)-a*(0*l-d*height)+c*(0*k-b*height)
+            crossing = c*b-d*a
+            assert -det == height*crossing
+            assert (-det > 0) == (crossing > 0)
+            count += 1
+    assert count == 13392
+    return count
+
+
+def check_fox_dihedral_relation():
+    """GKT-25-FOX-01: reflection relation, including composite moduli and n=2."""
+    count = 0
+    for n in range(2, 17):
+        def mul(g, h):
+            return (g[0]*h[0], (g[0]*h[1]+g[1]) % n)
+        for a, b, c in product(range(n), repeat=3):
+            A, B, C = (-1, a), (-1, b), (-1, c)
+            assert (mul(mul(B, A), B) == C) == ((2*b-a-c) % n == 0)
+            assert mul(B, B) == (1, 0)
+            # GKT-25-FOX-MOVES-01: idempotence, involution and self-distributivity.
+            def R(x, y):
+                return (2*y-x) % n
+            assert R(a, a) == a
+            assert R(R(a, b), b) == a
+            assert R(R(a, b), c) == R(R(a, c), R(b, c))
+            count += 1
+    assert count == 18495
+    return count
+
+
+def check_fox_prefix_cancellation():
+    """GKT-25-FOX-PREFIX-01: abelianized Fox derivatives and cancellations."""
+    def deriv(w):
+        out = {}
+        h = 0
+        for x in w:
+            if x < 0:
+                h -= 1
+            k = (abs(x), h)
+            out[k] = out.get(k, 0) + (1 if x > 0 else -1)
+            if x > 0:
+                h += 1
+        return {k: v for k, v in out.items() if v}
+
+    count = words = 0
+    letters = (-2, -1, 1, 2)
+    for n in range(6):
+        for w in product(letters, repeat=n):
+            words += 1
+            d = deriv(w)
+            for pos in range(n+1):
+                for x in letters:
+                    assert deriv(w[:pos]+(x, -x)+w[pos:]) == d
+                    count += 1
+            total = {}
+            for (_, h), v in d.items():
+                total[h+1] = total.get(h+1, 0)+v
+                total[h] = total.get(h, 0)-v
+            expected = {}
+            for h, v in ((sum(1 if x > 0 else -1 for x in w), 1), (0, -1)):
+                expected[h] = expected.get(h, 0)+v
+            assert {k: v for k, v in total.items() if v} == {k: v for k, v in expected.items() if v}
+    assert (count, words) == (30948, 1365)
+    assert deriv((1, 2, 1, -2, -1, -2)) == {
+        (1, 0): 1, (1, 2): 1, (1, 1): -1,
+        (2, 1): 1, (2, 2): -1, (2, 0): -1,
+    }
+    return count, words
+
+
+def check_arf_determinant_mod8():
+    """GKT-25-ARF-MOD8-01: exact determinant congruence on symplectic-mod-2 matrices."""
+    from random import Random
+
+    def determinant(m):
+        n = len(m)
+        # Leibniz formula, independent of Schur-complement proof.
+        result = 0
+        for p in permutations(range(n)):
+            v = (-1)**sum(p[i] > p[j] for i in range(n) for j in range(i+1,n))
+            for i, j in enumerate(p):
+                v *= m[i][j]
+            result += v
+        return result
+
+    def check(diag, pairs, cross):
+        n = len(diag)
+        m = [[0]*n for _ in range(n)]
+        for i, d in enumerate(diag):
+            m[i][i] = d
+        k = 0
+        for i in range(n):
+            for j in range(i+1,n):
+                if i//2 == j//2:
+                    m[i][j] = m[j][i] = pairs[i//2]
+                else:
+                    m[i][j] = m[j][i] = cross[k]
+                    k += 1
+        arf = sum((diag[i]//2)*(diag[i+1]//2) for i in range(0,n,2)) % 2
+        assert determinant(m) % 8 == ((-1)**(n//2)*(1-4*arf)) % 8
+
+    count = 0
+    for diag in product((0,2), repeat=4):
+        for pairs in product((1,3), repeat=2):
+            for cross in product((0,2,4,6), repeat=4):
+                check(diag,pairs,cross)
+                count += 1
+    rng = Random(230)
+    for _ in range(128):
+        check([2*rng.randrange(-4,5) for _ in range(6)],
+              [2*rng.randrange(-4,5)+1 for _ in range(3)],
+              [2*rng.randrange(-4,5) for _ in range(12)])
+    assert count == 16384
+    return count, 128
+
+
+def check_jones_mixed_r3_skein():
+    """GKT-25-JONES-01: six height orders and normalized skein coefficients."""
+    def b(i, sign):
+        return {(): {sign: 1}, (i,): {-sign: 1}}
+
+    orders = 0
+    for h in permutations(range(3)):
+        p, q, r = [1 if h[i] > h[j] else -1
+                   for i, j in ((0, 1), (0, 2), (1, 2))]
+        assert tl_mul(tl_mul(b(1,p),b(2,q)),b(1,r)) == \
+            tl_mul(tl_mul(b(2,r),b(1,q)),b(2,p))
+        orders += 1
+    assert orders == 6
+
+    for w in range(-12,13):
+        C = {-3*w: -1 if w % 2 else 1}
+        fpS, fpB = poly_mul(C,{-2:-1}), poly_mul(C,{-4:-1})
+        fmS, fmB = poly_mul(C,{2:-1}), poly_mul(C,{4:-1})
+        assert poly_add(poly_mul({4:1},fpS),poly_mul({-4:-1},fmS)) == \
+            poly_mul(C,{-2:1,2:-1})
+        assert poly_add(poly_mul({4:1},fpB),poly_mul({-4:-1},fmB)) == {}
+    return orders, 25
+
+
+def check_torus_fox_polynomial():
+    """GKT-25-TORUS-FOX-01: exact polynomial division for coprime torus parameters."""
+    from math import gcd
+
+    def div(a, b):
+        a = list(a)
+        q = [0]*(len(a)-len(b)+1)
+        for k in range(len(q)-1,-1,-1):
+            q[k] = a[k+len(b)-1]
+            for j,v in enumerate(b):
+                a[k+j] -= q[k]*v
+        assert not any(a)
+        return q
+
+    def mul(a,b):
+        c = [0]*(len(a)+len(b)-1)
+        for i,x in enumerate(a):
+            for j,y in enumerate(b):
+                c[i+j] += x*y
+        return c
+
+    count = 0
+    for p in range(2,21):
+        for q in range(2,21):
+            if gcd(p,q) != 1:
+                continue
+            a = [int(i%q == 0) for i in range(q*(p-1)+1)]
+            b = [int(i%p == 0) for i in range(p*(q-1)+1)]
+            h = div(a,[1]*p)
+            assert mul(h,[1]*q) == b
+            assert len(h)-1 == (p-1)*(q-1)
+            assert h[0] == h[-1] == 1 and sum(h) == 1 and h == h[::-1]
+            count += 1
+    assert count == 216
+    return count
+
+
+def check_alexander_normalization():
+    """GKT-25-ALEX-NORM-01: symmetric normalization and mirror determinant."""
+    from random import Random
+
+    def check(V):
+        g = len(V)//2
+        p = poly_det(alexander_matrix(V))
+        q = shifted(p, -g)
+        assert sum(q.values()) == 1
+        assert q == {-k:v for k,v in q.items()}
+        mirror = [[-V[j][i] for j in range(len(V))] for i in range(len(V))]
+        assert poly_det(alexander_matrix(mirror)) == p
+        for k in range(-3,4):
+            for sign in (-1,1):
+                r = {i+k:sign*v for i,v in q.items()}
+                if sum(r.values()) == 1 and r == {-i:v for i,v in r.items()}:
+                    assert k == 0 and sign == 1
+
+    count = 0
+    for a,b,c in product(range(-2,3),repeat=3):
+        for sign in (-1,1):
+            check([[a,b],[b-sign,c]])
+            count += 1
+    rng = Random(241)
+    for _ in range(128):
+        V = [[0]*4 for _ in range(4)]
+        for i in range(4):
+            V[i][i] = rng.randint(-3,3)
+            for j in range(i+1,4):
+                V[i][j] = rng.randint(-3,3)
+                V[j][i] = V[i][j]-int(i//2 == j//2)
+        check(V)
+        count += 1
+    check([])
+    count += 1
+    assert count == 379
+    return count
+
+
+def check_levine_tristram_enlargement():
+    """GKT-25-LT-01: Hermitian enlargement identity at scaled rational circle points."""
+    from random import Random
+    rng = Random(242)
+    count = 0
+    # All complex arithmetic below is on small Gaussian integers,
+    # hence exactly representable in binary64. Scaling by 5 is positive.
+    for c, mode, n in product((2,1+1j,1-1j,2+4j,2-4j,8+4j,8-4j),(0,1),(0,2,4)):
+        for _ in range(32):
+            V = [[rng.randrange(-3,4) for j in range(n)] for i in range(n)]
+            u = [rng.randrange(-3,4) for i in range(n)]
+            v = [rng.randrange(-3,4) for i in range(n)]
+            z = rng.randrange(-3,4)
+            E = enlarged(V,u,v,z,mode)
+            def herm(M):
+                return [[c*M[i][j]+c.conjugate()*M[j][i]
+                         for j in range(len(M))] for i in range(len(M))]
+            def form(M,x):
+                return sum(x[i].conjugate()*M[i][j]*x[j]
+                           for i in range(len(x)) for j in range(len(x)))
+            H, HE = herm(V), herm(E)
+            x = [complex(rng.randrange(-3,4),rng.randrange(-3,4)) for i in range(n)]
+            s,t = [complex(rng.randrange(-3,4),rng.randrange(-3,4)) for i in range(2)]
+            w = [c*a+c.conjugate()*b for a,b in zip(u,v)]
+            beta = c if mode else c.conjugate()
+            assert beta != 0
+            tp = beta*t+sum(a.conjugate()*b for a,b in zip(w,x))+c.real*z*s
+            assert form(HE,x+[s,t]) == form(H,x)+2*(s.conjugate()*tp).real
+            count += 1
+    assert count == 1344
+    return count
+
+
+def test_source():
+    names=[
+        "16-od-triangulacji-do-topologii-i-geometrii-rozmaitosci.tex",
+        "17-grafy-cayleya-dzialania-na-drzewach-i-teoria-bassa-serre-a.tex",
+        "18-teoria-wezlow-od-diagramow-do-rozmaitosci-czterowymiarowych.tex",
+    ]
+    a,b,c=[(DIR/name).read_text(encoding="utf-8") for name in names]
+    assert "bazach dualnych" in a
+    assert r"\label{thm:tg-finite-hodge}" in a
+    assert r"\label{ch:tg-bass-serre}" in b
+    assert r"\label{def:kt-four-ball-genus}" in c
+    assert r"\label{thm:kt-signature-four-genus}" in c
+    assert r"V&u&0\\ v^T&z&0\\0&1&0" in c
+    assert r"V&u&0\\v^T&z&1\\0&0&0" in c
+    assert r"b_1b_2b_1=b_2b_1b_2" in c
+    assert r"\label{thm:kt-arf-conway-slice}" in c
+    assert r"\label{def:kt-peripheral}" in c
+    assert r"\label{thm:kt-peripheral-homology}" in c
+    assert r"t'=t+(u+v)^Tx+zs" in c
+    # Verify both actual crossing diagrams, not an obsolete caption.
+    # The lower strand is split on each side of the crossing; the upper
+    # strand runs through the crossing without interruption.
+    crossing = c.split(r"\begin{tikzpicture}[scale=.88,line cap=round,line join=round,>=Stealth]", 1)[1].split(r"\end{tikzpicture}", 1)[0]
+    assert r"\draw[ktCoral,line width=2.8pt] (-1.0,1.0)--(-.14,.14);" in crossing
+    assert r"\draw[ktCoral,line width=2.8pt] (.14,-.14)--(1,-1);" in crossing
+    assert r"\draw[ktBlue,line width=3.2pt,-{Stealth[length=3mm]}] (-1,-1)--(1,1);" in crossing
+    assert r"\draw[ktBlue,line width=2.8pt] (-1,-1)--(-.14,-.14);" in crossing
+    assert r"\draw[ktBlue,line width=2.8pt] (.14,.14)--(1,1);" in crossing
+    assert r"\draw[ktCoral,line width=3.2pt,-{Stealth[length=3mm]}] (-1,1)--(1,-1);" in crossing
+
+
+if __name__=="__main__":
+    test_source()
+    print("PASS GKT-25-LT-01:",check_levine_tristram_enlargement())
+    print("PASS GKT-25-ALEX-NORM-01:",check_alexander_normalization())
+    print("PASS GKT-25-TORUS-FOX-01:",check_torus_fox_polynomial())
+    print("PASS GKT-25-JONES-01:",check_jones_mixed_r3_skein())
+    print("PASS GKT-25-ARF-MOD8-01:",check_arf_determinant_mod8())
+    print("PASS GKT-25-FOX-PREFIX-01:",check_fox_prefix_cancellation())
+    print("PASS GKT-25-FOX-01:",check_fox_dihedral_relation())
+    print("PASS GKT-25-LINK-SIGN-01:",check_crossing_orientation())
+    print("PASS finite weighted Hodge cochain models:",
+          [check_hodge(facets) for facets in (
+              {(0,1),(1,2),(0,2)},
+              {(0,1,2)},
+              {(0,1,2),(0,1,3),(0,2,3),(1,2,3)})])
+    print("PASS Cayley free balls:",[(r,cayley_free_ball(r,3)) for r in (1,2,3)])
+    print("PASS C2*C3 Bass--Serre truncated coset tree:",c2c3_tree_ball())
+    print("PASS GKT-24-BS12-PY-01:",check_bs12_cosets())
+    print("PASS Seifert S-enlargement Laurent determinant identities:",
+          check_seifert_alexander())
+    print("PASS Fox trefoil coloring moduli:",check_fox_coloring())
+    print("PASS Jones trefoil TL bracket:",check_jones_trefoil())
+    print("PASS Temperley--Lieb RII/RIII exact braid identities:",check_tl_reidemeister())
+    print("PASS Arf quadratic Gauss sums:",check_arf_gauss())
+    print("PASS Arf quadratic S-enlargement isometries over F2:",check_arf_enlargement_isometry())
+    print("PASS Arf-Conway mod 8 congruences:",check_conway_arf_congruence())

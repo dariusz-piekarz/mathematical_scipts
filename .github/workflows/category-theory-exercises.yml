@@ -1,0 +1,40 @@
+name: Category theory exercises validation
+on:
+  push:
+    branches: [biblioteka-matematyczna-iteracja-6]
+    paths:
+      - 'books/pl/category_theory_exercises.tex'
+      - '.github/workflows/category-theory-exercises.yml'
+  workflow_dispatch:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check exercise and hint identifiers
+        run: |
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          source = Path("books/pl/category_theory_exercises.tex").read_text(encoding="utf-8")
+          expected = [f"CAT-Z-{n:02}" for n in range(19)]
+          tasks, hints = source.split(r"\section{Podpowiedzi}")
+          for part in (tasks, hints):
+              assert re.findall(r"\\item\[\\textbf\{(CAT-Z-\d\d)\}\]", part) == expected
+          PY
+      - name: Compile exercise booklet
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: category_theory_exercises.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Verify PDF
+        run: |
+          test -s books/pl/category_theory_exercises.pdf
+          ! grep -E 'There were undefined references|LaTeX Warning: Reference .* undefined|^! ' books/pl/category_theory_exercises.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: category-theory-exercises-pdf
+          path: |
+            books/pl/category_theory_exercises.pdf
+            books/pl/category_theory_exercises.log

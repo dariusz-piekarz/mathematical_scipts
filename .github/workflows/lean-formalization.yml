@@ -1,0 +1,570 @@
+name: Lean 4 - kernel and axiom audit
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "application/lean/**"
+      - "application/backend/lean_concepts.py"
+      - "application/backend/lean_draft_generator.py"
+      - "application/backend/lean_draft_repair.py"
+      - "application/backend/lean_draft_runner.py"
+      - "application/tests/test_lean_draft_repair.py"
+      - "application/tests/test_lean_draft_generator.py"
+      - "application/tests/test_lean_concept_fixture.py"
+      - "application/scripts/lean_ci_audit.py"
+      - "application/scripts/lean_full_import_probe.py"
+      - "application/tests/test_lean_full_import_probe.py"
+      - "application/scripts/lean_mathlib_source_probe.py"
+      - "application/scripts/lean_artifact_manifest.py"
+      - "application/tests/test_lean_artifact_manifest.py"
+      - "application/tests/test_lean_mathlib_source_probe.py"
+      - "application/scripts/benchmark_lean_fingerprint.py"
+      - "application/scripts/benchmark_lean_paths.py"
+      - "application/scripts/profile_lean_olean_cpu.py"
+      - "application/tests/test_lean_fingerprint_benchmark.py"
+      - "application/tests/test_lean_paths_benchmark.py"
+      - "application/tests/test_lean_olean_cpu_profile.py"
+      - "application/tests/test_lean_environment.py"
+      - "application/tests/test_lean_results.py"
+      - "application/tests/test_lean_ci_audit.py"
+      - "application/backend/lean_introspection.py"
+      - "application/backend/lean_inspection_snapshot.py"
+      - "application/backend/lean_source_provenance.py"
+      - "application/backend/lean_formalization.py"
+      - "application/backend/lean_results.py"
+      - "application/backend/lean_environment.py"
+      - "application/tests/test_lean_introspection.py"
+      - "application/tests/test_lean_inspection_snapshot.py"
+      - "application/tests/test_lean_introspection_real.py"
+      - "application/requirements.txt"
+      - ".github/workflows/lean-formalization.yml"
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      candidate_sha:
+        description: "Full immutable commit SHA"
+        required: true
+        type: string
+      validation_pass:
+        description: "Independent validation pass ID"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ inputs.validation_pass && format('atlas-lean-{0}-{1}', github.run_id, inputs.validation_pass) || format('lean-formalization-{0}', github.ref) }}
+  # Keep the active pinned Lean + Mathlib audit running despite frequent commits.
+  # GitHub concurrency retains at most one pending run for this branch.
+  cancel-in-progress: false
+
+jobs:
+  lean-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout canonical repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha || github.sha }}
+
+      - name: Require exact pinned checkout identity
+        env:
+          EXPECTED_SHA: ${{ inputs.candidate_sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - name: Set up Python for evidence checks
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Test axiom audit, manifest and inspection snapshot contract
+        working-directory: application
+        run: |
+          python -m unittest \
+            tests.test_lean_ci_audit \
+            tests.test_lean_mathlib_source_probe \
+            tests.test_lean_artifact_manifest \
+            tests.test_lean_fingerprint_benchmark \
+            tests.test_lean_paths_benchmark \
+            tests.test_lean_olean_cpu_profile \
+            tests.test_lean_environment \
+            tests.test_lean_results \
+            tests.test_lean_inspection_snapshot -v
+
+      - name: Initialize pinned Lake manifest on a fresh checkout
+        working-directory: application/lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --show-error --silent --location \
+            https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none --no-modify-path
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lake" update
+          test -s lake-manifest.json
+
+      - name: Install Lean 4 and fetch pinned Mathlib cache
+        # leanprover/lean-action v1.7.1 pinned by immutable commit
+        uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        with:
+          lake-package-directory: application/lean
+          auto-config: "false"
+          use-mathlib-cache: "true"
+          use-github-cache: "true"
+        env:
+          LEAN_NUM_THREADS: "1"
+
+      - name: Check exact Lean and Mathlib revisions
+        working-directory: application/lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(cat lean-toolchain)" = "leanprover/lean4:v4.26.0"
+          grep -Fq 'rev = "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67"' lakefile.toml
+          mathlib_sha="$(git -C .lake/packages/mathlib rev-parse HEAD)"
+          test "$mathlib_sha" = "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67"
+          lake env lean --version
+          echo "Mathlib revision: $mathlib_sha"
+
+      - name: Verify pinned Mathlib source closure
+        working-directory: application
+        env:
+          EXPECTED_SHA: ${{ inputs.candidate_sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m scripts.lean_mathlib_source_probe "$EXPECTED_SHA" "$RUNNER_TEMP/atlas-mathlib-source-closure.json"
+      - name: Upload verified Mathlib source closure evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-mathlib-source-closure-${{ inputs.validation_pass || 'standalone' }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/atlas-mathlib-source-closure.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Hash and verify selected real Mathlib Logic artifacts
+        working-directory: application
+        env:
+          EXPECTED_SHA: ${{ inputs.candidate_sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          selected="lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Logic"
+          test -s "$selected/Basic.olean"
+          manifest="$RUNNER_TEMP/atlas-mathlib-logic-artifacts.json"
+          python -m scripts.lean_artifact_manifest create "$selected" "$manifest" \
+            --lean-root lean --checkout-sha "$EXPECTED_SHA"
+          expected_digest="$(sha256sum "$manifest" | cut -d ' ' -f 1)"
+          python -m scripts.lean_artifact_manifest verify "$selected" "$manifest" \
+            --lean-root lean --checkout-sha "$EXPECTED_SHA" \
+            --expected-sha256 "$expected_digest" \
+            | tee "$RUNNER_TEMP/atlas-mathlib-logic-verification.json"
+          echo "Selected Logic tree only: no complete offline closure or draft execution."
+
+      - name: Upload selected artifact integrity evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-selected-artifact-integrity-${{ inputs.validation_pass || 'standalone' }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/atlas-mathlib-logic-artifacts.json
+            ${{ runner.temp }}/atlas-mathlib-logic-verification.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Compile registered Lean files and check axioms
+        working-directory: application/lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ci_lean_logs
+          python ../scripts/lean_ci_audit.py \
+            --manifest manifest.json --lean-root . --list-files > ci_lean_files.txt
+          test -s ci_lean_files.txt
+          while IFS= read -r file; do
+            echo "Compiling registered file: $file"
+            log="ci_lean_logs/${file//\//_}.log"
+            if ! lake env lean "$file" > "$log" 2>&1; then
+              cat "$log"
+              echo "::error::Lean compilation failed for $file"
+              exit 1
+            fi
+            cat "$log"
+          done < ci_lean_files.txt
+          python ../scripts/lean_ci_audit.py \
+            --manifest manifest.json --lean-root . \
+            --logs-dir ci_lean_logs --report ci_lean_report.json
+
+      - name: Compile trusted concept dictionary signatures (when present)
+        working-directory: application/lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -f ../backend/lean_concepts.py && ! -f checks/ConceptSignatures.lean ]]; then
+            echo "Historical checkout without concept dictionary."
+            exit 0
+          fi
+          test -f ../backend/lean_concepts.py
+          test -f checks/ConceptSignatures.lean
+          (cd .. && python -m unittest tests.test_lean_concept_fixture -v)
+          mkdir -p ci_lean_logs
+          probe="$(mktemp --suffix=.lean ./ConceptSignaturesXXXXXX)"
+          trap 'rm -f "$probe"' EXIT
+          cat src/LST01_SyntaxValuations.lean > "$probe"
+          printf '\n' >> "$probe"
+          cat checks/ConceptSignatures.lean >> "$probe"
+          if ! lake env lean "$probe" > ci_lean_logs/concept-signatures.log 2>&1; then
+            cat ci_lean_logs/concept-signatures.log
+            exit 1
+          fi
+          cat ci_lean_logs/concept-signatures.log
+          (cd .. && python -c 'from backend.lean_concepts import dictionary_sha256; print("Dictionary SHA-256:", dictionary_sha256())')
+          echo "Trusted concept signature fixture compiled; semantic mappings remain unreviewed."
+
+      - name: Compile fixed trusted generated draft examples (when present)
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -f backend/lean_draft_generator.py && ! -f tests/test_lean_draft_generator.py ]]; then
+            echo "Historical checkout without draft generator."
+            exit 0
+          fi
+          test -f backend/lean_draft_generator.py
+          test -f tests/test_lean_draft_generator.py
+          python -m unittest tests.test_lean_draft_generator -v
+          probe="$(mktemp -d "$PWD/lean/DraftProbeXXXXXX")"
+          trap 'rm -rf "$probe"' EXIT
+          python -c 'import sys; from tests.test_lean_draft_generator import write_trusted_fixtures; write_trusted_fixtures(sys.argv[1])' "$probe"
+          if [[ -f backend/lean_draft_repair.py ]]; then
+            python -m unittest tests.test_lean_draft_repair -v
+            if grep -q '^def write_trusted_repair_fixtures' tests/test_lean_draft_repair.py; then
+              python -c 'import sys; from tests.test_lean_draft_repair import write_trusted_repair_fixtures; write_trusted_repair_fixtures(sys.argv[1])' "$probe"
+              test -s "$probe/DraftRepair2.lean"
+              test -s "$probe/DraftRepair3.lean"
+            fi
+          fi
+          export PYTHONPATH="$PWD"
+          (cd lean; mkdir -p ci_lean_logs
+           for file in "$probe"/Draft*.lean; do
+             log="ci_lean_logs/$(basename "$file").log"
+             if ! lake env lean "$file" > "$log" 2>&1; then cat "$log"; exit 1; fi
+             cat "$log"
+             python -c 'import sys; from pathlib import Path; from scripts.lean_ci_audit import inspect_log; print(inspect_log(Path(sys.argv[1]).read_text(encoding="utf-8"), ["atlas_draft"]))' "$log"
+             if grep -Ei 'sorryAx|declaration uses .sorry.' "$log"; then exit 1; fi
+           done)
+          # Historical 2+1 checkouts may precede the scoped import probe.
+          if grep -q '^def scoped_fixture_copy(' scripts/lean_full_import_probe.py 2>/dev/null; then
+            python -m unittest tests.test_lean_full_import_probe -v
+            python - "$probe" <<'PY'
+          import hashlib
+          import json
+          import subprocess
+          import sys
+          from pathlib import Path
+          from scripts.lean_ci_audit import inspect_log
+          from scripts.lean_full_import_probe import scoped_fixture_copy, SCOPED_IMPORTS, SCOPED_HEADER
+
+          root = Path("lean").resolve()
+          probe = Path(sys.argv[1]).resolve()
+          logs = root / "ci_lean_logs"
+          originals = sorted(probe.glob("Draft*.lean"))
+          if len(originals) != 10:
+              raise ValueError("Unexpected fixed generator/repair fixture count")
+          scoped = probe / "scoped"
+          scoped.mkdir()
+          records = []
+          for original in originals:
+              payload = original.read_bytes()
+              if payload.startswith(SCOPED_HEADER.encode("ascii")):
+                  from scripts.lean_full_import_probe import full_fixture_copy
+                  adapted = full_fixture_copy(payload)
+                  full_payload, scoped_payload = adapted, payload
+                  native_profile = "scoped"
+              else:
+                  adapted = scoped_fixture_copy(payload)
+                  full_payload, scoped_payload = payload, adapted
+                  native_profile = "full"
+              target = scoped / original.name
+              target.write_bytes(adapted)
+              log = logs / (("full-" if native_profile == "scoped" else "scoped-") + original.name + ".log")
+              result = subprocess.run(["lake", "env", "lean", str(target)],
+                                      cwd=root, stdout=subprocess.PIPE,
+                                      stderr=subprocess.STDOUT, timeout=90, check=False)
+              log.write_bytes(result.stdout)
+              if result.returncode or len(result.stdout) > 16000:
+                  raise ValueError("Scoped fixture compilation failed: " + original.name)
+              original_axioms = inspect_log((logs / (original.name + ".log")).read_text("utf-8"), ["atlas_draft"])
+              adapted_axioms = inspect_log(result.stdout.decode("utf-8"), ["atlas_draft"])
+              full_axioms, scoped_axioms = ((adapted_axioms, original_axioms)
+                                            if native_profile == "scoped" else (original_axioms, adapted_axioms))
+              if set(full_axioms["atlas_draft"]) != set(scoped_axioms["atlas_draft"]):
+                  raise ValueError("Scoped fixture axiom set differs: " + original.name)
+              records.append(dict(name=original.name, native_profile=native_profile,
+                                  full_sha256=hashlib.sha256(full_payload).hexdigest(),
+                                  scoped_sha256=hashlib.sha256(scoped_payload).hexdigest(),
+                                  axioms=sorted(scoped_axioms["atlas_draft"]), exit_code=0))
+          report = dict(schema=1, fixture_only=True, host_only=True, imports=list(SCOPED_IMPORTS),
+                        execution_allowed=False, offline_ready=False, certificate=False, fixtures=records)
+          (logs / "scoped-generator-parity.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+          print("ATLAS_SCOPED_GENERATOR_PARITY " + json.dumps(report, sort_keys=True))
+          PY
+          fi
+
+      - name: Measure real Lean proof-failure diagnostics (fixed CI fixtures)
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! grep -q '^def prepare_repair(' backend/lean_draft_runner.py 2>/dev/null; then
+            echo "Historical checkout without repair admission."
+            exit 0
+          fi
+          python - <<'PY'
+          import hashlib
+          import json
+          import subprocess
+          import tempfile
+          from pathlib import Path
+          from backend.lean_draft_generator import generate
+          from backend.lean_draft_repair import plan_next, MAX_DIAGNOSTIC_BYTES, VERSION
+          from backend.lean_draft_runner import prepare_repair
+          from scripts.lean_ci_audit import inspect_log
+
+          root = Path("lean").resolve()
+          logs = root / "ci_lean_logs"
+          logs.mkdir(exist_ok=True)
+          def require(condition, message):
+              if not condition:
+                  raise RuntimeError(message)
+
+          def compile_fixture(source, label, directory):
+              candidate = generate(source, consent=True)
+              require(candidate["status"] == "generated", "fixture generation failed")
+              payload = candidate["lean_code"].encode("utf-8")
+              require(hashlib.sha256(payload).hexdigest() == candidate["lean_code_sha256"],
+                      "fixture digest mismatch")
+              (directory / "Draft.lean").write_bytes(payload + b"\n#print axioms atlas_draft\n")
+              result = subprocess.run(
+                  ["lake", "env", "bash", "-c", 'cd "$1" && exec lean Draft.lean',
+                   "_", str(directory)], cwd=root, stdout=subprocess.PIPE,
+                  stderr=subprocess.STDOUT, timeout=90, check=False)
+              (logs / (label + ".log")).write_bytes(result.stdout)
+              require(0 < len(result.stdout) <= MAX_DIAGNOSTIC_BYTES,
+                      "empty or oversized diagnostic")
+              return candidate, result
+
+          with tempfile.TemporaryDirectory(prefix="atlas-repair-ci-") as temp:
+              directory = Path(temp)
+              # Positive control through the exact same invocation and Mathlib.
+              _, positive = compile_fixture(r"\top", "repair-positive-control", directory)
+              require(positive.returncode == 0, "positive Lean control failed")
+              inspect_log(positive.stdout.decode("utf-8"), ["atlas_draft"])
+
+              # False is intentionally unprovable; this is never user input.
+              candidate, failure = compile_fixture(r"\bot", "repair-real-diagnostic", directory)
+              require(failure.returncode == 1, "unexpected negative fixture exit code")
+              diagnostic = failure.stdout
+              require("error:" in diagnostic.decode("utf-8").lower(),
+                      "negative fixture produced no Lean error")
+              identity = dict(expected_source_sha256=candidate["source_sha256"],
+                              expected_ast_sha256=candidate["ast_sha256"],
+                              expected_initial_code_sha256=candidate["lean_code_sha256"],
+                              consent=True)
+              history = [dict(code_sha256=candidate["lean_code_sha256"],
+                              exit_code=failure.returncode, diagnostic=diagnostic)]
+              plan = plan_next(r"\bot", observations=history, **identity)
+              require(plan["status"] in ("blocked", "repair_planned"),
+                      "unexpected classifier outcome")
+              # Historical pinned checkouts measured the unsupported header only.
+              # Current classifier must actually recognize this real fixture.
+              if VERSION not in ("0.1.0", "0.1.1", "0.1.2"):
+                  require(plan["status"] == "repair_planned",
+                          "real omega diagnostic not recognized")
+              require(plan["certificate"] is False and plan["execution_allowed"] is False
+                      and plan["proof_status"] == "not_run", "planner granted authority")
+              admission = None
+              if plan["status"] == "repair_planned":
+                  require(plan["signature"] == candidate["signature"], "statement changed")
+                  admission, prepared = prepare_repair(
+                      r"\bot", observations=history,
+                      expected_repair_code_sha256=plan["lean_code_sha256"], **identity)
+                  require(prepared is not None and admission["execution_allowed"] is False
+                          and admission["certificate"] is False
+                          and admission["diagnostic_authenticity"] == "unverified",
+                          "repair admission contract violated")
+              else:
+                  require(plan["lean_code"] is None, "blocked plan returned code")
+              report = dict(positive_control="passed", exit_code=failure.returncode,
+                            diagnostic_sha256=hashlib.sha256(diagnostic).hexdigest(),
+                            diagnostic_bytes=len(diagnostic),
+                            initial_code_sha256=candidate["lean_code_sha256"],
+                            planner_status=plan["status"], planner_error=plan.get("error"),
+                            admission_status=None if admission is None else admission["admission_status"],
+                            fixture_only=True, execution_allowed=False, certificate=False)
+              (logs / "repair-real-diagnostic.json").write_text(
+                  json.dumps(report, indent=2) + "\n", encoding="utf-8")
+              print(json.dumps(report))
+              print(diagnostic.decode("utf-8"))
+          PY
+
+      - name: Exercise bounded repair loop on a fixed polynomial fixture
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! grep -q '^def prepare_repair(' backend/lean_draft_runner.py 2>/dev/null; then
+            echo "Historical checkout without repair admission."
+            exit 0
+          fi
+          python - <<'PY'
+          import hashlib
+          import json
+          import subprocess
+          import tempfile
+          from pathlib import Path
+          from backend.lean_draft_generator import generate
+          from backend.lean_draft_repair import plan_next, MAX_ATTEMPTS, MAX_DIAGNOSTIC_BYTES, VERSION
+          from backend.lean_draft_runner import prepare_repair
+          from scripts.lean_ci_audit import inspect_log
+
+          if VERSION in ("0.1.0", "0.1.1", "0.1.2"):
+              print("Historical classifier before real omega diagnostic support.")
+              raise SystemExit(0)
+
+          # Repository-controlled mathematical identity, never an application request.
+          source = (r"\forall x:Real, \forall y:Real, "
+                    r"(x + y) \cdot (x + y) = (x \cdot x) + "
+                    r"((2:Real) \cdot x \cdot y) + (y \cdot y)")
+          root = Path("lean").resolve()
+          logs = root / "ci_lean_logs"
+          logs.mkdir(exist_ok=True)
+
+          def require(condition, message):
+              if not condition:
+                  raise RuntimeError(message)
+
+          initial = generate(source, consent=True)
+          require(initial["status"] == "generated", "polynomial fixture generation failed")
+          identity = dict(expected_source_sha256=initial["source_sha256"],
+                          expected_ast_sha256=initial["ast_sha256"],
+                          expected_initial_code_sha256=initial["lean_code_sha256"],
+                          consent=True)
+          current = initial
+          payload = initial["lean_code"].encode("utf-8") + b"\n#print axioms atlas_draft\n"
+          history, trace = [], []
+          outcome = "not_run"
+          report = dict(fixture_only=True, repair_version=VERSION, max_attempts=MAX_ATTEMPTS,
+                        initial_code_sha256=initial["lean_code_sha256"],
+                        execution_allowed=False, certificate=False, attempts=trace)
+          with tempfile.TemporaryDirectory(prefix="atlas-repair-loop-ci-") as temp:
+              directory = Path(temp)
+              try:
+                  for attempt in range(1, MAX_ATTEMPTS + 1):
+                      code = current["lean_code"].encode("utf-8")
+                      require(current["signature"] == initial["signature"],
+                              "fixture statement changed")
+                      require(hashlib.sha256(code).hexdigest() == current["lean_code_sha256"],
+                              "fixture code digest mismatch")
+                      require(payload == code + b"\n#print axioms atlas_draft\n",
+                              "fixture payload mismatch")
+                      (directory / "Draft.lean").write_bytes(payload)
+                      result = subprocess.run(
+                          ["lake", "env", "bash", "-c", 'cd "$1" && exec lean Draft.lean',
+                           "_", str(directory)], cwd=root, stdout=subprocess.PIPE,
+                          stderr=subprocess.STDOUT, timeout=90, check=False)
+                      diagnostic = result.stdout
+                      (logs / f"repair-loop-{attempt}.log").write_bytes(diagnostic)
+                      require(0 < len(diagnostic) <= MAX_DIAGNOSTIC_BYTES,
+                              "empty or oversized fixture output")
+                      row = dict(attempt=attempt, code_sha256=current["lean_code_sha256"],
+                                 input_sha256=hashlib.sha256(payload).hexdigest(),
+                                 diagnostic_sha256=hashlib.sha256(diagnostic).hexdigest(),
+                                 exit_code=result.returncode)
+                      trace.append(row)
+                      if result.returncode == 0:
+                          row["axioms"] = inspect_log(diagnostic.decode("utf-8"), ["atlas_draft"])
+                          outcome = "initial_compiled" if attempt == 1 else "repair_compiled"
+                          break
+                      require(result.returncode == 1, "unexpected compiler exit code")
+                      history.append(dict(code_sha256=current["lean_code_sha256"],
+                                          exit_code=result.returncode, diagnostic=diagnostic))
+                      plan = plan_next(source, observations=history, **identity)
+                      row["planner_status"] = plan["status"]
+                      row["planner_error"] = plan.get("error")
+                      require(plan["execution_allowed"] is False and plan["certificate"] is False
+                              and plan["proof_status"] == "not_run", "planner granted authority")
+                      if plan["status"] != "repair_planned":
+                          outcome = plan["status"]
+                          require(plan["lean_code"] is None, "blocked plan returned code")
+                          break
+                      require(attempt < MAX_ATTEMPTS, "attempt limit exceeded")
+                      status, prepared = prepare_repair(
+                          source, observations=history,
+                          expected_repair_code_sha256=plan["lean_code_sha256"], **identity)
+                      require(prepared is not None and prepared.attempt == attempt + 1
+                              and status["execution_allowed"] is False
+                              and status["certificate"] is False
+                              and status["diagnostic_authenticity"] == "unverified",
+                              "repair admission contract violated")
+                      require(prepared.input_sha256 == hashlib.sha256(prepared.input_bytes).hexdigest(),
+                              "repair payload digest mismatch")
+                      current, payload = plan, prepared.input_bytes
+              finally:
+                  report["outcome"] = outcome
+                  (logs / "repair-loop.json").write_text(
+                      json.dumps(report, indent=2) + "\n", encoding="utf-8")
+                  print("ATLAS_TRUSTED_REPAIR_LOOP " + json.dumps(report))
+          # A successful initial proof alone is not evidence of repair.
+          require(outcome == "repair_compiled", "fixed polynomial repair was not demonstrated")
+          PY
+
+      - name: Install application dependencies for Lean introspection test
+        working-directory: application
+        run: python -m pip install -r requirements.txt
+
+      - name: Execute real Lean MetaM constant introspection (mandatory, no skips)
+        working-directory: application
+        env:
+          MATLIB_REQUIRE_REAL_LEAN_TEST: "1"
+          LEAN_NUM_THREADS: "1"
+        run: python -m unittest tests.test_lean_introspection_real -v
+
+      - name: Measure three genuine full fingerprint calls on pinned Mathlib checkout
+        working-directory: application
+        run: |
+          python scripts/benchmark_lean_fingerprint.py \
+            --samples 3 --output lean/ci_fingerprint_benchmark.json
+
+      - name: Compare legacy and optimized lexical paths on the same pinned Mathlib
+        working-directory: application
+        run: |
+          python scripts/benchmark_lean_paths.py \
+            --samples 5 --compare-with lean/ci_fingerprint_benchmark.json \
+            --output lean/ci_olean_paths_pair_benchmark.json
+
+      - name: Profile one genuine .olean fingerprint pass on pinned Mathlib
+        working-directory: application
+        run: |
+          python scripts/profile_lean_olean_cpu.py \
+            --top 12 --compare-with lean/ci_fingerprint_benchmark.json \
+            --output lean/ci_olean_cpu_profile.json
+
+      - name: Upload Lean compilation and axiom evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-kernel-axiom-evidence
+          path: |
+            application/lean/ci_lean_logs/*.log
+            application/lean/ci_lean_logs/repair-real-diagnostic.json
+            application/lean/ci_lean_logs/repair-loop.json
+            application/lean/ci_lean_logs/scoped-generator-parity.json
+            application/lean/ci_lean_report.json
+            application/lean/ci_lean_files.txt
+            application/lean/ci_fingerprint_benchmark.json
+            application/lean/ci_olean_cpu_profile.json
+            application/lean/ci_olean_paths_pair_benchmark.json
+          if-no-files-found: warn

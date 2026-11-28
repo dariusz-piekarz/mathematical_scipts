@@ -3,40 +3,77 @@
 
 \section{Informacja rosnąca w czasie}
 
-Warunkowa wartość oczekiwana mierzy to, co można
-przewidzieć na podstawie ustalonej informacji.
+Warunkowa wartość oczekiwana (rozdział~\ref{ch:condexp})
+opisuje to, co można przewidzieć na podstawie ustalonej
+informacji.
 W procesie losowym informacja jednak rośnie:
 po każdym kroku poznajemy nowy wynik. \emph{Filtracja}
 porządkuje te kolejne etapy, a warunek adaptacji
-gwarantuje, że proces w chwili $n$ nie odwołuje się
-do przyszłości.
+gwarantuje, że wartość procesu w chwili $n$
+jest mierzalna względem przyjętej informacji
+$\mathcal F_n$. To, czy informacja ta zawiera
+również pewne dane o przyszłości, zależy od
+wyboru filtracji.
 
 \begin{definicja}[Filtracja i proces adaptowany]
 Niech $(\Omega,\mathcal F,\Prob)$ będzie przestrzenią
 probabilistyczną. \emph{Filtracją w czasie dyskretnym}
-nazywamy ciąg pod-$\sigma$-ciał
+nazywamy ciąg $\sigma$-ciał
 $(\mathcal F_n)_{n\geq0}$ spełniający
-$\mathcal F_n\subseteq\mathcal F_{n+1}\subseteq\mathcal F$.
-Proces $(X_n)_{n\geq0}$ jest \emph{adaptowany}, jeśli
-$X_n$ jest $\mathcal F_n$-mierzalna dla każdego $n$.
+$\mathcal F_n\subseteq\mathcal F_{n+1}\subseteq\mathcal F$
+dla każdego $n\geq0$.
+Procesem o wartościach w przestrzeni mierzalnej
+$(S,\mathcal S)$ nazywamy tutaj ciąg mierzalnych
+odwzorowań $X_n:\Omega\to S$.
+Proces $(X_n)_{n\geq0}$ jest \emph{adaptowany}
+względem $(\mathcal F_n)$, jeśli każde $X_n$
+jest $(\mathcal F_n,\mathcal S)$-mierzalne.
 \emph{Naturalna filtracja} procesu to
 $\mathcal F_n^X=\sigma(X_0,\ldots,X_n)$.
-Proces $(H_n)_{n\geq1}$ jest \emph{przewidywalny},
-jeśli $H_n$ jest $\mathcal F_{n-1}$-mierzalna.
+Proces $(H_n)_{n\geq1}$ o wartościach w ustalonej
+przestrzeni mierzalnej jest \emph{przewidywalny}
+względem $(\mathcal F_n)$, jeśli każde $H_n$
+jest mierzalne względem $\mathcal F_{n-1}$.
 \end{definicja}
 
+\begin{uwaga}[Najmniejsza filtracja i przewidywalność]
+Naturalna filtracja jest filtracją, ponieważ dołączenie
+kolejnej zmiennej nie zmniejsza generowanego
+$\sigma$-ciała. Jeżeli $X$ jest adaptowany względem
+$(\mathcal G_n)$, to dla $k\leq n$ zmienna $X_k$
+jest mierzalna względem $\mathcal G_k\subseteq\mathcal G_n$,
+zatem $\mathcal F_n^X\subseteq\mathcal G_n$.
+W szczególności naturalna filtracja jest najmniejszą
+filtracją, względem której $X$ jest adaptowany.
+Każdy proces przewidywalny jest adaptowany w chwilach
+$n\geq1$, gdyż $\mathcal F_{n-1}\subseteq\mathcal F_n$.
+Odwrotna implikacja nie zachodzi, jak pokazuje
+następujący przykład z niezależnymi rzutami monetą.
+\end{uwaga}
+
 \begin{przyklad}[Historia, dodatkowa informacja i uprzedzenie przyszłości]
-Dla kolejnych rzutów monetą $\xi_k\in\{-1,1\}$,
+Dla niezależnych uczciwych rzutów monetą
+$\xi_k\in\{-1,1\}$,
 $S_n=\sum_{k=1}^n\xi_k$ i $S_0=0$, naturalna
 filtracja sum $\mathcal F_n^S$ jest równa
-$\sigma(\xi_1,\ldots,\xi_n)$: z trajektorii
-$S_0,\ldots,S_n$ odzyskujemy wszystkie przyrosty
-$\xi_k=S_k-S_{k-1}$. Możemy też rozszerzyć informację
-np. o temperaturę obserwowaną w danej chwili.
-Gdyby do $\mathcal F_0$ włączyć wartość
-$\xi_1$, proces sum pozostałby adaptowany, ale
-nie byłby już martyngałem, bo pierwszy przyrost
-nie byłby nieprzewidywalny. Martyngałowość
+$\sigma(\xi_1,\ldots,\xi_n)$: sumy są mierzalnymi
+funkcjami przyrostów, a z trajektorii $S_0,\ldots,S_n$
+odzyskujemy wszystkie przyrosty $\xi_k=S_k-S_{k-1}$.
+Dla $n=0$ (przy konwencji, że $\sigma$-ciało
+generowane przez pustą rodzinę jest trywialne)
+otrzymujemy $\sigma$-ciało
+$\{\varnothing,\Omega\}$.
+Możemy też rozszerzyć informację o dodatkowe
+obserwacje $Y_0,\ldots,Y_n$, przyjmując
+$\mathcal G_n=\sigma(S_0,\ldots,S_n,Y_0,\ldots,Y_n)$.
+W szczególności przyjmijmy
+$\mathcal G_n=\sigma(\xi_1,\ldots,\xi_{\max(1,n)})$.
+Proces sum pozostaje adaptowany, ale nie jest już
+martyngałem względem $(\mathcal G_n)$, gdyż
+$\E[S_1\mid\mathcal G_0]=\xi_1\ne0=S_0$ p.n.
+W naturalnej filtracji jest martyngałem, ponieważ
+niezależny od wcześniejszych rzutów przyrost ma
+średnią zero (dowód podamy również niżej). Martyngałowość
 zależy więc \emph{od filtracji}, a nie tylko od
 wspólnego rozkładu procesu.
 \end{przyklad}
@@ -47,15 +84,22 @@ którą wybieramy \emph{przed} zaobserwowaniem
 zmiany ceny między $n-1$ i $n$, to powinna być
 $\mathcal F_{n-1}$-mierzalna. Strategia
 $H_n=\operatorname{sgn}(S_n-S_{n-1})$ używałaby
-już wyniku kroku $n$ i dlatego nie jest
-strategią przewidywalną.
+już wyniku kroku $n$. W naturalnej filtracji
+niezależnych uczciwych rzutów z poprzedniego przykładu
+jest to $H_n=\xi_n$. Gdyby $H_n$ było
+$\mathcal F_{n-1}$-mierzalne, zdarzenie $\{\xi_n=1\}$
+byłoby niezależne od siebie, a jego prawdopodobieństwo
+$1/2$ musiałoby spełniać $1/2=(1/2)^2$.
+Otrzymujemy sprzeczność. Jest to więc proces adaptowany,
+ale nieprzewidywalny względem tej filtracji.
 \end{przyklad}
 
 
 \begin{przyklad}[Filtracja rozpisana na elementarnych zdarzeniach]
 Wykonujemy dwa niezależne uczciwe rzuty monetą.
 Przestrzeń wyników jest
-$\Omega=\{OO,OR,RO,RR\}$, gdzie pierwsza litera
+$\Omega=\{OO,OR,RO,RR\}$ z $\mathcal F=2^\Omega$,
+gdzie pierwsza litera
 opisuje pierwszy rzut. W chwili $0$ nic nie wiemy:
 $\mathcal F_0=\{\varnothing,\Omega\}$. Po pierwszym
 rzucie rozróżniamy atomy $\{OO,OR\}$ i $\{RO,RR\}$,
@@ -65,46 +109,94 @@ a więc
 \{OO,OR\},\{RO,RR\}\},\qquad
 \mathcal F_2=2^\Omega.
 \]
-Niech $Y=\ind{\{OO\}}$ oznacza zdarzenie,
-że oba rzuty dały orła. Wtedy
+Dla $n\geq2$ przyjmujemy $\mathcal F_n=\mathcal F_2$.
+Niech $Y=\chi_{\{OO\}}$ będzie funkcją
+charakterystyczną zdarzenia, że oba rzuty dały orła.
+Każdy wynik ma prawdopodobieństwo $1/4$.
+Obliczając średnie na atomach odpowiednich
+$\sigma$-ciał (rozdział~\ref{ch:condexp}), otrzymujemy
 $\E[Y\mid\mathcal F_0]=1/4$,
-$\E[Y\mid\mathcal F_1]=(1/2)\ind{\{OO,OR\}}$
+$\E[Y\mid\mathcal F_1]=(1/2)\chi_{\{OO,OR\}}$
 oraz $\E[Y\mid\mathcal F_2]=Y$.
 Pierwsza prognoza jest stała, druga wykorzystuje wynik
 pierwszego rzutu, a trzecia jest już dokładną
 obserwacją. Pokazuje to, dlaczego filtracja
-to matematyczny model \emph{narastania informacji}.
+to matematyczny model \emph{narastania informacji}
+(por. rysunek~\ref{fig:rp1-13-filtration}).
 \end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,
+  atom/.style={draw,rounded corners=3pt,minimum height=8mm,
+  align=center,font=\small,fill=blue!6,draw=blue!65!black}]
+\node[atom,minimum width=7cm] (a) at (0,0) {$\{OO,OR,RO,RR\}$};
+\node[atom,minimum width=3.1cm] (b) at (-1.9,-1.5) {$\{OO,OR\}$};
+\node[atom,minimum width=3.1cm] (c) at (1.9,-1.5) {$\{RO,RR\}$};
+\foreach \x/\s in {-2.8/OO,-1/OR,1/RO,2.8/RR}
+  \node[atom,minimum width=1.5cm] (\s) at (\x,-3) {$\{\s\}$};
+\draw[->,thick] (a.south)--(b.north);
+\draw[->,thick] (a.south)--(c.north);
+\draw[->] (b.south)--(OO.north);
+\draw[->] (b.south)--(OR.north);
+\draw[->] (c.south)--(RO.north);
+\draw[->] (c.south)--(RR.north);
+\node[anchor=east] at (-4,0) {$\mathcal F_0$};
+\node[anchor=east] at (-4,-1.5) {$\mathcal F_1$};
+\node[anchor=east] at (-4,-3) {$\mathcal F_2$};
+\end{tikzpicture}
+\caption{Uszczegóławianie podziału przestrzeni wyników
+przez kolejne rzuty. W każdym wierszu pokazano
+atomy danego $\sigma$-ciała; jego zdarzeniami
+są wszystkie sumy tych atomów.}
+\label{fig:rp1-13-filtration}
+\end{figure}
+
 
 \section{Czasy zatrzymania i informacja przy zatrzymaniu}
 
 \begin{definicja}[Czas zatrzymania]
-Zmienna losowa $\tau:\Omega\to\N_0\cup\{\infty\}$
-jest \emph{czasem zatrzymania} względem filtracji
+Odwzorowanie $\tau:\Omega\to\N_0\cup\{\infty\}$,
+gdzie zbiór wartości wyposażamy we wszystkie jego
+podzbiory jako zbiory mierzalne, nazywamy
+\emph{czasem zatrzymania} względem filtracji
 $(\mathcal F_n)$, jeśli $\{\tau\leq n\}\in\mathcal F_n$
-dla każdego $n\geq0$. Wówczas także
-$\{\tau=n\}\in\mathcal F_n$.
+dla każdego $n\geq0$. Równoważnie,
+$\{\tau=n\}\in\mathcal F_n$ dla każdego $n\geq0$:
+dla $n=0$ oba zdarzenia są identyczne, dla $n\geq1$
+odejmujemy $\{\tau\leq n-1\}$ od $\{\tau\leq n\}$,
+a w drugą stronę korzystamy z tożsamości
+$\{\tau\leq n\}=\bigcup_{k=0}^n\{\tau=k\}$.
+Warunki te zapewniają również $\mathcal F$-mierzalność
+$\tau$, ponieważ $\{\tau=\infty\}$ jest dopełnieniem
+przeliczalnej sumy zdarzeń $\{\tau=n\}$.
 \end{definicja}
 
 \begin{przyklad}[Czas wejścia do zbioru]
-Dla procesu adaptowanego $X_n$ o wartościach w
-przeliczalnym $S$ i $A\subseteq S$ czas
-$\tau_A=\inf\{n\geq0:X_n\in A\}$ jest czasem
-zatrzymania, bo
+Dla procesu adaptowanego $(X_n)$ o wartościach
+w przestrzeni mierzalnej $(S,\mathcal S)$ i
+$A\in\mathcal S$ czas
+$\tau_A=\inf\{n\geq0:X_n\in A\}$, z konwencją
+$\inf\varnothing=\infty$, jest czasem zatrzymania, bo
 $\{\tau_A\leq n\}=\bigcup_{k=0}^n\{X_k\in A\}
 \in\mathcal F_n$.
 \end{przyklad}
 
 \begin{przyklad}[Ostatnia wizyta na ogół nie jest czasem zatrzymania]
-Dla niezależnych rzutów monetą z wartościami
-$\xi_k\in\{-1,1\}$ i ustalonego $N\geq2$
+Dla niezależnych uczciwych rzutów monetą z wartościami
+$\xi_k\in\{-1,1\}$, ich naturalnej filtracji
+$\mathcal F_n=\sigma(\xi_1,\ldots,\xi_n)$
+i ustalonego $N\geq2$
 rozważmy $\rho=\max\{k\in\{1,\ldots,N\}:\xi_k=1\}$,
 a gdy nie ma takiego $k$, przyjmijmy $\rho=0$.
 Zdarzenie $\{\rho\leq N-1\}=\{\xi_N=-1\}$
 nie należy do $\sigma(\xi_1,\ldots,\xi_{N-1})$,
 ponieważ ostatni rzut jest niezależny od wcześniejszych
-i niedegenerowany. Dlatego $\rho$ nie jest czasem
-zatrzymania. Aby rozpoznać \emph{ostatni} sukces,
+i $\Prob(\xi_N=-1)=1/2$. Gdyby to zdarzenie
+należało do wcześniejszego $\sigma$-ciała, z niezależności
+wynikałoby, że jego prawdopodobieństwo jest równe
+własnemu kwadratowi, co jest niemożliwe.
+Dlatego $\rho$ nie jest czasem zatrzymania. Aby rozpoznać \emph{ostatni} sukces,
 trzeba znać jeszcze przyszłość.
 \end{przyklad}
 
@@ -115,14 +207,28 @@ Dla czasu zatrzymania $\tau$ definiujemy
 \{A\in\mathcal F: A\cap\{\tau\leq n\}\in\mathcal F_n
 \text{ dla każdego }n\geq0\}.
 \]
-Jest to $\sigma$-ciało zdarzeń rozstrzygalnych
-na podstawie informacji dostępnej w chwili $\tau$.
-Dla procesu adaptowanego definiujemy
-$X_{n\wedge\tau}$, zaś $X_\tau$ na $\{\tau<\infty\}$
-ma naturalną definicję przez sumę
-$\sum_n X_n\ind{\{\tau=n\}}$ w przypadku
-procesu rzeczywistego (przy odpowiednim umownym
-rozszerzeniu na $\{\tau=\infty\}$).
+Jest to $\sigma$-ciało: zawiera $\Omega$, a dla
+$A\in\mathcal F_\tau$ mamy
+$A^c\cap\{\tau\leq n\}=\{\tau\leq n\}\setminus
+(A\cap\{\tau\leq n\})\in\mathcal F_n$.
+Przecięcie z $\{\tau\leq n\}$ rozdziela się względem
+przeliczalnej sumy zbiorów, więc $\mathcal F_\tau$
+jest także zamknięte na takie sumy.
+Na $\{\tau<\infty\}$ opisuje ono informację dostępną
+w chwili zatrzymania.
+Dla mierzalnego procesu rzeczywistego przyjmujemy
+\[
+X_\tau(\omega)=
+\begin{cases}
+X_{\tau(\omega)}(\omega),&\tau(\omega)<\infty,\\
+0,&\tau(\omega)=\infty.
+\end{cases}
+\]
+Równoważnie $X_\tau=\sum_{k\geq0}X_k\chi_{\{\tau=k\}}$,
+gdzie w każdym punkcie co najwyżej jeden składnik
+jest niezerowy. Proces zatrzymany definiujemy przez
+$X^\tau_n=X_{n\wedge\tau}$; tutaj indeks jest zawsze
+skończony.
 \end{definicja}
 
 \begin{lemat}[Podstawowe własności zatrzymania]
@@ -130,9 +236,13 @@ Niech $\tau,\sigma$ będą czasami zatrzymania
 względem $(\mathcal F_n)$. Wtedy:
 \begin{enumerate}
 \item $\tau\wedge\sigma$ oraz $\tau\vee\sigma$ są czasami zatrzymania;
-\item jeśli $\sigma\leq\tau$, to $\mathcal F_\sigma\subseteq\mathcal F_\tau$;
-\item jeśli $X$ jest adaptowany, to $X_\tau\ind{\{\tau<\infty\}}$
-  jest $\mathcal F_\tau$-mierzalny, przy umownej wartości zero na $\{\tau=\infty\}$.
+\item jeśli $\sigma\leq\tau$ punktowo, to
+  $\mathcal F_\sigma\subseteq\mathcal F_\tau$;
+\item $\tau$ jest $\mathcal F_\tau$-mierzalny;
+\item jeśli $X$ jest rzeczywistym procesem adaptowanym,
+  to $X_\tau$ (z umowną wartością zero na
+  $\{\tau=\infty\}$) jest $\mathcal F_\tau$-mierzalna,
+  a proces zatrzymany $(X_{n\wedge\tau})$ jest adaptowany.
 \end{enumerate}
 \end{lemat}
 \begin{proof}
@@ -149,21 +259,99 @@ A\cap\{\tau\leq n\}
 \]
 wynikająca z $\sigma\leq\tau$, a prawa strona
 należy do $\mathcal F_n$.
-Dla (3) niech $B\subseteq\R$ będzie borelowski.
+Dla (3) wystarczy zauważyć, że
+$\{\tau\leq m\}\cap\{\tau\leq n\}
+=\{\tau\leq\min(m,n)\}\in\mathcal F_n$,
+więc $\{\tau\leq m\}\in\mathcal F_\tau$ dla każdego $m$.
+Z tych zdarzeń przez różnice i przeliczalne
+sumy oraz dopełnienie otrzymujemy przeciwobraz
+każdego podzbioru $\N_0\cup\{\infty\}$.
+Dla (4) niech $B\subseteq\R$ będzie borelowski.
 Na zdarzeniu $\{\tau\leq n\}$ przeciwobraz
 $\{X_\tau\in B\}$ jest sumą skończoną
 $\bigcup_{k=0}^n\{\tau=k\}\cap\{X_k\in B\}$,
 należącą do $\mathcal F_n$. Stąd mierzalność
-względem $\mathcal F_\tau$ po wybraniu
-wartości na $\{\tau=\infty\}$.
+względem $\mathcal F_\tau$, gdyż $X_\tau$
+jest także $\mathcal F$-mierzalna jako punktowa
+granica sum częściowych wskazanych w definicji.
+Ponieważ $n\wedge\tau$ jest czasem zatrzymania
+nie większym niż $n$, z (2) mamy
+$\mathcal F_{n\wedge\tau}\subseteq\mathcal F_n$.
+Tutaj $\mathcal F_n$ jest zarazem $\sigma$-ciałem
+zatrzymanym w deterministycznym czasie $n$:
+dla $k<n$ warunek definicyjny jest pusty,
+dla $k=n$ wymaga dokładnie $A\in\mathcal F_n$,
+a dla $k>n$ jest wtedy spełniony na mocy
+$\mathcal F_n\subseteq\mathcal F_k$.
+Stąd $X_{n\wedge\tau}$ jest $\mathcal F_n$-mierzalna.
+\end{proof}
+
+\begin{lemat}[Porównywanie czasów zatrzymania]
+\label{lem:rp1-13-stopping-comparison}
+Niech $\sigma,\tau$ będą czasami zatrzymania.
+Wówczas
+\[
+\{\sigma\leq\tau\},\ \{\sigma<\tau\}
+\in\mathcal F_\sigma\cap\mathcal F_\tau,
+\qquad
+\mathcal F_{\sigma\wedge\tau}
+=\mathcal F_\sigma\cap\mathcal F_\tau.
+\]
+Ponadto dla $A\in\mathcal F_\sigma$ mamy
+$A\cap\{\sigma\leq\tau\}\in\mathcal F_\tau$.
+\end{lemat}
+\begin{proof}
+Dla ustalonego $n\geq0$ zachodzą równości
+\begin{align*}
+\{\sigma\leq\tau\}\cap\{\sigma\leq n\}
+&=\bigcup_{k=0}^n
+  (\{\sigma=k\}\cap\{\tau\geq k\}),\\
+\{\sigma\leq\tau\}\cap\{\tau\leq n\}
+&=\bigcup_{k=0}^n
+  (\{\tau=k\}\cap\{\sigma\leq k\}).
+\end{align*}
+Każdy składnik obu sum należy do $\mathcal F_k$:
+dla $k\geq1$ mamy
+$\{\tau\geq k\}=\Omega\setminus\{\tau\leq k-1\}$,
+a dla $k=0$ jest to $\Omega$.
+Ponieważ $\mathcal F_k\subseteq\mathcal F_n$,
+obie sumy należą do $\mathcal F_n$.
+Dowodzi to pierwszej przynależności.
+Drugą otrzymujemy, zamieniając $\sigma$ z $\tau$
+i biorąc dopełnienie zdarzenia $\{\tau\leq\sigma\}$.
+
+Z poprzedniego lematu, stosując punktowe
+nierówności $\sigma\wedge\tau\leq\sigma,\tau$,
+otrzymujemy inkluzję w jedną stronę.
+Jeśli $A\in\mathcal F_\sigma\cap\mathcal F_\tau$,
+to
+\[
+A\cap\{\sigma\wedge\tau\leq n\}
+=(A\cap\{\sigma\leq n\})\cup
+ (A\cap\{\tau\leq n\})\in\mathcal F_n,
+\]
+co dowodzi inkluzji odwrotnej.
+Wreszcie dla $A\in\mathcal F_\sigma$ mamy
+\[
+A\cap\{\sigma\leq\tau\}\cap\{\tau\leq n\}
+=\bigcup_{k=0}^n
+  (A\cap\{\sigma\leq k\}\cap\{\tau=k\}).
+\]
+Każdy składnik należy do $\mathcal F_k$,
+więc suma należy do $\mathcal F_n$.
+Wszystkie rozważane zdarzenia należą do
+$\mathcal F$, również gdy czasy mogą być nieskończone.
 \end{proof}
 
 \begin{uwaga}[Dwie równoważne definicje $\mathcal F_\tau$]
 Dla każdego $A\in\mathcal F$ warunki
 $A\cap\{\tau\leq n\}\in\mathcal F_n$ dla wszystkich $n$
 oraz $A\cap\{\tau=n\}\in\mathcal F_n$ dla wszystkich $n$
-są równoważne. Istotnie, $\{\tau=n\}=\{\tau\leq n\}
-\setminus\{\tau\leq n-1\}$, a odwrotnie
+są równoważne. Dla $n=0$ warunki są identyczne,
+a dla $n\geq1$ korzystamy z różnicy
+$\{\tau=n\}=\{\tau\leq n\}\setminus\{\tau\leq n-1\}$
+i z inkluzji $\mathcal F_{n-1}\subseteq\mathcal F_n$.
+W drugą stronę korzystamy z sumy
 $\{\tau\leq n\}=\bigcup_{k=0}^n\{\tau=k\}$.
 Żadnego dodatkowego warunku na $\{\tau=\infty\}$
 nie trzeba dopisywać do tej równoważności.
@@ -173,8 +361,13 @@ proces nie został zatrzymany w żadnej skończonej chwili,
 a definicja nie nakłada ograniczeń na zdarzenia
 poza częściami $\{\tau\leq n\}$. Jest to konwencja
 wygodna dla ogólnych czasów zatrzymania;
-przy zatrzymaniu skończonym p.n. nie prowadzi do
-różnic w zwykłych rachunkach warunkowych.
+przy zatrzymaniu skończonym p.n. dowolne
+ograniczenie informacji na $\{\tau=\infty\}$
+nie zmienia warunkowania p.n., o ile pozostawia
+wszystkie zdarzenia na $\{\tau<\infty\}$.
+Istotnie, różnice takich zdarzeń są zawarte
+w zbiorze miary zero. Nie należy jednak bez
+dodatkowych założeń utożsamiać samych $\sigma$-ciał.
 \end{uwaga}
 
 
@@ -184,52 +377,124 @@ uczciwymi rzutami monetą, a
 $\tau=1$ przy $\xi_1=O$ oraz $\tau=2$ przy $\xi_1=R$.
 Filtracja $\mathcal F_0,\mathcal F_1,\mathcal F_2$
 pochodzi z poprzedniego przykładu czteroelementowego.
-Atomami $\mathcal F_\tau$ są
+Jest to czas zatrzymania, ponieważ
+$\{\tau\leq0\}=\varnothing$, $\{\tau\leq1\}=\{OO,OR\}$
+i $\{\tau\leq2\}=\Omega$.
+Z definicji $\mathcal F_\tau$ zbiór $A$ należy
+do niego dokładnie wtedy, gdy $A\cap\{OO,OR\}$
+jest pusty lub równy $\{OO,OR\}$ (warunek przy
+$n=2$ jest automatyczny).
+Atomami $\mathcal F_\tau$ są więc
 $\{OO,OR\}$, $\{RO\}$ i $\{RR\}$.
 Na pierwszym atomie przestajemy obserwować po
 pierwszym rzucie i nie rozróżniamy wyników
 $OO$ i $OR$. Na dwóch pozostałych atomach
 widzieliśmy również drugi rzut.
-Dla $Y=\ind{\{OO\}}$ otrzymujemy
+Dla $Y=\chi_{\{OO\}}$ średnia na atomie
+$\{OO,OR\}$ wynosi $1/2$, a na każdym
+z dwóch pozostałych atomów jest zerowa. Otrzymujemy
 $\E[Y\mid\mathcal F_\tau]
-=\frac12\ind{\{OO,OR\}}$.
+=\frac12\chi_{\{OO,OR\}}$.
 Przykład uświadamia, że $\mathcal F_\tau$ nie jest
 jednym z góry ustalonym $\mathcal F_n$:
-zakres obserwacji zależy od ścieżki.
+zakres obserwacji zależy od ścieżki, co przedstawia
+rysunek~\ref{fig:rp1-13-stopped-tree}.
 \end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,
+  history/.style={draw,rounded corners=3pt,minimum height=9mm,
+  minimum width=1.7cm,align=center,font=\small},
+  stop/.style={history,fill=green!12,draw=green!45!black,very thick}]
+\node[history] (root) at (0,0) {$\Omega$};
+\node[stop,minimum width=3.1cm] (o) at (3,1.3) {$\{OO,OR\}$};
+\node[history] (r) at (3,-1.3) {$\{RO,RR\}$};
+\node[stop] (ro) at (6,-.55) {$\{RO\}$};
+\node[stop] (rr) at (6,-2.05) {$\{RR\}$};
+\draw[->,thick] (root)--node[above,sloped] {$O$} (o);
+\draw[->,thick] (root)--node[below,sloped] {$R$} (r);
+\draw[->,thick] (r)--node[above,sloped] {$O$} (ro);
+\draw[->,thick] (r)--node[below,sloped] {$R$} (rr);
+\node[font=\small,above=2mm of o] {$\tau=1$};
+\node[font=\small,right=2mm of ro] {$\tau=2$};
+\node[font=\small,right=2mm of rr] {$\tau=2$};
+\node at (0,2.5) {$n=0$};
+\node at (3,2.5) {$n=1$};
+\node at (6,2.5) {$n=2$};
+\end{tikzpicture}
+\caption{Drzewo obserwacji zatrzymanej: po pierwszym orle
+nie wykonujemy dalszej obserwacji, a po reszce obserwujemy
+jeszcze drugi rzut. Wyróżnione liście są dokładnie
+atomami $\mathcal F_\tau$.}
+\label{fig:rp1-13-stopped-tree}
+\end{figure}
+
 
 \section{Przewidywanie przy losowym czasie}
 
-\begin{twierdzenie}[Warunkowanie po zatrzymaniu w skończonym horyzoncie]
-Niech $N\in\N$, $\tau\leq N$ będzie czasem
-zatrzymania, $X\in L^1(\Prob)$ oraz
-$Z_n=\E[X\mid\mathcal F_n]$ dla $0\leq n\leq N$.
-Wówczas
+\begin{twierdzenie}[Warunkowanie po zatrzymaniu]
+\label{thm:rp1-13-stopped-condexp}
+Niech $\tau$ będzie czasem zatrzymania takim,
+że $\Prob(\tau<\infty)=1$, niekoniecznie
+ograniczonym. Dla $X\in L^1(\Prob)$ oraz
+$Z_n=\E[X\mid\mathcal F_n]$, $n\geq0$, zachodzi
 \[
 \E[X\mid\mathcal F_\tau]
-=\sum_{n=0}^N\ind{\{\tau=n\}}Z_n.
+=Z_\tau=\sum_{n\geq0}\chi_{\{\tau=n\}}Z_n
+\quad\text{p.n.}
 \]
+W szczególności, jeśli $\tau\leq N$ p.n. dla
+pewnego $N\in\N_0$, sumę można zakończyć na $N$.
 \end{twierdzenie}
 \begin{proof}
-Prawa strona jest $\mathcal F_\tau$-mierzalna,
-ponieważ na $\{\tau=n\}$ zależy wyłącznie
-od $\mathcal F_n$. Jest całkowalna:
+Wybierzmy $\mathcal F_n$-mierzalne rzeczywiste
+wersje $Z_n$. Prawa strona jest
+$\mathcal F_\tau$-mierzalna na mocy lematu
+o zatrzymywaniu zastosowanego do adaptowanego
+procesu $(Z_n)$, przy umownej wartości zero
+na $\{\tau=\infty\}$.
+Ponieważ $|Z_n|\leq\E[|X|\mid\mathcal F_n]$ p.n.
+na mocy warunkowej nierówności Jensena
+(rozdział~\ref{ch:condexp}), a
+$\{\tau=n\}\in\mathcal F_n$, mamy
 \[
-\sum_{n=0}^N\E[|Z_n|\ind{\{\tau=n\}}]
-\leq\sum_{n=0}^N\E|X|<\infty.
+\E[|Z_n|\chi_{\{\tau=n\}}]
+\leq\E[|X|\chi_{\{\tau=n\}}].
+\]
+Sumując nieujemne wyrazy i stosując twierdzenie
+o zbieżności monotonicznej, otrzymujemy
+\[
+\E|Z_\tau|
+=\sum_{n\geq0}\E[|Z_n|\chi_{\{\tau=n\}}]
+\leq\E|X|<\infty.
 \]
 Dla dowolnego $A\in\mathcal F_\tau$ mamy
-$A\cap\{\tau=n\}\in\mathcal F_n$ i stąd
+$A\cap\{\tau=n\}\in\mathcal F_n$. Dlatego
 \begin{align*}
-\E\Bigl[\ind A\sum_{n=0}^N
-\ind{\{\tau=n\}}Z_n\Bigr]
-&=\sum_{n=0}^N\E[\ind{A\cap\{\tau=n\}}Z_n]\\
-&=\sum_{n=0}^N\E[\ind{A\cap\{\tau=n\}}X]
-=\E[\ind A X].
+\E[\chi_A Z_\tau]
+&=\sum_{n\geq0}\E[\chi_{A\cap\{\tau=n\}}Z_n]\\
+&=\sum_{n\geq0}\E[\chi_{A\cap\{\tau=n\}}X]
+=\E[\chi_A X].
 \end{align*}
-Jednoznaczność warunkowej wartości oczekiwanej
-daje tezę.
+Oba szeregi całek są absolutnie zbieżne
+na mocy powyższego oszacowania oraz całkowalności
+$X$, a ostatnia równość wykorzystuje
+$\Prob(\tau<\infty)=1$. Otrzymana tożsamość
+dla wszystkich $A\in\mathcal F_\tau$ wraz
+z mierzalnością i całkowalnością $Z_\tau$
+dowodzi tezy.
 \end{proof}
+
+\begin{uwaga}
+Powyższe twierdzenie dotyczy procesu
+$Z_n=\E[X\mid\mathcal F_n]$ pochodzącego
+od jednej całkowalnej zmiennej $X$.
+Nie wynika z niego twierdzenie o dowolnym
+martyngale zatrzymanym w prawie na pewno
+skończonym czasie. Odpowiednie dodatkowe warunki
+dla martyngałów omówimy poniżej oraz w rozdziale~\ref{ch:nadmartyngaly}.
+\end{uwaga}
 
 \section{Martyngał jako konsekwencja warunkowania}
 
@@ -240,51 +505,72 @@ spełniającym $\E|M_n|<\infty$ dla każdego $n$.
 Nazywamy go \emph{martyngałem}, jeśli
 $\E[M_{n+1}\mid\mathcal F_n]=M_n$ p.n.
 dla każdego $n\geq0$;
-\emph{podmartyngałem}, jeśli warunkowa wartość
-oczekiwana jest większa lub równa $M_n$;
-\emph{nadmartyngałem}, jeśli jest mniejsza
-lub równa $M_n$. Wszystkie nierówności
-rozumiemy prawie na pewno.
+\emph{podmartyngałem}, jeśli
+$\E[M_{n+1}\mid\mathcal F_n]\geq M_n$ p.n.
+dla każdego $n\geq0$;
+\emph{nadmartyngałem}, jeśli
+$\E[M_{n+1}\mid\mathcal F_n]\leq M_n$ p.n.
+dla każdego $n\geq0$.
 \end{definicja}
 
-W całej dalszej części książki słowo \emph{martyngał}
+W tym tomie słowo \emph{martyngał}
 bez dopowiedzenia dotyczy czasu dyskretnego
-$\N_0$. W czasie ciągłym wymagane są dodatkowe
-zagadnienia regularności i modyfikacji procesu.
+$\N_0$. W czasie ciągłym dochodzą zagadnienia
+regularności trajektorii i modyfikacji procesu.
+Z mierzalności $M_n$ i liniowości warunkowej
+wartości oczekiwanej wynika równoważny warunek
+$\E[M_{n+1}-M_n\mid\mathcal F_n]=0$ p.n.;
+dla podmartyngałów warunkowa średnia przyrostu
+jest nieujemna, a dla nadmartyngałów niedodatnia.
 
 \begin{przyklad}[Ruch bez dryfu i z dryfem]
 Niech $(\xi_k)$ będą niezależne i całkowalne,
 $\mathcal F_n=\sigma(\xi_1,\ldots,\xi_n)$,
 $S_n=\sum_{k=1}^n\xi_k$ i $S_0=0$.
-Jeśli $\E\xi_k=0$, to $(S_n)$ jest martyngałem,
-ponieważ
+Każde $S_n$ jest $\mathcal F_n$-mierzalne
+i całkowalne, gdyż $\E|S_n|\leq\sum_{k=1}^n\E|\xi_k|$.
+Z niezależności $\xi_{n+1}$ od $\mathcal F_n$ wynika
+$\E[\xi_{n+1}\mid\mathcal F_n]=\E\xi_{n+1}$.
+Jeśli $\E\xi_k=0$ dla każdego $k$, to $(S_n)$
+jest martyngałem, ponieważ
 $\E[S_{n+1}\mid\mathcal F_n]
 =S_n+\E\xi_{n+1}=S_n$.
-Jeśli $\E\xi_k=m>0$, to jest podmartyngałem;
-gdy $m<0$, nadmartyngałem. W każdym przypadku
-$S_n-nm$ jest martyngałem. Równoważność
-\emph{braku przewidywalnego przyrostu}
-i martyngałowości jest tutaj dosłowna.
+Jeśli $\E\xi_k=m$ dla wszystkich $k$, to
+dla $m>0$ proces $(S_n)$ jest podmartyngałem,
+a dla $m<0$ nadmartyngałem. Bez założenia
+o wspólnej średniej proces
+$S_n-\sum_{k=1}^n\E\xi_k$ jest martyngałem:
+jego przyrost ma warunkową średnią zero.
+Dla wspólnej średniej $m$ otrzymujemy więc
+martyngał $(S_n-nm)$. Zerowa warunkowa średnia
+przyrostu nie oznacza niezależności przyrostu
+od przeszłości.
 \end{przyklad}
 
 \begin{twierdzenie}[Kryterium wszystkich przyszłych chwil]
 Jeśli $(M_n)$ jest procesem całkowalnym i
 adaptowanym, to jest martyngałem wtedy i tylko wtedy,
-gdy dla wszystkich liczb $0\leq m\leq n$
+gdy dla wszystkich całkowitych indeksów $0\leq m\leq n$
 $\E[M_n\mid\mathcal F_m]=M_m$ p.n.
 Analogicznie podmartyngały i nadmartyngały
 spełniają odpowiednią nierówność dla $m\leq n$.
 \end{twierdzenie}
 \begin{proof}
-Przypadek $n=m+1$ jest definicją. Jeśli teza
-zachodzi dla $n-1$, własność wieży daje
+Implikacja odwrotna wynika z wyboru $n=m+1$.
+Ustalmy $m$ i dowiedźmy implikacji wprost
+indukcyjnie względem $n\geq m$.
+Dla $n=m$ korzystamy z adaptacji:
+$\E[M_m\mid\mathcal F_m]=M_m$ p.n.
+Dla $n>m$ własność wieży daje
 $\E[M_n\mid\mathcal F_m]
 =\E[\E[M_n\mid\mathcal F_{n-1}]\mid\mathcal F_m]$.
 Dla martyngału równa się to
 $\E[M_{n-1}\mid\mathcal F_m]=M_m$.
 Dla podmartyngału używamy monotoniczności
-warunkowej wartości oczekiwanej, otrzymując
-$\E[M_n\mid\mathcal F_m]\geq M_m$.
+warunkowej wartości oczekiwanej oraz założenia
+indukcyjnego, otrzymując
+$\E[M_n\mid\mathcal F_m]\geq
+\E[M_{n-1}\mid\mathcal F_m]\geq M_m$.
 Dla nadmartyngału nierówności odwracamy.
 \end{proof}
 
@@ -294,51 +580,67 @@ Dla nadmartyngału nierówności odwracamy.
 Niech $(M_n)$ będzie martyngałem, podmartyngałem
 lub nadmartyngałem względem $(\mathcal F_n)$,
 a $\tau$ czasem zatrzymania. Wtedy proces
-$M_n^\tau=M_{n\wedge\tau}$ ma tę samą własność.
+$M_n^\tau=M_{n\wedge\tau}$ ma tę samą własność
+względem $(\mathcal F_n)$.
 \end{twierdzenie}
 \begin{proof}
-Zachodzi tożsamość
+Adaptacja wynika z lematu o podstawowych
+własnościach zatrzymania. Ponadto
+$|M_{n\wedge\tau}|\leq\sum_{k=0}^n|M_k|$,
+więc dla każdego $n$ zmienna $M_n^\tau$ jest
+całkowalna. Zachodzi tożsamość
 \[
 M_{(n+1)\wedge\tau}-M_{n\wedge\tau}
-=\ind{\{\tau>n\}}(M_{n+1}-M_n).
+=\chi_{\{\tau>n\}}(M_{n+1}-M_n).
 \]
+Istotnie, na $\{\tau\leq n\}$ obie zatrzymane
+wartości są równe $M_\tau$, a na $\{\tau>n\}$
+indeksy zatrzymanych wartości to odpowiednio
+$n+1$ i $n$, ponieważ czas jest dyskretny.
 Zdarzenie $\{\tau>n\}$ należy do $\mathcal F_n$,
 więc po warunkowaniu dostajemy
 \[
 \E[M_{(n+1)\wedge\tau}-M_{n\wedge\tau}
 \mid\mathcal F_n]
-=\ind{\{\tau>n\}}\E[M_{n+1}-M_n\mid\mathcal F_n].
+=\chi_{\{\tau>n\}}\E[M_{n+1}-M_n\mid\mathcal F_n].
 \]
 Prawa strona jest zerowa dla martyngału,
 nieujemna dla podmartyngału i niedodatnia
-dla nadmartyngału. Zatrzymany proces jest
-adaptowany, a dla ustalonego $n$
-$|M_{n\wedge\tau}|\leq\sum_{k=0}^n|M_k|$,
-więc jest całkowalny.
+dla nadmartyngału. Ponieważ $M_{n\wedge\tau}$
+jest $\mathcal F_n$-mierzalna, po dodaniu tej
+zmiennej do obu stron otrzymujemy odpowiedni
+warunek dla procesu zatrzymanego.
 \end{proof}
 
 \begin{twierdzenie}[Twierdzenie o próbkowaniu opcjonalnym]
 Niech $(M_n)$ będzie martyngałem, a $\sigma,\tau$
 czasami zatrzymania spełniającymi
 $0\leq\sigma\leq\tau\leq N$ p.n. dla pewnego
-ustalonego $N\in\N$. Wtedy
+ustalonego $N\in\N_0$. Wtedy
 $\E[M_\tau\mid\mathcal F_\sigma]=M_\sigma$ p.n.,
 a w szczególności $\E M_\tau=\E M_0$.
-Dla podmartyngału (odpowiednio nadmartyngału)
-równość zastępujemy nierównością $\geq$
-(odpowiednio $\leq$).
+Dla podmartyngału zachodzi
+$\E[M_\tau\mid\mathcal F_\sigma]\geq M_\sigma$
+p.n. oraz $\E M_\tau\geq\E M_0$.
+Dla nadmartyngału obie nierówności są odwrócone.
 \end{twierdzenie}
 \begin{proof}
+Przyjmujemy wartości umowne na zdarzeniach
+nieskończonych czasów zgodnie z definicją.
+Z ograniczenia p.n. przez $N$ wynika, że
+$|M_\sigma|,|M_\tau|\leq\sum_{k=0}^N|M_k|$
+p.n., więc obie zmienne są całkowalne.
 Niech $A\in\mathcal F_\sigma$.
-Dla każdego $1\leq k\leq N$ wskaźnik
-$H_k=\ind A\ind{\{\sigma<k\leq\tau\}}$
-jest $\mathcal F_{k-1}$-mierzalny:
+Dla każdego $1\leq k\leq N$ funkcja
+$H_k=\chi_{A}\chi_{\{\sigma<k\leq\tau\}}$
+jest $\mathcal F_{k-1}$-mierzalna:
 $A\cap\{\sigma<k\}=A\cap\{\sigma\leq k-1\}
 \in\mathcal F_{k-1}$,
 a $\{k\leq\tau\}=\{\tau>k-1\}\in\mathcal F_{k-1}$.
-Ścieżkowo zachodzi teleskopowy wzór
+Na zdarzeniu $\{\sigma\leq\tau\leq N\}$
+pełnej miary zachodzi teleskopowy wzór
 \[
-\ind A(M_\tau-M_\sigma)
+\chi_{A}(M_\tau-M_\sigma)
 =\sum_{k=1}^N H_k(M_k-M_{k-1}).
 \]
 Wszystkie składniki są całkowalne, więc
@@ -347,19 +649,34 @@ Wszystkie składniki są całkowalne, więc
 =\E[H_k\E[M_k-M_{k-1}\mid\mathcal F_{k-1}]].
 \]
 Dla martyngału wyrażenie jest zerowe,
-a dla pod- i nadmartyngału ma odpowiedni znak.
-Wobec dowolności $A\in\mathcal F_\sigma$
-i $\mathcal F_\sigma$-mierzalności $M_\sigma$
-otrzymujemy przez definicję warunkowania
-żądaną równość lub nierówność.
+a dla pod- i nadmartyngału jest odpowiednio
+nieujemne i niedodatnie, ponieważ $H_k\geq0$.
+Po zsumowaniu dostajemy dla każdego
+$A\in\mathcal F_\sigma$
+$\E[\chi_A(M_\tau-M_\sigma)]=0$
+dla martyngału, z odpowiednią nierównością
+w pozostałych przypadkach. Z mierzalności
+$M_\sigma$ względem $\mathcal F_\sigma$
+wynika teza dla martyngału na mocy definicji
+warunkowej wartości oczekiwanej.
+Dla podmartyngału wybieramy w szczególności
+$A=\{\E[M_\tau\mid\mathcal F_\sigma]-M_\sigma<0\}$.
+Gdyby $\Prob(A)>0$, całka różnicy po $A$
+byłaby ujemna, wbrew wykazanej nierówności.
+Dla nadmartyngału stosujemy ten argument do $-M$.
+Wreszcie stosując udowodniony wynik z $\sigma=0$
+i biorąc wartość oczekiwaną, otrzymujemy
+odpowiednią relację między $\E M_\tau$ i $\E M_0$.
 \end{proof}
 
 \begin{uwaga}[Dlaczego ograniczenie czasu jest ważne]
 Powyższe twierdzenie nie mówi, że można zatrzymywać
 martyngał w \emph{dowolnym} prawie na pewno
 skończonym czasie i zachować jego średnią.
-Przejście $N\to\infty$ wymaga kontroli
-całkowalności zatrzymanych wartości.
+Przejście $N\to\infty$ wymaga uzasadnienia
+zbieżności wartości oczekiwanych, na przykład
+przez zbieżność w $L^1$. Sama całkowalność
+każdej zatrzymanej wartości nie wystarcza.
 Bez takiej kontroli strategia „czekam aż wygram”
 może dawać pozornie sprzeczny wynik.
 \end{uwaga}
@@ -369,23 +686,64 @@ Niech $(M_n)$ będzie martyngałem, $\tau$
 czasem zatrzymania o $\E\tau<\infty$,
 a przyrosty spełniają
 $|M_n-M_{n-1}|\leq c$ p.n. dla wszystkich $n\geq1$,
-gdzie $c<\infty$. Wówczas $M_\tau\in L^1$
-oraz $\E M_\tau=\E M_0$.
+gdzie $0\leq c<\infty$ jest stałą deterministyczną.
+Wówczas $M_\tau\in L^1(\Prob)$ i dla każdego
+czasu zatrzymania $\sigma\leq\tau$ p.n. zachodzi
+\[
+\E[M_\tau\mid\mathcal F_\sigma]=M_\sigma
+\quad\text{p.n.}
+\]
+W szczególności $\E M_\tau=\E M_0$.
 \end{twierdzenie}
 \begin{proof}
 Z nieujemności czasu i skończonej średniej
-wynika $\Prob(\tau<\infty)=1$. Dla każdego $n$
+wynika $\Prob(\tau<\infty)=1$.
+Ponieważ nierówności dla przyrostów są przeliczalną
+rodziną warunków zachodzących p.n., wybieramy
+jeden zbiór pełnej miary, na którym zachodzą
+wszystkie te nierówności i $\tau<\infty$.
+Na tym zbiorze dla każdego $n$
 \[
 |M_{n\wedge\tau}|
 \leq|M_0|+\sum_{k=1}^{n\wedge\tau}|M_k-M_{k-1}|
 \leq |M_0|+c\tau.
 \]
-Prawa strona należy do $L^1$, więc
-$M_{n\wedge\tau}\to M_\tau$ nie tylko p.n.,
-lecz również w $L^1$ z twierdzenia o zbieżności
-zdominowanej. Dla każdego $n$ proces zatrzymany
-jest martyngałem i $\E M_{n\wedge\tau}=\E M_0$.
-Przechodzimy do granicy w średnich.
+Na każdej rozważanej trajektorii dla $n\geq\tau$
+mamy $M_{n\wedge\tau}=M_\tau$. Stąd
+$|M_\tau|\leq|M_0|+c\tau$ p.n., więc $M_\tau$
+jest całkowalna. Ponadto
+$|M_{n\wedge\tau}-M_\tau|\leq2(|M_0|+c\tau)$
+p.n. Prawa strona jest całkowalna, dlatego
+twierdzenie o zbieżności zmajoryzowanej daje
+$\E|M_{n\wedge\tau}-M_\tau|\to0$.
+Ponieważ $\sigma\leq\tau$ p.n., analogiczne
+oszacowanie przez $|M_0|+c\tau$ daje całkowalność
+$M_\sigma$ i zbieżność $M_{n\wedge\sigma}\to M_\sigma$
+w $L^1$.
+
+Aby otrzymać warunkową równość bez dodatkowego
+założenia o zupełności filtracji, ustalmy
+$A\in\mathcal F_\sigma$. Na zbiorze pełnej
+miary, gdzie $\sigma\leq\tau<\infty$ i wszystkie
+przyrosty są ograniczone przez $c$, mamy
+\[
+\chi_A(M_\tau-M_\sigma)
+=\sum_{k\geq1}
+ \chi_{A\cap\{\sigma<k\leq\tau\}}(M_k-M_{k-1}).
+\]
+Suma modułów składników jest ograniczona
+przez $c\tau$, zatem jest całkowalna.
+Można więc zamienić szereg z wartością
+oczekiwaną. Każdy składnik ma średnią zero:
+zbiór $A\cap\{\sigma<k\leq\tau\}$ należy do
+$\mathcal F_{k-1}$, jak w dowodzie ograniczonego
+próbkowania opcjonalnego, a warunkowa średnia
+przyrostu jest zerowa. Dostajemy
+$\E[\chi_A(M_\tau-M_\sigma)]=0$.
+Ponieważ $M_\sigma$ jest $\mathcal F_\sigma$-mierzalna,
+dowodzi to warunkowej równości.
+Wybór $\sigma=0$ i wzięcie wartości oczekiwanej
+po obu stronach dają $\E M_\tau=\E M_0$.
 \end{proof}
 
 
@@ -393,9 +751,17 @@ Przechodzimy do granicy w średnich.
 Niech $\xi_1,\xi_2,\xi_3$ będą niezależnymi uczciwymi
 znakami ($+1$ dla orła, $-1$ dla reszki),
 $S_n=\sum_{k=1}^n\xi_k$ i
-$\tau=\min\{\inf\{n\geq1:\xi_n=1\},3\}$.
-Jest to czas zatrzymania i zawsze $\tau\leq3$.
-Wszystkie możliwe \emph{zatrzymane} scenariusze
+$\tau=\min\{\inf\{n\in\{1,2,3\}:\xi_n=1\},3\}$,
+z konwencją $\inf\varnothing=\infty$.
+Przyjmujemy $S_0=0$ i
+$\mathcal F_n=\sigma(\xi_1,\ldots,\xi_{\min(n,3)})$.
+Dla $n<3$ zdarzenie $\{\tau\leq n\}$ oznacza
+co najmniej jednego orła w pierwszych $n$ rzutach,
+a dla $n\geq3$ jest równe $\Omega$.
+Zatem $\tau$ jest czasem zatrzymania i $\tau\leq3$.
+Jeśli chcemy traktować $(S_n)$ jako proces
+dla wszystkich $n\geq0$, przyjmujemy $S_n=S_3$
+dla $n\geq3$. Wszystkie możliwe \emph{zatrzymane} scenariusze
 przedstawia tabela:
 \begin{center}
 \begin{tabular}{c|c|c|c}
@@ -415,19 +781,27 @@ Zatem
 Nawet jeśli wybór chwili zatrzymania zależy od
 zaobserwowanych wyników, oczekiwany wynik uczciwej
 gry nie zmienia się, gdy czas jest ograniczony.
-Nie oznacza to, że $S_\tau=0$ na każdej trajektorii.
+Również wprost z tabeli
+$\Prob(S_\tau>0)=1/2$, $\Prob(S_\tau=0)=1/4$
+i $\Prob(S_\tau<0)=1/4$.
+Zerowa wartość oczekiwana nie oznacza zatem
+ani identycznie zerowego wyniku, ani jednakowych
+prawdopodobieństw zysku i straty.
 \end{przyklad}
 
 \begin{przyklad}[Czekanie na jeden punkt]
 Niech $S_n=\xi_1+\cdots+\xi_n$ będzie symetrycznym
 spacerem losowym na $\Z$ z $S_0=0$,
 a $\tau=\inf\{n\geq0:S_n=1\}$.
-Z obliczenia ruiny gracza w przedziale
-$[-m,1]$ otrzymujemy
+Z obliczenia ruiny gracza
+(rozdział~\ref{ch:markov}), po przesunięciu
+przedziału $[-m,1]$ na $\{0,\ldots,m+1\}$
+dla całkowitego $m\geq1$, otrzymujemy
 $\Prob_0(\tau_1<\tau_{-m})=m/(m+1)$.
 Ponieważ zdarzenia po lewej zawierają się
-w $\{\tau_1<\infty\}$, po $m\to\infty$
-$\Prob(\tau<\infty)=1$. Jednak $S_\tau=1$
+w $\{\tau_1<\infty\}$, dla każdego $m\geq1$
+mamy $\Prob(\tau<\infty)\geq m/(m+1)$.
+Przejście do granicy daje $\Prob(\tau<\infty)=1$. Jednak $S_\tau=1$
 prawie na pewno, więc $\E S_\tau=1\ne0=\E S_0$.
 Przyrosty są ograniczone przez $1$;
 z poprzedniego twierdzenia wynika, że
@@ -447,13 +821,22 @@ $\tau_m=\tau\wedge m$ mamy na mocy ograniczonego
 zatrzymywania $\E S_{\tau_m}=0$ dla każdego $m$.
 Jednocześnie $S_{\tau_m}\to1$ prawie na pewno.
 Gdyby rodzina $(S_{\tau_m})$ była jednostajnie
-całkowalna, zbieżność prawie na pewno i kryterium
-Vitaliego dawałyby $\E S_{\tau_m}\to1$, co jest
+całkowalna, zbieżność prawie na pewno i twierdzenie
+Vitaliego o zbieżności w $L^1$
+(rozdział~\ref{ch:convergence}) dawałyby $\E S_{\tau_m}\to1$, co jest
 sprzeczne ze stałą wartością zero.
 Zatem rodzina zatrzymanych wartości nie jest
-jednostajnie całkowalna. Przykład wskazuje
+jednostajnie całkowalna. Ogólne twierdzenie
+o zatrzymywaniu martyngałów jednostajnie całkowalnych
+udowodnimy w rozdziale~\ref{ch:nadmartyngaly}. Przykład wskazuje
 \emph{dokładnie}, które przejście graniczne jest
 niedozwolone, zamiast poprzestawać na stwierdzeniu,
 że $\tau$ jest nieograniczony.
 \end{uwaga}
 
+
+Podstawowy rachunek martyngałowy, transformacje
+przewidywalne i nierówności maksymalne rozwiniemy
+w rozdziale~\ref{ch:martyngaly}; kryteria zbieżności
+i dalsze wersje twierdzeń o zatrzymywaniu
+w rozdziale~\ref{ch:nadmartyngaly}.

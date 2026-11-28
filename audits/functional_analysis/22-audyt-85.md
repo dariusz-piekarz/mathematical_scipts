@@ -1,0 +1,12 @@
+# Rozdział 22 — audyt 85 (2/4 podsekcji, etap poprawkowy)
+
+24 listopada 2026. Wyłącznie istniejąca gałąź biblioteka-matematyczna-iteracja-6.
+
+## Zmiany
+Przeniesiono nagłówek przed przypomnienie faktów i uzupełniono odsyłacze do rozdziałów 17, 18 i 21. Uściślono ciało skalarów, ciągłość włożenia D do S na każdym etapie granicy induktywnej, bezwzględną całkowalność funkcji o wzroście wielomianowym oraz miary z całkowalną wagą względem wahania całkowitego. Rozwinięto kontrprzykład Gaussa, dowód różnowartościowości L2 przy parowaniu biliniowym (aproksymacja sprzężenia f) oraz ciągłość obu odwzorowań do przestrzeni dystrybucji w topologiach silnych i słabych-*. Uściślono jednoznaczne przedłużenie dystrybucji o zwartym nośniku. W drugim bloku podano jawne stałe w oszacowaniu mnożnika, wzór na seminormę transpozycji, uzasadnienie równociągłości, przejście od ciągów do zwartości domknięcia i szczegółowy argument Hahna–Banacha przez iloraz. Poprawiono błędne „równoodległościowość” oraz terminologię ciągową. Commit fd2610f3c3d4301b1dda5c78d99fe1ab9aeb6027, blob 22c05366875553ad987e9ba59a2d86b7781bee5e. Nie zmieniano dwóch dalszych podsekcji; sprawdzono zgodność normalizacji (2pi)^(-d/2) z rozdziałem 17, pełny audyt wzorów Fouriera pozostawiono następnej iteracji.
+
+## Kontrole
+Dodano trwały plik tools/tests/test_functional_analysis_ch22.py (cac46b701bde76cc5efbf4a3c420384c96b7ab15): cztery metody, w tym FA22_tempered_embeddings_01, FA22_multiplier_01, FA22_montel_and_topologies_01. Niezależnie wykonano w JavaScript z BigInt 144 dokładne kontrole sum geometrycznych z oszacowania dyadycznego i 189 dokładnych kontroli wielomianowej reguły Leibniza (współczynniki dżetów znormalizowane przez silnię), razem 333/333. Nie są to formalne dowody ogólne. Aktualne źródło: 16/16 unikatowych etykiet, 15/15 odsyłaczy rozwiązanych w kontekście 17–22, 22/22 fragmentów regresyjnych, poprawny stos środowisk. Dodano workflow .github/workflows/functional-analysis-ch22.yml (1e44ea26856263ace49a7729e326ef0a81ca238d), kompilujący 24 pliki rozdziałów 01–22 z 15A/15B. Bieg 45428674204 był in_progress przy kontroli. Pełne wykonanie pliku Python, kompilacja i oględziny aktualnego PDF pozostają niepotwierdzone. Lean nie uruchamiano.
+
+## Decyzja
+2/4 podsekcji pierwszego przeglądu; 0/3 stabilizacji. Następny audyt 86: rozszerzenie transformacji Fouriera, znaki i stałe, zgodność transformaty dystrybucyjnej z klasyczną i twierdzenie Plancherela. Następnie ostatnia podsekcja i pełna stabilizacja. Nie zamykać rozdziału na podstawie samego CI.

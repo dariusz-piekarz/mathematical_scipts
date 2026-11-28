@@ -1,0 +1,747 @@
+\section{Kategorie wzbogacone}\label{cat:sec:enriched}
+
+Zamiast zbioru morfizmów pomiędzy dwoma obiektami rozważymy obiekt ustalonej kategorii monoidalnej. W ten sposób składanie może zachowywać strukturę liniową, porządek lub strukturę kategorii. Korzystamy z rozdziałów~\ref{cat:sec:monoidal} i~\ref{cat:sec:coherence}.
+
+\subsection{Aksjomaty wzbogacenia}
+
+Ustalmy lokalnie małą kategorię monoidalną $(\mathcal V,\otimes,I,\alpha,\lambda,\rho)$ (definicja~\ref{cat:def:monoidal}). Nie zakładamy symetrii.
+
+\begin{definicja}[Kategoria wzbogacona]\label{cat:def:enriched-category}
+$\mathcal V$-kategoria $\mathcal A$ składa się z klasy obiektów, obiektów $\mathcal A(X,Y)$ kategorii $\mathcal V$ dla każdej pary $X,Y$, morfizmów
+\[
+ m_{X,Y,Z}:\mathcal A(Y,Z)\otimes\mathcal A(X,Y)\to\mathcal A(X,Z)
+\]
+oraz jednostek $j_X:I\to\mathcal A(X,X)$. Pisząc $H_{XY}=\mathcal A(X,Y)$, wymagamy
+\begin{equation}\label{cat:eq:enriched-assoc}
+\begin{aligned}
+&m_{W,X,Z}(m_{X,Y,Z}\otimes\id_{H_{WX}})\\
+&=m_{W,Y,Z}(\id_{H_{YZ}}\otimes m_{W,X,Y})
+  \alpha_{H_{YZ},H_{XY},H_{WX}},
+\end{aligned}
+\end{equation}
+gdzie obie strony prowadzą z $(H_{YZ}\otimes H_{XY})\otimes H_{WX}$ do $H_{WZ}$, oraz
+\begin{equation}\label{cat:eq:enriched-unit}
+\begin{aligned}
+ m_{X,Y,Y}(j_Y\otimes\id_{H_{XY}})&=\lambda_{H_{XY}},\\
+ m_{X,X,Y}(\id_{H_{XY}}\otimes j_X)&=\rho_{H_{XY}}.
+\end{aligned}
+\end{equation}
+W pierwszym równaniu jednostkowym dziedziną jest $I\otimes H_{XY}$, w drugim $H_{XY}\otimes I$, a wspólną przeciwdziedziną $H_{XY}$. Kategorię nazywamy małą, gdy jej obiekty tworzą zbiór.
+\end{definicja}
+
+Aksjomat łączności przedstawia diagram (pomijamy indeksy $m$):
+\begin{center}
+\begin{tikzpicture}[>=stealth,every node/.style={font=\small}]
+ \node (a) at (0,3.8) {$(H_{YZ}\otimes H_{XY})\otimes H_{WX}$};
+ \node (b) at (7.2,3.8) {$H_{YZ}\otimes(H_{XY}\otimes H_{WX})$};
+ \node (c) at (0,1.9) {$H_{XZ}\otimes H_{WX}$};
+ \node (d) at (7.2,1.9) {$H_{YZ}\otimes H_{WY}$};
+ \node (e) at (3.6,0) {$H_{WZ}$};
+ \draw[->] (a)--node[above] {$\alpha$} (b);
+ \draw[->] (a)--node[left] {$m\otimes\id$} (c);
+ \draw[->] (b)--node[right] {$\id\otimes m$} (d);
+ \draw[->] (c)--node[below left] {$m$} (e);
+ \draw[->] (d)--node[below right] {$m$} (e);
+\end{tikzpicture}
+\end{center}
+
+\begin{twierdzenie}[Kategoria zwykła związana z kategorią wzbogaconą]\label{cat:thm:enriched-underlying}
+$\mathcal V$-kategoria $\mathcal A$ wyznacza lokalnie małą kategorię zwykłą $\mathcal A_0$ o tych samych obiektach, w której
+\[
+ \Hom_{\mathcal A_0}(X,Y)=\Hom_{\mathcal V}(I,\mathcal A(X,Y)).
+\]
+Identyczności to $j_X$, a składanie dane jest wzorem
+\[
+ g\circ f=m_{X,Y,Z}(g\otimes f)\delta,\qquad
+ \delta=\lambda_I^{-1}:I\to I\otimes I.
+\]
+\end{twierdzenie}
+\begin{proof}
+Lokalna małość $\mathcal V$ zapewnia istnienie wskazanych zbiorów morfizmów. Z lematu~\ref{cat:lem:unit-coherence} mamy $\lambda_I=\rho_I$. Z koherencji (twierdzenie~\ref{cat:thm:mac-lane-coherence}) wynika
+\[
+ \alpha_{I,I,I}(\delta\otimes\id_I)\delta
+ =(\id_I\otimes\delta)\delta,
+\]
+gdyż obie strony są kanonicznymi morfizmami $I\to I\otimes(I\otimes I)$ zbudowanymi z izomorfizmów jednostkowych i łączności.
+
+Dla $f:I\to\mathcal A(X,Y)$, $g:I\to\mathcal A(Y,Z)$, $h:I\to\mathcal A(Z,T)$ bifunktorialność daje
+\[
+ (h\circ g)\circ f
+ =m_{X,Y,T}(m_{Y,Z,T}\otimes\id)
+ ((h\otimes g)\otimes f)(\delta\otimes\id_I)\delta.
+\]
+Stosujemy~\eqref{cat:eq:enriched-assoc} dla ciągu obiektów $X,Y,Z,T$. Wprowadźmy $A=\mathcal A(Z,T)$, $B=\mathcal A(Y,Z)$, $C=\mathcal A(X,Y)$. Naturalność $\alpha$ daje dokładnie
+\[
+ \alpha_{A,B,C}((h\otimes g)\otimes f)
+ =(h\otimes(g\otimes f))\alpha_{I,I,I}.
+\]
+Po podstawieniu tej równości i równości dla $\delta$ dostajemy
+\[
+ \begin{aligned}
+ (h\circ g)\circ f
+ &=m_{X,Z,T}(\id\otimes m_{X,Y,Z})
+ (h\otimes(g\otimes f))(\id_I\otimes\delta)\delta\\
+ &=h\circ(g\circ f).
+ \end{aligned}
+\]
+Ostatnia równość wynika z bifunktorialności i definicji składania. Ponadto z~\eqref{cat:eq:enriched-unit} i naturalności izomorfizmów jednostkowych:
+\[
+\begin{aligned}
+ j_Y\circ f&=\lambda_{\mathcal A(X,Y)}(\id_I\otimes f)\delta
+ =f\lambda_I\delta=f,\\
+ f\circ j_X&=\rho_{\mathcal A(X,Y)}(f\otimes\id_I)\delta
+ =f\rho_I\delta=f.
+\end{aligned}
+\]
+Otrzymujemy wszystkie aksjomaty kategorii.
+\end{proof}
+
+\subsection{Przykłady}
+
+\begin{przyklad}[Zbiory]\label{cat:ex:enriched-set}
+Dla $(\Set,\times,\{*\})$ wzbogacenie jest równoważne strukturze lokalnie małej kategorii zwykłej. Jednostki wskazują identyczności, a diagramy aksjomatów sprawdzone na elementach są dokładnie prawami zwykłego składania. Odwrotnie, zwykła kategoria wyznacza wszystkie wymagane dane, a funkcje zbiorów są wyznaczone przez wartości na elementach.
+\end{przyklad}
+
+\begin{przyklad}[Kategorie liniowe]\label{cat:ex:enriched-modules}
+Dla przemiennego pierścienia $R$ z jedynką rozważamy kategorię unitarnych $R$-modułów z $\otimes_R$ i jednostką $R$ (twierdzenie~\ref{cat:thm:module-monoidal}). Własność uniwersalna iloczynu tensorowego identyfikuje morfizm składania z odwzorowaniem $R$-dwuliniowym na iloczynie kartezjańskim modułów. Jednostkę $j_X$ wyznacza $j_X(1)$, ponieważ $j_X(r)=rj_X(1)$. Na tensorach prostych aksjomaty są zwykłymi prawami łączności i jednostki. Odwrotnie, jeśli składanie dwuliniowe i identyczności spełniają te prawa, to liniowe morfizmy w diagramach są równe na generatorach (iterowanych tensorach prostych), więc są równe wszędzie. Dla $R=\mathbb Z$ otrzymujemy kategorie preaddytywne; nie wymaga się istnienia biproduktów ani obiektu zerowego.
+
+Kategoria zwykła odzyskuje pierwotne morfizmy dzięki bijekcji $\Hom_R(R,M)\to M$, $f\mapsto f(1)$, której odwrotnością jest $x\mapsto(r\mapsto rx)$. Jeśli elementom $u,v$ odpowiadają morfizmy $\widetilde u,\widetilde v$ z $R$, to $\delta(1)=1\otimes1$, a zatem $m(\widetilde v\otimes\widetilde u)\delta(1)=m(v\otimes u)=v\circ u$. Jednostce odpowiada $j_X(1)$. Bijekcje zachowują więc składanie i jednostki.
+\end{przyklad}
+
+\begin{przyklad}[Odległości Lawvere'a]\label{cat:ex:lawvere-metric}
+Niech $\mathcal V$ będzie kategorią uporządkowaną $[0,\infty]$ z odwróconym porządkiem: morfizm $a\to b$ istnieje dokładnie wtedy, gdy $a\geq b$, i jest wtedy jedyny. Przyjmujemy $a\otimes b=a+b$ (z $a+\infty=\infty+a=\infty$), $I=0$. Dodawanie jest monotoniczne w obu argumentach, więc daje bifunktor; łączność i jednostkowość są ścisłe.
+
+Wzbogacenie zbioru $X$ jest równoważne funkcji $d:X\times X\to[0,\infty]$ spełniającej
+\[
+ d(x,x)=0,\qquad d(x,z)\leq d(y,z)+d(x,y).
+\]
+Istnienie jednostki oznacza $0\geq d(x,x)$, a istnienie składania jest równoważne nierówności trójkąta. Równości morfizmów zachodzą automatycznie, bo pomiędzy ustalonymi obiektami istnieje co najwyżej jeden morfizm. Nie wymagamy symetrii, rozdzielania punktów ani skończoności odległości. W $\mathcal A_0$ istnieje morfizm $x\to y$ dokładnie wtedy, gdy $d(x,y)=0$. Dla zwykłej przestrzeni metrycznej $\mathcal A_0$ jest więc kategorią dyskretną i nie odzyskuje dodatnich odległości.
+\end{przyklad}
+
+\subsection{Funktory i transformacje naturalne wzbogacone}
+
+\begin{definicja}[Funktor wzbogacony]\label{cat:def:enriched-functor}
+Funktor wzbogacony $F:\mathcal A\to\mathcal B$ przypisuje obiektom obiekty, a parom $X,Y$ morfizmy
+\[
+ F_{XY}:\mathcal A(X,Y)\to\mathcal B(FX,FY)
+\]
+w $\mathcal V$ spełniające
+\[
+ F_{XX}j_X^{\mathcal A}=j_{FX}^{\mathcal B},\qquad
+ F_{XZ}m^{\mathcal A}_{X,Y,Z}
+ =m^{\mathcal B}_{FX,FY,FZ}(F_{YZ}\otimes F_{XY}).
+\]
+\end{definicja}
+
+\begin{stwierdzenie}\label{cat:prop:enriched-functor-underlying}
+Funktor wzbogacony wyznacza funktor $F_0:\mathcal A_0\to\mathcal B_0$ przez $F_0(f)=F_{XY}f$. Identyczności i składanie funktorów wzbogaconych definiujemy obiektowo i na składowych, a przyporządkowanie $F\mapsto F_0$ je zachowuje.
+\end{stwierdzenie}
+\begin{proof}
+Aksjomat jednostki daje $F_0(j_X^{\mathcal A})=j_{FX}^{\mathcal B}$. Dla $f:I\to\mathcal A(X,Y)$ i $g:I\to\mathcal A(Y,Z)$
+\[
+ \begin{aligned}
+ F_0(g\circ f)&=F_{XZ}m^{\mathcal A}_{X,Y,Z}(g\otimes f)\delta\\
+ &=m^{\mathcal B}_{FX,FY,FZ}(F_{YZ}g\otimes F_{XY}f)\delta
+ =F_0(g)\circ F_0(f).
+ \end{aligned}
+\]
+Druga równość wynika z aksjomatu składania i bifunktorialności.
+
+Dla $G:\mathcal B\to\mathcal D$ definiujemy $(GF)_{XY}=G_{FX,FY}F_{XY}$. Aksjomat jednostki dla złożenia wynika z $G_{FX,FX}F_{XX}j_X^{\mathcal A}=G_{FX,FX}j_{FX}^{\mathcal B}=j_{GFX}^{\mathcal D}$. Aksjomat składania wynika z kolejnych zastosowań aksjomatów $F,G$ i bifunktorialności:
+\[
+ (GF)_{XZ}m^{\mathcal A}
+ =G_{FX,FZ}m^{\mathcal B}(F_{YZ}\otimes F_{XY})
+ =m^{\mathcal D}((GF)_{YZ}\otimes(GF)_{XY}).
+\]
+Identyczności spełniają oba aksjomaty, ponieważ ich składowe są identycznościami w $\mathcal V$. Łączność i prawa jednostki wynikają z odpowiednich praw składania morfizmów w $\mathcal V$ oraz odwzorowań obiektów. Wreszcie $(GF)_0(f)=G_{FX,FY}F_{XY}f=G_0(F_0(f))$ i $(\id_{\mathcal A})_0=\id_{\mathcal A_0}$.
+\end{proof}
+
+\begin{przyklad}\label{cat:ex:enriched-functors}
+W przypadku modułów funktory wzbogacone są funktorami liniowymi na zbiorach morfizmów: warunek składania można sprawdzać na tensorach prostych, a warunek jednostki na $1\in R$. Dla odległości Lawvere'a funktor wzbogacony istnieje dla zadanej funkcji $F$ dokładnie wtedy, gdy
+\[
+ d_{\mathcal B}(Fx,Fy)\leq d_{\mathcal A}(x,y)
+\]
+dla wszystkich $x,y$. Istnienie składowych jest równoważne tym nierównościom, a ich zgodność jest automatyczna z jednoznaczności morfizmów w kategorii uporządkowanej.
+\end{przyklad}
+
+\begin{definicja}[Transformacja naturalna wzbogacona]\label{cat:def:enriched-natural}
+Dla funktorów wzbogaconych $F,G:\mathcal A\to\mathcal B$ transformacja naturalna wzbogacona $\eta:F\Rightarrow G$ to rodzina morfizmów $\eta_X:I\to\mathcal B(FX,GX)$ spełniająca
+\begin{equation}\label{cat:eq:enriched-natural}
+\begin{aligned}
+ &m^{\mathcal B}_{FX,FY,GY}(\eta_Y\otimes F_{XY})
+ \lambda_{\mathcal A(X,Y)}^{-1}\\
+ &=m^{\mathcal B}_{FX,GX,GY}(G_{XY}\otimes\eta_X)
+ \rho_{\mathcal A(X,Y)}^{-1}.
+\end{aligned}
+\end{equation}
+Obie strony mają dziedzinę $\mathcal A(X,Y)$ i przeciwdziedzinę $\mathcal B(FX,GY)$.
+\end{definicja}
+
+\begin{stwierdzenie}\label{cat:prop:enriched-natural-underlying}
+Transformacja naturalna wzbogacona $\eta$ wyznacza transformację naturalną zwykłą $F_0\Rightarrow G_0$ o składowych $\eta_X$.
+\end{stwierdzenie}
+\begin{proof}
+Dla $f:I\to\mathcal A(X,Y)$ naturalność izomorfizmów jednostkowych daje
+\[
+ \lambda_{\mathcal A(X,Y)}^{-1}f=(\id_I\otimes f)\delta,\quad
+ \rho_{\mathcal A(X,Y)}^{-1}f=(f\otimes\id_I)\delta.
+\]
+Składamy obie strony~\eqref{cat:eq:enriched-natural} z $f$. Bifunktorialność zamienia lewą stronę w $\eta_Y\circ F_0(f)$, a prawą w $G_0(f)\circ\eta_X$, na mocy wzoru składania w kategorii zwykłej. Otrzymujemy naturalność.
+\end{proof}
+
+\begin{uwaga}
+Odwrotna implikacja wymaga dodatkowego założenia. Jeżeli $\Hom_{\mathcal V}(I,-)$ jest wierny, to zwykła naturalność danej rodziny $\eta_X$ implikuje wzbogaconą: dwa morfizmy w~\eqref{cat:eq:enriched-natural} są równe po złożeniu z każdym $f:I\to\mathcal A(X,Y)$, a z wierności wynika ich równość. Nie można zakładać tej wierności dla dowolnej kategorii monoidalnej. Na przykład w kategorii uporządkowanej z przykładu~\ref{cat:ex:lawvere-metric} dwa odległościowe wzbogacenia tego samego zbioru dwuelementowego, jedno z odległością między różnymi punktami równą $1$, drugie równą $2$, mają tę samą zwykłą kategorię dyskretną. Funkcja identycznościowa z pierwszej przestrzeni do drugiej jest zwykłym funktorem tych kategorii, ale nie jest funktorem wzbogaconym, gdyż $2\not\leq1$. Pokazuje to niezależnie, że kategoria zwykła nie odzyskuje wszystkich danych wzbogacenia.
+\end{uwaga}
+
+
+\subsection{Samowzbogacenie kategorii monoidalnie domkniętej}
+
+Od tej chwili zakładamy, że $\mathcal V$ jest symetryczną kategorią monoidalnie domkniętą. Wewnętrzny obiekt Hom oznaczamy $[A,B]$, zgodnie z definicją~\ref{cat:def:monoidal-closed}. Ewaluację $\ev_{A,B}:[A,B]\otimes A\to B$ i jednoznaczność transpozycji przypomniano w stwierdzeniu~\ref{cat:prop:internal-hom-eval}.
+
+W rachunkach z więcej niż dwoma czynnikami opuszczamy nawiasy i kanoniczne izomorfizmy jednostkowe. Jest to dozwolone przez twierdzenie~\ref{cat:thm:mac-lane-coherence}. Jeśli zmieniamy kolejność czynników, używamy symetrii $c_{A,B}:A\otimes B\to B\otimes A$; dla każdej zadanej permutacji jej kanoniczny morfizm jest jednoznaczny przez twierdzenie~\ref{cat:thm:symmetric-coherence}. W szczególności przestawienie dwóch czynników nie jest utożsamieniem obiektów na poziomie równości.
+
+\begin{twierdzenie}[Samowzbogacenie]\label{cat:thm:self-enrichment}
+Kategoria $\mathcal V$ ma kanoniczną strukturę $\mathcal V$-kategorii, oznaczaną $\underline{\mathcal V}$, z
+\[
+ \underline{\mathcal V}(A,B)=[A,B].
+\]
+Jej kategoria zwykła jest kanonicznie izomorficzna z $\mathcal V$.
+\end{twierdzenie}
+\begin{proof}
+Definiujemy składanie $m:[B,C]\otimes[A,B]\to[A,C]$ jako transpozycję morfizmu
+\[
+ \begin{aligned}
+ ([B,C]\otimes[A,B])\otimes A
+ &\xrightarrow{\alpha}[B,C]\otimes([A,B]\otimes A)\\
+ &\xrightarrow{\id\otimes\ev_{A,B}}[B,C]\otimes B
+ \xrightarrow{\ev_{B,C}}C.
+ \end{aligned}
+\]
+Jednostka $j_A:I\to[A,A]$ jest transpozycją $\lambda_A:I\otimes A\to A$.
+
+Sprawdzimy łączność przez transpozycję odwrotną. W konwencji koherencji oznaczmy $P=[C,D]$, $Q=[B,C]$, $S=[A,B]$. Definicja składania daje
+\[
+ \ev_{A,C}(m_{A,B,C}\otimes\id_A)
+ =\ev_{B,C}(\id_Q\otimes\ev_{A,B}).
+\]
+Analogiczne równości obowiązują dla pozostałych trójek. Dwie transpozycje odwrotne na $P\otimes Q\otimes S\otimes A$ mają postać
+\[
+\begin{aligned}
+ &\ev_{A,D}(m_{A,B,D}\otimes\id_A)
+ (m_{B,C,D}\otimes\id_S\otimes\id_A)\\
+ &\quad=\ev_{B,D}(m_{B,C,D}\otimes\id_B)
+ (\id_P\otimes\id_Q\otimes\ev_{A,B})\\
+ &\quad=\ev_{C,D}(\id_P\otimes\ev_{B,C})
+ (\id_P\otimes\id_Q\otimes\ev_{A,B}),
+\end{aligned}
+\]
+oraz
+\[
+\begin{aligned}
+ &\ev_{A,D}(m_{A,C,D}\otimes\id_A)
+ (\id_P\otimes m_{A,B,C}\otimes\id_A)\\
+ &\quad=\ev_{C,D}
+ (\id_P\otimes(\ev_{A,C}(m_{A,B,C}\otimes\id_A)))\\
+ &\quad=\ev_{C,D}(\id_P\otimes\ev_{B,C})
+ (\id_P\otimes\id_Q\otimes\ev_{A,B}).
+\end{aligned}
+\]
+W pierwszym rachunku wykorzystujemy bifunktorialność $\otimes$, aby przenieść ewaluację $S\otimes A$ przed składanie $P\otimes Q$; w obu rachunkach przywrócenie nawiasów odbywa się przez naturalność $\alpha$ i koherencję. Oba morfizmy są więc równe, a jednoznaczność transpozycji dowodzi łączności.
+
+Oznaczmy $S=[A,B]$ i $e=\ev_{A,B}$. Dla lewej jednostki po transpozycji otrzymujemy
+\[
+\begin{aligned}
+ &e(m_{A,B,B}\otimes\id_A)
+ ((j_B\otimes\id_S)\otimes\id_A)\\
+ &=\ev_{B,B}(j_B\otimes e)\alpha_{I,S,A}\\
+ &=\lambda_B(\id_I\otimes e)\alpha_{I,S,A}\\
+ &=e\lambda_{S\otimes A}\alpha_{I,S,A}
+ =e(\lambda_S\otimes\id_A).
+\end{aligned}
+\]
+Korzystamy kolejno z definicji składania i naturalności $\alpha$, definicji $j_B$, naturalności $\lambda$ oraz koherencji jednostek. Dla prawej jednostki otrzymujemy
+\[
+\begin{aligned}
+ &e(m_{A,A,B}\otimes\id_A)
+ ((\id_S\otimes j_A)\otimes\id_A)\\
+ &=e(\id_S\otimes\ev_{A,A})
+   (\id_S\otimes(j_A\otimes\id_A))\alpha_{S,I,A}\\
+ &=e(\id_S\otimes\lambda_A)\alpha_{S,I,A}
+ =e(\rho_S\otimes\id_A).
+\end{aligned}
+\]
+Ostatnia równość to aksjomat trójkąta. Jednoznaczność transpozycji dowodzi obu praw jednostki.
+
+Bijekcja
+\[
+ \Hom_{\mathcal V}(I,[A,B])\cong
+ \Hom_{\mathcal V}(I\otimes A,B)\cong\Hom_{\mathcal V}(A,B)
+\]
+przypisuje $u$ morfizm $\ev_{A,B}(u\otimes\id_A)\lambda_A^{-1}$. Jednostce przypisuje $\id_A$. Dla dwóch elementów uogólnionych $u:I\to[A,B]$, $v:I\to[B,C]$ ewaluacja $m(v\otimes u)\delta$ na $A$ daje, po rozwinięciu definicji $m$ i użyciu naturalności jednostek, złożenie odpowiadających im morfizmów $A\to B$ i $B\to C$. Jawnie po wstawieniu $\delta$ do $I\otimes A$ dwa czynniki $I$ służą kolejno do ewaluacji $u$ i $v$; $\lambda_I\delta=\rho_I\delta=\id_I$ i trójkąt redukują ten morfizm do
+\[
+ \ev_{B,C}(v\otimes\id_B)\lambda_B^{-1}
+ \ev_{A,B}(u\otimes\id_A)\lambda_A^{-1}.
+\]
+Bijekcje są więc zgodne ze składaniem. Na obiektach przyjmujemy identyczność, co daje izomorfizm kategorii zwykłych.
+\end{proof}
+
+\subsection{Wzbogacona kategoria funktorów}
+
+Zakładamy dodatkowo, że $\mathcal V$ ma wszystkie małe iloczyny i equalizatory. Niech $\mathcal A$ będzie małą $\mathcal V$-kategorią, a $\mathcal B$ dowolną $\mathcal V$-kategorią. Małość $\mathcal A$ jest potrzebna do utworzenia poniższych iloczynów w $\mathcal V$.
+
+\begin{definicja}[Rodzina naturalna z parametrem]\label{cat:def:parameter-natural}
+Dla funktorów wzbogaconych $F,G:\mathcal A\to\mathcal B$ i obiektu $T\in\Ob(\mathcal V)$ rodzina $t_X:T\to\mathcal B(FX,GX)$ jest naturalna z parametrem $T$, jeśli dla wszystkich $X,Y$ dwa morfizmy z $T\otimes\mathcal A(X,Y)$ do $\mathcal B(FX,GY)$ są równe:
+\[
+ \begin{aligned}
+ &m^{\mathcal B}(t_Y\otimes F_{XY}),\\
+ &m^{\mathcal B}(G_{XY}\otimes t_X)c_{T,\mathcal A(X,Y)}.
+ \end{aligned}
+\]
+Dla $T=I$ oznaczmy $H=\mathcal A(X,Y)$. Z koherencji symetrycznej $\rho_Hc_{I,H}=\lambda_H$, więc $c_{I,H}\lambda_H^{-1}=\rho_H^{-1}$. Po złożeniu obu morfizmów z izomorfizmem $\lambda_H^{-1}$ otrzymujemy dokładnie warunek~\eqref{cat:eq:enriched-natural}. Ponieważ jest to izomorfizm, warunki są równoważne.
+\end{definicja}
+
+\begin{twierdzenie}[Obiekt naturalnych transformacji]\label{cat:thm:enriched-functor-hom}
+Istnieje obiekt $E(F,G)$ kategorii $\mathcal V$ z morfizmami $p_X:E(F,G)\to\mathcal B(FX,GX)$ reprezentujący rodziny naturalne z parametrem: dla każdego $T$ istnieje naturalna bijekcja
+\[
+ \Hom_{\mathcal V}(T,E(F,G))
+ \cong\{(t_X)_X:(t_X)_X\text{ jest naturalna z parametrem }T\}.
+\]
+Jest on equalizatorem
+\begin{equation}\label{cat:eq:enriched-nat-equalizer}
+ E(F,G)\longrightarrow
+ \prod_X\mathcal B(FX,GX)
+ \ \substack{\longrightarrow\\[-2pt]\longrightarrow}\
+ \prod_{X,Y}[\mathcal A(X,Y),\mathcal B(FX,GY)].
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy środkowy iloczyn przez $P$, a jego rzuty przez $q_X$. Dwa morfizmy z $P$ do prawego iloczynu określamy na składowych $(X,Y)$ przez transpozycje
+\[
+ m^{\mathcal B}(q_Y\otimes F_{XY}),\qquad
+ m^{\mathcal B}(G_{XY}\otimes q_X)c_{P,\mathcal A(X,Y)}.
+\]
+Niech $d_0,d_1$ będą tak określonymi strzałkami, a $e:E(F,G)\to P$ ich equalizatorem. Definiujemy $p_X=q_Xe$. Dla $t:T\to P$ warunek $d_0t=d_1t$ jest równoważny równości składowych $(X,Y)$. Oznaczając $H=\mathcal A(X,Y)$, po transpozycji odwrotnej składowych otrzymujemy odpowiednio
+\[
+\begin{aligned}
+ &m^{\mathcal B}(q_Y\otimes F_{XY})(t\otimes\id_H)
+ =m^{\mathcal B}(q_Yt\otimes F_{XY}),\\
+ &m^{\mathcal B}(G_{XY}\otimes q_X)c_{P,H}(t\otimes\id_H)\\
+ &\qquad=m^{\mathcal B}(G_{XY}\otimes q_Xt)c_{T,H}.
+\end{aligned}
+\]
+Druga równość wykorzystuje naturalność symetrii, obie bifunktorialność $\otimes$. Jest to dokładnie warunek naturalności rodziny $t_X=q_Xt$. Dowolna taka rodzina wyznacza jedyny morfizm $t$ do $P$, a equalizator daje jedyny $v:T\to E(F,G)$ z $ev=t$, czyli $p_Xv=t_X$ dla wszystkich $X$. Odwrotnie, dla $v$ rodzina $(p_Xv)_X$ spełnia warunek naturalności, ponieważ $d_0ev=d_1ev$. Otrzymane przyporządkowania są odwrotne. Bijekcja jest naturalna w $T$, ponieważ dla $u:S\to T$ rodzina odpowiadająca złożeniu $vu$ ma składowe $p_Xvu=t_Xu$. W przypadku pustej kategorii $\mathcal A$ oba iloczyny są końcowe i rodzina jest pusta; konstrukcja nadal działa.
+\end{proof}
+
+\begin{twierdzenie}[Wzbogacona kategoria funktorów]\label{cat:thm:enriched-functor-category}
+Funktory wzbogacone $\mathcal A\to\mathcal B$ tworzą $\mathcal V$-kategorię $[\mathcal A,\mathcal B]_{\mathcal V}$, której obiektami Hom są $E(F,G)$. Jej kategoria zwykła ma jako morfizmy transformacje naturalne wzbogacone.
+\end{twierdzenie}
+\begin{proof}
+Dla $F$ rodzina $j_{FX}^{\mathcal B}:I\to\mathcal B(FX,FX)$ jest naturalna z parametrem $I$. Istotnie, w równoważnej postaci~\eqref{cat:eq:enriched-natural} lewa strona wynosi
+\[
+ m^{\mathcal B}(j_{FY}\otimes F_{XY})\lambda_{\mathcal A(X,Y)}^{-1}
+ =\lambda_{\mathcal B(FX,FY)}(\id_I\otimes F_{XY})
+ \lambda_{\mathcal A(X,Y)}^{-1}=F_{XY},
+\]
+a prawa strona, używając prawej jednostki i naturalności $\rho$, wynosi
+\[
+ m^{\mathcal B}(F_{XY}\otimes j_{FX})\rho_{\mathcal A(X,Y)}^{-1}
+ =F_{XY}.
+\]
+Twierdzenie~\ref{cat:thm:enriched-functor-hom} wyznacza zatem jednostkę $J_F:I\to E(F,F)$ o składowych $j_{FX}$.
+
+Niech $F,G,H$ będą funktorami. Oznaczmy rzuty z $E(G,H)$ przez $s_X$, a z $E(F,G)$ przez $t_X$. Kandydatem na rodzinę składania z parametrem $P=E(G,H)\otimes E(F,G)$ jest
+\[
+ u_X=m^{\mathcal B}(s_X\otimes t_X):P\to\mathcal B(FX,HX).
+\]
+Dowodzimy jej naturalności jako równości morfizmów na
+$E(G,H)\otimes E(F,G)\otimes\mathcal A(X,Y)$.
+Dla czytelności zapisujemy morfizm składania za pomocą kropki: np.\ $s_Y\cdot(t_Y\cdot F_{XY})$ oznacza złożenie morfizmów z trzech wskazanych czynników przez dwa morfizmy $m^{\mathcal B}$, a nie działanie na punktach obiektów $\mathcal V$. Jeżeli zmienia się kolejność czynników, przed tak zapisanym złożeniem stosujemy kanoniczną permutację dziedziny. Kolejno mamy
+\[
+ \begin{aligned}
+ (s_Y\cdot t_Y)\cdot F_{XY}
+ &=s_Y\cdot(t_Y\cdot F_{XY})\\
+ &=s_Y\cdot(G_{XY}\cdot t_X)\\
+ &=(s_Y\cdot G_{XY})\cdot t_X\\
+ &=(H_{XY}\cdot s_X)\cdot t_X\\
+ &=H_{XY}\cdot(s_X\cdot t_X).
+ \end{aligned}
+\]
+Pierwsza, trzecia i ostatnia równość to aksjomaty łączności $\mathcal B$ złożone z odpowiednimi tensorami morfizmów. Druga korzysta z naturalności rodziny $t_X$ (przestawienie drugiego i trzeciego czynnika), a czwarta z naturalności $s_X$ (przestawienie pierwszego i trzeciego pierwotnego czynnika, które są teraz sąsiednie). Łącznie permutacja przenosi ostatni czynnik na początek, pozostawiając względny porządek dwóch pozostałych. Jest to właśnie $c_{P,\mathcal A(X,Y)}$ po kanonicznym nawiasowaniu, przez koherencję symetryczną. Otrzymaliśmy naturalność $u_X$.
+
+Twierdzenie~\ref{cat:thm:enriched-functor-hom} daje jedyny morfizm $E(G,H)\otimes E(F,G)\to E(F,H)$ o tych składowych. Aby sprawdzić łączność, składamy obie drogi w aksjomacie łączności z rzutem na $\mathcal B(FX,KX)$ dla każdego $X$. Z definicji są to dwie drogi aksjomatu łączności $\mathcal B$, poprzedzone tensorami trzech rzutów i kanonicznymi izomorfizmami. Są równe z naturalności $\alpha$ i aksjomatu $\mathcal B$. Rzuty $p_X$ są wspólnie monomorficzne: równość wszystkich składowych daje równość po włączeniu equalizatora do iloczynu, a monomorficzność equalizatora daje równość morfizmów. Stąd łączność. Dla $E=E(F,G)$ oznaczmy składanie w kategorii funktorów przez $M$. Lewa jednostka po złożeniu z rzutem $p_X:E\to\mathcal B(FX,GX)$ ma postać
+\[
+ p_XM(J_G\otimes\id_E)=m^{\mathcal B}(j_{GX}\otimes p_X)
+ =\lambda_{\mathcal B(FX,GX)}(\id_I\otimes p_X)
+ =p_X\lambda_E.
+\]
+Prawa jednostka daje
+\[
+ p_XM(\id_E\otimes J_F)=m^{\mathcal B}(p_X\otimes j_{FX})
+ =\rho_{\mathcal B(FX,GX)}(p_X\otimes\id_I)
+ =p_X\rho_E.
+\]
+W obu rachunkach najpierw użyliśmy definicji $M$, potem aksjomatu jednostki w $\mathcal B$ i naturalności odpowiedniego izomorfizmu. Wspólna monomorficzność rzutów daje żądane równości w $\mathcal V$.
+
+Dla parametru $I$ bijekcja z twierdzenia~\ref{cat:thm:enriched-functor-hom} identyfikuje morfizmy w kategorii zwykłej z transformacjami z definicji~\ref{cat:def:enriched-natural}. Jednostka ma składowe $j_{FX}$, a złożenie ma składowe będące złożeniami w $\mathcal B_0$: wynika to z poprzedniej konstrukcji, po dołączeniu $\delta:I\to I\otimes I$. Otrzymujemy zatem także zwykłą kategorię funktorów i transformacji wzbogaconych.
+\end{proof}
+
+\subsection{Wzbogacony lemat Yonedy}
+
+Niech nadal $\mathcal A$ będzie mała, a $\mathcal V$ symetryczna monoidalnie domknięta z małymi iloczynami i equalizatorami. Dla $X\in\Ob(\mathcal A)$ definiujemy kowariantny funktor reprezentowalny $h^X:\mathcal A\to\underline{\mathcal V}$ przez $h^X(Y)=\mathcal A(X,Y)$. Jego działanie na obiektach Hom jest transpozycją
+\[
+ \mathcal A(Y,Z)\otimes\mathcal A(X,Y)
+ \xrightarrow{m_{X,Y,Z}}\mathcal A(X,Z).
+\]
+Aksjomat jednostki funktora wynika po transpozycji odwrotnej z $m_{X,Y,Y}(j_Y\otimes\id)=\lambda$, a aksjomat składania z łączności $m$. Dokładniej, po dołączeniu $\mathcal A(X,Y)$ do dwóch obiektów Hom w aksjomacie składania obie drogi są odpowiednio składaniem najpierw dwóch morfizmów po lewej i najpierw dwóch po prawej; aksjomat~\eqref{cat:eq:enriched-assoc} daje ich równość, a jednoznaczność transpozycji przenosi ją na morfizmy do wewnętrznego Hom.
+
+\begin{twierdzenie}[Wzbogacony lemat Yonedy, wersja kowariantna]\label{cat:thm:enriched-yoneda}
+Dla funktora wzbogaconego $F:\mathcal A\to\underline{\mathcal V}$ istnieje izomorfizm w $\mathcal V$
+\[
+ [\mathcal A,\underline{\mathcal V}]_{\mathcal V}(h^X,F)\cong F(X),
+\]
+naturalny względem transformacji wzbogaconych $F\Rightarrow G$. W szczególności
+\[
+ \operatorname{Nat}_{\mathcal V}(h^X,F)
+ \cong\Hom_{\mathcal V}(I,F(X)).
+\]
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy przez $a_{YZ}:\mathcal A(Y,Z)\otimes F(Y)\to F(Z)$ transpozycję odwrotną składowej funktora $F_{YZ}$. Aksjomaty funktora i definicja samowzbogacenia dają
+\[
+ a_{YY}(j_Y\otimes\id)=\lambda_{F(Y)},\qquad
+ a_{YU}(m_{Y,Z,U}\otimes\id)
+ =a_{ZU}(\id\otimes a_{YZ})\alpha,
+\]
+gdzie $U$ jest obiektem $\mathcal A$ (nie obiektem parametru), a w drugim równaniu dziedziną jest
+$(\mathcal A(Z,U)\otimes\mathcal A(Y,Z))\otimes F(Y)$.
+Równości te otrzymujemy przez transpozycję odwrotną aksjomatów funktora, ponieważ składanie wewnętrznego Hom zdefiniowano przez dwukrotną ewaluację.
+
+Rodzina naturalna z parametrem $T$ od $h^X$ do $F$ jest, przez transpozycję składowych, rodziną
+\[
+ b_Y:T\otimes\mathcal A(X,Y)\to F(Y).
+\]
+Warunek naturalności jest równoważny następującej równości morfizmów z $T\otimes\mathcal A(Y,Z)\otimes\mathcal A(X,Y)$ do $F(Z)$ (z konwencją koherencji):
+\begin{equation}\label{cat:eq:enriched-yoneda-naturality}
+ b_Z(\id_T\otimes m_{X,Y,Z})
+ =a_{YZ}(\id\otimes b_Y)(c_{T,\mathcal A(Y,Z)}\otimes\id).
+\end{equation}
+Istotnie, po transpozycji odwrotnej lewa strona warunku z definicji~\ref{cat:def:parameter-natural} najpierw stosuje działanie funktora $h^X$, czyli składanie $m$, i potem $b_Z$; prawa przestawia parametr $T$, stosuje $b_Y$ i następnie działanie $F$, czyli $a_{YZ}$. Obie transpozycje są bijekcjami.
+
+Z takiej rodziny otrzymujemy morfizm
+\[
+ q=b_X(\id_T\otimes j_X)\rho_T^{-1}:T\to F(X).
+\]
+Odwrotnie, dla $q:T\to F(X)$ definiujemy
+\[
+ b_Y=a_{XY}(\id_{\mathcal A(X,Y)}\otimes q)c_{T,\mathcal A(X,Y)}.
+\]
+Aby sprawdzić~\eqref{cat:eq:enriched-yoneda-naturality}, oznaczmy $H=\mathcal A(Y,Z)$, $K=\mathcal A(X,Y)$, $m=m_{X,Y,Z}$ oraz
+\[
+ \sigma=(\id_H\otimes c_{T,K})(c_{T,H}\otimes\id_K):
+ T\otimes H\otimes K\to H\otimes K\otimes T.
+\]
+W konwencji koherencji $\sigma=c_{T,H\otimes K}$, z aksjomatu sześciokąta. Z naturalności symetrii względem $m$ i bifunktorialności dostajemy
+\[
+\begin{aligned}
+ b_Z(\id_T\otimes m)
+ &=a_{XZ}(\id\otimes q)c_{T,\mathcal A(X,Z)}
+      (\id_T\otimes m)\\
+ &=a_{XZ}(m\otimes\id_{F(X)})
+      (\id_H\otimes\id_K\otimes q)\sigma.
+\end{aligned}
+\]
+Druga droga ma postać
+\[
+\begin{aligned}
+ &a_{YZ}(\id_H\otimes b_Y)(c_{T,H}\otimes\id_K)\\
+ &=a_{YZ}(\id_H\otimes a_{XY})
+     (\id_H\otimes\id_K\otimes q)\sigma.
+\end{aligned}
+\]
+Są równe przez aksjomat działania $F$, po przywróceniu kanonicznego nawiasowania. Zatem rodzina jest naturalna.
+
+Zaczynając od $q$, obliczamy
+\[
+\begin{aligned}
+ b_X(\id_T\otimes j_X)\rho_T^{-1}
+ &=a_{XX}(j_X\otimes q)c_{T,I}\rho_T^{-1}\\
+ &=a_{XX}(j_X\otimes q)\lambda_T^{-1}\\
+ &=\lambda_{F(X)}(\id_I\otimes q)\lambda_T^{-1}
+ =q.
+\end{aligned}
+\]
+Użyliśmy kolejno naturalności symetrii, koherencji jednostek, aksjomatu działania $F$ i naturalności $\lambda$.
+
+Zaczynając od naturalnej rodziny $b$, oznaczmy $K=\mathcal A(X,Y)$ i zastosujmy~\eqref{cat:eq:enriched-yoneda-naturality} dla pary $(X,Y)$. Składamy obie strony z
+\[
+ T\otimes K\xrightarrow{\rho_{T\otimes K}^{-1}}
+ (T\otimes K)\otimes I\xrightarrow{\id_{T\otimes K}\otimes j_X}
+ (T\otimes K)\otimes\mathcal A(X,X).
+\]
+Lewa strona redukuje się do $b_Y$ dzięki
+$m_{X,X,Y}(\id_K\otimes j_X)=\rho_K$ i koherencji jednostek. Po symetrii prawa strona redukuje się do
+\[
+ a_{XY}(\id_K\otimes (b_X(\id_T\otimes j_X)\rho_T^{-1}))
+ c_{T,K}=a_{XY}(\id_K\otimes q)c_{T,K}.
+\]
+W tym przejściu korzystamy z naturalności symetrii i z tego, że po przestawieniu $T,K$ włożenie jednostki po prawej odpowiada $\id_K\otimes\rho_T^{-1}$, przez koherencję. Otrzymujemy pierwotną rodzinę $b$.
+
+Konstrukcje są naturalne w $T$: złożenie $q$ z $u:S\to T$ odpowiada rodzinie $b_Y(u\otimes\id)$, z bifunktorialności i naturalności symetrii. Z twierdzenia~\ref{cat:thm:enriched-functor-hom} dostajemy zatem naturalną bijekcję
+\[
+ \Hom_{\mathcal V}(T,E(h^X,F))\cong\Hom_{\mathcal V}(T,F(X)).
+\]
+Oznaczmy tę bijekcję przez $\Phi_T$ i $E=E(h^X,F)$. Kładziemy $u=\Phi_E(\id_E):E\to F(X)$ oraz $v=\Phi_{F(X)}^{-1}(\id_{F(X)}):F(X)\to E$. Naturalność w parametrze daje $\Phi_T(f)=uf$ dla każdego $f:T\to E$. W szczególności $uv=\id_{F(X)}$, a $\Phi_E(vu)=uvu=u=\Phi_E(\id_E)$, więc injektywność $\Phi_E$ daje $vu=\id_E$. Otrzymujemy żądany izomorfizm w $\mathcal V$. Jego naturalność w $F$ wynika z tego, że dla transformacji wzbogaconej $\eta:F\Rightarrow G$ odpowiadającej rodzinie zwykłych morfizmów $\eta_Y:F(Y)\to G(Y)$, rodzina $b_Y$ przechodzi na $\eta_Yb_Y$, a jej ewaluacja na $j_X$ to $\eta_Xq$. Składowe $\eta_Y$ w tej postaci uzyskujemy przez izomorfizm z twierdzenia~\ref{cat:thm:self-enrichment}. Wybór $T=I$ daje ostatnią bijekcję z definicji kategorii zwykłej związanej z kategorią wzbogaconą.
+\end{proof}
+
+\begin{przyklad}[Liniowa wersja lematu Yonedy]\label{cat:ex:enriched-linear-yoneda}
+Dla małej $R$-liniowej kategorii $\mathcal A$ oraz $R$-liniowego funktora $F$ do modułów izomorfizm z twierdzenia~\ref{cat:thm:enriched-yoneda} jest izomorfizmem $R$-modułów, a nie jedynie bijekcją zbiorów. Przypisuje transformacji $\eta$ element $\eta_X(\id_X)$, a elementowi $v\in F(X)$ rodzinę $\eta_Y(f)=F(f)(v)$ dla $f\in\mathcal A(X,Y)$. Liniowość w $f$ wynika z liniowości $F$ na zbiorach morfizmów, a naturalność z zachowywania składania. Wzory są wzajemnie odwrotne przez prawa jednostki i naturalność dla morfizmu $f:X\to Y$. Działania punktowe na rodzinach transformacji odpowiadają działaniom na $F(X)$, ponieważ każde $F(f)$ jest liniowe.
+\end{przyklad}
+
+
+\subsection{Kategorie przeciwne i iloczyny wzbogacone}
+
+Nadal zakładamy symetryczną domkniętość kategorii monoidalnej $\mathcal V$ i stosujemy konwencję koherencji z poprzednich podrozdziałów.
+
+\begin{stwierdzenie}\label{cat:prop:enriched-opposite-tensor}
+Dla $\mathcal V$-kategorii $\mathcal A,\mathcal B$ istnieją $\mathcal V$-kategorie $\mathcal A^{\op}$ oraz $\mathcal A\otimes\mathcal B$. Mają odpowiednio obiekty $\mathcal A$ oraz pary obiektów, a ich obiekty Hom są określone przez
+\[
+ \mathcal A^{\op}(X,Y)=\mathcal A(Y,X),\qquad
+ (\mathcal A\otimes\mathcal B)((X,U),(Y,V))
+ =\mathcal A(X,Y)\otimes\mathcal B(U,V).
+\]
+\end{stwierdzenie}
+\begin{proof}
+W kategorii przeciwnej zachowujemy jednostki, a składanie definiujemy jako
+\[
+ \mathcal A(Z,Y)\otimes\mathcal A(Y,X)
+ \xrightarrow{c}\mathcal A(Y,X)\otimes\mathcal A(Z,Y)
+ \xrightarrow{m_{Z,Y,X}}\mathcal A(Z,X).
+\]
+Obie drogi w aksjomacie łączności najpierw, po przeniesieniu symetrii przez składanie za pomocą naturalności, odwracają kolejność trzech czynników. Następnie składają je w $\mathcal A$ według dwóch nawiasowań. Równość permutacji wynika z koherencji symetrycznej, a równość składania z łączności $\mathcal A$. Lewa jednostka staje się prawą jednostką w $\mathcal A$: dla $H=\mathcal A(Y,X)$ naturalność symetrii daje $c_{\mathcal A(Y,Y),H}(j_Y\otimes\id_H)=(\id_H\otimes j_Y)c_{I,H}$, a $\rho_H c_{I,H}=\lambda_H$. Dokładniej, lewa jednostka w kategorii przeciwnej to
+\[
+ m_{Y,Y,X}c_{\mathcal A(Y,Y),H}(j_Y\otimes\id_H)
+ =m_{Y,Y,X}(\id_H\otimes j_Y)c_{I,H}
+ =\rho_Hc_{I,H}=\lambda_H.
+\]
+Prawa jednostka daje
+\[
+ m_{Y,X,X}c_{H,\mathcal A(X,X)}(\id_H\otimes j_X)
+ =m_{Y,X,X}(j_X\otimes\id_H)c_{H,I}
+ =\lambda_Hc_{H,I}=\rho_H.
+\]
+Podwójne odwrócenie przywraca składanie, ponieważ $c_{B,A}c_{A,B}=\id$. Ponadto $(\mathcal A^{\op})_0=(\mathcal A_0)^{\op}$ przy kanonicznej identyfikacji zbiorów morfizmów: dla elementów uogólnionych $f,g$ naturalność symetrii daje $c(g\otimes f)\delta=(f\otimes g)c_{I,I}\delta=(f\otimes g)\delta$, gdyż $c_{I,I}=\id_{I\otimes I}$ z koherencji.
+
+Dla iloczynu wzbogaconego jednostka to $(j_X\otimes j_U)\lambda_I^{-1}$. Składanie na czterech czynnikach $A_2\otimes B_2\otimes A_1\otimes B_1$ definiujemy przez kanoniczną permutację do $A_2\otimes A_1\otimes B_2\otimes B_1$ i morfizm $m^{\mathcal A}\otimes m^{\mathcal B}$. Tutaj $A_1=\mathcal A(X,Y)$, $A_2=\mathcal A(Y,Z)$, a $B_1,B_2$ są analogicznymi obiektami Hom kategorii $\mathcal B$. Dla łączności obie drogi na sześciu czynnikach mają tę samą permutację, grupującą kolejno $A_3,A_2,A_1,B_3,B_2,B_1$, a potem składają każdą trójkę. Naturalność symetrii pozwala wykonać grupowanie przed składaniem, koherencja identyfikuje permutacje, a łączność w obu kategoriach daje równość pozostałych morfizmów. Prawa jednostki redukują się do praw jednostki w $\mathcal A,\mathcal B$, ponieważ po grupowaniu każdy z czynników otrzymuje własną jednostkę, a kanoniczne usunięcie dwóch czynników $I$ jest zgodne z usunięciem jednego i morfizmem $\lambda_I^{-1}$ przez koherencję.
+\end{proof}
+
+Dla funktora wzbogaconego $F:\mathcal A\to\mathcal B$ jego funktor przeciwny $F^{\op}$ ma to samo działanie na obiektach, a składową $(F^{\op})_{XY}=F_{YX}$. Aksjomat jednostki nie zmienia się. Aksjomat składania wynika z naturalności symetrii względem $F_{ZY},F_{YX}$ oraz aksjomatu składania $F$ w odwróconej kolejności. Dla pary funktorów $F:\mathcal A\to\mathcal A'$, $G:\mathcal B\to\mathcal B'$ funktor $F\otimes G$ działa na parach obiektów składowo, a na obiektach Hom przez $F_{XY}\otimes G_{UV}$. Zachowanie jednostki wynika z
+\[
+ (F_{XX}\otimes G_{UU})(j_X\otimes j_U)\delta
+ =(j_{FX}\otimes j_{GU})\delta.
+\]
+Dla składania naturalność symetrii przenosi cztery składowe funktorów przez permutację grupującą czynniki, a dwa aksjomaty składania $F,G$ dają wymaganą równość po zastosowaniu $m^{\mathcal A'}\otimes m^{\mathcal B'}$. Wzbogacony bifunktor jest funktorem z takiego iloczynu wzbogaconego. Obiekty Hom określają bifunktor
+\[
+ \mathcal A(-,-):\mathcal A^{\op}\otimes\mathcal A
+ \longrightarrow\underline{\mathcal V}.
+\]
+Jego składowa na obiektach Hom jest transpozycją morfizmu
+\[
+ \mathcal A(X',X)\otimes\mathcal A(Y,Y')\otimes\mathcal A(X,Y)
+ \longrightarrow\mathcal A(X',Y'),
+\]
+w którym permutujemy czynniki do kolejności drugiego, trzeciego, pierwszego i stosujemy dwukrotnie składanie. Aksjomat jednostki po transpozycji jest dwukrotnym prawem jednostki $\mathcal A$. Aksjomat składania po transpozycji daje z obu stron składanie pięciu czynników w kolejności odpowiadającej drodze $X''\to X'\to X\to Y\to Y'\to Y''$. Naturalność symetrii i koherencja pozwalają przenieść permutacje na początek; łączność $\mathcal A$ pozwala zmieniać nawiasowania. Jednoznaczność transpozycji dowodzi aksjomatów bifunktora. W szczególności po ustaleniu jednego argumentu uzyskujemy funktory reprezentowalne $\mathcal A(X,-)$ oraz $\mathcal A(-,X)$.
+
+\subsection{Sprzężenia wzbogacone}
+
+\begin{definicja}[Sprzężenie wzbogacone]\label{cat:def:enriched-adjunction}
+Dla funktorów wzbogaconych $L:\mathcal A\to\mathcal B$ i $R:\mathcal B\to\mathcal A$ sprzężenie wzbogacone $L\dashv R$ oznacza izomorfizm
+\[
+ \mathcal B(LX,Y)\cong\mathcal A(X,RY)
+\]
+w $\mathcal V$, naturalny w sensie wzbogaconym względem $X,Y$. Ściślej jest to izomorfizm funktorów wzbogaconych $\mathcal A^{\op}\otimes\mathcal B\to\underline{\mathcal V}$ otrzymanych z bifunktorów Hom przez $L^{\op}\otimes\id$ oraz $\id\otimes R$. Składowe izomorfizmu zapisujemy jako zwykłe morfizmy w $\mathcal V$, korzystając z twierdzenia~\ref{cat:thm:self-enrichment}.
+\end{definicja}
+
+\begin{stwierdzenie}\label{cat:prop:enriched-adjunction-underlying}
+Sprzężenie wzbogacone wyznacza sprzężenie zwykłe $L_0\dashv R_0$.
+\end{stwierdzenie}
+\begin{proof}
+Stosując funktor $\Hom_{\mathcal V}(I,-)$ do izomorfizmu z definicji, otrzymujemy bijekcje
+\[
+ \Hom_{\mathcal B_0}(L_0X,Y)\cong\Hom_{\mathcal A_0}(X,R_0Y).
+\]
+Naturalność wzbogacona implikuje zwykłą naturalność na mocy stwierdzenia~\ref{cat:prop:enriched-natural-underlying}. Aby otrzymać naturalność osobno w $X$ i $Y$, bierzemy w kategorii iloczynu morfizmy postaci $(f\otimes j_Y)\delta$ oraz $(j_X\otimes g)\delta$, gdzie $f,g$ są odpowiednimi elementami uogólnionymi obiektów Hom. Oznaczmy bijekcję przez $\Phi_{X,Y}$. Dla $f:X'\to X$ w $\mathcal A_0$, $g:Y\to Y'$ w $\mathcal B_0$ oraz $h:L_0X\to Y$ działanie bifunktorów na morfizmach z wstawioną jednostką daje
+\[
+ \Phi_{X',Y}(h\circ L_0f)=\Phi_{X,Y}(h)\circ f,\qquad
+ \Phi_{X,Y'}(g\circ h)=R_0g\circ\Phi_{X,Y}(h).
+\]
+Istotnie, bifunktor Hom po transpozycji składa trzy czynniki w kolejności odpowiadającej drodze w kategorii; wstawiona jednostka usuwa jedno ze składań, a $\delta$ oraz izomorfizmy jednostkowe dają wzór na składanie w kategorii zwykłej. Powyższe równości są więc zwykłą naturalnością uzyskaną dla dwóch wskazanych rodzajów morfizmów w iloczynie wzbogaconym. Złożenie obu równości daje naturalność dla dowolnej pary $f,g$ w zwykłym iloczynie kategorii. Otrzymujemy sprzężenie $L_0\dashv R_0$.
+\end{proof}
+
+\subsection{Końce i kokońce wzbogacone}
+
+Niech $\mathcal A$ będzie małą $\mathcal V$-kategorią, a $K:\mathcal A^{\op}\otimes\mathcal A\to\underline{\mathcal V}$ funktorem wzbogaconym. Działanie na obiektach Hom w pojedynczej zmiennej, zdefiniowane przez wstawienie jednostki w drugiej zmiennej, ma po transpozycji postać
+\[
+\begin{aligned}
+ \ell_{X,Y;Z}&:\mathcal A(X,Y)\otimes K(Y,Z)\to K(X,Z),\\
+ r_{Z;X,Y}&:\mathcal A(X,Y)\otimes K(Z,X)\to K(Z,Y).
+\end{aligned}
+\]
+Ściślej, dla $H=\mathcal A(X,Y)$ pierwsze działanie jest transpozycją odwrotną złożenia
+\[
+ H\xrightarrow{\rho_H^{-1}}H\otimes I
+ \xrightarrow{\id_H\otimes j_Z}H\otimes\mathcal A(Z,Z)
+ \xrightarrow{K_{(Y,Z),(X,Z)}}[K(Y,Z),K(X,Z)],
+\]
+a drugie transpozycją odwrotną
+\[
+ H\xrightarrow{\lambda_H^{-1}}I\otimes H
+ \xrightarrow{j_Z\otimes\id_H}\mathcal A(Z,Z)\otimes H
+ \xrightarrow{K_{(Z,X),(Z,Y)}}[K(Z,X),K(Z,Y)].
+\]
+To są odpowiednio działania kontrawariantne i kowariantne.
+
+\begin{definicja}[Koniec i kokoniec wzbogacony]\label{cat:def:enriched-end-coend}
+Końcem $\int_X K(X,X)$ nazywamy obiekt $E$ z morfizmami $p_X:E\to K(X,X)$ spełniającymi, dla $H=\mathcal A(X,Y)$,
+\[
+ r_{X;X,Y}(\id_H\otimes p_X)
+ =\ell_{X,Y;Y}(\id_H\otimes p_Y)
+ \quad\text{na }H\otimes E.
+\]
+Wymagamy, aby każda rodzina o tej własności z dowolnego obiektu $T$ faktoryzowała się jednoznacznie przez $(p_X)_X$.
+
+Kokońcem $\int^X K(X,X)$ nazywamy obiekt $C$ z morfizmami $i_X:K(X,X)\to C$ spełniającymi
+\[
+ i_X\ell_{X,Y;X}=i_Y r_{Y;X,Y}
+ \quad\text{na }\mathcal A(X,Y)\otimes K(Y,X),
+\]
+uniwersalnymi względem wszystkich takich rodzin do wspólnego obiektu $T$.
+\end{definicja}
+
+\begin{twierdzenie}\label{cat:thm:enriched-end-coend-formula}
+Jeżeli $\mathcal V$ ma małe iloczyny i equalizatory, to koniec istnieje i jest equalizatorem
+\[
+ \int_X K(X,X)\longrightarrow\prod_X K(X,X)
+ \ \substack{\longrightarrow\\[-2pt]\longrightarrow}\
+ \prod_{X,Y}[\mathcal A(X,Y),K(X,Y)].
+\]
+Niezależnie, jeżeli $\mathcal V$ ma małe koprodukty i koequalizatory, to kokoniec istnieje i jest koequalizatorem
+\[
+ \coprod_{X,Y}\mathcal A(X,Y)\otimes K(Y,X)
+ \ \substack{\longrightarrow\\[-2pt]\longrightarrow}\
+ \coprod_X K(X,X)\longrightarrow\int^X K(X,X).
+\]
+\end{twierdzenie}
+\begin{proof}
+Niech $P=\prod_X K(X,X)$ z rzutami $q_X$. Dwie składowe strzałek w formule końca to transpozycje (po symetrii $P\otimes H\to H\otimes P$) morfizmów $r_{X;X,Y}(\id_H\otimes q_X)$ oraz $\ell_{X,Y;Y}(\id_H\otimes q_Y)$. Rodzina $t_X:T\to K(X,X)$ daje jedyny morfizm $t:T\to P$. Równość obu złożeń z $t$ jest równoważna równości składowych $(X,Y)$. Po transpozycji odwrotnej i użyciu naturalności symetrii są to dokładnie warunki końca dla $t_X$. Equalizator daje jedyną faktoryzację.
+
+Dla kokońca oznaczmy włączenia do koproduktu diagonalnego przez $k_X$. Na składniku $\mathcal A(X,Y)\otimes K(Y,X)$ dwie strzałki to $k_X\ell_{X,Y;X}$ oraz $k_Yr_{Y;X,Y}$. Rodzina $t_X:K(X,X)\to T$ daje jedyny morfizm z koproduktu diagonalnego do $T$. Wyrównuje on dwie strzałki dokładnie wtedy, gdy po każdym włączeniu składnika koproduktu wyjściowego otrzymujemy równe morfizmy, czyli gdy spełnia warunki kokońca. Koequalizator daje jedyną faktoryzację. Puste rodziny są uwzględnione przez puste iloczyny i koprodukty.
+\end{proof}
+
+\begin{wniosek}\label{cat:cor:enriched-nat-end}
+Dla funktorów wzbogaconych $F,G:\mathcal A\to\mathcal B$ zachodzi
+\[
+ E(F,G)\cong\int_X\mathcal B(FX,GX).
+\]
+\end{wniosek}
+\begin{proof}
+Bierzemy $K(X,Y)=\mathcal B(FX,GY)$ z działaniami przez składanie z $F_{XY}$ i $G_{XY}$, otrzymanymi z bifunktora Hom. Dla $H=\mathcal A(X,Y)$ działania $K$ mają postać $r_{X;X,Y}=m^{\mathcal B}(G_{XY}\otimes\id)$ oraz $\ell_{X,Y;Y}=m^{\mathcal B}(\id\otimes F_{XY})c_{H,\mathcal B(FY,GY)}$. Dla rodziny $p_X:T\to\mathcal B(FX,GX)$ warunek końca na $H\otimes T$ jest więc równością
+\[
+ m^{\mathcal B}(G_{XY}\otimes p_X)
+ =m^{\mathcal B}(p_Y\otimes F_{XY})c_{H,T},
+\]
+gdzie użyliśmy naturalności symetrii względem $p_Y$. Składając obie strony z $c_{T,H}$ i korzystając z $c_{H,T}c_{T,H}=\id$, otrzymujemy dokładnie naturalność z parametrem. Odwrotnie, złożenie z $c_{H,T}$ przywraca warunek końca. Twierdzenie~\ref{cat:thm:enriched-functor-hom} i definicja końca dają tę samą własność uniwersalną. Jedyny morfizm z każdego obiektu do drugiego zachowuje wszystkie składowe; ich złożenia również je zachowują, więc są identycznościami z jednoznaczności faktoryzacji.
+\end{proof}
+
+\subsection{Granice i kogranice ważone}
+
+Niech $\mathcal D$ będzie małą $\mathcal V$-kategorią, $D:\mathcal D\to\mathcal B$ diagramem wzbogaconym. W tym podrozdziale zakładamy małe iloczyny i equalizatory w $\mathcal V$, aby móc stosować twierdzenie~\ref{cat:thm:enriched-functor-hom}. W odróżnieniu od zwykłej granicy wprowadzamy dodatkowy funktor do kategorii bazowej, nazywany wagą.
+
+\begin{definicja}[Granica ważona]\label{cat:def:enriched-weighted-limit}
+Dla wagi $W:\mathcal D\to\underline{\mathcal V}$ granicą ważoną jest obiekt $L$ kategorii $\mathcal B$ wraz z transformacją wzbogaconą $\gamma:W\Rightarrow\mathcal B(L,D-)$, dla których morfizm porównawczy
+\[
+ \mathcal B(B,L)\longrightarrow
+ E\bigl(W,\mathcal B(B,D-)\bigr)
+\]
+jest izomorfizmem w $\mathcal V$ dla każdego $B$. Morfizm porównawczy odpowiada rodzinie z parametrem $\mathcal B(B,L)$ otrzymanej przez transpozycję złożeń
+\[
+ \mathcal B(B,L)\otimes W(X)
+ \xrightarrow{c}W(X)\otimes\mathcal B(B,L)
+ \xrightarrow{\gamma_X\otimes\id}
+ \mathcal B(L,DX)\otimes\mathcal B(B,L)
+ \xrightarrow{m}\mathcal B(B,DX),
+\]
+gdzie $\gamma_X:W(X)\to\mathcal B(L,DX)$ jest zwykłym morfizmem w $\mathcal V$ odpowiadającym składowej transformacji do $\underline{\mathcal V}$. Obiekt $L$ oznaczamy $\{W,D\}$.
+\end{definicja}
+
+\begin{definicja}[Kogranica ważona]\label{cat:def:enriched-weighted-colimit}
+Dla wagi $W:\mathcal D^{\op}\to\underline{\mathcal V}$ kogranicą ważoną jest obiekt $C$ z transformacją $\gamma:W\Rightarrow\mathcal B(D-,C)$, dla których morfizm porównawczy
+\[
+ \mathcal B(C,B)\longrightarrow
+ E\bigl(W,\mathcal B(D-,B)\bigr)
+\]
+jest izomorfizmem dla każdego $B$. Jego składowa po transpozycji odwrotnej jest złożeniem
+\[
+ \mathcal B(C,B)\otimes W(X)
+ \xrightarrow{\id\otimes\gamma_X}
+ \mathcal B(C,B)\otimes\mathcal B(DX,C)
+ \xrightarrow{m}\mathcal B(DX,B).
+\]
+Piszemy $C=W\star D$.
+\end{definicja}
+
+Sprawdźmy naturalność rodzin definiujących morfizmy porównawcze. Dla granicy niech $P=\mathcal B(B,L)$, $H=\mathcal D(X,Y)$, a $w_{XY}:H\otimes W(X)\to W(Y)$ niech będzie transpozycją odwrotną składowej wagi. Naturalność $\gamma$ po transpozycji odwrotnej daje
+\[
+ \gamma_Y w_{XY}
+ =m^{\mathcal B}(D_{XY}\otimes\gamma_X):
+ H\otimes W(X)\to\mathcal B(L,DY).
+\]
+Na $P\otimes H\otimes W(X)$ oznaczmy przez $\sigma$ kanoniczną permutację do $H\otimes W(X)\otimes P$. Lewa strona warunku naturalności rodziny porównawczej po transpozycji ma postać
+\[
+ m^{\mathcal B}((\gamma_Y w_{XY})\otimes\id_P)\sigma.
+\]
+Po podstawieniu naturalności $\gamma$ otrzymujemy
+\[
+ m^{\mathcal B}(m^{\mathcal B}\otimes\id_P)
+ (D_{XY}\otimes\gamma_X\otimes\id_P)\sigma.
+\]
+Prawa strona, w której stosujemy najpierw składową porównawczą dla $X$, a potem działanie diagramu $\mathcal B(B,D-)$, to
+\[
+ m^{\mathcal B}(\id\otimes m^{\mathcal B})
+ (D_{XY}\otimes\gamma_X\otimes\id_P)\sigma.
+\]
+Permutacja jest ta sama, gdyż obie drogi przenoszą $P$ na koniec z zachowaniem kolejności pozostałych czynników; naturalność symetrii i koherencja uzasadniają przeniesienie permutacji na początek. Równość wynika z łączności $\mathcal B$ w przyjętej konwencji nawiasowania. Dla kogranicy stosujemy tę konstrukcję do $D^{\op}:\mathcal D^{\op}\to\mathcal B^{\op}$: $\mathcal B^{\op}(C,DX)=\mathcal B(DX,C)$, a $\mathcal B^{\op}(B,C)=\mathcal B(C,B)$. Symetria występująca w porównaniu granicy oraz symetria w składaniu kategorii przeciwnej znoszą się, dając dokładnie podany wzór dla kogranicy. Wobec twierdzenia~\ref{cat:thm:enriched-functor-hom} oba morfizmy porównawcze są dobrze określone.
+
+\begin{stwierdzenie}\label{cat:prop:enriched-weighted-unique}
+Granica i kogranica ważona, jeżeli istnieją, są jednoznaczne z dokładnością do jedynego izomorfizmu w kategorii zwykłej $\mathcal B_0$ zachowującego uniwersalną transformację.
+\end{stwierdzenie}
+\begin{proof}
+Dla granicy stosujemy $\Hom_{\mathcal V}(I,-)$ do izomorfizmu porównawczego. Otrzymujemy bijekcję
+\[
+ \Hom_{\mathcal B_0}(B,L)
+ \cong\operatorname{Nat}_{\mathcal V}(W,\mathcal B(B,D-)).
+\]
+Morfizm $f:B\to L$ przechodzi na rodzinę powstałą z $\gamma$ przez składanie z $f$, jak wynika z definicji morfizmu porównawczego i wzoru składania w kategorii zwykłej. Dla dwóch granic $L,L'$ stosujemy bijekcje do ich uniwersalnych transformacji, otrzymując jedyne morfizmy $L'\to L$ i $L\to L'$ zachowujące te transformacje. Z łączności składania ich złożenia również zachowują uniwersalne transformacje, więc z jednoznaczności są identycznościami. Dla kogranicy argument jest ten sam po odwróceniu wszystkich morfizmów, na mocy definicji kategorii przeciwnej.
+\end{proof}
+
+\begin{przyklad}[Potęgi i kopotęgi]\label{cat:ex:enriched-tensor-cotensor}
+Niech $\mathcal D$ ma jeden obiekt i obiekt Hom $I$, ze składaniem $\lambda_I$ i jednostką $\id_I$. Aksjomaty wzbogacenia wynikają z koherencji. Diagram do $\mathcal B$ jest wtedy wyznaczony przez obiekt $A$ (składowa Hom musi być $j_A$), a waga przez obiekt $V$ kategorii $\mathcal V$. Rodziny naturalne z parametrem mają jedną składową i warunek naturalności jest automatyczny przez prawa jednostki. Granica ważona jest potęgą $[V,A]_{\mathcal B}$, a kogranica kopotęgą $V\odot A$, o własnościach
+\[
+\begin{aligned}
+ \mathcal B(B,[V,A]_{\mathcal B})&\cong[V,\mathcal B(B,A)],\\
+ \mathcal B(V\odot A,B)&\cong[V,\mathcal B(A,B)].
+\end{aligned}
+\]
+W samowzbogaceniu $\underline{\mathcal V}$ istnieją obie: odpowiednio $[V,A]$ oraz $V\otimes A$. Istotnie, dla dowolnego parametru $T$ mamy
+\[
+ \Hom(T,[B,[V,A]])
+ \cong\Hom(T\otimes B\otimes V,A)
+ \cong\Hom(T,[V,[B,A]]),
+\]
+oraz
+\[
+ \Hom(T,[V\otimes A,B])
+ \cong\Hom(T\otimes V\otimes A,B)
+ \cong\Hom(T,[V,[A,B]]).
+\]
+Bijekcja w pierwszym rachunku wykorzystuje symetrię czynników $B,V$ i koherencję, a w drugim łączność; wszystkie bijekcje są naturalne w $T$. Lematem Yonedy dostajemy izomorfizmy obiektów wewnętrznego Hom. Są to morfizmy porównawcze dla ewaluacji $V\otimes[V,A]\to A$ (z symetrią) i jednostki transpozycji $V\to[A,V\otimes A]$: po transpozycji odwrotnej oba rachunki sprowadzają się do tych morfizmów i ewaluacji. Dla $\mathcal V=\Set$ odzyskujemy zwykłe potęgi i kopotęgi indeksowane zbiorem, por.~\ref{cat:def:power-copower}.
+\end{przyklad}

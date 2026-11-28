@@ -1,0 +1,1234 @@
+\chapter{Pomijanie typów, modele atomowe i pierwsze}
+\label{ch:mod-omitting-types}
+\section{Motywacja i typy niegłówne}
+W rozdziale \ref{ch:mod-types} poznaliśmy przestrzenie
+typów, a w rozdziale \ref{ch:mod-saturation} badaliśmy
+modele realizujące wiele typów. Teraz stawiamy pytanie
+odwrotne: czy można zbudować model, w którym żaden
+element (lub żadna skończona krotka) nie realizuje
+wskazanego typu?
+
+Pracujemy w ZFC, w logice pierwszego rzędu z równością,
+z niepustymi uniwersami. Wszystkie typy w tym rozdziale
+mają skończoną dodatnią liczbę zmiennych i, o ile nie
+zaznaczono inaczej, nie mają parametrów. Typ częściowy
+nad spełnialną teorią $T$ oraz jego realizację
+i pomijanie rozumiemy jak w definicji
+\ref{def:mod-partial-type}. Typ zupełny nad $T$
+jest punktem $S_n(T)$ (definicja
+\ref{def:mod-complete-type}).
+
+\begin{definicja}[Typ główny i typ niegłówny]
+\label{def:mod-ott-principal}
+Niech $p\subseteq F_n(\mathcal L)$ będzie typem
+częściowym nad spełnialną teorią $T$.
+Nazywamy go głównym, jeżeli istnieje formuła
+$\theta(\bar x)$ realizowalna w pewnym modelu $T$
+i taka, że dla każdej $\varphi\in p$
+\[
+T\models\forall\bar x\,(\theta(\bar x)\to\varphi(\bar x)).
+\]
+Jeżeli nie istnieje taka formuła, typ nazywamy
+niegłównym. Formuła $\theta$ nie musi należeć do $p$.
+\end{definicja}
+
+Warunek realizowalności $\theta$ jest niezbędny:
+formuła sprzeczna implikuje semantycznie każdą
+formułę, ale nie opisuje żadnej krotki.
+Dla typów częściowych główność w tym znaczeniu
+nie oznacza, że typ jest równoważny jednej formule:
+wystarczy, aby pewna niepusta część przestrzeni
+typów była zawarta w zbiorze jego realizacji.
+
+\begin{lemat}[Główność a topologia przestrzeni typów]
+\label{lem:mod-ott-interior}
+Dla typu częściowego $p$ nad $T$ połóżmy
+\[
+C_p=\{q\in S_n(T):p\subseteq q\}
+=\bigcap_{\varphi\in p}[\varphi].
+\]
+Zbiór $C_p$ jest niepusty i domknięty.
+Typ $p$ jest główny dokładnie wtedy, gdy $C_p$
+ma niepuste wnętrze. W szczególności typ zupełny
+jest główny dokładnie wtedy, gdy jest izolowany.
+\end{lemat}
+\begin{proof}
+Niepustość wynika z twierdzenia
+\ref{thm:mod-type-completion}. Każdy zbiór
+$[\varphi]$ jest domknięty i otwarty w topologii
+Stone'a (lemat \ref{lem:mod-stone-basic}), więc
+ich część wspólna jest domknięta.
+Jeżeli $\theta$ świadczy o główności $p$, to
+$[\theta]$ jest niepustym zbiorem otwartym i
+$[\theta]\subseteq C_p$, ponieważ każda realizacja
+typu zawierającego $\theta$ spełnia wszystkie
+formuły $p$. Odwrotnie, jeśli $C_p$ ma niepuste
+wnętrze, wybieramy niepusty zbiór bazowy
+$[\theta]\subseteq C_p$. Realizowalność $\theta$
+wynika z niepustości $[\theta]$.
+Gdyby dla pewnej $\varphi\in p$ implikacja
+$\theta\to\varphi$ nie zachodziła modulo $T$,
+krotka realizująca $\theta\land\neg\varphi$
+w modelu $T$ miałaby typ należący do
+$[\theta]\setminus C_p$, co jest sprzecznością.
+Dla typu zupełnego $p$ maksymalność daje
+$C_p=\{p\}$, więc niepuste wnętrze jest
+równoważne izolacji punktu w sensie definicji
+\ref{def:mod-isolated-type}.
+\end{proof}
+
+W szczególności zbiór $C_p$ dla typu niegłównego
+jest domknięty i ma puste wnętrze, czyli jest
+nigdzie gęsty. Intuicyjnie: każde realizowalne
+skończone wymaganie można wzmocnić tak, aby
+przynajmniej jedna formuła niegłównego typu
+była fałszywa.
+
+\begin{lemat}[Nieuniknioność typów głównych w teorii zupełnej]
+\label{lem:mod-ott-principal-unavoidable}
+Jeżeli $T$ jest zupełna, a $p$ jest głównym typem
+częściowym nad $T$, to żaden model $T$ nie pomija $p$.
+\end{lemat}
+\begin{proof}
+Niech $\theta$ świadczy o główności $p$.
+Zdanie $\exists\bar x\,\theta$ zachodzi w pewnym
+modelu $T$, więc przez zupełność teorii zachodzi
+w każdym jej modelu. Dowolny jego świadek
+realizuje wszystkie formuły $p$ z definicji
+główności.
+\end{proof}
+
+Dla teorii niezupełnej wniosek ten jest fałszywy:
+przykład \ref{ex:mod-isolated-incomplete} podaje
+izolowany typ struktury jednoelementowej, pomijany
+w modelu dwuelementowym tej samej teorii.
+
+\section{Lemat o unikaniu typu przy skończonych wymaganiach}
+\begin{lemat}[Unikanie typu w języku z nowymi stałymi]
+\label{lem:mod-ott-avoidance}
+Niech $C$ będzie zbiorem nowych stałych,
+rozłącznym z językiem $\mathcal L$.
+Niech $\Delta$ będzie skończonym zbiorem zdań
+języka $\mathcal L(C)$ takim, że $T\cup\Delta$
+jest spełnialny, a $p\subseteq F_n(\mathcal L)$
+niegłównym typem nad $T$. Dla każdej krotki
+$\bar t=(t_1,\ldots,t_n)$ termów domkniętych
+języka $\mathcal L(C)$ istnieje $\varphi\in p$
+taka, że
+\[
+T\cup\Delta\cup\{\neg\varphi(\bar t)\}
+\]
+jest spełnialny.
+\end{lemat}
+\begin{proof}
+Przypuśćmy przeciwnie, że dla każdej $\varphi\in p$
+zachodzi $T\cup\Delta\models\varphi(\bar t)$.
+Niech $\bar c$ będzie listą wszystkich różnych nowych
+stałych występujących w $\Delta$ lub w termach $\bar t$.
+Jest to lista skończona, ponieważ $\Delta$ jest
+skończony, a formuły i termy są skończonymi wyrażeniami.
+Po ewentualnej zmianie nazw zmiennych związanych
+zastępujemy te stałe parami różnymi świeżymi
+zmiennymi $\bar z$, rozłącznymi z $\bar x$.
+Oznaczmy przez $\delta(\bar z)$ wynik tej zamiany
+w koniunkcji zdań $\Delta$, a przez
+$s_i(\bar z)$ wynik zamiany w $t_i$.
+Dla pustej koniunkcji używamy $\top$,
+zgodnie z konwencją z rozdziału \ref{ch:mod-qe}.
+W języku pierwotnym tworzymy formułę
+\[
+\theta(\bar x)=
+\exists\bar z\,\left(
+\delta(\bar z)\land\bigwedge_{i=1}^{n} x_i=s_i(\bar z)
+\right).
+\]
+Zmienne $\bar x$ wybieramy tak, aby żadna z nich
+nie występowała jako związana w $\delta$.
+Jeżeli lista $\bar c$ jest pusta, nie dodajemy
+kwantyfikatorów $\exists\bar z$.
+
+Spełnialność $T\cup\Delta$ daje model, w którym
+wartości nowych stałych świadczą o prawdziwości
+$\theta$ przy krotce wartości termów $\bar t$.
+Zatem $\theta$ jest realizowalna w modelu $T$.
+Niech teraz dowolny model $\mathfrak A\models T$
+i krotka $\bar a$ spełniają $\theta$.
+Wybieramy świadków $\bar b$ dla $\bar z$.
+Rozwijamy $\mathfrak A$ do języka $\mathcal L(C)$,
+interpretując stałe $\bar c$ przez $\bar b$,
+a pozostałe nowe stałe przez dowolny element
+niepustego uniwersum $A$. Z semantyki podstawienia
+(twierdzenie \ref{thm:sem-substitution}) oraz
+indukcji po budowie termów wynika, że rozwinięcie
+spełnia $\Delta$, a wartości termów $\bar t$
+są równe odpowiednio współrzędnym $\bar a$.
+Przy podstawianiu termów za zmienne w $\varphi$
+wykorzystujemy to, że termy $\bar t$ są domknięte;
+nie zawierają zmiennych, które mogłyby zostać
+przechwycone przez kwantyfikator.
+
+Z założenia rozwinięcie spełnia $\varphi(\bar t)$
+dla każdej $\varphi\in p$. Zatem
+$\mathfrak A\models\varphi(\bar a)$ dla każdej
+takiej $\varphi$. Dowolność modelu i krotki daje
+\[
+T\models\forall\bar x\,(\theta(\bar x)\to\varphi(\bar x))
+\qquad(\varphi\in p).
+\]
+Realizowalna formuła $\theta$ świadczyłaby więc
+o główności $p$, wbrew założeniu.
+\end{proof}
+
+Ważne jest to, że $\Delta$ jest skończony, natomiast
+$T$ może być nieskończony. Wszystkie wymagania z $T$
+są zachowywane w każdym kroku. W lemacie nie
+zakładamy ani przeliczalności języka, ani zupełności
+teorii; przeliczalność będzie potrzebna przy
+organizacji kolejnych etapów konstrukcji.
+
+\section{Twierdzenie o pomijaniu typów}
+\begin{twierdzenie}[Pomijanie przeliczalnej rodziny typów]
+\label{thm:mod-ott}
+Niech $\mathcal L$ będzie co najwyżej przeliczalnym
+językiem, a $T$ spełnialną teorią tego języka.
+Niech $(p_j)_{j\in J}$ będzie co najwyżej przeliczalną
+rodziną niegłównych typów częściowych nad $T$,
+gdzie $p_j\subseteq F_{n_j}(\mathcal L)$ i $n_j\geq1$.
+Istnieje model $\mathfrak M\models T$ o mocy
+co najwyżej $\aleph_0$, który pomija każdy $p_j$.
+Jeżeli $T$ nie ma modeli skończonych, to
+$|M|=\aleph_0$.
+\end{twierdzenie}
+\begin{proof}
+Dodajemy przeliczalnie nieskończony zbiór nowych
+stałych $C=\{c_0,c_1,\ldots\}$.
+Rozszerzony język $\mathcal L(C)$ jest nadal
+przeliczalny. Jego termy i formuły tworzą zbiory
+co najwyżej przeliczalne, jako skończone ciągi
+symboli z przeliczalnego alfabetu (por. lemat
+\ref{lem:ls-formula-count}).
+
+Ustalamy wyliczenie trzech rodzajów wymagań:
+\begin{enumerate}[label=(\roman*)]
+\item rozstrzygnąć każde zdanie $\sigma$ języka
+$\mathcal L(C)$;
+\item zapewnić świadka dla każdego zdania postaci
+$\exists x\,\psi(x)$ języka $\mathcal L(C)$,
+gdzie jedyną możliwą zmienną wolną $\psi$ jest $x$;
+\item dla każdego $j\in J$ i każdej krotki $\bar t$
+długości $n_j$ złożonej z termów domkniętych
+języka $\mathcal L(C)$ wymusić
+$\neg\varphi(\bar t)$ dla pewnej $\varphi\in p_j$.
+\end{enumerate}
+Zbiór wszystkich wymagań jest przeliczalny:
+w trzecim przypadku używamy przeliczalności
+rodziny $J$ i skończoności $n_j$.
+Wyliczenie może zawierać powtórzenia.
+Budujemy ciąg skończonych zbiorów zdań
+\[
+\varnothing=\Delta_0\subseteq\Delta_1
+\subseteq\Delta_2\subseteq\cdots
+\]
+tak, aby $T\cup\Delta_k$ był spełnialny dla każdego
+$k$. Na etapie $k$ obsługujemy $k$-te wymaganie.
+
+Dla wymagania (i) wybieramy jedno ze zdań
+$\sigma,\neg\sigma$, którego dodanie zachowuje
+spełnialność. Co najmniej jedno jest dopuszczalne,
+ponieważ dowolny model $T\cup\Delta_k$ spełnia
+dokładnie jedno z nich.
+
+Dla wymagania (ii) wybieramy stałą $c\in C$,
+która nie występuje w $\Delta_k$ ani w zdaniu
+$\exists x\,\psi(x)$. Jest to możliwe, ponieważ
+te wyrażenia używają tylko skończenie wielu
+nowych stałych, a $T$ nie używa żadnej z nich.
+Dodajemy zdanie Henkina
+\[
+(\exists x\,\psi(x))\to\psi(c).
+\]
+Aby sprawdzić spełnialność, wybieramy dowolny
+model $T\cup\Delta_k$. Jeżeli przesłanka jest
+prawdziwa, zmieniamy interpretację $c$ na
+wartość świadka. Jeżeli jest fałszywa, nie musimy
+nic zmieniać. W obu przypadkach wcześniejsze
+wymagania pozostają prawdziwe.
+Jest to semantyczna wersja kroku z lematu
+\ref{lem:henkin-one-witness}.
+
+Dla wymagania (iii) stosujemy lemat
+\ref{lem:mod-ott-avoidance} do $p_j$,
+$\Delta_k$ i krotki $\bar t$. Wybieramy formułę
+$\varphi\in p_j$ wskazaną przez lemat i dodajemy
+$\neg\varphi(\bar t)$.
+Możemy ustalić dobre uporządkowanie formuł
+rozszerzonego języka i zawsze brać pierwszą
+dopuszczalną formułę. W ten sposób wybory
+dokonywane są w obrębie zbioru.
+
+Niech
+\[
+\Gamma=T\cup\bigcup_{k<\omega}\Delta_k.
+\]
+Każdy skończony fragment $\Gamma$ należy do
+$T\cup\Delta_k$ dla dostatecznie dużego $k$.
+Z twierdzenia o zwartości \ref{thm:compactness}
+istnieje model $\mathfrak D\models\Gamma$
+w języku rozszerzonym. Nie możemy po prostu
+wziąć reduktu $\mathfrak D$: mogą w nim istnieć
+elementy niebędące wartościami żadnych termów
+domkniętych, których wymagania (iii) nie dotyczą.
+
+Niech $D_0$ będzie zbiorem wartości wszystkich
+termów domkniętych w $\mathfrak D$.
+Jest niepusty, gdyż zawiera wartość $c_0$,
+i co najwyżej przeliczalny. Zawiera wartości
+wszystkich stałych i jest zamknięty na działania:
+jeżeli $a_i=t_i^{\mathfrak D}$, to
+$f^{\mathfrak D}(\bar a)$ jest wartością termu
+$f(t_1,\ldots,t_m)$. Definiuje więc podstrukturę
+$\mathfrak D_0\subseteq\mathfrak D$.
+
+Pokażemy, że $\mathfrak D_0\preccurlyeq\mathfrak D$
+za pomocą kryterium Tarskiego--Vaughta
+\ref{thm:model-tarski-vaught}.
+Niech $\mathfrak D\models\exists x\,\eta(x,\bar a)$,
+gdzie $\bar a$ jest krotką z $D_0$. Każda współrzędna
+jest wartością pewnego termu domkniętego $t_i$.
+Podstawiając te termy za odpowiednie zmienne
+w $\eta$, otrzymujemy formułę $\psi(x)$, której
+jedyną możliwą zmienną wolną jest $x$.
+Jeżeli zachodzi potrzeba, wcześniej przemianowujemy
+zmienne związane. Semantyka podstawienia daje
+$\mathfrak D\models\exists x\,\psi(x)$.
+Wymaganie (ii) dla tego zdania zapewniło
+aksjomat $(\exists x\,\psi(x))\to\psi(c)$
+należący do $\Gamma$. Zatem
+$\mathfrak D\models\psi(c)$, czyli
+$\mathfrak D\models\eta(c^{\mathfrak D},\bar a)$.
+Ponieważ $c^{\mathfrak D}\in D_0$, otrzymaliśmy
+świadka w $D_0$ i kryterium daje elementarność.
+
+Niech $\mathfrak M$ będzie reduktem $\mathfrak D_0$
+do języka $\mathcal L$. Przez elementarność
+$\mathfrak D_0\models T$, więc $\mathfrak M\models T$.
+Ustalmy $j\in J$ i dowolną krotkę $\bar a\in M^{n_j}$.
+Wybieramy krotkę termów domkniętych $\bar t$
+o wartościach $\bar a$ w $\mathfrak D$.
+Wymaganie (iii) zapewniło zdanie
+$\neg\varphi(\bar t)\in\Gamma$
+dla pewnej $\varphi\in p_j$. W konsekwencji
+$\mathfrak D\models\neg\varphi(\bar t)$.
+Z elementarności $\mathfrak D_0$ i semantyki
+podstawienia wynika $\mathfrak M\models\neg\varphi(\bar a)$.
+Krotka $\bar a$ nie realizuje $p_j$.
+Dowolność $\bar a,j$ dowodzi pomijania całej
+rodziny. Ograniczenie mocy wynika z konstrukcji $D_0$;
+jeżeli $T$ nie ma skończonych modeli, model
+musi być przeliczalnie nieskończony.
+\end{proof}
+
+Konstrukcja jest wariantem metody Henkina
+z rozdziału \ref{ch:completeness}. Zamiast
+konstruować model jako iloraz termów względem
+równości dowodliwej, korzystamy z już udowodnionej
+zwartości i bierzemy elementarną podstrukturę
+generowaną przez termy domknięte. Warunek
+rozstrzygania zdań zapewnia dodatkowo, że $\Gamma$
+jest zupełna semantycznie; nie jest on niezbędny
+do ostatniego argumentu o podstrukturze.
+Kluczowe są wymagania Henkina oraz wymagania
+unikające realizacji typów.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,x=1cm,y=1cm]
+\foreach \x/\i in {0/0,2.7/1,5.4/2,8.1/3}{
+ \node[draw,rounded corners,minimum width=1.3cm]
+ (d\i) at (\x,0) {$\Delta_{\i}$};
+}
+\draw[->,thick] (d0)--node[above,font=\small] {zdanie}(d1);
+\draw[->,thick] (d1)--node[above,font=\small] {świadek}(d2);
+\draw[->,thick] (d2)--node[above,font=\small] {unikanie}(d3);
+\node at (9.6,0) {$\cdots$};
+\draw[->,dashed,thick] (d3)--(9.2,0);
+\node[align=center,text width=9cm,font=\small] at (4.8,-1)
+ {Każdy etap zachowuje spełnialność $T\cup\Delta_k$.};
+\end{tikzpicture}
+\caption{Trzy rodzaje wymagań w konstrukcji modelu
+pomijającego typy. Kolejność na rysunku jest przykładowa:
+wyliczenie musi objąć wszystkie wymagania.}
+\label{fig:mod-ott-henkin}
+\end{figure}
+
+\begin{wniosek}[Charakterystyka typów pomijalnych]
+\label{cor:mod-ott-complete}
+Niech $T$ będzie zupełną teorią w co najwyżej
+przeliczalnym języku. Typ częściowy nad $T$
+można pominąć w pewnym modelu $T$ dokładnie wtedy,
+gdy jest niegłówny. Można wtedy wybrać model
+o mocy co najwyżej $\aleph_0$.
+Dla typu zupełnego oznacza to dokładnie
+nieizolowanie w przestrzeni typów.
+\end{wniosek}
+\begin{proof}
+Typ główny jest realizowany w każdym modelu $T$
+na mocy lematu \ref{lem:mod-ott-principal-unavoidable}.
+Typ niegłówny można pominąć na mocy twierdzenia
+\ref{thm:mod-ott}, zastosowanego do rodziny
+jednoelementowej. Dla typu zupełnego stosujemy
+lemat \ref{lem:mod-ott-interior}.
+\end{proof}
+
+\section{Przykłady i ograniczenia twierdzenia}
+\begin{przyklad}[Typ elementu spoza standardowej arytmetyki]
+\label{ex:mod-ott-arithmetic}
+Niech $T=\operatorname{Th}(\mathbb N,0,S,+,\cdot)$,
+gdzie $S(n)=n+1$, a $\underline n=S^n(0)$.
+Zbiór
+\[
+p(x)=\{x\ne\underline n:n\in\mathbb N\}
+\]
+jest typem częściowym nad $T$:
+każdy skończony podzbiór wymaga uniknięcia
+skończenie wielu liczb naturalnych, co można
+zrealizować w modelu standardowym. Lemat
+\ref{lem:mod-type-compactness} daje realizowalność
+całego typu w pewnym modelu $T$.
+Model standardowy pomija jednak $p$, bo każdy
+jego element jest wartością pewnego numeralu.
+Z lematu \ref{lem:mod-ott-principal-unavoidable}
+wynika, że $p$ jest niegłówny. Z twierdzenia
+\ref{thm:mod-ott} istnieje model przeliczalny
+pomijający $p$ (w tym przypadku znamy go wprost).
+Każdy model $T$ pomijający $p$ jest izomorficzny
+z modelem standardowym: jego uniwersum składa
+się z wartości numerali, różniących się parami,
+a wszystkie równania opisujące działania $S,+,\cdot$
+na numeralach są konsekwencjami $T$.
+Typ $p$ ma także realizację w przeliczalnym
+modelu niestandardowym, przez zwartość i dolne
+twierdzenie Löwenheima--Skolema
+\ref{thm:downward-ls} zastosowane do modelu
+zawierającego realizację typu.
+\end{przyklad}
+
+\begin{przyklad}[Nie można pomijać dowolnie wielu typów]
+\label{ex:mod-ott-uncountable-family}
+Niech $\mathcal L=\{P_i:i\in\mathbb N\}$ będzie
+językiem z przeliczalną rodziną jednoargumentowych
+symboli relacyjnych. Rozważmy strukturę
+$\mathfrak A$ o uniwersum wszystkich skończonych
+podzbiorów $\mathbb N$ z interpretacją
+\[
+P_i^{\mathfrak A}(F)\quad\Longleftrightarrow\quad i\in F.
+\]
+Niech $T=\operatorname{Th}(\mathfrak A)$.
+Dla każdego $D\subseteq\mathbb N$ tworzymy typ częściowy
+\[
+p_D(x)=\{P_i(x):i\in D\}
+\cup\{\neg P_i(x):i\notin D\}.
+\]
+Jest realizowalny w pewnym modelu $T$, gdyż
+każdy skończony fragment można zrealizować
+w $\mathfrak A$ przez skończony zbiór dodatnich
+wymagań. Stosujemy lemat \ref{lem:mod-type-compactness}.
+
+Wykażemy niegłówność każdego $p_D$.
+Niech $\theta(x)$ będzie dowolną formułą
+realizowalną w pewnym modelu $T$.
+Z zupełności $T$ istnieje skończony zbiór
+$F\subseteq\mathbb N$ spełniający $\theta$ w
+$\mathfrak A$. Niech $I$ będzie skończonym
+zbiorem indeksów symboli $P_i$ występujących
+w $\theta$. Wybieramy $k\notin I$. Odwzorowanie
+$G\mapsto G\mathbin{\triangle}\{k\}$, gdzie
+$\triangle$ oznacza różnicę symetryczną, jest
+bijekcją uniwersum $\mathfrak A$ i automorfizmem
+reduktu do symboli z $I$: zachowuje przynależność
+do każdego $P_i$ dla $i\in I$.
+Z niezmienniczości względem izomorfizmu
+(twierdzenie \ref{thm:model-iso-invariance})
+oba zbiory $F$ i $F\mathbin{\triangle}\{k\}$
+spełniają $\theta$. Mają przeciwne wartości $P_k$,
+więc co najmniej jeden nie realizuje $p_D$.
+W konsekwencji $\theta$ nie wymusza wszystkich
+formuł $p_D$. Dowolność $\theta$ daje niegłówność.
+
+Rodzina $(p_D)_{D\subseteq\mathbb N}$ ma moc
+$2^{\aleph_0}$. Żaden model $T$ nie pomija wszystkich
+tych typów: dla dowolnego elementu $a$ modelu
+$\mathfrak M\models T$ wystarczy położyć
+\[
+D_a=\{i\in\mathbb N:\mathfrak M\models P_i(a)\}.
+\]
+Element $a$ realizuje $p_{D_a}$ z definicji.
+Twierdzenia \ref{thm:mod-ott} nie można więc
+rozszerzyć bezwarunkowo na dowolne nieprzeliczalne
+rodziny typów, nawet w przeliczalnym języku
+i dla teorii zupełnej.
+\end{przyklad}
+
+
+\section{Modele atomowe i pierwsze}
+
+W tej części $T$ jest spełnialną teorią zupełną.
+Przez typ krotki bez parametrów rozumiemy
+$\operatorname{tp}^{\mathfrak M}(\bar a/\varnothing)$,
+czyli zbiór wszystkich formuł języka pierwotnego
+prawdziwych przy $\bar a$ w $\mathfrak M$.
+
+\begin{definicja}[Model atomowy i model pierwszy]
+\label{def:mod-atomic-prime}
+Model $\mathfrak M\models T$ nazywamy atomowym,
+jeżeli typ każdej niepustej skończonej krotki
+elementów $M$ jest izolowany w odpowiedniej
+przestrzeni $S_n(T)$.
+Model $\mathfrak M\models T$ nazywamy pierwszym,
+jeżeli dla każdego $\mathfrak N\models T$
+istnieje zanurzenie elementarne
+$\mathfrak M\to\mathfrak N$.
+Nie żądamy jednoznaczności tego zanurzenia.
+\end{definicja}
+
+Atomowość dotyczy typów rzeczywiście realizowanych
+w danym modelu; nie wymaga realizacji wszystkich
+typów izolowanych jako dodatkowego aksjomatu.
+W istocie każdy typ izolowany jest realizowany
+w każdym modelu teorii zupełnej, co wynika
+z lematu \ref{lem:mod-ott-principal-unavoidable}.
+Model atomowy pomija każdy nieizolowany typ
+zupełny bez parametrów: jego realizacja przeczyłaby
+atomowości. Model $\aleph_0$-nasycony realizuje
+natomiast wszystkie takie typy skończonych krotek
+(twierdzenie \ref{thm:mod-saturation-finite-tuples}).
+
+\begin{lemat}[Przedłużenie dopasowania krotek]
+\label{lem:mod-atomic-extension}
+Niech $\mathfrak M,\mathfrak N\models T$,
+niech $\bar a\in M^n$, $\bar b\in N^n$ mają
+ten sam typ bez parametrów i niech $c\in M$.
+Jeżeli typ $(\bar a,c)$ jest izolowany,
+to istnieje $d\in N$ takie, że
+\[
+\operatorname{tp}^{\mathfrak M}(\bar a,c/\varnothing)
+=
+\operatorname{tp}^{\mathfrak N}(\bar b,d/\varnothing).
+\]
+Dopuszczamy $n=0$, gdy warunek równości typów
+pustych krotek oznacza równoważność elementarną.
+\end{lemat}
+\begin{proof}
+Niech $\theta(\bar x,y)$ izoluje typ $(\bar a,c)$.
+W szczególności
+$\mathfrak M\models\exists y\,\theta(\bar a,y)$.
+Równość typów daje
+$\mathfrak N\models\exists y\,\theta(\bar b,y)$;
+dla pustej krotki korzystamy z zupełności $T$.
+Wybieramy świadka $d$.
+Ponieważ $\theta$ izoluje typ, każda krotka
+spełniająca $\theta$ w dowolnym modelu $T$
+realizuje ten sam typ zupełny.
+Jeżeli $c\notin\{a_1,\ldots,a_n\}$, to formuły
+$y\ne x_i$ należą do izolowanego typu, więc
+$d\notin\{b_1,\ldots,b_n\}$.
+\end{proof}
+
+\begin{twierdzenie}[Przeliczalny model atomowy jest pierwszy]
+\label{thm:mod-countable-atomic-prime}
+Jeżeli $\mathfrak M\models T$ jest atomowy
+i ma moc co najwyżej $\aleph_0$, to jest pierwszy.
+Nie zakładamy tu przeliczalności języka.
+\end{twierdzenie}
+\begin{proof}
+Niech $\mathfrak N\models T$.
+Wyliczamy elementy $M$ bez powtórzeń, skończenie
+lub w ciągu $(a_i)_{i<\omega}$.
+Zaczynamy od pustego dopasowania.
+Jeżeli wybrano już $b_0,\ldots,b_{k-1}$
+o tym samym typie co $a_0,\ldots,a_{k-1}$,
+to z atomowości i lematu
+\ref{lem:mod-atomic-extension} możemy dobrać $b_k$,
+zachowując równość typów powiększonych krotek.
+Otrzymujemy parami różne elementy $b_i$.
+Odwzorowanie $f(a_i)=b_i$ jest więc injekcją.
+
+Dla dowolnej formuły i dowolnej skończonej krotki
+argumentów z $M$ wszystkie te argumenty należą
+do pewnego skończonego początkowego odcinka
+wyliczenia. Równość typów tego odcinka, po
+odpowiednim wyborze i ewentualnym powtórzeniu
+zmiennych, daje równoważność prawdziwości
+formuły na argumentach i na ich obrazach.
+W szczególności formuły atomowe opisujące
+działania, stałe i relacje są zachowane.
+Zatem $f$ jest zanurzeniem elementarnym.
+\end{proof}
+
+\begin{twierdzenie}[Model pierwszy jest atomowy i przeliczalny]
+\label{thm:mod-prime-atomic-countable}
+Jeżeli $\mathcal L$ jest co najwyżej przeliczalny,
+to każdy model pierwszy teorii $T$ jest atomowy
+i ma moc co najwyżej $\aleph_0$.
+W konsekwencji model jest pierwszy dokładnie
+wtedy, gdy jest atomowy i co najwyżej przeliczalny.
+\end{twierdzenie}
+\begin{proof}
+Z dolnego twierdzenia Löwenheima--Skolema
+\ref{thm:downward-ls} teoria $T$ ma model
+$\mathfrak N$ o mocy co najwyżej $\aleph_0$.
+Jeżeli $\mathfrak M$ jest pierwszy, to zanurza
+się elementarnie w $\mathfrak N$,
+więc $|M|\leq\aleph_0$.
+
+Przypuśćmy, że pewna skończona krotka $\bar a$
+w $M$ ma nieizolowany typ zupełny $p$.
+Z lematu \ref{lem:mod-ott-interior} typ $p$
+jest niegłówny. Twierdzenie \ref{thm:mod-ott}
+daje model $\mathfrak D\models T$ pomijający $p$.
+Jednak pierwszość $\mathfrak M$ zapewnia zanurzenie
+elementarne $g:\mathfrak M\to\mathfrak D$.
+Krotka $g(\bar a)$ realizuje $p$, gdyż zanurzenie
+elementarne zachowuje wszystkie formuły.
+Jest to sprzeczność. Zatem $\mathfrak M$
+jest atomowy. Odwrotną implikację daje twierdzenie
+\ref{thm:mod-countable-atomic-prime}.
+\end{proof}
+
+\begin{twierdzenie}[Jednoznaczność przeliczalnego modelu atomowego]
+\label{thm:mod-atomic-uniqueness}
+Dowolne dwa modele atomowe tej samej teorii zupełnej,
+o mocach co najwyżej $\aleph_0$, są izomorficzne.
+Co więcej, każde dopasowanie skończonych krotek
+o równych typach bez parametrów przedłuża się
+do izomorfizmu tych modeli.
+\end{twierdzenie}
+\begin{proof}
+Niech $\mathfrak M,\mathfrak N$ będą tymi modelami.
+Równość typów początkowych krotek zapewnia,
+że odpowiadające sobie współrzędne wyznaczają
+dobrze określoną częściową bijekcję, gdyż
+typ zawiera informacje o równościach i nierównościach.
+
+Jeżeli jeden model jest skończony, drugi ma
+tę samą moc: zdanie mówiące, że istnieje dokładnie
+$m$ elementów, należy do ich wspólnej teorii.
+W skończonym przypadku wystarczy przedłużać
+dopasowanie elementów pierwszego modelu
+lematem \ref{lem:mod-atomic-extension}, aż będzie
+ono bijekcją.
+
+W przypadku nieskończonym wyliczamy oba uniwersa.
+Na parzystych etapach dołączamy pierwszy jeszcze
+niedopasowany element $M$ i stosujemy lemat
+\ref{lem:mod-atomic-extension}, korzystając
+z atomowości $\mathfrak M$.
+Na nieparzystych etapach dołączamy pierwszy jeszcze
+niedopasowany element $N$ i stosujemy ten sam lemat
+z zamienionymi rolami modeli, korzystając
+z atomowości $\mathfrak N$.
+Każdy krok zachowuje równość typów dopasowanych
+krotek oraz injektywność dopasowania.
+
+Suma rosnącego ciągu częściowych bijekcji
+jest bijekcją $f:M\to N$: każdy element obu
+wyliczeń zostaje uwzględniony po skończenie
+wielu odpowiednich etapach.
+Każda skończona krotka argumentów pojawia się
+w pewnym etapie, dlatego $f$ zachowuje prawdziwość
+wszystkich formuł, jak w dowodzie twierdzenia
+\ref{thm:mod-countable-atomic-prime}.
+W szczególności jest izomorfizmem.
+\end{proof}
+
+\begin{wniosek}[Jednoznaczność modelu pierwszego]
+\label{cor:mod-prime-uniqueness}
+W języku co najwyżej przeliczalnym teoria zupełna
+ma co najwyżej jeden model pierwszy z dokładnością
+do izomorfizmu.
+\end{wniosek}
+\begin{proof}
+Stosujemy kolejno twierdzenia
+\ref{thm:mod-prime-atomic-countable}
+i \ref{thm:mod-atomic-uniqueness}.
+\end{proof}
+
+
+\section{Istnienie modelu pierwszego}
+
+\begin{lemat}[Izolowanie typów podkrotek]
+\label{lem:mod-isolated-subtuple}
+Jeżeli typ skończonej krotki $\bar a$ bez parametrów
+w modelu teorii zupełnej $T$ jest izolowany, to
+typ każdej jej niepustej podkrotki, także z
+powtórzeniami współrzędnych, jest izolowany.
+\end{lemat}
+\begin{proof}
+Niech $\theta(\bar x)$ izoluje typ $\bar a$,
+a podkrotka ma postać $(a_{i_1},\ldots,a_{i_m})$.
+Wybieramy świeżą krotkę zmiennych $\bar y$,
+rozłączną z $\bar x$ i zmiennymi związanymi w $\theta$.
+Formuła
+\[
+\eta(\bar y)=\exists\bar x\,
+\left(\theta(\bar x)\land
+\bigwedge_{j=1}^m y_j=x_{i_j}\right)
+\]
+jest realizowana przez tę podkrotkę.
+Każda realizacja $\eta$ w modelu $T$ jest
+podkrotką realizacji $\theta$. Wszystkie takie
+realizacje $\theta$ mają ten sam typ zupełny.
+Dla dowolnej formuły $\varphi(\bar y)$
+prawdziwość na rozważanej podkrotce jest
+prawdziwością formuły
+$\varphi(x_{i_1},\ldots,x_{i_m})$ na całej krotce
+(po ewentualnej zmianie nazw zmiennych związanych).
+Zatem wszystkie realizacje $\eta$ mają ten sam
+typ zupełny, a więc $\eta$ go izoluje.
+\end{proof}
+
+\begin{twierdzenie}[Kryterium istnienia modelu pierwszego]
+\label{thm:mod-prime-existence}
+Niech $T$ będzie spełnialną teorią zupełną
+w co najwyżej przeliczalnym języku $\mathcal L$.
+Następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $T$ ma model pierwszy;
+\item $T$ ma model atomowy;
+\item dla każdego $n\geq 1$ typy izolowane
+tworzą zbiór gęsty w $S_n(T)$.
+\end{enumerate}
+Jeżeli warunki zachodzą, istnieje model atomowy
+o mocy co najwyżej $\aleph_0$.
+\end{twierdzenie}
+\begin{proof}
+Implikacja (i)$\Rightarrow$(ii) wynika z twierdzenia
+\ref{thm:mod-prime-atomic-countable}.
+
+(ii)$\Rightarrow$(iii).
+Niech $\mathfrak M$ będzie atomowy, a
+$[\varphi]\subseteq S_n(T)$ niepusty zbiór bazowy.
+Pewien model $T$ spełnia $\exists\bar x\,\varphi$,
+więc przez zupełność $T$ również
+$\mathfrak M\models\exists\bar x\,\varphi$.
+Typ świadka w $M$ jest izolowany i należy do
+$[\varphi]$. Ponieważ zbiory $[\varphi]$ tworzą
+bazę topologii (lemat \ref{lem:mod-stone-basic}),
+otrzymujemy gęstość.
+
+(iii)$\Rightarrow$(i).
+Ustalmy dowolny model $\mathfrak D\models T$.
+Z gęstości w niepustej przestrzeni $S_1(T)$
+wybieramy typ izolowany, a z lematu
+\ref{lem:mod-ott-principal-unavoidable} jego
+realizację $a_0\in D$. Skonstruujemy ciąg
+$(a_i)_{i<\omega}$ w $D$, dopuszczając
+powtórzenia, tak aby każda początkowa
+krotka $\bar a_k=(a_0,\ldots,a_{k-1})$
+dla $k\geq 1$ miała typ izolowany.
+
+Wprowadzamy przeliczalnie nieskończoną rodzinę
+parami różnych nowych stałych $c_i$ dla $i<\omega$,
+rozłączną z $\mathcal L$. Ich znaczenie ustalamy
+podczas konstrukcji. Wyliczamy wszystkie
+zdania postaci $\exists y\,\varphi(y,\bar c)$
+w rozszerzonym języku, gdzie $\bar c$ jest
+skończoną krotką nowych stałych.
+Formuła $\varphi$ nie ma innych zmiennych wolnych
+niż ewentualnie $y$. Przeliczalność wyliczenia
+wynika ze skończoności wyrażeń oraz
+przeliczalności alfabetu.
+
+Na etapie $k\geq1$ obsługujemy wymaganie o najmniejszym
+jeszcze nieobsłużonym indeksie spośród tych,
+które używają wyłącznie stałych $c_i$ dla $i<k$.
+Jeżeli nie ma takiego wymagania, dołączamy
+$a_k=a_0$. Jeżeli wymaganie istnieje, oznaczamy
+je jako obsłużone i zastępujemy użyte stałe
+odpowiednimi zmiennymi krotki
+$\bar x=(x_0,\ldots,x_{k-1})$, otrzymując formułę $\psi(y,\bar x)$.
+Wybieramy parami różne zmienne $\bar x,y$ i przed
+zamianą przemianowujemy zmienne związane, aby
+uniknąć przechwycenia zmiennych; korzystamy z
+semantyki podstawienia (twierdzenie
+\ref{thm:sem-substitution}).
+Wymaganie jest prawdziwe w $\mathfrak D$,
+gdy $\mathfrak D\models\exists y\,\psi(y,\bar a_k)$.
+Jeśli nie jest prawdziwe, także dołączamy $a_k=a_0$.
+W obu przypadkach powtórzenia typu izolowanego
+pozostają izolowane: jeżeli $\theta(\bar x)$
+izoluje typ $\bar a_k$, to
+$\theta(\bar x)\land y=x_0$ izoluje typ
+$(\bar a_k,a_0)$.
+
+Pozostaje przypadek prawdziwego wymagania.
+Niech $\theta(\bar x)$ izoluje typ $\bar a_k$.
+Zbiór bazowy
+\[
+[\theta(\bar x)\land\psi(y,\bar x)]
+\subseteq S_{k+1}(T)
+\]
+jest niepusty, gdyż formułę realizuje w
+$\mathfrak D$ krotka $\bar a_k$ wraz z pewnym
+świadkiem. Z gęstości wybieramy w nim typ
+izolowany $q$ i formułę $\rho(\bar x,y)$
+izolującą $q$. Zatem
+\[
+\begin{aligned}
+T\models\forall\bar x\forall y\,\bigl(&\rho(\bar x,y)\to{}\\
+& (\theta(\bar x)\land\psi(y,\bar x))\bigr).
+\end{aligned}
+\]
+Istnieje model $T$ i krotka $(\bar b,d)$
+realizująca $\rho$. Krotka $\bar b$ realizuje
+$\theta$, więc ma ten sam typ co $\bar a_k$.
+Ponieważ $\exists y\,\rho(\bar x,y)$ należy
+do tego typu, mamy
+$\mathfrak D\models\exists y\,\rho(\bar a_k,y)$.
+Wybieramy $a_k$ jako świadka. Typ
+$(\bar a_k,a_k)$ jest izolowany przez $\rho$,
+a ponadto $\mathfrak D\models\psi(a_k,\bar a_k)$.
+
+Każde wymaganie zostanie obsłużone: od pewnego
+etapu wszystkie używane przez nie stałe mają
+już ustalone znaczenie, a wcześniejszych
+wymagań w wyliczeniu jest skończenie wiele.
+Jeżeli wymaganie jest od tego etapu dostępne,
+każdy krok, który wybiera inne wymaganie
+o mniejszym indeksie, usuwa jedno z tej
+skończonej listy.
+
+Niech $A=\{a_i:i<\omega\}$. Zbiór jest niepusty.
+Zawiera wartości wszystkich stałych języka
+pierwotnego i jest zamknięty na działania:
+wystarczy zastosować obsłużone wymagania
+$\exists y\,(y=c)$ oraz
+$\exists y\,(y=f(c_{i_1},\ldots,c_{i_m}))$,
+gdzie $c$ jest stałą języka pierwotnego,
+a $f$ symbolem funkcyjnym. Oba rodzaje
+zdań są prawdziwe w $\mathfrak D$.
+Zatem $A$ wyznacza podstrukturę $\mathfrak A$.
+Każda formuła egzystencjalna prawdziwa w
+$\mathfrak D$ z parametrami w $A$ otrzymała
+świadka w $A$. Kryterium Tarskiego--Vaughta
+\ref{thm:model-tarski-vaught} daje
+$\mathfrak A\preccurlyeq\mathfrak D$.
+
+Dowolna skończona niepusta krotka z $A$
+jest podkrotką pewnej $\bar a_k$ z dopuszczalnymi
+powtórzeniami i zmianą kolejności. Jej typ jest
+izolowany na mocy lematu
+\ref{lem:mod-isolated-subtuple}; elementarność
+zapewnia, że jest to również jej typ w $\mathfrak A$.
+Model $\mathfrak A$ jest więc atomowy i ma moc
+co najwyżej $\aleph_0$. Z twierdzenia
+\ref{thm:mod-countable-atomic-prime} jest pierwszy.
+\end{proof}
+
+Kryterium wymaga gęstości we wszystkich
+przestrzeniach skończenie wymiarowych.
+Konstrukcja nie polega na jednoczesnym pominięciu
+wszystkich typów nieizolowanych przez bezpośrednie
+zastosowanie twierdzenia \ref{thm:mod-ott}:
+takich typów może być nieprzeliczalnie wiele.
+
+\begin{przyklad}[Teoria bez modelu pierwszego]
+\label{ex:mod-no-prime}
+Wróćmy do teorii z przykładu
+\ref{ex:mod-ott-uncountable-family}.
+Jeżeli $a$ jest elementem dowolnego modelu tej
+teorii, to jego typ zupełny rozszerza $p_{D_a}$.
+Gdyby ten typ zupełny był izolowany przez
+formułę $\theta$, to $\theta$ wymuszałaby
+wszystkie formuły $p_{D_a}$, wbrew wykazanej
+tam niegłówności $p_{D_a}$.
+Zatem przestrzeń $S_1(T)$ jest niepusta i nie
+zawiera żadnego typu izolowanego. Z twierdzenia
+\ref{thm:mod-prime-existence} teoria nie ma
+modelu pierwszego ani atomowego.
+\end{przyklad}
+
+\section{Atomowość, nasycenie i jednorodność}
+
+\begin{wniosek}[Atomowość i nasycenie]
+\label{cor:mod-atomic-saturated}
+Jeżeli model atomowy teorii zupełnej $T$
+jest $\aleph_0$-nasycony, to wszystkie typy
+w $S_n(T)$ dla $n\geq1$ są izolowane,
+a każda z tych przestrzeni jest skończona.
+Odwrotnie, jeśli wszystkie te przestrzenie
+są skończone, to każdy model $T$ jest atomowy
+i $\aleph_0$-nasycony.
+\end{wniosek}
+\begin{proof}
+Z nasycenia i twierdzenia
+\ref{thm:mod-saturation-finite-tuples} każdy typ
+zupełny skończonej krotki nad zbiorem pustym
+jest realizowany. Atomowość daje izolowanie
+każdego punktu. Przestrzeń $S_n(T)$ jest zwarta
+(twierdzenie \ref{thm:mod-stone-compact}), a
+pokrycie przez otwarte singletony ma skończone
+podpokrycie, więc przestrzeń jest skończona.
+
+Odwrotnie, skończona przestrzeń Hausdorffa
+jest dyskretna: dopełnienie singletonu jest
+skończoną sumą domkniętych singletonów.
+Zatem każdy typ zupełny jest izolowany
+i każdy model $T$ jest atomowy.
+
+Niech $\mathfrak M\models T$, $B\subseteq M$
+będzie skończony, a $p(x)$ typem zupełnym nad $B$.
+Wyliczamy $B$ jako $\bar b$. Z realizowalności
+typu w rozszerzeniu elementarnym
+(twierdzenie \ref{thm:mod-type-elementary-extension})
+wybieramy $\mathfrak N\succeq\mathfrak M$
+oraz $d$ realizujące $p$ w $\mathfrak N$.
+Typ $(\bar b,d)$ bez parametrów w $\mathfrak N$
+jest izolowany przez pewną formułę $\theta$.
+Wobec elementarności
+$\mathfrak M\models\exists y\,\theta(\bar b,y)$.
+Każdy świadek $e$ w $M$ ma razem z $\bar b$
+ten sam typ bez parametrów co $(\bar b,d)$.
+W szczególności po podstawieniu parametrów
+$\bar b$ realizuje $p$. Otrzymaliśmy realizację
+każdego typu jednozmiennego nad skończonym
+zbiorem parametrów, co daje $\aleph_0$-nasycenie.
+\end{proof}
+
+\begin{przyklad}[Model pierwszy, lecz nienasycony]
+\label{ex:mod-prime-not-saturated}
+Standardowy model arytmetyki z przykładu
+\ref{ex:mod-ott-arithmetic} jest atomowy:
+typ krotki $(n_1,\ldots,n_m)$ izoluje formuła
+$\bigwedge_{i=1}^m x_i=\underline{n_i}$.
+Istotnie w każdym modelu pełnej teorii
+arytmetyki standardowej prawdziwość formuł
+na wartościach tych numerali jest rozstrzygnięta
+przez zdania teorii. Model jest przeliczalny,
+więc jest pierwszy. Nie jest jednak
+$\aleph_0$-nasycony, ponieważ pomija częściowy
+typ $\{x\ne\underline n:n\in\mathbb N\}$,
+który można rozszerzyć do typu zupełnego
+(twierdzenie \ref{thm:mod-type-completion}).
+\end{przyklad}
+
+\begin{przyklad}[Model $\aleph_0$-nasycony, lecz nieatomowy]
+\label{ex:mod-saturated-not-atomic}
+Dla tej samej teorii wybieramy
+$\aleph_0$-nasycone rozszerzenie elementarne
+modelu standardowego na mocy twierdzenia
+\ref{thm:mod-saturation-extension}.
+Musi ono realizować pewne zupełne rozszerzenie
+typu $p(x)=\{x\ne\underline n:n\in\mathbb N\}$.
+Żaden taki typ zupełny nie jest izolowany:
+w przeciwnym razie formuła izolująca świadczyłaby
+o główności $p$, której brak wykazano
+w przykładzie \ref{ex:mod-ott-arithmetic}.
+Zatem rozszerzenie nie jest atomowe.
+\end{przyklad}
+
+Twierdzenie \ref{thm:mod-atomic-uniqueness}
+pokazuje dodatkowo, że każdy przeliczalny
+model atomowy jest silnie $\aleph_0$-jednorodny
+w sensie definicji \ref{def:mod-homogeneity}.
+Nie wynika stąd nasycenie, jak pokazuje
+przykład \ref{ex:mod-prime-not-saturated}.
+Atomowość kontroluje typy realizowane bez parametrów;
+$\kappa$-nasycenie wymusza realizowanie typów nad
+zbiorami parametrów mocy mniejszej od $\kappa$,
+a jednorodność pozwala przedłużać odpowiednie
+odwzorowania częściowo elementarne.
+
+\section{Twierdzenie Ryll-Nardzewskiego}
+
+\begin{definicja}[Kategoryczność w danej mocy]
+\label{def:mod-categoricity}
+Niech $\kappa$ będzie mocą nieskończoną.
+Teorię $T$ nazywamy $\kappa$-kategoryczną,
+jeżeli ma model mocy $\kappa$ i wszystkie jej modele
+tej mocy są izomorficzne.
+W szczególności $\aleph_0$-kategoryczność oznacza
+istnienie dokładnie jednego przeliczalnie nieskończonego
+modelu z dokładnością do izomorfizmu.
+\end{definicja}
+
+Warunek istnienia modelu wyklucza kategoryczność
+w sensie pustej prawdziwości. W dalszej części
+zakładamy, że $T$ jest zupełną teorią w co najwyżej
+przeliczalnym języku i ma model nieskończony.
+Z dolnego twierdzenia Löwenheima--Skolema
+\ref{thm:downward-ls} ma więc model przeliczalnie
+nieskończony, a przez zupełność nie ma modeli
+skończonych.
+
+Dla modelu $\mathfrak M$ grupa
+$\operatorname{Aut}(\mathfrak M)$ działa na
+$M^n$ współrzędnie:
+\[
+g\cdot(a_1,\ldots,a_n)=(g(a_1),\ldots,g(a_n)).
+\]
+Orbitę krotki $\bar a$ stanowią wszystkie
+jej obrazy przez automorfizmy modelu.
+Krotki z tej samej orbity mają ten sam typ
+bez parametrów na mocy niezmienniczości
+formuł względem izomorfizmów
+(twierdzenie \ref{thm:model-iso-invariance}).
+Odwrotna implikacja wymaga dodatkowego argumentu
+o jednorodności.
+
+\begin{twierdzenie}[Ryll-Nardzewskiego]
+\label{thm:mod-ryll-nardzewski}
+Niech $T$ będzie zupełną teorią w co najwyżej
+przeliczalnym języku, mającą model nieskończony.
+Następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $T$ jest $\aleph_0$-kategoryczna;
+\item dla każdego $n\geq1$ każdy punkt $S_n(T)$
+jest izolowany;
+\item dla każdego $n\geq1$ przestrzeń $S_n(T)$
+jest skończona;
+\item dla każdego $n\geq1$ istnieje tylko skończenie
+wiele klas formuł o zmiennych wolnych zawartych
+w $\{x_1,\ldots,x_n\}$ względem równoważności
+modulo $T$;
+\item dla pewnego przeliczalnie nieskończonego modelu
+$\mathfrak M\models T$ i każdego $n\geq1$
+działanie $\operatorname{Aut}(\mathfrak M)$
+na $M^n$ ma skończenie wiele orbit.
+\end{enumerate}
+Gdy warunki te zachodzą, w jedynym z dokładnością
+do izomorfizmu modelu przeliczalnie nieskończonym
+orbity krotek
+są dokładnie zbiorami realizacji poszczególnych
+typów zupełnych bez parametrów. Każda orbita
+jest definiowalna bez parametrów.
+\end{twierdzenie}
+\begin{proof}
+(i)$\Rightarrow$(ii).
+Przypuśćmy, że $p\in S_n(T)$ jest nieizolowany.
+Z twierdzenia \ref{thm:mod-ott} i lematu
+\ref{lem:mod-ott-interior} istnieje model
+przeliczalnie nieskończony $\mathfrak M$
+pomijający $p$. Typ $p$ jest realizowalny w pewnym modelu $T$
+na mocy definicji \ref{def:mod-complete-type}
+i lematu \ref{lem:mod-type-compactness}.
+Stosujemy do niego dolne twierdzenie
+Löwenheima--Skolema \ref{thm:downward-ls},
+uwzględniając współrzędne realizacji $p$
+w zbiorze, który ma zawierać otrzymana
+podstruktura elementarna. Otrzymujemy model
+przeliczalnie nieskończony $\mathfrak N$
+realizujący $p$. Modele nie mogą być izomorficzne,
+gdyż realizowanie typu bez parametrów jest
+niezmiennicze względem izomorfizmu.
+Przeczy to (i).
+
+(ii)$\Rightarrow$(iii).
+Przestrzeń $S_n(T)$ jest zwarta na mocy
+twierdzenia \ref{thm:mod-stone-compact}.
+Jeżeli wszystkie jej punkty są izolowane,
+to otwarte singletony tworzą pokrycie
+tej przestrzeni. Skończone podpokrycie
+dowodzi, że przestrzeń jest skończona.
+
+(iii)$\Rightarrow$(i).
+Przez wniosek \ref{cor:mod-atomic-saturated}
+każdy model $T$ jest atomowy i $\aleph_0$-nasycony.
+Z twierdzenia \ref{thm:mod-atomic-uniqueness}
+dowolne dwa modele przeliczalnie nieskończone
+są izomorficzne. Istnienie takiego modelu
+wynika z dolnego twierdzenia Löwenheima--Skolema.
+
+(iii)$\Leftrightarrow$(iv).
+Ustalmy $n$. Odwzorowanie przyporządkowujące
+klasie formuły $\varphi$ zbiór
+$[\varphi]\subseteq S_n(T)$ jest dobrze określone,
+gdyż formuły równoważne modulo $T$ należą
+do dokładnie tych samych typów zupełnych.
+Jest to injekcja:
+jeśli formuły $\varphi,\psi$ nie są równoważne
+modulo $T$, to w pewnym modelu $T$
+istnieje krotka spełniająca dokładnie jedną
+z nich. Jej typ należy do dokładnie jednego
+ze zbiorów $[\varphi],[\psi]$.
+Jeżeli $S_n(T)$ jest skończona, istnieje
+tylko skończenie wiele jej podzbiorów,
+a więc także klas formuł.
+Odwrotnie, każdy typ jest jednoznacznie
+wyznaczony przez zbiór klas formuł, które
+zawiera: typ zupełny zawiera wszystkie
+formuły równoważne modulo $T$ z dowolną
+swoją formułą. Przy skończenie wielu klasach
+istnieje zatem skończenie wiele typów.
+
+(iii)$\Rightarrow$(v).
+Wybieramy model przeliczalnie nieskończony
+$\mathfrak M\models T$. Jest on atomowy
+i $\aleph_0$-nasycony na mocy wniosku
+\ref{cor:mod-atomic-saturated}.
+Każdy typ w $S_n(T)$ ma realizację w $M^n$
+z twierdzenia \ref{thm:mod-saturation-finite-tuples}.
+Jeżeli dwie krotki mają ten sam typ,
+twierdzenie \ref{thm:mod-atomic-uniqueness}
+zastosowane do $\mathfrak M$ i $\mathfrak M$
+przedłuża ich dopasowanie do automorfizmu.
+Zatem każda orbita odpowiada jednemu typowi,
+a każdy typ odpowiada jednej orbicie.
+Orbit jest skończenie wiele na mocy (iii).
+
+(v)$\Rightarrow$(iii).
+Niech $\mathfrak M$ będzie modelem z warunku (v).
+Każda orbita w $M^n$ jest zawarta w zbiorze
+realizacji pewnego typu bez parametrów,
+więc w $M^n$ realizowanych jest tylko
+skończenie wiele typów. Zbiór tych typów
+jest gęsty w $S_n(T)$: każdy niepusty
+zbiór bazowy $[\varphi]$ zawiera typ
+świadka zdania $\exists\bar x\,\varphi$,
+które należy do zupełnej teorii $T$,
+więc jest prawdziwe w $\mathfrak M$.
+Jednocześnie skończony zbiór w przestrzeni
+Hausdorffa jest domknięty. Przestrzeń $S_n(T)$
+jest przestrzenią Hausdorffa na mocy twierdzenia
+\ref{thm:mod-stone-compact}. Zatem skończony zbiór
+typów realizowanych jest całą przestrzenią.
+
+Na koniec, gdy warunki zachodzą, każda orbita
+jest zbiorem realizacji typu izolowanego.
+Jeśli $\theta$ izoluje ten typ, orbita
+jest dokładnie zbiorem krotek spełniających
+$\theta$, więc jest definiowalna bez parametrów.
+\end{proof}
+
+\begin{wniosek}[Skończona algebra Boole'a formuł]
+\label{cor:mod-rn-boolean-cardinality}
+Przy założeniach twierdzenia
+\ref{thm:mod-ryll-nardzewski} niech $T$
+będzie $\aleph_0$-kategoryczna i niech
+$k_n=|S_n(T)|$. Algebra Boole'a formuł
+w $n$ zmiennych modulo $T$ ma dokładnie
+$2^{k_n}$ elementów. Jej atomom odpowiadają
+poszczególne typy zupełne.
+\end{wniosek}
+\begin{proof}
+Injekcję klasy formuły w zbiór typów wykazano
+w dowodzie twierdzenia \ref{thm:mod-ryll-nardzewski}.
+Dla każdego typu $p\in S_n(T)$ wybieramy
+formułę $\theta_p$ izolującą $p$.
+Dowolny podzbiór $D\subseteq S_n(T)$
+jest skończony i ma postać
+\[
+D=\left[\bigvee_{p\in D}\theta_p\right],
+\]
+gdzie dla pustej alternatywy bierzemy
+formułę sprzeczną. Otrzymujemy bijekcję
+między klasami formuł a podzbiorami $S_n(T)$.
+Z definicji zbiorów $[\varphi]$ wynika,
+że koniunkcja odpowiada przecięciu,
+alternatywa sumie, a negacja dopełnieniu.
+Atomy algebry zbiorów są singletonami.
+\end{proof}
+
+\begin{przyklad}[Gęsty porządek liniowy bez końców]
+\label{ex:mod-rn-dlo}
+Rozważmy $T=\operatorname{Th}(\mathbb Q,<)$.
+Z eliminacji kwantyfikatorów dla gęstych
+porządków liniowych bez końców
+(twierdzenie \ref{thm:mod-qe-dlo}) wynika,
+że typ $n$-krotki jest wyznaczony przez
+skończenie wiele informacji o równościach
+i nierównościach między jej współrzędnymi.
+Istnieje zatem tylko skończenie wiele typów.
+Twierdzenie \ref{thm:mod-ryll-nardzewski}
+daje $\aleph_0$-kategoryczność $T$.
+
+Na przykład dla $n=2$ otrzymujemy trzy typy,
+izolowane odpowiednio przez $x_1=x_2$,
+$x_1<x_2$ i $x_2<x_1$. Wszystkie trzy
+są realizowane w $\mathbb Q$.
+Są to zarazem trzy orbity działania
+$\operatorname{Aut}(\mathbb Q,<)$ na $\mathbb Q^2$.
+Dla $n=3$ jedna orbita odpowiada trzem
+równym współrzędnym, sześć orbit odpowiada
+dokładnie dwóm różnym wartościom
+(wybieramy pojedynczą współrzędną na trzy
+sposoby oraz jej położenie przed lub za
+powtórzoną wartością), a sześć orbit
+odpowiada trzem różnym wartościom,
+uporządkowanym na $3!=6$ sposobów.
+Łącznie $|S_3(T)|=13$.
+\end{przyklad}
+
+\begin{przyklad}[Skończoność $S_1(T)$ nie wystarcza]
+\label{ex:mod-rn-one-type-insufficient}
+Niech $\mathfrak M=(\mathbb Z,S)$, gdzie
+$S(k)=k+1$, a język zawiera jedynie
+jednoargumentowy symbol funkcyjny $S$.
+Niech $T=\operatorname{Th}(\mathfrak M)$.
+Dla każdego $m\in\mathbb Z$ przesunięcie
+$k\mapsto k+m$ jest automorfizmem:
+$(k+1)+m=(k+m)+1$. Działanie grupy
+automorfizmów na $\mathbb Z$ jest więc
+przechodnie, a wszystkie elementy
+realizują ten sam typ jednozmienny.
+Zbiór typów realizowanych w $\mathfrak M$
+jest gęsty w $S_1(T)$ przez zupełność $T$,
+a singleton jest domknięty w przestrzeni
+Hausdorffa. Wobec tego $|S_1(T)|=1$.
+
+Dla każdego $m\in\mathbb N$ krotka $(0,m)$
+realizuje typ zawierający formułę
+$x_2=S^m(x_1)$, gdzie $S^0(x_1)=x_1$.
+Jeżeli $m\ne k$, to krotka $(0,k)$
+nie spełnia tej formuły, zatem ma inny typ.
+W konsekwencji $S_2(T)$ jest nieskończona,
+a teoria $T$ nie jest $\aleph_0$-kategoryczna
+na mocy twierdzenia \ref{thm:mod-ryll-nardzewski}.
+Nie można ograniczyć warunku o skończoności
+przestrzeni typów do jednej zmiennej.
+\end{przyklad}
+
+\begin{wniosek}[Typy nad skończonym zbiorem parametrów]
+\label{cor:mod-rn-finite-parameters}
+Jeżeli $T$ spełnia warunki twierdzenia
+\ref{thm:mod-ryll-nardzewski}, to dla każdego
+modelu $\mathfrak M\models T$, każdego
+skończonego zbioru $A\subseteq M$ i każdego
+$n\geq1$ przestrzeń $S_n(A)$ jest skończona.
+Wszystkie jej typy są izolowane.
+\end{wniosek}
+\begin{proof}
+Wyliczamy $A$ jako krotkę $\bar a$ długości $m$.
+Każdy typ z $S_n(A)$ ma realizację $\bar b$
+w pewnym rozszerzeniu elementarnym $\mathfrak M$
+na mocy twierdzenia
+\ref{thm:mod-type-elementary-extension}.
+Typ $(\bar a,\bar b)$ bez parametrów należy
+do $S_{m+n}(T)$ i wyznacza typ $\bar b$ nad $A$,
+ponieważ formuły z parametrami w $A$
+powstają przez podstawienie współrzędnych
+$\bar a$ do formuł języka pierwotnego.
+Dokładniej, każdy typ $q\in S_{m+n}(T)$, którego
+ograniczenie do pierwszych $m$ zmiennych jest typem
+$\bar a$ (dla $m=0$ warunek jest pusty), wyznacza
+co najwyżej jeden typ nad $A$: dla każdej formuły
+z parametrami jej przynależność do tego typu jest
+rozstrzygana przez $q$. Każdy typ nad $A$ powstaje
+w ten sposób, jak wykazano powyżej. Stąd
+$|S_n(A)|\leq |S_{m+n}(T)|<\infty$.
+Z definicji \ref{def:mod-type-over-parameters}
+i twierdzenia \ref{thm:mod-stone-compact}
+przestrzeń $S_n(A)$ jest przestrzenią Hausdorffa.
+Skończoność daje dyskretność, a zatem
+izolowanie wszystkich typów.
+\end{proof}
+
+Kategoryczność przeliczalna nie jest tym samym
+co istnienie modelu pierwszego: standardowa
+arytmetyka ma model pierwszy, lecz ma również
+przeliczalne modele niestandardowe
+(przykład \ref{ex:mod-ott-arithmetic}).
+W kryterium istnienia modelu pierwszego
+wystarcza gęstość typów izolowanych; twierdzenie
+Ryll-Nardzewskiego wymaga, aby każdy typ
+był izolowany.

@@ -1,0 +1,1209 @@
+\chapter{Funkcje rzeczywiste analityczne}
+\label{ma2:ch:real-analytic}
+
+W rozdziale \ref{ma2:ch:power-series} badaliśmy
+zbieżność szeregów potęgowych jednej zmiennej,
+a w rozdziale \ref{ma2:ch:taylor} otrzymaliśmy
+wzory Taylora skończonego rzędu.
+Teraz rozważymy pytanie, kiedy funkcję można
+odtworzyć z jej pochodnych wszystkich rzędów.
+Rozróżnienie gładkości i analityczności jest
+zasadnicze: istnienie wszystkich pochodnych
+nie gwarantuje jeszcze, że ich wartości
+w jednym punkcie wyznaczają funkcję w otoczeniu.
+
+\section{Analityczność jednej zmiennej}
+
+\begin{definicja}
+\label{ma2:def:real-analytic-one}
+Niech $I\subseteq\R$ będzie zbiorem otwartym.
+Funkcja $f:I\to\R$ jest rzeczywista analityczna
+w punkcie $a\in I$, jeżeli istnieje $r>0$
+takie, że $(a-r,a+r)\subseteq I$ oraz
+istnieją liczby $c_j$ spełniające
+\[
+ f(a+h)=\sum_{j=0}^\infty c_jh^j,\qquad |h|<r.
+\]
+Funkcja jest analityczna na $I$, gdy jest
+analityczna w każdym jego punkcie.
+Klasę takich funkcji oznaczamy $C^\omega(I)$.
+\end{definicja}
+
+\begin{stwierdzenie}
+\label{ma2:prop:analytic-taylor-one}
+Jeżeli $f$ jest analityczna w $a$, to
+jest gładka w pewnym otoczeniu $a$, a jej
+rozwinięcie jest jednoznaczne i ma postać
+\[
+ f(a+h)=\sum_{j=0}^\infty
+ \frac{f^{(j)}(a)}{j!}h^j.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Różniczkujemy szereg potęgowy dowolną
+skończoną liczbę razy wewnątrz jego przedziału
+zbieżności, stosując
+\ref{ma2:thm:power-derivative-radius}
+oraz \ref{ma2:thm:power-derivative}.
+Po podstawieniu $h=0$ otrzymujemy
+$f^{(j)}(a)=j!c_j$.
+Jednoznaczność jest również treścią
+\ref{ma2:cor:power-coefficients}.
+\end{proof}
+
+\begin{stwierdzenie}[Kryterium reszty Taylora]
+\label{ma2:prop:analytic-taylor-remainder}
+Niech $f$ będzie klasy $C^\infty$ w otoczeniu $a$.
+Funkcja jest analityczna w $a$ wtedy i tylko wtedy,
+gdy dla pewnego $r>0$, takiego że $f$ jest
+określona na $(a-r,a+r)$, i wszystkich $|h|<r$
+zachodzi
+\[
+ \lim_{N\to\infty}
+ \left(f(a+h)-\sum_{j=0}^N
+ \frac{f^{(j)}(a)}{j!}h^j\right)=0.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Warunek jest dokładnie warunkiem zbieżności
+sum częściowych szeregu Taylora do funkcji.
+Konieczność wynika z
+\ref{ma2:prop:analytic-taylor-one},
+a dostateczność z definicji
+\ref{ma2:def:real-analytic-one}.
+\end{proof}
+
+\begin{twierdzenie}[Kryterium oszacowań pochodnych]
+\label{ma2:thm:analytic-derivative-bound}
+Niech $f$ będzie klasy $C^\infty$
+na $(a-r,a+r)$, gdzie $r>0$.
+Jeżeli istnieją $C,A>0$ takie, że
+\[
+ |f^{(j)}(x)|\le C A^j j!
+ \qquad (j\ge0,\ |x-a|<r),
+\]
+to $f$ jest analityczna na tym przedziale.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $b\in(a-r,a+r)$ i wybierzmy
+$0<\delta<\min\{r-|b-a|,1/A\}$.
+Dla $|h|<\delta$ cały odcinek od $b$ do $b+h$
+leży w dziedzinie podanego oszacowania.
+Z reszty Lagrange'a
+(\ref{ma2:thm:taylor-lagrange}) otrzymujemy
+\[
+ \left|f(b+h)-\sum_{j=0}^N
+ \frac{f^{(j)}(b)}{j!}h^j\right|
+ \le C(A|h|)^{N+1}.
+\]
+Prawa strona dąży do zera, ponieważ $A|h|<1$.
+Stosujemy \ref{ma2:prop:analytic-taylor-remainder}.
+\end{proof}
+
+\begin{przyklad}[Funkcja gładka, lecz nieanalityczna]
+\label{ma2:ex:analytic-flat}
+Niech
+\[
+ f(x)=
+ \begin{cases}
+ \exp(-1/x^2),&x\ne0,\\
+ 0,&x=0.
+ \end{cases}
+\]
+Dla $x\ne0$ każda pochodna ma postać
+$f^{(j)}(x)=P_j(1/x)\exp(-1/x^2)$
+z pewnym wielomianem $P_j$.
+Istotnie, $P_0=1$, a różniczkowanie daje
+\[
+ P_{j+1}(t)=-t^2 P_j'(t)+2t^3P_j(t).
+\]
+Dla dowolnego całkowitego $m\ge0$
+mamy $|t|^m\exp(-t^2)\to0$ przy $|t|\to\infty$:
+na przykład z szeregu wykładniczego
+$\exp(t^2)\ge t^{2N}/N!$ dla $2N>m$.
+Indukcyjnie $f^{(j)}(0)=0$ dla wszystkich $j$,
+gdyż iloraz różnicowy w zerze także jest
+wielomianem w $1/x$ pomnożonym przez
+$\exp(-1/x^2)$ i ma granicę zero.
+Ta sama granica zapewnia ciągłość każdej
+pochodnej w zerze.
+Szereg Taylora w zerze jest więc tożsamościowo
+zerowy, lecz $f(x)>0$ dla $x\ne0$.
+Funkcja nie jest analityczna w zerze.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=.83\linewidth,height=5.3cm,
+ axis lines=middle,xlabel={$x$},ylabel={$y$},
+ xmin=-2,xmax=2,ymin=-.12,ymax=.95,
+ domain=-2:2,samples=200,
+ legend style={at={(.5,.97)},anchor=north}]
+\addplot[blue!75!black,very thick] coordinates {
+ (-2.000,0.77880078) (-1.975,0.77385623) (-1.950,0.76875352) (-1.925,0.76348637) (-1.900,0.75804820)
+ (-1.875,0.75243216) (-1.850,0.74663109) (-1.825,0.74063752) (-1.800,0.73444367) (-1.775,0.72804142)
+ (-1.750,0.72142229) (-1.725,0.71457748) (-1.700,0.70749780) (-1.675,0.70017371) (-1.650,0.69259528)
+ (-1.625,0.68475222) (-1.600,0.67663385) (-1.575,0.66822909) (-1.550,0.65952652) (-1.525,0.65051434)
+ (-1.500,0.64118039) (-1.475,0.63151219) (-1.450,0.62149696) (-1.425,0.61112166) (-1.400,0.60037304)
+ (-1.375,0.58923770) (-1.350,0.57770216) (-1.325,0.56575298) (-1.300,0.55337689) (-1.275,0.54056088)
+ (-1.250,0.52729242) (-1.225,0.51355970) (-1.200,0.49935179) (-1.175,0.48465904) (-1.150,0.46947339)
+ (-1.125,0.45378877) (-1.100,0.43760164) (-1.075,0.42091153) (-1.050,0.40372171) (-1.025,0.38603996)
+ (-1.000,0.36787944) (-0.975,0.34925970) (-0.950,0.33020776) (-0.925,0.31075940) (-0.900,0.29096046)
+ (-0.875,0.27086833) (-0.850,0.25055344) (-0.825,0.23010079) (-0.800,0.20961139) (-0.775,0.18920345)
+ (-0.750,0.16901332) (-0.725,0.14919561) (-0.700,0.12992261) (-0.675,0.11138224) (-0.650,0.09377435)
+ (-0.625,0.07730474) (-0.600,0.06217652) (-0.575,0.04857848) (-0.550,0.03667041) (-0.525,0.02656614)
+ (-0.500,0.01831564) (-0.475,0.01188910) (-0.450,0.00716698) (-0.425,0.00394096) (-0.400,0.00193045)
+ (-0.375,0.00081599) (-0.350,0.00028493) (-0.325,0.00007733) (-0.300,0.00001495) (-0.275,0.00000181)
+ (-0.250,0.00000011) (-0.225,0.00000000) (-0.200,0.00000000) (-0.175,0.00000000) (-0.150,0.00000000)
+ (-0.125,0.00000000) (-0.100,0.00000000) (-0.075,0.00000000) (-0.050,0.00000000) (-0.025,0.00000000)
+ (0.000,0.00000000) (0.025,0.00000000) (0.050,0.00000000) (0.075,0.00000000) (0.100,0.00000000)
+ (0.125,0.00000000) (0.150,0.00000000) (0.175,0.00000000) (0.200,0.00000000) (0.225,0.00000000)
+ (0.250,0.00000011) (0.275,0.00000181) (0.300,0.00001495) (0.325,0.00007733) (0.350,0.00028493)
+ (0.375,0.00081599) (0.400,0.00193045) (0.425,0.00394096) (0.450,0.00716698) (0.475,0.01188910)
+ (0.500,0.01831564) (0.525,0.02656614) (0.550,0.03667041) (0.575,0.04857848) (0.600,0.06217652)
+ (0.625,0.07730474) (0.650,0.09377435) (0.675,0.11138224) (0.700,0.12992261) (0.725,0.14919561)
+ (0.750,0.16901332) (0.775,0.18920345) (0.800,0.20961139) (0.825,0.23010079) (0.850,0.25055344)
+ (0.875,0.27086833) (0.900,0.29096046) (0.925,0.31075940) (0.950,0.33020776) (0.975,0.34925970)
+ (1.000,0.36787944) (1.025,0.38603996) (1.050,0.40372171) (1.075,0.42091153) (1.100,0.43760164)
+ (1.125,0.45378877) (1.150,0.46947339) (1.175,0.48465904) (1.200,0.49935179) (1.225,0.51355970)
+ (1.250,0.52729242) (1.275,0.54056088) (1.300,0.55337689) (1.325,0.56575298) (1.350,0.57770216)
+ (1.375,0.58923770) (1.400,0.60037304) (1.425,0.61112166) (1.450,0.62149696) (1.475,0.63151219)
+ (1.500,0.64118039) (1.525,0.65051434) (1.550,0.65952652) (1.575,0.66822909) (1.600,0.67663385)
+ (1.625,0.68475222) (1.650,0.69259528) (1.675,0.70017371) (1.700,0.70749780) (1.725,0.71457748)
+ (1.750,0.72142229) (1.775,0.72804142) (1.800,0.73444367) (1.825,0.74063752) (1.850,0.74663109)
+ (1.875,0.75243216) (1.900,0.75804820) (1.925,0.76348637) (1.950,0.76875352) (1.975,0.77385623)
+ (2.000,0.77880078)
+};
+\addlegendentry{$f$}
+\addplot[red!80!black,dashed,thick] {0};
+\addlegendentry{szereg Taylora w $0$}
+\end{axis}
+\end{tikzpicture}
+\caption{Wszystkie pochodne funkcji $f$ w zerze
+znikają, chociaż funkcja jest dodatnia poza zerem.}
+\label{ma2:fig:analytic-flat}
+\end{figure}
+
+\section{Szeregi potęgowe wielu zmiennych}
+
+Dla wielowskaźnika $\alpha=(\alpha_1,\ldots,\alpha_n)
+\in\N_0^n$ stosujemy oznaczenia
+$|\alpha|=\sum_i\alpha_i$,
+$\alpha!=\prod_i\alpha_i!$,
+$h^\alpha=\prod_i h_i^{\alpha_i}$
+oraz $\partial^\alpha=\partial_1^{\alpha_1}
+\cdots\partial_n^{\alpha_n}$, zgodnie
+z definicją \ref{ma2:def:multiindex} i rozdziałem
+\ref{ma2:ch:taylor}.
+Przyjmujemy $\N_0=\{0,1,\ldots\}$.
+Zakładamy $n\ge1$. Dla $r>0$ niech
+$Q_r=\{h\in\R^n:\|h\|_\infty<r\}$.
+Jeżeli używamy tego oznaczenia w innym wymiarze,
+wymiar wynika z przestrzeni, do której należy argument;
+w razie potrzeby piszemy $Q_r^{(n)}$.
+
+\begin{definicja}
+\label{ma2:def:analytic-multi}
+Niech $U\subseteq\R^n$ będzie otwarty.
+Funkcja $f:U\to\R$ jest analityczna w $a\in U$,
+jeżeli dla pewnego $r>0$, $a+Q_r\subseteq U$,
+istnieje rodzina współczynników
+$(c_\alpha)_{\alpha\in\N_0^n}$ taka, że
+\[
+ \sum_\alpha |c_\alpha|r^{|\alpha|}<\infty,
+ \qquad
+ f(a+h)=\sum_\alpha c_\alpha h^\alpha
+ \quad (h\in Q_r).
+\]
+Analityczność na $U$ oznacza analityczność
+w każdym punkcie $U$. Piszemy $C^\omega(U)$.
+Odwzorowanie $f:U\to\R^m$ jest analityczne,
+gdy każda jego składowa jest analityczna.
+\end{definicja}
+
+Wybór sześcianu zamiast kuli nie zmienia
+lokalnego charakteru definicji:
+każde otoczenie punktu zawiera taki sześcian.
+Wymaganie sumowalności przy promieniu $r$
+nie jest warunkiem zbieżności na maksymalnym
+obszarze szeregu. Jeśli szereg jest bezwzględnie
+zbieżny w pewnym otwartym sześcianie,
+to wystarczy zmniejszyć jego promień
+i sprawdzić bezwzględną zbieżność
+w punkcie $(r,\ldots,r)$.
+
+Dla $n=1$ definicja \ref{ma2:def:analytic-multi}
+jest równoważna definicji
+\ref{ma2:def:real-analytic-one}.
+Istotnie, jeśli szereg jest zbieżny dla
+$|h|<R$, to dla $0<r<R$ jest bezwzględnie
+zbieżny w $h=r$ na mocy
+\ref{ma2:thm:cauchy-hadamard}.
+Dostajemy $\sum_j|c_j|r^j<\infty$.
+Implikacja odwrotna wynika z porównania
+$|c_jh^j|\le |c_j|r^j$ dla $|h|<r$.
+
+\begin{twierdzenie}[Różniczkowanie szeregu wielowymiarowego]
+\label{ma2:thm:analytic-multi-derivative}
+Jeżeli $\sum_\alpha |c_\alpha|r^{|\alpha|}<\infty$,
+to szereg $\sum_\alpha c_\alpha h^\alpha$
+oraz wszystkie szeregi otrzymane przez
+różniczkowanie wyraz po wyrazie dowolnego
+skończonego rzędu są jednostajnie
+i bezwzględnie zbieżne na każdym domkniętym
+sześcianie $\overline{Q_s}$, $0<s<r$.
+Suma $f$ jest klasy $C^\infty$ na $Q_r$,
+a dla każdego wielowskaźnika $\beta$
+\[
+ \partial^\beta f(h)=
+ \sum_{\alpha\ge\beta} c_\alpha
+ \frac{\alpha!}{(\alpha-\beta)!}h^{\alpha-\beta}.
+\]
+Nierówność $\alpha\ge\beta$ rozumiemy współrzędnościowo.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $\beta$ i $s\in(0,r)$.
+Dla $|\beta|=m\ge1$ i $\alpha\ge\beta$
+mamy $\alpha!/(\alpha-\beta)!\le|\alpha|^m$,
+gdyż iloczyn zawiera $m$ czynników,
+z których żaden nie przekracza $|\alpha|$.
+Zatem dla $\|h\|_\infty\le s$
+\[
+ \left|c_\alpha\frac{\alpha!}{(\alpha-\beta)!}
+ h^{\alpha-\beta}\right|
+ \le |c_\alpha|r^{|\alpha|}
+ s^{-m}|\alpha|^m(s/r)^{|\alpha|}.
+\]
+Ciąg $l^m(s/r)^l$ jest ograniczony:
+dla $l\ge1$ iloraz kolejnych wyrazów
+dąży do $s/r<1$.
+Dla $m=0$ stosujemy bezpośrednio
+$|h^\alpha|\le r^{|\alpha|}$.
+Kryterium Weierstrassa
+(\ref{ma2:thm:weierstrass-test}) daje więc
+zbieżność jednostajną oraz jednostajną
+zbieżność szeregu modułów.
+Uporządkujmy sumy częściowe według stopnia
+całkowitego $|\alpha|$ (na każdym stopniu
+jest skończenie wiele wielowskaźników).
+Są to wielomiany, a ich pochodne
+wszystkich ustalonych rzędów mają
+jednostajne granice na mniejszych sześcianach.
+Stosując twierdzenie o różniczkowaniu
+granicy jednostajnej
+(\ref{ma2:thm:uniform-derivative})
+do każdej zmiennej osobno, na odcinkach
+równoległych do osi w mniejszym sześcianie,
+otrzymujemy wzór dla pochodnych pierwszego
+rzędu. Indukcyjnie stosujemy ten sam argument
+do sum częściowych pochodnych niższych rzędów.
+Ich granice są ciągłe jako jednostajne granice
+funkcji ciągłych. Istnienie i ciągłość wszystkich
+pochodnych cząstkowych do dowolnego skończonego
+rzędu daje gładkość w sensie Frécheta na mocy
+\ref{ma2:thm:ck-partials}.
+Każdy punkt $Q_r$ należy do wnętrza
+pewnego takiego mniejszego sześcianu.
+\end{proof}
+
+\begin{wniosek}[Jednoznaczność szeregu Taylora]
+\label{ma2:cor:analytic-multi-coefficients}
+Jeżeli $f$ jest analityczna w $a$ i ma rozwinięcie
+$\sum_\alpha c_\alpha h^\alpha$ w otoczeniu $a$,
+to jest tam gładka oraz
+\[
+ c_\alpha=\frac{\partial^\alpha f(a)}{\alpha!}.
+\]
+W szczególności rozwinięcie jest jednoznaczne.
+\end{wniosek}
+\begin{proof}
+Stosujemy \ref{ma2:thm:analytic-multi-derivative}
+do funkcji $h\mapsto f(a+h)$ i podstawiamy $h=0$.
+W szeregu pochodnej o wielowskaźniku $\alpha$
+pozostaje jedynie wyraz o indeksie $\alpha$,
+gdyż dla każdego innego dopuszczalnego indeksu
+$\gamma\ge\alpha$ mamy $|\gamma-\alpha|>0$.
+Wyraz ten ma wartość $\alpha!c_\alpha$.
+\end{proof}
+
+\section{Zmiana środka rozwinięcia}
+
+\begin{twierdzenie}[Przesunięcie środka szeregu]
+\label{ma2:thm:analytic-recenter}
+Niech $f(a+h)=\sum_\alpha c_\alpha h^\alpha$
+dla $h\in Q_r$, gdzie
+$\sum_\alpha |c_\alpha|r^{|\alpha|}<\infty$.
+Jeżeli $b=a+v$ i $\|v\|_\infty<r$, to dla
+$0<s<r-\|v\|_\infty$ zachodzi
+\[
+ f(b+w)=\sum_\beta d_\beta w^\beta
+ \quad(w\in Q_s),\qquad
+ d_\beta=\sum_{\alpha\ge\beta}
+ \binom{\alpha}{\beta}c_\alpha v^{\alpha-\beta},
+\]
+gdzie $\binom{\alpha}{\beta}
+=\prod_{i=1}^n\binom{\alpha_i}{\beta_i}$.
+Ponadto $\sum_\beta |d_\beta|s^{|\beta|}<\infty$.
+W szczególności suma szeregu jest analityczna
+na całym $a+Q_r$.
+\end{twierdzenie}
+\begin{proof}
+Stosujemy wzór dwumianowy do każdej współrzędnej:
+\[
+ (v+w)^\alpha
+ =\sum_{\beta\le\alpha}\binom{\alpha}{\beta}
+ v^{\alpha-\beta}w^\beta.
+\]
+Sumowalność rodziny powstałej po rozwinięciu
+wynika z oszacowania
+\[
+ \begin{aligned}
+ &\sum_\alpha |c_\alpha|
+ \sum_{\beta\le\alpha}\binom{\alpha}{\beta}
+ |v^{\alpha-\beta}|s^{|\beta|}\\
+ &\qquad=\sum_\alpha |c_\alpha|
+ \prod_{i=1}^n(|v_i|+s)^{\alpha_i}
+ \le\sum_\alpha |c_\alpha|r^{|\alpha|}<\infty .
+ \end{aligned}
+\]
+Możemy więc zmienić kolejność sumowania
+i pogrupować wyrazy według potęg $w^\beta$
+na mocy \ref{ma2:thm:family-grouping}.
+Ponieważ $s>0$, dla każdego ustalonego $\beta$
+suma modułów współczynników definiujących
+$d_\beta$ jest skończona (wystarczy podzielić
+odpowiednie oszacowanie przez $s^{|\beta|}$).
+To daje wzór na $d_\beta$ oraz
+$\sum_\beta|d_\beta|s^{|\beta|}
+\le\sum_\alpha|c_\alpha|r^{|\alpha|}$.
+Jednoznaczność z
+\ref{ma2:cor:analytic-multi-coefficients}
+pokazuje także, że
+$d_\beta=\partial^\beta f(b)/\beta!$.
+\end{proof}
+
+\begin{wniosek}[Lokalne oszacowania wszystkich pochodnych]
+\label{ma2:cor:analytic-local-derivative-bound}
+Jeżeli funkcja $f$ określona na otoczeniu
+$a\in\R^n$ jest analityczna w $a$,
+to istnieją $s,C,A>0$ takie, że
+\[
+ |\partial^\beta f(x)|\le C A^{|\beta|}\beta!
+ \qquad(x\in a+Q_s,\ \beta\in\N_0^n).
+\]
+\end{wniosek}
+\begin{proof}
+Wybieramy rozwinięcie z
+\ref{ma2:def:analytic-multi} o promieniu $r$.
+Przyjmijmy $s=r/3$ i
+$C=1+\sum_\alpha|c_\alpha|r^{|\alpha|}$.
+Dla $x=a+v\in a+Q_s$ dowód
+\ref{ma2:thm:analytic-recenter} daje
+$\sum_\beta |d_\beta|s^{|\beta|}\le C$.
+Stąd $|d_\beta|\le Cs^{-|\beta|}$.
+Ponieważ $d_\beta=\partial^\beta f(x)/\beta!$,
+wystarczy przyjąć $A=1/s$.
+\end{proof}
+
+\begin{twierdzenie}[Wielowymiarowe kryterium analityczności]
+\label{ma2:thm:analytic-multi-bound}
+Niech $f$ będzie klasy $C^\infty$ na $a+Q_r$.
+Jeżeli dla pewnych $C,A>0$ zachodzi
+\[
+ |\partial^\beta f(x)|\le C A^{|\beta|}\beta!
+ \qquad(x\in a+Q_r,\ \beta\in\N_0^n),
+\]
+to $f$ jest analityczna na $a+Q_r$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $b\in a+Q_r$ i wybierzmy
+$0<s<\min\{r-\|b-a\|_\infty,1/(nA)\}$.
+Dla $h\in Q_s$ rozważamy funkcję
+$g(t)=f(b+th)$ na otoczeniu $[0,1]$.
+Wielokrotne zastosowanie reguły łańcuchowej
+i wzoru wielomianowego daje
+\[
+ g^{(j)}(t)=\sum_{|\alpha|=j}
+ \frac{j!}{\alpha!}\partial^\alpha f(b+th)h^\alpha.
+\]
+Dokładniej, \ref{ma2:prop:line-higher} daje
+$g^{(j)}(t)=D^jf(b+th)[h^j]$, a wzór
+\ref{ma2:cor:multiindex-diagonal} daje
+jego rozwinięcie wielowskaźnikowe dla $j\ge1$.
+Dla $j=0$ jest to definicja $g$.
+Zatem dla $t\in[0,1]$,
+\[
+ \frac{|g^{(j)}(t)|}{j!}
+ \le C A^j\sum_{|\alpha|=j}|h^\alpha|
+ \le C(nA\|h\|_\infty)^j.
+\]
+Ostatnia nierówność wynika z rozwinięcia
+$(|h_1|+\cdots+|h_n|)^j$, w którym każdy
+współczynnik wielomianowy jest co najmniej $1$.
+Z reszty Lagrange'a
+(\ref{ma2:thm:taylor-lagrange}) wynika więc
+\[
+ \left|f(b+h)-\sum_{|\alpha|\le N}
+ \frac{\partial^\alpha f(b)}{\alpha!}h^\alpha\right|
+ \le C(nA\|h\|_\infty)^{N+1}.
+\]
+Prawa strona dąży do zera, jednostajnie dla
+$\|h\|_\infty\le s$, ponieważ $nAs<1$.
+Dla współczynników
+$c_\alpha=\partial^\alpha f(b)/\alpha!$
+mamy ponadto
+\[
+ \sum_\alpha |c_\alpha|s^{|\alpha|}
+ \le C\sum_{j=0}^\infty (nAs)^j<\infty,
+\]
+gdyż liczba wielowskaźników stopnia $j$
+jest nie większa od $n^j$ (każdy jest
+licznikiem wystąpień liter w pewnym słowie
+długości $j$ nad alfabetem $n$-elementowym).
+Spełnione są zatem oba warunki definicji
+\ref{ma2:def:analytic-multi}.
+\end{proof}
+
+\section{Działania na funkcjach analitycznych}
+
+W poniższych dowodach użyteczny będzie
+rachunek szeregów z bezwzględnie sumowalnymi
+współczynnikami. Dla $r>0$ oznaczmy przez
+$\mathcal A_r^{(n)}$ przestrzeń rzeczywistych rodzin
+$c=(c_\alpha)_{\alpha\in\N_0^n}$ takich, że
+\[
+ \|c\|_r=\sum_\alpha |c_\alpha|r^{|\alpha|}<\infty.
+\]
+Rodzinę utożsamiamy z szeregiem $\sum_\alpha c_\alpha h^\alpha$.
+Nie utożsamiamy natomiast normy $\|\cdot\|_r$
+z normą supremum sumy tego szeregu.
+
+\begin{lemat}[Norma współczynników i iloczyn Cauchy'ego]
+\label{ma2:lem:analytic-series-algebra}
+Dla $n\ge1$ i $r>0$ przestrzeń
+$\mathcal A_r^{(n)}$ z normą $\|\cdot\|_r$
+jest zupełna.
+Iloczyn określony wzorem
+\[
+ (cd)_\gamma=\sum_{\alpha+\beta=\gamma}c_\alpha d_\beta
+\]
+należy do tej samej przestrzeni i spełnia
+$\|cd\|_r\le\|c\|_r\|d\|_r$.
+Jego suma na $Q_r$ jest iloczynem sum
+szeregów $c$ i $d$.
+\end{lemat}
+\begin{proof}
+Odwzorowanie $(c_\alpha)\mapsto
+(r^{|\alpha|}c_\alpha)$ jest liniową izometrią
+na przestrzeń $\ell^1(\N_0^n)$:
+odwzorowanie odwrotne mnoży współrzędną
+indeksowaną przez $\alpha$ przez $r^{- |\alpha|}$.
+Dla $n\ge1$
+zbiór indeksów jest przeliczalnie nieskończony,
+więc jego dowolna enumeracja identyfikuje
+izometrycznie tę przestrzeń z $\ell^1$,
+zupełną na mocy \ref{thm:seq-banach12}.
+Dla każdego $\gamma$ w definicji iloczynu
+występuje skończenie wiele par indeksów.
+Sumowanie nieujemnych wyrazów daje
+\[
+ \begin{aligned}
+ \|cd\|_r
+ &\le \sum_{\alpha,\beta}|c_\alpha||d_\beta|
+ r^{|\alpha|+|\beta|}\\
+ &=\|c\|_r\|d\|_r .
+ \end{aligned}
+\]
+Dla $h\in Q_r$ rodzina
+$(c_\alpha d_\beta h^{\alpha+\beta})_{\alpha,\beta}$
+jest bezwzględnie sumowalna na mocy
+tego samego oszacowania.
+Grupowanie według $\gamma=\alpha+\beta$
+(\ref{ma2:thm:family-grouping})
+daje tożsamość dla sum szeregów.
+Jedynka tej algebry to szereg stały $1$,
+a jej łączność, rozdzielność i przemienność wynikają
+z odpowiednich własności iloczynu funkcji
+i jednoznaczności współczynników na mocy
+\ref{ma2:cor:analytic-multi-coefficients}.
+\end{proof}
+
+\begin{wniosek}
+\label{ma2:cor:analytic-algebra}
+Niech $U\subseteq\R^n$ będzie otwarty.
+Jeżeli $f,g:U\to\R$ są analityczne, to
+$f+g$, $fg$, wszystkie pochodne cząstkowe $f$
+oraz $\xi f$ dla $\xi\in\R$ są analityczne.
+Funkcja $1/f$ jest analityczna na otwartym zbiorze
+$\{x\in U:f(x)\ne0\}$.
+\end{wniosek}
+\begin{proof}
+W ustalonym punkcie $a$ wybieramy wspólny
+promień rozwinięć, zmniejszając w razie potrzeby
+promienie obu szeregów.
+Suma i mnożenie przez skalar zachowują
+bezwzględną sumowalność współczynników,
+a dla iloczynu stosujemy
+\ref{ma2:lem:analytic-series-algebra}.
+Różniczkowanie zachowuje tę własność
+na każdym mniejszym sześcianie dzięki
+oszacowaniom z
+\ref{ma2:thm:analytic-multi-derivative}.
+
+Jeżeli $f(a)\ne0$, piszemy
+$f(a+h)=f(a)(1-u(h))$, gdzie $u(0)=0$.
+Szereg $u$ ma zerowy wyraz stały.
+Jeżeli ma skończoną normę przy promieniu $r$,
+to przy $0<s<r$ zachodzi
+\[
+ \|u\|_s\le(s/r)\|u\|_r.
+\]
+Wybieramy $s$ tak małe, by $\|u\|_s<1$.
+Z submultiplikatywności normy
+i zupełności przestrzeni
+$\mathcal A_s^{(n)}$ wynika zbieżność
+szeregu $\sum_{j=0}^\infty u^j$ w tej przestrzeni:
+suma norm jest ograniczona przez
+$\sum_{j=0}^\infty\|u\|_s^j$.
+Dla każdego $h\in Q_s$ mamy
+$|u(h)|\le\|u\|_s<1$, więc suma
+jest równa $1/(1-u(h))$.
+Istotnie, wartości sum częściowych zbiegają
+do wartości szeregu granicznego, gdyż
+$|v(h)|\le\|v\|_s$ dla każdego szeregu $v$.
+Po podzieleniu przez $f(a)$ otrzymujemy
+analityczność odwrotności w punkcie $a$.
+\end{proof}
+
+\begin{twierdzenie}[Złożenie odwzorowań analitycznych]
+\label{ma2:thm:analytic-composition}
+Niech $U\subseteq\R^n$, $V\subseteq\R^m$
+będą otwarte, a $g:U\to V$ i $f:V\to\R^p$
+odwzorowaniami analitycznymi.
+Wtedy $f\circ g$ jest analityczne na $U$.
+\end{twierdzenie}
+\begin{proof}
+Wystarczy rozważyć jedną składową $f$.
+Ustalmy $a\in U$ oraz $b=g(a)$.
+Dla pewnego $r>0$ mamy rozwinięcie
+$f(b+z)=\sum_{\alpha\in\N_0^m}c_\alpha z^\alpha$
+z $\sum_\alpha|c_\alpha|r^{|\alpha|}<\infty$.
+Dla składowych $g$ piszemy
+$g_i(a+h)=b_i+u_i(h)$.
+Każdy szereg $u_i$ ma zerowy wyraz stały.
+Z poprzedniego dowodu wynika, że
+$\|u_i\|_s\to0$ przy $s\to0^+$.
+Wybieramy wspólny promień $s$ mniejszy
+od promieni rozwinięć wszystkich $u_i$,
+tak mały, aby $\|u_i\|_s<r$ dla wszystkich $i$
+i $a+Q_s\subseteq U$.
+W przestrzeni $\mathcal A_s^{(n)}$ mamy
+\[
+ \sum_\alpha\left\|c_\alpha
+ \prod_{i=1}^m u_i^{\alpha_i}\right\|_s
+ \le \sum_\alpha |c_\alpha|r^{|\alpha|}<\infty
+\]
+na mocy \ref{ma2:lem:analytic-series-algebra}.
+Zupełność daje zatem sumę będącą
+szeregiem potęgowym w $h$.
+Dla $h\in Q_s$ wartość szeregu jest
+równa $f(g(a+h))$, ponieważ ewaluacja
+$u\mapsto u(h)$ jest ciągła względem
+$\|\cdot\|_s$ i zachowuje iloczyny.
+To dowodzi tezy w punkcie $a$.
+\end{proof}
+
+\begin{przyklad}[Analityczność lokalna a promień szeregu Taylora]
+\label{ma2:ex:analytic-local-radius}
+Funkcja $f(x)=1/(1+x^2)$ jest analityczna
+na całej prostej, ponieważ mianownik jest
+wielomianem nigdzie niezerowym; stosujemy
+\ref{ma2:cor:analytic-algebra}.
+Jednak jej szereg Taylora w zerze ma postać
+$\sum_{j=0}^\infty(-1)^j x^{2j}$ i promień
+zbieżności $1$, jak wykazano w przykładzie
+\ref{ma2:ex:power-log-arctan}.
+Jednoznaczność współczynników wynika z
+\ref{ma2:prop:analytic-taylor-one}.
+Analityczność na całej dziedzinie nie oznacza
+zatem, że szereg Taylora w jednym ustalonym
+punkcie odtwarza funkcję na całej dziedzinie.
+\end{przyklad}
+
+\section{Twierdzenie o identyczności}
+
+\begin{twierdzenie}[Twierdzenie o identyczności]
+\label{ma2:thm:analytic-identity}
+Niech $U\subseteq\R^n$ będzie spójnym zbiorem
+otwartym, a $f,g:U\to\R$ funkcjami analitycznymi.
+Jeżeli $f=g$ na pewnym niepustym otwartym
+podzbiorze $U$, to $f=g$ na całym $U$.
+To samo zachodzi, jeśli dla pewnego $a\in U$
+wszystkie pochodne cząstkowe $f$ i $g$
+(w tym pochodne rzędu zero) są równe w $a$.
+\end{twierdzenie}
+\begin{proof}
+Niech $u=f-g$, co jest funkcją analityczną
+na mocy \ref{ma2:cor:analytic-algebra}.
+Rozważmy zbiór
+\[
+ Z=\{x\in U:\partial^\alpha u(x)=0
+                   \text{ dla każdego }\alpha\in\N_0^n\}.
+\]
+Jest względnie domknięty w $U$ jako
+przecięcie zbiorów zerowych ciągłych funkcji.
+Jeżeli $x\in Z$, to wszystkie współczynniki
+rozwinięcia $u$ w $x$ są zerowe, na mocy
+\ref{ma2:cor:analytic-multi-coefficients}.
+Funkcja $u$ jest więc zerowa w otoczeniu $x$,
+a w tym otoczeniu znikają również wszystkie
+jej pochodne. Zatem $Z$ jest względnie otwarty.
+Każde z założeń twierdzenia zapewnia,
+że $Z$ jest niepusty.
+Spójność $U$ daje $Z=U$, a w szczególności
+$u=0$ na $U$.
+\end{proof}
+
+\begin{wniosek}[Izolowane zera w jednej zmiennej]
+\label{ma2:cor:analytic-isolated-zeros}
+Niech $I$ będzie otwartym przedziałem,
+a $f:I\to\R$ funkcją analityczną,
+która nie jest tożsamościowo zerowa.
+Każde jej zero $a$ jest izolowane i ma
+skończony rząd: istnieje $m\ge1$ i funkcja
+$g$ analityczna w otoczeniu $a$, $g(a)\ne0$,
+takie że $f(x)=(x-a)^m g(x)$.
+\end{wniosek}
+\begin{proof}
+Gdyby wszystkie pochodne w $a$ były zerowe,
+to \ref{ma2:thm:analytic-identity} dawałoby
+$f=0$ na $I$. Istnieje więc najmniejszy
+indeks $m\ge1$ z $c_m=f^{(m)}(a)/m!\ne0$.
+W rozwinięciu w $a$ wyłączamy czynnik
+$(x-a)^m$; pozostały szereg jest zbieżny
+w tym samym otwartym przedziale zbieżności,
+gdyż przy każdym dodatnim mniejszym promieniu
+jego suma modułów jest sumą modułów ogona
+pierwotnego szeregu podzieloną przez
+promień podniesiony do potęgi $m$.
+Z \ref{ma2:thm:analytic-recenter} wynika,
+że jego suma $g$ jest analityczna.
+Ponieważ $g(a)=c_m\ne0$, ciągłość zapewnia
+$g\ne0$ w pewnym otoczeniu $a$.
+\end{proof}
+
+\begin{przyklad}[Ograniczenia twierdzenia o identyczności]
+\label{ma2:ex:analytic-identity-limitations}
+Dla funkcji analitycznej jednej zmiennej
+zbiór zer z punktem skupienia w przedziale
+wymusza tożsamościowe zerowanie się funkcji:
+w przeciwnym przypadku punkt skupienia
+byłby zerem przez ciągłość, wbrew
+\ref{ma2:cor:analytic-isolated-zeros}.
+W wielu zmiennych nie wystarczy istnienie
+punktu skupienia zbioru zer.
+Funkcja $f(x,y)=x$ jest analityczna na $\R^2$,
+znika na całej osi $y$, ale nie jest
+tożsamościowo zerowa.
+Spójność dziedziny także jest istotna:
+funkcja równa $0$ na $(-2,-1)$ i $1$ na $(1,2)$
+jest analityczna na sumie tych przedziałów,
+chociaż znika tylko na jednej składowej.
+\end{przyklad}
+
+\section{Analityczne twierdzenie o funkcji uwikłanej}
+
+Zupełność przestrzeni szeregów z lematu
+\ref{ma2:lem:analytic-series-algebra}
+pozwala dowieść analityczności rozwiązania
+równania uwikłanego bez korzystania z analizy
+zespolonej. Istotna jest kontrakcja w normie
+współczynników, a nie tylko w normie supremum
+funkcji: granica w tej ostatniej normie
+nie musi być analityczna, jak pokaże przykład
+\ref{ma2:ex:analytic-uniform-limit}.
+
+\begin{twierdzenie}[Analityczne twierdzenie o funkcji uwikłanej]
+\label{ma2:thm:analytic-implicit}
+Niech $F:W\to\R^m$ będzie odwzorowaniem
+analitycznym na otwartym zbiorze
+$W\subseteq\R^n\times\R^m$.
+Niech $(a,b)\in W$, $F(a,b)=0$
+i niech macierz $D_yF(a,b)$ będzie odwracalna.
+Istnieją otwarte otoczenia $U$ punktu $a$
+i $V$ punktu $b$, $U\times V\subseteq W$,
+oraz odwzorowanie analityczne $g:U\to V$
+takie, że $g(a)=b$ i
+\[
+ \{(x,y)\in U\times V:F(x,y)=0\}
+ =\{(x,g(x)):x\in U\}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Przesuwając punkty $a,b$ do zera, możemy
+założyć, że $a=0$, $b=0$.
+Niech $B=D_yF(0,0)$ i połóżmy
+\[
+ H(x,y)=y-B^{-1}F(x,y).
+\]
+Jest to odwzorowanie analityczne na mocy
+\ref{ma2:cor:analytic-algebra}, stosowanego
+do składowych. Równanie $F(x,y)=0$
+jest równoważne równaniu $y=H(x,y)$.
+Ponadto $H(0,0)=0$ oraz $D_yH(0,0)=0$.
+
+Dla wspólnego promienia $R>0$ rozwijamy
+każdą składową:
+\[
+ H_i(x,y)=\sum_{\alpha,\beta}
+ c_{i,\alpha,\beta}x^\alpha y^\beta,\qquad
+ \sum_{\alpha,\beta}|c_{i,\alpha,\beta}|
+ R^{|\alpha|+|\beta|}<\infty .
+\]
+Tu $\alpha\in\N_0^n$, $\beta\in\N_0^m$,
+$i\in\{1,\ldots,m\}$, a rozwinięcia obowiązują
+na $Q_R^{(n)}\times Q_R^{(m)}\subseteq W$.
+Mamy $c_{i,0,0}=0$ i
+$c_{i,0,e_j}=0$ dla wszystkich $i,j$,
+na mocy \ref{ma2:cor:analytic-multi-coefficients}.
+
+Dla $s>0$ rozważmy przestrzeń
+$E_s=(\mathcal A_s^{(n)})^m$
+z normą $\|u\|=\max_i\|u_i\|_s$.
+Jest ona zupełna dzięki
+\ref{ma2:lem:analytic-series-algebra}:
+ciąg Cauchy'ego w normie maksimum jest
+ciągiem Cauchy'ego w każdej składowej,
+a skończoność liczby składowych zapewnia
+zbieżność w normie maksimum do wektora granic.
+Przestrzeń $E_s^0$ jej elementów o zerowych
+wyrazach stałych jest domknięta:
+wartość wyrazu stałego każdego szeregu
+ma moduł nie większy od jego normy.
+Dla $0<s,t\le R/2$ i $\|u\|\le t$ definiujemy
+w $E_s$ odwzorowanie
+\[
+ (\mathcal T_s(u))_i
+ =\sum_{\alpha,\beta}
+ c_{i,\alpha,\beta}x^\alpha
+ \prod_{j=1}^m u_j^{\beta_j}.
+\]
+Zbieżność w normie wynika z oszacowania
+sumy norm przez
+$\sum_{\alpha,\beta}|c_{i,\alpha,\beta}|
+s^{|\alpha|}t^{|\beta|}$, która jest skończona
+ponieważ $s,t<R$. Stosujemy zupełność
+$\mathcal A_s^{(n)}$ i twierdzenie
+\ref{ma2:thm:absolute-family}.
+Wykorzystaliśmy tu
+$\|x^\alpha\|_s=s^{|\alpha|}$
+oraz submultiplikatywność normy.
+Jeśli $u\in E_s^0$, to także
+$\mathcal T_s(u)\in E_s^0$: ciągła ewaluacja
+w zerze zachowuje iloczyny i pozwala przejść
+do granicy sumy definiującej $\mathcal T_s(u)$.
+Daje wartość $H(0,0)=0$.
+
+Dla $\|u\|,\|v\|\le t$ mamy, gdy $|\beta|\ge1$,
+\[
+ \left\|\prod_{j=1}^m u_j^{\beta_j}
+       -\prod_{j=1}^m v_j^{\beta_j}\right\|_s
+ \le |\beta|t^{|\beta|-1}\|u-v\|.
+\]
+Aby to uzasadnić, rozpisujemy oba iloczyny
+jako iloczyny $|\beta|$ czynników.
+Zastępując kolejno po jednym czynniku
+pierwszego iloczynu odpowiednim czynnikiem
+drugiego, otrzymujemy sumę $|\beta|$
+różnic. Każda zawiera jeden czynnik różnicowy,
+o normie co najwyżej $\|u-v\|$, i pozostałe
+czynniki o normach co najwyżej $t$.
+Z submultiplikatywności i nierówności
+trójkąta wynika oszacowanie.
+Dla $|\beta|=0$ odpowiednie iloczyny są
+równe jedynce i ich różnica znika.
+Stosując nierówność trójkąta do skończonych
+sum, a następnie przechodząc do granicy
+w normie, otrzymujemy
+\[
+ \|\mathcal T_s(u)-\mathcal T_s(v)\|
+ \le L(s,t)\|u-v\|,
+\]
+gdzie
+\[
+ L(s,t)=\max_i\sum_{\alpha,\,|\beta|\ge1}
+ |c_{i,\alpha,\beta}|s^{|\alpha|}
+ |\beta|t^{|\beta|-1}.
+\]
+
+Wykażemy, że można dobrać $t$, a następnie $s$,
+tak aby $L(s,t)\le1/2$ i
+$\|\mathcal T_s(0)\|\le t/4$.
+Dla $s,t\le R/2$ każdy składnik sumy
+definiującej $L(s,t)$ jest ograniczony przez
+\[
+ \frac{1}{R}|c_{i,\alpha,\beta}|
+ R^{|\alpha|+|\beta|}
+ |\beta|2^{-(|\beta|-1)}.
+\]
+Ciąg $l2^{-(l-1)}$ dla $l\ge1$ jest
+ograniczony, więc majoranta jest sumowalna.
+Jeśli $s=t\to0^+$, każdy składnik
+o $|\alpha|+|\beta|\ge2$ dąży do zera.
+Jedynymi pozostałymi składnikami
+byłyby te z $\alpha=0$, $|\beta|=1$,
+ale ich współczynniki znikają.
+Z sumowalności majoranty wynika $L(t,t)\to0$:
+dla dowolnego $\varepsilon>0$ wybieramy
+w każdej z $m$ sum skończony zbiór indeksów,
+poza którym suma majorant jest mniejsza
+od $\varepsilon/2$. Na tym skończonym zbiorze
+suma składników jest mniejsza od $\varepsilon/2$
+dla dostatecznie małego $t$. Możemy wybrać
+wspólne ograniczenie na $t$ dla wszystkich
+$m$ składowych. To kończy argument bez
+korzystania z teorii miary.
+Wybieramy $t\in(0,R/2)$ tak, aby
+$L(t,t)\le1/2$. Przy zmniejszaniu $s\le t$
+wartość $L(s,t)$ nie wzrasta.
+Ponieważ $c_{i,0,0}=0$, mamy
+\[
+ \|\mathcal T_s(0)\|
+ =\max_i\sum_{\alpha\ne0}
+ |c_{i,\alpha,0}|s^{|\alpha|}\longrightarrow0
+ \quad(s\to0^+).
+\]
+Wystarczy oszacować tę sumę przez
+$(s/R)\sum_\alpha |c_{i,\alpha,0}|R^{|\alpha|}$.
+Wybieramy zatem $s\in(0,t]$ spełniające
+drugi warunek.
+
+Dla $\|u\|\le t$ mamy
+\[
+ \|\mathcal T_s(u)\|
+ \le\|\mathcal T_s(0)\|+L(s,t)\|u\|
+ \le 3t/4.
+\]
+Odwzorowanie $\mathcal T_s$ przenosi więc
+domkniętą kulę o promieniu $t$ w $E_s^0$
+w siebie i jest na niej kontrakcją.
+Dla kompletności rozpiszmy argument
+punktu stałego. Niech $u^{(0)}=0$ i
+$u^{(k+1)}=\mathcal T_s(u^{(k)})$.
+Wszystkie wyrazy należą do tej kuli, a
+\[
+ \|u^{(k+1)}-u^{(k)}\|
+ \le 2^{-k}\|u^{(1)}-u^{(0)}\|.
+\]
+Dla $p>k$ sumowanie tej nierówności daje
+\[
+ \|u^{(p)}-u^{(k)}\|
+ \le 2^{1-k}\|u^{(1)}-u^{(0)}\|.
+\]
+Prawa strona dąży do zera niezależnie od $p$,
+więc ciąg jest ciągiem Cauchy'ego.
+Zupełność i domkniętość kuli dają granicę $u$
+w tej kuli. Przechodząc w poprzednim oszacowaniu
+z $p\to\infty$, otrzymujemy także oszacowanie
+błędu iteracji
+$\|u-u^{(k)}\|\le 2^{1-k}\|u^{(1)}\|$.
+Nierówność Lipschitza zapewnia
+$u=\mathcal T_s(u)$.
+Dwa punkty stałe musiałyby mieć
+odległość nie większą od połowy
+swojej odległości, więc są równe.
+Ponadto $\|u\|\le3t/4$ z oszacowania
+dla obrazu kuli.
+
+Niech $g(x)$ oznacza wektor sum szeregów
+$u_i$ dla $x\in Q_s$.
+Z \ref{ma2:thm:analytic-recenter}
+wynika analityczność $g$ na całym $Q_s$.
+Zerowy wyraz stały daje $g(0)=0$,
+a oszacowanie normy daje
+$\|g(x)\|_\infty\le3t/4<t$.
+Ewaluacja szeregu w punkcie $x$ jest
+ciągła w normie współczynników
+i zachowuje iloczyny, jak w dowodzie
+\ref{ma2:thm:analytic-composition}.
+Zatem tożsamość w $E_s$ daje
+$g(x)=H(x,g(x))$, czyli $F(x,g(x))=0$.
+
+Pozostaje jednoznaczność rozwiązania
+punktowego, która nie wynika jeszcze
+z jednoznaczności szeregu w $E_s$.
+Dla ustalonego $x\in Q_s$ i $y,z$
+z $\|y\|_\infty,\|z\|_\infty\le t$
+to samo teleskopowe oszacowanie iloczynów
+liczb rzeczywistych daje
+\[
+ \|H(x,y)-H(x,z)\|_\infty
+ \le L(s,t)\|y-z\|_\infty.
+\]
+Jeżeli $y\in Q_t^{(m)}$ i $F(x,y)=0$,
+wówczas $y=H(x,y)$
+i powyższa nierówność dla $z=g(x)$
+wymusza $y=g(x)$.
+Bierzemy $U=Q_s^{(n)}$ oraz $V=Q_t^{(m)}$
+i na koniec cofamy przesunięcie środka.
+\end{proof}
+
+\begin{przyklad}[Analityczna gałąź rozwiązania]
+\label{ma2:ex:analytic-implicit-quadratic}
+Rozważmy równanie $y-y^2-x=0$.
+W punkcie $(0,0)$ pochodna względem $y$
+wynosi $1$, więc istnieje lokalne analityczne
+rozwiązanie $y=g(x)$ z $g(0)=0$.
+Jeżeli $g(x)=\sum_{j\ge1}a_jx^j$,
+to z równania $g=x+g^2$ i jednoznaczności
+współczynników wynika
+\[
+ a_1=1,\qquad a_j=\sum_{i=1}^{j-1}a_i a_{j-i}
+ \quad(j\ge2).
+\]
+W szczególności $a_2=1$, $a_3=2$, $a_4=5$.
+Lokalna gałąź ma więc rozwinięcie
+$g(x)=x+x^2+2x^3+5x^4+\cdots$.
+Rozwiązanie można także znaleźć jawnie:
+\[
+ g(x)=\frac{1-\sqrt{1-4x}}{2}.
+\]
+Wybór znaku wynika z warunku $g(0)=0$,
+a jednoznaczność z
+\ref{ma2:thm:analytic-implicit}.
+W przykładzie widać różnicę między
+formalnym wyznaczaniem współczynników
+a dowodem zbieżności szeregu:
+sama rekurencja nie uzasadnia analityczności,
+natomiast twierdzenie zapewnia dodatni
+promień zbieżności.
+\end{przyklad}
+
+\section{Analityczne twierdzenie o funkcji odwrotnej}
+
+\begin{twierdzenie}[Analityczne twierdzenie o funkcji odwrotnej]
+\label{ma2:thm:analytic-inverse}
+Niech $f:U\to\R^n$ będzie analityczne
+na otwartym zbiorze $U\subseteq\R^n$.
+Jeżeli $a\in U$ i $Df(a)$ jest odwracalne,
+to istnieją otwarte otoczenia $U_0\subseteq U$
+punktu $a$ i $V_0$ punktu $f(a)$ takie,
+że $f:U_0\to V_0$ jest bijekcją, a jej
+odwrotność jest analityczna.
+\end{twierdzenie}
+\begin{proof}
+Niech $b=f(a)$. Rozważmy odwzorowanie
+$F(y,x)=f(x)-y$ na $\R^n\times U$.
+Jest analityczne, ponieważ składowe $f(x)$
+są analityczne także jako funkcje $(y,x)$
+(z ich rozwinięć wystarczy wziąć współczynniki
+z zerowym wielowskaźnikiem w zmiennej $y$).
+Mamy $F(b,a)=0$ i $D_xF(b,a)=Df(a)$.
+Z \ref{ma2:thm:analytic-implicit} otrzymujemy
+otoczenia $V_0$ punktu $b$ i $W_0\subseteq U$
+punktu $a$ oraz analityczne $g:V_0\to W_0$,
+takie że $f(g(y))=y$, a każde rozwiązanie
+$f(x)=y$ w $W_0$ jest równe $g(y)$.
+Kładziemy $U_0=W_0\cap f^{-1}(V_0)$,
+co jest zbiorem otwartym dzięki ciągłości $f$.
+Dla $y\in V_0$ mamy $g(y)\in U_0$,
+a dla $x\in U_0$ jednoznaczność rozwiązania
+daje $g(f(x))=x$.
+Wobec tego $f|_{U_0}$ i $g$ są wzajemnie
+odwrotne. Ponadto $a\in U_0$, ponieważ
+$a\in W_0$ i $f(a)=b\in V_0$.
+\end{proof}
+
+\begin{przyklad}[Odwrotność funkcji wielomianowej]
+\label{ma2:ex:analytic-inverse-cubic}
+Funkcja $f(x)=x+x^3$ jest analityczna
+i $f'(x)=1+3x^2>0$. Jest ściśle rosnąca
+z granicami $\pm\infty$ na odpowiednich
+końcach prostej, więc jest bijekcją $\R\to\R$.
+Jej odwrotność $g$ jest analityczna w każdym
+punkcie na mocy \ref{ma2:thm:analytic-inverse}.
+Ponieważ $f$ jest nieparzysta, $g$ również
+jest nieparzysta: $f(-g(y))=-y$,
+a jednoznaczność przeciwobrazu daje
+$g(-y)=-g(y)$.
+Z równania $g(y)+g(y)^3=y$ i wzoru na
+iloczyn Cauchy'ego (\ref{ma2:lem:analytic-series-algebra})
+otrzymujemy
+w otoczeniu zera
+\[
+ g(y)=y-y^3+3y^5+O(y^7).
+\]
+Istotnie, pisząc $g(y)=a_1y+a_3y^3+a_5y^5
++O(y^7)$, porównujemy współczynniki:
+$a_1=1$, $a_3+a_1^3=0$,
+$a_5+3a_1^2a_3=0$.
+Reszta jest rzędu $O(y^7)$ dzięki
+zbieżności szeregu i nieparzystości:
+jeśli $\sum_{j\ge7}|a_j|r^j<\infty$, to dla
+$|y|\le r$ moduł ogona nie przekracza
+$|y|^7r^{-7}\sum_{j\ge7}|a_j|r^j$.
+\end{przyklad}
+
+\begin{przyklad}[Konieczność założenia o różniczce]
+\label{ma2:ex:analytic-inverse-singular}
+Funkcja $f(x)=x^3$ jest analityczną
+bijekcją $\R\to\R$, ale $f'(0)=0$.
+Jej odwrotność $g(y)=\sqrt[3]{y}$
+nie jest różniczkowalna w zerze, ponieważ
+dla $y\ne0$ iloraz $g(y)/y=|y|^{-2/3}$
+dąży do $+\infty$ przy $y\to0$.
+Tym bardziej nie jest w zerze analityczna.
+Sama lokalna różnowartościowość nie wystarcza
+zatem do analityczności odwrotności.
+\end{przyklad}
+
+
+\begin{przyklad}[Granica jednostajna funkcji analitycznych]
+\label{ma2:ex:analytic-uniform-limit}
+Dla $j\ge1$ funkcja $f_j(x)=\sqrt{x^2+1/j}$
+jest analityczna na $\R$.
+Istotnie, funkcja $t\mapsto\sqrt t$ jest
+analityczna na $(0,\infty)$ jako odwrotność
+funkcji $s\mapsto s^2$ na $(0,\infty)$:
+jej pochodna $2s$ nie znika, więc stosujemy
+\ref{ma2:thm:analytic-inverse} w każdym punkcie.
+Analityczność $f_j$ wynika następnie z
+\ref{ma2:thm:analytic-composition}.
+Dla każdego $x\in\R$ mamy
+\[
+ 0\le \sqrt{x^2+1/j}-|x|
+ =\frac{1/j}{\sqrt{x^2+1/j}+|x|}
+ \le \frac{1}{\sqrt j}.
+\]
+Otrzymujemy zbieżność jednostajną do $|x|$
+na całej prostej. Funkcja graniczna nie jest
+nawet różniczkowalna w zerze, a więc nie jest
+analityczna. W szczególności nie wystarczyłoby
+w dowodzie \ref{ma2:thm:analytic-implicit}
+wykazać jednostajnej zbieżności analitycznych
+iteracji do rozwiązania.
+\end{przyklad}
+
+\section{Zbiory zer i identyczność w sensie miarowym}
+
+W tej części korzystamy dodatkowo z podstaw
+miary Lebesgue'a. Jej zastosowania do całek
+omówimy w rozdziale \ref{ma2:ch:lebesgue-euclidean},
+a uogólnienie argumentu o wykresach na miary
+Hausdorffa w lemacie
+\ref{ma2:lem:surface-lower-dimension}.
+Poniższy dowód nie wymaga tych późniejszych wyników.
+
+\begin{twierdzenie}[Zbiór zer funkcji analitycznej i miara Lebesgue'a]
+\label{ma2:thm:analytic-zero-set-null}
+Niech $n\ge1$, $U\subseteq\R^n$ będzie niepustym
+spójnym zbiorem otwartym, a $f:U\to\R$ funkcją
+analityczną, która nie jest tożsamościowo zerowa.
+Wtedy
+\[
+ Z(f)=\{x\in U:f(x)=0\}
+ \quad\text{spełnia}\quad \lambda_n(Z(f))=0.
+\]
+Dokładniej, $Z(f)$ zawiera się w przeliczalnej
+sumie gładkich podrozmaitości wymiaru $n-1$
+zbioru $U$ (niekoniecznie zawartych w $Z(f)$).
+\end{twierdzenie}
+\begin{proof}
+Dla $x\in Z(f)$ z twierdzenia
+\ref{ma2:thm:analytic-identity} wynika, że
+nie wszystkie pochodne cząstkowe $f$ w $x$
+są zerowe. Niech $m\ge1$ będzie najmniejszym
+rzędem niezerowej pochodnej w $x$. Wybieramy
+wielowskaźnik $\alpha$ o $|\alpha|=m$ taki,
+że $\partial^\alpha f(x)\ne0$, oraz indeks $j$
+z $\alpha_j\ge1$. Dla $\beta=\alpha-e_j$
+mamy wtedy
+\[
+ \partial^\beta f(x)=0,\qquad
+ \partial_j(\partial^\beta f)(x)\ne0.
+\]
+Pochodne mieszane można przestawiać,
+ponieważ $f$ jest gładka
+(\ref{ma2:thm:analytic-multi-derivative}
+i \ref{ma2:thm:schwarz}).
+Dla każdego wielowskaźnika $\beta\in\N_0^n$
+połóżmy
+\[
+ M_\beta=\{y\in U:\partial^\beta f(y)=0,\
+                 \nabla(\partial^\beta f)(y)\ne0\}.
+\]
+Wykazaliśmy, że $Z(f)\subseteq\bigcup_\beta M_\beta$.
+Każdy niepusty $M_\beta$ jest gładką
+podrozmaitością wymiaru $n-1$: w otoczeniu
+każdego jego punktu pewna pochodna cząstkowa
+funkcji $\partial^\beta f$ jest niezerowa,
+więc dla $n\ge2$ analityczne twierdzenie
+o funkcji uwikłanej
+\ref{ma2:thm:analytic-implicit} opisuje
+zbiór zer jako analityczny wykres nad otwartym
+podzbiorem $\R^{n-1}$, po ewentualnej
+permutacji współrzędnych.
+Otoczenia można przy tym zmniejszyć tak,
+aby wybrana pochodna pozostawała niezerowa.
+Dla $n=1$ każdy punkt $M_\beta$ jest izolowany,
+ponieważ pochodna funkcji $\partial^\beta f$
+ma w pewnym jego otoczeniu stały niezerowy znak
+i z twierdzenia o wartości średniej funkcja
+jest tam ściśle monotoniczna.
+
+Korzystamy teraz z podstawowych własności
+miary Lebesgue'a
+(\atlasref{ME-04::ch:lebesgue}{teoria miary i całki}).
+Dla $n=1$ zbiór dyskretny $M_\beta$ jest
+co najwyżej przeliczalny dzięki istnieniu
+przeliczalnej bazy otoczeń, więc ma miarę zero.
+Dla $n\ge2$ dzięki drugiemu aksjomatowi
+przeliczalności $M_\beta$ wystarczy pokryć
+przeliczalnie wieloma wspomnianymi wykresami.
+Każdy z nich ma miarę $\lambda_n$ zero:
+dziedzinę funkcji wykresu pokrywamy przeliczalnie
+domkniętymi sześcianami zawartymi w dziedzinie.
+Na każdym takim sześcianie o boku $a>0$
+funkcja jest Lipschitzowska z pewną stałą $L$,
+na mocy ograniczoności pochodnej i nierówności
+wartości średniej.
+Dzieląc sześcian na $N^{n-1}$ sześcianów
+o boku $a/N$, otrzymujemy pokrycie wykresu
+prostopadłościanami o podstawach tych sześcianów
+i wysokości co najwyżej
+$2(L+1)a\sqrt{n-1}/N$.
+Łączna objętość jest nie większa niż
+$2(L+1)a^n\sqrt{n-1}/N$, co dąży do zera.
+Permutacje współrzędnych zachowują miarę
+Lebesgue'a. Przeliczalna podaddytywność
+daje zerowość miary każdego wykresu
+i każdego $M_\beta$.
+Ponieważ $\N_0^n$ jest przeliczalna,
+ten sam argument daje tezę dla $Z(f)$.
+Zbiór $Z(f)$ jest ponadto borelowski,
+jako względnie domknięty w otwartym $U$.
+\end{proof}
+
+\begin{wniosek}[Identyczność na zbiorze dodatniej miary]
+\label{ma2:cor:analytic-identity-positive-measure}
+Jeżeli $f,g:U\to\R$ są analityczne na spójnym
+otwartym zbiorze $U\subseteq\R^n$ i są równe
+na mierzalnym podzbiorze $E\subseteq U$
+o $\lambda_n(E)>0$, to $f=g$ na całym $U$.
+\end{wniosek}
+\begin{proof}
+Stosujemy \ref{ma2:thm:analytic-zero-set-null}
+do analitycznej funkcji $f-g$.
+Gdyby nie była tożsamościowo zerowa,
+jej zbiór zer miałby miarę zero, chociaż
+zawiera $E$.
+\end{proof}
+
+W wielu zmiennych zbiór zer może być
+nieprzeliczalny i mieć punkty skupienia,
+jak w przykładzie
+\ref{ma2:ex:analytic-identity-limitations}.
+Dodatnia miara Lebesgue'a jest jednak
+wystarczającym warunkiem identyczności,
+nawet jeśli rozważany zbiór ma puste wnętrze.

@@ -1,6 +1,12 @@
 \chapter{Procesy stochastyczne: od rozkładów do trajektorii}
 \label{ch:procesy}
-\paragraph{Odsyłacze międzytomowe.} Przypomnienie konstrukcji probabilistycznych znajduje się w tomie I, rozdziale~\ref{I-ch:probability}; statystyczny problem danych zależnych omawia tom IV, rozdział~\ref{IV-ch:time-series}.
+\paragraph{Odsyłacze międzytomowe.}
+Konstrukcje probabilistyczne przypomniano w tomie I,
+w rozdziale o przestrzeni probabilistycznej%
+\IfFileExists{probability_volume_i.aux}{ (rozdział~\ref{I-ch:probability})}{};
+statystyczny problem danych zależnych omawia tom IV,
+w rozdziale o wnioskowaniu z procesów zależnych%
+\IfFileExists{probability_volume_iv.aux}{ (rozdział~\ref{IV-ch:time-series})}{}.
 
 
 \section{Dlaczego pojedyncza zmienna losowa już nie wystarcza?}
@@ -61,9 +67,12 @@ odwzorowanie $z\mapsto tz$. Każda trajektoria jest prostą o losowym
 nachyleniu. Zmienność po czasie jest całkowicie zdeterminowana przez
 jedną liczbę $Z(\omega)$: znajomość $X_1$ wyznacza wszystkie $X_t$.
 Jeśli $\E Z=0$ i $\Var(Z)=\sigma^2<\infty$, to
-$\Cov(X_s,X_t)=st\sigma^2$. Przyrosty
-$X_t-X_s=(t-s)Z$ są zwykle silnie zależne; nie tworzą procesu o
-niezależnych przyrostach.
+$\Cov(X_s,X_t)=st\sigma^2$. Dla $s<t<u$
+kowariancja dwóch kolejnych przyrostów wynosi
+$(t-s)(u-t)\sigma^2$. Jeśli $\sigma^2>0$, jest dodatnia,
+więc przyrosty nie są niezależne. Gdy $\sigma^2=0$,
+zmienna $Z$ jest stała p.n. i przyrosty są niezależne
+w sensie zdegenerowanym.
 \end{przyklad}
 
 \begin{przyklad}[Dwa procesy o tych samych rozkładach pojedynczych]
@@ -100,8 +109,10 @@ Na przykład dla $A_0,\ldots,A_n\in\calE$ mamy
 \]
 Przecinki wewnątrz $\Prob(\ldots)$ oznaczają \emph{przecięcie zdarzeń}.
 W szczególności $\Prob(X_s\in A,X_t\in B)$ nie jest na ogół
-iloczynem $\Prob(X_s\in A)\Prob(X_t\in B)$; taki iloczyn
-wymaga niezależności zmiennych $X_s$ i $X_t$.
+iloczynem $\Prob(X_s\in A)\Prob(X_t\in B)$.
+Niezależność zmiennych $X_s$ i $X_t$ jest równoważna
+temu, że równość z tym iloczynem zachodzi dla wszystkich
+$A,B\in\calE$; równość dla jednej pary zbiorów nie wystarcza.
 
 \begin{twierdzenie}[Zgodność rzeczywistych rozkładów procesu]
 Niech $X=(X_t)_{t\in T}$ będzie procesem o stanach w $(E,\calE)$.
@@ -196,9 +207,10 @@ Dla ustalonego wyniku $\omega$ funkcja $t\mapsto tZ(\omega)$
 rośnie, gdy $Z(\omega)\ge0$, a maleje, gdy $Z(\omega)<0$.
 Wobec tego $\sup_{0\le t\le2}X_t=\max(0,2Z)$ i również
 $\Prob(\sup_{t\le2}X_t>1)=1-\Phi(1/2)$.
-Zgodność liczb jest szczególną cechą tego modelu, a nie ogólnym
-prawem: w drugim pytaniu występuje funkcjonał \emph{całej}
-trajektorii. Dla procesu o ciągłych trajektoriach maksimum można
+W tym szczególnym modelu oba zdarzenia są równe
+$\{X_2>1\}$, więc w obu pytaniach wystarcza rozkład $X_2$.
+Nie jest to ogólne prawo: w drugim pytaniu występuje
+funkcjonał \emph{całej} trajektorii. Dla procesu o ciągłych trajektoriach maksimum można
 też wyrazić jako supremum po przeliczalnym zbiorze chwil
 wymiernych, co zapewnia mierzalność zdarzenia.
 \end{zadanie}
@@ -213,34 +225,56 @@ prawie na pewno'' oraz ``prawie na pewno dla każdego $t$''.
 Niech $X,Y$ będą procesami na tej samej przestrzeni probabilistycznej,
 o wspólnym zbiorze indeksów $T$ i przestrzeni stanów $E$.
 Mówimy, że $Y$ jest \emph{modyfikacją} (wersją) $X$, jeśli
-dla każdego $t\in T$ zdarzenie $\{X_t=Y_t\}$ jest mierzalne
-i zachodzi $\Prob(X_t=Y_t)=1$.
-Warunek mierzalności jest automatyczny, gdy $E$ jest przestrzenią
-metryczną z borelowskim $\sigma$-ciałem: diagonala
-$\{(x,y)\in E^2:x=y\}$ jest wtedy zbiorem domkniętym.
+dla każdego $t\in T$ istnieje $N_t\in\calF$ z $\Prob(N_t)=0$
+takie, że $X_t(\omega)=Y_t(\omega)$ dla $\omega\notin N_t$.
+Gdy zdarzenie $\{X_t=Y_t\}$ jest mierzalne, warunek ten
+jest równoważny równości $\Prob(X_t=Y_t)=1$.
+Mierzalność tego zdarzenia jest automatyczna, gdy $E$ jest
+ośrodkową przestrzenią metryczną z borelowskim $\sigma$-ciałem:
+diagonala $\{(x,y)\in E^2:x=y\}$ jest domknięta,
+a $\mathcal B(E^2)=\mathcal B(E)\otimes\mathcal B(E)$
+dzięki przeliczalnej bazie topologii $E$.
+Dla ogólnej przestrzeni mierzalnej nie zakładamy
+automatycznie mierzalności diagonali.
 Mówimy, że $X$ i $Y$ są \emph{nierozróżnialne}, jeżeli istnieje
 $N\in\calF$ z $\Prob(N)=0$ takie, że dla wszystkich
 $\omega\notin N$ i wszystkich $t\in T$ zachodzi
 $X_t(\omega)=Y_t(\omega)$.
 \end{definicja}
 
+\begin{stwierdzenie}[Modyfikacje mają jednakowe prawo cylindryczne]
+Jeżeli $X$ i $Y$ są modyfikacjami, to mają jednakowe
+rozkłady skończeniewymiarowe, a więc także jednakowe prawa
+na $(E^T,\calE^{\otimes T})$.
+\end{stwierdzenie}
+\begin{proof}
+Dla ustalonych $t_1,\ldots,t_m$ zbiór
+$N=\bigcup_{j=1}^m N_{t_j}$, gdzie $N_{t_j}$ są zbiorami
+zerowymi z definicji modyfikacji, jest mierzalny
+i ma prawdopodobieństwo zero. Poza $N$ oba wektory wartości
+są równe. Dla dowolnego $A\in\calE^{\otimes m}$ ich
+zdarzenia przynależności do $A$ mogą się zatem różnić
+wyłącznie na $N$, więc mają to samo prawdopodobieństwo.
+Jednoznaczność prawa na przestrzeni iloczynowej wynika
+z udowodnionej wcześniej własności cylindrów.
+\end{proof}
+
 \begin{stwierdzenie}[Czas przeliczalny]
 Jeśli $T$ jest przeliczalny, a $X$ i $Y$ są swoimi
 modyfikacjami, to są nierozróżnialne.
 \end{stwierdzenie}
 \begin{proof}
-Dla każdego $t\in T$ zbiór
-$N_t=\{\omega:X_t(\omega)\ne Y_t(\omega)\}$ jest mierzalny
-i ma miarę zero (przyjmujemy mierzalną diagonalę w $E\times E$).
+Dla każdego $t\in T$ wybierzmy mierzalny zbiór zerowy $N_t$
+z definicji modyfikacji, poza którym $X_t=Y_t$.
 Wtedy $N=\bigcup_{t\in T}N_t$ jest przeliczalną sumą
 zbiorów zerowych. Poza $N$ zachodzi $X_t=Y_t$ dla
 wszystkich $t$ równocześnie.
 \end{proof}
 
 \begin{przyklad}[Modyfikacja, która nie jest nierozróżnialna]
-Niech $\Omega=[0,1]$ z miarą Lebesgue'a i niech
-$U(\omega)=\omega$. Dla $t\in[0,1]$ definiujemy
-$X_t(\omega)=0$ oraz $Y_t(\omega)=\ind{\{U(\omega)=t\}}$.
+Niech $\Omega=[0,1]$, $\calF=\mathcal B([0,1])$,
+$\Prob=\lambda_1|_{\calF}$ i niech $U(\omega)=\omega$. Dla $t\in[0,1]$ definiujemy
+$X_t(\omega)=0$ oraz $Y_t(\omega)=\chi_{U^{-1}(\{t\})}(\omega)$.
 Dla ustalonego $t$ zdarzenie $\{U=t\}$ jest pojedynczym
 punktem i ma prawdopodobieństwo $0$, a zatem
 $\Prob(X_t=Y_t)=1$. Natomiast dla \emph{każdego}
@@ -259,8 +293,9 @@ Jeżeli $X$ i $Y$ są modyfikacjami, to są nierozróżnialne.
 \begin{proof}
 Ustalmy przeliczalny zbiór gęsty
 $D=(\Q\cap[0,T_0])\cup\{T_0\}$.
-Dla każdego $t\in D$ mamy $\Prob(X_t=Y_t)=1$,
-więc poza jednym mierzalnym zbiorem zerowym $N_1$
+Dla każdego $t\in D$ procesy są równe poza mierzalnym
+zbiorem zerowym $N_t$. Zatem poza mierzalnym zbiorem zerowym
+$N_1=\bigcup_{t\in D}N_t$
 zachodzi $X_t(\omega)=Y_t(\omega)$ dla wszystkich $t\in D$.
 Do $N_1$ dodajmy zbiory zerowe, na których którakolwiek z
 trajektorii może nie być ciągła, otrzymując $N$.
@@ -332,24 +367,59 @@ to aby traktować $X$ jako zmienną losową o wartościach w $C$,
 wybieramy mierzalny zbiór $\Omega_0$ miary $1$, na którym
 ciągłość zachodzi \emph{jednocześnie dla wszystkich $t$},
 i poza nim przypisujemy dowolną ustaloną trajektorię ciągłą.
-Tak zmieniony proces jest modyfikacją poprzedniego, a jego
-odwzorowanie do $C$ jest mierzalne z poprzedniego twierdzenia.
+Tak zmieniony proces jest nierozróżnialny z poprzednim
+(wspólnym zbiorem wyjątkowym jest $\Omega\setminus\Omega_0$).
+Każda jego współrzędna jest mierzalna, gdyż powstaje przez
+sklejenie dwóch funkcji mierzalnych na mierzalnych częściach
+$\Omega_0$ i $\Omega\setminus\Omega_0$. Jego odwzorowanie
+do $C$ jest więc mierzalne na mocy poprzedniego twierdzenia.
 Przypadek $C([0,\infty);\R^d)$ można potraktować przy pomocy
-metryki jednostajnej zbieżności na przedziałach zwartych.
+metryki zbieżności jednostajnej na przedziałach zwartych.
 \end{uwaga}
 
 
+
+\begin{stwierdzenie}[Niemierzalność zbioru ciągłych trajektorii]
+Zbiór $C([0,1];\R)$, rozważany jako podzbiór
+$\R^{[0,1]}$, nie należy do cylindrycznego
+$\sigma$-ciała $\mathcal B(\R)^{\otimes[0,1]}$.
+\end{stwierdzenie}
+\begin{proof}
+Powiedzmy, że zbiór $A\subseteq\R^{[0,1]}$ zależy od
+współrzędnych z $J\subseteq[0,1]$, jeśli dla dowolnych
+$x,y$ warunek $x|_J=y|_J$ implikuje
+$(x\in A\Longleftrightarrow y\in A)$.
+Klasa zbiorów zależnych od pewnego przeliczalnego $J$
+jest $\sigma$-ciałem: dopełnienie nie zmienia $J$,
+a dla przeliczalnej sumy wystarczy suma odpowiednich
+przeliczalnych zbiorów indeksów.
+Klasa ta zawiera wszystkie cylindry jednowymiarowe,
+więc zawiera również generowane przez nie
+cylindryczne $\sigma$-ciało.
+
+Gdyby zbiór ciągłych trajektorii do niego należał,
+zależałby od pewnego przeliczalnego $J$.
+Wybierzmy $t_0\in(0,1)\setminus J$. Funkcje
+$x(t)=0$ oraz $y(t)=\chi_{\{t_0\}}(t)$ są równe na $J$,
+ale $x$ jest ciągła, a $y$ nie jest ciągła w $t_0$.
+Otrzymujemy sprzeczność.
+\end{proof}
 
 \begin{uwaga}[Prawo na przestrzeni trajektorii ciągłych]
 Jeśli proces $X$ ma trajektorie ciągłe, traktujemy go jako
 zmienną losową o wartościach w $C([0,T];\R^d)$. Wówczas
 rozkłady skończeniewymiarowe wyznaczają jego prawo
 \emph{jako miarę na przestrzeni trajektorii ciągłych}:
-równość miar na cylindrach określonych chwilami wymiernymi
-przechodzi na całe borelowskie $\sigma$-ciało, ponieważ
-te cylindry je generują. Jest to mocniejszy kontekst niż
-kanoniczna przestrzeń $E^T$, gdzie sama ciągłość trajektorii
-nie musi odpowiadać mierzalnemu zbiorowi cylindrycznemu.
+równość miar na cylindrach określonych chwilami ze zbioru
+$D=(\Q\cap[0,T])\cup\{T\}$ przechodzi na całe borelowskie
+$\sigma$-ciało, ponieważ te cylindry je generują.
+Dokładniej, $\mathcal B(C([0,T];\R^d))$ jest śladem
+cylindrycznego $\sigma$-ciała przestrzeni $(\R^d)^{[0,T]}$
+na $C([0,T];\R^d)$: każdy rzut ograniczony do $C$ jest
+ciągły, a rzuty o indeksach z $D$ generują $\mathcal B(C)$.
+Nie oznacza to mierzalności samego $C$ w przestrzeni
+iloczynowej ani możliwości warunkowania na zdarzeniu
+$\{X\in C\}$ bez dodatkowych założeń.
 \end{uwaga}
 
 \section{Trajektorie ze skokami: przestrzeń funkcji c\`adl\`ag}
@@ -377,16 +447,49 @@ Gdy $E=\R^d$, wielkość $\Delta f(t)=f(t)-f(t-)$
 
 \begin{przyklad}[Losowy skok, ale uporządkowana trajektoria]
 Dla $U\sim\operatorname{U}([0,1])$ proces
-$X_t=\ind{\{U\le t\}}$ ma trajektorie c\`adl\`ag.
+$X_t=\chi_{\{U\le t\}}$ ma trajektorie c\`adl\`ag.
 Przed chwilą $U$ przyjmuje wartość $0$,
 a w chwili $U$ i później wartość $1$.
-Stąd $X_U=1$, $X_{U-}=0$ oraz $\Delta X(U)=1$.
-Jest to funkcja prawostronnie ciągła z jednym skokiem.
-Jej trajektorie nie są ciągłe, chociaż -- jak wykażemy
+Na zdarzeniu $\{0<U<1\}$, mającym prawdopodobieństwo $1$,
+zachodzi $X_U=1$, $X_{U-}=0$ oraz $\Delta X(U)=1$.
+Dla $U=0$ trajektoria jest stale równa $1$ i skoku
+w zerze nie definiujemy; dla $U=1$ skok występuje
+na prawym końcu przedziału. Wszystkie te trajektorie
+są prawostronnie ciągłe w $[0,1)$.
+Prawie na pewno jego trajektorie nie są ciągłe, chociaż -- jak wykażemy
 w dalszym przykładzie -- proces jest stochastycznie ciągły.
 To rozróżnienie motywuje używanie przestrzeni $D([0,T];E)$
 zamiast $C([0,T];E)$ przy procesach skokowych.
 \end{przyklad}
+
+\begin{stwierdzenie}[Prawostronnie ciągłe modyfikacje są nierozróżnialne]
+Niech $X,Y$ będą procesami o wartościach w przestrzeni
+metrycznej, indeksowanymi przez $[0,T]$. Załóżmy, że są
+modyfikacjami i że poza mierzalnymi zbiorami zerowymi
+ich trajektorie są prawostronnie ciągłe na $[0,T)$.
+Wówczas procesy są nierozróżnialne. W szczególności dotyczy
+to modyfikacji o trajektoriach c\`adl\`ag.
+\end{stwierdzenie}
+\begin{proof}
+Dla każdej chwili ze zbioru
+$D=(\Q\cap[0,T])\cup\{T\}$ wybieramy mierzalny zbiór
+zerowy, poza którym procesy przyjmują tę samą wartość.
+Do przeliczalnej sumy tych zbiorów dołączamy zbiory
+wyjątkowe dla prawostronnej ciągłości. Poza otrzymanym
+zbiorem zerowym $N$ wartości obu procesów są równe na $D$.
+Dla $t<T$ wybieramy ciąg $q_n\in D\cap(t,T]$ malejący do $t$.
+Prawostronna ciągłość daje
+$X_t(\omega)=\lim_n X_{q_n}(\omega)
+=\lim_n Y_{q_n}(\omega)=Y_t(\omega)$ dla $\omega\notin N$.
+W chwili $T$ równość zachodzi bezpośrednio, gdyż $T\in D$.
+\end{proof}
+\begin{uwaga}
+W powyższym dowodzie dołączenie prawego końca przedziału
+jest istotne: funkcje c\`adl\`ag mogą różnić się wyłącznie
+w chwili $T$ (np. $f(t)=0$ i $g(t)=\chi_{\{T\}}(t)$).
+Na $[0,\infty)$ wystarcza zbiór $\Q\cap[0,\infty)$,
+gdyż każda chwila może być przybliżana z prawej strony.
+\end{uwaga}
 
 \begin{uwaga}[Topologia Skorochoda]
 Przy zbieżności procesów skokowych zwykła metryka
@@ -407,7 +510,9 @@ każdych $m\ge1$ i $0\le t_0<t_1<\cdots<t_m$
 zmienne $X_{t_1}-X_{t_0},\ldots,X_{t_m}-X_{t_{m-1}}$
 są niezależne. Proces ma \emph{stacjonarne przyrosty}, jeśli
 dla każdych $0\le s<t$ rozkład $X_t-X_s$ zależy tylko od $t-s$.
-Mówimy, że $X$ jest \emph{stochastycznie ciągły w chwili $t$},
+Dla procesu indeksowanego przedziałem czasu (także
+ograniczonym) mówimy, że $X$ jest
+\emph{stochastycznie ciągły w chwili $t$},
 jeśli dla każdego $\varepsilon>0$ zachodzi
 $\lim_{s\to t}\Prob(\norm{X_s-X_t}>\varepsilon)=0$
 (granica jest brana w zbiorze indeksów).
@@ -432,18 +537,25 @@ wszystkie rozkłady skończeniewymiarowe procesu.
 \end{twierdzenie}
 \begin{proof}
 Dla $k=1,\ldots,m$ mamy
-$X_{t_k}=\Delta_1+\cdots+\Delta_k$.
+$X_{t_k}=\Delta_1+\cdots+\Delta_k$ p.n.,
+ponieważ $X_0=0$ p.n.
 Stąd przez przestawienie dwóch \emph{skończonych} sum
 $\sum_{k=1}^m u_k X_{t_k}
 =\sum_{j=1}^m(\sum_{k=j}^m u_k)\Delta_j$.
 Korzystając z niezależności $\Delta_1,\ldots,\Delta_m$,
 możemy rozłożyć wartość oczekiwaną iloczynu
 wykładników na iloczyn wartości oczekiwanych,
-co daje wzór. Funkcja charakterystyczna wyznacza
-jednoznacznie rozkład wektora losowego (twierdzenie
-o jednoznaczności funkcji charakterystycznej z tomu I),
-a dowolną skończoną rodzinę chwil można uporządkować
-i dołączyć chwilę $0$. Dowodzi to ostatniego zdania.
+co daje wzór. Ostatnie zdanie wynika także bezpośrednio
+z faktu, że rozkład wektora $(\Delta_1,\ldots,\Delta_m)$
+jest iloczynem rozkładów przyrostów.
+Rozkład $(X_{t_1},\ldots,X_{t_m})$ jest obrazem
+tej miary produktowej przez ciągłe odwzorowanie
+$(z_1,\ldots,z_m)\mapsto(z_1,z_1+z_2,\ldots,\sum_{j=1}^m z_j)$.
+Dowolną skończoną rodzinę chwil można uporządkować,
+dołączyć chwilę $0$, a powtórzone współrzędne
+odtworzyć przez ich powielenie. Dowodzi to tezy
+bez dodatkowego twierdzenia o wielowymiarowych
+funkcjach charakterystycznych.
 \end{proof}
 
 \begin{przyklad}[Dwa pierwsze kroki spaceru losowego]
@@ -455,6 +567,9 @@ $\Prob(\xi_1=1,\xi_2=-1)=1/4$.
 Z kolei $\Prob(S_2=0)=1/2$, bo wynik $0$ otrzymujemy
 przy ścieżkach przyrostów $(1,-1)$ albo $(-1,1)$.
 Stąd $\Prob(S_1=1\mid S_2=0)=(1/4)/(1/2)=1/2$.
+Ta równość sama nie dowodzi zależności.
+Jednak $\Prob(S_2=2)=1/4>0$ i
+$\Prob(S_1=1\mid S_2=2)=1\ne\Prob(S_1=1)=1/2$.
 Wniosek: nawet gdy pojedyncze przyrosty są niezależne,
 położenia $S_1,S_2$ nie są niezależne; drugie położenie
 zawiera informację o pierwszym.
@@ -493,10 +608,11 @@ Równość rozkładów $X_t$ i $X_{t+h}$ daje równość średnich
 oraz drugich momentów. Równość rozkładów par
 $(X_s,X_t)$ i $(X_{s+h},X_{t+h})$ daje równość
 $\E[X_sX_t]$ i $\E[X_{s+h}X_{t+h}]$, więc i kowariancji.
-Wybierając przesunięcie, które przenosi jedną z chwil na $0$
-(gdy $T=[0,\infty)$, używamy dozwolonego przesunięcia
-obu nieujemnych chwil), otrzymujemy zależność kowariancji
-wyłącznie od różnicy czasów.
+Dla $s\le t$ przesuwamy obie chwile o $-s$, otrzymując
+$\Cov(X_s,X_t)=\Cov(X_0,X_{t-s})$.
+Dla $t<s$ korzystamy z symetrii kowariancji i definiujemy
+$c(u)=\Cov(X_0,X_{|u|})$ dla $u\in\R$.
+Zatem $\Cov(X_s,X_t)=c(t-s)$ także wtedy, gdy $T=[0,\infty)$.
 \end{proof}
 
 \begin{przyklad}[Stacjonarny proces z gładkimi trajektoriami]
@@ -507,7 +623,10 @@ Mamy $\E X_t=0$ i
 \Cov(X_s,X_t)=\cos s\cos t+\sin s\sin t=\cos(t-s).
 \]
 Dla dowolnego $m$ wektor $(X_{t_1},\ldots,X_{t_m})$
-jest gaussowski, więc wyznaczają go średnie i macierz kowariancji.
+jest gaussowski jako obraz liniowy wektora
+$(Z_1,Z_2)$ niezależnych standardowych zmiennych normalnych.
+Jego rozkład wyznaczają średnie i macierz kowariancji
+(por. rozdział~\ref{ch:gauss}).
 Po przesunięciu wszystkich chwil o $h$ te dane nie zmieniają się,
 zatem proces jest ściśle stacjonarny. Każda trajektoria jest przy
 tym funkcją gładką; stacjonarność nie oznacza ``poszarpania'' ścieżek.
@@ -515,7 +634,7 @@ tym funkcją gładką; stacjonarność nie oznacza ``poszarpania'' ścieżek.
 
 \begin{przyklad}[Ciągłość stochastyczna bez ciągłych trajektorii]
 Niech $U$ ma rozkład jednostajny na $[0,1]$ i
-$X_t=\ind{\{U\le t\}}$ dla $t\in[0,1]$.
+$X_t=\chi_{\{U\le t\}}$ dla $t\in[0,1]$.
 Dla ustalonego $t$ i $s$ zachodzi
 $\Prob(\abs{X_s-X_t}>0)=\Prob(U\in(\min(s,t),\max(s,t)])
 =\abs{s-t}$, zatem $X$ jest stochastycznie ciągły.
@@ -610,8 +729,21 @@ $\E Z_i^2=\E\xi_i^2=1$ oraz wszystkie mieszane
 kowariancje są zerowe. Jednak $X_0\sim\Normal(0,1)$,
 a $Y_0=\xi_1$ przyjmuje tylko wartości $-1,1$.
 Zatem procesy mają inne rozkłady już w chwili $0$.
-Funkcja kowariancji wyznacza rozkłady skończeniewymiarowe
-\emph{w klasie procesów gaussowskich}, ale nie w klasie
+Funkcja średniej wraz z funkcją kowariancji wyznacza
+rozkłady skończeniewymiarowe \emph{w klasie procesów gaussowskich}
+(por. rozdział~\ref{ch:gauss}), ale nie w klasie
 wszystkich procesów o skończonych drugich momentach.
+Sama kowariancja wystarcza w klasie wycentrowanych
+procesów gaussowskich.
+
+Proces $Y$ stanowi zarazem kontrprzykład dla implikacji
+od stacjonarności w drugim rzędzie do stacjonarności ścisłej.
+Jego średnia jest stała, a kowariancja zależy wyłącznie
+od różnicy czasów. Tymczasem $Y_0$ przyjmuje wartości
+$-1,1$ z prawdopodobieństwem $1/2$, podczas gdy
+$Y_{\pi/4}=(\xi_1+\xi_2)/\sqrt{2}$ przyjmuje wartości
+$-\sqrt{2},0,\sqrt{2}$ z prawdopodobieństwami odpowiednio
+$1/4,1/2,1/4$. Rozkłady jednowymiarowe nie są więc
+niezmiennicze względem przesunięć czasu.
 \end{przyklad}
 

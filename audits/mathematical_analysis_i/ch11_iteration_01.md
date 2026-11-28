@@ -1,0 +1,11 @@
+# MA1-11 — iteracja rozwojowo-stabilizacyjna 01
+Po stabilizacji MA1-10 (0aab99c) utworzono MA1-11, dodano do tomu bdb84dd i katalogu 52e177a. Treść po audycie 15a8625, blob 8920e856ce0687efec8f78841a3b955a507ea77b, 233 wiersze.
+## Audyt matematyczny
+001–002: sprawdzono definicję iloczynu od indeksu 0, bijekcję (n,j) <-> (j,n-j), trójkąt i kwadrat oraz skończoność wszystkich sum. Doprecyzowano legendę rysunku: zielone punkty trójkąta, niebieskie pozostałe punkty kwadratu. Kontrola skompilowanego rysunku jeszcze niewykonana.
+003–005: nierówność sum modułów, monotoniczność i ograniczoność; oszacowanie różnicy kwadratu i trójkąta przez sumy po dwóch pasach j>floor(N/2) lub k>floor(N/2). Uzasadniono zanikanie ogonów. Wzór geometryczny (n+1)q^n, również q=0.
+006–007: przemienność przez zmianę indeksu, jawne definicje sum częściowych, ograniczenie B_n-B i dwa niezależne wybory J,L w dowodzie Mertensa, poprawność dla alfa=0 i pustej sumy. W przykładzie jednego szeregu zbieżnego warunkowo dopisano uzasadnienie zbieżności szeregu majoranty modułów przy sprzecznym założeniu; rekurencja c_n=b_n+c_(n-1)/2.
+008: oba szeregi (-1)^n/sqrt(n+1) warunkowo zbieżne; wszystkie składniki współczynnika mają ten sam znak, moduł >=1. Sprawdzono oszacowanie mianowników i własność nieujemnych pierwiastków.
+009–010: lemat o średniej splotu ciągów zbieżnych, jawny rozkład różnicy iloczynów, dokładnie 2J indeksów końcowych, oszacowanie środka. Tożsamość sum C_m = sum A_j B_(N-j) przez liczność N-r-s+1 wystąpień każdej pary. Dowód Abela z lematu dla A,B oraz C,1, bez użycia teorii szeregów potęgowych.
+011–012: wyliczenie par przekątnymi, ograniczenie sum modułów, grupowanie i przestawienie za pomocą bijekcji; indukcja po liczbie szeregów, skończoność zbiorów krotek, oszacowanie normy. Nie wprowadzono jeszcze iloczynów nieskończonych.
+## Kontrole
+12 etykiet, zero duplikatów i nierozwiązanych ref, poprawne zagnieżdżenie środowisk, zgodne preambuły i wpisy tomu oraz katalogu. Testy 11ab246, kryteria 9381dd3: 8 nowych testów, 86 w całym tomie, 12 kryteriów. Terminologia 45443505327: sukces. CI 45443505323 (treść), 45443505326 (Atlas), 45443579704 (pełna regresja) w toku. Nie potwierdzono jeszcze nowych testów, kompilacji ani składu PDF. Lean nieuruchomiony. Status w stabilizacji; następna iteracja potwierdzająca.

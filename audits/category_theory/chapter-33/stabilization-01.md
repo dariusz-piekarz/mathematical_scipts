@@ -1,0 +1,13 @@
+# CAT-33 — pierwszy audyt stabilizacyjny (27.11.2026)
+
+Kandydat: commit bafb0581f51a85cd3f8a9510ab7e4946459ad0ff, blob c617862a9a2013d91b0b66aa7041b075af335e7b. Po trzech szczegółowych audytach (31 poprawionych fragmentów) ponownie sprawdzono argumenty dotyczące kategorii sympleksów, tożsamości symplicjalnych, lematu Eilenberga–Zilbera, nerwów, rogów i grupoidów. Nie znaleziono nowej usterki matematycznej wymagającej zmiany źródła.
+
+Niezależna kontrola obliczeniowa JS: wszystkie niemalejące odwzorowania [n]->[k] dla 0<=n<=6, 0<=k<=5 (2996). Sprawdzono rozkład na surjekcję i injekcję, jednoznaczność degeneracji poprzez enumerację możliwych surjekcji, 45417 relacji ściana–ściana, 63063 relacji degeneracja–degeneracja i 126126 relacji mieszanych. Dla par surjekcji [n]->[k] przy 0<=k<=n<=7 wyliczono ich sekcje i sprawdzono kryterium wzajemnej injektywności złożenia z sekcjami (4707 par). Wszystkie asercje PASS.
+
+Druga niezależna kontrola: nerwy pięciu monoidów (trywialny, C2, C3, dwuelementowy monoid z elementem idempotentnym, pełny monoid odwzorowań zbioru dwuelementowego T2). Wymiary 1–4, z wyjątkiem T2 (1–3). Rodziny ścian rogu enumerowano niezależnie od sympleksów wypełniających, sprawdzając zgodność na przecięciach. Następnie liczono wypełnienia według ich ograniczeń. Wyniki (wszystkie rogi / wewnętrzne / zewnętrzne / niewypełnialne): trywialny 14/6/8/0, C2 126/68/58/0, C3 542/306/236/0, idempotentny 134/68/66/10, T2 434/144/290/138. Każdy z 592 rogów wewnętrznych miał dokładnie jedno wypełnienie; wszystkie rogi grup miały wypełnienie (dla n>=2 jednoznaczne). W monoidach niebędących grupami wykryto oczekiwane 148 niewypełnialnych rogów zewnętrznych. Dodatkowo 268 rekonstrukcji sympleksów nerwu po usunięciu identyczności: PASS. Modele skończone nie zastępują dowodów ogólnych ani formalizacji Lean.
+
+Kontrola statyczna: 33 unikatowe etykiety, 14 dowodów, 4 diagramy TikZ, brak nierozwiązanych odsyłaczy, środowiska zrównoważone, książka i katalog zawierają rozdział.
+
+CI dla commitu źródłowego: CAT-00 validation (46014734704) completed/success, w tym testy regresji, kompilacja pełnej książki, weryfikacja odsyłaczy i PDF oraz publikacja artefaktu. Terminologia (46014734711) completed/success. CI aplikacji (46014734765) completed/failure: w jobie index-and-test nie przeszły testy regresji aplikacji, w jobie reader-ui nie przeszła weryfikacja kontrolek czytnika, pełnego ekranu, odsyłaczy i obrazów TikZ. Sam etap indeksowania i audyty odsyłaczy przeszły. Na podstawie samych nazw kroków nie ustalono związku przyczynowego z CAT-33. Oględzin PDF nie wykonano.
+
+Decyzja: 1/2 czystych audytów merytorycznych, 0/1 końcowych audytów kontrolnych. Źródło niezmienione; pełny odbiór aplikacyjny oraz wizualny nadal otwarty.

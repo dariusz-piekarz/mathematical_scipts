@@ -1,0 +1,7 @@
+# Rozdział 37 (drukowany 6) — ZAMKNIĘTY
+
+2026-11-24. Źródło 9ea1b1afaeb3895a8b9fbbda101c8d58617f53b1, blob fec54263161c1ec4fc05579e0021c0307945e84d; bieżąca gałąź ma ten sam blob. Wcześniejsze CI 45375073601, job 138378996043: overfull hbox 56.85233 pt w linii 614. Korekta łamania wzoru usuwa problem: pełny audyt 45375118241 dla 9ea1b1a completed/success; algorytmiczny audyt 45375148759 dla 93f4751 completed/success (finite-models 138379254134, chapter-pdf 138379254831). Log 138379146098: PASS TG37-MULTI-01: 761 loopless multigraphs, bridges and articulation; PASS chapter integration + 1099 simple undirected and 4165 loopless directed exhaustive cases.
+
+Pobrano rzeczywisty artefakt 14911111526 z przebiegu 45375148759; PDF 112 stron, w logu brak overfull oraz niezdefiniowanych/powielonych odsyłaczy. Rozdział na stronach fizycznych 48–55 (drukowane 43–50); następny zaczyna się na fizycznej 56. Wyrenderowano i obejrzano wszystkie osiem stron w 105 dpi, cztery plansze dwustronicowe. Rysunek BFS i podpis czytelne, wzór low w multigrafie mieści się w marginesach, brak widocznych kolizji, ostatnia strona wypełniona treścią. Nie stwierdzono potrzeby kolejnych korekt w zakresie wykonanych kontroli. Nie wdrażano niezaakceptowanych rozszerzeń.
+
+Status ZAMKNIĘTY w zakresie wykonanych kontroli. Następny rozdział w kolejności książki: 38-najkrotsze-drogi-wazone-i-algorytmy-wyszukiwania-tras.tex (drukowany 7). Pierwszy indywidualny audyt, propozycje rozszerzeń tylko po pierwszym audycie, potem stabilizacja.

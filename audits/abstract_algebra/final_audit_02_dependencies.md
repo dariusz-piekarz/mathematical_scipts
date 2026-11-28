@@ -1,0 +1,23 @@
+# AA-01–72 — końcowy audyt przekrojowy II: odsyłacze i hipotezy na granicach bloków
+
+Stan odczytu 55060b71c0f281d5aa343dfea4797423fe28f2f6. Porównanie z f941965d971ce54d66ac683198122c6233dd13c4: w obszarze AA zmieniono jedynie stronę tytułową, globalny test i raport I. Źródła rozdziałów bez zmian.
+
+## Przegląd jawnych odsyłaczy
+
+Odczytano 22 pliki AA-21–42, z pominięciem komentarzy LaTeX:
+- AA-21–30: 150 unikatowych etykiet, 109 odsyłaczy, 31 odsyłaczy między rozdziałami wewnątrz bloku (13 par), 24 odsyłacze poza blok; jedyny wewnętrzny odsyłacz w przód to AA-26:259 do rysunku aa:fig:kummer-cubic-cycle (272).
+- AA-31–40: 133 etykiety, 98 odsyłaczy, 21 między rozdziałami wewnątrz bloku (12 par), 9 poza blok; AA-39:366 do rysunku aa:fig:crossed-lines (387).
+- AA-41–42: 40 etykiet, 19 odsyłaczy, jeden między rozdziałami, zero poza blok; AA-41:210 do późniejszego przykładu aa:prz:maschke-explicit (354). Wcześniejszy fragment sam podaje obrazy obu operatorów projekcji; późniejszy przykład nie jest przesłanką tego rachunku.
+W żadnym z trzech bloków nie stwierdzono lokalnych powtórzeń etykiet. Trzy wskazane odsyłacze w przód są nawiązaniami ilustracyjnymi. Razem z raportem I odczyt AA-01–42 daje 844 etykiety (suma lokalnych liczności) i 373 odsyłacze. Razem z wcześniejszymi preflight AA-43–55 i AA-56–72: 1288 etykiet i 932 odsyłacze, zgodne z globalną bramką. Odczyt blokowy nie zastępuje globalnej klasyfikacji wszystkich odsyłaczy między blokami, w tym grup silnie spójnych; tę część domknąć po wyniku rozszerzonej bramki.
+
+## Kontrola matematyczna granic AA-01–42 / AA-43–55 / AA-56–72
+
+1. AA-20 → AA-43: wniosek aa:wn:charzero-separable dotyczy nierozkładalnego wielomianu dodatniego stopnia w charakterystyce zero. Minimalny wielomian elementu algebraicznego w dowodzie AA-43 spełnia te hipotezy; jego pochodna nie znika w rozważanym pierwiastku. Wzór wymuszający przedłużenie derywacji jest zatem określony.
+2. AA-23 → AA-43: twierdzenie aa:tw:trace-norm-embeddings wymaga skończonego rozszerzenia rozdzielczego, nie normalności. W AA-43 skończoność jest założona, rozdzielczość wynika z charakterystyki zero; domknięcie algebraiczne ma przedłużenie derywacji. Zanurzenia komutują z derywacją przez jednoznaczny wzór na pochodną elementu algebraicznego. Warunek u != 0 zapewnia niezerowość wszystkich czynników normy. Różniczkowanie skończonej sumy i iloczynu uzasadnia obie tożsamości. Bez uchybienia.
+3. AA-42 → AA-55: wszystkie trzy wyniki (aa:tw:multiplicities, aa:tw:regular-character, aa:tw:characters-basis) zakładają skończoną grupę i zespolone reprezentacje. AA-55 pracuje z G <= SL_2(C) skończoną, z pełną rodziną nieprzywiedlnych reprezentacji zespolonych. Charakter iloczynu tensorowego daje formułę a_ij; rzeczywistość charakteru naturalnego i całkowitość krotności dają symetrię. Rozkład reprezentacji regularnej daje sumę kwadratów wymiarów. W rekurencji potęg symetrycznych jednoznaczność rozwinięcia w bazie charakterów jest stosowana poprawnie; symetria A uzasadnia zapis Am_k zamiast transpozycji. Bez uchybienia.
+4. AA-55 → AA-56: rozróżniono przypadki m=1 (macierz [2], pętla, wyłączona w AA-56), m=2 (dwie krawędzie) oraz m>=3 (cykl); niecykliczne grupy zawierają -I, więc nie ma pętli. Symetria, spójność, dodatni wektor d i Ad=2d są dostępne w AA-55. Tożsamość ważonej sumy kwadratów w AA-56 daje dodatnią półokreśloność i jądro Rd; przy usunięciu wiersza i kolumny przedłużenie wektora przez zero wymusza, aby jedyny wektor jądra był zerowy. W klasyfikacji ważonych diagramów AA-56 używa konfiguracji o wartości własnej 2 z dowodu AA-55, a nie klasyfikacji algebr Liego z późniejszych rozdziałów. Zależność nie jest kołowa.
+
+Zweryfikowane źródła: AA-20 8aa1aedc2c07fe032527d2a0b276cf50b0a6dbfd; AA-23 69f5f2c35c3e7179055e0acc06fe95e041d0bc24; AA-42 f7b662c41bf51d05c03613c879c74b9a7e30040d; AA-43 c6563f402b7890e5e0c8f02796ebf649f4336906; AA-55 7e6c96ef96bd8f9d6a13b0443e357c738ff6743f; AA-56 b75d8fac66195d710df141cdae3e3081b137d687.
+
+## CI i dalsze działania
+Run 45566329555 po audycie kontrolnym VI: completed/success. Run 45567159987 (rozszerzona bramka) oraz 45567131064 (zmiana tytułu) w toku; oba przy odczycie 50 kroków success, 1 aktywny, 99 pending, globalna bramka i kompilacja jeszcze oczekują. Nie raportuje się ich jako zaliczonych. Nowego PDF nie sprawdzono. Nie uruchamiano Lean ani nowych lokalnych regresji; nie stwierdzono istotnej usterki wymagającej nowego testu. Bez zmian treści rozdziałów. Następnie: wynik rozszerzonej bramki i klasyfikacja globalnych cykli, kontrole przekrojowych ciągów dowodów wewnątrz AA-43–55 i AA-56–72 oraz PDF po aktualizacji strony tytułowej. Tom pozostaje otwarty; nie dodawać AA-73.

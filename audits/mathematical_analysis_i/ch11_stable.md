@@ -1,0 +1,2 @@
+# MA1-11 — stabilny
+Blob 0ed2e9cbbddcc2f22c84daad4eeb70a18f747ab6; 14 kryteriów z audytu 02. CI 45444823631: 88/88 testów (3+7+7+6+9+10+8+9+10+9+10), dwa przebiegi LaTeX, 73 strony, artefakt 14944053409. Brak Overfull/Underfull w sprawdzonym logu i nierozwiązanych odsyłaczy po drugim przebiegu. Atlas 45444787240 i terminologia 45444786792: sukces. Wyrenderowano i obejrzano strony fizyczne 68–73 oraz stronę 69 w powiększeniu: czytelny rysunek, poprawne oznaczenia i brak widocznych kolizji i obcięć. Lean nieuruchomiony. Stabilny w zakresie wykonanych kontroli.

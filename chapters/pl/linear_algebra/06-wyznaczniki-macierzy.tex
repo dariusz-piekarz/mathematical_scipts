@@ -1,0 +1,858 @@
+\chapter{Wyznaczniki macierzy}
+\label{ch:lin6-wyznaczniki}
+\index{wyznacznik@Wyznacznik}
+\index{permutacja@Permutacja}
+\index{rozwinięcie Laplace'a@Rozwinięcie Laplace'a}
+
+\noindent\textbf{Cel rozdziału.}
+W Rozdziale~\ref{ch:lin5-eliminacja-gaussa}
+nauczyliśmy się rozstrzygać odwracalność macierzy
+przez eliminację. W tym rozdziale skonstruujemy
+skalar, który odróżnia macierze odwracalne
+od nieodwracalnych. Wyjaśnimy, dlaczego
+wyznacznik zmienia znak przy zamianie wierszy,
+dlaczego jest mnożony przy składaniu
+odwzorowań oraz skąd pochodzą rozwinięcie
+Laplace'a, macierz dołączona i wzory Cramera.
+Każdy wynik udowodnimy nad dowolnym ciałem.
+
+W całym rozdziale \(K\) jest ciałem,
+\(0_K\ne1_K\), a wszystkie macierze
+są macierzami nad \(K\).
+Nie wymagamy, aby charakterystyka \(K\)
+była różna od \(2\). Przyjmujemy
+\(\mathbb N_0=\{0,1,2,\ldots\}\).
+Pusty iloczyn w \(K\) ma wartość \(1_K\).
+Przy \(n=0\) istnieje dokładnie jedna
+macierz kwadratowa rozmiaru \(0\times0\)
+i jest ona równa \(I_0\).
+
+\section{Permutacje i ich znaki}
+\label{sec:lin6-permutacje}
+
+\begin{definicja}[Permutacja i liczba inwersji]
+\label{def:lin6-permutacja-znak}
+Niech \(n\in\mathbb N_0\).
+\emph{Permutacją} zbioru
+\(\{1,\ldots,n\}\) nazywamy jego bijekcję
+na siebie. Zbiór tych permutacji
+oznaczamy przez \(S_n\).
+Dla \(\sigma\in S_n\) liczbą
+\emph{inwersji} nazywamy liczbę
+\[
+ \operatorname{inv}(\sigma)=
+ \#\{(i,j):1\leq i<j\leq n,\ 
+                 \sigma(i)>\sigma(j)\}.
+\]
+\emph{Znakiem permutacji} jest liczba całkowita
+\[
+ \operatorname{sgn}(\sigma)
+ :=(-1)^{\operatorname{inv}(\sigma)}
+ \in\{-1,1\},
+\]
+którą we wzorach nad \(K\) rozumiemy
+jako odpowiednio \(-1_K\) lub \(1_K\).
+Dla \(n=0\) istnieje jedna permutacja
+pustego zbioru; jej znak wynosi \(1\).
+\end{definicja}
+
+\begin{stwierdzenie}[Mnożenie znaków]
+\label{prop:lin6-znak-zlozenia}
+Dla \(n\in\mathbb N_0\) oraz dowolnych
+\(\sigma,\tau\in S_n\) zachodzi
+\[
+ \operatorname{sgn}(\sigma\circ\tau)
+ =\operatorname{sgn}(\sigma)
+  \operatorname{sgn}(\tau),\qquad
+ \operatorname{sgn}(\sigma^{-1})
+ =\operatorname{sgn}(\sigma).
+\]
+Każda transpozycja dwóch różnych
+elementów zbioru \(\{1,\ldots,n\}\)
+ma znak \(-1\).
+\end{stwierdzenie}
+\begin{proof}
+Niech \(s_k\) zamienia miejscami
+\(k\) i \(k+1\), a pozostałe elementy
+pozostawia bez zmian. W zapisie
+\((\sigma(1),\ldots,\sigma(n))\)
+złożenie \(\sigma\circ s_k\)
+zamienia dwie sąsiednie wartości.
+Dla par złożonych z tych dwóch pozycji
+status inwersji zmienia się dokładnie raz;
+dla każdej innej pozycji łączna liczba
+inwersji z tymi dwiema pozostaje ta sama.
+Zatem
+\(\operatorname{sgn}(\sigma\circ s_k)
+=-\operatorname{sgn}(\sigma)\).
+
+Każdą permutację \(\tau\) można zapisać
+jako iloczyn takich zamian: kolejnymi
+zamianami sąsiednich wartości usuwamy
+inwersje w zapisie \(\tau\), aż uzyskamy
+permutację identycznościową. Każdy taki krok
+zmniejsza liczbę inwersji dokładnie o \(1\),
+stąd liczba użytych kroków ma tę samą
+parzystość co \(\operatorname{inv}(\tau)\).
+Zastosowanie tych samych zamian do
+zapisu \(\sigma\) zmienia jego znak
+o czynnik \((-1)^{\operatorname{inv}(\tau)}\),
+co daje pierwszą równość.
+
+Ponieważ znak permutacji identycznościowej
+wynosi \(1\), podstawienie
+\(\tau=\sigma^{-1}\) daje
+\(1=\operatorname{sgn}(\sigma)
+\operatorname{sgn}(\sigma^{-1})\);
+obie liczby należą do \(\{-1,1\}\),
+zatem są równe.
+Transpozycja pozycji \(i<j\) jest
+iloczynem \(2(j-i)-1\) zamian sąsiednich,
+więc ma znak \(-1\).
+Dla \(n=0\) lub \(n=1\) jedyną
+permutacją jest identyczność i
+wszystkie stwierdzenia są spełnione.
+\end{proof}
+
+\begin{przyklad}[Znaki konkretnych permutacji]
+\label{prz:lin6-znaki}
+Dla \(\sigma=(2,3,1)\in S_3\),
+zapisanej przez kolejne wartości,
+inwersjami są pary \((1,3)\) i \((2,3)\),
+więc \(\operatorname{sgn}(\sigma)=1\).
+Dla \(\tau=(2,1,3)\) występuje
+dokładnie jedna inwersja, zatem
+\(\operatorname{sgn}(\tau)=-1\).
+To rozróżnienie będzie odpowiadało
+znakom składników wyznacznika.
+\end{przyklad}
+
+\section{Definicja wyznacznika}
+\label{sec:lin6-definicja}
+
+\begin{definicja}[Wyznacznik macierzy kwadratowej]
+\label{def:lin6-wyznacznik}
+Niech \(n\in\mathbb N_0\) oraz
+\(A=(a_{ij})\in\operatorname{Mat}_{n\times n}(K)\).
+\emph{Wyznacznikiem} macierzy \(A\)
+nazywamy skalar
+\[
+ \det A :=
+ \sum_{\sigma\in S_n}
+ \operatorname{sgn}(\sigma)
+ \prod_{i=1}^n a_{i,\sigma(i)}
+ \in K.
+\]
+Dla \(n=0\) suma zawiera jeden
+składnik, odpowiadający pustej permutacji,
+i przyjmujemy \(\det I_0=1_K\).
+\end{definicja}
+
+\begin{przyklad}[Wyznaczniki rozmiaru jeden i dwa]
+\label{prz:lin6-male}
+Dla \(a,b,c,d\in K\) mamy
+\[
+ \det(a)=a,\qquad
+ \det\begin{pmatrix}a&b\\c&d\end{pmatrix}
+ =ad-bc.
+\]
+Drugi wzór wynika z dwóch permutacji
+zbioru \(\{1,2\}\), o znakach \(1,-1\).
+W ciele charakterystyki \(2\) wyrażenie
+\(-bc\) jest równe \(bc\); definicja
+i wszystkie późniejsze twierdzenia
+pozostają prawdziwe.
+\end{przyklad}
+
+\begin{twierdzenie}[Wieloliniowość, naprzemienność i normalizacja]
+\label{thm:lin6-wlasnosci-aksjomatyczne}
+Niech \(n\in\mathbb N_0\).
+Wyznacznik, traktowany jako funkcja
+\(n\) kolejnych wierszy
+\((r_1,\ldots,r_n)\in(K^n)^n\),
+jest liniowy w każdym wierszu,
+przy ustaleniu pozostałych.
+Jeżeli dwa różne wiersze są równe,
+to wyznacznik jest równy \(0_K\).
+Ponadto \(\det I_n=1_K\).
+Dla \(n\geq1\) te trzy warunki
+jednoznacznie wyznaczają funkcję
+\(\det\colon\operatorname{Mat}_{n\times n}(K)\to K\).
+\end{twierdzenie}
+\begin{proof}
+W każdej sumie
+\(\prod_i a_{i,\sigma(i)}\)
+występuje dokładnie jeden wyraz
+z danego wiersza. Rozdzielność
+mnożenia w \(K\) pozwala więc wyodrębnić
+współczynniki kombinacji liniowej
+tego wiersza, co daje liniowość.
+
+Załóżmy, że wiersze o indeksach
+\(p\ne q\) są jednakowe.
+Zgrupujmy wyrazy definicji w pary
+odpowiadające permutacjom
+\(\sigma\) i \(\sigma\circ(p\,q)\).
+Iloczyny skalarów w obu składnikach
+są takie same, bo zamieniamy tylko
+dwa identyczne wiersze. Znaki są
+przeciwne na mocy
+Stwierdzenia~\ref{prop:lin6-znak-zlozenia}.
+W każdej parze składniki sumują się do
+zera. Permutacje w parze są różne,
+zatem parowanie jest poprawne.
+Rozumowanie działa również w
+charakterystyce \(2\), gdyż \(u+(-u)=0_K\).
+
+W macierzy \(I_n\) iloczyn odpowiadający
+permutacji różnej od identyczności
+zawiera co najmniej jeden wyraz zerowy.
+Składnik permutacji identycznościowej
+wynosi \(1_K\), stąd \(\det I_n=1_K\).
+
+Dla jednoznaczności niech \(F\) ma te
+same trzy własności. Z naprzemienności
+i wieloliniowości wynika zmiana znaku
+przy zamianie dowolnych dwóch wierszy:
+podstawienie w te miejsca \(u+v\) oraz
+\(u+v\) daje zero, a po rozwinięciu
+zostają dwa składniki, odpowiadające
+kolejnościom \((u,v)\) i \((v,u)\).
+Zatem ich wartości są przeciwne,
+również w charakterystyce \(2\).
+
+Niech \(e_1,\ldots,e_n\) będzie bazą
+standardową \(K^n\). Rozkładając każdy
+wiersz \(r_i=\sum_j a_{ij}e_j\)
+i stosując wieloliniowość, otrzymujemy
+\[
+ F(r_1,\ldots,r_n)
+ =\sum_{j_1,\ldots,j_n=1}^n
+    \left(\prod_{i=1}^n a_{i,j_i}\right)
+    F(e_{j_1},\ldots,e_{j_n}).
+\]
+Jeżeli dwa indeksy \(j_i\) są równe,
+odpowiadający składnik znika.
+Pozostałe ciągi są permutacjami
+\((\sigma(1),\ldots,\sigma(n))\).
+Własność zmiany znaku przy zamianie
+wierszy oraz \(F(e_1,\ldots,e_n)=1_K\)
+dają
+\(F(e_{\sigma(1)},\ldots,e_{\sigma(n)})
+=\operatorname{sgn}(\sigma)1_K\).
+Wzór na \(F\) staje się dokładnie
+wzorem z Definicji~\ref{def:lin6-wyznacznik}.
+Dla \(n=0\) normalizacja ustala
+jedyną wartość funkcji.
+\end{proof}
+
+\begin{wniosek}[Wpływ operacji na wierszach]
+\label{cor:lin6-operacje}
+Niech \(n\in\mathbb N_0\),
+\(A\in\operatorname{Mat}_{n\times n}(K)\),
+a \(B\) będzie wynikiem jednej dozwolonej
+operacji elementarnej na wierszach \(A\).
+Wówczas:
+\begin{enumerate}[label=(\roman*)]
+\item zamiana dwóch różnych wierszy daje
+\(\det B=-\det A\);
+\item pomnożenie jednego wiersza
+przez \(\lambda\in K\setminus\{0_K\}\)
+daje \(\det B=\lambda\det A\);
+\item dodanie do jednego wiersza
+\(\lambda\) razy innego wiersza
+nie zmienia wyznacznika.
+\end{enumerate}
+Przy \(n=0\) operacji nie ma,
+a \(\det I_0=1_K\).
+\end{wniosek}
+\begin{proof}
+Pierwszy wzór wynika z naprzemienności
+i wieloliniowości, jak w dowodzie
+Twierdzenia~\ref{thm:lin6-wlasnosci-aksjomatyczne}.
+Drugi to liniowość w jednym wierszu.
+W trzecim przypadku wieloliniowość
+daje sumę \(\det A\) i
+\(\lambda\) razy wyznacznik macierzy
+o dwóch identycznych wierszach;
+drugi składnik jest zerowy.
+\end{proof}
+
+\begin{uwaga}[Znaki i charakterystyka dwa]
+\label{rem:lin6-char2}
+Równość \(\det B=-\det A\)
+przy zamianie wierszy nie wystarcza
+sama do udowodnienia, że dwa równe
+wiersze dają zerowy wyznacznik:
+w charakterystyce \(2\) mamy
+\(-u=u\) dla każdego \(u\in K\).
+Dlatego naprzemienność wykazaliśmy
+bezpośrednio przez parowanie
+przeciwnych składników.
+\end{uwaga}
+
+\section{Macierze trójkątne i transpozycja}
+\label{sec:lin6-trojkatne}
+
+\begin{twierdzenie}[Wyznacznik macierzy trójkątnej]
+\label{thm:lin6-trojkatna}
+Niech \(n\in\mathbb N_0\) i
+\(A=(a_{ij})\in\operatorname{Mat}_{n\times n}(K)\).
+Jeżeli \(A\) jest górnotrójkątna
+(\(a_{ij}=0_K\) dla \(i>j\)),
+to
+\[
+ \det A=\prod_{i=1}^n a_{ii}.
+\]
+Ta sama równość zachodzi dla
+macierzy dolnotrójkątnej.
+W szczególności \(\det I_n=1_K\).
+\end{twierdzenie}
+\begin{proof}
+Dla macierzy górnotrójkątnej
+niezerowy składnik sumy definicyjnej
+wymaga \(\sigma(i)\geq i\)
+dla wszystkich \(i\).
+Ponieważ \(\sigma\) jest permutacją,
+\(\sum_i\sigma(i)=\sum_i i\);
+zatem wszystkie te nierówności
+muszą być równościami.
+Jedyną możliwą permutacją jest
+identyczność, której znak wynosi \(1\).
+Pozostaje więc wyłącznie iloczyn
+wyrazów diagonalnych.
+
+Dla macierzy dolnotrójkątnej
+niezerowy składnik wymaga
+\(\sigma(i)\leq i\) dla wszystkich \(i\).
+Ten sam argument z sumą indeksów
+znów daje permutację identycznościową.
+Przy \(n=0\) wyrażenie jest
+pustym iloczynem \(1_K\).
+\end{proof}
+
+\begin{stwierdzenie}[Wyznacznik transpozycji]
+\label{prop:lin6-transpozycja}
+Dla \(n\in\mathbb N_0\) i każdej
+\(A\in\operatorname{Mat}_{n\times n}(K)\)
+zachodzi
+\[
+ \det(A^{\mathsf T})=\det A.
+\]
+W szczególności wyznacznik jest
+liniowy w każdej kolumnie,
+znika przy dwóch identycznych kolumnach,
+a zamiana, skalowanie i dodawanie
+wielokrotności kolumn zmieniają go
+według tych samych reguł co operacje
+na wierszach.
+\end{stwierdzenie}
+\begin{proof}
+Dla każdej permutacji \(\sigma\)
+składnik sumy definiującej
+\(\det(A^{\mathsf T})\) jest równy
+\[
+ \operatorname{sgn}(\sigma)
+ \prod_{i=1}^n a_{\sigma(i),i}.
+\]
+Po podstawieniu \(\tau=\sigma^{-1}\)
+i przestawieniu czynników
+otrzymujemy
+\(\operatorname{sgn}(\tau)
+\prod_{j=1}^n a_{j,\tau(j)}\),
+gdyż
+\(\operatorname{sgn}(\tau)=
+\operatorname{sgn}(\sigma)\).
+Odwzorowanie \(\sigma\mapsto\sigma^{-1}\)
+jest bijekcją \(S_n\), więc sumy są równe.
+Własności kolumn wynikają z odpowiednich
+własności wierszy po transpozycji.
+\end{proof}
+
+\begin{przyklad}[Obliczenie wyznacznika przez eliminację]
+\label{prz:lin6-eliminacja}
+Niech
+\[
+ A=\begin{pmatrix}
+ 1&2&0\\
+ 0&1&3\\
+ 2&0&1
+ \end{pmatrix}
+ \in\operatorname{Mat}_{3\times3}(\mathbb R).
+\]
+Operacje
+\(R_3\leftarrow R_3-2R_1\)
+oraz
+\(R_3\leftarrow R_3+4R_2\)
+dają
+\[
+ A\sim
+ \begin{pmatrix}
+ 1&2&0\\
+ 0&1&3\\
+ 0&-4&1
+ \end{pmatrix}
+ \sim
+ \begin{pmatrix}
+ 1&2&0\\
+ 0&1&3\\
+ 0&0&13
+ \end{pmatrix}.
+\]
+Są to dodania wielokrotności
+innych wierszy, więc nie zmieniają
+wyznacznika. Zatem \(\det A=13\).
+Ten sam rachunek działa nad dowolnym ciałem,
+jeśli liczby całkowite interpretujemy
+jako wielokrotności \(1_K\).
+W charakterystyce \(13\) wyznacznik
+wynosi \(0_K\), nie \(13\ne0\).
+\end{przyklad}
+
+\section{Wyznacznik iloczynu i odwracalność}
+\label{sec:lin6-mnozenie}
+
+\begin{twierdzenie}[Multiplikatywność wyznacznika]
+\label{thm:lin6-multiplikatywnosc}
+Dla \(n\in\mathbb N_0\) i dowolnych
+\(A,B\in\operatorname{Mat}_{n\times n}(K)\)
+zachodzi
+\[
+ \det(AB)=\det A\cdot\det B.
+\]
+\end{twierdzenie}
+\begin{proof}
+Przy ustalonej macierzy \(B\)
+rozważmy funkcję
+\(F(A)=\det(AB)\) zależną od
+kolejnych wierszy \(A\).
+Każdy wiersz \(AB\) otrzymujemy
+mnożąc odpowiedni wiersz \(A\)
+przez \(B\) z prawej strony;
+operacja ta jest liniowa.
+Zatem \(F\) jest liniowa w każdym
+wierszu \(A\). Jeśli dwa wiersze \(A\)
+są równe, odpowiadające wiersze \(AB\)
+też są równe i \(F(A)=0_K\).
+
+Dowód jednoznaczności funkcji
+naprzemiennej i wieloliniowej z
+Twierdzenia~\ref{thm:lin6-wlasnosci-aksjomatyczne}
+pokazuje, że dla dowolnej takiej funkcji
+\(F(A)=F(I_n)\det A\).
+Tutaj \(F(I_n)=\det B\), a więc
+\(\det(AB)=\det B\det A\).
+Przemienność mnożenia skalarów w \(K\)
+daje zapis z tezy.
+Dla \(n=0\) obie strony są równe \(1_K\).
+\end{proof}
+
+\begin{twierdzenie}[Kryterium odwracalności]
+\label{thm:lin6-odwracalnosc}
+Niech \(n\in\mathbb N_0\) i
+\(A\in\operatorname{Mat}_{n\times n}(K)\).
+Następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item \(\det A\ne0_K\);
+\item \(A\) jest odwracalna;
+\item \(\operatorname{rk}A=n\);
+\item kolumny \(A\) tworzą bazę \(K^n\).
+\end{enumerate}
+Jeżeli te warunki zachodzą, to
+\[
+ \det(A^{-1})=(\det A)^{-1}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Jeżeli \(A\) jest odwracalna,
+to z mnożenia wyznaczników mamy
+\[
+ 1_K=\det I_n
+    =\det(AA^{-1})
+    =\det A\det(A^{-1}).
+\]
+Zatem \(\det A\ne0_K\) i otrzymujemy
+również wzór na wyznacznik odwrotności.
+
+Odwrotnie, załóżmy \(\det A\ne0_K\).
+Sprowadźmy \(A\) przez operacje
+elementarne do postaci schodkowej
+zredukowanej \(R\), korzystając z
+Twierdzenia~\ref{thm:lin5-gauss}.
+Każda operacja zmienia wyznacznik
+przez pomnożenie przez niezerowy
+skalar albo pozostawia go bez zmian.
+Wobec tego \(\det R\ne0_K\).
+Jeżeli \(R\) miałaby mniej niż \(n\)
+niezerowych wierszy, zawierałaby
+wiersz zerowy i z liniowości wyznacznika
+otrzymalibyśmy \(\det R=0_K\).
+Stąd ma \(n\) pivotów i jest równa \(I_n\).
+Wniosek~\ref{cor:lin5-pivoty-odwracalnosc}
+daje odwracalność \(A\).
+Równoważność odwracalności,
+pełnego rzędu i istnienia bazy z kolumn
+wynika z
+Twierdzenia~\ref{thm:lin4-odwracalnosc-kryteria}
+i wzoru wymiarowego.
+Dla \(n=0\) wszystkie warunki zachodzą,
+a \(I_0^{-1}=I_0\).
+\end{proof}
+
+\begin{wniosek}[Wyznacznik a podobieństwo]
+\label{cor:lin6-podobienstwo}
+Niech \(n\in\mathbb N_0\),
+\(A\in\operatorname{Mat}_{n\times n}(K)\),
+a \(P\in\operatorname{Mat}_{n\times n}(K)\)
+będzie odwracalna. Wtedy
+\[
+ \det(P^{-1}AP)=\det A.
+\]
+W szczególności dla endomorfizmu
+\(T\colon V\to V\) skończenie wymiarowej
+przestrzeni wektorowej \(V\) nad \(K\),
+wyznacznik macierzy \(T\) jest
+niezależny od wyboru uporządkowanej bazy.
+Liczbę tę oznaczamy przez \(\det T\).
+\end{wniosek}
+\begin{proof}
+Z multiplikatywności wyznacznika
+i poprzedniego twierdzenia mamy
+\[
+ \det(P^{-1}AP)
+ =(\det P)^{-1}\det A\det P
+ =\det A.
+\]
+Macierze tego samego endomorfizmu
+w różnych uporządkowanych bazach
+są podobne na mocy
+Wniosku~\ref{cor:lin4-podobienstwo}.
+Daje to niezależność \(\det T\) od bazy.
+\end{proof}
+
+\begin{uwaga}[Wyznacznik nie jest liniowy w całej macierzy]
+\label{rem:lin6-nieliniowosc}
+Wieloliniowość w poszczególnych wierszach
+nie oznacza liniowości funkcji
+\(A\mapsto\det A\). Na przykład nad
+\(\mathbb R\), dla \(n=2\),
+\[
+ \det(I_2+I_2)=\det(2I_2)=4,
+ \qquad \det I_2+\det I_2=2.
+\]
+Z ogólnej wieloliniowości wynika
+\(\det(\lambda A)=\lambda^n\det A\),
+a nie \(\lambda\det A\).
+Wzór potęgowy obowiązuje też przy \(n=0\),
+bo wówczas \(\lambda^0=1_K\)
+(również dla \(\lambda=0_K\) przez
+konwencję pustego iloczynu).
+\end{uwaga}
+
+\section{Rozwinięcie Laplace'a i macierz dołączona}
+\label{sec:lin6-laplace}
+
+\begin{definicja}[Minory i dopełnienia algebraiczne]
+\label{def:lin6-minor}
+Niech \(n\geq1\) i
+\(A=(a_{ij})\in\operatorname{Mat}_{n\times n}(K)\).
+Dla \(1\leq i,j\leq n\) przez
+\(A_{\widehat i,\widehat j}\)
+oznaczamy macierz rozmiaru
+\((n-1)\times(n-1)\), powstałą po
+usunięciu wiersza \(i\) i kolumny \(j\),
+z zachowaniem kolejności pozostałych.
+Liczbę
+\(M_{ij}:=\det A_{\widehat i,\widehat j}\)
+nazywamy \emph{minorem} odpowiadającym
+pozycji \((i,j)\), a
+\[
+ C_{ij}:=(-1)^{i+j}M_{ij}
+\]
+jej \emph{dopełnieniem algebraicznym}.
+Dla \(n=1\) minor jest wyznacznikiem
+pustej macierzy, czyli \(1_K\).
+\end{definicja}
+
+\begin{twierdzenie}[Rozwinięcie Laplace'a]
+\label{thm:lin6-laplace}
+Niech \(n\geq1\) oraz
+\(A\in\operatorname{Mat}_{n\times n}(K)\).
+Dla każdego \(i\in\{1,\ldots,n\}\)
+i każdego \(j\in\{1,\ldots,n\}\)
+zachodzą wzory
+\[
+ \det A=\sum_{k=1}^{n} a_{ik}C_{ik},
+ \qquad
+ \det A=\sum_{k=1}^{n} a_{kj}C_{kj}.
+\]
+Są to odpowiednio rozwinięcia
+według wiersza \(i\) i kolumny \(j\).
+\end{twierdzenie}
+\begin{proof}
+W sumie definiującej wyznacznik
+grupujemy permutacje według wartości
+\(j=\sigma(i)\). Dla ustalonego \(j\)
+przyporządkowanie \(\sigma\)
+wyznacza bijekcję pomiędzy pozostałymi
+\(n-1\) indeksami wierszy i kolumn,
+czyli permutację indeksów macierzy
+\(A_{\widehat i,\widehat j}\).
+
+Po przeniesieniu wiersza \(i\)
+i kolumny \(j\) na pierwsze miejsca
+porządków indeksów wykonujemy odpowiednio
+\(i-1\) i \(j-1\) przesunięć sąsiednich.
+Z własności znaku permutacji
+otrzymujemy
+\[
+ \operatorname{sgn}(\sigma)
+ =(-1)^{(i-1)+(j-1)}
+  \operatorname{sgn}(\widetilde\sigma)
+ =(-1)^{i+j}
+  \operatorname{sgn}(\widetilde\sigma),
+\]
+gdzie \(\widetilde\sigma\) jest
+permutacją pozostałych indeksów.
+Suma składników z warunkiem
+\(\sigma(i)=j\) wynosi zatem
+\[
+ a_{ij}(-1)^{i+j}
+ \det A_{\widehat i,\widehat j}
+ =a_{ij}C_{ij}.
+\]
+Zsumowanie po \(j\) daje rozwinięcie
+według wiersza \(i\).
+Rozwinięcie według kolumny wynika
+ze wzoru wierszowego zastosowanego
+do \(A^{\mathsf T}\) oraz z równości
+\(\det A^{\mathsf T}=\det A\).
+Dla \(n=1\) pozostała macierz jest
+pusta, więc wzór daje po prostu
+\(\det(a_{11})=a_{11}\).
+\end{proof}
+
+\begin{definicja}[Macierz dołączona]
+\label{def:lin6-dolaczona}
+Dla \(n\geq1\) i
+\(A\in\operatorname{Mat}_{n\times n}(K)\)
+\emph{macierzą dołączoną} do \(A\)
+nazywamy transpozycję macierzy
+dopełnień algebraicznych:
+\[
+ \operatorname{adj}A=(C_{ji})_{1\leq i,j\leq n}.
+\]
+\end{definicja}
+
+\begin{twierdzenie}[Tożsamość dla macierzy dołączonej]
+\label{thm:lin6-dolaczona}
+Niech \(n\geq1\) i
+\(A\in\operatorname{Mat}_{n\times n}(K)\).
+Wtedy
+\[
+ A\,\operatorname{adj}A
+ =\operatorname{adj}A\,A
+ =(\det A)I_n.
+\]
+Jeżeli \(\det A\ne0_K\), to
+\[
+ A^{-1}=(\det A)^{-1}\operatorname{adj}A.
+\]
+\end{twierdzenie}
+\begin{proof}
+Wyraz \((i,j)\) iloczynu
+\(A\,\operatorname{adj}A\) jest
+\(\sum_{k=1}^{n}a_{ik}C_{jk}\).
+Dla \(i=j\) jest to rozwinięcie
+Laplace'a według wiersza \(i\),
+czyli \(\det A\).
+
+Dla \(i\ne j\) zastąpmy wiersz \(j\)
+macierzy \(A\) jej wierszem \(i\).
+Otrzymana macierz ma dwa równe wiersze,
+więc jej wyznacznik jest równy \(0_K\).
+Rozwijając ten wyznacznik według
+zastąpionego wiersza \(j\),
+otrzymujemy dokładnie
+\(\sum_k a_{ik}C_{jk}\).
+Dopełnienia algebraiczne tego wiersza
+są niezmienione, ponieważ powstają
+po usunięciu wiersza \(j\).
+Zatem elementy pozadiagonalne
+iloczynu są zerowe.
+
+Analogicznie rozwinięcie według kolumn
+i zastąpienie kolumny \(i\) kolumną \(j\)
+dowodzą
+\(\operatorname{adj}A\,A=(\det A)I_n\).
+Jeżeli wyznacznik jest niezerowy,
+wolno podzielić przez \(\det A\);
+otrzymujemy dwustronną odwrotność
+i wzór na \(A^{-1}\).
+\end{proof}
+
+\begin{przyklad}[Macierz dołączona rozmiaru dwa]
+\label{prz:lin6-adjugate-2}
+Dla \(A=\begin{pmatrix}a&b\\c&d\end{pmatrix}\)
+mamy
+\[
+ \operatorname{adj}A
+ =\begin{pmatrix}d&-b\\-c&a\end{pmatrix},
+ \qquad
+ A\,\operatorname{adj}A=(ad-bc)I_2.
+\]
+Jeśli \(ad-bc\ne0_K\), to
+\[
+ A^{-1}=\frac{1}{ad-bc}
+ \begin{pmatrix}d&-b\\-c&a\end{pmatrix}.
+\]
+Dla macierzy z
+Przykładu~\ref{prz:lin4-odwrotnosc-2}
+otrzymujemy ponownie
+\(\begin{pmatrix}1&-1\\-1&2\end{pmatrix}\).
+\end{przyklad}
+
+\section{Wzory Cramera i interpretacja geometryczna}
+\label{sec:lin6-cramer}
+
+\begin{twierdzenie}[Wzory Cramera]
+\label{thm:lin6-cramer}
+Niech \(n\geq1\),
+\(A\in\operatorname{Mat}_{n\times n}(K)\)
+będzie macierzą o \(\det A\ne0_K\),
+a \(b\in K^n\).
+Dla \(1\leq j\leq n\) oznaczmy
+przez \(A_j(b)\) macierz otrzymaną
+z \(A\) po zastąpieniu \(j\)-tej
+kolumny kolumną \(b\).
+Układ \(Ax=b\) ma dokładnie jedno
+rozwiązanie \(x\in K^n\), którego
+współrzędne są równe
+\[
+ x_j=\frac{\det A_j(b)}{\det A},
+ \qquad 1\leq j\leq n.
+\]
+\end{twierdzenie}
+\begin{proof}
+Na mocy
+Twierdzenia~\ref{thm:lin6-odwracalnosc}
+macierz \(A\) jest odwracalna,
+więc rozwiązanie \(x=A^{-1}b\)
+istnieje i jest jednoznaczne.
+Niech \(a_1,\ldots,a_n\) będą
+kolumnami \(A\). Równość \(Ax=b\)
+oznacza
+\(b=\sum_{k=1}^n x_ka_k\).
+
+Stosując liniowość wyznacznika
+w \(j\)-tej kolumnie, otrzymujemy
+\[
+ \begin{aligned}
+ \det A_j(b)
+ &=\det(a_1,\ldots,
+        \textstyle\sum_{k=1}^n x_ka_k,
+        \ldots,a_n)\\
+ &=\sum_{k=1}^n x_k
+   \det(a_1,\ldots,a_k,\ldots,a_n),
+ \end{aligned}
+\]
+gdzie \(a_k\) w drugim wierszu
+wstawiamy w miejsce \(j\)-tej kolumny.
+Dla \(k\ne j\) wyznacznik
+ma dwie identyczne kolumny i znika.
+Dla \(k=j\) jest równy \(\det A\).
+Zatem \(\det A_j(b)=x_j\det A\).
+Ponieważ \(\det A\ne0_K\),
+dzielenie daje wzór z tezy.
+\end{proof}
+
+\begin{przyklad}[Rozwiązanie układu wzorami Cramera]
+\label{prz:lin6-cramer-2}
+Niech \(K=\mathbb R\),
+\[
+ A=\begin{pmatrix}2&1\\1&1\end{pmatrix},
+ \qquad b=\begin{pmatrix}5\\3\end{pmatrix}.
+\]
+Ponieważ \(\det A=2-1=1\),
+układ ma jedno rozwiązanie.
+Obliczamy
+\[
+ \det A_1(b)
+ =\det\begin{pmatrix}5&1\\3&1\end{pmatrix}
+ =2,\qquad
+ \det A_2(b)
+ =\det\begin{pmatrix}2&5\\1&3\end{pmatrix}
+ =1.
+\]
+Zatem \(x_1=2\), \(x_2=1\).
+Sprawdzenie przez podstawienie daje
+\(2\cdot2+1=5\) oraz \(2+1=3\).
+Wzory Cramera wymagają kwadratowej
+macierzy o niezerowym wyznaczniku;
+nie zastępują ogólnej eliminacji
+dla układów prostokątnych lub osobliwych.
+\end{przyklad}
+
+\begin{uwaga}[Pole i orientacja nad \(\mathbb R\)]
+\label{rem:lin6-geometria}
+W przypadku \(\mathbb R^2\) wyznacznik
+\(\det(u\ v)=u_1v_2-u_2v_1\)
+jest zorientowanym polem równoległoboku
+rozpiętego przez kolumny \(u,v\):
+jego wartość bezwzględna jest polem,
+a znak rozróżnia orientację.
+Na przykład dla
+\(u=(1,0)^{\mathsf T}\) i
+\(v=(1,1)^{\mathsf T}\) pole wynosi \(1\).
+Zamiana kolejności kolumn odwraca
+orientację bez zmiany zwykłego pola.
+Interpretacja pola dotyczy tu ciała
+\(\mathbb R\), podczas gdy wszystkie
+wcześniejsze własności algebraiczne
+obowiązują dla dowolnego ciała \(K\).
+\end{uwaga}
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[>=Latex,scale=1.0]
+ \draw[->,gray] (-0.25,0) -- (3.6,0)
+   node[below right] {\(x\)};
+ \draw[->,gray] (0,-0.2) -- (0,2.35)
+   node[above left] {\(y\)};
+ \filldraw[fill=manifoldblue!13,draw=manifoldblue,thick]
+   (0,0)--(1.45,0)--(2.9,1.45)--(1.45,1.45)--cycle;
+ \draw[->,very thick,manifoldblue] (0,0)--(1.45,0)
+   node[midway,below] {\(u\)};
+ \draw[->,very thick,manifoldred] (0,0)--(1.45,1.45)
+   node[midway,above left] {\(v\)};
+ \fill (0,0) circle (1.2pt);
+ \node[below left] at (0,0) {\(0\)};
+\end{tikzpicture}
+\caption{Równoległobok rozpięty przez
+\(u=(1,0)^{\mathsf T}\) i \(v=(1,1)^{\mathsf T}\).
+Macierz o tych kolumnach ma wyznacznik \(1\).
+Rysunek ma charakter poglądowy.}
+\label{fig:lin6-rownoleglobok}
+\end{figure}
+
+\section{Podsumowanie}
+\label{sec:lin6-podsumowanie}
+
+Wyznacznik jest jedyną znormalizowaną
+funkcją wieloliniową i naprzemienną
+wierszy macierzy kwadratowej.
+Definicja przez permutacje działa
+nad każdym ciałem, także w charakterystyce \(2\).
+Operacje elementarne umożliwiają jego
+obliczenie przez redukcję do macierzy
+trójkątnej. Zachodzi
+\(\det(AB)=\det A\det B\),
+a macierz jest odwracalna dokładnie
+wtedy, gdy jej wyznacznik jest niezerowy.
+Rozwinięcie Laplace'a prowadzi do
+macierzy dołączonej i wzoru na odwrotność,
+natomiast wzory Cramera podają
+współrzędne rozwiązania zgodnego układu
+kwadratowego z odwracalną macierzą.
+Wyznacznik endomorfizmu nie zależy
+od wyboru jego uporządkowanej bazy.

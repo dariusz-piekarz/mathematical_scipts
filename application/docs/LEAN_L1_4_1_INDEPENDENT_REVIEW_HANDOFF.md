@@ -1,0 +1,130 @@
+# Atlas L1.4.1 — pakiet do niezależnego odbioru (aktualny kandydat)
+
+## Obecny kandydat po naprawie #14 — 198ececc
+
+**Oceniany kod, niezmienny SHA:** `198ececceb511c37b4feb23fe1e283392bc091ee`, fragment `L1.4`, podetap L1.4.1. **Status: `stabilizing` — ukończone nowe 3/3 PASS (15/15 zadań), bez niezależnej uwierzytelnionej recenzji.** `skeptical_review=pending`, `certificate=false`. L1.4.2 zablokowane.
+
+### Granice nowej poprawki i rzeczywiste testy
+
+- `lean_formalization.fragment`: zarejestrowany plik Lean jest odczytywany **najwyżej `MAX_LEAN_CHARS * 4 + 1` bajtów przed dekodowaniem**, zamiast nieograniczonego `Path.read_text`. Nadal `MAX_LEAN_CHARS=60000`, HTTP 413 dla za dużego pliku, HTTP 503 dla niepoprawnego UTF-8. Cztery bajty na znak wystarczają również dla najdłuższych znaków UTF-8. [Poprawka `93aa071a`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/93aa071af624e87072f34fdd5f5879896cce17a2).
+- `lean_results.fingerprint`: wybrany plik Lean haszowany SHA256 porcjami 64 KiB, a nie przez nieograniczone `read_bytes`; odmowa dla pliku przekraczającego 64 MiB na `stat` lub w trakcie czytania. Hash niezmienionej zawartości pozostaje ten sam. [Poprawka `198ececc`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/198ececceb511c37b4feb23fe1e283392bc091ee).
+- [RED #45283297636](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283297636) na starym kodzie `8e49671f` rzeczywiście `completed/failure`, **742 testy, dwa błędy dokładnie nowych regresji**, `AssertionError: unbounded Lean Path.read_text` i `AssertionError: unbounded selected Lean read_bytes`.
+- [GREEN #45283418687](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283418687) na nowym kodzie `198ececc` **`completed/success`**, 742 testy: **732 PASS, 10 sklasyfikowanych SKIP**, `unreviewed_skips=0`, obie nowe regresje `passed`, prawdziwy Chromium 509 rozdziałów, `javascript_errors=[]`. Pobrany [artefakt #14871231252](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283418687/artifacts/14871231252) ma poprawny SHA256 ZIP `fd467354956b3c1efec758bbd164ccc9257ba523d7d64077bbd34af6430cf53e` i pasujące imienne wyniki. Osobne szybkie [Windows #45283418670](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283418670) i [Lean inspection #45283418854](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283418854) `completed/success`.
+- **NOWE immutable 2+1 — POTWIERDZONE 3/3 PASS:** [#45283773343](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283773343) uruchomione [commitem kontrolnym `d618635a`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/d618635a36543f74a55ead4a594e8a4974d29310) z `candidate_sha=198ececceb511c37b4feb23fe1e283392bc091ee`, `fragment=L1.4`, `verified_branch_ancestry=true`. `completed/success` **23.11.2026, 23:07 UTC**, wszystkie **15/15 jobów `success`**, obejmujących 3 × (aplikacja i Chromium, natywne Windows, szybkie regresje Lean, realny Lean/Mathlib), `skeptical_contract` i `evidence`. Historyczne [3/3 #45273475902](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45273475902) dotyczy wyłącznie poprzedniego kodu `02190e10` i nie było przenoszone na nowe 3/3.
+- **W każdej z trzech rund:** `executed=742`, `passed=732`, `skipped=10` (jawnie sklasyfikowane), `unreviewed_skips=0`, `errors=0`, `failures=0`; jednakowe zestawy **742 unikatowych identyfikatorów** i identyczne wyniki testów w trzech raportach. Obie nowe regresje `test_oversize_lean_fragment_never_reads_full_text` oraz `test_oversize_registered_lean_file_rejected_without_read_bytes` mają `passed` we wszystkich. Chromium: **509 rozdziałów**, `javascript_errors=[]`. Lean: przypięty Mathlib `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`, **5 plików i 26 deklaracji**, `axiom_check=passed`, `semantic_certificate=false`. **26 deklaracji nie jest liczbą niezależnie zatwierdzonych par LaTeX–Lean.**
+- **Dowód końcowy:** rzeczywisty log zadania `evidence` zawiera `ATLAS_STABILIZATION` z `passes=[true,true,true]`, `problems=[]`, `status=stabilizing`, `skeptical_review=pending`, `certificate=false`. Pobrano i sprawdzono bajty czterech ZIP-ów, wszystkie SHA256 zgodne z metadanymi GitHub:
+  - [`atlas-unittest-1` #14870763291](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283773343/artifacts/14870763291): `98aa32761dddbf07609b496120f15bf9782d39d4116f3c1ce9e0b7a536458ef5`;
+  - [`atlas-unittest-2` #14869299106](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283773343/artifacts/14869299106): `56e1d8cd40b995e920524f226114038628fdc7abcdb60e83344055f88aa15b13`;
+  - [`atlas-unittest-3` #14871077859](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283773343/artifacts/14871077859): `4c3c5b8586b036a3fe85c1c73e46ceac60139ee936f922cababd52ad3018ceaa`;
+  - [`atlas-validation-status` #14871696734](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283773343/artifacts/14871696734): `5055cb0b6271c9f331c535180d66e37963a95a1324e6d7296fdea9eb09e0354f`. Otwarty `atlas_validation_status.json` ma poprawny pełny SHA, 3/3, pustą listę problemów i nie-certifying `certificate=false`. Same weryfikacje bajtów nie poświadczają osoby recenzenta.
+- **Dryf gałęzi:** przy porównaniu kandydata z HEAD `7409ad93` późniejsze zmiany w `application/` dotyczyły jedynie konfiguracji wyboru SHA oraz dokumentacji; brak zmian backendu, testów, formalizacji, kanonicznych plików logicznych lub kluczowych workflow Atlas/Lean. To nie daje niezależnej aprobaty.
+
+
+
+### Recenzent musi zweryfikować
+
+1. Dokładny oceniany SHA i obie regresje (RED i GREEN), odczyt ograniczony bajtowo, obsługę Unicode oraz ciągłość fingerprintów dla niezmienionych plików.
+2. Wszystkie trzy rundy nowego 2+1, rzeczywisty Lean/Mathlib z audytem aksjomatów, natywne Windows i Chromium, `skips`, `skeptical_contract`, `evidence`; nie pomylić SHA kontrolnego commitu z SHA kodu.
+3. Pozostałe ryzyka TOCTOU z [#12](https://github.com/dariusz-piekarz/mathematical_scipts/issues/12), kanonicznego TeX z [#13](https://github.com/dariusz-piekarz/mathematical_scipts/issues/13), brak atomowego snapshotu i `certificate=false`.
+4. Wydać osobną, **autentykowaną i niezależną** decyzję `approve` lub `request changes` przypiętą do dokładnego SHA po 3/3. Autor, AI ani niezaufany JSON nie mogą tego zastąpić. [Issue odbiorowy #10](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10), [issue defektu #14](https://github.com/dariusz-piekarz/mathematical_scipts/issues/14), [odrębny LST-02 #11](https://github.com/dariusz-piekarz/mathematical_scipts/issues/11).
+
+---
+
+## Archiwum: 3/3 PASS dla historycznego SHA 02190e10 (nie bieżącego kodu)
+
+## Aktualny SHA po poprawce zasobów #13 — 3/3 PASS, niezależny odbiór nadal oczekiwany
+
+**Kandydat:** `02190e107a6305bc7b73334a566de25f9216584d` (niezmienny commit). **Fragment:** `L1.4`; podetap architektury L1.4.1.  
+**Status:** `stabilizing` po rzeczywistych **3/3 PASS** na tym SHA; brak autentykowanej niezależnej recenzji. `skeptical_review=pending`, `certificate=false`. Nie awansować do `stable` ani L1.4.2.  
+**Dziennik:** [issue #13 — bounded canonical TeX hashing](https://github.com/dariusz-piekarz/mathematical_scipts/issues/13), [issue #10 — obligatory review](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10), [issue #11 — separate LST-02 semantic review](https://github.com/dariusz-piekarz/mathematical_scipts/issues/11).
+
+### Co zmieniło się względem ca6165bc
+
+- `application/backend/lean_formalization.py::_source_file_current` wcześniej wykonywała `hashlib.sha256(path.read_bytes())`. Teraz fizyczny kanoniczny TeX haszowany jest porcjami po 64 KiB, a pliki przekraczające 16 MiB są odrzucane (kontrola wielkości przed i w trakcie czytania).
+- `application/tests/test_lean_formalization.py`: dwie nowe regresje, jedna wykrywająca zakaz nieograniczonego `Path.read_bytes` i zmianę pojedynczego bajtu pliku 4 MiB, druga sprawdzająca odmowę dla pliku większego niż 16 MiB.
+- **RED** [GitHub Actions #45272887609](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45272887609) na `eda06eb9`: rzeczywiste `FAILED (failures=1, skipped=10)` z `AssertionError: unbounded Path.read_bytes`. **GREEN** [CI aplikacji #45273085659](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45273085659): `completed/success`, **740** testów Python, `skipped=10`, `unreviewed_skips=0`, obie nowe regresje `ok`; Chromium **509** rozdziałów, `javascript_errors=[]`. [Szybkie regresje Lean #45273085385](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45273085385) `completed/success`.
+- **Aktualne 2+1** [#45273475902](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45273475902), uruchomione z [commita kontrolnego `ffc2c8cf`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/ffc2c8cfd4df94017b0700944d81cd967f9aa5e9) dla dokładnego `candidate_sha=02190e107a6305bc7b73334a566de25f9216584d`, `fragment=L1.4`: **`completed/success` 23.11.2026 o 22:02 UTC, 15/15 zadań PASS**. Wszystkie trzy kompletne rundy aplikacji, natywnego Windows, szybkiej inspekcji Lean, realnego Lean/Mathlib, `skeptical_contract` i `evidence` zakończyły się sukcesem. **Nie przenosić 3/3** z historycznego `ca6165bc`; jest to nowy niezależny wynik na `02190e10`.
+- **Dowody z końcowego logu `evidence`:** `ATLAS_STABILIZATION` zawiera `passes=[true,true,true]`, `problems=[]`, `status=stabilizing`, `skeptical_review=pending`, `certificate=false`. Każda runda: **740 testów**, `skips=10`, `unreviewed_skips=0`; obie regresje `test_canonical_tex_sha_is_streamed_without_read_bytes` i `test_oversize_canonical_tex_is_rejected_before_hashing` = `ok`; Chromium **509** rozdziałów, `javascript_errors=[]`. Lean 4.26.0, Mathlib `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`, **5 plików / 26 deklaracji**, `axiom_check=passed`, `semantic_certificate=false`. To kompilacja deklaracji, **nie 26 zweryfikowanych semantycznie mapowań**.
+- **Końcowy artefakt:** [`atlas-validation-status` #14866499415](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45273475902/artifacts/14866499415), digest ZIP zadeklarowany przez GitHub `sha256:f24ce6f39473bf1b921569647a12dfe17f4c5f7fbf683782d8060e306a1abc44`. Treść JSON zweryfikowana w logu `evidence`; nie deklaruje się osobnej niezależnej weryfikacji bajtów ZIP.
+- **Dryf gałęzi:** [porównanie ocenianego SHA do późniejszego `8066d101`](https://github.com/dariusz-piekarz/mathematical_scipts/compare/02190e107a6305bc7b73334a566de25f9216584d...8066d1014d1e4a53a91526eb76f7721608e2ad39) obejmuje 14 commitów i 11 zmienionych plików. W `application/` dotknięto wyłącznie konfiguracji sterującej i dokumentacji. Nie zmieniono backendu, frontendu, testów, `application/lean/`, kanonicznych źródeł LST-01/LST-02 ani krytycznych workflow Atlas/Lean. To nie jest niezależna recenzja.
+- W obecnym rejestrze są **9 mapowań**, 5 dla LST-01 i 4 `needs_review` dla LST-02; przypięte źródła mają około 31–32 tys. znaków każde, a więc znacznie mniej niż limit. Nowa kontrola ogranicza RAM i łączną długość jednego odczytu, ale **nie tworzy atomowej migawki plików/SQLite**, nie poświadcza semantyki i nie oznacza pełnej izolacji procesu.
+
+### Wymagania dla recenzenta na nowym SHA
+
+1. Odtworzyć kod i testy z dokładnego `02190e107a6305bc7b73334a566de25f9216584d`, nie z ruchomej gałęzi. Sprawdzić konsekwencje limitu 16 MiB, obsługę błędów I/O, wczesną odmowę dla dużego pliku oraz wykrywanie zmiany małego pliku.
+2. Sprawdzić aktualny wynik workflow #45273475902: trzy kompletne rundy z aplikacją, Chromium, Windows, prawdziwym Lean/Mathlib i audytem aksjomatów oraz sceptycznym kontraktem i `evidence`. Nie ufać samemu oznaczeniu koloru bez `candidate_sha` w raportach.
+3. Ponowić weryfikację negatywnych scenariuszy TOCTOU z #12, zatwierdzeń i cofnięć manifestu, zmian SQLite i ścieżek, konfliktów etykiet, ukrywania `proof_status`, ograniczeń snapshotu i `certificate=false`.
+4. Dopiero po pełnym 3/3 wydać **rzeczywiście niezależną i uwierzytelnioną** decyzję `approve` lub `request changes` z pełnym SHA w GitHub/chronionym kanale. Autor, asystent, CI i niesygnowany JSON nie mogą sami udzielić niezależnej aprobaty.
+
+---
+
+## Archiwum: historyczny kandydat ca6165bc — 3/3 PASS na starszym kodzie
+
+**Aktualny kandydat kodu:** `ca6165bcd0f59aa6fb836e1922b51aeba51be193`  
+**Gałąź:** `biblioteka-matematyczna-iteracja-6` (ruchomy HEAD; **nie** jest przedmiotem odbioru)  
+**Zakres:** odczytowy raport rozdziałowy powiązań kanonicznego LaTeX-u z rejestrem Lean  
+**Stan techniczny (23.11.2026, 20:02 UTC):** **3/3 pełnych rund 2+1 PASS** na dokładnym SHA `ca6165bcd0f59aa6fb836e1922b51aeba51be193`; `prepare`, wszystkie 12 zadań rund, `skeptical_contract` i `evidence` zakończyły się `success`.  
+**Stan formalny:** `stabilizing` najwyżej po 3/3, niezależna uwierzytelniona recenzja nadal **oczekiwana**. `certificate=false`.  
+**Odbiór:** [issue #10](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10); [naprawiona usterka #12](https://github.com/dariusz-piekarz/mathematical_scipts/issues/12).  
+**Właściwa stabilizacja:** [Atlas 2+1 #45252666627](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45252666627), wywołana kontrolnym commitem `fdc102952a99fb726a31f9b717afdb82c9af134c` z `candidate_sha=ca6165bc...` oraz `fragment=L1.4`.
+
+## 1. Co dokładnie podlega recenzji
+
+Funkcja `backend.lean_chapter_report.chapter_report` i endpoint `GET /api/lean/chapter-report?module_id=LST-01` raportują źródłowe powiązania; nie wykonują Lean, nie odczytują historii kompilacji, nie certyfikują zgodności twierdzeń z LaTeX-em. Flagi `run_history_checked=false`, `dependency_fingerprint_checked=false`, `proof_status_included=false` oraz `certificate=false` są celowe. `ready` nie oznacza `compiled`; `statement_approved` nie oznacza formalnego certyfikatu semantycznego.
+
+Bieżący rejestr obejmuje **9 mapowań**: LST-01 — 5, LST-02 — 4 z `statement_status=needs_review`, LA-01 — 0. Liczba **26 deklaracji Lean w 5 plikach** w historycznym, faktycznym CI LST-02 jest inną jednostką niż liczba mapowań; nie dowodzi zakończenia pilotażu 20–30. Zewnętrzna ocena czterech nowych mapowań LST-02 należy osobno do [issue #11](https://github.com/dariusz-piekarz/mathematical_scipts/issues/11).
+
+Główne źródła kodu na wskazanym SHA:
+- `application/backend/lean_chapter_report.py`, `lean_catalog.py`, `lean_source_provenance.py`, `lean_formalization.py` i `api.py`;
+- `application/tests/test_lean_catalog.py` (w szczególności `test_l14_draft_tex_changed_after_catalog_downgrades_draft` i `test_l14_draft_with_unchanged_canonical_tex_stays_draft`), `test_lean_http.py`;
+- `application/lean/manifest.json`, rozdziały `chapters/pl/logic_and_set_theory/`, `.github/workflows/atlas-stabilization.yml` i `.github/workflows/lean-formalization.yml`.
+
+## 2. Reprodukcja: właściwy SHA, właściwy workflow
+
+```bash
+git fetch origin biblioteka-matematyczna-iteracja-6
+git cat-file -t ca6165bcd0f59aa6fb836e1922b51aeba51be193
+git show ca6165bcd0f59aa6fb836e1922b51aeba51be193:application/backend/lean_chapter_report.py
+git show ca6165bcd0f59aa6fb836e1922b51aeba51be193:application/tests/test_lean_catalog.py
+git show ca6165bcd0f59aa6fb836e1922b51aeba51be193:application/lean/manifest.json
+gh run view 45252666627 -R dariusz-piekarz/mathematical_scipts --json status,conclusion,headSha
+gh run download 45252666627 -R dariusz-piekarz/mathematical_scipts -n atlas-validation-status -D /tmp/atlas-l141
+```
+
+**Ważne:** `headSha` workflow wskazuje commit **kontrolny** `fdc10295...`, a nie oceniany SHA. Weryfikacja celu musi użyć `candidate_sha` z wygenerowanego `atlas_validation_status.json` oraz `prepare.outputs.sha`, następnie wszystkich trzech pełnych rund aplikacji, Windows, szybkich regresji, prawdziwego Lean/Mathlib, sceptycznego kontraktu i zadania `evidence`. Kontrolne `fragment=L1.4` to poprawna składnia selektora obejmująca podetap L1.4.1; próba z `fragment=L1.4.1` została odrzucona w `prepare` [#45252342342](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45252342342) i nie liczy się jako PASS.
+
+[Pełne CI aplikacji #45251663688](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45251663688) na `ca6165bc` zakończyło się sukcesem: 738 testów Python, 10 sklasyfikowanych pominięć, `unreviewed_skips=0`, Chromium 509 rozdziałów, bez błędów JavaScript. Jest to **osobny** sukces CI, nie zastępuje kompletu 2+1. Poprzedni [3/3 #45181138327](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327) dotyczył wyłącznie historycznego `94a7b4a1e592b1b0504b881f9c016004786ca6d9`, przed poprawką #12.
+
+### Wynik końcowy rzeczywistego 2+1 (weryfikacja logu `evidence`)
+
+[Workflow #45252666627](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45252666627) zakończony `completed/success` 23.11.2026 o 20:02 UTC. Zadanie `evidence` wypisało rzeczywisty rekord `ATLAS_STABILIZATION`: `candidate_sha=ca6165bc...`, `fragment=L1.4`, `passes=[true,true,true]`, `problems=[]`, `status=stabilizing`, `skeptical_review=pending`, `certificate=false`. Łącznie 15/15 zadań `success`.
+
+W **każdej** z trzech rund: `738` testów Python, `10` sklasyfikowanych pominięć, `unreviewed_skips=0`; Chromium przejrzał `509` rozdziałów bez błędów JavaScript; natywne zadania Windows, szybkie regresje i prawdziwy Lean/Mathlib `success`. W logu `lean independent pass 3 / lean-pilot` potwierdzono przypięty Mathlib `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`, `files=5`, `theorems=26`, `axiom_check=passed`, `semantic_certificate=false`. Jest to 26 **deklaracji**, a nie 26 mapowań semantycznych.
+
+[Końcowy artefakt `atlas-validation-status`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45252666627/artifacts/14855289830), digest ZIP deklarowany przez GitHub: `sha256:9b4feae298d747b0af3c03c73b65865d8c1e8c67140ec9f04e66c165a767818b`. Potwierdzono treść statusu w logu `evidence`; nie oznacza to osobnej weryfikacji bajtów pobranego ZIP.
+
+[Porównanie ze stanem gałęzi `a4eb80db`](https://github.com/dariusz-piekarz/mathematical_scipts/compare/ca6165bcd0f59aa6fb836e1922b51aeba51be193...a4eb80dbff7da27a19358612a1d3e71ccc95470a): `67` późniejszych commitów, `41` zmienionych plików. **Brak zmian** w `application/backend/`, `application/frontend/`, `application/tests/`, `application/scripts/`, `application/lean/`, źródłowym LST-01/LST-02 oraz krytycznych workflow Atlas/Lean. Zmienione zostały dokumenty odbioru i konfiguracja kontrolna, ale nie kod oceniany w tej stabilizacji. To porównanie nie stanowi niezależnego review.
+
+**Brama formalna nadal zamknięta:** brak uwierzytelnionej decyzji niezależnego recenzenta w [issue #10](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10); [PR #7](https://github.com/dariusz-piekarz/mathematical_scipts/pull/7) bez zgłoszonego przeglądu. `stable` i L1.4.2 pozostają niedostępne, `certificate=false`.
+
+## 3. Macierz kontroli negatywnych i pozytywnych
+
+| Scenariusz | Oczekiwany skutek |
+| --- | --- |
+| Uszkodzone `documents.sha256` lub nietekstowe źródło | Odmowa albo `stale`, bez aprobaty |
+| Manifest: cofnięcie `approved`, dopisanie/usunięcie wpisu, zmiana ścieżki przy identycznych bajtach | `changed_manifest_during_report` i `stale/needs_review` |
+| SQLite: zmiana `entities.title`, `end_offset`, właściciela etykiety | `changed_index_binding`, `stale/needs_review` |
+| SQLite: nowa spójna generacja `documents.content` i `sha256` podczas raportu | `changed_during_report`, `stale/needs_review` |
+| `ready` bez sprawdzalnej ścieżki kanonicznego TeX | `unverifiable_canonical_source`, `stale/needs_review` |
+| TeX zmieniony **po katalogu** dla `ready` | `unverifiable_canonical_source`, `stale/needs_review` |
+| TeX zmieniony **po katalogu** dla `draft` z jawną ścieżką (nowa regresja #12) | `draft=0, stale=1`, `unverifiable_canonical_source`, bez `approved` |
+| TeX niezmieniony dla `draft` z jawną ścieżką (nowa regresja pozytywna #12) | `draft=1`, `statement_status=needs_review`, bez `approved` |
+| Przemycony `proof_status=compiled`, log i `certificate=true` w katalogu | Ścisła projekcja pól, bez wykonania i zawsze `certificate=false` |
+
+**Dowód RED/GREEN:** [CI RED #45251355545](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45251355545) na `4cb894fd` odtworzył defekt; [poprawka `c84b00bc`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/c84b00bc6258fd08256afc60c3913bcbf8512621) i [regresja pozytywna `ca6165bc`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/ca6165bcd0f59aa6fb836e1922b51aeba51be193) są objęte zielonym CI #45251663688.
+
+## 4. Granice bezpieczeństwa i kryterium odbioru
+
+Kolejność odczytów SQLite, rejestru i pliku systemowego **nie tworzy atomowego snapshotu**. Podmiana po ostatniej kontroli lub szybka podmiana i cofnięcie może pozostać niewykryta. Recenzent musi samodzielnie ocenić, czy ograniczenie jest dopuszczalne dla **lokalnego odczytowego endpointu diagnostycznego**. To nie jest sandbox, atestacja kryptograficzna ani zewnętrzna recenzja zgodności Lean–LaTeX.
+
+Wymagana decyzja `approve` lub `request changes` od **rzeczywiście niezależnego, uwierzytelnionego recenzenta**, przypięta do pełnego `ca6165bcd0f59aa6fb836e1922b51aeba51be193`, zawierająca ocenę powyższych testów i ostatecznego 3/3. Komentarz autora, AI, samodzielnie ustawiona flaga JSON i zielone testy nie spełniają tego warunku. Do tej decyzji utrzymać `stabilizing` i `certificate=false`, nie rozpoczynać L1.4.2 ani LA-01. Każda późniejsza zmiana ocenianego kodu wymaga nowego kandydata i nowego 2+1.

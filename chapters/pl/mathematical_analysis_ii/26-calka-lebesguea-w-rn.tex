@@ -1,0 +1,1185 @@
+\chapter{Całka Lebesgue'a w przestrzeni euklidesowej}
+\label{ma2:ch:lebesgue-euclidean}
+
+Celem rozdziału jest przygotowanie do obliczania
+całek na zbiorach $\R^n$, a następnie na
+krzywych, powierzchniach i podrozmaitościach.
+W rozdziale \ref{ma2:ch:riemann-integral} zdefiniowano
+całkę Riemanna na prostokątach i zawartość Jordana.
+Całka Lebesgue'a umożliwia rozszerzenie tego
+rachunku na dowolne zbiory mierzalne, funkcje
+nieograniczone i granice ciągów funkcji.
+Pełna konstrukcja miary i całki znajduje się w
+\atlasref{ME-04::ch:lebesgue}{teorii miary i całki, rozdział 4}
+oraz \atlasref{ME-07::ch:calkowanie-lebesgue}{rozdziale 7}.
+Przytoczymy potrzebne definicje i twierdzenia,
+nie powtarzając konstrukcji abstrakcyjnej.
+W całej dalszej części rozpatrujemy funkcje skalarne;
+pola wektorowe o skończenie wielu współrzędnych
+pojawią się w zastosowaniach geometrycznych.
+
+\section{Intuicja: grupowanie punktów według wartości funkcji}
+
+W całce Riemanna dzieliliśmy prostokąt
+na coraz mniejsze komórki i na każdej
+przybliżaliśmy funkcję stałą. Możemy jednak
+odwrócić kolejność tych czynności: najpierw
+ustalić przedziały wartości funkcji, a potem
+zmierzyć zbiory punktów, w których funkcja
+przyjmuje wartości z danego przedziału.
+Zbiory te nie muszą być prostokątami,
+spójne ani mieć gładkiego brzegu.
+
+Niech $A\subseteq\R^n$ będzie mierzalny,
+a $f:A\to[0,\infty)$ mierzalna.
+Dla przykładu wybierzmy krok wysokości
+$h>0$ i zbiory
+\[
+ A_j=\{x\in A:jh\le f(x)<(j+1)h\},
+ \qquad j=0,1,\ldots.
+\]
+Na $A_j$ funkcję przybliżamy od dołu
+wartością $jh$. Wkład tej grupy wynosi
+$jh\lambda_n(A_j)$ dla $j\ge1$;
+grupa $A_0$ wnosi zero, także gdy ma
+nieskończoną miarę. W definicji całki
+będziemy używać skończonych funkcji prostych.
+Dla funkcji nieograniczonej najpierw
+ograniczymy wysokość, a następnie
+będziemy zwiększać to ograniczenie.
+Formalnie dla $m\ge1$ i $f:A\to[0,\infty]$
+mierzalnej można przyjąć
+\[
+ s_m(x)=2^{-m}\left\lfloor
+  2^m\min\{f(x),m\}\right\rfloor.
+\]
+Funkcja $s_m$ jest mierzalna, ma skończenie
+wiele wartości i $0\le s_m\le f$.
+Ponieważ dyadyczna siatka wartości dla
+$m+1$ rozdrabnia siatkę dla $m$, a obcięcie
+następuje na większej wysokości, mamy
+$s_m\le s_{m+1}$. Ściślej, $s_m(x)$
+jest wielokrotnością $2^{-(m+1)}$ nie większą
+niż $\min\{f(x),m+1\}$, więc nie przekracza
+$s_{m+1}(x)$. Dla skończonego $f(x)$
+od pewnego miejsca błąd jest mniejszy od
+$2^{-m}$, a dla $f(x)=+\infty$ mamy $s_m(x)=m$.
+Zatem $s_m\uparrow f$ i na mocy twierdzenia
+\ref{ma2:thm:lebesgue-monotone}
+całki z $s_m$ dążą do całki z $f$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=4.5cm,y=3.0cm,>=stealth]
+ \begin{scope}
+  \fill[blue!12] (0,0) rectangle (.25,.4375);
+  \fill[blue!12] (.25,0) rectangle (.5,.75);
+  \fill[blue!12] (.5,0) rectangle (.75,.9375);
+  \fill[blue!12] (.75,0) rectangle (1,1);
+  \foreach \u/\v/\h in {0/.25/.4375,.25/.5/.75,.5/.75/.9375,.75/1/1}{
+   \draw[blue!65!black] (\u,0) rectangle (\v,\h);
+  }
+  \draw[blue!85!black,very thick,domain=0:1,samples=61]
+    plot (\x,{2*\x-\x*\x});
+  \draw[->] (-.05,0)--(1.13,0) node[right] {$x$};
+  \draw[->] (0,-.04)--(0,1.14) node[above] {$f(x)$};
+  \node[below] at (0,0) {$0$};
+  \node[below] at (1,0) {$1$};
+  \node[above] at (.5,1.18) {\small Podział dziedziny};
+ \end{scope}
+ \begin{scope}[xshift=6.3cm]
+  \foreach \j/\col in {1/20,2/35,3/55}{
+    \pgfmathsetmacro{\u}{1-sqrt(1-\j/4)}
+    \pgfmathsetmacro{\v}{1-sqrt(1-(\j+1)/4)}
+    \filldraw[fill=teal!\col,draw=teal!70!black]
+     (\u,0) rectangle (\v,{\j/4});
+  }
+  \draw[teal!80!black,very thick,domain=0:1,samples=61]
+   plot (\x,{2*\x-\x*\x});
+  \foreach \j in {1,2,3,4}{
+   \pgfmathsetmacro{\u}{1-sqrt(1-\j/4)}
+   \draw[gray,densely dashed] (0,{\j/4})--(\u,{\j/4});
+   \draw[gray,densely dashed] (\u,{\j/4})--(\u,0);
+  }
+  \draw[->] (-.05,0)--(1.13,0) node[right] {$x$};
+  \draw[->] (0,-.04)--(0,1.14) node[above] {$f(x)$};
+  \node[below] at (0,0) {$0$};
+  \node[below] at (1,0) {$1$};
+  \node[above] at (.5,1.18) {\small Podział wartości};
+ \end{scope}
+\end{tikzpicture}
+\caption{Dwa sposoby przybliżania funkcji
+$f(x)=2x-x^2$ na $[0,1]$.
+Po lewej komórki dziedziny i wysokości
+odpowiadające górnej sumie Darboux; po prawej przedziały wartości
+o długości $1/4$ i odpowiadające im zbiory
+w dziedzinie. Prawy rysunek ilustruje
+przybliżenie funkcją prostą od dołu;
+wartość $1$ w punkcie $x=1$ pominięto
+na rysunku, ponieważ punkt ma miarę zero.}
+\label{ma2:fig:lebesgue-value-partition}
+\end{figure}
+
+Drugi sposób nie oznacza, że całka Lebesgue'a
+jest definiowana przez geometryczne poziomice
+gładkich funkcji. Wymaga jedynie mierzalności
+przeciwobrazów przedziałów. Może więc
+obejmować funkcje o gęstych zbiorach
+nieciągłości. Przykładowo funkcja
+charakterystyczna liczb wymiernych na
+$[0,1]$ ma tylko dwie wartości: $0$ i $1$.
+Zbiór, na którym przyjmuje $1$, jest
+przeliczalny i ma miarę zero, dlatego
+całka Lebesgue'a wynosi zero.
+Sumy Darboux nie rozpoznają tego faktu:
+w każdym niezdegenerowanym przedziale
+infimum wynosi $0$, a supremum $1$.
+
+Warto odróżnić grupowanie według rozłącznych
+przedziałów wartości od wzoru warstwowego,
+w którym mierzymy nakładające się zbiory
+$\{f>t\}$ dla kolejnych wysokości $t$.
+Oba podejścia prowadzą do tej samej
+całki, lecz są innymi sposobami jej obliczania.
+Wzór warstwowy sformułujemy w twierdzeniu
+\ref{ma2:thm:lebesgue-layer-cake}; dowód znajduje
+się w teorii miary i całki.
+
+\section{Miara i całka na zbiorach w \texorpdfstring{$\R^n$}{R\textasciicircum n}}
+
+Niech $n\ge1$ i niech $\lambda_n$ oznacza
+zupełną miarę Lebesgue'a na $\R^n$.
+Dla prostokąta $Q=\prod_{j=1}^n[a_j,b_j]$,
+gdzie $a_j\le b_j$, mamy
+\[
+ \lambda_n(Q)=\prod_{j=1}^n(b_j-a_j).
+\]
+Przyjmujemy standardowe własności miary
+Lebesgue'a, w szczególności niezmienniczość
+względem przesunięć, przeliczalną addytywność
+i zupełność
+(\atlasref{ME-04::thm:lebesgue-exists}{twierdzenie o istnieniu miary}).
+
+\begin{definicja}
+\label{ma2:def:lebesgue-domain-integral}
+Niech $A\subseteq\R^n$ będzie mierzalny.
+Dla mierzalnej funkcji nieujemnej
+$f:A\to[0,\infty]$ definiujemy
+\[
+ \int_A f(x)\,\mathrm d\lambda_n(x)
+ =\sup\left\{
+ \sum_{j=1}^m c_j\lambda_n(A_j):
+ \ \sum_{j=1}^m c_j\chi_{A_j}\le f,\quad
+ c_j\in(0,\infty)
+ \right\},
+\]
+gdzie $A_j$ są parami rozłącznymi
+mierzalnymi podzbiorami $A$, $m$ jest
+skończone, a do supremum dołączamy wartość
+$0$ odpowiadającą funkcji zerowej.
+Dla mierzalnej funkcji rzeczywistej $f$
+kładziemy $f^+=\max(f,0)$ i $f^-=\max(-f,0)$.
+Jeśli $\int_A |f|\,\mathrm d\lambda_n<\infty$,
+nazywamy $f$ całkowalną i definiujemy
+\[
+ \int_A f\,\mathrm d\lambda_n
+ =\int_A f^+\,\mathrm d\lambda_n
+  -\int_A f^-\,\mathrm d\lambda_n.
+\]
+\end{definicja}
+
+W szczególności dla $B\subseteq A$ mierzalnego
+\[
+ \int_A\chi_B(x)\,\mathrm d\lambda_n(x)=\lambda_n(B).
+\]
+Wynika to z definicji, ponieważ sama
+$\chi_B$ jest funkcją prostą, a całka funkcji
+prostej jest monotoniczna
+(\atlasref{ME-07::thm:simple-properties}{własności całek prostych}).
+Całka funkcji nieujemnej może mieć wartość
+$+\infty$; dla funkcji ze znakiem nie
+dopuszczamy różnicy $\infty-\infty$.
+
+\begin{stwierdzenie}[Przedłużenie przez zero]
+\label{ma2:prop:lebesgue-zero-extension}
+Dla mierzalnego $A\subseteq\R^n$ i mierzalnej
+funkcji $f:A\to\R$ (lub $f:A\to[0,\infty]$) niech
+\[
+ \widetilde f(x)=
+ \begin{cases}
+ f(x),&x\in A,\\
+ 0,&x\notin A.
+ \end{cases}
+\]
+Wówczas $\widetilde f$ jest mierzalna,
+a całka $f$ na $A$ jest równa całce
+$\widetilde f$ na $\R^n$, jeżeli $f$
+jest nieujemna lub całkowalna.
+\end{stwierdzenie}
+\begin{proof}
+Dla borelowskiego $B$ w przeciwdziedzinie
+(w przypadku wartości rozszerzonych przyjmujemy
+borelowskie sigma-ciało na $[0,\infty]$) przeciwobraz
+$\widetilde f^{-1}(B)$ jest równy
+$f^{-1}(B)$ lub $f^{-1}(B)\cup(\R^n\setminus A)$,
+w zależności od tego, czy $0\in B$.
+Oba zbiory są mierzalne, gdyż $A$
+jest mierzalny, a mierzalność $f$
+rozumiemy względem ograniczenia sigma-ciała do $A$.
+Dla $f\ge0$ funkcje proste pod $\widetilde f$
+są zerowe poza $A$, więc ich ograniczenia
+do $A$ dają dokładnie te same wartości całek
+prostych co w definicji
+\ref{ma2:def:lebesgue-domain-integral}.
+Odwrotnie, każdą funkcję prostą pod $f$
+przedłużamy przez zero. Supremum jest więc
+takie samo. Dla funkcji ze znakiem stosujemy
+wynik do $f^+$ i $f^-$ osobno; równość dla
+$|f|$ zapewnia również całkowalność przedłużenia.
+\end{proof}
+
+\section{Zgodność z całką Riemanna na zbiorach Jordana}
+
+Niech $A$ będzie ograniczonym zbiorem
+mierzalnym w sensie Jordana, a $Q$
+niezdegenerowanym prostokątem zawierającym $A$.
+Dla ograniczonej funkcji $f:A\to\R$
+całkę Riemanna na $A$ definiujemy jako
+całkę przedłużenia przez zero na $Q$,
+o ile ta istnieje. Oznaczymy ją przez $I_A(f)$.
+Zarówno istnienie całki, jak i jej wartość nie zależą od wyboru niezdegenerowanego $Q$.
+Istotnie, dla prostokątów $Q\subseteq Q'$
+zawierających $A$ rozdrabniamy $Q'$ wzdłuż
+ścian $Q$. Na każdej komórce poza $Q$
+przedłużenie jest zerowe poza ścianami,
+których domknięcie ma miarę zero.
+Z wniosku \ref{ma2:cor:riemann-box-null-change}
+takie ograniczenie jest całkowalne
+w sensie Riemanna i ma całkę zero.
+Twierdzenie o addytywności
+\ref{ma2:thm:riemann-box-additivity}
+daje równoważność istnienia obu całek
+i ich równość. Dla dowolnych dwóch
+prostokątów stosujemy ten argument do
+wspólnego większego prostokąta.
+
+\begin{twierdzenie}
+\label{ma2:thm:lebesgue-jordan-agreement}
+Jeżeli $A\subseteq\R^n$ jest ograniczonym
+zbiorem mierzalnym w sensie Jordana,
+a $f:A\to\R$ jest ograniczona i ciągła
+względnie na $A$, to $f$ jest całkowalna
+w sensie Riemanna i Lebesgue'a na $A$,
+a obie całki są równe.
+\end{twierdzenie}
+\begin{proof}
+Wybieramy $Q$ zawierający domknięcie $A$
+we wnętrzu. Z kryterium Jordana
+\ref{ma2:thm:jordan-criterion} wynika także
+mierzalność Lebesgue'a zbioru $A$. Przedłużenie przez zero
+jest ciągłe w każdym punkcie wnętrza $A$,
+gdyż w otoczeniu tego punktu pokrywa się
+z $f$. Jest również ciągłe poza domknięciem
+$A$, gdyż lokalnie jest zerowe.
+Zatem zbiór jego punktów nieciągłości
+jest zawarty w brzegu $\partial A$.
+Z kryterium Jordana
+\ref{ma2:thm:jordan-criterion}
+brzeg ma miarę Lebesgue'a zero.
+Przedłużenie jest ograniczone, więc
+kryterium Lebesgue'a dla całki Riemanna
+\ref{ma2:thm:riemann-box-lebesgue-criterion}
+zapewnia jej istnienie. Z twierdzenia
+\ref{ma2:thm:riemann-box-lebesgue}
+przedłużenie jest mierzalne i jego całki
+Riemanna i Lebesgue'a są równe.
+Ograniczenie do mierzalnego $A$ jest
+mierzalne, a stwierdzenie
+\ref{ma2:prop:lebesgue-zero-extension}
+daje żądaną zgodność na $A$.
+\end{proof}
+
+Wynik ten pozwala obliczać całki
+ograniczonych funkcji ciągłych na ograniczonych
+zbiorach Jordana za pomocą dowolnego
+z dwóch rachunków. W szczególności funkcja
+ciągła na zwartym zbiorze Jordana spełnia
+warunek ograniczoności. Na zbiorze niezamkniętym
+ciągłość nie wystarcza: funkcja $f(x)=1/x$
+na $(0,1]$ jest ciągła, lecz nieograniczona.
+Jej całkę omówimy w kontekście całek z osobliwościami.
+
+Jeśli $I_A(f)$ istnieje, to niezależnie od
+ciągłości $f$ twierdzenie
+\ref{ma2:thm:riemann-box-lebesgue} zastosowane
+do przedłużenia przez zero daje
+\[
+ I_A(f)=\int_A f(x)\,\mathrm d\lambda_n(x).
+\]
+W drugą stronę całkowalność Lebesgue'a
+nie zapewnia całkowalności Riemanna.
+Na $Q=[0,1]^n$ funkcja
+$\chi_{\mathbb Q^n\cap Q}$ jest równa zero
+poza przeliczalnym zbiorem, więc jej całka
+Lebesgue'a wynosi zero. Każdy niezdegenerowany
+podprostokąt zawiera punkty tego zbioru
+oraz jego dopełnienia, zatem wszystkie
+dolne sumy Darboux są zerowe, a wszystkie
+górne równe $1$. W kolejnych
+sekcjach rozważymy przechodzenie
+do granicy i całki na zbiorach
+niemierzalnych w sensie Jordana,
+lecz mierzalnych w sensie Lebesgue'a.
+
+
+\section{Własności i twierdzenia graniczne}
+
+W poniższych twierdzeniach $A\subseteq\R^n$
+jest mierzalny. Nie zakładamy, że $A$
+jest ograniczony ani że $\lambda_n(A)<\infty$.
+Dowody ogólnych twierdzeń są w teorii miary
+i całki; tu stosujemy je do $\lambda_n$
+ograniczonej do $A$.
+
+\begin{twierdzenie}[Liniowość i oszacowanie]
+\label{ma2:thm:lebesgue-linearity}
+Dla całkowalnych funkcji rzeczywistych $f,g$
+na $A$ i $\alpha,\beta\in\R$ funkcja
+$\alpha f+\beta g$ jest całkowalna i
+\[
+ \int_A(\alpha f+\beta g)\,\mathrm d\lambda_n
+ =\alpha\int_A f\,\mathrm d\lambda_n+
+ \beta\int_A g\,\mathrm d\lambda_n.
+\]
+Ponadto
+\[
+ \left|\int_A f\,\mathrm d\lambda_n\right|
+ \le\int_A|f|\,\mathrm d\lambda_n.
+\]
+Jeżeli $f\le g$ prawie wszędzie, to
+$\int_A f\,\mathrm d\lambda_n\le\int_A g\,\mathrm d\lambda_n$.
+\end{twierdzenie}
+Liniowość i oszacowanie są specjalizacją
+\atlasref{ME-08::thm:integral-linear-real}{twierdzenia o liniowości}.
+Monotoniczność wynika z liniowości i nieujemności
+całki $g-f$, po zmianie wartości na zbiorze zerowym,
+która nie wpływa na całkę
+(\atlasref{ME-07::thm:ae-integral-invariance}{niezmienniczość prawie wszędzie}).
+
+\begin{twierdzenie}[O zbieżności monotonicznej]
+\label{ma2:thm:lebesgue-monotone}
+Niech $f_j:A\to[0,\infty]$ będą mierzalne
+i $f_j(x)\le f_{j+1}(x)$ dla każdego $x\in A$.
+Jeżeli $f(x)=\sup_j f_j(x)$, to $f$ jest
+mierzalna i
+\[
+ \int_A f(x)\,\mathrm d\lambda_n(x)
+ =\lim_{j\to\infty}\int_A f_j(x)\,\mathrm d\lambda_n(x).
+\]
+Obie strony mogą być nieskończone.
+\end{twierdzenie}
+Dowód: \atlasref{ME-08::thm:mct}{twierdzenie Beppa Leviego}.
+
+\begin{twierdzenie}[Lemat Fatou]
+\label{ma2:thm:lebesgue-fatou}
+Dla dowolnego ciągu mierzalnych funkcji
+$f_j:A\to[0,\infty]$ zachodzi
+\[
+ \int_A\liminf_{j\to\infty} f_j(x)\,\mathrm d\lambda_n(x)
+ \le\liminf_{j\to\infty}\int_A f_j(x)\,\mathrm d\lambda_n(x).
+\]
+\end{twierdzenie}
+Dowód: \atlasref{ME-08::thm:fatou}{lemat Fatou w teorii miary i całki}.
+
+\begin{twierdzenie}[O zbieżności zmajoryzowanej]
+\label{ma2:thm:lebesgue-dominated}
+Niech $f_j,f:A\to\R$ będą mierzalne,
+$f_j\to f$ prawie wszędzie i niech
+$g:A\to[0,\infty]$ będzie mierzalna
+oraz całkowalna. Jeżeli $|f_j|\le g$
+prawie wszędzie dla każdego $j$, to $f_j$
+i $f$ są całkowalne oraz
+\[
+ \begin{aligned}
+ \lim_{j\to\infty}\int_A f_j(x)\,\mathrm d\lambda_n(x)
+ &=\int_A f(x)\,\mathrm d\lambda_n(x),\\
+ \lim_{j\to\infty}\int_A |f_j(x)-f(x)|\,\mathrm d\lambda_n(x)
+ &=0.
+ \end{aligned}
+\]
+\end{twierdzenie}
+Zbiór wyjątkowy można wybrać wspólny dla
+całego ciągu, biorąc przeliczalną sumę
+zbiorów zerowych. Dowody podano w
+\atlasref{ME-08::thm:dct}{twierdzeniu Lebesgue'a}
+oraz \atlasref{ME-08::cor:dct-l1}{jego wniosku o zbieżności w $L^1$}.
+
+\begin{wniosek}[Całkowanie na zmieniających się zbiorach]
+\label{ma2:cor:lebesgue-moving-sets}
+Niech $A_j,A\subseteq\R^n$ będą mierzalne.
+Jeżeli $f:\R^n\to\R$ jest całkowalna i
+$\chi_{A_j}\to\chi_A$ prawie wszędzie, to
+\[
+ \lim_{j\to\infty}\int_{A_j} f(x)\,\mathrm d\lambda_n(x)
+ =\int_A f(x)\,\mathrm d\lambda_n(x).
+\]
+Jeżeli natomiast $f:\R^n\to[0,\infty]$
+jest mierzalna, a $A_j\uparrow A$
+(tzn. $A_j\subseteq A_{j+1}$ oraz
+$A=\bigcup_j A_j$), to ta sama równość
+zachodzi również przy nieskończonej całce.
+\end{wniosek}
+\begin{proof}
+Przedłużenia ograniczeń $f|_{A_j}$ przez
+zero są równe $f\chi_{A_j}$ (przyjmujemy
+wartość zero poza $A_j$, także dla
+$f(x)=+\infty$).
+W pierwszym przypadku zbiegają prawie
+wszędzie do $f\chi_A$ i są zmajoryzowane
+przez $|f|$, więc stosujemy twierdzenie
+\ref{ma2:thm:lebesgue-dominated}.
+W drugim przypadku przedłużenia są
+nieujemne i rosną punktowo do $f\chi_A$;
+stosujemy twierdzenie
+\ref{ma2:thm:lebesgue-monotone}.
+W obu przypadkach identyfikujemy całki
+z całkami na odpowiednich zbiorach za pomocą
+stwierdzenia \ref{ma2:prop:lebesgue-zero-extension}.
+\end{proof}
+
+\begin{wniosek}[Małe zbiory i małe całki]
+\label{ma2:cor:lebesgue-absolute-cont}
+Niech $f:A\to\R$ będzie całkowalna.
+Dla każdego $\varepsilon>0$ istnieje
+$\delta>0$ takie, że dla każdego
+mierzalnego $B\subseteq A$ o
+$\lambda_n(B)<\delta$ zachodzi
+$\int_B |f(x)|\,\mathrm d\lambda_n(x)<\varepsilon$.
+\end{wniosek}
+\begin{proof}
+Funkcje $|f|\chi_{\{|f|>m\}}$ zbiegają
+punktowo do zera i są zmajoryzowane
+przez $|f|$. Z twierdzenia
+\ref{ma2:thm:lebesgue-dominated} wybieramy
+liczbę całkowitą $m\ge1$ taką, że
+całka na $\{|f|>m\}$ jest mniejsza
+od $\varepsilon/2$. Przyjmujemy
+$\delta=\varepsilon/(2m)$.
+Rozkładając $B$ na części, gdzie
+$|f|\le m$ i $|f|>m$, dostajemy
+\[
+ \int_B|f(x)|\,\mathrm d\lambda_n(x)
+ \le m\lambda_n(B)
+ +\int_{\{|f|>m\}}|f(x)|\,\mathrm d\lambda_n(x)
+ <\varepsilon.
+\]
+\end{proof}
+
+\section{Przykłady na zbiorach w \texorpdfstring{$\R^n$}{R\textasciicircum n}}
+
+\begin{przyklad}[Zbiór mierzalny, który nie jest zbiorem Jordana]
+\label{ma2:ex:lebesgue-fat-cantor-product}
+Niech $F\subseteq[0,1]$ będzie zbiorem
+Smitha--Volterry--Cantora z
+\atlasref{ME-04::ex:fat-cantor}{teorii miary i całki}.
+Jest to zwarty zbiór o pustym wnętrzu
+i mierze $\lambda_1(F)=1/2$.
+Dla $n\ge1$ połóżmy $A=F\times[0,1]^{n-1}$
+(dla $n=1$ przyjmujemy $A=F$).
+Zbiór $A$ jest zwarty jako skończony
+iloczyn zbiorów zwartych. Ma puste wnętrze,
+gdyż rzut na pierwszą współrzędną każdego
+niepustego otwartego podzbioru $\R^n$ jest
+niepustym otwartym podzbiorem $\R$, a $F$
+nie zawiera takiego zbioru. Z domkniętości
+$A$ i pustego wnętrza wynika $\partial A=A$. Obliczymy jego miarę
+bez korzystania z twierdzenia Fubiniego.
+
+W konstrukcji $F=\bigcap_{j\ge0}F_j$ zbiory
+$F_j$ są malejącymi skończonymi sumami
+rozłącznych domkniętych przedziałów
+o łącznej długości $1/2+2^{-j-1}$:
+na etapie $k$ usunięto łącznie $2^{-k-1}$,
+więc pozostała długość to
+$1-\sum_{k=1}^j2^{-k-1}=1/2+2^{-j-1}$.
+Zbiory $A_j=F_j\times[0,1]^{n-1}$
+są skończonymi sumami rozłącznych
+prostokątów, a każdy prostokąt ma miarę
+równą długości swojej pierwszej krawędzi.
+Stąd $\lambda_n(A_j)=1/2+2^{-j-1}$.
+Ponieważ $\chi_{A_j}\to\chi_A$ i wszystkie
+funkcje charakterystyczne są ograniczone
+przez $\chi_{[0,1]^n}$, twierdzenie
+\ref{ma2:thm:lebesgue-dominated} daje
+\[
+ \int_{[0,1]^n}\chi_A(x)\,\mathrm d\lambda_n(x)
+ =\lambda_n(A)=\frac12.
+\]
+Ponieważ $\lambda_n(\partial A)=1/2>0$,
+zbiór $A$ nie jest mierzalny w sensie
+Jordana, a $\chi_A$ nie jest całkowalna
+w sensie Riemanna na $[0,1]^n$, zgodnie
+z twierdzeniem \ref{ma2:thm:jordan-criterion}.
+\end{przyklad}
+
+\begin{przyklad}[Przesuwanie masy i koncentracja]
+\label{ma2:ex:lebesgue-concentration}
+Na $Q=[0,1]^n$ dla $j\ge1$ niech
+$f_j(x)=j^n\chi_{[0,1/j]^n}(x)$.
+Dla każdego $x\in Q\setminus\{0\}$
+istnieje dodatnia współrzędna $x_i$,
+więc dla $j>1/x_i$ mamy $f_j(x)=0$.
+Zatem $f_j\to0$ prawie wszędzie, ale
+\[
+ \int_Q f_j(x)\,\mathrm d\lambda_n(x)
+ =j^n(1/j)^n=1.
+\]
+Nie istnieje wspólna całkowalna majoranta:
+gdyby istniała, twierdzenie
+\ref{ma2:thm:lebesgue-dominated}
+dawałoby zbieżność całek do zera.
+Lemat Fatou pozostaje prawdziwy,
+z ostrą nierównością $0<1$.
+
+Na $\R^n$ analogiczny brak zbieżności
+całek może wynikać z ucieczki nośników.
+Dla $h_j=\chi_{[j,j+1]\times[0,1]^{n-1}}$
+(z przedziałem $[j,j+1]$ w wymiarze $1$)
+mamy $h_j\to0$ w każdym punkcie, lecz
+każda całka wynosi $1$. Tutaj nawet
+wspólne ograniczenie $0\le h_j\le1$
+nie wystarcza: funkcja stała $1$
+nie jest całkowalna na $\R^n$.
+\end{przyklad}
+
+\section{Obliczanie całki za pomocą poziomic}
+
+\begin{twierdzenie}[Wzór warstwowy]
+\label{ma2:thm:lebesgue-layer-cake}
+Jeżeli $f:A\to[0,\infty]$ jest mierzalna,
+to funkcja $t\mapsto\lambda_n(\{x\in A:f(x)>t\})$
+jest borelowska na $[0,\infty)$ i
+\[
+ \int_A f(x)\,\mathrm d\lambda_n(x)
+ =
+ \int_{[0,\infty)}
+ \lambda_n(\{x\in A:f(x)>t\})\,\mathrm d\lambda_1(t).
+\]
+Obie strony mogą być nieskończone.
+\end{twierdzenie}
+Dowód niezależny od twierdzenia Tonellego
+znajduje się w
+\atlasref{ME-08::thm:layer-cake-8}{teorii miary i całki}.
+
+\begin{przyklad}[Całka z funkcji wyznaczonej przez maksimum współrzędnych]
+\label{ma2:ex:lebesgue-cube-layer}
+Dla $Q=[0,1]^n$ i
+$f(x)=1-\max_{1\le i\le n}x_i$ mamy
+$0\le f\le1$ i $f$ jest ciągła.
+Dla $0\le t<1$ zbiór $\{x\in Q:f(x)>t\}$
+jest równy $[0,1-t)^n$, a dla $t\ge1$
+jest pusty. W szczególności jego miara
+wynosi $(1-t)^n$ dla $0\le t\le1$.
+Z twierdzenia \ref{ma2:thm:lebesgue-layer-cake}
+otrzymujemy
+\[
+ \int_Q f(x)\,\mathrm d\lambda_n(x)
+ =\int_{[0,1]}(1-t)^n\,\mathrm d\lambda_1(t)
+ =\frac{1}{n+1}.
+\]
+Ostatnią całkę obliczamy wzorem
+Newtona--Leibniza, gdyż funkcja jest ciągła,
+a całka Lebesgue'a jest równa całce Riemanna.
+Dla $n=2$ rozpatrzmy bryłę
+\[
+ B=\{(x,y,z):(x,y)\in[0,1]^2,\ 0\le z\le f(x,y)\}.
+\]
+Jej objętość jest równa obliczonej całce.
+Można to uzasadnić bez twierdzenia Fubiniego:
+dla dowolnego podziału kwadratu na prostokąty
+$Q_\alpha$ bryłę zawierają graniastosłupy
+o podstawach $Q_\alpha$ i wysokościach
+$\sup_{Q_\alpha}f$, zaś graniastosłupy
+o wysokościach $\inf_{Q_\alpha}f$
+zawierają się w bryle. W obu rodzinach
+wnętrza graniastosłupów są rozłączne,
+więc ich łączne objętości są odpowiednio
+górną i dolną sumą Darboux.
+Bryła jest domknięta i ograniczona,
+a zatem mierzalna. Ponieważ $f$ jest
+ciągła na zwartym kwadracie, obie sumy
+można uczynić dowolnie bliskimi całce
+Riemanna (twierdzenia
+\ref{ma2:thm:riemann-darboux-box}
+i \ref{ma2:thm:riemann-box-continuous}).
+Stąd $\lambda_3(B)=1/3$.
+Dla $t\in[0,1]$ przekrój poziomy bryły
+na wysokości $z=t$ odpowiada kwadratowi
+$[0,1-t]^2$ o polu $(1-t)^2$.
+Jest to przekrój z rysunku
+\ref{ma2:fig:lebesgue-cube-layer}; różnica
+między domkniętym przekrojem a zbiorem
+$\{f>t\}$ ma miarę $\lambda_2$ zero.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(1.0cm,-0.28cm)},y={(-0.75cm,-0.38cm)},z={(0cm,1.1cm)},scale=3.0]
+\coordinate (O) at (0,0,0);
+\coordinate (A) at (1,0,0);
+\coordinate (B) at (1,1,0);
+\coordinate (C) at (0,1,0);
+\coordinate (T) at (0,0,1);
+\filldraw[fill=blue!14,draw=blue!55!black] (O)--(A)--(B)--(C)--cycle;
+\filldraw[fill=blue!32,draw=blue!65!black] (O)--(A)--(T)--cycle;
+\filldraw[fill=cyan!38,draw=blue!65!black] (O)--(C)--(T)--cycle;
+\filldraw[fill=cyan!48,fill opacity=.72,draw=blue!65!black] (T)--(C)--(B)--cycle;
+\filldraw[fill=blue!35,fill opacity=.72,draw=blue!65!black] (T)--(A)--(B)--cycle;
+\filldraw[fill=orange!25,fill opacity=.28,draw=orange!90!black,very thick] (0,0,.4)--(.6,0,.4)--(.6,.6,.4)--(0,.6,.4)--cycle;
+\draw[->] (O)--(1.25,0,0) node[below] {$x$};
+\draw[->] (O)--(0,1.25,0) node[left] {$y$};
+\draw[->] (O)--(0,0,1.17) node[above] {$z$};
+\node[above left] at (0,0,.4) {$t$};
+\node[below] at (A) {$1$};
+\node[below left] at (C) {$1$};
+\end{tikzpicture}
+\caption{Bryła pod wykresem $1-\max(x,y)$ na kwadracie.
+Pomarańczowy przekrój na wysokości $t=0{,}4$ ma bok $1-t$
+i pole $(1-t)^2$.}
+\label{ma2:fig:lebesgue-cube-layer}
+\end{figure}
+
+\section{Od miary Lebesgue'a do miary Hausdorffa}
+
+Konstrukcja całki Lebesgue'a nie wymaga,
+aby miara była miarą objętości w $\R^n$.
+Dla dowolnej przestrzeni z miarą
+$(X,\mathcal A,\mu)$ całkę nieujemnej
+funkcji prostej
+$s=\sum_{j=1}^m c_j\chi_{A_j}$, gdzie
+$A_j$ są mierzalne i parami rozłączne,
+a $c_j>0$, określamy przez
+\[
+ \int_X s\,\mathrm d\mu=\sum_{j=1}^m c_j\mu(A_j).
+\]
+Całka dowolnej mierzalnej $f\ge0$ jest
+supremum całek takich funkcji prostych
+$s\le f$, z uwzględnieniem funkcji zerowej.
+Dla funkcji rzeczywistych całkowalnych
+stosujemy rozkład na część dodatnią i ujemną.
+Własności i twierdzenia graniczne
+z poprzednich sekcji mają ogólne dowody
+w teorii miary i całki
+(\atlasref{ME-07::ch:calkowanie-lebesgue}{ME 07}
+oraz \atlasref{ME-08::thm:mct}{ME 08}).
+Nie wymagają skończoności ani
+sigma-skończoności miary.
+
+Zmiana miary zmienia geometryczne znaczenie
+lokalnych wag. Dla jednego i tego samego
+zbioru możemy mierzyć liczbę punktów,
+długość, pole lub objętość. Przykładowo
+odcinek jednostkowy w $\R^3$ ma długość $1$,
+choć jego trójwymiarowa objętość jest zerowa.
+Do całkowania po powierzchni nie wystarcza
+więc ograniczenie miary $\lambda_3$.
+
+\begin{definicja}[Miara Hausdorffa]
+\label{ma2:def:lebesgue-hausdorff}
+Niech $1\le k\le n$ będzie liczbą całkowitą.
+Dla $E\subseteq\R^n$ i $\delta>0$ połóżmy
+\[
+ \mathcal H^k_\delta(E)=
+ \inf\left\{c_k\sum_{j=1}^\infty
+ (\operatorname{diam}U_j)^k:
+ E\subseteq\bigcup_{j=1}^\infty U_j,\ 
+ \operatorname{diam}U_j\le\delta\right\},
+\]
+gdzie pokrycia mogą składać się z dowolnych
+podzbiorów $\R^n$. Średnica zbioru to
+supremum odległości jego punktów
+(dla zbioru pustego przyjmujemy zero).
+Definiujemy
+\[
+ \mathcal H^k(E)=\lim_{\delta\downarrow0}
+ \mathcal H^k_\delta(E).
+\]
+Wybieramy dodatnią stałą $c_k$ w taki sposób,
+aby $\mathcal H^k$ na $\R^k$ pokrywała się
+z miarą Lebesgue'a na zbiorach borelowskich.
+Istnienie takiej normalizacji wynika z
+\atlasref{ME-26::thm:hausdorff-calibration-26}{twierdzenia o kalibracji}.
+Dla $k=1$ mamy $c_1=1$
+(\atlasref{ME-26::thm:hausdorff-line-26}{miara Hausdorffa na prostej}).
+Przy $k=0$ stosujemy miarę liczącą
+$\mathcal H^0$, tj. liczność zbioru
+dla zbiorów skończonych i $+\infty$
+dla zbiorów nieskończonych.
+\end{definicja}
+Jest to specjalizacja konstrukcji
+\atlasref{ME-26::def:hausdorff-measure-26}{miary Hausdorffa}.
+Granica istnieje, ponieważ zmniejszenie
+$\delta$ ogranicza klasę dopuszczalnych
+pokryć, a zatem nie zmniejsza infimum.
+Każdy zbiór borelowski jest mierzalny
+w sensie Carathéodory'ego względem
+$\mathcal H^k$, a na pełnym sigma-ciele
+Carathéodory'ego miara jest zupełna
+(\atlasref{ME-26::thm:hausdorff-borel-26}{twierdzenie o mierzalności}).
+Miarę na borelowskim zbiorze $M$
+rozumiemy jako ograniczenie $\mathcal H^k$
+do $M$, z sigma-ciałem śladowym zbiorów
+mierzalnych w sensie Carathéodory'ego.
+Na zbiorach borelowskich można również
+rozpatrywać samo ograniczenie borelowskie.
+Przyjęta normalizacja daje $\mathcal H^n=\lambda_n$
+na zbiorach mierzalnych w sensie Lebesgue'a:
+obie miary zewnętrzne są równe na wszystkich
+podzbiorach $\R^n$, zgodnie z konwencją
+\atlasref{ME-26::rem:hausdorff-convention-26}{ME 26}.
+W szczególności nie zakładamy, że
+$\mathcal H^k$ jest sigma-skończona na całej
+przestrzeni $\R^n$ przy $k<n$.
+
+\paragraph{Intuicja potęgi średnicy.}
+Jeżeli odcinek o długości $1$ podzielimy
+na $m$ równych odcinków, suma ich średnic
+wyniesie $1$, a suma kwadratów średnic
+$1/m$. Dla kwadratu jednostkowego
+podział na $m^2$ małych kwadratów
+daje średnice $\sqrt2/m$; suma kwadratów
+średnic wynosi $2$, natomiast suma
+sześcianów średnic $2\sqrt2/m$.
+Te konkretne pokrycia pokazują, dlaczego
+potęga większa od wymiaru geometrycznego
+może prowadzić do miary zerowej.
+Nie dają jednak same z siebie dolnego
+oszacowania miary we właściwym wymiarze:
+do tego potrzebne jest infimum po
+wszystkich dopuszczalnych pokryciach
+i twierdzenie o kalibracji.
+
+\begin{stwierdzenie}[Całkowanie na płaszczyznach afinicznych]
+\label{ma2:prop:lebesgue-hausdorff-affine}
+Niech $1\le k\le n$ i niech
+$T:\R^k\to P\subseteq\R^n$ będzie
+izometrią afiniczną na $k$-wymiarową
+płaszczyznę afiniczną $P$.
+Dla borelowskiego $E\subseteq P$
+i nieujemnej borelowskiej funkcji $f$ na $E$
+mamy
+\[
+ \int_E f(x)\,\mathrm d\mathcal H^k(x)
+ =\int_{T^{-1}(E)}f(T(u))\,\mathrm d\lambda_k(u).
+\]
+Dla borelowskiej funkcji rzeczywistej
+równość zachodzi przy bezwzględnej
+całkowalności jednej ze stron;
+wówczas obie są całkowalne.
+Jeżeli $k<n$, to $\lambda_n(P)=0$.
+\end{stwierdzenie}
+Dowód znajduje się w
+\atlasref{ME-26::it:cor:hausdorff-affine-integration}{teorii miary}.
+Istotą wyniku jest zachowanie średnic
+przez izometrię i kalibracja miary
+w przestrzeni parametrów.
+
+\begin{przyklad}[Ten sam wzór, różne miary]
+\label{ma2:ex:lebesgue-hausdorff-dimensions}
+Na odcinku $L=[0,1]\times\{0\}\times\{0\}$
+i kwadracie $S=[0,1]^2\times\{0\}$
+rozpatrzmy funkcję $f(x,y,z)=1+x+y$.
+Na mocy \ref{ma2:prop:lebesgue-hausdorff-affine}
+\[
+ \begin{aligned}
+ \int_L f\,\mathrm d\mathcal H^1
+ &=\int_{[0,1]}(1+t)\,\mathrm d\lambda_1(t)
+ =\frac32,\\
+ \int_S f\,\mathrm d\mathcal H^2
+ &=\int_{[0,1]^2}(1+u+v)\,\mathrm d\lambda_2(u,v)
+ =2.
+ \end{aligned}
+\]
+Drugą wartość można uzyskać przez liniowość
+i symetrię względem $u\mapsto1-u$ oraz
+$v\mapsto1-v$, lub z granic sum środkowych:
+średnia współrzędnych znaczników w każdym
+kierunku wynosi $1/2$, a suma pól komórek $1$.
+Obie całki względem $\lambda_3$
+po tych zbiorach wynoszą zero.
+Odpowiedni wybór miary jest zatem
+częścią definicji całkowanej wielkości.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(1.5cm,-.4cm)},y={(-.85cm,-.5cm)},z={(0cm,1.5cm)},>=stealth]
+ \begin{scope}
+  \draw[->,gray] (0,0,0)--(1.3,0,0) node[right] {$x$};
+  \draw[->,gray] (0,0,0)--(0,1.2,0) node[left] {$y$};
+  \draw[->,gray] (0,0,0)--(0,0,1.15) node[above] {$z$};
+  \draw[blue!80!black,line width=2.5pt] (0,0,0)--(1,0,0);
+  \foreach \u in {0,.25,.5,.75,1}
+   \fill[blue!80!black] (\u,0,0) circle (1.3pt);
+  \node at (.3,0,-.65) {$\mathcal H^1(L)=1$};
+ \end{scope}
+ \begin{scope}[xshift=4.2cm]
+  \filldraw[fill=blue!25,draw=blue!70!black]
+   (0,0,0)--(1,0,0)--(1,1,0)--(0,1,0)--cycle;
+  \foreach \u in {.25,.5,.75}{
+   \draw[blue!55] (\u,0,0)--(\u,1,0);
+   \draw[blue!55] (0,\u,0)--(1,\u,0);
+  }
+  \draw[->,gray] (0,0,0)--(1.3,0,0) node[right] {$x$};
+  \draw[->,gray] (0,0,0)--(0,1.2,0) node[left] {$y$};
+  \draw[->,gray] (0,0,0)--(0,0,1.15) node[above] {$z$};
+  \node at (.3,0,-.65) {$\mathcal H^2(S)=1$};
+ \end{scope}
+ \begin{scope}[xshift=8.4cm]
+  \filldraw[fill=blue!35,draw=blue!75!black]
+   (0,1,0)--(1,1,0)--(1,1,1)--(0,1,1)--cycle;
+  \filldraw[fill=blue!55,draw=blue!75!black]
+   (1,0,0)--(1,1,0)--(1,1,1)--(1,0,1)--cycle;
+  \filldraw[fill=blue!18,draw=blue!75!black]
+   (0,0,1)--(1,0,1)--(1,1,1)--(0,1,1)--cycle;
+  \node at (.3,0,-.65) {$\mathcal H^3(Q)=1$};
+ \end{scope}
+\end{tikzpicture}
+\caption{Odcinek, kwadrat i sześcian jednostkowy
+w $\R^3$. Właściwe miary Hausdorffa mają wartość
+$1$, mimo że dwa pierwsze zbiory mają
+zerową trójwymiarową miarę Lebesgue'a.}
+\label{ma2:fig:lebesgue-hausdorff-dimensions}
+\end{figure}
+
+W przypadku zakrzywionej podrozmaitości
+parametryzacja na ogół nie zachowuje
+odległości. Pojawia się wtedy mnożnik
+geometryczny wyrażony przez różniczkę
+parametryzacji. Już teraz odnotujmy
+ogólną postać potrzebnego wyniku.
+
+\begin{twierdzenie}[Wzór parametryczny dla miary Hausdorffa]
+\label{ma2:thm:lebesgue-hausdorff-parametric}
+Niech $U\subseteq\R^k$ będzie otwarty,
+$1\le k\le n$, a $\varphi:U\to\R^n$
+immersją klasy $C^1$,
+czyli $\operatorname{rank}D\varphi(u)=k$
+dla każdego $u\in U$.
+Niech $E\subseteq U$ będzie borelowski
+i niech ograniczenie $\varphi|_E$ będzie
+różnowartościowe (nie wymagamy tego na całym $U$).
+Oznaczmy $J_k\varphi(u)=
+\sqrt{\det(D\varphi(u)^TD\varphi(u))}$,
+zgodnie z definicją
+\atlasref{ME-28::def:k-jacobian-28}{jakobianu wymiaru $k$}.
+Dla nieujemnej borelowskiej funkcji $f$
+na $\varphi(E)$ (który jest zbiorem borelowskim)
+zachodzi
+\[
+ \int_{\varphi(E)}f(x)\,\mathrm d\mathcal H^k(x)
+ =\int_E f(\varphi(u))
+ \sqrt{\det(D\varphi(u)^TD\varphi(u))}
+ \,\mathrm d\lambda_k(u).
+\]
+Dla borelowskiej funkcji rzeczywistej
+wzór zachodzi przy bezwzględnej
+całkowalności jednej ze stron; wtedy obie
+są bezwzględnie całkowalne.
+\end{twierdzenie}
+\begin{proof}
+Stosujemy ważony wzór pola dla immersji
+\atlasref{ME-28::thm:immersion-area-28}{ME 28}
+do funkcji $f\circ\varphi$ na $E$.
+Różnowartościowość oznacza, że dla
+$x\in\varphi(E)$ suma po włóknie
+zawiera dokładnie jeden składnik, równy
+$f(x)$, a poza $\varphi(E)$ jest zerowa.
+Obraz $\varphi(E)$ jest borelowski:
+immersję można lokalnie przedstawić
+jako wykres nad otwartym zbiorem
+w $\R^k$ po permutacji współrzędnych
+i zastosowaniu twierdzenia o funkcji odwrotnej.
+W przeliczalnym pokryciu takich otoczeń
+obraz borelowskiego fragmentu jest
+borelowskim podzbiorem wykresu,
+który jest borelowski w $\R^n$;
+przeliczalna suma tych obrazów
+jest zatem borelowska.
+Dla funkcji rzeczywistej stosujemy wzór
+najpierw do $|f|$ w celu wykazania
+równoważności całkowalności, a następnie
+do obu części $f^+$ i $f^-$.
+\end{proof}
+
+W rozdziałach o całkach geometrycznych
+wyprowadzimy z tego wyniku następujące
+czynniki, odpowiadające poszczególnym wymiarom:
+\[
+ \begin{array}{c|c}
+ k=1 & \|\varphi'(u)\|_2\\
+ k=2,\ n=3 & \|\partial_1\varphi(u)\times
+                         \partial_2\varphi(u)\|_2\\
+ k=n & |\det D\varphi(u)|
+ \end{array}
+\]
+W pierwszym przypadku macierz Grama ma
+jeden element równy kwadratowi normy.
+W drugim jej wyznacznik to
+$\|\partial_1\varphi\|_2^2\|\partial_2\varphi\|_2^2
+-\langle\partial_1\varphi,\partial_2\varphi\rangle^2$,
+czyli kwadrat normy iloczynu wektorowego.
+W trzecim przypadku korzystamy z
+$\det(A^TA)=(\det A)^2$.
+Wzór dotyczy całki skalarnej względem
+dodatniej miary i nie wymaga orientacji.
+Całki zorientowane, np. praca pola lub
+strumień, wymagają dodatkowych danych;
+nie utożsamiamy ich z całką skalarnej
+gęstości względem $\mathcal H^k$.
+Nieróżnowartościowe parametryzacje
+wymagają uwzględnienia krotności.
+
+\paragraph{Dlaczego pojawia się macierz Grama?}
+Niech $A=D\varphi(u):\R^k\to\R^n$,
+a $a_1,\ldots,a_k$ będą jej kolumnami.
+Mały sześcian parametrów o krawędzi $h$
+jest w przybliżeniu przekształcany
+w równoległościan o krawędziach $ha_i$.
+Jego $k$-wymiarowa objętość wynosi
+$h^k\sqrt{\det(A^TA)}$.
+Istotnie, wybierając ortonormalną bazę
+obrazu $A$ (który ma wymiar $k$),
+zapisujemy $A=QB$, gdzie $Q^TQ=I_k$
+i $B$ jest odwracalną macierzą $k\times k$.
+Izometria $Q$ zachowuje miarę Hausdorffa,
+a w $\R^k$ liniowe odwzorowanie $B$
+mnoży objętość przez $|\det B|$
+(\atlasref{ME-13::thm:linear-change-13}{liniowa zamiana zmiennych}).
+Wobec $A^TA=B^TB$ mamy
+$|\det B|=\sqrt{\det(A^TA)}$.
+Dla $k=2$ jest to pole równoległoboku:
+długość pierwszego wektora razy długość
+składowej drugiego prostopadłej do pierwszego.
+Ścisłe przejście od różniczki do całki
+zapewnia twierdzenie
+\ref{ma2:thm:lebesgue-hausdorff-parametric},
+a nie samo przybliżenie liniowe.
+
+\begin{przyklad}[Nachylona powierzchnia i zmiana parametrów]
+\label{ma2:ex:lebesgue-hausdorff-tilted}
+Niech $\varphi(u,v)=(u,v,u+v)$,
+$E=[0,1]^2$ oraz $S=\varphi(E)$.
+Parametryzację rozpatrujemy jako immersję
+na całej $\R^2$, więc zwarty zbiór $E$
+spełnia założenia wzoru parametrycznego.
+Mamy
+\[
+ D\varphi^TD\varphi=
+ \begin{pmatrix}2&1\\1&2\end{pmatrix},
+ \qquad J_2\varphi=\sqrt3.
+\]
+W szczególności $\mathcal H^2(S)=\sqrt3$.
+Dla gęstości $f(x,y,z)=1+z$ otrzymujemy
+\[
+ \int_S f\,\mathrm d\mathcal H^2
+ =\sqrt3\int_{[0,1]^2}(1+u+v)\,
+       \mathrm d\lambda_2(u,v)=2\sqrt3,
+\]
+gdzie ostatnią całkę obliczono już
+w przykładzie \ref{ma2:ex:lebesgue-hausdorff-dimensions}.
+Możemy również użyć parametrów
+$\psi(s,t)=\varphi(2s,3t)$ na prostokącie
+$[0,1/2]\times[0,1/3]$.
+Wtedy
+\[
+ D\psi^TD\psi=
+ \begin{pmatrix}8&6\\6&18\end{pmatrix},
+ \qquad J_2\psi=6\sqrt3.
+\]
+Pole prostokąta parametrów wynosi $1/6$,
+więc ponownie otrzymujemy $\mathcal H^2(S)=\sqrt3$.
+Zmiana parametrów zmieniła lokalny
+mnożnik, ale nie całkę geometryczną.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(3cm,-.55cm)},y={(-2cm,-.7cm)},z={(0cm,1.8cm)},>=stealth]
+ \filldraw[fill=gray!12,draw=gray!70] (0,0,0)--(1,0,0)--(1,1,0)--(0,1,0)--cycle;
+ \filldraw[fill=blue!25,fill opacity=.9,draw=blue!70!black,thick]
+ (0,0,0)--(1,0,1)--(1,1,2)--(0,1,1)--cycle;
+ \foreach \u in {.25,.5,.75}{
+  \draw[blue!50] (\u,0,\u)--(\u,1,{1+\u});
+  \draw[blue!50] (0,\u,\u)--(1,\u,{1+\u});
+ }
+ \filldraw[fill=orange!60,draw=orange!85!black,thick]
+ (.5,.5,1)--(.75,.5,1.25)--(.75,.75,1.5)--(.5,.75,1.25)--cycle;
+ \draw[gray,densely dashed] (1,0,0)--(1,0,1);
+ \draw[gray,densely dashed] (1,1,0)--(1,1,2);
+ \draw[gray,densely dashed] (0,1,0)--(0,1,1);
+ \draw[->,gray!80!black] (0,0,0)--(1.3,0,0) node[right] {$x$};
+ \draw[->,gray!80!black] (0,0,0)--(0,1.3,0) node[left] {$y$};
+ \draw[->,gray!80!black] (0,0,0)--(0,0,2.2) node[above] {$z$};
+ \node[blue!80!black,above right] at (1,1,2) {$z=x+y$};
+ \draw[orange!85!black] (.75,.5,1.25)--(1.2,.5,1.25)
+ node[right] {$\sqrt3/16$};
+\end{tikzpicture}
+\caption{Nachylony równoległobok z przykładu
+\ref{ma2:ex:lebesgue-hausdorff-tilted}.
+Wyróżniona komórka ma pole $\sqrt3/16$,
+choć jej rzut na płaszczyznę parametrów
+ma pole $1/16$.}
+\label{ma2:fig:lebesgue-hausdorff-tilted}
+\end{figure}
+
+\begin{wniosek}[Całka z uwzględnieniem krotności]
+\label{ma2:cor:lebesgue-hausdorff-multiplicity}
+Niech $\varphi:U\subseteq\R^k\to\R^n$
+będzie immersją klasy $C^1$ na otwartym
+$U$, niekoniecznie różnowartościową,
+a $E\subseteq U$ borelowski.
+Dla nieujemnej borelowskiej funkcji $f$
+na $\varphi(E)$ zachodzi
+\[
+ \int_E f(\varphi(u))J_k\varphi(u)\,
+       \mathrm d\lambda_k(u)
+ =\int_{\varphi(E)}f(x)N_\varphi(E,x)\,
+       \mathrm d\mathcal H^k(x),
+\]
+gdzie $N_\varphi(E,x)=\#(E\cap\varphi^{-1}(\{x\}))$,
+z wartością $+\infty$ dla nieskończonego
+włókna, oraz przyjmujemy $0\cdot\infty=0$.
+Dla rzeczywistej borelowskiej $f$
+analogiczna równość zachodzi, jeśli
+ważona całka z $|f|$ jest skończona.
+\end{wniosek}
+\begin{proof}
+Obraz $\varphi(E)$ jest borelowski na mocy
+lokalnego argumentu z dowodu
+\ref{ma2:thm:lebesgue-hausdorff-parametric},
+który nie wymaga różnowartościowości nawet na $E$.
+W ważonym wzorze dla immersji
+(\atlasref{ME-28::thm:immersion-area-28}{ME 28})
+każdy punkt włókna wnosi tę samą
+wartość $f(x)$, więc suma po włóknie
+jest iloczynem $f(x)N_\varphi(E,x)$.
+Mierzalność krotności wynika z tego samego
+twierdzenia zastosowanego do funkcji $1$.
+Dla funkcji ze znakiem stosujemy wynik
+do $|f|$ i do obu jej części.
+\end{proof}
+
+\begin{przyklad}[Dwukrotne obejście okręgu]
+\label{ma2:ex:lebesgue-hausdorff-double-circle}
+Niech $\gamma(t)=(\cos t,\sin t)$ na $\R$.
+Ograniczenie do $E_1=[0,2\pi)$ jest
+różnowartościowe i ma obraz $S^1$.
+Ponieważ $\|\gamma'(t)\|_2=1$,
+twierdzenie \ref{ma2:thm:lebesgue-hausdorff-parametric}
+daje $\mathcal H^1(S^1)=2\pi$.
+Istotne jest, że różnowartościowość zachodzi
+na $E_1$, choć nie na całej $\R$.
+Dla $E_2=[0,4\pi)$ obraz pozostaje ten
+sam, lecz każdy punkt okręgu ma dokładnie
+dwa przeciwobrazy. Wniosek
+\ref{ma2:cor:lebesgue-hausdorff-multiplicity}
+daje
+\[
+ \int_{E_2}\|\gamma'(t)\|_2\,
+           \mathrm d\lambda_1(t)
+ =2\mathcal H^1(S^1)=4\pi.
+\]
+Wielkość $4\pi$ mierzy długość drogi
+z uwzględnieniem powtórzeń, a nie
+miarę geometrycznego obrazu.
+To rozróżnienie będzie istotne w rozdziałach
+\ref{ma2:ch:rectifiable-curves}
+oraz \ref{ma2:ch:line-integrals}.
+\end{przyklad}
+
+
+\paragraph{Wizualizacja interaktywna.}
+Suwak wysokości przekroju pozwala obserwować
+zmianę jego pola. Drugi wykres pokazuje
+nachyloną powierzchnię, komórkę i jej rzut.
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+
+v = np.array([(0,0,0),(1,0,0),(1,1,0),
+              (0,1,0),(0,0,1)])
+f = np.array([(0,2,1),(0,3,2),(0,1,4),
+              (1,2,4),(2,3,4),(3,0,4)])
+fig = go.Figure(go.Mesh3d(
+    x=v[:,0],y=v[:,1],z=v[:,2],
+    i=f[:,0],j=f[:,1],k=f[:,2],
+    color="#397db5",opacity=.35))
+levels = np.arange(20)/20
+for i,t in enumerate(levels):
+    a=1-t
+    fig.add_trace(go.Mesh3d(
+        x=[0,a,a,0],y=[0,0,a,a],z=[t]*4,
+        i=[0,0],j=[1,2],k=[2,3],
+        color="#d97706",visible=i==8))
+steps = [dict(label=f"{t:.2f}",method="update",
+    args=[dict(visible=[True]+[j==i for j in
+         range(len(levels))]),
+         dict(title=f"Pole = {(1-t)**2:.4f}")])
+    for i,t in enumerate(levels)]
+fig.update_layout(scene_aspectmode="data",
+    sliders=[dict(active=8,steps=steps)],
+    title="Pole = 0.3600")
+fig.write_html("am2_26_layers.html", include_plotlyjs=True)
+
+x=np.linspace(0,1,5)
+X,Y=np.meshgrid(x,x)
+fig=go.Figure(go.Surface(x=X,y=Y,z=X+Y,
+    showscale=False,colorscale="Blues",opacity=.75))
+fig.add_trace(go.Surface(x=X,y=Y,z=0*X,
+    showscale=False,opacity=.35,colorscale="Greys"))
+a=np.array([.5,.75,.75,.5,.5])
+b=np.array([.5,.5,.75,.75,.5])
+fig.add_trace(go.Mesh3d(x=a[:4],y=b[:4],
+    z=(a+b)[:4],i=[0,0],j=[1,2],k=[2,3],
+    color="#d97706"))
+fig.add_trace(go.Scatter3d(x=a,y=b,z=a+b,
+    mode="lines",name="Pole sqrt(3)/16"))
+fig.add_trace(go.Scatter3d(x=a,y=b,z=0*a,
+    mode="lines",name="Pole rzutu 1/16"))
+fig.update_layout(scene_aspectmode="data")
+fig.write_html("am2_26_gram.html", include_plotlyjs=True)
+\end{lstlisting}
+
+\section{Przygotowanie do dalszego rachunku całkowego}
+
+Dla mierzalnej funkcji nieujemnej $f$ i rozkładu
+mierzalnego zbioru $A=\bigcup_{j\ge1}A_j$
+na parami rozłączne mierzalne zbiory $A_j$
+zachodzi
+\[
+ \int_A f(x)\,\mathrm d\lambda_n(x)
+ =\sum_{j=1}^\infty\int_{A_j} f(x)\,\mathrm d\lambda_n(x).
+\]
+Jest to specjalizacja
+\atlasref{ME-08::cor:integral-countable-partition}{twierdzenia o rozkładzie całki}.
+Jeżeli $f$ jest całkowalna ze znakiem,
+stosujemy wynik do $f^+,f^-$ i $|f|$:
+szereg całek jest bezwzględnie zbieżny,
+gdyż suma ich modułów nie przekracza
+$\int_A |f(x)|\,\mathrm d\lambda_n(x)$
+na mocy twierdzenia \ref{ma2:thm:lebesgue-linearity}
+i rozkładu całki nieujemnej. Ponieważ szeregi
+całek $f^+$ i $f^-$ mają skończone sumy,
+ich odejmowanie wyraz po wyrazie jest uzasadnione
+i daje tę samą równość dla $f$.
+
+W następnym rozdziale wykorzystamy wyczerpania
+zbiorów i twierdzenia graniczne do całek
+na zbiorach nieograniczonych oraz całek
+z osobliwościami. Całki iterowane i zamianę
+zmiennych w $\R^n$ rozwiniemy później.
+Przy całkowaniu po podrozmaitościach
+euklidesowych będziemy używać odpowiednio
+znormalizowanej miary Hausdorffa $\mathcal H^k$,
+nie wprowadzając ogólnej geometrii riemannowskiej.

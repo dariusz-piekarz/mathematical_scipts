@@ -1,0 +1,40 @@
+# Topologia ogólna — globalny audyt 53: pełna niezależna kontrola 14 dowodów rozdziału 10
+
+**Data:** 2026-11-23. **Gałąź:** `biblioteka-matematyczna-iteracja-6`. **Badany plik:** `chapters/pl/general_topology/10-metryzowalnosc.tex`, blob `1bc0fb72953cb70bcec7c60d3c2fc222ba1851c6` (769 wierszy).
+
+## Metoda
+
+Ponownie odczytano 14/14 aktualnych środowisk `proof` razem z tezą, hipotezami i użytymi lematami. Testowano przede wszystkim dwa kierunki równości topologii, potrzebę T1 w twierdzeniu Urysohna, liczbę funkcji oddzielających, przypadki przestrzeni pustych i iloczynów, błąd możliwy przy obciętych metrykach oraz wybór skończonych podpokryć. Sprawdzono też trzy kontrprzykłady zawarte poza środowiskami `proof`. Nie zmieniano pliku LaTeX.
+
+## Macierz: 14/14 proof
+
+| ID | Etykieta; wiersze proof | Niezależne sprawdzenie dowodu |
+|---|---|---|
+| 10-01 | `prop:topog-baza-kul`, 45–60 | Warunek pokrycia zapewniają B_d(x,1); dla z w przecięciu B_d(x,r)∩B_d(y,s) liczba δ=min(r−d(x,z),s−d(y,z)) jest dodatnia, a B_d(z,δ) jest zawarta w obu kulach. Każde bazowe otoczenie z zawiera mniejszą kulę o środku z, więc B_d(x,1/n) stanowią bazę otoczeń x nawet przy pseudometryce i X=∅. |
+| 10-02 | `prop:topog-metryka-t3-pierwszy`, 90–111 | Dodatnia odległość d(x,y) zapewnia otwarte dopełnienia singletonów, czyli T1. Dla F domkniętego i x∉F istnieje r>0 z B(x,r)∩F=∅; wówczas cl B(x,r/3)⊂B(x,2r/3)⊂X\F. Kryterium zwężania otoczeń dowodzi regularności. Pierwszy aksjomat przeliczalności pochodzi z baz kul 1/n. |
+| 10-03 | `prop:topog-min-metryka`, 135–147 | Nierówność min(1,a+b)≤min(1,a)+min(1,b) wraz z monotonicznością funkcji min(1,·) zapewnia trójkąt. Dodatnia określoność i symetria są zachowane; kule o r≤1 są identyczne, więc metryki d i min(1,d) indukują tę samą topologię. |
+| 10-04 | `thm:topog-metryzowalnosc-podprzestrzenie`, 155–165 | Ograniczenie d|_{A×A} spełnia aksjomaty metryki; kule B_{d|A}(a,r)=A∩B_d(a,r) tworzą dokładnie topologię podprzestrzeni. Puste A nie jest wyjątkiem. |
+| 10-05 | `prop:topog-metryzowalnosc-homeo`, 173–180 | Dla homeomorfizmu h:X→Y metryka d_h=d∘(h×h) jest dodatnio określona dzięki iniektywności, a topologia wynika z tożsamości B_{d_h}(x,r)=h^{-1}(B_d(h(x),r)). Samo odwzorowanie ciągłe bez homeomorfizmu nie wystarczyłoby. |
+| 10-06 | `lem:topog-t3-lindelof-normalna`, 197–238 | Dla rozłącznych domkniętych F,G regularność daje pokrycia U_x,V_y o domknięciach omijających drugi zbiór, a Lindelöfowość domkniętych podprzestrzeni daje przeliczalne pokrycia U_n,V_n. Zbiory U=∪_n(U_n\∪_{k≤n}cl V_k) oraz V=∪_m(V_m\∪_{k≤m}cl U_k) są otwarte i zawierają F,G. Dla n≤m drugi składnik usuwa cl U_n, dla m≤n pierwszy usuwa cl V_m; zatem U∩V=∅. Puste F lub G oddzielone trywialnie; regularność nie musi zawierać T1. |
+| 10-07 | `cor:topog-drugi-t3-t4`, 245–249 | Drugi aksjomat przeliczalności implikuje Lindelöfa (rozdział 09). T3 oznacza tu regularność wraz z T1, więc poprzedni lemat daje normalność i w połączeniu z T1 aksjomat T4. |
+| 10-08 | `thm:topog-urysohn-metryzowalnosc`, 261–382 | Przypadki X=∅ i singleton są osobne. Z przeliczalnej bazy wybiera się pary B,C z x∈B⊂cl B⊂C⊂O; regularność zapewnia W z cl W⊂C. Normalność z poprzedniego wniosku i lemat Urysohna dają f_n=0 na cl B, f_n=1 poza C. Funkcje rozdzielają różne x,y dzięki T1 i O=X\{y}. Szereg d=∑2^{-n}|f_n(x)−f_n(y)| jest metryką: zbieżność przez oszacowanie składników, dodatnia określoność przez f_n(x)≠f_n(y), trójkąt przez sumy częściowe. Ciągłość f_n oraz oszacowanie ogona 2^{-N} dają otwartość kul w wyjściowej topologii; osobno dla y∈B_d(x,ε) konstruuje się otwarte otoczenie y zawarte w tej kuli. Z kolei dla x∈O funkcja f_n=0 w x, 1 poza O daje B_d(x,2^{-n})⊂O. Obie inkluzje topologii są jawne; nie zakłada się konkluzji. |
+| 10-09 | `cor:topog-drugi-metryzowalna-iff-t3`, 413–418 | W klasie z drugim aksjomatem przeliczalności konieczność T3 wynika z właściwości metryk, wystarczalność bezpośrednio z twierdzenia Urysohna. Nie mylono pierwszego i drugiego aksjomatu przeliczalności. |
+| 10-10 | `thm:topog-metryka-kostka-przeliczalna`, 433–476 | Dla [0,1]^N metryka ρ=∑2^{-n}|a_n−b_n| spełnia trójkąt i rozdziela punkty przez różną współrzędną. Ogon 2^{-N} plus skończenie wiele otwartych warunków |a_n−b_n|<ε/2 zapewniają jedną inkluzję topologii. Dla bazowego cylindra ograniczonego skończonym F promień δ=min_{n∈F}2^{-n}δ_n gwarantuje wszystkie wymagane współrzędne; F=∅ rozpatrzono. |
+| 10-11 | `cor:topog-urysohn-kostka-hilberta`, 484–504 | Mapa Φ(x)=(f_1(x),f_2(x),...) jest izometrią z metryki Urysohna do kostki z metryką ρ; równanie ρ(Φ(x),Φ(y))=d(x,y) daje iniektywność i homeomorfizm na obraz. Puste i jednoelementowe X otrzymują osobne zanurzenia. |
+| 10-12 | `thm:topog-przeliczalny-iloczyn-metryzowalny`, 518–570 | Metryki d_n obcina się do d̂_n=min(1,d_n), zachowując topologie. Zbieżny szereg D=∑2^{-n}d̂_n rozdziela współrzędne i spełnia nierówność trójkąta. Ogon szeregu gwarantuje otwartość kul w topologii produktu. Dla dowolnego cylindra na skończonym F, promienie δ_n=min(1/2,r_n)<1 zapewniają, że d̂_n<δ_n daje d_n<r_n. F=∅ i pusty czynnik są obsłużone; nie należy pomijać ograniczenia δ_n<1. |
+| 10-13 | `cor:topog-zwarta-hausdorff-metryzowalna`, 578–599 | Zwartość i T2 dają T3, więc drugi aksjomat przeliczalności implikuje metryzowalność przez Urysohna. Jeśli X jest metryzowalna i zwarta, pokrycia kulami promienia 1/n mają skończone podpokrycia; suma środków D=∪F_n jest przeliczalna i gęsta, bo 1/n<r dla dowolnej kuli B(x,r). Dla metrycznej ośrodkowej przestrzeni drugi aksjomat wynika z rozdziału 09. X=∅ ujęta. |
+| 10-14 | `prop:topog-metryzowalnosc-zestawienie`, 737–746 | Wszystkie cztery punkty są dokładnie wcześniej udowodnionymi wynikami, a nie nowym nieudowodnionym kryterium. Prosta Sorgenfreya spełnia T3, pierwszy aksjomat przeliczalności, ośrodkowość i Lindelöfa, lecz nie drugi aksjomat, więc uzasadnia ostatnią uwagę. |
+
+## Kontrprzykłady poza środowiskami proof
+
+1. **`ex:topog-sorgenfrey-niemetryzowalna`: PASS.** Każdy bazowy przedział [a,b) w topologii Sorgenfreya jest otwarto-domknięty; przestrzeń jest T3, spełnia pierwszy aksjomat przeliczalności i jest ośrodkowa oraz Lindelöfa (rozdział 09). Gdyby była metryzowalna, ośrodkowość wymuszałaby drugi aksjomat przeliczalności, sprzecznie ze sprawdzonym dowodem rozdziału 09.
+2. **`ex:topog-kostka-nieprzeliczalna`: PASS.** Dla nieprzeliczalnego I kostka [0,1]^I jest zwarta i Hausdorffa. Każda przeliczalna baza otoczeń 0 zawiera cylindry ograniczające łącznie tylko przeliczalnie wiele współrzędnych. Wybór j spoza tego zbioru i otoczenia `{x:x_j<1/2}` przeczy jej bazowości; kostka nie spełnia pierwszego aksjomatu przeliczalności.
+3. **`ex:topog-iloraz-dwa-poczatki`: PASS.** Suma dwóch kopii R jest metryzowalna metryką obciętą w obrębie kopii i odległością 2 między kopiami. Po identyfikacji wszystkich niezerowych punktów dwóch kopii oba początki są nierozdzielalne przez rozłączne otwarte otoczenia, bo takie otoczenia zawierają odpowiednie małe dodatnie parametry t≠0, które identyfikują się w ilorazie. Iloraz nie jest Hausdorffa, więc nie jest metryzowalny.
+
+## Wynik i stan pełnego rejestru
+
+**14/14 PASS.** Wszystkie etykiety `10-01…10-14` mają indywidualną ocenę matematyczną dla aktualnego bloba. Nie znaleziono błędów wymagających zmian źródeł. W szczególności kontrola nie polegała wyłącznie na odliczaniu środowisk `proof`: sprawdzono obie inkluzje w dowodzie metryzowalności Urysohna oraz niezbędne warunki rozdzielania.
+
+Przed tym raportem 236 z 325 dowodów miało ujednoliconą pełną dokumentację. Po tej iteracji liczba wzrasta do **250/325**, pozostaje **75**: rozdziały 11–13 (**31**) i 24–26 (**44**). Historii raportów 48–52 nie zmieniamy, ponieważ zapisują stan w chwili ich utworzenia.
+
+CI nowego commitu należy sprawdzić po jego uruchomieniu; zielone CI nie jest formalizacją matematyczną. Ponowny rendering PDF i 2+1 nie są wymagane z racji braku zmian `.tex`. Następny etap: pełny audyt 8 dowodów rozdziału 11, następnie 14 dowodów rozdziału 12 i 9 dowodów rozdziału 13. Automatyzacja audytów pozostaje aktywna.

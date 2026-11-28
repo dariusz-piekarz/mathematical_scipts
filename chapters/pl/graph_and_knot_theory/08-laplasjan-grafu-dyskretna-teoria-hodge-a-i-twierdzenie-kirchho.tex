@@ -1,8 +1,8 @@
 \chapter{Laplasjan grafu, dyskretna teoria Hodge'a i twierdzenie Kirchhoffa}
 \label{ch:tg-laplacian}
 
-W pierwszym rozdziale pojawiła się macierz sąsiedztwa, a w szóstym
-macierz incydencji. Z ich połączenia otrzymamy operator, który
+W rozdziale \ref{ch:tg-podstawy} pojawiła się macierz sąsiedztwa,
+a w rozdziale \ref{ch:tg-algebra} macierz incydencji. Z ich połączenia otrzymamy operator, który
 jest dyskretnym odpowiednikiem laplasjanu na rozmaitości.
 W niniejszym rozdziale wykazujemy związek tego operatora
 ze spójnością, potencjałem harmonicznym, rozkładem Hodge'a
@@ -11,12 +11,16 @@ oraz liczbą drzew rozpinających.
 \section{Definicja i energia Dirichleta}
 \label{sec:tg-lap-definition}
 
-Niech $G=(V,E)$ będzie skończonym grafem prostym.
-Każdej krawędzi nadajmy dodatnią wagę $w_e>0$.
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+o $n=|V|\geq1$ wierzchołkach, $m=|E|$ krawędziach
+i $c$ składowych spójnych. Każdej krawędzi nadajmy dodatnią wagę $w_e>0$.
 Macierz diagonalną tych wag oznaczamy przez $W$.
 
 \begin{definicja}[Laplasjan ważony]
-Niech $B\in\mathbb R^{n\times m}$ będzie macierzą incydencji
+Niech $G=(V,E)$ będzie skończonym grafem prostym,
+$n=|V|\geq1$, $m=|E|$, a $w_e>0$ dla $e\in E$.
+Niech $W=\operatorname{diag}(w_e:e\in E)$ i
+$B\in\mathbb R^{n\times m}$ będzie macierzą incydencji
 grafu $G$ dla dowolnej orientacji pomocniczej. Definiujemy
 \emph{laplasjan ważony} $L:=BWB^T:\mathbb R^V\to\mathbb R^V$.
 Gdy wszystkie $w_e=1$, piszemy $L_G:=BB^T$ i mówimy
@@ -31,8 +35,29 @@ $L_{uv}$ wynosi $-w_{uv}$ dla krawędzi $uv$ i zero w pozostałych
 przypadkach. Odwrócenie pomocniczej orientacji zmienia znak
 kolumny $B$, ale nie zmienia iloczynu $BWB^T$.
 
+\begin{uwaga}[Laplasjan kombinatoryczny i znormalizowany]
+\label{rem:tg-laplacian-conventions}
+Jeśli graf prosty $G$ jest $d$-regularny dla $d\geq1$,
+to jego nieważony Laplasjan kombinatoryczny ma postać
+$L_G=D-A_G=dI-A_G$. Natomiast Laplasjan znormalizowany
+$\mathcal L=I-A_G/d$ z rozdziału \ref{ch:tg-expanders}
+spełnia $\mathcal L=d^{-1}L_G$. Jeśli wartości własne obu macierzy numerujemy rosnąco
+z krotnościami, to $\lambda_j(L_G)=d\lambda_j(\mathcal L)$
+dla $j=1,\ldots,n$. W szczególności dla spójnego grafu o co najmniej
+dwóch wierzchołkach spójność algebraiczna
+z tego rozdziału jest $d$ razy większa od luki
+znormalizowanej z rozdziału \ref{ch:tg-expanders}.
+Dla grafu bez krawędzi ($d=0$) ten wzór normalizujący
+nie jest określony; Laplasjan kombinatoryczny
+$L_G=0$ pozostaje natomiast dobrze zdefiniowany.
+\end{uwaga}
+
+\begin{samepage}
 \begin{twierdzenie}[Tożsamość energii]
 \label{thm:tg-energy}
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+o $n\geq1$ wierzchołkach i $c$ składowych spójnych,
+z dodatnimi wagami krawędzi i laplasjanem ważonym $L$.
 Dla dowolnego $f\in\mathbb R^V$ zachodzi
 \[
 f^TLf=\sum_{\{u,v\}\in E}w_{uv}(f(u)-f(v))^2\ge0.
@@ -42,6 +67,7 @@ $\ker L$ składa się dokładnie z funkcji stałych na każdej
 składowej spójnej. W szczególności $\dim\ker L=c$ i
 $\operatorname{rank}L=n-c$.
 \end{twierdzenie}
+\end{samepage}
 
 \begin{proof}
 Ponieważ $L=BWB^T$, dostajemy
@@ -49,12 +75,13 @@ $f^TLf=(B^Tf)^TW(B^Tf)$. Dla krawędzi skierowanej
 pomocniczo $u\to v$ jej współrzędna wektora $B^Tf$
 wynosi $f(v)-f(u)$. Po rozwinięciu iloczynu otrzymujemy
 wskazaną sumę kwadratów. Jest ona nieujemna, gdyż wagi są
-dodatnie. Ponieważ dla macierzy symetrycznej dodatnio
-półokreślonej równość $f^TLf=0$ jest równoważna
-$Lf=0$, mamy $Lf=0$ wtedy i tylko wtedy, gdy na
-końcach każdej krawędzi $f$ przyjmuje równe wartości.
+dodatnie. Jeżeli $Lf=0$, suma kwadratów znika.
+Odwrotnie, jeśli suma znika, to z dodatniości wszystkich
+wag wynika $B^Tf=0$, a stąd $Lf=BWB^Tf=0$.
+Zatem $Lf=0$ dokładnie wtedy, gdy na końcach każdej
+krawędzi $f$ przyjmuje równe wartości.
 To oznacza dokładnie stałość na składowych spójnych.
-Ich wskaźniki stanowią bazę jądra, więc jego wymiar wynosi
+Funkcje charakterystyczne $\chi_C$ składowych spójnych $C$ stanowią bazę jądra, więc jego wymiar wynosi
 $c$, a rząd wynosi $n-c$.
 \end{proof}
 
@@ -75,8 +102,9 @@ Wartości własne laplasjanu wynoszą więc $0,1,3$.
 \label{sec:tg-harmonic}
 
 \begin{definicja}[Funkcja harmoniczna we wierzchołku]
-Dla ważonego grafu $G$ i funkcji $f:V\to\mathbb R$
-mówimy, że $f$ jest \emph{harmoniczna w wierzchołku $v$},
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+z dodatnimi wagami i laplasjanem ważonym $L$.
+Dla $f:V\to\mathbb R$ oraz $v\in V$ mówimy, że $f$ jest \emph{harmoniczna w wierzchołku $v$},
 jeżeli $(Lf)(v)=0$. Oznaczmy przez $d_w(v):=\sum_{u:\,uv\in E}w_{uv}$
 jego ważony stopień.
 \end{definicja}
@@ -119,8 +147,9 @@ analogiczne stwierdzenie dla minimum.
 
 \begin{twierdzenie}[Dyskretne zagadnienie Dirichleta]
 \label{thm:tg-dirichlet}
-Niech $G=(V,E)$ będzie skończonym grafem z dodatnimi
-wagami, a $S\subseteq V$ niepustym zbiorem przecinającym
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+z dodatnimi wagami i laplasjanem ważonym $L$,
+a $S\subseteq V$ niepustym zbiorem przecinającym
 każdą składową spójną. Dla dowolnej funkcji brzegowej
 $g:S\to\mathbb R$ istnieje dokładnie jedna funkcja
 $f:V\to\mathbb R$ taka, że $f|_S=g$ oraz
@@ -158,6 +187,23 @@ dla $\eta\ne0$ na mocy dodatniej określoności $L_{II}$.
 Otrzymujemy jednoznaczność minimum.
 \end{proof}
 
+\begin{uwaga}[Konieczność warunku na zbiór brzegowy]
+Jeśli pewna składowa spójna $C$ grafu $G$ nie spotyka
+zbioru $S$, to $\chi_C$ należy do jądra $L$ i znika na $S$.
+Dodanie do dowolnego rozwiązania wielokrotności
+$\chi_C$ zachowuje dane brzegowe i harmoniczność,
+a także energię. Rozwiązanie nadal istnieje: na
+składowych spotykających $S$ stosujemy twierdzenie
+\ref{thm:tg-dirichlet}, na pozostałych wybieramy funkcje
+stałe. Wszelkie różnice rozwiązań są stałe na każdej
+składowej i zerowe na składowych spotykających $S$.
+Istotnie, dla różnicy $h$ mamy $h|_S=0$ oraz
+$(Lh)|_{V\setminus S}=0$, więc $h^TLh=0$.
+Z tożsamości energii wynika żądana charakterystyka.
+W szczególności wymiar przestrzeni różnic jest równy
+liczbie składowych nieprzecinających $S$.
+\end{uwaga}
+
 \begin{przyklad}[Napięcie na łańcuchu trzech wierzchołków]
 Na ścieżce $a-b-c$ ustalamy $f(a)=0$, $f(c)=1$
 i przyjmujemy wagi jednostkowe. Harmoniczność w $b$ daje
@@ -191,14 +237,17 @@ $(d_0f)(e)=f(v)-f(u)$.
 Operator sprzężony wynosi $d_0^*=B:C^1\to C^0$.
 
 \begin{definicja}[Laplasjany Hodge'a na grafie]
-Dla skończonego grafu prostego z jednostkowymi wagami
-definiujemy operator na $0$-kołańcuchach
+Niech $G$ będzie skończonym grafem prostym z jednostkowymi
+wagami i macierzą incydencji $B$. Definiujemy operator
+na $0$-kołańcuchach
 $\Delta_0:=d_0^*d_0=BB^T$ i operator na
 $1$-kołańcuchach $\Delta_1:=d_0d_0^*=B^TB$.
-$k$-kołańcuch $\omega$ nazywamy harmonicznym,
+Dla $k\in\{0,1\}$ kołańcuch $\omega\in C^k(G)$
+nazywamy harmonicznym,
 gdy $\Delta_k\omega=0$.
 \end{definicja}
 
+\begin{samepage}
 \begin{twierdzenie}[Harmoniczne reprezentanty kohomologii]
 \label{thm:tg-hodge-harmonic}
 Niech $G$ będzie skończonym grafem prostym o $n$ wierzchołkach,
@@ -211,10 +260,11 @@ $m$ krawędziach i $c$ składowych. Wtedy
 Ponadto każda klasa w
 $H^1(G;\mathbb R):=C^1(G)/\operatorname{im}d_0$
 ma dokładnie jednego przedstawiciela należącego do
-$\ker\Delta_1$. Ponieważ graf jest kompleksem
-jednowymiarowym, operator $d_1:C^1\to C^2=0$ jest zerowy,
+$\ker\Delta_1$. Ponieważ realizacja grafu jest kompleksem CW o wymiarze
+co najwyżej jeden, operator $d_1:C^1\to C^2=0$ jest zerowy,
 a więc $H^1=\ker d_1/\operatorname{im}d_0$.
 \end{twierdzenie}
+\end{samepage}
 
 \begin{proof}
 Ponieważ $\langle\Delta_0f,f\rangle=\|B^Tf\|^2$,
@@ -228,7 +278,10 @@ wynosi $m-n+c$ z twierdzenia \ref{thm:tg-rank}.
 Z rozkładu ortogonalnego
 $C^1=\operatorname{im}B^T\oplus^\perp\ker B$
 każdy $x\in C^1$ rozkłada się jednoznacznie na
-$x=d_0f+h$, gdzie $h\in\ker B$. W klasie $[x]$
+$x=d_0f+h$, gdzie $h\in\ker B$.
+Jednoznaczne są składniki $d_0f$ i $h$, natomiast
+$f$ jest wyznaczona z dokładnością do funkcji stałej
+na każdej składowej spójnej. W klasie $[x]$
 modulo obrazu $d_0$ przedstawiciel $h$ istnieje,
 a gdyby były dwa, ich różnica należałaby zarówno
 do $\operatorname{im}B^T$, jak i do jego dopełnienia
@@ -241,13 +294,15 @@ ma postać $d:\Omega^k\to\Omega^{k+1}$, a laplasjan
 Hodge'a to $\Delta=dd^*+d^*d$. Na grafie mamy tylko
 wymiary zero i jeden, więc $d_1=0$: stąd na
 $C^0$ pozostaje $d_0^*d_0$, a na $C^1$ -- $d_0d_0^*$.
-To szczególny, skończeniewymiarowy model twierdzenia,
-że klasy kohomologii mają jednoznacznych harmonicznych
-reprezentantów.
+To skończeniewymiarowy odpowiednik twierdzenia Hodge'a
+dla zwartych orientowalnych rozmaitości riemannowskich
+bez brzegu, gdzie każda klasa kohomologii de Rhama
+ma jednoznacznego harmonicznego reprezentanta.
 \end{uwaga}
 
 \begin{stwierdzenie}[Dodatnie widma dwóch laplasjanów]
-Niech $B$ będzie rzeczywistą macierzą incydencji grafu.
+Niech $B$ będzie rzeczywistą macierzą incydencji
+skończonego grafu prostego.
 Dodatnie wartości własne macierzy $BB^T$ i $B^TB$
 są takie same, z tymi samymi krotnościami.
 \end{stwierdzenie}
@@ -260,28 +315,43 @@ $B^TB(B^Tf)=B^T(BB^Tf)=\lambda B^Tf$.
 W drugą stronę, dla $B^TBh=\lambda h$ wektor
 $Bh$ jest niezerowy i spełnia
 $BB^T(Bh)=\lambda Bh$.
-Przekształcenia $B^T$ i $B$ tworzą wzajemnie odwrotne
-izomorfizmy przestrzeni własnych po przeskalowaniu
-przez $\lambda^{-1}$. Stąd zgadzają się krotności.
+Ograniczenia $B^T$ oraz $\lambda^{-1}B$ do odpowiednich
+przestrzeni własnych są wzajemnie odwrotne, ponieważ
+$BB^Tf=\lambda f$ oraz $B^TBh=\lambda h$.
+Obie macierze są symetryczne, więc krotności
+algebraiczne ich wartości własnych są równe wymiarom
+odpowiednich przestrzeni własnych.
 \end{proof}
 
 \section{Twierdzenie macierzowo-drzewowe Kirchhoffa}
 \label{sec:tg-matrix-tree}
 
 \begin{definicja}[Liczba drzew rozpinających]
-Dla skończonego grafu prostego $G$ przez $\tau(G)$
-oznaczamy liczbę jego drzew rozpinających.
+Dla skończonego grafu prostego $G$ o niepustym
+zbiorze wierzchołków przez $\tau(G)$ oznaczamy liczbę jego drzew rozpinających.
 Jeśli $G$ jest niespójny, przyjmujemy $\tau(G)=0$.
 Dla grafu jednoelementowego $K_1$ przyjmujemy
 $\tau(K_1)=1$, ponieważ jego jedynym drzewem
 rozpinającym jest on sam.
 \end{definicja}
 
+\begin{uwaga}[Dwa różne niezmienniki]
+W rozdziale \ref{ch:tg-skojarzenia} symbol
+$\tau_V(G)$ oznacza najmniejszą moc pokrycia
+wierzchołkowego. W tym rozdziale i w dalszych
+zastosowaniach twierdzenia Kirchhoffa
+$\tau(G)$ oznacza natomiast liczbę drzew
+rozpinających. Nie należy utożsamiać
+tych dwóch wielkości.
+\end{uwaga}
+
 \begin{twierdzenie}[Kirchhoff: liczba drzew z minora laplasjanu]
 \label{thm:tg-kirchhoff}
 Niech $G=(V,E)$ będzie skończonym spójnym grafem prostym,
 $|V|=n\ge1$, z dodatnimi wagami $w_e$ na krawędziach.
-Niech $L=BWB^T$, a $L^{(r)}$ macierzą otrzymaną
+Niech $B$ będzie macierzą incydencji, $W$ diagonalną
+macierzą wag, $L=BWB^T$ i $r\in V$. Niech $L^{(r)}$
+będzie macierzą otrzymaną
 przez skreślenie wiersza i kolumny odpowiadających
 wierzchołkowi $r\in V$. Wówczas
 \[
@@ -382,6 +452,158 @@ i $1$. Suma $2+2+1=5$ zgadza się z wynikiem macierzowym.
 \end{tikzpicture}
 \end{center}
 
+\section{Minory główne laplasjanu i lasy ukorzenione}
+\label{sec:tg-rooted-forests}
+
+Usunięcie jednego wiersza i jednej kolumny w twierdzeniu
+Kirchhoffa odpowiada wybraniu korzenia drzewa.
+Usunięcie większej liczby wierszy i odpowiadających im
+kolumn prowadzi do lasów, w których każda składowa
+zawiera dokładnie jeden z zadanych korzeni.
+
+\begin{twierdzenie}[Wzór na lasy z zadanym zbiorem korzeni]
+\label{thm:tg-rooted-forest-minor}
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+o $n\geq1$ wierzchołkach z dodatnimi wagami $w_e$,
+a $L$ jego laplasjanem ważonym, zdefiniowanym przez
+macierz incydencji $B$ i macierz wag $W$ jako $BWB^T$.
+Dla dowolnego niepustego zbioru $S\subseteq V$ niech
+$I=V\setminus S$, a $L_{II}$ oznacza podmacierz
+o wierszach i kolumnach indeksowanych przez $I$. Wówczas
+\[
+\det L_{II}=\sum_{F\in\mathcal F_S}\prod_{e\in E(F)}w_e,
+\]
+gdzie $\mathcal F_S$ jest rodziną lasów rozpinających $G$,
+w których każda składowa zawiera dokładnie jeden
+wierzchołek zbioru $S$. Przyjmujemy, że wyznacznik
+pustej macierzy i pusty iloczyn wynoszą $1$.
+Suma po pustej rodzinie wynosi $0$.
+\end{twierdzenie}
+
+\begin{proof}
+Oznaczmy $k=|I|$. Dla $k=0$ jedynym dopuszczalnym
+lasem jest graf na $V$ bez krawędzi, więc obie strony
+wynoszą $1$. Dla $k>0$ niech $B_I$ będzie macierzą
+powstałą przez pozostawienie wierszy $B$ odpowiadających
+$I$. Jeżeli $m=|E|<k$, rząd $L_{II}$ jest mniejszy
+od $k$ i nie istnieje dopuszczalny las, który musiałby
+mieć $k$ krawędzi. Obie strony są więc zerowe.
+W przeciwnym przypadku wzór Cauchy'ego--Bineta daje
+\[
+\det L_{II}=\sum_{\substack{A\subseteq E\\|A|=k}}
+    \det(B_{I,A})^2\prod_{e\in A}w_e.
+\]
+Jeżeli $(V,A)$ zawiera cykl, odpowiadające mu kolumny
+macierzy $B$ są liniowo zależne, a ta zależność zachodzi
+również po ograniczeniu do wierszy $I$.
+Taki składnik ma zerowy wyznacznik.
+
+Jeżeli $(V,A)$ jest lasem, to liczba jego składowych
+wynosi $n-k=|S|$. Gdy pewna składowa $C$ nie zawiera
+żadnego elementu $S$, wszystkie jej wierzchołki należą
+do $I$. Suma odpowiadających im wierszy $B_{I,A}$
+jest zerowa: krawędzie lasu albo mają oba końce
+w $C$, albo żaden. Jest to nietrywialna zależność
+wierszy. Jeżeli natomiast każda składowa spotyka $S$,
+to z równości liczby składowych i liczby korzeni
+wynika, że każda zawiera dokładnie jeden korzeń.
+
+W tym ostatnim przypadku porządkujemy wiersze
+i kolumny według składowych. Powstaje macierz
+blokowo diagonalna, której blok dla składowej $C$
+jest macierzą incydencji drzewa $C$ z usuniętym
+wierszem jego korzenia. Każdy blok jest kwadratowy,
+a jego wyznacznik wynosi $\pm1$ na mocy argumentu
+z usuwaniem liści z dowodu twierdzenia
+\ref{thm:tg-kirchhoff}. Składowa jednowierzchołkowa
+odpowiada pustemu blokowi. Permutowanie wierszy
+i kolumn może zmienić tylko znak wyznacznika,
+zatem $\det(B_{I,A})^2=1$.
+Po podstawieniu do sumy otrzymujemy tezę.
+\end{proof}
+
+\begin{uwaga}[Kiedy minor Dirichleta jest dodatni?]
+Przy dodatnich wagach wzór
+\ref{thm:tg-rooted-forest-minor} pokazuje, że
+$\det L_{II}>0$ dokładnie wtedy, gdy $S$
+spotyka każdą składową spójną grafu.
+Istnienie dopuszczalnego lasu oczywiście wymaga
+tego warunku. Aby wykazać wystarczalność, dla
+każdego $v\notin S$ wybieramy sąsiada $p(v)$
+o odległości od zbioru $S$ mniejszej o jeden,
+korzystając z najkrótszej drogi do $S$.
+Wybieramy wszystkie krawędzie $\{v,p(v)\}$.
+Są parami różne: ich ponowny wybór przez drugi
+koniec wymagałby jednoczesnego spadku odległości
+w obu kierunkach. Nie tworzą cyklu, bo wierzchołek
+o największej odległości od $S$ na hipotetycznym
+cyklu musiałby wybrać obie krawędzie cyklu
+(krawędzie łączą różne poziomy), a wybiera tylko jedną.
+Każdy wierzchołek łączy się z pewnym korzeniem
+przez kolejne przejścia do $p(v)$. Las ma
+$n-|S|$ krawędzi, a więc $|S|$ składowych,
+z których każda zawiera co najmniej jeden korzeń.
+Zatem każda zawiera dokładnie jeden.
+Dodatniość minora wynika z istnienia takiego lasu.
+Jest to kombinatoryczna kontrola warunku
+odwracalności macierzy z twierdzenia
+\ref{thm:tg-dirichlet}, także dla $I=\varnothing$.
+\end{uwaga}
+
+\begin{wniosek}[Wielomian lasów ukorzenionych]
+\label{cor:tg-rooted-forest-polynomial}
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+o $n\geq1$ wierzchołkach, z dodatnimi wagami $w_e$
+i laplasjanem ważonym $L$. Dla $t\in\mathbb R$
+zachodzi
+\[
+\det(L+tI_n)=
+\sum_F t^{c(F)}
+\left(\prod_{C\in\operatorname{Comp}(F)}|V(C)|\right)
+\prod_{e\in E(F)}w_e,
+\]
+gdzie suma biegnie po wszystkich lasach rozpinających
+$F$ grafu $G$, $\operatorname{Comp}(F)$ jest zbiorem ich
+składowych, a $c(F)$ oznacza liczbę tych składowych.
+\end{wniosek}
+\begin{proof}
+Z wieloliniowości wyznacznika względem kolumn
+otrzymujemy
+\[
+\det(L+tI_n)=\sum_{S\subseteq V}t^{|S|}
+\det L_{V\setminus S,V\setminus S}.
+\]
+Istotnie, dla kolumn o indeksach w $S$ wybieramy $t$ razy
+wektor bazy standardowej, a rozwinięcie względem
+tych kolumn usuwa odpowiadające im wiersze i kolumny
+bez zmiany znaku, ponieważ usuwamy te same indeksy
+wierszy i kolumn.
+
+Składnik $S=\varnothing$ znika,
+ponieważ $L$ ma niezerowy wektor stały w jądrze.
+Dla pozostałych składników stosujemy twierdzenie
+\ref{thm:tg-rooted-forest-minor}.
+Ustalony las $F$ występuje dla każdego zbioru $S$
+zawierającego dokładnie jeden wierzchołek z każdej
+składowej lasu. Takich zbiorów jest
+$\prod_{C\in\operatorname{Comp}(F)}|V(C)|$ i wszystkie
+mają moc $c(F)$. Grupowanie wyrazów daje wzór.
+\end{proof}
+
+\begin{przyklad}[Lasy ukorzenione na ścieżce]
+Na ścieżce $a-b-c$ o wagach jednostkowych, przy
+$S=\{a,c\}$ mamy $I=\{b\}$ i $\det L_{II}=2$.
+Dopuszczalne są dokładnie dwa lasy: jeden zawiera
+krawędź $ab$, drugi $bc$. Dla wszystkich zbiorów
+korzeni otrzymujemy
+$\det(L+tI_3)=t(t+1)(t+3)=t^3+4t^2+3t$.
+Współczynnik przy $t$ pochodzi z jednego drzewa
+i trzech wyborów korzenia. Współczynnik przy $t^2$
+pochodzi z dwóch lasów, z których każdy ma
+składowe o mocach $1$ i $2$. Współczynnik przy $t^3$
+odpowiada lasowi bez krawędzi.
+\end{przyklad}
+
 \section{Wartości własne laplasjanu i liczba drzew}
 \label{sec:tg-spectrum-tree}
 
@@ -401,22 +623,30 @@ liczonymi z krotnościami. Wtedy
 Z twierdzenia o energii i spójności jądro $L$ jest
 jednowymiarowe, rozpięte przez $\mathbf1=(1,\ldots,1)^T$.
 Z twierdzenia Kirchhoffa każdy główny kofaktor $L$
-wynosi $\tau(G)$. Co więcej, macierz dopełnień
-algebraicznych $\operatorname{adj}(L)$ ma wszystkie
-kolumny w $\ker L$, ponieważ
-$L\operatorname{adj}(L)=(\det L)I=0$.
-Symetria $L$ i zgodność diagonalnych elementów
-$\operatorname{adj}(L)$ z $\tau(G)$ dają
-$\operatorname{adj}(L)=\tau(G)\mathbf1\mathbf1^T$.
+wynosi $\tau(G)$. Macierz dołączona
+$\operatorname{adj}(L)$ (transpozycja macierzy dopełnień
+algebraicznych) ma wszystkie kolumny w $\ker L$,
+ponieważ $L\operatorname{adj}(L)=(\det L)I=0$.
+Jej $j$-ta kolumna jest więc wielokrotnością
+$\mathbf1$; element diagonalny tej kolumny jest
+równy $\tau(G)$, co wyznacza tę wielokrotność.
+Stąd $\operatorname{adj}(L)=\tau(G)\mathbf1\mathbf1^T$.
 
 Rozważmy macierz
 $M=L+\tfrac1n\mathbf1\mathbf1^T$.
 Na prostej rozpiętej przez $\mathbf1$ działa ona jako
 identyczność, a na dopełnieniu ortogonalnym jak $L$.
-Zatem jej wartości własne to $1,\lambda_2,\ldots,\lambda_n$
+Zatem jej wartości własne, z uwzględnieniem krotności,
+to $1,\lambda_2,\ldots,\lambda_n$
 i $\det M=\prod_{j=2}^n\lambda_j$.
-Z drugiej strony wzór na wyznacznik po dodaniu
-macierzy rzędu jeden daje
+Z drugiej strony korzystamy z tożsamości
+$\det(A+uv^T)=\det A+v^T\operatorname{adj}(A)u$,
+ważnej również dla macierzy osobliwych.
+Wynika ona z wieloliniowości wyznacznika względem
+kolumn: składniki z co najmniej dwiema kolumnami
+pochodzącymi z $uv^T$ znikają, a składniki z jedną
+taką kolumną dają rozwinięcia według dopełnień
+algebraicznych. Otrzymujemy
 \[
 \det M=\det L+\frac1n\mathbf1^T\operatorname{adj}(L)\mathbf1
 =\frac1n\tau(G)n^2=n\tau(G).
@@ -441,10 +671,31 @@ $\tau(K_n)=\frac1n n^{n-1}=n^{n-2}$.
 \end{proof}
 
 \begin{przyklad}[Widmo cyklu i grafu z przekątną]
-Dla $C_4$ wartości własne laplasjanu wynoszą
-$0,2,2,4$. Otrzymujemy $\tau(C_4)=\frac14(2\cdot2\cdot4)=4$.
-Dodajmy jedną przekątną do kwadratu. Otrzymamy graf
-$K_4$ bez jednej krawędzi, którego widmo to $0,2,4,4$.
+Ponumerujmy wierzchołki $C_4$ kolejno od $1$ do $4$.
+Wtedy
+\[
+L=\begin{pmatrix}
+2&-1&0&-1\\-1&2&-1&0\\0&-1&2&-1\\-1&0&-1&2
+\end{pmatrix}.
+\]
+Bezpośrednie mnożenie pokazuje, że wektory
+\[
+\begin{aligned}
+u_0&=(1,1,1,1)^T,&u_1&=(1,0,-1,0)^T,\\
+u_2&=(0,1,0,-1)^T,&u_3&=(1,-1,1,-1)^T
+\end{aligned}
+\]
+są wektorami własnymi dla wartości odpowiednio
+$0,2,2,4$. Są niezerowe i parami ortogonalne,
+więc tworzą bazę $\mathbb R^4$.
+Otrzymujemy $\tau(C_4)=\frac14(2\cdot2\cdot4)=4$.
+Dodajmy przekątną $13$ o wadze jednostkowej.
+Otrzymamy graf $K_4$ bez jednej krawędzi.
+Jeśli $b=(1,0,-1,0)^T=u_1$, to nowy laplasjan
+jest równy $L+bb^T$, na mocy wzoru $BWB^T$.
+Ponieważ $b^Tu_1=2$ i $b^Tu_j=0$ dla $j\ne1$,
+jedynie wartość własna odpowiadająca $u_1$
+wzrasta z $2$ do $4$. Nowe widmo to $0,2,4,4$.
 Stąd $\tau=\frac14(2\cdot4\cdot4)=8$.
 Dodanie pojedynczej krawędzi podwoiło więc liczbę
 rozpinających drzew w tym przykładzie.
@@ -457,7 +708,18 @@ Laplasjan może również opisywać sieć elektryczną: wagę $w_e>0$
 interpretujemy jako przewodność krawędzi, a jej odwrotność
 $r_e=1/w_e$ jako opór. Ustalenie kierunków krawędzi jest wyłącznie
 pomocnicze; to równania przepływu, a nie te kierunki, wyznaczają
-prąd w sieci.
+prąd w sieci. W przyjętej konwencji macierzy $B$
+kolumna krawędzi $u\to v$ ma znak $-1$ przy $u$
+i $+1$ przy $v$. Niech $i_e$ oznacza prąd fizyczny, dodatni w kierunku
+pomocniczym $u\to v$. Z prawa Ohma
+$i_e=w_e(f(u)-f(v))$. W przyjętej konwencji
+$Bi$ jest bilansem wpływającego prądu pomniejszonego
+o wypływający. Dla jednostkowego źródła w $s$
+i ujścia w $t$ mamy zatem $-Bi=[s]-[t]$, gdzie
+$[v]$ oznacza wektor bazy standardowej przy $v$.
+W dalszym ciągu zapisujemy $j=-i=WB^Tf$,
+więc równania przyjmują postać $Bj=Lf=[s]-[t]$.
+Zmiana znaku nie wpływa na energię prądu.
 
 \begin{definicja}[Efektywna rezystancja między wierzchołkami]
 Niech $G=(V,E)$ będzie skończonym spójnym grafem prostym,
@@ -470,7 +732,10 @@ Liczbę $R_{\mathrm{eff}}(s,t):=f(s)-f(t)$ nazywamy
 \end{definicja}
 
 \begin{stwierdzenie}[Istnienie rozwiązania i dodatniość oporu]
-W sytuacji z poprzedniej definicji równanie $Lf=b$ ma
+Niech $G=(V,E)$ będzie skończonym spójnym grafem
+prostym z dodatnimi przewodnościami $w_e$,
+$L$ jego laplasjanem ważonym, a $s,t\in V$ różnymi
+wierzchołkami. Dla $b=[s]-[t]$ równanie $Lf=b$ ma
 rozwiązanie, a każde dwa rozwiązania różnią się funkcją stałą.
 Liczba $R_{\mathrm{eff}}(s,t)$ nie zależy od wyboru rozwiązania
 i jest ściśle dodatnia. Ponadto
@@ -500,8 +765,49 @@ a więc $Lf=0$, wbrew $b\ne0$. W konsekwencji
 $R_{\mathrm{eff}}(s,t)>0$.
 \end{proof}
 
+\begin{samepage}
+\begin{wniosek}[Rezystancja jako iloraz wag lasów i drzew]
+\label{cor:tg-resistance-forest}
+Niech $G=(V,E)$ będzie skończonym spójnym grafem
+prostym z dodatnimi przewodnościami $w_e$,
+a $s,t\in V$ różnymi wierzchołkami.
+Niech $\tau_w(G)=\sum_T\prod_{e\in E(T)}w_e$,
+gdzie suma przebiega po drzewach rozpinających.
+Wówczas
+\[
+R_{\mathrm{eff}}(s,t)=
+\frac{\displaystyle\sum_{F\in\mathcal F_{\{s,t\}}}
+                \prod_{e\in E(F)}w_e}{\tau_w(G)}.
+\]
+W liczniku występują lasy rozpinające o dwóch
+składowych, rozdzielających $s$ i $t$.
+\end{wniosek}
+\end{samepage}
+\begin{proof}
+Wybierzmy rozwiązanie $Lf=[s]-[t]$ z normalizacją
+$f(t)=0$. Niech $J=V\setminus\{t\}$.
+Ograniczenie układu do wierszy $J$ daje
+$L_{JJ}f_J=[s]_J$. Macierz $L_{JJ}$ jest odwracalna
+na mocy twierdzenia \ref{thm:tg-dirichlet} (lub
+twierdzenia Kirchhoffa).
+Wzór na element diagonalny macierzy odwrotnej daje
+\[
+f(s)=(L_{JJ}^{-1})_{ss}
+=\frac{\det L_{V\setminus\{s,t\},V\setminus\{s,t\}}}
+       {\det L_{JJ}}.
+\]
+W mianowniku stosujemy twierdzenie \ref{thm:tg-kirchhoff},
+w liczniku twierdzenie \ref{thm:tg-rooted-forest-minor}.
+Ponieważ $f(t)=0$, lewa strona jest rezystancją
+efektywną, co dowodzi wzoru, także dla $|V|=2$.
+\end{proof}
+
 \begin{twierdzenie}[Zasada Thomsona: minimalna energia przepływu]
-Niech $G,B,W,s,t,b$ będą jak wyżej. Przez
+Niech $G=(V,E)$ będzie skończonym spójnym grafem
+prostym z dodatnimi przewodnościami $w_e$, $B$ jego
+macierzą incydencji, $W=\operatorname{diag}(w_e)$,
+a $s,t\in V$ różnymi wierzchołkami. Niech $b=[s]-[t]$
+i $L=BWB^T$. Przez
 $\mathcal J:=\{j\in\mathbb R^E:Bj=b\}$ oznaczmy
 zbiór wszystkich prądów krawędziowych realizujących
 jednostkowy przepływ między $s$ i $t$.
@@ -530,12 +836,97 @@ otrzymujemy
 \end{aligned}
 \]
 W drugim przejściu użyliśmy $j_0=WB^Tf$,
-a w trzecim $Bh=0$ i poprzedniego stwierdzenia.
+a w trzecim $h^TB^Tf=(Bh)^Tf=0$ i tożsamości
+$R_{\mathrm{eff}}(s,t)=f^TLf$.
 Ponieważ $W^{-1}$ jest dodatnio określona,
 ostatni składnik jest nieujemny i znika wyłącznie
 dla $h=0$. Zatem $j_0$ jest jedynym minimizatorem,
 a wartość minimum wynosi $R_{\mathrm{eff}}(s,t)$.
 \end{proof}
+
+\begin{twierdzenie}[Monotoniczność Rayleigha]
+\label{thm:tg-resistance-rayleigh}
+Niech $G=(V,E)$ będzie skończonym spójnym grafem
+prostym, $s,t\in V$, $s\ne t$, a $w,w'$ dwiema
+rodzinami dodatnich przewodności na $E$, takimi że
+$w'_e\ge w_e$ dla każdej krawędzi $e$.
+Niech $R_w$ i $R_{w'}$ oznaczają rezystancje
+efektywne dla odpowiednich przewodności.
+Wtedy $R_{w'}(s,t)\le R_w(s,t)$.
+Równość zachodzi dokładnie wtedy, gdy prąd minimalizujący
+energię dla $w$ znika na każdej krawędzi, której
+przewodność ściśle zwiększono.
+\end{twierdzenie}
+
+\begin{proof}
+Niech $j$ będzie jedynym minimizatorem dla $w$.
+Zbiór dopuszczalnych prądów $Bj=[s]-[t]$
+nie zależy od przewodności. Z zasady Thomsona mamy
+\[
+R_{w'}(s,t)\le \sum_e\frac{j_e^2}{w'_e}
+\le \sum_e\frac{j_e^2}{w_e}=R_w(s,t).
+\]
+Jeżeli zachodzi równość skrajnych wyrażeń, to
+$\sum_e j_e^2(1/w_e-1/w'_e)=0$.
+Każdy składnik jest nieujemny, a współczynnik
+jest dodatni dokładnie dla $w'_e>w_e$.
+Stąd na tych krawędziach $j_e=0$.
+
+Odwrotnie, załóżmy, że $j$ znika na wszystkich
+krawędziach o zwiększonej przewodności.
+Niech $f$ spełnia $BWB^Tf=[s]-[t]$.
+Z zasady Thomsona $j=WB^Tf$. Na krawędziach
+o zmienionej wadze mamy $(B^Tf)_e=0$, gdyż
+$w_e>0$ i $j_e=0$. Na pozostałych wag nie zmieniono.
+W konsekwencji $W'B^Tf=WB^Tf=j$, a więc
+$BW'B^Tf=[s]-[t]$. Ta sama funkcja $f$ rozwiązuje
+równanie dla nowych przewodności. Różnica
+$f(s)-f(t)$ pozostaje bez zmian, co daje równość.
+\end{proof}
+
+\begin{wniosek}[Dodawanie krawędzi]
+Niech $G$ będzie skończonym spójnym grafem prostym
+z dodatnimi przewodnościami, a $s,t$ jego różnymi
+wierzchołkami, a $L$ jego ważonym laplasjanem.
+Dodanie krawędzi między różnymi niesąsiadującymi
+wierzchołkami $u,v$ z dodatnią przewodnością nie zwiększa
+$R_{\mathrm{eff}}(s,t)$. Zmniejsza ją ściśle wtedy i tylko
+wtedy, gdy $f(u)\ne f(v)$ dla rozwiązania $Lf=[s]-[t]$
+w pierwotnym grafie.
+\end{wniosek}
+
+\begin{proof}
+Przedłużamy stary prąd minimalizujący przez zero na
+nowej krawędzi. Jest on dopuszczalny i ma tę samą
+energię, więc nowe minimum nie przekracza starego.
+Jeśli minima są równe, przedłużony prąd jest
+minimizatorem także w nowym grafie. Z zasady Thomsona
+pochodzi z potencjału $g$, a zerowy prąd na nowej
+krawędzi daje $g(u)=g(v)$. Zachowujemy pomocnicze orientacje starych krawędzi.
+Prądy pochodzące z $f$ i $g$ są na nich identyczne,
+czyli $WB^T(f-g)=0$. Odwracalność $W$ daje
+$B^T(f-g)=0$. Spójność daje stałość $f-g$,
+a stąd $f(u)=f(v)$.
+Odwrotnie, jeśli $f(u)=f(v)$, dodatkowa krawędź
+nie zmienia wartości laplasjanu zastosowanego do $f$.
+Funkcja $f$ rozwiązuje zatem nowe równanie i
+rezystancja pozostaje bez zmian.
+\end{proof}
+
+\begin{przyklad}[Krawędź między punktami o tym samym potencjale]
+Rozważmy cykl o krawędziach $sa,at,tb,bs$ i
+przewodnościach jednostkowych. Funkcja
+$f(s)=1$, $f(t)=0$, $f(a)=f(b)=1/2$ spełnia
+$Lf=[s]-[t]$: w $s$ suma różnic wynosi $1$,
+w $t$ wynosi $-1$, a w $a,b$ znika.
+Rezystancja między $s$ i $t$ wynosi $1$.
+Dodanie krawędzi $ab$ o dowolnej dodatniej
+przewodności nie zmienia tej rezystancji,
+ponieważ jej końce mają ten sam potencjał.
+Natomiast zwiększenie przewodności $sa$ zmniejsza
+rezystancję ściśle, gdyż pierwotny prąd na tej
+krawędzi ma moduł $1/2$.
+\end{przyklad}
 
 \begin{przyklad}[Dwa równoległe sposoby przejścia prądu]
 Dla ścieżki $s-a-t$ o przewodnościach równych jeden
@@ -580,19 +971,24 @@ zwiększa przewodność pomiędzy $s$ i $t$.}
 \end{center}
 
 
+\newpage
 \section{Luka spektralna i geometryczne znaczenie laplasjanu}
 \label{sec:tg-spectral-gap}
 
 \begin{definicja}[Druga wartość własna]
 Niech $G$ będzie spójnym grafem prostym o $n\ge2$
 wierzchołkach i laplasjanie nieważonym $L$.
-Liczbę $\lambda_2(G)$, czyli drugą najmniejszą
-wartość własną $L$, nazywamy \emph{spójnością algebraiczną}
+Liczbę $\lambda_2(G)$, czyli drugą w rosnącym uporządkowaniu
+wartości własnych $L$ z uwzględnieniem krotności, nazywamy \emph{spójnością algebraiczną}
 (lub \emph{luką spektralną} laplasjanu).
 \end{definicja}
 
 \begin{twierdzenie}[Zasada Rayleigha]
-Niech $G$ będzie jak wyżej. Wówczas
+Niech $G=(V,E)$ będzie skończonym spójnym grafem
+prostym o $n\ge2$ wierzchołkach, z jednostkowymi
+wagami. Niech $\lambda_2(G)$ oznacza drugą najmniejszą
+wartość własną jego laplasjanu, liczoną z krotnościami.
+Wówczas
 \[
 \lambda_2(G)=\min_{\substack{x\in\mathbb R^V\setminus\{0\}\\
                \sum_{v\in V}x_v=0}}
@@ -602,7 +998,7 @@ Niech $G$ będzie jak wyżej. Wówczas
 
 \begin{proof}
 Macierz $L$ jest rzeczywista i symetryczna, więc posiada
-ortogonalną bazę wektorów własnych. Wektor
+ortonormalną bazę wektorów własnych. Wektor
 $\mathbf1/\sqrt n$ odpowiada wartości własnej zero.
 Każdy $x\perp\mathbf1$ możemy zapisać w pozostałej
 części tej bazy jako $x=\sum_{j=2}^na_ju_j$.
@@ -620,7 +1016,7 @@ nie ma niezerowego takiego wektora, stąd $\lambda_2>0$.
 
 Liczba $\lambda_2$ mierzy opór wobec zmian funkcji między
 połączonymi wierzchołkami. W następnym etapie, po wprowadzeniu
-grafów planarnych i osadzeń grafów w powierzchniach,
+grafów planarnych i zanurzeń grafów w powierzchniach,
 połączymy laplasjan z topologią komórek wyższych wymiarów,
 kompleksami dualnymi i dalszymi przykładami dyskretnej geometrii.
 

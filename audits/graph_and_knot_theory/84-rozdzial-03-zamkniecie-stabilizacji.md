@@ -1,0 +1,7 @@
+# Rozdział 03 — ZAMKNIĘTY
+
+2026-11-24. Końcowe źródło: commit 0754720c6744842a3b36fa72b0ce354e3cf414e6, blob 9e80542ccb21b4ccd63e45518eea0f9fa3c04d8c; potwierdzono zgodność z aktualną gałęzią. Pełny audyt 45363634147: structural-audit i full-book-pdf completed/success. Pobrano artefakt 14905303687 dla tego SHA. PDF 307 stron, plik ostrzeżeń 0 bajtów. Wyrenderowano i obejrzano wszystkie sześć stron rozdziału, fizyczne 33–38, drukowane 23–28, rozdział 04 zaczyna się na fizycznej 39. Rysunki, podpisy, wzory i odsyłacze czytelne; brak widocznych kolizji i potrzeby zmiany składu.
+
+Trwałe regresje z commitu 18db186da6244e150e474782d71300302812aee3 potwierdzone w przebiegu 45363761045, job 138340089973 structural-audit completed/success. Rzeczywisty log: PASS chapter 03 Euler: 3137 directed, 462 undirected multigraphs, 10688 closed endpoint pairs, 21166 open endpoint pairs, 462 balanced orientation cases; PASS chapter 03 constructions: 771 graphs, 7612 DFS orientations, 456 Hierholzer runs, 4320 incidence reads. Powtórna kompilacja po zmianie wyłącznie testów jeszcze trwała przy odczycie, ale dokładne źródło rozdziału zostało już skompilowane i obejrzane. Nie utożsamiać tego z zakończeniem drugiego przebiegu PDF.
+
+Status ZAMKNIĘTY w zakresie wykonanych kontroli. Raporty 79–83 dokumentują audyty dowodów, dwie propozycje pierwszego audytu i ich realizację, stabilizację oraz testy. Kolejny rozdział 04 — pierwszy audyt. Propozycje rozszerzeń wyłącznie po pierwszym audycie, później stabilizacja. Nie wracać do 03 bez konkretnej nowej przesłanki.

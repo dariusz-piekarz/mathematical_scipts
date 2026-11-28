@@ -10,6 +10,7 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from contextlib import asynccontextmanager
 import asyncio
+import hashlib
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Annotated, Any, Literal
@@ -17,13 +18,23 @@ import os
 import sqlite3
 
 import networkx as nx
-from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import FileResponse
+from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictBool
 
 from backend.latex_parser import analyze_selection, get_stats, show_label
+from backend.label_registry import qualified_occurrence
+from backend.graph_coverage import graph_coverage, reading_reference_issues
 from backend import workspaces
+from backend import figure_preview
+from backend.concept_graph import build_concept_graph
+from backend import lean_catalog
+from backend import lean_chapter_report
+from backend import lean_dependencies
+from backend import lean_introspection
+from backend import lean_formalization
+from backend import lean_transcription
 
 ROOT = Path(__file__).resolve().parents[1]
 FRONTEND = ROOT / "frontend"
@@ -48,7 +59,43 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Biblioteka matematyczna — API", version="0.4.0", docs_url="/api/docs", redoc_url=None, lifespan=lifespan)
-app.mount("/assets", StaticFiles(directory=FRONTEND), name="assets")
+class ReaderStaticFiles(StaticFiles):
+    """Core reader assets are always revalidated, including old unversioned URLs."""
+
+    async def get_response(self, path, scope):
+        response = await super().get_response(path, scope)
+        if path in {"index.html", "styles.css", "preview.js", "app.js", "session.js"}:
+            response.headers["Cache-Control"] = "no-cache, must-revalidate"
+        return response
+
+
+app.mount("/assets", ReaderStaticFiles(directory=FRONTEND), name="assets")
+
+
+@app.websocket('/api/lifecycle/socket')
+async def desktop_connection(socket: WebSocket):
+    # A different website must not control the lifetime of this local process.
+    from urllib.parse import urlsplit
+    origin = urlsplit(socket.headers.get('origin', ''))
+    if (origin.scheme != 'http' or origin.hostname not in {'127.0.0.1', 'localhost', '::1'}
+            or origin.netloc != socket.headers.get('host')):
+        await socket.close(code=1008)
+        return
+    await socket.accept()
+    lifecycle = getattr(app.state, 'desktop_lifecycle', None)
+    if lifecycle is None:
+        await socket.send_json({'managed': False})
+        await socket.close()
+        return
+    token = lifecycle.connected()
+    try:
+        await socket.send_json({'managed': True})
+        while True:
+            await socket.receive_text()
+    except WebSocketDisconnect:
+        pass
+    finally:
+        lifecycle.disconnected(token)
 
 
 def database_path() -> Path:
@@ -93,7 +140,15 @@ def entity_payload(row: sqlite3.Row) -> dict[str, Any]:
 
 @app.get("/")
 def index():
-    return FileResponse(FRONTEND / "index.html")
+    html = (FRONTEND / "index.html").read_text(encoding="utf-8")
+    # Updated reader code must not be mixed with an older cached stylesheet.
+    for name in ("styles.css", "preview.js", "session.js", "app.js", "vendor/math-macro-profiles.js"):
+        asset = FRONTEND / name
+        if name.startswith("vendor/") and not asset.is_file():
+            continue  # Source view remains available without optional KaTeX assets.
+        revision = hashlib.sha256(asset.read_bytes()).hexdigest()[:16]
+        html = html.replace(f'"/assets/{name}"', f'"/assets/{name}?v={revision}"')
+    return HTMLResponse(html, headers={"Cache-Control": "no-cache"})
 
 
 @app.get("/api/health")
@@ -130,7 +185,7 @@ def modules(domain: str | None = None, q: str = "", limit: Annotated[int,Query(g
     with db_connection() as con:
         sql_where = " AND ".join(where)
         count = con.execute(f"SELECT count(*) FROM documents WHERE {sql_where}",params).fetchone()[0]
-        rows = con.execute(f"SELECT id,title,domain,path,length(content) AS length FROM documents WHERE {sql_where} ORDER BY domain,id LIMIT ? OFFSET ?", (*params, limit, offset)).fetchall()
+        rows = con.execute(f"SELECT id,title,domain,path,length(content) AS length FROM documents WHERE {sql_where} ORDER BY domain, CASE WHEN id IN ('MOD-24','MOD-25','MOD-26','MOD-27','MOD-28') THEN 0 WHEN id LIKE 'MOD-%' THEN 1 ELSE 0 END, id LIMIT ? OFFSET ?", (*params, limit, offset)).fetchall()
         return {"total":count,"items":[dict(x) for x in rows]}
 
 
@@ -171,17 +226,201 @@ def entity_detail(entity_id: str, full: bool = False):
                 "truncated":bool(limit and len(content)>limit), "full_length":len(content)}
 
 
+
+@app.get("/api/lean/status")
+def lean_toolchain_status():
+    """Local availability of the trusted, explicitly enabled Lean runner."""
+    return lean_formalization.availability()
+
+
+@app.get("/api/lean/catalog")
+def lean_catalog_index():
+    """Browse registered mappings, independently of compilation status."""
+    with db_connection() as con:
+        return lean_catalog.list_formalizations(con)
+
+
+@app.get("/api/lean/chapter-report")
+def lean_chapter_diagnostics(module_id: str):
+    """Versioned registration diagnostics for one chapter; no cached proof claims."""
+    with db_connection() as con:
+        return lean_chapter_report.chapter_report(con, module_id)
+
+
+@app.get("/api/lean/dependencies")
+def lean_dependencies_graph(formalization_id: str):
+    """Read manifest links and literal imports; not proof-level dependencies."""
+    with db_connection() as con:
+        return lean_dependencies.graph(con, formalization_id)
+
+
+class LeanInspectionRequest(BaseModel):
+    formalization_id: str = Field(min_length=1, max_length=100)
+    classify_references: bool = False
+
+
+@app.post("/api/lean/dependencies/inspect")
+def inspect_lean_declaration_constants(request: LeanInspectionRequest):
+    """Opt-in local Lean process: actual expression references, no certificate."""
+    with db_connection() as con:
+        return lean_introspection.inspect(
+            con, request.formalization_id,
+            classified=request.classify_references)
+
+
+@app.get("/api/lean/fragment")
+def lean_fragment(entity_id: str | None = None, module_id: str | None = None,
+                  start_line: Annotated[int | None, Query(ge=1)] = None,
+                  end_line: Annotated[int | None, Query(ge=1)] = None):
+    """Show exact indexed LaTeX and registered Lean code; never synthesize proof status."""
+    with db_connection() as con:
+        return lean_formalization.fragment(
+            con, entity_id=entity_id, module_id=module_id,
+            start_line=start_line, end_line=end_line)
+
+
+class LeanTranscriptionPrepareRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    entity_id: str = Field(min_length=1, max_length=300)
+    expected_source_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    consent: StrictBool
+
+
+@app.post("/api/lean/transcription/prepare")
+def prepare_lean_transcription(request: LeanTranscriptionPrepareRequest):
+    """Prepare an offline experimental request, not a generated Lean proof."""
+    with db_connection() as con:
+        # All provenance reads use one SQLite read snapshot.
+        con.execute("BEGIN")
+        return lean_transcription.prepare(
+            con, entity_id=request.entity_id,
+            expected_source_sha256=request.expected_source_sha256,
+            consent=request.consent)
+
+
+class LeanRunRequest(BaseModel):
+    formalization_id: str = Field(min_length=1, max_length=100)
+
+
+@app.post("/api/lean/run")
+def lean_run(request: LeanRunRequest):
+    """Run only a registered repository Lean file, never browser-provided code."""
+    with db_connection() as con:
+        return lean_formalization.run(con, request.formalization_id)
+
+
 @app.get("/api/labels/{label:path}")
-def label_detail(label: str):
+def label_detail(label: str, source_document: str | None = None):
     if len(label)>300:
         raise HTTPException(status_code=400,detail="Zbyt długa etykieta.")
+    if source_document is not None and len(source_document)>100:
+        raise HTTPException(status_code=400,detail="Zbyt długi identyfikator źródła.")
     with db_connection() as con:
-        result = show_label(con,label,max_chars=1700)
-        if not result:
-            raise HTTPException(status_code=404,detail="Etykieta nie istnieje.")
-        count = con.execute("SELECT count(*) FROM references_tex WHERE target_label=?",(label,)).fetchone()[0]
-        result["incoming_references"] = count
+        return resolve_label(con, label, source_document)
+
+
+def resolve_label(con, label, source_document=None):
+    qualified = qualified_occurrence(label)
+    if qualified is not None:
+        target_document, canonical_label = qualified
+        result = show_label(con, canonical_label, max_chars=1700, document_id=target_document)
+        if result is None:
+            raise HTTPException(status_code=404, detail="Etykieta nie istnieje we wskazanym rozdziale.")
+        result.update(name=label, canonical_label=canonical_label,
+                      source_document=source_document, occurrence_id=label,
+                      resolution_status="external_resolved")
+        result["incoming_references"] = con.execute(
+            "SELECT count(*) FROM references_tex WHERE target_document=? AND target_label=?",
+            (target_document, label)).fetchone()[0]
         return result
+    if source_document:
+        resolved = con.execute("""SELECT DISTINCT target_document,target_entity,status
+            FROM references_tex WHERE source_document=? AND target_label=?
+              AND target_document IS NOT NULL
+              AND status IN ('resolved','external_resolved','alias_resolved','included_resolved')""",
+              (source_document,label)).fetchall()
+        targets = {(r["target_document"],r["target_entity"]) for r in resolved}
+        if len(targets) == 1:
+            target_document,target_entity = next(iter(targets))
+            actual = con.execute("""SELECT name FROM label_occurrences
+                WHERE document_id=? AND (entity_id=? OR name=?)
+                ORDER BY CASE WHEN name=? THEN 0 ELSE 1 END, line LIMIT 1""",
+                (target_document,target_entity,label,label)).fetchone()
+            if not actual and resolved[0]["status"] == "included_resolved":
+                provenance = con.execute("""SELECT origin_path,origin_line,origin_offset
+                    FROM included_label_origins WHERE document_id=? AND name=?
+                    ORDER BY origin_path,origin_line LIMIT 1""",
+                    (target_document,label)).fetchone()
+                if provenance is not None:
+                    root = ROOT.parent.resolve()
+                    origin = (root / provenance["origin_path"]).resolve()
+                    if origin.is_relative_to(root) and origin.is_file():
+                        content = origin.read_text(encoding="utf-8-sig")
+                        position = provenance["origin_offset"]
+                        title = con.execute("SELECT title FROM documents WHERE id=?",
+                                            (target_document,)).fetchone()["title"]
+                        return {"name":label,"canonical_label":label,
+                                "document_id":target_document,"entity_id":None,
+                                "source_document":source_document,
+                                "occurrence_id":f"{target_document}::included::{label}",
+                                "resolution_status":"included_resolved",
+                                "origin_path":provenance["origin_path"],
+                                "origin_line":provenance["origin_line"],
+                                "title":title,"line":provenance["origin_line"],
+                                "latex":content[max(0,position-140):position+1560],
+                                "incoming_references":len(resolved)}
+            if actual:
+                result = show_label(con,actual["name"],max_chars=1700,document_id=target_document)
+                if result is not None:
+                    result["canonical_label"] = actual["name"]
+                    result["name"] = label
+                    result["source_document"] = source_document
+                    result["occurrence_id"] = f"{target_document}::{actual['name']}"
+                    result["resolution_status"] = resolved[0]["status"]
+                    result["incoming_references"] = con.execute(
+                        "SELECT count(*) FROM references_tex WHERE target_label=? AND source_document=?",
+                        (label,source_document)).fetchone()[0]
+                    return result
+    options = con.execute("""SELECT c.document_id,c.line,c.entity_id,d.title,d.domain
+         FROM label_conflicts c JOIN documents d ON d.id=c.document_id
+         WHERE c.name=? ORDER BY c.document_id""", (label,)).fetchall()
+    if options:
+        count = con.execute("SELECT count(*) FROM references_tex WHERE target_label=?", (label,)).fetchone()[0]
+        return {"name":label,"ambiguous":True,"candidates":[dict(x) for x in options],
+                "incoming_references":count}
+    result = show_label(con,label,max_chars=1700)
+    if not result:
+        raise HTTPException(status_code=404,detail="Etykieta nie istnieje.")
+    count = con.execute("SELECT count(*) FROM references_tex WHERE target_label=?",(label,)).fetchone()[0]
+    result["incoming_references"] = count
+    return result
+
+
+class ReferenceDescriptionsRequest(BaseModel):
+    source_document: str | None = Field(default=None, max_length=100)
+    labels: list[str] = Field(max_length=200)
+
+
+@app.post('/api/references/descriptions')
+def reference_descriptions(request: ReferenceDescriptionsRequest):
+    """Resolve a batch with exactly the same context rules as opening a reference."""
+    items = {}
+    with db_connection() as con:
+        for label in dict.fromkeys(request.labels):
+            if not label or len(label) > 300:
+                raise HTTPException(status_code=400, detail='Nieprawid?owa etykieta.')
+            try:
+                result = resolve_label(con, label, request.source_document)
+            except HTTPException as exc:
+                if exc.status_code != 404:
+                    raise
+                items[label] = {'name': label, 'missing': True}
+                continue
+            items[label] = {key: result[key] for key in (
+                'name', 'document_id', 'entity_id', 'entity_title', 'title', 'kind',
+                'subtype', 'line', 'ambiguous', 'candidates', 'occurrence_id',
+            ) if key in result}
+    return {'items': items}
 
 
 @app.get("/api/search")
@@ -266,8 +505,9 @@ def bipartite_graph(con: sqlite3.Connection, left: str, right: str,
     docs = {r["id"]:dict(r) for r in con.execute("SELECT id,title,domain FROM documents")}
     if left not in {r["domain"] for r in docs.values()} or right not in {r["domain"] for r in docs.values()}:
         raise HTTPException(status_code=400,detail="Nieznana dziedzina.")
-    rows=con.execute("""SELECT source_document,source_entity,target_document,target_entity,target_label
-                        FROM references_tex WHERE status='resolved' AND target_document IS NOT NULL
+    invalid_ids = {issue["reference_id"] for issue in reading_reference_issues(con)["issues"]}
+    rows=con.execute("""SELECT id,source_document,source_entity,target_document,target_entity,target_label
+                        FROM references_tex WHERE status IN ('resolved','external_resolved','alias_resolved','included_resolved') AND target_document IS NOT NULL
                           AND source_document!=target_document""").fetchall()
     owners={}
     if granularity == "section":
@@ -300,6 +540,8 @@ def bipartite_graph(con: sqlite3.Connection, left: str, right: str,
     nodes: dict[str,dict[str,Any]]={}
     for r in rows:
         s,d=r["source_document"],r["target_document"]
+        if r["id"] in invalid_ids or s not in docs or d not in docs:
+            continue
         if docs[s]["domain"]==left and docs[d]["domain"]==right:
             leftdoc,rightdoc=s,d;le=r["source_entity"];re=r["target_entity"]
         elif docs[d]["domain"]==left and docs[s]["domain"]==right:
@@ -322,6 +564,16 @@ def bipartite_graph(con: sqlite3.Connection, left: str, right: str,
             "available_edges":len(ordered)}
 
 
+@app.get("/api/concepts/graph")
+def concept_occurrence_graph(
+    q: Annotated[str, Query(min_length=2, max_length=100)],
+    max_occurrences: Annotated[int, Query(ge=1, le=80)] = 36,
+):
+    """Grounded concept graph: actual TeX occurrences plus curated relations."""
+    with db_connection() as con:
+        return build_concept_graph(con, q, max_occurrences)
+
+
 @app.get("/api/graph")
 def graph(left: str, right: str, granularity: Literal["module","section","entity"]="module",
           min_weight:Annotated[int,Query(ge=1,le=100)]=1,
@@ -330,15 +582,26 @@ def graph(left: str, right: str, granularity: Literal["module","section","entity
         return bipartite_graph(con,left,right,granularity,min_weight,max_edges)
 
 
+@app.get("/api/graph/coverage")
+def reference_graph_coverage():
+    """Global chapter inventory including isolated vertices and empty domain pairs."""
+    with db_connection() as con:
+        catalog = ROOT.parent / "catalog" / "books.json"
+        return graph_coverage(con, catalog if catalog.is_file() else None)
+
+
 @app.get("/api/graph/path")
 def graph_path(source: str, target: str):
     with db_connection() as con:
         require_document(con,source);require_document(con,target)
+        # Use the audited edge set, not the unfiltered SQL dependency view.
+        coverage = graph_coverage(con)
         G=nx.Graph()
-        for r in con.execute("SELECT source_document,target_document,references_count FROM dependency_edges WHERE source_document!=target_document"):
-            a,b=r["source_document"],r["target_document"]
-            if G.has_edge(a,b):G[a][b]["weight"]+=r["references_count"]
-            else:G.add_edge(a,b,weight=r["references_count"])
+        G.add_nodes_from(c["id"] for c in coverage["chapters"])
+        for r in coverage["edges"]:
+            a,b=r["source"],r["target"]
+            if G.has_edge(a,b):G[a][b]["weight"]+=r["weight"]
+            else:G.add_edge(a,b,weight=r["weight"])
         try:
             path=nx.shortest_path(G,source,target)
         except (nx.NodeNotFound,nx.NetworkXNoPath):
@@ -349,10 +612,19 @@ def graph_path(source: str, target: str):
                 "relation":"undirected_explicit_references","direction_ignored":True}
 
 # Generator API: no canonical .tex or SQLite writes, no shell execution.
+class CustomItem(BaseModel):
+    kind: Literal["module", "entity", "lines"]
+    id: str | None = Field(default=None, max_length=300)
+    module: str | None = Field(default=None, max_length=100)
+    start_line: int | None = None
+    end_line: int | None = None
+
+
 class GenerateRequest(BaseModel):
     title: str = Field(default='Mój skrypt matematyczny',min_length=1,max_length=160)
     modules: list[str] = Field(default_factory=list,max_length=75)
     entities: list[str] = Field(default_factory=list,max_length=300)
+    items: list[CustomItem] | None = Field(default=None,max_length=300)
     closure_depth: int = Field(default=0,ge=0,le=3)
 
 
@@ -362,7 +634,8 @@ def generate_project_endpoint(selection: GenerateRequest):
     from backend.generator import GenerationError, project_files, zip_project
     try:
         with db_connection() as con:
-            files,manifest=project_files(con,selection.modules,selection.entities,selection.title,selection.closure_depth)
+            files,manifest=project_files(con,selection.modules,selection.entities,selection.title,selection.closure_depth,
+                                     items=([item.model_dump(exclude_none=True) for item in selection.items] if selection.items is not None else None))
         archive=zip_project(files)
     except GenerationError as exc:
         raise HTTPException(status_code=422,detail=str(exc)) from exc
@@ -377,7 +650,8 @@ def generate_manifest_endpoint(selection: GenerateRequest):
     from backend.generator import GenerationError, project_files
     try:
         with db_connection() as con:
-            _,manifest=project_files(con,selection.modules,selection.entities,selection.title,selection.closure_depth)
+            _,manifest=project_files(con,selection.modules,selection.entities,selection.title,selection.closure_depth,
+                                     items=([item.model_dump(exclude_none=True) for item in selection.items] if selection.items is not None else None))
         return manifest
     except GenerationError as exc:
         raise HTTPException(status_code=422,detail=str(exc)) from exc
@@ -389,7 +663,8 @@ def create_draft(selection: GenerateRequest, session_id: str | None = None):
     from backend.generator import GenerationError, project_files, zip_project
     try:
         with db_connection() as con:
-            files, manifest = project_files(con, selection.modules, selection.entities, selection.title, selection.closure_depth)
+            files, manifest = project_files(con, selection.modules, selection.entities, selection.title, selection.closure_depth,
+                                            items=([item.model_dump(exclude_none=True) for item in selection.items] if selection.items is not None else None))
         return workspaces.stage_project(zip_project(files), manifest, session_id)
     except (GenerationError, workspaces.WorkspaceError) as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
@@ -423,6 +698,34 @@ def discard_draft(session_id: str):
 @app.get('/api/projects')
 def saved_projects():
     return {'items': workspaces.list_saved_projects()}
+
+
+@app.get('/api/plotly/bundle.js', include_in_schema=False)
+def plotly_bundle():
+    """Serve the installed package's local, fixed JavaScript asset."""
+    try:
+        import plotly
+        bundle = Path(plotly.__file__).resolve().parent / 'package_data' / 'plotly.min.js'
+    except ImportError as exc:
+        raise HTTPException(status_code=503, detail='Zainstaluj zależności aplikacji (Plotly).') from exc
+    if not bundle.is_file():
+        raise HTTPException(status_code=503, detail='Brak lokalnego pakietu JavaScript Plotly.')
+    return FileResponse(bundle, media_type='application/javascript',
+                        headers={'Cache-Control': 'no-cache'})
+
+
+@app.get('/api/modules/{module_id}/figures/{figure_id}.png')
+def preview_figure(module_id: str, figure_id: str):
+    with db_connection() as con:
+        require_document(con, module_id)
+        content = con.execute('SELECT content FROM documents WHERE id=?', (module_id,)).fetchone()['content']
+    try:
+        path = figure_preview.render(module_id, content, figure_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail='Nie znaleziono rysunku w rozdziale.') from exc
+    except figure_preview.FigureError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    return FileResponse(path, media_type='image/png')
 
 
 @app.get('/api/projects/{project_id}/download')

@@ -1,0 +1,14 @@
+# RRC 15 — iteracja 268: końcowy audyt kontrolny
+
+Źródło b4952ce41cfeb61edb446c84bd59948940bed4f6, 1457 wierszy. Trzeci szczegółowy przebieg 259–265: 64/64 bez nowych usterek. Odrębna kontrola przekrojowa z naciskiem na zależności logiczne, hipotezy i brak błędnych kół:
+
+- Definicja słabego rozwiązania i rozszerzenie testów opierają się na lokalnej aproksymacji, nie na tezie o H². Dyskretne całkowanie przez części zachowuje właściwy znak i nośniki; kryterium słabej pochodnej nie wymaga wcześniejszej różniczkowalności.
+- Wewnętrzne H²: współczynniki różnicowe ograniczane przez słabe pierwsze pochodne; iloraz f przeniesiony na test, nie zakłada się f w H¹. Stałe niezależne od kroku h. Słabe granice w L²(U), a nie jedynie na pojedynczych zwartych zbiorach.
+- Caccioppoli nie potrzebuje regularności pochodnych A ani symetrii. Bootstrap używa wyłącznie już uzyskanego H^{m+1} do wyprowadzenia równania dla pochodnych rzędu m i ponownego zastosowania H²; oszacowania zagnieżdżone. Gładkość wynika z zanurzeń, nie z analityczności.
+- Zmiana współrzędnych: reguły składania niezależne od równania, właściwy moduł wyznacznika i kolejność czynników, rozdzielone ograniczenia lokalne/globalne; H² składania użyte dopiero po uzyskaniu H² w półkuli.
+- Lemat styczny: ślady i przedłużenia zerowe uzasadniają testy, nie przedłuża się równania przez brzeg; oszacowania sięgają płaskiego brzegu. Globalna regularność: najpierw q_d w H¹ z dywergencji i pochodnych stycznych, następnie odzyskanie partial_d v przez dodatni współczynnik b_dd; brak mnożenia nieznanej dystrybucji przez funkcję Lipschitzowską. Skończone pokrycie, stałe, przypadek d=1 oraz redukcja niejednorodnych danych poprawne.
+- Uwaga o dziedzinie laplasjanu w RRC 12 nie jest używana w dowodzie H²; wynika z niego i niezależnej dystrybucyjnej charakterystyki. Oba kontrprzykłady naruszają konkretne hipotezy twierdzeń, nie ich tezy przy zachowanych hipotezach. Podsumowanie odróżnia warunki wystarczające od koniecznych.
+
+Kontrola programowa: 23 etykiety, 76 odsyłaczy, brak brakujących lub wieloznacznych celów w siedmiu sprawdzanych plikach. Ponownie porównano 12 blobów aktualnej gałęzi z commitem CI 1ff77ca07429b87cd23dea42e980ba2ebb4712ef: RRC 07,09,10,12,13,14,15, książka, manifest, code-listings, preambuła Atlasu, dedykowany workflow. Wszystkie 12 identyczne. Odbiór techniczny z iteracji 267 aktualny: CI 45966233611 success, PDF 16/16 stron sprawdzonych wizualnie. Izolowany PDF nie ma aktywnych celów odsyłaczy do innych rozdziałów.
+
+Nie stwierdzono nowych usterek w kontroli przekrojowej. Audyty matematyczne RRC 15 i dedykowany odbiór techniczny zamknięte. Globalne CI aplikacji nadal niepotwierdzone: najnowszy widoczny przebieg 45966883895 w kolejce. Nie uznaje się go za PASS. Następna iteracja: RRC 16, pierwszy szczegółowy audyt oszacowań Calderóna–Zygmunda i Schaudera.

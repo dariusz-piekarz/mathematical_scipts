@@ -1,0 +1,72 @@
+name: Functional analysis - chapter 32 audit
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/functional_analysis/32-*.tex'
+      - 'tools/tests/test_functional_analysis_ch32.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-ch32:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check chapter 32 spectral theorem regressions
+        run: python3 tools/tests/test_functional_analysis_ch32.py
+      - name: Prepare chapter context from the current AF inventory
+        id: context
+        run: python3 tools/prepare_functional_analysis_context.py 32
+      - name: Generate AF reference context after DT activation
+        if: steps.context.outputs.dt_active == 'true'
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: functional_analysis.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Generate DT reference context after DT activation
+        if: steps.context.outputs.dt_active == 'true'
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: distribution_theory.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Compile chapter 32 with complete 01-33 reference context
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: functional_analysis_ch32_context_ci.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Verify PDF, chapter heading, mathematical content and cross-references
+        run: |
+          if ! command -v pdfinfo >/dev/null || ! command -v pdftotext >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq poppler-utils
+          fi
+          test -s books/pl/functional_analysis_ch32_context_ci.pdf
+          test -s books/pl/functional_analysis_ch32_context_ci.log
+          if grep -E 'Undefined control sequence|There were undefined references|LaTeX Warning: (Reference|Citation).*undefined|Overfull \\hbox|Missing character' books/pl/functional_analysis_ch32_context_ci.log; then
+            echo 'Chapter 32 LaTeX diagnostics failed.'
+            exit 1
+          fi
+          pdfinfo books/pl/functional_analysis_ch32_context_ci.pdf
+          pdftotext -layout books/pl/functional_analysis_ch32_context_ci.pdf books/pl/functional_analysis_ch32_context_ci.txt
+          grep -q 'Teoria spektralna operatorów ograniczonych' books/pl/functional_analysis_ch32_context_ci.txt
+          grep -q 'Całkowanie względem dowolnej miary spektralnej' books/pl/functional_analysis_ch32_context_ci.txt
+          grep -q 'Rozkład polarny operatora ograniczonego' books/pl/functional_analysis_ch32_context_ci.txt
+      - name: Upload PDF and diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: functional-analysis-ch32-pdf
+          path: |
+            books/pl/functional_analysis_ch32_context_ci.pdf
+            books/pl/functional_analysis_ch32_context_ci.log
+            books/pl/functional_analysis_ch32_context_ci.txt
+          if-no-files-found: warn

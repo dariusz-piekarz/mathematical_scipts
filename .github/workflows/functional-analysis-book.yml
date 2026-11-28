@@ -1,0 +1,143 @@
+name: Functional analysis - full book audit
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/functional_analysis/**'
+      - 'books/pl/functional_analysis.tex'
+      - 'books/pl/distribution_theory.tex'
+      - 'shared/pl/distribution_theory/candidate/**'
+      - 'shared/pl/distribution_theory/restructure/**'
+      - 'catalog/distribution_theory_structure_plan.json'
+      - 'tools/tests/test_distribution_theory_restructure.py'
+      - 'chapters/pl/distribution_theory/**'
+      - 'catalog/distribution_theory_migration.json'
+      - 'tools/tests/distribution_migration_sources.py'
+      - 'tools/tests/test_distribution_theory_foundations.py'
+      - 'tools/tests/test_functional_analysis_*.py'
+      - '.github/workflows/functional-analysis-book.yml'
+      - '.github/workflows/functional-analysis-ch*.yml'
+  workflow_dispatch:
+
+# Preserve independent manual audits; coalesce only obsolete queued pushes.
+concurrency:
+  group: atlas-functional-analysis-book-${{ github.event_name == 'workflow_dispatch' && format('manual-{0}', github.run_id) || github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  full-book:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Execute all chapter and book regression files
+        run: |
+          set -o pipefail
+          python3 - <<'PY' | tee fa-regressions.log
+          import subprocess, sys
+          from pathlib import Path
+          tests = sorted(Path('tools/tests').glob('test_functional_analysis_*.py'))
+          assert len(tests) == 36, tests
+          tests.append(Path('tools/tests/test_distribution_theory_foundations.py'))
+          tests.append(Path('tools/tests/test_distribution_theory_restructure.py'))
+          failed = []
+          for path in tests:
+              print(f'RUN {path}', flush=True)
+              result = subprocess.run([sys.executable, str(path)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+              print(result.stdout, flush=True)
+              if result.returncode:
+                  failed.append(str(path))
+          print(f'FA regression files: {len(tests)-len(failed)}/{len(tests)} passed', flush=True)
+          if failed:
+              print('Failed:', failed, flush=True)
+              sys.exit(1)
+          PY
+      - name: Compile actual master with title and table of contents
+        if: always()
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: functional_analysis.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Compile distribution theory with AF reference context
+        if: always()
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: distribution_theory.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Recompile AF after DT reference generation
+        if: always()
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: functional_analysis.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Verify PDF and final diagnostics
+        if: always()
+        run: |
+          set -e
+          if ! command -v pdftotext >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq poppler-utils
+          fi
+          cd books/pl
+          test -s functional_analysis.pdf
+          test -s functional_analysis.log
+          test -s functional_analysis.toc
+          pdfinfo functional_analysis.pdf
+          pdftotext -layout functional_analysis.pdf functional_analysis.txt
+          grep -q 'Analiza funkcjonalna' functional_analysis.txt
+          grep -q 'Spis treści' functional_analysis.txt
+          grep -q 'Operatory nieograniczone na przestrzeniach Hilberta' functional_analysis.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, json
+          toc = Path('functional_analysis.toc').read_text()
+          ids = re.findall(r'\\contentsline\s*\{section\}\s*\{\\numberline\s*\{([^}]+)\}',toc)
+          expected = [str(i) for i in range(1,16)]+['15A','15B']+[str(i) for i in range(16,34)]
+          catalog = json.loads(Path('../../catalog/books.json').read_text())
+          if any(b['id'] == 'distribution_theory' for b in catalog['books']):
+              expected = [i for i in expected if not (i.isdigit() and 17 <= int(i) <= 25)]
+          dt_toc = Path('distribution_theory.toc').read_text()
+          dt_ids = re.findall(r'\\contentsline\s*\{section\}\s*\{\\numberline\s*\{([^}]+)\}', dt_toc)
+          plan = json.loads(Path('../../catalog/distribution_theory_structure_plan.json').read_text())
+          dt_expected = ([str(r['number']) for r in plan['chapters'] if r.get('target_path')]
+                         if plan['status'] == 'active' else [str(i) for i in range(1,20)])
+          assert dt_ids == dt_expected, dt_ids
+          print('TOC sections:', ids)
+          assert ids == expected
+          PY
+          test -s distribution_theory.pdf
+          test -s distribution_theory.log
+
+
+          pdftotext -layout distribution_theory.pdf distribution_theory.txt
+          grep -q 'Teoria dystrybucji i analiza harmoniczna' distribution_theory.txt
+          if grep -E 'Undefined control sequence|There were undefined references|There were multiply-defined labels|LaTeX Warning: (Reference|Citation).*undefined|Overfull \\hbox|Missing character|destination with the same identifier' functional_analysis.log distribution_theory.log; then
+            echo 'Final LaTeX diagnostics failed.'
+            exit 1
+          fi
+      - name: Upload actual book and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: functional-analysis-full-book
+          path: |
+            fa-regressions.log
+            books/pl/functional_analysis.pdf
+            books/pl/functional_analysis.log
+            books/pl/functional_analysis.toc
+            books/pl/functional_analysis.txt
+            books/pl/distribution_theory.pdf
+            books/pl/distribution_theory.log
+            books/pl/distribution_theory.toc
+            books/pl/distribution_theory.txt
+          if-no-files-found: warn

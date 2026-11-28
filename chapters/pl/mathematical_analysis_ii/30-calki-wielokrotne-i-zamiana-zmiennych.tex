@@ -1,0 +1,1503 @@
+\chapter{Całki wielokrotne i zamiana zmiennych}
+\label{ma2:ch:multiple-integrals}
+
+Przechodzimy od całek na dowolnych zbiorach mierzalnych
+do metod ich obliczania przez całki iterowane i zamianę
+zmiennych. Ogólne dowody twierdzeń o miarach produktowych
+oraz zamianie zmiennych podano odpowiednio w
+\atlasref{ME-12::ch:produkty-miary}{ME 12} i
+\atlasref{ME-13::ch:zamiana-zmiennych}{ME 13}.
+Tutaj rozwijamy rachunek skalarny w przestrzeniach
+euklidesowych. Wszystkie miary w tym rozdziale są miarami
+Lebesgue'a odpowiednich wymiarów.
+
+\section{Intuicja: całkowanie warstwami i przekrojami}
+
+Całka wielokrotna pozostaje jedną całką
+względem miary odpowiedniego wymiaru.
+Całka iterowana jest natomiast metodą
+jej obliczania: najpierw sumujemy wkłady
+w jednym bloku współrzędnych, następnie
+w pozostałych. Na prostokącie podzielonym
+na komórki o bokach $\Delta x_i,\Delta y_j$
+sumę Riemanna można pogrupować:
+\[
+ \sum_{i,j}f(\xi_i,\eta_j)\Delta x_i\Delta y_j
+ =\sum_i\left(\sum_j f(\xi_i,\eta_j)
+                      \Delta y_j\right)\Delta x_i.
+\]
+Punkty $\xi_i,\eta_j$ są wybrane
+w odpowiednich przedziałach podziału.
+Można również pogrupować wyrazy najpierw
+według $j$. Dla funkcji ciągłej na
+domkniętym prostokącie przejście od tych
+sum do całek uzasadnimy w
+\ref{ma2:prop:multiple-riemann}.
+Dla dowolnej funkcji mierzalnej samo
+formalne przestawienie kolejności
+nieskończonych wkładów nie wystarcza.
+
+\paragraph{Od objętości do pól przekrojów.}
+Niech $Q=[0,1]^2$ oraz $f(x,y)=x+2y$.
+Pod wykresem $f$ nad $Q$ znajduje się
+bryła
+\[
+ B=\{(x,y,z):(x,y)\in Q,\ 0\le z\le x+2y\}.
+\]
+Jej objętość jest równa całce z $f$
+na mocy \ref{ma2:thm:riemann-subgraph-volume}.
+Przy ustalonym $x$ przekrój bryły
+w płaszczyźnie równoległej do płaszczyzny
+$yz$ jest trapezem o polu
+\[
+ A(x)=\int_0^1(x+2y)\,\mathrm d\lambda_1(y)=x+1.
+\]
+Traktujemy $A(x)$ jako pole przekroju
+prostopadłego do osi $x$:
+warstwa o małej grubości $\Delta x$
+ma objętość bliską $A(x)\Delta x$.
+Dokładne uzasadnienie całkowania pól
+przekrojów daje wniosek
+\ref{ma2:cor:multiple-sections}.
+W drugiej kolejności przekrój przy
+ustalonym $y$ ma pole $B(y)=1/2+2y$.
+Oba rachunki dają
+\[
+ \begin{aligned}
+ \int_Q f\,\mathrm d\lambda_2
+ &=\int_0^1(x+1)\,\mathrm d\lambda_1(x)\\
+ &=\int_0^1(1/2+2y)\,\mathrm d\lambda_1(y)
+ =\frac32.
+ \end{aligned}
+\]
+Całki jednowymiarowe obliczono ze
+wzoru Newtona--Leibniza. Dla gęstości
+mogącej przyjmować wartości ujemne
+analogiczne przekroje przedstawiają
+wkłady ze znakiem, nie zwykłe pola
+geometryczne.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(3cm,-.65cm)},y={(-2cm,-.7cm)},z={(0cm,1.35cm)},>=stealth]
+ \filldraw[fill=blue!12,draw=blue!65!black] (0,0,0)--(1,0,0)--(1,1,0)--(0,1,0)--cycle;
+ \filldraw[fill=blue!20,draw=blue!65!black,fill opacity=.38]
+ (0,1,0)--(1,1,0)--(1,1,3)--(0,1,2)--cycle;
+ \filldraw[fill=blue!30,draw=blue!65!black,fill opacity=.38]
+ (1,0,0)--(1,1,0)--(1,1,3)--(1,0,1)--cycle;
+ \filldraw[fill=orange!65,draw=orange!85!black,fill opacity=.8,thick]
+ (.5,0,0)--(.5,1,0)--(.5,1,2.5)--(.5,0,.5)--cycle;
+ \filldraw[fill=blue!25,draw=blue!65!black,fill opacity=.3]
+ (0,0,0)--(1,0,1)--(1,1,3)--(0,1,2)--cycle;
+ \draw[orange!85!black,thick] (.5,0,.5)--(.5,1,2.5);
+ \draw[->,gray!80!black] (0,0,0)--(1.3,0,0) node[right] {$x$};
+ \draw[->,gray!80!black] (0,0,0)--(0,1.25,0) node[left] {$y$};
+ \draw[->,gray!80!black] (0,0,0)--(0,0,3.35) node[above] {$z$};
+ \node[orange!85!black,below] at (.5,.5,0) {$x=1/2$};
+ \node[orange!85!black,right] at (.5,1,1.25) {$A(1/2)=3/2$};
+ \node[blue!75!black,above right] at (1,1,3) {$z=x+2y$};
+\end{tikzpicture}
+\caption{Bryła pod wykresem $x+2y$ nad kwadratem.
+Pomarańczowy trapez jest przekrojem
+dla $x=1/2$. Całkowanie pól takich przekrojów
+daje objętość całej bryły.}
+\label{ma2:fig:multiple-section-volume}
+\end{figure}
+
+\paragraph{Dlaczego potrzebujemy dwóch twierdzeń?}
+Dla funkcji nieujemnej częściowe wkłady
+mogą tylko powiększać całkę. Twierdzenie
+Tonellego pozwala wtedy całkować w obu
+kolejnościach, także gdy wynik jest
+nieskończony. Dla funkcji ze znakiem
+wkłady dodatnie i ujemne mogą się znosić.
+Twierdzenie Fubiniego zapewnia zgodność
+kolejności, gdy całka z modułu funkcji
+jest skończona. Samo istnienie obu
+skończonych całek iterowanych nie
+zapewnia ich równości (zob.
+\ref{ma2:ex:multiple-nonabsolute}).
+W praktyce najpierw można zastosować
+Tonellego do modułu funkcji, aby sprawdzić
+hipotezę Fubiniego.
+
+\section{Przekroje i całki iterowane}
+
+Niech $m,n,d\ge1$ będą liczbami naturalnymi.
+Dla $E\subseteq\R^m\times\R^n$ określamy przekroje
+\[
+ E_x=\{y\in\R^n:(x,y)\in E\},\qquad
+ E^y=\{x\in\R^m:(x,y)\in E\}.
+\]
+Jeżeli $E$ jest mierzalny i $f:E\to\R$ jest
+mierzalna względem $\sigma$-algebry Lebesgue'a
+ograniczonej do $E$, przedłużamy ją przez zero
+poza $E$; analogicznie dla funkcji
+nieujemnych o wartościach rozszerzonych.
+Takie przedłużenie jest mierzalne, gdy $E$ jest
+mierzalny (por. \ref{ma2:prop:lebesgue-zero-extension}).
+Dla zbioru Lebesgue'a-mierzalnego nie wszystkie
+przekroje muszą być mierzalne. Wynika to z różnicy
+pomiędzy produktową $\sigma$-algebrą a jej uzupełnieniem,
+omówionej w \atlasref{ME-12::thm:lebesgue-products-12}{ME 12}.
+
+\begin{twierdzenie}[Tonelli w przestrzeni euklidesowej]
+\label{ma2:thm:multiple-tonelli}
+Jeżeli $f:\R^{m+n}\to[0,\infty]$ jest mierzalna
+w sensie Lebesgue'a, to przekroje są mierzalne
+dla prawie wszystkich parametrów w odpowiednich
+przestrzeniach. Zachodzi
+\[
+ \begin{aligned}
+ \int_{\R^{m+n}} f\,\mathrm d\lambda_{m+n}
+ &=\int_{\R^m}\left(\int_{\R^n}f(x,y)\,
+   \mathrm d\lambda_n(y)\right)\mathrm d\lambda_m(x)\\
+ &=\int_{\R^n}\left(\int_{\R^m}f(x,y)\,
+   \mathrm d\lambda_m(x)\right)\mathrm d\lambda_n(y).
+ \end{aligned}
+\]
+Równości obowiązują w $[0,\infty]$; w całkach
+zewnętrznych przypisujemy wartość zero na
+mierzalnych zbiorach wyjątkowych miary zero.
+Tak określone funkcje całek przekrojowych są
+mierzalne w sensie Lebesgue'a.
+\end{twierdzenie}
+
+\begin{twierdzenie}[Fubini w przestrzeni euklidesowej]
+\label{ma2:thm:multiple-fubini}
+Niech $f:\R^{m+n}\to\R$ będzie mierzalna i
+\[
+ \int_{\R^{m+n}}|f|\,\mathrm d\lambda_{m+n}<\infty.
+\]
+Wówczas przekroje są całkowalne dla prawie
+wszystkich parametrów, a obie całki iterowane
+z poprzedniego twierdzenia istnieją jako całki
+skończone i są równe całce po $\R^{m+n}$.
+Funkcje całek przekrojowych są całkowalne
+po nadaniu wartości zero na mierzalnych zbiorach
+wyjątkowych miary zero.
+\end{twierdzenie}
+Obie tezy wynikają bezpośrednio z
+\atlasref{ME-12::thm:completed-product-fubini-12}{twierdzenia dla uzupełnionej miary produktowej}
+oraz identyfikacji miary produktowej po uzupełnieniu
+z $\lambda_{m+n}$.
+Wersję Tonellego dla funkcji $|f|$
+można zastosować przed sprawdzeniem całkowalności
+$f$: skończoność jednej z całek iterowanych
+z $|f|$ wystarcza do zastosowania Fubiniego.
+
+\begin{wniosek}[Całkowanie po przekrojach zbioru]
+\label{ma2:cor:multiple-sections}
+Jeżeli $E\subseteq\R^{m+n}$ jest mierzalny,
+to
+\[
+ \lambda_{m+n}(E)=
+ \int_{\R^m}\lambda_n(E_x)\,\mathrm d\lambda_m(x)
+ =\int_{\R^n}\lambda_m(E^y)\,\mathrm d\lambda_n(y).
+\]
+Dla nieujemnej mierzalnej lub całkowalnej funkcji
+$f$ na $E$ zachodzi
+\[
+ \int_E f\,\mathrm d\lambda_{m+n}
+ =\int_{\R^m}
+ \left(\int_{E_x}f(x,y)\,\mathrm d\lambda_n(y)\right)
+ \mathrm d\lambda_m(x),
+\]
+oraz analogiczny wzór w odwrotnej kolejności.
+Przekroje są mierzalne prawie wszędzie, a na
+mierzalnych zbiorach wyjątkowych miary zero
+przyjmujemy zerową wartość funkcji miary przekroju
+lub całki przekrojowej.
+\end{wniosek}
+\begin{proof}
+Dla miary zbioru stosujemy
+\ref{ma2:thm:multiple-tonelli} do $\chi_E$,
+a dla funkcji do jej przedłużenia zerem,
+stosując odpowiednio Tonellego albo Fubiniego.
+\end{proof}
+
+W szczególności na zbiorze
+$E=\{(x,y):a\le x\le b,\ \alpha(x)\le y\le\beta(x)\}$,
+gdzie $a<b$, $\alpha,\beta:[a,b]\to\R$ są ciągłe
+i $\alpha\le\beta$, dla funkcji nieujemnej
+mierzalnej lub całkowalnej na $E$ otrzymujemy
+\[
+ \int_E f\,\mathrm d\lambda_2
+ =\int_a^b\left(\int_{\alpha(x)}^{\beta(x)}
+ f(x,y)\,\mathrm d\lambda_1(y)\right)
+ \mathrm d\lambda_1(x).
+\]
+Zbiór $E$ jest zwarty, a wzór wynika z jego
+przekrojów. W kolejności odwrotnej trzeba
+wyznaczyć przekroje poziome; nie zawsze są one
+pojedynczymi przedziałami.
+
+\begin{przyklad}[Zmiana kolejności na obszarze płaskim]
+\label{ma2:ex:multiple-order}
+Niech $E=\{(x,y):0\le x\le1,\ x^2\le y\le x\}$.
+Dla $y\in[0,1]$ i $x\in[0,1]$ nierówności
+$x^2\le y\le x$ są równoważne
+$y\le x\le\sqrt y$.
+W szczególności
+\[
+ \lambda_2(E)=\int_0^1(x-x^2)\,\mathrm d\lambda_1(x)
+ =\int_0^1(\sqrt y-y)\,\mathrm d\lambda_1(y)=\frac16.
+\]
+Funkcja $f(x,y)=e^x$ jest ciągła i ograniczona
+na zwartym zbiorze $E$, więc jest całkowalna.
+Naturalna jest kolejność
+z całkowaniem najpierw względem $y$:
+\[
+ \int_E e^x\,\mathrm d\lambda_2
+ =\int_0^1(x-x^2)e^x\,\mathrm d\lambda_1(x)
+ =3-e.
+\]
+Ostatnią równość otrzymujemy przez dwukrotne
+całkowanie przez części lub z funkcji pierwotnej
+$(-x^2+3x-3)e^x$.
+Dobór kolejności zależy od funkcji podcałkowej,
+nie tylko od prostoty granic. W kolejnym przykładzie
+zamiana kolejności usuwa trudną całkę wewnętrzną.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=4]
+ \fill[blue!15] (0,0)--(1,1)
+  plot[domain=1:0,samples=60] (\x,{\x*\x})--cycle;
+ \draw[->] (-.06,0)--(1.16,0) node[right] {$x$};
+ \draw[->] (0,-.06)--(0,1.15) node[above] {$y$};
+ \draw[blue!75!black,thick] (0,0)--(1,1)
+  node[above left] {$y=x$};
+ \draw[blue!75!black,thick,domain=0:1,samples=60]
+  plot (\x,{\x*\x}) node[right] {$y=x^2$};
+ \draw[orange!90!black,very thick] (.55,.3025)--(.55,.55);
+ \draw[teal!85!black,very thick] (.45,.45)--({sqrt(.45)},.45);
+ \node[orange!90!black,below] at (.55,0) {$x$};
+ \node[teal!85!black,left] at (0,.45) {$y$};
+ \draw[gray,densely dashed] (.55,0)--(.55,.3025);
+ \draw[gray,densely dashed] (0,.45)--(.45,.45);
+ \node[below] at (1,0) {$1$};
+ \node[left] at (0,1) {$1$};
+\end{tikzpicture}
+\caption{Obszar między parabolą i prostą z przykładu
+\ref{ma2:ex:multiple-order}. Pionowy przekrój ma
+końce $x^2,x$, a poziomy $y,\sqrt y$.}
+\label{ma2:fig:multiple-order}
+\end{figure}
+
+\begin{przyklad}[Zmiana kolejności usuwa trudną całkę wewnętrzną]
+\label{ma2:ex:multiple-order-gauss}
+Niech $D=\{(x,y):0\le x\le y\le1\}$.
+Funkcja $e^{y^2}$ jest ciągła na $D$, więc
+przedłużenie zerem jest całkowalne.
+Przy całkowaniu najpierw względem $y$ pojawia się
+całka funkcji $e^{y^2}$. Zmieniając kolejność
+na podstawie \ref{ma2:cor:multiple-sections},
+otrzymujemy
+\[
+ \begin{aligned}
+ \int_D e^{y^2}\,\mathrm d\lambda_2(x,y)
+ &=\int_0^1\left(\int_x^1e^{y^2}\,
+       \mathrm d\lambda_1(y)\right)\mathrm d\lambda_1(x)\\
+ &=\int_0^1 ye^{y^2}\,\mathrm d\lambda_1(y)
+ =\frac{e-1}{2}.
+ \end{aligned}
+\]
+Ostatni krok wynika z podstawienia $u=y^2$.
+\end{przyklad}
+
+\begin{przyklad}[Przekroje wymagające podziału obszaru]
+\label{ma2:ex:multiple-order-split}
+Niech $D=\{(x,y):-1\le x\le1,\ x^2\le y\le1\}$.
+Dla $0\le y\le1$ przekrój poziomy jest równy
+$[-\sqrt y,\sqrt y]$. Jeśli jednak usuniemy
+pionowy pas $|x|<1/2$, otrzymamy zbiór $D'$
+o przekrojach pustych dla $y<1/4$ lub $y>1$ oraz
+$[-\sqrt y,-1/2]\cup[1/2,\sqrt y]$ dla $1/4\le y\le1$.
+Wzór \ref{ma2:cor:multiple-sections} daje
+\[
+ \lambda_2(D')=\int_{1/4}^1(2\sqrt y-1)\,
+ \mathrm d\lambda_1(y)=\frac5{12}.
+\]
+Możemy również skorzystać z symetrii i otrzymać
+$2\int_{1/2}^1(1-x^2)\,\mathrm d\lambda_1(x)=5/12$.
+W obu rachunkach granice wynikają bezpośrednio
+z nierówności określających $D'$.
+\end{przyklad}
+
+\section{Całki iterowane Riemanna i wyjątki}
+
+\begin{stwierdzenie}
+\label{ma2:prop:multiple-riemann}
+Niech $Q_1\subset\R^m$, $Q_2\subset\R^n$ będą
+domkniętymi prostopadłościanami o dodatnich
+długościach boków, $Q=Q_1\times Q_2$, a $f:Q\to\R$ funkcją całkowalną
+w sensie Riemanna. Jeżeli dla każdego $x\in Q_1$
+przekrój $f(x,\cdot)$ jest całkowalny w sensie
+Riemanna na $Q_2$, to funkcja
+\[
+ F(x)=\int_{Q_2}f(x,y)\,\mathrm d\lambda_n(y)
+\]
+jest całkowalna w sensie Riemanna i jej całka
+na $Q_1$ jest równa całce $f$ na $Q$.
+Wszystkie całki w tej tezie można rozumieć jako
+całki Riemanna; zapis Lebesgue'a jest równoważny.
+\end{stwierdzenie}
+\begin{proof}
+Dla podziałów prostokątnych $P_1,P_2$ oznaczmy
+przez $m_{ij},M_{ij}$ infimum i supremum $f$
+na iloczynie komórek $Q_{1,i}\times Q_{2,j}$.
+Dla każdego $x\in Q_{1,i}$ dolna i górna suma
+Darboux przekroju dają
+\[
+ \sum_j m_{ij}\lambda_n(Q_{2,j})
+ \le F(x)\le
+ \sum_j M_{ij}\lambda_n(Q_{2,j}).
+\]
+Funkcja $F$ jest ograniczona, gdyż $|F(x)|\le
+\sup_Q|f|\,\lambda_n(Q_2)$. Biorąc infimum
+i supremum po $x\in Q_{1,i}$ w powyższym
+oszacowaniu, mnożąc przez objętości $Q_{1,i}$
+i sumując po $i$, dostajemy
+\[
+ L(f,P_1\times P_2)\le L(F,P_1)
+ \le U(F,P_1)\le U(f,P_1\times P_2).
+\]
+Każdy podział siatkowy $Q$ jest iloczynem
+podziałów siatkowych obu czynników. Z definicji całkowalności Darboux
+\ref{ma2:def:darboux-box} różnicę
+$U(f,P_1\times P_2)-L(f,P_1\times P_2)$
+można uczynić dowolnie małą. Stąd $F$ jest
+całkowalna w sensie Darboux, a całki $F$ i $f$
+leżą między tymi samymi zewnętrznymi sumami,
+więc są równe. Równoważność z definicją przez
+sumy Riemanna daje \ref{ma2:thm:riemann-darboux-box}. Zgodność całek Riemanna
+i Lebesgue'a wynika z
+\ref{ma2:thm:riemann-box-lebesgue}.
+\end{proof}
+
+Jeżeli $f$ jest ciągła na $Q$, wszystkie
+przekroje są ciągłe, więc obie kolejności
+całkowania są dopuszczalne w sensie Riemanna.
+Nie należy jednak utożsamiać tego wyniku
+z twierdzeniem Fubiniego dla funkcji mierzalnych,
+które dopuszcza zbiory wyjątkowych parametrów.
+
+\begin{przyklad}[Niemierzalny przekrój zbioru mierzalnego]
+\label{ma2:ex:multiple-nonmeasurable-section}
+Przyjmując aksjomat wyboru, wybierzmy zbiór
+Vitaliego $V\subseteq[0,1]$, niemierzalny
+w sensie Lebesgue'a
+(\atlasref{ME-04::thm:vitali}{ME 04}).
+Zbiór $E=\{0\}\times V$ jest zawarty
+w zbiorze $\{0\}\times[0,1]$ miary $\lambda_2$
+zero (\atlasref{ME-04::lem:hyperplane-null}{ME 04}).
+Z zupełności miary wynika, że $E$
+jest mierzalny i $\lambda_2(E)=0$.
+Jednak $E_0=V$ nie jest mierzalny względem
+$\lambda_1$, a dla $x\ne0$ mamy $E_x=\varnothing$.
+Wzór \ref{ma2:cor:multiple-sections} stosujemy,
+nadając na zbiorze wyjątkowym $\{0\}$ wartość
+zero funkcji miary przekroju. Nie jest to
+stwierdzenie, że $\lambda_1(V)=0$.
+\end{przyklad}
+
+\begin{przyklad}[Niecałkowalny przekrój Riemanna]
+\label{ma2:ex:multiple-riemann-exception}
+Na kwadracie $[0,1]^2$ określamy funkcję
+\[
+ f(x,y)=\chi_{\{0\}\times(\Q\cap[0,1])}(x,y).
+\]
+Funkcja jest ograniczona, a zbiór jej punktów
+nieciągłości jest zawarty w odcinku $\{0\}\times[0,1]$,
+który ma zerową miarę $\lambda_2$.
+Kryterium Lebesgue'a
+\ref{ma2:thm:riemann-box-lebesgue-criterion}
+daje całkowalność Riemanna na kwadracie.
+Całka wynosi zero, ponieważ funkcja znika
+prawie wszędzie. Jednak przekrój $f(0,\cdot)$
+jest funkcją Dirichleta: na każdym przedziale
+dodatniej długości ma infimum zero i supremum
+jeden dzięki gęstości liczb wymiernych oraz
+niewymiernych, więc nie jest całkowalny
+w sensie Riemanna. Dla $x>0$ przekroje są identycznie zerowe.
+W sensie Lebesgue'a wszystkie przekroje są
+całkowalne, a ich całki wynoszą zero.
+\end{przyklad}
+
+\begin{przyklad}[Obie całki iterowane istnieją, lecz są różne]
+\label{ma2:ex:multiple-nonabsolute}
+Na $(0,1)^2$ połóżmy
+\[
+ f(x,y)=\frac{x^2-y^2}{(x^2+y^2)^2}.
+\]
+Dla ustalonego $x\in(0,1)$ przekrój jest
+ciągły po przedłużeniu na domknięty przedział
+$[0,1]$, więc jest całkowalny bezwzględnie.
+Mamy
+$f(x,y)=\partial_y(y/(x^2+y^2))$, więc
+\[
+ \int_0^1 f(x,y)\,\mathrm d\lambda_1(y)=\frac1{1+x^2}.
+\]
+Analogicznie dla ustalonego $y\in(0,1)$
+przekrój ma ciągłe przedłużenie na $[0,1]$ i
+$f(x,y)=-\partial_x(x/(x^2+y^2))$, skąd
+\[
+ \int_0^1 f(x,y)\,\mathrm d\lambda_1(x)=-\frac1{1+y^2}.
+\]
+Całki zewnętrzne dają odpowiednio $\pi/4$ i $-\pi/4$.
+Każdy przekrój wewnętrzny jest całkowalny
+bezwzględnie, lecz nie zachodzi całkowalność
+bezwzględna po całym kwadracie.
+Istotnie, na obszarze $0<x<1$, $0<y<x/2$
+mamy $x^2-y^2\ge3x^2/4$ oraz
+$(x^2+y^2)^2\le25x^4/16$, zatem
+$f(x,y)\ge12/(25x^2)$. Tonelli daje
+\[
+ \int_{(0,1)^2}f^+\,\mathrm d\lambda_2
+ \ge\int_0^1\frac{6}{25x}\,\mathrm d\lambda_1(x)=+\infty.
+\]
+Po zamianie $x,y$ funkcja zmienia znak,
+więc analogicznie całka z $f^-$ jest nieskończona.
+Całka Lebesgue'a z $f$ po kwadracie nie jest określona.
+\end{przyklad}
+
+\section{Więcej niż dwa czynniki}
+
+Dla $d\ge2$ i funkcji nieujemnej mierzalnej na
+$\R^d$ albo funkcji całkowalnej stosujemy
+\ref{ma2:thm:multiple-tonelli} lub
+\ref{ma2:thm:multiple-fubini} kolejno do bloków
+współrzędnych. Otrzymujemy dowolną kolejność
+$d$ całek jednowymiarowych, z odpowiednimi
+wyjątkami prawie wszędzie. Permutacja współrzędnych
+zachowuje miarę Lebesgue'a, ponieważ jej macierz
+ma wyznacznik o module jeden
+(\atlasref{ME-13::thm:linear-change-13}{ME 13}).
+Zgodność różnych
+grupowań czynników wynika z
+\atlasref{ME-12::cor:associative-product-12}{łączności produktu miar}.
+Dla iloczynu nieujemnych funkcji mierzalnych
+$f_i:\R\to[0,\infty)$, gdy wszystkie ich
+całki są skończone, dostajemy
+\[
+ \int_{\R^d}\prod_{i=1}^d f_i(x_i)\,
+ \mathrm d\lambda_d(x)=
+ \prod_{i=1}^d\int_\R f_i(t)\,\mathrm d\lambda_1(t).
+\]
+Wynika to z iterowania całek i wyłączania
+czynników niezależnych od aktualnej zmiennej.
+
+\begin{przyklad}[Objętość sympleksu]
+\label{ma2:ex:multiple-simplex}
+Niech $S_d(t)=\{x\in[0,\infty)^d:
+\sum_{i=1}^d x_i\le t\}$ dla $t>0$.
+Dla $d\ge2$ przekroje względem pierwszej
+współrzędnej są sympleksami $S_{d-1}(t-u)$ dla $0<u<t$.
+Z \ref{ma2:cor:multiple-sections} i indukcji
+od $\lambda_1(S_1(t))=t$ otrzymujemy
+\[
+ \lambda_d(S_d(t))=\int_0^t
+ \frac{(t-u)^{d-1}}{(d-1)!}\,\mathrm d\lambda_1(u)
+ =\frac{t^d}{d!}.
+\]
+Ostatnia równość wynika z całkowania potęgi.
+\end{przyklad}
+
+\begin{przyklad}[Całka po czworościanie]
+\label{ma2:ex:multiple-tetrahedron}
+Dla $S=\{(x,y,z):x,y,z\ge0,\ x+y+z\le1\}$
+obliczymy moment pierwszej współrzędnej.
+Z \ref{ma2:cor:multiple-sections} oraz wzoru
+na pole dwuwymiarowego sympleksu z
+\ref{ma2:ex:multiple-simplex} otrzymujemy
+\[
+ \int_S x\,\mathrm d\lambda_3(x,y,z)
+ =\frac12\int_0^1x(1-x)^2\,\mathrm d\lambda_1(x)
+ =\frac1{24}.
+\]
+Ten sam wynik dotyczy $y$ oraz $z$ przez symetrię.
+Bezpośredni zapis potrójnej całki ma postać
+\[
+ \int_0^1\int_0^{1-x}\int_0^{1-x-y}
+ x\,\mathrm d\lambda_1(z)\,\mathrm d\lambda_1(y)\,
+ \mathrm d\lambda_1(x).
+\]
+Wewnętrzne granice określają odcinki równoległe
+do osi $z$, a rzut na płaszczyznę $(x,y)$
+jest trójkątem $x,y\ge0$, $x+y\le1$.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(3.1cm,-.8cm)},y={(-2.2cm,-1.05cm)},
+ z={(0cm,3.8cm)}]
+ \coordinate (O) at (0,0,0);
+ \coordinate (A) at (1,0,0);
+ \coordinate (B) at (0,1,0);
+ \coordinate (C) at (0,0,1);
+ \draw[->,gray] (O)--(1.25,0,0) node[right] {$x$};
+ \draw[->,gray] (O)--(0,1.25,0) node[left] {$y$};
+ \draw[->,gray] (O)--(0,0,1.17) node[above] {$z$};
+ \filldraw[fill=blue!15,draw=blue!65!black] (O)--(B)--(C)--cycle;
+ \filldraw[fill=blue!32,draw=blue!65!black] (O)--(A)--(C)--cycle;
+ \filldraw[fill=blue!53,draw=blue!70!black,fill opacity=.78]
+  (A)--(B)--(C)--cycle;
+ \draw[blue!85!black,thick] (A)--(B)--(C)--cycle;
+ \draw[orange!90!black,very thick] (.27,.25,0)--(.27,.25,.48);
+ \fill[orange!90!black] (.27,.25,.48) circle (1.3pt);
+ \node[below right] at (A) {$1$};
+ \node[below left] at (B) {$1$};
+ \node[right] at (C) {$1$};
+ \node[above right,blue!80!black] at (.34,.12,.54) {$x+y+z=1$};
+\end{tikzpicture}
+\caption{Czworościan z przykładu
+\ref{ma2:ex:multiple-tetrahedron}. Wyróżniony odcinek
+ma końce $z=0$ i $z=1-x-y$.}
+\label{ma2:fig:multiple-tetrahedron}
+\end{figure}
+
+\section{Zamiana zmiennych}
+
+\paragraph{Intuicja geometryczna jakobianu.}
+W jednym wymiarze pochodna podstawienia
+opisuje lokalną zmianę długości.
+W wielu wymiarach różniczka
+$D\Phi(u)$ jest odwzorowaniem liniowym,
+które w pierwszym przybliżeniu
+przenosi małe przyrosty zmiennej:
+\[
+ \Phi(u+h)=\Phi(u)+D\Phi(u)h+o(\|h\|_2).
+\]
+Obraz jednostkowego sześcianu przez
+odwracalne odwzorowanie liniowe $A$
+jest równoległościanem o objętości
+$|\det A|$ (por.
+\atlasref{ME-13::thm:linear-change-13}{ME 13}).
+W pobliżu $u$ oczekujemy więc
+mnożnika $|\det D\Phi(u)|$.
+Nie jest to dowód wzoru całkowego:
+trzeba kontrolować błąd aproksymacji,
+mierzalność obrazu i krotność.
+Dokładne twierdzenie podajemy poniżej.
+
+Na przykład odwzorowanie
+$\Phi(u,v)=(2u+v,v)$ przenosi kwadrat
+jednostkowy na równoległobok rozpięty
+przez wektory $(2,0)$ i $(1,1)$.
+Jego pole wynosi $2$, czyli
+$\left|\det\begin{pmatrix}2&1\\0&1\end{pmatrix}\right|$.
+Zamiana kolejności tych wektorów
+zmienia znak wyznacznika, lecz nie pole.
+Odróżniamy więc zmianę objętości
+od zmiany orientacji.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1.6cm,y=1.6cm,>=stealth]
+ \begin{scope}
+  \filldraw[fill=blue!20,draw=blue!75!black,thick] (0,0) rectangle (1,1);
+  \foreach \s in {.25,.5,.75}{
+   \draw[blue!50] (\s,0)--(\s,1);
+   \draw[blue!50] (0,\s)--(1,\s);
+  }
+  \draw[->,gray] (-.12,0)--(1.45,0) node[right] {$u$};
+  \draw[->,gray] (0,-.12)--(0,1.4) node[above] {$v$};
+  \node[below] at (.5,-.15) {pole $1$};
+ \end{scope}
+ \draw[->,thick] (1.7,.65)--(2.55,.65) node[midway,above] {$\Phi$};
+ \begin{scope}[xshift=4.8cm]
+  \filldraw[fill=teal!25,draw=teal!80!black,thick] (0,0)--(2,0)--(3,1)--(1,1)--cycle;
+  \foreach \s in {.25,.5,.75}{
+   \draw[teal!65] ({2*\s},0)--({2*\s+1},1);
+   \draw[teal!65] (\s,\s)--({2+\s},\s);
+  }
+  \draw[->,gray] (-.12,0)--(3.35,0) node[right] {$x$};
+  \draw[->,gray] (0,-.12)--(0,1.4) node[above] {$y$};
+  \draw[orange!85!black,->,very thick] (0,0)--(2,0);
+  \draw[orange!85!black,->,very thick] (0,0)--(1,1);
+  \node[below] at (1.5,-.15) {pole $2$};
+ \end{scope}
+\end{tikzpicture}
+\caption{Liniowa zamiana zmiennych:
+wszystkie komórki siatki zmieniają pole
+w tym samym stosunku, równym
+$|\det D\Phi|=2$. Dla odwzorowania
+nieliniowego stosunek ten zależy
+zazwyczaj od położenia komórki.}
+\label{ma2:fig:multiple-jacobian-linear}
+\end{figure}
+
+\begin{twierdzenie}[Wielowymiarowy wzór na zamianę zmiennych]
+\label{ma2:thm:multiple-change}
+Niech $U,V\subseteq\R^d$ będą otwarte, a
+$\Phi:U\to V$ będzie dyfeomorfizmem klasy $C^1$.
+Dla mierzalnego zbioru $E\subseteq U$ zbiór
+$\Phi(E)$ jest mierzalny. Jeżeli
+$f:\Phi(E)\to[0,\infty]$ jest mierzalna lub
+$f:\Phi(E)\to\R$ jest całkowalna, to
+\[
+ \int_{\Phi(E)} f(y)\,\mathrm d\lambda_d(y)
+ =\int_E f(\Phi(x))|\det D\Phi(x)|\,
+ \mathrm d\lambda_d(x).
+\]
+W szczególności
+$\lambda_d(\Phi(E))=\int_E|\det D\Phi(x)|
+\,\mathrm d\lambda_d(x)$.
+\end{twierdzenie}
+Dowód ogólny znajduje się w
+\atlasref{ME-13::thm:change-variables-13}{ME 13},
+a wersja dla podzbiorów w
+\atlasref{ME-13::cor:change-subdomain-13}{wniosku o zamianie na podzbiorze}.
+Warunki na $\Phi$ można sprawdzić, wykazując
+różnowartościowość oraz niezerowość wyznacznika
+pochodnej na otwartym zbiorze
+(\ref{ma2:cor:inverse-global-injective}).
+Wartość bezwzględna wyznacznika jest konieczna,
+ponieważ miara objętości jest nieujemna
+niezależnie od orientacji.
+Dla mierzalnej funkcji rzeczywistej $f$
+całkowalność na $\Phi(E)$ jest równoważna
+całkowalności funkcji
+$(f\circ\Phi)|\det D\Phi|$ na $E$.
+Istotnie, stosujemy wzór do $|f|$; wówczas
+obie całki z wartości bezwzględnej są równe,
+również gdy są nieskończone.
+
+\begin{wniosek}[Jakobian jako graniczny stosunek objętości]
+\label{ma2:cor:multiple-local-volume}
+Niech $\Phi:U\to V$ spełnia założenia
+twierdzenia \ref{ma2:thm:multiple-change},
+$u\in U$ oraz $Q_r=u+[-r,r]^d$.
+Dla dostatecznie małych $r>0$ mamy
+$Q_r\subset U$ oraz
+\[
+ \lim_{r\downarrow0}
+ \frac{\lambda_d(\Phi(Q_r))}{\lambda_d(Q_r)}
+ =|\det D\Phi(u)|.
+\]
+\end{wniosek}
+\begin{proof}
+Niech $J(x)=|\det D\Phi(x)|$.
+Z twierdzenia \ref{ma2:thm:multiple-change}
+zastosowanego do funkcji równej $1$
+wynika
+\[
+ \left|
+ \frac{\lambda_d(\Phi(Q_r))}{\lambda_d(Q_r)}
+ -J(u)\right|
+ \le\sup_{x\in Q_r}|J(x)-J(u)|.
+\]
+Użyliśmy liniowości i oszacowania modułu
+całki oraz $\lambda_d(Q_r)=(2r)^d>0$.
+Prawa strona dąży do zera, ponieważ
+$J$ jest ciągła w $u$.
+\end{proof}
+
+Wniosek formalizuje intuicję lokalnej
+zmiany objętości. Jego dowód korzysta
+z ogólnego wzoru zamiany zmiennych;
+nie jest niezależnym dowodem tego wzoru.
+
+\begin{wniosek}[Zamiana zmiennych dla całek Riemanna]
+\label{ma2:cor:multiple-riemann-change}
+Niech $\Phi:U\to V$ spełnia założenia
+\ref{ma2:thm:multiple-change}, a $K\subset U$
+będzie zwartym zbiorem mierzalnym w sensie Jordana.
+Jeżeli $f:\Phi(K)\to\R$ jest ciągła, to
+$\Phi(K)$ jest zwartym zbiorem mierzalnym
+w sensie Jordana, a wzór
+\[
+ \int_{\Phi(K)} f(y)\,\mathrm d\lambda_d(y)
+ =\int_K f(\Phi(x))|\det D\Phi(x)|\,
+ \mathrm d\lambda_d(x)
+\]
+jest również równością całek Riemanna.
+\end{wniosek}
+\begin{proof}
+Homeomorfizm $\Phi$ między otwartymi zbiorami
+odwzorowuje brzeg $K$ na brzeg $\Phi(K)$
+w odpowiednich przestrzeniach względnych.
+Ponieważ oba zbiory są zwarte i leżą
+w odpowiednich zbiorach otwartych, są to
+także ich brzegi w $\R^d$.
+Z \ref{ma2:thm:jordan-criterion}
+mamy $\lambda_d(\partial K)=0$.
+Odwzorowanie klasy $C^1$ jest lokalnie
+Lipschitzowskie (ograniczenie pochodnej
+na małej domkniętej kuli i twierdzenie
+o wartości średniej). Z
+\atlasref{ME-13::lem:lipschitz-null-13}{lematu o obrazach zbiorów zerowych}
+wynika $\lambda_d(\partial\Phi(K))=0$.
+Zatem $\Phi(K)$ jest mierzalny w sensie Jordana.
+Funkcja $f$ i funkcja podcałkowa po podstawieniu
+są ciągłe na odpowiednich zbiorach zwartych.
+Zgodność całek Riemanna i Lebesgue'a
+(\ref{ma2:thm:lebesgue-jordan-agreement})
+oraz \ref{ma2:thm:multiple-change} kończą dowód.
+\end{proof}
+
+\begin{wniosek}[Podstawienie poza zbiorem wyjątkowym]
+\label{ma2:cor:multiple-change-null}
+Niech $U,V\subseteq\R^d$ będą otwarte,
+$\Phi:U\to V$ będzie klasy $C^1$, a
+$U_0\subseteq U$, $V_0\subseteq V$ będą otwarte
+i spełniają
+\[
+ \lambda_d(U\setminus U_0)=
+ \lambda_d(V\setminus V_0)=0.
+\]
+Jeżeli ograniczenie $\Phi|_{U_0}:U_0\to V_0$
+jest dyfeomorfizmem, to dla każdej nieujemnej
+mierzalnej funkcji $f$ na $V$ lub funkcji
+całkowalnej na $V$ zachodzi
+\[
+ \int_V f(y)\,\mathrm d\lambda_d(y)
+ =\int_U f(\Phi(x))|\det D\Phi(x)|\,
+ \mathrm d\lambda_d(x).
+\]
+Iloczyn z czynnikiem zero definiujemy jako zero
+także dla $f=+\infty$.
+\end{wniosek}
+\begin{proof}
+Na $U_0$ mierzalność funkcji podcałkowej
+i równość całek po $U_0,V_0$ wynikają z
+\ref{ma2:thm:multiple-change}. Na $U\setminus U_0$
+dowolne jej wartości dają rozszerzenie mierzalne
+dzięki zupełności miary Lebesgue'a.
+Oba pominięte zbiory mają miarę zero,
+więc nie zmieniają wartości całek ani
+całkowalności.
+\end{proof}
+
+\begin{przyklad}[Podstawienie z zanikającym jakobianem]
+\label{ma2:ex:multiple-zero-jacobian}
+Odwzorowanie $\Phi(u,v)=(u^3,v)$ na $\R^2$
+jest bijekcją klasy $C^\infty$, lecz nie
+dyfeomorfizmem na całej płaszczyźnie:
+jego jakobian $3u^2$ znika dla $u=0$.
+Po usunięciu prostej $u=0$ zarówno w dziedzinie,
+jak i w obrazie, otrzymujemy dyfeomorfizm
+z gładką odwrotnością $(x,y)\mapsto(\sqrt[3]{x},y)$.
+Obie proste mają miarę zero. Stosując
+\ref{ma2:cor:multiple-change-null} do
+$f(x,y)=\chi_{[-1,1]^2}(x,y)|x|$,
+otrzymujemy
+\[
+ \int_{[-1,1]^2}|x|\,\mathrm d\lambda_2(x,y)
+ =\int_{-1}^1\int_{-1}^1 3|u|^5\,
+ \mathrm d\lambda_1(v)\,\mathrm d\lambda_1(u)=2.
+\]
+Nie trzeba zatem odrzucać podstawienia tylko
+dlatego, że wyznacznik zanika na zbiorze zerowym;
+trzeba jednak sprawdzić wszystkie pozostałe
+założenia, w tym zerowość pominiętej części obrazu.
+\end{przyklad}
+
+\begin{przyklad}[Podstawienie afiniczne]
+\label{ma2:ex:multiple-affine}
+Dla $A\in\mathrm{GL}(d,\R)$ oraz $b\in\R^d$
+odwzorowanie $\Phi(x)=Ax+b$ ma pochodną $A$.
+Zatem dla dowolnego mierzalnego $E$
+\[
+ \lambda_d(AE+b)=|\det A|\lambda_d(E).
+\]
+Jest to też
+\atlasref{ME-13::thm:linear-change-13}{liniowy wzór na objętość}.
+Jeżeli $a_i>0$ dla $1\le i\le d$, to elipsoida
+\[
+ E=\left\{y:\sum_{i=1}^d\frac{y_i^2}{a_i^2}<1\right\}
+\]
+jest obrazem kuli jednostkowej przez macierz
+diagonalną z przekątną $(a_1,\ldots,a_d)$.
+Jej objętość wynosi $v_d\prod_i a_i$,
+gdzie $v_d=\lambda_d(B(0,1))$.
+\end{przyklad}
+
+\begin{przyklad}[Podstawienie nieliniowe]
+\label{ma2:ex:multiple-nonlinear}
+Niech $U=\{(u,v):1<u<2,\ 0<v<1\}$ i
+$\Phi(u,v)=(u,uv)$. Na otwartym zbiorze
+$\{u>0\}$ odwzorowanie ma gładką odwrotność
+$(x,y)\mapsto(x,y/x)$ oraz wyznacznik pochodnej
+$u$. Obraz $U$ to
+$E=\{(x,y):1<x<2,\ 0<y<x\}$.
+Wobec tego
+\[
+ \int_E \frac{y}{x^2}\,\mathrm d\lambda_2(x,y)
+ =\int_U\frac{uv}{u^2}u\,\mathrm d\lambda_2(u,v)
+ =\int_1^2\int_0^1 v\,\mathrm d\lambda_1(v)\,
+ \mathrm d\lambda_1(u)=\frac12.
+\]
+W ostatnim kroku stosujemy Fubiniego do
+ograniczonej funkcji na ograniczonym zbiorze.
+\end{przyklad}
+
+\begin{przyklad}[Obszar ograniczony hiperbolami i prostymi]
+\label{ma2:ex:multiple-hyperbolas}
+Niech
+$E=\{(x,y):x,y>0,\ 1<xy<4,\ 1<y/x<9\}$.
+Wybieramy $u=xy$, $v=y/x$.
+Odwzorowanie $(x,y)\mapsto(u,v)$ jest
+dyfeomorfizmem dodatniej ćwiartki na nią samą,
+ponieważ odwrotność ma postać
+$x=\sqrt{u/v}$, $y=\sqrt{uv}$ i jest gładka.
+Wyznacznik pochodnej odwzorowania prostego jest
+równy
+\[
+ \det\begin{pmatrix}y&x\\-y/x^2&1/x\end{pmatrix}
+ =2y/x=2v.
+\]
+Z reguły różniczkowania odwrotności
+(\ref{ma2:cor:inverse-jacobian}) wyznacznik
+odwrotnego podstawienia wynosi $1/(2v)$.
+Obraz $E$ w nowych współrzędnych jest prostokątem
+$(1,4)\times(1,9)$. Stąd
+\[
+ \lambda_2(E)=\int_1^4\int_1^9\frac1{2v}\,
+ \mathrm d\lambda_1(v)\,\mathrm d\lambda_1(u)
+ =3\log 3.
+\]
+Wszystkie całki są skończone, gdyż nowa funkcja
+podcałkowa jest ograniczona na tym prostokącie.
+\end{przyklad}
+
+
+\paragraph{Wizualizacje interaktywne.}
+Pierwszy wykres przedstawia przekroje bryły
+z rysunku \ref{ma2:fig:multiple-section-volume}
+w obu kierunkach. Drugi pokazuje
+przekształcenie siatki przez $\Phi(u,v)=(u,uv)$
+z przykładu \ref{ma2:ex:multiple-nonlinear}.
+Dla komórki $Q=[u-h,u+h]\times[1/2-h,1/2+h]$
+zawartej w dziedzinie tego odwzorowania
+mamy dokładnie
+\[
+ \frac{\lambda_2(\Phi(Q))}{\lambda_2(Q)}
+ =\frac{2h\int_{u-h}^{u+h}s\,\mathrm d\lambda_1(s)}
+ {4h^2}=u.
+\]
+Równość wynika z wzoru na zamianę zmiennych
+\ref{ma2:thm:multiple-change} i Fubiniego.
+W tym przykładzie stosunek pól jest równy
+jakobianowi w środku komórki już dla
+skończonego $h$, ponieważ jakobian jest
+funkcją afiniczną. Nie jest to ogólna
+własność nieliniowych odwzorowań.
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+v=np.array([[0,0,0],[1,0,0],[1,1,0],[0,1,0],
+            [0,0,0],[1,0,1],[1,1,3],[0,1,2]])
+faces=np.array([[0,2,1],[0,3,2],[4,5,6],[4,6,7],
+ [0,1,5],[0,5,4],[1,2,6],[1,6,5],[2,3,7],
+ [2,7,6],[3,0,4],[3,4,7]])
+def mesh(v,f,color,opacity,visible=True):
+    return go.Mesh3d(x=v[:,0],y=v[:,1],z=v[:,2],
+        i=f[:,0],j=f[:,1],k=f[:,2],color=color,
+        opacity=opacity,visible=visible)
+fig=go.Figure(mesh(v,faces,"#397db5",.25))
+ts=np.linspace(0,1,21)
+opts=[(k,t) for k in range(2) for t in ts]
+for j,(k,t) in enumerate(opts):
+    v=np.array([[t,0,0],[t,1,0],[t,1,t+2],[t,0,t]]
+        if k==0 else
+        [[0,t,0],[1,t,0],[1,t,1+2*t],[0,t,2*t]])
+    fig.add_trace(mesh(v,np.array([[0,1,2],[0,2,3]]),
+        "#d97706" if k==0 else "#15988c",.9,j==10))
+steps=[dict(label=f"{'xy'[k]}={t:.2f}",method="update",
+    args=[dict(visible=[True]+[j==i for j in range(len(opts))]),
+          dict(title=f"A={1+t if k==0 else .5+2*t:.3f}")])
+    for i,(k,t) in enumerate(opts)]
+fig.update_layout(sliders=[dict(active=10,steps=steps)],
+    title="A=1.500",scene_aspectmode="data")
+fig.write_html("am2_30_sections.html", include_plotlyjs=True)
+
+fig=make_subplots(rows=1,cols=2)
+def cell(u,v,k,visible=True,fill="toself"):
+    return go.Scatter(x=u,y=np.array(u)*v if k else v,
+        mode="lines",fill=fill,visible=visible,
+        showlegend=False)
+for k in range(2):
+    fig.add_trace(cell([1,2,2,1,1],[0,0,1,1,0],k),1,k+1)
+    for s in np.linspace(.1,.9,9):
+        fig.add_trace(cell([1+s,1+s],[0,1],k,
+            fill="none"),1,k+1)
+        fig.add_trace(cell([1,2],[s,s],k,fill="none"),1,k+1)
+fixed=len(fig.data)
+opts=[(u,.1) for u in np.linspace(1.25,1.75,11)]
+opts += [(1.5,h) for h in np.linspace(.025,.25,10)]
+for i,(u,h) in enumerate(opts):
+    for k in range(2):
+        fig.add_trace(cell([u-h,u+h,u+h,u-h,u-h],
+            [.5-h,.5-h,.5+h,.5+h,.5-h],k,i==5),1,k+1)
+steps=[dict(label=f"u={u:.2f}, h={h:.3f}",
+    method="update",args=[dict(visible=[True]*fixed+
+        [j==i for j in range(len(opts)) for _ in range(2)]),
+        dict(title=f"Ratio={u:.2f}")])
+    for i,(u,h) in enumerate(opts)]
+fig.update_layout(sliders=[dict(active=5,steps=steps)],
+    title="Ratio=1.50",yaxis_scaleanchor="x",
+    yaxis2_scaleanchor="x2")
+fig.write_html("am2_30_jacobian.html", include_plotlyjs=True)
+\end{lstlisting}
+
+\section{Współrzędne biegunowe, walcowe i sferyczne}
+
+\subsection{Współrzędne biegunowe}
+
+Odwzorowanie
+$\Phi(r,\theta)=(r\cos\theta,r\sin\theta)$
+dla $r>0$, $0<\theta<2\pi$ jest różnowartościowe,
+a jego obraz to płaszczyzna bez nieujemnej półosi
+$x_1$. Macierz pochodnej i jej wyznacznik wynoszą
+\[
+ D\Phi=
+ \begin{pmatrix}\cos\theta&-r\sin\theta\\
+ \sin\theta&r\cos\theta\end{pmatrix},
+ \qquad \det D\Phi=r.
+\]
+Z niezerowości wyznacznika i
+\ref{ma2:cor:inverse-global-injective}
+wynika, że jest to dyfeomorfizm na obraz.
+Pominięta półoś ma miarę zero jako podzbiór
+hiperpłaszczyzny współrzędnościowej
+(\atlasref{ME-04::lem:hyperplane-null}{ME 04}),
+dlatego dla funkcji
+nieujemnej mierzalnej lub całkowalnej na $\R^2$
+\begin{equation}
+ \label{ma2:eq:multiple-polar}
+ \int_{\R^2}f\,\mathrm d\lambda_2
+ =\int_0^{2\pi}\int_0^\infty
+ f(r\cos\theta,r\sin\theta)r\,
+ \mathrm d\lambda_1(r)\,\mathrm d\lambda_1(\theta).
+\end{equation}
+Stosujemy \ref{ma2:thm:multiple-change}
+oraz Tonellego albo Fubiniego.
+
+\paragraph{Skąd bierze się czynnik $r$?}
+W prostokącie parametrów
+$[r,r+h]\times[\theta,\theta+k]$,
+gdzie $r,h,k>0$ i
+$0<\theta<\theta+k<2\pi$,
+przyrost $h$ jest długością w kierunku
+radialnym. Natomiast przyrost kąta $k$
+odpowiada łukowi o długości $rk$
+na okręgu promienia $r$.
+Różniczka $\Phi$ ma kolumny
+prostopadłe o normach $1$ i $r$,
+więc liniowe przybliżenie komórki
+ma pole $rhk$.
+Dokładne pole krzywoliniowej komórki
+$S=\Phi([r,r+h]\times[\theta,\theta+k])$
+wynosi na mocy
+\ref{ma2:thm:multiple-change}
+\[
+ \lambda_2(S)=\int_\theta^{\theta+k}
+ \int_r^{r+h}s\,\mathrm d\lambda_1(s)
+ \,\mathrm d\lambda_1(\eta)
+ =k\left(rh+\frac{h^2}{2}\right).
+\]
+Zatem $\lambda_2(S)/(hk)=r+h/2\to r$
+przy $h\downarrow0$, niezależnie od
+tempa zmniejszania $k$.
+Komórki o równych rozmiarach
+w przestrzeni parametrów obejmują
+większe pola przy większym promieniu.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.65,>=stealth]
+ \draw[->,gray] (-.15,0)--(2.8,0) node[right] {$x_1$};
+ \draw[->,gray] (0,-.15)--(0,2.4) node[above] {$x_2$};
+ \foreach \r in {.6,1.2,1.8,2.4}{
+  \draw[blue!50,domain=15:65,samples=35,variable=\a]
+   plot ({\r*cos(\a)},{\r*sin(\a)});
+ }
+ \foreach \a in {15,40,65}{
+  \draw[blue!50] (0,0)--(\a:2.4);
+ }
+ \filldraw[fill=orange!50,draw=orange!85!black,thick]
+ (15:1.2) arc (15:40:1.2)--(40:1.8)
+ arc (40:15:1.8)--cycle;
+ \filldraw[fill=teal!35,draw=teal!80!black,thick]
+ (40:1.8) arc (40:65:1.8)--(65:2.4)
+ arc (65:40:2.4)--cycle;
+ \draw[->,thick] (0,0)--(15:1.2) node[midway,below] {$r$};
+ \draw[orange!85!black,<->,thick] (12:1.2)--(12:1.8)
+ node[midway,below] {$h$};
+ \draw[orange!85!black,thick] (15:1.06) arc (15:40:1.06);
+ \node[orange!85!black,left] at (28:1.02) {$rk$};
+ \draw[gray] (15:.35) arc (15:40:.35);
+ \node at (28:.57) {$k$};
+\end{tikzpicture}
+\caption{Biegunowe komórki o tej samej grubości
+radialnej i szerokości kątowej. Komórka zielona
+ma większe pole, ponieważ leży dalej od zera.
+Długość wewnętrznego łuku pomarańczowej
+komórki wynosi $rk$, a jej grubość $h$.}
+\label{ma2:fig:multiple-polar-cell}
+\end{figure}
+
+Dla całki na podzbiorze należy przedłużyć
+funkcję przez zero lub ograniczyć dziedzinę
+parametrów do odpowiedniego przeciwobrazu.
+
+\begin{przyklad}[Całka Gaussa]
+\label{ma2:ex:multiple-gaussian}
+Oznaczmy $I=\int_\R e^{-t^2}\,\mathrm d\lambda_1(t)$.
+Jest to całka dodatnia i skończona, ponieważ
+dla $|t|\ge1$ mamy $e^{-t^2}\le e^{-|t|}$.
+Z Tonellego i \ref{ma2:eq:multiple-polar}
+wynika
+\[
+ I^2=\int_{\R^2}e^{-(x_1^2+x_2^2)}\,\mathrm d\lambda_2(x)
+ =2\pi\int_0^\infty e^{-r^2}r\,\mathrm d\lambda_1(r)=\pi.
+\]
+Podstawienie $u=r^2$ daje ostatnią równość.
+Zatem $I=\sqrt\pi$.
+\end{przyklad}
+
+\subsection{Współrzędne walcowe}
+
+Odwzorowanie
+\[
+ \Psi(r,\theta,z)=(r\cos\theta,r\sin\theta,z)
+\]
+na $(0,\infty)\times(0,2\pi)\times\R$
+jest iloczynem odwzorowania biegunowego
+i tożsamości. Jest dyfeomorfizmem na
+$\R^3\setminus\{(x_1,0,x_3):x_1\ge0\}$,
+a jego wyznacznik pochodnej wynosi $r$,
+ponieważ macierz jest blokowo diagonalna.
+Pominięty zbiór leży w płaszczyźnie $x_2=0$,
+więc ma miarę $\lambda_3$ zero. Stąd
+\[
+ \int_{\R^3} f\,\mathrm d\lambda_3
+ =\int_\R\int_0^{2\pi}\int_0^\infty
+ f(r\cos\theta,r\sin\theta,z)\,r\,
+ \mathrm d\lambda_1(r)\,\mathrm d\lambda_1(\theta)\,
+ \mathrm d\lambda_1(z)
+\]
+dla funkcji nieujemnych mierzalnych lub całkowalnych,
+na mocy \ref{ma2:thm:multiple-change}
+i twierdzeń o całkach iterowanych.
+
+Geometrycznie komórka walcowa jest
+iloczynem komórki biegunowej
+i przedziału wysokości $[z,z+\ell]$.
+Jej objętość wynosi dokładnie
+$\ell k(rh+h^2/2)$ na mocy
+\ref{ma2:cor:multiple-sections}
+i poprzedniego rachunku.
+Po podzieleniu przez objętość
+prostokątnej komórki parametrów
+$hk\ell$ otrzymujemy $r+h/2$.
+W granicy czynnik objętościowy
+to ponownie $r$, ponieważ trzeci
+kierunek nie jest skalowany.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(2.2cm,-.45cm)},y={(-1.5cm,-.65cm)},z={(0cm,2.0cm)}]
+ \filldraw[fill=blue!25,draw=blue!75!black]
+ plot[domain=15:65,samples=35,variable=\a] ({1.7*cos(\a)},{1.7*sin(\a)},0)
+ -- plot[domain=65:15,samples=35,variable=\a] ({1.1*cos(\a)},{1.1*sin(\a)},0)--cycle;
+ \filldraw[fill=blue!35,draw=blue!75!black]
+ plot[domain=15:65,samples=35,variable=\a] ({1.7*cos(\a)},{1.7*sin(\a)},0)
+ -- plot[domain=65:15,samples=35,variable=\a] ({1.7*cos(\a)},{1.7*sin(\a)},1)--cycle;
+ \filldraw[fill=blue!15,draw=blue!75!black]
+ plot[domain=15:65,samples=35,variable=\a] ({1.1*cos(\a)},{1.1*sin(\a)},0)
+ -- plot[domain=65:15,samples=35,variable=\a] ({1.1*cos(\a)},{1.1*sin(\a)},1)--cycle;
+ \foreach \a in {15,65}{
+  \filldraw[fill=blue!30,draw=blue!75!black]
+   ({1.1*cos(\a)},{1.1*sin(\a)},0)--
+   ({1.7*cos(\a)},{1.7*sin(\a)},0)--
+   ({1.7*cos(\a)},{1.7*sin(\a)},1)--
+   ({1.1*cos(\a)},{1.1*sin(\a)},1)--cycle;
+ }
+ \filldraw[fill=orange!45,draw=orange!85!black,thick]
+ plot[domain=15:65,samples=35,variable=\a] ({1.7*cos(\a)},{1.7*sin(\a)},1)
+ -- plot[domain=65:15,samples=35,variable=\a] ({1.1*cos(\a)},{1.1*sin(\a)},1)--cycle;
+ \draw[<->,thick] ({1.85*cos(15)},{1.85*sin(15)},0)--
+ ({1.85*cos(15)},{1.85*sin(15)},1) node[midway,right] {$\ell$};
+ \draw[orange!85!black,<->,thick]
+ ({1.1*cos(40)},{1.1*sin(40)},1)--
+ ({1.7*cos(40)},{1.7*sin(40)},1) node[midway,above] {$h$};
+\end{tikzpicture}
+\caption{Komórka walcowa: wycinek pierścienia
+przesunięty wzdłuż osi pionowej.
+Jej objętość jest iloczynem pola
+pomarańczowej podstawy i wysokości $\ell$.}
+\label{ma2:fig:multiple-cylindrical-cell}
+\end{figure}
+
+\begin{przyklad}[Bryła pod paraboloidą]
+\label{ma2:ex:multiple-paraboloid}
+Niech $R>0$ oraz
+$E=\{(x_1,x_2,z):0\le z\le R^2-x_1^2-x_2^2\}$.
+We współrzędnych walcowych otrzymujemy
+$0\le r\le R$, $0\le z\le R^2-r^2$,
+$0<\theta<2\pi$, z pominięciem zbioru miary zero.
+Zatem
+\[
+ \lambda_3(E)=2\pi\int_0^R r(R^2-r^2)\,
+ \mathrm d\lambda_1(r)=\frac{\pi R^4}{2}.
+\]
+Równość wynika z całkowania wielomianu.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(2.45cm,-.65cm)},y={(-1.85cm,-.85cm)},
+ z={(0cm,3.7cm)}]
+ % Parametryczne, wypełnione pasy powierzchni z=1-r^2.
+ % Rysujemy w kolejności od tylnej do przedniej połowy.
+ \draw[->,gray] (0,0,0)--(1.25,0,0) node[right] {$x_1$};
+ \draw[->,gray] (0,0,0)--(0,1.25,0) node[left] {$x_2$};
+ \draw[->,gray] (0,0,0)--(0,0,1.15) node[above] {$z$};
+ \fill[blue!15,fill opacity=.7]
+  plot[domain=0:360,samples=61] ({cos(\x)},{sin(\x)},0)--cycle;
+ \foreach \ang in {180,195,...,345,0,15,...,165}{
+  \pgfmathsetmacro{\nextang}{\ang+15}
+  \pgfmathsetmacro{\shadeval}{45+20*sin(\ang)}
+  \fill[blue!\shadeval!white,fill opacity=.9]
+   plot[domain=0:1,samples=18,variable=\rr]
+     ({\rr*cos(\ang)},{\rr*sin(\ang)},{1-\rr*\rr})
+   -- plot[domain=\ang:\nextang,samples=7]
+     ({cos(\x)},{sin(\x)},0)
+   -- plot[domain=1:0,samples=18,variable=\rr]
+     ({\rr*cos(\nextang)},{\rr*sin(\nextang)},{1-\rr*\rr})
+   --cycle;
+ }
+ \draw[blue!75!black,thick]
+  plot[domain=0:360,samples=81] ({cos(\x)},{sin(\x)},0);
+ \draw[blue!75!black,thick]
+  plot[domain=0:1,samples=35,variable=\rr]
+   ({\rr*cos(45)},{\rr*sin(45)},{1-\rr*\rr});
+ \node[blue!85!black,above right] at (0,0,1) {$z=1-r^2$};
+ \draw[orange!90!black,very thick] (.45,.15,0)--(.45,.15,.775);
+ \fill[orange!90!black] (.45,.15,.775) circle (1.5pt);
+\end{tikzpicture}
+\caption{Bryła pod paraboloidą dla $R=1$
+z przykładu \ref{ma2:ex:multiple-paraboloid}.
+Wypełniona powierzchnia jest górnym ograniczeniem
+bryły; wyróżniony odcinek pokazuje granice
+całkowania po $z$.}
+\label{ma2:fig:multiple-paraboloid}
+\end{figure}
+
+\begin{przyklad}[Bryła między stożkiem i paraboloidą]
+\label{ma2:ex:multiple-cone-paraboloid}
+Niech
+$E=\{(x_1,x_2,z):\sqrt{x_1^2+x_2^2}\le z
+\le2-x_1^2-x_2^2\}$.
+We współrzędnych walcowych warunek niepustości
+przekroju to $r\le2-r^2$, czyli $0\le r\le1$.
+Stąd
+\[
+ \lambda_3(E)=2\pi\int_0^1r(2-r^2-r)\,
+ \mathrm d\lambda_1(r)=\frac{5\pi}{6}.
+\]
+Wynik otrzymujemy przez całkowanie wielomianu;
+funkcją podcałkową po wykonaniu całki względem $z$
+jest iloczyn wysokości przekroju i jakobianu $r$.
+\end{przyklad}
+
+\subsection{Współrzędne sferyczne}
+
+Ustalamy konwencję: $\rho$ to odległość od zera,
+$\varphi$ to kąt od dodatniej półosi $x_3$,
+a $\theta$ to azymut. Dla
+$\rho>0$, $0<\varphi<\pi$, $0<\theta<2\pi$
+określamy
+\[
+ \Xi(\rho,\varphi,\theta)=
+ (\rho\sin\varphi\cos\theta,\,
+ \rho\sin\varphi\sin\theta,\,
+ \rho\cos\varphi).
+\]
+Obraz jest dopełnieniem półpłaszczyzny
+$\{(x_1,0,x_3):x_1\ge0\}$. Istotnie, poza nią
+$\rho=\|x\|_2>0$, kąt
+$\varphi=\arccos(x_3/\rho)$ należy do $(0,\pi)$,
+a azymut jest jednoznacznie określony jak dla
+współrzędnych biegunowych. To dowodzi
+różnowartościowości i opisu obrazu.
+Kolumny macierzy pochodnej wynoszą
+\[
+ \begin{pmatrix}
+ \sin\varphi\cos\theta\\ \sin\varphi\sin\theta\\ \cos\varphi
+ \end{pmatrix},\quad
+ \rho\begin{pmatrix}
+ \cos\varphi\cos\theta\\ \cos\varphi\sin\theta\\-\sin\varphi
+ \end{pmatrix},\quad
+ \rho\sin\varphi\begin{pmatrix}-\sin\theta\\\cos\theta\\0
+ \end{pmatrix}.
+\]
+Po wyłączeniu czynników $\rho$ i $\rho\sin\varphi$
+pozostają trzy wektory ortonormalne: ich normy
+są równe $1$, a iloczyny skalarne zero
+na mocy tożsamości trygonometrycznych.
+Wobec tego
+$|\det D\Xi|=\rho^2\sin\varphi>0$.
+Z \ref{ma2:cor:inverse-global-injective}
+wynika własność dyfeomorfizmu.
+Pominięta półpłaszczyzna ma miarę zero jako
+podzbiór $\{x_2=0\}$
+(\atlasref{ME-04::lem:hyperplane-null}{ME 04}).
+Otrzymujemy więc
+\begin{equation}
+\label{ma2:eq:multiple-spherical}
+ \begin{split}
+ \int_{\R^3} f\,\mathrm d\lambda_3
+ ={}&\int_0^{2\pi}\int_0^\pi\int_0^\infty
+ f(\Xi(\rho,\varphi,\theta))\rho^2\sin\varphi\\
+ &\quad\mathrm d\lambda_1(\rho)\,
+ \mathrm d\lambda_1(\varphi)\,
+ \mathrm d\lambda_1(\theta)
+ \end{split}
+\end{equation}
+dla funkcji nieujemnych mierzalnych lub całkowalnych.
+Podobnie jak we współrzędnych biegunowych,
+całki na podzbiorach obliczamy przez
+odpowiednie ograniczenie parametrów.
+
+\paragraph{Skąd bierze się czynnik $\rho^2\sin\varphi$?}
+Trzy kolumny $D\Xi$ są prostopadłe.
+Ich normy, w kolejności parametrów
+$(\rho,\varphi,\theta)$, to
+$1$, $\rho$, $\rho\sin\varphi$.
+Przyrost kąta $\varphi$ odbywa się
+wzdłuż południka promienia $\rho$,
+natomiast przyrost azymutu $\theta$
+wzdłuż równoleżnika o mniejszym promieniu
+$\rho\sin\varphi$. Dla małych przyrostów
+$h,k,\ell$ odpowiednie długości
+w liniowym przybliżeniu wynoszą
+$h,\rho k,\rho\sin\varphi\,\ell$.
+Ich iloczyn daje czynnik objętościowy
+$\rho^2\sin\varphi$.
+
+Można to sprawdzić dokładnie. Niech
+$Q=[\rho,\rho+h]\times[\varphi,\varphi+k]
+\times[\theta,\theta+\ell]$
+będzie zawarty w dziedzinie dyfeomorfizmu
+$\Xi$, przy $h,k,\ell>0$.
+Ze wzoru \ref{ma2:eq:multiple-spherical}
+i twierdzenia \ref{ma2:thm:multiple-change}
+otrzymujemy
+\[
+ \lambda_3(\Xi(Q))
+ =\frac{(\rho+h)^3-\rho^3}{3}
+   \big(\cos\varphi-\cos(\varphi+k)\big)\ell.
+\]
+Dzieląc przez $hk\ell$ i stosując
+definicję pochodnej do funkcji
+$s\mapsto s^3/3$ oraz $s\mapsto-\cos s$,
+dostajemy granicę $\rho^2\sin\varphi$
+przy $(h,k,\ell)\to(0,0,0)$.
+Nie trzeba narzucać proporcji
+między trzema przyrostami.
+W pobliżu bieguna, gdy $\sin\varphi$
+jest mały, zmiana azymutu odpowiada
+małej zmianie położenia. To wyjaśnia
+zagęszczenie komórek w pobliżu osi
+$x_3$ i zanik jakobianu na brzegu
+dziedziny kątowej.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(1.8cm,-.35cm)},y={(-1.35cm,-.65cm)},z={(0cm,2cm)},>=stealth]
+ \def\rr{1.65}
+ \foreach \p in {30,60,90,120,150}{
+  \draw[gray!45,domain=0:360,samples=65,variable=\a]
+   plot ({\rr*sin(\p)*cos(\a)},{\rr*sin(\p)*sin(\a)},{\rr*cos(\p)});
+ }
+ \foreach \a in {0,60,...,300}{
+  \draw[gray!45,domain=0:180,samples=35,variable=\p]
+   plot ({\rr*sin(\p)*cos(\a)},{\rr*sin(\p)*sin(\a)},{\rr*cos(\p)});
+ }
+ \foreach \p in {35,40,...,55}{
+  \pgfmathsetmacro{\pp}{\p+5}
+  \fill[blue!45,fill opacity=.8]
+  plot[domain=20:55,samples=15,variable=\a]
+   ({\rr*sin(\p)*cos(\a)},{\rr*sin(\p)*sin(\a)},{\rr*cos(\p)})
+  -- plot[domain=55:20,samples=15,variable=\a]
+   ({\rr*sin(\pp)*cos(\a)},{\rr*sin(\pp)*sin(\a)},{\rr*cos(\pp)})--cycle;
+ }
+ \foreach \p in {35,60}{
+  \draw[blue!85!black,thick,domain=20:55,samples=25,variable=\a]
+   plot ({\rr*sin(\p)*cos(\a)},{\rr*sin(\p)*sin(\a)},{\rr*cos(\p)});
+ }
+ \foreach \a in {20,55}{
+  \draw[blue!85!black,thick,domain=35:60,samples=25,variable=\p]
+   plot ({\rr*sin(\p)*cos(\a)},{\rr*sin(\p)*sin(\a)},{\rr*cos(\p)});
+ }
+ \draw[->,gray!80!black] (0,0,0)--(0,0,2.05) node[above] {$x_3$};
+ \draw[orange!85!black,thick,->] (0,0,0)--
+ ({\rr*sin(35)*cos(20)},{\rr*sin(35)*sin(20)},{\rr*cos(35)})
+ node[midway,left] {$\rho$};
+ \draw[orange!85!black,thick,<->,domain=35:60,samples=25,variable=\p]
+  plot ({\rr*sin(\p)*cos(20)},{\rr*sin(\p)*sin(20)},{\rr*cos(\p)});
+ \node[orange!85!black,right] at ({\rr*sin(48)*cos(20)},{\rr*sin(48)*sin(20)},{\rr*cos(48)})
+ {$\rho k$};
+ \draw[teal!85!black,thick,<->,domain=20:55,samples=25,variable=\a]
+  plot ({\rr*sin(60)*cos(\a)},{\rr*sin(60)*sin(\a)},{\rr*cos(60)});
+ \node[teal!80!black,below] at ({\rr*sin(60)*cos(37.5)},{\rr*sin(60)*sin(37.5)},{\rr*cos(60)})
+ {$\rho\sin(\varphi+k)\ell$};
+\end{tikzpicture}
+\caption{Fragment sfery ograniczony południkami
+$\theta,\theta+\ell$ oraz równoleżnikami
+$\varphi,\varphi+k$. Łuk południka ma
+długość $\rho k$, a łuk dolnego
+równoleżnika $\rho\sin(\varphi+k)\ell$.
+Trzeci kierunek komórki objętościowej
+jest radialny.}
+\label{ma2:fig:multiple-spherical-cell}
+\end{figure}
+
+\begin{przyklad}[Objętość kuli i moment radialny]
+\label{ma2:ex:multiple-ball-volume}
+Dla $R>0$ ze wzoru \ref{ma2:eq:multiple-spherical}
+stosowanego do funkcji charakterystycznej kuli
+otrzymujemy
+\[
+ \lambda_3(B(0,R))=
+ 2\pi\left(\int_0^\pi\sin\varphi\,\mathrm d\lambda_1(\varphi)\right)
+ \left(\int_0^R\rho^2\,\mathrm d\lambda_1(\rho)\right)
+ =\frac{4\pi R^3}{3}.
+\]
+W szczególności $v_3=4\pi/3$. Dla $p>-3$
+ten sam rachunek z czynnikiem $\rho^p$ daje
+\[
+ \int_{B(0,R)\setminus\{0\}}\|x\|_2^p\,
+ \mathrm d\lambda_3(x)=\frac{4\pi R^{p+3}}{p+3}.
+\]
+Jest to zgodne ze wzorem radialnym
+\ref{ma2:thm:improper-radial}, który wyprowadzimy
+niezależnie bez współrzędnych biegunowych.
+\end{przyklad}
+
+\begin{przyklad}[Wycięcie kuli stożkiem]
+\label{ma2:ex:multiple-spherical-sector}
+Niech $R>0$ i $0<\alpha<\pi/2$. Rozważmy
+$E=\{x\in\R^3:\|x\|_2<R,\ 
+x_3\ge\|x\|_2\cos\alpha\}$.
+Poza zbiorem miary zero nierówność dla $x_3$
+jest równoważna $0<\varphi\le\alpha$.
+Ze wzoru \ref{ma2:eq:multiple-spherical}
+otrzymujemy
+\[
+ \lambda_3(E)=
+ 2\pi\int_0^\alpha\sin\varphi\,\mathrm d\lambda_1(\varphi)
+ \int_0^R\rho^2\,\mathrm d\lambda_1(\rho)
+ =\frac{2\pi R^3}{3}(1-\cos\alpha).
+\]
+W szczególności gdy $\alpha\uparrow\pi/2$,
+otrzymujemy połowę objętości kuli. Zbieżność
+miar wynika też z ciągłości miary z dołu,
+ponieważ graniczna płaszczyzna ma miarę zero.
+\end{przyklad}
+
+
+\paragraph{Wizualizacja interaktywna komórek przestrzennych.}
+Porównujemy komórki walcowe i sferyczne
+o trzech przyrostach równych $\delta>0$.
+W pierwszej przyjmujemy punkt parametrów
+$(r,\theta,z)=(1.2,0.3,0.2)$, w drugiej
+$(\rho,\varphi,\theta)=(1.2,0.65,0.3)$.
+Kąty podajemy w radianach. Suwak zmienia
+$\delta$, a nagłówek podaje dokładne
+stosunki objętości do $\delta^3$,
+obliczone z powyższych wzorów, a nie
+z przybliżonej triangulacji powierzchni.
+Ich granicami są odpowiednio $1.2$ oraz
+$1.2^2\sin(0.65)$.
+Wizualizacja obejmuje wszystkie sześć
+ścian każdej komórki i jej dwanaście
+krawędzi. Ściany krzywoliniowe są
+przybliżane siatką trójkątów.
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+def cyl(r,a,z):
+    return r*np.cos(a),r*np.sin(a),z
+def sph(r,p,a):
+    return (r*np.sin(p)*np.cos(a),
+            r*np.sin(p)*np.sin(a),r*np.cos(p))
+starts=[np.array([1.2,.3,.2]),
+        np.array([1.2,.65,.3])]
+maps=[cyl,sph]
+ds=[.05,.075,.1,.15,.2,.3,.4]
+N=16
+fig=make_subplots(rows=1,cols=2,
+    specs=[[{"type":"scene"}]*2])
+for j,d in enumerate(ds):
+    for k in range(2):
+        v,f=[],[]
+        for ax in range(3):
+            b,c=(ax+1)%3,(ax+2)%3
+            for side in (0,1):
+                off=len(v)
+                for i in range(N+1):
+                    for l in range(N+1):
+                        q=np.zeros(3)
+                        q[ax],q[b],q[c]=side,i/N,l/N
+                        v.append(maps[k](*(starts[k]+d*q)))
+                for i in range(N):
+                    for l in range(N):
+                        a=off+i*(N+1)+l
+                        m=a+N+1
+                        for tri in [(a,m,m+1),(a,m+1,a+1)]:
+                            f.append(tri if side else tri[::-1])
+        x,y,z=np.array(v).T
+        a,b,c=np.array(f).T
+        fig.add_trace(go.Mesh3d(x=x,y=y,z=z,
+            i=a,j=b,k=c,opacity=.85,visible=j==4,
+            color=["#397db5","#15988c"][k]),1,k+1)
+def heading(d):
+    r,p=1.2,.65
+    c=r+d/2
+    s=((r+d)**3-r**3)/3*(np.cos(p)-np.cos(p+d))/d**2
+    return f"delta={d}: V/delta^3 = {c:.4f}, {s:.4f}"
+steps=[dict(label=str(d),method="update",
+    args=[dict(visible=[j==i for j in range(len(ds))
+                               for _ in range(2)]),
+          dict(title=heading(d))])
+    for i,d in enumerate(ds)]
+fig.update_scenes(aspectmode="cube")
+fig.update_layout(sliders=[dict(active=4,steps=steps)],
+    title=heading(ds[4]),showlegend=False)
+fig.write_html("am2_30_curvilinear_cells.html", include_plotlyjs=True)
+\end{lstlisting}
+
+W zamianie zmiennych należy zawsze sprawdzić
+dziedzinę parametrów, różnowartościowość,
+wyznacznik pochodnej i miarę pominiętych zbiorów.
+Przedłużenie zakresu kąta azymutalnego ponad
+pełny obrót prowadzi do wielokrotnego pokrycia
+części obrazu; nie wolno wówczas bezpośrednio
+stosować wzoru dla dyfeomorfizmu.
+Na przykład dla $R>0$ całka
+\[
+ \int_0^{4\pi}\int_0^R r\,
+ \mathrm d\lambda_1(r)\,\mathrm d\lambda_1(\theta)
+ =2\pi R^2
+\]
+jest dwa razy większa od pola koła promienia $R$.
+Rozdzielenie przedziału kątowego na $(0,2\pi)$
+i $(2\pi,4\pi)$ daje dwie kopie tej samej
+całki biegunowej, gdyż funkcje sinus i cosinus
+są $2\pi$-okresowe; pominięcie pojedynczej
+wartości kąta nie zmienia całki. W rachunku całek
+krzywoliniowych i powierzchniowych analogiczną
+rolę będzie odgrywać macierz Grama, a przy
+nieróżnowartościowych parametryzacjach krotność.

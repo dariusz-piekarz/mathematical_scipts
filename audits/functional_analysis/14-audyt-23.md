@@ -1,0 +1,13 @@
+# Rozdział 14 — audyt 23 (matematycznie czysty, korekta CI)
+
+Data: 24 listopada 2026. Gałąź biblioteka-matematyczna-iteracja-6. Punkt wyjścia raport 22 a2f160fa627bc1d0db5398b1285f1278ec54cc62. Źródło 49b8c98236e924281d4b7ee756bbe6213025f165 (486 wierszy, 36 etykiet, 15 dowodów) pozostawiono bez zmian.
+
+## Kontrola matematyczna
+Ponowny przegląd definicji i warunków istnienia pochodnych, kontrprzykładów, twierdzeń o przyrostach, pochodnych w przestrzeni Hilberta, zespolonej różniczkowalności, pochodnych słabych oraz rachunku Bastianiego. Szczególnie zweryfikowano parowanie c0 z l1, reprezentację Riesza w l2, zastosowanie Banacha–Steinhausa do ciągu ilorazów różnicowych na X', i niezależność granicy od wyboru ciągu dzięki istnieniu pochodnych skalarnych. W dowodzie Bastianiego pochodna g_t'(u) zawiera czynnik t na mocy jednorodności; całkowanie skalarne i jednostajna zbieżność w u wynikają z lokalnej wypukłości i wspólnej ciągłości df. Nie stwierdzono nowego błędu matematycznego ani koniecznej zmiany źródła. Zakres pozostaje zamknięty.
+
+## Technika
+CI pełnego kontekstu 01–17 dla commitu 4f11c5749aac58447e41d6e91935159b835b6696: przebieg 45353538962, job 138305606242, 21 testów, 137 stron, sukces. Artefakt 14901357032 pobrany i rozpakowany, końcowy log bez niezdefiniowanych odsyłaczy, overfull, błędów poleceń i brakujących znaków. Obejrzano render stron 78–86, w tym rysunek na stronie 80 i rachunek Bastianiego na stronie 86; brak widocznych kolizji, obcięć i błędów układu.
+Osobny workflow rozdziału 14, przebieg 45353584783 (job 138305757501), miał 21/21 testów i udaną kompilację, ale krok diagnostyczny niezaliczony z powodu nierozwiązanego odsyłacza sec:integral-vector15b (rozdział 14 odsyła do 15B, wrapper zawierał tylko 01–14). To błąd zakresu kontekstu kompilacji, nie brak etykiety w skrypcie. Naprawiono workflow .github/workflows/functional-analysis-ch14.yml w commicie 0943a126f4b08963a36026679d33f61a46ca90ab (blob eda32c72ad42b1f41a20a08a1031b7e131d9923e): kontekst 01–17 z 15A/15B, jawne asercje kolejności, obserwowane ścieżki zależności i diagnostyka Hyper reference. Nie usuwano odsyłacza ani nie ignorowano ostrzeżeń. Testy niezmienione. Odczyt CI nowego workflow: [{"id":45354523474,"name":"Functional analysis - chapter 14 audit","status":"in_progress","conclusion":null}].
+
+## Decyzja
+Matematycznie czysty, technicznie poprawkowy. Licznik stabilizacji pozostaje 0/2 do potwierdzenia dedykowanego CI. Następna iteracja 24 nadal rozdział 14. Nie przechodzić do 15 przed dwoma czystymi audytami z poprawną techniką. Kolejność 14, 15, 15A, 15B, 16 itd. bez zmian.

@@ -1,0 +1,5 @@
+# CAT-10 — audyt II stabilizacyjny
+
+Źródło 7e3e7c8f7014c3cd11b09265d640fa0965f6ee97; testy bfbfc24f2d7997448765a73caf3c48b751099a1a. Bez nowych zagadnień. Rozpisano typy składowych i obie tożsamości odwrotności w lemacie Yonedy, przypadek pustego F(A), naturalność w dwóch zmiennych (także wspólna zmiana), pełny rachunek dla Z jako grupy wolnej, klasyfikację krotek z odzyskiwaniem indeksów, klasyfikację map do zbioru potęgowego, przykład posetu i obie implikacje odzwierciedlania izomorfizmów. Uściślono, że operacje binarne na zbiorach istnieją (rzuty), a nie istnieją inne naturalne operacje. Użyto notacji obrazu prostego f[B]. Zachowano osiem etykiet.
+
+Dodano trzy regresje enumerujące wszystkie kandydatury na transformacje, a nie tylko rodziny z formuły Yonedy: kategoria jednej strzałki, działania monoidu idempotentnego, operacje binarne. CI pierwszego audytu przy odczycie queued (45593258221); nowe testy i kompilacja wymagają potwierdzenia. Lean nie uruchamiano. Następna iteracja niezależna kontrola.

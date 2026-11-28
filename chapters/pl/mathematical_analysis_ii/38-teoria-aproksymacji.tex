@@ -1,0 +1,2261 @@
+\chapter{Teoria aproksymacji}
+\label{ma2:ch:approximation}
+
+Rozwinięcie Taylora (AM I, rozdział 23;
+w wielu zmiennych omówimy je w rozdziale
+\ref{ma2:ch:taylor}) pozwala przybliżać funkcje
+za pomocą wielomianów w otoczeniu ustalonego punktu.
+Nie każda funkcja ciągła jest jednak różniczkowalna,
+a nawet funkcja gładka nie musi być sumą swojego
+szeregu Taylora. W tym rozdziale zmieniamy pytanie:
+czy na całym przedziale domkniętym można przybliżyć
+dowolną funkcję ciągłą wielomianem z dowolnie małym
+błędem? Nie wymagamy już zgodności pochodnych
+w wybranym punkcie.
+
+\section{Aproksymacja jednostajna i moduł ciągłości}
+
+\begin{definicja}[Błąd najlepszej aproksymacji]
+\label{ma2:def:approx-best-error}
+Niech $K\subseteq\R^d$, $d\ge1$, będzie niepustym zbiorem
+zwartym, a $C(K)$ przestrzenią rzeczywistych funkcji
+ciągłych z normą supremum
+$\|f\|_\infty=\sup_{x\in K}|f(x)|$.
+Dla niepustego zbioru $A\subseteq C(K)$ określamy
+\[
+ E(f,A)=\inf_{g\in A}\|f-g\|_\infty.
+\]
+Na przedziale $[a,b]$, $a<b$, oznaczamy przez
+$\mathcal P_n$ przestrzeń ograniczeń wielomianów
+stopnia co najwyżej $n$ do tego przedziału
+i piszemy $E_n(f)=E(f,\mathcal P_n)$.
+Przyjmujemy $n\in\N\cup\{0\}$; wszystkie dalsze
+indeksy stopni wielomianów i liczby węzłów
+są liczbami całkowitymi.
+\end{definicja}
+
+\begin{stwierdzenie}
+\label{ma2:prop:approx-distance}
+Dla dowolnego niepustego $A\subseteq C(K)$
+zachodzi $|E(f,A)-E(h,A)|\le\|f-h\|_\infty$.
+Ponadto $E(f,A)=0$ wtedy i tylko wtedy,
+gdy $f$ należy do domknięcia $A$ w normie supremum.
+Na przedziale ciąg $(E_n(f))_{n\ge0}$ jest
+nierosnący.
+\end{stwierdzenie}
+\begin{proof}
+Dla każdego $g\in A$ nierówność trójkąta daje
+$\|f-g\|_\infty\le\|f-h\|_\infty+\|h-g\|_\infty$.
+Biorąc infimum po $g$ i zamieniając role $f,h$,
+otrzymujemy pierwszą tezę. Jeżeli $E(f,A)=0$,
+to dla każdego $\varepsilon>0$ istnieje $g\in A$
+o $\|f-g\|_\infty<\varepsilon$; jest to dokładnie
+warunek przynależności do domknięcia.
+Implikacja odwrotna wynika z tego samego warunku.
+Ostatnia teza wynika z inkluzji
+$\mathcal P_n\subseteq\mathcal P_{n+1}$.
+\end{proof}
+
+\begin{definicja}[Moduł ciągłości]
+\label{ma2:def:approx-modulus}
+Niech $K\subseteq\R^d$ będzie niepustym zbiorem
+zwartym. Dla $f\in C(K)$ i $\delta\ge0$ określamy
+\[
+ \omega_f(\delta)=
+ \sup\{|f(x)-f(y)|:x,y\in K,\ \|x-y\|_2\le\delta\}.
+\]
+\end{definicja}
+
+\begin{stwierdzenie}
+\label{ma2:prop:approx-modulus}
+Moduł ciągłości jest niemalejący,
+$\omega_f(0)=0$, $\omega_f(\delta)\le2\|f\|_\infty$
+oraz $\omega_f(\delta)\to0$ przy $\delta\to0^+$.
+Jeżeli $K$ jest wypukły, to dla $\delta>0$
+i $x,y\in K$ zachodzi
+\[
+ |f(x)-f(y)|\le
+ \left(1+\frac{\|x-y\|_2}{\delta}\right)\omega_f(\delta).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Monotoniczność i wartość w zerze wynikają
+z definicji, a górne ograniczenie z nierówności
+trójkąta. Funkcja ciągła na zbiorze zwartym
+jest jednostajnie ciągła (twierdzenie Heinego--Cantora,
+\atlasref{AM1-16::ma1:thm:heine-cantor}{AM I, twierdzenie Heinego--Cantora}), co daje granicę.
+Jeśli $x\ne y$, dzielimy odcinek $[x,y]$
+na $N=\lceil\|x-y\|_2/\delta\rceil$ równych
+części. Wszystkie punkty podziału należą do $K$,
+a kolejne odległości nie przekraczają $\delta$.
+Sumowanie $N$ różnic i nierówność
+$N\le1+\|x-y\|_2/\delta$ dają wynik.
+Dla $x=y$ lewa strona jest zerowa.
+\end{proof}
+
+\section{Wielomiany Bernsteina}
+
+\begin{definicja}
+\label{ma2:def:approx-bernstein}
+Dla $f\in C([0,1])$, $n\ge1$ i $0\le k\le n$
+określamy
+\[
+ b_{n,k}(x)=\binom nk x^k(1-x)^{n-k},\qquad
+ B_nf(x)=\sum_{k=0}^n f(k/n)b_{n,k}(x).
+\]
+$B_nf$ nazywamy wielomianem Bernsteina funkcji $f$.
+\end{definicja}
+
+Dla ustalonego $x\in[0,1]$ liczby $b_{n,k}(x)$
+są nieujemne i sumują się do $1$ ze wzoru
+dwumianowego dla $x+(1-x)$. Przyjmujemy
+standardową konwencję $x^0=1$, również dla $x=0$.
+Wartość $B_nf(x)$ jest więc średnią ważoną
+wartości funkcji w węzłach $k/n$, a nie
+na ogół wartością interpolującą w tych węzłach.
+W punktach $0$ oraz $1$ odpowiednio jedynie
+składnik $k=0$ i $k=n$ ma wagę $1$,
+zatem $B_nf(0)=f(0)$ i $B_nf(1)=f(1)$.
+
+\begin{lemat}[Momenty wag Bernsteina]
+\label{ma2:lem:approx-bernstein-moments}
+Dla $x\in[0,1]$ i $n\ge1$ mamy
+\[
+ \sum_{k=0}^n b_{n,k}(x)=1,\qquad
+ \sum_{k=0}^n \frac{k}{n}b_{n,k}(x)=x,
+\]
+\[
+ \sum_{k=0}^n
+ \left(\frac{k}{n}-x\right)^2 b_{n,k}(x)
+ =\frac{x(1-x)}{n}.
+\]
+\end{lemat}
+\begin{proof}
+Pierwsza tożsamość jest wzorem dwumianowym
+dla $x+(1-x)$. Dla $k\ge1$ zachodzi
+$k\binom nk=n\binom{n-1}{k-1}$, więc
+$\sum_k k b_{n,k}(x)=nx$ po wyłączeniu $nx$
+i ponownym zastosowaniu wzoru dwumianowego.
+Dla $n\ge2$ i $k\ge2$ analogicznie
+$k(k-1)\binom nk=n(n-1)\binom{n-2}{k-2}$,
+stąd $\sum_k k(k-1)b_{n,k}(x)=n(n-1)x^2$.
+Dla $n=1$ obie strony tej ostatniej równości
+są zerowe. Korzystając z $k^2=k(k-1)+k$,
+otrzymujemy
+\[
+ \sum_k (k/n)^2 b_{n,k}(x)
+ =\frac{n-1}{n}x^2+\frac{x}{n}.
+\]
+Rozwinięcie kwadratu $(k/n-x)^2$ i podstawienie
+poprzednich tożsamości daje tezę.
+\end{proof}
+
+\begin{twierdzenie}[Aproksymacja wielomianami Bernsteina]
+\label{ma2:thm:approx-bernstein}
+Dla $f\in C([0,1])$, $n\ge1$ i $\delta>0$
+zachodzi
+\[
+ \|B_nf-f\|_\infty\le
+ \left(1+\frac{1}{2\delta\sqrt n}\right)
+ \omega_f(\delta).
+\]
+W szczególności
+$\|B_nf-f\|_\infty\le\frac32\omega_f(n^{-1/2})$
+i $B_nf$ zbiega jednostajnie do $f$.
+\end{twierdzenie}
+\begin{proof}
+Na mocy \ref{ma2:lem:approx-bernstein-moments}
+oraz nieujemności wag
+\[
+ |B_nf(x)-f(x)|\le
+ \sum_{k=0}^n b_{n,k}(x)|f(k/n)-f(x)|.
+\]
+Stosując \ref{ma2:prop:approx-modulus},
+otrzymujemy ograniczenie przez
+\[
+ \omega_f(\delta)\left(1+
+ \frac1\delta\sum_{k=0}^n b_{n,k}(x)|k/n-x|\right).
+\]
+Nierówność Cauchy'ego--Schwarza dla skończonych
+ciągów $\sqrt{b_{n,k}(x)}$ i
+$\sqrt{b_{n,k}(x)}|k/n-x|$ oraz lemat o momentach
+dają
+\[
+ \sum_k b_{n,k}(x)|k/n-x|
+ \le\sqrt{\frac{x(1-x)}n}\le\frac1{2\sqrt n}.
+\]
+Ostatnie oszacowanie wynika z
+$x(1-x)=1/4-(x-1/2)^2$.
+Biorąc supremum po $x$ otrzymujemy pierwszą
+nierówność. Podstawiamy $\delta=n^{-1/2}$
+i stosujemy granicę modułu ciągłości z
+\ref{ma2:prop:approx-modulus}.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Weierstrassa o aproksymacji]
+\label{ma2:thm:approx-weierstrass}
+Niech $a<b$. Dla każdej $f\in C([a,b])$
+i każdego $\varepsilon>0$ istnieje wielomian $p$
+taki, że $\|f-p\|_\infty<\varepsilon$.
+Równoważnie $\lim_{n\to\infty}E_n(f)=0$.
+\end{twierdzenie}
+\begin{proof}
+Funkcja $g(t)=f(a+(b-a)t)$ jest ciągła na $[0,1]$.
+Z \ref{ma2:thm:approx-bernstein} wynika jednostajna
+zbieżność $B_ng$ do $g$. Po podstawieniu
+\[
+ p_n(x)=(B_ng)\bigl((x-a)/(b-a)\bigr)
+\]
+otrzymujemy wielomiany stopnia co najwyżej $n$
+oraz $\|p_n-f\|_\infty=\|B_ng-g\|_\infty$,
+gdyż podstawienie afiniczne jest bijekcją
+między przedziałami. Stąd $E_n(f)$ jest
+ograniczony przez ciąg błędów dążący do zera.
+Implikacja odwrotna wynika z definicji infimum.
+\end{proof}
+
+\begin{przyklad}[Aproksymacja funkcji kwadratowej]
+\label{ma2:ex:approx-bernstein-square}
+Dla $f(x)=x^2$ na $[0,1]$ tożsamości momentów
+z \ref{ma2:lem:approx-bernstein-moments} dają
+\[
+ B_nf(x)=x^2+\frac{x(1-x)}n,\qquad
+ \|B_nf-f\|_\infty=\frac1{4n}.
+\]
+Maksimum błędu jest osiągane w $x=1/2$.
+Dla $n\ge2$ funkcja $f$ sama należy do $\mathcal P_n$,
+więc $E_n(f)=0$. Konstrukcja Bernsteina
+nie musi zatem dawać wielomianu najlepszej
+aproksymacji; jej zaletą jest jawny wzór
+i gwarancja zbieżności dla każdej funkcji ciągłej.
+\end{przyklad}
+
+\begin{przyklad}[Funkcje lipschitzowskie]
+\label{ma2:ex:approx-bernstein-lipschitz}
+Jeżeli $|f(x)-f(y)|\le L|x-y|$ na $[0,1]$,
+to bezpośrednio w pierwszym oszacowaniu dowodu
+\ref{ma2:thm:approx-bernstein} dostajemy
+\[
+ |B_nf(x)-f(x)|\le
+ L\sum_k b_{n,k}(x)|k/n-x|
+ \le\frac{L}{2\sqrt n}.
+\]
+Przykładem jest $f(x)=|x-1/2|$ z $L=1$,
+co pokazuje, że metoda działa także
+dla funkcji nieróżniczkowalnych.
+\end{przyklad}
+
+\section{Wielomiany Bernsteina wielu zmiennych}
+
+\begin{definicja}
+\label{ma2:def:approx-bernstein-multi}
+Niech $d\ge1$, $n\ge1$, $K=[0,1]^d$ oraz $f\in C(K)$.
+Dla $k=(k_1,\ldots,k_d)\in\{0,\ldots,n\}^d$
+i $x=(x_1,\ldots,x_d)\in K$ określamy
+\[
+ w_{n,k}(x)=\prod_{i=1}^d b_{n,k_i}(x_i),
+ \qquad
+ B_n^{(d)}f(x)=
+ \sum_{k\in\{0,\ldots,n\}^d}f(k/n)w_{n,k}(x).
+\]
+Tutaj $k/n=(k_1/n,\ldots,k_d/n)$, a $b_{n,k_i}$
+są wagami z definicji \ref{ma2:def:approx-bernstein}.
+\end{definicja}
+
+Jest to wielomian stopnia co najwyżej $n$
+w każdej zmiennej z osobna, a zatem stopnia
+całkowitego co najwyżej $dn$.
+Wagi są nieujemne, a ich suma wynosi $1$:
+przy rozpisaniu iloczynu skończonych sum
+otrzymujemy
+\[
+ \sum_k w_{n,k}(x)
+ =\prod_{i=1}^d\sum_{j=0}^n b_{n,j}(x_i)=1
+\]
+na mocy \ref{ma2:lem:approx-bernstein-moments}.
+Wartość wielomianu jest więc średnią ważoną
+wartości $f$ na regularnej siatce w sześcianie.
+
+\begin{twierdzenie}
+\label{ma2:thm:approx-bernstein-multi}
+Dla $f\in C([0,1]^d)$, $n\ge1$ i $\delta>0$
+zachodzi
+\[
+ \|B_n^{(d)}f-f\|_\infty\le
+ \left(1+\frac{\sqrt d}{2\delta\sqrt n}\right)
+ \omega_f(\delta).
+\]
+W szczególności
+\[
+ \|B_n^{(d)}f-f\|_\infty
+ \le\frac32\omega_f\bigl(\sqrt{d/n}\bigr)
+ \longrightarrow0
+ \qquad(n\to\infty)
+\]
+dla ustalonego $d$.
+\end{twierdzenie}
+\begin{proof}
+Dzięki faktoryzacji wag i
+\ref{ma2:lem:approx-bernstein-moments}
+mamy dla każdego $i\in\{1,\ldots,d\}$
+\[
+ \begin{aligned}
+ \sum_k w_{n,k}(x)(k_i/n-x_i)^2
+ &=
+ \left(\sum_{j=0}^n b_{n,j}(x_i)(j/n-x_i)^2\right)
+ \prod_{l\ne i}\sum_{j=0}^n b_{n,j}(x_l)\\
+ &=\frac{x_i(1-x_i)}n.
+ \end{aligned}
+\]
+Po zsumowaniu względem $i$ dostajemy
+\[
+ \sum_k w_{n,k}(x)\|k/n-x\|_2^2
+ =\sum_{i=1}^d\frac{x_i(1-x_i)}n
+ \le\frac d{4n}.
+\]
+Nierówność Cauchy'ego--Schwarza i równość
+$\sum_k w_{n,k}(x)=1$ dają
+\[
+ \sum_k w_{n,k}(x)\|k/n-x\|_2
+ \le\sqrt{\frac d{4n}}.
+\]
+Ponieważ sześcian jest wypukły, stosujemy
+\ref{ma2:prop:approx-modulus}:
+\[
+ \begin{aligned}
+ |B_n^{(d)}f(x)-f(x)|
+ &\le\sum_k w_{n,k}(x)|f(k/n)-f(x)|\\
+ &\le\omega_f(\delta)
+ \sum_k w_{n,k}(x)
+ \left(1+\frac{\|k/n-x\|_2}{\delta}\right)\\
+ &\le\left(1+\frac{\sqrt d}{2\delta\sqrt n}\right)
+ \omega_f(\delta).
+ \end{aligned}
+\]
+Bierzemy supremum po $x$, a następnie
+$\delta=\sqrt{d/n}$, co daje drugie oszacowanie.
+Granica wynika z jednostajnej ciągłości $f$,
+jak w \ref{ma2:prop:approx-modulus}.
+\end{proof}
+
+\begin{wniosek}
+\label{ma2:cor:approx-bernstein-box}
+Wielomiany są gęste w normie supremum
+w przestrzeni funkcji rzeczywistych ciągłych
+na każdym prostopadłościanie
+$K=\prod_{i=1}^d[a_i,b_i]$, gdzie $a_i<b_i$.
+\end{wniosek}
+\begin{proof}
+Odwzorowanie
+$\Phi:[0,1]^d\to K$, określone przez
+$\Phi_i(t)=a_i+(b_i-a_i)t_i$, jest bijekcją
+afiniczną z odwrotnością o składowych
+$(x_i-a_i)/(b_i-a_i)$.
+Dla $f\in C(K)$ stosujemy
+\ref{ma2:thm:approx-bernstein-multi} do $f\circ\Phi$.
+Wielomiany
+$p_n=(B_n^{(d)}(f\circ\Phi))\circ\Phi^{-1}$
+są wielomianami w $x$ dzięki afiniczności
+$\Phi^{-1}$. Bijektywność $\Phi$ zapewnia
+$\|p_n-f\|_{\infty,K}
+=\|B_n^{(d)}(f\circ\Phi)-f\circ\Phi\|_{\infty,[0,1]^d}$,
+co kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Aproksymacja powierzchni kwadratowej]
+\label{ma2:ex:approx-bernstein-surface}
+Dla $f(x,y)=x^2+y^2$ na $[0,1]^2$
+faktoryzacja sum oraz momenty z
+\ref{ma2:lem:approx-bernstein-moments} dają
+\[
+ B_n^{(2)}f(x,y)
+ =x^2+y^2+\frac{x(1-x)+y(1-y)}n.
+\]
+Istotnie, część sumy z $(k_1/n)^2$
+jest iloczynem drugiego momentu wag w $x$
+i sumy wag w $y$, a część z $(k_2/n)^2$
+obliczamy analogicznie.
+Wobec tego błąd jest nieujemny i wynosi
+\[
+ \|B_n^{(2)}f-f\|_\infty=\frac1{2n},
+\]
+gdyż każda z dwóch funkcji $t(1-t)$
+ma maksimum $1/4$ dla $t=1/2$.
+Mimo że $f$ należy do przestrzeni wielomianów
+już dla stopnia całkowitego $2$,
+wielomiany Bernsteina nie odtwarzają jej
+dokładnie dla żadnego skończonego $n$.
+\end{przyklad}
+
+\section{Twierdzenie Stone'a--Weierstrassa}
+
+Poprzednie konstrukcje korzystają z regularnej siatki.
+Chcemy teraz uzyskać twierdzenie o aproksymacji
+także na zwartych zbiorach o dowolnym kształcie,
+a ponadto przez rodziny funkcji inne niż wielomiany.
+Wystarczy odpowiednia struktura algebraiczna
+oraz możliwość rozróżnienia dwóch punktów.
+
+\begin{definicja}
+\label{ma2:def:approx-separate}
+Niech $K$ będzie niepustą zwartą przestrzenią
+Hausdorffa. Przez $C(K,\R)$ oznaczamy algebrę
+ciągłych funkcji rzeczywistych na $K$ z działaniami
+punktowymi i normą supremum.
+Podalgebra $A\subseteq C(K,\R)$ rozdziela punkty,
+jeżeli dla dowolnych różnych $x,y\in K$
+istnieje $g\in A$ takie, że $g(x)\ne g(y)$.
+Mówimy, że $A$ zawiera stałe, jeśli każda funkcja
+stała należy do $A$.
+\end{definicja}
+
+\begin{lemat}
+\label{ma2:lem:approx-lattice}
+Niech $K$ będzie niepustą zwartą przestrzenią
+Hausdorffa, $A\subseteq C(K,\R)$ podalgebrą
+zawierającą stałe, a $B$ jej domknięciem
+w normie supremum. Wówczas $B$ jest podalgebrą,
+zawiera stałe, a jeśli $u,v\in B$, to także
+$|u|$, $\max(u,v)$ i $\min(u,v)$ należą do $B$.
+\end{lemat}
+\begin{proof}
+Suma i mnożenie przez skalar są ciągłe w normie
+supremum, co wynika z nierówności trójkąta
+i jednorodności normy. Dla dowolnych $u,v\in B$
+wybieramy ciągi $u_j,v_j\in A$ takie, że
+$u_j\to u$, $v_j\to v$ jednostajnie. Wtedy
+\[
+ \|u_jv_j-uv\|_\infty
+ \le\|u_j\|_\infty\|v_j-v\|_\infty
+    +\|v\|_\infty\|u_j-u\|_\infty.
+\]
+Ciąg $(\|u_j\|_\infty)$ jest ograniczony,
+więc prawa strona dąży do zera.
+Otrzymujemy $uv\in B$; pozostałe działania
+algebraiczne zachowują $B$ przez ciągłość.
+Stałe należą do $B$, bo należą do $A$.
+
+Dla $u\in B$ wybierzmy $M>0$ tak, aby
+$\|u\|_\infty\le M$. Na mocy
+\ref{ma2:thm:approx-weierstrass} istnieją
+wielomiany $p_j$ zbiegające jednostajnie do
+$t\mapsto |t|$ na $[-M,M]$.
+Ponieważ $B$ jest algebrą zawierającą stałe,
+$p_j\circ u\in B$ dla każdego $j$.
+Ponadto
+\[
+ \|p_j\circ u-|u|\|_\infty
+ \le\sup_{|t|\le M}|p_j(t)-|t||\longrightarrow0.
+\]
+Domkniętość $B$ daje $|u|\in B$.
+Dla liczb rzeczywistych $a,b$ zachodzi
+$\max(a,b)=(a+b+|a-b|)/2$ i
+$\min(a,b)=(a+b-|a-b|)/2$;
+sprawdzamy to osobno dla $a\ge b$ i $a<b$.
+Stosując te tożsamości punktowo, dostajemy
+pozostałe dwie tezy.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Stone'a--Weierstrassa, wersja rzeczywista]
+\label{ma2:thm:approx-stone-weierstrass}
+Niech $K$ będzie niepustą zwartą przestrzenią
+Hausdorffa, a $A\subseteq C(K,\R)$ podalgebrą
+zawierającą stałe i rozdzielającą punkty.
+Wówczas $A$ jest gęsta w $C(K,\R)$
+w normie supremum.
+\end{twierdzenie}
+\begin{proof}
+Niech $B$ będzie domknięciem $A$.
+Ustalmy $f\in C(K,\R)$ i $\varepsilon>0$.
+
+\emph{Krok 1. Dopasowanie w dwóch punktach.}
+Dla $x,y\in K$ znajdziemy $h_{x,y}\in A$
+takie, że $h_{x,y}(x)=f(x)$ i
+$h_{x,y}(y)=f(y)$.
+Dla $x=y$ wystarczy funkcja stała $f(x)$.
+Jeśli $x\ne y$, wybieramy $g\in A$
+z $g(x)\ne g(y)$ i kładziemy
+\[
+ h_{x,y}(z)=f(x)+
+ \frac{f(y)-f(x)}{g(y)-g(x)}(g(z)-g(x)).
+\]
+Jest to kombinacja liniowa $g$ i funkcji stałej,
+a podstawienie $z=x$ oraz $z=y$ daje
+wymagane wartości.
+
+\emph{Krok 2. Dolne oszacowanie globalne
+przy zachowaniu wartości w punkcie $x$.}
+Ustalmy $x\in K$. Dla każdego $y\in K$
+zbiór
+\[
+ U_{x,y}=\{z\in K:h_{x,y}(z)>f(z)-\varepsilon\}
+\]
+jest otwarty dzięki ciągłości funkcji
+i zawiera $y$. Zwartość daje skończone
+podpokrycie $U_{x,y_1},\ldots,U_{x,y_r}$.
+Definiujemy
+\[
+ g_x=\max_{1\le j\le r}h_{x,y_j}.
+\]
+Na mocy \ref{ma2:lem:approx-lattice}, zastosowanego
+skończenie wiele razy, $g_x\in B$.
+Każdy z maksymalizowanych składników
+ma w $x$ wartość $f(x)$, więc $g_x(x)=f(x)$.
+Dla dowolnego $z\in K$ istnieje $j$ z
+$z\in U_{x,y_j}$, skąd
+$g_x(z)\ge h_{x,y_j}(z)>f(z)-\varepsilon$.
+
+\emph{Krok 3. Górne oszacowanie globalne.}
+Dla każdego $x\in K$ zbiór
+\[
+ V_x=\{z\in K:g_x(z)<f(z)+\varepsilon\}
+\]
+jest otwarty i zawiera $x$.
+Wybieramy skończone podpokrycie
+$V_{x_1},\ldots,V_{x_s}$ i kładziemy
+$h=\min_{1\le i\le s}g_{x_i}$.
+Ponownie $h\in B$ dzięki
+\ref{ma2:lem:approx-lattice}.
+Wszystkie funkcje $g_{x_i}$ są większe
+od $f-\varepsilon$ w każdym punkcie,
+więc także $h>f-\varepsilon$.
+Z pokrycia przez $V_{x_i}$ wynika
+$h<f+\varepsilon$ w każdym punkcie.
+Otrzymujemy $\|h-f\|_\infty\le\varepsilon$.
+
+Ponieważ $\varepsilon>0$ było dowolne,
+istnieje ciąg elementów $B$ zbiegający do $f$.
+Domkniętość $B$ daje $f\in B$.
+Stąd $B=C(K,\R)$.
+\end{proof}
+
+W dowodzie potrzebowaliśmy możliwości dopasowania
+wartości w dwóch punktach, a następnie możliwości
+tworzenia skończonych maksimów i minimów.
+Pierwszą zapewnia rozdzielanie punktów wraz
+z obecnością stałych. Drugą otrzymaliśmy
+z własności algebraicznych i jednowymiarowego
+twierdzenia Weierstrassa, przechodząc do domknięcia.
+
+\begin{wniosek}[Aproksymacja na dowolnym zwartym podzbiorze przestrzeni euklidesowej]
+\label{ma2:cor:approx-polynomials-compact}
+Dla każdego niepustego zwartego $K\subseteq\R^d$,
+$d\ge1$, ograniczenia rzeczywistych wielomianów
+w $d$ zmiennych do $K$ są gęste w $C(K)$.
+\end{wniosek}
+\begin{proof}
+Ograniczenia wielomianów tworzą podalgebrę
+zawierającą stałe. Jeżeli $x,y\in K$
+są różne, to dla pewnego $i$ zachodzi
+$x_i\ne y_i$. Wielomian współrzędnościowy
+$z\mapsto z_i$ rozdziela te punkty.
+Stosujemy \ref{ma2:thm:approx-stone-weierstrass}.
+\end{proof}
+
+\begin{przyklad}[Aproksymacja na okręgu]
+\label{ma2:ex:approx-circle}
+Na okręgu $K=\{(x,y)\in\R^2:x^2+y^2=1\}$
+możemy przybliżyć dowolną funkcję ciągłą
+przez ograniczenia wielomianów w $x,y$
+na mocy \ref{ma2:cor:approx-polynomials-compact}.
+Na przykład funkcję $(x,y)\mapsto|y|$
+możemy przybliżyć wielomianami w samym $y$,
+stosując \ref{ma2:thm:approx-weierstrass}
+do $t\mapsto|t|$ na $[-1,1]$.
+Natomiast wielomiany w samej współrzędnej $x$
+nie są gęste w $C(K)$: dla każdego takiego
+wielomianu $p$ i funkcji $f(x,y)=y$
+mamy
+\[
+ \|f-p\|_\infty\ge
+ \max\{|1-p(0)|,|-1-p(0)|\}\ge1.
+\]
+Ostatnia nierówność wynika z nierówności
+trójkąta, gdyż suma obu modułów jest
+co najmniej $2$.
+Wynika to z niemożności rozdzielenia
+punktów $(0,1)$ i $(0,-1)$ przez tę podalgebrę.
+\end{przyklad}
+
+\begin{przyklad}[Rola obecności funkcji stałych]
+\label{ma2:ex:approx-no-constants}
+Podalgebra
+$A=\{p\in\mathcal P:p(0)=0\}\subseteq C([0,1])$,
+gdzie $\mathcal P$ oznacza wszystkie ograniczenia
+wielomianów, rozdziela punkty, bo zawiera
+funkcję $x\mapsto x$.
+Nie jest jednak gęsta, gdyż dla każdego $p\in A$
+mamy $\|1-p\|_\infty\ge |1-p(0)|=1$.
+Nie można zatem w ogólnym twierdzeniu
+pominąć warunku dotyczącego stałych bez
+zastąpienia go odpowiednim dodatkowym założeniem.
+\end{przyklad}
+
+
+\subsection{Wersja zespolona twierdzenia Stone'a--Weierstrassa}
+
+\begin{twierdzenie}
+\label{ma2:thm:approx-stone-complex}
+Niech $K$ będzie niepustą zwartą przestrzenią
+Hausdorffa, a $A\subseteq C(K,\mathbb C)$
+zespoloną podalgebrą zawierającą stałe
+i rozdzielającą punkty. Załóżmy dodatkowo,
+że dla każdego $g\in A$ funkcja $\overline g$
+należy do $A$. Wówczas $A$ jest gęsta
+w $C(K,\mathbb C)$ w normie supremum.
+\end{twierdzenie}
+\begin{proof}
+Niech $A_{\mathbb R}=A\cap C(K,\R)$.
+Jest to rzeczywista podalgebra zawierająca
+wszystkie rzeczywiste funkcje stałe.
+Jeżeli $g\in A$, to
+\[
+ \operatorname{Re}g=\frac{g+\overline g}{2},
+ \qquad
+ \operatorname{Im}g=\frac{g-\overline g}{2i}
+\]
+należą do $A_{\mathbb R}$ na mocy
+założenia o sprzężeniu i liniowości $A$
+nad $\mathbb C$.
+Jeżeli $x,y\in K$ są różne, wybieramy
+$g\in A$ z $g(x)\ne g(y)$.
+Co najmniej jedna z jego części rzeczywistej
+i urojonej ma różne wartości w $x,y$,
+więc $A_{\mathbb R}$ rozdziela punkty.
+Z rzeczywistego twierdzenia
+\ref{ma2:thm:approx-stone-weierstrass}
+wynika gęstość $A_{\mathbb R}$ w $C(K,\R)$.
+
+Dla dowolnego $f\in C(K,\mathbb C)$
+i $\varepsilon>0$ wybieramy $u,v\in A_{\mathbb R}$
+takie, że
+$\|\operatorname{Re}f-u\|_\infty<\varepsilon/2$
+oraz $\|\operatorname{Im}f-v\|_\infty<\varepsilon/2$.
+Wtedy $u+iv\in A$ i z nierówności trójkąta
+\[
+ \|f-(u+iv)\|_\infty
+ \le\|\operatorname{Re}f-u\|_\infty
+    +\|\operatorname{Im}f-v\|_\infty<\varepsilon.
+\]
+To kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Konieczność dodatkowego założenia w wersji zespolonej]
+\label{ma2:ex:approx-stone-no-conjugation}
+Niech $K=\{z\in\mathbb C:|z|=1\}$.
+Ograniczenia wielomianów zespolonych w samej
+zmiennej $z$ tworzą podalgebrę $A$
+zawierającą stałe i rozdzielającą punkty.
+Jednak dla każdego wielomianu $p$
+\[
+ \|\overline z-p(z)\|_{\infty,K}\ge1.
+\]
+Aby to wykazać bez korzystania z analizy
+zespolonej, wybierzmy liczbę całkowitą
+$N>\deg p+1$ (dla $p=0$ wystarczy $N=2$).
+Niech $\zeta_j=\exp(2\pi i j/N)$,
+$j=0,\ldots,N-1$.
+Dla $1\le k<N$ mamy
+$\sum_{j=0}^{N-1}\zeta_j^k=0$:
+jest to suma geometryczna o ilorazie
+$\exp(2\pi i k/N)\ne1$ i liczniku
+$1-\exp(2\pi i k)=0$.
+Po rozwinięciu $zp(z)$ na jednomiany,
+których stopnie należą do $\{1,\ldots,N-1\}$,
+otrzymujemy
+\[
+ \frac1N\sum_{j=0}^{N-1}\zeta_jp(\zeta_j)=0.
+\]
+Ponieważ $\zeta_j\overline{\zeta_j}=1$,
+z nierówności trójkąta wynika
+\[
+ 1=\left|\frac1N\sum_{j=0}^{N-1}
+ \zeta_j(\overline{\zeta_j}-p(\zeta_j))\right|
+ \le\|\overline z-p(z)\|_{\infty,K}.
+\]
+W szczególności funkcja $z\mapsto\overline z$
+nie należy nawet do domknięcia $A$.
+Algebra nie jest więc zamknięta na sprzężenie
+i nie jest gęsta.
+
+Jeśli natomiast dopuścimy wielomiany w $z$
+oraz $\overline z$, otrzymamy algebrę
+spełniającą wszystkie założenia
+\ref{ma2:thm:approx-stone-complex}.
+Istotnie, sprzężenie zamienia $z$ i $\overline z$
+oraz sprzęga współczynniki; stałe i funkcja
+$z\mapsto z$ należą do algebry.
+W konsekwencji jej ograniczenia do dowolnego
+niepustego zwartego $K\subseteq\mathbb C$
+są gęste w $C(K,\mathbb C)$.
+\end{przyklad}
+
+\section{Istnienie najlepszej aproksymacji jednostajnej}
+
+Twierdzenie Weierstrassa (\ref{ma2:thm:approx-weierstrass})
+mówi, że błąd najlepszej aproksymacji wielomianowej
+$E_n(f)$ dąży do zera przy $n\to\infty$. Ogólnie
+analogiczny wniosek zachodzi dla rosnącej rodziny
+podprzestrzeni, której suma jest gęsta, na mocy
+definicji infimum i monotoniczności odległości. Osobnym zagadnieniem
+jest osiąganie infimum dla ustalonej przestrzeni.
+
+\begin{twierdzenie}[Istnienie najlepszej aproksymacji]
+\label{ma2:thm:approx-existence}
+Niech $X$ będzie rzeczywistą przestrzenią unormowaną,
+$M\subseteq X$ skończenie wymiarową podprzestrzenią
+liniową i $f\in X$. Istnieje $p\in M$ takie, że
+\[
+ \|f-p\|=\inf_{q\in M}\|f-q\|.
+\]
+W szczególności dla $f\in C([a,b])$, $a<b$,
+i $n\ge0$ istnieje $p\in\mathcal P_n$
+z $\|f-p\|_\infty=E_n(f)$.
+\end{twierdzenie}
+\begin{proof}
+Niech $E=\inf_{q\in M}\|f-q\|$.
+Ponieważ $0\in M$, mamy $0\le E\le\|f\|$.
+Z definicji infimum wybieramy ciąg $(q_j)$ w $M$
+taki, że $\|f-q_j\|\le E+1/j$ dla $j\ge1$.
+Nierówność trójkąta daje
+\[
+ \|q_j\|\le\|f\|+E+1\le 2\|f\|+1.
+\]
+Domknięta kula o tym promieniu w skończenie
+wymiarowej przestrzeni $M$ jest zwarta
+(por. \ref{ma2:thm:finite} oraz twierdzenie
+Heinego--Borela po identyfikacji $M$ z
+$\R^{\dim M}$ za pomocą bazy).
+Istnieje zatem podciąg $(q_{j_l})$ zbieżny
+w normie do $p\in M$.
+Z nierówności
+$|\|f-q_{j_l}\|-\|f-p\||\le\|q_{j_l}-p\|$
+wynika $\|f-p\|=E$.
+Dla $M=\mathcal P_n$ stosujemy wynik, ponieważ
+funkcje $1,x,\ldots,x^n$ rozpinają tę przestrzeń.
+\end{proof}
+
+Skończony wymiar zapewnia istnienie,
+ale nie zapewnia jednoznaczności.
+
+\begin{przyklad}[Niejednoznaczność najlepszej aproksymacji]
+\label{ma2:ex:approx-nonunique}
+W przestrzeni $\R^2$ z normą maksimum
+weźmy $M=\{(t,0):t\in\R\}$ i $f=(0,1)$.
+Wówczas
+\[
+ \|f-(t,0)\|_\infty=\max\{|t|,1\}.
+\]
+Najmniejsza odległość wynosi $1$ i jest
+osiągana przez wszystkie $t\in[-1,1]$.
+\end{przyklad}
+
+\begin{stwierdzenie}[Najlepsza aproksymacja stałą]
+\label{ma2:prop:approx-best-constant}
+Niech $f\in C(K)$, gdzie $K$ jest niepustym
+zbiorem zwartym, i niech
+$m=\min_K f$, $M=\max_K f$.
+Jedyną najlepszą aproksymacją $f$ przez funkcję
+stałą jest stała $c=(M+m)/2$, a błąd wynosi
+$(M-m)/2$.
+\end{stwierdzenie}
+\begin{proof}
+Ekstrema istnieją dzięki zwartości i ciągłości.
+Dla dowolnej stałej $c$ mamy
+\[
+ \|f-c\|_\infty=\max\{|M-c|,|m-c|\}.
+\]
+Istotnie, wartości $f$ należą do $[m,M]$,
+a moduł odległości od $c$ na tym przedziale
+jest ograniczony przez maksimum odległości
+od jego końców. Oba końce są osiągane przez $f$.
+Nierówność trójkąta daje
+$M-m\le |M-c|+|m-c|\le2\|f-c\|_\infty$.
+Dla $c=(M+m)/2$ obie odległości są równe
+$(M-m)/2$, co daje minimum.
+Jeśli dowolna stała osiąga to minimum, to
+$c\in[M-(M-m)/2,m+(M-m)/2]$.
+Przedział ten składa się wyłącznie
+z punktu $(M+m)/2$.
+\end{proof}
+
+\section{Wielomiany Czebyszewa}
+
+\begin{definicja}
+\label{ma2:def:approx-chebyshev}
+Wielomiany Czebyszewa pierwszego rodzaju
+określamy rekurencyjnie:
+\[
+ T_0(x)=1,\qquad T_1(x)=x,\qquad
+ T_{n+1}(x)=2xT_n(x)-T_{n-1}(x)\quad(n\ge1).
+\]
+\end{definicja}
+
+\begin{stwierdzenie}[Postać trygonometryczna i współczynnik wiodący]
+\label{ma2:prop:approx-chebyshev-properties}
+Dla $n\ge0$ i $\theta\in\R$ zachodzi
+\[
+ T_n(\cos\theta)=\cos(n\theta).
+\]
+Dla $n\ge1$ wielomian $T_n$ ma stopień $n$
+i współczynnik wiodący $2^{n-1}$.
+Ponadto $\|T_n\|_{\infty,[-1,1]}=1$.
+\end{stwierdzenie}
+\begin{proof}
+Dla $n=0,1$ tożsamość trygonometryczna
+wynika z definicji. Wzór
+$\cos((n+1)\theta)+\cos((n-1)\theta)
+=2\cos\theta\cos(n\theta)$, będący sumą
+wzorów na cosinus sumy i różnicy kątów,
+daje krok indukcyjny z rekurencji.
+Dla $n=1$ współczynnik wiodący wynosi $1$.
+Jeżeli $T_n$ ma stopień $n$ i współczynnik
+wiodący $2^{n-1}$, zaś $T_{n-1}$ ma
+stopień $n-1$, to odejmowanie $T_{n-1}$
+nie zmienia wyrazu najwyższego stopnia
+w $2xT_n$. Stąd stopień $n+1$ i współczynnik
+wiodący $2^n$.
+Każdy $x\in[-1,1]$ ma postać $\cos\theta$
+dla $\theta\in[0,\pi]$, więc $|T_n(x)|\le1$,
+a w $x=1$ wartość wynosi $1$.
+\end{proof}
+
+\begin{stwierdzenie}[Zera i punkty alternacji]
+\label{ma2:prop:approx-chebyshev-nodes}
+Dla $n\ge1$ wielomian $T_n$ ma dokładnie
+$n$ różnych zer
+\[
+ \xi_k=\cos\frac{(2k-1)\pi}{2n},
+ \qquad k=1,\ldots,n.
+\]
+W punktach
+\[
+ x_j=\cos\frac{j\pi}{n},
+ \qquad j=0,\ldots,n,
+\]
+zachodzi $T_n(x_j)=(-1)^j$, a
+$1=x_0>x_1>\cdots>x_n=-1$.
+\end{stwierdzenie}
+\begin{proof}
+Podstawiamy wskazane kąty do postaci
+trygonometrycznej z
+\ref{ma2:prop:approx-chebyshev-properties}.
+Pierwsze $n$ kątów należy do $(0,\pi)$
+i są parami różne, więc ścisła monotoniczność
+cosinusa na $[0,\pi]$ daje $n$ różnych zer.
+Więcej zer nie ma, ponieważ niezerowy
+wielomian stopnia $n$ ma co najwyżej $n$
+różnych zer. Wynika to z twierdzenia
+o czynniku liniowym: kolejne różne zera
+dają kolejne czynniki liniowe.
+Analogicznie monotoniczność cosinusa
+daje wskazany porządek punktów $x_j$.
+\end{proof}
+
+Pierwsze wielomiany to
+\[
+ T_2(x)=2x^2-1,\qquad
+ T_3(x)=4x^3-3x,\qquad
+ T_4(x)=8x^4-8x^2+1.
+\]
+Wzory otrzymujemy kolejno z rekurencji
+\ref{ma2:def:approx-chebyshev}.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=.90\linewidth,height=6.4cm,
+ axis lines=middle,xlabel={$x$},ylabel={$T_n(x)$},
+ xmin=-1.06,xmax=1.06,ymin=-1.25,ymax=1.35,
+ domain=-1:1,samples=161,
+ legend style={at={(.5,-.12)},anchor=north,legend columns=4}]
+\addplot[blue!75!black,thick] {x};
+\addlegendentry{$T_1$}
+\addplot[teal!80!black,thick] {2*x*x-1};
+\addlegendentry{$T_2$}
+\addplot[orange!85!black,thick] {4*x^3-3*x};
+\addlegendentry{$T_3$}
+\addplot[violet!85!black,very thick] {8*x^4-8*x*x+1};
+\addlegendentry{$T_4$}
+\addplot[gray,dashed,forget plot] {1};
+\addplot[gray,dashed,forget plot] {-1};
+\end{axis}
+\end{tikzpicture}
+\caption{Wielomiany Czebyszewa osiągają naprzemiennie
+wartości $1$ i $-1$. Wielomian $T_n$ ma $n+1$
+takich punktów na przedziale $[-1,1]$.}
+\label{ma2:fig:approx-chebyshev}
+\end{figure}
+
+\begin{twierdzenie}[Ekstremalna własność wielomianu Czebyszewa]
+\label{ma2:thm:approx-chebyshev-minimax}
+Dla całkowitego $n\ge1$ spośród wszystkich rzeczywistych
+wielomianów monicznych (o współczynniku wiodącym $1$)
+stopnia $n$ jedynym o najmniejszej normie
+supremum na $[-1,1]$ jest
+\[
+ q_n=2^{1-n}T_n.
+\]
+Najmniejsza norma wynosi $2^{1-n}$.
+\end{twierdzenie}
+\begin{proof}
+Na mocy \ref{ma2:prop:approx-chebyshev-properties}
+wielomian $q_n$ jest moniczny i ma normę
+$A=2^{1-n}$.
+Niech $p$ będzie dowolnym wielomianem monicznym
+stopnia $n$ z $\|p\|_\infty\le A$.
+Różnica $r=q_n-p$ ma stopień co najwyżej $n-1$
+lub jest wielomianem zerowym.
+Dla punktów $x_j$ z
+\ref{ma2:prop:approx-chebyshev-nodes} mamy
+\[
+ (-1)^j r(x_j)=A-(-1)^j p(x_j)\ge0.
+\]
+Aby uwzględnić także przypadek nierówności
+nieostrych, użyjemy tożsamości
+\[
+ \sum_{j=0}^n
+ \frac{r(x_j)}{\prod_{i\ne j}(x_j-x_i)}=0.
+\]
+Jej dowód jest następujący.
+Wielomian
+\[
+ L(x)=\sum_{j=0}^n r(x_j)
+       \prod_{i\ne j}\frac{x-x_i}{x_j-x_i}
+\]
+ma stopień co najwyżej $n$ i w każdym punkcie
+$x_j$ przyjmuje wartość $r(x_j)$.
+Różnica $L-r$ ma więc co najmniej $n+1$
+różnych zer, co wymusza $L=r$.
+Porównując współczynniki przy $x^n$,
+otrzymujemy żądaną tożsamość, ponieważ
+$\deg r\le n-1$ (dla $r=0$ również zachodzi).
+
+Ponieważ $x_0>x_1>\cdots>x_n$, mianownik
+$\prod_{i\ne j}(x_j-x_i)$ zawiera dokładnie $j$
+czynników ujemnych. Każdy składnik sumy
+w tożsamości jest zatem nieujemny.
+Ich suma jest zerowa, więc każdy jest zerowy.
+Wobec tego $r(x_j)=0$ dla wszystkich $j$,
+a ograniczenie stopnia daje $r=0$.
+Stąd $p=q_n$. Udowodniliśmy jednocześnie,
+że żaden wielomian moniczny nie może mieć
+mniejszej normy i że minimum jest jednoznaczne.
+\end{proof}
+
+\begin{wniosek}[Najlepsza aproksymacja jednomianu]
+\label{ma2:cor:approx-chebyshev-monomial}
+Niech $n\ge1$. Jedynym wielomianem stopnia co najwyżej $n-1$
+najlepiej przybliżającym $f(x)=x^n$ na $[-1,1]$
+jest
+\[
+ p_*(x)=x^n-2^{1-n}T_n(x),\qquad
+ E_{n-1}(f)=2^{1-n}.
+\]
+\end{wniosek}
+\begin{proof}
+Dla każdego $p\in\mathcal P_{n-1}$ różnica
+$x^n-p(x)$ jest moniczna stopnia $n$,
+a każdy wielomian moniczny stopnia $n$
+powstaje w ten sposób dla dokładnie jednego $p$.
+Stosujemy \ref{ma2:thm:approx-chebyshev-minimax}.
+\end{proof}
+
+\begin{wniosek}[Przeniesienie na dowolny przedział]
+\label{ma2:cor:approx-chebyshev-interval}
+Niech $a<b$, $n\ge1$, $c=(a+b)/2$,
+$\ell=(b-a)/2$.
+Jedyny wielomian moniczny stopnia $n$
+minimalizujący normę supremum na $[a,b]$ to
+\[
+ q_{n,[a,b]}(x)=
+ \ell^n2^{1-n}T_n\left(\frac{x-c}{\ell}\right),
+\]
+a jego norma wynosi $\ell^n2^{1-n}$.
+\end{wniosek}
+\begin{proof}
+Jeżeli $p$ jest moniczny stopnia $n$, to
+$t\mapsto \ell^{-n}p(c+\ell t)$ jest moniczny
+stopnia $n$ na $[-1,1]$.
+To przyporządkowanie jest bijekcją, z odwrotnością
+$q\mapsto \ell^n q((x-c)/\ell)$, a normy
+różnią się czynnikiem $\ell^n$.
+Wynik wynika z
+\ref{ma2:thm:approx-chebyshev-minimax}.
+\end{proof}
+
+\begin{przyklad}
+\label{ma2:ex:approx-chebyshev-cubic}
+Dla $f(x)=x^3$ na $[-1,1]$ otrzymujemy
+\[
+ p_*(x)=x^3-\tfrac14 T_3(x)=\tfrac34 x,
+ \qquad E_2(f)=\tfrac14.
+\]
+Wynik pochodzi z
+\ref{ma2:cor:approx-chebyshev-monomial}.
+Błąd $f-p_*=\tfrac14 T_3$ przyjmuje na
+kolejnych punktach $-1,-1/2,1/2,1$
+naprzemiennie wartości $-1/4,1/4,-1/4,1/4$.
+Widać tu zasadę alternacji: najlepszy
+wielomian nie musi mieć błędu o stałym znaku,
+lecz równoważy jego dodatnie i ujemne ekstrema.
+\end{przyklad}
+
+\section{Twierdzenie Czebyszewa o alternansie}
+
+W przypadku aproksymacji przez wielomiany na przedziale
+istnienie najlepszego przybliżenia wynika z
+\ref{ma2:thm:approx-existence}. Aby wykazać
+jednoznaczność i scharakteryzować najlepszy wielomian,
+potrzebujemy informacji nie tylko o wielkości
+maksymalnego błędu, ale także o jego znaku
+w punktach, w których osiąga on normę supremum.
+
+\begin{definicja}[Alternans błędu]
+\label{ma2:def:approx-alternance}
+Niech $f\in C([a,b])$, $p\in\mathcal P_n$ oraz
+$e=f-p$, $E=\|e\|_\infty>0$.
+Dla liczby całkowitej $m\ge1$ mówimy, że błąd $e$
+ma alternans długości $m$,
+jeżeli istnieją punkty
+$a\le t_0<t_1<\cdots<t_{m-1}\le b$
+i znak $\sigma\in\{-1,1\}$ takie, że
+\[
+ e(t_j)=\sigma(-1)^jE,\qquad j=0,\ldots,m-1.
+\]
+Punkty alternansu nie muszą być jednakowo odległe
+ani obejmować końców przedziału.
+\end{definicja}
+
+\begin{lemat}[Rozdzielenie znaków na zbiorze ekstremów]
+\label{ma2:lem:approx-sign-polynomial}
+Niech $a<b$, $e\in C([a,b])$, $E=\|e\|_\infty>0$,
+$n\ge0$. Stosujemy definicję
+\ref{ma2:def:approx-alternance} do $e$ jako błędu
+aproksymacji funkcji $e$ przez wielomian zerowy.
+Jeżeli $e$ nie ma alternansu długości
+$n+2$, to istnieje wielomian $q\in\mathcal P_n$
+taki, że
+\[
+ e(x)q(x)>0\qquad\text{dla każdego }
+ x\in S=\{x\in[a,b]:|e(x)|=E\}.
+\]
+\end{lemat}
+\begin{proof}
+Zbiory $S_+=\{x:e(x)=E\}$ oraz
+$S_-=\{x:e(x)=-E\}$ są zwarte i rozłączne.
+Ich suma $S$ jest niepusta, ponieważ ciągła
+funkcja $|e|$ osiąga maksimum.
+Jeżeli jeden z tych zbiorów jest pusty,
+wystarczy wielomian stały o znaku $e$ na $S$.
+
+Załóżmy, że oba zbiory są niepuste.
+Niech $t_0=\min S$ i $\sigma_0=e(t_0)/E$.
+Jeżeli na prawo od $t_0$ istnieje punkt $S$
+o przeciwnym znaku, wybieramy najmniejszy taki
+punkt $t_1$. Ogólnie, mając $t_j$ i
+$\sigma_j=e(t_j)/E$, wybieramy
+\[
+ t_{j+1}=\min\{x\in S:x>t_j,\ e(x)=-\sigma_j E\},
+\]
+jeżeli zbiór po prawej stronie jest niepusty.
+Minimum istnieje: można zastąpić warunek $x>t_j$
+warunkiem $x\ge t_j$, bo $t_j$ nie ma
+przeciwnego znaku. Otrzymujemy wtedy niepusty
+zbiór zwarty. Kolejne znaki są przeciwne.
+Brak alternansu długości $n+2$ oznacza, że
+procedura kończy się na $t_m$ dla pewnego
+$0\le m\le n$.
+
+Dla $0\le j<m$ wszystkie punkty
+$S\cap[t_j,t_{j+1})$ mają znak $\sigma_j$.
+Niech
+\[
+ u_j=\max\{x\in S:t_j\le x\le t_{j+1},
+                       \ e(x)=\sigma_j E\}.
+\]
+Ten zbiór jest zwarty i niepusty, gdyż
+zawiera $t_j$, a nie zawiera $t_{j+1}$.
+Zatem $u_j<t_{j+1}$.
+Wybieramy $c_j=(u_j+t_{j+1})/2$.
+Przedział $(u_j,t_{j+1})$ nie zawiera punktów $S$:
+punkt o znaku $\sigma_j$ przeczyłby definicji
+$u_j$, a punkt o znaku przeciwnym definicji
+$t_{j+1}$. W szczególności $c_j\notin S$.
+Mamy $c_0<\cdots<c_{m-1}$, ponieważ
+$c_j<t_{j+1}\le u_{j+1}<c_{j+1}$ dla $j<m-1$.
+Wielomian
+\[
+ q(x)=\sigma_0(-1)^m\prod_{j=0}^{m-1}(x-c_j)
+\]
+ma stopień $m\le n$ (dla $m=0$ pusty iloczyn
+wynosi $1$). Na lewo od pierwszego $c_j$
+jego znak jest $\sigma_0$, a przy przekroczeniu
+każdego $c_j$ zmienia się na przeciwny.
+Z konstrukcji punktów $c_j$ wynika, że
+na każdym kolejnym bloku zbioru $S$ znak $q$
+jest równy znakowi $e$; po ostatnim $t_m$
+nie ma już punktu o znaku przeciwnym.
+Ponieważ $q$ nie ma zer na $S$, otrzymujemy tezę.
+\end{proof}
+
+\begin{lemat}[Ścisłe zmniejszenie błędu]
+\label{ma2:lem:approx-improvement}
+Niech $a<b$, $e,q\in C([a,b])$, $E=\|e\|_\infty>0$.
+Jeżeli $e(x)q(x)>0$ dla wszystkich
+$x\in S=\{x:|e(x)|=E\}$, to dla dostatecznie
+małych $\tau>0$ zachodzi
+$\|e-\tau q\|_\infty<E$.
+\end{lemat}
+\begin{proof}
+Na niepustym zwartym zbiorze $S$
+ciągły iloczyn $eq$ osiąga dodatnie minimum
+$\mu>0$. Niech $Q=\|q\|_\infty>0$.
+Zbiór względnie otwarty
+$U=\{x\in[a,b]:e(x)q(x)>\mu/2\}$ zawiera $S$.
+Dla $x\in U$ mamy
+\[
+ |e(x)-\tau q(x)|^2
+ =e(x)^2-2\tau e(x)q(x)+\tau^2 q(x)^2
+ \le E^2-\tau\mu+\tau^2Q^2.
+\]
+Jeżeli $0<\tau<\mu/(2Q^2)$, prawa strona
+jest nie większa od $E^2-\tau\mu/2<E^2$.
+Jeżeli $[a,b]\setminus U$ jest niepusty,
+jest zwarty i rozłączny z $S$, więc
+$\max_{[a,b]\setminus U}|e|=E-\eta$
+dla pewnego $\eta>0$. Na tym zbiorze
+\[
+ |e(x)-\tau q(x)|\le E-\eta+\tau Q<E
+\]
+dla $0<\tau<\eta/(2Q)$.
+Jeżeli dopełnienie $U$ jest puste,
+ten drugi warunek nie jest potrzebny.
+W obu przypadkach uzyskujemy jednolite
+ograniczenie modułu błędu ściśle mniejsze od $E$.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Czebyszewa o alternansie]
+\label{ma2:thm:approx-alternance}
+Niech $a<b$, $n\ge0$, $f\in C([a,b])$.
+Istnieje dokładnie jeden najlepszy wielomian
+$p_*\in\mathcal P_n$ w normie supremum.
+Jeżeli $f\notin\mathcal P_n$, to dla
+$p\in\mathcal P_n$ następujące warunki
+są równoważne:
+\begin{enumerate}
+ \item $p$ jest najlepszą aproksymacją $f$;
+ \item błąd $f-p$ ma alternans długości $n+2$.
+\end{enumerate}
+Jeżeli $f\in\mathcal P_n$, najlepszym wielomianem
+jest samo $f$ i błąd wynosi zero.
+\end{twierdzenie}
+\begin{proof}
+Istnienie najlepszego wielomianu jest treścią
+\ref{ma2:thm:approx-existence}.
+Jeżeli $f\in\mathcal P_n$, to odległość zero
+może osiągnąć wyłącznie funkcja identyczna z $f$.
+Zakładamy odtąd, że $f\notin\mathcal P_n$,
+więc dla każdego $p\in\mathcal P_n$ błąd
+$e=f-p$ ma normę $E>0$.
+
+\emph{Konieczność.}
+Gdyby dla najlepszego $p$ nie istniał alternans
+długości $n+2$, to
+\ref{ma2:lem:approx-sign-polynomial} dawałby
+$q\in\mathcal P_n$ o znaku zgodnym z $e$
+w każdym punkcie $S=\{|e|=E\}$.
+Z \ref{ma2:lem:approx-improvement} wynikałoby,
+że dla dostatecznie małego $\tau>0$
+\[
+ \|f-(p+\tau q)\|_\infty
+ =\|e-\tau q\|_\infty<E.
+\]
+Ponieważ $p+\tau q\in\mathcal P_n$,
+otrzymujemy sprzeczność z optymalnością $p$.
+
+\emph{Dostateczność i jednoznaczność.}
+Załóżmy, że $p$ ma punkty alternansu
+$t_0<\cdots<t_{n+1}$, czyli
+$e(t_j)=\sigma(-1)^jE$.
+Niech $v\in\mathcal P_n$ spełnia
+$\|f-v\|_\infty\le E$ i niech $r=v-p$.
+Wtedy
+\[
+ \sigma(-1)^j r(t_j)
+ = E-\sigma(-1)^j(f-v)(t_j)\ge0.
+\]
+Dla $D_j=\prod_{i\ne j}(t_j-t_i)$
+mamy $\operatorname{sgn}D_j=(-1)^{n+1-j}$,
+ponieważ dokładnie $n+1-j$ czynników jest ujemnych.
+Tożsamość
+\[
+ \sum_{j=0}^{n+1}\frac{r(t_j)}{D_j}=0
+\]
+wynika z porównania współczynników przy $x^{n+1}$
+we wzorze interpolacyjnym użytym w dowodzie
+\ref{ma2:thm:approx-chebyshev-minimax},
+tym razem dla $n+2$ węzłów i wielomianu
+$r$ stopnia co najwyżej $n$.
+Po pomnożeniu przez $\sigma(-1)^{n+1}$
+każdy składnik sumy jest nieujemny,
+ponieważ otrzymujemy
+$\sigma(-1)^j r(t_j)/|D_j|$.
+Zatem każdy składnik znika,
+czyli $r(t_j)=0$ dla wszystkich $j$.
+Wielomian stopnia co najwyżej $n$ mający
+$n+2$ różnych zer musi być zerowy, na mocy
+twierdzenia o czynniku liniowym użytego w dowodzie
+\ref{ma2:prop:approx-chebyshev-nodes}.
+Wobec tego $v=p$.
+
+Dowodzi to, że żaden wielomian nie ma
+błędu mniejszego od $E$, a jedynym
+wielomianem z błędem nie większym od $E$
+jest $p$. Z konieczności alternansu dla
+każdego najlepszego wielomianu wynika
+również jego jednoznaczność.
+\end{proof}
+
+\begin{przyklad}[Najlepsza aproksymacja funkcji nieróżniczkowalnej]
+\label{ma2:ex:approx-alternance-absolute}
+Niech $f(x)=|x|$ na $[-1,1]$.
+Wielomian $p(x)=1/2\in\mathcal P_1$ ma błąd
+$e(x)=|x|-1/2$ o normie $1/2$, ponieważ
+$0\le|x|\le1$ i obie wartości brzegowe
+tego zakresu są osiągane.
+W punktach $-1,0,1$ błąd przyjmuje
+wartości $1/2,-1/2,1/2$.
+Mamy alternans długości $3=1+2$,
+więc na mocy \ref{ma2:thm:approx-alternance}
+$p$ jest jedyną najlepszą aproksymacją
+$f$ w $\mathcal P_1$.
+W szczególności dopuszczenie wyrazu liniowego
+nie zmniejsza tu błędu najlepszej stałej.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=.84\linewidth,height=5.8cm,
+ axis lines=middle,xlabel={$x$},ylabel={$e(x)$},
+ xmin=-1.12,xmax=1.12,ymin=-.69,ymax=.69]
+\addplot[gray,dashed,domain=-1:1] {0.5};
+\addplot[gray,dashed,domain=-1:1] {-0.5};
+\addplot[blue!75!black,very thick] coordinates {
+ (-1,0.5) (0,-0.5) (1,0.5)};
+\addplot[only marks,mark=*,red!80!black] coordinates {
+ (-1,0.5) (0,-0.5) (1,0.5)};
+\end{axis}
+\end{tikzpicture}
+\caption{Alternans błędu $e(x)=|x|-1/2$.
+Trzy punkty o naprzemiennych znakach i maksymalnym
+module błędu wystarczają do potwierdzenia
+optymalności w przestrzeni $\mathcal P_1$.}
+\label{ma2:fig:approx-alternance-absolute}
+\end{figure}
+
+\begin{przyklad}[Najlepsza aproksymacja wielomianem kwadratowym]
+\label{ma2:ex:approx-alternance-quartic}
+Dla $f(x)=x^4$ na $[-1,1]$ rozważmy
+$p(x)=x^2-1/8$. Wtedy
+\[
+ f(x)-p(x)=x^4-x^2+\tfrac18=\tfrac18 T_4(x).
+\]
+Z \ref{ma2:prop:approx-chebyshev-properties}
+wynika, że norma błędu to $1/8$.
+W punktach
+$-1,-1/\sqrt2,0,1/\sqrt2,1$
+błąd przyjmuje naprzemiennie wartości
+$1/8$ i $-1/8$, na mocy
+\ref{ma2:prop:approx-chebyshev-nodes}.
+Alternans ma długość $5$, więc zawiera
+zarówno alternans długości $4$, jak i $5$.
+Z \ref{ma2:thm:approx-alternance}
+wynika, że $p$ jest jedynym najlepszym
+wielomianem zarówno w $\mathcal P_2$,
+jak i w $\mathcal P_3$, oraz
+$E_2(f)=E_3(f)=1/8$.
+\end{przyklad}
+
+\section{Interpolacja wielomianowa}
+
+Aproksymacja najlepsza minimalizuje błąd na całym
+przedziale. Interpolacja stawia inny warunek:
+przybliżenie ma być dokładne w zadanych punktach.
+Zbieżność interpolantów przy zwiększaniu liczby
+węzłów nie jest automatyczna.
+
+\begin{definicja}
+\label{ma2:def:approx-interpolation}
+Niech $a<b$, $n\ge0$ i niech
+$x_0,\ldots,x_n\in[a,b]$ będą parami różne.
+Dla danych $y_0,\ldots,y_n\in\R$ interpolantem
+wielomianowym nazywamy wielomian $p\in\mathcal P_n$
+spełniający $p(x_j)=y_j$ dla $j=0,\ldots,n$.
+Jeżeli $y_j=f(x_j)$, piszemy $I_nf=p$,
+przy czym operator $I_n$ zależy także od węzłów.
+\end{definicja}
+
+\begin{twierdzenie}[Wzór interpolacyjny Lagrange'a]
+\label{ma2:thm:approx-lagrange}
+Interpolant z definicji \ref{ma2:def:approx-interpolation}
+istnieje i jest jedyny. Ma postać
+\[
+ p(x)=\sum_{j=0}^n y_j L_j(x),\qquad
+ L_j(x)=\prod_{\substack{0\le i\le n\\i\ne j}}
+ \frac{x-x_i}{x_j-x_i}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Mianowniki nie znikają, ponieważ węzły są
+parami różne. Dla $n=0$ pusty iloczyn wynosi $1$.
+Każdy $L_j$ jest wielomianem stopnia co najwyżej $n$.
+Podstawienie $x=x_k$ daje $L_j(x_k)=0$ dla
+$k\ne j$ oraz $L_j(x_j)=1$.
+Stąd wskazany wielomian spełnia wszystkie warunki.
+Gdyby dwa interpolanty spełniały te warunki,
+ich różnica miałaby $n+1$ różnych zer i stopień
+co najwyżej $n$, więc byłaby zerowa.
+\end{proof}
+
+Wzór zastosowaliśmy już w dowodzie ekstremalnej
+własności wielomianów Czebyszewa
+(\ref{ma2:thm:approx-chebyshev-minimax}).
+Jednoznaczność oznacza także, że przestawienie
+węzłów wraz z przypisanymi im wartościami
+nie zmienia interpolantu.
+
+\begin{definicja}[Różnice dzielone]
+\label{ma2:def:approx-divided-differences}
+Dla funkcji $f$ określonej w parami różnych
+punktach $x_0,\ldots,x_n$ definiujemy
+\[
+ f[x_i]=f(x_i),\qquad
+ f[x_i,\ldots,x_j]=
+ \frac{f[x_{i+1},\ldots,x_j]-f[x_i,\ldots,x_{j-1}]}
+ {x_j-x_i}\quad(i<j).
+\]
+\end{definicja}
+
+\begin{lemat}
+\label{ma2:lem:approx-divided-explicit}
+Dla $m\ge0$ i parami różnych punktów
+$x_0,\ldots,x_m$ zachodzi
+\[
+ f[x_0,\ldots,x_m]=
+ \sum_{j=0}^m
+ \frac{f(x_j)}{\prod_{i\ne j}(x_j-x_i)}.
+\]
+Różnica dzielona jest więc symetryczna
+względem przestawienia węzłów i jest
+współczynnikiem przy $x^m$ interpolantu
+stopnia co najwyżej $m$.
+\end{lemat}
+\begin{proof}
+Dla $m=0$ jest to definicja.
+Załóżmy, że wzór zachodzi dla $m-1$.
+Podstawiamy go do rekurencji z
+\ref{ma2:def:approx-divided-differences}.
+Dla $0<j<m$ współczynnik przy $f(x_j)$
+wynosi
+\[
+ \frac{1}{x_m-x_0}
+ \left(\frac1{x_j-x_m}-\frac1{x_j-x_0}\right)
+ \prod_{\substack{1\le i<m\\i\ne j}}
+ \frac1{x_j-x_i}
+ =\prod_{i\ne j}\frac1{x_j-x_i}.
+\]
+Dla $j=0$ występuje tylko drugi składnik
+rekurencji, a dla $j=m$ tylko pierwszy.
+Dodatkowe czynniki wynoszą odpowiednio
+$-1/(x_m-x_0)=1/(x_0-x_m)$
+oraz $1/(x_m-x_0)$, co daje ten sam wzór.
+W ten sposób kończymy indukcję, również
+dla $m=1$, gdy brak indeksów pośrednich.
+Symetria wynika z postaci sumy, a ostatnia
+teza z porównania współczynnika przy $x^m$
+we wzorze \ref{ma2:thm:approx-lagrange}.
+\end{proof}
+
+\begin{twierdzenie}[Wzór interpolacyjny Newtona]
+\label{ma2:thm:approx-newton}
+Dla danych $f(x_0),\ldots,f(x_n)$ w parami
+różnych węzłach z definicji
+\ref{ma2:def:approx-interpolation}
+interpolant ma postać
+\[
+ I_nf(x)=\sum_{j=0}^n f[x_0,\ldots,x_j]
+                \prod_{i=0}^{j-1}(x-x_i).
+\]
+\end{twierdzenie}
+\begin{proof}
+Niech $p_j$ oznacza interpolant na pierwszych
+$j+1$ węzłach. Dla $j=0$ mamy $p_0=f(x_0)$.
+Dla $j\ge1$ różnica $p_j-p_{j-1}$ ma stopień
+co najwyżej $j$ i znika w $x_0,\ldots,x_{j-1}$.
+Z twierdzenia o czynniku liniowym
+(por. dowód \ref{ma2:prop:approx-chebyshev-nodes}) wynika,
+że jest równa $c_j\prod_{i=0}^{j-1}(x-x_i)$
+dla pewnego $c_j\in\R$ (również gdy różnica
+jest zerowa).
+Ponieważ $p_{j-1}$ ma stopień co najwyżej $j-1$,
+porównanie współczynników przy $x^j$ i
+\ref{ma2:lem:approx-divided-explicit}
+dają $c_j=f[x_0,\ldots,x_j]$.
+Sumowanie tożsamości $p_j-p_{j-1}$
+kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Tablica różnic dzielonych]
+\label{ma2:ex:approx-newton-table}
+Interpolujemy $f(x)=x^3$ w punktach $0,1,2$.
+Z definicji różnic dzielonych otrzymujemy
+\[
+\begin{array}{c|r|r|r}
+ x_j&f[x_j]&f[x_{j-1},x_j]&f[x_{j-2},x_{j-1},x_j]\\ \hline
+ 0&0&&\\
+ 1&1&1&\\
+ 2&8&7&3
+\end{array}
+\]
+Różnice pierwszego rzędu to $(1-0)/(1-0)=1$
+oraz $(8-1)/(2-1)=7$, a drugiego rzędu
+$(7-1)/(2-0)=3$.
+Z \ref{ma2:thm:approx-newton} wynika
+$I_2f(x)=x+3x(x-1)=3x^2-2x$.
+Jeżeli dodamy kolejny węzeł $3$, wystarczy
+obliczyć dodatkowe różnice: $19$, $6$ oraz $1$
+(z kolejnych ilorazów $(27-8)/1$,
+$(19-7)/2$ i $(6-3)/3$).
+Nowy interpolant otrzymujemy przez dodanie
+$x(x-1)(x-2)$ do $I_2f$ i jest on równy $x^3$.
+Nie trzeba zmieniać wcześniejszych współczynników
+w postaci Newtona.
+\end{przyklad}
+
+\section{Błąd interpolacji i wybór węzłów}
+
+\begin{twierdzenie}[Reszta interpolacyjna]
+\label{ma2:thm:approx-interpolation-remainder}
+Niech $a<b$, $n\ge0$ i niech $f$ będzie rzeczywista
+klasy $C^{n+1}$ na otoczeniu $[a,b]$.
+Niech $x_0,\ldots,x_n\in[a,b]$
+będą parami różne. Oznaczmy
+\[
+ W(x)=\prod_{j=0}^n(x-x_j).
+\]
+Dla każdego $x\in[a,b]$ różnego od węzłów
+istnieje punkt $\xi$ we wnętrzu najmniejszego
+przedziału zawierającego $x,x_0,\ldots,x_n$ taki, że
+\[
+ f(x)-I_nf(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}W(x).
+\]
+W węzłach błąd jest zerowy. W szczególności
+\[
+ \|f-I_nf\|_\infty
+ \le\frac{\|f^{(n+1)}\|_\infty}{(n+1)!}\|W\|_\infty .
+\]
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $x$ różne od węzłów i połóżmy
+$c=(f(x)-I_nf(x))/W(x)$.
+Funkcja
+$g(t)=f(t)-I_nf(t)-cW(t)$
+znika w $n+2$ parami różnych punktach.
+Uporządkujmy je rosnąco. Twierdzenie Rolle'a (\atlasref{AM1-21::ma1:thm:rolle}{AM I, twierdzenie Rolle'a})
+zastosowane na każdym przedziale pomiędzy
+kolejnymi zerami daje co najmniej $n+1$
+różnych zer $g'$ we wnętrzu przedziału
+rozpiętego przez pierwotne zera.
+Powtarzając ten argument $n+1$ razy,
+otrzymujemy punkt $\xi$ z $g^{(n+1)}(\xi)=0$.
+Ponieważ $I_nf$ ma stopień co najwyżej $n$,
+a $W$ jest moniczny stopnia $n+1$,
+mamy $g^{(n+1)}=f^{(n+1)}-c(n+1)!$.
+Stąd $c=f^{(n+1)}(\xi)/(n+1)!$.
+Oszacowanie normy wynika z tego wzoru
+po wzięciu modułów i supremum, uwzględniając
+zerowy błąd w węzłach.
+\end{proof}
+
+\begin{wniosek}[Twierdzenie o wartości średniej dla różnic dzielonych]
+\label{ma2:cor:approx-divided-mean}
+Jeżeli $m\ge1$, $f$ jest klasy $C^m$
+na otoczeniu przedziału zawierającego
+parami różne punkty $x_0,\ldots,x_m$,
+to dla pewnego $\xi$ pomiędzy skrajnymi
+węzłami zachodzi
+\[
+ f[x_0,\ldots,x_m]=\frac{f^{(m)}(\xi)}{m!}.
+\]
+\end{wniosek}
+\begin{proof}
+Stosujemy \ref{ma2:thm:approx-interpolation-remainder}
+dla $n=m-1$ w punkcie $x=x_m$.
+Ze wzoru Newtona (\ref{ma2:thm:approx-newton}) wynika
+\[
+ f(x_m)-I_{m-1}f(x_m)=
+ f[x_0,\ldots,x_m]\prod_{j=0}^{m-1}(x_m-x_j).
+\]
+Wszystkie czynniki iloczynu są niezerowe,
+więc porównanie obu równości i skrócenie
+iloczynu daje tezę.
+\end{proof}
+
+\begin{twierdzenie}[Optymalne węzły dla oszacowania reszty]
+\label{ma2:thm:approx-chebyshev-interpolation}
+Dla $a<b$, $n\ge0$ oznaczmy $c=(a+b)/2$,
+$\ell=(b-a)/2$.
+Spośród wszystkich układów $n+1$ różnych
+węzłów na $[a,b]$ normę supremum iloczynu
+$\prod_{j=0}^n(x-x_j)$ minimalizuje,
+z dokładnością do kolejności, układ
+\[
+ x_j=c+\ell\cos\frac{(2j+1)\pi}{2(n+1)},
+ \qquad j=0,\ldots,n.
+\]
+Minimum wynosi $\ell^{n+1}2^{-n}$.
+Dla tych węzłów oraz $f$ klasy $C^{n+1}$
+na otoczeniu $[a,b]$ otrzymujemy
+\[
+ \|f-I_nf\|_\infty
+ \le \frac{\ell^{n+1}}{2^n(n+1)!}
+       \|f^{(n+1)}\|_\infty .
+\]
+\end{twierdzenie}
+\begin{proof}
+Każdy iloczyn w tezie jest monicznym
+wielomianem stopnia $n+1$.
+Z \ref{ma2:cor:approx-chebyshev-interval}
+wynika, że spośród wszystkich takich
+wielomianów jedynym o najmniejszej normie
+jest $\ell^{n+1}2^{-n}T_{n+1}((x-c)/\ell)$.
+Na mocy \ref{ma2:prop:approx-chebyshev-nodes}
+ma on dokładnie podane $n+1$ różnych zer
+we wnętrzu $[a,b]$.
+Ponieważ jest moniczny, jest iloczynem
+czynników liniowych odpowiadających tym zerom.
+Należy więc do rozpatrywanej klasy, a jego
+jednoznaczność daje jednoznaczność zbioru węzłów.
+Ostatnia nierówność wynika z podstawienia
+minimalnej normy do
+\ref{ma2:thm:approx-interpolation-remainder}.
+\end{proof}
+
+Wniosek dotyczy minimalizacji czynnika w ogólnym
+oszacowaniu błędu, a nie minimalizacji rzeczywistego
+błędu dla każdej ustalonej funkcji. Dla wielomianu
+stopnia co najwyżej $n$ każdy układ węzłów
+daje interpolację dokładną. Dla funkcji
+$f(x)=x^{n+1}$ sytuacja jest szczególna:
+$f-I_nf$ jest moniczny stopnia $n+1$
+i znika w węzłach, więc jest równy $W$.
+Wtedy wybór węzłów Czebyszewa daje także
+najlepszą aproksymację jednostajną w $\mathcal P_n$
+na mocy \ref{ma2:cor:approx-chebyshev-interval}.
+
+\begin{przyklad}[Interpolacja a najlepsza aproksymacja]
+\label{ma2:ex:approx-interpolation-difference}
+Dla $f(x)=x^2$ na $[-1,1]$ i $n=1$
+interpolacja w końcach przedziału daje
+$I_1f=1$, z błędem normy $1$.
+W węzłach Czebyszewa $\pm1/\sqrt2$
+wartości funkcji są równe $1/2$,
+więc interpolant jest stałą $1/2$,
+z błędem normy $1/2$.
+Jest to jedyna najlepsza aproksymacja
+w $\mathcal P_1$ na mocy
+\ref{ma2:cor:approx-chebyshev-monomial}.
+\end{przyklad}
+
+\section{Stała Lebesgue'a i stabilność interpolacji}
+
+\begin{definicja}
+\label{ma2:def:approx-lebesgue-constant}
+Dla ustalonego układu $n+1$ różnych węzłów
+$x_0,\ldots,x_n\in[a,b]$ oraz wielomianów
+bazowych $L_j$ z \ref{ma2:thm:approx-lagrange}
+określamy funkcję Lebesgue'a i stałą Lebesgue'a:
+\[
+ \mathcal L_n(x)=\sum_{j=0}^n|L_j(x)|,\qquad
+ \Lambda_n=\max_{x\in[a,b]}\mathcal L_n(x).
+\]
+Maksimum istnieje dzięki ciągłości i zwartości.
+Obie wielkości zależą od układu węzłów.
+Oznaczenie $\mathcal L_n$ pozwala odróżnić
+funkcję Lebesgue'a od miary Lebesgue'a $\lambda_n$.
+\end{definicja}
+
+\begin{twierdzenie}
+\label{ma2:thm:approx-lebesgue-norm}
+Operator interpolacji $I_n:C([a,b])\to C([a,b])$
+jest ograniczonym operatorem liniowym,
+a jego norma operatorowa wynosi $\Lambda_n$.
+Ponadto $\Lambda_n\ge1$ i dla każdej
+$f\in C([a,b])$ zachodzi nierówność Lebesgue'a
+\[
+ \|f-I_nf\|_\infty\le(1+\Lambda_n)E_n(f).
+\]
+\end{twierdzenie}
+\begin{proof}
+Liniowość wynika ze wzoru Lagrange'a.
+Dla $x\in[a,b]$ mamy
+\[
+ |I_nf(x)|\le \|f\|_\infty
+                    \sum_{j=0}^n|L_j(x)|,
+\]
+więc $\|I_n\|\le\Lambda_n$.
+Niech $x_*$ będzie punktem maksimum
+$\mathcal L_n$. Wybieramy $y_j=1$, jeśli
+$L_j(x_*)\ge0$, oraz $y_j=-1$ w przeciwnym
+przypadku. Istnieje $g\in C([a,b])$ o
+$\|g\|_\infty=1$ i $g(x_j)=y_j$:
+porządkujemy węzły rosnąco, łączymy
+kolejne wartości odcinkami i przedłużamy
+stałymi do końców przedziału.
+Wówczas $I_ng(x_*)=\sum_j|L_j(x_*)|=\Lambda_n$,
+stąd $\|I_n\|\ge\Lambda_n$.
+
+Jednoznaczność interpolacji daje $I_np=p$
+dla każdego $p\in\mathcal P_n$.
+W szczególności $I_n1=1$, więc
+$\|I_n\|\ge1$. Dla każdego $p\in\mathcal P_n$
+mamy
+\[
+ f-I_nf=(f-p)-I_n(f-p),
+\]
+a zatem $\|f-I_nf\|_\infty
+\le(1+\Lambda_n)\|f-p\|_\infty$.
+Biorąc infimum po $p$, otrzymujemy tezę.
+\end{proof}
+
+\begin{wniosek}[Wpływ błędów w danych]
+\label{ma2:cor:approx-data-error}
+Jeżeli $p,\widetilde p\in\mathcal P_n$
+interpolują w tych samych węzłach odpowiednio
+dane $y_j$ i $\widetilde y_j$, to
+\[
+ \|p-\widetilde p\|_\infty
+ \le\Lambda_n\max_{0\le j\le n}|y_j-\widetilde y_j|.
+\]
+Stałej $\Lambda_n$ nie można zastąpić mniejszą
+stałą niezależną od danych.
+\end{wniosek}
+\begin{proof}
+Stosujemy wzór Lagrange'a do różnicy danych.
+Ostrość wynika z wyboru różnic danych
+równych znakom $L_j(x_*)$, jak w dowodzie
+\ref{ma2:thm:approx-lebesgue-norm}.
+\end{proof}
+
+Dla kolejnych układów węzłów warunek
+$(1+\Lambda_n)E_n(f)\to0$ jest dostateczny
+do jednostajnej zbieżności interpolantów.
+Sama gęstość wielomianów zapewnia jedynie
+$E_n(f)\to0$, nie zaś ten silniejszy warunek.
+Nierówność pokazuje również różnicę między
+uwarunkowaniem zadania (wrażliwością na dane)
+a błędami zaokrągleń konkretnego algorytmu.
+
+
+\subsection{Wzrost stałej Lebesgue'a dla węzłów Czebyszewa}
+
+\begin{twierdzenie}[Logarytmiczne oszacowanie stałej Lebesgue'a]
+\label{ma2:thm:approx-lebesgue-chebyshev}
+Niech $n\ge1$ i niech $x_0,\ldots,x_n$
+będą zerami $T_{n+1}$ na $[-1,1]$.
+Wtedy
+\[
+ \Lambda_n\le \pi+4(1+\log n).
+\]
+To samo oszacowanie obowiązuje dla afinicznych
+obrazów tych węzłów na dowolnym przedziale
+$[a,b]$, $a<b$.
+\end{twierdzenie}
+\begin{proof}
+Piszemy $N=n+1$,
+$\varphi_j=(2j+1)\pi/(2N)$ oraz
+$x_j=\cos\varphi_j$.
+Niech $x=\cos\theta$ dla $\theta\in[0,\pi]$.
+Dla $x$ różnego od węzłów ze wzoru Lagrange'a
+i moniczności $2^{-n}T_N$ wynika
+\[
+ L_j(x)=\frac{T_N(x)}{(x-x_j)T_N'(x_j)}.
+\]
+Istotnie, licznik po podzieleniu przez
+$x-x_j$ jest wielomianem stopnia $n$
+zerującym się we wszystkich pozostałych
+węzłach, a jego wartość w $x_j$ po
+podzieleniu przez $T_N'(x_j)$ wynosi $1$.
+Różniczkując tożsamość
+$T_N(\cos t)=\cos(Nt)$ dla $0<t<\pi$,
+dostajemy
+$|T_N'(x_j)|=N/\sin\varphi_j$.
+Stąd
+\[
+ |L_j(\cos\theta)|=
+ \frac{|\cos(N\theta)|\sin\varphi_j}
+ {N|\cos\theta-\cos\varphi_j|}.
+\]
+
+Wykażemy przydatne oszacowanie
+\[
+ \frac{\sin\varphi}{|\cos\theta-\cos\varphi|}
+ \le\frac{\pi}{|\theta-\varphi|}
+ \qquad
+ (0\le\theta\le\pi,\ 0<\varphi<\pi,\
+ \theta\ne\varphi).
+\]
+Ze wzoru na różnicę cosinusów mianownik
+jest równy
+$2\sin((\theta+\varphi)/2)
+ |\sin((\theta-\varphi)/2)|$.
+Kąt $(\theta+\varphi)/2$ należy do
+$[\varphi/2,(\pi+\varphi)/2]$.
+Sinus na tym przedziale jest nie mniejszy
+od minimum wartości na jego końcach,
+czyli od $\min(\sin(\varphi/2),\cos(\varphi/2))$,
+bo na $[0,\pi]$ najpierw rośnie, a następnie maleje.
+Z tożsamości $\sin\varphi=2\sin(\varphi/2)
+\cos(\varphi/2)$ wynika więc
+$\sin\varphi\le2\sin((\theta+\varphi)/2)$.
+Ponadto $\sin u\ge 2u/\pi$ dla $0\le u\le\pi/2$
+z wklęsłości sinusa na tym przedziale
+($\sin''u=-\sin u\le0$, por.
+\atlasref{AM1-25::ma1:thm:convex-second-derivative}{AM I, kryterium wypukłości i wklęsłości})
+i porównania z cięciwą.
+Podstawiając $u=|\theta-\varphi|/2$,
+otrzymujemy żądane oszacowanie.
+
+Wybieramy indeks $j_*$, dla którego
+$|\theta-\varphi_{j_*}|$ jest najmniejsze.
+Kąty $\varphi_j$ są rozmieszczone
+w odległości $\pi/N$, a skrajne kąty
+leżą w odległości $\pi/(2N)$ od końców
+$[0,\pi]$. Stąd
+$|\theta-\varphi_{j_*}|\le\pi/(2N)$.
+Ponieważ $\cos(N\varphi_{j_*})=0$,
+twierdzenie o wartości średniej
+(\atlasref{AM1-21::ma1:thm:lagrange}{AM I, twierdzenie Lagrange'a}) daje
+\[
+ |\cos(N\theta)|\le N|\theta-\varphi_{j_*}|.
+\]
+Stosując poprzednie oszacowanie do $j_*$,
+otrzymujemy $|L_{j_*}(x)|\le\pi$.
+Jeżeli $j\ne j_*$ i $k=|j-j_*|\ge1$, to
+\[
+ |\theta-\varphi_j|\ge
+ |\varphi_j-\varphi_{j_*}|
+ -|\theta-\varphi_{j_*}|
+ \ge(k-1/2)\pi/N.
+\]
+Ponieważ $|\cos(N\theta)|\le1$,
+mamy $|L_j(x)|\le1/(k-1/2)\le2/k$.
+Dla każdej wartości $k$ istnieją co najwyżej
+dwa indeksy $j$ o $|j-j_*|=k$.
+Zatem
+\[
+ \mathcal L_n(x)\le\pi+4\sum_{k=1}^n\frac1k
+ \le\pi+4(1+\log n).
+\]
+Ostatnia nierówność wynika z porównania
+$\sum_{k=2}^n1/k$ z całką funkcji $1/t$
+na $[1,n]$.
+W samych węzłach $\mathcal L_n(x_j)=1$,
+więc ograniczenie zachodzi na całym przedziale.
+Przy afinicznej zmianie zmiennej każdy
+czynnik we wzorze Lagrange'a zachowuje wartość
+po skróceniu wspólnego współczynnika skali,
+a supremum po przedziale odpowiada supremum
+po $[-1,1]$. To daje ostatnią tezę.
+\end{proof}
+
+\begin{stwierdzenie}[Dolne oszacowanie wzrostu]
+\label{ma2:prop:approx-lebesgue-chebyshev-lower}
+Dla tych samych węzłów, przy $N=n+1\ge2$,
+\[
+ \Lambda_n\ge \frac{\sqrt2}{\pi}
+ \log(\lfloor N/2\rfloor+1).
+\]
+W szczególności wzrost stałych Lebesgue'a
+jest rzędu logarytmicznego.
+\end{stwierdzenie}
+\begin{proof}
+W punkcie $x=1$ poprzedni wzór daje
+\[
+ |L_j(1)|=\frac{\sin\varphi_j}
+ {N(1-\cos\varphi_j)}
+ =\frac1N\cot(\varphi_j/2).
+\]
+Niech $M=\lfloor N/2\rfloor$. Dla $0\le j<M$
+mamy $0<\varphi_j<\pi/2$,
+więc $\cos(\varphi_j/2)\ge1/\sqrt2$
+oraz $\sin(\varphi_j/2)\le\varphi_j/2$.
+Wynika stąd
+\[
+ \Lambda_n\ge\mathcal L_n(1)\ge
+ \frac{\sqrt2}{\pi}\sum_{j=0}^{M-1}
+ \frac1{j+1/2}
+ \ge \frac{\sqrt2}{\pi}\log(M+1).
+\]
+Ostatnia nierówność wynika z porównania
+$1/(j+1/2)\ge1/(j+1)$ i
+$\sum_{k=1}^{M}1/k\ge\int_1^{M+1}t^{-1}\,\mathrm dt$.
+Wraz z \ref{ma2:thm:approx-lebesgue-chebyshev}
+otrzymujemy dodatnie dolne i górne ograniczenia
+proporcjonalne do $\log(n+1)$ dla dostatecznie
+dużych $n$.
+\end{proof}
+
+\begin{wniosek}[Zbieżność interpolacji funkcji hölderowskich]
+\label{ma2:cor:approx-chebyshev-holder}
+Niech $f\in C([a,b])$, $a<b$,
+i załóżmy, że dla pewnych $H\ge0$
+oraz $0<\alpha\le1$ zachodzi
+$|f(x)-f(y)|\le H|x-y|^\alpha$.
+Wtedy interpolanty w węzłach Czebyszewa
+zbiegają jednostajnie do $f$, a dla $n\ge1$
+\[
+ \|f-I_nf\|_\infty\le
+ \frac32 H(b-a)^\alpha
+ (1+\pi+4(1+\log n))n^{-\alpha/2}.
+\]
+\end{wniosek}
+\begin{proof}
+Dla $g(t)=f(a+(b-a)t)$ mamy
+$\omega_g(\delta)\le H(b-a)^\alpha\delta^\alpha$.
+Z \ref{ma2:thm:approx-bernstein} i
+afinicznego podstawienia z dowodu
+\ref{ma2:thm:approx-weierstrass}
+wynika
+$E_n(f)\le(3/2)H(b-a)^\alpha n^{-\alpha/2}$.
+Stosujemy nierówność Lebesgue'a z
+\ref{ma2:thm:approx-lebesgue-norm}
+i oszacowanie
+\ref{ma2:thm:approx-lebesgue-chebyshev}.
+Prawa strona dąży do zera, ponieważ
+$\log n/n^{\alpha/2}\to0$.
+Ostatnia granica wynika na przykład z oszacowania
+$\log t=\int_1^t u^{-1}\,\mathrm du
+\le\int_1^t u^{\alpha/4-1}\,\mathrm du
+\le(4/\alpha)t^{\alpha/4}$ dla $t\ge1$,
+po podzieleniu przez $t^{\alpha/2}$.
+\end{proof}
+
+Powyższe oszacowanie stałej Lebesgue'a
+nie ma optymalnej stałej przy logarytmie,
+ale wystarcza do wykazania jej rzędu wzrostu
+i do otrzymania jawnego kryterium zbieżności.
+Nie wnioskujemy z niego zbieżności
+dla każdej funkcji ciągłej: samo
+$E_n(f)\to0$ nie zapewnia
+$E_n(f)\log(n+1)\to0$.
+
+\section{Postać barycentryczna interpolantu}
+
+\begin{twierdzenie}[Wzór barycentryczny]
+\label{ma2:thm:approx-barycentric}
+Niech $n\ge0$, $a<b$, $x_0,\ldots,x_n\in[a,b]$
+będą parami różnymi węzłami, a $y_0,\ldots,y_n\in\R$
+danymi. Niech
+\[
+ W(x)=\prod_{j=0}^n(x-x_j),\qquad
+ w_j=\frac1{\prod_{i\ne j}(x_j-x_i)}.
+\]
+Dla $x$ różnego od wszystkich węzłów
+interpolant danych $y_j$ ma postać
+\[
+ p(x)=\frac{\displaystyle\sum_{j=0}^n
+                       \frac{w_jy_j}{x-x_j}}
+                 {\displaystyle\sum_{j=0}^n
+                       \frac{w_j}{x-x_j}}.
+\]
+W punkcie $x_j$ przyjmujemy bezpośrednio
+wartość $y_j$. Wspólny niezerowy czynnik
+we wszystkich wagach nie zmienia wzoru.
+\end{twierdzenie}
+\begin{proof}
+Dla $x$ różnego od węzłów mamy
+$L_j(x)=W(x)w_j/(x-x_j)$.
+Interpolacja funkcji stałej $1$ daje
+$\sum_jL_j(x)=1$, zatem
+\[
+ \sum_j\frac{w_j}{x-x_j}=\frac1{W(x)}\ne0.
+\]
+Podstawiając do wzoru Lagrange'a
+(\ref{ma2:thm:approx-lagrange}), otrzymujemy
+wzór barycentryczny. W węzłach wartości
+wynikają z definicji interpolantu.
+Niezmienniczość względem wspólnego
+czynnika wynika ze skrócenia ułamka.
+\end{proof}
+
+\begin{wniosek}[Wagi dla dwóch układów węzłów]
+\label{ma2:cor:approx-barycentric-weights}
+Niech $a<b$. Dla węzłów równomiernych $x_j=a+jh$,
+$h=(b-a)/n$, $n\ge1$, można przyjąć
+\[
+ w_j=(-1)^j\binom nj.
+\]
+Dla węzłów Czebyszewa na $[a,b]$, gdzie $n\ge0$,
+$c=(a+b)/2$, $\ell=(b-a)/2$,
+$x_j=c+\ell\cos\theta_j$,
+$\theta_j=(2j+1)\pi/(2(n+1))$,
+$j=0,\ldots,n$, można przyjąć
+\[
+ w_j=(-1)^j\sin\theta_j.
+\]
+\end{wniosek}
+\begin{proof}
+Dla węzłów równomiernych
+$\prod_{i\ne j}(x_j-x_i)=h^n j!(-1)^{n-j}(n-j)!$.
+Po pomnożeniu odwrotności przez wspólny
+czynnik $(-1)^n h^n n!$ dostajemy pierwszy wzór.
+Dla węzłów Czebyszewa, na mocy
+\ref{ma2:thm:approx-chebyshev-interpolation},
+$W(x)=\ell^{n+1}2^{-n}T_{n+1}((x-c)/\ell)$.
+Mamy $w_j=1/W'(x_j)$, ponieważ po
+zróżniczkowaniu iloczynu w $x_j$
+pozostaje tylko składnik odpowiadający
+pochodnej czynnika $(x-x_j)$.
+Różniczkując tożsamość
+$T_{n+1}(\cos\theta)=\cos((n+1)\theta)$
+dla $0<\theta<\pi$, otrzymujemy
+\[
+ T_{n+1}'(\cos\theta)=
+ \frac{(n+1)\sin((n+1)\theta)}{\sin\theta}.
+\]
+Dla $\theta=\theta_j$ licznik zawiera
+$\sin((n+1)\theta_j)=(-1)^j$.
+Stąd $1/W'(x_j)$ jest równy
+$(-1)^j\sin\theta_j$ pomnożonemu
+przez wspólną stałą $2^n/(\ell^n(n+1))$.
+\end{proof}
+
+Po obliczeniu wag wartość interpolantu poza
+węzłami można uzyskać za pomocą dwóch sum
+o $n+1$ składnikach. Postać barycentryczna
+nie usuwa jednak dużej stałej Lebesgue'a,
+jeżeli wynika ona z niekorzystnego wyboru
+węzłów. Równość algebraiczna wzorów nie jest
+sama w sobie dowodem stabilności numerycznej
+implementacji w arytmetyce zmiennoprzecinkowej.
+
+\section{Zjawisko Rungego}
+
+\begin{przyklad}[Dokładna reszta dla funkcji Rungego]
+\label{ma2:ex:approx-runge-exact}
+Niech $f(x)=1/(1+25x^2)$ na $[-1,1]$.
+Rozpatrujemy $n\ge1$ i symetryczny
+układ $n+1$ różnych węzłów, czyli układ,
+który wraz z $x$ zawiera $-x$.
+Wówczas $p=I_nf$ jest parzysty, ponieważ
+$p(-x)$ interpoluje te same dane co $p(x)$:
+$f(-x_j)=f(x_j)$ i $-x_j$ również jest węzłem.
+Jednoznaczność z \ref{ma2:thm:approx-lagrange}
+daje $p(-x)=p(x)$ na całej prostej.
+Wielomian $W(x)=\prod_{j=0}^n(x-x_j)$
+spełnia $W(-x)=(-1)^{n+1}W(x)$,
+ponieważ podstawienie $-x$ zamienia węzły
+na przeciwne, a ich zbiór jest symetryczny.
+Wielomian $R(x)=1-(1+25x^2)p(x)$ jest parzysty
+i znika we wszystkich węzłach.
+Stąd $W$ dzieli $R$ przez kolejne zastosowania
+twierdzenia o czynniku liniowym dla różnych węzłów.
+Jeżeli $n$ jest parzyste, to $\deg R\le n+2$,
+a iloraz $R/W$ jest nieparzysty, więc $R=CxW$.
+Jeżeli $n$ jest nieparzyste, to z parzystości $p$
+wynika $\deg p\le n-1$ (lub $p=0$), a więc
+$\deg R\le n+1$ i $R=CW$.
+Ponieważ otrzymane równości są tożsamościami
+wielomianów o rzeczywistych współczynnikach,
+obowiązują również po podstawieniu liczby zespolonej.
+Podstawienie $z=i/5$ daje
+$R(i/5)=1$. Ponieważ $W(i/5)\ne0$,
+otrzymujemy odpowiednio
+$C=1/((i/5)W(i/5))$ lub $C=1/W(i/5)$.
+Po podzieleniu przez $1+25x^2$ dostajemy
+dokładny wzór
+\[
+ |f(x)-p(x)|=
+ \frac{|W(x)|}{(1+25x^2)|W(i/5)|}
+ \begin{cases}
+ 5|x|,&n\text{ parzyste},\\
+ 1,&n\text{ nieparzyste}.
+ \end{cases}
+\]
+Mimo wykorzystania liczby zespolonej do
+wyznaczenia stałej, jest to wyłącznie
+tożsamość wielomianowa; nie korzystamy
+z analizy zespolonej.
+\end{przyklad}
+
+\begin{twierdzenie}[Rozbieżność interpolacji w węzłach równomiernych]
+\label{ma2:thm:approx-runge-divergence}
+Dla $f(x)=1/(1+25x^2)$ na $[-1,1]$
+oraz węzłów $x_j=-1+2j/n$, $0\le j\le n$, $n\ge1$,
+błąd interpolacji w normie supremum
+dąży do nieskończoności przy $n\to\infty$.
+\end{twierdzenie}
+\begin{proof}
+Niech $W_n$ oznacza wielomian węzłowy.
+Dla $s_n=1-1/n$ zachodzi
+\[
+ |W_n(s_n)|=(2/n)^{n+1}
+                   \frac12\prod_{k=1}^n(k-1/2).
+\]
+Istotnie, $s_n-x_j=(2/n)(n-j-1/2)$,
+a po zmianie indeksu otrzymujemy iloczyn.
+Wykażemy, że
+$\lim_{n\to\infty}|W_n(s_n)|^{1/n}=2/e$.
+Mamy
+\[
+ \frac1n\log|W_n(s_n)|
+ =\frac{n+1}{n}\log2-\frac{\log(2n)}n
+       +\frac1n\sum_{k=1}^n
+                    \log\frac{k-1/2}{n}.
+\]
+Ostatnia średnia dąży do $-1$.
+Aby uzasadnić granicę mimo osobliwości
+logarytmu w zerze, porównujemy ją z sumą
+$\frac1n\sum_{k=1}^n\log(k/n)$.
+Moduł różnicy tych średnich nie przekracza
+\[
+ \frac1n\sum_{k=1}^n
+        -\log(1-1/(2k))
+ \le\frac1n\sum_{k=1}^n\frac1k
+ \le\frac{1+\log n}{n}.
+\]
+Pierwsza nierówność wynika z
+$-\log(1-u)=\int_0^u(1-t)^{-1}\,\mathrm dt
+\le2u$ dla $0\le u\le1/2$.
+Druga wynika z porównania sumy z całką
+funkcji $1/t$.
+Monotoniczność logarytmu daje
+$\int_1^n\log t\,\mathrm dt\le\log(n!)
+\le\int_1^n\log t\,\mathrm dt+\log n$,
+więc $\log(n!)/n-\log n\to-1$.
+To uzasadnia żądaną granicę.
+
+Z drugiej strony
+\[
+ \frac1n\log |W_n(i/5)|
+ =\frac1{2n}\sum_{j=0}^n\log(x_j^2+1/25)
+ \longrightarrow
+ \frac14\int_{-1}^1\log(t^2+1/25)\,\mathrm dt .
+\]
+Jest to granica sum Riemanna dla funkcji ciągłej
+(\atlasref{AM1-29::ma1:thm:riemann-continuous}{AM I, całkowalność funkcji ciągłych}): krok wynosi $2/n$,
+a dodatkowy składnik końcowy podzielony
+przez $n$ dąży do zera.
+Całkowanie przez części
+(\atlasref{AM1-30::ma1:thm:integration-by-parts}{AM I, całkowanie przez części}) daje
+\[
+ \frac14\int_{-1}^1\log(t^2+1/25)\,\mathrm dt
+ =\frac12\log(26/25)-1+\frac15\arctan5.
+\]
+Istotnie, z parzystości wystarczy połowa
+całki na $[0,1]$; całka z
+$2t^2/(t^2+1/25)$ jest równa
+$2t-(2/5)\arctan(5t)$.
+Wobec tego
+\[
+ \lim_{n\to\infty}
+ \left(\frac{|W_n(s_n)|}{|W_n(i/5)|}\right)^{1/n}
+ =\frac{2}{\sqrt{26/25}\exp((\arctan5)/5)}>1 .
+\]
+Ostatnia nierówność wynika na przykład
+z $\sqrt{26/25}<6/5$ i
+$(\arctan5)/5<\pi/10<1/3$;
+z szeregu wykładniczego
+$e^{1/3}<\sum_{k\ge0}(1/3)^k=3/2$,
+więc mianownik jest mniejszy od $9/5$.
+Ponieważ granica pierwiastków $n$-tego stopnia
+jest większa od $1$, dla pewnego $q>1$
+iloraz jest co najmniej $q^n$ przy dostatecznie
+dużych $n$. Dąży zatem do nieskończoności.
+Stosujemy \ref{ma2:ex:approx-runge-exact}
+w punkcie $s_n$. Dodatkowy czynnik jest równy
+$5|s_n|/(1+25s_n^2)$ dla parzystych $n$ oraz
+$1/(1+25s_n^2)$ dla nieparzystych $n$.
+Wzdłuż obu podciągów ma dodatnią granicę
+(odpowiednio $5/26$ i $1/26$), więc
+jest od dołu ograniczony dodatnią stałą
+dla dostatecznie dużych $n$.
+Stąd $|f(s_n)-I_nf(s_n)|\to\infty$.
+Norma supremum jest nie mniejsza od
+tego błędu punktowego.
+\end{proof}
+
+\begin{twierdzenie}[Zbieżność dla funkcji Rungego w węzłach Czebyszewa]
+\label{ma2:thm:approx-runge-chebyshev}
+Dla funkcji $f(x)=1/(1+25x^2)$ na $[-1,1]$
+i węzłów będących
+zerami $T_{n+1}$ interpolanty dla wszystkich
+$n\ge1$ zbiegają jednostajnie do $f$.
+Jeżeli $\rho=(1+\sqrt{26})/5>1$, to
+\[
+ \|f-I_nf\|_\infty
+ \le\frac{2}{\rho^{n+1}-\rho^{-(n+1)}}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Węzły są symetryczne, gdyż
+$T_{n+1}(-x)=(-1)^{n+1}T_{n+1}(x)$,
+co wynika z rekurencji.
+Ponadto $W_n=2^{-n}T_{n+1}$.
+Dla dowolnego niezerowego $w\in\mathbb C$
+rekurencja Czebyszewa daje
+\[
+ T_m((w+w^{-1})/2)=(w^m+w^{-m})/2
+ \qquad(m\ge0).
+\]
+Istotnie, wzór jest prawdziwy dla $m=0,1$,
+a podstawienie obu poprzednich wyrazów
+do rekurencji daje kolejny.
+Bierzemy $w=i\rho$, dla którego
+$(w+w^{-1})/2=i/5$, gdyż
+$\rho-\rho^{-1}=2/5$.
+Ponieważ $(i\rho)^{-m}=(-1)^m i^m\rho^{-m}$,
+otrzymujemy
+$|T_m(i/5)|=(\rho^m+(-1)^m\rho^{-m})/2$
+dla $m\ge1$, a więc
+$|T_m(i/5)|\ge(\rho^m-\rho^{-m})/2$.
+Z \ref{ma2:ex:approx-runge-exact}, nierówności
+$5|x|/(1+25x^2)\le1/2$, wynikającej z
+$(5|x|-1)^2\ge0$, oraz $1/(1+25x^2)\le1$
+i $\|T_{n+1}\|_\infty=1$ wynika
+\[
+ |f(x)-I_nf(x)|\le 1/|T_{n+1}(i/5)|.
+\]
+Podstawienie poprzedniego dolnego oszacowania
+mianownika daje żądane ograniczenie i granicę.
+\end{proof}
+
+Przykład pokazuje, że nawet dla funkcji
+rzeczywistej analitycznej na całej prostej
+(analityczność wynika z niezerowania się
+mianownika i własności odwrotności funkcji,
+które udowodnimy w rozdziale
+\ref{ma2:ch:real-analytic}) interpolacja wielomianowa może być rozbieżna
+w normie supremum. Zmiana węzłów przy tej samej
+funkcji i tym samym stopniu może zmienić
+charakter zbieżności.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=.90\linewidth,height=6.6cm,
+ axis lines=middle,xlabel={$x$},ylabel={$y$},
+ xmin=-1.05,xmax=1.05,
+ legend style={at={(.5,-.13)},anchor=north}]
+\addplot[black,very thick,domain=-1:1,samples=161]
+ {1/(1+25*x*x)};
+\addlegendentry{$f$}
+\addplot[red!80!black,thick] coordinates {
+ (-1.00000,0.0384615) (-0.98750,0.8680965) (-0.97500,1.4231270) (-0.96250,1.7591518) (-0.95000,1.9236311)
+ (-0.93750,1.9567854) (-0.92500,1.8924194) (-0.91250,1.7586755) (-0.90000,1.5787210) (-0.88750,1.3713738)
+ (-0.87500,1.1516698) (-0.86250,0.9313770) (-0.85000,0.7194591) (-0.83750,0.5224924) (-0.82500,0.3450396)
+ (-0.81250,0.1899835) (-0.80000,0.0588235) (-0.78750,-0.0480622) (-0.77500,-0.1311858) (-0.76250,-0.1917478)
+ (-0.75000,-0.2314617) (-0.73750,-0.2524030) (-0.72500,-0.2568795) (-0.71250,-0.2473227) (-0.70000,-0.2261963)
+ (-0.68750,-0.1959214) (-0.67500,-0.1588165) (-0.66250,-0.1170498) (-0.65000,-0.0726042) (-0.63750,-0.0272511)
+ (-0.62500,0.0174656) (-0.61250,0.0602388) (-0.60000,0.1000000) (-0.58750,0.1359159) (-0.57500,0.1673806)
+ (-0.56250,0.1940030) (-0.55000,0.2155919) (-0.53750,0.2321385) (-0.52500,0.2437968) (-0.51250,0.2508633)
+ (-0.50000,0.2537555) (-0.48750,0.2529902) (-0.47500,0.2491629) (-0.46250,0.2429258) (-0.45000,0.2349685)
+ (-0.43750,0.2259989) (-0.42500,0.2167248) (-0.41250,0.2078382) (-0.40000,0.2000000) (-0.38750,0.1938271)
+ (-0.37500,0.1898810) (-0.36250,0.1886577) (-0.35000,0.1905805) (-0.33750,0.1959934) (-0.32500,0.2051569)
+ (-0.31250,0.2182455) (-0.30000,0.2353466) (-0.28750,0.2564608) (-0.27500,0.2815042) (-0.26250,0.3103116)
+ (-0.25000,0.3426412) (-0.23750,0.3781800) (-0.22500,0.4165505) (-0.21250,0.4573182) (-0.20000,0.5000000)
+ (-0.18750,0.5440724) (-0.17500,0.5889808) (-0.16250,0.6341493) (-0.15000,0.6789896) (-0.13750,0.7229108)
+ (-0.12500,0.7653288) (-0.11250,0.8056755) (-0.10000,0.8434074) (-0.08750,0.8780140) (-0.07500,0.9090253)
+ (-0.06250,0.9360191) (-0.05000,0.9586270) (-0.03750,0.9765403) (-0.02500,0.9895136) (-0.01250,0.9973694)
+ (0.00000,1.0000000) (0.01250,0.9973694) (0.02500,0.9895136) (0.03750,0.9765403) (0.05000,0.9586270)
+ (0.06250,0.9360191) (0.07500,0.9090253) (0.08750,0.8780140) (0.10000,0.8434074) (0.11250,0.8056755)
+ (0.12500,0.7653288) (0.13750,0.7229108) (0.15000,0.6789896) (0.16250,0.6341493) (0.17500,0.5889808)
+ (0.18750,0.5440724) (0.20000,0.5000000) (0.21250,0.4573182) (0.22500,0.4165505) (0.23750,0.3781800)
+ (0.25000,0.3426412) (0.26250,0.3103116) (0.27500,0.2815042) (0.28750,0.2564608) (0.30000,0.2353466)
+ (0.31250,0.2182455) (0.32500,0.2051569) (0.33750,0.1959934) (0.35000,0.1905805) (0.36250,0.1886577)
+ (0.37500,0.1898810) (0.38750,0.1938271) (0.40000,0.2000000) (0.41250,0.2078382) (0.42500,0.2167248)
+ (0.43750,0.2259989) (0.45000,0.2349685) (0.46250,0.2429258) (0.47500,0.2491629) (0.48750,0.2529902)
+ (0.50000,0.2537555) (0.51250,0.2508633) (0.52500,0.2437968) (0.53750,0.2321385) (0.55000,0.2155919)
+ (0.56250,0.1940030) (0.57500,0.1673806) (0.58750,0.1359159) (0.60000,0.1000000) (0.61250,0.0602388)
+ (0.62500,0.0174656) (0.63750,-0.0272511) (0.65000,-0.0726042) (0.66250,-0.1170498) (0.67500,-0.1588165)
+ (0.68750,-0.1959214) (0.70000,-0.2261963) (0.71250,-0.2473227) (0.72500,-0.2568795) (0.73750,-0.2524030)
+ (0.75000,-0.2314617) (0.76250,-0.1917478) (0.77500,-0.1311858) (0.78750,-0.0480622) (0.80000,0.0588235)
+ (0.81250,0.1899835) (0.82500,0.3450396) (0.83750,0.5224924) (0.85000,0.7194591) (0.86250,0.9313770)
+ (0.87500,1.1516698) (0.88750,1.3713738) (0.90000,1.5787210) (0.91250,1.7586755) (0.92500,1.8924194)
+ (0.93750,1.9567854) (0.95000,1.9236311) (0.96250,1.7591518) (0.97500,1.4231270) (0.98750,0.8680965)
+ (1.00000,0.0384615)
+};
+\addlegendentry{węzły równomierne}
+\addplot[blue!75!black,thick,dashed] coordinates {
+ (-1.00000,-0.0053269) (-0.98750,0.0469094) (-0.97500,0.0753217) (-0.96250,0.0864222) (-0.95000,0.0855349)
+ (-0.93750,0.0769485) (-0.92500,0.0640554) (-0.91250,0.0494777) (-0.90000,0.0351804) (-0.88750,0.0225736)
+ (-0.87500,0.0126034) (-0.86250,0.0058331) (-0.85000,0.0025158) (-0.83750,0.0026575) (-0.82500,0.0060733)
+ (-0.81250,0.0124358) (-0.80000,0.0213173) (-0.78750,0.0322255) (-0.77500,0.0446343) (-0.76250,0.0580094)
+ (-0.75000,0.0718292) (-0.73750,0.0856014) (-0.72500,0.0988771) (-0.71250,0.1112600) (-0.70000,0.1224143)
+ (-0.68750,0.1320687) (-0.67500,0.1400191) (-0.66250,0.1461293) (-0.65000,0.1503294) (-0.63750,0.1526131)
+ (-0.62500,0.1530347) (-0.61250,0.1517037) (-0.60000,0.1487796) (-0.58750,0.1444660) (-0.57500,0.1390040)
+ (-0.56250,0.1326658) (-0.55000,0.1257477) (-0.53750,0.1185633) (-0.52500,0.1114372) (-0.51250,0.1046980)
+ (-0.50000,0.0986724) (-0.48750,0.0936794) (-0.47500,0.0900246) (-0.46250,0.0879952) (-0.45000,0.0878560)
+ (-0.43750,0.0898447) (-0.42500,0.0941689) (-0.41250,0.1010030) (-0.40000,0.1104861) (-0.38750,0.1227197)
+ (-0.37500,0.1377673) (-0.36250,0.1556529) (-0.35000,0.1763616) (-0.33750,0.1998391) (-0.32500,0.2259934)
+ (-0.31250,0.2546957) (-0.30000,0.2857821) (-0.28750,0.3190556) (-0.27500,0.3542891) (-0.26250,0.3912275)
+ (-0.25000,0.4295913) (-0.23750,0.4690795) (-0.22500,0.5093735) (-0.21250,0.5501401) (-0.20000,0.5910362)
+ (-0.18750,0.6317117) (-0.17500,0.6718139) (-0.16250,0.7109913) (-0.15000,0.7488971) (-0.13750,0.7851932)
+ (-0.12500,0.8195539) (-0.11250,0.8516689) (-0.10000,0.8812470) (-0.08750,0.9080189) (-0.07500,0.9317401)
+ (-0.06250,0.9521932) (-0.05000,0.9691907) (-0.03750,0.9825760) (-0.02500,0.9922261) (-0.01250,0.9980520)
+ (0.00000,1.0000000) (0.01250,0.9980520) (0.02500,0.9922261) (0.03750,0.9825760) (0.05000,0.9691907)
+ (0.06250,0.9521932) (0.07500,0.9317401) (0.08750,0.9080189) (0.10000,0.8812470) (0.11250,0.8516689)
+ (0.12500,0.8195539) (0.13750,0.7851932) (0.15000,0.7488971) (0.16250,0.7109913) (0.17500,0.6718139)
+ (0.18750,0.6317117) (0.20000,0.5910362) (0.21250,0.5501401) (0.22500,0.5093735) (0.23750,0.4690795)
+ (0.25000,0.4295913) (0.26250,0.3912275) (0.27500,0.3542891) (0.28750,0.3190556) (0.30000,0.2857821)
+ (0.31250,0.2546957) (0.32500,0.2259934) (0.33750,0.1998391) (0.35000,0.1763616) (0.36250,0.1556529)
+ (0.37500,0.1377673) (0.38750,0.1227197) (0.40000,0.1104861) (0.41250,0.1010030) (0.42500,0.0941689)
+ (0.43750,0.0898447) (0.45000,0.0878560) (0.46250,0.0879952) (0.47500,0.0900246) (0.48750,0.0936794)
+ (0.50000,0.0986724) (0.51250,0.1046980) (0.52500,0.1114372) (0.53750,0.1185633) (0.55000,0.1257477)
+ (0.56250,0.1326658) (0.57500,0.1390040) (0.58750,0.1444660) (0.60000,0.1487796) (0.61250,0.1517037)
+ (0.62500,0.1530347) (0.63750,0.1526131) (0.65000,0.1503294) (0.66250,0.1461293) (0.67500,0.1400191)
+ (0.68750,0.1320687) (0.70000,0.1224143) (0.71250,0.1112600) (0.72500,0.0988771) (0.73750,0.0856014)
+ (0.75000,0.0718292) (0.76250,0.0580094) (0.77500,0.0446343) (0.78750,0.0322255) (0.80000,0.0213173)
+ (0.81250,0.0124358) (0.82500,0.0060733) (0.83750,0.0026575) (0.85000,0.0025158) (0.86250,0.0058331)
+ (0.87500,0.0126034) (0.88750,0.0225736) (0.90000,0.0351804) (0.91250,0.0494777) (0.92500,0.0640554)
+ (0.93750,0.0769485) (0.95000,0.0855349) (0.96250,0.0864222) (0.97500,0.0753217) (0.98750,0.0469094)
+ (1.00000,-0.0053269)
+};
+\addlegendentry{węzły Czebyszewa}
+\end{axis}
+\end{tikzpicture}
+\caption{Funkcja Rungego oraz interpolanty stopnia
+co najwyżej $10$ dla dwóch układów $11$ węzłów.
+Krzywe interpolantów przedstawiono na podstawie
+wartości obliczonych wzorem barycentrycznym
+w $161$ punktach.}
+\label{ma2:fig:approx-runge-comparison}
+\end{figure}
+
+\begin{przyklad}[Porównanie numeryczne]
+\label{ma2:ex:approx-runge-table}
+Dla funkcji Rungego obliczono wartości błędów
+bezwzględnych na siatce $4001$ równomiernych
+punktów przedziału $[-1,1]$, używając wzoru
+\ref{ma2:thm:approx-barycentric}.
+Poniższe liczby są przybliżonymi maksimami
+na tej siatce, a nie ścisłymi wartościami
+norm supremum.
+\[
+ \begin{array}{c|r|r}
+ n & \text{węzły równomierne} & \text{węzły Czebyszewa}\\ \hline
+ 4 & 0.43836 & 0.40202\\
+ 8 & 1.04517 & 0.17084\\
+ 12 & 3.66338 & 0.06922\\
+ 16 & 14.39385 & 0.03261\\
+ 20 & 59.82231 & 0.01533\\
+ \end{array}
+\]
+Obliczenia ilustrują różnicę między wynikami
+\ref{ma2:thm:approx-runge-divergence}
+i \ref{ma2:thm:approx-runge-chebyshev}.
+Nie zastępują dowodów tych twierdzeń.
+\end{przyklad}

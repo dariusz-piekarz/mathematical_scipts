@@ -1,0 +1,426 @@
+\section{Monady, komonady i twierdzenie Becka}\label{cat:sec:monadicity}
+W rozdziale~\ref{sec:monads} zdefiniowaliśmy monadę oraz skonstruowaliśmy kategorie Kleisliego i Eilenberga--Moore'a. W rozdziale~\ref{cat:sec:monoids-duality} zinterpretowaliśmy monady jako monoidy w kategorii endofunktorów ze składaniem. Teraz badamy, na ile monada odtwarza kategorię występującą w dowolnym sprzężeniu, a także dualną teorię komonad. Pracujemy z lokalnie małymi kategoriami w ustalonym uniwersum. Przyjmujemy, że rozważane kategorie są małe względem odpowiednio większego uniwersum; w nim stosujemy aksjomat wyboru, kryterium równoważności z twierdzenia~\ref{tw:equivalence} i konstrukcje kategorii funktorów.
+
+\subsection{Komonady i ich koalgebry}
+Dla monady $(T,\eta,\mu)$ na $\mathcal C$ stosujemy definicję~\ref{def:monad}, oznaczenia $\mathcal C_T$ i $\mathcal C^T$ z definicji~\ref{cat:def:kleisli} i~\ref{cat:def:em-algebra} oraz sprzężenia $J\dashv K$ i $F_T\dashv U_T$ ze stwierdzeń~\ref{cat:prop:kleisli-adj} i~\ref{cat:prop:em-adj}. Oba sprzężenia odtwarzają monadę $T$.
+
+\begin{definicja}[Komonada]\label{cat:def:comonad}
+Komonada na $\mathcal C$ jest trójką $(S,\epsilon,\delta)$ z endofunktorem $S$, kojednostką $\epsilon:S\Rightarrow\id_{\mathcal C}$ i komnożeniem $\delta:S\Rightarrow S^2$, spełniającą
+\begin{align}
+ S(\delta_X)\delta_X&=\delta_{S(X)}\delta_X,\label{cat:eq:comonad-assoc}\\
+ S(\epsilon_X)\delta_X&=\id_{S(X)}=\epsilon_{S(X)}\delta_X.\label{cat:eq:comonad-unit}
+\end{align}
+Pierwsze równanie dotyczy morfizmów $S(X)\to S^3(X)$, drugie endomorfizmów $S(X)$. Naturalność oznacza dla $f:X\to Y$ równości
+\[
+ \epsilon_Y S(f)=f\epsilon_X,\qquad
+ \delta_Y S(f)=S^2(f)\delta_X.
+\]
+\end{definicja}
+Aksjomat kołączności przedstawia diagram
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (a) at (0,1.8) {$S(X)$};
+ \node (b) at (3.5,1.8) {$S^2(X)$};
+ \node (c) at (0,0) {$S^2(X)$};
+ \node (d) at (3.5,0) {$S^3(X)$};
+ \draw[->] (a) -- node[above] {$\delta_X$} (b);
+ \draw[->] (a) -- node[left] {$\delta_X$} (c);
+ \draw[->] (b) -- node[right] {$S(\delta_X)$} (d);
+ \draw[->] (c) -- node[below] {$\delta_{S(X)}$} (d);
+\end{tikzpicture}
+\end{center}
+Oba prawa kojednostki można zapisać jako przemienność dwóch diagramów
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (a) at (0,1.9) {$S(X)$};
+ \node (b) at (3.4,1.9) {$S^2(X)$};
+ \node (c) at (1.7,0) {$S(X)$};
+ \draw[->] (a) -- node[above] {$\delta_X$} (b);
+ \draw[->] (a) -- node[below left] {$\id_{S(X)}$} (c);
+ \draw[->] (b) -- node[below right] {$\epsilon_{S(X)}$} (c);
+ \begin{scope}[xshift=6cm]
+ \node (d) at (0,1.9) {$S(X)$};
+ \node (e) at (3.4,1.9) {$S^2(X)$};
+ \node (f) at (1.7,0) {$S(X)$};
+ \draw[->] (d) -- node[above] {$\delta_X$} (e);
+ \draw[->] (d) -- node[below left] {$\id_{S(X)}$} (f);
+ \draw[->] (e) -- node[below right] {$S(\epsilon_X)$} (f);
+ \end{scope}
+\end{tikzpicture}
+\end{center}
+Komonada jest dokładnie monadą w kategorii przeciwnej: na $\mathcal C^{\op}$ bierzemy $S^{\op}$, jednostkę $\epsilon^{\op}$ i mnożenie $\delta^{\op}$. Odwrócenie strzałek zachowuje funktorialność i naturalność, a równania~\eqref{cat:eq:comonad-assoc} i~\eqref{cat:eq:comonad-unit} przechodzą w aksjomaty monady. Ponowne odwrócenie odzyskuje dane wyjściowe.
+
+\begin{stwierdzenie}[Komonada ze sprzężenia]\label{cat:prop:adjunction-comonad}
+Jeżeli $F:\mathcal C\rightleftarrows\mathcal D:U$ jest sprzężeniem $F\dashv U$ z jednostką $\eta$ i kojednostką $\varepsilon$, to $S=FU$ z $\epsilon=\varepsilon$ i $\delta_Y=F(\eta_{U(Y)})$ jest komonadą na $\mathcal D$.
+\end{stwierdzenie}
+\begin{proof}
+Dla $g:Y\to Z$ naturalność $\eta$ względem $U(g)$ daje po zastosowaniu $F$ równość
+\[
+ FUFU(g)F(\eta_{U(Y)})=F(\eta_{U(Z)})FU(g).
+\]
+Jest to naturalność $\delta$. Naturalność $\epsilon$ jest częścią danych sprzężenia. Tożsamości trójkątne~\ref{tw:triangles} dają
+\begin{align*}
+ S(\epsilon_Y)\delta_Y&=F(U(\varepsilon_Y)\eta_{U(Y)})=\id_{FU(Y)},\\
+ \epsilon_{S(Y)}\delta_Y&=\varepsilon_{FU(Y)}F(\eta_{U(Y)})=\id_{FU(Y)}.
+\end{align*}
+Naturalność $\eta$ względem $\eta_{U(Y)}:U(Y)\to UFU(Y)$ daje
+\[
+ UF(\eta_{U(Y)})\eta_{U(Y)}=\eta_{UFU(Y)}\eta_{U(Y)}.
+\]
+Po zastosowaniu $F$ otrzymujemy~\eqref{cat:eq:comonad-assoc}.
+\end{proof}
+
+\begin{definicja}[Koalgebry komonady]\label{cat:def:comonad-coalgebra}
+Koalgebrą komonady $(S,\epsilon,\delta)$ jest para $(X,c)$ z $c:X\to S(X)$ spełniającym
+\[
+ \epsilon_Xc=\id_X,\qquad \delta_Xc=S(c)c.
+\]
+Morfizmem koalgebr $(X,c)\to(Y,d)$ jest $f:X\to Y$ z $S(f)c=df$. Kategorię koalgebr oznaczamy $\mathcal C^S$ (gdy $S$ jest komonadą), a jej funktor zapominający przez $V_S$.
+\end{definicja}
+Warunek morfizmu koalgebr jest przemiennością kwadratu
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (a) at (0,1.8) {$X$};
+ \node (b) at (3,1.8) {$Y$};
+ \node (c) at (0,0) {$S(X)$};
+ \node (d) at (3,0) {$S(Y)$};
+ \draw[->] (a) -- node[above] {$f$} (b);
+ \draw[->] (a) -- node[left] {$c$} (c);
+ \draw[->] (b) -- node[right] {$d$} (d);
+ \draw[->] (c) -- node[below] {$S(f)$} (d);
+\end{tikzpicture}
+\end{center}
+Identyczność spełnia warunek morfizmu. Dla kolejnego morfizmu $g:(Y,d)\to(Z,e)$ mamy $S(gf)c=S(g)S(f)c=S(g)df=egf$, więc składanie jest dobrze określone. Łączność i prawa identyczności dziedziczymy z $\mathcal C$. Zbiory morfizmów są podzbiorami zbiorów morfizmów $\mathcal C$.
+
+\begin{twierdzenie}[Koalgebra koswobodna]\label{cat:thm:cofree-coalgebra}
+Funktor $V_S:\mathcal C^S\to\mathcal C$ ma prawe sprzężenie $R_S$, dane przez $R_S(X)=(S(X),\delta_X)$ oraz $R_S(f)=S(f)$. Komonada sprzężenia $V_S\dashv R_S$ na $\mathcal C$ jest wyjściową komonadą.
+\end{twierdzenie}
+\begin{proof}
+Aksjomaty koalgebry $(S(X),\delta_X)$ mają postać $\epsilon_{S(X)}\delta_X=\id_{S(X)}$ i $\delta_{S(X)}\delta_X=S(\delta_X)\delta_X$. Są to odpowiednio jedno z praw~\eqref{cat:eq:comonad-unit} oraz~\eqref{cat:eq:comonad-assoc}. Naturalność $\delta$ daje warunek morfizmu koalgebr dla $S(f)$, a identyczności i składanie wynikają z funktorialności $S$. Dla $(A,c)$ i $X$ odwzorowania
+\begin{align*}
+ \Hom_{\mathcal C^S}((A,c),R_S(X))
+ &\longrightarrow\Hom_{\mathcal C}(A,X),& h&\longmapsto\epsilon_Xh,\\
+ \Hom_{\mathcal C}(A,X)
+ &\longrightarrow\Hom_{\mathcal C^S}((A,c),R_S(X)),& f&\longmapsto S(f)c
+\end{align*}
+są wzajemnie odwrotne. Istotnie,
+\[
+ \delta_X S(f)c=S^2(f)\delta_Ac=S^2(f)S(c)c=S(S(f)c)c,
+\]
+więc $S(f)c$ jest morfizmem koalgebr. Mamy $\epsilon_X S(f)c=f\epsilon_Ac=f$ i dla morfizmu koalgebr $h$,
+\[
+ S(\epsilon_X h)c=S(\epsilon_X)S(h)c=S(\epsilon_X)\delta_Xh=h.
+\]
+Dla morfizmu koalgebr $u:(B,d)\to(A,c)$ mamy $\epsilon_Xhu=(\epsilon_Xh)u$, a dla $v:X\to Y$ naturalność $\epsilon$ daje $\epsilon_Y S(v)h=v\epsilon_Xh$. Bijekcja jest zatem naturalna. Jednostka w $(A,c)$ ma morfizm bazowy $c$, a kojednostka w $X$ jest $\epsilon_X$. Ponieważ $V_SR_S=S$ oraz morfizmem bazowym jednostki w $R_S(X)$ jest $\delta_X$, wzór ze stwierdzenia~\ref{cat:prop:adjunction-comonad} daje dokładnie komnożenie $\delta$.
+\end{proof}
+
+\begin{definicja}[Kategoria ko-Kleisliego]\label{cat:def:cokleisli}
+Obiektami $\mathcal C_S$ (dla komonady $S$) są obiekty $\mathcal C$, morfizmem $X\to Y$ jest morfizm $f:S(X)\to Y$ w $\mathcal C$, identycznością jest $\epsilon_X$, a składaniem
+\[
+ g\star f=g S(f)\delta_X:S(X)\to Z
+ \qquad(g:S(Y)\to Z).
+\]
+\end{definicja}
+\begin{stwierdzenie}\label{cat:prop:cokleisli-adj}
+Powyższe dane definiują kategorię i sprzężenie $L:\mathcal C_S\rightleftarrows\mathcal C:J_S$ z komonadą $S$.
+\end{stwierdzenie}
+\begin{proof}
+Kategoria $\mathcal C_S$ jest przeciwną do kategorii Kleisliego monady $(S^{\op},\epsilon^{\op},\delta^{\op})$ na $\mathcal C^{\op}$. Istotnie morfizm $Y\to X$ tej ostatniej to morfizm $Y\to S^{\op}(X)$ w $\mathcal C^{\op}$, czyli $S(X)\to Y$ w $\mathcal C$. Odwrócenie wzoru na składanie Kleisliego daje dokładnie $gS(f)\delta_X$, a odwrócenie identyczności daje $\epsilon_X$. Aksjomaty kategorii wynikają z dowodu po definicji~\ref{cat:def:kleisli}. Odwracając sprzężenie ze stwierdzenia~\ref{cat:prop:kleisli-adj} dla tej monady, otrzymujemy $L\dashv J_S$, gdzie
+\[
+ L(X)=S(X),\quad L(f)=S(f)\delta_X,\qquad
+ J_S(X)=X,\quad J_S(u)=u\epsilon_X
+\]
+dla $f:S(X)\to Y$ i $u:X\to Y$ w odpowiednich kategoriach. Bijekcja sprzężenia jest identycznością zbiorów
+\[
+ \Hom_{\mathcal C}(S(X),Y)=\Hom_{\mathcal C_S}(X,J_S(Y)).
+\]
+Jej naturalność wynika z odwrócenia naturalności bijekcji sprzężenia Kleisliego. Kojednostką jest $\epsilon$, a jednostka w $X$ kategorii ko-Kleisliego jest reprezentowana przez $\id_{S(X)}$. Mamy $LJ_S(u)=S(u)S(\epsilon_X)\delta_X=S(u)$ i obraz jednostki przez $L$ jest $\delta_X$. Stąd indukowana komonada jest dokładnie $S$.
+\end{proof}
+
+\begin{przyklad}[Komonada iloczynu]\label{cat:ex:product-comonad}
+Dla ustalonego zbioru $E$ funktor $S(X)=E\times X$ na $\Set$ ma kojednostkę $(e,x)\mapsto x$ oraz komnożenie $(e,x)\mapsto(e,(e,x))$. Naturalność sprawdzamy na parach: dla funkcji $f$ zmienia się tylko $x$ na $f(x)$. Obie drogi kołączności dają $(e,(e,(e,x)))$, a obie drogi z praw kojednostki dają $(e,x)$. Koalgebra $c:X\to E\times X$ musi z pierwszego aksjomatu mieć postać $c(x)=(p(x),x)$ dla funkcji $p:X\to E$; drugi aksjomat jest wówczas automatyczny, bo obie strony dają $(p(x),(p(x),x))$. Morfizm koalgebr jest dokładnie funkcją $f:X\to Y$ z $qf=p$. Otrzymujemy izomorfizm kategorii koalgebr z kategorią obiektów nad $E$. Także dla $E=\varnothing$ warunki są poprawne: jedyną możliwą dziedziną jest zbiór pusty.
+\end{przyklad}
+
+\subsection{Funktory porównawcze sprzężenia}
+Niech $F:\mathcal C\rightleftarrows\mathcal D:U$ spełniają $F\dashv U$, a $T=UF$ będzie indukowaną monadą, z $\mu_X=U(\varepsilon_{F(X)})$ jak w twierdzeniu~\ref{cat:thm:adjunction-monad}.
+
+\begin{twierdzenie}[Porównanie Eilenberga--Moore'a]\label{cat:thm:em-comparison}
+Istnieje funktor $Q:\mathcal D\to\mathcal C^T$ określony przez
+\[
+ Q(Y)=(U(Y),U(\varepsilon_Y)),\qquad Q(g)=U(g).
+\]
+Spełnia $U_T Q=U$ i $QF=F_T$. Jest jedynym funktorem o $U_T Q=U$, dla którego struktura algebry $Q(Y)$ jest dana przez $U(\varepsilon_Y)$.
+\end{twierdzenie}
+\begin{proof}
+Piszemy $a_Y=U(\varepsilon_Y)$. Prawo jednostki $a_Y\eta_{U(Y)}=\id_{U(Y)}$ wynika z tożsamości trójkątnej. Naturalność $\varepsilon$ względem $\varepsilon_Y:FU(Y)\to Y$ daje
+\[
+ \varepsilon_Y FU(\varepsilon_Y)=\varepsilon_Y\varepsilon_{FU(Y)}.
+\]
+Po zastosowaniu $U$ otrzymujemy $a_Y T(a_Y)=a_Y\mu_{U(Y)}$. Zatem $Q(Y)$ jest algebrą. Dla $g:Y\to Z$ naturalność $\varepsilon$ daje $U(g)a_Y=a_ZT(U(g))$, czyli $U(g)$ jest morfizmem algebr. Funktorialność wynika z funktorialności $U$. Równość $U_TQ=U$ jest definicyjna, a $QF(X)=(T(X),\mu_X)$ i $QF(f)=T(f)$ dają $QF=F_T$. Jednoznaczność wynika z wyznaczenia obiektów przez strukturę algebry i z tego, że morfizm algebry jest wyznaczony przez morfizm bazowy.
+Równości funktorów przedstawiają dwa przemienne trójkąty
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (a) at (0,1.9) {$\mathcal C$};
+ \node (b) at (3.4,1.9) {$\mathcal D$};
+ \node (c) at (1.7,0) {$\mathcal C^T$};
+ \draw[->] (a) -- node[above] {$F$} (b);
+ \draw[->] (a) -- node[below left] {$F_T$} (c);
+ \draw[->] (b) -- node[below right] {$Q$} (c);
+ \begin{scope}[xshift=6cm]
+ \node (d) at (0,1.9) {$\mathcal D$};
+ \node (e) at (3.4,1.9) {$\mathcal C^T$};
+ \node (f) at (1.7,0) {$\mathcal C$};
+ \draw[->] (d) -- node[above] {$Q$} (e);
+ \draw[->] (d) -- node[below left] {$U$} (f);
+ \draw[->] (e) -- node[below right] {$U_T$} (f);
+ \end{scope}
+\end{tikzpicture}
+\end{center}
+Pierwszy trójkąt wyraża $QF=F_T$, drugi $U_TQ=U$.
+\end{proof}
+
+\begin{twierdzenie}[Porównanie Kleisliego]\label{cat:thm:kleisli-comparison}
+Istnieje w pełni wierny funktor $I:\mathcal C_T\to\mathcal D$ dany przez $I(X)=F(X)$ i
+\[
+ I(f)=\varepsilon_{F(Y)}F(f):F(X)\to F(Y)
+ \qquad(f:X\to T(Y)).
+\]
+Spełnia $IJ=F$ oraz $UI=K$. Jego obraz istotny składa się z obiektów izomorficznych z $F(X)$ dla pewnego $X$.
+\end{twierdzenie}
+\begin{proof}
+Identyczność jest zachowana przez tożsamość trójkątną $\varepsilon_{F(X)}F(\eta_X)=\id_{F(X)}$. Dla $g:Y\to T(Z)$ obliczamy
+\begin{align*}
+ I(g)I(f)
+ &=\varepsilon_{F(Z)}F(g)\varepsilon_{F(Y)}F(f)\\
+ &=\varepsilon_{F(Z)}\varepsilon_{FT(Z)}FU(F(g))F(f)\\
+ &=\varepsilon_{F(Z)}FU(\varepsilon_{F(Z)})FU(F(g))F(f)\\
+ &=\varepsilon_{F(Z)}F(\mu_Z T(g)f)=I(g\star f).
+\end{align*}
+Druga i trzecia równość są naturalnością $\varepsilon$ odpowiednio dla $F(g)$ i $\varepsilon_{F(Z)}$. Pełność i wierność wynikają z bijekcji sprzężenia $\Hom_{\mathcal C}(X,UF(Y))\cong\Hom_{\mathcal D}(F(X),F(Y))$, której odwrotnością jest $h\mapsto U(h)\eta_X$. Dla $u:X\to Y$ mamy $IJ(u)=\varepsilon_{F(Y)}F(\eta_Y)F(u)=F(u)$, zaś $UI(f)=\mu_Y T(f)=K(f)$; równości na obiektach są definicyjne. Opis obrazu istotnego wynika z $I(X)=F(X)$.
+\end{proof}
+
+\begin{wniosek}\label{cat:cor:free-algebra-comparison}
+Złożenie $QI:\mathcal C_T\to\mathcal C^T$ jest w pełni wiernym funktorem, którego obraz istotny składa się z algebr izomorficznych z algebrami swobodnymi. Obiekt $X$ przechodzi na $(T(X),\mu_X)$, a morfizm $f:X\to T(Y)$ na $\mu_Y T(f)$.
+\end{wniosek}
+\begin{proof}
+Wzory wynikają z poprzednich twierdzeń oraz $U_TQ=U$. Dla dowolnych $X,Y$ bijekcja sprzężenia $F_T\dashv U_T$ ze stwierdzenia~\ref{cat:prop:em-adj} jest dokładnie bijekcją $f\mapsto\mu_YT(f)$, z odwrotnością $h\mapsto h\eta_X$. Stąd pełność i wierność oraz opis obrazu istotnego. Wniosek nie wymaga pełności ani wierności samego $Q$.
+\end{proof}
+
+\begin{definicja}[Monadyczność i komonadyczność]\label{cat:def:monadicity}
+Prawy funktor sprzężony $U:\mathcal D\to\mathcal C$ nazywamy monadycznym, jeśli funktor porównawczy $Q$ z twierdzenia~\ref{cat:thm:em-comparison} jest równoważnością kategorii. Lewy funktor sprzężony $F$ nazywamy komonadycznym, jeśli $F^{\op}$ jest monadyczny. Dla komonady $S=FU$ odpowiadający funktor porównawczy $\mathcal C\to\mathcal D^S$ wysyła $X$ na $(F(X),F(\eta_X))$, a morfizm $f$ na $F(f)$.
+\end{definicja}
+Ostatni wzór otrzymujemy przez zastosowanie twierdzenia~\ref{cat:thm:em-comparison} do sprzężenia $U^{\op}\dashv F^{\op}$ i odwrócenie strzałek: algebry monady na $\mathcal D^{\op}$ stają się koalgebrami na $\mathcal D$, a kojednostka przeciwnego sprzężenia to $\eta^{\op}$. Nie wymagamy, aby $Q$ był dosłownie izomorfizmem kategorii. Równoważność jest warunkiem niezależnym od wyborów reprezentantów.
+
+
+\subsection{Rozszczepione koequalizatory}
+
+\begin{definicja}[Rozszczepiony koequalizator]\label{cat:def:split-coequalizer}
+Dla pary $f,g:A\rightrightarrows B$ rozszczepionym koequalizatorem nazywamy dane
+\[
+ p:B\to C,\qquad s:C\to B,\qquad t:B\to A
+\]
+spełniające
+\[
+ pf=pg,\qquad ps=\id_C,\qquad ft=\id_B,\qquad gt=sp.
+\]
+Dopuszczamy zamianę kolejności $f$ i $g$, o ile odpowiednio zmienimy warunki rozszczepienia. Dla funktora $U:\mathcal D\to\mathcal C$ parę $f,g$ w $\mathcal D$ nazywamy $U$-rozszczepioną, jeśli para $U(f),U(g)$ ma rozszczepiony koequalizator w $\mathcal C$. Nie wymagamy, by morfizmy rozszczepiające pochodziły z $\mathcal D$. Nie należy też mylić tego pojęcia z parą refleksywną, czyli parą mającą wspólną prawą odwrotność: przykładowo na $A=B=\{0,1\}$ bierzemy $f=\id_B$, $g$ stałą o wartości $0$, $p:B\to\{0\}$, $s(0)=0$ i $t=\id_B$. Wszystkie cztery równania zachodzą, lecz wspólna prawa odwrotność $f,g$ nie istnieje, ponieważ $g$ nie jest surjekcją.
+\end{definicja}
+
+\begin{przyklad}[Para refleksywna bez rozszczepionego koequalizatora]\label{cat:ex:reflexive-not-split}
+Niech $B=\{0,1,2\}$, a $A=\{(0,0),(1,1),(2,2),(0,1),(1,2)\}$. Pierwsza i druga projekcja $f,g:A\rightrightarrows B$ mają wspólną prawą odwrotność $b\mapsto(b,b)$. Ich koequalizator w $\Set$ jest funkcją $p:B\to\{*\}$, gdyż każdy morfizm $h$ z $hf=hg$ musi spełniać $h(0)=h(1)=h(2)$ i faktoryzuje jednoznacznie przez zbiór jednoelementowy.
+Gdyby ten koequalizator był rozszczepiony, to dla $c=s(*)$ warunki $ft=\id_B$ oraz $gt=sp$ wymuszałyby $(b,c)\in A$ dla wszystkich $b\in B$. Dla $b=2$ otrzymujemy $c=2$, ale $(0,2)\notin A$. Po zamianie $f$ i $g$ otrzymalibyśmy $(c,b)\in A$ dla wszystkich $b$; wtedy $b=0$ wymusza $c=0$, a znów $(0,2)\notin A$. Rozszczepienie nie istnieje w żadnej z dwóch orientacji. Wybór innego koequalizatora nie zmienia tego wniosku. Istotnie, jeśli $p'=jp$ dla izomorfizmu $j$ i istnieją rozszczepienia $s',t$ dla $p'$, to $s=s'j$ spełnia $ps=\id$, a $gt=s'p'=sp$; otrzymalibyśmy rozszczepienie dla $p$.
+\end{przyklad}
+
+\begin{lemat}\label{cat:lem:split-coequalizer-absolute}
+Rozszczepiony koequalizator jest koequalizatorem i jest zachowywany przez każdy funktor.
+\end{lemat}
+\begin{proof}
+Jeśli $h:B\to Z$ spełnia $hf=hg$, to
+\[
+ h=hft=hgt=hsp.
+\]
+Zatem $k=hs:C\to Z$ spełnia $kp=h$. Dla dowolnego innego $k'$ z $k'p=h$ mamy $k'=k'ps=hs=k$. Otrzymujemy własność uniwersalną koequalizatora. Każdy funktor zachowuje cztery równania z definicji~\ref{cat:def:split-coequalizer}, więc ten sam dowód stosuje się do ich obrazów.
+\end{proof}
+
+\begin{lemat}[Koequalizatory w kategorii algebr]\label{cat:lem:em-split-coequalizer}
+Niech $T$ będzie monadą na $\mathcal C$. Jeśli morfizmy algebr
+$f,g:(A,a)\rightrightarrows(B,b)$ mają rozszczepiony koequalizator
+$p:B\to C$ w kategorii bazowej, to istnieje dokładnie jedna struktura
+algebry $c:T(C)\to C$, dla której $p$ jest morfizmem algebr.
+Morfizm $p:(B,b)\to(C,c)$ jest wówczas koequalizatorem w $\mathcal C^T$.
+\end{lemat}
+\begin{proof}
+Mamy $pbT(f)=pfa=pga=pbT(g)$. Z lematu~\ref{cat:lem:split-coequalizer-absolute} morfizm $T(p)$ jest koequalizatorem $T(f),T(g)$. Istnieje więc dokładnie jeden $c$ taki, że $cT(p)=pb$. W szczególności $c=pbT(s)$, ponieważ $T(p)T(s)=\id_{T(C)}$.
+Naturalność jednostki i aksjomat algebry $b$ dają
+\[
+ c\eta_Cp=cT(p)\eta_B=pb\eta_B=p.
+\]
+Ponieważ $ps=\id_C$, z równości $u p=v p$ wynika $u=u p s=v p s=v$, więc $p$ jest epimorfizmem. Tak samo $T(p)$ i $T^2(p)$ są epimorfizmami, gdyż mają prawe odwrotności odpowiednio $T(s)$ i $T^2(s)$. Otrzymujemy $c\eta_C=\id_C$.
+Analogicznie
+\begin{align*}
+ cT(c)T^2(p)&=cT(pb)=pbT(b),\\
+ c\mu_C T^2(p)&=cT(p)\mu_B=pb\mu_B.
+\end{align*}
+Prawo algebry $b$ i epimorficzność $T^2(p)$ dają $cT(c)=c\mu_C$.
+Jeżeli $h:(B,b)\to(Z,z)$ jest morfizmem algebr z $hf=hg$, to istnieje dokładnie jeden morfizm bazowy $k:C\to Z$ z $kp=h$. Obliczamy
+\[
+ kcT(p)=kpb=hb=zT(h)=zT(k)T(p).
+\]
+Skrócenie przez epimorfizm $T(p)$ daje $kc=zT(k)$, więc $k$ jest morfizmem algebr. To dowodzi własności uniwersalnej w $\mathcal C^T$.
+\end{proof}
+
+\begin{lemat}\label{cat:lem:canonical-algebra-presentation}
+Każda algebra $(X,a)$ monady $T$ ma w $\mathcal C^T$ prezentację jako koequalizator
+\[
+ F_T(T(X))\ \mathop{\rightrightarrows}^{\mu_X}_{T(a)}\
+ F_T(X)\ \xrightarrow{a}\ (X,a).
+\]
+Etykiety strzałek oznaczają ich morfizmy bazowe. Koequalizator w kategorii bazowej jest rozszczepiony.
+\end{lemat}
+\begin{proof}
+Morfizm $\mu_X$ jest morfizmem algebr swobodnych dzięki łączności monady, a $T(a)$ jest morfizmem algebr jako $F_T(a)$. Prawo algebry $a$ zapewnia $a\mu_X=aT(a)$ i jednocześnie gwarantuje, że $a:F_T(X)\to(X,a)$ jest morfizmem algebr.
+Dla $p=a$, $f=\mu_X$, $g=T(a)$ wybieramy $s=\eta_X$ oraz $t=\eta_{T(X)}$. Wtedy $ps=\id_X$, $ft=\id_{T(X)}$ i z naturalności jednostki
+\[
+ gt=T(a)\eta_{T(X)}=\eta_Xa=sp.
+\]
+Stosujemy lemat~\ref{cat:lem:em-split-coequalizer}; struktura otrzymana na $X$ jest właśnie $a$, przez jednoznaczność.
+\end{proof}
+
+\subsection{Twierdzenie Becka}
+
+\begin{twierdzenie}[Twierdzenie Becka o monadyczności]\label{cat:thm:beck-monadicity}
+Niech $F:\mathcal C\rightleftarrows\mathcal D:U$ będzie sprzężeniem $F\dashv U$ i $T=UF$. Funktor $U$ jest monadyczny wtedy i tylko wtedy, gdy:
+\begin{enumerate}
+ \item $U$ odzwierciedla izomorfizmy, czyli $U(h)$ izomorfizm implikuje, że $h$ jest izomorfizmem;
+ \item każda $U$-rozszczepiona para w $\mathcal D$ ma koequalizator w $\mathcal D$ i $U$ zachowuje ten koequalizator.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+\emph{Konieczność.} Funktor $U_T:\mathcal C^T\to\mathcal C$ odzwierciedla izomorfizmy: jeśli morfizm algebr $h:(A,a)\to(B,b)$ ma odwrotność bazową $h^{-1}$, to z $ha=bT(h)$ otrzymujemy $h^{-1}b=aT(h^{-1})$. Z lematu~\ref{cat:lem:em-split-coequalizer} każda $U_T$-rozszczepiona para ma koequalizator zachowywany przez $U_T$. Jeśli $Q$ jest równoważnością i $U=U_TQ$, to $Q$ odzwierciedla izomorfizmy: odwrotność $Q(h)$ podnosimy przez pełność do morfizmu w $\mathcal D$, a wierność zapewnia obie tożsamości odwrotności. W konsekwencji również $U$ odzwierciedla izomorfizmy.
+Niech teraz $f,g:A\rightrightarrows B$ będzie parą $U$-rozszczepioną. Para $Q(f),Q(g)$ jest $U_T$-rozszczepiona, ma więc koequalizator $p:Q(B)\to W$ zachowywany przez $U_T$. Z istotnej surjektywności wybieramy $Y\in\mathcal D$ i izomorfizm $j:W\to Q(Y)$. Pełność daje $q:B\to Y$ z $Q(q)=jp$, zaś wierność daje $qf=qg$. Dla każdego $h:B\to Z$ z $hf=hg$ istnieje dokładnie jeden $v:W\to Q(Z)$ z $vp=Q(h)$. Przez pełność i wierność istnieje dokładnie jeden $k:Y\to Z$ z $Q(k)=vj^{-1}$; wtedy $Q(kq)=vj^{-1}jp=Q(h)$, czyli $kq=h$. Jeśli $k'q=h$, to $Q(k')jp=Q(h)$; jednoznaczność faktoryzacji przez $p$ daje $Q(k')j=v$, stąd $Q(k')=Q(k)$ i $k'=k$. Zatem $q$ jest koequalizatorem. Jego obraz $U(q)=U_T(j)U_T(p)$ jest koequalizatorem w $\mathcal C$, jako złożenie koequalizatora z izomorfizmem. Dowodzi to drugiego warunku.
+
+\emph{Dostateczność: istotna surjektywność.}
+Niech $(X,a)$ będzie dowolną algebrą monady $T$. W $\mathcal D$ rozważamy parę
+\[
+ FT(X)\ \mathop{\rightrightarrows}^{\varepsilon_{F(X)}}_{F(a)}\ F(X).
+\]
+Jej obraz przez $U$ jest parą $\mu_X,T(a)$ z lematu~\ref{cat:lem:canonical-algebra-presentation}; ma rozszczepiony koequalizator $a:T(X)\to X$. Z warunku 2 istnieje koequalizator $q:F(X)\to Y$ zachowywany przez $U$. Jednoznaczność koequalizatora daje izomorfizm $j:U(Y)\to X$ z $jU(q)=a$. Oznaczmy $b=U(\varepsilon_Y)$. Ponieważ $Q(q)$ jest morfizmem algebr z $F_T(X)$ do $(U(Y),b)$, mamy
+\[
+ U(q)\mu_X=bT(U(q)).
+\]
+Zatem
+\[
+ jbT(U(q))=a\mu_X=aT(a)=aT(j)T(U(q)).
+\]
+Morfizm $U(q)=j^{-1}a$ jest rozszczepionym epimorfizmem, z prawą odwrotnością $\eta_Xj$. Także $T(U(q))$ jest epimorfizmem. Otrzymujemy $jb=aT(j)$, a więc $j$ jest izomorfizmem algebr (jak w dowodzie konieczności). Każda algebra jest izomorficzna z pewnym $Q(Y)$.
+
+\emph{Prezentacja obiektów kategorii $\mathcal D$.}
+Dla $Y\in\mathcal D$ piszemy $a_Y=U(\varepsilon_Y)$.
+Ponieważ $(U(Y),a_Y)$ jest algebrą monady, lemat~\ref{cat:lem:canonical-algebra-presentation} pokazuje, że para $\varepsilon_{FU(Y)},F(a_Y):FTU(Y)\rightrightarrows FU(Y)$ jest $U$-rozszczepiona: jej obraz przez $U$ to $\mu_{U(Y)},T(a_Y)$, z koequalizatorem $a_Y$ i rozszczepieniami $\eta_{U(Y)},\eta_{TU(Y)}$. Naturalność kojednostki względem $\varepsilon_Y:FU(Y)\to Y$ daje
+\[
+ \varepsilon_Y\varepsilon_{FU(Y)}
+ =\varepsilon_Y FU(\varepsilon_Y)=\varepsilon_Y F(a_Y),
+\]
+więc $\varepsilon_Y$ koequalizuje tę parę. Z warunku 2 wybieramy jej koequalizator $q:FU(Y)\to P$. Istnieje jedyny $r:P\to Y$ z $rq=\varepsilon_Y$. Zarówno $U(q)$, jak i $a_Y$ są koequalizatorami tej samej pary w $\mathcal C$; wobec tego $U(r)$ jest izomorfizmem. Z warunku 1 także $r$ jest izomorfizmem. W konsekwencji $\varepsilon_Y$ jest koequalizatorem tej pary.
+
+\emph{Pełność i wierność.}
+Niech $h:Q(Y)\to Q(Z)$ będzie morfizmem algebr, który na poziomie bazowym spełnia $ha_Y=a_ZT(h)$. Rozważamy $k=\varepsilon_ZF(h):FU(Y)\to Z$. Transpozycja w sprzężeniu $F\dashv U$ wysyła $k$ na $h$, czyli $U(k)\eta_{U(Y)}=h$.
+Dwa morfizmy $k\varepsilon_{FU(Y)}$ i $kF(a_Y)$ z $FTU(Y)$ do $Z$ mają transpozycje odpowiednio
+\begin{align*}
+ U(k)\mu_{U(Y)}\eta_{TU(Y)}&=U(k)=a_ZT(h),\\
+ U(k)T(a_Y)\eta_{TU(Y)}&=U(k)\eta_{U(Y)}a_Y=ha_Y.
+\end{align*}
+Są one równe na mocy warunku morfizmu algebr. Bijekcja sprzężenia dowodzi równości morfizmów wyjściowych. Z prezentacji $Y$ istnieje dokładnie jeden $\ell:Y\to Z$ taki, że $\ell\varepsilon_Y=k$. Stosując $U$ do $\ell\varepsilon_Y=k$ i składając z $\eta_{U(Y)}$, otrzymujemy
+\[
+ U(\ell)=U(\ell)a_Y\eta_{U(Y)}=U(k)\eta_{U(Y)}=h.
+\]
+Daje to pełność. Faktoryzację przedstawia przemienny trójkąt
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (a) at (0,1.9) {$FU(Y)$};
+ \node (b) at (3.5,1.9) {$Z$};
+ \node (c) at (1.75,0) {$Y$};
+ \draw[->] (a) -- node[above] {$k$} (b);
+ \draw[->] (a) -- node[below left] {$\varepsilon_Y$} (c);
+ \draw[->,dashed] (c) -- node[below right] {$\ell$} (b);
+\end{tikzpicture}
+\end{center}
+Jeśli $U(\ell_1)=U(\ell_2)$, to morfizmy $\ell_i\varepsilon_Y$ mają tę samą transpozycję $U(\ell_i)a_Y\eta_{U(Y)}=U(\ell_i)$. Są więc równe, a epimorficzność $\varepsilon_Y$ daje $\ell_1=\ell_2$. Jest to wierność. Pełność, wierność i istotna surjektywność $Q$ dają równoważność kategorii na mocy twierdzenia~\ref{tw:equivalence}, zastosowanego w większym uniwersum zgodnie z konwencją przyjętą na początku rozdziału.
+\end{proof}
+
+\begin{wniosek}[Dualne twierdzenie Becka]\label{cat:cor:beck-comonadicity}
+Lewy funktor sprzężony $F:\mathcal C\to\mathcal D$ jest komonadyczny wtedy i tylko wtedy, gdy odzwierciedla izomorfizmy, a każda para w $\mathcal C$, której obraz przez $F$ ma rozszczepiony equalizator, ma equalizator zachowywany przez $F$.
+\end{wniosek}
+\begin{proof}
+Stosujemy twierdzenie~\ref{cat:thm:beck-monadicity} do sprzężenia $U^{\op}\dashv F^{\op}$. Rozszczepiony equalizator oznacza dokładnie diagram przeciwny do diagramu z definicji~\ref{cat:def:split-coequalizer}: dla pary $f,g:B\rightrightarrows A$ są to morfizmy $i:C\to B$, $r:B\to C$ i $u:A\to B$ spełniające
+\[
+ fi=gi,\qquad ri=\id_C,\qquad uf=\id_B,\qquad ug=ir.
+\]
+W szczególności jest on equalizatorem zachowywanym przez każdy funktor, na mocy dualności lematu~\ref{cat:lem:split-coequalizer-absolute}. Odwrócenie strzałek zamienia koequalizatory na equalizatory i zachowuje warunek odzwierciedlania izomorfizmów. Funktor porównawczy po odwróceniu jest funktorem z definicji~\ref{cat:def:monadicity}.
+\end{proof}
+
+\begin{przyklad}[Sprzężenie, które nie jest monadyczne]\label{cat:ex:nonmonadic-top}
+Funktor dyskretnej topologii $\Set\to\Top$ jest lewym sprzężeniem funktora zapominającego $U:\Top\to\Set$: każda funkcja z przestrzeni dyskretnej do dowolnej przestrzeni topologicznej jest ciągła. Jednak $U$ nie odzwierciedla izomorfizmów. Dla zbioru dwuelementowego identyczność z topologii dyskretnej do antydyskretnej jest ciągłą bijekcją, ale odwrotność nie jest ciągła, gdyż jednoelementowy zbiór otwarty w topologii dyskretnej nie jest otwarty w antydyskretnej. Warunek 1 twierdzenia~\ref{cat:thm:beck-monadicity} nie zachodzi. Indukowana monada jest identycznościowa, więc jej kategorią algebr jest $\Set$ z jedynymi możliwymi strukturami; funktor porównawczy jest w tych oznaczeniach dokładnie funktorem zapominającym.
+\end{przyklad}
+
+
+\subsection{Zastosowania twierdzenia Becka}
+
+\begin{stwierdzenie}[Grupy jako algebry monady]\label{cat:prop:beck-groups}
+Funktor zapominający $U:\Grp\to\Set$ jest monadyczny dla sprzężenia z funktorem grupy wolnej.
+\end{stwierdzenie}
+\begin{proof}
+Istnienie sprzężenia wynika z własności uniwersalnej grupy wolnej: funkcja ze zbioru generatorów do grupy przedłuża się jednoznacznie do homomorfizmu. Bijektywny homomorfizm ma odwrotność będącą homomorfizmem, gdyż dla $y_i=h(x_i)$ mamy $h^{-1}(y_1y_2)=x_1x_2$. Zatem $U$ odzwierciedla izomorfizmy.
+
+Niech $f,g:A\rightrightarrows B$ będą homomorfizmami, których obrazy mają rozszczepiony koequalizator $p:U(B)\to C$ z rozszczepieniami $s,t$ jak w definicji~\ref{cat:def:split-coequalizer}. Piszemy $f,g$ również dla funkcji bazowych. Dla $b,b'\in B$, wykorzystując homomorfizmy $f,g$, otrzymujemy
+\begin{align*}
+ p(bb')&=pf(t(b)t(b'))\\
+ &=pg(t(b)t(b'))=p(s(p(b))s(p(b'))),\\
+ p(b^{-1})&=pf(t(b)^{-1})=pg(t(b)^{-1})
+ =p(s(p(b))^{-1}).
+\end{align*}
+Stąd definiujemy na $C$
+\[
+ xy=p(s(x)s(y)),\qquad x^{-1}=p(s(x)^{-1}),
+ \qquad 1_C=p(1_B).
+\]
+Obliczenia pokazują, że $p$ zachowuje działanie i odwrotności. Ponieważ $ps=\id_C$, każdy element $C$ ma przeciwobraz. Dla $x=p(b),y=p(b'),z=p(b'')$ mamy
+\[
+ (xy)z=p((bb')b'')=p(b(b'b''))=x(yz),
+\]
+a także $1_Cx=p(1_Bb)=x=p(b1_B)=x1_C$ oraz
+$x^{-1}x=xx^{-1}=1_C$. Jest to struktura grupy. Surjektywność $p$ zapewnia jej jednoznaczność wśród struktur, dla których $p$ jest homomorfizmem.
+
+Jeżeli homomorfizm $h:B\to H$ spełnia $hf=hg$, to lemat~\ref{cat:lem:split-coequalizer-absolute} daje jedyną funkcję $k:C\to U(H)$ z $kp=h$. Dla $x=p(b),y=p(b')$ zachodzi
+\[
+ k(xy)=kp(bb')=h(bb')=h(b)h(b')=k(x)k(y),
+ \qquad k(1_C)=h(1_B)=1_H.
+\]
+Zatem $k$ jest homomorfizmem, więc $p$ jest koequalizatorem również w $\Grp$. Wykazaliśmy istnienie koequalizatorów $U$-rozszczepionych par i ich zachowywanie przez $U$. Twierdzenie~\ref{cat:thm:beck-monadicity} kończy dowód.
+\end{proof}
+Nie twierdzimy, że $U:\Grp\to\Set$ zachowuje wszystkie koequalizatory. Dla dwóch homomorfizmów z grupy addytywnej $\mathbb Z$ do niej samej, $f(n)=2n$ i $g(n)=0$, koequalizatorem w grupach jest redukcja modulo $2$: homomorfizm zerujący $2\mathbb Z$ faktoryzuje jednoznacznie przez grupę ilorazową. W zbiorach identyfikujemy wszystkie liczby parzyste ze sobą, ale każda liczba nieparzysta pozostaje osobną klasą. Istotnie, ta relacja równoważności zawiera wszystkie pary $(2n,0)$ i jest zawarta w każdej relacji równoważności zawierającej te pary. Zatem redukcja modulo $2$ nie jest koequalizatorem w zbiorach.
+
+\begin{stwierdzenie}[Ograniczenie skalarów]\label{cat:prop:beck-restriction}
+Dla homomorfizmu pierścieni z jedynką $\varphi:R\to S$ funktor ograniczenia skalarów $U:S\text{-}\cat{Mod}\to R\text{-}\cat{Mod}$ na lewych modułach unitarnych jest monadyczny.
+\end{stwierdzenie}
+\begin{proof}
+Lewe sprzężenie to $F(M)=S\otimes_R M$, gdzie prawe działanie $R$ na $S$ dane jest przez $sr=s\varphi(r)$. Bijekcja
+\[
+ \Hom_S(S\otimes_R M,N)\cong\Hom_R(M,U(N))
+\]
+wysyła $h$ na $m\mapsto h(1\otimes m)$; odwrotnie, dla $u:M\to U(N)$ przyjmujemy $s\otimes m\mapsto su(m)$. Wzór jest zrównoważony nad $R$, ponieważ $s\varphi(r)u(m)=su(rm)$, i wyznacza odwzorowanie $S$-liniowe. Obie operacje są odwrotne na mocy liniowości i faktu, że tensory proste generują iloczyn tensorowy. Dla $v:M'\to M$ odwzorowanie $h\circ(\id_S\otimes v)$ odpowiada funkcji $m'\mapsto h(1\otimes v(m'))$, a dla $w:N\to N'$ odwzorowanie $w\circ h$ odpowiada funkcji $m\mapsto w(h(1\otimes m))$. Daje to naturalność w obu zmiennych.
+
+Funktor $U$ odzwierciedla izomorfizmy: jeśli $U(h)$ jest izomorfizmem, to $h$ jest bijekcją; dla $y_i=h(x_i)$ i $s\in S$ mamy $h^{-1}(y_1+y_2)=x_1+x_2$ oraz $h^{-1}(sy_1)=sx_1$. Odwrotność jest więc $S$-liniowa. Dla $f,g:A\rightrightarrows B$ w kategorii $S$-modułów koequalizatorem jest rzut
+\[
+ B\longrightarrow B/\operatorname{im}(f-g).
+\]
+Istotnie, obraz różnicy jest podmodułem, a odwzorowanie zerujące ten obraz faktoryzuje jednoznacznie przez iloraz. Po ograniczeniu skalarów obraz różnicy i grupy addytywne ilorazu pozostają te same; własność uniwersalna ilorazu nad $R$ daje więc koequalizator również w kategorii $R$-modułów. Tutaj $U$ zachowuje wszystkie koequalizatory. Z twierdzenia~\ref{cat:thm:beck-monadicity} wynika monadyczność.
+\end{proof}
+
+Indukowana monada ma postać $T(M)=U(S\otimes_R M)$; jednostkę $\eta_M(m)=1\otimes m$ i mnożenie $\mu_M(s\otimes(t\otimes m))=st\otimes m$ otrzymujemy z powyższej bijekcji sprzężenia, ponieważ kojednostką w $N$ jest $s\otimes n\mapsto sn$. Funktor porównawczy przypisuje modułowi $N$ algebrę $(U(N),a_N)$ z $a_N(s\otimes n)=sn$.
+
+\begin{przyklad}[Komonadyczność funktora z kategorii obiektów nad zbiorem]\label{cat:ex:beck-slice}
+Dla ustalonego $E$ funktor $V:\Set/E\to\Set$, $(p:X\to E)\mapsto X$, ma prawe sprzężenie $R(Y)=(E\times Y\to E)$ z pierwszą projekcją. Funkcje $f:X\to Y$ odpowiadają dokładnie morfizmom nad $E$ postaci $x\mapsto(p(x),f(x))$; naturalność wynika ze składania funkcji. Indukowana komonada jest komonadą iloczynu z przykładu~\ref{cat:ex:product-comonad}. Funktor porównawczy wysyła $p$ na koalgebrę $x\mapsto(p(x),x)$ i jest izomorfizmem kategorii w przyjętych modelach, także dla $E=\varnothing$.
+
+Można to również uzyskać z dualnego twierdzenia Becka. Funkcja bijektywna nad $E$ ma odwrotność nad $E$, a equalizator dwóch morfizmów nad $E$ jest podzbiorem punktów, w których funkcje są równe, wyposażonym w ograniczone odwzorowanie do $E$. Faktoryzacja funkcji przez ten podzbiór automatycznie jest morfizmem nad $E$. Zatem $V$ odzwierciedla izomorfizmy i zachowuje wszystkie equalizatory.
+\end{przyklad}

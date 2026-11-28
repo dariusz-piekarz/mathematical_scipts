@@ -1,0 +1,662 @@
+% AA-08 | Algebra abstrakcyjna | Iteracja IV, uzupelnienie definicji modulow
+\setlength{\parskip}{0pt}
+\chapter{Grupy abelowe, torsja i iloczyn tensorowy}
+\label{aa:ch:grupy-abelowe}
+
+\section{Od grup abelowych do modułów}
+\label{aa:sec:wprowadzenie-moduly}
+
+\subsection{Dlaczego potrzebujemy nowego pojęcia?}
+Do tej pory badaliśmy grupy, których podstawową strukturą jest jedno
+odwracalne działanie. W grupie abelowej działanie zapisujemy addytywnie,
+a zatem możemy nie tylko dodawać elementy, lecz również tworzyć ich
+całkowite wielokrotności: $a+a+a=3a$, $-a=(-1)a$.
+Widać tu zaczątek \emph{mnożenia elementu grupy przez skalar}.
+W algebrze liniowej skalary pochodzą z ciała, na przykład z $\mathbb R$;
+jednak nie zawsze potrzebujemy dzielenia przez każdy niezerowy skalar.
+Chcemy więc zachować dodawanie wektorów i zgodność ze skalarami,
+ale dopuścić, aby skalary pochodziły z ogólnego pierścienia.
+Właśnie to opisuje pojęcie modułu.
+
+Przypomnijmy: pierścień $R$ z jedynką jest zbiorem z dodawaniem
+i mnożeniem, w którym $(R,+)$ jest grupą abelową, mnożenie
+jest łączne oraz rozdzielne względem dodawania, a element $1_R$
+jest jedynką mnożenia. Nie zakładamy tutaj przemienności mnożenia.
+Pełną teorię pierścieni rozwiniemy w kolejnych rozdziałach.
+Taki krótki opis wystarcza do sformułowania definicji modułu.
+
+\subsection{Definicja modułu}
+\begin{definicja}[Lewy moduł nad pierścieniem]
+\label{aa:def:module-introduction}
+Niech $R$ będzie \emph{pierścieniem z jedynką} $1_R$,
+niekoniecznie przemiennym. \emph{Lewym modułem nad $R$}
+(nazywanym także \emph{lewym $R$-modułem}) nazywamy
+\textbf{grupę abelową} $(M,+,0_M)$ wraz z odwzorowaniem
+\[
+  R\times M\longrightarrow M,\qquad (r,m)\longmapsto rm,
+\]
+zwanym \emph{mnożeniem przez skalar}, które dla wszystkich
+$r,s\in R$ i $m,n\in M$ spełnia cztery warunki:
+\begin{enumerate}[label=\textup{(M\arabic*)}]
+\item $r(m+n)=rm+rn$;
+\item $(r+s)m=rm+sm$;
+\item $(rs)m=r(sm)$;
+\item $1_Rm=m$.
+\end{enumerate}
+Elementy $R$ nazywamy \emph{skalarami}, a elementy $M$
+\emph{elementami modułu}. Gdy pierścień jest przemienny,
+możemy zwykle mówić po prostu o $R$-module.
+\end{definicja}
+Homomorfizm lewych $R$-modułów $f:M\to N$ oznacza homomorfizm
+grup addytywnych spełniający $f(rm)=rf(m)$ dla wszystkich
+$r\in R$ i $m\in M$.
+
+\begin{uwaga}[Co jest istotne w definicji?]
+\label{aa:uw:module-crucial}
+\textbf{Warunek przemienności dodawania w $M$ jest częścią definicji.}
+Nie wystarczy dowolna grupa z dodatkową operacją: dodawanie
+w module musi być łączne, przemienne, mieć zero i odwrotności.
+Pierścień $R$ nie musi być ciałem ani nawet być przemienny.
+Jeśli $R$ nie jest przemienny, rozróżniamy moduły lewe i prawe:
+w prawym module mnożenie ma postać $M\times R\to M$.
+W dalszej części tego rozdziału wystarczy nam przemienny
+pierścień $\mathbb Z$.
+\end{uwaga}
+
+\begin{lemat}[Pierwsze konsekwencje aksjomatów]
+\label{aa:lem:module-zero-minus}
+Niech $R$ będzie pierścieniem z jedynką, a $M$ lewym
+$R$-modułem. Dla wszystkich $r\in R$ i $m\in M$ zachodzą
+\[
+ 0_Rm=0_M,\qquad r0_M=0_M,\qquad (-r)m=-(rm),
+ \qquad r(-m)=-(rm).
+\]
+\end{lemat}
+\begin{proof}
+Z warunku (M2) mamy $0_Rm=(0_R+0_R)m=0_Rm+0_Rm$.
+Odejmując $0_Rm$ w grupie addytywnej $M$, dostajemy
+$0_Rm=0_M$. Podobnie (M1) daje
+$r0_M=r(0_M+0_M)=r0_M+r0_M$, a więc $r0_M=0_M$.
+Teraz $(-r)m+rm=((-r)+r)m=0_Rm=0_M$, toteż
+$(-r)m=-(rm)$. Analogicznie
+$r(-m)+rm=r((-m)+m)=r0_M=0_M$,
+co dowodzi ostatniej równości.
+\end{proof}
+
+\begin{przyklad}[Przestrzeń wektorowa jest modułem]
+Jeśli $K$ jest ciałem, a $V$ przestrzenią wektorową nad $K$,
+to $V$ jest $K$-modułem: aksjomaty modułu są dokładnie
+odpowiednimi aksjomatami przestrzeni wektorowej.
+W szczególności $\mathbb C$ jest jednocześnie modułem nad
+$\mathbb C$ oraz, po ograniczeniu skalarów, nad $\mathbb R$.
+Pierwsza z tych struktur ma jedną współrzędną zespoloną,
+druga --- dwie współrzędne rzeczywiste.
+Wybór pierścienia skalarów jest więc częścią danych, a nie
+jedynie zmianą zapisu.
+\end{przyklad}
+
+\begin{przyklad}[Moduły, które nie są przestrzeniami wektorowymi]
+Grupa $\mathbb Z/6\mathbb Z$ jest modułem nad $\mathbb Z$.
+Jej element $[2]$ nie jest zerowy, lecz
+$3[2]=[6]=[0]$. Nie możemy z tego wywnioskować
+$[2]=[0]$, bo skalar $3$ nie jest odwracalny w $\mathbb Z$.
+Takie zjawisko nazywamy \emph{torsją} i będziemy je badać
+w tym rozdziale. Dla porównania, w przestrzeni wektorowej
+nad ciałem $K$ z $r\ne0$ z równania $rv=0$ wynika $v=0$,
+gdyż można pomnożyć je przez $r^{-1}$.
+\end{przyklad}
+
+\subsection[Dlaczego grupa abelowa jest modułem nad liczbami całkowitymi?]{Dlaczego każda grupa abelowa jest modułem nad $\mathbb Z$?}
+Przyjmujemy teraz \emph{notację addytywną} w grupie abelowej $A$:
+jej element neutralny oznaczamy przez $0$, a odwrotność $a$
+przez $-a$. Mnożenie przez liczbę całkowitą nie wymaga
+żadnego dodatkowego wyboru; jest już określone przez
+strukturę grupy.
+
+\begin{definicja}[Grupa abelowa i działanie liczb całkowitych]
+\label{aa:def:abelian-zmodule}
+Niech $(A,+,0)$ będzie grupą abelową.
+Dla $n\in\mathbb Z$ i $a\in A$ definiujemy $na$ jako sumę
+$n$ kopii $a$, jeśli $n>0$, jako $0$ dla $n=0$ oraz jako
+$-((-n)a)$ dla $n<0$.
+\end{definicja}
+\begin{stwierdzenie}[Tożsamości modułowe]
+\label{aa:st:abelian-module-laws}
+Niech $A$ będzie grupą abelową, a mnożenie przez liczby całkowite
+niech będzie określone jak w definicji~\ref{aa:def:abelian-zmodule}.
+Dla wszystkich $m,n\in\mathbb Z$ i $a,b\in A$ zachodzą
+\[
+(m+n)a=ma+na,\qquad m(a+b)=ma+mb,\qquad
+(mn)a=m(na),\qquad 1a=a.
+\]
+Działanie z poprzedniej definicji czyni $A$ modułem nad
+$\mathbb Z$. Jest ono \emph{jedynym} możliwym działaniem
+$\mathbb Z$ spełniającym aksjomaty modułu. Ponadto
+homomorfizmy grup abelowych są dokładnie homomorfizmami
+$\mathbb Z$-modułów.
+\end{stwierdzenie}
+\begin{proof}
+Dla nieujemnych $m,n$ pierwsza i trzecia równość wynikają
+z łączności dodawania, a druga z łączności i przemienności:
+na przykład $2(a+b)=a+b+a+b=a+a+b+b=2a+2b$.
+Definicja wielokrotności ujemnych pozwala przeprowadzić
+te same rachunki po zastąpieniu składników ich odwrotnościami.
+Dla przykładu, jeśli $m\ge n>0$, to
+$m a+(-n)a=(m-n)a$, gdyż w sumie $m$ kopii $a$
+i $n$ kopii $-a$ możemy usunąć $n$ par przeciwnych.
+Pozostałe przypadki znaków otrzymujemy analogicznie.
+Równość $1a=a$ wynika wprost z definicji.
+
+Jeżeli $A$ byłoby już $\mathbb Z$-modułem z jakimś działaniem,
+to z (M4) i (M2) musielibyśmy mieć
+$n a=(1+\cdots+1)a=a+\cdots+a$ dla $n>0$,
+a także $0a=0$ i $(-n)a=-(na)$ na mocy lematu
+\ref{aa:lem:module-zero-minus}. Działanie jest zatem
+jednoznacznie wyznaczone przez dodawanie w $A$.
+
+Jeśli $f:A\to B$ jest homomorfizmem grup abelowych,
+to zachowuje sumy, zero i odwrotności. Stąd dla każdego
+$n\in\mathbb Z$ mamy $f(na)=nf(a)$; $f$ jest więc
+homomorfizmem $\mathbb Z$-modułów. Odwrotnie,
+homomorfizm modułów z definicji zachowuje dodawanie,
+więc jest homomorfizmem grup abelowych.
+\end{proof}
+
+\begin{przyklad}[Obliczenia w module nad $\mathbb Z$]
+W $A=\mathbb Z/6\mathbb Z$ mamy
+$(-2)[4]=[-8]=[4]$ oraz $3[2]=[0]$.
+W $A=\mathbb Q/\mathbb Z$ element $[1/5]$ ma rząd $5$,
+bo $5[1/5]=[1]=[0]$, lecz żadna z liczb
+$1,2,3,4$ nie zeruje tej klasy. Obie grupy są
+$\mathbb Z$-modułami, choć pierwsza jest skończona,
+a druga nieskończona.
+\end{przyklad}
+
+\begin{uwaga}[Co zrobimy dalej z modułami?]
+\label{aa:uw:module-roadmap}
+Na tym etapie potrzebujemy tylko definicji modułu i faktu,
+że \textbf{grupy abelowe to dokładnie moduły nad $\mathbb Z$}.
+Dlatego możemy później zdefiniować iloczyn tensorowy grup
+abelowych jako $A\otimes_{\mathbb Z}B$. Pełną teorię
+modułów --- podmoduły, moduły wolne i ilorazowe, bazy,
+homomorfizmy, ciągi dokładne, moduły nad pierścieniami
+wielomianów oraz klasyfikację nad PID --- opracujemy
+w osobnej części poświęconej modułom.
+Nie należy utożsamiać iloczynu tensorowego grup abelowych
+z odrębnymi konstrukcjami zwanymi \emph{nieabelowymi
+iloczynami tensorowymi grup}.
+\end{uwaga}
+
+\section{Suma prosta, iloczyn prosty i skończone generowanie}
+\begin{definicja}[Suma prosta rodziny grup abelowych]
+\label{aa:def:abelian-directsum}
+Niech $(A_i)_{i\in I}$ będzie rodziną grup abelowych.
+Ich \emph{iloczyn prosty} $\prod_{i\in I}A_i$ składa się
+ze wszystkich rodzin $(a_i)_{i\in I}$ z działaniem współrzędnym.
+\emph{Suma prosta} $\bigoplus_{i\in I}A_i$ to podgrupa
+tylko tych rodzin, dla których $a_i=0$ poza skończonym
+zbiorem indeksów.
+\end{definicja}
+\begin{lemat}[Różnica pomiędzy sumą a iloczynem]
+\label{aa:lem:abelian-sum-product}
+Niech $(A_i)_{i\in I}$ będzie rodziną grup abelowych.
+Jeśli zbiór indeksów $I$ jest skończony, to suma prosta
+$\bigoplus_{i\in I}A_i$ jest równa iloczynowi
+$\prod_{i\in I}A_i$ jako jego podgrupa.
+Jeśli $I=\{1,2,3,\ldots\}$ i $A_i=\mathbb Z/2\mathbb Z$
+dla każdego $i\in I$, to suma prosta jest przeliczalna,
+a iloczyn prosty jest nieprzeliczalny.
+\end{lemat}
+\begin{proof}
+Przy skończonym $I$ każdy element iloczynu ma co najwyżej
+$|I|$ niezerowych współrzędnych, więc spełnia definicję sumy.
+Przy $I=\mathbb N$ suma jest sumą przeliczalnie wielu
+zbiorów skończonych: elementy mające nośnik w
+$\{1,\ldots,n\}$ tworzą grupę o $2^n$ elementach.
+Cała suma jest przeliczalna i nieskończona.
+Dla iloczynu funkcje $\mathbb N\to\{0,1\}$ są jego elementami.
+Gdyby można je było wypisać jako $x^{(1)},x^{(2)},\ldots$,
+funkcja $y$ o $n$-tej współrzędnej przeciwnej do
+$n$-tej współrzędnej $x^{(n)}$ różniłaby się od każdego
+wyrazu listy. Jest to sprzeczność, więc iloczyn jest
+nieprzeliczalny.
+\end{proof}
+
+\begin{definicja}[Grupa skończenie generowana]
+\label{aa:def:abelian-fg}
+Grupa abelowa $A$ jest \emph{skończenie generowana}, jeśli
+istnieją $a_1,\ldots,a_r\in A$ takie, że każdy $a\in A$
+można zapisać jako $\sum_{i=1}^r n_i a_i$,
+gdzie $n_i\in\mathbb Z$.
+\end{definicja}
+\begin{lemat}[Opis przez grupę wolną abelową]
+\label{aa:lem:abelian-fg-quotient}
+Grupa abelowa $A$ jest skończenie generowana wtedy i tylko wtedy,
+gdy istnieje $r\ge0$ oraz surjekcja $\mathbb Z^r\to A$.
+Każda taka grupa jest izomorficzna z ilorazem
+$\mathbb Z^r/K$ przez pewną podgrupę $K\le\mathbb Z^r$.
+\end{lemat}
+\begin{proof}
+Jeśli $a_1,\ldots,a_r$ generują $A$, wzór
+$f(n_1,\ldots,n_r)=\sum_i n_i a_i$ określa homomorfizm,
+który jest surjektywny z definicji generowania.
+Odwrotnie, obrazy standardowych wektorów bazowych
+surjekcji $\mathbb Z^r\to A$ generują $A$.
+Pierwsze twierdzenie o izomorfizmie grup zastosowane do
+$f$ daje $A\cong\mathbb Z^r/\ker f$.
+\end{proof}
+
+\section{Rząd, wykładnik i podgrupa torsyjna}
+\begin{definicja}[Torsja]
+\label{aa:def:abelian-torsion}
+Niech $A$ będzie grupą abelową.
+Element $a\in A$ jest \emph{torsyjny}, jeśli $na=0$
+dla pewnej liczby całkowitej $n>0$.
+Zbiór wszystkich takich elementów oznaczamy
+$\operatorname{Tors}(A)$ i nazywamy \emph{podgrupą torsyjną}.
+Grupa jest \emph{torsyjna}, jeśli $\operatorname{Tors}(A)=A$,
+a \emph{beztorsyjna}, jeśli $\operatorname{Tors}(A)=\{0\}$.
+\end{definicja}
+\begin{lemat}[Torsja jest podgrupą charakterystyczną]
+\label{aa:lem:torsion-characteristic}
+Dla każdej grupy abelowej $A$ zbiór $\operatorname{Tors}(A)$
+jest podgrupą charakterystyczną $A$, a iloraz
+$A/\operatorname{Tors}(A)$ jest beztorsyjny.
+\end{lemat}
+\begin{proof}
+Jeśli $ma=0$ i $nb=0$, gdzie $m,n>0$, to
+$mn(a-b)=n(ma)-m(nb)=0$; zbiór elementów torsyjnych
+jest zatem zamknięty na różnice i zawiera $0$, więc jest
+podgrupą. Każdy automorfizm zachowuje równości $na=0$,
+stąd podgrupa torsyjna jest charakterystyczna.
+
+Załóżmy, że klasa $a+\operatorname{Tors}(A)$ jest torsyjna
+w ilorazie. Wtedy dla pewnego $n>0$ element $na$ należy
+do $\operatorname{Tors}(A)$, czyli $m(na)=0$ dla pewnego $m>0$.
+A zatem $a$ jest torsyjny i jego klasa jest zerowa.
+Iloraz nie ma więc niezerowych elementów torsyjnych.
+\end{proof}
+
+\begin{definicja}[Wykładnik grupy]
+\label{aa:def:abelian-exponent}
+Niech $A$ będzie grupą abelową. Jej \emph{wykładnikiem} nazywamy najmniejszą
+liczbę całkowitą $n>0$ taką, że $na=0$ dla wszystkich
+$a\in A$, jeśli istnieje. Gdy takiej liczby nie ma,
+mówimy, że grupa nie ma skończonego wykładnika.
+Dla skończonej grupy abelowej wykładnik istnieje i jest
+najmniejszą wspólną wielokrotnością rzędów jej elementów.
+\end{definicja}
+\begin{proof}
+W skończonej grupie wszystkie elementy mają skończone rzędy.
+Liczba $n$ zeruje każdy element dokładnie wtedy, gdy jest
+podzielna przez rząd każdego z nich. Najmniejszą taką
+liczbą jest z definicji ich najmniejsza wspólna wielokrotność.
+\end{proof}
+
+\begin{przyklad}[Torsja nie musi być skończona]
+\label{aa:prz:torsion-infinite}
+W $\mathbb Z\oplus\mathbb Z/12\mathbb Z$ podgrupa torsyjna
+to $\{0\}\oplus\mathbb Z/12\mathbb Z$.
+W $\mathbb Q/\mathbb Z$ każdy element jest torsyjny:
+dla liczby wymiernej $a/b$ mamy
+$b(a/b+\mathbb Z)=0+\mathbb Z$.
+Jednak $\mathbb Q/\mathbb Z$ jest nieskończona i nie ma
+skończonego wykładnika, bo zawiera elementy rzędu $n$
+dla każdego $n\ge1$, na przykład $1/n+\mathbb Z$.
+\end{przyklad}
+
+\begin{uwaga}[Dlaczego przemienność jest potrzebna?]
+W dowolnej grupie nieprzemiennej zbiór elementów skończonego
+rzędu nie musi być podgrupą. W nieskończonej grupie
+diedralnej generowanej przez dwa odbicia każdy z tych
+odbiciowych generatorów ma rząd dwa, ale ich iloczyn
+jest obrotem nieskończonego rzędu. Nie można więc
+bez zmiany założeń przenosić definicji podgrupy torsyjnej
+z grup abelowych na wszystkie grupy.
+\end{uwaga}
+
+\section{Części pierwsze i rozkład grupy torsyjnej}
+\begin{definicja}[Podgrupa $p$-pierwotna]
+\label{aa:def:abelian-primary}
+Niech $A$ będzie grupą abelową, a $p$ liczbą pierwszą. Definiujemy
+$A[p^\infty]=\{a\in A: p^k a=0\text{ dla pewnego }k\ge0\}$.
+Jest to \emph{$p$-pierwotna podgrupa torsyjna} $A$.
+Dla $k\ge1$ oznaczamy również
+$A[p^k]=\{a\in A:p^k a=0\}$.
+\end{definicja}
+
+\begin{twierdzenie}[Rozkład torsji na części pierwsze]
+\label{aa:tw:torsion-primary}
+Dla każdej grupy abelowej $A$ jej podgrupa torsyjna jest
+wewnętrzną sumą prostą podgrup $A[p^\infty]$.
+Równoważnie, odwzorowanie sumowania wyznacza kanoniczny izomorfizm
+\[
+\bigoplus_{p\text{ -- liczba pierwsza}}A[p^\infty]
+ \;\cong\;\operatorname{Tors}(A).
+\]
+W szczególności każda skończona grupa abelowa jest
+iloczynem prostym swoich części $p$-pierwotnych.
+\end{twierdzenie}
+\begin{proof}
+Weźmy element $a$ skończonego rzędu $n$.
+Jeśli $n=1$, to $a=0$, więc otrzymujemy sumę pustą.
+Dalej zakładamy $n>1$ i rozkładamy $n$ na potęgi różnych liczb pierwszych:
+$n=n_1\cdots n_r$, gdzie $n_i=p_i^{k_i}$.
+Dla każdego $i$ liczba $m_i=n/n_i$ jest względnie pierwsza
+z $n_i$, więc z tożsamości Bézouta istnieją liczby całkowite
+$c_i,d_i$ z $c_i m_i+d_i n_i=1$.
+Połóżmy $e_i=c_i m_i$. Mamy $e_i\equiv1\pmod{n_i}$,
+natomiast $e_i\equiv0\pmod{n_j}$ dla $j\ne i$.
+Stąd $\sum_i e_i\equiv1\pmod {n_i}$ dla każdego $i$.
+Ponieważ liczby $n_i$ są parami względnie pierwsze,
+wielokrotna wersja lematu Euklidesa pokazuje, że
+$n\mid(1-\sum_i e_i)$.
+Wobec $na=0$ otrzymujemy
+$a=\sum_i e_i a$.
+Dla każdego $i$ zachodzi $n_i(e_i a)=0$:
+liczba $n_i e_i$ jest podzielna przez $n$, bo $e_i$
+jest podzielne przez wszystkie pozostałe $n_j$.
+Zatem $e_i a\in A[p_i^\infty]$; udowodniliśmy, że
+każdy element torsyjny jest sumą skończenie wielu elementów
+z części pierwszych.
+
+Sprawdźmy jednoznaczność. Jeśli
+$\sum_{i=1}^r a_i=0$ dla $a_i\in A[p_i^\infty]$
+i różnych liczb pierwszych $p_i$, dobierzmy potęgi
+$n_i=p_i^{k_i}$ zerujące $a_i$. Mnożąc równość przez
+$e_j$ z poprzedniej konstrukcji otrzymujemy
+$0=e_j\sum_i a_i=a_j$, gdyż
+$e_j\equiv1\pmod {n_j}$ i
+$e_j\equiv0\pmod{n_i}$ dla $i\ne j$.
+Wszystkie składniki są zatem zerowe.
+Sumowanie jest więc izomorfizmem sumy prostej na
+$\operatorname{Tors}(A)$. Jeśli $A$ jest skończona,
+wszystkie jej elementy są torsyjne, a tylko skończenie
+wiele liczb pierwszych dzieli $|A|$.
+\end{proof}
+
+\begin{przyklad}[Rozkład $C_{360}$]
+\label{aa:prz:c360-primary}
+Ponieważ $360=2^3\cdot3^2\cdot5$, mamy
+$C_{360}\cong C_8\oplus C_9\oplus C_5$.
+Przy generatorze $[1]_{360}$ podgrupę rzędu $8$
+generuje $[45]_{360}$, podgrupę rzędu $9$ generuje
+$[40]_{360}$, a podgrupę rzędu $5$ generuje
+$[72]_{360}$. Suma podgrup rzędów $8$ i $9$ ma rząd
+$8\cdot9=72$, ponieważ ich przekrój jest trywialny.
+Przekrój tej sumy z podgrupą rzędu $5$ jest również trywialny,
+ponieważ ich rzędy są względnie pierwsze. Wobec tego suma
+trzech podgrup ma rząd $72\cdot5=360$ i jest całą grupą.
+\end{przyklad}
+
+\begin{wniosek}[Związek z podgrupami Sylowa]
+\label{aa:wn:abelian-sylow}
+Jeżeli $A$ jest skończoną grupą abelową, to dla każdej
+liczby pierwszej $p$ dzielącej $|A|$ podgrupa $A[p^\infty]$
+jest jej jedyną podgrupą $p$-Sylowa.
+\end{wniosek}
+\begin{proof}
+Twierdzenie~\ref{aa:tw:torsion-primary} rozkłada $A$
+na sumę skończonych $p$-grup. Rzędy tych czynników są
+potęgami odpowiednich liczb pierwszych, a ich iloczyn
+jest równy $|A|$. Stąd czynnik $p$-pierwotny ma rząd
+największej potęgi $p$ dzielącej $|A|$ i jest podgrupą
+$p$-Sylowa. Ponieważ $A$ jest abelowa, wszystkie jej podgrupy
+są normalne; drugie twierdzenie Sylowa zapewnia, że
+wszystkie podgrupy $p$-Sylowa są sprzężone, a zatem równe.
+\end{proof}
+
+\section{Skończone grupy abelowe: zarys klasyfikacji i niezmienniki}
+\begin{uwaga}[Klasyfikacja skończonych grup abelowych --- zapowiedź twierdzenia]
+\label{aa:tw:finite-abelian-classification}
+Dla każdej skończonej grupy abelowej $A$ i każdej liczby
+pierwszej $p$ istnieje jednoznacznie wyznaczona liczba całkowita
+$r_p\ge0$ oraz, gdy $r_p>0$, jednoznacznie wyznaczone
+(z dokładnością do kolejności) liczby całkowite
+$e_{p,1}\ge\cdots\ge e_{p,r_p}\ge1$ takie, że
+\[
+A\cong\bigoplus_p\bigoplus_{j=1}^{r_p}C_{p^{e_{p,j}}}.
+\]
+Przy $r_p=0$ odpowiedni czynnik jest trywialny, a dla wszystkich
+poza skończenie wieloma liczbami pierwszymi zachodzi $r_p=0$.
+Powyższego twierdzenia nie wykorzystujemy w obecnym rozdziale
+bez dowodu. Pełny dowód istnienia i jednoznaczności przeprowadzimy
+w rozdziale o klasyfikacji skończenie generowanych
+modułów nad dziedziną ideałów głównych, gdzie otrzymamy
+zarazem postać Smitha i klasyfikację grup abelowych.
+\end{uwaga}
+
+\begin{lemat}[Co już można odczytać bez klasyfikacji]
+\label{aa:lem:abelian-p-rank}
+Niech $p$ będzie liczbą pierwszą, $r\ge0$ liczbą całkowitą,
+$e_1,\ldots,e_r$ dodatnimi liczbami całkowitymi oraz
+$A=\bigoplus_{j=1}^r C_{p^{e_j}}$.
+Wtedy $A[p]\cong C_p^r$, a dla każdego $k\ge1$
+liczba elementów z $A[p^k]$ wynosi
+$p^{\sum_{j=1}^r\min(k,e_j)}$.
+\end{lemat}
+\begin{proof}
+W grupie $C_{p^{e}}$ równanie $p^k x=0$ jest spełnione
+dokładnie przez klasy wielokrotności $p^{\max(e-k,0)}$.
+Ich liczba wynosi $p^{\min(k,e)}$.
+W sumie prostej warunek $p^k x=0$ zachodzi dokładnie wtedy,
+gdy jest spełniony w każdej współrzędnej. Mnożąc liczności
+dostajemy wskazany wzór. Dla $k=1$ każdy czynnik daje
+jedną kopię $C_p$, co dowodzi pierwszego izomorfizmu.
+\end{proof}
+
+\begin{przyklad}[Dwie grupy rzędu $16$]
+\label{aa:prz:abelian-order16}
+Grupy $C_8\oplus C_2$ oraz $C_4\oplus C_4$ mają ten sam
+rząd $16$ i po cztery elementy zerowane przez $2$
+(bo w obu przypadkach $A[2]\cong C_2^2$).
+Nie są jednak izomorficzne: pierwsza zawiera element
+rzędu $8$, druga nie. Wzór poprzedniego lematu daje też
+$|A[4]|=8$ dla pierwszej grupy i $|A[4]|=16$ dla drugiej.
+To pokazuje, że znajomość samego rzędu i liczby elementów
+rzędu dwa nie wystarcza do rozpoznania grupy abelowej.
+\end{przyklad}
+
+\section{Grupy torsyjne i beztorsyjne poza przypadkiem skończonym}
+\begin{definicja}[Podzielność i grupa Prüfera]
+\label{aa:def:divisible-prufer}
+Grupa abelowa $D$ jest \emph{podzielna}, gdy dla każdego
+$n>0$ odwzorowanie $D\to D$, $x\mapsto nx$, jest surjektywne.
+Dla liczby pierwszej $p$ \emph{grupą Prüfera} $C_{p^\infty}$
+nazywamy podgrupę $\mathbb Q/\mathbb Z$ złożoną z klas
+$\frac{a}{p^k}+\mathbb Z$, gdzie $a\in\mathbb Z$, $k\ge0$.
+\end{definicja}
+\begin{stwierdzenie}[Przykłady nieskończonej torsji]
+\label{aa:st:prufer-properties}
+Niech $p$ będzie liczbą pierwszą i niech
+$C_{p^\infty}\le\mathbb Q/\mathbb Z$ będzie grupą Prüfera.
+Dla każdego $k\ge1$ określmy
+$H_k=\{a/p^k+\mathbb Z:a\in\mathbb Z\}$.
+Wówczas $H_k\cong C_{p^k}$, zachodzą ścisłe zawierania
+$H_1\subsetneq H_2\subsetneq H_3\subsetneq\cdots$ oraz
+$C_{p^\infty}=\bigcup_{k\ge1}H_k$.
+Grupa $C_{p^\infty}$ jest torsyjna, nieskończona i podzielna.
+Ponadto $\mathbb Q/\mathbb Z\cong
+\bigoplus_{q\text{ -- liczba pierwsza}} C_{q^\infty}$.
+\end{stwierdzenie}
+\begin{proof}
+Klasa $a/p^k+\mathbb Z$ jest zerowana przez $p^k$,
+więc jest torsyjna. Klasy $1/p^k+\mathbb Z$ mają kolejno
+rzędy $p^k$, zatem są różne i grupa jest nieskończona.
+Dla $n>0$ i klasy $a/p^k+\mathbb Z$ możemy rozwiązać
+$nx=a/p^k+\mathbb Z$ wewnątrz tej grupy.
+Zapiszmy $n=p^s m$, gdzie $\gcd(m,p)=1$.
+Wybierzmy całkowite $u$ z $um\equiv a\pmod{p^{k+s}}$.
+Wtedy $x=u/p^{k+s}+\mathbb Z$ spełnia
+$n x=p^s m u/p^{k+s}+\mathbb Z
+= m u/p^k+\mathbb Z=a/p^k+\mathbb Z$.
+Istnienie $u$ wynika z tożsamości Bézouta.
+Dla każdego $k\ge1$ zbiór klas $a/p^k+\mathbb Z$, gdzie
+$a\in\mathbb Z$, jest podgrupą cykliczną rzędu $p^k$,
+generowaną przez $1/p^k+\mathbb Z$: dwie takie klasy
+są równe dokładnie wtedy, gdy ich liczniki są przystające
+modulo $p^k$. Każdy element $C_{p^\infty}$ należy do jednej
+z tych podgrup, a podgrupa dla $k$ zawiera się w podgrupie
+dla $k+1$, gdyż $a/p^k=pa/p^{k+1}$.
+Zawieranie jest ścisłe: $1/p^{k+1}+\mathbb Z$ ma rząd $p^{k+1}$,
+natomiast każdy element $H_k$ jest zerowany przez $p^k$.
+Dla $x\in\mathbb Q/\mathbb Z$ warunek $p^k x=0$ oznacza,
+że istnieje reprezentant wymierny $q$ klasy $x$ taki, że
+$p^kq\in\mathbb Z$. Wobec tego $q=a/p^k$ dla pewnego
+$a\in\mathbb Z$, co dowodzi równości
+$(\mathbb Q/\mathbb Z)[p^\infty]=C_{p^\infty}$.
+Ostatni izomorfizm wynika teraz z
+Twierdzenia~\ref{aa:tw:torsion-primary} zastosowanego
+do grupy torsyjnej $\mathbb Q/\mathbb Z$.
+\end{proof}
+
+\begin{przyklad}[Beztorsyjność nie oznacza istnienia bazy nad $\mathbb Z$]
+\label{aa:prz:torsionfree-notfree}
+Grupa addytywna $\mathbb Z[1/2]=\{m/2^k:m\in\mathbb Z,k\ge0\}$
+jest beztorsyjna jako podgrupa $\mathbb Q$.
+Nie jest jednak wolnym $\mathbb Z$-modułem.
+Gdyby była wolna na pewnej bazie, nie mogłaby ona mieć
+dwóch różnych elementów: dla niezerowych liczb wymiernych
+$x=a/b$ oraz $y=c/d$ zachodzi niebanalna relacja całkowita
+$bc\,x-ad\,y=0$. Ponieważ grupa jest niezerowa,
+baza musiałaby składać się z dokładnie jednego elementu
+$x=m/2^k\ne0$.
+Wówczas grupa byłaby cykliczna, generowana przez $x$.
+Jednak element $x/2$ należy do $\mathbb Z[1/2]$, a nie jest
+całkowitą wielokrotnością $x$ (wymagałoby to współczynnika
+$1/2$). Sprzeczność dowodzi, że moduł nie jest wolny.
+W przypadku przestrzeni wektorowych nad ciałem taka różnica
+nie występuje: każda przestrzeń wektorowa ma bazę.
+\end{przyklad}
+
+\section{Iloczyn tensorowy grup abelowych}
+\label{aa:sec:abelian-tensor}
+Trzeba odróżniać trzy różne konstrukcje: iloczyn prosty
+$A\times B$, iloczyn półprosty (zależny od działania grupy
+na grupie) oraz iloczyn tensorowy $A\otimes_{\mathbb Z}B$.
+Iloczyn prosty $A\times B$ składa się z par i ma działanie
+wykonywane na każdej współrzędnej. Iloczyn tensorowy
+$A\otimes_{\mathbb Z}B$ jest grupą abelową zbudowaną
+z generatorów $a\otimes b$ i relacji wyrażających addytywność
+w każdej zmiennej. Jego własność uniwersalna opisuje
+odwzorowania dwuliniowe; nie należy traktować tych dwóch
+konstrukcji jako zamiennych.
+
+\begin{definicja}[Odwzorowanie dwuliniowe grup abelowych]
+\label{aa:def:abelian-bilinear}
+Niech $A,B,C$ będą grupami abelowymi. Odwzorowanie
+$b:A\times B\to C$ jest \emph{dwuliniowe}, jeśli
+$b(a+a',v)=b(a,v)+b(a',v)$ i
+$b(a,v+v')=b(a,v)+b(a,v')$
+dla wszystkich $a,a'\in A$, $v,v'\in B$.
+\end{definicja}
+
+\begin{twierdzenie}[Istnienie i własność uniwersalna iloczynu tensorowego]
+\label{aa:tw:abelian-tensor-universal}
+Dla każdej pary grup abelowych $A,B$ istnieje grupa abelowa
+$A\otimes_{\mathbb Z}B$ i odwzorowanie dwuliniowe
+$\otimes:A\times B\to A\otimes_{\mathbb Z}B$ takie, że
+każde odwzorowanie dwuliniowe $b:A\times B\to C$ do grupy
+abelowej $C$ ma jednoznaczną postać
+$b=\widetilde b\circ\otimes$, gdzie
+$\widetilde b:A\otimes_{\mathbb Z}B\to C$ jest homomorfizmem.
+Para ta jest jednoznaczna z dokładnością do jedynego
+izomorfizmu zgodnego z prostymi tensorami $a\otimes v$.
+\end{twierdzenie}
+\begin{proof}
+Niech $F$ będzie wolną grupą abelową o bazie wszystkich
+symboli $[a,v]$, gdzie $(a,v)\in A\times B$.
+Niech $N\le F$ będzie podgrupą generowaną przez relacje
+\[
+[a+a',v]-[a,v]-[a',v],\qquad
+[a,v+v']-[a,v]-[a,v'].
+\]
+Połóżmy $A\otimes_{\mathbb Z}B=F/N$ i
+$a\otimes v=[a,v]+N$. Obie relacje dokładnie oznaczają
+addytywność w każdej zmiennej. Dla dowolnego dwuliniowego
+$b$ istnieje dokładnie jeden homomorfizm $B_0:F\to C$
+określony na bazie przez $B_0([a,v])=b(a,v)$.
+Równania dwuliniowości pokazują, że $N\subseteq\ker B_0$;
+$B_0$ przechodzi więc na homomorfizm $\widetilde b:F/N\to C$.
+Jego jednoznaczność wynika z generowania ilorazu przez
+proste tensory $a\otimes v$.
+
+Jeśli $(T,t)$ jest drugą parą o tej samej własności,
+obie własności uniwersalne dają jedyne homomorfizmy
+$f:T\to A\otimes_{\mathbb Z}B$ i $g:A\otimes_{\mathbb Z}B\to T$
+spełniające $f\circ t=\otimes$ i $g\circ\otimes=t$.
+Wówczas $(g\circ f)\circ t=t$ oraz
+$(f\circ g)\circ\otimes=\otimes$.
+Jednoznaczność faktoryzacji odpowiednio przez $t$ i przez
+$\otimes$ daje $g\circ f=\mathrm{id}_T$ i
+$f\circ g=\mathrm{id}_{A\otimes_{\mathbb Z}B}$.
+\end{proof}
+
+\begin{twierdzenie}[Iloczyny tensorowe grup cyklicznych]
+\label{aa:tw:abelian-tensor-cyclic}
+Dla grupy abelowej $B$ i liczby całkowitej $m\ge1$ istnieje
+naturalny izomorfizm
+\[
+(\mathbb Z/m\mathbb Z)\otimes_{\mathbb Z} B\cong B/mB.
+\]
+W szczególności dla $m,n\ge1$ zachodzi
+$C_m\otimes_{\mathbb Z}C_n\cong C_{\gcd(m,n)}$,
+a ponadto $\mathbb Z\otimes_{\mathbb Z}B\cong B$.
+\end{twierdzenie}
+\begin{proof}
+Niech $\bar1$ oznacza klasę $1$ modulo $m$.
+Homomorfizm $\phi:B\to C_m\otimes_{\mathbb Z}B$, $b\mapsto\bar1\otimes b$,
+jest surjektywny: dowolny prosty tensor
+$\bar a\otimes b=a(\bar1\otimes b)=\bar1\otimes ab$.
+Ponieważ $m\bar1=0$, mamy
+$\phi(mb)=\bar1\otimes(mb)=m(\bar1\otimes b)=0$.
+Zatem $mB\subseteq\ker\phi$ i powstaje surjekcja
+$\overline\phi:B/mB\to C_m\otimes_{\mathbb Z}B$.
+
+W drugą stronę zdefiniujmy
+$\beta:C_m\times B\to B/mB$ przez
+$\beta(\bar a,b)=ab+mB$.
+Wzór jest poprawny, bo zastąpienie $a$ przez $a+km$
+zmienia wynik o element $km b\in mB$;
+jest też addytywny w obu zmiennych.
+Własność uniwersalna iloczynu tensorowego daje homomorfizm
+$\widetilde\beta:C_m\otimes_{\mathbb Z}B\to B/mB$.
+Na generatorach sprawdzamy
+$\widetilde\beta(\overline\phi(b+mB))=b+mB$
+oraz $\overline\phi(\widetilde\beta(\bar a\otimes b))
+=\bar1\otimes(ab)=\bar a\otimes b$.
+Mapy są wzajemnie odwrotne. Izomorfizm jest naturalny
+względem $B$: dla dowolnego homomorfizmu grup abelowych
+$f:B\to B'$ homomorfizmy indukowane na ilorazach oraz
+iloczynach tensorowych spełniają
+$\overline f(b+mB)=f(b)+mB'$ i
+$(\mathrm{id}_{C_m}\otimes f)(\bar1\otimes b)=\bar1\otimes f(b)$.
+Przez konstrukcję $\overline\phi$ obie drogi od
+$B/mB$ do $C_m\otimes_{\mathbb Z}B'$ mają więc tę samą
+wartość na każdej klasie $b+mB$.
+
+Dla $B=C_n$ podgrupa $mC_n$ ma indeks $\gcd(m,n)$:
+obraz mnożenia przez $m$ w $C_n$ ma rząd
+$n/\gcd(m,n)$, gdyż jądro ma $\gcd(m,n)$ elementów.
+Iloraz jest cykliczny odpowiedniego rzędu, stąd wzór.
+Dla $\mathbb Z\otimes_{\mathbb Z}B$ analogiczne pary map są dane przez
+$n\otimes b\mapsto nb$ oraz $b\mapsto1\otimes b$.
+\end{proof}
+
+\begin{przyklad}[Iloczyn tensorowy nie jest iloczynem prostym]
+\label{aa:prz:abelian-tensor-contrasts}
+Mamy $C_2\otimes_{\mathbb Z}C_3=0$, choć oba czynniki
+są niezerowe, zaś $C_2\times C_3\cong C_6$.
+Natomiast $C_4\otimes_{\mathbb Z}C_6\cong C_2$,
+bo $\gcd(4,6)=2$.
+W przeciwieństwie do iloczynu prostego, iloczyn tensorowy
+może więc być grupą trywialną nawet wtedy, gdy oba czynniki
+są nietrywialne. Jest to zasadnicza różnica między tymi
+dwoma rodzajami iloczynów.
+Ogólną konstrukcję $M\otimes_R N$ dla modułów nad
+pierścieniem $R$, a także jej dokładność i związki
+z funktorami $\operatorname{Tor}$, opracujemy w części
+poświęconej modułom.
+\end{przyklad}
+
+\setlength{\parskip}{4pt}

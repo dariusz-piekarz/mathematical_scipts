@@ -1,0 +1,484 @@
+\chapter{Pierwsze twierdzenie Gödla o niezupełności}\label{ch:first-incompleteness}
+
+\section{Dlaczego mechaniczne wyliczanie dowodów nie wystarcza?}
+W rozdziałach~\ref{ch:arithmetization}--\ref{ch:representability-diagonal}
+zakodowaliśmy dowody jako liczby naturalne, a potem skonstruowaliśmy
+formułę arytmetyczną mówiącą, że pewna liczba jest kodem poprawnego
+dowodu. Pozwala nam to zadać bardzo szczególne pytanie: czy teoria
+potrafi udowodnić zdanie, które po zakodowaniu głosi o sobie, że
+\emph{nie ma dowodu w tej teorii}?
+
+Musimy precyzyjnie odróżniać trzy kwestie. Zdanie może być
+prawdziwe w standardowym zbiorze liczb naturalnych; może mieć
+dowód w wybranej teorii; i może być prawdziwe w jakimś
+\emph{niestandardowym} modelu tej teorii. W tym rozdziale tych
+pojęć nie utożsamiamy.
+
+\begin{definicja}[Niesprzeczność i zupełność teorii]\label{def:incomp-properties}
+Niech $T$ będzie teorią pierwszego rzędu o ustalonym klasycznym
+rachunku dowodowym. Teorię $T$ nazywamy \emph{niesprzeczną},
+jeśli nie istnieje zdanie $\sigma$ takie, że
+$T\vdash\sigma$ oraz $T\vdash\neg\sigma$.
+Nazywamy ją \emph{zupełną}, jeśli dla każdego zdania $\sigma$
+jej języka zachodzi $T\vdash\sigma$ lub $T\vdash\neg\sigma$.
+Zdanie, dla którego nie zachodzi żadna z tych dowodliwości,
+nazywamy \emph{nierozstrzygalnym w $T$}.
+\end{definicja}
+
+\begin{uwaga}[Niezupełność a sprzeczność]
+Teoria sprzeczna w klasycznym rachunku dowodzi każdego zdania,
+a więc jest zupełna w powyższym znaczeniu, lecz nie interesuje
+nas taka „zupełność”. Pierwsze twierdzenie Gödla dotyczy
+\emph{niesprzecznych} teorii o efektywnie wyliczalnych aksjomatach.
+Na przykład pełna teoria ustalonego skończonego grafu jest
+zupełna i niesprzeczna; potrzebna jest odpowiednia siła arytmetyczna.
+\end{uwaga}
+
+\begin{definicja}[$\omega$-niesprzeczność]\label{def:omega-consistency-incomp}
+Niech $T$ będzie teorią w języku pierwszego rzędu
+zawierającym język arytmetyki $\mathcal L_{\mathrm{ar}}$.
+Teoria $T$ jest \emph{$\omega$-niesprzeczna},
+jeżeli nie istnieje formuła $\theta(x)$ jej języka,
+której jedyną zmienną wolną jest $x$, taka, że jednocześnie
+\[
+ T\vdash\exists x\,\theta(x)
+ \quad\text{oraz}\quad
+ (\forall n\in\N)\;T\vdash\neg\theta(\overline n).
+\]
+To znaczy: teoria nie może udowodnić, że istnieje
+świadek pewnej własności, oraz osobno wykluczyć
+\emph{każdego konkretnego} numerału jako świadka.
+\end{definicja}
+
+\begin{lemat}[$\omega$-niesprzeczność implikuje niesprzeczność]
+Każda $\omega$-niesprzeczna teoria arytmetyczna jest niesprzeczna.
+\end{lemat}
+\begin{proof}
+Gdyby $T$ była sprzeczna, dowodziłaby dowolnego zdania
+oraz jego negacji. Biorąc $\theta(x):=(x=x)$, otrzymalibyśmy
+$T\vdash\exists x\,(x=x)$ i dla każdego $n\in\N$
+$T\vdash\neg(\overline n=\overline n)$. Jest to dokładnie
+sytuacja wykluczona w Definicji~\ref{def:omega-consistency-incomp}.
+\end{proof}
+
+\section{Jak formuła mówi o dowodach?}
+Przypomnijmy konstrukcję z Lematu~\ref{res:7:7}.
+Jeżeli aksjomaty teorii $T$ w efektywnie kodowanym języku
+można algorytmicznie wyliczać (bez zakładania rozstrzygalności
+samego zbioru aksjomatów), przyjmujemy kod pełnego dowodu $p$,
+zawierający również certyfikaty pochodzenia jego aksjomatów. Wtedy
+$\operatorname{Prf}_T(p,x)$ jest formułą arytmetyczną
+$\Delta_0$, która w strukturze standardowej opisuje
+weryfikację dowodu o kodzie $p$ i ostatnim zdaniu o kodzie $x$.
+Definiujemy
+\[
+\operatorname{Bew}_T(x):=\exists p\,\operatorname{Prf}_T(p,x).
+\]
+Przez $g=\ulcorner G\urcorner$ oznaczamy \emph{liczbę}
+kodującą zdanie $G$, a przez $\overline g$ jej \emph{numerał},
+czyli term języka arytmetyki. W zapisie formuły $\operatorname{Bew}_T(\overline g)$
+występuje zatem numerał, a nie liczba metateoretyczna $g$.
+Podobnie w zamkniętych instancjach $\operatorname{Prf}_T$
+kody dowodu i zdania zastępujemy ich numerałami
+$\overline p$ i $\overline g$; w formułach otwartych
+pozostają odpowiednie zmienne.
+
+\begin{lemat}[Dwie podstawowe własności predykatu dowodu]\label{lem:incomp-proof-check}
+Niech $T\supseteq Q$ będzie teorią o efektywnie wyliczalnych
+aksjomatach i $g\in\N$ liczbą kodującą zdanie.
+\begin{enumerate}[label=(\roman*)]
+\item Jeśli $p\in\N$ rzeczywiście koduje pełny dowód zdania
+o kodzie $g$, to $Q\vdash\operatorname{Prf}_T(\overline p,\overline g)$.
+\item Jeśli $p\in\N$ nie jest takim kodem, to
+$Q\vdash\neg\operatorname{Prf}_T(\overline p,\overline g)$.
+\end{enumerate}
+W pierwszym przypadku ponadto $T\vdash\operatorname{Bew}_T(\overline g)$.
+\end{lemat}
+\begin{proof}
+Formuła $\operatorname{Prf}_T$ jest $\Delta_0$,
+a jej prawdziwość w $\mathfrak N$ jest równoważna
+rzeczywistemu przejściu algorytmicznej weryfikacji.
+Lemat~\ref{res:4:7} mówi, że $Q$ dowodzi każdej prawdziwej
+instancji zamkniętej formuły $\Delta_0$ i zaprzeczenia
+każdej fałszywej. To dowodzi (i) i (ii).
+W sytuacji (i) wprowadzamy kwantyfikator egzystencjalny,
+otrzymując $Q\vdash\exists u\,\operatorname{Prf}_T(u,\overline g)$.
+Każdy dowód w $Q$ jest również dowodem w $T$, ponieważ
+$T$ zawiera aksjomaty $Q$.
+\end{proof}
+
+\begin{przyklad}[Co dokładnie daje gotowy dowód?]
+Rozważmy zdanie $\sigma:=(0=0)$. Z aksjomatu zwrotności
+równości istnieje jego skończony dowód w $Q$, a więc także
+w dowolnej teorii $T\supseteq Q$. Wybierzmy rzeczywisty
+pełny kod $p$ tego dowodu, zawierający certyfikaty
+pochodzenia aksjomatów, i połóżmy
+$g=\ulcorner\sigma\urcorner$. Weryfikator akceptuje parę
+$(p,g)$, zatem Lemat~\ref{lem:incomp-proof-check} daje
+$Q\vdash\operatorname{Prf}_T(\overline p,\overline g)$.
+Dopiero po wprowadzeniu kwantyfikatora egzystencjalnego
+i użyciu $T\supseteq Q$ otrzymujemy
+$T\vdash\operatorname{Bew}_T(\overline g)$.
+Nie wynika stąd, że każdy kod oznacza poprawny dowód:
+formalnie potwierdziliśmy \emph{jeden} konkretny dowód.
+\end{przyklad}
+
+\section{Zdanie Gödla}
+\begin{twierdzenie}[Pierwsze twierdzenie Gödla --- postać pierwotna]\label{thm:godel-first-original}
+Niech $T$ będzie efektywnie aksjomatyzowalną teorią
+klasycznej logiki pierwszego rzędu w efektywnie kodowanym
+języku zawierającym $\mathcal L_{\mathrm{ar}}$, przy czym
+$T\supseteq Q$.
+Istnieje zdanie arytmetyczne $G_T$ o kodzie
+$g=\ulcorner G_T\urcorner$ takie, że
+\[
+ Q\vdash G_T\leftrightarrow
+  \neg\operatorname{Bew}_T(\overline g).
+\]
+Zdanie to ma następujące własności:
+\begin{enumerate}[label=(\alph*)]
+\item jeśli $T$ jest niesprzeczna, to $T\nvdash G_T$;
+\item jeśli $T$ jest $\omega$-niesprzeczna, to $T\nvdash\neg G_T$.
+\end{enumerate}
+W szczególności $\omega$-niesprzeczna teoria o podanych
+własnościach jest niezupełna.
+\end{twierdzenie}
+\begin{proof}
+Lemat diagonalny (Lemat~\ref{res:8:1}) stosujemy do
+formuły $\psi(x):=\neg\operatorname{Bew}_T(x)$.
+Otrzymujemy zdanie $G_T$ i dowodliwą w $Q$
+równoważność z tezy. Oznaczmy $g=\ulcorner G_T\urcorner$.
+
+\emph{Punkt (a).} Przypuśćmy, że $T\vdash G_T$.
+Istnieje wtedy rzeczywisty, skończony dowód tego zdania,
+więc możemy w metateorii wskazać jego kod $p\in\N$.
+Na mocy Lematu~\ref{lem:incomp-proof-check}
+$T\vdash\operatorname{Bew}_T(\overline g)$.
+Z drugiej strony $T$ zawiera $Q$ i dowodzi $G_T$;
+stosując eliminację równoważności, otrzymujemy
+$T\vdash\neg\operatorname{Bew}_T(\overline g)$.
+Są to dwa przeciwne zdania, więc $T$ byłaby sprzeczna.
+Otrzymaliśmy sprzeczność z założeniem.
+
+\emph{Punkt (b).} Zakładamy teraz $\omega$-niesprzeczność.
+Z Lematu poprzedniego wynika niesprzeczność, a punkt (a)
+daje $T\nvdash G_T$. Zatem \emph{żadna} standardowa
+liczba $p\in\N$ nie koduje dowodu $G_T$.
+Dla każdego ustalonego $p$ stosujemy część (ii) Lematu
+\ref{lem:incomp-proof-check}, uzyskując oddzielny dowód
+\[
+T\vdash\neg\operatorname{Prf}_T(\overline p,\overline g).
+\]
+Gdyby jednak $T\vdash\neg G_T$, to z dowodliwej
+równoważności dla $G_T$ i klasycznej eliminacji podwójnej
+negacji wynikałoby
+$T\vdash\operatorname{Bew}_T(\overline g)$, czyli
+\[
+T\vdash\exists u\,\operatorname{Prf}_T(u,\overline g).
+\]
+To przeczy $\omega$-niesprzeczności: teoria dowodziłaby
+istnienia pewnego $u$ z daną własnością, a jednocześnie
+wykluczałaby każdy standardowy numerał jako świadka.
+Wniosek o niezupełności jest natychmiastowy z definicji.
+\end{proof}
+
+\begin{uwaga}[Czy $G_T$ jest prawdziwe?]\label{rem:godel-true}
+Jeśli $T$ jest niesprzeczna, punkt (a) pokazuje, że
+$G_T$ nie ma żadnego rzeczywistego dowodu w $T$.
+Dlatego w modelu standardowym $\mathfrak N$ zdanie
+$\operatorname{Bew}_T(\overline g)$ jest fałszywe.
+Ponieważ $\mathfrak N\models Q$, obowiązuje też w nim
+dowodliwa równoważność dla $G_T$, a więc
+$\mathfrak N\models G_T$.
+Nie założyliśmy tutaj, że wszystkie aksjomaty $T$ są
+prawdziwe w $\mathfrak N$: wystarczy niesprzeczność,
+aby ustalić prawdziwość \emph{tego konkretnego} zdania.
+\end{uwaga}
+
+\begin{przyklad}[Dlaczego nie wystarcza seria osobnych sprawdzeń?]
+Dla każdej liczby $p$ możemy po skończonym obliczeniu
+sprawdzić, czy jest kodem dowodu $G_T$.
+Z niesprzeczności wynika, że każdy taki test daje
+odpowiedź przeczącą. Są to jednak wyniki dla
+$0,1,2,\ldots$ rozpatrywanych oddzielnie.
+Nie wolno stąd bez dodatkowego dowodu wnioskować,
+że $T\vdash\forall p\,\neg\operatorname{Prf}_T(p,\overline g)$.
+Właśnie ta luka między \emph{wszystkimi konkretnymi testami}
+a \emph{jednym zdaniem ogólnym} tłumaczy, dlaczego
+punkt (b) wymaga silniejszego założenia.
+\end{przyklad}
+
+\section{Rosser: jak osłabić założenie do zwykłej niesprzeczności?}
+Idea polega na porównaniu \emph{dwóch} rodzajów dowodów:
+dowodów rozważanego zdania i dowodów jego negacji.
+Rosser nie pyta wyłącznie, czy istnieje dowód zdania.
+Pyta, czy istnieje dowód tego zdania bez żadnego
+\emph{wcześniejszego pod względem kodu} dowodu negacji.
+
+\begin{definicja}[Relacja Rossera]\label{def:rosser-predicate}
+Niech $T\supseteq Q$ będzie efektywnie aksjomatyzowalną
+teorią w efektywnie kodowanym języku zawierającym
+$\mathcal L_{\mathrm{ar}}$.
+Funkcja $\operatorname{neg}(n)$, zwracająca kod negacji
+formuły o kodzie $n$ (a na niepoprawnych kodach ustaloną
+wartość zastępczą), jest pierwotnie rekurencyjna.
+Wybierzmy formułę $N(x,z)$ \emph{silnie reprezentującą}
+tę funkcję w $Q$ w sensie Definicji~\ref{res:7:2}.
+Definiujemy formułę
+\[
+\operatorname{RosPr}_T(x):=
+\exists z\,\exists p\,
+\left(N(x,z)\land\operatorname{Prf}_T(p,x)
+\land\forall q<p\,\neg\operatorname{Prf}_T(q,z)\right).
+\]
+Kwantyfikator $\forall q<p$ jest ograniczony:
+przebiega tylko po liczbach mniejszych od $p$.
+\end{definicja}
+
+\begin{uwaga}[Co daje reprezentacja negacji?]
+Jeśli $r$ jest rzeczywistym kodem zdania $R$,
+a $r^-:=\operatorname{neg}(r)=\ulcorner\neg R\urcorner$,
+to $Q$ dowodzi
+$\forall z\,(N(\overline r,z)\leftrightarrow z=\overline{r^-})$.
+Dlatego instancja $\operatorname{RosPr}_T(\overline r)$
+jest w $Q$ równoważna formułce
+\[
+\exists p\,\bigl(\operatorname{Prf}_T(p,\overline r)
+\land\forall q<p\,\neg\operatorname{Prf}_T(q,\overline{r^-})\bigr).
+\]
+Jest to równoważność dowodliwa w $Q$, nie tylko
+równoważność zachodząca w modelu standardowym:
+silna reprezentowalność daje dla ustalonego $r$
+zarówno istnienie właściwego $z$, jak i wykluczenie
+wszystkich innych wartości $z$. Symbol
+$\operatorname{neg}$ pozostaje wyłącznie w metajęzyku.
+\end{uwaga}
+
+\begin{twierdzenie}[Wzmocnienie Rossera]\label{thm:rosser-first}
+Niech $T\supseteq Q$ będzie efektywnie aksjomatyzowalną,
+niesprzeczną teorią klasycznej logiki pierwszego rzędu
+w efektywnie kodowanym języku zawierającym
+$\mathcal L_{\mathrm{ar}}$.
+Istnieje zdanie arytmetyczne $R_T$ takie, że
+$T\nvdash R_T$ i $T\nvdash\neg R_T$.
+Do tego wniosku nie jest potrzebna $\omega$-niesprzeczność.
+\end{twierdzenie}
+\begin{proof}
+Stosujemy Lemat~\ref{res:8:1} do
+$\neg\operatorname{RosPr}_T(x)$.
+Otrzymujemy zdanie $R_T$ z
+$Q\vdash R_T\leftrightarrow\neg\operatorname{RosPr}_T(\overline r)$,
+gdzie $r=\ulcorner R_T\urcorner$; niech
+$r^-=\ulcorner\neg R_T\urcorner$.
+Z poprzedniej uwagi dostajemy dowodliwą w $Q$
+równoważność
+\begin{equation}\label{eq:rosser-instance}
+R_T\leftrightarrow\neg\exists p\,
+\left(\operatorname{Prf}_T(p,\overline r)\land
+ \forall q<p\,\neg\operatorname{Prf}_T(q,\overline{r^-})\right).
+\end{equation}
+
+\emph{Pierwsza możliwość:} przypuśćmy $T\vdash R_T$.
+Niech $a$ koduje rzeczywisty dowód $R_T$.
+Z niesprzeczności wynika $T\nvdash\neg R_T$,
+więc żaden kod $q<a$ nie koduje dowodu $\neg R_T$.
+Dla każdego z \emph{faktycznie skończenie wielu} $q<a$
+Lemat~\ref{lem:incomp-proof-check} daje
+$Q\vdash\neg\operatorname{Prf}_T(\overline q,\overline{r^-})$.
+Na mocy Lematu~\ref{res:4:4}, stosowanego do ustalonego
+standardowego $a$, mamy w $Q$ równoważność
+$q<\overline a$ ze skończoną alternatywą
+$q=\overline0\lor\cdots\lor q=\overline{a-1}$.
+W każdej jej gałęzi zastępujemy $q$ odpowiednim numerałem
+i korzystamy z jednej z uzyskanych negacji
+$\operatorname{Prf}_T(\overline q,\overline{r^-})$.
+Generalizacja po $q$ daje
+$Q\vdash\forall q<\overline a\,\neg\operatorname{Prf}_T(q,\overline{r^-})$.
+Gdy $a=0$, alternatywa jest pusta, a wynik pochodzi
+z $Q\vdash\forall q\,\neg(q<\overline0)$.
+Ponadto $Q\vdash\operatorname{Prf}_T(\overline a,\overline r)$.
+Silna reprezentowalność funkcji $\operatorname{neg}$ daje
+$Q\vdash N(\overline r,\overline{r^-})$.
+Wstawiając do definicji Rossera świadków
+$z=\overline{r^-}$ i $p=\overline a$, otrzymujemy
+$Q\vdash\operatorname{RosPr}_T(\overline r)$.
+Równoważność~\eqref{eq:rosser-instance} wraz z
+$T\vdash R_T$ daje zarazem
+$T\vdash\neg\operatorname{RosPr}_T(\overline r)$.
+Teoria byłaby sprzeczna, zatem $T\nvdash R_T$.
+
+\emph{Druga możliwość:} przypuśćmy $T\vdash\neg R_T$.
+Niech $b$ koduje rzeczywisty dowód $\neg R_T$.
+Pierwszy przypadek wykazał $T\nvdash R_T$,
+więc żaden kod $p$ nie koduje dowodu $R_T$.
+W szczególności dla każdej standardowej liczby $p\le b$
+teoria $Q$ rozstrzyga negatywnie konkretny test
+$\operatorname{Prf}_T(\overline p,\overline r)$.
+Ponieważ $p\le\overline b$ jest skrótem
+$p<\overline b\lor p=\overline b$, Lemat~\ref{res:4:4}
+rozwija tę przesłankę w $Q$ na skończoną alternatywę
+$p=\overline0\lor\cdots\lor p=\overline b$.
+Każdy jej składnik daje jeden z wcześniej
+udowodnionych przypadków negatywnych. Po generalizacji:
+\[
+Q\vdash\forall p\le\overline b\,
+\neg\operatorname{Prf}_T(p,\overline r).
+\]
+Rzeczywisty dowód negacji o kodzie $b$ daje natomiast,
+na mocy Lematu~\ref{lem:incomp-proof-check},
+$Q\vdash\operatorname{Prf}_T(\overline b,\overline{r^-})$.
+
+Teraz dowodzimy w $Q$ negacji całego warunku
+pod kwantyfikatorem egzystencjalnym w~\eqref{eq:rosser-instance}.
+Niech $p$ będzie dowolne. Z Lematu~\ref{res:4:4}
+wynika rozbicie na dwie sytuacje
+$p\le\overline b$ albo $\overline b<p$.
+W pierwszej sytuacji przeczy mu pierwszy czynnik:
+$\neg\operatorname{Prf}_T(p,\overline r)$.
+W drugiej mamy konkretnego świadka $q=\overline b$
+dla zaprzeczenia drugiego czynnika, gdyż
+$q<p$ i $\operatorname{Prf}_T(q,\overline{r^-})$.
+Formalnie dla dowolnego $p$ w $Q$ otrzymujemy
+\[
+\operatorname{Prf}_T(p,\overline r)
+\longrightarrow
+\exists q<p\,\operatorname{Prf}_T(q,\overline{r^-}).
+\]
+W pierwszej gałęzi poprzednik jest fałszywy; w drugiej
+świadkiem następnika jest $q=\overline b$. Zatem $Q$ dowodzi
+negacji koniunkcji
+$\operatorname{Prf}_T(p,\overline r)\land
+\forall q<p\,\neg\operatorname{Prf}_T(q,\overline{r^-})$
+dla każdego $p$. Po generalizacji i zanegowaniu kwantyfikatora
+istnienia dostajemy
+\[
+Q\vdash\neg\exists p\,\bigl(
+\operatorname{Prf}_T(p,\overline r)\land
+\forall q<p\,\neg\operatorname{Prf}_T(q,\overline{r^-})\bigr).
+\]
+Dopiero teraz, korzystając z dowodliwej w $Q$ eliminacji
+zmiennej $z$ za pomocą formuły $N$ (poprzednia uwaga),
+otrzymujemy $Q\vdash\neg\operatorname{RosPr}_T(\overline r)$.
+Stosując~\eqref{eq:rosser-instance}, uzyskujemy
+$Q\vdash R_T$, a więc $T\vdash R_T$.
+Jest to sprzeczne z $T\vdash\neg R_T$ i niesprzecznością.
+Zatem $T\nvdash\neg R_T$.
+\end{proof}
+
+\begin{uwaga}[Dlaczego dowód Rossera jest mocniejszy?]
+W dowodzie z pierwszej części użyliśmy jedynie \emph{skończenie wielu}
+ujemnych testów dla $q<a$. W drugiej części wystarczyła
+skończona kontrola $p\le b$ oraz \emph{jeden} rzeczywisty dowód
+negacji o kodzie $b$, który obala pozostałe kandydatury.
+Nie potrzebowaliśmy twierdzenia $T\vdash\forall p\,\neg\operatorname{Prf}_T(p,\overline r)$
+ani $\omega$-niesprzeczności. Samo zdanie Rossera nie musi
+mieć tak prostej interpretacji słownej jak zdanie Gödla.
+\end{uwaga}
+
+\section{Dwie konsekwencje obliczeniowe}
+\begin{wniosek}[Zbiór zdań prawdziwych nie jest efektywnie wyliczalny]
+Zbiór kodów wszystkich zdań języka arytmetyki prawdziwych
+w standardowej strukturze $\mathfrak N$ nie jest rekurencyjnie przeliczalny.
+\end{wniosek}
+\begin{proof}
+Gdyby kody prawdziwych zdań można było efektywnie wyliczać,
+przyjęlibyśmy te zdania jako aksjomaty teorii $T$.
+Byłaby to efektywnie aksjomatyzowalna teoria w ustalonym,
+efektywnie kodowanym języku arytmetyki.
+Struktura $\mathfrak N$ byłaby modelem $T$, zatem $T$
+byłaby niesprzeczna. Ponadto dla każdego zdania $\sigma$
+jedno ze zdań $\sigma,\neg\sigma$ jest prawdziwe w $\mathfrak N$,
+więc należałoby do aksjomatów: teoria byłaby zupełna.
+Ponieważ wszystkie aksjomaty $Q$ są prawdziwe w $\mathfrak N$,
+$T$ zawierałaby $Q$. Przeczyłoby to Twierdzeniu~\ref{thm:rosser-first}.
+\end{proof}
+
+\begin{wniosek}[Zbiór zdań dowodliwych jest nierozstrzygalny]\label{cor:undecidability-theorems}
+Dla każdej niesprzecznej i efektywnie aksjomatyzowalnej
+teorii $T\supseteq Q$ zbiór kodów jej twierdzeń nie jest rozstrzygalny.
+\end{wniosek}
+\begin{proof}
+Przypuśćmy, że istnieje algorytm rozstrzygający,
+czy dane zdanie $\sigma$ jest dowodliwe w $T$.
+Ponieważ język $T$ jest efektywnie kodowany,
+algorytmicznie rozpoznajemy poprawne kody zdań.
+Definiujemy zatem totalną relację rekurencyjną $D(n)$:
+ma ona wartość prawdziwą dokładnie wtedy, gdy $n$
+jest kodem zdania dowodliwego w $T$; dla kodów
+niepoprawnych jest fałszywa.
+Z Twierdzenia~\ref{res:7:6} istnieje formuła arytmetyczna
+$\rho_D(x)$, dla której $Q$ dowodzi
+$\rho_D(\overline n)$, gdy $D(n)$ zachodzi, oraz
+$\neg\rho_D(\overline n)$, gdy $D(n)$ nie zachodzi.
+Użycie twierdzenia jest uprawnione właśnie dlatego,
+że $D$ jest totalna i rozstrzygalna.
+Lemat diagonalny daje zdanie $H$ takie, że
+\[
+Q\vdash H\leftrightarrow\neg\rho_D(\overline h),
+\qquad h=\ulcorner H\urcorner.
+\]
+Jeśli $T\vdash H$, to $D(h)$ zachodzi, więc
+$Q\vdash\rho_D(\overline h)$, a z
+$T\vdash H$ i dowodliwej równoważności wynika
+$T\vdash\neg\rho_D(\overline h)$. Niesprzeczność
+$T\supseteq Q$ wyklucza tę możliwość.
+Jeśli natomiast $T\nvdash H$, to $D(h)$ nie zachodzi,
+więc $Q\vdash\neg\rho_D(\overline h)$.
+Z równoważności $Q\vdash H\leftrightarrow
+\neg\rho_D(\overline h)$ wnioskujemy
+$T\vdash H$, wbrew założeniu. Obie możliwości
+prowadzą do sprzeczności.
+\end{proof}
+
+\begin{uwaga}[Czego nie dowiedliśmy]
+Pierwsze twierdzenie nie twierdzi, że \emph{każde}
+zdanie nierozstrzygalne w $T$ jest prawdziwe w $\mathfrak N$,
+ani że istnieje algorytm rozpoznający prawdę zdań.
+Nie wyprowadza też jeszcze tego, że $T$ nie potrafi
+udowodnić własnej niesprzeczności: to osobne twierdzenie,
+do którego potrzebujemy dodatkowej analizy predykatu dowodliwości.
+\end{uwaga}
+
+
+\section{Porządek kodów dowodów w argumencie Rossera}
+W formule Rossera ograniczenie $q<p$ dotyczy \emph{kodów dowodów},
+a nie długości zdań ani numerów formuł. Przy ustalonym standardowym
+$p$ relacja $q<p$ obejmuje skończenie wiele liczb standardowych;
+$Q$ potrafi rozstrzygnąć każdą z odpowiednich instancji
+predykatu dowodu dzięki jego reprezentacji $\Delta_0$
+(Lemat~\ref{lem:incomp-proof-check}). Nie wolno natomiast wyciągać z tego
+wniosku, że $Q$ dowodzi ogólnego zdania o wszystkich kodach.
+W szczególności przejście od metamatematycznego braku dowodu do
+wewnętrznego zdania o braku dowodów wymaga osobnego argumentu;
+w dowodzie Rossera używa się konkretnych świadków i skończonych
+ograniczeń, nie zaś zasady refleksji $\Box\varphi\to\varphi$.
+
+\section{Co naprawdę znaczy niezależność zdania?}
+\begin{uwaga}[Prawdziwość, niedowodliwość i rozstrzygnięcie przez nowy aksjomat]
+Niech $T$ będzie niesprzeczną teorią, a $\rho$ zdaniem niezależnym od $T$,
+czyli $T\nvdash\rho$ oraz $T\nvdash\neg\rho$.
+Nie oznacza to, że zdanie $\rho$ jest fałszywe, ani że nie ma żadnego modelu,
+w którym zachodzi. Przeciwnie, przez twierdzenie Gödla o pełności
+(tego nie mylić z jego twierdzeniem o niezupełności)
+teorie $T+\rho$ i $T+\neg\rho$ mają modele:
+gdyby pierwsza była sprzeczna, to z twierdzenia o dedukcji
+uzyskalibyśmy $T\vdash\neg\rho$; analogicznie dla drugiej
+(w drugim przypadku stosujemy także klasyczną negację podwójną).
+
+Możemy dołączyć $\rho$ jako nowy aksjomat i wtedy rozstrzygniemy ten jeden przypadek.
+Jednak każde niesprzeczne efektywnie aksjomatyzowalne rozszerzenie $Q$
+pozostaje niezupełne, więc znajdzie się inne zdanie niezależne.
+Nawet nieskończone efektywne dokładanie aksjomatów nie omija tego ograniczenia,
+jeżeli ostateczna teoria wciąż jest niesprzeczna i zawiera $Q$.
+Zbiór wszystkich prawdziwych zdań standardowej arytmetyki
+jest wprawdzie zupełny, lecz nie jest efektywnie aksjomatyzowalny.
+\end{uwaga}
+
+\begin{przyklad}[Dwa różne modele tej samej teorii]
+Jeżeli $T$ nie rozstrzyga $\rho$, istnieje model $\mathfrak A\models T+\rho$
+i model $\mathfrak B\models T+\neg\rho$.
+Modele te nie są izomorficzne, ponieważ zdania pierwszego rzędu
+mają tę samą wartość w strukturach izomorficznych.
+To nie oznacza sprzeczności w $T$: teoria nie określiła,
+która z dwóch sytuacji musi występować w każdym jej modelu.
+\end{przyklad}

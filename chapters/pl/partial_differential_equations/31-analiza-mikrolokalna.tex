@@ -1,0 +1,2337 @@
+\chapter[Analiza mikrolokalna]{Analiza mikrolokalna: zbiór falowy, symbole i operatory pseudoróżniczkowe}
+\label{chap:pde31}
+
+\section{Motywacja i konwencja transformaty Fouriera}
+Nośnik osobliwy dystrybucji mówi, \emph{gdzie} dystrybucja
+nie jest lokalnie reprezentowana przez funkcję gładką.
+Nie mówi jednak, w \emph{jakich kierunkach} transformata
+Fouriera lokalizacji dystrybucji nie maleje szybciej
+niż dowolna odwrotna potęga częstotliwości.
+Tę brakującą informację koduje \emph{zbiór falowy}
+(ang. \emph{wavefront set}). Sam brak szybkiego zaniku
+nie oznacza braku zbieżności transformaty do zera;
+przykładem będzie funkcja Heaviside'a.
+W analizie mikrolokalnej badamy pary $(x,\xi)$,
+gdzie $\xi\ne0$ jest kowektorem w punkcie $x$.
+Para należy do zbioru falowego, jeżeli żadna lokalizacja
+równa $1$ blisko $x$ nie daje szybkiego zaniku
+transformaty Fouriera w żadnym otwartym stożku
+wokół $\xi$.
+
+W tym rozdziale $d\ge1$, a $U\subset\R^d$ jest otwarty. Dla
+$h\in\mathcal S(\R^d)$ ustalamy normalizację
+\begin{equation}\label{eq:pde31-fourier}
+ \widehat h(\xi)=\int_{\R^d}e^{-ix\cdot\xi}h(x)
+ \,\mathrm d\lambda_d(x),\qquad
+ h(x)=(2\pi)^{-d}\int_{\R^d}e^{ix\cdot\xi}\widehat h(\xi)
+ \,\mathrm d\lambda_d(\xi).
+\end{equation}
+Przedłużamy ją na dystrybucje temperowane przez transpozycję,
+zgodnie z definicją w rozdziale~\ref{chap:pde-fourier-Rd}.
+Konwencja jest dokładnie tą z równania~\eqref{eq:pde8-convention};
+nie zmieniamy znaku fazy ani czynników $(2\pi)^{-d}$.
+Przez $\langle\xi\rangle=(1+|\xi|^2)^{1/2}$ oznaczamy standardową
+wagę Sobolewa. \emph{Stożek otwarty} $\Gamma\subset\R^d\setminus\{0\}$
+jest otwarty w $\R^d\setminus\{0\}$ i niezmienniczy
+względem mnożenia przez dodatnie liczby.
+Przez $\mathcal E'(\R^d)$ oznaczamy przestrzeń
+dystrybucji o zwartym nośniku.
+Przez $H^s_{\mathrm{loc}}(U)$ dla $s\in\R$ rozumiemy
+zbiór $u\in\mathcal D'(U)$, dla których
+$\eta u\in H^s(\R^d)$ po przedłużeniu przez zero
+dla każdej $\eta\in C_c^\infty(U)$.
+Dystrybucje mogą być zespolone; stosujemy parowanie
+liniowe względem funkcji testowej, zgodnie z konwencją
+rozdziału~\ref{chap:pde-fourier-Rd}.
+
+\begin{lemat}[Transformata dystrybucji o zwartym nośniku]
+\label{lem:pde31-compact-fourier}
+Niech $T\in\mathcal E'(\R^d)$ i niech
+$\theta\in C_c^\infty(\R^d)$ będzie równa $1$
+w otoczeniu $\operatorname{supp}T$. Wtedy
+$\widehat T$ jest reprezentowana przez funkcję
+\[
+ F_T(\xi)=\langle T(x),\theta(x)e^{-ix\cdot\xi}\rangle.
+\]
+Funkcja ta nie zależy od wyboru $\theta$, jest gładka
+i istnieje $M\in\N_0$ takie, że dla każdego
+wielowskaźnika $\alpha$ istnieje $C_\alpha>0$ z
+\[
+ |\partial_\xi^\alpha F_T(\xi)|\le C_\alpha
+ \langle\xi\rangle^M.
+\]
+\end{lemat}
+\begin{proof}
+Różnica dwóch dopuszczalnych funkcji $\theta$
+znika w otoczeniu nośnika $T$, więc nie zmienia
+wartości parowania. Z oszacowania lokalnego rzędu
+dystrybucji (Twierdzenie~\ref{thm:pde7-local-order})
+istnieją $C,M$ takie, że dla testów o nośniku
+w ustalonym zwartym otoczeniu $\operatorname{supp}\theta$
+wartość $|T(\psi)|$ nie przekracza
+$C\max_{|\beta|\le M}\|\partial^\beta\psi\|_\infty$.
+Stąd również $T$ przedłuża się na $\mathcal S$
+przez $T(\psi)=T(\theta\psi)$, ciągle względem
+półnorm Schwartza.
+Różniczkując funkcję $\theta(x)e^{-ix\cdot\xi}$
+względem $\xi$ w topologii funkcji testowych,
+otrzymujemy
+\[
+ \partial_\xi^\alpha F_T(\xi)
+ =\langle T(x),(-ix)^\alpha\theta(x)e^{-ix\cdot\xi}\rangle.
+\]
+Różniczkowanie jest dopuszczalne: na ustalonym zwartym
+nośniku różnicowe ilorazy i wszystkie ich pochodne
+względem $x$ zbiegają jednostajnie, z rozwinięcia
+Taylora funkcji wykładniczej.
+Reguła Leibniza i ograniczoność $x$ na nośniku
+$\theta$ dają żądane oszacowanie, z tym samym $M$.
+
+Dla $\psi\in\mathcal S$ całka z
+$\theta(x)e^{-ix\cdot\xi}\psi(\xi)$ względem $\xi$
+zbiega w każdej półnormie funkcji testowych
+o ustalonym nośniku: pochodne względem $x$
+są majorowane przez stałą razy
+$\langle\xi\rangle^{|\beta|}|\psi(\xi)|$.
+Można więc przenieść $T$ pod całkę
+(przez obcięcie całki i przybliżenie sumami Riemanna).
+Otrzymujemy
+\[
+ \int_{\R^d}F_T(\xi)\psi(\xi)\,\mathrm d\lambda_d(\xi)
+ =\langle T,\theta\widehat\psi\rangle
+ =\langle T,\widehat\psi\rangle
+ =\langle\widehat T,\psi\rangle.
+\]
+To dowodzi reprezentacji transformaty.
+\end{proof}
+
+\begin{definicja}[Regularność mikrolokalna]\label{def:pde31-wf}
+Niech $u\in\mathcal D'(U)$, $x_0\in U$ i
+$\xi_0\in\R^d\setminus\{0\}$. Mówimy, że
+$(x_0,\xi_0)\notin\operatorname{WF}(u)$, jeżeli istnieją
+$\chi\in C_c^\infty(U)$ z $\chi=1$ w otoczeniu $x_0$
+(iloczyn $\chi u$ przedłużamy przez zero na $\R^d$)
+i otwarty stożek $\Gamma$ zawierający $\xi_0$, takie że dla każdego
+$N\in\N$ istnieje $C_N>0$ spełniająca
+\begin{equation}\label{eq:pde31-wf-decay}
+ |\widehat{\chi u}(\xi)|\le C_N\langle\xi\rangle^{-N}
+ \qquad(\xi\in\Gamma).
+\end{equation}
+Dopełnienie zbioru tak określonych par nazywamy zbiorem falowym $u$.
+Jest to domknięty podzbiór $U\times(\R^d\setminus\{0\})$,
+niezmienniczy względem dodatniego skalowania drugiej współrzędnej.
+\end{definicja}
+Istotnie, jeśli para jest regularna mikrolokalnie,
+to ta sama funkcja $\chi$ i ten sam stożek świadczą
+o regularności wszystkich par z iloczynu otoczenia,
+na którym $\chi=1$, i stożka $\Gamma$.
+Dopełnienie zbioru falowego jest więc otwarte.
+Niezmienniczość wynika bezpośrednio ze stożkowości
+$\Gamma$.
+
+\begin{lemat}[Niezależność od dalszego obcięcia]\label{lem:pde31-cutoff}
+Załóżmy, że $u\in\mathcal D'(U)$, $\chi\in C_c^\infty(U)$,
+$\chi=1$ w otoczeniu $x_0$, i że
+$\widehat{\chi u}$ szybko maleje w stożku $\Gamma$.
+Jeżeli $\eta\in C_c^\infty(U)$ ma nośnik w tym otoczeniu,
+a $\Gamma'$ jest stożkiem, którego domknięcie przecięte ze sferą
+jednostkową leży wewnątrz $\Gamma$, to
+$\widehat{\eta u}$ szybko maleje na $\Gamma'$.
+\end{lemat}
+\begin{proof}
+Połóżmy $T=\chi u$, przedłużone przez zero na $\R^d$.
+Ponieważ $\eta u=\eta T$, mamy
+\[
+ \widehat{\eta u}(\xi)=(2\pi)^{-d}\int_{\R^d}
+ \widehat\eta(\xi-\zeta)\widehat T(\zeta)
+ \,\mathrm d\lambda_d(\zeta).
+\]
+Istotnie, stosując odwrotną transformatę Fouriera
+do $\eta$ i mnożąc przez $e^{-ix\cdot\xi}$,
+otrzymujemy całkę funkcji wykładniczych z wagą
+$\widehat\eta$. Po pomnożeniu przez funkcję
+obcinającą równą $1$ blisko nośnika $T$,
+całka zbiega w półnormach funkcji testowych,
+jak w Lemacie~\ref{lem:pde31-compact-fourier}.
+Możemy więc przenieść $T$ pod całkę i podstawić
+$\zeta=\xi-\omega$, gdzie $\omega$ jest zmienną
+całkowania we wzorze odwrotnym dla $\eta$.
+Całka jest bezwzględnie zbieżna: z tego samego
+lematu mamy $|\widehat T(\zeta)|\le C\langle\zeta\rangle^M$,
+a $\widehat\eta$ należy do $\mathcal S$.
+
+Z założenia o $\Gamma'$ istnieje $0<\delta<1/2$
+takie, że dla $\xi\in\Gamma'$ i
+$|\xi-\zeta|\le\delta|\xi|$ zachodzi $\zeta\in\Gamma$.
+Wynika to z dodatniej odległości zwartego zbioru
+$\overline{\Gamma'}\cap S^{d-1}$ od dopełnienia
+$\Gamma\cap S^{d-1}$ na sferze: jednostkowe
+kierunki $\xi$ i $\zeta$ różnią się o co najwyżej
+$2|\xi-\zeta|/|\xi|\le2\delta$.
+Jeśli dopełnienie na sferze jest puste,
+wystarcza dowolne $0<\delta<1/2$.
+W tym obszarze $|\zeta|\ge(1-\delta)|\xi|$,
+więc dla dowolnego $N\in\N$
+\[
+ \int_{|\xi-\zeta|\le\delta|\xi|}
+ |\widehat\eta(\xi-\zeta)\widehat T(\zeta)|
+ \,\mathrm d\lambda_d(\zeta)
+ \le C_N'\langle\xi\rangle^{-N}\|\widehat\eta\|_1 .
+\]
+W pozostałym obszarze kładziemy $w=\xi-\zeta$.
+Mamy $|w|>\delta|\xi|$, a zatem
+$\langle\xi\rangle\le\delta^{-1}\langle w\rangle$
+oraz $\langle\xi-w\rangle\le(1+\delta^{-1})\langle w\rangle$.
+Z wielomianowego wzrostu $\widehat T$ i szybkiego
+zaniku $\widehat\eta$, wybierając wykładnik
+$L=M+N+d+1$, dostajemy
+\[
+ \begin{aligned}
+ &\int_{|w|>\delta|\xi|}
+ |\widehat\eta(w)\widehat T(\xi-w)|
+ \,\mathrm d\lambda_d(w)\\
+ &\qquad\le C_L\int_{|w|>\delta|\xi|}
+ \langle w\rangle^{-N-d-1}\,\mathrm d\lambda_d(w)\\
+ &\qquad\le C_{L,\delta}\langle\xi\rangle^{-N}
+ \int_{\R^d}\langle w\rangle^{-d-1}\,\mathrm d\lambda_d(w).
+ \end{aligned}
+\]
+Ostatnia całka jest skończona, co widać
+współrzędnymi biegunowymi dla $|w|\ge1$
+i z ograniczoności funkcji na kuli jednostkowej.
+Oba oszacowania dają szybki zanik w $\Gamma'$.
+Zauważmy, że w części dowodu dotyczącej oszacowań
+splotu wykorzystaliśmy tylko wielomianowe ograniczenie
+$\widehat T$ i jego szybki zanik w $\Gamma$.
+Dlatego te same oszacowania obowiązują dla każdej
+mierzalnej funkcji $F$ o tych własnościach,
+także gdy $F$ nie jest transformatą dystrybucji
+o zwartym nośniku.
+\end{proof}
+
+\begin{lemat}[Lokalizacja transformaty o wzroście wielomianowym]
+\label{lem:pde31-polynomial-convolution}
+Niech $F:\R^d\to\C$ będzie mierzalna i niech
+$|F(\xi)|\le C\langle\xi\rangle^M$ dla pewnego $M\ge0$.
+Jeżeli $T=\mathcal F^{-1}F$ w $\mathcal S'$,
+to dla $\eta\in C_c^\infty(\R^d)$ zachodzi
+\[
+ \widehat{\eta T}(\xi)=(2\pi)^{-d}
+ \int_{\R^d}\widehat\eta(\xi-\zeta)F(\zeta)
+ \,\mathrm d\lambda_d(\zeta).
+\]
+\end{lemat}
+\begin{proof}
+Dla $\psi\in\mathcal S$ mamy z definicji
+$\langle\widehat{\eta T},\psi\rangle
+=\langle F,\mathcal F^{-1}(\eta\widehat\psi)\rangle$.
+Ze wzoru odwrotnego Fouriera otrzymujemy
+\[
+ \begin{aligned}
+ \mathcal F^{-1}(\eta\widehat\psi)(\zeta)
+ &= (2\pi)^{-d}\int_{\R^d}
+ e^{ix\cdot\zeta}\eta(x)\widehat\psi(x)
+ \,\mathrm d\lambda_d(x)\\
+ &= (2\pi)^{-d}\int_{\R^d}
+ \widehat\eta(\xi-\zeta)\psi(\xi)\,\mathrm d\lambda_d(\xi).
+ \end{aligned}
+\]
+W drugiej równości podstawiliśmy definicję
+$\widehat\psi(x)$ i zmieniliśmy kolejność całek;
+całka z modułu funkcji podcałkowej jest
+ograniczona przez $\|\eta\|_1\|\psi\|_1$.
+Po podstawieniu do parowania z $F$ stosujemy
+ponownie twierdzenie Fubiniego. Jego założenia
+wynikają z nierówności
+$\langle\zeta\rangle^M\le
+2^{M/2}\langle\xi\rangle^M\langle\xi-\zeta\rangle^M$,
+która daje całkowalną majorantę w zmiennych
+$\xi$ i $\xi-\zeta$ jako iloczyn dwóch funkcji
+szybko malejących pomnożonych przez wagi wielomianowe.
+Otrzymujemy podany splot w sensie dystrybucji.
+W istocie otrzymany splot jest funkcją gładką.
+Dla każdego wielowskaźnika $\alpha$, każdej
+liczby $L\ge0$ oraz $|\xi|\le A$ mamy
+\[
+ \bigl|\partial^\alpha\widehat\eta(\xi-\zeta)F(\zeta)\bigr|
+ \le C_{\alpha,L,A}\langle\zeta\rangle^{M-L}.
+\]
+Wynika to z szybkiego zaniku pochodnych
+$\widehat\eta$ i nierówności
+$\langle\zeta\rangle\le\sqrt{2}\langle\xi\rangle
+\langle\xi-\zeta\rangle$.
+Wybierając $L>M+d$, otrzymujemy całkowalną
+majorantę wspólną dla $\xi$ w ustalonej kuli.
+Twierdzenie o zbieżności zmajoryzowanej daje
+ciągłość oraz uzasadnia kolejne różniczkowania
+względem $\xi$ pod całką (dla ilorazów różnicowych
+stosujemy oszacowanie pochodnej o jeden rząd wyższej
+na nieco większej kuli).
+Lewa strona również jest gładka z Lematu
+~\ref{lem:pde31-compact-fourier}, więc równość
+dystrybucyjna zachodzi punktowo.
+\end{proof}
+
+\begin{stwierdzenie}[Rzut zbioru falowego]\label{prop:pde31-singular-support}
+Dla $u\in\mathcal D'(U)$ zachodzi
+$\operatorname{sing\,supp}(u)=\pi_x(\operatorname{WF}(u))$,
+gdzie $\pi_x(x,\xi)=x$, a $\operatorname{sing\,supp}(u)$
+oznacza zbiór punktów, w żadnym otoczeniu których
+$u$ nie jest reprezentowana przez funkcję klasy $C^\infty$.
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $u$ jest gładka w otoczeniu $x_0$, to dla
+$\chi\in C_c^\infty$ równej $1$ blisko $x_0$
+i o nośniku w tym otoczeniu mamy
+$\chi u\in C_c^\infty$; jej transformata maleje szybko we wszystkich
+kierunkach, zatem $x_0$ nie leży w rzucie zbioru falowego.
+
+Przeciwnie, załóżmy, że wszystkie pary $(x_0,\xi)$, $|\xi|=1$,
+nie należą do zbioru falowego. Dla każdego kierunku $\xi$ wybieramy stożek
+regularności $\Gamma_\xi$, funkcję obcinającą $\chi_\xi$
+oraz mniejszy otwarty stożek $\Gamma_\xi'$
+zawierający $\xi$, którego domknięcie na sferze
+mieści się w $\Gamma_\xi$.
+Ze zwartości sfery wybieramy skończone pokrycie
+przez $\Gamma_{\xi_j}'$. W przecięciu otoczeń,
+na których wszystkie $\chi_{\xi_j}=1$,
+wybieramy $\eta\in C_c^\infty(U)$, równą $1$
+blisko $x_0$. Z Lematu~\ref{lem:pde31-cutoff}
+$\widehat{\eta u}$ szybko maleje w każdym
+$\Gamma_{\xi_j}'$, a biorąc maksimum skończenie
+wielu stałych, otrzymujemy szybki zanik na całej
+$\R^d$ (również w zerze, przez ciągłość transformaty).
+Definiujemy
+\[
+ v(x)=(2\pi)^{-d}\int_{\R^d}
+ e^{ix\cdot\xi}\widehat{\eta u}(\xi)\,\mathrm d\lambda_d(\xi).
+\]
+Dla każdego wielowskaźnika $\alpha$ funkcja
+$|\xi|^{|\alpha|}|\widehat{\eta u}(\xi)|$ jest całkowalna,
+więc twierdzenie o zbieżności zmajoryzowanej
+uzasadnia różniczkowanie pod całką i ciągłość
+wszystkich pochodnych $v$.
+Dla $\psi\in\mathcal S(\R^d)$ z twierdzenia
+Fubiniego otrzymujemy
+\[
+ \begin{aligned}
+ \langle v,\psi\rangle
+ &=(2\pi)^{-d}\int_{\R^d}
+ \widehat{\eta u}(\xi)\widehat\psi(-\xi)
+ \,\mathrm d\lambda_d(\xi)\\
+ &=\langle\widehat{\eta u},\mathcal F^{-1}\psi\rangle
+ =\langle\eta u,\psi\rangle .
+ \end{aligned}
+\]
+Fubini jest dopuszczalny, ponieważ całka z modułu
+przed zamianą kolejności jest ograniczona przez
+$(2\pi)^{-d}\|\widehat{\eta u}\|_1\|\psi\|_1$.
+Ostatnia równość wynika z definicji odwrotnej
+transformaty i jej odwracalności w $\mathcal S'$
+(Twierdzenie~\ref{thm:pde8-dist-rules}).
+Zatem $v=\eta u$ w sensie dystrybucji.
+Ponieważ $\eta=1$ w otoczeniu $x_0$, dystrybucja
+$u$ jest tam reprezentowana przez funkcję gładką $v$.
+\end{proof}
+
+\section{Przykłady kierunkowych osobliwości}
+\begin{przyklad}[Delta Diraca i skok]\label{ex:pde31-delta}
+Dla $\delta_0\in\mathcal D'(\R^d)$ z Lematu
+~\ref{lem:pde31-compact-fourier} mamy
+$\widehat{\chi\delta_0}(\xi)=\chi(0)$.
+Jeśli $\chi=1$ blisko zera, transformata jest
+identycznie równa $1$ i nie maleje szybko w żadnym
+niepustym stożku. Poza zerem dystrybucja jest
+reprezentowana lokalnie przez funkcję zerową.
+Zatem $\operatorname{WF}(\delta_0)=\{(0,\xi):\xi\ne0\}$.
+
+Dla funkcji Heaviside'a $H(x)=\chi_{(0,\infty)}(x)$
+w $\R$ zbiór falowy jest taki sam jak dla delty
+w wymiarze jeden. Istotnie, dla dowolnej
+$\chi\in C_c^\infty(\R)$ równej $1$ blisko zera
+oraz $\xi\ne0$, całkowanie przez części daje
+\[
+ \widehat{\chi H}(\xi)
+ =\int_0^\infty e^{-ix\xi}\chi(x)\,\mathrm d\lambda_1(x)
+ =\frac{1}{i\xi}+
+ \frac{1}{i\xi}\int_0^\infty e^{-ix\xi}\chi'(x)
+ \,\mathrm d\lambda_1(x).
+\]
+Funkcja $\chi'\chi_{(0,\infty)}$ jest gładka
+i ma zwarty nośnik, ponieważ $\chi'=0$
+w otoczeniu zera. Jej transformata należy do
+$\mathcal S(\R)$, więc ostatni składnik jest
+$O(|\xi|^{-N})$ dla każdego $N$ przy $|\xi|\to\infty$.
+W szczególności $|\xi\widehat{\chi H}(\xi)|\to1$
+w obu kierunkach, co wyklucza szybki zanik
+dla każdej dopuszczalnej lokalizacji.
+Poza zerem $H$ jest lokalnie stała.
+\end{przyklad}
+
+\begin{przyklad}[Osobliwość hiperpłaszczyzny]\label{ex:pde31-conormal}
+Niech $d\ge2$, $x=(x_1,x')$ i
+$u=\delta(x_1)\otimes1(x')$, tj.
+$\langle u,\varphi\rangle=\int_{\R^{d-1}}\varphi(0,x')
+\,\mathrm d\lambda_{d-1}(x')$ dla $\varphi\in C_c^\infty(\R^d)$.
+Wtedy
+\[
+ \operatorname{WF}(u)=
+ \{((0,x'),(\xi_1,0)):\ x'\in\R^{d-1},\ \xi_1\ne0\}.
+\]
+Poza hiperpłaszczyzną $x_1=0$ dystrybucja znika
+lokalnie. Ustalmy punkt $(0,x_0')$ na niej
+i dowolną funkcję obcinającą $\chi$ równą $1$
+blisko tego punktu. Z definicji dystrybucji
+\[
+ \widehat{\chi u}(\xi_1,\xi')
+ =\int_{\R^{d-1}} e^{-ix'\cdot\xi'}\chi(0,x')
+ \,\mathrm d\lambda_{d-1}(x')
+ =\widehat h(\xi'),\qquad h(x')=\chi(0,x').
+\]
+Mamy $h\in C_c^\infty(\R^{d-1})$ i $h=1$
+blisko $x_0'$. Jeśli kierunek $\xi_0=(\xi_{0,1},\xi_0')$
+spełnia $\xi_0'\ne0$, to w odpowiednim otwartym
+stożku wokół niego zachodzi $|\xi'|\ge c|\xi|$
+z $c>0$. Szybki zanik $\widehat h$ daje więc
+regularność mikrolokalną w tym stożku.
+Jeśli natomiast $\xi_0'=0$, to z $h\not\equiv0$
+i odwracalności transformaty Fouriera wynika,
+że istnieje $\eta'\in\R^{d-1}$ z
+$\widehat h(\eta')\ne0$. Dla $r\to+\infty$
+wektory $(r\xi_{0,1},\eta')$ ostatecznie należą
+do każdego otwartego stożka zawierającego $\xi_0$,
+a transformata ma na nich tę samą niezerową wartość.
+To wyklucza szybki zanik dla dowolnej $\chi$.
+W szczególności nie wystarcza badanie samej półprostej
+$\xi'=0$, gdyż całka z obcięcia $h$ może być zerowa.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.83,>=Latex]
+  \draw[->,gray!70] (-2.8,0)--(2.8,0) node[right] {$x_1$};
+  \draw[->,gray!70] (0,-2.5)--(0,2.6) node[above] {$x_2$};
+  \draw[blue!65!black,very thick] (0,-2.25)--(0,2.25);
+  \foreach \y in {-1.5,0,1.5}{
+    \draw[-{Latex[length=3mm]},red!65!black,thick] (0,\y)--(1.25,\y);
+    \draw[-{Latex[length=3mm]},red!65!black,thick] (0,\y)--(-1.25,\y);
+  }
+  \node[blue!65!black,below right] at (0,-2.25) {nośnik $u$};
+  \node[red!65!black,above right] at (1.15,1.5) {kowektory normalne};
+\end{tikzpicture}
+
+\small Rysunek: nośnik $\delta(x_1)$ i kierunki zbioru falowego
+w wymiarze dwa (schemat).
+\end{center}
+
+\begin{uwaga}[Zbiór falowy a nośnik]
+Dystrybucja $\delta(x_1)$ ma nośnik będący hiperpłaszczyzną,
+lecz zbiór falowy składa się z \emph{kowektorów normalnych} do niej.
+Każda funkcja gładka, nawet o niezwartym nośniku,
+ma pusty zbiór falowy; przykładem jest funkcja $1$.
+Nie należy utożsamiać nośnika, nośnika osobliwego
+ani zbioru falowego.
+\end{uwaga}
+
+
+\begin{twierdzenie}[Dokładna propagacja zbioru falowego przy translacji]
+\label{thm:pde31-transport-wf}
+Niech $u_0\in\mathcal D'(\R^d)$, $c\in\R^d$,
+a dla $t\in\R$ niech $u(t)=\tau_{ct}u_0$,
+gdzie $\tau_a u_0$ oznacza translację dystrybucji,
+która dla funkcji ma postać $(\tau_a u_0)(x)=u_0(x-a)$.
+Wtedy $t\mapsto u(t)$ jest gładkim odwzorowaniem
+$\R\to\mathcal D'(\R^d)$ i rozwiązuje
+$\partial_tu+c\cdot\nabla_xu=0$ przy $u(0)=u_0$.
+Dla każdego $t\in\R$ zachodzi dokładna tożsamość
+\begin{equation}\label{eq:pde31-transport-wf}
+ \operatorname{WF}(u(t))=
+ \{(x+ct,\xi):(x,\xi)\in\operatorname{WF}(u_0)\}.
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Definiujemy translację przez
+$\langle\tau_a u_0,\varphi\rangle
+=\langle u_0,\varphi(\cdot+a)\rangle$.
+Dla ustalonej funkcji testowej $\varphi$
+i $t$ z przedziału zwartego $I$ funkcje
+$\varphi(\cdot+ct)$ mają nośniki w jednym
+zbiorze zwartym $K$. Taylorowski wzór z resztą
+całkową pokazuje, że ilorazy różnicowe
+zbiegają w każdej półnormie funkcji testowych
+o nośniku w $K$. Dla pochodnych kolejnych rzędów
+stosujemy ten sam argument do
+$(c\cdot\nabla)^k\varphi(\cdot+ct)$.
+Z ciągłości $u_0$ otrzymujemy
+\[
+ \frac{\mathrm d^k}{\mathrm dt^k}
+ \langle u(t),\varphi\rangle
+ =\langle u_0,(c\cdot\nabla)^k\varphi(\cdot+ct)\rangle
+ =\langle(-c\cdot\nabla_x)^k u(t),\varphi\rangle .
+\]
+Zbieżność ilorazów różnicowych zachodzi także
+w silnej topologii dystrybucji: dla ograniczonego
+zbioru testów ich nośniki leżą w jednym zbiorze
+zwartym i wszystkie półnormy są jednostajnie
+ograniczone. Przesunięcia dla $t\in I$
+zachowują te własności. Oszacowanie lokalnego
+rzędu $u_0$ ogranicza resztę Taylora
+po sparowaniu przez stałą razy moduł przyrostu,
+jednostajnie na tym zbiorze testów.
+Stąd $t\mapsto u(t)$ jest gładkie i
+$\partial_tu=-c\cdot\nabla_xu$, a $u(0)=u_0$.
+
+Dla dowolnej funkcji odcinającej
+$\chi\in C_c^\infty(\R^d)$ definiujemy
+$\eta(y)=\chi(y+a)$. Wtedy
+$\chi\tau_a u_0=\tau_a(\eta u_0)$: dla testu
+$\varphi$ obie strony mają wartość
+$\langle u_0,\chi(\cdot+a)\varphi(\cdot+a)\rangle$.
+Ponieważ $\eta u_0$ ma zwarty nośnik, wzór
+z Lematu~\ref{lem:pde31-compact-fourier} i definicja
+translacji dają
+\[
+ \begin{aligned}
+ \widehat{\chi\tau_a u_0}(\xi)
+ &=\langle \tau_a(\eta u_0),\theta_a(x)e^{-ix\cdot\xi}\rangle\\
+ &=e^{-ia\cdot\xi}
+ \langle\eta u_0,\theta_a(\cdot+a)e^{-i(\cdot)\cdot\xi}\rangle\\
+ &=e^{-ia\cdot\xi}\widehat{\eta u_0}(\xi).
+ \end{aligned}
+\]
+Tutaj $\theta_a\in C_c^\infty(\R^d)$ jest równa
+$1$ w otoczeniu przesuniętego nośnika
+$\operatorname{supp}(\eta u_0)+a$, więc
+$\theta_a(\cdot+a)$ jest dopuszczalnym obcięciem
+dla $\eta u_0$ w Lemacie o transformacie
+dystrybucji o zwartym nośniku.
+Współczynnik wykładniczy ma moduł jeden, zatem
+szybki zanik w dowolnym stożku jest równoważny
+po obu stronach. Funkcja $\chi$ jest równa jeden
+w otoczeniu $x_0+a$ dokładnie wtedy, gdy $\eta$
+jest równa jeden blisko $x_0$.
+Stąd $(x_0+a,\xi_0)\notin\operatorname{WF}(\tau_a u_0)$
+wtedy i tylko wtedy, gdy
+$(x_0,\xi_0)\notin\operatorname{WF}(u_0)$.
+Podstawiamy $a=ct$.
+\end{proof}
+
+\begin{przyklad}[Transport punktowej osobliwości]
+\label{ex:pde31-moving-delta}
+W jednym wymiarze dla $u_0=\delta_0$ otrzymujemy
+$u(t,x)=\delta(x-ct)$. Z
+\eqref{eq:pde31-transport-wf} wynika
+$\operatorname{WF}(u(t))=\{(ct,\xi):\xi\ne0\}$.
+Na czasoprzestrzeni $\R^2$ definiujemy $u$ przez
+$\langle u,\varphi\rangle=\int_\R\varphi(t,ct)
+\,\mathrm d\lambda_1(t)$.
+Jest to dystrybucja rzędu zero: dla testów o nośniku
+w ustalonym zbiorze zwartym całkowanie odbywa się
+po ograniczonym przedziale czasu, więc moduł
+parowania ogranicza stała razy $\|\varphi\|_\infty$.
+Rozwiązuje ona równanie transportu również
+w sensie dystrybucji na całej czasoprzestrzeni.
+Istotnie, dla $\varphi\in C_c^\infty(\R^2)$
+z reguły łańcuchowej mamy
+\[
+ \begin{aligned}
+ \langle(\partial_t+c\partial_x)u,\varphi\rangle
+ &=-\int_\R
+ (\partial_t\varphi+c\partial_x\varphi)(t,ct)
+ \,\mathrm d\lambda_1(t)\\
+ &=-\int_\R\frac{\mathrm d}{\mathrm dt}\varphi(t,ct)
+ \,\mathrm d\lambda_1(t)=0.
+ \end{aligned}
+\]
+Ostatnia równość wynika ze zwartego nośnika
+funkcji $t\mapsto\varphi(t,ct)$.
+Poza prostą $x=ct$ dystrybucja lokalnie znika.
+Obliczymy
+\[
+ \operatorname{WF}(u)=
+ \{((t,ct),(-c\xi,\xi)):t\in\R,\ \xi\ne0\}.
+\]
+Aby to sprawdzić, dla $\rho\in C_c^\infty(\R^2)$
+obliczamy
+$\widehat{\rho u}(\tau,\xi)=
+\int_\R e^{-it(\tau+c\xi)}\rho(t,ct)\,
+\mathrm d\lambda_1(t)$.
+Jest to jednowymiarowa transformata funkcji
+$h(t)=\rho(t,ct)\in C_c^\infty(\R)$ w punkcie
+$\tau+c\xi$. W stożku wokół kierunku
+$(\tau_0,\xi_0)$ z $\tau_0+c\xi_0\ne0$
+mamy $|\tau+c\xi|\ge c_0|(\tau,\xi)|$
+dla pewnego $c_0>0$, więc transformata
+maleje szybko.
+Ustalmy teraz niezerowy kierunek normalny
+$(-c\xi_0,\xi_0)$ oraz dowolne obcięcie $\rho$
+równe $1$ w otoczeniu $(t_0,ct_0)$.
+Wtedy $h=1$ blisko $t_0$, więc z odwracalności
+transformaty istnieje $\sigma\in\R$ z
+$\widehat h(\sigma)\ne0$.
+Dla $r\to+\infty$ pary
+$(\sigma-rc\xi_0,r\xi_0)$ należą ostatecznie
+do każdego otwartego stożka wokół kierunku
+normalnego, ale transformata na nich jest
+równa $\widehat h(\sigma)$. Wyklucza to
+regularność mikrolokalną w tym kierunku.
+Nie dowodzi to ogólnego twierdzenia o propagacji
+bicharakterystyk dla operatorów o zmiennych współczynnikach.
+\end{przyklad}
+
+
+\begin{stwierdzenie}[Wygładzanie cieplne usuwa zbiór falowy]
+\label{prop:pde-v44-heat-wavefront}
+Niech $T\in\mathcal E'(\R^d)$ będzie dystrybucją
+o zwartym nośniku i $t>0$. Dla jądra ciepła
+$G_t(x)=(4\pi t)^{-d/2}e^{-|x|^2/(4t)}$
+funkcja $G_t*T$ należy do $\mathcal S(\R^d)$,
+a więc $\operatorname{WF}(G_t*T)=\varnothing$.
+W szczególności dla $T=\delta_0$ zbiór falowy
+w chwili początkowej jest niepusty we wszystkich
+kierunkach, ale znika dla każdego $t>0$.
+\end{stwierdzenie}
+\begin{proof}
+Z Lematu~\ref{lem:pde31-compact-fourier}
+$\widehat T$ jest funkcją gładką na $\R^d$,
+a ona sama i wszystkie jej pochodne mają
+co najwyżej wzrost wielomianowy.
+Jądro $G_t$ należy do $\mathcal S$, a jego
+transformata wynosi $e^{-t|\xi|^2}$
+(por. Lemat~\ref{lem:pde8-gauss}).
+Twierdzenie~\ref{thm:pde8-convol-temp} daje
+$\widehat{G_t*T}(\xi)=e^{-t|\xi|^2}\widehat T(\xi)$.
+Każda pochodna mnożnika gaussowskiego jest
+iloczynem wielomianu i tego samego mnożnika.
+Z reguły Leibniza dla dowolnych $\alpha,N$
+funkcja $\langle\xi\rangle^N
+\partial_\xi^\alpha(e^{-t|\xi|^2}\widehat T(\xi))$
+jest ograniczona, gdyż wykładniczy zanik
+przeważa dowolną potęgę.
+Iloczyn należy więc do przestrzeni Schwartza,
+a jego odwrotna transformata również.
+Z odwracalności transformaty w $\mathcal S'$
+jest ona równa $G_t*T$ w sensie dystrybucji,
+a ponieważ obie funkcje są gładkie,
+równość zachodzi punktowo.
+Z definicji~\ref{def:pde31-wf} każda funkcja gładka
+ma pusty zbiór falowy.
+\end{proof}
+\begin{uwaga}[Znaczenie założenia o zwartym nośniku]
+Dla dowolnego $T\in\mathcal S'$ splot $G_t*T$
+jest gładki na mocy Twierdzenia
+~\ref{thm:pde8-convol-temp}, więc również ma pusty
+zbiór falowy. Nie musi jednak należeć do
+przestrzeni Schwartza. Dla dystrybucji regularnej
+$T=1$ mamy
+\[
+ (G_t*1)(x)=\int_{\R^d}G_t(x-y)\,\mathrm d\lambda_d(y)
+ =\int_{\R^d}G_t(z)\,\mathrm d\lambda_d(z)=1.
+\]
+Ostatnia równość wynika z wartości transformaty
+$\widehat G_t(0)=1$. Funkcja stała $1$ nie należy
+do przestrzeni Schwartza, gdyż
+$\sup_x\langle x\rangle|1|=\infty$.
+Rozróżniamy więc wygładzanie lokalne i szybki
+zanik funkcji po wygładzeniu.
+\end{uwaga}
+\begin{uwaga}[Wygładzanie a niestabilność problemu odwrotnego]
+Zanik zbioru falowego nie oznacza utraty
+jednoznaczności odtwarzania danych początkowych.
+Dla ustalonego $t>0$ operator $T\mapsto G_t*T$
+jest iniektywny nawet na $\mathcal S'$:
+jeśli $e^{-t|\xi|^2}\widehat T=0$, to dla
+dowolnej $\psi\in C_c^\infty(\R^d)$ możemy
+testować tę równość przez
+$e^{t|\xi|^2}\psi(\xi)\in C_c^\infty(\R^d)$.
+Otrzymujemy $\langle\widehat T,\psi\rangle=0$.
+Stąd $\widehat T=0$ jako dystrybucja, a także
+jako dystrybucja temperowana, gdyż
+$C_c^\infty$ jest gęsta w $\mathcal S$.
+Odwracalność transformaty Fouriera daje $T=0$.
+Wygładzanie opisuje kierunki osobliwości,
+ale samo nie jest oszacowaniem stabilności
+problemu odwrotnego.
+Na obszarze ograniczonym mnożnik cieplny
+$e^{-t\lambda_k}$ na funkcjach własnych laplasjanu
+powoduje silną niestabilność odtwarzania warunku
+początkowego; por. stwierdzenie
+\ref{prop:pde-v44-heat-inverse} w rozdziale~\ref{chap:pde32}.
+\end{uwaga}
+
+
+\section{Symbole i kwantyzacja Kohna--Nirenberga}
+\begin{definicja}[Klasa symboli $S^m_{1,0}$]\label{def:pde31-symbol}
+Dla $m\in\R$ klasą $S^m_{1,0}(\R^d\times\R^d)$
+nazywamy zbiór funkcji $a\in C^\infty(\R^d\times\R^d)$,
+dla których dla każdych wielowskaźników $\alpha,\beta$
+istnieje $C_{\alpha\beta}$ takie, że
+\begin{equation}\label{eq:pde31-symbol}
+ |\partial_x^\alpha\partial_\xi^\beta a(x,\xi)|
+ \le C_{\alpha\beta}\langle\xi\rangle^{m-|\beta|}
+ \quad(x,\xi\in\R^d).
+\end{equation}
+Dla $u\in\mathcal S(\R^d)$ operator pseudoróżniczkowy
+w kwantyzacji Kohna--Nirenberga określamy wzorem
+\begin{equation}\label{eq:pde31-op}
+ \operatorname{Op}(a)u(x)=(2\pi)^{-d}
+ \int_{\R^d}e^{ix\cdot\xi}a(x,\xi)\widehat u(\xi)
+ \,\mathrm d\lambda_d(\xi).
+\end{equation}
+Liczba $m$ jest górnym ograniczeniem rzędu symbolu:
+dla $m_1\le m_2$ mamy $S^{m_1}_{1,0}\subset S^{m_2}_{1,0}$.
+Nie zakładamy jednorodności symbolu w $\xi$.
+Całka~\eqref{eq:pde31-op} jest bezwzględnie zbieżna,
+ponieważ $|a(x,\xi)|\le C_{00}\langle\xi\rangle^m$
+i $\widehat u\in\mathcal S$.
+\end{definicja}
+
+\begin{lemat}[Ciągłość na przestrzeni Schwartza]
+\label{lem:pde31-schwartz-op}
+Jeżeli $a\in S^m_{1,0}$, to $\operatorname{Op}(a)$
+jest ciągłym operatorem liniowym
+$\mathcal S(\R^d)\to\mathcal S(\R^d)$.
+\end{lemat}
+\begin{proof}
+Dla wielowskaźnika $\alpha$ różniczkujemy pod całką:
+\[
+ \partial_x^\alpha\operatorname{Op}(a)u(x)
+ =(2\pi)^{-d}\int_{\R^d}e^{ix\cdot\xi}
+ b_\alpha(x,\xi)\widehat u(\xi)\,\mathrm d\lambda_d(\xi),
+ \qquad
+ b_\alpha(x,\xi)=
+ \sum_{\gamma\le\alpha}\binom{\alpha}{\gamma}
+ (i\xi)^{\alpha-\gamma}\partial_x^\gamma a(x,\xi).
+\]
+Z reguły Leibniza i oszacowań symbolu wynika
+$|\partial_\xi^\nu b_\alpha(x,\xi)|
+\le C_{\alpha\nu}\langle\xi\rangle^{m+|\alpha|-|\nu|}$.
+Każdy iloczyn $b_\alpha\widehat u$ jest więc
+jednostajnie względem $x$ szybko malejący wraz
+ze wszystkimi pochodnymi po $\xi$.
+W szczególności funkcje pod całkami otrzymanymi
+przez kolejne różniczkowania względem $x$
+mają całkowalne majoranty niezależne od $x$.
+Uzasadnia to różniczkowanie przez twierdzenie
+o zbieżności zmajoryzowanej.
+
+Dla wielowskaźnika $\beta$ wykorzystujemy
+$x^\beta e^{ix\cdot\xi}=i^{-|\beta|}
+\partial_\xi^\beta e^{ix\cdot\xi}$.
+Całkowanie przez części daje
+\[
+ x^\beta\partial_x^\alpha\operatorname{Op}(a)u(x)
+ =(2\pi)^{-d}i^{|\beta|}
+ \int_{\R^d}e^{ix\cdot\xi}
+ \partial_\xi^\beta(b_\alpha(x,\xi)\widehat u(\xi))
+ \,\mathrm d\lambda_d(\xi).
+\]
+Nie ma wyrazów brzegowych dzięki szybkiemu
+zanikowi iloczynu i jego pochodnych.
+Rozwijając pochodną przez regułę Leibniza,
+dla liczby całkowitej $L> d+\max(0,m+|\alpha|)$
+otrzymujemy
+\[
+ \sup_x|x^\beta\partial_x^\alpha\operatorname{Op}(a)u(x)|
+ \le C_{\alpha\beta L}
+ \sum_{\nu\le\beta}\sup_\xi
+ \langle\xi\rangle^L|\partial_\xi^\nu\widehat u(\xi)|.
+\]
+Istotnie, po wyłączeniu wskazanych półnorm
+pozostaje całkowalna majoranta
+$\langle\xi\rangle^{m+|\alpha|-L}$.
+Prawa strona jest ciągłą półnormą funkcji $u$
+na mocy ciągłości transformaty Fouriera na przestrzeni
+Schwartza (rozdział~\ref{chap:pde-fourier-Rd}).
+Półnormy po lewej wyznaczają jej topologię,
+co dowodzi tezy.
+\end{proof}
+
+\begin{przyklad}[Mnożenie, pochodne, potencjały Bessela]
+Jeżeli $b\in C_b^\infty(\R^d)$ (wszystkie pochodne są ograniczone),
+to $a(x,\xi)=b(x)$ należy do $S^0_{1,0}$ i
+$\operatorname{Op}(a)u=bu$.
+Dla $a(\xi)=i\xi_j\in S^1_{1,0}$ dostajemy
+$\partial_{x_j}$ przez różniczkowanie wzoru
+odwrotnego Fouriera. Ogólniej, dla
+$P=\sum_{|\alpha|\le k}b_\alpha(x)\partial^\alpha$
+z $b_\alpha\in C_b^\infty$ symbolem jest
+$p(x,\xi)=\sum_{|\alpha|\le k}b_\alpha(x)(i\xi)^\alpha
+\in S^k_{1,0}$; kolejność mnożenia i różniczkowania
+jest dokładnie taka jak we wzorze na $P$.
+
+Symbol $\langle\xi\rangle^m$ definiuje operator
+$(I-\Delta)^{m/2}$ (potencjał Bessela dla $m<0$).
+Przynależność do $S^m_{1,0}$ wynika z następującego
+oszacowania: każda pochodna rzędu $|\beta|$
+jest sumą wyrazów postaci
+$p(\xi)(1+|\xi|^2)^{m/2-j}$, gdzie $p$
+jest wielomianem stopnia co najwyżej $2j-|\beta|$.
+Dowodzimy tego indukcyjnie: różniczkowanie $p$
+zmniejsza stopień o jeden, a różniczkowanie potęgi
+zwiększa $j$ o jeden i mnoży $p$ przez współrzędną.
+Każdy taki wyraz jest ograniczony przez stałą
+razy $\langle\xi\rangle^{m-|\beta|}$.
+Wzór na operator wynika z definicji mnożnika
+Fouriera; por. Twierdzenie~\ref{thm:pde8-Hs}.
+\end{przyklad}
+
+\begin{twierdzenie}[Oszacowanie Sobolewa dla symboli o zwartym nośniku w $x$]
+\label{thm:pde31-compact-symbol}
+Niech $m,s\in\R$ i $a\in S^m_{1,0}$ ma nośnik w zmiennej $x$
+zawarty w ustalonym zwartym zbiorze $K\subset\R^d$.
+Wtedy $\operatorname{Op}(a)$ przedłuża się jednoznacznie do
+ograniczonego operatora $H^s(\R^d)\to H^{s-m}(\R^d)$.
+Jego norma zależy od $m,s,d,K$ i skończonej liczby
+stałych z~\eqref{eq:pde31-symbol}.
+\end{twierdzenie}
+\begin{proof}
+Najpierw niech $u\in\mathcal S(\R^d)$.
+Niech $\widehat a_x(\eta,\xi)$ oznacza transformatę
+Fouriera $a$ po zmiennej $x$. Dla każdej liczby
+całkowitej $k\ge0$ mamy
+\[
+ \langle\eta\rangle^{2k}\widehat a_x(\eta,\xi)
+ =\int_{\R^d}e^{-ix\cdot\eta}(I-\Delta_x)^ka(x,\xi)
+ \,\mathrm d\lambda_d(x).
+\]
+Całkowanie przez części nie daje wyrazów brzegowych,
+bo $a(\cdot,\xi)$ ma nośnik w $K$.
+Moduł prawej strony jest nie większy niż
+$C_k\lambda_d(K)\langle\xi\rangle^m$,
+gdzie $C_k$ zależy tylko od stałych symbolu
+dla pochodnych po $x$ rzędu co najwyżej $2k$.
+W szczególności dla dowolnego $N\ge0$,
+wybierając $2k\ge N$, otrzymujemy
+$|\widehat a_x(\eta,\xi)|\le
+C_N\langle\eta\rangle^{-N}\langle\xi\rangle^m$.
+
+Z twierdzenia Fubiniego
+\[
+ \widehat{\operatorname{Op}(a)u}(\zeta)
+ =(2\pi)^{-d}\int_{\R^d}
+ \widehat a_x(\zeta-\xi,\xi)\widehat u(\xi)
+ \,\mathrm d\lambda_d(\xi).
+\]
+Istotnie, całka z modułu funkcji pod podwójną
+całką jest ograniczona z góry przez skończoną liczbę
+\[
+ C_{00}\lambda_d(K)\int_{\R^d}
+ \langle\xi\rangle^m|\widehat u(\xi)|\,\mathrm d\lambda_d(\xi).
+\]
+
+Dla $s\in\R$ kładziemy
+$v(\xi)=\langle\xi\rangle^s\widehat u(\xi)$.
+Jądro operatora przekształcającego $v$ w
+$\langle\zeta\rangle^{s-m}\widehat{\operatorname{Op}(a)u}(\zeta)$
+wynosi
+\[
+ J(\zeta,\xi)=(2\pi)^{-d}\langle\zeta\rangle^{s-m}
+ \widehat a_x(\zeta-\xi,\xi)\langle\xi\rangle^{-s}.
+\]
+Nierówność $\langle x+y\rangle\le
+\sqrt2\langle x\rangle\langle y\rangle$
+wynika z $|x+y|^2\le2|x|^2+2|y|^2$.
+Stosując ją do $\zeta=\xi+(\zeta-\xi)$
+dla $s-m\ge0$ albo do
+$\xi=\zeta+(\xi-\zeta)$ dla $s-m<0$,
+dostajemy nierówność Peetre'a
+\[
+ \langle\zeta\rangle^{s-m}\langle\xi\rangle^{m-s}
+ \le2^{|s-m|/2}\langle\zeta-\xi\rangle^{|s-m|}.
+\]
+Stąd $|J(\zeta,\xi)|\le
+C_N\langle\zeta-\xi\rangle^{-N+|s-m|}$.
+Wybieramy $N>d+|s-m|$ i oznaczamy
+\[
+ A_1=\sup_\zeta\int_{\R^d}|J(\zeta,\xi)|
+ \,\mathrm d\lambda_d(\xi),\qquad
+ A_2=\sup_\xi\int_{\R^d}|J(\zeta,\xi)|
+ \,\mathrm d\lambda_d(\zeta).
+\]
+Obie liczby są skończone przez podstawienie
+$\eta=\zeta-\xi$ i całkowalność
+$\langle\eta\rangle^{-N+|s-m|}$.
+Nierówność Schura wynika tutaj bezpośrednio
+z nierówności Cauchy'ego--Schwarza:
+\[
+ \left|\int_{\R^d}J(\zeta,\xi)v(\xi)
+ \,\mathrm d\lambda_d(\xi)\right|^2
+ \le A_1\int_{\R^d}|J(\zeta,\xi)|\,|v(\xi)|^2
+ \,\mathrm d\lambda_d(\xi).
+\]
+Całkując po $\zeta$ i stosując twierdzenie Tonellego,
+otrzymujemy oszacowanie kwadratu normy $L^2$
+przez $A_1A_2\|v\|_2^2$.
+W normach Sobolewa po obu stronach występuje
+ten sam czynnik $(2\pi)^{-d/2}$, zgodny z
+normalizacją Plancherela. W konsekwencji
+\[
+ \|\operatorname{Op}(a)u\|_{H^{s-m}}
+ \le\sqrt{A_1A_2}\|u\|_{H^s}.
+\]
+Z gęstości $\mathcal S$ w $H^s$ i zupełności
+$H^{s-m}$ (Twierdzenie~\ref{thm:pde8-Hs})
+wynika istnienie i jednoznaczność ciągłego
+przedłużenia. Podane oszacowania pokazują
+zależność jego normy tylko od wymienionych danych.
+\end{proof}
+
+\begin{uwaga}[Zasięg twierdzenia]
+Zwartego nośnika symbolu w zmiennej $x$ nie wymaga pełne
+twierdzenie o ograniczoności operatorów pseudoróżniczkowych,
+lecz nasze założenie umożliwia samodzielny dowód przez jądro Fouriera.
+Dla symboli ogólnych potrzebna jest dodatkowa lokalizacja
+lub pełna teoria ograniczoności operatorów pseudoróżniczkowych;
+nie utożsamiamy tego skrótu z jej dowodem.
+\end{uwaga}
+
+\begin{wniosek}[Lokalne oszacowanie operatora]
+\label{cor:pde31-local-sobolev}
+Dla $a\in S^m_{1,0}$, $\rho\in C_c^\infty(\R^d)$
+i $s\in\R$ operator $\rho\operatorname{Op}(a)$
+ma jednoznaczne ograniczone przedłużenie
+$H^s(\R^d)\to H^{s-m}(\R^d)$.
+\end{wniosek}
+\begin{proof}
+Na przestrzeni Schwartza
+$\rho\operatorname{Op}(a)=\operatorname{Op}(\rho a)$
+bez żadnego wyrazu resztowego, bezpośrednio
+ze wzoru~\eqref{eq:pde31-op}.
+Z reguły Leibniza $\rho a\in S^m_{1,0}$:
+pochodne $\rho$ są ograniczone, a pochodne
+po $\xi$ działają jedynie na $a$.
+Nośnik w zmiennej $x$ mieści się w
+$\operatorname{supp}\rho$. Stosujemy
+Twierdzenie~\ref{thm:pde31-compact-symbol}.
+\end{proof}
+
+\section{Jądro poza przekątną i lokalność osobliwości}
+\begin{stwierdzenie}[Gładkość jądra poza przekątną]
+\label{prop:pde31-kernel}
+Niech $a\in S^m_{1,0}$. Istnieje dokładnie jedno jądro dystrybucyjne
+$K_a\in\mathcal D'(\R^{2d})$ operatora~\eqref{eq:pde31-op},
+tj. dla $u,\varphi\in C_c^\infty(\R^d)$ zachodzi
+\[
+ \langle K_a,\varphi\otimes u\rangle
+ =\int_{\R^d}\operatorname{Op}(a)u(x)\varphi(x)
+ \,\mathrm d\lambda_d(x).
+\]
+Jądro jest reprezentowane przez funkcję gładką
+na zbiorze $\{(x,y):x\ne y\}$.
+\end{stwierdzenie}
+\begin{proof}
+Wybierzmy $\rho_0\in C_c^\infty(\R^d)$ równą $1$
+na kuli jednostkowej. Dla $R\ge1$ połóżmy
+$\rho_R(\xi)=\rho_0(\xi/R)$ oraz
+\[
+ K_R(x,y)=(2\pi)^{-d}\int_{\R^d}
+ e^{i(x-y)\cdot\xi}a(x,\xi)\rho_R(\xi)
+ \,\mathrm d\lambda_d(\xi).
+\]
+Są to funkcje gładkie. Dla testu
+$\Phi\in C_c^\infty(\R^{2d})$ twierdzenie Fubiniego daje
+\[
+ \langle K_R,\Phi\rangle=(2\pi)^{-d}
+ \int_{\R^{2d}} e^{ix\cdot\xi}a(x,\xi)\rho_R(\xi)
+ \widehat\Phi_y(x,\xi)\,\mathrm d\lambda_{2d}(x,\xi),
+\]
+gdzie $\widehat\Phi_y$ oznacza transformatę Fouriera
+względem zmiennej $y$.
+Jeżeli nośnik $\Phi$ leży w ustalonym zwartym
+zbiorze $B_x\times B_y$, to całkowanie przez części
+za pomocą $(I-\Delta_y)^k$ daje
+\[
+ |\widehat\Phi_y(x,\xi)|
+ \le C_{B_y,k}\langle\xi\rangle^{-2k}
+ \max_{|\beta|\le2k}\|\partial_y^\beta\Phi\|_\infty.
+\]
+Funkcja po lewej znika dla $x\notin B_x$.
+Dla $2k>m+d$ powyższe oszacowanie daje całkowalną
+majorantę niezależną od $R$. Z twierdzenia
+o zbieżności zmajoryzowanej istnieje granica
+$\langle K_R,\Phi\rangle$, a jej moduł jest ograniczony
+przez stałą razy wskazaną półnormę $\Phi$.
+Definiuje ona dystrybucję $K_a$ niezależną od $\rho_0$.
+Dla $\Phi(x,y)=\varphi(x)u(y)$ dostajemy tożsamość
+z tezy, ponieważ
+$\widehat\Phi_y(x,\xi)=\varphi(x)\widehat u(\xi)$.
+Jednoznaczność można wykazać bez korzystania
+z ogólnego twierdzenia o jądrze Schwartza.
+Niech $D$ będzie różnicą dwóch jąder spełniających
+tożsamość z tezy. Dla dowolnego testu $\Phi$
+wybieramy prostokąt otwarty zawierający jego
+nośnik, o bokach równoległych do osi, i przedłużamy
+$\Phi$ okresowo z tego prostokąta. Ponieważ
+$\Phi$ znika blisko jego brzegu, przedłużenie
+jest gładkie. Jego szereg Fouriera zbiega wraz
+ze wszystkimi pochodnymi jednostajnie:
+współczynniki maleją szybciej niż dowolna
+potęga indeksu, co wynika z wielokrotnego
+całkowania przez części na prostokącie.
+Wybieramy funkcje $\eta_x,\eta_y$ gładkie
+o zwartych nośnikach wewnątrz odpowiednich
+prostokątów w zmiennych $x$ i $y$, równe $1$
+blisko rzutów nośnika $\Phi$.
+Mnożąc skończone sumy szeregu przez
+$\eta_x(x)\eta_y(y)$, otrzymujemy skończone
+sumy iloczynów funkcji testowych w zmiennych
+$x$ i $y$, zbieżne do $\Phi$ we wszystkich
+półnormach na wspólnym zwartym nośniku.
+Dystrybucja $D$ znika na każdej takiej sumie
+z założenia, a z ciągłości także na $\Phi$.
+Stąd $D=0$.
+
+Przejdźmy do regularności poza przekątną.
+Dla $z=x-y\ne0$ połóżmy
+$L_z=(i|z|^2)^{-1}z\cdot\nabla_\xi$.
+Wtedy $L_z e^{iz\cdot\xi}=e^{iz\cdot\xi}$,
+a transpozycją względem całki po $\xi$ jest
+$-L_z$, gdyż współczynniki nie zależą od $\xi$.
+Po zróżniczkowaniu $K_R$ względem $(x,y)$ do rzędu
+co najwyżej $k$ dostajemy sumę całek o amplitudach
+$b(x,\xi)\rho_R(\xi)$, gdzie $b\in S^{m+k}_{1,0}$:
+pochodne fazy wnoszą czynniki liniowe w $\xi$,
+a pochodne po $x$ symbolu nie zwiększają jego rzędu.
+Całkując przez części $N$ razy, przenosimy
+$(-L_z)^N$ na każdą amplitudę.
+Dla wielowskaźnika $\gamma\ne0$ pochodna
+$\partial_\xi^\gamma\rho_R(\xi)$ ma nośnik
+w pierścieniu $R\le|\xi|\le C_{\rho_0}R$
+i ma moduł nie większy niż $C_\gamma R^{-|\gamma|}$,
+a więc jest ograniczona przez
+$C_\gamma'\langle\xi\rangle^{-|\gamma|}$ niezależnie
+od $R\ge1$. Dla $\gamma=0$ wystarcza ograniczoność
+$\rho_R$. Reguła Leibniza daje dla $|\beta|=N$
+\[
+ |\partial_\xi^\beta(b(x,\xi)\rho_R(\xi))|
+ \le C_{\beta,k}\langle\xi\rangle^{m+k-N}.
+\]
+Na zwartym podzbiorze $F$ zbioru $x\ne y$
+współczynniki $(-L_z)^N$ są jednostajnie ograniczone,
+ponieważ $\inf_F|x-y|>0$.
+Wybieramy $N>m+k+d$. Całki po przeniesieniu
+pochodnych mają całkowalną majorantę niezależną
+od $(x,y)\in F$ i $R$.
+Różnica amplitud po całkowaniu przez części
+w stosunku do amplitudy bez obcięcia ma nośnik
+w $|\xi|\ge R$ i ma tę samą całkowalną majorantę
+(z większą stałą). Ogon jej całki dąży do zera
+jednostajnie na $F$.
+Otrzymujemy zbieżność $K_R$ i wszystkich pochodnych
+do rzędu $k$ jednostajnie na zbiorach zwartych
+poza przekątną. Ponieważ $k$ było dowolne,
+granica jest gładka; zgodność z granicą
+dystrybucyjną wynika z całkowania przeciw testom
+o nośniku poza przekątną.
+\end{proof}
+
+\begin{lemat}[Przedłużenie działania na dystrybucje temperowane]
+\label{lem:pde31-distribution-op}
+Niech $a\in S^m_{1,0}(\R^d\times\R^d)$, $m\in\R$.
+Operator $\operatorname{Op}(a)$ określony wzorem
+\eqref{eq:pde31-op} dla funkcji Schwartza ma
+kanoniczne przedłużenie
+$\mathcal S'(\R^d)\to\mathcal S'(\R^d)$,
+ciągłe w topologii słabej* i silnej.
+W szczególności działa na $\mathcal E'$.
+Dla $u\in\mathcal S'$ i $\varphi\in\mathcal S$
+przedłużenie to definiujemy przez
+\[
+ \langle\operatorname{Op}(a)u,\varphi\rangle
+ =\langle u,\operatorname{Op}(a)^t\varphi\rangle,
+\]
+gdzie $t$ oznacza transpozycję względem dwuliniowego
+parowania dystrybucji z funkcją testową.
+\end{lemat}
+\begin{proof}
+Dla $\varphi\in\mathcal S(\R^d)$ określamy
+\[
+ B_\varphi(\xi)=\int_{\R^d}e^{ix\cdot\xi}a(x,\xi)
+ \varphi(x)\,\mathrm d\lambda_d(x),\qquad
+ (\operatorname{Op}(a)^t\varphi)(y)
+ =(2\pi)^{-d}\widehat{B_\varphi}(y).
+\]
+Pokażemy, że $\varphi\mapsto B_\varphi$ jest
+ciągłym operatorem na przestrzeni Schwartza.
+Różniczkując względem $\xi$, otrzymujemy sumę
+całek o amplitudach
+$(ix)^{\beta-\gamma}\partial_\xi^\gamma a(x,\xi)
+\varphi(x)$, gdzie $\gamma\le\beta$.
+Różniczkowanie uzasadniają całkowalne majoranty
+na zwartych zbiorach częstotliwości,
+bo $x^\nu\varphi$ jest szybko malejąca.
+Dla każdej takiej całki mnożymy przez
+$\langle\xi\rangle^{2k}$ i całkujemy przez części,
+przenosząc $(I-\Delta_x)^k$ z fazy na amplitudę.
+Nie ma wyrazów brzegowych: wszystkie pochodne
+amplitudy względem $x$ są szybko malejące
+dla ustalonego $\xi$.
+Z reguły Leibniza i oszacowań symbolu wynika
+\[
+ |\partial_\xi^\beta B_\varphi(\xi)|
+ \le C_{k,\beta}\langle\xi\rangle^{m-2k}
+ \sum_{\substack{|\nu|\le|\beta|\\|\alpha|\le2k}}
+ \|x^\nu\partial_x^\alpha\varphi\|_1 .
+\]
+Normy $L^1$ po prawej są kontrolowane przez
+skończenie wiele półnorm Schwartza, gdyż
+$\langle x\rangle^{-d-1}$ jest całkowalna.
+Wybierając $2k>m+N$, kontrolujemy półnormę
+$\sup_\xi\langle\xi\rangle^N
+|\partial_\xi^\beta B_\varphi(\xi)|$.
+Z ciągłości transformaty Fouriera wynika więc
+ciągłość $\operatorname{Op}(a)^t:\mathcal S\to\mathcal S$.
+Znak fazy w jej wzorze jest ujemny:
+jest to transpozycja względem parowania
+dwuliniowego, a nie sprzężenie hermitowskie.
+
+Dla $u,\varphi\in\mathcal S$ tożsamość
+\[
+ \int_{\R^d}\operatorname{Op}(a)u\,\varphi\,\mathrm d\lambda_d
+ =\int_{\R^d}u\,\operatorname{Op}(a)^t\varphi\,\mathrm d\lambda_d
+\]
+wynika dwukrotnie z Fubiniego: pierwsza podwójna
+całka jest bezwzględnie zbieżna dzięki
+$\|\varphi\|_1\int_{\R^d}\langle\xi\rangle^m
+|\widehat u(\xi)|\,\mathrm d\lambda_d(\xi)<\infty$,
+a druga dzięki $\|u\|_1\|B_\varphi\|_1<\infty$.
+Podany w tezie wzór istotnie przedłuża działanie
+operatora na funkcjach Schwartza.
+Definiuje dystrybucję temperowaną, ponieważ
+jest złożeniem dwóch ciągłych odwzorowań.
+Ciągłość słaba* wynika z testowania przez
+$\operatorname{Op}(a)^t\varphi$. Ciągłość silna
+wynika z tego, że ciągły operator liniowy
+na $\mathcal S$ przekształca zbiory ograniczone
+w zbiory ograniczone, a półnormy silnej topologii
+$\mathcal S'$ są supremami parowań na takich zbiorach.
+Przedłużenie jest jednoznaczne wśród słabo*
+ciągłych operatorów: $\mathcal S$ jest słabo*
+gęsta w $\mathcal S'$.
+Istotnie, ciągłe funkcjonały liniowe względem
+topologii słabej* są skończonymi kombinacjami
+parowań z testami, czyli same są parowaniami
+z elementami $\mathcal S$.
+Gdyby domknięcie podprzestrzeni $\mathcal S$
+było właściwe, z twierdzenia Hahna--Banacha
+istniałby niezerowy taki funkcjonał znikający
+na $\mathcal S$. Jego test $\varphi$ musiałby
+jednak spełniać
+$\int_{\R^d}\overline\varphi\varphi\,\mathrm d\lambda_d=0$,
+a więc byłby zerowy. Otrzymujemy sprzeczność.
+\end{proof}
+
+\begin{wniosek}[Zgodność przedłużeń operatora]
+\label{cor:pde31-extension-compatibility}
+Dla symbolu o zwartym nośniku w zmiennej $x$
+przedłużenie operatora na $H^s$ z Twierdzenia
+~\ref{thm:pde31-compact-symbol} jest ograniczeniem
+jego przedłużenia na $\mathcal S'$ z Lematu
+~\ref{lem:pde31-distribution-op}.
+Analogiczna zgodność zachodzi dla lokalnego
+operatora $\rho\operatorname{Op}(a)$ z Wniosku
+~\ref{cor:pde31-local-sobolev}.
+\end{wniosek}
+\begin{proof}
+Zanurzenie $H^t\hookrightarrow\mathcal S'$ jest
+ciągłe w topologii słabej*: dla $\varphi\in\mathcal S$
+nierówność Cauchy'ego--Schwarza i wzór odwrotny
+Fouriera dają
+\[
+ |\langle v,\varphi\rangle|
+ \le(2\pi)^{-d/2}\|v\|_{H^t}
+ \|\langle\cdot\rangle^{-t}\widehat\varphi(-\cdot)\|_2.
+\]
+Istotnie, z definicji transformaty odwrotnej w
+$\mathcal S'$ mamy
+\[
+ \langle v,\varphi\rangle=(2\pi)^{-d}
+ \int_{\R^d}\widehat v(\xi)\widehat\varphi(-\xi)
+ \,\mathrm d\lambda_d(\xi).
+\]
+Całka jest bezwzględnie zbieżna na mocy
+nierówności Cauchy'ego--Schwarza dla czynników
+$\langle\xi\rangle^t\widehat v(\xi)$
+i $\langle\xi\rangle^{-t}\widehat\varphi(-\xi)$;
+pierwszy ma normę $(2\pi)^{d/2}\|v\|_{H^t}$.
+Dla $u\in H^s$ wybieramy ciąg $u_j\in\mathcal S$
+zbieżny do $u$ w $H^s$. Wobec ciągłości zanurzenia
+$u_j\to u$ słabo* w $\mathcal S'$.
+Z jednej strony $\operatorname{Op}(a)u_j$
+zbiega w $H^{s-m}$ do przedłużenia sobolewowskiego,
+a więc także słabo* w $\mathcal S'$.
+Z drugiej strony z Lematu
+~\ref{lem:pde31-distribution-op} zbiega słabo*
+do przedłużenia dystrybucyjnego.
+Jednoznaczność granicy w topologii Hausdorffa
+daje zgodność.
+Dla $\rho\operatorname{Op}(a)$ stosujemy
+ten sam argument do $\rho a$. Tożsamość
+$\rho\operatorname{Op}(a)=\operatorname{Op}(\rho a)$
+przenosi się z $\mathcal S$ na $\mathcal S'$
+przez słabą* ciągłość obu stron i gęstość.
+\end{proof}
+
+\begin{wniosek}[Własność pseudolokalna]
+\label{cor:pde31-pseudolocal}
+Jeśli $a\in S^m_{1,0}$, a $u\in\mathcal E'(\R^d)$
+jest dystrybucją o zwartym nośniku, przy czym
+$\operatorname{Op}(a)u$ rozumiemy w sensie
+Lematu~\ref{lem:pde31-distribution-op}, to
+\[
+ \operatorname{sing\,supp}(\operatorname{Op}(a)u)
+ \subset\operatorname{sing\,supp}(u).
+\]
+\end{wniosek}
+\begin{proof}
+Niech $x_0$ leży poza nośnikiem osobliwym $u$.
+Rozkładamy $u=\rho u+(1-\rho)u$, gdzie
+$\rho\in C_c^\infty$ jest równa $1$ blisko $x_0$
+i ma nośnik w otoczeniu gładkości $u$.
+Funkcja $\rho u$ należy do $C_c^\infty$,
+więc z Lematu~\ref{lem:pde31-schwartz-op}
+$\operatorname{Op}(a)(\rho u)\in\mathcal S$.
+
+Połóżmy $v=(1-\rho)u$ i wybierzmy ograniczone
+otoczenie $W$ punktu $x_0$ oraz
+$\theta\in C_c^\infty(\R^d)$, równą $1$ blisko
+$\operatorname{supp}v$, tak aby
+$\overline W\cap\operatorname{supp}\theta=\varnothing$.
+Jest to możliwe, ponieważ $\operatorname{supp}v$
+jest zwarty i nie przecina otoczenia $x_0$.
+Ze Stwierdzenia~\ref{prop:pde31-kernel} funkcja
+\[
+ F(x)=\langle v(y),\theta(y)K_a(x,y)\rangle,\qquad x\in W,
+\]
+jest dobrze określona i gładka. W iloczynie
+$\theta(y)K_a(x,y)$ rozumiemy jądro jako jego
+gładkiego reprezentanta poza przekątną, a iloczyn
+przedłużamy przez zero w otoczeniu $y=x$.
+Jest to dopuszczalne, gdyż $\operatorname{supp}\theta$
+i $\overline W$ są rozłączne.
+Dla $x$ w zwartym podzbiorze $W$ wszystkie
+pochodne funkcji pod parowaniem są ograniczone
+na wspólnym zwartym nośniku w $y$,
+a ilorazy różnicowe zbiegają w półnormach
+funkcji testowych. Zatem pochodne $F$ powstają
+przez różniczkowanie jądra względem $x$.
+
+Aby utożsamić $F$ z $\operatorname{Op}(a)v$ na $W$,
+weźmy $\varphi\in C_c^\infty(W)$.
+Dla obciętych jąder $K_R$ z dowodu Stwierdzenia
+~\ref{prop:pde31-kernel} mamy
+\[
+ \begin{aligned}
+ &\int_W\varphi(x)\langle v,\theta K_R(x,\cdot)\rangle
+ \,\mathrm d\lambda_d(x)\\
+ &\qquad=\langle v,\theta\operatorname{Op}(a\rho_R)^t
+ \varphi\rangle .
+ \end{aligned}
+\]
+Równość wynika z przeniesienia parowania przez
+całkę na zwartym zbiorze i definicji transpozycji.
+Lewa strona zbiega do
+$\int_W\varphi F\,\mathrm d\lambda_d$,
+bo $K_R$ zbiega ze wszystkimi pochodnymi jednostajnie
+na $\operatorname{supp}\varphi\times\operatorname{supp}\theta$.
+Dokładniej, oszacowanie lokalnego rzędu $v$
+na ustalonym zwartym nośniku $\theta$ ogranicza
+\[
+ \sup_{x\in\operatorname{supp}\varphi}
+ |\langle v,\theta(K_R(x,\cdot)-K_a(x,\cdot))\rangle|
+\]
+przez stałą razy maksimum norm jednostajnych
+pochodnych różnicy jąder względem $y$
+do skończonego rzędu na tym iloczynie zbiorów.
+Maksimum dąży do zera, co po pomnożeniu
+przez $\|\varphi\|_1$ daje żądaną zbieżność całek.
+Prawa strona zbiega do
+$\langle v,\operatorname{Op}(a)^t\varphi\rangle$,
+gdyż $\rho_R B_\varphi\to B_\varphi$ w $\mathcal S$
+z szybkiego zaniku $B_\varphi$ i oszacowań
+pochodnych $\rho_R$, a $\theta=1$ blisko nośnika $v$.
+Z definicji przedłużenia jest to
+$\langle\operatorname{Op}(a)v,\varphi\rangle$.
+Otrzymujemy żądaną gładkość w otoczeniu $x_0$.
+\end{proof}
+
+\section{Parametryks i regularność eliptyczna}
+\begin{twierdzenie}[Parametryks operatora o stałych współczynnikach]
+\label{thm:pde31-parametrix}
+Niech $P(D)=\sum_{|\alpha|\le m}c_\alpha\partial^\alpha$
+będzie operatorem o stałych współczynnikach o rzędzie $m\ge1$.
+Załóżmy, że jego jednorodny symbol główny
+$P_m(i\xi)=\sum_{|\alpha|=m}c_\alpha(i\xi)^\alpha$
+nie znika dla $\xi\ne0$. Wtedy istnieje
+$q\in S^{-m}_{1,0}$ i funkcja $r\in C_c^\infty(\R^d)$
+takie, że
+\begin{equation}\label{eq:pde31-param}
+ q(\xi)P(i\xi)=1-r(\xi).
+\end{equation}
+Dla każdej dystrybucji temperowanej $u$ zachodzi
+$u=q(D)P(D)u+r(D)u$. Operator $r(D)$ jest wygładzający,
+tj. przekształca $\mathcal S'$ w $C^\infty$.
+Jeśli $P(D)u\in H^s(\R^d)$ oraz $u\in H^t(\R^d)$ dla pewnego $t\in\R$,
+to $u\in H^{s+m}(\R^d)$ i
+\[
+ \|u\|_{H^{s+m}}\le C_{P,s,t}
+ \bigl(\|P(D)u\|_{H^s}+\|u\|_{H^t}\bigr).
+\]
+\end{twierdzenie}
+\begin{proof}
+Z eliptyczności symbolu głównego i zwartości sfery wynika
+$|P_m(i\xi)|\ge c|\xi|^m$. Ponieważ symbole niższych
+rzędów są $O(|\xi|^{m-1})$, mamy
+$|P(i\xi)|\ge c'\langle\xi\rangle^m$ przy $|\xi|\ge R$.
+Wybieramy $\rho\in C^\infty$ równą zero dla $|\xi|\le R$
+i jeden dla $|\xi|\ge2R$. Kładziemy $q=0$ na $|\xi|\le R$,
+$q(\xi)=\rho(\xi)/P(i\xi)$ na $|\xi|>R$
+oraz $r=1-\rho$. Nie dzielimy przez symbol
+w jego zbiorze zer. Funkcja $q$ jest gładka,
+ponieważ $P(i\xi)$ nie znika także w otoczeniu
+sfery $|\xi|=R$, a $\rho$ znika na całej kuli.
+
+Niech $p(\xi)=P(i\xi)$ i $b(\xi)=1/p(\xi)$
+dla $|\xi|\ge R$. Dla każdego wielowskaźnika
+$\gamma$ mamy $|\partial^\gamma p(\xi)|
+\le C_\gamma\langle\xi\rangle^{m-|\gamma|}$,
+gdyż $p$ jest wielomianem stopnia $m$,
+a pochodne rzędu większego niż $m$ są zerowe.
+Z dolnego oszacowania $|p|$ wynika
+$|b|\le C\langle\xi\rangle^{-m}$.
+Różniczkując $pb=1$ dla $|\beta|\ge1$, dostajemy
+\[
+ \partial^\beta b=-b\sum_{0<\gamma\le\beta}
+ \binom{\beta}{\gamma}(\partial^\gamma p)
+ (\partial^{\beta-\gamma}b).
+\]
+Indukcja względem $|\beta|$ daje
+$|\partial^\beta b|\le C_\beta
+\langle\xi\rangle^{-m-|\beta|}$:
+każdy iloczyn w sumie po pomnożeniu przez $b$
+ma właśnie taki rząd. Reguła Leibniza dla $q=\rho b$
+daje identyczne oszacowanie, gdyż pochodne $\rho$
+dodatniego rzędu mają zwarty nośnik.
+Stąd $q\in S^{-m}_{1,0}$ i zachodzi
+~\eqref{eq:pde31-param}.
+Mnożenie przez $p,q,r$ jest ciągłe na przestrzeni
+Schwartza dzięki regule Leibniza i wielomianowym
+oszacowaniom wszystkich pochodnych, a zatem przez
+transpozycję jest określone i słabo* ciągłe
+także w $\mathcal S'$.
+Dla symbolu $b(\xi)$ niezależnego od $x$ zapis
+$b(D)u=\mathcal F^{-1}(b\widehat u)$ jest zgodny
+z przedłużeniem $\operatorname{Op}(b)u$ z Lematu
+~\ref{lem:pde31-distribution-op}: obie definicje
+są zgodne na $\mathcal S$ ze wzoru odwrotnego
+Fouriera i obie są słabo* ciągłe na $\mathcal S'$.
+Równość na całej przestrzeni wynika więc ze
+słabej* gęstości $\mathcal S$ wykazanej w tym lemacie.
+W szczególności wolno stosować własność
+pseudolokalną do mnożnika $q(D)$.
+Mnożąc tożsamość
+~\eqref{eq:pde31-param} przez $\widehat u$
+i stosując odwrotną transformatę Fouriera,
+otrzymujemy rozkład $u=q(D)P(D)u+r(D)u$.
+
+Dystrybucja $r\widehat u$ ma zwarty nośnik.
+Z Lematu~\ref{lem:pde31-compact-fourier}
+jej odwrotna transformata jest gładką funkcją
+o wzroście co najwyżej wielomianowym wraz z
+każdą pochodną. To uzasadnia wygładzanie.
+Dla $v\in H^s$ mamy
+\[
+ \|q(D)v\|_{H^{s+m}}
+ \le \sup_\xi\langle\xi\rangle^m|q(\xi)|\,\|v\|_{H^s}.
+\]
+Analogicznie dla $w\in H^t$,
+\[
+ \|r(D)w\|_{H^{s+m}}
+ \le\sup_\xi\langle\xi\rangle^{s+m-t}|r(\xi)|\,\|w\|_{H^t}.
+\]
+Oba suprema są skończone, pierwsze z rzędu
+symbolu $q$, drugie ze zwartości nośnika $r$.
+Nierówność trójkąta zastosowana do rozkładu $u$
+kończy dowód.
+\end{proof}
+
+\begin{wniosek}[Lokalna regularność eliptyczna]
+\label{cor:pde31-local-ellipticity}
+Niech $P(D)$ spełnia założenia Twierdzenia
+~\ref{thm:pde31-parametrix}, $U\subset\R^d$
+będzie otwarty i $u\in\mathcal D'(U)$.
+Jeśli $P(D)u\in H^s_{\mathrm{loc}}(U)$,
+to $u\in H^{s+m}_{\mathrm{loc}}(U)$.
+W szczególności $P(D)u\in C^\infty(U)$
+implikuje $u\in C^\infty(U)$.
+\end{wniosek}
+\begin{proof}
+Dla dowolnego $x_0\in U$ wybieramy
+$\chi\in C_c^\infty(U)$ równą $1$ w otoczeniu
+$x_0$. Iloczyn $v=\chi u$ przedłużamy przez zero
+na $\R^d$. Z reguły Leibniza dla dystrybucji
+\[
+ P(D)v=\chi P(D)u+[P(D),\chi]u,
+ \qquad [P(D),\chi]u=P(D)(\chi u)-\chi P(D)u.
+\]
+Komutator jest sumą wyrazów
+$c_\alpha\binom{\alpha}{\gamma}
+(\partial^\gamma\chi)\partial^{\alpha-\gamma}u$
+dla $0<\gamma\le\alpha$, $|\alpha|\le m$.
+W szczególności jest dystrybucją o zwartym
+nośniku, który nie przecina otoczenia $x_0$.
+Stosując tożsamość parametryksu do $v$, dostajemy
+\[
+ v=q(D)(\chi P(D)u)+q(D)([P(D),\chi]u)+r(D)v.
+\]
+Pierwszy wyraz należy do $H^{s+m}(\R^d)$,
+ponieważ $\chi P(D)u\in H^s(\R^d)$
+z definicji lokalnej przestrzeni Sobolewa.
+Drugi wyraz jest gładki w otoczeniu $x_0$
+z własności pseudolokalnej (Wniosek
+~\ref{cor:pde31-pseudolocal}), a trzeci
+jest gładki na całej $\R^d$.
+Mnożąc tę tożsamość przez funkcję obcinającą
+o nośniku w odpowiednio małym otoczeniu $x_0$,
+dostajemy dystrybucję z $H^{s+m}$: mnożenie
+przez funkcję z $C_c^\infty$ jest ograniczone
+na $H^{s+m}$ z Twierdzenia
+~\ref{thm:pde31-compact-symbol} dla symbolu rzędu zero,
+a obcięcia funkcji gładkich należą do $\mathcal S$.
+Ponieważ $v=u$ blisko $x_0$, otrzymujemy
+funkcję obcinającą równą $1$ w otoczeniu $x_0$,
+dla której obcięta dystrybucja należy do $H^{s+m}$.
+Aby uzyskać warunek dla dowolnej $\eta\in C_c^\infty(U)$,
+pokrywamy jej zwarty nośnik skończoną liczbą
+otoczeń $V_j$, na których odpowiednie obcięcia
+$\rho_j\in C_c^\infty(U)$ są równe $1$
+i dla których $\rho_j u\in H^{s+m}(\R^d)$
+po przedłużeniu przez zero.
+Wybieramy $\psi_j\in C_c^\infty(V_j)$
+tak, aby $\sum_j\psi_j=1$ w otoczeniu
+$\operatorname{supp}\eta$, stosując gładki
+rozkład jedności. Wtedy w $\mathcal D'(\R^d)$
+(z przedłużeniem przez zero wszystkich
+dystrybucji o zwartym nośniku) mamy
+\[
+ \eta u=\sum_j(\eta\psi_j)(\rho_j u).
+\]
+Każdy składnik należy do $H^{s+m}(\R^d)$,
+ponieważ $\eta\psi_j$ jest gładkim obcięciem,
+a $\rho_j u\in H^{s+m}(\R^d)$.
+Skończona suma należy do $H^{s+m}$.
+Dostajemy lokalną regularność.
+Jeśli prawa strona jest gładka, to należy do
+$H^s_{\mathrm{loc}}$ dla wszystkich $s$.
+Dla każdego $k$ wybieramy $s+m>k+d/2$;
+dla każdego obcięcia $\eta\in C_c^\infty(U)$
+i $|\alpha|\le k$ mamy
+\[
+ \int_{\R^d}|\xi^\alpha\widehat{\eta u}(\xi)|
+ \,\mathrm d\lambda_d(\xi)
+ \le
+ \|\langle\cdot\rangle^{s+m}\widehat{\eta u}\|_2
+ \|\langle\cdot\rangle^{k-s-m}\|_2<\infty .
+\]
+Pierwszy czynnik jest skończony z wykazanej
+regularności, drugi z warunku $s+m-k>d/2$.
+Wzór odwrotny daje reprezentanta klasy $C^k$
+dystrybucji $\eta u$: wszystkie pochodne do
+rzędu $k$ otrzymujemy przez różniczkowanie
+pod całką, uzasadnione powyższymi oszacowaniami
+i twierdzeniem o zbieżności zmajoryzowanej.
+Ustalamy $\eta=1$ blisko dowolnego $x_0\in U$.
+Dla różnych $k$ otrzymane reprezentanty są
+zgodne, ponieważ ciągłe funkcje wyznaczające
+tę samą dystrybucję są równe punktowo.
+Zatem $u$ jest lokalnie reprezentowana przez
+funkcję gładką, czyli $u\in C^\infty(U)$.
+\end{proof}
+
+\begin{stwierdzenie}[Operatory różniczkowe nie tworzą nowych kierunków osobliwości]
+\label{prop:pde31-differential-wf}
+Jeśli $P=\sum_{|\alpha|\le m}b_\alpha(x)\partial^\alpha$
+ma gładkie współczynniki na $U$, to dla $u\in\mathcal D'(U)$
+\[
+ \operatorname{WF}(Pu)\subset\operatorname{WF}(u).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Niech $(x_0,\xi_0)\notin\operatorname{WF}(u)$
+i niech $\chi,\Gamma$ realizują regularność
+w sensie Definicji~\ref{def:pde31-wf}.
+Na otoczeniu $x_0$, na którym $\chi=1$,
+mamy $\partial^\alpha u=\partial^\alpha(\chi u)$.
+Transformata ostatniej dystrybucji o zwartym
+nośniku jest równa $(i\xi)^\alpha\widehat{\chi u}(\xi)$
+na mocy Twierdzenia~\ref{thm:pde8-dist-rules},
+więc szybko maleje w $\Gamma$: dowolną utratę
+potęgi kompensujemy wyborem większego wykładnika
+zaniku $\widehat{\chi u}$.
+Wybierzmy $\eta\in C_c^\infty(U)$ równą $1$
+blisko $x_0$, z nośnikiem w tym otoczeniu,
+oraz mniejszy stożek $\Gamma'$ wokół $\xi_0$,
+którego domknięcie na sferze mieści się w $\Gamma$.
+Funkcja $\eta b_\alpha$ po przedłużeniu przez zero
+jest gładka o zwartym nośniku.
+Oszacowanie splotowe z dowodu Lematu
+~\ref{lem:pde31-cutoff} stosujemy do
+$\partial^\alpha(\chi u)$ oraz $\eta b_\alpha$.
+Nie wymaga ono, by mnożnik był równy $1$.
+Otrzymujemy szybki zanik transformaty
+$\eta b_\alpha\partial^\alpha u$ w $\Gamma'$.
+Skończona suma daje żądaną regularność $\eta Pu$.
+\end{proof}
+
+\begin{twierdzenie}[Mikrolokalna regularność dla stałych współczynników]
+\label{thm:pde31-conic-ellipticity}
+Niech $P(D)$ będzie operatorem różniczkowym o stałych
+współczynnikach rzędu $m\ge1$ i niech
+$p_m(\xi)=\sum_{|\alpha|=m}c_\alpha(i\xi)^\alpha$.
+Definiujemy
+$\operatorname{Char}(P)=\{(x,\xi)\in U\times
+(\R^d\setminus\{0\}):p_m(\xi)=0\}$.
+Dla $u\in\mathcal D'(U)$ zachodzi
+\[
+ \operatorname{WF}(Pu)\subset\operatorname{WF}(u)
+ \subset\operatorname{WF}(Pu)\cup\operatorname{Char}(P).
+\]
+Nie zakładamy globalnej eliptyczności $P$.
+\end{twierdzenie}
+\begin{proof}
+Pierwsza inkluzja jest treścią Stwierdzenia
+~\ref{prop:pde31-differential-wf}.
+Niech $(x_0,\xi_0)$ nie należy do zbioru po prawej
+w drugiej inkluzji. Z regularności $Pu$ wybieramy
+$\chi,\Gamma$ tak, że $\widehat{\chi Pu}$
+szybko maleje w $\Gamma$.
+Z ciągłości i jednorodności $p_m$ oraz
+$p_m(\xi_0)\ne0$ wybieramy otwarte stożki
+$\Gamma_1,\Gamma_2$ wokół $\xi_0$,
+z domknięciem $\Gamma_2$ na sferze zawartym
+w $\Gamma_1$, a domknięciem $\Gamma_1$ na sferze
+zawartym w $\Gamma\cap\{p_m\ne0\}$.
+Na $\Gamma_1$ zachodzi
+$|p_m(\xi)|\ge c|\xi|^m$ z pewnym $c>0$.
+Dla dostatecznie dużego $R$ pełny symbol
+$p(\xi)=P(i\xi)$ spełnia
+$|p(\xi)|\ge c' \langle\xi\rangle^m$
+w $\Gamma_1$ dla $|\xi|\ge R$.
+
+Wybieramy gładką funkcję kątową $\omega$ na
+sferze, o wartościach w $[0,1]$, równą $1$
+na domknięciu $\Gamma_2$ na sferze i o nośniku
+wewnątrz $\Gamma_1$. Jej przedłużenie jednorodne
+stopnia zero ma pochodne rzędu $|\beta|$
+jednorodne stopnia $-|\beta|$, zatem ograniczone
+przez $C_\beta|\xi|^{-|\beta|}$ poza zerem.
+Niech $\rho$ będzie gładkim obcięciem radialnym,
+zerowym dla $|\xi|\le R$ i równym $1$ dla
+$|\xi|\ge2R$. Definiujemy $\theta(\xi)=
+\rho(\xi)\omega(\xi/|\xi|)$ poza zerem,
+a $\theta(0)=0$.
+Symbol $q=\theta/p$ definiujemy na obszarze,
+gdzie mianownik nie znika, i przedłużamy przez zero
+poza nośnikiem $\theta$. Jest gładki, a indukcja
+z dowodu Twierdzenia~\ref{thm:pde31-parametrix}
+na stożku $\Gamma_1$ daje $q\in S^{-m}_{1,0}$.
+Zachodzi $qp=\theta$.
+
+Niech $v=\chi u$ będzie dystrybucją
+przedłużoną przez zero na $\R^d$.
+Jak w dowodzie Wniosku~\ref{cor:pde31-local-ellipticity}
+otrzymujemy w $\mathcal S'$
+\[
+ v=q(D)(\chi Pu)+q(D)([P,\chi]u)+(1-\theta)(D)v .
+\]
+Drugi składnik jest gładki blisko $x_0$ dzięki
+Wnioskowi~\ref{cor:pde31-pseudolocal}, ponieważ
+komutator ma zwarty nośnik poza otoczeniem $x_0$.
+Transformata pierwszego składnika jest funkcją
+$q\widehat{\chi Pu}$, szybko malejącą we wszystkich
+kierunkach: $q$ ma nośnik w $\Gamma_1$ poza
+obszarem ograniczonych częstotliwości,
+a na $\Gamma_1$ zachodzi założony szybki zanik.
+Wzór odwrotny Fouriera i całkowalność
+$|\xi|^k|q\widehat{\chi Pu}|$ dla każdego $k$
+dają gładkość tego składnika.
+
+Transformata trzeciego składnika jest funkcją
+$F=(1-\theta)\widehat v$ o wzroście wielomianowym,
+która znika w $\Gamma_2$ dla $|\xi|\ge2R$.
+Na pozostałej, ograniczonej części $\Gamma_2$
+jest ograniczona z ciągłości, więc w całym
+$\Gamma_2$ spełnia oszacowania szybkiego zaniku
+dla dowolnego wykładnika.
+Wybieramy $\eta\in C_c^\infty(U)$ równą $1$
+blisko $x_0$ i o nośniku w otoczeniu,
+na którym $\chi=1$ oraz drugi składnik jest gładki.
+Transformata trzeciego składnika po pomnożeniu
+przez $\eta$ jest splotem $(2\pi)^{-d}\widehat\eta*F$.
+Wzór ten obowiązuje na mocy Lematu
+~\ref{lem:pde31-polynomial-convolution}.
+Oszacowania obu obszarów całkowania z dowodu
+Lematu~\ref{lem:pde31-cutoff} wymagają jedynie
+wielomianowego wzrostu $F$ globalnie i szybkiego
+zaniku w $\Gamma_2$. Dają więc szybki zanik
+w mniejszym stożku wokół $\xi_0$.
+Obcięte pierwsze dwa składniki są gładkie
+o zwartym nośniku. Ponieważ $\eta v=\eta u$,
+otrzymujemy $(x_0,\xi_0)\notin\operatorname{WF}(u)$.
+\end{proof}
+
+\begin{uwaga}[Operatory o zmiennych współczynnikach]
+Pierwszą inkluzję udowodniliśmy również dla
+gładkich zmiennych współczynników.
+Druga w tym przypadku jest ogólnym twierdzeniem
+o regularności mikrolokalnej, wymagającym
+parametryksu w rachunku symboli zależnych od $x$.
+Nie dowodzimy tutaj tego ogólnego twierdzenia
+ani nie stosujemy go do współczynników mierzalnych.
+\end{uwaga}
+
+\section{Zbiór falowy Sobolewa i powierzchnie charakterystyczne}
+\begin{definicja}[Zbiór falowy Sobolewa rzędu $s$]
+\label{def:pde31-wfs}
+Dla $s\in\R$, $u\in\mathcal D'(U)$, para $(x_0,\xi_0)$
+z $\xi_0\ne0$ nie należy do $\operatorname{WF}^s(u)$,
+jeśli istnieje $\chi\in C_c^\infty(U)$ równa
+$1$ blisko $x_0$ i otwarty stożek $\Gamma\ni\xi_0$
+taki, że
+\[
+ \int_\Gamma\langle\xi\rangle^{2s}
+ |\widehat{\chi u}(\xi)|^2\,\mathrm d\lambda_d(\xi)<\infty.
+\]
+\end{definicja}
+Tak jak w przypadku zwykłego zbioru falowego
+dopełnienie jest otwarte, a zbiór jest stożkowy.
+Jeżeli $s\le t$, to $\operatorname{WF}^s(u)\subset
+\operatorname{WF}^t(u)$, ponieważ
+$\langle\xi\rangle^{2s}\le\langle\xi\rangle^{2t}$.
+Ponadto $\operatorname{WF}^s(u)\subset\operatorname{WF}(u)$:
+szybki zanik implikuje całkowalność z dowolną
+potęgą wagi.
+
+\begin{lemat}[Dalsze obcięcie w skali Sobolewa]
+\label{lem:pde31-sobolev-cutoff}
+W założeniach Definicji~\ref{def:pde31-wfs}
+niech $\eta\in C_c^\infty(U)$ ma nośnik w otoczeniu,
+na którym $\chi=1$, a $\Gamma'$ będzie mniejszym
+stożkiem z domknięciem na sferze wewnątrz $\Gamma$.
+Wtedy
+$\langle\xi\rangle^s\widehat{\eta u}\in L^2(\Gamma')$.
+Ogólniej, jeśli $F$ jest mierzalną funkcją
+o co najwyżej wielomianowym wzroście na $\R^d$
+i $\langle\cdot\rangle^sF\in L^2(\Gamma)$,
+to dla dowolnej $\eta\in C_c^\infty(\R^d)$
+zachodzi
+\[
+ \langle\cdot\rangle^s(\widehat\eta*F)\in L^2(\Gamma').
+\]
+\end{lemat}
+\begin{proof}
+Najpierw dowodzimy ogólniejszego oszacowania.
+Splot jest określony punktowo przez bezwzględnie
+zbieżną całkę: jeśli $|F(\zeta)|\le C\langle\zeta\rangle^M$,
+to nierówność Peetre'a daje dla ustalonego $\xi$
+\[
+ |\widehat\eta(\xi-\zeta)F(\zeta)|
+ \le C2^{M/2}\langle\xi\rangle^M
+ |\widehat\eta(\xi-\zeta)|\langle\xi-\zeta\rangle^M,
+\]
+gdzie możemy przyjąć $M\ge0$. Prawa strona jest
+całkowalna względem $\zeta$ dzięki szybkiemu
+zanikowi $\widehat\eta$.
+Rozkładamy $F=F_1+F_2$, gdzie
+$F_1=\chi_\Gamma F$ i $F_2=\chi_{\R^d\setminus\Gamma}F$.
+Z założenia $\langle\cdot\rangle^s F_1\in L^2$.
+Nierówność Peetre'a z dowodu Twierdzenia
+~\ref{thm:pde31-compact-symbol} daje
+\[
+ \langle\xi\rangle^s|(\widehat\eta*F_1)(\xi)|
+ \le 2^{|s|/2}
+ \bigl((\langle\cdot\rangle^{|s|}|\widehat\eta|)
+ *(\langle\cdot\rangle^s|F_1|)\bigr)(\xi).
+\]
+Pierwszy czynnik splotu należy do $L^1$,
+drugi do $L^2$. Stosujemy oszacowanie Schura
+z dowodu Twierdzenia~\ref{thm:pde31-compact-symbol}
+do nieujemnego jądra
+$J(\xi,\zeta)=\langle\xi-\zeta\rangle^{|s|}
+|\widehat\eta(\xi-\zeta)|$.
+Oba kresy górne całek jądra są równe
+$\|\langle\cdot\rangle^{|s|}\widehat\eta\|_1$,
+przez niezmienniczość miary Lebesgue'a względem
+translacji. Stąd otrzymujemy jawne oszacowanie
+\[
+ \|\langle\cdot\rangle^s(\widehat\eta*F_1)\|_2
+ \le 2^{|s|/2}
+ \|\langle\cdot\rangle^{|s|}\widehat\eta\|_1
+ \|\langle\cdot\rangle^s F_1\|_2.
+\]
+Funkcja $F_2$ jest wielomianowo ograniczona
+i znika w $\Gamma$. Z oszacowań dowodu
+Lematu~\ref{lem:pde31-cutoff} splot
+$\widehat\eta*F_2$ szybko maleje w $\Gamma'$,
+więc jego iloczyn z $\langle\xi\rangle^s$
+należy do $L^2(\Gamma')$.
+Dodając oba składniki, otrzymujemy ogólniejszą tezę.
+W szczególnym przypadku $F=\widehat{\chi u}$
+wielomianowe ograniczenie wynika z Lematu
+~\ref{lem:pde31-compact-fourier}, a warunek
+całkowalności z założenia. Ponieważ $\eta u=\eta\chi u$,
+z Lematu~\ref{lem:pde31-polynomial-convolution}
+mamy $\widehat{\eta u}=(2\pi)^{-d}\widehat\eta*F$.
+To daje pierwszą tezę.
+\end{proof}
+
+\begin{wniosek}[Lokalna regularność Sobolewa a zbiór falowy]
+\label{cor:pde31-wfs-projection}
+Dla $s\in\R$ zachodzi
+$\operatorname{WF}^s(u)\cap(\{x_0\}\times
+(\R^d\setminus\{0\}))=\varnothing$
+wtedy i tylko wtedy, gdy $u$ należy do $H^s$
+lokalnie w pewnym otoczeniu $x_0$.
+\end{wniosek}
+\begin{proof}
+Jeśli $u$ należy lokalnie do $H^s$,
+wybieramy obcięcie równe $1$ blisko $x_0$
+i otrzymujemy całkowalność z wagą na całej
+przestrzeni częstotliwości.
+Odwrotnie, dla każdego kierunku wybieramy
+stożek i obcięcie z definicji oraz mniejszy stożek
+z domknięciem wewnątrz pierwszego na sferze.
+Ze zwartości sfery wybieramy skończone pokrycie
+mniejszymi stożkami i wspólną funkcję obcinającą
+$\eta$ równą $1$ blisko $x_0$, z nośnikiem
+w przecięciu otoczeń, gdzie wszystkie pierwotne
+obcięcia są równe $1$.
+Z Lematu~\ref{lem:pde31-sobolev-cutoff}
+całka z wagą jest skończona w każdym stożku,
+a skończona suma ogranicza całkę na całej
+$\R^d$. Zatem $\eta u\in H^s(\R^d)$.
+Mnożenie przez kolejne gładkie obcięcia
+zachowuje $H^s$ z Twierdzenia
+~\ref{thm:pde31-compact-symbol}, co daje tezę.
+\end{proof}
+
+\begin{twierdzenie}[Mikrolokalne oszacowanie Sobolewa dla operatorów różniczkowych]
+\label{thm:pde31-sobolev-ellipticity}
+Niech $u\in\mathcal D'(U)$ oraz
+$P=\sum_{|\alpha|\le m}b_\alpha(x)\partial^\alpha$
+będzie operatorem różniczkowym rzędu $m\ge1$
+o gładkich współczynnikach na $U$.
+Przyjmujemy
+$p_m(x,\xi)=\sum_{|\alpha|=m}b_\alpha(x)(i\xi)^\alpha$
+oraz $\operatorname{Char}(P)=\{(x,\xi):x\in U,\
+\xi\ne0,\ p_m(x,\xi)=0\}$.
+Dla każdego $s\in\R$
+zachodzi
+\[
+ \operatorname{WF}^{s}(Pu)\subset
+ \operatorname{WF}^{s+m}(u).
+\]
+Jeżeli ponadto współczynniki $P$ są stałe, to
+\[
+ \operatorname{WF}^{s+m}(u)\subset
+ \operatorname{WF}^{s}(Pu)\cup\operatorname{Char}(P).
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla pierwszej inkluzji niech $\chi,\Gamma$
+realizują regularność Sobolewa rzędu $s+m$
+dystrybucji $u$ przy $(x_0,\xi_0)$.
+Dla $|\alpha|\le m$ mamy
+\[
+ \langle\xi\rangle^s
+ |(i\xi)^\alpha\widehat{\chi u}(\xi)|
+ \le\langle\xi\rangle^{s+m}|\widehat{\chi u}(\xi)|.
+\]
+Stąd transformata $\partial^\alpha(\chi u)$
+spełnia warunek całkowalności z wagą rzędu $s$
+w $\Gamma$. Wybieramy $\eta$ równą $1$ blisko
+$x_0$ i o nośniku tam, gdzie $\chi=1$.
+Dla każdego współczynnika $b_\alpha$ stosujemy
+oszacowanie splotowe z dowodu Lematu
+~\ref{lem:pde31-sobolev-cutoff} do mnożnika
+$\eta b_\alpha\in C_c^\infty(U)$ i transformaty
+$\partial^\alpha(\chi u)$. Argument ten
+nie wymaga, aby mnożnik był równy $1$.
+Ustalmy jeden otwarty stożek $\Gamma'$ wokół
+$\xi_0$, którego domknięcie na sferze mieści się
+w $\Gamma$. Dla każdego $|\alpha|\le m$ ogólna
+część Lematu~\ref{lem:pde31-sobolev-cutoff}
+daje całkowalność z wagą w tym samym $\Gamma'$:
+transformata $\partial^\alpha(\chi u)$ ma
+wzrost wielomianowy z Lematu
+~\ref{lem:pde31-compact-fourier}.
+Z tożsamości $\eta b_\alpha\partial^\alpha u
+=\eta b_\alpha\partial^\alpha(\chi u)$ i wzoru
+na transformatę iloczynu wynika, że
+\[
+ \|\langle\cdot\rangle^s\widehat{\eta Pu}\|_{L^2(\Gamma')}
+ \le \sum_{|\alpha|\le m}
+ \|\langle\cdot\rangle^s
+ \widehat{\eta b_\alpha\partial^\alpha(\chi u)}
+ \|_{L^2(\Gamma')}<\infty .
+\]
+Dowodzi to pierwszej inkluzji.
+
+Dla drugiej inkluzji załóżmy, że
+$(x_0,\xi_0)\notin\operatorname{WF}^s(Pu)
+\cup\operatorname{Char}(P)$.
+Wybieramy $\chi,\Gamma$ dla $Pu$ i konstruujemy
+$\Gamma_1,\Gamma_2,q,\theta$ dokładnie jak w dowodzie
+Twierdzenia~\ref{thm:pde31-conic-ellipticity}.
+Dla $v=\chi u$ otrzymujemy ten sam rozkład
+\[
+ v=q(D)(\chi Pu)+q(D)([P,\chi]u)+(1-\theta)(D)v.
+\]
+Transformata pierwszego składnika to
+$q\widehat{\chi Pu}$, a ponieważ
+$\operatorname{supp}q\subset\Gamma_1\subset\Gamma$
+oraz $|q(\xi)|\le C\langle\xi\rangle^{-m}$,
+mamy
+\[
+ \int_{\R^d}\langle\xi\rangle^{2(s+m)}
+ |q(\xi)\widehat{\chi Pu}(\xi)|^2\,\mathrm d\lambda_d(\xi)
+ \le C^2\int_\Gamma\langle\xi\rangle^{2s}
+ |\widehat{\chi Pu}(\xi)|^2\,\mathrm d\lambda_d(\xi)
+ <\infty .
+\]
+Pierwszy składnik należy więc do $H^{s+m}(\R^d)$.
+Drugi jest gładki blisko $x_0$ dzięki własności
+pseudolokalnej. Transformata trzeciego jest
+wielomianowo ograniczona i znika w $\Gamma_2$
+dla dostatecznie dużych częstotliwości.
+Wybieramy dalsze obcięcie $\eta$ jak w dowodzie
+Twierdzenia~\ref{thm:pde31-conic-ellipticity}.
+Mnożenie przez $\eta$ zachowuje $H^{s+m}$
+na mocy Twierdzenia~\ref{thm:pde31-compact-symbol}.
+Obcięty drugi składnik jest gładki o zwartym
+nośniku. Dla trzeciego składnika kładziemy
+$F=(1-\theta)\widehat v$. Funkcja $F$ jest
+wielomianowo ograniczona i szybko maleje
+w $\Gamma_2$, ponieważ znika w tym stożku
+poza kulą o promieniu $2R$, a w kuli jest ograniczona.
+Z Lematu~\ref{lem:pde31-polynomial-convolution}
+jego transformata po obcięciu jest równa
+$(2\pi)^{-d}\widehat\eta*F$. Oszacowania
+z dowodu Lematu~\ref{lem:pde31-cutoff}
+dają szybki zanik tego splotu w dowolnym
+mniejszym stożku z domknięciem na sferze
+wewnątrz $\Gamma_2$. W szczególności wybierając
+wykładnik zaniku $N>s+m+d/2$, uzyskujemy
+całkowalność kwadratu z wagą rzędu $s+m$.
+Wszystkie trzy spełniają zatem warunek Sobolewa
+rzędu $s+m$ w tym stożku. Ponieważ $\eta v=\eta u$,
+otrzymujemy żądaną regularność.
+\end{proof}
+
+\begin{przyklad}[Próg Sobolewa delty]
+Dla $\delta_0$ lokalna transformata przy obcięciu
+równym $1$ blisko zera jest identycznie równa $1$.
+Na dowolnym niepustym otwartym stożku $\Gamma$
+całka z wagą $\langle\xi\rangle^{2s}$ dla
+$|\xi|\ge1$ jest, z dokładnością do dodatnich
+stałych, równa
+$\int_1^\infty r^{2s+d-1}\,\mathrm d\lambda_1(r)$,
+ponieważ przekrój stożka ze sferą ma dodatnią
+miarę powierzchniową (dla $d=1$ liczymy kierunki).
+Całka zbiega dokładnie wtedy, gdy $s<-d/2$;
+przy równości rozbieżność jest logarytmiczna.
+Poza zerem dystrybucja znika lokalnie.
+W konsekwencji
+\[
+ \operatorname{WF}^s(\delta_0)=
+ \begin{cases}
+  \varnothing,&s<-d/2,\\
+  \{(0,\xi):\xi\ne0\},&s\ge-d/2.
+ \end{cases}
+\]
+W szczególności $\delta_0\in H^s_{\mathrm{loc}}(\R^d)$
+dokładnie dla $s<-d/2$.
+\end{przyklad}
+
+\begin{przyklad}[Próg Sobolewa skoku]
+\label{ex:pde31-sobolev-heaviside}
+Dla $H=\chi_{(0,\infty)}$ na $\R$ zachodzi
+\[
+ \operatorname{WF}^s(H)=
+ \begin{cases}
+ \varnothing,&s<1/2,\\
+ \{(0,\xi):\xi\ne0\},&s\ge1/2.
+ \end{cases}
+\]
+Istotnie, dla każdej funkcji obcinającej $\chi$
+równej $1$ blisko zera w Przykładzie
+~\ref{ex:pde31-delta} wykazaliśmy
+$|\xi\widehat{\chi H}(\xi)|\to1$ przy
+$|\xi|\to\infty$. Na każdej półprostej całka
+z wagą jest więc zbieżna dokładnie wtedy,
+gdy zbiega $\int_1^\infty r^{2s-2}\,
+\mathrm d\lambda_1(r)$, czyli dla $s<1/2$.
+Na ograniczonych częstotliwościach transformata
+jest ciągła, więc nie ma dodatkowego warunku.
+Poza zerem funkcja jest gładka.
+\end{przyklad}
+
+\begin{przyklad}[Próg Sobolewa delty na hiperpłaszczyźnie]
+\label{ex:pde31-sobolev-conormal}
+Dla $u=\delta(x_1)\otimes1(x')$, $d\ge2$,
+zachodzi
+\[
+ \operatorname{WF}^s(u)=
+ \begin{cases}
+ \varnothing,&s<-1/2,\\
+ \{((0,x'),(\xi_1,0)):\xi_1\ne0\},&s\ge-1/2.
+ \end{cases}
+\]
+Dla dowolnego obcięcia $\chi$ transformata
+$\widehat{\chi u}(\xi_1,\xi')=\widehat h(\xi')$,
+gdzie $h(x')=\chi(0,x')$, jak w Przykładzie
+~\ref{ex:pde31-conormal}.
+Dla $s<-1/2$ podstawienie
+$\xi_1=\langle\xi'\rangle t$ daje
+\[
+ \int_{\R}\langle(\xi_1,\xi')\rangle^{2s}
+ \,\mathrm d\lambda_1(\xi_1)
+ =C_s\langle\xi'\rangle^{2s+1},
+ \qquad
+ C_s=\int_\R(1+t^2)^s\,\mathrm d\lambda_1(t)<\infty.
+\]
+Z twierdzenia Tonellego i szybkiego zaniku
+$\widehat h$ wynika skończoność całki na całej
+$\R^d$.
+
+Dla $s\ge-1/2$ oraz $\chi=1$ blisko $(0,x_0')$
+funkcja $h$ nie jest zerowa. Istnieje więc
+ograniczona kula otwarta $B\subset\R^{d-1}$
+i liczba $c_0>0$ takie, że
+$|\widehat h|\ge c_0$ na $B$, z ciągłości
+transformaty i jej odwracalności.
+Każdy otwarty stożek wokół $(1,0)$ zawiera
+$(R,\infty)\times B$ dla dostatecznie dużego $R$,
+a stożek wokół $(-1,0)$ zawiera
+$(-\infty,-R)\times B$.
+Na tych zbiorach
+$\langle(\xi_1,\xi')\rangle^{2s}$ jest porównywalna
+z $|\xi_1|^{2s}$, także dla ujemnych $s$,
+ponieważ $\xi'$ jest ograniczone.
+Całka z wagą jest nieskończona z rozbieżności
+$\int_R^\infty r^{2s}\,\mathrm d\lambda_1(r)$.
+W kierunkach nienormalnych zwykły zbiór falowy
+jest pusty, a $\operatorname{WF}^s(u)\subset
+\operatorname{WF}(u)$. To kończy obliczenie.
+\end{przyklad}
+
+\begin{przyklad}[Charakterystyki równania falowego]
+\label{ex:pde31-wave-bicharacteristics}
+Niech $c>0$. Symbol główny operatora
+$P=\partial_t^2-c^2\Delta_x$ wynosi
+$p(\tau,\xi)=-\tau^2+c^2|\xi|^2$.
+Jego zbiór charakterystyczny jest stożkiem
+$\tau^2=c^2|\xi|^2$, $(\tau,\xi)\ne0$.
+Z Twierdzenia~\ref{thm:pde31-conic-ellipticity}
+dla $Pu=0$ wynika
+$\operatorname{WF}(u)\subset\operatorname{Char}(P)$.
+
+Pole Hamiltona symbolu $p$ w zmiennych
+$(t,x;\tau,\xi)$ definiujemy wzorem
+\[
+ H_p=(\partial_\tau p)\partial_t+
+ \nabla_\xi p\cdot\nabla_x
+ -(\partial_t p)\partial_\tau-\nabla_xp\cdot\nabla_\xi.
+\]
+W tym przypadku $H_p=-2\tau\partial_t+
+2c^2\xi\cdot\nabla_x$. Bicharakterystyki
+na zbiorze charakterystycznym, czyli krzywe
+całkowe tego pola z $p=0$, spełniają
+\[
+ \begin{aligned}
+ t(\sigma)&=t_0-2\tau_0\sigma,&
+ x(\sigma)&=x_0+2c^2\xi_0\sigma,\\
+ \tau(\sigma)&=\tau_0,&
+ \xi(\sigma)&=\xi_0.
+ \end{aligned}
+\]
+Ponieważ na niezerowej części stożka
+$\tau_0\ne0$, można użyć $t$ jako parametru.
+Rzut krzywej na czasoprzestrzeń ma postać
+\[
+ x(t)=x_0-\frac{c^2\xi_0}{\tau_0}(t-t_0),
+ \qquad \left|\frac{\mathrm dx}{\mathrm dt}\right|=c .
+\]
+Są to proste o prędkości $c$.
+Na każdej z dwóch gałęzi stożka znak $\tau_0$
+określa zwrot ruchu względem $\xi_0$:
+dla $\tau_0=c|\xi_0|$ mamy
+$\dot x=-c\xi_0/|\xi_0|$, natomiast dla
+$\tau_0=-c|\xi_0|$ mamy $\dot x=c\xi_0/|\xi_0|$.
+W odróżnieniu od laplasjanu operator falowy
+ma rzeczywiste niezerowe kowektory charakterystyczne.
+
+Wzdłuż krzywej całkowej pola Hamiltona dowolnego
+gładkiego rzeczywistego symbolu $p$ zachodzi
+$H_pp=0$, ponieważ odpowiednie iloczyny
+pochodnych po zmiennych bazowych i kowektorowych
+znoszą się parami. W szczególności przepływ
+zachowuje poziomicę $p=0$.
+Obliczenie krzywych nie jest jeszcze dowodem
+propagacji zbioru falowego wzdłuż nich.
+Ogólne twierdzenie o propagacji osobliwości
+dla operatorów typu głównego o rzeczywistym symbolu
+jest głębsze niż udowodniona tutaj inkluzja
+mikrolokalna; nie przedstawiamy jego pełnego dowodu.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
+ \draw[->,gray!70] (-2.35,0)--(2.35,0) node[right] {$\xi$};
+ \draw[->,gray!70] (0,-2.05)--(0,2.25) node[above] {$\tau$};
+ \draw[blue!70!black,very thick] (-1.9,1.9)--(0,0)--(1.9,1.9);
+ \draw[orange!80!black,very thick] (-1.9,-1.9)--(0,0)--(1.9,-1.9);
+ \fill[white] (0,0) circle (2pt);
+ \draw[gray] (0,0) circle (2pt);
+ \node[blue!70!black,above left] at (-1.1,1.1) {$\tau=|\xi|$};
+ \node[orange!80!black,below left] at (-1.1,-1.1) {$\tau=-|\xi|$};
+ \node at (0,-2.55) {przekrój stożka, $c=1$};
+ \begin{scope}[xshift=6.1cm]
+  \draw[->,gray!70] (-2.35,0)--(2.35,0) node[right] {$x$};
+  \draw[->,gray!70] (0,-.35)--(0,2.25) node[above] {$t$};
+  \foreach \a in {-1.4,-.7,0,.7,1.4}{
+   \draw[blue!65!black,thick,->] (\a,0)--({\a-0.8},1.6);
+   \draw[orange!80!black,thick,->] (\a,0)--({\a+0.8},1.6);
+  }
+  \node[blue!65!black,above] at (-1.4,1.7) {$\dot x=-c$};
+  \node[orange!80!black,above] at (1.4,1.7) {$\dot x=c$};
+  \node at (0,-2.55) {rzuty bicharakterystyk};
+ \end{scope}
+\end{tikzpicture}
+
+{\small Rysunek: przekrój charakterystycznego stożka
+częstotliwości w wymiarze przestrzennym jeden (po lewej)
+oraz rodziny prostych charakterystycznych w czasoprzestrzeni
+(po prawej). Początek w przestrzeni kowektorów jest wyłączony.
+Kolory po lewej oznaczają znak $\tau$, a po prawej
+zwrot ruchu. Zgodność kolorów między panelami dotyczy
+kierunku $\xi>0$; dla $\xi<0$ zwroty są przeciwne.
+Skale osi w prawym panelu są schematyczne.}
+\end{center}
+
+\section{Przybliżenie optyki geometrycznej}
+\begin{stwierdzenie}[Równanie eikonalne jako warunek wysokich częstotliwości]
+\label{prop:pde31-eikonal}
+Niech $c>0$ i $\eps>0$, a $\varphi$ będzie
+rzeczywistą funkcją klasy $C^2$ i $a$ funkcją
+klasy $C^2$ o wartościach w $\C$ na otwartym
+podzbiorze $\R^{1+d}$. Dla $u_\eps=a\exp(i\varphi/\eps)$
+zachodzi
+\[
+ (\partial_t^2-c^2\Delta_x)u_\eps
+ =e^{i\varphi/\eps}
+ \Bigl[\eps^{-2}a(c^2|\nabla_x\varphi|^2-\varphi_t^2)
+ +i\eps^{-1}\mathcal T(a,\varphi)
+ +(\partial_t^2-c^2\Delta_x)a\Bigr],
+\]
+gdzie
+$\mathcal T(a,\varphi)=2\varphi_ta_t+a\varphi_{tt}
+ -2c^2\nabla_x\varphi\cdot\nabla_xa-c^2a\Delta_x\varphi$.
+Zanik wyrazu rzędu $\eps^{-2}$ w punktach, gdzie $a\ne0$,
+jest równoważny równaniu eikonalnemu
+$\varphi_t^2=c^2|\nabla_x\varphi|^2$.
+\end{stwierdzenie}
+\begin{proof}
+Dla dowolnej zmiennej $z\in\{t,x_1,\ldots,x_d\}$
+z reguły iloczynu i reguły łańcuchowej mamy
+\[
+ \begin{aligned}
+ \partial_z u_\eps
+ &=e^{i\varphi/\eps}
+ \left(\partial_z a+\frac{i}{\eps}a\partial_z\varphi\right),\\
+ \partial_z^2u_\eps
+ &=e^{i\varphi/\eps}
+ \left(\partial_z^2 a+
+ \frac{i}{\eps}(2\partial_z a\,\partial_z\varphi+
+ a\partial_z^2\varphi)
+ -\frac{a}{\eps^2}(\partial_z\varphi)^2\right).
+ \end{aligned}
+\]
+Od wzoru dla $z=t$ odejmujemy $c^2$ razy sumę
+wzorów dla $z=x_j$. Wyrazy rzędu $\eps^{-2}$,
+$\eps^{-1}$ oraz $\eps^0$ dają odpowiednio
+trzy składniki podane w tezie.
+Jeżeli $a\ne0$, zerowanie współczynnika
+przy $\eps^{-2}$ jest równoważne równaniu
+eikonalnemu.
+\end{proof}
+
+\begin{stwierdzenie}[Transport amplitudy i reszta przybliżenia]
+\label{prop:pde31-amplitude}
+Niech $c>0$, $\eps>0$ i
+$P=\partial_t^2-c^2\Delta_x$. Przyjmujemy
+założenia o gładkości fazy $\varphi$ i amplitudy $a$
+ze Stwierdzenia~\ref{prop:pde31-eikonal}.
+Załóżmy ponadto, że rzeczywista faza $\varphi$
+spełnia równanie eikonalne i $\partial_t\varphi\ne0$.
+Po wyzerowaniu współczynnika rzędu $\eps^{-1}$
+równanie amplitudy przyjmuje postać
+\[
+ a_t+v\cdot\nabla_xa+\kappa a=0,\qquad
+ v=-c^2\frac{\nabla_x\varphi}{\varphi_t},
+ \quad \kappa=\frac{P\varphi}{2\varphi_t}.
+\]
+W szczególności $|v|=c$. Jeżeli $a$ spełnia
+to równanie, to
+$Pu_\eps=e^{i\varphi/\eps}Pa$, a zatem
+$\|Pu_\eps\|_{L^2(K)}=\|Pa\|_{L^2(K)}$
+na każdym zwartym zbiorze mierzalnym $K$
+w dziedzinie fazy i amplitudy.
+\end{stwierdzenie}
+\begin{proof}
+Równanie transportu otrzymujemy, dzieląc
+$\mathcal T(a,\varphi)=0$ przez $2\varphi_t$,
+co jest dopuszczalne z założenia.
+Równanie eikonalne daje
+$|\nabla_x\varphi|/|\varphi_t|=1/c$.
+Pozostałe tożsamości wynikają ze Stwierdzenia
+~\ref{prop:pde31-eikonal} i modułu
+$|e^{i\varphi/\eps}|=1$.
+Ponieważ $\varphi$ jest klasy $C^2$, pole $v$
+jest klasy $C^1$, a $\kappa$ jest ciągła.
+Lokalne istnienie i jednoznaczność krzywych
+$X'(t)=v(t,X(t))$, $X(t_0)=x_0$, wynika
+z twierdzenia Picarda--Lindelöfa.
+Wzdłuż takiej krzywej, na przedziale jej
+istnienia w dziedzinie fazy, reguła łańcuchowa daje
+$\frac{\mathrm d}{\mathrm dt}a(t,X(t))
+=-\kappa(t,X(t))a(t,X(t))$. Stąd
+\[
+ a(t,X(t))=a(t_0,X(t_0))
+ \exp\left(-\int_{t_0}^t\kappa(s,X(s))
+ \,\mathrm d\lambda_1(s)\right).
+\]
+Jest to opis amplitudy dla istniejącego
+rozwiązania klasy $C^2$. Jeśli dodatkowo
+$\varphi\in C^\infty$, to $v$ i $\kappa$ są gładkie.
+Dla gładkich danych $a_0$ na przekroju $t=t_0$
+możemy wówczas skonstruować amplitudę lokalnie.
+Oznaczmy przez $X(t;t_0,y)$ rozwiązanie równania
+charakterystyk wychodzące z $y$ w chwili $t_0$.
+Z twierdzenia o gładkiej zależności rozwiązań
+od danych początkowych odwzorowanie
+$(t,y)\mapsto(t,X(t;t_0,y))$ jest gładkie.
+W chwili $t_0$ jego macierz Jacobiego ma
+dolny prawy blok równy macierzy jednostkowej,
+górny wiersz blokowy $(1,0)$, a zatem jest
+odwracalna. Twierdzenie o funkcji odwrotnej
+daje lokalne gładkie współrzędne $(t,x)$.
+Definiujemy w nich amplitudę przez
+\[
+ a(t,X(t;t_0,y))=a_0(y)
+ \exp\left(-\int_{t_0}^t\kappa(s,X(s;t_0,y))
+ \,\mathrm d\lambda_1(s)\right).
+\]
+Gładkość prawej strony wynika z różniczkowania
+całki po parametrach na lokalnym przedziale
+istnienia przepływu. Różniczkowanie wzdłuż
+charakterystyk daje równanie amplitudy i warunek
+$a(t_0,y)=a_0(y)$, a jednoznaczność lokalna
+wynika z jednoznaczności skalarnego równania
+liniowego na każdej charakterystyce.
+Przy samej fazie klasy $C^2$ nie wnioskujemy
+w ten sposób o istnieniu amplitudy klasy $C^2$.
+\end{proof}
+
+\begin{przyklad}[Faza liniowa i fala transportowana]
+\label{ex:pde31-plane-phase}
+Dla ustalonego $k\in\R^d\setminus\{0\}$
+weźmy $\varphi(t,x)=k\cdot x-c|k|t$.
+Mamy $P\varphi=0$, a równanie eikonalne
+jest spełnione, ponieważ $\varphi_t=-c|k|$
+i $\nabla_x\varphi=k$.
+Stąd $v=ck/|k|$ jest stały i
+$a(t,x)=a_0(x-tv)$ spełnia równanie transportu.
+Dla $a_0\in C_c^\infty(\R^d)$
+\[
+ Pu_\eps(t,x)=
+ e^{i\varphi(t,x)/\eps}
+ \bigl((v\cdot\nabla)^2-c^2\Delta\bigr)a_0(x-tv).
+\]
+Rozkładając laplasjan wzdłuż jednostkowego
+wektora $e=k/|k|$ i w kierunkach prostopadłych,
+otrzymujemy $Pu_\eps=-c^2e^{i\varphi/\eps}
+(\Delta_\perp a_0)(x-tv)$, gdzie
+$\Delta_\perp=\Delta-(e\cdot\nabla)^2$.
+W wymiarze jeden reszta jest zerowa i
+$u_\eps$ jest dokładnym rozwiązaniem
+równania falowego. W wyższych wymiarach
+reszta jest niezależnie od $\eps$ ograniczona
+w normie $L^2$ względem $x$, gdyż translacja
+zachowuje tę normę.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
+ \fill[blue!6] (-2.8,-1.45) rectangle (2.8,1.45);
+ \foreach \x in {-2.4,-1.6,-.8,0,.8,1.6,2.4}{
+  \draw[blue!65!black,thick] (\x,-1.45)--(\x,1.45);
+ }
+ \foreach \y in {-.95,0,.95}{
+  \draw[->,orange!90!black,very thick] (-2.4,\y)--(-1.78,\y);
+  \draw[->,orange!90!black,very thick] (0,\y)--(.62,\y);
+  \draw[->,orange!90!black,very thick] (1.6,\y)--(2.22,\y);
+ }
+ \node[blue!65!black,above] at (0,1.6) {powierzchnie stałej fazy};
+ \draw[->] (-2.8,-1.9)--(-1.6,-1.9) node[right] {$x_1$};
+ \node[orange!90!black,below] at (.7,-1.65) {$v=ce_1$};
+\end{tikzpicture}
+
+{\small Rysunek: dla $k=|k|e_1$ powierzchnie stałej
+fazy w ustalonej chwili są równoległymi prostymi
+(w wymiarze dwa). Prędkość transportu amplitudy
+jest prostopadła do nich.}
+\end{center}
+
+\begin{wniosek}[Oszacowanie błędu energetycznego]
+\label{cor:pde31-wkb-energy}
+Niech $a_0\in C_c^\infty(\R^d)$ i $u_\eps$
+będzie przybliżeniem z Przykładu
+~\ref{ex:pde31-plane-phase}. Niech $w_\eps$
+będzie dokładnym rozwiązaniem $Pw_\eps=0$
+z tymi samymi danymi początkowymi jak $u_\eps$
+w chwili $0$. Dla $t\ge0$ zachodzi
+\[
+ \left(\|\partial_t(w_\eps-u_\eps)(t)\|_2^2
+ +c^2\|\nabla_x(w_\eps-u_\eps)(t)\|_2^2\right)^{1/2}
+ \le c^2t\|\Delta_\perp a_0\|_2.
+\]
+W konsekwencji po przemnożeniu lewej strony
+przez $\eps$ otrzymujemy błąd $O(\eps)$
+jednostajnie dla $t$ w ograniczonym przedziale.
+Ponadto
+\[
+ \|(w_\eps-u_\eps)(t)\|_2
+ \le \frac{c^2t^2}{2}\|\Delta_\perp a_0\|_2.
+\]
+\end{wniosek}
+\begin{proof}
+Dane początkowe są gładkie o zwartym nośniku.
+Rozwiązanie $w_\eps$ istnieje z konstrukcji
+Fourierowskiej równania falowego: dla danych
+$g,h\in\mathcal S$ jego transformata przestrzenna
+jest równa
+$\cos(ct|\xi|)\widehat g+
+\frac{\sin(ct|\xi|)}{c|\xi|}\widehat h$,
+gdzie drugi mnożnik ma wartość $t$ w zerze.
+Oba mnożniki są gładkie wraz ze wszystkimi
+pochodnymi o wzroście co najwyżej wielomianowym
+dla ustalonego $t$. Dokładniej, w otoczeniu zera
+korzystamy z szeregów
+\[
+ \cos(ct|\xi|)
+ =\sum_{j=0}^\infty\frac{(-1)^j(ct)^{2j}|\xi|^{2j}}{(2j)!},
+ \qquad
+ \frac{\sin(ct|\xi|)}{c|\xi|}
+ =\sum_{j=0}^\infty
+ \frac{(-1)^jc^{2j}t^{2j+1}|\xi|^{2j}}{(2j+1)!}.
+\]
+Są to szeregi wielomianów w $t$ i współrzędnych
+$\xi$, zbieżne wraz ze wszystkimi pochodnymi
+jednostajnie na zbiorach zwartych: różniczkowanie
+ustalonego rzędu wprowadza co najwyżej czynniki
+wielomianowe w $j$, kontrolowane przez silnie
+w mianownikach. Dla $|\xi|\ge1$ pochodne
+$|\xi|$ rzędu $|\beta|$ są ograniczone przez
+$C_\beta|\xi|^{1-|\beta|}$ z jednorodności
+i zwartości sfery. Reguła łańcuchowa i reguła
+Leibniza pokazują więc, że dla każdego rzędu
+różniczkowania względem $t$ i $\xi$ pochodne
+obu mnożników są ograniczone przez pewną potęgę
+$\langle\xi\rangle$, jednostajnie dla $t$ w ustalonym
+przedziale zwartym.
+Po pomnożeniu przez $\widehat g,\widehat h\in\mathcal S$
+otrzymujemy ciągłe w $t$ funkcje o wartościach
+w przestrzeni Schwartza, również po dowolnym
+różniczkowaniu względem $t$. Istotnie, reszty
+ilorazów różnicowych są kontrolowane w każdej
+półnormie Schwartza przez oszacowania pochodnej
+o jeden rząd wyższej. Ciągłość odwrotnej
+transformaty Fouriera daje gładkość
+$t\mapsto w_\eps(t)$ w przestrzeni Schwartza.
+Bezpośrednie różniczkowanie mnożników daje
+$\partial_t^2\widehat w_\eps=-c^2|\xi|^2
+\widehat w_\eps$, także dla $\xi=0$.
+Wartości mnożników w chwili $0$ wynoszą
+odpowiednio $1$ i $0$, a wartości ich pierwszych
+pochodnych względem $t$ wynoszą $0$ i $1$.
+Zatem $Pw_\eps=0$, $w_\eps(0)=g$ i
+$\partial_t w_\eps(0)=h$.
+W klasie gładkich odwzorowań czasu w przestrzeń
+Schwartza rozwiązanie jest jednoznaczne:
+po transformacji Fouriera różnica dwóch rozwiązań
+spełnia dla każdej $\xi$ skalarne równanie
+$y''+c^2|\xi|^2y=0$ z zerowymi danymi początkowymi,
+a więc jest zerowa. Odwracalność transformaty
+daje zerowanie różnicy.
+Możemy zatem różniczkować w $t$ i całkować
+przez części względem $x$ w obliczeniu energii.
+Niech $z=w_\eps-u_\eps$. Mamy
+$Pz=-Pu_\eps$ oraz $z(0)=z_t(0)=0$.
+Dla $E(t)=\frac12(\|z_t\|_2^2+c^2\|\nabla z\|_2^2)$
+różniczkowanie i całkowanie przez części dają
+\[
+ E'(t)=-\operatorname{Re}\int_{\R^d}
+ (Pu_\eps)\overline{z_t}\,\mathrm d\lambda_d
+ \le\|Pu_\eps(t)\|_2\sqrt{2E(t)}.
+\]
+Nie ma wyrazów brzegowych dzięki szybkiemu
+zanikowi rozwiązania i jego pochodnych.
+Dla $\delta>0$ różniczkujemy
+$\sqrt{2E+\delta^2}$, aby nie dzielić przez zero.
+Jej pochodna jest nie większa niż $\|Pu_\eps(t)\|_2$.
+Całkując i następnie przechodząc z $\delta$ do zera,
+otrzymujemy
+$\sqrt{2E(t)}\le\int_0^t\|Pu_\eps(s)\|_2\,\mathrm d\lambda_1(s)$.
+Z Przykładu~\ref{ex:pde31-plane-phase}
+norma reszty jest równa $c^2\|\Delta_\perp a_0\|_2$.
+To daje pierwszą nierówność.
+Z $z(0)=0$ wynika w $L^2$
+$z(t)=\int_0^t z_t(s)\,\mathrm d\lambda_1(s)$,
+gdzie całka jest całką Bochnera ciągłej
+funkcji o wartościach w $L^2$.
+Z nierówności trójkąta i pierwszego oszacowania
+\[
+ \|z(t)\|_2\le\int_0^t\|z_t(s)\|_2\,\mathrm d\lambda_1(s)
+ \le \frac{c^2t^2}{2}\|\Delta_\perp a_0\|_2.
+\]
+Oszacowanie rzędu $O(\eps)$ dotyczy normy energetycznej
+przemnożonej przez $\eps$ (czyli energii
+kwadratowej przemnożonej przez $\eps^2$);
+nie stwierdza zaniku błędu w zwykłej normie
+energetycznej.
+\end{proof}
+
+\section{Jak stosować analizę mikrolokalną w PDE?}
+Praktyczny schemat polega na identyfikacji symbolu głównego,
+wyznaczeniu zbioru charakterystycznego i zbadaniu,
+czy rozważane pary $(x,\xi)$ są eliptyczne.
+Dla operatorów o stałych współczynnikach poza
+zbiorem charakterystycznym regularność
+mikrolokalna prawej strony $Pu$ implikuje
+regularność mikrolokalną rozwiązania $u$.
+W skali Sobolewa oznacza to zysk $m$ rzędów
+dla operatora rzędu $m$. Oba wyniki
+udowodniliśmy odpowiednio w Twierdzeniach
+~\ref{thm:pde31-conic-ellipticity}
+i~\ref{thm:pde31-sobolev-ellipticity}.
+Na zbiorze charakterystycznym istotna staje się
+geometria przepływu hamiltonowskiego symbolu,
+lecz sama regularność eliptyczna nie przesądza
+o propagacji osobliwości wzdłuż jego krzywych.
+Przed użyciem tego schematu trzeba określić \emph{gładkość
+współczynników}; metody z tego rozdziału nie zastępują teorii
+De Giorgiego--Nasha--Mosera dla macierzy mierzalnych.
+
+
+

@@ -1,0 +1,13 @@
+# CAT-34 — pierwszy audyt stabilizacyjny (27.11.2026)
+
+Kandydat: commit bdca3eacf9d3f1685cd678fe7c7048e54836c0a8, blob 21100a1fb1754db7c686c5040a591d37675861e5. Po trzech szczegółowych audytach (34 poprawione fragmenty) skontrolowano konstrukcje rogów w dowodach relacji homotopii i składania w hX, z uwzględnieniem dokładnych wartości brakujących krawędzi. Nie znaleziono nowej usterki matematycznej wymagającej zmiany źródła.
+
+Niezależna kontrola obliczeniowa JS: model X = N(C2) × cosk_1(E), gdzie E ma jeden wierzchołek i dwie krawędzie, z których jedna jest zdegenerowana. Sympleks jest wyznaczony przez kolejne przyrosty w C2 oraz niezależną etykietę z {0,1} dla każdej pary różnych indeksów wierzchołków; na powtórzonym indeksie obie etykiety są zerowe. Operatory obliczano przez ograniczenie do odpowiedniej listy indeksów. Model ma 1, 4, 32, 512 sympleksów w wymiarach 0–3. Istotna różnica względem nerwu zwykłej kategorii: istnieją różne, lecz homotopijne krawędzie (cztery uporządkowane pary), a kategoria homotopii jest jednowierzchołkową kategorią grupy C2.
+
+Rodziny zgodnych ścian enumerowano niezależnie od wypełnień, wykonując 45104 porównania przecięć. Wszystkie 2098 rogów w wymiarach 1–3 miały wypełnienie: 1040 wewnętrznych (16 z więcej niż jednym wypełnieniem), 1058 zewnętrznych. Dla każdej badanej konstrukcji z dowodu sprawdzono, że zadane ściany są zgodne, zbiór wypełnień jest niepusty i każde wypełnienie ma wymaganą brakującą ścianę. Wyniki: zwrotność 4, symetria 8, przechodniość 16, R->L 8, L->R 8, niezależność wyboru wypełnienia 64, zmiana pierwszego czynnika 64, zmiana drugiego czynnika 64, łączność 512, realizacja dokładnie zadanej krawędzi złożonej 64. Sprawdzono również dla wszystkich 16 par krawędzi zgodność relacji homotopii z równością pierwszej etykiety oraz zgodność składania klas z działaniem C2. Wszystkie asercje PASS. Jest to skończona kontrola regresji dowodów, a nie formalizacja Lean ani dowód ogólnych twierdzeń.
+
+Kontrola statyczna: 41 unikatowych etykiet, 17 dowodów, 3 diagramy TikZ, brak nierozwiązanych odsyłaczy, środowiska zrównoważone, książka i katalog zawierają rozdział.
+
+CI dokładnego commitu źródłowego: Category theory CAT-00 validation (46030536011): queued/brak wyniku; Polish mathematical terminology (46030536057): queued/brak wyniku; Mathematical library application checks (46030536027): queued/brak wyniku. Oględzin renderowanego PDF nie wykonano. Twierdzenia zewnętrzne pozostają przytoczone z odsyłaczami, bez pełnych dowodów.
+
+Decyzja: 1/2 czystych audytów merytorycznych, 0/1 końcowych audytów kontrolnych. Źródło niezmienione; pełny odbiór techniczny i wizualny zależy od wyników CI i kontroli PDF.

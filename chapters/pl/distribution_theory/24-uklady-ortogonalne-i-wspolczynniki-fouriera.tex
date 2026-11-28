@@ -1,0 +1,560 @@
+
+\section{Szereg Fouriera: współczynniki, ortogonalność i zbieżność}
+\label{sec:dt-series-fourier}
+\providecommand{\atlasref}[2]{#2}
+
+Por. \atlasref{PDE-06::thm:pde6-fejer}{RRC-06: średnie Fejéra i szeregi Fouriera}.
+
+
+Przez $\mathbb T=\R/(2\pi\mathbb Z)$ rozumiemy okrąg z
+współrzędną $x\in[-\pi,\pi]$ i utożsamionymi końcami.
+Funkcję z $L^1(-\pi,\pi)$ utożsamiamy z jej
+$2\pi$-okresowym przedłużeniem, określonym z dokładnością
+do zbioru miary zero; wartości na końcach przedziału
+nie wpływają na całki. Dla takiej funkcji definiujemy
+$\widehat f(k)=(2\pi)^{-1}\int_{-\pi}^{\pi}f(x)e^{-ikx}\,\mathrm d\lambda_1(x)$,
+$k\in\mathbb Z$, oraz sumę częściową
+$S_Nf(x)=\sum_{|k|\le N}\widehat f(k)e^{ikx}$.
+W tym rozdziale $L^2(\mathbb T)$ oznacza zespoloną przestrzeń Hilberta
+z iloczynem skalarnym
+$\langle f,g\rangle=(2\pi)^{-1}\int_{-\pi}^{\pi}f(x)\overline{g(x)}\,\mathrm d\lambda_1(x)$.
+Pojęcie całki Lebesgue'a i podstawowe własności $L^p$
+traktujemy jako znane. Na okręgu używamy miary Haara
+unormowanej do masy $1$, czyli $\mathrm d\lambda_1/(2\pi)$.
+Na torusie $\mathbb T^d$ jej odpowiednikiem jest
+$\mathrm d\lambda_d/(2\pi)^d$ na kostce fundamentalnej;
+współczynniki Fouriera zawierają zatem czynnik $(2\pi)^{-d}$.
+Norma $L^2$ względem nieznormalizowanej miary jest
+$(2\pi)^{d/2}$ razy większa. Nie należy utożsamiać tej
+normalizacji okresowej z unitarną normalizacją całki
+Fouriera na $\R^d$ z definicji \ref{def:fourier-schwartz17}.
+Ponieważ miara unormowana na
+$\mathbb T$ ma masę $1$, nierówność Cauchy'ego--Schwarza
+daje $(2\pi)^{-1}\|f\|_{L^1(-\pi,\pi)}\leq\|f\|_2$,
+więc współczynniki Fouriera są określone dla każdego
+$f\in L^2(\mathbb T)$.
+
+\subsection{Postać zespolona i rzeczywista, dowolny okres}
+
+Dla funkcji $2\pi$-okresowej szereg Fouriera jest
+formalnym rozwinięciem funkcji względem harmonicznych
+$e^{ikx}$. Słowo \emph{formalny} oznacza, że sam wzór
+na współczynniki nie zapewnia jeszcze zbieżności
+ani odzyskania funkcji. Częstotliwości $k$ opisują
+oscylacje o $|k|$ pełnych obrotach na okres,
+a współczynnik zerowy jest średnią funkcji.
+Jeżeli funkcja jest rzeczywista, pary harmonicznych
+o przeciwnych częstotliwościach można zapisać
+za pomocą sinusów i cosinusów.
+
+\begin{stwierdzenie}[Rzeczywista postać szeregu Fouriera]
+\label{prop:dt-series-real}
+Dla rzeczywistej funkcji $f\in L^1(-\pi,\pi)$ definiujemy
+\[
+ a_n=\frac1\pi\int_{-\pi}^{\pi}f(x)\cos(nx)\,
+ \mathrm d\lambda_1(x)\quad(n\ge0),\qquad
+ b_n=\frac1\pi\int_{-\pi}^{\pi}f(x)\sin(nx)\,
+ \mathrm d\lambda_1(x)\quad(n\ge1).
+\]
+Wówczas $\widehat f(0)=a_0/2$,
+$\widehat f(-n)=\overline{\widehat f(n)}$ i
+$\widehat f(n)=(a_n-ib_n)/2$ dla $n\ge1$. W szczególności
+\[
+ S_Nf(x)=\frac{a_0}{2}+
+ \sum_{n=1}^N\bigl(a_n\cos(nx)+b_n\sin(nx)\bigr).
+\]
+Dla funkcji parzystej wszystkie $b_n$ znikają,
+a dla funkcji nieparzystej wszystkie $a_n$ znikają.
+\end{stwierdzenie}
+\begin{proof}
+Ze wzoru Eulera $e^{-inx}=\cos(nx)-i\sin(nx)$
+i rzeczywistości $f$ otrzymujemy obie zależności
+dla współczynników niezerowych, a przypadek $n=0$
+wynika wprost z definicji. Grupując w sumie częściowej
+składniki o indeksach $n,-n$, dostajemy
+\[
+ \widehat f(n)e^{inx}+\widehat f(-n)e^{-inx}
+ =2\operatorname{Re}\bigl(\widehat f(n)e^{inx}\bigr)
+ =a_n\cos(nx)+b_n\sin(nx).
+\]
+Własności dla funkcji parzystych i nieparzystych
+wynikają z zerowania całki funkcji nieparzystej
+na przedziale symetrycznym.
+\end{proof}
+
+\begin{stwierdzenie}[Szereg Fouriera dla dowolnego okresu]
+\label{prop:dt-series-period}
+Niech $L>0$, $a\in\R$ i niech $f$ będzie funkcją
+$L$-okresową, całkowalną na $[a,a+L]$.
+Przyjmijmy $\kappa=2\pi/L$. Współczynniki i sumy
+częściowe w bazie $e^{ik\kappa(x-a)}$ mają postać
+\[
+ c_k=\frac1L\int_a^{a+L}f(x)e^{-ik\kappa(x-a)}
+ \,\mathrm d\lambda_1(x),\qquad
+ S_N^{(L,a)}f(x)=\sum_{|k|\le N}c_k e^{ik\kappa(x-a)}.
+\]
+Dla $f$ rzeczywistej współczynniki trygonometryczne
+w tej bazie są równe
+\[
+ A_n=\frac2L\int_a^{a+L}f(x)\cos(n\kappa(x-a))
+ \,\mathrm d\lambda_1(x),\qquad
+ B_n=\frac2L\int_a^{a+L}f(x)\sin(n\kappa(x-a))
+ \,\mathrm d\lambda_1(x)
+\]
+(dla $A_n$ dopuszczamy $n=0$, a dla $B_n$ mamy $n\ge1$).
+Wzór na sumę częściową ma postać z poprzedniego
+stwierdzenia po zastąpieniu $x$ przez $\kappa(x-a)$.
+\end{stwierdzenie}
+\begin{proof}
+Kładziemy $g(t)=f(a+t/\kappa)$, która jest
+$2\pi$-okresowa. Całkę definiującą $\widehat g(k)$
+można obliczyć na $[0,2\pi]$, ponieważ funkcja
+podcałkowa jest okresowa: przesunięcie przedziału
+o jeden okres nie zmienia całki, a przesunięcie
+o część okresu sprowadza się do rozcięcia przedziału
+i translacji jednego z fragmentów. Podstawienie
+$t=\kappa(x-a)$ daje $\widehat g(k)=c_k$.
+Analogicznie uzyskujemy współczynniki rzeczywiste.
+To samo podstawienie jest izometrią między
+przestrzeniami $L^2$ z miarami unormowanymi:
+\[
+ \frac1{2\pi}\int_0^{2\pi}|g(t)|^2\,\mathrm d\lambda_1(t)
+ =\frac1L\int_a^{a+L}|f(x)|^2\,\mathrm d\lambda_1(x).
+\]
+Wyniki o zbieżności szeregów na okręgu przenoszą
+się zatem przez tę zmianę zmiennych na dowolny okres.
+\end{proof}
+
+\subsection{Ortogonalność i rzuty w przestrzeni Hilberta}
+
+\begin{lemat}[Ortogonalność i nierówność Bessela]
+\label{lem:dt-series-bessel}
+Niech $f\in L^2(\mathbb T)$ oraz $N\geq0$ będzie całkowite. Wówczas
+$\langle e^{ikx},e^{i\ell x}\rangle=\delta_{k\ell}$,
+$\|S_Nf\|_2^2=\sum_{|k|\le N}|\widehat f(k)|^2$ i
+$\sum_{|k|\le N}|\widehat f(k)|^2\le\|f\|_2^2$.
+\end{lemat}
+\begin{proof}
+Dla $k=\ell$ całka z jedynki względem miary
+unormowanej wynosi $1$. Jeśli $k\ne\ell$, to
+\[
+ \frac1{2\pi}\int_{-\pi}^{\pi}e^{i(k-\ell)x}\,
+ \mathrm d\lambda_1(x)
+ =\frac{e^{i(k-\ell)\pi}-e^{-i(k-\ell)\pi}}
+ {2\pi i(k-\ell)}=0,
+\]
+ponieważ $k-\ell$ jest całkowite. Otrzymujemy
+ortonormalność. Rozwijając kwadrat normy skończonej
+sumy $S_Nf$ i korzystając z tej ortonormalności,
+dostajemy $\|S_Nf\|_2^2=\sum_{|k|\le N}|\widehat f(k)|^2$.
+Ponadto dla $|\ell|\leq N$
+\[
+ \langle f-S_Nf,e^{i\ell x}\rangle
+ =\widehat f(\ell)-\sum_{|k|\leq N}
+ \widehat f(k)\delta_{k\ell}=0.
+\]
+Zatem $S_N$ jest rzutem ortogonalnym na przestrzeń
+rozpiętą przez te wykładniki. W szczególności
+$\langle f-S_Nf,S_Nf\rangle=0$, skąd
+\[
+ \|f\|_2^2=\|S_Nf\|_2^2+\|f-S_Nf\|_2^2.
+\]
+Nieujemność ostatniego składnika daje nierówność Bessela.
+\end{proof}
+
+Nie można jednak wywnioskować z ortogonalności, że $S_Nf\to f$.
+Do tego potrzebujemy zupełności układu wykładniczego.
+
+
+\begin{wniosek}[Najlepsze przybliżenie wielomianem trygonometrycznym]
+\label{cor:dt-series-best-approx}
+Dla $f\in L^2(\mathbb T)$ i każdego wielomianu
+trygonometrycznego $p(x)=\sum_{|k|\le N}d_ke^{ikx}$
+mamy
+\[
+ \|f-p\|_2^2=\|f-S_Nf\|_2^2+
+ \sum_{|k|\le N}|\widehat f(k)-d_k|^2.
+\]
+W szczególności $S_Nf$ jest jedynym najlepszym
+przybliżeniem $f$ w normie $L^2$ w tej przestrzeni.
+\end{wniosek}
+\begin{proof}
+Rozkład $f-p=(f-S_Nf)+(S_Nf-p)$ jest ortogonalny
+na mocy Lematu~\ref{lem:dt-series-bessel}.
+Norma drugiego składnika jest sumą kwadratów
+jego współczynników przez ortonormalność.
+Ostatnia suma jest nieujemna i znika dokładnie
+wtedy, gdy wszystkie $d_k=\widehat f(k)$.
+\end{proof}
+
+\subsection{Współczynniki funkcji całkowalnych}
+
+\begin{twierdzenie}[Lemat Riemanna--Lebesgue'a dla szeregów]
+\label{thm:dt-series-riemann-lebesgue}
+Dla $f\in L^1(\mathbb T)$ zachodzi
+$|\widehat f(k)|\le (2\pi)^{-1}\|f\|_{L^1(-\pi,\pi)}$
+oraz $\widehat f(k)\to0$ przy $|k|\to\infty$.
+\end{twierdzenie}
+\begin{proof}
+Pierwsza nierówność wynika z modułu wykładnika
+równego $1$. Przedłużamy $f$ z $(-\pi,\pi)$ przez
+zero na $\R$. Z gęstości funkcji testowych w $L^1$
+(Twierdzenie~\ref{thm:dt-test-density}) dla
+dowolnego $\varepsilon>0$ wybieramy
+$g\in\mathcal D(\R)$ tak, że
+$\|f-g\|_{L^1(-\pi,\pi)}<2\pi\varepsilon$.
+Funkcja $g$ nie musi być okresowa; jej współczynniki
+obliczamy na $[-\pi,\pi]$. Całkowanie przez części
+dla $k\ne0$ daje
+\[
+ \widehat g(k)=
+ \frac{g(-\pi)e^{ik\pi}-g(\pi)e^{-ik\pi}}{2\pi ik}
+ +\frac1{2\pi ik}\int_{-\pi}^{\pi}g'(x)e^{-ikx}
+ \,\mathrm d\lambda_1(x).
+\]
+Stąd $|\widehat g(k)|\le C_g/|k|$. Z pierwszej
+nierówności dla $f-g$ mamy
+$|\widehat f(k)|\le\varepsilon+C_g/|k|$.
+Przechodzimy do granicy górnej, a następnie
+wykorzystujemy dowolność $\varepsilon$.
+\end{proof}
+
+\begin{przyklad}[Szereg funkcji prostokątnej]
+\label{ex:dt-series-square-wave}
+Niech $f(x)=1$ dla $0<x<\pi$ i $f(x)=-1$
+dla $-\pi<x<0$, przedłużona okresowo.
+Wartości w punktach skoku nie zmieniają
+współczynników. Z nieparzystości $a_n=0$, natomiast
+\[
+ b_n=\frac2\pi\int_0^\pi\sin(nx)\,\mathrm d\lambda_1(x)
+ =\frac{2(1-(-1)^n)}{\pi n}.
+\]
+Wobec tego
+\[
+ S_Nf(x)=\frac4\pi
+ \sum_{\substack{1\le n\le N\\ n\ \mathrm{nieparzyste}}}
+ \frac{\sin(nx)}{n}.
+\]
+Na tym etapie jest to tożsamość dla sum częściowych,
+a nie dowód zbieżności punktowej do $f$.
+\end{przyklad}
+
+\begin{przyklad}[Okresowe przedłużenie funkcji liniowej]
+\label{ex:dt-series-sawtooth}
+Niech $f(x)=x$ dla $-\pi<x<\pi$ i przedłużmy $f$
+$2\pi$-okresowo. Funkcja jest nieparzysta prawie
+wszędzie, więc wszystkie $a_n$ są zerowe.
+Całkowanie przez części daje dla $n\ge1$
+\[
+ b_n=\frac2\pi\int_0^\pi x\sin(nx)\,\mathrm d\lambda_1(x)
+ =\frac2\pi\left[
+ -\frac{x\cos(nx)}n+\frac{\sin(nx)}{n^2}
+ \right]_0^\pi
+ =\frac{2(-1)^{n+1}}n.
+\]
+Zatem
+\[
+ S_Nf(x)=2\sum_{n=1}^N\frac{(-1)^{n+1}}n\sin(nx).
+\]
+W punktach $x\in\pi+2\pi\mathbb Z$ każda suma
+częściowa wynosi zero. Nie jest to sprzeczne z tym,
+że możemy wybrać dowolną wartość przedłużenia
+w punkcie skoku: współczynniki nie zależą od
+wartości na zbiorze miary zero.
+\end{przyklad}
+
+\begin{przyklad}[Okresowe przedłużenie funkcji kwadratowej]
+\label{ex:dt-series-quadratic}
+Niech $f(x)=x^2$ na $[-\pi,\pi]$, przedłużona okresowo.
+W tym przypadku $f$ jest parzysta i ciągła na okręgu,
+więc $b_n=0$, a
+\[
+ a_0=\frac2\pi\int_0^\pi x^2\,\mathrm d\lambda_1(x)
+ =\frac{2\pi^2}3.
+\]
+Dla $n\ge1$ dwukrotne całkowanie przez części daje
+\[
+ \begin{aligned}
+ a_n&=\frac2\pi\int_0^\pi x^2\cos(nx)\,\mathrm d\lambda_1(x)\\
+ &=-\frac4{\pi n}\int_0^\pi x\sin(nx)\,\mathrm d\lambda_1(x)
+ =\frac{4(-1)^n}{n^2}.
+ \end{aligned}
+\]
+W ostatnim kroku wykorzystaliśmy rachunek z
+Przykładu~\ref{ex:dt-series-sawtooth}.
+Stąd
+\[
+ S_Nf(x)=\frac{\pi^2}3+
+ 4\sum_{n=1}^N\frac{(-1)^n}{n^2}\cos(nx).
+\]
+Kryterium Weierstrassa daje jednostajną i bezwzględną
+zbieżność tego szeregu, ponieważ $\sum_{n\ge1}n^{-2}$
+jest zbieżny. Identyfikacja sumy z $f$ wymaga jeszcze
+zupełności układu trygonometrycznego, którą
+wykażemy w następnym rozdziale. Sama jednostajna
+zbieżność szeregu nie wystarcza do tej identyfikacji.
+\end{przyklad}
+
+\subsection{Jądro Dirichleta}
+
+\begin{stwierdzenie}[Reprezentacja sum częściowych jako splotu]
+\label{prop:dt-series-dirichlet}
+Dla $N\in\N_0$ kładziemy
+\[
+ D_N(t)=\sum_{|k|\le N}e^{ikt}
+ =1+2\sum_{k=1}^N\cos(kt)
+ =\frac{\sin((N+1/2)t)}{\sin(t/2)}
+ \qquad(t\notin2\pi\mathbb Z).
+\]
+W punktach $2\pi\mathbb Z$ przyjmujemy $D_N=2N+1$.
+Dla $f\in L^1(\mathbb T)$ zachodzi
+\[
+ S_Nf(x)=\frac1{2\pi}\int_{-\pi}^{\pi}
+ f(x-t)D_N(t)\,\mathrm d\lambda_1(t),
+ \qquad
+ \frac1{2\pi}\int_{-\pi}^{\pi}D_N(t)\,\mathrm d\lambda_1(t)=1.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Postać cosinusowa wynika z grupowania indeksów
+przeciwnych. Wzór na iloraz sinusów otrzymujemy,
+sumując ciąg geometryczny:
+$D_N(t)=e^{-iNt}(1-e^{i(2N+1)t})/(1-e^{it})$
+i stosując $1-e^{iu}=-2ie^{iu/2}\sin(u/2)$.
+W punktach wyłączonych wszystkie składniki są
+równe $1$, co daje wskazane wartości.
+Z definicji współczynników, przez zamianę skończonej
+sumy z całką, mamy
+\[
+ S_Nf(x)=\frac1{2\pi}\int_{-\pi}^{\pi}
+ f(y)D_N(x-y)\,\mathrm d\lambda_1(y).
+\]
+Podstawienie $t=x-y$ i okresowość funkcji
+podcałkowej pozwalają przenieść przedział całkowania
+na $[-\pi,\pi]$. Całkując poszczególne wykładniki
+w $D_N$ i stosując ortogonalność względem funkcji
+stałej z Lematu~\ref{lem:dt-series-bessel}, otrzymujemy
+ostatnią równość.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[x=1.65cm,y=0.25cm,>=stealth]
+ \draw[->,gray] (-3.35,0)--(3.43,0) node[right] {$t$};
+ \draw[->,gray] (0,-3.4)--(0,14) node[above] {$D_N(t)$};
+ \foreach \x/\lab in {-3.14159/{-\pi},-1.5708/{-\pi/2},1.5708/{\pi/2},3.14159/{\pi}}
+   {\draw[gray] (\x,0.22)--(\x,-0.22) node[below=2pt,fill=white,inner sep=1pt] {$\lab$};}
+ \foreach \y in {5,13}
+   {\draw[gray] (-0.04,\y)--(0.04,\y) node[left=3pt,fill=white,inner sep=1pt] {\small $\y$};}
+ \draw[blue!75!black,thick,domain=-3.14159:3.14159,samples=241,variable=\x]
+ plot ({\x},{1+2*cos(deg(1*\x))+2*cos(deg(2*\x))});
+ \draw[red!75!black,thick,dashed,domain=-3.14159:3.14159,samples=361,variable=\x]
+ plot ({\x},{1+2*cos(deg(1*\x))+2*cos(deg(2*\x))+2*cos(deg(3*\x))+2*cos(deg(4*\x))+2*cos(deg(5*\x))+2*cos(deg(6*\x))});
+ \draw[blue!75!black,thick] (1.55,12.4)--(2.02,12.4) node[right,black] {\small $N=2$};
+ \draw[red!75!black,thick,dashed] (1.55,10.6)--(2.02,10.6) node[right,black] {\small $N=6$};
+\end{tikzpicture}
+
+\small Jądra Dirichleta na jednym okresie:
+wysokość w zerze wynosi $2N+1$, a boczne płaty
+zmieniają znak. Wykresy otrzymano bezpośrednio
+ze skończonych sum cosinusów, także w punkcie $t=0$.
+\end{center}
+
+\begin{twierdzenie}[Wzrost normy jądra Dirichleta]
+\label{thm:dt-dirichlet-norm}
+Niech norma $L^1(\mathbb T)$ będzie obliczana
+względem miary unormowanej, a
+$\Lambda_N=\|D_N\|_{L^1(\mathbb T)}$.
+Dla pewnych stałych $c,C>0$ niezależnych od $N\ge1$
+zachodzi
+\[
+ c\log(N+1)\le\Lambda_N\le C\log(N+1).
+\]
+Ponadto dla operatora sum częściowych na $C(\mathbb T)$
+z normą supremum mamy $\|S_N\|=\Lambda_N$.
+\end{twierdzenie}
+\begin{proof}
+Jądro jest parzyste. Dla $0<t\le\pi$ zachodzi
+$t/\pi\le\sin(t/2)\le t/2$; dolne oszacowanie
+wynika z wklęsłości sinusa na $[0,\pi/2]$
+i oszacowania przez cięciwę, górne z
+$\sin u\le u$ dla $u\ge0$.
+Ze skończonej sumy wykładników oraz ilorazu
+sinusów w Stwierdzeniu~\ref{prop:dt-series-dirichlet}
+otrzymujemy
+\[
+ |D_N(t)|\le\min(2N+1,\pi/t).
+\]
+Dzieląc całkę w punkcie $1/(N+1)$, dostajemy
+\[
+ \Lambda_N=\frac1\pi\int_0^\pi |D_N(t)|\,\mathrm d\lambda_1(t)
+ \le\frac{2N+1}{\pi(N+1)}+\log(\pi(N+1)).
+\]
+To daje górne oszacowanie dla $N\ge1$.
+Z drugiej strony, przy $u=(N+1/2)t$ mamy
+\[
+ \Lambda_N\ge\frac2\pi
+ \int_0^{(N+1/2)\pi}\frac{|\sin u|}{u}\,\mathrm d\lambda_1(u)
+ \ge\frac4{\pi^2}\sum_{j=1}^N\frac1j.
+\]
+Ostatnia nierówność wynika z podziału na odcinki
+$[(j-1)\pi,j\pi]$: na każdym $1/u\ge1/(j\pi)$,
+a całka z $|\sin u|$ wynosi $2$.
+Ponieważ $\sum_{j=1}^N1/j\ge\int_1^{N+1}
+\mathrm d\lambda_1(t)/t=\log(N+1)$, otrzymujemy
+dolne oszacowanie.
+
+Wzór splotowy daje
+$\|S_Nf\|_\infty\le\Lambda_N\|f\|_\infty$.
+Dla $\varepsilon>0$ wybieramy ciągłą funkcję
+\[
+ f_\varepsilon(x)=
+ \frac{D_N(-x)}{|D_N(-x)|+\varepsilon}.
+\]
+Jej norma supremum nie przekracza $1$, a
+\[
+ S_N f_\varepsilon(0)=\frac1{2\pi}
+ \int_{-\pi}^\pi
+ \frac{|D_N(t)|^2}{|D_N(t)|+\varepsilon}
+ \,\mathrm d\lambda_1(t)\longrightarrow\Lambda_N.
+\]
+Przejście do granicy wynika ze zbieżności
+zmajoryzowanej, z majorantą $|D_N|$.
+Zatem także $\|S_N\|\ge\Lambda_N$.
+\end{proof}
+
+\begin{wniosek}[Nieograniczoność operatorów sum częściowych]
+\label{cor:dt-dirichlet-unbounded}
+Istnieje rzeczywista funkcja $f\in C(\mathbb T)$,
+dla której ciąg $(S_Nf(0))$ jest nieograniczony.
+W szczególności nie każdy szereg Fouriera
+funkcji ciągłej jest zbieżny punktowo.
+\end{wniosek}
+\begin{proof}
+Na rzeczywistej przestrzeni Banacha $C(\mathbb T;\R)$
+rozważamy funkcjonały $L_N(f)=S_Nf(0)$.
+Dowód poprzedniego twierdzenia, w którym
+$f_\varepsilon$ jest rzeczywista, pokazuje
+$\|L_N\|=\Lambda_N$. Normy te nie są ograniczone.
+Gdyby dla każdego $f$ wartości $(L_N(f))$ były
+ograniczone, zasada jednostajnej ograniczoności
+(Banacha--Steinhausa) dawałaby ograniczoność
+norm funkcjonałów, co jest sprzecznością.
+\end{proof}
+
+Jądro Dirichleta nie jest nieujemne dla $N\ge1$
+(np. dla $t=3\pi/(2N+1)$ licznik wynosi $-1$,
+a mianownik jest dodatni). Sam warunek całki
+równej $1$ nie wystarcza do otrzymania aproksymacji
+jedności w sensie dodatnich jąder. W kolejnym
+rozdziale przejdziemy do średnich Fejéra, a następnie
+do zupełności układu trygonometrycznego.
+
+\subsection{Współczynniki Fouriera na torusie wielowymiarowym}
+
+\begin{stwierdzenie}[Ortogonalność na torusie i sumy prostokątne]
+\label{prop:dt-series-torus}
+Niech $d\ge1$ i $Q=[-\pi,\pi]^d$. Dla
+$f\in L^1(\mathbb T^d)$ i $k\in\mathbb Z^d$ kładziemy
+\[
+ \widehat f(k)=\frac1{(2\pi)^d}
+ \int_Q f(x)e^{-ik\cdot x}\,\mathrm d\lambda_d(x).
+\]
+Dla $f\in L^2(\mathbb T^d)$ funkcje $e^{ik\cdot x}$
+tworzą układ ortonormalny względem unormowanej
+miary Haara. Jeśli $A\subseteq\mathbb Z^d$
+jest skończony, to
+\[
+ S_Af=\sum_{k\in A}\widehat f(k)e^{ik\cdot x},
+ \qquad
+ \|f-S_Af\|_2^2=\|f\|_2^2-\sum_{k\in A}|\widehat f(k)|^2.
+\]
+Dla $A=\prod_{j=1}^d\{-N_j,\ldots,N_j\}$,
+gdzie $N_j\in\N_0$, odpowiadające jądro jest równe
+\[
+ D_A(t)=\prod_{j=1}^d D_{N_j}(t_j),\qquad
+ S_Af(x)=\frac1{(2\pi)^d}\int_Q
+ f(x-t)D_A(t)\,\mathrm d\lambda_d(t).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Z twierdzenia Fubiniego oraz ortonormalności
+w jednym wymiarze otrzymujemy
+\[
+ \frac1{(2\pi)^d}\int_Q e^{i(k-\ell)\cdot x}
+ \,\mathrm d\lambda_d(x)
+ =\prod_{j=1}^d\delta_{k_j\ell_j}=\delta_{k\ell}.
+\]
+Tak jak w Lemacie~\ref{lem:dt-series-bessel},
+$S_Af$ jest rzutem ortogonalnym na rozpiętość
+skończonego układu indeksowanego przez $A$.
+Twierdzenie Pitagorasa daje tożsamość norm.
+Dla prostokątnego zbioru indeksów iloczyn
+skończonych sum jednowymiarowych jest równy
+$\sum_{k\in A}e^{ik\cdot t}$. Wstawiając
+definicję współczynników i zamieniając skończoną
+sumę z całką, otrzymujemy całkę z $f(y)D_A(x-y)$.
+Podstawienie $t=x-y$ oraz okresowość w każdej
+współrzędnej dają wzór splotowy.
+\end{proof}
+
+\begin{wniosek}[Wielowymiarowa nierówność Bessela]
+\label{cor:dt-series-torus-bessel}
+Dla $f\in L^2(\mathbb T^d)$ mamy
+$\sum_{k\in\mathbb Z^d}|\widehat f(k)|^2\le\|f\|_2^2$.
+\end{wniosek}
+\begin{proof}
+W poprzednim stwierdzeniu bierzemy
+$A=\{-N,\ldots,N\}^d$ i przechodzimy
+do granicy $N\to\infty$ w rosnących sumach
+nieujemnych wyrazów.
+\end{proof}
+
+\begin{stwierdzenie}[Lemat Riemanna--Lebesgue'a na torusie]
+\label{prop:dt-series-torus-rl}
+Jeśli $f\in L^1(\mathbb T^d)$, to
+$\widehat f(k)\to0$ przy $|k|\to\infty$.
+\end{stwierdzenie}
+\begin{proof}
+Przedłużamy $f|_Q$ zerem na $\R^d$.
+Z gęstości funkcji testowych
+(Twierdzenie~\ref{thm:dt-test-density})
+dla $\varepsilon>0$ wybieramy $g\in\mathcal D(\R^d)$
+takie, że $\|f-g\|_{L^1(Q)}<(2\pi)^d\varepsilon$.
+Stąd $|\widehat f(k)-\widehat g(k)|<\varepsilon$,
+gdzie współczynniki $g$ obliczamy tylko na $Q$.
+Dla $k\ne0$ wybieramy $j$ z
+$|k_j|=\max_i|k_i|\ge |k|/\sqrt d$ (norma euklidesowa).
+Całkując przez części względem $x_j$ i stosując
+twierdzenie Fubiniego, otrzymujemy
+\[
+ |\widehat g(k)|\le
+ \frac{2(2\pi)^{d-1}\sup_Q|g|
+ +(2\pi)^d\max_i\sup_Q|\partial_i g|}
+ {(2\pi)^d|k_j|}.
+\]
+Pierwszy składnik w liczniku ogranicza całki
+po dwóch przeciwległych ścianach kostki,
+drugi całkę z pochodnej wewnątrz kostki.
+Zatem $|\widehat f(k)|\le\varepsilon+C_g/|k|$,
+co daje tezę przez dowolność $\varepsilon$.
+\end{proof}
+
+\begin{przyklad}[Współczynniki iloczynu funkcji jednej zmiennej]
+\label{ex:dt-series-torus-product}
+Jeśli $f_j\in L^1(\mathbb T)$ dla $1\le j\le d$
+i $f(x)=\prod_{j=1}^df_j(x_j)$, to
+$\widehat f(k)=\prod_{j=1}^d\widehat f_j(k_j)$.
+Istotnie, twierdzenie Tonellego zastosowane do
+modułu iloczynu daje całkowalność $f$, a twierdzenie
+Fubiniego rozdziela całkę definiującą współczynnik.
+W szczególności dla prostokątnych sum częściowych
+z poprzedniego stwierdzenia mamy
+$S_Af(x)=\prod_{j=1}^d S_{N_j}f_j(x_j)$
+przez rozdzielenie skończonych sum.
+\end{przyklad}
+
+Zupełność układu na torusie oraz identyfikację
+przestrzeni $L^2(\mathbb T^d)$ z przestrzenią
+ciągów kwadratowo sumowalnych wyprowadzimy
+z wielowymiarowej aproksymacji jedności
+za pomocą jąder Fejéra.

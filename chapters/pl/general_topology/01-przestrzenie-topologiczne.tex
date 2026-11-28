@@ -1,0 +1,871 @@
+\chapter{Przestrzenie topologiczne}
+\label{ch:topog-przestrzenie-topologiczne}
+
+\noindent\textbf{Cel rozdziału.}
+W analizie pojęcia granicy i ciągłości poznajemy najpierw za pomocą odległości.
+Zaczynamy od elementarnego wprowadzenia do przestrzeni metrycznych:
+metryki, kul i sfer oraz przykładów na prostej i w przestrzeni euklidesowej.
+Następnie sprawdzamy, że wiele argumentów nie wymaga liczbowej
+wartości odległości: wystarcza wiedzieć, które zbiory są otwarte.
+Precyzujemy aksjomaty topologii, wyprowadzamy pierwsze konsekwencje,
+konstruujemy topologie z baz i podbaz oraz porównujemy różne topologie
+na tym samym zbiorze. Zaawansowane własności przestrzeni metrycznych
+(zbieżność, zupełność, metryzowalność) omówimy w dalszych rozdziałach.
+Nie zakładamy żadnych aksjomatów oddzielania, przeliczalności
+ani niepustości przestrzeni.
+
+\section{Przestrzenie metryczne: definicje i podstawowe przykłady}
+\label{sec:topog-motywacja}
+
+Zanim zdefiniujemy topologię, wprowadzimy znany z geometrii
+sposób mierzenia odległości. Posłuży nam on jako punkt wyjścia,
+ale nie będziemy zakładać istnienia odległości w dowolnej
+przestrzeni topologicznej.
+
+\begin{definicja}[Metryka i przestrzeń metryczna]
+\label{def:topog-metryka}
+Niech $X$ będzie zbiorem. \emph{Metryką} na $X$ nazywamy
+odwzorowanie $d\colon X\times X\to[0,\infty)$ takie, że
+dla wszystkich $x,y,z\in X$ zachodzą:
+\begin{enumerate}[label=(M\arabic*)]
+\item $d(x,y)=0$ wtedy i tylko wtedy, gdy $x=y$;
+\item $d(x,y)=d(y,x)$ (symetria);
+\item $d(x,z)\le d(x,y)+d(y,z)$ (nierówność trójkąta).
+\end{enumerate}
+Parę $(X,d)$ nazywamy \emph{przestrzenią metryczną}.
+Liczba $d(x,y)$ jest \emph{odległością} między $x$ a $y$.
+Dopuszczamy $X=\varnothing$; jedyna funkcja
+$\varnothing\times\varnothing\to[0,\infty)$ jest wtedy metryką.
+\end{definicja}
+
+\begin{przyklad}[Prosta rzeczywista i przestrzeń euklidesowa]
+\label{ex:topog-metryka-euklidesowa}
+Na $\R$ funkcja $d(x,y)=|x-y|$ jest metryką.
+Warunek (M1) wynika z własności wartości bezwzględnej,
+(M2) z równości $|x-y|=|y-x|$, a (M3) z nierówności
+$|x-z|\le |x-y|+|y-z|$.
+
+Dla $n\ge1$ na $\R^n$ kładziemy
+$d_2(x,y)=\sqrt{\sum_{j=1}^{n}(x_j-y_j)^2}=\|x-y\|_2$.
+Symetria i warunek (M1) są natychmiastowe.
+Uzasadnijmy używaną tu nierówność Cauchy'ego--Schwarza.
+Dla $v\ne0$, przyjmując
+$t=\bigl(\sum_j u_jv_j\bigr)/\sum_j v_j^2$, z nierówności
+$0\le\sum_j(u_j-tv_j)^2$ otrzymujemy
+$(\sum_j u_jv_j)^2\le(\sum_j u_j^2)(\sum_j v_j^2)$;
+dla $v=0$ nierówność jest oczywista.
+Zatem $\|u+v\|_2^2=\|u\|_2^2+2\sum_j u_jv_j+\|v\|_2^2
+\le(\|u\|_2+\|v\|_2)^2$.
+Po wzięciu pierwiastków i podstawieniu
+$u=x-y$, $v=y-z$ otrzymujemy (M3).
+Dla $n=1$ wzór ten sprowadza się do wartości bezwzględnej.
+\end{przyklad}
+
+\begin{przyklad}[Metryka maksimum]
+\label{ex:topog-metryka-maksimum}
+Na $\R^n$, $n\ge1$, określmy
+$d_\infty(x,y)=\max_{1\le j\le n}|x_j-y_j|$.
+Warunki (M1) i (M2) wynikają z własności wartości
+bezwzględnej. Dla każdych $x,y,z\in\R^n$ i każdego $j$
+mamy $|x_j-z_j|\le|x_j-y_j|+|y_j-z_j|
+\le d_\infty(x,y)+d_\infty(y,z)$.
+Biorąc maksimum po $j$, dostajemy (M3).
+W szczególności na $\R^2$ kula tej metryki ma kształt
+kwadratu o bokach równoległych do osi współrzędnych.
+\end{przyklad}
+
+\begin{przyklad}[Metryka dyskretna]
+\label{ex:topog-metryka-dyskretna}
+Na dowolnym zbiorze $X$ określmy
+$d_{\mathrm{dys}}(x,y)=0$, gdy $x=y$, oraz
+$d_{\mathrm{dys}}(x,y)=1$, gdy $x\ne y$.
+Symetria i (M1) są oczywiste. Jeśli $x\ne z$, to
+przynajmniej jedna z nierówności $x\ne y$ lub $y\ne z$
+jest prawdziwa. Stąd
+$1=d_{\mathrm{dys}}(x,z)\le
+ d_{\mathrm{dys}}(x,y)+d_{\mathrm{dys}}(y,z)$.
+Dla $x=z$ nierówność trójkąta także zachodzi.
+Metryka dyskretna nie wymaga żadnej struktury algebraicznej
+ani porządku na $X$.
+\end{przyklad}
+
+\begin{definicja}[Kule i sfera metryczna]
+\label{def:topog-kule-sfera}
+Niech $(X,d)$ będzie przestrzenią metryczną,
+$x\in X$ i $r>0$. Definiujemy:
+\begin{align*}
+B_d(x,r)&=\{y\in X:d(x,y)<r\},
+&&\text{\emph{kula otwarta}},\\
+\overline B_d(x,r)&=\{y\in X:d(x,y)\le r\},
+&&\text{\emph{kula domknięta}},\\
+S_d(x,r)&=\{y\in X:d(x,y)=r\},
+&&\text{\emph{sfera metryczna}}.
+\end{align*}
+Punkt $x$ nazywamy \emph{środkiem}, a $r$ \emph{promieniem}.
+W każdym z tych zbiorów bierzemy pod uwagę wyłącznie
+punkty należące do $X$.
+\end{definicja}
+
+\begin{przyklad}[Kule na prostej i płaszczyźnie]
+\label{ex:topog-kule-euklidesowe}
+Dla $X=\R$ i $d(x,y)=|x-y|$ mamy
+$B_d(x,r)=(x-r,x+r)$,
+$\overline B_d(x,r)=[x-r,x+r]$ oraz
+$S_d(x,r)=\{x-r,x+r\}$.
+Na płaszczyźnie euklidesowej $B_{d_2}(x,r)$ jest
+wnętrzem dysku o środku $x$ i promieniu $r$,
+$\overline B_{d_2}(x,r)$ jest całym dyskiem,
+a $S_{d_2}(x,r)$ jest okręgiem.
+W $\R^3$ sfera $S_{d_2}(x,r)$ jest powierzchnią kuli,
+nie jej wnętrzem. Dla metryki maksimum na $\R^2$
+kula $B_{d_\infty}(x,r)$ jest otwartym kwadratem,
+a $S_{d_\infty}(x,r)$ jego brzegiem geometrycznym.
+\end{przyklad}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=Latex, font=\small]
+  \begin{scope}[shift={(0,0)}]
+    \fill[blue!10] (0,0) circle (0.83);
+    \draw[blue!65!black,densely dashed,thick] (0,0) circle (0.83);
+    \fill (0,0) circle (1.2pt);
+    \draw[->,thin] (0,0)--(.58,.58) node[pos=.61,above left] {$r$};
+    \node at (0,-1.20) {$B_d(x,r)$};
+    \node[font=\scriptsize,align=center] at (0,-1.60) {bez okręgu};
+  \end{scope}
+  \begin{scope}[shift={(3.4,0)}]
+    \fill[blue!10] (0,0) circle (0.83);
+    \draw[blue!65!black,thick] (0,0) circle (0.83);
+    \fill (0,0) circle (1.2pt);
+    \draw[->,thin] (0,0)--(.58,.58);
+    \node at (0,-1.20) {$\overline B_d(x,r)$};
+    \node[font=\scriptsize] at (0,-1.60) {z okręgiem};
+  \end{scope}
+  \begin{scope}[shift={(6.8,0)}]
+    \draw[blue!65!black,thick] (0,0) circle (0.83);
+    % Środek służy tylko jako odniesienie: nie jest punktem sfery.
+    \draw[gray!75,fill=white] (0,0) circle (1.2pt);
+    \draw[->,thin] (0,0)--(.58,.58);
+    \node at (0,-1.20) {$S_d(x,r)$};
+    \node[font=\scriptsize] at (0,-1.60) {tylko okrąg};
+  \end{scope}
+\end{tikzpicture}
+\caption{Kula otwarta, kula domknięta i sfera
+w płaszczyźnie z metryką euklidesową. Na rysunku
+linia przerywana nie należy do kuli otwartej, a zaznaczony
+środek nie należy do sfery. Dla ogólnej metryki kształt tych
+zbiorów może być inny.}
+\label{fig:topog-kule-sfera}
+\end{figure}
+
+\begin{definicja}[Zbiór otwarty w przestrzeni metrycznej]
+\label{def:topog-otwarty-metrycznie}
+Niech $(X,d)$ będzie przestrzenią metryczną.
+Podzbiór $U\subseteq X$ nazywamy \emph{otwartym
+w sensie metrycznym}, jeśli dla każdego $x\in U$
+istnieje $r>0$ takie, że $B_d(x,r)\subseteq U$.
+W szczególności $\varnothing$ jest otwarty:
+nie ma w nim punktów wymagających sprawdzenia.
+Podzbiór $F\subseteq X$ nazywamy \emph{domkniętym
+w sensie metrycznym}, jeśli $X\setminus F$ jest otwarty.
+\end{definicja}
+
+\begin{stwierdzenie}[Otwartość i domkniętość kul oraz sfer]
+\label{prop:topog-kule-otwarte-sfery-domkniete}
+Niech $(X,d)$ będzie przestrzenią metryczną,
+$x\in X$ i $r>0$. Wówczas kula $B_d(x,r)$ jest otwarta
+w sensie metrycznym, a zbiory $\overline B_d(x,r)$
+i $S_d(x,r)$ są domknięte w sensie metrycznym.
+\end{stwierdzenie}
+\begin{proof}
+Z nierówności trójkąta i symetrii otrzymujemy dla
+wszystkich $y,z\in X$
+$|d(x,y)-d(x,z)|\le d(y,z)$.
+Jeżeli $y\in B_d(x,r)$, to $\varepsilon=r-d(x,y)>0$.
+Dla każdego $z\in B_d(y,\varepsilon)$ zachodzi
+$d(x,z)\le d(x,y)+d(y,z)<r$, więc
+$B_d(y,\varepsilon)\subseteq B_d(x,r)$.
+
+Jeżeli $y\notin\overline B_d(x,r)$, to
+$\varepsilon=d(x,y)-r>0$. Dla każdego
+$z\in B_d(y,\varepsilon)$ mamy
+$d(x,z)\ge d(x,y)-d(y,z)>r$.
+Dopełnienie kuli domkniętej jest zatem otwarte.
+
+Wreszcie, jeśli $y\notin S_d(x,r)$, to
+$\varepsilon=|d(x,y)-r|>0$. Każdy
+$z\in B_d(y,\varepsilon)$ spełnia
+$|d(x,z)-d(x,y)|<\varepsilon$,
+więc $d(x,z)$ leży po tej samej stronie $r$ co $d(x,y)$.
+W szczególności $z\notin S_d(x,r)$.
+Zatem dopełnienie sfery jest otwarte.
+\end{proof}
+
+\begin{uwaga}[Kula domknięta nie musi być domknięciem kuli otwartej]
+\label{rem:topog-kula-domknieta-a-domkniecie}
+Nazwy „kula domknięta” i „sfera” odnoszą się do
+warunków określających odległość od środka. W ogólnej przestrzeni
+metrycznej $\overline B_d(x,r)$ nie musi być domknięciem
+$B_d(x,r)$, a sfera nie musi być brzegiem kuli otwartej.
+Przykładowo, dla metryki dyskretnej na zbiorze $X$
+mającym co najmniej dwa punkty i promienia $r=1$ mamy
+$B_d(x,1)=\{x\}$, $\overline B_d(x,1)=X$ i
+$S_d(x,1)=X\setminus\{x\}$.
+Singleton $\{x\}$ jest otwarty, a także domknięty,
+bo $X\setminus\{x\}$ jest sumą otwartych kul o promieniu
+$1/2$ ze środkami w pozostałych punktach. Wobec tego
+$\{x\}$ jest już zbiorem domkniętym, podczas gdy
+kula domknięta $\overline B_d(x,1)$ jest całym $X$.
+To rozróżnienie oraz pojęcie brzegu dokładniej omówimy
+w rozdziale 02.
+\end{uwaga}
+
+\section{Od metryki do aksjomatów topologii}
+\label{sec:topog-odleglosc-otwarte}
+
+W przestrzeni metrycznej zadana metryka pozwala określić
+zbiory otwarte. Okazuje się, że rodzina tych zbiorów
+spełnia proste aksjomaty, które można przyjąć bez
+odwoływania się do odległości.
+
+\begin{stwierdzenie}[Zbiory otwarte w przestrzeni metrycznej]
+\label{prop:topog-topologia-metryczna}
+Niech $(X,d)$ będzie dowolną przestrzenią metryczną, a $\tau_d$
+rodziną wszystkich podzbiorów $X$ otwartych w sensie
+Definicji~\ref{def:topog-otwarty-metrycznie}.
+Wówczas:
+\begin{enumerate}[label=(\roman*)]
+\item $\varnothing,X\in\tau_d$;
+\item suma dowolnej rodziny zbiorów z $\tau_d$ należy do $\tau_d$;
+\item przecięcie dowolnej skończonej rodziny zbiorów z $\tau_d$
+      należy do $\tau_d$.
+\end{enumerate}
+\end{stwierdzenie}
+\begin{proof}
+Zbiór pusty jest otwarty na mocy definicji. Jeżeli $x\in X$,
+to $B_d(x,1)\subseteq X$, więc $X$ również jest otwarty;
+dotyczy to także $X=\varnothing$.
+
+Niech $(U_i)_{i\in I}$ będzie dowolną rodziną zbiorów otwartych.
+Jeżeli $x\in\bigcup_{i\in I}U_i$, to $x\in U_j$ dla pewnego $j\in I$.
+Istnieje $r>0$ takie, że $B_d(x,r)\subseteq U_j\subseteq
+\bigcup_{i\in I}U_i$. A zatem suma jest otwarta.
+Gdy $I=\varnothing$, suma jest zbiorem pustym.
+
+Dla dwóch zbiorów otwartych $U,V$ i punktu $x\in U\cap V$
+wybieramy $r,s>0$ takie, że $B_d(x,r)\subseteq U$ i
+$B_d(x,s)\subseteq V$. Wówczas
+$B_d(x,\min\{r,s\})\subseteq U\cap V$.
+Indukcja daje tezę dla dowolnej niepustej skończonej rodziny;
+przecięciem rodziny pustej jest $X$, które jest otwarte.
+\end{proof}
+
+\begin{uwaga}
+\label{rem:topog-nie-metryczna}
+Aksjomaty z powyższego stwierdzenia mają sens na dowolnym zbiorze,
+nawet gdy nie jest na nim zadana metryka. To prowadzi do podstawowej
+definicji topologii. W dalszych rozdziałach zobaczymy także topologie,
+których nie można otrzymać z żadnej metryki.
+\end{uwaga}
+
+\section{Aksjomaty przestrzeni topologicznej}
+\label{sec:topog-aksjomaty}
+
+\begin{definicja}[Topologia i przestrzeń topologiczna]
+\label{def:topog-topologia}
+Niech $X$ będzie dowolnym zbiorem. \emph{Topologią na $X$}
+nazywamy rodzinę $\tau\subseteq\mathcal P(X)$ spełniającą:
+\begin{enumerate}[label=(T\arabic*)]
+\item $\varnothing\in\tau$ i $X\in\tau$;
+\item dla każdej rodziny $(U_i)_{i\in I}$ elementów $\tau$
+      zbiór $\bigcup_{i\in I}U_i$ należy do $\tau$;
+\item dla każdych $U,V\in\tau$ zbiór $U\cap V$ należy do $\tau$.
+\end{enumerate}
+Parę $(X,\tau)$ nazywamy \emph{przestrzenią topologiczną},
+a elementy $\tau$ \emph{zbiorami otwartymi}. Zbiór $F\subseteq X$
+nazywamy \emph{domkniętym}, jeśli $X\setminus F\in\tau$.
+Jeżeli topologia nie budzi wątpliwości, piszemy krótko $X$
+zamiast $(X,\tau)$.
+\end{definicja}
+
+Warunek (T3) jest równoważny zamknięciu na \emph{skończone}
+przecięcia: wykonujemy kolejne przecięcia dwóch zbiorów,
+a przecięcie pustej rodziny to $X$. W (T2) indeks $I$
+może być dowolny, także pusty. Nie wymagamy, by przecięcie
+nieskończenie wielu zbiorów otwartych było otwarte.
+
+\begin{przyklad}[Przecięcie nieskończenie wielu zbiorów otwartych]
+\label{ex:topog-nieskonczone-przeciecie}
+W $\R$ z topologią pochodzącą od metryki $d(x,y)=|x-y|$
+zbiory $U_n=(-1/n,1/n)$, $n\geq1$, są otwarte, lecz
+$\bigcap_{n\geq1}U_n=\{0\}$ nie jest otwarty.
+Istotnie, dla każdego $r>0$ punkt $r/2$ należy do
+$B_d(0,r)$, ale nie do $\{0\}$.
+Ponadto $x\neq0$ nie należy do $U_n$ dla dostatecznie
+dużego $n$, dlatego przecięcie jest dokładnie $\{0\}$.
+\end{przyklad}
+
+\begin{stwierdzenie}[Aksjomaty zbiorów domkniętych]
+\label{prop:topog-zbiory-domkniete}
+Niech $(X,\tau)$ będzie przestrzenią topologiczną, a
+$\mathcal F=\{F\subseteq X:X\setminus F\in\tau\}$.
+Wówczas $\varnothing,X\in\mathcal F$, przecięcie dowolnej
+rodziny elementów $\mathcal F$ należy do $\mathcal F$
+i suma dwóch elementów $\mathcal F$ należy do $\mathcal F$.
+Odwrotnie, każda rodzina $\mathcal F\subseteq\mathcal P(X)$
+spełniająca te trzy warunki wyznacza dokładnie jedną topologię,
+której rodziną zbiorów domkniętych jest $\mathcal F$.
+\end{stwierdzenie}
+\begin{proof}
+Pierwsze trzy własności wynikają z praw de Morgana:
+$X\setminus\bigcap_{i\in I}F_i
+=\bigcup_{i\in I}(X\setminus F_i)$ i
+$X\setminus(F\cup G)=(X\setminus F)\cap(X\setminus G)$.
+Pierwsza równość jest prawdziwa również dla pustej rodziny.
+
+Odwrotnie, dla zadanej $\mathcal F$ definiujemy
+$\tau=\{X\setminus F:F\in\mathcal F\}$. Z warunku
+$\varnothing,X\in\mathcal F$ otrzymujemy (T1),
+z zamknięcia $\mathcal F$ na dowolne przecięcia otrzymujemy
+(T2), a z jej zamknięcia na sumy dwóch zbiorów otrzymujemy
+(T3). Ponieważ $\varnothing\in\mathcal F$, rodzina
+$\mathcal F$ jest także zamknięta na sumy skończone.
+Rodzina zbiorów domkniętych tej topologii jest
+równa $\mathcal F$. Każda topologia o tej rodzinie
+zbiorów domkniętych musi składać się z ich dopełnień,
+więc jest jednoznacznie wyznaczona.
+\end{proof}
+
+\section{Pierwsze przykłady i kontrprzykłady}
+\label{sec:topog-przyklady}
+
+\begin{przyklad}[Topologia dyskretna i antydyskretna]
+\label{ex:topog-dyskretna-antydyskretna}
+Dla dowolnego zbioru $X$ rodzina $\mathcal P(X)$ jest topologią,
+ponieważ wszystkie występujące w aksjomatach zbiory są
+podzbiorami $X$. Jest to \emph{topologia dyskretna}.
+Jest ona topologią pochodzącą od metryki dyskretnej
+z Przykładu~\ref{ex:topog-metryka-dyskretna}: dla każdego $x\in X$
+mamy $B_{d_{\mathrm{dys}}}(x,1/2)=\{x\}$, a więc
+każdy podzbiór $U\subseteq X$ jest otwarty, także gdy $U=\varnothing$.
+Rodzina $\{\varnothing,X\}$ także spełnia (T1)--(T3):
+sumy i przecięcia jej elementów należą do tej rodziny.
+Jest to \emph{topologia antydyskretna}.
+Jeżeli $X=\varnothing$ lub $X$ jest jednoelementowy,
+obie topologie są identyczne; jeżeli $X$ ma co najmniej
+dwa elementy, są różne.
+\end{przyklad}
+
+\begin{przyklad}[Topologia koskończona]
+\label{ex:topog-kofinita}
+Niech $X$ będzie dowolnym zbiorem. Ustalmy
+\[
+\tau_{\mathrm{ks}}=\{\varnothing\}\cup
+\{U\subseteq X:X\setminus U\text{ jest skończony}\}.
+\]
+Zbiory $\varnothing$ i $X$ należą do $\tau_{\mathrm{ks}}$.
+Jeżeli rodzina elementów $\tau_{\mathrm{ks}}$ zawiera
+niepusty składnik $U$, to dopełnienie jej sumy jest zawarte
+w skończonym zbiorze $X\setminus U$, a zatem jest skończone.
+Jeżeli wszystkie składniki są puste albo rodzina jest pusta,
+ich suma jest pusta.
+Dla niepustych $U,V\in\tau_{\mathrm{ks}}$ dopełnienie
+$U\cap V$ jest sumą dwóch zbiorów skończonych.
+Przecięcie z $\varnothing$ również jest otwarte.
+Są to dokładnie aksjomaty topologii.
+
+Gdy $X$ jest skończony, $\tau_{\mathrm{ks}}=\mathcal P(X)$.
+Gdy $X$ jest nieskończony, dwa niepuste zbiory otwarte
+nie mogą być rozłączne: ich dopełnienia są skończone,
+a zbiory dopełniające nie mogłyby razem pokryć
+nieskończonego $X$.
+\end{przyklad}
+
+\begin{przyklad}[Topologia koprzeliczalna]
+\label{ex:topog-koprzeliczalna}
+Niech $X$ będzie dowolnym zbiorem. Definiujemy
+\[
+\tau_{\mathrm{kp}}=\{\varnothing\}\cup
+\{X\setminus C:C\subseteq X,\ C\text{ jest co najwyżej przeliczalny}\}.
+\]
+Argument z poprzedniego przykładu działa po zastąpieniu
+słowa „skończony” słowami „co najwyżej przeliczalny”:
+podzbiór zbioru co najwyżej przeliczalnego jest
+co najwyżej przeliczalny, a suma dwóch zbiorów
+co najwyżej przeliczalnych jest co najwyżej przeliczalna.
+Zatem jest to topologia. Jeśli $X$ jest co najwyżej
+przeliczalny, otrzymujemy topologię dyskretną.
+Jeżeli $X$ jest nieprzeliczalny, to każde dwa niepuste
+zbiory otwarte mają niepuste przecięcie, ponieważ suma
+dwóch co najwyżej przeliczalnych dopełnień nie może pokryć $X$.
+\end{przyklad}
+
+\begin{przyklad}[Przestrzeń Sierpińskiego]
+\label{ex:topog-sierpinski}
+Na $X=\{0,1\}$ określmy
+$\tau_{\mathrm{Si}}=\{\varnothing,\{1\},X\}$. Łatwo bezpośrednio
+sprawdzić, że suma i przecięcie dowolnych elementów
+tej rodziny należą do $\tau_{\mathrm{Si}}$: jedynymi możliwościami
+są $\varnothing,\{1\},X$. Jest to topologia różna
+zarówno od dyskretnej, jak i antydyskretnej.
+Zbiór $\{1\}$ jest otwarty, lecz nie jest domknięty,
+ponieważ jego dopełnienie $\{0\}$ nie jest otwarte.
+Natomiast $\{0\}$ jest domknięty, lecz nieotwarty.
+\end{przyklad}
+
+\begin{przyklad}[Topologia wyznaczona przez podział]
+\label{ex:topog-podzial}
+Niech $\mathcal A$ będzie podziałem zbioru $X$:
+każdy $A\in\mathcal A$ jest niepusty, różne elementy
+$\mathcal A$ są rozłączne, a $\bigcup\mathcal A=X$.
+Rodzina $\tau_{\mathcal A}=\{\bigcup\mathcal E:
+\mathcal E\subseteq\mathcal A\}$ jest topologią.
+Zbiór pusty powstaje jako suma pustej podrodziny,
+a $X$ jako suma całego podziału. Suma dowolnych sum
+bloków znów jest sumą bloków. Przecięcie dwóch takich
+sum jest sumą bloków należących do obu wybranych
+podrodzin: każdy punkt należy do dokładnie jednego bloku.
+Gdy $\mathcal A=\{X\}$ i $X\neq\varnothing$, mamy
+topologię antydyskretną; gdy
+$\mathcal A=\{\{x\}:x\in X\}$, mamy topologię dyskretną.
+\end{przyklad}
+
+\begin{uwaga}[Przestrzeń pusta]
+\label{rem:topog-pusta}
+Na $X=\varnothing$ istnieje tylko jedna topologia,
+$\tau=\{\varnothing\}$. W aksjomacie (T1) zbiory
+$\varnothing$ i $X$ są wtedy tym samym zbiorem.
+Uwzględnianie przypadku pustego zapobiega
+niepotrzebnym wyjątkom w ogólnych konstrukcjach.
+\end{uwaga}
+
+\section{Otoczenia punktów}
+\label{sec:topog-otoczenia}
+
+\begin{definicja}[Otoczenie i otoczenie otwarte]
+\label{def:topog-otoczenie}
+Niech $(X,\tau)$ będzie przestrzenią topologiczną i $x\in X$.
+Zbiór $N\subseteq X$ nazywamy \emph{otoczeniem punktu $x$},
+jeśli istnieje $U\in\tau$ takie, że $x\in U\subseteq N$.
+Jeżeli dodatkowo $N\in\tau$, mówimy o
+\emph{otoczeniu otwartym}. Rodzinę wszystkich otoczeń
+punktu $x$ oznaczamy przez $\mathcal N(x)$.
+\end{definicja}
+
+Nie każde otoczenie jest otwarte: w standardowej topologii
+na $\R$ zbiór $[-1,1]$ jest otoczeniem zera, ponieważ
+$0\in(-1,1)\subseteq[-1,1]$, lecz sam nie jest otwarty.
+
+\begin{stwierdzenie}[Podstawowe własności otoczeń]
+\label{prop:topog-otoczenia}
+Dla dowolnej przestrzeni topologicznej $(X,\tau)$
+i każdego $x\in X$ zachodzą następujące własności:
+\begin{enumerate}[label=(\roman*)]
+\item $X\in\mathcal N(x)$, a każde $N\in\mathcal N(x)$ zawiera $x$;
+\item jeżeli $N\in\mathcal N(x)$ oraz $N\subseteq M\subseteq X$,
+      to $M\in\mathcal N(x)$;
+\item jeżeli $N,M\in\mathcal N(x)$, to
+      $N\cap M\in\mathcal N(x)$;
+\item jeżeli $N\in\mathcal N(x)$, to istnieje $M\in\mathcal N(x)$
+      takie, że $N\in\mathcal N(y)$ dla każdego $y\in M$.
+\end{enumerate}
+Zbiór $U\subseteq X$ jest otwarty wtedy i tylko wtedy, gdy
+$U\in\mathcal N(x)$ dla każdego $x\in U$.
+\end{stwierdzenie}
+\begin{proof}
+Ponieważ $X$ jest otwarty, jest otoczeniem każdego swojego punktu.
+Pozostała część (i) wynika wprost z definicji.
+Jeżeli $x\in V\subseteq N\subseteq M$ i $V$ jest otwarty,
+to $M$ również jest otoczeniem $x$, co daje (ii).
+Dla (iii) wybieramy otwarte $V,W$ takie, że
+$x\in V\subseteq N$ i $x\in W\subseteq M$.
+Zbiór $V\cap W$ jest otwarty i
+$x\in V\cap W\subseteq N\cap M$.
+W (iv) możemy wziąć $M=V$, gdzie $V$ jest dowolnym
+otwartym zbiorem spełniającym $x\in V\subseteq N$:
+dla każdego $y\in V$ ten sam $V$ świadczy,
+że $N$ jest otoczeniem $y$.
+
+Jeżeli $U$ jest otwarty, jest otoczeniem każdego punktu,
+który zawiera. Odwrotnie, załóżmy, że $U\in\mathcal N(x)$
+dla każdego $x\in U$. Każdy taki punkt należy do pewnego
+zbioru otwartego $V$ zawartego w $U$. Wobec tego
+\[
+U=\bigcup\{V\in\tau:V\subseteq U\},
+\]
+więc $U$ jest otwarty. Równość pozostaje prawdziwa także dla
+$U=\varnothing$: rodzina po prawej stronie jest wtedy
+jednoelementowa i składa się ze zbioru pustego.
+\end{proof}
+
+\begin{uwaga}
+\label{rem:topog-otoczenia-topologia}
+Własność (iv) odzwierciedla fakt, że punkt nie musi być
+jedynym punktem posiadającym dane otoczenie: pewien
+jego mniejszy fragment jest otoczeniem każdego swojego punktu.
+Pełne odwrotne twierdzenie o opisywaniu topologii za pomocą
+rodzin otoczeń jest użyteczne przy przejściu do przestrzeni
+jednostajnych; na obecnym etapie wystarczy powyższa charakteryzacja.
+\end{uwaga}
+
+\section{Bazy topologii}
+\label{sec:topog-bazy}
+
+\begin{definicja}[Baza topologii]
+\label{def:topog-baza}
+Niech $(X,\tau)$ będzie przestrzenią topologiczną.
+Rodzinę $\mathcal B\subseteq\tau$ nazywamy
+\emph{bazą topologii $\tau$}, jeśli dla każdego
+$U\in\tau$ oraz $x\in U$ istnieje $B\in\mathcal B$
+takie, że $x\in B\subseteq U$.
+\end{definicja}
+
+Równoważnie, każdy zbiór otwarty jest sumą pewnej podrodziny
+$\mathcal B$. Istotnie, wybierając wszystkie elementy bazy
+zawarte w $U$, otrzymujemy sumę równą $U$;
+w drugą stronę, jeśli $U$ jest taką sumą, każdy
+jego punkt należy do któregoś składnika.
+
+\begin{twierdzenie}[Kryterium bycia bazą]
+\label{thm:topog-kryterium-bazy}
+Niech $X$ będzie zbiorem, a $\mathcal B\subseteq\mathcal P(X)$.
+Istnieje topologia na $X$, dla której $\mathcal B$ jest bazą,
+wtedy i tylko wtedy, gdy:
+\begin{enumerate}[label=(B\arabic*)]
+\item dla każdego $x\in X$ istnieje $B\in\mathcal B$
+      takie, że $x\in B$;
+\item jeżeli $B_1,B_2\in\mathcal B$ oraz
+      $x\in B_1\cap B_2$, to istnieje $B_3\in\mathcal B$
+      takie, że $x\in B_3\subseteq B_1\cap B_2$.
+\end{enumerate}
+Jeżeli te warunki są spełnione, odpowiednia topologia
+jest wyznaczona jednoznacznie i ma postać
+\[
+\tau_{\mathcal B}=
+\left\{\bigcup\mathcal E:\mathcal E\subseteq\mathcal B\right\}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $\mathcal B$ jest bazą topologii $\tau$, to dla
+$U=X$ jej definicja daje (B1). Jeżeli
+$x\in B_1\cap B_2$, zbiór $B_1\cap B_2$ jest otwarty,
+więc z definicji bazy istnieje $B_3$ jak w (B2).
+
+Załóżmy odwrotnie (B1)--(B2) i zdefiniujmy
+$\tau_{\mathcal B}$ podanym wzorem. Suma pustej
+podrodziny daje $\varnothing$; z (B1) wynika
+$X=\bigcup\mathcal B\in\tau_{\mathcal B}$.
+Suma dowolnej rodziny elementów $\tau_{\mathcal B}$
+jest sumą wszystkich występujących w ich zapisie
+elementów bazy, więc należy do $\tau_{\mathcal B}$.
+
+Niech $U=\bigcup\mathcal E$ oraz $V=\bigcup\mathcal D$,
+gdzie $\mathcal E,\mathcal D\subseteq\mathcal B$.
+Dla każdego $x\in U\cap V$ istnieją
+$B_1\in\mathcal E$ i $B_2\in\mathcal D$
+takie, że $x\in B_1\cap B_2$. Z (B2) wynika więc
+istnienie $B\in\mathcal B$ spełniającego
+$x\in B\subseteq B_1\cap B_2\subseteq U\cap V$.
+W konsekwencji
+\[
+U\cap V=\bigcup\{B\in\mathcal B:B\subseteq U\cap V\},
+\]
+co dowodzi, że $U\cap V\in\tau_{\mathcal B}$.
+Ten zapis obejmuje również przypadek $U\cap V=\varnothing$
+i nie wymaga wyboru po jednym elemencie bazy dla każdego punktu.
+Otrzymujemy topologię. Wszystkie elementy
+$\mathcal B$ są w niej otwarte, a każdy zbiór otwarty
+jest sumą elementów $\mathcal B$, więc $\mathcal B$
+jest jej bazą. Jednoznaczność wynika z równoważnej
+charakteryzacji bazy podanej przed twierdzeniem.
+\end{proof}
+
+\begin{stwierdzenie}[Kryterium otwartości przez bazę]
+\label{prop:topog-otwartosc-przez-baze}
+Niech $\mathcal B$ będzie bazą topologii $\tau$ na $X$.
+Dla podzbioru $U\subseteq X$ następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $U\in\tau$;
+\item dla każdego $x\in U$ istnieje $B\in\mathcal B$
+      takie, że $x\in B\subseteq U$.
+\end{enumerate}
+\end{stwierdzenie}
+\begin{proof}
+Implikacja (i)$\Rightarrow$(ii) jest definicją bazy.
+W drugą stronę $U$ jest sumą wszystkich elementów
+$\mathcal B$ zawartych w $U$, a więc zbiorem otwartym.
+Gdy $U=\varnothing$, warunek (ii) jest spełniony,
+a $U$ jest otwarty z aksjomatu (T1).
+\end{proof}
+
+\begin{przyklad}[Kule metryczne jako baza]
+\label{ex:topog-kule-baza}
+W dowolnej przestrzeni metrycznej $(X,d)$ rodzina
+$\mathcal B_d=\{B_d(x,r):x\in X,\ r>0\}$
+jest bazą topologii metrycznej. Istotnie, z
+Definicji~\ref{def:topog-otwarty-metrycznie} wynika,
+że dla każdego otwartego $U\subseteq X$ i $x\in U$
+istnieje $B_d(x,r)$ zawarta w $U$. Każda kula należy
+przy tym do topologii metrycznej na mocy
+Stwierdzenia~\ref{prop:topog-kule-otwarte-sfery-domkniete}.
+Są to dokładnie warunki z Definicji~\ref{def:topog-baza}.
+Jeżeli $X=\varnothing$, baza jest pusta i warunek
+jej definicji zachodzi bez konieczności wyboru punktu.
+\end{przyklad}
+
+\begin{przyklad}[Baza o końcach wymiernych]
+\label{ex:topog-wymierna-baza}
+W zwykłej topologii na $\R$ rodzina
+$\mathcal B_{\mathbb Q}=\{(p,q):p,q\in\Q,\ p<q\}$
+jest bazą. Niech $U$ będzie otwarty i $x\in U$.
+Istnieje $\varepsilon>0$ takie, że
+$(x-\varepsilon,x+\varepsilon)\subseteq U$.
+Z gęstości $\Q$ w $\R$ wybieramy liczby wymierne
+$p,q$ tak, aby $x-\varepsilon<p<x<q<x+\varepsilon$.
+Wtedy $x\in(p,q)\subseteq U$. Rodzina jest przeliczalna: jest obrazem przeliczalnego
+zbioru $\{(p,q)\in\Q\times\Q:p<q\}$ przy odwzorowaniu,
+które parze liczb $(p,q)$ przyporządkowuje przedział $(p,q)$.
+Własność tę wykorzystamy przy aksjomatach przeliczalności.
+\end{przyklad}
+
+\begin{przyklad}[Topologia dolnej granicy]
+\label{ex:topog-sorgenfrey}
+Niech $X=\R$ i
+$\mathcal B_{\mathrm S}=\{[a,b):a,b\in\R,\ a<b\}$.
+Rodzina pokrywa $\R$, gdyż $x\in[x,x+1)$.
+Jeżeli $x\in[a,b)\cap[c,d)$, to
+$x<\min\{b,d\}$ i
+$[x,\min\{b,d\})\subseteq[a,b)\cap[c,d)$.
+Kryterium bazy wyznacza topologię
+$\tau_{\mathrm{So}}$, zwaną \emph{topologią dolnej granicy}
+(topologią prostej Sorgenfreya).
+Każdy zbiór otwarty w zwykłej topologii na $\R$
+jest otwarty w $\tau_{\mathrm{So}}$: dla $x\in U$
+można wybrać $\varepsilon>0$ z
+$(x-\varepsilon,x+\varepsilon)\subseteq U$, skąd
+$x\in[x,x+\varepsilon)\subseteq U$.
+Natomiast $[0,1)$ jest otwarty w $\tau_{\mathrm{So}}$,
+ale nie jest otwarty w topologii zwykłej,
+bo żadna kula wokół zera nie mieści się w $[0,1)$.
+Topologia dolnej granicy jest zatem ściśle silniejsza
+od topologii zwykłej.
+\end{przyklad}
+
+\section{Podbazy i topologie generowane}
+\label{sec:topog-podbazy}
+
+\begin{definicja}[Topologia generowana przez rodzinę zbiorów]
+\label{def:topog-topologia-generowana}
+Niech $X$ będzie zbiorem, a $\mathcal S\subseteq\mathcal P(X)$.
+\emph{Topologią generowaną przez $\mathcal S$} nazywamy
+najmniejszą względem zawierania topologię na $X$,
+która zawiera wszystkie elementy $\mathcal S$.
+Rodzinę $\mathcal S$ nazywamy \emph{podbazą} tej topologii.
+\end{definicja}
+
+Istnienie najmniejszej topologii nie jest założeniem:
+wynika z następnego twierdzenia. W definicji
+\emph{nie} zakładamy, że $\mathcal S$ pokrywa $X$.
+
+\begin{twierdzenie}[Konstrukcja topologii z podbazy]
+\label{thm:topog-podbaza-konstrukcja}
+Niech $X$ będzie dowolnym zbiorem i
+$\mathcal S\subseteq\mathcal P(X)$. Niech $\mathcal B$
+będzie rodziną wszystkich przecięć skończonych podrodzin
+$\mathcal S$, przy czym przecięcie pustej podrodziny
+jest równe $X$. Wówczas $\mathcal B$ jest bazą pewnej
+topologii, a topologia ta jest dokładnie topologią
+generowaną przez $\mathcal S$. Każdy jej zbiór otwarty
+jest sumą skończonych przecięć elementów $\mathcal S$.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $X\in\mathcal B$, każdy punkt jest zawarty
+w pewnym elemencie $\mathcal B$. Przecięcie dwóch
+skończonych przecięć elementów $\mathcal S$ jest
+znów takim skończonym przecięciem. Zatem $\mathcal B$
+spełnia (B1)--(B2) z
+Twierdzenia~\ref{thm:topog-kryterium-bazy}.
+Oznaczmy wyznaczoną topologię przez $\tau$.
+Każdy $S\in\mathcal S$ należy do $\mathcal B$ jako
+przecięcie jednoelementowej rodziny, zatem $\mathcal S
+\subseteq\tau$.
+
+Niech $\rho$ będzie dowolną topologią na $X$
+zawierającą $\mathcal S$. Z (T1) i (T3) wynika,
+że każde skończone przecięcie elementów $\mathcal S$
+należy do $\rho$, a z (T2), że należą do niej także
+wszystkie sumy takich przecięć. Zatem $\tau\subseteq\rho$.
+Dowodzi to minimalności i jednoznaczności $\tau$.
+\end{proof}
+
+\begin{przyklad}[Podbaza nie musi być bazą]
+\label{ex:topog-podbaza-niebaza}
+Niech $X=\{a,b,c\}$ i
+$\mathcal S=\{\{a,b\},\{b,c\}\}$.
+Przecięcie obu elementów $\mathcal S$ jest równe
+$\{b\}$, ale w $\mathcal S$ nie ma zbioru
+zawierającego $b$ i zawartego w $\{b\}$.
+Zatem $\mathcal S$ nie spełnia (B2), choć pokrywa $X$.
+Topologia przez nią generowana to
+\[
+\tau=\{\varnothing,\{b\},\{a,b\},\{b,c\},X\}.
+\]
+Istotnie, przecięcia skończone dają tylko $X$,
+$\{a,b\}$, $\{b,c\}$ i $\{b\}$,
+a sumy tych zbiorów, wraz z sumą pustą,
+dają dokładnie wypisaną rodzinę.
+\end{przyklad}
+
+\begin{przyklad}[Pusta podbaza]
+\label{ex:topog-pusta-podbaza}
+Gdy $\mathcal S=\varnothing$, jedynym skończonym
+przecięciem zbiorów z $\mathcal S$ jest $X$
+(przecięcie puste). Sumy podrodzin $\{X\}$
+dają $\varnothing$ oraz $X$, a więc topologię
+antydyskretną. Jest to zgodne z tym, że żadnych
+zbiorów nie nakazano uczynić otwartymi.
+\end{przyklad}
+
+\section{Porównywanie topologii na ustalonym zbiorze}
+\label{sec:topog-porownywanie}
+
+\begin{definicja}[Topologia słabsza i silniejsza]
+\label{def:topog-silniejsza}
+Niech $\tau_1$ i $\tau_2$ będą topologiami na tym
+samym zbiorze $X$. Mówimy, że $\tau_1$ jest
+\emph{słabsza} (albo \emph{grubsza}) od $\tau_2$,
+a $\tau_2$ jest \emph{silniejsza} (albo \emph{drobniejsza})
+od $\tau_1$, jeżeli $\tau_1\subseteq\tau_2$.
+Jeśli zawieranie jest właściwe, mówimy odpowiednio
+o topologii \emph{ściśle słabszej} i \emph{ściśle silniejszej}.
+\end{definicja}
+
+To porównanie dotyczy liczby i układu zbiorów otwartych,
+a nie wartości odległości. Topologia dyskretna jest
+najsilniejsza, a antydyskretna najsłabsza ze wszystkich
+topologii na $X$.
+
+\begin{stwierdzenie}[Kryterium porównania przez bazy]
+\label{prop:topog-porownanie-bazy}
+Niech $\tau_1,\tau_2$ będą topologiami na $X$,
+a $\mathcal B_1$ bazą $\tau_1$.
+Wówczas $\tau_1\subseteq\tau_2$ wtedy i tylko wtedy,
+gdy każdy zbiór $B\in\mathcal B_1$ należy do $\tau_2$.
+Jeżeli $\mathcal B_2$ jest bazą $\tau_2$, jest to
+równoważne warunkowi: dla wszystkich $B\in\mathcal B_1$
+i $x\in B$ istnieje $C\in\mathcal B_2$ takie,
+że $x\in C\subseteq B$.
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $\tau_1\subseteq\tau_2$, każdy element
+$\mathcal B_1\subseteq\tau_1$ należy do $\tau_2$.
+Odwrotnie, jeśli wszystkie elementy $\mathcal B_1$
+są otwarte w $\tau_2$, to dowolny $U\in\tau_1$
+jako ich suma również należy do $\tau_2$.
+Ostatnia równoważność wynika z kryterium otwartości
+przez bazę $\mathcal B_2$.
+\end{proof}
+
+\begin{przyklad}[Topologie nieporównywalne]
+\label{ex:topog-nieporownywalne}
+Na $X=\{a,b\}$ określmy
+$\tau_a=\{\varnothing,\{a\},X\}$ i
+$\tau_b=\{\varnothing,\{b\},X\}$.
+Obie rodziny są topologiami, ale
+$\{a\}\in\tau_a\setminus\tau_b$ i
+$\{b\}\in\tau_b\setminus\tau_a$.
+Żadna z tych topologii nie jest słabsza od drugiej.
+Na zbiorze dwuelementowym istnieją dokładnie cztery
+topologie: antydyskretna, dyskretna oraz $\tau_a,\tau_b$.
+Wynika to z tego, że $\varnothing$ i $X$ są obowiązkowe,
+a każdy z dwóch pozostałych podzbiorów można dołączyć
+lub pominąć, nie naruszając aksjomatów.
+\end{przyklad}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=Latex, every node/.style={font=\small},
+ box/.style={draw,rounded corners,align=center,inner sep=4pt}]
+\node[box] (top) at (0,2.6) {$\mathcal P(X)$};
+\node[box] (left) at (-2.5,1.3) {$\tau_a$};
+\node[box] (right) at (2.5,1.3) {$\tau_b$};
+\node[box] (bottom) at (0,0) {$\{\varnothing,X\}$};
+\draw (bottom)--(left)--(top)--(right)--(bottom);
+\end{tikzpicture}
+\caption{Cztery topologie na $X=\{a,b\}$ uporządkowane
+przez zawieranie; kierunek ku górze oznacza topologię silniejszą.}
+\label{fig:topog-cztery-topologie}
+\end{figure}
+
+\begin{twierdzenie}[Przecięcia topologii i topologia generowana]
+\label{thm:topog-przeciecia-topologii}
+Niech $X$ będzie zbiorem i $(\tau_i)_{i\in I}$
+dowolną rodziną topologii na $X$. Wówczas
+$\bigcap_{i\in I}\tau_i$ jest topologią na $X$,
+przy czym dla $I=\varnothing$ przyjmujemy
+$\bigcap_{i\in\varnothing}\tau_i=\mathcal P(X)$.
+W szczególności dla każdego
+$\mathcal S\subseteq\mathcal P(X)$ topologia
+generowana przez $\mathcal S$ jest przecięciem
+wszystkich topologii na $X$ zawierających $\mathcal S$.
+\end{twierdzenie}
+\begin{proof}
+Dla $I\neq\varnothing$ zbiory $\varnothing,X$
+należą do każdej $\tau_i$, więc także do ich przecięcia.
+Jeżeli $(U_j)_{j\in J}$ jest rodziną zbiorów należących
+do wszystkich $\tau_i$, to dla każdego $i\in I$
+zbiór $\bigcup_{j\in J}U_j$ należy do $\tau_i$;
+zatem należy do ich przecięcia. Analogicznie,
+jeżeli $U,V$ należą do wszystkich $\tau_i$, to
+$U\cap V$ należy do wszystkich $\tau_i$.
+Dla $I=\varnothing$ otrzymujemy topologię dyskretną.
+
+Rodzina wszystkich topologii zawierających $\mathcal S$
+nie jest pusta, ponieważ zawiera $\mathcal P(X)$.
+Jej przecięcie jest topologią zawierającą $\mathcal S$
+i zawartą w każdej innej topologii o tej własności.
+Zatem jest to najmniejsza topologia zawierająca
+$\mathcal S$, zgodnie z Definicją~\ref{def:topog-topologia-generowana}.
+\end{proof}
+
+\begin{przyklad}[Porównanie trzech topologii na prostej]
+\label{ex:topog-porownanie-r}
+Na $\R$ topologia koskończona jest ściśle słabsza od
+zwykłej topologii euklidesowej. Istotnie, dla każdego
+$a\in\R$ zbiór $\R\setminus\{a\}$ jest otwarty:
+jeśli $x\ne a$, to
+$B_d(x,|x-a|/2)\subseteq\R\setminus\{a\}$.
+Dopełnienie dowolnego zbioru skończonego jest zatem
+przecięciem skończenie wielu takich zbiorów otwartych,
+a więc jest otwarte. Jednak $(-1,1)$ nie jest otwarty
+w topologii koskończonej, ponieważ jego dopełnienie
+jest nieskończone.
+
+Topologia euklidesowa i topologia koprzeliczalna
+na $\R$ są nieporównywalne. Zbiór
+$\R\setminus\Q$ jest koprzeliczalnie otwarty,
+ale nie jest euklidesowo otwarty: każdy przedział
+wokół liczby niewymiernej zawiera liczbę wymierną.
+Z kolei $(-1,1)$ jest euklidesowo otwarty,
+ale jego dopełnienie nie jest przeliczalne,
+więc nie jest koprzeliczalnie otwarty.
+\end{przyklad}
+
+\section{Podsumowanie i dalsze powiązania}
+\label{sec:topog-podsumowanie}
+
+W przestrzeni metrycznej odległość umożliwia definiowanie
+kul i sfer; z kul wyprowadzamy pojęcie zbioru otwartego.
+Przestrzeń topologiczna to zbiór wyposażony w rodzinę zbiorów
+otwartych, zamkniętą na dowolne sumy i skończone przecięcia.
+Te same informacje można opisywać za pomocą zbiorów
+domkniętych, otoczeń, baz albo podbaz. Znajomość bazy
+pozwala sprawdzać otwartość lokalnie, w otoczeniu każdego
+punktu. Podbaza daje z kolei sposób wygenerowania
+najmniejszej topologii zawierającej zadaną rodzinę zbiorów.
+
+W następnym rozdziale przejdziemy do operacji na podzbiorach
+przestrzeni topologicznej: wnętrza, domknięcia, brzegu i zbioru
+pochodnego. Następnie zbadamy ciągłość odwzorowań, dla której
+istotna będzie właśnie rodzina zbiorów otwartych,
+a nie wybrana metryka.

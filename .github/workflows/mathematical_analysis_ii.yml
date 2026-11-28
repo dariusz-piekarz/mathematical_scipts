@@ -1,0 +1,67 @@
+name: Mathematical analysis II validation
+on:
+  push:
+    paths:
+      - 'books/pl/mathematical_analysis_ii.tex'
+      - 'chapters/pl/mathematical_analysis_ii/**'
+      - 'tests/mathematical/mathematical_analysis_ii/**'
+      - 'application/config/preambles/AM2.tex'
+      - 'application/backend/figure_preview.py'
+      - 'application/scripts/audit_graph_figure_previews.py'
+      - 'application/scripts/test_audit_figure_png.py'
+      - '.github/workflows/mathematical_analysis_ii.yml'
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+    paths:
+      - 'books/pl/mathematical_analysis_ii.tex'
+      - 'chapters/pl/mathematical_analysis_ii/**'
+      - 'tests/mathematical/mathematical_analysis_ii/**'
+      - 'application/config/preambles/AM2.tex'
+      - 'application/backend/figure_preview.py'
+      - 'application/scripts/audit_graph_figure_previews.py'
+      - 'application/scripts/test_audit_figure_png.py'
+      - '.github/workflows/mathematical_analysis_ii.yml'
+  workflow_dispatch:
+# Coalesce superseded pending automatic runs, but let running audits finish.
+# Keep push/PR refs separate; manual runs retain their own independent group.
+concurrency:
+  group: atlas-am2-${{ (github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.draft && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'biblioteka-matematyczna-iteracja-6')) && format('isolated-{0}', github.run_id) || format('{0}-{1}', github.event_name, github.ref) }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    # The long-lived draft PR is already covered by scoped push checks.
+    # Run full PR validation again when it becomes ready for review.
+    if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.draft && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'biblioteka-matematyczna-iteracja-6') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install LaTeX
+        run: sudo apt-get update && sudo apt-get install -y texlive-latex-extra texlive-fonts-recommended texlive-lang-polish texlive-science lmodern poppler-utils python3-pil
+      - name: Compile book
+        working-directory: books/pl
+        # PGFPlots 3D surfaces need additional TeX memory; retain full resolution.
+        env:
+          extra_mem_top: '10000000'
+          extra_mem_bot: '5000000'
+        run: |
+          # At least two passes; allow the table of contents and references to settle.
+          for pass in 1 2 3 4 5; do
+            pdflatex -interaction=nonstopmode -halt-on-error mathematical_analysis_ii.tex
+            if [ "$pass" -ge 2 ] && ! grep -Eq 'Label\(s\) may have changed|Rerun to get cross-references right|Rerun to get outlines right|There were undefined references' mathematical_analysis_ii.log; then
+              break
+            fi
+          done
+          if grep -E 'There were undefined references|There were multiply-defined labels|LaTeX Warning: Reference .* undefined|destination with the same identifier|Label\(s\) may have changed|Rerun to get cross-references right|Rerun to get outlines right' mathematical_analysis_ii.log; then exit 1; fi
+      - name: Compile every AM2 TikZ figure with the Atlas reader renderer
+        run: |
+          /usr/bin/python3 application/scripts/test_audit_figure_png.py
+          /usr/bin/python3 application/scripts/audit_graph_figure_previews.py --book mathematical_analysis_ii --report audit_output/am2_reader_figures.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mathematical-analysis-ii
+          path: |
+            books/pl/mathematical_analysis_ii.pdf
+            books/pl/mathematical_analysis_ii.log
+            audit_output/am2_reader_figures.json

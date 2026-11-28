@@ -1,0 +1,5 @@
+# Rozdział 38 — audyt indywidualny 04
+
+2026-11-24. Regresja TG38-BIDIR-01: przebieg 45376986318, finite-models 138385784109 i chapter-pdf 138385783437 completed/success. Pełna książka 45376961218: structural-audit success, PDF jeszcze w toku podczas odczytu.
+
+Źródło 2527b0ecdfbc3facfc4836e4c57a1c90d16de56e: ścisły dowód niezmiennika A* z ponownym otwieraniem przez pierwszy wierzchołek nieprzetworzony z optymalną etykietą; jawna heurystyka czasu przy ograniczeniu prędkości; doprecyzowanie przechowywania krawędzi i rekordów świadków CH oraz odwrócenie drugiej ścieżki w zapytaniu. TG38-ASTAR-02 (b8222017145f643cb3bb3981ef57300c6d0424ac): wszystkie 4113 digrafów o wagach 0,1,3 lub braku łuku na 1–3 wierzchołkach, wszystkie pary i wszystkie całkowite dopuszczalne heurystyki ograniczone przez 2, porównanie z Floydem–Warshallem. Nowe CI i oględziny PDF niepotwierdzone. Zakres tematyczny bez zmian. Status OTWARTY. Następnie weryfikacja nowych regresji, składu PDF i domknięcie stabilizacji jeśli nie wystąpią nowe nieścisłości.

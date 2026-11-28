@@ -1,0 +1,630 @@
+\section{Końce i kokońce}\label{cat:sec:ends-coends}
+Końce i kokońce pozwalają opisać konstrukcje uniwersalne zależne jednocześnie kowariantnie i kontrawariantnie od tego samego argumentu. W szczególności zbiór transformacji naturalnych jest końcem, a iloraz występujący w punktowym lewym rozszerzeniu Kana jest kokońcem. Rozdział rozwija pojęcia z rozdziałów~\ref{sec:naturalne}, \ref{sec:granice} i~\ref{cat:sec:kan-extensions}. Pracujemy z małą kategorią $\mathcal A$ oraz lokalnie małą kategorią $\mathcal C$, a wybory obiektów uniwersalnych rozpatrujemy w ustalonym większym uniwersum, jak w rozdziale~\ref{cat:sec:kan-extensions}.
+
+\subsection{Dinaturalność}
+Niech $T:\mathcal A^{\op}\times\mathcal A\to\mathcal C$ będzie funktorem dwóch zmiennych. Dla $f:a\to b$ i $g:c\to d$ piszemy $T(f,g):T(b,c)\to T(a,d)$, pomijając symbol $\op$ w pierwszej współrzędnej. W szczególności
+\[
+ T(\id_a,f):T(a,a)\to T(a,b),\qquad
+ T(f,\id_b):T(b,b)\to T(a,b).
+\]
+Pierwsza zmienna jest kontrawariantna, druga kowariantna. Z funktorialności wynika przemienność działań w różnych zmiennych:
+\[
+ T(f,g)=T(\id_a,g)T(f,\id_c)
+       =T(f,\id_d)T(\id_b,g).
+\]
+Dokładniej, dla $f':b\to b'$ i $g':d\to d'$ mamy $T(f,g')T(f',g)=T(f'f,g'g)$ jako morfizmy $T(b',c)\to T(a,d')$. Pierwsza współrzędna jest składana w odwrotnej kolejności względem kolejności stosowania morfizmów w kategorii wartości.
+
+\begin{definicja}[Transformacja dinaturalna]\label{cat:def:dinatural}
+Dla funktorów $S,T:\mathcal A^{\op}\times\mathcal A\to\mathcal C$ transformacją dinaturalną $\alpha:S\dashrightarrow T$ nazywamy rodzinę morfizmów $\alpha_a:S(a,a)\to T(a,a)$ spełniającą dla każdego $f:a\to b$ równanie
+\begin{equation}\label{cat:eq:dinatural}
+ T(\id_a,f)\alpha_a S(f,\id_a)
+ =T(f,\id_b)\alpha_b S(\id_b,f).
+\end{equation}
+Obie strony są morfizmami $S(b,a)\to T(a,b)$.
+\end{definicja}
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (s) at (0,3.8) {$S(b,a)$};
+ \node (sa) at (-2.4,2.5) {$S(a,a)$};
+ \node (sb) at (2.4,2.5) {$S(b,b)$};
+ \node (ta) at (-2.4,1.3) {$T(a,a)$};
+ \node (tb) at (2.4,1.3) {$T(b,b)$};
+ \node (t) at (0,0) {$T(a,b)$};
+ \draw[->] (s)--node[above left] {$S(f,\id_a)$} (sa);
+ \draw[->] (s)--node[above right] {$S(\id_b,f)$} (sb);
+ \draw[->] (sa)--node[left] {$\alpha_a$} (ta);
+ \draw[->] (sb)--node[right] {$\alpha_b$} (tb);
+ \draw[->] (ta)--node[below left] {$T(\id_a,f)$} (t);
+ \draw[->] (tb)--node[below right] {$T(f,\id_b)$} (t);
+\end{tikzpicture}
+\end{center}
+Górne strzałki są odpowiednio $S(f,\id_a)$ i $S(\id_b,f)$, dolne odpowiednio $T(\id_a,f)$ i $T(f,\id_b)$. Nie zakładamy istnienia funktora diagonalnego $a\mapsto T(a,a)$: morfizm $f:a\to b$ nie daje na ogół morfizmu $T(a,a)\to T(b,b)$.
+
+\begin{stwierdzenie}\label{cat:prop:dinatural-natural}
+Ograniczenie transformacji naturalnej $\beta:S\Rightarrow T$ do par $(a,a)$ jest transformacją dinaturalną.
+\end{stwierdzenie}
+\begin{proof}
+Naturalność względem morfizmów $(f,\id_a)$ oraz $(\id_b,f)$ daje
+\[
+ \beta_{a,a}S(f,\id_a)=T(f,\id_a)\beta_{b,a},
+ \qquad
+ \beta_{b,b}S(\id_b,f)=T(\id_b,f)\beta_{b,a}.
+\]
+Po złożeniu z odpowiednimi dolnymi strzałkami obie strony~\eqref{cat:eq:dinatural} stają się $T(f,f)\beta_{b,a}$ przez funktorialność $T$.
+\end{proof}
+\begin{uwaga}\label{cat:rem:dinatural-composition}
+Dowolne transformacje dinaturalne nie muszą składać się do transformacji dinaturalnej. Można natomiast składać transformację dinaturalną z ograniczeniem transformacji naturalnej, po obu stronach.
+\end{uwaga}
+Istotnie, dla $\alpha:S\dashrightarrow T$ i naturalnej $\beta:T\Rightarrow U$ mamy
+\[
+ U(\id_a,f)\beta_{a,a}\alpha_a S(f,\id_a)
+ =\beta_{a,b}T(\id_a,f)\alpha_a S(f,\id_a)
+ =\beta_{a,b}T(f,\id_b)\alpha_b S(\id_b,f),
+\]
+a ostatnia strona jest równa $U(f,\id_b)\beta_{b,b}\alpha_b S(\id_b,f)$ przez naturalność $\beta$. Dla naturalnej $\gamma:R\Rightarrow S$ otrzymujemy natomiast
+\begin{align*}
+ T(\id_a,f)\alpha_a\gamma_{a,a}R(f,\id_a)
+ &=T(\id_a,f)\alpha_a S(f,\id_a)\gamma_{b,a}\\
+ &=T(f,\id_b)\alpha_b S(\id_b,f)\gamma_{b,a}\\
+ &=T(f,\id_b)\alpha_b\gamma_{b,b}R(\id_b,f).
+\end{align*}
+Pierwsza i trzecia równość wynikają z naturalności $\gamma$, druga z dinaturalności $\alpha$.
+\begin{przyklad}[Brak domknięcia na składanie]\label{cat:ex:dinatural-noncomposition}
+Niech $\mathcal A$ będzie kategorią $0\to1$ z nietrywialną strzałką $f$, a $\mathcal C=\Set$. Niech $S,T,U$ będą funktorami na $\mathcal A^{\op}\times\mathcal A$. Bierzemy $S$ stały o wartości $\{*\}$, $T(1,0)=\varnothing$ i pozostałe trzy wartości $T$ singletonowe. Niech $U(1,0)=\varnothing$, $U(0,0)=U(1,1)=\{*\}$ i $U(0,1)=\{0,1\}$. Dwie strzałki z diagonalnych wartości $U$ do $U(0,1)$ wysyłają $*$ odpowiednio na $0$ i $1$. Pozostałe nietrywialne strzałki o dziedzinie pustej są jedynymi funkcjami z pustego zbioru. Funktor $S$ jest stały, więc wszystkie jego kwadraty są przemienne. Dla $T$ i $U$ dwie drogi długości dwa od $(1,0)$ do $(0,1)$ mają pustą dziedzinę, więc ich złożenia są równe. Obrazy pozostałych morfizmów wyznaczają identyczności i składanie, co dowodzi funktorialności wszystkich trzech konstrukcji.
+Rodziny jedynych map singletonów $\alpha_a:S(a,a)\to T(a,a)$ i $\beta_a:T(a,a)\to U(a,a)$ są dinaturalne: dla $\alpha$ obie strony równania mają wspólną singletonową przeciwdziedzinę, dla $\beta$ wspólną pustą dziedzinę. Jednak dla $\beta_a\alpha_a$ obie strony równania dla $f$ są mapami $\{*\}\to\{0,1\}$ o różnych wartościach. Zatem rodzina złożeń nie jest dinaturalna. Równania dla identyczności nie wprowadzają dodatkowych warunków, ponieważ wszystkie funktory zachowują identyczności. Ten przykład pokazuje również, że nie każda transformacja dinaturalna jest ograniczeniem transformacji naturalnej: gdyby $\beta$ pochodziła od transformacji naturalnej $T\Rightarrow U$, jej składowa w $(0,1)$ musiałaby wysłać jedyny element $T(0,1)$ jednocześnie na $0$ i na $1$, przez naturalność względem strzałek z $(0,0)$ i $(1,1)$ do $(0,1)$. Jest to niemożliwe.
+\end{przyklad}
+
+\subsection{Własności uniwersalne końca i kokońca}
+\begin{definicja}[Stożki i kostożki dinaturalne]\label{cat:def:wedges}
+Stożkiem dinaturalnym nad $T$ o wierzchołku $X$ nazywamy rodzinę $p_a:X\to T(a,a)$ spełniającą
+\begin{equation}\label{cat:eq:wedge}
+ T(\id_a,f)p_a=T(f,\id_b)p_b\qquad(f:a\to b).
+\end{equation}
+Kostożek dinaturalny o wierzchołku $Y$ jest rodziną $i_a:T(a,a)\to Y$ spełniającą
+\begin{equation}\label{cat:eq:cowedge}
+ i_a T(f,\id_a)=i_b T(\id_b,f)\qquad(f:a\to b).
+\end{equation}
+Są to transformacje dinaturalne odpowiednio ze stałego funktora $\Delta X:\mathcal A^{\op}\times\mathcal A\to\mathcal C$ o wartości $X$ do $T$ i z $T$ do $\Delta Y$. Istotnie, w~\eqref{cat:eq:dinatural} morfizmy stałego funktora są identycznościami, a pozostałe morfizmy dają odpowiednio~\eqref{cat:eq:wedge} oraz~\eqref{cat:eq:cowedge}.
+\end{definicja}
+\begin{definicja}[Koniec i kokoniec]\label{cat:def:end-coend}
+Końcem funktora $T$ nazywamy obiekt $E$ z dinaturalnym stożkiem $p_a:E\to T(a,a)$, taki że dla każdego stożka dinaturalnego $q_a:X\to T(a,a)$ istnieje dokładnie jeden $h:X\to E$ spełniający $p_a h=q_a$ dla wszystkich $a$. Piszemy
+\[
+ E=\int_{a\in\mathcal A}T(a,a).
+\]
+Kokońcem nazywamy obiekt $Q$ z dinaturalnym kostożkiem $i_a:T(a,a)\to Q$, taki że dla każdego kostożka dinaturalnego $j_a:T(a,a)\to Y$ istnieje dokładnie jeden $h:Q\to Y$ spełniający $h i_a=j_a$ dla wszystkich $a$. Piszemy
+\[
+ Q=\int^{a\in\mathcal A}T(a,a).
+\]
+Symbol całki jest tu oznaczeniem konstrukcji kategoryjnej, nie całki względem miary.
+\end{definicja}
+Można sformułować obie własności uniwersalne w języku obiektów początkowych i końcowych. Kategoria stożków dinaturalnych ma obiekty $(X,(q_a)_a)$, a morfizm do $(X',(q'_a)_a)$ to $h:X\to X'$ spełniający $q'_a h=q_a$ dla każdego $a$. Identyczności spełniają te równania, a składanie je zachowuje: jeśli $q''_a k=q'_a$, to $q''_a kh=q_a$. Koniec jest dokładnie obiektem końcowym tej kategorii. Dla kostożków morfizm $(Y,j)\to(Y',j')$ to $h:Y\to Y'$ z $hj_a=j'_a$; składanie zachowuje warunek, ponieważ $khj_a=kj'_a=j''_a$. Kokoniec jest obiektem początkowym tej kategorii. Są to szczególne przypadki własności uniwersalnych omówionych w rozdziale~\ref{sec:granice}, choć na tym etapie nie utożsamiamy jeszcze stożków dinaturalnych ze zwykłymi stożkami nad jednym diagramem.
+\begin{stwierdzenie}[Jednoznaczność]\label{cat:prop:end-coend-unique}
+Jeżeli koniec (odpowiednio kokoniec) istnieje, jest jednoznaczny z dokładnością do jedynego izomorfizmu zgodnego ze stożkami (odpowiednio kostożkami) uniwersalnymi.
+\end{stwierdzenie}
+\begin{proof}
+Dla dwóch końców $(E,p),(E',p')$ własności uniwersalne wyznaczają $h:E\to E'$ i $k:E'\to E$ z $p'_a h=p_a$, $p_a k=p'_a$. Mamy $p_a kh=p_a$ i $p'_a hk=p'_a$ dla każdego $a$, więc jednoznaczność daje $kh=\id_E$, $hk=\id_{E'}$. Dla kokońców $(Q,i),(Q',i')$ otrzymujemy $h:Q\to Q'$, $k:Q'\to Q$ z $h i_a=i'_a$, $k i'_a=i_a$. Równania $kh i_a=i_a$ i $hk i'_a=i'_a$ dają analogicznie wzajemną odwrotność. Jednoznaczność samego porównania jest częścią własności uniwersalnej.
+\end{proof}
+\begin{stwierdzenie}[Funktorialność]\label{cat:prop:end-coend-functorial}
+Jeśli końce wszystkich rozważanych funktorów istnieją, wybór końców wyznacza funktor na kategorii tych funktorów i transformacji naturalnych. Analogicznie dla kokońców.
+\end{stwierdzenie}
+\begin{proof}
+Niech $\beta:T\Rightarrow U$ będzie transformacją naturalną, a $p^T,p^U$ stożkami końców. Rodzina $\beta_{a,a}p^T_a$ jest dinaturalna na mocy uwagi~\ref{cat:rem:dinatural-composition}. Istnieje zatem jedyny $E(\beta):E(T)\to E(U)$ z
+\[
+ p^U_a E(\beta)=\beta_{a,a}p^T_a.
+\]
+Dla $\beta=\id$ równanie spełnia identyczność. Dla $\gamma:U\Rightarrow V$ złożenie $E(\gamma)E(\beta)$ ma po postkompozycji z $p^V_a$ wartość $\gamma_{a,a}\beta_{a,a}p^T_a$, więc jest równe $E(\gamma\beta)$. Dla kokońców rodzina $i^U_a\beta_{a,a}$ jest dinaturalnym kostożkiem. Jedyny $Q(\beta):Q(T)\to Q(U)$ spełnia $Q(\beta)i^T_a=i^U_a\beta_{a,a}$. Identyczności i składanie zachowują się z tego samego argumentu: oba złożenia z $i^T_a$ dają $i^V_a\gamma_{a,a}\beta_{a,a}$. Wybór innych reprezentantów końców lub kokońców daje funktory kanonicznie izomorficzne. Dla końców niech $c_T:E(T)\to E'(T)$ będzie jedynym izomorfizmem z $p'^T_a c_T=p^T_a$. Dla $\beta:T\Rightarrow U$ oba morfizmy $c_U E(\beta)$ i $E'(\beta)c_T$ po postkompozycji z $p'^U_a$ dają $\beta_{a,a}p^T_a$, zatem są równe. Dla kokońców porównanie $d_T:Q(T)\to Q'(T)$ spełnia $d_T i^T_a=i'^T_a$; oba morfizmy $d_U Q(\beta)$ i $Q'(\beta)d_T$ po prekompozycji z $i^T_a$ dają $i'^U_a\beta_{a,a}$. Jednoznaczność dowodzi naturalności porównań.
+\end{proof}
+
+\subsection{Konstrukcja przez equalizatory i koequalizatory}
+\begin{twierdzenie}[Istnienie końca]\label{cat:thm:end-equalizer}
+Załóżmy, że w $\mathcal C$ istnieją produkty
+\[
+ P=\prod_{a\in\Ob(\mathcal A)}T(a,a),
+ \qquad D=\prod_{f:a\to b}T(a,b).
+\]
+Oznaczmy projekcje przez $\pi_a$ i $\pi_f$. Niech $s,t:P\to D$ będą wyznaczone przez
+\[
+ \pi_f s=T(\id_a,f)\pi_a,\qquad
+ \pi_f t=T(f,\id_b)\pi_b .
+\]
+Koniec $T$ istnieje wtedy i tylko wtedy, gdy istnieje equalizator $e:E\to P$ pary $s,t$. Wówczas $E$ wraz z $p_a=\pi_a e$ jest końcem $T$. W szczególności końce istnieją w każdej kategorii zupełnej.
+\end{twierdzenie}
+\begin{proof}
+Morfizmy $s,t$ istnieją i są jedyne na mocy własności uniwersalnej produktu $D$. Równość $se=te$ po postkompozycji z $\pi_f$ daje~\eqref{cat:eq:wedge} dla $p_a=\pi_a e$. Dla dowolnego stożka dinaturalnego $q_a:X\to T(a,a)$ istnieje jedyny $q:X\to P$ z $\pi_a q=q_a$. Dla każdego $f:a\to b$ mamy
+\[
+ \pi_f s q=T(\id_a,f)q_a=T(f,\id_b)q_b=\pi_f t q .
+\]
+Jednoznaczność w produkcie $D$ daje $sq=tq$. Z własności equalizatora istnieje jedyny $h:X\to E$ z $eh=q$; wtedy $p_a h=q_a$. Jeśli $h'$ również spełnia $p_a h'=q_a$, to $\pi_a eh'=q_a$ dla każdego $a$, stąd $eh'=q$, a jednoznaczność w equalizatorze daje $h'=h$. Odwrotnie, jeżeli istnieje koniec $(E,p)$, to jedyny morfizm $e:E\to P$ z $\pi_a e=p_a$ spełnia $se=te$, ponieważ $\pi_f se=T(\id_a,f)p_a=T(f,\id_b)p_b=\pi_f te$. Jeśli $q:X\to P$ spełnia $sq=tq$, to rodzina $(\pi_a q)_a$ jest dinaturalna, gdyż po postkompozycji tej równości z $\pi_f$ otrzymujemy~\eqref{cat:eq:wedge}. Istnieje więc jedyny $h:X\to E$ z $p_a h=\pi_a q$ dla każdego $a$. Warunek ten jest równoważny $eh=q$ przez własność produktu. Tym samym $e$ jest equalizatorem. Małość $\mathcal A$ gwarantuje, że oba produkty są małe; zupełność daje je oraz equalizator.
+\end{proof}
+\begin{twierdzenie}[Istnienie kokońca]\label{cat:thm:coend-coequalizer}
+Załóżmy, że istnieją koprodukty
+\[
+ P'=\coprod_{a\in\Ob(\mathcal A)}T(a,a),
+ \qquad D'=\coprod_{f:a\to b}T(b,a).
+\]
+Niech $j_a,j_f$ oznaczają ich morfizmy kanoniczne. Definiujemy $s',t':D'\to P'$ przez
+\[
+ s'j_f=j_a T(f,\id_a),\qquad
+ t'j_f=j_b T(\id_b,f).
+\]
+Kokoniec $T$ istnieje wtedy i tylko wtedy, gdy istnieje koequalizator $q:P'\to Q$ pary $s',t'$. Wówczas $Q$ wraz z $i_a=qj_a$ jest kokońcem $T$. W szczególności kokońce istnieją w każdej kategorii kozupełnej.
+\end{twierdzenie}
+\begin{proof}
+Istnienie i jednoznaczność $s',t'$ wynika z własności uniwersalnej koproduktu $D'$. Równość $qs'=qt'$ po prekompozycji z $j_f$ daje~\eqref{cat:eq:cowedge}. Dla dowolnego kostożka dinaturalnego $k_a:T(a,a)\to Y$ istnieje jedyny $k:P'\to Y$ z $kj_a=k_a$. Mamy
+\[
+ ks'j_f=k_aT(f,\id_a)=k_bT(\id_b,f)=kt'j_f .
+\]
+Z jednoznaczności w koprodukcie $D'$ wynika $ks'=kt'$. Własność koequalizatora daje jedyny $h:Q\to Y$ z $hq=k$, więc $hi_a=k_a$. Jeśli $h'$ spełnia $h'i_a=k_a$, to $h'qj_a=k_a$ dla wszystkich $a$, a stąd $h'q=k$. Jednoznaczność w koequalizatorze daje $h'=h$. Odwrotnie, jeśli istnieje kokoniec $(Q,i)$, to jedyny $q:P'\to Q$ z $qj_a=i_a$ spełnia $qs'=qt'$, ponieważ $qs'j_f=i_aT(f,\id_a)=i_bT(\id_b,f)=qt'j_f$. Dla $k:P'\to Y$ z $ks'=kt'$ rodzina $(kj_a)_a$ jest dinaturalna: równość wynika po prekompozycji z $j_f$. Własność uniwersalna kokońca daje jedyny $h:Q\to Y$ z $hi_a=kj_a$ dla każdego $a$. Warunek ten jest równoważny $hq=k$ przez własność koproduktu. Jest to własność uniwersalna koequalizatora. Oba koprodukty są małe, więc kozupełność zapewnia istnienie wszystkich potrzebnych obiektów.
+\end{proof}
+\begin{wniosek}[Modele zbiorowe]\label{cat:cor:end-coend-set}
+Dla $T:\mathcal A^{\op}\times\mathcal A\to\Set$ istnieją koniec i kokoniec. Można je opisać jako
+\[
+ \int_a T(a,a)=\left\{(x_a)_a\in\prod_a T(a,a):
+ T(\id_a,f)(x_a)=T(f,\id_b)(x_b)\ \forall f:a\to b\right\}
+\]
+oraz
+\[
+ \int^a T(a,a)=\left(\coprod_a T(a,a)\right)/{\sim},
+\]
+gdzie $\sim$ jest najmniejszą relacją równoważności zawierającą dla każdego $f:a\to b$ i $z\in T(b,a)$ parę
+\[
+ (a,T(f,\id_a)(z))\sim(b,T(\id_b,f)(z)).
+\]
+\end{wniosek}
+\begin{proof}
+W $\Set$ equalizator pary funkcji jest podzbiorem punktów, na których wartości funkcji są równe (definicja~\ref{def:equalizer}). Zastosowanie tego do $s,t$ z twierdzenia~\ref{cat:thm:end-equalizer} daje pierwszy wzór. Koequalizator pary funkcji jest ilorazem przeciwdziedziny przez najmniejszą relację równoważności zawierającą pary ich wartości w każdym punkcie dziedziny (definicja~\ref{def:coeq}). Dla $s',t'$ z twierdzenia~\ref{cat:thm:coend-coequalizer} otrzymujemy dokładnie wskazane pary. Morfizmy uniwersalne są odpowiednio projekcjami ograniczonymi do zbioru zgodnych rodzin i funkcjami $x\mapsto[a,x]$. W szczególności dla stożka dinaturalnego $(q_a:X\to T(a,a))_a$ jedyna funkcja do końca to $x\mapsto(q_a(x))_a$: dinaturalność zapewnia, że każda jej wartość należy do zbioru zgodnych rodzin. Dla kostożka $(k_a:T(a,a)\to Y)_a$ jedyna funkcja z kokońca ma postać $[a,x]\mapsto k_a(x)$. Jest dobrze określona, ponieważ równanie dinaturalności daje $k_a(T(f,\id_a)(z))=k_b(T(\id_b,f)(z))$ dla każdej pary generującej relację, a równość wartości jest relacją równoważności. Jednoznaczność obu funkcji wynika odpowiednio z tego, że element produktu jest wyznaczony przez współrzędne i że każda klasa ilorazu ma reprezentanta.
+\end{proof}
+\begin{przyklad}[Kategorie dyskretne i puste]\label{cat:ex:end-discrete}
+Jeśli $\mathcal A$ jest dyskretna, równania~\eqref{cat:eq:wedge} i~\eqref{cat:eq:cowedge} dla identyczności są tautologiami. Koniec jest wówczas produktem wszystkich $T(a,a)$, a kokoniec koproduktem. Dla pustej kategorii oznacza to odpowiednio obiekt końcowy i początkowy, o ile istnieją. Dla kategorii z jednym obiektem i jego identycznością obie konstrukcje są kanonicznie izomorficzne z jedyną wartością $T(a,a)$.
+\end{przyklad}
+\begin{przyklad}[Funktor zależny od jednej zmiennej]\label{cat:ex:end-one-variable}
+Jeśli $T(a,b)=F(b)$ dla $F:\mathcal A\to\mathcal C$ (również na morfizmach $T(f,g)=F(g)$), to~\eqref{cat:eq:wedge} przyjmuje postać $F(f)p_a=p_b$, a~\eqref{cat:eq:cowedge} postać $i_a=i_b F(f)$. Są to zwykłe warunki stożka i kostożka nad $F$. Zatem koniec i kokoniec tego $T$ są odpowiednio granicą i kogranicą $F$, również pod względem istnienia. Dla $T(a,b)=G(a)$ z $G:\mathcal A^{\op}\to\mathcal C$ otrzymujemy granicę i kogranicę $G$ w kategorii przeciwnej indeksów: warunki to $p_a=G(f)p_b$ oraz $i_a G(f)=i_b$.
+\end{przyklad}
+
+\subsection{Transformacje naturalne jako końce}
+\begin{twierdzenie}\label{cat:thm:nat-as-end}
+Dla funktorów $F,G:\mathcal A\to\mathcal C$ istnieje bijekcja
+\[
+ \Nat(F,G)\cong\int_{a\in\mathcal A}\Hom_{\mathcal C}(F(a),G(a)).
+\]
+Po prawej stronie bierzemy koniec w $\Set$ funktora $T(a,b)=\Hom_{\mathcal C}(F(a),G(b))$. Bijekcja jest naturalna kontrawariantnie względem $F$ i kowariantnie względem $G$.
+\end{twierdzenie}
+\begin{proof}
+Definiujemy $T(f,g)(h)=G(g)hF(f)$ dla $f:a\to a'$, $g:b\to b'$ i $h:F(a')\to G(b)$. Identyczności zachowują się. Dla $f':a'\to a''$, $g':b'\to b''$ i $h:F(a'')\to G(b)$ mamy
+\[
+ T(f,g')\bigl(T(f',g)(h)\bigr)
+ =G(g')G(g)hF(f')F(f)
+ =T(f'f,g'g)(h),
+\]
+W pierwszej operacji otrzymujemy morfizm $F(a')\to G(b')$, a w drugiej morfizm $F(a)\to G(b'')$, więc oba złożenia mają tę samą dziedzinę i przeciwdziedzinę. Wynika to z funktorialności $F,G$ oraz łączności składania. Zatem $T$ jest funktorem. Z~\ref{cat:cor:end-coend-set} element końca jest rodziną $\alpha_a:F(a)\to G(a)$ spełniającą dla każdego $f:a\to b$
+\[
+ G(f)\alpha_a=\alpha_bF(f).
+\]
+Jest to dokładnie warunek z definicji~\ref{def:naturalna}; obie strony bijekcji są więc tym samym zbiorem rodzin. Dla $\mu:F'\Rightarrow F$ i $\nu:G\Rightarrow G'$ definiujemy składową $\theta_{a,b}$ odpowiedniej transformacji funktorów dwóch zmiennych przez $h\mapsto\nu_b h\mu_a$. Dla $f:a\to a'$, $g:b\to b'$ i $h:F(a')\to G(b)$ obie drogi kwadratu naturalności są równe, ponieważ
+\[
+ G'(g)\nu_b h\mu_{a'}F'(f)
+ =\nu_{b'}G(g)hF(f)\mu_a.
+\]
+Użyliśmy naturalności $\mu$ i $\nu$. Indukowana funkcja końców wysyła rodzinę $(\alpha_a)$ na $(\nu_a\alpha_a\mu_a)$ na mocy stwierdzenia~\ref{cat:prop:end-coend-functorial}; jest to dokładnie składanie transformacji naturalnych. Dowodzi to naturalności bijekcji w obu argumentach.
+\end{proof}
+\begin{uwaga}
+W przypadku funktorów do kategorii $\mathcal C$ nieposiadającej dodatkowej struktury powyższy koniec jest obiektem $\Set$, a nie obiektem $\mathcal C$. Małość $\mathcal A$ i lokalna małość $\mathcal C$ zapewniają, że $\Nat(F,G)$ jest zbiorem. Wzbogaconą wersję tej konstrukcji omówimy oddzielnie.
+\end{uwaga}
+
+\subsection{Lemat Yonedy i lemat ko-Yonedy}
+\begin{stwierdzenie}[Wersja końcowa lematu Yonedy]\label{cat:prop:yoneda-end}
+Dla $F:\mathcal A\to\Set$, $P:\mathcal A^{\op}\to\Set$ oraz $b\in\Ob(\mathcal A)$ istnieją izomorfizmy
+\[
+ \int_a\Hom_{\Set}(\Hom_{\mathcal A}(b,a),F(a))\cong F(b),
+ \qquad
+ \int_a\Hom_{\Set}(\Hom_{\mathcal A}(a,b),P(a))\cong P(b).
+\]
+Są naturalne względem funktora $F$ lub $P$ i względem $b$ (odpowiednio kowariantnie i kontrawariantnie).
+\end{stwierdzenie}
+\begin{proof}
+Pierwszy koniec jest zbiorem transformacji $\Nat(\Hom_{\mathcal A}(b,-),F)$ przez twierdzenie~\ref{cat:thm:nat-as-end}. Bijekcja Yonedy z twierdzenia~\ref{tw:yoneda} wysyła rodzinę $\alpha$ na $\alpha_b(\id_b)$, a element $x\in F(b)$ na rodzinę $\alpha_a(h)=F(h)(x)$. Dla $g:b\to c$ prekompozycja z transformacją $\Hom_{\mathcal A}(c,-)\Rightarrow\Hom_{\mathcal A}(b,-)$ wysyła $\alpha$ na rodzinę $h\mapsto\alpha_a(hg)$; ewaluacja w $\id_c$ daje $\alpha_c(g)=F(g)\alpha_b(\id_b)$ przez naturalność $\alpha$. Dla $\mu:F\Rightarrow F'$ ewaluacja postkompozycji daje $\mu_b(\alpha_b(\id_b))$. W drugim wzorze funktor dwóch zmiennych na $\mathcal A^{\op}\times\mathcal A$ jest dany przez $(a,a')\mapsto\Hom_{\Set}(\Hom_{\mathcal A}(a',b),P(a))$. Warunek końcowy dla $f:a\to a'$ przyjmuje postać
+\[
+ \alpha_a(hf)=P(f)(\alpha_{a'}(h))
+ \quad(h:a'\to b).
+\]
+Są to dokładnie równania naturalności transformacji $\Hom_{\mathcal A}(-,b)\Rightarrow P$. Kontrawariantny lemat Yonedy~\ref{cat:thm:yoneda-contra} daje bijekcję $\alpha\mapsto\alpha_b(\id_b)$ z odwrotnością $x\mapsto(h\mapsto P(h)(x))$. Dla $g:b\to c$ prekompozycja z transformacją $\Hom_{\mathcal A}(-,b)\Rightarrow\Hom_{\mathcal A}(-,c)$ wysyła rodzinę dla obiektu $c$ na rodzinę $h\mapsto\alpha_a(gh)$ dla obiektu $b$. Ewaluacja w $\id_b$ daje $\alpha_b(g)=P(g)(\alpha_c(\id_c))$. Dla $\mu:P\Rightarrow P'$ ewaluacja postkompozycji w $\id_b$ daje $\mu_b(\alpha_b(\id_b))$. To sprawdza obie naturalności bez odwoływania się wyłącznie do dualności.
+\end{proof}
+\begin{twierdzenie}[Lemat ko-Yonedy]\label{cat:thm:co-yoneda}
+Dla $F:\mathcal A\to\Set$, $P:\mathcal A^{\op}\to\Set$ i $b\in\Ob(\mathcal A)$ mamy naturalne izomorfizmy
+\[
+ \int^a\Hom_{\mathcal A}(a,b)\times F(a)\cong F(b),
+ \qquad
+ \int^a P(a)\times\Hom_{\mathcal A}(b,a)\cong P(b).
+\]
+W pierwszej formule funktor dwóch zmiennych to $(a,a')\mapsto\Hom_{\mathcal A}(a,b)\times F(a')$, w drugiej $(a,a')\mapsto P(a)\times\Hom_{\mathcal A}(b,a')$.
+\end{twierdzenie}
+\begin{proof}
+W pierwszym kokońcu, zgodnie z wnioskiem~\ref{cat:cor:end-coend-set}, relacje generujące to
+\[
+ [a,hf,x]=[a',h,F(f)(x)]
+ \quad(f:a\to a',\ h:a'\to b,\ x\in F(a)).
+\]
+Definiujemy $\Phi^F_b[a,h,x]=F(h)(x)$ (pomijamy indeks $F$, gdy nie ma wątpliwości). Relacja jest zachowana, gdyż $F(hf)(x)=F(h)F(f)(x)$. Funkcja $\Psi_b(x)=[b,\id_b,x]$ spełnia $\Phi_b\Psi_b=\id$. Wstawiając $f=h$ i identyczność obiektu $b$ do relacji, otrzymujemy $[a,h,x]=[b,\id_b,F(h)(x)]$, więc $\Psi_b\Phi_b=\id$. Dla $g:b\to c$ postkompozycja strzałek z $g$ zachowuje relacje, gdyż $g(hf)=(gh)f$. Indukowany morfizm kokońca wysyła $[a,h,x]$ na $[a,gh,x]$ i $\Phi^F_c[a,gh,x]=F(g)\Phi^F_b[a,h,x]$. Dla $\mu:F\Rightarrow F'$ morfizm kokońca wysyła klasę na $[a,h,\mu_a(x)]$; zachowuje relacje, ponieważ $\mu_{a'}F(f)=F'(f)\mu_a$. Naturalność $\mu$ względem $h$ daje
+\[
+ \Phi^{F'}_b[a,h,\mu_a(x)]=\mu_b\Phi^F_b[a,h,x].
+\]
+Identyczności i składanie obu rodzin morfizmów są zachowywane na reprezentantach, a zmiany $F$ i $b$ komutują, ponieważ działają w różnych współrzędnych trójki.
+
+W drugiej formule relacje mają postać $[a,P(f)(x),h]=[a',x,fh]$ dla $f:a\to a'$, $h:b\to a$, $x\in P(a')$. Funkcja $\Phi^P_b[a,x,h]=P(h)(x)$ zachowuje każdą parę generującą, ponieważ $P(h)P(f)(x)=P(fh)(x)$. Odwrotność $\Psi_b(z)=[b,z,\id_b]$ spełnia $\Phi^P_b\Psi_b(z)=z$. Relacja dla $h:b\to a$ utożsamia $[b,P(h)(x),\id_b]$ z $[a,x,h]$, więc również $\Psi_b\Phi^P_b=\id$. Dla $g:b'\to b$ prekompozycja zachowuje relacje przez $(fh)g=f(hg)$; morfizm kokońca wysyła $[a,x,h]$ na $[a,x,hg]$ i odpowiada $P(g)$ przez równość $P(hg)=P(g)P(h)$. Dla $\mu:P\Rightarrow P'$ działanie na klasie to $[a,\mu_a(x),h]$, dobrze określone dzięki $\mu_aP(f)=P'(f)\mu_{a'}$. Równość $P'(h)\mu_a(x)=\mu_bP(h)(x)$ daje naturalność. Także tutaj identyczności, składanie i przemienność obu działań sprawdzamy na reprezentantach.
+\end{proof}
+\begin{uwaga}
+Drugi wzór jest punktową postacią twierdzenia o gęstości zanurzenia Yonedy~\ref{cat:thm:kan-yoneda-density}: w obiekcie $b$ jego kogranica ma te same klasy trójek $(a,x,h:b\to a)$ i te same relacje. Dokładniej, morfizm $(a,P(f)(x))\to(a',x)$ kategorii elementów odpowiada relacji $[a,P(f)(x),h]=[a',x,fh]$, a każda relacja generująca kokoniec pochodzi w ten sposób od morfizmu kategorii elementów. Izomorfizm klas komutuje z ewaluacją w $P(b)$ i jest naturalny względem $b$ i $P$ na mocy powyższych wzorów. Nie należy mylić kokońca z produktem kartezjańskim wartości bez tych relacji.
+\end{uwaga}
+
+\subsection{Zachowywanie końców i kokońców}
+\begin{definicja}\label{cat:def:end-preservation}
+Funktor $J:\mathcal C\to\mathcal D$ zachowuje koniec $(E,p)$ funktora $T$, jeśli $(J(E),(J(p_a))_a)$ jest końcem $JT$. Zachowywanie kokońca definiujemy analogicznie przez obraz kostożka uniwersalnego.
+\end{definicja}
+\begin{stwierdzenie}\label{cat:prop:end-preservation}
+Jeżeli $J$ zachowuje produkty i equalizator użyte w twierdzeniu~\ref{cat:thm:end-equalizer}, to zachowuje skonstruowany tam koniec. Przy założeniu zachowywania obu produktów zachowywanie końca jest równoważne zachowywaniu tego equalizatora. Jeżeli $J$ zachowuje koprodukty i koequalizator z twierdzenia~\ref{cat:thm:coend-coequalizer}, to zachowuje skonstruowany tam kokoniec. Przy założeniu zachowywania obu koproduktów zachowywanie kokońca jest równoważne zachowywaniu tego koequalizatora. W szczególności prawe funktory sprzężone zachowują końce, a lewe funktory sprzężone kokońce.
+\end{stwierdzenie}
+\begin{proof}
+W przypadku końca rodziny $(J(\pi_a))$ i $(J(\pi_f))$ są projekcjami produktów dla $JT$. Z równań $\pi_f s=T(\id_a,f)\pi_a$, $\pi_f t=T(f,\id_b)\pi_b$ po zastosowaniu $J$ wynika, że $J(s),J(t)$ są dokładnie morfizmami porównawczymi konstrukcji dla $JT$. Zachowany equalizator $J(e)$ wraz z $J(\pi_a)J(e)=J(p_a)$ jest więc końcem przez twierdzenie~\ref{cat:thm:end-equalizer}. Dla kokońca obrazy morfizmów $j_a,j_f$ są morfizmami kanonicznymi koproduktów, a równania $J(s')J(j_f)=J(j_a)JT(f,\id_a)$ oraz $J(t')J(j_f)=J(j_b)JT(\id_b,f)$ identyfikują parę morfizmów dla $JT$. Zachowany koequalizator daje tezę. Dla implikacji odwrotnych stosujemy uzupełnione kryteria z twierdzeń~\ref{cat:thm:end-equalizer} i~\ref{cat:thm:coend-coequalizer} w kategorii $\mathcal D$. Jeśli obraz końca jest końcem $JT$, to morfizm do zachowanego produktu wyznaczony przez $J(p_a)$ jest równy $J(e)$, gdyż $J(\pi_a)J(e)=J(p_a)$ dla każdego $a$. Jest więc equalizatorem $J(s),J(t)$. Jeśli obraz kokońca jest kokońcem $JT$, to morfizm z zachowanego koproduktu wyznaczony przez $J(i_a)$ jest równy $J(q)$ z równań $J(q)J(j_a)=J(i_a)$, a zatem jest koequalizatorem $J(s'),J(t')$. Aby uzyskać ostatnie zdanie nawet wtedy, gdy produkty i equalizatory z powyższych konstrukcji nie istnieją, można użyć sprzężenia bezpośrednio. Jeśli $H\dashv J$, oznaczmy bijekcję sprzężenia przez $\phi_{Y,Z}:\Hom_{\mathcal C}(H(Y),Z)\to\Hom_{\mathcal D}(Y,J(Z))$. Dla stożka dinaturalnego $(r_a:Y\to JT(a,a))_a$ kładziemy $\widetilde r_a=\phi_{Y,T(a,a)}^{-1}(r_a)$. Naturalność $\phi$ daje
+\[
+ \phi_{Y,T(a,b)}(T(\id_a,f)\widetilde r_a)
+ =JT(\id_a,f)r_a
+ =JT(f,\id_b)r_b
+ =\phi_{Y,T(a,b)}(T(f,\id_b)\widetilde r_b).
+\]
+Injektywność $\phi$ dowodzi dinaturalności $\widetilde r$. Istnieje jedyny $h:H(Y)\to E$ z $p_a h=\widetilde r_a$. Dla $\bar h=\phi_{Y,E}(h)$ mamy $J(p_a)\bar h=r_a$ przez naturalność. Każdy inny morfizm spełniający te równania po transpozycji dawałby ten sam $h$, więc $\bar h$ jest jedyny.
+Dla $J\dashv H$ oznaczmy bijekcję przez $\psi_{Z,Y}:\Hom_{\mathcal D}(J(Z),Y)\to\Hom_{\mathcal C}(Z,H(Y))$. Kostożkowi $(r_a:JT(a,a)\to Y)_a$ przypisujemy $\widetilde r_a=\psi_{T(a,a),Y}(r_a)$. Naturalność $\psi$ w pierwszej zmiennej daje
+\[
+ \widetilde r_a T(f,\id_a)
+ =\psi_{T(b,a),Y}(r_a JT(f,\id_a))
+ =\psi_{T(b,a),Y}(r_b JT(\id_b,f))
+ =\widetilde r_b T(\id_b,f).
+\]
+Jedyny $h:Q\to H(Y)$ z $h i_a=\widetilde r_a$ odpowiada jedynemu $\bar h:J(Q)\to Y$ z $\bar h J(i_a)=r_a$. Dowodzi to zachowywania kokońca bez dodatkowych założeń o istnieniu produktów i koproduktów.
+\end{proof}
+\begin{wniosek}\label{cat:cor:hom-end}
+Dla $X\in\Ob(\mathcal C)$ i istniejących końców lub kokońców mamy kanoniczne bijekcje
+\[
+ \Hom_{\mathcal C}\left(X,\int_a T(a,a)\right)
+ \cong \int_a\Hom_{\mathcal C}(X,T(a,a)),
+\]
+\[
+ \Hom_{\mathcal C}\left(\int^a T(a,a),X\right)
+ \cong \int_a\Hom_{\mathcal C}(T(a,a),X).
+\]
+W drugim końcu funktor dwóch zmiennych to $(a,b)\mapsto\Hom_{\mathcal C}(T(b,a),X)$.
+\end{wniosek}
+\begin{proof}
+Pierwsza bijekcja wysyła $h$ na $(p_a h)_a$. Zbiór po prawej jest zbiorem stożków dinaturalnych o wierzchołku $X$ przez wniosek~\ref{cat:cor:end-coend-set}; własność uniwersalna końca daje dokładnie jedną odwrotność. Druga bijekcja wysyła $h$ na $(h i_a)_a$. Równanie końcowe dla funktora z zamienionymi współrzędnymi jest równaniem $h i_a T(f,\id_a)=h i_b T(\id_b,f)$, więc prawy zbiór składa się z kostożków dinaturalnych. Własność uniwersalna kokońca daje odwrotność. Dla $v:X'\to X$ w pierwszej bijekcji rodzina odpowiadająca $hv$ ma składowe $p_a hv$, a dla $v:X\to X'$ w drugiej bijekcji rodzina odpowiadająca $vh$ ma składowe $vh i_a$. To dowodzi naturalności względem $X$, odpowiednio kontrawariantnej i kowariantnej. Dla $\beta:T\Rightarrow U$ w pierwszej bijekcji rodzina odpowiadająca $E(\beta)h$ ma składowe $p^U_a E(\beta)h=\beta_{a,a}p^T_a h$. W drugiej bijekcji rodzina odpowiadająca $hQ(\beta)$ ma składowe $hQ(\beta)i^T_a=h i^U_a\beta_{a,a}$. Są to dokładnie działania na końcach zbiorów morfizmów ze stwierdzenia~\ref{cat:prop:end-coend-functorial}, więc pierwsza bijekcja jest kowariantna, a druga kontrawariantna względem $T$.
+\end{proof}
+
+\subsection{Twierdzenia Fubiniego}
+Niech $\mathcal A,\mathcal B$ będą małymi kategoriami i
+\[
+ T:\mathcal A^{\op}\times\mathcal A\times
+       \mathcal B^{\op}\times\mathcal B\to\mathcal C.
+\]
+Piszemy $T(a,a';b,b')$. Przez koniec po $(a,b)$ rozumiemy koniec funktora na $(\mathcal A\times\mathcal B)^{\op}\times(\mathcal A\times\mathcal B)$ otrzymanego po przestawieniu współrzędnych. Dla każdej pary $(a,a')$ załóżmy istnienie końca $U(a,a')=\int_bT(a,a';b,b)$ z projekcjami $p^{a,a'}_b$. Dla $f:a\to a'$ i $h:c\to c'$ morfizmy $T(f,h;\id_b,\id_{b'})$ tworzą transformację naturalną funktorów po $\mathcal B$ z $T(a',c;-,-)$ do $T(a,c';-,-)$: naturalność wynika z przemienności działań w różnych współrzędnych. Stwierdzenie~\ref{cat:prop:end-coend-functorial} wyznacza zatem funktor $U:\mathcal A^{\op}\times\mathcal A\to\mathcal C$, którego działanie jest określone równaniem
+\[
+ p^{a,c'}_b U(f,h)=T(f,h;\id_b,\id_b)p^{a',c}_b .
+\]
+Dla kokońców wewnętrznych $V(a,c)=\int^bT(a,c;b,b)$ z morfizmami kanonicznymi $i^{a,c}_b$ analogicznie otrzymujemy
+\[
+ V(f,h)i^{a',c}_b=i^{a,c'}_b T(f,h;\id_b,\id_b).
+\]
+W obu przypadkach potrzebujemy istnienia obiektów wewnętrznych także dla par niediagonalnych, aby móc utworzyć funktor dwóch zmiennych.
+\begin{twierdzenie}[Fubini dla końców]\label{cat:thm:fubini-end}
+Przy powyższym założeniu istnienia końców wewnętrznych, koniec $\int_a U(a,a)$ istnieje wtedy i tylko wtedy, gdy istnieje koniec po $(a,b)$, i są one kanonicznie izomorficzne. Jeśli końce wewnętrzne w obu kolejnościach istnieją, otrzymujemy
+\[
+ \int_a\int_b T(a,a;b,b)
+ \cong\int_{(a,b)}T(a,a;b,b)
+ \cong\int_b\int_a T(a,a;b,b),
+\]
+o ile jeden z końców zewnętrznych lub koniec po parze istnieje.
+\end{twierdzenie}
+\begin{proof}
+Rodzina $r_{a,b}:X\to T(a,a;b,b)$ jest dinaturalna względem par wtedy i tylko wtedy, gdy jest dinaturalna względem $a$ przy ustalonym $b$ oraz względem $b$ przy ustalonym $a$. Konieczność wynika z podstawienia $(f,\id_b)$ i $(\id_a,g)$. Dla wystarczalności rozważmy $f:a\to a'$ i $g:b\to b'$. Jawne obliczenie, z zachowaniem identyczności we wszystkich współrzędnych, ma postać
+\begin{align*}
+&T(\id_a,f;\id_b,g)r_{a,b}\\
+&=T(\id_a,\id_{a'};\id_b,g)
+  T(f,\id_{a'};\id_b,\id_b)r_{a',b}\\
+&=T(f,\id_{a'};\id_b,\id_{b'})
+  T(\id_{a'},\id_{a'};\id_b,g)r_{a',b}\\
+&=T(f,\id_{a'};\id_b,\id_{b'})
+  T(\id_{a'},\id_{a'};g,\id_{b'})r_{a',b'}\\
+&=T(f,\id_{a'};g,\id_{b'})r_{a',b'} .
+\end{align*}
+Pierwsza równość wykorzystuje dinaturalność względem $f$, druga funktorialność w różnych współrzędnych, trzecia dinaturalność względem $g$, ostatnia ponownie funktorialność. Oba skrajne morfizmy mają dziedzinę $X$ i przeciwdziedzinę $T(a,a';b,b')$.
+
+Dla każdej takiej rodziny dinaturalność w $b$ daje jedyny $q_a:X\to U(a,a)$ z $p^{a,a}_b q_a=r_{a,b}$. Dla $f:a\to a'$ musimy sprawdzić
+\[
+ U(\id_a,f)q_a=U(f,\id_{a'})q_{a'}.
+\]
+Po postkompozycji z każdą projekcją $p^{a,a'}_b$ lewa strona daje $T(\id_a,f;\id_b,\id_b)r_{a,b}$, prawa $T(f,\id_{a'};\id_b,\id_b)r_{a',b}$. Są równe przez dinaturalność w $a$. Jednoznaczność w końcu $U(a,a')$ daje żądane równanie. Odwrotnie, dla dinaturalnej rodziny $q_a$ kładziemy $r_{a,b}=p^{a,a}_b q_a$. Dla $g:b\to b'$ dinaturalność w $b$ wynika po prekompozycji równania dla $p^{a,a}$ z $q_a$. Dla $f:a\to a'$ mamy
+\begin{align*}
+ T(\id_a,f;\id_b,\id_b)r_{a,b}
+ &=p^{a,a'}_b U(\id_a,f)q_a\\
+ &=p^{a,a'}_b U(f,\id_{a'})q_{a'}\\
+ &=T(f,\id_{a'};\id_b,\id_b)r_{a',b}.
+\end{align*}
+Zatem rodzina jest dinaturalna w obu zmiennych, a więc również względem par. Konstrukcje są wzajemnie odwrotne przez jednoznaczność w końcach wewnętrznych i komutują z prekompozycją morfizmu do $X$. Zatem koniec po parze i koniec zewnętrzny reprezentują tę samą własność uniwersalną, co daje równoważność istnienia i kanoniczny izomorfizm z~\ref{cat:prop:end-coend-unique}. Zamiana ról $\mathcal A,\mathcal B$ daje drugie porównanie. Dokładniej, jeżeli $\ell_a:L\to U(a,a)$ są morfizmami końca iterowanego, to jego rodzina względem par ma postać $p^{a,a}_b\ell_a$. Kanoniczny izomorfizm z końcem po parze jest jedynym izomorfizmem zachowującym wszystkie te morfizmy. Dla transformacji naturalnej $\beta:T\Rightarrow T'$ oba morfizmy otrzymane przez przejście najpierw do końca po parze lub najpierw przez $\beta$ mają po postkompozycji z projekcją dla $(a,b)$ wartość $\beta_{a,a;b,b}p^{a,a}_b\ell_a$. Jednoznaczność dowodzi naturalności porównania. Jeżeli istnieją oba końce iterowane, izomorfizm między nimi jest zatem również jedyny z warunkiem zgodności wszystkich projekcji względem par.
+\end{proof}
+\begin{twierdzenie}[Fubini dla kokońców]\label{cat:thm:fubini-coend}
+Jeżeli istnieją kokońce wewnętrzne po $\mathcal B$ dla wszystkich par $(a,a')$, to istnienie kokońca zewnętrznego jest równoważne istnieniu kokońca po parze, a te obiekty są kanonicznie izomorficzne. Przy istnieniu kokońców wewnętrznych w obu kolejnościach mamy
+\[
+ \int^a\int^b T(a,a;b,b)
+ \cong\int^{(a,b)}T(a,a;b,b)
+ \cong\int^b\int^a T(a,a;b,b)
+\]
+przy istnieniu jednego z tych trzech obiektów.
+\end{twierdzenie}
+\begin{proof}
+W kategorii przeciwnej $\mathcal C^{\op}$ rozpatrujemy funktor $\widetilde T(a,a';b,b')=T(a',a;b',b)$, którego działanie na morfizmach otrzymujemy przez odwrócenie strzałek $T$ po zamianie pierwszej i drugiej współrzędnej w każdej parze. Dla $f:a\to a'$ i $g:b\to b'$ równanie stożka dinaturalnego dla $\widetilde T$ odwrócone w $\mathcal C$ przyjmuje postać
+\[
+ k_{a,b}T(f,\id_a;g,\id_b)
+ =k_{a',b'}T(\id_{a'},f;\id_{b'},g),
+\]
+gdzie $k_{a,b}:T(a,a;b,b)\to Y$. Obie strony są morfizmami $T(a',a;b',b)\to Y$, a więc jest to dokładnie równanie kostożka dinaturalnego dla $T$. Własność uniwersalna końca w $\mathcal C^{\op}$ staje się własnością uniwersalną kokońca w $\mathcal C$, a to samo zachodzi dla końców wewnętrznych i zewnętrznych, przy czym morfizmy indukowane są odwróconymi morfizmami z konstrukcji funktorialności kokońców. Stosujemy więc twierdzenie~\ref{cat:thm:fubini-end} do $\widetilde T$. Otrzymane izomorfizmy są zgodne z kostożkami po parze, ponieważ izomorfizmy końców są zgodne ze stożkami. Jeśli $j_a:V(a,a)\to Q$ są morfizmami kokońca zewnętrznego, to odpowiadająca rodzina po parze ma składowe $j_a i^{a,a}_b$. Dla transformacji naturalnej $\beta:T\Rightarrow T'$ oba sposoby porównania po prekompozycji z morfizmem kanonicznym dla $(a,b)$ dają $j'_a i'^{a,a}_b\beta_{a,a;b,b}$. Własność uniwersalna daje naturalność izomorfizmów i jednoznaczność ich zgodności z rodziną po parze. To daje tezę.
+\end{proof}
+\begin{uwaga}
+Powyższe twierdzenia nie utożsamiają dowolnego mieszanego końca i kokońca. Na przykład dla dyskretnych kategorii $\mathcal A,\mathcal B$ po dwa obiekty i funktora stałego o wartości singletonu w $\Set$, $\int_a\int^b T$ ma cztery elementy, a $\int^b\int_a T$ dwa. Wynika to z przykładu~\ref{cat:ex:end-discrete}: w pierwszym przypadku bierzemy produkt dwóch dwuelementowych zbiorów, a w drugim sumę rozłączną dwóch singletonów. Istnieje tutaj naturalne porównanie od kokońca końców do końca kokońców, które element indeksowany przez $b$ wysyła na stałą rodzinę o wartości $b$ w obu współrzędnych $a$. Jego obraz składa się z dwóch spośród czterech rodzin, zatem porównanie nie jest surjekcją.
+\end{uwaga}
+
+\subsection{Formuły rozszerzeń Kana}
+\begin{twierdzenie}[Wzory w kategorii zbiorów]\label{cat:thm:kan-end-coend}
+Niech $K:\mathcal A\to\mathcal B$ będzie funktorem małych kategorii i $F:\mathcal A\to\Set$. Wówczas
+\begin{align}
+ (\operatorname{Lan}_K F)(b)
+ &\cong\int^a\Hom_{\mathcal B}(K(a),b)\times F(a),\label{cat:eq:lan-coend}\\
+ (\operatorname{Ran}_K F)(b)
+ &\cong\int_a\Hom_{\Set}(\Hom_{\mathcal B}(b,K(a)),F(a)).\label{cat:eq:ran-end}
+\end{align}
+Izomorfizmy są naturalne w $b$ i $F$ oraz zgodne z jednostką i kojednostką rozszerzeń.
+\end{twierdzenie}
+\begin{proof}
+W pierwszym wzorze funktor dwóch zmiennych to $(a,a')\mapsto\Hom_{\mathcal B}(K(a),b)\times F(a')$. Relacja kokońca dla $f:a\to a'$ i pary $(u',x)$ z $u':K(a')\to b$, $x\in F(a)$ jest $[a,u'K(f),x]=[a',u',F(f)(x)]$. Jest to dokładnie relacja w twierdzeniu~\ref{cat:thm:kan-set}, więc izomorfizm jest identycznością na odpowiednich klasach trójek. Dla $g:b\to c$ postkompozycja z $g$ daje $[a,gu,x]$, a dla $\mu:F\Rightarrow F'$ morfizm kokońca daje $[a,u,\mu_a(x)]$. Są to działania rozszerzeń ze stwierdzenia~\ref{cat:prop:kan-pointwise-nat-action} i twierdzenia~\ref{cat:thm:kan-set}; jednostka odpowiada $x\mapsto[a,\id_{K(a)},x]$.
+
+W drugim wzorze funktor dwóch zmiennych to $(a,a')\mapsto\Hom_{\Set}(\Hom_{\mathcal B}(b,K(a)),F(a'))$. Koniec identyfikuje się przez twierdzenie~\ref{cat:thm:nat-as-end} z $\Nat(\Hom_{\mathcal B}(b,K(-)),F)$. Stwierdzenie~\ref{cat:prop:kan-ran-nat} identyfikuje tę rodzinę funkcji $\theta_a$ z elementem prawego rozszerzenia o składowych $x_{a,v}=\theta_a(v)$. Dla $g:b\to c$ prekompozycja z funkcją $w\mapsto wg$ odpowiada działaniu prawego rozszerzenia; dla $\mu:F\Rightarrow F'$ postkompozycja z $\mu_a$ daje właściwy morfizm rodzin. Kojednostka przy $a$ jest ewaluacją $\theta_a$ na $\id_{K(a)}$ przy $b=K(a)$, zgodnie z twierdzeniem~\ref{cat:thm:kan-set}.
+\end{proof}
+\begin{definicja}[Potęgi i kopotęgi indeksowane zbiorem]\label{cat:def:power-copower}
+Dla zbioru $S$ i obiektu $X$ kategorii $\mathcal C$ piszemy $X^S=\prod_{s\in S}X$ i $S\cdot X=\coprod_{s\in S}X$, o ile obiekty te istnieją. Oznaczamy morfizmy kanoniczne koproduktu przez $j_s^{S,X}:X\to S\cdot X$, a projekcje produktu przez $\pi_s^{S,X}:X^S\to X$. Dla funkcji $h:S\to S'$ i morfizmu $v:X\to Y$ definiujemy odpowiednie morfizmy $h\cdot v:S\cdot X\to S'\cdot Y$ i $v^h:X^{S'}\to Y^S$ przez
+\[
+ (h\cdot v)j_s^{S,X}=j_{h(s)}^{S',Y}v,\qquad
+ \pi_s^{S,Y}v^h=v\pi_{h(s)}^{S',X}.
+\]
+Istnienie i jednoznaczność wynikają z własności uniwersalnych. Identyczności spełniają te równania dla $h=\id_S$, $v=\id_X$. Dla $h':S'\to S''$, $w:Y\to Z$ mamy $(h'\cdot w)(h\cdot v)=(h'h)\cdot(wv)$, ponieważ obie strony po prekompozycji z $j_s^{S,X}$ dają $j_{h'(h(s))}^{S'',Z}wv$. Dla potęg, przy $h':S''\to S$ i $w:Y\to Z$, mamy $w^{h'}v^h=(wv)^{hh'}$, ponieważ obie strony po postkompozycji z $\pi_t^{S'',Z}$ dają $wv\pi_{h(h'(t))}^{S',X}$. Otrzymujemy więc funktory kowariantne w obiekcie $\mathcal C$, a w zmiennej zbiorowej odpowiednio kowariantny i kontrawariantny, na parach, dla których potrzebne obiekty istnieją. Dla $S=\varnothing$ kopotęga jest obiektem początkowym, a potęga końcowym; dla singletonu obie są kanonicznie izomorficzne z $X$. Wynika to bezpośrednio z własności uniwersalnych pustej i jednoelementowej rodziny.
+\end{definicja}
+\begin{stwierdzenie}\label{cat:prop:power-copower-hom}
+Dla istniejących potęg i kopotęg zachodzą naturalne bijekcje
+\[
+ \Hom_{\mathcal C}(S\cdot X,Y)
+ \cong\Hom_{\Set}(S,\Hom_{\mathcal C}(X,Y))
+ \cong\Hom_{\mathcal C}(X,Y^S).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Pierwsza bijekcja wysyła $k:S\cdot X\to Y$ na funkcję $s\mapsto kj_s^{S,X}$, a druga (w kierunku od prawej do środka) wysyła $l:X\to Y^S$ na funkcję $s\mapsto\pi_s^{S,Y}l$. W obu przypadkach odwrotność istnieje i jest jedyna na mocy odpowiedniej własności uniwersalnej. Dla $h:S'\to S$ zmiana indeksu daje po obu stronach funkcję otrzymaną przez prekompozycję z $h$, przez równania z definicji~\ref{cat:def:power-copower}. Dla $u:X'\to X$ i $v:Y\to Y'$ rodzina $(k_s)_{s\in S}$ przechodzi na $(vk_su)_{s\in S}$, co wynika z równań definiujących morfizmy potęg i kopotęg. Dowodzi to naturalności w trzech argumentach. Lokalna małość $\mathcal C$ zapewnia, że zbiory morfizmów pośrodku są zbiorami.
+\end{proof}
+\begin{twierdzenie}[Wzory dla kategorii wartości]\label{cat:thm:kan-weighted}
+Niech $\mathcal A,\mathcal B$ będą małymi kategoriami, $K:\mathcal A\to\mathcal B$ i $F:\mathcal A\to\mathcal C$. Dla $b\in\Ob(\mathcal B)$ mamy
+\[
+ (\operatorname{Lan}_K F)(b)
+ \cong\int^a\Hom_{\mathcal B}(K(a),b)\cdot F(a),
+ \qquad
+ (\operatorname{Ran}_K F)(b)
+ \cong\int_a F(a)^{\Hom_{\mathcal B}(b,K(a))},
+\]
+przy założeniu istnienia kopotęg, odpowiednio potęg, dla wszystkich $b\in\Ob(\mathcal B)$ oraz wszystkich par argumentów $(a,a')$ potrzebnych do definicji funktorów dwóch zmiennych. Wtedy istnienie wszystkich kokońców po prawej stronie pierwszego wzoru jest równoważne istnieniu punktowego lewego rozszerzenia Kana, a istnienie wszystkich końców w drugim wzorze jest równoważne istnieniu punktowego prawego rozszerzenia. Nie twierdzimy tego o rozszerzeniach niepunktowych. Izomorfizmy są naturalne w $b$ i $F$ (dla funktorów, dla których odpowiednie konstrukcje istnieją) oraz zgodne z jednostką i kojednostką. W szczególności pierwsza konstrukcja istnieje dla kozupełnej $\mathcal C$, a druga dla zupełnej $\mathcal C$.
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonego $b$ kładziemy $S_a=\Hom_{\mathcal B}(K(a),b)$ oraz $T(a,a')=S_a\cdot F(a')$. Dla $f:a\to d$ i $h:a'\to d'$ morfizm $T(f,h):S_d\cdot F(a')\to S_a\cdot F(d')$ jest wyznaczony przez
+\[
+ T(f,h)j_u^{S_d,F(a')}=j_{uK(f)}^{S_a,F(d')}F(h)
+ \quad(u:K(d)\to b).
+\]
+Prekompozycja z $K(f)$ jest kontrawariantna w $a$, a $F(h)$ kowariantna w $a'$; funktorialność wynika z definicji~\ref{cat:def:power-copower}. Kostożek dinaturalny $i_a:S_a\cdot F(a)\to Y$ odpowiada jednoznacznie rodzinie morfizmów $i_{a,u}:F(a)\to Y$ po prekompozycji z morfizmami kanonicznymi kopotęgi. Równanie~\eqref{cat:eq:cowedge} dla $f:a\to a'$ jest równością morfizmów z $S_{a'}\cdot F(a)$ do $Y$. Po prekompozycji z morfizmem kanonicznym o indeksie $u'\in S_{a'}$ przyjmuje postać
+\[
+ i_{a,u'K(f)}=i_{a',u'}F(f).
+\]
+Własność uniwersalna koproduktu pokazuje także wystarczalność wszystkich tych równań. Otrzymaliśmy dokładnie kostożek nad diagramem $FP_b^-$ z definicji~\ref{cat:def:kan-comma}. Bijekcja kostożków komutuje z postkompozycją w $Y$, więc kokoniec jest kogranicą tego diagramu. Odwrotnie, z kostożka kogranicznego diagramu przecinkowego otrzymujemy przez własność kopotęg dinaturalny kostożek po $a$. Dla dowolnego innego kostożka dinaturalnego jego rodzina na składnikach rozkłada się przez jedyny morfizm z tej kogranicy; równość na składnikach jest równoważna równości na kopotęgach. Otrzymujemy własność uniwersalną kokońca, zatem równoważność istnienia obu obiektów.
+
+Dla przypadku prawego kładziemy $S_a=\Hom_{\mathcal B}(b,K(a))$ oraz $T(a,a')=F(a')^{S_a}$. Dla $f:a\to d$ i $h:a'\to d'$ morfizm $T(f,h):F(a')^{S_d}\to F(d')^{S_a}$ spełnia
+\[
+ \pi_v^{S_a,F(d')}T(f,h)=F(h)\pi_{K(f)v}^{S_d,F(a')}
+ \quad(v:b\to K(a)).
+\]
+Postkompozycja z $K(f)$ jest kowariantna jako funkcja zbiorów indeksów, a potęga odwraca ten kierunek. Własność funktora wynika z definicji~\ref{cat:def:power-copower}. Stożek dinaturalny $p_a:Y\to F(a)^{S_a}$ odpowiada rodzinie $p_{a,v}:Y\to F(a)$, otrzymanej przez postkompozycję z projekcjami. Równanie~\eqref{cat:eq:wedge} dla $f:a\to a'$ jest równością morfizmów do $F(a')^{S_a}$. Po postkompozycji z projekcją o indeksie $v\in S_a$ ma postać
+\[
+ F(f)p_{a,v}=p_{a',K(f)v}.
+\]
+Jednoznaczność w produkcie daje równoważność z warunkiem dinaturalności. Otrzymujemy dokładnie stożek nad $FP_b^+$, a bijekcja komutuje z prekompozycją w $Y$. Koniec jest więc granicą tego diagramu. Odwrotnie, granica diagramu przecinkowego z rodziną projekcji indeksowanych przez $(a,v)$ daje przez własność potęg stożek dinaturalny. Dowolny stożek dinaturalny rozkłada się przez jedyny morfizm do tej granicy, ponieważ warunek rozkładu po każdej projekcji potęgi jest dokładnie warunkiem rozkładu stożka przecinkowego. Otrzymujemy równoważność istnienia. W obu przypadkach twierdzenia~\ref{cat:thm:pointwise-lan} i~\ref{cat:thm:pointwise-ran}, wraz z definicją punktowości, dają tezę o istnieniu rozszerzeń.
+
+Oznaczmy przez $\lambda^{b,F}_{a,u}:F(a)\to L_F(b)$ morfizmy złożone z morfizmu kanonicznego kopotęgi i morfizmu kokońca, a przez $\rho^{b,F}_{a,v}:R_F(b)\to F(a)$ morfizmy złożone z projekcji końca i projekcji potęgi. Dla $g:b\to c$ postkompozycja $u\mapsto gu$ i prekompozycja $w\mapsto wg$ indukują odpowiednio morfizmy spełniające
+\[
+ L_F(g)\lambda^{b,F}_{a,u}=\lambda^{c,F}_{a,gu},
+ \qquad
+ \rho^{c,F}_{a,w}R_F(g)=\rho^{b,F}_{a,wg}.
+\]
+To dokładnie~\eqref{cat:eq:lan-action} i~\eqref{cat:eq:ran-action}. Dla $\mu:F\Rightarrow F'$ morfizmy indukowane przez $\mu$ na każdej kopotędze i potędze dają
+\[
+ (L_\mu)_b\lambda^{b,F}_{a,u}=\lambda^{b,F'}_{a,u}\mu_a,
+ \qquad
+ \rho^{b,F'}_{a,v}(R_\mu)_b=\mu_a\rho^{b,F}_{a,v}.
+\]
+Są to równania ze stwierdzenia~\ref{cat:prop:kan-pointwise-nat-action}. Jednoznaczność w granicach i kogranicach dowodzi zgodności wszystkich porównań z tymi działaniami, a więc naturalności w $b$ i $F$. Jednostka ma składową $\lambda^{K(a),F}_{a,\id_{K(a)}}$, a kojednostka $\rho^{K(a),F}_{a,\id_{K(a)}}$. Stąd izomorfizmy zachowują również jednostkę i kojednostkę.
+\end{proof}
+
+\subsection{Iloczyn tensorowy funktorów}
+\begin{definicja}\label{cat:def:functor-tensor}
+Dla presnopa $P:\mathcal A^{\op}\to\Set$ i funktora $F:\mathcal A\to\Set$ definiujemy iloczyn tensorowy nad kategorią $\mathcal A$ przez
+\[
+ P\otimes_{\mathcal A}F=\int^a P(a)\times F(a).
+\]
+Jest to zbiór klas $[a,x,y]$ dla $x\in P(a)$, $y\in F(a)$, z relacją generowaną przez
+\[
+ [a,P(f)(x'),y]=[b,x',F(f)(y)]
+ \quad(f:a\to b,\ x'\in P(b),\ y\in F(a)).
+\]
+Wynika to z wniosku~\ref{cat:cor:end-coend-set} dla funktora $(a,b)\mapsto P(a)\times F(b)$. Dla morfizmów $\mu:P\Rightarrow P'$ oraz $\nu:F\Rightarrow F'$ indukowana funkcja wysyła $[a,x,y]$ na $[a,\mu_a(x),\nu_a(y)]$. Jest dobrze określona, gdyż $\mu_aP(f)=P'(f)\mu_b$ i $\nu_bF(f)=F'(f)\nu_a$; zachowuje identyczności i składanie na reprezentantach.
+\end{definicja}
+\begin{twierdzenie}[Sprzężenie iloczynu tensorowego i Hom]\label{cat:thm:functor-tensor-hom}
+Dla zbioru $X$ istnieją naturalne bijekcje
+\[
+ \Hom_{\Set}(P\otimes_{\mathcal A}F,X)
+ \cong\Nat(P,\Hom_{\Set}(F(-),X))
+ \cong\Nat(F,\Hom_{\Set}(P(-),X)).
+\]
+Pierwszy funktor Hom po prawej jest kontrawariantny, drugi kowariantny w obiekcie $\mathcal A$. Przy ustalonym $F$ otrzymujemy sprzężenie $-\otimes_{\mathcal A}F\dashv\Hom_{\Set}(F(-),-)$ między kategorią presnopów a $\Set$. Przy ustalonym $P$ otrzymujemy sprzężenie $P\otimes_{\mathcal A}-\dashv\Hom_{\Set}(P(-),-)$ między kategorią funktorów kowariantnych a $\Set$.
+\end{twierdzenie}
+\begin{proof}
+Dla $f:a\to b$ funktor $\Hom_{\Set}(F(-),X)$ działa przez prekompozycję z $F(f)$, czyli wysyła funkcję $F(b)\to X$ na funkcję $F(a)\to X$. Funktor $\Hom_{\Set}(P(-),X)$ działa przez prekompozycję z $P(f)$, czyli wysyła funkcję $P(a)\to X$ na funkcję $P(b)\to X$. Funktorialność w obu przypadkach wynika z łączności składania. Funkcja $\ell:P\otimes_{\mathcal A}F\to X$ wyznacza funkcje
+\[
+ \alpha_a(x)(y)=\ell[a,x,y],\qquad
+ \beta_a(y)(x)=\ell[a,x,y].
+\]
+Dla $f:a\to b$, $x'\in P(b)$ i $y\in F(a)$ relacja w iloczynie tensorowym daje
+\[
+ \alpha_a(P(f)x')(y)=\alpha_b(x')(F(f)y),
+ \qquad
+ \beta_b(F(f)y)(x')=\beta_a(y)(P(f)x').
+\]
+Są to dokładnie równania naturalności odpowiednio $\alpha$ oraz $\beta$. Odwrotnie, każda z tych transformacji definiuje funkcję na klasach przez ten sam wzór, ponieważ jej naturalność zapewnia zachowanie wszystkich par generujących relację. Konstrukcje są odwrotne: wartości na każdej klasie wyznaczają $\ell$, a ewaluacje w każdej parze $(x,y)$ wyznaczają $\alpha$ i $\beta$. Dla $\mu:P'\Rightarrow P$ prekompozycja $\ell$ z $\mu\otimes\id$ odpowiada zastąpieniu $x$ przez $\mu_a(x)$, dla $\nu:F'\Rightarrow F$ analogicznie zastępujemy $y$ przez $\nu_a(y)$. Dla funkcji $X\to X'$ po obu stronach postkomponujemy wartości. Dowodzi to naturalności w trzech argumentach.
+\end{proof}
+\begin{wniosek}\label{cat:cor:tensor-adjunction-unit}
+Jednostka pierwszego sprzężenia ma składowe
+\[
+ x\longmapsto (y\longmapsto[a,x,y]),
+\]
+a kojednostka w zbiorze $X$ jest ewaluacją $[a,h,y]\mapsto h(y)$, gdzie $h:F(a)\to X$. Jednostka drugiego sprzężenia jest dana przez $y\mapsto(x\mapsto[a,x,y])$, a kojednostka przez $[a,x,h]\mapsto h(x)$, gdzie $h:P(a)\to X$.
+\end{wniosek}
+\begin{proof}
+Jednostki odpowiadają identycznościom iloczynów tensorowych, a kojednostki identycznościom odpowiednich funktorów Hom w bijekcjach z twierdzenia~\ref{cat:thm:functor-tensor-hom}. Dla pierwszego sprzężenia ewaluacja zachowuje relację generującą, gdyż $(hF(f))(y)=h(F(f)y)$; dla drugiego analogicznie $h(P(f)x)=(hP(f))(x)$. Naturalność jednostek wynika z relacji definiującej iloczyn tensorowy. Pierwsze równanie trójkątne pierwszego sprzężenia na klasie $[a,x,y]$ daje po wstawieniu jednostki i ewaluacji ponownie $[a,x,y]$. Drugie na funkcji $h:F(a)\to X$ daje funkcję $y\mapsto h(y)$, więc identyczność. Dla drugiego sprzężenia te same obliczenia na klasie $[a,x,y]$ i funkcji $h:P(a)\to X$ dają odpowiednio tę samą klasę i funkcję $x\mapsto h(x)$.
+\end{proof}
+\begin{przyklad}\label{cat:ex:functor-tensor-group}
+Niech $\mathcal A=BG$ dla grupy $G$, jak w twierdzeniu~\ref{cat:thm:kan-group-modules}. Presnop $P$ jest prawym $G$-zbiorem, a $F$ lewym $G$-zbiorem. Ich iloczyn tensorowy jest zbiorem orbit działania
+\[
+ (x,y)\cdot g=(xg,g^{-1}y)
+\]
+na $P(*)\times F(*)$. Jest to prawe działanie, ponieważ dwukrotne zastosowanie $g,h$ daje $(xgh,h^{-1}g^{-1}y)$, a identyczność działa trywialnie. Para $(xg,y)$ i $(x,gy)$ należy do jednej orbity: druga przechodzi na pierwszą przez działanie $g$. Odwrotnie, każdy krok działania $(x,y)\mapsto(xg,g^{-1}y)$ jest relacją generującą, biorąc w niej $g^{-1}y$ jako drugi argument. Zatem relacja orbit jest dokładnie relacją kokońca. Dla trywialnego prawego $G$-zbioru jednoelementowego otrzymujemy zbiór orbit lewego działania na $F(*)$. Dla prawego zbioru regularnego $P(*)=G$ funkcja $[g,y]\mapsto gy$ jest dobrze określona, gdyż $(gh)y=g(hy)$. Odwrotność to $y\mapsto[1,y]$: relacja równoważenia daje $[g,y]=[1,gy]$. Jest to szczególny przypadek lematu ko-Yonedy~\ref{cat:thm:co-yoneda}.
+\end{przyklad}
+
+\subsection{Wersja addytywna i moduły}
+\begin{twierdzenie}\label{cat:thm:additive-coend}
+Niech $T:\mathcal A^{\op}\times\mathcal A\to\Ab$. Wtedy
+\[
+ \int^a T(a,a)\cong
+ \left(\bigoplus_a T(a,a)\right)/N,
+\]
+gdzie $N$ jest podgrupą generowaną przez wszystkie elementy
+\[
+ j_a T(f,\id_a)(z)-j_b T(\id_b,f)(z),
+ \qquad f:a\to b,\quad z\in T(b,a),
+\]
+a $j_a$ oznaczają morfizmy kanoniczne sumy prostej. Koniec jest podgrupą produktu $\prod_a T(a,a)$ określoną równaniami~\eqref{cat:eq:wedge} na elementach.
+\end{twierdzenie}
+\begin{proof}
+W kategorii grup abelowych koprodukt jest sumą prostą, a koequalizator pary $s,t$ jest ilorazem przeciwdziedziny przez obraz $s-t$. Istotnie, homomorfizm $h$ spełnia $hs=ht$ wtedy i tylko wtedy, gdy zeruje $\im(s-t)$, a wtedy rozkłada się jednoznacznie przez iloraz. W konstrukcji z twierdzenia~\ref{cat:thm:coend-coequalizer} dziedziną $s'-t'$ jest suma prosta po strzałkach $f$, więc jej obraz jest generowany przez obrazy poszczególnych składników; są to dokładnie wypisane różnice. Equalizator jest jądrem różnicy dwóch homomorfizmów, ponieważ $sx=tx$ wtedy i tylko wtedy, gdy $(s-t)x=0$. Twierdzenie~\ref{cat:thm:end-equalizer} daje zatem drugi opis. Nie jest to na ogół iloraz zbioru otrzymany przez zapomnienie struktury grupowej przed obliczeniem kokońca. Na przykład dla dyskretnej kategorii dwóch obiektów i stałego funktora dwóch zmiennych o wartości zerowej grupy abelowej kokoniec w $\Ab$ jest zerową grupą, której zbiór elementów jest singletonem. Po zapomnieniu struktury grupowej kokoniec w $\Set$ jest sumą rozłączną dwóch singletonów, czyli ma dwa elementy. Natomiast koniec w $\Ab$ po zapomnieniu struktury grupowej jest końcem w $\Set$, ponieważ zgodne rodziny tworzą dokładnie ten sam podzbiór produktu w obu konstrukcjach.
+\end{proof}
+\begin{wniosek}[Iloczyn tensorowy modułów jako kokoniec]\label{cat:cor:module-tensor-coend}
+Dla pierścienia $R$ z jedynką, prawego $R$-modułu $M$ i lewego $R$-modułu $N$ traktujemy multiplikatywny monoid $R$ jako kategorię jednoobiektową $BR$. Funktor dwóch zmiennych o wartości $M\otimes_{\mathbb Z}N$ działa w pierwszej zmiennej przez $m\mapsto mr$, a w drugiej przez $n\mapsto rn$. Jego kokoniec w $\Ab$ jest kanonicznie izomorficzny z $M\otimes_R N$.
+\end{wniosek}
+\begin{proof}
+Prawe działanie daje funktor kowariantny $BR^{\op}\to\Ab$ (czyli kontrawariantny na $BR$). Jeśli składanie w $BR$ oznacza mnożenie $sr=s\circ r$, to operator $R_r(m)=mr$ spełnia $R_{sr}=R_r R_s$. Lewe działanie daje funktor $BR\to\Ab$, ponieważ operator $L_r(n)=rn$ spełnia $L_{sr}=L_s L_r$. Oba operatory dla $1$ są identycznościami. Dla pary $(r,s)$ działanie funktora na tensorze prostym ma postać $m\otimes n\mapsto mr\otimes sn$: istnieje jako homomorfizm grup, ponieważ jest indukowane przez biaddytywne odwzorowanie $(m,n)\mapsto mr\otimes sn$. Działania w różnych współrzędnych komutują na tensorach prostych, które generują grupę; stąd oraz z podanych równań składania wynika funktorialność. Na mocy twierdzenia~\ref{cat:thm:additive-coend} jego kokoniec to iloraz $M\otimes_{\mathbb Z}N$ przez podgrupę generowaną przez
+\[
+ mr\otimes n-m\otimes rn \quad(m\in M,\ n\in N,\ r\in R).
+\]
+Istotnie, obraz różnicy dwóch homomorfizmów dla każdego $r$ jest generowany przez ich wartości na tensorach prostych. Homomorfizm z tego ilorazu do dowolnej grupy abelowej $B$ odpowiada homomorfizmowi $M\otimes_{\mathbb Z}N\to B$ zerującemu wszystkie wskazane różnice. Własność uniwersalna iloczynu tensorowego nad $\mathbb Z$ utożsamia te homomorfizmy z biaddytywnymi odwzorowaniami $M\times N\to B$, a zerowanie różnic jest równoważne zrównoważeniu względem $R$. Jest to własność uniwersalna $M\otimes_R N$. Dokładniej, odwzorowanie $M\times N\to M\otimes_R N$ indukuje homomorfizm z ilorazu $M\otimes_{\mathbb Z}N$, ponieważ zeruje wszystkie wskazane różnice. W drugą stronę biaddytywne i zrównoważone odwzorowanie wysyłające $(m,n)$ na klasę $m\otimes n$ indukuje homomorfizm z $M\otimes_R N$ do ilorazu. Oba złożenia są identycznościami, gdyż zachowują klasy tensorów prostych generujące obie grupy. Dla morfizmów modułów $u:M\to M'$ i $v:N\to N'$ morfizm $u\otimes_{\mathbb Z}v$ wysyła różnicę równoważenia na $u(m)r\otimes v(n)-u(m)\otimes rv(n)$. Przechodzi więc do ilorazu. Obie drogi kwadratu naturalności wysyłają klasę $m\otimes n$ na $u(m)\otimes v(n)$ nad $R$, a zatem są równe.
+\end{proof}
+\begin{uwaga}
+W powyższym wniosku addytywność w $m,n$ pochodzi z iloczynu tensorowego w $\Ab$, mimo że $BR$ jest zwykłą kategorią. Nie utożsamiamy wszystkich zwykłych funktorów z $BR$ do $\Ab$ z modułami nad $R$; porównaj uwagę po twierdzeniu~\ref{cat:thm:kan-group-modules}.
+\end{uwaga}
+
+\subsection{Kategoria skręconych strzałek}
+\begin{definicja}\label{cat:def:twisted-arrow}
+Kategorię skręconych strzałek $\operatorname{Tw}(\mathcal A)$ definiujemy następująco. Obiekt to strzałka $f:a\to b$ w $\mathcal A$. Morfizm $f\to g$, gdzie $g:c\to d$, jest parą $(u:c\to a,v:b\to d)$ z $g=vfu$.
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (c) at (0,1.8) {$c$};
+ \node (a) at (3.3,1.8) {$a$};
+ \node (b) at (3.3,0) {$b$};
+ \node (d) at (0,0) {$d$};
+ \draw[->] (c)--node[above] {$u$} (a);
+ \draw[->] (a)--node[right] {$f$} (b);
+ \draw[->] (b)--node[below] {$v$} (d);
+ \draw[->] (c)--node[left] {$g$} (d);
+\end{tikzpicture}
+\end{center}
+Przemienność oznacza $g=vfu$.
+Identyczność to $(\id_a,\id_b)$. Jeśli $(u',v'):g\to h$ jest kolejnym morfizmem, składanie daje $(uu',v'v):f\to h$, gdyż $h=v'gu'=v'v fuu'$. Dla trzeciego morfizmu $(u'',v'')$ oba sposoby grupowania złożenia dają $(uu'u'',v''v'v)$, co wynika z łączności składania w $\mathcal A$. Złożenie z identycznością nie zmienia żadnej współrzędnej. Zatem otrzymujemy kategorię. Zbiór obiektów jest zbiorem morfizmów $\mathcal A$, a zbiór morfizmów można utożsamić z podzbiorem czwórek $(f,g,u,v)$ morfizmów $\mathcal A$ spełniających warunki na dziedziny, przeciwdziedziny i równanie $g=vfu$. Stąd małość $\operatorname{Tw}(\mathcal A)$. Funktor $\tau:\operatorname{Tw}(\mathcal A)\to\mathcal A^{\op}\times\mathcal A$ wysyła $f:a\to b$ na $(a,b)$, a $(u,v)$ na $(u^{\op},v)$; zachowuje identyczności i składanie przez podany wzór.
+\end{definicja}
+\begin{twierdzenie}[Koniec jako granica]\label{cat:thm:end-twisted}
+Dla $T:\mathcal A^{\op}\times\mathcal A\to\mathcal C$ zachodzi
+\[
+ \int_a T(a,a)\cong
+ \lim_{f\in\operatorname{Tw}(\mathcal A)} (T\tau)(f).
+\]
+Istnienie jednego obiektu jest równoważne istnieniu drugiego.
+\end{twierdzenie}
+\begin{proof}
+Dla stożka dinaturalnego $p_a:X\to T(a,a)$ definiujemy dla $f:a\to b$
+\[
+ q_f=T(\id_a,f)p_a=T(f,\id_b)p_b.
+\]
+Równość wynika z~\eqref{cat:eq:wedge}. Dla $(u,v):f\to g$ z $u:c\to a$, $v:b\to d$ i $g=vfu$ mamy
+\begin{align*}
+ T(u,v)q_f
+ &=T(u,vf)p_a\\
+ &=T(\id_c,vf)T(u,\id_a)p_a\\
+ &=T(\id_c,vf)T(\id_c,u)p_c
+ =T(\id_c,g)p_c=q_g .
+\end{align*}
+Użyliśmy dinaturalności dla $u$ i funktorialności w obu zmiennych. Zatem $q$ jest zwykłym stożkiem nad $T\tau$. Odwrotnie, dla stożka $q$ kładziemy $p_a=q_{\id_a}$. W kategorii skręconych strzałek istnieją morfizmy $\id_a\to f$ o parze $(\id_a,f)$ i $\id_b\to f$ o parze $(f,\id_b)$. Równania stożka dają obie równości definiujące $q_f$, a zatem dinaturalność $p$. Te konstrukcje są odwrotne, ponieważ $q_{\id_a}=p_a$, a każda $q_f$ jest wyznaczona przez $q_{\id_a}$. Komutują z prekompozycją w $X$: dla $h:X'\to X$ rodzina wyznaczona przez $p_a h$ ma składową $T(\id_a,f)p_a h=q_f h$. Jeśli $(E,p)$ jest końcem, to dla dowolnego zwykłego stożka nad $T\tau$ jego ograniczenie do identyczności wyznacza jedyny morfizm do $E$, a zgodność z pozostałymi składowymi wynika z równania na $q_f$. Jeśli istnieje granica nad $T\tau$, to dla dowolnego stożka dinaturalnego rozszerzamy rodzinę na wszystkie $f$ i stosujemy własność uniwersalną tej granicy; jednoznaczność morfizmu już na identycznościach wynika z tego, że pozostałe składowe są przez nie wyznaczone. Otrzymujemy równoważność istnienia i kanoniczny izomorfizm zachowujący rodziny przy identycznościach. Dla $\beta:T\Rightarrow U$ rodzina po zastosowaniu $\beta$ ma składowe
+\[
+ U(\id_a,f)\beta_{a,a}p_a
+ =\beta_{a,b}T(\id_a,f)p_a
+ =\beta_{a,b}q_f.
+\]
+Porównanie jest więc naturalne względem $T$ przez jednoznaczność w granicy.
+\end{proof}
+\begin{twierdzenie}[Kokoniec jako kogranica]\label{cat:thm:coend-twisted}
+Niech $\sigma:\operatorname{Tw}(\mathcal A)^{\op}\to\mathcal A^{\op}\times\mathcal A$ wysyła $f:a\to b$ na $(b,a)$, a przeciwny do $(u,v):f\to g$ morfizm $g\to f$ na $(v^{\op},u)$. Wtedy
+\[
+ \int^a T(a,a)\cong
+ \colim_{f\in\operatorname{Tw}(\mathcal A)^{\op}} (T\sigma)(f).
+\]
+Istnienie jednego obiektu jest równoważne istnieniu drugiego.
+\end{twierdzenie}
+\begin{proof}
+Dla $(u,v):f\to g$ i $(u',v'):g\to h$ w $\operatorname{Tw}(\mathcal A)$ obrazy odwróconych morfizmów przez $\sigma$ składają się w kolejności od $\sigma(h)$ do $\sigma(f)$:
+\[
+ (v^{\op},u)((v')^{\op},u')
+ =((v'v)^{\op},uu').
+\]
+Jest to obraz morfizmu przeciwnego do złożenia $(uu',v'v):f\to h$. Identyczności przechodzą na identyczności, zatem $\sigma$ jest funktorem. Zauważmy, że w konstrukcji kokońca potrzebujemy wartości $T(b,a)$ dla $f:a\to b$, nie wartości $T(a,b)$ z konstrukcji końca. Dla kostożka dinaturalnego $i_a:T(a,a)\to Y$ definiujemy
+\[
+ k_f=i_a T(f,\id_a)=i_b T(\id_b,f):T(b,a)\to Y.
+\]
+Dla $(u,v):f\to g$ jak wyżej mamy
+\begin{align*}
+ k_f T(v,u)
+ &=i_a T(vf,u)\\
+ &=i_a T(\id_a,u)T(vf,\id_c)\\
+ &=i_c T(u,\id_c)T(vf,\id_c)
+ =i_c T(g,\id_c)=k_g.
+\end{align*}
+Trzecia równość pochodzi z dinaturalności dla $u$. To jest warunek kostożka względem morfizmu $g\to f$ w kategorii przeciwnej skręconych strzałek. Odwrotnie, dla kostożka $k$ kładziemy $i_a=k_{\id_a}$. Morfizmy $f\to\id_a$ i $f\to\id_b$ w kategorii przeciwnej mają obrazy odpowiednio $T(f,\id_a)$ i $T(\id_b,f)$ po zastosowaniu $T\sigma$. Warunki kostożka dają $i_a T(f,\id_a)=k_f=i_b T(\id_b,f)$. Otrzymujemy dinaturalność oraz wzajemną odwrotność obu konstrukcji: dla identyczności $k_{\id_a}=i_a$, a dla dowolnego $f$ kostożek jest wyznaczony przez składową $k_{\id_a}$ i morfizm $f\to\id_a$ w kategorii przeciwnej. Dla $h:Y\to Y'$ rodzina wyznaczona przez $hi_a$ ma składową $hi_aT(f,\id_a)=hk_f$. Jeżeli istnieje kokoniec, każdy zwykły kostożek rozkłada się jednoznacznie przez niego po ograniczeniu do identyczności; zgodność ze wszystkimi składowymi wynika z równania definiującego $k_f$. Jeżeli istnieje kogranica, każdy kostożek dinaturalny rozszerzamy na wszystkie strzałki i stosujemy własność uniwersalną kogranicy. Jednoznaczność na identycznościach jest równoważna jednoznaczności na wszystkich strzałkach. Dowodzi to równoważności istnienia oraz zgodności kanonicznego izomorfizmu z rodzinami morfizmów. Dla $\beta:T\Rightarrow U$ i kostożka $(i_a:U(a,a)\to Y)_a$ naturalność daje
+\[
+ i_a\beta_{a,a}T(f,\id_a)
+ =i_a U(f,\id_a)\beta_{b,a}.
+\]
+Ograniczenie transformacji przed rozszerzeniem kostożka daje więc tę samą rodzinę co rozszerzenie przed prekompozycją z transformacją. Porównanie jest naturalne względem $T$ przez jednoznaczność w kogranicy.
+\end{proof}
+\begin{wniosek}\label{cat:cor:twisted-preservation}
+Funktor zachowuje wszystkie istniejące małe granice wtedy i tylko wtedy, gdy zachowuje wszystkie istniejące końce nad małymi kategoriami; analogicznie zachowywanie wszystkich istniejących małych kogranic jest równoważne zachowywaniu wszystkich istniejących kokońców. Nie wymagamy, aby w kategorii wyjściowej istniały wszystkie produkty lub koprodukty użyte w konstrukcjach przez equalizatory i koequalizatory.
+\end{wniosek}
+\begin{proof}
+Granica lub kogranica odpowiedniego diagramu skręconych strzałek istnieje przez twierdzenie~\ref{cat:thm:end-twisted} lub~\ref{cat:thm:coend-twisted}. Po zastosowaniu rozważanego funktora jest nadal granicą lub kogranicą. Zgodność porównań z rodzinami przy identycznościach oznacza, że obraz końca lub kokońca spełnia jego własność uniwersalną. Odwrotnie, dla dowolnego diagramu $F:\mathcal A\to\mathcal C$ bierzemy $T(a,b)=F(b)$ i $T(f,g)=F(g)$. Przykład~\ref{cat:ex:end-one-variable} utożsamia koniec i kokoniec $T$ odpowiednio z granicą i kogranicą $F$, wraz z rodzinami uniwersalnymi. Dla funktora $J$ mamy $(JT)(a,b)=JF(b)$, więc zachowywanie końca daje zachowywanie granicy $F$, a zachowywanie kokońca daje zachowywanie kogranicy $F$. Ponieważ $\mathcal A$ i $F$ były dowolne, otrzymujemy implikacje odwrotne.
+\end{proof}
+
+\begin{uwaga}
+Końce i kokońce stanowią narzędzie do opisu sprzężeń, rozszerzeń Kana oraz składania profunktorów. Dalsze rozwinięcie w języku kategorii wzbogaconych i kategorii wyższych wymaga odróżnienia zwykłych zbiorów morfizmów od obiektów morfizmów w kategorii wzbogacającej.
+\end{uwaga}

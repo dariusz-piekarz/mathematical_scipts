@@ -1,0 +1,3785 @@
+\chapter{Semantyka Kripkego i pełność logik modalnych}
+\label{ch:ncl-modal-kripke}
+
+W poprzednim rozdziale wprowadziliśmy normalne
+logiki modalne, ich semantykę algebraiczną
+oraz przykłady interpretacji relacyjnej.
+Teraz badamy systematycznie zależność między
+budową relacji dostępności i prawdziwością formuł.
+Rozróżniamy własności pojedynczego modelu,
+ważność na ramie i ważność w klasie ram.
+W szczególności nie zakładamy, że każda normalna
+logika modalna jest pełna względem pewnej klasy ram.
+
+Rozdział dzieli się na trzy etapy. Najpierw
+wprowadzamy semantykę relacyjną, badamy
+korespondencję podstawowych aksjomatów i dowodzimy
+pełności metodą modelu kanonicznego.
+Następnie analizujemy przekształcenia modeli,
+filtracje, własność modelu skończonego
+i rozstrzygalność. Na końcu przedstawiamy
+ograniczenia pełności Kripkego oraz teorię
+korespondencji i kanoniczności Sahlqvista.
+W szczególności wynik o pełności nie zastępuje
+wyniku o istnieniu skończonego kontrmodelu:
+są to odrębne własności logiki.
+
+\section{Ramy, modele i relacja spełniania}
+
+\begin{definicja}[Rama i model Kripkego]
+\label{def:ncl-kripke-frame-model}
+Ramą Kripkego nazywamy parę $F=(W,R)$,
+gdzie $W\ne\varnothing$ jest zbiorem stanów
+(światów), a $R\subseteq W\times W$ jest
+relacją dostępności. Piszemy
+\[
+ R(w)=\{z\in W:wRz\}.
+\]
+Model Kripkego to trójka $M=(W,R,V)$,
+gdzie $(W,R)$ jest ramą, a
+$V:\mathrm{Var}\to\mathcal P(W)$ jest
+wartościowaniem zmiennych zdaniowych.
+Model z wyróżnionym stanem to para $(M,w)$,
+gdzie $w\in W$.
+\end{definicja}
+
+Nie wymagamy zwrotności, przechodniości
+ani symetryczności relacji $R$.
+Strzałka $w\to z$ na diagramie oznacza
+$wRz$, nie zaś implikację logiczną.
+W odróżnieniu od intuicjonistycznych modeli
+Kripkego z rozdziału~\ref{ch:ncl-intuitionistic},
+wartościowanie nie musi być monotoniczne
+względem relacji dostępności.
+
+\begin{definicja}[Spełnianie formuły]
+\label{def:ncl-kripke-satisfaction}
+Dla języka z Definicji~\ref{def:ncl-modal-language}
+definiujemy rekurencyjnie relację $M,w\Vdash A$:
+\[
+\begin{aligned}
+ M,w\Vdash p &\iff w\in V(p),\\
+ M,w&\not\Vdash\bot,\\
+ M,w\Vdash A\wedge B
+   &\iff M,w\Vdash A\ \text{oraz}\ M,w\Vdash B,\\
+ M,w\Vdash A\vee B
+   &\iff M,w\Vdash A\ \text{lub}\ M,w\Vdash B,\\
+ M,w\Vdash A\to B
+   &\iff M,w\not\Vdash A\ \text{lub}\ M,w\Vdash B,\\
+ M,w\Vdash\Box A
+   &\iff \forall z\in R(w)\quad M,z\Vdash A.
+\end{aligned}
+\]
+Z definicji skrótów wynikają klauzule
+\[
+\begin{aligned}
+ M,w\Vdash\neg A&\iff M,w\not\Vdash A,\\
+ M,w\Vdash\Diamond A&\iff
+ \exists z\in R(w)\quad M,z\Vdash A.
+\end{aligned}
+\]
+\end{definicja}
+Pierwsza z ostatnich klauzul wynika z faktu,
+że $\bot$ nie jest spełnione w żadnym stanie.
+Druga wynika z definicji $\Diamond A=\neg\Box\neg A$
+oraz klasycznego zaprzeczenia kwantyfikatora ogólnego.
+W szczególności $\Box A$ jest prawdziwa w stanie
+bez następców niezależnie od $A$, natomiast
+$\Diamond A$ jest w takim stanie fałszywa.
+Semantyka jest dwuwartościowa w każdym
+stanie, choć prawdziwość formuły może
+zależeć od stanu.
+
+\begin{przyklad}[Prawdziwość a dostępność]
+\label{ex:ncl-kripke-three-states}
+Niech $W=\{r,s,t\}$, $R=\{(r,s),(s,t)\}$
+oraz $V(p)=\{s\}$. Innych krawędzi nie ma.
+\begin{center}
+\begin{tikzpicture}[>=Stealth,node distance=22mm]
+\node[draw,circle] (r) {$r$};
+\node[draw,circle,fill=blue!15,right=of r] (s) {$s$};
+\node[draw,circle,right=of s] (t) {$t$};
+\draw[->] (r)--(s);
+\draw[->] (s)--(t);
+\node[below=4mm of r] {$\neg p$};
+\node[below=4mm of s] {$p$};
+\node[below=4mm of t] {$\neg p$};
+\end{tikzpicture}
+\end{center}
+W stanie $r$ prawdziwe są $\Box p$ i $\Diamond p$,
+choć samo $p$ jest fałszywe.
+W stanie $s$ prawdziwe jest $p$, ale $\Box p$
+i $\Diamond p$ są fałszywe, ponieważ jedyny
+następnik $t$ nie spełnia $p$.
+W stanie $t$ zachodzi $\Box p$, lecz nie $\Diamond p$.
+W stanie $r$ formuła $\Box\Box p$ jest fałszywa,
+gdyż $s$ nie spełnia $\Box p$.
+Model rozróżnia zatem prawdziwość punktową,
+konieczność i możliwość oraz ilustruje
+zawodność schematów T i 4.
+\end{przyklad}
+
+\begin{stwierdzenie}[Zbiory prawdziwości]
+\label{prop:ncl-kripke-truth-sets}
+Dla modelu $M=(W,R,V)$ oznaczmy
+\[
+ [\![A]\!]_M=\{w\in W:M,w\Vdash A\}.
+\]
+Przypisanie $A\mapsto[\![A]\!]_M$ jest
+rozszerzeniem wartościowania $V$ na formuły
+w algebrze kompleksowej relacji
+z Przykładu~\ref{ex:ncl-modal-complex-algebra}.
+W szczególności
+\[
+ [\![\Box A]\!]_M=\Box_R[\![A]\!]_M,\qquad
+ [\![\Diamond A]\!]_M=\Diamond_R[\![A]\!]_M.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Dla zmiennych zbiory prawdziwości są równe
+$V(p)$, dla $\bot$ otrzymujemy $\varnothing$.
+Klauzule klasyczne dają odpowiednio przecięcie,
+sumę, dopełnienie i implikację boolowską.
+Z klauzuli konieczności mamy
+\[
+ w\in[\![\Box A]\!]_M
+ \iff R(w)\subseteq[\![A]\!]_M.
+\]
+To jest definicja $\Box_R$.
+Klauzula możliwości daje analogicznie
+warunek niepustego przecięcia.
+Indukcja po budowie formuły pokazuje,
+że otrzymane przypisanie jest dokładnie
+rozszerzeniem $V$ do wartościowania algebraicznego.
+\end{proof}
+
+\begin{lemat}[Lemat o podstawieniu]
+\label{lem:ncl-kripke-substitution}
+Niech $\sigma$ będzie podstawieniem modalnym.
+Dla modelu $M=(W,R,V)$ określmy model
+$M_\sigma=(W,R,V_\sigma)$ przez
+$V_\sigma(p)=[\![\sigma(p)]\!]_M$.
+Wtedy dla każdej formuły $A$ i każdego $w\in W$
+\[
+ M,w\Vdash\sigma(A)\iff M_\sigma,w\Vdash A.
+\]
+\end{lemat}
+\begin{proof}
+Indukujemy po budowie $A$, jednocześnie
+dla wszystkich stanów.
+Dla zmiennej jest to definicja $V_\sigma$,
+a dla $\bot$ obie strony są fałszywe.
+Dla spójników klasycznych stosujemy hipotezę
+indukcyjną do argumentów w tym samym stanie.
+Dla $A=\Box C$ mamy
+\[
+\begin{aligned}
+ M,w\Vdash\sigma(\Box C)
+ &\iff \forall z\in R(w)\quad M,z\Vdash\sigma(C)\\
+ &\iff \forall z\in R(w)\quad M_\sigma,z\Vdash C\\
+ &\iff M_\sigma,w\Vdash\Box C.
+\end{aligned}
+\]
+To kończy indukcję. Skróty są objęte dowodem
+po ich rozwinięciu.
+\end{proof}
+
+\section{Ważność i konsekwencja relacyjna}
+
+\begin{definicja}[Ważność i spełnialność]
+\label{def:ncl-kripke-validity}
+Piszemy $M\Vdash A$, jeśli $M,w\Vdash A$
+dla wszystkich $w\in W$.
+Piszemy $F\Vdash A$, jeśli $M\Vdash A$
+dla każdego modelu $M$ na ramie $F$.
+Dla klasy ram $\mathcal C$ piszemy
+$\mathcal C\Vdash A$, jeśli $F\Vdash A$
+dla wszystkich $F\in\mathcal C$.
+Formuła $A$ jest spełnialna w klasie
+$\mathcal C$, jeśli istnieje $F\in\mathcal C$,
+model $M$ na $F$ oraz stan $w$, w którym
+$M,w\Vdash A$.
+\end{definicja}
+Ważność na ramie wymaga kwantyfikacji po
+wszystkich wartościowaniach, nie tylko po
+stanach jednego modelu. Z klasycznej negacji
+wynika, że $A$ jest ważna w $\mathcal C$
+dokładnie wtedy, gdy $\neg A$ nie jest
+spełnialna w $\mathcal C$.
+
+\begin{definicja}[Konsekwencja lokalna i globalna]
+\label{def:ncl-kripke-consequence}
+Niech $\mathcal C$ będzie klasą ram.
+Dla zbioru formuł $\Gamma$ i formuły $A$
+określamy dwa pojęcia konsekwencji:
+\[
+ \Gamma\models_{\mathcal C}^{\mathrm{lok}} A
+\]
+oznacza, że dla każdego modelu $M$ na ramie
+z $\mathcal C$ i każdego stanu $w$,
+jeżeli $M,w\Vdash C$ dla każdego $C\in\Gamma$,
+to $M,w\Vdash A$.
+Zapis
+\[
+ \Gamma\models_{\mathcal C}^{\mathrm{glob}} A
+\]
+oznacza, że dla każdego takiego modelu $M$,
+jeżeli $M\Vdash C$ dla każdego $C\in\Gamma$,
+to $M\Vdash A$.
+\end{definicja}
+W pierwszym przypadku wszystkie przesłanki
+muszą zachodzić w jednym stanie, w drugim
+w każdym stanie ustalonego modelu.
+W obu przypadkach wartościowanie jest wspólne
+dla wszystkich przesłanek i wniosku.
+
+\begin{stwierdzenie}[Podstawowe własności konsekwencji]
+\label{prop:ncl-kripke-consequence-laws}
+Oba rodzaje konsekwencji są zwrotne,
+monotoniczne, spełniają regułę cięcia
+i są strukturalne. Ponadto
+\[
+ \Gamma\models_{\mathcal C}^{\mathrm{lok}}A
+ \Longrightarrow
+ \Gamma\models_{\mathcal C}^{\mathrm{glob}}A,
+ \qquad
+ \varnothing\models_{\mathcal C}^{\mathrm{lok}}A
+ \iff \varnothing\models_{\mathcal C}^{\mathrm{glob}}A
+ \iff\mathcal C\Vdash A.
+\]
+Dla skończonego $\Gamma$ zachodzi
+\[
+ \Gamma\models_{\mathcal C}^{\mathrm{lok}}A
+ \iff\mathcal C\Vdash
+        \left(\bigwedge_{C\in\Gamma}C\right)\to A.
+\]
+Pusta koniunkcja oznacza $\top$.
+\end{stwierdzenie}
+\begin{proof}
+Zwrotność i monotoniczność wynikają
+bezpośrednio z definicji. Dla cięcia,
+jeśli wszystkie przesłanki z $\Gamma$ są
+spełnione, to każda konsekwencja z $\Delta$
+jest spełniona, a zatem również konsekwencja
+$A$ zbioru $\Delta$. W przypadku lokalnym
+wszystkie trzy kroki odnoszą się do tego
+samego stanu, w globalnym do całego modelu.
+Strukturalność wynika z
+Lematu~\ref{lem:ncl-kripke-substitution}:
+model $M_\sigma$ ma tę samą ramę co $M$,
+więc należy do tej samej rozważanej klasy modeli.
+Jeżeli przesłanki są prawdziwe globalnie,
+to są prawdziwe lokalnie w każdym stanie.
+Zastosowanie konsekwencji lokalnej w każdym
+stanie daje konsekwencję globalną.
+Dla pustego zbioru przesłanek oba warunki
+sprowadzają się do ważności w klasie.
+Ostatnia równoważność wynika z klasycznych
+klauzul koniunkcji i implikacji w każdym stanie.
+\end{proof}
+Nie wpisujemy na tej liście skończoności
+konsekwencji: dla dowolnej klasy ram własność
+ta nie musi zachodzić. Będziemy ją analizować
+wraz z twierdzeniami o silnej pełności.
+
+\begin{przyklad}[Konsekwencja globalna nie musi być lokalna]
+\label{ex:ncl-kripke-global-not-local}
+Dla każdej klasy ram $\mathcal C$ mamy
+$p\models_{\mathcal C}^{\mathrm{glob}}\Box p$:
+jeśli $p$ jest prawdziwe w każdym stanie,
+to jest prawdziwe w każdym następniku
+dowolnego stanu.
+Niech $\mathcal C$ zawiera ramę
+dwuelementową z relacją pełną.
+Dla $V(p)=\{r\}$ w stanie $r$ prawdziwe jest
+$p$, lecz $\Box p$ jest fałszywa,
+ponieważ drugi stan $s$ nie spełnia $p$.
+Stąd $p\not\models_{\mathcal C}^{\mathrm{lok}}\Box p$.
+Kontrprzykład działa nawet w klasie ram S5.
+\end{przyklad}
+
+\begin{twierdzenie}[Poprawność relacyjna normalnych logik]
+\label{thm:ncl-kripke-soundness}
+Niech $L$ będzie normalną logiką modalną
+i niech $\mathcal C$ będzie klasą ram,
+na których ważne są wszystkie formuły $L$.
+Wtedy
+\[
+\begin{aligned}
+ \Gamma\vdash_L^{\mathrm{lok}} A
+ &\Longrightarrow
+ \Gamma\models_{\mathcal C}^{\mathrm{lok}}A,\\
+ \Gamma\vdash_L^{\mathrm{glob}} A
+ &\Longrightarrow
+ \Gamma\models_{\mathcal C}^{\mathrm{glob}}A.
+\end{aligned}
+\]
+System K jest poprawny względem klasy
+wszystkich niepustych ram Kripkego.
+\end{twierdzenie}
+\begin{proof}
+Dla pierwszych dwóch tez stosujemy indukcję
+po dowodzie z
+Definicji~\ref{def:ncl-modal-local-global}.
+Każda przesłanka jest prawdziwa z założenia,
+każde twierdzenie $L$ z ważności na ramie.
+Modus ponens zachowuje prawdziwość w stanie,
+a więc również prawdziwość globalną.
+W dowodzie globalnym reguła konieczności
+zachowuje prawdziwość globalną: jeżeli
+$M\Vdash C$, to w każdym stanie $w$
+wszyscy jego następnicy spełniają $C$,
+czyli $M\Vdash\Box C$.
+W dowodzie lokalnym tej dodatkowej
+reguły dla przesłanek nie ma.
+
+Dla ostatniej tezy sprawdzamy aksjomaty K.
+Klasyczne tautologie są prawdziwe w każdym
+stanie ze względu na klasyczne klauzule
+spójników. Jeżeli w stanie $w$ zachodzą
+$\Box(A\to B)$ oraz $\Box A$, to każdy
+$z\in R(w)$ spełnia zarówno $A\to B$, jak i $A$,
+a więc także $B$. Zatem $w$ spełnia $\Box B$,
+co daje ważność aksjomatu K.
+Obie reguły dowodzenia twierdzeń zachowują
+ważność w każdym modelu na każdej ramie,
+jak wykazano wyżej. Indukcja po dowodach
+K daje ważność wszystkich twierdzeń K,
+co pozwala zastosować pierwsze dwie tezy.
+\end{proof}
+
+\begin{wniosek}[Logika klasy ram]
+\label{cor:ncl-kripke-frame-logic}
+Dla dowolnej klasy ram $\mathcal C$ zbiór
+\[
+ \operatorname{Log}(\mathcal C)
+ =\{A:\mathcal C\Vdash A\}
+\]
+jest normalną logiką modalną.
+Jeżeli $\mathcal C$ jest niepusta,
+to logika ta jest niesprzeczna.
+\end{wniosek}
+\begin{proof}
+Poprawność K daje zawieranie aksjomatów K.
+Modus ponens i konieczność zachowują
+ważność, a podstawienie zachowuje ją
+z Lematu~\ref{lem:ncl-kripke-substitution}.
+Jeśli istnieje rama z $\mathcal C$,
+to ma ona co najmniej jeden stan.
+Formuła $\bot$ jest w nim fałszywa,
+więc nie należy do $\operatorname{Log}(\mathcal C)$.
+Dla pustej klasy wszystkie formuły są
+ważne próżniowo, co daje logikę sprzeczną.
+\end{proof}
+
+\section{Korespondencja aksjomatów z własnościami ram}
+
+\begin{definicja}[Własności relacji dostępności]
+\label{def:ncl-kripke-relation-properties}
+Relację $R$ na zbiorze $W$ nazywamy:
+\begin{itemize}
+ \item seryjną, gdy $\forall w\in W\ \exists z\in W\quad wRz$;
+ \item zwrotną, gdy $\forall w\in W\quad wRw$;
+ \item symetryczną, gdy $wRz$ pociąga $zRw$;
+ \item przechodnią, gdy $wRz$ i $zRu$ pociągają $wRu$;
+ \item euklidesową (prawostronnie), gdy $wRz$ i $wRu$
+       pociągają $zRu$.
+\end{itemize}
+W ostatnich trzech warunkach kwantyfikujemy
+po wszystkich występujących stanach.
+\end{definicja}
+
+\begin{twierdzenie}[Korespondencja D, T, B, 4 i 5]
+\label{thm:ncl-kripke-basic-correspondence}
+Niech $F=(W,R)$ będzie ramą Kripkego,
+a $p$ zmienną zdaniową. Zachodzą równoważności
+\[
+\begin{array}{c|l|l}
+ &\text{formuła ważna na }F&\text{własność }R\\ \hline
+ \mathrm D&\Box p\to\Diamond p&\text{seryjność}\\
+ \mathrm T&\Box p\to p&\text{zwrotność}\\
+ \mathrm B&p\to\Box\Diamond p&\text{symetryczność}\\
+ 4&\Box p\to\Box\Box p&\text{przechodniość}\\
+ 5&\Diamond p\to\Box\Diamond p&\text{euklidesowość}
+\end{array}
+\]
+W każdej równoważności ważność pojedynczej
+formuły można zastąpić ważnością wszystkich
+instancji odpowiedniego schematu.
+\end{twierdzenie}
+\begin{proof}
+Wystarczalność własności relacji dla wszystkich
+instancji wykazano w Lemacie~\ref{lem:ncl-modal-frame-sufficient}.
+Wystarczy zatem udowodnić konieczność
+każdej własności, konstruując wartościowanie
+na ustalonej ramie, na której dana własność
+nie zachodzi. Wartości pozostałych zmiennych
+można wybrać dowolnie.
+
+\emph{D.} Jeżeli $R(w)=\varnothing$,
+to w stanie $w$ formuła $\Box p$ jest prawdziwa,
+a $\Diamond p$ fałszywa przy dowolnym
+wartościowaniu. Zatem ważność D wymaga seryjności.
+
+\emph{T.} Jeżeli nie zachodzi $wRw$,
+przyjmujemy $V(p)=R(w)$. Każdy następnik
+$w$ spełnia $p$, ale sam $w$ nie spełnia $p$.
+Formuła T jest fałszywa w $w$.
+
+\emph{B.} Jeżeli $wRz$, lecz nie $zRw$,
+przyjmujemy $V(p)=\{w\}$. W stanie $w$
+zachodzi $p$, lecz $z$ nie ma żadnego
+następnika spełniającego $p$.
+Zatem $z$ nie spełnia $\Diamond p$,
+a $w$ nie spełnia $\Box\Diamond p$.
+
+\emph{4.} Jeżeli $wRz$ i $zRu$, lecz nie $wRu$,
+przyjmujemy $V(p)=R(w)$. W stanie $w$
+zachodzi $\Box p$. Ponieważ $u\notin V(p)$
+oraz $zRu$, w stanie $z$ nie zachodzi $\Box p$.
+Zatem w $w$ nie zachodzi $\Box\Box p$.
+
+\emph{5.} Jeżeli $wRz$ i $wRu$, lecz nie $zRu$,
+przyjmujemy $V(p)=\{u\}$. Stan $u$ jest świadkiem
+prawdziwości $\Diamond p$ w $w$, ale $z$ nie ma
+następnika spełniającego $p$. Wobec $wRz$
+w stanie $w$ nie zachodzi $\Box\Diamond p$.
+
+Każde z powyższych wartościowań obala
+odpowiednią formułę na rozważanej ramie.
+Ponadto z Lematu~\ref{lem:ncl-kripke-substitution}
+wynika, że ważność formuły z jedną zmienną
+na ramie implikuje ważność wszystkich jej
+instancji podstawieniowych.
+\end{proof}
+
+\begin{przyklad}[Ważność w modelu nie wystarcza do korespondencji]
+\label{ex:ncl-kripke-model-frame-distinction}
+Rozważmy ramę $W=\{w,z\}$, $R=\{(w,z),(z,z)\}$.
+Nie jest ona zwrotna, ale w modelu, w którym
+każda zmienna jest prawdziwa w obu stanach
+lub fałszywa w obu stanach, wszystkie formuły
+mają stałą wartość na $W$. Istotnie, spójniki
+klasyczne zachowują stałość, a każdy stan ma
+dokładnie jednego następnika, więc $\Box$
+nie zmienia wartości formuły stałej.
+Indukcja po budowie formuły pokazuje, że
+wszystkie instancje T są ważne w tym modelu.
+Natomiast dla wartościowania $V(p)=\{z\}$
+formuła $\Box p\to p$ jest fałszywa w $w$.
+Korespondencja dotyczy więc ważności na ramie,
+nie ważności w pojedynczym modelu, nawet
+gdy w tym modelu ważne są wszystkie instancje
+schematu.
+\end{przyklad}
+
+\begin{lemat}[Relacje zwrotne i euklidesowe]
+\label{lem:ncl-kripke-reflexive-euclidean}
+Dla relacji $R$ na $W$ równoważne są warunki:
+\begin{enumerate}
+ \item $R$ jest zwrotna i euklidesowa;
+ \item $R$ jest relacją równoważności.
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+Załóżmy zwrotność i euklidesowość.
+Jeżeli $wRz$, to wobec $wRw$ z euklidesowości
+otrzymujemy $zRw$, czyli symetryczność.
+Jeżeli $wRz$ i $zRu$, to z symetryczności
+mamy $zRw$; euklidesowość zastosowana
+do $zRw$ i $zRu$ daje $wRu$.
+Otrzymujemy zatem także przechodniość.
+Odwrotnie, jeśli $R$ jest relacją równoważności
+i zachodzą $wRz$, $wRu$, to $zRw$ przez
+symetryczność, a stąd $zRu$ przez przechodniość.
+\end{proof}
+
+\begin{wniosek}[Klasy ram podstawowych systemów]
+\label{cor:ncl-kripke-basic-frame-classes}
+Klasy ram, na których ważne są wszystkie
+twierdzenia wskazanych logik, mają postać
+\[
+\begin{array}{c|l}
+ \mathrm K & \text{wszystkie ramy}\\
+ \mathrm{KD} & \text{ramy seryjne}\\
+ \mathrm T & \text{ramy zwrotne}\\
+ \mathrm{KB} & \text{ramy symetryczne}\\
+ \mathrm{K4} & \text{ramy przechodnie}\\
+ \mathrm{K5} & \text{ramy euklidesowe}\\
+ \mathrm B & \text{ramy zwrotne i symetryczne}\\
+ \mathrm{S4} & \text{ramy zwrotne i przechodnie}\\
+ \mathrm{S5} & \text{ramy z relacją równoważności}.
+\end{array}
+\]
+\end{wniosek}
+\begin{proof}
+K jest poprawna na wszystkich ramach na mocy
+Twierdzenia~\ref{thm:ncl-kripke-soundness}.
+Każdy z pozostałych systemów zawiera wskazane
+w Definicji~\ref{def:ncl-modal-axiom-schemes}
+schematy. Ich ważność na ramie wymusza
+odpowiednie własności relacji przez
+Twierdzenie~\ref{thm:ncl-kripke-basic-correspondence}.
+Odwrotnie, te własności gwarantują ważność
+wszystkich instancji schematów. Ważność
+na ramie jest zachowywana przez podstawienie,
+modus ponens i regułę konieczności
+(jak w dowodzie Wniosku~\ref{cor:ncl-kripke-frame-logic}),
+więc na takiej ramie ważne są wszystkie
+twierdzenia rozważanego systemu.
+Dla S5 stosujemy dodatkowo
+Lemat~\ref{lem:ncl-kripke-reflexive-euclidean}.
+\end{proof}
+
+\begin{uwaga}[Korespondencja a pełność]
+\label{rem:ncl-kripke-correspondence-not-completeness}
+Dla logiki $L$ oznaczmy
+\[
+ \operatorname{Fr}(L)=\{F:\ \forall A\in L\quad F\Vdash A\}.
+\]
+Z definicji zawsze zachodzi
+$L\subseteq\operatorname{Log}(\operatorname{Fr}(L))$.
+Powyższy wniosek identyfikuje klasę
+$\operatorname{Fr}(L)$ dla podstawowych logik,
+ale sam przez się nie dowodzi odwrotnej inkluzji.
+Aby uzyskać pełność, trzeba wykazać, że
+dla każdej formuły $A\notin L$ istnieje
+rama z $\operatorname{Fr}(L)$ i model na tej ramie,
+w którym $A$ jest fałszywa w pewnym stanie.
+\end{uwaga}
+
+\section{Maksymalne zbiory niesprzeczne}
+
+Ustalmy niesprzeczną normalną logikę modalną $L$.
+W tej sekcji i w konstrukcji modelu kanonicznego
+stosujemy wyłącznie konsekwencję lokalną
+z Definicji~\ref{def:ncl-modal-local-global}.
+To ograniczenie jest istotne: prawdziwość
+w jednym stanie nie pozwala stosować reguły
+konieczności do dowolnej przesłanki.
+
+\begin{definicja}[Niesprzeczność lokalna]
+\label{def:ncl-kripke-consistency}
+Zbiór formuł $\Gamma$ jest $L$-niesprzeczny, gdy
+\[
+ \Gamma\not\vdash_L^{\mathrm{lok}}\bot.
+\]
+Jest maksymalnym zbiorem $L$-niesprzecznym,
+gdy jest $L$-niesprzeczny i żaden jego
+właściwy nadzbiór nie jest $L$-niesprzeczny.
+\end{definicja}
+
+\begin{lemat}[Dołączanie formuły]
+\label{lem:ncl-kripke-consistency-extension}
+Dla dowolnego zbioru $\Gamma$ i formuły $A$
+zachodzi
+\[
+\begin{aligned}
+ \Gamma\cup\{A\}\vdash_L^{\mathrm{lok}}\bot
+ &\iff\Gamma\vdash_L^{\mathrm{lok}}\neg A,\\
+ \Gamma\cup\{\neg A\}\vdash_L^{\mathrm{lok}}\bot
+ &\iff\Gamma\vdash_L^{\mathrm{lok}} A.
+\end{aligned}
+\]
+Jeżeli $\Gamma$ jest $L$-niesprzeczny,
+to co najmniej jeden ze zbiorów
+$\Gamma\cup\{A\}$ i $\Gamma\cup\{\neg A\}$
+jest $L$-niesprzeczny.
+\end{lemat}
+\begin{proof}
+Pierwsza równoważność jest lokalnym twierdzeniem
+o dedukcji (Twierdzenie~\ref{thm:ncl-modal-local-deduction})
+dla wniosku $\bot$. Druga wynika z pierwszej
+dla formuły $\neg A$ oraz klasycznych tautologii
+$A\to\neg\neg A$ i $\neg\neg A\to A$.
+Gdyby oba rozszerzenia były sprzeczne,
+z $\Gamma$ można byłoby lokalnie wyprowadzić
+zarówno $A$, jak i $\neg A=A\to\bot$,
+a więc przez modus ponens również $\bot$.
+\end{proof}
+
+\begin{lemat}[Lemat Lindenbauma]
+\label{lem:ncl-kripke-lindenbaum-extension}
+Każdy $L$-niesprzeczny zbiór formuł zawiera
+się w pewnym maksymalnym zbiorze
+$L$-niesprzecznym.
+\end{lemat}
+\begin{proof}
+Język jest przeliczalny na mocy
+Definicji~\ref{def:ncl-modal-language}:
+każda formuła jest skończonym napisem
+nad przeliczalnym alfabetem, a zbiór
+skończonych napisów jest przeliczalny.
+Ustalmy wyliczenie wszystkich formuł
+$A_0,A_1,\ldots$. Dla danego niesprzecznego
+zbioru $\Gamma$ definiujemy rekurencyjnie
+$\Gamma_0=\Gamma$ oraz
+\[
+ \Gamma_{n+1}=
+ \begin{cases}
+  \Gamma_n\cup\{A_n\},&
+    \text{jeśli ten zbiór jest niesprzeczny},\\
+  \Gamma_n\cup\{\neg A_n\},&
+    \text{w przeciwnym przypadku}.
+ \end{cases}
+\]
+Lemat~\ref{lem:ncl-kripke-consistency-extension}
+zapewnia niesprzeczność każdego $\Gamma_n$.
+Niech $\Delta=\bigcup_{n\geq 0}\Gamma_n$.
+Gdyby $\Delta$ była sprzeczna, skończony
+dowód $\bot$ wykorzystywałby jedynie skończoną
+liczbę przesłanek z $\Delta$.
+Wszystkie należałyby do jednego $\Gamma_N$,
+ponieważ ciąg zbiorów jest rosnący.
+To przeczyłoby niesprzeczności $\Gamma_N$.
+Dla każdej formuły $A$ do $\Delta$ należy
+$A$ lub $\neg A$. Jeżeli $A\notin\Delta$,
+to $\neg A\in\Delta$, więc dołączenie $A$
+daje sprzeczność przez modus ponens.
+Każdy właściwy nadzbiór $\Delta$ jest zatem
+sprzeczny, a $\Gamma\subseteq\Delta$.
+\end{proof}
+
+Konstrukcja jest argumentem egzystencjalnym,
+nie procedurą decyzyjną: nie zakładamy
+algorytmu rozstrzygającego niesprzeczność.
+Przeliczalność języka umożliwia powyższą
+konstrukcję bez odwoływania się do lematu Zorna.
+
+\begin{stwierdzenie}[Rachunek w maksymalnym zbiorze niesprzecznym]
+\label{prop:ncl-kripke-maximal-consistent-laws}
+Niech $x$ będzie maksymalnym zbiorem
+$L$-niesprzecznym. Wtedy $L\subseteq x$,
+$\bot\notin x$ i dla każdej formuły $A$
+\[
+ x\vdash_L^{\mathrm{lok}}A\iff A\in x.
+\]
+Ponadto dla dowolnych $A,B$ zachodzą
+\[
+\begin{aligned}
+ \neg A\in x &\iff A\notin x,\\
+ A\wedge B\in x &\iff A\in x\text{ oraz }B\in x,\\
+ A\vee B\in x &\iff A\in x\text{ lub }B\in x,\\
+ A\to B\in x &\iff A\notin x\text{ lub }B\in x.
+\end{aligned}
+\]
+\end{stwierdzenie}
+\begin{proof}
+Gdy $A\notin x$, maksymalność oznacza
+sprzeczność $x\cup\{A\}$. Z
+Lematu~\ref{lem:ncl-kripke-consistency-extension}
+wynika $x\vdash_L^{\mathrm{lok}}\neg A$.
+Nie może więc zachodzić
+$x\vdash_L^{\mathrm{lok}}A$, bo przez modus
+ponens otrzymalibyśmy $\bot$.
+Odwrotny kierunek jest zwrotnością konsekwencji.
+W szczególności każde twierdzenie $L$ należy
+do $x$, a $\bot$ nie należy do $x$.
+Jeżeli $A\notin x$, to wykazaliśmy
+$x\vdash_L^{\mathrm{lok}}\neg A$, czyli
+$\neg A\in x$. Odwrotnie $A$ i $\neg A$
+nie mogą jednocześnie należeć do $x$.
+
+Dla koniunkcji używamy tautologii eliminacji
+$A\wedge B\to A$, $A\wedge B\to B$
+i wprowadzenia $A\to(B\to A\wedge B)$
+oraz domknięcia $x$ względem modus ponens.
+Jeżeli $A\in x$ lub $B\in x$, tautologie
+wprowadzenia alternatywy dają $A\vee B\in x$.
+Jeżeli żadna z formuł nie należy do $x$,
+to $\neg A,\neg B\in x$. Tautologia
+$\neg A\to(\neg B\to\neg(A\vee B))$
+daje $\neg(A\vee B)\in x$, więc
+$A\vee B\notin x$.
+Jeśli $A\notin x$ lub $B\in x$, odpowiednio
+tautologia $\neg A\to(A\to B)$ lub
+$B\to(A\to B)$ daje $A\to B\in x$.
+Jeżeli $A\in x$ i $B\notin x$, to
+$A\to B$ nie może należeć do $x$,
+gdyż modus ponens dawałby $B\in x$.
+\end{proof}
+
+\section{Model kanoniczny i lemat o prawdziwości}
+
+\begin{definicja}[Model kanoniczny]
+\label{def:ncl-kripke-canonical-model}
+Dla niesprzecznej normalnej logiki $L$
+definiujemy $M_L=(W_L,R_L,V_L)$, gdzie
+$W_L$ jest zbiorem wszystkich maksymalnych
+zbiorów $L$-niesprzecznych, a
+\[
+\begin{aligned}
+ xR_Ly &\iff S_L(x)\subseteq y,\qquad
+ S_L(x)=\{A:\Box A\in x\},\\
+ V_L(p)&=\{x\in W_L:p\in x\}.
+\end{aligned}
+\]
+Ramę $F_L=(W_L,R_L)$ nazywamy ramą kanoniczną.
+\end{definicja}
+
+Z niesprzeczności $L$ wynika niesprzeczność
+pustego zbioru przesłanek (por.
+Stwierdzenie~\ref{prop:ncl-modal-consequence-structural}).
+Lemat~\ref{lem:ncl-kripke-lindenbaum-extension}
+zapewnia więc $W_L\ne\varnothing$.
+Ponieważ $W_L\subseteq\mathcal P(\mathrm{Fm}_{\Box})$,
+jest to rzeczywiście zbiór, a nie klasa właściwa.
+
+Relacja kanoniczna ma znaczenie syntaktyczne:
+jeżeli w świecie $x$ formuła $\Box A$ należy
+do maksymalnego zbioru niesprzecznego $x$, każdy dostępny
+świat musi zawierać $A$. Sam warunek
+$S_L(x)\subseteq y$ nie gwarantuje istnienia
+żadnego następnika. Istnienie świadków
+dla formuł możliwości jest treścią kolejnego lematu.
+
+\begin{lemat}[Istnienie następnika kanonicznego]
+\label{lem:ncl-kripke-canonical-successor}
+Niech $x\in W_L$ i niech $A$ będzie formułą.
+Jeżeli $\Diamond A\in x$, to istnieje
+$y\in W_L$ takie, że $xR_Ly$ i $A\in y$.
+\end{lemat}
+\begin{proof}
+Wykażemy niesprzeczność $S_L(x)\cup\{A\}$.
+Gdyby zbiór ten był sprzeczny, skończoność
+konsekwencji pozwoliłaby wybrać
+$B_1,\ldots,B_n\in S_L(x)$ takie, że
+\[
+ \{B_1,\ldots,B_n,A\}\vdash_L^{\mathrm{lok}}\bot.
+\]
+Niech $B=\bigwedge_{i=1}^{n}B_i$,
+przy czym dla $n=0$ przyjmujemy $B=\top$.
+Z lokalnego twierdzenia o dedukcji oraz
+tautologii klasycznych wynika $B\to\neg A\in L$:
+dla $n>0$ można z przesłanki $B$ wyprowadzić
+każde $B_i$, a następnie z $B,A$ wyprowadzić
+$\bot$; dwukrotna dedukcja daje żądaną
+implikację. Dla $n=0$ otrzymujemy
+$\neg A\in L$, a stąd $\top\to\neg A\in L$.
+Reguła konieczności zastosowana do twierdzenia
+$B\to\neg A$ oraz aksjomat K dają
+\[
+ \Box B\to\Box\neg A\in L.
+\]
+Każda $\Box B_i$ należy do $x$.
+Normalne prawa operatora konieczności
+(Twierdzenie~\ref{thm:ncl-modal-normal-laws})
+dają $\Box B\in x$ przez zachowanie
+skończonych koniunkcji; dla $n=0$
+korzystamy z twierdzenia $\Box\top\in L$.
+Wobec domknięcia $x$ względem modus ponens
+otrzymujemy $\Box\neg A\in x$.
+Przeczy to $\Diamond A=\neg\Box\neg A\in x$.
+Zatem $S_L(x)\cup\{A\}$ jest niesprzeczny
+i Lemat~\ref{lem:ncl-kripke-lindenbaum-extension}
+daje jego maksymalne niesprzeczne rozszerzenie $y$.
+Z definicji $xR_Ly$ i $A\in y$.
+\end{proof}
+
+\begin{wniosek}[Dwie postacie relacji kanonicznej]
+\label{cor:ncl-kripke-canonical-relation-dual}
+Dla $x,y\in W_L$ zachodzi
+\[
+ xR_Ly\iff
+ \forall A\in y\quad\Diamond A\in x.
+\]
+\end{wniosek}
+\begin{proof}
+Jeżeli $xR_Ly$ i $A\in y$, lecz
+$\Diamond A\notin x$, to maksymalność oraz
+podwójna negacja dają $\Box\neg A\in x$.
+Stąd $\neg A\in y$, sprzecznie z $A\in y$.
+Odwrotnie, załóżmy warunek po prawej
+i niech $\Box B\in x$. Gdyby $B\notin y$,
+mielibyśmy $\neg B\in y$ i wobec założenia
+$\Diamond\neg B\in x$. Jest ona równoważna
+$\neg\Box B$ w K przez podwójną negację
+i zastępowanie równoważników, więc
+$\neg\Box B\in x$, co jest sprzecznością.
+Zatem $B\in y$ i $S_L(x)\subseteq y$.
+\end{proof}
+
+\begin{twierdzenie}[Lemat o prawdziwości]
+\label{thm:ncl-kripke-canonical-truth}
+Dla każdej formuły $A$ i każdego $x\in W_L$
+\[
+ M_L,x\Vdash A\iff A\in x.
+\]
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po budowie $A$, jednocześnie
+dla wszystkich $x\in W_L$.
+Dla zmiennych teza wynika z definicji $V_L$.
+Dla $\bot$ obie strony równoważności są
+fałszywe. Dla $\wedge,\vee,\to$ stosujemy
+hipotezę indukcyjną oraz odpowiednie
+równoważności ze
+Stwierdzenia~\ref{prop:ncl-kripke-maximal-consistent-laws}.
+
+Niech $A=\Box C$. Jeżeli $\Box C\in x$,
+to każdy $y$ z $xR_Ly$ zawiera $C$.
+Z hipotezy indukcyjnej każdy taki $y$
+spełnia $C$ w $M_L$, a zatem $x$ spełnia $\Box C$.
+
+Jeżeli natomiast $\Box C\notin x$,
+to $\neg\Box C\in x$. Przez podwójną
+negację i zastępowanie równoważników
+w K otrzymujemy $\Diamond\neg C\in x$.
+Lemat~\ref{lem:ncl-kripke-canonical-successor}
+daje $y$ takie, że $xR_Ly$ i $\neg C\in y$.
+Wobec niesprzeczności $C\notin y$,
+więc z hipotezy indukcyjnej $y$ nie spełnia $C$.
+W konsekwencji $x$ nie spełnia $\Box C$.
+To kończy indukcję; skróty $\neg$ i $\Diamond$
+są objęte dowodem po rozwinięciu.
+\end{proof}
+
+\begin{wniosek}[Realizacja zbiorów niesprzecznych]
+\label{cor:ncl-kripke-canonical-realization}
+Każdy $L$-niesprzeczny zbiór $\Gamma$
+jest spełniony w pewnym stanie modelu $M_L$.
+Ponadto jeżeli $\Gamma\not\vdash_L^{\mathrm{lok}}A$,
+to istnieje $x\in W_L$, który spełnia wszystkie
+formuły $\Gamma$, lecz nie spełnia $A$.
+\end{wniosek}
+\begin{proof}
+Pierwsza teza wynika z rozszerzenia $\Gamma$
+do maksymalnego zbioru niesprzecznego i z
+Twierdzenia~\ref{thm:ncl-kripke-canonical-truth}.
+Dla drugiej tezy zbiór $\Gamma\cup\{\neg A\}$
+jest niesprzeczny przez
+Lemat~\ref{lem:ncl-kripke-consistency-extension}.
+Stosujemy pierwszą tezę do tego zbioru
+i korzystamy z klauzuli negacji.
+\end{proof}
+
+\begin{uwaga}[Model kanoniczny a rama kanoniczna]
+\label{rem:ncl-kripke-canonical-model-frame}
+Wszystkie twierdzenia $L$ są prawdziwe w każdym
+stanie modelu $M_L$, ponieważ należą do każdego
+maksymalnego zbioru $L$-niesprzecznego.
+Nie wynika stąd jednak, że są ważne na ramie
+$F_L$: model $M_L$ ma jedno ustalone
+wartościowanie $V_L$, natomiast ważność
+na ramie wymaga wszystkich wartościowań.
+W kolejnym etapie wykażemy, dla których
+podstawowych systemów $F_L$ należy do
+$\operatorname{Fr}(L)$. Dopiero wtedy powyższa
+realizacja zbiorów niesprzecznych pozwoli
+wnioskować o silnej pełności względem klasy ram.
+\end{uwaga}
+
+\section{Własności ram kanonicznych}
+
+\begin{twierdzenie}[Aksjomaty a relacja kanoniczna]
+\label{thm:ncl-kripke-canonical-frame-properties}
+Niech $L$ będzie niesprzeczną normalną logiką
+modalną. Jeżeli $L$ zawiera odpowiedni schemat,
+to relacja $R_L$ ma wskazaną własność:
+\[
+\begin{array}{c|l}
+ \mathrm D&\text{seryjność}\\
+ \mathrm T&\text{zwrotność}\\
+ \mathrm B&\text{symetryczność}\\
+ 4&\text{przechodniość}\\
+ 5&\text{euklidesowość}.
+\end{array}
+\]
+\end{twierdzenie}
+\begin{proof}
+Wszystkie występujące poniżej światy należą
+do $W_L$. Korzystamy z tego, że zawierają
+wszystkie twierdzenia $L$ i są domknięte
+względem modus ponens
+(Stwierdzenie~\ref{prop:ncl-kripke-maximal-consistent-laws}).
+
+\emph{D.} Dla dowolnego $x\in W_L$ mamy
+$\Box\top\in x$, a instancja D daje
+$\Diamond\top\in x$. Z
+Lematu~\ref{lem:ncl-kripke-canonical-successor}
+istnieje $y$ takie, że $xR_Ly$.
+
+\emph{T.} Jeżeli $\Box A\in x$, to
+z instancji T otrzymujemy $A\in x$.
+Zatem $xR_Lx$.
+
+\emph{B.} Załóżmy $xR_Ly$ i $\Box A\in y$.
+Gdyby $A\notin x$, mielibyśmy $\neg A\in x$.
+Instancja B dla $\neg A$ dawałaby
+$\Box\Diamond\neg A\in x$, skąd
+$\Diamond\neg A\in y$.
+Jednak $\Diamond\neg A$ jest w K równoważna
+$\neg\Box A$
+(Twierdzenie~\ref{thm:ncl-modal-normal-laws}),
+co przeczy $\Box A\in y$.
+Stąd $A\in x$, czyli $yR_Lx$.
+
+\emph{4.} Załóżmy $xR_Ly$, $yR_Lz$
+i $\Box A\in x$. Instancja 4 daje
+$\Box\Box A\in x$, a z $xR_Ly$ wynika
+$\Box A\in y$. Z $yR_Lz$ otrzymujemy
+$A\in z$, czyli $xR_Lz$.
+
+\emph{5.} Załóżmy $xR_Ly$, $xR_Lz$
+i $\Box A\in y$. Jeżeli $A\notin z$,
+to $\neg A\in z$ i z dualnej charakterystyki
+relacji kanonicznej
+(Wniosek~\ref{cor:ncl-kripke-canonical-relation-dual})
+otrzymujemy $\Diamond\neg A\in x$.
+Instancja 5 daje $\Box\Diamond\neg A\in x$.
+Z $xR_Ly$ wynika $\Diamond\neg A\in y$,
+co jest sprzeczne z $\Box A\in y$.
+Zatem $A\in z$, czyli $yR_Lz$.
+\end{proof}
+
+\begin{wniosek}[Ramy kanoniczne podstawowych systemów]
+\label{cor:ncl-kripke-basic-canonical-frames}
+Dla każdej logiki
+\[
+ L\in\{\mathrm K,\mathrm{KD},\mathrm T,\mathrm{KB},
+ \mathrm{K4},\mathrm{K5},\mathrm B,\mathrm{S4},\mathrm{S5}\}
+\]
+zachodzi $F_L\in\operatorname{Fr}(L)$.
+\end{wniosek}
+\begin{proof}
+Każda z wymienionych logik jest niesprzeczna:
+jednoelementowa rama zwrotna spełnia wszystkie
+warunki z
+Twierdzenia~\ref{thm:ncl-kripke-basic-correspondence},
+więc na niej ważne są wszystkie jej twierdzenia,
+lecz nie $\bot$. Ramy kanoniczne są zatem
+dobrze określone.
+Twierdzenie~\ref{thm:ncl-kripke-canonical-frame-properties}
+daje własności relacji odpowiadające schematom
+każdego systemu. Dla S5 z T i 5 otrzymujemy
+relację równoważności na mocy
+Lematu~\ref{lem:ncl-kripke-reflexive-euclidean}.
+Wniosek~\ref{cor:ncl-kripke-basic-frame-classes}
+identyfikuje te klasy z $\operatorname{Fr}(L)$.
+\end{proof}
+
+\section{Słaba i silna pełność relacyjna}
+
+\begin{definicja}[Pełność i kanoniczność]
+\label{def:ncl-kripke-completeness-canonicity}
+Niech $L$ będzie normalną logiką modalną
+i $\mathcal C$ klasą ram.
+Logikę $L$ nazywamy słabo pełną względem
+$\mathcal C$, gdy
+\[
+ \mathcal C\Vdash A\Longrightarrow A\in L.
+\]
+Nazywamy ją silnie pełną lokalnie względem
+$\mathcal C$, gdy dla każdego zbioru formuł
+$\Gamma$ i każdej formuły $A$
+\[
+ \Gamma\models_{\mathcal C}^{\mathrm{lok}}A
+ \Longrightarrow\Gamma\vdash_L^{\mathrm{lok}}A.
+\]
+Silną pełność globalną definiujemy analogicznie
+dla obu konsekwencji globalnych.
+Niesprzeczną normalną logikę modalną
+w rozważanym języku nazywamy kanoniczną,
+gdy $F_L\in\operatorname{Fr}(L)$.
+\end{definicja}
+
+Słaba pełność dotyczy twierdzeń, a silna
+pełność również dowolnych, w tym nieskończonych,
+zbiorów przesłanek. Nie zakładamy w definicji
+pełności poprawności; gdy zachodzą obie własności,
+otrzymujemy równoważność syntaktycznej
+i semantycznej konsekwencji.
+
+\begin{twierdzenie}[Silna pełność lokalna logik kanonicznych]
+\label{thm:ncl-kripke-canonical-strong-local}
+Jeżeli $L$ jest kanoniczna, to dla każdej
+klasy ram $\mathcal C$ takiej, że
+$F_L\in\mathcal C\subseteq\operatorname{Fr}(L)$,
+zachodzi
+\[
+ \Gamma\vdash_L^{\mathrm{lok}}A
+ \iff\Gamma\models_{\mathcal C}^{\mathrm{lok}}A
+\]
+dla dowolnego zbioru formuł $\Gamma$ i formuły $A$.
+\end{twierdzenie}
+\begin{proof}
+Implikacja od lewej do prawej wynika z
+Twierdzenia~\ref{thm:ncl-kripke-soundness}.
+Jeżeli $\Gamma\not\vdash_L^{\mathrm{lok}}A$,
+to Wniosek~\ref{cor:ncl-kripke-canonical-realization}
+daje stan $x$ modelu $M_L$ spełniający
+wszystkie przesłanki, lecz nie $A$.
+Ponieważ $F_L\in\mathcal C$, jest to
+kontrmodel dla konsekwencji lokalnej w $\mathcal C$.
+\end{proof}
+
+\begin{wniosek}[Pełność lokalna podstawowych logik modalnych]
+\label{cor:ncl-kripke-basic-strong-local}
+Każda z dziewięciu logik wymienionych we
+Wniosku~\ref{cor:ncl-kripke-basic-canonical-frames}
+jest silnie pełna lokalnie względem
+$\operatorname{Fr}(L)$, czyli odpowiedniej klasy
+ram z Wniosku~\ref{cor:ncl-kripke-basic-frame-classes}.
+W szczególności zachodzi
+\[
+ L=\operatorname{Log}(\operatorname{Fr}(L)).
+\]
+\end{wniosek}
+\begin{proof}
+Wniosek~\ref{cor:ncl-kripke-basic-canonical-frames}
+zapewnia kanoniczność, a
+Twierdzenie~\ref{thm:ncl-kripke-canonical-strong-local}
+daje silną pełność i poprawność.
+Dla pustego zbioru przesłanek konsekwencja
+syntaktyczna oznacza przynależność do $L$,
+a konsekwencja semantyczna ważność w klasie ram.
+\end{proof}
+
+\subsection{Podmodele generowane i pełność globalna}
+
+\begin{definicja}[Podmodel generowany]
+\label{def:ncl-kripke-generated-submodel}
+Niech $M=(W,R,V)$ będzie modelem Kripkego
+i niech $\varnothing\ne U\subseteq W$.
+Jeżeli $u\in U$ i $uRv$ pociągają $v\in U$,
+to $U$ jest domknięty względem następników.
+Ograniczenie modelu do takiego zbioru,
+\[
+ M|_U=(U,R\cap(U\times U),V_U),\qquad
+ V_U(p)=V(p)\cap U,
+\]
+nazywamy podmodelem generowanym.
+Analogicznie określamy generowane podramy.
+Dla $w\in W$ oznaczamy przez $U_w$ zbiór
+stanów osiągalnych z $w$ skończonym ciągiem
+krawędzi relacji $R$, dopuszczając ciąg
+długości zero, a więc $w\in U_w$.
+\end{definicja}
+
+\begin{lemat}[Zachowanie prawdziwości w podmodelu generowanym]
+\label{lem:ncl-kripke-generated-truth}
+Jeżeli $U$ jest niepusty i domknięty względem
+następników, to dla każdej formuły $A$ i $u\in U$
+\[
+ M|_U,u\Vdash A\iff M,u\Vdash A.
+\]
+Ponadto $U_w$ jest najmniejszym zbiorem
+domkniętym względem następników zawierającym $w$.
+\end{lemat}
+\begin{proof}
+Pierwszą tezę dowodzimy indukcyjnie po budowie
+formuły. Dla zmiennych wynika ona z definicji
+$V_U$, dla $\bot$ obie strony są fałszywe,
+a dla spójników klasycznych stosujemy
+hipotezę indukcyjną.
+Dla $\Box B$ z domknięcia względem następników
+wynika, że zbiór następników $u$ jest taki sam
+w $M|_U$ i $M$. Hipoteza indukcyjna dla $B$
+w każdym z tych stanów daje równoważność
+klauzul konieczności.
+
+Jeżeli $v\in U_w$ oraz $vRz$, to do drogi
+z $w$ do $v$ dołączamy krawędź do $z$,
+co daje $z\in U_w$. Każdy zbiór domknięty
+względem następników zawierający $w$
+zawiera wszystkie stany osiągalne z $w$,
+przez indukcję po długości drogi.
+\end{proof}
+
+\begin{lemat}[Iteracje konieczności i osiągalność]
+\label{lem:ncl-kripke-box-paths}
+Dla $n\geq0$ formuła $\Box^n A$ jest
+prawdziwa w stanie $w$ dokładnie wtedy,
+gdy $A$ jest prawdziwa w każdym stanie
+osiągalnym z $w$ drogą długości dokładnie $n$.
+W szczególności
+\[
+ M,w\Vdash\Box^n A\text{ dla każdego }n\geq0
+ \iff M|_{U_w}\Vdash A.
+\]
+\end{lemat}
+\begin{proof}
+Dla $n=0$ jedynym końcem drogi jest $w$,
+a $\Box^0 A=A$. W kroku indukcyjnym
+$\Box^{n+1}A$ jest prawdziwa w $w$ wtedy
+i tylko wtedy, gdy $\Box^n A$ jest prawdziwa
+w każdym następniku $w$. Z hipotezy indukcyjnej
+oznacza to prawdziwość $A$ na końcach wszystkich
+dróg długości $n+1$, gdyż każda taka droga
+składa się z pierwszej krawędzi i drogi
+długości $n$.
+Jeśli dróg danej długości nie ma, oba warunki
+są prawdziwe próżniowo.
+Biorąc wszystkie $n\geq0$, otrzymujemy
+prawdziwość $A$ w każdym stanie $U_w$.
+Stosujemy następnie
+Lemat~\ref{lem:ncl-kripke-generated-truth}.
+\end{proof}
+
+\begin{twierdzenie}[Semantyczna redukcja konsekwencji globalnej]
+\label{thm:ncl-kripke-global-local-reduction}
+Niech $\mathcal C$ będzie klasą ram domkniętą
+względem przechodzenia do generowanych podram.
+Dla domknięcia przesłanek
+$\Gamma^\Box=\{\Box^n B:B\in\Gamma,\ n\geq0\}$
+z Definicji~\ref{def:ncl-modal-box-closure} zachodzi
+\[
+ \Gamma\models_{\mathcal C}^{\mathrm{glob}}A
+ \iff\Gamma^\Box\models_{\mathcal C}^{\mathrm{lok}}A.
+\]
+\end{twierdzenie}
+\begin{proof}
+Jeżeli prawa strona zachodzi, a model $M$
+na ramie z $\mathcal C$ spełnia globalnie
+wszystkie przesłanki $\Gamma$, to przez
+indukcję po $n$ spełnia globalnie również
+wszystkie formuły $\Box^n B$ dla $B\in\Gamma$.
+Stąd w każdym stanie $M$ zachodzi $A$.
+Ten kierunek nie wymaga domknięcia klasy.
+
+Dla odwrotnej implikacji załóżmy, że
+$M,w$ spełnia wszystkie formuły $\Gamma^\Box$.
+Lemat~\ref{lem:ncl-kripke-box-paths}
+pokazuje, że podmodel $M|_{U_w}$ spełnia
+globalnie każdą przesłankę z $\Gamma$.
+Jego rama należy do $\mathcal C$
+na mocy założenia o domknięciu.
+Z konsekwencji globalnej wynika
+$M|_{U_w}\Vdash A$, a w szczególności
+$M|_{U_w},w\Vdash A$.
+Lemat~\ref{lem:ncl-kripke-generated-truth}
+daje $M,w\Vdash A$.
+\end{proof}
+
+W tym miejscu $\Gamma^\Box$ oznacza domknięcie
+zbioru przesłanek względem wszystkich iteracji
+konieczności. Nie należy go mylić z pomocniczym
+oznaczeniem $S_L(x)=\{A:\Box A\in x\}$ użytym
+w Definicji~\ref{def:ncl-kripke-canonical-model}.
+
+\begin{twierdzenie}[Silna pełność globalna podstawowych logik]
+\label{thm:ncl-kripke-basic-strong-global}
+Dla każdej z dziewięciu podstawowych logik
+$L$ i $\mathcal C=\operatorname{Fr}(L)$ zachodzi
+\[
+ \Gamma\vdash_L^{\mathrm{glob}}A
+ \iff\Gamma\models_{\mathcal C}^{\mathrm{glob}}A.
+\]
+\end{twierdzenie}
+\begin{proof}
+Każda z klas ram wymienionych we
+Wniosku~\ref{cor:ncl-kripke-basic-frame-classes}
+jest domknięta względem generowanych podram.
+Zwrotność, symetryczność, przechodniość
+i euklidesowość zachowują się przy ograniczeniu
+relacji do dowolnego niepustego podzbioru:
+światy wymagane w ich definicjach już należą
+do tego podzbioru. Seryjność zachowuje się
+dla podzbioru domkniętego względem następników,
+ponieważ dla każdego jego stanu istnieje
+następnik w wyjściowej ramie i musi on
+należeć do podzbioru.
+Przecięcia takich klas również są domknięte.
+
+Z syntaktycznej redukcji
+(Twierdzenie~\ref{thm:ncl-modal-global-local}),
+silnej pełności lokalnej
+(Wniosek~\ref{cor:ncl-kripke-basic-strong-local})
+i semantycznej redukcji
+(Twierdzenie~\ref{thm:ncl-kripke-global-local-reduction})
+otrzymujemy kolejno
+\[
+\begin{aligned}
+ \Gamma\vdash_L^{\mathrm{glob}}A
+ &\iff\Gamma^\Box\vdash_L^{\mathrm{lok}}A\\
+ &\iff\Gamma^\Box\models_{\mathcal C}^{\mathrm{lok}}A\\
+ &\iff\Gamma\models_{\mathcal C}^{\mathrm{glob}}A.
+\end{aligned}
+\]
+\end{proof}
+
+\begin{wniosek}[Zwartość konsekwencji i spełnialności]
+\label{cor:ncl-kripke-basic-compactness}
+Dla każdej z dziewięciu podstawowych logik
+i $\mathcal C=\operatorname{Fr}(L)$ zarówno
+konsekwencja lokalna, jak i globalna jest
+skończona: jeśli $\Gamma\models A$ w odpowiednim
+sensie, to istnieje skończony
+$\Gamma_0\subseteq\Gamma$ taki, że $\Gamma_0\models A$.
+Ponadto zbiór $\Gamma$ jest spełnialny
+w jednym stanie modelu na ramie z $\mathcal C$
+dokładnie wtedy, gdy każdy jego skończony
+podzbiór jest tak spełnialny.
+Analogiczna równoważność zachodzi dla
+jednoczesnej prawdziwości wszystkich formuł
+w całym modelu na ramie z $\mathcal C$.
+\end{wniosek}
+\begin{proof}
+Z silnej pełności otrzymujemy odpowiedni dowód
+syntaktyczny $A$ z $\Gamma$.
+Dowód jest skończony, zatem wykorzystuje
+skończoną liczbę przesłanek. Poprawność zastosowana do
+tych przesłanek daje pierwszą tezę.
+Dla spełnialności lokalnej brak modelu
+z wyróżnionym stanem spełniającym $\Gamma$
+jest równoważny $\Gamma\models_{\mathcal C}^{\mathrm{lok}}\bot$.
+W przypadku globalnym brak modelu spełniającego
+globalnie $\Gamma$ jest równoważny
+$\Gamma\models_{\mathcal C}^{\mathrm{glob}}\bot$,
+gdyż każda rama ma co najmniej jeden stan
+i $\bot$ nie jest w nim prawdziwe.
+Skończoność odpowiedniej konsekwencji daje
+skończony niespełnialny podzbiór.
+Odwrotna implikacja w obu przypadkach wynika
+bezpośrednio z definicji spełnialności.
+\end{proof}
+
+\section{Morfizmy ograniczone i bisymulacje}
+
+\subsection{Morfizmy ograniczone ram i modeli}
+
+\begin{definicja}[Morfizm ograniczony]
+\label{def:ncl-kripke-bounded-morphism}
+Niech $F=(W,R)$ i $F'=(W',R')$ będą ramami.
+Morfizmem ograniczonym (p-morfizmem,
+ang. \emph{bounded morphism}) nazywamy
+odwzorowanie $f:W\to W'$ spełniające
+dwa warunki:
+\begin{enumerate}
+ \item (w przód) jeżeli $xRy$, to $f(x)R'f(y)$;
+ \item (wstecz) jeżeli $f(x)R'v$, to istnieje
+ $y\in W$ takie, że $xRy$ oraz $f(y)=v$.
+\end{enumerate}
+Jeżeli $M=(W,R,V)$ i $M'=(W',R',V')$
+są modelami na tych ramach, to morfizm
+ograniczony ram jest morfizmem ograniczonym
+modeli, gdy dodatkowo
+\[
+ V(p)=f^{-1}(V'(p))\qquad(p\in\mathrm{Var}).
+\]
+Nie wymagamy ani różnowartościowości,
+ani surjektywności, chyba że jest to wyraźnie
+zaznaczone.
+\end{definicja}
+
+Warunek w przód zapewnia, że krawędź
+nie znika przy odwzorowaniu, a warunek
+wstecz, że każdą krawędź wychodzącą z obrazu
+stanu można podnieść do krawędzi wychodzącej
+z tego stanu. Łącznie mówią one dokładnie, że
+\[
+ f(R(x))=R'(f(x))\qquad(x\in W).
+\]
+Istotnie, warunek w przód daje inkluzję
+od lewej do prawej, a warunek wstecz
+inkluzję przeciwną.
+
+\begin{stwierdzenie}[Składanie morfizmów ograniczonych]
+\label{prop:ncl-kripke-bounded-composition}
+Identyczność ramy jest morfizmem ograniczonym,
+a złożenie dwóch morfizmów ograniczonych
+jest morfizmem ograniczonym.
+Analogicznie dla modeli.
+Obraz morfizmu ograniczonego ram jest
+domknięty względem następników w ramie docelowej.
+\end{stwierdzenie}
+\begin{proof}
+Dla identyczności obie inkluzje są równościami.
+Jeżeli $f:F\to F'$ i $g:F'\to F''$
+są morfizmami ograniczonymi, to
+\[
+ (g\circ f)(R(x))=g(R'(f(x)))
+ =R''(g(f(x))).
+\]
+Dla morfizmów modeli ponadto
+$(g\circ f)^{-1}(V''(p))
+=f^{-1}(g^{-1}(V''(p)))=V(p)$.
+Jeżeli $v\in f(W)$ i $vR'z$, to dla
+$x$ takiego, że $f(x)=v$, warunek wstecz
+daje $y$ z $xRy$ i $f(y)=z$. Zatem $z\in f(W)$.
+\end{proof}
+
+\begin{twierdzenie}[Niezmienniczość względem morfizmów ograniczonych]
+\label{thm:ncl-kripke-bounded-truth}
+Jeżeli $f:M\to M'$ jest morfizmem ograniczonym
+modeli, to dla każdej formuły modalnej $A$
+i każdego $x\in W$ zachodzi
+\[
+ M,x\Vdash A\iff M',f(x)\Vdash A.
+\]
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po budowie $A$, jednocześnie
+dla wszystkich stanów. Dla zmiennej $p$
+teza wynika z warunku dotyczącego wartościowania,
+dla $\bot$ obie strony są fałszywe,
+a dla klasycznych spójników zdaniowych
+stosujemy hipotezę indukcyjną.
+Dla $A=\Box B$ otrzymujemy
+\[
+\begin{aligned}
+ M,x\Vdash\Box B
+ &\iff \forall y\in R(x)\quad M,y\Vdash B\\
+ &\iff \forall y\in R(x)\quad M',f(y)\Vdash B\\
+ &\iff \forall v\in R'(f(x))\quad M',v\Vdash B\\
+ &\iff M',f(x)\Vdash\Box B.
+\end{aligned}
+\]
+Przedostatnia równoważność wykorzystuje
+równość $f(R(x))=R'(f(x))$.
+\end{proof}
+
+\begin{przyklad}[Sklejenie nierozróżnialnych następników]
+\label{ex:ncl-kripke-bounded-fold}
+Niech $W=\{r,s,t\}$, $R=\{(r,s),(r,t)\}$,
+$W'=\{a,b\}$ oraz $R'=\{(a,b)\}$.
+Definiujemy $f(r)=a$ i $f(s)=f(t)=b$.
+\begin{center}
+\begin{tikzpicture}[>=Stealth,
+ state/.style={draw,circle,minimum size=8mm,inner sep=1pt}]
+ \node[state] (r) at (0,1.55) {$r$};
+ \node[state] (s) at (-0.95,0) {$s$};
+ \node[state] (t) at (0.95,0) {$t$};
+ \node[state] (a) at (5,1.55) {$a$};
+ \node[state] (b) at (5,0) {$b$};
+ \draw[->,thick] (r)--(s);
+ \draw[->,thick] (r)--(t);
+ \draw[->,thick] (a)--(b);
+ \draw[->,dashed,blue!65!black] (r)--node[above] {$f$} (a);
+ \draw[->,dashed,blue!65!black] (s.south) to[out=-65,in=-150] (b.south west);
+ \draw[->,dashed,blue!65!black] (t.east)--(b.west);
+ \node at (0,2.25) {rama $F$};
+ \node at (5,2.25) {rama $F'$};
+\end{tikzpicture}
+\end{center}
+Strzałki ciągłe przedstawiają relacje dostępności
+w obu ramach, a niebieskie strzałki przerywane
+przedstawiają odwzorowanie $f$. Nie należy ich
+traktować jako dodatkowych krawędzi dostępności.
+Mamy $f(R(r))=\{b\}=R'(a)$ i
+$f(R(s))=f(R(t))=\varnothing=R'(b)$.
+Jest to więc surjektywny morfizm ograniczony ram.
+Dla każdego wartościowania $V'$ na ramie docelowej
+definiujemy $V(p)=f^{-1}(V'(p))$.
+Otrzymujemy morfizm modeli, a z
+Twierdzenia~\ref{thm:ncl-kripke-bounded-truth}
+wynika, że $r$ i $a$ spełniają dokładnie te same
+formuły, mimo że mają różne liczby następników.
+\end{przyklad}
+
+\begin{przyklad}[Sam warunek w przód nie wystarcza]
+\label{ex:ncl-kripke-forward-insufficient}
+Niech $F$ składa się z jednego stanu $x$
+bez krawędzi, a $F'$ z dwóch stanów $a,b$
+i jedynej krawędzi $aR'b$. Odwzorowanie
+$f(x)=a$ spełnia warunek w przód próżniowo,
+ale nie spełnia warunku wstecz.
+Przyjmijmy wartościowanie wszystkich zmiennych
+przez zbiór pusty w obu modelach.
+Wówczas $M,x\Vdash\Box\bot$, podczas gdy
+$M',a\not\Vdash\Box\bot$. W szczególności
+zachowanie wartości zmiennych i krawędzi
+nie wystarcza do zachowania prawdziwości
+wszystkich formuł.
+\end{przyklad}
+
+\begin{wniosek}[Ważność na obrazach morfizmów ograniczonych]
+\label{cor:ncl-kripke-bounded-validity}
+Jeżeli $f:F\to F'$ jest surjektywnym
+morfizmem ograniczonym ram, to
+\[
+ F\Vdash A\Longrightarrow F'\Vdash A.
+\]
+\end{wniosek}
+\begin{proof}
+Dla dowolnego wartościowania $V'$ na $F'$
+definiujemy wartościowanie na $F$ przez
+$V(p)=f^{-1}(V'(p))$. Otrzymujemy morfizm
+ograniczony modeli.
+Dla każdego $v\in W'$ surjektywność daje
+$x\in W$ z $f(x)=v$. Jeżeli $F\Vdash A$,
+to $M,x\Vdash A$, więc
+Twierdzenie~\ref{thm:ncl-kripke-bounded-truth}
+daje $M',v\Vdash A$. Ponieważ $V'$ i $v$
+były dowolne, $F'\Vdash A$.
+\end{proof}
+
+\subsection{Bisymulacje}
+
+\begin{definicja}[Bisymulacja]
+\label{def:ncl-kripke-bisimulation}
+Niech $M=(W,R,V)$ i $M'=(W',R',V')$
+będą modelami Kripkego.
+Bisymulacją między nimi nazywamy relację
+$Z\subseteq W\times W'$ taką, że dla każdej
+pary $xZx'$ zachodzą warunki:
+\begin{enumerate}
+ \item (atomowy) $x\in V(p)$ wtedy i tylko wtedy,
+ gdy $x'\in V'(p)$, dla każdej zmiennej $p$;
+ \item (w przód) jeżeli $xRy$, to istnieje
+ $y'\in W'$ takie, że $x'R'y'$ i $yZy'$;
+ \item (wstecz) jeżeli $x'R'y'$, to istnieje
+ $y\in W$ takie, że $xRy$ i $yZy'$.
+\end{enumerate}
+Stany $x,x'$ nazywamy bisymilarnymi, jeśli
+istnieje bisymulacja $Z$ zawierająca parę
+$(x,x')$. Piszemy wtedy $(M,x)\sim(M',x')$.
+\end{definicja}
+
+W przeciwieństwie do morfizmu ograniczonego
+bisymulacja nie musi być wykresem funkcji:
+jeden stan może być powiązany z wieloma
+stanami drugiego modelu. Nie wymaga się
+również, aby każdy stan występował
+w jakiejś parze relacji.
+
+\begin{stwierdzenie}[Podstawowe własności bisymulacji]
+\label{prop:ncl-kripke-bisimulation-laws}
+Relacja diagonalna jest bisymulacją modelu
+z samym sobą. Relacja odwrotna do bisymulacji
+jest bisymulacją, a złożenie bisymulacji
+jest bisymulacją. Dowolna suma bisymulacji
+między ustalonymi modelami jest bisymulacją.
+Ponadto wykres odwzorowania $f:W\to W'$
+jest bisymulacją dokładnie wtedy, gdy $f$
+jest morfizmem ograniczonym modeli.
+\end{stwierdzenie}
+\begin{proof}
+Dla relacji diagonalnej jako świadków
+wybieramy te same stany, a odwrócenie relacji
+zamienia warunek w przód z warunkiem wstecz.
+Niech $Z$ będzie bisymulacją między $M$ i $M'$,
+a $Y$ między $M'$ i $M''=(W'',R'',V'')$.
+Jeżeli $xZx'$ i $x'Yx''$, to warunki
+atomowe dla obu par dają zgodność wartości
+zmiennych w $x$ i $x''$.
+Dla $xRy$ wybieramy kolejno $y'$ i $y''$
+z warunków w przód: $x'R'y'$, $yZy'$,
+$x''R''y''$ oraz $y'Yy''$. Wówczas
+$(y,y'')\in Y\circ Z$. Analogicznie, dla
+$x''R''y''$ wybieramy najpierw $y'$,
+a potem $y$, korzystając z warunków wstecz.
+Dowodzi to, że $Y\circ Z$ jest bisymulacją.
+Dla sumy każda jej para należy do pewnej
+bisymulacji składowej, która dostarcza
+wszystkich wymaganych świadków.
+Dla wykresu $Z=\{(x,f(x)):x\in W\}$
+warunki atomowy, w przód i wstecz są
+dokładnie warunkami z
+Definicji~\ref{def:ncl-kripke-bounded-morphism}.
+\end{proof}
+
+\begin{twierdzenie}[Niezmienniczość względem bisymulacji]
+\label{thm:ncl-kripke-bisimulation-invariance}
+Jeżeli $Z$ jest bisymulacją i $xZx'$, to
+dla każdej formuły modalnej $A$
+\[
+ M,x\Vdash A\iff M',x'\Vdash A.
+\]
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po budowie formuły, jednocześnie
+dla wszystkich par należących do $Z$.
+Dla zmiennych stosujemy warunek atomowy,
+dla $\bot$ obie strony są fałszywe,
+a dla spójników klasycznych korzystamy
+z hipotezy indukcyjnej.
+Niech $A=\Box B$ i załóżmy $M,x\Vdash\Box B$.
+Dla dowolnego $y'$ z $x'R'y'$ warunek
+wstecz daje $y$ z $xRy$ i $yZy'$.
+Wówczas $M,y\Vdash B$, więc z hipotezy
+indukcyjnej $M',y'\Vdash B$.
+Ponieważ $y'$ był dowolny, $M',x'\Vdash\Box B$.
+Odwrotnie, załóżmy $M',x'\Vdash\Box B$.
+Dla każdego $y$ z $xRy$ warunek w przód
+daje $y'$ z $x'R'y'$ i $yZy'$.
+Z hipotezy indukcyjnej przenosimy
+prawdziwość $B$ z $y'$ do $y$.
+Stąd $M,x\Vdash\Box B$.
+\end{proof}
+
+\subsection{Równoważność modalna a bisymilarność}
+
+\begin{definicja}[Równoważność modalna]
+\label{def:ncl-kripke-modal-equivalence}
+Modele z wyróżnionym stanem $(M,x)$ i $(M',x')$
+nazywamy równoważnymi modalnie, gdy
+\[
+ \forall A\in\mathrm{Fm}_{\Box}\quad
+ (M,x\Vdash A\iff M',x'\Vdash A).
+\]
+Piszemy $(M,x)\equiv_{\mathrm{mod}}(M',x')$.
+Mówimy, że model ma skończone rozgałęzienie,
+gdy każdy jego stan ma skończoną liczbę
+bezpośrednich następników.
+\end{definicja}
+
+\begin{twierdzenie}[Twierdzenie Hennessy'ego--Milnera]
+\label{thm:ncl-kripke-hennessy-milner}
+Dla modeli o skończonym rozgałęzieniu
+$M,M'$ zachodzi
+\[
+ (M,x)\sim(M',x')
+ \iff (M,x)\equiv_{\mathrm{mod}}(M',x').
+\]
+\end{twierdzenie}
+\begin{proof}
+Implikację od lewej do prawej daje
+Twierdzenie~\ref{thm:ncl-kripke-bisimulation-invariance}.
+W drugą stronę niech $Z$ będzie relacją
+równoważności modalnej między stanami
+obu modeli. Warunek atomowy wynika z definicji.
+Niech $xZx'$ i $xRy$. Przypuśćmy, że żaden
+następnik $x'$ nie jest równoważny modalnie
+ze stanem $y$. Wypiszmy wszystkie te następniki
+jako $y'_1,\ldots,y'_m$.
+Dla każdego $i$ istnieje formuła $B_i$ prawdziwa
+w $y$, a fałszywa w $y'_i$: jeśli formuła
+rozróżniająca ma odwrotne wartości,
+zastępujemy ją negacją.
+Niech $B=\bigwedge_{i=1}^{m}B_i$,
+przy czym dla $m=0$ bierzemy $B=\top$.
+Stan $y$ spełnia $B$, więc $x$ spełnia
+$\Diamond B$. Żaden następnik $x'$ nie
+spełnia $B$, więc $x'$ nie spełnia $\Diamond B$.
+To przeczy $xZx'$. Otrzymujemy warunek w przód.
+Analogiczny argument po zamianie modeli
+i wykorzystaniu skończoności $R(x)$ daje
+warunek wstecz. Relacja $Z$ jest więc
+bisymulacją i zawiera każdą parę stanów
+równoważnych modalnie.
+\end{proof}
+
+\begin{przyklad}[Równoważność modalna bez bisymulacji]
+\label{ex:ncl-kripke-infinite-branching}
+W modelu $M$ niech korzeń $r$ ma dla każdego
+$n\geq0$ osobnego następnika $c_{n,0}$,
+który rozpoczyna skończony łańcuch
+\[
+ c_{n,0}\to c_{n,1}\to\cdots\to c_{n,n}.
+\]
+Łańcuchy są parami rozłączne i nie ma innych
+krawędzi. W modelu $M'$ do identycznej
+konstrukcji z korzeniem $r'$ dodajemy
+jeszcze osobny nieskończony łańcuch
+\[
+ r'\to d_0\to d_1\to d_2\to\cdots .
+\]
+W obu modelach wszystkie zmienne zdaniowe
+są wszędzie fałszywe.
+
+Wykażemy, że korzenie są równoważne modalnie.
+Najpierw zauważmy, że dla każdego $k\geq0$,
+formuły $A$ o głębokości modalnej co najwyżej
+$k$ i $n-i\geq k$ stan $c_{n,i}$ spełnia
+$A$ dokładnie wtedy, gdy dowolny $d_j$
+spełnia $A$. Dowodzimy tego indukcją po
+budowie formuły, z warunkiem na pozostałą
+długość łańcucha równą co najmniej
+$\operatorname{md}(A)$.
+Zmienne i $\bot$ mają te same wartości,
+a dla spójników zdaniowych stosujemy
+hipotezę indukcyjną. Dla $\Box B$ oba
+stany mają dokładnie jednego następnika,
+a pozostała długość skończonego łańcucha
+po wykonaniu jednego kroku jest co najmniej
+$\operatorname{md}(B)$. Stosujemy hipotezę
+indukcyjną do tych następników.
+
+Teraz indukujemy po budowie formuły
+ocenianej w korzeniach. Dla $\Box B$
+wszystkie skończone łańcuchy występują
+w obu modelach i odpowiadające sobie stany
+spełniają te same formuły, ponieważ ich
+podmodele generowane są izomorficzne
+(izomorfizm jest morfizmem ograniczonym).
+Jeżeli $r$ spełnia $\Box B$, to każdy
+$c_{n,0}$ spełnia $B$. Wybieramy
+$n\geq\operatorname{md}(B)$ i z pierwszej
+części otrzymujemy prawdziwość $B$ w $d_0$.
+Stąd $r'$ spełnia $\Box B$. Odwrotnie,
+prawdziwość $\Box B$ w $r'$ pociąga
+prawdziwość $B$ na wszystkich skończonych
+łańcuchach, a więc również $\Box B$ w $r$.
+Pozostałe przypadki indukcji są klasyczne.
+Korzenie są zatem równoważne modalnie.
+
+Nie są jednak bisymilarne. Gdyby $rZr'$
+dla pewnej bisymulacji, warunek wstecz
+dla krawędzi $r'R'd_0$ wymagałby
+$c_{n,0}Zd_0$ dla pewnego skończonego $n$.
+Kolejne $n$ zastosowań warunku wstecz
+wymuszałyby $c_{n,n}Zd_n$, ale $d_n$
+ma następnika, podczas gdy $c_{n,n}$ nie.
+Jeszcze jedno zastosowanie warunku wstecz
+jest więc niemożliwe.
+Przykład pokazuje, że założenia skończonego
+rozgałęzienia nie można pominąć bez
+zastąpienia go innym warunkiem.
+\end{przyklad}
+
+\subsection{Konsekwencje dla definiowalności klas ram}
+
+\begin{stwierdzenie}[Zachowanie ważności przy operacjach na ramach]
+\label{prop:ncl-kripke-frame-preservation}
+Niech $\Sigma$ będzie zbiorem formuł modalnych,
+a $\mathcal C_\Sigma$ klasą wszystkich ram,
+na których ważna jest każda formuła z $\Sigma$.
+Klasa $\mathcal C_\Sigma$ jest domknięta względem:
+\begin{enumerate}
+ \item generowanych podram;
+ \item surjektywnych obrazów przez morfizmy ograniczone;
+ \item niepustych sum rozłącznych ram.
+\end{enumerate}
+\end{stwierdzenie}
+\begin{proof}
+Dla generowanej podramy $U$ każde
+wartościowanie na $U$ można przedłużyć
+na całą ramę, przyjmując te same zbiory
+prawdziwości zmiennych jako podzbiory $W$.
+Lemat~\ref{lem:ncl-kripke-generated-truth}
+przenosi ważność z całej ramy na $U$.
+Punkt drugi jest
+Wnioskiem~\ref{cor:ncl-kripke-bounded-validity}.
+
+Niech $(F_i)_{i\in I}$ będzie niepustą
+rodziną ram z $\mathcal C_\Sigma$.
+Ich suma rozłączna ma zbiór stanów
+$\bigsqcup_{i\in I}W_i$ i krawędzie wyłącznie
+wewnątrz poszczególnych składników,
+zgodnie z relacjami $R_i$.
+Dla dowolnego wartościowania na tej sumie
+każdy składnik jest podmodelem generowanym
+i na mocy założenia spełnia globalnie każdą
+formułę z $\Sigma$. Z lematu o zachowaniu
+prawdziwości wynika, że każda taka formuła
+jest prawdziwa w każdym stanie sumy.
+Wartościowanie było dowolne.
+\end{proof}
+
+\begin{przyklad}[Ograniczenia języka modalnego]
+\label{ex:ncl-kripke-frame-nondefinability}
+Klasy ram, w których każdy stan ma co najmniej
+dwóch różnych następników, nie można
+zdefiniować przez ważność zbioru formuł
+w rozważanym języku modalnym.
+Istotnie, dwuelementowa rama z relacją pełną
+należy do tej klasy. Stałe odwzorowanie
+tej ramy na jednoelementową ramę z pętlą
+jest surjektywnym morfizmem ograniczonym:
+obraz zbioru następników każdego stanu
+jest jednoelementowym zbiorem następników
+stanu docelowego. Rama docelowa nie należy
+jednak do rozważanej klasy, co na mocy
+Stwierdzenia~\ref{prop:ncl-kripke-frame-preservation}
+wyklucza taką definiowalność.
+
+Analogicznie klasy ram, w których każdy stan
+jest połączony drogą skierowaną z każdym innym stanem,
+nie można zdefiniować przez ważność zbioru
+formuł modalnych. Jednoelementowa rama
+z pętlą należy do tej klasy, lecz suma
+rozłączna dwóch jej kopii już nie.
+Rozważane warunki domknięcia są warunkami
+koniecznymi definiowalności; nie wykazaliśmy
+ich wystarczalności.
+\end{przyklad}
+
+\section{Filtracja modeli Kripkego}
+
+\subsection{Iloraz względem skończonego zbioru formuł}
+
+Filtracja pozwala zastąpić, być może nieskończony,
+model modelem skończonym, zachowując prawdziwość
+wybranego skończonego zbioru formuł. W odróżnieniu
+od bisymulacji nie wymaga zachowania wszystkich
+formuł języka. Z tego powodu można niekiedy
+skleić stany, które nie są bisymilarne.
+
+\begin{definicja}[Podformuły]
+\label{def:ncl-kripke-subformulas}
+Zbiór podformuł $\operatorname{Sub}(A)$ formuły
+$A$ określamy rekurencyjnie w języku
+z Definicji~\ref{def:ncl-modal-language}:
+\[
+\begin{aligned}
+ \operatorname{Sub}(p)&=\{p\},&
+ \operatorname{Sub}(\bot)&=\{\bot\},\\
+ \operatorname{Sub}(B\circ C)
+ &=\{B\circ C\}\cup\operatorname{Sub}(B)
+                  \cup\operatorname{Sub}(C),
+ &\circ&\in\{\wedge,\vee,\to\},\\
+ \operatorname{Sub}(\Box B)
+ &=\{\Box B\}\cup\operatorname{Sub}(B).
+\end{aligned}
+\]
+Skróty, w tym $\neg$ i $\Diamond$,
+rozwijamy przed zastosowaniem tej definicji.
+Zbiór formuł $\Sigma$ jest domknięty względem
+podformuł, jeżeli dla każdego $A\in\Sigma$
+zachodzi $\operatorname{Sub}(A)\subseteq\Sigma$.
+\end{definicja}
+
+Indukcja po budowie formuły pokazuje, że
+$\operatorname{Sub}(A)$ jest skończony,
+zawiera $A$ i jest domknięty względem podformuł.
+Dla spójników dwuargumentowych korzystamy
+ze skończoności obu zbiorów podformuł
+argumentów, a dla $\Box$ z analogicznej
+własności jednego argumentu.
+Domknięcie wynika stąd, że podformuła
+podformuły jest również podformułą wyjściowej
+formuły, co wynika z tej samej rekurencji.
+
+\begin{definicja}[Równoważność filtracyjna]
+\label{def:ncl-kripke-filtration-equivalence}
+Niech $M=(W,R,V)$ będzie modelem Kripkego,
+a $\Sigma$ skończonym zbiorem formuł domkniętym
+względem podformuł. Dla $x,y\in W$ określamy
+\[
+ x\equiv_\Sigma y
+ \iff \forall A\in\Sigma\quad
+      (M,x\Vdash A\iff M,y\Vdash A).
+\]
+Jest to relacja równoważności, gdyż oznacza
+równość zbiorów formuł z $\Sigma$ prawdziwych
+w obu stanach. Oznaczamy
+$W_\Sigma=W/{\equiv_\Sigma}$, a klasę stanu
+$x$ przez $[x]_\Sigma$ lub krótko $[x]$.
+\end{definicja}
+
+\begin{stwierdzenie}[Liczba klas filtracji]
+\label{prop:ncl-kripke-filtration-bound}
+Zachodzi
+\[
+ 1\leq |W_\Sigma|\leq 2^{|\Sigma|}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Zbiór stanów $W$ jest niepusty, więc zbiór klas
+równoważności również jest niepusty.
+Odwzorowanie
+\[
+ [x]\longmapsto\{A\in\Sigma:M,x\Vdash A\}
+\]
+jest dobrze określonym odwzorowaniem różnowartościowym
+$W_\Sigma\to\mathcal P(\Sigma)$.
+Dobre określenie i różnowartościowość wynikają
+bezpośrednio z definicji $\equiv_\Sigma$.
+Stąd żądane oszacowanie.
+\end{proof}
+
+\subsection{Dopuszczalne relacje filtracyjne}
+
+\begin{definicja}[Filtracja modelu]
+\label{def:ncl-kripke-filtration}
+Filtracją modelu $M$ względem $\Sigma$
+nazywamy model $M_\Sigma=(W_\Sigma,S,V_\Sigma)$,
+w którym
+\[
+ V_\Sigma(p)=\{[x]:M,x\Vdash p\}
+       \qquad(p\in\mathrm{Var}\cap\Sigma).
+\]
+Dla zmiennych spoza $\Sigma$ wartościowanie
+można wybrać dowolnie; przyjmujemy
+$V_\Sigma(p)=\varnothing$.
+Relacja $S$ na $W_\Sigma$ ma spełniać:
+\begin{enumerate}
+ \item jeżeli $xRy$, to $[x]S[y]$;
+ \item jeżeli $[x]S[y]$ oraz $\Box B\in\Sigma$,
+ to $M,x\Vdash\Box B$ implikuje $M,y\Vdash B$.
+\end{enumerate}
+W drugim warunku wartości obu formuł
+nie zależą od wyboru reprezentantów,
+ponieważ $\Box B\in\Sigma$ i $B\in\Sigma$.
+\end{definicja}
+
+\begin{definicja}[Najmniejsza i największa relacja filtracyjna]
+\label{def:ncl-kripke-filtration-extremes}
+Na $W_\Sigma$ określamy relacje
+\[
+\begin{aligned}
+ [x]S_{\min}[y]
+ &\iff \exists u\in[x]\ \exists v\in[y]\quad uRv,\\
+ [x]S_{\max}[y]
+ &\iff \forall\Box B\in\Sigma\quad
+       (M,x\Vdash\Box B\Rightarrow M,y\Vdash B).
+\end{aligned}
+\]
+W szczególności druga relacja jest pełna,
+jeśli $\Sigma$ nie zawiera żadnej formuły
+o postaci $\Box B$.
+\end{definicja}
+
+\begin{stwierdzenie}[Istnienie i charakterystyka filtracji]
+\label{prop:ncl-kripke-filtration-extremes}
+Zachodzi $S_{\min}\subseteq S_{\max}$.
+Relacja $S$ spełnia warunki filtracji
+dokładnie wtedy, gdy
+\[
+ S_{\min}\subseteq S\subseteq S_{\max}.
+\]
+W szczególności każda z relacji skrajnych
+wyznacza filtrację.
+\end{stwierdzenie}
+\begin{proof}
+Niech $[x]S_{\min}[y]$; wybieramy świadków
+$u\in[x]$, $v\in[y]$ z $uRv$.
+Jeżeli $\Box B\in\Sigma$ i $M,x\Vdash\Box B$,
+to $M,u\Vdash\Box B$ przez równoważność
+filtracyjną. Z $uRv$ dostajemy $M,v\Vdash B$,
+a ponieważ $B\in\Sigma$, także $M,y\Vdash B$.
+Zatem $[x]S_{\max}[y]$.
+Pierwszy warunek z
+Definicji~\ref{def:ncl-kripke-filtration}
+jest równoważny inkluzji $S_{\min}\subseteq S$,
+drugi zaś inkluzji $S\subseteq S_{\max}$.
+\end{proof}
+
+\begin{twierdzenie}[Lemat filtracyjny]
+\label{thm:ncl-kripke-filtration-lemma}
+Jeżeli $M_\Sigma$ jest filtracją $M$
+względem $\Sigma$, to dla każdej formuły
+$A\in\Sigma$ i każdego $x\in W$ zachodzi
+\[
+ M,x\Vdash A\iff M_\Sigma,[x]\Vdash A.
+\]
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po budowie $A$, jednocześnie
+dla wszystkich $x\in W$.
+Domknięcie $\Sigma$ względem podformuł
+zapewnia stosowalność hipotezy indukcyjnej
+do argumentów każdego spójnika.
+Dla zmiennej teza wynika z definicji
+$V_\Sigma$, a dla $\bot$ obie strony są
+fałszywe. Dla spójników klasycznych
+stosujemy ich klauzule semantyczne.
+
+Niech $A=\Box B\in\Sigma$.
+Jeżeli $M,x\Vdash\Box B$, to dla każdego
+$[y]$ z $[x]S[y]$ drugi warunek filtracji
+daje $M,y\Vdash B$. Z hipotezy indukcyjnej
+$M_\Sigma,[y]\Vdash B$, więc
+$M_\Sigma,[x]\Vdash\Box B$.
+Jeżeli $M,x\not\Vdash\Box B$, istnieje
+$y$ z $xRy$ i $M,y\not\Vdash B$.
+Pierwszy warunek filtracji daje $[x]S[y]$,
+a hipoteza indukcyjna
+$M_\Sigma,[y]\not\Vdash B$. Zatem
+$M_\Sigma,[x]\not\Vdash\Box B$.
+\end{proof}
+
+\begin{wniosek}[Skończona realizacja formuł]
+\label{cor:ncl-kripke-filtration-finite-realization}
+Jeżeli formuła $A$ jest spełnialna w pewnym
+modelu Kripkego, to jest spełnialna w modelu
+o co najwyżej $2^{|\operatorname{Sub}(A)|}$ stanach.
+Jeżeli $A$ jest fałszywa w pewnym stanie modelu,
+to istnieje taki sam skończony kontrmodel.
+\end{wniosek}
+\begin{proof}
+W obu przypadkach filtrujemy dany model
+względem $\Sigma=\operatorname{Sub}(A)$,
+używając na przykład $S_{\min}$.
+Twierdzenie~\ref{thm:ncl-kripke-filtration-lemma}
+zachowuje prawdziwość i fałszywość $A$,
+a Stwierdzenie~\ref{prop:ncl-kripke-filtration-bound}
+daje oszacowanie liczby stanów.
+\end{proof}
+
+\subsection{Przykład i ograniczenia filtracji}
+
+\begin{przyklad}[Filtracja nieskończonego łańcucha]
+\label{ex:ncl-kripke-filtration-chain}
+Niech $W=\{0,1,2,\ldots\}$,
+$nRm$ wtedy i tylko wtedy, gdy $m=n+1$,
+oraz $V(p)=\{2k:k\geq0\}$.
+Dla $\Sigma=\{p,\Box p\}$ otrzymujemy
+dwie klasy: $e$ stanów parzystych i $o$
+stanów nieparzystych. W stanach parzystych
+prawdziwe jest $p$, a fałszywe $\Box p$;
+w stanach nieparzystych jest odwrotnie.
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+ \node[draw,circle,fill=blue!15] (a) at (0,0) {$0$};
+ \node[draw,circle] (b) at (1.25,0) {$1$};
+ \node[draw,circle,fill=blue!15] (c) at (2.5,0) {$2$};
+ \node[draw,circle] (d) at (3.75,0) {$3$};
+ \node (more) at (5,0) {$\cdots$};
+ \draw[->] (a)--(b);
+ \draw[->] (b)--(c);
+ \draw[->] (c)--(d);
+ \draw[->] (d)--(more);
+ \node at (2.5,-0.65) {model wyjściowy};
+ \node[draw,circle,fill=blue!15] (e) at (1.5,-2) {$e$};
+ \node[draw,circle] (o) at (3.5,-2) {$o$};
+ \draw[->] (e) to[bend left=22] (o);
+ \draw[->] (o) to[bend left=22] (e);
+ \node at (2.5,-2.8) {filtracja przez $S_{\min}$};
+\end{tikzpicture}
+\end{center}
+Zaznaczenie kolorem oznacza prawdziwość $p$.
+Relacja $S_{\min}$ składa się z krawędzi
+$eS_{\min}o$ i $oS_{\min}e$.
+Natomiast $S_{\max}$ dopuszcza dodatkowo
+$eS_{\max}e$, ponieważ $\Box p$ jest
+fałszywa w stanach klasy $e$.
+W obu filtracjach zachowana jest prawdziwość
+$p$ i $\Box p$. Nie zachowują one jednak
+koniecznie prawdziwości formuł spoza $\Sigma$.
+Na przykład $\Box\neg p$ jest prawdziwa w $0$
+i w $e$ dla $S_{\min}$, lecz fałszywa w $e$
+dla $S_{\max}$.
+\end{przyklad}
+
+\begin{przyklad}[Utrata przechodniości]
+\label{ex:ncl-kripke-filtration-transitivity-loss}
+Niech $W=\{a,b,c,d\}$ i
+$R=\{(a,b),(c,d)\}$. Relacja jest przechodnia,
+ponieważ nie istnieje droga długości dwóch krawędzi.
+Dla $\Sigma=\{p,q\}$ przyjmujemy
+$V(p)=\{a\}$ i $V(q)=\{d\}$.
+Otrzymujemy trzy klasy
+\[
+ X=\{a\},\qquad Y=\{b,c\},\qquad Z=\{d\}.
+\]
+Relacja $S_{\min}$ zawiera dokładnie krawędzie
+$XS_{\min}Y$ oraz $YS_{\min}Z$,
+ale nie $XS_{\min}Z$. Nie jest zatem przechodnia.
+Sklejenie $b$ i $c$ stworzyło drogę,
+której nie było w modelu wyjściowym.
+Własność modelu skończonego dla logik
+wymagających przechodniości nie wynika
+więc bezpośrednio z użycia najmniejszej
+relacji filtracyjnej.
+\end{przyklad}
+
+\subsection{Zachowanie wybranych własności ram}
+
+\begin{stwierdzenie}[Seryjność, zwrotność i symetryczność]
+\label{prop:ncl-kripke-filtration-basic-properties}
+Jeżeli $R$ jest seryjna, zwrotna lub symetryczna,
+to $S_{\min}$ ma odpowiednią własność.
+Seryjność i zwrotność zachowują również
+wszystkie relacje filtracyjne $S$,
+natomiast dla symetryczności nie jest to
+gwarantowane.
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $R$ jest seryjna, to dla dowolnej
+klasy $[x]$ wybieramy następnika $y$ stanu
+$x$. Wtedy $[x]S_{\min}[y]$.
+Jeżeli $R$ jest zwrotna, to $xRx$ daje
+$[x]S_{\min}[x]$.
+Obie własności zachowują się przy
+powiększaniu relacji.
+Jeżeli $R$ jest symetryczna i
+$[x]S_{\min}[y]$, to istnieją świadkowie
+$u\in[x]$, $v\in[y]$ z $uRv$.
+Symetryczność daje $vRu$, a zatem
+$[y]S_{\min}[x]$.
+
+Aby zobaczyć, że dowolna filtracja nie
+musi być symetryczna, weźmy dwuelementową
+ramę z relacją identycznościową i
+$\Sigma=\{p\}$, gdzie $p$ rozróżnia stany.
+Wówczas $S_{\min}$ jest identycznością,
+a $S_{\max}$ relacją pełną. Do $S_{\min}$
+można dodać jedną krawędź między różnymi
+klasami bez dodawania krawędzi odwrotnej.
+Otrzymana relacja nadal jest filtracyjna.
+\end{proof}
+
+\begin{lemat}[Filtracja przechodnia]
+\label{lem:ncl-kripke-transitive-filtration}
+Jeżeli relacja $R$ jest przechodnia,
+to przechodnie domknięcie $S_{\min}^{+}$
+relacji $S_{\min}$ jest relacją filtracyjną.
+Przez $S_{\min}^{+}$ rozumiemy relację
+istnienia drogi o skończonej dodatniej długości
+w relacji $S_{\min}$.
+Jeżeli $R$ jest ponadto zwrotna, to
+$S_{\min}^{+}$ jest zwrotna.
+\end{lemat}
+\begin{proof}
+Z definicji $S_{\min}\subseteq S_{\min}^{+}$,
+a łączenie dróg dowodzi przechodniości.
+Sprawdzimy inkluzję $S_{\min}^{+}\subseteq S_{\max}$.
+Najpierw zauważmy, że dla każdej
+$\Box B\in\Sigma$ oraz krawędzi
+$[x]S_{\min}[y]$ z $M,x\Vdash\Box B$
+wynikają jednocześnie $M,y\Vdash B$
+i $M,y\Vdash\Box B$.
+Pierwsza teza wynika z
+Stwierdzenia~\ref{prop:ncl-kripke-filtration-extremes}.
+Dla drugiej wybieramy świadków $uRv$
+z $u\in[x]$, $v\in[y]$.
+Mamy $M,u\Vdash\Box B$.
+Jeżeli $vRz$, to przechodniość daje $uRz$,
+więc $M,z\Vdash B$.
+Zatem $M,v\Vdash\Box B$, a ponieważ
+$\Box B\in\Sigma$, również $M,y\Vdash\Box B$.
+
+Jeżeli teraz $[x]S_{\min}^{+}[y]$, wybieramy
+drogę dodatniej długości od $[x]$ do $[y]$.
+Prawdziwość $\Box B$ przenosimy wzdłuż
+kolejnych krawędzi na wszystkie klasy
+drogi, a na ostatniej krawędzi uzyskujemy
+także prawdziwość $B$ w klasie $[y]$.
+To daje $[x]S_{\max}[y]$.
+Charakterystyka relacji filtracyjnych
+kończy dowód. Jeżeli $R$ jest zwrotna,
+to $S_{\min}$ jest zwrotna, a więc także
+jego nadrelacja $S_{\min}^{+}$.
+\end{proof}
+
+\begin{wniosek}[Filtracja ram z relacją równoważności]
+\label{cor:ncl-kripke-equivalence-filtration}
+Jeżeli $R$ jest relacją równoważności,
+to $S_{\min}^{+}$ jest relacją równoważności
+i wyznacza filtrację.
+\end{wniosek}
+\begin{proof}
+Z poprzedniego lematu otrzymujemy filtrację
+z relacją zwrotną i przechodnią.
+Ponieważ $R$ jest symetryczna, $S_{\min}$
+również jest symetryczna na mocy
+Stwierdzenia~\ref{prop:ncl-kripke-filtration-basic-properties}.
+Odwracając każdą drogę, otrzymujemy
+symetryczność $S_{\min}^{+}$.
+\end{proof}
+
+Powyższe konstrukcje będą wykorzystane
+do wykazania własności modelu skończonego
+dla logik K, KD, T, KB, K4, B, S4 i S5.
+Dla K5 potrzeba osobnego argumentu:
+euklidesowość nie jest tym samym co
+przechodniość ani symetryczność.
+Nie przypisujemy więc tej logice własności
+zachowania ram bez dodatkowego dowodu.
+
+\section{Własność modelu skończonego i rozstrzygalność}
+
+\begin{definicja}[Własność modelu skończonego]
+\label{def:ncl-kripke-finite-model-property}
+Normalna logika modalna $L$ ma własność modelu
+skończonego, jeżeli dla każdej formuły $A\notin L$
+istnieje skończona rama $F\in\operatorname{Fr}(L)$,
+model $M$ na tej ramie i stan $w$ takie,
+że $M,w\not\Vdash A$.
+\end{definicja}
+
+Warunek $F\in\operatorname{Fr}(L)$ jest istotny:
+nie wystarczy znaleźć skończonego modelu,
+w którym $A$ jest fałszywa, ale trzeba także
+zagwarantować ważność wszystkich twierdzeń $L$
+na jego ramie. Dla logiki mającej tę własność
+i każdej formuły $B$ lokalna $L$-niesprzeczność
+$\{B\}$ jest równoważna spełnialności $B$
+na skończonej ramie z $\operatorname{Fr}(L)$.
+Istotnie, niesprzeczność $\{B\}$ oznacza
+$\neg B\notin L$ przez
+Lemat~\ref{lem:ncl-kripke-consistency-extension}
+i konsekwencję z pustego zbioru przesłanek.
+Stosujemy własność modelu skończonego
+do $\neg B$. Implikacja odwrotna wynika
+z poprawności
+(Twierdzenie~\ref{thm:ncl-kripke-soundness}).
+
+\subsection{Przypadek ram euklidesowych}
+
+\begin{lemat}[Budowa podramy generowanej w ramie euklidesowej]
+\label{lem:ncl-kripke-euclidean-cluster}
+Niech $R$ będzie relacją euklidesową
+na zbiorze $W$, a $w\in W$.
+Jeżeli $R(w)=\varnothing$, to $U_w=\{w\}$.
+Jeżeli $D=R(w)\ne\varnothing$, wybieramy
+$d\in D$ i oznaczamy $C=R(d)$.
+Wówczas
+\[
+ D\subseteq C,\qquad
+ R(c)=C\quad(c\in C),\qquad
+ U_w=\{w\}\cup C.
+\]
+W szczególności relacja ograniczona do $C$
+jest pełna. Jeżeli $w\in C$, to $D=C$
+i $U_w=C$. Jeżeli $w\notin C$, to $w$
+ma następniki dokładnie w $D$, a żaden
+stan z $C$ nie ma krawędzi do $w$.
+\end{lemat}
+\begin{proof}
+Przypadek $R(w)=\varnothing$ wynika z definicji
+osiągalności.
+W pozostałym przypadku dla każdego $u\in D$
+z $wRd$ i $wRu$ przez euklidesowość dostajemy
+$dRu$, czyli $D\subseteq C$. W szczególności
+$d\in C$ i $dRd$.
+
+Ustalmy $c\in C$. Dla każdego $v\in C$
+z $dRc$ i $dRv$ dostajemy $cRv$.
+Zatem $C\subseteq R(c)$, a ponadto $cRd$,
+ponieważ $d\in C$. Dla dowolnego $z\in R(c)$
+z $cRd$ i $cRz$ dostajemy $dRz$,
+czyli $z\in C$. Stąd $R(c)=C$.
+Zbiór $\{w\}\cup C$ zawiera $w$ i jest
+domknięty względem następników, ponieważ
+$R(w)=D\subseteq C$. Każdy stan $c\in C$
+jest osiągalny z $w$ przez $wRd$ i $dRc$.
+Na mocy Lematu~\ref{lem:ncl-kripke-generated-truth}
+otrzymujemy $U_w=\{w\}\cup C$.
+Jeżeli $w\in C$, podstawienie $c=w$
+w równości $R(c)=C$ daje $D=C$.
+Jeżeli $w\notin C$, żadna krawędź
+z $C$ nie prowadzi do $w$, bo każdy stan
+z $C$ ma zbiór następników równy $C$.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,
+ state/.style={draw,circle,fill=white,minimum size=8mm,inner sep=1pt}]
+ \draw[rounded corners=5pt,fill=blue!5]
+   (2,-1.3) rectangle (7.2,1.6);
+ \draw[rounded corners=4pt,fill=blue!15]
+   (2.25,-1.05) rectangle (4.45,1.25);
+ \node[state] (w) at (0,0) {$w$};
+ \node[state] (d) at (3.35,0) {$d$};
+ \node[state] (c) at (5.9,0) {$c$};
+ \draw[->,thick] (w)--(d);
+ \draw[<->,thick] (d)--(c);
+ \draw[->] (d) edge[loop above,looseness=5] (d);
+ \draw[->] (c) edge[loop above,looseness=5] (c);
+ \node at (3.35,-0.73) {$D=R(w)$};
+ \node[anchor=north east] at (7.1,1.5) {$C=R(d)$};
+ \node at (3.6,-1.85) {$w\notin C,\quad D\subseteq C$};
+\end{tikzpicture}
+\end{center}
+Rysunek przedstawia przykład z jednoelementowym
+$D$ (ciemniejsze pole) i dwuelementowym $C$
+(całe jasne pole wraz z $D$); w ogólności oba
+zbiory mogą być nieskończone.
+Pełna relacja na $C$ jest wymuszona przez
+euklidesowość, lecz $w$ nie musi być zwrotny.
+
+\begin{lemat}[Zależność od zmiennych występujących w formule]
+\label{lem:ncl-kripke-variable-dependence}
+Niech dwa modele mają tę samą ramę i takie samo
+wartościowanie wszystkich zmiennych należących
+do zbioru $P\subseteq\mathrm{Var}$.
+Wówczas w każdym stanie zgadzają się co do
+prawdziwości każdej formuły, której wszystkie
+zmienne należą do $P$.
+\end{lemat}
+\begin{proof}
+Indukcja po budowie formuły:
+dla zmiennej stosujemy założenie o wartościowaniu,
+dla $\bot$ obie wartości są fałszywe,
+dla spójników klasycznych stosujemy hipotezę
+indukcyjną, a dla $\Box$ stosujemy ją
+w każdym następniku danego stanu.
+Zbiór następników jest taki sam w obu modelach.
+\end{proof}
+
+\begin{twierdzenie}[Skończona redukcja modelu euklidesowego]
+\label{thm:ncl-kripke-euclidean-finite-reduction}
+Niech $M$ będzie modelem na ramie euklidesowej,
+$w$ jego stanem, a $P$ skończonym zbiorem
+zmiennych zdaniowych. Istnieje skończony
+model $N$ na ramie euklidesowej, zawierający
+stan $w$, którego liczba stanów nie przekracza
+$1+2^{|P|}$, taki że dla każdej formuły $A$
+o zmiennych z $P$ zachodzi
+\[
+ M,w\Vdash A\iff N,w\Vdash A.
+\]
+Ponadto jeżeli $M$ spełnia globalnie każdą
+formułę z pewnego zbioru $\Gamma$ o zmiennych
+z $P$, to $N$ również spełnia globalnie
+każdą formułę z $\Gamma$.
+\end{twierdzenie}
+\begin{proof}
+Przechodzimy najpierw do podmodelu generowanego
+przez $w$; prawdziwość w każdym jego stanie
+nie zmienia się na mocy
+Lematu~\ref{lem:ncl-kripke-generated-truth}.
+Zmieniamy wartościowanie zmiennych spoza $P$
+na zbiór pusty, co nie wpływa na rozważane
+formuły przez
+Lemat~\ref{lem:ncl-kripke-variable-dependence}.
+Otrzymany model oznaczmy $M_0$.
+
+Jeżeli $R(w)=\varnothing$, bierzemy $N=M_0$,
+który w tym przypadku ma jeden stan.
+W przeciwnym przypadku używamy oznaczeń
+$D,C$ z
+Lematu~\ref{lem:ncl-kripke-euclidean-cluster}.
+Dla $c\in C$ niech
+\[
+ t(c)=\{p\in P:M_0,c\Vdash p\}.
+\]
+Wybieramy po jednym reprezentancie $c_T$
+każdego zrealizowanego typu $T=t(c)$.
+Jeżeli dany typ jest realizowany w $D$,
+wybieramy reprezentanta należącego do $D$.
+Jeżeli $w\in C$, to $D=C$, więc dla typu
+$t(w)$ możemy i będziemy wybierać $w$.
+Oznaczmy zbiór wybranych reprezentantów przez
+$E$. Ponieważ $t(c)\subseteq P$, mamy
+$|E|\leq 2^{|P|}$.
+
+Niech $N$ będzie ograniczeniem $M_0$
+do zbioru $U'=\{w\}\cup E$ z relacją
+indukowaną przez $R$ i ograniczonym wartościowaniem.
+Relacja ta jest euklidesowa, gdyż własność
+euklidesowości zachowuje się przy ograniczaniu
+do podzbiorów. Mamy $|U'|\leq 1+2^{|P|}$.
+
+Definiujemy $f:U_w\to U'$ wzorem
+$f(c)=c_{t(c)}$ dla $c\in C$, a jeśli
+$w\notin C$, dodatkowo $f(w)=w$.
+Gdy $w\in C$, wybór reprezentanta zapewnia
+również $f(w)=w$. Odwzorowanie jest
+surjektywne i zachowuje wartości wszystkich
+zmiennych: dla zmiennych z $P$ z definicji
+typu, a dla pozostałych dlatego, że są
+wszędzie fałszywe w obu modelach.
+
+Dla $c\in C$ mamy $R(c)=C$ i
+$f(R(c))=E=R(f(c))\cap U'$.
+Jeżeli $w\notin C$, to $R(w)=D$ i
+$f(D)=D\cap E$: typy realizowane w $D$
+mają wybranych reprezentantów w $D$,
+a każdy reprezentant z $D$ jest obrazem
+samego siebie. Zatem również
+$f(R(w))=R(f(w))\cap U'$.
+Otrzymujemy surjektywny morfizm ograniczony
+modeli $f:M_0\to N$.
+Z Twierdzenia~\ref{thm:ncl-kripke-bounded-truth}
+wynika zachowanie prawdziwości we wszystkich
+odpowiadających sobie stanach, w szczególności
+w $w=f(w)$. Surjektywność daje ponadto
+zachowanie prawdziwości globalnej.
+\end{proof}
+
+W dowodzie nie korzystamy z dowolnej
+filtracji euklidesowej. Najpierw ograniczamy
+model do części generowanej przez badany
+stan, a następnie dobieramy reprezentantów
+z uwzględnieniem szczególnej budowy tej części.
+W ten sposób zachowujemy wszystkie formuły
+o zmiennych z $P$, a nie tylko ustalony
+skończony zbiór podformuł.
+
+\subsection{Własność modelu skończonego podstawowych logik}
+
+\begin{twierdzenie}[Skończone kontrmodele]
+\label{thm:ncl-kripke-basic-fmp}
+Wszystkie logiki
+\[
+ \mathrm K,\ \mathrm{KD},\ \mathrm T,\ \mathrm{KB},\
+ \mathrm{K4},\ \mathrm{K5},\ \mathrm B,\
+ \mathrm{S4},\ \mathrm{S5}
+\]
+mają własność modelu skończonego.
+Jeśli $A\notin L$ i
+$n=|\operatorname{Sub}(A)|$, to dla
+$L\ne\mathrm{K5}$ można znaleźć kontrmodel
+o co najwyżej $2^n$ stanach.
+Dla K5 można znaleźć kontrmodel
+o co najwyżej $1+2^m$ stanach, gdzie $m$
+jest liczbą różnych zmiennych w $A$.
+\end{twierdzenie}
+\begin{proof}
+Z pełności
+(Wniosek~\ref{cor:ncl-kripke-basic-strong-local})
+istnieje model $M$ na ramie z
+$\operatorname{Fr}(L)$ i stan $w$,
+w którym $A$ jest fałszywa.
+Dla $L\ne\mathrm{K5}$ stosujemy filtrację
+względem $\Sigma=\operatorname{Sub}(A)$.
+Wybór relacji filtracyjnej przedstawia tabela:
+\[
+\begin{array}{c|c|l}
+ L &\text{relacja}&\text{zachowana własność}\\ \hline
+ \mathrm K&S_{\min}&\text{brak dodatkowych warunków}\\
+ \mathrm{KD}&S_{\min}&\text{seryjność}\\
+ \mathrm T&S_{\min}&\text{zwrotność}\\
+ \mathrm{KB}&S_{\min}&\text{symetryczność}\\
+ \mathrm B&S_{\min}&\text{zwrotność i symetryczność}\\
+ \mathrm{K4}&S_{\min}^{+}&\text{przechodniość}\\
+ \mathrm{S4}&S_{\min}^{+}&\text{zwrotność i przechodniość}\\
+ \mathrm{S5}&S_{\min}^{+}&\text{relacja równoważności}
+\end{array}
+\]
+Uzasadnienie wyborów dają
+Stwierdzenie~\ref{prop:ncl-kripke-filtration-basic-properties},
+Lemat~\ref{lem:ncl-kripke-transitive-filtration}
+i Wniosek~\ref{cor:ncl-kripke-equivalence-filtration}.
+Wszystkie otrzymane ramy należą zatem
+do $\operatorname{Fr}(L)$, na mocy
+Wniosku~\ref{cor:ncl-kripke-basic-frame-classes}.
+Lemat filtracyjny
+(Twierdzenie~\ref{thm:ncl-kripke-filtration-lemma})
+zachowuje fałszywość $A$ w $[w]$, a
+Stwierdzenie~\ref{prop:ncl-kripke-filtration-bound}
+daje oszacowanie liczby stanów.
+
+Dla K5 stosujemy
+Twierdzenie~\ref{thm:ncl-kripke-euclidean-finite-reduction}
+do zbioru $P$ wszystkich zmiennych $A$.
+Dostajemy skończoną ramę euklidesową
+z najwyżej $1+2^m$ stanami i z kontrmodelem
+dla $A$. Korespondencja ram dla K5
+zapewnia przynależność do $\operatorname{Fr}(L)$.
+\end{proof}
+
+\begin{wniosek}[Skończone kontrmodele dla skończonych przesłanek]
+\label{cor:ncl-kripke-finite-premise-countermodels}
+Niech $L$ będzie jedną z dziewięciu podstawowych
+logik, a $\Gamma$ skończonym zbiorem formuł.
+Jeżeli $\Gamma\not\vdash_L^{\mathrm{lok}}A$,
+istnieje skończony model na ramie z
+$\operatorname{Fr}(L)$ i jego stan,
+w którym wszystkie formuły $\Gamma$ są
+prawdziwe, a $A$ jest fałszywa.
+Jeżeli $\Gamma\not\vdash_L^{\mathrm{glob}}A$,
+istnieje taki skończony model, w którym
+wszystkie formuły $\Gamma$ są prawdziwe
+globalnie, lecz $A$ nie jest prawdziwa globalnie.
+\end{wniosek}
+\begin{proof}
+Z odpowiedniej silnej pełności
+(Wniosek~\ref{cor:ncl-kripke-basic-strong-local}
+lub
+Twierdzenie~\ref{thm:ncl-kripke-basic-strong-global})
+otrzymujemy, być może nieskończony, kontrmodel.
+W przypadku globalnym wybieramy stan $w$,
+w którym $A$ jest fałszywa.
+W przypadku lokalnym wybieramy stan
+spełniający przesłanki i obalający $A$.
+
+Dla $L\ne\mathrm{K5}$ filtrujemy względem
+skończonego zbioru
+\[
+ \Sigma=\bigcup_{B\in\Gamma\cup\{A\}}
+             \operatorname{Sub}(B).
+\]
+Jest on domknięty względem podformuł.
+Używamy relacji z dowodu
+Twierdzenia~\ref{thm:ncl-kripke-basic-fmp}.
+Lemat filtracyjny zachowuje prawdziwość
+każdej przesłanki w odpowiednich stanach
+oraz fałszywość $A$ w $[w]$.
+W przypadku globalnym każda klasa ma
+reprezentanta, zatem zachowujemy globalną
+prawdziwość przesłanek.
+Dla K5 stosujemy redukcję euklidesową
+do skończonego zbioru wszystkich zmiennych
+w $\Gamma\cup\{A\}$. Jej teza obejmuje
+zarówno prawdziwość w $w$, jak i zachowanie
+globalnej prawdziwości przesłanek.
+\end{proof}
+
+\begin{przyklad}[Brak silnej pełności względem ram skończonych]
+\label{ex:ncl-kripke-no-finite-strong-completeness}
+Skończone zbiory przesłanek są istotne
+we Wniosku~\ref{cor:ncl-kripke-finite-premise-countermodels}.
+Dla każdej z dziewięciu podstawowych logik
+silna pełność względem całej klasy ram
+nie przenosi się na klasę jej ram skończonych.
+Rozważmy zbiór
+\[
+ \Delta=\{\Diamond p_i:i\geq1\}
+ \cup\{\Box\neg(p_i\wedge p_j):1\leq i<j\}.
+\]
+Na ramie $W=\{v_i:i\geq1\}$ z relacją pełną
+$R=W\times W$ przyjmujemy $V(p_i)=\{v_i\}$.
+Każdy stan spełnia wszystkie formuły $\Delta$:
+każda formuła $\Diamond p_i$ ma świadka $v_i$,
+a żaden stan nie spełnia dwóch różnych $p_i$.
+Jest to rama z relacją równoważności,
+należąca do klas ram wszystkich dziewięciu
+logik. Z poprawności wynika, że ani lokalnie,
+ani globalnie nie można wyprowadzić $\bot$
+z $\Delta$ w żadnej z nich.
+W każdym modelu spełniającym $\Delta$ w $w$
+formuła $\Diamond p_i$ wymaga następnika
+spełniającego $p_i$, a formuły z $\Box$
+nie pozwalają, aby ten sam następnik
+spełniał $p_i$ i $p_j$ dla $i\ne j$.
+Musi więc istnieć nieskończenie wiele
+następników. Zbiór $\Delta$ nie jest
+spełnialny na żadnej skończonej ramie,
+ani lokalnie, ani globalnie (ramy są niepuste).
+W konsekwencji na skończonych ramach
+każdej z dziewięciu logik z $\Delta$
+wynika semantycznie $\bot$ w obu sensach,
+lecz nie wynika syntaktycznie. To dowodzi
+braku silnej pełności lokalnej i globalnej
+względem klas ram skończonych.
+\end{przyklad}
+
+\subsection{Algorytm rozstrzygający}
+
+\begin{definicja}[Rozstrzygalność logiki]
+\label{def:ncl-kripke-decidability}
+Logikę $L$ nazywamy rozstrzygalną, gdy
+istnieje algorytm, który dla każdej formuły
+$A$ kończy działanie i poprawnie odpowiada,
+czy $A\in L$.
+Przyjmujemy efektywne kodowanie przeliczalnego
+zbioru zmiennych oraz formuł języka modalnego.
+\end{definicja}
+
+\begin{twierdzenie}[Rozstrzygalność podstawowych systemów]
+\label{thm:ncl-kripke-basic-decidability}
+Wszystkie dziewięć logik z
+Twierdzenia~\ref{thm:ncl-kripke-basic-fmp}
+jest rozstrzygalnych. Rozstrzygalna jest
+również konsekwencja lokalna i globalna
+ze skończonych zbiorów przesłanek
+w każdej z tych logik.
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonej formuły $A$ obliczamy zbiór
+jej podformuł i zbiór $P$ jej zmiennych.
+Niech $m=|P|$ i niech $N$ będzie ograniczeniem
+liczby stanów z
+Twierdzenia~\ref{thm:ncl-kripke-basic-fmp}.
+Dla każdego $k=1,\ldots,N$ wykonujemy
+następujące czynności:
+\begin{enumerate}
+ \item Wyliczamy wszystkie relacje $R$ na
+ zbiorze $\{1,\ldots,k\}$.
+ \item Odrzucamy relacje niespełniające
+ warunków ram dla ustalonej logiki z
+ Wniosku~\ref{cor:ncl-kripke-basic-frame-classes}.
+ Każdy z tych warunków można sprawdzić
+ przez skończone sprawdzenie odpowiednich
+ pojedynczych stanów, par lub trójek stanów.
+ \item Dla każdej pozostałej relacji wyliczamy
+ wszystkie wartościowania zmiennych z $P$.
+ Zmienne spoza $P$ wartościujemy przez
+ zbiór pusty, co jest dozwolone przez
+ Lemat~\ref{lem:ncl-kripke-variable-dependence}.
+ \item Obliczamy zbiory prawdziwości podformuł
+ $A$ od najmniejszych do największych.
+ Dla spójników klasycznych stosujemy operacje
+ boolowskie na podzbiorach zbioru stanów,
+ a dla konieczności obliczamy
+ \[
+ [\![\Box B]\!]=\{x:R(x)\subseteq[\![B]\!]\}.
+ \]
+ Jeżeli w którymkolwiek stanie $A$ jest
+ fałszywa, kończymy z odpowiedzią $A\notin L$.
+\end{enumerate}
+Jeżeli wszystkie sprawdzenia zakończą się
+bez znalezienia kontrmodelu, odpowiadamy $A\in L$.
+Algorytm kończy się, ponieważ na $k$ stanach
+jest $2^{k^2}$ relacji i $2^{km}$ wartościowań
+zmiennych z $P$. Łączna liczba badanych
+modeli jest ograniczona z góry przez
+\[
+ \sum_{k=1}^{N}2^{k^2+km}.
+\]
+Każda ocena formuły również wymaga
+skończonej liczby operacji.
+Poprawność odpowiedzi negatywnej wynika
+z poprawności relacyjnej $L$, a odpowiedzi
+pozytywnej z istnienia kontrmodelu o
+ograniczonej liczbie stanów dla każdej
+formuły spoza $L$.
+
+Dla konsekwencji ze skończonych przesłanek
+bierzemy sumę zbiorów podformuł wszystkich
+formuł $\Gamma\cup\{A\}$ i zbiór ich zmiennych.
+W dowodzie
+Wniosku~\ref{cor:ncl-kripke-finite-premise-countermodels}
+otrzymaliśmy jawne ograniczenia: $2^{|\Sigma|}$
+dla $L\ne\mathrm{K5}$ oraz $1+2^{|P|}$ dla K5.
+Wyliczamy modele do odpowiedniej granicy.
+Dla konsekwencji lokalnej szukamy stanu,
+w którym wszystkie przesłanki są prawdziwe,
+a $A$ fałszywa. Dla konsekwencji globalnej
+szukamy modelu spełniającego wszystkie
+przesłanki globalnie, lecz obalającego $A$
+w pewnym stanie.
+Znalezienie takiego modelu oznacza brak
+odpowiedniego wynikania; brak kontrmodelu
+oznacza wynikanie, przez przytoczony wniosek
+i poprawność. Wszystkie sprawdzenia są skończone.
+\end{proof}
+
+\begin{uwaga}[Rozstrzygalność a efektywność]
+\label{rem:ncl-kripke-decision-complexity}
+Powyższy algorytm jest celowo elementarny.
+Oszacowanie liczby sprawdzanych modeli
+nie jest oszacowaniem optymalnej złożoności
+problemu. W szczególności nie wnioskujemy
+z niego, że każda metoda rozstrzygania
+musi przeglądać wszystkie relacje i wartościowania.
+Nie twierdzimy również, że dla dowolnej
+normalnej logiki sama słaba pełność
+względem pewnej klasy ram daje rozstrzygalność:
+w tym dowodzie potrzebowaliśmy efektywnej
+granicy liczby stanów oraz efektywnego
+sprawdzania przynależności ramy do klasy.
+\end{uwaga}
+
+\section{Ograniczenia pełności Kripkego}
+
+\begin{stwierdzenie}[Kryterium pełności względem pewnej klasy ram]
+\label{prop:ncl-kripke-completeness-criterion}
+Normalna logika $L$ jest poprawna i słabo pełna
+względem pewnej klasy ram wtedy i tylko wtedy, gdy
+\[
+ L=\operatorname{Log}(\operatorname{Fr}(L)).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $L=\operatorname{Log}(\mathcal C)$,
+to $\mathcal C\subseteq\operatorname{Fr}(L)$
+i wobec tego
+\[
+ L\subseteq\operatorname{Log}(\operatorname{Fr}(L))
+ \subseteq\operatorname{Log}(\mathcal C)=L.
+\]
+Odwrotnie, równość z tezy oznacza poprawność
+i pełność względem $\operatorname{Fr}(L)$.
+\end{proof}
+Logikę, dla której powyższa równość nie zachodzi,
+nazywamy niepełną w sensie Kripkego.
+Nie jest to stwierdzenie o niezupełności
+w sensie twierdzeń Gödla. Chodzi o istnienie
+klasy ram charakteryzującej zbiór twierdzeń,
+nie o rozstrzyganie każdej formuły lub jej negacji.
+
+\subsection{Ramy ogólne i wartościowania dopuszczalne}
+
+\begin{definicja}[Rama ogólna]
+\label{def:ncl-kripke-general-frame}
+Ramą ogólną nazywamy trójkę $G=(W,R,\mathcal A)$,
+gdzie $(W,R)$ jest ramą Kripkego,
+a $\mathcal A\subseteq\mathcal P(W)$ jest
+algebrą Boole'a zbiorów zawierającą $W$
+i domkniętą względem operatora
+\[
+ \Diamond_R X=\{x\in W:R(x)\cap X\ne\varnothing\}.
+\]
+Wartościowanie jest dopuszczalne, gdy
+$V(p)\in\mathcal A$ dla każdej zmiennej $p$.
+Piszemy $G\Vdash A$, jeżeli $A$ jest prawdziwa
+w każdym stanie każdego modelu z dopuszczalnym
+wartościowaniem.
+\end{definicja}
+
+Zauważmy, że $\mathcal A$ jest też domknięta
+względem $\Box_R X=W\setminus
+\Diamond_R(W\setminus X)$.
+W zwykłej ramie dopuszczamy wszystkie
+podzbiory jako wartości zmiennych, czyli
+otrzymujemy szczególny przypadek
+$\mathcal A=\mathcal P(W)$.
+
+\begin{lemat}[Poprawność względem ram ogólnych]
+\label{lem:ncl-kripke-general-frame-soundness}
+Dla każdego dopuszczalnego wartościowania
+zbiory prawdziwości wszystkich formuł
+należą do $\mathcal A$.
+Zbiór formuł ważnych na $G$ jest
+niesprzeczną normalną logiką modalną.
+\end{lemat}
+\begin{proof}
+Pierwsza teza wynika z indukcji po budowie
+formuły: dla zmiennych korzystamy z założenia,
+dla $\bot$ z $\varnothing\in\mathcal A$,
+dla spójników klasycznych z domknięcia
+algebry Boole'a, a dla $\Box$ z domknięcia
+względem $\Box_R$.
+Ważne są wszystkie formuły K, ponieważ
+są ważne nawet bez ograniczeń wartościowań.
+Modus ponens i konieczność zachowują
+globalną prawdziwość w każdym modelu.
+W Lemacie~\ref{lem:ncl-kripke-substitution}
+wartościowanie $V_\sigma(p)$ jest teraz
+dopuszczalne na mocy pierwszej tezy,
+więc podstawienie zachowuje ważność na $G$.
+Formuła $\bot$ nie jest ważna, gdyż
+$W$ jest niepusty i istnieją dopuszczalne
+wartościowania (np. stale równe $\varnothing$).
+\end{proof}
+
+\subsection{Przykład van Benthema}
+
+Rozważymy przykład z pracy J.~van Benthema
+\emph{Syntactic aspects of modal incompleteness theorems}
+(1979); por. także W.~H.~Holliday, T.~Litak,
+\emph{Complete Additivity and Modal Incompleteness},
+The Review of Symbolic Logic (2019), sekcja 2.
+Zastosujemy ramę ogólną, aby wykazać
+niedowodliwość pewnej formuły bez mylenia
+ważności w pojedynczym modelu z ważnością na ramie.
+
+\begin{definicja}[Logika van Benthema]
+\label{def:ncl-kripke-vb-logic}
+Niech $L_{\mathrm{vB}}$ będzie najmniejszą
+normalną logiką modalną zawierającą formułę
+\[
+ \alpha(p)=\Box\Diamond\top
+     \to\Box\bigl(\Box(\Box p\to p)\to p\bigr).
+\]
+Oznaczmy także
+\[
+ \beta=\Box\Diamond\top\to\Box\bot.
+\]
+\end{definicja}
+
+\begin{lemat}[Konsekwencja na zwykłych ramach]
+\label{lem:ncl-kripke-vb-frame-consequence}
+Dla dowolnej ramy Kripkego zachodzi
+$F\Vdash\alpha(p)$ wtedy i tylko wtedy, gdy
+$F\Vdash\beta$.
+\end{lemat}
+\begin{proof}
+Załóżmy, że $F\Vdash\alpha(p)$.
+Gdyby $\beta$ była fałszywa w stanie $x$,
+zbiór $R(x)$ byłby niepusty i każdy jego
+element miałby przynajmniej jednego następnika.
+Wybieramy $y\in R(x)$ i nadajemy zmiennej
+$p$ zbiór prawdziwości $W\setminus\{y\}$.
+Wykażemy, że każdy następnik $y$ spełnia
+$\Box p\to p$. Każdy stan różny od $y$
+spełnia tę implikację, gdyż spełnia $p$.
+Dla $y$ rozróżniamy dwa przypadki.
+Jeśli $yRy$, to $\Box p$ jest w $y$ fałszywa.
+Jeśli nie zachodzi $yRy$, to jedyny możliwy
+stan niespełniający $\Box p\to p$ to $y$,
+ale nie jest on następnikiem samego siebie.
+W obu przypadkach każdy następnik $y$
+spełnia $\Box p\to p$: w pierwszym
+wszystkie stany ją spełniają, w drugim
+wszyscy następnicy $y$ są różni od $y$.
+Zatem $y$ spełnia $\Box(\Box p\to p)$,
+lecz nie spełnia $p$. Wobec $xRy$ stan $x$
+nie spełnia następnika implikacji $\alpha(p)$.
+Jej poprzednik jest prawdziwy, co przeczy
+ważności $\alpha(p)$ na $F$.
+
+Odwrotnie, jeżeli $F\Vdash\beta$, to
+w każdym stanie spełniającym $\Box\Diamond\top$
+nie ma żadnych następników (z $\Box\bot$).
+Następnik implikacji $\alpha(p)$ jest tam prawdziwy
+próżniowo. W pozostałych stanach poprzednik
+jest fałszywy. To daje ważność $\alpha(p)$
+dla każdego wartościowania.
+\end{proof}
+
+\begin{twierdzenie}[Niepełność logiki van Benthema]
+\label{thm:ncl-kripke-vb-incompleteness}
+Logika $L_{\mathrm{vB}}$ jest niesprzeczna
+i niepełna w sensie Kripkego. Dokładniej
+\[
+ \operatorname{Fr}(L_{\mathrm{vB}})\Vdash\beta,
+ \qquad \beta\notin L_{\mathrm{vB}}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Pierwszą tezę o ważności daje
+Lemat~\ref{lem:ncl-kripke-vb-frame-consequence},
+ponieważ $\alpha(p)\in L_{\mathrm{vB}}$.
+Aby wykazać niedowodliwość $\beta$,
+skonstruujemy ramę ogólną $G$.
+Niech
+\[
+ W=\mathbb N_0\cup\{a,b\},
+\]
+gdzie $a,b$ są dwoma nowymi elementami.
+Relację określamy przez zbiory następników:
+\[
+ R(0)=\varnothing,\quad
+ R(n)=\{0,\ldots,n-1\}\ (n\geq1),\quad
+ R(a)=\mathbb N_0\cup\{a\},\quad R(b)=\{a\}.
+\]
+Dopuszczamy zbiory z rodziny
+\[
+ \mathcal A=
+ \{X\subseteq W:X\text{ skończony},\ a\notin X\}
+ \cup
+ \{X\subseteq W:W\setminus X\text{ skończony},
+                       \ a\in X\}.
+\]
+Rodzina ta zawiera $\varnothing,W$ i jest
+domknięta względem dopełnień. Dla sumy dwóch
+zbiorów, jeśli oba są skończone i nie zawierają
+$a$, to również ich suma ma te własności;
+jeżeli przynajmniej jeden jest ko-skończony
+i zawiera $a$, to ich suma także jest
+ko-skończona i zawiera $a$. Domknięcie
+względem przecięć wynika z praw de Morgana.
+
+Sprawdzimy domknięcie względem $\Diamond_R$.
+Jeżeli $X\cap\mathbb N_0=\varnothing$,
+to $a\notin X$ (zbiór ko-skończony zawiera
+pewną liczbę naturalną). W takim przypadku
+$X\subseteq\{b\}$, a ponieważ żaden stan
+nie ma krawędzi do $b$, mamy
+$\Diamond_R X=\varnothing$.
+Jeżeli $X\cap\mathbb N_0\ne\varnothing$,
+niech $k$ będzie najmniejszą liczbą z tego
+przecięcia. Wtedy
+\[
+ \Diamond_R X=\{n\in\mathbb N_0:n>k\}\cup\{a\}
+                 \cup \bigl(\{b\}\cap Y\bigr),
+ \qquad
+ Y=\begin{cases}
+ W,&a\in X,\\
+ \varnothing,&a\notin X.
+ \end{cases}
+\]
+Jest to zbiór ko-skończony zawierający $a$.
+Zatem $G=(W,R,\mathcal A)$ jest ramą ogólną.
+
+Ustalmy dowolne dopuszczalne wartościowanie
+i oznaczmy $X=V(p)$.
+W stanie $0$ formuła $\alpha(p)$ jest
+prawdziwa, ponieważ oba jej człony
+rozpoczynające się od $\Box$ są prawdziwe.
+W każdym stanie $n\geq1$ oraz w stanie $a$
+poprzednik implikacji $\alpha(p)$, czyli
+$\Box\Diamond\top$, jest fałszywy,
+bo stan $0$ jest następnikiem i nie ma
+żadnych następników.
+Pozostaje stan $b$, którego jedynym
+następnikiem jest $a$.
+Jeżeli $a\in X$, to następnik implikacji $\alpha(p)$
+jest w $b$ prawdziwy, ponieważ $p$ jest
+prawdziwa w $a$.
+Jeżeli $a\notin X$, to $X$ jest skończony.
+Niech $n$ będzie najmniejszą liczbą naturalną
+nienależącą do $X$. Wszystkie liczby mniejsze
+od $n$ należą do $X$, więc
+$M,n\Vdash\Box p$, lecz $M,n\not\Vdash p$.
+Wobec $aRn$ formuła $\Box(\Box p\to p)$
+jest fałszywa w $a$.
+Implikacja $\Box(\Box p\to p)\to p$
+jest zatem w $a$ prawdziwa, a następnik implikacji
+$\alpha(p)$ prawdziwy w $b$.
+
+Wykazaliśmy $G\Vdash\alpha(p)$.
+Z Lematu~\ref{lem:ncl-kripke-general-frame-soundness}
+wynika, że każda formuła $L_{\mathrm{vB}}$
+jest ważna na $G$ i że logika ta jest
+niesprzeczna. Jednak w $b$ prawdziwa jest
+$\Box\Diamond\top$, bo $a$ ma następnika,
+a fałszywa jest $\Box\bot$, bo $bRa$.
+Zatem $G\not\Vdash\beta$, co dowodzi
+$\beta\notin L_{\mathrm{vB}}$.
+Stosujemy
+Stwierdzenie~\ref{prop:ncl-kripke-completeness-criterion}.
+\end{proof}
+
+\begin{uwaga}[Dlaczego ograniczenie wartościowań jest konieczne?]
+\label{rem:ncl-kripke-vb-admissibility}
+Na zwykłej ramie $(W,R)$ z powyższego dowodu
+formuła $\alpha(p)$ nie jest ważna:
+wartościowanie $V(p)=W\setminus\{a\}$
+obala ją w $b$ zgodnie z dowodem
+Lematu~\ref{lem:ncl-kripke-vb-frame-consequence}.
+Zbiór ten nie należy jednak do $\mathcal A$,
+ponieważ jest nieskończony i nie zawiera $a$.
+Ograniczenie rodziny dopuszczalnych zbiorów
+prawdziwości jest dokładnie tym elementem,
+który umożliwia oddzielenie dowodliwości
+od konsekwencji na zwykłych ramach.
+\end{uwaga}
+
+\subsection{Pełność nie wymaga kanoniczności}
+
+\begin{twierdzenie}[Przykład słabo pełnej logiki niekanonicznej]
+\label{thm:ncl-kripke-complete-noncanonical}
+Istnieje niesprzeczna normalna logika modalna
+słabo pełna w sensie Kripkego, która nie jest
+silnie pełna lokalnie względem klasy swoich
+ram i której rama kanoniczna nie należy
+do tej klasy.
+\end{twierdzenie}
+\begin{proof}
+Niech $\mathcal C$ będzie klasą wszystkich
+niepustych skończonych zbiorów liniowo
+uporządkowanych ze ścisłym porządkiem $R$,
+a $L=\operatorname{Log}(\mathcal C)$.
+Jest to niesprzeczna normalna logika,
+pełna względem $\mathcal C$ z definicji.
+Każda rama z $\mathcal C$ jest przechodnia,
+więc $4\in L$.
+Ponadto na każdej z tych ram ważna jest
+formuła Löba
+\[
+ \ell(p)=\Box(\Box p\to p)\to\Box p.
+\]
+Istotnie, jeżeli w stanie $x$ formuła $\Box p$
+jest fałszywa, wybieramy największy w porządku ścisłym
+stan $y\in R(x)$,
+w którym $p$ jest fałszywa. Każdy następnik
+$y$ należy również do $R(x)$ przez przechodniość
+i spełnia $p$ przez maksymalność $y$.
+Zatem $y$ spełnia $\Box p$, lecz nie $p$,
+więc $x$ nie spełnia poprzednika $\ell(p)$.
+To dowodzi $\ell(p)\in L$.
+
+Rozważmy teraz zbiór formuł
+\[
+ \Gamma=\{\Diamond p_0\}
+ \cup\{\Box(p_i\to\Diamond p_{i+1}):i\geq0\},
+\]
+gdzie zmienne $p_i$ są parami różne.
+Każdy skończony podzbiór $\Gamma$ jest
+spełnialny w pewnym skończonym ścisłym
+porządku liniowym: dla największego
+występującego indeksu implikacji $k$
+bierzemy stany $0,1,\ldots,k+2$ z relacją
+$<$, wartościujemy $p_i$ przez $\{i+1\}$
+dla $0\leq i\leq k+1$, a pozostałe
+przez $\varnothing$. W stanie $0$ zachodzi
+$\Diamond p_0$ i każda z implikacji
+pod $\Box$ o indeksie co najwyżej $k$.
+Jeżeli podzbiór nie zawiera żadnej
+implikacji, wystarczy rama dwuelementowa
+z $p_0$ prawdziwym w drugim stanie.
+
+Z poprawności względem $\mathcal C$ i
+skończoności dowodów wynika, że $\Gamma$
+jest lokalnie $L$-niesprzeczny.
+Wniosek~\ref{cor:ncl-kripke-canonical-realization}
+daje stan $x$ modelu kanonicznego $M_L$
+spełniający $\Gamma$. Rama kanoniczna
+jest przechodnia przez
+Twierdzenie~\ref{thm:ncl-kripke-canonical-frame-properties},
+ponieważ $L$ zawiera 4.
+Z $\Diamond p_0$ wybieramy następnika $x_0$
+spełniającego $p_0$. Jeżeli skonstruowaliśmy
+$x_i$ dostępny z $x$ i spełniający $p_i$,
+to $\Box(p_i\to\Diamond p_{i+1})$ prawdziwa
+w $x$ daje $\Diamond p_{i+1}$ w $x_i$.
+Wybieramy $x_{i+1}$ z $x_iR_Lx_{i+1}$
+spełniający $p_{i+1}$. Przechodniość
+zapewnia $xR_Lx_{i+1}$.
+Rekurencyjnie (korzystając z aksjomatu wyboru
+zależnego) otrzymujemy ciąg
+$x_0R_Lx_1R_Lx_2R_L\cdots$.
+
+Zauważmy ogólnie, że na żadnej ramie,
+na której ważna jest formuła Löba $\ell(p)$,
+nie może istnieć nieskończony ciąg
+$z_0Rz_1Rz_2R\cdots$ (nie wymagamy, aby
+stany były parami różne). Istotnie,
+przyjmijmy wartościowanie, w którym
+$p$ jest prawdziwa dokładnie poza zbiorem
+$\{z_i:i\geq0\}$.
+Każdy stan spoza tego zbioru spełnia $p$,
+a każdy stan z tego zbioru ma następnika
+niespełniającego $p$. W obu przypadkach
+formuła $\Box p\to p$ jest prawdziwa.
+W szczególności $z_0$ spełnia
+$\Box(\Box p\to p)$, lecz nie $\Box p$,
+ponieważ $z_1$ nie spełnia $p$.
+Formuła Löba nie jest więc ważna na tej ramie.
+
+Stosując ten argument do ciągu $(x_i)$
+w ramie kanonicznej, dostajemy
+$F_L\not\Vdash\ell(p)$.
+Ponieważ $\ell(p)\in L$, rama $F_L$
+nie należy do $\operatorname{Fr}(L)$.
+
+Wreszcie $\Gamma$ nie jest spełnialny
+w żadnym stanie żadnego modelu na ramie
+z $\operatorname{Fr}(L)$.
+Istotnie, każda taka rama jest przechodnia
+(ważność 4) i nie ma nieskończonego ciągu
+krawędzi (ważność $\ell(p)$).
+Gdyby pewien stan spełniał $\Gamma$,
+dokładnie ta sama rekurencyjna konstrukcja,
+którą zastosowaliśmy w modelu kanonicznym,
+dałaby nieskończony ciąg krawędzi.
+Stąd $\Gamma\models_{\operatorname{Fr}(L)}^{\mathrm{lok}}\bot$,
+lecz $\Gamma\not\vdash_L^{\mathrm{lok}}\bot$,
+jak wykazano wcześniej. Silna pełność
+lokalna zatem nie zachodzi.
+\end{proof}
+
+\begin{wniosek}[Hierarchia własności pełności]
+\label{cor:ncl-kripke-completeness-hierarchy}
+Dla niesprzecznych normalnych logik
+kanoniczność pociąga silną pełność lokalną,
+a silna pełność lokalna pociąga słabą
+pełność (w obu przypadkach względem
+$\operatorname{Fr}(L)$).
+Sama słaba pełność nie pociąga silnej
+pełności lokalnej ani kanoniczności,
+a niesprzeczność nie pociąga nawet słabej pełności.
+\end{wniosek}
+\begin{proof}
+Pierwsza implikacja jest
+Twierdzeniem~\ref{thm:ncl-kripke-canonical-strong-local};
+druga wynika z przypadku pustego zbioru
+przesłanek. Ostatnie dwa stwierdzenia wynikają
+odpowiednio z
+Twierdzenia~\ref{thm:ncl-kripke-complete-noncanonical}
+i Twierdzenia~\ref{thm:ncl-kripke-vb-incompleteness}.
+\end{proof}
+
+\section{Translacja standardowa i teoria korespondencji}
+
+\subsection{Logika modalna jako fragment logiki pierwszego rzędu}
+
+\begin{definicja}[Translacja standardowa]
+\label{def:ncl-kripke-standard-translation}
+Każdemu modelowi $M=(W,R,V)$ przypisujemy
+strukturę pierwszego rzędu $\mathfrak M$ o
+uniwersum $W$, z dwuargumentowym symbolem
+relacyjnym $R$ i jednoargumentowymi symbolami
+$P_p$ dla $p\in\mathrm{Var}$, interpretowanymi
+odpowiednio przez $R$ i $V(p)$.
+Translację $\operatorname{ST}_x$ określamy
+rekurencyjnie:
+\[
+\begin{aligned}
+ \operatorname{ST}_x(p)&=P_p(x),\\
+ \operatorname{ST}_x(\bot)&=(x\ne x),\\
+ \operatorname{ST}_x(B\circ C)
+ &=\operatorname{ST}_x(B)\circ\operatorname{ST}_x(C),
+ \qquad\circ\in\{\wedge,\vee,\to\},\\
+ \operatorname{ST}_x(\Box B)
+ &=\forall y\,(R(x,y)\to\operatorname{ST}_y(B)).
+\end{aligned}
+\]
+W ostatnim wierszu wybieramy świeżą zmienną $y$,
+unikając przechwytywania zmiennych wolnych.
+Jedyną możliwą zmienną wolną translacji jest $x$.
+\end{definicja}
+
+\begin{twierdzenie}[Poprawność translacji standardowej]
+\label{thm:ncl-kripke-standard-translation}
+Dla każdej formuły modalnej $A$ i $w\in W$
+\[
+ M,w\Vdash A\iff
+ \mathfrak M\models\operatorname{ST}_x(A)[x:=w].
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla zmiennej zdaniowej teza wynika
+z interpretacji $P_p$, dla $\bot$ z fałszywości
+$x\ne x$, a dla spójników klasycznych
+z hipotezy indukcyjnej i zgodności ich
+klauzul semantycznych.
+Dla $A=\Box B$ otrzymujemy
+\[
+\begin{aligned}
+ M,w\Vdash\Box B
+ &\iff \forall v\in W\,(wRv\Rightarrow M,v\Vdash B)\\
+ &\iff \mathfrak M\models
+       \forall y\,(R(x,y)\to\operatorname{ST}_y(B))[x:=w].
+\end{aligned}
+\]
+Druga równoważność wykorzystuje hipotezę
+indukcyjną dla $B$ we wszystkich stanach.
+To kończy indukcję.
+\end{proof}
+Po rozwinięciu skrótów i zastosowaniu
+klasycznych praw negacji otrzymujemy
+\[
+\begin{aligned}
+ \operatorname{ST}_x(\neg B)&\equiv
+      \neg\operatorname{ST}_x(B),\\
+ \operatorname{ST}_x(\Diamond B)&\equiv
+      \exists y\,(R(x,y)\wedge\operatorname{ST}_y(B)),
+\end{aligned}
+\]
+gdzie $\equiv$ oznacza równoważność w logice
+pierwszego rzędu. W szczególności dwie nazwy
+zmiennych indywiduowych wystarczają do
+translacji podstawowego języka modalnego:
+można rekurencyjnie zamieniać role $x,y$,
+ponieważ translacja argumentu operatora
+modalnego ma tylko jedną możliwą zmienną wolną.
+
+\begin{wniosek}[Translacja ważności na ramie]
+\label{cor:ncl-kripke-second-order-translation}
+Jeżeli $p_1,\ldots,p_m$ są wszystkimi zmiennymi
+zdaniowymi formuły $A$, to
+\[
+ F\Vdash A\iff
+ F\models\forall P_{p_1}\cdots\forall P_{p_m}
+                \forall x\,\operatorname{ST}_x(A).
+\]
+Kwantyfikatory po symbolach $P_{p_i}$ są
+kwantyfikatorami drugiego rzędu, przebiegającymi
+wszystkie podzbiory uniwersum ramy.
+\end{wniosek}
+\begin{proof}
+Ważność na ramie wymaga prawdziwości we
+wszystkich stanach przy każdym wartościowaniu.
+Zmiennym występującym w $A$ przypisujemy
+dowolne podzbiory $W$, zaś wartości pozostałych
+zmiennych są bez znaczenia przez
+Lemat~\ref{lem:ncl-kripke-variable-dependence}.
+Twierdzenie~\ref{thm:ncl-kripke-standard-translation}
+zamienia prawdziwość w stanie na spełnianie
+translacji przy odpowiedniej wartości $x$.
+\end{proof}
+
+Translacja pojedynczej formuły w modelu
+należy zatem do logiki pierwszego rzędu,
+ale translacja ważności na ramie ma na ogół
+charakter drugiego rzędu. Problem
+korespondencji polega na eliminacji
+kwantyfikacji po wartościowaniach.
+
+\subsection{Korespondencja lokalna i globalna}
+
+\begin{definicja}[Korespondent pierwszego rzędu]
+\label{def:ncl-kripke-first-order-correspondent}
+Piszemy $F,w\Vdash A$, gdy dla każdego
+wartościowania na ramie $F$ formuła $A$
+jest prawdziwa w stanie $w$.
+Formuła pierwszego rzędu $\theta(x)$
+w języku zawierającym jedynie relację $R$
+i równość jest lokalnym korespondentem
+formuły modalnej $A$, jeśli dla wszystkich
+ram $F$ i stanów $w$ zachodzi
+\[
+ F,w\Vdash A\iff F\models\theta(x)[x:=w].
+\]
+Wtedy zdanie $\forall x\,\theta(x)$ jest
+globalnym korespondentem $A$.
+\end{definicja}
+Ostatnia teza wynika z kwantyfikacji po
+wszystkich stanach w definicji ważności
+na ramie. Korespondencję lokalną należy
+odróżniać od prawdziwości $A$ w pojedynczym
+modelu z ustalonym wartościowaniem.
+
+\begin{przyklad}[Eliminacja predykatu dla aksjomatu 4]
+\label{ex:ncl-kripke-correspondence-four}
+Dla $A=\Box p\to\Box\Box p$ warunek
+lokalnej ważności po translacji standardowej
+ma postać
+\[
+ \forall P\left[
+  \forall y\,(Rxy\to P(y))\to
+  \forall y\forall z\,((Rxy\wedge Ryz)\to P(z))
+ \right].
+\]
+Najmniejszym zbiorem $P$ spełniającym
+poprzednik jest $R(x)$. Jeżeli warunek
+zachodzi dla tego zbioru, to
+\[
+ \forall y\forall z\,((Rxy\wedge Ryz)\to Rxz).
+\]
+Odwrotnie, jeśli zachodzi ten ostatni warunek,
+to każdy zbiór $P$ zawierający $R(x)$
+zawiera także wszystkie stany osiągalne
+z $x$ w dwóch krokach. Zatem wystarcza
+sprawdzenie najmniejszego wartościowania.
+Po domknięciu ogólnym względem $x$
+otrzymujemy przechodniość.
+\end{przyklad}
+
+\begin{twierdzenie}[Korespondencja aksjomatu zbieżności]
+\label{thm:ncl-kripke-confluence-correspondence}
+Formuła $\Diamond\Box p\to\Box\Diamond p$
+ma lokalny korespondent
+\[
+ \forall y\forall z\,
+ \bigl((Rxy\wedge Rxz)\to
+       \exists u\,(Ryu\wedge Rzu)\bigr).
+\]
+\end{twierdzenie}
+\begin{proof}
+Załóżmy warunek relacyjny w $x$ i prawdziwość
+$\Diamond\Box p$ w pewnym modelu w $x$.
+Istnieje następnik $y$ stanu $x$, którego
+wszyscy następnicy spełniają $p$.
+Dla dowolnego następnika $z$ stanu $x$
+warunek daje wspólnego następnika $u$
+stanów $y,z$. Stan $u$ spełnia $p$,
+więc $z$ spełnia $\Diamond p$. Stąd
+$x$ spełnia $\Box\Diamond p$.
+
+Odwrotnie, jeśli warunek relacyjny zawodzi,
+wybieramy $y,z$ dostępne z $x$ bez wspólnego
+następnika i przyjmujemy $V(p)=R(y)$.
+W stanie $y$ zachodzi $\Box p$, lecz w $z$
+nie zachodzi $\Diamond p$. Otrzymujemy
+fałszywość implikacji w $x$.
+\end{proof}
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+ \node[draw,circle] (x) at (0,2.4) {$x$};
+ \node[draw,circle] (y) at (-1.6,1.2) {$y$};
+ \node[draw,circle] (z) at (1.6,1.2) {$z$};
+ \node[draw,circle,fill=blue!15] (u) at (0,0) {$u$};
+ \draw[->] (x)--(y);
+ \draw[->] (x)--(z);
+ \draw[->,dashed] (y)--(u);
+ \draw[->,dashed] (z)--(u);
+ \node at (0,-0.65) {wspólny następnik};
+\end{tikzpicture}
+\end{center}
+Strzałki przerywane przedstawiają krawędzie,
+których istnienia wymaga warunek zbieżności.
+W ogólności występujące stany nie muszą
+być parami różne.
+
+\subsection{Fragment Sahlqvista}
+
+\begin{definicja}[Dodatniość i ujemność formuł]
+\label{def:ncl-kripke-polarity}
+Na potrzeby badania znaków wystąpień zmiennych
+traktujemy $\neg,\wedge,\vee,\Box,\Diamond$
+oraz $\bot,\top$ jako spójniki i stałe.
+Implikację $B\to C$ zastępujemy przez
+$\neg B\vee C$, a pozostałe skróty,
+w tym równoważność, najpierw rozwijamy
+w tych spójnikach.
+Wystąpienie zmiennej jest dodatnie, jeżeli
+znajduje się w zasięgu parzystej liczby
+negacji, i ujemne w przeciwnym przypadku.
+Formułę nazywamy dodatnią, jeśli wszystkie
+jej wystąpienia zmiennych są dodatnie,
+a ujemną, jeśli wszystkie są ujemne.
+Formuły bez zmiennych spełniają oba warunki.
+\end{definicja}
+
+\begin{lemat}[Monotoniczność formuł ze względu na wartościowanie]
+\label{lem:ncl-kripke-polarity-monotonicity}
+Na ustalonej ramie niech $V(p)\subseteq V'(p)$
+dla każdej zmiennej $p$. Dla formuły dodatniej
+$B$ zachodzi
+\[
+ (F,V),w\Vdash B\Longrightarrow(F,V'),w\Vdash B,
+\]
+a dla formuły ujemnej $C$ zachodzi
+\[
+ (F,V'),w\Vdash C\Longrightarrow(F,V),w\Vdash C.
+\]
+\end{lemat}
+\begin{proof}
+Przenosimy negacje do zmiennych, stosując
+prawa de Morgana, podwójną negację oraz
+$\neg\Box D\equiv\Diamond\neg D$ i
+$\neg\Diamond D\equiv\Box\neg D$.
+Te równoważności wynikają z klasycznych
+klauzul semantycznych i definicji możliwości.
+W otrzymanej postaci normalnej dodatniej
+nie ma zanegowanych zmiennych, a w ujemnej
+nie ma niezanegowanych zmiennych.
+Dla atomów $p$ zbiór prawdziwości rośnie
+przy powiększaniu $V$, natomiast dla $\neg p$
+maleje przez odwrócenie inkluzji dopełnień.
+Przecięcie, suma oraz operatory
+$\Box_R,\Diamond_R$ zachowują inkluzje
+zbiorów, co dla operatorów modalnych wynika
+wprost z ich definicji. Indukcja po budowie
+postaci normalnej daje obie tezy.
+\end{proof}
+
+\begin{definicja}[Implikacje i formuły Sahlqvista]
+\label{def:ncl-kripke-sahlqvist}
+Atomem opatrzonym koniecznością nazywamy
+formułę $\Box^k p$, gdzie $k\geq0$.
+Poprzedniki Sahlqvista tworzymy z takich
+atomów, formuł ujemnych oraz $\bot,\top$,
+stosując $\wedge,\vee,\Diamond$.
+Implikacja Sahlqvista jest formułą $B\to C$,
+gdzie $B$ jest poprzednikiem Sahlqvista,
+a $C$ formułą dodatnią.
+
+Formuły Sahlqvista tworzymy z tych implikacji
+przez skończone koniunkcje, operator $\Box$
+oraz alternatywy $A\vee B$ takie, że
+zbiory zmiennych występujących w $A$ i $B$
+są rozłączne. Pusta koniunkcja oznacza $\top$,
+którą można również zapisać jako
+implikację Sahlqvista $\top\to\top$.
+\end{definicja}
+
+\begin{lemat}[Alternatywa o rozłącznych zbiorach zmiennych]
+\label{lem:ncl-kripke-disjoint-disjunction}
+Niech $A,B$ nie mają wspólnych zmiennych
+zdaniowych. Dla dowolnej ramy $F$ i stanu $x$
+zachodzi
+\[
+ F,x\Vdash A\vee B
+ \iff (F,x\Vdash A\ \text{lub}\ F,x\Vdash B).
+\]
+Ta sama równoważność zachodzi, jeśli po obu
+stronach ograniczamy wartościowania do
+wartościowań dopuszczalnych na ustalonej
+ramie ogólnej.
+\end{lemat}
+\begin{proof}
+Jeżeli jeden ze składników jest prawdziwy
+w $x$ przy każdym (dopuszczalnym)
+wartościowaniu, to ich alternatywa również.
+Jeżeli żaden składnik nie ma tej własności,
+wybieramy wartościowanie $V_A$ obalające
+$A$ w $x$ i wartościowanie $V_B$ obalające
+$B$ w $x$. Definiujemy wspólne wartościowanie
+$V$ przez $V(p)=V_A(p)$ dla zmiennych $A$,
+$V(p)=V_B(p)$ dla zmiennych $B$ i
+$V(p)=\varnothing$ dla pozostałych.
+Rozłączność zbiorów zmiennych gwarantuje
+dobre określenie. Jeżeli oba wybrane
+wartościowania były dopuszczalne, to
+także $V$ jest dopuszczalne, ponieważ
+$\varnothing$ należy do algebry Boole'a.
+Lemat~\ref{lem:ncl-kripke-variable-dependence}
+daje fałszywość obu składników przy $V$
+w stanie $x$, a zatem również fałszywość
+ich alternatywy.
+\end{proof}
+Założenia rozłączności nie wolno pominąć:
+$p\vee\neg p$ jest lokalnie ważna w każdym
+stanie każdej ramy, lecz ani $p$, ani
+$\neg p$ nie są lokalnie ważne w żadnym stanie,
+co pokazują wartościowania $V(p)=\varnothing$
+i $V(p)=W$.
+
+\begin{twierdzenie}[Efektywna korespondencja implikacji Sahlqvista]
+\label{thm:ncl-kripke-sahlqvist-implication-correspondence}
+Każda implikacja Sahlqvista ma efektywnie
+wyznaczalny lokalny korespondent pierwszego
+rzędu.
+\end{twierdzenie}
+\begin{proof}
+Niech $B\to C$ będzie taką implikacją.
+Opisujemy skończony algorytm eliminacji
+kwantyfikacji po wartościowaniach.
+
+Najpierw rozpisujemy poprzednik $B$ jako
+skończoną alternatywę wyrażeń zbudowanych
+z atomów opatrzonych koniecznością,
+formuł ujemnych i stałych przez
+$\wedge,\Diamond$. Robimy to, traktując
+formuły ujemne jako nierozkładane bloki,
+rozdzielając koniunkcję względem alternatywy
+oraz wykorzystując
+$\Diamond(D\vee E)\equiv\Diamond D\vee\Diamond E$.
+Ostatnia równoważność wynika z klauzuli
+egzystencjalnej dla $\Diamond$.
+Skończoność alternatywy wynika indukcyjnie
+z budowy poprzednika: dla koniunkcji
+tworzymy wszystkie pary składników,
+dla alternatywy łączymy listy, a dla
+$\Diamond$ nakładamy operator na każdy
+składnik. Wystarczy rozpatrzyć każdy
+składnik oddzielnie, ponieważ
+$(D\vee E)\to C$ jest równoważna
+$(D\to C)\wedge(E\to C)$.
+
+Ustalmy jeden składnik. W jego translacji
+standardowej rozwijamy koniunkcje i operatory
+$\Diamond$ poza blokami ujemnymi i atomami
+opatrzonymi koniecznością. Każde wystąpienie
+$\Diamond$ wprowadza świeżą zmienną dla
+następnika oraz atom relacyjny.
+Koniunkcja łączy warunki w tym samym
+stanie. Po przesunięciu tych kwantyfikatorów
+egzystencjalnych na początek (zmienne
+są świeże) otrzymujemy warunek
+\[
+ \exists\vec y\,\bigl(H(x,\vec y)
+                  \wedge Q(x,\vec y,\vec P)
+                  \wedge N(x,\vec y,\vec P)\bigr).
+\]
+Tutaj $H$ jest koniunkcją atomów relacyjnych
+i ewentualnych warunków stałych,
+$Q$ jest koniunkcją warunków postaci
+$\operatorname{ST}_v(\Box^k p)$,
+a $N$ koniunkcją translacji formuł ujemnych.
+Zmienna $v$ jest jedną ze zmiennych
+$x,\vec y$. Puste koniunkcje traktujemy
+jako prawdziwe.
+Ta postać wynika bezpośrednio z rekurencji:
+atom opatrzony koniecznością trafia do $Q$,
+blok ujemny do $N$, stała do $H$,
+a możliwość wprowadza nowego świadka
+i krawędź w $H$.
+
+Dla ustalonego przypisania $x,\vec y$
+każdy warunek $\operatorname{ST}_v(\Box^k p)$
+wymaga, aby zbiór interpretujący $P_p$ zawierał
+wszystkie stany
+osiągalne z $v$ w dokładnie $k$ krokach
+(por. Lemat~\ref{lem:ncl-kripke-box-paths}).
+Niech $R^k(v,z)$ oznacza pierwszorzędową
+formułę istnienia takiej drogi; dla $k=0$
+jest to $v=z$, a dla $k+1$
+\[
+ R^{k+1}(v,z)=\exists u\,(R(v,u)\wedge R^k(u,z)).
+\]
+Dla każdego $p$ definiujemy predykat
+\[
+ P_p^*(z)=
+ \bigvee_{(v,k):\,\operatorname{ST}_v(\Box^k p)
+                       \text{ występuje w }Q}
+             R^k(v,z).
+\]
+Pusta alternatywa oznacza $z\ne z$.
+Daje to najmniejsze wartościowanie względem inkluzji w każdej składowej
+spełniające $Q$: każdy wymagany zbiór
+następników musi być zawarty w $P_p$,
+a ich suma wystarcza do spełnienia $Q$.
+
+Dla danego $x,\vec y$ rozważmy warunek
+\[
+ \forall\vec P\,
+ \bigl((Q\wedge N)\to\operatorname{ST}_x(C)\bigr).
+\]
+Jest on równoważny warunkowi
+\[
+ N[\vec P:=\vec P^*]\to
+       \operatorname{ST}_x(C)[\vec P:=\vec P^*].
+\]
+Istotnie, w kierunku konieczności podstawiamy
+najmniejsze wartościowanie, które spełnia $Q$.
+W kierunku wystarczalności, jeśli dowolne
+wartościowanie spełnia $Q\wedge N$, to
+$P_p^*\subseteq P_p$ dla każdej rozważanej zmiennej $p$.
+Ujemność bloków $N$ przenosi ich prawdziwość
+na mniejsze wartościowanie, a dodatniość
+$C$ pozwala przenieść uzyskaną prawdziwość
+$C$ z mniejszego wartościowania na większe,
+na mocy
+Lematu~\ref{lem:ncl-kripke-polarity-monotonicity}.
+
+Ostatecznie warunek lokalnej ważności
+dla ustalonego składnika poprzednika
+jest równoważny formule
+\[
+ \forall\vec y\,\left(
+  \bigl(H(x,\vec y)\wedge N[\vec P:=\vec P^*]\bigr)
+  \to \operatorname{ST}_x(C)[\vec P:=\vec P^*]\right).
+\]
+Równoważność wynika z przeniesienia
+kwantyfikatorów egzystencjalnych poprzednika
+przed implikację (gdzie stają się kwantyfikatorami
+ogólnymi), z zamiany kolejności kwantyfikatorów
+ogólnych oraz z wykazanej eliminacji $\vec P$.
+Podstawienia predykatów wykonujemy po
+zmianie nazw zmiennych związanych,
+tak aby nie związać parametrów $x,\vec y$.
+W otrzymanej formule nie występują symbole
+predykatów zdaniowych. Biorąc koniunkcję
+wyników dla wszystkich składników,
+otrzymujemy korespondent w języku
+relacji $R$ i równości.
+Wszystkie operacje są efektywne i skończone.
+\end{proof}
+
+
+\subsection{Kanoniczność formuł Sahlqvista}
+
+\begin{lemat}[Topologia ramy kanonicznej]
+\label{lem:ncl-kripke-canonical-stone-topology}
+Niech $L$ będzie niesprzeczną normalną logiką
+modalną. Na $W_L$ zbiory
+\[
+ \widehat A=\{x\in W_L:A\in x\}
+ \qquad(A\in\mathrm{Fm}_{\Box})
+\]
+tworzą bazę topologii zwartej i Hausdorffa.
+Zbiory otwarto-domknięte są dokładnie
+zbiorami tej postaci. Relacja $R_L$ jest
+domknięta w $W_L\times W_L$.
+Dla każdego $x\in W_L$ i $k\geq0$ zbiór
+$R_L^k(x)$ stanów osiągalnych z $x$ w
+dokładnie $k$ krokach jest domknięty.
+\end{lemat}
+\begin{proof}
+Na mocy
+Stwierdzenia~\ref{prop:ncl-kripke-maximal-consistent-laws}
+mamy $\widehat\top=W_L$, $\widehat\bot=\varnothing$,
+$\widehat{A\wedge B}=\widehat A\cap\widehat B$
+oraz $W_L\setminus\widehat A=\widehat{\neg A}$.
+Rodzina tworzy więc bazę zbiorów
+otwarto-domkniętych. Jeżeli $x\ne y$,
+pewna formuła $A$ należy do jednego ze
+zbiorów, lecz nie do drugiego.
+Rozłączne zbiory $\widehat A$ i
+$\widehat{\neg A}$ oddzielają te stany.
+
+Dla zwartości wystarczy sprawdzić pokrycia
+zbiorami bazowymi: każde pokrycie otwarte
+można rozdrobnić do takiego pokrycia.
+Gdyby rodzina $(\widehat{A_i})_{i\in I}$
+pokrywała $W_L$ bez skończonego podpokrycia,
+każdy skończony podzbiór
+$\{\neg A_i:i\in I\}$ zawierałby się w
+pewnym maksymalnym zbiorze niesprzecznym.
+Przez skończoność konsekwencji lokalnej
+cały zbiór byłby niesprzeczny.
+Lemat~\ref{lem:ncl-kripke-lindenbaum-extension}
+dawałby stan spoza wszystkich
+$\widehat{A_i}$, sprzecznie z pokryciem.
+Każdy zbiór otwarto-domknięty jest zwarty
+jako domknięty podzbiór przestrzeni zwartej,
+a jako zbiór otwarty jest sumą zbiorów
+bazowych. Ma więc skończone pokrycie
+takimi zbiorami zawartymi w nim.
+Ponieważ $\widehat{A\vee B}=\widehat A\cup\widehat B$,
+jest sam zbiorem bazowym (dla zbioru pustego
+bierzemy $\widehat\bot$).
+
+Jeżeli nie zachodzi $xR_Ly$, to istnieje
+$A$ takie, że $\Box A\in x$, lecz $A\notin y$.
+Prostokąt $\widehat{\Box A}\times\widehat{\neg A}$
+jest otoczeniem $(x,y)$ rozłącznym z $R_L$,
+co dowodzi domkniętości relacji.
+Zbiór $R_L^0(x)=\{x\}$ jest domknięty
+przez własność Hausdorffa.
+Jeżeli $K=R_L^k(x)$ jest domknięty, to
+\[
+ R_L^{k+1}(x)=\pi_2\bigl(R_L\cap(K\times W_L)\bigr),
+\]
+gdzie $\pi_2$ jest rzutem na drugą współrzędną.
+Skończony iloczyn przestrzeni zwartych
+jest zwarty, jego domknięty podzbiór jest
+zwarty, a ciągły obraz zbioru zwartego
+w przestrzeni Hausdorffa jest domknięty.
+Stosując te standardowe własności zwartości,
+otrzymujemy tezę indukcyjnie.
+\end{proof}
+
+\begin{lemat}[Przybliżanie wartościowań zbiorami otwarto-domkniętymi]
+\label{lem:ncl-kripke-canonical-clopen-approximation}
+Na ramie kanonicznej niech $P$ będzie
+skończonym zbiorem zmiennych, a $K_p$
+domkniętym podzbiorem $W_L$ dla $p\in P$.
+Niech $\mathcal D$ będzie rodziną wszystkich
+wartościowań $U$ zmiennych z $P$ przez zbiory
+otwarto-domknięte zawierające odpowiednie $K_p$.
+Dla formuły dodatniej $B$ o zmiennych z $P$
+zachodzi
+\[
+ [\![B]\!]_{K}=\bigcap_{U\in\mathcal D}[\![B]\!]_{U}.
+\]
+Indeksy oznaczają wartościowania na tej
+samej ramie $F_L$; wartościowania
+uzupełniamy zbiorem pustym dla zmiennych
+spoza $P$.
+\end{lemat}
+\begin{proof}
+Rodzina $\mathcal D$ jest niepusta (można
+przyjąć wszystkie wartości równe $W_L$)
+i skierowana w dół: składowe przecięcie
+dwóch jej elementów znów do niej należy.
+Ponadto $K_p=\bigcap_{U\in\mathcal D}U(p)$,
+bo dla dowolnego stanu spoza $K_p$ istnieje
+bazowe otoczenie tego stanu rozłączne z $K_p$,
+a jego dopełnienie jest otwarto-domkniętym
+nadzbiorem $K_p$ niezawierającym danego stanu.
+
+Dla każdego $U\in\mathcal D$ zbiór
+prawdziwości dowolnej formuły o zmiennych z $P$
+jest otwarto-domknięty. Istotnie, wybieramy
+formuły $D_p$ takie, że $U(p)=\widehat{D_p}$,
+co jest możliwe na mocy
+Lematu~\ref{lem:ncl-kripke-canonical-stone-topology}.
+Lemat o prawdziwości
+(Twierdzenie~\ref{thm:ncl-kripke-canonical-truth})
+i Lemat~\ref{lem:ncl-kripke-substitution}
+dają $[\![A]\!]_U=\widehat{\sigma(A)}$,
+gdzie $\sigma(p)=D_p$ dla $p\in P$,
+a poza $P$ podstawiamy $\bot$.
+
+Przenosimy negacje w dodatniej formule $B$
+do atomów jak w dowodzie
+Lematu~\ref{lem:ncl-kripke-polarity-monotonicity}.
+Otrzymujemy formułę zbudowaną z atomów
+niezanegowanych, stałych $\bot,\top$,
+koniunkcji, alternatywy, konieczności
+i możliwości. Dowodzimy tezy indukcyjnie
+dla tej postaci. Dla atomów wykazaliśmy
+ją wyżej, a dla stałych jest natychmiastowa.
+Koniunkcja i konieczność zachowują dowolne
+niepuste przecięcia odpowiednich rodzin.
+Dla alternatywy, jeśli stan nie należy
+do żadnego z dwóch przecięć zbiorów
+prawdziwości argumentów, wybieramy dla
+każdego argumentu wartościowanie z
+$\mathcal D$ obalające go w tym stanie.
+Wspólne mniejsze wartościowanie z
+$\mathcal D$ obala oba argumenty przez
+monotoniczność formuł dodatnich.
+Stąd żądana równość dla alternatywy.
+
+Pozostaje $B=\Diamond C$. Jeżeli stan $x$
+spełnia $\Diamond C$ przy każdym $U\in\mathcal D$,
+rodzina zbiorów
+\[
+ R_L(x)\cap[\![C]\!]_U,\qquad U\in\mathcal D,
+\]
+składa się z niepustych zbiorów domkniętych
+i ma własność skończonych przecięć.
+Dla skończonej liczby wartościowań bierzemy
+ich składowe przecięcie i wykorzystujemy
+monotoniczność $C$.
+Zbiór $R_L(x)$ jest zwarty jako domknięty
+podzbiór $W_L$ na mocy poprzedniego lematu.
+Zatem istnieje wspólny punkt wszystkich
+wymienionych zbiorów. Z hipotezy indukcyjnej
+punkt ten spełnia $C$ przy wartościowaniu $K$.
+To daje $\Diamond C$ przy $K$ w $x$.
+Odwrotna inkluzja dla wszystkich rozpatrywanych
+przypadków wynika z monotoniczności.
+\end{proof}
+
+\begin{twierdzenie}[Lokalna kanoniczność formuł Sahlqvista]
+\label{thm:ncl-kripke-sahlqvist-local-canonicity}
+Niech $A$ będzie formułą Sahlqvista w sensie
+Definicji~\ref{def:ncl-kripke-sahlqvist}.
+Jeżeli $A$ jest prawdziwa w stanie $x\in W_L$
+przy każdym wartościowaniu przez zbiory
+otwarto-domknięte, to jest prawdziwa w $x$
+przy każdym wartościowaniu na ramie $F_L$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw rozważmy implikację $A=B\to C$.
+Przypuśćmy, że dla pewnego wartościowania
+$V$ i stanu $x$ zachodzi $B$, lecz nie $C$.
+Wybieramy prawdziwy składnik alternatywy
+poprzednika oraz stany $\vec y$ będące świadkami
+warunków egzystencjalnych, jak w dowodzie
+Twierdzenia~\ref{thm:ncl-kripke-sahlqvist-implication-correspondence}.
+Otrzymujemy warunki $H,Q,N$ z tego dowodu.
+Niech $P$ będzie zbiorem wszystkich zmiennych
+w $A$. Najmniejsze wartościowanie
+spełniające $Q$ ma składowe
+\[
+ K_p=\bigcup_{(v,k)} R_L^k(v),
+\]
+gdzie suma przebiega po wymaganiach
+$\Box^k p$ w wybranym składniku, a $v$
+oznacza stan wyznaczony przez przypisanie
+zmiennych $x,\vec y$.
+Jest to skończona suma zbiorów domkniętych
+na mocy Lematu~\ref{lem:ncl-kripke-canonical-stone-topology},
+a więc zbiór domknięty; pusta suma to
+zbiór pusty. Ponadto $K_p\subseteq V(p)$.
+Ujemne formuły składające się na $N$
+pozostają prawdziwe w odpowiednich stanach
+przy $K$, natomiast dodatnia formuła $C$
+pozostaje fałszywa w $x$, przez
+Lemat~\ref{lem:ncl-kripke-polarity-monotonicity}.
+
+Niech $\mathcal D$ będzie rodziną
+wartościowań przez zbiory otwarto-domknięte
+zawierające odpowiednie składowe $K$,
+z poprzedniego lematu.
+Ponieważ $C$ nie zachodzi przy $K$ w $x$,
+istnieje $U_0\in\mathcal D$ obalające $C$
+w $x$. Dla każdego ujemnego bloku $D$
+w warunku $N$, ocenianego w stanie $v$,
+formuła $\neg D$ jest dodatnia i fałszywa
+w $v$ przy $K$. Z tego samego lematu
+istnieje $U_D\in\mathcal D$ obalające
+$\neg D$ w $v$, czyli spełniające $D$ w $v$.
+Liczba tych bloków jest skończona.
+Bierzemy składowe przecięcie $U_0$
+i wszystkich $U_D$, oznaczając je $U$.
+Należy ono do $\mathcal D$.
+Przez monotoniczność $C$ pozostaje
+fałszywa w $x$, a wszystkie ujemne bloki
+pozostają prawdziwe w odpowiednich stanach.
+Każde wartościowanie zawierające $K$ składowo
+spełnia $Q$,
+natomiast $H$ nie zależy od wartościowania.
+Zatem wybrani świadkowie nadal zapewniają
+prawdziwość $B$ w $x$ przy $U$.
+Otrzymaliśmy wartościowanie przez zbiory
+otwarto-domknięte obalające $B\to C$ w $x$.
+Dowodzi to tezy dla implikacji.
+
+Rozszerzamy wynik indukcyjnie na koniunkcje,
+konieczność i alternatywy o rozłącznych
+zbiorach zmiennych. Jeżeli koniunkcja jest
+prawdziwa w $x$ przy każdym wartościowaniu
+otwarto-domkniętym, to każdy jej składnik
+ma tę własność, więc z hipotezy indukcyjnej
+jest prawdziwy przy wszystkich wartościowaniach.
+Jeżeli $\Box A$ jest prawdziwa w $x$
+przy każdym wartościowaniu przez zbiory otwarto-domknięte,
+to dla każdego następnika $y$ stanu $x$
+formuła $A$ jest prawdziwa w $y$ przy każdym
+takim wartościowaniu. Hipoteza indukcyjna
+dla $A$ w $y$ daje prawdziwość przy
+wszystkich wartościowaniach.
+Zatem $\Box A$ jest prawdziwa w $x$
+przy wszystkich wartościowaniach.
+
+Jeżeli $A\vee B$ ma rozłączne zbiory
+zmiennych i jest prawdziwa w $x$ przy każdym
+wartościowaniu przez zbiory otwarto-domknięte, to
+Lemat~\ref{lem:ncl-kripke-disjoint-disjunction}
+daje prawdziwość przynajmniej jednego
+ze składników przy wszystkich takich
+wartościowaniach. Stosowalność tego lematu
+wynika stąd, że zbiory otwarto-domknięte
+ramy kanonicznej tworzą algebrę Boole'a
+domkniętą względem operatorów modalnych:
+domknięcie to wykazano w dowodzie
+Lematu~\ref{lem:ncl-kripke-canonical-clopen-approximation}
+za pomocą podstawienia i lematu o prawdziwości
+(dla pojedynczej zmiennej można wziąć dowolny
+zbiór otwarto-domknięty).
+Hipoteza indukcyjna przenosi ważność
+wybranego składnika na wszystkie
+wartościowania, skąd wynika teza
+dla alternatywy.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Sahlqvista]
+\label{thm:ncl-kripke-sahlqvist}
+Dla formuł Sahlqvista w sensie
+Definicji~\ref{def:ncl-kripke-sahlqvist}
+zachodzą następujące własności:
+\begin{enumerate}
+ \item każda ma efektywnie wyznaczalny
+       lokalny korespondent pierwszego rzędu;
+ \item są kanoniczne: jeżeli niesprzeczna
+       normalna logika $L$ zawiera taką
+       formułę, to jest ona ważna na $F_L$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Pierwszy punkt dla implikacji wynika z
+Twierdzenia~\ref{thm:ncl-kripke-sahlqvist-implication-correspondence}.
+Jeżeli $\theta_A(x)$ i $\theta_B(x)$ są
+lokalnymi korespondentami $A,B$, to
+$\theta_A(x)\wedge\theta_B(x)$ jest
+korespondentem $A\wedge B$: kwantyfikacja
+po wszystkich wartościowaniach rozdziela
+się względem koniunkcji.
+Jeśli $\theta_A(x)$ jest korespondentem $A$,
+to $\forall y\,(Rxy\to\theta_A(y))$ jest
+korespondentem $\Box A$, ponieważ
+kwantyfikacja po wartościowaniach i
+następnikach może zostać zamieniona kolejnością.
+Jeśli $A,B$ mają rozłączne zbiory zmiennych,
+to z Lematu~\ref{lem:ncl-kripke-disjoint-disjunction}
+wynika, że $\theta_A(x)\vee\theta_B(x)$
+jest lokalnym korespondentem $A\vee B$.
+Indukcja po konstrukcji formuł Sahlqvista
+rozszerza w ten sposób efektywny dowód
+korespondencji na całą zdefiniowaną klasę.
+
+Dla drugiego punktu załóżmy $A\in L$.
+Każde wartościowanie zmiennych $A$ przez
+zbiory otwarto-domknięte ma postać
+$U(p)=\widehat{D_p}$.
+Podstawienie $\sigma(p)=D_p$ oraz
+domknięcie $L$ względem podstawień
+dają $\sigma(A)\in L$.
+Lemat o podstawieniu i lemat o prawdziwości
+pokazują, że $A$ jest prawdziwa przy $U$
+w każdym stanie ramy kanonicznej, ponieważ
+$\sigma(A)$ należy do każdego maksymalnego
+zbioru niesprzecznego.
+Twierdzenie~\ref{thm:ncl-kripke-sahlqvist-local-canonicity}
+przenosi tę własność na dowolne wartościowania
+w każdym stanie, czyli $F_L\Vdash A$.
+
+Powyższe dowody dotyczą fragmentu z
+Definicji~\ref{def:ncl-kripke-sahlqvist}.
+Klasyczne źródło twierdzenia to praca
+H.~Sahlqvista, \emph{Completeness and
+correspondence in the first and second order
+semantics for modal logic}, w: S.~Kanger (red.),
+Proceedings of the Third Scandinavian Logic
+Symposium, North-Holland, 1975, s.~110--143.
+Zob. również G.~Sambin, V.~Vaccaro,
+\emph{A new proof of Sahlqvist's theorem on
+modal definability and completeness},
+Journal of Symbolic Logic 54 (1989),
+s.~992--999.
+\end{proof}
+
+\begin{wniosek}[Pełność logik aksjomatyzowanych formułami Sahlqvista]
+\label{cor:ncl-kripke-sahlqvist-completeness}
+Jeżeli niesprzeczna normalna logika $L$
+jest najmniejszą normalną logiką zawierającą
+zbiór $\Sigma$ formuł Sahlqvista, to $L$
+jest kanoniczna i silnie pełna zarówno
+lokalnie, jak i globalnie względem klasy
+ram spełniających wszystkie zdania pierwszego rzędu
+\[
+ \{\forall x\,\theta_A(x): A\in\Sigma\},
+\]
+gdzie $\theta_A$ jest lokalnym korespondentem $A$.
+\end{wniosek}
+\begin{proof}
+Drugi punkt
+Twierdzenia~\ref{thm:ncl-kripke-sahlqvist}
+daje ważność każdej formuły z $\Sigma$ na $F_L$.
+Zachowanie ważności przez reguły normalnych
+logik modalnych daje ważność całej $L$.
+Wobec tego $L$ jest kanoniczna.
+Na dowolnej ramie ważność wszystkich formuł
+$\Sigma$ jest równoważna ważności całej $L$
+z tego samego powodu. Pierwszy punkt twierdzenia
+Sahlqvista identyfikuje więc wskazaną klasę ram
+z $\operatorname{Fr}(L)$.
+Stosujemy
+Twierdzenie~\ref{thm:ncl-kripke-canonical-strong-local}
+dla $\mathcal C=\operatorname{Fr}(L)$.
+Ponadto na mocy
+Stwierdzenia~\ref{prop:ncl-kripke-frame-preservation}
+klasa ta jest domknięta względem generowanych
+podram. Dla dowolnego zbioru przesłanek
+$\Gamma$ zachodzi zatem
+\[
+\begin{aligned}
+ \Gamma\vdash_L^{\mathrm{glob}}A
+ &\iff\Gamma^\Box\vdash_L^{\mathrm{lok}}A\\
+ &\iff\Gamma^\Box\models_{\mathcal C}^{\mathrm{lok}}A\\
+ &\iff\Gamma\models_{\mathcal C}^{\mathrm{glob}}A.
+\end{aligned}
+\]
+Pierwsza równoważność jest syntaktyczną
+redukcją z
+Twierdzenia~\ref{thm:ncl-modal-global-local},
+druga wynika z silnej pełności i poprawności
+lokalnej, a trzecia z semantycznej redukcji
+(Twierdzenie~\ref{thm:ncl-kripke-global-local-reduction}).
+W szczególności argument globalny działa
+dla każdej logiki kanonicznej, a nie tylko
+dla logik aksjomatyzowanych formułami
+Sahlqvista.
+\end{proof}
+
+\begin{uwaga}[Zakres twierdzenia]
+\label{rem:ncl-kripke-sahlqvist-scope}
+Aksjomaty D, T, B, 4 i 5 zapisane w
+Definicji~\ref{def:ncl-modal-axiom-schemes}
+są implikacjami Sahlqvista (dla 5 poprzednik
+to $\Diamond p$). Również aksjomat zbieżności
+z Twierdzenia~\ref{thm:ncl-kripke-confluence-correspondence}
+należy do tej klasy: jego poprzednik to
+$\Diamond\Box p$, a następnik implikacji jest dodatni.
+Otrzymujemy pełność logiki K rozszerzonej
+o ten aksjomat względem ram zbieżnych
+bez osobnego badania jej ramy kanonicznej.
+Sama korespondencja pierwszego rzędu
+nie wystarcza jednak do pełności:
+formuła $\alpha(p)$ z
+Definicji~\ref{def:ncl-kripke-vb-logic}
+ma globalny korespondent pierwszego rzędu
+$\forall x\,((\forall y\,(Rxy\to
+\exists z\,Ryz))\to\forall y\,\neg Rxy)$,
+lecz generowana przez nią logika jest
+niepełna. Wynika to z
+Lematu~\ref{lem:ncl-kripke-vb-frame-consequence}
+i Twierdzenia~\ref{thm:ncl-kripke-vb-incompleteness}.
+\end{uwaga}

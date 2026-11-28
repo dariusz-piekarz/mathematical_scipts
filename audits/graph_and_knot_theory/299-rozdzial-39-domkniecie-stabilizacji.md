@@ -1,0 +1,7 @@
+# GKT39 — drugi audyt kontrolny
+
+Źródło: blob `da9c4bbacf39c9239ce1362026e576c438df28c2`, commit `82a2b715b8c25d113de58057bb262f5b0c13f460`, 740 wierszy. Bez zmian. 18 etykiet, 16 różnych celów odsyłaczy rozstrzygniętych jednoznacznie w GKT36–39, 32 poprawnie zagnieżdżone środowiska.
+
+SymPy: dla macierzy klas U i J=diag(1,-1,...,-1) potwierdzono det(U^T J U)=49 oraz U^T J k=(7,0,0,0,0,0)^T. Niezależnie wyznaczono bazę N jądra U^T J (8 kolumn), G=N^T J N. det G=-49/64 w użytej bazie wymiernej, nie całkowitej. Wyrażenie k^T J N G^{-1} N^T J w daje dokładnie 14 współczynników wzoru z twierdzenia 39.3.4; dla w=k wynik 2, przykład 39.3.6 daje 726/7. Sprawdzono 7140 przypadków uporządkowanych list 13 współczynników z {0,1,2,3,4}, z 3a-sum(b) w {0,1,3}: 7P>=13B, przy B>0 lub 3a>sum(b) zachodzi P>0. 35 przypadków brzegowych z P=0. Kontrola argumentu komorowego, oszacowania Weitzenböcka i pullbacku metryki bez nowych istotnych usterek. Nie weryfikowano ponownie źródłowej publikacji Parka; wyniki geometryczne pozostają importowane.
+
+Artefakt 15182409937: 400 stron, plik ostrzeżeń 0 bajtów. W PyMuPDF wyrenderowano i obejrzano osiem stron rozdziału (PDF 366–373, drukowane 356–363), w tym oba schematy; brak istotnych usterek wizualnych. CI 45966237209 i 45966237083 oba zadania success, 45966237202 changed-latex success. Globalny CI aplikacji 45966237152: index-and-test in_progress, reader-ui queued w chwili odczytu. Odbiór GKT39 w zakresie dedykowanego GT zamknięty. Nie oznacza pełnego PASS całego repozytorium. Następny GKT40.

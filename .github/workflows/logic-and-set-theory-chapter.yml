@@ -1,0 +1,461 @@
+name: Logic and model theory validation
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/logic_and_set_theory/**"
+      - "chapters/pl/model_theory/**"
+      - "chapters/pl/nonclassical_logic/**"
+      - "chapters/pl/metamathematics/**"
+      - "books/pl/metamathematics.tex"
+      - "books/pl/nonclassical_logic.tex"
+      - "books/pl/model_theory.tex"
+      - "catalog/logic_model_migration.json"
+      - "tools/tests/logic_model_sources.py"
+      - "tools/tests/test_logic_model_split.py"
+      - "tools/tests/test_logic_and_set_theory_ch01_normal_forms.py"
+      - "books/pl/logic_and_set_theory.tex"
+      - "catalog/books.json"
+      - "audits/logic_and_set_theory_ch07_audit_*.md"
+      - "audits/logic_and_set_theory_ch08_audit_*.md"
+      - "audits/logic_and_set_theory_ch09_audit_*.md"
+      - "audits/logic_and_set_theory_ch10_audit_*.md"
+      - "audits/logic_and_set_theory_ch11_audit_*.md"
+      - "audits/logic_and_set_theory_ch12_audit_*.md"
+      - "audits/logic_and_set_theory_ch13_audit_*.md"
+      - "audits/logic_and_set_theory_ch14_audit_*.md"
+      - "audits/logic_and_set_theory_ch15_audit_*.md"
+      - "audits/logic_and_set_theory_ch16_audit_*.md"
+      - "audits/logic_and_set_theory_ch17_audit_*.md"
+      - "audits/logic_and_set_theory_ch18_audit_*.md"
+      - "audits/logic_and_set_theory_ch19_audit_*.md"
+      - "audits/logic_and_set_theory_ch20_audit_*.md"
+      - "audits/logic_and_set_theory_ch21_audit_*.md"
+      - "audits/logic_and_set_theory_ch22_audit_*.md"
+      - "audits/logic_and_set_theory_ch23_audit_*.md"
+      - "audits/logic_and_set_theory_ch24_audit_*.md"
+      - "audits/logic_and_set_theory_ch25_audit_*.md"
+      - "audits/logic_and_set_theory_ch26_audit_*.md"
+      - "audits/logic_and_set_theory_ch27_audit_*.md"
+      - "audits/logic_and_set_theory_ch28_audit_*.md"
+      - "audits/logic_and_set_theory_ch29_audit_*.md"
+      - "audits/logic_and_set_theory_ch30_audit_*.md"
+      - "audits/logic_and_set_theory_ch31_audit_*.md"
+      - "audits/logic_and_set_theory_ch32_audit_*.md"
+      - "audits/logic_and_set_theory_ch33_audit_*.md"
+      - "audits/logic_and_set_theory_ch34_audit_*.md"
+      - "audits/logic_and_set_theory_ch35_audit_*.md"
+      - "audits/logic_and_set_theory_ch36_audit_*.md"
+      - "audits/logic_and_set_theory_ch37_audit_*.md"
+      - "audits/logic_and_set_theory_ch38_audit_*.md"
+      - "audits/logic_and_set_theory_ch39_audit_*.md"
+      - "tools/tests/test_logic_and_set_theory_ch12.py"
+      - "tools/tests/test_logic_and_set_theory_ch13.py"
+      - "tools/tests/test_logic_and_set_theory_ch14.py"
+      - "tools/tests/test_logic_and_set_theory_ch15.py"
+      - "tools/tests/test_logic_and_set_theory_ch16.py"
+      - "tools/tests/test_logic_and_set_theory_ch17.py"
+      - "tools/tests/test_logic_and_set_theory_ch18.py"
+      - "tools/tests/test_logic_and_set_theory_ch19.py"
+      - "tools/tests/test_logic_and_set_theory_ch20.py"
+      - "tools/tests/test_logic_and_set_theory_ch21.py"
+      - "tools/tests/test_logic_and_set_theory_ch22.py"
+      - "tools/tests/test_logic_and_set_theory_ch23.py"
+      - "tools/tests/test_logic_and_set_theory_ch24.py"
+      - "tools/tests/test_logic_and_set_theory_ch25.py"
+      - "tools/tests/test_logic_and_set_theory_ch26.py"
+      - "tools/tests/test_logic_and_set_theory_ch27.py"
+      - "tools/tests/test_logic_and_set_theory_ch28.py"
+      - "tools/tests/test_logic_and_set_theory_ch29.py"
+      - "tools/tests/test_logic_and_set_theory_ch30.py"
+      - "tools/tests/test_logic_and_set_theory_ch31.py"
+      - "tools/tests/test_logic_and_set_theory_ch32.py"
+      - "tools/tests/test_logic_and_set_theory_ch33.py"
+      - "tools/tests/test_logic_and_set_theory_ch34.py"
+      - "tools/tests/test_logic_and_set_theory_ch35.py"
+      - "tools/tests/test_logic_and_set_theory_ch36.py"
+      - "tools/tests/test_logic_and_set_theory_cross_ch32_36.py"
+      - "tools/tests/test_logic_and_set_theory_ch37.py"
+      - "tools/tests/test_logic_and_set_theory_ch38.py"
+      - "tools/tests/test_logic_and_set_theory_ch39.py"
+      - "tools/tests/test_logic_and_set_theory_ch11.py"
+      - "tools/tests/test_logic_and_set_theory_ch10.py"
+      - "tools/tests/test_logic_and_set_theory_ch09.py"
+      - "tools/tests/test_logic_and_set_theory_ch08.py"
+      - "tools/tests/test_logic_and_set_theory_ch07.py"
+      - ".github/workflows/logic-and-set-theory-chapter.yml"
+  workflow_dispatch:
+
+jobs:
+  validate-chapters:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check CLI imports, theorem inventory and chapter references
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          catalog = json.loads(Path("catalog/books.json").read_text(encoding="utf-8"))
+          book = next(item for item in catalog["books"] if item["id"] == "logic_and_set_theory")
+          models = next(item for item in catalog["books"] if item["id"] == "model_theory")
+          meta = next(item for item in catalog["books"] if item["id"] == "metamathematics")
+          combined = {Path(p).name: p for p in book["chapters"] + models["chapters"] + meta["chapters"]}
+          assert len(combined) == len(book["chapters"]) + len(models["chapters"]) + len(meta["chapters"]), "Repeated chapter filename"
+          expected_names = [
+              "01-zdania-i-spojniki-logiczne.tex",
+              "02-kwantyfikatory-i-podstawowe-metody-dowodzenia.tex",
+              "03-zbiory-i-operacje-na-zbiorach.tex",
+              "04-pary-uporzadkowane-i-relacje.tex",
+              "05-relacje-rownowaznosci-i-zbiory-ilorazowe.tex",
+              "06-relacje-porzadku-od-porownywania-do-kresow.tex",
+              "07-funkcje-i-odwzorowania.tex",
+              "08-obrazy-przeciwobrazy-i-dzialania-na-funkcjach.tex",
+              "09-jezyki-formalne-termy-i-formuly.tex",
+              "10-struktury-wartosciowania-i-prawda.tex",
+              "11-dowody-formalne-i-dedukcja-naturalna.tex",
+              "12-poprawnosc-logiki-pierwszego-rzedu.tex",
+              "13-twierdzenie-godla-o-pelnosci-i-konstrukcja-henkina.tex",
+              "14-twierdzenie-o-zwartosci-i-jego-zastosowania.tex",
+              "15-homomorfizmy-izomorfizmy-i-elementarnosc-struktur.tex",
+              "16-algorytmy-obliczalnosc-i-nierozstrzygalnosc.tex",
+              "17-arytmetyka-formalna-i-kodowanie-skladni.tex",
+              "18-reprezentowalnosc-i-diagonalizacja.tex",
+              "19-pierwsze-twierdzenie-godla-o-niezupelnosci.tex",
+              "20-prawda-arytmetyczna-i-twierdzenie-tarskiego.tex",
+              "21-operacje-na-dowodach-i-warunki-wyprowadzalnosci.tex",
+              "22-drugie-twierdzenie-godla-i-twierdzenie-loba.tex",
+              "23-dolne-twierdzenie-lowenheima-skolema-i-domkniecia-skolema.tex",
+              "24-gorne-twierdzenie-lowenheima-skolema-i-paradoks-skolema.tex",
+              "25-aksjomaty-zf-zfc-i-konstrukcje-zbiorowe.tex",
+              "26-aksjomat-wyboru-i-jego-rownowazne-postacie.tex",
+              "27-liczby-kardynalne-i-arytmetyka-mocy.tex",
+              "28-liczby-porzadkowe-i-rekurencja-pozaskonczona.tex",
+              "29-slabsze-zasady-wyboru-i-ich-ograniczenia.tex",
+              "30-gry-nieskonczone-i-aksjomat-determinacji.tex",
+              "31-uniwersum-konstruowalne-i-modele-wewnetrzne.tex",
+              "32-podstawy-wymuszania-i-modele-generyczne.tex",
+              "33-relacja-wymuszania-i-twierdzenie-o-wymuszaniu.tex",
+              "34-hipoteza-continuum-i-zastosowania-wymuszania.tex",
+              "35-modele-boolowskie-i-wzgledna-niesprzecznosc-ch.tex",
+              "36-modele-symetryczne-i-niezaleznosc-aksjomatu-wyboru.tex",
+              "37-duze-liczby-kardynalne-nieosiagalnosc-i-mierzalnosc.tex",
+              "38-kardynaly-mahla-i-slaba-zwartosc.tex",
+              "39-slaba-zwartosc-charakterystyki-i-logika-infinitarna.tex",
+          ]
+          moved = {9: 24, 10: 25, 11: 26, 12: 27, 13: 28, 14: 20, 15: 21, 23: 22, 24: 23}
+          expected_model_names = [
+              str(moved[n]) + "-" + expected_names[n-1].split("-", 1)[1]
+              for n in moved
+          ]
+          expected_logic_names = [name for n, name in enumerate(expected_names, 1)
+                                  if n not in moved and not 16 <= n <= 22]
+          assert [Path(p).name for p in book["chapters"]][:23] == expected_logic_names
+          assert [Path(p).name for p in models["chapters"]][:9] == expected_model_names
+          assert [Path(p).name for p in meta["chapters"]] == expected_names[15:22]
+          sources = []
+          for n, name in enumerate(expected_names, 1):
+              owner = models if n in moved else meta if 16 <= n <= 22 else book
+              if n in moved:
+                  name = str(moved[n]) + "-" + name.split("-", 1)[1]
+              path = combined[name]
+              assert path in owner["chapters"], path
+              chapter = Path(path)
+              assert chapter.is_file(), path
+              text = Path(owner["entrypoint"]).read_text(encoding="utf-8")
+              assert "\\input{../../" + path + "}" in text, path
+              sources.append(chapter.read_text(encoding="utf-8"))
+          labels = [name for source in sources for name in re.findall(r"\\label\{([^}]+)\}", source)]
+          refs = [name for source in sources for name in re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", source)]
+          assert len(labels) == len(set(labels)), "Duplicate LaTeX labels"
+          assert len(labels) == 993, f"Unexpected labels: {len(labels)}"
+          assert len(refs) == 772, f"Unexpected references: {len(refs)}"
+          forward = set()
+          assert set(refs) - set(labels) == forward, "Unexpected unresolved targets in partial book"
+          inventories = [
+              (sources[5], {"twierdzenie": 15, "wniosek": 1, "proof": 16,
+                            "definicja": 12, "przyklad": 21, "uwaga": 7}),
+              (sources[6], {"twierdzenie": 11, "wniosek": 0, "proof": 11,
+                            "definicja": 5, "przyklad": 10, "uwaga": 9}),
+              (sources[7], {"twierdzenie": 20, "wniosek": 0, "proof": 20,
+                            "definicja": 6, "przyklad": 16, "uwaga": 1}),
+              (sources[8], {"twierdzenie": 2, "stwierdzenie": 1,
+                            "lemat": 5, "proof": 8,
+                            "definicja": 7, "przyklad": 13, "uwaga": 3}),
+              (sources[9], {"twierdzenie": 5, "stwierdzenie": 1,
+                            "lemat": 2, "wniosek": 1, "proof": 9,
+                            "definicja": 8, "przyklad": 16, "uwaga": 3}),
+              (sources[10], {"twierdzenie": 5, "stwierdzenie": 0,
+                             "lemat": 0, "wniosek": 0, "proof": 5,
+                             "definicja": 7, "przyklad": 16, "uwaga": 8}),
+              (sources[11], {"twierdzenie": 3, "lemat": 3,
+                             "wniosek": 2, "proof": 8,
+                             "definicja": 1, "przyklad": 4, "uwaga": 3}),
+              (sources[12], {"twierdzenie": 5, "lemat": 11,
+                             "wniosek": 0, "stwierdzenie": 0,
+                             "proof": 16, "definicja": 6,
+                             "przyklad": 6, "uwaga": 4, "figure": 1}),
+              (sources[13], {"twierdzenie": 7, "lemat": 0,
+                             "wniosek": 1, "proof": 8,
+                             "definicja": 5, "przyklad": 3, "uwaga": 5}),
+              (sources[14], {"twierdzenie": 5, "lemat": 1,
+                             "wniosek": 0, "proof": 6,
+                             "definicja": 7, "przyklad": 7, "uwaga": 4}),
+              (sources[15], {"twierdzenie": 5, "lemat": 2,
+                             "wniosek": 1, "proof": 8,
+                             "definicja": 5, "przyklad": 6,
+                             "uwaga": 4, "figure": 1}),
+              (sources[16], {"twierdzenie": 0, "lemat": 5,
+                             "wniosek": 0, "proof": 5,
+                             "definicja": 10, "przyklad": 5, "uwaga": 11,
+                             "figure": 0}),
+              (sources[17], {"twierdzenie": 2, "lemat": 5, "wniosek": 0,
+                             "proof": 7, "definicja": 3,
+                             "przyklad": 4, "uwaga": 3}),
+              (sources[18], {"twierdzenie": 2, "lemat": 2, "wniosek": 2,
+                             "proof": 6, "definicja": 3,
+                             "przyklad": 3, "uwaga": 6}),
+              (sources[19], {"twierdzenie": 3, "lemat": 1, "wniosek": 0,
+                             "proof": 4, "definicja": 3,
+                             "przyklad": 5, "uwaga": 7}),
+              (sources[20], {"twierdzenie": 2, "lemat": 5, "wniosek": 0,
+                             "proof": 7, "definicja": 0,
+                             "przyklad": 3, "uwaga": 4}),
+              (sources[21], {"twierdzenie": 3, "lemat": 2, "wniosek": 1,
+                             "proof": 6, "definicja": 1,
+                             "przyklad": 2, "uwaga": 5}),
+              (sources[22], {"twierdzenie": 1, "lemat": 2, "wniosek": 1,
+                             "proof": 4, "definicja": 3,
+                             "przyklad": 2, "uwaga": 3}),
+              (sources[23], {"twierdzenie": 4, "lemat": 2, "wniosek": 1,
+                             "proof": 7, "definicja": 2,
+                             "przyklad": 2, "uwaga": 6}),
+              (sources[24], {"twierdzenie": 11, "lemat": 6, "wniosek": 2,
+                             "proof": 19, "definicja": 16,
+                             "przyklad": 14, "uwaga": 5, "figure": 1}),
+              (sources[25], {"twierdzenie": 8, "lemat": 1, "wniosek": 1,
+                             "proof": 10, "definicja": 5,
+                             "przyklad": 10, "uwaga": 2}),
+              (sources[26], {"twierdzenie": 11, "wniosek": 2,
+                             "proof": 13, "definicja": 4,
+                             "przyklad": 5, "uwaga": 6, "figure": 1}),
+              (sources[27], {"twierdzenie": 5, "lemat": 2,
+                             "wniosek": 1, "proof": 8,
+                             "definicja": 4, "przyklad": 5, "uwaga": 3}),
+              (sources[28], {"twierdzenie": 7, "lemat": 1,
+                             "proof": 8, "definicja": 6,
+                             "przyklad": 5, "uwaga": 7}),
+              (sources[29], {"twierdzenie": 15, "lemat": 9,
+                             "wniosek": 4, "proof": 26, "definicja": 12,
+                             "przyklad": 7, "uwaga": 15, "figure": 1}),
+              (sources[30], {"twierdzenie": 5, "lemat": 27,
+                             "wniosek": 2, "proof": 34, "definicja": 6,
+                             "przyklad": 9, "uwaga": 16}),
+              (sources[31], {"twierdzenie": 4, "lemat": 7,
+                             "wniosek": 1, "proof": 12, "definicja": 11,
+                             "przyklad": 4, "uwaga": 4, "figure": 1}),
+              (sources[32], {"twierdzenie": 6, "lemat": 6,
+                             "wniosek": 0, "proof": 12, "definicja": 4,
+                             "przyklad": 3, "uwaga": 5, "figure": 0}),
+              (sources[33], {"twierdzenie": 5, "lemat": 7,
+                             "wniosek": 0, "proof": 12, "definicja": 5,
+                             "przyklad": 2, "uwaga": 3, "figure": 0}),
+              (sources[34], {"twierdzenie": 6, "lemat": 8,
+                             "wniosek": 0, "proof": 14, "definicja": 8,
+                             "przyklad": 1, "uwaga": 4, "figure": 0}),
+              (sources[35], {"twierdzenie": 4, "lemat": 7,
+                             "wniosek": 0, "proof": 12, "definicja": 5,
+                             "przyklad": 1, "uwaga": 3, "figure": 0}),
+              (sources[36], {"twierdzenie": 7, "lemat": 4,
+                             "wniosek": 1, "proof": 12, "definicja": 7,
+                             "przyklad": 1, "uwaga": 5, "figure": 0}),
+              (sources[37], {"twierdzenie": 5, "lemat": 4,
+                             "wniosek": 1, "proof": 10, "definicja": 8,
+                             "przyklad": 2, "uwaga": 5, "figure": 0}),
+              (sources[38], {"twierdzenie": 6, "lemat": 4,
+                             "wniosek": 2, "proof": 12, "definicja": 4,
+                             "przyklad": 1, "uwaga": 4, "figure": 0}),
+          ]
+          for source, inventory in inventories:
+              for env, expected in inventory.items():
+                  actual = source.count("\\begin{" + env + "}")
+                  assert actual == expected, (env, actual, expected)
+              stack = []
+              for kind, env in re.findall(r"\\(begin|end)\{([^}]+)\}", source):
+                  if kind == "begin":
+                      stack.append(env)
+                  else:
+                      assert stack and stack.pop() == env, ("Unbalanced environment", env)
+              assert not stack, ("Unclosed environments", stack)
+          print(f"PASS: imports, chapter order, {len(labels)} labels, {len(refs)} references, {len(forward)} documented forward reference(s), inventories and TeX environments")
+          PY
+      - name: Run chapter 07 finite-model regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch07 -v
+      - name: Run chapter 08 finite-model regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch08 -v
+      - name: Run chapter 09 syntax regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch09 -v
+      - name: Run chapter 10 semantics regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch10 -v
+      - name: Run chapter 11 natural deduction regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch11 -v
+      - name: Run chapter 12 soundness regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch12 -v
+      - name: Run chapter 13 Henkin/completeness regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch13 -v
+      - name: Run chapter 14 compactness regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch14 -v
+      - name: Run chapter 15 elementary structure regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch15 -v
+      - name: Run chapter 16 computability regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch16 -v
+      - name: Run chapter 17 formal arithmetic and Godel coding regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch17 -v
+      - name: Run chapter 18 representability and diagonalization regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch18 -v
+      - name: Run chapter 19 Godel Rosser regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch19 -v
+      - name: Run chapter 20 Tarski truth and derivability regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch20 -v
+      - name: Run chapter 21 proof operations and derivability regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch21 -v
+      - name: Run chapter 22 Godel II and Lob theorem regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch22 -v
+      - name: Run chapter 23 downward Lowenheim-Skolem regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch23 -v
+      - name: Run chapter 24 upward Lowenheim-Skolem regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch24 -v
+      - name: Run chapter 25 ZF construction and arithmetic regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch25 -v
+      - name: Run chapter 26 axiom of choice regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch26 -v
+      - name: Run chapter 27 cardinal arithmetic regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch27 -v
+      - name: Run chapter 28 ordinals regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch28 -v
+      - name: Run chapter 29 weak choice regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch29 -v
+      - name: Run chapter 30 game determinacy regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch30 -v
+      - name: Run chapter 31 constructibility regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch31 -v
+      - name: Run chapter 32 forcing and generic-model regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch32 -v
+      - name: Run chapter 33 forcing theorem regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch33 -v
+      - name: Run chapter 34 continuum hypothesis and forcing regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch34 -v
+      - name: Run chapter 35 Boolean-valued models and relative consistency regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch35 -v
+      - name: Run chapter 36 symmetric models and AC independence regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch36 -v
+      - name: Run cross-chapter forcing and independence regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_cross_ch32_36 -v
+      - name: Run chapter 37 large-cardinal regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch37 -v
+      - name: Run chapter 38 Mahlo and weak-compactness regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch38 -v
+      - name: Run chapter 39 weak compactness and infinitary logic regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch39 -v
+      - name: Verify propositional normal forms and functional completeness
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch01_normal_forms -v
+      - name: Verify the split, archive and fuzzy logic examples
+        run: python -m unittest tools.tests.test_logic_model_split -v
+      - name: Compile logic and set theory PDF (first pass)
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: logic_and_set_theory.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Compile model theory PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: model_theory.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Compile metamathematics PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: metamathematics.tex
+          working_directory: books/pl
+          args: -pdf -g -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Recompile logic and set theory with model theory references
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: logic_and_set_theory.tex
+          working_directory: books/pl
+          args: -pdf -g -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Recompile model theory with cross-book references
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: model_theory.tex
+          working_directory: books/pl
+          args: -pdf -g -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Recompile metamathematics with cross-book references
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: metamathematics.tex
+          working_directory: books/pl
+          args: -pdf -g -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Compile general_topology AUX for nonclassical logic
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Compile measure_theory AUX for nonclassical logic
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: measure_theory.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Compile nonclassical logic with external references
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: nonclassical_logic.tex
+          working_directory: books/pl
+          args: -pdf -g -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Check all four compiled PDFs and logs
+        shell: bash
+        run: |
+          test -s books/pl/logic_and_set_theory.pdf
+          test -s books/pl/model_theory.pdf
+          test -s books/pl/nonclassical_logic.pdf
+          test -s books/pl/metamathematics.pdf
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          log = "\n".join(Path("books/pl", name + ".log").read_text(errors="replace")
+                          for name in ("logic_and_set_theory", "model_theory", "nonclassical_logic", "metamathematics"))
+          refs = set(re.findall(r"LaTeX Warning: Reference `([^']+)' on page \d+ undefined", log))
+          allowed = set()
+          assert refs <= allowed, f"Unexpected undefined references: {sorted(refs - allowed)}"
+          assert not re.search(r"Overfull \\hbox", log), "Overfull TeX boxes"
+          assert not re.search(r"LaTeX Warning: Citation .+ undefined", log), "Undefined citation"
+          assert "destination with the same identifier" not in log, "Duplicate PDF page anchor"
+          assert "Token not allowed in a PDF string" not in log, "Invalid token in PDF bookmark"
+          print("PASS: PDF present; references, citations, box layout and PDF anchors/bookmarks clean")
+          if refs:
+              print("Documented forward references (not yet imported):", sorted(refs))
+          PY
+      - name: Archive logic and set theory PDF and log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logic-and-model-theory-pdfs
+          path: |
+            books/pl/logic_and_set_theory.pdf
+            books/pl/logic_and_set_theory.log
+            books/pl/model_theory.pdf
+            books/pl/model_theory.log
+            books/pl/nonclassical_logic.pdf
+            books/pl/nonclassical_logic.log
+            books/pl/metamathematics.pdf
+            books/pl/metamathematics.log
+          if-no-files-found: warn

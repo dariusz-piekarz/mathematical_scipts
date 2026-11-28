@@ -1,65 +1,161 @@
 \chapter{Wartość oczekiwana, momenty i podstawowe nierówności}
 \label{ch:expectation}
 
+\providecommand{\atlasref}[2]{#2}
+
 \section{Całka względem rozkładu}
 Prawdopodobieństwo odpowiada na pytanie, jak często wydarza się
 zdarzenie. Wartość oczekiwana odpowiada na inne pytanie:
 jaka jest przeciętna wielkość liczbowego wyniku, jeśli ważymy
 możliwości ich prawdopodobieństwami? W modelu skończonym jest
 to ważona suma. Całka względem miary probabilistycznej jest
-jej konsekwentnym uogólnieniem na dowolne zmienne losowe.
+jej konsekwentnym uogólnieniem na zmienne losowe, dla których
+całka jest określona.
 Nazwa „oczekiwana” nie oznacza wartości najbardziej prawdopodobnej;
 może to być wartość, której zmienna nigdy nie przyjmuje.
 
 \begin{definicja}
-Niech $X$ będzie rzeczywistą zmienną losową na
-$(\Omega,\mathcal F,\Prob)$. Jeśli $X\geq0$, definiujemy
+Niech $X$ będzie rzeczywistą zmienną losową na przestrzeni
+probabilistycznej $(\Omega,\mathcal F,\Prob)$. Piszemy
+$X^+=\max(X,0)$ oraz $X^-=\max(-X,0)$, tak że
+$X=X^+-X^-$ i $|X|=X^++X^-$.
+Jeśli $X\geq0$, definiujemy
 $\E X:=\int_\Omega X(\omega)\,\dd\Prob(\omega)\in[0,\infty]$.
+Jeżeli $X\geq0$ tylko prawie na pewno, to $\E X=\E X^+$,
+gdyż $X^-$ jest wtedy zerowa prawie na pewno, a całka
+nie zmienia się przy modyfikacji prawie wszędzie
+(\atlasref{ME-07::thm:ae-integral-invariance}{niezmienniczość całki}).
 Jeśli $\E|X|<\infty$, nazywamy $X$ całkowalną i definiujemy
 $\E X:=\int_\Omega X(\omega)\,\dd\Prob(\omega)\in\R$.
-W przypadku ogólnym, gdy przynajmniej jedna z liczb
-$\E X^+,\E X^-$ jest skończona, dopuszczamy rozszerzoną
-wartość oczekiwaną $\E X=\E X^+-\E X^-$.
+W przypadku ogólnym, jeśli przynajmniej jedna z liczb $\E X^+,\E X^-$ jest
+skończona, dopuszczamy rozszerzoną wartość oczekiwaną
+$\E X=\E X^+-\E X^-$. Gdy obie są nieskończone,
+wartość oczekiwana nie jest określona.
+Jest to definicja całki Lebesgue'a względem $\Prob$;
+por. \atlasref{ME-07::thm:integrability-criterion}{kryterium całkowalności}.
+Dla zmiennej zespolonej $Z$ o $\E|Z|<\infty$ definiujemy
+$\E Z=\E\operatorname{Re}Z+i\E\operatorname{Im}Z$.
+Obie części są całkowalne, ponieważ ich moduły nie przekraczają
+$|Z|$; por. \atlasref{ME-08::def:complex-integral}{definicję całki zespolonej}.
 \end{definicja}
+
+Dla całkowalnych rzeczywistych zmiennych losowych $X,Y$
+na tej samej przestrzeni probabilistycznej oraz $a,b\in\R$ zmienna $aX+bY$
+jest całkowalna, gdyż $|aX+bY|\leq |a||X|+|b||Y|$.
+Z \atlasref{ME-08::thm:integral-linear-real}{liniowości całki}
+wynika $\E(aX+bY)=a\E X+b\E Y$.
+Ponadto dla stałej $c\in\R$ mamy $\E c=c\Prob(\Omega)=c$,
+a z monotoniczności całki, jeśli $X\leq Y$ prawie na pewno,
+to $\E X\leq\E Y$. Stosujemy tu monotoniczność do
+nieujemnych części lub, równoważnie, do różnicy $Y-X$,
+której całka jest nieujemna. W szczególności
+$|\E X|\leq\E|X|$, ponieważ $-|X|\leq X\leq |X|$.
+Dla całkowalnych zmiennych zespolonych obowiązuje liniowość
+ze współczynnikami zespolonymi oraz $|\E Z|\leq\E|Z|$
+(\atlasref{ME-08::thm:integral-complex-linear}{liniowość i oszacowanie modułu całki zespolonej}).
+Z definicji całki zespolonej wynika również
+$\E\overline Z=\overline{\E Z}$.
+
+Dla nieujemnej zmiennej losowej $U$ zachodzi $\E U=0$
+wtedy i tylko wtedy, gdy $U=0$ prawie na pewno.
+Jeśli $\E U=0$, to dla każdego $n\geq1$ mamy
+$0\leq n^{-1}\chi_{\{U\geq 1/n\}}\leq U$.
+Monotoniczność całki nieujemnej daje
+$n^{-1}\Prob(U\geq1/n)\leq\E U=0$.
+Zatem $\{U>0\}=\bigcup_{n\geq1}\{U\geq1/n\}$ ma
+prawdopodobieństwo zero. Odwrotna implikacja wynika
+z niezmienniczości całki względem równości prawie wszędzie.
+Własność tę stosujemy również do zmiennych nieujemnych
+prawie na pewno, zastępując je ich częściami dodatnimi.
 
 \begin{twierdzenie}[Przenoszenie całkowania na rozkład]
 Niech $X$ będzie rzeczywistą zmienną losową o rozkładzie $\mu_X$,
-a $h:\R\to\R$ mierzalną funkcją borelowską.
-Jeżeli $h\geq0$ albo $\int_\R|h(x)|\,\dd\mu_X(x)<\infty$, to
+a $h:\R\to\mathbb C$ funkcją borelowską (w szczególności
+może być rzeczywista). Jeżeli $h$ przyjmuje wyłącznie
+wartości nieujemne rzeczywiste, to $h(X)$ jest nieujemna.
+Dla dowolnej funkcji borelowskiej $h:\R\to\mathbb C$
+zachodzi
+\[
+\E|h(X)|=\int_\R|h(x)|\,\dd\mu_X(x)\in[0,\infty].
+\]
+W szczególności $h(X)$ jest całkowalna wtedy i tylko wtedy,
+gdy $h$ jest całkowalna względem $\mu_X$.
+Jeżeli $h$ jest rzeczywista i nieujemna lub $h$ jest
+całkowalna względem $\mu_X$, to
 \begin{equation}\label{eq:lotus}
 \E[h(X)]=\int_\R h(x)\,\dd\mu_X(x).
 \end{equation}
 W szczególności, dla dyskretnego $X$ o masach $p(x)$ prawa strona
-jest sumą $\sum_xh(x)p(x)$, a dla $X$ o gęstości $f_X$
-jest całką $\int_\R h(x)f_X(x)\,\dd\lambda_1(x)$.
+jest sumą $\sum_{x\in D}h(x)p(x)$, gdzie
+$D=\{x:p(x)>0\}$ jest co najwyżej przeliczalny.
+Dla $X$ o gęstości $f_X$ (wybieramy wersję wszędzie
+skończoną) prawa strona jest całką
+$\int_\R h(x)f_X(x)\,\dd\lambda_1(x)$.
+W przypadku funkcji rzeczywistych ze znakiem lub zespolonych
+obowiązuje tu założenie całkowalności; w przypadku nieujemnym
+dopuszczamy wartość nieskończoną.
 \end{twierdzenie}
 \begin{proof}
-Dowód polega na przejściu od funkcji najprostszych
-do ogólnych; wyjaśnia on zarazem, dlaczego rozkład
-$\mu_X$ pozwala obliczać wartości oczekiwane funkcji $X$.
+Jest to szczególny przypadek
+\atlasref{ME-13::thm:pushforward-integral-13}{twierdzenia o całkowaniu względem miary obrazowej}.
+Podamy dowód w notacji probabilistycznej. Złożenie $h\circ X$
+jest mierzalne, ponieważ $X$ i $h$ są mierzalne.
 
-Dla funkcji wskaźnikowej $h=\ind B$, gdzie
-$B\in\mathcal B(\R)$, mamy
+Dla funkcji charakterystycznej $h=\chi_B$, gdzie
+$B\in\mathcal B(\R)$, mamy $h(X)=\chi_{X^{-1}(B)}$ oraz
 $\E[h(X)]=\Prob(X\in B)=\mu_X(B)
-=\int_\R\ind B(x)\,\dd\mu_X(x)$.
+=\int_\R\chi_B(x)\,\dd\mu_X(x)$.
 Dla nieujemnej funkcji prostej
-$h=\sum_{j=1}^r a_j\ind{B_j}$, gdzie $a_j\geq0$,
+$h=\sum_{j=1}^r a_j\chi_{B_j}$, gdzie $a_j\geq0$,
+a $B_j$ są zbiorami borelowskimi,
 równość wynika z liniowości całki i poprzedniego przypadku.
 
 Dla dowolnej nieujemnej funkcji mierzalnej $h$
-wybieramy ciąg nieujemnych funkcji prostych $h_n\uparrow h$.
+wybieramy ciąg nieujemnych borelowskich funkcji prostych
+$h_n\uparrow h$
+(\atlasref{ME-06::thm:simple-up}{aproksymacja funkcjami prostymi}).
 Wówczas $h_n(X)\uparrow h(X)$ na $\Omega$.
-Stosując twierdzenie o zbieżności monotonicznej
+Stosując \atlasref{ME-08::thm:mct}{twierdzenie o zbieżności monotonicznej}
 po obu stronach już udowodnionych równości, dostajemy
 \[
 \E[h(X)]=\lim_n\E[h_n(X)]
-=\lim_n\int_\R h_n\,\dd\mu_X
-=\int_\R h\,\dd\mu_X.
+=\lim_n\int_\R h_n(x)\,\dd\mu_X(x)
+=\int_\R h(x)\,\dd\mu_X(x).
 \]
-Jeśli $h$ jest całkowalna względem $\mu_X$,
+Jeśli $h$ jest rzeczywista i całkowalna względem $\mu_X$,
 rozkładamy $h=h^+-h^-$ i stosujemy pierwszy przypadek
-do obu nieujemnych części. Obie odpowiadające całki
-są skończone, więc ich różnica jest dobrze określona.
+do obu nieujemnych części. Stosując również przypadek
+nieujemny do $|h|$, otrzymujemy
+$\E|h(X)|=\int_\R|h(x)|\,\dd\mu_X(x)<\infty$.
+Obie odpowiadające całki są zatem skończone i można
+odjąć uzyskane równości.
+
+Dla zespolonej funkcji całkowalnej $h$ stosujemy wynik
+do $\operatorname{Re}h$ i $\operatorname{Im}h$, które są
+całkowalne, a następnie korzystamy z definicji całki zespolonej.
+Równość dla $|h|$ została już udowodniona w przypadku
+nieujemnym, również wtedy, gdy obie strony są nieskończone.
+
+Dla rozkładu dyskretnego $\mu_X(D)=1$. Dla $h\geq0$
+rozkładamy całkę na sumę po singletonach $\{x\}$,
+$x\in D$, stosując
+\atlasref{ME-08::cor:integral-countable-partition}{addytywność całki względem zbioru całkowania}.
+Całka po singletonie wynosi $h(x)p(x)$, a po
+$\R\setminus D$ jest zerowa. Dla całkowalnego rzeczywistego $h$
+stosujemy to do $h^+$ i $h^-$; szereg jest bezwzględnie
+zbieżny, bo $\sum_{x\in D}|h(x)|p(x)<\infty$.
+Dla funkcji zespolonej stosujemy wzór do obu części,
+a bezwzględna zbieżność wynika z tego samego oszacowania.
+W przypadku gęstości stosujemy
+\atlasref{ME-18::lem:integration-density-18}{wzór na całkę względem miary określonej gęstością}
+do $\mu_X=f_X\lambda_1$ (obie miary na $\mathcal B(\R)$).
+Możemy wybrać wszędzie skończoną wersję $f_X$, ponieważ
+$\int_\R f_X(x)\,\dd\lambda_1(x)=1$, a zbiór
+$\{f_X=\infty\}$ jest borelowski i ma miarę zero.
+Dla funkcji nieujemnej wzór obowiązuje także przy
+nieskończonej całce; dla całkowalnej funkcji rzeczywistej
+lub zespolonej całkowalność iloczynu $hf_X$ wynika z
+$\int_\R |h(x)|f_X(x)\,\dd\lambda_1(x)=\int_\R |h(x)|\,\dd\mu_X(x)$.
 \end{proof}
 
 
@@ -72,17 +168,33 @@ może ona znajdować się daleko od większości realizacji.
 \end{przyklad}
 
 \begin{definicja}
-Dla całkowalnej zmiennej losowej $X$ definiujemy średnią
-$m_X:=\E X$. Jeżeli $\E X^2<\infty$, definiujemy
-wariancję $\Var(X):=\E[(X-\E X)^2]$.
+Dla całkowalnej rzeczywistej zmiennej losowej $X$
+definiujemy średnią $m_X:=\E X$. Jeżeli $\E X^2<\infty$, to $X$ i funkcja stała $1$
+należą do $L^2(\Prob)$. Z nierówności
+Cauchy'ego--Schwarza dla tych funkcji mamy
+$\E|X|\leq(\E X^2)^{1/2}$, gdyż $\Prob(\Omega)=1$.
+Definiujemy wariancję $\Var(X):=\E[(X-\E X)^2]$.
+Jest ona skończona, ponieważ
+$(X-\E X)^2\leq 2X^2+2(\E X)^2$.
 Odchyleniem standardowym nazywamy $\sqrt{\Var(X)}$.
-Dla zmiennych $X,Y$ o skończonych drugich momentach definiujemy
+Wariancja jest nieujemna. Jest równa zero wtedy i tylko wtedy,
+gdy $X=\E X$ prawie na pewno: całka nieujemnej funkcji
+$(X-\E X)^2$ jest zerowa wtedy i tylko wtedy, gdy ta funkcja
+znika prawie wszędzie.
+Dla rzeczywistych zmiennych $X,Y$ na tej samej przestrzeni
+probabilistycznej o skończonych drugich momentach definiujemy
 kowariancję $\Cov(X,Y):=\E[(X-\E X)(Y-\E Y)]$.
+Z nierówności Cauchy'ego--Schwarza wynika
+$\E|(X-\E X)(Y-\E Y)|\leq
+\sqrt{\Var(X)\Var(Y)}<\infty$, więc kowariancja jest
+dobrze określona. Użyta nierówność to przypadek $p=q=2$
+\atlasref{ME-14::thm:holder-14}{nierówności Höldera}.
 \end{definicja}
 
 \begin{stwierdzenie}[Algebra momentów]
-Dla rzeczywistych zmiennych losowych $X,Y$ o skończonych
-drugich momentach oraz $a,b\in\R$ zachodzą
+Dla rzeczywistych zmiennych losowych $X,Y$ na wspólnej
+przestrzeni probabilistycznej, o skończonych drugich
+momentach, oraz $a,b\in\R$ zachodzą
 \begin{align*}
 \Var(X)&=\E X^2-(\E X)^2, &
 \Var(aX+b)&=a^2\Var(X),\\
@@ -96,7 +208,11 @@ a zatem $\Cov(X,Y)=0$ i $\Var(X+Y)=\Var(X)+\Var(Y)$.
 Wszystkie podane wyrażenia są skończone,
 ponieważ nierówność Cauchy'ego--Schwarza zapewnia
 $\E|XY|\leq(\E X^2)^{1/2}(\E Y^2)^{1/2}<\infty$.
-Dzięki temu możemy swobodnie korzystać z liniowości całki.
+Ponadto $(aX+b)^2\leq2a^2X^2+2b^2$ i
+$(X+Y)^2\leq2X^2+2Y^2$, więc również przekształcenia
+w tezie mają skończone drugie momenty.
+Możemy zatem korzystać z
+\atlasref{ME-08::thm:integral-linear-real}{liniowości całki funkcji całkowalnych}.
 Oznaczając $m=\E X$, rozwijamy
 $\E(X-m)^2=\E X^2-2m\E X+m^2=\E X^2-m^2$.
 Ponadto $\E(aX+b)=a\E X+b$, więc
@@ -104,16 +220,27 @@ $aX+b-\E(aX+b)=a(X-\E X)$,
 a stąd $\Var(aX+b)=a^2\Var(X)$.
 
 Dla $m_X=\E X$, $m_Y=\E Y$ mamy
-$\Cov(X,Y)=\E[(X-m_X)(Y-m_Y)]
-=\E[XY]-m_Xm_Y$.
+\[
+\begin{aligned}
+\Cov(X,Y)
+&=\E[(X-m_X)(Y-m_Y)]\\
+&=\E[XY]-m_Y\E X-m_X\E Y+m_Xm_Y\\
+&=\E[XY]-m_Xm_Y.
+\end{aligned}
+\]
 Ponieważ
 $X+Y-\E(X+Y)=(X-m_X)+(Y-m_Y)$,
 rozwinięcie kwadratu i całkowanie daje
 $\Var(X+Y)=\Var(X)+\Var(Y)+2\Cov(X,Y)$.
 
 Jeśli $X,Y$ są niezależne, ich rozkład łączny to
-$\mu_X\otimes\mu_Y$. Przez Fubiniego, którego
-stosowanie usprawiedliwia całkowalność iloczynu,
+$\mu_X\otimes\mu_Y$ (rozdział~\ref{ch:random-variables}).
+Stosując \atlasref{ME-13::thm:pushforward-integral-13}{wzór na całkę względem miary obrazowej}
+do nieujemnej funkcji $(x,y)\mapsto|xy|$, otrzymujemy
+$\int_{\R^2}|xy|\,\dd(\mu_X\otimes\mu_Y)(x,y)
+=\E|XY|<\infty$. Spełniona jest zatem hipoteza całkowalności
+funkcji $(x,y)\mapsto xy$ w twierdzeniu Fubiniego. Z \atlasref{ME-12::thm:fubini-12}{twierdzenia Fubiniego}
+i wzoru na całkę względem miary obrazowej otrzymujemy
 \[
 \E[XY]=\int_{\R^2}xy\,\dd(\mu_X\otimes\mu_Y)(x,y)
 =\left(\int_\R x\,\dd\mu_X(x)\right)
@@ -128,49 +255,75 @@ jej wykorzystywać bez dodatkowych założeń.
 \begin{uwaga}
 Zerowa kowariancja nie oznacza na ogół niezależności.
 Jeśli $X$ jest jednostajna na $[-1,1]$, a $Y=X^2$, to
+obie zmienne są ograniczone prawie na pewno, zatem mają
+skończone drugie momenty. Stąd
 $\Cov(X,Y)=\E X^3-\E X\,\E X^2=0$,
-ale $Y$ jest funkcją $X$, a więc zmienne nie są niezależne.
+ponieważ $\E X=\frac12\int_{-1}^1 x\,\dd\lambda_1(x)=0$
+oraz $\E X^3=\frac12\int_{-1}^1 x^3\,\dd\lambda_1(x)=0$
+z nieparzystości funkcji podcałkowych.
+Jednak dla $A=\{|X|\leq1/2\}$ i $B=\{Y\leq1/4\}$
+mamy $A=B$, a z rozkładu jednostajnego
+$\Prob(A)=\Prob(B)=1/2$ i $\Prob(A\cap B)=1/2\neq1/4$.
+Zatem zmienne nie są niezależne.
 \end{uwaga}
 
-\begin{stwierdzenie}[Momenty zmiennej wskaźnikowej]
-Jeżeli $A\in\mathcal F$ i $I=\ind{A}$, to
+\begin{stwierdzenie}[Momenty funkcji charakterystycznej zdarzenia]
+Niech $(\Omega,\mathcal F,\Prob)$ będzie przestrzenią
+probabilistyczną. Jeżeli $A\in\mathcal F$ i $I=\chi_A$, to
 $\E I=\Prob(A)$ oraz
 $\Var(I)=\Prob(A)(1-\Prob(A))$.
-Dla dowolnych zdarzeń $A,B$ zachodzi
-$\Cov(\ind{A},\ind{B})=\Prob(A\cap B)-\Prob(A)\Prob(B)$.
+Dla dowolnych zdarzeń $A,B\in\mathcal F$ zachodzi
+$\Cov(\chi_A,\chi_B)=\Prob(A\cap B)-\Prob(A)\Prob(B)$.
 \end{stwierdzenie}
 \begin{proof}
-Zmienna $I$ przyjmuje wartości zero i jeden, a $I^2=I$.
-Ponadto $\ind{A}\ind{B}=\ind{A\cap B}$.
-Wstawiamy te równości do definicji momentów.
+Funkcja $I$ jest mierzalna, ograniczona i spełnia $I^2=I$.
+Z definicji całki funkcji charakterystycznej
+$\E I=\int_\Omega\chi_A(\omega)\,\dd\Prob(\omega)=\Prob(A)$.
+Ze wzoru na wariancję otrzymujemy
+$\Var(I)=\E I^2-(\E I)^2=\Prob(A)-\Prob(A)^2$.
+Ponadto $\chi_A\chi_B=\chi_{A\cap B}$, więc ze wzoru
+na kowariancję wynika
+$\Cov(\chi_A,\chi_B)=\E\chi_{A\cap B}-\E\chi_A\,\E\chi_B
+=\Prob(A\cap B)-\Prob(A)\Prob(B)$.
 \end{proof}
 
 \section{Nierówności Markowa i Czebyszewa}
 Nie zawsze umiemy wyznaczyć cały rozkład, ale czasem znamy
 średnią albo wariancję. Czy można na tej podstawie oszacować
 prawdopodobieństwo dużego wyniku lub dużego odchylenia od średniej?
-Nierówność Markowa opiera się tylko na dodatniości, a nierówność
+Nierówność Markowa opiera się tylko na nieujemności, a nierówność
 Czebyszewa stosuje tę samą ideę do kwadratu odchylenia.
 Ich siła tkwi w uniwersalności: nie wymagają normalności,
 jednostajności ani nawet znajomości gęstości.
 
 \begin{twierdzenie}[Nierówność Markowa]
-Jeżeli $X\geq0$ prawie na pewno i $a>0$, to
+Niech $X$ będzie rzeczywistą zmienną losową na przestrzeni
+probabilistycznej $(\Omega,\mathcal F,\Prob)$. Jeżeli
+$X\geq0$ prawie na pewno i $a>0$, to
 $\Prob(X\geq a)\leq\E X/a$, gdzie dopuszczamy $\E X=\infty$.
+Jeżeli $\E X<\infty$, równość zachodzi wtedy i tylko wtedy,
+gdy $X\in\{0,a\}$ prawie na pewno. Stała $1$ jest optymalna.
 \end{twierdzenie}
 \begin{proof}
-Na zdarzeniu $A=\{X\geq a\}$ zachodzi $X\geq a$,
-a poza nim $a\ind A=0\leq X$.
-Możemy więc zapisać punktową nierówność
-$a\ind A\leq X$ dla każdego wyniku poza ewentualnym
-zbiorem zerowym z założenia $X\geq0$ prawie na pewno.
-Z monotoniczności całki mamy
-$a\Prob(A)=\E[a\ind A]\leq\E X$.
+Zdarzenie $A=\{X\geq a\}$ jest mierzalne. Na $A$ zachodzi
+$X\geq a$, a na $\Omega\setminus A$ mamy $a\chi_A=0$.
+Zatem $a\chi_A\leq X^+$ na całej przestrzeni.
+Ponieważ $X^-=0$ prawie na pewno, zachodzi $\E X=\E X^+$.
+Z monotoniczności całki nieujemnej otrzymujemy
+$a\Prob(A)=\E[a\chi_A]\leq\E X^+=\E X$.
+Jest to probabilistyczna postać
+\atlasref{ME-07::thm:markov-nonnegative}{nierówności Markowa dla całki nieujemnej}.
 Dzielenie przez $a>0$ daje tezę. Nierówność pozostaje
 prawdziwa, choć może być bezużyteczna, gdy $\E X=\infty$.
-Dowód pokazuje również, kiedy stała jest optymalna:
-gdy $X$ przyjmuje wyłącznie wartości $0$ i $a$,
-zachodzi równość.
+Jeżeli $\E X<\infty$, równość zachodzi wtedy i tylko wtedy,
+gdy $X\in\{0,a\}$ prawie na pewno. Istotnie, różnica
+$X^+-a\chi_A$ jest nieujemna, a jej całka jest zerowa
+dokładnie wtedy, gdy różnica znika prawie wszędzie.
+Na $A$ oznacza to $X=a$, a poza $A$ oznacza $X^+=0$,
+czyli $X=0$ poza zbiorem zerowym. Odwrotna implikacja
+wynika przez podstawienie. Biorąc $X=a$ z prawdopodobieństwem
+jeden, otrzymujemy równość z dodatnią prawą stroną;
+stałej $1$ w nierówności nie można więc zmniejszyć.
 \end{proof}
 
 \begin{twierdzenie}[Nierówność Czebyszewa]
@@ -180,10 +333,15 @@ drugim momencie. Wtedy dla każdego $\varepsilon>0$ zachodzi
 \Prob(|X-\E X|\geq\varepsilon)
 \leq\frac{\Var(X)}{\varepsilon^2}.
 \]
+Równość zachodzi wtedy i tylko wtedy, gdy
+$|X-\E X|\in\{0,\varepsilon\}$ prawie na pewno.
+Stała $1$ jest optymalna.
 \end{twierdzenie}
 \begin{proof}
+Z założenia o drugim momencie wynika całkowalność $X$,
+więc $m=\E X$ jest skończoną liczbą rzeczywistą.
 Wprowadźmy nieujemną zmienną
-$Y=(X-\E X)^2$. Jej wartość oczekiwana jest równa
+$Y=(X-m)^2$, mierzalną jako złożenie $X$ z funkcją ciągłą. Jej wartość oczekiwana jest równa
 $\E Y=\Var(X)<\infty$. Ponadto dla $\varepsilon>0$
 zdarzenia
 $\{Y\geq\varepsilon^2\}$ oraz
@@ -197,19 +355,69 @@ do zmiennej $Y$ i progu $\varepsilon^2$, otrzymujemy
 =\frac{\Var(X)}{\varepsilon^2}.
 \]
 Nie używaliśmy żadnych informacji o kształcie rozkładu $X$.
+Z warunku równości w nierówności Markowa wynika, że
+równość zachodzi dokładnie wtedy, gdy
+$|X-\E X|\in\{0,\varepsilon\}$ prawie na pewno.
+W szczególności zmienna przyjmująca wartości
+$-\varepsilon$ i $\varepsilon$ z prawdopodobieństwami
+po $1/2$ ma średnią zero, wariancję $\varepsilon^2$
+i osiąga równość. Stała $1$ jest optymalna.
 \end{proof}
 
 \begin{przyklad}[Kontrola odchylenia sumy]
-Niech $X_1,\ldots,X_n$ będą niezależnymi zmiennymi losowymi
+Niech $X_1,\ldots,X_n$ będą niezależnymi rzeczywistymi
+zmiennymi losowymi na wspólnej przestrzeni probabilistycznej,
 o wspólnej średniej $m$ i wariancji $\sigma^2<\infty$,
-gdzie $n\geq1$. Dla średniej $\overline X_n:=n^{-1}\sum_{i=1}^nX_i$
-mamy $\E\overline X_n=m$ i $\Var(\overline X_n)=\sigma^2/n$.
-Z nierówności Czebyszewa wynika
+gdzie $n\geq1$ jest liczbą całkowitą.
+Dla średniej $\overline X_n:=n^{-1}\sum_{i=1}^nX_i$
+liniowość wartości oczekiwanej daje
+$\E\overline X_n=n^{-1}\sum_{i=1}^n m=m$.
+Skończoność drugiego momentu sumy wynika z nierówności
+$(\sum_{i=1}^n X_i)^2\leq n\sum_{i=1}^n X_i^2$,
+która jest nierównością Cauchy'ego--Schwarza dla wektorów
+$(X_1(\omega),\ldots,X_n(\omega))$ oraz $(1,\ldots,1)$.
+Rozwijając kwadrat wycentrowanej sumy, otrzymujemy
+\[
+\Var(\overline X_n)=\frac{1}{n^2}
+\left(\sum_{i=1}^n\Var(X_i)+
+2\sum_{1\leq i<j\leq n}\Cov(X_i,X_j)\right).
+\]
+Kowariancje dla $i\ne j$ są zerowe z niezależności
+i poprzedniego stwierdzenia o algebrze momentów.
+Stąd $\Var(\overline X_n)=n^{-2}n\sigma^2=\sigma^2/n$.
+Z nierówności Czebyszewa dla każdego $\varepsilon>0$ wynika
 $\Prob(|\overline X_n-m|\geq\varepsilon)
 \leq\sigma^2/(n\varepsilon^2)$.
 Jest to zalążek słabego prawa wielkich liczb, którego
-pełne sformułowania i uogólnienia pojawią się w dalszej części tomu.
+pełne sformułowania i uogólnienia pojawią się w rozdziale~\ref{ch:lln}.
+Rysunek~\ref{fig:rp1-05-chebyshev-average} przedstawia zależność oszacowania od liczby obserwacji i progu odchylenia.
 \end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1.8cm,y=4.3cm,>=Stealth]
+\draw[->] (0,0)--(5.3,0) node[right] {$\varepsilon/\sigma$};
+\draw[->] (0,0)--(0,1.13) node[above] {ograniczenie};
+\foreach \x in {1,2,3,4,5} \node[below,font=\small] at (\x,0) {$\x$};
+\foreach \y/\lab in {.25/{1/4},.5/{1/2},.75/{3/4},1/1} {
+ \draw[gray!20] (0,\y)--(5,\y);
+ \node[left,font=\small] at (0,\y) {$\lab$};
+}
+\draw[blue!75!black,very thick] plot coordinates {(0,1) (0.05,1) (0.1,1) (0.15,1) (0.2,1) (0.25,1) (0.3,1) (0.35,1) (0.4,1) (0.45,1) (0.5,1) (0.55,1) (0.6,1) (0.65,1) (0.7,1) (0.75,1) (0.8,1) (0.85,1) (0.9,1) (0.95,1) (1,1) (1.05,0.9070295) (1.1,0.8264463) (1.15,0.7561437) (1.2,0.6944444) (1.25,0.64) (1.3,0.591716) (1.35,0.5486968) (1.4,0.5102041) (1.45,0.4756243) (1.5,0.4444444) (1.55,0.4162331) (1.6,0.390625) (1.65,0.3673095) (1.7,0.3460208) (1.75,0.3265306) (1.8,0.308642) (1.85,0.2921841) (1.9,0.2770083) (1.95,0.2629849) (2,0.25) (2.05,0.2379536) (2.1,0.2267574) (2.15,0.2163332) (2.2,0.2066116) (2.25,0.1975309) (2.3,0.1890359) (2.35,0.1810774) (2.4,0.1736111) (2.45,0.1665973) (2.5,0.16) (2.55,0.153787) (2.6,0.147929) (2.65,0.1423994) (2.7,0.1371742) (2.75,0.1322314) (2.8,0.127551) (2.85,0.1231148) (2.9,0.1189061) (2.95,0.1149095) (3,0.1111111) (3.05,0.107498) (3.1,0.1040583) (3.15,0.1007811) (3.2,0.0976562) (3.25,0.0946746) (3.3,0.0918274) (3.35,0.0891067) (3.4,0.0865052) (3.45,0.084016) (3.5,0.0816327) (3.55,0.0793493) (3.6,0.0771605) (3.65,0.075061) (3.7,0.073046) (3.75,0.0711111) (3.8,0.0692521) (3.85,0.067465) (3.9,0.0657462) (3.95,0.0640923) (4,0.0625) (4.05,0.0609663) (4.1,0.0594884) (4.15,0.0580636) (4.2,0.0566893) (4.25,0.0553633) (4.3,0.0540833) (4.35,0.0528471) (4.4,0.0516529) (4.45,0.0504987) (4.5,0.0493827) (4.55,0.0483033) (4.6,0.047259) (4.65,0.0462481) (4.7,0.0452694) (4.75,0.0443213) (4.8,0.0434028) (4.85,0.0425125) (4.9,0.0416493) (4.95,0.0408122) (5,0.04)};
+\draw[orange!85!black,dashed,very thick] plot coordinates {(0,1) (0.05,1) (0.1,1) (0.15,1) (0.2,1) (0.25,1) (0.3,1) (0.35,1) (0.4,1) (0.45,1) (0.5,1) (0.55,0.8264463) (0.6,0.6944444) (0.65,0.591716) (0.7,0.5102041) (0.75,0.4444444) (0.8,0.390625) (0.85,0.3460208) (0.9,0.308642) (0.95,0.2770083) (1,0.25) (1.05,0.2267574) (1.1,0.2066116) (1.15,0.1890359) (1.2,0.1736111) (1.25,0.16) (1.3,0.147929) (1.35,0.1371742) (1.4,0.127551) (1.45,0.1189061) (1.5,0.1111111) (1.55,0.1040583) (1.6,0.0976562) (1.65,0.0918274) (1.7,0.0865052) (1.75,0.0816327) (1.8,0.0771605) (1.85,0.073046) (1.9,0.0692521) (1.95,0.0657462) (2,0.0625) (2.05,0.0594884) (2.1,0.0566893) (2.15,0.0540833) (2.2,0.0516529) (2.25,0.0493827) (2.3,0.047259) (2.35,0.0452694) (2.4,0.0434028) (2.45,0.0416493) (2.5,0.04) (2.55,0.0384468) (2.6,0.0369822) (2.65,0.0355999) (2.7,0.0342936) (2.75,0.0330579) (2.8,0.0318878) (2.85,0.0307787) (2.9,0.0297265) (2.95,0.0287274) (3,0.0277778) (3.05,0.0268745) (3.1,0.0260146) (3.15,0.0251953) (3.2,0.0244141) (3.25,0.0236686) (3.3,0.0229568) (3.35,0.0222767) (3.4,0.0216263) (3.45,0.021004) (3.5,0.0204082) (3.55,0.0198373) (3.6,0.0192901) (3.65,0.0187652) (3.7,0.0182615) (3.75,0.0177778) (3.8,0.017313) (3.85,0.0168663) (3.9,0.0164366) (3.95,0.0160231) (4,0.015625) (4.05,0.0152416) (4.1,0.0148721) (4.15,0.0145159) (4.2,0.0141723) (4.25,0.0138408) (4.3,0.0135208) (4.35,0.0132118) (4.4,0.0129132) (4.45,0.0126247) (4.5,0.0123457) (4.55,0.0120758) (4.6,0.0118147) (4.65,0.011562) (4.7,0.0113173) (4.75,0.0110803) (4.8,0.0108507) (4.85,0.0106281) (4.9,0.0104123) (4.95,0.010203) (5,0.01)};
+\draw[teal!75!black,dashdotted,very thick] plot coordinates {(0,1) (0.05,1) (0.1,1) (0.15,1) (0.2,1) (0.25,1) (0.3,0.6944444) (0.35,0.5102041) (0.4,0.390625) (0.45,0.308642) (0.5,0.25) (0.55,0.2066116) (0.6,0.1736111) (0.65,0.147929) (0.7,0.127551) (0.75,0.1111111) (0.8,0.0976562) (0.85,0.0865052) (0.9,0.0771605) (0.95,0.0692521) (1,0.0625) (1.05,0.0566893) (1.1,0.0516529) (1.15,0.047259) (1.2,0.0434028) (1.25,0.04) (1.3,0.0369822) (1.35,0.0342936) (1.4,0.0318878) (1.45,0.0297265) (1.5,0.0277778) (1.55,0.0260146) (1.6,0.0244141) (1.65,0.0229568) (1.7,0.0216263) (1.75,0.0204082) (1.8,0.0192901) (1.85,0.0182615) (1.9,0.017313) (1.95,0.0164366) (2,0.015625) (2.05,0.0148721) (2.1,0.0141723) (2.15,0.0135208) (2.2,0.0129132) (2.25,0.0123457) (2.3,0.0118147) (2.35,0.0113173) (2.4,0.0108507) (2.45,0.0104123) (2.5,0.01) (2.55,0.0096117) (2.6,0.0092456) (2.65,0.0089) (2.7,0.0085734) (2.75,0.0082645) (2.8,0.0079719) (2.85,0.0076947) (2.9,0.0074316) (2.95,0.0071818) (3,0.0069444) (3.05,0.0067186) (3.1,0.0065036) (3.15,0.0062988) (3.2,0.0061035) (3.25,0.0059172) (3.3,0.0057392) (3.35,0.0055692) (3.4,0.0054066) (3.45,0.005251) (3.5,0.005102) (3.55,0.0049593) (3.6,0.0048225) (3.65,0.0046913) (3.7,0.0045654) (3.75,0.0044444) (3.8,0.0043283) (3.85,0.0042166) (3.9,0.0041091) (3.95,0.0040058) (4,0.0039063) (4.05,0.0038104) (4.1,0.003718) (4.15,0.003629) (4.2,0.0035431) (4.25,0.0034602) (4.3,0.0033802) (4.35,0.0033029) (4.4,0.0032283) (4.45,0.0031562) (4.5,0.0030864) (4.55,0.003019) (4.6,0.0029537) (4.65,0.0028905) (4.7,0.0028293) (4.75,0.0027701) (4.8,0.0027127) (4.85,0.002657) (4.9,0.0026031) (4.95,0.0025508) (5,0.0025)};
+\draw[blue!75!black,very thick] (3.1,.89)--(3.55,.89) node[right,font=\small] {$n=1$};
+\draw[orange!85!black,very thick,dashed] (3.1,.78)--(3.55,.78) node[right,font=\small] {$n=4$};
+\draw[teal!75!black,very thick,dashdotted] (3.1,.67)--(3.55,.67) node[right,font=\small] {$n=16$};
+\end{tikzpicture}
+\caption{Ograniczenia Czebyszewa $\min(1,1/(na^2))$,
+gdzie $a=\varepsilon/\sigma>0$ i $\sigma>0$.
+Wartość w zerze oznacza ciągłe przedłużenie ograniczenia.
+Krzywe nie są dokładnymi prawdopodobieństwami;
+ich obniżanie przy wzroście $n$ ilustruje kontrolę średniej.}
+\label{fig:rp1-05-chebyshev-average}
+\end{figure}
+
 
 \section{Momenty wyższych rzędów i sens funkcji tworzących}
 
@@ -219,27 +427,47 @@ a jednocześnie zupełnie inny kształt ogonów. Chcielibyśmy zatem
 przechowywać informacje o całej rodzinie momentów, a najlepiej
 w jednej funkcji, na której można wykonywać zwykłe operacje
 analityczne. Dwa użyteczne pomysły polegają na obliczaniu
-$\E z^X$ dla zmiennych całkowitoliczbowych i $\E e^{tX}$
+$\E z^X$ dla zmiennych o wartościach w $\N_0=\{0,1,2,\ldots\}$ i $\E e^{tX}$
 dla zmiennych rzeczywistych. Trzeci --- wykorzystujący
 $e^{itX}$ --- pozwala uniknąć problemu rozbieżności.
 
 \begin{definicja}
-Niech $X$ będzie rzeczywistą zmienną losową i $r\in\N$.
-Jeśli $\E|X|^r<\infty$, to $m_r(X):=\E X^r$
-nazywamy momentem zwykłym rzędu $r$. Jeśli $\E X$
-istnieje i $\E|X|^r<\infty$, to
-$\mu_r(X):=\E(X-\E X)^r$ nazywamy momentem centralnym.
-Momentami absolutnymi nazywamy $\E|X|^r$.
+Niech $X$ będzie rzeczywistą zmienną losową, a $r\geq1$
+liczbą całkowitą. Jeśli $\E|X|^r<\infty$, to
+$m_r(X):=\E X^r$ nazywamy momentem zwykłym rzędu $r$.
+Ponieważ $|x|\leq1+|x|^r$, założenie to zapewnia
+całkowalność $X$. Ponadto nierówność trójkąta i wypukłość funkcji
+$t\mapsto t^r$ na $[0,\infty)$ zastosowana z wagami
+$1/2,1/2$ dają
+\[
+|X-\E X|^r\leq 2^{r-1}(|X|^r+|\E X|^r),
+\]
+więc $\mu_r(X):=\E[(X-\E X)^r]$ jest skończona.
+Nazywamy ją momentem centralnym rzędu $r$.
+Dla dowolnego rzeczywistego $s>0$ wielkość
+$\E|X|^s\in[0,\infty]$ nazywamy momentem bezwzględnym
+rzędu $s$.
 \end{definicja}
 
 \begin{uwaga}
 Dla nieparzystego $r$ całka $\E X^r$ może nie istnieć,
 nawet gdy symetria rozkładu formalnie sugeruje zero.
-Istnienie momentu jako skończonej liczby wymaga
-$\E|X|^r<\infty$. Gdy $r>s>0$, z nierówności
-$|x|^s\leq 1+|x|^r$ wynika, że istnienie momentu
-absolutnego rzędu $r$ zapewnia istnienie wszystkich momentów
-absolutnych mniejszych rzędów.
+Istnienie momentu zwykłego jako skończonej liczby
+w sensie całki Lebesgue'a jest równoważne warunkowi
+$\E|X|^r<\infty$, ponieważ $|X^r|=|X|^r$.
+Na przykład dla standardowego rozkładu Cauchy'ego
+(por. \eqref{eq:cauchy} w rozdziale~\ref{ch:distributions})
+obie części całki definiującej średnią są nieskończone:
+dla części dodatniej
+$\int_0^R x/(\pi(1+x^2))\,\dd\lambda_1(x)
+=\log(1+R^2)/(2\pi)\to\infty$, a część ujemna
+ma tę samą całkę z symetrii gęstości.
+Gdy $r>s>0$, dla $|x|\leq1$ mamy $|x|^s\leq1$,
+a dla $|x|>1$ mamy $|x|^s\leq|x|^r$.
+W konsekwencji $\E|X|^s\leq1+\E|X|^r$,
+więc skończoność momentu bezwzględnego rzędu $r$
+zapewnia skończoność wszystkich momentów bezwzględnych
+dodatnich rzędów mniejszych od $r$.
 \end{uwaga}
 
 \section{Funkcja tworząca prawdopodobieństwa}
@@ -252,74 +480,185 @@ liczb wystąpień --- dokładnie tak, jak splot ciągów mas
 opisuje rozkład ich sumy.
 
 \begin{definicja}
-Niech $N:\Omega\to\N_0$ będzie zmienną losową.
+Niech $N:\Omega\to\N_0$ będzie zmienną losową na przestrzeni
+probabilistycznej $(\Omega,\mathcal F,\Prob)$.
 Jej funkcją tworzącą prawdopodobieństwa nazywamy
 $G_N(z):=\E z^N=\sum_{k=0}^\infty \Prob(N=k)z^k$
-dla $|z|\leq1$, z konwencją $0^0=1$.
-Dla argumentów zespolonych stosujemy tę samą definicję.
+dla $z\in\mathbb C$, $|z|\leq1$, z konwencją $0^0=1$.
+Funkcja $\omega\mapsto z^{N(\omega)}$ jest mierzalna:
+przeciwobraz dowolnego zbioru borelowskiego w $\mathbb C$
+jest przeliczalną sumą odpowiednich zdarzeń $\{N=k\}$. Jej moduł
+nie przekracza jedności, więc funkcja $z^N$ jest całkowalna.
+Równość z szeregiem wynika z \eqref{eq:lotus},
+zastosowanego do funkcji borelowskiej $h$ określonej
+przez $h(k)=z^k$ dla $k\in\N_0$ i $h(x)=0$ poza $\N_0$.
+W ten sposób nie trzeba definiować potęgi zespolonej
+$z^x$ dla dowolnego rzeczywistego $x$.
+Szereg jest bezwzględnie i jednostajnie zbieżny na domkniętym
+kole jednostkowym, ponieważ $|p_kz^k|\leq p_k$ i
+$\sum_{k=0}^\infty p_k=1$. W szczególności $G_N$ jest
+ciągła na tym kole.
 \end{definicja}
 
 \begin{twierdzenie}[Odzyskiwanie rozkładu i momentów silniowych]
-Niech $N$ przyjmuje wartości w $\N_0$, a $G_N$ będzie jej
-funkcją tworzącą. Wtedy $G_N(1)=1$, a dla $k\in\N_0$
-zachodzi $\Prob(N=k)=G_N^{(k)}(0)/k!$.
-Dla $r\in\N$ i $0\leq z<1$ mamy
+Niech $N$ będzie zmienną losową o wartościach w $\N_0$,
+a $G_N$ jej funkcją tworzącą. Funkcja $G_N$ jest holomorficzna
+w otwartym kole jednostkowym, $G_N(1)=1$, a dla $k\in\N_0$
+zachodzi $\Prob(N=k)=G_N^{(k)}(0)/k!$, gdzie
+$G_N^{(0)}=G_N$. W konsekwencji funkcja $G_N$ wyznacza
+rozkład $N$ jednoznacznie.
+Dla całkowitego $r\geq1$ i $0\leq z<1$ mamy
 \[
-G_N^{(r)}(z)=\E\bigl[(N)_r z^{N-r}\ind{\{N\geq r\}}\bigr],
+G_N^{(r)}(z)=\E\bigl[(N)_r z^{N-r}\chi_{\{N\geq r\}}\bigr],
 \qquad (n)_r:=n(n-1)\cdots(n-r+1).
 \]
 W powyższym wzorze całe wyrażenie pod wartością oczekiwaną
 ma wartość $0$ na $\{N<r\}$, bez obliczania $z^{N-r}$;
 dla $z=0$ i $N=r$ przyjmujemy $0^0=1$.
-W szczególności $G_N^{(r)}(1-)=\E(N)_r\in[0,\infty]$.
+Dla $n<r$ iloczyn $(n)_r$ jest zerowy.
+W szczególności istnieje granica lewostronna
+$G_N^{(r)}(1-):=\lim_{z\uparrow1}G_N^{(r)}(z)
+=\E(N)_r\in[0,\infty]$.
+Nie utożsamiamy tej granicy z pochodną zespoloną w punkcie
+$1$, który może leżeć na brzegu koła zbieżności.
+Dla $r=1$ w szczególności $\E N=G_N'(1-)$,
+także gdy średnia jest nieskończona.
 Jeżeli $\E N^2<\infty$, to
-$\E N=G_N'(1-)$ i
 $\Var(N)=G_N''(1-)+G_N'(1-)-[G_N'(1-)]^2$.
 \end{twierdzenie}
 \begin{proof}
-Dla $|z|<1$ szereg $\sum_k p_kz^k$ jest bezwzględnie
-zbieżny i można go różniczkować dowolną liczbę razy
-wewnątrz koła jednostkowego: na każdym $|z|\leq\rho<1$
-pochodne kolejnych wyrazów są ograniczone przez
-$(k)_r\rho^{k-r}$, a szereg tych ograniczeń jest zbieżny,
-ponieważ $p_k\leq1$. Współczynnik przy $z^k$ jest więc
-równy $G_N^{(k)}(0)/k!$. Z drugiej strony, podstawiając
-$z=1$, otrzymujemy $G_N(1)=\sum_kp_k=1$.
-Dla $z\uparrow1$ każdy składnik $(k)_rz^{k-r}$ jest
-niemalejący i nieujemny. Twierdzenie o zbieżności
-monotonicznej dla sum daje
-$G_N^{(r)}(1-)=\sum_{k\geq r}(k)_rp_k=\E(N)_r$,
-bez uprzedniego zakładania skończoności tej liczby.
-Wreszcie $N^2=N(N-1)+N$; podstawiając tę tożsamość
-do wzoru $\Var(N)=\E N^2-(\E N)^2$, otrzymujemy tezę.
+Promień zbieżności szeregu $\sum_k p_kz^k$ jest co
+najmniej jeden, ponieważ $0\leq p_k\leq1$.
+Z twierdzenia o różniczkowaniu szeregów potęgowych
+wewnątrz koła zbieżności wynika holomorficzność $G_N$
+oraz możliwość różniczkowania wyraz po wyrazie:
+\[
+G_N^{(r)}(z)=\sum_{k=r}^\infty (k)_r p_kz^{k-r}
+\quad (|z|<1).
+\]
+Dla $0<\rho<1$ i $k\geq r$ moduł każdego wyrazu
+jest nie większy od $(k)_r\rho^{k-r}$.
+Iloraz kolejnych takich ograniczeń wynosi
+$\rho(k+1)/(k+1-r)\to\rho<1$, więc szereg ograniczeń
+jest zbieżny z kryterium d'Alemberta.
+Dla $z=0$ i $r\geq1$ jedynym niezerowym składnikiem
+może być wyraz o $k=r$, co daje $G_N^{(r)}(0)=r!p_r$;
+dla $r=0$ mamy bezpośrednio $G_N(0)=p_0$.
+Dla $0\leq z<1$ definiujemy funkcję na $\N_0$ równą
+$(k)_rz^{k-r}$ dla $k\geq r$ i zeru dla $k<r$.
+Przedłużając ją zerem na $\R\setminus\N_0$, otrzymujemy
+funkcję nieujemną i borelowską. Wzór \eqref{eq:lotus}
+oraz zbieżność szeregu pochodnej dają skończoną
+wartość oczekiwaną z tezy.
+Podstawiając $z=1$ do pierwotnego szeregu, otrzymujemy
+$G_N(1)=\sum_kp_k=1$.
+Dla $k\geq r$ składnik $(k)_rp_kz^{k-r}$ jest
+niemalejący i nieujemny na $[0,1)$, a jego granicą
+przy $z\uparrow1$ jest $(k)_rp_k$.
+Stosujemy \atlasref{ME-08::thm:mct}{twierdzenie o zbieżności monotonicznej}
+względem miary liczącej do dowolnego ciągu $z_j\uparrow1$:
+\[
+\lim_j G_N^{(r)}(z_j)=
+\sum_{k=r}^\infty(k)_rp_k=\E(N)_r.
+\]
+Monotoniczność $G_N^{(r)}$ na $[0,1)$ gwarantuje istnienie
+granicy lewostronnej o tej wartości, także nieskończonej.
+Jeżeli $\E N^2<\infty$, to $\E N<\infty$ z nierówności
+$N\leq1+N^2$, a $0\leq N(N-1)\leq N^2$.
+Wówczas $\E N=G_N'(1-)$, a z tożsamości
+$N^2=N(N-1)+N$ otrzymujemy
+$\E N^2=G_N''(1-)+G_N'(1-)$.
+Odjęcie kwadratu średniej daje podany wzór na wariancję.
 \end{proof}
 
 \begin{twierdzenie}[Suma niezależnych liczników]
-Jeśli $N_1,N_2$ są niezależnymi zmiennymi o wartościach
-w $\N_0$, to $G_{N_1+N_2}(z)=G_{N_1}(z)G_{N_2}(z)$
+Jeśli $N_1,N_2$ są niezależnymi zmiennymi losowymi
+o wartościach w $\N_0$ na wspólnej przestrzeni
+probabilistycznej, to $G_{N_1+N_2}(z)=G_{N_1}(z)G_{N_2}(z)$
 dla $|z|\leq1$.
 \end{twierdzenie}
 \begin{proof}
-Dla $|z|\leq1$ wszystkie zmienne $z^{N_j}$ są ograniczone
-co do modułu przez jeden. Niezależność $N_1,N_2$ implikuje
-niezależność ich mierzalnych funkcji, więc przez Fubiniego
-$\E[z^{N_1}z^{N_2}]=\E z^{N_1}\,\E z^{N_2}$.
-Lewa strona jest równa $\E z^{N_1+N_2}$.
+Oznaczmy $p_j=\Prob(N_1=j)$, $q_k=\Prob(N_2=k)$.
+Dla $|z|\leq1$ zmienna $z^{N_1+N_2}$ jest ograniczona
+co do modułu przez jeden. Z niezależności
+$\Prob(N_1=j,N_2=k)=p_jq_k$.
+Stosując \atlasref{ME-13::thm:pushforward-integral-13}{wzór na całkę względem miary obrazowej}
+dla wektora $(N_1,N_2)$ oraz wzór na całkę względem
+miary dyskretnej, otrzymujemy
+\[
+\begin{aligned}
+G_{N_1+N_2}(z)
+&=\sum_{j,k\geq0}z^{j+k}p_jq_k\\
+&=\left(\sum_{j\geq0}z^jp_j\right)
+  \left(\sum_{k\geq0}z^kq_k\right)
+=G_{N_1}(z)G_{N_2}(z).
+\end{aligned}
+\]
+Rozdzielenie sum jest uprawnione, ponieważ
+$\sum_{j,k\geq0}|z^{j+k}p_jq_k|\leq
+\sum_{j,k\geq0}p_jq_k=1$.
+Dla $z=0$ równość $z^{j+k}=z^jz^k$ zachodzi również
+przy przyjętej konwencji $0^0=1$.
 \end{proof}
 
-\begin{przyklad}[Cztery klasyczne funkcje tworzące]
-Dla $B\sim\operatorname{Bern}(p)$ zachodzi
-$G_B(z)=1-p+pz$. Dla $N\sim\Bin(n,p)$ mamy
-$G_N(z)=(1-p+pz)^n$. Dla $N\sim\Poi(\lambda)$:
-$G_N(z)=\exp(\lambda(z-1))$.
-Jeśli $T\sim\Geom(p)$ oznacza numer pierwszej udanej próby,
-to $N=T-1$ liczy poprzedzające ją porażki i
-$G_N(z)=p/[1-(1-p)z]$ dla $|z|\leq1$.
-Dla liczby porażek przed $r$-tym sukcesem otrzymujemy
-$G(z)=[p/(1-(1-p)z)]^r$.
-Porównanie tych wzorów od razu wyjaśnia stabilność
-rozkładu Poissona przy sumowaniu i konstrukcję
-ujemnego dwumianowego jako sumy czasów oczekiwania.
+\begin{przyklad}[Pięć klasycznych funkcji tworzących]
+Korzystamy z definicji rozkładów z rozdziału~\ref{ch:distributions}.
+W każdym przypadku $z\in\mathbb C$, $|z|\leq1$.
+
+Dla $B\sim\operatorname{Bern}(p)$, $p\in[0,1]$,
+z dwóch mas punktowych otrzymujemy $G_B(z)=1-p+pz$.
+Dla $N\sim\Bin(n,p)$, $n\geq0$ całkowitego, z
+\eqref{eq:binomial} i dwumianu Newtona wynika
+\[
+G_N(z)=\sum_{k=0}^n\binom nk (pz)^k(1-p)^{n-k}
+=(1-p+pz)^n.
+\]
+Przy potęgach zerowych stosujemy konwencję $0^0=1$.
+
+Dla $N\sim\Poi(\lambda)$, $\lambda>0$, z szeregu funkcji
+wykładniczej dostajemy
+\[
+G_N(z)=e^{-\lambda}\sum_{k=0}^\infty\frac{(\lambda z)^k}{k!}
+=\exp(\lambda(z-1)).
+\]
+Jeżeli $N_1\sim\Poi(\lambda_1)$ i $N_2\sim\Poi(\lambda_2)$
+są niezależne, to ich suma ma funkcję tworzącą
+$\exp((\lambda_1+\lambda_2)(z-1))$.
+Z jednoznaczności rozkładu wyznaczonego przez funkcję
+tworzącą wynika $N_1+N_2\sim\Poi(\lambda_1+\lambda_2)$.
+W tym przykładzie $\lambda_1,\lambda_2$ oznaczają parametry
+rozkładów, nie miary Lebesgue'a.
+
+Jeśli $T\sim\Geom(p)$, $p\in(0,1]$, oznacza numer pierwszej
+udanej próby, to $N=T-1$ liczy poprzedzające ją porażki.
+Po oznaczeniu $q=1-p$ mamy $\Prob(N=k)=pq^k$ dla $k\geq0$.
+Ponieważ $|qz|\leq q<1$, z szeregu geometrycznego otrzymujemy
+\[
+G_N(z)=p\sum_{k=0}^\infty(qz)^k=\frac{p}{1-qz}.
+\]
+W szczególności przy $p=1$ funkcja tworząca jest równa $1$.
+
+Dla liczby porażek $L$ przed $r$-tym sukcesem, gdzie
+$r\geq1$ jest liczbą całkowitą, w ciągu niezależnych prób Bernoulliego
+z parametrem $p\in(0,1]$, niech $W_j$ oznacza liczbę prób
+od poprzedniego sukcesu do następnego, wliczając sukces
+(dla $j=1$ liczymy od początku). W rozdziale~\ref{ch:distributions}
+wykazano, że $W_1,\ldots,W_r$ są niezależne i mają rozkład
+$\Geom(p)$. Zmienne $W_j-1$ również są niezależne:
+dla dowolnych borelowskich $A_j$ zdarzenia
+$\{W_j-1\in A_j\}=\{W_j\in 1+A_j\}$ są niezależne,
+zgodnie z definicją niezależności zmiennych losowych.
+Zatem $L=\sum_{j=1}^r(W_j-1)$ prawie na pewno.
+Rozkład łączny tych zmiennych jest iloczynem ich rozkładów,
+więc wielokrotne sumowanie bezwzględnie zbieżnego szeregu,
+jak w dowodzie wzoru dla dwóch niezależnych liczników, daje
+\[
+G_L(z)=\left(\frac{p}{1-qz}\right)^r.
+\]
+Dla liczby wszystkich prób $T_r=L+r$ funkcja tworząca
+wynosi natomiast $G_{T_r}(z)=z^rG_L(z)$, ponieważ
+$z^{L+r}=z^rz^L$, również przy $z=0$ i przyjętej konwencji.
+Rozróżnienie tych dwóch konwencji jest istotne.
 \end{przyklad}
 
 \section{Funkcja tworząca momenty i kumulanty}
@@ -327,73 +666,167 @@ ujemnego dwumianowego jako sumy czasów oczekiwania.
 \begin{definicja}
 Dla rzeczywistej zmiennej losowej $X$ definiujemy
 $M_X(t):=\E e^{tX}\in(0,\infty]$ dla $t\in\R$.
+Funkcja podcałkowa jest mierzalna i ściśle dodatnia,
+więc jej całka nie może być zerowa: w przeciwnym razie $e^{tX}=0$
+prawie na pewno, co jest niemożliwe.
 Dziedziną skończoności jest $D_X:=\{t\in\R:M_X(t)<\infty\}$;
-zawsze $0\in D_X$, lecz $D_X$ nie musi zawierać
-żadnego otoczenia zera. Jeśli $M_X$ jest skończona
-w otoczeniu zera, określamy również funkcję tworzącą
-kumulanty $K_X(t):=\log M_X(t)$.
+zawsze $M_X(0)=1$, zatem $0\in D_X$, lecz $D_X$
+nie musi zawierać żadnego otoczenia zera.
+Jeśli $M_X$ jest skończona w otoczeniu zera, określamy
+funkcję tworzącą kumulanty $K_X(t):=\log M_X(t)$ dla $t\in D_X$.
+Kumulantą rzędu $r\geq1$ nazywamy $\kappa_r(X):=K_X^{(r)}(0)$,
+gdzie $r$ jest liczbą całkowitą; istnienie tych pochodnych
+wynika z następnego twierdzenia.
 \end{definicja}
+
+Dziedzina $D_X$ jest przedziałem, być może zredukowanym
+do jednego punktu. Istotnie, dla $s,t\in D_X$ i $0<\theta<1$
+nierówność Höldera z wykładnikami $1/\theta$ i $1/(1-\theta)$
+(\atlasref{ME-14::thm:holder-14}{nierówność Höldera}) daje
+\[
+M_X(\theta s+(1-\theta)t)
+\leq M_X(s)^\theta M_X(t)^{1-\theta}<\infty.
+\]
+Funkcje $e^{\theta sX}$ oraz $e^{(1-\theta)tX}$ spełniają
+hipotezy tej nierówności, ponieważ ich odpowiednie potęgi
+mają skończone całki. Przypadki $\theta=0,1$ są bezpośrednie.
+Ta sama nierówność po zlogarytmowaniu dowodzi wypukłości
+$\log M_X$ na $D_X$.
 
 \begin{twierdzenie}[Istnienie pochodnych i odzyskiwanie momentów]
 Niech $X$ będzie rzeczywistą zmienną losową oraz
 $\delta>0$ takie, że $M_X(-\delta)<\infty$ i
-$M_X(\delta)<\infty$. Wtedy $M_X$ jest nieskończenie
-wiele razy różniczkowalna na $(-\delta,\delta)$ oraz
+$M_X(\delta)<\infty$. Wtedy $M_X$ jest klasy $C^\infty$ na $(-\delta,\delta)$ oraz
 dla każdego $r\in\N_0$ i $|t|<\delta$ zachodzi
 \[
 M_X^{(r)}(t)=\E[X^r e^{tX}].
 \]
 W szczególności $\E|X|^r<\infty$ i
 $M_X^{(r)}(0)=\E X^r$ dla każdego $r\in\N_0$.
+Ponadto dla $|t|<\delta$ zachodzi rozwinięcie
+\[
+M_X(t)=\sum_{r=0}^\infty\frac{\E X^r}{r!}t^r.
+\]
 \end{twierdzenie}
 \begin{proof}
 Najpierw zwróćmy uwagę, że
 $e^{\delta|X|}\leq e^{\delta X}+e^{-\delta X}$.
 Zatem $\E e^{\delta|X|}<\infty$.
-Ustalmy $0<\eta<\delta$ i $r\geq0$. Funkcja
-$u\mapsto u^re^{-(\delta-\eta)u}$ jest ograniczona na
-$[0,\infty)$, więc istnieje $C_{r,\eta,\delta}<\infty$
-taka, że dla $|t|\leq\eta$:
-$|X|^re^{tX}\leq C_{r,\eta,\delta}e^{\delta|X|}$.
-Prawa strona jest całkowalna i nie zależy od $t$.
-Możemy więc stosować twierdzenie o zbieżności zdominowanej
-do ilorazów różnicowych, a następnie do wyższych pochodnych:
-każde różniczkowanie $e^{tX}$ mnoży wyrażenie przez $X$.
-Dostajemy wzór na wszystkie pochodne. Dla $t=0$
-otrzymujemy momenty, które są skończone na mocy
-powyższego oszacowania dla $r$ i $\eta=0$.
+Ustalmy $0<\eta<\delta$ i całkowite $r\geq0$.
+Funkcja $u\mapsto u^re^{-(\delta-\eta)u}$ jest ograniczona na
+$[0,\infty)$, ponieważ dla $r>0$ jej granica w nieskończoności
+jest zerowa, a dla $r=0$ nie przekracza jedności.
+Istnieje zatem stała $C_{r,\eta,\delta}<\infty$ taka, że
+dla $|t|\leq\eta$:
+\[
+|X|^re^{tX}\leq C_{r,\eta,\delta}e^{\delta|X|}.
+\]
+W szczególności wszystkie momenty bezwzględne rzędów
+całkowitych są skończone (weźmy $t=0$), a skończoność
+momentów pozostałych dodatnich rzędów wynika z oszacowania
+momentów niższych rzędów z poprzedniej sekcji. Oznaczmy $H_r(t)=\E[X^re^{tX}]$,
+przyjmując $X^0=1$. Funkcja $H_r$ jest ciągła na
+$(-\delta,\delta)$ przez
+\atlasref{ME-08::thm:dct}{twierdzenie o zbieżności zmajoryzowanej}
+i powyższą wspólną majorantę na każdym przedziale
+$[-\eta,\eta]$.
+
+Dla ustalonego $t$ wybieramy $\eta$ tak, aby
+$|t|<\eta<\delta$. Jeżeli $0<|h|<\eta-|t|$, to
+z twierdzenia o wartości średniej dla funkcji wykładniczej
+dla każdego $x\in\R$ mamy
+\[
+\left|x^r\frac{e^{(t+h)x}-e^{tx}}{h}\right|
+\leq |x|^{r+1}e^{\eta|x|}
+\leq C_{r+1,\eta,\delta}e^{\delta|x|}.
+\]
+Iloraz różnicowy dąży punktowo do $x^{r+1}e^{tx}$.
+Zbieżność zmajoryzowana pozwala więc przenieść granicę
+pod całkę i daje $H_r'(t)=H_{r+1}(t)$.
+Ponieważ $M_X=H_0$, indukcja dowodzi
+$M_X^{(r)}=H_r$, a ciągłość wszystkich $H_r$ daje klasę
+$C^\infty$. Dla $t=0$ otrzymujemy żądane wzory na momenty.
+Aby uzyskać rozwinięcie w szereg, dla ustalonego $|t|<\delta$
+stosujemy szereg wykładniczy. Moduł każdej sumy częściowej
+$\sum_{r=0}^n(tX)^r/r!$ nie przekracza $e^{|t||X|}$,
+a ta funkcja jest całkowalna, ponieważ
+$e^{|t||X|}\leq e^{\delta|X|}$. Zbieżność zmajoryzowana
+daje wskazany szereg dla $M_X(t)$. Jego bezwzględna zbieżność
+wynika z oszacowania
+\[
+\sum_{r=0}^\infty\frac{|\E X^r|}{r!}|t|^r
+\leq \E\left[\sum_{r=0}^\infty\frac{|tX|^r}{r!}\right]
+=\E e^{|t||X|}<\infty,
+\]
+gdzie wymiana sumy z całką wynika ze zbieżności monotonicznej.
 \end{proof}
 
 \begin{twierdzenie}[Dodawanie kumulantów]
-Niech $X,Y$ będą niezależnymi rzeczywistymi zmiennymi losowymi,
-a ich funkcje $M_X,M_Y$ będą skończone w pewnym wspólnym
+Niech $X,Y$ będą niezależnymi rzeczywistymi zmiennymi losowymi
+na wspólnej przestrzeni probabilistycznej, a ich funkcje $M_X,M_Y$ będą skończone w pewnym wspólnym
 otoczeniu zera. Wtedy w tym otoczeniu
 $M_{X+Y}(t)=M_X(t)M_Y(t)$ i
 $K_{X+Y}(t)=K_X(t)+K_Y(t)$.
+W szczególności $\kappa_r(X+Y)=\kappa_r(X)+\kappa_r(Y)$
+dla każdego całkowitego $r\geq1$.
 Ponadto $K_X'(0)=\E X$, $K_X''(0)=\Var(X)$
 oraz $K_X'''(0)=\E(X-\E X)^3$.
 \end{twierdzenie}
 \begin{proof}
-Nieujemność $e^{tX}$ i $e^{tY}$ oraz niezależność pozwalają
-zastosować Tonellego do miary produktowej:
-$\E e^{t(X+Y)}=\E e^{tX}\E e^{tY}$.
-Obie wartości są skończone w podanym otoczeniu, więc
-możemy wziąć logarytm. Ponieważ $M_X(0)=1$, reguły
+Z niezależności rozkład łączny jest miarą produktową
+$\mu_X\otimes\mu_Y$ (rozdział~\ref{ch:random-variables}).
+Korzystając z całkowania względem miary obrazowej i
+\atlasref{ME-12::thm:tonelli-12}{twierdzenia Tonellego}
+dla nieujemnej borelowskiej funkcji $(x,y)\mapsto e^{tx}e^{ty}$,
+otrzymujemy
+\[
+M_{X+Y}(t)=\int_{\R^2}e^{tx}e^{ty}\,
+\dd(\mu_X\otimes\mu_Y)(x,y)
+=M_X(t)M_Y(t).
+\]
+Oba czynniki są dodatnie i skończone we wspólnym otoczeniu
+zera, zatem $M_{X+Y}$ jest tam skończona, a logarytmowanie
+daje wzór na sumę funkcji tworzących kumulanty.
+Z założenia o wspólnym otoczeniu zera można wybrać
+$\delta_0>0$ tak, aby wszystkie trzy funkcje tworzące
+momenty były skończone w punktach $\pm\delta_0$.
+Poprzednie twierdzenie i gładkość logarytmu na $(0,\infty)$
+zapewniają istnienie wszystkich pochodnych kumulant.
+Różniczkując tę równość w zerze, uzyskujemy
+$\kappa_r(X+Y)=\kappa_r(X)+\kappa_r(Y)$ dla każdego $r\geq1$. Ponieważ $M_X(0)=1$, reguły
 różniczkowania logarytmu dają
 $K_X'=M_X'/M_X$ i
 $K_X''=M_X''/M_X-(M_X'/M_X)^2$.
-Dla trzeciej pochodnej otrzymujemy przy $t=0$
-$K_X'''(0)=\E X^3-3\E X\,\E X^2+2(\E X)^3$,
-co jest rozwinięciem trzeciego momentu centralnego.
+W szczególności $K_X'(0)=\E X$, a
+$K_X''(0)=\E X^2-(\E X)^2=\Var(X)$.
+Różniczkując jeszcze raz, dostajemy
+\[
+K_X'''=\frac{M_X'''}{M_X}
+-\frac{3M_X'M_X''}{M_X^2}
++\frac{2(M_X')^3}{M_X^3}.
+\]
+Podstawiając $t=0$ i wzory na momenty, otrzymujemy
+$K_X'''(0)=\E X^3-3\E X\,\E X^2+2(\E X)^3$.
+Rozwinięcie $(X-\E X)^3$ i liniowość całki pokazują,
+że jest to trzeci moment centralny.
 \end{proof}
 
 \begin{przyklad}[Kumulanty trzech rodzin]
-Dla $X\sim\Normal(\mu,\sigma^2)$ mamy
-$K_X(t)=\mu t+\sigma^2t^2/2$: wszystkie pochodne
-rzędu co najmniej trzeciego znikają. Dla
-$N\sim\Poi(\lambda)$ zachodzi $K_N(t)=\lambda(e^t-1)$,
-a więc każda kumulanta dodatniego rzędu jest równa $\lambda$.
-Dla zmiennej Bernoulliego $K_B(t)=\log(1-p+pe^t)$.
+Korzystamy ze wzorów na funkcje tworzące momenty
+z rozdziału~\ref{ch:distributions}.
+Dla $X\sim\Normal(\mu,\sigma^2)$, $\mu\in\R$, $\sigma>0$,
+logarytm funkcji tworzącej daje
+$K_X(t)=\mu t+\sigma^2t^2/2$, zatem
+$\kappa_1(X)=\mu$, $\kappa_2(X)=\sigma^2$
+i $\kappa_r(X)=0$ dla $r\geq3$.
+Dla $N\sim\Poi(\lambda)$, $\lambda>0$, zachodzi
+$K_N(t)=\lambda(e^t-1)$, a więc
+$\kappa_r(N)=\lambda$ dla każdego $r\geq1$.
+Dla $B\sim\operatorname{Bern}(p)$, $p\in[0,1]$,
+mamy $M_B(t)=1-p+pe^t$ oraz $K_B(t)=\log(1-p+pe^t)$.
+Ponieważ $B^r=B$ dla całkowitych $r\geq1$, poprzednie
+wzory dają $\kappa_1(B)=p$, $\kappa_2(B)=p(1-p)$
+oraz $\kappa_3(B)=p-3p^2+2p^3=p(1-p)(1-2p)$.
 \end{przyklad}
 
 \begin{stwierdzenie}[Jednoznaczność funkcji tworzącej momenty]
@@ -406,41 +839,104 @@ i są tam równe, to $\Law(X)=\Law(Y)$.
 Rozważmy transformaty zespolone
 $L_X(z)=\E e^{zX}$ i $L_Y(z)=\E e^{zY}$
 na pasie $\{z\in\mathbb C:|\operatorname{Re}z|<\delta\}$.
-Są tam holomorficzne: dla dowolnych $0<\eta<\delta'
-<\delta$, na pasie $|\operatorname{Re}z|\leq\eta$
-moduły wyrazów $X^re^{zX}$ można oszacować przez
-$C_r e^{\delta'|X|}$, którego wartość oczekiwana
-jest skończona, ponieważ $M_X(\delta')$ i
-$M_X(-\delta')$ są skończone. To zapewnia zbieżność
-zdominowaną dla kolejnych pochodnych zespolonych.
+Wykażemy holomorficzność $L_X$; dla $L_Y$ argument
+jest identyczny. Dla ustalonego $z_0$ z pasa wybierzmy
+$|\operatorname{Re}z_0|<\eta<\delta'<\delta$.
+Mamy $\E e^{\delta'|X|}<\infty$ z oszacowania
+$e^{\delta'|X|}\leq e^{\delta'X}+e^{-\delta'X}$,
+więc całka definiująca $L_X(z_0)$ jest bezwzględnie zbieżna.
+Dla zespolonego $w\ne0$, $|w|<\eta-|\operatorname{Re}z_0|$,
+korzystamy z tożsamości
+\[
+\frac{e^{(z_0+w)x}-e^{z_0x}}{w}
+=x\int_0^1 e^{(z_0+sw)x}\,\dd\lambda_1(s).
+\]
+Wynika ona z podstawowego twierdzenia rachunku całkowego
+dla funkcji zmiennej rzeczywistej $s$, zastosowanego
+do części rzeczywistej i urojonej.
+Moduł prawej strony nie przekracza
+$|x|e^{\eta|x|}\leq C e^{\delta'|x|}$.
+Iloraz dąży do $xe^{z_0x}$ przy $w\to0$.
+Zbieżność zmajoryzowana, stosowana do obu części,
+daje istnienie pochodnej zespolonej
+$L_X'(z_0)=\E[Xe^{z_0X}]$.
+Ponieważ $z_0$ jest dowolny, $L_X$ jest holomorficzna
+na całym pasie.
+Pas jest otwartym i spójnym zbiorem, a przedział
+$(-\delta,\delta)$ ma w nim punkt skupienia.
 Z zasady identyczności funkcji holomorficznych równość
-$L_X(t)=L_Y(t)$ na $(-\delta,\delta)$ implikuje
+$L_X(t)=L_Y(t)$ na tym przedziale implikuje
 równość na całym pasie, w szczególności dla $z=it$.
 Zatem $\varphi_X(t)=\varphi_Y(t)$ dla każdego $t\in\R$.
 Twierdzenie o jednoznaczności funkcji charakterystycznej,
 udowodnione w następnej sekcji, daje $\Law(X)=\Law(Y)$.
 \end{proof}
 
+W szczególności jeżeli obie funkcje tworzące momenty
+są skończone w pewnym wspólnym otoczeniu zera i
+$\E X^r=\E Y^r$ dla wszystkich całkowitych $r\geq1$,
+to rozwinięcia w szeregi potęgowe są identyczne
+na dostatecznie małym otoczeniu zera (wyrazy stałe
+są równe jeden). Z udowodnionego stwierdzenia wynika
+wtedy $\Law(X)=\Law(Y)$. Samo istnienie wszystkich
+momentów nie zapewnia jednak takiej jednoznaczności,
+co pokazuje następny przykład.
+
 \begin{przyklad}[Wszystkie momenty nie muszą wyznaczać rozkładu]
 Niech $Z\sim\Normal(0,1)$ oraz $X=e^Z$.
-Zmienna $X$ ma wszystkie dodatnie całkowite momenty
-$\E X^n=e^{n^2/2}$, ale dla każdego $t>0$ zachodzi
-$M_X(t)=\infty$ (w całce po $z\to\infty$ wykładnik
-$t e^z-z^2/2$ zmierza do $+\infty$).
-Co więcej, przyjmijmy gęstość $f_0(x)=
-\ind{\{x>0\}}e^{-(\log x)^2/2}/(x\sqrt{2\pi})$
-i dla $|\varepsilon|\leq1$ połóżmy
-$f_\varepsilon(x)=f_0(x)[1+\varepsilon\sin(2\pi\log x)]$.
-Są to nieujemne gęstości: dla każdego $n\in\N_0$
+Ze wzoru na funkcję tworzącą standardowego rozkładu normalnego
+(rozdział~\ref{ch:distributions})
+otrzymujemy $\E X^n=\E e^{nZ}=e^{n^2/2}$ dla każdego
+całkowitego $n\geq0$. Jednak dla $t>0$
 \[
-\int_0^\infty x^n f_0(x)\sin(2\pi\log x)
-\,\dd\lambda_1(x)
-=\operatorname{Im}\exp((n+2\pi i)^2/2)=0,
+M_X(t)=\frac{1}{\sqrt{2\pi}}\int_\R
+\exp(te^z-z^2/2)\,\dd\lambda_1(z)=\infty.
 \]
-gdyż $\sin(2\pi n)=0$. Dla $n=0$ otrzymujemy
-normalizację, a dla wszystkich $n$ --- identyczne momenty.
-Dla różnych $\varepsilon$ gęstości są jednak różne prawie
-wszędzie. Ten przykład pokazuje, dlaczego sama lista momentów
+Istotnie, wykładnik $te^z-z^2/2$ dąży do $+\infty$
+przy $z\to+\infty$, więc funkcja podcałkowa bez czynnika
+$1/\sqrt{2\pi}$ jest od pewnego miejsca nie mniejsza od $1$.
+Dla $t\leq0$ mamy natomiast $0<e^{tX}\leq1$,
+zatem $D_X=(-\infty,0]$.
+
+Z twierdzenia o transformacji monotonicznej dla
+$\exp:\R\to(0,\infty)$ wynika, że $X$ ma gęstość
+\[
+f_0(x)=
+\begin{cases}
+\displaystyle\frac{\exp(-(\log x)^2/2)}{x\sqrt{2\pi}},&x>0,\\
+0,&x\leq0.
+\end{cases}
+\]
+Dla $\varepsilon\in[-1,1]$ połóżmy
+$f_\varepsilon(x)=f_0(x)[1+\varepsilon\sin(2\pi\log x)]$
+dla $x>0$, a $f_\varepsilon(x)=0$ dla $x\leq0$.
+Funkcje te są borelowskie, nieujemne i ograniczone
+z góry przez $2f_0$. W szczególności ich całki i wszystkie
+momenty nieujemnych rzędów całkowitych są skończone.
+Aby sprawdzić normalizację i równość momentów, podstawiamy
+$x=e^z$ w całce. Dla każdego całkowitego $n\geq0$
+\[
+\begin{aligned}
+\int_0^\infty x^n f_0(x)\sin(2\pi\log x)\,
+\dd\lambda_1(x)
+&=\operatorname{Im}\E e^{(n+2\pi i)Z}\\
+&=\operatorname{Im}\exp((n+2\pi i)^2/2)=0.
+\end{aligned}
+\]
+Ostatni wzór wynika z holomorficzności $L_Z$ na
+każdym pasie $|\operatorname{Re}z|<\delta$, wykazanej
+w poprzednim dowodzie, oraz zasady identyczności:
+$L_Z(z)=e^{z^2/2}$ na $\mathbb C$, ponieważ obie funkcje
+są holomorficzne i zgadzają się na $\R$.
+Część urojona wynosi $e^{n^2/2-2\pi^2}\sin(2\pi n)=0$.
+Dla $n=0$ otrzymujemy $\int_\R f_\varepsilon\,\dd\lambda_1=1$,
+a dla wszystkich $n\geq1$ identyczne momenty $e^{n^2/2}$.
+Dla $\varepsilon\ne\varepsilon'$ funkcje
+$f_\varepsilon$ i $f_{\varepsilon'}$ różnią się na
+$(0,\infty)$ poza przeliczalnym zbiorem
+$\{e^{k/2}:k\in\mathbb Z\}$, gdyż $f_0$ jest tam dodatnia.
+Z jednoznaczności gęstości prawie wszędzie wynika,
+że wyznaczają różne rozkłady. Ten przykład pokazuje, dlaczego sama lista momentów
 bez warunków zapewniających jednoznaczność może być niewystarczająca.
 \end{przyklad}
 
@@ -456,24 +952,31 @@ informację o całym rozkładzie, nie tylko o jego średniej.
 Funkcją charakterystyczną rzeczywistej zmiennej losowej $X$
 nazywamy $\varphi_X:\R\to\mathbb C$ zadaną wzorem
 $\varphi_X(t):=\E e^{itX}=\int_\R e^{itx}\,\dd\mu_X(x)$.
+Równość wynika z \eqref{eq:lotus}, ponieważ funkcja
+$x\mapsto e^{itx}$ jest ciągła i ma moduł jeden.
+Dla borelowskiej miary probabilistycznej $\mu$ piszemy
+analogicznie $\varphi_\mu(t)=\int_\R e^{itx}\,\dd\mu(x)$.
+Jest to transformata Fouriera miary z konwencją znaku
+dodatniego w wykładniku.
 \end{definicja}
 
 \begin{twierdzenie}[Własności funkcji charakterystycznej]
 Dla każdej rzeczywistej zmiennej losowej $X$ i
-$t,s,a,b\in\R$ zachodzą:
+$t,a,b\in\R$ zachodzą:
 \begin{enumerate}
 \item $\varphi_X(0)=1$, $|\varphi_X(t)|\leq1$
  i $\varphi_X(-t)=\overline{\varphi_X(t)}$;
 \item $\varphi_X$ jest jednostajnie ciągła na $\R$;
 \item $\varphi_{aX+b}(t)=e^{itb}\varphi_X(at)$;
-\item dla niezależnych $X,Y$ mamy
+\item dla niezależnych rzeczywistych zmiennych losowych
+ $X,Y$ na wspólnej przestrzeni probabilistycznej mamy
  $\varphi_{X+Y}(t)=\varphi_X(t)\varphi_Y(t)$;
 \item dla dowolnych $n\in\N$, $t_1,\ldots,t_n\in\R$,
  $c_1,\ldots,c_n\in\mathbb C$ zachodzi
  $\sum_{j,k=1}^n c_j\overline{c_k}\varphi_X(t_j-t_k)\geq0$.
 \end{enumerate}
-Jeżeli $\E|X|^r<\infty$ dla pewnego $r\in\N$,
-to $\varphi_X$ jest $r$ razy różniczkowalna i
+Jeżeli $\E|X|^r<\infty$ dla pewnego całkowitego $r\geq1$,
+to $\varphi_X$ jest klasy $C^r$ na $\R$ i
 $\varphi_X^{(k)}(t)=\E[(iX)^k e^{itX}]$
 dla $0\leq k\leq r$.
 \end{twierdzenie}
@@ -486,40 +989,84 @@ Dla ciągu $h_n\to0$ wyrażenie
 $|\varphi_X(t+h_n)-\varphi_X(t)|$
 jest nie większe niż $\E|e^{ih_nX}-1|$, niezależnie od $t$.
 Funkcja pod wartością oczekiwaną dąży punktowo do zera
-i nie przekracza $2$, więc zbieżność zdominowana daje
-jednostajną ciągłość. Punkt trzeci wynika z równości
+i nie przekracza $2$. Z
+\atlasref{ME-08::thm:dct}{twierdzenia o zbieżności zmajoryzowanej}
+wynika $\E|e^{ihX}-1|\to0$ przy $h\to0$.
+Ponieważ oszacowanie jest niezależne od $t$, otrzymujemy
+$\sup_{t\in\R}|\varphi_X(t+h)-\varphi_X(t)|\to0$,
+czyli jednostajną ciągłość. Punkt trzeci wynika z równości
 $e^{it(aX+b)}=e^{itb}e^{i(at)X}$.
-Dla czwartego korzystamy z niezależności i Fubiniego:
+Dla czwartego korzystamy z niezależności, dzięki której
+rozkład łączny jest miarą $\mu_X\otimes\mu_Y$.
+Funkcja $(x,y)\mapsto e^{itx}e^{ity}$ ma moduł jeden,
+jest więc całkowalna względem tej miary probabilistycznej.
+Z twierdzenia o mierze obrazowej i
+\atlasref{ME-12::thm:fubini-12}{twierdzenia Fubiniego}
+dla obu części zespolonych wynika
 $\E[e^{itX}e^{itY}]=\E e^{itX}\E e^{itY}$.
-Dla ostatniego punktu obliczamy
+Dla ostatniego punktu korzystamy z liniowości całki
+zespolonej dla skończonej sumy:
 \[
-\sum_{j,k}c_j\overline{c_k}\varphi_X(t_j-t_k)
-=\E\left|\sum_{j=1}^n c_je^{it_jX}\right|^2\geq0.
+\begin{aligned}
+\sum_{j,k=1}^n c_j\overline{c_k}\varphi_X(t_j-t_k)
+&=\E\left[\sum_{j,k=1}^n
+c_je^{it_jX}\overline{c_ke^{it_kX}}\right]\\
+&=\E\left|\sum_{j=1}^n c_je^{it_jX}\right|^2\geq0.
+\end{aligned}
 \]
-Wreszcie $|(iX)^k e^{itX}|=|X|^k$ jest całkowalna
-przy $k\leq r$. Zbieżność zdominowana stosowana
-kolejno do ilorazów różnicowych uzasadnia różniczkowanie
-pod całką i podany wzór na pochodne.
+Ostatnia funkcja jest nieujemna i ograniczona przez
+$(\sum_{j=1}^n|c_j|)^2$, a więc całkowalna.
+Wreszcie oznaczmy $H_k(t)=\E[(iX)^ke^{itX}]$,
+$0\leq k\leq r$, przy konwencji $X^0=1$.
+Z nierówności $|X|^k\leq1+|X|^r$ wynika całkowalność
+tych funkcji podcałkowych. Zbieżność zmajoryzowana
+daje ciągłość wszystkich $H_k$.
+Dla $0\leq k<r$ i rzeczywistego $h\ne0$ zachodzi
+\[
+\left|(ix)^k e^{itx}\frac{e^{ihx}-1}{h}\right|
+\leq |x|^{k+1},
+\]
+gdyż $e^{ihx}-1=ihx\int_0^1e^{ishx}\,\dd\lambda_1(s)$.
+Iloraz różnicowy dąży do $(ix)^{k+1}e^{itx}$,
+a majoranta $|X|^{k+1}$ jest całkowalna.
+Zbieżność zmajoryzowana zastosowana do obu części
+zespolonych daje $H_k'=H_{k+1}$.
+Indukcja od $H_0=\varphi_X$ oraz ciągłość $H_r$
+dowodzą tezy.
 \end{proof}
 
 \begin{lemat}[Całka Fouriera dla rozkładu Gaussa]
 Jeśli $Z\sim\Normal(0,1)$, to
 $\varphi_Z(t)=e^{-t^2/2}$ dla $t\in\R$.
-Jeśli $Y\sim\Normal(m,\sigma^2)$, to
+Jeśli $Y\sim\Normal(m,\sigma^2)$, gdzie $m\in\R$ i
+$\sigma>0$, to
 $\varphi_Y(t)=\exp(imt-\sigma^2t^2/2)$.
 \end{lemat}
 \begin{proof}
 Niech $g(x)=(2\pi)^{-1/2}e^{-x^2/2}$.
-Zdominowana zbieżność pozwala różniczkować
-$\varphi_Z(t)=\int_\R e^{itx}g(x)\,\dd\lambda_1(x)$.
-Ponieważ $g'(x)=-xg(x)$, całkowanie przez części daje
-$\int_\R xe^{itx}g(x)\,\dd\lambda_1(x)
-=it\int_\R e^{itx}g(x)\,\dd\lambda_1(x)$;
-wyrazy brzegowe znikają dzięki wykładniczemu zanikowi $g$.
-Stąd $\varphi_Z'(t)=i(it\varphi_Z(t))=-t\varphi_Z(t)$.
-Przy warunku początkowym $\varphi_Z(0)=1$ rozwiązanie tego
-równania to $e^{-t^2/2}$. Drugą równość otrzymujemy
-przez przekształcenie afiniczne $Y\stackrel d=m+\sigma Z$.
+Z definicji gęstości normalnej (rozdział~\ref{ch:distributions})
+oraz \eqref{eq:lotus} mamy
+$\E|Z|=2(2\pi)^{-1/2}\int_0^\infty xe^{-x^2/2}\,\dd\lambda_1(x)
+=\sqrt{2/\pi}<\infty$, gdyż podstawienie $u=x^2/2$
+daje $\int_0^\infty e^{-u}\,\dd\lambda_1(u)=1$.
+Poprzednie twierdzenie daje więc
+$\varphi_Z'(t)=i\int_\R xe^{itx}g(x)\,\dd\lambda_1(x)$.
+Ponieważ $g'(x)=-xg(x)$, całkowanie przez części na
+$[-R,R]$ (osobno dla części rzeczywistej i urojonej) daje
+\[
+\int_{-R}^R xe^{itx}g(x)\,\dd\lambda_1(x)
+=-[e^{itx}g(x)]_{-R}^R+
+it\int_{-R}^R e^{itx}g(x)\,\dd\lambda_1(x).
+\]
+Obie całki przechodzą do całek po $\R$ przy $R\to\infty$,
+ponieważ odpowiednio $|x|g(x)$ i $g(x)$ są całkowalne.
+Wyraz brzegowy ma moduł nie większy od $2g(R)\to0$.
+Stąd $\varphi_Z'(t)=-t\varphi_Z(t)$, czyli
+$(e^{t^2/2}\varphi_Z(t))'=0$.
+Warunek $\varphi_Z(0)=1$ daje $\varphi_Z(t)=e^{-t^2/2}$.
+Z transformacji gęstości przez $x\mapsto m+\sigma x$
+wynika $\Law(Y)=\Law(m+\sigma Z)$.
+Własność afiniczna funkcji charakterystycznej daje drugą równość.
 \end{proof}
 
 \begin{twierdzenie}[Jednoznaczność funkcji charakterystycznej]
@@ -531,42 +1078,75 @@ to $\Law(X)=\Law(Y)$.
 Oznaczmy rozkłady przez $\mu$ i $\nu$, a przez
 $g_\sigma(x)=(\sigma\sqrt{2\pi})^{-1}
 \exp(-x^2/(2\sigma^2))$ gęstość $\Normal(0,\sigma^2)$
-dla $\sigma>0$. Dzięki poprzedniemu lematowi i
-całkowalności funkcji $t\mapsto e^{-\sigma^2t^2/2}$
-możemy zastosować Fubiniego do wzoru Fouriera na gęstość
-Gaussa i otrzymać dla każdego $x\in\R$
+dla $\sigma>0$. Oznaczmy przez $\gamma_\sigma$ miarę
+$g_\sigma\lambda_1$ i przez $\mu*\gamma_\sigma$ obraz
+miary produktowej $\mu\otimes\gamma_\sigma$ przez dodawanie.
+Dla zbioru borelowskiego $B$ korzystamy z definicji
+miary obrazowej, podstawienia $x=y+u$ (przesunięcie
+zachowuje miarę Lebesgue'a) i twierdzenia Tonellego
+dla nieujemnej borelowskiej funkcji
+$(y,u)\mapsto\chi_B(y+u)g_\sigma(u)$. Dostajemy
+\[
+(\mu*\gamma_\sigma)(B)
+=\int_\R\int_\R\chi_B(y+u)g_\sigma(u)\,
+\dd\lambda_1(u)\,\dd\mu(y)
+=\int_B\int_\R g_\sigma(x-y)\,\dd\mu(y)\,\dd\lambda_1(x).
+\]
+Zatem funkcja $x\mapsto\int_\R g_\sigma(x-y)\,\dd\mu(y)$
+jest gęstością splotu; jej mierzalność wynika z Tonellego.
+Z poprzedniego lematu, podstawiając $v=\sigma t$, otrzymujemy
+dla każdego $u\in\R$
+\[
+\frac1{2\pi}\int_\R e^{-itu}e^{-\sigma^2t^2/2}\,\dd\lambda_1(t)
+=\frac1{\sigma\sqrt{2\pi}}e^{-u^2/(2\sigma^2)}
+=g_\sigma(u).
+\]
+Całka z modułu funkcji podcałkowej po $\mu(y)$ i
+$\lambda_1(t)$ wynosi $\int_\R e^{-\sigma^2t^2/2}\,\dd\lambda_1(t)
+=\sqrt{2\pi}/\sigma<\infty$.
+Możemy więc zastosować Fubiniego i dla każdego $x\in\R$
+otrzymujemy
 \[
 \int_\R g_\sigma(x-y)\,\dd\mu(y)
 =\frac1{2\pi}\int_\R
  e^{-itx}\varphi_\mu(t)e^{-\sigma^2t^2/2}
 \,\dd\lambda_1(t).
 \]
-Tutaj użyliśmy elementarnej odwrotności transformaty
-Fouriera Gaussa, wynikającej z udowodnionego wzoru na
-$\varphi_Z$ (równoważnie z całki Gaussa po zamianie
-ról zmiennych). To samo zachodzi dla $\nu$.
+To samo zachodzi dla $\nu$.
 Równość funkcji charakterystycznych oznacza zatem,
-że sploty $\mu*g_\sigma$ i $\nu*g_\sigma$ mają
+że sploty $\mu*\gamma_\sigma$ i $\nu*\gamma_\sigma$ mają
 identyczne gęstości, a więc są równymi miarami.
 
 Dla dowolnej funkcji $h:\R\to\R$ ograniczonej i ciągłej
-oraz niezależnej zmiennej $Z\sim\Normal(0,1)$ zachodzi
+oraz zmiennej $Z\sim\Normal(0,1)$, określonej na dowolnej
+przestrzeni probabilistycznej, zachodzi
 \[
-\int_\R h(x)\,\dd(\mu*g_\sigma)(x)
-=\int_\R\E[h(x+\sigma Z)]\,\dd\mu(x).
+\int_\R h(x)\,\dd(\mu*\gamma_\sigma)(x)
+=\int_\R\E[h(y+\sigma Z)]\,\dd\mu(y).
 \]
-Gdy $\sigma\downarrow0$, dla każdego ustalonego $x$
-zmienna $h(x+\sigma Z)$ dąży prawie na pewno do $h(x)$,
+Jest to wzór na całkę względem miary obrazowej i Fubini
+dla funkcji ograniczonej na przestrzeni o mierze jeden;
+$\sigma Z$ ma rozkład $\gamma_\sigma$. Wewnętrzna
+wartość oczekiwana jest borelowską funkcją $y$,
+co wynika z mierzalności całki względem parametru
+w twierdzeniu Fubiniego (lub z ciągłości i zbieżności
+zmajoryzowanej).
+Gdy $\sigma\downarrow0$, dla każdego ustalonego $y$
+zmienna $h(y+\sigma Z)$ dąży punktowo do $h(y)$,
 a jej moduł jest ograniczony przez $\|h\|_\infty$.
-Dwukrotne zastosowanie zbieżności zdominowanej daje
-$\int h\,\dd(\mu*g_\sigma)\to\int h\,\dd\mu$;
+Dwukrotne zastosowanie zbieżności zmajoryzowanej daje
+$\int h\,\dd(\mu*\gamma_\sigma)\to\int h\,\dd\mu$;
 podobnie dla $\nu$. Ponieważ sploty były równe dla
 każdego $\sigma$, otrzymujemy
 $\int h\,\dd\mu=\int h\,\dd\nu$ dla każdej
-ograniczonej funkcji ciągłej $h$. Takie całki
-jednoznacznie wyznaczają borelowskie miary probabilistyczne
-na $\R$ (przez aproksymację wskaźników przedziałów
-funkcjami ciągłymi). Wobec tego $\mu=\nu$.
+ograniczonej funkcji ciągłej $h$. Dla ustalonego $a\in\R$ niech $h_n$ będzie równa $1$
+na $(-\infty,a]$, liniowo maleje od $1$ do $0$ na
+$[a,a+1/n]$ i wynosi $0$ na $[a+1/n,\infty)$.
+Funkcje te są ograniczone, ciągłe i dążą punktowo
+do $\chi_{(-\infty,a]}$. Zbieżność zmajoryzowana
+względem obu miar daje $\mu((-\infty,a])=\nu((-\infty,a])$.
+Z jednoznaczności miary wyznaczonej przez dystrybuantę
+(rozdział~\ref{ch:random-variables}) otrzymujemy $\mu=\nu$.
 \end{proof}
 
 \begin{stwierdzenie}[Odwracanie transformaty przy całkowalności]
@@ -579,24 +1159,49 @@ f_X(x)=\frac1{2\pi}\int_\R e^{-itx}\varphi_X(t)
 \]
 \end{stwierdzenie}
 \begin{proof}
-Niech $g_\sigma$ będzie gaussowską gęstością z
-poprzedniego dowodu. Splot $\mu_X*g_\sigma$ ma gęstość
-$f_\sigma(x)=(2\pi)^{-1}\int e^{-itx}\varphi_X(t)
+Niech $\gamma_\sigma=g_\sigma\lambda_1$ będzie miarą
+gaussowską z poprzedniego dowodu. Splot $\mu_X*\gamma_\sigma$
+ma gęstość
+$f_\sigma(x)=(2\pi)^{-1}\int_\R e^{-itx}\varphi_X(t)
  e^{-\sigma^2t^2/2}\,\dd\lambda_1(t)$.
-Ponieważ $|e^{-\sigma^2t^2/2}|\leq1$, zbieżność zdominowana
-względem $|\varphi_X(t)|\,\dd\lambda_1(t)$ daje
-$f_\sigma\to f$ jednostajnie na całej $\R$.
-Funkcja $f$ jest ciągła i ograniczona z dominacji
-oraz ciągłości fazy $e^{-itx}$.
+Oznaczmy przez $f$ funkcję z tezy. Dla każdego $x$
+\[
+|f_\sigma(x)-f(x)|\leq\frac1{2\pi}\int_\R
+|\varphi_X(t)|\,|e^{-\sigma^2t^2/2}-1|\,\dd\lambda_1(t).
+\]
+Prawa strona jest niezależna od $x$ i dąży do zera
+przez zbieżność zmajoryzowaną, z majorantą $|\varphi_X|$.
+Zatem $f_\sigma\to f$ jednostajnie na $\R$, a w szczególności
+$f$ jest rzeczywista i nieujemna, gdyż takie są $f_\sigma$.
+Z nierówności trójkąta mamy $|f(x)|\leq
+(2\pi)^{-1}\int_\R|\varphi_X(t)|\,\dd\lambda_1(t)$.
+Ciągłość $f$ wynika ze zbieżności zmajoryzowanej przy
+$x_n\to x$ w całce definiującej $f$.
 Dla nieujemnej funkcji ciągłej $h$ o zwartym nośniku
-mamy $\int h f_\sigma\,\dd\lambda_1\to
-\int h f\,\dd\lambda_1$ z jednostajnej zbieżności,
-a jednocześnie $\int h f_\sigma\,\dd\lambda_1\to\E h(X)$
+mamy
+\[
+\left|\int_\R h(x)(f_\sigma(x)-f(x))\,\dd\lambda_1(x)\right|
+\leq \|f_\sigma-f\|_\infty\int_\R h(x)\,\dd\lambda_1(x)
+\longrightarrow0,
+\]
+gdyż $h$ jest ograniczona i ma zwarty nośnik,
+a jednocześnie $\int_\R h(x)f_\sigma(x)\,\dd\lambda_1(x)
+\to\E h(X)$
 z argumentu z dowodu jednoznaczności.
-Zatem $\int h f\,\dd\lambda_1=\E h(X)$
-dla wszystkich takich $h$, co wyznacza miarę
-$\mu_X=f\lambda_1$. W szczególności $f\geq0$
-i $\int f\,\dd\lambda_1=1$.
+Zatem $\int_\R h(x)f(x)\,\dd\lambda_1(x)=\E h(X)$
+dla wszystkich takich $h$.
+Aby uzyskać normalizację, weźmy
+$h_n(x)=\min(1,\max(0,n+1-|x|))$, $n\geq1$.
+Są to nieujemne ciągłe funkcje o zwartym nośniku
+i $h_n\uparrow1$. Zbieżność monotoniczna po obu stronach
+daje $\int_\R f(x)\,\dd\lambda_1(x)=1$.
+Miara $\rho=f\lambda_1$ jest więc probabilistyczna.
+Dla dowolnej ograniczonej ciągłej funkcji $h\geq0$ stosujemy
+uzyskaną równość do $hh_n$ i przechodzimy do granicy
+przez zbieżność monotoniczną. Otrzymujemy
+$\int_\R h\,\dd\rho=\int_\R h\,\dd\mu_X$.
+Stosując ciągłą aproksymację półprostych z poprzedniego
+dowodu, wnioskujemy $\rho=\mu_X$.
 \end{proof}
 
 \begin{przyklad}[Ciężkie ogony a funkcja charakterystyczna]
@@ -605,10 +1210,22 @@ $\varphi_X(t)=e^{-|t|}$. Udowodnimy tę tożsamość
 bez odwoływania się do rachunku residuów.
 Niech $Z_1,Z_2$ będą niezależnymi zmiennymi standardowo
 normalnymi. Z przedstawienia rozkładu Studenta dla
-jednego stopnia swobody wiemy, że $C=Z_1/|Z_2|$
-ma rozkład Cauchy'ego. Korzystając z niezależności
-i funkcji charakterystycznej rozkładu normalnego,
-możemy całkować najpierw po $Z_1$:
+jednego stopnia swobody (rozdział~\ref{ch:distributions})
+wiemy, że $C=Z_1/|Z_2|$ ma rozkład Cauchy'ego;
+na zdarzeniu $\{Z_2=0\}$, którego prawdopodobieństwo
+wynosi zero, definiujemy $C=0$.
+Tak określona zmienna $C$ jest mierzalna: iloraz jest
+ciągły na otwartym zbiorze par $(x,z)$ z $z\ne0$,
+a na domkniętym zbiorze $\{z=0\}$ przyjmujemy zero.
+Rozkład łączny $Z_1,Z_2$ jest miarą produktową.
+Funkcja $e^{itC}$ ma moduł jeden, więc po przeniesieniu
+całkowania na rozkład łączny Fubini pozwala
+całkować najpierw po $Z_1$ dla ustalonego $Z_2=z\ne0$.
+Wewnętrzna całka to $\varphi_{Z_1}(t/|z|)$, czyli
+$e^{-t^2/(2z^2)}$. Korzystając z symetrii gęstości $Z_2$,
+otrzymujemy poniższą równość, przyjmując funkcję
+$x\mapsto\exp(-t^2/(2x^2))$ równą $1$ w punkcie $x=0$
+(co odpowiada przyjętemu $C=0$ na $\{Z_2=0\}$):
 \[
 \varphi_C(t)=\E\exp\!\left(-\frac{t^2}{2Z_2^2}\right)
 =\sqrt{\frac2\pi}\int_0^\infty
@@ -617,18 +1234,34 @@ możemy całkować najpierw po $Z_1$:
 \]
 Aby obliczyć tę całkę, dla $a>0$ i $b\geq0$ połóżmy
 $I(a,b)=\int_0^\infty e^{-az^2-b/z^2}\,\dd\lambda_1(z)$.
-Dla $b>0$ wolno różniczkować względem $b$ pod całką
-(zdominowanie na dowolnym zwartym podprzedziale
-$(0,\infty)$). Podstawienie $u=\sqrt{b/a}/z$ daje
+Całka jest dodatnia i skończona, ponieważ jej funkcja
+podcałkowa jest dodatnia i nie większa od $e^{-az^2}$.
+Dla $b>0$ ustalmy $0<b_0<b<b_1$. Z twierdzenia o wartości
+średniej ilorazy różnicowe względem $b$, dla przyrostów
+pozostających w $[b_0,b_1]$, są ograniczone przez
+$z^{-2}e^{-az^2-b_0/z^2}$.
+Na $(0,1]$ całkowalność tej majoranty wynika z podstawienia
+$v=1/z$, gdyż $\int_1^\infty e^{-b_0v^2}\,\dd\lambda_1(v)<\infty$;
+na $[1,\infty)$ majoranta nie przekracza $e^{-az^2}$.
+Zbieżność zmajoryzowana uzasadnia różniczkowanie.
+Podstawienie $u=\sqrt{b/a}/z$ w całce pochodnej daje
+$z^{-2}|\dd z/\dd u|=\sqrt{a/b}$ (gdyż
+$z=\sqrt{b/a}/u$ i $|\dd z/\dd u|=\sqrt{b/a}/u^2$) oraz
+$az^2+b/z^2=b/u^2+au^2$. Stąd
 \[
 \frac{\partial I}{\partial b}(a,b)
 =-\int_0^\infty z^{-2}e^{-az^2-b/z^2}\,\dd\lambda_1(z)
 =-\sqrt{\frac ab}\,I(a,b).
 \]
-Zatem $\partial_b\log I(a,b)=-\sqrt{a/b}$,
-czyli $I(a,b)=C(a)e^{-2\sqrt{ab}}$.
-Zdominowana zbieżność przy $b\downarrow0$ i całka
-Gaussa wyznaczają $C(a)=I(a,0)=\sqrt\pi/(2\sqrt a)$.
+Zatem dla $b>0$ mamy $\partial_b\log I(a,b)=-\sqrt{a/b}$.
+Pochodna funkcji $b\mapsto\log I(a,b)+2\sqrt{ab}$
+jest zerowa, więc funkcja ta jest stała na $(0,\infty)$.
+Po potęgowaniu otrzymujemy $I(a,b)=C(a)e^{-2\sqrt{ab}}$.
+Zbieżność zmajoryzowana przy $b\downarrow0$ z majorantą
+$e^{-az^2}$ daje $C(a)=I(a,0)$.
+Podstawiając $u=\sqrt{2a}\,z$ i korzystając z całki Gaussa
+(rozdział~\ref{ch:distributions}), otrzymujemy
+$I(a,0)=\sqrt\pi/(2\sqrt a)$.
 Podstawiając $a=1/2$ i $b=t^2/2$ do powyższego
 wzoru na $\varphi_C$, otrzymujemy
 $\varphi_C(t)=e^{-|t|}$ również dla $t=0$.

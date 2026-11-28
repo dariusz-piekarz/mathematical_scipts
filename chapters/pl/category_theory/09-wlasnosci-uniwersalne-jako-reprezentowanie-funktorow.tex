@@ -1,13 +1,15 @@
 \section{Własności uniwersalne jako reprezentowanie funktorów}\label{sec:reprezentacja}
 
-Definicje z poprzednich sekcji mają jeszcze jedną wspólną cechę. Dla dowolnego obiektu testowego $X$ opisują wszystkie strzałki $X\to U$ przez prostsze dane. Taki sposób myślenia prowadzi do pojęcia funktora reprezentowalnego.
+\providecommand{\atlasref}[2]{#2}
+
+Definicje z poprzednich sekcji mają jeszcze jedną wspólną cechę. Dla dowolnego obiektu testowego $X$ opisują wszystkie strzałki $X\to U$ albo $U\to X$ przez prostsze dane; kierunek strzałek rozstrzyga o wariancji reprezentowanego funktora. Taki sposób myślenia prowadzi do pojęcia funktora reprezentowalnego.
 
 \begin{definicja}[Reprezentowalność]\label{def:representable}
 Niech $\mathcal C$ będzie kategorią lokalnie małą i $F:\mathcal C\to\Set$ funktorem. Mówimy, że $F$ jest \emph{reprezentowalny}, jeśli istnieje obiekt $A\in\Ob(\mathcal C)$ oraz izomorfizm naturalny $\Hom_{\mathcal C}(A,-)\cong F$. Wtedy $A$ \emph{reprezentuje} $F$. Dla funktora kontrawariantnego $G:\mathcal C^{\op}\to\Set$ reprezentowalność oznacza istnienie $A$ oraz izomorfizmu naturalnego $\Hom_{\mathcal C}(-,A)\cong G$.
 \end{definicja}
 
 \begin{przyklad}[Iloczyn jako reprezentowanie]
-Ustalmy obiekty $A,B$ i rozważmy kontrawariantny funktor $G(X)=\Hom_{\mathcal C}(X,A)\times\Hom_{\mathcal C}(X,B)$, z działaniem na morfizmach przez poprzedzanie składaniem. Jeśli iloczyn $A\times B$ istnieje, to uniwersalna własność daje bijekcje
+Ustalmy obiekty $A,B$ i rozważmy kontrawariantny funktor $G(X)=\Hom_{\mathcal C}(X,A)\times\Hom_{\mathcal C}(X,B)$, z działaniem na morfizmach przez składanie z prawej strony. Jeśli iloczyn $A\times B$ istnieje, to uniwersalna własność daje bijekcje
 \[
 \Hom_{\mathcal C}(X,A\times B)\longrightarrow\Hom_{\mathcal C}(X,A)\times\Hom_{\mathcal C}(X,B),\qquad h\longmapsto(p_Ah,p_Bh).
 \]
@@ -15,7 +17,14 @@ Są one naturalne względem $X$: dla $u:Y\to X$ obie drogi prowadzą od $h$ do $
 \end{przyklad}
 
 \begin{przyklad}[Koprodukt jako reprezentowanie]
-Koprodukt $A\sqcup B$ reprezentuje kowariantny funktor $X\mapsto\Hom_{\mathcal C}(A,X)\times\Hom_{\mathcal C}(B,X)$ w sensie izomorfizmu $\Hom_{\mathcal C}(A\sqcup B,X)\cong\Hom_{\mathcal C}(A,X)\times\Hom_{\mathcal C}(B,X)$. Różnica kierunku argumentu $X$ jest istotna.
+Niech $Q=A\sqcup B$ będzie koproduktem z włączeniami $i_A:A\to Q$ i $i_B:B\to Q$. Rozważmy kowariantny funktor $F(X)=\Hom_{\mathcal C}(A,X)\times\Hom_{\mathcal C}(B,X)$. Dla $g:X\to Y$ określamy $F(g)(a,b)=(ga,gb)$; prawa funktora wynikają z łączności składania. Funkcja
+\[
+\Phi_X:\Hom_{\mathcal C}(Q,X)\to F(X),\qquad
+h\mapsto(hi_A,hi_B)
+\]
+jest surjektywna, gdyż dla każdej pary $(a,b)$ własność koproduktu daje morfizm $h$ z $hi_A=a$, $hi_B=b$. Ta sama własność daje jego jednoznaczność, czyli injektywność $\Phi_X$. Dla $g:X\to Y$ mamy
+$\Phi_Y(gh)=(ghi_A,ghi_B)=F(g)(\Phi_X(h))$.
+Jest to naturalność; zatem $Q$ reprezentuje $F$. Różnica kierunku argumentu $X$ w porównaniu z iloczynem jest istotna.
 \end{przyklad}
 
 \begin{twierdzenie}[Reprezentowalność i element uniwersalny]\label{tw:univ-element}
@@ -27,14 +36,165 @@ Niech $\mathcal C$ będzie lokalnie mała, a $F:\mathcal C\to\Set$ funktorem. Na
 W przypadku (i) można wziąć $u=\Phi_A(\id_A)$.
 \end{twierdzenie}
 \begin{proof}
-Załóżmy (i) i ustalmy $X$. Dla $f:A\to X$ naturalność $\Phi$ względem $f$ daje $\Phi_X(f)=F(f)(\Phi_A(\id_A))=F(f)(u)$. Funkcja $\Phi_X$ jest bijekcją, więc dla każdego $x\in F(X)$ istnieje dokładnie jeden $f$ taki, że $F(f)(u)=x$. Otrzymujemy (ii).
+Załóżmy (i) i ustalmy $X$. Dla $f:A\to X$ funktor $\Hom(A,-)$ wysyła $\id_A$ na $f\circ\id_A=f$. Naturalność $\Phi$ oznacza
+\[
+\Phi_X\circ\Hom(A,f)=F(f)\circ\Phi_A.
+\]
+Obliczając obie strony na $\id_A$, otrzymujemy $\Phi_X(f)=F(f)(\Phi_A(\id_A))=F(f)(u)$. Funkcja $\Phi_X$ jest bijekcją, więc dla każdego $x\in F(X)$ istnieje dokładnie jeden $f$ taki, że $F(f)(u)=x$. Otrzymujemy (ii).
 
-Załóżmy (ii). Dla każdego $X$ definiujemy $\Phi_X:\Hom(A,X)\to F(X)$ przez $\Phi_X(f)=F(f)(u)$. Warunek uniwersalności mówi dokładnie, że $\Phi_X$ jest bijekcją. Dla strzałki $g:X\to Y$ i $f:A\to X$ zachodzi $\Phi_Y(gf)=F(gf)(u)=F(g)(F(f)(u))=F(g)(\Phi_X(f))$, czyli rodzina $\Phi_X$ jest naturalna. Mamy zatem izomorfizm naturalny wymagany w (i).
+Załóżmy (ii). Dla każdego $X$ definiujemy $\Phi_X:\Hom(A,X)\to F(X)$ przez $\Phi_X(f)=F(f)(u)$. Dla dowolnego $x\in F(X)$ istnienie strzałki $f$ z $F(f)(u)=x$ daje surjektywność. Jeżeli $\Phi_X(f)=\Phi_X(f')=x$, jednoznaczność takiej strzałki daje $f=f'$, czyli injektywność. Dla strzałki $g:X\to Y$ i $f:A\to X$ zachodzi $\Phi_Y(gf)=F(gf)(u)=F(g)(F(f)(u))=F(g)(\Phi_X(f))$, czyli rodzina $\Phi_X$ jest naturalna. Ponieważ każda $\Phi_X$ jest bijekcją, równanie naturalności po złożeniu z $\Phi_Y^{-1}$ z lewej i $\Phi_X^{-1}$ z prawej daje $\Hom(A,g)\Phi_X^{-1}=\Phi_Y^{-1}F(g)$. Rodzina odwrotności jest zatem naturalna. Mamy izomorfizm naturalny wymagany w (i).
 \end{proof}
 
 
 
 \begin{przyklad}[Reprezentowanie funktora zapominania dla zbiorów punktowanych]
-W kategorii $\Set_*$ zbiorów z wyróżnionym punktem i funkcji zachowujących ten punkt niech $D=\{*,a\}$, gdzie $*$ jest punktem wyróżnionym. Funktor zapominania $U:\Set_*\to\Set$ jest reprezentowany przez $D$: odwzorowanie punktowane $f:D\to(X,x_0)$ jest jednoznacznie wyznaczone przez wartość $f(a)\in X$, ponieważ musi spełniać $f(*)=x_0$. Dostajemy naturalną bijekcję $\Hom_{\Set_*}(D,(X,x_0))\cong X$. Elementem uniwersalnym jest $a\in U(D)$, nie zaś punkt wyróżniony $*$.
+W kategorii $\Set_*$ zbiorów z wyróżnionym punktem i funkcji zachowujących ten punkt niech $D=\{*,a\}$, gdzie $*$ jest punktem wyróżnionym. Funktor zapominania $U:\Set_*\to\Set$ jest reprezentowany przez $D$: odwzorowanie punktowane $f:D\to(X,x_0)$ jest jednoznacznie wyznaczone przez wartość $f(a)\in X$, ponieważ musi spełniać $f(*)=x_0$. Odwrotnie, dla każdego $x\in X$ funkcja $f(*)=x_0$, $f(a)=x$ jest punktowana. Jeśli $h:(X,x_0)\to(Y,y_0)$ jest morfizmem, to $(hf)(a)=h(f(a))$, co dowodzi naturalności bijekcji $\Hom_{\Set_*}(D,(X,x_0))\cong X$. Elementem uniwersalnym jest $a\in U(D)$, nie zaś punkt wyróżniony $*$.
 \end{przyklad}
 
+\subsection{Elementy uniwersalne i jednoznaczność reprezentacji}
+
+\begin{twierdzenie}[Kontrawariantny element uniwersalny]\label{cat:thm:contra-univ-element}
+Niech $G:\mathcal C^{\op}\to\Set$ będzie funktorem, gdzie $\mathcal C$ jest lokalnie mała. Dla obiektu $A$ i elementu $u\in G(A)$ istnieje izomorfizm naturalny $\Psi:\Hom(-,A)\Rightarrow G$ z $\Psi_A(\id_A)=u$ wtedy i tylko wtedy, gdy dla każdego $X$ i $x\in G(X)$ istnieje dokładnie jeden morfizm $f:X\to A$ taki, że $G(f)(u)=x$. Odpowiadający izomorfizm naturalny ma składowe $f\mapsto G(f)(u)$.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy, że $\Psi:\Hom(-,A)\Rightarrow G$ jest izomorfizmem naturalnym z $\Psi_A(\id_A)=u$. Dla $f:X\to A$ naturalność względem $f$, rozpatrywanego jako strzałka $A\to X$ w $\mathcal C^{\op}$, daje
+\[
+\Psi_X(f)=\Psi_X(\id_A\circ f)=G(f)(\Psi_A(\id_A))=G(f)(u).
+\]
+Bijektywność $\Psi_X$ daje istnienie i jednoznaczność $f$.
+Odwrotnie, załóżmy własność uniwersalną. Funkcja
+$\Psi_X:\Hom(X,A)\to G(X)$ zadana przez $\Psi_X(f)=G(f)(u)$
+jest surjektywna przez istnienie morfizmu $f$ dla każdego $x$, a injektywna przez jego jednoznaczność. Ponadto $\Psi_A(\id_A)=G(\id_A)(u)=u$. Dla $h:Y\to X$ kontrawariantność daje
+\[
+\Psi_Y(fh)=G(fh)(u)=G(h)G(f)(u)=G(h)(\Psi_X(f)).
+\]
+To jest równanie naturalności, a składowe odwrotne są naturalne przez odwrócenie bijekcji, jak w dowodzie twierdzenia~\ref{tw:univ-element}.
+\end{proof}
+
+\begin{twierdzenie}[Jednoznaczność pary reprezentującej]\label{cat:thm:representing-unique}
+Jeżeli $(A,u)$ oraz $(B,v)$ są parami uniwersalnymi dla $F:\mathcal C\to\Set$, to istnieje dokładnie jeden izomorfizm $a:A\to B$ spełniający $F(a)(u)=v$. Dla $G:\mathcal C^{\op}\to\Set$ istnieje dokładnie jeden izomorfizm $a:A\to B$ z $G(a)(v)=u$.
+\end{twierdzenie}
+\begin{proof}
+W przypadku kowariantnym uniwersalność $(A,u)$ daje jedyny $a:A\to B$ z $F(a)(u)=v$, a uniwersalność $(B,v)$ daje jedyny $b:B\to A$ z $F(b)(v)=u$. Wówczas
+\[
+F(ba)(u)=F(b)(v)=u=F(\id_A)(u).
+\]
+Jednoznaczność dla $(A,u)$ wymusza $ba=\id_A$. Tak samo
+$F(ab)(v)=F(a)(u)=v=F(\id_B)(v)$, zatem $ab=\id_B$.
+W przypadku kontrawariantnym zastosujmy uniwersalność $(B,v)$ do elementu $u\in G(A)$: istnieje dokładnie jedna strzałka $a:A\to B$ z $G(a)(v)=u$. Z uniwersalności $(A,u)$ dla $v\in G(B)$ dostajemy jedyną strzałkę $b:B\to A$ z $G(b)(u)=v$. Kontrawariantność daje
+\[
+G(ba)(u)=G(a)G(b)(u)=G(a)(v)=u,
+\qquad
+G(ab)(v)=G(b)G(a)(v)=G(b)(u)=v.
+\]
+Identyczności $\id_A$ i $\id_B$ spełniają te same równania co odpowiednio $ba$ i $ab$. Uniwersalność obu par daje $ba=\id_A$ i $ab=\id_B$. Zatem $a$ jest izomorfizmem, a jego jednoznaczność jako morfizmu zgodnego z elementami uniwersalnymi została wykazana już na początku.
+\end{proof}
+
+\begin{uwaga}
+Jednoznaczny jest izomorfizm zachowujący wybrane elementy uniwersalne, nie dowolny izomorfizm obiektów reprezentujących. Na przykład $\mathbb Z$ reprezentuje funktor zapominania $\Ab\to\Set$ za pomocą elementu $1$ albo $-1$: dla $x$ w dowolnej grupie abelowej jedynym homomorfizmem wysyłającym $1$ na $x$ jest $n\mapsto nx$, a jedynym homomorfizmem wysyłającym $-1$ na $x$ jest $n\mapsto -nx$. Izomorfizm zgodny z tymi dwoma elementami to mnożenie przez $-1$, natomiast identyczność nie jest z nimi zgodna.
+\end{uwaga}
+
+\subsection{Kategoria elementów}
+
+\begin{definicja}[Kategoria elementów funktora]\label{cat:def:elements}
+Niech $\mathcal C$ będzie lokalnie mała. Dla $F:\mathcal C\to\Set$ obiektami kategorii elementów $\int F$ są pary $(X,x)$ z $x\in F(X)$. Morfizmem $(X,x)\to(Y,y)$ jest strzałka $f:X\to Y$ z $F(f)(x)=y$. Dla $G:\mathcal C^{\op}\to\Set$ przyjmujemy tę samą orientację strzałek w $\mathcal C$, lecz warunek ma postać $G(f)(y)=x$. Kategoria elementów może być duża.
+\end{definicja}
+
+Istotnie, identyczność spełnia warunek, ponieważ $F(\id_X)=\id_{F(X)}$. Jeżeli $F(f)(x)=y$ i $F(g)(y)=z$, to $F(gf)(x)=F(g)(y)=z$. W wersji kontrawariantnej $G(f)(y)=x$, $G(g)(z)=y$ dają $G(gf)(z)=G(f)G(g)(z)=x$. Łączność oraz prawa identyczności dziedziczymy z $\mathcal C$.
+
+\begin{stwierdzenie}[Reprezentowalność przez obiekt początkowy lub końcowy]\label{cat:prop:elements-representable}
+Dla lokalnie małej kategorii $\mathcal C$ funktor kowariantny $F:\mathcal C\to\Set$ jest reprezentowalny dokładnie wtedy, gdy $\int F$ ma obiekt początkowy. Funktor kontrawariantny $G:\mathcal C^{\op}\to\Set$ jest reprezentowalny dokładnie wtedy, gdy $\int G$ ma obiekt końcowy.
+\end{stwierdzenie}
+\begin{proof}
+Strzałka z $(A,u)$ do $(X,x)$ w $\int F$ to dokładnie morfizm $f:A\to X$ spełniający $F(f)(u)=x$. Istnienie dokładnie jednej takiej strzałki dla każdego $(X,x)$ jest równoważne warunkowi twierdzenia~\ref{tw:univ-element}. W wersji kontrawariantnej strzałka z $(X,x)$ do $(A,u)$ ma postać $f:X\to A$ z $G(f)(u)=x$. Stosujemy twierdzenie~\ref{cat:thm:contra-univ-element}.
+\end{proof}
+
+\subsection{Przykłady algebraiczne i geometryczne}
+
+\begin{przyklad}[Moduł wolny]\label{cat:ex:free-module-rep}
+Niech $R$ będzie pierścieniem z jedynką, $S$ zbiorem, a $\mathcal C$ kategorią lewych $R$-modułów. Funktor
+$F(M)=\operatorname{Map}(S,M)$ działa na homomorfizmie $h:M\to N$ przez $F(h)(u)=h\circ u$. Reprezentuje go moduł wolny $R^{(S)}$ z elementem uniwersalnym $e:S\to R^{(S)}$, $s\mapsto e_s$.
+
+Dla funkcji $u:S\to M$ określamy $\bar u:R^{(S)}\to M$ przez
+\[
+\bar u\left(\sum_{s\in S}r_se_s\right)=\sum_{s\in S}r_su(s).
+\]
+Rodzina współczynników $(r_s)_s$ ma skończony nośnik, więc obie sumy zawierają jedynie skończenie wiele niezerowych składników. Jednoznaczność współrzędnych zapewnia dobre określenie. Jeśli $x=\sum_s r_se_s$ i $y=\sum_s t_se_s$, to
+\[
+\bar u(x+y)=\sum_s(r_s+t_s)u(s)
+=\sum_s r_su(s)+\sum_s t_su(s)=\bar u(x)+\bar u(y).
+\]
+Sumujemy nad sumą skończonych nośników obu rodzin. Dla $a\in R$ mamy
+$\bar u(ax)=\sum_s(ar_s)u(s)=a\sum_s r_su(s)=a\bar u(x)$.
+Kolejność czynników pozostaje zachowana również dla nieprzemiennego $R$. Dla $S=\varnothing$ otrzymujemy moduł zerowy i jedyny homomorfizm z niego do $M$. Mamy $\bar u e=u$. Jeżeli $w$ jest innym homomorfizmem z $we=u$, to
+$w(\sum_s r_se_s)=\sum_s r_sw(e_s)=\sum_s r_su(s)$, więc $w=\bar u$. Twierdzenie~\ref{tw:univ-element} daje reprezentowalność; naturalność można też sprawdzić przez $(h\bar u)e=hu$. Konstrukcja modułu wolnego jest opisana w \atlasref{AA-16::aa:tw:modules-free-universal}{AA-16: własność uniwersalna modułu wolnego}.
+\end{przyklad}
+
+\begin{przyklad}[Lokalizacja pierścienia]\label{cat:ex:localization-rep}
+Ustalmy przemienny pierścień $R$ z jedynką oraz zbiór multiplikatywny $S$ zawierający $1$, niezawierający $0$. W kategorii przemiennych pierścieni z jedynką i homomorfizmów zachowujących jedynkę rozważmy funktor
+\[
+F(T)=\{f:R\to T:\ f\text{ jest homomorfizmem},\
+ f(S)\subseteq T^\times\}.
+\]
+Na strzałce $h:T\to T'$ kładziemy $F(h)(f)=hf$. Jest to dobrze określone, gdyż $h(t)h(t^{-1})=1$ dla jednostki $t$.
+
+Elementem uniwersalnym jest $\iota:R\to S^{-1}R$, $a\mapsto a/1$. Dla $f\in F(T)$ formuła
+$\bar f(a/s)=f(a)f(s)^{-1}$ daje jedyną faktoryzację przez $\iota$. Rzeczywiście, z równości $a/s=b/t$ wynika $u(at-bs)=0$ dla pewnego $u\in S$. Po zastosowaniu $f$ i pomnożeniu przez $f(u)^{-1}f(s)^{-1}f(t)^{-1}$ otrzymujemy $f(a)f(s)^{-1}=f(b)f(t)^{-1}$. Wzory dodawania i mnożenia ułamków oraz przemienność $T$ dają
+\[
+\begin{aligned}
+\bar f(a/s+b/t)
+&=f(at+bs)f(st)^{-1}\\
+&=(f(a)f(t)+f(b)f(s))f(s)^{-1}f(t)^{-1}\\
+&=f(a)f(s)^{-1}+f(b)f(t)^{-1},\\
+\bar f((a/s)(b/t))
+&=f(ab)f(st)^{-1}\\
+&=f(a)f(s)^{-1}f(b)f(t)^{-1}.
+\end{aligned}
+\]
+Ponadto $\bar f(1)=1$, $\bar f\iota=f$. Każdy homomorfizm spełniający ostatnią równość musi wysyłać $(a/1)(s/1)^{-1}$ na $f(a)f(s)^{-1}$. Zatem $(S^{-1}R,\iota)$ reprezentuje $F$. Dla homomorfizmu $h:T\to T'$ mamy $(h\bar f)\iota=hf$. Jednoznaczność przedłużenia daje $h\bar f=\overline{hf}$, co wyraża naturalność w pierścieniu docelowym. Pełną konstrukcję lokalizacji podano w \atlasref{AA-12::aa:tw:localization-universal}{AA-12: własność uniwersalna lokalizacji} oraz w \atlasref{ALG-04::tw:loc-up}{ALG-04: własność uniwersalna lokalizacji w geometrii algebraicznej}.
+\end{przyklad}
+
+\begin{przyklad}[Iloczyn tensorowy]\label{cat:ex:tensor-rep}
+Niech $M$ będzie prawym, a $N$ lewym modułem nad pierścieniem $R$ z jedynką. Dla grupy abelowej $A$ niech $B(A)$ będzie zbiorem funkcji $b:M\times N\to A$ addytywnych w obu zmiennych i spełniających $b(mr,n)=b(m,rn)$. Dla homomorfizmu $h:A\to A'$ funkcja $h\circ b$ nadal jest addytywna i zbilansowana: na przykład
+$(hb)(mr,n)=h(b(m,rn))=(hb)(m,rn)$.
+Identyczności i złożenia zachowuje się przez składanie funkcji. Zatem $B:\Ab\to\Set$ jest funktorem.
+
+Z konstrukcji opisanej w \atlasref{AA-18::aa:tw:tensor-universal}{AA-18: własność uniwersalna iloczynu tensorowego} każda taka funkcja $b$ ma jedyną addytywną faktoryzację $\bar b:M\otimes_R N\to A$ z $\bar b(m\otimes n)=b(m,n)$. Jest to dokładnie warunek twierdzenia~\ref{tw:univ-element} dla pary $(M\otimes_R N,\tau)$, gdzie $\tau(m,n)=m\otimes n$. Naturalność bijekcji
+\[
+\Hom_{\Ab}(M\otimes_R N,A)\cong B(A)
+\]
+wynika z $(h\bar b)\tau=h(\bar b\tau)=hb$. Nie zakładamy, że dla nieprzemiennego $R$ iloczyn tensorowy dowolnej pary takich modułów ma kanoniczną strukturę $R$-modułu. Dla przemiennego $R$ wersja $R$-dwuliniowa reprezentowana jest w kategorii $R$-modułów (\atlasref{AA-18::aa:tw:tensor-commutative-module}{AA-18: struktura modułu nad pierścieniem przemiennym}).
+\end{przyklad}
+
+\begin{przyklad}[Różniczki Kählera]\label{cat:ex:kahler-rep}
+Dla przemiennych pierścieni z jedynką $k,A$ i ustalonego homomorfizmu $k\to A$ rozważmy funktor $A$-modułów
+$M\mapsto\operatorname{Der}_k(A,M)$. Jego elementy to addytywne funkcje $\delta:A\to M$ z $\delta(ab)=a\delta(b)+b\delta(a)$, zerujące się na obrazie $k$. Homomorfizm $A$-modułów $h:M\to N$ działa przez $\delta\mapsto h\delta$: liniowość $h$ zapewnia regułę Leibniza dla $h\delta$, a addytywność i zerowanie się na obrazie $k$ są zachowane.
+
+Przypomnijmy konstrukcję uniwersalnej derywacji, aby uzasadnić istnienie obiektu reprezentującego także dla dowolnej $k$-algebry przemiennej. Niech $E$ będzie wolnym $A$-modułem na symbolach $[a]$, $a\in A$, a $L$ podmodułem generowanym przez
+\[
+[a+b]-[a]-[b],\quad [ab]-a[b]-b[a],
+\quad [\iota(c)]
+\]
+dla $a,b\in A$, $c\in k$, gdzie $\iota:k\to A$ jest homomorfizmem strukturalnym. Niech $\Omega^1_{A/k}=E/L$ i $d(a)=[a]+L$. Każdy generator $L$ znika w ilorazie, zatem $d$ jest addytywna, spełnia regułę Leibniza i zeruje się na obrazie $k$.
+
+Dla derywacji $\delta:A\to M$ własność wolnego modułu daje jedyny homomorfizm $A$-liniowy $v:E\to M$ z $v([a])=\delta(a)$. Obrazy trzech rodzajów generatorów $L$ są odpowiednio
+$\delta(a+b)-\delta(a)-\delta(b)$, $\delta(ab)-a\delta(b)-b\delta(a)$ oraz $\delta(\iota(c))$, czyli zero. Z liniowości $v$ wynika $L\subseteq\Ker v$. Dlatego $\varphi(e+L)=v(e)$ jest dobrze określonym homomorfizmem $A$-liniowym, a $\varphi d=\delta$. Jeżeli $\varphi'$ ma tę samą własność, to $\varphi'$ i $\varphi$ są równe na wszystkich $[a]+L$, które generują iloraz, więc są równe na całym module. Prezentację dla ilorazu pierścienia wielomianów podano w \atlasref{ALG-04::st:kahler}{ALG-04: różniczki Kählera w pierścieniu ilorazowym}. Zatem
+\[
+\Hom_A(\Omega^1_{A/k},M)\cong\operatorname{Der}_k(A,M).
+\]
+Naturalność względem $h$ wyraża równość $(h\varphi)d=h\delta$.
+To przykład reprezentowania funktora, a nie utożsamienia wszystkich derywacji z jednym odwzorowaniem $d$.
+\end{przyklad}
+
+\subsection{Kryterium braku reprezentowalności}
+
+\begin{stwierdzenie}[Reprezentowalność a obiekt końcowy]\label{cat:prop:rep-terminal}
+Jeżeli lokalnie mała kategoria $\mathcal C$ ma obiekt końcowy $1$, to każdy kowariantny funktor reprezentowalny $F:\mathcal C\to\Set$ spełnia $|F(1)|=1$.
+\end{stwierdzenie}
+\begin{proof}
+Dla obiektu reprezentującego $A$ mamy bijekcję $\Hom(A,1)\cong F(1)$. Z definicji obiektu końcowego istnieje dokładnie jedna strzałka $A\to1$, więc oba zbiory mają jeden element.
+\end{proof}
+
+\begin{przyklad}[Funktor niereprezentowalny]\label{cat:ex:nonrepresentable}
+Funktor zbioru potęgowego $\mathcal P:\Set\to\Set$ działający na funkcjach przez obraz prosty nie jest reprezentowalny. Istotnie, dla funkcji $f:X\to Y$, $g:Y\to Z$ i podzbioru $B\subseteq X$ mamy $(gf)[B]=g[f[B]]$ oraz $\id_X[B]=B$, co sprawdza prawa funktora. Natomiast $\mathcal P(\{*\})=\{\varnothing,\{*\}\}$ ma dwa elementy, co przeczy stwierdzeniu~\ref{cat:prop:rep-terminal}. Nie dotyczy to funktora kontrawariantnego zbioru potęgowego działającego przez przeciwobraz: ten jest reprezentowany przez $\{0,1\}$, ponieważ podzbiór $B\subseteq X$ odpowiada funkcji charakterystycznej $\chi_B:X\to\{0,1\}$. Odwrotność tego przyporządkowania wysyła funkcję $v:X\to\{0,1\}$ na $v^{-1}(\{1\})$: rzeczywiście $\chi_B^{-1}(\{1\})=B$ i $\chi_{v^{-1}(\{1\})}=v$. Dla $h:Y\to X$ i $y\in Y$ obie wartości $\chi_{h^{-1}(B)}(y)$ oraz $\chi_B(h(y))$ są równe $1$ dokładnie wtedy, gdy $h(y)\in B$. Stąd $\chi_{h^{-1}(B)}=\chi_B\circ h$, co daje naturalność.
+\end{przyklad}

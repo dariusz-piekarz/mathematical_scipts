@@ -1,0 +1,59 @@
+name: Probability volumes - real xr-hyper PDF and AUX integration
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - '.github/workflows/probability-xr-hyper.yml'
+      - 'application/scripts/verify_probability_aux.py'
+      - 'books/pl/probability_volume_*.tex'
+      - 'chapters/pl/probability_volume_*/**'
+  workflow_dispatch:
+
+jobs:
+  latex-xr-hyper:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install TeX toolchain
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            texlive-latex-extra texlive-lang-polish texlive-pictures texlive-fonts-recommended lmodern latexmk
+      - name: First pass - build actual four volumes and AUX
+        working-directory: books/pl
+        run: |
+          set -euo pipefail
+          for v in i ii iii iv; do
+            latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error \
+              -silent "probability_volume_${v}.tex"
+            test -s "probability_volume_${v}.aux"
+            test -s "probability_volume_${v}.pdf"
+          done
+      - name: Second pass - import other-volume AUX through xr-hyper
+        working-directory: books/pl
+        run: |
+          set -euo pipefail
+          for v in i ii iii iv; do
+            latexmk -g -pdf -interaction=nonstopmode -halt-on-error -file-line-error \
+              -silent "probability_volume_${v}.tex"
+          done
+          for v in i ii iii iv; do
+            latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error \
+              -silent "probability_volume_${v}.tex"
+          done
+      - name: Validate AUX references, imported prefix labels and PDF
+        run: python application/scripts/verify_probability_aux.py --directory books/pl
+      - name: Upload logs, AUX and diagnostic summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: probability-xr-hyper-logs-aux
+          path: |
+            books/pl/probability_volume_*.log
+            books/pl/probability_volume_*.aux
+            books/pl/probability_volume_*.fls
+            books/pl/probability_xr_verification.json
+          if-no-files-found: warn

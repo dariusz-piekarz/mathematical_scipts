@@ -13,11 +13,13 @@ class GeneratorTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.con=sqlite3.connect(ROOT/'data'/'biblioteka.db');cls.con.row_factory=sqlite3.Row
-        cls.client=TestClient(app)
+        cls._client_context=TestClient(app)
+        cls.client=cls._client_context.__enter__()
 
     @classmethod
     def tearDownClass(cls):
         cls.con.close()
+        cls._client_context.__exit__(None,None,None)
 
     def test_module_keeps_exact_source(self):
         files,report=project_files(self.con,['ALG-09'],[],'Analiza zesp.')
@@ -65,8 +67,142 @@ class GeneratorTests(unittest.TestCase):
         with self.assertRaises(GenerationError):project_files(self.con,[],['non-existent'],'Bad')
         with self.assertRaises(GenerationError):project_files(self.con,[],[],'Bad')
 
+    def test_retired_volume_references_in_full_index(self):
+        # All original BT labels are frozen independently of the AA source.
+        bt = (
+            "tw:banach-tarski",
+            "def:grupa-wolna",
+            "lem:stos",
+            "tw:redukcja",
+            "wn:redukcja-iloczyn",
+            "st:grupa-slow",
+            "tw:uniwersalnosc",
+            "st:przeliczalnosc-f2",
+            "def:rownorozklad",
+            "lem:skladanie",
+            "eq:3-1",
+            "def:paradoksalny",
+            "wn:przenoszenie",
+            "lem:lancuch",
+            "eq:4-1",
+            "lem:pierwsza-litera",
+            "eq:4-2",
+            "tw:cztery-kawalki",
+            "eq:4-3",
+            "eq:4-4",
+            "subsec:so3",
+            "lem:os-obrotu",
+            "eq:5-1",
+            "eq:5-2",
+            "eq:5-3",
+            "eq:5-4",
+            "eq:5-5",
+            "eq:5-6",
+            "lem:liczniki",
+            "eq:5-7",
+            "tw:wolne-obroty",
+            "eq:6-1",
+            "lem:wyjatkowy",
+            "lem:wspolrzedne-orbitowe",
+            "eq:6-2",
+            "tw:paradoksalnosc-x",
+            "lem:nieprzeliczalnosc",
+            "lem:obrot-rozdzielajacy",
+            "eq:7-1",
+            "tw:pelna-sfera",
+            "eq:7-2",
+            "eq:7-3",
+            "lem:stozki",
+            "wn:kula-bez-srodka",
+            "eq:8-1",
+            "lem:wchloniecie-srodka",
+            "eq:8-2",
+            "eq:8-3",
+            "wn:dowolna-kula",
+            "st:niemierzalnosc",
+        )
+        expected = dict.fromkeys(bt, 'AA-07')
+        expected.update({
+            "eq:trace-norm": "AA-43",
+            "eq:liouville": "AA-44",
+            "eq:hyperexp": "AA-45",
+            "eq:elliptic-liouville": "AA-45",
+            "eq:airy-riccati": "AA-46",
+        })
+        self.assertEqual(len(expected), 55)
+        self.assertFalse(self.con.execute(
+            "SELECT id FROM documents WHERE id GLOB 'BT-*' OR id GLOB 'GA-*'"
+        ).fetchall())
+        stale = self.con.execute(
+            "SELECT source_document,line,target_label FROM references_tex "
+            "WHERE target_label GLOB 'BT-[0-9][0-9]::*' "
+            "OR target_label GLOB 'GA-[0-9][0-9]::*' "
+            "OR target_document GLOB 'BT-*' OR target_document GLOB 'GA-*'"
+        ).fetchall()
+        self.assertEqual([tuple(row) for row in stale], [])
+        good = {'resolved', 'external_resolved', 'alias_resolved', 'included_resolved'}
+        for label, owner in expected.items():
+            with self.subTest(label=label, owner=owner):
+                rows = self.con.execute(
+                    "SELECT document_id FROM label_occurrences "
+                    "WHERE name=? AND document_id=?", (label, owner)
+                ).fetchall()
+                self.assertEqual([row[0] for row in rows], [owner])
+                # A bare generic label can also belong to a different book.
+                # Require the canonical owner for qualified and AA-local links;
+                # for globally unique names also check all external bare links.
+                owners = self.con.execute(
+                    "SELECT document_id FROM label_occurrences WHERE name=? "
+                    "UNION SELECT document_id FROM included_label_origins WHERE name=?",
+                    (label, label)
+                ).fetchall()
+                unique = {row[0] for row in owners} == {owner}
+                refs = self.con.execute(
+                    "SELECT source_document,line,target_label,target_document,status "
+                    "FROM references_tex WHERE target_label=? OR target_label=?",
+                    (label, owner + '::' + label)
+                ).fetchall()
+                for source, line, target, resolved, status in refs:
+                    if unique or source == owner or target == owner + '::' + label:
+                        self.assertIn(status, good, (source, line, target))
+                        self.assertEqual(resolved, owner, (source, line, target))
+
+    def test_retired_volume_preambles_are_not_available(self):
+        from backend.generator import PROJECT_TEMPLATE_KEYS
+        for key in ('BT', 'GA'):
+            with self.subTest(key=key):
+                self.assertNotIn(key, PROJECT_TEMPLATE_KEYS)
+                self.assertNotIn(key, PROJECT_TEMPLATE_KEYS.values())
+                self.assertFalse((ROOT / 'config' / 'preambles' / (key + '.tex')).exists())
+
+    def test_retired_banach_tarski_labels_resolve_in_abstract_algebra(self):
+        for label in ('tw:banach-tarski', 'subsec:so3'):
+            with self.subTest(label=label):
+                response = self.client.get('/api/labels/'+label, params={'source_document':'AA-07'})
+                self.assertEqual(response.status_code, 200, response.text)
+                self.assertEqual(response.json()['document_id'], 'AA-07')
+        self.assertEqual(self.client.post('/api/generate/manifest', json={'modules':['BT-00']}).status_code,422)
+
+    def test_retired_galois_labels_resolve_in_abstract_algebra(self):
+        targets = {
+            'eq:trace-norm':'AA-43',
+            'eq:liouville':'AA-44',
+            'eq:hyperexp':'AA-45',
+            'eq:elliptic-liouville':'AA-45',
+            'eq:airy-riccati':'AA-46',
+        }
+        for label, module in targets.items():
+            with self.subTest(label=label):
+                response = self.client.get('/api/labels/'+label, params={'source_document':module})
+                self.assertEqual(response.status_code, 200, response.text)
+                self.assertEqual(response.json()['document_id'], module)
+        for module in ('GA-00', 'GA-09'):
+            with self.subTest(module=module):
+                response = self.client.post('/api/generate/manifest', json={'modules':[module]})
+                self.assertEqual(response.status_code, 422, response.text)
+
     def test_title_escaped(self):
-        files,report=project_files(self.con,['BT-00'],[],r'Błąd $x_1$ & TeX')
+        files,report=project_files(self.con,['AA-01'],[],r'Błąd $x_1$ & TeX')
         self.assertIn(r'Błąd \$x\_1\$ \& TeX',files['main.tex'].decode())
 
     def test_zip_paths_safe(self):
@@ -75,19 +211,38 @@ class GeneratorTests(unittest.TestCase):
             self.assertTrue(z.testzip() is None)
             self.assertEqual(z.read('main.tex'),b'hello')
         with self.assertRaises(GenerationError):zip_project({'../bad.tex':b'123'})
+        for bad in ('..\\bad.tex', 'rozdzialy\\..\\bad.tex',
+                    'C:/evil.tex', '/absolute.tex', 'a//b.tex',
+                    'a/./b.tex', 'a/../b.tex', 'a\x00b.tex'):
+            with self.subTest(path=bad), self.assertRaises(GenerationError):
+                zip_project({bad:b'bad'})
+        with self.assertRaises(GenerationError):
+            zip_project({'valid.tex':'not bytes'})
+
+    def test_zip_resource_budgets(self):
+        from backend.generator import MAX_ARCHIVE_FILES, MAX_ARCHIVE_UNCOMPRESSED_BYTES
+        with self.assertRaisesRegex(GenerationError, 'Zbyt wiele plików'):
+            zip_project({f'f{i}.tex': b'x' for i in range(MAX_ARCHIVE_FILES + 1)})
+        with self.assertRaisesRegex(GenerationError, 'rozmiaru archiwum'):
+            zip_project({'large.tex': b'x' * (MAX_ARCHIVE_UNCOMPRESSED_BYTES + 1)})
+        # At the exact limit, the payload is accepted.
+        data = zip_project({'ok.tex': b'x' * MAX_ARCHIVE_UNCOMPRESSED_BYTES})
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            self.assertEqual(archive.getinfo('ok.tex').file_size, MAX_ARCHIVE_UNCOMPRESSED_BYTES)
 
     def test_http_zip_and_manifest(self):
-        request={'title':'Test','modules':['BT-00'],'entities':[],'closure_depth':0}
+        request={'title':'Test','modules':['ALG-09'],'entities':[],'closure_depth':0}
         r=self.client.post('/api/generate/manifest',json=request)
         self.assertEqual(r.status_code,200)
-        self.assertEqual(r.json()['external_targets']['BT-04'],['subsec:so3'])
+        self.assertIn('ch:ga5-rozdmuchania',r.json()['external_targets']['ALG-05'])
         r=self.client.post('/api/generate',json=request)
         self.assertEqual(r.status_code,200)
         self.assertEqual(r.headers['content-type'],'application/zip')
         with zipfile.ZipFile(io.BytesIO(r.content)) as z:
             self.assertIsNone(z.testzip())
             self.assertIn('main.tex',z.namelist())
-            self.assertIn('aux/BT-04.tex',z.namelist())
+            self.assertIn('aux/ALG-05.tex',z.namelist())
+            self.assertIn('rozdzialy/ALG-09.tex',z.namelist())
         self.assertEqual(self.client.post('/api/generate',json={'title':'Test','modules':['UNKNOWN']}).status_code,422)
 
 

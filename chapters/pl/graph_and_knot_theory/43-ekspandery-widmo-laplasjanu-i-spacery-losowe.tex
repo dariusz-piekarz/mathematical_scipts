@@ -1,0 +1,1083 @@
+\chapter{Ekspandery: ekspansja, widmo Laplasjanu i spacery losowe}
+\label{ch:tg-expanders}
+
+Rozdział \ref{ch:tg-random-graphs} pokazał, jak własności
+grafów badać probabilistycznie. Teraz zajmiemy się grafami,
+w których mały zbiór wierzchołków ma wiele połączeń
+z dopełnieniem. Powiążemy tę cechę z widmem macierzy
+i szybkim mieszaniem spacerów losowych.
+Wszystkie oznaczenia i założenia potrzebne w twierdzeniach
+podajemy jawnie, w szczególności rozróżniamy
+ekspansję krawędziową i wierzchołkową.
+
+\section{Przekroje i stałe ekspansji}
+\label{sec:tg-expanders-expansion}
+
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+nieskierowanym, o $n=|V|\geq2$ wierzchołkach.
+Przez $\partial_E S$ oznaczamy zbiór krawędzi
+mających dokładnie jeden koniec w $S\subseteq V$,
+zaś przez $\partial_V S=N_G(S)\setminus S$
+zbiór sąsiadów zbioru $S$ leżących poza nim.
+
+\begin{definicja}[Ekspansja krawędziowa i wierzchołkowa]
+\label{def:tg-expander-constants}
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+nieskierowanym, $n=|V|\geq2$. Definiujemy
+\[
+h_E(G)=
+\min_{\substack{\varnothing\ne S\subseteq V\\|S|\leq n/2}}
+\frac{|\partial_E S|}{|S|},
+\qquad
+h_V(G)=
+\min_{\substack{\varnothing\ne S\subseteq V\\|S|\leq n/2}}
+\frac{|\partial_V S|}{|S|}.
+\]
+Jeżeli ponadto $G$ jest $d$-regularny, gdzie $d\geq1$,
+to jego \emph{stałą ekspansji znormalizowanej}
+(izoperymetryczną) nazywamy
+$\Phi(G)=h_E(G)/d$.
+\end{definicja}
+
+\begin{stwierdzenie}[Porównanie dwóch rodzajów ekspansji]
+\label{prop:tg-expander-edge-vertex}
+Jeżeli $G$ jest skończonym grafem prostym
+nieskierowanym o co najmniej dwóch wierzchołkach
+i maksymalnym stopniu $\Delta\geq1$, to
+\[
+h_V(G)\leq h_E(G)\leq\Delta\,h_V(G).
+\]
+W szczególności dla grafu $d$-regularnego
+$\Phi(G)\leq h_V(G)\leq d\,\Phi(G)$.
+\end{stwierdzenie}
+\begin{proof}
+Dla każdego dopuszczalnego $S$
+każdy wierzchołek $\partial_VS$
+jest końcem co najmniej jednej
+i co najwyżej $\Delta$ krawędzi $\partial_ES$.
+Zatem $|\partial_VS|\leq|\partial_ES|
+\leq\Delta|\partial_VS|$.
+Biorąc minimum pierwszej nierówności
+po wszystkich $S$, otrzymujemy $h_V\leq h_E$.
+Dla drugiej bierzemy zbiór $S$ realizujący
+minimum definiujące $h_V$ i dostajemy
+$h_E\leq|\partial_ES|/|S|
+\leq\Delta h_V$.
+Dzieląc pierwszą i drugą nierówność przez $d$
+dla $\Delta=d$, otrzymujemy
+$h_V/d\leq\Phi\leq h_V$.
+Zapisując je równoważnie, uzyskujemy
+$\Phi\leq h_V\leq d\Phi$.
+\end{proof}
+
+\begin{uwaga}[Wymóg spójności]
+W grafie niespójnym składowa o najmniejszej liczności
+ma co najwyżej $n/2$ wierzchołków.
+Jej granica krawędziowa jest pusta;
+dlatego $\Phi(G)=0$ dla każdego niespójnego
+grafu $d$-regularnego. Odwrotnie, jeśli graf jest spójny, to każdy
+niepusty właściwy podzbiór ma niepustą granicę.
+Minimum po skończenie wielu dopuszczalnych zbiorach
+jest więc dodatnie. Dla $d\geq1$ regularność daje
+równoważność spójności i warunku $\Phi(G)>0$.
+\end{uwaga}
+
+\begin{uwaga}[Ekspansja i spójność krawędziowa]
+\label{rem:tg-expansion-connectivity}
+Granica $\partial_E S$ jest dokładnie przekrojem
+$\delta_G(S)$ z rozdziału \ref{ch:tg-menger}.
+Dla grafu spójnego o $n\geq2$, po zamianie $S$
+na dopełnienie, jeśli to konieczne, stwierdzenie
+\ref{prop:tg-lambda-cut} daje
+\[
+\lambda(G)=\min_{0<|S|\leq n/2}|\partial_E S|.
+\]
+Stąd $h_E(G)\leq\lambda(G)$, bo dla zbioru
+realizującego minimum po prawej stronie dzielimy
+liczbę krawędzi przez liczbę wierzchołków co najmniej
+jeden. Z drugiej strony, dla każdego dopuszczalnego
+zbioru $S$ mamy
+$|\partial_E S|/|S|\geq
+\lambda(G)/\lfloor n/2\rfloor$.
+W konsekwencji
+\[
+\frac{\lambda(G)}{\lfloor n/2\rfloor}
+\leq h_E(G)\leq\lambda(G).
+\]
+Spójność krawędziowa sama w sobie nie zapewnia
+jednostajnej ekspansji: cykl $C_n$ dla $n\geq3$
+ma $\lambda(C_n)=2$, lecz dla zbioru
+$\lfloor n/2\rfloor$ kolejnych wierzchołków
+przekrój ma tylko dwie krawędzie. Dostajemy więc
+$h_E(C_n)=2/\lfloor n/2\rfloor$, które dąży do zera.
+\end{uwaga}
+
+\begin{definicja}[Rodzina ekspanderów regularnych]
+\label{def:tg-expander-family}
+Rodzinę grafów prostych $(G_j)_{j\geq1}$
+nazywamy \emph{rodziną ekspanderów
+o ograniczonym stopniu}, jeśli
+$|V(G_j)|\to\infty$, istnieje jedna
+liczba całkowita $d\geq1$, dla której
+wszystkie $G_j$ są skończone, nieskierowane
+i $d$-regularne,
+oraz istnieje stała $\varepsilon>0$
+taka, że $\Phi(G_j)\geq\varepsilon$
+dla każdego $j$.
+\end{definicja}
+
+Przyjęta tu definicja dotyczy rodzin regularnych o wspólnym
+stopniu. Ogólnie ograniczoność stopni oznacza jedynie istnienie
+jednej górnej granicy stopni wszystkich wierzchołków wszystkich
+grafów rodziny; nie wymaga ani regularności, ani wspólnego stopnia.
+Dla takich ogólniejszych rodzin można używać przewodności
+z definicji \ref{def:tg-expander-volume}.
+Grafy pełne mają bardzo dobrą ekspansję,
+ale stopień $K_n$ rośnie wraz z $n$.
+Najpierw badamy grafy regularne, następnie przejdziemy
+do ważonej objętości i laplasjanu znormalizowanego
+dla grafów nieregularnych.
+
+\section{Laplasjan i wariacyjna charakterystyka luki}
+\label{sec:tg-expanders-spectrum}
+
+Niech odtąd $G=(V,E)$ będzie grafem prostym,
+$d$-regularnym, o $n\geq2$ wierzchołkach, $d\geq1$.
+Nie zakładamy na razie spójności.
+Niech $A$ oznacza jego macierz sąsiedztwa,
+zdefiniowaną w rozdziale \ref{ch:tg-podstawy}.
+
+\begin{definicja}[Laplasjan znormalizowany]
+\label{def:tg-expander-laplacian}
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+nieskierowanym, $d$-regularnym, $n=|V|\geq2$, $d\geq1$,
+a $A$ jego macierzą sąsiedztwa.
+Definiujemy $P=A/d$ i $\mathcal L=I-P=I-A/d$.
+Oznaczmy wartości własne macierzy
+rzeczywistej symetrycznej $\mathcal L$
+(z uwzględnieniem krotności)
+przez
+$0=\lambda_1\leq\lambda_2\leq\cdots\leq\lambda_n$.
+Liczbę $\lambda_2$ nazywamy
+\emph{znormalizowaną luką spektralną} grafu.
+Zgodnie z uwagą \ref{rem:tg-laplacian-conventions}
+w rozdziale \ref{ch:tg-laplacian} mamy
+$\mathcal L=d^{-1}L_G$, gdzie $L_G=BB^T$.
+Nie utożsamiamy więc tej luki z drugą wartością
+własną macierzy $L_G$.
+\end{definicja}
+
+\begin{lemat}[Postać energetyczna]
+\label{lem:tg-expander-energy}
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+nieskierowanym, $d$-regularnym, $|V|\geq2$, $d\geq1$.
+W przestrzeni $\mathbb R^V$ używamy iloczynu
+skalarnego $\langle f,g\rangle=\sum_v f(v)g(v)$.
+Dla każdej funkcji $f:V\to\mathbb R$ zachodzi
+\[
+d\langle f,\mathcal L f\rangle
+=\sum_{\{u,v\}\in E}(f(u)-f(v))^2.
+\]
+Wszystkie wartości własne $\mathcal L$
+należą do $[0,2]$, a wymiar jądra
+$\mathcal L$ jest liczbą składowych spójnych $G$.
+W szczególności
+$\lambda_2>0$ dokładnie wtedy, gdy $G$ jest spójny.
+\end{lemat}
+\begin{proof}
+Rozwijając kwadraty i wykorzystując
+$d$-regularność, otrzymujemy
+$\sum_{\{u,v\}\in E}(f(u)-f(v))^2
+=d\sum_vf(v)^2-2\sum_{\{u,v\}\in E}f(u)f(v)$,
+co jest równe $d\langle f,(I-A/d)f\rangle$.
+Wynik jest nieujemny.
+Z nierówności $(a-b)^2\leq2(a^2+b^2)$
+otrzymujemy górne oszacowanie
+$\langle f,\mathcal L f\rangle\leq2\|f\|_2^2$,
+a więc widmo zawiera się w $[0,2]$.
+Energia znika dokładnie wtedy,
+gdy $f$ jest stała na każdej krawędzi,
+czyli na każdej składowej.
+Ponieważ $\mathcal L$ jest symetryczna i dodatnio
+półokreślona, zerowa energia jest równoważna
+przynależności do jej jądra (rozwińmy funkcję w bazie
+wektorów własnych). Funkcje charakterystyczne składowych
+tworzą bazę tego jądra, a krotność zera równa się
+jego wymiarowi.
+\end{proof}
+
+\begin{stwierdzenie}[Iloraz Rayleigha]
+\label{prop:tg-expander-rayleigh}
+Dla każdego skończonego grafu prostego
+$d$-regularnego $G$ o $n\geq2$, $d\geq1$,
+\[
+\lambda_2=
+\min_{\substack{f:V\to\mathbb R,\ f\not\equiv0\\
+                 \sum_{v\in V}f(v)=0}}
+\frac{\sum_{\{u,v\}\in E}(f(u)-f(v))^2}
+{d\sum_{v\in V}f(v)^2}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Wektor stały $\boldsymbol1$ jest
+wektorem własnym $\mathcal L$
+z wartością własną $0$.
+Z twierdzenia spektralnego
+można wybrać ortonormalną
+bazę wektorów własnych,
+w której pierwszym jest
+$\boldsymbol1/\sqrt n$.
+Warunek $\sum f(v)=0$
+oznacza ortogonalność do
+tego wektora. Iloraz energii
+i normy wektora jest wtedy
+średnią ważoną wartości
+$\lambda_2,\ldots,\lambda_n$
+i jest co najmniej $\lambda_2$.
+Równość uzyskujemy dla
+odpowiedniego wektora własnego.
+Korzystamy z lematu
+\ref{lem:tg-expander-energy}.
+\end{proof}
+
+\section{Nierówności Cheegera dla grafów regularnych}
+\label{sec:tg-expanders-cheeger}
+
+\begin{lemat}[Nierówność współpowierzchniowa dla funkcji]
+\label{lem:tg-expander-coarea}
+Niech $G=(V,E)$ będzie skończonym grafem
+$d$-regularnym o $d\geq1$, $|V|=n\geq2$.
+Niech $g:V\to[0,\infty)$ będzie niezerową
+funkcją, której nośnik ma co najwyżej $n/2$
+elementów. Wówczas
+\[
+\sum_{\{u,v\}\in E}(g(u)-g(v))^2
+\geq\frac{d\Phi(G)^2}{2}\sum_{v\in V}g(v)^2.
+\]
+\end{lemat}
+\begin{proof}
+Dla $t\geq0$ niech
+$S_t=\{v:g(v)^2>t\}$.
+Każdy niepusty $S_t$
+zawiera co najwyżej $n/2$ wierzchołków;
+z definicji $\Phi(G)$ mamy
+$|\partial_ES_t|\geq d\Phi(G)|S_t|$.
+Dla każdej krawędzi $\{u,v\}$ zbiór parametrów $t$,
+dla których krawędź należy do $\partial_E S_t$,
+jest przedziałem pomiędzy $g(u)^2$ i $g(v)^2$
+(z dokładnością do końców). Jego długość wynosi
+$|g(u)^2-g(v)^2|$. Analogicznie całka funkcji
+charakterystycznej warunku $v\in S_t$ wynosi
+$g(v)^2$. Sumując te tożsamości po skończonych
+zbiorach krawędzi i wierzchołków oraz oznaczając
+miarę Lebesgue'a na prostej przez $\lambda_{\mathbb R}$ (aby nie
+mylić jej z wartością własną $\lambda_1$), otrzymujemy
+\[
+\begin{aligned}
+\sum_{\{u,v\}\in E}|g(u)^2-g(v)^2|
+&=\int_0^\infty|\partial_ES_t|\,\mathrm d\lambda_{\mathbb R}(t)\\
+&\geq d\Phi(G)\int_0^\infty|S_t|\,\mathrm d\lambda_{\mathbb R}(t)\\
+&=d\Phi(G)\sum_{v\in V}g(v)^2.
+\end{aligned}
+\]
+Z drugiej strony nierówności
+Cauchy'ego--Schwarza i
+$(a+b)^2\leq2(a^2+b^2)$ dają
+\[
+\begin{aligned}
+\sum_{\{u,v\}\in E}|g(u)^2-g(v)^2|
+&\leq
+\left(\sum_{\{u,v\}\in E}(g(u)-g(v))^2\right)^{1/2}\\
+&\quad{}\cdot
+\left(\sum_{\{u,v\}\in E}(g(u)+g(v))^2\right)^{1/2}\\
+&\leq
+\left(2d\sum_v g(v)^2\right)^{1/2}
+\left(\sum_{\{u,v\}\in E}(g(u)-g(v))^2\right)^{1/2}.
+\end{aligned}
+\]
+Podnosząc do kwadratu
+i skracając dodatni czynnik
+$d\sum_vg(v)^2$, otrzymujemy
+żądaną nierówność.
+\end{proof}
+
+\begin{twierdzenie}[Nierówności Cheegera]
+\label{thm:tg-expander-cheeger}
+Dla każdego grafu prostego
+$d$-regularnego $G$
+o $n\geq2$ wierzchołkach i $d\geq1$
+zachodzi
+\[
+\frac{\lambda_2(G)}2
+\leq\Phi(G)\leq\sqrt{2\lambda_2(G)}.
+\]
+Równoważnie:
+$\Phi(G)^2/2\leq\lambda_2(G)\leq2\Phi(G)$.
+\end{twierdzenie}
+\begin{proof}
+Wybierzmy niepusty zbiór
+$S\subset V$ o $|S|\leq n/2$
+realizujący minimum $\Phi(G)$.
+Dla $f=\chi_S-(|S|/n)\boldsymbol1$
+mamy $\sum_vf(v)=0$ oraz
+$\sum_vf(v)^2=|S|(n-|S|)/n$.
+Energia $f$ równa się
+$|\partial_ES|$, więc iloraz
+Rayleigha z
+\ref{prop:tg-expander-rayleigh} daje
+\[
+\lambda_2
+\leq\frac{|\partial_ES|}
+{d|S|(n-|S|)/n}
+=\Phi(G)\frac n{n-|S|}
+\leq2\Phi(G).
+\]
+
+Do przeciwnej nierówności
+wybierzmy rzeczywisty
+wektor własny $f\not\equiv0$
+dla $\lambda_2$, prostopadły
+do wektora stałego.
+Niezerowa funkcja o sumie wartości zero
+przyjmuje zarówno wartości dodatnie, jak i ujemne.
+Wybierzmy znak $f$ tak, aby co najwyżej $n/2$
+jego wartości było dodatnich
+(jeden z dwóch zbiorów:
+$\{f>0\}$, $\{f<0\}$,
+musi mieć ten rozmiar).
+Niech $g(v)=\max\{f(v),0\}$.
+Funkcja $g$ jest niezerowa,
+nieujemna i ma nośnik
+o co najwyżej $n/2$ elementach.
+
+Dla wszystkich liczb rzeczywistych
+$a,b$ zachodzi
+$(a-b)(a_+-b_+)\geq(a_+-b_+)^2$,
+gdzie $x_+=\max(x,0)$: funkcja $x\mapsto x_+$
+jest niemalejąca i $1$-lipschitzowska, więc różnice
+mają zgodny znak, a $|a_+-b_+|\leq|a-b|$.
+Polaryzacja tożsamości z lematu
+\ref{lem:tg-expander-energy} daje
+$d\langle g,\mathcal Lf\rangle=
+\sum_{\{u,v\}\in E}(f(u)-f(v))(g(u)-g(v))$.
+Ponieważ $f(v)g(v)=g(v)^2$, po pomnożeniu
+równania własnego przez $g$ otrzymujemy
+\[
+\lambda_2d\sum_vg(v)^2
+=\sum_{\{u,v\}\in E}(f(u)-f(v))(g(u)-g(v))
+\geq\sum_{\{u,v\}\in E}(g(u)-g(v))^2.
+\]
+Lemat \ref{lem:tg-expander-coarea}
+daje dolne ograniczenie
+ostatniej sumy przez
+$d\Phi(G)^2\sum_vg(v)^2/2$.
+Dzieląc przez
+$d\sum_vg(v)^2>0$,
+dostajemy
+$\lambda_2\geq\Phi(G)^2/2$.
+\end{proof}
+
+\begin{wniosek}[Ekspansja a luka spektralna w rodzinie]
+\label{cor:tg-expander-spectral-family}
+Niech $(G_j)_{j\geq1}$ będzie rodziną
+grafów prostych $d$-regularnych o wspólnym
+$d\geq1$, przy czym $|V(G_j)|\to\infty$.
+Jest to rodzina ekspanderów w sensie
+definicji \ref{def:tg-expander-family}
+wtedy i tylko wtedy, gdy
+$\inf_{j\geq1}\lambda_2(G_j)>0$.
+\end{wniosek}
+\begin{proof}
+Jeżeli $\Phi(G_j)\geq\varepsilon>0$,
+to nierówności Cheegera dają
+$\lambda_2(G_j)\geq\varepsilon^2/2$.
+Odwrotnie, jeżeli
+$\lambda_2(G_j)\geq\delta>0$,
+to $\Phi(G_j)\geq\delta/2$.
+\end{proof}
+
+\section{Lemat o mieszaniu krawędzi}
+\label{sec:tg-expander-edge-mixing}
+
+Ekspansja zbioru kontroluje jego przekrój z dopełnieniem.
+Widmo pozwala ponadto porównać liczbę połączeń między
+dwoma dowolnymi zbiorami z liczbą, jakiej oczekiwalibyśmy
+przy równomiernym rozmieszczeniu krawędzi.
+
+\begin{twierdzenie}[Lemat o mieszaniu ekspanderów]
+\label{thm:tg-expander-edge-mixing}
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+nieskierowanym, $d$-regularnym, $n=|V|\geq2$, $d\geq1$.
+Niech $d=\theta_1\geq\theta_2\geq\cdots\geq\theta_n$
+będą wartościami własnymi macierzy sąsiedztwa $A$,
+a $\Lambda=\max_{2\leq i\leq n}|\theta_i|$.
+Dla dowolnych $S,T\subseteq V$ połóżmy
+$e(S,T)=\sum_{u\in S,v\in T}A_{uv}$.
+Wówczas
+\[
+\left|e(S,T)-\frac{d|S||T|}{n}\right|
+\leq\Lambda
+\sqrt{|S|(1-|S|/n)|T|(1-|T|/n)}.
+\]
+Jeżeli $S,T$ są rozłączne, $e(S,T)$ jest liczbą
+krawędzi między nimi. W ogólności krawędź jest liczona
+dwukrotnie dokładnie wtedy, gdy oba jej końce należą do
+$S\cap T$; raz, gdy dokładnie jedna z jej dwóch orientacji
+prowadzi z $S$ do $T$, i zero razy w pozostałych przypadkach.
+\end{twierdzenie}
+\begin{proof}
+Piszemy $\chi_S=(|S|/n)\boldsymbol1+f$ oraz
+$\chi_T=(|T|/n)\boldsymbol1+g$, gdzie
+$f,g$ są prostopadłe do $\boldsymbol1$.
+Ponieważ $A\boldsymbol1=d\boldsymbol1$ i $A$ jest
+symetryczna, składniki mieszane znikają:
+\[
+e(S,T)=\langle\chi_S,A\chi_T\rangle
+=\frac{d|S||T|}{n}+\langle f,Ag\rangle.
+\]
+Na podprzestrzeni prostopadłej do $\boldsymbol1$
+norma operatorowa $A$ wynosi $\Lambda$ na mocy
+twierdzenia spektralnego, również gdy wartość własna
+$d$ ma krotność większą niż jeden.
+Stąd $|\langle f,Ag\rangle|\leq\Lambda\|f\|_2\|g\|_2$.
+Bezpośrednie rozwinięcie kwadratów daje
+$\|f\|_2^2=|S|-|S|^2/n$ i analogiczny wzór dla $g$,
+co kończy dowód.
+\end{proof}
+
+\begin{uwaga}[Dwa różne parametry spektralne]
+Znormalizowana luka $\lambda_2=1-\theta_2/d$
+kontroluje ekspansję i mieszanie leniwego spaceru.
+Lemat o mieszaniu krawędzi wykorzystuje jednak
+również dolny kraniec widma: $\Lambda/d=
+\max\{1-\lambda_2,\lambda_n-1\}$.
+Na spójnym grafie dwudzielnym wektor o wartościach
+$1$ i $-1$ na dwóch częściach jest wektorem własnym
+$A$ dla $-d$, więc $\Lambda=d$ mimo dodatniej
+luki $\lambda_2$. Nie należy utożsamiać tych parametrów.
+\end{uwaga}
+
+\section{Leniwy spacer losowy i tempo mieszania}
+\label{sec:tg-expanders-random-walk}
+
+W przypadku grafów regularnych mieszanie oznacza
+zbieżność \emph{rozkładu położenia} spaceru losowego
+do rozkładu jednostajnego na wierzchołkach;
+nie chodzi o losowy wybór krawędzi
+w modelu $G(n,p)$.
+
+\begin{definicja}[Leniwy spacer losowy]
+\label{def:tg-expander-lazy-walk}
+Niech $G=(V,E)$ będzie spójnym grafem
+prostym $d$-regularnym o $n\geq2$
+wierzchołkach, $d\geq1$.
+Niech $P=A/d$ i
+$Q=(I+P)/2$.
+Łańcuch Markowa o macierzy przejścia
+$Q$ nazywamy \emph{leniwym spacerem losowym}:
+w każdym kroku pozostaje w miejscu
+z prawdopodobieństwem $1/2$,
+a z prawdopodobieństwem $1/2$
+wybiera jednostajnie jednego
+z $d$ sąsiadów.
+\end{definicja}
+
+Ponieważ $Q$ jest symetryczna
+i sumy jej wierszy wynoszą $1$,
+rozkład $\pi(v)=1/n$ jest
+stacjonarny. Dla dwóch rozkładów
+$\mu,\nu$ na $V$ definiujemy
+odległość w wariacji całkowitej
+\[
+\|\mu-\nu\|_{\mathrm{TV}}
+=\frac12\sum_{v\in V}|\mu(v)-\nu(v)|.
+\]
+Wektor rozkładu utożsamiamy
+z wektorem w $\mathbb R^V$.
+
+\begin{twierdzenie}[Mieszanie z prędkością spektralną]
+\label{thm:tg-expander-mixing}
+Niech $G$ będzie spójnym grafem
+prostym $d$-regularnym o $n\geq2$
+wierzchołkach, $d\geq1$.
+Niech $Q$ będzie macierzą
+leniwego spaceru, $\pi$
+rozkładem jednostajnym, a
+$\lambda_2$ drugą wartością
+własną $\mathcal L=I-A/d$.
+Dla każdego rozkładu początkowego
+$\mu$ i liczby całkowitej $t\geq0$
+(przyjmujemy $a^0=1$ także dla $a=0$)
+zachodzi
+\[
+\|\mu Q^t-\pi\|_{\mathrm{TV}}
+\leq\frac{\sqrt n}{2}
+\left(1-\frac{\lambda_2}{2}\right)^t
+\|\mu-\pi\|_2
+\leq\frac{\sqrt{n-1}}2
+\left(1-\frac{\lambda_2}{2}\right)^t.
+\]
+W szczególności dla każdego
+$\varepsilon\in(0,1)$
+odległość ta jest co najwyżej
+$\varepsilon$, gdy
+\[
+t\geq\max\left\{0,\,
+\frac2{\lambda_2}
+\log\frac{\sqrt n}{2\varepsilon}\right\}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Macierz $Q=I-\mathcal L/2$
+jest symetryczna, a jej
+wartości własne wynoszą
+$\eta_i=1-\lambda_i/2$.
+Na mocy
+\ref{lem:tg-expander-energy}
+wszystkie należą do $[0,1]$,
+a spójność daje
+$\eta_2=1-\lambda_2/2<1$.
+Podprzestrzeń prostopadła
+do wektora stałego jest
+$Q$-niezmiennicza.
+Ponieważ $\mu-\pi$
+ma sumę współrzędnych zero,
+rozkład spektralny daje
+\[
+\|(\mu-\pi)Q^t\|_2
+\leq\eta_2^t\|\mu-\pi\|_2.
+\]
+Z nierówności Cauchy'ego--Schwarza
+$\|x\|_1\leq\sqrt n\|x\|_2$
+otrzymujemy pierwszą nierówność
+dla wariacji całkowitej.
+Następnie
+$\|\mu-\pi\|_2^2
+=\sum_v\mu(v)^2-1/n
+\leq1-1/n$,
+ponieważ $\sum_v\mu(v)^2
+\leq(\sum_v\mu(v))^2=1$.
+Daje to drugą nierówność.
+
+Wreszcie
+$1-\lambda_2/2
+\leq\exp(-\lambda_2/2)$.
+Gdy wskazany dolny warunek
+na $t$ zachodzi,
+$\sqrt n\exp(-t\lambda_2/2)/2
+\leq\varepsilon$,
+a wcześniejsze oszacowania
+kończą dowód.
+\end{proof}
+
+\begin{uwaga}[Dlaczego spacer jest leniwy]
+\label{rem:tg-expander-lazy-needed}
+Zwykły spacer na grafie
+dwudzielnym może przechodzić
+na przemian między dwiema
+częściami. Na przykład
+na $K_2$, jeśli spacer zaczyna się w ustalonym
+wierzchołku, rozkład położenia w każdej chwili
+jest skupiony w jednym wierzchołku
+i nie zbiega do
+rozkładu jednostajnego.
+Macierz $Q=(I+P)/2$
+eliminuje tę przeszkodę:
+jej wartości własne
+są nieujemne,
+a dla grafu spójnego
+poza stałą wszystkie
+są ściśle mniejsze od $1$.
+\end{uwaga}
+
+\section{Grafy nieregularne: objętość, przewodność i mieszanie}
+\label{sec:tg-expander-irregular}
+
+Niech $G=(V,E)$ będzie skończonym spójnym grafem
+prostym nieskierowanym, $n=|V|\geq2$.
+Każdy stopień $d_v=d_G(v)$ jest dodatni.
+Niech $D=\operatorname{diag}(d_v)$ oraz
+$W=\sum_{v\in V}d_v=2|E|$.
+
+\begin{definicja}[Objętość i przewodność]
+\label{def:tg-expander-volume}
+Niech $G=(V,E)$ będzie skończonym spójnym grafem
+prostym nieskierowanym, $|V|\geq2$, $d_v=d_G(v)$,
+$D=\operatorname{diag}(d_v)$, $W=\sum_v d_v$.
+Dla $S\subseteq V$ definiujemy
+$\operatorname{vol}(S)=\sum_{v\in S}d_v$ oraz
+\[
+\Phi_{\mathrm{vol}}(G)=
+\min_{0<\operatorname{vol}(S)\leq W/2}
+\frac{|\partial_E S|}{\operatorname{vol}(S)}.
+\]
+Definiujemy również symetryczny laplasjan
+znormalizowany $\mathcal L_{\mathrm{sym}}=
+I-D^{-1/2}AD^{-1/2}$.
+W minimum rozważamy podzbiory $S\subseteq V$.
+Rodzina jest niepusta, ponieważ przynajmniej jeden
+wierzchołek ma stopień co najwyżej $W/2$.
+Dla grafu $d$-regularnego mamy $\operatorname{vol}(S)=d|S|$
+i $W=dn$, więc $\Phi_{\mathrm{vol}}(G)=\Phi(G)$.
+Ponadto $D=dI$, skąd $\mathcal L_{\mathrm{sym}}=\mathcal L$.
+Ogólnie, dla laplasjanu kombinatorycznego $L_G=D-A=BB^T$
+z rozdziału \ref{ch:tg-laplacian}, zachodzi
+\[
+\mathcal L_{\mathrm{sym}}=D^{-1/2}L_GD^{-1/2}.
+\]
+Jest to przekształcenie przez kongruencję, a nie na ogół
+podobieństwo macierzy. Natomiast laplasjan spaceru losowego
+$I-D^{-1}A$ jest podobny do $\mathcal L_{\mathrm{sym}}$:
+\[
+D^{1/2}(I-D^{-1}A)D^{-1/2}=\mathcal L_{\mathrm{sym}}.
+\]
+Te dwie macierze mają więc to samo widmo; nie wynika
+stąd równość ich widma z widmem $L_G$.
+\end{definicja}
+
+\begin{lemat}[Ważony iloraz Rayleigha]
+\label{lem:tg-expander-weighted-rayleigh}
+Niech $\lambda_2^{\mathrm{sym}}$ będzie drugą najmniejszą
+wartością własną $\mathcal L_{\mathrm{sym}}$ dla grafu
+jak w definicji \ref{def:tg-expander-volume}. Wówczas
+\[
+\lambda_2^{\mathrm{sym}}=
+\min_{\substack{f:V\to\mathbb R,\ f\not\equiv0\\\sum_v d_v f(v)=0}}
+\frac{\sum_{\{u,v\}\in E}(f(u)-f(v))^2}
+{\sum_v d_v f(v)^2}.
+\]
+Ponadto $0<\lambda_2^{\mathrm{sym}}\leq2$.
+\end{lemat}
+\begin{proof}
+Podstawiamy $x=D^{1/2}f$. Z powyższej tożsamości macierzowej
+oraz twierdzenia \ref{thm:tg-energy} dla wag jednostkowych
+otrzymujemy $\langle x,\mathcal L_{\mathrm{sym}}x\rangle
+=\langle f,L_Gf\rangle
+=\sum_{\{u,v\}\in E}(f(u)-f(v))^2$ oraz
+$\|x\|_2^2=\sum_v d_v f(v)^2$.
+Energia jest nieujemna i znika dokładnie dla funkcji
+stałych dzięki spójności. Zatem jądro jest rozpięte
+przez $D^{1/2}\boldsymbol1$.
+Oszacowanie $(f(u)-f(v))^2\leq2(f(u)^2+f(v)^2)$
+daje górną granicę $2$ dla widma.
+Ortogonalność $x$ do jądra jest równoważna
+warunkowi $\sum_vd_vf(v)=0$.
+Twierdzenie spektralne daje tezę.
+\end{proof}
+
+\begin{twierdzenie}[Ważone nierówności Cheegera]
+\label{thm:tg-expander-weighted-cheeger}
+Dla każdego skończonego spójnego grafu prostego
+nieskierowanego o co najmniej dwóch wierzchołkach
+zachodzi
+\[
+\frac{\Phi_{\mathrm{vol}}(G)^2}{2}
+\leq\lambda_2^{\mathrm{sym}}\leq2\Phi_{\mathrm{vol}}(G).
+\]
+\end{twierdzenie}
+\begin{proof}
+Niech $S$ realizuje minimum przewodności,
+$a=\operatorname{vol}(S)\leq W/2$.
+Dla $f=\chi_S-(a/W)\boldsymbol1$ ważona średnia
+wynosi zero, mianownik ilorazu Rayleigha jest
+równy $a(1-a/W)$, a licznik $|\partial_ES|$.
+Stąd $\lambda_2^{\mathrm{sym}}\leq
+\Phi_{\mathrm{vol}}/(1-a/W)\leq2\Phi_{\mathrm{vol}}$.
+
+Dla przeciwnego oszacowania wybieramy niezerowy
+wektor własny $x$ dla $\lambda_2^{\mathrm{sym}}$,
+prostopadły do $D^{1/2}\boldsymbol1$,
+i kładziemy $f=D^{-1/2}x$. Wtedy
+$(D-A)f=\lambda_2^{\mathrm{sym}}Df$,
+a $\sum_vd_vf(v)=0$. Funkcja $f$ przyjmuje
+wartości obu znaków. Po ewentualnej zmianie znaku
+zbiór $\{f>0\}$ ma objętość co najwyżej $W/2$.
+Niech $g=\max\{f,0\}$.
+Z tożsamości
+$\langle g,(D-A)f\rangle=
+\sum_{\{u,v\}\in E}(g(u)-g(v))(f(u)-f(v))$,
+wynikającej z rozwinięcia obu stron, i z równości
+$f(v)g(v)=g(v)^2$ oraz nierówności dla części dodatnich
+z dowodu twierdzenia \ref{thm:tg-expander-cheeger}
+otrzymujemy
+\[
+\lambda_2^{\mathrm{sym}}\sum_vd_vg(v)^2
+\geq\sum_{\{u,v\}\in E}(g(u)-g(v))^2.
+\]
+Dla $S_t=\{v:g(v)^2>t\}$ mamy
+$|\partial_ES_t|\geq\Phi_{\mathrm{vol}}\operatorname{vol}(S_t)$,
+także gdy $S_t$ jest pusty. Całkując względem miary Lebesgue'a $\lambda_{\mathbb R}$
+na $[0,\infty)$, jak w dowodzie lematu
+\ref{lem:tg-expander-coarea}, dostajemy
+\[
+\begin{aligned}
+\sum_{\{u,v\}\in E}|g(u)^2-g(v)^2|
+&=\int_0^\infty|\partial_ES_t|\,\mathrm d\lambda_{\mathbb R}(t)\\
+&\geq\Phi_{\mathrm{vol}}\int_0^\infty
+\sum_v d_v\chi_{S_t}(v)\,\mathrm d\lambda_{\mathbb R}(t)\\
+&=\Phi_{\mathrm{vol}}\sum_vd_vg(v)^2.
+\end{aligned}
+\]
+Z drugiej strony nierówność Cauchy'ego--Schwarza
+oraz $(a+b)^2\leq2(a^2+b^2)$ dają oszacowanie
+tej sumy z góry przez
+\[
+\left(\sum_{\{u,v\}\in E}(g(u)-g(v))^2\right)^{1/2}
+\left(2\sum_v d_vg(v)^2\right)^{1/2}.
+\]
+Po podniesieniu do kwadratu i podzieleniu przez
+$2\sum_vd_vg(v)^2>0$ uzyskujemy dolną granicę
+energii $g$ równą
+$\tfrac12\Phi_{\mathrm{vol}}^2\sum_vd_vg(v)^2$.
+Łącząc obie nierówności dla energii i dzieląc
+przez dodatnią normę ważoną, otrzymujemy tezę.
+\end{proof}
+
+\begin{twierdzenie}[Mieszanie spaceru na grafie nieregularnym]
+\label{thm:tg-expander-weighted-mixing}
+Niech $G=(V,E)$ będzie skończonym spójnym grafem
+prostym nieskierowanym o co najmniej dwóch
+wierzchołkach. Przy oznaczeniach z definicji
+\ref{def:tg-expander-volume} połóżmy
+$P=D^{-1}A$, $Q=(I+P)/2$ i $\pi(v)=d_v/W$.
+Rozkład $\pi$ jest jedynym rozkładem stacjonarnym
+dla $Q$. Dla każdego rozkładu $\mu$ na $V$ i
+każdej liczby całkowitej $t\geq0$ zachodzi
+\[
+\|\mu Q^t-\pi\|_{\mathrm{TV}}
+\leq\frac12(1-\lambda_2^{\mathrm{sym}}/2)^t
+\left(\sum_v\frac{(\mu(v)-\pi(v))^2}{\pi(v)}\right)^{1/2}.
+\]
+Przyjmujemy $0^0=1$ dla $t=0$.
+W szczególności ostatni czynnik nie przekracza
+$\sqrt{1/\pi_{\min}-1}$, gdzie
+$\pi_{\min}=\min_{v\in V}\pi(v)>0$.
+\end{twierdzenie}
+\begin{proof}
+Zachodzi szczegółowa równowaga
+$\pi(u)Q_{uv}=\pi(v)Q_{vu}$, gdyż dla $u\ne v$
+obie strony są równe $A_{uv}/(2W)$, a dla $u=v$
+równość jest natychmiastowa. Sumując po $u$,
+otrzymujemy $\pi Q=\pi$.
+Dla dowolnego rozkładu $\nu$ określmy jego
+wycentrowaną gęstość $h_\nu(v)=\nu(v)/\pi(v)-1$.
+Rozkłady traktujemy jako wektory wierszowe,
+a funkcje jako wektory kolumnowe. Z równowagi
+szczegółowej i sumowania wierszy $Q$ do jedności
+wynika
+\[
+\begin{aligned}
+h_{\nu Q}(v)
+&=\sum_u\frac{\nu(u)Q_{uv}}{\pi(v)}-1\\
+&=\sum_u Q_{vu}\bigl(h_\nu(u)+1\bigr)-1\\
+&=(Qh_\nu)(v).
+\end{aligned}
+\]
+Na przestrzeni funkcji z normą
+$\|h\|_\pi^2=\sum_v\pi(v)h(v)^2$
+operator $Q$ jest sprzężony izometrycznie
+przez $h\mapsto W^{-1/2}D^{1/2}h$
+z symetryczną macierzą
+$D^{1/2}QD^{-1/2}=
+(I+D^{-1/2}AD^{-1/2})/2=I-\mathcal L_{\mathrm{sym}}/2$.
+Ponieważ $\sum_v\pi(v)h_\nu(v)=0$,
+obraz $h_\nu$ jest prostopadły do
+$D^{1/2}\boldsymbol1$. Na tej podprzestrzeni
+norma operatorowa $Q^t$ nie przekracza
+$(1-\lambda_2^{\mathrm{sym}}/2)^t$.
+Zatem $\|h_{\mu Q^t}\|_\pi\leq
+(1-\lambda_2^{\mathrm{sym}}/2)^t\|h_\mu\|_\pi$.
+Nierówność Cauchy'ego--Schwarza daje
+$\sum_v\pi(v)|h(v)|\leq\|h\|_\pi$, co dowodzi
+oszacowania wariacji całkowitej.
+Ponadto
+$\|h_\mu\|_\pi^2=\sum_v\mu(v)^2/\pi(v)-1
+\leq1/\pi_{\min}-1$.
+Ponieważ $\lambda_2^{\mathrm{sym}}>0$,
+każdy rozkład początkowy zbiega do $\pi$;
+jeśli był stacjonarny, musi więc być równy $\pi$.
+\end{proof}
+
+\begin{przyklad}[Gwiazda a wybór rozkładu stacjonarnego]
+\label{ex:tg-expander-star}
+Niech $G=K_{1,r}$, $r\geq2$, z centrum $c$.
+Zwykły spacer ma macierz przejścia $P=D^{-1}A$.
+Rozkład $\pi(v)=d_v/W$ jest stacjonarny, ponieważ
+$\pi(u)P_{uv}=A_{uv}/W=\pi(v)P_{vu}$ i sumując
+po $u$ otrzymujemy $(\pi P)(v)=\pi(v)$.
+W gwieździe $\pi(c)=1/2$, a dla każdego liścia
+$\pi(v)=1/(2r)$; rozkład nie jest jednostajny.
+Dopuszczalny zbiór w definicji przewodności składa
+się z samych liści albo z samego centrum, ponieważ
+centrum ma objętość $W/2=r$. W obu przypadkach
+$|\partial_ES|=\operatorname{vol}(S)$, zatem
+$\Phi_{\mathrm{vol}}(G)=1$.
+\end{przyklad}
+
+\section{Średnica i wzrost kul}
+\label{sec:tg-expanders-diameter}
+
+\begin{twierdzenie}[Średnica a ekspansja wierzchołkowa]
+\label{thm:tg-expander-diameter}
+Niech $G=(V,E)$ będzie spójnym grafem
+prostym na $n\geq2$ wierzchołkach
+i niech $h_V(G)>0$.
+Wówczas
+\[
+\operatorname{diam}(G)\leq
+2\left(
+\left\lceil
+\frac{\log n}{\log(1+h_V(G))}
+\right\rceil+1\right).
+\]
+W szczególności, jeśli
+$h_V(G_j)\geq\varepsilon>0$
+w rodzinie grafów spójnych,
+to średnice wynoszą $O(\log|V(G_j)|)$.
+\end{twierdzenie}
+\begin{proof}
+Dla $v\in V$ niech $B_r(v)$
+oznacza zbiór wierzchołków
+o odległości co najwyżej $r$
+od $v$. Gdy
+$0<|B_r(v)|\leq n/2$,
+z definicji ekspansji
+mamy
+\[
+|B_{r+1}(v)|
+=|B_r(v)|+|\partial_VB_r(v)|
+\geq(1+h_V(G))|B_r(v)|.
+\]
+Niech
+$R=\lceil\log n/\log(1+h_V(G))\rceil+1$.
+Ponieważ $h_V(G)>0$, mianownik jest dodatni.
+Ponieważ $|B_0(v)|=1$, gdyby $|B_R(v)|\leq n/2$,
+to wszystkie wcześniejsze kule
+również miałyby rozmiar
+co najwyżej $n/2$,
+a iteracja nierówności dałaby
+$|B_R(v)|\geq(1+h_V(G))^R>n$,
+sprzeczność.
+Zatem każda kula $B_R(v)$
+zawiera więcej niż połowę
+wierzchołków grafu.
+Dla dowolnych $u,v$ kule
+$B_R(u)$ i $B_R(v)$ mają
+niepuste przecięcie.
+Łącząc ich środki przez
+wspólny wierzchołek,
+otrzymujemy
+$d_G(u,v)\leq2R$.
+W rodzinie z $h_V(G_j)\geq\varepsilon>0$
+mamy $R\leq\log|V(G_j)|/\log(1+\varepsilon)+2$,
+gdyż $\lceil x\rceil\leq x+1$.
+Stała w oszacowaniu logarytmicznym nie zależy
+więc od $j$.
+\end{proof}
+
+\section{Przykłady: grafy pełne i cykle}
+\label{sec:tg-expanders-examples}
+
+\begin{przyklad}[Graf pełny]
+\label{ex:tg-expander-complete}
+Dla $n\geq2$ graf $K_n$
+jest $(n-1)$-regularny.
+Jeżeli $|S|=k\leq n/2$,
+to $|\partial_ES|=k(n-k)$.
+Stąd
+\[
+\Phi(K_n)=
+\min_{1\leq k\leq n/2}
+\frac{n-k}{n-1}
+=\frac{\lceil n/2\rceil}{n-1}.
+\]
+Ponadto $A=J-I$,
+gdzie $J$ jest macierzą
+samych jedynek.
+Na wektorze stałym
+$A$ działa przez $n-1$,
+a na podprzestrzeni
+sumy współrzędnych zero
+przez $-1$.
+Zatem
+$\lambda_2(K_n)=n/(n-1)$.
+Mimo dobrej ekspansji
+ciąg $(K_n)$ nie jest
+rodziną ekspanderów
+o ograniczonym stopniu,
+gdyż jego stopień
+$n-1$ nie jest stały.
+\end{przyklad}
+
+\begin{przyklad}[Cykl]
+\label{ex:tg-expander-cycle}
+Niech $n\geq3$.
+Graf $C_n$ jest $2$-regularny.
+Dla niepustego
+$S\subsetneq V$, $|S|=k$,
+granica $\partial_ES$
+zawiera co najmniej
+dwie krawędzie;
+równość otrzymujemy,
+gdy $S$ składa się
+z $k$ kolejnych
+wierzchołków cyklu.
+Stąd
+\[
+\Phi(C_n)=\frac1{\lfloor n/2\rfloor}.
+\]
+Aby obliczyć widmo,
+numerujemy wierzchołki
+$0,\ldots,n-1$
+w kolejności cyklicznej.
+Wektory zespolone
+$z_j(v)=\exp(2\pi ijv/n)$
+są wektorami własnymi
+macierzy $A$:
+$(Az_j)(v)=z_j(v-1)+z_j(v+1)
+=2\cos(2\pi j/n)z_j(v)$.
+Wektory $z_j$ dla $j=0,\ldots,n-1$ są parami
+ortogonalne w $\mathbb C^n$: dla $j\ne k$ iloczyn
+skalarny jest sumą $n$ kolejnych potęg nietrywialnego
+$n$-tego pierwiastka z jedności, równą zero.
+Tworzą więc bazę. Wartości własne $\mathcal L$ wynoszą
+$1-\cos(2\pi j/n)$, a najmniejsza dodatnia odpowiada
+$j=1$ lub $j=n-1$. Otrzymujemy
+\[
+\lambda_2(C_n)
+=1-\cos(2\pi/n).
+\]
+Zarówno $\Phi(C_n)$,
+jak i $\lambda_2(C_n)$
+dążą do zera;
+cykle nie tworzą
+rodziny ekspanderów.
+\end{przyklad}
+
+
+
+\section{Kiedy graf jest ekspanderem?}
+\label{sec:tg-expanders-criteria}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=.95]
+\foreach \i in {0,...,7}{
+  \pgfmathsetmacro{\ang}{90-45*\i}
+  \node[tgVertex] (v\i) at (\ang:1.72) {\scriptsize$\i$};
+}
+\foreach \i in {0,...,7}{
+  \pgfmathtruncatemacro{\j}{mod(\i+1,8)}
+  \draw[tgEdge] (v\i)--(v\j);
+}
+\draw[tgAccent,line width=1.35pt]
+  (v2)--(v3);
+\draw[tgAccent,line width=1.35pt]
+  (v7)--(v0);
+\node[font=\small] at (0,-2.23)
+  {$S=\{0,1,2\},\quad|\partial_ES|=2$};
+\end{tikzpicture}
+\caption{W cyklu $C_8$ zbiór trzech kolejnych
+wierzchołków ma dwie krawędzie graniczne,
+zaznaczone grubszą linią.
+Dla większych cykli stosunek
+$|\partial_ES|/(2|S|)$ może być coraz mniejszy.}
+\label{fig:tg-expander-cycle-cut}
+\end{figure}
+
+
+Dla rodzin grafów $d$-regularnych
+o wspólnym, stałym $d$
+można stosować następujące
+równoważne kryteria:
+jednostajnie dodatnia
+znormalizowana ekspansja
+krawędziowa $\Phi$,
+jednostajnie dodatnia
+ekspansja wierzchołkowa $h_V$
+oraz jednostajnie dodatnia
+luka $\lambda_2$.
+Równoważność pierwszego
+i trzeciego kryterium
+wynika z wniosku
+\ref{cor:tg-expander-spectral-family},
+a pierwszego i drugiego
+ze stwierdzenia
+\ref{prop:tg-expander-edge-vertex}.
+
+W takim przypadku
+twierdzenie
+\ref{thm:tg-expander-mixing}
+daje czas mieszania
+leniwego spaceru
+rzędu $O(\log n)$
+dla ustalonej dokładności
+w wariacji całkowitej,
+a twierdzenie
+\ref{thm:tg-expander-diameter}
+daje średnicę $O(\log n)$.
+Same małe średnice
+\emph{nie stanowią}
+kryterium ekspandera:
+nie kontrolują
+liczby krawędzi
+oddzielających
+dowolny mały zbiór
+od jego dopełnienia.
+
+\begin{przyklad}[Mała średnica bez jednostajnej ekspansji]
+\label{ex:tg-expander-small-diameter}
+Dla każdej liczby całkowitej $h\geq2$ weźmy dwie rozłączne
+kopie pełnego drzewa binarnego wysokości $h$ (korzeń na
+poziomie $0$, liście na poziomie $h$). W każdej kopii połączmy
+jej $2^h$ liści w jeden cykl, a następnie połączmy oba
+korzenie jedną krawędzią. Otrzymany graf $G_h$ jest prosty:
+cykle mają co najmniej cztery wierzchołki, a żadna krawędź
+drzewa nie łączy dwóch liści. Jest spójny i $3$-regularny:
+wierzchołki wewnętrzne poza korzeniami mają po trzech
+sąsiadów w drzewie, każdy liść ma rodzica i dwóch sąsiadów
+na cyklu, a każdy korzeń ma dwoje dzieci i drugi korzeń
+jako sąsiada.
+
+Każda kopia ma $m_h=\sum_{j=0}^h2^j=2^{h+1}-1$
+wierzchołków, zatem $n_h=|V(G_h)|=2m_h$. Dowolne
+dwa wierzchołki w tej samej kopii można połączyć
+przez jej korzeń drogą o długości co najwyżej $2h$
+(po usunięciu ewentualnych powtórzeń); dla dwóch
+różnych kopii przechodzimy dodatkowo przez krawędź
+między korzeniami. Stąd $\operatorname{diam}(G_h)\leq 2h+1$.
+Z drugiej strony wybierzmy po jednym liściu w każdej
+kopii. Każda droga między nimi musi przejść przez jedyną
+krawędź między korzeniami. W obrębie każdej kopii
+poziom wierzchołka zmienia się wzdłuż krawędzi drzewa
+o jeden, a wzdłuż krawędzi cyklu liści nie zmienia się.
+Przejście z liścia na poziomie $h$ do korzenia na
+poziomie $0$ wymaga więc co najmniej $h$ krawędzi.
+Odległość wybranych liści jest zatem równa $2h+1$.
+Otrzymujemy
+\[
+\operatorname{diam}(G_h)=2h+1
+=2\log_2(n_h+2)-3.
+\]
+Niech $S$ będzie zbiorem wierzchołków jednej kopii.
+Mamy $|S|=n_h/2=m_h$ oraz $|\partial_E S|=1$,
+więc $\Phi(G_h)\leq 1/(3m_h)$.
+Dla każdego niepustego $T\subseteq V(G_h)$
+o $|T|\leq m_h$ spójność daje $|\partial_E T|\geq1$,
+a stąd $|\partial_E T|/(3|T|)\geq 1/(3m_h)$.
+Biorąc minimum w definicji \ref{def:tg-expander-constants},
+uzyskujemy dokładną wartość
+\[
+\Phi(G_h)=\frac{1}{3m_h}
+=\frac{2}{3n_h}\longrightarrow0.
+\]
+Z nierówności Cheegera \ref{thm:tg-expander-cheeger}
+wynika też $\lambda_2(G_h)\leq4/(3n_h)\to0$.
+Jest to zatem rodzina spójnych grafów o wspólnym
+stopniu $3$ i logarytmicznej średnicy, która nie jest
+rodziną ekspanderów.
+\end{przyklad}
+
+Zagadnienia jawnych konstrukcji ekspanderów,
+optymalnych ograniczeń spektralnych i zastosowań
+wymagają osobnego opracowania.

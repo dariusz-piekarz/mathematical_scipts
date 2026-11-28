@@ -1,0 +1,3 @@
+# CAT-17 — stabilizacja II
+
+Źródło wejściowe a855ae5275cd6187d956ad9f5b5209dc65d0dd10. Doprecyzowano zapis funktora D i transformacji naturalnej, rozróżnienie funkcji włączenia i ich grafów w Rel, rozpisano składanie relacji z projekcją. Dodano przykład obiektu zerowego Rel i zastrzeżenie dotyczące idempotentnej sumy relacji (nie jest dodawaniem grupowym). Rozpisano rachunek homomorfizmu z iloczynu prostego, dowód jednoznaczności i konkretny kontrprzykład z transpozycjami w S3. Zachowano wszystkie etykiety. Kontrola strukturalna JS PASS. Dodano CAT-17-005: enumeracja macierzy naturalnych operacji na k i k², z rejestrem. Nowe testy i PDF wymagają potwierdzenia w CI. Lean nie uruchamiano.

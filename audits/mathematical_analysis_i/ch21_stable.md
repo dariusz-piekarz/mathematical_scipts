@@ -1,0 +1,10 @@
+# MA1-21 — stabilny (audyt 03)
+Odczyt HEAD 390f0c003a9b8dd850010a17b3f5679b18843d74. Źródło 2a5919bcd4239d01d5cfbbe4420aa5283688aba5, testy ff10b881e5e63facce5b1a302ebb1b0c3e474ca5, rejestr d9d0f985d9123aeb2e3e449b06bec250053ed05f, tom 16ccde5b5bbf326429bc2173bbdfa26e78cd2321; wszystkie cztery bloby zgodne z przebiegiem CI dla 7e670aeaeaf14727bf5dea7131b74f04ec0968bb.
+## Kontrola semantyczna
+001–004: znaki ilorazów Fermata, punkt wewnętrzny, Rolle przez ekstrema z osobnym przypadkiem funkcji stałej, kontrprzykłady poprawne.
+005–008: odjęcie siecznej, świadki dla wielomianów, Cauchy bez dzielenia, w wersji ilorazowej niezerowy przyrost g przez Rolle'a i niezerowa pochodna. Oznaczenia A,B w przykładzie zdefiniowane lokalnie.
+009–014: monotoniczność, ścisły wzrost przy nieujemnej pochodnej i braku przedziałów stałości, różnica stała na przedziale, oszacowania przyrostów, równoważność Lipschitza w podanej klasie, odwrotność z dolnym ograniczeniem, nierówności logarytmiczne. Założenia o końcach przedziału zachowane.
+015: ponowna kontrola jawnych kwantyfikatorów dla granicy skończonej i obu niewłaściwych; c_h w (a,a+h), prawy koniec analogicznie przez [b-h,b] i poprawny znak ilorazu. Brak implikacji odwrotnej. Nie wykryto nowej usterki matematycznej.
+016: wzmocnione testy obecności i współrzędnych stycznej Rolle'a oraz obu prostych Lagrange'a zaliczone.
+## Kontrole końcowe
+CI 45502844761 job 138830324615 SUCCESS: log 215/215 testów, 14/14 rozdziału. Kompilacja 127 i 129 stron, brak Overfull/Underfull; zbiorcze ostrzeżenie odsyłaczy tylko po pierwszym przebiegu. Atlas 45502809409 i terminologia 45502809451 SUCCESS dla źródła 6824e2a. Artefakt 14972170612 pobrano, rozpakowano i sprawdzono pdfinfo (129 stron). Render pdftoppm 120 dpi fizyczne strony 124–129; obejrzano planszę sześciu stron i osobno strony 125–126. Oba rysunki czytelne, styczne poprawnie położone; brak widocznych ucięć. Ostatnia strona zawiera dowód i sporo wolnej przestrzeni, kosmetyka. Zachowano 16 kryteriów, 14 metod rozdziału i raporty 01–02. Lean nieuruchomiony. Status stabilny w zakresie wykonanych kontroli. Rozdział 22 nie rozpoczęty.

@@ -2,7 +2,9 @@
 \label{ch:mart-cont}
 
 \section{Dlaczego przejście od czasu dyskretnego nie jest automatyczne?}
-W tomie I martyngał był ciągiem $(M_n)_{n\ge0}$, którego
+W tomie I (rozdział~\ref{I-ch:nadmartyngaly})
+badaliśmy martyngały w czasie dyskretnym.
+Martyngał był ciągiem $(M_n)_{n\ge0}$, którego
 warunkowa prognoza następnej wartości, przy znajomości przeszłości,
 wynosiła dokładnie wartość obecną. W czasie ciągłym rozważamy
 nieprzeliczalną rodzinę chwil. Pojawiają się dwa nowe pytania:
@@ -34,12 +36,14 @@ miałyby zachodzić jednocześnie dla nieprzeliczalnie wielu par.
 Niech $W$ będzie standardowym procesem Wienera w jego
 uzupełnionej filtracji naturalnej. Wówczas
 $W_t$ jest martyngałem z powodu niezależnych wycentrowanych
-przyrostów. Proces $W_t^2-t$ również nim jest, ponieważ
+przyrostów (rozdział~\ref{ch:wiener}). Uzupełnienie filtracji
+o zbiory zerowe nie zmienia równości warunkowych. Proces $W_t^2-t$ również nim jest, ponieważ
 \[
 \E[W_t^2-t\mid\calF_s]
 =W_s^2+\E[(W_t-W_s)^2]-t=W_s^2-s.
 \]
-Jeśli $N$ jest procesem Poissona o intensywności $\lambda>0$,
+Jeśli $N$ jest procesem Poissona o intensywności $\lambda>0$
+w swojej filtracji naturalnej (rozdział~\ref{ch:poisson-process}),
 to $N_t-\lambda t$ jest martyngałem, gdyż przyrost liczby
 zdarzeń po chwili $s$ jest niezależny od przeszłości i ma
 średnią $\lambda(t-s)$. Pierwsze dwa procesy mają trajektorie
@@ -47,24 +51,25 @@ ciągłe, ostatni ma skoki wysokości jeden.
 \end{przyklad}
 
 \begin{lemat}[Warunkowe wartości oczekiwane są jednostajnie całkowalne]
+\label{lem:mart-cont-ui-cond}
 Niech $X\in L^1(\Omega,\calF,\Prob)$. Rodzina
 $\{\E[X\mid\calG]:\calG\subseteq\calF\text{ jest pod-}\sigma\text{-ciałem}\}$
 jest jednostajnie całkowalna.
 \end{lemat}
 \begin{proof}
 Ustalmy $K>0$ i rozłóżmy $X=U+V$, gdzie
-$U=X\ind{\{|X|\le K/2\}}$ oraz
-$V=X\ind{\{|X|>K/2\}}$. Dla dowolnego $\calG$
+$U=X\chi_{\{|X|\le K/2\}}$ oraz
+$V=X\chi_{\{|X|>K/2\}}$. Dla dowolnego $\calG$
 połóżmy $Y=\E[X\mid\calG]$. Wówczas
 $|\E[U\mid\calG]|\le K/2$, skąd na zdarzeniu
 $\{|Y|>K\}$ zachodzi $|\E[V\mid\calG]|>K/2$
 i $|Y|\le K/2+|\E[V\mid\calG]|\le2|\E[V\mid\calG]|$.
 Dlatego
 \[
-\E[|Y|\ind{\{|Y|>K\}}]
+\E[|Y|\chi_{\{|Y|>K\}}]
 \le2\E|\E[V\mid\calG]|
 \le2\E|V|
-=2\E[|X|\ind{\{|X|>K/2\}}].
+=2\E[|X|\chi_{\{|X|>K/2\}}].
 \]
 Prawa strona nie zależy od $\calG$ i dąży do zera
 przy $K\to\infty$ dzięki całkowalności $X$.
@@ -98,17 +103,56 @@ Ortogonalność rzutu warunkowego daje
 $\|Y_n-Y_m\|_2^2=\|Y_n\|_2^2-\|Y_m\|_2^2$.
 Normy $\|Y_n\|_2$ maleją i są nieujemne, zatem
 $(Y_n)$ jest ciągiem Cauchy'ego w $L^2$. Niech $Y$
-będzie jego granicą. Dla każdego ustalonego $k$ wszystkie
-$Y_n$ z $n\ge k$ są $\calG_k$-mierzalne; domkniętość
-$L^2(\calG_k)$ daje mierzalność $Y$ względem każdego
-$\calG_k$, czyli względem $\calG_\infty$.
+będzie jego granicą. Wybierzmy podciąg $(Y_{n_j})$ zbieżny prawie na pewno
+do $Y$, co jest możliwe dzięki zbieżności w $L^2$.
+Aby uzyskać jedną wersję mierzalną względem
+przecięcia także bez założenia zupełności $\calG_k$,
+definiujemy $\widehat Y$ jako granicę tego podciągu
+tam, gdzie istnieje skończona granica, a poza tym
+jako zero. Dla każdego $k$ definicja zależy wyłącznie
+od ogona podciągu o indeksach $n_j\ge k$, dlatego
+$\widehat Y$ jest $\calG_k$-mierzalna dla wszystkich $k$
+i w konsekwencji $\calG_\infty$-mierzalna.
+Ponadto $\widehat Y=Y$ p.n.; dalej używamy tej wersji.
 Dla $A\in\calG_\infty$ i wszystkich $n$ mamy
-$\E[Y_n\ind A]=\E[X\ind A]$; przejście do granicy
+$\E[Y_n\chi_A]=\E[X\chi_A]$; przejście do granicy
 w $L^1$ identyfikuje $Y=\E[X\mid\calG_\infty]$.
 Dla ogólnego $X\in L^1$ przybliżamy $X$ obcięciami
 $X^{(K)}\in L^2$. Kontrakcja warunkowania w $L^1$
 pozwala przenieść zbieżność z $X^{(K)}$ na $X$ po
 przejściu $K\to\infty$.
+\end{proof}
+
+\begin{lemat}[Zbieżność w $L^1$ dla malejącej informacji]
+\label{lem:reverse-submart-l1}
+Niech $(\mathcal G_n)_{n\ge1}$ będzie malejącym
+ciągiem pod-$\sigma$-ciał i niech
+$V_n\in L^1(\mathcal G_n)$ spełniają
+$\E[V_n\mid\mathcal G_{n+1}]\ge V_{n+1}$ p.n.
+Jeżeli $\inf_n\E V_n>-\infty$, to $(V_n)$
+jest zbieżny w $L^1$.
+\end{lemat}
+\begin{proof}
+Połóżmy $A_j=\E[V_j\mid\mathcal G_{j+1}]-V_{j+1}$.
+Wybieramy nieujemne wersje $A_j$.
+Przez indukcję, korzystając z własności wieży
+i $\mathcal G_{j+1}$-mierzalności $A_j$, otrzymujemy
+\[
+V_n=\E\left[V_1-\sum_{j=1}^{n-1}A_j
+\,\middle|\,\mathcal G_n\right].
+\]
+Średnie $\E V_n$ są nierosnące, a teleskopowanie daje
+$\sum_{j\ge1}\E A_j=\E V_1-\lim_n\E V_n<\infty$.
+Zatem $A=\sum_{j\ge1}A_j$ jest całkowalna
+i z kontrakcji warunkowania w $L^1$
+\[
+\left\|V_n-\E[V_1-A\mid\mathcal G_n]\right\|_1
+\le\E\sum_{j\ge n}A_j\longrightarrow0.
+\]
+Poprzedni lemat o odwrotnych warunkowych wartościach
+oczekiwanych daje zbieżność
+$\E[V_1-A\mid\mathcal G_n]$ w $L^1$,
+a więc również zbieżność $V_n$.
 \end{proof}
 
 \begin{lemat}[Dlaczego z ograniczonej liczby przekroczeń wynikają granice?]
@@ -120,8 +164,9 @@ przekroczeń przedziału $[a,b]$ w górę. Wtedy w każdej chwili
 $t<T$ istnieje skończona prawa granica
 $\lim_{r\downarrow t,\,r\in D}f(r)$, a w każdej chwili
 $t>0$ istnieje skończona lewa granica wzdłuż $D$.
-Funkcja zdefiniowana przez prawe granice (z wartością $f(T)$
-w końcu przedziału, gdy $T\in D$) jest c\`adl\`ag.
+Funkcja zdefiniowana przez prawe granice dla $t<T$,
+z dowolną skończoną wartością w punkcie $T$
+(w szczególności $f(T)$, gdy $T\in D$), jest c\`adl\`ag.
 \end{lemat}
 \begin{proof}
 Brak prawej granicy w chwili $t$ oznaczałby
@@ -161,29 +206,45 @@ $\widetilde M_t=M_t$ prawie na pewno.
 \end{twierdzenie}
 \begin{proof}
 Ustalmy skończony horyzont $T>0$ i wybierzmy
-$D_T=(\Q\cap[0,T])\cup\{T\}$. Dla dowolnych liczb
+$D_T=(\Q\cap[0,T])\cup\{T\}$.
+Wybieramy rosnący ciąg skończonych podzbiorów $D_T$
+zawierających $0,T$ i wyczerpujących $D_T$.
+Dla dowolnych liczb
 wymiernych $a<b$ i skończonego uporządkowanego podzbioru
 $D_T$ zastosujmy nierówność przekroczeń do dyskretnego
 martyngału otrzymanego przez próbkowanie $(M_t)$ w tych
 chwilach. Oczekiwana liczba przekroczeń przedziału
 $[a,b]$ jest ograniczona przez stałą zależną od
 $a,b$ i $\E|X|$, a nie od liczby punktów próbkowania:
-taki wniosek wynika z dowodu nierówności przekroczeń
-zamieszczonego w tomie I (i ponownie w rozdziale
-\ref{ch:stop-cont}). Przechodząc po rosnących skończonych
-podzbiorach do całego $D_T$, otrzymujemy prawie na pewno
-skończoną liczbę przekroczeń każdego przedziału
-wymiernego. Wynika stąd istnienie skończonych granic
-jednostronnych $M_{s-}$ i $M_{s+}$ wzdłuż $D_T$
-we wszystkich chwilach $s\in(0,T)$, z wyjątkiem jednego
-zbioru zerowego (zastosowaliśmy tylko przeliczalnie wiele
-par $a<b$). Skończoność granic wynika też z ograniczenia
-$\sup_{r\in D_T}|M_r|<\infty$ prawie na pewno;
-to ostatnie uzyskujemy z nierówności maksymalnej w $L^1$
-dla skończonych podzbiorów i zbieżności monotonicznej.
+taki wniosek wynika z nierówności przekroczeń
+Dooba z tomu I, rozdział~\ref{I-ch:nadmartyngaly}:
+dla martyngału na skończonej siatce
+$(b-a)\E U[a,b]\le\E[(M_T-a)^+]-\E[(M_0-a)^+]$
+i prawa strona jest nie większa od $\E|X|+|a|$.
+Tutaj $U[a,b]$ oznacza liczbę pełnych przekroczeń
+w górę, a $y^+=\max(y,0)$.
+Przy dodawaniu punktów siatki liczba przekroczeń
+nie maleje (definiujemy ją jako maksymalną
+liczbę rozłącznych kolejnych par punktów).
+Zbieżność monotoniczna zapewnia skończoną liczbę
+przekroczeń wzdłuż $D_T$ prawie na pewno.
+Ponadto $|M|$ jest podmartyngałem przez nierówność
+Jensena. Słaba nierówność maksymalna Dooba
+na każdej skończonej siatce daje dla $K>0$
+$\Prob(\max |M_r|>K)\le \E|M_T|/K\le\E|X|/K$.
+Przechodząc do całego $D_T$, a następnie z $K$
+do nieskończoności, uzyskujemy
+$\sup_{r\in D_T}|M_r|<\infty$ prawie na pewno.
+Na wspólnym zbiorze pełnej miary, wyznaczonym
+przez te warunki dla przeliczalnie wielu par
+wymiernych $a<b$, stosujemy poprzedni lemat.
+Dostajemy skończone prawe granice dla $0\le s<T$
+i lewe dla $0<s\le T$.
 
-Definiujemy $\widetilde M_s=\lim_{r\downarrow s,r\in D_T}M_r$
-dla $s<T$ oraz $\widetilde M_T=M_T$. Poprzedni lemat
+Na tym zbiorze definiujemy
+$\widetilde M_s=\lim_{r\downarrow s,r\in D_T}M_r$
+dla $s<T$ oraz $\widetilde M_T=M_T$.
+Na jego dopełnieniu przyjmujemy zerową trajektorię. Poprzedni lemat
 o funkcjach rzeczywistych z granicami jednostronnymi
 zapewnia, że $s\mapsto\widetilde M_s$ jest prawostronnie
 ciągła i ma granice z lewej: gdyby prawostronna ciągłość
@@ -199,12 +260,131 @@ $M_{r_n}=\E[X\mid\calF_{r_n}]\to
 \E[X\mid\calF_s]=M_s$ w $L^1$.
 Z drugiej strony lewa strona zbiega prawie na pewno do
 $\widetilde M_s$. Stąd $\widetilde M_s=M_s$ prawie na pewno.
-Łącząc konstrukcje na horyzontach $T=1,2,\ldots$
-(na wspólnym zbiorze pełnej miary), otrzymujemy proces
-na $[0,\infty)$; wartości na nakładających się odcinkach
-są zgodne jako prawe granice z tego samego zbioru
-wymiernych chwil.
+Dla ustalonego $s$ granica wzdłuż malejących
+$r_n$ jest $\bigcap_n\calF_{r_n}=\calF_s$-mierzalna:
+można ją zdefiniować jako granicę ogona tam,
+gdzie istnieje skończona granica, i zero w przeciwnym
+razie. Zmiana na wspólnym zbiorze zerowym jest
+$\calF_0$-mierzalna dzięki zupełności filtracji.
+Zatem $\widetilde M$ jest adaptowany.
+
+Łącząc konstrukcje na horyzontach $T=1,2,\ldots$,
+bierzemy wspólny zbiór pełnej miary, na którym
+istnieją wszystkie potrzebne granice oraz
+w każdym całkowitym punkcie końcowym wartość
+$M_T$ jest zgodna z prawą granicą uzyskaną
+na dłuższym horyzoncie. Ten ostatni warunek
+wynika z udowodnionej własności modyfikacji
+i przeliczalności całkowitych $T$.
+W punktach wewnętrznych zgodność jest bezpośrednia,
+bo używamy tych samych wymiernych chwil.
+Poza wspólnym zbiorem pełnej miary definiujemy
+zerową trajektorię. Otrzymujemy adaptowany proces
+o wszędzie c\`adl\`ag trajektoriach, który jest
+modyfikacją $M$, a przez równości w ustalonych
+chwilach również martyngałem.
+Każde dwie prawostronnie ciągłe modyfikacje
+są nierozróżnialne, gdyż zgadzają się p.n.
+w każdej z przeliczalnie wielu chwil wymiernych,
+a prawostronna ciągłość rozszerza zgodność
+na wszystkie chwile jednocześnie.
 \end{proof}
+
+\begin{twierdzenie}[Ogólne twierdzenie regularizacyjne Dooba]
+\label{thm:doob-general-regularization}
+Niech $(\calF_t)$ spełnia warunki zwykłe, a $X$ będzie
+rzeczywistym podmartyngałem. Istnieje adaptowana
+modyfikacja c\`adl\`ag wtedy i tylko wtedy, gdy
+$t\mapsto\E X_t$ jest prawostronnie ciągła.
+Analogiczna teza zachodzi dla nadmartyngałów.
+W szczególności każdy martyngał ma taką modyfikację.
+\end{twierdzenie}
+\begin{proof}
+Najpierw wykażemy istnienie granic trajektorii
+na chwilach wymiernych, niezależnie od założenia
+o ciągłości średniej. Dla $T>0$ połóżmy
+$D_T=(\Q\cap[0,T])\cup\{T\}$.
+Wybieramy rosnący ciąg skończonych siatek
+zawierających $0,T$ i wyczerpujących $D_T$.
+Na każdej z nich nierówność przekroczeń Dooba (tom I,
+rozdział~\ref{I-ch:nadmartyngaly}) daje
+$(b-a)\E U[a,b]\le \E[(X_T-a)^+]-
+\E[(X_0-a)^+]$; w szczególności prawa strona
+jest nie większa od $\E|X_T|+|a|$.
+Liczba przekroczeń wzdłuż całego $D_T$
+jest więc skończona p.n. dla każdej wymiernej
+pary $a<b$.
+
+Aby uzyskać także ograniczoność próbek, połóżmy
+$C_u=\E[X_T\mid\calF_u]$ i $Y_u=C_u-X_u$
+dla $0\le u\le T$. Z własności podmartyngału
+$Y_u\ge0$ p.n., a $Y$ jest nadmartyngałem.
+Na skończonej siatce maksymalna nierówność
+dla nieujemnego nadmartyngału daje
+$\Prob(\max Y_u>K)\le\E Y_0/K$:
+zatrzymujemy na pierwszym przekroczeniu poziomu
+$K$ (lub końcu siatki), stosujemy dyskretne
+próbkowanie opcjonalne i nieujemność.
+Nierówność maksymalna dla $|C|$ daje analogiczne
+oszacowanie przez $\E|X_T|/K$.
+Wyczerpując $D_T$ skończonymi siatkami, otrzymujemy
+$\sup_{u\in D_T}|X_u|<\infty$ p.n.
+Lemat o przekroczeniach pozwala zatem zdefiniować
+prawostronne granice $\widetilde X_u$ wzdłuż $D_T$
+dla $u<T$, z trajektoriami c\`adl\`ag po dołączeniu
+wartości $X_T$ na końcu. Jak w dowodzie
+twierdzenia~\ref{thm:regularizacja}, warunki
+zwykłe zapewniają adaptację tej konstrukcji.
+
+Potrzebujemy teraz zbieżności w $L^1$ przy
+$u_j\downarrow u$. Oznaczmy $V_j=X_{u_j}$
+i $\mathcal G_j=\calF_{u_j}$.
+Z własności podmartyngału
+$\E[V_j\mid\mathcal G_{j+1}]\ge V_{j+1}$,
+a $\E V_j\ge\E X_u$. Lemat
+\ref{lem:reverse-submart-l1} daje zbieżność $V_j$ w $L^1$.
+Jeżeli $u_j\in D_T$, jej granica jest
+$\widetilde X_u$, ponieważ istnieje granica p.n.
+
+W szczególności $\E\widetilde X_u=
+\lim_{j\to\infty}\E X_{u_j}$ oraz
+$\E[V_j\mid\calF_u]\ge X_u$.
+Przechodząc do granicy w $L^1$ i korzystając
+z $\calF_u$-mierzalności $\widetilde X_u$,
+dostajemy $\widetilde X_u\ge X_u$ p.n.
+Gdy średnia jest prawostronnie ciągła,
+różnica ta ma średnią zero, więc
+$\widetilde X_u=X_u$ p.n.
+Łączenie horyzontów i wybór zerowej trajektorii
+na wspólnym zbiorze zerowym odbywa się
+jak w twierdzeniu~\ref{thm:regularizacja}.
+
+Odwrotnie, jeśli istnieje modyfikacja
+prawostronnie ciągła, dla każdego ciągu
+$u_j\downarrow u$ mamy $X_{u_j}\to X_u$ p.n.
+(zgodność wersji wystarczy w przeliczalnym
+zbiorze tych chwil). Udowodniona powyżej
+zbieżność w $L^1$ dla takiego ciągu pokazuje
+$\E X_{u_j}\to\E X_u$. Ponieważ średnia
+podmartyngału jest niemalejąca, to oznacza
+jej prawostronną ciągłość.
+Dla nadmartyngałów stosujemy wynik do $-X$,
+a dla martyngału średnia jest stała.
+\end{proof}
+
+\begin{przyklad}[Warunki zwykłe nie wystarczają dla podmartyngału]
+Niech filtracja będzie trywialna na jednopunktowej
+przestrzeni probabilistycznej i niech
+$X_0=0$, $X_t=1$ dla $t>0$. Jest to
+ograniczony podmartyngał, ponieważ jego
+deterministyczne wartości są niemalejące.
+Nie ma jednak modyfikacji prawostronnie
+ciągłej: nawet na ciągu $t_n=1/n$ wartości
+zbiegają do $1$, a nie do $X_0$.
+Filtracja spełnia warunki zwykłe; zawodzi
+natomiast ciągłość średniej wymagana
+w twierdzeniu~\ref{thm:doob-general-regularization}.
+\end{przyklad}
 
 \begin{uwaga}[Dlaczego wymagana jest prawostronna ciągłość filtracji?]
 Bez warunku $\calF_{t+}=\calF_t$ granica
@@ -234,6 +414,17 @@ Ten przykład ujawnia, że regularizacja jest twierdzeniem o
 \emph{procesie oraz informacji}, a nie wyłącznie o funkcjach czasu.
 \end{przyklad}
 
+W dalszej części rozdziału przyjmujemy warunki zwykłe
+filtracji, chyba że wyraźnie zaznaczono inaczej.
+Adaptowany proces o prawie na pewno c\`adl\`ag
+trajektoriach można na mierzalnym zbiorze zerowym
+zastąpić zerową trajektorią, zachowując adaptację
+i nierozróżnialność. Dlatego w argumentach
+trajektoryjnych możemy używać wszędzie c\`adl\`ag
+wersji.
+
+\section{Czasy zatrzymania i proces zatrzymany}
+
 \begin{lemat}[Mierzalność wartości procesu zatrzymanego]
 Niech $X=(X_t)_{t\ge0}$ będzie rzeczywistym procesem adaptowanym
 o wszędzie prawostronnie ciągłych trajektoriach, a $\tau$ czasem zatrzymania.
@@ -244,18 +435,19 @@ Ustalmy $t>0$. Przybliżamy $\tau\wedge t$ od góry przez czasy
 $\rho_n=2^{-n}\lceil2^n(\tau\wedge t)\rceil\wedge t$, które
 przyjmują skończenie wiele wartości z $[0,t]$ i są czasami
 zatrzymania. Dla każdego $n$ mamy
-$X_{\rho_n}=\sum_{u\in D_n}X_u\ind{\{\rho_n=u\}}$,
+$X_{\rho_n}=\sum_{u\in D_n}X_u\chi_{\{\rho_n=u\}}$,
 gdzie $D_n$ jest skończonym zbiorem wartości $\rho_n$.
 Każdy składnik jest $\calF_t$-mierzalny (ponieważ $u\le t$),
 a $\rho_n\downarrow\tau\wedge t$. Prawostronna ciągłość daje
-$X_{\rho_n}\to X_{\tau\wedge t}$ prawie na pewno, a więc ostatnia
-zmienna jest mierzalna względem $\calF_t$, po ewentualnym
-uzupełnieniu filtracji. Dla procesu o prawostronnie ciągłych
-trajektoriach dla każdego $\omega$ argument jest punktowy.
+$X_{\rho_n}\to X_{\tau\wedge t}$ punktowo, a więc
+ostatnia zmienna jest mierzalna względem $\calF_t$
+bez potrzeby uzupełniania filtracji.
+Dla $t=0$ jest to adaptowana zmienna $X_0$.
+Przy trajektoriach prawostronnie ciągłych jedynie
+p.n. ten sam argument działa przy zupełnej filtracji.
 \end{proof}
 
 
-\section{Czasy zatrzymania i proces zatrzymany}
 \begin{definicja}[Proces zatrzymany]
 Niech $X$ będzie procesem adaptowanym c\`adl\`ag,
 a $\tau$ czasem zatrzymania (dopuszczamy wartość $\infty$).
@@ -263,55 +455,135 @@ Dla $t\ge0$ definiujemy $X_t^\tau=X_{t\wedge\tau}$.
 Gdy $\tau=\infty$, przyjmujemy $t\wedge\tau=t$.
 \end{definicja}
 
-\begin{twierdzenie}[Zatrzymanie w ustalonej chwili]
+\begin{definicja}[Klasy $(D)$ i $(DL)$]
+Adaptowany proces c\`adl\`ag jest klasy $(D)$,
+jeżeli rodzina wszystkich jego wartości w
+ograniczonych czasach zatrzymania jest jednostajnie
+całkowalna (bez wspólnego deterministycznego
+ograniczenia tych czasów).
+Jest klasy $(DL)$, jeżeli dla każdego $T<\infty$
+rodzina wartości w czasach zatrzymania $\sigma\le T$
+jest jednostajnie całkowalna.
+\end{definicja}
+
+\begin{twierdzenie}[Zatrzymywanie procesu w czasie losowym]
+\label{thm:mart-cont-stopping}
 Niech $M$ będzie martyngałem c\`adl\`ag, a $\tau$
 czasem zatrzymania. Wtedy $M^\tau$ jest martyngałem.
 Jeżeli $X$ jest podmartyngałem (odpowiednio nadmartyngałem)
-c\`adl\`ag \emph{klasy $(DL)$}, to $X^\tau$ pozostaje
-podmartyngałem (odpowiednio nadmartyngałem).
-Tutaj klasa $(DL)$ oznacza, że dla każdego $T<\infty$
-rodzina $\{X_\sigma: \sigma\le T,\ \sigma
-\text{ jest czasem zatrzymania}\}$ jest jednostajnie
-całkowalna.
+c\`adl\`ag, to $X^\tau$ pozostaje podmartyngałem
+(odpowiednio nadmartyngałem).
+Jeżeli ponadto $X$ jest klasy $(DL)$,
+to $X^\tau$ również jest klasy $(DL)$.
 \end{twierdzenie}
 \begin{proof}
-Ustalmy $0\le s\le t$ i czas
+Adaptacja wynika z poprzedniego lematu, a trajektorie
+zatrzymane są c\`adl\`ag: przed zatrzymaniem
+zgadzają się z pierwotną trajektorią, a od chwili
+zatrzymania są stałe. Ustalmy $0\le s\le t$ i czas
 $\rho=s\vee(t\wedge\tau)$. Ponieważ
 $s\le\rho\le t$, twierdzenie o ograniczonym
-próbkowaniu opcjonalnym daje
-$\E[M_\rho\mid\calF_s]=M_s$.
+próbkowaniu opcjonalnym (twierdzenie~\ref{thm:optional-cont})
+daje całkowalność $M_\rho,M_{t\wedge\tau},M_{s\wedge\tau}$
+oraz $\E[M_\rho\mid\calF_s]=M_s$.
 Na zdarzeniu $\{\tau>s\}\in\calF_s$ mamy
 $\rho=t\wedge\tau$, a na $\{\tau\le s\}$
 proces zatrzymany jest już stały. Dlatego
 \[
 \begin{aligned}
 \E[M_{t\wedge\tau}\mid\calF_s]
-&=\ind{\{\tau\le s\}}M_\tau
- +\ind{\{\tau>s\}}\E[M_\rho\mid\calF_s]\\
+&=\chi_{\{\tau\le s\}}M_{s\wedge\tau}
+ +\chi_{\{\tau>s\}}\E[M_\rho\mid\calF_s]\\
 &=M_{s\wedge\tau}.
 \end{aligned}
 \]
-Dla podmartyngału $X$ klasy $(DL)$ te same przybliżenia
-siatkowe czasów $s$ i $t\wedge\tau$, użyte w dowodzie
-twierdzenia~\ref{thm:optional-cont}, dają
+Dla podmartyngału $X$ stosujemy ogólną wersję
+ograniczonego próbkowania opcjonalnego, której dowód
+podamy w twierdzeniu~\ref{thm:ost-cont}.
+Zapewnia ona całkowalność wartości w ograniczonych
+czasach zatrzymania oraz
+$\E[X_\rho\mid\calF_s]\ge X_s$.
+Ten sam rozkład na zdarzenia
+$\{\tau\le s\}$ i $\{\tau>s\}$ daje
 $\E[X_{t\wedge\tau}\mid\calF_s]\ge X_{s\wedge\tau}$.
-Istotne jest przejście do granicy w $L^1$:
-z klasy $(DL)$ otrzymujemy jednostajną całkowalność
-wartości w przybliżających czasach zatrzymania,
-a prawostronna ciągłość daje ich zbieżność prawie na pewno.
-Nierówność przechodzi więc do granicy w warunkowych
-wartościach oczekiwanych. Dla nadmartyngału zmieniamy
+Klasa $(DL)$ jest zachowana,
+ponieważ dla każdego czasu zatrzymania $\sigma\le T$
+wartość $(X^\tau)_\sigma=X_{\sigma\wedge\tau}$
+należy do pierwotnej rodziny na horyzoncie $T$.
+Dla nadmartyngału zmieniamy
 znak procesu i powtarzamy argument. Samo formalne
 podstawienie losowej chwili w definicji podmartyngału
 nie jest dowodem.
 \end{proof}
 
+
+
+\begin{twierdzenie}[Klasy całkowalności martyngału]
+\label{thm:mart-cont-class-d}
+Każdy martyngał c\`adl\`ag jest klasy $(DL)$.
+Dla martyngału c\`adl\`ag równoważne są warunki:
+\begin{enumerate}
+\item jest klasy $(D)$;
+\item rodzina $\{M_t:t\ge0\}$ jest jednostajnie całkowalna;
+\item istnieje $X\in L^1$ mierzalna względem
+$\calF_\infty=\sigma(\bigcup_{t\ge0}\calF_t)$
+taka, że $M_t=\E[X\mid\calF_t]$ p.n. dla każdego $t$.
+\end{enumerate}
+W ostatnim przypadku dla każdego p.n. skończonego
+czasu zatrzymania $\sigma$ zachodzi
+$M_\sigma=\E[X\mid\calF_\sigma]$ p.n.
+W szczególności rodzinę w definicji klasy $(D)$
+dla takiego martyngału można rozszerzyć na
+wszystkie p.n. skończone czasy zatrzymania.
+\end{twierdzenie}
+\begin{proof}
+Dla $\sigma\le T$ ograniczone próbkowanie
+opcjonalne (twierdzenie~\ref{thm:optional-cont})
+daje $M_\sigma=\E[M_T\mid\calF_\sigma]$.
+Lemat~\ref{lem:mart-cont-ui-cond} zapewnia
+jednostajną całkowalność na ustalonym horyzoncie.
+Z $(D)$ wynika drugi warunek przez wybór czasów
+deterministycznych.
+Przy drugim warunku dyskretny martyngał $(M_n)$
+jest jednostajnie całkowalny, więc zbiega w $L^1$
+do $X\in L^1(\calF_\infty)$
+(tom I, rozdział~\ref{I-ch:nadmartyngaly}).
+Dla każdego ustalonego $t$ i całkowitego $n\ge t$
+mamy $M_t=\E[M_n\mid\calF_t]$.
+Przejście do granicy w $L^1$ daje trzeci warunek.
+Jeśli zachodzi trzeci warunek, dla ograniczonego
+$\sigma\le T$ z własności wieży i próbkowania
+opcjonalnego
+$M_\sigma=\E[M_T\mid\calF_\sigma]
+=\E[X\mid\calF_\sigma]$.
+Stąd $(D)$ z tego samego lematu.
+
+Dla p.n. skończonego $\sigma$ mamy
+$M_{\sigma\wedge n}\to M_\sigma$ p.n.
+(ostatecznie $\sigma\wedge n=\sigma$),
+a klasa $(D)$ daje również zbieżność w $L^1$.
+Dla $A\in\calF_\sigma$ zdarzenie
+$A_n=A\cap\{\sigma\le n\}$ należy do
+$\calF_{\sigma\wedge n}$, co wynika bezpośrednio
+z definicji $\sigma$-ciała w czasie zatrzymania.
+Zatem
+$\E[M_{\sigma\wedge n}\chi_{A_n}]=\E[X\chi_{A_n}]$.
+Przejście do granicy i mierzalność $M_\sigma$
+(twierdzenie~\ref{thm:sampled}) identyfikują
+żądaną warunkową wartość oczekiwaną.
+\end{proof}
+
 \begin{uwaga}[Nie mylić zatrzymania z granicą $M_\tau$]
-Powyższe twierdzenie dotyczy procesu $M_{t\wedge\tau}$
-przy każdym skończonym $t$. Nie wolno z niego wnioskować
-$\E M_\tau=\E M_0$ dla nieograniczonego czasu $\tau$:
-przejście $t\to\infty$ wymaga dodatkowego warunku
-jednostajnej całkowalności.
+Twierdzenie~\ref{thm:mart-cont-stopping}
+dotyczy procesu $M_{t\wedge\tau}$ przy każdym
+skończonym $t$. Nie wolno z niego automatycznie
+wnioskować $\E M_\tau=\E M_0$ dla p.n. skończonego,
+lecz nieograniczonego czasu $\tau$.
+Jednostajna całkowalność rodziny
+$\{M_{t\wedge\tau}:t\ge0\}$ jest warunkiem
+dostatecznym przejścia do granicy w $L^1$
+i zachowania średniej. Dodatkowe kryteria
+omówimy w rozdziale~\ref{ch:stop-cont}.
 \end{uwaga}
 
 \begin{zadanie}[Co odróżnia martyngał od procesu o niemalejącej średniej?]
@@ -333,8 +605,8 @@ martyngałem. Odejmując od niego deterministyczny
 proces $t$, dostajemy
 $\E[W_t^2-t\mid\calF_s]=W_s^2-s$.
 Wyraz $t$ jest dokładnie kompensacją narastającej
-wariancji, którą w kolejnym rozdziale opiszemy za
-pomocą nawiasu procesu.
+wariancji, którą w rozdziale~\ref{ch:quadratic-cont}
+opiszemy za pomocą nawiasu procesu.
 \end{zadanie}
 
 \section{Martyngały lokalne}
@@ -345,6 +617,12 @@ martyngałem}, jeżeli istnieją czasy zatrzymania
 $\tau_k\uparrow\infty$ prawie na pewno, takie że dla
 każdego $k$ proces $M^{\tau_k}$ jest martyngałem.
 Ciąg $(\tau_k)$ nazywamy \emph{ciągiem lokalizującym}.
+W szczególności $M_0\in L^1$, ponieważ
+$M^{\tau_k}_0=M_0$. Można zawsze wymagać
+$\tau_k\le k$: zastąpienie $\tau_k$ przez
+$\tau_k\wedge k$ zachowuje własność martyngałową
+na mocy twierdzenia o zatrzymywaniu i nadal daje
+ciąg rosnący do nieskończoności p.n.
 \end{definicja}
 
 \begin{twierdzenie}[Zatrzymanie ograniczonego procesu lokalnego]
@@ -355,6 +633,11 @@ przez $K$. Czasy $\tau_K\uparrow\infty$ prawie na pewno,
 gdy $K\to\infty$.
 \end{twierdzenie}
 \begin{proof}
+Czasy $\tau_K$ są czasami zatrzymania, ponieważ
+dla ciągłej trajektorii i $t\ge0$
+$\{\tau_K\le t\}=\{\sup_{0\le u\le t}|M_u|\ge K\}$,
+a supremum można obliczyć po chwilach wymiernych
+z $[0,t]$ wraz z punktem $t$.
 Niech $\sigma_n$ lokalizuje $M$. Proces
 $M^{\tau_K\wedge\sigma_n}$ jest martyngałem na mocy
 próbkowania opcjonalnego zastosowanego do
@@ -372,9 +655,122 @@ ograniczona, więc dla dużego $K$ nie przekracza poziomu
 $K$ na tym przedziale. To dowodzi $\tau_K\uparrow\infty$.
 \end{proof}
 
+\begin{twierdzenie}[Lokalizacja procesu ze skokami o ograniczonej wysokości]
+\label{thm:bounded-jumps-localization}
+Niech $M$ będzie lokalnym martyngałem c\`adl\`ag
+z $M_0=0$ i niech istnieje deterministyczna
+stała $C<\infty$ taka, że prawie na pewno
+$|\Delta M_t|\le C$ dla wszystkich $t>0$,
+gdzie $\Delta M_t=M_t-M_{t-}$.
+Dla $K>0$ definiujemy
+\[
+\rho_K=\inf\{t\ge0:|M_t|>K\}.
+\]
+Wtedy $\rho_K$ są czasami zatrzymania,
+$\rho_K\uparrow\infty$ p.n. przy $K\to\infty$,
+a $M^{\rho_K}$ jest martyngałem ograniczonym
+w module przez $K+C$.
+\end{twierdzenie}
+\begin{proof}
+Dzięki prawostronnej ciągłości trajektorii
+dla $t>0$ mamy
+\[
+\{\rho_K<t\}
+=\bigcup_{q\in\Q\cap[0,t)}\{|M_q|>K\}.
+\]
+Stąd $\{\rho_K<t\}\in\calF_t$, a prawostronna
+ciągłość filtracji daje
+$\{\rho_K\le t\}=\bigcap_{j\ge1}
+\{\rho_K<t+1/j\}\in\calF_t$.
+Pracujemy na wspólnym zbiorze pełnej miary,
+na którym trajektorie są c\`adl\`ag i wszystkie
+skoki spełniają podane ograniczenie.
+Przed $\rho_K$ moduł procesu nie przekracza $K$.
+Jeżeli $\rho_K<\infty$, to z prawostronnej
+ciągłości w zerze i $M_0=0$ mamy $\rho_K>0$.
+Istnienie lewej granicy daje $|M_{\rho_K-}|\le K$,
+a ograniczenie skoku daje
+$|M_{\rho_K}|\le K+C$.
+Zatem dla każdego $t$ zachodzi
+$|M_{t\wedge\rho_K}|\le K+C$.
+Jeżeli $(\sigma_n)$ jest ciągiem lokalizującym
+$M$, to $M^{\rho_K\wedge\sigma_n}$ są martyngałami
+na mocy twierdzenia~\ref{thm:mart-cont-stopping}.
+Ich wartości w każdej ustalonej chwili
+zbiegają p.n. do $M_{t\wedge\rho_K}$ i są
+wspólnie ograniczone przez $K+C$.
+Zbieżność zmajoryzowana oraz kontrakcja
+warunkowania w $L^1$ dają własność martyngałową.
+Na każdym zwartym przedziale funkcja c\`adl\`ag
+jest ograniczona: w otoczeniu każdego punktu
+ograniczenie wynika z istnienia odpowiednich
+granic jednostronnych, a skończone podpokrycie
+daje ograniczenie globalne. Stąd dla każdego
+skończonego $T$ i dostatecznie dużego $K$
+mamy $\rho_K\ge T$, co dowodzi ostatniej
+własności ciągu lokalizującego.
+\end{proof}
+
+\begin{przyklad}[Nie każdy martyngał lokalny jest lokalnie ograniczony]
+\label{ex:unbounded-jump-local}
+Niech $Y$ będzie symetryczną zmienną całkowalną
+o nieograniczonym nośniku i nieskończonym
+drugim momencie. Przykładowo
+$\Prob(Y=k)=\Prob(Y=-k)=c k^{-3}$, $k\ge1$,
+gdzie $c=(2\sum_{k\ge1}k^{-3})^{-1}$.
+Wówczas $\E Y=0$, $\E|Y|<\infty$ i
+$\E Y^2=\infty$ przez porównanie szeregów.
+Na przestrzeni z tym prawem przyjmijmy
+$\calF_t$ trywialne (z uzupełnieniem) dla $t<1$,
+a $\calF_t=\sigma(Y)$ (z uzupełnieniem) dla $t\ge1$.
+Filtracja spełnia warunki zwykłe.
+Proces
+\[
+M_t=Y\chi_{\{t\ge1\}}
+\]
+jest martyngałem c\`adl\`ag: przed chwilą $1$
+warunkowa średnia skoku jest zerowa, a po niej
+wartość procesu jest stała.
+
+Nie istnieje ciąg czasów zatrzymania
+$\tau_n\uparrow\infty$ p.n., dla którego
+wszystkie $M^{\tau_n}$ byłyby martyngałami
+kwadratowo całkowalnymi w każdej chwili,
+a tym bardziej martyngałami ograniczonymi.
+Istotnie dla dowolnego czasu zatrzymania $\tau$
+zdarzenie $\{\tau<1\}$ należy do
+$\sigma(\bigcup_{t<1}\calF_t)$, ponieważ
+jest sumą zdarzeń $\{\tau\le q\}$ dla wymiernych
+$q<1$. To $\sigma$-ciało jest trywialne
+z dokładnością do zbiorów zerowych.
+Zatem $\Prob(\tau\ge1)$ wynosi zero lub jeden.
+Dla ciągu rosnącego do nieskończoności
+prawdopodobieństwa $\Prob(\tau_n\ge1)$
+zbiegają do jednego; dla pewnego $n$ zachodzi
+więc $\tau_n\ge1$ p.n.
+Wtedy $M^{\tau_n}_1=Y$ p.n. i jego drugi
+moment jest nieskończony.
+Nie można zatrzymać procesu tuż przed
+nieprzewidzianą wielkością skoku na podstawie
+informacji dostępnej dopiero po skoku.
+\end{przyklad}
+
+\begin{uwaga}[Lokalna ograniczoność a lokalna całkowalność]
+Dla procesów ciągłych zatrzymywanie na poziomach
+modułu prowadzi do ograniczonych martyngałów
+(po odjęciu całkowalnego $M_0$).
+Dla procesów ze skokami należy kontrolować
+również wielkość skoku w chwili zatrzymania.
+Przykład~\ref{ex:unbounded-jump-local}
+pokazuje nawet, że własność lokalnego
+martyngału nie implikuje lokalnej
+kwadratowej całkowalności.
+\end{uwaga}
+
 \begin{zadanie}[Kompensowany proces Poissona i momenty]
 Niech $N$ będzie procesem Poissona o intensywności
-$\lambda>0$ oraz $M_t=N_t-\lambda t$. Wykazać,
+$\lambda>0$ w jego filtracji naturalnej
+oraz $M_t=N_t-\lambda t$. Wykazać,
 że $M$ jest martyngałem, i wyznaczyć jego wariancję.
 
 \emph{Rozwiązanie.} Dla $s<t$ przyrost
@@ -420,6 +816,198 @@ całkowalności potrzebnej do zachowania średniej po usunięciu
 lokalizacji.
 \end{proof}
 
+\begin{twierdzenie}[Kryteria dla martyngałów lokalnych]
+\label{thm:local-mart-criteria}
+Niech $M$ będzie lokalnym martyngałem c\`adl\`ag.
+\begin{enumerate}
+\item Dla każdego czasu zatrzymania $\rho$
+proces $M^\rho$ jest lokalnym martyngałem.
+\item Suma i kombinacje liniowe lokalnych
+martyngałów są lokalnymi martyngałami.
+\item Jeżeli $M$ jest klasy $(DL)$, to jest martyngałem.
+Wystarczy również, że dla każdego $T<\infty$
+zmienna $\sup_{t\le T}|M_t|$ jest całkowalna.
+\item Jeżeli $M\ge0$, to jest martyngałem wtedy
+i tylko wtedy, gdy $\E M_t=\E M_0$ dla każdego $t$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Niech $(\tau_n)$ lokalizuje $M$.
+Zatrzymując martyngał $M^{\tau_n}$ dodatkowo
+w $\rho$, dostajemy martyngał
+$(M^\rho)^{\tau_n}$, co dowodzi pierwszej tezy.
+Dla dwóch procesów z ciągami lokalizującymi
+$(\tau_n)$ i $(\sigma_n)$ wspólny ciąg
+$(\tau_n\wedge\sigma_n)$ nadal rośnie do
+nieskończoności p.n. i lokalizuje ich kombinację
+liniową.
+Przy klasie $(DL)$ dla ustalonego $t$
+rodzina $M_{t\wedge\tau_n}$ jest jednostajnie
+całkowalna. Zbieżność p.n. do $M_t$ (ostateczna
+równość) daje zbieżność w $L^1$, a stąd
+równości martyngałowe przez kontrakcję warunkowania.
+Całkowalny supremum na każdym skończonym
+horyzoncie daje klasę $(DL)$ przez dominację.
+Jeżeli $M\ge0$, to z twierdzenia
+\ref{thm:positive-local-supermart}
+$\E[M_t\mid\calF_s]\le M_s$.
+Przy stałych średnich nieujemna różnica
+$M_s-\E[M_t\mid\calF_s]$ ma średnią zero,
+więc znika p.n. Odwrotna implikacja jest
+bezpośrednia.
+\end{proof}
+
+\begin{definicja}[Lokalne podmartyngały i nadmartyngały]
+Proces adaptowany c\`adl\`ag $X$ jest lokalnym
+podmartyngałem (odpowiednio nadmartyngałem),
+jeżeli istnieje rosnący do nieskończoności p.n.
+ciąg czasów zatrzymania $(\tau_n)$, dla którego
+$X^{\tau_n}$ są podmartyngałami
+(odpowiednio nadmartyngałami).
+\end{definicja}
+
+\begin{twierdzenie}[Usuwanie lokalizacji dla nierówności warunkowych]
+\label{thm:local-submart-criteria}
+Niech $X$ będzie lokalnym podmartyngałem
+oraz niech $X_t\in L^1$ dla każdego $t$.
+Jeżeli dla pewnego ciągu lokalizującego
+$(\tau_n)$ i każdego $t$ rodzina
+$\{(X_{t\wedge\tau_n})^+:n\ge1\}$
+jest jednostajnie całkowalna, to $X$ jest
+podmartyngałem. W szczególności wystarcza
+klasa $(DL)$ lub dominacja dodatniej części
+na każdym skończonym horyzoncie przez zmienną
+całkowalną.
+Dla lokalnego nadmartyngału analogiczny
+warunek dotyczy części ujemnych.
+Nieujemny lokalny nadmartyngał jest
+nadmartyngałem bez dodatkowego założenia
+całkowalności w chwilach dodatnich.
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonego $t$ z $\tau_n\uparrow\infty$ p.n.
+wynika $X_{t\wedge\tau_n}\to X_t$ p.n.
+Jednostajna całkowalność części dodatnich
+daje ich zbieżność w $L^1$.
+Dla $s\le t$ i $A\in\calF_s$ połóżmy
+$A_n=A\cap\{\tau_n\ge s\}$.
+Zdarzenia $A_n$ należą do $\calF_s$
+i ich funkcje charakterystyczne zbiegają
+do $\chi_A$ p.n. Z nierówności
+podmartyngałowej dla zatrzymanego procesu
+otrzymujemy
+\[
+\E[X_{t\wedge\tau_n}\chi_{A_n}]
+\ge \E[X_s\chi_{A_n}].
+\]
+Części dodatnie po lewej zbiegają w $L^1$ do
+$X_t^+\chi_A$: wynika to z poprzedniej
+zbieżności w $L^1$ oraz z dominacji przez
+$X_t^+$ dla różnicy samych funkcji
+charakterystycznych. Dla części ujemnych
+stosujemy lemat Fatou. Otrzymujemy
+\[
+\E[X_t\chi_A]\ge
+\limsup_n\E[X_{t\wedge\tau_n}\chi_{A_n}]
+\ge \E[X_s\chi_A],
+\]
+gdzie w ostatnim kroku używamy zbieżności
+zmajoryzowanej po prawej stronie nierówności
+zatrzymanej. Dowolność $A$ daje własność
+podmartyngału. W przypadku nadmartyngału
+stosujemy wynik do $-X$.
+Dla nieujemnego lokalnego nadmartyngału
+$Y$ lemat Fatou daje najpierw
+$\E Y_t\le\liminf_n\E Y_{t\wedge\tau_n}
+\le\E Y_0<\infty$; część ujemna jest zerowa,
+więc stosujemy udowodnione kryterium.
+\end{proof}
+
+\begin{twierdzenie}[Ciągły lokalny martyngał o skończonej wariacji]
+\label{thm:continuous-local-finite-variation}
+Niech $M$ będzie ciągłym lokalnym martyngałem.
+Jeżeli prawie wszystkie trajektorie mają
+skończoną wariację całkowitą na każdym
+zwartym przedziale, to $M_t=M_0$ dla wszystkich
+$t\ge0$ poza jednym zbiorem zerowym.
+\end{twierdzenie}
+\begin{proof}
+Odejmujemy stały w czasie martyngał $M_0$,
+który jest całkowalny z definicji lokalności.
+Możemy więc założyć $M_0=0$. Na wspólnym
+zbiorze zerowym wybieramy zerową trajektorię.
+Niech
+\[
+V_t=\sup_{\pi}\sum_{i=1}^{k}
+|M_{t_i}-M_{t_{i-1}}|,
+\quad \pi=(0=t_0<\cdots<t_k=t)
+\]
+oznacza wariację całkowitą na $[0,t]$.
+Przez ciągłość $M$ supremum wystarczy brać
+po przeliczalnych podziałach z wymiernymi
+punktami wewnętrznymi. Zatem $V$ jest
+adaptowany. Wariacja jest addytywna względem
+sąsiadujących przedziałów: w jedną stronę
+łączymy podziały, a w drugą dołączamy punkt
+podziału do dowolnej siatki, korzystając
+z nierówności trójkąta.
+Funkcja $t\mapsto V_t$ jest ciągła.
+Dla $s<t$ ustalony podział kończący się w $t$
+można przy $s\uparrow t$ zakończyć w $s$,
+co przez ciągłość $M$ dowodzi ciągłości
+lewostronnej $V$. Dla ciągłości prawostronnej
+stosujemy ten sam argument do odwróconej
+trajektorii na dowolnym $[0,T]$, korzystając
+z addytywności wariacji.
+
+Czasy $\rho_n=\inf\{t:V_t\ge n\}$ są czasami
+zatrzymania, ponieważ $\{\rho_n\le t\}=\{V_t\ge n\}$.
+Rosną do nieskończoności p.n. i proces
+$L=M^{\rho_n}$ ma wariację nie większą niż $n$
+na każdym przedziale. W szczególności
+$|L_t|\le n$. Jest lokalnym martyngałem
+z twierdzenia~\ref{thm:local-mart-criteria},
+a jego ograniczenie daje prawdziwy
+martyngał kwadratowo całkowalny.
+Ustalmy $T>0$ i podziały deterministyczne
+$\pi_j$ przedziału $[0,T]$ o średnicach
+zbiegających do zera. Ortogonalność przyrostów
+martyngału w $L^2$ daje
+\[
+\E L_T^2=\E\sum_{[u,v]\in\pi_j}(L_v-L_u)^2.
+\]
+Ortogonalność wynika z warunkowania
+późniejszego przyrostu względem jego chwili
+początkowej. Suma pod wartością oczekiwaną
+jest nie większa od
+$n\max_{[u,v]\in\pi_j}|L_v-L_u|$,
+co z jednostajnej ciągłości trajektorii
+zbiega do zera p.n. Dominuje ją stała $n^2$
+(każdy moduł przyrostu jest co najwyżej $n$).
+Zbieżność zmajoryzowana daje $\E L_T^2=0$.
+Przecinając zbiory pełnej miary dla
+wymiernych $T$ i wszystkich $n$, używając
+ciągłości oraz $\rho_n\uparrow\infty$,
+otrzymujemy $M_t=0$ jednocześnie dla
+wszystkich $t$ po odjęciu $M_0$.
+\end{proof}
+
+\begin{uwaga}[Ciągłość ma znaczenie]
+Kompensowany proces Poissona $N_t-\lambda t$
+jest niestałym martyngałem o skończonej
+wariacji na każdym zwartym przedziale:
+wariacja na $[0,T]$ wynosi $N_T+\lambda T$.
+Górne ograniczenie wynika z podaddytywności
+wariacji, a dolne z podziałów obejmujących
+wszystkie chwile skoków i punkty dowolnie
+bliskie im od lewej.
+Nie wolno więc usuwać założenia ciągłości
+z twierdzenia~\ref{thm:continuous-local-finite-variation}.
+W rozdziale~\ref{ch:jump-mart} powrócimy do
+tego przykładu, rozróżniając rzeczywistą
+wariację kwadratową $[M]$ i przewidywalny nawias.
+\end{uwaga}
+
 \begin{uwaga}[Różnica między lokalnym martyngałem a martyngałem]
 Każdy martyngał c\`adl\`ag jest lokalnym martyngałem
 (można wziąć $\tau_k=k$), ale implikacja odwrotna nie jest
@@ -430,9 +1018,138 @@ trzeba jeszcze kontrolować brak utraty masy przy lokalizacji.
 \end{uwaga}
 
 
+\begin{twierdzenie}[Odwrotność trójwymiarowego procesu Bessela]
+\label{thm:inverse-bessel-strict-local}
+Niech $B$ będzie standardowym ruchem Browna
+w $\R^3$, $x\ne0$, $r=|x|$ i
+$R_t=|x+B_t|$. Proces $R$ nazywamy
+trójwymiarowym procesem Bessela rozpoczętym od $r$.
+W jego filtracji naturalnej uzupełnionej
+o zbiory zerowe całej przestrzeni
+oraz w filtracji ruchu Browna spełniającej
+warunki zwykłe i zachowującej niezależność
+przyrostów proces $M_t=1/R_t$ jest dodatnim
+ciągłym lokalnym martyngałem, ale nie jest
+martyngałem. Dla $t>0$
+\[
+\E M_t=\frac{2\Phi(r/\sqrt t)-1}{r}
+<\frac1r=M_0,
+\]
+gdzie $\Phi$ jest dystrybuantą standardowego
+rozkładu normalnego.
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia o trafianiu w punkty przez ruch
+Browna w rozdziale~\ref{ch:brown-multi}
+wynika, że $x+B_t$ prawie na pewno nigdy nie
+osiąga zera. Na wspólnym zbiorze zerowym
+możemy przyjąć stałą trajektorię $R_t=r$.
+Dla $n$ tak dużego, że $1/n<r<n$, połóżmy
+\[
+\tau_n=\inf\{t\ge0:R_t\notin(1/n,n)\}.
+\]
+Są to czasy zatrzymania względem obu filtracji,
+przez ciągłość trajektorii i twierdzenie
+o trafianiu w zbiory domknięte
+(twierdzenie~\ref{thm:hitting-closed}).
+Na każdym zwartym przedziale $R$ ma dodatnie
+minimum i skończone maksimum, więc
+$\tau_n\uparrow\infty$ p.n.
+
+Funkcja $h(y)=|y|^{-1}$ jest harmoniczna
+na $\R^3\setminus\{0\}$: dla $u=|y|>0$
+jej radialny laplasjan wynosi
+$h''(u)+2h'(u)/u=2/u^3-2/u^3=0$
+(por. twierdzenie~\ref{thm:brown-annulus}).
+Wybieramy gładką funkcję o zwartym nośniku
+$h_n$ równą $h$ na otoczeniu domkniętego
+pierścienia $\{1/n\le |y|\le n\}$,
+mnożąc $h$ przez gładką funkcję odcinającą
+równą jeden na tym otoczeniu i zero blisko
+zera oraz poza dostatecznie dużą kulą.
+Lemat~\ref{lem:brown-generator-martingale}
+(dowód wykorzystuje niezależność przyrostów
+od danej filtracji) daje ciągły martyngał
+\[
+h_n(x+B_t)-h_n(x)
+-\frac12\int_0^t\Delta h_n(x+B_v)\,\mathrm d\lambda_1(v).
+\]
+Po zatrzymaniu w $\tau_n$ całka znika,
+gdyż $\Delta h_n=0$ na pierścieniu,
+a pozostała różnica wynosi
+$M_{t\wedge\tau_n}-1/r$.
+Zatem $M^{\tau_n}$ jest martyngałem
+w filtracji ruchu Browna. W mniejszej filtracji procesu $R$
+zatrzymany proces $M^{\tau_n}$ pozostaje
+martyngałem przez własność wieży i adaptację. Dowód lokalności nie wymaga
+rachunku It\^o.
+
+Obliczymy teraz średnią bez lokalizacji.
+Dzięki symetrii obrotowej możemy przyjąć
+$x=(0,0,r)$. Dla $t>0$ gęstość $x+B_t$
+w punkcie $y$ wynosi
+$(2\pi t)^{-3/2}\exp(-|y-x|^2/(2t))$.
+We współrzędnych sferycznych
+$\rho=|y|>0$, $\alpha$ jest kątem względem osi
+$x$, a element objętości ma postać
+$\rho^2\sin\alpha\,\mathrm d\lambda_3(\rho,\alpha,\beta)$.
+Po całkowaniu po kącie azymutalnym $\beta$
+oraz podstawieniu $v=\cos\alpha$ otrzymujemy
+\[
+\begin{aligned}
+\E M_t
+&=\frac{2\pi}{(2\pi t)^{3/2}}\int_0^\infty
+\rho e^{-(\rho^2+r^2)/(2t)}
+\left(\int_{-1}^1 e^{\rho rv/t}\,\mathrm d\lambda_1(v)\right)
+\,\mathrm d\lambda_1(\rho)\\
+&=\frac1{r\sqrt{2\pi t}}\int_0^\infty
+\left(e^{-(\rho-r)^2/(2t)}-
+e^{-(\rho+r)^2/(2t)}\right)
+\,\mathrm d\lambda_1(\rho)\\
+&=\frac1r\left(\Phi(r/\sqrt t)-\Phi(-r/\sqrt t)\right).
+\end{aligned}
+\]
+W drugiej równości całkujemy funkcję wykładniczą
+po $v$, w ostatniej podstawiamy
+$(\rho-r)/\sqrt t$ oraz $(\rho+r)/\sqrt t$.
+Symetria rozkładu normalnego daje żądany wzór.
+Dla każdego $t>0$ średnia jest ściśle mniejsza
+niż $1/r$, więc proces nie jest martyngałem.
+Jest to \emph{ścisły lokalny martyngał},
+w odróżnieniu od prawdziwego martyngału,
+który traci średnią dopiero w granicy
+$t\to\infty$.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[x=0.82cm,y=4cm,>=Latex]
+ \foreach \y/\lab in {0/0,0.25/{1/4},0.5/{1/2},0.75/{3/4},1/1}{
+  \draw[gray!25] (0,\y)--(10,\y);
+  \node[left] at (0,\y) {$\lab$};
+ }
+ \draw[->] (0,0)--(10.5,0) node[right] {$t$};
+ \draw[->] (0,0)--(0,1.15) node[above] {$\E M_t$};
+ \foreach \x in {2,4,6,8,10}{
+  \draw (\x,0.012)--(\x,-0.012) node[below] {$\x$};
+ }
+ \draw[blue!75!black,very thick] (0,1)--(10,1);
+ \draw[red!75!black,very thick] plot coordinates {(0,1) (0.1,0.998434) (0.2,0.974653) (0.3,0.932111) (0.4,0.886154) (0.5,0.842701) (0.6,0.803294) (0.7,0.768002) (0.8,0.736447) (0.9,0.708159) (1.0,0.682689) (1.1,0.659644) (1.2,0.638690) (1.3,0.619545) (1.4,0.601975) (1.5,0.585784) (1.6,0.570805) (1.7,0.556898) (1.8,0.543944) (1.9,0.531840) (2.0,0.520500) (2.1,0.509847) (2.2,0.499816) (2.3,0.490349) (2.4,0.481395) (2.5,0.472911) (2.6,0.464857) (2.7,0.457198) (2.8,0.449903) (2.9,0.442944) (3.0,0.436297) (3.1,0.429939) (3.2,0.423850) (3.3,0.418011) (3.4,0.412406) (3.5,0.407020) (3.6,0.401839) (3.7,0.396849) (3.8,0.392041) (3.9,0.387403) (4.0,0.382925) (4.1,0.378598) (4.2,0.374415) (4.3,0.370367) (4.4,0.366447) (4.5,0.362648) (4.6,0.358965) (4.7,0.355392) (4.8,0.351923) (4.9,0.348554) (5.0,0.345279) (5.1,0.342095) (5.2,0.338997) (5.3,0.335982) (5.4,0.333045) (5.5,0.330185) (5.6,0.327396) (5.7,0.324677) (5.8,0.322024) (5.9,0.319436) (6.0,0.316909) (6.1,0.314440) (6.2,0.312029) (6.3,0.309672) (6.4,0.307367) (6.5,0.305113) (6.6,0.302908) (6.7,0.300750) (6.8,0.298638) (6.9,0.296569) (7.0,0.294543) (7.1,0.292558) (7.2,0.290612) (7.3,0.288704) (7.4,0.286834) (7.5,0.284999) (7.6,0.283199) (7.7,0.281433) (7.8,0.279700) (7.9,0.277998) (8.0,0.276326) (8.1,0.274685) (8.2,0.273072) (8.3,0.271487) (8.4,0.269930) (8.5,0.268399) (8.6,0.266894) (8.7,0.265414) (8.8,0.263958) (8.9,0.262526) (9.0,0.261117) (9.1,0.259731) (9.2,0.258366) (9.3,0.257022) (9.4,0.255700) (9.5,0.254397) (9.6,0.253114) (9.7,0.251851) (9.8,0.250606) (9.9,0.249379) (10.0,0.248170)};
+ \node[blue!75!black,below] at (6.2,0.99) {\small martyngał o średniej $1$};
+ \node[red!75!black,above] at (6.5,0.40) {\small $\E(1/R_t)$};
+\end{tikzpicture}
+\par\smallskip\small Dla $R_0=1$ średnia odwrotności
+trójwymiarowego procesu Bessela maleje już
+w skończonym czasie. Prawdziwy martyngał
+o wartości początkowej $1$ zachowuje średnią.
+Wykres przedstawia średnie, nie trajektorie.
+\end{center}
+
 \section{Wykładnik gaussowski: martyngał, który traci średnią w granicy}
 \begin{twierdzenie}[Wykładnik procesu Wienera]
-Niech $W$ będzie standardowym procesem Wienera, a
+\label{thm:brown-exponential-mart}
+Niech $W$ będzie standardowym procesem Wienera
+w filtracji zachowującej niezależność jego
+przyszłych przyrostów od przeszłości, a
 $\theta\in\R$. Wtedy
 $Z_t=\exp(\theta W_t-\tfrac12\theta^2t)$
 jest dodatnim, ciągłym martyngałem o $\E Z_t=1$
@@ -455,7 +1172,8 @@ Dla liczb całkowitych $n$, przyrosty
 $W_n-W_{n-1}$ są niezależne i mają ten sam rozkład
 $\Normal(0,1)$; mocne prawo wielkich liczb daje
 $W_n/n\to0$ prawie na pewno.
-Dla $u>0$ zasada odbicia i symetria dają
+Dla $u>0$ zasada odbicia (twierdzenie~\ref{thm:wiener-reflection})
+i symetria dają
 $\Prob(\sup_{0\le s\le1}|W_s|>u)\le
 4(1-\Phi(u))\le C e^{-u^2/2}$ dla $u\ge1$.
 Dlatego dla każdego $\varepsilon>0$ suma
@@ -472,12 +1190,13 @@ a zatem $\E Z_t\to0$. Przeczy to $\E Z_t=1$.
 
 \section{Przypadek zatrzymania na pierwszym trafieniu}
 \begin{zadanie}[Dlaczego $\E M_\tau$ może różnić się od $\E M_0$?]
-Niech $W$ będzie procesem Wienera, a
+Niech $W$ będzie procesem Wienera w jego
+uzupełnionej filtracji naturalnej, a
 $\tau=\inf\{t\ge0:W_t=1\}$. Wykazać, że
 $\tau<\infty$ prawie na pewno, lecz
 $\E W_\tau=1\ne0=\E W_0$.
 
-\emph{Rozwiązanie.} Z zasady odbicia
+\emph{Rozwiązanie.} Z zasady odbicia (twierdzenie~\ref{thm:wiener-reflection})
 $\Prob(\tau\le t)=2(1-\Phi(1/\sqrt t))\to1$.
 Z ciągłości trajektorii $W_\tau=1$ na $\{\tau<\infty\}$.
 Dla każdego skończonego $T$ proces $W_{t\wedge\tau}$

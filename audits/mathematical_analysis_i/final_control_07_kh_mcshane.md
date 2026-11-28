@@ -1,0 +1,9 @@
+# MA1 — audyt końcowy 07: KH i McShane
+
+CI 45642098397, commit 4408193f5cb3e9e0b45b1335e9552e983960192d, job 139303202665: SUCCESS, 481 testów, trzy przebiegi LaTeX (278/283/283 stron), brak Overfull/Underfull, ustąpienie ostrzeżenia o zmianie etykiet w trzecim przebiegu.
+
+Audyt szczegółowy wierszy 1–450 wersji 34470f8408b4bf9c08cec74558e713a879e201b1: wahanie i rozkład Jordana, definicja KH, Cousin, Cauchy, lokalność, zmiany na zbiorze zerowym, całkowalność pochodnych, Saks–Henstock, pięciokrotne pokrycie, różniczkowalność pierwotnej i mierzalność funkcji podcałkowej, Hake, przykłady oscylacyjne, McShane (wolne znaczniki, Cauchy, bezwzględna całkowalność, równoważność z Lebesgue'em, działania kratowe i zbieżność), charakterystyka absolutnie ciągłych pierwotnych. Ponowny przegląd końcowych sekcji: mnożniki BV, podstawienie, norma Alexiewicza, granice KH i hierarchia całek. Nie stwierdzono fałszywej tezy.
+
+Poprawki: jawne ustalenie dowolnego epsilon oraz wybór cechowania w dowodzie różniczkowalności pierwotnej KH; zakończenie dowodu kryterium Cauchy'ego dla McShane'a, szczegółowe oszacowanie liniowości i monotoniczności. Commit cfedb2c0a7ef801d9aba11d5b1102c31645c184f. Blob 050fc502eff0a47e7b4c79c0c330f8b33ec165fa, 2594 wiersze, 128 etykiet, zero duplikatów i błędów środowisk, jedyny odsyłacz poza rozdział do MA1-29. Pierwsza próba zapisu zakończyła się błędem narzędzia, ponowna próba po odczycie zakończyła się sukcesem.
+
+CI 45651646319 dla nowego commitu: queued w chwili sprawdzenia. Nie dodano nowych testów ani tematów, nie uruchamiano Lean, nie sprawdzono wizualnie nowego PDF. Audyty 03–07 objęły wszystkie sekcje rozdziału 36, lecz potrzebny jest niezależny przebieg kontrolny po zmianach. Następnie: potwierdzić CI i PDF, sprawdzić globalną strukturę 36 rozdziałów i aktualność starszych audytów względem bieżących blobów, usunąć ewentualne usterki, wykonać kontrolę końcową. Nie deklarować stabilizacji na podstawie samego CI.

@@ -1,0 +1,9 @@
+# GT — audyt stabilizacyjny 327
+
+Migawka odniesienia: d0d6e3db19e5850d1869a9ee2f32f5f060bc0ce7. Odczytano wszystkie 42 pliki źródłowe (w trzech grupach po 14) i potwierdzono zgodność blobów z katalogiem migawki. Książka zawiera 42 różne wejścia, kolejność 00–05, 37–43, 06–34; brak pominiętych źródeł i powtórzonych wejść.
+
+Statyczna kontrola po usunięciu komentarzy: 742 etykiety, 624 wystąpienia odsyłaczy ref/eqref/pageref/autoref, 448 środowisk proof, 103 tikzpicture. Grupy 00–13: 183/150/139/46; 14–27: 205/217/145/33; 28–34 i 37–43: 354/257/164/24. Brak konfliktów etykiet w grupach, porównano listy etykiet pomiędzy grupami; 50 celów odsyłaczy poza własną grupą (7+22+21) znaleziono w pozostałych grupach. Brak niedopasowanych środowisk. Kontrola statyczna nie jest pełnym parserem TeX.
+
+Ponownie przeczytano dowody z GT08 (dodatniość minora Dirichleta), GT14 (surjekcja grup fundamentalnych grafu Reeba), GT26 (całkowita H1 po wymiernej kontrakcji), GT39 (ostrość odporności MSF), GT41 (jednoznaczność Turána). W czterech nie wykryto nowej luki. W GT26 rozpisano spójność dopełnienia, potrzebną w ciągu Mayera–Vietorisa, i poprawiono odsyłacz słowny do stwierdzenia. Commit e67d489404705b2753c8922d36fa55a8b4b75e94, blob 636bf6f97cc609125bbb6af487f042238f6d0bd6 potwierdzony ponownym odczytem; brak nowych etykiet/odsyłaczy, środowiska poprawne. Nie zmieniano pozostałych rozdziałów.
+
+Pełne CI 45987739543 nadal queued po ponownym odczycie; brak potwierdzonego wykonania kompilacji i wizualnego odbioru PDF. Pierwsze jednorazowe pobranie wszystkich źródeł przekroczyło limit wywołań narzędzia; ponowne pobranie w trzech grupach powiodło się. Następny etap: audyt kontrolny poprawki GT26 i ponowna szczegółowa kontrola pozostałych nowych fragmentów 319–326, bez dodawania materiału poza niezbędnymi poprawkami. Nie ogłaszamy pełnej stabilizacji książki przed odbiorem dowodów i CI.

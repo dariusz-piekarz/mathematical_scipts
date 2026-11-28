@@ -1,0 +1,153 @@
+name: Lean inspection - fast regression checks
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "application/scripts/lean_offline_fixture.py"
+      - "application/tests/test_lean_offline_fixture.py"
+      - "application/scripts/lean_artifact_manifest.py"
+      - "application/tests/test_lean_artifact_manifest.py"
+      - "application/backend/lean_introspection.py"
+      - "application/backend/lean_inspection_snapshot.py"
+      - "application/backend/lean_source_provenance.py"
+      - "application/backend/lean_catalog.py"
+      - "application/backend/lean_formalization.py"
+      - "application/backend/lean_results.py"
+      - "application/backend/lean_environment.py"
+      - "application/backend/lean_run_lock.py"
+      - "application/backend/lean_windows_job.py"
+      - "application/backend/lean_process.py"
+      - "application/backend/lean_cgroup.py"
+      - "application/backend/lean_cgroup_exec.py"
+      - "application/tests/test_lean_cgroup.py"
+      - "application/scripts/lean_native_cgroup_ci.sh"
+      - "application/tests/test_lean_introspection.py"
+      - "application/tests/test_lean_formalization.py"
+      - "application/tests/test_lean_run_lock.py"
+      - "application/tests/test_lean_windows_job.py"
+      - "application/scripts/benchmark_lean_fingerprint.py"
+      - "application/scripts/benchmark_lean_paths.py"
+      - "application/scripts/profile_lean_olean_cpu.py"
+      - "application/tests/test_lean_fingerprint_benchmark.py"
+      - "application/tests/test_lean_paths_benchmark.py"
+      - "application/tests/test_lean_olean_cpu_profile.py"
+      - "application/tests/test_lean_environment.py"
+      - "application/tests/test_lean_results.py"
+      - "application/tests/test_lean_inspection_snapshot.py"
+      - "application/tests/test_lean_source_provenance.py"
+      - "application/tests/test_lean_inspection_browser.py"
+      - "application/frontend/app.js"
+      - "application/requirements.txt"
+      - ".github/workflows/lean-inspection-fast.yml"
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      candidate_sha:
+        description: "Full immutable commit SHA"
+        required: true
+        type: string
+      validation_pass:
+        description: "Independent validation pass ID"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ inputs.validation_pass && format('atlas-fast-{0}-{1}', github.run_id, inputs.validation_pass) || format('lean-inspection-fast-{0}', github.ref) }}
+  cancel-in-progress: false
+
+jobs:
+  lean-introspection-regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout current revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha || github.sha }}
+
+      - name: Require exact pinned checkout identity on Linux
+        env:
+          EXPECTED_SHA: ${{ inputs.candidate_sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install API test requirements
+        working-directory: application
+        run: python -m pip install -r requirements.txt
+
+      - name: Require Node for JavaScript regression tests
+        run: node --version
+
+      - name: Exercise Lean introspection and browser contract without global LaTeX index
+        working-directory: application
+        run: |
+          python -m unittest \
+            tests.test_lean_offline_fixture tests.test_lean_artifact_manifest \
+            tests.test_lean_introspection \
+            tests.test_lean_formalization \
+            tests.test_lean_run_lock \
+            tests.test_lean_cgroup \
+            tests.test_lean_windows_job \
+            tests.test_lean_fingerprint_benchmark \
+            tests.test_lean_paths_benchmark \
+            tests.test_lean_olean_cpu_profile \
+            tests.test_lean_environment \
+            tests.test_lean_results \
+            tests.test_lean_inspection_snapshot \
+            tests.test_lean_source_provenance \
+            tests.test_lean_inspection_browser -v
+
+      - name: Verify native delegated cgroup v2 with a real unprivileged process
+        working-directory: application
+        run: |
+          sudo systemd-run --wait --pipe --collect \
+            --unit="atlas-lean-cgroup-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" \
+            --uid="$(id -u)" --gid="$(id -g)" \
+            --property=Delegate=yes --property=MemoryAccounting=yes \
+            --working-directory="$PWD" \
+            /bin/bash "$PWD/scripts/lean_native_cgroup_ci.sh" "$(command -v python)"
+
+      - name: Explicitly distinguish parser tests from kernel validation
+        run: |
+          echo "These tests use mocked Lean subprocess results."
+          echo "The separate Lean 4 - kernel and axiom audit workflow is mandatory for real Lean verification."
+
+  windows-native-runner:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout current revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha || github.sha }}
+
+      - name: Require exact pinned checkout identity on Windows
+        shell: pwsh
+        env:
+          EXPECTED_SHA: ${{ inputs.candidate_sha || github.sha }}
+        run: |
+          if ((git rev-parse HEAD).Trim() -ne $env:EXPECTED_SHA) { throw "Wrong checkout SHA" }
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Verify native Windows OS lock and Job Object subprocess isolation
+        working-directory: application
+        shell: pwsh
+        run: python -m unittest tests.test_lean_offline_fixture tests.test_lean_artifact_manifest tests.test_lean_run_lock tests.test_lean_windows_job tests.test_lean_environment tests.test_lean_results tests.test_lean_olean_cpu_profile tests.test_lean_paths_benchmark -v
+
+      - name: Bound Windows result scope
+        shell: pwsh
+        run: |
+          Write-Output "Tests native Windows file locks and Job Objects with Python processes."
+          Write-Output "It does not compile any Lean source or certify LaTeX equivalence."
+

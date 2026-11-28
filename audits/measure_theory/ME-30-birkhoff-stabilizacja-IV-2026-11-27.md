@@ -1,0 +1,3 @@
+# ME-30 — stabilizacja IV całki Birkhoffa
+
+CI stabilizacji III: 46072049548 — testy rozdziału i PDF PASS; 46072049470 — globalne regresje i PDF PASS; terminologia i migracja IT PASS; pozostałe przebiegi anulowane. Sprawdzono 1062 wiersze sekcji, 11 dowodów, 4 przykłady, 13 wpisów indeksowych, 19 testów ME-30, brak kolizji etykiet, brak nierozwiązanych lokalnych odsyłaczy i brak odsyłaczy lokalnych w przód. Wszystkie pięć celów FA-15B istnieje. Doprecyzowano przeliczalność rodziny zbiorów w zastosowaniu twierdzenia Orlicza–Pettisa (przeliczalne sumy są mierzalne) oraz opis odsyłacza do literatury. Nie zmieniono twierdzeń ani indeksu. Nowe CI niepotwierdzone. Następny etap: kontrola poprawionych fragmentów i niezależny audyt kontrolny po zielonym CI.

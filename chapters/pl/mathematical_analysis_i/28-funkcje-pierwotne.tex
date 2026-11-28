@@ -1,0 +1,209 @@
+\chapter{Funkcje pierwotne}
+\label{ma1:ch:primitives}
+
+Dotychczas wyznaczaliśmy pochodną danej funkcji. Teraz odwracamy to zadanie: dla zadanej funkcji $f$ szukamy funkcji $F$, której pochodną jest $f$. Rozróżnimy samo istnienie takiej funkcji, jej niejednoznaczność oraz możliwość zapisania jej za pomocą znanych funkcji elementarnych.
+
+\section{Definicja i jednoznaczność z dokładnością do stałej}
+\begin{definicja}
+\label{ma1:def:primitive}
+Niech $U\subseteq\R$ będzie niepustym zbiorem otwartym, a $f:U\to\R$. Funkcję różniczkowalną $F:U\to\R$ nazywamy funkcją pierwotną funkcji $f$ na $U$, jeśli
+\[
+ F'(x)=f(x)\qquad(x\in U).
+\]
+\end{definicja}
+W pierwszej kolejności będziemy rozpatrywać otwarte przedziały. Dla przedziału domkniętego $[a,b]$, $a<b$, można rozważać funkcję pierwotną ciągłą na całym przedziale, różniczkowalną w jego wnętrzu, z warunkiem $F'=f$ we wnętrzu. Jeśli wymagamy także równości pochodnych jednostronnych z wartościami $f$ na końcach, należy to zaznaczyć osobno. W tej definicji i w następnych twierdzeniach nie używamy jednak pochodnych na brzegu zbioru otwartego.
+
+\begin{twierdzenie}
+\label{ma1:thm:primitive-uniqueness}
+Niech $I$ będzie niepustym otwartym przedziałem i niech $F$ będzie funkcją pierwotną $f$ na $I$. Wszystkie funkcje pierwotne $f$ na $I$ mają postać
+\[
+ F+C,\qquad C\in\R.
+\]
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $G$ jest drugą funkcją pierwotną $f$ na $I$, to z liniowości pochodnej (twierdzenie \ref{ma1:thm:derivative-algebra}) mamy $(G-F)'=G'-F'=0$. Dla dowolnych $u<v$ z $I$ odcinek $[u,v]$ zawiera się w $I$. Funkcja $G-F$ jest na nim ciągła i różniczkowalna w jego wnętrzu. Z twierdzenia Lagrange'a \ref{ma1:thm:lagrange} istnieje $c\in(u,v)$ takie, że
+\[
+ (G-F)(v)-(G-F)(u)=(v-u)(G-F)'(c)=0.
+\]
+Wobec dowolności $u,v$ funkcja $G-F$ jest stała na $I$. Odwrotnie, jeżeli $C\in\R$, to $(F+C)'=F'+0=f$, więc każda funkcja tej postaci jest pierwotna.
+\end{proof}
+Jest to także bezpośrednie zastosowanie wniosku \ref{ma1:cor:equal-derivatives}.
+
+\begin{wniosek}[Warunek początkowy]
+\label{ma1:cor:primitive-normalization}
+Jeżeli $f$ ma funkcję pierwotną na niepustym otwartym przedziale $I$, to dla dowolnych $x_0\in I$ oraz $y_0\in\R$ istnieje dokładnie jedna funkcja pierwotna $G$ spełniająca $G(x_0)=y_0$.
+\end{wniosek}
+\begin{proof}
+Jeżeli $F'=f$, to $G(x)=F(x)-F(x_0)+y_0$ spełnia oba warunki. Jeśli $G_1,G_2$ spełniają oba warunki, to $G_1-G_2$ jest stała z twierdzenia \ref{ma1:thm:primitive-uniqueness}; jej wartość w $x_0$ wynosi zero, więc $G_1=G_2$.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[x=1.4cm,y=.85cm,>=Stealth]
+ \draw[->] (-1.8,0)--(2.4,0) node[right] {$x$};
+ \draw[->] (0,-1.5)--(0,5.5) node[above] {$y$};
+ \draw[blue!65!black,thick,domain=-1.6:1.6,samples=90] plot (\x,{\x*\x});
+ \draw[green!45!black,thick,domain=-1.6:1.6,samples=90] plot (\x,{\x*\x+2});
+ \draw[orange!85!black,thick,domain=-1.6:1.6,samples=90] plot (\x,{\x*\x-1});
+ \draw[gray,dashed] (1,-1.3)--(1,4.6);
+ \fill[blue!65!black] (1,1) circle (1.7pt);
+ \fill[green!45!black] (1,3) circle (1.7pt);
+ \fill[orange!85!black] (1,0) circle (1.7pt);
+ \draw[blue!65!black] (.65,.3)--(1.35,1.7);
+ \draw[green!45!black] (.65,2.3)--(1.35,3.7);
+ \draw[orange!85!black] (.65,-.7)--(1.35,.7);
+ \node[right,blue!65!black] at (1.6,2.56) {$F(x)=x^2$};
+ \node[right,green!45!black] at (1.6,4.56) {$F(x)+2$};
+ \node[right,orange!85!black] at (1.6,1.56) {$F(x)-1$};
+ \node[below right] at (1,-1.2) {$x_0=1$};
+\end{tikzpicture}
+
+\small Rysunek: trzy funkcje pierwotne funkcji $f(x)=2x$. W tym samym punkcie $x_0=1$ mają styczne o identycznym nachyleniu, lecz różne wartości. Warunek początkowy wybiera dokładnie jeden wykres z rodziny przesunięć pionowych.
+\end{center}
+
+\section{Dziedzina funkcji pierwotnej}
+\begin{stwierdzenie}
+\label{ma1:prop:primitive-components}
+Niech $U$ będzie niepustym zbiorem otwartym w $\R$ i niech $F$ będzie funkcją pierwotną $f$ na $U$. Dla każdej innej funkcji pierwotnej $G$ funkcji $f$ na $U$ zachodzi następująca własność. Wtedy $G-F$ jest stała na każdym maksymalnym otwartym przedziale zawartym w $U$. Stałe na różnych takich przedziałach można wybierać niezależnie.
+\end{stwierdzenie}
+\begin{proof}
+Dla $x\in U$ weźmy sumę wszystkich otwartych przedziałów zawartych w $U$ i zawierających $x$. Rodzina tych przedziałów jest niepusta z otwartości $U$. Jest ona otwarta, zawarta w $U$ i jest przedziałem: jeśli $u<v$ należą do tej sumy, to należą do dwóch przedziałów zawierających wspólny punkt $x$. Dla $t\in[u,v]$, jeśli $t\le x$, to $t$ leży między $u$ i $x$, a jeśli $t\ge x$, to leży między $x$ i $v$. W pierwszym przypadku należy do przedziału zawierającego $u,x$, a w drugim do przedziału zawierającego $x,v$. Zatem $[u,v]$ zawiera się w sumie. Otrzymany przedział jest maksymalny z konstrukcji. Dwa różne maksymalne przedziały nie mogą się przecinać: gdyby miały punkt wspólny, ich suma byłaby otwartym przedziałem zawartym w $U$, a maksymalność obu wymuszałaby ich równość. Każdy punkt $U$ należy więc do dokładnie jednego z nich.
+
+Na każdym takim przedziale stosujemy twierdzenie \ref{ma1:thm:primitive-uniqueness}, otrzymując stałą różnicę. Odwrotnie, jeżeli na każdym przedziale $J$ wybierzemy liczbę $C_J$ i położymy $G(x)=F(x)+C_J$ dla $x\in J$, to każdy $x\in U$ ma otoczenie zawarte w swoim $J$. Na tym otoczeniu $G'=F'=f$, zatem $G$ jest funkcją pierwotną na $U$. Wybory $C_J$ są niezależne.
+\end{proof}
+
+\begin{przyklad}
+\label{ma1:ex:primitive-log-domain}
+Dla $f(x)=1/x$ na $\R\setminus\{0\}$ funkcja $F(x)=\log|x|$ jest pierwotna. Na $(0,\infty)$ jej pochodna to $1/x$ z twierdzenia \ref{ma1:thm:exp-log-derivatives}. Na $(-\infty,0)$ mamy $F(x)=\log(-x)$ i z reguły łańcuchowej \ref{ma1:thm:chain-rule} otrzymujemy $F'(x)=(-1)/(-x)=1/x$. Wszystkie funkcje pierwotne na całej dziedzinie mają więc postać
+\[
+ G(x)=
+ \begin{cases}
+ \log(-x)+C_-,&x<0,\\
+ \log x+C_+,&x>0,
+ \end{cases}
+ \qquad C_-,C_+\in\R.
+\]
+Nie ma powodu, aby $C_-=C_+$. Na przykład wybór $C_-=0$, $C_+=1$ daje $G(-1)=0$ i $G(1)=1$. Gdyby $G(x)=\log|x|+C$ na całej dziedzinie, podstawienie $x=-1$ dawałoby $C=0$, a podstawienie $x=1$ dawałoby $C=1$, sprzeczność. Warunek początkowy w jednej składowej ustala tylko jej stałą.
+\end{przyklad}
+
+\section{Całka nieoznaczona i liniowość}
+\begin{definicja}
+\label{ma1:def:indefinite-integral}
+Jeżeli $f:I\to\R$ ma funkcję pierwotną $F$ na niepustym otwartym przedziale $I$, to zapis
+\[
+ \int f(x)\,\dd x=F(x)+C,\qquad C\in\R,
+\]
+oznacza rodzinę wszystkich jej funkcji pierwotnych na $I$. Nazywamy ją całką nieoznaczoną funkcji $f$ na $I$.
+\end{definicja}
+Symbol $\dd x$ wskazuje zmienną całkowania. Wiąże się z różniczką z definicji \ref{ma1:def:differential}: jeśli $F'=f$, to $\dd F_x=f(x)\dd x_x$ jako równość odwzorowań liniowych w punkcie $x$. Zapis całki nieoznaczonej nie oznacza jeszcze liczby, pola powierzchni ani granicy sum. W następnym rozdziale zdefiniujemy całkę oznaczoną Riemanna i wykażemy jej związek z funkcjami pierwotnymi.
+
+\begin{twierdzenie}
+\label{ma1:thm:primitive-linearity}
+Jeżeli $F'=f$ i $G'=g$ na niepustym otwartym przedziale $I$, to dla dowolnych $\alpha,\beta\in\R$ wszystkie funkcje pierwotne $\alpha f+\beta g$ na $I$ mają postać
+\[
+ \alpha F+\beta G+C,\qquad C\in\R.
+\]
+\end{twierdzenie}
+\begin{proof}
+Z liniowości pochodnej mamy $(\alpha F+\beta G)'=\alpha f+\beta g$. Funkcja $\alpha F+\beta G$ jest więc jedną funkcją pierwotną, a twierdzenie \ref{ma1:thm:primitive-uniqueness} opisuje wszystkie pozostałe.
+\end{proof}
+W obliczeniach często zapisujemy liniowość symbolicznie jako $\int(\alpha f+\beta g)\,\dd x=\alpha\int f\,\dd x+\beta\int g\,\dd x$. Jeśli rozumiemy prawą stronę jako sumę zbiorów funkcji pomnożonych przez skalary, to jej elementy mają postać $\alpha F+\beta G+\alpha C_1+\beta C_2$. Gdy $\alpha\ne0$, każdą stałą $C$ otrzymamy przez wybór $C_1=C/\alpha$, $C_2=0$. Gdy $\alpha=0$ i $\beta\ne0$, wybieramy $C_2=C/\beta$. Dlatego równość rodzin zachodzi, jeśli co najmniej jeden współczynnik jest niezerowy. Jeżeli $\alpha=\beta=0$, całka lewej strony oznacza wszystkie funkcje stałe, a dosłowne mnożenie dwóch rodzin przez zero i ich dodawanie dałoby jedynie funkcję zerową. Wersja twierdzenia \ref{ma1:thm:primitive-linearity} jest wolna od tej niejednoznaczności.
+
+\section{Podstawowe funkcje pierwotne}
+\begin{stwierdzenie}
+\label{ma1:prop:primitive-table}
+Poniższe wzory podają po jednej funkcji pierwotnej. Aby otrzymać wszystkie funkcje pierwotne na danym otwartym przedziale, należy dodać dowolną stałą.
+\[
+\begin{array}{c|c|l}
+ f(x)&F(x)&\text{Dziedzina wzoru}\\ \hline
+ 1 & x & \R\\
+ x^r,\ r\in\R\setminus\{-1\} & x^{r+1}/(r+1)& x>0\\
+ 1/x & \log|x| & x\ne0\\
+ e^x & e^x & \R\\
+ a^x,\ a>0,\ a\ne1 & a^x/\log a & \R\\
+ \cos x & \sin x & \R\\
+ \sin x & -\cos x & \R\\
+ 1/\cos^2 x & \tan x & \cos x\ne0\\
+ 1/\sin^2 x & -\cot x & \sin x\ne0\\
+ 1/(1+x^2) & \arctan x & \R\\
+ 1/\sqrt{1-x^2} & \arcsin x & |x|<1
+\end{array}
+\]
+Dla całkowitego $r\ge0$ wzór potęgowy zachodzi na całej $\R$, a dla całkowitego $r<-1$ na $\R\setminus\{0\}$. W przypadku $r=0$ funkcję $x^0$ rozumiemy jako wielomian stały $1$.
+\end{stwierdzenie}
+\begin{proof}
+Dla $x>0$ i $r\ne-1$ różniczkujemy $x^{r+1}=\exp((r+1)\log x)$, otrzymując
+\[
+ \left(\frac{x^{r+1}}{r+1}\right)'
+ =\frac{\exp((r+1)\log x)}{r+1}\frac{r+1}{x}
+ =x^r.
+\]
+Dla całkowitych wykładników na wskazanych większych dziedzinach stosujemy wzór \ref{ma1:cor:integer-power-derivative}. Wiersz $1/x$ uzasadniliśmy w przykładzie \ref{ma1:ex:primitive-log-domain}. Dla $a^x=\exp(x\log a)$ mamy $(a^x)'=(\log a)a^x$ z reguły łańcuchowej \ref{ma1:thm:chain-rule}; $\log a\ne0$ dla $a\ne1$. Pozostałe wiersze są bezpośrednio wzorami z twierdzeń \ref{ma1:thm:exp-log-derivatives}, \ref{ma1:thm:trig-derivatives} i \ref{ma1:thm:inverse-trig-derivatives}, odczytanymi jako równości $F'=f$. Jeżeli dziedzina wzoru jest rozłączną sumą przedziałów, opis wszystkich funkcji pierwotnych daje stwierdzenie \ref{ma1:prop:primitive-components}.
+\end{proof}
+
+Dodatkowe wzory wynikające z twierdzenia \ref{ma1:thm:hyperbolic-derivatives}:
+\[
+\begin{array}{c|c|l}
+ f(x)&F(x)&\text{Dziedzina wzoru}\\ \hline
+ \cosh x & \sinh x & \R\\
+ \sinh x & \cosh x & \R\\
+ 1/\cosh^2x & \tanh x & \R\\
+ 1/\sinh^2x & -\coth x & x\ne0\\
+ 1/\sqrt{1+x^2} & \operatorname{arsinh}x & \R\\
+ 1/\sqrt{x^2-1} & \operatorname{arcosh}x & x>1\\
+ 1/(1-x^2) & \operatorname{artanh}x & |x|<1\\
+ 1/(1-x^2) & \operatorname{arcoth}x & |x|>1
+\end{array}
+\]
+Na $x<-1$ funkcją pierwotną $1/\sqrt{x^2-1}$ jest $-\operatorname{arcosh}(-x)$: reguła łańcuchowa daje pochodną $-(-1)/\sqrt{(-x)^2-1}=1/\sqrt{x^2-1}$.
+
+\begin{przyklad}
+\label{ma1:ex:primitive-polynomial}
+Na $\R$ szukamy funkcji pierwotnej $f(x)=3x^2-4x+5$ spełniającej $G(1)=2$. Z tabeli i liniowości otrzymujemy $F(x)=x^3-2x^2+5x$. Ponieważ $F(1)=4$, warunek początkowy daje $G(x)=F(x)-4+2=x^3-2x^2+5x-2$. Różniczkowanie potwierdza $G'=f$, a podstawienie $x=1$ daje $G(1)=2$. Jednoznaczność wynika z wniosku \ref{ma1:cor:primitive-normalization}.
+\end{przyklad}
+
+\begin{przyklad}
+\label{ma1:ex:primitive-affine-argument}
+Dla $a,b\in\R$, $a\ne0$, jeśli $F'=f$ na niepustym otwartym przedziale $I$, to na przedziale $J=\{x\in\R:ax+b\in I\}$ funkcja $H(x)=F(ax+b)/a$ jest funkcją pierwotną $x\mapsto f(ax+b)$. Istotnie,
+\[
+ H'(x)=\frac1a F'(ax+b)a=f(ax+b)
+\]
+z reguły łańcuchowej. Zbiór $J$ jest niepustym otwartym przedziałem: odwzorowanie $x\mapsto ax+b$ jest ciągłą bijekcją $\R$ na $\R$, a dla każdego punktu między dwoma punktami $J$ jego obraz leży między obrazami tych punktów, również przy $a<0$. W szczególności na $\R$ mamy
+\[
+ \int \cos(3x-1)\,\dd x=\frac{\sin(3x-1)}3+C.
+\]
+Nie trzeba osobno zgadywać współczynnika $1/3$: wynika on z konieczności skompensowania pochodnej argumentu. Ogólną metodę podstawienia i całkowanie przez części omówimy w rozdziale poświęconym metodom całkowania.
+\end{przyklad}
+
+\section{Istnienie funkcji pierwotnej}
+\begin{stwierdzenie}
+\label{ma1:prop:primitive-necessary}
+Jeżeli $f$ ma funkcję pierwotną na otwartym przedziale $I$, to $f$ ma własność wartości pośredniej na $I$. Ponadto, jeśli w punkcie $a\in I$ istnieje jednostronna granica $f$ w rozszerzonej prostej rzeczywistej, to jest skończona i równa $f(a)$.
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $F'=f$, to pierwsza teza wynika z twierdzenia Darboux \ref{ma1:thm:derivative-darboux} zastosowanego do $F$. Drugą tezę otrzymujemy z wniosku \ref{ma1:cor:derivative-no-jumps}.
+\end{proof}
+\begin{przyklad}
+\label{ma1:ex:primitive-nonexistence}
+Funkcja $f(x)=0$ dla $x<0$ oraz $f(x)=1$ dla $x\ge0$ nie ma funkcji pierwotnej na $\R$. Gdyby $F'=f$, to z $F'(-1)=0$ i $F'(1)=1$ wynikałoby istnienie $c\in(-1,1)$ z $F'(c)=1/2$, wbrew temu, że $f$ przyjmuje jedynie wartości $0,1$. Na każdej z dwóch półprostych otwartych funkcja ma jednak pierwotną, odpowiednio stałą lub postaci $x+C$.
+\end{przyklad}
+
+\begin{przyklad}
+\label{ma1:ex:primitive-discontinuous}
+Ciągłość nie jest warunkiem koniecznym istnienia funkcji pierwotnej. W przykładzie \ref{ma1:ex:discontinuous-derivative} wykazaliśmy, że funkcja
+\[
+ F(x)=
+ \begin{cases}x^2\sin(1/x),&x\ne0,\\0,&x=0\end{cases}
+\]
+jest różniczkowalna na $\R$, a jej pochodna
+\[
+ f(x)=
+ \begin{cases}2x\sin(1/x)-\cos(1/x),&x\ne0,\\0,&x=0\end{cases}
+\]
+nie jest ciągła w zerze. Mimo to $F$ jest funkcją pierwotną $f$ na całej $\R$.
+\end{przyklad}
+
+W kolejnym rozdziale udowodnimy podstawowe twierdzenie rachunku całkowego: dla funkcji ciągłej $f$ na otwartym przedziale $I$ oraz ustalonego $x_0\in I$ funkcja
+\[
+ F(x)=\int_{x_0}^{x} f(t)\,\dd t
+\]
+jest pierwotna $f$ i spełnia $F(x_0)=0$. Jest to zapowiedź wyniku, nie zastosowanie niezdefiniowanej jeszcze całki oznaczonej. Dopiero po skonstruowaniu całki Riemanna uzyskamy dowód istnienia funkcji pierwotnej dla każdej funkcji ciągłej. Twierdzenie o istnieniu gwarantuje funkcję pierwotną, lecz nie podaje algorytmu wyrażania jej za pomocą skończonej liczby działań i znanych funkcji elementarnych. Zagadnienie takiej reprezentacji wymaga osobnej teorii.

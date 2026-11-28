@@ -1,0 +1,714 @@
+\section{\texorpdfstring{Stabilne $\infty$-kategorie}{Stabilne kategorie nieskończonego rzędu} i wyższa algebra homologiczna}\label{cat:sec:stable-infty-categories}
+
+W kategorii triangulowanej (rozdział~\ref{cat:sec:triangulated-derived}) przesunięcia i trójkąty wyróżnione opisują konstrukcje homologiczne na poziomie klas homotopii. Nie rejestrują jednak wszystkich homotopii między morfizmami ani wyższych zależności między nimi. Stabilne $\infty$-kategorie zachowują tę informację i pozwalają definiować włókna oraz kowłókna przez własności uniwersalne na poziomie przestrzeni odwzorowań.
+
+Pracujemy w modelu quasi-kategorii z rozdziału~\ref{cat:sec:quasicategories}, w ustalonych uniwersach. Przez $\mathcal S$ oznaczamy $\infty$-kategorię przestrzeni (typów homotopii, reprezentowanych przez kompleksy Kana), a przez $\operatorname{Map}_{\mathcal C}(X,Y)$ przestrzeń odwzorowań. Zapis $\simeq$ oznacza równoważność obiektów lub przestrzeni, nie ich dosłowną równość. Diagram przemienny w $\infty$-kategorii zawiera również dane odpowiednich homotopii: kwadrat jest diagramem $\Delta^1\times\Delta^1\to\mathcal C$ (w notacji rozdziału~\ref{cat:sec:quasicategories}: $\Delta[1]\times\Delta[1]\to\mathcal C$), a nie jedynie kwadratem przemiennym w kategorii homotopii. W szczególności jego dwie trójkątne ściany wyznaczają homotopię dwóch złożeń wzdłuż brzegu kwadratu przez wspólną przekątną. Własności graniczne dotyczą całego tego diagramu.
+
+\subsection{Kwadraty kartezjańskie i kokartezjańskie}
+
+Przyjmujemy następujące podstawowe wyniki rachunku granic w $\infty$-kategoriach (por. J.~Lurie, \emph{Higher Topos Theory}, rozdział 4, oraz \emph{Kerodon}, podrozdział 7.6.2). Uzupełniają one definicję~\ref{cat:def:quasicat-limits}.
+
+\begin{twierdzenie}[Kryterium granic przez przestrzenie odwzorowań; wynik zewnętrzny]\label{cat:thm:stable-mapping-limit}
+Niech $D:K\to\mathcal C$ będzie diagramem indeksowanym małym zbiorem symplicjalnym $K$. Stożek o wierzchołku $L$ jest stożkiem granicznym wtedy i tylko wtedy, gdy dla każdego $T\in\mathcal C$ indukowany morfizm
+\[
+ \operatorname{Map}_{\mathcal C}(T,L)\longrightarrow
+ \lim_{k\in K}\operatorname{Map}_{\mathcal C}(T,D(k))
+\]
+jest równoważnością w $\mathcal S$. Dualnie, kostożek o wierzchołku $M$ jest kograniczny wtedy i tylko wtedy, gdy dla każdego $T$ indukowany morfizm
+\[
+ \operatorname{Map}_{\mathcal C}(M,T)\longrightarrow
+ \lim_{k\in K^{\mathrm{op}}}\operatorname{Map}_{\mathcal C}(D(k),T)
+\]
+jest równoważnością.
+\end{twierdzenie}
+
+Granice po prawej stronie są granicami w $\mathcal S$, nie granicami zbiorów klas składowych spójnych. W szczególności nie wolno zastąpić iloczynu włóknistego przestrzeni zwykłym iloczynem włóknistym zbiorów.
+
+\begin{definicja}[Kwadrat kartezjański, kokartezjański i bikartezjański]\label{cat:def:stable-bicartesian}
+Rozważmy kwadrat
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (a) at (0,1.8) {$A$};
+ \node (b) at (3.4,1.8) {$B$};
+ \node (c) at (0,0) {$C$};
+ \node (d) at (3.4,0) {$D$};
+ \draw[->] (a)--node[above] {$f$}(b);
+ \draw[->] (a)--node[left] {$g$}(c);
+ \draw[->] (b)--node[right] {$h$}(d);
+ \draw[->] (c)--node[below] {$k$}(d);
+\end{tikzpicture}
+\end{center}
+Jest kartezjański, gdy wskazany stożek realizuje $A\simeq B\times_D C$. Jest kokartezjański, gdy wskazany kostożek realizuje $D\simeq B\sqcup_A C$. Jest bikartezjański, gdy spełnia oba warunki.
+\end{definicja}
+
+Przez skończone granice i kogranice rozumiemy granice i kogranice diagramów indeksowanych skończonymi zbiorami symplicjalnymi (mającymi skończenie wiele niezdegenerowanych sympleksów). Nie jest to to samo co żądanie granic po nerwach wszystkich kategorii o skończonej liczbie obiektów i morfizmów: taki nerw może mieć niezdegenerowane sympleksy w dowolnie wysokim wymiarze.
+
+\begin{twierdzenie}[Generowanie skończonych granic i kogranic; wynik zewnętrzny]\label{cat:thm:stable-finite-limit-generation}
+$\infty$-kategoria ma skończone granice wtedy i tylko wtedy, gdy ma obiekt końcowy i iloczyny włókniste. Funktor między $\infty$-kategoriami mającymi skończone granice zachowuje je wtedy i tylko wtedy, gdy zachowuje obiekt końcowy i kwadraty kartezjańskie. Dualnie, dla skończonych kogranic wystarczają obiekt początkowy i sumy amalgamowane.
+\end{twierdzenie}
+Por. \emph{Kerodon}, wniosek 7.6.2.42, oraz dualny wynik dla kogranic; również J.~Lurie, \emph{Higher Topos Theory}, wnioski 4.4.2.4 i 4.4.2.5. Będziemy stosować te wyniki bez powtarzania ich ogólnych dowodów symplicjalnych.
+
+\begin{lemat}[Sklejanie kwadratów]\label{cat:lem:stable-square-pasting}
+W diagramie złożonym z dwóch sąsiednich kwadratów kokartezjańskich kwadrat zewnętrzny jest kokartezjański. Jeżeli lewy kwadrat i kwadrat zewnętrzny są kokartezjańskie, to prawy kwadrat jest kokartezjański. Dualnie dla kwadratów kartezjańskich zachodzi reguła sklejania i skracania z prawym kwadratem.
+\end{lemat}
+\begin{proof}
+Dla diagramu o górnym wierszu $A\to B\to C$ i dolnym wierszu $D\to E\to F$ zakładamy, że $E\simeq B\sqcup_A D$ za pomocą lewego kwadratu. Dla dowolnego $T$ oznaczmy $\operatorname{Map}_{\mathcal C}(Z,T)$ przez $M_Z$. Kryterium~\ref{cat:thm:stable-mapping-limit} daje $M_E\simeq M_B\times_{M_A}M_D$. Wówczas
+\[
+ M_C\times_{M_B}M_E
+ \simeq M_C\times_{M_B}(M_B\times_{M_A}M_D)
+ \simeq M_C\times_{M_A}M_D.
+\]
+Druga równoważność jest regułą zmiany bazy dla iloczynów włóknistych. Można ją sprawdzić w modelu przestrzeni jako kompleksów Kana: zastępujemy $M_D\to M_A$ równoważnym morfizmem będącym fibracją Kana $M'_D\to M_A$. Wtedy $M_B\times_{M_A}M'_D\to M_B$ jest fibracją Kana, a oba kolejne iloczyny włókniste obliczamy przez zwykłe iloczyny włókniste zbiorów symplicjalnych. Ich izomorfizm
+\[
+ M_C\times_{M_B}(M_B\times_{M_A}M'_D)
+ \cong M_C\times_{M_A}M'_D
+\]
+jest dany przez usunięcie współrzędnej w $M_B$, która jest wyznaczona przez współrzędną w $M_C$. Odwrotny morfizm wstawia tę współrzędną przez morfizm $M_C\to M_B$. Ponieważ iloczyny wzdłuż fibracji obliczają iloczyny włókniste homotopijne, otrzymujemy żądaną równoważność. W przypadku diagramu koherentnego używamy równoważnego modelu tego diagramu w przestrzeniach; reguła dotyczy wskazanych morfizmów porównawczych, nie tylko typów homotopii wierzchołków. Równoważność jest zgodna z morfizmami z $M_F$ indukowanymi przez diagram. Zatem morfizm testujący kokartezjańskość prawego kwadratu jest równoważnością dla każdego $T$ wtedy i tylko wtedy, gdy taką własność ma morfizm testujący zewnętrzny kwadrat. Wniosek wynika z kryterium granic przez przestrzenie odwzorowań. Przechodząc do $\mathcal C^{\mathrm{op}}$, dostajemy wersję kartezjańską z odwróconą kolejnością kwadratów.
+\end{proof}
+
+\subsection{Obiekt zerowy, włókno i kowłókno}
+
+\begin{definicja}[Punktowana $\infty$-kategoria]\label{cat:def:stable-pointed}
+Obiekt zerowy $0$ jest jednocześnie początkowy i końcowy. $\infty$-kategorię mającą obiekt zerowy nazywamy punktowaną. W niej morfizm zerowy $X\to Y$ jest złożeniem $X\to0\to Y$.
+\end{definicja}
+
+Przestrzenie $\operatorname{Map}(X,0)$ i $\operatorname{Map}(0,Y)$ są ściągalne. W konsekwencji wybory strzałek w tym złożeniu i ich składania są określone z dokładnością do koherentnej homotopii; dają wyróżniony punkt przestrzeni $\operatorname{Map}(X,Y)$ z dokładnością do ściągalnego wyboru. W kategorii homotopii otrzymujemy dobrze określony morfizm zerowy. W dalszym ciągu przestrzenie odwzorowań traktujemy jako przestrzenie punktowane w ten sposób.
+
+\begin{definicja}[Włókno i kowłókno]\label{cat:def:stable-fiber-cofiber}
+Dla $f:X\to Y$ w punktowanej $\infty$-kategorii, jeśli istnieją odpowiednie granice i kogranice, definiujemy
+\[
+ \operatorname{fib}(f)=X\times_Y0,\qquad
+ \operatorname{cofib}(f)=Y\sqcup_X0.
+\]
+Przez ciąg włóknowy rozumiemy diagram $A\to B\to C$ z określoną homotopią złożenia do morfizmu zerowego, dla którego kwadrat $A\to B$, $0\to C$ jest kartezjański. Przez ciąg kowłóknowy rozumiemy taki diagram, dla którego kwadrat $A\to B$, $0\to C$ jest kokartezjański.
+\end{definicja}
+
+W obu przypadkach chodzi o ten sam kształt diagramu:
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (a) at (0,1.8) {$A$};
+ \node (b) at (3.5,1.8) {$B$};
+ \node (o) at (0,0) {$0$};
+ \node (c) at (3.5,0) {$C$};
+ \draw[->] (a)--node[above] {$f$}(b);
+ \draw[->] (a)--(o);
+ \draw[->] (b)--node[right] {$g$}(c);
+ \draw[->] (o)--(c);
+\end{tikzpicture}
+\end{center}
+Zależnie od własności kwadratu mamy $A\simeq\operatorname{fib}(g)$ lub $C\simeq\operatorname{cofib}(f)$. Homotopia zerowa złożenia $gf$ jest częścią danych i nie można jej pominąć.
+
+\begin{stwierdzenie}[Włókna przestrzeni odwzorowań]\label{cat:prop:stable-mapping-fibers}
+Dla $f:X\to Y$ w punktowanej $\infty$-kategorii, mającego włókno i kowłókno, i dowolnego $T$ zachodzą naturalne równoważności przestrzeni punktowanych
+\[
+\begin{aligned}
+ \operatorname{Map}(T,\operatorname{fib}(f))
+ &\simeq\operatorname{fib}_0\bigl(\operatorname{Map}(T,X)
+                    \to\operatorname{Map}(T,Y)\bigr),\\
+ \operatorname{Map}(\operatorname{cofib}(f),T)
+ &\simeq\operatorname{fib}_0\bigl(\operatorname{Map}(Y,T)
+                    \to\operatorname{Map}(X,T)\bigr).
+\end{aligned}
+\]
+Po prawej stronie $\operatorname{fib}_0$ oznacza włókno homotopijne nad wyróżnionym punktem.
+\end{stwierdzenie}
+\begin{proof}
+Z twierdzenia~\ref{cat:thm:stable-mapping-limit} otrzymujemy w pierwszym przypadku
+\[
+ \operatorname{Map}(T,X\times_Y0)
+ \simeq\operatorname{Map}(T,X)
+       \times_{\operatorname{Map}(T,Y)}\operatorname{Map}(T,0).
+\]
+Ostatni czynnik jest ściągalny i jego morfizm do $\operatorname{Map}(T,Y)$ wybiera morfizm zerowy. Jest to właśnie włókno homotopijne. Dla drugiego równania stosujemy część dualną twierdzenia i ściągalność $\operatorname{Map}(0,T)$. Wyróżnione punkty obu stron odpowiadają sobie przez funktorialność konstrukcji.
+\end{proof}
+
+\subsection{Stabilność i przesunięcie}
+
+\begin{definicja}[Stabilna $\infty$-kategoria]\label{cat:def:stable-infty-category}
+Punktowaną $\infty$-kategorię $\mathcal C$ nazywamy stabilną, jeżeli ma skończone granice i kogranice oraz kwadrat w $\mathcal C$ jest kartezjański wtedy i tylko wtedy, gdy jest kokartezjański.
+\end{definicja}
+Jest to równoważna postać definicji J.~Lurie, \emph{Higher Algebra}, definicja 1.1.1.9 i stwierdzenie 1.1.3.4. W szczególności ciągi włóknowe i kowłóknowe są w kategorii stabilnej tymi samymi diagramami. Nazywamy je ciągami dokładnymi, mając na myśli dokładność w sensie $\infty$-kategorii.
+
+\begin{definicja}[Zawieszenie i obiekt pętli]\label{cat:def:stable-suspension-loop}
+W punktowanej $\infty$-kategorii mającej skończone granice i kogranice kładziemy
+\[
+ \Sigma X=0\sqcup_X0,\qquad
+ \Omega X=0\times_X0.
+\]
+Są to odpowiednio zawieszenie i obiekt pętli.
+\end{definicja}
+Zawieszenie jest kowłóknem morfizmu $X\to0$, a obiekt pętli jest włóknem morfizmu $0\to X$. Konstrukcje są funktorialne z dokładnością do koherentnego wyboru granic i kogranic. Korzystamy tu ze standardowej funktorialności granic: funktor granicy jest prawym sprzężeniem do funktora stałych diagramów, a funktor kogranicy jego lewym odpowiednikiem. Własności uniwersalne zapewniają, że zastosowanie konstrukcji do morfizmów diagramów wyznacza całe funktory $\Sigma$ i $\Omega$, a nie tylko funkcje na klasach obiektów.
+
+\begin{stwierdzenie}[Sprzężenie zawieszenia i pętli]\label{cat:prop:stable-suspension-loop-adjunction}
+W punktowanej $\infty$-kategorii mającej skończone granice i kogranice zachodzi $\Sigma\dashv\Omega$.
+\end{stwierdzenie}
+\begin{proof}
+Oznaczmy przez $\Omega_{\mathcal S}$ funktor pętli w przestrzeniach punktowanych. Stosując kryterium~\ref{cat:thm:stable-mapping-limit} dwukrotnie, otrzymujemy naturalne równoważności
+\[
+\begin{aligned}
+ \operatorname{Map}(\Sigma X,Y)
+ &\simeq *\times_{\operatorname{Map}(X,Y)}*
+ \simeq\Omega_{\mathcal S}\operatorname{Map}(X,Y),\\
+ \operatorname{Map}(X,\Omega Y)
+ &\simeq *\times_{\operatorname{Map}(X,Y)}*
+ \simeq\Omega_{\mathcal S}\operatorname{Map}(X,Y).
+\end{aligned}
+\]
+W obu wzorach morfizmy z przestrzeni jednopunktowej wybierają morfizm zerowy. Dokładniej, w pierwszym wzorze obie przestrzenie $\operatorname{Map}(0,Y)$ są ściągalne, a ich morfizmy do $\operatorname{Map}(X,Y)$ są indukowane przez $X\to0$; w drugim obie przestrzenie $\operatorname{Map}(X,0)$ są ściągalne, a ich morfizmy do $\operatorname{Map}(X,Y)$ są indukowane przez $0\to Y$. W obu przypadkach wybór punktów i porównujących je homotopii pochodzi z tego samego faktoryzowania morfizmu zerowego przez $0$. Złożenie pierwszej równoważności z odwrotnością drugiej daje naturalną równoważność przestrzeni odwzorowań, czyli sprzężenie w sensie rozdziału~\ref{cat:sec:quasicategories}.
+\end{proof}
+
+\begin{twierdzenie}[Odwracalność zawieszenia]\label{cat:thm:stable-suspension-equivalence}
+W stabilnej $\infty$-kategorii zawieszenie i obiekt pętli są wzajemnie odwrotnymi równoważnościami:
+\[
+ \Omega\Sigma\simeq\id_{\mathcal C},\qquad
+ \Sigma\Omega\simeq\id_{\mathcal C}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Z definicji $\Sigma X$ kwadrat po lewej stronie poniższego diagramu jest kokartezjański; z definicji $\Omega Y$ kwadrat po prawej stronie jest kartezjański.
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (a) at (0,1.8) {$X$};
+ \node (b) at (2.4,1.8) {$0$};
+ \node (c) at (0,0) {$0$};
+ \node (d) at (2.4,0) {$\Sigma X$};
+ \draw[->] (a)--(b); \draw[->] (a)--(c);
+ \draw[->] (b)--(d); \draw[->] (c)--(d);
+ \node (e) at (5,1.8) {$\Omega Y$};
+ \node (f) at (7.4,1.8) {$0$};
+ \node (g) at (5,0) {$0$};
+ \node (h) at (7.4,0) {$Y$};
+ \draw[->] (e)--(f); \draw[->] (e)--(g);
+ \draw[->] (f)--(h); \draw[->] (g)--(h);
+\end{tikzpicture}
+\end{center}
+Stabilność czyni oba kwadraty bikartezjańskimi. Pierwszy realizuje zatem $X$ jako iloczyn włóknisty $0\times_{\Sigma X}0$, a drugi realizuje $Y$ jako sumę amalgamowaną $0\sqcup_{\Omega Y}0$. Morfizmy porównawcze $X\to\Omega\Sigma X$ i $\Sigma\Omega Y\to Y$ są równoważnościami, ponieważ porównują dwa stożki graniczne lub dwa kostożki kograniczne. Są to jednostka i kojednostka sprzężenia ze stwierdzenia~\ref{cat:prop:stable-suspension-loop-adjunction}: pierwszy morfizm odpowiada identyczności $\Sigma X\to\Sigma X$, a drugi identyczności $\Omega Y\to\Omega Y$, przez podane tam własności uniwersalne. Naturalność jednostki i kojednostki daje równoważności funktorów.
+\end{proof}
+
+\begin{wniosek}[Włókno a kowłókno]\label{cat:cor:stable-fiber-cofiber-shift}
+Dla morfizmu $f:X\to Y$ w stabilnej $\infty$-kategorii istnieje naturalna równoważność $\operatorname{cofib}(f)\simeq\Sigma\operatorname{fib}(f)$. Ponadto następujące warunki są równoważne: $f$ jest równoważnością, $\operatorname{fib}(f)\simeq0$, $\operatorname{cofib}(f)\simeq0$.
+\end{wniosek}
+\begin{proof}
+Niech $K=\operatorname{fib}(f)$. Kwadrat o wierzchołkach $K,X,0,Y$ jest bikartezjański. Dołączamy do niego z prawej kwadrat kokartezjański o górnym wierszu $X\to0$, lewym boku $f:X\to Y$ i dolnym wierszu $Y\to\operatorname{cofib}(f)$. Otrzymujemy diagram
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (k) at (0,1.8) {$K$};
+ \node (x) at (3.3,1.8) {$X$};
+ \node (o1) at (6.6,1.8) {$0$};
+ \node (o2) at (0,0) {$0$};
+ \node (y) at (3.3,0) {$Y$};
+ \node (c) at (6.6,0) {$\operatorname{cofib}(f)$};
+ \draw[->] (k)--(x); \draw[->] (x)--(o1);
+ \draw[->] (k)--(o2); \draw[->] (x)--node[right] {$f$}(y);
+ \draw[->] (o1)--(c);
+ \draw[->] (o2)--(y); \draw[->] (y)--(c);
+\end{tikzpicture}
+\end{center} Z lematu~\ref{cat:lem:stable-square-pasting} kwadrat zewnętrzny jest kokartezjański i ma trzy pozostałe wierzchołki $K,0,0$. Stąd $\operatorname{cofib}(f)\simeq0\sqcup_K0=\Sigma K$. Konstrukcja wykorzystuje funktorialne granice i kogranice, więc równoważność jest naturalna względem morfizmów strzałek. Z odwracalności zawieszenia wynika równoważność obu warunków zanikania. Jeśli $f$ jest równoważnością, to zmiana bazy wzdłuż $f$ daje $\operatorname{fib}(f)\simeq0$. Odwrotnie, jeśli $K\simeq0$, to kokartezjański kwadrat włókna daje $Y\simeq X\sqcup_00$, przy czym wskazany morfizm $X\to Y$ jest równoważnością: suma amalgamowana wzdłuż równoważności $0\to0$ nie zmienia drugiego obiektu. Jest to własność uniwersalna kogranicy, sprawdzalna przez twierdzenie~\ref{cat:thm:stable-mapping-limit}.
+\end{proof}
+
+\begin{przyklad}[Punktowanie nie wystarcza do stabilności]\label{cat:ex:stable-pointed-counterexample}
+Zwykła kategoria grup abelowych ma obiekt zerowy oraz wszystkie skończone granice i kogranice. W jej nerwie granice i kogranice diagramów zwykłych odpowiadają granicom i kogranicom w kategorii grup abelowych (przykład~\ref{cat:ex:quasicat-ordinary-limits}). Dla dowolnej grupy $A$ suma amalgamowana $0\sqcup_A0$ jest zerowa. Istotnie, dla każdego $B$ istnieje dokładnie jedna zgodna para morfizmów $0\to B$. Jeżeli $A$ jest niezerowa, to kwadrat $A\to0$, $0\to0$ nie jest kartezjański, gdyż iloczyn włóknisty $0\times_00$ jest zerowy. Nerw kategorii grup abelowych nie jest więc stabilną $\infty$-kategorią. Wyjaśnia to, dlaczego w wyższej algebrze homologicznej stosujemy konstrukcje pochodne, a nie zwykłe iloczyny włókniste i sumy amalgamowane grup abelowych.
+\end{przyklad}
+
+\subsection{Funktory dokładne}
+
+\begin{definicja}[Dokładność funktora stabilnego]\label{cat:def:stable-exact-functor}
+Funktor pomiędzy stabilnymi $\infty$-kategoriami nazywamy dokładnym, jeżeli zachowuje skończone granice i skończone kogranice.
+\end{definicja}
+
+\begin{stwierdzenie}[Kryteria dokładności]\label{cat:prop:stable-exact-criteria}
+Dla funktora $F:\mathcal C\to\mathcal D$ pomiędzy stabilnymi $\infty$-kategoriami równoważne są warunki:
+\begin{enumerate}
+ \item $F$ jest dokładny;
+ \item $F$ zachowuje skończone granice;
+ \item $F$ zachowuje skończone kogranice;
+ \item $F$ zachowuje obiekt zerowy oraz kwadraty bikartezjańskie.
+\end{enumerate}
+\end{stwierdzenie}
+\begin{proof}
+Warunek pierwszy implikuje drugi i trzeci. Jeśli funktor zachowuje skończone granice, to zachowuje obiekt końcowy, będący w obu kategoriach obiektem zerowym. Zachowuje też kwadraty kartezjańskie, a przez stabilność są to dokładnie kwadraty bikartezjańskie. Zatem drugi warunek implikuje czwarty. Analogicznie trzeci warunek implikuje czwarty, wykorzystując obiekt początkowy i kwadraty kokartezjańskie. Jeżeli zachodzi czwarty warunek, to funktor zachowuje obiekt początkowy i końcowy oraz kwadraty kartezjańskie i kokartezjańskie, ponieważ w obu kategoriach oba rodzaje kwadratów się pokrywają. Twierdzenie~\ref{cat:thm:stable-finite-limit-generation} daje zachowywanie wszystkich skończonych granic i kogranic.
+\end{proof}
+
+\begin{wniosek}[Sprzężenia stabilne]\label{cat:cor:stable-adjoint-exact}
+Jeżeli $F:\mathcal C\rightleftarrows\mathcal D:G$ jest sprzężeniem pomiędzy stabilnymi $\infty$-kategoriami, to zarówno $F$, jak i $G$ są dokładne.
+\end{wniosek}
+\begin{proof}
+Lewe sprzężenie zachowuje istniejące kogranice, a prawe istniejące granice. Dla przykładu dla diagramu $D:K\to\mathcal C$ i jego kogranicy $M$ mamy
+\[
+ \operatorname{Map}_{\mathcal D}(FM,T)
+ \simeq\operatorname{Map}_{\mathcal C}(M,GT)
+ \simeq\lim_{k\in K^{\mathrm{op}}}
+           \operatorname{Map}_{\mathcal C}(D(k),GT)
+ \simeq\lim_{k\in K^{\mathrm{op}}}
+           \operatorname{Map}_{\mathcal D}(FD(k),T).
+\]
+Równoważności są naturalne i zgodne z morfizmami kostożka, więc kryterium~\ref{cat:thm:stable-mapping-limit} dowodzi zachowywania kogranicy. Dla granicy $L$ diagramu $E:K\to\mathcal D$ mamy dualnie
+\[
+ \operatorname{Map}_{\mathcal C}(T,GL)
+ \simeq\operatorname{Map}_{\mathcal D}(FT,L)
+ \simeq\lim_{k\in K}\operatorname{Map}_{\mathcal D}(FT,E(k))
+ \simeq\lim_{k\in K}\operatorname{Map}_{\mathcal C}(T,GE(k)).
+\]
+Zgodność ze stożkiem wynika z naturalności sprzężenia, więc kryterium granic daje zachowywanie granicy przez $G$. Stwierdzenie~\ref{cat:prop:stable-exact-criteria} kończy dowód.
+\end{proof}
+
+\subsection{Biprodukty i addytywność kategorii homotopii}
+
+W całym dalszym ciągu $\mathcal C$ jest stabilną $\infty$-kategorią. Jej kategorię homotopii oznaczamy przez $h\mathcal C$, zgodnie z twierdzeniem~\ref{cat:thm:homotopy-category}.
+
+\begin{twierdzenie}[Skończone biprodukty]\label{cat:thm:stable-biproducts}
+Dla $X,Y\in\mathcal C$ naturalny morfizm $X\sqcup Y\to X\times Y$ o macierzy składowych
+\[
+ \begin{pmatrix}\id_X&0\\0&\id_Y\end{pmatrix}
+\]
+jest równoważnością. W szczególności skończone produkty i koprodukty w $\mathcal C$ są jednocześnie produktami i koproduktami w $h\mathcal C$.
+\end{twierdzenie}
+\begin{proof}
+Niech $P=X\times Y$, a $i_X:X\to P$, $i_Y:Y\to P$ będą morfizmami zadanymi odpowiednio przez pary $(\id_X,0)$ i $(0,\id_Y)$. Rozważamy kwadrat
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (o) at (0,1.8) {$0$};
+ \node (y) at (3.4,1.8) {$Y$};
+ \node (x) at (0,0) {$X$};
+ \node (p) at (3.4,0) {$X\times Y$};
+ \draw[->] (o)--(y); \draw[->] (o)--(x);
+ \draw[->] (y)--node[right] {$i_Y$}(p);
+ \draw[->] (x)--node[below] {$i_X$}(p);
+\end{tikzpicture}
+\end{center}
+Wybieramy jego homotopię przemienności przez faktoryzację obu złożeń przez obiekt zerowy. Dla dowolnego $T$ kładziemy $M=\operatorname{Map}(T,X)$, $N=\operatorname{Map}(T,Y)$. Przestrzeń odwzorowań do $P$ jest równoważna $M\times N$, a morfizmy indukowane przez $i_X,i_Y$ są w tych współrzędnych postaci $m\mapsto(m,0)$ i $n\mapsto(0,n)$. Wobec tego
+\[
+ M\times_{M\times N}N
+ \simeq (M\times_M *)\times(*\times_N N)
+ \simeq *.
+\]
+Pierwsza równoważność wynika z obliczania granic iloczynu dwóch diagramów składowo; w drugim kroku każde włókno jest włóknem identyczności nad wyróżnionym punktem. Ponieważ $\operatorname{Map}(T,0)\simeq *$, morfizm porównawczy jest równoważnością. Kryterium~\ref{cat:thm:stable-mapping-limit} daje kartezjańskość kwadratu. Przez stabilność kwadrat jest również kokartezjański, więc $P$ realizuje $X\sqcup_0Y$. Jest to koprodukt $X\sqcup Y$: dla każdego $T$ kryterium przez przestrzenie odwzorowań daje
+\[
+ \operatorname{Map}(P,T)\simeq
+ \operatorname{Map}(X,T)\times_{\operatorname{Map}(0,T)}
+ \operatorname{Map}(Y,T)\simeq
+ \operatorname{Map}(X,T)\times\operatorname{Map}(Y,T).
+\]
+Morfizmy porównawcze są indukowane przez injekcje $i_X,i_Y$, więc jest to własność uniwersalna koproduktu. Morfizm porównawczy ma wskazane składowe przez definicję $i_X,i_Y$.
+
+Przechodząc do $\pi_0$ równoważności przestrzeni odwzorowań dla produktu lub koproduktu, otrzymujemy zwykłe własności uniwersalne w $h\mathcal C$, ponieważ $\pi_0(M\times N)=\pi_0(M)\times\pi_0(N)$. Przypadek pustej rodziny daje obiekt zerowy, a indukcja daje dowolną skończoną rodzinę.
+\end{proof}
+
+Piszemy $X\oplus Y$ dla otrzymanego biproduktu, a jego injekcje i rzuty oznaczamy przez $i_X,i_Y,p_X,p_Y$.
+
+\begin{twierdzenie}[Addytywność]\label{cat:thm:stable-homotopy-additive}
+Kategoria $h\mathcal C$ jest addytywna. Struktura grupy abelowej na $\Hom_{h\mathcal C}(X,Y)$ jest naturalna względem obu zmiennych i zgodna z dodawaniem przez przekątną oraz koprzekątną biproduktu.
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia~\ref{cat:thm:stable-suspension-equivalence} i stwierdzenia~\ref{cat:prop:stable-suspension-loop-adjunction} otrzymujemy naturalną równoważność przestrzeni punktowanych
+\[
+ \operatorname{Map}(X,Y)\simeq
+ \Omega_{\mathcal S}^2\operatorname{Map}(X,\Sigma^2Y).
+\]
+Istotnie $Y\simeq\Omega^2\Sigma^2Y$, a przestrzeń odwzorowań do obiektu pętli jest przestrzenią pętli przestrzeni odwzorowań. Zatem przez stwierdzenie~\ref{cat:prop:mapping-pi0}
+\[
+ \Hom_{h\mathcal C}(X,Y)
+ \cong \pi_2(\operatorname{Map}(X,\Sigma^2Y),0).
+\]
+Prawa strona jest grupą abelową: dla drugiej grupy homotopii dwie operacje sklejania kwadratów (wzdłuż dwóch kierunków), oznaczone przez $\star$ i $\diamond$, spełniają prawo wymiany
+\[
+ (a\star b)\diamond(c\star d)
+ =(a\diamond c)\star(b\diamond d).
+\]
+Obie mają tę samą jednostkę $e$ (klasę stałego kwadratu). Podstawiając $b=c=e$, otrzymujemy $a\diamond d=a\star d$. Podstawiając $a=d=e$, dostajemy $b\diamond c=c\star b$, a z poprzedniej równości przemienność. Jest to argument Eckmanna--Hiltona. Odwrotność otrzymuje się przez odwrócenie jednego parametru pętli. Przenosimy tę strukturę na zbiór morfizmów. Element neutralny odpowiada morfizmowi zerowemu.
+
+Naturalność równoważności w $X,Y$ oznacza, że prekompozycja przez $u:X'\to X$ oraz postkompozycja przez $v:Y\to Y'$ odpowiadają morfizmom punktowanych przestrzeni, a więc indukują homomorfizmy drugich grup homotopii. Składanie jest zatem addytywne w każdej zmiennej. Wraz z obiektem zerowym i skończonymi biproduktami z twierdzenia~\ref{cat:thm:stable-biproducts} daje to addytywność.
+
+Dla zgodności z dodawaniem biproduktowym pracujemy w $h\mathcal C$. Równania $p_Xi_X=\id_X$, $p_Yi_Y=\id_Y$, $p_Xi_Y=0$, $p_Yi_X=0$ dają
+\[
+ i_Xp_X+i_Yp_Y=\id_{X\oplus Y},
+\]
+gdyż po złożeniu z oboma rzutami obie strony mają te same składowe. Dla $a,b:X\to Y$ niech $\Delta_X:X\to X\oplus X$ ma oba rzuty równe identyczności, a $\nabla_Y:Y\oplus Y\to Y$ ma oba ograniczenia do składników równe identyczności. Stąd $\Delta_X=i_1+i_2$ oraz $\nabla_Y=p_1+p_2$. Morfizm $a\oplus b$ ma składowe diagonalne $a,b$ i pozadiagonalne zerowe. Korzystając z addytywności składania, otrzymujemy
+\[
+ \nabla_Y(a\oplus b)\Delta_X=a+b.
+\]
+W szczególności dodawanie jest wyznaczone przez strukturę biproduktów.
+\end{proof}
+
+\subsection{Ciągi dokładne i morfizm łączący}
+
+Niech $X\xrightarrow{f}Y\xrightarrow{g}Z$ będzie ciągiem dokładnym z ustaloną homotopią zerową $gf$. Z konstrukcji kowłókna i złożenia $Y\to0$ otrzymujemy morfizm $\partial:Z\to\Sigma X$.
+
+\begin{stwierdzenie}[Przedłużanie ciągu dokładnego]\label{cat:prop:stable-exact-rotation}
+Istnieje diagram
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (x) at (0,1.8) {$X$};
+ \node (y) at (3.3,1.8) {$Y$};
+ \node (o1) at (6.6,1.8) {$0$};
+ \node (o2) at (0,0) {$0$};
+ \node (z) at (3.3,0) {$Z$};
+ \node (sx) at (6.6,0) {$\Sigma X$};
+ \draw[->] (x)--node[above] {$f$}(y);
+ \draw[->] (y)--(o1);
+ \draw[->] (x)--(o2);
+ \draw[->] (y)--node[right] {$g$}(z);
+ \draw[->] (o1)--(sx);
+ \draw[->] (o2)--(z);
+ \draw[->] (z)--node[below] {$\partial$}(sx);
+\end{tikzpicture}
+\end{center}
+w którym oba kwadraty są bikartezjańskie. W szczególności $Y\to Z\to\Sigma X$ również jest ciągiem dokładnym.
+\end{stwierdzenie}
+\begin{proof}
+Lewy kwadrat jest kwadratem definiującym $Z$ jako kowłókno $f$. Do górnego wiersza dołączamy $Y\to0$ i tworzymy kogranicę prawego kwadratu. W ten sposób otrzymujemy diagram złożony z dwóch kwadratów kokartezjańskich; spójność diagramu zapewnia własność uniwersalna kogranicy, a wybór jej realizacji jest ściągalny. Z lematu~\ref{cat:lem:stable-square-pasting} kwadrat zewnętrzny jest kokartezjański, więc jego prawy dolny wierzchołek realizuje $0\sqcup_X0=\Sigma X$. Porównanie kostożków identyfikuje go z wybranym zawieszeniem. Stabilność daje kartezjańskość obu kwadratów. Prawy kwadrat, po zamianie dwóch kierunków, jest kwadratem kowłókna morfizmu $g$, z morfizmem $\partial:Z\to\Sigma X$.
+\end{proof}
+
+Wybór porządku dwóch kopii zera w zawieszeniu ma znaczenie dla znaku morfizmu łączącego. Zamiana tych kopii indukuje automorfizm $\sigma:\Sigma X\to\Sigma X$. W równoważności $\operatorname{Map}(\Sigma X,T)\simeq\Omega_{\mathcal S}\operatorname{Map}(X,T)$ zamiana kopii odwraca kierunek ścieżki w iloczynie włóknistym $*\times_{\operatorname{Map}(X,T)}*$. Na klasach pętli oznacza to przejście do odwrotności w grupie $\pi_1$. Dodawanie w tej grupie odpowiada dodawaniu morfizmów: równoważność z przestrzenią pętli jest naturalna w $T$ i zachowuje produkty, a operacja dodawania przez przekątną i koprzekątną działa na grupach pętli jako suma (dwie inkluzje czynników dają identyczność, a grupa jest abelowa). W szczególności dla $T=\Sigma X$ klasa $\id_{\Sigma X}$ przechodzi przez prekompozycję z $\sigma$ w swoją odwrotność addytywną. Zatem $[\sigma]=-\id_{\Sigma X}$ w $h\mathcal C$. W kategorii homotopii klasyczny obrót trójkąta $X\to Y\to Z\to\Sigma X$ ma ostatnią strzałkę $-\Sigma f$, a nie $\Sigma f$. Nie utożsamiamy więc samego przedłużania ciągu przez kwadraty z twierdzeniem o wszystkich aksjomatach kategorii triangulowanej bez uwzględnienia znaku.
+
+\begin{stwierdzenie}[Długie ciągi dokładne grup morfizmów]\label{cat:prop:stable-long-exact-hom}
+Dla ciągu dokładnego $X\to Y\to Z$ i dowolnego $T\in\mathcal C$ otrzymujemy dokładny ciąg grup abelowych
+\[
+ \cdots\to\Hom_{h\mathcal C}(\Sigma^n T,X)
+ \to\Hom_{h\mathcal C}(\Sigma^n T,Y)
+ \to\Hom_{h\mathcal C}(\Sigma^n T,Z)
+ \to\Hom_{h\mathcal C}(\Sigma^{n-1}T,X)\to\cdots ,
+\]
+dla $n\in\mathbb Z$. Analogicznie, stosując odwzorowania do $T$, otrzymujemy
+\[
+ \cdots\to\Hom_{h\mathcal C}(\Sigma^n Z,T)
+ \to\Hom_{h\mathcal C}(\Sigma^n Y,T)
+ \to\Hom_{h\mathcal C}(\Sigma^n X,T)
+ \to\Hom_{h\mathcal C}(\Sigma^{n-1}Z,T)\to\cdots .
+\]
+\end{stwierdzenie}
+\begin{proof}
+Dla dowolnej liczby całkowitej $n$ przesunięcie $\Sigma^n$ oznacza iterację zawieszenia, dla $n<0$ iterację $\Omega$. Ze stwierdzenia~\ref{cat:prop:stable-mapping-fibers} mamy ciąg włóknowy przestrzeni punktowanych
+\[
+ \operatorname{Map}(S,X)\longrightarrow\operatorname{Map}(S,Y)
+ \longrightarrow\operatorname{Map}(S,Z).
+\]
+Do dowodu dokładności wystarczy najpierw przejść do $\pi_0$. Jeżeli $P\to Q\to R$ jest ciągiem włóknowym przestrzeni punktowanych, to obraz $\pi_0 P\to\pi_0 Q$ jest dokładnie przeciwobrazem składowej punktu bazowego w $\pi_0 R$: element włókna jest punktem $q\in Q$ wraz ze ścieżką od jego obrazu w $R$ do punktu bazowego. Odwrotnie, istnienie takiej ścieżki daje punkt włókna. W naszym przypadku wszystkie zbiory $\pi_0$ są grupami abelowymi, a morfizmy są homomorfizmami przez twierdzenie~\ref{cat:thm:stable-homotopy-additive}. Otrzymujemy zatem dokładność w środkowej grupie dla dowolnego $S$. Biorąc $S=\Sigma^nT$, otrzymujemy dokładność w grupie odpowiadającej $Y$. Z poprzedniego stwierdzenia ciąg $Y\to Z\to\Sigma X$ jest również dokładny. Stosując ten sam argument do niego, otrzymujemy dokładność w grupie odpowiadającej $Z$. Kolejne przedłużenie daje ciąg $Z\to\Sigma X\to\Sigma Y$, w którym ostatni morfizm odpowiada przesunięciu $f$ z ewentualnym znakiem wynikającym z konwencji zamiany kopii zera (znak nie zmienia jądra ani obrazu). Dokładność w grupie odpowiadającej $\Sigma X$ daje dokładność w następnym stopniu. Przesuwając wszystkie obiekty przez potęgi $\Sigma$, otrzymujemy te same trzy warunki w każdym stopniu całkowitym.
+
+Morfizm łączący jest indukowany przez $\partial:Z\to\Sigma X$ po identyfikacji
+\[
+ \Hom_{h\mathcal C}(\Sigma^nT,\Sigma X)
+ \cong\Hom_{h\mathcal C}(\Sigma^{n-1}T,X)
+\]
+z ustaloną konwencją zawieszenia; dokładność wykazaliśmy bez utożsamiania go z konkretną konwencją znaku klasycznego morfizmu brzegowego. Drugi ciąg można otrzymać bezpośrednio, stosując $\operatorname{Map}(-,T)$ do ciągów dokładnych i używając części dualnej stwierdzenia~\ref{cat:prop:stable-mapping-fibers}. Dla morfizmu $a:\Sigma^n X\to T$ morfizm łączący jest reprezentowany przez złożenie $a\circ\Sigma^{n-1}\partial:\Sigma^{n-1}Z\to T$. Dokładność w trzech kolejnych miejscach wynika z kwadratów obrotu oraz ich przesunięć, tak jak powyżej.
+\end{proof}
+
+\subsection{Widma odwzorowań}
+
+Użyjemy opisu widma przez ciąg przestrzeni punktowanych $(E_j)_{j\geq0}$ z koherentnymi równoważnościami $E_j\simeq\Omega_{\mathcal S} E_{j+1}$. Jest to model widma typu $\Omega$; ogólną kategorię widm $\operatorname{Sp}$ można zrealizować jako granicę ciągu $\infty$-kategorii przestrzeni punktowanych z funktorami pętli. Odwołujemy się do konstrukcji obiektów widmowych w J.~Lurie, \emph{Higher Algebra}, podrozdziały 1.4.2--1.4.3. W tym modelu
+\[
+ \pi_k E=\mathop{\operatorname{colim}}_{j,\ k+j\geq2}\pi_{k+j}(E_j)
+ \qquad(k\in\mathbb Z);
+\]
+morfizmy przejścia pochodzą z równoważności $E_j\simeq\Omega_{\mathcal S}E_{j+1}$ oraz identyfikacji grup homotopii przestrzeni pętli. Są izomorfizmami. Warunek $k+j\geq2$ wybiera końcowy fragment ciągu i zapewnia, że wszystkie rozważane grupy są abelowe.
+
+\begin{definicja}[Widmo odwzorowań]\label{cat:def:stable-mapping-spectrum}
+Dla $X,Y\in\mathcal C$ widmo odwzorowań $\operatorname{map}_{\mathcal C}(X,Y)$ ma w poziomie $j\geq0$ przestrzeń
+\[
+ E_j(X,Y)=\operatorname{Map}_{\mathcal C}(X,\Sigma^jY).
+\]
+Porównanie $E_j(X,Y)\simeq\Omega_{\mathcal S}E_{j+1}(X,Y)$ otrzymujemy przez jednostkę $\Sigma^jY\simeq\Omega\Sigma^{j+1}Y$ oraz zachowywanie granic przez $\operatorname{Map}_{\mathcal C}(X,-)$.
+\end{definicja}
+
+Te porównania są naturalne w obu zmiennych, więc konstrukcja daje funktor $\mathcal C^{\mathrm{op}}\times\mathcal C\to\operatorname{Sp}$ w modelu widm jako granicy ciągu funktorów pętli. Nie definiujemy widma przez same grupy homotopii: przestrzenie i morfizmy pomiędzy nimi są istotną częścią konstrukcji.
+
+\begin{stwierdzenie}[Grupy homotopii widma odwzorowań]\label{cat:prop:stable-mapping-spectrum-groups}
+Dla każdego $k\in\mathbb Z$ istnieje naturalny izomorfizm grup abelowych
+\[
+ \pi_k\operatorname{map}_{\mathcal C}(X,Y)
+ \cong\Hom_{h\mathcal C}(\Sigma^kX,Y).
+\]
+Ponadto zerowa przestrzeń widma jest przestrzenią odwzorowań $\operatorname{Map}_{\mathcal C}(X,Y)$.
+\end{stwierdzenie}
+\begin{proof}
+Dla $j$ dostatecznie dużego, aby $k+j\geq2$, mamy
+\[
+\begin{aligned}
+ \pi_{k+j}\operatorname{Map}(X,\Sigma^jY)
+ &\cong\pi_0\operatorname{Map}(\Sigma^{k+j}X,\Sigma^jY)\\
+ &\cong\Hom_{h\mathcal C}(\Sigma^{k+j}X,\Sigma^jY)\\
+ &\cong\Hom_{h\mathcal C}(\Sigma^kX,Y).
+\end{aligned}
+\]
+Pierwsza identyfikacja wynika z iteracji sprzężenia zawieszenia i pętli na przestrzeniach odwzorowań, druga ze stwierdzenia~\ref{cat:prop:mapping-pi0}, trzecia z zastosowania równoważności $\Sigma^{-j}$ do źródła i celu. Zgodność struktur grupowych można sprawdzić przez biprodukt. Dla $r=k+j\geq2$ i dwóch klas w $\pi_r\operatorname{Map}(X,\Sigma^jY)$ tworzymy ich parę w grupie homotopii produktu przestrzeni odwzorowań do $\Sigma^jY\oplus\Sigma^jY$. Morfizm indukowany przez koprzekątną na tej grupie jest homomorfizmem, którego ograniczenia do obu składników są identycznościami, więc jest dodawaniem. Naturalność identyfikacji $\pi_r\operatorname{Map}(X,A)\cong\Hom_{h\mathcal C}(\Sigma^rX,A)$ względem $A$ przenosi tę operację na dodawanie przez koprzekątną w kategorii homotopii. Jest ono dodawaniem z twierdzenia~\ref{cat:thm:stable-homotopy-additive}. Równoważność $\Sigma^{-j}$ zachowuje biprodukty, więc także tę strukturę grupową. Morfizmy przejścia odpowiadają identyczności na ostatniej grupie: przejście od $j$ do $j+1$ jest zadane przez to samo sprzężenie zawieszenia i pętli, a ostatni izomorfizm usuwa dodatkowe wspólne zawieszenie. Wobec tego kogranica daje żądany izomorfizm. Stwierdzenie o zerowej przestrzeni jest częścią definicji, dla $j=0$.
+\end{proof}
+
+\begin{stwierdzenie}[Dokładność widm odwzorowań]\label{cat:prop:stable-mapping-spectrum-exact}
+Ciąg dokładny $A\to B\to C$ indukuje ciągi włóknowe widm
+\[
+ \operatorname{map}(T,A)\to\operatorname{map}(T,B)\to\operatorname{map}(T,C),
+ \qquad
+ \operatorname{map}(C,T)\to\operatorname{map}(B,T)\to\operatorname{map}(A,T).
+\]
+\end{stwierdzenie}
+\begin{proof}
+W modelu widm przez ciąg przestrzeni pętli granice, w szczególności włókna, obliczamy poziomami: funktor $\Omega_{\mathcal S}$ zachowuje granice jako funktor zdefiniowany przez granicę (lub jako prawe sprzężenie do zawieszenia przestrzeni punktowanych). Zatem poziomowe włókno ciągu widm ponownie ma wymagane równoważności strukturalne. Dla pierwszego ciągu na poziomie $j$ stosujemy stwierdzenie~\ref{cat:prop:stable-mapping-fibers} do ciągu $\Sigma^j A\to\Sigma^j B\to\Sigma^j C$, dokładnego, ponieważ $\Sigma^j$ jest równoważnością i zachowuje granice oraz kogranice. Dla drugiego stosujemy część dualną tego stwierdzenia do $A\to B\to C$ i celu $\Sigma^jT$. Otrzymane porównania są zgodne z morfizmami strukturalnymi przez naturalność kryterium granic oraz jednostki zawieszenia i pętli. Dają więc równoważności widm z odpowiednimi włóknami.
+\end{proof}
+
+\subsection{Struktura triangulowana kategorii homotopii}
+
+\begin{twierdzenie}[Triangulacja; wynik zewnętrzny]\label{cat:thm:stable-triangulated}
+Kategoria homotopii $h\mathcal C$ stabilnej $\infty$-kategorii jest kategorią triangulowaną w sensie definicji~\ref{cat:def:triangulated-category}, z funktorem przesunięcia indukowanym przez $\Sigma$. Trójkąty wyróżnione są trójkątami izomorficznymi z obrazami ciągów dokładnych $X\to Y\to Z$ przedłużonych do $X\to Y\to Z\to\Sigma X$ przez morfizm łączący z konwencją znaku triangulacji.
+\end{twierdzenie}
+Pełny dowód wraz ze znakami obrotu i aksjomatem ośmiościanu podaje J.~Lurie, \emph{Higher Algebra}, twierdzenie 1.1.2.14. Addytywność i odwracalność przesunięcia zostały wyżej udowodnione niezależnie. Wyprowadzimy jeszcze bezpośrednio część geometryczną aksjomatu ośmiościanu, korzystając z kwadratów kokartezjańskich.
+
+\begin{stwierdzenie}[Kowłókno złożenia]\label{cat:prop:stable-cofiber-composite}
+Dla koherentnego diagramu $X\xrightarrow f Y\xrightarrow g Z$ z wybranym złożeniem $gf$ istnieje ciąg dokładny
+\[
+ \operatorname{cofib}(f)\longrightarrow
+ \operatorname{cofib}(gf)\longrightarrow
+ \operatorname{cofib}(g).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Oznaczmy $U=Y\sqcup_X0$, $V=Z\sqcup_X0$. Z funktorialności kogranic otrzymujemy diagram
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (x) at (0,1.8) {$X$};
+ \node (y) at (3.2,1.8) {$Y$};
+ \node (z) at (6.4,1.8) {$Z$};
+ \node (o) at (0,0) {$0$};
+ \node (u) at (3.2,0) {$U$};
+ \node (v) at (6.4,0) {$V$};
+ \draw[->] (x)--node[above] {$f$}(y);
+ \draw[->] (y)--node[above] {$g$}(z);
+ \draw[->] (x)--(o); \draw[->] (y)--(u); \draw[->] (z)--(v);
+ \draw[->] (o)--(u); \draw[->] (u)--node[below] {$\alpha$}(v);
+\end{tikzpicture}
+\end{center}
+w którym lewy i zewnętrzny kwadrat są kokartezjańskie z definicji $U,V$. Lemat~\ref{cat:lem:stable-square-pasting} daje kokartezjańskość prawego kwadratu. Dołączamy pod nim kwadrat definiujący kowłókno $\alpha$:
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+ \node (y) at (0,3.2) {$Y$};
+ \node (z) at (3.5,3.2) {$Z$};
+ \node (u) at (0,1.6) {$U$};
+ \node (v) at (3.5,1.6) {$V$};
+ \node (o) at (0,0) {$0$};
+ \node (w) at (3.5,0) {$W$};
+ \draw[->] (y)--node[above] {$g$}(z);
+ \draw[->] (y)--(u); \draw[->] (z)--(v);
+ \draw[->] (u)--node[above] {$\alpha$}(v);
+ \draw[->] (u)--(o); \draw[->] (v)--(w);
+ \draw[->] (o)--(w);
+\end{tikzpicture}
+\end{center}
+Oba kwadraty są kokartezjańskie, więc zewnętrzny jest kokartezjański. Zatem $W\simeq Z\sqcup_Y0=\operatorname{cofib}(g)$ przez równoważność zgodną z morfizmem z $Z$. Dolny kwadrat opisuje $U\to V\to W$ jako ciąg kowłóknowy, a przez stabilność również włóknowy. To dowodzi tezy. Konstrukcja opisuje czwarty trójkąt aksjomatu ośmiościanu; zgodność znaków i wszystkich morfizmów łączących jest częścią twierdzenia~\ref{cat:thm:stable-triangulated}.
+\end{proof}
+
+\begin{wniosek}[Funktory triangulowane indukowane przez funktory dokładne]\label{cat:cor:stable-triangulated-functor}
+Dokładny funktor $F:\mathcal C\to\mathcal D$ indukuje dokładny funktor kategorii triangulowanych $hF:h\mathcal C\to h\mathcal D$.
+\end{wniosek}
+\begin{proof}
+Funktor zachowuje obiekt zerowy i biprodukty, więc wzór przez przekątną i koprzekątną z twierdzenia~\ref{cat:thm:stable-homotopy-additive} daje addytywność $hF$. Zachowywanie kwadratu definiującego zawieszenie daje naturalną równoważność $F\Sigma\simeq\Sigma F$. Zachowywanie kwadratów definiujących kowłókna oraz konstrukcji morfizmu łączącego daje zachowywanie trójkątów wyróżnionych przy tej identyfikacji przesunięć. Zgodność z konwencją znaku wynika z addytywności. Jest to dokładność w sensie definicji~\ref{cat:def:triangulated-exact-functor}.
+\end{proof}
+
+\subsection{\texorpdfstring{$t$}{t}-struktury i obcięcia}
+
+Stabilność nie wyróżnia obiektów odpowiadających modułom skupionym w stopniu zerowym. Do tego potrzebna jest dodatkowa struktura. Przyjmujemy indeksowanie homologiczne: $\Sigma$ podnosi stopień homologiczny o jeden, a dla kompleksów kohomologicznych $\Sigma=[1]$ i $H^q(X[1])=H^{q+1}(X)$. Zatem stopniowi homologicznemu $n$ odpowiada stopień kohomologiczny $-n$, nie $n$.
+
+\begin{definicja}[$t$-struktura]\label{cat:def:stable-t-structure}
+$t$-strukturą na stabilnej $\infty$-kategorii $\mathcal C$ nazywamy parę pełnych podkategorii $\mathcal C_{\geq0},\mathcal C_{\leq0}$ zamkniętych na równoważności, zawierających obiekt zerowy i spełniających warunki:
+\begin{enumerate}
+ \item $\Sigma\mathcal C_{\geq0}\subseteq\mathcal C_{\geq0}$ oraz $\Omega\mathcal C_{\leq0}\subseteq\mathcal C_{\leq0}$;
+ \item dla $A\in\mathcal C_{\geq0}$ i $B\in\mathcal C_{\leq-1}$ przestrzeń $\operatorname{Map}(A,B)$ jest ściągalna, gdzie $\mathcal C_{\leq-1}=\Omega\mathcal C_{\leq0}$;
+ \item dla każdego $X$ istnieje ciąg dokładny $A\to X\to B$ z $A\in\mathcal C_{\geq0}$ i $B\in\mathcal C_{\leq-1}$.
+\end{enumerate}
+Dla $n\in\mathbb Z$ piszemy $\mathcal C_{\geq n}=\Sigma^n\mathcal C_{\geq0}$ oraz $\mathcal C_{\leq n}=\Sigma^n\mathcal C_{\leq0}$, rozumiejąc pełne podkategorie wyznaczone przez istotne obrazy. W szczególności $\mathcal C_{\geq n+1}\subseteq\mathcal C_{\geq n}$ i $\mathcal C_{\leq n}\subseteq\mathcal C_{\leq n+1}$, przez przesunięcie pierwszego aksjomatu. Dla $a>b$ zachodzi $\mathcal C_{\geq a}\cap\mathcal C_{\leq b}=\{X:X\simeq0\}$: dla obiektu z przecięcia ortogonalność daje $\operatorname{Map}(X,X)\simeq *$, więc identyczność jest zerowa w kategorii homotopii, co jest równoważne $X\simeq0$.
+\end{definicja}
+
+Warunek ortogonalności jest równoważny warunkowi $\Hom_{h\mathcal C}(A,B)=0$ dla wszystkich wskazanych $A,B$. Istotnie, dla $j\geq0$ mamy $\Sigma^j A\in\mathcal C_{\geq0}$, więc wszystkie grupy homotopii przestrzeni odwzorowań w punkcie zerowym znikają na mocy stwierdzenia~\ref{cat:prop:stable-mapping-spectrum-groups} i konstrukcji widma (dla $j=0$ otrzymujemy jedną składową spójną). Kryterium słabej równoważności przestrzeni daje ściągalność w sensie typu homotopii. Odwrotna implikacja wynika przez przejście do $\pi_0$.
+
+\begin{twierdzenie}[Funktory obcięcia]\label{cat:thm:stable-truncation-adjunctions}
+Inkluzja $\mathcal C_{\geq n}\hookrightarrow\mathcal C$ ma prawe sprzężenie $\tau_{\geq n}$, a inkluzja $\mathcal C_{\leq n}\hookrightarrow\mathcal C$ ma lewe sprzężenie $\tau_{\leq n}$. Dla każdego $X$ istnieje naturalny ciąg dokładny
+\[
+ \tau_{\geq n}X\longrightarrow X\longrightarrow\tau_{\leq n-1}X.
+\]
+\end{twierdzenie}
+\begin{proof}
+Przesuwając aksjomat trzeci, wybieramy ciąg dokładny $A\to X\to B$ z $A\in\mathcal C_{\geq n}$ i $B\in\mathcal C_{\leq n-1}$. Jeżeli $T\in\mathcal C_{\geq n}$, to stwierdzenie~\ref{cat:prop:stable-mapping-fibers} daje
+\[
+ \operatorname{Map}(T,A)\simeq
+ \operatorname{Map}(T,X)\times_{\operatorname{Map}(T,B)}*.
+\]
+Ortogonalność po przesunięciu oznacza, że $\operatorname{Map}(T,B)\simeq *$. Rzut na $\operatorname{Map}(T,X)$ jest więc równoważnością. W ten sposób $A\to X$ reprezentuje ograniczenie funktora $\operatorname{Map}(-,X)$ do $\mathcal C_{\geq n}$. Analogicznie dla $T\in\mathcal C_{\leq n-1}$ mamy
+\[
+ \operatorname{Map}(B,T)\simeq
+ \operatorname{Map}(X,T)\times_{\operatorname{Map}(A,T)}*
+ \simeq\operatorname{Map}(X,T),
+\]
+więc $X\to B$ ma dualną własność uniwersalną. Kryterium istnienia sprzężeń przez uniwersalne morfizmy w $\infty$-kategorii (rozdział~\ref{cat:sec:quasicategories}, podrozdział o sprzężeniach) daje odpowiednie funktory i ich naturalne jednostki oraz kojednostki. Stosując tę konstrukcję dla $n+1$, dostajemy także lewe sprzężenie do inkluzji $\mathcal C_{\leq n}$.
+
+Kowłókno naturalnego morfizmu $\tau_{\geq n}X\to X$ jest funktorialne w $X$. Dla każdego $X$ jest równoważne $B$, więc należy do $\mathcal C_{\leq n-1}$, a morfizm z $X$ spełnia właśnie własność uniwersalną lewego sprzężenia. Jednoznaczność reprezentantów w postaci równoważności naturalnej identyfikuje to kowłókno z $\tau_{\leq n-1}X$. Otrzymujemy naturalny ciąg dokładny.
+\end{proof}
+
+\begin{stwierdzenie}[Charakterystyka przez ortogonalność]\label{cat:prop:stable-t-orthogonality}
+Zachodzą równości pełnych podkategorii
+\[
+\begin{aligned}
+ \mathcal C_{\geq n}
+ &=\{X:\operatorname{Map}(X,B)\simeq *\
+                  \text{ dla wszystkich } B\in\mathcal C_{\leq n-1}\},\\
+ \mathcal C_{\leq n-1}
+ &=\{X:\operatorname{Map}(A,X)\simeq *\
+                  \text{ dla wszystkich } A\in\mathcal C_{\geq n}\}.
+\end{aligned}
+\]
+\end{stwierdzenie}
+\begin{proof}
+Jedna inkluzja w każdym równaniu jest aksjomatem ortogonalności. Jeżeli $X$ spełnia warunek pierwszego równania, to dla $B=\tau_{\leq n-1}X$ własność lewego sprzężenia daje
+\[
+ \operatorname{Map}(B,B)\simeq\operatorname{Map}(X,B)\simeq *.
+\]
+Identyczność $B$ jest więc równa morfizmowi zerowemu w kategorii homotopii. Morfizmy $B\to0$ i $0\to B$ są tam wzajemnie odwrotne, więc $B\simeq0$. Ciąg obcięcia identyfikuje $X$ z $\tau_{\geq n}X$, gdyż włókno morfizmu $X\to0$ jest równoważne $X$. Dla drugiego równania stosujemy analogiczny argument do $A=\tau_{\geq n}X$, wykorzystując prawe sprzężenie i fakt, że kowłókno $0\to X$ jest równoważne $X$.
+\end{proof}
+
+\begin{wniosek}[Domknięcia klas obiektów]\label{cat:cor:stable-t-closure}
+Podkategoria $\mathcal C_{\geq n}$ jest zamknięta na istniejące kogranice, a $\mathcal C_{\leq n}$ na istniejące granice. Obie są zamknięte na rozszerzenia, tj. jeżeli skrajne obiekty ciągu dokładnego należą do danej podkategorii, to należy do niej również obiekt środkowy.
+\end{wniosek}
+\begin{proof}
+Dla diagramu z wartościami w $\mathcal C_{\geq n}$ i dowolnego $B\in\mathcal C_{\leq n-1}$ przestrzeń odwzorowań z kogranicy do $B$ jest granicą diagramu ściągalnych przestrzeni, więc jest ściągalna (również dla diagramu pustego). Stosujemy stwierdzenie~\ref{cat:prop:stable-t-orthogonality}. Dla granic argument jest dualny.
+
+Niech $X\to Y\to Z$ będzie ciągiem dokładnym z $X,Z\in\mathcal C_{\geq n}$. Dla $B\in\mathcal C_{\leq n-1}$ mamy ciąg włóknowy przestrzeni $\operatorname{Map}(Z,B)\to\operatorname{Map}(Y,B)\to\operatorname{Map}(X,B)$. Ponieważ ostatnia przestrzeń jest ściągalna, jej włókno nad zerem jest równoważne przestrzeni środkowej. Pierwsza przestrzeń jest ściągalna, zatem środkowa również. Dla $X,Z\in\mathcal C_{\leq n}$ stosujemy $\operatorname{Map}(A,-)$ dla $A\in\mathcal C_{\geq n+1}$ i ten sam argument. Ortogonalność daje tezę.
+\end{proof}
+
+\begin{stwierdzenie}[Komutowanie obcięć]\label{cat:prop:stable-truncation-commute}
+Dla $a,b\in\mathbb Z$ istnieje naturalna równoważność
+\[
+ \tau_{\geq a}\tau_{\leq b}\simeq
+ \tau_{\leq b}\tau_{\geq a}.
+\]
+Jeżeli $a\leq b$, oba funktory przyjmują wartości w $\mathcal C_{\geq a}\cap\mathcal C_{\leq b}$, a jeżeli $a>b$, są równoważne funktorowi zerowemu.
+\end{stwierdzenie}
+\begin{proof}
+Dla $a\leq b$ kładziemy $A=\tau_{\geq a}X$, $B=\tau_{\leq b}X$, $P=\tau_{\geq a}B$ oraz $Q=\tau_{\leq b}A$. Obiekt $P$ należy do $\mathcal C_{\leq b}$, ponieważ jest włóknem $B\to\tau_{\leq a-1}B$, a oba obiekty tego morfizmu należą do $\mathcal C_{\leq b}$; stosujemy wniosek~\ref{cat:cor:stable-t-closure}. Analogicznie $Q$ należy do $\mathcal C_{\geq a}$, bo jest kowłóknem $\tau_{\geq b+1}A\to A$. Zatem $P,Q$ należą do obu wymaganych podkategorii.
+
+Morfizm $A\to B$ otrzymujemy jako złożenie $A\to X\to B$. Ponieważ $A\in\mathcal C_{\geq a}$, faktoryzuje się on przez $P\to B$ z dokładnością do ściągalnego wyboru. Ponieważ $P\in\mathcal C_{\leq b}$, morfizm $A\to P$ faktoryzuje się przez $A\to Q$, dając naturalny morfizm $Q\to P$. Aby wykazać, że jest równoważnością, korzystamy z diagramu dwóch ciągów obcięcia
+\[
+\begin{array}{ccccc}
+ \tau_{\geq b+1}A&\longrightarrow&A&\longrightarrow&Q\\
+ \downarrow&&\downarrow&&\downarrow\\
+ \tau_{\geq b+1}X&\longrightarrow&X&\longrightarrow&B .
+\end{array}
+\]
+Lewy morfizm jest równoważnością, ponieważ $\mathcal C_{\geq b+1}\subseteq\mathcal C_{\geq a}$ i oba obiekty reprezentują funktor $\operatorname{Map}(-,X)$ ograniczony do $\mathcal C_{\geq b+1}$. Oba wiersze po dołączeniu zera są kwadratami kokartezjańskimi; ich sklejenie, z lewym morfizmem będącym równoważnością, daje kwadrat kokartezjański $A\to X$, $Q\to B$. Dokładniej, $B\simeq X\sqcup_{\tau_{\geq b+1}X}0$ i $Q\simeq A\sqcup_{\tau_{\geq b+1}A}0$, skąd $X\sqcup_A Q\simeq B$ przez regułę sklejania.
+
+Zatem $\operatorname{cofib}(Q\to B)\simeq\operatorname{cofib}(A\to X)=\tau_{\leq a-1}X$. Ponieważ $Q\in\mathcal C_{\geq a}$, ciąg dokładny $Q\to B\to\tau_{\leq a-1}X$ ma skrajne obiekty w klasach wymaganych dla obcięcia $B$ w stopniu $a$. Twierdzenie~\ref{cat:thm:stable-truncation-adjunctions} identyfikuje $Q\to B$ z $P\to B$, a więc wskazany morfizm $Q\to P$ jest równoważnością. Wszystkie konstrukcje są naturalne przez własności sprzężeń i funktorialność kogranic.
+
+Jeżeli $a>b$, to dla $T\in\mathcal C_{\geq a}$ mamy $\operatorname{Map}(T,\tau_{\leq b}X)\simeq *$, więc $\tau_{\geq a}\tau_{\leq b}X\simeq0$ przez własność prawego sprzężenia. Dualnie $\tau_{\leq b}\tau_{\geq a}X\simeq0$. Równoważności z funktorem zerowym są naturalne przez początkowość lub końcowość zera.
+\end{proof}
+
+\subsection{Serce \texorpdfstring{$t$}{t}-struktury i homologia}
+
+\begin{definicja}[Serce]\label{cat:def:stable-t-heart}
+Sercem $t$-struktury jest pełna podkategoria $\mathcal C^\heartsuit=\mathcal C_{\geq0}\cap\mathcal C_{\leq0}$.
+\end{definicja}
+
+\begin{stwierdzenie}[Dyskretność przestrzeni odwzorowań serca]\label{cat:prop:stable-heart-discrete}
+Dla $X,Y\in\mathcal C^\heartsuit$ przestrzeń $\operatorname{Map}(X,Y)$ ma typ homotopii zbioru dyskretnego. Serce jest więc równoważne nerwowi zwykłej kategorii $h(\mathcal C^\heartsuit)$.
+\end{stwierdzenie}
+\begin{proof}
+Dla $j>0$ mamy $\Sigma^j X\in\mathcal C_{\geq1}$ oraz $Y\in\mathcal C_{\leq0}$. Ortogonalność i wzór na grupy homotopii widma odwzorowań dają $\pi_j(\operatorname{Map}(X,Y),0)=0$. Każda składowa ma ten sam typ homotopii co składowa zerowa: przestrzeń odwzorowań jest równoważna podwójnej przestrzeni pętli, a mnożenie przez wybraną pętlę daje równoważność z przesunięciem składowej, z odwrotnością indukowaną przez pętlę odwrotną. Wszystkie wyższe grupy homotopii znikają zatem w każdej składowej. Morfizm do dyskretnej przestrzeni $\pi_0\operatorname{Map}(X,Y)$ jest równoważnością. Kanoniczny funktor z quasi-kategorii do nerwu jej kategorii homotopii jest w tym przypadku równoważnością na przestrzeniach odwzorowań i jest istotnie surjektywny. Stosujemy kryterium~\ref{cat:thm:quasicat-equivalence-criterion}.
+\end{proof}
+
+Dla $X\in\mathcal C$ definiujemy obiekt homologii stopnia $n$ przez
+\[
+ H_n(X)=\Sigma^{-n}\tau_{\geq n}\tau_{\leq n}X.
+\]
+Należy on do serca: jeżeli $B=\tau_{\leq n}X$, to $\tau_{\geq n}B$ jest włóknem morfizmu $B\to\tau_{\leq n-1}B$ pomiędzy obiektami $\mathcal C_{\leq n}$. Wniosek~\ref{cat:cor:stable-t-closure} daje jego przynależność do $\mathcal C_{\leq n}$, a definicja obcięcia daje przynależność do $\mathcal C_{\geq n}$. Po przesunięciu o $-n$ otrzymujemy obiekt serca. W szczególności $H_0(X)\simeq X$ dla $X$ z serca, ponieważ sprzężenia do pełnych inkluzji ograniczają się do identyczności na ich dziedzinach.
+
+\begin{twierdzenie}[Serce abelowe; wynik zewnętrzny]\label{cat:thm:stable-heart-abelian}
+Zwykła kategoria odpowiadająca sercu $t$-struktury jest abelowa. Każdy ciąg dokładny $A\to B\to C$ w $\mathcal C$ indukuje w niej naturalny długi ciąg dokładny
+\[
+ \cdots\longrightarrow H_n(A)\longrightarrow H_n(B)
+ \longrightarrow H_n(C)\longrightarrow H_{n-1}(A)
+ \longrightarrow\cdots.
+\]
+\end{twierdzenie}
+Jest to klasyczne twierdzenie o $t$-strukturach, zastosowane do triangulacji z twierdzenia~\ref{cat:thm:stable-triangulated}; por. J.~Lurie, \emph{Higher Algebra}, podrozdział 1.2.1, w szczególności uwaga 1.2.1.12 dotycząca serca. Obcięcia w kategorii homotopii są obcięciami triangulowanymi przez sprzężenia z twierdzenia~\ref{cat:thm:stable-truncation-adjunctions}. Nie powtarzamy pełnego dowodu tego twierdzenia.
+
+\begin{stwierdzenie}[Jądra i kojądra w sercu]\label{cat:prop:stable-heart-kernel-cokernel}
+Dla morfizmu $f:X\to Y$ obiektów serca mamy w sercu naturalne izomorfizmy
+\[
+ \ker(f)\cong\tau_{\geq0}\operatorname{fib}(f),\qquad
+ \operatorname{coker}(f)\cong\tau_{\leq0}\operatorname{cofib}(f).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Włókno $K=\operatorname{fib}(f)$ należy do $\mathcal C_{\leq0}$ przez domknięcie na granice. Z argumentu użytego przy definicji homologii wynika, że $\tau_{\geq0}K$ należy do serca. Dla $T$ z serca własność obcięcia i stwierdzenie~\ref{cat:prop:stable-mapping-fibers} dają
+\[
+ \operatorname{Map}(T,\tau_{\geq0}K)
+ \simeq\operatorname{Map}(T,X)\times_{\operatorname{Map}(T,Y)}*.
+\]
+Przestrzenie po prawej stronie są dyskretne z dokładnością do równoważności, więc włókno jest zwykłym zbiorem morfizmów $T\to X$, których złożenie z $f$ jest zerowe. Otrzymujemy własność uniwersalną jądra. Dualnie $Q=\operatorname{cofib}(f)\in\mathcal C_{\geq0}$. Obiekt $\tau_{\leq0}Q$ jest kowłóknem $\tau_{\geq1}Q\to Q$, więc należy do $\mathcal C_{\geq0}$ przez domknięcie na kogranice; należy również do $\mathcal C_{\leq0}$. Dla $T$ z serca lewe sprzężenie identyfikuje $\operatorname{Map}(\tau_{\leq0}Q,T)$ z $\operatorname{Map}(Q,T)$, a własność kowłókna identyfikuje tę ostatnią przestrzeń z włóknem nad zerem morfizmu $\operatorname{Map}(Y,T)\to\operatorname{Map}(X,T)$. Po przejściu do $\pi_0$, przez dyskretność, jest to zbiór morfizmów $Y\to T$ zerujących $f$. Naturalność w $T$ i zgodność z morfizmem $Y\to Q\to\tau_{\leq0}Q$ dają własność uniwersalną kojądra.
+\end{proof}
+
+\begin{stwierdzenie}[Krótkie ciągi dokładne w sercu]\label{cat:prop:stable-heart-short-exact}
+Ciąg dokładny $A\to B\to C$ w $\mathcal C$, którego wszystkie trzy obiekty należą do serca, indukuje krótki ciąg dokładny $0\to A\to B\to C\to0$ w sercu. Odwrotnie, każdy krótki ciąg dokładny w sercu można zrealizować jako taki ciąg dokładny w $\mathcal C$.
+\end{stwierdzenie}
+\begin{proof}
+Dla obiektu $X$ serca mamy $H_0(X)\simeq X$ oraz $H_n(X)\simeq0$ dla $n\ne0$. Gdy $n>0$, wynika to z ortogonalności $X\in\mathcal C_{\leq0}$ względem $\mathcal C_{\geq n}$; gdy $n<0$, obcięcie $\tau_{\leq n}X$ jest zerowe przez ortogonalność. Długi ciąg dokładny homologii z twierdzenia~\ref{cat:thm:stable-heart-abelian} redukuje się zatem do żądanego krótkiego ciągu.
+
+Odwrotnie, niech $0\to A\xrightarrow{f}B\to C\to0$ będzie krótkim ciągiem dokładnym w sercu. Wybieramy morfizm reprezentujący $f$ i kładziemy $Q=\operatorname{cofib}(f)$. Domknięcie na kogranice daje $Q\in\mathcal C_{\geq0}$. Przedłużenie ciągu $A\to B\to Q$ daje ciąg dokładny $B\to Q\to\Sigma A$. Ponieważ $B,\Sigma A\in\mathcal C_{\leq1}$, domknięcie na rozszerzenia daje $Q\in\mathcal C_{\leq1}$. Z długiego ciągu dokładnego otrzymujemy
+\[
+ 0\longrightarrow H_1(Q)\longrightarrow A
+ \xrightarrow{f}B\longrightarrow H_0(Q)\longrightarrow0.
+\]
+Morfizm $f$ jest monomorfizmem, więc $H_1(Q)=0$. Ponieważ $Q\in\mathcal C_{\leq1}$, z definicji $H_1(Q)$ wynika $\tau_{\geq1}Q\simeq\Sigma H_1(Q)\simeq0$. Ciąg obcięcia w stopniu $1$ daje $Q\simeq\tau_{\leq0}Q$. Zatem $Q$ należy do serca i $Q\simeq H_0(Q)$. Własność uniwersalna kojądra identyfikuje morfizm $B\to Q$ z zadanym $B\to C$ przez jedyny izomorfizm w sercu. Przez dyskretność przestrzeni odwzorowań serca ten izomorfizm reprezentuje równoważność w $\mathcal C$ zgodną z morfizmami z $B$. Przenosząc kwadrat kowłókna przez tę równoważność, dostajemy realizację krótkiego ciągu dokładnego.
+\end{proof}
+
+\begin{definicja}[Dokładność względem $t$-struktur]\label{cat:def:stable-t-exact}
+Dokładny funktor $F:\mathcal C\to\mathcal D$ pomiędzy kategoriami z $t$-strukturami nazywamy prawostronnie $t$-dokładnym, gdy zachowuje podkategorie $\mathcal C_{\geq0}$, lewostronnie $t$-dokładnym, gdy zachowuje $\mathcal C_{\leq0}$, oraz $t$-dokładnym, gdy spełnia oba warunki.
+\end{definicja}
+
+\begin{wniosek}\label{cat:cor:stable-t-exact-heart}
+Funktor $t$-dokładny komutuje z obcięciami i indukuje dokładny funktor kategorii abelowych na sercach.
+\end{wniosek}
+\begin{proof}
+Zachowuje wszystkie przesunięte podkategorie, ponieważ jest dokładny i komutuje z $\Sigma$ oraz $\Omega$. Obraz ciągu obcięcia jest zatem ciągiem dokładnym spełniającym wymagane warunki przynależności skrajnych obiektów. Dowód twierdzenia~\ref{cat:thm:stable-truncation-adjunctions} identyfikuje jego skrajne obiekty z odpowiednimi obcięciami $FX$, zgodnie z morfizmami ciągu i naturalnie w $X$. Funktor zachowuje serce oraz, przez wzory ze stwierdzenia~\ref{cat:prop:stable-heart-kernel-cokernel}, jądra i kojądra. Addytywność wynika z twierdzenia~\ref{cat:thm:stable-homotopy-additive} i zachowywania biproduktów. W kategorii abelowej addytywny funktor zachowujący jądra i kojądra jest dokładny.
+\end{proof}
+
+\subsection{Przykłady: kategorie pochodne i widma}
+
+\begin{twierdzenie}[Pochodna $\infty$-kategoria modułów; wynik zewnętrzny]\label{cat:thm:stable-derived-infty}
+Niech $R$ będzie pierścieniem z jedynką. Lokalizacja $\infty$-kategorialna kategorii kompleksów lewych $R$-modułów względem quasi-izomorfizmów daje stabilną $\infty$-kategorię $\mathcal D_\infty(R)$. Jej kategoria homotopii jest równoważna zwykłej kategorii pochodnej $\mathcal D(R)$ z rozdziału~\ref{cat:sec:triangulated-derived}. Standardowa $t$-struktura jest określona przez znikanie kohomologii:
+\[
+\begin{aligned}
+ \mathcal D_\infty(R)_{\geq n}&=\{X:H^q(X)=0\text{ dla }q>-n\},\\
+ \mathcal D_\infty(R)_{\leq n}&=\{X:H^q(X)=0\text{ dla }q<-n\}.
+\end{aligned}
+\]
+Jej serce jest równoważne kategorii lewych $R$-modułów przez kompleksy skupione w stopniu zerowym.
+\end{twierdzenie}
+Por. J.~Lurie, \emph{Higher Algebra}, podrozdział 1.3.2 i część 7.1 dotycząca modułów. Lokalizacja w powyższym twierdzeniu jest lokalizacją w $\infty$-kategoriach, a nie nerwem zwykłej lokalizacji. W szczególności zachowuje wyższe homotopie. Obcięcia opisane w rozdziale~\ref{cat:sec:triangulated-derived} realizują obcięcia standardowej $t$-struktury po przejściu do kategorii homotopii. Dokładniej, dla kompleksu kohomologicznego $(X^q,d^q)$ i $r=-n$ obcięcie $\tau_{\geq n}$ jest reprezentowane przez kompleks równy $X^q$ dla $q<r$, $\ker d^r$ dla $q=r$ i zeru dla $q>r$, z różniczkami indukowanymi przez $d$. Obcięcie $\tau_{\leq n}$ jest reprezentowane przez kompleks zerowy dla $q<r$, równy $X^r/\operatorname{im}d^{r-1}$ dla $q=r$ i $X^q$ dla $q>r$. W pierwszym przypadku $d^{r-1}$ trafia do $\ker d^r$ przez $d^rd^{r-1}=0$, w drugim $d^r$ faktoryzuje się przez iloraz z tego samego powodu. Naturalne morfizmy pierwszego obcięcia do $X$ oraz $X$ do drugiego indukują izomorfizmy kohomologii w zachowanych stopniach, a pozostałe grupy znikają. Zatem $H_n(X)$ w sercu odpowiada dokładnie modułowi $H^{-n}(X)$.
+
+\begin{przyklad}[Kowłókno mnożenia przez liczbę całkowitą]\label{cat:ex:stable-infty-multiplication}
+Dla $m\in\mathbb Z$ rozważmy morfizm $m:\mathbb Z[0]\to\mathbb Z[0]$ w $\mathcal D_\infty(\mathbb Z)$. W kategorii homotopii jego kowłókno jest reprezentowane przez stożek, czyli kompleks
+\[
+ \cdots\to0\to\mathbb Z\xrightarrow{m}\mathbb Z\to0\to\cdots
+\]
+w stopniach kohomologicznych $-1,0$. Z definicji kohomologii $H^{-1}=\ker(m)$ oraz $H^0=\mathbb Z/m\mathbb Z$, a pozostałe grupy znikają. Dla $m\ne0$ rzut kompleksu na $(\mathbb Z/m\mathbb Z)[0]$ jest quasi-izomorfizmem. Dla $m=0$ kompleks jest równy sumie prostej $\mathbb Z[1]\oplus\mathbb Z[0]$. Kowłókno w kategorii stabilnej zawiera więc informację zarówno o jądrze, jak i o kojądrze pierwotnego morfizmu.
+\end{przyklad}
+
+\begin{przyklad}[Wyższe morfizmy pomiędzy modułami]\label{cat:ex:stable-infty-derived-ext}
+Dla modułów $M,N$ traktowanych jako kompleksy w stopniu zerowym, stwierdzenie~\ref{cat:prop:stable-mapping-spectrum-groups} oraz twierdzenie~\ref{cat:thm:derived-ext} dają dla $q\geq0$
+\[
+ \pi_{-q}\operatorname{map}_{\mathcal D_\infty(R)}(M,N)
+ \cong\Hom_{\mathcal D(R)}(M,N[q])
+ \cong\operatorname{Ext}^q_R(M,N).
+\]
+Dla dodatnich stopni homotopii widma otrzymujemy zero przez ortogonalność standardowej $t$-struktury. Na przykład dla $M=\mathbb Z/m\mathbb Z$ ($m\geq2$) i $N=\mathbb Z$ rezolucja $0\to\mathbb Z\xrightarrow{m}\mathbb Z\to M\to0$ po zastosowaniu $\Hom(-,\mathbb Z)$ daje kompleks $\mathbb Z\xrightarrow{m}\mathbb Z$ w stopniach $0,1$. Stąd $\pi_{-1}\operatorname{map}(M,N)\cong\mathbb Z/m\mathbb Z$, chociaż zwykła przestrzeń odwzorowań $\operatorname{Map}(M,N)$ jest ściągalna: jej $\pi_0$ jest zerową grupą, a dodatnie grupy homotopii znikają. Pokazuje to różnicę między widmem odwzorowań a jego zerową przestrzenią.
+\end{przyklad}
+
+\begin{twierdzenie}[Widma i moduły nad widmami; wynik zewnętrzny]\label{cat:thm:stable-spectra-modules}
+Kategoria widm $\operatorname{Sp}$ jest stabilną $\infty$-kategorią. Jej standardowa $t$-struktura jest wyznaczona przez
+\[
+ \operatorname{Sp}_{\geq0}=\{E:\pi_kE=0\text{ dla } k<0\},\qquad
+ \operatorname{Sp}_{\leq0}=\{E:\pi_kE=0\text{ dla } k>0\},
+\]
+a serce jest równoważne kategorii grup abelowych przez widma Eilenberga--MacLane'a. Dla łącznego unitalnego widma pierścieniowego $A$ (algebry $\mathbb E_1$ w symetrycznej monoidalnej kategorii widm) $\infty$-kategoria lewych modułów nad $A$ jest stabilna. Jeżeli $A$ jest konektywne, tj. $\pi_k A=0$ dla $k<0$, standardowa $t$-struktura modułów jest wyznaczona przez te same warunki znikania grup homotopii widma bazowego, a jej serce jest równoważne kategorii lewych $\pi_0 A$-modułów.
+\end{twierdzenie}
+Por. \emph{Higher Algebra}, podrozdziały 1.4.3 i 7.1.1, w szczególności stwierdzenie 7.1.1.13 dla modułów nad konektywnym widmem pierścieniowym. Algebra $\mathbb E_1$ ma mnożenie łączne z dokładnością do wszystkich wymaganych koherencji; nie zastępujemy jej jedynie monoidem w kategorii homotopii widm. Dla pierścienia zwykłego $R$ widmo Eilenberga--MacLane'a $HR$ ma $\pi_0 HR=R$ i $\pi_k HR=0$ dla $k\ne0$. Twierdzenie o porównaniu modułów nad $HR$ z pochodną $\infty$-kategorią $R$-modułów (por. \emph{Higher Algebra}, część 7.1.2) daje równoważność $\operatorname{LMod}_{HR}\simeq\mathcal D_\infty(R)$. Przy ogólnym widmie pierścieniowym nie można zastąpić kategorii modułów kategorią modułów nad samym $\pi_0 A$.
+
+\begin{uwaga}[Granice zakresu]\label{cat:rem:stable-infty-scope}
+Istnienie $t$-struktury nie oznacza automatycznie, że obiekt jest granicą swoich kolejnych obcięć ani że funktor homologii wykrywa równoważności. Takie wnioski wymagają dodatkowych hipotez. Dla wykrywania równoważności wystarcza obustronna rozdzieloność, tj. założenie, że obie pełne podkategorie $\bigcap_n\mathcal C_{\geq n}$ i $\bigcap_n\mathcal C_{\leq n}$ składają się wyłącznie z obiektów zerowych z dokładnością do równoważności. Istotnie, jeżeli $H_n(X)=0$ dla wszystkich $n$, to ciąg obcięcia obiektu $\tau_{\leq n}X$ oraz komutowanie obcięć ze stwierdzenia~\ref{cat:prop:stable-truncation-commute} dają $\tau_{\leq n}X\simeq\tau_{\leq n-1}X$. Tutaj $\tau_{\leq n-1}\tau_{\leq n}\simeq\tau_{\leq n-1}$ przez własności sprzężeń do zagnieżdżonych pełnych podkategorii. Iterując dla każdego $m<n$, otrzymujemy $\tau_{\leq n}X\in\mathcal C_{\leq m}$, więc $\tau_{\leq n}X\simeq0$ przez rozdzieloność. Ciąg obcięcia daje wówczas $X\simeq\tau_{\geq n+1}X$ dla każdego $n$, a druga rozdzieloność daje $X\simeq0$. Jeżeli morfizm indukuje izomorfizmy wszystkich homologii, to długi ciąg dokładny daje zanikanie homologii jego kowłókna. Powyższy argument i wniosek~\ref{cat:cor:stable-fiber-cofiber-shift} pokazują, że jest równoważnością. Nie utożsamiamy rozdzieloności z zupełnością względem wieży obcięć. Przykład zdegenerowany: na niezerowej stabilnej $\infty$-kategorii para $(\mathcal C,\{0\})$ spełnia aksjomaty $t$-struktury, gdyż ciąg $X\xrightarrow{\id}X\to0$ jest dokładny. Wszystkie obiekty homologii są zerowe, lecz morfizm $0\to X$ dla niezerowego $X$ nie jest równoważnością. Ponadto wszystkie $\tau_{\leq n}X$ są zerowe, więc ich granica nie odtwarza $X$. Nie utożsamiamy też stabilnej $\infty$-kategorii z kategorią pochodną jej serca: kategoria widm oraz pochodna $\infty$-kategoria grup abelowych mają równoważne serca, ale stabilna informacja homotopijna jest szersza. Ogólną teorię prezentowalności, lokalizacji stabilnych i monoidalnych struktur wyższych rozpatruje się osobno.
+\end{uwaga}

@@ -1,0 +1,13 @@
+# CAT-33 — końcowy audyt kontrolny (27.11.2026)
+
+Kandydat: commit bafb0581f51a85cd3f8a9510ab7e4946459ad0ff, blob c617862a9a2013d91b0b66aa7041b075af335e7b. Źródło identyczne w obu czystych audytach. Ponownie przejrzano dowody charakteryzacji nerwu przez warunki Segala i jednoznaczne wypełnienia rogów wewnętrznych, odtwarzanie jednostek i składania oraz argument dla grupoidów. Nie znaleziono nowej usterki matematycznej wymagającej edycji.
+
+Niezależna kontrola obliczeniowa JS: 14 modeli kategorii, w tym 11 reprezentantów posetów o licznościach 0–3 z porządkiem zgodnym z numeracją (bez utożsamiania wszystkich izomorficznych reprezentantów), kategoria dwóch równoległych strzałek, dwuobiektowy spójny grupoid ze zbiorami morfizmów C2, niespójny trzyobiektowy grupoid. Wymiary 0–4, z wyjątkiem spójnego grupoidu z C2 (0–3). Funktory [n]->C enumerowano przez niezależny wybór obiektów i wszystkich krawędzi oraz kontrolę wszystkich relacji trójkątnych, a nie przez generowanie ścieżek. Otrzymano 517 sympleksów, w tym 484 dodatniego wymiaru. Niezależnie enumerowano ciągi składanych morfizmów, porównując je bijektywnie z sympleksami (484 przypadki). Odtworzono składanie przez d1 i odwrotność S2; 96 kontroli składania, 108 praw jednostek i 215 kontroli łączności: PASS.
+
+Rodziny ścian rogów enumerowano niezależnie od listy ich wypełnień, wykonując 49379 porównań zgodności. Każdy z 883 rogów wewnętrznych miał dokładnie jedno wypełnienie. Spośród 962 rogów zewnętrznych 36 nie miało wypełnienia, wszystkie w kategoriach niebędących grupoidami. W grupoidach wszystkie rogi miały wypełnienie, w wymiarach >=2 jednoznaczne. Uwzględniono kategorię pustą, równoległe morfizmy i grupoid niespójny. Testy są skończonymi kontrolami regresji, nie zastępują dowodów ogólnych ani formalizacji Lean.
+
+Kontrola statyczna: 33 unikatowe etykiety, 14 dowodów, 4 diagramy TikZ, brak nierozwiązanych odsyłaczy, środowiska zrównoważone, książka i katalog zawierają rozdział.
+
+CI dokładnego commitu źródłowego: CAT-00 validation (46014734704) completed/success, kompilacja pełnej książki, weryfikacja PDF i odsyłaczy PASS (artefakt 15205982052). Terminologia PASS według poprzedniego audytu. Nie wykonano oględzin PDF. Wcześniejsze CI aplikacji miało błędy odsyłaczy FA/ME/GT i timeout podglądu Rozdmuchania, opisane w stabilization-02.md; ich naprawy nie zweryfikowano w tej iteracji.
+
+Decyzja: 2/2 czystych audytów stabilizacyjnych i 1/1 końcowych audytów kontrolnych merytorycznych. Źródło pozostaje niezmienione. Kompilacja książki potwierdzona; pełny odbiór aplikacyjny oraz wizualny nadal otwarty.

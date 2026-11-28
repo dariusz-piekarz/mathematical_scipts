@@ -1,0 +1,7 @@
+# GKT32 — niezależna kontrola matematyczna, bramki techniczne otwarte
+
+Data: 2026-11-25. Rozdział drukowany 32 (TG25), źródło 25-rachunek-kirby-ego-operacje-na-ramowanych-splotach-i-grafach.tex, commit 34df98c2b5676a2f671f8993acbecd4e8d249adb, blob e47ce8796c300d48e30e493d18771509267b227e, 640 wierszy. Źródło niezmienione względem poprzedniej kontroli. Nie modyfikowano rozdziału.
+
+Niezależny rachunek dokładny w JS, przez rozwinięcie Laplace'a i macierze dołączone: wszystkie symetryczne macierze 3x3 postaci Q=[epsilon, x, y; x, a, d; y, d, b], epsilon=±1, x,y,a,b,d od -2 do 2. 6250 przypadków wyznacznika i redukcji B'=B-epsilon ell ell^T; 514 osobliwych, 5736 nieosobliwych. Dla nieosobliwych porównano cztery współczynniki dolnego bloku Q^{-1} z B'^{-1} przez mnożenie na krzyż: 22944 równości. Dwa przypadki pustej macierzy po kontrakcji. Ponadto 686 przesunięć uchwytów na symetrycznych macierzach 2x2 z wpisami -3..3, oba znaki: zgodność wyznaczników, a dla nieosobliwych zgodność macierzy dołączonych pod odpowiednim przekształceniem. Wszystkie asercje PASS. Testy nie zastępują dowodów topologicznych.
+
+CI 45708499715: structural-audit success, full-book-pdf in_progress. CI 45708499660: chapter-pdf i finite-models success. Pełny PDF aktualnego rozdziału nie był dostępny w artefaktach w chwili zapisu, nie przeprowadzono jego oględzin. Nie deklaruje się końcowej stabilizacji GKT32. Licznik zamkniętych rozdziałów pozostaje 31/43 według dotychczasowych kontroli; następny krok: potwierdzenie pełnego CI i wizualna kontrola PDF tego samego źródła.

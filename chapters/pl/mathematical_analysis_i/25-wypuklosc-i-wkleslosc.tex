@@ -1,0 +1,260 @@
+\chapter{Wypukłość i wklęsłość funkcji}
+\label{ma1:ch:convexity}
+
+Monotoniczność opisuje zmianę wartości funkcji, a wypukłość zmianę nachylenia jej wykresu. Zaczynamy od warunku geometrycznego, niewymagającego istnienia pochodnej.
+
+\section{Definicje i nachylenia siecznych}
+\begin{definicja}
+\label{ma1:def:convex-function}
+Niech $I\subseteq\R$ będzie niepustym przedziałem. Funkcję $f:I\to\R$ nazywamy wypukłą, jeśli dla wszystkich $x,y\in I$, $t\in[0,1]$ zachodzi
+\[
+ f((1-t)x+ty)\le(1-t)f(x)+tf(y).
+\]
+Jest ściśle wypukła, gdy nierówność jest ostra dla $x\ne y$ i $0<t<1$. Funkcję nazywamy wklęsłą (ściśle wklęsłą), gdy $-f$ jest wypukła (ściśle wypukła).
+\end{definicja}
+Rzędna punktu cięciwy o odciętej $(1-t)x+ty$ wynosi $(1-t)f(x)+tf(y)$. Wykres funkcji wypukłej leży pod cięciwą lub na niej, a wykres funkcji wklęsłej nad cięciwą lub na niej.
+
+\begin{center}
+\begin{tikzpicture}[x=1.3cm,y=1.4cm,>=Stealth]
+ \draw[->] (-1.5,0)--(2.6,0) node[right] {$x$};
+ \draw[->] (0,-.15)--(0,3.2) node[above] {$y$};
+ \draw[blue!65!black,thick,domain=-1.25:2.25,samples=100] plot (\x,{.5*\x*\x+.3});
+ \coordinate (A) at (-1,.8);
+ \coordinate (B) at (2,2.3);
+ \coordinate (C) at (.5,.425);
+ \coordinate (D) at (.5,1.55);
+ \draw[orange!85!black,thick] (A)--(B);
+ \draw[gray,dotted] (.5,0)--(C);
+ \draw[violet,thick,<->] (C)--(D);
+ \fill (A) circle (1.7pt) node[left] {$A$};
+ \fill (B) circle (1.7pt) node[right] {$B$};
+ \fill (C) circle (1.7pt) node[right] {$C$};
+ \fill (D) circle (1.7pt) node[above left] {$D$};
+ \node[below] at (-1,0) {$x_1$};
+ \node[below] at (.5,0) {$z$};
+ \node[below] at (2,0) {$x_2$};
+ \node[orange!85!black,above] at (1.1,2.05) {cięciwa};
+\end{tikzpicture}
+
+\small Rysunek: $z=(x_1+x_2)/2$. Rzędna punktu $C$ na wykresie nie przekracza rzędnej punktu $D$ na cięciwie $AB$.
+\end{center}
+Dla $u,v\in I$, $u<v$, oznaczamy nachylenie siecznej przez $S(u,v)=(f(v)-f(u))/(v-u)$.
+\begin{twierdzenie}[Kryterium siecznych]
+\label{ma1:thm:convex-secants}
+Wypukłość jest równoważna warunkowi
+$S(u,v)\le S(u,w)\le S(v,w)$ dla wszystkich $u<v<w$ z $I$. Ścisła wypukłość jest równoważna ostrym nierównościom.
+\end{twierdzenie}
+\begin{proof}
+Podstawiamy $t=(v-u)/(w-u)\in(0,1)$ w definicji, uzyskując
+\[
+ (w-u)f(v)\le(w-v)f(u)+(v-u)f(w).
+\]
+Odejmując $(w-u)f(u)$ i dzieląc przez $(v-u)(w-u)>0$, dostajemy pierwszą nierówność. Odejmując obie strony od $(w-u)f(w)$ i dzieląc przez $(w-v)(w-u)>0$, dostajemy drugą. Wszystkie przekształcenia są odwracalne również dla nierówności ostrych. Odwrotnie, dla $x<y$, $0<t<1$ wybieramy $u=x$, $v=(1-t)x+ty$, $w=y$ i odwracamy pierwsze przekształcenie. Dla $x>y$ zamieniamy końce i zastępujemy $t$ przez $1-t$. Dla $x=y$ lub $t=0,1$ zachodzi równość.
+\end{proof}
+\begin{stwierdzenie}
+\label{ma1:prop:convex-combinations}
+Jeżeli $f,g$ są wypukłe na $I$ oraz $\alpha,\beta\ge0$, to $\alpha f+\beta g$ jest wypukła. Jeśli jeden składnik jest ściśle wypukły i ma dodatni współczynnik, suma jest ściśle wypukła.
+\end{stwierdzenie}
+\begin{proof}
+Mnożymy nierówności z definicji przez odpowiednie współczynniki i dodajemy. Dla różnych punktów i $0<t<1$ jedna ostra nierówność pomnożona przez dodatni współczynnik wystarcza, aby suma była ostra.
+\end{proof}
+
+\section{Regularność}
+\begin{twierdzenie}
+\label{ma1:thm:convex-local-lipschitz}
+Funkcja wypukła $f:I\to\R$ spełnia warunek Lipschitza na każdym $[a,b]\subset\operatorname{int}I$, $a<b$. W szczególności jest ciągła we wnętrzu $I$.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $a,b$ należą do wnętrza $I$, istnieją $u,v\in I$ takie, że $u<a<b<v$. Dla $a\le x<y\le b$ kryterium \ref{ma1:thm:convex-secants} daje
+\[
+ S(u,a)\le S(u,x)\le S(x,y)\le S(y,v)\le S(b,v).
+\]
+Dla $a<x$ pierwsza nierówność wynika z trójki $u<a<x$, a przy $x=a$ jest równością. Druga wynika z $S(u,x)\le S(u,y)\le S(x,y)$. Trzecia wynika z $S(x,y)\le S(x,v)\le S(y,v)$. Dla $y<b$ ostatnia wynika z trójki $y<b<v$, a dla $y=b$ jest równością. Dla $L=\max\{|S(u,a)|,|S(b,v)|\}$ mamy $|S(x,y)|\le L$, więc $|f(y)-f(x)|\le L|y-x|$. Dla $x=y$ zachodzi równość, a dla $x>y$ zamieniamy punkty. Każdy punkt wewnętrzny należy do wnętrza pewnego takiego odcinka, więc oszacowanie daje ciągłość.
+\end{proof}
+\begin{przyklad}
+\label{ma1:ex:convex-endpoint}
+Funkcja $f(0)=1$, $f(x)=0$ dla $0<x\le1$ jest wypukła na $[0,1]$, ale nieciągła w zerze. Jeśli $0<t<1$ i co najmniej jeden z $x,y$ jest dodatni, to $(1-t)x+ty>0$, więc lewa strona nierówności wypukłości jest zerowa, a prawa nieujemna. Jeśli oba punkty są zerowe lub $t=0,1$, zachodzi równość. Granica prawostronna w zerze wynosi $0\ne f(0)$.
+\end{przyklad}
+\begin{twierdzenie}
+\label{ma1:thm:convex-one-sided-derivatives}
+Funkcja wypukła ma w każdym punkcie wewnętrznym $a$ skończone pochodne jednostronne, przy czym $f'_-(a)\le f'_+(a)$. Dla punktów wewnętrznych $a<b$ zachodzi $f'_+(a)\le f'_-(b)$.
+\end{twierdzenie}
+\begin{proof}
+Wybieramy $u<a<v$ w $I$. Kryterium siecznych daje $S(x,a)\le S(y,a)$ dla $u<x<y<a$ i $S(a,x)\le S(a,y)$ dla $a<x<y<v$. Ponadto dla $u<x<a<y<v$,
+\[
+ S(u,a)\le S(x,a)\le S(a,y)\le S(a,v).
+\]
+Obie rodziny są ograniczone. Niech $M=\sup_{u<x<a}S(x,a)$. Dla $\varepsilon>0$ wybieramy $x_0\in(u,a)$ z $S(x_0,a)>M-\varepsilon$. Dla $x_0<x<a$ monotoniczność daje $M-\varepsilon<S(x,a)\le M$. Stąd granica lewostronna wynosi $M$. Dla $m=\inf_{a<y<v}S(a,y)$ wybieramy $y_0\in(a,v)$ z $S(a,y_0)<m+\varepsilon$; dla $a<y<y_0$ mamy $m\le S(a,y)<m+\varepsilon$. Granica prawostronna wynosi $m$. Dla $h<0$ iloraz $(f(a+h)-f(a))/h$ jest równy $S(a+h,a)$, a dla $h>0$ jest równy $S(a,a+h)$. Są to więc pochodne jednostronne z definicji \ref{ma1:def:derivative}. Ustalając $y>a$, przechodzimy do granicy przy $x\to a^-$ w $S(x,a)\le S(a,y)$, a następnie przy $y\to a^+$, co daje $f'_-(a)\le f'_+(a)$.
+Dla $a<b$ we wnętrzu, $a<x<b$ i $a<y<b$ mamy $S(a,x)\le S(a,b)\le S(y,b)$. Przechodząc do granic przy $x\to a^+$ i $y\to b^-$, otrzymujemy $f'_+(a)\le S(a,b)\le f'_-(b)$.
+\end{proof}
+
+\section{Styczne i kryteria różniczkowe}
+\begin{twierdzenie}[Prosta podpierająca]
+\label{ma1:thm:convex-support}
+Niech $f:I\to\R$ będzie wypukła, a $a$ punktem wewnętrznym $I$. Nierówność
+\[
+ f(x)\ge f(a)+p(x-a)\qquad(x\in I)
+\]
+zachodzi dokładnie dla $p\in[f'_-(a),f'_+(a)]$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $x>a$, to dla $a<y<x$ mamy $S(a,y)\le S(a,x)$; przechodząc do granicy $y\to a^+$, dostajemy $p\le f'_+(a)\le S(a,x)$, skąd teza po pomnożeniu przez $x-a>0$. Jeżeli $x<a$, to dla $x<y<a$ mamy $S(x,a)\le S(y,a)$ i w granicy $S(x,a)\le f'_-(a)\le p$. Mnożąc przez $a-x>0$, dostajemy $f(a)-f(x)\le p(a-x)$, czyli $f(x)\ge f(a)+p(x-a)$. Dla $x=a$ jest równość. Odwrotnie, założona nierówność daje $S(a,x)\ge p$ dla $x>a$ oraz $S(x,a)\le p$ dla $x<a$. Granice jednostronne dają żądany przedział.
+\end{proof}
+Jeśli $f$ jest różniczkowalna w punkcie wewnętrznym $a$, obie pochodne jednostronne są równe $f'(a)$, więc styczna $y=f(a)+f'(a)(x-a)$ leży pod wykresem na całej dziedzinie lub na nim. Dla wklęsłości stosujemy twierdzenie do $-f$. Dla $f(x)=|x|$ w zerze wszystkie proste $y=px$, $p\in[-1,1]$, są podpierające, choć nie istnieje pochodna dwustronna (por. przykład \ref{ma1:ex:nondifferentiability}).
+
+\begin{twierdzenie}
+\label{ma1:thm:convex-first-derivative}
+Niech $f:I\to\R$ będzie różniczkowalna na otwartym przedziale. Równoważne są: wypukłość $f$, niemalejącość $f'$ oraz nierówność $f(x)\ge f(a)+f'(a)(x-a)$ dla wszystkich $a,x\in I$. Ścisła wypukłość jest równoważna ścisłej rosnącości $f'$.
+\end{twierdzenie}
+\begin{proof}
+Z wypukłości wynika niemalejącość pochodnej na mocy twierdzenia \ref{ma1:thm:convex-one-sided-derivatives}. Jeżeli $f'$ jest niemalejąca i $u<v<w$, twierdzenie Lagrange'a \ref{ma1:thm:lagrange} zastosowane na $[u,v]$ i $[v,w]$ daje $S(u,v)=f'(c)$ oraz $S(v,w)=f'(d)$, gdzie $u<c<v<d<w$. Zatem $S(u,v)\le S(v,w)$. Mamy tożsamość
+\[
+ S(u,w)=\frac{v-u}{w-u}S(u,v)+\frac{w-v}{w-u}S(v,w),
+\]
+która wynika z $f(w)-f(u)=(f(v)-f(u))+(f(w)-f(v))$. Współczynniki są dodatnie i sumują się do jedności, więc $S(u,v)\le S(u,w)\le S(v,w)$; twierdzenie \ref{ma1:thm:convex-secants} daje wypukłość. Nierówność stycznej wynika z twierdzenia \ref{ma1:thm:convex-support}. Jeżeli zaś ta nierówność zachodzi dla wszystkich punktów, dla $x,y\in I$ i $t\in[0,1]$ przyjmujemy $z=(1-t)x+ty$. Mamy
+\[
+ \begin{aligned}
+ f(x)&\ge f(z)+f'(z)(x-z),\\
+ f(y)&\ge f(z)+f'(z)(y-z).
+ \end{aligned}
+\]
+Mnożymy przez $1-t$ i $t$ i dodajemy. Ponieważ $(1-t)(x-z)+t(y-z)=0$, otrzymujemy $f(z)\le(1-t)f(x)+tf(y)$.
+
+Dla ściśle rosnącej pochodnej otrzymujemy w dowodzie przez sieczne nierówności ostre, gdyż $c<d$ i oba współczynniki kombinacji są dodatnie. Odwrotnie, ścisła wypukłość daje już niemalejącość pochodnej. Gdyby $f'(u)=f'(w)$ dla $u<w$, monotoniczność wymuszałaby stałość pochodnej na $[u,w]$. Twierdzenie Lagrange'a na $[u,x]$, $u<x\le w$, dawałoby $f(x)=f(u)+f'(u)(x-u)$, co przeczy ostrej nierówności wypukłości dla środka $[u,w]$.
+\end{proof}
+
+\begin{twierdzenie}
+\label{ma1:thm:convex-second-derivative}
+Jeżeli $f$ jest dwukrotnie różniczkowalna na otwartym przedziale $I$, to jest wypukła wtedy i tylko wtedy, gdy $f''\ge0$ na $I$. Warunek $f''>0$ wystarcza do ścisłej wypukłości. Dla wklęsłości zachodzą analogiczne tezy z odwróconymi nierównościami.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $f$ jest wypukła, to $f'$ jest niemalejąca. Dla $h>0$ licznik $f'(a+h)-f'(a)$ jest nieujemny, dla $h<0$ niedodatni, więc w obu przypadkach iloraz przez $h$ jest nieujemny. Jego granica $f''(a)$ jest nieujemna. Odwrotnie, dla $u<v$ w $I$ funkcja $f'$ jest różniczkowalna na $I$, więc ciągła na $[u,v]$ (twierdzenie \ref{ma1:thm:linear-approximation}). Twierdzenie Lagrange'a zastosowane do $f'$ na $[u,v]$ daje $f'(v)-f'(u)=f''(c)(v-u)$ dla $c\in(u,v)$. Założenie $f''\ge0$ daje niemalejącość, a $f''>0$ ścisłą rosnącość. Stosujemy twierdzenie \ref{ma1:thm:convex-first-derivative}. Dla $-f$ druga pochodna zmienia znak.
+\end{proof}
+Ciągłość $f''$ nie jest wymagana. Ścisła wypukłość nie wymaga $f''>0$ wszędzie: dla $f(x)=x^4$ mamy $f''(0)=0$, ale $f'(x)=4x^3$ jest ściśle rosnąca, ponieważ dla $u<v$ zachodzi $v^3-u^3=(v-u)((u+v/2)^2+3v^2/4)>0$. Suma kwadratów może być zerowa jedynie dla $u=v=0$, co przeczy $u<v$.
+
+\begin{twierdzenie}[Nierówność Bernoulliego dla wykładników rzeczywistych]
+\label{ma1:thm:bernoulli-real}
+Dla $x>-1$ i $r\in\R$ zachodzą nierówności
+\[
+ \begin{cases}
+ (1+x)^r\ge1+rx,& r\le0\ \text{lub}\ r\ge1,\\
+ (1+x)^r\le1+rx,& 0<r<1.
+ \end{cases}
+\]
+Równość zachodzi dokładnie wtedy, gdy $x=0$ lub $r\in\{0,1\}$.
+\end{twierdzenie}
+\begin{proof}
+Dla $t>0$ niech $F(t)=t^r=\exp(r\log t)$ (definicja \ref{ma1:def:real-powers}). Z reguły łańcuchowej \ref{ma1:thm:chain-rule} i wzorów \ref{ma1:thm:exp-log-derivatives} wynika
+\[
+ F'(t)=\exp(r\log t)\frac{r}{t}=rt^{r-1},
+ \qquad F''(t)=r(r-1)t^{r-2}.
+\]
+Jeżeli $r<0$ lub $r>1$, to $F''(t)>0$ dla każdego $t>0$, więc $F$ jest ściśle wypukła na $(0,\infty)$ na mocy twierdzenia \ref{ma1:thm:convex-second-derivative}. Jeżeli $0<r<1$, to $F''(t)<0$ i $F$ jest ściśle wklęsła. W pierwszym przypadku twierdzenie \ref{ma1:thm:convex-support} dla punktu $t=1$ daje
+\[
+ F(1+x)\ge F(1)+F'(1)x=1+rx.
+\]
+W drugim przypadku zastosowanie tego samego twierdzenia do $-F$ daje nierówność odwrotną.
+
+Dla $x\ne0$ twierdzenie Lagrange'a \ref{ma1:thm:lagrange} daje $F(1+x)-F(1)=xF'(c)$ dla pewnego $c$ ściśle między $1$ i $1+x$. Przy ścisłej wypukłości $F'$ jest ściśle rosnąca (twierdzenie \ref{ma1:thm:convex-first-derivative}). Gdy $x>0$, mamy $F'(c)>F'(1)$; gdy $x<0$, mamy $F'(c)<F'(1)$, ale mnożymy przez liczbę ujemną $x$. W obu przypadkach $xF'(c)>xF'(1)$, więc nierówność jest ostra. Dla ścisłej wklęsłości stosujemy ten argument do $-F$. Gdy $r=0$, obie strony wynoszą $1$, a gdy $r=1$, obie wynoszą $1+x$. Dla $x=0$ obie strony wynoszą $1$ dla każdego $r$.
+\end{proof}
+Dla $r>0$ nierówność rozszerza się na $x=-1$ przez przyjęcie $0^r=0$: lewa strona wynosi $0$, prawa $1-r$, a odpowiedni znak wynika z porównania $r$ z $1$. Równość na tym końcu zachodzi tylko dla $r=1$. Dla $r<0$ potęga zerowej podstawy nie jest określona; nie włączamy też nieokreślonego w tym kontekście $0^0$. Wersja naturalna, z dowodem bez rachunku różniczkowego, znajduje się w twierdzeniu \ref{ma1:thm:bernoulli-natural}.
+
+\section{Nierówność Jensena i jej zastosowania}
+\begin{twierdzenie}[Jensena]
+\label{ma1:thm:jensen}
+Niech $f:I\to\R$ będzie wypukła, $n\ge1$ liczbą całkowitą, $x_1,\ldots,x_n\in I$, $\lambda_i\ge0$, $\sum_i\lambda_i=1$. Wówczas
+\[
+ f\left(\sum_{i=1}^n\lambda_i x_i\right)\le
+ \sum_{i=1}^n\lambda_i f(x_i).
+\]
+Jeśli $f$ jest ściśle wypukła, równość zachodzi dokładnie wtedy, gdy wszystkie punkty z dodatnimi wagami są równe.
+\end{twierdzenie}
+\begin{proof}
+Usuwamy składniki o zerowych wagach; pozostaje co najmniej jeden. Dla jednego składnika teza jest równością. Załóżmy tezę wraz z warunkiem równości dla $n-1$ dodatnich wag. Dla $n\ge2$ dodatnich wag przyjmujemy $s=1-\lambda_n\in(0,1)$ i $z=\sum_{i<n}(\lambda_i/s)x_i$. Punkt $z$ leży w $I$, ponieważ jego wagi są dodatnie, sumują się do jedności i zatem $z$ leży między najmniejszym i największym z tych punktów. Z wypukłości i założenia indukcyjnego:
+\[
+ f(sz+\lambda_n x_n)\le s f(z)+\lambda_n f(x_n)
+ \le\sum_{i=1}^n\lambda_i f(x_i).
+\]
+Argument po lewej to $\sum_i\lambda_i x_i$. Równość skrajnych stron wymusza równość w obu nierównościach łańcucha. Przy ścisłej wypukłości równość w pierwszej nierówności wymaga $z=x_n$, a w drugiej, skoro $s>0$, równości wszystkich $x_i$ dla $i<n$ z indukcji. Wtedy $z=x_1=x_n$. Odwrotnie, gdy wszystkie punkty o dodatnich wagach są równe, obie strony są wartością $f$ w tym punkcie.
+\end{proof}
+Dla funkcji wklęsłej stosujemy twierdzenie do $-f$.
+\begin{przyklad}[Średnia arytmetyczna i geometryczna]
+\label{ma1:ex:jensen-amgm}
+Logarytm jest ściśle wklęsły na $(0,\infty)$, ponieważ $(\log x)''=-1/x^2<0$ (twierdzenie \ref{ma1:thm:exp-log-derivatives} i reguła potęgowa). Dla dodatnich $x_i$ oraz nieujemnych wag $\lambda_i$ sumujących się do jedności nierówność Jensena dla funkcji wklęsłej daje
+\[
+ \log\left(\sum_i\lambda_i x_i\right)\ge\sum_i\lambda_i\log x_i.
+\]
+Stosując ściśle rosnącą funkcję wykładniczą, jej prawo dodawania argumentów oraz definicję potęg, dostajemy $\sum_i\lambda_i x_i\ge\prod_i x_i^{\lambda_i}$. Równość zachodzi dokładnie wtedy, gdy punkty o dodatnich wagach są równe. Dla $\lambda_i=1/n$ jest to klasyczna nierówność średnich.
+\end{przyklad}
+
+\begin{twierdzenie}[Nierówność Younga]
+\label{ma1:thm:young}
+Niech $p,q>1$ oraz $1/p+1/q=1$. Dla wszystkich $a,b\ge0$ zachodzi
+\[
+ ab\le\frac{a^p}{p}+\frac{b^q}{q}.
+\]
+Równość zachodzi dokładnie wtedy, gdy $a^p=b^q$.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $a,b>0$, stosujemy ważoną nierówność między średnią arytmetyczną i geometryczną z przykładu \ref{ma1:ex:jensen-amgm} do liczb $a^p,b^q$ z wagami $1/p,1/q$. Obie wagi są dodatnie i sumują się do jedności, więc
+\[
+ \frac{a^p}{p}+\frac{b^q}{q}
+ \ge (a^p)^{1/p}(b^q)^{1/q}=ab,
+\]
+gdzie ostatnia równość wynika z praw potęgowania \ref{ma1:thm:power-laws}. Warunek równości w ważonej nierówności średnich to $a^p=b^q$. Jeżeli $a=0$, prawa strona wynosi $b^q/q\ge0$, lewa jest zerowa, a równość zachodzi dokładnie dla $b=0$. Przypadek $b=0$ jest analogiczny. W obu przypadkach zerowych warunek równości jest zatem również równoważny $a^p=b^q$.
+\end{proof}
+Dla $p=q=2$ otrzymujemy $2ab\le a^2+b^2$, co można sprawdzić bezpośrednio z $(a-b)^2\ge0$. Dla dowolnych liczb rzeczywistych $u,v$ zastosowanie nierówności do $a=|u|$, $b=|v|$ daje $|uv|\le |u|^p/p+|v|^q/q$.
+
+\begin{stwierdzenie}
+\label{ma1:prop:midpoint-convex}
+Jeśli ciągła funkcja $f:I\to\R$ spełnia $f((x+y)/2)\le(f(x)+f(y))/2$ dla wszystkich $x,y\in I$, to jest wypukła.
+\end{stwierdzenie}
+\begin{proof}
+Ustalmy $x,y$ i $z(t)=(1-t)x+ty$. Indukcyjnie po $m\ge0$ wykazujemy nierówność wypukłości dla $t=k/2^m$, $0\le k\le 2^m$. Dla $m=0$ zachodzą równości na końcach. Dla mianownika $2^{m+1}$ parzyste $k$ redukują się do poprzedniego mianownika. Dla $k=2j+1$, $0\le j<2^m$, oznaczmy $t=k/2^{m+1}$. Punkt $z(t)$ jest środkiem $z(j/2^m)$ i $z((j+1)/2^m)$. Stosujemy założenie o środku, następnie indukcję do obu składników:
+\[
+ f(z(k/2^{m+1}))\le
+ \tfrac12(f(z(j/2^m))+f(z((j+1)/2^m)))
+ \le (1-t)f(x)+tf(y).
+\]
+Ostatnia nierówność wynika z tego, że średnia obu parametrów jest równa $t$. Dla dowolnego $t\in[0,1]$ bierzemy $k_m=\lfloor2^mt\rfloor$, więc $0\le t-k_m/2^m<2^{-m}$. Zatem $z(k_m/2^m)\to z(t)$, a ciągłość pozwala przejść do granicy w nierówności.
+\end{proof}
+
+\section{Punkty przegięcia}
+\begin{definicja}
+\label{ma1:def:inflection-point}
+Niech $f:I\to\R$ będzie ciągła w punkcie wewnętrznym $a$. Przyjmujemy, że $(a,f(a))$ jest punktem przegięcia, gdy dla pewnego $\delta>0$ przedział $(a-\delta,a+\delta)\subset I$, funkcja jest ściśle wypukła na jednym z przedziałów $(a-\delta,a)$, $(a,a+\delta)$ i ściśle wklęsła na drugim. Przyjmujemy konwencję rzeczywistej, ścisłej zmiany wypukłości.
+\end{definicja}
+\begin{twierdzenie}
+\label{ma1:thm:inflection-second-derivative}
+Niech $f:I\to\R$ i $a\in\operatorname{int}I$. Jeżeli $f$ jest ciągła w $a$ i dwukrotnie różniczkowalna na $(a-\delta,a)$ oraz $(a,a+\delta)$ dla pewnego $\delta>0$ takiego, że $(a-\delta,a+\delta)\subset I$, a $f''>0$ po jednej stronie i $f''<0$ po drugiej, to $(a,f(a))$ jest punktem przegięcia. Jeżeli $(a,f(a))$ jest punktem przegięcia i $f$ jest dwukrotnie różniczkowalna w otwartym otoczeniu $a$, to $f''(a)=0$.
+\end{twierdzenie}
+\begin{proof}
+Pierwsza teza wynika z kryterium \ref{ma1:thm:convex-second-derivative}. Dla drugiej załóżmy wypukłość po lewej i wklęsłość po prawej. Z twierdzenia \ref{ma1:thm:convex-first-derivative} pochodna $f'$ jest rosnąca po lewej i malejąca po prawej. Ponieważ istnieje $f''(a)$, funkcja $f'$ jest ciągła w $a$ na mocy twierdzenia \ref{ma1:thm:linear-approximation}. Dla ustalonego $x<a$ w tym otoczeniu mamy $f'(x)\le f'(y)$ dla $x<y<a$; przechodzimy do granicy $y\to a^-$. Dla $x>a$ mamy $f'(x)\le f'(y)$ dla $a<y<x$; przechodzimy do granicy $y\to a^+$. W obu przypadkach $f'(x)\le f'(a)$. Zatem $f'$ ma maksimum lokalne w $a$, a twierdzenie Fermata \ref{ma1:thm:fermat} daje $f''(a)=0$. Przy odwrotnej kolejności stosujemy argument do $-f$.
+\end{proof}
+\begin{przyklad}
+\label{ma1:ex:inflection-counterexamples}
+Funkcja $x^3$ ma punkt przegięcia w zerze, ponieważ druga pochodna $6x$ zmienia tam znak. Funkcja $x^4$ ma $f''(0)=0$, lecz nie ma przegięcia, ponieważ jest ściśle wypukła na całej prostej.
+
+Dla $g(x)=x|x|$ mamy $g(x)=-x^2$ po lewej i $g(x)=x^2$ po prawej. Funkcja jest ciągła w zerze, gdyż $|g(x)|=x^2\to0=g(0)$, a $g'(0)=0$, ponieważ $g(h)/h=|h|\to0$. Poza zerem $g'(x)=2|x|$. Iloraz $(g'(h)-g'(0))/h=2|h|/h$ ma granice jednostronne $-2$ i $2$, więc $g''(0)$ nie istnieje. Jednak $g''=-2$ po lewej i $g''=2$ po prawej; zero jest punktem przegięcia.
+\end{przyklad}
+\begin{center}
+\begin{tikzpicture}[x=1.1cm,y=1.15cm,>=Stealth]
+ \begin{scope}
+ \draw[->] (-1.5,0)--(1.5,0) node[right] {$x$};
+ \draw[->] (0,-1.65)--(0,1.75) node[above] {$y$};
+ \draw[blue!65!black,thick,domain=-1.15:0,samples=60] plot (\x,{\x*\x*\x});
+ \draw[green!45!black,thick,domain=0:1.15,samples=60] plot (\x,{\x*\x*\x});
+ \fill (0,0) circle (1.8pt) node[above left] {$0$};
+ \node at (0,-2.0) {$f(x)=x^3$};
+ \end{scope}
+ \begin{scope}[xshift=5.2cm]
+ \draw[->] (-1.5,0)--(1.5,0) node[right] {$x$};
+ \draw[->] (0,-1.65)--(0,1.75) node[above] {$y$};
+ \draw[green!45!black,thick,domain=-1.1:1.1,samples=100] plot (\x,{\x*\x*\x*\x});
+ \fill (0,0) circle (1.8pt) node[below right] {$0$};
+ \node at (0,-2.0) {$f(x)=x^4$};
+ \end{scope}
+\end{tikzpicture}
+
+\small Rysunek: po lewej zmiana wklęsłości na wypukłość, po prawej brak zmiany mimo zerowej drugiej pochodnej.
+\end{center}

@@ -1,0 +1,826 @@
+\chapter{Algorytmiczne przeszukiwanie grafów: BFS i DFS}
+\label{ch:tg-bfs-dfs}
+
+Rozdziały \ref{ch:tg-podstawy}--\ref{ch:tg-skojarzenia}
+wprowadziły ścieżki, odległość, drzewa rozpinające, cykle i spójność.
+W twierdzeniu \ref{thm:tg-tree-bfs-distance} rozdziału
+\ref{ch:tg-drzewa} udowodniliśmy, że przeszukiwanie wszerz
+wyznacza drzewo rozpinające grafu spójnego i odległości od korzenia.
+Tutaj rozszerzymy ten wynik na grafy niespójne, wyodrębniając
+niezmiennik kolejki oraz dowód indukcyjny względem odległości.
+W części poświęconej orientacjom wykorzystaliśmy już własność
+drzewa DFS. Teraz podamy oba algorytmy, niezmienniki zapewniające
+ich poprawność oraz dokładne oszacowania kosztu.
+
+\section{Model obliczeń i reprezentacja grafu}
+\label{sec:tg-algo-model}
+
+W całym rozdziale $G=(V,E)$ jest \emph{skończonym grafem prostym
+nieskierowanym}, $n=|V|$, $m=|E|$, chyba że jawnie mówimy
+o grafie skierowanym $D=(V,A)$.
+Dla $v\in V$ piszemy $N(v)=\{w\in V:\{v,w\}\in E\}$.
+Zakładamy, że wierzchołki mają identyfikatory, dzięki którym
+odczyt i zapis wartości tablicy indeksowanej przez $V$
+kosztuje $O(1)$.
+Graf przechowujemy jako \emph{listy sąsiedztwa}:
+dla każdego $v$ dostępna jest lista wszystkich elementów $N(v)$.
+Utworzenie takiej reprezentacji z listy krawędzi trwa $O(n+m)$
+i zajmuje $O(n+m)$ pamięci.
+Każda krawędź grafu nieskierowanego pojawia się na dwóch listach.
+Kolejność sąsiadów może wpływać na otrzymane drzewo przeszukiwania,
+ale nie na prawdziwość udowodnionych własności.
+
+\begin{definicja}[Odkrycie, przetworzenie i rodzic]
+\label{def:tg-algo-discovery}
+Wierzchołek jest \emph{nieodkryty}, zanim algorytm po raz pierwszy
+do niego dotrze, oraz \emph{odkryty} od tej chwili.
+Tablica rodziców $p$ przypisuje każdemu wierzchołkowi odkrytemu
+z innego wierzchołka $v$ jego poprzednika $p(v)$.
+Dla korzenia przeszukiwania oraz wierzchołków nieosiągalnych
+przyjmujemy $p(v)=\bot$.
+Krawędzie $\{p(v),v\}$, dla których $p(v)\neq\bot$,
+nazywamy \emph{krawędziami drzewa przeszukiwania}.
+\end{definicja}
+
+W pseudokodzie \texttt{Q.push} dopisuje element na koniec kolejki,
+\texttt{Q.pop} usuwa element z początku,
+a \texttt{for w in N(v)} przegląda sąsiadów w ustalonej kolejności.
+Dla obliczeń złożoności przyjmujemy jednostkowy koszt tych operacji
+oraz dodawania i porównywania liczb całkowitych z zakresu $0,\ldots,2n$ (wartość $\infty$ w BFS reprezentujemy osobnym znacznikiem).
+Nie używamy reprezentacji macierzą sąsiedztwa przy wyprowadzaniu
+granic $O(n+m)$.
+
+\section{Przeszukiwanie wszerz (BFS)}
+\label{sec:tg-algo-bfs}
+
+Niech $s\in V$. Przeszukiwanie wszerz (BFS, od ang.
+\emph{breadth-first search}) odwiedza wierzchołki kolejnymi
+warstwami odległości od $s$.
+Tablica $d$ przechowuje długość drogi odkrytej przez algorytm.
+
+\begin{definicja}[Algorytm BFS]
+\label{def:tg-algo-bfs}
+Początkowo dla każdego $v\in V$ ustawiamy
+$\mathrm{seen}[v]=\mathrm{false}$, $d[v]=\infty$,
+$p[v]=\bot$. Następnie wykonujemy kroki:
+\begin{enumerate}[label=(\arabic*)]
+\item Ustawiamy $\mathrm{seen}[s]=\mathrm{true}$, $d[s]=0$
+      i umieszczamy $s$ w pustej kolejce $Q$.
+\item Dopóki $Q$ nie jest pusta, usuwamy z jej początku
+      wierzchołek $v$.
+\item Dla kolejnych $w\in N(v)$, dla których
+      $\mathrm{seen}[w]=\mathrm{false}$, ustawiamy
+      $\mathrm{seen}[w]=\mathrm{true}$, $p[w]=v$,
+      $d[w]=d[v]+1$, po czym dopisujemy $w$ na koniec $Q$.
+      Po przejrzeniu wszystkich sąsiadów wracamy do kroku (2).
+\item Kończymy, gdy kolejka jest pusta.
+\end{enumerate}
+Ważne: wierzchołek oznaczamy jako odkryty już przy
+\emph{dopisaniu} do kolejki, nie dopiero podczas usuwania.
+\end{definicja}
+
+\begin{lemat}[Niezmiennik kolejki]
+\label{lem:tg-bfs-queue}
+W dowolnej chwili algorytmu BFS, gdy kolejka nie jest pusta,
+wartości $d$ kolejnych jej elementów są niemalejące,
+a różnica wartości dla ostatniego i pierwszego elementu
+jest co najwyżej jeden. Ponadto każdy wierzchołek zostaje
+dopisany do kolejki co najwyżej raz.
+\end{lemat}
+\begin{proof}
+Na początku kolejka składa się wyłącznie z $s$, więc
+pierwsza własność jest spełniona. Załóżmy ją przed
+usunięciem elementu $v$ o wartości $k=d[v]$.
+W pozostałej części kolejki wartości są równe $k$
+lub $k+1$, przy czym wszystkie $k$ poprzedzają $k+1$.
+Każdy nowo odkryty sąsiad $v$ otrzymuje wartość $k+1$
+i trafia na koniec kolejki. Powstała kolejka
+ma nadal wartości niemalejące i najwyżej dwie
+kolejne wartości. Indukcja po liczbie usunięć
+daje tezę, także gdy kolejka przejściowo staje się pusta.
+Ponadto wartości $d$ kolejno usuwanych wierzchołków są
+niemalejące: po usunięciu elementu o wartości $k$
+każdy pozostający lub nowo dopisany element ma wartość
+co najmniej $k$.
+Oznaczanie wierzchołka przy pierwszym dopisaniu sprawia,
+że żadne późniejsze przeglądanie krawędzi nie dopisze go
+powtórnie.
+\end{proof}
+
+\begin{twierdzenie}[Poprawność i optymalność BFS]
+\label{thm:tg-bfs-correct}
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+nieskierowanym, $s\in V$, a $d,p$ wynikiem BFS z $s$.
+Wówczas dla każdego $v\in V$ zachodzą następujące własności:
+\begin{enumerate}[label=(\roman*)]
+\item $v$ zostaje odkryty wtedy i tylko wtedy, gdy istnieje
+      droga z $s$ do $v$;
+\item $d[v]=d_G(s,v)$, z przyjęciem wartości $\infty$
+      dla wierzchołków nieosiągalnych;
+\item gdy $v\neq s$ jest osiągalny, kolejne zastosowania $p$
+      odtwarzają drogę z $s$ do $v$ długości $d_G(s,v)$;
+\item krawędzie rodziców osiągalnych wierzchołków tworzą
+      drzewo rozpinające składowej spójnej zawierającej $s$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Każdy odkryty wierzchołek inny niż $s$ ma rodzica
+odkrytego wcześniej, a jego wartość $d$ jest o jeden
+większa od wartości rodzica. Podążając za rodzicami,
+otrzymujemy zatem po skończonej liczbie kroków $s$.
+Odwrócenie tego ciągu daje drogę długości $d[v]$.
+W szczególności $d_G(s,v)\leq d[v]$.
+
+Pokażemy przez indukcję po $k\geq0$, że każdy wierzchołek
+o prawdziwej odległości $k$ zostaje odkryty z wartością
+$d[v]\leq k$. Dla $k=0$ jest to $s$.
+Niech $d_G(s,v)=k+1$ i niech $u$ będzie przedostatnim
+wierzchołkiem na najkrótszej drodze z $s$ do $v$.
+Z założenia indukcyjnego $u$ zostaje odkryty i
+$d[u]\leq k$. Algorytm usunie w końcu $u$ z kolejki,
+ponieważ każdy odkryty wierzchołek jest usuwany dokładnie
+raz, a kolejka nie może nieskończenie rosnąć.
+Jeśli $v$ nie zostało jeszcze odkryte, przeglądanie
+$\{u,v\}$ ustali $d[v]=d[u]+1\leq k+1$.
+Jeśli $v$ odkryto wcześniej z innym rodzicem,
+niezmiennik kolejki z lematu
+\ref{lem:tg-bfs-queue} zapewnia, że wcześniejsze
+odkrycie nie nastąpiło z wartością większą niż
+$d[u]+1$: przed przetworzeniem $u$ algorytm nie może
+przetworzyć elementu o wartości większej niż $d[u]$,
+a każdy nowy element otrzymuje wartość o jeden większą.
+Zatem zawsze $d[v]\leq k+1$.
+
+Otrzymujemy $d[v]=d_G(s,v)$ dla wszystkich wierzchołków
+osiągalnych. Każdy wierzchołek na drodze z $s$
+zostaje odkryty na mocy powyższej indukcji;
+w drugą stronę konstrukcja rodziców gwarantuje
+istnienie drogi do odkrytego wierzchołka.
+Stąd także (i), (ii) i (iii).
+Każdy osiągalny wierzchołek łączy się z $s$ przez rodziców.
+Gdyby krawędzie rodziców zawierały cykl nieskierowany,
+wierzchołek o maksymalnej wartości $d$ na tym cyklu
+miałby dwóch różnych sąsiadów o wartości $d$ mniejszej o jeden,
+a więc dwóch rodziców, co jest niemożliwe.
+Jest więc drzewem na całej składowej $s$.
+\end{proof}
+
+\begin{uwaga}[BFS dla grafów skierowanych]
+\label{rem:tg-bfs-directed}
+W skończonym grafie skierowanym w kroku (3)
+definicji \ref{def:tg-algo-bfs} przeglądamy jedynie
+łuki wychodzące z aktualnego wierzchołka.
+Niezmiennik kolejki oraz dowód punktów (i)--(iii)
+twierdzenia \ref{thm:tg-bfs-correct} pozostają
+ważne, gdy każdą drogę rozumiemy jako skierowaną:
+w indukcji po odległości łuk od poprzednika
+do kolejnego wierzchołka jest właśnie łukiem
+wychodzącym. Łuki rodziców tworzą ukorzenione
+drzewo skierowane na zbiorze osiągalnym z $s$,
+zorientowane od korzenia. Nie musi to być cała
+składowa spójna grafu nieskierowanego otrzymanego
+przez zapomnienie orientacji.
+Łuki równoległe i pętle nie zmieniają dowodu,
+ponieważ wierzchołek dopisujemy tylko raz.
+Przy listach sąsiedztwa koszt wynosi $O(n+m)$,
+gdyż każdy łuk wychodzący z osiągalnego wierzchołka
+przeglądamy tylko raz.
+\end{uwaga}
+
+\begin{przyklad}[Warstwy BFS i drzewo najkrótszych dróg]
+\label{ex:tg-bfs-layers}
+Niech $V=\{s,a,b,c,d,e,f\}$ oraz
+$E=\{sa,sb,ac,ad,bd,be,cd,df,ef\}$, gdzie
+$xy$ oznacza krawędź $\{x,y\}$.
+Przy kolejności sąsiadów alfabetycznej, z $s$ jako
+pierwszym elementem kolejki, otrzymujemy
+$d[s]=0$, $d[a]=d[b]=1$,
+$d[c]=d[d]=d[e]=2$ i $d[f]=3$.
+Możliwe drzewo BFS ma krawędzie
+$sa,sb,ac,ad,be,df$.
+Krawędzie $bd,cd,ef$ nie należą do tego drzewa;
+nie wpływa to na poprawność obliczonych odległości.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=.9]
+\node[tgBlueVertex] (s) at (0,0) {$s$};
+\node[tgVertex] (a) at (2,1.35) {$a$};
+\node[tgVertex] (b) at (2,-1.35) {$b$};
+\node[tgVertex] (c) at (4,1.55) {$c$};
+\node[tgVertex] (d) at (4,0) {$d$};
+\node[tgVertex] (e) at (4,-1.55) {$e$};
+\node[tgVertex] (f) at (6,0) {$f$};
+\draw[tgTree] (s)--(a) (s)--(b) (a)--(c) (a)--(d)
+ (b)--(e) (d)--(f);
+\draw[tgGhost] (b)--(d) (c)--(d) (e)--(f);
+\node[font=\footnotesize,text=tgNavy] at (0,-.6) {$d=0$};
+\node[font=\footnotesize,text=tgNavy] at (2,-2.2) {$d=1$};
+\node[font=\footnotesize,text=tgNavy] at (4,-2.2) {$d=2$};
+\node[font=\footnotesize,text=tgNavy] at (6,-.6) {$d=3$};
+\end{tikzpicture}
+\caption{Przykładowe warstwy BFS od $s$: krawędzie drzewa
+oznaczono linią ciągłą, pozostałe -- przerywaną.}
+\label{fig:tg-bfs-layers}
+\end{figure}
+
+\begin{stwierdzenie}[Złożoność BFS]
+\label{prop:tg-bfs-complexity}
+Dla grafu prostego zadanego listami sąsiedztwa BFS
+wykonuje $O(n+m)$ operacji i zużywa $O(n)$
+pamięci pomocniczej poza wejściową reprezentacją grafu.
+\end{stwierdzenie}
+\begin{proof}
+Inicjalizacja tablic kosztuje $O(n)$.
+Każdy wierzchołek zostaje dopisany i usunięty
+co najwyżej raz. Lista sąsiedztwa $v$
+jest przeglądana tylko podczas usuwania $v$,
+zatem łączna liczba odczytów wpisów nie przekracza
+$\sum_{v\in V}d_G(v)=2m$, także dla grafu niespójnego.
+Wszystkie pozostałe czynności przy jednym wpisie
+zajmują $O(1)$. Tablice i kolejka przechowują po
+co najwyżej $n$ elementów.
+\end{proof}
+
+\section{Zastosowania BFS: składowe i dwudzielność}
+\label{sec:tg-bfs-applications}
+
+\begin{twierdzenie}[Składowe spójne w czasie liniowym]
+\label{thm:tg-components-algo}
+Dla dowolnego skończonego grafu prostego $G$ można
+wyznaczyć wszystkie składowe spójne w czasie $O(n+m)$,
+uruchamiając BFS kolejno z każdego jeszcze
+nieodkrytego wierzchołka, inicjalizując wszystkie tablice tylko raz.
+Przy każdym nowym korzeniu ustawiamy jego odległość na zero
+i uruchamiamy pętlę kolejki bez ponownej inicjalizacji tablic.
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia \ref{thm:tg-bfs-correct} jedno uruchomienie
+odkrywa dokładnie jedną składową. Kolejny korzeń
+należy do innej składowej, a po zakończeniu
+nie zostaje żaden nieodkryty wierzchołek.
+Listy sąsiedztwa każdej składowej przeglądamy
+dokładnie raz, więc sumaryczny koszt wynosi
+$O(n+\sum_v d_G(v))=O(n+m)$.
+\end{proof}
+
+\begin{twierdzenie}[Test dwudzielności]
+\label{thm:tg-bfs-bipartite}
+Dla skończonego grafu prostego $G$ uruchommy BFS
+w każdej składowej i przypiszmy odkrytemu
+wierzchołkowi kolor $d[v]\bmod2$.
+Graf jest dwudzielny wtedy i tylko wtedy,
+gdy dla każdej krawędzi $\{u,v\}$ kolory
+końców są różne. Sprawdzenie trwa $O(n+m)$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli test nie wykrywa krawędzi o końcach tego
+samego koloru, podział na oba zbiory kolorów
+spełnia definicję grafu dwudzielnego.
+Jeżeli istnieje krawędź $uv$ o równych kolorach,
+drogi w drzewie BFS od korzenia do $u$ i $v$
+mają długości tej samej parzystości.
+Niech $z$ będzie ich ostatnim wspólnym wierzchołkiem.
+Połączenie rozłącznych odcinków dróg od $z$ do
+$u$ oraz od $z$ do $v$ z krawędzią $uv$
+tworzy cykl długości
+$d[u]+d[v]-2d[z]+1$, a więc nieparzystej
+(zauważmy, że $uv$ nie jest krawędzią drzewa).
+Graf zawierający cykl nieparzysty nie jest dwudzielny,
+bo na takim cyklu kolory musiałyby naprzemiennie się
+zmieniać i nie mogłyby wrócić do wyjściowego.
+Koszt badania krawędzi jest liniowy jak dla BFS.
+\end{proof}
+
+\section{Przeszukiwanie w głąb (DFS)}
+\label{sec:tg-algo-dfs}
+
+DFS (\emph{depth-first search}) bada jedną gałąź
+aż do wyczerpania możliwości, po czym wraca
+do najbliższego wierzchołka mającego
+nieodkrytego sąsiada. Wersję rekurencyjną
+można zastąpić wersją ze stosem, która
+przechowuje także bieżącą pozycję
+w liście sąsiedztwa każdego aktywnego wierzchołka.
+
+\begin{definicja}[Algorytm DFS z czasami wejścia i wyjścia]
+\label{def:tg-algo-dfs}
+Wszystkie wierzchołki są początkowo białe,
+$p[v]=\bot$, a licznik czasu $t=0$.
+Wykonujemy procedurę \texttt{DFS(v)}:
+\begin{enumerate}[label=(\arabic*)]
+\item Kolorujemy $v$ na szaro,
+      zwiększamy $t$ o jeden i zapisujemy
+      $\mathrm{tin}[v]=t$.
+\item Dla każdego sąsiada $w\in N(v)$:
+      jeśli $w$ jest biały, ustawiamy $p[w]=v$
+      i wywołujemy \texttt{DFS(w)}.
+\item Po przeglądnięciu całej listy $N(v)$
+      kolorujemy $v$ na czarno, zwiększamy
+      $t$ o jeden i zapisujemy $\mathrm{tout}[v]=t$.
+\end{enumerate}
+W celu przeszukania całego grafu wywołujemy
+\texttt{DFS(v)} z każdego jeszcze białego
+wierzchołka. Szare wierzchołki odpowiadają
+dokładnie aktywnemu stosowi rekurencji.
+\end{definicja}
+
+\begin{twierdzenie}[Las DFS i przedziały czasowe]
+\label{thm:tg-dfs-intervals}
+Dla skończonego grafu prostego nieskierowanego
+wynik DFS spełnia:
+\begin{enumerate}[label=(\roman*)]
+\item krawędzie rodziców tworzą las rozpinający $G$,
+      po jednym drzewie na każdą składową spójną;
+\item dla różnych wierzchołków $u,v$ zachodzi
+      dokładnie jedna z relacji:
+      przedziały $[\mathrm{tin}[u],\mathrm{tout}[u]]$
+      i $[\mathrm{tin}[v],\mathrm{tout}[v]]$ są rozłączne
+      albo jeden jest właściwie zawarty w drugim;
+\item $u$ jest przodkiem $v$ w lesie DFS
+      (dopuszczamy $u=v$) wtedy i tylko wtedy,
+      gdy przedział $v$ zawiera się
+      w przedziale $u$;
+\item każda krawędź niedrzewowa łączy wierzchołek
+      z jego właściwym przodkiem w lesie DFS.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Każdy wierzchołek otrzymuje rodzica tylko w chwili
+pierwszego odkrycia. Rodzic jest odkryty wcześniej
+i pozostaje szary do końca wywołania potomka.
+Czas odkrycia ściśle maleje przy przechodzeniu do rodzica.
+Każdy łańcuch rodziców kończy się więc w korzeniu.
+Gdyby nieskierowane krawędzie rodziców tworzyły cykl,
+wierzchołek o największym czasie wejścia na tym cyklu
+musiałby mieć dwóch rodziców (obaj sąsiedzi na cyklu
+zostaliby odkryci wcześniej), co jest niemożliwe.
+Z dowolnego korzenia DFS docieramy do wszystkich
+osiągalnych wierzchołków: gdyby pierwszy wierzchołek
+nieodkryty na drodze wychodzącej od korzenia
+istniał po zakończeniu procedury, jego poprzednik
+musiałby wcześniej przejrzeć odpowiednią krawędź
+i go odkryć. Stąd (i).
+
+Wykonanie rekurencyjne ma własność zagnieżdżenia:
+wywołanie potomka kończy się, zanim skończy się
+wywołanie jego przodka. Wywołania w różnych
+gałęziach nie nakładają się w czasie.
+Wynikają stąd (ii) i (iii), gdyż każdy czas
+wejścia i wyjścia jest odrębny.
+
+Dla (iv) załóżmy, że końce krawędzi $uv$
+nie są powiązane relacją przodka.
+Z (ii) ich przedziały byłyby rozłączne;
+niech bez straty ogólności $u$ kończy się
+przed odkryciem $v$. Podczas wykonywania
+\texttt{DFS(u)} przeglądamy jednak krawędź
+$uv$. Jeśli $v$ był wówczas biały,
+procedura odkryłaby go jako potomka $u$,
+wbrew założeniu. Jeśli nie był biały,
+jego wywołanie nie mogłoby rozpoczynać się
+dopiero po zakończeniu $u$.
+Sprzeczność dowodzi (iv).
+\end{proof}
+
+\begin{stwierdzenie}[Złożoność DFS]
+\label{prop:tg-dfs-complexity}
+DFS dla list sąsiedztwa działa w czasie $O(n+m)$
+i zajmuje $O(n)$ pamięci pomocniczej,
+licząc stos rekurencji.
+\end{stwierdzenie}
+\begin{proof}
+Każdy wierzchołek rozpoczyna i kończy wywołanie
+dokładnie raz, a każdą listę sąsiedztwa
+przeglądamy najwyżej raz. Łącznie odczytujemy
+$2m$ wpisów i wykonujemy $O(n)$ aktualizacji
+kolorów, rodziców i czasów. Głębokość stosu
+jest co najwyżej $n$, ponieważ w jednym
+momencie aktywne wywołania odpowiadają
+różnym wierzchołkom.
+\end{proof}
+
+\section{Mosty i wykrywanie cykli metodą DFS}
+\label{sec:tg-algo-low}
+
+Dla każdego $v\in V$ oznaczmy przez $T_v$ zbiór
+wierzchołków poddrzewa o korzeniu $v$ w jego drzewie DFS.
+Liczba $\mathrm{low}[v]$ jest minimum czasu wejścia
+wśród wierzchołków osiągalnych z $v$ przez zejście
+w dół drzewa do pewnego $y\in T_v$, po którym można
+przejść co najwyżej jedną krawędzią niedrzewową
+od $y$ do jego właściwego przodka. Dopuszczamy także
+pozostanie w $v$.
+W szczególności $\mathrm{low}[v]\leq\mathrm{tin}[v]$.
+Równoważnie obliczamy to minimum rekurencyjnie
+w czasie kończenia procedury DFS:
+\[
+\begin{aligned}
+\mathrm{low}[v]=\min\bigl(
+  &\{\mathrm{tin}[v]\}\\
+  &{}\cup\{\mathrm{tin}[w]:vw\in E,\
+                  w\text{ jest właściwym przodkiem }v,\ w\ne p[v]\}\\
+  &{}\cup\{\mathrm{low}[w]:p[w]=v\}
+\bigr).
+\end{aligned}
+\]
+Aby uzasadnić wzór, rozróżniamy drogi, które nie
+schodzą do dziecka $v$, oraz drogi, które najpierw
+schodzą do dziecka $w$. W pierwszym przypadku
+pozostajemy w $v$ lub przechodzimy krawędzią niedrzewową
+do przodka; w drugim wszystkie dopuszczalne końce
+są dokładnie tymi uwzględnionymi przez $\mathrm{low}[w]$.
+Dla grafu \emph{prostego} warunek $w\ne p[v]$ wyklucza
+jedyną krawędź do rodzica.
+Dla multigrafu trzeba odróżniać identyfikatory
+krawędzi równoległych; pominięcie wszystkich
+krawędzi do rodzica dałoby niepoprawny wynik.
+
+\begin{twierdzenie}[Kryterium mostu metodą DFS]
+\label{thm:tg-dfs-bridge}
+Niech $G=(V,E)$ będzie skończonym grafem prostym,
+a $p,\mathrm{tin},\mathrm{low}$ danymi z DFS.
+Dla krawędzi drzewa $\{v,w\}$, dla której
+$p[w]=v$, następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $\{v,w\}$ jest mostem;
+\item $\mathrm{low}[w]>\mathrm{tin}[v]$.
+\end{enumerate}
+Każdy most jest krawędzią drzewa DFS.
+Wszystkie mosty można znaleźć w czasie $O(n+m)$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $\{v,w\}$ jest krawędzią niedrzewową,
+łączy wierzchołek z przodkiem na mocy
+\ref{thm:tg-dfs-intervals}(iv). Razem z drogą
+drzewową tworzy cykl, więc nie jest mostem.
+
+Rozważmy teraz krawędź drzewową $\{v,w\}$,
+$p[w]=v$. Jedyną krawędzią drzewa łączącą
+$T_w$ z $V\setminus T_w$ jest $\{v,w\}$.
+Na mocy \ref{thm:tg-dfs-intervals}(iv)
+każda inna krawędź przekraczająca ten przekrój
+jest niedrzewowa i łączy potomka $w$
+z $v$ albo z przodkiem $v$.
+Taka krawędź istnieje dokładnie wtedy, gdy
+$\mathrm{low}[w]\leq\mathrm{tin}[v]$.
+Jeżeli istnieje, po usunięciu $\{v,w\}$
+nadal mamy połączenie poddrzewa $T_w$
+z resztą składowej; krawędź nie jest mostem.
+Jeśli nie istnieje, usunięcie $\{v,w\}$
+odcina całe $T_w$, więc jest mostem.
+Aktualizacje \texttt{low} wymagają stałej
+pracy podczas analizy każdej krawędzi
+i każdego wierzchołka, dlatego zachowują
+złożoność DFS.
+\end{proof}
+
+\begin{twierdzenie}[Punkty artykulacji i liczby \texttt{low}]
+\label{thm:tg-dfs-articulation}
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+nieskierowanym, a $p,\mathrm{tin},\mathrm{low}$
+niech będą danymi z pełnego przeszukiwania DFS.
+Wierzchołek $v$ nazywamy \emph{punktem artykulacji},
+jeśli usunięcie $v$ i wszystkich incydentnych
+z nim krawędzi zwiększa liczbę składowych spójnych
+grafu. Wówczas:
+\begin{enumerate}[label=(\roman*)]
+\item jeśli $v$ jest korzeniem swojego drzewa DFS,
+to jest punktem artykulacji wtedy i tylko wtedy,
+gdy ma co najmniej dwoje dzieci w tym drzewie;
+\item jeśli $v$ nie jest korzeniem, to jest punktem
+artykulacji wtedy i tylko wtedy, gdy istnieje
+jego dziecko $w$ spełniające
+$\mathrm{low}[w]\geq\mathrm{tin}[v]$.
+\end{enumerate}
+Wszystkie punkty artykulacji można wyznaczyć
+w czasie $O(n+m)$ i przy $O(n)$ pamięci
+pomocniczej dla reprezentacji listowej.
+\end{twierdzenie}
+
+\begin{proof}
+Pracujemy w jednej składowej spójnej $G$,
+a przez $T_w$ oznaczamy poddrzewo DFS
+o korzeniu $w$. Z
+Twierdzenia~\ref{thm:tg-dfs-intervals}(iv)
+każda krawędź niedrzewowa łączy
+wierzchołek z jego przodkiem.
+Jeżeli $w$ jest dzieckiem $v$,
+to z $T_w$ może wychodzić krawędź
+niedrzewowa do ścisłego przodka $v$
+dokładnie wtedy, gdy
+$\mathrm{low}[w]<\mathrm{tin}[v]$.
+Krawędź do samego $v$ nie wystarcza
+do zachowania łączności po jego usunięciu.
+
+Niech $v$ nie będzie korzeniem.
+Jeżeli pewne dziecko $w$ spełnia
+$\mathrm{low}[w]\geq\mathrm{tin}[v]$,
+to po usunięciu $v$ poddrzewo $T_w$
+nie ma krawędzi do żadnego wierzchołka spoza $T_w$:
+krawędź do innego poddrzewa dziecięcego przeczyłaby
+własności przodków DFS, a krawędź do ścisłego przodka $v$
+przeczyłaby nierówności dla $\mathrm{low}[w]$.
+Poddrzewo $T_w$ pozostaje spójne, a rodzic $v$ leży
+poza nim. Zatem liczba składowych wzrasta.
+Jeśli natomiast dla każdego dziecka
+$w$ zachodzi
+$\mathrm{low}[w]<\mathrm{tin}[v]$,
+to każde poddrzewo dziecięce
+łączy się bez udziału $v$ ze ścisłym
+przodkiem $v$. Poza poddrzewem $T_v$ każdy wierzchołek składowej
+nadal jest połączony z korzeniem swoją drogą drzewową,
+która nie zawiera $v$. Każde poddrzewo dziecięce
+jest spójne i ma krawędź do tej części składowej.
+Wobec tego cała składowa po usunięciu $v$ pozostaje spójna.
+
+Niech teraz $v$ będzie korzeniem.
+Poddrzewa jego różnych dzieci
+nie mają między sobą krawędzi:
+taka krawędź zostałaby zbadana
+przy wykonywaniu pierwszego z
+dwóch wywołań i spowodowałaby
+odkrycie drugiego poddrzewa
+wewnątrz pierwszego. Po usunięciu
+$v$ w obrębie jego pierwotnej składowej pozostaje
+dokładnie tyle składowych, ile $v$ ma dzieci.
+Dla izolowanego korzenia liczba ta wynosi zero;
+pozostałe składowe grafu nie zmieniają się.
+Usunięcie korzenia zwiększa zatem
+liczbę składowych dokładnie wtedy,
+gdy dzieci jest co najmniej dwoje.
+
+Podczas jednej procedury DFS
+przechowujemy dla korzeni
+liczbę dzieci, a dla pozostałych
+wierzchołków porównujemy
+$\mathrm{low}[w]$ z $\mathrm{tin}[v]$
+przy powrocie z rekurencji.
+Każda krawędź i każdy wierzchołek
+są przetwarzane stałą liczbę razy,
+co daje zapowiedziane oszacowania.
+\end{proof}
+
+\begin{przyklad}[Punkt artykulacji bez mostu na cyklu]
+\label{ex:tg-dfs-articulation}
+Niech $G$ składa się z dwóch trójkątów
+$abc$ i $cde$, których jedynym wspólnym
+wierzchołkiem jest $c$.
+Żadna z sześciu krawędzi nie jest mostem,
+gdyż każda leży na cyklu. Jednak $c$
+jest punktem artykulacji: po jego usunięciu
+pozostają dwie składowe z krawędziami
+$ab$ i $de$. Przykład pokazuje, że
+kryterium punktów artykulacji nie jest
+tym samym co kryterium mostu.
+\end{przyklad}
+
+\begin{przyklad}[Mosty i liczby \texttt{low}]
+\label{ex:tg-dfs-low}
+Rozważmy graf o wierzchołkach $\{s,a,b,c,d\}$
+i krawędziach $sa,ab,bc,ca,bd$.
+Przy kolejności DFS $s,a,b,c,d$ mamy
+$\mathrm{tin}[s]=1$, $\mathrm{tin}[a]=2$,
+$\mathrm{tin}[b]=3$, $\mathrm{tin}[c]=4$
+oraz $\mathrm{tin}[d]=6$.
+Krawędź $ca$ daje
+$\mathrm{low}[c]=2$, a stąd
+$\mathrm{low}[b]=\mathrm{low}[a]=2$.
+Wierzchołek $d$ jest liściem, więc
+$\mathrm{low}[d]=6$.
+W konsekwencji mostami są dokładnie
+$sa$ i $bd$; krawędzie cyklu $abc$ mostami
+nie są.
+\end{przyklad}
+
+\begin{stwierdzenie}[Wykrywanie cyklu]
+\label{prop:tg-dfs-cycle}
+Skończony graf prosty nieskierowany zawiera
+cykl wtedy i tylko wtedy, gdy DFS znajdzie
+krawędź do szarego wierzchołka różnego
+od rodzica bieżącego wierzchołka.
+Test można wykonać w czasie $O(n+m)$.
+\end{stwierdzenie}
+\begin{proof}
+Taka krawędź łączy wierzchołek z jego
+właściwym przodkiem i wraz z drogą
+drzewową tworzy cykl. Jeśli graf ma cykl,
+nie może być lasem; krawędzie drzewa DFS
+tworzą las, zatem istnieje krawędź
+niedrzewowa. Z twierdzenia
+\ref{thm:tg-dfs-intervals}(iv) ma ona
+końce w relacji przodka. Przeglądana
+od potomka do przodka trafia na szary
+wierzchołek różny od rodzica.
+\end{proof}
+
+\begin{stwierdzenie}[Mosty i punkty artykulacji w multigrafach]
+\label{prop:tg-dfs-multigraph-edges}
+Niech $G=(V,E)$ będzie skończonym nieskierowanym
+\emph{multigrafem bez pętli}, którego krawędzie
+mają odrębne identyfikatory, nawet jeśli łączą
+tę samą parę wierzchołków. W algorytmie DFS
+każdą krawędź zapisujemy w listach sąsiedztwa
+jako parę $(w,\mathrm{id})$. W wywołaniu dla
+wierzchołka $v$ pomijamy wyłącznie
+\emph{identyfikator krawędzi drzewowej},
+którą przyszliśmy z rodzica, nie wszystkie
+krawędzie do tego rodzica.
+Niech $e_v$ oznacza identyfikator krawędzi drzewowej
+prowadzącej do $v$ (dla korzenia $e_v=\bot$).
+Wtedy właściwa rekurencja ma postać
+\[
+\begin{aligned}
+\mathrm{low}[v]=\min\bigl(
+ &\{\mathrm{tin}[v]\}\\
+ &{}\cup\{\mathrm{tin}[x]:(x,i)\in N_{\mathrm{id}}(v),\ i\ne e_v,\\
+ &\qquad\qquad x\text{ jest właściwym przodkiem }v\}\\
+ &{}\cup\{\mathrm{low}[w]:p[w]=v\}\bigr),
+\end{aligned}
+\]
+gdzie $N_{\mathrm{id}}(v)$ jest listą par sąsiad--identyfikator.
+Kryterium mostu
+z Twierdzenia~\ref{thm:tg-dfs-bridge}
+oraz kryteria punktu artykulacji
+z Twierdzenia~\ref{thm:tg-dfs-articulation}
+pozostają prawdziwe.
+Cały rachunek można przeprowadzić
+w czasie $O(|V|+|E|)$.
+\end{stwierdzenie}
+
+\begin{proof}
+Identyfikatory zapewniają, że jedynie
+krawędź, po której DFS weszło z
+rodzica do dziecka, nie jest rozpatrywana
+ponownie jako krawędź wsteczna.
+Wszystkie inne krawędzie do
+aktywnego przodka, również równoległe
+do krawędzi drzewa, uczestniczą
+w minimum definiującym $\mathrm{low}$.
+Dowód własności zagnieżdżania
+przedziałów DFS nie wymaga
+prostoty grafu. Także każda krawędź
+niedrzewowa multigrafu łączy
+potomka z przodkiem: dwie
+niepowiązane gałęzie nie mogłyby
+mieć krawędzi między sobą,
+gdyż przeglądanie wcześniejszej
+z nich odkryłoby drugą.
+
+Dla krawędzi drzewa $vw$,
+gdzie $p[w]=v$, warunek
+$\mathrm{low}[w]\leq\mathrm{tin}[v]$
+oznacza istnienie innej
+krawędzi wychodzącej z
+$T_w$ do $v$ lub wyżej,
+a więc po usunięciu
+\emph{samej krawędzi drzewowej}
+połączenie nie zostaje przerwane.
+Jest to dokładnie argument
+kryterium mostu, także w
+obecności krawędzi równoległych.
+Przy usunięciu całego wierzchołka
+$v$ połączenie przez $v$
+już nie wystarcza: potrzeba
+krawędzi do ścisłego przodka,
+co daje nierówność
+$\mathrm{low}[w]<\mathrm{tin}[v]$
+dla każdego dziecka wierzchołka
+niebędącego korzeniem ani punktem artykulacji.
+Jeżeli nierówność nie zachodzi, poddrzewo dziecka
+zostaje odcięte od rodzica $v$ po usunięciu $v$.
+W przeciwnym przypadku wszystkie poddrzewa dziecięce
+pozostają połączone z częścią drzewa zawierającą korzeń.
+Warunek na liczbę dzieci
+korzenia nie ulega zmianie.
+Każdy wpis listy sąsiedztwa
+jest analizowany stałą liczbę
+razy, więc koszt pozostaje liniowy.
+\end{proof}
+
+\begin{przyklad}[Dwie krawędzie równoległe]
+\label{ex:tg-dfs-parallel-edges}
+Niech $V=\{u,v\}$, a $E=\{e_1,e_2\}$,
+gdzie obie krawędzie łączą $u$ z $v$.
+W DFS z korzeniem $u$ przyjmijmy
+$e_1$ jako krawędź drzewa i
+$\mathrm{tin}[u]=1$, $\mathrm{tin}[v]=2$.
+Druga krawędź $e_2$ jest niedrzewowa
+i daje
+$\mathrm{low}[v]=\mathrm{tin}[u]=1$.
+Zatem $e_1$ nie jest mostem.
+Oczywiście $e_2$ również nie jest
+mostem, bo po usunięciu którejkolwiek
+krawędzi końce nadal są połączone.
+Błędne pominięcie \emph{obu}
+krawędzi do rodzica
+dałoby $\mathrm{low}[v]=2$
+i fałszywy wynik.
+\end{przyklad}
+
+\section{DFS w grafach skierowanych: porządek topologiczny}
+\label{sec:tg-algo-dag}
+
+Niech $D=(V,A)$ będzie skończonym grafem
+skierowanym w znaczeniu rozdziału
+\ref{ch:tg-euler}. W procedurze DFS przeglądamy
+wyłącznie łuki wychodzące.
+\emph{Skierowanym cyklem} nazywamy
+ciąg różnych wierzchołków
+$v_0,\ldots,v_{k-1}$ dla $k\geq2$
+z łukami $v_i\to v_{i+1}$ oraz
+$v_{k-1}\to v_0$; pętla, jeśli jest
+dozwolona, również wyklucza acykliczność.
+\emph{Porządek topologiczny} to liniowe
+uszeregowanie wierzchołków, w którym
+każdy łuk $u\to v$ biegnie od
+wcześniejszego do późniejszego wierzchołka.
+
+\begin{twierdzenie}[Rozpoznawanie DAG i sortowanie topologiczne]
+\label{thm:tg-dfs-dag}
+Niech $D=(V,A)$ będzie skończonym grafem
+skierowanym bez pętli.
+Wówczas $D$ jest acykliczny wtedy i tylko
+wtedy, gdy podczas DFS nie wystąpi łuk
+od bieżącego wierzchołka do szarego
+wierzchołka. Jeśli $D$ jest acykliczny,
+kolejność malejących wartości
+$\mathrm{tout}$ jest porządkiem
+topologicznym. Obie operacje mają
+złożoność $O(|V|+|A|)$ dla list
+sąsiedztwa wychodzącego.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli podczas przeglądania łuku $u\to v$
+wierzchołek $v$ jest szary, należy on
+do aktywnego stosu rekurencji i jest
+przodkiem $u$. Łuk $u\to v$ wraz
+z drzewową drogą skierowaną od $v$ do $u$
+tworzy skierowany cykl.
+
+Załóżmy odwrotnie, że DFS nie znalazło
+żadnego łuku do szarego wierzchołka.
+Rozważmy dowolny łuk $u\to v$.
+W chwili jego przeglądania $v$ jest biały
+albo czarny. Jeśli jest biały, wywołanie
+\texttt{DFS(v)} skończy się przed zakończeniem
+\texttt{DFS(u)}. Jeśli jest czarny, jego
+wywołanie zakończyło się już wcześniej.
+W obu przypadkach
+$\mathrm{tout}[u]>\mathrm{tout}[v]$.
+Istnienie skierowanego cyklu
+$v_0\to v_1\to\cdots\to v_{k-1}\to v_0$
+wymagałoby zatem nierówności
+$\mathrm{tout}[v_0]>\mathrm{tout}[v_1]>
+\cdots>\mathrm{tout}[v_{k-1}]>
+\mathrm{tout}[v_0]$, co jest niemożliwe.
+Otrzymujemy równoważność.
+
+Dla acyklicznego $D$ stwierdzona
+nierówność obowiązuje na każdym łuku,
+zatem uporządkowanie wierzchołków
+według malejących czasów wyjścia
+jest porządkiem topologicznym.
+Aby uzyskać go w czasie liniowym, dopisujemy każdy wierzchołek
+do listy w chwili zakończenia jego wywołania DFS, a po zakończeniu
+całego przeszukiwania odwracamy listę w czasie $O(|V|)$.
+Nie stosujemy sortowania porównaniowego.
+Każdy wierzchołek i każdy łuk
+analizujemy stałą liczbę razy,
+więc koszt wynosi $O(|V|+|A|)$.
+\end{proof}
+
+\begin{przyklad}[Zależności pomiędzy czynnościami]
+Niech wierzchołki $A,B,C,D$ oznaczają
+czynności i niech łuki będą
+$A\to C$, $B\to C$, $C\to D$.
+Porządki $A,B,C,D$ oraz $B,A,C,D$
+są topologiczne; $C,A,B,D$ nie jest,
+ponieważ narusza zależność $A\to C$.
+Wprowadzenie łuku $D\to A$
+tworzy cykl $A\to C\to D\to A$,
+więc porządek topologiczny przestaje istnieć.
+\end{przyklad}
+
+\section{Podsumowanie i dalsze algorytmy}
+\label{sec:tg-algo-summary}
+
+Dla reprezentacji listowej BFS i DFS mają jednakową
+złożoność $O(n+m)$, ale dostarczają różnych danych:
+BFS wyznacza najkrótsze drogi w grafie nieważonym
+i warstwy metryczne; DFS dostarcza przedziały
+czasowe, relacje przodków, mosty i porządki
+topologiczne. W obu przypadkach złożoność
+dotyczy \emph{całego} grafu także wtedy, gdy
+jest niespójny, po uruchomieniu procedury
+z kolejnych nieodkrytych korzeni.
+
+W następnych uzupełnieniach algorytmicznych
+rozpatrzymy najkrótsze drogi z wagami,
+minimalne drzewa rozpinające oraz
+maksymalny przepływ i minimalny przekrój.
+Należy odróżniać wymienione zadania:
+BFS minimalizuje liczbę krawędzi drogi,
+a nie sumę dowolnych wag; zwykły DFS
+nie wyznacza drzew o najmniejszym koszcie.
