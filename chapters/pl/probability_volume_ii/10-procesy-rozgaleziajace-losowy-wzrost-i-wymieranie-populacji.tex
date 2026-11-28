@@ -767,6 +767,163 @@ mas wynosi $q<1$, a brakująca masa $1-q$
 odpowiada zdarzeniu $H=\infty$.
 \end{zadanie}
 
+\section{Markowowskie procesy rozgałęziające w czasie ciągłym}
+
+\begin{definicja}[Rozgałęzianie z wykładniczym czasem życia]
+Każdy osobnik żyje przez czas o rozkładzie
+$\mathrm{Exp}(c)$, $c>0$, po czym zastępuje go
+losowa liczba dzieci o prawie $\Prob(\xi=k)=p_k$.
+Czas życia i liczba dzieci są niezależne, a pary
+przypisane różnym węzłom drzewa są niezależne
+i jednakowo rozłożone.
+Liczebność żyjących osobników w chwili $t$
+oznaczamy przez $Z_t$; w chwili śmierci rodzica
+jego dzieci są już zaliczane do populacji.
+\end{definicja}
+
+\begin{twierdzenie}[Konstrukcja, własność rozgałęziania i średnia]
+\label{thm:ct-branching-general}
+Jeśli $m=\E\xi<\infty$ i $Z_0=z\in\N_0$,
+proces nie eksploduje w skończonym czasie.
+Jest jednorodnym łańcuchem Markowa z intensywnościami
+\[
+q_{n,n-1+k}=cnp_k\quad(k\ne1,\ n\ge1),
+\qquad q_{nn}=-cn(1-p_1),
+\]
+a zero jest stanem pochłaniającym. Przy $p_1=1$
+wszystkie intensywności przejść są zerowe.
+Proces rozpoczęty od $z$ osobników ma prawo sumy
+$z$ niezależnych procesów rozpoczętych od jednego
+osobnika. Ponadto
+\[
+\E Z_t=z e^{c(m-1)t},\qquad
+\bigl(e^{-c(m-1)t}Z_t\bigr)_{t\ge0}
+\quad\text{jest martyngałem.}
+\]
+\end{twierdzenie}
+\begin{proof}
+Na przestrzeni produktowej przypisujemy niezależne
+pary czasu życia i liczby dzieci wszystkim możliwym
+węzłom uporządkowanego drzewa, jak w dowodzie
+twierdzenia~\ref{thm:gw-kesten-stigum}.
+Dla jednego korzenia średnia liczba węzłów
+w pokoleniu $j$ wynosi $m^j$. Warunkowo względem
+samego drzewa czas urodzenia każdego węzła
+pokolenia $j$ jest sumą $j$ niezależnych czasów
+wykładniczych o intensywności $c$.
+Dla $j\ge1$ prawdopodobieństwo, że suma nie
+przekracza $t$, jest nie większe niż
+$(ct)^j/j!$: całkujemy wspólną gęstość
+$c^j e^{-c(s_1+\cdots+s_j)}$ po sympleksie
+$s_i\ge0$, $\sum_i s_i\le t$, którego objętość
+$t^j/j!$ wynika przez iterowane całkowanie.
+Dla $j=0$ prawdopodobieństwo wynosi $1$.
+Zatem oczekiwana liczba wszystkich urodzonych
+do chwili $t$ (łącznie z korzeniami) jest
+ograniczona przez $z\sum_{j\ge0}(mct)^j/j!$.
+Jest skończona, więc liczba urodzeń jest skończona
+prawie na pewno; liczba śmierci nie przekracza
+liczby urodzonych. Przecinając zbiory pełnej
+miary dla dodatnich całkowitych $t$, otrzymujemy
+brak eksplozji jednocześnie na całej półprostej.
+
+W chwili, gdy żyje $n$ osobników, ich resztkowe
+czasy życia są niezależnymi zmiennymi
+$\mathrm{Exp}(c)$, dzięki własności braku pamięci.
+Można to uzasadnić warunkowaniem kolejno po
+czasach i rodzajach wszystkich dotychczasowych
+zdarzeń: przy minimum niezależnych zegarów
+pozostałe resztkowe czasy są znów niezależne
+i wykładnicze. To samo warunkowanie stosujemy
+po dodatkowym okresie bez zdarzenia do ustalonej
+chwili $t$. Liczby dzieci przy przyszłych
+zdarzeniach mają niezmienione prawo.
+Minimum zegarów ma intensywność $cn$, a typ
+zdarzenia ma rozkład $(p_k)$. Zdarzenia z $k=1$
+nie zmieniają liczebności; usunięcie takich
+zdarzeń daje czas do zmiany stanu o intensywności
+$cn(1-p_1)$ (sumowanie geometrycznej liczby
+niezależnych odstępów wykładniczych albo
+przerzedzanie procesu Poissona).
+Stąd podane intensywności i własność Markowa.
+Niezależna konstrukcja drzew poszczególnych
+korzeni daje własność rozgałęziania; po chwili
+$t$ resztkowe czasy życia i przyszłe drzewa
+żyjących osobników mają warunkowo takie samo
+niezależne prawo jak drzewa nowych korzeni.
+
+Węzeł pokolenia $j$ jest żywy w chwili $t$
+wtedy, gdy suma pierwszych $j$ czasów życia
+wzdłuż jego linii nie przekracza $t$, lecz suma
+pierwszych $j+1$ jest większa od $t$.
+To zdarzenie ma prawdopodobieństwo
+$e^{-ct}(ct)^j/j!$ na mocy konstrukcji procesu
+Poissona z odstępów wykładniczych
+(rozdział~\ref{ch:poisson-process}).
+Warunkując względem drzewa i sumując po węzłach
+oraz pokoleniach przez Tonellego, dostajemy
+\[
+\E Z_t=z\sum_{j\ge0}m^j e^{-ct}\frac{(ct)^j}{j!}
+=z e^{c(m-1)t}.
+\]
+Względem naturalnej filtracji $\calF_t$
+własność rozgałęziania daje
+$\E[Z_{t+u}\mid\calF_t]=Z_t e^{c(m-1)u}$.
+Skończoność średniej i ta równość dowodzą
+własności martyngałowej.
+\end{proof}
+
+\begin{twierdzenie}[Równanie funkcji tworzącej]
+\label{thm:ct-branching-pgf}
+Niech $f(s)=\E s^\xi$, a
+$G_t(s)=\E[s^{Z_t}\mid Z_0=1]$ dla $s\in[0,1]$.
+Przy założeniach twierdzenia~\ref{thm:ct-branching-general}
+zachodzi
+\[
+G_{t+u}(s)=G_t(G_u(s)),\qquad
+\frac{\partial G_t(s)}{\partial t}
+=c\bigl(f(G_t(s))-G_t(s)\bigr),\quad G_0(s)=s.
+\]
+Prawdopodobieństwo ostatecznego wymarcia jest
+najmniejszym punktem stałym $f$ w $[0,1]$.
+\end{twierdzenie}
+\begin{proof}
+Pierwsza równość wynika z warunkowej własności
+rozgałęziania. Warunkując względem czasu życia
+pierwszego osobnika oraz jego potomstwa, otrzymujemy
+\[
+G_t(s)=s e^{-ct}
++\int_0^t c e^{-cv} f(G_{t-v}(s))\,\mathrm d\lambda_1(v).
+\]
+Po podstawieniu $w=t-v$ i pomnożeniu przez $e^{ct}$
+dostajemy
+$e^{ct}G_t(s)=s+\int_0^t c e^{cw}f(G_w(s))
+\,\mathrm d\lambda_1(w)$.
+Mierzalność $w\mapsto G_w(s)$ wynika z mierzalności
+procesu o prawostronnie ciągłych trajektoriach
+i z twierdzenia Fubiniego. Prawa strona jest
+lokalnie absolutnie ciągła, więc $G_t(s)$
+jest ciągła w $t$. Ciągłość $f$ daje teraz
+ciągłość funkcji podcałkowej i różniczkowanie
+prowadzi do podanego równania.
+Jednoznaczność rozwiązania o wartościach w $[0,1]$
+wynika z nierówności
+$|f(x)-f(y)|\le m|x-y|$ dla $x,y\in[0,1]$,
+uzyskanej z $|x^k-y^k|\le k|x-y|$,
+oraz nierówności Gronwalla.
+
+Drzewo samych relacji rodzic--dziecko jest
+drzewem Galtona--Watsona. Jeżeli jest skończone,
+wszystkie czasy życia są skończone i populacja
+wymiera w skończonej chwili. Jeśli populacja
+wymiera w skończonej chwili, to z braku eksplozji
+wynika, że do tej chwili urodziło się skończenie
+wiele osobników i żaden późniejszy węzeł nie
+może istnieć. Wymarcie jest więc równoważne
+skończoności drzewa, a wcześniejsze kryterium
+dla procesu Galtona--Watsona daje tezę.
+\end{proof}
+
 \section{Model rozgałęziania w czasie ciągłym: proces Yule'a}
 \begin{definicja}[Proces czystych urodzin Yule'a]
 Niech $\lambda>0$. Procesem Yule'a rozpoczynającym się
@@ -1100,7 +1257,7 @@ q=\frac{\delta}{\lambda+\delta}
 +\frac{\lambda}{\lambda+\delta}q^2.
 \]
 Rozwiązaniami są $1$ i $\delta/\lambda$.
-Uzasadnijmy wybór mniejszego pierwiastka. Każdy żyjący
+Uzasadnijmy wybór najmniejszego pierwiastka należącego do $[0,1]$. Każdy żyjący
 osobnik ma niezależny czas do pierwszego zdarzenia
 o rozkładzie $\mathrm{Exp}(\lambda+\delta)$; wtedy
 z prawdopodobieństwem $\delta/(\lambda+\delta)$
@@ -1124,9 +1281,178 @@ to brak eksplozji oznacza skończoną liczbę zdarzeń do tej
 chwili, a zatem skończone drzewo genealogiczne.
 Wymarcie procesu jest więc dokładnie wymarciem tego drzewa.
 Stosując kryterium z wcześniejszej części rozdziału,
-wybieramy najmniejszy pierwiastek: $q=1$ przy
+wybieramy najmniejszy pierwiastek w $[0,1]$: $q=1$ przy
 $\lambda\le\delta$ i $q=\delta/\lambda$ przy
 $\lambda>\delta$.
+\end{proof}
+
+\begin{twierdzenie}[Jawny rozkład liniowego procesu urodzin i śmierci]
+\label{thm:bd-explicit-law}
+Niech $Z_0=1$, $\lambda,\delta>0$ i
+$r=\lambda-\delta$.
+Dla $t\ge0$ wprowadzamy
+\[
+a_t=\begin{cases}
+\dfrac{\delta(1-e^{-rt})}{\lambda-\delta e^{-rt}},&r\ne0,\\[6pt]
+\dfrac{\lambda t}{1+\lambda t},&r=0,
+\end{cases}
+\qquad
+b_t=\begin{cases}
+\dfrac{\lambda(1-e^{-rt})}{\lambda-\delta e^{-rt}},&r\ne0,\\[6pt]
+\dfrac{\lambda t}{1+\lambda t},&r=0.
+\end{cases}
+\]
+Wtedy
+\[
+\Prob(Z_t=0)=a_t,\qquad
+\Prob(Z_t=k)=(1-a_t)(1-b_t)b_t^{k-1},\quad k\ge1,
+\]
+z konwencją $b_t^0=1$ również dla $t=0$.
+Przy warunku $Z_t>0$ rozkład jest geometryczny
+na $\{1,2,\ldots\}$ z parametrem $1-b_t$.
+\end{twierdzenie}
+\begin{proof}
+Stosujemy twierdzenie~\ref{thm:ct-branching-pgf}
+dla $c=\lambda+\delta$ i
+$f(s)=(\delta+\lambda s^2)/(\lambda+\delta)$.
+Otrzymujemy
+\[
+\partial_t G_t=\lambda G_t^2-(\lambda+\delta)G_t+\delta
+=(G_t-1)(\lambda G_t-\delta).
+\]
+Dla $v_t=1-G_t(s)$ mamy
+$v_t'=rv_t-\lambda v_t^2$, $v_0=1-s$.
+Przy $s<1$ mamy $v_t>0$, ponieważ
+$\Prob(Z_t>0)\ge e^{-(\lambda+\delta)t}>0$.
+Podstawienie $y_t=1/v_t$ daje
+$y_t'=-ry_t+\lambda$, skąd
+\[
+1-G_t(s)=
+\begin{cases}
+\dfrac{r e^{rt}(1-s)}{r+\lambda(e^{rt}-1)(1-s)},&r\ne0,\\[6pt]
+\dfrac{1-s}{1+\lambda t(1-s)},&r=0.
+\end{cases}
+\]
+Wzory są ważne też dla $s=1$ przez ciągłość.
+Po uporządkowaniu otrzymujemy
+\[
+G_t(s)=a_t+(1-a_t)\frac{(1-b_t)s}{1-b_ts}.
+\]
+Istotnie $1-G_t(s)=(1-a_t)(1-s)/(1-b_ts)$.
+Bezpośrednio ze wzorów, dla każdego skończonego $t$,
+$0\le a_t,b_t<1$: przy $r\ne0$ mianownik
+ma znak $r$, a $1-a_t=r/(\lambda-\delta e^{-rt})$
+oraz $1-b_t=r e^{-rt}/(\lambda-\delta e^{-rt})$
+są dodatnie. Przy $r=0$ jest to natychmiastowe.
+Rozwinięcie szeregu geometrycznego daje masy
+rozkładu, ponieważ współczynniki funkcji tworzącej
+jednoznacznie wyznaczają prawo na $\N_0$.
+\end{proof}
+
+\begin{wniosek}[Momenty i martyngał populacyjny]
+Dla liniowego procesu urodzin i śmierci z $Z_0=1$
+\[
+\E Z_t=e^{rt},\qquad
+\Var(Z_t)=
+\begin{cases}
+\dfrac{\lambda+\delta}{r}e^{rt}(e^{rt}-1),&r\ne0,\\[6pt]
+2\lambda t,&r=0 .
+\end{cases}
+\]
+Proces $W_t=e^{-rt}Z_t$ jest nieujemnym martyngałem.
+Jeżeli $r>0$, to zbiega prawie na pewno i w $L^2$
+do $W$ o prawie
+\[
+\Law(W)=\frac{\delta}{\lambda}\delta_0+
+\frac r\lambda\,\mathrm{Exp}(r/\lambda),
+\]
+gdzie $\delta_0$ oznacza miarę Diraca, a parametr
+rozkładu wykładniczego jest jego intensywnością.
+\end{wniosek}
+\begin{proof}
+Własność martyngałowa i średnia wynikają
+z twierdzenia~\ref{thm:ct-branching-general}.
+Z jawnego rozkładu dostajemy
+$\E Z_t^2=(1-a_t)(1+b_t)/(1-b_t)^2$,
+gdyż dla rozkładu geometrycznego o parametrze
+$p$ drugi moment wynosi $(2-p)/p^2$
+(z dwukrotnego różniczkowania szeregu
+geometrycznego).
+Stąd $\Var(Z_t)=\E Z_t^2-e^{2rt}$.
+Podstawiając wzory na $a_t,b_t$, dla $r\ne0$
+otrzymujemy
+\[
+\E Z_t^2=e^{2rt}\frac{1+b_t}{1-a_t},
+\qquad
+\frac{1+b_t}{1-a_t}-1
+=\frac{a_t+b_t}{1-a_t}
+=\frac{\lambda+\delta}{r}(1-e^{-rt}).
+\]
+Dla $r=0$ mamy $\E Z_t^2=1+2\lambda t$.
+To daje oba wzory.
+
+Dla $r>0$ mamy
+$\Var(W_t)=(\lambda+\delta)(1-e^{-rt})/r$,
+więc martyngał o prawostronnie ciągłych trajektoriach
+jest ograniczony w $L^2$.
+Z twierdzenia o zbieżności martyngałów w czasie
+ciągłym (rozdział~\ref{ch:stop-cont}) dostajemy
+granicę p.n. i w $L^2$. Dla $\theta\ge0$
+$\E e^{-\theta W_t}=G_t(e^{-\theta e^{-rt}})$.
+Ponieważ $e^{rt}(1-e^{-\theta e^{-rt}})\to\theta$,
+jawny wzór na $1-G_t$ daje
+\[
+\E e^{-\theta W}
+=1-\frac{r\theta}{r+\lambda\theta}
+=\frac{\delta}{\lambda}
++\frac r\lambda\frac{r/\lambda}{r/\lambda+\theta}.
+\]
+Przejście do granicy uzasadnia zbieżność
+zmajoryzowana; jednoznaczność transformaty
+Laplace'a, jak w dowodzie
+twierdzenia~\ref{thm:gw-yaglom}, identyfikuje prawo.
+Na zdarzeniu wymarcia $W=0$. Ponieważ masa w zerze
+wynosi dokładnie prawdopodobieństwo wymarcia,
+na zdarzeniu przetrwania $W>0$ p.n.
+\end{proof}
+
+\begin{wniosek}[Czas wymarcia i przypadek krytyczny]
+Niech $\tau=\inf\{t\ge0:Z_t=0\}$, $Z_0=1$.
+Dla każdego $t\ge0$ mamy
+$\Prob(\tau\le t)=a_t$.
+W przypadku krytycznym $\lambda=\delta$:
+\[
+\Prob(\tau>t)=\frac1{1+\lambda t},
+\quad \E\tau=\infty,\qquad
+\Law(Z_t/t\mid Z_t>0)\longrightarrow
+\mathrm{Exp}(1/\lambda).
+\]
+Dla $0<\lambda<\delta$ czas wymarcia jest całkowalny
+i $\E\tau=\lambda^{-1}\log(\delta/(\delta-\lambda))$.
+\end{wniosek}
+\begin{proof}
+Stan zero jest pochłaniający, więc zdarzenie
+$\{\tau\le t\}$ jest równe $\{Z_t=0\}$.
+W przypadku krytycznym wzór na ogon wynika
+z postaci $a_t$, a jego całka po $[0,\infty)$
+jest rozbieżna. Dla $x\ge0$ warunkowy ogon
+liczebności z twierdzenia~\ref{thm:bd-explicit-law}
+wynosi
+\[
+\Prob(Z_t/t>x\mid Z_t>0)
+=\left(\frac{\lambda t}{1+\lambda t}\right)^{\lfloor tx\rfloor}
+\longrightarrow e^{-x/\lambda}.
+\]
+Dla $\lambda<\delta$ połóżmy $d=\delta-\lambda>0$.
+Wówczas $1-a_t=d/(\delta e^{dt}-\lambda)$.
+Ze wzoru ogonowego i podstawienia $v=e^{-dt}$
+dostajemy
+\[
+\E\tau=\int_0^\infty\frac{d}{\delta e^{dt}-\lambda}
+\,\mathrm d\lambda_1(t)
+=\int_0^1\frac{1}{\delta-\lambda v}\,\mathrm d\lambda_1(v)
+=\frac1\lambda\log\frac{\delta}{\delta-\lambda}.
+\]
 \end{proof}
 
 \begin{zadanie}[Próg przeżycia populacji]
