@@ -126,7 +126,7 @@ każdego $n$, choć nie zawsze ostra.
 
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[x=11cm,y=4.2cm,>=Latex]
+\begin{tikzpicture}[x=22cm,y=5cm,>=Latex]
 \draw[->] (0,0)--(.44,0) node[right] {$\varepsilon$};
 \draw[->] (0,0)--(0,1.08) node[above] {ograniczenie};
 \foreach \x/\lab in {.1/{0{,}1},.2/{0{,}2},.3/{0{,}3},.4/{0{,}4}}
@@ -134,11 +134,11 @@ każdego $n$, choć nie zawsze ostra.
 \foreach \y/\lab in {.25/{0{,}25},.5/{0{,}5},.75/{0{,}75},1/{1}}
   {\draw[gray!20] (0,\y)--(.4,\y);
    \draw (0,\y)--++(-.005,0) node[left] {$\lab$};}
-\draw[blue!75!black,very thick,domain=0:.4,samples=121,smooth]
+\draw[blue!75!black,very thick,domain=0:.4,samples=121]
   plot (\x,{min(1,2*exp(-40*\x*\x))});
-\draw[teal!75!black,very thick,dashed,domain=0:.4,samples=121,smooth]
+\draw[teal!75!black,very thick,dashed,domain=0:.4,samples=121]
   plot (\x,{min(1,2*exp(-100*\x*\x))});
-\draw[orange!85!black,very thick,dashdotted,domain=0:.4,samples=121,smooth]
+\draw[orange!85!black,very thick,dashdotted,domain=0:.4,samples=121]
   plot (\x,{min(1,2*exp(-200*\x*\x))});
 \draw[blue!75!black,very thick] (.29,.91)--(.325,.91)
   node[right,black] {$n=20$};
@@ -152,7 +152,7 @@ $\min(1,2e^{-2n\varepsilon^2})$ dla średniej prób
 Bernoulliego. Krzywe są ograniczeniami górnymi
 prawdopodobieństwa odchylenia, a nie dokładnymi
 prawdopodobieństwami. Przy ustalonym $\varepsilon>0$
-ograniczenie maleje ze wzrostem $n$.}
+ograniczenie jest nierosnące względem $n$.}
 \label{fig:rp1-11-hoeffding}
 \end{figure}
 
@@ -178,9 +178,13 @@ do dwustronnego oszacowania Hoeffdinga. Dla $n\geq2$
 =2n^{-(1+\eta)}.
 \]
 Szereg tych prawdopodobieństw jest zbieżny.
-Pierwszy lemat Borela--Cantellego stwierdza, że
-odchylenia przekraczające próg $\varepsilon_n$
-zdarzają się tylko skończenie wiele razy p.n.
+Pierwszy lemat Borela--Cantellego
+(rozdział~\ref{ch:probability}) stwierdza, że
+zdarzenia $\{|\overline X_n-m|\geq\varepsilon_n\}$
+zachodzą tylko skończenie wiele razy p.n.
+Na zbiorze pełnej miary od pewnego (zależnego
+od wyniku doświadczenia) indeksu mamy więc
+$|\overline X_n-m|<\varepsilon_n$.
 \end{proof}
 
 \begin{uwaga}
@@ -392,7 +396,7 @@ a_n\bigl(g(T_n)-g(\theta)\bigr)
 \begin{proof}
 Najpierw zauważmy, że rodzina rozkładów
 $a_n(T_n-\theta)$ jest ciasna, bo zbiega według
-rozkładu. Dla dowolnych $\varepsilon,\delta>0$ z ciasności
+rozkładu (rozdział~\ref{ch:convergence}). Dla dowolnych $\varepsilon,\delta>0$ z ciasności
 wybieramy $M>0$ tak, by
 $\sup_n\Prob(|a_n(T_n-\theta)|>M)<\delta$.
 Dla dostatecznie dużych $n$ zachodzi
@@ -458,10 +462,16 @@ Slutsky kończy dowód.
 Niech $X_1,X_2,\ldots$ będą niezależne, jednakowo
 rozłożone, $\E X_1=m>0$ i
 $0<\Var(X_1)=\sigma^2<\infty$.
-Przez MPWL prawdopodobieństwo zdarzenia
-$\{\overline X_n>0\}$ dąży do jedności;
+Z prawa wielkich liczb $\overline X_n\to m$
+według prawdopodobieństwa. Ponieważ
+$\{\overline X_n\leq0\}\subseteq
+\{|\overline X_n-m|\geq m\}$ i $m>0$,
+prawdopodobieństwo zdarzenia $\{\overline X_n>0\}$
+dąży do jedności;
 na jego dopełnieniu możemy umownie ustawić
 $T_n=\log m$, a na nim $T_n=\log\overline X_n$.
+Z klasycznego CTG mamy
+$\sqrt n(\overline X_n-m)\xrightarrow d\Normal(0,\sigma^2)$.
 Z metody delty dla $g(x)=\log x$ w otoczeniu $m$
 (z borelowskim rozszerzeniem
 $g(x)=\log m$ dla $x\leq0$)
@@ -522,10 +532,14 @@ $\sqrt n(\overline X_n-m)\xrightarrow d \Normal(0,\sigma^2)$.
 Twierdzenie Slutsky'ego daje wskazaną granicę dla
 iloczynu $\sqrt n(\overline X_n-m)R_n$. Każde inne
 mierzalne, rzeczywiste określenie ilorazu na
-$\{V_n=0\}$ różni się od tego iloczynu ze
-zdarzeniem o prawdopodobieństwie nie większym
-niż $\Prob(V_n=0)\to0$, a zatem nie zmienia
-granicy według rozkładu.
+$\{V_n=0\}$ daje zmienną $W_n$, której różnica
+z iloczynem $A_n=\sqrt n(\overline X_n-m)R_n$
+spełnia dla każdego $\varepsilon>0$
+\[
+\Prob(|W_n-A_n|>\varepsilon)\leq\Prob(V_n=0)\to0.
+\]
+Ponowne zastosowanie twierdzenia Slutsky'ego do
+$W_n=A_n+(W_n-A_n)$ daje tę samą granicę według rozkładu.
 \end{proof}
 
 \begin{uwaga}
@@ -538,8 +552,10 @@ Przy zwykłej wariancji z próby
 $S_n^2=(n-1)^{-1}\sum_{k=1}^n(X_k-\overline X_n)^2$
 mamy $S_n^2=nV_n/(n-1)$, więc zastąpienie $V_n$
 przez $S_n^2$ nie zmienia granicy asymptotycznej.
-Dokładny rozkład Studenta dla próby normalnej dotyczy
-ilorazu z $S_n$, nie z $\sqrt{V_n}$. Rozróżnienie to
+Dokładny rozkład Studenta o $n-1$ stopniach swobody
+dla próby normalnej dotyczy ilorazu z $S_n$, nie
+z $\sqrt{V_n}$; ten drugi iloraz ma rozkład
+pierwszego pomnożony przez $\sqrt{n/(n-1)}$. Rozróżnienie to
 jest ważne przy przejściu do statystyki matematycznej
 w tomie IV.
 \end{uwaga}
@@ -645,7 +661,9 @@ zależnych od skończenie wielu współrzędnych ich
 rozkłady są równe z niezależności, a zbiory te tworzą
 $\pi$-układ generujący to $\sigma$-ciało. Jednoznaczność
 miary probabilistycznej na takim układzie wynika
-z twierdzenia o $\pi$- i $\lambda$-układach.
+z twierdzenia o $\pi$- i $\lambda$-układach
+(por. argument o jednoznaczności miary na cylindrach
+w rozdziale~\ref{ch:probability}).
 Dla ciągu $z=(z_k)_{k\geq1}$ połóżmy
 \[
 D_n(z)=\sup_{q\in\mathbb Q}
@@ -752,9 +770,16 @@ uzyskamy podobną kontrolę.
 W niniejszym rozdziale udowodniono
 \emph{kierunek wystarczający} twierdzenia Lindeberga--Fellera.
 Sama zbieżność sum do rozkładu normalnego nie implikuje
-warunku Lindeberga bez dodatkowych hipotez, takich jak
-asymptotyczne zanikanie największych wariancji
-(w wersji twierdzenia o równoważności).
+warunku Lindeberga. Istotnie, jeśli w każdym wierszu
+$Y_{n,1}\sim\Normal(0,1)$, a wszystkie pozostałe
+składniki są zerowe, to $s_n=1$, a suma ma dokładnie
+rozkład $\Normal(0,1)$. Tymczasem dla każdego
+$\varepsilon>0$ wyrażenie z warunku Lindeberga
+jest równe dodatniej stałej
+$\E[Y_{n,1}^2\chi_{\{|Y_{n,1}|>\varepsilon\}}]$,
+niezależnej od $n$. W wersji twierdzenia o równoważności
+potrzebny jest dodatkowy warunek Fellera:
+$\max_{k\leq k_n}\Var(Y_{n,k})/s_n^2\to0$.
 Warunek Lindeberga kontroluje nie tylko prawdopodobieństwo
 rzadkiego dużego skoku, ale jego wkład do \emph{drugiego momentu}.
 Zastąpienie warunku Lindeberga samym warunkiem
