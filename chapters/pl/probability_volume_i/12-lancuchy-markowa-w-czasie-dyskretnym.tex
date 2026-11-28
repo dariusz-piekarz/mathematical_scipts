@@ -1650,8 +1650,9 @@ na jednej długiej trajektorii}.
 
 \begin{twierdzenie}[Liczba wizyt i prawdopodobieństwa pochłonięcia]
 Niech $S=T\sqcup A$ będzie skończoną przestrzenią
-stanów, gdzie $A$ jest niepustym zbiorem stanów
-pochłaniających, a dla każdego $i\in T$ istnieje
+stanów, gdzie $T$ i $A$ są niepuste, każdy stan
+$a\in A$ jest pochłaniający (tj. $p_{aa}=1$),
+a dla każdego $i\in T$ istnieje
 droga o dodatnim prawdopodobieństwie do $A$.
 Po uporządkowaniu stanów zapiszmy
 \[
@@ -1677,27 +1678,52 @@ istnieje dodatnia droga do $A$, znajdziemy
 $L\geq1$, $\delta>0$ takie, że z dowolnego
 stanu $i\in T$ prawdopodobieństwo wejścia do $A$
 w najbliższych $L$ krokach jest co najmniej
-$\delta$. Dzięki własności Markowa
+$\delta$. Wybieramy dla każdego $i\in T$ jedną
+dodatnią drogę do $A$, a następnie bierzemy
+maksimum ich długości jako $L$ i minimum
+ich prawdopodobieństw jako $\delta$.
+Na zdarzeniu $\{\tau_A>kL\}$ stan $X_{kL}$
+należy do $T$. Z pełnej własności Markowa
+prawdopodobieństwo pozostania w $T$ przez
+następne $L$ kroków, warunkowo względem
+$\mathcal F_{kL}^X$, jest tam nie większe niż
+$1-\delta$. Indukcyjnie otrzymujemy
 $\Prob_i(\tau_A>kL)\leq(1-\delta)^k$.
-A zatem wszystkie sumy wierszy $Q^n$ dążą do zera,
-i to geometrycznie. Otrzymujemy zbieżność
-szeregu macierzy $\sum_{n\geq0}Q^n$.
+Ponadto z prawa trajektorii, sumując po
+stanach pośrednich w $T$, mamy
+\[
+(Q^n)_{ij}=\Prob_i(X_n=j,\tau_A>n),\qquad i,j\in T.
+\]
+Dla $n=0$ obowiązuje $Q^0=I$.
+Stąd $\sum_{j\in T}(Q^n)_{ij}=\Prob_i(\tau_A>n)$.
+Dla $n=kL+s$, $0\leq s<L$, ta suma nie przekracza
+$(1-\delta)^k$. Zatem każdy szereg współrzędnych
+macierzy $\sum_{n\geq0}Q^n$ jest zbieżny,
+a $Q^n\to0$. W szczególności $\tau_A<\infty$ p.n.
 Dla sumy częściowej
 $(I-Q)\sum_{n=0}^{m}Q^n=I-Q^{m+1}$.
 Przechodząc z $m\to\infty$, dostajemy
 $(I-Q)N=I$; analogicznie $N(I-Q)=I$.
 
-Dla $i,j\in T$ prawdopodobieństwo
-$\Prob_i(X_n=j,\tau_A>n)$ jest równe
-$(Q^n)_{ij}$. Sumując po $n$ i stosując
-monotoniczną zbieżność, otrzymujemy
+Sumując wykazaną wyżej tożsamość dla
+$(Q^n)_{ij}$ po $n$ i stosując twierdzenie
+o zbieżności monotonicznej, otrzymujemy
 $N_{ij}=\E_i\sum_{n<\tau_A}\chi_{\{X_n=j\}}$.
-Sumowanie po $j$ daje
-$\E_i\tau_A=(N\mathbf 1)_i$.
-Prawdopodobieństwo pochłonięcia w $a\in A$
-dokładnie po $n+1$ krokach wynosi
-$(Q^nR)_{ia}$. Sumujemy po $n$, więc
+Ponieważ przed $\tau_A$ w każdej chwili proces
+jest w dokładnie jednym stanie z $T$, sumowanie
+po $j$ daje $\E_i\tau_A=(N\mathbf 1)_i$.
+Dla $a\in A$ rozbijamy zdarzenie pierwszego
+wejścia do $A$ w chwili $n+1$ po stanie $j\in T$
+w chwili $n$. Z własności Markowa otrzymujemy
+\[
+\Prob_i(\tau_A=n+1,X_{n+1}=a)
+=\sum_{j\in T}(Q^n)_{ij}R_{ja}=(Q^nR)_{ia}.
+\]
+Zdarzenia te są rozłączne dla różnych $n$.
+Sumowanie daje
 $B_{ia}=\sum_{n\geq0}(Q^nR)_{ia}=(NR)_{ia}$.
+Każdy wiersz $B$ sumuje się do $1$, ponieważ
+pochłonięcie zachodzi prawie na pewno.
 \end{proof}
 
 \begin{przyklad}[Cztery stany, dwa cele pochłaniające]
@@ -1713,13 +1739,15 @@ Dla uporządkowania $T=(1,2)$ i $A=(0,3)$ mamy
 Q=\begin{pmatrix}0&3/4\\1/2&0\end{pmatrix},
 \qquad R=\begin{pmatrix}1/4&0\\0&1/2\end{pmatrix},
 \]
-oraz
+a ponieważ $\det(I-Q)=1-3/8=5/8$, wzór
+na macierz odwrotną daje
 \[
 N=\begin{pmatrix}8/5&6/5\\4/5&8/5\end{pmatrix},
 \qquad B=NR=\begin{pmatrix}2/5&3/5\\1/5&4/5\end{pmatrix}.
 \]
-Zaczynając w stanie $1$, spędzamy średnio
-$8/5$ kroków w stanie $1$ i $6/5$ w stanie $2$,
+Zaczynając w stanie $1$, odwiedzamy przed pochłonięciem średnio
+$8/5$ razy stan $1$ (wliczając chwilę zero)
+i $6/5$ razy stan $2$,
 a czas do pochłonięcia ma średnią $14/5$.
 Prawdopodobieństwo zakończenia w stanie $3$
 wynosi $3/5$. Zaczynając w stanie $2$, czas
@@ -1805,6 +1833,10 @@ nowego wejścia w chwili $2$.
 \emph{(5) Ile kroków średnio upłynie do trwałego wyłączenia?}
 Niech $m_i=\E_i\tau_2$, gdzie $\tau_2$
 jest pierwszym czasem wejścia do stanu $2$.
+Z obu niepochłaniających stanów istnieje
+bezpośrednie przejście do $2$ z prawdopodobieństwem
+co najmniej $1/6$, więc z twierdzenia o macierzy
+fundamentalnej czasy te mają skończone średnie.
 Mamy $m_2=0$, a analiza pierwszego kroku daje
 \[
 \begin{cases}
@@ -1830,11 +1862,12 @@ $\E_\mu\tau_2=(3/4)\cdot5+(1/4)\cdot(9/2)=39/8$.
 
 \section{Dwa dalsze modele: urna i nieskończona kolejka}
 
-\begin{przyklad}[Model Ehrenfesta: dlaczego pojawia się dwumianowy]
+\begin{przyklad}[Model Ehrenfesta: rozkład dwumianowy]
 Rozważmy $N\geq1$ rozróżnialnych cząstek,
 z których każda znajduje się w jednym z dwóch
 pojemników. W każdym kroku wybieramy jednostajnie
-jedną cząstkę i przenosimy do drugiego pojemnika.
+jedną cząstkę, niezależnie od dotychczasowych
+wyborów, i przenosimy ją do drugiego pojemnika.
 Niech $X_n\in\{0,\ldots,N\}$ oznacza liczbę
 cząstek w pierwszym pojemniku. Wtedy
 \[
@@ -1842,23 +1875,50 @@ p_{k,k+1}=\frac{N-k}{N},\qquad
 p_{k,k-1}=\frac{k}{N},
 \]
 przy czym nieistniejące przejścia na brzegach
-pomijamy. Warunek równowagi szczegółowej
+pomijamy, a wszystkie pozostałe przejścia mają
+prawdopodobieństwo zero. Warunkowo względem
+pełnej historii konfiguracji szanse wyboru cząstki
+z obu pojemników zależą wyłącznie od $X_n$.
+Własność wieży daje zatem własność Markowa
+dla samego ciągu liczebności.
+Warunek równowagi szczegółowej
 $\pi_k(N-k)/N=\pi_{k+1}(k+1)/N$
-prowadzi do $\pi_{k+1}/\pi_k=(N-k)/(k+1)$,
-więc po normalizacji
+prowadzi do rekurencji
+$\pi_{k+1}=\pi_k(N-k)/(k+1)$ dla $0\leq k<N$.
+Indukcyjnie $\pi_k=\pi_0\binom Nk$.
+Z tożsamości $\sum_{k=0}^N\binom Nk=2^N$
+otrzymujemy po normalizacji
 $\pi_k=2^{-N}\binom Nk$.
-Jest to rozkład dwumianowy $\Bin(N,1/2)$.
+Te masy spełniają równowagę szczegółową
+dla wszystkich par stanów i są dodatnie.
+Łańcuch jest nieprzywiedlny, ponieważ można
+przejść pomiędzy dowolnymi stanami przez
+kolejne przejścia do sąsiednich stanów.
+Zatem jest to jedyny rozkład stacjonarny,
+mianowicie rozkład dwumianowy $\Bin(N,1/2)$.
 
 Łańcuch ma jednak okres $2$, ponieważ parzystość
 liczby cząstek w pierwszym pojemniku zmienia się
-w każdym kroku. Rozkład $X_n$ nie zbiega z
-ustalonego stanu do $\pi$, choć częstości odwiedzin
+w każdym kroku, a z każdego stanu istnieje
+dodatnia droga powrotu długości $2$ (także
+przy $N=1$). Największy wspólny dzielnik
+długości powrotów jest więc równy $2$.
+Rozkład $X_n$ nie zbiega z ustalonego stanu
+do $\pi$: masy zbiorów stanów parzystych
+i nieparzystych zmieniają się naprzemiennie
+między $0$ i $1$, choć częstości odwiedzin
 spełniają twierdzenie ergodyczne. Jeśli w każdym
 kroku z prawdopodobieństwem $1/2$ pozostaniemy
 bez ruchu, a z prawdopodobieństwem $1/2$ wykonamy
 powyższe przejście, nowa macierz wynosi
-$P'=(I+P)/2$. Jest nieokresowa, zachowuje $\pi$
-i teraz rozkłady zbiegną do $\pi$.
+$P'=(I+P)/2$. Każdy stan ma teraz dodatnią
+pętlę własną, a dotychczasowe dodatnie
+przejścia pozostają dodatnie, więc łańcuch
+jest nieokresowy i nieprzywiedlny.
+Ponieważ $\pi P'=(\pi+\pi P)/2=\pi$,
+z twierdzenia o zbieżności skończonego łańcucha
+ergodycznego wynika $\mu(P')^n\to\pi$ dla każdego
+rozkładu początkowego $\mu$.
 \end{przyklad}
 
 \begin{przyklad}[Stabilna i niestabilna kolejka w czasie dyskretnym]
@@ -1881,15 +1941,28 @@ otrzymując
 \pi_i=(1-\rho)\rho^i,
 \qquad \E_\pi X=\frac{\rho}{1-\rho}.
 \]
-Gdy $p\geq q$, ta sama rekurencja nie może
-definiować rozkładu probabilistycznego.
-Nie istnieje również żaden inny rozkład
-stacjonarny: równość masy wpływającej i
-wypływającej ze skończonego zbioru
-$\{0,\ldots,i\}$ wymusza
-$\pi_i p=\pi_{i+1}q$ dla każdego $i$.
-Bez sumowalności nie można spełnić
-$\sum_i\pi_i=1$. Jest to przykład sytuacji,
+Normalizacja wynika z $\sum_{i\geq0}\rho^i=(1-\rho)^{-1}$,
+a wzór na średnią z
+$\sum_{i\geq1}i\rho^i=\rho/(1-\rho)^2$
+(różniczkujemy szereg potęgowy dla $|\rho|<1$).
+Otrzymany rozkład jest stacjonarny dzięki
+równowadze szczegółowej.
+Aby wykazać jednoznaczność i rozstrzygnąć
+przypadek $p\geq q$, załóżmy, że dowolny rozkład
+$\nu$ jest stacjonarny. Dla $C_i=\{0,\ldots,i\}$
+z warunku $\nu P=\nu$ otrzymujemy
+\[
+\nu(C_i)=\nu(C_i)-\nu_i p+\nu_{i+1}q.
+\]
+W istocie jedyne przejścia przez brzeg $C_i$
+to $i\to i+1$ oraz $i+1\to i$.
+Stąd $\nu_i p=\nu_{i+1}q$ dla każdego $i$,
+czyli $\nu_i=\nu_0\rho^i$. Masa $\nu_0$ musi
+być dodatnia, bo inaczej wszystkie masy
+byłyby zerowe. Dla $\rho<1$ normalizacja
+wyznacza ją jednoznacznie, a dla $\rho\geq1$
+szereg mas jest rozbieżny. W tym drugim
+przypadku nie istnieje rozkład stacjonarny. Jest to przykład sytuacji,
 w której dla skończonego łańcucha stacjonarność
 była automatyczna, ale w przeliczalnym
 tak być nie musi.
