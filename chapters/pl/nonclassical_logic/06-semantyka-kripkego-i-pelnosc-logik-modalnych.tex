@@ -2485,3 +2485,376 @@ w tym dowodzie potrzebowaliśmy efektywnej
 granicy liczby stanów oraz efektywnego
 sprawdzania przynależności ramy do klasy.
 \end{uwaga}
+
+\section{Ograniczenia pełności Kripkego}
+
+\begin{stwierdzenie}[Kryterium pełności względem pewnej klasy ram]
+\label{prop:ncl-kripke-completeness-criterion}
+Normalna logika $L$ jest poprawna i słabo pełna
+względem pewnej klasy ram wtedy i tylko wtedy, gdy
+\[
+ L=\operatorname{Log}(\operatorname{Fr}(L)).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $L=\operatorname{Log}(\mathcal C)$,
+to $\mathcal C\subseteq\operatorname{Fr}(L)$
+i wobec tego
+\[
+ L\subseteq\operatorname{Log}(\operatorname{Fr}(L))
+ \subseteq\operatorname{Log}(\mathcal C)=L.
+\]
+Odwrotnie, równość z tezy oznacza poprawność
+i pełność względem $\operatorname{Fr}(L)$.
+\end{proof}
+Logikę, dla której powyższa równość nie zachodzi,
+nazywamy niepełną w sensie Kripkego.
+Nie jest to stwierdzenie o niezupełności
+w sensie twierdzeń Gödla. Chodzi o istnienie
+klasy ram charakteryzującej zbiór twierdzeń,
+nie o rozstrzyganie każdej formuły lub jej negacji.
+
+\subsection{Ramy ogólne i wartościowania dopuszczalne}
+
+\begin{definicja}[Rama ogólna]
+\label{def:ncl-kripke-general-frame}
+Ramą ogólną nazywamy trójkę $G=(W,R,\mathcal A)$,
+gdzie $(W,R)$ jest ramą Kripkego,
+a $\mathcal A\subseteq\mathcal P(W)$ jest
+algebrą Boole'a zbiorów zawierającą $W$
+i domkniętą względem operatora
+\[
+ \Diamond_R X=\{x\in W:R(x)\cap X\ne\varnothing\}.
+\]
+Wartościowanie jest dopuszczalne, gdy
+$V(p)\in\mathcal A$ dla każdej zmiennej $p$.
+Piszemy $G\Vdash A$, jeżeli $A$ jest prawdziwa
+w każdym stanie każdego modelu z dopuszczalnym
+wartościowaniem.
+\end{definicja}
+
+Zauważmy, że $\mathcal A$ jest też domknięta
+względem $\Box_R X=W\setminus
+\Diamond_R(W\setminus X)$.
+W zwykłej ramie dopuszczamy wszystkie
+podzbiory jako wartości zmiennych, czyli
+otrzymujemy szczególny przypadek
+$\mathcal A=\mathcal P(W)$.
+
+\begin{lemat}[Poprawność względem ram ogólnych]
+\label{lem:ncl-kripke-general-frame-soundness}
+Dla każdego dopuszczalnego wartościowania
+zbiory prawdziwości wszystkich formuł
+należą do $\mathcal A$.
+Zbiór formuł ważnych na $G$ jest
+niesprzeczną normalną logiką modalną.
+\end{lemat}
+\begin{proof}
+Pierwsza teza wynika z indukcji po budowie
+formuły: dla zmiennych korzystamy z założenia,
+dla $\bot$ z $\varnothing\in\mathcal A$,
+dla spójników klasycznych z domknięcia
+algebry Boole'a, a dla $\Box$ z domknięcia
+względem $\Box_R$.
+Ważne są wszystkie formuły K, ponieważ
+są ważne nawet bez ograniczeń wartościowań.
+Modus ponens i konieczność zachowują
+globalną prawdziwość w każdym modelu.
+W Lemacie~\ref{lem:ncl-kripke-substitution}
+wartościowanie $V_\sigma(p)$ jest teraz
+dopuszczalne na mocy pierwszej tezy,
+więc podstawienie zachowuje ważność na $G$.
+Formuła $\bot$ nie jest ważna, gdyż
+$W$ jest niepusty i istnieją dopuszczalne
+wartościowania (np. stale równe $\varnothing$).
+\end{proof}
+
+\subsection{Przykład van Benthema}
+
+Rozważymy przykład z pracy J.~van Benthema
+\emph{Syntactic aspects of modal incompleteness theorems}
+(1979); por. także W.~H.~Holliday, T.~Litak,
+\emph{Complete Additivity and Modal Incompleteness},
+The Review of Symbolic Logic (2019), sekcja 2.
+Zastosujemy ramę ogólną, aby wykazać
+niedowodliwość pewnej formuły bez mylenia
+ważności w pojedynczym modelu z ważnością na ramie.
+
+\begin{definicja}[Logika van Benthema]
+\label{def:ncl-kripke-vb-logic}
+Niech $L_{\mathrm{vB}}$ będzie najmniejszą
+normalną logiką modalną zawierającą formułę
+\[
+ \alpha(p)=\Box\Diamond\top
+     \to\Box\bigl(\Box(\Box p\to p)\to p\bigr).
+\]
+Oznaczmy także
+\[
+ \beta=\Box\Diamond\top\to\Box\bot.
+\]
+\end{definicja}
+
+\begin{lemat}[Konsekwencja na zwykłych ramach]
+\label{lem:ncl-kripke-vb-frame-consequence}
+Dla dowolnej ramy Kripkego zachodzi
+$F\Vdash\alpha(p)$ wtedy i tylko wtedy, gdy
+$F\Vdash\beta$.
+\end{lemat}
+\begin{proof}
+Załóżmy, że $F\Vdash\alpha(p)$.
+Gdyby $\beta$ była fałszywa w stanie $x$,
+zbiór $R(x)$ byłby niepusty i każdy jego
+element miałby przynajmniej jednego następnika.
+Wybieramy $y\in R(x)$ i nadajemy zmiennej
+$p$ zbiór prawdziwości $W\setminus\{y\}$.
+Wykażemy, że każdy następnik $y$ spełnia
+$\Box p\to p$. Każdy stan różny od $y$
+spełnia tę implikację, gdyż spełnia $p$.
+Dla $y$ rozróżniamy dwa przypadki.
+Jeśli $yRy$, to $\Box p$ jest w $y$ fałszywa.
+Jeśli nie zachodzi $yRy$, to jedyny możliwy
+stan niespełniający $\Box p\to p$ to $y$,
+ale nie jest on następnikiem samego siebie.
+W obu przypadkach każdy następnik $y$
+spełnia $\Box p\to p$: w pierwszym
+wszystkie stany ją spełniają, w drugim
+wszyscy następnicy $y$ są różni od $y$.
+Zatem $y$ spełnia $\Box(\Box p\to p)$,
+lecz nie spełnia $p$. Wobec $xRy$ stan $x$
+nie spełnia konsekwentu $\alpha(p)$.
+Antecedent jest prawdziwy, co przeczy
+ważności $\alpha(p)$ na $F$.
+
+Odwrotnie, jeżeli $F\Vdash\beta$, to
+w każdym stanie spełniającym $\Box\Diamond\top$
+nie ma żadnych następników (z $\Box\bot$).
+Konsekwent $\alpha(p)$ jest tam prawdziwy
+próżniowo. W pozostałych stanach antecedent
+jest fałszywy. To daje ważność $\alpha(p)$
+dla każdego wartościowania.
+\end{proof}
+
+\begin{twierdzenie}[Niepełność logiki van Benthema]
+\label{thm:ncl-kripke-vb-incompleteness}
+Logika $L_{\mathrm{vB}}$ jest niesprzeczna
+i niepełna w sensie Kripkego. Dokładniej
+\[
+ \operatorname{Fr}(L_{\mathrm{vB}})\Vdash\beta,
+ \qquad \beta\notin L_{\mathrm{vB}}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Pierwszą tezę o ważności daje
+Lemat~\ref{lem:ncl-kripke-vb-frame-consequence},
+ponieważ $\alpha(p)\in L_{\mathrm{vB}}$.
+Aby wykazać niedowodliwość $\beta$,
+skonstruujemy ramę ogólną $G$.
+Niech
+\[
+ W=\mathbb N_0\cup\{a,b\},
+\]
+gdzie $a,b$ są dwoma nowymi elementami.
+Relację określamy przez zbiory następników:
+\[
+ R(0)=\varnothing,\quad
+ R(n)=\{0,\ldots,n-1\}\ (n\geq1),\quad
+ R(a)=\mathbb N_0\cup\{a\},\quad R(b)=\{a\}.
+\]
+Dopuszczamy zbiory z rodziny
+\[
+ \mathcal A=
+ \{X\subseteq W:X\text{ skończony},\ a\notin X\}
+ \cup
+ \{X\subseteq W:W\setminus X\text{ skończony},
+                       \ a\in X\}.
+\]
+Rodzina ta zawiera $\varnothing,W$ i jest
+domknięta względem dopełnień. Dla sumy dwóch
+zbiorów, jeśli oba są skończone i nie zawierają
+$a$, to również ich suma ma te własności;
+jeżeli przynajmniej jeden jest ko-skończony
+i zawiera $a$, to ich suma także jest
+ko-skończona i zawiera $a$. Domknięcie
+względem przecięć wynika z praw de Morgana.
+
+Sprawdzimy domknięcie względem $\Diamond_R$.
+Jeżeli $X\cap\mathbb N_0=\varnothing$,
+to $a\notin X$ (zbiór ko-skończony zawiera
+pewną liczbę naturalną). W takim przypadku
+$X\subseteq\{b\}$, a ponieważ żaden stan
+nie ma krawędzi do $b$, mamy
+$\Diamond_R X=\varnothing$.
+Jeżeli $X\cap\mathbb N_0\ne\varnothing$,
+niech $k$ będzie najmniejszą liczbą z tego
+przecięcia. Wtedy
+\[
+ \Diamond_R X=\{n\in\mathbb N_0:n>k\}\cup\{a\}
+                 \cup \bigl(\{b\}\cap Y\bigr),
+ \qquad
+ Y=\begin{cases}
+ W,&a\in X,\\
+ \varnothing,&a\notin X.
+ \end{cases}
+\]
+Jest to zbiór ko-skończony zawierający $a$.
+Zatem $G=(W,R,\mathcal A)$ jest ramą ogólną.
+
+Ustalmy dowolne dopuszczalne wartościowanie
+i oznaczmy $X=V(p)$.
+W stanie $0$ formuła $\alpha(p)$ jest
+prawdziwa, ponieważ oba jej człony
+rozpoczynające się od $\Box$ są prawdziwe.
+W każdym stanie $n\geq1$ oraz w stanie $a$
+antecedent $\Box\Diamond\top$ jest fałszywy,
+bo stan $0$ jest następnikiem i nie ma
+żadnych następników.
+Pozostaje stan $b$, którego jedynym
+następnikiem jest $a$.
+Jeżeli $a\in X$, to konsekwent $\alpha(p)$
+jest w $b$ prawdziwy, ponieważ $p$ jest
+prawdziwa w $a$.
+Jeżeli $a\notin X$, to $X$ jest skończony.
+Niech $n$ będzie najmniejszą liczbą naturalną
+nienależącą do $X$. Wszystkie liczby mniejsze
+od $n$ należą do $X$, więc
+$M,n\Vdash\Box p$, lecz $M,n\not\Vdash p$.
+Wobec $aRn$ formuła $\Box(\Box p\to p)$
+jest fałszywa w $a$.
+Implikacja $\Box(\Box p\to p)\to p$
+jest zatem w $a$ prawdziwa, a konsekwent
+$\alpha(p)$ prawdziwy w $b$.
+
+Wykazaliśmy $G\Vdash\alpha(p)$.
+Z Lematu~\ref{lem:ncl-kripke-general-frame-soundness}
+wynika, że każda formuła $L_{\mathrm{vB}}$
+jest ważna na $G$ i że logika ta jest
+niesprzeczna. Jednak w $b$ prawdziwa jest
+$\Box\Diamond\top$, bo $a$ ma następnika,
+a fałszywa jest $\Box\bot$, bo $bRa$.
+Zatem $G\not\Vdash\beta$, co dowodzi
+$\beta\notin L_{\mathrm{vB}}$.
+Stosujemy
+Stwierdzenie~\ref{prop:ncl-kripke-completeness-criterion}.
+\end{proof}
+
+\begin{uwaga}[Dlaczego ograniczenie wartościowań jest konieczne?]
+\label{rem:ncl-kripke-vb-admissibility}
+Na zwykłej ramie $(W,R)$ z powyższego dowodu
+formuła $\alpha(p)$ nie jest ważna:
+wartościowanie $V(p)=W\setminus\{a\}$
+obala ją w $b$ zgodnie z dowodem
+Lematu~\ref{lem:ncl-kripke-vb-frame-consequence}.
+Zbiór ten nie należy jednak do $\mathcal A$,
+ponieważ jest nieskończony i nie zawiera $a$.
+Ograniczenie rodziny dopuszczalnych zbiorów
+prawdziwości jest dokładnie tym elementem,
+który umożliwia oddzielenie dowodliwości
+od konsekwencji na zwykłych ramach.
+\end{uwaga}
+
+\subsection{Pełność nie wymaga kanoniczności}
+
+\begin{twierdzenie}[Przykład pełnej logiki niekanonicznej]
+\label{thm:ncl-kripke-complete-noncanonical}
+Istnieje normalna logika modalna pełna
+w sensie Kripkego, której rama kanoniczna
+nie należy do klasy jej ram.
+\end{twierdzenie}
+\begin{proof}
+Niech $\mathcal C$ będzie klasą wszystkich
+niepustych skończonych zbiorów liniowo
+uporządkowanych ze ścisłym porządkiem $R$,
+a $L=\operatorname{Log}(\mathcal C)$.
+Jest to niesprzeczna normalna logika,
+pełna względem $\mathcal C$ z definicji.
+Każda rama z $\mathcal C$ jest przechodnia,
+więc $4\in L$.
+Ponadto na każdej z tych ram ważna jest
+formuła Löba
+\[
+ \ell(p)=\Box(\Box p\to p)\to\Box p.
+\]
+Istotnie, jeżeli w stanie $x$ formuła $\Box p$
+jest fałszywa, wybieramy największy
+w porządku ścisłym stan $y\in R(x)$,
+w którym $p$ jest fałszywa. Każdy następnik
+$y$ należy również do $R(x)$ przez przechodniość
+i spełnia $p$ przez maksymalność $y$.
+Zatem $y$ spełnia $\Box p$, lecz nie $p$,
+więc $x$ nie spełnia antecedentu $\ell(p)$.
+To dowodzi $\ell(p)\in L$.
+
+Rozważmy teraz zbiór formuł
+\[
+ \Gamma=\{\Diamond p_0\}
+ \cup\{\Box(p_i\to\Diamond p_{i+1}):i\geq0\},
+\]
+gdzie zmienne $p_i$ są parami różne.
+Każdy skończony podzbiór $\Gamma$ jest
+spełnialny w pewnym skończonym ścisłym
+porządku liniowym: dla największego
+występującego indeksu implikacji $k$
+bierzemy stany $0,1,\ldots,k+2$ z relacją
+$<$, wartościujemy $p_i$ przez $\{i+1\}$
+dla $0\leq i\leq k+1$, a pozostałe
+przez $\varnothing$. W stanie $0$ zachodzi
+$\Diamond p_0$ i każda z implikacji
+pod $\Box$ o indeksie co najwyżej $k$.
+Jeżeli podzbiór nie zawiera żadnej
+implikacji, wystarczy rama dwuelementowa
+z $p_0$ prawdziwym w drugim stanie.
+
+Z poprawności względem $\mathcal C$ i
+skończoności dowodów wynika, że $\Gamma$
+jest lokalnie $L$-niesprzeczny.
+Wniosek~\ref{cor:ncl-kripke-canonical-realization}
+daje stan $x$ modelu kanonicznego $M_L$
+spełniający $\Gamma$. Rama kanoniczna
+jest przechodnia przez
+Twierdzenie~\ref{thm:ncl-kripke-canonical-frame-properties},
+ponieważ $L$ zawiera 4.
+Z $\Diamond p_0$ wybieramy następnika $x_0$
+spełniającego $p_0$. Jeżeli skonstruowaliśmy
+$x_i$ dostępny z $x$ i spełniający $p_i$,
+to $\Box(p_i\to\Diamond p_{i+1})$ prawdziwa
+w $x$ daje $\Diamond p_{i+1}$ w $x_i$.
+Wybieramy $x_{i+1}$ z $x_iR_Lx_{i+1}$
+spełniający $p_{i+1}$. Przechodniość
+zapewnia $xR_Lx_{i+1}$.
+Rekurencyjnie (korzystając z aksjomatu wyboru
+zależnego) otrzymujemy ciąg
+$x_0R_Lx_1R_Lx_2R_L\cdots$.
+
+Zmieniamy wartościowanie na ramie $F_L$:
+niech $p$ będzie prawdziwa dokładnie poza
+zbiorem $\{x_i:i\geq0\}$.
+Każdy stan spoza tego zbioru spełnia $p$,
+a każdy stan z tego zbioru ma następnika
+niespełniającego $p$. W obu przypadkach
+formuła $\Box p\to p$ jest prawdziwa.
+W szczególności $x_0$ spełnia
+$\Box(\Box p\to p)$, lecz nie $\Box p$.
+Zatem $F_L\not\Vdash\ell(p)$.
+Ponieważ $\ell(p)\in L$, rama $F_L$
+nie należy do $\operatorname{Fr}(L)$.
+\end{proof}
+
+\begin{wniosek}[Hierarchia własności pełności]
+\label{cor:ncl-kripke-completeness-hierarchy}
+Dla niesprzecznych normalnych logik
+kanoniczność pociąga silną pełność lokalną,
+a silna pełność lokalna pociąga słabą
+pełność (w obu przypadkach względem
+$\operatorname{Fr}(L)$).
+Sama słaba pełność nie pociąga kanoniczności,
+a niesprzeczność nie pociąga nawet słabej pełności.
+\end{wniosek}
+\begin{proof}
+Pierwsza implikacja jest
+Twierdzeniem~\ref{thm:ncl-kripke-canonical-strong-local};
+druga wynika z przypadku pustego zbioru
+przesłanek. Ostatnie dwa stwierdzenia wynikają
+odpowiednio z
+Twierdzenia~\ref{thm:ncl-kripke-complete-noncanonical}
+i Twierdzenia~\ref{thm:ncl-kripke-vb-incompleteness}.
+\end{proof}
