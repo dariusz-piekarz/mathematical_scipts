@@ -485,6 +485,44 @@ with sync_playwright() as pw:
             assert check['error'] < 1e-12 and check['steps'] == 9, check
         host.locator('button').click()
         assert iframe.count() == 0
+    # AM II 30: exact section areas and local nonlinear area ratios.
+    source = (ROOT.parent / 'chapters/pl/mathematical_analysis_ii/30-calki-wielokrotne-i-zamiana-zmiennych.tex').read_text(encoding='utf-8')
+    page.evaluate("latex => renderSimplified(latex, 'AM2-30')", source)
+    hosts = box.locator('.atlas-plot-host')
+    assert hosts.count() == 2
+    for i, identifier in enumerate(('am2_30_sections.html', 'am2_30_jacobian.html')):
+        host = hosts.nth(i)
+        host.locator('button').click()
+        iframe = host.locator('iframe')
+        assert iframe.get_attribute('sandbox') == 'allow-scripts'
+        assert iframe.get_attribute('src').endswith(identifier)
+        plot = host.frame_locator('iframe').locator('#plot[data-ready=true]')
+        plot.wait_for(timeout=60000)
+        if i == 0:
+            check = plot.evaluate("""el => {
+                let error=0;
+                for(let j=0;j<42;j++){
+                    const d=el.data[j+2],t=(j%21)/20;
+                    const area=(d.z[2]+d.z[3])/2;
+                    error=Math.max(error,Math.abs(area-(j<21?1+t:.5+2*t)));
+                }
+                return {error,steps:el.layout.sliders[0].steps.length};
+            }""")
+            assert check['error'] < 1e-12 and check['steps'] == 42, check
+        else:
+            check = plot.evaluate("""el => {
+                let error=0;
+                const area=d=>Math.abs(d.x.slice(0,-1).reduce((s,x,k)=>s+x*d.y[k+1]-d.x[k+1]*d.y[k],0))/2;
+                for(let j=0;j<21;j++){
+                    const a=el.data[38+2*j],b=el.data[39+2*j];
+                    const u=(a.x[0]+a.x[1])/2;
+                    error=Math.max(error,Math.abs(area(b)/area(a)-u));
+                }
+                return {error,steps:el.layout.sliders[0].steps.length};
+            }""")
+            assert check['error'] < 1e-10 and check['steps'] == 21, check
+        host.locator('button').click()
+        assert iframe.count() == 0
     # Real graph chapters: every figure must decode, not merely insert a placeholder.
     for module, filename, expected in (
         ('GW-01', '01-podstawy-teorii-grafow.tex', 7),
