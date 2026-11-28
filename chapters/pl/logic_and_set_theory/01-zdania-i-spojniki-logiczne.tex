@@ -917,6 +917,203 @@ formuł przy wszystkich wartościowaniach, a
 $p\Leftrightarrow q$ jest formułą, której wartość badamy.
 \end{przyklad}
 
+\section{Zbiory przesłanek i konsekwencja logiczna}
+\label{sec:lst-propositional-consequence}
+Dotychczas rozważaliśmy skończone listy przesłanek.
+Możemy jednak ustalić także zbiór nieskończony, na przykład
+nieskończoną listę warunków, które mają zachodzić jednocześnie.
+Nadal każda pojedyncza formuła ma skończoną budowę.
+
+\begin{definicja}[Spełnialność zbioru formuł i wynikanie]
+\label{def:lst-propositional-theory}
+Niech $\Gamma$ będzie dowolnym zbiorem formuł zdaniowych.
+Wartościowanie $v$ spełnia $\Gamma$, gdy $v(\gamma)=1$
+dla każdego $\gamma\in\Gamma$. Zbiór jest spełnialny,
+gdy istnieje takie wartościowanie.
+Piszemy $\Gamma\models\varphi$, gdy każde wartościowanie
+spełniające $\Gamma$ nadaje formule $\varphi$ wartość $1$.
+\end{definicja}
+Definicja rozszerza Definicję~\ref{def:consequence}.
+Zbiór pusty jest spełnialny: spełnia go każde wartościowanie.
+Nie wystarcza natomiast, by każda formuła z $\Gamma$
+była z osobna spełnialna. Na przykład $p$ oraz $\neg p$
+są z osobna spełnialne, ale nie mają wspólnego wartościowania
+spełniającego obie formuły.
+
+\begin{twierdzenie}[Kryterium przez niespełnialność]
+\label{thm:lst-propositional-refutation}
+Dla dowolnego zbioru przesłanek $\Gamma$ i formuł
+$\varphi,\psi$ zachodzą równoważności
+\[
+\begin{split}
+ \Gamma\models\varphi
+ &\iff \Gamma\cup\{\neg\varphi\}
+          \text{ jest niespełnialny},\\
+ \Gamma\cup\{\varphi\}\models\psi
+ &\iff\Gamma\models(\varphi\Rightarrow\psi).
+\end{split}
+\]
+\end{twierdzenie}
+\begin{proof}
+W pierwszym przypadku zaprzeczenie lewej strony oznacza
+istnienie wartościowania spełniającego $\Gamma$ i nadającego
+$\varphi$ wartość $0$, czyli nadającego $\neg\varphi$ wartość $1$.
+Jest to dokładnie spełnialność zbioru po prawej stronie.
+W drugim przypadku, przy wartościowaniu spełniającym $\Gamma$,
+implikacja $\varphi\Rightarrow\psi$ jest fałszywa dokładnie
+wtedy, gdy $\varphi$ jest prawdziwa, a $\psi$ fałszywa.
+Takie wartościowanie obala obie strony równoważności.
+\end{proof}
+Drugą równoważność nazywamy semantyczną postacią twierdzenia
+o dedukcji. Nie zakładamy tu żadnego formalnego rachunku
+dowodów. Syntaktyczne twierdzenie o dedukcji dla dedukcji
+naturalnej omawiamy w teorii modeli.
+
+\begin{stwierdzenie}[Własności konsekwencji]
+\label{prop:lst-propositional-consequence-properties}
+Dla zbiorów formuł $\Gamma,\Delta$ i formuły $\varphi$
+zachodzą następujące własności:
+\begin{enumerate}
+ \item jeśli $\varphi\in\Gamma$, to $\Gamma\models\varphi$;
+ \item jeśli $\Gamma\subseteq\Delta$ i $\Gamma\models\varphi$,
+       to $\Delta\models\varphi$;
+ \item jeśli $\Gamma\models\delta$ dla każdego $\delta\in\Delta$
+       i $\Delta\models\varphi$, to $\Gamma\models\varphi$.
+\end{enumerate}
+\end{stwierdzenie}
+\begin{proof}
+Każde wartościowanie spełniające $\Gamma$ spełnia w szczególności
+każdą należącą do niego formułę, co daje pierwszy punkt.
+Jeśli $\Gamma\subseteq\Delta$, to każde wartościowanie spełniające
+$\Delta$ spełnia także $\Gamma$. Daje to drugi punkt.
+W trzecim, dowolne wartościowanie spełniające $\Gamma$
+spełnia wszystkie formuły z $\Delta$, a więc także $\varphi$.
+Argumenty pozostają ważne dla zbiorów niespełnialnych:
+wówczas nie istnieje wartościowanie obalające konsekwencję.
+\end{proof}
+Druga własność nazywa się monotonicznością: dodanie przesłanek
+nie unieważnia żadnego dotychczasowego wniosku klasycznego.
+Trzecia pozwala zastąpić cały łańcuch pośrednich wnioskowań
+jednym wynikaniem od przesłanek początkowych do końcowego wniosku.
+
+\begin{twierdzenie}[Jednoczesne podstawianie formuł]
+\label{thm:lst-propositional-substitution}
+Niech $\sigma$ przyporządkowuje każdej literze zdaniowej $p$
+formułę $\sigma(p)$. Rozszerzamy $\sigma$ na wszystkie formuły,
+zachowując ich spójniki i podstawiając jednocześnie
+przypisane formuły w miejsca liter. Jeżeli
+$\Gamma\models\varphi$, to $\sigma(\Gamma)\models\sigma(\varphi)$,
+gdzie $\sigma(\Gamma)=\{\sigma(\gamma):\gamma\in\Gamma\}$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy dowolne wartościowanie $v$ i określmy wartościowanie
+liter $w(p)=v(\sigma(p))$. Indukcja po budowie formuły $\theta$
+pokazuje, że $v(\sigma(\theta))=w(\theta)$.
+Dla litery wynika to z definicji $w$, a dla spójnika
+obie strony powstają przez zastosowanie tej samej funkcji
+prawdziwościowej do równych wartości argumentów.
+Jeżeli $v$ spełnia $\sigma(\Gamma)$, to $w$ spełnia $\Gamma$.
+Z założenia $w(\varphi)=1$, zatem $v(\sigma(\varphi))=1$.
+\end{proof}
+W szczególności podstawienie dowolnych formuł w miejsce liter
+tautologii daje tautologię. Na przykład do tautologii
+$p\lor\neg p$ możemy podstawić formułę $q\land r$ za $p$
+i otrzymać $(q\land r)\lor\neg(q\land r)$.
+Nie podstawiamy następnie rekurencyjnie za litery pojawiające się
+we wstawionej formule: podstawienie jest jednoczesne.
+
+\section{Skończoność przesłanek}
+\label{sec:lst-propositional-compactness}
+Wynikanie z nieskończonej liczby warunków może wyglądać na
+istotnie silniejsze od wynikania ze skończonej listy.
+W klasycznym rachunku zdań zachodzi jednak następujące
+twierdzenie. Jego dowód podamy dla ustalonego wcześniej
+przeliczalnego języka liter zdaniowych.
+
+\begin{twierdzenie}[Zwartość rachunku zdań]
+\label{thm:lst-propositional-compactness}
+Zbiór formuł $\Gamma$ w języku o przeliczalnym zbiorze liter
+zdaniowych jest spełnialny wtedy i tylko wtedy,
+gdy każdy jego skończony podzbiór jest spełnialny.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $v$ spełnia $\Gamma$, to spełnia każdy jego podzbiór.
+Dowodzimy implikacji odwrotnej.
+W przypadku skończonego zbioru liter dołączamy w razie potrzeby
+przeliczalnie wiele nowych liter niewystępujących w $\Gamma$,
+co nie zmienia spełnialności.
+Oznaczmy litery przez $p_1,p_2,\ldots$.
+Dla skończonego przypisania $a_1,\ldots,a_n\in\{0,1\}$
+rozpatrujemy własność: każdy skończony podzbiór $\Gamma$
+ma wartościowanie spełniające go i przyjmujące
+wartości $a_i$ na literach $p_i$ dla $i\leq n$.
+
+Przypisanie puste ma tę własność z założenia.
+Jeśli ma ją przypisanie długości $n$, to co najmniej jedno
+z jego dwóch rozszerzeń przez $a_{n+1}=0$ albo $a_{n+1}=1$
+także ma tę własność.
+Gdyby nie miało jej żadne, istniałyby dwa skończone podzbiory
+$\Gamma_0,\Gamma_1\subseteq\Gamma$: pierwszy nie miałby
+wartościowania zgodnego z rozszerzeniem przez $0$,
+a drugi zgodnego z rozszerzeniem przez $1$.
+Skończony zbiór $\Gamma_0\cup\Gamma_1$ nie miałby wtedy
+wartościowania zgodnego z wyjściowym przypisaniem,
+ponieważ dowolne wartościowanie musi nadać $p_{n+1}$
+jedną z tych dwóch wartości. Otrzymujemy sprzeczność.
+
+Budujemy więc ciąg $a_1,a_2,\ldots$, na każdym kroku
+wybierając rozszerzenie przez $0$, jeśli zachowuje własność,
+a w przeciwnym razie przez $1$. Definiujemy $v(p_i)=a_i$.
+Dla dowolnej $\gamma\in\Gamma$ istnieje $n$ takie, że
+wszystkie jej litery należą do $p_1,\ldots,p_n$,
+gdyż formuła jest skończona.
+Własność z etapu $n$ zastosowana do zbioru $\{\gamma\}$
+daje wartościowanie $w$ spełniające $\gamma$ i zgodne
+z $v$ na tych literach. Z rekurencyjnej definicji
+wartościowania wynika $v(\gamma)=w(\gamma)=1$.
+Tak jest dla każdej $\gamma$, zatem $v$ spełnia $\Gamma$.
+\end{proof}
+
+\begin{wniosek}[Skończony zbiór istotnych przesłanek]
+\label{cor:lst-propositional-finite-support}
+W przeliczalnym języku zdaniowym $\Gamma\models\varphi$
+wtedy i tylko wtedy, gdy istnieje skończony podzbiór
+$\Gamma_0\subseteq\Gamma$ taki, że $\Gamma_0\models\varphi$.
+\end{wniosek}
+\begin{proof}
+Jeżeli $\Gamma\models\varphi$, to
+$\Gamma\cup\{\neg\varphi\}$ jest niespełnialny na mocy
+Twierdzenia~\ref{thm:lst-propositional-refutation}.
+Ze zwartości wynika, że pewien jego skończony podzbiór
+$\Sigma$ jest niespełnialny. Niech $\Gamma_0=\Sigma\cap\Gamma$.
+Mamy $\Sigma\subseteq\Gamma_0\cup\{\neg\varphi\}$,
+więc ten ostatni zbiór jest również niespełnialny.
+Ponownie stosujemy kryterium przez niespełnialność.
+Kierunek odwrotny wynika z monotoniczności
+(Stwierdzenie~\ref{prop:lst-propositional-consequence-properties}).
+\end{proof}
+
+\begin{przyklad}[Nieskończony łańcuch implikacji]
+\label{ex:lst-propositional-chain}
+Rozważmy $\Gamma=\{p_1\}\cup\{p_i\Rightarrow p_{i+1}:i\geq1\}$.
+Dla każdego ustalonego $n$ mamy $\Gamma\models p_n$:
+od $p_1$ przechodzimy kolejno do $p_2,\ldots,p_n$.
+Wystarcza skończony podzbiór złożony z $p_1$ i pierwszych
+$n-1$ implikacji. Nie istnieje jednak jeden skończony
+podzbiór $\Gamma_0$ wystarczający do wyprowadzenia wszystkich $p_n$.
+Wybierzmy $N\geq1$ tak, by wszystkie litery występujące
+w $\Gamma_0$ miały indeks co najwyżej $N$.
+Wartościowanie nadające $p_1,\ldots,p_N$ wartość $1$
+i pozostałym literom wartość $0$ spełnia $\Gamma_0$,
+lecz nie spełnia $p_{N+1}$.
+\end{przyklad}
+Zwartość nie daje algorytmu rozstrzygającego spełnialność
+dowolnie zadanego nieskończonego zbioru formuł.
+Mówi o istnieniu skończonej przeszkody w razie niespełnialności,
+nie o sposobie jej znalezienia przy dowolnej reprezentacji danych.
+Zwartość logiki pierwszego rzędu ma osobny dowód
+w teorii modeli.
+
 \section{Czego jeszcze nie potrafi rachunek zdań?}\label{sec:why-quantifiers}
 Niech $P(x)$ oznacza wypowiedź „liczba $x$ jest parzysta”.
 Możemy sprawdzić $P(2)$ albo $P(3)$, ale sama logika zdań

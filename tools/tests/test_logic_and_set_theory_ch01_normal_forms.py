@@ -29,6 +29,27 @@ class TestPropositionalNormalForms(unittest.TestCase):
             self.assertEqual((not a and b) or (a and not b),
                              (a or b) and (not a or not b))
 
+    def test_semantic_deduction_and_refutation(self):
+        universe = frozenset(range(4))
+        subsets = [frozenset(i for i in universe if mask & (1 << i))
+                   for mask in range(16)]
+        for g, a, b in itertools.product(subsets, repeat=3):
+            self.assertEqual(g <= a, not (g & (universe - a)))
+            self.assertEqual((g & a) <= b, g <= ((universe - a) | b))
+            if g <= a and a <= b:
+                self.assertTrue(g <= b)
+
+    def test_chain_finite_support(self):
+        for n in range(1, 9):
+            def satisfies(row):
+                return row[0] and all(not row[i] or row[i+1]
+                                      for i in range(n-1))
+            rows = tuple(itertools.product((False, True), repeat=n+1))
+            models = [row for row in rows if satisfies(row)]
+            self.assertTrue(models)
+            self.assertTrue(all(row[n-1] for row in models))
+            self.assertTrue(any(not row[n] for row in models))
+
     def test_monotonicity_obstruction(self):
         rows = tuple(itertools.product((False, True), repeat=2))
         functions = [lambda a,b:a, lambda a,b:b, lambda a,b:False,
