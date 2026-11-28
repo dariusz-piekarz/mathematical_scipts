@@ -88,6 +88,8 @@ class ScopedPayloadTests(unittest.TestCase):
             report = probe.run_fixed_repair_loop([], {}, image)
         self.assertEqual([x["exit_code"] for x in report["attempts"]], [1, 1, 0])
         self.assertEqual(len({x.input_sha256 for x in seen}), 3)
+        for row in report["attempts"]:
+            self.assertTrue(row["compiler_output"].startswith("ATLAS_INPUT_SHA256 " + row["input_sha256"]))
         self.assertEqual(seen[-1].attempt, 3)
         self.assertFalse(report["execution_allowed"])
         self.assertFalse(report["certificate"])
@@ -97,3 +99,9 @@ class ScopedPayloadTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 probe.run_fixed_repair_loop([], {}, "sha256:" + "a"*64)
             run.assert_called_once()
+
+
+    def test_persisted_report_rejects_stale_identity_and_authority(self):
+        for report in ({}, {"execution_allowed": True}, {"certificate": True}):
+            with self.assertRaises(ValueError):
+                probe.replay_report(report, {}, {}, expected_sha="a"*40, expected_manifest_sha="b"*64)

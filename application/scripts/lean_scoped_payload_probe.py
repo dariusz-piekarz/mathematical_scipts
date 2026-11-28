@@ -153,7 +153,7 @@ def check_fixed_payload(prefix, env, image, case):
     prepared, expected_exit = prepared_fixture(case)
     row, output = _execute_fixed_payload(prefix, env, image, prepared, expected_exit=expected_exit)
     validate_payload_output(output, prepared, expected_exit=expected_exit)
-    return dict(case=case, **row)
+    return dict(case=case, compiler_output=output.decode("utf-8"), **row)
 
 
 def run_fixed_repair_loop(prefix, env, image):
@@ -193,7 +193,7 @@ def run_fixed_repair_loop(prefix, env, image):
                 or row["cleanup_status"] != "removed_verified" or row["image_id"] != image
                 or any(previous["container_id"] == row["container_id"] for previous in rows)):
             raise ValueError("Fixed repair execution evidence mismatch")
-        row.update(attempt=attempt)
+        row.update(attempt=attempt, compiler_output=output.decode("utf-8"))
         rows.append(row)
         if expected_exit == 0:
             if row["axioms"] is None:
@@ -252,7 +252,7 @@ def run_fixed_payload_probe(*, work, context, rootfs, prefix, env, packages, sou
                 raise ValueError("Fixed payload and repair cases must use distinct containers")
         finally:
             transport._command(prefix, ("image", "rm", image), env)
-        report = dict(schema=1, checkout_sha=checkout_sha, fixture_only=True,
+        report = dict(schema=2, checkout_sha=checkout_sha, fixture_only=True,
                       manifest_sha256=digest, execution_allowed=False, offline_ready=False,
                       certificate=False, proof_status="not_run", cases=rows, repair_loop=repair)
         for name, value in (("manifest", manifest), ("report", report)):
@@ -262,3 +262,138 @@ def run_fixed_payload_probe(*, work, context, rootfs, prefix, env, packages, sou
     finally:
         entry.write_bytes(old_entry)
         fixture.write_bytes(old_fixture)
+
+
+def replay_report(report, manifest, baseline, *, expected_sha, expected_manifest_sha):
+    """Check persisted fixed-case evidence, not independent runtime attestation."""
+    from scripts import lean_mathlib_source_probe as sources
+    from backend.lean_draft_repair import plan_next
+    from scripts.lean_ci_audit import ALLOWED_AXIOMS
+    fixed = dict(schema=2, checkout_sha=expected_sha, fixture_only=True,
+                 execution_allowed=False, offline_ready=False, certificate=False,
+                 proof_status="not_run", manifest_sha256=expected_manifest_sha)
+    if (type(expected_sha) is not str or not sources.REV.fullmatch(expected_sha)
+            or type(expected_manifest_sha) is not str or not artifacts.HEX.fullmatch(expected_manifest_sha)
+            or type(report) is not dict or set(report) != set(fixed) | {"cases", "repair_loop"}
+            or any(type(report[k]) is not type(v) or report[k] != v for k,v in fixed.items())):
+        raise ValueError("Invalid persisted payload report identity")
+    for tree in (manifest, baseline):
+        artifacts.validate_manifest_structure(tree, scope=artifacts.SCOPED_FIXTURE_SCOPE)
+        if artifacts.provenance(tree["source_closure"])["checkout_sha"] != expected_sha:
+            raise ValueError("Stale payload source provenance")
+    if hashlib.sha256(artifacts.encoded(manifest)).hexdigest() != expected_manifest_sha:
+        raise ValueError("Persisted payload manifest digest mismatch")
+    if manifest["source_closure"] != baseline["source_closure"]:
+        raise ValueError("Payload source closure changed")
+    old = {r["path"]:r for r in baseline["entries"]}
+    new = {r["path"]:r for r in manifest["entries"]}
+    fixture, entry = "opt/atlas/Fixture.lean", "opt/atlas/run-draft"
+    if (fixture not in old or entry not in old or entry not in new
+            or set(new) != set(old) - {fixture}
+            or any(new[k] != old[k] for k in new if k != entry)):
+        raise ValueError("Payload dependency tree differs from fixed scoped baseline")
+    entry_bytes = payload_entry(p["name"] for p in manifest["source_closure"]["packages"]).encode("ascii")
+    if new[entry] != dict(path=entry, kind="file", size=len(entry_bytes),
+                          sha256=hashlib.sha256(entry_bytes).hexdigest()):
+        raise ValueError("Payload entrypoint digest mismatch")
+    ids, images = set(), set()
+
+    def verify_row(row, prepared, expected_exit, extra):
+        if type(row) is not dict or type(row.get("compiler_output")) is not str:
+            raise ValueError("Missing raw compiler evidence")
+        if len(row["compiler_output"]) > policy.MAX_OUTPUT_BYTES:
+            raise ValueError("Oversized raw compiler evidence")
+        output = row["compiler_output"].encode("utf-8")
+        version, diagnostic, text = _payload_envelope(output, prepared, expected_exit=expected_exit)
+        axioms = None
+        if expected_exit == 0:
+            if "error:" in text.lower():
+                raise ValueError("Unexpected successful fixture diagnostic")
+            axioms = inspect_log(text, ["atlas_draft"])["atlas_draft"]
+        elif "error:" not in text.lower():
+            raise ValueError("Missing negative diagnostic")
+        expected = dict(input_sha256=prepared.input_sha256, observed_input_sha256=prepared.input_sha256,
+                        code_sha256=prepared.lean_code_sha256, source_sha256=prepared.source_sha256,
+                        ast_sha256=prepared.ast_sha256, cleanup_status="removed_verified",
+                        container_state="exited", exit_code=expected_exit, lean_version=version,
+                        diagnostic_sha256=hashlib.sha256(diagnostic).hexdigest(),
+                        diagnostic_bytes=len(diagnostic), axioms=axioms, **extra)
+        if (set(row) != set(expected) | {"image_id","container_id","compiler_output"}
+                or any(type(row[k]) is not type(v) or row[k] != v for k,v in expected.items())
+                or type(row["container_id"]) is not str or not transport._CONTAINER_ID.fullmatch(row["container_id"])
+                or row["container_id"] in ids
+                or type(row["image_id"]) is not str or not policy._IMAGE.fullmatch(row["image_id"])):
+            raise ValueError("Persisted payload case evidence mismatch")
+        ids.add(row["container_id"])
+        images.add(row["image_id"])
+        return diagnostic
+
+    if type(report["cases"]) is not list or len(report["cases"]) != len(CASES):
+        raise ValueError("Incorrect fixed case count")
+    for row, case in zip(report["cases"], CASES):
+        prepared, exit_code = prepared_fixture(case)
+        verify_row(row, prepared, exit_code, dict(case=case))
+        validate_payload_output(row["compiler_output"].encode(), prepared, expected_exit=exit_code)
+    initial = generate(POLYNOMIAL, consent=True)
+    identity = dict(expected_source_sha256=initial["source_sha256"],
+                    expected_ast_sha256=initial["ast_sha256"],
+                    expected_initial_code_sha256=initial["lean_code_sha256"], consent=True)
+    _, prepared = policy.prepare(POLYNOMIAL, consent=True,
+        expected_source_sha256=initial["source_sha256"], expected_ast_sha256=initial["ast_sha256"],
+        expected_code_sha256=initial["lean_code_sha256"])
+    loop = report["repair_loop"]
+    flags = dict(outcome="repair_compiled", initial_code_sha256=initial["lean_code_sha256"],
+                 max_attempts=3, fixture_only=True, execution_allowed=False,
+                 offline_ready=False, certificate=False, proof_status="not_run")
+    if (type(loop) is not dict or set(loop) != set(flags) | {"attempts"}
+            or any(type(loop[k]) is not type(v) or loop[k] != v for k,v in flags.items())
+            or type(loop["attempts"]) is not list or len(loop["attempts"]) != 3):
+        raise ValueError("Invalid persisted repair loop")
+    history = []
+    for attempt, row in enumerate(loop["attempts"], 1):
+        extra = dict(attempt=attempt)
+        if attempt < 3:
+            extra["planner_status"] = "repair_planned"
+        diagnostic = verify_row(row, prepared, int(attempt < 3), extra)
+        if attempt == 3:
+            if not set(row["axioms"]).issubset(ALLOWED_AXIOMS):
+                raise ValueError("Forbidden final axioms")
+            break
+        history.append(dict(code_sha256=prepared.lean_code_sha256, exit_code=1, diagnostic=diagnostic))
+        plan = plan_next(POLYNOMIAL, observations=history, **identity)
+        if plan["status"] != "repair_planned" or plan["signature"] != initial["signature"]:
+            raise ValueError("Persisted diagnostic replay rejected")
+        _, prepared = policy.prepare_repair(POLYNOMIAL, observations=history,
+            expected_repair_code_sha256=plan["lean_code_sha256"], **identity)
+        if type(prepared) is not policy.PreparedRepair or prepared.attempt != attempt + 1:
+            raise ValueError("Persisted repair preparation rejected")
+    if len(ids) != 5 or len(images) != 1:
+        raise ValueError("Persisted container or image identity mismatch")
+
+
+def main():
+    import argparse
+    from scripts import lean_mathlib_source_probe as sources
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--evidence-directory", type=Path, required=True)
+    parser.add_argument("--expected-manifest-sha256", required=True)
+    parser.add_argument("--expected-baseline-sha256", required=True)
+    args = parser.parse_args()
+    def read(name, limit, digest=None):
+        with (args.evidence_directory / name).open("rb") as handle:
+            raw = handle.read(limit + 1)
+        if len(raw) > limit or (digest is not None and hashlib.sha256(raw).hexdigest() != digest):
+            raise ValueError("Oversized or changed persisted evidence")
+        return json.loads(raw, object_pairs_hook=sources.unique_object)
+    report = read("atlas-mathlib-scoped-payload-report.json", 256000)
+    manifest = read("atlas-mathlib-scoped-payload-manifest.json", artifacts.MAX_MANIFEST_BYTES,
+                    args.expected_manifest_sha256)
+    baseline = read("atlas-mathlib-scoped-manifest.json", artifacts.MAX_MANIFEST_BYTES,
+                    args.expected_baseline_sha256)
+    replay_report(report, manifest, baseline, expected_sha=os.environ.get("GITHUB_SHA",""),
+                  expected_manifest_sha=args.expected_manifest_sha256)
+    print("ATLAS_SCOPED_PAYLOAD_REPLAY_VALIDATED")
+
+
+if __name__ == "__main__":
+    main()
