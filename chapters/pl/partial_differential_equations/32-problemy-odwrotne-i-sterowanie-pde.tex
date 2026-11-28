@@ -250,9 +250,15 @@ daje błąd $O(\delta^{2\nu/(2\nu+1)})$.
 \begin{proof}
 Z twierdzenia spektralnego dla dodatniego ograniczonego
 operatora samosprzężonego $A_0$ definiujemy
-$A_0^\nu$. Dla $\nu>0$ obraz $A_0^\nu$ jest
-prostopadły do $\ker A_0=\ker K$; dlatego
-$f^\dagger$ jest rozwiązaniem o najmniejszej normie.
+$A_0^\nu$. Dla $\nu>0$ i $v\in\ker A_0=\ker K$
+rachunek funkcyjny daje $A_0^\nu v=0$.
+Ponieważ $A_0^\nu$ jest samosprzężony,
+$(f^\dagger,v)_X=(w,A_0^\nu v)_X=0$.
+Każde rozwiązanie równania $Kf=y$ ma postać
+$f=f^\dagger+v$, gdzie $v\in\ker K$, a wtedy
+$\|f\|_X^2=\|f^\dagger\|_X^2+\|v\|_X^2$.
+Stąd $f^\dagger$ jest jedynym rozwiązaniem
+o najmniejszej normie.
 Rozkład błędu w dowodzie
 \ref{thm:pde32-tikhonov} ma postać
 \[
@@ -267,13 +273,39 @@ Twierdzenie spektralne daje
  =\alpha^\nu\sup_{r\ge0}\frac{r^\nu}{1+r}
  =C_\nu\alpha^\nu.
 \]
-Stała $C_\nu$ jest skończona dla $0<\nu\le1$.
+Dla $0<\nu<1$ pochodna funkcji
+$g_\nu(r)=r^\nu/(1+r)$ dla $r>0$ wynosi
+\[
+ g_\nu'(r)=
+ \frac{r^{\nu-1}(\nu-(1-\nu)r)}{(1+r)^2}.
+\]
+Funkcja rośnie do $r=\nu/(1-\nu)$, a następnie
+maleje; ponadto dąży do zera przy $r\downarrow0$
+oraz przy $r\to\infty$.
+Podstawienie punktu maksimum daje
+\[
+ C_\nu=\nu^\nu(1-\nu)^{1-\nu}
+ \quad(0<\nu<1).
+\]
+Dla $\nu=1$ funkcja $r/(1+r)$ rośnie do $1$,
+zatem $C_1=1$.
 Część pochodząca od szumu ma normę nie większą
 niż $\delta/(2\sqrt\alpha)$, jak wykazano w
 \ref{thm:pde32-tikhonov}. To dowodzi oszacowania.
-Porównanie wykładników $\alpha^\nu$ i
-$\delta\alpha^{-1/2}$ prowadzi do
-$\alpha^{\nu+1/2}\asymp\delta$, skąd podane tempo.
+Aby oba człony oszacowania miały ten sam rząd,
+przyjmujemy $\alpha^{\nu+1/2}\asymp\delta$.
+Dokładniej, jeśli dla dostatecznie małych $\delta>0$
+zachodzi $c_1\delta^{2/(2\nu+1)}\le\alpha
+\le c_2\delta^{2/(2\nu+1)}$ z $c_1,c_2>0$, to
+\[
+ \alpha^\nu\le c_2^\nu\delta^{2\nu/(2\nu+1)},
+ \qquad
+ \frac{\delta}{\sqrt\alpha}\le
+ c_1^{-1/2}\delta^{2\nu/(2\nu+1)}.
+\]
+To uzasadnia deklarowane tempo przy jednostajnym
+ograniczeniu normy $w$. Nie stwierdzamy, że ten wybór
+parametru minimalizuje rzeczywisty błąd dla każdych danych.
 \end{proof}
 
 \begin{uwaga}[Zakres tempa]
@@ -282,8 +314,34 @@ $f^\dagger\in\operatorname{Ran}(A_0^\nu)$
 nie można przypisać wszystkim danym tempa
 $\delta^{2\nu/(2\nu+1)}$. Ponadto w standardowej
 regularyzacji Tichonowa wykładnik $\nu>1$ nie
-prowadzi tą metodą do analogicznego polepszenia
-członu obciążenia (zjawisko nasycenia).
+prowadzi do analogicznego polepszenia rzędu
+członu obciążenia. Istotnie, dla
+$f^\dagger=A_0^\nu w$ i danych dokładnych
+$y=Kf^\dagger$ mamy
+\[
+ \|f_\alpha^0-f^\dagger\|_X
+ \le\alpha\|A_0\|^{\nu-1}\|w\|_X,
+\]
+gdyż $t^\nu/(t+\alpha)\le t^{\nu-1}$
+dla $t>0$. Co więcej, z rachunku spektralnego
+i twierdzenia o zbieżności zmajoryzowanej wynika
+\[
+ \frac{f_\alpha^0-f^\dagger}{\alpha}
+ =-(A_0+\alpha I)^{-1}A_0^\nu w
+ \longrightarrow -A_0^{\nu-1}w
+ \quad\text{w }X .
+\]
+Rzeczywiście, mnożniki $t^\nu/(t+\alpha)$
+zbiegają punktowo na widmie do $t^{\nu-1}$
+(również w zerze) i są jednostajnie ograniczone
+przez $\|A_0\|^{\nu-1}$.
+Jeżeli $f^\dagger\ne0$, to $A_0^{\nu-1}w\ne0$,
+ponieważ $A_0 A_0^{\nu-1}w=f^\dagger$.
+Wówczas błąd dla danych dokładnych jest dokładnie
+rzędu $\alpha$, nie zaś $o(\alpha)$.
+Jest to nasycenie rzędu obciążenia; nie jest to
+jeszcze twierdzenie o optymalnym tempie rekonstrukcji
+dla dowolnej reguły doboru parametru i klasy szumów.
 \end{uwaga}
 
 \begin{przyklad}[Zbyt mała regularyzacja]
@@ -305,7 +363,14 @@ jest różnowartościowy.
 
 \section{Sterowanie rozłożone w obszarze: operator stanu}
 Niech $\Omega\subset\R^d$ będzie ograniczonym obszarem
-Lipschitzowskim, $V=H_0^1(\Omega)$ i $H=L^2(\Omega)$.
+Lipschitzowskim, $V=H_0^1(\Omega)$ i $H=L^2(\Omega)$
+nad ciałem liczb rzeczywistych. W dalszej części
+przyjmujemy normę $\|v\|_V=\|\nabla v\|_2$,
+równoważną standardowej normie $H^1$ na $V$
+na mocy nierówności Poincarégo
+$\|v\|_H\le C_P\|v\|_V$.
+Normę na przestrzeni sprzężonej $V'=H^{-1}(\Omega)$
+wyznaczamy względem tej normy na $V$.
 Przyjmujemy mierzalną symetryczną macierz
 $A\in L^\infty(\Omega;\R^{d\times d})$
 i $\xi^{\mathsf T}A(x)\xi\ge\lambda|\xi|^2$ dla
@@ -314,17 +379,46 @@ Niech $c\in L^\infty(\Omega)$, $c\ge0$.
 Forma
 $\mathfrak a(y,v)=\int_\Omega
 (A\nabla y\cdot\nabla v+cyv)\,\mathrm d\lambda_d(x)$
-jest koercywna i symetryczna na $V$.
-Niech $f\in V'$ oraz $u\in H$. Przez $y(u)\in V$
-oznaczamy jedyne rozwiązanie
+jest symetryczna, ograniczona i koercywna na $V$.
+Dokładniej, z nierówności Cauchy'ego--Schwarza
+i nierówności Poincarégo mamy
+\[
+ \begin{aligned}
+ |\mathfrak a(y,v)|
+ &\le(\|A\|_{L^\infty}+C_P^2\|c\|_\infty)
+ \|y\|_V\|v\|_V,\\
+ \mathfrak a(v,v)&\ge\lambda\|v\|_V^2,
+ \end{aligned}
+\]
+gdzie normę macierzy w $L^\infty$ rozumiemy
+jako istotny kres górny normy operatorowej macierzy.
+Niech $f\in V'$ oraz $u\in H$. Funkcjonał
+$v\mapsto\langle f,v\rangle_{V',V}+(u,v)_H$
+jest liniowy i ograniczony przez
+$(\|f\|_{V'}+C_P\|u\|_H)\|v\|_V$.
+Z twierdzenia Laxa--Milgrama istnieje zatem
+dokładnie jedno $y(u)\in V$ spełniające równanie
 \begin{equation}\label{eq:pde32-state}
  \mathfrak a(y(u),v)=\langle f,v\rangle_{V',V}
  +\int_\Omega uv\,\mathrm d\lambda_d(x)
  \quad\text{dla każdego }v\in V.
 \end{equation}
-Odwzorowanie $u\mapsto y(u)$ jest afiniczne i ciągłe
-$H\to V$. Kładziemy $S(u)=y(u)-y(0)$; jest to liniowy
-operator rozwiązania dla źródła $u$.
+Testując równanie przez $v=y(u)$, otrzymujemy
+\[
+ \|y(u)\|_V\le\lambda^{-1}
+ (\|f\|_{V'}+C_P\|u\|_H).
+\]
+Kładziemy $S(u)=y(u)-y(0)$. Odejmując równania
+dla $y(u)$ oraz $y(0)$, mamy
+$\mathfrak a(S(u),v)=(u,v)_H$ dla każdego $v\in V$.
+Liniowość prawej strony oraz jednoznaczność
+rozwiązania dają liniowość $S$.
+Z koercywności, po podstawieniu $v=S(u)$,
+wynika $\|S(u)\|_V\le C_P\lambda^{-1}\|u\|_H$.
+W szczególności $u\mapsto y(u)=y(0)+S(u)$
+jest afiniczne i ciągłe jako odwzorowanie $H\to V$.
+Traktowany jako operator $H\to H$, operator $S$
+jest także zwarty dzięki zwartemu zanurzeniu $V\hookrightarrow H$.
 
 \begin{twierdzenie}[Istnienie sterowania optymalnego]\label{thm:pde32-control}
 Niech $y_d\in H$, $\alpha>0$ i $U_{\mathrm{ad}}\subset H$
@@ -348,9 +442,31 @@ Ciągłość liniowa $S$ daje słabą zbieżność
 $y(u_n)\rightharpoonup y(\bar u)$ w $H$.
 Słaba dolna półciągłość norm daje
 $\mathcal J(\bar u)\le\liminf\mathcal J(u_n)$.
-Składnik z $\alpha>0$ zapewnia ścisłą wypukłość
-$\mathcal J$, a wraz z wypukłością $U_{\mathrm{ad}}$
-także jednoznaczność minimizatora.
+Dla $u,v\in H$ i $0\le\theta\le1$ z afiniczności
+stanu i tożsamości dla kwadratu normy w przestrzeni
+Hilberta otrzymujemy
+\[
+ \begin{aligned}
+ \mathcal J((1-\theta)u+\theta v)
+ &=(1-\theta)\mathcal J(u)+\theta\mathcal J(v)\\
+ &\quad-\frac{\theta(1-\theta)}2
+ \bigl(\|S(u-v)\|_H^2+\alpha\|u-v\|_H^2\bigr).
+ \end{aligned}
+\]
+Dla $u\ne v$ i $0<\theta<1$ ostatni człon jest
+ściśle ujemny, co daje ścisłą wypukłość.
+Dwa różne minimizatory w $U_{\mathrm{ad}}$
+miałyby dopuszczalny środek o mniejszej wartości
+funkcjonału, co jest sprzecznością.
+Ponadto każdy ciąg minimalizujący zbiega silnie
+do $\bar u$: podstawiając $u=\bar u$, $v=u_n$,
+$\theta=1/2$ i korzystając z minimalności
+$\bar u$, otrzymujemy
+\[
+ \frac{\alpha}{8}\|u_n-\bar u\|_H^2
+ \le \frac12\bigl(\mathcal J(u_n)-\mathcal J(\bar u)\bigr)
+ \longrightarrow0.
+\]
 \end{proof}
 
 \section{Równanie sprzężone i warunki optymalności}
