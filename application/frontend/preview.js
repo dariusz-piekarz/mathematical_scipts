@@ -239,7 +239,7 @@ function addAtlasPlot(parent,source,moduleId){
     frame.referrerPolicy='no-referrer';
     frame.className='atlas-plot-frame';
     frame.src='/assets/plots/viewer.html?id='+encodeURIComponent(id);
-    host.append(frame);button.textContent=title?'Zamknij wykres 3D — '+title:'Zamknij wykres 3D';
+    host.append(frame);button.textContent='Zamknij '+plotKind+(title?' — '+title:'');
     button.setAttribute('aria-expanded','true');
   });
   host.append(button);parent.append(host);
