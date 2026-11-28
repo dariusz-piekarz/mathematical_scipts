@@ -532,3 +532,324 @@ dla każdej formuły $A\notin L$ istnieje
 rama z $\operatorname{Fr}(L)$ i model na tej ramie,
 w którym $A$ jest fałszywa w pewnym stanie.
 \end{uwaga}
+
+\section{Maksymalne zbiory niesprzeczne}
+
+Ustalmy niesprzeczną normalną logikę modalną $L$.
+W tej sekcji i w konstrukcji modelu kanonicznego
+stosujemy wyłącznie konsekwencję lokalną
+z Definicji~\ref{def:ncl-modal-local-global}.
+To ograniczenie jest istotne: prawdziwość
+w jednym stanie nie pozwala stosować reguły
+konieczności do dowolnej przesłanki.
+
+\begin{definicja}[Niesprzeczność lokalna]
+\label{def:ncl-kripke-consistency}
+Zbiór formuł $\Gamma$ jest $L$-niesprzeczny, gdy
+\[
+ \Gamma\not\vdash_L^{\mathrm{lok}}\bot.
+\]
+Jest maksymalnym zbiorem $L$-niesprzecznym,
+gdy jest $L$-niesprzeczny i żaden jego
+właściwy nadzbiór nie jest $L$-niesprzeczny.
+\end{definicja}
+
+\begin{lemat}[Dołączanie formuły]
+\label{lem:ncl-kripke-consistency-extension}
+Dla dowolnego zbioru $\Gamma$ i formuły $A$
+zachodzi
+\[
+\begin{aligned}
+ \Gamma\cup\{A\}\vdash_L^{\mathrm{lok}}\bot
+ &\iff\Gamma\vdash_L^{\mathrm{lok}}\neg A,\\
+ \Gamma\cup\{\neg A\}\vdash_L^{\mathrm{lok}}\bot
+ &\iff\Gamma\vdash_L^{\mathrm{lok}} A.
+\end{aligned}
+\]
+Jeżeli $\Gamma$ jest $L$-niesprzeczny,
+to co najmniej jeden ze zbiorów
+$\Gamma\cup\{A\}$ i $\Gamma\cup\{\neg A\}$
+jest $L$-niesprzeczny.
+\end{lemat}
+\begin{proof}
+Pierwsza równoważność jest lokalnym twierdzeniem
+o dedukcji (Twierdzenie~\ref{thm:ncl-modal-local-deduction})
+dla wniosku $\bot$. Druga wynika z pierwszej
+dla formuły $\neg A$ oraz klasycznych tautologii
+$A\to\neg\neg A$ i $\neg\neg A\to A$.
+Gdyby oba rozszerzenia były sprzeczne,
+z $\Gamma$ można byłoby lokalnie wyprowadzić
+zarówno $A$, jak i $\neg A=A\to\bot$,
+a więc przez modus ponens również $\bot$.
+\end{proof}
+
+\begin{lemat}[Lemat Lindenbauma]
+\label{lem:ncl-kripke-lindenbaum-extension}
+Każdy $L$-niesprzeczny zbiór formuł zawiera
+się w pewnym maksymalnym zbiorze
+$L$-niesprzecznym.
+\end{lemat}
+\begin{proof}
+Język jest przeliczalny na mocy
+Definicji~\ref{def:ncl-modal-language}:
+każda formuła jest skończonym napisem
+nad przeliczalnym alfabetem, a zbiór
+skończonych napisów jest przeliczalny.
+Ustalmy wyliczenie wszystkich formuł
+$A_0,A_1,\ldots$. Dla danego niesprzecznego
+zbioru $\Gamma$ definiujemy rekurencyjnie
+$\Gamma_0=\Gamma$ oraz
+\[
+ \Gamma_{n+1}=
+ \begin{cases}
+  \Gamma_n\cup\{A_n\},&
+    \text{jeśli ten zbiór jest niesprzeczny},\\
+  \Gamma_n\cup\{\neg A_n\},&
+    \text{w przeciwnym przypadku}.
+ \end{cases}
+\]
+Lemat~\ref{lem:ncl-kripke-consistency-extension}
+zapewnia niesprzeczność każdego $\Gamma_n$.
+Niech $\Delta=\bigcup_{n\geq 0}\Gamma_n$.
+Gdyby $\Delta$ była sprzeczna, skończony
+dowód $\bot$ używałby jedynie skończenie
+wielu przesłanek z $\Delta$.
+Wszystkie należałyby do jednego $\Gamma_N$,
+ponieważ ciąg zbiorów jest rosnący.
+To przeczyłoby niesprzeczności $\Gamma_N$.
+Dla każdej formuły $A$ do $\Delta$ należy
+$A$ lub $\neg A$. Jeżeli $A\notin\Delta$,
+to $\neg A\in\Delta$, więc dołączenie $A$
+daje sprzeczność przez modus ponens.
+Każdy właściwy nadzbiór $\Delta$ jest zatem
+sprzeczny, a $\Gamma\subseteq\Delta$.
+\end{proof}
+
+Konstrukcja jest argumentem egzystencjalnym,
+nie procedurą decyzyjną: nie zakładamy
+algorytmu rozstrzygającego niesprzeczność.
+Przeliczalność języka umożliwia powyższą
+konstrukcję bez odwoływania się do lematu Zorna.
+
+\begin{stwierdzenie}[Rachunek w maksymalnym zbiorze niesprzecznym]
+\label{prop:ncl-kripke-maximal-consistent-laws}
+Niech $x$ będzie maksymalnym zbiorem
+$L$-niesprzecznym. Wtedy $L\subseteq x$,
+$\bot\notin x$ i dla każdej formuły $A$
+\[
+ x\vdash_L^{\mathrm{lok}}A\iff A\in x.
+\]
+Ponadto dla dowolnych $A,B$ zachodzą
+\[
+\begin{aligned}
+ \neg A\in x &\iff A\notin x,\\
+ A\wedge B\in x &\iff A\in x\text{ oraz }B\in x,\\
+ A\vee B\in x &\iff A\in x\text{ lub }B\in x,\\
+ A\to B\in x &\iff A\notin x\text{ lub }B\in x.
+\end{aligned}
+\]
+\end{stwierdzenie}
+\begin{proof}
+Gdy $A\notin x$, maksymalność oznacza
+sprzeczność $x\cup\{A\}$. Z
+Lematu~\ref{lem:ncl-kripke-consistency-extension}
+wynika $x\vdash_L^{\mathrm{lok}}\neg A$.
+Nie może więc zachodzić
+$x\vdash_L^{\mathrm{lok}}A$, bo przez modus
+ponens otrzymalibyśmy $\bot$.
+Odwrotny kierunek jest zwrotnością konsekwencji.
+W szczególności każde twierdzenie $L$ należy
+do $x$, a $\bot$ nie należy do $x$.
+Jeżeli $A\notin x$, to wykazaliśmy
+$x\vdash_L^{\mathrm{lok}}\neg A$, czyli
+$\neg A\in x$. Odwrotnie $A$ i $\neg A$
+nie mogą jednocześnie należeć do $x$.
+
+Dla koniunkcji używamy tautologii eliminacji
+$A\wedge B\to A$, $A\wedge B\to B$
+i wprowadzenia $A\to(B\to A\wedge B)$
+oraz domknięcia $x$ względem modus ponens.
+Jeżeli $A\in x$ lub $B\in x$, tautologie
+wprowadzenia alternatywy dają $A\vee B\in x$.
+Jeżeli żadna z formuł nie należy do $x$,
+to $\neg A,\neg B\in x$. Tautologia
+$\neg A\to(\neg B\to\neg(A\vee B))$
+daje $\neg(A\vee B)\in x$, więc
+$A\vee B\notin x$.
+Jeśli $A\notin x$ lub $B\in x$, odpowiednio
+tautologia $\neg A\to(A\to B)$ lub
+$B\to(A\to B)$ daje $A\to B\in x$.
+Jeżeli $A\in x$ i $B\notin x$, to
+$A\to B$ nie może należeć do $x$,
+gdyż modus ponens dawałby $B\in x$.
+\end{proof}
+
+\section{Model kanoniczny i lemat o prawdziwości}
+
+\begin{definicja}[Model kanoniczny]
+\label{def:ncl-kripke-canonical-model}
+Dla niesprzecznej normalnej logiki $L$
+definiujemy $M_L=(W_L,R_L,V_L)$, gdzie
+$W_L$ jest zbiorem wszystkich maksymalnych
+zbiorów $L$-niesprzecznych, a
+\[
+\begin{aligned}
+ xR_Ly &\iff x^\Box\subseteq y,\qquad
+ x^\Box=\{A:\Box A\in x\},\\
+ V_L(p)&=\{x\in W_L:p\in x\}.
+\end{aligned}
+\]
+Ramę $F_L=(W_L,R_L)$ nazywamy ramą kanoniczną.
+\end{definicja}
+
+Z niesprzeczności $L$ wynika niesprzeczność
+pustego zbioru przesłanek (por.
+Stwierdzenie~\ref{prop:ncl-modal-consequence-structural}).
+Lemat~\ref{lem:ncl-kripke-lindenbaum-extension}
+zapewnia więc $W_L\ne\varnothing$.
+Ponieważ $W_L\subseteq\mathcal P(\mathrm{Fm}_{\Box})$,
+jest to rzeczywiście zbiór, a nie klasa właściwa.
+
+Relacja kanoniczna ma znaczenie syntaktyczne:
+jeżeli w świecie $x$ formuła $\Box A$ należy
+do jego zbioru przekonań, każdy dostępny
+świat musi zawierać $A$. Sam warunek
+$x^\Box\subseteq y$ nie gwarantuje istnienia
+żadnego następnika. Istnienie świadków
+dla formuł możliwości jest treścią kolejnego lematu.
+
+\begin{lemat}[Istnienie następnika kanonicznego]
+\label{lem:ncl-kripke-canonical-successor}
+Niech $x\in W_L$ i niech $A$ będzie formułą.
+Jeżeli $\Diamond A\in x$, to istnieje
+$y\in W_L$ takie, że $xR_Ly$ i $A\in y$.
+\end{lemat}
+\begin{proof}
+Wykażemy niesprzeczność $x^\Box\cup\{A\}$.
+Gdyby zbiór ten był sprzeczny, skończoność
+konsekwencji pozwoliłaby wybrać
+$B_1,\ldots,B_n\in x^\Box$ takie, że
+\[
+ \{B_1,\ldots,B_n,A\}\vdash_L^{\mathrm{lok}}\bot.
+\]
+Niech $B=\bigwedge_{i=1}^{n}B_i$,
+przy czym dla $n=0$ przyjmujemy $B=\top$.
+Z lokalnego twierdzenia o dedukcji oraz
+tautologii klasycznych wynika $B\to\neg A\in L$:
+dla $n>0$ można z przesłanki $B$ wyprowadzić
+każde $B_i$, a następnie z $B,A$ wyprowadzić
+$\bot$; dwukrotna dedukcja daje żądaną
+implikację. Dla $n=0$ otrzymujemy
+$\neg A\in L$, a stąd $\top\to\neg A\in L$.
+Reguła konieczności zastosowana do twierdzenia
+$B\to\neg A$ oraz aksjomat K dają
+\[
+ \Box B\to\Box\neg A\in L.
+\]
+Każda $\Box B_i$ należy do $x$.
+Normalne prawa operatora konieczności
+(Twierdzenie~\ref{thm:ncl-modal-normal-laws})
+dają $\Box B\in x$ przez zachowanie
+skończonych koniunkcji; dla $n=0$
+korzystamy z twierdzenia $\Box\top\in L$.
+Wobec domknięcia $x$ względem modus ponens
+otrzymujemy $\Box\neg A\in x$.
+Przeczy to $\Diamond A=\neg\Box\neg A\in x$.
+Zatem $x^\Box\cup\{A\}$ jest niesprzeczny
+i Lemat~\ref{lem:ncl-kripke-lindenbaum-extension}
+daje jego maksymalne niesprzeczne rozszerzenie $y$.
+Z definicji $xR_Ly$ i $A\in y$.
+\end{proof}
+
+\begin{wniosek}[Dwie postacie relacji kanonicznej]
+\label{cor:ncl-kripke-canonical-relation-dual}
+Dla $x,y\in W_L$ zachodzi
+\[
+ xR_Ly\iff
+ \forall A\in y\quad\Diamond A\in x.
+\]
+\end{wniosek}
+\begin{proof}
+Jeżeli $xR_Ly$ i $A\in y$, lecz
+$\Diamond A\notin x$, to maksymalność oraz
+podwójna negacja dają $\Box\neg A\in x$.
+Stąd $\neg A\in y$, sprzecznie z $A\in y$.
+Odwrotnie, załóżmy warunek po prawej
+i niech $\Box B\in x$. Gdyby $B\notin y$,
+mielibyśmy $\neg B\in y$ i wobec założenia
+$\Diamond\neg B\in x$. Jest ona równoważna
+$\neg\Box B$ w K przez podwójną negację
+i zastępowanie równoważników, więc
+$\neg\Box B\in x$, co jest sprzecznością.
+Zatem $B\in y$ i $x^\Box\subseteq y$.
+\end{proof}
+
+\begin{twierdzenie}[Lemat o prawdziwości]
+\label{thm:ncl-kripke-canonical-truth}
+Dla każdej formuły $A$ i każdego $x\in W_L$
+\[
+ M_L,x\Vdash A\iff A\in x.
+\]
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po budowie $A$, jednocześnie
+dla wszystkich $x\in W_L$.
+Dla zmiennych teza wynika z definicji $V_L$.
+Dla $\bot$ obie strony równoważności są
+fałszywe. Dla $\wedge,\vee,\to$ stosujemy
+hipotezę indukcyjną oraz odpowiednie
+równoważności ze
+Stwierdzenia~\ref{prop:ncl-kripke-maximal-consistent-laws}.
+
+Niech $A=\Box C$. Jeżeli $\Box C\in x$,
+to każdy $y$ z $xR_Ly$ zawiera $C$.
+Z hipotezy indukcyjnej każdy taki $y$
+spełnia $C$ w $M_L$, a zatem $x$ spełnia $\Box C$.
+
+Jeżeli natomiast $\Box C\notin x$,
+to $\neg\Box C\in x$. Przez podwójną
+negację i zastępowanie równoważników
+w K otrzymujemy $\Diamond\neg C\in x$.
+Lemat~\ref{lem:ncl-kripke-canonical-successor}
+daje $y$ takie, że $xR_Ly$ i $\neg C\in y$.
+Wobec niesprzeczności $C\notin y$,
+więc z hipotezy indukcyjnej $y$ nie spełnia $C$.
+W konsekwencji $x$ nie spełnia $\Box C$.
+To kończy indukcję; skróty $\neg$ i $\Diamond$
+są objęte dowodem po rozwinięciu.
+\end{proof}
+
+\begin{wniosek}[Realizacja zbiorów niesprzecznych]
+\label{cor:ncl-kripke-canonical-realization}
+Każdy $L$-niesprzeczny zbiór $\Gamma$
+jest spełniony w pewnym stanie modelu $M_L$.
+Ponadto jeżeli $\Gamma\not\vdash_L^{\mathrm{lok}}A$,
+to istnieje $x\in W_L$, który spełnia wszystkie
+formuły $\Gamma$, lecz nie spełnia $A$.
+\end{wniosek}
+\begin{proof}
+Pierwsza teza wynika z rozszerzenia $\Gamma$
+do maksymalnego zbioru niesprzecznego i z
+Twierdzenia~\ref{thm:ncl-kripke-canonical-truth}.
+Dla drugiej tezy zbiór $\Gamma\cup\{\neg A\}$
+jest niesprzeczny przez
+Lemat~\ref{lem:ncl-kripke-consistency-extension}.
+Stosujemy pierwszą tezę do tego zbioru
+i korzystamy z klauzuli negacji.
+\end{proof}
+
+\begin{uwaga}[Model kanoniczny a rama kanoniczna]
+\label{rem:ncl-kripke-canonical-model-frame}
+Wszystkie twierdzenia $L$ są prawdziwe w każdym
+stanie modelu $M_L$, ponieważ należą do każdego
+maksymalnego zbioru $L$-niesprzecznego.
+Nie wynika stąd jednak, że są ważne na ramie
+$F_L$: model $M_L$ ma jedno ustalone
+wartościowanie $V_L$, natomiast ważność
+na ramie wymaga wszystkich wartościowań.
+W kolejnym etapie wykażemy, dla których
+podstawowych systemów $F_L$ należy do
+$\operatorname{Fr}(L)$. Dopiero wtedy powyższa
+realizacja zbiorów niesprzecznych pozwoli
+wnioskować o silnej pełności względem klasy ram.
+\end{uwaga}
