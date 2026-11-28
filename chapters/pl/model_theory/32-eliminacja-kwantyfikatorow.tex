@@ -1,0 +1,552 @@
+\chapter{Eliminacja kwantyfikatorów}
+\label{ch:mod-qe}
+\section{Motywacja i definicja}
+Formuła $\exists y\,(x<y\land y<z)$ wyraża istnienie
+elementu pomiędzy $x$ i $z$. W gęstym porządku liniowym
+jest równoważna formule $x<z$: kwantyfikator nie niesie
+tam dodatkowej informacji. Eliminacja kwantyfikatorów
+oznacza, że w ustalonej teorii każdą formułę można w ten
+sposób zastąpić formułą bez kwantyfikatorów. Nie oznacza
+to, że każda formuła jest prawdziwa w każdym modelu.
+
+Pracujemy w logice pierwszego rzędu z równością i w ZFC.
+Korzystamy z pojęć termu, formuły i konsekwencji semantycznej
+z definicji \ref{def:syntax-term}, \ref{def:syntax-formula}
+i \ref{def:sem-entailment}.
+Dla wygody dopuszczamy logiczne stałe $\top,\bot$,
+o wartościach odpowiednio prawda i fałsz w każdej strukturze.
+Jest to konserwatywne rozszerzenie składni: w obecności
+zmiennej $x$ można je zastąpić przez $x=x$ i $\neg(x=x)$,
+a w obecności termu domkniętego $t$ przez $t=t$ i $\neg(t=t)$.
+W języku bez stałych i bez symboli funkcyjnych o arności zero
+konwencja ta pozwala mówić także o zdaniach bez kwantyfikatorów.
+Jeśli nie ma dostępnych termów domkniętych, nie utożsamiamy
+$\top$ i $\bot$ z atomami języka pierwotnego.
+
+\begin{definicja}[Eliminacja kwantyfikatorów]
+\label{def:mod-qe}
+Niech $T$ będzie spełnialną teorią języka $\mathcal L$.
+Mówimy, że $T$ ma eliminację kwantyfikatorów, jeżeli dla
+każdej formuły $\varphi(\bar x)$ istnieje formuła
+bez kwantyfikatorów $\psi(\bar x)$, bez dodatkowych
+zmiennych wolnych, taka że
+\[
+T\models\forall\bar x\,(\varphi(\bar x)\leftrightarrow\psi(\bar x)).
+\]
+Dopuszczamy pustą listę $\bar x$, a wówczas uniwersalne
+domknięcie oznacza samo zdanie.
+\end{definicja}
+
+Równoważność dotyczy wszystkich modeli $T$ i wszystkich
+wartościowań wskazanych zmiennych; nie wystarcza równoważność
+w jednym wybranym modelu niezupełnej teorii.
+Formuła bez kwantyfikatorów jest kombinacją boolowską
+formuł atomowych i stałych logicznych.
+
+\begin{lemat}[Eliminacja pojedynczego kwantyfikatora]
+\label{lem:mod-qe-exists}
+W celu wykazania eliminacji kwantyfikatorów wystarczy
+wykazać, że każda formuła postaci $\exists y\,\theta(y,\bar x)$,
+gdzie $\theta$ nie zawiera kwantyfikatorów, jest równoważna
+modulo $T$ formule bez kwantyfikatorów.
+Wystarczy rozpatrywać $\theta$ będące skończonymi
+koniunkcjami literałów, tj. atomów i negacji atomów.
+\end{lemat}
+\begin{proof}
+Indukcja po budowie formuły (twierdzenie
+\ref{thm:syntax-structural-induction-xlv}) pozostawia atomy
+bez zmian i zastępuje podformuły przy spójnikach ich
+równoważnikami bez kwantyfikatorów. W kroku egzystencjalnym
+stosujemy założenie do już uproszczonej podformuły.
+Krok uniwersalny sprowadzamy do negacji i kwantyfikatora
+egzystencjalnego. Równoważność podformuł jest zachowywana
+przez spójniki i kwantyfikatory z ich semantyki.
+Każdą skończoną kombinację boolowską atomów można
+zapisać jako alternatywę koniunkcji literałów: dla każdego
+wartościowania atomów czyniącego kombinację prawdziwą
+tworzymy koniunkcję tych atomów lub ich negacji zgodnie
+z wartościowaniem. Alternatywa tych koniunkcji ma tę samą
+tablicę prawdy. Pusta koniunkcja to $\top$, pusta
+alternatywa to $\bot$. Kwantyfikator egzystencjalny
+rozkłada się na skończoną alternatywę, ponieważ świadek
+spełnia alternatywę dokładnie wtedy, gdy spełnia
+co najmniej jeden jej człon.
+\end{proof}
+
+\section{Kryterium semantyczne}
+\begin{definicja}[Typ bez kwantyfikatorów]
+\label{def:mod-qe-qftype}
+Dla krotki $\bar a$ w strukturze $\mathfrak M$ określamy
+jej typ bez kwantyfikatorów
+$\operatorname{qftp}^{\mathfrak M}(\bar a)$ jako zbiór
+wszystkich formuł bez kwantyfikatorów, prawdziwych przy
+$\bar a$ i o zmiennych wolnych w ustalonej liście $\bar x$.
+Dla pustej krotki jest to zbiór prawdziwych zdań
+bez kwantyfikatorów. Typ zupełny $\operatorname{tp}$
+definiowano w rozdziale \ref{ch:mod-types}.
+\end{definicja}
+
+\begin{twierdzenie}[Kryterium przez typy bez kwantyfikatorów]
+\label{thm:mod-qe-semantic}
+Dla spełnialnej teorii $T$ równoważne są warunki:
+\begin{enumerate}[label=(\roman*)]
+\item $T$ ma eliminację kwantyfikatorów;
+\item dla dowolnych modeli $\mathfrak M,\mathfrak N\models T$
+i skończonych krotek $\bar a,\bar b$ tej samej długości
+(w tym pustych) równość ich typów bez kwantyfikatorów
+implikuje zgodność prawdziwości wszystkich formuł
+przy tych krotkach.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Jeżeli zachodzi (i), to dowolna formuła ma równoważnik
+bez kwantyfikatorów, co daje (ii).
+
+Załóżmy (ii) i ustalmy formułę $\varphi(\bar x)$.
+Dla każdej jej realizacji $\bar a$ w pewnym modelu $T$
+typ bez kwantyfikatorów $q$ tej krotki wymusza
+$\varphi$: inaczej istniałaby realizacja $q$ w modelu $T$,
+która nie spełnia $\varphi$, a ponieważ $q$ rozstrzyga
+każdą formułę bez kwantyfikatorów, przeczyłoby to (ii).
+Formalnie, po dodaniu świeżych stałych $\bar c$,
+teoria
+\[
+T\cup\{\eta(\bar c):\eta\in q\}
+  \cup\{\neg\varphi(\bar c)\}
+\]
+nie ma modelu. Z twierdzenia o zwartości
+\ref{thm:compactness} istnieje skończony fragment
+$q_0\subseteq q$, którego koniunkcja $\theta_q$ wymusza
+$\varphi$ modulo $T$. Podstawienie stałych za zmienne
+jest zgodne z semantyką na mocy twierdzenia
+\ref{thm:sem-substitution}; dla pustej krotki stałych
+nie dodajemy. Koniunkcja $\theta_q$ jest bez kwantyfikatorów
+i spełniona przy wyjściowej krotce.
+
+Nie musimy wybierać realizacji ze zbioru wszystkich modeli:
+niech $\Theta$ będzie zbiorem wszystkich formuł bez
+kwantyfikatorów o wskazanych zmiennych wolnych, które
+implikują $\varphi$ modulo $T$. Z poprzedniego akapitu
+każda realizacja $\varphi$ spełnia pewną formułę z $\Theta$.
+Zatem teoria
+\[
+T\cup\{\varphi(\bar c)\}
+  \cup\{\neg\theta(\bar c):\theta\in\Theta\}
+\]
+jest niespełnialna. Zwartość daje skończenie wiele formuł
+$\theta_1,\ldots,\theta_m$ z $\Theta$, takich że
+$\varphi$ implikuje ich alternatywę modulo $T$.
+Każdy człon alternatywy implikuje $\varphi$, więc
+$\varphi$ jest równoważna tej alternatywie. Jeśli
+$m=0$, otrzymujemy $\bot$. Dowód obejmuje także zdania.
+\end{proof}
+
+\begin{twierdzenie}[Kryterium przedłużania zgodnych krotek]
+\label{thm:mod-qe-forth}
+Załóżmy, że dla każdych modeli $\mathfrak M,\mathfrak N$
+teorii $T$ i krotek $\bar a,\bar b$ o tym samym typie
+bez kwantyfikatorów spełniony jest warunek:
+dla każdego $a\in M$ istnieje rozszerzenie elementarne
+$\mathfrak N'\succeq\mathfrak N$ i $b\in N'$ takie, że
+\[
+\operatorname{qftp}^{\mathfrak M}(\bar a,a)=
+\operatorname{qftp}^{\mathfrak N'}(\bar b,b).
+\]
+Wówczas $T$ ma eliminację kwantyfikatorów.
+\end{twierdzenie}
+\begin{proof}
+Weryfikujemy kryterium \ref{thm:mod-qe-semantic}
+indukcją po formułach, jednocześnie dla wszystkich
+modeli $T$ i zgodnych krotek. Atomy są zgodne z założenia,
+a spójniki zachowują zgodność przez indukcję.
+Jeśli $\mathfrak M\models\exists y\,\varphi(\bar a,y)$,
+wybieramy świadka $a$ i stosujemy założenie.
+Hipoteza indukcyjna daje
+$\mathfrak N'\models\varphi(\bar b,b)$, stąd
+$\mathfrak N'\models\exists y\,\varphi(\bar b,y)$.
+Z elementarności rozszerzenia
+(\ref{def:model-elementary-substructure})
+wynika $\mathfrak N\models\exists y\,\varphi(\bar b,y)$.
+Implikacja odwrotna wynika z zastosowania tego samego
+założenia po zamianie modeli i krotek. Kwantyfikator
+uniwersalny sprowadzamy do negacji i egzystencjalnego.
+\end{proof}
+
+\begin{wniosek}[Kryterium w modelach nasyconych]
+\label{cor:mod-qe-saturated}
+W twierdzeniu \ref{thm:mod-qe-forth} wystarczy sprawdzić
+możliwość przedłużenia krotek bez wychodzenia poza modele,
+gdy oba modele są $\aleph_0$-nasycone.
+\end{wniosek}
+\begin{proof}
+Dla dowolnych $\mathfrak M,\mathfrak N\models T$ bierzemy
+ich $\aleph_0$-nasycone rozszerzenia elementarne
+$\mathfrak M',\mathfrak N'$ z twierdzenia
+\ref{thm:mod-saturation-extension}. Elementarność
+zachowuje typy bez kwantyfikatorów. Stosujemy założenie
+do $\bar a,a$ w $\mathfrak M'$ i $\bar b$ w $\mathfrak N'$.
+Otrzymujemy świadka w $\mathfrak N'$; jego typ bez
+kwantyfikatorów z $\bar b$ zgadza się z typem
+$\bar a,a$ także w $\mathfrak M$. Spełnione jest
+kryterium \ref{thm:mod-qe-forth}.
+\end{proof}
+
+\section{Konsekwencje eliminacji}
+\begin{wniosek}[Zanurzenia i zupełność]
+\label{cor:mod-qe-consequences}
+Jeżeli $T$ ma eliminację kwantyfikatorów, to każde
+zanurzenie struktur będących modelami $T$ jest elementarne.
+Jeżeli dodatkowo wszystkie modele $T$ zgadzają się co do
+zdań bez kwantyfikatorów, to $T$ jest zupełna.
+\end{wniosek}
+\begin{proof}
+Zanurzenie utożsamia dziedzinę z podstrukturą obrazu.
+Wartości termów w podstrukturze są takie same jak
+w strukturze większej, co wynika z indukcji po termach:
+dla zmiennej i stałej jest to definicja podstruktury,
+a dla zastosowania symbolu funkcyjnego korzystamy z
+ograniczenia interpretacji tego symbolu. Relacje na
+podstrukturze są ograniczeniami relacji większej struktury.
+Stąd atomy, a przez spójniki wszystkie formuły bez
+kwantyfikatorów, mają tę samą wartość logiczną.
+Eliminacja kwantyfikatorów rozszerza zgodność na wszystkie
+formuły, czyli zanurzenie jest elementarne.
+W drugiej części każde zdanie ma równoważnik bez
+kwantyfikatorów, a więc wszystkie modele $T$ zgadzają
+się co do jego prawdziwości. To jest zupełność teorii.
+\end{proof}
+
+\begin{wniosek}[Zbiory definiowalne i typy z parametrami]
+\label{cor:mod-qe-definability}
+Niech $T$ ma eliminację kwantyfikatorów i
+$\mathfrak M\models T$. Każdy zbiór definiowalny
+w $M^n$ z parametrami z $A\subseteq M$ jest definiowany
+przez formułę bez kwantyfikatorów z parametrami z $A$.
+Typ zupełny nad $A$ jest wyznaczony przez należące
+do niego formuły bez kwantyfikatorów.
+\end{wniosek}
+\begin{proof}
+Formułę z nazwami skończonej krotki parametrów zapisujemy
+jako $\varphi(\bar x,\bar a)$, zgodnie z konwencją
+z rozdziału \ref{ch:mod-types}. Stosujemy eliminację
+do formuły języka $\mathcal L$ z dodatkową listą
+wolnych zmiennych dla parametrów i podstawiamy
+ponownie ich nazwy. Równoważność zachodzi przy każdym
+wartościowaniu, w szczególności przy wskazanych
+parametrach. Daje to pierwszą część.
+Dla typu zupełnego nad $A$ wybieramy jego realizację
+w rozszerzeniu elementarnym (twierdzenie
+\ref{thm:mod-type-elementary-extension}).
+Równoważność modulo $T$ przy parametrach z $A$
+obowiązuje również w tym rozszerzeniu, więc przynależność
+formuły do typu jest równoważna przynależności jej
+równoważnika bez kwantyfikatorów.
+\end{proof}
+
+\section{Język samej równości i gęste porządki}
+\begin{twierdzenie}[Teoria nieskończonych zbiorów]
+\label{thm:mod-qe-equality}
+Teoria nieskończonych struktur języka samej równości
+ma eliminację kwantyfikatorów i jest zupełna.
+\end{twierdzenie}
+\begin{proof}
+Niech $\bar a,\bar b$ będą krotkami w nieskończonych
+strukturach o tym samym typie bez kwantyfikatorów.
+Atomy są wyłącznie równościami zmiennych, więc
+zgadzają się wszystkie równości między współrzędnymi.
+Jeżeli $a$ jest jedną ze współrzędnych $\bar a$,
+wybieramy odpowiadającą współrzędną $\bar b$ jako $b$.
+Zgodność równości sprawia, że wybór nie zależy od
+indeksu tej współrzędnej. Jeśli $a$ jest różny od
+wszystkich współrzędnych, wybieramy $b$ poza
+skończonym zbiorem współrzędnych $\bar b$, co jest
+możliwe przez nieskończoność. W obu przypadkach
+rozszerzone krotki zgadzają się co do atomów, a więc
+i wszystkich formuł bez kwantyfikatorów.
+Kryterium \ref{thm:mod-qe-forth} daje eliminację.
+W języku nie ma termów domkniętych, a zdania bez
+kwantyfikatorów są kombinacjami $\top,\bot$.
+Wniosek \ref{cor:mod-qe-consequences} daje zupełność.
+\end{proof}
+
+\begin{twierdzenie}[Gęste porządki liniowe bez elementów krańcowych]
+\label{thm:mod-qe-dlo}
+Teoria gęstych porządków liniowych bez elementu
+najmniejszego i największego w języku $\{<\}$
+ma eliminację kwantyfikatorów i jest zupełna.
+\end{twierdzenie}
+\begin{proof}
+Przez gęstość rozumiemy warunek
+$\forall u\,\forall v\,(u<v\to\exists w\,(u<w\land w<v))$.
+Niech $\mathfrak M,\mathfrak N$ będą modelami teorii,
+a $\bar a,\bar b$ krotkami zgodnymi co do typu bez
+kwantyfikatorów. Równości i porządek między
+współrzędnymi są takie same. Porządkujemy różne
+wartości współrzędnych $\bar a$ w rosnący ciąg
+$u_1<\cdots<u_k$; odpowiadają im różne wartości
+$v_1<\cdots<v_k$ w $\bar b$.
+Dla nowego elementu $a\in M$ rozważamy przypadki:
+\begin{enumerate}
+\item Jeżeli $a=u_i$, bierzemy $b=v_i$.
+\item Jeżeli $u_i<a<u_{i+1}$, z gęstości wybieramy
+$b$ spełniający $v_i<b<v_{i+1}$.
+\item Jeżeli $a<u_1$ lub $a>u_k$, wybieramy element
+poniżej $v_1$ lub powyżej $v_k$ przez brak elementów
+krańcowych.
+\item Jeżeli $k=0$, wybieramy dowolny element $N$,
+gdyż uniwersum jest niepuste.
+\end{enumerate}
+Przypadki wyczerpują możliwości przez liniowość porządku.
+W każdym z nich wszystkie równości i nierówności
+między rozszerzonymi krotkami są zgodne; w tym języku
+są to wszystkie atomy. Kryterium
+\ref{thm:mod-qe-forth} daje eliminację kwantyfikatorów.
+Jak w dowodzie twierdzenia \ref{thm:mod-qe-equality},
+wszystkie zdania bez kwantyfikatorów mają ustaloną
+wartość, więc teoria jest zupełna.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm,>=Stealth]
+\draw[<->] (0,1.9)--(10,1.9);
+\draw[<->] (0,0)--(10,0);
+\foreach \x/\i in {1.5/1,4/2,8/3}{
+ \fill (\x,1.9) circle (2pt) node[above] {$u_{\i}$};
+ \fill (\x,0) circle (2pt) node[below] {$v_{\i}$};
+ \draw[densely dashed,gray] (\x,1.65)--(\x,0.25);
+}
+\fill[blue!65!black] (5.2,1.9) circle (3pt) node[above] {$a$};
+\fill[blue!65!black] (6.6,0) circle (3pt) node[below] {$b$};
+\draw[->,blue!65!black,thick] (5.3,1.65)--(6.5,0.25);
+\node[left] at (0,1.9) {$M$};
+\node[left] at (0,0) {$N$};
+\end{tikzpicture}
+\caption{Przedłużenie zgodnych krotek w gęstych porządkach.
+Ważne jest położenie względem wybranych elementów, nie odległość.}
+\label{fig:mod-qe-dlo}
+\end{figure}
+
+Rysunek \ref{fig:mod-qe-dlo} ilustruje drugi przypadek
+dowodu twierdzenia \ref{thm:mod-qe-dlo}.
+
+\begin{przyklad}[Zbiory definiowalne w jednej zmiennej]
+\label{ex:mod-qe-dlo-definable}
+W gęstym porządku liniowym bez elementów krańcowych
+każdy zbiór definiowalny w jednej zmiennej z parametrami
+jest skończoną sumą punktów i otwartych przedziałów
+(o końcach w zbiorze parametrów lub nieskończonych).
+Istotnie, po eliminacji kwantyfikatorów formuła używa
+tylko skończenie wielu parametrów. Po uporządkowaniu
+ich różnych wartości $a_1<\cdots<a_k$ dzielimy
+uniwersum na punkty $a_i$, przedziały $(a_i,a_{i+1})$
+i dwa przedziały nieograniczone. Gdy $k=0$, podział
+ma jeden człon: całe uniwersum.
+Każdy atom z jednym argumentem zmiennym ma na każdym
+członie stałą wartość logiczną, więc tak samo ma ją
+formuła bez kwantyfikatorów. Zbiór definiowany jest
+sumą tych członów, na których formuła jest prawdziwa.
+\end{przyklad}
+
+\section{Ciała algebraicznie domknięte}
+Pracujemy w języku pierścieni $\{0,1,+,-,\cdot\}$
+(z jednoargumentowym minusem). Każdy term tego języka
+jest reprezentowany przez wielomian o współczynnikach
+całkowitych w swoich zmiennych: dla zmiennych i stałych
+jest to oczywiste, a operacje na termach odpowiadają
+dodawaniu, negowaniu i mnożeniu wielomianów.
+Równość termów można więc zapisać jako $P=0$,
+przenosząc prawą stronę na lewą.
+
+\begin{lemat}[Skończone rozgałęzienia algorytmu wielomianowego]
+\label{lem:mod-qe-polynomial-branches}
+Dla skończonej listy wielomianów w $K[Y]$, których
+współczynniki są wielomianami w krotce parametrów
+$\bar x$, następujące warunki można wyrazić formułami
+bez kwantyfikatorów w języku pierścieni, jednolicie
+dla wszystkich ciał $K$:
+\begin{enumerate}
+\item dany wielomian jest zerowy lub ma wskazany stopień;
+\item największy wspólny dzielnik niezerowych
+wielomianów z listy ma dodatni stopień;
+\item gdy na liście jest niezerowy wielomian,
+największy wspólny dzielnik listy dzieli wskazany
+wielomian o współczynnikach wielomianowych w $\bar x$.
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+Warunek zerowości to koniunkcja równości wszystkich
+współczynników z zerem, a warunek stopnia $d$ wymaga
+niezerowości współczynnika przy $Y^d$ i zerowości
+wszystkich współczynników wyższych. Stopnie są
+ograniczone przez stopnie wyjściowych wielomianów.
+
+Na każdej gałęzi rozróżniamy rzeczywiste stopnie
+wielomianów, odrzucamy wielomiany zerowe i wykonujemy
+algorytm Euklidesa. Dzielenie z resztą polega na
+odejmowaniu wielokrotności dzielnika tak, aby
+skasować aktualny wyraz wiodący. Współczynniki
+wyników są ilorazami wielomianów w $\bar x$:
+dzielenie zachodzi jedynie przez współczynnik wiodący,
+którego niezerowość jest już warunkiem danej gałęzi.
+Rozróżniamy stopień każdej reszty, sprawdzając
+zerowość lub niezerowość liczników tych ilorazów
+(mianowniki są niezerowe na tej gałęzi).
+Każde dzielenie ma skończenie wiele kroków, ograniczonych
+przez stopień dzielnej plus jeden, a kolejne niezerowe
+reszty w algorytmie mają ściśle malejące stopnie.
+Wobec ustalonych początkowych ograniczeń stopni i
+skończonej listy wielomianów drzewo możliwych rozgałęzień
+jest skończone. Największy wspólny dzielnik otrzymujemy
+iterując algorytm dla listy: dla pary $f,g$ z $g\ne0$
+wspólne dzielniki $f,g$ to dokładnie wspólne dzielniki
+$g,r$, gdzie $f=qg+r$; ostatnia niezerowa reszta dzieli
+wszystkie poprzednie i jest podzielna przez każdy
+wspólny dzielnik. Jednoargumentowa lista ma jako
+dzielnik swój jedyny niezerowy wielomian.
+
+Na liściu drzewa znamy stopień dzielnika i jego
+współczynniki jako ilorazy wielomianów. W przypadku (iii)
+dzielimy wskazany wielomian przez ten dzielnik
+i sprawdzamy zerowość reszty, ponownie przez
+zerowość liczników. Każdy liść jest opisany skończoną
+koniunkcją warunków wielomianowych; alternatywa
+liści o żądanej własności daje formułę bez kwantyfikatorów.
+Nie korzystamy z żadnego założenia o charakterystyce
+ciała, ponieważ wszystkie potrzebne niezerowości
+sprawdzamy jawnie.
+\end{proof}
+
+\begin{twierdzenie}[Eliminacja kwantyfikatorów dla ciał algebraicznie domkniętych]
+\label{thm:mod-qe-acf}
+Teoria ciał algebraicznie domkniętych w języku
+pierścieni ma eliminację kwantyfikatorów, niezależnie
+od tego, czy ustalono charakterystykę.
+\end{twierdzenie}
+\begin{proof}
+Na mocy lematu \ref{lem:mod-qe-exists} wystarczy
+wyeliminować $Y$ z formuły
+\[
+\exists Y\,
+\left(\bigwedge_{i=1}^{r}P_i(Y,\bar x)=0
+\land \bigwedge_{j=1}^{s}Q_j(Y,\bar x)\ne0\right),
+\]
+gdzie wszystkie $P_i,Q_j$ są wielomianami o współczynnikach
+całkowitych. Niech $Q=\prod_{j=1}^{s}Q_j$ (dla $s=0$
+przyjmujemy $Q=1$). W ciele warunek wszystkich
+nierówności jest równoważny $Q\ne0$, ponieważ nie ma
+dzielników zera.
+
+Ustalmy ciało algebraicznie domknięte $K$ i wartości
+parametrów $\bar a$. Ciało $K$ jest nieskończone:
+gdyby było skończone, wielomian
+$\prod_{c\in K}(Y-c)-1$ byłby niestały i nie miałby
+pierwiastka w $K$, sprzecznie z algebraicznym domknięciem.
+Jeśli wszystkie $P_i(Y,\bar a)$ są wielomianami zerowymi
+(w tym gdy $r=0$), świadek istnieje dokładnie wtedy,
+gdy $Q(Y,\bar a)$ nie jest wielomianem zerowym.
+Rzeczywiście niezerowy wielomian ma co najwyżej tyle
+pierwiastków, ile wynosi jego stopień: po znalezieniu
+pierwiastka $c$ dzielimy przez $Y-c$ i stosujemy
+indukcję po stopniu. W nieskończonym ciele można
+zatem wybrać punkt spoza skończonego zbioru pierwiastków.
+
+W pozostałym przypadku oznaczmy przez $G$ największy
+wspólny dzielnik niezerowych $P_i(Y,\bar a)$.
+Wspólne pierwiastki wielomianów $P_i$ to dokładnie
+pierwiastki $G$: jeśli $c$ jest wspólnym pierwiastkiem,
+$Y-c$ dzieli każdy $P_i$, więc dzieli $G$; odwrotnie
+$G$ dzieli każdy $P_i$.
+Jeżeli $G$ jest stały, świadek nie istnieje.
+Jeżeli $\deg G>0$, niech $D\geq1$ będzie ustalonym
+ograniczeniem stopni wszystkich wyjściowych $P_i$
+w zmiennej $Y$. Wtedy $\deg G\leq D$.
+Twierdzimy, że
+\[
+\exists c\in K\ (G(c)=0\land Q(c,\bar a)\ne0)
+\quad\Longleftrightarrow\quad
+G\nmid Q(Y,\bar a)^D .
+\]
+Jeżeli istnieje taki $c$, podzielność byłaby sprzeczna
+z podstawieniem $c$. Jeżeli nie istnieje, każdy
+pierwiastek $G$ jest pierwiastkiem $Q$.
+Gdy $Q=0$, podzielność zachodzi automatycznie.
+W przeciwnym razie rozkładamy $G$ na czynniki liniowe
+w $K[Y]$, co wynika przez indukcję po stopniu
+z algebraicznego domknięcia i dzielenia przez $Y-c$.
+Każdy czynnik ma krotność co najwyżej $D$ w $G$,
+a w $Q^D$ ma krotność co najmniej $D$.
+Stąd $G$ dzieli $Q^D$.
+
+Otrzymaliśmy skończoną alternatywę warunków:
+wszystkie $P_i$ zerowe i $Q$ niezerowy; albo nie
+wszystkie $P_i$ zerowe, $\deg G>0$ i
+$G\nmid Q^D$. Są to warunki bez kwantyfikatorów
+na współczynniki według lematu
+\ref{lem:mod-qe-polynomial-branches}.
+Równoważnik jest jednolity dla wszystkich ciał
+algebraicznie domkniętych i nie wprowadza nowych
+parametrów. Lemat \ref{lem:mod-qe-exists} kończy dowód.
+\end{proof}
+
+\begin{wniosek}[Zupełność w ustalonej charakterystyce]
+\label{cor:mod-qe-acf-complete}
+Teoria ciał algebraicznie domkniętych ustalonej
+charakterystyki, dla której istnieje model, jest zupełna.
+\end{wniosek}
+\begin{proof}
+Term domknięty w języku pierścieni reprezentuje
+liczbę całkowitą interpretowaną w ciele przez wielokrotność
+jedynki i ewentualny minus. Atom domknięty jest więc
+równością takich liczb, a jego prawdziwość zależy
+tylko od charakterystyki: w charakterystyce zero
+różnica musi być zerowa w $\mathbb Z$, w charakterystyce
+$p>0$ musi być podzielna przez $p$. Tak samo kombinacje
+boolowskie atomów domkniętych zależą jedynie od
+charakterystyki. Z twierdzenia \ref{thm:mod-qe-acf}
+i wniosku \ref{cor:mod-qe-consequences} wynika zupełność.
+\end{proof}
+
+\begin{przyklad}[Eliminacja w konkretnej formule]
+\label{ex:mod-qe-acf-example}
+W każdym ciele algebraicznie domkniętym formuła
+$\exists y\,(ay=1\land y\ne b)$ jest równoważna
+$a\ne0\land ab\ne1$.
+Jeśli $a=0$, pierwsze równanie nie ma rozwiązania.
+Jeśli $a\ne0$, jedynym rozwiązaniem jest $y=a^{-1}$;
+nierówność $y\ne b$ jest równoważna $ab\ne1$,
+ponieważ mnożenie przez $a$ jest różnowartościowe.
+W tym przykładzie wystarcza nawet dowolne ciało.
+\end{przyklad}
+
+\section{Kiedy eliminacja nie zachodzi}
+\begin{przyklad}[Porządki dyskretne i gęste]
+\label{ex:mod-qe-not-linear-orders}
+Teoria wszystkich porządków liniowych nie ma eliminacji
+kwantyfikatorów w języku $\{<\}$. W strukturach
+$(\mathbb Z,<)$ i $(\Q,<)$ krotki $(0,1)$ zgadzają się
+co do równości i porządku, a zatem co do wszystkich
+formuł bez kwantyfikatorów. Formuła
+$\exists y\,(x<y\land y<z)$ jest fałszywa przy $(0,1)$
+w pierwszej strukturze i prawdziwa w drugiej.
+Kryterium \ref{thm:mod-qe-semantic} wyklucza eliminację.
+\end{przyklad}
+
+\begin{przyklad}[Zupełność nie wystarcza]
+\label{ex:mod-qe-complete-not-qe}
+Zupełna teoria $\operatorname{Th}(\mathbb Z,<)$
+nie ma eliminacji kwantyfikatorów.
+W jednym modelu $(\mathbb Z,<)$ krotki $(0,1)$
+i $(0,2)$ mają ten sam typ bez kwantyfikatorów,
+bo każda składa się z dwóch różnych rosnących elementów.
+Formuła $\exists y\,(x<y\land y<z)$ rozróżnia te krotki:
+pierwsza nie ma świadka, a druga ma świadka $1$.
+Zatem warunek z twierdzenia \ref{thm:mod-qe-semantic}
+nie zachodzi mimo zupełności teorii.
+\end{przyklad}
+
+W kolejnej części opracujemy eliminację kwantyfikatorów
+w ciałach rzeczywiście domkniętych oraz w arytmetyce
+Presburgera, w której istotne jest odpowiednie rozszerzenie
+języka o relacje kongruencji. Powyższe kryteria pozwolą
+następnie badać zupełność modelową i kategoryczność.
