@@ -126,6 +126,37 @@ Oscylacje wewnątrz komórek także zanikają prawie na pewno,
 więc zbieżność jest jednostajna prawie na pewno.
 \end{proof}
 
+\begin{center}
+\begin{tikzpicture}[x=1.5cm,y=0.85cm,>=Latex]
+\draw[->] (0,0)--(4.4,0) node[right] {$t$};
+\draw[->] (0,0)--(0,3.8) node[above] {$x(t)$};
+\foreach \x in {1,2,3,4}{\draw[gray,densely dotted] (\x,0)--(\x,3.3);}
+\draw[blue!75!black,thick] (0,1)--(0.55,2.4)--(1,1.8)--(1.6,0.6)--(2,1.2)--(2.5,2.8)--(3,2.2)--(3.5,1.4)--(4,2.8);
+\foreach \x/\y in {0/1,1/1.8,2/1.2,3/2.2,4/2.8}{\fill[blue!75!black] (\x,\y) circle (1.6pt);}
+\end{tikzpicture}
+
+\begin{tikzpicture}[x=1.5cm,y=0.85cm,>=Latex]
+\draw[->] (0,0)--(4.4,0) node[right] {$t$};
+\draw[->] (0,0)--(0,4.2) node[above] {$V_t^\pi(x)$};
+\foreach \x in {1,2,3,4}{\draw[gray,densely dotted] (\x,0)--(\x,3.85);}
+\draw[blue!75!black,thick,domain=0:0.55,samples=25] plot(\x,{(1.4*\x/0.55)^2});
+\draw[blue!75!black,thick,domain=0.55:1,samples=25] plot(\x,{(1.4-0.6*(\x-0.55)/0.45)^2});
+\draw[blue!75!black,thick,domain=1:1.6,samples=25] plot(\x,{0.64+(1.2*(\x-1)/0.6)^2});
+\draw[blue!75!black,thick,domain=1.6:2,samples=25] plot(\x,{0.64+(1.2-0.6*(\x-1.6)/0.4)^2});
+\draw[blue!75!black,thick,domain=2:2.5,samples=25] plot(\x,{1+(1.6*(\x-2)/0.5)^2});
+\draw[blue!75!black,thick,domain=2.5:3,samples=25] plot(\x,{1+(1.6-0.6*(\x-2.5)/0.5)^2});
+\draw[blue!75!black,thick,domain=3:3.5,samples=25] plot(\x,{2+(0.8*(\x-3)/0.5)^2});
+\draw[blue!75!black,thick,domain=3.5:4,samples=30] plot(\x,{2+(-0.8+1.4*(\x-3.5)/0.5)^2});
+\draw[orange!80!black,thick,dashed] (0,0)--(1,0)--(1,0.64)--(2,0.64)--(2,1)--(3,1)--(3,2)--(4,2)--(4,2.36);
+\end{tikzpicture}
+\par\smallskip\small Góra: przykładowa ciągła trajektoria
+odcinkami liniowa i siatka $\{0,1,2,3,4\}$.
+Dół: suma kwadratów z niedokończonym przyrostem (linia ciągła)
+oraz suma tylko pełnych przyrostów (linia przerywana).
+Pierwsza może lokalnie maleć, druga jest niemalejąca.
+Nie jest to symulacja ruchu Browna.
+\end{center}
+
 \section{Dyskretny lemat izometrii: fundament konstrukcji}
 Zanim skonstruujemy wariację kwadratową \emph{dowolnego}
 ciągłego martyngału, potrzebujemy tylko elementarnego
@@ -347,7 +378,7 @@ Adaptacja wynika z tego, że w każdej ustalonej chwili
 jest granicą $\calF_t$-mierzalnych $A^K_t$,
 ze zmianą na zbiorze z $\calF_0$.
 Ponadto $[M]_{t\wedge\tau_K}=A^K_t$.
-W konciągu
+W konsekwencji
 \[
 (M^2-[M])_{t\wedge\tau_K}
 =(M^{\tau_K}_t)^2-A^K_t
@@ -387,6 +418,45 @@ od jej przewidywalnej kompensacji; por. rozdział~\ref{ch:jump-mart}.
 \end{uwaga}
 
 
+\begin{twierdzenie}[Dodanie procesu o skończonej wariacji]
+\label{thm:finite-var-drift-bracket}
+Niech $X$ będzie procesem ciągłym mającym
+wariację kwadratową w sensie ucp, a $A$
+procesem ciągłym o trajektoriach lokalnie
+skończonej wariacji całkowitej p.n.
+Wtedy
+\[
+[X+A]=[X],\qquad [A]=0,
+\]
+a sumy mieszane $\sum_i\Delta_i^tX\Delta_i^tA$
+zbiegają do zera w ucp. W szczególności wynik
+dotyczy $X$ będącego ciągłym lokalnym martyngałem.
+\end{twierdzenie}
+\begin{proof}
+Na każdym $[0,T]$ lemat
+\ref{lem:finite-var-zero-quadratic} daje
+$\sup_{t\le T}V_t^\pi(A)\to0$ p.n. wzdłuż
+dowolnego ciągu podziałów o zanikającej średnicy.
+Z nierówności Cauchy'ego--Schwarza
+\[
+\sup_{t\le T}\left|\sum_i\Delta_i^tX\Delta_i^tA\right|
+\le
+\sqrt{\sup_{t\le T}V_t^\pi(X)}
+\sqrt{\sup_{t\le T}V_t^\pi(A)}.
+\]
+Pierwszy czynnik jest ograniczony według
+prawdopodobieństwa: z ucp supremum $V^\pi(X)$
+zbiega według prawdopodobieństwa do skończonego
+supremum ciągłego procesu $[X]$.
+Iloczyn z czynnikiem zbiegającym do zera
+według prawdopodobieństwa zbiega do zera
+według prawdopodobieństwa (najpierw ograniczamy
+pierwszy czynnik przez dużą stałą z dużym
+prawdopodobieństwem, a następnie przechodzimy
+do granicy dla drugiego).
+Rozwinięcie kwadratu przyrostu $X+A$ kończy dowód.
+\end{proof}
+
 \begin{przyklad}[Dodanie deterministycznego dryfu nie zmienia wariacji]
 Niech $W$ będzie procesem Wienera i $b\in\R$, a
 $X_t=W_t+bt$. Wtedy dla każdej siatki $\pi$ na $[0,T]$
@@ -405,7 +475,7 @@ Nierówność Cauchy'ego--Schwarza daje, jednostajnie w $t$,
 \]
 Z twierdzenia~\ref{thm:brownian-bracket} supremum $V_t^\pi(W)$
 jest ograniczone według prawdopodobieństwa, toteż oba dodatkowe
-składniki znikają w ucp. W konciągu $[W+bt]_t=t$.
+składniki znikają w ucp. W konsekwencji $[W+bt]_t=t$.
 Dryf wpływa na średnią $X_t$, ale nie na jego kwadratową
 fluktuację w drobnej skali. Jest to jedno z podstawowych
 rozróżnień wykorzystywanych później w rachunku It\^o.
@@ -470,6 +540,88 @@ przyrostów i kowariacji pozostają prawdziwe dla
 dowolnych wartości początkowych, po odjęciu $M_0,N_0$.
 \end{proof}
 
+\begin{twierdzenie}[Macierz kowariacji i nierówność Kunity--Watanabego]
+\label{thm:kunita-watanabe}
+Niech $M=(M^{(1)},\ldots,M^{(d)})$ będzie
+wektorem ciągłych lokalnych martyngałów.
+Macierz $C_t=([M^{(i)},M^{(j)}]_t)_{i,j=1}^d$
+jest symetryczna i jej przyrosty $C_t-C_s$
+dla $s\le t$ są dodatnio półokreślone,
+jednocześnie dla wszystkich $s,t$ p.n.
+Dla dwóch składowych, oznaczonych $U,V$, oraz
+dowolnych funkcji borelowskich $f,g$ na $[0,T]$
+zachodzi trajektoryjna nierówność
+\[
+\int_{[0,T]} |fg|\,\mathrm d|[U,V]|
+\le
+\left(\int_{[0,T]} |f|^2\,\mathrm d[U]\right)^{1/2}
+\left(\int_{[0,T]} |g|^2\,\mathrm d[V]\right)^{1/2},
+\]
+jeżeli obie całki po prawej są skończone.
+Zapis $\mathrm d[U]$ oznacza miarę Lebesgue'a--Stieltjesa
+trajektorii $[U]$, z zerową masą w zerze, a
+$\mathrm d|[U,V]|$ oznacza wariację całkowitą
+miary znakowanej indukowanej przez $[U,V]$.
+W szczególności
+\[
+\operatorname{Var}_{[s,t]}([U,V])
+\le\sqrt{([U]_t-[U]_s)([V]_t-[V]_s)}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla $a\in\Q^d$ z dwuliniowości nawiasu mamy
+$a^\top C_t a=[\sum_i a_i M^{(i)}]_t$.
+Przecinając zbiory pełnej miary dla przeliczalnie
+wielu $a$, otrzymujemy wszystkie te tożsamości
+jednocześnie w czasie. Prawa strona jest
+niemalejąca. Przez gęstość $\Q^d$ i ciągłość
+formy kwadratowej w $a$ przyrosty $C_t-C_s$
+są dodatnio półokreślone także dla dowolnego
+$a\in\R^d$.
+
+Ustalmy trajektorię z tego zbioru pełnej miary,
+a na $[0,T]$ oznaczmy przez $\mu,\nu,\gamma$
+miary Lebesgue'a--Stieltjesa odpowiednio
+$[U],[V],[U,V]$. Dwie pierwsze są nieujemne
+i skończone, trzecia znakowana i skończonej
+wariacji. Dla dowolnych $a,b\in\R$ miara
+$a^2\mu+2ab\gamma+b^2\nu$ jest nieujemna,
+gdyż odpowiada niemalejącej funkcji $[aU+bV]$.
+Stąd dla każdego zbioru borelowskiego $E$
+macierz z elementami $\mu(E),\gamma(E),\nu(E)$
+jest dodatnio półokreślona, a więc
+$|\gamma(E)|^2\le\mu(E)\nu(E)$.
+W szczególności $\gamma\ll\kappa=\mu+\nu$.
+Z twierdzenia Radona--Nikodyma oznaczmy
+$p=\mathrm d\mu/\mathrm d\kappa$,
+$q=\mathrm d\nu/\mathrm d\kappa$,
+$h=\mathrm d\gamma/\mathrm d\kappa$.
+Mamy $p,q\ge0$, $p+q=1$ $\kappa$-p.w.
+Dla wymiernych $a,b$ nieujemność powyższej
+miary daje $a^2p+2abh+b^2q\ge0$ $\kappa$-p.w.
+Po przecięciu przeliczalnej rodziny zbiorów
+pełnej miary i przejściu do rzeczywistych $a,b$
+dostajemy $|h|^2\le pq$.
+Wariacja całkowita $\gamma$ ma gęstość $|h|$
+względem $\kappa$ (wynika to z rozkładu na
+dodatnią i ujemną część gęstości).
+Zatem
+\[
+\int|fg|\,\mathrm d|\gamma|
+\le\int |f|\sqrt p\,|g|\sqrt q\,\mathrm d\kappa
+\le
+\left(\int|f|^2\,\mathrm d\mu\right)^{1/2}
+\left(\int|g|^2\,\mathrm d\nu\right)^{1/2}
+\]
+przez nierówność Cauchy'ego--Schwarza.
+Dla $f=g=\chi_{(s,t]}$ otrzymujemy oszacowanie
+wariacji na $[s,t]$, ponieważ miary nie mają atomów
+z uwagi na ciągłość funkcji.
+Argument jest trajektoryjny, więc obowiązuje
+także dla funkcji zależnych od $\omega$,
+o ile dla danej trajektorii są borelowskie.
+\end{proof}
+
 \begin{wniosek}[Kowariacja ruchu Browna]
 Dla standardowego ruchu Browna
 $B=(B^{(1)},\ldots,B^{(d)})$ zachodzi
@@ -494,9 +646,11 @@ dla $AB$ wynika z dwuliniowości.
 \section{Warunkowa wariancja przyrostu i elementarna izometria}
 \begin{twierdzenie}[Wariancja warunkowa przez nawias]
 \label{thm:conditional-variance-bracket}
-Niech $M$ będzie ciągłym, ograniczonym martyngałem
-z $M_0=0$ oraz $[M]$ jego wariacją kwadratową.
-Dla każdych $0\le s\le t$ zachodzi
+Niech $M$ będzie ciągłym martyngałem na $[0,T]$
+z $M_T\in L^2$ oraz $M_0=0$.
+Wtedy $[M]_T\in L^1$, a $M^2-[M]$ jest
+martyngałem na $[0,T]$.
+Dla każdych $0\le s\le t\le T$ zachodzi
 \[
 \E[(M_t-M_s)^2\mid\calF_s]
 =\E[[M]_t-[M]_s\mid\calF_s].
@@ -504,11 +658,29 @@ Dla każdych $0\le s\le t$ zachodzi
 W szczególności $\E M_t^2=\E\bigl([M]_t\bigr)$.
 \end{twierdzenie}
 \begin{proof}
-W dowodzie twierdzenia~\ref{thm:general-bracket}
-wykazaliśmy, że $M^2-[M]$ jest martyngałem
-dla martyngału ograniczonego na każdym rozważanym
-horyzoncie: w tej konstrukcji $M^2-[M]=2I$,
-gdzie $I$ jest prawdziwym martyngałem.
+Dla $\tau_K=\inf\{t\ge0:|M_t|\ge K\}$
+(z konwencją $\inf\varnothing=\infty$ na $[0,T]$)
+proces $M^{\tau_K}$ jest ograniczonym martyngałem.
+Z twierdzenia~\ref{thm:general-bracket} i własności
+zatrzymywania nawiasu (twierdzenie~\ref{thm:stopped-bracket})
+wynika, że
+$M_{t\wedge\tau_K}^2-[M]_{t\wedge\tau_K}$
+jest martyngałem na $[0,T]$, rozpoczynającym się
+od zera. W szczególności
+$\E[M]_{t\wedge\tau_K}=\E M_{t\wedge\tau_K}^2$.
+Z nierówności Dooba (twierdzenie~\ref{thm:doob-cont})
+$\E\sup_{u\le T}|M_u|^2\le4\E M_T^2<\infty$.
+Kwadraty zatrzymanych wartości zbiegają więc w $L^1$
+do $M_t^2$ przez zbieżność zmajoryzowaną.
+Ponieważ $[M]$ jest niemalejący i $\tau_K$ rosną,
+zbieżność monotoniczna daje
+\[
+\E[M]_t=\lim_K\E[M]_{t\wedge\tau_K}=\E M_t^2<\infty.
+\]
+W szczególności $[M]_{t\wedge\tau_K}\to[M]_t$
+w $L^1$. Przechodząc do granicy w warunkowych
+równościach dla zatrzymanych martyngałów,
+uzyskujemy własność martyngałową $M^2-[M]$.
 Zatem
 $\E[M_t^2-M_s^2\mid\calF_s]
 =\E[[M]_t-[M]_s\mid\calF_s]$.
@@ -518,7 +690,31 @@ Rozwinięcie $(M_t-M_s)^2=M_t^2-M_s^2-2M_s(M_t-M_s)$
 daje tezę. Biorąc $s=0$, otrzymujemy równość średnich.
 \end{proof}
 
+\begin{wniosek}[Warunkowa kowariancja przyrostów]
+\label{cor:conditional-cross-bracket}
+Dla ciągłych martyngałów $M,N$ kwadratowo
+całkowalnych na $[0,T]$ z zerowymi wartościami
+początkowymi proces $MN-[M,N]$ jest martyngałem i
+\[
+\E[(M_t-M_s)(N_t-N_s)\mid\calF_s]
+=\E[[M,N]_t-[M,N]_s\mid\calF_s]
+\]
+dla $0\le s\le t\le T$. W szczególności
+$\E M_tN_t=\E[M,N]_t$.
+\end{wniosek}
+\begin{proof}
+Stosujemy twierdzenie
+\ref{thm:conditional-variance-bracket}
+do $M+N$ i $M-N$ oraz odejmujemy
+odpowiednie równości, dzieląc przez cztery.
+Całkowalność wynika również z nierówności
+Cauchy'ego--Schwarza dla iloczynu i z
+nierówności~\ref{thm:kunita-watanabe} dla wariacji
+kowariacji, gdyż $\E[M]_T,\E[N]_T<\infty$.
+\end{proof}
+
 \begin{wniosek}[Izometria elementarnych strategii]
+\label{cor:elementary-bracket-isometry}
 Przy założeniach poprzedniego twierdzenia niech
 $0=t_0<\cdots<t_n=T$ i $H_i$ będą ograniczonymi
 $\calF_{t_i}$-mierzalnymi zmiennymi. Wtedy
@@ -538,6 +734,34 @@ $\calF_{t_i}$-mierzalne, można je wyciągnąć przed
 warunkowanie, a następnie wziąć wartość oczekiwaną.
 \end{proof}
 
+\begin{wniosek}[Izometria mieszana elementarnych strategii]
+\label{cor:elementary-cross-isometry}
+Przy założeniach wniosku~\ref{cor:conditional-cross-bracket}
+niech $H_i,K_i$ będą ograniczonymi
+$\calF_{t_i}$-mierzalnymi zmiennymi.
+Wówczas
+\[
+\E\left[
+\left(\sum_i H_i\Delta_i M\right)
+\left(\sum_i K_i\Delta_i N\right)
+\right]
+=\E\sum_i H_iK_i
+([M,N]_{t_{i+1}}-[M,N]_{t_i}).
+\]
+\end{wniosek}
+\begin{proof}
+Po rozwinięciu iloczynu wyrazy dla różnych
+indeksów mają średnią zero, warunkując względem
+początku późniejszego przyrostu.
+Wyrazy diagonalne przekształcamy przez
+wniosek~\ref{cor:conditional-cross-bracket}
+i wyciągnięcie $H_iK_i$ przed warunkowanie.
+Całkowalność wszystkich wyrazów zapewniają
+ograniczenie współczynników, kwadratowa
+całkowalność martyngałów oraz oszacowanie
+wariacji z twierdzenia~\ref{thm:kunita-watanabe}.
+\end{proof}
+
 \begin{uwaga}[Gdzie w tej formule ukrywa się całka Itô?]
 Lewa strona opisuje skończoną sumę przewidywalnych
 zakładów, których stawka $H_i$ jest znana przed
@@ -545,7 +769,7 @@ przyrostem $M_{t_{i+1}}-M_{t_i}$. Prawa strona
 mierzy ich kwadratowy koszt, ważony przyrostami
 wariacji kwadratowej. W tomie III rozszerzymy tę
 równość z procesów prostych na odpowiednie klasy
-procesów przewidywalnych przez domknięcie przestrzeni
+procesów przewidywalnych przez domknięcie podprzestrzeni w odpowiedniej przestrzeni
 Hilberta; właśnie wtedy pojawi się całka stochastyczna.
 \end{uwaga}
 
