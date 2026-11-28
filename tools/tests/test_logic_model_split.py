@@ -74,6 +74,9 @@ class TestLogicModelSplit(unittest.TestCase):
         self.assertIn(r"\label{thm:lst-fuzzy-filter-quotient}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-prime-separation}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-strong-chain-completeness}", src)
+        self.assertIn(r"\label{thm:lst-fuzzy-local-deduction}", src)
+        self.assertIn(r"\label{eq:lst-fuzzy-syntactic-residuation}", src)
+        self.assertIn(r"\label{eq:lst-fuzzy-syntactic-cases}", src)
         self.assertIn(r"\label{lem:lst-fuzzy-clipped-affine}", src)
         self.assertIn(r"\label{lem:lst-fuzzy-lattice-representation}", src)
         stack = []
@@ -158,6 +161,24 @@ class TestFuzzyOperations(unittest.TestCase):
                     for x, y in itertools.product(grid, repeat=2):
                         if x | y in p:
                             self.assertTrue(x in p or y in p)
+
+    def test_mtl_case_rule_and_join(self):
+        for star, implication in self.norms:
+            for a, b, r in itertools.product(self.grid, repeat=3):
+                join = min(implication(implication(a, b), b),
+                           implication(implication(b, a), a))
+                self.assertEqual(join, max(a, b))
+                if implication(a, b) <= r and implication(b, a) <= r:
+                    self.assertEqual(r, 1)
+                self.assertEqual(implication(star(a, b), r),
+                                 implication(a, implication(b, r)))
+
+    def test_local_deduction_not_global(self):
+        star, implication = self.norms[2]
+        p = F(1, 2)
+        self.assertEqual(implication(p, star(p, p)), F(1, 2))
+        for p in self.grid:
+            self.assertEqual(implication(star(p, p), star(p, p)), 1)
 
     def test_sugeno_zero_order(self):
         self.assertEqual(F(1, 4)*2 + F(3, 4)*6, 5)

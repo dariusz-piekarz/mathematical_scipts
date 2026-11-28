@@ -332,7 +332,8 @@ filtr pierwszy $P$ zawierający $F$, dla którego $c\notin P$.
 Rozważamy filtry zawierające $F$ i niezawierające $c$, uporządkowane
 przez inkluzję. Suma niepustego łańcucha takich filtrów ma te same
 własności, ponieważ dowolne dwa jej elementy leżą we wspólnym
-filtrze z łańcucha. Z lematu Zorna istnieje element maksymalny $P$.
+filtrze z łańcucha. Z lematu Kuratowskiego--Zorna (Twierdzenie~\ref{thm:choice-zorn})
+istnieje element maksymalny $P$.
 
 Załóżmy, że $u\vee v\in P$, lecz $u,v\notin P$.
 Maksymalność $P$ oraz Lemat~\ref{lem:lst-fuzzy-generated-filter}
@@ -391,21 +392,170 @@ i tylko wtedy, gdy każde wartościowanie w każdej algebrze
 MTL, które nadaje wszystkim elementom $\Gamma$ wartość $1$,
 nadaje $p$ wartość $1$.
 \end{twierdzenie}
-Jako zewnętrzny wynik wykorzystujemy tutaj twierdzenie
-o algebraizacji rachunku MTL z dokładnie tymi schematami
-aksjomatów i modus ponens. Por. F. Esteva, L. Godo,
+\begin{proof}
+Ustalmy $\Gamma$. W dowodzie oznaczamy koniunkcję monoidalną
+przez $*$ i piszemy
+\[
+ a\preccurlyeq b\quad\Longleftrightarrow\quad
+ \Gamma\vdash_{\mathrm{MTL}}a\to b,
+\]
+gdzie $a,b$ są formułami, nie wartościami w ustalonej algebrze.
+Przez $t$ oznaczamy formułę $\bot\to\bot$.
+Wszystkie poniższe stwierdzenia o dowodliwości wynikają
+ze schematów Definicji~\ref{def:lst-fuzzy-mtl-calculus}
+i modus ponens. Nie zakładamy jeszcze pełności.
+
+\emph{Krok 1: preorder, element największy i jednostka.}
+Przechodniość $\preccurlyeq$ daje pierwszy schemat
+przez dwukrotne zastosowanie modus ponens.
+Z drugiego i siódmego (w kierunku od produktu do zagnieżdżonej
+implikacji) wynika $a\to(b\to a)$.
+Ponieważ $t$ jest instancją ostatniego schematu, modus ponens
+daje $a\preccurlyeq t$ dla każdej formuły $a$.
+Ze schematu przemienności i schematu projekcji dostajemy
+$t*a\preccurlyeq a*t\preccurlyeq a$. Przekształcenie
+$(t*a)\to a$ w $t\to(a\to a)$ i modus ponens z $t$
+dają $a\preccurlyeq a$. Relacja jest więc preorderem.
+
+Dwa schematy dotyczące residuacji dają równoważności
+\begin{equation}\label{eq:lst-fuzzy-syntactic-residuation}
+ a*b\preccurlyeq c
+ \iff a\preccurlyeq b\to c
+ \iff b\preccurlyeq a\to c.
+\end{equation}
+Ostatnia równoważność wykorzystuje przemienność i przechodniość.
+Z $t*a\preccurlyeq t*a$ wynika $t\preccurlyeq a\to(t*a)$.
+Ponieważ $\Gamma\vdash t$, mamy $a\preccurlyeq t*a$.
+Wobec projekcji $a*t\preccurlyeq a$ oraz przemienności
+formuły $a*t,t*a,a$ są równoważne w preorderze.
+Ponadto
+\[
+ t\preccurlyeq a\iff\Gamma\vdash_{\mathrm{MTL}}a:
+\]
+kierunek prosty wynika z modus ponens z $t$, odwrotny
+z dowodliwości $a\to(t\to a)$.
+
+\emph{Krok 2: zgodność operacji i łączność.}
+Jeśli $a\preccurlyeq b$, to ze zwrotności
+$b*c\preccurlyeq b*c$ i z \eqref{eq:lst-fuzzy-syntactic-residuation}
+mamy $b\preccurlyeq c\to(b*c)$. Przechodniość oraz ponowne
+zastosowanie \eqref{eq:lst-fuzzy-syntactic-residuation}
+dają $a*c\preccurlyeq b*c$. Przemienność daje analogiczną
+monotoniczność w drugim argumencie.
+
+Dla dowolnej formuły $d$ zachodzi
+\[
+\begin{split}
+ (a*b)*c\preccurlyeq d
+ &\iff a*b\preccurlyeq c\to d\\
+ &\iff a\preccurlyeq b\to(c\to d)\\
+ &\iff a\preccurlyeq (b*c)\to d\\
+ &\iff a*(b*c)\preccurlyeq d.
+\end{split}
+\]
+Przedostatnia równoważność wynika z dwóch schematów
+residuacji i przechodniości. Podstawiając za $d$ kolejno
+obie strony postulowanej łączności, otrzymujemy ich
+wzajemną porównywalność w obu kierunkach.
+Jeśli $a\preccurlyeq b$ i $c\preccurlyeq d$, to
+\[
+ a*(b\to c)\preccurlyeq b*(b\to c)
+ \preccurlyeq c\preccurlyeq d.
+\]
+Środkowa nierówność wynika z
+$b\to c\preccurlyeq b\to c$ i residuacji syntaktycznej.
+Stąd $b\to c\preccurlyeq a\to d$.
+Dowiedliśmy więc antymonotoniczności implikacji w pierwszym
+argumencie i monotoniczności w drugim.
+
+\emph{Krok 3: kresy kratowe.}
+Przedostatni schemat aksjomatu daje następującą regułę
+rozpatrywania przypadków:
+\begin{equation}\label{eq:lst-fuzzy-syntactic-cases}
+ \left.
+ \begin{aligned}
+ a\to b&\preccurlyeq r\\
+ b\to a&\preccurlyeq r
+ \end{aligned}
+ \right\}\quad\Longrightarrow\quad\Gamma\vdash r.
+\end{equation}
+Istotnie, dwa zastosowania modus ponens do tego schematu
+z przesłankami $(a\to b)\to r$ oraz $(b\to a)\to r$
+dają $r$.
+
+Aksjomaty projekcji i przemienności dla $\wedge$ dają
+$a\wedge b\preccurlyeq a,b$.
+Załóżmy $c\preccurlyeq a$ i $c\preccurlyeq b$.
+Z monotoniczności produktu oraz szóstego schematu mamy
+\[
+\begin{split}
+ c*(a\to b)&\preccurlyeq a*(a\to b)
+              \preccurlyeq a\wedge b,\\
+ c*(b\to a)&\preccurlyeq b*(b\to a)
+              \preccurlyeq b\wedge a
+              \preccurlyeq a\wedge b.
+\end{split}
+\]
+Przez \eqref{eq:lst-fuzzy-syntactic-residuation} otrzymujemy
+$a\to b\preccurlyeq r$ i $b\to a\preccurlyeq r$
+dla $r=c\to(a\wedge b)$. Reguła
+\eqref{eq:lst-fuzzy-syntactic-cases} daje
+$c\preccurlyeq a\wedge b$.
+
+Niech $j=((a\to b)\to b)\wedge((b\to a)\to a)$.
+Mamy $a*(a\to b)\preccurlyeq b$ przez residuację oraz
+$a*(b\to a)\preccurlyeq a$ przez projekcję.
+Ponowna residuacja i własność kresu dolnego dają
+$a\preccurlyeq j$. Symetrycznie $b\preccurlyeq j$.
+Jeśli $a,b\preccurlyeq c$, to z projekcji kresu dolnego
+i residuacji wynika
+$j*(a\to b)\preccurlyeq b\preccurlyeq c$ oraz
+$j*(b\to a)\preccurlyeq a\preccurlyeq c$.
+Zatem $a\to b\preccurlyeq j\to c$ i
+$b\to a\preccurlyeq j\to c$. Reguła
+\eqref{eq:lst-fuzzy-syntactic-cases} daje $j\preccurlyeq c$.
+Formuła $j=a\vee b$ jest więc kresem górnym w preorderze.
+
+\emph{Krok 4: algebra Lindenbauma--Tarskiego.}
+Definiujemy $a\sim b$, gdy $a\preccurlyeq b$ i
+$b\preccurlyeq a$. Jest to relacja równoważności.
+Monotoniczność produktu i odpowiednia monotoniczność
+implikacji dają zgodność tych operacji z $\sim$.
+Zgodność $\wedge,\vee$ wynika z udowodnionych własności
+kresów. Na zbiorze klas $A_\Gamma$ definiujemy operacje
+przez zastosowanie danego spójnika do reprezentantów,
+a porządek przez $[a]\leq[b]$ wtedy i tylko wtedy,
+gdy $a\preccurlyeq b$. Przechodniość gwarantuje niezależność
+porządku od reprezentantów, a definicja $\sim$ antysymetrię.
+Krok 3 daje kratę. Ostatni schemat daje element najmniejszy
+$[\bot]$, a Krok 1 element największy $[t]$.
+Kroki 1 i 2 dają przemienny monoid z jednostką $[t]$,
+a \eqref{eq:lst-fuzzy-syntactic-residuation} daje residuację.
+Wreszcie, dla $r=(a\to b)\vee(b\to a)$ mamy
+$a\to b,b\to a\preccurlyeq r$. Reguła
+\eqref{eq:lst-fuzzy-syntactic-cases} daje $\Gamma\vdash r$,
+czyli $[r]=[t]$ na mocy Kroku 1. Jest to prelinearność,
+więc $A_\Gamma$ jest algebrą MTL.
+
+\emph{Krok 5: wartościowanie kanoniczne i kontrmodel.}
+Przypiszmy każdej zmiennej $p$ klasę $[p]$. Indukcja
+po budowie formuły pokazuje, że wartość dowolnej formuły
+$a$ jest równa $[a]$. Z Kroku 1 mamy
+\[
+ [a]=[t]\iff\Gamma\vdash_{\mathrm{MTL}}a.
+\]
+W szczególności wszystkie przesłanki mają wartość $[t]$,
+a niedowodliwa formuła $p$ ma wartość różną od $[t]$.
+Jest to kontrmodel dla konsekwencji semantycznej.
+Kierunek odwrotny to poprawność względem wszystkich algebr,
+wyprowadzona powyżej z reprezentacji przez łańcuchy.
+\end{proof}
+Historycznym źródłem twierdzenia jest F. Esteva, L. Godo,
 \emph{Monoidal t-norm based logic: Towards a logic for
 left-continuous t-norms}, Fuzzy Sets and Systems 124 (2001),
 271--288 (DOI: 10.1016/S0165-0114(01)00098-7).
-W szczególności w konstrukcji algebry Lindenbauma--Tarskiego
-względem $\Gamma$ utożsamia się formuły $p,q$, gdy obie
-implikacje $p\to q$ i $q\to p$ są dowodliwe z $\Gamma$.
-Wynik algebraizacji zapewnia, że jest to kongruencja,
-iloraz jest algebrą MTL, a $[p]=[1]$ dokładnie dla
-$\Gamma\vdash_{\mathrm{MTL}}p$. Nie wyprowadzamy tutaj
-tych własności bezpośrednio ze schematów Hilberta;
-poniżej dowodzimy redukcji do łańcuchów i rozszerzeń
-aksjomatycznych niezależnie od dowodu tej algebraizacji.
+Powyższy dowód konstruuje algebrę Lindenbauma--Tarskiego
+bez odwołania do pełności jako przesłanki.
 
 \begin{twierdzenie}[Silna pełność względem łańcuchów]
 \label{thm:lst-fuzzy-strong-chain-completeness}
@@ -455,9 +605,82 @@ a także względem wszystkich właściwych im algebr.
 Silna pełność dotyczy dowolnych, nie tylko skończonych
 zbiorów przesłanek. Nie oznacza ograniczenia do $[0,1]$.
 
+\section{Lokalne twierdzenie o dedukcji}
+Niech $\mathsf L$ będzie rozszerzeniem aksjomatycznym MTL
+w języku z Definicji~\ref{def:lst-fuzzy-mtl-calculus}.
+Dla formuły $a$ określamy $a^0=\bot\to\bot$ i
+$a^{n+1}=a^n\mathbin{\&}a$. W każdej algebrze $a^0$ ma
+wartość $1$, dlatego $a^1$ jest równoważna $a$.
+
+\begin{twierdzenie}[Lokalne twierdzenie o dedukcji]
+\label{thm:lst-fuzzy-local-deduction}
+Dla dowolnego zbioru formuł $\Gamma$ i formuł $a,b$ zachodzi
+\[
+ \Gamma\cup\{a\}\vdash_{\mathsf L} b
+ \iff
+ \exists n\in\{1,2,\ldots\}\quad
+ \Gamma\vdash_{\mathsf L} a^n\to b.
+\]
+\end{twierdzenie}
+\begin{proof}
+Prawa strona implikuje lewą na mocy poprawności i pełności
+z Twierdzenia~\ref{thm:lst-fuzzy-strong-chain-completeness}:
+gdy $a$ ma wartość $1$, każda jego potęga ma wartość $1$.
+
+Dla drugiego kierunku powtórzmy konstrukcję
+$A_\Gamma$ z dowodu Twierdzenia
+\ref{thm:lst-fuzzy-mtl-general-completeness}, zastępując
+$\vdash_{\mathrm{MTL}}$ przez $\vdash_{\mathsf L}$.
+Każdy krok pozostaje ważny, gdyż $\mathsf L$ zawiera
+aksjomaty MTL i modus ponens. Dodatkowe schematy mają
+w ilorazie zawsze wartość $1$: każda krotka elementów
+ilorazu jest krotką klas formuł, a instancja schematu
+po podstawieniu tych formuł jest dowodliwa.
+Mamy więc $A_\Gamma\in\mathcal K_{\mathsf L}$.
+
+Oznaczmy $u=[a]$, $v=[b]$, a przez $F$ filtr generowany
+przez $\{1,u\}$. Gdyby $v\notin F$, w algebrze
+ilorazowej $A_\Gamma/F$ wartościowanie indukowane
+przez wartościowanie kanoniczne nadawałoby wszystkim
+formułom $\Gamma$ oraz $a$ wartość $1$, natomiast
+$b$ wartość różną od $1$
+(Twierdzenie~\ref{thm:lst-fuzzy-filter-quotient}).
+Iloraz należy do $\mathcal K_{\mathsf L}$, ponieważ
+dodatkowe aksjomaty wyrażają tożsamości.
+Przeczyłoby to poprawności dowodu $b$ z $\Gamma\cup\{a\}$.
+Zatem $v\in F$ i Lemat~\ref{lem:lst-fuzzy-generated-filter}
+daje $u^n\leq v$ dla pewnego całkowitego $n\geq0$.
+Definicja porządku kanonicznego daje
+$\Gamma\vdash_{\mathsf L}a^n\to b$.
+Jeżeli $n=0$, to $1\leq v$, a stąd $u\leq v$,
+więc wolno wziąć $n=1$.
+\end{proof}
+\begin{przyklad}[Dlaczego nie wystarczy wykładnik jeden?]
+\label{ex:lst-fuzzy-no-global-deduction}
+W logice Łukasiewicza $p\vdash p\mathbin{\&}p$:
+gdy $p$ ma wartość $1$, jego kwadrat też ma wartość $1$,
+a wniosek wynika z silnej pełności względem algebr MV.
+Jednak $p\to(p\mathbin{\&}p)$ nie jest tautologią standardową,
+bo dla $p=1/2$ ma wartość $1/2$. Poprawność wyklucza
+jego dowodliwość. W lokalnym twierdzeniu o dedukcji
+dla tego przykładu wystarcza $n=2$.
+\end{przyklad}
+\begin{wniosek}\label{cor:lst-fuzzy-deduction-idempotent}
+W logice Gödla zachodzi zwykłe twierdzenie o dedukcji,
+tj. w powyższym twierdzeniu zawsze wystarcza $n=1$.
+\end{wniosek}
+\begin{proof}
+W każdej algebrze odpowiadającej logice Gödla zachodzi
+$a*a=a$ przez dodatkowy schemat i całkowitość.
+Indukcja daje $a^n=a$ dla $n\geq1$.
+Silna pełność względem tych algebr i lokalne twierdzenie
+o dedukcji dają tezę.
+\end{proof}
+
 \section{Pełność i ograniczenia zwartości}
 W klasycznej logice pierwszego rzędu pełność pozwala przejść od
-konsekwencji semantycznej do skończonego dowodu. W logice rozmytej
+konsekwencji semantycznej do skończonego dowodu
+(por. rozdział~\ref{ch:completeness} w teorii modeli). W logice rozmytej
 trzeba odróżniać pełność względem wszystkich algebr, pełność
 względem algebr standardowych na $[0,1]$ oraz przypadki skończonego
 i dowolnego zbioru przesłanek. Standardowa pełność zdaniowej logiki
