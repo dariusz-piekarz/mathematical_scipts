@@ -10,8 +10,154 @@ Tutaj przygotujemy jej rozszerzenie na prostokąty
 w $\R^n$. Zagadnienia całek iterowanych, zamiany
 zmiennych i całkowania po ogólniejszych zbiorach
 rozwiniemy w rozdziale poświęconym całkom wielokrotnym.
-Całka funkcji o wartościach w przestrzeni Banacha
-będzie przedmiotem osobnego rozdziału.
+Ogólną teorię całek o wartościach w przestrzeni Banacha
+pozostawiamy analizie funkcjonalnej.
+
+\section{Intuicja: sumowanie lokalnych wkładów}
+
+Całkowanie w wielu wymiarach nie polega na
+sumowaniu samych wartości funkcji. Każdej
+wartości przypisujemy wagę określającą rozmiar
+fragmentu dziedziny, który ta wartość reprezentuje.
+Jeżeli na małym prostokącie $C$ funkcja $f$
+jest prawie stała, to jego wkład do całki
+jest w przybliżeniu równy
+\[
+ f(\xi)|C|,\qquad \xi\in C.
+\]
+Na przykład jeśli $f$ jest gęstością masy
+płyty, to iloczyn gęstości i pola komórki
+przybliża masę jej fragmentu. Dla gęstości
+stałej przybliżenie jest dokładne.
+W trzech wymiarach zamiast pola podstawy
+występuje objętość komórki, a w wymiarze $n$
+iloczyn długości jej $n$ boków.
+
+Gdy $f\ge0$ jest funkcją dwóch zmiennych,
+ten sam iloczyn ma interpretację geometryczną:
+jest objętością prostopadłościanu o podstawie
+$C$ i wysokości $f(\xi)$.
+Sumując takie bryły, przybliżamy obszar
+\[
+ B_f=\{(x,y,z):(x,y)\in Q,\ 0\le z\le f(x,y)\}.
+\]
+W przypadku funkcji jednej zmiennej
+otrzymujemy prostokąty zamiast prostopadłościanów.
+W wyższych wymiarach rolę bryły pod wykresem
+pełni odpowiedni zbiór w $\R^{n+1}$.
+Związek granicy sum z miarą takiego zbioru
+uzasadnimy w dalszej części rozdziału.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(3.3cm,-.9cm)},y={(-2.2cm,-1.15cm)},z={(0cm,3.8cm)},>=stealth]
+ \fill[blue!9] (0,0,0)--(1,0,0)--(1,1,0)--(0,1,0)--cycle;
+ \foreach \i in {0,1,2,3}{
+  \foreach \j in {0,1,2,3}{
+   \pgfmathsetmacro{\u}{\i/4}
+   \pgfmathsetmacro{\v}{\j/4}
+   \pgfmathsetmacro{\U}{(\i+1)/4}
+   \pgfmathsetmacro{\V}{(\j+1)/4}
+   \draw[gray!55,thin] (\u,\v,0)--(\U,\v,0)--(\U,\V,0)--(\u,\V,0)--cycle;
+  }
+ }
+ \filldraw[fill=blue!25,draw=blue!65!black] (0,0,0)--(1,0,0)--(1,0,.7)--(0,0,.3)--cycle;
+ \filldraw[fill=blue!35,draw=blue!65!black] (1,0,0)--(1,1,0)--(1,1,1)--(1,0,.7)--cycle;
+ \filldraw[fill=blue!15,draw=blue!65!black] (0,0,.3)--(1,0,.7)--(1,1,1)--(0,1,.6)--cycle;
+ \foreach \i in {1,2,3}{
+  \pgfmathsetmacro{\u}{\i/4}
+  \draw[blue!50,thin] (\u,0,{.3+.4*\u})--(\u,1,{.6+.4*\u});
+  \draw[blue!50,thin] (0,\u,{.3+.3*\u})--(1,\u,{.7+.3*\u});
+ }
+ \filldraw[fill=orange!55,draw=orange!85!black]
+ (.75,0,0)--(1,0,0)--(1,0,.6)--(.75,0,.6)--cycle;
+ \filldraw[fill=orange!72,draw=orange!85!black]
+ (1,0,0)--(1,.25,0)--(1,.25,.6)--(1,0,.6)--cycle;
+ \filldraw[fill=orange!30,draw=orange!85!black,densely dashed]
+ (.75,0,.6)--(1,0,.6)--(1,.25,.6)--(.75,.25,.6)--cycle;
+ \draw[->,gray!80!black] (0,0,0)--(1.25,0,0) node[right] {$x$};
+ \draw[->,gray!80!black] (0,0,0)--(0,1.25,0) node[left] {$y$};
+ \draw[->,gray!80!black] (0,0,0)--(0,0,1.18) node[above] {$z$};
+ \node[blue!70!black,above] at (.5,.5,.75) {$z=f(x,y)$};
+ \node[orange!85!black,right] at (1,.08,.28) {$f(\xi)|C|$};
+\end{tikzpicture}
+\caption{Bryła pod dodatnim wykresem
+$f(x,y)=0{,}3+0{,}4x+0{,}3y$ na kwadracie
+jednostkowym i wyróżniona komórka
+$C=[3/4,1]\times[0,1/4]$. Pomarańczowy
+prostopadłościan ma wysokość $f(3/4,0)=0{,}6$;
+jego górna ściana jest schematycznie
+zaznaczona linią przerywaną, aby odróżnić
+ją od wykresu.}
+\label{ma2:fig:riemann-local-volume}
+\end{figure}
+
+Dla funkcji nieujemnej można na każdej
+komórce wybrać najmniejszą i największą
+możliwą wysokość: odpowiednio infimum
+i supremum funkcji. Pierwsza bryła mieści
+się pod wykresem, druga obejmuje cały
+fragment bryły pod wykresem. Różnica
+ich objętości jest iloczynem oscylacji
+funkcji i pola podstawy. Jeśli łączna
+różnica daje się uczynić dowolnie małą,
+obie metody prowadzą do tej samej wartości.
+To jest geometryczna treść kryterium Darboux.
+Nie wymagamy osiągania kresów przez
+dowolną funkcję ograniczoną.
+
+\paragraph{Funkcja zmieniająca znak.}
+Jeżeli $f$ przyjmuje również wartości ujemne,
+wkłady poniżej płaszczyzny podstawy
+odejmujemy zamiast dodawać. Całka jest
+wówczas bilansem, a nie zwykłą objętością
+geometryczną. Na przykład na $Q=[-1,1]\times[0,1]$
+funkcja $f(x,y)=x$ daje dwie przystające
+bryły po przeciwnych stronach płaszczyzny
+$z=0$. Ich wkłady wzajemnie się znoszą.
+Natomiast zastąpienie $f$ przez $|f|$
+powoduje dodanie obu objętości.
+Ścisły rachunek podamy po wprowadzeniu
+własności całki.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(2.2cm,-.5cm)},y={(-1.5cm,-.8cm)},z={(0cm,2cm)},>=stealth]
+ \fill[gray!12] (-1,0,0)--(1,0,0)--(1,1,0)--(-1,1,0)--cycle;
+ \filldraw[fill=orange!35,draw=orange!85!black] (-1,0,0)--(-1,0,-1)--(0,0,0)--cycle;
+ \filldraw[fill=orange!55,draw=orange!85!black] (-1,0,0)--(-1,1,0)--(-1,1,-1)--(-1,0,-1)--cycle;
+ \filldraw[fill=orange!22,draw=orange!85!black] (-1,0,-1)--(-1,1,-1)--(0,1,0)--(0,0,0)--cycle;
+ \filldraw[fill=blue!30,draw=blue!75!black] (0,0,0)--(1,0,0)--(1,0,1)--cycle;
+ \filldraw[fill=blue!50,draw=blue!75!black] (1,0,0)--(1,1,0)--(1,1,1)--(1,0,1)--cycle;
+ \filldraw[fill=blue!18,draw=blue!75!black] (0,0,0)--(1,0,1)--(1,1,1)--(0,1,0)--cycle;
+ \draw[->,gray!80!black] (-1.15,0,0)--(1.25,0,0) node[right] {$x$};
+ \draw[->,gray!80!black] (0,0,0)--(0,1.2,0) node[left] {$y$};
+ \draw[->,gray!80!black] (0,0,-1.1)--(0,0,1.2) node[above] {$z$};
+ \node[orange!85!black,below] at (-.75,0,-.8) {$-1/2$};
+ \node[blue!75!black,above] at (.7,.5,.8) {$+1/2$};
+\end{tikzpicture}
+\caption{Całka funkcji $f(x,y)=x$ nad
+$[-1,1]\times[0,1]$: dodatni i ujemny
+wkład mają przeciwne znaki, choć obie
+bryły mają dodatnią objętość $1/2$.}
+\label{ma2:fig:riemann-signed-volume}
+\end{figure}
+
+Warto od razu odróżnić całkowanie
+względem rozmiaru dziedziny od całkowania
+wzdłuż krzywej lub po powierzchni.
+Prostokąty w $\R^n$ mają $n$-wymiarową
+objętość. Krzywa w $\R^3$ może mieć
+dodatnią długość, lecz zerową objętość
+trójwymiarową. Aby sumować wkłady wzdłuż
+takiej krzywej, należy używać długości,
+a dla powierzchni pola jej fragmentów.
+W kolejnych rozdziałach rolę właściwej
+miary pełnić będzie odpowiednio
+$\mathcal H^1$, $\mathcal H^2$ lub ogólnie
+$\mathcal H^k$; nie zastępujemy ich
+$n$-wymiarową miarą Lebesgue'a w przestrzeni
+otaczającej.
 
 \section{Podziały prostokąta i sumy Darboux}
 
@@ -291,6 +437,39 @@ Stosując monotoniczność do
 $-|f|\le f\le |f|\le\|f\|_\infty$ i używając
 liniowości, uzyskujemy żądane oszacowanie.
 \end{proof}
+
+\begin{przyklad}[Bilans wkładów dodatnich i ujemnych]
+\label{ma2:ex:riemann-signed-volume}
+Dla funkcji $f(x,y)=x$ z rysunku
+\ref{ma2:fig:riemann-signed-volume}
+weźmy podział na $2N$ równych przedziałów
+na osi $x$ oraz $N$ na osi $y$,
+ze znacznikami w środkach komórek.
+Wkłady dla $x$ i $-x$ mają jednakowe
+pola podstaw i przeciwne wartości funkcji,
+więc suma Riemanna jest równa zero.
+Ciągłość i twierdzenie
+\ref{ma2:thm:riemann-darboux-box}
+dają $I_Q(f)=0$.
+Dla $|f|$ na każdej połowie prostokąta
+podstawy suma środkowa wynosi
+\[
+ \frac{1}{N}\sum_{i=1}^N\frac{i-1/2}{N}
+ =\frac12,
+\]
+ponieważ sumowanie po $N$ komórkach
+w kierunku $y$ daje czynnik $1$.
+Zatem $I_Q(|f|)=1$.
+Ogólnie dla funkcji całkowalnej $f$
+jej części $f^+=(|f|+f)/2$ i
+$f^-=(|f|-f)/2$ są całkowalne na mocy
+\ref{ma2:thm:riemann-box-algebra},
+a liniowość daje
+\[
+ I_Q(f)=I_Q(f^+)-I_Q(f^-),\qquad
+ I_Q(|f|)=I_Q(f^+)+I_Q(f^-).
+\]
+\end{przyklad}
 
 \begin{przyklad}[Iloczyn dwóch funkcji współrzędnościowych]
 \label{ma2:ex:riemann-box-xy}
@@ -726,6 +905,54 @@ komórka ma pole $1/N^2$, stąd
 \]
 Obie sumy dążą do $1/2$, więc $c(A)=1/2$.
 \end{przyklad}
+
+\begin{twierdzenie}[Objętość pod wykresem]
+\label{ma2:thm:riemann-subgraph-volume}
+Niech $f:Q\to[0,\infty)$ będzie ograniczona
+i całkowalna w sensie Riemanna.
+Wtedy zbiór
+\[
+ B_f=\{(x,t)\in Q\times\R:0\le t\le f(x)\}
+\]
+jest mierzalny w sensie Jordana w $\R^{n+1}$
+i
+\[
+ c(B_f)=I_Q(f).
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla podziału $P$ tworzymy zbiory elementarne
+\[
+ E_P=\bigcup_\alpha Q_\alpha\times[0,m_\alpha],
+ \qquad
+ H_P=\bigcup_\alpha Q_\alpha\times[0,M_\alpha].
+\]
+Z definicji kresów
+$E_P\subset B_f\subset H_P$.
+Bryły nad różnymi komórkami mogą przecinać
+się jedynie nad ich wspólnymi brzegami,
+czyli na zbiorach miary $(n+1)$-wymiarowej
+zero (fragmentach hiperpłaszczyzn).
+Ich objętości są zatem dokładnie
+$L(f,P)$ i $U(f,P)$, na mocy addytywności
+objętości zbiorów elementarnych.
+W konsekwencji
+\[
+ L(f,P)\le c_*(B_f)\le c^*(B_f)\le U(f,P).
+\]
+Całkowalność $f$ i przejście do kresów
+dają równość wszystkich granicznych wartości.
+Z \ref{ma2:thm:jordan-criterion}
+wynika ponadto
+$\lambda_{n+1}(B_f)=I_Q(f)$.
+\end{proof}
+Dla funkcji o dowolnym znaku stosujemy wynik
+oddzielnie do $f^+$ i $f^-$:
+całka jest różnicą objętości brył, a
+całka z $|f|$ ich sumą. W ten sposób
+intuicja z początku rozdziału uzyskuje
+ścisłe uzasadnienie bez korzystania
+z twierdzenia Fubiniego.
 
 \section{Geometryczna interpretacja sum Darboux}
 
