@@ -98,3 +98,21 @@ class FullImportTraceBudgetTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 probe.offline.parse_trace(raw, cwd=Path("/"), measurement_only=True,
                                           nonportable_components=set())
+
+
+class FixedProfileTests(unittest.TestCase):
+    def test_scoped_profile_changes_only_imports(self):
+        full = probe.fixture_source("full")
+        scoped = probe.fixture_source("scoped")
+        self.assertEqual(full, probe.SOURCE)
+        self.assertEqual(scoped, probe.SCOPED_SOURCE)
+        imports = "".join("import " + name + "\n" for name in probe.SCOPED_IMPORTS)
+        self.assertTrue(scoped.startswith(imports))
+        self.assertEqual(scoped[len(imports):], full.split("\n", 1)[1])
+        self.assertNotIn("import Mathlib\n", scoped)
+        self.assertEqual(len(set(probe.SCOPED_IMPORTS)), len(probe.SCOPED_IMPORTS))
+
+    def test_unknown_profile_is_rejected(self):
+        for profile in ("", "import Mathlib", "custom", None):
+            with self.assertRaises(ValueError):
+                probe.fixture_source(profile)

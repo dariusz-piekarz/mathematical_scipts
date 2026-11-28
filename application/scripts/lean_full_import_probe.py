@@ -38,6 +38,24 @@ example (x y : Real) : (x + y)^2 = x^2 + 2*x*y + y^2 := by ring
 theorem atlas_isolated_fixture (p q : Prop) : (p ∧ q) ↔ (q ∧ p) := and_comm
 #print axioms atlas_isolated_fixture
 """
+# Candidate profile only. The production generator still uses import Mathlib.
+# Keep the fixture body identical for a fair comparison of import closures.
+SCOPED_IMPORTS = (
+    "Mathlib.Data.Real.Basic",
+    "Mathlib.Tactic.Ring",
+    "Mathlib.Tactic.Tauto",
+    "Aesop",
+    "Lean.Elab.Tactic.Omega",
+)
+SCOPED_SOURCE = "".join("import " + name + "\n" for name in SCOPED_IMPORTS) + SOURCE.split("\n", 1)[1]
+
+
+def fixture_source(profile: str) -> str:
+    if profile == "full":
+        return SOURCE
+    if profile == "scoped":
+        return SCOPED_SOURCE
+    raise ValueError("Unknown fixed measurement profile")
 
 
 def inventory(root: Path, *, deadline: float, remaining: int) -> dict:
@@ -72,13 +90,16 @@ def inventory(root: Path, *, deadline: float, remaining: int) -> dict:
     return result
 
 
-def observe(work: Path, toolchain: Path, packages: dict[str, Path]) -> dict:
+def observe(work: Path, toolchain: Path, packages: dict[str, Path], *, profile="full") -> dict:
+    source = fixture_source(profile)
     fixture = work / "Fixture.lean"
-    fixture.write_text(SOURCE, encoding="utf-8")
+    fixture.write_text(source, encoding="utf-8")
     env = {"PATH": str(toolchain / "bin") + ":/usr/bin:/bin",
            "HOME": str(work), "LANG": "C", "LEAN_NUM_THREADS": "1",
            "LEAN_PATH": ":".join(str(p / ".lake/build/lib/lean") for p in packages.values())}
     result = {"status": "blocked", "trace_files": 0, "trace_bytes": 0,
+              "profile": profile, "source_sha256": hashlib.sha256(source.encode()).hexdigest(),
+              "host_fixture_compiled": False,
               "measurement_trace_limit": offline.MEASUREMENT_TRACE_BYTES,
               "admission_trace_limit": offline.MAX_TRACE_BYTES}
     nonportable = set()
@@ -164,13 +185,16 @@ def main() -> int:
         remaining -= row["entries"]
     with tempfile.TemporaryDirectory(prefix="atlas-full-mathlib-") as directory:
         observation = observe(Path(directory), toolchain, packages)
+    with tempfile.TemporaryDirectory(prefix="atlas-scoped-mathlib-") as directory:
+        scoped_observation = observe(Path(directory), toolchain, packages, profile="scoped")
     report = {"schema": 1, "checkout_sha": sha,
               "source_sha256": hashlib.sha256(SOURCE.encode()).hexdigest(),
               "fixture_only": True, "host_only": True, "execution_allowed": False,
               "offline_ready": False, "certificate": False, "inventory": rows,
               "inventory_totals": {key: sum(row[key] for row in rows.values())
                                    for key in ("entries", "files", "bytes", "symlinks")},
-              "observation": observation}
+              "observation": observation, "scoped_imports": list(SCOPED_IMPORTS),
+              "scoped_observation": scoped_observation}
     path = Path(os.environ["RUNNER_TEMP"]) / "atlas-full-mathlib-measurement.json"
     with path.open("xb") as handle:
         handle.write(artifacts.encoded(report))
