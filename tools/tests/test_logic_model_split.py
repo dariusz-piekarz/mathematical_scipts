@@ -84,6 +84,9 @@ class TestLogicModelSplit(unittest.TestCase):
         self.assertIn(r"\label{thm:lst-fuzzy-mtl-standard}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-godel-standard}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-finite-standard}", src)
+        self.assertIn(r"\label{thm:lst-fuzzy-bl-ordinal-decomposition}", src)
+        self.assertIn(r"\label{lem:lst-fuzzy-finite-ordinal-tnorm}", src)
+        self.assertIn(r"\label{thm:lst-fuzzy-bl-finite-countermodel}", src)
         self.assertIn(r"\label{lem:lst-fuzzy-ordered-linear-transfer}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-mv-rational-countermodel}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-product-finite-countermodel}", src)
@@ -318,6 +321,29 @@ class TestFuzzyOperations(unittest.TestCase):
             u, eps = F(1), F(1,n+1)
             self.assertGreater(eps,0)
             self.assertTrue(all(k*eps<u for k in range(1,n+1)))
+
+    def test_ordinal_sum_tnorm(self):
+        intervals = [(F(0),F(1,3),self.norms[2]),
+                     (F(1,2),F(5,6),self.norms[1])]
+        def star(a,b):
+            for l,r,(op,_) in intervals:
+                if l <= a <= r and l <= b <= r:
+                    return l+(r-l)*op((a-l)/(r-l),(b-l)/(r-l))
+            return min(a,b)
+        def imp(a,b):
+            if a <= b:
+                return F(1)
+            for l,r,(_,op) in intervals:
+                if l <= b < a <= r:
+                    return l+(r-l)*op((a-l)/(r-l),(b-l)/(r-l))
+            return b
+        grid = tuple(F(i,12) for i in range(13))
+        for a,b,c in itertools.product(grid, repeat=3):
+            self.assertEqual(star(star(a,b),c),star(a,star(b,c)))
+            self.assertEqual(star(a,c) <= b,c <= imp(a,b))
+            self.assertEqual(star(a,imp(a,b)),min(a,b))
+        self.assertEqual(star(F(2,3),F(2,3)),F(7,12))
+        self.assertEqual(imp(F(2,3),F(1,4)),F(1,4))
 
     def test_sugeno_zero_order(self):
         self.assertEqual(F(1, 4)*2 + F(3, 4)*6, 5)
