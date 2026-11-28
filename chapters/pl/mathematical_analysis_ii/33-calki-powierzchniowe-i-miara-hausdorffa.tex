@@ -273,6 +273,117 @@ i zbieżność monotoniczną, a dla funkcji
 całkowalnych przez rozkład na części dodatnią
 i ujemną.
 
+
+\subsection{Intuicja: ważone pole i objętość nad powierzchnią}
+\label{ma2:sec:surface-weighted-intuition}
+
+W całce pierwszego rodzaju ważymy każdy mały fragment
+podrozmaitości wartością funkcji $f$:
+jego przybliżony wkład to $f(p)$ razy jego
+$k$-wymiarowa objętość. Dla $f=1$ odzyskujemy
+samą miarę $\mathcal H^k$; dla $k=2$ i nieujemnej
+gęstości powierzchniowej $f$ całka oznacza masę
+cienkiej powłoki. Nie jest to na ogół pole wykresu
+funkcji $f$ nad powierzchnią.
+
+Podobnie jak dla całki krzywoliniowej
+(\ref{ma2:prop:line-curtain-area}), istnieje
+ścisła interpretacja geometryczna w przestrzeni
+z dodatkową współrzędną.
+
+\begin{stwierdzenie}[Objętość nad podrozmaitością]
+\label{ma2:prop:surface-subgraph-volume}
+Niech $M\subseteq\R^n$ będzie $k$-wymiarową
+podrozmaitością klasy $C^1$ bez brzegu,
+$E\subseteq M$ borelowskim zbiorem i
+$f:E\to[0,\infty)$ funkcją borelowską.
+W przestrzeni $\R^{n+1}$ określamy
+\[
+ V_f=\{(p,w):p\in E,\ 0\le w\le f(p)\}.
+\]
+Wówczas, również dla wartości nieskończonej całki,
+\[
+ \mathcal H^{k+1}(V_f)
+ =\int_E f(p)\,\mathrm d\mathcal H^k(p).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Niech $\sigma_j:U_j\to M$ będą lokalnymi
+parametryzacjami z poprzedniego rozkładu $E$
+na rozłączne zbiory borelowskie $E_j$.
+Odwzorowanie
+$\Phi_j:U_j\times\R\to\R^{n+1}$,
+$\Phi_j(u,w)=(\sigma_j(u),w)$,
+jest zanurzeniem klasy $C^1$: jest
+różnowartościowe, ma różnowartościową pochodną,
+a jego odwrotność na obraz jest ciągła, ponieważ
+jest iloczynem odwrotności $\sigma_j$ i identyczności.
+Macierz Grama ma postać blokową
+\[
+ (D\Phi_j)^{\mathsf T}D\Phi_j
+ =
+ \begin{pmatrix}
+  (D\sigma_j)^{\mathsf T}D\sigma_j & 0\\
+  0 & 1
+ \end{pmatrix}.
+\]
+Stąd $J_{k+1}\Phi_j(u,w)=J_k\sigma_j(u)$.
+Zbiór parametrów
+$D_j=\{(u,w):u\in\sigma_j^{-1}(E_j),\
+0\le w\le f(\sigma_j(u))\}$
+jest borelowski z mierzalności funkcji.
+Z \ref{ma2:thm:surface-area} i twierdzenia
+Tonellego
+(\atlasref{ME-12::thm:lebesgue-products-12}{ME 12})
+otrzymujemy
+\[
+ \begin{aligned}
+ \mathcal H^{k+1}(\Phi_j(D_j))
+ &=\int_{D_j}J_k\sigma_j(u)\,
+                 \mathrm d\lambda_{k+1}(u,w)\\
+ &=\int_{\sigma_j^{-1}(E_j)}
+ f(\sigma_j(u))J_k\sigma_j(u)\,\mathrm d\lambda_k(u)\\
+ &=\int_{E_j} f(p)\,\mathrm d\mathcal H^k(p),
+ \end{aligned}
+\]
+gdzie ostatni krok to \ref{ma2:cor:surface-weighted-area}.
+Obrazy $\Phi_j(D_j)$ są borelowskie i rozłączne,
+bo ich rzuty na $\R^n$ są rozłączne.
+Sumując równości, otrzymujemy tezę.
+\end{proof}
+
+Dla rzeczywistej funkcji całkowalnej $f$
+otrzymujemy różnicę objętości zbiorów nad
+i pod poziomem $w=0$, stosując stwierdzenie
+do $f^+$ i $f^-$ oraz odbicie ostatniej
+współrzędnej. Dla zwykłej powierzchni w $\R^3$
+dodatkowy wymiar jest czwartą współrzędną:
+nie należy mylić go z pionowym kierunkiem
+w pierwotnej przestrzeni $\R^3$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(1.2cm,-.25cm)},y={(-.55cm,-.5cm)},z={(0cm,1.35cm)},>=Latex]
+\fill[blue!12] (0,0,0)--(2.4,0,0)--(2.4,1.5,0)--(0,1.5,0)--cycle;
+\fill[teal!25,opacity=.75] (0,0,0)--(2.4,0,0)--(2.4,0,1.6)--(0,0,.7)--cycle;
+\fill[teal!14,opacity=.75] (2.4,0,0)--(2.4,1.5,0)--(2.4,1.5,1.2)--(2.4,0,1.6)--cycle;
+\fill[teal!45,opacity=.85] (0,0,.7)--(2.4,0,1.6)--(2.4,1.5,1.2)--(0,1.5,.3)--cycle;
+\draw[blue!70!black,thick] (0,0,0)--(2.4,0,0)--(2.4,1.5,0)--(0,1.5,0)--cycle;
+\draw[teal!75!black,thick] (0,0,.7)--(2.4,0,1.6)--(2.4,1.5,1.2)--(0,1.5,.3)--cycle;
+\foreach \x/\y/\h in {0/0/.7,2.4/0/1.6,2.4/1.5/1.2,0/1.5/.3}
+ \draw[teal!70!black] (\x,\y,0)--(\x,\y,\h);
+\node[below,blue!70!black] at (1.2,1.5,0) {$E$};
+\node[above,teal!75!black] at (1.2,0,1.15) {wykres wysokości $f$};
+\draw[<->] (2.65,0,0)--node[right]{$f(p)$}(2.65,0,1.6);
+\end{tikzpicture}
+\caption{Model dla płaskiego fragmentu: objętość
+nad dziedziną to pole ważone wysokością.
+Dla zakrzywionej podrozmaitości obowiązuje
+ten sam wzór z miarą Hausdorffa i dodatkową
+współrzędną.}
+\label{ma2:fig:surface-weighted-volume}
+\end{figure}
+
 \section{Przykłady obliczeniowe}
 
 \begin{przyklad}[Wykres funkcji skalarnej]
