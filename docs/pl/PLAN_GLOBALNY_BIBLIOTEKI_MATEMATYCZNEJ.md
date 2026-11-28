@@ -1,6 +1,6 @@
 # PLAN GLOBALNY BIBLIOTEKI MATEMATYCZNEJ
 
-**Wersja 1.0 — 28.11.2026.** Nadrzędny dokument roboczy. Migawka katalogu: [8e104a7](https://github.com/dariusz-piekarz/mathematical_scipts/commit/8e104a732fb4293b1f23f06774f01f8d6e17d96c). Gałąź robocza: biblioteka-matematyczna-iteracja-6. **22 aktywne skrypty, 607 rozdziałów.** Pełny indeks ścieżek, blobów i kandydatów na raporty: [catalog/global_library_inventory.json](../../catalog/global_library_inventory.json).
+**Wersja 1.1 — 28.11.2026.** Nadrzędny dokument roboczy. Migawka katalogu: [8e104a7](https://github.com/dariusz-piekarz/mathematical_scipts/commit/8e104a732fb4293b1f23f06774f01f8d6e17d96c). Gałąź robocza: biblioteka-matematyczna-iteracja-6. **22 aktywne skrypty, 607 rozdziałów.** Pełny indeks ścieżek, blobów i kandydatów na raporty: [catalog/global_library_inventory.json](../../catalog/global_library_inventory.json).
 
 To plan żywy, nie certyfikat ukończenia całej biblioteki. Inwentaryzacja obejmuje katalog i nazwy wszystkich aktywnych rozdziałów oraz wybrane raporty i plany. Nie przeczytano ponownie wszystkich dowodów ani wszystkich raportów; propozycje uzupełnień są zadaniami sprawdzenia pokrycia, a nie stwierdzeniem braku. Statusy historyczne dotyczą wersji wskazanych w raportach. Brak raportu w standardowym katalogu nie oznacza braku przeprowadzonego audytu.
 
@@ -23,8 +23,11 @@ To plan żywy, nie certyfikat ukończenia całej biblioteki. Inwentaryzacja obej
 | P1 | AF → FSG: rejestracja i migracja geometrii przestrzeni Banacha | istniejący kandydat, cross-check AM II, audyt i CI |
 | P1 | DT/Fourier, RRC, MOD, NL, MM, LTM, CAT i RP1–4 | domknięcie rozpoczętych tematów i audytów, nie ponawiać zaliczonych bez powodu |
 | P1 | Kontrola integracji całej biblioteki: etykiety, graf pojęć, CI, PDF, aplikacja | raporty na zgodnych blobach, nie sam licznik testów |
-| P2 | Analiza zespolona, teoria liczb i arytmetyka, analiza p-adyczna | po ustaleniu zależności i pokrycia |
-| P3 | Geometria analityczna zespolona, ODE, dalsze specjalizacje | decyzja po podstawowych skryptach |
+| P1 | AF: rozbudowa teorii operatorów; ALG: rozbudowa geometrii algebraicznej | audyt pokrycia, niezależne moduły |
+| P2 | AZ I–II, geometria klasyczna, RZUD, teoria liczb i arytmetyka | po ustaleniu zależności i pokrycia |
+| P2 | Liczby p-adyczne i analiza niearchimedesowa, analiza niestandardowa | AA, TL, ME, AF, MOD i LTM |
+| P2 | Rozdzielenie DG na geometrię i topologię różniczkową; następnie osobne specjalizacje wymiaru 4 | mapa etykiet, audyt pokrycia DG/AT/GT/RRC |
+| P3 | GAZ I–II i pogłębione tomy czterowymiarowe | po odpowiednich podstawach; dokładna kolejność do ustalenia |
 
 P0 w wątku AM ma ścisłą kolejność AM II → AM I → RTPC. FSG i inne rozpoczęte wątki mogą być prowadzone osobno pod warunkiem bezpiecznej koordynacji i braku utraty zależności. Nie włączać automatyzacji tym planem.
 
@@ -61,7 +64,7 @@ P0 w wątku AM ma ścisłą kolejność AM II → AM I → RTPC. FSG i inne rozp
 ### DG — Geometria i topologia różniczkowa (20)
 
 - **Rdzeń:** Rozmaitości, pola, formy, geometria riemannowska, koneksje, geodezyjne, krzywizna, transwersalność, Morse, kobordyzmy.
-- **Plan / granice:** DG03–09: formalizm AL/AA/CAT/AT, zachować pomosty i zastosowania. DG10: abstrakcyjne rozmaitości i de Rham, AM II dowód euklidesowy Stokesa. DG17–20 utrzymać w części topologii różniczkowej, uzgodnić z AT i GT. Uzupełnić wiązki, koneksje główne, Lie groups, symplektykę, Hodge'a, geometrię zespoloną, po sprawdzeniu pokrycia. Rozważyć dwa tomy, nie rozcinać automatycznie.
+- **Plan / granice:** DG03–09: formalizm AL/AA/CAT/AT, zachować pomosty i zastosowania. DG10: abstrakcyjne rozmaitości i de Rham, AM II dowód euklidesowy Stokesa. DG15–20: rozdzielić materiał geometryczny i topologiczny, uzgodnić z AT i GT. Zatwierdzony kierunek: odrębna geometria różniczkowa i topologia różniczkowa, następnie specjalizacje w wymiarze 4; proponowany podział na DG, TD, DG4 i TD4 opisano w sekcji 5. Uzupełnić wiązki, koneksje główne, grupy Liego, symplektykę, teorię Hodge'a i geometrię zespoloną po sprawdzeniu pokrycia. Nie wycofywać obecnej książki przed pełną migracją.
 - **Audyt:** Raporty historyczne; pełna macierz audytów aktualnych 20 rozdziałów do odtworzenia. [Dokument](../../application/docs/AUDYT_CIAGLOSCI_DG_I_ODSYLACZY_2026-11-20.md).
 - [Aktywny katalog rozdziałów](../../books/pl/differential_geometry_and_topology.tex).
 
@@ -89,7 +92,7 @@ P0 w wątku AM ma ścisłą kolejność AM II → AM I → RTPC. FSG i inne rozp
 ### GT — Teoria grafów i węzłów (42)
 
 - **Rdzeń:** Grafy kombinatoryczne, algorytmy, grafy topologiczne oraz węzły i 3-/4-rozmaitości.
-- **Plan / granice:** Zaproponować dwa tomy: grafy (00–17, 37–43 w obecnych ID) i węzły/niska topologia (18–34), z mostami Taita/Tutte/plumbing. Seiberg–Witten: GT zastosowania do 4-rozmaitości, RRC/DG podstawy analityczne i geometryczne. Uzupełnić po audycie grafów algorytmy/kolorowanie, matroidy i teorię węzłów (Alexander, Jones, sploty, niezmienniki). Zachować wszystkie stabilne dowody.
+- **Plan / granice:** Zaproponować dwa tomy: grafy (00–17, 37–43 w obecnych ID) i węzły/niska topologia (18–34), z mostami Taita/Tutte/plumbing. Seiberg–Witten i rozbudowana teoria 4-rozmaitości: docelowo TD4 (niezmienniki, zastosowania topologiczne), DG4 (geometria i równania cechowania), RRC/AF (ogólne podstawy analityczne); GT zachowuje węzły, sploty i potrzebne pomosty. Przed przeniesieniem sprawdzić GT22–34 i zachować pełny materiał. Uzupełnić po audycie grafów algorytmy/kolorowanie, matroidy i teorię węzłów (Alexander, Jones, sploty, niezmienniki). Zachować wszystkie stabilne dowody.
 - **Audyt:** Istnieją liczne audyty globalne i rozdziałowe; status na aktualnych blobach ustalić przed rozdziałem tomów. [Dokument](../../audits/graph_and_knot_theory/global-structural-batch-control-2026-11-25.md).
 - [Aktywny katalog rozdziałów](../../books/pl/graph_and_knot_theory.tex).
 
@@ -200,6 +203,11 @@ P0 w wątku AM ma ścisłą kolejność AM II → AM I → RTPC. FSG i inne rozp
 | M10 | GA/BT wycofane skrypty | AA | sprawdzić wszystkie etykiety, semantykę i regresje; nie tworzyć ponownie bez uzasadnienia |
 | M11 | LA22–28, AA51–72 | LA/AA | potencjalne wydzielenie sterowania i teorii Liego/reprezentacji tylko po analizie rozmiaru i pokrycia; obecnie nie migrować |
 | M12 | DG, ME31, AM II | DG/FSG/ME | dżety i geometria: właściciel geometryczny, ME zachowuje zastosowania miarowe |
+| M13 | DG01–20, AT09/11/17–21/30 | DG/TD | zatwierdzone rozdzielenie; DG01–04/10–16 jako kandydaci geometryczni, DG15–20 jako kandydaci topologiczni; rozdzielić na poziomie sekcji, unikać podwójnych etykiet |
+| M14 | GT22–34, DG/AT, RRC | DG4/TD4 | odrębne opracowania geometrii i topologii czterowymiarowej; zachować GT jako źródło teorii węzłów i splotów |
+| M15 | LA/AA/DG/ALG/AM I | GK/AZ I–II | geometrie modelowe i rzutowe, grupy przekształceń, gotowe zespolone funkcje elementarne; dowody algebraiczne pozostają u właścicieli |
+| M16 | AF/LA/RRC/AA/FSG | RZUD | ODE, przepływy, układy dynamiczne, stabilność, sterowanie tylko w zakresie potrzebnym dla ODE; istniejące dowody i zastosowania zachować |
+| M17 | MOD/LTM/AM I/AA/ME | AN/PA | ultrailoczyny i transfer, liczby hiperrzeczywiste, liczby p-adyczne i wartościowania; odróżniać analizę niestandardową od niearchimedesowskiej |
 
 ## 5. Nowe skrypty i ich program
 
@@ -213,15 +221,99 @@ P0 w wątku AM ma ścisłą kolejność AM II → AM I → RTPC. FSG i inne rozp
 
 **FSG — Geometria różniczkowa przestrzeni Banacha:** istniejący kandydat, jeszcze niezarejestrowany w sprawdzonym katalogu. Gâteaux/Fréchet, Bastiani, wyższe pochodne, lokalne twierdzenia, podrozmaitości Banacha, wiązki, koneksje, metryki słabe/silne, przestrzenie odwzorowań, rozkłady jedności przy odpowiednich hipotezach, rachunek wariacyjny. AF zachowuje funkcjonalne podstawy; AM II elementarny pomost.
 
-**AZ — Analiza zespolona:** liczby zespolone z AM I, gotowy materiał [funkcji elementarnych](complex_analysis_materials/README.md), holomorficzność, Cauchy, szeregi Laurenta i residua, funkcje meromorficzne, odwzorowania konforemne, rodziny normalne, funkcje harmoniczne/subharmoniczne, podstawy powierzchni Riemanna. Dalej osobny tom wielu zmiennych: dziedziny holomorficzności, pseudowypukłość, Levi, problem d-bar, jądra Bergmana/Szegő, funkcje wewnętrzne, Nevanlinna–Pick, geodezyjne zespolone i odległości niezmiennicze.
+### 5.1. Zatwierdzone nowe kierunki (28.11.2026)
 
-**TL — Teoria liczb i arytmetyka:** elementarna arytmetyka, kongruencje, kwadratowe prawo wzajemności, funkcje arytmetyczne, aproksymacja diofantyczna, algebraiczna teoria liczb, pierścienie liczb całkowitych, ideały, jednostki, klasy, analityczna teoria liczb, zeta i funkcje L. AA daje teorię ciał i Galois; nie kopiować jej.
+Kierunki zatwierdzone przez użytkownika; poniższe szczegółowe programy i robocze identyfikatory są propozycją organizacji, nie poleceniem natychmiastowego tworzenia rozdziałów. GAZ wstępnie dwutomowa. Pierwszeństwo zachowuje kolejność AM II → AM I → RTPC.
 
-**PA — Liczby p-adyczne i analiza niearchimedesowa:** ciała lokalne, wartościowania, lemat Hensela, rozszerzenia, analiza p-adyczna, miary, analiza harmoniczna, przestrzenie Banacha p-adyczne, podstawy geometrii niearchimedesowej. Zależności TL/AA/ME/AF.
+#### AZ I — Analiza zespolona jednej zmiennej
+1. Liczby zespolone, geometria płaszczyzny i sfery Riemanna (AM I, GK); funkcje elementarne i gałęzie, wykorzystać [materiały zespolone](complex_analysis_materials/README.md).
+2. Holomorficzność, równania Cauchy'ego–Riemanna, całki po krzywych, twierdzenie i wzór Cauchy'ego, twierdzenie Morery, rozwinięcia Taylora i Laurenta, osobliwości.
+3. Residua, zasada argumentu, Rouché, całki rzeczywiste, funkcje meromorficzne, iloczyny Weierstrassa, Mittag–Leffler.
+4. Odwzorowania konforemne, automorfizmy dysku, Schwarz–Pick, rodziny normalne, Montel, twierdzenie Riemanna o odwzorowaniu, twierdzenia Picarda.
+5. Funkcje harmoniczne i subharmoniczne, problem Dirichleta, jądro Poissona, teoria potencjału i przestrzenie Hardy'ego/Bergmana w dysku; podstawy powierzchni Riemanna.
+6. Zależności: AM I/II, TO, ME; algebraiczna konstrukcja liczb pozostaje AM I/AA; pełny formalizm snopowy GAZ/CAT.
 
-**GAZ — Geometria analityczna zespolona:** lokalne zbiory i przestrzenie analityczne, snopy koherentne, twierdzenia Cartana A/B, przestrzenie Steina, osobliwości, analityfikacja, GAGA, porównanie z ALG. Po AZ i CAT.
+#### AZ II — Analiza zespolona wielu zmiennych
+1. Holomorficzność w C^n, szeregi wielowymiarowe, Hartogs, twierdzenia o osobnej holomorficzności, dziedziny zbieżności.
+2. Obszary holomorficzności, otoczki holomorficzne, funkcje plurisubharmoniczne, pseudowypukłość, forma Leviego, problem Leviego.
+3. Formy typu (p,q), operator d-bar, całkowe reprezentacje i rozwiązywanie d-bar, oszacowania L² i regularność przy odpowiednich hipotezach.
+4. Obszary klasyczne, odwzorowania właściwe, biholomorfizmy, automorfizmy, geometria brzegu.
+5. Jądra Bergmana i Szegő, metryki i odległości Carathéodory'ego, Kobayashiego i Bergmana, twierdzenie Lemperta, geodezyjne zespolone.
+6. Interpolacja Nevanlinny–Picka, zagadnienia ekstremalne, funkcje wewnętrzne, związki z teorią operatorów (AF).
+7. Zależności: AZ I, AM II, ME, AF, DG; algebra lokalna i snopy analityczne rozwijane w GAZ, nie powielać ich pełnej teorii.
 
-**Propozycje do zatwierdzenia po podstawach:** ODE i układy dynamiczne (istnienie, jednoznaczność, stabilność, układy dynamiczne, bifurkacje; granica z RRC/FSG); teoria Liego i reprezentacji (wydzielenie AA51–72 dopiero gdy uzasadnione); analiza numeryczna i optymalizacja/sterowanie (kwadratury, metody macierzowe, ODE/PDE, optymalizacja); geometria symplektyczna i kontaktowa jako rozszerzenie DG; teoria informacji i uczenie statystyczne po RP4. Zbiór zadań do RP I–IV z podpowiedziami jako osobny skrypt. Nie tworzyć pustych wpisów katalogu dla propozycji.
+#### GK — Geometria klasyczna: geometrie modelowe, rzutowe i program Kleina
+1. Aksjomatyka geometrii, incydencja, porządek, przystawanie, podobieństwo; modele i izomorfizmy.
+2. Geometria afiniczna i euklidesowa, grupy izometrii, podobieństwa, konstrukcje, klasyczne twierdzenia; geometria sferyczna i eliptyczna.
+3. Geometria hiperboliczna: modele Poincarégo (dysk i półprzestrzeń), Kleina i hiperboloidy, metryki, geodezyjne, izometrie, trójkąty, przejścia między modelami.
+4. Geometria rzutowa nad ciałem: współrzędne jednorodne, incydencja, dualność, dwustosunek, twierdzenia Desargues'a i Pappusa, przekroje stożkowe, biegunowość, kolineacje, geometrie rzutowe nad ciałami skończonymi.
+5. Program erlangeński Kleina: geometria jako działanie grupy, niezmienniki, przestrzenie jednorodne G/H, hierarchia geometrii; geometria Möbiusa, konforemna, inwersyjna, Cayleya–Kleina, geometria Minkowskiego i Lorentza, geometrie Galileusza.
+6. Dodatkowe modele: geometria symplektyczna liniowa, geometria skończona, geometrie modelowe wymiaru 3 (osiem geometrii Thurstona jako pomost do TD, bez powielania dowodu geometryzacji); ocenić przydatność geometrii Finslera jako mostu do DG.
+7. LA zachowuje algebrę liniową, formy i grupy macierzowe; AA teorię działań i grup; GK klasyczne konstrukcje, modele i niezmienniki; DG lokalną i globalną geometrię różniczkową, ALG schematy. Wiele czytelnych rysunków, porównań modeli i przekształceń.
+
+#### GAZ I — Geometria analityczna zespolona: teoria lokalna (proponowany tom I)
+1. Pierścienie zbieżnych szeregów, zarodki funkcji i zbiorów, twierdzenia Weierstrassa o przygotowaniu i dzieleniu, noetherowskość, analityczne twierdzenie o zerach.
+2. Przestrzenie analityczne zredukowane i niezredukowane, morfizmy, wymiar, składowe, regularność i osobliwości.
+3. Snopy analityczne, moduły koherentne, twierdzenia Oki o koherencji, lokalna teoria przecięć, krotności, normalizacja.
+4. Rozdmuchania, rozwiązywanie osobliwości, przykłady krzywych i powierzchni, porównanie lokalnych pierścieni z ALG.
+5. Zależności: AZ II, AA algebra przemienna, CAT snopy, ALG lokalne metody.
+
+#### GAZ II — Geometria analityczna zespolona: teoria globalna (proponowany tom II)
+1. Przestrzenie Steina, holomorficzna wypukłość i oddzielanie, twierdzenia Cartana A/B, kohomologia snopów koherentnych.
+2. Wiązki holomorficzne, dywizory, grupy Picarda, twierdzenia Cousina, kohomologia Dolbeaulta, dualność Serre'a.
+3. Właściwe odwzorowania analityczne, twierdzenia Remmerta, obrazy proste, rodziny i deformacje; przestrzenie moduli w uzasadnionym zakresie.
+4. Rozmaitości zwarte zespolone i rozmaitości Kählera, Hodge, twierdzenia o zanurzeniu, Chow, GAGA i precyzyjne porównanie z geometrią algebraiczną.
+5. Zależności: GAZ I, AZ II, DG (metryki i formy), CAT (formalizm kohomologiczny), ALG. Nie utożsamiać AZ II z GAZ I/II.
+
+#### RZUD — Równania różniczkowe zwyczajne i układy dynamiczne (jeden skrypt)
+1. Równania pierwszego rzędu, metody elementarne, istnienie i jednoznaczność Peana i Picarda–Lindelöfa, ciągła zależność od danych, przedłużanie rozwiązań, eksplozja.
+2. Układy liniowe, macierz fundamentalna, zmienność stałych, równania wyższych rzędów, Floquet, równania specjalne, problemy brzegowe i Sturm–Liouville.
+3. Przepływy, portrety fazowe, punkty równowagi, linearyzacja, Hartman–Grobman, stabilność Lapunowa i LaSalle'a, rozmaitości stabilne/niestabilne i centralne.
+4. Układy płaskie, Poincaré–Bendixson, cykle graniczne, mapy Poincarégo, bifurkacje (siodło–węzeł, Hopf i inne), układy dyskretne i chaos, podkowy i sprzężenia.
+5. Układy Hamiltona, całkowalność, podstawy ergodyczności; numeryczne metody Eulera/Rungego–Kutty, stabilność, błędy i przykłady.
+6. LA: ogólna teoria macierzy, AA43–50: różniczkowa teoria Galois i algorytm Kovacica, AF: półgrupy operatorów, DG/FSG: ogólne przepływy na rozmaitościach, RRC: charakterystyki i równania cząstkowe. RZUD jest właścicielem podstaw ODE i dynamiki skończenie wymiarowej.
+
+### 5.2. Rozdzielenie geometrii i topologii różniczkowej
+
+Zatwierdzony kierunek: osobne skrypty geometrii i topologii różniczkowej, z pogłębionymi specjalizacjami dla wymiaru 4. Proponujemy cztery jednostki docelowe; ich nazwy i liczba tomów technicznych mogą zostać doprecyzowane po audycie. Wynik ogólnowymiarowy pozostaje w tomie podstawowym nawet wtedy, gdy obowiązuje także w wymiarze 4. Nie powtarzać go w całości.
+
+**DG — Geometria różniczkowa (ogólnowymiarowa):** rozmaitości, wiązki, pola i przepływy, formy, Stokes, metryki riemannowskie i pseudo-riemannowskie, koneksje, geodezyjne, krzywizna, twierdzenia porównawcze, holonomia, grupy i algebry Liego w ujęciu geometrycznym, wiązki główne, charakterystyczne formy Chern–Weila, geometria symplektyczna i kontaktowa, geometria zespolona i Kählera, operatory Hodge'a i Diraca jako pomost do specjalizacji.
+
+**TD — Topologia różniczkowa (ogólna, ze specjalizacją poza wymiarem 4):** Sard, transwersalność, zanurzenia i immersje, otoczenia tubularne, stopień, indeks, Morse i uchwyty, kobordyzmy, konstrukcja Pontriagina–Thoma, h- i s-kobordyzmy, chirurgia w wysokich wymiarach, klasyfikacja i gładkie struktury, sfery egzotyczne, twierdzenia o wymiarach 1–3 oraz wysokich wymiarach z właściwymi ograniczeniami. AT zachowuje teorię homotopii i homologii; GT zachowuje teorię węzłów i splotów. Wyjątki wymiaru 4 omawiane osobno, nie stosować twierdzeń wysokowymiarowych bez sprawdzenia hipotez.
+
+**DG4 — Geometria różniczkowa czterowymiarowa:** rozkład 2-form na samodualne i antysamodualne, krzywizna Weyla i operator krzywizny, rozmaitości Einsteina, geometria Kählera i hiper-Kählera, spin i spin^c, operator Diraca, teoria twistorów w wymiarze 4, koneksje Yang–Millsa, instantony, równania Seiberga–Wittena, analityczna teoria przestrzeni moduli (eliptyczność, teoria cechowania, zwartość, transwersalność). AF/RRC właściciele ogólnych narzędzi operatorowych i PDE, DG ogólnej geometrii.
+
+**TD4 — Topologia różniczkowa czterowymiarowa:** formy przecięcia, układy uchwytów i diagramy Kirby'ego, plumbing, rozróżnienie kategorii TOP/PL/DIFF, twierdzenia Freedmana i Donaldsona z pełnym zakresem hipotez, niezmienniki Donaldsona i Seiberga–Wittena, rozmaitości symplektyczne i algebraiczne jako źródła przykładów, wymierne kontrakcje, chirurgia wzdłuż węzłów, konstrukcje egzotycznych 4-rozmaitości i egzotycznych R^4, ograniczenia klasyfikacji, otwarte problemy. Dowody centralne opracowywać warstwowo, rozróżniając dowody własne, wyniki przytoczone ze sprawdzonych źródeł i zagadnienia otwarte; nie deklarować kompletnego dowodu głębokiego twierdzenia bez rzeczywistego opracowania.
+
+**Migracja:** DG01–04/10–16 → DG z wydzieleniem sekcji topologicznych; DG15–20 → TD w odpowiednich częściach; AT17–21 i GT18–34 przejrzeć na poziomie twierdzeń, dowodów, rysunków i etykiet. GT22–34 jest istotnym istniejącym źródłem dla TD4/DG4. Uzgodnić pełny zakres z ALG i RRC; żadnych usunięć przed odbiorem docelowych tomów. Zachować obecne identyfikatory i raporty do czasu bezpiecznej migracji.
+
+### 5.3. Liczby i inne rodzaje analizy
+
+**TL — Teoria liczb i arytmetyka:** zachować wcześniejszy plan: kongruencje, kwadratowe prawo wzajemności, funkcje arytmetyczne, aproksymacja diofantyczna, algebraiczna teoria liczb (ideały, jednostki, klasy), analityczna teoria liczb (zeta, funkcje L), po sprawdzeniu pokrycia AA.
+
+**PA — Liczby p-adyczne i analiza niearchimedesowska:** plan wspólnego skryptu z dwiema wyraźnymi częściami, z możliwością wydzielenia tomów po ustaleniu objętości. (I) Liczby p-adyczne, wartościowania, konstrukcja Q_p i Z_p, lemat Hensela, rozszerzenia, ciała lokalne, rozgałęzienie i teoria Galois ciał lokalnych. (II) Ogólne ciała niearchimedesowskie, szeregi i funkcje analityczne, całki i miary z wartościami rzeczywistymi lub niearchimedesowskimi (rozróżnić), transformacja Fouriera na grupach lokalnych, przestrzenie Banacha niearchimedesowskie, operatory i podstawy analizy sztywnej/Berkovicha jako rozszerzenie. Zależności AA, TL, ME, AF, DT.
+
+**AN — Analiza niestandardowa (osobny skrypt, nie utożsamiać z PA):** ultrafiltry i ultrailoczyny z MOD, konstrukcja liczb hiperrzeczywistych, zasada transferu, obiekty wewnętrzne/zewnętrzne, część standardowa, nasycenie i jego założenia, nieskończenie małe i nieskończenie duże, granice i ciągłość, różniczkowanie, całkowanie przez sumy hiperskończone, miara Loeba, zastosowania do prawdopodobieństwa, analizy funkcjonalnej i topologii. Rozróżniać uporządkowane ciało liczb hiperrzeczywistych od ciał z wartościowaniem ultrametrycznym. MOD pozostaje właścicielem ogólnego twierdzenia Łosia i podstaw teorii modeli.
+
+### 5.4. Rozbudowa istniejących skryptów
+
+**AF — teoria operatorów, osobna duża część istniejącego skryptu (zatwierdzone):**
+- Operatory ograniczone w przestrzeniach Banacha i Hilberta, sprzężone, zwarte, Fredholma, ideały, ślad i klasy Schattena; aproksymacja i wartości osobliwe.
+- Operatory nieograniczone: dziedziny, domknięcie i domykalność, sprzężenie, rdzenie, operatory symetryczne, samosprzężone, rozszerzenia i indeksy defektu, operatory normalne; odróżniać symetrię od samosprzężoności.
+- Widmo, rezolwenta i typy widma, rachunek funkcyjny wielomianowy, holomorficzny, ciągły i borelowski, twierdzenia spektralne, miary spektralne, rozkład polarny, pierwiastek dodatni.
+- Algebry Banacha, C*-algebry, reprezentacja Gelfanda, konstrukcja GNS, algebry von Neumanna (po ustaleniu zakresu), teoria perturbacji, półgrupy C_0, Hille–Yosida, Stone, Lumer–Phillips; połączenia z RRC, mechaniką kwantową, RZUD i AZ II.
+- Przed dopisaniem porównać AF26–33, LA14–28, RRC12/18, ME i DT; istniejących dowodów nie powielać. Rozdzielenie na osobny tom operatorowy rozważyć dopiero przy rozroście, obecnie rozwijać AF.
+
+**ALG — geometria algebraiczna (zatwierdzone pogłębienie):**
+- Zachować i audytować most od geometrii afinicznej/rzutowej oraz krzywych i powierzchni (ALG00–10) do schematów: Spec, Proj, snopy strukturalne, morfizmy, włókna, produkty, lokalne własności.
+- Algebra przemienna (AA): lokalizacja, moduły, noetherowskość, całkowitość, wymiar, płaskość i uzupełnienia; w ALG zastosowania geometryczne, bez powtórnego pełnego kursu.
+- Morfizmy właściwe, skończone, gładkie, nierozgałęzione i étale; dywizory Cartiera i Weila, wiązki, kohomologia koherentna, dualność Serre'a, Riemann–Roch/Hirzebruch–Riemann–Roch w odpowiednim zakresie.
+- Geometria przecięć i grupy Chowa, klasy charakterystyczne, osobliwości i rozwiązywanie, geometria biwymierna i program modeli minimalnych, geometria rodzin, deformacje i moduli, podstawy stosów (CAT).
+- Geometria arytmetyczna: schematy nad Z, krzywe eliptyczne i odmiany abelowe, redukcja, punkty wymierne, wprowadzenie do kohomologii étale; zaawansowane twierdzenia po TL/PA.
+- Porównanie z GAZ (analityfikacja, GAGA), AT (kohomologia, Hodge), DG4/TD4 (powierzchnie zespolone i czterorozmaitości). Uzupełnienia dopiero po inwentaryzacji planu lokalnego i pełnych tez ALG00–10.
+
+**Pozostałe wcześniejsze propozycje (niezatwierdzone automatycznie):** wydzielenie teorii Liego i reprezentacji z AA51–72, analiza numeryczna i optymalizacja/sterowanie, teoria informacji i uczenie statystyczne po RP4, zbiór zadań do RP I–IV z podpowiedziami. Nie tworzyć pustych wpisów katalogu.
+
 
 ## 6. Mapa kanonicznych właścicieli (skrót przed dodawaniem)
 
@@ -238,7 +330,15 @@ P0 w wątku AM ma ścisłą kolejność AM II → AM I → RTPC. FSG i inne rozp
 | Macierze, formy i tensory | LA | AA, DG, AF, RRC |
 | Algebra przemienna i Galois | AA | ALG, TL, MOD |
 | Prawdopodobieństwo/procesy/całki stochastyczne/statystyka | RP1/RP2/RP3/RP4 | RRC, GT, RTPC |
-| Operatory i widmo | AF | RRC, DT, FSG |
+| Operatory i widmo | AF | RRC, DT, FSG, DG4 |
+| Geometrie modelowe, rzutowe i program Kleina | GK | DG, ALG, AZ, PA |
+| Analiza holomorficzna | AZ I (jedna zmienna), AZ II (wiele zmiennych) | GAZ, ALG, AF |
+| Geometria przestrzeni analitycznych | GAZ I–II | AZ, ALG, AT |
+| ODE i układy dynamiczne | RZUD | DG, FSG, RRC, RP3 |
+| Geometria różniczkowa ogólna i czterowymiarowa | DG, DG4 | TD, TD4, RRC |
+| Topologia różniczkowa ogólna i czterowymiarowa | TD, TD4 | AT, GT, DG |
+| Analiza niestandardowa | AN | AM, ME, MOD |
+| Analiza niearchimedesowska i p-adyczna | PA | TL, AA, GAZ, AF |
 | Topologia ogólna i metryzacja | TO | AM, AF, DG, AT |
 | Logika klasyczna i mnogości / modele / niezupełność / logiki alternatywne | LTM / MOD / MM / NL | CAT, AA, TL |
 
@@ -289,6 +389,9 @@ Indeks JSON zawiera wszystkie aktywne pliki z blobami w migawce i ścieżki rapo
 - [ ] RTPC: mapa źródło–cel–etykiety, rejestracja i audyty migracji AM I, AF, AM II, ME.
 - [ ] FSG: sprawdzić aktualność kandydata i migrację AF14–15 bez zerwania AM II.
 - [ ] Uzupełnić rejestr per rozdział dla wszystkich książek, poczynając od aktywnych wątków; wykorzystać już wykonane audyty.
+- [ ] Przygotować mapy pokrycia i zależności AZ I–II, GK, RZUD, GAZ I–II, AN i PA; nie tworzyć pustych skryptów.
+- [ ] Przygotować szczegółową mapę rozdzielenia DG/TD/DG4/TD4, z inwentaryzacją GT/AT/RRC i audytów źródłowych.
+- [ ] AF: teoria operatorów i ALG: pogłębienie geometrii algebraicznej — audyty pokrycia i kolejność rozwoju.
 - [ ] Cross-check właścicieli tematów przed każdym nowym rozdziałem. Zmieniać plan po decyzji użytkownika, nie traktować propozycji P2/P3 jako nakazu implementacji.
 
 ## 9. Dokumenty lokalne i techniczne
