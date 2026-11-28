@@ -177,6 +177,20 @@ class PersistedReplayAdversarialTests(unittest.TestCase):
         with patch.object(transport.subprocess, "Popen", side_effect=AssertionError("no execution")):
             self.verify()
 
+    def test_replay_rejects_repair_preparation_authority_and_history_mismatch(self):
+        from dataclasses import replace
+        original = probe.policy.prepare_repair
+
+        for mode in ("execution_allowed", "certificate", "history"):
+            def prepare(*args, **kwargs):
+                status, prepared = original(*args, **kwargs)
+                if mode == "history":
+                    return status, replace(prepared, diagnostic_sha256=("0" * 64,))
+                return {**status, mode: True}, prepared
+            with self.subTest(mode=mode), patch.object(probe.policy, "prepare_repair", side_effect=prepare):
+                with self.assertRaisesRegex(ValueError, "Persisted repair preparation rejected"):
+                    self.verify()
+
     def test_mutated_row_fields_and_identity_rejected(self):
         from copy import deepcopy
         for key, value in (("exit_code", True), ("cleanup_status", "unconfirmed"),

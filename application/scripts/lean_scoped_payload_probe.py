@@ -338,9 +338,14 @@ def replay_report(report, manifest, baseline, *, expected_sha, expected_manifest
     identity = dict(expected_source_sha256=initial["source_sha256"],
                     expected_ast_sha256=initial["ast_sha256"],
                     expected_initial_code_sha256=initial["lean_code_sha256"], consent=True)
-    _, prepared = policy.prepare(POLYNOMIAL, consent=True,
+    status, prepared = policy.prepare(POLYNOMIAL, consent=True,
         expected_source_sha256=initial["source_sha256"], expected_ast_sha256=initial["ast_sha256"],
         expected_code_sha256=initial["lean_code_sha256"])
+    if (type(prepared) is not policy.PreparedDraft or status["execution_allowed"] is not False
+            or status["certificate"] is not False):
+        raise ValueError("Persisted initial preparation rejected")
+    original_prefix = initial["lean_code"].split(" := by\n", 1)[0]
+    seen_payloads = set()
     loop = report["repair_loop"]
     flags = dict(outcome="repair_compiled", initial_code_sha256=initial["lean_code_sha256"],
                  max_attempts=3, fixture_only=True, execution_allowed=False,
@@ -351,6 +356,13 @@ def replay_report(report, manifest, baseline, *, expected_sha, expected_manifest
         raise ValueError("Invalid persisted repair loop")
     history = []
     for attempt, row in enumerate(loop["attempts"], 1):
+        if (prepared.source_sha256 != initial["source_sha256"]
+                or prepared.ast_sha256 != initial["ast_sha256"]
+                or hashlib.sha256(prepared.input_bytes).hexdigest() != prepared.input_sha256
+                or prepared.input_bytes.decode("utf-8").split(" := by\n", 1)[0] != original_prefix
+                or prepared.input_sha256 in seen_payloads):
+            raise ValueError("Persisted prepared payload identity mismatch")
+        seen_payloads.add(prepared.input_sha256)
         extra = dict(attempt=attempt)
         if attempt < 3:
             extra["planner_status"] = "repair_planned"
@@ -361,11 +373,16 @@ def replay_report(report, manifest, baseline, *, expected_sha, expected_manifest
             break
         history.append(dict(code_sha256=prepared.lean_code_sha256, exit_code=1, diagnostic=diagnostic))
         plan = plan_next(POLYNOMIAL, observations=history, **identity)
-        if plan["status"] != "repair_planned" or plan["signature"] != initial["signature"]:
+        if (plan["status"] != "repair_planned" or plan["signature"] != initial["signature"]
+                or plan["execution_allowed"] is not False or plan["certificate"] is not False):
             raise ValueError("Persisted diagnostic replay rejected")
-        _, prepared = policy.prepare_repair(POLYNOMIAL, observations=history,
+        status, prepared = policy.prepare_repair(POLYNOMIAL, observations=history,
             expected_repair_code_sha256=plan["lean_code_sha256"], **identity)
-        if type(prepared) is not policy.PreparedRepair or prepared.attempt != attempt + 1:
+        if (type(prepared) is not policy.PreparedRepair or prepared.attempt != attempt + 1
+                or prepared.initial_code_sha256 != initial["lean_code_sha256"]
+                or prepared.diagnostic_sha256 != tuple(hashlib.sha256(h["diagnostic"]).hexdigest() for h in history)
+                or status["execution_allowed"] is not False or status["certificate"] is not False
+                or prepared.input_bytes != plan["lean_code"].encode() + b"\n#print axioms atlas_draft\n"):
             raise ValueError("Persisted repair preparation rejected")
     if len(ids) != 5 or len(images) != 1:
         raise ValueError("Persisted container or image identity mismatch")
