@@ -1660,6 +1660,170 @@ a model z zamienionymi wartościami obala drugą.
 Z poprawności żadna z nich nie jest dowodliwa.
 \end{przyklad}
 
+\subsection{Przesłanki Harropa i reguły dopuszczalne}
+
+\begin{definicja}[Formuły Harropa]
+\label{def:ncl-ipc-harrop}
+Klasę formuł Harropa definiujemy rekurencyjnie:
+zmienne zdaniowe i $\bot$ do niej należą; jeśli
+$H_1,H_2$ są formułami Harropa, to $H_1\wedge H_2$
+jest formułą Harropa; jeśli $H$ jest formułą Harropa,
+a $A$ dowolną formułą IPC, to $A\to H$ jest formułą
+Harropa. Nie dodajemy innych reguł konstrukcji.
+\end{definicja}
+Każda negacja jest formułą Harropa, niezależnie
+od budowy jej argumentu. Alternatywy mogą występować
+wewnątrz poprzedników implikacji.
+
+\begin{lemat}[Zachowanie formuł Harropa przy dołączaniu korzenia]
+\label{lem:ncl-ipc-harrop-joining}
+Niech modele w Lemacie~\ref{lem:ncl-ipc-root-amalgamation}
+mają korzenie $r_1,r_2$. Modyfikujemy wartościowanie
+w nowym korzeniu $r$, przyjmując
+\[
+ r\Vdash p\iff r_1\Vdash p\ \text{i}\ r_2\Vdash p
+\]
+dla każdej zmiennej $p$. Wówczas otrzymujemy model
+Kripkego zachowujący wymuszanie w obu składowych,
+a dla każdej formuły Harropa $H$ mamy
+\[
+ r\Vdash H\iff (r_1\Vdash H\ \text{i}\ r_2\Vdash H).
+\]
+\end{lemat}
+\begin{proof}
+Zmodyfikowane wartościowanie jest domknięte ku górze:
+jeśli $r$ wymusza zmienną, to wymuszają ją oba stare
+korzenie, a z trwałości wszystkie stare światy.
+W starych światach nie zmienia się wartościowanie ani
+zbiór rozszerzeń, więc indukcja jak w
+Lemacie~\ref{lem:ncl-ipc-root-amalgamation} zachowuje
+w nich wymuszanie wszystkich formuł.
+
+Kierunek prosty równoważności wynika z trwałości.
+Kierunek odwrotny dowodzimy indukcją po konstrukcji
+$H$. Dla zmiennych jest to definicja nowego
+wartościowania, dla $\bot$ założenie o wymuszaniu
+przez oba korzenie jest niemożliwe, a dla koniunkcji
+stosujemy hipotezę indukcyjną do obu członów.
+
+Niech $H=A\to H_0$, gdzie $H_0$ jest formułą
+Harropa, i załóżmy, że oba stare korzenie wymuszają
+$H$. Rozpatrzmy dowolny świat $v\geq r$ wymuszający
+$A$. Jeżeli $v$ jest starym światem, leży nad jednym
+ze starych korzeni, więc z trwałości i klauzuli
+implikacji wynika $v\Vdash H_0$.
+Jeżeli $v=r$, to oba stare korzenie wymuszają $A$
+przez trwałość, a z założenia wymuszają $A\to H_0$.
+Wymuszają zatem $H_0$, więc z hipotezy indukcyjnej
+$r\Vdash H_0$. W obu przypadkach otrzymujemy
+$v\Vdash H_0$, czyli $r\Vdash A\to H_0$.
+\end{proof}
+
+\begin{twierdzenie}[Własność alternatywy z przesłankami Harropa]
+\label{thm:ncl-ipc-harrop-disjunction}
+Jeżeli każda formuła zbioru $\Gamma$ jest formułą
+Harropa, to
+\[
+ \Gamma\vdash_{\mathrm I}\alpha\vee\beta
+ \quad\Longrightarrow\quad
+ \Gamma\vdash_{\mathrm I}\alpha\ \text{lub}\
+ \Gamma\vdash_{\mathrm I}\beta.
+\]
+Zbiór $\Gamma$ nie musi być skończony.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli żadna z dwóch konsekwencji po prawej stronie
+nie zachodzi, to silna pełność
+(Twierdzenie~\ref{thm:ncl-ipc-strong-completeness})
+daje dwa ukorzenione kontrmodele, których korzenie
+wymuszają wszystkie formuły z $\Gamma$ i nie
+wymuszają odpowiednio $\alpha$ i $\beta$.
+Po dołączeniu wspólnego korzenia zgodnie z
+Lematem~\ref{lem:ncl-ipc-harrop-joining}
+nowy korzeń wymusza wszystkie formuły z $\Gamma$.
+Nie wymusza żadnego członu alternatywy przez
+trwałość, więc nie wymusza także alternatywy.
+Poprawność IPC daje żądaną kontrapozycję.
+\end{proof}
+
+\begin{definicja}[Reguła dopuszczalna i reguła wyprowadzalna]
+\label{def:ncl-ipc-admissible-rule}
+Niech $A_1,\ldots,A_m,B$ będą formułami.
+Regułę $A_1,\ldots,A_m/B$ nazywamy dopuszczalną,
+jeżeli dla każdego jednolitego podstawienia $\sigma$
+formuł za zmienne zdaniowe zachodzi
+\[
+ \bigl(\forall i=1,\ldots,m\
+           \vdash_{\mathrm I}\sigma(A_i)\bigr)
+ \ \Longrightarrow\ \vdash_{\mathrm I}\sigma(B).
+\]
+Regułę nazywamy wyprowadzalną, jeżeli
+$\{A_1,\ldots,A_m\}\vdash_{\mathrm I}B$.
+\end{definicja}
+Każda reguła wyprowadzalna jest dopuszczalna:
+jednolite podstawienie w skończonym wyprowadzeniu
+zachowuje poprawność każdego zastosowania reguły
+dedukcji naturalnej, włącznie z rozładowaniem założeń
+(przy zachowaniu oznaczeń ich wystąpień).
+Jeżeli podstawione przesłanki są twierdzeniami,
+reguła cięcia daje dowód podstawionego wniosku
+bez otwartych założeń.
+
+\begin{przyklad}[Reguła Harropa]
+\label{ex:ncl-ipc-harrop-rule}
+Reguła
+\[
+ \frac{\neg p\to(q\vee s)}
+ {(\neg p\to q)\vee(\neg p\to s)}
+\]
+jest dopuszczalna w IPC, lecz nie jest wyprowadzalna.
+\end{przyklad}
+\begin{proof}
+Niech $\sigma$ będzie dowolnym podstawieniem,
+a $A=\sigma(p)$, $B=\sigma(q)$ i $C=\sigma(s)$.
+Jeżeli $\vdash_{\mathrm I}\neg A\to(B\vee C)$,
+to $\{\neg A\}\vdash_{\mathrm I}B\vee C$.
+Ponieważ $\neg A$ jest formułą Harropa,
+Twierdzenie~\ref{thm:ncl-ipc-harrop-disjunction}
+daje $\{\neg A\}\vdash_{\mathrm I}B$
+lub $\{\neg A\}\vdash_{\mathrm I}C$. Wprowadzając
+implikację, a następnie alternatywę, otrzymujemy
+twierdzenie $(\neg A\to B)\vee(\neg A\to C)$.
+
+Dla niewyprowadzalności rozważamy ramę o korzeniu $r$
+i trzech nieporównywalnych światach maksymalnych
+$a,b,c$ nad $r$. Przyjmujemy $V(p)=\{c\}$,
+$V(q)=\{a\}$, $V(s)=\{b\}$.
+Negację $\neg p$ wymuszają dokładnie $a,b$:
+korzeń ma rozszerzenie $c$ wymuszające $p$,
+a $c$ sam wymusza $p$.
+Oba światy wymuszające $\neg p$ wymuszają $q\vee s$,
+więc $r\Vdash\neg p\to(q\vee s)$.
+Jednak $b$ jest świadkiem niewymuszania
+$\neg p\to q$ w $r$, a $a$ świadkiem niewymuszania
+$\neg p\to s$ w $r$. Korzeń nie wymusza zatem
+wniosku reguły. Poprawność IPC wyklucza
+wyprowadzalność.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+\node[draw,rounded corners] (r) at (0,0) {$r$};
+\node[draw,rounded corners,fill=blue!8] (a) at (-2,1.8) {$a:\ q$};
+\node[draw,rounded corners,fill=blue!8] (b) at (0,1.8) {$b:\ s$};
+\node[draw,rounded corners,fill=blue!8] (c) at (2,1.8) {$c:\ p$};
+\draw[->,thick] (r)--(a);
+\draw[->,thick] (r)--(b);
+\draw[->,thick] (r)--(c);
+\end{tikzpicture}
+\end{center}
+Podpisy wskazują wymuszane zmienne spośród $p,q,s$;
+w korzeniu żadna z nich nie jest wymuszana.
+Rozróżnienie jest istotne: dopuszczalność pozwala
+przechodzić między twierdzeniami, ale sama w sobie
+nie uzasadnia zastosowania reguły pod dowolnymi
+otwartymi założeniami.
+
 \section{Translacja negatywna logiki klasycznej}
 
 \subsection{Klasyczne rozszerzenie dedukcji naturalnej}
