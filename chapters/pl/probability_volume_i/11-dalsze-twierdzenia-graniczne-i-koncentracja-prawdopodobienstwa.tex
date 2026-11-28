@@ -270,8 +270,8 @@ W konsekwencji
 \leq 2\sum_k|z_{n,k}|^2\longrightarrow0.
 \]
 Nie trzeba utożsamiać sumy lokalnych logarytmów
-z logarytmem głównym iloczynu. Z niezależności
-w każdym wierszu (rozdział~\ref{ch:expectation}) mamy
+z logarytmem głównym iloczynu. Z niezależności w każdym wierszu i własności
+funkcji charakterystycznej sumy (rozdział~\ref{ch:clt}) mamy
 \[
 \varphi_{\sum_k Z_{n,k}}(t)
 =\prod_k(1+z_{n,k})
@@ -438,7 +438,8 @@ w przybliżeniu niepewności logarytmu średniej.
 \begin{przyklad}[Gdy pochodna pierwszego rzędu znika]
 Niech $Z_1,Z_2,\ldots$ będą niezależne
 $\Normal(0,1)$ i $T_n=\overline Z_n$.
-Mamy $\sqrt n T_n\xrightarrow d \Normal(0,1)$.
+Niech ponadto $Z\sim\Normal(0,1)$ oznacza zmienną
+o rozkładzie granicznym. Mamy $\sqrt n T_n\xrightarrow d \Normal(0,1)$.
 Dla $g(x)=x^2$ zachodzi $g'(0)=0$
 i $g''(0)=2$, zatem
 $nT_n^2\xrightarrow d Z^2\sim\chi^2_1$.
@@ -509,7 +510,9 @@ postać
 $F_n(x)=n^{-1}\sum_{k=1}^n\chi_{\{X_k\leq x\}}$.
 Dla ustalonego $x$ jest to średnia prób Bernoulliego
 z parametrem $F(x)$, więc MPWL daje
-$F_n(x)\to F(x)$ p.n. Istotne jest mocniejsze pytanie:
+$F_n(x)\to F(x)$ p.n., o ile obserwacje są niezależne
+i jednakowo rozłożone ze wspólną dystrybuantą $F$.
+Istotne jest mocniejsze pytanie:
 czy możemy jednocześnie kontrolować błąd
 na \emph{całej prostej}? W tym miejscu potrzebujemy
 odrobiny więcej niż punktowego MPWL.
@@ -527,11 +530,14 @@ Wówczas
 \end{twierdzenie}
 \begin{proof}
 \emph{Krok pierwszy: rozkład jednostajny.}
-Niech $U_1,U_2,\ldots$ będą niezależne
-$\Unif(0,1)$ i
+Na pomocniczej przestrzeni produktowej wybieramy
+niezależne zmienne $U_1,U_2,\ldots$ o rozkładzie
+$\Unif(0,1)$ i wartościach w $(0,1)$. Niech
 $H_n(t)=n^{-1}\sum_{k\leq n}\chi_{\{U_k\leq t\}}$.
-Dla każdego ustalonego $t\in[0,1]$ MPWL
-daje $H_n(t)\to t$ p.n. Zastosujemy je
+Dla każdego ustalonego $t\in[0,1]$ zmienne
+$\chi_{\{U_k\leq t\}}$ są niezależne i jednakowo
+rozłożone, o średniej $t$. MPWL
+(rozdział~\ref{ch:lln}) daje $H_n(t)\to t$ p.n. Zastosujemy je
 jednocześnie tylko do przeliczalnego zbioru
 liczb wymiernych $t\in[0,1]$. Ich przecięcie
 zdarzeń pełnej miary nadal ma miarę jeden.
@@ -539,7 +545,9 @@ Ustalmy trajektorię z tego przecięcia i
 liczbę całkowitą $m\geq1$. Dla
 $0\leq j\leq m$ mamy
 $H_n(j/m)\to j/m$.
-Jeżeli $j/m\leq t\leq(j+1)/m$, to monotoniczność
+Dla każdego $t\in[0,1]$ wybieramy
+$j\in\{0,\ldots,m-1\}$ z $j/m\leq t\leq(j+1)/m$.
+Monotoniczność
 dystrybuanty empirycznej daje
 \[
 H_n(j/m)-\frac{j+1}{m}\leq H_n(t)-t
@@ -555,29 +563,68 @@ $\sup_{t\in[0,1]}|H_n(t)-t|\to0$ p.n.
 
 \emph{Krok drugi: dowolna dystrybuanta.}
 Niech $Q(u)=\inf\{x\in\R:F(x)\geq u\}$,
-$u\in(0,1)$, będzie lewostronną funkcją kwantylową.
-Jest niemalejąca i borelowska, a jej podstawowa
-własność, wynikająca z monotoniczności i
-prawostronnej ciągłości $F$, brzmi
-$Q(u)\leq x\iff u\leq F(x)$.
-Wobec tego zmienne $Q(U_k)$ są niezależne i mają
-wspólną dystrybuantę $F$. Dla nich odpowiednia
-dystrybuanta empiryczna jest równa
-$H_n(F(x))$ dla każdego $x$.
+$u\in(0,1)$, będzie uogólnioną funkcją odwrotną
+dystrybuanty (funkcją kwantylową).
+Ponieważ $F(-\infty)=0$ i $F(+\infty)=1$, zbiór
+$\{x:F(x)\geq u\}$ jest niepusty i ograniczony z dołu,
+więc $Q(u)\in\R$.
+Z definicji kresu dolnego wybieramy punkty tego
+zbioru z przedziału $[Q(u),Q(u)+1/j)$ dla $j\geq1$.
+Prawostronna ciągłość i monotoniczność $F$ dają
+$F(Q(u))\geq u$. Stąd
+\[
+Q(u)\leq x\quad\Longleftrightarrow\quad u\leq F(x).
+\]
+Implikacja w prawo wynika z monotoniczności $F$,
+a w lewo z definicji kresu dolnego. Funkcja $Q$
+jest niemalejąca, a powyższa równoważność
+pokazuje również jej borelowskość:
+$\{u:Q(u)\leq x\}=(0,1)\cap(0,F(x)]$.
+Argument nie wymaga ciągłości $F$ z lewej strony
+ani jej ścisłej monotoniczności.
+Wobec tego zmienne $Q(U_k)$ są niezależne jako
+mierzalne funkcje niezależnych zmiennych oraz
+$\Prob(Q(U_k)\leq x)=\Prob(U_k\leq F(x))=F(x)$.
+Dla skonstruowanej próby oznaczmy dystrybuantę
+empiryczną przez $\widetilde F_n$. Równoważność
+dotycząca $Q$ zachodzi punktowo dla wszystkich $x$,
+więc $\widetilde F_n(x)=H_n(F(x))$.
 Dlatego
-$\sup_x|F_n(x)-F(x)|\leq\sup_{t\in[0,1]}|H_n(t)-t|\to0$
+$\sup_x|\widetilde F_n(x)-F(x)|
+\leq\sup_{t\in[0,1]}|H_n(t)-t|\to0$
 prawie na pewno w skonstruowanym modelu.
 
-Ostatni krok przenosimy do dowolnej próby iid o
-tej samej dystrybuancie: skończone układy obserwacji
-mają ten sam rozkład, a zdarzenie
-$\{\sup_x|F_n(x)-F(x)|\to0\}$ jest mierzalne
-względem całego ciągu obserwacji. Mierzalność
-wynika z prawostronnej ciągłości $F_n,F$:
-$\sup_x|F_n(x)-F(x)|=\sup_{q\in\mathbb Q}
-|F_n(q)-F(q)|$. Zdarzenie ma zatem to samo
-prawdopodobieństwo w obu modelach, a w modelu
-kwantylowym prawdopodobieństwo to wynosi jeden.
+Ostatni krok przenosimy do dowolnej niezależnej próby
+o tej samej dystrybuancie. Oba ciągi mają ten sam
+rozkład na $\R^{\N}$ wyposażonej w produktowe
+$\sigma$-ciało borelowskie: na zbiorach cylindrycznych
+zależnych od skończenie wielu współrzędnych ich
+rozkłady są równe z niezależności, a zbiory te tworzą
+$\pi$-układ generujący to $\sigma$-ciało. Jednoznaczność
+miary probabilistycznej na takim układzie wynika
+z twierdzenia o $\pi$- i $\lambda$-układach.
+Dla ciągu $z=(z_k)_{k\geq1}$ połóżmy
+\[
+D_n(z)=\sup_{q\in\mathbb Q}
+\left|\frac1n\sum_{k=1}^n\chi_{(-\infty,q]}(z_k)
+-F(q)\right|.
+\]
+Jest to funkcja mierzalna jako przeliczalne supremum
+funkcji mierzalnych. Z prawostronnej ciągłości obu
+dystrybuant supremum po liczbach wymiernych jest
+równe supremum po wszystkich liczbach rzeczywistych:
+dla dowolnego $x$ wybieramy $q_j\downarrow x$.
+Zdarzenie
+\[
+\{z:D_n(z)\to0\}
+=\bigcap_{m\geq1}\bigcup_{N\geq1}
+\bigcap_{n\geq N}\{z:D_n(z)<1/m\}
+\]
+należy więc do produktowego $\sigma$-ciała.
+Ma ono jednakowe prawdopodobieństwo w obu modelach,
+a w modelu kwantylowym prawdopodobieństwo to jest
+równe jeden. Dowodzi to tezy na pierwotnej przestrzeni
+probabilistycznej.
 \end{proof}
 
 \begin{przyklad}[Dystrybuanta empiryczna próby Bernoulliego]
@@ -600,7 +647,7 @@ z tym samym parametrem $p\in[0,1]$,
 $S_n=\sum_{k=1}^n B_k$, a $g:\R\to\R$ będzie
 funkcją $L$-Lipschitza z $L>0$, tzn.
 $|g(x)-g(y)|\leq L|x-y|$ dla wszystkich $x,y$.
-Z nierówności Hoeffdinga z rozdziału~\ref{ch:advancedlimits}
+Z udowodnionej wcześniej nierówności Hoeffdinga
 wynika dla każdego $\varepsilon>0$
 \[
 \Prob\bigl(|g(S_n/n)-g(p)|\geq L\varepsilon\bigr)
@@ -620,7 +667,7 @@ uzyskamy podobną kontrolę.
 \end{przyklad}
 
 \begin{uwaga}[Dokładny zakres twierdzenia Lindeberga]
-W rozdziale~\ref{ch:advancedlimits} udowodniono
+W niniejszym rozdziale udowodniono
 \emph{kierunek wystarczający} twierdzenia Lindeberga--Fellera.
 Sama zbieżność sum do rozkładu normalnego nie implikuje
 warunku Lindeberga bez dodatkowych hipotez, takich jak
@@ -628,10 +675,20 @@ asymptotyczne zanikanie największych wariancji
 (w wersji twierdzenia o równoważności).
 Warunek Lindeberga kontroluje nie tylko prawdopodobieństwo
 rzadkiego dużego skoku, ale jego wkład do \emph{drugiego momentu}.
-Zastąpienie $Y_{n,k}^2$ samą funkcją charakterystyczną
-$\chi_{\{|Y_{n,k}|>\varepsilon s_n\}}$
-byłoby zbyt słabe: zdarzenie rzadkie może nieść
-niemal całą wariancję sumy.
+Zastąpienie warunku Lindeberga samym warunkiem
+\[
+\sum_{k=1}^{k_n}\Prob(|Y_{n,k}|>\varepsilon s_n)\to0
+\qquad(\varepsilon>0)
+\]
+byłoby zbyt słabe. Wprawdzie warunek Lindeberga
+implikuje powyższy warunek, gdyż
+\[
+\sum_k\Prob(|Y_{n,k}|>\varepsilon s_n)
+\leq \frac1{\varepsilon^2 s_n^2}
+\sum_k\E[Y_{n,k}^2\chi_{\{|Y_{n,k}|>\varepsilon s_n\}}],
+\]
+ale zdarzenie rzadkie może nieść niemal całą
+wariancję sumy, jak pokazuje następny przykład.
 \end{uwaga}
 
 \begin{przyklad}[Rzadki skok o istotnej wariancji]
@@ -645,6 +702,9 @@ bo prawdopodobieństwo niezerowego wyniku wynosi $1/n$,
 choć jej wariancja pozostaje równa jeden.
 Dla dowolnego $\varepsilon>0$ i $n>\varepsilon^2$
 wyrażenie z warunku Lindeberga wynosi $1$.
+Jednocześnie suma prawdopodobieństw dużych skoków
+wynosi $1/n$ i dąży do zera, więc słabszy warunek
+z poprzedniej uwagi jest spełniony.
 Nie można więc uzyskać granicy normalnej przez
 argument opierający się wyłącznie na malejącej
 częstości dużych skoków.
@@ -654,8 +714,11 @@ częstości dużych skoków.
 
 Jeśli interesuje nas wartość średniej przy dużym $n$,
 stosujemy SPWL lub MPWL. Jeśli potrzebujemy rozkładu
-fluktuacji o skali $n^{-1/2}$, używamy CTG, a dla
-niejednakowych składników warunku Lindeberga lub
+fluktuacji średniej o skali $n^{-1/2}$ przy niezależnych,
+jednakowo rozłożonych składnikach o dodatniej
+skończonej wariancji, używamy klasycznego CTG.
+Dla niejednakowych składników stosujemy odpowiednią
+normalizację przez $s_n$ oraz warunek Lindeberga lub
 Lapunowa. Gdy pytamy o konkretną liczbę prób potrzebną
 do ograniczenia ryzyka odchylenia, pomocna jest
 nierówność Hoeffdinga. Metoda delty opisuje
