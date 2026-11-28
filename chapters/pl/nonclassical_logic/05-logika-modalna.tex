@@ -2511,3 +2511,241 @@ ponieważ punkty tego samego elementu
 podziału należą do dokładnie tych samych
 zbiorów otwartych. Wówczas topologia
 jest dyskretna.
+
+\section{Translacja Gödla z logiki intuicjonistycznej do S4}
+
+\begin{definicja}[Translacja Gödla]
+\label{def:ncl-modal-goedel-translation}
+Dla formuł intuicjonistycznego rachunku zdań
+określamy translację $g$ do języka modalnego:
+\[
+\begin{aligned}
+ g(p)&=\Box p,& g(\bot)&=\bot,\\
+ g(A\wedge B)&=g(A)\wedge g(B),&
+ g(A\vee B)&=g(A)\vee g(B),\\
+ g(A\to B)&=\Box(g(A)\to g(B)).
+\end{aligned}
+\]
+Po prawej stronie wszystkie spójniki są
+klasycznymi spójnikami języka modalnego.
+Dla zbioru formuł $\Gamma$ oznaczamy
+$g[\Gamma]=\{g(A):A\in\Gamma\}$.
+\end{definicja}
+Negacja intuicjonistyczna jest skrótem $A\to\bot$,
+stąd $g(\neg A)=\Box\neg g(A)$.
+Translacja implikacji wykorzystuje dokładnie
+wzór na implikację w algebrze Heytinga elementów
+otwartych algebry wnętrza, podany w
+Twierdzeniu~\ref{thm:ncl-modal-open-heyting}.
+
+\begin{lemat}[Zgodność translacji z wartościowaniami]
+\label{lem:ncl-modal-goedel-valuation}
+Niech $B$ będzie algebrą wnętrza i niech $v$
+będzie wartościowaniem modalnym w $B$.
+Przypisanie $u(p)=\Box v(p)$ wyznacza
+wartościowanie intuicjonistyczne $u$ w
+$\mathcal O(B)$. Dla każdej formuły
+intuicjonistycznej $A$ zachodzi
+\[
+ u(A)=v(g(A)).
+\]
+W szczególności wartość $v(g(A))$ jest otwarta.
+\end{lemat}
+\begin{proof}
+Idempotentność operatora $\Box$ zapewnia,
+że $u(p)\in\mathcal O(B)$.
+Indukujemy po budowie formuły.
+Dla zmiennej teza jest definicją $u$,
+a dla $\bot$ obie wartości są równe $0$.
+Dla koniunkcji i alternatywy korzystamy
+z odziedziczenia obu działań kratowych
+przez $\mathcal O(B)$ oraz hipotezy indukcyjnej.
+Dla implikacji mamy z tej hipotezy
+i Twierdzenia~\ref{thm:ncl-modal-open-heyting}
+\[
+\begin{aligned}
+ u(A\to C)
+ &=u(A)\to_{\mathcal O(B)}u(C)\\
+ &=\Box(\neg u(A)\vee u(C))\\
+ &=\Box(\neg v(g(A))\vee v(g(C)))\\
+ &=v(\Box(g(A)\to g(C)))=v(g(A\to C)).
+\end{aligned}
+\]
+Wszystkie wartości $u$ należą z definicji
+do $\mathcal O(B)$, co daje ostatnią tezę.
+\end{proof}
+
+\begin{wniosek}[Stabilność formuł po translacji]
+\label{cor:ncl-modal-goedel-stability}
+Dla każdej formuły intuicjonistycznej $A$
+zachodzi
+\[
+ \vdash_{\mathrm{S4}}g(A)\leftrightarrow\Box g(A).
+\]
+\end{wniosek}
+\begin{proof}
+W każdej algebrze z klasy $\mathcal V_{\mathrm{S4}}$
+wartości formuł po translacji są otwarte
+na mocy Lematu~\ref{lem:ncl-modal-goedel-valuation}.
+Wartości obu członów równoważności są więc
+równe. Z pełności algebraicznej dla twierdzeń
+(Wniosek~\ref{cor:ncl-modal-algebra-theorem-completeness})
+otrzymujemy żądaną dowodliwość.
+\end{proof}
+
+\begin{twierdzenie}[Zachowanie i odzwierciedlanie konsekwencji]
+\label{thm:ncl-modal-goedel-embedding}
+Dla dowolnego zbioru formuł intuicjonistycznych
+$\Gamma$ i dowolnej formuły $A$ zachodzą
+równoważności
+\[
+ \Gamma\vdash_{\mathrm{IPC}} A
+ \quad\Longleftrightarrow\quad
+ g[\Gamma]\vdash_{\mathrm{S4}}^{\mathrm{lok}}g(A)
+ \quad\Longleftrightarrow\quad
+ g[\Gamma]\vdash_{\mathrm{S4}}^{\mathrm{glob}}g(A).
+\]
+W szczególności
+\[
+ \vdash_{\mathrm{IPC}}A
+ \iff \vdash_{\mathrm{S4}}g(A).
+\]
+\end{twierdzenie}
+\begin{proof}
+Załóżmy $\Gamma\vdash_{\mathrm{IPC}}A$.
+Dowód wykorzystuje skończenie wiele przesłanek,
+tworzących zbiór $\Delta\subseteq\Gamma$.
+Niech $B$ będzie dowolną algebrą wnętrza,
+a $v$ dowolnym wartościowaniem modalnym.
+W algebrze Heytinga $\mathcal O(B)$ bierzemy
+wartościowanie $u(p)=\Box v(p)$.
+Poprawność algebraiczna IPC daje
+\[
+ \bigwedge_{C\in\Delta}u(C)\leq u(A).
+\]
+Z Lematu~\ref{lem:ncl-modal-goedel-valuation}
+i odziedziczenia skończonych kresów dolnych
+otrzymujemy w $B$
+\[
+ \bigwedge_{C\in\Delta}v(g(C))\leq v(g(A)).
+\]
+Z lokalnej pełności algebraicznej S4
+(Twierdzenie~\ref{thm:ncl-modal-local-algebra-completeness})
+wynika lokalna dowodliwość $g(A)$ z $g[\Gamma]$.
+
+Każdy dowód lokalny jest dowodem globalnym.
+Pozostaje więc wykazać, że dowodliwość globalna
+po translacji pociąga dowodliwość w IPC.
+Załóżmy przeciwnie, że
+$\Gamma\nvdash_{\mathrm{IPC}}A$.
+Z silnej pełności algebraicznej IPC
+istnieje algebra Heytinga $H$ i wartościowanie
+$u$ takie, że
+\[
+ u(C)=1\quad(C\in\Gamma),\qquad u(A)\ne1.
+\]
+Na mocy Wniosku~\ref{cor:ncl-modal-heyting-open-representation}
+istnieje zanurzenie algebr Heytinga
+$e:H\to\mathcal O(B)$ do algebry elementów
+otwartych pewnej algebry wnętrza $B$.
+W $B$ definiujemy wartościowanie modalne przez
+$v(p)=e(u(p))$. Wartości zmiennych są otwarte,
+zatem $\Box v(p)=v(p)$.
+Zgodność translacji z wartościowaniami
+oraz zachowanie działań Heytinga przez $e$ dają
+\[
+ v(g(C))=e(u(C))
+\]
+dla każdej formuły $C$.
+W szczególności wszystkie przesłanki po
+translacji mają wartość $1$, lecz $g(A)$
+nie ma wartości $1$, ponieważ $e$ jest
+różnowartościowe i zachowuje jedynkę.
+Globalna poprawność algebraiczna
+(Twierdzenie~\ref{thm:ncl-modal-global-algebra-completeness})
+wyklucza globalną dowodliwość $g(A)$.
+To kończy dowód.
+\end{proof}
+W tej szczególnej klasie przesłanek różnica
+między konsekwencją lokalną i globalną
+zanika. Można to też wyjaśnić syntaktycznie:
+na mocy Wniosku~\ref{cor:ncl-modal-goedel-stability}
+każda formuła $g(C)$ pociąga lokalnie
+wszystkie swoje iteracje konieczności.
+Twierdzenie~\ref{thm:ncl-modal-global-local}
+pozwala zastąpić dowód globalny dowodem
+lokalnym z tymi iteracjami, a cięcie eliminuje
+dodatkowe przesłanki.
+
+\begin{wniosek}[Zanurzenie algebry formuł IPC]
+\label{cor:ncl-modal-goedel-lindenbaum}
+Niech $\mathfrak H$ będzie algebrą
+Lindenbauma--Tarskiego IPC, a
+$\mathfrak B_{\mathrm{S4}}$ modalną algebrą
+Lindenbauma--Tarskiego S4. Wzór
+\[
+ [A]_{\mathrm{IPC}}\longmapsto[g(A)]_{\mathrm{S4}}
+\]
+wyznacza zanurzenie algebr Heytinga
+$\mathfrak H\to\mathcal O(\mathfrak B_{\mathrm{S4}})$.
+\end{wniosek}
+\begin{proof}
+Jeżeli $A,B$ są równoważne w IPC, to obie
+implikacje $A\to B$ i $B\to A$ są twierdzeniami.
+Z Twierdzenia~\ref{thm:ncl-modal-goedel-embedding}
+ich translacje są twierdzeniami S4.
+Z T otrzymujemy dowodliwość
+$g(A)\to g(B)$ i $g(B)\to g(A)$.
+Wzór nie zależy zatem od reprezentanta.
+Odwrotnie, jeśli $g(A)$ i $g(B)$ są
+równoważne w S4, to reguła konieczności
+daje twierdzenia $\Box(g(A)\to g(B))$ oraz
+$\Box(g(B)\to g(A))$.
+Odzwierciedlanie dowodliwości w
+Twierdzeniu~\ref{thm:ncl-modal-goedel-embedding}
+daje równoważność $A$ i $B$ w IPC.
+Stąd różnowartościowość.
+Wartości obrazu są otwarte z
+Wniosku~\ref{cor:ncl-modal-goedel-stability}.
+Zachowanie $\wedge,\vee,0$ wynika z definicji
+translacji, a zachowanie implikacji ze wzoru
+na implikację elementów otwartych.
+Jedynkę reprezentuje $\bot\to\bot$,
+której translacja jest twierdzeniem S4,
+więc także jedynka jest zachowana.
+\end{proof}
+
+\begin{przyklad}[Prawo wyłączonego środka po translacji]
+\label{ex:ncl-modal-goedel-excluded-middle}
+Translacja prawa wyłączonego środka ma postać
+\[
+ g(p\vee\neg p)=\Box p\vee\Box\neg\Box p.
+\]
+Nie jest to klasyczna tautologia modalna
+i nie jest twierdzeniem S4.
+Rozważmy ramę $W=\{r,s\}$ z relacją zwrotną
+oraz $rRs$, i niech $v(p)=\{s\}$.
+Zbiorem prawdziwości $\Box p$ jest $\{s\}$,
+natomiast zbiorem prawdziwości $\neg\Box p$
+jest $\{r\}$, którego wnętrze w topologii
+Aleksandrowa jest puste.
+Translacja jest więc fałszywa w $r$.
+Rama jest zwrotna i przechodnia, zatem
+poprawność S4 wyklucza dowodliwość tej formuły.
+Otrzymujemy jednocześnie znany kontrmodel
+dla prawa wyłączonego środka w IPC.
+\end{przyklad}
+
+\paragraph{Zakres dalszego rozdziału.}
+W tym rozdziale zbudowaliśmy syntaktykę
+normalnych logik modalnych, ich semantykę
+algebraiczną i podstawowe interpretacje
+topologiczne. W następnym rozdziale
+rozwiniemy systematycznie semantykę Kripkego:
+modele kanoniczne, lemat o prawdzie, pełność,
+korespondencję aksjomatów z własnościami relacji
+oraz filtrację. Rozróżnienie między semantyką
+algebraiczną i relacyjną jest istotne:
+pełność algebraiczna każdej normalnej logiki
+nie oznacza automatycznie jej pełności względem
+jakiejkolwiek klasy ram Kripkego.
