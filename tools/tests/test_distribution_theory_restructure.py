@@ -35,6 +35,10 @@ class DistributionRestructureTest(unittest.TestCase):
             self.assertEqual(len(labels), len(set(labels)), path)
             self.assertEqual(len(re.findall(r"(?m)^\\section\{", text)), 1, path)
             self.assertNotRegex(text, r"(?m)^\\setcounter\{section\}", path)
+            prose = "\n".join(line for line in text.splitlines()
+                              if not line.lstrip().startswith("%"))
+            self.assertNotRegex(
+                prose, r"rozdzia[łl][a-ząćęłńóśźż]*[~ ]+\d", path)
             for label in labels:
                 self.assertNotIn(label, actual)
                 actual[label] = row["number"]
