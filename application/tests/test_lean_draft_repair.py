@@ -96,6 +96,37 @@ class LeanDraftRepairTests(unittest.TestCase):
             data = f"Draft.lean:{row}:{col+offset}: error: unsolved goals".encode()
             self.assertEqual(self.plan([self.record(self.initial, data)])["status"], expected)
 
+    def test_pinned_omega_diagnostic_is_repairable_not_a_proof(self):
+        source = r"\bot"
+        initial = generate(source, consent=True)
+        args = dict(expected_source_sha256=initial["source_sha256"],
+                    expected_ast_sha256=initial["ast_sha256"],
+                    expected_initial_code_sha256=initial["lean_code_sha256"],
+                    consent=True)
+        # Exact output shape observed on Lean 4.26.0, CI #46129195565.
+        diagnostic = (
+            b"Draft.lean:14:4: error: omega could not prove the goal:\n"
+            b"No usable constraints found. You may need to unfold definitions "
+            b"so \x60omega\x60 can see linear arithmetic facts about \x60Nat\x60 and "
+            b"\x60Int\x60, which may also involve multiplication, division, and "
+            b"modular remainder by constants.\n"
+            b"'atlas_draft' depends on axioms: [sorryAx]\n"
+        )
+        result = plan_next(source, observations=[self.record(initial, diagnostic)], **args)
+        self.assertEqual(result["status"], "repair_planned", result)
+        self.assertEqual(result["signature"], initial["signature"])
+        self.assertEqual(result["proof_status"], "not_run")
+        self.assertFalse(result["execution_allowed"])
+        self.assertFalse(result["certificate"])
+        for bad in (
+            diagnostic.replace(b":14:4:", b":1:0:"),
+            diagnostic.replace(b"could not prove the goal:", b"timed out"),
+            diagnostic.replace(b"could not prove the goal:", b"could not prove the goal: timeout"),
+            diagnostic + b"Draft.lean:1:0: error: unknown import\n",
+        ):
+            self.assertEqual(plan_next(source, observations=[self.record(initial, bad)],
+                                       **args)["status"], "blocked")
+
     def test_known_tactic_diagnostic(self):
         for message in ("tactic 'omega' failed", "tactic \x60rfl\x60 failed"):
             data = f"Draft.lean:8:2: error: {message}".encode()

@@ -13,7 +13,7 @@ from backend import lean_draft_generator as generator
 
 MAX_ATTEMPTS = 3  # Includes the original candidate.
 MAX_DIAGNOSTIC_BYTES = 16000
-VERSION = "0.1.2"
+VERSION = "0.1.3"
 # Fixed tactic text only. Never interpolate diagnostics.
 # A branch of `first` must close all goals, not merely make progress.
 _REPAIRS = (
@@ -67,7 +67,9 @@ def _failure_kind(record, expected_hash, code, prefix):
                 or (row == proof_line and col < proof_column)
                 or col > len(lines[row-1])):
             return "non_repairable_failure"
-        if message != "unsolved goals" and not _TACTIC_FAILED.fullmatch(message):
+        # Exact header observed in pinned Lean 4.26.0 CI (#46129195565).
+        if (message not in ("unsolved goals", "omega could not prove the goal:")
+                and not _TACTIC_FAILED.fullmatch(message)):
             return "non_repairable_failure"
     # No claim about authenticity of this diagnostic is made here.
     return "reported_proof_failure"

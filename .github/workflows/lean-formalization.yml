@@ -270,7 +270,7 @@ jobs:
           import tempfile
           from pathlib import Path
           from backend.lean_draft_generator import generate
-          from backend.lean_draft_repair import plan_next, MAX_DIAGNOSTIC_BYTES
+          from backend.lean_draft_repair import plan_next, MAX_DIAGNOSTIC_BYTES, VERSION
           from backend.lean_draft_runner import prepare_repair
           from scripts.lean_ci_audit import inspect_log
 
@@ -319,6 +319,11 @@ jobs:
               plan = plan_next(r"\bot", observations=history, **identity)
               require(plan["status"] in ("blocked", "repair_planned"),
                       "unexpected classifier outcome")
+              # Historical pinned checkouts measured the unsupported header only.
+              # Current classifier must actually recognize this real fixture.
+              if VERSION not in ("0.1.0", "0.1.1", "0.1.2"):
+                  require(plan["status"] == "repair_planned",
+                          "real omega diagnostic not recognized")
               require(plan["certificate"] is False and plan["execution_allowed"] is False
                       and plan["proof_status"] == "not_run", "planner granted authority")
               admission = None
