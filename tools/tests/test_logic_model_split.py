@@ -75,6 +75,11 @@ class TestLogicModelSplit(unittest.TestCase):
         self.assertIn(r"\label{thm:lst-fuzzy-prime-separation}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-strong-chain-completeness}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-local-deduction}", src)
+        self.assertIn(r"\label{thm:lst-fuzzy-mtl-standard}", src)
+        self.assertIn(r"\label{thm:lst-fuzzy-godel-standard}", src)
+        self.assertIn(r"\label{thm:lst-fuzzy-finite-standard}", src)
+        self.assertIn(r"\label{thm:lst-fuzzy-bl-noncompactness}", src)
+        self.assertIn(r"\label{def:lst-fuzzy-product-logic}", src)
         self.assertIn(r"\label{eq:lst-fuzzy-syntactic-residuation}", src)
         self.assertIn(r"\label{eq:lst-fuzzy-syntactic-cases}", src)
         self.assertIn(r"\label{lem:lst-fuzzy-clipped-affine}", src)
@@ -179,6 +184,36 @@ class TestFuzzyOperations(unittest.TestCase):
         self.assertEqual(implication(p, star(p, p)), F(1, 2))
         for p in self.grid:
             self.assertEqual(implication(star(p, p), star(p, p)), 1)
+
+    def test_product_axioms_and_cancellation(self):
+        star, implication = self.norms[1]
+        neg = lambda a: implication(a, F(0))
+        for a, b, c in itertools.product(self.grid, repeat=3):
+            self.assertEqual(implication(min(a, neg(a)), F(0)), 1)
+            inner = implication(implication(star(a, c), star(b, c)),
+                                implication(a, b))
+            self.assertEqual(implication(neg(neg(c)), inner), 1)
+            if c > 0:
+                self.assertEqual(star(a, c) <= star(b, c), a <= b)
+
+    def test_bl_noncompact_finite_witnesses(self):
+        for n in range(1, 21):
+            a = F(1, 2)
+            b = 1 - F(1, 2*n)
+            for star, implication in self.norms[1:]:
+                power = F(1)
+                for k in range(1, n+1):
+                    power = star(power, b)
+                    self.assertEqual(implication(a, power), 1)
+                self.assertLess(implication(a, star(a, b)), 1)
+
+    def test_godel_order_embeddings_preserve_operations(self):
+        star, implication = self.norms[0]
+        embedding = {x: x*x for x in self.grid}
+        for a, b in itertools.product(self.grid, repeat=2):
+            for op in (min, max, star, implication):
+                self.assertEqual(embedding[op(a, b)],
+                                 op(embedding[a], embedding[b]))
 
     def test_sugeno_zero_order(self):
         self.assertEqual(F(1, 4)*2 + F(3, 4)*6, 5)
