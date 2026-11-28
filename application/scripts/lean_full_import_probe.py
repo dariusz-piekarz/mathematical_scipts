@@ -81,6 +81,7 @@ def observe(work: Path, toolchain: Path, packages: dict[str, Path]) -> dict:
     result = {"status": "blocked", "trace_files": 0, "trace_bytes": 0,
               "measurement_trace_limit": offline.MEASUREMENT_TRACE_BYTES,
               "admission_trace_limit": offline.MAX_TRACE_BYTES}
+    nonportable = set()
     try:
         version = offline.trace_command([str(toolchain / "bin/lean"), "--version"],
                                         work / "version-trace", cwd=work, env=env, measurement_only=True)
@@ -89,6 +90,7 @@ def observe(work: Path, toolchain: Path, packages: dict[str, Path]) -> dict:
                                     work / "fixture-trace", cwd=work, env=env, measurement_only=True)
         if "'atlas_isolated_fixture' does not depend on any axioms" not in raw.decode("utf-8").splitlines():
             raise ValueError("Unexpected full-import fixture output")
+        result['host_fixture_compiled'] = True
         traces = list(work.glob("*-trace.*"))
         result.update(trace_files=len(traces), trace_bytes=sum(p.stat().st_size for p in traces))
         if not 1 <= result["trace_files"] <= offline.MAX_TRACE_FILES or result["trace_bytes"] > offline.MEASUREMENT_TRACE_BYTES:
@@ -98,7 +100,8 @@ def observe(work: Path, toolchain: Path, packages: dict[str, Path]) -> dict:
         for trace in traces:
             with trace.open("rb") as handle:
                 observed.update(offline.parse_trace(handle.read(offline.MEASUREMENT_TRACE_BYTES + 1),
-                                                    cwd=work, allow_empty=True, measurement_only=True))
+                                                    cwd=work, allow_empty=True, measurement_only=True,
+                                                    nonportable_components=nonportable))
             if len(observed) > offline.MEASUREMENT_TRACE_ENTRIES:
                 raise ValueError("Aggregate measurement entry budget exceeded")
         if not observed:
@@ -111,9 +114,9 @@ def observe(work: Path, toolchain: Path, packages: dict[str, Path]) -> dict:
         for path in sorted(paths):
             if path == fixture or any(path.is_relative_to(r) for r in offline.KERNEL_ROOTS):
                 continue
-            target = offline.destination(path, toolchain, packages)
+            target = offline.destination(path, toolchain, packages, nonportable_components=nonportable)
             resolved = Path(path).resolve(strict=True)
-            offline.destination(resolved, toolchain, packages)
+            offline.destination(resolved, toolchain, packages, nonportable_components=nonportable)
             info = artifacts.checked_stat(resolved)
             if stat.S_ISDIR(info.st_mode):
                 continue
@@ -133,6 +136,9 @@ def observe(work: Path, toolchain: Path, packages: dict[str, Path]) -> dict:
         traces = list(work.glob("*-trace.*"))
         result.update(trace_files=len(traces), trace_bytes=sum(p.stat().st_size for p in traces),
                       reason=str(exc)[:2000])
+    result['nonportable_component_count'] = len(nonportable)
+    result['nonportable_component_examples'] = sorted(nonportable)[:20]
+    result['portable_paths'] = not nonportable if result['status'] == 'host_observation_measured' else None
     result["within_trace_byte_limit"] = result["trace_bytes"] <= offline.MAX_TRACE_BYTES
     return result
 

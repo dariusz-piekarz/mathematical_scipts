@@ -68,3 +68,33 @@ class FullImportTraceBudgetTests(unittest.TestCase):
         with patch.object(probe.offline, "MEASUREMENT_TRACE_ENTRIES", 0):
             with self.assertRaises(ValueError):
                 probe.offline.parse_trace(raw, cwd=Path("/"), measurement_only=True)
+
+
+    def test_nonportable_names_are_counted_only_in_measurement(self):
+        raw = b'openat(AT_FDCWD, "/lib/Con.olean", O_RDONLY) = 3</lib/Con.olean>\n'
+        seen = set()
+        with self.assertRaises(ValueError):
+            probe.offline.parse_trace(raw, cwd=Path("/"))
+        with self.assertRaises(ValueError):
+            probe.offline.parse_trace(raw, cwd=Path("/"), nonportable_components=seen)
+        paths = probe.offline.parse_trace(raw, cwd=Path("/"), measurement_only=True,
+                                          nonportable_components=seen)
+        self.assertEqual(len(paths), 1)
+        self.assertEqual(seen, {"Con.olean"})
+        with self.assertRaises(ValueError):
+            probe.offline.destination(next(iter(paths)), Path("/tools"), {})
+        target = probe.offline.destination(next(iter(paths)), Path("/tools"), {},
+                                           nonportable_components=seen)
+        self.assertEqual(str(target), "lib/Con.olean")
+        with self.assertRaises(ValueError):
+            probe.offline.destination(Path("/home/Con.olean"), Path("/tools"), {},
+                                      nonportable_components=seen)
+
+    def test_measurement_still_rejects_deleted_and_write_descriptors(self):
+        for raw in (
+            b'openat(AT_FDCWD, "/lib/a", O_RDONLY) = 3</lib/a (deleted)>\n',
+            b'openat(AT_FDCWD, "/lib/Con.olean", O_RDWR) = 3</lib/Con.olean>\n',
+        ):
+            with self.assertRaises(ValueError):
+                probe.offline.parse_trace(raw, cwd=Path("/"), measurement_only=True,
+                                          nonportable_components=set())

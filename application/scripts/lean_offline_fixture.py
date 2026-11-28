@@ -46,18 +46,31 @@ OPEN = re.compile(r'^(?:\d+\s+)?openat\((?P<directory>AT_FDCWD(?:<(?P<cwd>/[^>]*
                   r'<(?P<resolved>/[^<>]+)(?:<(?P<device>char|block) \d+:\d+>)?>$')
 
 
-def normalized(path: str) -> PurePosixPath:
+def normalized(path: str, *, nonportable_components: set[str] | None = None) -> PurePosixPath:
     if not path.startswith("/") or path.startswith("//") or "\x00" in path or "\\" in path:
         raise ValueError("Expected absolute Linux dependency path")
     value = PurePosixPath(posixpath.normpath(path))
     for name in PurePosixPath(value.as_posix()).parts[1:]:
-        artifacts.component(name)
+        try:
+            artifacts.component(name)
+        except ValueError:
+            # A CI-only measurement collector may count Linux filenames that
+            # cannot enter a portable artifact. Never relax the default path.
+            if (nonportable_components is None or name.endswith(' (deleted)')
+                    or any(ord(ch) < 32 or ord(ch) == 127 for ch in name)
+                    or len(name.encode('utf-8')) > 255):
+                raise
+            nonportable_components.add(name)
+            if len(nonportable_components) > MEASUREMENT_TRACE_ENTRIES:
+                raise ValueError('Nonportable component measurement budget exceeded')
     return value
 
 
 def parse_trace(raw: bytes, *, cwd: Path, allow_empty=False,
-                measurement_only=False) -> set[Path]:
+                measurement_only=False, nonportable_components: set[str] | None = None) -> set[Path]:
     """Accept only complete, decoded, read-only successful openat records."""
+    if nonportable_components is not None and not measurement_only:
+        raise ValueError('Nonportable collector requires measurement-only mode')
     byte_limit = MEASUREMENT_TRACE_BYTES if measurement_only else MAX_TRACE_BYTES
     entry_limit = MEASUREMENT_TRACE_ENTRIES if measurement_only else artifacts.MAX_ENTRIES
     if len(raw) > byte_limit:
@@ -82,8 +95,8 @@ def parse_trace(raw: bytes, *, cwd: Path, allow_empty=False,
             raise ValueError("Invalid dependency path literal")
         if not requested.startswith("/"):
             requested = str((PurePosixPath(base) if base else PurePosixPath(cwd)) / requested)
-        requested_path = normalized(requested)
-        resolved_path = normalized(resolved)  # Reject deleted descriptors and nonportable names.
+        requested_path = normalized(requested, nonportable_components=nonportable_components)
+        resolved_path = normalized(resolved, nonportable_components=nonportable_components)
         # strace -yy annotates device descriptors, e.g. /dev/urandom<char 1:9>.
         # These are provided by the container runtime, never copied into rootfs.
         # Keep annotations restricted to /dev; other nested descriptor metadata
@@ -114,8 +127,9 @@ def elf_dependencies(raw: bytes) -> set[Path]:
     return result
 
 
-def destination(path: Path, toolchain: Path, packages: dict[str, Path]) -> Path:
-    path = normalized(str(path))
+def destination(path: Path, toolchain: Path, packages: dict[str, Path], *,
+                nonportable_components: set[str] | None = None) -> Path:
+    path = normalized(str(path), nonportable_components=nonportable_components)
     toolchain = normalized(str(toolchain))
     packages = {name: normalized(str(root)) for name, root in packages.items()}
     if path.is_relative_to(toolchain):
