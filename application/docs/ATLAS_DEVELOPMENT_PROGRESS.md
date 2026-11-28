@@ -6,7 +6,7 @@
 
 ## Wskaźnik wykonywania
 
-- **Aktualny krok (28.11.2026):** L1.5.6 / RT-09d i L1.5.7, faza B. Rzeczywista izolowana pętla ustalonych próbek i replay PASS na `e94ac5f6` (#46146592203), kody napraw 1/1/0. Nowszy kandydat `56191f7c` wzmacnia kontrole historii i przygotowania; #46177909934 w toku, pełny CI i 2+1 jeszcze niepotwierdzone. `testing / review pending`; `offline_ready=false`, `execution_allowed=false`, `certificate=false`. Nie uruchamiać dowolnych draftów ani nie rozpoczynać L1.5.8 przed technicznym odbiorem. Szczegóły na końcu dziennika.
+- **Aktualny krok (28.11.2026):** L1.5.6 / RT-09d i L1.5.7, faza B. Rootless #46177909934 PASS na `56191f7c`, 54+11 testów i rzeczywisty replay; pełna aplikacja #46178886864 PASS na `d3e20ef2`, 1139 testów, 11 sklasyfikowanych pominięć, Chromium 613 rozdziałów i 939 poprawnych odsyłaczy kwalifikowanych. Uruchomiono istniejący standardowy 2+1 na `d3e20ef2`; nie obejmuje trzech rootless przebiegów, rootless evidence osobne. `stabilizing / review pending`; `offline_ready=false`, `execution_allowed=false`, `certificate=false`. Szczegóły na końcu dziennika.
 
 - **Priorytet naprawczy:** L1.3 — pilotaż LST-01 / LST-02 / LA-01 nadal otwarty; **aktualna partia LST-02 ma techniczne 3/3 PASS na SHA `44cc2031`** (8 deklaracji LST-02, 4 mapowania `needs_review`), ale niezależna recenzja semantyczna nadal `pending`. L1.4.1 zachowuje osobne historyczne 3/3 PASS na swoim SHA, lecz również oczekuje niezależnego odbioru w issue #10; LA-01 i L1.4.2 nierozpoczęte.
 
@@ -2006,3 +2006,11 @@ Odczytany `atlas_validation_status.json`: `candidate_sha=02190e107a6305bc7b73334
 - #46178587649, job 141082800691, completed/success: rzeczywisty PDF CAT 588 stron, końcowa bramka odsyłaczy PASS. Naprawa stmaryrd potwierdzona.
 - #46178444059, job 141082618761: 1139 testów, 11 sklasyfikowanych pominięć, jedna rzeczywista regresja DT-07 test_inherited_outgoing_links_follow_the_split: utracony ME-21::cor:measures-separate-21. Commit d9d4652742c336ffaead3839f2d709e5537ab142 przywraca odsyłacz w DT-14 jako uwagę o dodatnich miarach Radona, bez zastępowania dowodu dla miar zespolonych. Odczyt wszystkich ośmiu następców DT-07 na tym SHA: 7/7 wymaganych odsyłaczy, brak utraconych, wskazany odsyłacz dokładnie w DT-14. Nie modyfikowano testu ani baseline. #46178880109 cancelled, nie PASS; nowy pełny CI konieczny.
 - #46177909934 nadal w toku, obecnie scoped Mathlib fixture; bez nowego 2+1, bez niezależnej recenzji. Nie uruchamiano powtórzeń ani zmieniano runnera. Bez zmian main i harmonogramu.
+
+
+### 2026-11-28 — faza B: rzeczywisty PASS aplikacji i rootless replay, żądanie 2+1
+
+- #46178886864, SHA d3e20ef2eac1f92c112e97fccb22da549ad0c966: oba joby completed/success, 1139 testów, 11 sklasyfikowanych pominięć, zero unreviewed, Chromium 613 rozdziałów/22 dziedziny, 939 kwalifikowanych odsyłaczy/0 nieprawidłowych, javascript_errors=[]. #46178444062 pełny audyt AA completed/success.
+- #46177909934, SHA 56191f7cc08decf7e8497909737038272048a1e0, job 141080689602 completed/success, 54+11 testów, nowa regresja przygotowania/historii PASS, rzeczywiste ATLAS_SCOPED_PAYLOAD_REPLAY_VALIDATED. Dwa bloby probe/regresje identyczne na d3e20ef2, ale nie utożsamiać osobnego SHA z pełną walidacją identycznego kandydata.
+- #46179354335 FA: test historyczny FA22 wymagał starych nazw zmiennych i odcięcia, których dowód DT-10 już nie używa. Commit a0940acb7a238c7d09fd14fe7a180bec8b9ba1bb sprawdza realny dowód zastępczy w DT-10, w tym oszacowanie seminormy, pochodne, granicę całek i identyfikację transformaty, zachowuje testy numeryczne i starszą ścieżkę. Wynik nowego CI jeszcze nieznany.
+- Commit 53590b9032c811c6f5b494ed01532606e98e5f17 aktualizuje istniejące żądanie 2+1 L1.5 na d3e20ef2. Standardowy orkiestrator obejmuje app/native/pinned Lean, ale nie 3x rootless, więc nie deklarować zamknięcia RT-09d. Brak niezależnej recenzji, wszystkie flagi dopuszczenia false. Bez main i nowych automatyzacji.
