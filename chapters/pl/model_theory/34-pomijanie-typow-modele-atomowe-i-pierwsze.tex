@@ -1,0 +1,474 @@
+\chapter{Pomijanie typów, modele atomowe i pierwsze}
+\label{ch:mod-omitting-types}
+\section{Motywacja i typy niegłówne}
+W rozdziale \ref{ch:mod-types} poznaliśmy przestrzenie
+typów, a w rozdziale \ref{ch:mod-saturation} badaliśmy
+modele realizujące wiele typów. Teraz stawiamy pytanie
+odwrotne: czy można zbudować model, w którym żaden
+element (lub żadna skończona krotka) nie realizuje
+wskazanego typu?
+
+Pracujemy w ZFC, w logice pierwszego rzędu z równością,
+z niepustymi uniwersami. Wszystkie typy w tym rozdziale
+mają skończoną dodatnią liczbę zmiennych i, o ile nie
+zaznaczono inaczej, nie mają parametrów. Typ częściowy
+nad spełnialną teorią $T$ oraz jego realizację
+i pomijanie rozumiemy jak w definicji
+\ref{def:mod-partial-type}. Typ zupełny nad $T$
+jest punktem $S_n(T)$ (definicja
+\ref{def:mod-complete-type}).
+
+\begin{definicja}[Typ główny i typ niegłówny]
+\label{def:mod-ott-principal}
+Niech $p\subseteq F_n(\mathcal L)$ będzie typem
+częściowym nad spełnialną teorią $T$.
+Nazywamy go głównym, jeżeli istnieje formuła
+$\theta(\bar x)$ realizowalna w pewnym modelu $T$
+i taka, że dla każdej $\varphi\in p$
+\[
+T\models\forall\bar x\,(\theta(\bar x)\to\varphi(\bar x)).
+\]
+Jeżeli nie istnieje taka formuła, typ nazywamy
+niegłównym. Formuła $\theta$ nie musi należeć do $p$.
+\end{definicja}
+
+Warunek realizowalności $\theta$ jest niezbędny:
+formuła sprzeczna implikuje semantycznie każdą
+formułę, ale nie opisuje żadnej krotki.
+Dla typów częściowych główność w tym znaczeniu
+nie oznacza, że typ jest równoważny jednej formule:
+wystarczy, aby pewna niepusta część przestrzeni
+typów była zawarta w zbiorze jego realizacji.
+
+\begin{lemat}[Główność a topologia przestrzeni typów]
+\label{lem:mod-ott-interior}
+Dla typu częściowego $p$ nad $T$ połóżmy
+\[
+C_p=\{q\in S_n(T):p\subseteq q\}
+=\bigcap_{\varphi\in p}[\varphi].
+\]
+Zbiór $C_p$ jest niepusty i domknięty.
+Typ $p$ jest główny dokładnie wtedy, gdy $C_p$
+ma niepuste wnętrze. W szczególności typ zupełny
+jest główny dokładnie wtedy, gdy jest izolowany.
+\end{lemat}
+\begin{proof}
+Niepustość wynika z twierdzenia
+\ref{thm:mod-type-completion}. Każdy zbiór
+$[\varphi]$ jest domknięty i otwarty w topologii
+Stone'a (lemat \ref{lem:mod-stone-basic}), więc
+ich część wspólna jest domknięta.
+Jeżeli $\theta$ świadczy o główności $p$, to
+$[\theta]$ jest niepustym zbiorem otwartym i
+$[\theta]\subseteq C_p$, ponieważ każda realizacja
+typu zawierającego $\theta$ spełnia wszystkie
+formuły $p$. Odwrotnie, jeśli $C_p$ ma niepuste
+wnętrze, wybieramy niepusty zbiór bazowy
+$[\theta]\subseteq C_p$. Realizowalność $\theta$
+wynika z niepustości $[\theta]$.
+Gdyby dla pewnej $\varphi\in p$ implikacja
+$\theta\to\varphi$ nie zachodziła modulo $T$,
+krotka realizująca $\theta\land\neg\varphi$
+w modelu $T$ miałaby typ należący do
+$[\theta]\setminus C_p$, co jest sprzecznością.
+Dla typu zupełnego $p$ maksymalność daje
+$C_p=\{p\}$, więc niepuste wnętrze jest
+równoważne izolacji punktu w sensie definicji
+\ref{def:mod-isolated-type}.
+\end{proof}
+
+W szczególności zbiór $C_p$ dla typu niegłównego
+jest domknięty i ma puste wnętrze, czyli jest
+nigdzie gęsty. Intuicyjnie: każde realizowalne
+skończone wymaganie można wzmocnić tak, aby
+przynajmniej jedna formuła niegłównego typu
+była fałszywa.
+
+\begin{lemat}[Nieuniknioność typów głównych w teorii zupełnej]
+\label{lem:mod-ott-principal-unavoidable}
+Jeżeli $T$ jest zupełna, a $p$ jest głównym typem
+częściowym nad $T$, to żaden model $T$ nie pomija $p$.
+\end{lemat}
+\begin{proof}
+Niech $\theta$ świadczy o główności $p$.
+Zdanie $\exists\bar x\,\theta$ zachodzi w pewnym
+modelu $T$, więc przez zupełność teorii zachodzi
+w każdym jej modelu. Dowolny jego świadek
+realizuje wszystkie formuły $p$ z definicji
+główności.
+\end{proof}
+
+Dla teorii niezupełnej wniosek ten jest fałszywy:
+przykład \ref{ex:mod-isolated-incomplete} podaje
+izolowany typ struktury jednoelementowej, pomijany
+w modelu dwuelementowym tej samej teorii.
+
+\section{Lemat o unikaniu typu przy skończonych wymaganiach}
+\begin{lemat}[Unikanie typu w języku z nowymi stałymi]
+\label{lem:mod-ott-avoidance}
+Niech $C$ będzie zbiorem nowych stałych,
+rozłącznym z językiem $\mathcal L$.
+Niech $\Delta$ będzie skończonym zbiorem zdań
+języka $\mathcal L(C)$ takim, że $T\cup\Delta$
+jest spełnialny, a $p\subseteq F_n(\mathcal L)$
+niegłównym typem nad $T$. Dla każdej krotki
+$\bar t=(t_1,\ldots,t_n)$ termów domkniętych
+języka $\mathcal L(C)$ istnieje $\varphi\in p$
+taka, że
+\[
+T\cup\Delta\cup\{\neg\varphi(\bar t)\}
+\]
+jest spełnialny.
+\end{lemat}
+\begin{proof}
+Przypuśćmy przeciwnie, że dla każdej $\varphi\in p$
+zachodzi $T\cup\Delta\models\varphi(\bar t)$.
+Niech $\bar c$ będzie listą wszystkich różnych nowych
+stałych występujących w $\Delta$ lub w termach $\bar t$.
+Jest to lista skończona, ponieważ $\Delta$ jest
+skończony, a formuły i termy są skończonymi wyrażeniami.
+Po ewentualnej zmianie nazw zmiennych związanych
+zastępujemy te stałe parami różnymi świeżymi
+zmiennymi $\bar z$, rozłącznymi z $\bar x$.
+Oznaczmy przez $\delta(\bar z)$ wynik tej zamiany
+w koniunkcji zdań $\Delta$, a przez
+$s_i(\bar z)$ wynik zamiany w $t_i$.
+Dla pustej koniunkcji używamy $\top$,
+zgodnie z konwencją z rozdziału \ref{ch:mod-qe}.
+W języku pierwotnym tworzymy formułę
+\[
+\theta(\bar x)=
+\exists\bar z\,\left(
+\delta(\bar z)\land\bigwedge_{i=1}^{n} x_i=s_i(\bar z)
+\right).
+\]
+Zmienne $\bar x$ wybieramy tak, aby żadna z nich
+nie występowała jako związana w $\delta$.
+Jeżeli lista $\bar c$ jest pusta, nie dodajemy
+kwantyfikatorów $\exists\bar z$.
+
+Spełnialność $T\cup\Delta$ daje model, w którym
+wartości nowych stałych świadczą o prawdziwości
+$\theta$ przy krotce wartości termów $\bar t$.
+Zatem $\theta$ jest realizowalna w modelu $T$.
+Niech teraz dowolny model $\mathfrak A\models T$
+i krotka $\bar a$ spełniają $\theta$.
+Wybieramy świadków $\bar b$ dla $\bar z$.
+Rozwijamy $\mathfrak A$ do języka $\mathcal L(C)$,
+interpretując stałe $\bar c$ przez $\bar b$,
+a pozostałe nowe stałe przez dowolny element
+niepustego uniwersum $A$. Z semantyki podstawienia
+(twierdzenie \ref{thm:sem-substitution}) oraz
+indukcji po budowie termów wynika, że rozwinięcie
+spełnia $\Delta$, a wartości termów $\bar t$
+są równe odpowiednio współrzędnym $\bar a$.
+Przy podstawianiu termów za zmienne w $\varphi$
+wykorzystujemy to, że termy $\bar t$ są domknięte;
+nie zawierają zmiennych, które mogłyby zostać
+przechwycone przez kwantyfikator.
+
+Z założenia rozwinięcie spełnia $\varphi(\bar t)$
+dla każdej $\varphi\in p$. Zatem
+$\mathfrak A\models\varphi(\bar a)$ dla każdej
+takiej $\varphi$. Dowolność modelu i krotki daje
+\[
+T\models\forall\bar x\,(\theta(\bar x)\to\varphi(\bar x))
+\qquad(\varphi\in p).
+\]
+Realizowalna formuła $\theta$ świadczyłaby więc
+o główności $p$, wbrew założeniu.
+\end{proof}
+
+Ważne jest to, że $\Delta$ jest skończony, natomiast
+$T$ może być nieskończony. Wszystkie wymagania z $T$
+są zachowywane w każdym kroku. W lemacie nie
+zakładamy ani przeliczalności języka, ani zupełności
+teorii; przeliczalność będzie potrzebna przy
+organizacji kolejnych etapów konstrukcji.
+
+\section{Twierdzenie o pomijaniu typów}
+\begin{twierdzenie}[Pomijanie przeliczalnej rodziny typów]
+\label{thm:mod-ott}
+Niech $\mathcal L$ będzie co najwyżej przeliczalnym
+językiem, a $T$ spełnialną teorią tego języka.
+Niech $(p_j)_{j\in J}$ będzie co najwyżej przeliczalną
+rodziną niegłównych typów częściowych nad $T$,
+gdzie $p_j\subseteq F_{n_j}(\mathcal L)$ i $n_j\geq1$.
+Istnieje model $\mathfrak M\models T$ o mocy
+co najwyżej $\aleph_0$, który pomija każdy $p_j$.
+Jeżeli $T$ nie ma modeli skończonych, to
+$|M|=\aleph_0$.
+\end{twierdzenie}
+\begin{proof}
+Dodajemy przeliczalnie nieskończony zbiór nowych
+stałych $C=\{c_0,c_1,\ldots\}$.
+Rozszerzony język $\mathcal L(C)$ jest nadal
+przeliczalny. Jego termy i formuły tworzą zbiory
+co najwyżej przeliczalne, jako skończone ciągi
+symboli z przeliczalnego alfabetu (por. lemat
+\ref{lem:ls-formula-count}).
+
+Ustalamy wyliczenie trzech rodzajów wymagań:
+\begin{enumerate}[label=(\roman*)]
+\item rozstrzygnąć każde zdanie $\sigma$ języka
+$\mathcal L(C)$;
+\item zapewnić świadka dla każdego zdania postaci
+$\exists x\,\psi(x)$ języka $\mathcal L(C)$,
+gdzie jedyną możliwą zmienną wolną $\psi$ jest $x$;
+\item dla każdego $j\in J$ i każdej krotki $\bar t$
+długości $n_j$ złożonej z termów domkniętych
+języka $\mathcal L(C)$ wymusić
+$\neg\varphi(\bar t)$ dla pewnej $\varphi\in p_j$.
+\end{enumerate}
+Zbiór wszystkich wymagań jest przeliczalny:
+w trzecim przypadku używamy przeliczalności
+rodziny $J$ i skończoności $n_j$.
+Wyliczenie może zawierać powtórzenia.
+Budujemy ciąg skończonych zbiorów zdań
+\[
+\varnothing=\Delta_0\subseteq\Delta_1
+\subseteq\Delta_2\subseteq\cdots
+\]
+tak, aby $T\cup\Delta_k$ był spełnialny dla każdego
+$k$. Na etapie $k$ obsługujemy $k$-te wymaganie.
+
+Dla wymagania (i) wybieramy jedno ze zdań
+$\sigma,\neg\sigma$, którego dodanie zachowuje
+spełnialność. Co najmniej jedno jest dopuszczalne,
+ponieważ dowolny model $T\cup\Delta_k$ spełnia
+dokładnie jedno z nich.
+
+Dla wymagania (ii) wybieramy stałą $c\in C$,
+która nie występuje w $\Delta_k$ ani w zdaniu
+$\exists x\,\psi(x)$. Jest to możliwe, ponieważ
+te wyrażenia używają tylko skończenie wielu
+nowych stałych, a $T$ nie używa żadnej z nich.
+Dodajemy zdanie Henkina
+\[
+(\exists x\,\psi(x))\to\psi(c).
+\]
+Aby sprawdzić spełnialność, wybieramy dowolny
+model $T\cup\Delta_k$. Jeżeli przesłanka jest
+prawdziwa, zmieniamy interpretację $c$ na
+wartość świadka. Jeżeli jest fałszywa, nie musimy
+nic zmieniać. W obu przypadkach wcześniejsze
+wymagania pozostają prawdziwe.
+Jest to semantyczna wersja kroku z lematu
+\ref{lem:henkin-one-witness}.
+
+Dla wymagania (iii) stosujemy lemat
+\ref{lem:mod-ott-avoidance} do $p_j$,
+$\Delta_k$ i krotki $\bar t$. Wybieramy formułę
+$\varphi\in p_j$ wskazaną przez lemat i dodajemy
+$\neg\varphi(\bar t)$.
+Możemy ustalić dobre uporządkowanie formuł
+rozszerzonego języka i zawsze brać pierwszą
+dopuszczalną formułę. W ten sposób wybory
+dokonywane są w obrębie zbioru.
+
+Niech
+\[
+\Gamma=T\cup\bigcup_{k<\omega}\Delta_k.
+\]
+Każdy skończony fragment $\Gamma$ należy do
+$T\cup\Delta_k$ dla dostatecznie dużego $k$.
+Z twierdzenia o zwartości \ref{thm:compactness}
+istnieje model $\mathfrak D\models\Gamma$
+w języku rozszerzonym. Nie możemy po prostu
+wziąć reduktu $\mathfrak D$: mogą w nim istnieć
+elementy niebędące wartościami żadnych termów
+domkniętych, których wymagania (iii) nie dotyczą.
+
+Niech $D_0$ będzie zbiorem wartości wszystkich
+termów domkniętych w $\mathfrak D$.
+Jest niepusty, gdyż zawiera wartość $c_0$,
+i co najwyżej przeliczalny. Zawiera wartości
+wszystkich stałych i jest zamknięty na działania:
+jeżeli $a_i=t_i^{\mathfrak D}$, to
+$f^{\mathfrak D}(\bar a)$ jest wartością termu
+$f(t_1,\ldots,t_m)$. Definiuje więc podstrukturę
+$\mathfrak D_0\subseteq\mathfrak D$.
+
+Pokażemy, że $\mathfrak D_0\preccurlyeq\mathfrak D$
+za pomocą kryterium Tarskiego--Vaughta
+\ref{thm:model-tarski-vaught}.
+Niech $\mathfrak D\models\exists x\,\eta(x,\bar a)$,
+gdzie $\bar a$ jest krotką z $D_0$. Każda współrzędna
+jest wartością pewnego termu domkniętego $t_i$.
+Podstawiając te termy za odpowiednie zmienne
+w $\eta$, otrzymujemy formułę $\psi(x)$, której
+jedyną możliwą zmienną wolną jest $x$.
+Jeżeli zachodzi potrzeba, wcześniej przemianowujemy
+zmienne związane. Semantyka podstawienia daje
+$\mathfrak D\models\exists x\,\psi(x)$.
+Wymaganie (ii) dla tego zdania zapewniło
+aksjomat $(\exists x\,\psi(x))\to\psi(c)$
+należący do $\Gamma$. Zatem
+$\mathfrak D\models\psi(c)$, czyli
+$\mathfrak D\models\eta(c^{\mathfrak D},\bar a)$.
+Ponieważ $c^{\mathfrak D}\in D_0$, otrzymaliśmy
+świadka w $D_0$ i kryterium daje elementarność.
+
+Niech $\mathfrak M$ będzie reduktem $\mathfrak D_0$
+do języka $\mathcal L$. Przez elementarność
+$\mathfrak D_0\models T$, więc $\mathfrak M\models T$.
+Ustalmy $j\in J$ i dowolną krotkę $\bar a\in M^{n_j}$.
+Wybieramy krotkę termów domkniętych $\bar t$
+o wartościach $\bar a$ w $\mathfrak D$.
+Wymaganie (iii) zapewniło zdanie
+$\neg\varphi(\bar t)\in\Gamma$
+dla pewnej $\varphi\in p_j$. W konsekwencji
+$\mathfrak D\models\neg\varphi(\bar t)$.
+Z elementarności $\mathfrak D_0$ i semantyki
+podstawienia wynika $\mathfrak M\models\neg\varphi(\bar a)$.
+Krotka $\bar a$ nie realizuje $p_j$.
+Dowolność $\bar a,j$ dowodzi pomijania całej
+rodziny. Ograniczenie mocy wynika z konstrukcji $D_0$;
+jeżeli $T$ nie ma skończonych modeli, model
+musi być przeliczalnie nieskończony.
+\end{proof}
+
+Konstrukcja jest wariantem metody Henkina
+z rozdziału \ref{ch:completeness}. Zamiast
+konstruować model jako iloraz termów względem
+równości dowodliwej, korzystamy z już udowodnionej
+zwartości i bierzemy elementarną podstrukturę
+generowaną przez termy domknięte. Warunek
+rozstrzygania zdań zapewnia dodatkowo, że $\Gamma$
+jest zupełna semantycznie; nie jest on niezbędny
+do ostatniego argumentu o podstrukturze.
+Kluczowe są wymagania Henkina oraz wymagania
+unikające realizacji typów.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,x=1cm,y=1cm]
+\foreach \x/\i in {0/0,2.7/1,5.4/2,8.1/3}{
+ \node[draw,rounded corners,minimum width=1.3cm]
+ (d\i) at (\x,0) {$\Delta_{\i}$};
+}
+\draw[->,thick] (d0)--node[above,font=\small] {zdanie}(d1);
+\draw[->,thick] (d1)--node[above,font=\small] {świadek}(d2);
+\draw[->,thick] (d2)--node[above,font=\small] {unikanie}(d3);
+\node at (9.6,0) {$\cdots$};
+\draw[->,dashed,thick] (d3)--(9.2,0);
+\node[align=center,text width=9cm,font=\small] at (4.8,-1)
+ {Każdy etap zachowuje spełnialność $T\cup\Delta_k$.};
+\end{tikzpicture}
+\caption{Trzy rodzaje wymagań w konstrukcji modelu
+pomijającego typy. Kolejność na rysunku jest przykładowa:
+wyliczenie musi objąć wszystkie wymagania.}
+\label{fig:mod-ott-henkin}
+\end{figure}
+
+\begin{wniosek}[Charakterystyka typów pomijalnych]
+\label{cor:mod-ott-complete}
+Niech $T$ będzie zupełną teorią w co najwyżej
+przeliczalnym języku. Typ częściowy nad $T$
+można pominąć w pewnym modelu $T$ dokładnie wtedy,
+gdy jest niegłówny. Można wtedy wybrać model
+o mocy co najwyżej $\aleph_0$.
+Dla typu zupełnego oznacza to dokładnie
+nieizolowanie w przestrzeni typów.
+\end{wniosek}
+\begin{proof}
+Typ główny jest realizowany w każdym modelu $T$
+na mocy lematu \ref{lem:mod-ott-principal-unavoidable}.
+Typ niegłówny można pominąć na mocy twierdzenia
+\ref{thm:mod-ott}, zastosowanego do rodziny
+jednoelementowej. Dla typu zupełnego stosujemy
+lemat \ref{lem:mod-ott-interior}.
+\end{proof}
+
+\section{Przykłady i ograniczenia twierdzenia}
+\begin{przyklad}[Typ elementu spoza standardowej arytmetyki]
+\label{ex:mod-ott-arithmetic}
+Niech $T=\operatorname{Th}(\mathbb N,0,S,+,\cdot)$,
+gdzie $S(n)=n+1$, a $\underline n=S^n(0)$.
+Zbiór
+\[
+p(x)=\{x\ne\underline n:n\in\mathbb N\}
+\]
+jest typem częściowym nad $T$:
+każdy skończony podzbiór wymaga uniknięcia
+skończenie wielu liczb naturalnych, co można
+zrealizować w modelu standardowym. Lemat
+\ref{lem:mod-type-compactness} daje realizowalność
+całego typu w pewnym modelu $T$.
+Model standardowy pomija jednak $p$, bo każdy
+jego element jest wartością pewnego numeralu.
+Z lematu \ref{lem:mod-ott-principal-unavoidable}
+wynika, że $p$ jest niegłówny. Z twierdzenia
+\ref{thm:mod-ott} istnieje model przeliczalny
+pomijający $p$ (w tym przypadku znamy go wprost).
+Każdy model $T$ pomijający $p$ jest izomorficzny
+z modelem standardowym: jego uniwersum składa
+się z wartości numerali, różniących się parami,
+a wszystkie równania opisujące działania $S,+,\cdot$
+na numeralach są konsekwencjami $T$.
+Typ $p$ ma także realizację w przeliczalnym
+modelu niestandardowym, przez zwartość i dolne
+twierdzenie Löwenheima--Skolema
+\ref{thm:downward-ls} zastosowane do modelu
+zawierającego realizację typu.
+\end{przyklad}
+
+\begin{przyklad}[Nie można pomijać dowolnie wielu typów]
+\label{ex:mod-ott-uncountable-family}
+Niech $\mathcal L=\{P_i:i\in\mathbb N\}$ będzie
+językiem z przeliczalną rodziną jednoargumentowych
+symboli relacyjnych. Rozważmy strukturę
+$\mathfrak A$ o uniwersum wszystkich skończonych
+podzbiorów $\mathbb N$ z interpretacją
+\[
+P_i^{\mathfrak A}(F)\quad\Longleftrightarrow\quad i\in F.
+\]
+Niech $T=\operatorname{Th}(\mathfrak A)$.
+Dla każdego $D\subseteq\mathbb N$ tworzymy typ częściowy
+\[
+p_D(x)=\{P_i(x):i\in D\}
+\cup\{\neg P_i(x):i\notin D\}.
+\]
+Jest realizowalny w pewnym modelu $T$, gdyż
+każdy skończony fragment można zrealizować
+w $\mathfrak A$ przez skończony zbiór dodatnich
+wymagań. Stosujemy lemat \ref{lem:mod-type-compactness}.
+
+Wykażemy niegłówność każdego $p_D$.
+Niech $\theta(x)$ będzie dowolną formułą
+realizowalną w pewnym modelu $T$.
+Z zupełności $T$ istnieje skończony zbiór
+$F\subseteq\mathbb N$ spełniający $\theta$ w
+$\mathfrak A$. Niech $I$ będzie skończonym
+zbiorem indeksów symboli $P_i$ występujących
+w $\theta$. Wybieramy $k\notin I$. Odwzorowanie
+$G\mapsto G\mathbin{\triangle}\{k\}$, gdzie
+$\triangle$ oznacza różnicę symetryczną, jest
+bijekcją uniwersum $\mathfrak A$ i automorfizmem
+reduktu do symboli z $I$: zachowuje przynależność
+do każdego $P_i$ dla $i\in I$.
+Z niezmienniczości względem izomorfizmu
+(twierdzenie \ref{thm:model-iso-invariance})
+oba zbiory $F$ i $F\mathbin{\triangle}\{k\}$
+spełniają $\theta$. Mają przeciwne wartości $P_k$,
+więc co najmniej jeden nie realizuje $p_D$.
+W konsekwencji $\theta$ nie wymusza wszystkich
+formuł $p_D$. Dowolność $\theta$ daje niegłówność.
+
+Rodzina $(p_D)_{D\subseteq\mathbb N}$ ma moc
+$2^{\aleph_0}$. Żaden model $T$ nie pomija wszystkich
+tych typów: dla dowolnego elementu $a$ modelu
+$\mathfrak M\models T$ wystarczy położyć
+\[
+D_a=\{i\in\mathbb N:\mathfrak M\models P_i(a)\}.
+\]
+Element $a$ realizuje $p_{D_a}$ z definicji.
+Twierdzenia \ref{thm:mod-ott} nie można więc
+rozszerzyć bezwarunkowo na dowolne nieprzeliczalne
+rodziny typów, nawet w przeliczalnym języku
+i dla teorii zupełnej.
+\end{przyklad}
+
+W dalszej części rozdziału zastosujemy twierdzenie
+o pomijaniu typów do charakterystyki modeli atomowych
+i pierwszych.
