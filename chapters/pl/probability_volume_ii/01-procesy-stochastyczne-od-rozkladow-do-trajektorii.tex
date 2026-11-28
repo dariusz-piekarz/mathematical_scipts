@@ -109,8 +109,10 @@ Na przykład dla $A_0,\ldots,A_n\in\calE$ mamy
 \]
 Przecinki wewnątrz $\Prob(\ldots)$ oznaczają \emph{przecięcie zdarzeń}.
 W szczególności $\Prob(X_s\in A,X_t\in B)$ nie jest na ogół
-iloczynem $\Prob(X_s\in A)\Prob(X_t\in B)$; taki iloczyn
-wymaga niezależności zmiennych $X_s$ i $X_t$.
+iloczynem $\Prob(X_s\in A)\Prob(X_t\in B)$.
+Niezależność zmiennych $X_s$ i $X_t$ jest równoważna
+temu, że równość z tym iloczynem zachodzi dla wszystkich
+$A,B\in\calE$; równość dla jednej pary zbiorów nie wystarcza.
 
 \begin{twierdzenie}[Zgodność rzeczywistych rozkładów procesu]
 Niech $X=(X_t)_{t\in T}$ będzie procesem o stanach w $(E,\calE)$.
@@ -223,9 +225,11 @@ prawie na pewno'' oraz ``prawie na pewno dla każdego $t$''.
 Niech $X,Y$ będą procesami na tej samej przestrzeni probabilistycznej,
 o wspólnym zbiorze indeksów $T$ i przestrzeni stanów $E$.
 Mówimy, że $Y$ jest \emph{modyfikacją} (wersją) $X$, jeśli
-dla każdego $t\in T$ zdarzenie $\{X_t=Y_t\}$ jest mierzalne
-i zachodzi $\Prob(X_t=Y_t)=1$.
-Warunek mierzalności jest automatyczny, gdy $E$ jest
+dla każdego $t\in T$ istnieje $N_t\in\calF$ z $\Prob(N_t)=0$
+takie, że $X_t(\omega)=Y_t(\omega)$ dla $\omega\notin N_t$.
+Gdy zdarzenie $\{X_t=Y_t\}$ jest mierzalne, warunek ten
+jest równoważny równości $\Prob(X_t=Y_t)=1$.
+Mierzalność tego zdarzenia jest automatyczna, gdy $E$ jest
 ośrodkową przestrzenią metryczną z borelowskim $\sigma$-ciałem:
 diagonala $\{(x,y)\in E^2:x=y\}$ jest domknięta,
 a $\mathcal B(E^2)=\mathcal B(E)\otimes\mathcal B(E)$
@@ -245,7 +249,8 @@ na $(E^T,\calE^{\otimes T})$.
 \end{stwierdzenie}
 \begin{proof}
 Dla ustalonych $t_1,\ldots,t_m$ zbiór
-$N=\bigcup_{j=1}^m\{X_{t_j}\ne Y_{t_j}\}$ jest mierzalny
+$N=\bigcup_{j=1}^m N_{t_j}$, gdzie $N_{t_j}$ są zbiorami
+zerowymi z definicji modyfikacji, jest mierzalny
 i ma prawdopodobieństwo zero. Poza $N$ oba wektory wartości
 są równe. Dla dowolnego $A\in\calE^{\otimes m}$ ich
 zdarzenia przynależności do $A$ mogą się zatem różnić
@@ -259,9 +264,8 @@ Jeśli $T$ jest przeliczalny, a $X$ i $Y$ są swoimi
 modyfikacjami, to są nierozróżnialne.
 \end{stwierdzenie}
 \begin{proof}
-Dla każdego $t\in T$ zbiór
-$N_t=\{\omega:X_t(\omega)\ne Y_t(\omega)\}$ jest mierzalny
-i ma miarę zero z definicji modyfikacji.
+Dla każdego $t\in T$ wybierzmy mierzalny zbiór zerowy $N_t$
+z definicji modyfikacji, poza którym $X_t=Y_t$.
 Wtedy $N=\bigcup_{t\in T}N_t$ jest przeliczalną sumą
 zbiorów zerowych. Poza $N$ zachodzi $X_t=Y_t$ dla
 wszystkich $t$ równocześnie.
@@ -289,8 +293,9 @@ Jeżeli $X$ i $Y$ są modyfikacjami, to są nierozróżnialne.
 \begin{proof}
 Ustalmy przeliczalny zbiór gęsty
 $D=(\Q\cap[0,T_0])\cup\{T_0\}$.
-Dla każdego $t\in D$ mamy $\Prob(X_t=Y_t)=1$,
-więc poza jednym mierzalnym zbiorem zerowym $N_1$
+Dla każdego $t\in D$ procesy są równe poza mierzalnym
+zbiorem zerowym $N_t$. Zatem poza mierzalnym zbiorem zerowym
+$N_1=\bigcup_{t\in D}N_t$
 zachodzi $X_t(\omega)=Y_t(\omega)$ dla wszystkich $t\in D$.
 Do $N_1$ dodajmy zbiory zerowe, na których którakolwiek z
 trajektorii może nie być ciągła, otrzymując $N$.
@@ -401,8 +406,8 @@ Jeśli proces $X$ ma trajektorie ciągłe, traktujemy go jako
 zmienną losową o wartościach w $C([0,T];\R^d)$. Wówczas
 rozkłady skończeniewymiarowe wyznaczają jego prawo
 \emph{jako miarę na przestrzeni trajektorii ciągłych}:
-równość miar na cylindrach określonych chwilami wymiernymi
-przechodzi na całe borelowskie $\sigma$-ciało, ponieważ
+równość miar na cylindrach określonych chwilami ze zbioru
+$D=(\Q\cap[0,T])\cup\{T\}$ przechodzi na całe borelowskie $\sigma$-ciało, ponieważ
 te cylindry je generują. Jest to mocniejszy kontekst niż
 kanoniczna przestrzeń $E^T$, gdzie sama ciągłość trajektorii
 nie musi odpowiadać mierzalnemu zbiorowi cylindrycznemu.
@@ -447,6 +452,35 @@ w dalszym przykładzie -- proces jest stochastycznie ciągły.
 To rozróżnienie motywuje używanie przestrzeni $D([0,T];E)$
 zamiast $C([0,T];E)$ przy procesach skokowych.
 \end{przyklad}
+
+\begin{stwierdzenie}[Prawostronnie ciągłe modyfikacje są nierozróżnialne]
+Niech $X,Y$ będą procesami o wartościach w przestrzeni
+metrycznej, indeksowanymi przez $[0,T]$. Załóżmy, że są
+modyfikacjami i że poza mierzalnymi zbiorami zerowymi
+ich trajektorie są prawostronnie ciągłe na $[0,T)$.
+Wówczas procesy są nierozróżnialne. W szczególności dotyczy
+to modyfikacji o trajektoriach c\`adl\`ag.
+\end{stwierdzenie}
+\begin{proof}
+Dla każdej chwili ze zbioru
+$D=(\Q\cap[0,T])\cup\{T\}$ wybieramy mierzalny zbiór
+zerowy, poza którym procesy przyjmują tę samą wartość.
+Do przeliczalnej sumy tych zbiorów dołączamy zbiory
+wyjątkowe dla prawostronnej ciągłości. Poza otrzymanym
+zbiorem zerowym $N$ wartości obu procesów są równe na $D$.
+Dla $t<T$ wybieramy ciąg $q_n\in D\cap(t,T]$ malejący do $t$.
+Prawostronna ciągłość daje
+$X_t(\omega)=\lim_n X_{q_n}(\omega)
+=\lim_n Y_{q_n}(\omega)=Y_t(\omega)$ dla $\omega\notin N$.
+W chwili $T$ równość zachodzi bezpośrednio, gdyż $T\in D$.
+\end{proof}
+\begin{uwaga}
+W powyższym dowodzie dołączenie prawego końca przedziału
+jest istotne: funkcje c\`adl\`ag mogą różnić się wyłącznie
+w chwili $T$ (np. $f(t)=0$ i $g(t)=\chi_{\{T\}}(t)$).
+Na $[0,\infty)$ wystarcza zbiór $\Q\cap[0,\infty)$,
+gdyż każda chwila może być przybliżana z prawej strony.
+\end{uwaga}
 
 \begin{uwaga}[Topologia Skorochoda]
 Przy zbieżności procesów skokowych zwykła metryka
