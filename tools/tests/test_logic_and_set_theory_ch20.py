@@ -7,7 +7,7 @@ import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
-REPO_SOURCE = ROOT/'chapters/pl/logic_and_set_theory/20-prawda-arytmetyczna-i-twierdzenie-tarskiego.tex'
+REPO_SOURCE = ROOT/'chapters/pl/metamathematics/20-prawda-arytmetyczna-i-twierdzenie-tarskiego.tex'
 SRC = REPO_SOURCE if REPO_SOURCE.is_file() else Path('/mnt/data/logika_rozdzial_20_audyt_III.tex')
 SOURCE = SRC.read_text(encoding='utf-8')
 FIXTURE = REPO_SOURCE.parent if REPO_SOURCE.is_file() else Path('/mnt/data/logic20_audit3_work/chapters')

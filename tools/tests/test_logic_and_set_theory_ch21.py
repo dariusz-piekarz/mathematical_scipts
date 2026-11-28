@@ -9,7 +9,7 @@ import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
-REPO_FILE = ROOT / 'chapters/pl/logic_and_set_theory/21-operacje-na-dowodach-i-warunki-wyprowadzalnosci.tex'
+REPO_FILE = ROOT / 'chapters/pl/metamathematics/21-operacje-na-dowodach-i-warunki-wyprowadzalnosci.tex'
 SOURCE = REPO_FILE if REPO_FILE.is_file() else Path('/mnt/data/logika_rozdzial_21_audyt_III.tex')
 CHAPTERS = REPO_FILE.parent if REPO_FILE.is_file() else Path('/mnt/data/logic21_audit3_work/chapters')
 

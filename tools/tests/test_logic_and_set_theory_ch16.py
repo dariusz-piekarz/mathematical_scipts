@@ -5,7 +5,7 @@ import os
 import re
 import unittest
 
-SOURCE = Path(os.environ.get('LOGIC16_SOURCE', str(Path(__file__).resolve().parents[2] / 'chapters/pl/logic_and_set_theory/16-algorytmy-obliczalnosc-i-nierozstrzygalnosc.tex')))
+SOURCE = Path(os.environ.get('LOGIC16_SOURCE', str(Path(__file__).resolve().parents[2] / 'chapters/pl/metamathematics/16-algorytmy-obliczalnosc-i-nierozstrzygalnosc.tex')))
 
 def pair_encode(u, v):
     return '0' * len(u) + '1' + u + v

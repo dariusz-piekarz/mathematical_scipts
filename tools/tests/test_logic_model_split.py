@@ -14,6 +14,7 @@ BY_ID = {book["id"]: book for book in CATALOG}
 LST = BY_ID["logic_and_set_theory"]
 MOD = BY_ID["model_theory"]
 NCL = BY_ID["nonclassical_logic"]
+MMT = BY_ID["metamathematics"]
 FUZZY = ROOT / "chapters/pl/nonclassical_logic/01-logika-rozmyta-i-zbiory-rozmyte.tex"
 LABEL = re.compile(r"\\label\{([^}]+)\}")
 REF = re.compile(r"\\(?:ref|eqref|autoref|pageref)\{([^}]+)\}|\\hyperref\[([^\]]+)\]")
@@ -38,14 +39,26 @@ class TestLogicModelSplit(unittest.TestCase):
                 self.assertNotIn(moved["src"], LST["chapters"])
                 self.assertTrue((ROOT / moved["dest"]).is_file())
 
+    def test_metamathematics_migration(self):
+        moves = MANIFEST["metamathematics_moves"]
+        self.assertEqual(len(moves), 7)
+        self.assertEqual([m["dest"] for m in moves], MMT["chapters"])
+        for moved in moves:
+            self.assertFalse((ROOT / moved["src"]).exists())
+            self.assertNotIn(moved["src"], LST["chapters"])
+            self.assertTrue((ROOT / moved["dest"]).is_file())
+        self.assertTrue((ROOT / "application/config/preambles/MMT.tex").is_file())
+        self.assertEqual([Path(p).name[:2] for p in LST["chapters"]],
+                         [f"{i:02}" for i in (*range(1, 9), *range(25, 40))])
+
     def test_cross_book_labels_and_book_imports(self):
-        paths = LST["chapters"] + MOD["chapters"] + NCL["chapters"]
+        paths = LST["chapters"] + MOD["chapters"] + NCL["chapters"] + MMT["chapters"]
         sources = [(ROOT / path).read_text("utf8") for path in paths]
         labels = [x for src in sources for x in LABEL.findall(src)]
         refs = {a or b for src in sources for a, b in REF.findall(src)}
         self.assertEqual(len(labels), len(set(labels)))
         self.assertFalse(refs - set(labels), refs - set(labels))
-        for book in (LST, MOD, NCL):
+        for book in (LST, MOD, NCL, MMT):
             text = (ROOT / book["entrypoint"]).read_text("utf8")
             self.assertEqual(re.findall(r"\\input\{\.\./\.\./([^}]+)\}", text), book["chapters"])
         self.assertIn(str(FUZZY.relative_to(ROOT)), NCL["chapters"])

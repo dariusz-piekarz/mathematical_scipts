@@ -8,6 +8,8 @@ on:
       - "chapters/pl/logic_and_set_theory/**"
       - "chapters/pl/model_theory/**"
       - "chapters/pl/nonclassical_logic/**"
+      - "chapters/pl/metamathematics/**"
+      - "books/pl/metamathematics.tex"
       - "books/pl/nonclassical_logic.tex"
       - "books/pl/model_theory.tex"
       - "catalog/logic_model_migration.json"
@@ -102,8 +104,9 @@ jobs:
           catalog = json.loads(Path("catalog/books.json").read_text(encoding="utf-8"))
           book = next(item for item in catalog["books"] if item["id"] == "logic_and_set_theory")
           models = next(item for item in catalog["books"] if item["id"] == "model_theory")
-          combined = {Path(p).name: p for p in book["chapters"] + models["chapters"]}
-          assert len(combined) == len(book["chapters"]) + len(models["chapters"]), "Repeated chapter filename"
+          meta = next(item for item in catalog["books"] if item["id"] == "metamathematics")
+          combined = {Path(p).name: p for p in book["chapters"] + models["chapters"] + meta["chapters"]}
+          assert len(combined) == len(book["chapters"]) + len(models["chapters"]) + len(meta["chapters"]), "Repeated chapter filename"
           expected_names = [
               "01-zdania-i-spojniki-logiczne.tex",
               "02-kwantyfikatory-i-podstawowe-metody-dowodzenia.tex",
@@ -151,12 +154,13 @@ jobs:
               for n in moved
           ]
           expected_logic_names = [name for n, name in enumerate(expected_names, 1)
-                                  if n not in moved]
-          assert [Path(p).name for p in book["chapters"]][:30] == expected_logic_names
+                                  if n not in moved and not 16 <= n <= 22]
+          assert [Path(p).name for p in book["chapters"]][:23] == expected_logic_names
           assert [Path(p).name for p in models["chapters"]][:9] == expected_model_names
+          assert [Path(p).name for p in meta["chapters"]] == expected_names[15:22]
           sources = []
           for n, name in enumerate(expected_names, 1):
-              owner = models if n in moved else book
+              owner = models if n in moved else meta if 16 <= n <= 22 else book
               if n in moved:
                   name = str(moved[n]) + "-" + name.split("-", 1)[1]
               path = combined[name]
@@ -374,10 +378,28 @@ jobs:
           root_file: model_theory.tex
           working_directory: books/pl
           args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Compile metamathematics PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: metamathematics.tex
+          working_directory: books/pl
+          args: -pdf -g -interaction=nonstopmode -halt-on-error -file-line-error
       - name: Recompile logic and set theory with model theory references
         uses: xu-cheng/latex-action@v3
         with:
           root_file: logic_and_set_theory.tex
+          working_directory: books/pl
+          args: -pdf -g -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Recompile model theory with cross-book references
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: model_theory.tex
+          working_directory: books/pl
+          args: -pdf -g -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Recompile metamathematics with cross-book references
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: metamathematics.tex
           working_directory: books/pl
           args: -pdf -g -interaction=nonstopmode -halt-on-error -file-line-error
       - name: Compile nonclassical logic with external references
@@ -386,18 +408,19 @@ jobs:
           root_file: nonclassical_logic.tex
           working_directory: books/pl
           args: -pdf -g -interaction=nonstopmode -halt-on-error -file-line-error
-      - name: Check all three compiled PDFs and logs
+      - name: Check all four compiled PDFs and logs
         shell: bash
         run: |
           test -s books/pl/logic_and_set_theory.pdf
           test -s books/pl/model_theory.pdf
           test -s books/pl/nonclassical_logic.pdf
+          test -s books/pl/metamathematics.pdf
           python - <<'PY'
           import re
           from pathlib import Path
 
           log = "\n".join(Path("books/pl", name + ".log").read_text(errors="replace")
-                          for name in ("logic_and_set_theory", "model_theory", "nonclassical_logic"))
+                          for name in ("logic_and_set_theory", "model_theory", "nonclassical_logic", "metamathematics"))
           refs = set(re.findall(r"LaTeX Warning: Reference `([^']+)' on page \d+ undefined", log))
           allowed = set()
           assert refs <= allowed, f"Unexpected undefined references: {sorted(refs - allowed)}"
@@ -421,4 +444,6 @@ jobs:
             books/pl/model_theory.log
             books/pl/nonclassical_logic.pdf
             books/pl/nonclassical_logic.log
+            books/pl/metamathematics.pdf
+            books/pl/metamathematics.log
           if-no-files-found: warn

@@ -71,6 +71,7 @@ PREFIX_DOMAINS = {
     "LA": "algebra liniowa",
     "LST": "logika i teoria mnogości",
     "NCL": "logika niestandardowa",
+    "MMT": "metamatematyka i teoria obliczalności",
     "GT": "topologia ogólna",
 }
 COMMAND = re.compile(r"\\([A-Za-z@]+|.)")
@@ -258,6 +259,7 @@ REPOSITORY_CATEGORIES = {
     "linear_algebra": "LA",
     "logic_and_set_theory": "LST",
     "nonclassical_logic": "NCL",
+    "metamathematics": "MMT",
     "algebraic_geometry": "ALG", "algebraic_topology": "TOP",
     "banach_tarski": "BT", "category_theory": "KAT",
     "galois_theory": "GA", "general_topology": "GT", "graph_and_knot_theory": "GW",

@@ -8,8 +8,8 @@ import unittest
 from itertools import product
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE = (ROOT/'chapters/pl/logic_and_set_theory/18-reprezentowalnosc-i-diagonalizacja.tex').read_text(encoding='utf8')
-PREV = ''.join((ROOT/'chapters/pl/logic_and_set_theory'/n).read_text(encoding='utf8') for n in (
+SOURCE = (ROOT/'chapters/pl/metamathematics/18-reprezentowalnosc-i-diagonalizacja.tex').read_text(encoding='utf8')
+PREV = ''.join((ROOT/'chapters/pl/metamathematics'/n).read_text(encoding='utf8') for n in (
  '16-algorytmy-obliczalnosc-i-nierozstrzygalnosc.tex',
  '17-arytmetyka-formalna-i-kodowanie-skladni.tex'))
 S=SOURCE

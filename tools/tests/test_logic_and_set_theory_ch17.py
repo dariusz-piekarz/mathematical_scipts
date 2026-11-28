@@ -6,7 +6,7 @@ import re
 import unittest
 
 CHAPTER=(Path(__file__).resolve().parents[2]
- / 'chapters/pl/logic_and_set_theory/17-arytmetyka-formalna-i-kodowanie-skladni.tex')
+ / 'chapters/pl/metamathematics/17-arytmetyka-formalna-i-kodowanie-skladni.tex')
 if not CHAPTER.exists():
     CHAPTER=Path('/mnt/data/logika_rozdzial_17_audyt_III.tex')
 

@@ -8,7 +8,7 @@ from pathlib import Path
 from tools.tests.logic_model_sources import logic_model_sources
 
 ROOT = Path(__file__).resolve().parents[2]
-CHAPTER_DIR = ROOT / "chapters/pl/logic_and_set_theory"
+CHAPTER_DIR = ROOT / "chapters/pl/metamathematics"
 SOURCE_FILE = CHAPTER_DIR / "22-drugie-twierdzenie-godla-i-twierdzenie-loba.tex"
 SOURCE = SOURCE_FILE.read_text(encoding="utf-8")
 
@@ -16,8 +16,8 @@ SOURCE = SOURCE_FILE.read_text(encoding="utf-8")
 class TestLogicChapter22(unittest.TestCase):
     def test_chapter_is_imported(self):
         self.assertTrue(SOURCE_FILE.is_file())
-        book = (ROOT / "books/pl/logic_and_set_theory.tex").read_text(encoding="utf-8")
-        self.assertIn(r"\input{../../chapters/pl/logic_and_set_theory/" + SOURCE_FILE.name + "}", book)
+        book = (ROOT / "books/pl/metamathematics.tex").read_text(encoding="utf-8")
+        self.assertIn(r"\input{../../chapters/pl/metamathematics/" + SOURCE_FILE.name + "}", book)
         self.assertIn(r"\label{ch:second-incompleteness}", SOURCE)
 
     def test_environment_balance(self):

@@ -8,7 +8,7 @@ import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
-REPO_SOURCE = ROOT / 'chapters/pl/logic_and_set_theory/19-pierwsze-twierdzenie-godla-o-niezupelnosci.tex'
+REPO_SOURCE = ROOT / 'chapters/pl/metamathematics/19-pierwsze-twierdzenie-godla-o-niezupelnosci.tex'
 SRC = REPO_SOURCE if REPO_SOURCE.is_file() else Path('/mnt/data/logika_rozdzial_19_audyt_III.tex')
 CHAPTERS = REPO_SOURCE.parent if REPO_SOURCE.is_file() else Path('/mnt/data/logic19_audit3_work/chapters')
 
