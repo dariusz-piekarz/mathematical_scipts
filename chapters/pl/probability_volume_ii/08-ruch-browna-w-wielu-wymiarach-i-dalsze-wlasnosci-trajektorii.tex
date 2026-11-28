@@ -101,7 +101,53 @@ wynosi $sI_d$. Przy $s=0$ położenie początkowe jest stałe p.n. Niezależne s
 przedziałach czasu.
 \end{uwaga}
 
+\begin{twierdzenie}[Mocna własność Markowa w wielu wymiarach]
+\label{thm:brown-multi-strong}
+Niech $B$ będzie standardowym ruchem Browna względem
+filtracji $(\calF_t)_{t\ge0}$, o wszystkich trajektoriach
+ciągłych, a $\tau$ czasem zatrzymania skończonym prawie
+na pewno. Wówczas proces
+$(B_{\tau+v}-B_\tau)_{v\ge0}$ (z trajektorią zerową
+przy $\tau=\infty$) jest standardowym $d$-wymiarowym
+ruchem Browna niezależnym od $\calF_\tau$.
+\end{twierdzenie}
+\begin{proof}
+Dowód jest wektorową wersją dowodu
+twierdzenia~\ref{thm:wiener-strong-markov}.
+Dla $h_n=2^{-n}$ zaokrąglamy $\tau$ w górę do
+$\tau_n=h_n\lceil\tau/h_n\rceil$ (z wartością
+$\infty$ przy $\tau=\infty$). Są to czasy zatrzymania,
+$\tau_n\downarrow\tau$, a $\calF_\tau\subseteq\calF_{\tau_n}$.
+Obserwacje w losowych chwilach są mierzalne na mocy
+twierdzeń~\ref{thm:prog} i~\ref{thm:sampled}.
+Dla $A\in\calF_\tau$, chwil $0\le v_1<\cdots<v_m$
+i wektorów $u_1,\ldots,u_m\in\R^d$ warunkujemy na
+zdarzeniach $A\cap\{\tau_n=kh_n\}\in\calF_{kh_n}$.
+Kolejne przyrosty po $kh_n$ są łącznie niezależne
+od $\calF_{kh_n}$ przez iterowane warunkowanie
+względem chwil ich rozpoczęcia. Z gaussowskości
+i wzoru na kowariancję dostajemy po zsumowaniu
+po $k\ge0$
+\[
+\E\left[\chi_A\exp\left(
+i\sum_{j=1}^m\langle u_j,B_{\tau_n+v_j}-B_{\tau_n}\rangle
+\right)\right]
+=\Prob(A)\exp\left(
+-\frac12\sum_{j,l=1}^m\min(v_j,v_l)\langle u_j,u_l\rangle
+\right).
+\]
+Z ciągłości trajektorii i zbieżności zmajoryzowanej
+ta sama równość zachodzi z $\tau$ w miejsce $\tau_n$.
+Dla $A=\Omega$ identyfikuje ona rozkłady
+skończeniewymiarowe ruchu Browna, a dla dowolnego
+$A$ dowodzi ich niezależności od $\calF_\tau$
+przez jednoznaczność funkcji charakterystycznych.
+Ciągłość przyszłych trajektorii oraz argument
+$\pi$--$\lambda$ dla cylindrów kończą dowód.
+\end{proof}
+
 \begin{twierdzenie}[Generator i wielowymiarowe równanie ciepła]
+\label{thm:brown-multi-generator}
 Niech $B$ będzie standardowym ruchem Browna w $\R^d$.
 Dla $t\ge0$ oraz ograniczonej funkcji borelowskiej
 $f:\R^d\to\R$ połóżmy $P_tf(x)=\E f(x+B_t)$.
@@ -246,6 +292,208 @@ $\E\tau=(R^2-r^2)/2$. Gdy $r=0$, średni czas to $R^2/2$.
 Zależność od $r$ jest kwadratowa, mimo że typowe wychylenie
 po czasie $t$ ma rząd $\sqrt t$.
 \end{zadanie}
+
+\section{Trafianie w kule i punkty: zależność od wymiaru}
+
+Aby zbadać trafianie w małe zbiory, potrzebujemy
+martyngałów związanych z funkcjami harmonicznymi.
+Wyprowadzimy je bez stosowania wzoru Itô, który
+zostanie wprowadzony w tomie III.
+
+\begin{lemat}[Martyngał związany z generatorem]
+\label{lem:brown-generator-martingale}
+Dla $f\in C_c^\infty(\R^d)$ i $X_t=x+B_t$ proces
+\[
+M_t^f=f(X_t)-f(x)-\frac12\int_0^t
+\Delta f(X_v)\,\mathrm d\lambda_1(v)
+\]
+jest ciągłym martyngałem względem filtracji naturalnej.
+\end{lemat}
+\begin{proof}
+Oznaczmy $g=\frac12\Delta f$. Dla $0\le s<t$
+weźmy podział $v_j=s+jh$, $h=(t-s)/n$.
+Niezależność przyrostów od przeszłości daje
+\[
+\E[f(X_{v_{j+1}})-f(X_{v_j})\mid\calF_{v_j}]
+=(P_h f-f)(X_{v_j}).
+\]
+Z twierdzenia~\ref{thm:brown-multi-generator}
+mamy $P_h f-f=hg+h r_h$, gdzie
+$\norm{r_h}_\infty\to0$. Stosując własność wieży
+i sumując, otrzymujemy
+\[
+\E[f(X_t)-f(X_s)\mid\calF_s]
+=\E\left[\sum_{j=0}^{n-1}h g(X_{v_j})
++\sum_{j=0}^{n-1}h r_h(X_{v_j})\mid\calF_s\right].
+\]
+Druga suma jest ograniczona w module przez
+$(t-s)\norm{r_h}_\infty\to0$. Pierwsza zbiega
+punktowo do całki po $[s,t]$, a ponieważ $g$
+jest ograniczona, również w $L^1$.
+Kontraktywność warunkowej wartości oczekiwanej
+w $L^1$ pozwala przejść do granicy. Otrzymujemy
+$\E[M_t^f-M_s^f\mid\calF_s]=0$.
+Adaptacja całki wynika z aproksymacji sumami
+Riemanna, a jej ciągłość i całkowalność
+z ciągłości trajektorii i ograniczoności $g$.
+\end{proof}
+
+\begin{twierdzenie}[Trafienie w sferę wewnętrzną przed zewnętrzną]
+\label{thm:brown-annulus}
+Niech $0<r<|x|<R$ i $X_t=x+B_t$. Oznaczmy
+$\tau_r=\inf\{t\ge0:|X_t|\le r\}$ oraz
+$\sigma_R=\inf\{t\ge0:|X_t|\ge R\}$.
+Wtedy
+\[
+\Prob_x(\tau_r<\sigma_R)=
+\begin{cases}
+\dfrac{R-|x|}{R-r},&d=1,\\[6pt]
+\dfrac{\log(R/|x|)}{\log(R/r)},&d=2,\\[6pt]
+\dfrac{|x|^{2-d}-R^{2-d}}{r^{2-d}-R^{2-d}},&d\ge3.
+\end{cases}
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla radialnej funkcji $u(y)=h(|y|)$ poza zerem
+bezpośrednie różniczkowanie daje
+$\Delta u(y)=h''(|y|)+(d-1)h'(|y|)/|y|$.
+W istocie $\partial_i u=h'(\rho)y_i/\rho$,
+gdzie $\rho=|y|$, a zsumowanie drugich pochodnych
+daje wskazany wzór. Wybieramy $h(\rho)=\rho$
+dla $d=1$, $h(\rho)=\log\rho$ dla $d=2$ i
+$h(\rho)=\rho^{2-d}$ dla $d\ge3$.
+W każdym przypadku $\Delta u=0$ poza zerem.
+Mnożąc $u$ przez gładką funkcję odcinającą,
+równą $1$ w otoczeniu domkniętego pierścienia
+$\{r\le |y|\le R\}$, o nośniku zwartym poza zerem,
+otrzymujemy $f\in C_c^\infty(\R^d)$ zgodną z $u$
+na tym otoczeniu.
+
+Czas $\eta=\tau_r\wedge\sigma_R$ jest czasem
+zatrzymania na mocy twierdzenia~\ref{thm:hitting-closed}
+i jest skończony p.n., gdyż $\eta\le\sigma_R$,
+a skończoność $\sigma_R$ wynika z twierdzenia
+o średnim czasie wyjścia z kuli.
+Przed $\eta$ mamy $\Delta f(X_v)=0$.
+Stosując lemat~\ref{lem:brown-generator-martingale}
+oraz twierdzenie~\ref{thm:optional-cont} do
+$\eta\wedge n$, otrzymujemy $\E_x f(X_{\eta\wedge n})=f(x)$.
+Przez zbieżność zmajoryzowaną
+$\E_x f(X_\eta)=f(x)$. Ciągłość trajektorii daje
+$|X_\eta|\in\{r,R\}$; oba czasy nie mogą być
+jednocześnie równe $\eta<\infty$.
+Dla $p=\Prob_x(\tau_r<\sigma_R)$ otrzymujemy
+$h(|x|)=p h(r)+(1-p)h(R)$.
+Rozwiązując równanie względem $p$, dostajemy wszystkie
+trzy wzory.
+\end{proof}
+
+\begin{wniosek}[Prawdopodobieństwo trafienia w domkniętą kulę]
+Dla $|x|>r>0$ zachodzi
+\[
+\Prob_x(\tau_r<\infty)=
+\begin{cases}
+1,&d=1,2,\\
+(r/|x|)^{d-2},&d\ge3.
+\end{cases}
+\]
+\end{wniosek}
+\begin{proof}
+Zdarzenia $\{\tau_r<\sigma_R\}$ rosną przy
+$R\to\infty$ wzdłuż rosnącego ciągu promieni.
+Ich suma jest równa $\{\tau_r<\infty\}$:
+jeśli $\tau_r<\infty$, trajektoria na $[0,\tau_r]$
+jest ograniczona i mieści się w dostatecznie dużej
+kuli. Wystarczy zatem przejść do granicy we
+wzorach twierdzenia~\ref{thm:brown-annulus}.
+\end{proof}
+
+\begin{twierdzenie}[Trafianie w pojedyncze punkty]
+Niech $X_t=x+B_t$ i $y\ne x$.
+Jeżeli $d=1$, to $X$ trafia w $y$ prawie na pewno.
+Jeżeli $d\ge2$, to z prawdopodobieństwem $1$
+nie trafia w $y$ w żadnej chwili.
+Ponadto przy $d\ge2$, startując w $y$, proces
+prawie na pewno nie wraca do $y$ w żadnej chwili $t>0$.
+\end{twierdzenie}
+\begin{proof}
+Przez przesunięcie możemy przyjąć $y=0$.
+Dla $d=1$ wniosek wynika z rozkładu czasu
+trafienia i symetrii w rozdziale~\ref{ch:wiener}.
+Dla $d\ge2$ i ustalonego $R>|x|>0$
+trafienie w zero przed wyjściem z kuli promienia $R$
+wymusza trafienie w każdą kulę o promieniu
+$0<r<|x|$ przed tym wyjściem. Z twierdzenia
+\ref{thm:brown-annulus} prawdopodobieństwo
+takiego zdarzenia jest nie większe niż
+$\Prob_x(\tau_r<\sigma_R)\to0$ przy $r\downarrow0$.
+Każde trafienie w zero w skończonej chwili
+musiałoby zajść przed wyjściem z dostatecznie
+dużej kuli, więc suma po całkowitych $R>|x|$
+ma prawdopodobieństwo zero.
+
+Gdy $x=y$, dla każdej ustalonej chwili $q>0$
+mamy $\Prob_y(X_q=y)=0$, ponieważ rozkład $X_q$
+ma gęstość. Warunkując względem $\calF_q$ i
+korzystając z niezależności przyszłego ruchu Browna
+od przeszłości (twierdzenie~\ref{thm:brown-multi-strong}
+dla $\tau=q$), wnioskujemy, że prawdopodobieństwo
+trafienia w $y$ w chwili $t\ge q$ jest zero.
+Zdarzenie trafienia po $q$ jest mierzalne, ponieważ
+na każdym zwartym przedziale istnienie trafienia
+można wyrazić przez minimum odległości od $y$,
+obliczane po gęstym zbiorze chwil. Suma po
+$q=1/n$ wyklucza wszystkie powroty w chwilach $t>0$.
+\end{proof}
+
+\begin{twierdzenie}[Powracalność i przejściowość ruchu Browna]
+Dla $d=1,2$ z prawdopodobieństwem $1$ ruch Browna
+odwiedza każdy niepusty zbiór otwarty w dowolnie
+późnych chwilach. Dla $d\ge3$ zachodzi prawie na pewno
+\[
+\lim_{t\to\infty}|x+B_t|=\infty.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla $d=1,2$, dowolnej otwartej kuli $U$
+i całkowitej chwili $n\ge1$ prawdopodobieństwo
+wejścia do $U$ w chwili $t\ge n$ wynosi $1$:
+warunkujemy względem $\calF_n$ i stosujemy wniosek
+o trafieniu w domkniętą kulę zawartą w $U$
+(z dowolnego punktu startowego). Jeśli stan należy
+już do tej mniejszej kuli, trafienie jest natychmiastowe.
+Mierzalność zdarzeń wejścia do otwartej kuli wynika
+z ciągłości i wystarczy sprawdzać chwile wymierne.
+Przecinamy zbiory pełnej miary po $n$ oraz
+po przeliczalnej bazie kul o wymiernych środkach
+i dodatnich wymiernych promieniach.
+
+Dla $d\ge3$ ustalmy $r>0$ i wybierzmy rosnące
+promienie $R_n>\max(r,|x|)$, $R_n\to\infty$.
+Czasy $\sigma_{R_n}$ są skończone p.n. i
+$|X_{\sigma_{R_n}}|=R_n$.
+Mocna własność Markowa
+(twierdzenie~\ref{thm:brown-multi-strong}) oraz
+wzór na trafienie w kulę dają
+\[
+\Prob_x(\exists t\ge\sigma_{R_n}:|X_t|\le r)
+=(r/R_n)^{d-2}\longrightarrow0.
+\]
+Zdarzenia po lewej są malejące (czasy wyjścia
+rosną), zatem ich przecięcie ma miarę zero.
+Prawie na pewno dla pewnego $n$ nie ma już
+wizyt w kuli promienia $r$ po $\sigma_{R_n}$.
+Przecinając zbiory pełnej miary dla $r=1,2,\ldots$,
+otrzymujemy ucieczkę do nieskończoności.
+\end{proof}
+
+\begin{uwaga}[Powracalność w płaszczyźnie a trafianie w punkty]
+Dwuwymiarowy ruch Browna prawie na pewno wchodzi
+dowolnie późno do każdego otoczenia każdego punktu,
+lecz ustalony punkt różny od punktu startowego
+prawie na pewno nie zostaje trafiony.
+Powracalność dotyczy otoczeń, nie pojedynczych punktów.
+\end{uwaga}
 
 \section{Maksimum ruchu Browna i mostu Browna}
 Pełną zasadę odbicia i łączny rozkład maksimum
