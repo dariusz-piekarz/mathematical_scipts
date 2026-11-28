@@ -1,7 +1,10 @@
 \chapter{Krzywe, długość i prostowalność}
 \label{ma2:ch:rectifiable-curves}
 
-Pracujemy w przestrzeni euklidesowej $\R^n$, $n\ge1$.
+Pracujemy w przestrzeni euklidesowej $\R^n$, gdzie
+$n\ge1$ jest liczbą naturalną. W całym rozdziale
+$a,b\in\R$ i $a<b$, o ile nie rozważamy wprost
+zdegenerowanego przedziału jednopunktowego.
 Odróżniamy krzywą parametryczną $\gamma:[a,b]\to\R^n$
 od jej obrazu $\gamma([a,b])$. Długość drogi może
 uwzględniać wielokrotne przejścia przez tę samą
@@ -61,7 +64,7 @@ gdzie $\operatorname{Var}$ oznacza wahanie całkowite.
 
 \begin{twierdzenie}[Niezmienniczość przy reparametryzacji]
 \label{ma2:thm:curve-reparam}
-Jeżeli $\varphi:[c,d]\to[a,b]$ jest ciągła,
+Niech $c<d$. Jeżeli $\varphi:[c,d]\to[a,b]$ jest ciągła,
 monotoniczna (niemalejąca lub nierosnąca)
 i surjektywna, to $L(\gamma\circ\varphi)=L(\gamma)$.
 Nie zakładamy różniczkowalności ani ścisłej monotoniczności.
@@ -81,7 +84,8 @@ Przejście do supremum daje drugą nierówność.
 \begin{stwierdzenie}[Przybliżanie długości łamanymi]
 \label{ma2:prop:curve-polygon-limit}
 Niech $(P_j)$ będzie ciągiem podziałów $[a,b]$
-o średnicach $\|P_j\|=\max_i(t_i-t_{i-1})$
+o średnicach $\|P_j\|=\max_i(t_{j,i}-t_{j,i-1})$,
+gdzie $t_{j,i}$ to kolejne punkty $P_j$,
 dążących do zera. Wówczas
 $L_{P_j}(\gamma)\to L(\gamma)$, również wtedy,
 gdy długość jest nieskończona.
@@ -154,7 +158,8 @@ ciągłe i kawałkami klasy $C^1$ dla skończonego podziału.
 
 \begin{definicja}
 \label{ma2:def:curve-ac}
-Krzywa jest absolutnie ciągła, jeżeli dla każdego
+Krzywa $\gamma:[a,b]\to\R^n$ jest absolutnie
+ciągła, jeżeli dla każdego
 $\varepsilon>0$ istnieje $\delta>0$ takie, że
 dla każdej skończonej rodziny przedziałów
 $[u_j,v_j]\subseteq[a,b]$ o parami rozłącznych
@@ -165,7 +170,10 @@ wnętrzach z $\sum_j(v_j-u_j)<\delta$ zachodzi
 Równoważnie każda współrzędna jest absolutnie
 ciągła; wynika to z nierówności normowych użytych
 w \ref{ma2:prop:curve-length-basic}, wybierając
-wspólne $\delta$ dla skończenie wielu współrzędnych.
+wspólne $\delta$ dla skończenie wielu współrzędnych
+przy tolerancji $\varepsilon/n$ dla każdej z nich.
+Warunek dla pojedynczego przedziału implikuje
+jednostajną ciągłość $\gamma$.
 \end{definicja}
 
 \begin{twierdzenie}[Długość krzywej absolutnie ciągłej]
@@ -185,8 +193,11 @@ Twierdzenie o funkcji pierwotnej
 \atlasref{AM1-37::ma1:kh:thm:ac-lebesgue-primitive}{AM I, rozdział 37}
 stosujemy do każdej współrzędnej. Poza sumą
 skończenie wielu zbiorów zerowych istnieją
-wszystkie pochodne, a $\|\gamma'\|_2\le
-\sum_i|\gamma_i'|$ jest całkowalna.
+wszystkie pochodne. Przyjmujemy $\gamma'=0$ na
+pozostałym zbiorze zerowym (w tym na końcach).
+Mierzalność i całkowalność współrzędnych pochodnej
+wynikają z przywołanego twierdzenia, więc
+$\|\gamma'\|_2\le\sum_i|\gamma_i'|$ jest całkowalna.
 Dla $u<v$ i dowolnego jednostkowego $e\in\R^n$
 mamy z liniowości całki
 \[
@@ -217,8 +228,9 @@ Lemat Fatou \ref{ma2:thm:lebesgue-fatou} daje
  \le\liminf_j\int_{[a,b]}\|q_j(t)\|_2\,\mathrm d\lambda_1(t)
  \le L(\gamma).
 \]
-Tak samo postępujemy na każdym podprzedziale,
-ponieważ ograniczenie pozostaje absolutnie ciągłe.
+Tak samo postępujemy na każdym niezdegenerowanym
+podprzedziale, ponieważ ograniczenie pozostaje
+absolutnie ciągłe. Dla $u=v$ obie strony są zerowe.
 \end{proof}
 
 \section{Parametryzacja długością łuku}
@@ -345,8 +357,7 @@ Niech $\gamma$ będzie ciągła i prostowalna.
 Dla $y\in\R^n$ niech
 $N_\gamma(y)=\#\{t\in[a,b]:\gamma(t)=y\}$,
 z wartością $+\infty$ dla nieskończonego włókna.
-Wówczas $N_\gamma$ jest mierzalna względem
-zupełnej miary Hausdorffa i
+Wówczas $N_\gamma$ jest funkcją borelowską i
 \[
  L(\gamma)=\int_{\R^n}N_\gamma(y)\,\mathrm d\mathcal H^1(y).
 \]
@@ -354,6 +365,24 @@ Jeżeli $\gamma$ jest różnowartościowa, to
 $L(\gamma)=\mathcal H^1(\gamma([a,b]))$.
 \end{twierdzenie}
 \begin{proof}
+Najpierw wykażemy borelowskość krotności. Dla
+liczb naturalnych $k,j\ge1$ niech $E_{k,j}$
+będzie zbiorem wszystkich $(t_1,\ldots,t_k)\in[a,b]^k$
+spełniających $|t_p-t_q|\ge1/j$ dla $p\ne q$
+oraz $\gamma(t_1)=\cdots=\gamma(t_k)$.
+Jest to zbiór zwarty, bo warunki określają
+zbiory domknięte. Jego obraz $B_{k,j}$ przez
+ciągłe odwzorowanie $(t_1,\ldots,t_k)\mapsto\gamma(t_1)$
+jest zwarty. Zachodzi
+\[
+ \{y:N_\gamma(y)\ge k\}=\bigcup_{j\ge1}B_{k,j},
+\]
+ponieważ dowolne $k$ różnych punktów włókna
+ma dodatnią minimalną odległość (dla $k=1$
+warunek odległości jest pusty). Zbiory poziomicowe
+są borelowskie, co dowodzi mierzalności.
+Ten argument nie wymaga prostowalności.
+
 Oznaczmy $\ell=L(\gamma)$.
 Dla $\ell=0$ krotność jest zero poza jednym
 punktem, więc całka jest zero.
@@ -365,7 +394,10 @@ złożenie z rzutem na przedział.
 Stosujemy wzór na pole z krotnością
 \atlasref{ME-28::thm:lipschitz-area-coarea-28}{ME 28}
 dla $k=1$, zbioru $E=[0,\ell]$ i funkcji równej $1$.
-Jakobian jednowymiarowy wynosi
+Z definicji jakobianu
+(\atlasref{ME-28::def:k-jacobian-28}{ME 28})
+dla macierzy kolumnowej $\widehat\gamma'(s)$
+otrzymujemy jakobian jednowymiarowy
 $\sqrt{\widehat\gamma'(s)^{\mathsf T}\widehat\gamma'(s)}
 =\|\widehat\gamma'(s)\|_2$ prawie wszędzie.
 Dostajemy
@@ -385,6 +417,25 @@ na mocy
 Z zupełności miary wynika mierzalność i równość całek.
 Dla krzywej różnowartościowej $N_\gamma$ jest
 funkcją charakterystyczną jej zwartego obrazu.
+\end{proof}
+
+\begin{wniosek}[Kiedy długość jest miarą obrazu?]
+\label{ma2:cor:curve-length-image-equality}
+Dla ciągłej krzywej prostowalnej o obrazie $E$
+równość $L(\gamma)=\mathcal H^1(E)$ zachodzi
+wtedy i tylko wtedy, gdy $N_\gamma(y)=1$
+dla $\mathcal H^1$-prawie każdego $y\in E$.
+\end{wniosek}
+\begin{proof}
+Na $E$ mamy $N_\gamma\ge1$, poza $E$ mamy zero.
+Z twierdzenia \ref{ma2:thm:curve-length-multiplicity}
+i skończoności długości wynika
+\[
+ L(\gamma)-\mathcal H^1(E)=
+ \int_E (N_\gamma(y)-1)\,\mathrm d\mathcal H^1(y).
+\]
+Całka funkcji nieujemnej jest zerowa wtedy i tylko
+wtedy, gdy funkcja jest zerowa prawie wszędzie.
 \end{proof}
 
 \section{Przykłady}
@@ -443,8 +494,8 @@ z \atlasref{ME-17::ex:cantor-measure-17}{ME 17}.
 Dystrybuanta $C(t)=\kappa([0,t])$, $0\le t\le1$,
 jest ciągła i niemalejąca, $C(0)=0$, $C(1)=1$.
 Ciągłość wynika z braku atomów, a poza $K$ funkcja
-jest lokalnie stała. Ponieważ $\lambda_1(K)=0$,
-mamy $C'=0$ prawie wszędzie.
+jest lokalnie stała. Ponieważ $\lambda_1(K)=0$ (por. konstrukcję miary
+Cantora w ME 17), mamy $C'=0$ prawie wszędzie.
 Dla krzywej $\gamma(t)=(C(t),0)\in\R^2$
 każda suma długości w podziale jest równa
 $\sum_j(C(t_j)-C(t_{j-1}))=1$.
