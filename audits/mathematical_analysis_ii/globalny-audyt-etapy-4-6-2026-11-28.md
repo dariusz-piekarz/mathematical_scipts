@@ -29,3 +29,7 @@ Zweryfikowano istnienie celów odsyłaczy między grupami; nie wykryto brakując
 ## Zakres dalszej kontroli
 
 Sprawdzono dowody rozbieżności interpolacji Rungego i lematy użyte w twierdzeniu o alternansie. Pozostaje dokończenie kontroli aproksymacji, weryfikacja odsyłaczy zewnętrznych, wynik kompilacji aktualnego PDF i oględziny figur. Nie ogłasza się jeszcze stabilizacji całego tomu.
+
+## Uzupełnienie: kontrola odsyłaczy zewnętrznych
+
+Sprawdzono 187 wystąpień `atlasref` w AM II: 0 w AM2-01–10, 50 w AM2-11–20, 101 w AM2-21–30 oraz 36 w AM2-31–38. Dla każdej różnej pary identyfikatora rozdziału i etykiety odczytano rozdział docelowy i potwierdzono obecność etykiety. Wszystkie 38 rozdziałów docelowych znajduje się w katalogu `catalog/books.json`. Zakres: AM I, FA, LA, DT, PDE, ME, DG i TOP. Nie wykryto brakujących celów. Kontrola dotyczy źródeł i rejestracji, nie działania każdego odsyłacza w przeglądarce. Nie zmieniano treści rozdziałów. Przebieg kompilacji 46189819134 pozostawał w toku podczas kontroli.
