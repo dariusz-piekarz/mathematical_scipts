@@ -1218,3 +1218,449 @@ skończony niespełnialny podzbiór.
 Odwrotna implikacja w obu przypadkach wynika
 bezpośrednio z definicji spełnialności.
 \end{proof}
+
+\section{Morfizmy ograniczone i bisymulacje}
+
+\subsection{Morfizmy ograniczone ram i modeli}
+
+\begin{definicja}[Morfizm ograniczony]
+\label{def:ncl-kripke-bounded-morphism}
+Niech $F=(W,R)$ i $F'=(W',R')$ będą ramami.
+Morfizmem ograniczonym (p-morfizmem,
+ang. \emph{bounded morphism}) nazywamy
+odwzorowanie $f:W\to W'$ spełniające
+dwa warunki:
+\begin{enumerate}
+ \item (w przód) jeżeli $xRy$, to $f(x)R'f(y)$;
+ \item (wstecz) jeżeli $f(x)R'v$, to istnieje
+ $y\in W$ takie, że $xRy$ oraz $f(y)=v$.
+\end{enumerate}
+Jeżeli $M=(W,R,V)$ i $M'=(W',R',V')$
+są modelami na tych ramach, to morfizm
+ograniczony ram jest morfizmem ograniczonym
+modeli, gdy dodatkowo
+\[
+ V(p)=f^{-1}(V'(p))\qquad(p\in\mathrm{Var}).
+\]
+Nie wymagamy ani różnowartościowości,
+ani surjektywności, chyba że jest to wyraźnie
+zaznaczone.
+\end{definicja}
+
+Warunek w przód zapewnia, że krawędź
+nie znika przy odwzorowaniu, a warunek
+wstecz, że każdą krawędź wychodzącą z obrazu
+stanu można podnieść do krawędzi wychodzącej
+z tego stanu. Łącznie mówią one dokładnie, że
+\[
+ f(R(x))=R'(f(x))\qquad(x\in W).
+\]
+Istotnie, warunek w przód daje inkluzję
+od lewej do prawej, a warunek wstecz
+inkluzję przeciwną.
+
+\begin{stwierdzenie}[Składanie morfizmów ograniczonych]
+\label{prop:ncl-kripke-bounded-composition}
+Identyczność ramy jest morfizmem ograniczonym,
+a złożenie dwóch morfizmów ograniczonych
+jest morfizmem ograniczonym.
+Analogicznie dla modeli.
+Obraz morfizmu ograniczonego ram jest
+domknięty względem następników w ramie docelowej.
+\end{stwierdzenie}
+\begin{proof}
+Dla identyczności obie inkluzje są równościami.
+Jeżeli $f:F\to F'$ i $g:F'\to F''$
+są morfizmami ograniczonymi, to
+\[
+ (g\circ f)(R(x))=g(R'(f(x)))
+ =R''(g(f(x))).
+\]
+Dla morfizmów modeli ponadto
+$(g\circ f)^{-1}(V''(p))
+=f^{-1}(g^{-1}(V''(p)))=V(p)$.
+Jeżeli $v\in f(W)$ i $vR'z$, to dla
+$x$ takiego, że $f(x)=v$, warunek wstecz
+daje $y$ z $xRy$ i $f(y)=z$. Zatem $z\in f(W)$.
+\end{proof}
+
+\begin{twierdzenie}[Niezmienniczość względem morfizmów ograniczonych]
+\label{thm:ncl-kripke-bounded-truth}
+Jeżeli $f:M\to M'$ jest morfizmem ograniczonym
+modeli, to dla każdej formuły modalnej $A$
+i każdego $x\in W$ zachodzi
+\[
+ M,x\Vdash A\iff M',f(x)\Vdash A.
+\]
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po budowie $A$, jednocześnie
+dla wszystkich stanów. Dla zmiennej $p$
+teza wynika z warunku dotyczącego wartościowania,
+dla $\bot$ obie strony są fałszywe,
+a dla klasycznych spójników zdaniowych
+stosujemy hipotezę indukcyjną.
+Dla $A=\Box B$ otrzymujemy
+\[
+\begin{aligned}
+ M,x\Vdash\Box B
+ &\iff \forall y\in R(x)\quad M,y\Vdash B\\
+ &\iff \forall y\in R(x)\quad M',f(y)\Vdash B\\
+ &\iff \forall v\in R'(f(x))\quad M',v\Vdash B\\
+ &\iff M',f(x)\Vdash\Box B.
+\end{aligned}
+\]
+Przedostatnia równoważność wykorzystuje
+równość $f(R(x))=R'(f(x))$.
+\end{proof}
+
+\begin{przyklad}[Sklejenie nierozróżnialnych następników]
+\label{ex:ncl-kripke-bounded-fold}
+Niech $W=\{r,s,t\}$, $R=\{(r,s),(r,t)\}$,
+$W'=\{a,b\}$ oraz $R'=\{(a,b)\}$.
+Definiujemy $f(r)=a$ i $f(s)=f(t)=b$.
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+ \node[draw,circle] (r) at (0,1.3) {$r$};
+ \node[draw,circle] (s) at (-0.8,0) {$s$};
+ \node[draw,circle] (t) at (0.8,0) {$t$};
+ \node[draw,circle] (a) at (4,1.3) {$a$};
+ \node[draw,circle] (b) at (4,0) {$b$};
+ \draw[->] (r)--(s);
+ \draw[->] (r)--(t);
+ \draw[->] (a)--(b);
+ \draw[->,dashed] (r)--node[above] {$f$} (a);
+ \draw[->,dashed] (s) to[bend right=22] (b);
+ \draw[->,dashed] (t)--(b);
+\end{tikzpicture}
+\end{center}
+Strzałki ciągłe przedstawiają relacje dostępności,
+a przerywane odwzorowanie $f$.
+Mamy $f(R(r))=\{b\}=R'(a)$ i
+$f(R(s))=f(R(t))=\varnothing=R'(b)$.
+Jest to więc surjektywny morfizm ograniczony ram.
+Dla każdego wartościowania $V'$ na ramie docelowej
+definiujemy $V(p)=f^{-1}(V'(p))$.
+Otrzymujemy morfizm modeli, a z
+Twierdzenia~\ref{thm:ncl-kripke-bounded-truth}
+wynika, że $r$ i $a$ spełniają dokładnie te same
+formuły, mimo że mają różne liczby następników.
+\end{przyklad}
+
+\begin{przyklad}[Sam warunek w przód nie wystarcza]
+\label{ex:ncl-kripke-forward-insufficient}
+Niech $F$ składa się z jednego stanu $x$
+bez krawędzi, a $F'$ z dwóch stanów $a,b$
+i jedynej krawędzi $aR'b$. Odwzorowanie
+$f(x)=a$ spełnia warunek w przód próżniowo,
+ale nie spełnia warunku wstecz.
+Przyjmijmy wartościowanie wszystkich zmiennych
+przez zbiór pusty w obu modelach.
+Wówczas $M,x\Vdash\Box\bot$, podczas gdy
+$M',a\not\Vdash\Box\bot$. W szczególności
+zachowanie wartości zmiennych i krawędzi
+nie wystarcza do zachowania prawdziwości
+wszystkich formuł.
+\end{przyklad}
+
+\begin{wniosek}[Ważność na obrazach morfizmów ograniczonych]
+\label{cor:ncl-kripke-bounded-validity}
+Jeżeli $f:F\to F'$ jest surjektywnym
+morfizmem ograniczonym ram, to
+\[
+ F\Vdash A\Longrightarrow F'\Vdash A.
+\]
+\end{wniosek}
+\begin{proof}
+Dla dowolnego wartościowania $V'$ na $F'$
+definiujemy wartościowanie na $F$ przez
+$V(p)=f^{-1}(V'(p))$. Otrzymujemy morfizm
+ograniczony modeli.
+Dla każdego $v\in W'$ surjektywność daje
+$x\in W$ z $f(x)=v$. Jeżeli $F\Vdash A$,
+to $M,x\Vdash A$, więc
+Twierdzenie~\ref{thm:ncl-kripke-bounded-truth}
+daje $M',v\Vdash A$. Ponieważ $V'$ i $v$
+były dowolne, $F'\Vdash A$.
+\end{proof}
+
+\subsection{Bisymulacje}
+
+\begin{definicja}[Bisymulacja]
+\label{def:ncl-kripke-bisimulation}
+Niech $M=(W,R,V)$ i $M'=(W',R',V')$
+będą modelami Kripkego.
+Bisymulacją między nimi nazywamy relację
+$Z\subseteq W\times W'$ taką, że dla każdej
+pary $xZx'$ zachodzą warunki:
+\begin{enumerate}
+ \item (atomowy) $x\in V(p)$ wtedy i tylko wtedy,
+ gdy $x'\in V'(p)$, dla każdej zmiennej $p$;
+ \item (w przód) jeżeli $xRy$, to istnieje
+ $y'\in W'$ takie, że $x'R'y'$ i $yZy'$;
+ \item (wstecz) jeżeli $x'R'y'$, to istnieje
+ $y\in W$ takie, że $xRy$ i $yZy'$.
+\end{enumerate}
+Stany $x,x'$ nazywamy bisymilarnymi, jeśli
+istnieje bisymulacja $Z$ zawierająca parę
+$(x,x')$. Piszemy wtedy $(M,x)\sim(M',x')$.
+\end{definicja}
+
+W przeciwieństwie do morfizmu ograniczonego
+bisymulacja nie musi być wykresem funkcji:
+jeden stan może być powiązany z wieloma
+stanami drugiego modelu. Nie wymaga się
+również, aby każdy stan występował
+w jakiejś parze relacji.
+
+\begin{stwierdzenie}[Podstawowe własności bisymulacji]
+\label{prop:ncl-kripke-bisimulation-laws}
+Relacja diagonalna jest bisymulacją modelu
+z samym sobą. Relacja odwrotna do bisymulacji
+jest bisymulacją, a złożenie bisymulacji
+jest bisymulacją. Dowolna suma bisymulacji
+między ustalonymi modelami jest bisymulacją.
+Ponadto wykres odwzorowania $f:W\to W'$
+jest bisymulacją dokładnie wtedy, gdy $f$
+jest morfizmem ograniczonym modeli.
+\end{stwierdzenie}
+\begin{proof}
+Dla relacji diagonalnej jako świadków
+wybieramy te same stany, a odwrócenie relacji
+zamienia warunek w przód z warunkiem wstecz.
+Niech $Z$ będzie bisymulacją między $M$ i $M'$,
+a $Y$ między $M'$ i $M''=(W'',R'',V'')$.
+Jeżeli $xZx'$ i $x'Yx''$, to warunki
+atomowe dla obu par dają zgodność wartości
+zmiennych w $x$ i $x''$.
+Dla $xRy$ wybieramy kolejno $y'$ i $y''$
+z warunków w przód: $x'R'y'$, $yZy'$,
+$x''R''y''$ oraz $y'Yy''$. Wówczas
+$(y,y'')\in Y\circ Z$. Analogicznie, dla
+$x''R''y''$ wybieramy najpierw $y'$,
+a potem $y$, korzystając z warunków wstecz.
+Dowodzi to, że $Y\circ Z$ jest bisymulacją.
+Dla sumy każda jej para należy do pewnej
+bisymulacji składowej, która dostarcza
+wszystkich wymaganych świadków.
+Dla wykresu $Z=\{(x,f(x)):x\in W\}$
+warunki atomowy, w przód i wstecz są
+dokładnie warunkami z
+Definicji~\ref{def:ncl-kripke-bounded-morphism}.
+\end{proof}
+
+\begin{twierdzenie}[Niezmienniczość względem bisymulacji]
+\label{thm:ncl-kripke-bisimulation-invariance}
+Jeżeli $Z$ jest bisymulacją i $xZx'$, to
+dla każdej formuły modalnej $A$
+\[
+ M,x\Vdash A\iff M',x'\Vdash A.
+\]
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po budowie formuły, jednocześnie
+dla wszystkich par należących do $Z$.
+Dla zmiennych stosujemy warunek atomowy,
+dla $\bot$ obie strony są fałszywe,
+a dla spójników klasycznych korzystamy
+z hipotezy indukcyjnej.
+Niech $A=\Box B$ i załóżmy $M,x\Vdash\Box B$.
+Dla dowolnego $y'$ z $x'R'y'$ warunek
+wstecz daje $y$ z $xRy$ i $yZy'$.
+Wówczas $M,y\Vdash B$, więc z hipotezy
+indukcyjnej $M',y'\Vdash B$.
+Ponieważ $y'$ był dowolny, $M',x'\Vdash\Box B$.
+Odwrotnie, załóżmy $M',x'\Vdash\Box B$.
+Dla każdego $y$ z $xRy$ warunek w przód
+daje $y'$ z $x'R'y'$ i $yZy'$.
+Z hipotezy indukcyjnej przenosimy
+prawdziwość $B$ z $y'$ do $y$.
+Stąd $M,x\Vdash\Box B$.
+\end{proof}
+
+\subsection{Równoważność modalna a bisymilarność}
+
+\begin{definicja}[Równoważność modalna]
+\label{def:ncl-kripke-modal-equivalence}
+Modele z wyróżnionym stanem $(M,x)$ i $(M',x')$
+nazywamy równoważnymi modalnie, gdy
+\[
+ \forall A\in\mathrm{Fm}_{\Box}\quad
+ (M,x\Vdash A\iff M',x'\Vdash A).
+\]
+Piszemy $(M,x)\equiv_{\mathrm{mod}}(M',x')$.
+Model nazywamy lokalnie skończenie rozgałęzionym,
+gdy każdy jego stan ma skończenie wiele
+bezpośrednich następników.
+\end{definicja}
+
+\begin{twierdzenie}[Twierdzenie Hennessy'ego--Milnera]
+\label{thm:ncl-kripke-hennessy-milner}
+Dla lokalnie skończenie rozgałęzionych modeli
+$M,M'$ zachodzi
+\[
+ (M,x)\sim(M',x')
+ \iff (M,x)\equiv_{\mathrm{mod}}(M',x').
+\]
+\end{twierdzenie}
+\begin{proof}
+Implikację w prawo daje
+Twierdzenie~\ref{thm:ncl-kripke-bisimulation-invariance}.
+W drugą stronę niech $Z$ będzie relacją
+równoważności modalnej między stanami
+obu modeli. Warunek atomowy wynika z definicji.
+Niech $xZx'$ i $xRy$. Przypuśćmy, że żaden
+następnik $x'$ nie jest równoważny modalnie
+ze stanem $y$. Wypiszmy wszystkie te następniki
+jako $y'_1,\ldots,y'_m$.
+Dla każdego $i$ istnieje formuła $B_i$ prawdziwa
+w $y$, a fałszywa w $y'_i$: jeśli formuła
+rozróżniająca ma odwrotne wartości,
+zastępujemy ją negacją.
+Niech $B=\bigwedge_{i=1}^{m}B_i$,
+przy czym dla $m=0$ bierzemy $B=\top$.
+Stan $y$ spełnia $B$, więc $x$ spełnia
+$\Diamond B$. Żaden następnik $x'$ nie
+spełnia $B$, więc $x'$ nie spełnia $\Diamond B$.
+To przeczy $xZx'$. Otrzymujemy warunek w przód.
+Analogiczny argument po zamianie modeli
+i wykorzystaniu skończoności $R(x)$ daje
+warunek wstecz. Relacja $Z$ jest więc
+bisymulacją i zawiera każdą parę stanów
+równoważnych modalnie.
+\end{proof}
+
+\begin{przyklad}[Równoważność modalna bez bisymulacji]
+\label{ex:ncl-kripke-infinite-branching}
+W modelu $M$ niech korzeń $r$ ma dla każdego
+$n\geq0$ osobnego następnika $c_{n,0}$,
+który rozpoczyna skończony łańcuch
+\[
+ c_{n,0}\to c_{n,1}\to\cdots\to c_{n,n}.
+\]
+Łańcuchy są parami rozłączne i nie ma innych
+krawędzi. W modelu $M'$ do identycznej
+konstrukcji z korzeniem $r'$ dodajemy
+jeszcze osobny nieskończony łańcuch
+\[
+ r'\to d_0\to d_1\to d_2\to\cdots .
+\]
+W obu modelach wszystkie zmienne zdaniowe
+są wszędzie fałszywe.
+
+Wykażemy, że korzenie są równoważne modalnie.
+Najpierw zauważmy, że dla każdego $k\geq0$,
+formuły $A$ o głębokości modalnej co najwyżej
+$k$ i $n-i\geq k$ stan $c_{n,i}$ spełnia
+$A$ dokładnie wtedy, gdy dowolny $d_j$
+spełnia $A$. Dowodzimy tego indukcją po
+budowie formuły, z warunkiem na pozostałą
+długość łańcucha równą co najmniej
+$\operatorname{md}(A)$.
+Zmienne i $\bot$ mają te same wartości,
+a dla spójników zdaniowych stosujemy
+hipotezę indukcyjną. Dla $\Box B$ oba
+stany mają dokładnie jednego następnika,
+a pozostała długość skończonego łańcucha
+po wykonaniu jednego kroku jest co najmniej
+$\operatorname{md}(B)$. Stosujemy hipotezę
+indukcyjną do tych następników.
+
+Teraz indukujemy po budowie formuły
+ocenianej w korzeniach. Dla $\Box B$
+wszystkie skończone łańcuchy występują
+w obu modelach i odpowiadające sobie stany
+spełniają te same formuły, ponieważ ich
+podmodele generowane są izomorficzne
+(izomorfizm jest morfizmem ograniczonym).
+Jeżeli $r$ spełnia $\Box B$, to każdy
+$c_{n,0}$ spełnia $B$. Wybieramy
+$n\geq\operatorname{md}(B)$ i z pierwszej
+części otrzymujemy prawdziwość $B$ w $d_0$.
+Stąd $r'$ spełnia $\Box B$. Odwrotnie,
+prawdziwość $\Box B$ w $r'$ pociąga
+prawdziwość $B$ na wszystkich skończonych
+łańcuchach, a więc również $\Box B$ w $r$.
+Pozostałe przypadki indukcji są klasyczne.
+Korzenie są zatem równoważne modalnie.
+
+Nie są jednak bisymilarne. Gdyby $rZr'$
+dla pewnej bisymulacji, warunek wstecz
+dla krawędzi $r'R'd_0$ wymagałby
+$c_{n,0}Zd_0$ dla pewnego skończonego $n$.
+Kolejne $n$ zastosowań warunku wstecz
+wymuszałyby $c_{n,n}Zd_n$, ale $d_n$
+ma następnika, podczas gdy $c_{n,n}$ nie.
+Jeszcze jedno zastosowanie warunku wstecz
+jest więc niemożliwe.
+Przykład pokazuje, że założenia skończonego
+rozgałęzienia nie można pominąć bez
+zastąpienia go innym warunkiem.
+\end{przyklad}
+
+\subsection{Konsekwencje dla definiowalności klas ram}
+
+\begin{stwierdzenie}[Zachowanie ważności przy operacjach na ramach]
+\label{prop:ncl-kripke-frame-preservation}
+Niech $\Sigma$ będzie zbiorem formuł modalnych,
+a $\mathcal C_\Sigma$ klasą wszystkich ram,
+na których ważna jest każda formuła z $\Sigma$.
+Klasa $\mathcal C_\Sigma$ jest domknięta względem:
+\begin{enumerate}
+ \item generowanych podram;
+ \item surjektywnych obrazów przez morfizmy ograniczone;
+ \item niepustych sum rozłącznych ram.
+\end{enumerate}
+\end{stwierdzenie}
+\begin{proof}
+Dla generowanej podramy $U$ każde
+wartościowanie na $U$ można przedłużyć
+na całą ramę, przyjmując te same zbiory
+prawdziwości zmiennych jako podzbiory $W$.
+Lemat~\ref{lem:ncl-kripke-generated-truth}
+przenosi ważność z całej ramy na $U$.
+Punkt drugi jest
+Wnioskiem~\ref{cor:ncl-kripke-bounded-validity}.
+
+Niech $(F_i)_{i\in I}$ będzie niepustą
+rodziną ram z $\mathcal C_\Sigma$.
+Ich suma rozłączna ma zbiór stanów
+$\bigsqcup_{i\in I}W_i$ i krawędzie wyłącznie
+wewnątrz poszczególnych składników,
+zgodnie z relacjami $R_i$.
+Dla dowolnego wartościowania na tej sumie
+każdy składnik jest podmodelem generowanym
+i na mocy założenia spełnia globalnie każdą
+formułę z $\Sigma$. Z lematu o zachowaniu
+prawdziwości wynika, że każda taka formuła
+jest prawdziwa w każdym stanie sumy.
+Wartościowanie było dowolne.
+\end{proof}
+
+\begin{przyklad}[Ograniczenia języka modalnego]
+\label{ex:ncl-kripke-frame-nondefinability}
+Klasy ram, w których każdy stan ma co najmniej
+dwóch różnych następników, nie można
+zdefiniować przez ważność zbioru formuł
+w rozważanym języku modalnym.
+Istotnie, dwuelementowa rama z relacją pełną
+należy do tej klasy. Stałe odwzorowanie
+tej ramy na jednoelementową ramę z pętlą
+jest surjektywnym morfizmem ograniczonym:
+obraz zbioru następników każdego stanu
+jest jednoelementowym zbiorem następników
+stanu docelowego. Rama docelowa nie należy
+jednak do rozważanej klasy, co na mocy
+Stwierdzenia~\ref{prop:ncl-kripke-frame-preservation}
+wyklucza taką definiowalność.
+
+Analogicznie klasy ram, w których każdy stan
+ma ścieżkę do każdego innego stanu,
+nie można zdefiniować przez ważność zbioru
+formuł modalnych. Jednoelementowa rama
+z pętlą należy do tej klasy, lecz suma
+rozłączna dwóch jej kopii już nie.
+Rozważane warunki domknięcia są warunkami
+koniecznymi definiowalności; nie wykazaliśmy
+ich wystarczalności.
+\end{przyklad}
