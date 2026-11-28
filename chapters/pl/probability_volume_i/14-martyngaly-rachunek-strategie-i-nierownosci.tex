@@ -407,19 +407,32 @@ $\Prob(\max_{k\leq n}|M_k|\geq\lambda)
 \begin{proof}
 Niech $A=\{\max_{0\leq k\leq n}X_k\geq\lambda\}$
 i $\tau=\inf\{k\leq n:X_k\geq\lambda\}$,
-z umową $\tau=n$ na ścieżkach bez przekroczenia.
+z konwencją $\inf\varnothing=\infty$.
+Jest to czas zatrzymania na mocy wyniku
+z rozdziału~\ref{ch:filtracje}, po stałym
+przedłużeniu filtracji poza chwilę $n$.
 Rozbijmy $A$ na rozłączne zdarzenia
 $A_k=\{X_0<\lambda,\ldots,X_{k-1}<\lambda,
-X_k\geq\lambda\}$ dla $k\leq n$.
+X_k\geq\lambda\}$ dla $0\leq k\leq n$,
+czyli $A_k=\{\tau=k\}$, przy czym
+$A_0=\{X_0\geq\lambda\}$.
 Mamy $A_k\in\mathcal F_k$ i
 $X_k\geq\lambda$ na $A_k$.
-Z podmartyngałowości i wieży
+Z kryterium wszystkich przyszłych chwil
+(rozdział~\ref{ch:filtracje}) mamy
+$\E[X_n\mid\mathcal F_k]\geq X_k$ p.n.
+Mnożąc przez $\chi_{A_k}$ i biorąc wartość
+oczekiwaną, otrzymujemy
 $\E[X_n\chi_{A_k}]\geq\E[X_k\chi_{A_k}]
 \geq\lambda\Prob(A_k)$.
 Sumujemy po $k=0,\ldots,n$, dostając pierwszą
 nierówność. Druga wynika z nieujemności $X_n$.
-Dla martyngału $|M_k|$ jest podmartyngałem
-przez warunkową nierówność Jensena.
+Dla martyngału proces $(|M_k|)$ jest nieujemnym
+podmartyngałem, ponieważ warunkowa nierówność
+Jensena daje
+$\E[|M_{k+1}|\mid\mathcal F_k]\geq
+|\E[M_{k+1}\mid\mathcal F_k]|=|M_k|$ p.n.
+Stosujemy do niego pierwszą część twierdzenia.
 \end{proof}
 
 \begin{twierdzenie}[Nierówność maksymalna $L^p$]
@@ -442,9 +455,12 @@ w szczególności każde $X_k$ ma skończony $p$-ty moment.
 Oznaczmy $Y=\max_{k\leq n}X_k$.
 Z poprzedniego twierdzenia, dla każdego $t>0$,
 $t\Prob(Y\geq t)\leq\E[X_n\chi_{\{Y\geq t\}}]$.
-Najpierw zastąpmy $Y$ przez $Y\wedge L$,
-aby wszystkie całki były skończone.
-Wzór warstwowy i twierdzenie Tonellego dają
+Dla dowolnego $L>0$ stosujemy to oszacowanie
+w całce po $t\in(0,L)$.
+Tożsamość
+$(y\wedge L)^p=\int_0^L pt^{p-1}
+\chi_{\{t\leq y\}}\,\dd\lambda_1(t)$ dla $y\geq0$
+oraz twierdzenie Tonellego dają
 \begin{align*}
 \E[(Y\wedge L)^p]
 &=p\int_0^L t^{p-1}\Prob(Y\geq t)\,\dd\lambda_1(t)\\
@@ -458,17 +474,22 @@ gdzie w ostatnim kroku zastosowano nierówność
 Höldera. Jeśli $\|Y\wedge L\|_p=0$, teza jest
 oczywista; w innym przypadku dzielimy przez
 $\|Y\wedge L\|_p^{p-1}$, a następnie
-przechodzimy z $L\to\infty$ przez monotoniczną
-zbieżność.
+stosujemy twierdzenie o zbieżności monotonicznej
+dla $(Y\wedge L)^p$ przy $L\to\infty$.
+Wniosek dla martyngału wynika z podmartyngałowości
+$(|M_k|)$ wykazanej w poprzednim dowodzie.
 \end{proof}
 
 \begin{przyklad}[Kontrola maksimum trajektorii]
-Jeżeli $S_n$ jest symetrycznym spacerem losowym,
-to $\E S_n^2=n$. Z nierówności Dooba dla $p=2$
+Jeżeli $S_0=0$ i $S_n$ jest symetrycznym
+spacerem losowym o niezależnych przyrostach
+$\xi_k\in\{-1,1\}$, to z ortogonalności
+przyrostów mamy $\E S_n^2=\sum_{k=1}^n\E\xi_k^2=n$. Z nierówności Dooba dla $p=2$
 otrzymujemy
 $\E(\max_{k\leq n}|S_k|)^2\leq4n$.
 Nierówność Markowa daje
-$\Prob(\max_{k\leq n}|S_k|\geq u)\leq4n/u^2$.
+$\Prob(\max_{0\leq k\leq n}|S_k|\geq u)
+\leq\min\{1,4n/u^2\}$ dla $u>0$.
 Kontrolujemy w ten sposób \emph{całą drogę},
 a nie tylko wartość końcową $S_n$.
 \end{przyklad}
@@ -494,22 +515,36 @@ odchylenia o dodatnie $u$ ma prawdopodobieństwo zero.
 Dla $D_k=\Delta M_k$ mamy
 $\E[D_k\mid\mathcal F_{k-1}]=0$ oraz
 $-c_k\leq D_k\leq c_k$.
-Warunkowa wersja lematu Hoeffdinga dowodzona
-jest dokładnie jak wersja bezwarunkowa, z
-miarą prawdopodobieństwa zastąpioną warunkową
-średnią i tym samym oszacowaniem wariancji
-zmiennej na odcinku. Daje
+Jeśli $c_k=0$, to $D_k=0$ p.n. i poniższe
+oszacowanie jest równością. Dla $c_k>0$,
+z wypukłości funkcji wykładniczej dla
+$x\in[-c_k,c_k]$ i $t\in\R$ mamy
+\[
+e^{tx}\leq\frac{c_k-x}{2c_k}e^{-tc_k}
++\frac{c_k+x}{2c_k}e^{tc_k}.
+\]
+Podstawiamy $x=D_k$ i warunkujemy względem
+$\mathcal F_{k-1}$. Dzięki zerowej warunkowej
+średniej $D_k$ otrzymujemy
 \[
 \E[e^{tD_k}\mid\mathcal F_{k-1}]
-\leq e^{t^2c_k^2/2}\qquad(t\in\R).
+\leq\cosh(tc_k)\leq e^{t^2c_k^2/2}.
 \]
-Można to również uzasadnić bez odwoływania się
-do regularnych rozkładów warunkowych:
-na przedziale $[-c_k,c_k]$ funkcja $e^{tx}$
-leży poniżej cięciwy łączącej końce,
-więc po warunkowaniu i użyciu zerowej średniej
-otrzymuje się $\cosh(tc_k)\leq e^{t^2c_k^2/2}$.
-Własność wieży daje rekurencyjnie
+Ostatnia nierówność wynika z rozwinięć w szeregi:
+$(2j)!=2^j j!\prod_{\ell=1}^j(2\ell-1)\geq2^j j!$,
+więc dla $s\in\R$ mamy
+$\cosh s=\sum_{j\geq0}s^{2j}/(2j)!
+\leq\sum_{j\geq0}(s^2/2)^j/j!=e^{s^2/2}$.
+Niech $R_k=M_k-M_0=\sum_{j=1}^kD_j$.
+Mamy $|R_k|\leq\sum_{j=1}^kc_j$ p.n.,
+więc $e^{tR_k}$ jest całkowalna. Z własności
+wieży i mierzalności $R_{k-1}$ otrzymujemy
+\[
+\E e^{tR_k}
+=\E\bigl[e^{tR_{k-1}}\E[e^{tD_k}\mid\mathcal F_{k-1}]\bigr]
+\leq e^{t^2c_k^2/2}\E e^{tR_{k-1}}.
+\]
+Iterując od $R_0=0$, dostajemy
 \[
 \E e^{t(M_n-M_0)}\leq
 \exp\left(\frac{t^2}{2}\sum_{k=1}^n c_k^2\right).
@@ -517,66 +552,123 @@ Własność wieży daje rekurencyjnie
 Dla $t>0$ nierówność Markowa prowadzi do
 $\Prob(M_n-M_0\geq u)\leq
 \exp(-tu+t^2V/2)$.
-Minimalizujemy przy $t=u/V$, otrzymując
-$e^{-u^2/(2V)}$. Ten sam rachunek stosujemy do
+Ponieważ $-tu+t^2V/2=V(t-u/V)^2/2-u^2/(2V)$,
+minimum dla $t>0$ jest osiągane przy $t=u/V$,
+co daje $e^{-u^2/(2V)}$. Ten sam rachunek stosujemy do
 $-(M_n-M_0)$ i dodajemy dwa ogony.
 \end{proof}
 
 \begin{przyklad}[Uczciwy spacer i prawdopodobieństwo odchylenia]
-Dla niezależnych symetrycznych znaków
-$S_n=\sum_{k\leq n}\xi_k$ i $c_k=1$.
-Zatem dla $u>0$
+Niech $(\xi_k)_{k\geq1}$ będą niezależnymi
+symetrycznymi znakami, $S_0=0$ i
+$S_n=\sum_{k=1}^n\xi_k$. W naturalnej filtracji
+jest to martyngał o ograniczeniach $c_k=1$.
+Zatem dla $n\geq1$ i $u>0$
 $\Prob(|S_n|\geq u)\leq2e^{-u^2/(2n)}$.
 Nierówność Czebyszewa dałaby jedynie
 $\Prob(|S_n|\geq u)\leq n/u^2$.
-Oszacowanie wykładnicze jest dużo mocniejsze
-przy dużych odchyleniach, ale korzysta z ograniczenia
-przyrostów, nie tylko z wariancji.
+Oba ograniczenia można dodatkowo zastąpić
+ich minimum z $1$. Dla $u=a\sqrt n$,
+$a>0$, porównujemy $2e^{-a^2/2}$ z $a^{-2}$;
+ich iloraz $2a^2e^{-a^2/2}$ dąży do zera
+przy $a\to\infty$. Oszacowanie wykładnicze
+korzysta jednak z ograniczenia przyrostów,
+nie tylko z wariancji.
 \end{przyklad}
 
 \begin{przyklad}[Odkrywanie współrzędnych funkcji wielu losowań]
-Niech $\xi_1,\ldots,\xi_n$ będą niezależne, a
-$f(\xi_1,\ldots,\xi_n)$ całkowalna.
-Definiujemy martyngał Dooba
-$M_k=\E[f(\xi_1,\ldots,\xi_n)\mid
-\sigma(\xi_1,\ldots,\xi_k)]$, gdzie $M_0=\E f$.
-Jeżeli zmiana tylko $k$-tej współrzędnej
-może zmienić $f$ o co najwyżej $c_k$,
-to dla ustalonej historii $\xi_1,\ldots,\xi_{k-1}$
-możliwe wartości $M_k$ leżą w przedziale długości
-co najwyżej $c_k$. W konsekwencji
-$|M_k-M_{k-1}|\leq c_k$; Azuma daje
+Niech $n\geq1$, $\xi_1,\ldots,\xi_n$ będą
+niezależnymi rzeczywistymi zmiennymi losowymi
+o rozkładach $\mu_1,\ldots,\mu_n$, a
+$f:\R^n\to\R$ będzie funkcją borelowską.
+Załóżmy, że zmiana wyłącznie $k$-tej współrzędnej
+zmienia wartość $f$ w module o co najwyżej
+$c_k\geq0$. Zmieniając współrzędne kolejno,
+otrzymujemy $|f(x)-f(0)|\leq\sum_{k=1}^nc_k$,
+więc $f$ jest ograniczona.
+Niech $Y=f(\xi_1,\ldots,\xi_n)$,
+$\mathcal F_k=\sigma(\xi_1,\ldots,\xi_k)$
+z trywialnym $\mathcal F_0$ i
+$M_k=\E[Y\mid\mathcal F_k]$.
+W szczególności $M_0=\E Y$ i $M_n=Y$ p.n.
+
+Dla $0\leq k<n$ definiujemy
 \[
-\Prob(|f-\E f|\geq u)\leq
-2\exp\left(-\frac{u^2}{2\sum_kc_k^2}\right).
+g_k(x_1,\ldots,x_k)=
+\int_{\R^{n-k}} f(x_1,\ldots,x_n)\,
+\dd(\mu_{k+1}\otimes\cdots\otimes\mu_n)(x_{k+1},\ldots,x_n),
 \]
-Ostrzejszą stałą $2$ w wykładniku daje
-warunkowy lemat Hoeffdinga zastosowany do
-przyrostu $M_k$, którego \emph{przedział wartości}
-ma długość $c_k$; wtedy otrzymuje się
-$\Prob(|f-\E f|\geq u)\leq
-2\exp(-2u^2/\sum_kc_k^2)$.
-To znana nierówność ograniczonych różnic.
+a $g_n=f$. Z twierdzenia Fubiniego i niezależności
+wynika, że $g_k(\xi_1,\ldots,\xi_k)$ jest wersją
+$M_k$: całkowanie po dowolnym zdarzeniu postaci
+$\{(\xi_1,\ldots,\xi_k)\in B\}$, $B$ borelowski,
+daje tę samą całkę co dla $Y$.
+Dla ustalonej historii $h=(x_1,\ldots,x_{k-1})$
+funkcja $x\mapsto g_k(h,x)$ ma oscylację
+co najwyżej $c_k$, ponieważ całkujemy
+punktowe ograniczenie różnicy wartości $f$.
+Ponadto $g_{k-1}(h)=\int g_k(h,x)\,\dd\mu_k(x)$.
+Wynika stąd $|g_k(h,x)-g_{k-1}(h)|\leq c_k$,
+a więc $|M_k-M_{k-1}|\leq c_k$ p.n.
+Jeśli $V=\sum_kc_k^2>0$, Azuma daje
+\[
+\Prob(|Y-\E Y|\geq u)\leq2e^{-u^2/(2V)}
+\qquad(u>0).
+\]
+Jeśli $V=0$, funkcja $f$ jest stała,
+więc prawdopodobieństwo odchylenia jest zerowe.
 \end{przyklad}
 
-
-\begin{uwaga}[Dlaczego w nierówności ograniczonych różnic jest lepsza stała?]
-Samo oszacowanie $|\Delta M_k|\leq c_k$ mówi,
-że przyrost leży w przedziale długości $2c_k$.
-W przykładzie odkrywania współrzędnych
-istnieje jednak przedział $[a_k,b_k]$
-o długości $b_k-a_k\leq c_k$, wyznaczony przez
-informację do chwili $k-1$, w którym leży
-$\Delta M_k$. Dla zmiennej o warunkowej
-średniej zero warunkowy lemat Hoeffdinga daje
+\begin{uwaga}[Nierówność ograniczonych różnic McDiarmida]
+W poprzednim przykładzie dla każdej ustalonej
+historii $h$ zmienna $U=g_k(h,\xi_k)-g_{k-1}(h)$
+ma średnią zero i wartości w przedziale
+długości najwyżej $c_k$. Wykażmy potrzebną
+wersję lematu Hoeffdinga.
+Jeżeli $\E U=0$ oraz $a\leq U\leq b$ p.n.,
+to $\psi(t)=\log\E e^{tU}$ jest dwukrotnie
+różniczkowalna: ograniczoność $U$ pozwala
+różniczkować pod całką przez zbieżność
+zmajoryzowaną na każdym ograniczonym przedziale $t$.
+Mamy $\psi(0)=\psi'(0)=0$ oraz
+$\psi''(t)=\Var_t(U)$, gdzie $\Var_t$ oznacza
+wariancję względem miary o gęstości
+$e^{tU}/\E e^{tU}$ względem $\Prob$.
+Istotnie, różniczkowanie logarytmu daje
+$\psi''(t)=\E_t U^2-(\E_t U)^2$.
+Ponieważ wariancja nie przekracza średniego
+kwadratu odchylenia od dowolnej stałej,
 \[
- \E[e^{t\Delta M_k}\mid\mathcal F_{k-1}]
- \leq\exp\bigl(t^2(b_k-a_k)^2/8\bigr)
- \leq\exp(t^2c_k^2/8).
+\psi''(t)\leq\E_t[(U-(a+b)/2)^2]\leq(b-a)^2/4.
 \]
-Po wymnożeniu oszacowań przez wieżę i minimalizacji
-$-tu+t^2\sum_kc_k^2/8$ otrzymujemy
-$\exp(-2u^2/\sum_kc_k^2)$ dla jednego ogona.
+Wzór Taylora z resztą całkową, w postaci
+$\psi(t)=t^2\int_0^1(1-s)\psi''(st)\,
+\dd\lambda_1(s)$, daje
+$\E e^{tU}\leq e^{t^2(b-a)^2/8}$ dla każdego $t\in\R$,
+również gdy $a=b$.
+
+Stosujemy ten wynik dla każdej ustalonej historii
+$h$, z rozkładem $\mu_k$ i przedziałem o końcach
+$\inf_x(g_k(h,x)-g_{k-1}(h))$ oraz
+$\sup_x(g_k(h,x)-g_{k-1}(h))$.
+Nie trzeba dowodzić mierzalności tych końców:
+oszacowanie jest jednostajne względem $h$.
+Z niezależności i twierdzenia Fubiniego,
+tak jak przy konstrukcji $g_k$, dostajemy
+\[
+\E[e^{t\Delta M_k}\mid\mathcal F_{k-1}]
+\leq e^{t^2c_k^2/8}\quad\text{p.n.}
+\]
+Iterując warunkowanie jak w dowodzie nierówności
+Azumy--Hoeffdinga i stosując nierówność Markowa
+z $t=4u/V$ dla $u>0$ i $V>0$, otrzymujemy
+$\exp(-2u^2/V)$ dla prawego ogona.
+Powtarzając rozumowanie dla $-Y$ i sumując,
+dostajemy nierówność ograniczonych różnic:
+\[
+\Prob(|Y-\E Y|\geq u)
+\leq2\exp(-2u^2/V).
+\]
 \end{uwaga}
 
 \section{Proces Galtona--Watsona i znormalizowany martyngał}
@@ -584,36 +676,83 @@ $\exp(-2u^2/\sum_kc_k^2)$ dla jednego ogona.
 \begin{przyklad}[Rozmnażanie i zmienna populacja]
 Niech $Z_0=1$, a
 $Z_{n+1}=\sum_{j=1}^{Z_n}\xi_{n,j}$, gdzie
-$\xi_{n,j}$ są niezależnymi, jednakowo rozłożonymi
-nieujemnymi całkowitymi zmiennymi losowymi,
-niezależnymi od dotychczasowej historii,
+$(\xi_{n,j})_{n\geq0,j\geq1}$ jest rodziną
+wspólnie niezależnych, jednakowo rozłożonych
+nieujemnych całkowitych zmiennych losowych
 o średniej $m=\E\xi_{n,j}>0$ i wariancji
-$\sigma^2<\infty$. Filtrację $\mathcal F_n$
-tworzą populacje i wszystkie losowania do
-chwili $n-1$. Warunkowo przy $Z_n$ mamy
-\[
-\E[Z_{n+1}\mid\mathcal F_n]=mZ_n,
-\qquad \Var(Z_{n+1}\mid\mathcal F_n)=\sigma^2 Z_n.
-\]
-Zatem $W_n=Z_n/m^n$ jest nieujemnym martyngałem.
-Średnia $\E Z_n=m^n$ wynika indukcyjnie z wieży,
-a więc $\E W_n=1$.
+$\sigma^2<\infty$. Przyjmijmy
+$\mathcal F_n=\sigma(\xi_{k,j}:0\leq k<n,\ j\geq1)$
+oraz $\mathcal F_0=\{\varnothing,\Omega\}$.
+Indukcyjnie $Z_n$ jest skończoną, nieujemną
+całkowitą zmienną losową i jest $\mathcal F_n$-mierzalna;
+dla $Z_n=0$ suma definiująca $Z_{n+1}$ jest zerowa.
+Cały wiersz $(\xi_{n,j})_{j\geq1}$ jest niezależny
+od $\mathcal F_n$.
 
-Jeśli $m>1$, to przez rozkład wariancji
+Na zdarzeniu $\{Z_n=r\}$ mamy
+$Z_{n+1}=\sum_{j=1}^r\xi_{n,j}$. Dla każdego
+$A\in\mathcal F_n$ niezależność daje
+\begin{align*}
+\E[\chi_{A\cap\{Z_n=r\}}Z_{n+1}]
+ &=\Prob(A\cap\{Z_n=r\})rm,\\
+\E[\chi_{A\cap\{Z_n=r\}}Z_{n+1}^2]
+ &=\Prob(A\cap\{Z_n=r\})(r\sigma^2+r^2m^2).
+\end{align*}
+Druga równość wynika z rozwinięcia kwadratu
+sumy $r$ niezależnych zmiennych; dla $r=0$
+obie strony obu równości są zerowe.
+Sumując po $r\geq0$ i korzystając ze zbieżności
+monotonicznej, dostajemy indukcyjnie
+$\E Z_{n+1}=m\E Z_n=m^{n+1}$ oraz
+$\E Z_{n+1}^2=\sigma^2\E Z_n+m^2\E Z_n^2<\infty$,
+zaczynając od $Z_0=1$.
+Ponieważ równości zachodzą dla każdego
+$A\in\mathcal F_n$, otrzymujemy
 \[
-\E[(W_{n+1}-W_n)^2]
-=\frac{\sigma^2\E Z_n}{m^{2(n+1)}}
-=\frac{\sigma^2}{m^{n+2}}.
+\E[Z_{n+1}\mid\mathcal F_n]=mZ_n,\qquad
+\Var(Z_{n+1}\mid\mathcal F_n)=\sigma^2Z_n.
+\]
+Drugi wzór wykorzystuje definicję wariancji
+warunkowej jako różnicy warunkowego drugiego
+momentu i kwadratu warunkowej średniej.
+Zatem $W_n=Z_n/m^n$ jest adaptowanym procesem
+w $L^2$, o średniej $1$ i
+$\E[W_{n+1}\mid\mathcal F_n]=W_n$ p.n.;
+jest więc nieujemnym martyngałem.
+
+Dla każdego $m>0$ warunkowy drugi moment
+przyrostu wynosi
+$\E[(W_{n+1}-W_n)^2\mid\mathcal F_n]
+=\sigma^2 Z_n/m^{2(n+1)}$.
+Biorąc wartość oczekiwaną, otrzymujemy
+\[
+\E[(W_{n+1}-W_n)^2]=\frac{\sigma^2}{m^{n+2}}.
 \]
 Ortogonalność przyrostów daje
+$\E W_n^2=1+\sigma^2\sum_{k=0}^{n-1}m^{-(k+2)}$.
+Obliczając sumę geometryczną, otrzymujemy
 \[
-\E W_n^2=1+\frac{\sigma^2}{m(m-1)}(1-m^{-n})
-\leq1+\frac{\sigma^2}{m(m-1)}.
+\E W_n^2=
+\begin{cases}
+1+\dfrac{\sigma^2}{m(m-1)}(1-m^{-n}),&m\ne1,\\[4pt]
+1+n\sigma^2,&m=1.
+\end{cases}
 \]
-Wniosek o zbieżności w $L^2$ i p.n. uzyskamy
-w następnym rozdziale. Dla $m\leq1$ oszacowanie
-nie daje jednostajnej kontroli drugiego momentu;
-rozstrzygnięcie granic wymaga innego argumentu.
+Jeżeli $m>1$, to
+$\sup_n\E W_n^2\leq1+\sigma^2/[m(m-1)]$.
+Wniosek o zbieżności w $L^2$ i p.n. wynika
+z twierdzenia o martyngałach ograniczonych w $L^2$
+w rozdziale~\ref{ch:nadmartyngaly}.
+Dla $0<m\leq1$ i $\sigma^2>0$ drugi moment
+rośnie bez ograniczenia, co nie wyklucza
+zbieżności p.n. Jeżeli natomiast $\sigma^2=0$,
+liczba potomków jest deterministyczna i równa $m$
+p.n.; ponieważ jest całkowita i $m>0$,
+w przypadku $m\leq1$ musi zachodzić $m=1$.
+Wówczas $Z_n=W_n=1$ p.n. dla każdego $n$.
+Przypadek $m=0$ nie jest objęty normalizacją:
+wtedy wszystkie liczby potomków są zerowe p.n.
+i $Z_n=0$ p.n. dla $n\geq1$.
 \end{przyklad}
 
 
