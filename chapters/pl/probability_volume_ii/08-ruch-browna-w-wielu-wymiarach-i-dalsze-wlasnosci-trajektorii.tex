@@ -11,7 +11,7 @@ Zacznijmy od konstrukcji, w której odpowiedź na ostatnie pytanie
 wynika ze szczególnej postaci macierzy kowariancji.
 
 \begin{definicja}[Standardowy wielowymiarowy ruch Browna]
-Niech $d\in\N$. Proces $B=(B_t)_{t\ge0}$ o wartościach
+Niech $d\ge1$ będzie liczbą całkowitą. Proces $B=(B_t)_{t\ge0}$ o wartościach
 w $\R^d$, z prawie na pewno ciągłymi trajektoriami, nazywamy
 \emph{standardowym $d$-wymiarowym ruchem Browna}, jeżeli
 $B_0=0$ prawie na pewno, ma niezależne przyrosty oraz
@@ -19,6 +19,12 @@ $B_t-B_s\sim\Normal_d(0,(t-s)I_d)$ dla wszystkich $0\le s<t$.
 Jeżeli $x\in\R^d$, proces $X_t=x+B_t$ nazywamy ruchem Browna
 rozpoczynającym się w $x$; jego prawo i wartość oczekiwaną oznaczamy
 odpowiednio przez $\Prob_x$ oraz $\E_x$.
+Gdy zadano filtrację $(\calF_t)_{t\ge0}$, wymagamy
+dodatkowo adaptacji oraz niezależności przyrostu
+$B_t-B_s$ od $\calF_s$ dla $s<t$.
+W dalszym ciągu, o ile nie zaznaczono inaczej, wybieramy
+wersję o wszystkich trajektoriach ciągłych i $B_0=0$
+punktowo oraz jej filtrację naturalną.
 \end{definicja}
 
 \begin{twierdzenie}[Konstrukcja i izotropia]
@@ -42,18 +48,56 @@ $\Normal(0,t-s)$, czyli ma rozkład $\Normal_d(0,(t-s)I_d)$.
 Współrzędne na różnych rozłącznych przedziałach także są niezależne;
 można to zobaczyć, grupując skończone wektory przyrostów po
 współrzędnych. Ciągłość wynika z przecięcia $d$ zdarzeń pełnej miary.
+
+Dla dowolnego procesu spełniającego definicję wektor
+wartości w skończonym zbiorze chwil jest prawie na pewno
+liniowym obrazem wektora niezależnych gaussowskich przyrostów
+(zaczynamy od chwili zero). Jest zatem gaussowski.
+Dla $s\le t$ niezależność $B_t-B_s$ od $B_s$ daje
+$\Cov(B_s^{(i)},B_t^{(j)})=\Cov(B_s^{(i)},B_s^{(j)})
+=s\delta_{ij}$; średnie są zerowe. Dla dowolnych skończonych
+rodzin obserwacji poszczególnych współrzędnych macierz
+kowariancji jest blokowo diagonalna względem współrzędnych,
+więc odpowiednie bloki są łącznie niezależne. Iterując
+argument $\pi$--$\lambda$ po $d$ współrzędnych, otrzymujemy
+niezależność $\sigma$-ciał generowanych przez całe procesy
+współrzędnych, nie tylko przez ich wartości w jednej chwili.
+Każdy proces współrzędnej jest standardowym procesem Wienera.
+
 Ponieważ $U((t-s)I_d)U^\top=(t-s)I_d$, przyrosty procesu $UB$
 mają te same rozkłady co przyrosty $B$ i pozostają niezależne.
-Stąd równość rozkładów skończeniewymiarowych, a przez mierzalność
-ewaluacji na przestrzeni trajektorii także równość praw na
-$C_0([0,T];\R^d)$.
+Stąd równość rozkładów skończeniewymiarowych, a przez generowanie borelowskiego $\sigma$-ciała
+przestrzeni $C_0([0,T];\R^d)$ przez ewaluacje w przeliczalnym
+gęstym zbiorze chwil także równość praw trajektorii.
+Wynika to z jednowymiarowego argumentu z rozdziału~\ref{ch:wiener}
+i identyfikacji przestrzeni trajektorii wektorowych z iloczynem
+$d$ przestrzeni trajektorii rzeczywistych.
+\end{proof}
+
+\begin{stwierdzenie}[Równoważna charakteryzacja gaussowska]
+Rzeczywisty proces wektorowy $B$ o prawie na pewno ciągłych
+trajektoriach jest standardowym ruchem Browna w $\R^d$
+wtedy i tylko wtedy, gdy jest wycentrowanym procesem
+gaussowskim o macierzach kowariancji
+$\Cov(B_s,B_t)=\min(s,t)I_d$.
+\end{stwierdzenie}
+\begin{proof}
+Konieczność wykazano w poprzednim twierdzeniu.
+Odwrotnie, z zerowej średniej i kowariancji w chwili zero
+wynika $B_0=0$ p.n. Przyrost $B_t-B_s$ jest gaussowski
+o średniej zero i kowariancji $(t-s)I_d$.
+Dla $0\le a<b\le c<e$ kowariancja przyrostów
+$B_b-B_a$ i $B_e-B_c$ jest równa
+$(b-b-a+a)I_d=0$. Dowolny skończony wektor takich
+przyrostów jest gaussowski o blokowo diagonalnej
+macierzy kowariancji, co daje ich łączną niezależność.
 \end{proof}
 
 \begin{uwaga}[Niezależność współrzędnych a niezależność położenia]
 Współrzędne $B_t^{(1)},\ldots,B_t^{(d)}$ są niezależne w ustalonej
 chwili $t$. Nie wynika stąd, że położenia $B_s$ i $B_t$ są niezależne
-dla $s<t$: przeciwnie, mają wspólną przeszłość, a ich kowariancja
-wynosi $sI_d$. Niezależne są \emph{przyrosty} na rozłącznych
+dla $0<s<t$: przeciwnie, mają wspólną przeszłość, a ich kowariancja
+wynosi $sI_d$. Przy $s=0$ położenie początkowe jest stałe p.n. Niezależne są \emph{przyrosty} na rozłącznych
 przedziałach czasu.
 \end{uwaga}
 
@@ -62,9 +106,10 @@ Niech $B$ będzie standardowym ruchem Browna w $\R^d$.
 Dla $t\ge0$ oraz ograniczonej funkcji borelowskiej
 $f:\R^d\to\R$ połóżmy $P_tf(x)=\E f(x+B_t)$.
 Jeżeli $f\in C_b^3(\R^d)$ (wszystkie pochodne do rzędu trzeciego
-są ciągłe i ograniczone), to dla każdego $x\in\R^d$
+są ciągłe i ograniczone, włącznie z samą funkcją), to
 \[
-\lim_{t\downarrow0}\frac{P_tf(x)-f(x)}{t}=\frac12\Delta f(x).
+\lim_{t\downarrow0}\left\|\frac{P_tf-f}{t}-\frac12\Delta f
+\right\|_\infty=0.
 \]
 Jeżeli $f\in C_b(\R^d)$, to $u(t,x)=P_tf(x)$ jest klasy
 $C^{1,2}$ na $(0,\infty)\times\R^d$, spełnia
@@ -80,15 +125,31 @@ Ponieważ $\E B_t=0$,
 $\E[B_t^{(i)}B_t^{(j)}]=t\delta_{ij}$ i
 $\E|B_t|^3=t^{3/2}\E|B_1|^3$, otrzymujemy
 $P_tf(x)-f(x)=\frac{t}{2}\sum_i\partial_{ii}f(x)+O(t^{3/2})$.
-To dowodzi granicy po podzieleniu przez $t$.
+Stała w reszcie jest niezależna od $x$, a trzeci moment
+normy $B_1$ jest skończony, ponieważ
+$|B_1|^3\le d^{1/2}\sum_i|B_1^{(i)}|^3$.
+To dowodzi granicy w normie supremum po podzieleniu przez $t$.
 Dla $t>0$ rozkład $B_t$ ma gęstość
 $p_t^{(d)}(z)=(2\pi t)^{-d/2}\exp(-|z|^2/(2t))$.
-Na każdym pasie czasowym $\delta\le t\le R$ pochodne
-$\partial_t p_t^{(d)}$ oraz $\partial_i p_t^{(d)}$,
-$\partial_{ij}p_t^{(d)}$ są zdominowane całkowalnymi
-funkcjami zmiennej $z$ (wielomian razy gaussowski ogon).
-Różniczkując splot $u(t,x)=\int f(x+z)p_t^{(d)}(z)\,\dd\lambda_d(z)$
-po jądrze, dostajemy $\partial_tu=\frac12\Delta u$.
+Na każdym pasie czasowym $0<\delta\le t\le R$ mamy
+\[
+\partial_t p_t^{(d)}(z)=
+\left(-\frac d{2t}+\frac{|z|^2}{2t^2}\right)p_t^{(d)}(z),
+\qquad
+\partial_{ij}p_t^{(d)}(z)=
+\left(\frac{z_i z_j}{t^2}-\frac{\delta_{ij}}{t}\right)p_t^{(d)}(z).
+\]
+Ponadto $\partial_i p_t^{(d)}(z)=-(z_i/t)p_t^{(d)}(z)$.
+Piszemy $u(t,x)=\int_{\R^d} f(y)p_t^{(d)}(y-x)\,
+\mathrm d\lambda_d(y)$, aby różniczkować jądro, a nie $f$.
+Dla $|x-x_0|\le1$ mamy $|y-x|^2\ge |y-x_0|^2/2-1$.
+Zatem wszystkie wskazane pochodne pod znakiem całki
+mają wspólną całkowalną majorantę, będącą stałą razy
+$(1+|y-x_0|^2)\exp(-|y-x_0|^2/(4R))$.
+Różniczkowanie pod znakiem całki i twierdzenie o zbieżności
+zmajoryzowanej dają ciągłość pochodnych oraz
+$\partial_tu=\frac12\Delta u$, gdyż
+$\partial_t p_t^{(d)}=\frac12\Delta p_t^{(d)}$.
 Zbieżność do warunku początkowego wynika z ciągłości $f$ w $x$,
 ograniczenia $f$ i faktu $\E|B_t|^2=dt\to0$, dokładnie jak
 w dowodzie jednowymiarowym.
@@ -102,9 +163,15 @@ macierzy jednostkowej, kierunki nie są równoważne: powierzchnie
 jednakowej gęstości są elipsoidami. Dla
 $f\in C_b^3(\R^m)$ generator ma postać
 $Lf=\frac12\sum_{i,j}(AA^\top)_{ij}\partial_{ij}f$.
-Jeżeli $AA^\top$ jest osobliwa, proces porusza się w
-odpowiedniej podprzestrzeni afinicznej; gęstość względem
-$\lambda_m$ nie musi istnieć.
+Wzór wynika z tego samego rachunku Taylora, po zastąpieniu
+macierzy kowariancji $tI_m$ przez $tAA^\top$, dla półgrupy
+$P_t^Af(x)=\E f(x+AB_t)$. Przy osobliwej macierzy
+$AA^\top$ mamy $\operatorname{rank} A<m$, ponieważ
+$\ker(AA^\top)=\ker A^\top$. Proces startujący w $b$
+porusza się w $b+\operatorname{im}A$, podprzestrzeni
+afinicznej o wymiarze mniejszym od $m$. Jej miara
+Lebesgue'a jest zerowa, więc rozkład $X_t$ jest singularny
+względem $\lambda_m$.
 \end{przyklad}
 
 
@@ -130,7 +197,8 @@ wartości oczekiwanej $\E X_t=0$.
 
 \section{Czas wyjścia z kuli i martyngał kwadratu promienia}
 \begin{twierdzenie}[Średni czas wyjścia z kuli]
-Niech $d\in\N$, $R>0$, $x\in\R^d$ i $|x|<R$.
+Niech $d\ge1$ będzie liczbą całkowitą, $R>0$,
+$x\in\R^d$ i $|x|<R$.
 Dla standardowego $d$-wymiarowego ruchu Browna $B$ połóżmy
 $X_t=x+B_t$ oraz $\tau=\inf\{t\ge0:|X_t|\ge R\}$.
 Wtedy $\tau<\infty$ prawie na pewno i
@@ -139,23 +207,30 @@ Wtedy $\tau<\infty$ prawie na pewno i
 \]
 \end{twierdzenie}
 \begin{proof}
+Pracujemy z ciągłą wersją $B$ zaczynającą się w zerze
+i jej filtracją naturalną. Niezależność przyrostu od
+tej filtracji wynika ze zdarzeń cylindrycznych i argumentu
+$\pi$--$\lambda$, tak jak w przypadku jednowymiarowym.
+Czas $\tau$ jest czasem zatrzymania na mocy
+twierdzenia~\ref{thm:hitting-closed}, zastosowanego do
+domkniętego zbioru $\{y:|y|\ge R\}$.
 Dla $s<t$ i $Z=B_t-B_s$, niezależnego od przeszłości,
 $\E Z=0$ i $\E|Z|^2=d(t-s)$. Rozwinięcie kwadratu daje
 $\E[|X_t|^2\mid\calF_s]=|X_s|^2+d(t-s)$.
-Zatem $M_t=|X_t|^2-dt$ jest martyngałem.
-Dla każdego deterministycznego $n\in\N$ zatrzymujemy go
-w ograniczonej chwili $\tau\wedge n$ (twierdzenie o
-próbkowaniu opcjonalnym daje)
+Zatem $M_t=|X_t|^2-dt$ jest całkowalnym martyngałem
+o ciągłych trajektoriach. Dla każdego całkowitego $n\ge1$
+twierdzenie o próbkowaniu opcjonalnym
+(twierdzenie~\ref{thm:optional-cont}) daje
 \[
 \E|X_{\tau\wedge n}|^2-|x|^2=d\E(\tau\wedge n).
 \]
 Z ciągłości trajektorii zawsze $|X_{\tau\wedge n}|\le R$:
 przed $\tau$ proces jest w kuli, a w chwili $\tau<\infty$
-osiąga jej sferę. Stąd $d\E(\tau\wedge n)\le R^2$.
-Zbieżność monotoniczna daje $\E\tau\le R^2/d<\infty$,
+osiąga jej sferę. Stąd $d\E(\tau\wedge n)\le R^2-|x|^2$.
+Zbieżność monotoniczna daje $\E\tau\le (R^2-|x|^2)/d<\infty$,
 co wymusza $\tau<\infty$ p.n. Wtedy
 $|X_{\tau\wedge n}|^2\to|X_\tau|^2=R^2$ p.n., a
-zmienne są ograniczone przez $R^2$. Zbieżność zdominowana
+zmienne są ograniczone przez $R^2$. Zbieżność zmajoryzowana
 i monotoniczna po obu stronach poprzedniej tożsamości dają
 $R^2-|x|^2=d\E\tau$.
 \end{proof}
@@ -172,48 +247,22 @@ Zależność od $r$ jest kwadratowa, mimo że typowe wychylenie
 po czasie $t$ ma rząd $\sqrt t$.
 \end{zadanie}
 
-\section{Maksimum, zasada odbicia i rozkład końcowego położenia}
-W rozdziale poprzednim wyprowadziliśmy prawdopodobieństwo
-przekroczenia poziomu $a$ do chwili $T$. Często potrzebujemy
-więcej: co wiemy o położeniu końcowym, jeśli poziom został
-po drodze osiągnięty?
-
-\begin{twierdzenie}[Rozkład łączny maksimum i położenia]
-Niech $W$ będzie standardowym procesem Wienera,
-$T>0$, $a>0$ i $M_T:=\sup_{0\le s\le T}W_s$.
-Wówczas dla dowolnego borelowskiego $A\subset(-\infty,a)$
+\section{Maksimum ruchu Browna i mostu Browna}
+Pełną zasadę odbicia i łączny rozkład maksimum
+$M_T=\sup_{0\le s\le T}W_s$ oraz położenia $W_T$
+udowodniono w twierdzeniu~\ref{thm:wiener-reflection}
+i wniosku~\ref{cor:wiener-max-joint}.
+Przypomnijmy ich konsekwencję: dla $a>0$, $T>0$ i
+borelowskiego $A\subset(-\infty,a)$
 \[
 \Prob(M_T<a,\ W_T\in A)
-=\int_A\bigl(p_T(y)-p_T(2a-y)\bigr)\,\dd\lambda_1(y),
+=\int_A(p_T(y)-p_T(2a-y))\,\mathrm d\lambda_1(y),
 \]
-gdzie $p_T(y)=(2\pi T)^{-1/2}\exp(-y^2/(2T))$.
-Ponadto $M_T$ ma ten sam rozkład co $|W_T|$ oraz
+gdzie $p_T$ jest gęstością $\Normal(0,T)$.
+Ponieważ $M_T$ ma prawo $|W_T|$, z momentu bezwzględnego
+standardowej zmiennej normalnej otrzymujemy
 $\E M_T=\sqrt{2T/\pi}$.
-\end{twierdzenie}
-\begin{proof}
-Niech $\tau_a$ będzie chwilą pierwszego trafienia w $a$.
-Dla trajektorii z $\tau_a\le T$ odbijamy część drogi
-po chwili $\tau_a$ według wzoru
-$\widetilde W_t=W_t$ dla $t\le\tau_a$ oraz
-$\widetilde W_t=2a-W_t$ dla $t>\tau_a$.
-Mocna własność Markowa oraz symetria przyrostów po
-$\tau_a$ pokazują, że to przekształcenie zachowuje prawo
-procesu na zdarzeniu $\{\tau_a\le T\}$. Dokładniej,
-dla dowolnego ograniczonego funkcjonału borelowskiego
-$H$ ciągłej trajektorii warunkujemy względem $\calF_{\tau_a}$:
-po odbiciu niezależny przyszły proces Wienera ma nadal to samo prawo.
-W szczególności
-$\Prob(M_T\ge a,W_T\in A)=\Prob(W_T\in 2a-A)$,
-bo $A\subset(-\infty,a)$, a trajektorie kończące się
-w $2a-A\subset(a,\infty)$ muszą wcześniej trafić w $a$.
-Gęstość końcowego położenia wynosi $p_T$, zaś gęstość
-drugiego zdarzenia po zmianie zmiennej to $p_T(2a-y)$.
-Odejmując od $\Prob(W_T\in A)$, otrzymujemy wzór.
-Ponieważ $\Prob(M_T\ge a)=2\Prob(W_T\ge a)$,
-dystrybuanta $M_T$ na $[0,\infty)$ jest dystrybuantą
-$|W_T|$. Stąd
-$\E M_T=\E|W_T|=\sqrt{2T/\pi}$.
-\end{proof}
+Wykorzystamy teraz te wyniki do analizy mostu Browna.
 
 \begin{wniosek}[Maksimum mostu Browna]
 Niech $\beta_t=W_t-(t/T)W_T$ dla $0\le t\le T$.
@@ -224,7 +273,7 @@ Dla każdego $a>0$ zachodzi
 \]
 \end{wniosek}
 \begin{proof}
-Z rozdziału o procesach gaussowskich wiemy, że $\beta$ jest
+Z rozdziału~\ref{ch:gauss} wiemy, że $\beta$ jest
 niezależny od $W_T$. Dla każdego $y\in\R$ proces
 $\beta_t+(t/T)y$ ma rozkład warunkowy całej trajektorii
 Wienera przy $W_T=y$; jest to \emph{regularna wersja}
@@ -233,7 +282,8 @@ prawdopodobieństwie dodatnim.
 
 Niech $V=\sup_{0\le t\le T}\beta_t$ i dla $y<b$ połóżmy
 $H(y,b)=\Prob(\sup_{0\le t\le T}(\beta_t+ty/T)<b)$.
-Z poprzedniego twierdzenia, przez podzielenie gęstości
+Z twierdzenia~\ref{thm:wiener-reflection} i powyższego wzoru,
+przez podzielenie gęstości
 wspólnej zdarzenia braku przekroczenia i położenia końcowego
 przez $p_T(y)>0$, otrzymujemy dla prawie każdego $y<b$
 \[
@@ -242,8 +292,9 @@ H(y,b)=1-\frac{p_T(2b-y)}{p_T(y)}.
 Wyrażenie po prawej stronie ma dla $y\to0$ granicę
 $g(b):=1-\exp(-2b^2/T)$, o ile $b>0$.
 
-Ustalmy $a>0$ i $0<\varepsilon<a$. Jeśli $|y|<\varepsilon$,
-to dla każdej trajektorii $\sup_t|(t/T)y|\le\varepsilon$.
+Ustalmy $a>0$ i $0<\varepsilon<a$. Jeśli $|y|<\min(\varepsilon,a-\varepsilon)$,
+to oba progi $a-\varepsilon,a+\varepsilon$ są większe
+od $y$, a dla każdej trajektorii $\sup_t|(t/T)y|\le\varepsilon$.
 Dlatego mamy zawieranie zdarzeń prowadzące do nierówności
 \[
 H(y,a-\varepsilon)\le\Prob(V<a)
@@ -269,7 +320,7 @@ prawdopodobieństwo zero. Reguła Bayesa dla zdarzeń o dodatniej
 mierze nie daje zatem rozkładu mostu przy zerowym punkcie
 końcowym. Poprzedni dowód najpierw konstruuje \emph{konkretną}
 wersję warunkowego prawa przy każdym $y$ przez rozkład
-Gaussowski, a następnie wykorzystuje ciągłość przesunięcia
+gaussowski, a następnie wykorzystuje ciągłość przesunięcia
 trajektorii o funkcję $ty/T$. Wartość w $y=0$ jest tym
 samym uzasadniona przez tę wersję, nie przez arbitralne
 podstawienie do tożsamości obowiązującej tylko prawie wszędzie.
@@ -366,9 +417,12 @@ Udowodnione zdarzenie pełnej miary zależy od $t_0$.
 Na ogół nie wolno przecinać nieprzeliczalnie wielu
 zbiorów pełnej miary. Własność stwierdzona w twierdzeniu
 nie zachodzi jednocześnie dla wszystkich chwil trajektorii:
-na przykład w chwili ścisłego maksimum na przedziale
-$[0,T]$ nie może wystąpić większa wartość przed końcem
-tego przedziału. To ważna lekcja dotycząca kwantyfikatorów
+na przykład maksimum na $[0,T]$ jest osiągane
+w pewnej chwili $t_*<T$ prawie na pewno: proces odwrócony
+$(W_T-W_{T-s})_{0\le s\le T}$ ma prawo Wienera
+i przyjmuje ujemne wartości prawie na pewno, więc $W_T$
+nie jest maksimum. Dla takiej chwili $t_*$ nie może
+wystąpić większa wartość przed końcem przedziału. To ważna lekcja dotycząca kwantyfikatorów
 w twierdzeniach o trajektoriach.
 \end{uwaga}
 
