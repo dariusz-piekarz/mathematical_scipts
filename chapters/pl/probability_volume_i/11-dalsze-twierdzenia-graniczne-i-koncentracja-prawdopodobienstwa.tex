@@ -42,23 +42,38 @@ Dla każdego $t\in\R$ zachodzi
 \end{lemat}
 \begin{proof}
 Zdefiniujmy $M(t)=\E e^{tZ}$ i
-$h(t)=\log M(t)$. Ponieważ $Z$ jest ograniczona,
-możemy różniczkować pod znakiem całki dowolną
-liczbę razy, a $M(t)>0$. Obliczamy
+$h(t)=\log M(t)$. Ponieważ $Z$ jest ograniczona, $M(t)$ jest skończona
+i ściśle dodatnia dla każdego $t$. Jeśli
+$B=\max(|a|,|b|)$, to dla $|s-t|\leq1$ mamy
+$|Z^j e^{sZ}|\leq B^j e^{(|t|+1)B}$ p.n.
+Z twierdzenia o różniczkowaniu pod znakiem całki
+(lub z twierdzenia o zbieżności zmajoryzowanej
+dla ilorazów różnicowych) otrzymujemy
+$M'(t)=\E[Ze^{tZ}]$ oraz $M''(t)=\E[Z^2e^{tZ}]$. Obliczamy
 $h'(t)=M'(t)/M(t)$ oraz
 $h''(t)=M''(t)/M(t)-(M'(t)/M(t))^2$.
 Dla każdego $t$ wyrażenie $h''(t)$ jest
 wariancją $Z$ względem nowej miary
 $\dd\Prob_t=e^{tZ}\dd\Prob/M(t)$. Nowa miara jest
-probabilistyczna i nadal skupiona na $[a,b]$.
+probabilistyczna, ponieważ jej gęstość jest nieujemna
+i całkuje się do jedności. Ponadto $\Prob_t\ll\Prob$,
+więc $a\leq Z\leq b$ również $\Prob_t$-prawie na pewno.
+Rzeczywiście $M'(t)/M(t)=\E_t Z$ oraz
+$M''(t)/M(t)=\E_t Z^2$.
 Poprzedni lemat daje więc
 $0\leq h''(t)\leq(b-a)^2/4$ dla wszystkich $t$.
 
 Funkcja $g(t)=h(t)-th'(0)$ spełnia $g(0)=g'(0)=0$,
 a $g''(t)=h''(t)\leq(b-a)^2/4$.
-Całkując tę nierówność dwukrotnie od zera do $t$
-(dla $t<0$ całkujemy po odcinku $[t,0]$),
-dostajemy $g(t)\leq t^2(b-a)^2/8$.
+Stosując wzór Taylora z resztą całkową do funkcji
+$s\mapsto g(st)$ na $[0,1]$, otrzymujemy dla
+dowolnego $t\in\R$
+\[
+g(t)=t^2\int_0^1(1-s)g''(st)\,\dd\lambda_1(s)
+\leq \frac{t^2(b-a)^2}{8}.
+\]
+Wzór obowiązuje także dla $t<0$, ponieważ czynnik
+$t^2(1-s)$ jest nieujemny.
 Ponieważ $h'(0)=\E Z$,
 $g(t)=\log\E e^{t(Z-\E Z)}$.
 Potęgowanie daje tezę.
@@ -96,13 +111,13 @@ z sumowania prawdopodobieństw dwóch ogonów.
 
 \begin{przyklad}[Ile prób potrzeba do kontroli częstości?]
 Jeżeli $B_1,\ldots,B_n$ są niezależnymi próbami
-Bernoulliego z parametrem $p$, to $0\leq B_k\leq1$
+Bernoulliego z parametrem $p\in[0,1]$, to $0\leq B_k\leq1$
 i $\E\overline B_n=p$. Nierówność Hoeffdinga
 przy $u=n\varepsilon$ daje
 $\Prob(|\overline B_n-p|\geq\varepsilon)
 \leq2e^{-2n\varepsilon^2}$.
-Aby prawa strona była nie większa niż zadane
-$\delta\in(0,1)$, wystarczy
+Dla $\varepsilon>0$ i zadanej $\delta\in(0,1)$,
+aby prawa strona była nie większa niż $\delta$, wystarczy
 $n\geq\log(2/\delta)/(2\varepsilon^2)$.
 Jest to gwarancja nieasymptotyczna, ważna dla
 każdego $n$, choć nie zawsze ostra.
@@ -165,7 +180,7 @@ Mówimy, że zachodzi \emph{warunek Lindeberga}, jeżeli
  dla każdego $\varepsilon>0$
 \[
 \frac1{s_n^2}\sum_{k=1}^{k_n}
-\E\left[Y_{n,k}^2\ind{\{|Y_{n,k}|>\varepsilon s_n\}}\right]
+\E\left[Y_{n,k}^2\chi_{\{|Y_{n,k}|>\varepsilon s_n\}}\right]
 \longrightarrow0.
 \]
 \end{definicja}
@@ -183,11 +198,11 @@ oraz warunek Lindeberga, to
 wariancji.} Połóżmy $Z_{n,k}=Y_{n,k}/s_n$.
 Wtedy $\sum_k\E Z_{n,k}^2=1$, a warunek Lindeberga
 przyjmuje postać
-$\sum_k\E[Z_{n,k}^2\ind{\{|Z_{n,k}|>\varepsilon\}}]\to0$.
+$\sum_k\E[Z_{n,k}^2\chi_{\{|Z_{n,k}|>\varepsilon\}}]\to0$.
 Dla dowolnego $\varepsilon>0$
 \[
 \E Z_{n,k}^2\leq\varepsilon^2+
-\E[Z_{n,k}^2\ind{\{|Z_{n,k}|>\varepsilon\}}],
+\E[Z_{n,k}^2\chi_{\{|Z_{n,k}|>\varepsilon\}}],
 \]
 zatem $\limsup_n\max_k\E Z_{n,k}^2\leq\varepsilon^2$.
 Ponieważ $\varepsilon$ jest dowolne,
@@ -197,13 +212,20 @@ części całkowitej wariancji.
 
 \emph{Krok 2: rozwinięcie pojedynczych funkcji
 charakterystycznych.} Ustalmy $t\in\R$.
-Dla każdej liczby rzeczywistej $u$ zachodzi
-$|e^{iu}-1-iu|\leq u^2/2$ oraz
-$|e^{iu}-1-iu+u^2/2|\leq C u^2\min(|u|,1)$
-z pewną stałą bezwzględną $C$.
-Dla $|u|\leq1$ druga nierówność wynika z reszty
-Taylora rzędu trzeciego, a dla $|u|>1$ z oszacowania
-wszystkich składników przez stałą razy $u^2$.
+Dla każdej liczby rzeczywistej $u$ wzór Taylora
+z resztą całkową, zastosowany do funkcji
+$s\mapsto e^{isu}$ na $[0,1]$, daje
+\[
+e^{iu}-1-iu=-u^2\int_0^1(1-s)e^{isu}\,\dd\lambda_1(s),
+\]
+więc $|e^{iu}-1-iu|\leq u^2/2$. Odejmując
+odpowiedni wyraz drugiego rzędu i korzystając
+z $|e^{isu}-1|\leq s|u|$, otrzymujemy
+$|e^{iu}-1-iu+u^2/2|\leq |u|^3/6$.
+Z pierwszego oszacowania i nierówności trójkąta
+ten sam moduł jest nie większy niż $u^2$.
+Łącznie
+$|e^{iu}-1-iu+u^2/2|\leq u^2\min(|u|,1)$.
 Oznaczmy $\psi_{n,k}(t)=\E e^{itZ_{n,k}}$.
 Ponieważ $\E Z_{n,k}=0$, dostajemy
 \[
@@ -214,15 +236,18 @@ Ponieważ $\E Z_{n,k}=0$, dostajemy
 Pozostaje sprawdzić, że $\sum_k|r_{n,k}(t)|\to0$.
 Dla ustalonego $\delta>0$ rozbijmy oczekiwanie
 w reszcie na $\{|Z_{n,k}|\leq\delta\}$ i dopełnienie.
-Na pierwszej części mamy oszacowanie
-$C_t\delta\E Z_{n,k}^2$, na drugiej
-$C_t\E[Z_{n,k}^2\ind{\{|Z_{n,k}|>\delta\}}]$,
-gdzie $C_t$ nie zależy od $n,k$. Po zsumowaniu
+Na pierwszej części, ponieważ
+$\min(|tZ_{n,k}|,1)\leq |t|\delta$,
+otrzymujemy oszacowanie $|t|^3\delta\E Z_{n,k}^2$.
+Na drugiej części korzystamy z
+$\min(|tZ_{n,k}|,1)\leq1$, uzyskując
+$t^2\E[Z_{n,k}^2\chi_{\{|Z_{n,k}|>\delta\}}]$.
+Możemy więc przyjąć $C_t=\max(|t|^3,t^2)$. Po zsumowaniu
 i wykorzystaniu sumy wariancji równej jeden,
 \[
 \limsup_n\sum_k|r_{n,k}(t)|\leq C_t\delta.
 \]
-Możemy puścić $\delta\downarrow0$, uzyskując
+Przechodzimy z $\delta\downarrow0$, uzyskując
 $\sum_k|r_{n,k}(t)|\to0$, a więc
 $\sum_k(\psi_{n,k}(t)-1)\to-t^2/2$.
 
@@ -233,18 +258,29 @@ $\sum_k|z_{n,k}|\leq t^2/2$.
 W konsekwencji
 $\sum_k|z_{n,k}|^2\leq
 (\max_k|z_{n,k}|)\sum_k|z_{n,k}|\to0$.
-Dla dużych $n$ wszystkie $1+z_{n,k}$ leżą
-w otoczeniu jedynki, gdzie
-$\log(1+z)=z+O(|z|^2)$. Stąd
+Dla dostatecznie dużych $n$ mamy $|z_{n,k}|\leq1/2$
+dla wszystkich $k$. Na tym kole określamy
+$L(z)=\sum_{j=1}^\infty(-1)^{j+1}z^j/j$.
+Jest to lokalna gałąź logarytmu spełniająca
+$\exp L(z)=1+z$. Z szeregu otrzymujemy
+$|L(z)-z|\leq |z|^2/(1-|z|)\leq2|z|^2$.
+W konsekwencji
 \[
-\log\prod_{k=1}^{k_n}\psi_{n,k}(t)
-=\sum_kz_{n,k}+O\!\left(\sum_k|z_{n,k}|^2\right)
-\longrightarrow-\frac{t^2}{2}.
+\left|\sum_k L(z_{n,k})-\sum_k z_{n,k}\right|
+\leq 2\sum_k|z_{n,k}|^2\longrightarrow0.
 \]
-Niezależność w każdym wierszu daje
-$\varphi_{\sum_kZ_{n,k}}(t)=\prod_k\psi_{n,k}(t)$.
-Po potęgowaniu granicą funkcji charakterystycznych
-jest $e^{-t^2/2}$. Twierdzenie Lévy'ego kończy dowód.
+Nie trzeba utożsamiać sumy lokalnych logarytmów
+z logarytmem głównym iloczynu. Z niezależności
+w każdym wierszu (rozdział~\ref{ch:expectation}) mamy
+\[
+\varphi_{\sum_k Z_{n,k}}(t)
+=\prod_k(1+z_{n,k})
+=\exp\left(\sum_k L(z_{n,k})\right)
+\longrightarrow e^{-t^2/2}.
+\]
+Jest to funkcja charakterystyczna $\Normal(0,1)$,
+ciągła w zerze. Twierdzenie Lévy'ego
+(rozdział~\ref{ch:convergence}) kończy dowód.
 \end{proof}
 
 \begin{wniosek}[Warunek Lapunowa]
@@ -279,7 +315,7 @@ $\varepsilon>0$ od pewnego $n$ mamy
 $|X_k|\leq C<\varepsilon s_n$ dla każdego
 $k\leq n$. Warunek Lindeberga jest więc
 spełniony automatycznie, a zatem
-$\sum_{k=1}^nX_k/s_n\xrightarrow d N(0,1)$.
+$\sum_{k=1}^nX_k/s_n\xrightarrow d \Normal(0,1)$.
 Wspólny rozkład nie jest potrzebny; ważna jest
 całkowita wariancja oraz brak dominujących składników.
 \end{przyklad}
@@ -321,20 +357,28 @@ a_n\bigl(g(T_n)-g(\theta)\bigr)
 \begin{proof}
 Najpierw zauważmy, że rodzina rozkładów
 $a_n(T_n-\theta)$ jest ciasna, bo zbiega według
-rozkładu. Dla dowolnych $\varepsilon,\delta>0$
+rozkładu. Dla dowolnych $\varepsilon,\delta>0$ z ciasności
+wybieramy $M>0$ tak, by
+$\sup_n\Prob(|a_n(T_n-\theta)|>M)<\delta$.
+Dla dostatecznie dużych $n$ zachodzi
+$\varepsilon a_n\geq M$, zatem
 \[
 \Prob(|T_n-\theta|>\varepsilon)
-\leq\Prob(|a_n(T_n-\theta)|>\varepsilon a_n)
-\longrightarrow0,
+=\Prob(|a_n(T_n-\theta)|>\varepsilon a_n)
+\leq\Prob(|a_n(T_n-\theta)|>M)<\delta.
 \]
-co wynika z ciasności i $\varepsilon a_n\to\infty$.
+Dowolność $\delta$ dowodzi zbieżności do zera.
 A zatem $T_n\xrightarrow{\Prob}\theta$.
 Z różniczkowalności $g$ w $\theta$ wynika
 reprezentacja
 $g(x)-g(\theta)=(x-\theta)(g'(\theta)+r(x))$,
 gdzie $r(x)\to0$ dla $x\to\theta$
 i przyjmujemy $r(\theta)=0$.
-Wówczas $r(T_n)\xrightarrow{\Prob}0$.
+Funkcja $r$ jest borelowska, a z $r(x)\to0$ przy
+$x\to\theta$ i $r(\theta)=0$ wynika, że dla każdego
+$\eta>0$ istnieje $\rho>0$ takie, że
+$\{|r(T_n)|>\eta\}\subseteq\{|T_n-\theta|\geq\rho\}$.
+Stąd $r(T_n)\xrightarrow{\Prob}0$.
 Po pomnożeniu przez $a_n$ mamy
 \[
 a_n(g(T_n)-g(\theta))
@@ -346,8 +390,9 @@ $Z\,g'(\theta)$, zgodnie z tezą.
 
 \begin{wniosek}[Metoda delty drugiego rzędu]
 Przy założeniach poprzedniego twierdzenia załóżmy
-dodatkowo, że $g$ jest dwukrotnie różniczkowalna
-w punkcie $\theta$ oraz $g'(\theta)=0$.
+dodatkowo, że $g$ jest różniczkowalna w otoczeniu $\theta$,
+jej pochodna jest różniczkowalna w $\theta$ oraz
+$g'(\theta)=0$.
 Wtedy
 \[
 a_n^2(g(T_n)-g(\theta))
@@ -355,7 +400,9 @@ a_n^2(g(T_n)-g(\theta))
 \]
 \end{wniosek}
 \begin{proof}
-Z rozwinięcia Taylora w punkcie $\theta$ mamy
+Z rozwinięcia Taylora z resztą Peana w punkcie $\theta$
+(rozwijamy do drugiego rzędu, korzystając z
+różniczkowalności $g'$ w $\theta$) mamy
 $g(x)-g(\theta)=\frac12g''(\theta)(x-\theta)^2
 +o((x-\theta)^2)$. Ponieważ $T_n\to\theta$
 według prawdopodobieństwa, iloraz reszty przez
@@ -379,7 +426,8 @@ $\{\overline X_n>0\}$ dąży do jedności;
 na jego dopełnieniu możemy umownie ustawić
 $T_n=\log m$, a na nim $T_n=\log\overline X_n$.
 Z metody delty dla $g(x)=\log x$ w otoczeniu $m$
-(rozszerzonej dowolnie poza tym otoczeniem)
+(z borelowskim rozszerzeniem
+$g(x)=\log m$ dla $x\leq0$)
 otrzymujemy
 $\sqrt n(T_n-\log m)\xrightarrow d
 \Normal(0,\sigma^2/m^2)$.
@@ -390,13 +438,13 @@ w przybliżeniu niepewności logarytmu średniej.
 \begin{przyklad}[Gdy pochodna pierwszego rzędu znika]
 Niech $Z_1,Z_2,\ldots$ będą niezależne
 $\Normal(0,1)$ i $T_n=\overline Z_n$.
-Mamy $\sqrt n T_n\xrightarrow d N(0,1)$.
+Mamy $\sqrt n T_n\xrightarrow d \Normal(0,1)$.
 Dla $g(x)=x^2$ zachodzi $g'(0)=0$
 i $g''(0)=2$, zatem
 $nT_n^2\xrightarrow d Z^2\sim\chi^2_1$.
 W tym przykładzie równość rozkładów jest nawet
 prawdziwa dla każdego $n$, ponieważ
-$\sqrt n\,T_n\sim N(0,1)$. Zastosowanie
+$\sqrt n\,T_n\sim \Normal(0,1)$. Zastosowanie
 metody delty pierwszego rzędu dawałoby tylko
 zdegenerowaną granicę zero przy skali $\sqrt n$.
 \end{przyklad}
@@ -414,7 +462,7 @@ Wtedy $V_n\to\sigma^2$ prawie na pewno i
 \frac{\sqrt n(\overline X_n-m)}{\sqrt{V_n}}
 \xrightarrow d\Normal(0,1),
 \]
-przy dowolnym określeniu ilorazu na zdarzeniu
+przy dowolnym mierzalnym, rzeczywistym określeniu ilorazu na zdarzeniu
 $\{V_n=0\}$.
 \end{twierdzenie}
 \begin{proof}
@@ -425,19 +473,28 @@ liczb można zastosować zarówno do $X_k$, jak i $X_k^2$:
 $\overline X_n\to m$ i
 $n^{-1}\sum_{k\leq n}X_k^2\to\E X_1^2$
 prawie na pewno. Stąd $V_n\to\sigma^2>0$ p.n.,
-a więc $1/\sqrt{V_n}\to1/\sigma$ według
-prawdopodobieństwa (prawdopodobieństwo $V_n=0$
-równe zero nie jest wymagane dla skończonych $n$).
-Z podstawowego CTG
-$\sqrt n(\overline X_n-m)\xrightarrow d N(0,\sigma^2)$.
-Twierdzenie Slutsky'ego daje wskazaną granicę.
+a więc na zbiorze pełnej miary od pewnego indeksu
+$V_n>0$. Definiując $R_n=1/\sqrt{V_n}$ dla $V_n>0$
+i $R_n=0$ poza tym zdarzeniem, mamy
+$R_n\to1/\sigma$ prawie na pewno.
+Ponadto $\Prob(V_n=0)\to0$ ze zbieżności według
+prawdopodobieństwa do dodatniej stałej $\sigma^2$.
+Z podstawowego CTG (rozdział~\ref{ch:clt})
+$\sqrt n(\overline X_n-m)\xrightarrow d \Normal(0,\sigma^2)$.
+Twierdzenie Slutsky'ego daje wskazaną granicę dla
+iloczynu $\sqrt n(\overline X_n-m)R_n$. Każde inne
+mierzalne, rzeczywiste określenie ilorazu na
+$\{V_n=0\}$ różni się od tego iloczynu ze
+zdarzeniem o prawdopodobieństwie nie większym
+niż $\Prob(V_n=0)\to0$, a zatem nie zmienia
+granicy według rozkładu.
 \end{proof}
 
 \begin{uwaga}
 \emph{Asymptotyczna} normalność zmiennej
 studentyzowanej zachodzi dla wielu rozkładów
 z drugim momentem. Nie jest tym samym co
-\emph{dokładny} rozkład t-Studenta, który
+\emph{dokładny} rozkład Studenta, który
 wynika z dodatkowych własności próby normalnej.
 Rozróżnienie to jest ważne przy przejściu
 do statystyki matematycznej w tomie IV.
@@ -449,7 +506,7 @@ Dla próby $X_1,\ldots,X_n$ obserwujemy nie tylko
 średnią, ale i empiryczny rozkład: każda obserwacja
 otrzymuje masę $1/n$. Dystrybuanta empiryczna ma
 postać
-$F_n(x)=n^{-1}\sum_{k=1}^n\ind{\{X_k\leq x\}}$.
+$F_n(x)=n^{-1}\sum_{k=1}^n\chi_{\{X_k\leq x\}}$.
 Dla ustalonego $x$ jest to średnia prób Bernoulliego
 z parametrem $F(x)$, więc MPWL daje
 $F_n(x)\to F(x)$ p.n. Istotne jest mocniejsze pytanie:
@@ -461,7 +518,7 @@ odrobiny więcej niż punktowego MPWL.
 Niech $X_1,X_2,\ldots$ będą niezależnymi
 jednakowo rozłożonymi rzeczywistymi zmiennymi losowymi
 o wspólnej dystrybuancie $F$ i niech
-$F_n(x)=n^{-1}\sum_{k=1}^n\ind{\{X_k\leq x\}}$.
+$F_n(x)=n^{-1}\sum_{k=1}^n\chi_{\{X_k\leq x\}}$.
 Wówczas
 \[
 \sup_{x\in\R}|F_n(x)-F(x)|\longrightarrow0
@@ -472,7 +529,7 @@ Wówczas
 \emph{Krok pierwszy: rozkład jednostajny.}
 Niech $U_1,U_2,\ldots$ będą niezależne
 $\Unif(0,1)$ i
-$H_n(t)=n^{-1}\sum_{k\leq n}\ind{\{U_k\leq t\}}$.
+$H_n(t)=n^{-1}\sum_{k\leq n}\chi_{\{U_k\leq t\}}$.
 Dla każdego ustalonego $t\in[0,1]$ MPWL
 daje $H_n(t)\to t$ p.n. Zastosujemy je
 jednocześnie tylko do przeliczalnego zbioru
@@ -538,7 +595,8 @@ wielkich liczb dla częstości sukcesów.
 \section{Koncentracja i funkcje Lipschitza}
 
 \begin{przyklad}[Koncentracja odpowiedzi układu, a nie tylko średniej]
-Niech $B_1,\ldots,B_n$ będą niezależnymi próbami Bernoulliego,
+Niech $B_1,\ldots,B_n$ będą niezależnymi próbami Bernoulliego
+z tym samym parametrem $p\in[0,1]$,
 $S_n=\sum_{k=1}^n B_k$, a $g:\R\to\R$ będzie
 funkcją $L$-Lipschitza z $L>0$, tzn.
 $|g(x)-g(y)|\leq L|x-y|$ dla wszystkich $x,y$.
@@ -570,8 +628,8 @@ asymptotyczne zanikanie największych wariancji
 (w wersji twierdzenia o równoważności).
 Warunek Lindeberga kontroluje nie tylko prawdopodobieństwo
 rzadkiego dużego skoku, ale jego wkład do \emph{drugiego momentu}.
-Zastąpienie $Y_{n,k}^2$ samym wskaźnikiem
-$\ind{\{|Y_{n,k}|>\varepsilon s_n\}}$
+Zastąpienie $Y_{n,k}^2$ samą funkcją charakterystyczną
+$\chi_{\{|Y_{n,k}|>\varepsilon s_n\}}$
 byłoby zbyt słabe: zdarzenie rzadkie może nieść
 niemal całą wariancję sumy.
 \end{uwaga}
