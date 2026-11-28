@@ -64,7 +64,7 @@ Poniższa lista pochodzi z `catalog/books.json`. Liczba rozdziałów oznacza poz
 **Dalszy plan algebry liniowej:** [rozdziały 28–32: realizacje minimalne, grassmanniany, algebry Clifforda, grupy Pin/Spin, spinory i twistory](docs/pl/plan_algebry_liniowej.md). Materiał o Pin/Spin i spinorach przenosimy z DG-04, natomiast twistory opracujemy od podstaw.
 | [Logika matematyczna i teoria mnogości](books/pl/logic_and_set_theory.tex) | 23 |
 | [Metamatematyka i teoria obliczalności](books/pl/metamathematics.tex) | 7 |
-| [Logika niestandardowa](books/pl/nonclassical_logic.tex) | 3 |
+| [Logika niestandardowa](books/pl/nonclassical_logic.tex) | 4 |
 | [Teoria miary](books/pl/measure_theory.tex) | 31 |
 | [Teoria modeli](books/pl/model_theory.tex) | 9 |
 | [Równania różniczkowe cząstkowe](books/pl/partial_differential_equations.tex) | 33 |
@@ -242,6 +242,6 @@ Rejestr `application/config/pending_reference_baseline.json` dokumentuje odsyła
 
 **Źródła prawdy:** [katalog książek](catalog/books.json), pliki `chapters/pl/`, [rejestr tematów](catalog/topic_registry.json), [workflow GitHub Actions](https://github.com/dariusz-piekarz/mathematical_scipts/actions). Historyczne README, archiwa offline i wcześniejsze raporty mogą mieć nieaktualne liczby.
 
-**Logika niestandardowa (28.11.2026):** NCL-01 przejmuje dawny LST-40 z zachowaniem źródła i etykiet. NCL-02 rozwija semantykę macierzową logik wielowartościowych. NCL-03 wprowadza logikę intuicjonistyczną i dedukcję naturalną. Kompilować po LST, MOD, topologii ogólnej i teorii miary, aby rozstrzygnąć odsyłacze.
+**Logika niestandardowa (28.11.2026):** NCL-01 przejmuje dawny LST-40 z zachowaniem źródła i etykiet. NCL-02 rozwija semantykę macierzową logik wielowartościowych. NCL-03 wprowadza logikę intuicjonistyczną i dedukcję naturalną. NCL-04 rozwija teorię algebr Heytinga. Kompilować po LST, MOD, topologii ogólnej i teorii miary, aby rozstrzygnąć odsyłacze.
 
 **Metamatematyka i teoria obliczalności:** MMT-16–22 przejmują dawne LST-16–22. Numery plików zachowano, PDF numeruje rozdziały od 1. Zaawansowana teoria mnogości pozostaje w LST. Kompilacja książek powiązanych: LST, MOD, MMT, ponownie LST, MOD, MMT, na końcu NCL.
