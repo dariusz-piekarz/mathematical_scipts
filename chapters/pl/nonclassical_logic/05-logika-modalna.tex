@@ -1587,3 +1587,512 @@ a ich alternatywa jest twierdzeniem S5.
 Otrzymujemy dokładnie $2^4=16$ klas
 formuł jednej zmiennej.
 \end{przyklad}
+
+\section{Algebry Boole'a z operatorami modalnymi}
+
+\subsection{Podstawowe własności algebr modalnych}
+
+\begin{definicja}[Algebra modalna]
+\label{def:ncl-modal-algebra}
+Algebrą modalną nazywamy algebrę Boole'a
+$B=(B,\wedge,\vee,\neg,0,1)$ wyposażoną w
+operację jednoargumentową $\Box:B\to B$,
+która spełnia
+\[
+ \Box1=1,\qquad
+ \Box(a\wedge b)=\Box a\wedge\Box b.
+\]
+Operację dualną definiujemy przez
+$\Diamond a=\neg\Box\neg a$.
+Implikacja boolowska ma postać $a\to b=\neg a\vee b$.
+Dopuszczamy algebrę jednoelementową.
+Homomorfizm algebr modalnych jest homomorfizmem
+algebr Boole'a zachowującym $\Box$; automatycznie
+zachowuje także $\Diamond$.
+\end{definicja}
+Algebra Boole'a jest szczególną algebrą Heytinga,
+jak w Twierdzeniu~\ref{thm:ncl-heyting-boolean}.
+Przyjmujemy zatem ten sam porządek kratowy oraz
+tę samą implikację, lecz dodajemy do struktury
+dwa wzajemnie dualne operatory.
+Zachowanie skończonych kresów dolnych nie oznacza
+zachowania dowolnych kresów dolnych, nawet jeśli
+algebra Boole'a jest zupełna.
+
+\begin{stwierdzenie}[Równoważne opisy normalności]
+\label{prop:ncl-modal-algebra-normal}
+W algebrze Boole'a z operacją $\Box$ następujące
+warunki są równoważne:
+\begin{enumerate}
+\item $\Box1=1$ oraz $\Box(a\wedge b)=\Box a\wedge\Box b$.
+\item $\Box1=1$ oraz
+      $\Box(a\to b)\leq\Box a\to\Box b$.
+\item Operacja dualna spełnia $\Diamond0=0$ oraz
+      $\Diamond(a\vee b)=\Diamond a\vee\Diamond b$.
+\end{enumerate}
+W każdym z tych przypadków oba operatory są
+monotoniczne.
+\end{stwierdzenie}
+\begin{proof}
+Przy warunku 1 z $a\leq b$ wynika
+$\Box a=\Box(a\wedge b)=\Box a\wedge\Box b$,
+czyli monotoniczność. Z
+$a\wedge(a\to b)\leq b$ otrzymujemy więc
+$\Box a\wedge\Box(a\to b)\leq\Box b$,
+co przez residuację boolowską daje warunek 2.
+
+Przy warunku 2, jeśli $a\leq b$, to $a\to b=1$,
+zatem $1=\Box(a\to b)\leq\Box a\to\Box b$.
+Stąd $\Box a\leq\Box b$.
+Monotoniczność daje jedną nierówność
+$\Box(a\wedge b)\leq\Box a\wedge\Box b$.
+Z tożsamości $a\to(b\to(a\wedge b))=1$
+oraz dwukrotnego zastosowania warunku 2 mamy
+\[
+ \Box a\leq\Box(b\to(a\wedge b))
+        \leq\Box b\to\Box(a\wedge b).
+\]
+Residuacja daje odwrotną nierówność.
+Wobec tego zachodzi warunek 1.
+
+Równoważność 1 i 3 wynika bezpośrednio
+z dualności $\Diamond a=\neg\Box\neg a$
+i praw de Morgana. Monotoniczność $\Diamond$
+wynika z dwukrotnego zastosowania
+antymonotoniczności dopełnienia.
+\end{proof}
+
+\begin{przyklad}[Algebra modalna relacji]
+\label{ex:ncl-modal-complex-algebra}
+Niech $W$ będzie zbiorem, a $R\subseteq W\times W$.
+Na algebrze potęgowej $\mathcal P(W)$ definiujemy
+\[
+\begin{aligned}
+ \Box_R A&=\{w\in W:R(w)\subseteq A\},\\
+ \Diamond_R A&=\{w\in W:R(w)\cap A\ne\varnothing\},
+ \qquad R(w)=\{z:wRz\}.
+\end{aligned}
+\]
+Otrzymujemy algebrę modalną: każdy zbiór $R(w)$
+jest zawarty w $W$, a zawieranie się w przecięciu
+jest równoważne zawieraniu się w każdym z jego
+składników. Dualność operatorów wynika z
+\[
+ R(w)\not\subseteq W\setminus A
+ \iff R(w)\cap A\ne\varnothing.
+\]
+Co więcej, $\Box_R$ zachowuje dowolne przecięcia,
+a $\Diamond_R$ dowolne sumy, również puste.
+Nazywamy tę strukturę algebrą kompleksową relacji.
+\end{przyklad}
+
+\begin{przyklad}[Normalność bez zupełnej addytywności]
+\label{ex:ncl-modal-noncomplete-additivity}
+Niech $B=\mathcal P(\mathbb N)$ i określmy
+\[
+ \Box A=
+ \begin{cases}
+ \mathbb N,&\mathbb N\setminus A\text{ jest skończony},\\
+ \varnothing,&\text{w przeciwnym przypadku}.
+ \end{cases}
+\]
+Zbiór $\mathbb N$ ma skończone dopełnienie,
+a przecięcie dwóch zbiorów ma skończone
+dopełnienie dokładnie wtedy, gdy oba zbiory
+mają skończone dopełnienia. Zatem $\Box$
+zachowuje $1$ i skończone kresy dolne.
+Dla $A_n=\mathbb N\setminus\{n\}$ zachodzi jednak
+\[
+ \Box\left(\bigcap_{n\in\mathbb N}A_n\right)
+ =\Box\varnothing=\varnothing,\qquad
+ \bigcap_{n\in\mathbb N}\Box A_n=\mathbb N.
+\]
+Dualny operator $\Diamond$ nie zachowuje
+dowolnych sum. W szczególności nie istnieje
+relacja $R$ na $\mathbb N$, dla której
+$\Box=\Box_R$ na całej algebrze $\mathcal P(\mathbb N)$.
+\end{przyklad}
+
+\subsection{Wartościowania i aksjomaty algebraiczne}
+
+\begin{definicja}[Wartościowanie modalne]
+\label{def:ncl-modal-algebra-valuation}
+Przypisanie zmiennym elementów algebry modalnej
+rozszerzamy rekurencyjnie na wszystkie formuły
+przez działania boolowskie oraz
+$v(\Box A)=\Box v(A)$.
+Formuła $A$ jest ważna w algebrze $B$, jeśli
+$v(A)=1$ dla każdego wartościowania.
+Dla normalnej logiki $L$ przez $\mathcal V_L$
+oznaczamy klasę algebr modalnych, w których
+ważna jest każda formuła należąca do $L$.
+\end{definicja}
+
+\begin{stwierdzenie}[Algebraiczne postacie aksjomatów]
+\label{prop:ncl-modal-algebra-axioms}
+Ważność wszystkich instancji danego schematu
+jest równoważna odpowiadającemu mu warunkowi
+dla wszystkich $a\in B$:
+\[
+\begin{array}{c|l}
+ \mathrm D&\Box a\leq\Diamond a\\
+ \mathrm T&\Box a\leq a\\
+ \mathrm B&a\leq\Box\Diamond a\\
+ 4&\Box a\leq\Box\Box a\\
+ 5&\Diamond a\leq\Box\Diamond a.
+\end{array}
+\]
+Jeżeli $L=\mathrm K+\Sigma$, to $\mathcal V_L$
+składa się dokładnie z algebr modalnych
+spełniających warunki odpowiadające $\Sigma$
+(w ogólności równania $v(A)=1$ dla schematów
+$A\in\Sigma$ i wszystkich wartościowań).
+\end{stwierdzenie}
+\begin{proof}
+W algebrze Boole'a $a\to b=1$ dokładnie wtedy,
+gdy $a\leq b$. Podstawienie wartości zmiennej
+$p$ równych dowolnym $a\in B$ daje konieczność
+warunków. Ich zastosowanie do wartości formuły
+$A$ daje wystarczalność.
+
+Klasyczne tautologie przyjmują wartość $1$
+w każdej algebrze Boole'a. Można to uzasadnić
+rozkładem jedynki na skończone koniunkcje
+literałów dla zmiennych występujących w tautologii:
+na każdym takim składniku formuła przyjmuje
+odpowiednią klasyczną wartość, co wynika
+z indukcji po spójnikach; niektóre składniki
+mogą być równe $0$.
+Schemat K jest ważny z
+Stwierdzenia~\ref{prop:ncl-modal-algebra-normal}.
+Modus ponens zachowuje wartość $1$, ponieważ
+$1\to b=b$. Reguła konieczności zachowuje
+ważność, gdyż $\Box1=1$.
+Podstawienie zachowuje ważność: wartościowanie
+formuły po podstawieniu odpowiada wartościowaniu
+wyjściowej formuły, w którym zmienna przyjmuje
+wartość wstawionej formuły; dowód przebiega
+indukcyjnie po jej budowie.
+Indukcja po dowodach $L$ kończy argument.
+\end{proof}
+
+\subsection{Modalna algebra Lindenbauma--Tarskiego}
+
+\begin{twierdzenie}[Algebra formuł normalnej logiki modalnej]
+\label{thm:ncl-modal-lindenbaum}
+Niech $L$ będzie normalną logiką modalną.
+Na formułach określamy relację
+\[
+ A\equiv_L B\iff\vdash_L A\leftrightarrow B.
+\]
+Jest to kongruencja względem wszystkich spójników
+i operatora $\Box$. Iloraz $\mathfrak B_L$,
+z działaniami na klasach
+\[
+ [A]\wedge[B]=[A\wedge B],\quad
+ [A]\vee[B]=[A\vee B],\quad
+ \neg[A]=[\neg A],\quad \Box[A]=[\Box A],
+ \quad 0=[\bot],\ 1=[\top],
+\]
+jest algebrą modalną należącą do $\mathcal V_L$.
+Ponadto
+\[
+ [A]\leq[B]\iff\vdash_L A\to B,\qquad
+ [A]=1\iff\vdash_L A.
+\]
+\end{twierdzenie}
+\begin{proof}
+Klasyczne tautologie zapewniają zwrotność,
+symetrię i przechodniość $\equiv_L$.
+Zgodność ze spójnikami wynika z klasycznej
+zasady zastępowania równoważników, a zgodność
+z $\Box$ z
+Twierdzenia~\ref{thm:ncl-modal-monotonicity}.
+Relacja jest więc kongruencją.
+Tożsamości algebr Boole'a zachodzą na klasach,
+ponieważ ich formuły równoważności są
+klasycznymi tautologiami.
+Równości $\Box1=1$ oraz
+$\Box([A]\wedge[B])=\Box[A]\wedge\Box[B]$
+wynikają z Twierdzenia~\ref{thm:ncl-modal-normal-laws}.
+Porządek klas określa równość
+$[A]\wedge[B]=[A]$, która jest równoważna
+dowodliwości $A\to B$ przez klasyczne
+tautologie. Dla $[A]=1$ stosujemy ponadto
+dowodliwość $\top$ i równoważność
+$A\leftrightarrow(\top\to A)$.
+
+Pozostaje wykazać $\mathfrak B_L\in\mathcal V_L$.
+Dla dowolnego wartościowania $v$ i formuły
+$A\in L$ wybieramy reprezentanty klas
+$v(p)$ dla skończenie wielu zmiennych $p$
+występujących w $A$. Rozszerzamy ten wybór
+do podstawienia $\sigma$ (na pozostałych
+zmiennych możemy przyjąć identyczność).
+Indukcja po budowie formuły daje
+$v(A)=[\sigma(A)]$.
+Z domknięcia $L$ względem podstawień
+mamy $\sigma(A)\in L$, a więc $v(A)=1$.
+\end{proof}
+
+\begin{wniosek}[Pełność algebraiczna dla twierdzeń]
+\label{cor:ncl-modal-algebra-theorem-completeness}
+Dla każdej normalnej logiki modalnej $L$ zachodzi
+\[
+ \vdash_L A
+ \iff \forall B\in\mathcal V_L\ \forall v\quad v(A)=1.
+\]
+Algebra $\mathfrak B_L$ jest wolna w klasie
+$\mathcal V_L$ na klasach zmiennych, w sensie
+własności uniwersalnej z
+Definicji~\ref{def:ncl-heyting-free}, z
+homomorfizmami modalnymi zamiast Heytinga.
+\end{wniosek}
+\begin{proof}
+Kierunek prosty wynika z definicji klasy
+$\mathcal V_L$. Dla odwrotnego przyjmujemy
+wartościowanie kanoniczne $v(p)=[p]$
+w $\mathfrak B_L$. Indukcja daje $v(A)=[A]$,
+a poprzednie twierdzenie identyfikuje
+warunek $[A]=1$ z dowodliwością.
+Jeśli $B\in\mathcal V_L$ i $v$ jest
+dowolnym wartościowaniem, to wzór
+$h([A])=v(A)$ jest dobrze określony:
+z $A\equiv_L B'$ wynika $v(A\leftrightarrow B')=1$,
+a więc $v(A)=v(B')$.
+Z definicji działań $h$ jest homomorfizmem
+modalnym. Jego jednoznaczność wynika z faktu,
+że klasy zmiennych generują $\mathfrak B_L$.
+\end{proof}
+
+\subsection{Filtry modalne, kongruencje i ilorazy}
+
+\begin{definicja}[Filtr modalny]
+\label{def:ncl-modal-filter}
+Filtr $F$ kraty boolowskiej algebry modalnej
+nazywamy modalnym, jeśli
+$a\in F$ pociąga $\Box a\in F$.
+Filtr nie musi być właściwy.
+\end{definicja}
+
+\begin{twierdzenie}[Kongruencje algebr modalnych]
+\label{thm:ncl-modal-filter-congruence}
+Filtry modalne algebry $B$ odpowiadają
+bijektywnie jej kongruencjom modalnym.
+Dla filtru modalnego $F$ odpowiednia kongruencja
+ma postać
+\[
+ a\sim_F b
+ \iff (a\to b)\wedge(b\to a)\in F.
+\]
+Konstrukcja odwrotna przypisuje kongruencji
+klasę jedynki. Iloraz $B/F$ jest algebrą modalną,
+a rzutowanie na iloraz jest homomorfizmem modalnym.
+Jeżeli $B\in\mathcal V_L$, to $B/F\in\mathcal V_L$.
+\end{twierdzenie}
+\begin{proof}
+Dla zwykłego filtru kratowego relacja $\sim_F$
+jest kongruencją algebry Heytinga, a więc także
+algebry Boole'a, ponieważ dopełnienie jest
+pseudodopełnieniem. Korzystamy z
+Twierdzenia~\ref{thm:ncl-heyting-filter-congruence}.
+Otrzymany iloraz jest boolowski, ponieważ
+tożsamość $a\vee\neg a=1$ przechodzi na klasy.
+
+Jeśli $F$ jest modalny i $a\sim_F b$, to
+$a\to b,b\to a\in F$, a zatem
+$\Box(a\to b),\Box(b\to a)\in F$.
+Ze Stwierdzenia~\ref{prop:ncl-modal-algebra-normal}
+i domknięcia ku górze otrzymujemy
+$\Box a\to\Box b,\Box b\to\Box a\in F$.
+Stąd $\Box a\sim_F\Box b$.
+Operacja na ilorazie
+$\Box[a]=[\Box a]$ jest więc dobrze określona.
+Zachowuje jedynkę i skończone kresy dolne,
+ponieważ zachowuje je operacja na reprezentantach.
+
+Odwrotnie, jeśli $\theta$ jest kongruencją modalną,
+to jej klasa jedynki jest filtrem boolowskim
+z twierdzenia o kongruencjach Heytinga.
+Dla $a\,\theta\,1$ zachodzi
+$\Box a\,\theta\,\Box1=1$, więc filtr jest modalny.
+Obie konstrukcje są wzajemnie odwrotne na mocy
+tego samego twierdzenia.
+
+Jeżeli $B\in\mathcal V_L$, to dla formuły $A\in L$
+i wartościowania w $B/F$ wybieramy reprezentanty
+wartości skończenie wielu zmiennych występujących
+w $A$. Homomorfizm ilorazowy przenosi
+wartość $A$ z $B$ na jej wartość w $B/F$;
+pierwsza jest jedynką, więc druga także.
+\end{proof}
+
+\begin{stwierdzenie}[Filtr modalny generowany przez zbiór]
+\label{prop:ncl-modal-generated-filter}
+Dla $S\subseteq B$ najmniejszy filtr modalny
+zawierający $S$ jest zwykłym filtrem kratowym
+generowanym przez
+\[
+ S^\Box=\{\Box^k a:a\in S,\ k\geq0\}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Każdy filtr modalny zawierający $S$ zawiera
+wszystkie iteracje, a więc również filtr
+kratowy generowany przez $S^\Box$.
+Oznaczmy ten ostatni filtr przez $F$.
+Z Lematu~\ref{lem:ncl-heyting-generated-filter}
+każdy $b\in F$ jest nie mniejszy od
+skończonej koniunkcji $d_1\wedge\cdots\wedge d_m$
+elementów $S^\Box$.
+Monotoniczność oraz zachowanie kresów dolnych
+dają
+\[
+ \Box d_1\wedge\cdots\wedge\Box d_m\leq\Box b.
+\]
+Każdy $\Box d_i$ nadal należy do $S^\Box$,
+więc $\Box b\in F$. Dla $m=0$ używamy
+$\Box1=1$. Zatem $F$ jest modalny.
+\end{proof}
+
+\subsection{Silna pełność algebraiczna obu konsekwencji}
+
+\begin{twierdzenie}[Semantyka filtrowa konsekwencji lokalnej]
+\label{thm:ncl-modal-local-algebra-completeness}
+Dla dowolnej normalnej logiki $L$, zbioru
+przesłanek $\Gamma$ i formuły $A$ równoważne są:
+\begin{enumerate}
+\item $\Gamma\vdash_L^{\mathrm{lok}}A$.
+\item Istnieje skończony $\Delta\subseteq\Gamma$
+      taki, że w każdej algebrze $B\in\mathcal V_L$
+      i dla każdego wartościowania $v$ zachodzi
+      \[
+       \bigwedge_{C\in\Delta}v(C)\leq v(A).
+      \]
+\item Dla każdej algebry $B\in\mathcal V_L$,
+      każdego filtru kratowego $F$ algebry $B$
+      i wartościowania $v$, jeśli $v(C)\in F$
+      dla wszystkich $C\in\Gamma$, to $v(A)\in F$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Skończoność dowodu i
+Wniosek~\ref{cor:ncl-modal-local-finite}
+dają z 1 twierdzenie
+$(\bigwedge_{C\in\Delta}C)\to A$.
+Jego ważność w $B\in\mathcal V_L$ i
+boolowska charakterystyka porządku dają 2.
+Z domknięcia filtru względem skończonych
+kresów dolnych i ku górze wynika 3.
+
+Dla odwrotnego kierunku przyjmijmy
+$\Gamma\nvdash_L^{\mathrm{lok}} A$.
+W $\mathfrak B_L$ bierzemy filtr kratowy
+$F$ generowany przez $\{[C]:C\in\Gamma\}$.
+Z Lematu~\ref{lem:ncl-heyting-generated-filter}
+i charakterystyki porządku w $\mathfrak B_L$
+mamy
+\[
+ [A]\in F
+ \iff\exists\Delta\subseteq\Gamma,\ \Delta\text{ skończony},
+ \quad\vdash_L\left(\bigwedge_{C\in\Delta}C\right)\to A.
+\]
+Prawa strona jest równoważna lokalnej dowodliwości
+$A$ z $\Gamma$ przez skończoność i
+Wniosek~\ref{cor:ncl-modal-local-finite}.
+Zatem $[A]\notin F$.
+Wartościowanie kanoniczne spełnia wszystkie
+przesłanki w sensie przynależności do $F$,
+lecz nie spełnia wniosku. Warunek 3 zawodzi.
+\end{proof}
+
+\begin{twierdzenie}[Semantyka zachowania jedynki]
+\label{thm:ncl-modal-global-algebra-completeness}
+Dla dowolnej normalnej logiki $L$ równoważne są:
+\begin{enumerate}
+\item $\Gamma\vdash_L^{\mathrm{glob}}A$.
+\item W każdej algebrze $B\in\mathcal V_L$
+      i dla każdego wartościowania $v$,
+      jeśli $v(C)=1$ dla wszystkich $C\in\Gamma$,
+      to $v(A)=1$.
+\item W każdej takiej algebrze i dla każdego
+      filtru modalnego $F$ oraz wartościowania,
+      jeśli $v(C)\in F$ dla wszystkich $C\in\Gamma$,
+      to $v(A)\in F$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Dla 1 implikującego 3 indukujemy po dowodzie.
+Twierdzenia mają wartość $1\in F$.
+Modus ponens zachowuje przynależność do $F$,
+ponieważ $a\wedge(a\to b)\leq b$.
+Konieczność zachowuje przynależność z definicji
+filtru modalnego.
+Warunek 3 daje 2 przez wybór $F=\{1\}$.
+
+Jeśli 1 nie zachodzi, to
+Twierdzenie~\ref{thm:ncl-modal-global-local}
+daje $\Gamma^\Box\nvdash_L^{\mathrm{lok}} A$.
+W algebrze $\mathfrak B_L$ bierzemy filtr
+modalny $F$ generowany przez $\{[C]:C\in\Gamma\}$.
+Ze Stwierdzenia~\ref{prop:ncl-modal-generated-filter}
+jest on filtrem kratowym generowanym przez
+klasy formuł $\Gamma^\Box$.
+Jak w dowodzie poprzedniego twierdzenia
+otrzymujemy $[A]\notin F$.
+Algebra ilorazowa $\mathfrak B_L/F$ należy
+do $\mathcal V_L$ z
+Twierdzenia~\ref{thm:ncl-modal-filter-congruence}.
+Wartościowanie $v(p)=\pi_F([p])$, gdzie $\pi_F$
+jest rzutowaniem ilorazowym, przyjmuje
+dla każdej przesłanki wartość $1$, lecz
+$v(A)\ne1$, ponieważ klasa jedynki rzutowania
+jest równa $F$. Zatem 2 nie zachodzi.
+\end{proof}
+
+Ważne jest rozróżnienie między dwiema
+semantykami algebraicznymi: sam warunek
+zachowania wartości $1$ w algebrze modalnej
+nie opisuje ogólnie konsekwencji lokalnej.
+Zawsze zachowuje on przejście od $A$ do $\Box A$,
+którego nie dopuszcza lokalne wnioskowanie
+z przesłanek (Przykład~\ref{ex:ncl-modal-local-global-difference}).
+Dla konsekwencji lokalnej potrzebujemy
+zwykłych filtrów lub nierówności algebraicznych,
+a dla globalnej filtrów modalnych lub zachowania
+jedynki.
+
+\begin{wniosek}[Teorie i filtry modalnej algebry formuł]
+\label{cor:ncl-modal-theories-filters}
+Zbiory domknięte względem konsekwencji lokalnej
+w $L$ odpowiadają bijektywnie filtrom kratowym
+$\mathfrak B_L$, a zbiory domknięte względem
+konsekwencji globalnej odpowiadają filtrom modalnym.
+Odpowiedniość ma postać
+\[
+ T\longmapsto F_T=\{[A]:A\in T\},\qquad
+ F\longmapsto T_F=\{A:[A]\in F\}.
+\]
+Obie konstrukcje zachowują inkluzję.
+\end{wniosek}
+\begin{proof}
+Jeżeli $T$ jest domknięty lokalnie, to zawiera
+$L$. Gdy $A\in T$ i $A\equiv_L B$, lokalny
+modus ponens daje $B\in T$, więc przynależność
+nie zależy od reprezentanta.
+Własności filtru wynikają z charakterystyki
+porządku oraz klasycznego wprowadzania koniunkcji.
+Odwrotnie, dla filtru $F$ i lokalnego dowodu
+z $T_F$ indukcja po wierszach pokazuje,
+że klasy wszystkich wierszy należą do $F$:
+twierdzenia dają $1$, a modus ponens zachowuje
+przynależność do filtru.
+Zatem $T_F$ jest domknięty lokalnie.
+Wzajemna odwrotność i zachowanie inkluzji
+wynikają wprost z definicji.
+Z Wniosku~\ref{cor:ncl-modal-theory-closure}
+domknięcie globalne jest równoważne
+domknięciu lokalnemu wraz z domknięciem
+względem $\Box$; to ostatnie odpowiada
+dokładnie modalności filtru.
+\end{proof}
