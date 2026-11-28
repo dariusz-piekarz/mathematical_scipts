@@ -364,6 +364,10 @@ Bernoulliego o parametrze $1/4$; jeśli $H=2$,
 mają parametr $3/4$. Bez znajomości $H$
 obserwacje nie tworzą łańcucha Markowa.
 Rzeczywiście, dla $p_1=1/4$, $p_2=3/4$,
+z prawa całkowitego prawdopodobieństwa względem
+$H$ i warunkowej niezależności obserwacji przy
+ustalonym $H$ otrzymujemy (w obu ilorazach
+skraca się wspólny czynnik $1/2$):
 \begin{align*}
 \Prob(X_2=1\mid X_1=1,X_0=1)
 &=\frac{p_1^3+p_2^3}{p_1^2+p_2^2}=\frac7{10},\\
@@ -375,11 +379,17 @@ Mimo jednakowego stanu obecnego $X_1=1$ prognoza
 zależy od $X_0$. Powód: przeszłe obserwacje
 pozwalają wnioskować o ukrytym parametrze $H$,
 którego sam $X_1$ nie opisuje. Gdyby do stanu
-dołączyć $H$, uzyskalibyśmy bogatszy opis o własności Markowa.
+dołączyć $H$, uzyskalibyśmy proces $(X_n,H)$
+o własności Markowa: ze stanu $(x,h)$ przechodzi on
+do $(1,h)$ z prawdopodobieństwem $p_h$, a do
+$(0,h)$ z prawdopodobieństwem $1-p_h$.
+Wynika to z warunkowej niezależności kolejnego
+losowania od wcześniejszych przy ustalonym $H=h$.
 \end{przyklad}
 
 \begin{przyklad}[Ruch po grafie]
-Niech $G=(V,E)$ będzie skończonym nieskierowanym grafem,
+Niech $G=(V,E)$ będzie skończonym nieskierowanym
+grafem prostym o niepustym zbiorze wierzchołków,
 w którym każdy wierzchołek ma dodatni stopień $d(v)$.
 Z wierzchołka $v$ przechodzimy jednostajnie do jednego
 z jego sąsiadów: $p_{vw}=1/d(v)$, gdy $\{v,w\}\in E$,
@@ -552,9 +562,11 @@ q_n=\frac{\alpha}{\alpha+\beta}
 \left(q_0-\frac{\alpha}{\alpha+\beta}\right).
 \]
 Przy $\alpha=\beta=1$ łańcuch zmienia stan
-w każdym kroku i nigdy nie zbiega w rozkładzie
-z ustalonego stanu, mimo istnienia rozkładu
-stacjonarnego $(1/2,1/2)$. W pozostałych
+w każdym kroku. Wtedy $q_n=1/2+(-1)^n(q_0-1/2)$,
+więc rozkłady zbiegają wtedy i tylko wtedy,
+gdy $q_0=1/2$ (rozkład od początku jest
+stacjonarny). W szczególności nie zbiegają
+przy starcie z ustalonego stanu. W pozostałych
 przypadkach $\alpha,\beta>0$ i
 $\alpha+\beta<2$ mamy $|1-\alpha-\beta|<1$,
 więc rozkład dąży do stacjonarnego.
@@ -860,7 +872,7 @@ Szereg prawdopodobieństw powrotu jest rozbieżny,
 więc spacer jest powracający. Ponadto okres wynosi $2$.
 Dla spaceru z niezależnymi przyrostami o wspólnym
 rozkładzie $\Prob(\xi_k=1)=p$, gdzie $0<p<1$
-i $p\ne1/2$,
+i $p\ne1/2$, oraz $\Prob(\xi_k=-1)=1-p$,
 mamy
 $\Prob_0(X_{2n}=0)=\binom{2n}{n}[p(1-p)]^n
 \sim[4p(1-p)]^n/\sqrt{\pi n}$,
@@ -871,14 +883,23 @@ deterministycznie w jednym kierunku i również
 nie powraca do punktu wyjścia.
 Przez niezmienniczość przejść względem przesunięć
 te same wnioski o powracaniu dotyczą każdego stanu.
-W przypadku symetrycznym okres każdego stanu wynosi $2$.
+W przypadku symetrycznym oraz dla $0<p<1$
+okres każdego stanu wynosi $2$: powroty
+w nieparzystych chwilach są niemożliwe, a powrót
+po dwóch krokach ma prawdopodobieństwo $2p(1-p)>0$.
+Dla $p=0$ lub $p=1$ okres jest nieokreślony
+w przyjętej konwencji.
 \end{przyklad}
 
 \begin{przyklad}[Dlaczego przy powracaniu liczy się cały szereg]
 Prawdopodobieństwo powrotu w jednym kroku może
 być małe, a powrót w pewnej dodatniej chwili może
 mimo to zachodzić prawie na pewno,
-ponieważ ma nieskończenie wiele okazji. Dlatego
+jak pokazuje kryterium szeregowe.
+Sama liczba możliwych chwil powrotu nie wystarcza:
+w spacerze z dryfem dodatnie prawdopodobieństwa
+powrotu występują w nieskończenie wielu chwilach,
+ale ich szereg jest zbieżny. W szczególności
 samo $p_{ii}$ nie rozstrzyga o powracaniu.
 Na przykład spacer symetryczny ma $p_{00}=0$,
 a mimo to stan zero jest powracający.
@@ -1046,8 +1067,9 @@ Wyraża ona niezmienniczość prawa skończonych
 trajektorii przy odwróceniu czasu.
 
 \begin{przyklad}[Spacer na grafie: przewaga wierzchołków o dużym stopniu]
-Dla skończonego nieskierowanego grafu bez
-wierzchołków izolowanych zdefiniujmy
+Dla skończonego nieskierowanego grafu prostego
+o niepustym zbiorze wierzchołków, bez wierzchołków
+izolowanych, zdefiniujmy
 $\pi_v=d(v)/\sum_{w\in V}d(w)$.
 Gdy $v,w$ są sąsiadami,
 $\pi_vp_{vw}=1/\sum_zd(z)=\pi_wp_{wv}$;
@@ -1059,9 +1081,10 @@ trzykrotnie większe prawdopodobieństwo wizyty.
 
 \begin{przyklad}[Stacjonarność nie jest zbieżnością]
 Dla $P=\begin{psmallmatrix}0&1\\1&0\end{psmallmatrix}$
-rozkład $(1/2,1/2)$ jest stacjonarny, ale startując
-od pierwszego stanu, rozkłady kolejnych $X_n$
-naprzemiennie wynoszą $(1,0)$ i $(0,1)$.
+rozkład $(1/2,1/2)$ jest stacjonarny, lecz
+przy starcie z pierwszego stanu rozkłady
+kolejnych $X_n$ naprzemiennie wynoszą
+$(1,0)$ i $(0,1)$.
 Sama równość $\pi P=\pi$ nie wystarcza do
 $\mu P^n\to\pi$; trzeba kontrolować okresowość.
 \end{przyklad}
@@ -1174,16 +1197,21 @@ nie większa niż $Cr^n$.
 Z poprzedniego lematu wybierzmy $N$ takie,
 że $Q=P^N$ ma wszystkie współrzędne dodatnie.
 Niech $m=|S|$ i $\varepsilon=m\min_{i,j}Q_{ij}>0$.
-Gdy $\varepsilon=1$, wszystkie wiersze $Q$ są
-jednostajne i po $N$ krokach następuje pełne
-zapomnienie stanu początkowego.
-W przeciwnym razie $0<\varepsilon<1$ i
+Ponieważ każdy wiersz $Q$ sumuje się do $1$,
+$\varepsilon\leq1$. Gdy $\varepsilon=1$,
+wszystkie wiersze $Q$ są jednostajne. Z
+$\pi Q=\pi$ wynika wtedy, że $\pi$ jest
+rozkładem jednostajnym i $\mu Q=\pi$ dla każdego
+rozkładu $\mu$.
+Rozpatrzmy teraz przypadek $0<\varepsilon<1$. Mamy
 \[
 Q_{ij}=\varepsilon\,u_j+(1-\varepsilon)R_{ij},
 \qquad u_j=1/m,
 \]
-gdzie $R$ jest macierzą stochastyczną (nieujemność
-wynika z definicji $\varepsilon$).
+gdzie $R_{ij}=(Q_{ij}-\varepsilon/m)/(1-\varepsilon)$
+jest nieujemne, a suma każdego wiersza wynosi
+$(1-\varepsilon)/(1-\varepsilon)=1$. Zatem $R$
+jest macierzą stochastyczną.
 Dla dowolnych rozkładów $\mu,\nu$
 $\mu Q-\nu Q=(1-\varepsilon)(\mu R-\nu R)$.
 Dla każdej macierzy stochastycznej $K$ i dowolnego
@@ -1200,14 +1228,17 @@ Stosując to do $K=R$ oraz $v=\mu-\nu$, otrzymujemy
 Ustalmy stacjonarny $\pi$ i podstawmy $\nu=\pi$.
 Iteracja daje
 $\|\mu Q^k-\pi\|_1\leq2(1-\varepsilon)^k$.
-Dla $n=kN+r$, $0\leq r<N$, kontrakcja przez
-$P^r$ daje ten sam szacunek z $k=\lfloor n/N\rfloor$.
+Dla $n=kN+s$, $0\leq s<N$, kontrakcja przez
+$P^s$ daje to samo oszacowanie dla
+$k=\lfloor n/N\rfloor$.
 Przy $0<\varepsilon<1$ jest on geometryczny:
 można wziąć $r_0=(1-\varepsilon)^{1/N}<1$
 i stałą $C=2/(1-\varepsilon)$.
-Przy $\varepsilon=1$ rozkład jest dokładnie
-stacjonarny od pewnego kroku, więc dowolna stała
-$r_0\in(0,1)$ i wystarczająco duże $C$ wystarczą.
+Przy $\varepsilon=1$ mamy $\mu P^n=\pi$
+dla $n\geq N$, gdyż $\mu P^N=\pi$ i $\pi P=\pi$.
+Dla $n<N$ norma różnicy rozkładów jest nie większa
+niż $2$. Wystarczy więc dowolne $r_0\in(0,1)$
+oraz $C=2r_0^{-(N-1)}$.
 \end{proof}
 
 \begin{uwaga}[Odległość całkowitej wariacji]
@@ -1381,7 +1412,15 @@ a jej druga różnica wynosi
 $u_{i+1}-2u_i+u_{i-1}=-2$, czyli
 $u_i=1+(u_{i+1}+u_{i-1})/2$. Przy $p\ne q$, funkcja $i\mapsto i$
 spełnia $p(i+1)+q(i-1)-i=p-q$,
-a $h$ jest harmoniczna, stąd
+a $h$ jest harmoniczna. Dla funkcji
+$v_i=(Nh_i-i)/(p-q)$ mamy $v_0=v_N=0$ oraz
+\[
+pv_{i+1}+qv_{i-1}-v_i
+=\frac{N(ph_{i+1}+qh_{i-1}-h_i)-(p-q)}{p-q}
+=-1.
+\]
+Spełnia ona zatem równanie dla $u$, skąd
+po zastosowaniu poniższego argumentu jedyności
 \[
 u_i=\frac{Nh_i-i}{p-q}.
 \]
@@ -1468,9 +1507,12 @@ $(1-\alpha-\beta)^k$.
 Jeśli $\alpha+\beta>1$, korelacje zmieniają
 znak naprzemiennie, a jeśli $\alpha+\beta<1$,
 zanikają bez zmiany znaku. Dla $\alpha+\beta=1$
-korelacja jest zerowa dla każdego $k\geq1$. Proces może zatem
-mieć pamięć statystyczną mimo ustalonego rozkładu
-jednowymiarowego.
+korelacja jest zerowa dla każdego $k\geq1$. W tym ostatnim przypadku oba wiersze $P$
+są równe $\pi$, więc prawo trajektorii jest
+iloczynem mas $\pi$ i przy przyjętym starcie
+zmienne są niezależne. W pozostałych przypadkach
+proces ma zależność czasową mimo stałego
+rozkładu jednowymiarowego.
 \end{przyklad}
 
 \section{Częstości odwiedzin i twierdzenie ergodyczne}
@@ -1918,11 +1960,10 @@ wyborów, i przenosimy ją do drugiego pojemnika.
 Niech $X_n\in\{0,\ldots,N\}$ oznacza liczbę
 cząstek w pierwszym pojemniku. Wtedy
 \[
-p_{k,k+1}=\frac{N-k}{N},\qquad
-p_{k,k-1}=\frac{k}{N},
+p_{k,k+1}=\frac{N-k}{N}\quad(0\leq k<N),\qquad
+p_{k,k-1}=\frac{k}{N}\quad(0<k\leq N),
 \]
-przy czym nieistniejące przejścia na brzegach
-pomijamy, a wszystkie pozostałe przejścia mają
+a wszystkie pozostałe przejścia mają
 prawdopodobieństwo zero. Warunkowo względem
 pełnej historii konfiguracji szanse wyboru cząstki
 z obu pojemników zależą wyłącznie od $X_n$.
@@ -1986,7 +2027,7 @@ możemy unormować szereg geometryczny,
 otrzymując
 \[
 \pi_i=(1-\rho)\rho^i,
-\qquad \E_\pi X=\frac{\rho}{1-\rho}.
+\qquad \E_\pi X_0=\frac{\rho}{1-\rho}.
 \]
 Normalizacja wynika z $\sum_{i\geq0}\rho^i=(1-\rho)^{-1}$,
 a wzór na średnią z
