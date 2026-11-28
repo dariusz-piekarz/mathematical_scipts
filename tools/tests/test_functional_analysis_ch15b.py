@@ -180,6 +180,32 @@ class TestChapter15B(unittest.TestCase):
             self.assertIn(fragment, source)
 
 
+    def test_integral_definitions_have_separate_environments(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for title, label in (
+            ("Mierzalność silna", "def:measurability15b"),
+            ("Mierzalność słaba", "def:weak-measurable15b"),
+            ("Istotna ośrodkowość zbioru wartości", "def:essential-separable-range15b"),
+            ("Całka funkcji prostej", "def:bochner-simple-integral15b"),
+            ("Całka Bochnera", "def:bochner15b"),
+            ("Całka Dunforda", "def:dunford15b"),
+            ("Całka Pettisa", "def:pettis15b"),
+            ("Całka Birkhoffa", "def:birkhoff15b"),
+        ):
+            marker = r"\begin{definicja}[" + title + "]"
+            self.assertEqual(source.count(marker), 1)
+            start = source.index(marker)
+            end = source.index(r"\end{definicja}", start)
+            self.assertIn(r"\label{" + label + "}", source[start:end])
+        for label in (
+            "thm:dunford-integration-operator15b",
+            "thm:pettis-integration-operator15b",
+            "thm:atomic-four-integrals15b",
+            "cor:finite-dimensional-vector-integrals15b",
+            "ex:bochner-continuous-functions15b",
+        ):
+            self.assertEqual(source.count(r"\label{" + label + "}"), 1)
+
     def test_audit10_completion_and_total_integral(self):
         source = SOURCE.read_text(encoding="utf-8")
         for fragment in (
