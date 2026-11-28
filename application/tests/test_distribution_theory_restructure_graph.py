@@ -1,5 +1,6 @@
 """Exercise the actual Atlas resolver on all historical DT aliases before activation."""
 import json
+from contextlib import closing
 from pathlib import Path
 import re
 import shutil
@@ -42,7 +43,7 @@ class DistributionRestructureGraphTest(unittest.TestCase):
                                   encoding="utf-8")
             db = Path(tmp) / "index.db"
             build_database(root, db, alias_path, recursive=True)
-            with sqlite3.connect(db) as con:
+            with closing(sqlite3.connect(db)) as con, con:
                 rows = con.execute(
                     "SELECT target_label,status,target_document,target_entity "
                     "FROM references_tex WHERE source_document='ME-99' "
@@ -74,21 +75,27 @@ class DistributionRestructureGraphTest(unittest.TestCase):
 
     def test_inherited_outgoing_links_follow_the_split(self):
         plan = structure_plan()
-        if plan["status"] == "active":
-            self.skipTest("historical source snapshot is checked before activation")
+        baseline = plan["historical_outgoing_links"]["by_document"]
         migration = json.loads((ROOT / "catalog/distribution_theory_migration.json")
                                .read_text(encoding="utf-8"))
-        # Every historical qualified link must survive in at least one of its
-        # successor chapters, including links not in the older baseline tests.
+        self.assertEqual(set(baseline), {c["id"] for c in migration["chapters"]})
+        key = "target_path" if plan["status"] == "active" else "candidate_path"
+        # The baseline was extracted from the pre-activation revision.
+        # It remains independently checkable after removing obsolete files.
         for chapter in migration["chapters"]:
-            text = (ROOT / chapter["target_path"]).read_text(encoding="utf-8")
-            links = set(re.findall(r"\\atlasref\{([^}]+)\}", text))
+            old_id = chapter["id"]
+            links = set(baseline[old_id])
+            if plan["status"] != "active":
+                text = (ROOT / chapter["target_path"]).read_text(encoding="utf-8")
+                self.assertEqual(links, set(re.findall(r"\\atlasref\{([^}]+)\}", text)),
+                                 old_id)
             successors = [r for r in plan["chapters"]
-                          if chapter["id"] in r["source_modules"] and r.get("candidate_path")]
-            combined = "\n".join((ROOT / r["candidate_path"]).read_text(encoding="utf-8")
+                          if old_id in r["source_modules"] and r.get(key)]
+            self.assertTrue(successors, old_id)
+            combined = "\n".join((ROOT / r[key]).read_text(encoding="utf-8")
                                  for r in successors)
             self.assertLessEqual(links, set(re.findall(r"\\atlasref\{([^}]+)\}", combined)),
-                                 chapter["id"])
+                                 old_id)
         for old, qualified, new in (
             ("DT-01", "PDE-08::thm:pde8-inversion", "DT-09"),
             ("DT-04", "PDE-07::def:pde7-derivative", "DT-05"),
