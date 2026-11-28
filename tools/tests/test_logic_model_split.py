@@ -84,6 +84,9 @@ class TestLogicModelSplit(unittest.TestCase):
         self.assertIn(r"\label{thm:lst-fuzzy-mtl-standard}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-godel-standard}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-finite-standard}", src)
+        self.assertIn(r"\label{lem:lst-fuzzy-ordered-linear-transfer}", src)
+        self.assertIn(r"\label{thm:lst-fuzzy-mv-rational-countermodel}", src)
+        self.assertIn(r"\label{thm:lst-fuzzy-product-finite-countermodel}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-bl-noncompactness}", src)
         self.assertIn(r"\label{def:lst-fuzzy-product-logic}", src)
         self.assertIn(r"\label{eq:lst-fuzzy-syntactic-residuation}", src)
@@ -290,6 +293,31 @@ class TestFuzzyOperations(unittest.TestCase):
             self.assertLessEqual(2,m)
             self.assertLessEqual(m,6)
             self.assertEqual((2*(1-x)+6*x),2+4*x)
+
+    def test_finite_mv_rational_countermodels(self):
+        for n in range(1, 21):
+            grid = [F(i,n) for i in range(n+1)]
+            star, implication = self.norms[2]
+            for a,b in itertools.product(grid, repeat=2):
+                for op in (min,max,star,implication):
+                    self.assertIn(op(a,b),grid)
+
+    def test_product_group_exponents(self):
+        star, implication = self.norms[1]
+        for x,y in itertools.product(range(-8,1), repeat=2):
+            a,b = F(2)**x,F(2)**y
+            self.assertEqual(star(a,b),F(2)**(x+y))
+            self.assertEqual(implication(a,b),F(2)**min(0,y-x))
+            self.assertEqual(implication(a,F(0)),0)
+            self.assertEqual(implication(F(0),b),1)
+
+    def test_finite_lexicographic_constraints(self):
+        # The full lexicographic group is not Archimedean, but finite
+        # inequalities n*epsilon < unit admit rational realizations.
+        for n in range(1, 50):
+            u, eps = F(1), F(1,n+1)
+            self.assertGreater(eps,0)
+            self.assertTrue(all(k*eps<u for k in range(1,n+1)))
 
     def test_sugeno_zero_order(self):
         self.assertEqual(F(1, 4)*2 + F(3, 4)*6, 5)
