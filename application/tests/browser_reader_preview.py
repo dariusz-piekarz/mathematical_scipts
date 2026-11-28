@@ -314,6 +314,44 @@ with sync_playwright() as pw:
             assert abs(check['volumes'][1]-5/6) < 1e-12, check
         host.locator('button').click()
         assert host.locator('iframe').count() == 0
+    # AM II 26: slider cross-sections and the Gram area multiplier.
+    source = (ROOT.parent / 'chapters/pl/mathematical_analysis_ii/26-calka-lebesguea-w-rn.tex').read_text(encoding='utf-8')
+    page.evaluate("latex => renderSimplified(latex, 'AM2-26')", source)
+    hosts = box.locator('.atlas-plot-host')
+    assert hosts.count() == 2
+    for i, identifier in enumerate(('am2_26_layers.html', 'am2_26_gram.html')):
+        host = hosts.nth(i)
+        assert host.locator('iframe').count() == 0
+        host.locator('button').click()
+        iframe = host.locator('iframe')
+        assert iframe.get_attribute('sandbox') == 'allow-scripts'
+        assert iframe.get_attribute('src').endswith(identifier)
+        plot = host.frame_locator('iframe').locator('#plot[data-ready=true]')
+        plot.wait_for(timeout=60000)
+        if i == 0:
+            check = plot.evaluate("""el => {
+                const cuts=el.data.slice(2), slider=el.layout.sliders[0];
+                return {count:cuts.length, steps:slider.steps.length,
+                    visible:cuts.filter(t=>t.visible===true).length,
+                    error:Math.max(...cuts.map(t=>Math.abs(Math.max(...t.x)-(1-t.z[0])))),
+                    activeHeight:cuts[slider.active].z[0],
+                    activeArea:Math.max(...cuts[slider.active].x)**2,
+                    stepVisibility:slider.steps.every((s,i)=>s.args[0].visible.slice(2).every((v,j)=>v===(i===j)))};
+            }""")
+            assert check['count'] == check['steps'] == 20 and check['visible'] == 1, check
+            assert check['error'] < 1e-12 and check['stepVisibility'], check
+            assert abs(check['activeHeight']-.4) < 1e-12 and abs(check['activeArea']-.36) < 1e-12, check
+        else:
+            check = plot.evaluate("""el => {
+                const s=el.data[2], a=[s.x[1]-s.x[0],0,s.z[0][1]-s.z[0][0]],
+                    b=[0,s.y[1]-s.y[0],s.z[1][0]-s.z[0][0]];
+                const cross=[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+                return {area:Math.hypot(...cross), projected:a[0]*b[1]};
+            }""")
+            assert abs(check['area']-3**.5/16) < 1e-12, check
+            assert abs(check['projected']-1/16) < 1e-12, check
+        host.locator('button').click()
+        assert iframe.count() == 0
     # Real graph chapters: every figure must decode, not merely insert a placeholder.
     for module, filename, expected in (
         ('GW-01', '01-podstawy-teorii-grafow.tex', 7),

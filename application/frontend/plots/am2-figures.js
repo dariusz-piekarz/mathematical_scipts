@@ -160,6 +160,24 @@
       };
       return base([...wedge(-1,"#d97706","Wkład −1/2"),...wedge(1,"#397db5","Wkład +1/2")],"Całka ze znakiem: −1/2 + 1/2 = 0",{scene:{...scene(),aspectmode:"data",camera:{eye:{x:1.3,y:1.6,z:.8}}}});
     },
+    "am2_26_layers.html":()=>{
+      const v=[[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,1]],f=[[0,2,1],[0,3,2],[0,1,4],[1,2,4],[2,3,4],[3,0,4]];
+      const edges=[[0,1],[1,2],[2,3],[3,0],[0,4],[1,4],[2,4],[3,4]],p=edges.flatMap(([i,j])=>[v[i],v[j],[null,null,null]]);
+      const data=[{type:"mesh3d",x:v.map(q=>q[0]),y:v.map(q=>q[1]),z:v.map(q=>q[2]),i:f.map(q=>q[0]),j:f.map(q=>q[1]),k:f.map(q=>q[2]),color:"#397db5",opacity:.35,flatshading:true,name:"Bryła pod wykresem",showlegend:true},
+      {...line(p.map(q=>q[0]),p.map(q=>q[1]),p.map(q=>q[2]),"Krawędzie","#24517d"),showlegend:false}];
+      const levels=Array.from({length:20},(_,i)=>i/20);
+      for(const [i,t] of levels.entries()){const a=1-t;data.push({type:"mesh3d",x:[0,a,a,0],y:[0,0,a,a],z:[t,t,t,t],i:[0,0],j:[1,2],k:[2,3],color:"#d97706",opacity:.85,visible:i===8,name:"Przekrój",showlegend:false});}
+      const steps=levels.map((t,i)=>({label:t.toFixed(2),method:"update",args:[{visible:[true,true,...levels.map((_,j)=>j===i)]},{"title.text":"Przekrój na wysokości "+t.toFixed(2)+" — pole "+((1-t)**2).toFixed(4)}]}));
+      return base(data,"Przekrój na wysokości 0.40 — pole 0.3600",{scene:{...scene(),aspectmode:"data",xaxis:{...axis("x"),range:[0,1]},yaxis:{...axis("y"),range:[0,1]},zaxis:{...axis("z"),range:[0,1]}},margin:{l:0,r:0,b:70,t:55},sliders:[{active:8,currentvalue:{prefix:"t = "},steps}]});
+    },
+    "am2_26_gram.html":()=>{
+      const x=lin(0,1,5),q=[.5,.75],z=grid(x,x,(u,v)=>u+v);
+      const data=[surface(x,x,grid(x,x,()=>0),{colorscale:[[0,"#aeb6bf"],[1,"#aeb6bf"]],opacity:.35,name:"Rzut na dziedzinę",showlegend:true}),surface(x,x,z,{colorscale:[[0,"#82b5df"],[1,"#397db5"]],name:"z=x+y",showlegend:true,opacity:.75}),surface(q,q,grid(q,q,(u,v)=>u+v),{colorscale:[[0,"#d97706"],[1,"#d97706"]],name:"Pole √3/16",showlegend:true})];
+      const a=[.5,.75,.75,.5,.5],b=[.5,.5,.75,.75,.5];
+      data.push(line(a,b,a.map((u,i)=>u+b[i]),"Brzeg komórki","#8d4b00"),line(a,b,a.map(()=>0),"Rzut: pole 1/16","#444"));
+      for(let i=0;i<4;i++)data.push({...line([a[i],a[i]],[b[i],b[i]],[0,a[i]+b[i]],"Rzutowanie","#888"),showlegend:false,line:{color:"#888",width:2,dash:"dash"}});
+      return base(data,"Macierz Grama: mnożnik pola √3",{scene:{...scene(),aspectmode:"data",camera:{eye:{x:1.55,y:1.55,z:1.1}}}});
+    },
     "am2_36_geometric.html":()=>{
       const r=lin(0,.97,61),t=lin(0,2*Math.PI,121),X=t.map(a=>r.map(v=>v*Math.cos(a))),Y=t.map(a=>r.map(v=>v*Math.sin(a)));
       const norm=(a,v,n)=>n===null?1/Math.hypot(1-v*Math.cos(a),v*Math.sin(a)):Math.hypot(1-v**(n+1)*Math.cos((n+1)*a),v**(n+1)*Math.sin((n+1)*a))/Math.hypot(1-v*Math.cos(a),v*Math.sin(a));

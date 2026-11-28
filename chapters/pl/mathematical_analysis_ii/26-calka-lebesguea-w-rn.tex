@@ -1098,6 +1098,59 @@ To rozróżnienie będzie istotne w rozdziałach
 oraz \ref{ma2:ch:line-integrals}.
 \end{przyklad}
 
+
+\paragraph{Wizualizacja interaktywna.}
+Suwak wysokości przekroju pozwala obserwować
+zmianę jego pola. Drugi wykres pokazuje
+nachyloną powierzchnię, komórkę i jej rzut.
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+
+v = np.array([(0,0,0),(1,0,0),(1,1,0),
+              (0,1,0),(0,0,1)])
+f = np.array([(0,2,1),(0,3,2),(0,1,4),
+              (1,2,4),(2,3,4),(3,0,4)])
+fig = go.Figure(go.Mesh3d(
+    x=v[:,0],y=v[:,1],z=v[:,2],
+    i=f[:,0],j=f[:,1],k=f[:,2],
+    color="#397db5",opacity=.35))
+levels = np.arange(20)/20
+for i,t in enumerate(levels):
+    a=1-t
+    fig.add_trace(go.Mesh3d(
+        x=[0,a,a,0],y=[0,0,a,a],z=[t]*4,
+        i=[0,0],j=[1,2],k=[2,3],
+        color="#d97706",visible=i==8))
+steps = [dict(label=f"{t:.2f}",method="update",
+    args=[dict(visible=[True]+[j==i for j in
+         range(len(levels))]),
+         dict(title=f"Pole = {(1-t)**2:.4f}")])
+    for i,t in enumerate(levels)]
+fig.update_layout(scene_aspectmode="data",
+    sliders=[dict(active=8,steps=steps)],
+    title="Pole = 0.3600")
+fig.write_html("am2_26_layers.html", include_plotlyjs=True)
+
+x=np.linspace(0,1,5)
+X,Y=np.meshgrid(x,x)
+fig=go.Figure(go.Surface(x=X,y=Y,z=X+Y,
+    showscale=False,colorscale="Blues",opacity=.75))
+fig.add_trace(go.Surface(x=X,y=Y,z=0*X,
+    showscale=False,opacity=.35,colorscale="Greys"))
+a=np.array([.5,.75,.75,.5,.5])
+b=np.array([.5,.5,.75,.75,.5])
+fig.add_trace(go.Mesh3d(x=a[:4],y=b[:4],
+    z=(a+b)[:4],i=[0,0],j=[1,2],k=[2,3],
+    color="#d97706"))
+fig.add_trace(go.Scatter3d(x=a,y=b,z=a+b,
+    mode="lines",name="Pole sqrt(3)/16"))
+fig.add_trace(go.Scatter3d(x=a,y=b,z=0*a,
+    mode="lines",name="Pole rzutu 1/16"))
+fig.update_layout(scene_aspectmode="data")
+fig.write_html("am2_26_gram.html", include_plotlyjs=True)
+\end{lstlisting}
+
 \section{Przygotowanie do dalszego rachunku całkowego}
 
 Dla mierzalnej funkcji nieujemnej $f$ i rozkładu
