@@ -54,11 +54,15 @@ dotyczą czasu $[0,\infty)$.
 \draw[->] (-.3,0)--(8.1,0) node[right] {$t$};
 \draw[->] (0,-.3)--(0,4.8) node[above] {$N_t$};
 \foreach \j in {1,2,3,4} {\draw (-.09,\j)--(.09,\j) node[left=4pt] {$\j$};}
-\draw[very thick,blue!70!black] (0,0)--(1.05,0)--(1.05,1)--(2.55,1)--(2.55,2)--(3.6,2)--(3.6,3)--(6.2,3)--(6.2,4)--(7.75,4);
+\draw[very thick,blue!70!black] (0,0)--(1.05,0);
+\draw[very thick,blue!70!black] (1.05,1)--(2.55,1);
+\draw[very thick,blue!70!black] (2.55,2)--(3.6,2);
+\draw[very thick,blue!70!black] (3.6,3)--(6.2,3);
+\draw[very thick,blue!70!black] (6.2,4)--(7.75,4);
 \foreach \x/\j in {1.05/1,2.55/2,3.6/3,6.2/4} {
+\draw[densely dashed,gray] (\x,0)--(\x,\j);
 \fill[blue!70!black] (\x,\j) circle (2pt);
 \draw[fill=white,blue!70!black] (\x,{\j-1}) circle (2pt);
-\draw[densely dashed,gray] (\x,0)--(\x,\j);
 \node[below=4pt] at (\x,0) {$T_{\j}$};}
 \end{tikzpicture}
 \par\smallskip\small Przykładowa trajektoria: $N_t$ liczy zdarzenia w $(0,t]$;
@@ -422,8 +426,16 @@ co daje wzór dwumianowy.
 \end{proof}
 
 Warto zauważyć zmianę perspektywy: bez warunkowania liczby
-nadejść w rozłącznych przedziałach są niezależne, ale po warunku
-$N_t=n$ przestają być niezależne, bo ich suma musi wynosić $n$.
+nadejść w rozłącznych przedziałach są niezależne, ale
+po warunkowaniu względem $N_t=n$ ($n\ge1$) liczności
+w dwóch rozłącznych podprzedziałach $(0,t]$ o dodatnich
+długościach nie są niezależne. Jeżeli ich względne długości
+to $p_1,p_2>0$, z rozkładu wielomianowego wynika
+kowariancja warunkowa $-np_1p_2$: zapisując obie liczności
+jako sumy wskaźników dla $n$ niezależnych jednostajnych
+punktów, dla każdego punktu iloczyn dwóch wskaźników jest
+zerem, a kowariancje między różnymi punktami znikają.
+Dla $n=0$ wszystkie liczności są deterministycznie zerowe.
 
 \begin{zadanie}[Cztery zgłoszenia w godzinę]
 Zgłoszenia pojawiają się zgodnie z procesem Poissona o
@@ -483,7 +495,11 @@ intensywność nie wpływa na względne położenie ich chwil.
 Niech $N^{(1)},\ldots,N^{(r)}$ będą niezależnymi procesami
 Poissona o intensywnościach $\lambda_1,\ldots,\lambda_r>0$.
 Wtedy $N_t:=\sum_{j=1}^rN_t^{(j)}$ jest procesem Poissona
-o intensywności $\lambda:=\sum_j\lambda_j$.
+o intensywności $\lambda:=\sum_j\lambda_j$ w sensie
+rozkładów skończeniewymiarowych i ma jednostkowe skoki
+prawie na pewno. Po ewentualnej zmianie na wspólnym
+zbiorze zerowym jest procesem Poissona także w sensie
+konstrukcji z dodatnich odstępów wykładniczych.
 \end{twierdzenie}
 \begin{proof}
 Trajektorie sumy są niemalejące, prawostronnie ciągłe
@@ -629,7 +645,9 @@ $\E|S_t|\le\E N_t\,\E|Y_1|$, a kwadratowalność,
 jeżeli $\E Y_1^2<\infty$, z
 $\E S_t^2\le\E[N_t^2]\,\E Y_1^2$
 (przez nierówność Cauchy'ego--Schwarza dla sumy).
-Po uśrednieniu pierwsza równość jest oczywista. Ze wzoru
+Przy skończonym pierwszym momencie uśrednienie daje
+$\E S_t=\E N_t\,\E Y_1=\lambda t\E Y_1$.
+Przy skończonym drugim momencie ze wzoru
 na wariancję całkowitą wynika
 \begin{align*}
 \Var(S_t)&=\E[N_t\Var(Y_1)]
@@ -643,6 +661,12 @@ $\sum_{n\ge0}e^{-\lambda t}(\lambda t)^n z^n/n!
 Doprecyzujmy filtrację: $\mathcal G_s$ jest generowane przez
 $N_v$ dla $0\le v\le s$ oraz zmienne
 $Y_k\chi_{\{T_k\le s\}}$ dla $k\ge1$.
+Jeżeli $s\le t$, to $\{T_k\le s\}=\{N_s\ge k\}$
+należy do $\mathcal G_t$ i
+$Y_k\chi_{\{T_k\le s\}}=
+(Y_k\chi_{\{T_k\le t\}})\chi_{\{T_k\le s\}}$.
+Zatem $\mathcal G_s\subseteq\mathcal G_t$, czyli
+rzeczywiście otrzymujemy filtrację.
 Na zdarzeniu $\{N_s=n\}$ informacja ta zależy tylko
 od przeszłości licznika i znaczników $Y_1,\ldots,Y_n$.
 Dla $A\in\mathcal G_s$ zdarzenie $A\cap\{N_s=n\}$
@@ -686,15 +710,45 @@ na rozłącznych przedziałach są niezależne. Ponadto
 $\Prob(N_t-N_s=0)=\exp(-\int_s^t a(u)\,\mathrm d\lambda_1(u))$.
 \end{stwierdzenie}
 \begin{proof}
-Funkcja $A$ jest ciągła i niemalejąca, a
-$A(t)-A(s)=\int_s^t a(u)\,\mathrm d\lambda_1(u)$.
+Funkcja $A$ jest lokalnie absolutnie ciągła i niemalejąca,
+$A(0)=0$, a $A(t)-A(s)=\int_s^t a(u)\,\mathrm d\lambda_1(u)$.
+Złożenie $N_t=\widetilde N_{A(t)}$ jest prawostronnie
+ciągłe, gdyż $A(v)\downarrow A(t)$ dla $v\downarrow t$.
+Ma granice lewostronne jako funkcja niemalejąca,
+ograniczona na każdym przedziale zwartym przez
+$\widetilde N_{A(T)}$ na $[0,T]$. Ponadto dla $t>0$
+granica lewostronna jest równa albo $\widetilde N_{A(t)}$,
+jeśli $A$ jest stała na pewnym lewostronnym otoczeniu $t$,
+albo $\widetilde N_{A(t)-}$, jeśli $A(v)<A(t)$ dla
+każdego $v<t$. Skoki są więc co najwyżej jednostkowe.
+Nie ma eksplozji na skończonym przedziale czasu.
 Stąd $N_t-N_s=\widetilde N_{A(t)}-\widetilde N_{A(s)}$.
-Przedziały obrazowe $[A(s),A(t)]$ odpowiadające rozłącznym
-przedziałom czasu mają rozłączne wnętrza; przedziały o
-zerowej długości dają zerowe przyrosty. Zatem po zastosowaniu
+Przedziały $(A(s),A(t)]$ odpowiadające rozłącznym
+przedziałom $(s,t]$ są rozłączne dzięki monotoniczności
+$A$; przedziały o zerowej długości są puste i dają
+zerowe przyrosty. Zatem po zastosowaniu
 niezależnych i stacjonarnych przyrostów $\widetilde N$
 dostajemy wszystkie tezy.
 \end{proof}
+
+\begin{uwaga}[Całkowita intensywność i chwile nadejść]
+Niech $A_\infty=\lim_{t\to\infty}A(t)\in[0,\infty]$.
+Jeżeli $A_\infty<\infty$, to całkowita liczba nadejść
+$N_\infty=\lim_{t\to\infty}N_t$ ma rozkład
+$\operatorname{Poisson}(A_\infty)$: jest równa
+$\widetilde N_{A_\infty}$ prawie na pewno, ponieważ
+w deterministycznej chwili $A_\infty$ proces
+$\widetilde N$ nie ma skoku prawie na pewno.
+Gdy $A_\infty=\infty$, liczba nadejść dąży do nieskończoności
+prawie na pewno dzięki konstrukcji z chwil nadejść.
+Dla $\tau=\inf\{t\ge0:N_t\ge1\}$, z konwencją
+$\inf\varnothing=\infty$, mamy
+$\Prob(\tau>t)=\Prob(N_t=0)=e^{-A(t)}$,
+a w szczególności $\Prob(\tau=\infty)=e^{-A_\infty}$
+(z $e^{-\infty}=0$).
+Nie należy zatem zakładać, że każdy niejednorodny
+proces Poissona ma nieskończenie wiele nadejść.
+\end{uwaga}
 
 \begin{przyklad}[Intensywność sezonowa]
 Niech $a(t)=2+t$ dla $0\le t\le2$ i $a(t)=4$ dla $t>2$.
@@ -791,10 +845,19 @@ Dla ustalonego $k\ge0$ jej prawdopodobieństwo wynosi
 Granica wynika z
 $\binom mk/m^k\to1/k!$ i
 $(1-\lambda t/m)^m\to e^{-\lambda t}$.
-Dla wszystkich rozłącznych odcinków siatki liczby
-sukcesów są niezależne; analogicznie otrzymujemy
-zbieżność ich wspólnych rozkładów do niezależnych
-przyrostów Poissona. Jest to matematyczne wyjaśnienie,
+Dla ustalonego podprzedziału $(a,b]\subseteq[0,t]$
+liczba punktów siatki wynosi
+$m_{a,b}=\lfloor mb/t\rfloor-\lfloor ma/t\rfloor$,
+więc $m_{a,b}\lambda t/m\to\lambda(b-a)$.
+Ten sam argument dwumianowy daje graniczny rozkład
+$\operatorname{Poisson}(\lambda(b-a))$.
+Dla rozłącznych podprzedziałów odpowiednie zliczenia
+są niezależne dla każdego $m$, ponieważ wykorzystują
+rozłączne rodziny prób. Ich wspólne prawdopodobieństwa
+punktowe są iloczynami prawdopodobieństw brzegowych
+i zbiegają do iloczynu prawdopodobieństw Poissona.
+Ponieważ graniczne prawdopodobieństwa sumują się do $1$,
+otrzymujemy zbieżność wspólnych rozkładów. Jest to matematyczne wyjaśnienie,
 dlaczego rozkład Poissona naturalnie opisuje wiele
 niezależnych, rzadkich zdarzeń.
 \end{przyklad}
