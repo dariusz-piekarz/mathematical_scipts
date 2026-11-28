@@ -1442,3 +1442,351 @@ Jest to jedyna najlepsza aproksymacja
 w $\mathcal P_1$ na mocy
 \ref{ma2:cor:approx-chebyshev-monomial}.
 \end{przyklad}
+
+\section{Stała Lebesgue'a i stabilność interpolacji}
+
+\begin{definicja}
+\label{ma2:def:approx-lebesgue-constant}
+Dla ustalonego układu $n+1$ różnych węzłów
+$x_0,\ldots,x_n\in[a,b]$ oraz wielomianów
+bazowych $L_j$ z \ref{ma2:thm:approx-lagrange}
+określamy funkcję Lebesgue'a i stałą Lebesgue'a:
+\[
+ \lambda_n(x)=\sum_{j=0}^n|L_j(x)|,\qquad
+ \Lambda_n=\max_{x\in[a,b]}\lambda_n(x).
+\]
+Maksimum istnieje dzięki ciągłości i zwartości.
+Obie wielkości zależą od układu węzłów.
+\end{definicja}
+
+\begin{twierdzenie}
+\label{ma2:thm:approx-lebesgue-norm}
+Operator interpolacji $I_n:C([a,b])\to C([a,b])$
+jest ograniczonym operatorem liniowym,
+a jego norma operatorowa wynosi $\Lambda_n$.
+Ponadto $\Lambda_n\ge1$ i dla każdej
+$f\in C([a,b])$ zachodzi nierówność Lebesgue'a
+\[
+ \|f-I_nf\|_\infty\le(1+\Lambda_n)E_n(f).
+\]
+\end{twierdzenie}
+\begin{proof}
+Liniowość wynika ze wzoru Lagrange'a.
+Dla $x\in[a,b]$ mamy
+\[
+ |I_nf(x)|\le \|f\|_\infty
+                    \sum_{j=0}^n|L_j(x)|,
+\]
+więc $\|I_n\|\le\Lambda_n$.
+Niech $x_*$ będzie punktem maksimum
+$\lambda_n$. Wybieramy $y_j=1$, jeśli
+$L_j(x_*)\ge0$, oraz $y_j=-1$ w przeciwnym
+przypadku. Istnieje $g\in C([a,b])$ o
+$\|g\|_\infty=1$ i $g(x_j)=y_j$:
+porządkujemy węzły rosnąco, łączymy
+kolejne wartości odcinkami i przedłużamy
+stałymi do końców przedziału.
+Wówczas $I_ng(x_*)=\sum_j|L_j(x_*)|=\Lambda_n$,
+stąd $\|I_n\|\ge\Lambda_n$.
+
+Jednoznaczność interpolacji daje $I_np=p$
+dla każdego $p\in\mathcal P_n$.
+W szczególności $I_n1=1$, więc
+$\|I_n\|\ge1$. Dla każdego $p\in\mathcal P_n$
+mamy
+\[
+ f-I_nf=(f-p)-I_n(f-p),
+\]
+a zatem $\|f-I_nf\|_\infty
+\le(1+\Lambda_n)\|f-p\|_\infty$.
+Biorąc infimum po $p$, otrzymujemy tezę.
+\end{proof}
+
+\begin{wniosek}[Wpływ błędów w danych]
+\label{ma2:cor:approx-data-error}
+Jeżeli $p,\widetilde p\in\mathcal P_n$
+interpolują w tych samych węzłach odpowiednio
+dane $y_j$ i $\widetilde y_j$, to
+\[
+ \|p-\widetilde p\|_\infty
+ \le\Lambda_n\max_{0\le j\le n}|y_j-\widetilde y_j|.
+\]
+Stałej $\Lambda_n$ nie można zastąpić mniejszą
+stałą niezależną od danych.
+\end{wniosek}
+\begin{proof}
+Stosujemy wzór Lagrange'a do różnicy danych.
+Ostrość wynika z wyboru różnic danych
+równych znakom $L_j(x_*)$, jak w dowodzie
+\ref{ma2:thm:approx-lebesgue-norm}.
+\end{proof}
+
+Dla kolejnych układów węzłów warunek
+$(1+\Lambda_n)E_n(f)\to0$ jest dostateczny
+do jednostajnej zbieżności interpolantów.
+Sama gęstość wielomianów zapewnia jedynie
+$E_n(f)\to0$, nie zaś ten silniejszy warunek.
+Nierówność pokazuje również różnicę między
+uwarunkowaniem zadania (wrażliwością na dane)
+a błędami zaokrągleń konkretnego algorytmu.
+
+\section{Postać barycentryczna interpolantu}
+
+\begin{twierdzenie}[Wzór barycentryczny]
+\label{ma2:thm:approx-barycentric}
+Dla parami różnych węzłów $x_0,\ldots,x_n$
+niech
+\[
+ W(x)=\prod_{j=0}^n(x-x_j),\qquad
+ w_j=\frac1{\prod_{i\ne j}(x_j-x_i)}.
+\]
+Dla $x$ różnego od wszystkich węzłów
+interpolant danych $y_j$ ma postać
+\[
+ p(x)=\frac{\displaystyle\sum_{j=0}^n
+                       \frac{w_jy_j}{x-x_j}}
+                 {\displaystyle\sum_{j=0}^n
+                       \frac{w_j}{x-x_j}}.
+\]
+W punkcie $x_j$ przyjmujemy bezpośrednio
+wartość $y_j$. Wspólny niezerowy czynnik
+we wszystkich wagach nie zmienia wzoru.
+\end{twierdzenie}
+\begin{proof}
+Dla $x$ różnego od węzłów mamy
+$L_j(x)=W(x)w_j/(x-x_j)$.
+Interpolacja funkcji stałej $1$ daje
+$\sum_jL_j(x)=1$, zatem
+\[
+ \sum_j\frac{w_j}{x-x_j}=\frac1{W(x)}\ne0.
+\]
+Podstawiając do wzoru Lagrange'a
+(\ref{ma2:thm:approx-lagrange}), otrzymujemy
+wzór barycentryczny. W węzłach wartości
+wynikają z definicji interpolantu.
+Niezmienniczość względem wspólnego
+czynnika wynika ze skrócenia ułamka.
+\end{proof}
+
+\begin{wniosek}[Wagi dla dwóch układów węzłów]
+\label{ma2:cor:approx-barycentric-weights}
+Dla węzłów równomiernych $x_j=a+jh$,
+$h=(b-a)/n$, $n\ge1$, można przyjąć
+\[
+ w_j=(-1)^j\binom nj.
+\]
+Dla węzłów Czebyszewa
+$x_j=c+\ell\cos\theta_j$,
+$\theta_j=(2j+1)\pi/(2(n+1))$,
+$j=0,\ldots,n$, można przyjąć
+\[
+ w_j=(-1)^j\sin\theta_j.
+\]
+\end{wniosek}
+\begin{proof}
+Dla węzłów równomiernych
+$\prod_{i\ne j}(x_j-x_i)=h^n j!(-1)^{n-j}(n-j)!$.
+Po pomnożeniu odwrotności przez wspólny
+czynnik $(-1)^n h^n n!$ dostajemy pierwszy wzór.
+Dla węzłów Czebyszewa, na mocy
+\ref{ma2:thm:approx-chebyshev-interpolation},
+$W(x)=\ell^{n+1}2^{-n}T_{n+1}((x-c)/\ell)$.
+Mamy $w_j=1/W'(x_j)$, ponieważ po
+zróżniczkowaniu iloczynu w $x_j$
+pozostaje tylko składnik odpowiadający
+pochodnej czynnika $(x-x_j)$.
+Różniczkując tożsamość
+$T_{n+1}(\cos\theta)=\cos((n+1)\theta)$
+dla $0<\theta<\pi$, otrzymujemy
+\[
+ T_{n+1}'(\cos\theta)=
+ \frac{(n+1)\sin((n+1)\theta)}{\sin\theta}.
+\]
+W $\theta=\theta_j$ licznik zawiera
+$\sin((n+1)\theta_j)=(-1)^j$.
+Stąd $1/W'(x_j)$ jest równy
+$(-1)^j\sin\theta_j$ pomnożonemu
+przez wspólną stałą $2^n/(\ell^n(n+1))$.
+\end{proof}
+
+Po obliczeniu wag wartość interpolantu poza
+węzłami można uzyskać za pomocą dwóch sum
+o $n+1$ składnikach. Postać barycentryczna
+nie usuwa jednak dużej stałej Lebesgue'a,
+jeżeli wynika ona z niekorzystnego wyboru
+węzłów. Równość algebraiczna wzorów nie jest
+sama w sobie dowodem stabilności numerycznej
+implementacji w arytmetyce zmiennoprzecinkowej.
+
+\section{Zjawisko Rungego}
+
+\begin{przyklad}[Dokładna reszta dla funkcji Rungego]
+\label{ma2:ex:approx-runge-exact}
+Niech $f(x)=1/(1+25x^2)$ na $[-1,1]$.
+Rozpatrujemy parzyste $n\ge2$ i symetryczny
+układ $n+1$ różnych węzłów, czyli układ,
+który wraz z $x$ zawiera $-x$.
+Wówczas $p=I_nf$ jest parzysty, ponieważ
+$p(-x)$ interpoluje te same dane co $p(x)$,
+a interpolant jest jedyny.
+Wielomian $W(x)=\prod_{j=0}^n(x-x_j)$
+jest nieparzysty: węzły składają się z zera
+i $n/2$ par przeciwnych.
+Wielomian
+$R(x)=1-(1+25x^2)p(x)$ jest parzysty,
+ma stopień co najwyżej $n+2$ i znika
+we wszystkich węzłach. Jest więc równy
+$C xW(x)$ dla pewnej stałej $C$:
+iloraz przez $W$ ma stopień co najwyżej
+jeden i musi być nieparzysty.
+Podstawienie zespolonej liczby $z=i/5$
+do tej tożsamości wielomianowej daje
+$R(i/5)=1$, a zatem
+$C=1/((i/5)W(i/5))$. Mianownik nie znika,
+gdyż wszystkie zera $W$ są rzeczywiste.
+Otrzymujemy dokładny wzór
+\[
+ |f(x)-p(x)|
+ =\frac{5|x|\,|W(x)|}{(1+25x^2)|W(i/5)|}.
+\]
+Mimo wykorzystania liczby zespolonej do
+wyznaczenia stałej, jest to wyłącznie
+tożsamość wielomianowa; nie korzystamy
+z analizy zespolonej.
+\end{przyklad}
+
+\begin{twierdzenie}[Rozbieżność interpolacji w węzłach równomiernych]
+\label{ma2:thm:approx-runge-divergence}
+Dla $f(x)=1/(1+25x^2)$ na $[-1,1]$
+oraz węzłów $x_j=-1+2j/n$, $0\le j\le n$,
+błąd interpolacji w normie supremum
+dąży do nieskończoności wzdłuż parzystych
+$n\to\infty$.
+\end{twierdzenie}
+\begin{proof}
+Niech $W_n$ oznacza wielomian węzłowy.
+Dla $s_n=1-1/n$ zachodzi
+\[
+ |W_n(s_n)|=(2/n)^{n+1}
+                   \frac12\prod_{k=1}^n(k-1/2).
+\]
+Istotnie, $s_n-x_j=(2/n)(n-j-1/2)$,
+a po zmianie indeksu otrzymujemy iloczyn.
+Wykażemy, że
+$\lim_{n\to\infty}|W_n(s_n)|^{1/n}=2/e$.
+Mamy
+\[
+ \frac1n\log|W_n(s_n)|
+ =\frac{n+1}{n}\log2-\frac{\log(2n)}n
+       +\frac1n\sum_{k=1}^n
+                    \log\frac{k-1/2}{n}.
+\]
+Ostatnia średnia dąży do $-1$.
+Aby uzasadnić granicę mimo osobliwości
+logarytmu w zerze, porównujemy ją z sumą
+$\frac1n\sum_{k=1}^n\log(k/n)$.
+Różnica modułów nie przekracza
+\[
+ \frac1n\sum_{k=1}^n
+        -\log(1-1/(2k))
+ \le\frac1n\sum_{k=1}^n\frac1k
+ \le\frac{1+\log n}{n}.
+\]
+Pierwsza nierówność wynika z
+$-\log(1-u)=\int_0^u(1-t)^{-1}\,\mathrm dt
+\le2u$ dla $0\le u\le1/2$.
+Druga wynika z porównania sumy z całką
+funkcji $1/t$.
+Monotoniczność logarytmu daje
+$\int_1^n\log t\,\mathrm dt\le\log(n!)
+\le\int_1^n\log t\,\mathrm dt+\log n$,
+więc $\log(n!)/n-\log n\to-1$.
+To uzasadnia żądaną granicę.
+
+Z drugiej strony
+\[
+ \frac1n\log |W_n(i/5)|
+ =\frac1{2n}\sum_{j=0}^n\log(x_j^2+1/25)
+ \longrightarrow
+ \frac14\int_{-1}^1\log(t^2+1/25)\,\mathrm dt .
+\]
+Jest to zwykła granica sum Riemanna
+dla funkcji ciągłej: krok wynosi $2/n$,
+a dodatkowy składnik końcowy podzielony
+przez $n$ dąży do zera.
+Całkowanie przez części daje
+\[
+ \frac14\int_{-1}^1\log(t^2+1/25)\,\mathrm dt
+ =\frac12\log(26/25)-1+\frac15\arctan5.
+\]
+Istotnie, z parzystości wystarczy połowa
+całki na $[0,1]$; całka z
+$2t^2/(t^2+1/25)$ jest równa
+$2t-(2/5)\arctan(5t)$.
+Wobec tego
+\[
+ \lim_{n\to\infty}
+ \left(\frac{|W_n(s_n)|}{|W_n(i/5)|}\right)^{1/n}
+ =\frac{2}{\sqrt{26/25}\exp((\arctan5)/5)}>1 .
+\]
+Ostatnia nierówność wynika na przykład
+z $\sqrt{26/25}<6/5$ i
+$(\arctan5)/5<\pi/10<1/3$;
+z szeregu wykładniczego
+$e^{1/3}<\sum_{k\ge0}(1/3)^k=3/2$,
+więc mianownik jest mniejszy od $9/5$.
+Iloraz rośnie zatem do nieskończoności.
+Dla parzystych $n$ stosujemy
+\ref{ma2:ex:approx-runge-exact} w punkcie $s_n$.
+Czynnik $5|s_n|/(1+25s_n^2)$ dąży do
+dodatniej liczby $5/26$, stąd
+$|f(s_n)-I_nf(s_n)|\to\infty$.
+Norma supremum jest nie mniejsza od
+tego błędu punktowego.
+\end{proof}
+
+\begin{twierdzenie}[Zbieżność dla funkcji Rungego w węzłach Czebyszewa]
+\label{ma2:thm:approx-runge-chebyshev}
+Dla tej samej funkcji $f$ i węzłów będących
+zerami $T_{n+1}$ interpolanty dla parzystych
+$n\ge2$ zbiegają jednostajnie do $f$.
+Jeżeli $\rho=(1+\sqrt{26})/5>1$, to
+\[
+ \|f-I_nf\|_\infty
+ \le\frac{10}{\rho^{n+1}-\rho^{-(n+1)}}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Węzły są symetryczne, gdyż
+$T_{n+1}(-x)=(-1)^{n+1}T_{n+1}(x)$,
+co wynika z rekurencji.
+Ponadto $W_n=2^{-n}T_{n+1}$.
+Dla dowolnego niezerowego $w\in\mathbb C$
+rekurencja Czebyszewa daje
+\[
+ T_m((w+w^{-1})/2)=(w^m+w^{-m})/2
+ \qquad(m\ge0).
+\]
+Istotnie, wzór jest prawdziwy dla $m=0,1$,
+a podstawienie obu poprzednich wyrazów
+do rekurencji daje kolejny.
+Bierzemy $w=i\rho$, dla którego
+$(w+w^{-1})/2=i/5$, gdyż
+$\rho-\rho^{-1}=2/5$.
+Dla nieparzystego $m=n+1$ otrzymujemy
+$|T_m(i/5)|=(\rho^m-\rho^{-m})/2$.
+Z \ref{ma2:ex:approx-runge-exact} i
+$\|T_{n+1}\|_\infty=1$ wynika
+\[
+ |f(x)-I_nf(x)|\le 5/|T_{n+1}(i/5)|.
+\]
+Podstawienie poprzedniej wartości daje
+oszacowanie i granicę.
+\end{proof}
+
+Przykład pokazuje, że nawet dla funkcji
+rzeczywistej analitycznej na całej prostej
+interpolacja wielomianowa może być rozbieżna
+w normie supremum. Zmiana węzłów przy tej samej
+funkcji i tym samym stopniu może zmienić
+charakter zbieżności.
