@@ -23,13 +23,17 @@ def reading_reference_issues(con):
             "SELECT document_id,name,entity_id FROM label_occurrences"):
         occurrences[(doc, label)].append(entity)
     migrations = defaultdict(set)
-    for old, new in con.execute(
-            "SELECT old_label,new_label FROM historical_aliases "
-            "WHERE scope_document='' AND reason='qualified_migration_alias'"):
-        old_pair = qualified_occurrence(old)
-        new_pair = qualified_occurrence(new)
-        if old_pair is not None and new_pair is not None and old_pair != new_pair:
-            migrations[old_pair].add(new_pair)
+    # Older indices and minimal graph fixtures may lack the alias table.
+    # In that case no migration is authorized: alias claims still fail closed.
+    if con.execute("SELECT 1 FROM sqlite_master WHERE type='table' "
+                   "AND name='historical_aliases'").fetchone():
+        for old, new in con.execute(
+                "SELECT old_label,new_label FROM historical_aliases "
+                "WHERE scope_document='' AND reason='qualified_migration_alias'"):
+            old_pair = qualified_occurrence(old)
+            new_pair = qualified_occurrence(new)
+            if old_pair is not None and new_pair is not None and old_pair != new_pair:
+                migrations[old_pair].add(new_pair)
     issues = []
     for reference_id, source, label, line, status, target, entity, entity_owner in rows:
         qualified = qualified_occurrence(label)
