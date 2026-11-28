@@ -1,0 +1,358 @@
+\chapter{Semantyka Kripkego i pełność logik modalnych}
+\label{ch:ncl-modal-kripke}
+
+W poprzednim rozdziale wprowadziliśmy normalne
+logiki modalne, ich semantykę algebraiczną
+oraz przykłady interpretacji relacyjnej.
+Teraz badamy systematycznie zależność między
+budową relacji dostępności i prawdziwością formuł.
+Rozróżniamy własności pojedynczego modelu,
+ważność na ramie i ważność w klasie ram.
+W szczególności nie zakładamy, że każda normalna
+logika modalna jest pełna względem pewnej klasy ram.
+
+\section{Ramy, modele i relacja spełniania}
+
+\begin{definicja}[Rama i model Kripkego]
+\label{def:ncl-kripke-frame-model}
+Ramą Kripkego nazywamy parę $F=(W,R)$,
+gdzie $W\ne\varnothing$ jest zbiorem stanów
+(światów), a $R\subseteq W\times W$ jest
+relacją dostępności. Piszemy
+\[
+ R(w)=\{z\in W:wRz\}.
+\]
+Model Kripkego to trójka $M=(W,R,V)$,
+gdzie $(W,R)$ jest ramą, a
+$V:\mathrm{Var}\to\mathcal P(W)$ jest
+wartościowaniem zmiennych zdaniowych.
+Model z wyróżnionym stanem to para $(M,w)$,
+gdzie $w\in W$.
+\end{definicja}
+
+Nie wymagamy zwrotności, przechodniości
+ani symetryczności relacji $R$.
+Strzałka $w\to z$ na diagramie oznacza
+$wRz$, nie zaś implikację logiczną.
+W odróżnieniu od intuicjonistycznych modeli
+Kripkego z rozdziału~\ref{ch:ncl-intuitionistic},
+wartościowanie nie musi być monotoniczne
+względem relacji dostępności.
+
+\begin{definicja}[Spełnianie formuły]
+\label{def:ncl-kripke-satisfaction}
+Dla języka z Definicji~\ref{def:ncl-modal-language}
+definiujemy rekurencyjnie relację $M,w\Vdash A$:
+\[
+\begin{aligned}
+ M,w\Vdash p &\iff w\in V(p),\\
+ M,w&\not\Vdash\bot,\\
+ M,w\Vdash A\wedge B
+   &\iff M,w\Vdash A\ \text{oraz}\ M,w\Vdash B,\\
+ M,w\Vdash A\vee B
+   &\iff M,w\Vdash A\ \text{lub}\ M,w\Vdash B,\\
+ M,w\Vdash A\to B
+   &\iff M,w\not\Vdash A\ \text{lub}\ M,w\Vdash B,\\
+ M,w\Vdash\Box A
+   &\iff \forall z\in R(w)\quad M,z\Vdash A.
+\end{aligned}
+\]
+Z definicji skrótów wynikają klauzule
+\[
+\begin{aligned}
+ M,w\Vdash\neg A&\iff M,w\not\Vdash A,\\
+ M,w\Vdash\Diamond A&\iff
+ \exists z\in R(w)\quad M,z\Vdash A.
+\end{aligned}
+\]
+\end{definicja}
+Pierwsza z ostatnich klauzul wynika z faktu,
+że $\bot$ nie jest spełnione w żadnym stanie.
+Druga wynika z definicji $\Diamond A=\neg\Box\neg A$
+oraz klasycznego zaprzeczenia kwantyfikatora ogólnego.
+W szczególności $\Box A$ jest prawdziwa w stanie
+bez następców niezależnie od $A$, natomiast
+$\Diamond A$ jest w takim stanie fałszywa.
+Wartości formuł są dwuwartościowe, choć
+prawdziwość może zależeć od stanu.
+
+\begin{przyklad}[Prawdziwość a dostępność]
+\label{ex:ncl-kripke-three-states}
+Niech $W=\{r,s,t\}$, $R=\{(r,s),(s,t)\}$
+oraz $V(p)=\{s\}$. Innych krawędzi nie ma.
+\begin{center}
+\begin{tikzpicture}[>=Stealth,node distance=22mm]
+\node[draw,circle] (r) {$r$};
+\node[draw,circle,fill=blue!15,right=of r] (s) {$s$};
+\node[draw,circle,right=of s] (t) {$t$};
+\draw[->] (r)--(s);
+\draw[->] (s)--(t);
+\node[below=4mm of r] {$\neg p$};
+\node[below=4mm of s] {$p$};
+\node[below=4mm of t] {$\neg p$};
+\end{tikzpicture}
+\end{center}
+W stanie $r$ prawdziwe są $\Box p$ i $\Diamond p$,
+choć samo $p$ jest fałszywe.
+W stanie $s$ prawdziwe jest $p$, ale $\Box p$
+i $\Diamond p$ są fałszywe, ponieważ jedyny
+następnik $t$ nie spełnia $p$.
+W stanie $t$ zachodzi $\Box p$, lecz nie $\Diamond p$.
+W stanie $r$ formuła $\Box\Box p$ jest fałszywa,
+gdyż $s$ nie spełnia $\Box p$.
+Model rozróżnia zatem prawdziwość punktową,
+konieczność i możliwość oraz ilustruje
+zawodność schematów T i 4.
+\end{przyklad}
+
+\begin{stwierdzenie}[Zbiory prawdziwości]
+\label{prop:ncl-kripke-truth-sets}
+Dla modelu $M=(W,R,V)$ oznaczmy
+\[
+ [\![A]\!]_M=\{w\in W:M,w\Vdash A\}.
+\]
+Przypisanie $A\mapsto[\![A]\!]_M$ jest
+wartościowaniem w algebrze kompleksowej relacji
+z Przykładu~\ref{ex:ncl-modal-complex-algebra}.
+W szczególności
+\[
+ [\![\Box A]\!]_M=\Box_R[\![A]\!]_M,\qquad
+ [\![\Diamond A]\!]_M=\Diamond_R[\![A]\!]_M.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Dla zmiennych zbiory prawdziwości są równe
+$V(p)$, dla $\bot$ otrzymujemy $\varnothing$.
+Klauzule klasyczne dają odpowiednio przecięcie,
+sumę, dopełnienie i implikację boolowską.
+Z klauzuli konieczności mamy
+\[
+ w\in[\![\Box A]\!]_M
+ \iff R(w)\subseteq[\![A]\!]_M.
+\]
+To jest definicja $\Box_R$.
+Klauzula możliwości daje analogicznie
+warunek niepustego przecięcia.
+Indukcja po budowie formuły pokazuje,
+że otrzymane przypisanie jest dokładnie
+rozszerzeniem $V$ do wartościowania algebraicznego.
+\end{proof}
+
+\begin{lemat}[Lemat o podstawieniu]
+\label{lem:ncl-kripke-substitution}
+Niech $\sigma$ będzie podstawieniem modalnym.
+Dla modelu $M=(W,R,V)$ określmy model
+$M_\sigma=(W,R,V_\sigma)$ przez
+$V_\sigma(p)=[\![\sigma(p)]\!]_M$.
+Wtedy dla każdej formuły $A$ i każdego $w\in W$
+\[
+ M,w\Vdash\sigma(A)\iff M_\sigma,w\Vdash A.
+\]
+\end{lemat}
+\begin{proof}
+Indukujemy po budowie $A$, jednocześnie
+dla wszystkich stanów.
+Dla zmiennej jest to definicja $V_\sigma$,
+a dla $\bot$ obie strony są fałszywe.
+Dla spójników klasycznych stosujemy hipotezę
+indukcyjną do argumentów w tym samym stanie.
+Dla $A=\Box C$ mamy
+\[
+\begin{aligned}
+ M,w\Vdash\sigma(\Box C)
+ &\iff \forall z\in R(w)\quad M,z\Vdash\sigma(C)\\
+ &\iff \forall z\in R(w)\quad M_\sigma,z\Vdash C\\
+ &\iff M_\sigma,w\Vdash\Box C.
+\end{aligned}
+\]
+To kończy indukcję. Skróty są objęte dowodem
+po ich rozwinięciu.
+\end{proof}
+
+\section{Ważność i konsekwencja relacyjna}
+
+\begin{definicja}[Ważność i spełnialność]
+\label{def:ncl-kripke-validity}
+Piszemy $M\Vdash A$, jeśli $M,w\Vdash A$
+dla wszystkich $w\in W$.
+Piszemy $F\Vdash A$, jeśli $M\Vdash A$
+dla każdego modelu $M$ na ramie $F$.
+Dla klasy ram $\mathcal C$ piszemy
+$\mathcal C\Vdash A$, jeśli $F\Vdash A$
+dla wszystkich $F\in\mathcal C$.
+Formuła $A$ jest spełnialna w klasie
+$\mathcal C$, jeśli istnieje $F\in\mathcal C$,
+model $M$ na $F$ oraz stan $w$, w którym
+$M,w\Vdash A$.
+\end{definicja}
+Ważność na ramie wymaga kwantyfikacji po
+wszystkich wartościowaniach, nie tylko po
+stanach jednego modelu. Z klasycznej negacji
+wynika, że $A$ jest ważna w $\mathcal C$
+dokładnie wtedy, gdy $\neg A$ nie jest
+spełnialna w $\mathcal C$.
+
+\begin{definicja}[Konsekwencja lokalna i globalna]
+\label{def:ncl-kripke-consequence}
+Niech $\mathcal C$ będzie klasą ram.
+Dla zbioru formuł $\Gamma$ i formuły $A$
+określamy dwa pojęcia konsekwencji:
+\[
+ \Gamma\models_{\mathcal C}^{\mathrm{lok}} A
+\]
+oznacza, że dla każdego modelu $M$ na ramie
+z $\mathcal C$ i każdego stanu $w$,
+jeżeli $M,w\Vdash C$ dla każdego $C\in\Gamma$,
+to $M,w\Vdash A$.
+Zapis
+\[
+ \Gamma\models_{\mathcal C}^{\mathrm{glob}} A
+\]
+oznacza, że dla każdego takiego modelu $M$,
+jeżeli $M\Vdash C$ dla każdego $C\in\Gamma$,
+to $M\Vdash A$.
+\end{definicja}
+W pierwszym przypadku wszystkie przesłanki
+muszą zachodzić w jednym stanie, w drugim
+w każdym stanie ustalonego modelu.
+W obu przypadkach wartościowanie jest wspólne
+dla wszystkich przesłanek i wniosku.
+
+\begin{stwierdzenie}[Podstawowe własności konsekwencji]
+\label{prop:ncl-kripke-consequence-laws}
+Oba rodzaje konsekwencji są zwrotne,
+monotoniczne, spełniają regułę cięcia
+i są strukturalne. Ponadto
+\[
+ \Gamma\models_{\mathcal C}^{\mathrm{lok}}A
+ \Longrightarrow
+ \Gamma\models_{\mathcal C}^{\mathrm{glob}}A,
+ \qquad
+ \varnothing\models_{\mathcal C}^{\mathrm{lok}}A
+ \iff \varnothing\models_{\mathcal C}^{\mathrm{glob}}A
+ \iff\mathcal C\Vdash A.
+\]
+Dla skończonego $\Gamma$ zachodzi
+\[
+ \Gamma\models_{\mathcal C}^{\mathrm{lok}}A
+ \iff\mathcal C\Vdash
+        \left(\bigwedge_{C\in\Gamma}C\right)\to A.
+\]
+Pusta koniunkcja oznacza $\top$.
+\end{stwierdzenie}
+\begin{proof}
+Zwrotność i monotoniczność wynikają
+bezpośrednio z definicji. Dla cięcia,
+jeśli wszystkie przesłanki z $\Gamma$ są
+spełnione, to każda konsekwencja z $\Delta$
+jest spełniona, a zatem również konsekwencja
+$A$ zbioru $\Delta$. W przypadku lokalnym
+wszystkie trzy kroki odnoszą się do tego
+samego stanu, w globalnym do całego modelu.
+Strukturalność wynika z
+Lematu~\ref{lem:ncl-kripke-substitution}:
+model $M_\sigma$ ma tę samą ramę co $M$,
+więc należy do tej samej rozważanej klasy modeli.
+Jeżeli przesłanki są prawdziwe globalnie,
+to są prawdziwe lokalnie w każdym stanie.
+Zastosowanie konsekwencji lokalnej w każdym
+stanie daje konsekwencję globalną.
+Dla pustego zbioru przesłanek oba warunki
+sprowadzają się do ważności w klasie.
+Ostatnia równoważność wynika z klasycznych
+klauzul koniunkcji i implikacji w każdym stanie.
+\end{proof}
+Nie wpisujemy na tej liście skończoności
+konsekwencji: dla dowolnej klasy ram własność
+ta nie musi zachodzić. Będziemy ją analizować
+wraz z twierdzeniami o silnej pełności.
+
+\begin{przyklad}[Konsekwencja globalna nie musi być lokalna]
+\label{ex:ncl-kripke-global-not-local}
+Dla każdej klasy ram $\mathcal C$ mamy
+$p\models_{\mathcal C}^{\mathrm{glob}}\Box p$:
+jeśli $p$ jest prawdziwe w każdym stanie,
+to jest prawdziwe w każdym następniku
+dowolnego stanu.
+Niech $\mathcal C$ zawiera ramę
+dwuelementową z relacją pełną.
+Dla $V(p)=\{r\}$ w stanie $r$ prawdziwe jest
+$p$, lecz $\Box p$ jest fałszywa,
+ponieważ drugi stan $s$ nie spełnia $p$.
+Stąd $p\not\models_{\mathcal C}^{\mathrm{lok}}\Box p$.
+Kontrprzykład działa nawet w klasie ram S5.
+\end{przyklad}
+
+\begin{twierdzenie}[Poprawność relacyjna normalnych logik]
+\label{thm:ncl-kripke-soundness}
+Niech $L$ będzie normalną logiką modalną
+i niech $\mathcal C$ będzie klasą ram,
+na których ważne są wszystkie formuły $L$.
+Wtedy
+\[
+\begin{aligned}
+ \Gamma\vdash_L^{\mathrm{lok}} A
+ &\Longrightarrow
+ \Gamma\models_{\mathcal C}^{\mathrm{lok}}A,\\
+ \Gamma\vdash_L^{\mathrm{glob}} A
+ &\Longrightarrow
+ \Gamma\models_{\mathcal C}^{\mathrm{glob}}A.
+\end{aligned}
+\]
+System K jest poprawny względem klasy
+wszystkich niepustych ram Kripkego.
+\end{twierdzenie}
+\begin{proof}
+Dla pierwszych dwóch tez stosujemy indukcję
+po dowodzie z
+Definicji~\ref{def:ncl-modal-local-global}.
+Każda przesłanka jest prawdziwa z założenia,
+każde twierdzenie $L$ z ważności na ramie.
+Modus ponens zachowuje prawdziwość w stanie,
+a więc również prawdziwość globalną.
+W dowodzie globalnym reguła konieczności
+zachowuje prawdziwość globalną: jeżeli
+$M\Vdash C$, to w każdym stanie $w$
+wszyscy jego następnicy spełniają $C$,
+czyli $M\Vdash\Box C$.
+W dowodzie lokalnym tej dodatkowej
+reguły dla przesłanek nie ma.
+
+Dla ostatniej tezy sprawdzamy aksjomaty K.
+Klasyczne tautologie są prawdziwe w każdym
+stanie ze względu na klasyczne klauzule
+spójników. Jeżeli w stanie $w$ zachodzą
+$\Box(A\to B)$ oraz $\Box A$, to każdy
+$z\in R(w)$ spełnia zarówno $A\to B$, jak i $A$,
+a więc także $B$. Zatem $w$ spełnia $\Box B$,
+co daje ważność aksjomatu K.
+Obie reguły dowodzenia twierdzeń zachowują
+ważność w każdym modelu na każdej ramie,
+jak wykazano wyżej. Indukcja po dowodach
+K daje ważność wszystkich twierdzeń K,
+co pozwala zastosować pierwsze dwie tezy.
+\end{proof}
+
+\begin{wniosek}[Logika klasy ram]
+\label{cor:ncl-kripke-frame-logic}
+Dla dowolnej klasy ram $\mathcal C$ zbiór
+\[
+ \operatorname{Log}(\mathcal C)
+ =\{A:\mathcal C\Vdash A\}
+\]
+jest normalną logiką modalną.
+Jeżeli $\mathcal C$ jest niepusta,
+to logika ta jest niesprzeczna.
+\end{wniosek}
+\begin{proof}
+Poprawność K daje zawieranie aksjomatów K.
+Modus ponens i konieczność zachowują
+ważność, a podstawienie zachowuje ją
+z Lematu~\ref{lem:ncl-kripke-substitution}.
+Jeśli istnieje rama z $\mathcal C$,
+to ma ona co najmniej jeden stan.
+Formuła $\bot$ jest w nim fałszywa,
+więc nie należy do $\operatorname{Log}(\mathcal C)$.
+Dla pustej klasy wszystkie formuły są
+ważne próżniowo, co daje logikę sprzeczną.
+\end{proof}
