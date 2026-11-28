@@ -115,8 +115,10 @@ jobs:
               expected = [i for i in expected if not (i.isdigit() and 17 <= int(i) <= 25)]
           dt_toc = Path('distribution_theory.toc').read_text()
           dt_ids = re.findall(r'\\contentsline\s*\{section\}\s*\{\\numberline\s*\{([^}]+)\}', dt_toc)
-          assert dt_ids == [str(i) for i in range(1,20)], dt_ids
           plan = json.loads(Path('../../catalog/distribution_theory_structure_plan.json').read_text())
+          dt_expected = ([str(r['number']) for r in plan['chapters'] if r.get('target_path')]
+                         if plan['status'] == 'active' else [str(i) for i in range(1,20)])
+          assert dt_ids == dt_expected, dt_ids
           candidate_toc = Path('distribution_theory_restructured.toc').read_text()
           candidate_ids = re.findall(r'\\contentsline\s*\{section\}\s*\{\\numberline\s*\{([^}]+)\}', candidate_toc)
           assert candidate_ids == [str(i) for i in plan['candidate_master']['expected_section_numbers']], candidate_ids

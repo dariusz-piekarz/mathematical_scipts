@@ -23,15 +23,22 @@ class DistributionRestructureTest(unittest.TestCase):
         active = json.loads((ROOT / "catalog/books.json").read_text(
             encoding="utf-8"))["books"]
         canonical = {p for book in active for p in book["chapters"]}
+        switched = plan["status"] == "active"
+        key = "target_path" if switched else "candidate_path"
         for row in plan["chapters"]:
-            path = row.get("candidate_path")
+            path = row.get(key)
             if not path:
                 self.assertFalse(row["labels"])
                 continue
-            self.assertNotIn(path, canonical)
+            if switched:
+                self.assertIn(path, canonical)
+            else:
+                self.assertNotIn(path, canonical)
             text = (ROOT / path).read_text(encoding="utf-8")
             labels = re.findall(r"\\label\{([^}]+)\}", text)
-            self.assertEqual(sorted(labels), sorted(row["labels"]), path)
+            self.assertLessEqual(set(row["labels"]), set(labels), path)
+            if not switched:
+                self.assertEqual(sorted(labels), sorted(row["labels"]), path)
             self.assertEqual(len(labels), len(set(labels)), path)
             self.assertEqual(len(re.findall(r"(?m)^\\section\{", text)), 1, path)
             self.assertNotRegex(text, r"(?m)^\\setcounter\{section\}", path)
@@ -42,8 +49,9 @@ class DistributionRestructureTest(unittest.TestCase):
             for label in labels:
                 self.assertNotIn(label, actual)
                 actual[label] = row["number"]
-                self.assertEqual(mapping[label]["old_document"], historical[label])
-                self.assertEqual(mapping[label]["planned_chapter"], row["number"])
+                if label in mapping:
+                    self.assertEqual(mapping[label]["old_document"], historical[label])
+                    self.assertEqual(mapping[label]["planned_chapter"], row["number"])
             for hit in re.finditer(
                 r"\\(?:ref|eqref|autoref|pageref)\{([^}]+)\}|\\hyperref\[([^\]]+)\]",
                 text
@@ -57,7 +65,9 @@ class DistributionRestructureTest(unittest.TestCase):
                     self.assertTrue(stack, path)
                     self.assertEqual(stack.pop(), match[2], path)
             self.assertFalse(stack, path)
-        self.assertEqual(set(actual), set(historical))
+        self.assertLessEqual(set(historical), set(actual))
+        if not switched:
+            self.assertEqual(set(actual), set(historical))
         external = set(migration["external_unqualified_labels"])
         for n, label, path in all_refs:
             if label not in external:
@@ -104,18 +114,22 @@ class DistributionRestructureTest(unittest.TestCase):
                      for a in config["qualified_label_aliases"]}
         self.assertTrue(all((a["old_document"], a["old_label"],
                              a["target_document"], a["target_label"]) in installed
-                            for a in migration["qualified_label_aliases"]))
+                            for a in (plan["planned_qualified_aliases"]
+                                      if plan["status"] == "active"
+                                      else migration["qualified_label_aliases"])))
 
     def test_candidate_master_exact_order(self):
         plan = json.loads(PLAN.read_text(encoding="utf-8"))
-        master = (ROOT / plan["candidate_master"]["path"]).read_text(
-            encoding="utf-8")
-        rows = [r for r in plan["chapters"] if r.get("candidate_path")]
+        switched = plan["status"] == "active"
+        master_path = "books/pl/distribution_theory.tex" if switched else plan["candidate_master"]["path"]
+        key = "target_path" if switched else "candidate_path"
+        master = (ROOT / master_path).read_text(encoding="utf-8")
+        rows = [r for r in plan["chapters"] if r.get(key)]
         actual = re.findall(
             r"\\setcounter\{section\}\{(\d+)\}\s*\\input\{\.\./\.\./([^}]+)\}",
             master)
         self.assertEqual([(int(n) + 1, path) for n, path in actual],
-                         [(r["number"], r["candidate_path"]) for r in rows])
+                         [(r["number"], r[key]) for r in rows])
         self.assertEqual(master.count(r"\input{"), len(rows))
         self.assertEqual(master.count(r"\begin{document}"), 1)
         self.assertEqual(master.count(r"\end{document}"), 1)

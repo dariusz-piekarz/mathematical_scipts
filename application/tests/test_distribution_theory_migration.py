@@ -27,6 +27,10 @@ class DistributionTheoryMigrationTest(unittest.TestCase):
         chapters = migration["chapters"]
         aliases = migration["qualified_label_aliases"]
         catalog = read_json("catalog/books.json")
+        plan = read_json("catalog/distribution_theory_structure_plan.json")
+        if plan["status"] == "active":
+            self.assert_restructured_catalog(migration, catalog, plan)
+            return
         registered = [p for book in catalog["books"] for p in book["chapters"]]
         targets = {c["target_path"] for c in chapters}
         staged = {c["staged_path"] for c in chapters}
@@ -81,6 +85,46 @@ class DistributionTheoryMigrationTest(unittest.TestCase):
             old_labels = [(mid, label) for mid, path in originals.items()
                           for label in labels(path)]
             self.assertCountEqual(old_labels, list(keys))
+
+
+    def assert_restructured_catalog(self, migration, catalog, plan):
+        dt = [b for b in catalog["books"] if b["id"] == "distribution_theory"]
+        self.assertEqual(len(dt), 1)
+        rows = [r for r in plan["chapters"] if r.get("target_path")]
+        self.assertEqual(dt[0]["chapters"], [r["target_path"] for r in rows])
+        registered = {p for b in catalog["books"] for p in b["chapters"]}
+        self.assertFalse(registered.intersection(
+            r["candidate_path"] for r in rows if r.get("candidate_path")))
+        self.assertFalse(any(re.fullmatch(
+            r"chapters/pl/functional_analysis/(1[789]|2[0-5])-[^/]+\.tex", p)
+            for p in registered))
+        actual = {}
+        for row in rows:
+            path = row["target_path"]
+            self.assertLessEqual(set(row["labels"]), set(labels(path)), path)
+            for label in labels(path):
+                self.assertNotIn(label, actual, path)
+                actual[label] = f"DT-{row['number']:02d}"
+        historical = {label for c in migration["chapters"] for label in c["labels"]}
+        self.assertLessEqual(historical, actual.keys())
+        for row in plan["label_map"]:
+            self.assertEqual(actual[row["label"]], f"DT-{row['planned_chapter']:02d}")
+        config = read_json("application/config/ALIASY_PO_SCALENIACH.json")
+        configured = {alias_key(a) for a in config["qualified_label_aliases"]}
+        planned = {alias_key(a) for a in plan["planned_qualified_aliases"]}
+        self.assertLessEqual(planned, configured)
+        keys = {(a["old_document"], a["old_label"])
+                for a in config["qualified_label_aliases"]}
+        self.assertEqual(len(keys), len(config["qualified_label_aliases"]))
+        for old, label, owner, target_label in planned:
+            self.assertEqual(label, target_label)
+            self.assertEqual(actual[label], owner)
+            self.assertNotEqual(old, owner)
+        self.assertEqual(sum(a[0].startswith("FA-") for a in planned), 211)
+        self.assertEqual(sum(a[0].startswith("DT-") for a in planned), 224)
+        # No superseded file may remain in the recursive canonical index.
+        self.assertEqual(set((ROOT / "chapters/pl/distribution_theory").glob("*.tex")),
+                         {ROOT / r["target_path"] for r in rows})
 
 
 if __name__ == "__main__":

@@ -115,14 +115,19 @@ class DistributionTheoryBook(unittest.TestCase):
         manifest = migration()
         book, paths, texts = sources(DT_BOOK)
         key = "target_path" if dt_active() else "staged_path"
-        self.assertEqual(paths, [(ROOT / c[key]).resolve()
-                                 for c in manifest["chapters"]])
-        self.assertEqual(len(set(paths)), 19)
+        plan = json.loads((ROOT / "catalog/distribution_theory_structure_plan.json")
+                          .read_text(encoding="utf-8"))
+        chapters = manifest["chapters"]
+        if plan["status"] == "active":
+            chapters = [c for c in plan["chapters"] if c.get("target_path")]
+            key = "target_path"
+        self.assertEqual(paths, [(ROOT / c[key]).resolve() for c in chapters])
+        self.assertEqual(len(set(paths)), len(chapters))
         self.assertIn(r"\maketitle", book)
         self.assertIn(r"\tableofcontents", book)
         self.assertTrue(all(t.strip() for t in texts))
         labels = Counter()
-        for chapter, path, text in zip(manifest["chapters"], paths, texts):
+        for chapter, path, text in zip(chapters, paths, texts):
             clean = without_comments_and_code(text)
             current = re.findall(r"\\label\{([^}]+)\}", clean)
             self.assertLessEqual(set(chapter["labels"]), set(current), path)
