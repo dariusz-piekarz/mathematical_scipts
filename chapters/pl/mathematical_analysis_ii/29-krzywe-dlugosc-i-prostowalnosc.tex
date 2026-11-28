@@ -1079,6 +1079,58 @@ prawie wszędzie.}
 \label{ma2:fig:curve-cantor-approximations}
 \end{figure}
 
+
+\paragraph{Wizualizacje interaktywne.}
+Pierwszy wykres umożliwia zmianę wykładnika
+$\alpha$ z przykładu
+\ref{ma2:ex:curve-oscillation-threshold};
+przedstawia wykres na $[1/200,1]$.
+Drugi przedstawia $C_j$ i jego pochodną
+na kolejnych etapach konstrukcji.
+Nie rysujemy pochodnej w punktach załamania.
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+t=1/np.linspace(200,1,2401)
+alphas=np.arange(1,13)/4
+fig=go.Figure()
+for j,a in enumerate(alphas):
+    fig.add_trace(go.Scatter(x=t,
+        y=t**a*np.sin(1/t),mode="lines",
+        visible=j==3))
+steps=[dict(label=str(a),method="update",
+    args=[dict(visible=[j==i for j in range(len(alphas))])])
+    for i,a in enumerate(alphas)]
+fig.update_layout(sliders=[dict(active=3,steps=steps)],
+    showlegend=False,yaxis_range=[-1.05,1.05])
+fig.write_html("am2_29_oscillations.html", include_plotlyjs=True)
+
+fig=make_subplots(rows=2,cols=1)
+p=np.array([[0.,0.],[1.,1.]])
+for n in range(9):
+    x,y=p.T
+    fig.add_trace(go.Scatter(x=x,y=y,
+        mode="lines",visible=n==3),1,1)
+    dx,dy=[],[]
+    for i in range(len(x)-1):
+        m=(y[i+1]-y[i])/(x[i+1]-x[i])
+        dx.extend([x[i],x[i+1],None])
+        dy.extend([m,m,None])
+    fig.add_trace(go.Scatter(x=dx,y=dy,
+        mode="lines",visible=n==3),2,1)
+    p=np.vstack([p/[3,2],(p+[2,1])/[3,2]])
+steps=[dict(label=str(n),method="update",
+    args=[dict(visible=[j==n for j in range(9)
+                              for _ in range(2)]),
+          {"yaxis2.range":[0,1.1*1.5**n]}])
+    for n in range(9)]
+fig.update_layout(sliders=[dict(active=3,steps=steps)],
+    showlegend=False,yaxis2_range=[0,1.1*1.5**3])
+fig.write_html("am2_29_cantor.html", include_plotlyjs=True)
+\end{lstlisting}
+
 W kolejnym rozdziale rozwiniemy całkowanie
 wielokrotne. Długość i miara $\mathcal H^1$
 będą podstawą całek krzywoliniowych pierwszego
