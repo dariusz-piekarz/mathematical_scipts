@@ -580,8 +580,17 @@ chwilach wymiernych z $[0,t]$ wraz z końcem przedziału.
 \end{definicja}
 
 \begin{twierdzenie}[Zasada odbicia]
-Dla standardowego procesu Wienera $W$, $t>0$ i $a>0$
+\label{thm:wiener-reflection}
+Dla standardowego procesu Wienera $W$ o ciągłych
+trajektoriach i $W_0=0$ punktowo, przy $t>0$ i $a>0$,
+oznaczmy $M_t=\sup_{0\le s\le t}W_s$.
+Dla każdego borelowskiego $D\subseteq(-\infty,a)$
 zachodzi
+\[
+\Prob(M_t\ge a,\ W_t\in D)=\Prob(W_t\in 2a-D),
+\qquad 2a-D=\{2a-x:x\in D\}.
+\]
+W szczególności
 \[
 \Prob\left(\sup_{0\le s\le t}W_s\ge a\right)
 =2\Prob(W_t\ge a)
@@ -590,6 +599,7 @@ zachodzi
 gdzie $\Phi$ jest dystrybuantą standardowego rozkładu normalnego.
 \end{twierdzenie}
 \begin{proof}
+Pracujemy względem filtracji naturalnej $W$.
 Niech $\tau=\tau_a$. Z ciągłości trajektorii
 $\{\sup_{s\le t}W_s\ge a\}=\{\tau\le t\}$.
 Jeśli $W_t>a$, to z ciągłości i $W_0=0<a$ musieliśmy
@@ -612,16 +622,19 @@ dowolnej ograniczonej borelowskiej funkcji $g$,
 \E[\chi_A g(W_t-a)]
 =\E[\chi_A H(t-\rho)],\qquad H(v)=\E g(B_v).
 \]
-Dla $g(x)=\chi_{(-\infty,0)}(x)$ i
-$g(x)=\chi_{(0,\infty)}(x)$ funkcje $H$ są takie same
-przez symetrię rozkładu $B_v$, także gdy $v=0$.
-Stąd
+Przez symetrię rozkładu $B_v$ mamy
+$\E g(B_v)=\E g(-B_v)$ także przy $v=0$.
+Dla $g(x)=\chi_D(a+x)$ otrzymujemy więc
 \[
-\Prob(\tau\le t,\ W_t<a)
-=\Prob(\tau\le t,\ W_t>a).
+\Prob(A,\ W_t\in D)
+=\Prob(A,\ 2a-W_t\in D)
+=\Prob(W_t\in 2a-D).
 \]
-Równość jest prawdziwa także na granicy $\tau=t$,
-gdyż oba zdarzenia tam nie zachodzą.
+Ostatnia równość wynika z $2a-D\subset(a,\infty)$:
+osiągnięcie wartości większej od $a$ wymusza
+wcześniejsze trafienie w $a$.
+Dla $D=(-\infty,a)$ dostajemy
+$\Prob(\tau\le t,W_t<a)=\Prob(W_t>a)$.
 Ponieważ $W_t$ ma rozkład ciągły,
 $\Prob(W_t=a)=0$ i
 $\Prob(\tau\le t,\ W_t>a)=\Prob(W_t>a)$.
@@ -629,6 +642,63 @@ Dzieląc $\{\tau\le t\}$ według zdarzeń
 $\{W_t<a\},\{W_t=a\},\{W_t>a\}$,
 dostajemy żądany wzór.
 \end{proof}
+
+\begin{wniosek}[Łączny rozkład maksimum i położenia]
+\label{cor:wiener-max-joint}
+Dla $t>0$ wektor $(M_t,W_t)$ ma względem
+dwuwymiarowej miary Lebesgue'a gęstość
+\[
+f_{M_t,W_t}(m,x)=
+\chi_{\{m>\max(0,x)\}}\frac{2(2m-x)}{t}\,p_t(2m-x).
+\]
+W szczególności $M_t$ ma taki sam rozkład jak $|W_t|$.
+\end{wniosek}
+\begin{proof}
+Dla $m>0$ i $x<m$ zasada odbicia daje
+\[
+\Prob(M_t\le m,\ W_t\le x)
+=\Phi(x/\sqrt t)-1+\Phi((2m-x)/\sqrt t).
+\]
+Możemy użyć nierówności nieostrej dla $M_t$,
+ponieważ ze wzoru na jego rozkład brzegowy
+wynika $\Prob(M_t=m)=0$. Dla $x\ge m$
+łączna dystrybuanta wynosi
+$2\Phi(m/\sqrt t)-1$, gdyż $W_t\le M_t$.
+Dla $m\le0$ wynosi zero (przy $m=0$ wynika to
+z granicy przy $m\downarrow0$).
+Aby uzasadnić brak dodatkowej masy na brzegu,
+sprawdzimy bezpośrednio całki z proponowanej gęstości.
+Dla ustalonego $z<m$ mamy
+\[
+\int_{\max(0,z)}^m
+\frac{2(2v-z)}{t}p_t(2v-z)\,\mathrm d\lambda_1(v)
+=p_t(z)-p_t(2m-z).
+\]
+Korzystamy tu z $p_t'(y)=-(y/t)p_t(y)$
+oraz parzystości $p_t$. Całkując po
+$z\le\min(x,m)$, otrzymujemy dokładnie obie
+postacie dystrybuanty powyżej.
+Dla $m\le0$ całka jest zerowa. Równość dystrybuant
+dowodzi tezy, w tym absolutnej ciągłości całego
+rozkładu. Rozkład $M_t$ jest rozkładem $|W_t|$
+na mocy zasady odbicia.
+\end{proof}
+
+\begin{przyklad}[Trajektoria poniżej bariery przy zadanym położeniu końcowym]
+Dla $a>0$ i $x<a$ z zasady odbicia wynika
+\[
+\Prob(M_t<a\mid W_t=x)
+=1-\frac{p_t(2a-x)}{p_t(x)}
+=1-e^{-2a(a-x)/t}.
+\]
+Dla $x\ge a$ prawdopodobieństwo wynosi zero.
+Jest to wersja regularnego prawdopodobieństwa
+warunkowego: po pomnożeniu przez $p_t(x)$
+i scałkowaniu po dowolnym zbiorze borelowskim
+otrzymujemy rozkład $W_t$ na zdarzeniu $\{M_t<a\}$.
+Związek z warunkowaniem całej trajektorii opisano
+w rozdziale~\ref{ch:gauss}.
+\end{przyklad}
 
 \begin{wniosek}[Rozkład czasu trafienia]
 Dla $a>0$ czas $\tau_a$ jest skończony prawie na pewno,
@@ -818,15 +888,39 @@ Przestrzeń $\calC_0([0,T])$ jest ośrodkową przestrzenią
 metryczną (można przybliżać funkcje ciągłe łamanymi
 na siatkach $kT/n$ o wymiernych wartościach w węzłach,
 z wartością zero w chwili $0$).
-Borelowskie sigma-ciało tej przestrzeni jest generowane
+Borelowskie $\sigma$-ciało tej przestrzeni jest generowane
 przez ewaluacje w przeliczalnym gęstym zbiorze chwil:
 rzeczywiście $\norm{w-v}_\infty=\sup_{r\in D}|w(r)-v(r)|$
 dla gęstego przeliczalnego $D$ zawierającego końce,
 więc każda kula otwarta jest mierzalna względem
 $\sigma(e_r:r\in D)$; dzięki ośrodkowości każdy zbiór
 otwarty jest przeliczalną sumą takich kul.
+Odwrotna inkluzja wynika z ciągłości ewaluacji.
 Zatem przeciwobrazy zbiorów borelowskich przez $W$
 są mierzalne.
+\end{proof}
+
+\begin{stwierdzenie}[Proces kanoniczny i zgodność miar Wienera]
+Na przestrzeni $(\calC_0([0,T]),\calB(\calC_0([0,T])),\mu_T)$
+proces ewaluacji $B_t(w)=w(t)$ jest procesem Wienera
+na $[0,T]$. Dla $0<S<T$ odwzorowanie ograniczenia
+$r_{S,T}(w)=w|_{[0,S]}$ przenosi $\mu_T$ na $\mu_S$.
+\end{stwierdzenie}
+\begin{proof}
+Z definicji miary obrazowej wszystkie skończeniewymiarowe
+rozkłady $B$ są takie same jak rozkłady $W$.
+Początek w zerze i ciągłość zachodzą punktowo
+na przestrzeni kanonicznej, a prawa przyrostów
+i ich niezależność wynikają z rozkładów
+skończeniewymiarowych. Ograniczenie $r_{S,T}$ jest
+ciągłe w normie supremum, a jego złożenie
+z odwzorowaniem trajektorii $W$ jest odwzorowaniem
+trajektorii na $[0,S]$. Z własności składania miar
+obrazowych dostajemy $(r_{S,T})_*\mu_T=\mu_S$.
+Jeżeli miary skonstruowano z różnych procesów Wienera,
+wynik nadal obowiązuje: równość rozkładów
+skończeniewymiarowych daje równość miar na
+generującym $\pi$-układzie cylindrów.
 \end{proof}
 
 \begin{twierdzenie}[Całki cylindryczne względem miary Wienera]
@@ -869,7 +963,12 @@ Obliczyć rozkład $A_T$ i jego funkcję charakterystyczną.
 $A_T^{(n)}=\sum_{k=0}^{n-1}W_{kT/n}\,(T/n)$.
 Każda suma jest gaussowska, ponieważ jest liniową
 kombinacją wspólnie gaussowskich zmiennych.
-Z ciągłości trajektorii $A_T^{(n)}\to A_T$ p.n.
+Pracujemy z ciągłą wersją $W$; funkcjonał
+$w\mapsto\int_0^T w(s)\,\mathrm d\lambda_1(s)$
+jest ciągły w normie supremum (jego moduł jest
+nie większy niż $T\norm w_\infty$), więc $A_T$ jest
+mierzalna. Z ciągłości trajektorii
+$A_T^{(n)}\to A_T$ p.n.
 Co więcej, jeśli $\varphi_n(s)$ jest lewym końcem
 przedziału siatki zawierającego $s$, to nierówność
 Cauchy'ego--Schwarza i twierdzenie Fubiniego dają
@@ -883,14 +982,20 @@ a jego średnie i wariancje zbiegają do odpowiednich
 wielkości granicy. Granica rozkładów normalnych o
 zbieżnych parametrach jest normalna (wynika to wprost
 ze zbieżności funkcji charakterystycznych).
-Ponieważ $\E A_T=0$ i
+Mamy $\E A_T=0$. Stosowanie Fubiniego do
+iloczynu $W_sW_t$ jest dopuszczalne, ponieważ
+proces jest progresywnie mierzalny względem
+filtracji naturalnej, a
+$\E|W_sW_t|\le\sqrt{st}$ jest całkowalne
+na $[0,T]^2$. Otrzymujemy
 \[
 \Var(A_T)=\int_0^T\!\int_0^T\Cov(W_s,W_t)
 \,\mathrm d\lambda_1(s)\,\mathrm d\lambda_1(t)
 =\int_0^T\!\int_0^T\min(s,t)\,\mathrm d\lambda_1(s)\,\mathrm d\lambda_1(t)
-=\frac{T^3}{3},
+=2\int_0^T\left(\int_0^t s\,\mathrm d\lambda_1(s)\right)
+\,\mathrm d\lambda_1(t)=\frac{T^3}{3}.
 \]
-dostajemy $A_T\sim\Normal(0,T^3/3)$ oraz
+Zatem $A_T\sim\Normal(0,T^3/3)$ oraz
 \[
 \E e^{iuA_T}=\exp\left(-\frac{u^2T^3}{6}\right).
 \]
@@ -953,10 +1058,10 @@ $f:\R\to\R$. Wówczas:
 \begin{enumerate}
 \item dla każdej $f\in C_b^3(\R)$, czyli funkcji o
 ciągłych i ograniczonych pochodnych do rzędu trzeciego,
-zachodzi dla każdego $x\in\R$
+zachodzi zbieżność jednostajna
 \[
-\lim_{t\downarrow0}\frac{(P_tf)(x)-f(x)}{t}
-=\frac12 f''(x);
+\lim_{t\downarrow0}
+\left\|\frac{P_tf-f}{t}-\frac12 f''\right\|_\infty=0;
 \]
 \item jeżeli $f\in C_b(\R)$, to funkcja
 $u(t,x)=(P_tf)(x)$ jest klasy $C^{1,2}$ na
@@ -1000,8 +1105,13 @@ Mnożąc ją przez $\norm f_\infty$, otrzymujemy
 majorantę funkcji podcałkowych. Twierdzenie o
 różniczkowaniu pod znakiem całki daje istnienie
 i ciągłość wskazanych pochodnych $u$.
-Bezpośredni rachunek gęstości wykazuje
-$\partial_t p_t(z)=\frac12\partial_{zz}p_t(z)$,
+Różniczkując jawny wzór na gęstość, dostajemy
+\[
+\partial_t p_t(z)=\left(-\frac1{2t}+\frac{z^2}{2t^2}\right)p_t(z),
+\quad
+\partial_{zz}p_t(z)=\left(-\frac1t+\frac{z^2}{t^2}\right)p_t(z).
+\]
+Zatem $\partial_t p_t(z)=\frac12\partial_{zz}p_t(z)$,
 a więc po przeniesieniu pochodnych pod całkę
 $\partial_tu=\frac12\partial_{xx}u$.
 
@@ -1015,6 +1125,45 @@ $|P_tf(x)-f(x)|\le\varepsilon
 +2\norm f_\infty\Prob(|W_t|\ge\delta)$.
 Zatem granica górna błędu nie przekracza $\varepsilon$.
 Dowolność $\varepsilon$ daje wymaganą zbieżność.
+\end{proof}
+
+\begin{stwierdzenie}[Półgrupa ciepła na $C_0(\R)$]
+Niech $C_0(\R)$ oznacza przestrzeń ciągłych funkcji
+zanikających w nieskończoności, z normą supremum.
+Operatory $P_t$ tworzą na niej silnie ciągłą półgrupę
+dodatnich kontrakcji. Jej generator $A$, definiowany
+przez granicę w normie supremum
+$Af=\lim_{t\downarrow0}(P_tf-f)/t$ na dziedzinie
+funkcji, dla których granica istnieje w $C_0(\R)$,
+spełnia $Af=\tfrac12 f''$ dla $f\in C_c^\infty(\R)$.
+\end{stwierdzenie}
+\begin{proof}
+Dodatniość i kontraktywność wynikają z całkowania
+względem miary probabilistycznej.
+Każda $f\in C_0(\R)$ jest jednostajnie ciągła:
+poza odpowiednio dużym przedziałem jest mała,
+a na powiększonym przedziale stosujemy jednostajną
+ciągłość na zbiorze zwartym.
+Stąd $P_tf$ jest ciągła, gdyż
+$|P_tf(x+h)-P_tf(x)|\le\sup_y|f(y+h)-f(y)|$.
+Dla $|x|\to\infty$, przy ustalonym $t$, mamy
+$f(x+W_t)\to0$ punktowo i $|f(x+W_t)|\le\norm f_\infty$,
+więc twierdzenie o zbieżności zmajoryzowanej
+daje $P_tf(x)\to0$. Zatem $P_t$ zachowuje $C_0(\R)$.
+Dla $\varepsilon>0$ wybieramy $\delta>0$ tak, by
+$|f(x+y)-f(x)|<\varepsilon$ dla wszystkich $x$
+i $|y|<\delta$. Wtedy
+\[
+\norm{P_tf-f}_\infty
+\le\varepsilon+2\norm f_\infty\Prob(|W_t|\ge\delta)
+\longrightarrow\text{wartość nie większa niż }\varepsilon
+\]
+w sensie granicy górnej. Dowolność $\varepsilon$
+daje silną ciągłość w zerze, a własność półgrupy
+i kontraktywność dają ją w każdej chwili.
+Dla $f\in C_c^\infty(\R)$ mamy $f''\in C_0(\R)$,
+a poprzednie twierdzenie zapewnia wymaganą
+zbieżność w normie supremum.
 \end{proof}
 
 \begin{przyklad}[Od losowej trajektorii do równania różniczkowego]
@@ -1031,10 +1180,12 @@ jawnego rozwiązania równania ciepła.
 \end{przyklad}
 
 \section{Podsumowanie i kierunek dalszej teorii}
-Proces Wienera łączy zaskakujące fakty: ma ciągłe
-trajektorie, ale żadna z nich nie jest różniczkowalna;
-ma nieskończoną wariację całkowitą, lecz jego wariacja
-kwadratowa jest dokładnie równa upływającemu czasowi.
+Proces Wienera łączy zaskakujące fakty: prawie na pewno
+jego trajektorie są ciągłe i nigdzie nieróżniczkowalne,
+mają nieskończoną wariację całkowitą na każdym
+nietrywialnym przedziale, a wariacja kwadratowa
+wzdłuż kolejnych siatek dyadycznych jest równa
+upływającemu czasowi.
 Jednocześnie można go analizować za pomocą elementarnych
 narzędzi gaussowskich, mocnej własności Markowa i
 równania ciepła.
