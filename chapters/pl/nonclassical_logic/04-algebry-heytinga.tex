@@ -1311,3 +1311,388 @@ są dokładnie tożsamościami algebr Heytinga
 wyrażonymi w języku formuł.
 Stałą $1$ w dowolnym termie można zastąpić
 skrótem $\top=\bot\to\bot$.
+
+\section{Topologiczna interpretacja logiki intuicjonistycznej}
+
+\begin{twierdzenie}[Algebra zbiorów otwartych]
+\label{thm:ncl-heyting-open-sets}
+Niech $(X,\tau)$ będzie przestrzenią topologiczną
+(zob. Definicję~\ref{def:topog-topologia} w topologii
+ogólnej). Zbiór $\mathcal O(X)=\tau$ z porządkiem
+inkluzji jest zupełną algebrą Heytinga, w której
+\[
+\begin{aligned}
+ \bigvee_{i\in I}U_i&=\bigcup_{i\in I}U_i,&
+ \bigwedge_{i\in I}U_i&=\operatorname{int}_X
+                          \bigcap_{i\in I}U_i,\\
+ 0&=\varnothing,&1&=X,\\
+ U\to V&=\operatorname{int}_X((X\setminus U)\cup V),&
+ \neg U&=\operatorname{int}_X(X\setminus U).
+\end{aligned}
+\]
+W szczególności skończony kres dolny jest
+zwykłym przecięciem.
+\end{twierdzenie}
+\begin{proof}
+Dowolna suma zbiorów otwartych jest otwarta
+i stanowi ich najmniejsze ograniczenie górne.
+Największym zbiorem otwartym zawartym
+w przecięciu jest jego wnętrze
+(Definicja~\ref{def:topog-wnetrze-domkniecie}).
+W szczególności pusta suma jest równa
+$\varnothing$, a puste przecięcie jest równe $X$.
+Dla skończonej rodziny przecięcie jest otwarte,
+więc branie wnętrza niczego nie zmienia.
+
+Dla zbioru otwartego $W$ mamy równoważności
+\[
+ U\cap W\subseteq V
+ \iff W\subseteq (X\setminus U)\cup V
+ \iff W\subseteq\operatorname{int}_X((X\setminus U)\cup V).
+\]
+Ostatni krok wynika z otwartości $W$ i definicji
+wnętrza. Jest to dokładnie residuacja
+\eqref{eq:ncl-heyting-adjunction}.
+Wzór na negację otrzymujemy, podstawiając
+$V=\varnothing$.
+\end{proof}
+
+\begin{stwierdzenie}[Implikacja a domknięcie różnicy]
+\label{prop:ncl-heyting-topological-implication}
+W $\mathcal O(X)$ zachodzą wzory
+\[
+\begin{aligned}
+ U\to V&=X\setminus\overline{U\setminus V},\\
+ \neg U&=X\setminus\overline U,\qquad
+ \neg\neg U=\operatorname{int}_X\overline U.
+\end{aligned}
+\]
+Ponadto dla punktu $x\in X$
+\[
+ x\in U\to V
+ \iff
+ \exists W\in\tau\quad x\in W,\quad W\cap U\subseteq V.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Pierwsze dwa wzory otrzymujemy z
+Twierdzenia~\ref{thm:ncl-heyting-open-sets}
+oraz dualności wnętrza i domknięcia
+(Stwierdzenie~\ref{prop:topog-dualnosc-wnetrze-domkniecie}).
+Podstawiając $\neg U=X\setminus\overline U$
+do wzoru na negację i ponownie stosując dualność,
+dostajemy $\neg\neg U=\operatorname{int}_X\overline U$.
+Ostatnia równoważność wynika z punktowej
+charakterystyki wnętrza
+(Twierdzenie~\ref{thm:topog-punktowa-charakteryzacja})
+i równoważności
+$W\subseteq(X\setminus U)\cup V$
+oraz $W\cap U\subseteq V$.
+\end{proof}
+
+Interpretacja jest lokalna: aby w punkcie $x$
+zachodziła implikacja, musi istnieć otwarte
+otoczenie $x$, w którym prawdziwość poprzednika
+pociąga prawdziwość następnika.
+Nie wystarcza, aby sam punkt $x$ nie należał
+do poprzednika. Negacja oznacza istnienie
+otoczenia rozłącznego z obszarem prawdziwości
+formuły.
+
+\begin{przyklad}[Implikacja i podwójna negacja na prostej]
+\label{ex:ncl-heyting-real-open-sets}
+W zwykłej topologii $\mathbb R$ przyjmijmy
+$U=(-2,1)$ i $V=(0,2)$.
+Mamy $U\setminus V=(-2,0]$, więc
+\[
+ U\to V=(-\infty,-2)\cup(0,\infty).
+\]
+Punkty $-2$ i $0$ nie należą do implikacji,
+gdyż każde ich otoczenie przecina $U\setminus V$.
+
+Dla $A=(-1,0)\cup(0,1)$ mamy natomiast
+\[
+ \neg A=(-\infty,-1)\cup(1,\infty),\qquad
+ \neg\neg A=(-1,1).
+\]
+Podwójna negacja wypełnia brakujący punkt $0$,
+ale nie dodaje końców przedziału.
+Zatem $\neg\neg A\ne A$.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=1.05]
+\foreach \y/\lab in {2.4/$U$,1.6/$V$,0.8/$U\to V$,0/$A$, -0.8/$\neg\neg A$}{
+ \draw[gray!65,->] (-3.35,\y)--(3.35,\y);
+ \node[anchor=east] at (-3.45,\y) {\lab};
+ \foreach \x in {-2,-1,0,1,2}{
+  \draw[gray!55] (\x,\y-.06)--(\x,\y+.06);
+ }
+}
+\draw[blue!75!black,line width=2.8pt] (-2,2.4)--(1,2.4);
+\draw[teal!70!black,line width=2.8pt] (0,1.6)--(2,1.6);
+\draw[orange!85!black,line width=2.8pt,<-] (-3.12,.8)--(-2,.8);
+\draw[orange!85!black,line width=2.8pt,->] (0,.8)--(3.12,.8);
+\draw[blue!75!black,line width=2.8pt] (-1,0)--(1,0);
+\draw[teal!70!black,line width=2.8pt] (-1,-.8)--(1,-.8);
+\foreach \x/\y in {-2/2.4,1/2.4,0/1.6,2/1.6,-2/.8,0/.8,-1/0,0/0,1/0,-1/-.8,1/-.8}{
+ \draw[fill=white,black] (\x,\y) circle (2.1pt);
+}
+\foreach \x in {-2,-1,0,1,2}{
+ \node[anchor=north] at (\x,-1.02) {$\x$};
+}
+\end{tikzpicture}
+\end{center}
+Kolorowe odcinki oznaczają zbiory otwarte, a puste
+kółka wskazują wyłączone punkty. Górne trzy wiersze
+ilustrują implikację, dolne dwa podwójną negację.
+
+\begin{definicja}[Semantyka topologiczna IPC]
+\label{def:ncl-heyting-topological-semantics}
+Wartościowaniem topologicznym w przestrzeni $X$
+nazywamy wartościowanie w algebrze $\mathcal O(X)$.
+Piszemy $x\Vdash_v A$, gdy $x\in v(A)$.
+Konsekwencja lokalna $\Gamma\models_{\mathrm{top}}A$
+oznacza, że w każdej przestrzeni topologicznej,
+dla każdego wartościowania i punktu $x$, z
+$x\in v(B)$ dla wszystkich $B\in\Gamma$
+wynika $x\in v(A)$.
+Konsekwencja globalna oznacza natomiast, że
+w każdej przestrzeni, jeżeli $v(B)=X$ dla wszystkich
+$B\in\Gamma$, to $v(A)=X$.
+\end{definicja}
+Rozróżniamy te dwa pojęcia: dla ustalonej przestrzeni
+warunek lokalny pociąga za sobą globalny, a odwrotna
+implikacja nie wynika z samych definicji.
+Dla całej klasy przestrzeni oba dadzą tę samą
+relację konsekwencji IPC.
+
+\begin{twierdzenie}[Silna pełność semantyki topologicznej]
+\label{thm:ncl-heyting-topological-completeness}
+Dla dowolnego zbioru przesłanek $\Gamma$ i formuły $A$
+następujące warunki są równoważne:
+\begin{enumerate}
+\item $\Gamma\vdash_{\mathrm I}A$.
+\item $\Gamma\models_{\mathrm{top}}A$.
+\item Zachodzi globalna konsekwencja topologiczna.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Jeżeli zachodzi warunek 1, to istnieje skończony
+zbiór $\Delta\subseteq\Gamma$ wykorzystanych
+przesłanek. Z mocniejszej postaci poprawności
+algebraicznej
+(Twierdzenie~\ref{thm:ncl-heyting-soundness})
+w $\mathcal O(X)$ mamy
+$\bigcap_{B\in\Delta}v(B)\subseteq v(A)$.
+Punkt należący do wszystkich wartości przesłanek
+należy więc do $v(A)$. Otrzymujemy warunek 2,
+który zastosowany do wszystkich punktów przestrzeni
+daje warunek 3.
+
+Jeżeli warunek 1 nie zachodzi, silna pełność Kripkego
+(Twierdzenie~\ref{thm:ncl-ipc-strong-completeness})
+daje ukorzeniony kontrmodel $\mathcal M=(W,\leq,V)$
+z korzeniem $r$.
+Na $W$ wprowadzamy topologię
+$\tau=\operatorname{Up}(W)$.
+Jest to topologia, gdyż zawiera $\varnothing,W$
+i jest zamknięta względem dowolnych sum i przecięć.
+Nazywamy ją topologią Aleksandrowa porządku.
+Wnętrze dowolnego zbioru $E\subseteq W$ ma postać
+\[
+ \operatorname{int}_{\tau} E
+ =\{w\in W:\{z:z\geq w\}\subseteq E\},
+\]
+gdyż stożek górny punktu $w$ jest jego najmniejszym
+otwartym otoczeniem.
+Algebra $\mathcal O(W)$ jest więc dokładnie
+algebrą $\operatorname{Up}(W)$ z
+Przykładu~\ref{ex:ncl-heyting-upsets}.
+Stwierdzenie~\ref{prop:ncl-heyting-kripke-valuation}
+pokazuje, że wartościowanie zbiorami wymuszania
+daje $v(B)=W$ dla wszystkich $B\in\Gamma$
+oraz $r\notin v(A)$.
+Warunek 3 jest fałszywy, co kończy dowód.
+\end{proof}
+Dla skończonych przesłanek można dodatkowo
+ograniczyć się do skończonych przestrzeni
+Aleksandrowa pochodzących od porządków częściowych:
+w powyższym dowodzie wybieramy kontrmodel z
+Twierdzenia~\ref{thm:ncl-ipc-finite-model-property}.
+
+\section{Jądra i regularne elementy algebry Heytinga}
+
+\begin{definicja}[Jądro]
+\label{def:ncl-heyting-nucleus}
+Jądrem na algebrze Heytinga $H$ nazywamy
+odwzorowanie $j:H\to H$, które dla wszystkich
+$a,b\in H$ spełnia
+\[
+ a\leq j(a),\qquad j(j(a))=j(a),\qquad
+ j(a\wedge b)=j(a)\wedge j(b).
+\]
+Jądro jest monotoniczne: z $a\leq b$ wynika
+$j(a)=j(a\wedge b)=j(a)\wedge j(b)$,
+czyli $j(a)\leq j(b)$.
+Ponadto $j(1)=1$ z ekstensywności.
+\end{definicja}
+
+\begin{twierdzenie}[Algebra punktów stałych jądra]
+\label{thm:ncl-heyting-nucleus-fixed}
+Niech $H_j=\{a\in H:j(a)=a\}$.
+Z porządkiem odziedziczonym z $H$ jest to algebra
+Heytinga z działaniami
+\[
+ a\wedge_j b=a\wedge b,\quad
+ a\vee_j b=j(a\vee b),\quad
+ a\to_j b=a\to b,\quad
+ 0_j=j(0),\quad 1_j=1.
+\]
+Jeżeli $H$ jest zupełna, to $H_j$ także jest zupełna
+i dla dowolnej rodziny $S\subseteq H_j$ mamy
+$\bigwedge_j S=\bigwedge S$ oraz
+$\bigvee_j S=j(\bigvee S)$.
+\end{twierdzenie}
+\begin{proof}
+Idempotentność i zachowanie kresów dolnych dają
+domknięcie względem wymienionych działań kratowych.
+Dla elementów stałych $a,b$ każdy ich górny
+ogranicznik $c\in H_j$ spełnia
+$j(a\vee b)\leq j(c)=c$ przez monotoniczność.
+Z ekstensywności $j(a\vee b)$ jest ograniczeniem
+górnym, więc jest kresem górnym w $H_j$.
+Kres dolny jest odziedziczony. Ekstensywność
+i monotoniczność pokazują, że $j(0)$ oraz $1$
+są odpowiednio elementami najmniejszym i największym.
+
+Aby uzasadnić domknięcie względem implikacji,
+wystarczy nawet założyć, że tylko $b$ jest
+punktem stałym. Z residuacji
+$a\wedge(a\to b)\leq b$, zatem
+\[
+ a\wedge j(a\to b)
+ \leq j(a)\wedge j(a\to b)
+ =j(a\wedge(a\to b))\leq j(b)=b.
+\]
+Ponownie stosując residuację, otrzymujemy
+$j(a\to b)\leq a\to b$; druga nierówność
+wynika z ekstensywności.
+Implikacja należy zatem do $H_j$.
+Dla trzech elementów stałych residuacja w $H_j$
+jest identyczna z residuacją w $H$.
+To daje strukturę algebry Heytinga.
+
+Dla dowolnej rodziny $S\subseteq H_j$ w algebrze
+zupełnej niech $d=\bigwedge S$.
+Monotoniczność daje $j(d)\leq s$ dla każdego
+$s\in S$, więc $j(d)\leq d$; ekstensywność daje
+odwrotną nierówność. Zatem $d$ jest stały.
+Wzór na kres górny otrzymujemy tak samo jak
+w przypadku dwóch elementów: $j(\bigvee S)$
+jest stałym ograniczeniem górnym nie większym
+od każdego innego stałego ograniczenia górnego.
+\end{proof}
+
+\begin{twierdzenie}[Podwójna negacja jest jądrem]
+\label{thm:ncl-heyting-double-negation-nucleus}
+Odwzorowanie $j(a)=\neg\neg a$ jest jądrem.
+Ponadto $j(0)=0$.
+\end{twierdzenie}
+\begin{proof}
+Ekstensywność, monotoniczność i idempotentność
+wynikają z praw negacji
+(Stwierdzenie~\ref{prop:ncl-heyting-negation-laws}).
+W szczególności idempotentność wynika z prawa
+potrójnej negacji po zastosowaniu negacji
+do obu jego stron.
+Równość $j(0)=0$ wynika z $\neg0=1$, $\neg1=0$.
+
+Monotoniczność daje
+$\neg\neg(a\wedge b)\leq\neg\neg a\wedge\neg\neg b$.
+Dla nierówności odwrotnej połóżmy
+$c=\neg(a\wedge b)$.
+Z $c\wedge a\wedge b=0$ wynika
+$c\wedge a\leq\neg b$, a zatem
+$c\wedge a\wedge\neg\neg b=0$.
+Stąd $c\wedge\neg\neg b\leq\neg a$,
+więc
+$c\wedge\neg\neg b\wedge\neg\neg a=0$.
+Residuacja względem $c$ daje
+$\neg\neg a\wedge\neg\neg b\leq\neg c
+=\neg\neg(a\wedge b)$.
+\end{proof}
+
+\begin{twierdzenie}[Boolowska algebra elementów regularnych]
+\label{thm:ncl-heyting-regular-boolean}
+Zbiór
+\[
+ \operatorname{Reg}(H)=\{a\in H:\neg\neg a=a\}
+\]
+jest algebrą Boole'a z działaniami
+\[
+ a\wedge_{\mathrm r}b=a\wedge b,\qquad
+ a\vee_{\mathrm r}b=\neg\neg(a\vee b),\qquad
+ \neg_{\mathrm r}a=\neg a,
+\]
+oraz stałymi $0,1$.
+Jeżeli $H$ jest zupełna, to
+$\operatorname{Reg}(H)$ jest zupełną algebrą Boole'a.
+\end{twierdzenie}
+\begin{proof}
+Stosujemy Twierdzenia~\ref{thm:ncl-heyting-nucleus-fixed}
+i \ref{thm:ncl-heyting-double-negation-nucleus}.
+Otrzymujemy algebrę Heytinga, której zero
+jest równe $0$ i której implikacja jest
+odziedziczona dla argumentów regularnych.
+Jej negacja jest więc również odziedziczona.
+Każdy jej element spełnia prawo podwójnej negacji
+z definicji. Twierdzenie~\ref{thm:ncl-heyting-boolean}
+daje boolowskość.
+Zupełność wynika z twierdzenia o punktach stałych.
+\end{proof}
+
+\begin{wniosek}[Regularnie otwarte zbiory]
+\label{cor:ncl-heyting-regular-open}
+Zbiór otwarty $U\subseteq X$ nazywamy regularnie
+otwartym, jeżeli $U=\operatorname{int}_X\overline U$.
+Rodzina $\operatorname{RO}(X)$ wszystkich
+zbiorów regularnie otwartych jest zupełną
+algebrą Boole'a, w której
+\[
+\begin{aligned}
+ U\wedge_{\mathrm r}V&=U\cap V,\\
+ U\vee_{\mathrm r}V&=\operatorname{int}_X\overline{U\cup V},\\
+ \neg_{\mathrm r}U&=X\setminus\overline U,\\
+ \bigvee_{\mathrm r,i\in I}U_i
+ &=\operatorname{int}_X\overline{\bigcup_{i\in I}U_i},\\
+ \bigwedge_{\mathrm r,i\in I}U_i
+ &=\operatorname{int}_X\bigcap_{i\in I}U_i.
+\end{aligned}
+\]
+\end{wniosek}
+\begin{proof}
+Stwierdzenie~\ref{prop:ncl-heyting-topological-implication}
+identyfikuje regularność otwartych zbiorów
+z byciem punktem stałym podwójnej negacji
+w $\mathcal O(X)$.
+Stosujemy Twierdzenie~\ref{thm:ncl-heyting-regular-boolean}
+oraz wzory z Twierdzenia~\ref{thm:ncl-heyting-nucleus-fixed}
+dla zupełnej algebry $\mathcal O(X)$.
+\end{proof}
+
+\begin{przyklad}[Suma regularnie otwartych zbiorów]
+\label{ex:ncl-heyting-regular-open-join}
+W $\mathbb R$ zbiory $U=(-1,0)$ i $V=(0,1)$
+są regularnie otwarte, gdyż wnętrze domknięcia
+każdego z nich jest nim samym.
+Ich zwykła suma $(-1,0)\cup(0,1)$ nie jest
+regularnie otwarta, natomiast
+\[
+ U\vee_{\mathrm r}V=(-1,1).
+\]
+Zatem $\operatorname{RO}(\mathbb R)$ nie jest
+podalgebrą Heytinga $\mathcal O(\mathbb R)$
+z odziedziczonym kresem górnym, mimo że
+jest jej podzbiorem i sama jest algebrą Boole'a.
+\end{przyklad}
