@@ -1,4 +1,4 @@
-% Kandydat restrukturyzacji; nie jest aktywnym rozdziałem Atlasu.
+% Rozdział aktywny po restrukturyzacji DT.
 \section{Transformacja Fouriera w przestrzeniach Schwartza i funkcji całkowalnych}
 \providecommand{\atlasref}[2]{#2}
 
@@ -78,14 +78,14 @@ I_\varepsilon(x)=(2\pi)^{-d/2}\int_{\R^d}
 \]
 Ponieważ $f\in L^1$ i czynnik Gaussa należy do $L^1$,
 możemy zastosować twierdzenie Fubiniego. Jednowymiarową całkę Gaussa obliczamy następująco:
-$I(u)=\int_\R e^{-\varepsilon t^2/2}e^{iut}\,\mathrm dt$
+$I(u)=\int_\R e^{-\varepsilon t^2/2}e^{iut}\,\mathrm d\lambda_1(t)$
 można różniczkować pod całką z majorantą
 $|t|e^{-\varepsilon t^2/2}$. Ponieważ
 $(e^{-\varepsilon t^2/2})'=-\varepsilon t e^{-\varepsilon t^2/2}$,
 całkowanie przez części, z zanikającymi wyrazami brzegowymi, daje
 \[
 I'(u)=-\frac{i}{\varepsilon}
-\int_\R (e^{-\varepsilon t^2/2})'e^{iut}\,\mathrm dt
+\int_\R (e^{-\varepsilon t^2/2})'e^{iut}\,\mathrm d\lambda_1(t)
 =-\frac u\varepsilon I(u).
 \]
 Ponadto $I(0)=\sqrt{2\pi/\varepsilon}$ z całki Gaussa
@@ -121,6 +121,38 @@ Ten sam argument, ze zmienionym znakiem wykładnika,
 daje $\mathcal F\mathcal F^{-1}g=g$ dla $g\in\mathcal S$.
 Ciągłość operatora odwrotnego wynika z identycznych
 oszacowań seminorm po zmianie znaku wykładnika.
+\end{proof}
+
+\begin{wniosek}[Odbicie i iteracje transformacji Fouriera]
+\label{cor:dt-fourier-iteration}
+Niech $R:\mathcal S(\R^d;\C)\to\mathcal S(\R^d;\C)$
+będzie operatorem odbicia $(Rf)(x)=f(-x)$.
+Wtedy
+\[
+ \mathcal F^{-1}=R\mathcal F=\mathcal F R,\qquad
+ \mathcal F^2=R,\qquad \mathcal F^4=I.
+\]
+Ponadto dla $f\in\mathcal S$ zachodzi
+\[
+ \widehat{\overline f}(\xi)=\overline{\widehat f(-\xi)}.
+\]
+\end{wniosek}
+\begin{proof}
+Odbicie jest ciągłym automorfizmem $\mathcal S$,
+ponieważ zachowuje wszystkie seminormy $Q_{N,m}$
+i spełnia $R^2=I$. W istocie
+$\partial^\alpha(Rf)(x)=(-1)^{|\alpha|}(\partial^\alpha f)(-x)$
+i $|-x|=|x|$.
+Z wzoru odwrotnego w Twierdzeniu~\ref{thm:fourier-schwartz17}
+otrzymujemy $\mathcal F^{-1}=R\mathcal F$.
+Podstawienie $y=-x$ w całce Fourierowskiej daje
+$\mathcal F R=R\mathcal F$, ponieważ miara Lebesgue'a
+jest niezmiennicza względem odbicia. Zatem
+$I=\mathcal F^{-1}\mathcal F=R\mathcal F^2$,
+a mnożenie przez $R$ daje $\mathcal F^2=R$.
+Stąd $\mathcal F^4=R^2=I$.
+Sprzężenie zespolone przenosimy pod znak bezwzględnie
+zbieżnej całki, co daje ostatnią tożsamość.
 \end{proof}
 
 \begin{przyklad}[Funkcja Gaussa i wizualizacja w Plotly]
@@ -192,6 +224,82 @@ Możemy więc zastosować twierdzenie Fubiniego i podstawić $z=x-y$:
 \]
 \end{proof}
 
+\begin{stwierdzenie}[Transformata iloczynu i splotu]
+\label{prop:dt-fourier-product}
+Dla $f,g\in\mathcal S(\R^d;\C)$ zachodzą
+\[
+ \mathcal F(fg)=c_d(\widehat f*\widehat g),\qquad
+ \mathcal F^{-1}(fg)=c_d(\mathcal F^{-1}f*\mathcal F^{-1}g),
+ \qquad c_d=(2\pi)^{-d/2}.
+\]
+W szczególności transformacja Fouriera zamienia
+splot na mnożenie punktowe z czynnikiem $c_d^{-1}$,
+a mnożenie punktowe na splot z czynnikiem $c_d$.
+\end{stwierdzenie}
+\begin{proof}
+Reguła Leibniza daje
+$Q_{N,m}(fg)\le 2^m Q_{N,m}(f)Q_{0,m}(g)$,
+więc $fg\in\mathcal S$. Rzeczywiście, w każdym składniku
+pochodnej iloczynu rzędu co najwyżej $m$ przypisujemy
+całą wagę $(1+|x|)^N$ pochodnej $f$, a suma
+współczynników dwumianowych dla wielowskaźnika
+$\alpha$ wynosi $2^{|\alpha|}\le2^m$.
+Wstawiamy wzór odwrotny dla $g$ z
+Twierdzenia~\ref{thm:fourier-schwartz17}:
+\[
+\begin{aligned}
+ \widehat{fg}(\xi)
+ &=c_d^2\int_{\R^d}\int_{\R^d}
+ f(x)\widehat g(\eta)e^{-ix\cdot(\xi-\eta)}
+ \,\mathrm d\lambda_d(\eta)\,\mathrm d\lambda_d(x)\\
+ &=c_d\int_{\R^d}\widehat f(\xi-\eta)\widehat g(\eta)
+ \,\mathrm d\lambda_d(\eta).
+\end{aligned}
+\]
+Zamiana kolejności całkowania jest dozwolona na mocy
+twierdzenia Fubiniego, ponieważ całka modułu bez czynnika
+$c_d^2$ wynosi $\|f\|_1\|\widehat g\|_1<\infty$.
+Druga równość wynika z pierwszej i Wniosku~\ref{cor:dt-fourier-iteration}:
+odbicie spełnia $R(u*v)=(Ru)*(Rv)$ przez podstawienie
+$y=-z$ w całce definiującej splot.
+Regułę transformowania splotu udowodniono w
+Stwierdzeniu~\ref{prop:convolution-schwartz17}.
+\end{proof}
+
+\begin{przyklad}[Gauss wielowymiarowy i zmiana skali]
+\label{ex:dt-fourier-gaussian-matrix}
+Niech $A$ będzie rzeczywistą symetryczną macierzą
+dodatnio określoną rozmiaru $d\times d$.
+Dla $f_A(x)=\exp(-x^TAx/2)$ mamy
+\[
+ \widehat f_A(\xi)=(\det A)^{-1/2}
+ \exp(-\xi^TA^{-1}\xi/2).
+\]
+Istotnie, z twierdzenia spektralnego dla macierzy
+symetrycznych istnieje macierz ortogonalna $U$
+oraz $a_1,\ldots,a_d>0$ takie, że
+$A=U^T\operatorname{diag}(a_1,\ldots,a_d)U$.
+W szczególności $x^TAx\ge(\min_j a_j)|x|^2$,
+więc $f_A\in\mathcal S$: każda jej pochodna jest
+iloczynem wielomianu i $f_A$, co wynika indukcyjnie
+z reguły iloczynu.
+Podstawienie $y=Ux$ zachowuje miarę Lebesgue'a,
+a $x\cdot\xi=y\cdot(U\xi)$.
+Twierdzenie Fubiniego pozwala rozdzielić całkę na
+$d$ jednowymiarowych całek (ich moduły są całkowalne).
+Z Przykładu~\ref{ex:fourier-gauss17} otrzymujemy
+\[
+ \widehat f_A(\xi)
+ =\prod_{j=1}^d a_j^{-1/2}
+ \exp\left(-\frac{(U\xi)_j^2}{2a_j}\right).
+\]
+Ponieważ $\det A=\prod_j a_j$ i
+$A^{-1}=U^T\operatorname{diag}(a_1^{-1},\ldots,a_d^{-1})U$,
+dostajemy tezę. W szczególności kierunki silniejszego
+skupienia funkcji odpowiadają kierunkom słabszego
+zanikania transformaty.
+\end{przyklad}
+
 \subsection{Transformacja całkowa w przestrzeni \texorpdfstring{$L^1$}{L1}}
 
 Przyjmujemy w całym skrypcie normalizację unitarną z
@@ -234,8 +342,10 @@ Wtedy $e^{-ih\cdot\xi}=-1$ oraz
  \le c_d\|f-\tau_h f\|_1.
 \]
 Gdy $|\xi|\to\infty$, mamy $h\to0$, a prawa strona
-dąży do zera na mocy
-\atlasref{ME-14::thm:translation-lp-14}{ciągłości translacji w przestrzeni $L^1$}.
+dąży do zera na mocy ciągłości translacji w $L^1$,
+wykazanej w dowodzie Twierdzenia~\ref{thm:dt-approx-lp}.
+Por. także
+\atlasref{ME-14::thm:translation-lp-14}{ciągłość translacji w przestrzeniach Lebesgue'a}.
 \end{proof}
 
 \begin{stwierdzenie}[Reguły transformacji całkowej]
@@ -277,6 +387,49 @@ majorantą jest $|x^{\beta+e_j}f(x)|$; ciągłość
 pochodnych wynika ponownie ze zbieżności zmajoryzowanej.
 \end{proof}
 
+\begin{wniosek}[Transformata pochodnej słabej w $L^1$]
+\label{cor:dt-fourier-weak-derivative-l1}
+Niech $f,g\in L^1(\R^d;\C)$ i niech
+$\partial_jT_f=T_g$ w $\mathcal D'(\R^d)$
+dla ustalonego $j\in\{1,\ldots,d\}$.
+Wtedy dla każdego $\xi\in\R^d$
+\[
+ \widehat g(\xi)=i\xi_j\widehat f(\xi).
+\]
+W szczególności jeśli wszystkie pochodne słabe
+$\partial^\alpha f$ dla $|\alpha|\le m$ należą do $L^1$,
+to $\mathcal F(\partial^\alpha f)=(i\xi)^\alpha\widehat f$
+dla każdego takiego wielowskaźnika.
+\end{wniosek}
+\begin{proof}
+Nie można bezpośrednio użyć funkcji wykładniczej
+jako testu w definicji pochodnej dystrybucyjnej,
+gdyż nie ma zwartego nośnika.
+Z Lematu~\ref{lem:cutoffs17} wybieramy
+$\chi\in\mathcal D(\R^d;\R)$, $0\le\chi\le1$,
+równą $1$ w otoczeniu zera. Dla $R>0$ i
+$\xi\in\R^d$ bierzemy test
+$\varphi_R(x)=\chi(x/R)e^{-ix\cdot\xi}$.
+Z definicji pochodnej dystrybucyjnej
+\[
+\begin{aligned}
+ \int_{\R^d}g(x)\varphi_R(x)\,\mathrm d\lambda_d(x)
+ &=i\xi_j\int_{\R^d} f(x)\varphi_R(x)\,\mathrm d\lambda_d(x)\\
+ &\quad-\frac1R\int_{\R^d}f(x)(\partial_j\chi)(x/R)
+ e^{-ix\cdot\xi}\,\mathrm d\lambda_d(x).
+\end{aligned}
+\]
+Ostatni składnik ma moduł nie większy niż
+$R^{-1}\|f\|_1\|\partial_j\chi\|_\infty$, więc zanika.
+W dwóch pozostałych całkach stosujemy twierdzenie
+o zbieżności zmajoryzowanej, ponieważ
+$\chi(x/R)\to1$ punktowo, a majoranty to odpowiednio
+$|g|$ i $|f|$.
+Mnożąc otrzymaną równość przez $c_d$, dostajemy tezę.
+Iterowanie tego wyniku po kolejnych pochodnych
+pierwszego rzędu daje wzór dla wielowskaźników.
+\end{proof}
+
 \begin{lemat}[Odwracanie z regularyzacją Gaussa]
 \label{lem:dt-fourier-gaussian-l1}
 Niech $f\in L^1(\R^d)$ i $\varepsilon>0$.
@@ -314,7 +467,8 @@ Dla dowolnego $\delta>0$ część po $|y|<\delta$ nie
 przekracza $\sup_{|y|<\delta}\|\tau_yf-f\|_1$,
 a pozostała nie przekracza
 $2\|f\|_1\int_{|y|\ge\delta}G_\varepsilon\,\mathrm d\lambda_d$.
-Ciągłość translacji pozwala najpierw wybrać $\delta$,
+Ciągłość translacji z dowodu Twierdzenia~\ref{thm:dt-approx-lp}
+pozwala najpierw wybrać $\delta$,
 a następnie zmniejszyć $\varepsilon$, tak aby obie
 części były dowolnie małe.
 \end{proof}
