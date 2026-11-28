@@ -70,6 +70,7 @@ PREFIX_DOMAINS = {
     "PDE": "równania różniczkowe cząstkowe",
     "LA": "algebra liniowa",
     "LST": "logika i teoria mnogości",
+    "NCL": "logika niestandardowa",
     "GT": "topologia ogólna",
 }
 COMMAND = re.compile(r"\\([A-Za-z@]+|.)")
@@ -256,6 +257,7 @@ REPOSITORY_CATEGORIES = {
     "partial_differential_equations": "PDE",
     "linear_algebra": "LA",
     "logic_and_set_theory": "LST",
+    "nonclassical_logic": "NCL",
     "algebraic_geometry": "ALG", "algebraic_topology": "TOP",
     "banach_tarski": "BT", "category_theory": "KAT",
     "galois_theory": "GA", "general_topology": "GT", "graph_and_knot_theory": "GW",

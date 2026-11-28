@@ -7,6 +7,8 @@ on:
     paths:
       - "chapters/pl/logic_and_set_theory/**"
       - "chapters/pl/model_theory/**"
+      - "chapters/pl/nonclassical_logic/**"
+      - "books/pl/nonclassical_logic.tex"
       - "books/pl/model_theory.tex"
       - "catalog/logic_model_migration.json"
       - "tools/tests/logic_model_sources.py"
@@ -375,17 +377,24 @@ jobs:
           root_file: logic_and_set_theory.tex
           working_directory: books/pl
           args: -pdf -g -interaction=nonstopmode -halt-on-error -file-line-error
-      - name: Check both compiled PDFs and logs
+      - name: Compile nonclassical logic with external references
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: nonclassical_logic.tex
+          working_directory: books/pl
+          args: -pdf -g -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Check all three compiled PDFs and logs
         shell: bash
         run: |
           test -s books/pl/logic_and_set_theory.pdf
           test -s books/pl/model_theory.pdf
+          test -s books/pl/nonclassical_logic.pdf
           python - <<'PY'
           import re
           from pathlib import Path
 
           log = "\n".join(Path("books/pl", name + ".log").read_text(errors="replace")
-                          for name in ("logic_and_set_theory", "model_theory"))
+                          for name in ("logic_and_set_theory", "model_theory", "nonclassical_logic"))
           refs = set(re.findall(r"LaTeX Warning: Reference `([^']+)' on page \d+ undefined", log))
           allowed = set()
           assert refs <= allowed, f"Unexpected undefined references: {sorted(refs - allowed)}"
@@ -407,4 +416,6 @@ jobs:
             books/pl/logic_and_set_theory.log
             books/pl/model_theory.pdf
             books/pl/model_theory.log
+            books/pl/nonclassical_logic.pdf
+            books/pl/nonclassical_logic.log
           if-no-files-found: warn

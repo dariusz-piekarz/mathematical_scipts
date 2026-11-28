@@ -13,7 +13,8 @@ CATALOG = json.loads((ROOT / "catalog/books.json").read_text("utf8"))["books"]
 BY_ID = {book["id"]: book for book in CATALOG}
 LST = BY_ID["logic_and_set_theory"]
 MOD = BY_ID["model_theory"]
-FUZZY = ROOT / "chapters/pl/logic_and_set_theory/40-logika-rozmyta-i-zbiory-rozmyte.tex"
+NCL = BY_ID["nonclassical_logic"]
+FUZZY = ROOT / "chapters/pl/nonclassical_logic/01-logika-rozmyta-i-zbiory-rozmyte.tex"
 LABEL = re.compile(r"\\label\{([^}]+)\}")
 REF = re.compile(r"\\(?:ref|eqref|autoref|pageref)\{([^}]+)\}|\\hyperref\[([^\]]+)\]")
 
@@ -38,16 +39,20 @@ class TestLogicModelSplit(unittest.TestCase):
                 self.assertTrue((ROOT / moved["dest"]).is_file())
 
     def test_cross_book_labels_and_book_imports(self):
-        paths = LST["chapters"] + MOD["chapters"]
+        paths = LST["chapters"] + MOD["chapters"] + NCL["chapters"]
         sources = [(ROOT / path).read_text("utf8") for path in paths]
         labels = [x for src in sources for x in LABEL.findall(src)]
         refs = {a or b for src in sources for a, b in REF.findall(src)}
         self.assertEqual(len(labels), len(set(labels)))
         self.assertFalse(refs - set(labels), refs - set(labels))
-        for book in (LST, MOD):
+        for book in (LST, MOD, NCL):
             text = (ROOT / book["entrypoint"]).read_text("utf8")
             self.assertEqual(re.findall(r"\\input\{\.\./\.\./([^}]+)\}", text), book["chapters"])
-        self.assertIn(str(FUZZY.relative_to(ROOT)), LST["chapters"])
+        self.assertIn(str(FUZZY.relative_to(ROOT)), NCL["chapters"])
+        self.assertNotIn(str(FUZZY.relative_to(ROOT)), LST["chapters"])
+        self.assertFalse((ROOT / "chapters/pl/logic_and_set_theory/40-logika-rozmyta-i-zbiory-rozmyte.tex").exists())
+        self.assertEqual(MANIFEST["nonclassical_logic_move"]["dest"], str(FUZZY.relative_to(ROOT)))
+        self.assertTrue((ROOT / "application/config/preambles/NCL.tex").is_file())
         self.assertEqual([Path(p).name[:2] for p in MOD["chapters"][:9]],
                          ["24", "25", "26", "27", "28", "20", "21", "22", "23"])
         self.assertEqual(len(MANIFEST["moved_chapters"]), 9)
