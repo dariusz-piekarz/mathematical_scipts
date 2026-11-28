@@ -351,6 +351,117 @@ jobs:
               print(diagnostic.decode("utf-8"))
           PY
 
+      - name: Exercise bounded repair loop on a fixed polynomial fixture
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! grep -q '^def prepare_repair(' backend/lean_draft_runner.py 2>/dev/null; then
+            echo "Historical checkout without repair admission."
+            exit 0
+          fi
+          python - <<'PY'
+          import hashlib
+          import json
+          import subprocess
+          import tempfile
+          from pathlib import Path
+          from backend.lean_draft_generator import generate
+          from backend.lean_draft_repair import plan_next, MAX_ATTEMPTS, MAX_DIAGNOSTIC_BYTES, VERSION
+          from backend.lean_draft_runner import prepare_repair
+          from scripts.lean_ci_audit import inspect_log
+
+          if VERSION in ("0.1.0", "0.1.1", "0.1.2"):
+              print("Historical classifier before real omega diagnostic support.")
+              raise SystemExit(0)
+
+          # Repository-controlled mathematical identity, never an application request.
+          source = (r"\forall x:Real, \forall y:Real, "
+                    r"(x + y) \cdot (x + y) = (x \cdot x) + "
+                    r"((2:Real) \cdot x \cdot y) + (y \cdot y)")
+          root = Path("lean").resolve()
+          logs = root / "ci_lean_logs"
+          logs.mkdir(exist_ok=True)
+
+          def require(condition, message):
+              if not condition:
+                  raise RuntimeError(message)
+
+          initial = generate(source, consent=True)
+          require(initial["status"] == "generated", "polynomial fixture generation failed")
+          identity = dict(expected_source_sha256=initial["source_sha256"],
+                          expected_ast_sha256=initial["ast_sha256"],
+                          expected_initial_code_sha256=initial["lean_code_sha256"],
+                          consent=True)
+          current = initial
+          payload = initial["lean_code"].encode("utf-8") + b"\n#print axioms atlas_draft\n"
+          history, trace = [], []
+          outcome = "not_run"
+          report = dict(fixture_only=True, repair_version=VERSION, max_attempts=MAX_ATTEMPTS,
+                        initial_code_sha256=initial["lean_code_sha256"],
+                        execution_allowed=False, certificate=False, attempts=trace)
+          with tempfile.TemporaryDirectory(prefix="atlas-repair-loop-ci-") as temp:
+              directory = Path(temp)
+              try:
+                  for attempt in range(1, MAX_ATTEMPTS + 1):
+                      code = current["lean_code"].encode("utf-8")
+                      require(current["signature"] == initial["signature"],
+                              "fixture statement changed")
+                      require(hashlib.sha256(code).hexdigest() == current["lean_code_sha256"],
+                              "fixture code digest mismatch")
+                      require(payload == code + b"\n#print axioms atlas_draft\n",
+                              "fixture payload mismatch")
+                      (directory / "Draft.lean").write_bytes(payload)
+                      result = subprocess.run(
+                          ["lake", "env", "bash", "-c", 'cd "$1" && exec lean Draft.lean',
+                           "_", str(directory)], cwd=root, stdout=subprocess.PIPE,
+                          stderr=subprocess.STDOUT, timeout=90, check=False)
+                      diagnostic = result.stdout
+                      (logs / f"repair-loop-{attempt}.log").write_bytes(diagnostic)
+                      require(0 < len(diagnostic) <= MAX_DIAGNOSTIC_BYTES,
+                              "empty or oversized fixture output")
+                      row = dict(attempt=attempt, code_sha256=current["lean_code_sha256"],
+                                 input_sha256=hashlib.sha256(payload).hexdigest(),
+                                 diagnostic_sha256=hashlib.sha256(diagnostic).hexdigest(),
+                                 exit_code=result.returncode)
+                      trace.append(row)
+                      if result.returncode == 0:
+                          row["axioms"] = inspect_log(diagnostic.decode("utf-8"), ["atlas_draft"])
+                          outcome = "initial_compiled" if attempt == 1 else "repair_compiled"
+                          break
+                      require(result.returncode == 1, "unexpected compiler exit code")
+                      history.append(dict(code_sha256=current["lean_code_sha256"],
+                                          exit_code=result.returncode, diagnostic=diagnostic))
+                      plan = plan_next(source, observations=history, **identity)
+                      row["planner_status"] = plan["status"]
+                      row["planner_error"] = plan.get("error")
+                      require(plan["execution_allowed"] is False and plan["certificate"] is False
+                              and plan["proof_status"] == "not_run", "planner granted authority")
+                      if plan["status"] != "repair_planned":
+                          outcome = plan["status"]
+                          require(plan["lean_code"] is None, "blocked plan returned code")
+                          break
+                      require(attempt < MAX_ATTEMPTS, "attempt limit exceeded")
+                      status, prepared = prepare_repair(
+                          source, observations=history,
+                          expected_repair_code_sha256=plan["lean_code_sha256"], **identity)
+                      require(prepared is not None and prepared.attempt == attempt + 1
+                              and status["execution_allowed"] is False
+                              and status["certificate"] is False
+                              and status["diagnostic_authenticity"] == "unverified",
+                              "repair admission contract violated")
+                      require(prepared.input_sha256 == hashlib.sha256(prepared.input_bytes).hexdigest(),
+                              "repair payload digest mismatch")
+                      current, payload = plan, prepared.input_bytes
+              finally:
+                  report["outcome"] = outcome
+                  (logs / "repair-loop.json").write_text(
+                      json.dumps(report, indent=2) + "\n", encoding="utf-8")
+                  print("ATLAS_TRUSTED_REPAIR_LOOP " + json.dumps(report))
+          # A successful initial proof alone is not evidence of repair.
+          require(outcome == "repair_compiled", "fixed polynomial repair was not demonstrated")
+          PY
+
       - name: Install application dependencies for Lean introspection test
         working-directory: application
         run: python -m pip install -r requirements.txt
@@ -390,6 +501,7 @@ jobs:
           path: |
             application/lean/ci_lean_logs/*.log
             application/lean/ci_lean_logs/repair-real-diagnostic.json
+            application/lean/ci_lean_logs/repair-loop.json
             application/lean/ci_lean_report.json
             application/lean/ci_lean_files.txt
             application/lean/ci_fingerprint_benchmark.json
