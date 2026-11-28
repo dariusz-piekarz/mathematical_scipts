@@ -143,8 +143,9 @@ def destination(path: Path, toolchain: Path, packages: dict[str, Path], *,
 
 
 def stage(paths: set[Path], rootfs: Path, toolchain: Path,
-          packages: dict[str, Path], fixture: Path) -> dict:
+          packages: dict[str, Path], fixture: Path, *, scope=artifacts.DEFAULT_SCOPE) -> dict:
     """Trusted CI files only; aliases become independent regular destination files."""
+    byte_budget = artifacts.total_budget(scope)
     origins = {}
     total = 0
     deadline = time.monotonic() + artifacts.SCAN_SECONDS
@@ -163,7 +164,7 @@ def stage(paths: set[Path], rootfs: Path, toolchain: Path,
         if target.as_posix() in origins:
             raise ValueError("Colliding staged dependency")
         total += info.st_size
-        if total > artifacts.MAX_TOTAL_BYTES or len(origins) >= artifacts.MAX_ENTRIES:
+        if total > byte_budget or len(origins) >= artifacts.MAX_ENTRIES:
             raise ValueError("Offline bundle budget exceeded")
         before = artifacts.identity(info)
         sha = artifacts.hash_file(resolved, before, deadline)
@@ -207,25 +208,39 @@ def entry_script(package_names) -> str:
             "exec /opt/lean/bin/lean /opt/atlas/Fixture.lean\n")
 
 
-def validate_missing_import_output(output: bytes) -> str:
+def fixture_spec(profile: str) -> tuple[str, str, str, str, str]:
+    if profile == "minimal":
+        return SOURCE, MISSING_IMPORT, "Mathlib.Logic.Basic", artifacts.DEFAULT_SCOPE, "atlas-mathlib-offline"
+    if profile == "scoped":
+        # Import lazily: the measurement module imports this module.
+        from scripts.lean_full_import_probe import SCOPED_SOURCE
+        return (SCOPED_SOURCE, "opt/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Real/Basic.olean",
+                "Mathlib.Data.Real.Basic", artifacts.SCOPED_FIXTURE_SCOPE, "atlas-mathlib-scoped")
+    raise ValueError("Unknown fixed offline fixture profile")
+
+
+def validate_missing_import_output(output: bytes, *, profile="minimal") -> str:
+    _, missing_import, module, _, _ = fixture_spec(profile)
     lines = output.decode('ascii').splitlines()
-    diagnostic = ("/opt/atlas/Fixture.lean:1:0: error: object file '/" + MISSING_IMPORT
-                  + "' of module Mathlib.Logic.Basic does not exist")
+    diagnostic = ("/opt/atlas/Fixture.lean:1:0: error: object file '/" + missing_import
+                  + "' of module " + module + " does not exist")
     if len(lines) != 2 or lines[1] != diagnostic:
         raise ValueError('Unexpected missing-import compiler evidence')
     return core.validate_version(lines[0])
 
 
-def validate_report(report, manifest, origins, *, expected_sha, expected_manifest_sha, rejected=False):
+def validate_report(report, manifest, origins, *, expected_sha, expected_manifest_sha, rejected=False,
+                    profile='minimal'):
     """Check persisted consistency, not authenticity or general offline readiness."""
+    source_text, missing_import, _, scope, _ = fixture_spec(profile)
     fixed = {"schema": 1, "status": "trusted_mathlib_fixture_offline_compiled", "checkout_sha": expected_sha,
-             "source_sha256": hashlib.sha256(SOURCE.encode()).hexdigest(), "archive_sha256": core.ARCHIVE_SHA256,
+             "source_sha256": hashlib.sha256(source_text.encode()).hexdigest(), "archive_sha256": core.ARCHIVE_SHA256,
              "manifest_sha256": expected_manifest_sha, "execution_allowed": False, "offline_ready": False,
              "certificate": False, "proof_status": "not_run", "container_state": "exited", "exit_code": 0,
              "cleanup_status": "removed_verified"}
     if rejected:
         fixed.update(status='trusted_mathlib_fixture_missing_import_rejected', exit_code=1,
-                     missing_import=MISSING_IMPORT)
+                     missing_import=missing_import)
     variable = {"file_count", "total_bytes", "observed_origin_count", "image_id", "container_id",
                 "lean_version", "lake_version", "compiler_output"}
     if (not isinstance(expected_sha, str) or not sources.REV.fullmatch(expected_sha)
@@ -237,7 +252,7 @@ def validate_report(report, manifest, origins, *, expected_sha, expected_manifes
         if type(report[name]) is not int or report[name] <= 0:
             raise ValueError("Invalid offline evidence counts")
     # Validate the raw list before path-keyed maps can hide duplicate entries.
-    artifacts.validate_manifest_structure(manifest)
+    artifacts.validate_manifest_structure(manifest, scope=scope)
     if (type(manifest) is not dict or type(origins) is not dict
             or hashlib.sha256(artifacts.encoded(manifest)).hexdigest() != expected_manifest_sha
             or manifest.get('file_count') != report['file_count'] or manifest.get('total_bytes') != report['total_bytes']
@@ -257,12 +272,12 @@ def validate_report(report, manifest, origins, *, expected_sha, expected_manifes
             raise ValueError("Observed file differs from manifest")
         normalized(origin['source'])
         normalized(origin['resolved_source'])
-    generated = {'opt/atlas/Fixture.lean': SOURCE,
+    generated = {'opt/atlas/Fixture.lean': source_text,
                  'opt/atlas/run-draft': entry_script(p['name'] for p in source['packages'])}
     for path, text in generated.items():
         if files[path]['sha256'] != hashlib.sha256(text.encode()).hexdigest() or files[path]['size'] != len(text.encode()):
             raise ValueError("Fixed fixture bytes differ")
-    if rejected and MISSING_IMPORT in files:
+    if rejected and missing_import in files:
         raise ValueError('Rejected fixture still contains the required import')
     if (not isinstance(report['image_id'], str) or not policy._IMAGE.fullmatch(report['image_id'])
             or not isinstance(report['container_id'], str) or not transport._CONTAINER_ID.fullmatch(report['container_id'])):
@@ -271,18 +286,19 @@ def validate_report(report, manifest, origins, *, expected_sha, expected_manifes
     if type(output) is not str or len(output) > transport.MAX_METADATA_BYTES:
         raise ValueError("Invalid compiler evidence")
     lake, separator, rest = output.partition('\n')
-    validate_output = validate_missing_import_output if rejected else core.validate_output
+    validate_output = (lambda data: validate_missing_import_output(data, profile=profile)) if rejected else core.validate_output
     if (not separator or validate_lake(lake.encode()) != report['lake_version']
             or validate_output(rest.encode()) != report['lean_version']):
         raise ValueError("Inconsistent compiler evidence")
 
 
 def validate_report_pair(positive, negative, *, expected_sha, expected_manifest_sha,
-                         expected_rejected_manifest_sha):
+                         expected_rejected_manifest_sha, profile='minimal'):
+    _, missing_import, _, _, _ = fixture_spec(profile)
     for evidence, digest, rejected in ((positive, expected_manifest_sha, False),
                                        (negative, expected_rejected_manifest_sha, True)):
         validate_report(*evidence, expected_sha=expected_sha,
-                        expected_manifest_sha=digest, rejected=rejected)
+                        expected_manifest_sha=digest, rejected=rejected, profile=profile)
     success, manifest, origins = positive
     failure, rejected_manifest, rejected_origins = negative
     if (success['image_id'] == failure['image_id']
@@ -293,10 +309,10 @@ def validate_report_pair(positive, negative, *, expected_sha, expected_manifest_
     rejected_files = {e['path']: e for e in rejected_manifest['entries'] if e['kind'] == 'file'}
     entries = {e['path']: e for e in manifest['entries']}
     rejected_entries = {e['path']: e for e in rejected_manifest['entries']}
-    if (MISSING_IMPORT not in files or set(rejected_files) != set(files) - {MISSING_IMPORT}
+    if (missing_import not in files or set(rejected_files) != set(files) - {missing_import}
             or any(files[path] != entry for path, entry in rejected_files.items())
-            or rejected_entries != {p: e for p, e in entries.items() if p != MISSING_IMPORT}
-            or rejected_origins != {p: o for p, o in origins.items() if p != MISSING_IMPORT}
+            or rejected_entries != {p: e for p, e in entries.items() if p != missing_import}
+            or rejected_origins != {p: o for p, o in origins.items() if p != missing_import}
             or manifest['source_closure'] != rejected_manifest['source_closure']):
         raise ValueError('Negative bundle must differ only by the required import')
 
@@ -324,7 +340,8 @@ def read_evidence(path: Path):
 
 
 def check_image(prefix: list[str], env: dict[str, str], image: str, lake_version: str,
-                *, rejected=False) -> dict:
+                *, rejected=False, profile='minimal') -> dict:
+    fixture_spec(profile)
     def call(*args):
         return transport._command(prefix, args, env)
     transport.validate_engine(transport._decode_metadata(call("info", "--format", "{{json .}}")))
@@ -353,7 +370,7 @@ def check_image(prefix: list[str], env: dict[str, str], image: str, lake_version
         first, sep, rest = output.partition(b"\n")
         if not sep or first.decode("ascii") != lake_version:
             raise ValueError("Isolated Lake version differs from prepared tool")
-        version = (validate_missing_import_output if rejected else core.validate_output)(rest)
+        version = validate_missing_import_output(rest, profile=profile) if rejected else core.validate_output(rest)
         state = validate_exited_fixture(
             transport._decode_metadata(cleanup("container", "inspect", cid)),
             container_id=cid, image_id=image, expected_exit=1 if rejected else 0)
@@ -395,7 +412,8 @@ def trace_command(command: list[str], trace: Path, *, cwd: Path, env: dict,
     return raw
 
 
-def main() -> int:
+def main(*, profile='minimal') -> int:
+    source_text, missing_import, _, scope, evidence_prefix = fixture_spec(profile)
     if os.name != "posix" or not Path("/proc/sys/kernel").is_dir():
         raise ValueError("The trusted offline fixture requires Linux CI, not a client runtime")
     lean_root = Path(__file__).resolve().parents[1] / "lean"
@@ -410,7 +428,7 @@ def main() -> int:
         subprocess.run(["tar", "--zstd", "-xf", str(archive), "-C", directory], check=True, timeout=180)
         toolchain = work / "lean-4.26.0-linux"
         fixture = work / "Fixture.lean"
-        fixture.write_text(SOURCE, encoding="utf-8")
+        fixture.write_text(source_text, encoding="utf-8")
         path = ":".join(str(root / ".lake/build/lib/lean") for root in packages.values())
         observe_env = {"PATH": str(toolchain / "bin") + ":/usr/bin:/bin", "HOME": "/tmp",
                        "LANG": "C", "LEAN_NUM_THREADS": "1", "LEAN_PATH": path}
@@ -437,10 +455,10 @@ def main() -> int:
         context = work / "context"
         rootfs = context / "rootfs"
         rootfs.mkdir(parents=True)
-        origins = stage(paths, rootfs, toolchain, packages, fixture)
+        origins = stage(paths, rootfs, toolchain, packages, fixture, scope=scope)
         atlas = rootfs / "opt/atlas"
         atlas.mkdir(parents=True)
-        (atlas / "Fixture.lean").write_text(SOURCE, encoding="utf-8")
+        (atlas / "Fixture.lean").write_text(source_text, encoding="utf-8")
         (atlas / "run-draft").write_text(entry_script(packages), encoding="ascii")
         (atlas / "run-draft").chmod(0o755)
         (rootfs / "tmp").mkdir(mode=0o1777)
@@ -450,11 +468,11 @@ def main() -> int:
         prefix = [str(transport._DOCKER), "--host", "unix://" + str(transport._local_socket()), "--config", str(config)]
         env = {"PATH": "/usr/bin:/bin", "HOME": directory, "LANG": "C"}
         def run_case(case_origins, *, rejected):
-            manifest = artifacts.create_manifest(rootfs, source_report)
+            manifest = artifacts.create_manifest(rootfs, source_report, scope=scope)
             raw = artifacts.encoded(manifest)
             digest = hashlib.sha256(raw).hexdigest()
             verification = artifacts.verify_manifest(rootfs, raw, expected_sha256=digest,
-                                                      expected_source_report=source_report)
+                                                      expected_source_report=source_report, scope=scope)
             iid = work / ('rejected-image-id' if rejected else 'image-id')
             subprocess.run(prefix + ['build', '--network=none', '--pull=false', '--iidfile', str(iid), str(context)],
                            check=True, timeout=360, stdin=subprocess.DEVNULL, env={**env, 'DOCKER_BUILDKIT': '0'})
@@ -463,33 +481,34 @@ def main() -> int:
                 raise ValueError('Invalid offline fixture image ID')
             try:
                 # Compare actual bytes immediately before container admission.
-                artifacts.verify_manifest(rootfs, raw, expected_sha256=digest, expected_source_report=source_report)
-                result = check_image(prefix, env, image, lake_version, rejected=rejected)
+                artifacts.verify_manifest(rootfs, raw, expected_sha256=digest, expected_source_report=source_report, scope=scope)
+                result = check_image(prefix, env, image, lake_version, rejected=rejected, profile=profile)
             finally:
                 transport._command(prefix, ('image', 'rm', image), env)
             report = {'schema': 1, 'status': 'trusted_mathlib_fixture_offline_compiled', 'checkout_sha': sha,
-                      'source_sha256': hashlib.sha256(SOURCE.encode()).hexdigest(),
+                      'source_sha256': hashlib.sha256(source_text.encode()).hexdigest(),
                       'archive_sha256': core.ARCHIVE_SHA256, 'manifest_sha256': digest,
                       'file_count': verification['file_count'], 'total_bytes': verification['total_bytes'],
                       'observed_origin_count': len(case_origins), 'execution_allowed': False,
                       'offline_ready': False, 'proof_status': 'not_run', 'certificate': False, **result}
             if rejected:
-                report.update(status='trusted_mathlib_fixture_missing_import_rejected', missing_import=MISSING_IMPORT)
+                report.update(status='trusted_mathlib_fixture_missing_import_rejected', missing_import=missing_import)
             validate_report(report, manifest, case_origins, expected_sha=sha,
-                            expected_manifest_sha=digest, rejected=rejected)
+                            expected_manifest_sha=digest, rejected=rejected, profile=profile)
             return report, manifest, case_origins
 
         positive = run_case(origins, rejected=False)
-        if MISSING_IMPORT not in origins:
+        if missing_import not in origins:
             raise ValueError('Required import was not present in the successful observed bundle')
-        (rootfs / MISSING_IMPORT).unlink()
-        negative = run_case({p: o for p, o in origins.items() if p != MISSING_IMPORT}, rejected=True)
+        (rootfs / missing_import).unlink()
+        negative = run_case({p: o for p, o in origins.items() if p != missing_import}, rejected=True)
         validate_report_pair(positive, negative, expected_sha=sha,
                              expected_manifest_sha=positive[0]['manifest_sha256'],
-                             expected_rejected_manifest_sha=negative[0]['manifest_sha256'])
+                             expected_rejected_manifest_sha=negative[0]['manifest_sha256'], profile=profile)
+        marker_prefix = 'ATLAS_MATHLIB_OFFLINE' if profile == 'minimal' else 'ATLAS_MATHLIB_SCOPED'
         for evidence, prefix_name, marker in (
-                (positive, 'atlas-mathlib-offline-', 'ATLAS_MATHLIB_OFFLINE_FIXTURE'),
-                (negative, 'atlas-mathlib-offline-rejected-', 'ATLAS_MATHLIB_OFFLINE_REJECTED')):
+                (positive, evidence_prefix + '-', marker_prefix + '_FIXTURE'),
+                (negative, evidence_prefix + '-rejected-', marker_prefix + '_REJECTED')):
             for name, payload in zip(('report', 'manifest', 'origins'), evidence):
                 target = Path(os.environ['RUNNER_TEMP']) / (prefix_name + name + '.json')
                 with target.open('xb') as handle:
@@ -500,6 +519,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--profile', choices=('minimal', 'scoped'), default='minimal')
     parser.add_argument('--validate-report', type=Path)
     parser.add_argument('--manifest', type=Path)
     parser.add_argument('--origins', type=Path)
@@ -508,16 +528,17 @@ if __name__ == "__main__":
     parser.add_argument('--evidence-directory', type=Path)
     parser.add_argument('--expected-rejected-manifest-sha256')
     args = parser.parse_args()
+    _, _, _, _, evidence_prefix = fixture_spec(args.profile)
     if args.validate_report_pair:
         if not all((args.evidence_directory, args.expected_manifest_sha256, args.expected_rejected_manifest_sha256)):
             parser.error('Pair validation requires evidence directory and both independently captured digests')
         def evidence(prefix):
             return tuple(read_evidence(args.evidence_directory / (prefix + name + '.json'))
                          for name in ('report', 'manifest', 'origins'))
-        validate_report_pair(evidence('atlas-mathlib-offline-'), evidence('atlas-mathlib-offline-rejected-'),
+        validate_report_pair(evidence(evidence_prefix + '-'), evidence(evidence_prefix + '-rejected-'),
                              expected_sha=os.environ.get('GITHUB_SHA', ''),
                              expected_manifest_sha=args.expected_manifest_sha256,
-                             expected_rejected_manifest_sha=args.expected_rejected_manifest_sha256)
+                             expected_rejected_manifest_sha=args.expected_rejected_manifest_sha256, profile=args.profile)
         print('ATLAS_MATHLIB_OFFLINE_REPORT_PAIR_VALIDATED')
     elif args.validate_report:
         if not all((args.manifest, args.origins, args.expected_manifest_sha256)):
@@ -527,7 +548,8 @@ if __name__ == "__main__":
         if hashlib.sha256(artifacts.encoded(raw)).hexdigest() != args.expected_manifest_sha256:
             raise ValueError('Persisted manifest digest mismatch')
         validate_report(read_evidence(args.validate_report), raw, read_evidence(args.origins),
-                        expected_sha=os.environ.get('GITHUB_SHA', ''), expected_manifest_sha=args.expected_manifest_sha256)
+                        expected_sha=os.environ.get('GITHUB_SHA', ''), expected_manifest_sha=args.expected_manifest_sha256,
+                        profile=args.profile)
         print('ATLAS_MATHLIB_OFFLINE_REPORT_VALIDATED')
     else:
-        raise SystemExit(main())
+        raise SystemExit(main(profile=args.profile))

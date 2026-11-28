@@ -305,7 +305,7 @@ jobs:
           test "$(git -C .lake/packages/mathlib rev-parse HEAD)" = "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67"
       - name: Verify offline fixture contracts on native Linux
         working-directory: application
-        run: python3 -m unittest tests.test_lean_offline_fixture -v
+        run: python3 -m unittest tests.test_lean_offline_fixture tests.test_lean_artifact_manifest -v
       - name: Observe and compile one fixed Mathlib fixture without container network
         working-directory: application
         shell: bash
@@ -340,6 +340,27 @@ jobs:
           python3 -m unittest tests.test_lean_full_import_probe -v
           python3 -m scripts.lean_full_import_probe | tee "$RUNNER_TEMP/atlas-full-mathlib-measurement.log"
           grep -q '^ATLAS_FULL_MATHLIB_MEASUREMENT ' "$RUNNER_TEMP/atlas-full-mathlib-measurement.log"
+      - name: Compile fixed scoped Mathlib fixture without container network
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m scripts.lean_offline_fixture --profile scoped 2>&1 | tee "$RUNNER_TEMP/atlas-mathlib-scoped.log"
+          grep -q '^ATLAS_MATHLIB_SCOPED_FIXTURE ' "$RUNNER_TEMP/atlas-mathlib-scoped.log"
+          grep -q '^ATLAS_MATHLIB_SCOPED_REJECTED ' "$RUNNER_TEMP/atlas-mathlib-scoped.log"
+          digest="$(sha256sum "$RUNNER_TEMP/atlas-mathlib-scoped-manifest.json" | cut -d ' ' -f1)"
+          rejected_digest="$(sha256sum "$RUNNER_TEMP/atlas-mathlib-scoped-rejected-manifest.json" | cut -d ' ' -f1)"
+          echo "ATLAS_SCOPED_MANIFEST_SHA=$digest" >> "$GITHUB_ENV"
+          echo "ATLAS_SCOPED_REJECTED_MANIFEST_SHA=$rejected_digest" >> "$GITHUB_ENV"
+      - name: Independently validate persisted scoped Mathlib fixture evidence
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m scripts.lean_offline_fixture --profile scoped --validate-report-pair \
+            --evidence-directory "$RUNNER_TEMP" \
+            --expected-manifest-sha256 "$ATLAS_SCOPED_MANIFEST_SHA" \
+            --expected-rejected-manifest-sha256 "$ATLAS_SCOPED_REJECTED_MANIFEST_SHA"
       - name: Retain scoped Mathlib offline fixture evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -355,6 +376,8 @@ jobs:
             ${{ runner.temp }}/atlas-mathlib-offline-rejected-report.json
             ${{ runner.temp }}/atlas-full-mathlib-measurement.json
             ${{ runner.temp }}/atlas-full-mathlib-measurement.log
+            ${{ runner.temp }}/atlas-mathlib-scoped.log
+            ${{ runner.temp }}/atlas-mathlib-scoped-*.json
           if-no-files-found: warn
           retention-days: 30
       - name: Stop test daemon

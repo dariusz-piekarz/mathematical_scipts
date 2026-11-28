@@ -50,6 +50,29 @@ class ArtifactManifestTests(unittest.TestCase):
             self.assertIs(result[flag], False)
         self.assertEqual(self.raw, artifacts.encoded(artifacts.create_manifest(self.root, self.report)))
 
+    def test_scoped_fixture_budget_is_explicit_and_never_accepted_by_default(self):
+        scope = artifacts.SCOPED_FIXTURE_SCOPE
+        with patch.object(artifacts, "MAX_TOTAL_BYTES", 1):
+            with self.assertRaises(ValueError):
+                artifacts.create_manifest(self.root, self.report)
+            manifest = artifacts.create_manifest(self.root, self.report, scope=scope)
+            raw = artifacts.encoded(manifest)
+            sha = hashlib.sha256(raw).hexdigest()
+            artifacts.validate_manifest_structure(manifest, scope=scope)
+            with self.assertRaises(ValueError):
+                artifacts.validate_manifest_structure(manifest)
+            with self.assertRaises(ValueError):
+                artifacts.verify_manifest(self.root, raw, expected_sha256=sha,
+                                          expected_source_report=self.report)
+            result = artifacts.verify_manifest(self.root, raw, expected_sha256=sha,
+                                               expected_source_report=self.report, scope=scope)
+            self.assertIs(result["execution_allowed"], False)
+        with patch.object(artifacts, "SCOPED_FIXTURE_BYTES", 1):
+            with self.assertRaises(ValueError):
+                artifacts.create_manifest(self.root, self.report, scope=scope)
+        with self.assertRaises(ValueError):
+            artifacts.create_manifest(self.root, self.report, scope="custom")
+
     def test_same_size_mutation_with_restored_mtime_is_rejected(self):
         old = self.file.stat()
         self.file.write_bytes(b"X" * old.st_size)

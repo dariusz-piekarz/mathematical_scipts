@@ -21,6 +21,9 @@ from scripts import lean_mathlib_source_probe as sources
 MAX_ENTRIES = 20000
 MAX_FILE_BYTES = 512 * 1024 * 1024
 MAX_TOTAL_BYTES = 2 * 1024 * 1024 * 1024
+SCOPED_FIXTURE_BYTES = 5 * 1024**3 // 2
+DEFAULT_SCOPE = 'selected_artifact_tree'
+SCOPED_FIXTURE_SCOPE = 'trusted_scoped_fixture_tree'
 MAX_MANIFEST_BYTES = 8 * 1024 * 1024
 MAX_DEPTH = 32
 SCAN_SECONDS = 120
@@ -29,6 +32,14 @@ HEX = re.compile(r"[0-9a-f]{64}\Z")
 COMPONENT = re.compile(r"[A-Za-z0-9_.-]{1,120}\Z")
 RESERVED = {"con", "prn", "aux", "nul", *(f"com{i}" for i in range(1, 10)),
             *(f"lpt{i}" for i in range(1, 10))}
+
+
+def total_budget(scope: str) -> int:
+    if scope == DEFAULT_SCOPE:
+        return MAX_TOTAL_BYTES
+    if scope == SCOPED_FIXTURE_SCOPE:
+        return SCOPED_FIXTURE_BYTES
+    raise ValueError('Unknown artifact scope')
 
 
 def encoded(value: object) -> bytes:
@@ -168,14 +179,15 @@ def provenance(report: dict) -> dict:
     return json.loads(encoded(report))
 
 
-def create_manifest(root: Path, source_report: dict) -> dict:
+def create_manifest(root: Path, source_report: dict, *, scope=DEFAULT_SCOPE) -> dict:
+    byte_budget = total_budget(scope)
     source_report = provenance(source_report)
     root = root_path(root)
     deadline = time.monotonic() + SCAN_SECONDS
     before = inventory(root, deadline)
     files = [(name, info) for name, info in before.items() if stat.S_ISREG(info[2])]
     total = sum(info[4] for _, info in files)
-    if not files or total > MAX_TOTAL_BYTES:
+    if not files or total > byte_budget:
         raise ValueError("Empty artifact set or total byte budget exceeded")
     records = []
     for name in sorted(before):
@@ -189,7 +201,7 @@ def create_manifest(root: Path, source_report: dict) -> dict:
                             "sha256": hash_file(root / name, info, deadline)})
     if inventory(root, deadline) != before:
         raise ValueError("Artifact tree changed during scan")
-    manifest = {"schema": 1, "scope": "selected_artifact_tree",
+    manifest = {"schema": 1, "scope": scope,
                 "source_closure": source_report, "entries": records,
                 "file_count": len(files), "total_bytes": total,
                 "offline_ready": False, "execution_allowed": False, "certificate": False}
@@ -198,13 +210,14 @@ def create_manifest(root: Path, source_report: dict) -> dict:
     return manifest
 
 
-def validate_manifest_structure(manifest: dict) -> None:
+def validate_manifest_structure(manifest: dict, *, scope=DEFAULT_SCOPE) -> None:
     """Check persisted structure and counts without authenticating tree bytes."""
+    byte_budget = total_budget(scope)
     fields = {"schema", "scope", "source_closure", "entries", "file_count", "total_bytes",
               "offline_ready", "execution_allowed", "certificate"}
     if (type(manifest) is not dict or set(manifest) != fields
             or type(manifest["schema"]) is not int or manifest["schema"] != 1
-            or manifest["scope"] != "selected_artifact_tree"
+            or manifest["scope"] != scope
             or any(manifest[key] is not False for key in
                    ("offline_ready", "execution_allowed", "certificate"))):
         raise ValueError("Invalid artifact manifest structure")
@@ -244,12 +257,13 @@ def validate_manifest_structure(manifest: dict) -> None:
             raise ValueError("Missing artifact parent directory")
     if (type(manifest["file_count"]) is not int or manifest["file_count"] != count or count < 1
             or type(manifest["total_bytes"]) is not int or manifest["total_bytes"] != total
-            or total > MAX_TOTAL_BYTES or len(encoded(manifest)) > MAX_MANIFEST_BYTES):
+            or total > byte_budget or len(encoded(manifest)) > MAX_MANIFEST_BYTES):
         raise ValueError("Invalid artifact manifest counts or byte budget")
 
 
 def verify_manifest(root: Path, raw: bytes, *, expected_sha256: str,
-                    expected_source_report: dict) -> dict:
+                    expected_source_report: dict, scope=DEFAULT_SCOPE) -> dict:
+    total_budget(scope)
     if (type(expected_sha256) is not str or not HEX.fullmatch(expected_sha256)
             or len(raw) > MAX_MANIFEST_BYTES
             or hashlib.sha256(raw).hexdigest() != expected_sha256):
@@ -261,7 +275,7 @@ def verify_manifest(root: Path, raw: bytes, *, expected_sha256: str,
     # Reconstruct the complete selected tree, including empty directories.
     # Exact comparison rejects unknown schema/fields, unsafe paths and claims;
     # none of the paths in the supplied manifest are opened.
-    actual = create_manifest(root, expected_source_report)
+    actual = create_manifest(root, expected_source_report, scope=scope)
     if encoded(manifest) != encoded(actual):
         raise ValueError("Artifact manifest or selected tree mismatch")
     return {"status": "selected_artifact_bytes_verified", "manifest_sha256": expected_sha256,

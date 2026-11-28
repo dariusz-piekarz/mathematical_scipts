@@ -19,6 +19,23 @@ MISSING_OUTPUT = (VERSION + "\n/opt/atlas/Fixture.lean:1:0: error: object file '
 
 
 class DependencyTraceTests(unittest.TestCase):
+    def test_scoped_profile_is_fixed_and_missing_import_is_profile_bound(self):
+        source, missing, module, scope, prefix = offline.fixture_spec("scoped")
+        self.assertIn("import " + module, source)
+        self.assertEqual(scope, artifacts.SCOPED_FIXTURE_SCOPE)
+        self.assertEqual(prefix, "atlas-mathlib-scoped")
+        self.assertEqual(artifacts.total_budget(scope), 5 * 1024**3 // 2)
+        self.assertEqual(artifacts.total_budget(artifacts.DEFAULT_SCOPE), 2 * 1024**3)
+        output = (VERSION + "\n/opt/atlas/Fixture.lean:1:0: error: object file '/"
+                  + missing + "' of module " + module + " does not exist\n").encode()
+        self.assertEqual(offline.validate_missing_import_output(output, profile="scoped"), VERSION)
+        with self.assertRaises(ValueError):
+            offline.validate_missing_import_output(output)
+        with self.assertRaises(ValueError):
+            offline.validate_missing_import_output(MISSING_OUTPUT, profile="scoped")
+        with self.assertRaises(ValueError):
+            offline.fixture_spec("custom")
+
     def test_persisted_json_rejects_duplicates_nonfinite_and_oversized_data(self):
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / 'report.json'
