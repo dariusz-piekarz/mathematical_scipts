@@ -254,6 +254,98 @@ jobs:
              if grep -Ei 'sorryAx|declaration uses .sorry.' "$log"; then exit 1; fi
            done)
 
+      - name: Measure real Lean proof-failure diagnostics (fixed CI fixtures)
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! grep -q '^def prepare_repair(' backend/lean_draft_runner.py 2>/dev/null; then
+            echo "Historical checkout without repair admission."
+            exit 0
+          fi
+          python - <<'PY'
+          import hashlib
+          import json
+          import subprocess
+          import tempfile
+          from pathlib import Path
+          from backend.lean_draft_generator import generate
+          from backend.lean_draft_repair import plan_next, MAX_DIAGNOSTIC_BYTES
+          from backend.lean_draft_runner import prepare_repair
+          from scripts.lean_ci_audit import inspect_log
+
+          root = Path("lean").resolve()
+          logs = root / "ci_lean_logs"
+          logs.mkdir(exist_ok=True)
+          def require(condition, message):
+              if not condition:
+                  raise RuntimeError(message)
+
+          def compile_fixture(source, label, directory):
+              candidate = generate(source, consent=True)
+              require(candidate["status"] == "generated", "fixture generation failed")
+              payload = candidate["lean_code"].encode("utf-8")
+              require(hashlib.sha256(payload).hexdigest() == candidate["lean_code_sha256"],
+                      "fixture digest mismatch")
+              (directory / "Draft.lean").write_bytes(payload + b"\n#print axioms atlas_draft\n")
+              result = subprocess.run(
+                  ["lake", "env", "bash", "-c", 'cd "$1" && exec lean Draft.lean',
+                   "_", str(directory)], cwd=root, stdout=subprocess.PIPE,
+                  stderr=subprocess.STDOUT, timeout=90, check=False)
+              (logs / (label + ".log")).write_bytes(result.stdout)
+              require(0 < len(result.stdout) <= MAX_DIAGNOSTIC_BYTES,
+                      "empty or oversized diagnostic")
+              return candidate, result
+
+          with tempfile.TemporaryDirectory(prefix="atlas-repair-ci-") as temp:
+              directory = Path(temp)
+              # Positive control through the exact same invocation and Mathlib.
+              _, positive = compile_fixture(r"\top", "repair-positive-control", directory)
+              require(positive.returncode == 0, "positive Lean control failed")
+              inspect_log(positive.stdout.decode("utf-8"), ["atlas_draft"])
+
+              # False is intentionally unprovable; this is never user input.
+              candidate, failure = compile_fixture(r"\bot", "repair-real-diagnostic", directory)
+              require(failure.returncode == 1, "unexpected negative fixture exit code")
+              diagnostic = failure.stdout
+              require("error:" in diagnostic.decode("utf-8").lower(),
+                      "negative fixture produced no Lean error")
+              identity = dict(expected_source_sha256=candidate["source_sha256"],
+                              expected_ast_sha256=candidate["ast_sha256"],
+                              expected_initial_code_sha256=candidate["lean_code_sha256"],
+                              consent=True)
+              history = [dict(code_sha256=candidate["lean_code_sha256"],
+                              exit_code=failure.returncode, diagnostic=diagnostic)]
+              plan = plan_next(r"\bot", observations=history, **identity)
+              require(plan["status"] in ("blocked", "repair_planned"),
+                      "unexpected classifier outcome")
+              require(plan["certificate"] is False and plan["execution_allowed"] is False
+                      and plan["proof_status"] == "not_run", "planner granted authority")
+              admission = None
+              if plan["status"] == "repair_planned":
+                  require(plan["signature"] == candidate["signature"], "statement changed")
+                  admission, prepared = prepare_repair(
+                      r"\bot", observations=history,
+                      expected_repair_code_sha256=plan["lean_code_sha256"], **identity)
+                  require(prepared is not None and admission["execution_allowed"] is False
+                          and admission["certificate"] is False
+                          and admission["diagnostic_authenticity"] == "unverified",
+                          "repair admission contract violated")
+              else:
+                  require(plan["lean_code"] is None, "blocked plan returned code")
+              report = dict(positive_control="passed", exit_code=failure.returncode,
+                            diagnostic_sha256=hashlib.sha256(diagnostic).hexdigest(),
+                            diagnostic_bytes=len(diagnostic),
+                            initial_code_sha256=candidate["lean_code_sha256"],
+                            planner_status=plan["status"], planner_error=plan.get("error"),
+                            admission_status=None if admission is None else admission["admission_status"],
+                            fixture_only=True, execution_allowed=False, certificate=False)
+              (logs / "repair-real-diagnostic.json").write_text(
+                  json.dumps(report, indent=2) + "\n", encoding="utf-8")
+              print(json.dumps(report))
+              print(diagnostic.decode("utf-8"))
+          PY
+
       - name: Install application dependencies for Lean introspection test
         working-directory: application
         run: python -m pip install -r requirements.txt
@@ -292,6 +384,7 @@ jobs:
           name: lean-kernel-axiom-evidence
           path: |
             application/lean/ci_lean_logs/*.log
+            application/lean/ci_lean_logs/repair-real-diagnostic.json
             application/lean/ci_lean_report.json
             application/lean/ci_lean_files.txt
             application/lean/ci_fingerprint_benchmark.json
