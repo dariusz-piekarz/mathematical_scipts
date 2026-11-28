@@ -1,0 +1,110 @@
+\section{Monoidalne \texorpdfstring{$\infty$-kategorie i $\infty$-operady}{kategorie wyższe i operady wyższe}}\label{cat:sec:infty-monoidal-operads}
+
+W rozdziałach~\ref{cat:sec:monoidal} i~\ref{cat:sec:coherence} poznaliśmy zwykłe kategorie monoidalne oraz ich prawa koherencji. Rozdział~\ref{cat:sec:operads} wprowadził operady, które opisują operacje wieloargumentowe, ich podstawianie i symetrie. W $\infty$-kategorii nie wystarczy zastąpić równości łączności pojedynczą homotopią: potrzebujemy również zgodności pomiędzy homotopiami, zgodności wyższych rzędów i ich funktorialności. Zakodujemy te dane za pomocą odpowiednich funktorów do nerwów kategorii indeksujących. Wykorzystamy fibracje kokartezjańskie z rozdziału~\ref{cat:sec:cartesian-fibrations} oraz teorię kategorii prezentowalnych z rozdziału~\ref{cat:sec:presentable-infty-bousfield}.
+
+\subsection{Skończone zbiory punktowane: morfizmy aktywne i inercyjne}
+
+\begin{definicja}[Kategoria skończonych zbiorów punktowanych]\label{cat:def:infty-finpointed}
+Przez $\mathrm{Fin}_*$ oznaczamy szkielet kategorii skończonych zbiorów z wyróżnionym punktem i funkcji zachowujących ten punkt. Jego obiektami są
+\[
+ \langle n\rangle=\{*,1,\ldots,n\},\qquad n\geq0.
+\]
+Morfizm $f:\langle m\rangle\to\langle n\rangle$ nazywamy aktywnym, jeśli $f^{-1}(*)=\{*\}$, a inercyjnym, jeśli dla każdego $1\leq j\leq n$ zbiór $f^{-1}(j)$ jest jednoelementowy. Dla $1\leq j\leq n$ przez $\rho^j:\langle n\rangle\to\langle1\rangle$ oznaczamy morfizm inercyjny wysyłający $j$ na $1$, a wszystkie pozostałe elementy na $*$. Przez $\mu_n:\langle n\rangle\to\langle1\rangle$ oznaczamy morfizm aktywny wysyłający wszystkie elementy różne od $*$ na $1$.
+\end{definicja}
+
+Intuicyjnie, morfizm inercyjny wybiera i porządkuje argumenty, a morfizm aktywny rozdziela wszystkie argumenty pomiędzy operacje. Zbiór $f^{-1}(j)$ to lista argumentów potrzebnych do utworzenia $j$-tego wyniku. Pusty zbiór argumentów odpowiada operacji zeroargumentowej. W szczególności $\mu_0$ jest aktywny, a jedyny morfizm $\langle n\rangle\to\langle0\rangle$ jest inercyjny.
+
+\begin{przyklad}[Wybieranie i łączenie argumentów]\label{cat:ex:infty-finpointed-factor}
+Niech $f:\langle4\rangle\to\langle2\rangle$ będzie zadany przez $f(1)=f(3)=2$, $f(2)=1$, $f(4)=*$. Najpierw usuwamy czwarty argument, a następnie grupujemy trzy pozostałe. Odpowiada temu rozkład $f=a i$:
+\[
+\begin{tikzpicture}[>=Stealth,baseline=(b.base),scale=.87,transform shape]
+ \node (a) at (0,0) {$\langle4\rangle$};
+ \node (b) at (4,0) {$\langle3\rangle$};
+ \node (c) at (8,0) {$\langle2\rangle$};
+ \draw[->] (a)--node[above]{$i$ inercyjny}(b);
+ \draw[->] (b)--node[above]{$a$ aktywny}(c);
+ \node[align=center] at (2,-.85) {$4\mapsto *$\\$1,2,3\mapsto1,2,3$};
+ \node[align=center] at (6,-.85) {$1,3\mapsto2$\\$2\mapsto1$};
+\end{tikzpicture}
+\]
+W przypadku operacji na obiektach monoidalnych wynikami byłyby $X_2$ oraz $X_1\otimes X_3$, a $X_4$ nie bierze udziału w żadnym wyniku. Nie oznacza to istnienia morfizmu $X_4\to\mathbb 1$ w wyjściowej kategorii monoidalnej: usunięcie argumentu zachodzi w kategorii operatorów, nie w samej kategorii obiektów.
+\end{przyklad}
+
+\begin{stwierdzenie}[Rozkład inercyjno-aktywny]\label{cat:prop:infty-finpointed-factor}
+Każdy morfizm w $\mathrm{Fin}_*$ jest złożeniem morfizmu inercyjnego, a następnie aktywnego. Rozkład jest jednoznaczny z dokładnością do jednoznacznego izomorfizmu obiektu pośredniego. Ponadto dla każdego przemiennego kwadratu
+\[
+\begin{tikzpicture}[>=Stealth,baseline=(a.base)]
+ \node (a) at (0,2) {$A$};
+ \node (b) at (4,2) {$C$};
+ \node (c) at (0,0) {$B$};
+ \node (d) at (4,0) {$D$};
+ \draw[->] (a)--node[above]{$u$}(b);
+ \draw[->] (a)--node[left]{$i$}(c);
+ \draw[->] (b)--node[right]{$a$}(d);
+ \draw[->] (c)--node[below]{$v$}(d);
+ \draw[dashed,->] (c)--node[above left]{$h$}(b);
+\end{tikzpicture}
+\]
+z $i$ inercyjnym i $a$ aktywnym istnieje dokładnie jeden morfizm $h$ czyniący oba trójkąty przemiennymi.
+\end{stwierdzenie}
+\begin{proof}
+Dla $f:A\to D$ bierzemy punktowany zbiór pośredni $B=\{*\}\amalg\{x\in A:f(x)\neq *\}$. Morfizm $i:A\to B$ zachowuje każdy element tej drugiej części i wysyła pozostałe na punkt wyróżniony. Jest inercyjny. Ograniczenie $a=f|_B$ jest aktywne. W dowolnym innym takim rozkładzie $f=a'i'$ warunek aktywności daje $(i')^{-1}(*)=f^{-1}(*)$, natomiast inercyjność $i'$ daje bijekcję pomiędzy pozostałymi elementami $A$ i elementami różnymi od punktu wyróżnionego obiektu pośredniego. Ta bijekcja wyznacza jedyny izomorfizm porównujący rozkłady. Zastąpienie zbiorów przez reprezentantów szkieletu nie zmienia argumentu.
+
+Dla kwadratu z tezy definiujemy $h(*)=*$, a dla $b\neq *$ kładziemy $h(b)=u(x)$, gdzie $x$ jest jedynym elementem $i^{-1}(b)$. Wtedy $ah(b)=au(x)=vi(x)=v(b)$. Jeśli $i(x)=*$, to $au(x)=*$, a aktywność $a$ wymusza $u(x)=*$. Stąd również w tym przypadku $hi(x)=u(x)$. Mamy więc $hi=u$ i $ah=v$. Jednoznaczność wynika z surjektywności $i$, ponieważ każdy element różny od punktu wyróżnionego ma dokładnie jeden przeciwobraz, a punkt wyróżniony ma co najmniej jeden.
+\end{proof}
+
+\subsection{Definicja \texorpdfstring{$\infty$-operady}{operady wyższej}}
+
+Dla funktora $p:\mathcal O^\otimes\to N\mathrm{Fin}_*$ i obiektów $X,Y$ nad odpowiednio $\langle m\rangle,\langle n\rangle$ oznaczamy przez
+\[
+ \operatorname{Map}^{f}_{\mathcal O^\otimes}(X,Y)
+\]
+homotopijne włókno odwzorowania przestrzeni odwzorowań indukowanego przez $p$ nad morfizmem $f:\langle m\rangle\to\langle n\rangle$. Ponieważ przestrzenie odwzorowań w nerwie zwykłej kategorii są dyskretne z dokładnością do równoważności (przykład~\ref{cat:ex:mapping-ordinary}), można równoważnie traktować to włókno jako sumę składowych odwzorowań nad $f$.
+
+\begin{definicja}[$\infty$-operada]\label{cat:def:infty-operad}
+Funktor $p:\mathcal O^\otimes\to N\mathrm{Fin}_*$ pomiędzy $\infty$-kategoriami nazywamy $\infty$-operadą, jeśli spełnia następujące warunki.
+\begin{enumerate}
+ \item Każdy morfizm inercyjny $f:\langle m\rangle\to\langle n\rangle$ ma $p$-kokartezjańskie podniesienie z dowolnego obiektu nad $\langle m\rangle$. Takie podniesienia nazywamy morfizmami inercyjnymi $\mathcal O^\otimes$.
+ \item Dla $Y$ nad $\langle n\rangle$ wybierzmy morfizmy inercyjne $Y\to Y_j$ nad $\rho^j$. Dla każdego $X$ nad $\langle m\rangle$ i każdego $f:\langle m\rangle\to\langle n\rangle$ składanie z tymi morfizmami indukuje równoważność
+ \begin{equation}\label{cat:eq:infty-operad-mapping}
+ \operatorname{Map}^{f}_{\mathcal O^\otimes}(X,Y)
+ \simeq\prod_{j=1}^n
+ \operatorname{Map}^{\rho^j f}_{\mathcal O^\otimes}(X,Y_j).
+ \end{equation}
+ \item Dla każdej rodziny $Y_1,\ldots,Y_n$ obiektów włókna $\mathcal O^\otimes_{\langle1\rangle}$ istnieje obiekt $Y$ nad $\langle n\rangle$ z morfizmami inercyjnymi $Y\to Y_j$ nad $\rho^j$.
+\end{enumerate}
+Dopuszczamy $n=0$, a pusty produkt przestrzeni jest przestrzenią punktową. Włókno $\mathcal O=\mathcal O^\otimes_{\langle1\rangle}$ nazywamy kategorią kolorów $\infty$-operady.
+\end{definicja}
+
+Jest to definicja Luriego (\emph{Higher Algebra}, definicja 2.1.1.10, \url{https://www.math.ias.edu/~lurie/papers/HA.pdf}). Warunek 1 daje możliwość wybierania argumentów, warunek 2 mówi, że operacje o wielu wynikach są rozpoznawane przez ich poszczególne wyniki, a warunek 3 zapewnia możliwość zgromadzenia dowolnej skończonej listy kolorów. Nie wymagamy podniesień kokartezjańskich wszystkich morfizmów aktywnych; taki dodatkowy warunek będzie charakteryzował symetryczne kategorie monoidalne.
+
+\begin{stwierdzenie}[Warunek Segala na włóknach]\label{cat:prop:infty-operad-segal}
+Dla każdej $\infty$-operady istnieje równoważność
+\begin{equation}\label{cat:eq:infty-operad-segal}
+ \mathcal O^\otimes_{\langle n\rangle}\simeq\mathcal O^n
+\end{equation}
+indukowana przez transport kokartezjański wzdłuż $\rho^1,\ldots,\rho^n$. W szczególności włókno nad $\langle0\rangle$ jest równoważne kategorii końcowej.
+\end{stwierdzenie}
+\begin{proof}
+Ograniczenie $p$ do nerwu podkategorii morfizmów inercyjnych jest fibracją kokartezjańską; warunek 1 daje wymagane podniesienia, a warunek kokartezjański jest zachowywany po zmianie bazy. Przez twierdzenie o prostowaniu i odprostowywaniu~\ref{cat:thm:straightening-unstraightening} transport daje funktory $\rho^j_!$ na włóknach, określone z dokładnością do koherentnej równoważności. Rozważmy ich produkt. Dla $X,Y$ nad $\langle n\rangle$ niech $X\to X_j$ i $Y\to Y_j$ będą wybranymi podniesieniami. Z warunku 2 dla $f=\id_{\langle n\rangle}$ mamy
+\[
+ \operatorname{Map}_{\mathcal O^\otimes_{\langle n\rangle}}(X,Y)
+ \simeq\prod_{j=1}^n\operatorname{Map}^{\rho^j}(X,Y_j).
+\]
+Przez kokartezjańskość $X\to X_j$ każdy czynnik po prawej jest równoważny $\operatorname{Map}_{\mathcal O}(X_j,Y_j)$: własność uniwersalna morfizmu kokartezjańskiego identyfikuje odwzorowania nad $\rho^j$ z odwzorowaniami nad $\id_{\langle1\rangle}$ wychodzącymi z $X_j$. Równoważności są naturalne i dają właśnie morfizm przestrzeni odwzorowań indukowany przez produkt funktorów $\rho^j_!$. Funktor ten jest więc pełny i wierny w sensie homotopijnym. Warunek 3 daje istotną surjektywność. Kryterium~\ref{cat:thm:quasicat-equivalence-criterion} daje tezę. Dla $n=0$ warunek 3 daje obiekt we włóknie, a warunek 2 pokazuje, że przestrzeń odwzorowań między dowolną parą obiektów jest ściągalna. Z tego samego kryterium włókno jest równoważne kategorii końcowej.
+\end{proof}
+
+\begin{definicja}[Przestrzeń operacji wieloargumentowych]\label{cat:def:infty-operad-multimap}
+Dla kolorów $X_1,\ldots,X_n,Y$ wybieramy obiekt $\mathbf X$ nad $\langle n\rangle$ odpowiadający $(X_1,\ldots,X_n)$ w równoważności~\eqref{cat:eq:infty-operad-segal}. Przestrzenią operacji wieloargumentowych nazywamy
+\[
+ \operatorname{Mul}_{\mathcal O}(X_1,\ldots,X_n;Y)
+ =\operatorname{Map}^{\mu_n}_{\mathcal O^\otimes}(\mathbf X,Y).
+\]
+Wybór $\mathbf X$ wraz z identyfikacjami jego składowych jest określony z dokładnością do ściągalnej przestrzeni wyborów: jest to włókno równoważności kategorii~\eqref{cat:eq:infty-operad-segal} nad zadaną listą. W szczególności przestrzeń operacji jest określona z dokładnością do równoważności.
+\end{definicja}
+
+Dla $n=1$ morfizm $\mu_1$ jest identycznością, więc $\operatorname{Mul}_{\mathcal O}(X;Y)\simeq\operatorname{Map}_{\mathcal O}(X,Y)$. Dla $n=0$ otrzymujemy przestrzeń operacji bez argumentów. Na tym etapie nie zakładamy, że przestrzeń operacji wieloargumentowych jest reprezentowana przez iloczyn tensorowy kolorów; to właśnie odróżnia ogólną operadę od kategorii monoidalnej.
+
+\begin{uwaga}[Dalszy zakres]\label{cat:rem:infty-monoidal-scope}
+Następnie skonstruujemy kategorię operatorów zwykłej operady i porównamy ją z powyższą definicją. Omówimy symetryczne i niesymetryczne kategorie monoidalne, funktory monoidalne, algebry nad $\infty$-operadami, przykłady $E_n$ oraz moduły i pochodne iloczyny tensorowe. Nie będziemy powtarzać rachunku operad klasycznych ani algebr $A_\infty$ z rozdziału~\ref{cat:sec:dg-a-infty}; zamiast tego pokażemy powiązania między modelami.
+\end{uwaga}
