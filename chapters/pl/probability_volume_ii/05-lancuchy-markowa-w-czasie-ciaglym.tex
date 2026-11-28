@@ -20,7 +20,9 @@ $q_{ij}\ge0$ dla $i\ne j$, $q_i:=-q_{ii}\in[0,\infty)$
 oraz $\sum_{j\ne i}q_{ij}=q_i$ dla każdego $i\in E$.
 Gdy $q_i>0$, definiujemy prawdopodobieństwa skoku
 $r_{ij}=q_{ij}/q_i$ dla $j\ne i$ i $r_{ii}=0$.
-Stan z $q_i=0$ jest pochłaniający.
+Stan z $q_i=0$ jest pochłaniający; dla wygody
+w macierzy łańcucha skoków przyjmujemy wówczas
+$r_{ii}=1$ i $r_{ij}=0$ dla $j\ne i$.
 \end{definicja}
 
 Wyraz $q_{ij}$, $i\ne j$, jest natężeniem \emph{bezpośredniego}
@@ -83,8 +85,10 @@ proces $X$ następująco:
 \begin{itemize}
 \item $Y_0\sim\mu$, a ze stanu $i$ o $q_i>0$ następny stan
 ma rozkład $(r_{ij})_{j\in E}$;
-\item przy wejściu do $i$ o $q_i>0$ losujemy niezależny
-czas przebywania o rozkładzie $\operatorname{Exp}(q_i)$;
+\item przy wejściu do $i$ o $q_i>0$ losujemy czas przebywania
+o rozkładzie $\operatorname{Exp}(q_i)$, warunkowo względem
+bieżącego stanu niezależny od przeszłości i od wyboru
+następnego stanu;
 \item dla $J_n\le t<J_{n+1}$ ustalamy $X_t=Y_n$,
 a po wejściu do stanu z $q_i=0$ proces pozostaje w nim na stałe.
 \end{itemize}
@@ -94,7 +98,8 @@ ustalamy $X_t=\partial$ w dodatkowym stanie cmentarnym
 $\partial\notin E$. Tak otrzymany proces nazywamy
 \emph{minimalnym procesem skokowym o macierzy $Q$}.
 Na przedziale $[0,\zeta)$ jego trajektorie są schodkowe i
-c\`adl\`ag, a skoki mają czasy bez atomów.
+c\`adl\`ag, a czasy rzeczywistych skoków nie mają atomów
+w skończonych chwilach.
 \end{twierdzenie}
 \begin{proof}
 Dla każdego stanu $i$ z $q_i>0$ wiersz $(r_{ij})$ jest
@@ -102,15 +107,30 @@ rozkładem probabilistycznym. Używając niezależnych zmiennych
 jednostajnych na $(0,1)$ oraz ustalonego wyliczenia stanów,
 możemy metodą odwrotnej dystrybuanty wylosować następny stan
 z tego rozkładu. Pozwala to rekurencyjnie skonstruować
-$Y_0,Y_1,\ldots$; po pochłonięciu kończymy konstrukcję.
+$Y_0,Y_1,\ldots$; po pochłonięciu pozostawiamy
+$Y_n$ w stanie pochłaniającym. Zmienne pomocnicze
+możemy zrealizować na przeliczalnym iloczynie przestrzeni
+probabilistycznych wraz z niezależnym stanem początkowym.
 
-Niezależnie losujemy ciąg $Z_0,Z_1,\ldots$ o rozkładzie
+Niezależnie od całego łańcucha $Y$ losujemy ciąg
+niezależnych zmiennych $Z_0,Z_1,\ldots$ o rozkładzie
 $\operatorname{Exp}(1)$, a czas przebywania przy wizycie
-w stanie $Y_n=i$ definiujemy jako $H_n=Z_n/q_i$.
+w stanie $Y_n=i$ definiujemy jako $H_n=Z_n/q_i$,
+jeśli $q_i>0$, oraz $H_n=\infty$, jeśli $q_i=0$.
 Z równości
 $\Prob(Z_n/q_i>t)=e^{-q_i t}$ wynika żądany rozkład
-warunkowy. Ustalamy $J_{n+1}=J_n+H_n$ tak długo, jak
-$Y_n$ nie jest stanem pochłaniającym.
+warunkowy. Ustalamy $J_0=0$ i $J_{n+1}=J_n+H_n$ w rozszerzonej
+półprostej. W szczególności po pochłonięciu kolejne
+czasy skoków są nieskończone. Definiujemy
+$\zeta=\lim_n J_n$. Wszystkie $J_n$ i $\zeta$ są mierzalne.
+Dla $i\in E$ i skończonego $t$ mamy
+\[
+\{X_t=i\}=\bigcup_{n\ge0}
+\{Y_n=i,\ J_n\le t<J_{n+1}\},
+\qquad \{X_t=\partial\}=\{\zeta\le t\}.
+\]
+Zatem $X_t$ jest zmienną losową na dyskretnej
+przestrzeni $E\cup\{\partial\}$.
 
 Jeśli $J_n\uparrow\zeta<\infty$, to przed chwilą $\zeta$
 występuje nieskończenie wiele skoków. Nie należy wtedy
@@ -121,6 +141,12 @@ poszczególne chwile $J_n$ są ściśle rosnące; na $[0,\zeta)$
 na każdym przedziale domkniętym zawartym w $[0,\zeta)$
 występuje tylko skończenie wiele skoków. Stąd wskazana
 regularność trajektorii przed eksplozją.
+Dla $n\ge1$ i ustalonego skończonego $t$ mamy
+$\Prob(J_n=t)=0$: warunkowo względem ciągu stanów
+$Y$, jeśli $J_n<\infty$, jest on sumą $n$ niezależnych
+zmiennych wykładniczych o dodatnich parametrach, a więc
+ma gęstość (przez splot gęstości). Możliwy jest natomiast
+atom w nieskończoności.
 \end{proof}
 
 \begin{uwaga}[Dwie różne macierze]
@@ -135,7 +161,7 @@ mają inne rozkłady $X_t$ w czasie kalendarzowym.
 \begin{przyklad}[Dlaczego rozkład wykładniczy jest naturalny dla jednorodnego łańcucha?]
 Przypuśćmy, że układ zaczyna w stanie $0$, czeka losowy
 czas $H$, a następnie nieodwracalnie przechodzi do $1$.
-Jeżeli $H\sim\operatorname{U}([0,2])$, to przy $0<s<s+h<2$
+Jeżeli $H$ ma rozkład jednostajny na $[0,2]$, to przy $0<s<s+h<2$
 \[
 \Prob(H>s+h\mid H>s)=\frac{2-s-h}{2-s}.
 \]
@@ -163,7 +189,9 @@ ma $\sup_{i\in E}q_i\le\Lambda<\infty$.
 Wtedy $\Prob(\zeta=\infty)=1$.
 \end{twierdzenie}
 \begin{proof}
-Jeżeli proces wchodzi do stanu pochłaniającego, to oczywiście
+Jeśli $\Lambda=0$, wszystkie stany są pochłaniające
+i teza jest natychmiastowa. Załóżmy $\Lambda>0$.
+Jeżeli proces wchodzi do stanu pochłaniającego, to
 nie może mieć nieskończenie wielu rzeczywistych skoków
 w czasie skończonym. W przeciwnym razie kolejne czasy
 przebywania są równe $H_n=Z_n/q_{Y_n}$, gdzie
@@ -212,7 +240,8 @@ $\E\zeta=\sum\E H_n<\infty$ na mocy twierdzenia o
 zbieżności monotonicznej, skąd $\zeta<\infty$ prawie na pewno.
 
 Załóżmy teraz $\sum1/\lambda_n=\infty$.
-Dla $c>0$ niezależność i zbieżność ograniczona dają
+Dla $c>0$ niezależność i twierdzenie o zbieżności
+zmajoryzowanej (przez stałą $1$) dają
 \[
 \E e^{-c\zeta}
 =\lim_{m\to\infty}\prod_{n=0}^m\E e^{-cH_n}
@@ -279,7 +308,8 @@ Dla $i\ne j$ mamy $R_{ij}=q_{ij}/\Lambda\ge0$,
 a na przekątnej $R_{ii}=1-q_i/\Lambda>0$.
 Suma każdego wiersza jest równa
 $1+\Lambda^{-1}\sum_j q_{ij}=1$.
-Wprowadzamy niezależny łańcuch skoków i zegar Poissona.
+Wprowadzamy niezależny pomocniczy łańcuch dyskretny
+i zegar Poissona.
 W chwili zegara $Y$ dokonuje kroku macierzy $R$; może
 przy tym pozostać w obecnym stanie. Te pozorne skoki
 nazywamy \emph{skokami fikcyjnymi}.
@@ -293,27 +323,47 @@ e^{-\Lambda t}\sum_{n=0}^\infty\frac{(\Lambda tR)^n}{n!}
 =e^{-\Lambda t I}e^{\Lambda tR}
 =e^{\Lambda t(R-I)}=e^{tQ}.
 \]
-Zbieżność jest bezproblemowa w skończonym wymiarze.
+W dowolnej podmultiplikatywnej normie macierzowej
+szereg jest bezwzględnie zbieżny, gdyż
+$\sum_{n\ge0}(\Lambda t)^n\norm{R^n}/n!$ można oszacować
+przez $\exp(\Lambda t\norm{R})$, korzystając z
+$\norm{R^n}\le\norm{R}^n$ (dla normy z $\norm I=1$).
+To uzasadnia również mnożenie szeregów wykładniczych.
 Rozwinięcie wykładnika macierzowego
 $e^{hQ}=I+hQ+O(h^2)$ przy $h\downarrow0$
 daje oba wskazane limity.
 
-Pozostaje zweryfikować, że opis intensywności jest właściwy.
-Będąc w stanie $i$, na krótkim przedziale $[t,t+h]$
-występuje jeden impuls zegara z prawdopodobieństwem
-$\Lambda h+O(h^2)$, dwa lub więcej z prawdopodobieństwem
-$O(h^2)$, a pojedynczy impuls kieruje nas z $i$ do $j\ne i$
-z prawdopodobieństwem $R_{ij}$. Zatem
-$\Prob(X_{t+h}=j\mid X_t=i)=\Lambda hR_{ij}+O(h^2)
-=q_{ij}h+O(h^2)$.
-Łączna intensywność rzeczywistego opuszczenia $i$ jest
-$\Lambda(1-R_{ii})=q_i$. Po każdym fikcyjnym kroku bez
-zmiany stanu pozostajemy w $i$; własność braku pamięci
-zegara Poissona daje wykładniczy czas do pierwszego
-rzeczywistego skoku z parametrem $q_i$, a przy tym
-prawdopodobieństwo jego kierunku to
-$R_{ij}/(1-R_{ii})=q_{ij}/q_i$.
-Jest to dokładnie konstrukcja procesu z $Q$.
+Pozostaje porównać konstrukcję z rzeczywistymi
+czasami przebywania. Przy starcie ze stanu $i$ o $q_i>0$
+niech $K=\inf\{n\ge1:Y_n\ne i\}$.
+Z własności Markowa łańcucha dyskretnego
+\[
+\Prob_i(K=k,Y_K=j)=R_{ii}^{k-1}R_{ij},
+\qquad k\ge1,\ j\ne i.
+\]
+Stąd $K$ ma rozkład geometryczny z parametrem
+$1-R_{ii}=q_i/\Lambda$, a kierunek $Y_K$ jest niezależny
+od $K$ i ma rozkład $q_{ij}/q_i$.
+Ponieważ cały łańcuch $Y$ jest niezależny od zegara,
+czas pierwszego rzeczywistego skoku $H=T_K$, gdzie
+$T_k$ są chwilami impulsów Poissona, jest niezależny
+od kierunku $Y_K$. Ponadto
+\[
+\Prob_i(H>t)=\sum_{n\ge0}\Prob(N_t=n)R_{ii}^n
+=e^{-\Lambda t(1-R_{ii})}=e^{-q_i t}.
+\]
+Jeżeli $q_i=0$, wiersz $R$ ma jedynkę na przekątnej
+i żadna rzeczywista zmiana stanu nie następuje.
+Po rzeczywistym skoku argument można powtórzyć:
+łańcuch dyskretny ma mocną własność Markowa w indeksie
+$K$ (tom I), a niezależne wykładnicze odstępy zegara
+po tym indeksie są niezależne od dotychczasowych.
+Ostatnia własność wynika przez rozbicie względem
+$\{K=k\}$, ponieważ $K$ zależy wyłącznie od $Y$,
+a odstępy zegara są niezależne od $Y$ i między sobą.
+Iteracja daje warunkowe prawa kolejnych czasów i kierunków
+takie jak w twierdzeniu~\ref{thm:jump-construction}.
+Tym samym uniformizacja realizuje ten sam model.
 \end{proof}
 
 
@@ -333,8 +383,9 @@ Tak otrzymujemy czas oczekiwania $\operatorname{Exp}(q_i)$.
 Warunkowo względem tego, że impuls powoduje rzeczywisty skok,
 prawdopodobieństwo wybrania stanu $j\ne i$ jest
 $R_{ij}/(1-R_{ii})=q_{ij}/q_i$.
-Po skoku niezależne przyszłe impulsy zegara i kroki pomocnicze
-pozwalają powtórzyć argument. Ta obserwacja uzasadnia
+Po skoku powtarzamy argument warunkowo względem
+nowego stanu, korzystając z uzasadnienia w dowodzie
+uniformizacji. Ta obserwacja uzasadnia
 równoważność uniformizacji i konstrukcji przez czasy przebywania.
 \end{uwaga}
 
@@ -429,10 +480,16 @@ Pracujemy na przestrzeni z konstrukcji uniformizacyjnej:
 $X_t=Y_{N_t}$, gdzie łańcuch dyskretny $Y$ o macierzy $R$
 jest niezależny od zegara Poissona $N$ o intensywności $\Lambda$.
 Niech $\calH_s$ oznacza informację wygenerowaną przez
-$(N_u)_{u\le s}$ oraz przez stany $Y_0,\ldots,Y_{N_s}$
-odwiedzone przez łańcuch pomocniczy przed chwilą $s$.
-Jest to $\sigma$-ciało zawierające $\calF_s^X$,
-a $X_s=Y_{N_s}$ jest $\calH_s$-mierzalny.
+$(N_u)_{0\le u\le s}$ oraz przez zmienne
+$V_j^s$, równe $Y_j$ na $\{j\le N_s\}$ i ustalonemu
+dodatkowemu symbolowi poza $E$ w przeciwnym razie.
+Dla $u\le s$ zmienna $X_u=Y_{N_u}$ jest
+$\calH_s$-mierzalna, gdyż na $\{N_u=j\}$ jest równa
+$V_j^s$. Zatem $\calF_s^X\subseteq\calH_s$.
+Dla każdego $A\in\calH_s$ i $n\ge0$ zachodzi
+$A\cap\{N_s=n\}\in\sigma(\calF_s^N,Y_0,\ldots,Y_n)$:
+klasa zdarzeń o tej własności jest $\sigma$-ciałem
+i zawiera wszystkie wskazane generatory.
 
 Ustalmy $k\ge0$ i weźmy zdarzenie $\{N_s=n\}$.
 Niezależność całego procesu $Y$ od $N$ i własność
@@ -442,9 +499,19 @@ Markowa dyskretnego łańcucha dają, dla każdego stanu $i$,
 \]
 Warunkowo względem $\calH_s$ liczba dodatkowych impulsów
 $K=N_{s+t}-N_s$ ma rozkład $\operatorname{Poisson}(\Lambda t)$
-i jest niezależna od przyszłych kroków łańcucha $Y$.
-Możemy zatem najpierw warunkować względem $K=k$,
-a następnie uśrednić po jego rozkładzie:
+i jest niezależna od całego łańcucha $Y$ oraz przeszłości
+zegara łącznie. Dokładniej, dla $A\in\calH_s$,
+na $\{N_s=n\}$ stosujemy niezależność $K$ od
+$\sigma(\calF_s^N,Y_j:j\ge0)$ oraz dyskretną własność
+Markowa, rozszerzoną na $\sigma(\calF_s^N,Y_0,\ldots,Y_n)$
+dzięki niezależności $Y$ od zegara (argument $\pi$--$\lambda$).
+Otrzymujemy
+\[
+\E[\chi_{A\cap\{N_s=n\}}\chi_{\{K=k\}}f(Y_{n+k})]
+=\Prob(K=k)\E[\chi_{A\cap\{N_s=n\}}(R^kf)(Y_n)].
+\]
+Sumując po $n,k$ i stosując charakterystykę
+warunkowej wartości oczekiwanej, dostajemy:
 \[
 \begin{aligned}
 \E[f(X_{s+t})\mid\calH_s]
@@ -466,7 +533,7 @@ jest $\calF_s^X$-mierzalna. Własność wieży
 =\E[(P(t)f)(X_s)\mid\calF_s^X]
 =(P(t)f)(X_s).
 \]
-Dla $f=\ind{\{j\}}$ otrzymujemy zapis
+Dla $f=\chi_{\{j\}}$ otrzymujemy zapis
 w terminach prawdopodobieństw warunkowych.
 \end{proof}
 
@@ -479,7 +546,9 @@ ciągłych. Niech $\calF_t^0=\sigma(X_s:0\le s\le t)$
 oraz
 $\calF_t=\bigcap_{u>t}\sigma(\calF_u^0\cup\calN)$,
 gdzie $\calN$ jest rodziną wszystkich podzbiorów zbiorów
-$\Prob$-zerowych z $\calF$ (przestrzeń jest zupełna).
+zerowych z bazowego $\sigma$-ciała $\mathcal A$
+przestrzeni probabilistycznej $(\Omega,\mathcal A,\Prob)$,
+którą zakładamy zupełną.
 Wówczas dla $t,h\ge0$ i każdego $f:E\to\R$
 \[
 \E[f(X_{t+h})\mid\calF_t]=(P(h)f)(X_t)
@@ -488,13 +557,13 @@ Wówczas dla $t,h\ge0$ i każdego $f:E\to\R$
 \end{lemat}
 \begin{proof}
 Ustalmy $t,h$ i $A\in\calF_t$. Dla każdego $n\ge1$
-połóżmy $u_n=t+1/n$. Ponieważ $A\in\calF_{u_n}$,
+połóżmy $u_n=t+1/n$. Ponieważ $A\in\calF_t\subseteq\sigma(\calF_{u_n}^0\cup\calN)$,
 po odrzuceniu nieistotnych zbiorów zerowych możemy
 stosować własność Markowa względem $\calF_{u_n}^0$
 do ograniczonej zmiennej $f(X_{u_n+h})$:
 \[
-\E[\ind A f(X_{u_n+h})]
- =\E[\ind A(P(h)f)(X_{u_n})].
+\E[\chi_A f(X_{u_n+h})]
+ =\E[\chi_A(P(h)f)(X_{u_n})].
 \]
 Uzasadnijmy przejście przez uzupełnienie. Każde zdarzenie
 $A\in\sigma(\calF_{u_n}^0\cup\calN)$ różni się
@@ -506,7 +575,7 @@ można zastosować także do $A$.
 Prawostronna ciągłość daje $X_{u_n+h}\to X_{t+h}$
 oraz $X_{u_n}\to X_t$ niemal na pewno.
 Na skończonym $E$ funkcje $f$ i $P(h)f$ są ograniczone,
-więc zbieżność zdominowana pozwala przejść do granicy.
+więc zbieżność zmajoryzowana pozwala przejść do granicy.
 Otrzymana równość całek dla każdego $A\in\calF_t$
 oraz $\calF_t$-mierzalność $(P(h)f)(X_t)$
 stanowią charakterystykę warunkowej wartości oczekiwanej.
@@ -526,29 +595,40 @@ pewno, to dla każdego $t\ge0$ i funkcji $f:E\to\R$
 \]
 \end{twierdzenie}
 \begin{proof}
-Najpierw niech $\tau$ przyjmuje wartości w przeliczalnym
+Na zdarzeniu $\{\tau=\infty\}$, które należy do $\calF_0$
+dzięki zupełności, możemy zastąpić $\tau$ przez $0$.
+Tak otrzymujemy skończony punktowo czas zatrzymania;
+$\sigma$-ciała w tych dwóch chwilach są identyczne,
+gdyż przecięcia w ich definicjach różnią się wyłącznie
+na zdarzeniu zerowym należącym wraz z podzbiorami do $\calF_0$.
+Wartości $X_\tau$ i $X_{\tau+t}$ na tym zdarzeniu
+ustalamy dowolnie w $E$. Najpierw niech $\tau$ przyjmuje wartości w przeliczalnym
 zbiorze $\{s_k:k\ge1\}\subset[0,\infty)$.
 Dla $A\in\calF_\tau$ zdarzenie
 $A\cap\{\tau=s_k\}$ należy do $\calF_{s_k}$
-(ponieważ $\{\tau=s_k\}\in\calF_{s_k}$ i z definicji
-$\calF_\tau$).
+(ponieważ $\{\tau=s_k\}=\{\tau\le s_k\}\setminus
+\{\tau<s_k\}$, gdzie $\{\tau<s_k\}$ jest sumą
+$\{\tau\le q\}$ po nieujemnych wymiernych $q<s_k$;
+dla $s_k=0$ jest puste).
 Stosując własność Markowa w deterministycznej chwili $s_k$
 \emph{dla uzupełnionej filtracji} (lemat~\ref{lem:markov-aug})
 i sumując po $k$, uzyskujemy
 \[
-\E[\ind A f(X_{\tau+t})]
-=\E[\ind A(P(t)f)(X_\tau)].
+\E[\chi_A f(X_{\tau+t})]
+=\E[\chi_A(P(t)f)(X_\tau)].
 \]
 Dla ogólnego czasu $\tau<\infty$ prawie na pewno niech
 $\tau_m=2^{-m}\lceil2^m\tau\rceil$.
 Jest to czas zatrzymania przyjmujący wartości w zbiorze
-$2^{-m}\N_0$, przy czym $\tau_m\downarrow\tau$
+$2^{-m}\N_0$: dla $v\ge0$ zdarzenie $\{\tau_m\le v\}$
+jest równe $\{\tau\le2^{-m}\lfloor2^mv\rfloor\}$.
+Ponadto $\tau_m\downarrow\tau$
 prawie na pewno. Mamy $\calF_\tau\subseteq\calF_{\tau_m}$,
 więc dla każdego $A\in\calF_\tau$ poprzednia równość
 zastosowana do $\tau_m$ daje
 \[
-\E[\ind A f(X_{\tau_m+t})]
-=\E[\ind A(P(t)f)(X_{\tau_m})].
+\E[\chi_A f(X_{\tau_m+t})]
+=\E[\chi_A(P(t)f)(X_{\tau_m})].
 \]
 Trajektorie procesu na skończonej przestrzeni stanów są
 prawostronnie ciągłe. Dlatego
@@ -556,8 +636,12 @@ $X_{\tau_m+t}\to X_{\tau+t}$ i $X_{\tau_m}\to X_\tau$
 prawie na pewno. Ponieważ $f$ i $P(t)f$ są ograniczone,
 możemy zastosować zbieżność zdominowaną po obu stronach.
 W efekcie identyczna równość zachodzi dla $\tau$ i wszystkich
-$A\in\calF_\tau$. Jest to dokładnie definicja wskazanej
-warunkowej wartości oczekiwanej.
+$A\in\calF_\tau$. Proces $X$ jest progresywnie mierzalny
+jako adaptowany proces prawostronnie ciągły
+(twierdzenie~\ref{thm:prog}), zatem $X_\tau$ jest
+$\calF_\tau$-mierzalna na mocy
+twierdzenia~\ref{thm:sampled}. Otrzymujemy więc
+charakterystykę wskazanej warunkowej wartości oczekiwanej.
 \end{proof}
 
 \begin{przyklad}[Pierwsza naprawa jako chwila losowa]
@@ -584,13 +668,13 @@ stanu $1$ wynosi $q_1=q_{10}+q_{12}=4$, wobec czego
 $J\sim\operatorname{Exp}(4)$. Kierunek skoku jest
 niezależny od $J$ i ma rozkład
 $\Prob(Y=0)=1/4$, $\Prob(Y=2)=3/4$.
-Dla $t\ge0$ gęstość wspólna chwil i kierunku wynosi
+Miara $B\mapsto\Prob(J\in B,Y=2)$ na $[0,\infty)$
+ma względem miary Lebesgue'a gęstość
 \[
-\Prob(J\in\dd t,Y=2)=q_{12}e^{-q_1t}\,\dd t
-=3e^{-4t}\,\dd t.
+g(t)=q_{12}e^{-q_1t}=3e^{-4t},\qquad t\ge0.
 \]
 Zatem
-$\Prob(J\le1,Y=2)=\int_0^1 3e^{-4t}\,\dd t
+$\Prob(J\le1,Y=2)=\int_0^1 3e^{-4t}\,\mathrm d\lambda_1(t)
 =\tfrac34(1-e^{-4})$.
 Nie należy tego mylić z $\Prob_1(X_1=2)$:
 ten ostatni wynik obejmuje również ścieżki, na których
@@ -677,44 +761,50 @@ Niech $E$ będzie skończone, $X$ łańcuchem w czasie
 ciągłym o intensywnościach $Q$ i filtracji naturalnej.
 Dla każdej funkcji $f:E\to\R$ proces
 \[
-M_t^f:=f(X_t)-f(X_0)-\int_0^t (Lf)(X_s)\,\dd s
+M_t^f:=f(X_t)-f(X_0)-\int_0^t (Lf)(X_s)\,\mathrm d\lambda_1(s)
 \]
 jest całkowalnym martyngałem.
 W szczególności dla każdego $t\ge0$
 \[
 \E f(X_t)=\E f(X_0)+
-\int_0^t\E[(Lf)(X_s)]\,\dd s.
+\int_0^t\E[(Lf)(X_s)]\,\mathrm d\lambda_1(s).
 \]
 Jeśli $\tau$ jest ograniczonym czasem zatrzymania,
 to również
 \[
 \E f(X_\tau)=\E f(X_0)+
-\E\int_0^\tau (Lf)(X_s)\,\dd s.
+\E\int_0^\tau (Lf)(X_s)\,\mathrm d\lambda_1(s).
 \]
 \end{twierdzenie}
 \begin{proof}
 Wszystkie funkcje na skończonym $E$ są ograniczone.
-Z równania wstecznego, w zapisie operatorowym,
+Z równania w przód, w zapisie operatorowym,
 $\frac{\dd}{\dd t}P(t)f=P(t)Lf$.
 Całkując od $0$ do $u$ dostajemy
-$P(u)f-f=\int_0^u P(v)Lf\,\dd v$.
+$P(u)f-f=\int_0^u P(v)Lf\,\mathrm d\lambda_1(v)$.
 Dla $0\le s\le t$ własność Markowa implikuje
 \[
 \E[f(X_t)-f(X_s)\mid\calF_s]
 =(P(t-s)f-f)(X_s).
 \]
 Jednocześnie $Lf$ jest funkcją ograniczoną na skończonym $E$, więc
-$\int_s^t\E|Lf(X_u)|\,\dd u\le(t-s)\norm{Lf}_\infty<\infty$.
+$\int_s^t\E|Lf(X_u)|\,\mathrm d\lambda_1(u)\le(t-s)\norm{Lf}_\infty<\infty$.
 Dla każdego $A\in\calF_s$ możemy więc zastosować twierdzenie
-Fubiniego do $\E[\ind A\int_s^t Lf(X_u)\,\dd u]$,
+Fubiniego do $\E[\chi_A\int_s^t Lf(X_u)\,\mathrm d\lambda_1(u)]$,
 a następnie własność Markowa pod całką. Charakterystyka
 warunkowej wartości oczekiwanej daje
 \[
-\E\left[\int_s^t(Lf)(X_u)\,\dd u\mid\calF_s\right]
-=\int_0^{t-s}(P(v)Lf)(X_s)\,\dd v.
+\E\left[\int_s^t(Lf)(X_u)\,\mathrm d\lambda_1(u)\mid\calF_s\right]
+=\int_0^{t-s}(P(v)Lf)(X_s)\,\mathrm d\lambda_1(v).
 \]
 Obie prawe strony są równe. Po odjęciu otrzymujemy
 $\E[M_t^f-M_s^f\mid\calF_s]=0$.
+Proces $M^f$ jest adaptowany: $X$ jest progresywnie
+mierzalny, więc całka do chwili $t$ z ograniczonej
+funkcji $(Lf)(X_s)$ jest $\calF_t^X$-mierzalna
+na mocy twierdzenia Fubiniego o mierzalności całki.
+Ponadto całka jest ciągła względem górnej granicy,
+więc $M^f$ ma prawostronnie ciągłe trajektorie.
 Zatem $M^f$ jest martyngałem. Całkowalność jest
 natychmiastowa, ponieważ $f$ i $Lf$ są ograniczone,
 a rozważamy skończony czas $t$.
@@ -731,9 +821,9 @@ Dla modelu dwustanowego i $f(0)=0$, $f(1)=1$ mamy
 $Lf(0)=\alpha$ i $Lf(1)=-\beta$.
 Proces
 \[
-\ind{\{X_t=1\}}-\ind{\{X_0=1\}}
--\int_0^t\bigl(\alpha\ind{\{X_s=0\}}
--\beta\ind{\{X_s=1\}}\bigr)\,\dd s
+\chi_{\{X_t=1\}}-\chi_{\{X_0=1\}}
+-\int_0^t\bigl(\alpha\chi_{\{X_s=0\}}
+-\beta\chi_{\{X_s=1\}}\bigr)\,\mathrm d\lambda_1(s)
 \]
 jest martyngałem. Człon podcałkowy opisuje
 \emph{chwilową przewidywaną zmianę} wskaźnika awarii,
@@ -886,10 +976,20 @@ spełnia równowagę szczegółową dla wszystkich jego krawędzi,
 a więc jest stacjonarny w myśl twierdzenia skończonego.
 
 Dla ustalonego stanu początkowego $i\in\N_0$ skonstruujmy
-proces obcięty i pierwotny przy użyciu \emph{tych samych}
-losowań skoków i czasów przebywania, aż do pierwszej próby
-wyjścia poza $\{0,\ldots,K\}$. Do tej chwili oba procesy
-są jednakowe. Ponieważ oryginalny proces jest nieeksplodujący,
+sprzężenie procesu pierwotnego i obciętego przy użyciu
+wspólnych zegarów potencjalnych przejść w górę i w dół.
+W stanie $n$ zegary mają niezależne czasy wykładnicze
+o parametrach $\lambda_n,\mu_n$ (parametr zero oznacza
+czas nieskończony). Minimum ma parametr sumy, a kierunek
+jest niezależny od minimum, z prawdopodobieństwami
+proporcjonalnymi do parametrów, co wynika z iloczynu
+funkcji przeżycia i gęstości. W stanie $K$ proces
+obcięty ignoruje zegar przejścia w górę; zachowuje
+zegar przejścia w dół. Do pierwszego wyjścia procesu
+pierwotnego poza $\{0,\ldots,K\}$ oba procesy są jednakowe.
+Po rozdzieleniu można kontynuować je zgodnie z ich
+własnymi intensywnościami, wykorzystując brak pamięci
+niezakończonego zegara. Ponieważ oryginalny proces jest nieeksplodujący,
 na każdym $[0,t]$ wykonuje tylko skończenie wiele skoków
 prawie na pewno; jego trajektoria ma zatem na $[0,t]$
 skończone maksimum. Stąd dla każdego $i,j$ i $t$
@@ -980,8 +1080,20 @@ $\rho:=\lambda/\mu<1$:
 \pi_n=(1-\rho)\rho^n,\qquad n\in\N_0.
 \]
 Sprawdźmy też, dlaczego $\rho<1$ jest konieczne dla
-istnienia rozkładu stacjonarnego. Każdy taki rozkład
-spełnia równanie bilansu w stanie $0$:
+istnienia rozkładu stacjonarnego. Każdy taki rozkład spełnia $\pi Q=0$: dla
+$h\downarrow0$ prawdopodobieństwa przejścia spełniają
+$p_{ij}(h)=\chi_{\{i=j\}}+hq_{ij}+O(h^2)$,
+z błędem jednostajnym względem $i,j$.
+Istotnie, uniformizacja z zegarem o intensywności
+$\Lambda>\lambda+\mu$ działa także w tym modelu
+przeliczalnym: $R=I+Q/\Lambda$ jest stochastyczna,
+a prawdopodobieństwo co najmniej dwóch impulsów jest
+$O(h^2)$, niezależnie od stanu początkowego.
+Rozkład stacjonarny spełnia $\pi P(h)=\pi$,
+więc po odjęciu $\pi$, podzieleniu przez $h$ i przejściu
+do granicy można sumować po $i$ dzięki jednostajnemu
+oszacowaniu błędu i $\sum_i\pi_i=1$.
+Równanie bilansu w stanie $0$ brzmi:
 $\lambda\pi_0=\mu\pi_1$.
 Bilans w stanie $n\ge1$ brzmi
 $\lambda\pi_{n-1}+\mu\pi_{n+1}=(\lambda+\mu)\pi_n$.
@@ -1066,7 +1178,7 @@ osiąga $A$ z prawdopodobieństwem jeden.
 Wtedy $B$ jest odwracalna, macierz
 $G:=(-B)^{-1}$ ma nieujemne wyrazy i
 \[
-G_{ij}=\E_i\left[\int_0^\tau\ind{\{X_t=j\}}\,\dd t\right],
+G_{ij}=\E_i\left[\int_0^\tau\chi_{\{X_t=j\}}\,\mathrm d\lambda_1(t)\right],
 \qquad
 \E_i\tau=\sum_{j\in T}G_{ij},
 \]
@@ -1082,9 +1194,9 @@ wynika to z blokowo-trójkątnej postaci $e^{tQ}$,
 którą widać bezpośrednio z potęg macierzy $Q$.
 Stąd całkując funkcję wskaźnikową i stosując Tonellego,
 \[
-\E_i\int_0^\tau\ind{\{X_t=j\}}\,\dd t
-=\int_0^\infty\Prob_i(X_t=j,\tau>t)\,\dd t
-=\int_0^\infty(e^{tB})_{ij}\,\dd t.
+\E_i\int_0^\tau\chi_{\{X_t=j\}}\,\mathrm d\lambda_1(t)
+=\int_0^\infty\Prob_i(X_t=j,\tau>t)\,\mathrm d\lambda_1(t)
+=\int_0^\infty(e^{tB})_{ij}\,\mathrm d\lambda_1(t).
 \]
 
 Musimy wykazać zbieżność tej całki oraz odwracalność $B$.
@@ -1098,7 +1210,7 @@ Własność Markowa w chwilach $nt_0$ pokazuje indukcyjnie,
 Zatem wierszowe sumy macierzy $e^{tB}$ maleją
 wykładniczo do zera, a nieujemne wyrazy tej macierzy
 są całkowalne na $[0,\infty)$. Niech
-$G=\int_0^\infty e^{tB}\,\dd t$.
+$G=\int_0^\infty e^{tB}\,\mathrm d\lambda_1(t)$.
 Z równania $\frac{\dd}{\dd t}e^{tB}=Be^{tB}$ wynika
 \[
 BG=\lim_{t\to\infty}e^{tB}-I=-I.
@@ -1107,7 +1219,7 @@ W skończonym wymiarze istnienie prawej odwrotności
 macierzy kwadratowej oznacza odwracalność, a
 $G=(-B)^{-1}$. Nieujemność wyrazów jest widoczna
 z całkowej reprezentacji. Sumując tożsamość
-$\int_0^\tau\sum_{j\in T}\ind{\{X_t=j\}}\,\dd t=\tau$
+$\int_0^\tau\sum_{j\in T}\chi_{\{X_t=j\}}\,\mathrm d\lambda_1(t)=\tau$
 (na $[0,\tau)$ proces pozostaje w $T$)
 po $j$ i biorąc wartości oczekiwane,
 otrzymujemy drugi wzór.
@@ -1211,7 +1323,7 @@ przebywania i prawdopodobieństw wyboru kolejnych stanów:
 $[q_i e^{-q_i u}](q_{ij}/q_i)=q_{ij}e^{-q_i u}$.
 To zapis, od którego zaczyna się matematyczne formułowanie
 wiarygodności ciągłych trajektorii procesów skokowych;
-sama statystyczna estymacja należy jednak do tomu III.
+sama statystyczna estymacja należy jednak do tomu IV.
 \end{uwaga}
 
 \section{Podsumowanie i połączenie z procesem Wienera}
