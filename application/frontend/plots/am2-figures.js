@@ -319,6 +319,39 @@
       const steps=opts.map((o,i)=>({label:i<centers.length?"u="+o.u.toFixed(2):"h="+o.h.toFixed(3),method:"update",args:[{visible:data.map((_,j)=>j<fixed||j===fixed+2*i||j===fixed+2*i+1)},{"title.text":heading(o)}]}));
       return {data,layout:{title:{text:heading(opts[5])},xaxis:{domain:[0,.46],range:[.9,2.1],title:"u",scaleanchor:"y",scaleratio:1},yaxis:{domain:[0,1],range:[-.1,2.1],title:"v"},xaxis2:{domain:[.54,1],range:[.9,2.1],title:"x",scaleanchor:"y2",scaleratio:1},yaxis2:{domain:[0,1],anchor:"x2",range:[-.1,2.1],title:"y"},margin:{l:55,r:20,b:85,t:55},sliders:[{active:5,steps,currentvalue:{prefix:"Komórka: "}}],showlegend:false}};
     },
+    "am2_30_curvilinear_cells.html":()=>{
+      const N=16,ds=[.05,.075,.1,.15,.2,.3,.4],r=1.2,p=.65,a=.3,z=.2,data=[];
+      const maps=[(r,a,z)=>[r*Math.cos(a),r*Math.sin(a),z],(r,p,a)=>[r*Math.sin(p)*Math.cos(a),r*Math.sin(p)*Math.sin(a),r*Math.cos(p)]];
+      const starts=[[r,a,z],[r,p,a]];
+      // Six consistently oriented faces and twelve geometric edges.
+      const cell=(k,d,visible)=>{
+        const start=starts[k],map=maps[k],sc=k?"scene2":"scene",v=[],f=[],e=[];
+        const point=q=>map(...q.map((x,i)=>start[i]+d*x));
+        for(let ax=0;ax<3;ax++)for(let side=0;side<2;side++){
+          const b=(ax+1)%3,c=(ax+2)%3,off=v.length;
+          for(let i=0;i<=N;i++)for(let j=0;j<=N;j++){
+            const q=[0,0,0];q[ax]=side;q[b]=i/N;q[c]=j/N;v.push(point(q));
+          }
+          for(let i=0;i<N;i++)for(let j=0;j<N;j++){
+            const l=off+i*(N+1)+j,m=l+N+1;
+            const tris=[[l,m,m+1],[l,m+1,l+1]];
+            f.push(...tris.map(t=>side?t:[t[0],t[2],t[1]]));
+          }
+        }
+        for(let ax=0;ax<3;ax++)for(let b=0;b<2;b++)for(let c=0;c<2;c++){
+          for(let i=0;i<=N;i++){const q=[0,0,0];q[ax]=i/N;q[(ax+1)%3]=b;q[(ax+2)%3]=c;e.push(point(q));}
+          e.push([null,null,null]);
+        }
+        const color=k?"#15988c":"#397db5";
+        return [{type:"mesh3d",scene:sc,x:v.map(q=>q[0]),y:v.map(q=>q[1]),z:v.map(q=>q[2]),i:f.map(q=>q[0]),j:f.map(q=>q[1]),k:f.map(q=>q[2]),color,opacity:.85,flatshading:false,visible,showlegend:false},
+          {...line(e.map(q=>q[0]),e.map(q=>q[1]),e.map(q=>q[2]),"Krawędzie","#24465c"),scene:sc,visible,showlegend:false}];
+      };
+      ds.forEach((d,i)=>{for(let k=0;k<2;k++)data.push(...cell(k,d,i===4));});
+      const heading=d=>"δ = "+d.toFixed(3)+" | V/δ³: walcowa "+(r+d/2).toFixed(4)+"; sferyczna "+((((r+d)**3-r**3)/3)*(Math.cos(p)-Math.cos(p+d))/d**2).toFixed(4);
+      const steps=ds.map((d,i)=>({label:String(d),method:"update",args:[{visible:ds.flatMap((_,j)=>Array(4).fill(i===j))},{"title.text":heading(d)}]}));
+      const sc=k=>({...scene(),domain:{x:[k/2,(k+1)/2],y:[0,1]},aspectmode:"cube",xaxis:{...axis("x"),range:[.45,1.65]},yaxis:{...axis("y"),range:[0,1.2]},zaxis:{...axis("z"),range:[0,1.6]}});
+      return base(data,heading(.2),{scene:sc(0),scene2:sc(1),margin:{l:0,r:0,b:70,t:85},annotations:[{xref:"paper",yref:"paper",x:.25,y:1.04,text:"Walcowa: J = "+r.toFixed(3),showarrow:false},{xref:"paper",yref:"paper",x:.75,y:1.04,text:"Sferyczna: J = "+(r*r*Math.sin(p)).toFixed(3),showarrow:false}],sliders:[{active:4,currentvalue:{prefix:"δ = "},steps}]});
+    },
     "am2_36_geometric.html":()=>{
       const r=lin(0,.97,61),t=lin(0,2*Math.PI,121),X=t.map(a=>r.map(v=>v*Math.cos(a))),Y=t.map(a=>r.map(v=>v*Math.sin(a)));
       const norm=(a,v,n)=>n===null?1/Math.hypot(1-v*Math.cos(a),v*Math.sin(a)):Math.hypot(1-v**(n+1)*Math.cos((n+1)*a),v**(n+1)*Math.sin((n+1)*a))/Math.hypot(1-v*Math.cos(a),v*Math.sin(a));
