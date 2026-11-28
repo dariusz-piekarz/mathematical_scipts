@@ -1283,7 +1283,25 @@ if __name__ == "__main__":
 \end{lstlisting}
 
 \section{Ilorazy różnicowe i skok pochodnej — Plotly}
-Przykład pokazuje, jak skok pochodnej prowadzi do nieograniczonej normy dyskretnych drugich pochodnych.
+Przykład pokazuje, jak skok pochodnej prowadzi do
+nieograniczonej normy dyskretnych drugich pochodnych.
+Rozważamy funkcję ciągłą, liniową po obu stronach
+$x=1/2$, o nachyleniach $1$ i $1/2$. Jej pochodna
+słaba jest funkcją schodkową, a druga pochodna
+dystrybucyjna wynosi $-\frac12\delta_{1/2}$, co
+wynika z całkowania przez części na obu podprzedziałach.
+Funkcja należy więc do $H^1(0,1)$, ale nie do
+$H^2(0,1)$, ponieważ delta Diraca nie jest
+reprezentowana przez funkcję z $L^2$.
+Dla współczynnika $a=1$ po lewej i $a=2$ po prawej
+strumień $au'$ jest stały, więc $-(au')'=0$
+dystrybucyjnie mimo skoku $u'$.
+Jeżeli $N$ jest parzyste i $h=1/N$, centralna
+druga różnica jest zerowa poza węzłem $x=1/2$,
+w którym wynosi $-1/(2h)$. Jej dyskretna norma
+$L^2$, z wagą $h$ przy każdym węźle wewnętrznym,
+wynosi zatem $1/(2\sqrt h)$.
+Nie jest to norma $H^2$ funkcji ciągłej.
 \begin{lstlisting}[style=pythonpde,caption={Brak regularnosci H2 dla transmisji (Plotly)},label={code:pde15-plotly}]
 """PDE, rozdzial 15: H2-regularnosc i transmisja (Plotly).
 Instalacja: pip install numpy plotly
@@ -1318,15 +1336,21 @@ def main():
     for N in Ns:
         xgrid = np.linspace(0, 1, N+1)
         uh = transmission(xgrid)
-        second = (uh[2:] - 2*uh[1:-1] + uh[:-2]) / (1/N)**2
-        norms.append(np.sqrt(np.sum(second**2) / N))
+        h = 1.0/N
+        second = (uh[2:] - 2*uh[1:-1] + uh[:-2]) / h**2
+        expected = np.zeros(N-1)
+        expected[N//2-1] = -0.5/h
+        np.testing.assert_allclose(second, expected, atol=1e-8, rtol=1e-10)
+        a = np.where((xgrid[1:]+xgrid[:-1])/2 < 0.5, 1., 2.)
+        np.testing.assert_allclose(a*np.diff(uh)/h, 1., atol=1e-10)
+        norms.append(np.sqrt(h*np.sum(second**2)))
     norms = np.array(norms)
     reference = 0.5 / np.sqrt(hs)
     assert np.allclose(norms, reference, rtol=1e-10, atol=1e-10)
     slope = np.polyfit(np.log(hs), np.log(norms), 1)[0]
     assert abs(slope + .5) < 1e-10
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=hs, y=norms, mode="lines+markers", name="dyskretna norma H2"))
+    fig.add_trace(go.Scatter(x=hs, y=norms, mode="lines+markers", name="dyskretna norma L2 drugiej roznicy"))
     fig.add_trace(go.Scatter(x=hs, y=reference, mode="lines", name="0.5 / sqrt(h)"))
     fig.update_layout(title=f"Brak H2: norma drugiej roznicy ~ h^({slope:.2f})",
                       xaxis_type="log", yaxis_type="log",
@@ -1342,7 +1366,32 @@ if __name__ == "__main__":
 Poniższy eksperyment na torusie dwuwymiarowym ilustruje kontrast
 między normą średniokwadratową a normą supremum Hessianu.
 Jest to eksperyment periodyczny, nie dowód twierdzenia dla $\R^d$.
-Na końcu kod przedstawia dokładny przykład ostrości wykładnika Höldera.
+Na torusie $(\R/2\pi\mathbb Z)^2$ rozwiązujemy
+$-\Delta u=f$ z zerową średnią danych i rozwiązania.
+Dla $k\ne0$ mamy $\widehat u(k)=\widehat f(k)/|k|^2$,
+więc mnożnik pochodnej mieszanej jest równy
+$-k_1k_2/|k|^2$. Nierówność $2|k_1k_2|\le|k|^2$
+i tożsamość Parsevala dają
+$\|\partial_{12}u\|_2\le\frac12\|f\|_2$.
+Kod stosuje nieparzystą liczbę węzłów, aby uniknąć
+niejednoznaczności znaku częstotliwości Nyquista
+przy obliczaniu pochodnej mieszanej.
+Mierzymy normę średniokwadratową (normę $L^2$
+względem znormalizowanej miary na torusie).
+Wzrost maksimum na skończonych siatkach sam
+w sobie nie dowodzi rozbieżności w granicy.
+Na końcu kod przedstawia dokładny przykład ostrości
+wykładnika Höldera związanego z oszacowaniem
+Schaudera~\ref{thm:pde16-schauder-poisson}:
+dla $0<\alpha<1$ funkcja
+$u(x)=-|x|^{2+\alpha}/((1+\alpha)(2+\alpha))$
+spełnia $-u''=|x|^\alpha$, także w zerze przez
+ciągłość drugiej pochodnej.
+Z nierówności $||x|^\alpha-|y|^\alpha|\le|x-y|^\alpha$
+wynika przynależność do $C^{2,\alpha}$.
+Iloraz dla pary $(0,h)$ i wykładnika $\beta>\alpha$
+wynosi $h^{\alpha-\beta}\to\infty$ przy $h\downarrow0$,
+co wyklucza $C^{2,\beta}$.
 \begin{lstlisting}[style=pythonpde,caption={Rachunek spektralny dla Hessianu i wykresy ilustrujące oszacowania Schaudera (Plotly)},label={code:pde16-plotly}]
 """Rozdzial 16: regularnosc W2p i oszacowania Schaudera; interaktywne wykresy Plotly.
 Instalacja: pip install numpy plotly
@@ -1371,12 +1420,15 @@ def mixed_hessian(N):
     k2 = K1*K1 + K2*K2
     m = np.zeros_like(k2, dtype=float)
     np.divide(-K1*K2, k2, out=m, where=k2 != 0)
-    d12u = np.fft.ifft2(np.fft.fft2(f)*m).real
-    return x, f, d12u
+    if N % 2 == 0:
+        raise ValueError("Uzyj nieparzystej liczby wezlow")
+    result = np.fft.ifft2(np.fft.fft2(f)*m)
+    assert np.max(np.abs(result.imag)) < 1e-12
+    return x, f, result.real
 
 
 def demo_fft():
-    N = 256
+    N = 257
     x, f, d12u = mixed_hessian(N)
     fig = go.Figure(data=go.Heatmap(x=x, y=x, z=d12u.T,
                                      colorbar=dict(title='u_xy')))
@@ -1384,15 +1436,15 @@ def demo_fft():
                       xaxis_title='x', yaxis_title='y', yaxis_scaleanchor='x')
     save(fig, 'pde16_fft_hessjan.html')
 
-    Ns = [32, 64, 128, 256, 512]
+    Ns = [33, 65, 129, 257, 513]
     peaks = []
     rms = []
     for n in Ns:
         _, fn, hn = mixed_hessian(n)
         peaks.append(float(np.max(np.abs(hn))))
         rms.append(float(np.mean(hn**2)**0.5))
-        # Mnoznik Hessianu ma modul <= 1 w normie L2:
-        assert rms[-1] <= float(np.mean(fn**2)**0.5) + 1e-11
+        # |k1*k2|/|k|^2 <= 1/2, z Parsevala:
+        assert rms[-1] <= 0.5*float(np.mean(fn**2)**0.5) + 1e-11
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=Ns, y=peaks, mode='lines+markers', name='maksimum |u_xy|'))
     fig.add_trace(go.Scatter(x=Ns, y=rms, mode='lines+markers', name='norma sredniokwadratowa'))
@@ -1444,6 +1496,28 @@ $C^{0,\gamma}$, macierz współczynników oraz ilorazy Höldera.
 Dodatkowo sprawdza wartości maksimum i minimum przykładowej
 funkcji harmonicznej. Jest to eksperyment ilustracyjny,
 nie dowód twierdzenia o regularności przy mierzalnych współczynnikach.
+W przykładzie~\ref{ex:pde17-radial} dla $0<\gamma<1$
+macierz $A$ ma wartości własne $1$ w kierunku radialnym
+i $\gamma^2$ w kierunku stycznym. Dla $r>0$ rozwiązanie
+$u(r,\theta)=r^\gamma\cos\theta$ spełnia
+\[
+ \operatorname{div}(A\nabla u)
+ =u_{rr}+r^{-1}u_r+\gamma^2r^{-2}u_{\theta\theta}=0.
+\]
+Pochodne radialne i kątowe dają
+$|\nabla u|^2=\gamma^2r^{2\gamma-2}\cos^2\theta
++r^{2\gamma-2}\sin^2\theta$, zatem gradient jest
+całkowalny z kwadratem przy zerze, bo
+$\int_0^1r^{2\gamma-1}\,\mathrm d\lambda_1(r)<\infty$.
+Przy całkowaniu przez części poza dyskiem o promieniu
+$\varepsilon$ człon brzegowy jest $O(\varepsilon^\gamma)$
+i zanika. To uzasadnia równanie słabe także w zerze.
+Na dodatniej półosi iloraz Höldera względem zera
+wynosi $r^{\gamma-\beta}$, więc wyklucza każdy
+wykładnik $\beta>\gamma$. Kod kontroluje również
+eliptyczność macierzy przez jej ślad i wyznacznik.
+Wartość macierzy w zerze wybieramy jako $I$;
+nie ma ona wpływu na równanie słabe.
 \begin{lstlisting}[style=pythonpde,caption={Mierzalne współczynniki, regularność Höldera i Harnack (Plotly)},label={code:pde17-plotly}]
 """PDE rozdzial 17: ostrosc Holdera przy mierzalnych wspolczynnikach.
 
@@ -1465,6 +1539,8 @@ def store(fig: go.Figure, filename: str) -> None:
 
 
 def radial_example(gamma: float, n: int = 301):
+    if not 0 < gamma < 1 or n < 3:
+        raise ValueError("Wymagane 0 < gamma < 1 oraz n >= 3")
     xx = np.linspace(-1.0, 1.0, n)
     x, y = np.meshgrid(xx, xx, indexing="xy")
     radius = np.hypot(x, y)
@@ -1477,6 +1553,10 @@ def radial_example(gamma: float, n: int = 301):
     a11 = gamma**2 + (1.0-gamma**2) * e1**2
     a22 = gamma**2 + (1.0-gamma**2) * e2**2
     a12 = (1.0-gamma**2) * e1 * e2
+    nonzero = radius > 0
+    np.testing.assert_allclose((a11+a22)[nonzero], 1+gamma**2)
+    np.testing.assert_allclose((a11*a22-a12**2)[nonzero], gamma**2)
+    a11[~nonzero] = a22[~nonzero] = 1.0
     return xx, x, y, radius, u, a11, a12, a22
 
 
@@ -1538,6 +1618,30 @@ wizualizuje ślad półgrupy cieplnej. Ostatnie porównanie wykorzystuje
 jawne wartości własne ciągłego laplasjanu na kwadracie.
 Przy ustalonej siatce nie należy interpretować końca widma
 macierzy jako asymptotyki wysokich częstotliwości operatora ciągłego.
+Dla kwadratu jednostkowego ciągłe wartości własne
+mają postać $\pi^2(j^2+k^2)$, $j,k\ge1$.
+Z prawa Weyla~\ref{thm:pde18-weyl} wynika
+$N(\Lambda)\sim\Lambda/(4\pi)$ dla $\Lambda\to\infty$.
+Porównujemy zliczanie dla operatora ciągłego
+i macierzy różnicowej, uwzględniając krotności.
+Na skończonej siatce wszystkie wartości własne
+macierzy są ograniczone; nie ma tam asymptotyki Weyla
+przy ustalonej liczbie węzłów.
+Ślad półgrupy na kwadracie jest kwadratem szeregu
+$\sum_{j\ge1}e^{-\pi^2tj^2}$.
+Dla obcięcia po $M$ wyrazach błąd szeregu
+jednowymiarowego jest ograniczony przez
+\[
+ \int_M^\infty e^{-a x^2}\,\mathrm d\lambda_1(x)
+ \le\frac{e^{-aM^2}}{2aM},\qquad a=\pi^2t>0,
+\]
+gdzie pierwsze ograniczenie ogona wynika z monotoniczności,
+a drugie z $x/M\ge1$ pod całką.
+Ponieważ pełny szereg nie przekracza
+$\sqrt{\pi}/(2\sqrt a)$, błąd kwadratu jest
+nie większy niż $\sqrt{\pi/a}\,e^{-aM^2}/(2aM)$.
+Program kontroluje to ograniczenie w całym
+zakresie wyświetlanych czasów.
 \begin{lstlisting}[style=pythonpde,caption={Wartości własne, prawo Weyla i ślad cieplny (Plotly)},label={code:pde18-plotly}]
 """PDE, rozdzial 18: min-max, Weyl, slad cieplny.
 
@@ -1594,10 +1698,18 @@ def weyl_square():
     two_d = np.sort((one_d[:, None] + one_d[None, :]).ravel())
     cutoffs = np.linspace(0, 2400, 450)
     counts = np.searchsorted(two_d, cutoffs, side='right')
+    jmax = int(np.sqrt(cutoffs[-1])/np.pi)+1
+    j = np.arange(1, jmax+1)
+    continuous = np.sort((np.pi**2*(j[:, None]**2+j[None, :]**2)).ravel())
+    exact_counts = np.searchsorted(continuous, cutoffs, side='right')
+    assert jmax <= m
+    assert np.all(counts >= exact_counts)
     leading = cutoffs / (4*np.pi)  # |Omega|=1, d=2
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=cutoffs, y=counts, mode='lines',
                              line_shape='hv', name='Dyskretne zliczanie modow'))
+    fig.add_trace(go.Scatter(x=cutoffs, y=exact_counts, mode='lines',
+                             line_shape='hv', name='Widmo ciagle'))
     fig.add_trace(go.Scatter(x=cutoffs, y=leading, mode='lines',
                              name='Wyraz glowny Weyla: Lambda/(4 pi)'))
     fig.update_layout(title='Funkcja zliczajaca na kwadracie jednostkowym',
@@ -1609,21 +1721,24 @@ def weyl_square():
 
 
 def heat_trace():
-    j = np.arange(1, 180)
-    eigs = np.pi**2 * (j[:, None]**2 + j[None, :]**2)
+    M = 179
+    j = np.arange(1, M+1)
     t = np.logspace(-3.3, -1.2, 170)
-    exact = np.array([np.exp(-tau*eigs).sum() for tau in t])
+    a = np.pi**2*t
+    truncated = np.sum(np.exp(-a[:, None]*j[None, :]**2), axis=1)**2
+    tail_bound = np.sqrt(np.pi/a)*np.exp(-a*M*M)/(2*a*M)
+    assert np.max(tail_bound) < 1e-12
     leading = 1 / (4*np.pi*t)  # |Omega|=1, d=2
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=t, y=exact, mode='lines',
-                             name='Slad cieplny (suma modow)'))
+    fig.add_trace(go.Scatter(x=t, y=truncated, mode='lines',
+                             name='Slad cieplny (suma obcieta)'))
     fig.add_trace(go.Scatter(x=t, y=leading, mode='lines',
                              name='Asymptotyka 1/(4 pi t)'))
     fig.update_layout(title='Slad cieplny laplasjanu Dirichleta na kwadracie',
                       xaxis_type='log', yaxis_type='log',
                       xaxis_title='Czas t', yaxis_title='Tr exp(t Delta_D)')
     save(fig, 'pde18_slad_cieplny.html')
-    ratio = exact[0] / leading[0]
+    ratio = truncated[0] / leading[0]
     assert 0.8 < ratio < 1.0
     print('Stosunek sladu do wyrazu glownego dla malego t:', round(ratio, 6))
 
