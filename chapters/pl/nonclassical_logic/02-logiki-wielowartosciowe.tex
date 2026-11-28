@@ -186,6 +186,11 @@ lecz nie wyróżnia wniosku. Operacje macierzy skończonej
 możemy zapisać w postaci skończonych tablic, więc
 każda taka kontrola kończy się po skończonej liczbie kroków.
 \end{proof}
+Jeżeli sygnatura jest nieskończona, rozstrzygalność
+w sensie jednolitego algorytmu wymaga ponadto
+efektywnego dostępu do arności i tablic spójników.
+Dla skończonej sygnatury wszystkie tablice można
+zapisać raz na zawsze.
 Dla ustalonej macierzy i stałego kosztu odczytu tablicy,
 jeśli $L$ oznacza łączną liczbę węzłów drzew składniowych
 przesłanek i wniosku, bezpośrednia enumeracja ma czas
@@ -264,6 +269,19 @@ a konsekwencja z przesłanek $p,\neg p$ do $q$
 zachodzi w $K_3$, lecz nie w LP.
 Daje to obie nieinkluzje.
 \end{proof}
+Dla pojedynczej przesłanki zachodzi ponadto użyteczna
+równoważność
+\[
+ \varphi\models_{K_3}\psi
+ \iff \neg\psi\models_{\mathrm{LP}}\neg\varphi.
+\]
+Istotnie, kontrmodel po lewej spełnia
+$v(\varphi)=1$ i $v(\psi)\ne1$. Z tablicy negacji
+jest to równoważne $v(\neg\varphi)=0$ oraz
+$v(\neg\psi)\ne0$, czyli warunkom kontrmodelu
+po prawej. Ten sam argument działa dla pary
+$B_3,\mathrm{PWK}$ w ich wspólnym języku
+(Definicja~\ref{def:ncl-weak-kleene}).
 
 \subsection{Porządek informacyjny i uzupełnienia klasyczne}
 Na zbiorze $\{0,u,1\}$ wprowadzamy drugi porządek
@@ -326,6 +344,16 @@ klasyczne uzupełnienie nadaje jej wartość $1$.
 Interpretacja przez zgodność wszystkich klasycznych
 uzupełnień, nazywana semantyką superwaluacyjną,
 nie jest więc tym samym co silne tablice Kleene'ego.
+Dokładniej, przypisujemy formule wartość $1$, gdy
+wszystkie klasyczne uzupełnienia dają $1$, wartość
+$0$, gdy wszystkie dają $0$, i $u$ w pozostałym
+przypadku. Uzupełnienia istnieją, ponieważ można
+każdej zmiennej nieokreślonej przypisać $0$.
+Ta semantyka nie jest prawdziwościowo funkcyjna
+względem samych trzech wartości: przy $v(p)=v(q)=u$
+formuły $p\vee\neg p$ oraz $p\vee q$ mają w niej
+odpowiednio wartości $1$ i $u$, choć w obu
+przypadkach argumenty alternatywy mają wartość $u$.
 
 \section{Słaba logika Kleene'ego i logika Bochvara}
 \begin{definicja}[Słaba algebra Kleene'ego]
@@ -1183,7 +1211,10 @@ stale równą $a$.
 
 \begin{stwierdzenie}[Generowanie klonu]\label{prop:ncl-clone-terms}
 Klon $\operatorname{Clo}(F)$ jest rodziną funkcji
-termowych dodatnich arności języka o operacjach $F$.
+termowych dodatnich arności języka o operacjach $F$,
+przy czym term może nie wykorzystywać wszystkich
+zmiennych zadanej arności. Jeśli w języku występują
+stałe, przyjmujemy konwencję z Definicji~\ref{def:ncl-clone}.
 Rodzina $F$ jest funkcjonalnie zupełna dokładnie wtedy,
 gdy generuje klon wszystkich operacji dodatnich arności.
 \end{stwierdzenie}
@@ -1193,7 +1224,10 @@ każda zmienna jest termem, i zawiera generatory.
 Podstawianie termów za zmienne daje składanie funkcji,
 więc rodzina jest klonem. Każdy klon zawierający $F$
 zawiera funkcje wszystkich termów przez indukcję
-po ich budowie. Daje to równość z najmniejszym klonem.
+po ich budowie. W przypadku stałej jej funkcję
+$n$-argumentową, $n\geq1$, otrzymujemy przez
+złożenie odpowiadającej jej jednoargumentowej
+funkcji stałej z rzutem $\pi_1^n$. Daje to równość z najmniejszym klonem.
 Druga teza wynika z
 Definicji~\ref{def:ncl-functional-completeness}.
 \end{proof}
@@ -1355,10 +1389,13 @@ mocy $U$ wyznaczamy zatem jednoznacznie współczynniki
 $a_U$, uzyskując zadane wartości funkcji.
 Nieafiniczność oznacza istnienie składnika stopnia
 co najmniej dwa. Wybierzmy dwa różne indeksy $i,j$
-należące do takiego składnika. Suma współczynników
-przy $x_i x_j$ po ustaleniu pozostałych zmiennych
-jest funkcją tych pozostałych zmiennych, reprezentowaną
-przez niezerowy wielomian wieloliniowy: różne składniki
+należące do takiego składnika. Współczynnik przy $x_i x_j$ po ustaleniu
+pozostałych zmiennych jest wartością funkcji
+\[
+ \bigoplus_{S\supseteq\{i,j\}}
+    a_S\prod_{k\in S\setminus\{i,j\}}x_k.
+\]
+Reprezentuje ją niezerowy wielomian wieloliniowy: różne składniki
 zawierające $i,j$ dają różne jednomiany po usunięciu
 tych dwóch indeksów. Na mocy jednoznaczności istnieje
 ustalenie pozostałych zmiennych, dla którego
@@ -1387,9 +1424,12 @@ jest funkcjonalnie zupełna:
 $f(x,x)=\neg x$ oraz $f(f(x,y),f(x,y))=x\wedge y$.
 Analogicznie NOR $g(x,y)=\neg(x\vee y)$ daje negację
 przez $g(x,x)$ i alternatywę przez $g(g(x,y),g(x,y))$.
-W obu przypadkach prawo de Morgana i konstrukcja
-z dowodu Twierdzenia~\ref{thm:ncl-post-criterion}
-dają wszystkie operacje boolowskie.
+W obu przypadkach prawo de Morgana daje brakujący
+spójnik kratowy. Funkcje stałe uzyskujemy jako
+$x\wedge\neg x$ i $x\vee\neg x$, a alternatywa
+koniunkcji literałów z dowodu
+Twierdzenia~\ref{thm:ncl-post-criterion}
+reprezentuje wszystkie pozostałe funkcje boolowskie.
 \end{przyklad}
 
 \subsection{Kryterium z selektorami na zbiorze skończonym}
