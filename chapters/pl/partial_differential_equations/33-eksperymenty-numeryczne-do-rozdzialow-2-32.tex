@@ -3241,8 +3241,43 @@ if __name__ == '__main__':
 
 \section{Homogenizacja periodyczna: rozwiązanie i strumień — Plotly}
 \label{sec:pde30-code}
-Program porównuje dokładne rozwiązania jednowymiarowe z równaniem
-uśrednionym, pokazuje oscylacje gradientu oraz zbieżność błędu.
+Program porównuje rozwiązania jednowymiarowe, odtworzone
+z dokładnego wzoru całkowego za pomocą kwadratury,
+z rozwiązaniem równania uśrednionego, pokazuje oscylacje
+gradientu oraz zbieżność błędu.
+Dla $a(y)=2+\sin(2\pi y)$, $b_\varepsilon(x)=1/a(x/\varepsilon)$
+i zadania $-(a(x/\varepsilon)u_\varepsilon')'=1$
+z zerowymi wartościami brzegowymi mamy
+\[
+ c_\varepsilon=
+ \frac{\int_0^1 x b_\varepsilon(x)\,\mathrm d\lambda_1(x)}
+ {\int_0^1 b_\varepsilon(x)\,\mathrm d\lambda_1(x)},
+ \qquad
+ u_\varepsilon(x)=\int_0^x(c_\varepsilon-t)b_\varepsilon(t)
+ \,\mathrm d\lambda_1(t).
+\]
+Średnia harmoniczna wynosi $a_{\rm hom}=\sqrt3$.
+Aby uzasadnić rząd błędu, oznaczmy przez $B$
+ograniczoną okresową funkcję pierwotną funkcji
+$1/a-1/a_{\rm hom}$ (jej całka po okresie jest zerowa).
+Całkowanie przez części daje, dla $\varphi\in C^1([0,1])$,
+\[
+ \left|\int_0^x\varphi(t)
+ \left(b_\varepsilon(t)-1/a_{\rm hom}\right)
+ \,\mathrm d\lambda_1(t)\right|
+ \le\varepsilon\|B\|_\infty
+ \left(2\|\varphi\|_\infty+\|\varphi'\|_\infty\right).
+\]
+Stosując to do $1$ i $t$, otrzymujemy
+$c_\varepsilon=1/2+O(\varepsilon)$, gdyż
+mianownik jest nie mniejszy niż $1/3$.
+Stąd $\|u_\varepsilon-u_0\|_\infty=O(\varepsilon)$,
+a strumienie $a(x/\varepsilon)u_\varepsilon'=c_\varepsilon-x$
+zbiegają jednostajnie. Poprawiony gradient
+$a_{\rm hom}u_0'/a(x/\varepsilon)$ różni się
+od $u_\varepsilon'$ o $(1/2-c_\varepsilon)/a(x/\varepsilon)$,
+czyli ma błąd $O(\varepsilon)$ również w normie supremum.
+Błąd kwadratury kontrolujemy przez zagęszczenie siatki.
 Ostatni wykres przedstawia anizotropię macierzy efektywnej
 materiału dwuwarstwowego; jest ilustracją prawa
 ~\eqref{eq:pde30-layers}, a nie obliczeniem metodą elementów skończonych.
@@ -3267,6 +3302,8 @@ def cumulative_trapezoid(v, h):
 
 
 def micro_solution(periods, samples_per_period=240):
+    if periods < 1 or samples_per_period < 8:
+        raise ValueError("Wymagany dodatni okres i co najmniej 8 probek")
     eps = 1.0 / periods
     x = np.linspace(0.0, 1.0, periods * samples_per_period + 1)
     h = x[1] - x[0]
@@ -3314,6 +3351,8 @@ def main():
 
     ns = np.array([4, 8, 16, 32, 64], dtype=int)
     errors = np.array([micro_solution(int(n))[6] for n in ns])
+    fine_errors = np.array([micro_solution(int(n),480)[6] for n in ns])
+    np.testing.assert_allclose(errors, fine_errors, rtol=2e-3, atol=1e-10)
     order = float(np.polyfit(np.log(1.0/ns), np.log(errors), 1)[0])
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=1.0/ns, y=errors, mode="lines+markers", name="blad L^2"))
@@ -3325,9 +3364,15 @@ def main():
     export(fig, "pde30_zbieznosc.html")
 
     t = np.linspace(0, 2*np.pi, 360)
+    # Dwie warstwy o rownych udzialach, przewodnosci 1 i 4.
+    normal = 1/(0.5/1+0.5/4)
+    tangential = 0.5*1+0.5*4
+    q1 = np.sqrt(normal)*np.cos(t)
+    q2 = np.sqrt(tangential)*np.sin(t)
+    np.testing.assert_allclose(q1*q1/normal+q2*q2/tangential,1)
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=np.sqrt(8.0/5.0)*np.cos(t),
-                             y=np.sqrt(5.0/2.0)*np.sin(t),
+    fig.add_trace(go.Scatter(x=q1,
+                             y=q2,
                              name="warstwy: diag(8/5,5/2)"))
     fig.add_trace(go.Scatter(x=np.sqrt(2.5)*np.cos(t),
                              y=np.sqrt(2.5)*np.sin(t),
@@ -3370,7 +3415,34 @@ if __name__ == "__main__":
 
 \section{Analiza mikrolokalna i symbole: eksperymenty Plotly}
 \label{sec:pde31-code}
-Rozkład częstości dla wąskiej warstwy, stożek charakterystyczny i parametryks.
+Rozkład częstości dla wąskiej warstwy, stożek
+charakterystyczny i symbol odwrotny.
+W lokalnych współrzędnych ortogonalnych $(s,t)$,
+gdzie $s$ jest współrzędną normalną do prostej $s=0$,
+rozważamy
+\[
+ f_\varepsilon(s,t)=
+ \frac{e^{-s^2/(2\varepsilon^2)}}{\sqrt{2\pi}\varepsilon}\,b(t),
+\]
+gdzie $b$ jest gładkim profilem Gaussa.
+Przy $\varepsilon\downarrow0$ funkcje te zbiegają
+dystrybucyjnie do $\delta(s)b(t)$, przez podstawienie
+$s=\varepsilon z$ i twierdzenie o zbieżności zmajoryzowanej.
+Ich transformaty w obróconych współrzędnych mają czynnik
+$e^{-\varepsilon^2\xi_s^2/2}\widehat b(\xi_t)$.
+Wraz ze zmniejszaniem szerokości pasa zanik
+w kierunku normalnym słabnie, podczas gdy w kierunku
+stycznym pozostaje szybki. Na skończonym oknie
+obliczeniowym stosujemy dodatkowe gładkie obcięcie
+o zwartym nośniku, by nie wprowadzać skoków na jego brzegach.
+Każdy profil o dodatniej szerokości jest gładki,
+więc sam wykres nie wyznacza zbioru falowego.
+Dla operatora falowego $\partial_t^2-4\partial_x^2$
+symbol główny to $-\tau^2+4\xi^2$; jego zbiór zerowy
+poza początkiem tworzy dwie gałęzie charakterystyczne.
+Dla $P=I-\partial_x^2$ mnożnik $(1+\xi^2)^{-1}$
+jest symbolem rzeczywistej odwrotności, a tym samym
+parametryksu z zerową resztą.
 \begin{lstlisting}[style=pythonpde,caption={Eksperymenty rozdziału 31 (Python i Plotly)},label={code:pde31-plotly}]
 """Rozdzial 31: kierunki osobliwosci i symbole Fourierowskie.
 Wymaga numpy, plotly; zapisuje trzy interaktywne wykresy HTML.
@@ -3395,13 +3467,24 @@ def directional_singularity():
     dx = x[1] - x[0]
     xx, yy = np.meshgrid(x, x, indexing="ij")
     angle = np.pi / 5
-    normal = xx * np.cos(angle) + yy * np.sin(angle)
-    # Okresowy profil waskiego pasa; zwezone przyblizenie delty.
-    profile = np.exp(-0.5 * (np.sin(normal / 2) / 0.075) ** 2)
-    window = np.exp(-0.5 * ((xx / 2.2) ** 8 + (yy / 2.2) ** 8))
-    img = profile * window
-    freq = np.fft.fftshift(np.fft.fftfreq(n, d=dx)) * 2 * np.pi
-    amp = np.log1p(np.abs(np.fft.fftshift(np.fft.fft2(img))))
+    normal = xx*np.cos(angle)+yy*np.sin(angle)
+    tangent = -xx*np.sin(angle)+yy*np.cos(angle)
+    def bump(z):
+        out = np.zeros_like(z)
+        mask = abs(z)<1
+        out[mask] = np.exp(1-1/(1-z[mask]**2))
+        return out
+    window = bump(xx/2.8)*bump(yy/2.8)
+    eps = 0.15
+    profile = np.exp(-0.5*(normal/eps)**2)/(np.sqrt(2*np.pi)*eps)
+    img = profile*np.exp(-0.5*tangent**2)*window
+    freq = np.fft.fftshift(np.fft.fftfreq(n, d=dx))*2*np.pi
+    spectrum = dx**2*np.abs(np.fft.fftshift(np.fft.fft2(img)))
+    amp = np.log1p(spectrum)
+    f1,f2 = np.meshgrid(freq,freq,indexing="ij")
+    kn = f1*np.cos(angle)+f2*np.sin(angle)
+    kt = -f1*np.sin(angle)+f2*np.cos(angle)
+    assert np.sum(kn**2*spectrum**2) > 5*np.sum(kt**2*spectrum**2)
     fig = go.Figure(go.Heatmap(x=freq, y=freq, z=amp.T, colorscale="Viridis"))
     fig.update_layout(title="Kierunki wysokich czestotliwosci: waski pas",
                       xaxis_title="xi_1", yaxis_title="xi_2")
@@ -3419,6 +3502,8 @@ def characteristic_cone():
                       xaxis_title="xi", yaxis_title="tau")
     save(fig, "pde31_charakterystyki.html")
     assert np.max(np.abs((2 * np.abs(xi)) ** 2 - 4 * xi ** 2)) < 1e-10
+    # Początek narysowanych galezi nie nalezy do zbioru charakterystycznego
+    # w przestrzeni kowektorow niezerowych.
 
 
 def parametrix_filter():
@@ -3444,7 +3529,36 @@ if __name__ == "__main__":
 
 \section{Problemy odwrotne i sterowanie optymalne: eksperymenty Plotly}
 \label{sec:pde32-code}
-Zanik wartości singularnych, regularyzacja Tichonowa i sterowanie.
+Zanik wartości singularnych, regularyzacja Tichonowa
+i sterowanie. Na odcinku $(0,\pi)$ z jednorodnymi
+warunkami Dirichleta funkcje
+$e_n(x)=\sqrt{2/\pi}\sin(nx)$ są ortonormalne
+i odpowiadają wartościom własnym $n^2$ operatora $-\Delta_D$.
+Wartości singularne operatorów $(I-\Delta_D)^{-1}$
+oraz $e^{T\Delta_D}$ wynoszą odpowiednio
+$(1+n^2)^{-1}$ i $e^{-Tn^2}$.
+Dla skończonego modelu spektralnego regularyzacja
+Tichonowa z rozdziału~\ref{chap:pde32} daje
+$f_{\alpha,n}^\delta=\sigma_n y_n^\delta/(\sigma_n^2+\alpha)$.
+Jeżeli $f_\alpha^0$ jest rekonstrukcją z danych dokładnych,
+to
+\[
+ \|f_\alpha^\delta-f_\alpha^0\|_2
+ \le\frac{\delta}{2\sqrt\alpha},
+\]
+ponieważ $\sigma/(\sigma^2+\alpha)\le1/(2\sqrt\alpha)$.
+W kodzie kontrolujemy zarówno tę nierówność, jak i równanie
+normalne. Minimum rzeczywistego błędu na siatce parametrów
+jest dostępne tylko w eksperymencie ze znanym rozwiązaniem;
+nie jest praktyczną regułą wyboru parametru z samych danych.
+W zadaniu sterowania $-y''=u$ minimalizujemy
+$\frac12\|y-y_d\|_2^2+\frac\alpha2\|u\|_2^2$
+bez dodatkowych ograniczeń na sterowanie.
+W tej samej bazie $\sigma_n=n^{-2}$, a równanie normalne
+jest równoważne warunkowi stacjonarności
+$\alpha u+p=0$, gdzie $-p''=y-y_d$.
+Brak wymuszenia w pozostałych modach oznacza, że ich
+optymalne współczynniki są zerowe.
 \begin{lstlisting}[style=pythonpde,caption={Eksperymenty rozdziału 32 (Python i Plotly)},label={code:pde32-plotly}]
 """Rozdzial 32: niestabilnosc, regularyzacja Tichonowa i sterowanie PDE.
 Wymaga numpy, plotly. Zawiera testy formul dla modelu spektralnego.
@@ -3483,13 +3597,31 @@ def inverse_heat():
     delta = 0.002
     noise = rng.normal(0, 1, n.size)
     noise = delta * noise / np.linalg.norm(noise)
-    data = sigma * truth + noise
+    data_exact = sigma*truth
+    data = data_exact+noise
     alpha = np.logspace(-10, -2, 130)
-    recon = sigma[:, None] * data[:, None] / (sigma[:, None] ** 2 + alpha[None, :])
+    den = sigma[:, None]**2+alpha[None,:]
+    gain = sigma[:,None]/den
+    recon = gain*data[:,None]
+    noiseless = gain*data_exact[:,None]
+    np.testing.assert_allclose(den*recon,
+                               np.broadcast_to(sigma[:,None]*data[:,None],den.shape),
+                               atol=1e-14,rtol=1e-12)
+    assert np.isclose(np.linalg.norm(noise),delta)
+    noise_error = np.linalg.norm(recon-noiseless,axis=0)
+    assert np.all(noise_error <= delta/(2*np.sqrt(alpha))+1e-12)
+    bias = -alpha[None,:]*truth[:,None]/den
+    np.testing.assert_allclose(noiseless-truth[:,None],bias,atol=1e-13)
     error = np.linalg.norm(recon - truth[:, None], axis=0)
     idx = int(np.argmin(error)); alpha_best = alpha[idx]
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=alpha, y=error, name="blad rekonstrukcji"))
+    fig.add_trace(go.Scatter(x=alpha, y=noise_error, name="wplyw szumu"))
+    fig.add_trace(go.Scatter(x=alpha, y=np.linalg.norm(bias,axis=0),
+                             name="blad regularyzacji bez szumu"))
+    fig.add_trace(go.Scatter(x=alpha, y=delta/(2*np.sqrt(alpha)),
+                             name="gorna granica wplywu szumu",
+                             line=dict(dash="dot"), visible="legendonly"))
     fig.add_vline(x=alpha_best, line_dash="dash",
                   annotation_text="minimum dla danych testowych")
     fig.update_layout(title="Regularyzacja Tichonowa: kompromis szum-gladzenie",
@@ -3514,10 +3646,19 @@ def elliptic_control():
     sigma = 1 / (n ** 2)
     control_coeff = sigma * desired_coeff / (sigma ** 2 + alpha)
     observed_coeff = sigma * control_coeff
-    sin_modes = np.sin(n[:, None] * x)
+    sin_modes = np.sqrt(2/np.pi)*np.sin(n[:,None]*x)
     y_desired = desired_coeff @ sin_modes
     y_state = observed_coeff @ sin_modes
     control = control_coeff @ sin_modes
+    adjoint_coeff = sigma*(observed_coeff-desired_coeff)
+    np.testing.assert_allclose(alpha*control_coeff+adjoint_coeff,0,atol=1e-13)
+    np.testing.assert_allclose(n**2*observed_coeff,control_coeff,atol=1e-13)
+    def objective(v):
+        return 0.5*np.sum((sigma*v-desired_coeff)**2)+alpha/2*np.sum(v*v)
+    for h in (np.array([.1,-.2]),np.array([-.3,.4])):
+        np.testing.assert_allclose(objective(control_coeff+h)-objective(control_coeff),
+                                   0.5*np.sum((sigma*sigma+alpha)*h*h),
+                                   atol=1e-13)
     fig = go.Figure()
     for values, name in ((y_desired, "stan pozadany"),
                          (y_state, "stan optymalny"), (control, "sterowanie")):
@@ -3533,7 +3674,7 @@ if __name__ == "__main__":
     singular_values()
     a, err = inverse_heat()
     elliptic_control()
-    print(f"Optymalne testowe alpha={a:.3e}, blad={err:.4f}; zapisano 4 wykresy.")
+    print(f"Najlepsze alpha na siatce testowej={a:.3e}, blad={err:.4f}; zapisano 4 wykresy.")
 \end{lstlisting}
 
 
