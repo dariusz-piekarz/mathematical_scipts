@@ -55,7 +55,7 @@ class FunctionalPDEGraphTest(unittest.TestCase):
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 dest.write_bytes(source_path.read_bytes())
             db = Path(tmp) / "index.db"
-            build_database(root, db, recursive=True)
+            build_database(root, db, repository / "application/config/ALIASY_PO_SCALENIACH.json", recursive=True)
             with sqlite3.connect(db) as con:
                 edges = {(e["source"], e["target"]): e for e in graph_coverage(con)["edges"]}
                 for source, target, label in expected:
@@ -63,12 +63,13 @@ class FunctionalPDEGraphTest(unittest.TestCase):
                         rows = con.execute(
                             "SELECT status,target_document,target_entity "
                             "FROM references_tex WHERE source_document=? "
-                            "AND command='atlasref' AND target_label=?",
-                            (source, target + "::" + label),
+                            "AND command='atlasref' AND target_document=? "
+                            "AND substr(target_label,instr(target_label,'::')+2)=?",
+                            (source, target, label),
                         ).fetchall()
                         self.assertEqual(len(rows), 1)
                         status, owner, entity = rows[0]
-                        self.assertEqual(status, "external_resolved")
+                        self.assertIn(status, ("external_resolved", "alias_resolved"))
                         self.assertEqual(owner, target)
                         self.assertIsNotNone(entity)
                         self.assertEqual(con.execute(
