@@ -1,0 +1,419 @@
+\chapter{Logika modalna}\label{ch:ncl-modal}
+
+\section{Język modalny i jego interpretacja}
+
+W klasycznym rachunku zdań pytamy, czy zdanie jest
+prawdziwe. W logice modalnej możemy dodatkowo pytać,
+czy jest koniecznie prawdziwe lub czy jest możliwe.
+Znaczenie tych pojęć zależy od zastosowania: mogą
+dotyczyć możliwości logicznej, informacji posiadanych
+przez podmiot albo dostępnych stanów pewnego układu.
+W tym rozdziale badamy normalne zdaniowe logiki
+modalne od strony syntaktycznej. Pełną semantykę
+relacyjną oraz twierdzenia o pełności rozwiniemy
+w następnym rozdziale.
+
+\begin{definicja}[Język zdaniowej logiki modalnej]
+\label{def:ncl-modal-language}
+Niech $\mathrm{Var}$ będzie przeliczalnie nieskończonym
+zbiorem zmiennych zdaniowych. Zbiór formuł modalnych
+$\mathrm{Fm}_{\Box}$ definiujemy rekurencyjnie:
+\begin{itemize}
+\item każda zmienna $p\in\mathrm{Var}$ i stała $\bot$
+      są formułami;
+\item jeżeli $A,B$ są formułami, to
+      $(A\wedge B)$, $(A\vee B)$ i $(A\to B)$
+      są formułami;
+\item jeżeli $A$ jest formułą, to $\Box A$ jest formułą.
+\end{itemize}
+Stosujemy skróty
+\[
+ \neg A=A\to\bot,\qquad
+ \top=\neg\bot,\qquad
+ A\leftrightarrow B=(A\to B)\wedge(B\to A),\qquad
+ \Diamond A=\neg\Box\neg A.
+\]
+Operator $\Box$ nazywamy operatorem konieczności,
+a $\Diamond$ operatorem możliwości.
+\end{definicja}
+Spójniki zdaniowe są w tym rozdziale klasyczne.
+W szczególności nie używamy intuicjonistycznej
+negacji do definiowania operatora możliwości.
+Wyrażenia $\Box A$ oraz $\Diamond A$ nie są
+nowymi zmiennymi, lecz formułami utworzonymi
+z $A$.
+
+\begin{definicja}[Głębokość modalna]
+\label{def:ncl-modal-depth}
+Głębokość modalną $\operatorname{md}(A)$ formuły
+określamy przez
+\[
+\begin{aligned}
+ \operatorname{md}(p)&=\operatorname{md}(\bot)=0,\\
+ \operatorname{md}(A\circ B)
+ &=\max(\operatorname{md}(A),\operatorname{md}(B)),
+ \qquad \circ\in\{\wedge,\vee,\to\},\\
+ \operatorname{md}(\Box A)&=1+\operatorname{md}(A).
+\end{aligned}
+\]
+W szczególności $\operatorname{md}(\Diamond A)
+=1+\operatorname{md}(A)$, co wynika z definicji
+skrótu $\Diamond$.
+\end{definicja}
+
+\begin{przyklad}[Zakres operatorów modalnych]
+\label{ex:ncl-modal-scope}
+Formuła $\Box(p\to q)$ mówi o konieczności
+implikacji. Formuła $\Box p\to\Box q$ mówi,
+że konieczność $p$ pociąga konieczność $q$.
+Obie mają głębokość modalną $1$, ale nie są
+tym samym wyrażeniem.
+Natomiast $\Box\Diamond p$ ma głębokość $2$:
+wyraża konieczność możliwości $p$.
+Nie należy jej utożsamiać z $\Diamond\Box p$,
+czyli możliwością konieczności $p$.
+\end{przyklad}
+
+\begin{definicja}[Podstawienie modalne]
+\label{def:ncl-modal-substitution}
+Podstawienie $\sigma:\mathrm{Var}\to\mathrm{Fm}_{\Box}$
+rozszerzamy na formuły, zachowując stałą $\bot$,
+wszystkie spójniki dwuargumentowe i operator $\Box$.
+W szczególności
+\[
+ \sigma(\Box A)=\Box\sigma(A),\qquad
+ \sigma(\Diamond A)=\Diamond\sigma(A).
+\]
+Druga równość wynika z pierwszej i z zachowania
+spójników występujących w definicji $\Diamond$.
+\end{definicja}
+Podstawienie jest jednoczesne: formuł wstawionych
+za zmienne nie podstawiamy ponownie w tym samym
+kroku. Dla podstawień $\sigma,\tau$ ich złożenie
+na zmiennych określa wzór
+$(\tau\circ\sigma)(p)=\tau(\sigma(p))$.
+Indukcja po budowie formuły pokazuje, że
+$(\tau\circ\sigma)(A)=\tau(\sigma(A))$:
+dla zmiennych jest to definicja, dla stałej
+obie strony są $\bot$, a dla spójników i $\Box$
+korzystamy z hipotezy indukcyjnej dla argumentów.
+
+\section{Normalna logika modalna K}
+
+\begin{definicja}[System Hilberta K]
+\label{def:ncl-modal-K}
+System $\mathrm K$ ma następujące aksjomaty i reguły:
+\begin{enumerate}
+\item Wszystkie instancje klasycznych tautologii
+      zdaniowych przez podstawienia formuł modalnych.
+\item Schemat dystrybucji konieczności:
+\[
+ \tag{K}\label{eq:ncl-modal-axiom-K}
+ \Box(A\to B)\to(\Box A\to\Box B).
+\]
+\item Reguła modus ponens:
+\[
+ \frac{A\qquad A\to B}{B}.
+\]
+\item Reguła konieczności (necessitation):
+\[
+ \frac{A}{\Box A}\quad(\mathrm{Nec}),
+\]
+      stosowana do twierdzeń, czyli formuł
+      dowiedzionych bez dodatkowych przesłanek.
+\end{enumerate}
+Dowód twierdzenia jest skończonym ciągiem formuł,
+z których każda jest aksjomatem lub wynika
+z wcześniejszych wierszy przez jedną z reguł.
+Piszemy $\vdash_{\mathrm K}A$, gdy istnieje taki
+dowód o ostatnim wierszu $A$.
+\end{definicja}
+Schemat K pozwala przenosić konieczną implikację
+na konieczność jej członów. Nie daje jednak
+odwrotnej implikacji. W szczególności z samego
+$A\to B$ jako lokalnego założenia nie wolno
+przejść do $\Box(A\to B)$.
+
+\begin{definicja}[Normalna logika modalna]
+\label{def:ncl-modal-normal-logic}
+Normalną logiką modalną nazywamy zbiór $L$
+formuł modalnych zawierający klasyczne instancje
+tautologii oraz wszystkie instancje K i domknięty
+względem modus ponens, reguły konieczności
+oraz dowolnych podstawień.
+Piszemy $\vdash_L A$, gdy $A\in L$.
+\end{definicja}
+
+\begin{stwierdzenie}[Minimalność systemu K]
+\label{prop:ncl-modal-K-minimal}
+Zbiór twierdzeń systemu $\mathrm K$ jest najmniejszą
+normalną logiką modalną.
+\end{stwierdzenie}
+\begin{proof}
+Aksjomaty systemu są domknięte względem podstawień.
+Podstawiając formuły we wszystkich wierszach dowodu,
+otrzymujemy ponownie dowód: podstawienie zachowuje
+zarówno modus ponens, jak i przejście od $A$ do
+$\Box A$. Stąd zbiór twierdzeń K jest domknięty
+względem podstawień. Domknięcie względem dwóch
+pozostałych reguł wynika z możliwości połączenia
+dowodów i dopisania odpowiedniego wniosku.
+Jeżeli $L$ jest normalna, to indukcja po długości
+dowodu K pokazuje, że każdy jego wiersz należy
+do $L$. Zatem każdy normalny system zawiera
+wszystkie twierdzenia K.
+\end{proof}
+Dla dowolnej rodziny dodatkowych schematów
+aksjomatycznych piszemy $\mathrm K+\Sigma$ na
+oznaczenie najmniejszej normalnej logiki
+zawierającej te schematy. Istnieje ona jako
+przecięcie wszystkich normalnych logik
+zawierających $\Sigma$; rodzina ta jest niepusta,
+bo zawiera zbiór wszystkich formuł.
+Równoważnie bierzemy system Hilberta K
+z dodatkowymi instancjami schematów: powtarzając
+dowód minimalności otrzymujemy tę samą logikę.
+
+\section{Reguły pochodne i rachunek operatorów}
+
+\begin{twierdzenie}[Monotoniczność i zastępowanie równoważników]
+\label{thm:ncl-modal-monotonicity}
+W każdej normalnej logice modalnej $L$ zachodzą
+reguły pochodne
+\[
+\begin{aligned}
+ \vdash_L A\to B&\Longrightarrow
+                   \vdash_L\Box A\to\Box B,\\
+ \vdash_L A\to B&\Longrightarrow
+                   \vdash_L\Diamond A\to\Diamond B,\\
+ \vdash_L A\leftrightarrow B&\Longrightarrow
+                   \vdash_L\Box A\leftrightarrow\Box B,\\
+ \vdash_L A\leftrightarrow B&\Longrightarrow
+                   \vdash_L\Diamond A\leftrightarrow\Diamond B.
+\end{aligned}
+\]
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia $A\to B$ przez konieczność otrzymujemy
+$\Box(A\to B)$, a następnie przez K i modus ponens
+$\Box A\to\Box B$.
+Klasyczna kontrapozycja daje z $A\to B$
+twierdzenie $\neg B\to\neg A$.
+Pierwsza reguła zastosowana do niego daje
+$\Box\neg B\to\Box\neg A$.
+Ponowna kontrapozycja daje
+$\neg\Box\neg A\to\neg\Box\neg B$, czyli
+$\Diamond A\to\Diamond B$.
+Dwie ostatnie reguły wynikają z zastosowania
+dwóch pierwszych do obu kierunków równoważności
+i połączenia otrzymanych implikacji koniunkcją,
+co jest dozwolone przez klasyczne tautologie
+oraz modus ponens.
+\end{proof}
+
+\begin{wniosek}[Zastępowanie w kontekstach modalnych]
+\label{cor:ncl-modal-context-replacement}
+Niech $C[-]$ oznacza formułę z wyróżnionym miejscem
+na podformułę. Jeśli $\vdash_L A\leftrightarrow B$,
+to $\vdash_L C[A]\leftrightarrow C[B]$.
+\end{wniosek}
+\begin{proof}
+Indukujemy po budowie kontekstu.
+Dla samego wyróżnionego miejsca otrzymujemy
+założenie. Dla spójników klasycznych korzystamy
+z tautologii wyrażających zachowanie równoważności
+po zastąpieniu jednego argumentu.
+Dla kontekstu $\Box D[-]$ stosujemy hipotezę
+indukcyjną i trzecią regułę z poprzedniego
+twierdzenia. Skróty, w tym $\Diamond$, są objęte
+indukcją po rozwinięciu.
+\end{proof}
+
+\begin{twierdzenie}[Prawa normalnych operatorów modalnych]
+\label{thm:ncl-modal-normal-laws}
+W każdej normalnej logice modalnej dowodliwe są
+formuły
+\[
+\begin{gathered}
+ \Box\top,\qquad \neg\Diamond\bot,\\
+ \Box(A\wedge B)\leftrightarrow(\Box A\wedge\Box B),\\
+ \Diamond(A\vee B)\leftrightarrow
+                  (\Diamond A\vee\Diamond B),\\
+ (\Box A\vee\Box B)\to\Box(A\vee B),\\
+ \Diamond(A\wedge B)\to(\Diamond A\wedge\Diamond B),\\
+ \neg\Box A\leftrightarrow\Diamond\neg A,\qquad
+ \neg\Diamond A\leftrightarrow\Box\neg A.
+\end{gathered}
+\]
+\end{twierdzenie}
+\begin{proof}
+Z tautologii $\top$ przez regułę konieczności
+otrzymujemy $\Box\top$.
+Ponieważ $\neg\bot=\top$, klasyczna eliminacja
+podwójnej negacji daje $\neg\Diamond\bot$.
+
+Z tautologii $A\wedge B\to A$ oraz
+$A\wedge B\to B$ przez monotoniczność $\Box$
+otrzymujemy obie implikacje potrzebne do
+$\Box(A\wedge B)\to(\Box A\wedge\Box B)$.
+W drugą stronę stosujemy konieczność do tautologii
+$A\to(B\to A\wedge B)$, a następnie dwukrotnie K.
+Otrzymujemy kolejno
+\[
+ \Box A\to\Box(B\to A\wedge B),\qquad
+ \Box(B\to A\wedge B)\to
+       (\Box B\to\Box(A\wedge B)).
+\]
+Składanie implikacji i klasyczne przekształcenie
+$X\to(Y\to Z)$ w $(X\wedge Y)\to Z$ dają
+$(\Box A\wedge\Box B)\to\Box(A\wedge B)$.
+Równoważność dla możliwości sumy wynika z definicji
+$\Diamond$, praw de Morgana, zastępowania
+równoważników oraz właśnie udowodnionej
+równoważności dla $\Box$ i koniunkcji.
+
+Tautologie $A\to A\vee B$ i $B\to A\vee B$
+przenosimy przez $\Box$ i łączymy klasyczną
+eliminacją alternatywy. Analogicznie z implikacji
+$A\wedge B\to A$ i $A\wedge B\to B$ przez
+monotoniczność $\Diamond$ otrzymujemy implikację
+dla możliwości koniunkcji.
+Ostatnie dwie równoważności wynikają z definicji
+$\Diamond$, klasycznej podwójnej negacji i
+zastępowania równoważników pod $\Box$.
+\end{proof}
+Indukcja po liczbie członów rozszerza prawo
+konieczności koniunkcji na dowolną skończoną
+rodzinę formuł, a prawo możliwości alternatywy
+na dowolną skończoną alternatywę.
+Przypadki pustych rodzin to odpowiednio
+$\Box\top$ i $\neg\Diamond\bot$.
+
+\begin{stwierdzenie}[Modalny modus ponens]
+\label{prop:ncl-modal-mixed-mp}
+W każdej normalnej logice modalnej zachodzi
+\[
+ \vdash_L\Box(A\to B)\to(\Diamond A\to\Diamond B).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Z tautologii $(A\to B)\to(\neg B\to\neg A)$
+i monotoniczności $\Box$ otrzymujemy
+$\Box(A\to B)\to\Box(\neg B\to\neg A)$.
+Schemat K daje
+$\Box(\neg B\to\neg A)\to
+(\Box\neg B\to\Box\neg A)$.
+Składamy obie implikacje i stosujemy klasyczną
+kontrapozycję do implikacji w następniku.
+Wynik to
+$\Box(A\to B)\to
+(\neg\Box\neg A\to\neg\Box\neg B)$.
+\end{proof}
+
+\section{Podstawowe rozszerzenia aksjomatyczne}
+
+\begin{definicja}[Schematy D, T, B, 4 i 5]
+\label{def:ncl-modal-axiom-schemes}
+Rozważamy następujące schematy, w których $A$
+jest dowolną formułą modalną:
+\[
+\begin{array}{c|l}
+ \mathrm D&\Box A\to\Diamond A\\
+ \mathrm T&\Box A\to A\\
+ \mathrm B&A\to\Box\Diamond A\\
+ 4&\Box A\to\Box\Box A\\
+ 5&\Diamond A\to\Box\Diamond A.
+\end{array}
+\]
+Definiujemy logiki
+\[
+\begin{aligned}
+ \mathrm{KD}&=\mathrm K+\mathrm D,&
+ \mathrm T&=\mathrm K+\mathrm T,\\
+ \mathrm{KB}&=\mathrm K+\mathrm B,&
+ \mathrm{K4}&=\mathrm K+4,\\
+ \mathrm{K5}&=\mathrm K+5,&
+ \mathrm B&=\mathrm K+\mathrm T+\mathrm B,\\
+ \mathrm{S4}&=\mathrm K+\mathrm T+4,&
+ \mathrm{S5}&=\mathrm K+\mathrm T+5.
+\end{aligned}
+\]
+Po prawej stronie symbole D, T, B, 4, 5 oznaczają
+schematy; po lewej nazwy systemów. Oznaczenia
+$\mathrm{KB}$ i $\mathrm B$ rozróżniamy: drugi
+system ma dodatkowo schemat T.
+\end{definicja}
+
+Schemat D wyklucza konieczność zdania wraz
+z niemożliwością tego zdania.
+Schemat T wyraża faktywność konieczności.
+Schemat B pozwala z prawdziwości zdania przejść
+do konieczności jego możliwości.
+Schemat 4 wyraża przejście od konieczności
+do konieczności konieczności, a schemat 5
+od możliwości do konieczności możliwości.
+Są to intuicje syntaktyczne; ich dokładne znaczenie
+w kategoriach własności relacji dostępności
+zostanie udowodnione w rozdziale o semantyce Kripkego.
+
+\begin{stwierdzenie}[Dualne postacie schematów]
+\label{prop:ncl-modal-dual-axioms}
+W obecności K następujące pary schematów
+wyznaczają te same rozszerzenia:
+\[
+\begin{array}{c|l}
+ \mathrm D & \neg\Box\bot\\
+ \mathrm T & A\to\Diamond A\\
+ \mathrm B & \Diamond\Box A\to A\\
+ 4 & \Diamond\Diamond A\to\Diamond A\\
+ 5 & \Diamond\Box A\to\Box A .
+\end{array}
+\]
+\end{stwierdzenie}
+\begin{proof}
+D dla $A=\bot$ daje $\Box\bot\to\Diamond\bot$,
+a ponieważ $\neg\Diamond\bot$ jest twierdzeniem K,
+otrzymujemy $\neg\Box\bot$.
+Odwrotnie, z prawa konieczności koniunkcji i
+zastępowania równoważników mamy
+$(\Box A\wedge\Box\neg A)\to\Box\bot$.
+Z $\neg\Box\bot$ wynika więc
+$\Box A\to\neg\Box\neg A$, czyli D.
+Dla T podstawiamy $\neg A$ do schematu
+$\Box A\to A$, stosujemy kontrapozycję i
+eliminujemy podwójną negację, otrzymując
+$A\to\Diamond A$. Te same operacje zastosowane
+do postaci dualnej dają T.
+Dla B z instancji
+$\neg A\to\Box\Diamond\neg A$ przez
+kontrapozycję otrzymujemy
+$\neg\Box\Diamond\neg A\to A$ po uproszczeniu
+podwójnej negacji. Z definicji i praw dualności
+$\neg\Box\Diamond\neg A$ jest równoważne
+$\Diamond\Box A$. Odwrócenie argumentu
+daje pierwotny schemat B.
+Dla 4 kontrapozycja instancji
+$\Box\neg A\to\Box\Box\neg A$ daje
+$\Diamond\Diamond A\to\Diamond A$
+po zastosowaniu praw dualności.
+Dla 5 analogicznie kontrapozycja instancji
+$\Diamond\neg A\to\Box\Diamond\neg A$
+daje $\Diamond\Box A\to\Box A$.
+W dwóch ostatnich przypadkach ponowne
+podstawienie negacji i kontrapozycja dają
+schematy wyjściowe, ponieważ prawa dualności
+oraz podwójnej negacji są dowodliwe już w K.
+\end{proof}
+
+\begin{wniosek}[Faktywność pociąga D]
+\label{cor:ncl-modal-T-implies-D}
+Każda normalna logika zawierająca schemat T
+zawiera także D.
+\end{wniosek}
+\begin{proof}
+Z T mamy $\Box A\to A$, a z postaci dualnej T
+ze Stwierdzenia~\ref{prop:ncl-modal-dual-axioms}
+mamy $A\to\Diamond A$. Składamy implikacje,
+korzystając z klasycznej tautologii przechodniości
+implikacji i modus ponens.
+\end{proof}
