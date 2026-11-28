@@ -489,7 +489,7 @@ with sync_playwright() as pw:
     source = (ROOT.parent / 'chapters/pl/mathematical_analysis_ii/30-calki-wielokrotne-i-zamiana-zmiennych.tex').read_text(encoding='utf-8')
     page.evaluate("latex => renderSimplified(latex, 'AM2-30')", source)
     hosts = box.locator('.atlas-plot-host')
-    assert hosts.count() == 2
+    assert hosts.count() == 3
     for i, identifier in enumerate(('am2_30_sections.html', 'am2_30_jacobian.html')):
         host = hosts.nth(i)
         host.locator('button').click()
@@ -523,6 +523,38 @@ with sync_playwright() as pw:
             assert check['error'] < 1e-10 and check['steps'] == 21, check
         host.locator('button').click()
         assert iframe.count() == 0
+    host = hosts.nth(2)
+    host.locator('button').click()
+    iframe = host.locator('iframe')
+    assert iframe.get_attribute('sandbox') == 'allow-scripts'
+    assert iframe.get_attribute('src').endswith('am2_30_curvilinear_cells.html')
+    plot = host.frame_locator('iframe').locator('#plot[data-ready=true]')
+    plot.wait_for(timeout=60000)
+    check = plot.evaluate("""el => {
+        const ds=[.05,.075,.1,.15,.2,.3,.4],r=1.2,p=.65;
+        let error=0,edges=true;
+        for(let j=0;j<ds.length;j++){
+            const d=ds[j];
+            for(let k=0;k<2;k++){
+                const m=el.data[4*j+2*k],e=el.data[4*j+2*k+1];
+                const exact=k?((r+d)**3-r**3)/3*(Math.cos(p)-Math.cos(p+d))*d:
+                    d*d*(r*d+d*d/2);
+                let vol=0;
+                for(let l=0;l<m.i.length;l++){
+                    const a=m.i[l],b=m.j[l],c=m.k[l];
+                    vol+=(m.x[a]*(m.y[b]*m.z[c]-m.z[b]*m.y[c])
+                        +m.y[a]*(m.z[b]*m.x[c]-m.x[b]*m.z[c])
+                        +m.z[a]*(m.x[b]*m.y[c]-m.y[b]*m.x[c]))/6;
+                }
+                error=Math.max(error,Math.abs(vol/exact-1));
+                edges=edges&&e.x.filter(x=>x===null).length===12&&m.i.length===3072;
+            }
+        }
+        return {error,edges,steps:el.layout.sliders[0].steps.length};
+    }""")
+    assert check['error'] < .003 and check['edges'] and check['steps'] == 7, check
+    host.locator('button').click()
+    assert iframe.count() == 0
     # Real graph chapters: every figure must decode, not merely insert a placeholder.
     for module, filename, expected in (
         ('GW-01', '01-podstawy-teorii-grafow.tex', 7),
