@@ -53,13 +53,14 @@ $M'(t)=\E[Ze^{tZ}]$ oraz $M''(t)=\E[Z^2e^{tZ}]$. Obliczamy
 $h'(t)=M'(t)/M(t)$ oraz
 $h''(t)=M''(t)/M(t)-(M'(t)/M(t))^2$.
 Dla każdego $t$ wyrażenie $h''(t)$ jest
-wariancją $Z$ względem nowej miary
+wariancją $Z$ względem nowej miary (przechylenie wykładnicze)
 $\dd\Prob_t=e^{tZ}\dd\Prob/M(t)$. Nowa miara jest
 probabilistyczna, ponieważ jej gęstość jest nieujemna
 i całkuje się do jedności. Ponadto $\Prob_t\ll\Prob$,
 więc $a\leq Z\leq b$ również $\Prob_t$-prawie na pewno.
 Rzeczywiście $M'(t)/M(t)=\E_t Z$ oraz
-$M''(t)/M(t)=\E_t Z^2$.
+$M''(t)/M(t)=\E_t Z^2$, gdzie $\E_t$ oznacza
+wartość oczekiwaną względem $\Prob_t$.
 Poprzedni lemat daje więc
 $0\leq h''(t)\leq(b-a)^2/4$ dla wszystkich $t$.
 
@@ -122,6 +123,38 @@ $n\geq\log(2/\delta)/(2\varepsilon^2)$.
 Jest to gwarancja nieasymptotyczna, ważna dla
 każdego $n$, choć nie zawsze ostra.
 \end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=11cm,y=4.2cm,>=Latex]
+\draw[->] (0,0)--(.44,0) node[right] {$\varepsilon$};
+\draw[->] (0,0)--(0,1.08) node[above] {ograniczenie};
+\foreach \x/\lab in {.1/{0{,}1},.2/{0{,}2},.3/{0{,}3},.4/{0{,}4}}
+  {\draw (\x,0)--++(0,-.018) node[below] {$\lab$};}
+\foreach \y/\lab in {.25/{0{,}25},.5/{0{,}5},.75/{0{,}75},1/{1}}
+  {\draw[gray!20] (0,\y)--(.4,\y);
+   \draw (0,\y)--++(-.005,0) node[left] {$\lab$};}
+\draw[blue!75!black,very thick,domain=0:.4,samples=121,smooth]
+  plot (\x,{min(1,2*exp(-40*\x*\x))});
+\draw[teal!75!black,very thick,dashed,domain=0:.4,samples=121,smooth]
+  plot (\x,{min(1,2*exp(-100*\x*\x))});
+\draw[orange!85!black,very thick,dashdotted,domain=0:.4,samples=121,smooth]
+  plot (\x,{min(1,2*exp(-200*\x*\x))});
+\draw[blue!75!black,very thick] (.29,.91)--(.325,.91)
+  node[right,black] {$n=20$};
+\draw[teal!75!black,very thick,dashed] (.29,.80)--(.325,.80)
+  node[right,black] {$n=50$};
+\draw[orange!85!black,very thick,dashdotted] (.29,.69)--(.325,.69)
+  node[right,black] {$n=100$};
+\end{tikzpicture}
+\caption{Dwustronne ograniczenie Hoeffdinga
+$\min(1,2e^{-2n\varepsilon^2})$ dla średniej prób
+Bernoulliego. Krzywe są ograniczeniami górnymi
+prawdopodobieństwa odchylenia, a nie dokładnymi
+prawdopodobieństwami. Przy ustalonym $\varepsilon>0$
+ograniczenie maleje ze wzrostem $n$.}
+\label{fig:rp1-11-hoeffding}
+\end{figure}
 
 \begin{twierdzenie}[Prawie pewna szybkość stabilizacji średnich]
 Niech $X_1,X_2,\ldots$ będą niezależnymi rzeczywistymi
@@ -222,6 +255,8 @@ więc $|e^{iu}-1-iu|\leq u^2/2$. Odejmując
 odpowiedni wyraz drugiego rzędu i korzystając
 z $|e^{isu}-1|\leq s|u|$, otrzymujemy
 $|e^{iu}-1-iu+u^2/2|\leq |u|^3/6$.
+Użyta nierówność wynika z
+$e^{isu}-1=iu\int_0^s e^{ivu}\,\dd\lambda_1(v)$.
 Z pierwszego oszacowania i nierówności trójkąta
 ten sam moduł jest nie większy niż $u^2$.
 Łącznie
@@ -247,7 +282,7 @@ i wykorzystaniu sumy wariancji równej jeden,
 \[
 \limsup_n\sum_k|r_{n,k}(t)|\leq C_t\delta.
 \]
-Przechodzimy z $\delta\downarrow0$, uzyskując
+Przechodzimy do granicy przy $\delta\downarrow0$, uzyskując
 $\sum_k|r_{n,k}(t)|\to0$, a więc
 $\sum_k(\psi_{n,k}(t)-1)\to-t^2/2$.
 
@@ -285,8 +320,8 @@ ciągła w zerze. Twierdzenie Lévy'ego
 
 \begin{wniosek}[Warunek Lapunowa]
 Przy założeniach schematu trójkątnego załóżmy,
-że dla pewnego $\delta>0$ istnieją wszystkie momenty
-$\E|Y_{n,k}|^{2+\delta}$ i
+że dla pewnego $\delta>0$ wszystkie momenty
+$\E|Y_{n,k}|^{2+\delta}$ są skończone i
 \[
 \frac{1}{s_n^{2+\delta}}
 \sum_{k=1}^{k_n}\E|Y_{n,k}|^{2+\delta}
@@ -308,7 +343,7 @@ więc stosujemy poprzednie CTG.
 
 \begin{przyklad}[Zmienne niezależne, ale niejednakowo rozłożone]
 Niech $X_k$ będą niezależne, $\E X_k=0$,
-$|X_k|\leq C$ i
+$|X_k|\leq C$ p.n. dla pewnej stałej $C>0$ i
 $s_n^2=\sum_{k=1}^n\Var(X_k)$.
 Jeśli $s_n\to\infty$, to dla ustalonego
 $\varepsilon>0$ od pewnego $n$ mamy
@@ -384,8 +419,8 @@ Po pomnożeniu przez $a_n$ mamy
 a_n(g(T_n)-g(\theta))
 =[a_n(T_n-\theta)]\,[g'(\theta)+r(T_n)].
 \]
-Twierdzenie Slutsky'ego daje granicę
-$Z\,g'(\theta)$, zgodnie z tezą.
+Twierdzenie Slutsky'ego (rozdział~\ref{ch:convergence})
+daje granicę $Z\,g'(\theta)$, zgodnie z tezą.
 \end{proof}
 
 \begin{wniosek}[Metoda delty drugiego rzędu]
@@ -406,8 +441,10 @@ różniczkowalności $g'$ w $\theta$) mamy
 $g(x)-g(\theta)=\frac12g''(\theta)(x-\theta)^2
 +o((x-\theta)^2)$. Ponieważ $T_n\to\theta$
 według prawdopodobieństwa, iloraz reszty przez
-$(T_n-\theta)^2$ (z wartością zero w punkcie
-równości) dąży do zera według prawdopodobieństwa.
+$(T_n-\theta)^2$ (z wartością zero na zdarzeniu
+$\{T_n=\theta\}$) dąży do zera według prawdopodobieństwa
+na mocy tego samego argumentu co w dowodzie
+metody delty pierwszego rzędu.
 Zatem
 $a_n^2(g(T_n)-g(\theta))
 =(\frac12g''(\theta)+o_{\Prob}(1))
@@ -497,8 +534,14 @@ studentyzowanej zachodzi dla wielu rozkładów
 z drugim momentem. Nie jest tym samym co
 \emph{dokładny} rozkład Studenta, który
 wynika z dodatkowych własności próby normalnej.
-Rozróżnienie to jest ważne przy przejściu
-do statystyki matematycznej w tomie IV.
+Przy zwykłej wariancji z próby
+$S_n^2=(n-1)^{-1}\sum_{k=1}^n(X_k-\overline X_n)^2$
+mamy $S_n^2=nV_n/(n-1)$, więc zastąpienie $V_n$
+przez $S_n^2$ nie zmienia granicy asymptotycznej.
+Dokładny rozkład Studenta dla próby normalnej dotyczy
+ilorazu z $S_n$, nie z $\sqrt{V_n}$. Rozróżnienie to
+jest ważne przy przejściu do statystyki matematycznej
+w tomie IV.
 \end{uwaga}
 
 \section{Jednostajna zbieżność dystrybuanty empirycznej}
@@ -627,9 +670,48 @@ równe jeden. Dowodzi to tezy na pierwotnej przestrzeni
 probabilistycznej.
 \end{proof}
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=4.6cm,y=4.6cm,>=Latex]
+\foreach \shift/\lab in {0cm/5,6.808cm/20}{
+  \begin{scope}[xshift=\shift]
+    \draw[->] (0,0)--(1.09,0) node[right] {$t$};
+    \draw[->] (0,0)--(0,1.09) node[above] {$H_n(t)$};
+    \foreach \x/\tick in {.5/{0{,}5},1/1}
+      {\draw[gray!20] (\x,0)--(\x,1);
+       \draw (\x,0)--++(0,-.018) node[below] {$\tick$};}
+    \foreach \y/\tick in {.5/{0{,}5},1/1}
+      {\draw[gray!20] (0,\y)--(1,\y);
+       \draw (0,\y)--++(-.018,0) node[left] {$\tick$};}
+    \draw[gray!85,dashed,thick] (0,0)--(1,1);
+    \node[above] at (.5,1.13) {$n=\lab$};
+  \end{scope}
+}
+\draw[blue!75!black,very thick] (0,0)--(0.12,0)--(0.12,0.2)--(0.34,0.2)--(0.34,0.4)--(0.47,0.4)--(0.47,0.6)--(0.78,0.6)--(0.78,0.8)--(0.91,0.8)--(0.91,1)--(1,1);
+\begin{scope}[xshift=6.808cm]
+\draw[blue!75!black,very thick] (0,0)--(0.03,0)--(0.03,0.05)--(0.08,0.05)--(0.08,0.1)--(0.12,0.1)--(0.12,0.15)--(0.18,0.15)--(0.18,0.2)--(0.24,0.2)--(0.24,0.25)--(0.29,0.25)--(0.29,0.3)--(0.34,0.3)--(0.34,0.35)--(0.39,0.35)--(0.39,0.4)--(0.43,0.4)--(0.43,0.45)--(0.47,0.45)--(0.47,0.5)--(0.51,0.5)--(0.51,0.55)--(0.55,0.55)--(0.55,0.6)--(0.62,0.6)--(0.62,0.65)--(0.66,0.65)--(0.66,0.7)--(0.72,0.7)--(0.72,0.75)--(0.78,0.75)--(0.78,0.8)--(0.85,0.8)--(0.85,0.85)--(0.91,0.85)--(0.91,0.9)--(0.95,0.9)--(0.95,0.95)--(0.98,0.95)--(0.98,1)--(1,1);
+\end{scope}
+\draw[blue!75!black,very thick] (.15,-.20)--(.27,-.20)
+node[right,black] {empiryczna};
+\draw[gray!85,dashed,thick] (1.48,-.20)--(1.60,-.20)
+node[right,black] {teoretyczna $F(t)=t$};
+\end{tikzpicture}
+\caption{Dystrybuanty empiryczne rozkładu jednostajnego
+na $(0,1)$ dla dwóch zagnieżdżonych prób ilustracyjnych:
+pierwszych pięciu oraz wszystkich dwudziestu obserwacji.
+Błąd jednostajny w tym przykładzie wynosi odpowiednio
+$0{,}18$ oraz $0{,}06$.
+Pionowe odcinki są konwencją graficzną oznaczającą skoki;
+wartość w punkcie skoku jest wartością prawostronną.
+Twierdzenie Glivenki--Cantellego nie orzeka, że błąd
+maleje monotonicznie dla każdej realizacji.}
+\label{fig:rp1-11-empirical-cdf}
+\end{figure}
+
 \begin{przyklad}[Dystrybuanta empiryczna próby Bernoulliego]
 Niech $X_k\sim\operatorname{Bernoulli}(p)$ będą
-niezależne. Dla $x<0$ obie dystrybuanty są zerowe,
+niezależne i przyjmują wartości w $\{0,1\}$ (z dokładnością
+do wspólnego zbioru zerowego). Dla $x<0$ obie dystrybuanty są zerowe,
 a dla $x\geq1$ obie są jedynką. Na $0\leq x<1$
 mamy $F_n(x)=1-\overline X_n$ oraz $F(x)=1-p$.
 Stąd
