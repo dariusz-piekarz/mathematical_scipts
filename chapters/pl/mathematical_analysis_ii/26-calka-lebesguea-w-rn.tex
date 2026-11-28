@@ -18,6 +18,111 @@ W całej dalszej części rozpatrujemy funkcje skalarne;
 pola wektorowe o skończenie wielu współrzędnych
 pojawią się w zastosowaniach geometrycznych.
 
+\section{Intuicja: grupowanie punktów według wartości funkcji}
+
+W całce Riemanna dzieliliśmy prostokąt
+na coraz mniejsze komórki i na każdej
+przybliżaliśmy funkcję stałą. Możemy jednak
+odwrócić kolejność tych czynności: najpierw
+ustalić przedziały wartości funkcji, a potem
+zmierzyć zbiory punktów, w których funkcja
+przyjmuje wartości z danego przedziału.
+Zbiory te nie muszą być prostokątami,
+spójne ani mieć gładkiego brzegu.
+
+Niech $A\subseteq\R^n$ będzie mierzalny,
+a $f:A\to[0,\infty)$ mierzalna.
+Dla przykładu wybierzmy krok wysokości
+$h>0$ i zbiory
+\[
+ A_j=\{x\in A:jh\le f(x)<(j+1)h\},
+ \qquad j=0,1,\ldots.
+\]
+Na $A_j$ funkcję przybliżamy od dołu
+wartością $jh$. Wkład tej grupy wynosi
+$jh\lambda_n(A_j)$ dla $j\ge1$;
+grupa $A_0$ wnosi zero, także gdy ma
+nieskończoną miarę. W definicji całki
+będziemy używać skończonych funkcji prostych.
+Dla funkcji nieograniczonej najpierw
+ograniczymy wysokość, a następnie
+będziemy zwiększać to ograniczenie.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=4.5cm,y=3.0cm,>=stealth]
+ \begin{scope}
+  \fill[blue!12] (0,0) rectangle (.25,.4375);
+  \fill[blue!12] (.25,0) rectangle (.5,.75);
+  \fill[blue!12] (.5,0) rectangle (.75,.9375);
+  \fill[blue!12] (.75,0) rectangle (1,1);
+  \foreach \u/\v/\h in {0/.25/.4375,.25/.5/.75,.5/.75/.9375,.75/1/1}{
+   \draw[blue!65!black] (\u,0) rectangle (\v,\h);
+  }
+  \draw[blue!85!black,very thick,domain=0:1,samples=61]
+    plot (\x,{2*\x-\x*\x});
+  \draw[->] (-.05,0)--(1.13,0) node[right] {$x$};
+  \draw[->] (0,-.04)--(0,1.14) node[above] {$f(x)$};
+  \node[below] at (0,0) {$0$};
+  \node[below] at (1,0) {$1$};
+  \node[above] at (.5,1.18) {\small Podział dziedziny};
+ \end{scope}
+ \begin{scope}[xshift=6.3cm]
+  \foreach \j/\col in {1/20,2/35,3/55}{
+    \pgfmathsetmacro{\u}{1-sqrt(1-\j/4)}
+    \pgfmathsetmacro{\v}{1-sqrt(1-(\j+1)/4)}
+    \filldraw[fill=teal!\col,draw=teal!70!black]
+     (\u,0) rectangle (\v,{\j/4});
+  }
+  \draw[teal!80!black,very thick,domain=0:1,samples=61]
+   plot (\x,{2*\x-\x*\x});
+  \foreach \j in {1,2,3,4}{
+   \pgfmathsetmacro{\u}{1-sqrt(1-\j/4)}
+   \draw[gray,densely dashed] (0,{\j/4})--(\u,{\j/4});
+   \draw[gray,densely dashed] (\u,{\j/4})--(\u,0);
+  }
+  \draw[->] (-.05,0)--(1.13,0) node[right] {$x$};
+  \draw[->] (0,-.04)--(0,1.14) node[above] {$f(x)$};
+  \node[below] at (0,0) {$0$};
+  \node[below] at (1,0) {$1$};
+  \node[above] at (.5,1.18) {\small Podział wartości};
+ \end{scope}
+\end{tikzpicture}
+\caption{Dwa sposoby przybliżania funkcji
+$f(x)=2x-x^2$ na $[0,1]$.
+Po lewej komórki dziedziny i wysokości
+odpowiadające górnej sumie Darboux; po prawej przedziały wartości
+o długości $1/4$ i odpowiadające im zbiory
+w dziedzinie. Prawy rysunek ilustruje
+przybliżenie funkcją prostą od dołu;
+samotny punkt $x=1$ nie wpływa na pole.}
+\label{ma2:fig:lebesgue-value-partition}
+\end{figure}
+
+Drugi sposób nie oznacza, że całka Lebesgue'a
+jest definiowana przez geometryczne poziomice
+gładkich funkcji. Wymaga jedynie mierzalności
+przeciwobrazów przedziałów. Może więc
+obejmować funkcje o gęstych zbiorach
+nieciągłości. Przykładowo funkcja
+charakterystyczna liczb wymiernych na
+$[0,1]$ ma tylko dwie wartości: $0$ i $1$.
+Zbiór, na którym przyjmuje $1$, jest
+przeliczalny i ma miarę zero, dlatego
+całka Lebesgue'a wynosi zero.
+Sumy Darboux nie rozpoznają tego faktu:
+w każdym niezdegenerowanym przedziale
+infimum wynosi $0$, a supremum $1$.
+
+Warto odróżnić grupowanie według rozłącznych
+przedziałów wartości od wzoru warstwowego,
+w którym mierzymy nakładające się zbiory
+$\{f>t\}$ dla kolejnych wysokości $t$.
+Oba podejścia prowadzą do tej samej
+całki, lecz są innymi sposobami jej obliczania.
+Wzór warstwowy uzasadnimy w twierdzeniu
+\ref{ma2:thm:lebesgue-layer-cake}.
+
 \section{Miara i całka na zbiorach w $\R^n$}
 
 Niech $n\ge1$ i niech $\lambda_n$ oznacza
@@ -521,6 +626,279 @@ Pomarańczowy przekrój na wysokości $t=0{,}4$ ma bok $1-t$
 i pole $(1-t)^2$.}
 \label{ma2:fig:lebesgue-cube-layer}
 \end{figure}
+
+\section{Od miary Lebesgue'a do miary Hausdorffa}
+
+Konstrukcja całki Lebesgue'a nie wymaga,
+aby miara była miarą objętości w $\R^n$.
+Dla dowolnej przestrzeni z miarą
+$(X,\mathcal A,\mu)$ całkę nieujemnej
+funkcji prostej
+$s=\sum_{j=1}^m c_j\chi_{A_j}$, gdzie
+$A_j$ są mierzalne i parami rozłączne,
+a $c_j>0$, określamy przez
+\[
+ \int_X s\,\mathrm d\mu=\sum_{j=1}^m c_j\mu(A_j).
+\]
+Całka dowolnej mierzalnej $f\ge0$ jest
+supremum całek takich funkcji prostych
+$s\le f$, z uwzględnieniem funkcji zerowej.
+Dla funkcji rzeczywistych całkowalnych
+stosujemy rozkład na część dodatnią i ujemną.
+Własności i twierdzenia graniczne
+z poprzednich sekcji mają ogólne dowody
+w teorii miary i całki
+(\atlasref{ME-07::ch:calkowanie-lebesgue}{ME 07}
+oraz \atlasref{ME-08::thm:mct}{ME 08}).
+Nie wymagają skończoności ani
+sigma-skończoności miary.
+
+Zmiana miary zmienia geometryczne znaczenie
+lokalnych wag. Dla jednego i tego samego
+zbioru możemy mierzyć liczbę punktów,
+długość, pole lub objętość. Przykładowo
+odcinek jednostkowy w $\R^3$ ma długość $1$,
+choć jego trójwymiarowa objętość jest zerowa.
+Do całkowania po powierzchni nie wystarcza
+więc ograniczenie miary $\lambda_3$.
+
+\begin{definicja}[Miara Hausdorffa]
+\label{ma2:def:lebesgue-hausdorff}
+Niech $1\le k\le n$ będzie liczbą całkowitą.
+Dla $E\subseteq\R^n$ i $\delta>0$ połóżmy
+\[
+ \mathcal H^k_\delta(E)=
+ \inf\left\{c_k\sum_{j=1}^\infty
+ (\operatorname{diam}U_j)^k:
+ E\subseteq\bigcup_{j=1}^\infty U_j,\ 
+ \operatorname{diam}U_j\le\delta\right\},
+\]
+gdzie pokrycia mogą składać się z dowolnych
+podzbiorów $\R^n$. Średnica zbioru to
+supremum odległości jego punktów
+(dla zbioru pustego przyjmujemy zero).
+Definiujemy
+\[
+ \mathcal H^k(E)=\lim_{\delta\downarrow0}
+ \mathcal H^k_\delta(E).
+\]
+Wybieramy dodatnią stałą $c_k$ w taki sposób,
+aby $\mathcal H^k$ na $\R^k$ pokrywała się
+z miarą Lebesgue'a na zbiorach borelowskich.
+Istnienie takiej normalizacji wynika z
+\atlasref{ME-26::thm:hausdorff-calibration-26}{twierdzenia o kalibracji}.
+Dla $k=1$ mamy $c_1=1$.
+Przy $k=0$ stosujemy miarę liczącą
+$\mathcal H^0$, tj. liczność zbioru
+dla zbiorów skończonych i $+\infty$
+dla zbiorów nieskończonych.
+\end{definicja}
+Jest to specjalizacja konstrukcji
+\atlasref{ME-26::def:hausdorff-measure-26}{miary Hausdorffa}.
+Granica istnieje, ponieważ zmniejszenie
+$\delta$ ogranicza klasę dopuszczalnych
+pokryć, a zatem nie zmniejsza infimum.
+Każdy zbiór borelowski jest mierzalny
+w sensie Carathéodory'ego względem
+$\mathcal H^k$, a na pełnym sigma-ciele
+Carathéodory'ego miara jest zupełna
+(\atlasref{ME-26::thm:hausdorff-borel-26}{twierdzenie o mierzalności}).
+Miarę na borelowskim zbiorze $M$
+rozumiemy jako ograniczenie $\mathcal H^k$
+do $M$, z odpowiednim sigma-ciałem.
+W szczególności nie zakładamy, że
+$\mathcal H^k$ jest sigma-skończona na całej
+przestrzeni $\R^n$ przy $k<n$.
+
+\paragraph{Intuicja potęgi średnicy.}
+Jeżeli odcinek o długości $1$ podzielimy
+na $m$ równych odcinków, suma ich średnic
+wyniesie $1$, a suma kwadratów średnic
+$1/m$. Dla kwadratu jednostkowego
+podział na $m^2$ małych kwadratów
+daje średnice $\sqrt2/m$; suma kwadratów
+średnic wynosi $2$, natomiast suma
+sześcianów średnic $2\sqrt2/m$.
+Te konkretne pokrycia pokazują, dlaczego
+potęga większa od wymiaru geometrycznego
+może prowadzić do miary zerowej.
+Nie dają jednak same z siebie dolnego
+oszacowania miary we właściwym wymiarze:
+do tego potrzebne jest infimum po
+wszystkich dopuszczalnych pokryciach
+i twierdzenie o kalibracji.
+
+\begin{stwierdzenie}[Całkowanie na płaszczyznach afinicznych]
+\label{ma2:prop:lebesgue-hausdorff-affine}
+Niech $1\le k\le n$ i niech
+$T:\R^k\to P\subseteq\R^n$ będzie
+izometrią afiniczną na $k$-wymiarową
+płaszczyznę afiniczną $P$.
+Dla borelowskiego $E\subseteq P$
+i nieujemnej borelowskiej funkcji $f$ na $E$
+mamy
+\[
+ \int_E f(x)\,\mathrm d\mathcal H^k(x)
+ =\int_{T^{-1}(E)}f(T(u))\,\mathrm d\lambda_k(u).
+\]
+Dla borelowskiej funkcji rzeczywistej
+równość zachodzi przy bezwzględnej
+całkowalności jednej ze stron;
+wówczas obie są całkowalne.
+Jeżeli $k<n$, to $\lambda_n(P)=0$.
+\end{stwierdzenie}
+Dowód znajduje się w
+\atlasref{ME-26::it:cor:hausdorff-affine-integration}{teorii miary}.
+Istotą wyniku jest zachowanie średnic
+przez izometrię i kalibracja miary
+w przestrzeni parametrów.
+
+\begin{przyklad}[Ten sam wzór, różne miary]
+\label{ma2:ex:lebesgue-hausdorff-dimensions}
+Na odcinku $L=[0,1]\times\{0\}\times\{0\}$
+i kwadracie $S=[0,1]^2\times\{0\}$
+rozpatrzmy funkcję $f(x,y,z)=1+x+y$.
+Na mocy \ref{ma2:prop:lebesgue-hausdorff-affine}
+\[
+ \begin{aligned}
+ \int_L f\,\mathrm d\mathcal H^1
+ &=\int_{[0,1]}(1+t)\,\mathrm d\lambda_1(t)
+ =\frac32,\\
+ \int_S f\,\mathrm d\mathcal H^2
+ &=\int_{[0,1]^2}(1+u+v)\,\mathrm d\lambda_2(u,v)
+ =2.
+ \end{aligned}
+\]
+Drugą wartość można uzyskać przez liniowość
+i symetrię względem $u\mapsto1-u$ oraz
+$v\mapsto1-v$, lub z granic sum środkowych:
+średnia współrzędnych znaczników w każdym
+kierunku wynosi $1/2$, a suma pól komórek $1$.
+Obie całki względem $\lambda_3$
+po tych zbiorach wynoszą zero.
+Odpowiedni wybór miary jest zatem
+częścią definicji całkowanej wielkości.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(1.5cm,-.4cm)},y={(-.85cm,-.5cm)},z={(0cm,1.5cm)},>=stealth]
+ \begin{scope}
+  \draw[->,gray] (0,0,0)--(1.3,0,0) node[right] {$x$};
+  \draw[->,gray] (0,0,0)--(0,1.2,0) node[left] {$y$};
+  \draw[->,gray] (0,0,0)--(0,0,1.15) node[above] {$z$};
+  \draw[blue!80!black,line width=2.5pt] (0,0,0)--(1,0,0);
+  \foreach \u in {0,.25,.5,.75,1}
+   \fill[blue!80!black] (\u,0,0) circle (1.3pt);
+  \node at (.3,0,-.65) {$\mathcal H^1(L)=1$};
+ \end{scope}
+ \begin{scope}[xshift=4.2cm]
+  \filldraw[fill=blue!25,draw=blue!70!black]
+   (0,0,0)--(1,0,0)--(1,1,0)--(0,1,0)--cycle;
+  \foreach \u in {.25,.5,.75}{
+   \draw[blue!55] (\u,0,0)--(\u,1,0);
+   \draw[blue!55] (0,\u,0)--(1,\u,0);
+  }
+  \draw[->,gray] (0,0,0)--(1.3,0,0) node[right] {$x$};
+  \draw[->,gray] (0,0,0)--(0,1.2,0) node[left] {$y$};
+  \draw[->,gray] (0,0,0)--(0,0,1.15) node[above] {$z$};
+  \node at (.3,0,-.65) {$\mathcal H^2(S)=1$};
+ \end{scope}
+ \begin{scope}[xshift=8.4cm]
+  \filldraw[fill=blue!35,draw=blue!75!black]
+   (0,1,0)--(1,1,0)--(1,1,1)--(0,1,1)--cycle;
+  \filldraw[fill=blue!55,draw=blue!75!black]
+   (1,0,0)--(1,1,0)--(1,1,1)--(1,0,1)--cycle;
+  \filldraw[fill=blue!18,draw=blue!75!black]
+   (0,0,1)--(1,0,1)--(1,1,1)--(0,1,1)--cycle;
+  \node at (.3,0,-.65) {$\mathcal H^3(Q)=1$};
+ \end{scope}
+\end{tikzpicture}
+\caption{Odcinek, kwadrat i sześcian jednostkowy
+w $\R^3$. Właściwe miary Hausdorffa mają wartość
+$1$, mimo że dwa pierwsze zbiory mają
+zerową trójwymiarową miarę Lebesgue'a.}
+\label{ma2:fig:lebesgue-hausdorff-dimensions}
+\end{figure}
+
+W przypadku zakrzywionej podrozmaitości
+parametryzacja na ogół nie zachowuje
+odległości. Pojawia się wtedy mnożnik
+geometryczny wyrażony przez różniczkę
+parametryzacji. Już teraz odnotujmy
+ogólną postać potrzebnego wyniku.
+
+\begin{twierdzenie}[Wzór parametryczny dla miary Hausdorffa]
+\label{ma2:thm:lebesgue-hausdorff-parametric}
+Niech $U\subseteq\R^k$ będzie otwarty,
+$1\le k\le n$, a $\varphi:U\to\R^n$
+różnowartościową immersją klasy $C^1$,
+czyli $\operatorname{rank}D\varphi(u)=k$.
+Dla borelowskiego $E\subseteq U$
+i nieujemnej borelowskiej funkcji $f$
+na $\varphi(E)$ zachodzi
+\[
+ \int_{\varphi(E)}f(x)\,\mathrm d\mathcal H^k(x)
+ =\int_E f(\varphi(u))
+ \sqrt{\det(D\varphi(u)^TD\varphi(u))}
+ \,\mathrm d\lambda_k(u).
+\]
+Dla borelowskiej funkcji rzeczywistej
+wzór zachodzi przy bezwzględnej
+całkowalności jednej ze stron.
+\end{twierdzenie}
+\begin{proof}
+Stosujemy ważony wzór pola dla immersji
+\atlasref{ME-28::thm:immersion-area-28}{ME 28}
+do funkcji $f\circ\varphi$ na $E$.
+Różnowartościowość oznacza, że dla
+$x\in\varphi(E)$ suma po włóknie
+zawiera dokładnie jeden składnik, równy
+$f(x)$, a poza $\varphi(E)$ jest zerowa.
+Obraz $\varphi(E)$ jest borelowski:
+immersję można lokalnie przedstawić
+jako wykres nad otwartym zbiorem
+w $\R^k$ po permutacji współrzędnych
+i zastosowaniu twierdzenia o funkcji odwrotnej.
+W przeliczalnym pokryciu takich otoczeń
+obraz borelowskiego fragmentu jest
+borelowskim podzbiorem wykresu,
+który jest borelowski w $\R^n$;
+przeliczalna suma tych obrazów
+jest zatem borelowska.
+Dla funkcji rzeczywistej stosujemy wzór
+najpierw do $|f|$ w celu wykazania
+równoważności całkowalności, a następnie
+do obu części $f^+$ i $f^-$.
+\end{proof}
+
+W rozdziałach o całkach geometrycznych
+wyprowadzimy z tego wyniku następujące
+czynniki, odpowiadające poszczególnym wymiarom:
+\[
+ \begin{array}{c|c}
+ k=1 & \|\varphi'(u)\|_2\\
+ k=2,\ n=3 & \|\partial_1\varphi(u)\times
+                         \partial_2\varphi(u)\|_2\\
+ k=n & |\det D\varphi(u)|
+ \end{array}
+\]
+W pierwszym przypadku macierz Grama ma
+jeden element równy kwadratowi normy.
+W drugim jej wyznacznik to
+$\|\partial_1\varphi\|_2^2\|\partial_2\varphi\|_2^2
+-\langle\partial_1\varphi,\partial_2\varphi\rangle^2$,
+czyli kwadrat normy iloczynu wektorowego.
+W trzecim przypadku korzystamy z
+$\det(A^TA)=(\det A)^2$.
+Wzór dotyczy całki skalarnej względem
+dodatniej miary i nie wymaga orientacji.
+Całki zorientowane, np. praca pola lub
+strumień, wymagają dodatkowych danych;
+nie utożsamiamy ich z całką skalarnej
+gęstości względem $\mathcal H^k$.
+Nieróżnowartościowe parametryzacje
+będą wymagały uwzględnienia krotności.
 
 \section{Przygotowanie do dalszego rachunku całkowego}
 
