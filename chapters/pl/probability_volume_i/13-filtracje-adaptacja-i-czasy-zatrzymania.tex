@@ -9,8 +9,11 @@ informacji.
 W procesie losowym informacja jednak rośnie:
 po każdym kroku poznajemy nowy wynik. \emph{Filtracja}
 porządkuje te kolejne etapy, a warunek adaptacji
-gwarantuje, że proces w chwili $n$ nie odwołuje się
-do przyszłości.
+gwarantuje, że wartość procesu w chwili $n$
+jest mierzalna względem przyjętej informacji
+$\mathcal F_n$. To, czy informacja ta zawiera
+również pewne dane o przyszłości, zależy od
+wyboru filtracji.
 
 \begin{definicja}[Filtracja i proces adaptowany]
 Niech $(\Omega,\mathcal F,\Prob)$ będzie przestrzenią
@@ -27,7 +30,8 @@ względem $(\mathcal F_n)$, jeśli każde $X_n$
 jest $(\mathcal F_n,\mathcal S)$-mierzalne.
 \emph{Naturalna filtracja} procesu to
 $\mathcal F_n^X=\sigma(X_0,\ldots,X_n)$.
-Proces $(H_n)_{n\geq1}$ jest \emph{przewidywalny}
+Proces $(H_n)_{n\geq1}$ o wartościach w ustalonej
+przestrzeni mierzalnej jest \emph{przewidywalny}
 względem $(\mathcal F_n)$, jeśli każde $H_n$
 jest mierzalne względem $\mathcal F_{n-1}$.
 \end{definicja}
@@ -92,7 +96,8 @@ ale nieprzewidywalny względem tej filtracji.
 \begin{przyklad}[Filtracja rozpisana na elementarnych zdarzeniach]
 Wykonujemy dwa niezależne uczciwe rzuty monetą.
 Przestrzeń wyników jest
-$\Omega=\{OO,OR,RO,RR\}$, gdzie pierwsza litera
+$\Omega=\{OO,OR,RO,RR\}$ z $\mathcal F=2^\Omega$,
+gdzie pierwsza litera
 opisuje pierwszy rzut. W chwili $0$ nic nie wiemy:
 $\mathcal F_0=\{\varnothing,\Omega\}$. Po pierwszym
 rzucie rozróżniamy atomy $\{OO,OR\}$ i $\{RO,RR\}$,
@@ -102,6 +107,7 @@ a więc
 \{OO,OR\},\{RO,RR\}\},\qquad
 \mathcal F_2=2^\Omega.
 \]
+Dla $n\geq2$ przyjmujemy $\mathcal F_n=\mathcal F_2$.
 Niech $Y=\chi_{\{OO\}}$ będzie funkcją
 charakterystyczną zdarzenia, że oba rzuty dały orła.
 Każdy wynik ma prawdopodobieństwo $1/4$.
@@ -113,8 +119,37 @@ oraz $\E[Y\mid\mathcal F_2]=Y$.
 Pierwsza prognoza jest stała, druga wykorzystuje wynik
 pierwszego rzutu, a trzecia jest już dokładną
 obserwacją. Pokazuje to, dlaczego filtracja
-to matematyczny model \emph{narastania informacji}.
+to matematyczny model \emph{narastania informacji}
+(por. rysunek~\ref{fig:rp1-13-filtration}).
 \end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,
+  atom/.style={draw,rounded corners=3pt,minimum height=8mm,
+  align=center,font=\small,fill=blue!6,draw=blue!65!black}]
+\node[atom,minimum width=7cm] (a) at (0,0) {$\{OO,OR,RO,RR\}$};
+\node[atom,minimum width=3.1cm] (b) at (-1.9,-1.5) {$\{OO,OR\}$};
+\node[atom,minimum width=3.1cm] (c) at (1.9,-1.5) {$\{RO,RR\}$};
+\foreach \x/\s in {-2.8/OO,-1/OR,1/RO,2.8/RR}
+  \node[atom,minimum width=1.5cm] (\s) at (\x,-3) {$\{\s\}$};
+\draw[->,thick] (a.south)--(b.north);
+\draw[->,thick] (a.south)--(c.north);
+\draw[->] (b.south)--(OO.north);
+\draw[->] (b.south)--(OR.north);
+\draw[->] (c.south)--(RO.north);
+\draw[->] (c.south)--(RR.north);
+\node[anchor=east] at (-4,0) {$\mathcal F_0$};
+\node[anchor=east] at (-4,-1.5) {$\mathcal F_1$};
+\node[anchor=east] at (-4,-3) {$\mathcal F_2$};
+\end{tikzpicture}
+\caption{Uszczegóławianie podziału przestrzeni wyników
+przez kolejne rzuty. W każdym wierszu pokazano
+atomy danego $\sigma$-ciała; jego zdarzeniami
+są wszystkie sumy tych atomów.}
+\label{fig:rp1-13-filtration}
+\end{figure}
+
 
 \section{Czasy zatrzymania i informacja przy zatrzymaniu}
 
@@ -177,7 +212,7 @@ przeliczalnej sumy zbiorów, więc $\mathcal F_\tau$
 jest także zamknięte na takie sumy.
 Na $\{\tau<\infty\}$ opisuje ono informację dostępną
 w chwili zatrzymania.
-Dla procesu rzeczywistego przyjmujemy
+Dla mierzalnego procesu rzeczywistego przyjmujemy
 \[
 X_\tau(\omega)=
 \begin{cases}
@@ -290,8 +325,39 @@ $\E[Y\mid\mathcal F_\tau]
 =\frac12\chi_{\{OO,OR\}}$.
 Przykład uświadamia, że $\mathcal F_\tau$ nie jest
 jednym z góry ustalonym $\mathcal F_n$:
-zakres obserwacji zależy od ścieżki.
+zakres obserwacji zależy od ścieżki, co przedstawia
+rysunek~\ref{fig:rp1-13-stopped-tree}.
 \end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,
+  history/.style={draw,rounded corners=3pt,minimum height=9mm,
+  minimum width=1.7cm,align=center,font=\small},
+  stop/.style={history,fill=green!12,draw=green!45!black,very thick}]
+\node[history] (root) at (0,0) {$\Omega$};
+\node[stop,minimum width=3.1cm] (o) at (3,1.3) {$\{OO,OR\}$};
+\node[history] (r) at (3,-1.3) {$\{RO,RR\}$};
+\node[stop] (ro) at (6,-.55) {$\{RO\}$};
+\node[stop] (rr) at (6,-2.05) {$\{RR\}$};
+\draw[->,thick] (root)--node[above,sloped] {$O$} (o);
+\draw[->,thick] (root)--node[below,sloped] {$R$} (r);
+\draw[->,thick] (r)--node[above,sloped] {$O$} (ro);
+\draw[->,thick] (r)--node[below,sloped] {$R$} (rr);
+\node[font=\small,above=2mm of o] {$\tau=1$};
+\node[font=\small,right=2mm of ro] {$\tau=2$};
+\node[font=\small,right=2mm of rr] {$\tau=2$};
+\node at (0,2.5) {$n=0$};
+\node at (3,2.5) {$n=1$};
+\node at (6,2.5) {$n=2$};
+\end{tikzpicture}
+\caption{Drzewo obserwacji zatrzymanej: po pierwszym orle
+nie wykonujemy dalszej obserwacji, a po reszce obserwujemy
+jeszcze drugi rzut. Wyróżnione liście są dokładnie
+atomami $\mathcal F_\tau$.}
+\label{fig:rp1-13-stopped-tree}
+\end{figure}
+
 
 \section{Przewidywanie przy losowym czasie}
 
@@ -358,9 +424,8 @@ regularności trajektorii i modyfikacji procesu.
 Z mierzalności $M_n$ i liniowości warunkowej
 wartości oczekiwanej wynika równoważny warunek
 $\E[M_{n+1}-M_n\mid\mathcal F_n]=0$ p.n.;
-dla podmartyngałów i nadmartyngałów zastępujemy
-zero odpowiednio dolnym i górnym ograniczeniem
-warunkowej średniej przyrostu.
+dla podmartyngałów warunkowa średnia przyrostu
+jest nieujemna, a dla nadmartyngałów niedodatnia.
 
 \begin{przyklad}[Ruch bez dryfu i z dryfem]
 Niech $(\xi_k)$ będą niezależne i całkowalne,
@@ -565,7 +630,9 @@ Dla $n<3$ zdarzenie $\{\tau\leq n\}$ oznacza
 co najmniej jednego orła w pierwszych $n$ rzutach,
 a dla $n\geq3$ jest równe $\Omega$.
 Zatem $\tau$ jest czasem zatrzymania i $\tau\leq3$.
-Wszystkie możliwe \emph{zatrzymane} scenariusze
+Jeśli chcemy traktować $(S_n)$ jako proces
+dla wszystkich $n\geq0$, przyjmujemy $S_n=S_3$
+dla $n\geq3$. Wszystkie możliwe \emph{zatrzymane} scenariusze
 przedstawia tabela:
 \begin{center}
 \begin{tabular}{c|c|c|c}
@@ -625,9 +692,17 @@ Vitaliego o zbieżności w $L^1$
 (rozdział~\ref{ch:convergence}) dawałyby $\E S_{\tau_m}\to1$, co jest
 sprzeczne ze stałą wartością zero.
 Zatem rodzina zatrzymanych wartości nie jest
-jednostajnie całkowalna. Przykład wskazuje
+jednostajnie całkowalna. Ogólne twierdzenie
+o zatrzymywaniu martyngałów jednostajnie całkowalnych
+udowodnimy w rozdziale~\ref{ch:nadmartyngaly}. Przykład wskazuje
 \emph{dokładnie}, które przejście graniczne jest
 niedozwolone, zamiast poprzestawać na stwierdzeniu,
 że $\tau$ jest nieograniczony.
 \end{uwaga}
 
+
+Podstawowy rachunek martyngałowy, transformacje
+przewidywalne i nierówności maksymalne rozwiniemy
+w rozdziale~\ref{ch:martyngaly}; kryteria zbieżności
+i dalsze wersje twierdzeń o zatrzymywaniu
+w rozdziale~\ref{ch:nadmartyngaly}.
