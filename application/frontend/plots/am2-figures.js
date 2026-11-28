@@ -275,6 +275,50 @@
       const steps=levels.map(n=>({label:String(n),method:"update",args:[{visible:levels.flatMap(j=>[j===n,j===n])},{"title.text":heading(n),"yaxis2.range":[0,1.1*(1.5**n)]}]}));
       return {data,layout:{title:{text:heading(3)},xaxis:{domain:[0,1],anchor:"y",range:[0,1]},yaxis:{title:"Cⱼ(t)",domain:[.58,1],range:[0,1.05]},xaxis2:{domain:[0,1],anchor:"y2",title:"t",range:[0,1]},yaxis2:{title:"Cⱼ′(t)",domain:[0,.43],range:[0,1.1*1.5**3]},margin:{l:65,r:15,t:60,b:85},showlegend:false,sliders:[{active:3,currentvalue:{prefix:"j = "},steps}]}};
     },
+    "am2_30_sections.html":()=>{
+      const faces=[[0,2,1],[0,3,2],[4,5,6],[4,6,7],[0,1,5],[0,5,4],[1,2,6],[1,6,5],[2,3,7],[2,7,6],[3,0,4],[3,4,7]];
+      const vertices=[[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,0],[1,0,1],[1,1,3],[0,1,2]];
+      const mesh=(v,f,color,name,visible=true,opacity=1)=>({type:"mesh3d",x:v.map(p=>p[0]),y:v.map(p=>p[1]),z:v.map(p=>p[2]),i:f.map(p=>p[0]),j:f.map(p=>p[1]),k:f.map(p=>p[2]),color,opacity,visible,name,showlegend:false,flatshading:true});
+      const data=[mesh(vertices,faces,"#397db5","Bryła",true,.25)];
+      const edges=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[1,5],[2,6],[3,7]];
+      const ep=edges.flatMap(([i,j])=>[vertices[i],vertices[j],[null,null,null]]);
+      data.push({...line(ep.map(p=>p[0]),ep.map(p=>p[1]),ep.map(p=>p[2]),"Krawędzie","#24517d"),showlegend:false});
+      const values=lin(0,1,21);
+      const opts=[];
+      for(let axisId=0;axisId<2;axisId++)for(const [i,t] of values.entries()){
+        const v=axisId===0?[[t,0,0],[t,1,0],[t,1,t+2],[t,0,t]]:[[0,t,0],[1,t,0],[1,t,1+2*t],[0,t,2*t]];
+        const color=axisId===0?"#d97706":"#15988c";
+        data.push(mesh(v,[[0,1,2],[0,2,3]],color,"Przekrój",axisId===0&&i===10,.9));
+        opts.push({axisId,t,index:data.length-1});
+      }
+      const title=o=>(o.axisId===0?"x = ":"y = ")+o.t.toFixed(2)+" | pole przekroju = "+(o.axisId===0?1+o.t:.5+2*o.t).toFixed(3);
+      const steps=opts.map(o=>({label:(o.axisId===0?"x=":"y=")+o.t.toFixed(2),method:"update",args:[{visible:data.map((_,i)=>i<2||i===o.index)},{"title.text":title(o)}]}));
+      return base(data,title(opts[10]),{scene:{...scene(),aspectmode:"manual",aspectratio:{x:1,y:1,z:1.6},xaxis:{...axis("x"),range:[0,1.05]},yaxis:{...axis("y"),range:[0,1.05]},zaxis:{...axis("z"),range:[0,3.1]}},margin:{l:0,r:0,b:70,t:55},sliders:[{active:10,currentvalue:{prefix:"Przekrój: "},steps}]});
+    },
+    "am2_30_jacobian.html":()=>{
+      const us=lin(1,2,11),vs=lin(0,1,11),data=[];
+      const polygon=(u,v,trans,axisId,color,visible=true)=>{
+        const x=u.map((a,i)=>a),y=v.map((b,i)=>trans?u[i]*b:b);
+        return {type:"scatter",mode:"lines",x,y,xaxis:axisId===1?"x2":"x",yaxis:axisId===1?"y2":"y",fill:"toself",fillcolor:color,line:{color:"#456d92",width:1},visible,showlegend:false};
+      };
+      for(let k=0;k<2;k++){
+        data.push(polygon([1,2,2,1,1],[0,0,1,1,0],!!k,k,"rgba(57,125,181,.18)"));
+        for(let i=1;i<10;i++){
+          data.push({...polygon([us[i],us[i]],[0,1],!!k,k,"transparent"),fill:"none"});
+          data.push({...polygon([1,2],[vs[i],vs[i]],!!k,k,"transparent"),fill:"none"});
+        }
+      }
+      const fixed=data.length,hs=lin(.025,.25,10),centers=lin(1.25,1.75,11);
+      // One slider selects the centre at fixed h=.1; second comparison uses h through the first slider's listed choices.
+      const opts=centers.map(u=>({u,h:.1})).concat(hs.map(h=>({u:1.5,h})));
+      opts.forEach(({u,h},i)=>{
+        const U=[u-h,u+h,u+h,u-h,u-h],V=[.5-h,.5-h,.5+h,.5+h,.5-h];
+        for(let k=0;k<2;k++)data.push(polygon(U,V,!!k,k,"rgba(217,119,6,.55)",i===5));
+      });
+      const heading=o=>"u = "+o.u.toFixed(2)+" | h = "+o.h.toFixed(3)+" | stosunek pól = "+o.u.toFixed(2);
+      const steps=opts.map((o,i)=>({label:i<centers.length?"u="+o.u.toFixed(2):"h="+o.h.toFixed(3),method:"update",args:[{visible:data.map((_,j)=>j<fixed||j===fixed+2*i||j===fixed+2*i+1)},{"title.text":heading(o)}]}));
+      return {data,layout:{title:{text:heading(opts[5])},xaxis:{domain:[0,.46],range:[.9,2.1],title:"u",scaleanchor:"y",scaleratio:1},yaxis:{domain:[0,1],range:[-.1,2.1],title:"v"},xaxis2:{domain:[.54,1],range:[.9,2.1],title:"x",scaleanchor:"y2",scaleratio:1},yaxis2:{domain:[0,1],anchor:"x2",range:[-.1,2.1],title:"y"},margin:{l:55,r:20,b:85,t:55},sliders:[{active:5,steps,currentvalue:{prefix:"Komórka: "}}],showlegend:false}};
+    },
     "am2_36_geometric.html":()=>{
       const r=lin(0,.97,61),t=lin(0,2*Math.PI,121),X=t.map(a=>r.map(v=>v*Math.cos(a))),Y=t.map(a=>r.map(v=>v*Math.sin(a)));
       const norm=(a,v,n)=>n===null?1/Math.hypot(1-v*Math.cos(a),v*Math.sin(a)):Math.hypot(1-v**(n+1)*Math.cos((n+1)*a),v**(n+1)*Math.sin((n+1)*a))/Math.hypot(1-v*Math.cos(a),v*Math.sin(a));
