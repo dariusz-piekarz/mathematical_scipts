@@ -358,6 +358,8 @@ jobs:
           echo "ATLAS_SCOPED_REJECTED_MANIFEST_SHA=$rejected_digest" >> "$GITHUB_ENV"
           payload_digest="$(sha256sum "$RUNNER_TEMP/atlas-mathlib-scoped-payload-manifest.json" | cut -d ' ' -f1)"
           echo "ATLAS_SCOPED_PAYLOAD_MANIFEST_SHA=$payload_digest" >> "$GITHUB_ENV"
+          report_digest="$(sha256sum "$RUNNER_TEMP/atlas-mathlib-scoped-payload-report.json" | cut -d ' ' -f1)"
+          echo "ATLAS_SCOPED_PAYLOAD_REPORT_SHA=$report_digest" >> "$GITHUB_ENV"
       - name: Independently validate persisted scoped Mathlib fixture evidence
         working-directory: application
         shell: bash
@@ -370,7 +372,8 @@ jobs:
           python3 -m scripts.lean_scoped_payload_probe \
             --evidence-directory "$RUNNER_TEMP" \
             --expected-manifest-sha256 "$ATLAS_SCOPED_PAYLOAD_MANIFEST_SHA" \
-            --expected-baseline-sha256 "$ATLAS_SCOPED_MANIFEST_SHA"
+            --expected-baseline-sha256 "$ATLAS_SCOPED_MANIFEST_SHA" \
+            --expected-report-sha256 "$ATLAS_SCOPED_PAYLOAD_REPORT_SHA"
       - name: Retain scoped Mathlib offline fixture evidence
         if: always()
         uses: actions/upload-artifact@v4

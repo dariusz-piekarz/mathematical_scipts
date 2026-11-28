@@ -378,6 +378,7 @@ def main():
     parser.add_argument("--evidence-directory", type=Path, required=True)
     parser.add_argument("--expected-manifest-sha256", required=True)
     parser.add_argument("--expected-baseline-sha256", required=True)
+    parser.add_argument("--expected-report-sha256", required=True)
     args = parser.parse_args()
     def read(name, limit, digest=None):
         with (args.evidence_directory / name).open("rb") as handle:
@@ -385,7 +386,7 @@ def main():
         if len(raw) > limit or (digest is not None and hashlib.sha256(raw).hexdigest() != digest):
             raise ValueError("Oversized or changed persisted evidence")
         return json.loads(raw, object_pairs_hook=sources.unique_object)
-    report = read("atlas-mathlib-scoped-payload-report.json", 256000)
+    report = read("atlas-mathlib-scoped-payload-report.json", 256000, args.expected_report_sha256)
     manifest = read("atlas-mathlib-scoped-payload-manifest.json", artifacts.MAX_MANIFEST_BYTES,
                     args.expected_manifest_sha256)
     baseline = read("atlas-mathlib-scoped-manifest.json", artifacts.MAX_MANIFEST_BYTES,
