@@ -90,6 +90,147 @@ jako równość podobiektów po kanonicznym utożsamieniu $F(M_{\vec x})\cong(FM
 Zachowywanie iloczynów umożliwia interpretację symboli funkcji, a zachowywanie monomorfizmów (przez kryterium diagonali) pozwala przenieść interpretacje relacji. Funktor zachowuje obrazy, ponieważ obraz jest częścią rozkładu na regularny epimorfizm i monomorfizm, a $F$ zachowuje obie klasy morfizmów. Jednoznaczność obrazu daje kanoniczne utożsamienie. Indukcja po termach wykorzystuje zachowywanie iloczynów, a indukcja po formułach wykorzystuje zachowywanie equalizatorów, zmian bazy, obiektu końcowego i obrazów. Jeżeli jeden podobiekt faktoryzuje się przez drugi, zastosowanie $F$ zachowuje tę faktoryzację, więc zachowuje spełnione sekwenty.
 \end{proof}
 
+\subsection{Rachunek sekwentów regularnych}
+
+Aby skonstruować kategorię z samej teorii $T$, musimy odróżnić dowodliwość od prawdziwości w ustalonym modelu. Poniżej opisujemy rachunek przez generatory i reguły domknięcia relacji wynikania. Wszystkie konteksty są skończone; przy łączeniu kontekstów zmieniamy nazwy zmiennych tak, aby były rozłączne.
+
+\begin{definicja}[Dowodliwość regularna]\label{cat:def:cl-regular-deduction}
+Piszemy $\varphi\vdash^T_{\vec x}\psi$, jeżeli sekwent należy do najmniejszej rodziny relacji spełniającej następujące warunki.
+\begin{enumerate}
+ \item W każdym kontekście relacja jest zwrotna i przechodnia oraz zawiera aksjomaty $T$. Formuła $\top$ jest elementem największym, a $\wedge$ jest kresem dolnym: z $\theta\vdash\varphi$ i $\theta\vdash\psi$ wynika $\theta\vdash\varphi\wedge\psi$, zaś $\varphi\wedge\psi\vdash\varphi,\psi$ oznacza dwa sekwenty.
+ \item Dowodliwość jest zachowywana przez poprawne sortowo podstawianie termów, w tym przez zmianę nazw i rozszerzenie kontekstu.
+ \item Zachodzą refleksywność równości $\top\vdash_x x=x$ oraz reguła zastępowania: dla termów $t,u$ tego samego sortu i formuły $\theta(\vec x,y)$
+ \[
+ (t=u)\wedge\theta(\vec x,t)\vdash_{\vec x}\theta(\vec x,u).
+ \]
+ \item Dla $\alpha$ w kontekście $(\vec x,y)$ i $\beta$ w kontekście $\vec x$ obowiązuje reguła sprzężenia
+ \[
+ (\exists y\,\alpha)\vdash_{\vec x}\beta
+ \quad\Longleftrightarrow\quad
+ \alpha\vdash_{\vec x,y}\beta.
+ \]
+ Obie implikacje są regułami wnioskowania.
+ \item Obowiązuje reguła Frobeniusa, tj. oba kierunki sekwentu odpowiadającego równości
+ \[
+ \exists y\,(\alpha\wedge\beta)
+ \dashv\vdash_{\vec x}(\exists y\,\alpha)\wedge\beta,
+ \]
+ gdzie $y$ nie występuje wolno w $\beta$.
+\end{enumerate}
+W rachunku identyfikujemy formuły różniące się jedynie nazwami zmiennych związanych. Zapis $\dashv\vdash^T$ oznacza dowodliwość w obu kierunkach.
+\end{definicja}
+
+Przecięcie wszystkich rodzin relacji spełniających te warunki ponownie spełnia warunki, więc najmniejsza rodzina relacji istnieje. Reguła sprzężenia obejmuje wprowadzenie kwantyfikatora: $\alpha\vdash_{\vec x,y}\exists y\,\alpha$. Podstawienie termu $t$ za $y$ daje $\alpha[t/y]\vdash_{\vec x}\exists y\,\alpha$. Eliminacja pozwala usunąć świadka z kontekstu, gdy konkluzja nie zależy od niego. Wielokrotne kwantyfikowanie zapisujemy przez $\exists\vec y$; niezależne kwantyfikatory egzystencjalne można przestawiać, ponieważ obie kolejności są lewymi sprzężonymi do tego samego osłabienia kontekstu. Dla dowolnej zamiany parametrów zachodzi składniowa zgodność podstawiania z kwantyfikatorem (po zmianie nazw zmiennych związanych). Nie zakładamy niepustości sortów: w szczególności nie wprowadzamy reguły $\top\vdash\exists y\,\top$ bez odpowiedniego aksjomatu.
+
+\begin{stwierdzenie}[Poprawność rachunku regularnego]\label{cat:prop:cl-deduction-sound}
+Jeżeli $M$ jest modelem $T$ w kategorii regularnej i $\varphi\vdash^T_{\vec x}\psi$, to $\llbracket\varphi\rrbracket_{M,\vec x}\leq\llbracket\psi\rrbracket_{M,\vec x}$.
+\end{stwierdzenie}
+\begin{proof}
+Dla morfizmu $p:A\to B$ i podobiektu $U\hookrightarrow A$ oznaczmy przez $\exists_p U$ obraz złożenia $U\to A\to B$. Minimalność obrazu i własność uniwersalna iloczynu włóknistego dają
+\[
+ \exists_p U\leq V\ \Longleftrightarrow\ U\leq p^*V
+ \qquad(V\hookrightarrow B).
+\]
+Ponadto $\exists_p(U\wedge p^*V)=\exists_p U\wedge V$, gdyż rozkład obrazowy $U\to\exists_p U\to B$ po zmianie bazy wzdłuż $V\hookrightarrow B$ nadal jest rozkładem obrazowym przez twierdzenie~\ref{cat:thm:barr-image}. Są to interpretacje reguł sprzężenia i Frobeniusa dla projekcji. Pozostałe reguły wynikają z porządku podobiektów, własności uniwersalnej equalizatora (na nim interpretacje równych termów pokrywają się), oraz twierdzenia o podstawianiu~\ref{cat:prop:cl-substitution}. Rodzina sekwentów spełnionych w $M$ zawiera aksjomaty i jest domknięta na wszystkie reguły, zatem zawiera najmniejszą taką rodzinę.
+\end{proof}
+
+\subsection{Kategoria syntaktyczna teorii regularnej}
+
+\begin{definicja}[Relacja dowodliwie funkcjonalna]\label{cat:def:cl-functional-relation}
+Niech $\varphi(\vec x)$ i $\psi(\vec y)$ będą formułami regularnymi w rozłącznych kontekstach. Formuła $\theta(\vec x,\vec y)$ jest relacją dowodliwie funkcjonalną od $\varphi$ do $\psi$, jeżeli zachodzą trzy sekwenty w teorii $T$:
+\[
+\begin{aligned}
+ \theta&\vdash_{\vec x,\vec y}^T\varphi\wedge\psi,\\
+ \varphi&\vdash_{\vec x}^T\exists\vec y\,\theta,\\
+ \theta(\vec x,\vec y)\wedge\theta(\vec x,\vec y')
+ &\vdash_{\vec x,\vec y,\vec y'}^T\vec y=\vec y'.
+\end{aligned}
+\]
+Równość ciągów oznacza koniunkcję równości odpowiednich składowych, w przypadku pustego ciągu oznacza $\top$.
+\end{definicja}
+
+Warunki wyrażają kolejno ograniczenie dziedziny i przeciwdziedziny, totalność oraz jednoznaczność. Relacja nie musi być wykresem termu: na przykład operacja odwrotna do dowodliwie bijektywnego symbolu funkcji może być zdefiniowana przez odwrócenie jego wykresu bez dodawania nowego symbolu.
+
+\begin{definicja}[Kategoria syntaktyczna]\label{cat:def:cl-syntactic-category}
+Obiektami $\mathcal C_T$ są formuły w kontekstach $\{\vec x\mid\varphi\}$, z dokładnością do zmiany nazw zmiennych. Morfizmy są klasami relacji dowodliwie funkcjonalnych modulo $\dashv\vdash^T$. Identycznością obiektu $\{\vec x\mid\varphi\}$ jest relacja $\varphi(\vec x)\wedge(\vec x=\vec x')$. Dla morfizmów reprezentowanych przez $\theta(\vec x,\vec y)$ i $\rho(\vec y,\vec z)$ składanie definiujemy jako
+\[
+ (\rho\circ\theta)(\vec x,\vec z)
+ =\exists\vec y\,(\theta(\vec x,\vec y)\wedge\rho(\vec y,\vec z)).
+\]
+\end{definicja}
+
+\begin{stwierdzenie}\label{cat:prop:cl-syntactic-category}
+Powyższe konstrukcje określają małą kategorię.
+\end{stwierdzenie}
+\begin{proof}
+Weryfikujemy trzy warunki funkcjonalności złożenia. Ograniczenie wynika z ograniczenia obu relacji i eliminacji $\exists\vec y$. Dla totalności z $\varphi$ otrzymujemy świadka $\vec y$ relacji $\theta$, a z $\theta$ otrzymujemy $\psi$, skąd świadka $\vec z$ relacji $\rho$. Formalnie stosujemy wprowadzenie i eliminację kwantyfikatora oraz regułę Frobeniusa, aby zachować formułę $\theta$ przy wprowadzaniu $\exists\vec z$. Dla jednoznaczności dwóch wyników $\vec z,\vec z'$ eliminujemy oba kwantyfikatory, otrzymując świadków $\vec y,\vec y'$. Jednoznaczność $\theta$ daje $\vec y=\vec y'$, a zastępowanie i jednoznaczność $\rho$ dają $\vec z=\vec z'$. Wynik nie zależy od świadków, więc eliminacja kwantyfikatorów jest dopuszczalna. Wszystkie operacje zachowują dowodliwą równoważność formuł (monotoniczność $\exists$ wynika z reguły sprzężenia).
+ 
+Dla trzech relacji $\theta,\rho,\sigma$ oba złożenia są dowodliwie równoważne formule
+\[
+ \exists\vec y\,\exists\vec z\,
+ (\theta(\vec x,\vec y)\wedge\rho(\vec y,\vec z)\wedge\sigma(\vec z,\vec w)).
+\]
+Wynika to z Frobeniusa i możliwości przestawiania niezależnych kwantyfikatorów. Identyczności działają przez zastępowanie równych zmiennych i wprowadzenie świadka równego danej zmiennej. Małość wynika z małości sygnatury i skończonej budowy formuł.
+\end{proof}
+
+\begin{twierdzenie}[Regularność kategorii syntaktycznej]\label{cat:thm:cl-syntactic-regular}
+Kategoria $\mathcal C_T$ jest regularna. Podobiekty $\{\vec x\mid\varphi\}$ odpowiadają klasom formuł $\alpha$ z $\alpha\vdash^T_{\vec x}\varphi$, uporządkowanym przez dowodliwe wynikanie.
+\end{twierdzenie}
+\begin{proof}
+Obiekt końcowy to $\{\varnothing\mid\top\}$: jedyna relacja funkcjonalna do niego jest dowodliwie równoważna formule dziedziny. Iloczyn dwóch obiektów jest reprezentowany przez $\{(\vec x,\vec y)\mid\varphi\wedge\psi\}$ z projekcjami określonymi przez równości współrzędnych. Dla dwóch relacji wychodzących ze wspólnej dziedziny ich koniunkcja jest relacją do tego iloczynu; totalność wynika z kolejnego wprowadzania świadków, a jednoznaczność z jednoznaczności obu składowych. To daje własność uniwersalną. Equalizator równoległych relacji $\theta,\rho$ jest włożeniem obiektu
+\[
+ \{\vec x\mid\exists\vec y\,(\theta(\vec x,\vec y)\wedge\rho(\vec x,\vec y))\}
+ \longrightarrow\{\vec x\mid\varphi\}.
+\]
+Relacja do dziedziny faktoryzuje się przez ten podobiekt dokładnie wtedy, gdy jej złożenia z $\theta$ i $\rho$ są dowodliwie równoważne: w kierunku wprost korzystamy ze wspólnego świadka, a odwrotnie z totalności i jednoznaczności obu złożeń. Włożenia określone przez węższą formułę i równość współrzędnych są monomorfizmami, bo składanie z nimi nie zmienia relacji poza kontekstem przeciwdziedziny. Uzyskaliśmy skończone granice.
+
+Dla morfizmu $\theta:\varphi\to\psi$ definiujemy $\iota(\vec y)=\exists\vec x\,\theta(\vec x,\vec y)$. Wtedy $\theta$ faktoryzuje się przez włożenie $\iota\to\psi$. Pierwszy morfizm $e:\varphi\to\iota$ jest dowodliwie surjektywny, tj. $\iota\vdash^T\exists\vec x\,\theta$. Pokażemy, że każdy dowodliwie surjektywny morfizm $e:\varphi\to\psi$ jest koequalizatorem swojej pary jądrowej. Para jądrowa ma dziedzinę
+\[
+ \{(\vec x,\vec x')\mid\exists\vec y\,(\theta(\vec x,\vec y)\wedge\theta(\vec x',\vec y))\}
+\]
+i dwie projekcje. Jeśli relacja $\eta:\varphi\to\chi$ zrównuje te projekcje, to dla dwóch świadków $\vec x,\vec x'$ o wspólnym obrazie w $\psi$ jej wyniki są dowodliwie równe. Definiujemy relację
+\[
+ \zeta(\vec y,\vec z)=\exists\vec x\,(\theta(\vec x,\vec y)\wedge\eta(\vec x,\vec z)).
+\]
+Surjektywność $e$ i totalność $\eta$ dają totalność $\zeta$; zrównanie projekcji i jednoznaczność $\eta$ dają jednoznaczność $\zeta$. Ograniczenie wynika z ograniczenia relacji składowych. Składanie $\zeta e$ daje $\eta$ przez totalność $e$ i warunek zrównania projekcji. Każda inna faktoryzacja ma tę samą relację $\zeta$, gdyż każdy element kontekstu $\psi$ ma dowodliwie świadka w $\varphi$. Jest to własność koequalizatora, czyli $e$ jest regularnym epimorfizmem.
+
+Odwrotnie regularny epimorfizm $f$ musi mieć część monomorficzną powyższego rozkładu izomorficzną. Istotnie, jeśli $f=me$ jest koequalizatorem pewnej pary, monomorficzność $m$ oznacza, że $e$ zrównuje tę parę. Własność koequalizatora daje $d$ z $df=e$, a epimorficzność $f,e$ daje $md=\id$ i $dm=\id$. Zatem $\iota\dashv\vdash^T\psi$: dla włożenia $\iota\to\psi$ istnienie odwrotności daje sekwent $\psi\vdash^T\iota$ przez totalność odwrotnej relacji. Regularne epimorfizmy są więc dokładnie dowodliwie surjektywnymi morfizmami. Ich zmiana bazy jest dowodliwie surjektywna: dla każdej zmiennej w nowej bazie totalność morfizmu do starej bazy daje świadka obrazu, a surjektywność daje świadka w dziedzinie; obaj świadkowie spełniają formułę iloczynu włóknistego. Formalnie jest to kolejne zastosowanie totalności, Frobeniusa i eliminacji kwantyfikatorów. Otrzymujemy wszystkie warunki definicji~\ref{cat:def:barr-regular}.
+
+Wreszcie monomorfizm po rozłożeniu na regularny epimorfizm i włożenie ma część epimorficzną również monomorficzną, a monomorficzny koequalizator jest izomorfizmem (zrównuje tylko identyczne strzałki). Każdy podobiekt jest zatem reprezentowany przez włożenie formuły $\alpha$ wynikającej w kierunku $\varphi$. Faktoryzacja dwóch takich włożeń jest możliwa dokładnie wtedy, gdy pierwsza formuła dowodliwie pociąga drugą: relacja faktoryzująca musi zachować wszystkie współrzędne, a jej totalność daje wynikanie. Odwrotnie wynikanie definiuje włożenie przez równość współrzędnych.
+\end{proof}
+
+\subsection{Model syntaktyczny i własność uniwersalna}
+
+\begin{twierdzenie}[Model generyczny teorii regularnej]\label{cat:thm:cl-generic-model}
+W $\mathcal C_T$ istnieje model $G_T$ teorii $T$, w którym interpretacja formuły $\varphi(\vec x)$ jest podobiektem $\{\vec x\mid\varphi\}\hookrightarrow\{\vec x\mid\top\}$. W szczególności sekwent jest dowodliwy w $T$ wtedy i tylko wtedy, gdy jest spełniony w każdym modelu $T$ w każdej kategorii regularnej.
+\end{twierdzenie}
+\begin{proof}
+Sort $S$ interpretujemy przez $\{x:S\mid\top\}$, symbol funkcji przez wykres odpowiedniego termu, a symbol relacji przez włożenie obiektu zdefiniowanego formułą atomową. Iloczyny obiektów sortów są kontekstami z formułą $\top$. Indukcja po termach identyfikuje interpretację termu z jego wykresem; składanie wykresów odpowiada podstawianiu dzięki regułom równości. Z opisów granic, obrazów i podobiektów w twierdzeniu~\ref{cat:thm:cl-syntactic-regular} wynika rekurencyjnie podana interpretacja: equalizator wykresów jest równością termów, zmiana bazy relacji jest podstawieniem termów, przecięcie jest koniunkcją, a obraz projekcji jest egzystencjalnym domknięciem formuły. Dla ostatniej tezy projekcja ma relację $\varphi(\vec x,y)\wedge(\vec x=\vec x')$, której obraz jest dowodliwie równoważny $\exists y\,\varphi(\vec x',y)$ przez zastępowanie równości.
+
+Aksjomaty $T$ są spełnione, ponieważ porządek podobiektów w kategorii syntaktycznej odpowiada dowodliwości. Ten sam argument pokazuje, że dowolny sekwent spełniony w $G_T$ jest dowodliwy. W drugą stronę stosujemy poprawność rachunku ze stwierdzenia~\ref{cat:prop:cl-deduction-sound}.
+\end{proof}
+
+\begin{twierdzenie}[Własność uniwersalna kategorii syntaktycznej]\label{cat:thm:cl-syntactic-universal}
+Dla kategorii regularnej $\mathcal E$ ewaluacja w modelu generycznym daje równoważność kategorii
+\[
+ \operatorname{Reg}(\mathcal C_T,\mathcal E)
+ \simeq \operatorname{Mod}_T(\mathcal E),
+ \qquad F\longmapsto F(G_T).
+\]
+Po lewej morfizmami są transformacje naturalne funktorów regularnych, a po prawej homomorfizmy modeli: rodziny morfizmów na sortach zgodne z operacjami i przenoszące relacje w relacje (nie muszą ich odzwierciedlać).
+\end{twierdzenie}
+\begin{proof}
+Niech $M$ będzie modelem w $\mathcal E$. Obiekt $\{\vec x\mid\varphi\}$ przyporządkowujemy obiektowi reprezentującemu interpretację podobiektu $\llbracket\varphi\rrbracket_{M,\vec x}$. Dla relacji funkcjonalnej $\theta$ poprawność rachunku zapewnia faktoryzację jej interpretacji przez iloczyn interpretacji $\varphi,\psi$. Otrzymujemy podobiekt $R\hookrightarrow A\times B$. Pierwsza projekcja $R\to A$ jest regularnym epimorfizmem przez warunek totalności i opis obrazu. Jest też monomorfizmem: na jej parze jądrowej druga współrzędna jest jednakowa przez warunek jednoznaczności, a włożenie w $A\times B$ jest monomorfizmem. Regularny epimorfizm będący monomorfizmem jest izomorfizmem, więc $R$ jest wykresem jednoznacznego morfizmu $A\to B$. Relacje równoważne dają ten sam morfizm. Składanie wykresów przez obraz ich iloczynu włóknistego jest wykresem złożenia, ponieważ iloczyn włóknisty wykresów identyfikuje się z dziedziną pierwszego morfizmu. W ten sposób otrzymujemy funktor $F_M$.
+
+Opisy obiektu końcowego, iloczynów i equalizatorów w dowodzie twierdzenia~\ref{cat:thm:cl-syntactic-regular} po interpretacji dają odpowiadające granice w $\mathcal E$: w szczególności wspólny świadek w formule equalizatora odpowiada równości wartości dwóch morfizmów, gdyż wykresy obu mają izomorficzne projekcje na dziedzinę. Dowodliwa surjektywność daje pełny obraz, więc $F_M$ zachowuje regularne epimorfizmy. Jest zatem regularny.
+
+Homomorfizm modeli $h:M\to N$ zachowuje interpretacje formuł regularnych w sensie faktoryzacji morfizmu $\prod h_{S_i}$ ograniczonego do interpretacji $\varphi$ przez interpretację tej samej formuły w $N$. Dowodzimy tego indukcyjnie: dla atomów wynika ze zgodności z funkcjami i relacjami, dla koniunkcji z iloczynu włóknistego, a dla kwantyfikacji z minimalności obrazu. Dokładniej morfizm na dziedzinie projekcji przenosi interpretację formuły z dodatkową zmienną do analogicznego podobiektu w $N$. Złożenie do kontekstu $N$ faktoryzuje się przez obraz tej projekcji w $N$; regularny epimorfizm na obraz w $M$ pozwala zejść do tego obrazu przez własność koequalizatora pary jądrowej i monomorficzność obrazu w $N$. Otrzymujemy składowe transformacji $F_M\to F_N$. Naturalność względem relacji funkcjonalnej wynika z zachowywania jej wykresu i jednoznaczności wyniku.
+
+Odwrotnie transformacja naturalna funktorów regularnych daje na sortach homomorfizm modeli: naturalność względem wykresów symboli funkcji i włożeń relacji daje dokładnie wymagane warunki. Naturalność względem projekcji wymusza jej składowe na kontekstach, a naturalność względem włożenia $\{\vec x\mid\varphi\}\hookrightarrow\{\vec x\mid\top\}$ wyznacza składową na każdym obiekcie jednoznacznie przez monomorficzność obrazu tego włożenia.
+
+Wreszcie $F_M(G_T)\cong M$ z konstrukcji. Dla regularnego $F$ stwierdzenie~\ref{cat:prop:cl-regular-functors} identyfikuje $F(\{\vec x\mid\varphi\})$ z interpretacją $\varphi$ w $F(G_T)$, a zachowanie wykresów daje zgodność tych izomorfizmów z morfizmami. Są to naturalne izomorfizmy obu złożeń z identycznościami, co dowodzi równoważności. Wybory reprezentantów podobiektów zmieniają konstrukcję jedynie z dokładnością do naturalnego izomorfizmu.
+\end{proof}
+
 \begin{uwaga}[Dalszy zakres]\label{cat:rem:cl-scope}
-Następnie skonstruujemy kategorię syntaktyczną teorii regularnej, zbadamy jej własność uniwersalną, rachunek podobiektów i kwantyfikatorów, logikę wewnętrzną toposów, hiperdoktryny, teorie koherentne i geometryczne oraz toposy klasyfikujące i ich powiązania z teorią modeli.
+Po konstrukcji kategorii syntaktycznej i modelu generycznego zbadamy rachunek podobiektów i kwantyfikatorów, logikę wewnętrzną toposów, hiperdoktryny, teorie koherentne i geometryczne oraz toposy klasyfikujące i ich powiązania z teorią modeli.
 \end{uwaga}
