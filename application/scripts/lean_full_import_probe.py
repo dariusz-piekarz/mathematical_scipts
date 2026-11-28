@@ -78,25 +78,29 @@ def observe(work: Path, toolchain: Path, packages: dict[str, Path]) -> dict:
     env = {"PATH": str(toolchain / "bin") + ":/usr/bin:/bin",
            "HOME": str(work), "LANG": "C", "LEAN_NUM_THREADS": "1",
            "LEAN_PATH": ":".join(str(p / ".lake/build/lib/lean") for p in packages.values())}
-    result = {"status": "blocked", "trace_files": 0, "trace_bytes": 0}
+    result = {"status": "blocked", "trace_files": 0, "trace_bytes": 0,
+              "measurement_trace_limit": offline.MEASUREMENT_TRACE_BYTES,
+              "admission_trace_limit": offline.MAX_TRACE_BYTES}
     try:
         version = offline.trace_command([str(toolchain / "bin/lean"), "--version"],
-                                        work / "version-trace", cwd=work, env=env)
+                                        work / "version-trace", cwd=work, env=env, measurement_only=True)
         offline.core.validate_version(version.decode("ascii").strip())
         raw = offline.trace_command([str(toolchain / "bin/lean"), str(fixture)],
-                                    work / "fixture-trace", cwd=work, env=env)
+                                    work / "fixture-trace", cwd=work, env=env, measurement_only=True)
         if "'atlas_isolated_fixture' does not depend on any axioms" not in raw.decode("utf-8").splitlines():
             raise ValueError("Unexpected full-import fixture output")
         traces = list(work.glob("*-trace.*"))
         result.update(trace_files=len(traces), trace_bytes=sum(p.stat().st_size for p in traces))
-        if not 1 <= result["trace_files"] <= offline.MAX_TRACE_FILES or result["trace_bytes"] > offline.MAX_TRACE_BYTES:
+        if not 1 <= result["trace_files"] <= offline.MAX_TRACE_FILES or result["trace_bytes"] > offline.MEASUREMENT_TRACE_BYTES:
             raise ValueError("Aggregate dependency trace budget exceeded")
         paths = {toolchain / "bin/lean", toolchain / "bin/lake", Path("/bin/busybox")}
         observed = set()
         for trace in traces:
             with trace.open("rb") as handle:
-                observed.update(offline.parse_trace(handle.read(offline.MAX_TRACE_BYTES + 1),
-                                                    cwd=work, allow_empty=True))
+                observed.update(offline.parse_trace(handle.read(offline.MEASUREMENT_TRACE_BYTES + 1),
+                                                    cwd=work, allow_empty=True, measurement_only=True))
+            if len(observed) > offline.MEASUREMENT_TRACE_ENTRIES:
+                raise ValueError("Aggregate measurement entry budget exceeded")
         if not observed:
             raise ValueError("Empty full-import trace")
         paths.update(observed)
@@ -129,6 +133,7 @@ def observe(work: Path, toolchain: Path, packages: dict[str, Path]) -> dict:
         traces = list(work.glob("*-trace.*"))
         result.update(trace_files=len(traces), trace_bytes=sum(p.stat().st_size for p in traces),
                       reason=str(exc)[:2000])
+    result["within_trace_byte_limit"] = result["trace_bytes"] <= offline.MAX_TRACE_BYTES
     return result
 
 

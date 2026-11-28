@@ -3,6 +3,7 @@ from pathlib import Path
 import tempfile
 import time
 import unittest
+from unittest.mock import patch
 
 from scripts import lean_full_import_probe as probe
 
@@ -44,3 +45,26 @@ class FullImportInventoryTests(unittest.TestCase):
                 return
             row = probe.inventory(root, deadline=time.monotonic() + 10, remaining=10)
             self.assertEqual((row["files"], row["bytes"], row["symlinks"]), (1, 1, 1))
+
+
+class FullImportTraceBudgetTests(unittest.TestCase):
+    def test_measurement_does_not_change_default_trace_limit(self):
+        raw = b'openat(AT_FDCWD, "/lib/libc.so.6", O_RDONLY) = 3</lib/libc.so.6>\n'
+        with patch.object(probe.offline, "MAX_TRACE_BYTES", 1):
+            with self.assertRaises(ValueError):
+                probe.offline.parse_trace(raw, cwd=Path("/"))
+            self.assertEqual(len(probe.offline.parse_trace(
+                raw, cwd=Path("/"), measurement_only=True)), 1)
+            with self.assertRaises(ValueError):
+                probe.offline.parse_trace(raw, cwd=Path("/"))
+
+    def test_measurement_entry_limit_is_separate_and_bounded(self):
+        raw = b'openat(AT_FDCWD, "/lib/libc.so.6", O_RDONLY) = 3</lib/libc.so.6>\n'
+        with patch.object(probe.artifacts, "MAX_ENTRIES", 0):
+            with self.assertRaises(ValueError):
+                probe.offline.parse_trace(raw, cwd=Path("/"))
+            self.assertEqual(len(probe.offline.parse_trace(
+                raw, cwd=Path("/"), measurement_only=True)), 1)
+        with patch.object(probe.offline, "MEASUREMENT_TRACE_ENTRIES", 0):
+            with self.assertRaises(ValueError):
+                probe.offline.parse_trace(raw, cwd=Path("/"), measurement_only=True)

@@ -35,6 +35,9 @@ theorem atlas_isolated_fixture (p q : Prop) : (p ∧ q) ↔ (q ∧ p) := and_com
 MISSING_IMPORT = 'opt/packages/mathlib/.lake/build/lib/lean/Mathlib/Logic/Basic.olean'
 MAX_TRACE_BYTES = 16 * 1024 * 1024
 MAX_TRACE_FILES = 128
+# Explicit opt-in for trusted host measurement only; never used by stage/main.
+MEASUREMENT_TRACE_BYTES = 64 * 1024 * 1024
+MEASUREMENT_TRACE_ENTRIES = 200000
 SYSTEM_ROOTS = tuple(map(PurePosixPath, ("/lib", "/lib64", "/usr/lib")))
 SYSTEM_FILES = set(map(PurePosixPath, ("/etc/ld.so.cache", "/etc/locale.alias", "/etc/localtime", "/bin/busybox", "/usr/bin/busybox", "/usr/share/zoneinfo/Etc/UTC")))
 KERNEL_ROOTS = tuple(map(PurePosixPath, ("/proc", "/sys", "/dev")))
@@ -52,9 +55,12 @@ def normalized(path: str) -> PurePosixPath:
     return value
 
 
-def parse_trace(raw: bytes, *, cwd: Path, allow_empty=False) -> set[Path]:
+def parse_trace(raw: bytes, *, cwd: Path, allow_empty=False,
+                measurement_only=False) -> set[Path]:
     """Accept only complete, decoded, read-only successful openat records."""
-    if len(raw) > MAX_TRACE_BYTES:
+    byte_limit = MEASUREMENT_TRACE_BYTES if measurement_only else MAX_TRACE_BYTES
+    entry_limit = MEASUREMENT_TRACE_ENTRIES if measurement_only else artifacts.MAX_ENTRIES
+    if len(raw) > byte_limit:
         raise ValueError("Dependency trace byte budget exceeded")
     paths = set()
     for line in raw.decode("utf-8", errors="strict").splitlines():
@@ -86,7 +92,7 @@ def parse_trace(raw: bytes, *, cwd: Path, allow_empty=False) -> set[Path]:
                                     and resolved_path.is_relative_to(PurePosixPath('/dev'))):
             raise ValueError("Device descriptor outside /dev")
         paths.add(requested_path)
-        if len(paths) > artifacts.MAX_ENTRIES:
+        if len(paths) > entry_limit:
             raise ValueError("Dependency trace entry budget exceeded")
     if not paths and not allow_empty:
         raise ValueError("Empty dependency trace")
@@ -344,9 +350,11 @@ def check_image(prefix: list[str], env: dict[str, str], image: str, lake_version
             "cleanup_status": "removed_verified", **state}
 
 
-def trace_command(command: list[str], trace: Path, *, cwd: Path, env: dict) -> bytes:
+def trace_command(command: list[str], trace: Path, *, cwd: Path, env: dict,
+                  measurement_only=False) -> bytes:
     # Fixed trusted executables/sources only, never a draft or client argument.
-    args = ["/usr/bin/prlimit", "--fsize=" + str(MAX_TRACE_BYTES), "--",
+    byte_limit = MEASUREMENT_TRACE_BYTES if measurement_only else MAX_TRACE_BYTES
+    args = ["/usr/bin/prlimit", "--fsize=" + str(byte_limit), "--",
             "/usr/bin/strace", "-ff", "-qq", "-yy", "-s", "4096", "-e", "trace=openat",
             "-o", str(trace), *command]
     # File-backed output is bounded by prlimit and never accumulated unboundedly in RAM.
@@ -367,7 +375,9 @@ def trace_command(command: list[str], trace: Path, *, cwd: Path, env: dict) -> b
         raw = output.read(policy.MAX_OUTPUT_BYTES + 1)
         error = diagnostic.read(16001)
     if code or len(raw) > policy.MAX_OUTPUT_BYTES or len(error) > 16000:
-        raise ValueError("Trusted dependency observation failed: " + error[:2000].decode(errors="replace"))
+        raise ValueError(f"Trusted dependency observation failed (exit={code}, "
+                         f"stdout_bytes={len(raw)}, stderr_bytes={len(error)}): "
+                         + error[:1800].decode(errors="replace"))
     return raw
 
 
