@@ -724,7 +724,9 @@ $d(i)=\gcd\{n\geq1:p_{ii}^{(n)}>0\}$;
 przez $\gcd$ rozumiemy największy wspólny dzielnik
 niepustego zbioru, zaś jeśli zbiór jest pusty,
 stan nie ma dodatnich czasów powrotu i okres
-pozostawiamy nieokreślony.
+pozostawiamy nieokreślony. Stan o okresie $1$
+nazywamy nieokresowym, a łańcuch nieokresowym,
+jeśli każdy jego stan ma okres $1$.
 \end{definicja}
 
 \begin{lemat}[Okres jest wspólny dla klasy komunikującej]
@@ -732,13 +734,17 @@ Jeżeli stany $i,j$ komunikują się i istnieje
 $n\geq1$ z $p_{ii}^{(n)}>0$, to $d(i)=d(j)$.
 \end{lemat}
 \begin{proof}
-Wybierzmy $r,s\geq0$ takie, że
+Dla $i=j$ teza jest oczywista. Dla $i\ne j$
+wybierzmy $r,s\geq1$ takie, że
 $p_{ij}^{(r)}>0$ i $p_{ji}^{(s)}>0$.
-W szczególności istnieje cykl z $i$ do $j$ i z
-powrotem długości $r+s$, a więc $d(i)$ dzieli $r+s$.
-Dla dowolnego $n$ z $p_{jj}^{(n)}>0$ powstaje
-cykl w $i$ długości $r+n+s$, zatem $d(i)$
-dzieli $r+n+s$ i $r+s$, więc dzieli $n$.
+Z równania Chapmana--Kołmogorowa mamy
+$p_{ii}^{(r+s)}\geq p_{ij}^{(r)}p_{ji}^{(s)}>0$
+oraz $p_{jj}^{(r+s)}>0$, więc oba okresy są określone.
+W szczególności $d(i)$ dzieli $r+s$.
+Dla dowolnego $n\geq1$ z $p_{jj}^{(n)}>0$ mamy
+$p_{ii}^{(r+n+s)}\geq p_{ij}^{(r)}p_{jj}^{(n)}
+p_{ji}^{(s)}>0$, zatem $d(i)$ dzieli $r+n+s$
+i $r+s$, więc dzieli $n$.
 Tym samym $d(i)$ dzieli $d(j)$.
 Zamieniając $i$ z $j$, otrzymujemy podzielność
 odwrotną, a więc równość.
@@ -767,12 +773,26 @@ to $\sum_{n\geq0}p_{ii}^{(n)}=1/(1-r_i)$.
 \begin{proof}
 Rozważmy liczbę wszystkich wizyt w $i$,
 $N_i=\sum_{n\geq0}\chi_{\{X_n=i\}}$, dla łańcucha
-rozpoczętego w $i$. Niech $T_k$ oznacza chwilę
-$k$-tego powrotu po czasie zero; $T_0=0$.
-Mocna własność Markowa zastosowana w $T_k$
-daje indukcyjnie
-$\Prob_i(T_k<\infty)=r_i^k$.
-Z monotonicznej zbieżności
+rozpoczętego w $i$. Niech $T_0=0$, a rekurencyjnie
+$T_{k+1}=\inf\{n>T_k:X_n=i\}$, z wartością $\infty$,
+jeśli taki czas nie istnieje. Każdy $T_k$ jest czasem
+zatrzymania: dla $k\geq1$ zdarzenie $\{T_k\leq n\}$
+jest równe $\{\sum_{\ell=1}^n\chi_{\{X_\ell=i\}}\geq k\}$.
+Dla $m\geq1$ mocna własność Markowa, zastosowana
+do zdarzenia powrotu w ciągu następnych $m$ kroków,
+daje
+\[
+\Prob_i(T_{k+1}<\infty,\ T_{k+1}-T_k\leq m)
+=\Prob_i(T_k<\infty)\Prob_i(\tau_i^+\leq m),
+\]
+gdzie zdarzenie po lewej rozumiemy tylko dla
+skończonego $T_{k+1}$. Przechodząc do granicy
+$m\to\infty$ przez ciągłość miary z dołu,
+otrzymujemy
+$\Prob_i(T_{k+1}<\infty)=r_i\Prob_i(T_k<\infty)$.
+Indukcja daje $\Prob_i(T_k<\infty)=r_i^k$.
+Ponieważ punktowo $N_i=\sum_{k\geq0}\chi_{\{T_k<\infty\}}$,
+dwukrotne zastosowanie twierdzenia o zbieżności monotonicznej daje
 \[
 \sum_{n\geq0}p_{ii}^{(n)}=\E_iN_i
 =\sum_{k\geq0}\Prob_i(T_k<\infty)
@@ -794,16 +814,25 @@ Ze wzoru Stirlinga
 $\binom{2n}{n}2^{-2n}\sim1/\sqrt{\pi n}$.
 Szereg prawdopodobieństw powrotu jest rozbieżny,
 więc spacer jest powracający. Ponadto okres wynosi $2$.
-Dla spaceru z dryfem $\Prob(\xi_k=1)=p\ne1/2$
+Dla spaceru z niezależnymi przyrostami o wspólnym
+rozkładzie $\Prob(\xi_k=1)=p$, gdzie $0<p<1$
+i $p\ne1/2$,
 mamy
 $\Prob_0(X_{2n}=0)=\binom{2n}{n}[p(1-p)]^n
 \sim[4p(1-p)]^n/\sqrt{\pi n}$,
-a $4p(1-p)<1$; stan zero jest zatem przemijający.
+a $4p(1-p)<1$; przez porównanie z szeregiem
+geometrycznym stan zero jest zatem przemijający.
+Dla $p=0$ lub $p=1$ spacer porusza się
+deterministycznie w jednym kierunku i również
+nie powraca do punktu wyjścia.
+Przez niezmienniczość przejść względem przesunięć
+te same wnioski o powracaniu dotyczą każdego stanu.
 \end{przyklad}
 
 \begin{przyklad}[Dlaczego przy powracaniu liczy się cały szereg]
-Łańcuch może w jednym kroku powracać bardzo mało
-prawdopodobnie, ale i tak powracać niemal na pewno,
+Prawdopodobieństwo powrotu w jednym kroku może
+być małe, a powrót w pewnej dodatniej chwili może
+mimo to zachodzić prawie na pewno,
 ponieważ ma nieskończenie wiele okazji. Dlatego
 samo $p_{ii}$ nie rozstrzyga o powracaniu.
 Na przykład spacer symetryczny ma $p_{00}=0$,
@@ -832,7 +861,33 @@ Indukcja z warunkowaniem względem $X_n$
 daje $\Prob(X_n\in C)=1$ przy $X_0\in C$ p.n.
 Przeliczalne przecięcie zdarzeń pełnej miary
 zapewnia pozostawanie w $C$ jednocześnie
-we wszystkich chwilach. 
+we wszystkich chwilach.
+\end{proof}
+
+\begin{stwierdzenie}[Powracanie jest własnością klasy komunikującej]
+Jeżeli $i$ i $j$ komunikują się, to albo oba stany
+są powracające, albo oba są przemijające.
+Każda klasa powracająca jest domknięta.
+\end{stwierdzenie}
+\begin{proof}
+Wybierzmy $r,s\geq0$ z $p_{ji}^{(r)}>0$
+i $p_{ij}^{(s)}>0$. Dla każdego $n\geq0$
+\[
+p_{jj}^{(r+n+s)}\geq p_{ji}^{(r)}
+p_{ii}^{(n)}p_{ij}^{(s)}.
+\]
+Jeżeli szereg po $n$ dla $i$ jest rozbieżny,
+to szereg dla $j$ także jest rozbieżny,
+a kryterium powracania daje tezę w jedną stronę.
+Zamiana $i$ i $j$ daje drugą.
+Jeśli klasa powracająca $C$ nie byłaby domknięta,
+istniałyby $i\in C$, $j\notin C$ takie, że $p_{ij}>0$.
+Wtedy $j$ nie może osiągnąć $i$ (w przeciwnym
+razie komunikowałyby się). Zatem
+$\Prob_j(\tau_i<\infty)=0$, ponieważ każde
+$\Prob_j(X_n=i)=0$. Z własności Markowa
+$\Prob_i(X_1=j,\ \tau_i^+=\infty)=p_{ij}>0$,
+co przeczy powracaniu $i$.
 \end{proof}
 
 \begin{przyklad}[Dwie klasy pochłaniające i stan przejściowy]
@@ -841,8 +896,11 @@ $P=\begin{psmallmatrix}1&0&0\\ 1/3&0&2/3\\ 0&0&1\end{psmallmatrix}$.
 Stany $0$ i $2$ są oddzielnymi domkniętymi klasami,
 a stan $1$ jest przemijający. Rozkłady
 $\delta_0$ i $\delta_2$ są stacjonarne;
-stacjonarny jest też każdy ich wypukły
-mieszany rozkład $t\delta_0+(1-t)\delta_2$.
+stacjonarny jest też każdy ich rozkład mieszany
+$t\delta_0+(1-t)\delta_2$, gdzie $t\in[0,1]$.
+Są to wszystkie rozkłady stacjonarne: kolumna
+macierzy odpowiadająca stanowi $1$ jest zerowa,
+więc równanie $\pi P=\pi$ wymusza $\pi_1=0$.
 Zatem bez nieprzywiedlności nie musi być
 jednoznacznego rozkładu stacjonarnego ani
 wspólnej granicy niezależnej od startu.
@@ -861,7 +919,7 @@ warunkową, a nie wnioskować z samej znajomości
 jednokrokowych rozkładów bezwarunkowych.
 \end{uwaga}
 
-\begin{przyklad}[Rozwiązane zadanie: pochłanianie a warunkowanie wstecz]
+\begin{przyklad}[Rozwiązane zadanie: warunkowanie wstecz]
 W modelu pogody z macierzą
 $P=\begin{psmallmatrix}4/5&1/5\\2/5&3/5\end{psmallmatrix}$
 przyjmijmy $\Prob(X_0=s)=3/4$ i
@@ -900,6 +958,9 @@ czyli $\pi P=\pi$.
 Mówimy, że $\pi$ spełnia \emph{warunek równowagi
 szczegółowej}, jeśli
 $\pi_i p_{ij}=\pi_jp_{ji}$ dla wszystkich $i,j\in S$.
+Łańcuch z rozkładem początkowym $\pi$ spełniającym
+równowagę szczegółową nazywamy odwracalnym
+względem $\pi$.
 \end{definicja}
 
 \begin{stwierdzenie}[Równowaga szczegółowa implikuje stacjonarność]
@@ -914,6 +975,30 @@ $\sum_i\pi_i p_{ij}=\sum_i\pi_jp_{ji}
 W ostatnim wyrażeniu sumujemy \emph{wiersz}
 macierzy $P$ o indeksie początkowym $j$.
 \end{proof}
+
+Jeżeli $X_0$ ma rozkład stacjonarny $\pi$, to
+$X_n$ ma rozkład $\pi P^n=\pi$ dla każdego $n$.
+Ponadto z prawa trajektorii i wielokrokowej
+własności Markowa, dla $0\leq t_0<\cdots<t_r$
+i $i_0,\ldots,i_r\in S$,
+\[
+\Prob(X_{t_0}=i_0,\ldots,X_{t_r}=i_r)
+=\pi_{i_0}\prod_{\ell=1}^r
+p_{i_{\ell-1}i_\ell}^{(t_\ell-t_{\ell-1})}.
+\]
+Wzór nie zmienia się przy wspólnym przesunięciu
+chwil o dowolną nieujemną liczbę całkowitą,
+co dowodzi ścisłej stacjonarności procesu.
+Przy równowadze szczegółowej mamy także
+\[
+\pi_{i_0}p_{i_0i_1}\cdots p_{i_{r-1}i_r}
+=\pi_{i_r}p_{i_ri_{r-1}}\cdots p_{i_1i_0}.
+\]
+Równość wynika z kolejnego stosowania równowagi
+szczegółowej od lewej do prawej, bez dzielenia
+przez $\pi_i$; działa zatem również dla zerowych mas.
+Wyraża ona niezmienniczość prawa skończonych
+trajektorii przy odwróceniu czasu.
 
 \begin{przyklad}[Spacer na grafie: przewaga wierzchołków o dużym stopniu]
 Dla skończonego nieskierowanego grafu bez
@@ -977,9 +1062,11 @@ $D_i=c\rho_i-\pi_i\geq0$. Co najmniej jeden $D_i=0$.
 Ponieważ obie miary są stacjonarne,
 $D_j=\sum_iD_i p_{ij}$ dla wszystkich $j$.
 Jeśli $D_j=0$, to każdy $i$ z $p_{ij}>0$ ma $D_i=0$.
-Przez iterację dostajemy $D_i=0$ dla wszystkich $i$
-mających drogę do $j$, a przez nieprzywiedlność
-dla wszystkich $i$. Zatem $\pi=c\rho$.
+Wybieramy $j$ z $D_j=0$. Z $DP^n=D$ dla
+każdego $n$ otrzymujemy
+$0=D_j\geq D_i p_{ij}^{(n)}$. Dla każdego $i$
+nieprzywiedlność zapewnia $n$ z $p_{ij}^{(n)}>0$,
+stąd $D_i=0$ dla wszystkich $i$. Zatem $\pi=c\rho$.
 Sumowanie współrzędnych daje $c=1$, więc
 $\pi=\rho$.
 \end{proof}
@@ -1003,11 +1090,15 @@ nieujemną kombinacją całkowitą $n_1,\ldots,n_r$.
 Aby to uzasadnić, oznaczmy $a=n_1$.
 Reszty modulo $a$ osiągane przez nieujemne sumy
 $n_1,\ldots,n_r$ tworzą podmonoid skończonej
-grupy $\Z/a\Z$, a więc są podgrupą;
-NWD równy $1$ oznacza, że jest to cała grupa.
-Wybierzmy dla każdej reszty jedną nieujemną sumę
-$h_r$ o tej reszcie. Każda liczba o danej reszcie
-większa lub równa $h_r$ jest postaci $h_r+ka$,
+grupy $\Z/a\Z$. Jest on podgrupą, ponieważ
+dla każdego elementu $x$ tego podmonoidu istnieje
+$d\geq1$ z $dx=0$, a wtedy $-x=(d-1)x$ również
+należy do podmonoidu. Z tożsamości Bézouta dla
+liczb $n_1,\ldots,n_r$ wynika, że podgrupa zawiera
+resztę $1$, a więc jest całą grupą.
+Wybierzmy dla każdej reszty $b$ jedną nieujemną sumę
+$h_b$ o tej reszcie. Każda liczba o danej reszcie
+większa lub równa $h_b$ jest postaci $h_b+ka$,
 $k\geq0$, więc jest realizowana jako długość
 ścieżki z $o$ do $o$.
 
@@ -1050,8 +1141,13 @@ gdzie $R$ jest macierzą stochastyczną (nieujemność
 wynika z definicji $\varepsilon$).
 Dla dowolnych rozkładów $\mu,\nu$
 $\mu Q-\nu Q=(1-\varepsilon)(\mu R-\nu R)$.
-Ponieważ przejście stochastyczne nie zwiększa
-normy sumy modułów różnic,
+Dla każdej macierzy stochastycznej $K$ i dowolnego
+wektora $v$ mamy
+\[
+\|vK\|_1=\sum_j\left|\sum_i v_iK_{ij}\right|
+\leq\sum_i |v_i|\sum_jK_{ij}=\|v\|_1.
+\]
+Stosując to do $K=R$ oraz $v=\mu-\nu$, otrzymujemy
 \[
 \|\mu Q-\nu Q\|_1
 \leq(1-\varepsilon)\|\mu-\nu\|_1.
@@ -1075,6 +1171,14 @@ $\|\mu-\nu\|_{\mathrm{TV}}=\sup_{A\subseteq S}
 |\mu(A)-\nu(A)|=\frac12\sum_i|\mu_i-\nu_i|$.
 Użyta w dowodzie norma $\ell^1$ jest dwa razy
 większa od odległości całkowitej wariacji.
+Aby uzasadnić wzór, połóżmy $v_i=\mu_i-\nu_i$
+i $A_+=\{i:v_i>0\}$. Ponieważ $\sum_i v_i=0$,
+suma dodatnich współrzędnych jest równa modułowi
+sumy ujemnych i wynosi $\tfrac12\sum_i|v_i|$.
+Dla dowolnego $A\subseteq S$ moduł $\sum_{i\in A}v_i$
+nie przekracza tej liczby; dla $A=A_+$ zachodzi
+równość. Wszystkie szeregi są absolutnie zbieżne,
+gdyż $\mu$ i $\nu$ są rozkładami probabilistycznymi.
 W przypadku przestrzeni nieskończonych rozkład
 stacjonarny może nie istnieć, a okresowość nie
 jest jedyną przeszkodą zbieżności.
