@@ -55,12 +55,20 @@ class TestLogicModelSplit(unittest.TestCase):
         paths = LST["chapters"] + MOD["chapters"] + NCL["chapters"] + MMT["chapters"]
         sources = [(ROOT / path).read_text("utf8") for path in paths]
         labels = [x for src in sources for x in LABEL.findall(src)]
-        refs = {a or b for src in sources for a, b in REF.findall(src)}
         self.assertEqual(len(labels), len(set(labels)))
-        self.assertFalse(refs - set(labels), refs - set(labels))
+        # Resolve against the actual xr-hyper imports, not exceptions.
+        by_stem = {Path(book["entrypoint"]).stem: book for book in CATALOG}
         for book in (LST, MOD, NCL, MMT):
             text = (ROOT / book["entrypoint"]).read_text("utf8")
             self.assertEqual(re.findall(r"\\input\{\.\./\.\./([^}]+)\}", text), book["chapters"])
+            imported = re.findall(r"\\externaldocument\{([^}]+)\}", text)
+            self.assertTrue(set(imported) <= set(by_stem), imported)
+            available = {label for source_book in [book] + [by_stem[name] for name in imported]
+                         for path in source_book["chapters"]
+                         for label in LABEL.findall((ROOT / path).read_text("utf8"))}
+            book_refs = {a or b for path in book["chapters"]
+                         for a, b in REF.findall((ROOT / path).read_text("utf8"))}
+            self.assertFalse(book_refs - available, (book["id"], book_refs - available))
         self.assertIn(str(FUZZY.relative_to(ROOT)), NCL["chapters"])
         self.assertNotIn(str(FUZZY.relative_to(ROOT)), LST["chapters"])
         self.assertFalse((ROOT / "chapters/pl/logic_and_set_theory/40-logika-rozmyta-i-zbiory-rozmyte.tex").exists())
