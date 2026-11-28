@@ -1,0 +1,236 @@
+\chapter{Teoria aproksymacji}
+\label{ma2:ch:approximation}
+
+Rozwinięcie Taylora pozwala przybliżać funkcje
+za pomocą wielomianów w otoczeniu ustalonego punktu.
+Nie każda funkcja ciągła jest jednak różniczkowalna,
+a nawet funkcja gładka nie musi być sumą swojego
+szeregu Taylora. W tym rozdziale zmieniamy pytanie:
+czy na całym przedziale domkniętym można przybliżyć
+dowolną funkcję ciągłą wielomianem z dowolnie małym
+błędem? Nie wymagamy już zgodności pochodnych
+w wybranym punkcie.
+
+\section{Aproksymacja jednostajna i moduł ciągłości}
+
+\begin{definicja}[Błąd najlepszej aproksymacji]
+\label{ma2:def:approx-best-error}
+Niech $K\subseteq\R^d$ będzie niepustym zbiorem
+zwartym, a $C(K)$ przestrzenią rzeczywistych funkcji
+ciągłych z normą supremum
+$\|f\|_\infty=\sup_{x\in K}|f(x)|$.
+Dla niepustego zbioru $A\subseteq C(K)$ określamy
+\[
+ E(f,A)=\inf_{g\in A}\|f-g\|_\infty.
+\]
+Na przedziale $[a,b]$, $a<b$, oznaczamy przez
+$\mathcal P_n$ przestrzeń ograniczeń wielomianów
+stopnia co najwyżej $n$ do tego przedziału
+i piszemy $E_n(f)=E(f,\mathcal P_n)$.
+\end{definicja}
+
+\begin{stwierdzenie}
+\label{ma2:prop:approx-distance}
+Dla dowolnego niepustego $A\subseteq C(K)$
+zachodzi $|E(f,A)-E(h,A)|\le\|f-h\|_\infty$.
+Ponadto $E(f,A)=0$ wtedy i tylko wtedy,
+gdy $f$ należy do domknięcia $A$ w normie supremum.
+Na przedziale ciąg $(E_n(f))_{n\ge0}$ jest
+nierosnący.
+\end{stwierdzenie}
+\begin{proof}
+Dla każdego $g\in A$ nierówność trójkąta daje
+$\|f-g\|_\infty\le\|f-h\|_\infty+\|h-g\|_\infty$.
+Biorąc infimum po $g$ i zamieniając role $f,h$,
+otrzymujemy pierwszą tezę. Jeżeli $E(f,A)=0$,
+to dla każdego $\varepsilon>0$ istnieje $g\in A$
+o $\|f-g\|_\infty<\varepsilon$; jest to dokładnie
+warunek przynależności do domknięcia.
+Implikacja odwrotna wynika z tego samego warunku.
+Ostatnia teza wynika z inkluzji
+$\mathcal P_n\subseteq\mathcal P_{n+1}$.
+\end{proof}
+
+\begin{definicja}[Moduł ciągłości]
+\label{ma2:def:approx-modulus}
+Dla $f\in C(K)$ i $\delta\ge0$ określamy
+\[
+ \omega_f(\delta)=
+ \sup\{|f(x)-f(y)|:x,y\in K,\ \|x-y\|_2\le\delta\}.
+\]
+\end{definicja}
+
+\begin{stwierdzenie}
+\label{ma2:prop:approx-modulus}
+Moduł ciągłości jest niemalejący,
+$\omega_f(0)=0$, $\omega_f(\delta)\le2\|f\|_\infty$
+oraz $\omega_f(\delta)\to0$ przy $\delta\to0^+$.
+Jeżeli $K$ jest wypukły, to dla $\delta>0$
+i $x,y\in K$ zachodzi
+\[
+ |f(x)-f(y)|\le
+ \left(1+\frac{\|x-y\|_2}{\delta}\right)\omega_f(\delta).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Monotoniczność i wartość w zerze wynikają
+z definicji, a górne ograniczenie z nierówności
+trójkąta. Funkcja ciągła na zbiorze zwartym
+jest jednostajnie ciągła, co daje granicę.
+Jeśli $x\ne y$, dzielimy odcinek $[x,y]$
+na $N=\lceil\|x-y\|_2/\delta\rceil$ równych
+części. Wszystkie punkty podziału należą do $K$,
+a kolejne odległości nie przekraczają $\delta$.
+Sumowanie $N$ różnic i nierówność
+$N\le1+\|x-y\|_2/\delta$ dają wynik.
+Dla $x=y$ lewa strona jest zerowa.
+\end{proof}
+
+\section{Wielomiany Bernsteina}
+
+\begin{definicja}
+\label{ma2:def:approx-bernstein}
+Dla $f\in C([0,1])$, $n\ge1$ i $0\le k\le n$
+określamy
+\[
+ b_{n,k}(x)=\binom nk x^k(1-x)^{n-k},\qquad
+ B_nf(x)=\sum_{k=0}^n f(k/n)b_{n,k}(x).
+\]
+$B_nf$ nazywamy wielomianem Bernsteina funkcji $f$.
+\end{definicja}
+
+Dla ustalonego $x\in[0,1]$ liczby $b_{n,k}(x)$
+są nieujemne i sumują się do $1$.
+Wartość $B_nf(x)$ jest więc średnią ważoną
+wartości funkcji w węzłach $k/n$, a nie
+na ogół wartością interpolującą w tych węzłach.
+W punktach $0$ oraz $1$ odpowiednio jedynie
+składnik $k=0$ i $k=n$ ma wagę $1$,
+zatem $B_nf(0)=f(0)$ i $B_nf(1)=f(1)$.
+
+\begin{lemat}[Momenty wag Bernsteina]
+\label{ma2:lem:approx-bernstein-moments}
+Dla $x\in[0,1]$ i $n\ge1$ mamy
+\[
+ \sum_{k=0}^n b_{n,k}(x)=1,\qquad
+ \sum_{k=0}^n \frac{k}{n}b_{n,k}(x)=x,
+\]
+\[
+ \sum_{k=0}^n
+ \left(\frac{k}{n}-x\right)^2 b_{n,k}(x)
+ =\frac{x(1-x)}{n}.
+\]
+\end{lemat}
+\begin{proof}
+Pierwsza tożsamość jest wzorem dwumianowym
+dla $x+(1-x)$. Dla $k\ge1$ zachodzi
+$k\binom nk=n\binom{n-1}{k-1}$, więc
+$\sum_k k b_{n,k}(x)=nx$ po wyłączeniu $nx$
+i ponownym zastosowaniu wzoru dwumianowego.
+Dla $n\ge2$ i $k\ge2$ analogicznie
+$k(k-1)\binom nk=n(n-1)\binom{n-2}{k-2}$,
+stąd $\sum_k k(k-1)b_{n,k}(x)=n(n-1)x^2$.
+Dla $n=1$ obie strony tej ostatniej równości
+są zerowe. Korzystając z $k^2=k(k-1)+k$,
+otrzymujemy
+\[
+ \sum_k (k/n)^2 b_{n,k}(x)
+ =\frac{n-1}{n}x^2+\frac{x}{n}.
+\]
+Rozwinięcie kwadratu $(k/n-x)^2$ i podstawienie
+poprzednich tożsamości daje tezę.
+\end{proof}
+
+\begin{twierdzenie}[Aproksymacja wielomianami Bernsteina]
+\label{ma2:thm:approx-bernstein}
+Dla $f\in C([0,1])$, $n\ge1$ i $\delta>0$
+zachodzi
+\[
+ \|B_nf-f\|_\infty\le
+ \left(1+\frac{1}{2\delta\sqrt n}\right)
+ \omega_f(\delta).
+\]
+W szczególności
+$\|B_nf-f\|_\infty\le\frac32\omega_f(n^{-1/2})$
+i $B_nf$ zbiega jednostajnie do $f$.
+\end{twierdzenie}
+\begin{proof}
+Na mocy \ref{ma2:lem:approx-bernstein-moments}
+oraz nieujemności wag
+\[
+ |B_nf(x)-f(x)|\le
+ \sum_{k=0}^n b_{n,k}(x)|f(k/n)-f(x)|.
+\]
+Stosując \ref{ma2:prop:approx-modulus},
+otrzymujemy ograniczenie przez
+\[
+ \omega_f(\delta)\left(1+
+ \frac1\delta\sum_{k=0}^n b_{n,k}(x)|k/n-x|\right).
+\]
+Nierówność Cauchy'ego--Schwarza dla skończonych
+ciągów $\sqrt{b_{n,k}(x)}$ i
+$\sqrt{b_{n,k}(x)}|k/n-x|$ oraz lemat o momentach
+dają
+\[
+ \sum_k b_{n,k}(x)|k/n-x|
+ \le\sqrt{\frac{x(1-x)}n}\le\frac1{2\sqrt n}.
+\]
+Ostatnie oszacowanie wynika z
+$x(1-x)=1/4-(x-1/2)^2$.
+Biorąc supremum po $x$ otrzymujemy pierwszą
+nierówność. Podstawiamy $\delta=n^{-1/2}$
+i stosujemy granicę modułu ciągłości z
+\ref{ma2:prop:approx-modulus}.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Weierstrassa o aproksymacji]
+\label{ma2:thm:approx-weierstrass}
+Niech $a<b$. Dla każdej $f\in C([a,b])$
+i każdego $\varepsilon>0$ istnieje wielomian $p$
+taki, że $\|f-p\|_\infty<\varepsilon$.
+Równoważnie $\lim_{n\to\infty}E_n(f)=0$.
+\end{twierdzenie}
+\begin{proof}
+Funkcja $g(t)=f(a+(b-a)t)$ jest ciągła na $[0,1]$.
+Z \ref{ma2:thm:approx-bernstein} wynika jednostajna
+zbieżność $B_ng$ do $g$. Po podstawieniu
+\[
+ p_n(x)=(B_ng)\bigl((x-a)/(b-a)\bigr)
+\]
+otrzymujemy wielomiany stopnia co najwyżej $n$
+oraz $\|p_n-f\|_\infty=\|B_ng-g\|_\infty$,
+gdyż podstawienie afiniczne jest bijekcją
+między przedziałami. Stąd $E_n(f)$ jest
+ograniczony przez ciąg błędów dążący do zera.
+Implikacja odwrotna wynika z definicji infimum.
+\end{proof}
+
+\begin{przyklad}[Aproksymacja funkcji kwadratowej]
+\label{ma2:ex:approx-bernstein-square}
+Dla $f(x)=x^2$ tożsamości momentów dają
+\[
+ B_nf(x)=x^2+\frac{x(1-x)}n,\qquad
+ \|B_nf-f\|_\infty=\frac1{4n}.
+\]
+Maksimum błędu jest osiągane w $x=1/2$.
+Dla $n\ge2$ funkcja $f$ sama należy do $\mathcal P_n$,
+więc $E_n(f)=0$. Konstrukcja Bernsteina
+nie musi zatem dawać wielomianu najlepszej
+aproksymacji; jej zaletą jest jawny wzór
+i gwarancja zbieżności dla każdej funkcji ciągłej.
+\end{przyklad}
+
+\begin{przyklad}[Funkcje lipschitzowskie]
+\label{ma2:ex:approx-bernstein-lipschitz}
+Jeżeli $|f(x)-f(y)|\le L|x-y|$ na $[0,1]$,
+to bezpośrednio w pierwszym oszacowaniu dowodu
+\ref{ma2:thm:approx-bernstein} dostajemy
+\[
+ |B_nf(x)-f(x)|\le
+ L\sum_k b_{n,k}(x)|k/n-x|
+ \le\frac{L}{2\sqrt n}.
+\]
+Przykładem jest $f(x)=|x-1/2|$ z $L=1$,
+co pokazuje, że metoda działa także
+dla funkcji nieróżniczkowalnych.
+\end{przyklad}
