@@ -883,7 +883,7 @@ deterministycznie w jednym kierunku i również
 nie powraca do punktu wyjścia.
 Przez niezmienniczość przejść względem przesunięć
 te same wnioski o powracaniu dotyczą każdego stanu.
-W przypadku symetrycznym oraz dla $0<p<1$
+Dla $0<p<1$ (w tym w przypadku symetrycznym)
 okres każdego stanu wynosi $2$: powroty
 w nieparzystych chwilach są niemożliwe, a powrót
 po dwóch krokach ma prawdopodobieństwo $2p(1-p)>0$.
@@ -934,6 +934,9 @@ we wszystkich chwilach.
 Jeżeli $i$ i $j$ komunikują się, to albo oba stany
 są powracające, albo oba są przemijające.
 Każda klasa powracająca jest domknięta.
+Domkniętość klasy nieskończonej nie gwarantuje
+jednak powracania, czego przykładem jest spacer
+z dryfem na $\Z$.
 \end{stwierdzenie}
 \begin{proof}
 Wybierzmy $r,s\geq0$ z $p_{ji}^{(r)}>0$
@@ -1087,6 +1090,122 @@ kolejnych $X_n$ naprzemiennie wynoszą
 $(1,0)$ i $(0,1)$.
 Sama równość $\pi P=\pi$ nie wystarcza do
 $\mu P^n\to\pi$; trzeba kontrolować okresowość.
+\end{przyklad}
+
+\begin{twierdzenie}[Dodatnie powracanie a rozkład stacjonarny]
+\label{thm:rp1-12-positive-recurrence}
+Niech $P$ będzie macierzą stochastyczną nieprzywiedlnego
+łańcucha Markowa na niepustym przeliczalnym zbiorze $S$.
+Następujące warunki są równoważne:
+\begin{enumerate}
+\item Pewien stan jest dodatnio powracający.
+\item Każdy stan jest dodatnio powracający.
+\item Istnieje rozkład stacjonarny $\pi$.
+\end{enumerate}
+Jeżeli te warunki zachodzą, rozkład stacjonarny
+jest jedyny i dla każdego $i\in S$ spełnia
+\[
+\pi_i=\frac1{\E_i\tau_i^+}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Ustalmy stan $i$ i oznaczmy $\tau=\tau_i^+$.
+Najpierw załóżmy, że $i$ jest dodatnio powracający.
+Dla $j\in S$ określmy oczekiwaną liczbę wizyt
+w $j$ w jednym cyklu powrotu do $i$:
+\[
+v_j=\E_i\sum_{n=0}^{\tau-1}\chi_{\{X_n=j\}}.
+\]
+Mamy $v_i=1$ oraz z twierdzenia Tonellego
+$\sum_jv_j=\E_i\tau<\infty$.
+Pokażemy, że $vP=v$. Dla każdego $j\in S$
+\begin{align*}
+\sum_{k\in S}v_kp_{kj}
+&=\sum_{n\geq0}\E_i[
+      \chi_{\{\tau>n\}}p_{X_nj}]\\
+&=\sum_{n\geq0}\Prob_i(\tau>n,X_{n+1}=j)\\
+&=\E_i\sum_{n=1}^{\tau}\chi_{\{X_n=j\}}=v_j.
+\end{align*}
+Druga równość wynika z własności Markowa, ponieważ
+$\{\tau>n\}\in\mathcal F_n^X$. Ostatnia zachodzi,
+gdyż $X_0=X_\tau=i$ p.n., a zamiany nieujemnych
+sum i wartości oczekiwanych uzasadnia twierdzenie
+Tonellego. Normalizacja przez $\E_i\tau$ daje
+rozkład stacjonarny $\pi_j=v_j/\E_i\tau$.
+Otrzymaliśmy implikację (1)$\Rightarrow$(3).
+
+Niech teraz $\pi$ będzie dowolnym rozkładem stacjonarnym.
+Z nieprzywiedlności wynika $\pi_i>0$ dla każdego $i$:
+wybieramy $k$ z $\pi_k>0$ oraz $m$ z $p_{ki}^{(m)}>0$,
+wtedy $\pi_i=(\pi P^m)_i\geq\pi_kp_{ki}^{(m)}>0$.
+
+Dla dowolnego $i$ nie zakładamy jeszcze powracania.
+Definiujemy $v_j=\sum_{n\geq0}\Prob_i(X_n=j,\tau>n)$,
+dopuszczając wartość nieskończoną. W stacjonarnym
+łańcuchu, dla ustalonego $M\geq0$, zdarzenia
+\[
+\{X_{M-n}=i,\ X_{M-n+1}\ne i,\ldots,
+  X_M\ne i,\ X_M=j\},\qquad 0\leq n\leq M,
+\]
+są rozłączne (dla $n=0$ warunki po $X_{M}=i$
+dotyczące braku ponownej wizyty są puste).
+Każde określa ostatnią wizytę w $i$ do chwili $M$
+i zawiera się w $\{X_M=j\}$. Z prawa trajektorii
+oraz stacjonarności prawdopodobieństwo tego
+zdarzenia wynosi $\pi_i\Prob_i(\tau>n,X_n=j)$.
+Sumując po $n$ i przechodząc do granicy, dostajemy
+\[
+\pi_j\geq\pi_i v_j.
+\]
+Sumując po $j$ i stosując twierdzenie Tonellego,
+otrzymujemy
+\[
+1\geq\pi_i\sum_jv_j
+=\pi_i\sum_{n\geq0}\Prob_i(\tau>n)
+=\pi_i\E_i\tau.
+\]
+Zatem $\E_i\tau<\infty$, co również implikuje
+$\Prob_i(\tau<\infty)=1$. Ponieważ $i$ był dowolny,
+dowodzi to (3)$\Rightarrow$(2); implikacja
+(2)$\Rightarrow$(1) jest oczywista.
+
+Pozostaje ustalić jedyność i dokładny wzór.
+Dla ustalonego $i$ z pierwszej części dowodu mamy
+$vP=v$, $v_i=1$. Wektor $w=\pi-\pi_iv$ jest
+nieujemny na mocy wykazanej nierówności,
+sumowalny i spełnia $wP=w$ oraz $w_i=0$.
+Dla dowolnego $k$ wybieramy $m$ z $p_{ki}^{(m)}>0$.
+Wtedy $0=w_i=(wP^m)_i\geq w_kp_{ki}^{(m)}$,
+więc $w_k=0$. Stąd $\pi=\pi_iv$, a sumowanie
+współrzędnych daje $1=\pi_i\E_i\tau$.
+Wektor $v$ zależy wyłącznie od $P$ i wybranego $i$,
+więc ten wzór wyznacza cały rozkład stacjonarny
+jednoznacznie.
+\end{proof}
+
+\begin{uwaga}
+W nieprzywiedlnym łańcuchu wszystkie stany są
+jednego z trzech typów: przemijające, zerowo
+powracające albo dodatnio powracające. Istnienie
+rozkładu stacjonarnego odróżnia przypadek dodatniego
+powracania od dwóch pozostałych, ale jego brak sam
+w sobie nie rozstrzyga, czy łańcuch jest przemijający,
+czy zerowo powracający.
+\end{uwaga}
+
+\begin{przyklad}[Spacer symetryczny jest zerowo powracający]
+Wykazaliśmy wcześniej powracanie spaceru symetrycznego
+na $\Z$. Gdyby istniał rozkład stacjonarny $\pi$,
+dla każdego $j\in\Z$ zachodziłoby
+$\pi_j=(\pi_{j-1}+\pi_{j+1})/2$.
+Zatem $\pi_{j+1}-\pi_j$ nie zależy od $j$.
+Ciąg $(\pi_j)_{j\in\Z}$ byłby afiniczny,
+a jego nieujemność dla wszystkich całkowitych
+$j$ wymusza zerową różnicę. Stały ciąg nieujemny
+na $\Z$ nie może mieć sumy równej $1$.
+Nie istnieje więc rozkład stacjonarny.
+Z twierdzenia~\ref{thm:rp1-12-positive-recurrence}
+wynika, że wszystkie stany są zerowo powracające.
 \end{przyklad}
 
 \begin{twierdzenie}[Istnienie rozkładu stacjonarnego na skończonym zbiorze]
@@ -2050,10 +2169,49 @@ być dodatnia, bo inaczej wszystkie masy
 byłyby zerowe. Dla $\rho<1$ normalizacja
 wyznacza ją jednoznacznie, a dla $\rho\geq1$
 szereg mas jest rozbieżny. W tym drugim
-przypadku nie istnieje rozkład stacjonarny. Jest to przykład sytuacji,
-w której dla skończonego łańcucha stacjonarność
-była automatyczna, ale w przeliczalnym
-tak być nie musi.
+przypadku nie istnieje rozkład stacjonarny.
+
+Łańcuch jest nieprzywiedlny, gdyż $p,q>0$.
+Z twierdzenia~\ref{thm:rp1-12-positive-recurrence}
+wynika, że dla $p<q$ wszystkie stany są dodatnio
+powracające, a w szczególności
+$\E_0\tau_0^+=1/(1-\rho)$.
+Aby rozróżnić przypadki $p=q$ i $p>q$,
+obliczmy prawdopodobieństwo wejścia do zera
+przy starcie z $1$. Dla całkowitego $M>1$
+wprowadźmy $\tau_M$, czas wejścia do stanu $M$.
+Do chwili $\tau_0\wedge\tau_M$ proces zachowuje
+się jak spacer z przykładu ruiny gracza.
+Stąd
+\[
+\Prob_1(\tau_0<\tau_M)=
+\begin{cases}
+1-1/M,&p=q,\\
+1-\dfrac{1-q/p}{1-(q/p)^M},&p\ne q.
+\end{cases}
+\]
+Zdarzenia $\{\tau_0<\tau_M\}$ rosną wraz z $M$:
+aby osiągnąć $M+1$, trzeba wcześniej osiągnąć $M$.
+Ich suma jest równa $\{\tau_0<\infty\}$,
+ponieważ skończona trajektoria do zera ma
+skończone maksimum. Z ciągłości miary z dołu
+otrzymujemy
+\[
+\Prob_1(\tau_0<\infty)=
+\begin{cases}
+1,&p\leq q,\\
+q/p,&p>q.
+\end{cases}
+\]
+Rozdzielając pierwszy krok ze stanu $0$, mamy
+$\Prob_0(\tau_0^+<\infty)=q+p\Prob_1(\tau_0<\infty)$.
+Dla $p=q$ jest to $1$, lecz nie istnieje
+rozkład stacjonarny, zatem łańcuch jest zerowo
+powracający. Dla $p>q$ prawdopodobieństwo
+powrotu wynosi $2q<1$, więc łańcuch jest
+przemijający. W ten sposób otrzymujemy pełną
+klasyfikację kolejki, a nie tylko warunek istnienia
+rozkładu stacjonarnego.
 \end{przyklad}
 
 
