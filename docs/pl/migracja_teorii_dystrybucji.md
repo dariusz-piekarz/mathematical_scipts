@@ -1,4 +1,4 @@
-# Teoria dystrybucji i analiza harmoniczna — migracja (etap 3)
+# Teoria dystrybucji i analiza harmoniczna — migracja (etap 4)
 
 Data: 2026-11-28. Nazwa robocza: distribution_theory. Planowany prefiks Atlasu: DT (do potwierdzenia przy przełączeniu identyfikatorów).
 
@@ -40,3 +40,8 @@ Etap 1 pozostaje celowo poza katalogiem aktywnych książek Atlasu. Nie jest to 
 - Rozdział 31: rozwiązanie fundamentalne laplasjanu, jądra Hessianu, główna wartość, człon delta i oszacowanie L2.
 - Rozdział 32: gęstość testów, aproksymacja jedności, rozkład dyadyczny, ogólne twierdzenie o słabym typie (1,1), szczególny przypadek interpolacji Marcinkiewicza i ograniczoność w Lp dla 1<p<∞ (z dowodem przez sprzężenie), Hessian oraz kontrprzykłady końcowe. Nie udowodniono jeszcze zbieżności głównych wartości p.w. dla ogólnych danych Lp.
 - RRC i AF pozostają nietknięte. Kompilacja i przełączenie katalogu nadal do wykonania.
+
+## Etap 4 — teoria miary i dystrybucje
+- Rozdział 33: splot na grupach lokalnie zwartych z ME-23, algebra L1, modularność, nierówność Younga L1 × Lp i dowód przedłużenia bez założenia sigma-skończoności. Konstrukcja miary Haara i jej własności pozostają w ME.
+- Rozdział 34: wzór skoku przez hiperpowierzchnię, skok strumienia, przeszkoda Schwartza i rozbieżność kwadratów aproksymacji delty z RRC-07. Nie przenoszono zastosowań do praw zachowania. Zachowano wszystkie etykiety źródłowe w ME/RRC; nowe mają prefiks dt.
+- Do dalszej kontroli: lokalna aproksymacja w Lp, słabe pochodne, lemat Weyla jako zastosowanie PDE, porównanie szczegółów Fourier i zależności katalogowe. Kompilacja wciąż do potwierdzenia.
