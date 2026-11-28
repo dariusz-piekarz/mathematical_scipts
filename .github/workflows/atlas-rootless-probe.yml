@@ -12,6 +12,8 @@ on:
       - "application/tests/test_lean_draft_transport.py"
       - "application/scripts/lean_rootless_compiler_probe.py"
       - "application/scripts/lean_offline_fixture.py"
+      - "application/scripts/lean_full_import_probe.py"
+      - "application/tests/test_lean_full_import_probe.py"
       - "application/tests/test_lean_offline_fixture.py"
       - "application/scripts/lean_mathlib_source_probe.py"
       - "application/scripts/lean_artifact_manifest.py"
@@ -330,6 +332,14 @@ jobs:
             --evidence-directory "$RUNNER_TEMP" \
             --expected-manifest-sha256 "$ATLAS_OFFLINE_MANIFEST_SHA" \
             --expected-rejected-manifest-sha256 "$ATLAS_OFFLINE_REJECTED_MANIFEST_SHA"
+      - name: Measure full Mathlib import on trusted CI host
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest tests.test_lean_full_import_probe -v
+          python3 -m scripts.lean_full_import_probe | tee "$RUNNER_TEMP/atlas-full-mathlib-measurement.log"
+          grep -q '^ATLAS_FULL_MATHLIB_MEASUREMENT ' "$RUNNER_TEMP/atlas-full-mathlib-measurement.log"
       - name: Retain scoped Mathlib offline fixture evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -343,6 +353,8 @@ jobs:
             ${{ runner.temp }}/atlas-mathlib-offline-rejected-manifest.json
             ${{ runner.temp }}/atlas-mathlib-offline-rejected-origins.json
             ${{ runner.temp }}/atlas-mathlib-offline-rejected-report.json
+            ${{ runner.temp }}/atlas-full-mathlib-measurement.json
+            ${{ runner.temp }}/atlas-full-mathlib-measurement.log
           if-no-files-found: warn
           retention-days: 30
       - name: Stop test daemon
