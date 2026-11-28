@@ -21,7 +21,18 @@ Z_{n+1}=\sum_{i=1}^{Z_n}\xi_{n,i},\qquad n\ge0,
 \]
 przyjmując sumę pustą za zero. Proces $(Z_n)_{n\ge0}$
 nazywamy \emph{procesem rozgałęziającym Galtona--Watsona}.
+Przyjmujemy filtrację
+$\calF_n=\sigma(\xi_{k,i}:0\le k<n,\ i\ge1)$,
+z trywialnym $\calF_0$.
 \end{definicja}
+
+Istnienie tablicy niezależnych zmiennych zapewnia
+przeliczalny iloczyn przestrzeni z prawem $(p_k)_{k\ge0}$.
+Indukcyjnie $Z_n$ jest skończoną zmienną całkowitoliczbową
+i jest $\calF_n$-mierzalna: na zdarzeniu $\{Z_n=k\}$
+suma definiująca $Z_{n+1}$ ma dokładnie $k$ składników,
+a zdarzenia te tworzą przeliczalny podział przestrzeni.
+Wiersz $(\xi_{n,i})_{i\ge1}$ jest niezależny od $\calF_n$.
 
 \begin{uwaga}[Dlaczego występują dwa indeksy?]
 Liczba $n$ identyfikuje pokolenie, natomiast $i$ rozróżnia
@@ -64,11 +75,15 @@ Przyjmujemy $s^0=1$, także dla $s=0$.
 Średnią liczbę potomków oznaczamy
 $m=\E\xi\in[0,\infty]$, a gdy istnieje drugi moment,
 wariancję przez $\sigma^2=\Var(\xi)$.
+Szereg definiujący $f$ jest jednostajnie zbieżny na
+$[0,1]$ przez oszacowanie wyrazów przez $p_k$;
+w szczególności $f$ jest ciągła i niemalejąca.
 \end{definicja}
 
 \begin{twierdzenie}[Rozkład przejścia i składanie funkcji tworzących]
-Niech proces Galtona--Watsona rozpoczyna się od $Z_0=1$.
-Wówczas jest łańcuchem Markowa na $\N_0$, a dla
+Proces Galtona--Watsona z dowolnym deterministycznym
+$Z_0=z\in\N_0$ jest jednorodnym łańcuchem Markowa
+na $\N_0$. Jeżeli $Z_0=1$, to dla
 $0\le s\le1$ jego funkcja tworząca $g_n(s)=\E[s^{Z_n}]$
 spełnia
 \[
@@ -78,21 +93,51 @@ g_0(s)=s,\qquad g_{n+1}(s)=g_n(f(s)),
 Przy starcie od $Z_0=z$ zachodzi $\E[s^{Z_n}]=(f^{\circ n}(s))^z$.
 \end{twierdzenie}
 \begin{proof}
-Niech $\calF_n$ będzie $\sigma$-ciałem wygenerowanym
-przez dotychczasowe pokolenia i losowania użyte do konstrukcji
-$Z_0,\ldots,Z_n$; wybieramy je tak, by zmienne
-$(\xi_{n,i})_{i\ge1}$ były niezależne od $\calF_n$.
-Po ustaleniu $Z_n=k$ następna liczba osobników jest sumą
-$k$ niezależnych kopii $\xi$. Zatem
-$\E[s^{Z_{n+1}}\mid\calF_n]=f(s)^{Z_n}$.
-Ten wzór pokazuje własność Markowa: rozkład następnego pokolenia
-przy całej przeszłości zależy tylko od $Z_n$.
+Dla $k,j\in\N_0$ niech $P(k,j)$ będzie masą w $j$
+$k$-krotnego splotu prawa $\xi$, przy czym splot zerowy
+jest masą jednostkową w zerze.
+Na zdarzeniu $\{Z_n=k\}$ niezależność $n$-tego wiersza
+od $\calF_n$ daje
+$\Prob(Z_{n+1}=j\mid\calF_n)=P(k,j)$.
+Formalnie mnożymy przez funkcję charakterystyczną
+dowolnego zdarzenia $A\in\calF_n$ i sumujemy po $k$.
+Otrzymujemy $\Prob(Z_{n+1}=j\mid\calF_n)=P(Z_n,j)$,
+czyli jednorodną własność Markowa, również względem
+filtracji naturalnej (przez własność wieży).
+Analogicznie dla $s\in[0,1]$ niezależność składników
+daje $\E[s^{Z_{n+1}}\mid\calF_n]=f(s)^{Z_n}$.
 Biorąc wartość oczekiwaną, otrzymujemy
 $g_{n+1}(s)=\E[f(s)^{Z_n}]=g_n(f(s))$.
 Indukcja i $g_0(s)=s$ dają $g_n=f^{\circ n}$.
-Dla $z$ przodków drzewo populacji jest sumą $z$
-niezależnych drzew z jednym przodkiem, dlatego
-funkcje tworzące mnożą się, dając $(f^{\circ n}(s))^z$.
+Dla dowolnego $z$ ta sama rekurencja zaczyna się
+od $g_0(s)=s^z$, więc daje $(f^{\circ n}(s))^z$.
+\end{proof}
+
+\begin{stwierdzenie}[Własność rozgałęziania]
+\label{prop:gw-branching}
+Prawo całego procesu z $z$ przodkami jest prawem sumy
+$z$ niezależnych procesów Galtona--Watsona z jednym
+przodkiem. Ponadto warunkowo względem $\calF_n$,
+na $\{Z_n=k\}$ przyszła populacja ma prawo sumy
+$k$ takich niezależnych procesów, z czasem liczonym od $n$.
+\end{stwierdzenie}
+\begin{proof}
+Na przestrzeni iloczynowej budujemy niezależne kopie
+procesu z jednym przodkiem. Jeśli ich obecne liczebności
+wynoszą $k_1,\ldots,k_z$, rozkład sumy następnych
+liczebności jest splotem $k_1+\cdots+k_z$ kopii
+prawa $\xi$, niezależnie od podziału tej sumy.
+Warunkowanie względem wspólnej historii i następnie
+względem historii samej sumy daje macierz przejścia
+$P$ z poprzedniego dowodu.
+Stan początkowy sumy wynosi $z$, więc indukcja
+po liczbie chwil identyfikuje jej rozkłady
+skończeniewymiarowe z rozkładami pierwotnego procesu.
+Dla drugiej tezy niezależność wszystkich przyszłych
+wierszy tablicy od $\calF_n$ pozwala powtórzyć
+ten rachunek przy ustalonym $Z_n=k$. Tożsamości dla
+cylindrów rozszerzamy argumentem $\pi$--$\lambda$
+na $\sigma$-ciało produktowe przyszłych trajektorii.
 \end{proof}
 
 \begin{twierdzenie}[Średnia liczba osobników]
@@ -100,8 +145,9 @@ Niech $m=\E\xi<\infty$ i $Z_0=z\in\N_0$.
 Wtedy dla każdego $n\in\N_0$
 \[
 \E[Z_{n+1}\mid\calF_n]=mZ_n,\qquad
-\E Z_n=z\,m^n.
+\E Z_n=z\,m^n,
 \]
+z konwencją $m^0=1$ także przy $m=0$.
 Jeżeli $m>0$, proces $(Z_n/m^n)_{n\ge0}$ jest
 nieujemnym martyngałem (dla $z\ge0$).
 \end{twierdzenie}
@@ -111,7 +157,7 @@ wartość oczekiwana sumy $k$ niezależnych kopii $\xi$
 wynosi $km$. Ponieważ $\E Z_n<\infty$ wynika
 indukcyjnie z $\E Z_0=z$, otrzymujemy
 $\E Z_{n+1}=m\E Z_n$ i formułę $zm^n$.
-Dzieląc równość warunkową przez $m^{n+1}$,
+Dla $m>0$, dzieląc równość warunkową przez $m^{n+1}$,
 dostajemy $\E[Z_{n+1}/m^{n+1}\mid\calF_n]=Z_n/m^n$.
 Całkowalność każdego wyrazu wykazaliśmy wcześniej.
 \end{proof}
@@ -144,7 +190,7 @@ prawdopodobieństwa z dołu.
 Funkcja tworząca $f$ jest ciągła na $[0,1]$:
 ciągłość z lewej w $1$ otrzymujemy ze zbieżności monotonicznej
 $s^\xi\uparrow1$, a w pozostałych punktach ze zbieżności
-zdominowanej. Dlatego przechodząc do granicy w
+zmajoryzowanej. Dlatego przechodząc do granicy w
 $q_{n+1}=f(q_n)$, dostajemy $q=f(q)$.
 Jeżeli $r\in[0,1]$ spełnia $f(r)=r$, to $q_0=0\le r$.
 Monotoniczność $f$ i indukcja dają $q_n\le r$
@@ -153,7 +199,7 @@ dla każdego $n$, a więc $q\le r$. To dowodzi minimalności.
 
 \begin{twierdzenie}[Kryterium wymierania]
 Niech $\xi$ będzie zmienną o wartościach w $\N_0$, z
-$0<m=\E\xi<\infty$ oraz $p_0=\Prob(\xi=0)>0$.
+$m=\E\xi\in[0,\infty]$ oraz $p_0=\Prob(\xi=0)>0$.
 Dla procesu Galtona--Watsona z jednym przodkiem:
 \begin{enumerate}
 \item jeśli $m\le1$, to $q=1$;
@@ -165,14 +211,20 @@ przypadek $\xi\equiv1$ ma $m=1$, lecz również $q=0$.
 \begin{proof}
 Funkcja $f$ jest wypukła na $[0,1]$, bo każda
 funkcja $s\mapsto s^k$ jest wypukła dla $k\ge0$.
-Jej pochodna lewostronna w $1$ wynosi $m$, co wynika
-z twierdzenia o zbieżności monotonicznej dla
-$f'(s)=\sum_{k\ge1}kp_ks^{k-1}$ przy $s\uparrow1$.
+Jej pochodna lewostronna w $1$ wynosi $m$,
+również gdy $m=\infty$. Istotnie,
+\[
+\frac{1-f(s)}{1-s}
+=\sum_{k\ge1}p_k\sum_{j=0}^{k-1}s^j
+\uparrow\sum_{k\ge1}kp_k=m
+\quad(s\uparrow1)
+\]
+na mocy twierdzenia o zbieżności monotonicznej.
 Jeżeli $m\le1$, wypukłość daje dla $0\le s<1$
 \[
 f(s)\ge f(1)+m(s-1)=1-m(1-s)\ge s.
 \]
-Nierówność jest ściśle dodatnia dla $m<1$.
+Różnica $f(s)-s$ jest ściśle dodatnia dla $m<1$.
 Jeżeli $m=1$ i $p_0>0$, warunek średniej wymusza
 $\Prob(\xi\ge2)>0$, a więc $f$ jest ściśle wypukła
 na $(0,1)$ i $f(s)>s$ również w tym przypadku.
@@ -185,8 +237,30 @@ Ciągłość zapewnia istnienie punktu stałego $q\in(0,1)$.
 Najmniejszy punkt stały, będący prawdopodobieństwem wymarcia,
 leży w $(0,1)$: mniejszy od $1$ na mocy istnienia punktu stałego,
 a większy od zera, gdyż $\Prob(Z_1=0)=p_0>0$.
-Gdy $p_0=0$, żaden osobnik nie może mieć zera potomków,
+Ponieważ $m>1$ wymusza $\Prob(\xi\ge2)>0$,
+funkcja $f(s)-s$ jest ściśle wypukła na $[0,1]$.
+Nie może mieć trzech różnych zer (wartość w środkowym
+byłaby ściśle mniejsza od zera). Zatem $q$ jest
+jedynym punktem stałym w $[0,1)$.
+Gdy $p_0=0$, z prawdopodobieństwem $1$ wszystkie
+zmienne z przeliczalnej tablicy są dodatnie,
 więc $Z_n\ge1$ dla wszystkich $n$ i $q=0$.
+\end{proof}
+
+\begin{wniosek}[Wymarcie przy wielu przodkach i po zadanym pokoleniu]
+Przy starcie z $z$ przodkami prawdopodobieństwo
+wymarcia wynosi $q^z$ (także dla $z=0$, z $q^0=1$).
+Dla dowolnego $n$ warunkowe prawdopodobieństwo
+ostatecznego wymarcia względem $\calF_n$ wynosi $q^{Z_n}$.
+\end{wniosek}
+\begin{proof}
+Dla startu z $z$ mamy
+$\Prob(Z_n=0)=(f^{\circ n}(0))^z$.
+Przejście do granicy daje pierwszą tezę.
+Druga wynika z własności rozgałęziania
+(stwierdzenie~\ref{prop:gw-branching}) albo z własności
+Markowa dla zdarzeń $\{Z_{n+k}=0\}$ i warunkowej
+zbieżności monotonicznej przy $k\to\infty$.
 \end{proof}
 
 \begin{zadanie}[Dwoje dzieci albo brak]
@@ -259,7 +333,10 @@ pewnej zmiennej $W_\infty\ge0$ o $\E W_\infty=1$ oraz
 \]
 \end{twierdzenie}
 \begin{proof}
-Z niezależności potomstwa, przy warunku $Z_n=k$,
+Z niezależności potomstwa, na zdarzeniu $Z_n=k$,
+$\E[Z_{n+1}^2\mid\calF_n]=k\sigma^2+k^2m^2$.
+Indukcyjnie $\E Z_n^2<\infty$, zaczynając od $Z_0=1$.
+W szczególności
 $\Var(Z_{n+1}\mid\calF_n)=\sigma^2Z_n$.
 Wzór na wariancję całkowitą daje dla $v_n=\Var(Z_n)$
 \[
@@ -271,7 +348,7 @@ Indukcja daje
 $v_n=\sigma^2\sum_{j=0}^{n-1}m^{2(n-1-j)+j}
 =\sigma^2m^{n-1}\sum_{j=0}^{n-1}m^j$,
 co po zsumowaniu szeregu geometrycznego daje wzór.
-Dla $m>1$ otrzymujemy
+Dla $n=0$ wariancja wynosi zero. Dla $m>1$ otrzymujemy
 $\Var(W_n)=m^{-2n}v_n
 =\frac{\sigma^2}{m(m-1)}(1-m^{-n})$.
 Ponieważ $\E W_n=1$, drugie momenty są jednostajnie
@@ -321,14 +398,19 @@ h(s)=s f(h(s)),
 gdzie $f$ jest funkcją tworzącą liczby potomków.
 \end{stwierdzenie}
 \begin{proof}
-Po usunięciu pierwszego przodka drzewo rozdziela się
-na $\xi$ niezależnych drzew potomków, każde o tym samym
-prawie co pierwotne. Ich całkowite liczebności $H_j$
-są niezależnymi kopiami $H$, niezależnymi od $\xi$.
-Mamy $H=1+\sum_{j=1}^\xi H_j$.
+Warunkowo względem $\xi=Z_1=k$, z własności
+rozgałęziania (stwierdzenie~\ref{prop:gw-branching})
+proces od pokolenia pierwszego ma prawo sumy
+$k$ niezależnych drzew z jednym przodkiem.
+Sumując liczebności po wszystkich pokoleniach,
+otrzymujemy równość rozkładów
+$H\overset{d}=1+\sum_{j=1}^\xi H_j$, gdzie po prawej
+stronie możemy użyć niezależnych kopii $H$,
+niezależnych od $\xi$, na przestrzeni iloczynowej.
 Warunkowanie względem $\xi$ daje
-$\E[s^H\mid\xi]=s\,h(s)^\xi$, skąd po uśrednieniu
-$h(s)=sf(h(s))$.
+$\E[s^H\mid\xi]=s\,h(s)^\xi$ prawie na pewno
+(z warunkowej własności rozgałęziania), skąd po
+uśrednieniu $h(s)=sf(h(s))$.
 \end{proof}
 
 \begin{zadanie}[Potomstwo Poissona]
@@ -377,7 +459,9 @@ $\E e^{-c\zeta}>0$. Tymczasem
 $\sum_{k\ge1}\log(1+c/(\lambda k))=\infty$,
 ponieważ dla dużych $k$ wyrazy są nie mniejsze od
 $c/(2\lambda k)$, a szereg harmoniczny jest rozbieżny.
-Zatem $\E e^{-c\zeta}=0$, co wymusza
+Zbieżność zmajoryzowana, z konwencją $e^{-c\infty}=0$,
+pozwala przejść do granicy w transformatach sum
+częściowych. Zatem $\E e^{-c\zeta}=0$, co wymusza
 $\Prob(\zeta=\infty)=1$. To jest bezpośredni dowód
 przypadku kryterium eksplozji potrzebnego tutaj.
 
@@ -391,7 +475,8 @@ a ponieważ proces Yule'a wykonuje jedynie skoki $n\to n+1$,
 dla $j\le K$ ich prawdopodobieństwa przebywania w stanie $j$
 są równe. Proces obcięty ma skończoną przestrzeń stanów;
 możemy więc zastosować wcześniej udowodnione równania
-Kołmogorowa w przód, a otrzymane równania dla $p_j$, $j\le K$,
+Kołmogorowa w przód (twierdzenie~\ref{thm:kolmogorov-eq}),
+a otrzymane równania dla $p_j$, $j\le K$,
 nie zależą od $K$. Dowodzi to dla wszystkich $n\ge1$ równań
 $p_1'(t)=-\lambda p_1(t)$,
 $p_n'(t)=-n\lambda p_n(t)+(n-1)\lambda p_{n-1}(t)$ dla $n\ge2$,
@@ -479,18 +564,27 @@ $Z_{t\wedge\tau_K}$ przyjmuje wartości w skończonym
 zbiorze $\{0,1,\ldots,K\}$. Dla funkcji $f(n)=n$
 jego generator przed zatrzymaniem wynosi
 $Qf(n)=(\lambda-\delta)n\le\lambda n$.
-Wzór Dynkina dla skończonego, zatrzymanego łańcucha
-daje dla $u_K(t)=\E Z_{t\wedge\tau_K}$
+Wzór Dynkina (twierdzenie~\ref{thm:dynkin})
+dla skończonego łańcucha z pochłaniającymi stanami
+$0$ i $K$, który ma prawo procesu do zatrzymania, daje dla $u_K(t)=\E Z_{t\wedge\tau_K}$
 \[
-u_K(t)\le1+\lambda\int_0^tu_K(s)\,\dd s.
+u_K(t)\le1+\lambda\int_0^tu_K(s)\,\mathrm d\lambda_1(s).
 \]
 Nierówność Gronwalla prowadzi do
 $u_K(t)\le e^{\lambda t}$. Ponieważ
 $Z_{t\wedge\tau_K}=K$ na $\{\tau_K\le t\}$,
 $\Prob(\tau_K\le t)\le e^{\lambda t}/K$.
-Każdy skok zmienia liczbę osobników o jeden, zatem
-eksplozja w skończonym czasie wymaga osiągnięcia
-każdego poziomu $K$. Dla każdego $t<\infty$
+Eksplozja w skończonym czasie wymaga osiągnięcia
+każdego poziomu $K$ poza zbiorem zerowym:
+jeżeli łańcuch pozostaje w skończonym zbiorze stanów,
+jego intensywności są ograniczone, a suma czasów
+oczekiwania przy nieskończenie wielu skokach
+jest nieskończona p.n. (twierdzenie~\ref{thm:bounded-rates},
+lub sprzężenie z niezależnymi odstępami wykładniczymi
+o wspólnej maksymalnej intensywności).
+Ponieważ każdy skok zmienia liczebność o jeden,
+ucieczka z każdego skończonego zbioru wymusza
+osiągnięcie każdego $K$. Dla każdego $t<\infty$
 $\Prob(\zeta\le t)\le\inf_{K\ge2}e^{\lambda t}/K=0$,
 gdzie $\zeta$ oznacza czas eksplozji. Proces jest zatem
 nieeksplozywny.
@@ -500,8 +594,19 @@ Rozważmy pierwsze zdarzenie po starcie od jednego osobnika.
 jest niezależny od czasu oczekiwania: z prawdopodobieństwem
 $\delta/(\lambda+\delta)$ osobnik umiera, z prawdopodobieństwem
 $\lambda/(\lambda+\delta)$ rodzi drugiego osobnika.
-Po urodzeniu mamy dwa niezależne drzewa potomne, każde
-o takim samym prawdopodobieństwie wymarcia $q$.
+Konstrukcję przez niezależne zegary uzasadniamy
+następująco: każdemu osobnikowi przypisujemy niezależny
+czas wykładniczy o intensywności $\lambda+\delta$
+i niezależny typ zdarzenia (śmierć lub rozdzielenie
+na dwóch osobników). Minimum $n$ zegarów ma
+intensywność $n(\lambda+\delta)$, a typ zdarzenia
+ma podane prawdopodobieństwa. Własność braku pamięci
+daje po zdarzeniu niezależne nowe zegary pozostałych
+osobników, więc konstrukcja ma dokładnie intensywności
+i czasy przebywania z definicji minimalnego łańcucha.
+Brak eksplozji pozwala prowadzić ją dla wszystkich czasów.
+Po rozdzieleniu mamy dwa niezależne drzewa potomne,
+każde o takim samym prawdopodobieństwie wymarcia $q$.
 Wobec tego
 \[
 q=\frac{\delta}{\lambda+\delta}
