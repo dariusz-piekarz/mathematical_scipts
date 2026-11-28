@@ -47,7 +47,22 @@ SCOPED_IMPORTS = (
     "Aesop",
     "Lean.Elab.Tactic.Omega",
 )
-SCOPED_SOURCE = "".join("import " + name + "\n" for name in SCOPED_IMPORTS) + SOURCE.split("\n", 1)[1]
+SCOPED_HEADER = "".join("import " + name + "\n" for name in SCOPED_IMPORTS)
+SCOPED_SOURCE = SCOPED_HEADER + SOURCE.split("\n", 1)[1]
+
+
+def scoped_fixture_copy(payload: bytes) -> bytes:
+    """CI-only transformation of an already generated fixed fixture.
+
+    Not an admission function: never invoke this on a user draft or treat
+    the resulting digest as the original generator's digest.
+    """
+    header = b"import Mathlib\n"
+    if (type(payload) is not bytes or len(payload) > 65536 + 128
+            or not payload.startswith(header)
+            or not payload.endswith(b"\n#print axioms atlas_draft\n")):
+        raise ValueError("Unexpected fixed fixture payload")
+    return SCOPED_HEADER.encode("ascii") + payload[len(header):]
 
 
 def fixture_source(profile: str) -> str:

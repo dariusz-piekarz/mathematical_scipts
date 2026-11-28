@@ -14,6 +14,8 @@ on:
       - "application/tests/test_lean_draft_generator.py"
       - "application/tests/test_lean_concept_fixture.py"
       - "application/scripts/lean_ci_audit.py"
+      - "application/scripts/lean_full_import_probe.py"
+      - "application/tests/test_lean_full_import_probe.py"
       - "application/scripts/lean_mathlib_source_probe.py"
       - "application/scripts/lean_artifact_manifest.py"
       - "application/tests/test_lean_artifact_manifest.py"
@@ -253,6 +255,52 @@ jobs:
              python -c 'import sys; from pathlib import Path; from scripts.lean_ci_audit import inspect_log; print(inspect_log(Path(sys.argv[1]).read_text(encoding="utf-8"), ["atlas_draft"]))' "$log"
              if grep -Ei 'sorryAx|declaration uses .sorry.' "$log"; then exit 1; fi
            done)
+          # Historical 2+1 checkouts may precede the scoped import probe.
+          if grep -q '^def scoped_fixture_copy(' scripts/lean_full_import_probe.py 2>/dev/null; then
+            python -m unittest tests.test_lean_full_import_probe -v
+            python - "$probe" <<'PY'
+          import hashlib
+          import json
+          import subprocess
+          import sys
+          from pathlib import Path
+          from scripts.lean_ci_audit import inspect_log
+          from scripts.lean_full_import_probe import scoped_fixture_copy, SCOPED_IMPORTS
+
+          root = Path("lean").resolve()
+          probe = Path(sys.argv[1]).resolve()
+          logs = root / "ci_lean_logs"
+          originals = sorted(probe.glob("Draft*.lean"))
+          if len(originals) != 10:
+              raise ValueError("Unexpected fixed generator/repair fixture count")
+          scoped = probe / "scoped"
+          scoped.mkdir()
+          records = []
+          for original in originals:
+              payload = original.read_bytes()
+              adapted = scoped_fixture_copy(payload)
+              target = scoped / original.name
+              target.write_bytes(adapted)
+              log = logs / ("scoped-" + original.name + ".log")
+              result = subprocess.run(["lake", "env", "lean", str(target)],
+                                      cwd=root, stdout=subprocess.PIPE,
+                                      stderr=subprocess.STDOUT, timeout=90, check=False)
+              log.write_bytes(result.stdout)
+              if result.returncode or len(result.stdout) > 16000:
+                  raise ValueError("Scoped fixture compilation failed: " + original.name)
+              full_axioms = inspect_log((logs / (original.name + ".log")).read_text("utf-8"), ["atlas_draft"])
+              scoped_axioms = inspect_log(result.stdout.decode("utf-8"), ["atlas_draft"])
+              if set(full_axioms["atlas_draft"]) != set(scoped_axioms["atlas_draft"]):
+                  raise ValueError("Scoped fixture axiom set differs: " + original.name)
+              records.append(dict(name=original.name, full_sha256=hashlib.sha256(payload).hexdigest(),
+                                  scoped_sha256=hashlib.sha256(adapted).hexdigest(),
+                                  axioms=sorted(scoped_axioms["atlas_draft"]), exit_code=0))
+          report = dict(schema=1, fixture_only=True, host_only=True, imports=list(SCOPED_IMPORTS),
+                        execution_allowed=False, offline_ready=False, certificate=False, fixtures=records)
+          (logs / "scoped-generator-parity.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+          print("ATLAS_SCOPED_GENERATOR_PARITY " + json.dumps(report, sort_keys=True))
+          PY
+          fi
 
       - name: Measure real Lean proof-failure diagnostics (fixed CI fixtures)
         working-directory: application
@@ -502,6 +550,7 @@ jobs:
             application/lean/ci_lean_logs/*.log
             application/lean/ci_lean_logs/repair-real-diagnostic.json
             application/lean/ci_lean_logs/repair-loop.json
+            application/lean/ci_lean_logs/scoped-generator-parity.json
             application/lean/ci_lean_report.json
             application/lean/ci_lean_files.txt
             application/lean/ci_fingerprint_benchmark.json
