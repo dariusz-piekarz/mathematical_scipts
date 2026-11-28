@@ -21,7 +21,7 @@ EXPECTED = {
     "FA-09": {"GT-07::thm:topog-tychonoff-iloczyny", "GT-07::thm:topog-zwartosc-sieci"},
     "FA-11": {"GT-11::thm:topog-baire-metryczne", "GT-11::def:topog-baire-zupelna-metryzowalnosc"},
     "FA-13": {"LA-12::thm:lin12-cauchy-schwarz", "LA-12::thm:lin12-riesz"},
-    "FA-24": {"AA-18::aa:tw:tensor-universal"},
+    "DT-09": {"AA-18::aa:tw:tensor-universal"},
     "FA-27": {"LST-26::thm:choice-hamel-basis"},
     "LA-01": {"LST-26::thm:choice-hamel-basis"},
     "LA-17": {"AA-17::aa:tw:pid-structure"},

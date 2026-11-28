@@ -11,7 +11,7 @@ from backend.latex_parser import build_database, module_id
 
 ROOT = Path(__file__).resolve().parents[2]
 EXPECTED = {
-    "GT-18": {"FA-17::def:seminormy-cinf17", "FA-11::ex:frechet-list11"},
+    "GT-18": {"DT-01::def:seminormy-cinf17", "FA-11::ex:frechet-list11"},
     "GT-19": {"ME-01::def:borel", "LST-28::thm:ordinal-recursion"},
     "GT-24": {"ME-23::thm:haar-main-23"},
 }

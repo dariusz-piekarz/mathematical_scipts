@@ -19,14 +19,14 @@ EXPECTED = {
     "ME-06": {"AM1-08::ma1:def:liminf-limsup"},
     "ME-07": {"P1-05::ch:expectation"},
     "ME-08": {"AM1-29::ma1:thm:riemann-darboux-equivalence"},
-    "ME-10": {"GT-05::thm:topog-tietze", "FA-17::lem:cutoffs17"},
+    "ME-10": {"GT-05::thm:topog-tietze", "DT-01::lem:cutoffs17"},
     "ME-11": {"AM1-32::ma1:thm:parameter-differentiation"},
     "ME-12": {"P1-02::ch:probability"},
     "ME-16": {"FA-12::def:banach12"},
     "ME-17": {"P3-08::ch:girsanov"},
     "ME-19": {"P4-01::ch:eksperyment"},
     "ME-24": {"LA-12::thm:lin12-cauchy-schwarz"},
-    "ME-29": {"PDE-07::def:pde7-derivative", "FA-19::def:distribution19",
+    "ME-29": {"PDE-07::def:pde7-derivative", "DT-03::def:distribution19",
               "DG-11::ch:metryka-riemannowska"},
 }
 
