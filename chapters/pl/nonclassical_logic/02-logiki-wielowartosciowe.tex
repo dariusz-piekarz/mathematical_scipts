@@ -1382,3 +1382,314 @@ muszą zachowywać podalgebry
 Ogólna charakterystyka przez relacje niezmiennicze
 z Twierdzenia~\ref{thm:ncl-finite-pol-inv} nie wymaga
 istnienia selektora ani testów.
+
+\section{Systemy dowodowe dla skończonych macierzy}
+
+Ustalmy skończoną macierz $\mathcal M=(A,D)$
+z Definicji~\ref{def:ncl-matrix}. Zamiast szukać osobnego
+rachunku aksjomatów dla każdej logiki, skonstruujemy
+rachunek bezpośrednio z tablic jej spójników.
+Będzie on rozstrzygał konsekwencję skończonych
+zbiorów formuł i pozwalał odczytać kontrmodel
+z nieudanego dowodu.
+
+\subsection{Sekwenty wielostronne}
+\begin{definicja}[Sekwent znakowany]\label{def:ncl-signed-sequent}
+Formułą znakowaną nazywamy parę $a:\varphi$,
+gdzie $a\in A$. Sekwent $S$ jest skończonym zbiorem
+takich par. Wartościowanie $v$ spełnia $S$, jeżeli
+istnieje $a:\varphi\in S$ takie, że $v(\varphi)=a$.
+Sekwent jest ważny, jeśli każde wartościowanie
+go spełnia. Pusty sekwent nie jest spełniony
+przez żadne wartościowanie.
+\end{definicja}
+Równoważnie sekwent ma po jednej stronie dla każdej
+wartości $a$: strona $S_a$ zawiera dokładnie formuły
+$\varphi$ takie, że $a:\varphi\in S$.
+Poszczególne strony są połączone semantyczną
+alternatywą, nie koniunkcją. Znaki są metajęzykowe,
+więc nie wymagamy istnienia w języku spójnika
+testującego daną wartość.
+
+\begin{stwierdzenie}[Kodowanie konsekwencji]
+\label{prop:ncl-sequent-consequence}
+Dla skończonego $\Gamma$ i formuły $\varphi$ zachodzi
+$\Gamma\models_{\mathcal M}\varphi$ dokładnie wtedy,
+gdy ważny jest sekwent
+\[
+ S_{\Gamma,\varphi}=
+ \{a:\gamma:\gamma\in\Gamma,\ a\in A\setminus D\}
+ \cup\{a:\varphi:a\in D\}.
+\]
+W zapisie zbiorów pierwszy dwukropek łączy znak
+z formułą, a drugi oddziela element od warunku.
+\end{stwierdzenie}
+\begin{proof}
+Niespełnienie sekwentu oznacza, że żaden jego
+znak nie odpowiada rzeczywistej wartości formuły.
+W szczególności dla każdej $\gamma\in\Gamma$
+mamy $v(\gamma)\in D$, a $v(\varphi)\notin D$.
+Jest to dokładnie kontrmodel dla konsekwencji.
+Argument działa również dla $\Gamma=\varnothing$
+oraz dla $D=\varnothing$ lub $D=A$.
+\end{proof}
+
+\begin{definicja}[Rachunek tablicowy sekwentów]
+\label{def:ncl-matrix-sequent-calculus}
+Aksjomatami są wszystkie sekwenty zawierające
+$\{a:\psi:a\in A\}$ dla pewnej formuły $\psi$.
+Dla spójnika $c$ arności $k\geq0$ i znaku $a$
+wprowadzamy następującą regułę:
+\[
+\frac{
+ \bigl(S\cup
+       \{d:\psi_i:1\leq i\leq k,\ d\in A\setminus\{b_i\}\}
+ \bigr)_{\substack{b=(b_1,\ldots,b_k)\in A^k\\
+                    c^A(b)\ne a}}
+}{
+ S\cup\{a:c(\psi_1,\ldots,\psi_k)\}
+}.
+\]
+Licznik oznacza rodzinę wszystkich przesłanek reguły,
+po jednej dla każdej krotki $b$ z $c^A(b)\ne a$.
+Gdy rodzina jest pusta, reguła ma zero przesłanek.
+Dla $k=0$ zbiór $A^0$ zawiera jedną pustą krotkę,
+a do kontekstu $S$ nie dodajemy żadnych znaków.
+Dowód jest skończonym drzewem z korzeniem
+oznaczonym dowodzonym sekwentem i liśćmi będącymi
+aksjomatami lub zastosowaniami reguł bez przesłanek.
+\end{definicja}
+
+Intuicja reguły jest następująca. Aby znak
+$a:c(\psi_1,\ldots,\psi_k)$ był fałszywy,
+argumenty muszą przyjąć jedną z krotek $b$
+niedających wyniku $a$. Każdej takiej krotce
+odpowiada przesłanka, której fałszywość wymusza
+dokładnie tę krotkę i fałszywość kontekstu.
+
+\begin{lemat}[Odwracalność reguły]
+\label{lem:ncl-sequent-invertibility}
+Dla ustalonego wartościowania wniosek reguły
+z Definicji~\ref{def:ncl-matrix-sequent-calculus}
+jest spełniony wtedy i tylko wtedy, gdy wszystkie
+jej przesłanki są spełnione.
+\end{lemat}
+\begin{proof}
+Jeśli kontekst $S$ jest spełniony, obie strony
+równoważności zachodzą. Załóżmy więc, że nie jest.
+Niech $u=(v(\psi_1),\ldots,v(\psi_k))$.
+Przesłanka odpowiadająca $b$ jest niespełniona
+dokładnie wtedy, gdy $v(\psi_i)=b_i$ dla wszystkich
+$i$, czyli $u=b$. Istnieje taka niespełniona
+przesłanka wtedy i tylko wtedy, gdy $c^A(u)\ne a$,
+co jest równoważne niespełnieniu wniosku.
+Dla spójnika zeroargumentowego argument działa
+z pustą krotką, a warunek o wszystkich przesłankach
+jest prawdziwy próżniowo, jeśli ich nie ma.
+\end{proof}
+
+\begin{twierdzenie}[Poprawność, pełność i zakończenie]
+\label{thm:ncl-sequent-sound-complete}
+Dla skończonej macierzy $\mathcal M$ sekwent jest
+ważny wtedy i tylko wtedy, gdy ma dowód w rachunku
+z Definicji~\ref{def:ncl-matrix-sequent-calculus}.
+Dowodu lub kontrmodelu można szukać, stosując
+reguły od wniosku do przesłanek, bez reguły cięcia.
+Każdy taki rozwój, w którym usuwa się rozwijany
+znak z kontekstu, kończy się po skończenie wielu krokach.
+\end{twierdzenie}
+\begin{proof}
+Każde wartościowanie przypisuje formule $\psi$
+pewną wartość $a\in A$, więc aksjomaty są ważne.
+Lemat~\ref{lem:ncl-sequent-invertibility} daje
+poprawność wszystkich reguł, a indukcja po drzewie
+dowodu poprawność rachunku.
+
+Dla pełności ustalmy rangę $r(p)=0$ dla zmiennej
+i $r(c(\psi_1,\ldots,\psi_k))=
+1+\max(\{0\}\cup\{r(\psi_i):1\leq i\leq k\})$.
+W szczególności stała ma rangę $1$.
+Niech $K$ będzie największą arnością spójnika
+w początkowym sekwencie (bierzemy $K=0$, jeśli
+nie ma spójników) i $B=2+K|A|$.
+Waga sekwentu to
+\[
+ W(S)=\sum_{a:\psi\in S} B^{r(\psi)}.
+\]
+Rozwijając jeden znak formuły rangi $r\geq1$,
+usuwamy składnik $B^r$ i w każdej przesłance
+dodajemy co najwyżej $K(|A|-1)$ składników
+o randze nie większej niż $r-1$.
+Łączna waga dodanych składników jest mniejsza
+od $B^r$. Powtórzenia znaków jedynie zmniejszają
+liczbę nowych składników, gdyż sekwenty są zbiorami.
+Nie pojawiają się spójniki spoza podformuł
+początkowego sekwentu. Waga maleje zatem
+ściśle na każdej gałęzi i jest nieujemną liczbą
+całkowitą. Każdy węzeł ma skończenie wiele
+bezpośrednich następców. Ponieważ długość gałęzi
+jest ograniczona początkową wagą, rozwój jest skończony.
+
+Jeśli liść zawiera wyłącznie znaki zmiennych i nie
+jest aksjomatem, to dla każdej występującej zmiennej
+$p$ istnieje $b_p\in A$ taki, że $b_p:p$ nie należy
+do liścia. Wartościowanie $v(p)=b_p$ nie spełnia
+żadnego znaku liścia; pozostałe zmienne wartościujemy
+dowolnie. Lemat~\ref{lem:ncl-sequent-invertibility}
+pokazuje, że jeśli nie jest spełniona choć jedna
+przesłanka, to nie jest spełniony jej wniosek.
+Idąc od liścia do korzenia otrzymujemy więc
+kontrmodel dla początkowego sekwentu.
+
+Jeśli początkowy sekwent jest ważny, taki liść
+nie może wystąpić. Wszystkie gałęzie kończą się
+aksjomatami lub regułami bez przesłanek, a całe
+drzewo stanowi dowód. Jeśli sekwent nie jest ważny,
+co najmniej jeden liść jest nieważny i pozwala
+odczytać kontrmodel.
+\end{proof}
+
+\begin{wniosek}[Skończone dowody dla dowolnych przesłanek]
+\label{cor:ncl-sequent-compact}
+Dla dowolnego zbioru formuł $\Gamma$ zachodzi
+$\Gamma\models_{\mathcal M}\varphi$ wtedy i tylko wtedy,
+gdy istnieje skończony $\Gamma_0\subseteq\Gamma$,
+dla którego $S_{\Gamma_0,\varphi}$ ma dowód.
+\end{wniosek}
+\begin{proof}
+Twierdzenie~\ref{thm:ncl-finite-matrix-compactness}
+daje skończony podzbiór wystarczających przesłanek,
+a Stwierdzenie~\ref{prop:ncl-sequent-consequence}
+i Twierdzenie~\ref{thm:ncl-sequent-sound-complete}
+dają dowód odpowiedniego sekwentu.
+Odwrotnie korzystamy z poprawności rachunku,
+kodowania konsekwencji i monotoniczności.
+\end{proof}
+
+\subsection{Przykłady wyprowadzeń}
+\begin{przyklad}[Negacja w logice trójwartościowej]
+\label{ex:ncl-sequent-kleene-negation}
+W algebrze z Definicji~\ref{def:ncl-k3-lp}
+znak $1:\neg p$ jest spełniony dokładnie wtedy,
+gdy $0:p$ jest spełniony. Reguła z tablicy negacji
+ma w tym przypadku postać
+\[
+\frac{S\cup\{0:p,1:p\}\qquad
+      S\cup\{0:p,u:p\}}
+     {S\cup\{1:\neg p\}}.
+\]
+Istotnie, negacja nie daje jedynki dla argumentów
+$u$ i $1$. Obie przesłanki są jednocześnie spełnione
+dokładnie wtedy, gdy spełniony jest $S$ lub $0:p$.
+Można zatem zastąpić tę regułę uproszczoną regułą
+o jednej przesłance $S\cup\{0:p\}$, zachowując
+odwracalność. Analogicznie dla pozostałych znaków
+negacji, ponieważ negacja jest bijekcją.
+\end{przyklad}
+
+\begin{przyklad}[Eksplozja w $K_3$ i kontrmodel w LP]
+\label{ex:ncl-sequent-explosion}
+Niech $p,q$ będą różnymi zmiennymi.
+W $K_3$ sekwent kodujący konsekwencję
+$p,\neg p\models q$ jest równy
+\[
+ \{0:p,u:p,0:\neg p,u:\neg p,1:q\}.
+\]
+Uproszczone reguły negacji zastępują odpowiednio
+$0:\neg p$ znakiem $1:p$, a $u:\neg p$ znakiem
+$u:p$. Otrzymujemy sekwent atomowy zawierający
+wszystkie trzy znaki dla $p$, więc jest aksjomatem.
+Rozwój czytany w przeciwnym kierunku daje dowód.
+
+W LP ta sama konsekwencja jest kodowana przez
+\[
+ \{0:p,0:\neg p,u:q,1:q\}.
+\]
+Po rozwinięciu negacji otrzymujemy
+$\{0:p,1:p,u:q,1:q\}$.
+Brakujący znak dla $p$ to $u:p$, a dla $q$ to $0:q$.
+Odczytujemy kontrmodel $v(p)=u$, $v(q)=0$,
+zgodny z Przykładem~\ref{ex:ncl-k3-lp-laws}.
+\end{przyklad}
+
+\subsection{Tablice ograniczeń i wyszukiwanie kontrmodeli}
+\begin{definicja}[Ograniczenia wartości]
+\label{def:ncl-matrix-constraints}
+Ograniczeniem jest para $(\psi,B)$, gdzie
+$B\subseteq A$. Wartościowanie spełnia ograniczenie,
+jeżeli $v(\psi)\in B$. Gałąź jest skończonym
+zbiorem ograniczeń i jest spełnialna, jeśli pewne
+wartościowanie spełnia je wszystkie.
+\end{definicja}
+W odróżnieniu od sekwentu znakowanego ograniczenia
+gałęzi są połączone koniunkcją. Negacja spełniania
+sekwentu $S$ jest równoważna spełnialności gałęzi
+z ograniczeniami
+\[
+ (\psi,A\setminus\{a:a:\psi\in S\})
+\]
+dla wszystkich formuł występujących w $S$.
+Można łączyć ograniczenia tej samej formuły
+przez przecięcie dozwolonych zbiorów wartości.
+
+\begin{twierdzenie}[Procedura tablic ograniczeń]
+\label{thm:ncl-matrix-tableau}
+Gałąź z ograniczeniem $(c(\psi_1,\ldots,\psi_k),B)$
+jest spełnialna dokładnie wtedy, gdy spełnialna
+jest co najmniej jedna z gałęzi uzyskanych przez
+usunięcie tego ograniczenia i dodanie
+\[
+ (\psi_i,\{b_i\}),\qquad 1\leq i\leq k,
+\]
+dla każdej krotki $b\in A^k$ z $c^A(b)\in B$.
+Gałąź zawierająca ograniczenia $(\psi,B_1),\ldots,
+(\psi,B_s)$ z $\bigcap_{i=1}^s B_i=\varnothing$
+jest niespełnialna.
+Rozwijając ograniczenia formuł złożonych aż do
+zmiennych, otrzymujemy skończoną procedurę
+sprawdzania spełnialności gałęzi.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $v$ spełnia początkową gałąź, to krotka
+$b_i=v(\psi_i)$ jest jedną z krotek dopuszczonych
+przez warunek $c^A(b)\in B$. Wartościowanie
+spełnia więc odpowiadającą jej gałąź potomną.
+Odwrotnie wartościowanie spełniające taką gałąź
+nadaje argumentom dokładnie wartości $b_i$,
+a więc spełnia usunięte ograniczenie.
+Pusty zbiór dopuszczonych krotek zamyka gałąź.
+Dla stałej jest co najwyżej jedna pusta krotka.
+Warunek przecięcia zbiorów wynika bezpośrednio
+z jednoczesnego spełniania ograniczeń.
+
+Zakończenie wynika z tej samej funkcji rang co w
+Twierdzeniu~\ref{thm:ncl-sequent-sound-complete}:
+stosujemy wagę $\sum_{(\psi,B)}(K+2)^{r(\psi)}$,
+gdzie $K$ jest największą arnością spójnika
+w początkowych formułach lub zerem, gdy ich nie ma.
+Każde rozwinięcie zastępuje jeden składnik
+co najwyżej $K$ składnikami niższej rangi.
+Dla liścia zawierającego wyłącznie zmienne
+wystarczy dla każdej zmiennej wybrać wartość
+ze wspólnej części jej ograniczeń.
+Jeśli każde takie przecięcie jest niepuste,
+otrzymujemy wartościowanie spełniające liść;
+w przeciwnym razie gałąź jest zamknięta.
+Przez udowodnione równoważności spełnialność
+co najmniej jednego liścia jest równoważna
+spełnialności gałęzi początkowej.
+\end{proof}
+Dla sprawdzenia $\Gamma\models_{\mathcal M}\varphi$
+zaczynamy od ograniczeń $(\gamma,D)$ dla $\gamma\in\Gamma$
+oraz $(\varphi,A\setminus D)$.
+Jeśli wszystkie gałęzie się zamykają, konsekwencja
+zachodzi. Otwarta gałąź daje kontrmodel.
+W najgorszym przypadku procedura może rozgałęziać
+się wykładniczo; nie wynika z niej lepsze ograniczenie
+złożoności niż z enumeracji wartościowań.
+W implementacji można wcześnie wykrywać sprzeczne
+ograniczenia, łączyć ograniczenia tej samej formuły
+i unikać ponownego rozwijania identycznych gałęzi.
+Wszystkie przedstawione rachunki są konstrukcjami
+ogólnymi, zależnymi jedynie od tablic skończonej macierzy,
+a nie od istnienia szczególnych spójników w jej języku.
