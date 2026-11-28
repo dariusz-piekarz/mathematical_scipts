@@ -1,0 +1,266 @@
+\chapter{Funkcje rzeczywiste analityczne}
+\label{ma2:ch:real-analytic}
+
+W rozdziale \ref{ma2:ch:power-series} badaliśmy
+zbieżność szeregów potęgowych jednej zmiennej,
+a w rozdziale \ref{ma2:ch:taylor} otrzymaliśmy
+wzory Taylora skończonego rzędu.
+Teraz rozważymy pytanie, kiedy funkcję można
+odtworzyć z jej pochodnych wszystkich rzędów.
+Rozróżnienie gładkości i analityczności jest
+zasadnicze: istnienie wszystkich pochodnych
+nie gwarantuje jeszcze, że ich wartości
+w jednym punkcie wyznaczają funkcję w otoczeniu.
+
+\section{Analityczność jednej zmiennej}
+
+\begin{definicja}
+\label{ma2:def:real-analytic-one}
+Niech $I\subseteq\R$ będzie zbiorem otwartym.
+Funkcja $f:I\to\R$ jest rzeczywista analityczna
+w punkcie $a\in I$, jeżeli istnieje $r>0$
+takie, że $(a-r,a+r)\subseteq I$ oraz
+istnieją liczby $c_j$ spełniające
+\[
+ f(a+h)=\sum_{j=0}^\infty c_jh^j,\qquad |h|<r.
+\]
+Funkcja jest analityczna na $I$, gdy jest
+analityczna w każdym jego punkcie.
+Klasę takich funkcji oznaczamy $C^\omega(I)$.
+\end{definicja}
+
+\begin{stwierdzenie}
+\label{ma2:prop:analytic-taylor-one}
+Jeżeli $f$ jest analityczna w $a$, to
+jest gładka w pewnym otoczeniu $a$, a jej
+rozwinięcie jest jednoznaczne i ma postać
+\[
+ f(a+h)=\sum_{j=0}^\infty
+ \frac{f^{(j)}(a)}{j!}h^j.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Różniczkujemy szereg potęgowy dowolną
+skończoną liczbę razy wewnątrz jego przedziału
+zbieżności, stosując
+\ref{ma2:thm:power-derivative-radius}
+oraz \ref{ma2:thm:power-derivative}.
+Po podstawieniu $h=0$ otrzymujemy
+$f^{(j)}(a)=j!c_j$.
+Jednoznaczność jest również treścią
+\ref{ma2:cor:power-coefficients}.
+\end{proof}
+
+\begin{stwierdzenie}[Kryterium reszty Taylora]
+\label{ma2:prop:analytic-taylor-remainder}
+Niech $f$ będzie klasy $C^\infty$ w otoczeniu $a$.
+Funkcja jest analityczna w $a$ wtedy i tylko wtedy,
+gdy dla pewnego $r>0$ i wszystkich $|h|<r$
+zachodzi
+\[
+ \lim_{N\to\infty}
+ \left(f(a+h)-\sum_{j=0}^N
+ \frac{f^{(j)}(a)}{j!}h^j\right)=0.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Warunek jest dokładnie warunkiem zbieżności
+sum częściowych szeregu Taylora do funkcji.
+Konieczność wynika z
+\ref{ma2:prop:analytic-taylor-one},
+a dostateczność z definicji
+\ref{ma2:def:real-analytic-one}.
+\end{proof}
+
+\begin{twierdzenie}[Kryterium oszacowań pochodnych]
+\label{ma2:thm:analytic-derivative-bound}
+Niech $f$ będzie klasy $C^\infty$
+na $(a-r,a+r)$, gdzie $r>0$.
+Jeżeli istnieją $C,A>0$ takie, że
+\[
+ |f^{(j)}(x)|\le C A^j j!
+ \qquad (j\ge0,\ |x-a|<r),
+\]
+to $f$ jest analityczna na tym przedziale.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $b\in(a-r,a+r)$ i wybierzmy
+$0<\delta<\min\{r-|b-a|,1/A\}$.
+Dla $|h|<\delta$ cały odcinek od $b$ do $b+h$
+leży w dziedzinie podanego oszacowania.
+Z reszty Lagrange'a
+(\ref{ma2:thm:taylor-lagrange}) otrzymujemy
+\[
+ \left|f(b+h)-\sum_{j=0}^N
+ \frac{f^{(j)}(b)}{j!}h^j\right|
+ \le C(A|h|)^{N+1}.
+\]
+Prawa strona dąży do zera, ponieważ $A|h|<1$.
+Stosujemy \ref{ma2:prop:analytic-taylor-remainder}.
+\end{proof}
+
+\begin{przyklad}[Funkcja gładka, lecz nieanalityczna]
+\label{ma2:ex:analytic-flat}
+Niech
+\[
+ f(x)=
+ \begin{cases}
+ \exp(-1/x^2),&x\ne0,\\
+ 0,&x=0.
+ \end{cases}
+\]
+Dla $x\ne0$ każda pochodna ma postać
+$f^{(j)}(x)=P_j(1/x)\exp(-1/x^2)$
+z pewnym wielomianem $P_j$.
+Istotnie, $P_0=1$, a różniczkowanie daje
+\[
+ P_{j+1}(t)=-t^2 P_j'(t)+2t^3P_j(t).
+\]
+Dla dowolnego całkowitego $m\ge0$
+mamy $|t|^m\exp(-t^2)\to0$ przy $|t|\to\infty$:
+na przykład z szeregu wykładniczego
+$\exp(t^2)\ge t^{2N}/N!$ dla $2N>m$.
+Indukcyjnie $f^{(j)}(0)=0$ dla wszystkich $j$,
+gdyż iloraz różnicowy w zerze także jest
+wielomianem w $1/x$ pomnożonym przez
+$\exp(-1/x^2)$ i ma granicę zero.
+Ta sama granica zapewnia ciągłość każdej
+pochodnej w zerze.
+Szereg Taylora w zerze jest więc tożsamościowo
+zerowy, lecz $f(x)>0$ dla $x\ne0$.
+Funkcja nie jest analityczna w zerze.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=.83\linewidth,height=5.3cm,
+ axis lines=middle,xlabel={$x$},ylabel={$y$},
+ xmin=-2,xmax=2,ymin=-.12,ymax=.95,
+ domain=-2:2,samples=200,
+ legend style={at={(.5,.97)},anchor=north}]
+\addplot[blue!75!black,very thick,domain=-2:-.015] {exp(-1/(x*x))};
+\addlegendentry{$f$}
+\addplot[blue!75!black,very thick,domain=.015:2,forget plot] {exp(-1/(x*x))};
+\addplot[red!80!black,dashed,thick] {0};
+\addlegendentry{szereg Taylora w $0$}
+\end{axis}
+\end{tikzpicture}
+\caption{Wszystkie pochodne funkcji $f$ w zerze
+znikają, chociaż funkcja jest dodatnia poza zerem.}
+\label{ma2:fig:analytic-flat}
+\end{figure}
+
+\section{Szeregi potęgowe wielu zmiennych}
+
+Dla wielowskaźnika $\alpha=(\alpha_1,\ldots,\alpha_n)
+\in\N_0^n$ stosujemy oznaczenia
+$|\alpha|=\sum_i\alpha_i$,
+$\alpha!=\prod_i\alpha_i!$,
+$h^\alpha=\prod_i h_i^{\alpha_i}$
+oraz $\partial^\alpha=\partial_1^{\alpha_1}
+\cdots\partial_n^{\alpha_n}$, zgodnie
+z rozdziałem \ref{ma2:ch:taylor}.
+Przyjmujemy $\N_0=\{0,1,\ldots\}$.
+Dla $r>0$ niech $Q_r=\{h\in\R^n:\|h\|_\infty<r\}$.
+
+\begin{definicja}
+\label{ma2:def:analytic-multi}
+Niech $U\subseteq\R^n$ będzie otwarty.
+Funkcja $f:U\to\R$ jest analityczna w $a\in U$,
+jeżeli dla pewnego $r>0$, $a+Q_r\subseteq U$,
+istnieje rodzina współczynników
+$(c_\alpha)_{\alpha\in\N_0^n}$ taka, że
+\[
+ \sum_\alpha |c_\alpha|r^{|\alpha|}<\infty,
+ \qquad
+ f(a+h)=\sum_\alpha c_\alpha h^\alpha
+ \quad (h\in Q_r).
+\]
+Analityczność na $U$ oznacza analityczność
+w każdym punkcie $U$.
+Odwzorowanie $f:U\to\R^m$ jest analityczne,
+gdy każda jego składowa jest analityczna.
+\end{definicja}
+
+Wybór sześcianu zamiast kuli nie zmienia
+lokalnego charakteru definicji:
+każde otoczenie punktu zawiera taki sześcian.
+Wymaganie sumowalności przy promieniu $r$
+nie jest warunkiem zbieżności na maksymalnym
+obszarze szeregu. Jeśli szereg jest bezwzględnie
+zbieżny w pewnym otwartym sześcianie,
+to wystarczy zmniejszyć jego promień
+i sprawdzić bezwzględną zbieżność
+w punkcie $(r,\ldots,r)$.
+
+\begin{twierdzenie}[Różniczkowanie szeregu wielowymiarowego]
+\label{ma2:thm:analytic-multi-derivative}
+Jeżeli $\sum_\alpha |c_\alpha|r^{|\alpha|}<\infty$,
+to szereg $\sum_\alpha c_\alpha h^\alpha$
+oraz wszystkie szeregi otrzymane przez
+różniczkowanie wyraz po wyrazie dowolnego
+skończonego rzędu są jednostajnie
+i bezwzględnie zbieżne na każdym domkniętym
+sześcianie $\overline{Q_s}$, $0<s<r$.
+Suma $f$ jest klasy $C^\infty$ na $Q_r$,
+a dla każdego wielowskaźnika $\beta$
+\[
+ \partial^\beta f(h)=
+ \sum_{\alpha\ge\beta} c_\alpha
+ \frac{\alpha!}{(\alpha-\beta)!}h^{\alpha-\beta}.
+\]
+Nierówność $\alpha\ge\beta$ rozumiemy współrzędnościowo.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $\beta$ i $s\in(0,r)$.
+Dla $|\beta|=m\ge1$ i $\alpha\ge\beta$
+mamy $\alpha!/(\alpha-\beta)!\le|\alpha|^m$,
+gdyż iloczyn zawiera $m$ czynników,
+z których żaden nie przekracza $|\alpha|$.
+Zatem dla $\|h\|_\infty\le s$
+\[
+ \left|c_\alpha\frac{\alpha!}{(\alpha-\beta)!}
+ h^{\alpha-\beta}\right|
+ \le |c_\alpha|r^{|\alpha|}
+ s^{-m}|\alpha|^m(s/r)^{|\alpha|}.
+\]
+Ciąg $l^m(s/r)^l$ jest ograniczony:
+dla $l\ge1$ iloraz kolejnych wyrazów
+dąży do $s/r<1$.
+Dla $m=0$ stosujemy bezpośrednio
+$|h^\alpha|\le r^{|\alpha|}$.
+Kryterium Weierstrassa daje więc
+jednostajną zbieżność bezwzględną.
+Uporządkujmy sumy częściowe według stopnia
+całkowitego $|\alpha|$ (na każdym stopniu
+jest skończenie wiele wielowskaźników).
+Są to wielomiany, a ich pochodne
+wszystkich ustalonych rzędów mają
+jednostajne granice na mniejszych sześcianach.
+Stosując twierdzenie o różniczkowaniu
+granicy jednostajnej do każdej zmiennej
+osobno, na odcinkach równoległych do osi,
+a następnie indukcyjnie do pochodnych,
+otrzymujemy podany wzór.
+Jednostajna zbieżność ciągłych funkcji
+zapewnia ciągłość pochodnych.
+Każdy punkt $Q_r$ należy do wnętrza
+pewnego takiego mniejszego sześcianu.
+\end{proof}
+
+\begin{wniosek}[Jednoznaczność szeregu Taylora]
+\label{ma2:cor:analytic-multi-coefficients}
+Jeżeli $f$ jest analityczna w $a$, to jest
+gładka w otoczeniu $a$ oraz
+\[
+ c_\alpha=\frac{\partial^\alpha f(a)}{\alpha!}.
+\]
+W szczególności rozwinięcie jest jednoznaczne.
+\end{wniosek}
+\begin{proof}
+Stosujemy \ref{ma2:thm:analytic-multi-derivative}
+do funkcji $h\mapsto f(a+h)$ i podstawiamy $h=0$.
+W szeregu pochodnej rzędu $\alpha$ pozostaje
+jedynie wyraz o indeksie $\alpha$.
+\end{proof}
