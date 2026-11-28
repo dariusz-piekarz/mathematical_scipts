@@ -1,0 +1,266 @@
+\chapter{Logiki wielowartościowe}\label{ch:ncl-many-valued}
+
+\section{Macierze logiczne}
+W logice klasycznej rozróżniamy dwie wartości logiczne.
+W rozdziale~\ref{ch:lst-fuzzy-logic} rozważaliśmy
+głównie wartości z odcinka jednostkowego i spójniki
+określone za pomocą norm trójkątnych. Wielowartościowość
+jest jednak pojęciem ogólniejszym: wartości nie muszą
+być liczbami, nie muszą tworzyć łańcucha, a za wartości
+wyróżnione można uznać więcej niż jeden element.
+Przykładowo trzecia wartość może opisywać brak
+informacji albo jednoczesne uznanie zdania i jego
+negacji. Są to różne interpretacje, nawet jeśli
+rachunek spójników ma takie same tablice.
+
+\begin{definicja}[Macierz logiczna]\label{def:ncl-matrix}
+Ustalmy język zdaniowy, w którym każdy spójnik $c$
+ma ustaloną skończoną liczbę argumentów $n_c\geq0$.
+Macierzą logiczną nazywamy parę
+$\mathcal M=(A,D)$, gdzie $A$ jest niepustym zbiorem
+wyposażonym dla każdego spójnika $c$ w operację
+$c^A:A^{n_c}\to A$, a $D\subseteq A$ jest zbiorem
+wartości wyróżnionych. Wartościowanie zmiennych
+$p\mapsto v(p)\in A$ rozszerzamy rekurencyjnie na
+formuły przez
+\[
+ v(c(\varphi_1,\ldots,\varphi_{n_c}))
+ =c^A(v(\varphi_1),\ldots,v(\varphi_{n_c})).
+\]
+Dla spójnika zeroargumentowego prawa strona jest
+ustaloną stałą algebry.
+\end{definicja}
+Zwykle interesuje nas przypadek $\varnothing\ne D\ne A$.
+Nie jest to jednak konieczne dla samej definicji.
+
+\begin{definicja}[Konsekwencja macierzowa]\label{def:ncl-matrix-consequence}
+Dla zbioru formuł $\Gamma$ i formuły $\varphi$ piszemy
+\[
+ \Gamma\models_{\mathcal M}\varphi
+ \quad\Longleftrightarrow\quad
+ \forall v\ \bigl(v(\Gamma)\subseteq D
+                 \ \Longrightarrow\ v(\varphi)\in D\bigr).
+\]
+Dla klasy macierzy $\mathcal K$ definiujemy
+$\Gamma\models_{\mathcal K}\varphi$, gdy powyższa
+konsekwencja zachodzi w każdej macierzy z $\mathcal K$.
+Tautologią macierzy jest formuła $\varphi$ taka,
+że $\varnothing\models_{\mathcal M}\varphi$.
+Zbiór $\Gamma$ jest spełnialny w $\mathcal M$, jeżeli
+istnieje wartościowanie $v$ z $v(\Gamma)\subseteq D$.
+\end{definicja}
+W logice klasycznej bierzemy $A=\{0,1\}$, $D=\{1\}$
+i klasyczne operacje boolowskie. Macierz
+$([0,1],\{1\})$ z operacjami MTL opisuje konsekwencję
+zachowującą prawdę z
+Definicji~\ref{def:ncl-degree-consequence}, nie zaś
+konsekwencję zachowującą stopnie prawdy.
+
+\begin{twierdzenie}[Własności konsekwencji macierzowej]
+\label{thm:ncl-matrix-tarski}
+Konsekwencja $\models_{\mathcal K}$ ma następujące własności:
+\begin{enumerate}
+\item jeżeli $\varphi\in\Gamma$, to
+      $\Gamma\models_{\mathcal K}\varphi$;
+\item jeżeli $\Gamma\subseteq\Delta$ oraz
+      $\Gamma\models_{\mathcal K}\varphi$, to
+      $\Delta\models_{\mathcal K}\varphi$;
+\item jeżeli $\Gamma\models_{\mathcal K}\delta$ dla
+      każdego $\delta\in\Delta$ i
+      $\Delta\models_{\mathcal K}\varphi$, to
+      $\Gamma\models_{\mathcal K}\varphi$;
+\item dla każdego jednolitego podstawienia $\sigma$,
+      z $\Gamma\models_{\mathcal K}\varphi$ wynika
+      $\sigma(\Gamma)\models_{\mathcal K}\sigma(\varphi)$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Ustalmy dowolną macierz z $\mathcal K$. W pierwszym
+przypadku wartość wniosku należy do wartości przesłanek.
+W drugim każde wartościowanie wyróżniające wszystkie
+formuły $\Delta$ wyróżnia także wszystkie formuły $\Gamma$.
+W trzecim wartościowanie wyróżniające $\Gamma$ wyróżnia
+kolejno każdą formułę $\Delta$, a więc również $\varphi$.
+
+Dla ostatniej własności podstawienie $\sigma$ przypisuje
+każdej zmiennej pewną formułę i rozszerza się na formuły
+przez zachowanie spójników. Dla dowolnego wartościowania
+$v$ definiujemy $u(p)=v(\sigma(p))$. Indukcja po budowie
+formuły daje $u(\psi)=v(\sigma(\psi))$: dla zmiennych
+jest to definicja, dla stałych obie strony są tą samą
+wartością, a dla spójników stosujemy hipotezę indukcyjną
+do argumentów i tę samą operację w $A$.
+Jeżeli $v(\sigma(\Gamma))\subseteq D$, to
+$u(\Gamma)\subseteq D$, a z założenia $u(\varphi)\in D$.
+Stąd $v(\sigma(\varphi))\in D$. Ponieważ macierz
+i wartościowanie były dowolne, otrzymujemy tezę.
+\end{proof}
+
+\begin{wniosek}[Operator konsekwencji]\label{cor:ncl-matrix-closure}
+Przyporządkowanie
+$C_{\mathcal K}(\Gamma)=\{\varphi:\Gamma\models_{\mathcal K}\varphi\}$
+jest operatorem domknięcia na zbiorze formuł:
+jest ekstensywne, monotoniczne i idempotentne.
+\end{wniosek}
+\begin{proof}
+Pierwsze dwie własności odpowiadają pierwszym dwóm
+punktom Twierdzenia~\ref{thm:ncl-matrix-tarski}.
+Jeżeli $\varphi\in C_{\mathcal K}(C_{\mathcal K}(\Gamma))$,
+to stosujemy punkt trzeci z $\Delta=C_{\mathcal K}(\Gamma)$,
+uzyskując $\varphi\in C_{\mathcal K}(\Gamma)$.
+Odwrotna inkluzja wynika z ekstensywności.
+\end{proof}
+
+\section{Macierze skończone i zwartość}
+\begin{twierdzenie}[Zwartość skończonej macierzy]
+\label{thm:ncl-finite-matrix-compactness}
+Jeżeli $A$ jest skończone, to konsekwencja
+$\models_{\mathcal M}$ jest zwarta: jeśli
+$\Gamma\models_{\mathcal M}\varphi$, to
+istnieje skończony $\Gamma_0\subseteq\Gamma$,
+dla którego $\Gamma_0\models_{\mathcal M}\varphi$.
+Zwartość zachodzi również dla skończonej klasy
+skończonych macierzy.
+\end{twierdzenie}
+\begin{proof}
+Niech $P$ będzie zbiorem zmiennych zdaniowych.
+Nadajmy $A$ topologię dyskretną. Jest to przestrzeń
+zwarta, ponieważ $A$ jest skończone.
+Z twierdzenia Tychonoffa
+(Twierdzenie~\ref{thm:topog-tychonoff-iloczyny}
+w topologii ogólnej) przestrzeń wartościowań
+$A^P$ z topologią produktową jest zwarta.
+Wartość formuły jest ciągłą funkcją na $A^P$:
+rzuty są ciągłe, operacje na skończonych przestrzeniach
+dyskretnych są ciągłe, a indukcja po budowie formuły
+daje ciągłość złożenia.
+Zatem dla każdej formuły $\psi$ zbiór
+$V_\psi=\{v:v(\psi)\in D\}$ jest otwarto-domknięty.
+
+Przypuśćmy, że żaden skończony podzbiór $\Gamma$
+nie pociąga $\varphi$. Wtedy rodzina zbiorów domkniętych
+\[
+ \{V_\gamma:\gamma\in\Gamma\}
+ \cup\{A^P\setminus V_\varphi\}
+\]
+ma własność skończonych przecięć: kontrmodel
+dla odpowiedniego skończonego zbioru przesłanek
+należy do każdego z rozpatrywanych zbiorów.
+Zwartość daje punkt wspólny całej rodziny.
+Jest to kontrmodel dla $\Gamma\models_{\mathcal M}\varphi$.
+
+Jeżeli $\mathcal K$ jest niepustą skończoną klasą
+takich macierzy i $\Gamma\models_{\mathcal K}\varphi$,
+dla każdej $\mathcal M\in\mathcal K$ wybieramy
+skończony $\Gamma_{\mathcal M}\subseteq\Gamma$,
+który pociąga $\varphi$ w tej macierzy.
+Ich suma jest skończona i na mocy monotoniczności
+pociąga $\varphi$ w każdej macierzy z $\mathcal K$.
+Dla pustej klasy wystarczy pusty zbiór przesłanek.
+\end{proof}
+W rozdziale~\ref{ch:lst-fuzzy-logic} zwartość
+spełnialności nie zawsze pociągała zwartość konsekwencji.
+Tutaj istotne jest to, że również dopełnienie zbioru
+wartości wyróżnionych jest domknięte.
+Nie wolno automatycznie rozciągać twierdzenia
+na nieskończone klasy skończonych macierzy.
+
+\begin{stwierdzenie}[Rozstrzygalność przez tablice]
+\label{prop:ncl-finite-matrix-decision}
+Niech $\Gamma$ będzie skończonym zbiorem formuł,
+$\varphi$ formułą, a $\mathcal M$ ustaloną macierzą
+o $k$ elementach. Jeżeli w $\Gamma\cup\{\varphi\}$
+występuje $n$ różnych zmiennych, to do rozstrzygnięcia
+$\Gamma\models_{\mathcal M}\varphi$ wystarczy sprawdzić
+$k^n$ przypisań wartości tym zmiennym.
+\end{stwierdzenie}
+\begin{proof}
+Indukcja po budowie formuły pokazuje, że jej wartość
+zależy jedynie od wartości występujących w niej zmiennych.
+Każde przypisanie do skończonego zbioru zmiennych
+rozszerza się na wartościowanie wszystkich zmiennych,
+ponieważ $A$ jest niepuste.
+Wobec tego istnieje kontrmodel wtedy i tylko wtedy,
+gdy jedno z $k^n$ przypisań wyróżnia wszystkie przesłanki,
+lecz nie wyróżnia wniosku. Operacje macierzy skończonej
+możemy zapisać w postaci skończonych tablic, więc
+każda taka kontrola kończy się po skończonej liczbie kroków.
+\end{proof}
+Dla ustalonej macierzy i stałego kosztu odczytu tablicy,
+jeśli $L$ oznacza łączną liczbę węzłów drzew składniowych
+przesłanek i wniosku, bezpośrednia enumeracja ma czas
+$O(k^n L)$. Nie jest to twierdzenie o optymalności algorytmu.
+
+\section{Logika silna Kleene'ego i logika Priesta}
+\begin{definicja}[Wspólna algebra trójwartościowa]\label{def:ncl-k3-lp}
+Niech $A=\{0,u,1\}$, gdzie $0<u<1$.
+Dla negacji, koniunkcji i alternatywy określamy
+\[
+ \neg0=1,\quad \neg u=u,\quad \neg1=0,\qquad
+ a\wedge b=\min(a,b),\quad a\vee b=\max(a,b).
+\]
+Rozważamy dwie macierze w języku $\neg,\wedge,\vee$:
+\[
+ K_3=(A,\{1\}),\qquad \mathrm{LP}=(A,\{u,1\}).
+\]
+Pierwsza wyznacza silną logikę trójwartościową
+Kleene'ego, druga logikę paradoksu Priesta.
+\end{definicja}
+W $K_3$ wartość $u$ można rozumieć jako nieokreśloną,
+natomiast w LP jako jednoczesną prawdziwość i fałszywość.
+To interpretacje semantyczne, nie identyfikacja
+wartości $u$ z prawdopodobieństwem $1/2$.
+Tablice operacji są identyczne:
+\[
+\begin{array}{c|c}
+ a&\neg a\\\hline
+ 0&1\\u&u\\1&0
+\end{array}
+\qquad
+\begin{array}{c|ccc}
+ \wedge&0&u&1\\\hline
+ 0&0&0&0\\u&0&u&u\\1&0&u&1
+\end{array}
+\qquad
+\begin{array}{c|ccc}
+ \vee&0&u&1\\\hline
+ 0&0&u&1\\u&u&u&1\\1&1&1&1
+\end{array}
+\]
+Różne zbiory wartości wyróżnionych prowadzą jednak
+do różnych relacji konsekwencji.
+
+\begin{przyklad}[Wyłączony środek i eksplozja]\label{ex:ncl-k3-lp-laws}
+W $K_3$ formuła $p\vee\neg p$ nie jest tautologią:
+dla $v(p)=u$ ma wartość $u$, która nie jest wyróżniona.
+W LP jest tautologią, ponieważ jej wartość wynosi
+$1$ dla $v(p)=0,1$ oraz $u$ dla $v(p)=u$.
+
+W $K_3$ zachodzi $\{p,\neg p\}\models_{K_3}q$:
+nie istnieje wartościowanie, w którym jednocześnie
+$p$ i $\neg p$ mają wartość $1$.
+Natomiast w LP wartościowanie $v(p)=u$, $v(q)=0$
+wyróżnia obie przesłanki, lecz nie wniosek, zatem
+$\{p,\neg p\}\not\models_{\mathrm{LP}}q$.
+Brak prawa eksplozji nie oznacza, że wszystkie
+formuły stają się prawdziwe.
+\end{przyklad}
+\begin{stwierdzenie}[Porównanie z klasyczną konsekwencją]
+\label{prop:ncl-k3-lp-classical}
+Każda konsekwencja w $K_3$ lub LP jest konsekwencją
+klasyczną w języku $\neg,\wedge,\vee$.
+Ponadto relacje konsekwencji $K_3$ i LP
+nie zawierają się jedna w drugiej.
+\end{stwierdzenie}
+\begin{proof}
+Ograniczenie obu macierzy do $\{0,1\}$ daje
+klasyczne tablice i dokładnie jedną wartość wyróżnioną $1$.
+Każde wartościowanie klasyczne jest więc szczególnym
+wartościowaniem w obu macierzach. Teza o klasycznej
+konsekwencji wynika przez ograniczenie kwantyfikacji.
+Przykład~\ref{ex:ncl-k3-lp-laws} pokazuje, że
+$p\vee\neg p$ jest tautologią LP, lecz nie $K_3$,
+a konsekwencja z przesłanek $p,\neg p$ do $q$
+zachodzi w $K_3$, lecz nie w LP.
+Daje to obie nieinkluzje.
+\end{proof}
