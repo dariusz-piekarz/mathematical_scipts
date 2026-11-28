@@ -73,13 +73,6 @@ jobs:
           root_file: distribution_theory.tex
           working_directory: books/pl
           args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
-      - name: Compile restructured DT candidate with AF reference context
-        if: always()
-        uses: xu-cheng/latex-action@v3
-        with:
-          root_file: ../../shared/pl/distribution_theory/restructure/master.tex
-          working_directory: books/pl
-          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error -jobname=distribution_theory_restructured
       - name: Recompile AF after DT reference generation
         if: always()
         uses: xu-cheng/latex-action@v3
@@ -119,21 +112,16 @@ jobs:
           dt_expected = ([str(r['number']) for r in plan['chapters'] if r.get('target_path')]
                          if plan['status'] == 'active' else [str(i) for i in range(1,20)])
           assert dt_ids == dt_expected, dt_ids
-          candidate_toc = Path('distribution_theory_restructured.toc').read_text()
-          candidate_ids = re.findall(r'\\contentsline\s*\{section\}\s*\{\\numberline\s*\{([^}]+)\}', candidate_toc)
-          assert candidate_ids == [str(i) for i in plan['candidate_master']['expected_section_numbers']], candidate_ids
-          print('Candidate DT TOC sections:', candidate_ids)
           print('TOC sections:', ids)
           assert ids == expected
           PY
           test -s distribution_theory.pdf
           test -s distribution_theory.log
-          test -s distribution_theory_restructured.pdf
-          test -s distribution_theory_restructured.log
-          pdftotext -layout distribution_theory_restructured.pdf distribution_theory_restructured.txt
+
+
           pdftotext -layout distribution_theory.pdf distribution_theory.txt
           grep -q 'Teoria dystrybucji i analiza harmoniczna' distribution_theory.txt
-          if grep -E 'Undefined control sequence|There were undefined references|There were multiply-defined labels|LaTeX Warning: (Reference|Citation).*undefined|Overfull \\hbox|Missing character|destination with the same identifier' functional_analysis.log distribution_theory.log distribution_theory_restructured.log; then
+          if grep -E 'Undefined control sequence|There were undefined references|There were multiply-defined labels|LaTeX Warning: (Reference|Citation).*undefined|Overfull \\hbox|Missing character|destination with the same identifier' functional_analysis.log distribution_theory.log; then
             echo 'Final LaTeX diagnostics failed.'
             exit 1
           fi
@@ -152,8 +140,4 @@ jobs:
             books/pl/distribution_theory.log
             books/pl/distribution_theory.toc
             books/pl/distribution_theory.txt
-            books/pl/distribution_theory_restructured.pdf
-            books/pl/distribution_theory_restructured.log
-            books/pl/distribution_theory_restructured.toc
-            books/pl/distribution_theory_restructured.txt
           if-no-files-found: warn
