@@ -1,6 +1,6 @@
 # PLAN GLOBALNY BIBLIOTEKI MATEMATYCZNEJ
 
-**Wersja 1.4 — 28.11.2026.** Nadrzędny dokument roboczy. Migawka katalogu: [8e104a7](https://github.com/dariusz-piekarz/mathematical_scipts/commit/8e104a732fb4293b1f23f06774f01f8d6e17d96c). Gałąź robocza: biblioteka-matematyczna-iteracja-6. **22 aktywne skrypty, 607 rozdziałów.** Pełny indeks ścieżek, blobów i kandydatów na raporty: [catalog/global_library_inventory.json](../../catalog/global_library_inventory.json).
+**Wersja 1.5 — 28.11.2026.** Nadrzędny dokument roboczy. Migawka katalogu: [8e104a7](https://github.com/dariusz-piekarz/mathematical_scipts/commit/8e104a732fb4293b1f23f06774f01f8d6e17d96c). Gałąź robocza: biblioteka-matematyczna-iteracja-6. **22 aktywne skrypty, 607 rozdziałów.** Pełny indeks ścieżek, blobów i kandydatów na raporty: [catalog/global_library_inventory.json](../../catalog/global_library_inventory.json).
 
 To plan żywy, nie certyfikat ukończenia całej biblioteki. Inwentaryzacja obejmuje katalog i nazwy wszystkich aktywnych rozdziałów oraz wybrane raporty i plany. Nie przeczytano ponownie wszystkich dowodów ani wszystkich raportów; propozycje uzupełnień są zadaniami sprawdzenia pokrycia, a nie stwierdzeniem braku. Statusy historyczne dotyczą wersji wskazanych w raportach. Brak raportu w standardowym katalogu nie oznacza braku przeprowadzonego audytu.
 
@@ -253,11 +253,13 @@ Kierunki zatwierdzone przez użytkownika; poniższe szczegółowe programy i rob
 6. Interpolacja Nevanlinny–Picka, zagadnienia ekstremalne, funkcje wewnętrzne, związki z teorią operatorów (AF).
 7. Zależności: AZ I, AM II, ME, AF, DG; algebra lokalna i snopy analityczne rozwijane w GAZ, nie powielać ich pełnej teorii.
 
-#### GK — Geometria klasyczna: planimetria, stereometria, geometrie modelowe i rzutowe, program Kleina
+#### GK — Geometria klasyczna: euklidesowa, afiniczna, hiperboliczna, sferyczna, eliptyczna i rzutowa
 
-Doprecyzowanie użytkownika z 28.11.2026: klasyczna geometria euklidesowa, jej twierdzenia, konstrukcje i obliczenia mają stanowić znaczną, samodzielną część skryptu, a nie krótki wstęp do geometrii abstrakcyjnych. Rozwijać od elementarnych pojęć do zaawansowanych twierdzeń geometrii syntetycznej; prowadzić pełne dowody, liczne zadania i czytelne rysunki z oznaczeniami. Poniższe części są roboczym programem, bez deklaracji istniejącego pokrycia.
+Decyzja użytkownika z 28.11.2026: jeden tom o klasycznych geometriach, prowadzony od elementarnych pojęć, twierdzeń i konstrukcji. Najpierw pełna planimetria i stereometria euklidesowa, rozszerzenie afiniczne i opis współrzędnościowy; następnie analogiczne kursy geometrii hiperbolicznej, sferycznej i eliptycznej. Geometria rzutowa jest ostatnią zasadniczą częścią tomu, również opracowaną w stylu szkolnym i syntetycznym. Program Kleina służy jako wspólna perspektywa porównawcza, nie zastępuje klasycznych twierdzeń. Niejasne określenie „kaonowska” z dyspozycji roboczo odczytano jako geometrię w ujęciu Kleinowskim; opis kartezjański/współrzędnościowy pozostaje w planie niezależnie od tej interpretacji.
 
-**Blok A — klasyczna geometria euklidesowa (główny trzon):**
+**Wspólny schemat każdej geometrii metrycznej:** punkty, proste/geodezyjne, odcinki i kąty; incydencja i równoległość; przystawanie i podobieństwo; trójkąty oraz ich szczególne proste i punkty; czworokąty i wielokąty; okręgi, koła, styczne; długości i pola; trygonometria; konstrukcje i przekształcenia; opis współrzędnościowy i modele; stereometria odpowiednich przestrzeni stałej krzywizny; zadania z pełnymi rozwiązaniami; tabela porównawcza z poprzednimi geometriami. Nie zakładać, że wszystkie obiekty i twierdzenia euklidesowe mają analogi. Jawnie rozróżniać twierdzenia prawdziwe bez zmian, zmodyfikowane, fałszywe i pojęcia bez naturalnego odpowiednika. W geometriach o niezerowej ustalonej krzywiźnie podobieństwo trójkątów nie działa tak jak w euklidesowej; uwzględnić degeneracje, ograniczenia długości i wyboru geodezyjnych.
+
+**Część I — klasyczna geometria euklidesowa (główny trzon):**
 1. Podstawy aksjomatyczne: punkty, proste, płaszczyzny, odcinki, półproste, kąty, incydencja, porządek, przystawanie, proste równoległe i prostopadłe, postulat Euklidesa.
 2. Trójkąty: klasyfikacja, suma kątów, nierówność trójkąta, cechy przystawania i podobieństwa, twierdzenia Talesa i Pitagorasa (z twierdzeniami odwrotnymi), twierdzenia o wysokości i przyprostokątnych, dwusieczne, środkowe i symetralne.
 3. Szczególne punkty i proste trójkąta: środek ciężkości, ortocentrum, środki okręgów wpisanego i opisanego, okręgi dopisane, prosta Eulera, okrąg dziewięciu punktów; twierdzenia Cevy, Menelaosa, Stewarta, Simsona, Morleya i Napoleona.
@@ -270,15 +272,36 @@ Doprecyzowanie użytkownika z 28.11.2026: klasyczna geometria euklidesowa, jej t
 10. Stereometria: wzajemne położenie prostych i płaszczyzn, rzuty, kąty i odległości, kąty dwuścienne, wielościany, graniastosłupy, ostrosłupy, czworościany, bryły platońskie, walce, stożki, kule, przekroje, pola powierzchni i objętości, podobieństwo brył, zasada Cavalieriego. Powiązać ze wzorami całkowymi AM II oraz wzorem Eulera z GT/AT.
 11. Zadania konstrukcyjne i dowodowe, geometria olimpijska: dodatkowe twierdzenia, dowody syntetyczne, analityczne i wektorowe, nierówności geometryczne, przykłady z pełnym rozwiązaniem oraz osobne zadania z podpowiedziami. Nie ograniczać skryptu do tablic wzorów.
 
-**Blok B — uogólnienia klasycznych geometrii:**
-12. Geometria afiniczna: incydencja, równoległość, środki ciężkości, przekształcenia afiniczne, niezmienniki, relacja do geometrii euklidesowej.
-13. Geometria rzutowa nad ciałem: współrzędne jednorodne, incydencja, dualność, dwustosunek, twierdzenia Desargues'a i Pappusa, przekroje stożkowe, biegunowość, kolineacje, geometrie rzutowe nad ciałami skończonymi. Rozróżnić geometrię rzutową od geometrii algebraicznej odmian rzutowych.
-14. Geometria sferyczna i eliptyczna: wielkie koła, trójkąty, trygonometria sferyczna, pola i nadmiar kątowy, izometrie.
-15. Geometria hiperboliczna: modele Poincarégo (dysk i półpłaszczyzna/półprzestrzeń), Kleina i hiperboloidy, metryki, geodezyjne, izometrie, trójkąty, przejścia między modelami; porównanie pól, kątów i podobieństwa z geometrią euklidesową.
-16. Program erlangeński Kleina: geometria jako działanie grupy, niezmienniki, przestrzenie jednorodne G/H, hierarchia geometrii; geometria Möbiusa, konforemna, inwersyjna, Cayleya–Kleina, geometria Minkowskiego i Lorentza, geometrie Galileusza.
-17. Dodatkowe modele: geometria symplektyczna liniowa, geometria skończona, geometrie modelowe wymiaru 3 (osiem geometrii Thurstona jako pomost do TD, bez powielania dowodu geometryzacji); ewentualna geometria Finslera jako most do DG.
 
-**Granice i audyt pokrycia:** LA zachowuje algebrę liniową, formy i grupy macierzowe; AA teorię działań i grup oraz algebraiczne kryteria konstrukcji; AM I/II analityczne dowody dotyczące całek i funkcji; DG lokalną i globalną geometrię różniczkową; ALG schematy; GT/AT ogólne twierdzenia topologiczne. GK jest właścicielem klasycznych dowodów geometrycznych, konstrukcji, pól i objętości figur, modeli i niezmienników. Sprawdzić istniejące rozdziały przed migracją. Rysunki powinny jasno pokazywać konfigurację, założenia, pomocnicze konstrukcje i elementy dowodu; zadania mają narastać od elementarnych do olimpijskich.
+**Część II — geometria afiniczna i ujęcie współrzędnościowe:**
+12. Geometria afiniczna: punkty, wektory przesunięć, proste i płaszczyzny, równoległość, podział odcinków, współrzędne barycentryczne, środki ciężkości, twierdzenia Talesa, Cevy i Menelaosa w odpowiednim ujęciu; przekształcenia afiniczne, stosunki pól i objętości. Rozróżnić niezmienniki afiniczne od metrycznych (długość, kąt, prostopadłość nie są ogólnie zachowywane).
+13. Ujęcie kartezjańskie i wektorowe: powiązać z wcześniejszymi rozdziałami euklidesowymi, stosować współrzędne do dowodów, konstrukcji i obliczeń; porównać dowód syntetyczny i analityczny tego samego twierdzenia, nie powielać pełnych sekcji. Wprowadzić intuicję programu Kleina przez grupy przekształceń i ich niezmienniki; formalizm rzutowy rozwinąć na końcu.
+
+**Część III — geometria hiperboliczna:**
+14. Aksjomatyka, postulat hiperboliczny, modele Poincarégo (dysk i półpłaszczyzna), Kleina i hiperboloidy; odpowiedniki punktów, prostych, odcinków, kątów, izometrii i równoległości; podstawowe konstrukcje.
+15. Trójkąty: przystawanie, nierówności, defekt kątowy, ograniczenia podobieństwa, hiperboliczne twierdzenia Pitagorasa, sinusów i cosinusów, dwusieczne, środkowe i wysokości, istnienie i położenie szczególnych punktów. Badać zakres analogów twierdzeń klasycznych, np. Cevy i Menelaosa w odpowiedniej postaci.
+16. Wielokąty, czworokąty Saccheriego i Lamberta, okręgi, horocykle, ekwidystanty, styczne; długości i pola, wzory pól trójkątów i wielokątów, pola koła; konstrukcje i zadania.
+17. Geometria hiperboliczna przestrzenna: geodezyjne, płaszczyzny, kąty dwuścienne, wielościany i bryły, pola i objętości w wybranych przypadkach. Porównanie modeli i niezmienników z euklidesową; model Kleina wprowadzić operacyjnie bez wcześniejszego pełnego kursu geometrii rzutowej.
+
+**Część IV — geometria sferyczna:**
+18. Sfera o promieniu R, wielkie koła, łuki, geodezyjne i ich niejednoznaczność dla punktów antypodycznych; kąty, izometrie, brak prostych równoległych.
+19. Trójkąty sferyczne: warunki wyboru łuków, przystawanie, nadmiar kątowy, trygonometria, twierdzenia sinusów i cosinusów oraz sferyczne twierdzenie Pitagorasa; dwusieczne, wysokości, środkowe i szczególne punkty przy poprawnych hipotezach; odpowiedniki klasycznych twierdzeń.
+20. Wielokąty sferyczne, dwukąty, koła i okręgi sferyczne, obwody i pola (twierdzenie Girarda), konstrukcje i zadania; stereometria w przestrzeni sferycznej S^3 i przykłady. Nie utożsamiać powierzchni sfery w R^3 z trójwymiarową przestrzenią sferyczną.
+
+**Część V — geometria eliptyczna:**
+21. Model sfery z identyfikacją punktów antypodycznych; punkty, proste, metryka, kąty, incydencja, izometrie; odróżnić geometrię eliptyczną od sferycznej.
+22. Trójkąty, przystawanie, zakres pojęcia podobieństwa, trygonometria, wielokąty, koła, długości, pola i konstrukcje. Ustalić konwencje dotyczące wyboru odcinków i obszarów, szczególnie gdy istnieje więcej niż jedna geodezyjna minimalna.
+23. Geometria eliptyczna przestrzenna, porównanie czterech geometrii metrycznych: równoległość, sumy kątów, pole, przystawanie, podobieństwo, krzywizna. Uogólnienia klasycznych twierdzeń przy poprawnych hipotezach.
+
+**Część VI — geometria rzutowa (ostatnia część tomu):**
+24. Elementarne wprowadzenie syntetyczne: punkty, proste, punkty i prosta w nieskończoności, incydencja, zasada dualności, perspektywa i rzuty. Liczne rysunki oraz konstrukcje z użyciem prostej krawędzi; nie wymagać na początku znajomości schematów ani geometrii algebraicznej.
+25. Konfiguracje rzutowe, twierdzenia Desargues'a i Pappusa z właściwymi założeniami, zupełny czworokąt, współliniowość i współpękowość, konstrukcje harmoniczne, dwustosunek, twierdzenia Pascala i Brianchona w odpowiednim zakresie.
+26. Współrzędne jednorodne, przekształcenia rzutowe, proste i płaszczyzny, stożkowe, biegunowość, kolineacje, geometria rzutowa nad ciałem i przykłady skończone. Nie przypisywać geometrii rzutowej kanonicznych długości, kątów, pól lub podobieństwa metrycznego: zamiast tego rozwijać odpowiednie niezmienniki rzutowe.
+27. Synteza w duchu programu erlangeńskiego Kleina: hierarchia grup przekształceń, związek geometrii afinicznej i metrycznej z rzutową, konstrukcje Cayleya–Kleina przy właściwych założeniach, porównanie wcześniejszych modeli; zadania syntetyczne i współrzędnościowe. To zamknięcie tomu, nie początek kolejnego bloku abstrakcyjnego.
+
+**Pozostałe wcześniej planowane geometrie:** Möbiusa, konforemna i inwersyjna mogą występować przy przekształceniach i modelach odpowiednich części; Minkowskiego, Lorentza, Galileusza, liniowa symplektyczna, Finslera oraz geometrie Thurstona nie są teraz odrębnymi częściami tego tomu. Zachować jako tematy do późniejszej decyzji lub odsyłacze GK → DG/GSK/TG3; nie umieszczać rozdziałów po końcowej geometrii rzutowej.
+
+**Granice i audyt pokrycia:** LA zachowuje algebrę liniową, formy i grupy macierzowe; AA teorię działań i grup oraz algebraiczne kryteria konstrukcji; AM I/II analityczne dowody dotyczące całek i funkcji; DG lokalną i globalną geometrię różniczkową; ALG schematy; GT/AT ogólne twierdzenia topologiczne. GK jest właścicielem klasycznych dowodów geometrycznych, konstrukcji, pól i objętości figur, modeli i niezmienników. Sprawdzić istniejące rozdziały przed migracją. Rysunki, rozwiązania i zadania od poziomu szkolnego do olimpijskiego i akademickiego w każdej części. Plan nie jest deklaracją pokrycia ani wykonania audytu.
 
 
 #### GAZ I — Geometria analityczna zespolona: teoria lokalna (proponowany tom I)
