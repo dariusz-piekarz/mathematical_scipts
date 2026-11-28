@@ -356,3 +356,179 @@ więc nie należy do $\operatorname{Log}(\mathcal C)$.
 Dla pustej klasy wszystkie formuły są
 ważne próżniowo, co daje logikę sprzeczną.
 \end{proof}
+
+\section{Korespondencja aksjomatów z własnościami ram}
+
+\begin{definicja}[Własności relacji dostępności]
+\label{def:ncl-kripke-relation-properties}
+Relację $R$ na zbiorze $W$ nazywamy:
+\begin{itemize}
+ \item seryjną, gdy $\forall w\in W\ \exists z\in W\quad wRz$;
+ \item zwrotną, gdy $\forall w\in W\quad wRw$;
+ \item symetryczną, gdy $wRz$ pociąga $zRw$;
+ \item przechodnią, gdy $wRz$ i $zRu$ pociągają $wRu$;
+ \item euklidesową (prawostronnie), gdy $wRz$ i $wRu$
+       pociągają $zRu$.
+\end{itemize}
+W ostatnich trzech warunkach kwantyfikujemy
+po wszystkich występujących stanach.
+\end{definicja}
+
+\begin{twierdzenie}[Korespondencja D, T, B, 4 i 5]
+\label{thm:ncl-kripke-basic-correspondence}
+Niech $F=(W,R)$ będzie ramą Kripkego,
+a $p$ zmienną zdaniową. Zachodzą równoważności
+\[
+\begin{array}{c|l|l}
+ &\text{formuła ważna na }F&\text{własność }R\\ \hline
+ \mathrm D&\Box p\to\Diamond p&\text{seryjność}\\
+ \mathrm T&\Box p\to p&\text{zwrotność}\\
+ \mathrm B&p\to\Box\Diamond p&\text{symetryczność}\\
+ 4&\Box p\to\Box\Box p&\text{przechodniość}\\
+ 5&\Diamond p\to\Box\Diamond p&\text{euklidesowość}
+\end{array}
+\]
+W każdej równoważności ważność pojedynczej
+formuły można zastąpić ważnością wszystkich
+instancji odpowiedniego schematu.
+\end{twierdzenie}
+\begin{proof}
+Wystarczalność własności relacji dla wszystkich
+instancji wykazano w Lemacie~\ref{lem:ncl-modal-frame-sufficient}.
+Wystarczy zatem udowodnić konieczność
+każdej własności, konstruując wartościowanie
+na ustalonej ramie, na której dana własność
+nie zachodzi. Wartości pozostałych zmiennych
+można wybrać dowolnie.
+
+\emph{D.} Jeżeli $R(w)=\varnothing$,
+to w stanie $w$ formuła $\Box p$ jest prawdziwa,
+a $\Diamond p$ fałszywa przy dowolnym
+wartościowaniu. Zatem ważność D wymaga seryjności.
+
+\emph{T.} Jeżeli nie zachodzi $wRw$,
+przyjmujemy $V(p)=R(w)$. Każdy następnik
+$w$ spełnia $p$, ale sam $w$ nie spełnia $p$.
+Formuła T jest fałszywa w $w$.
+
+\emph{B.} Jeżeli $wRz$, lecz nie $zRw$,
+przyjmujemy $V(p)=\{w\}$. W stanie $w$
+zachodzi $p$, lecz $z$ nie ma żadnego
+następnika spełniającego $p$.
+Zatem $z$ nie spełnia $\Diamond p$,
+a $w$ nie spełnia $\Box\Diamond p$.
+
+\emph{4.} Jeżeli $wRz$ i $zRu$, lecz nie $wRu$,
+przyjmujemy $V(p)=R(w)$. W stanie $w$
+zachodzi $\Box p$. Ponieważ $u\notin V(p)$
+oraz $zRu$, w stanie $z$ nie zachodzi $\Box p$.
+Zatem w $w$ nie zachodzi $\Box\Box p$.
+
+\emph{5.} Jeżeli $wRz$ i $wRu$, lecz nie $zRu$,
+przyjmujemy $V(p)=\{u\}$. Stan $u$ jest świadkiem
+prawdziwości $\Diamond p$ w $w$, ale $z$ nie ma
+następnika spełniającego $p$. Wobec $wRz$
+w stanie $w$ nie zachodzi $\Box\Diamond p$.
+
+Każde z powyższych wartościowań obala
+odpowiednią formułę na rozważanej ramie.
+Ponadto z Lematu~\ref{lem:ncl-kripke-substitution}
+wynika, że ważność formuły z jedną zmienną
+na ramie implikuje ważność wszystkich jej
+instancji podstawieniowych.
+\end{proof}
+
+\begin{przyklad}[Ważność w modelu nie wystarcza do korespondencji]
+\label{ex:ncl-kripke-model-frame-distinction}
+Rozważmy ramę $W=\{w,z\}$, $R=\{(w,z),(z,z)\}$.
+Nie jest ona zwrotna, ale w modelu, w którym
+każda zmienna jest prawdziwa w obu stanach
+lub fałszywa w obu stanach, wszystkie formuły
+mają stałą wartość na $W$. Istotnie, spójniki
+klasyczne zachowują stałość, a każdy stan ma
+dokładnie jednego następnika, więc $\Box$
+nie zmienia wartości formuły stałej.
+Indukcja po budowie formuły pokazuje, że
+wszystkie instancje T są ważne w tym modelu.
+Natomiast dla wartościowania $V(p)=\{z\}$
+formuła $\Box p\to p$ jest fałszywa w $w$.
+Korespondencja dotyczy więc ważności na ramie,
+nie ważności w pojedynczym modelu, nawet
+gdy w tym modelu ważne są wszystkie instancje
+schematu.
+\end{przyklad}
+
+\begin{lemat}[Relacje zwrotne i euklidesowe]
+\label{lem:ncl-kripke-reflexive-euclidean}
+Dla relacji $R$ na $W$ równoważne są warunki:
+\begin{enumerate}
+ \item $R$ jest zwrotna i euklidesowa;
+ \item $R$ jest relacją równoważności.
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+Załóżmy zwrotność i euklidesowość.
+Jeżeli $wRz$, to wobec $wRw$ z euklidesowości
+otrzymujemy $zRw$, czyli symetryczność.
+Jeżeli $wRz$ i $zRu$, to z symetryczności
+mamy $zRw$; euklidesowość zastosowana
+do $zRw$ i $zRu$ daje $wRu$.
+Otrzymujemy zatem także przechodniość.
+Odwrotnie, jeśli $R$ jest relacją równoważności
+i zachodzą $wRz$, $wRu$, to $zRw$ przez
+symetryczność, a stąd $zRu$ przez przechodniość.
+\end{proof}
+
+\begin{wniosek}[Klasy ram podstawowych systemów]
+\label{cor:ncl-kripke-basic-frame-classes}
+Klasy ram, na których ważne są wszystkie
+twierdzenia wskazanych logik, mają postać
+\[
+\begin{array}{c|l}
+ \mathrm K & \text{wszystkie ramy}\\
+ \mathrm{KD} & \text{ramy seryjne}\\
+ \mathrm T & \text{ramy zwrotne}\\
+ \mathrm{KB} & \text{ramy symetryczne}\\
+ \mathrm{K4} & \text{ramy przechodnie}\\
+ \mathrm{K5} & \text{ramy euklidesowe}\\
+ \mathrm B & \text{ramy zwrotne i symetryczne}\\
+ \mathrm{S4} & \text{ramy zwrotne i przechodnie}\\
+ \mathrm{S5} & \text{ramy z relacją równoważności}.
+\end{array}
+\]
+\end{wniosek}
+\begin{proof}
+K jest poprawna na wszystkich ramach na mocy
+Twierdzenia~\ref{thm:ncl-kripke-soundness}.
+Każdy z pozostałych systemów zawiera wskazane
+w Definicji~\ref{def:ncl-modal-axiom-schemes}
+schematy. Ich ważność na ramie wymusza
+odpowiednie własności relacji przez
+Twierdzenie~\ref{thm:ncl-kripke-basic-correspondence}.
+Odwrotnie, te własności gwarantują ważność
+wszystkich instancji schematów. Ważność
+na ramie jest zachowywana przez podstawienie,
+modus ponens i regułę konieczności
+(jak w dowodzie Wniosku~\ref{cor:ncl-kripke-frame-logic}),
+więc na takiej ramie ważne są wszystkie
+twierdzenia rozważanego systemu.
+Dla S5 stosujemy dodatkowo
+Lemat~\ref{lem:ncl-kripke-reflexive-euclidean}.
+\end{proof}
+
+\begin{uwaga}[Korespondencja a pełność]
+\label{rem:ncl-kripke-correspondence-not-completeness}
+Dla logiki $L$ oznaczmy
+\[
+ \operatorname{Fr}(L)=\{F:\ \forall A\in L\quad F\Vdash A\}.
+\]
+Z definicji zawsze zachodzi
+$L\subseteq\operatorname{Log}(\operatorname{Fr}(L))$.
+Powyższy wniosek identyfikuje klasę
+$\operatorname{Fr}(L)$ dla podstawowych logik,
+ale sam przez się nie dowodzi odwrotnej inkluzji.
+Aby uzyskać pełność, trzeba wykazać, że
+dla każdej formuły $A\notin L$ istnieje
+rama z $\operatorname{Fr}(L)$ i model na tej ramie,
+w którym $A$ jest fałszywa w pewnym stanie.
+\end{uwaga}
