@@ -12,6 +12,21 @@ VERSION = "0.1.0"
 MAX_SOURCE_BYTES = 32768
 
 
+def _same_tree(expected, actual):
+    """Compare parser metadata without Python's bool/int/float coercion."""
+    if type(expected) is not type(actual):
+        return False
+    if type(expected) is dict:
+        if len(expected) != len(actual) or any(type(k) is not str for k in actual):
+            return False
+        return expected.keys() == actual.keys() and all(
+            _same_tree(value, actual[key]) for key, value in expected.items())
+    if type(expected) is list:
+        return len(expected) == len(actual) and all(
+            _same_tree(x, y) for x, y in zip(expected, actual))
+    return expected == actual
+
+
 def capabilities() -> dict:
     return {"schema_version": 1, "adapter_version": VERSION,
             "generators": {
@@ -104,7 +119,7 @@ def generate(source: str, *, generator: str, expected_source_sha256: str,
                   else rules.lean_parser.parse_pilot_statement(source, segments))
         if (parsed["status"] not in ("parsed_formula", "parsed_pilot_statement")
                 or parsed["ast_sha256"] != result["ast_sha256"]
-                or parsed["trace"] != result["trace"]):
+                or not _same_tree(parsed["trace"], result["trace"])):
             return reject("candidate_identity_mismatch")
         signature, names = rules._render(parsed["ast"])
         # Rules are deterministic: authenticate the entire template, not
@@ -112,7 +127,7 @@ def generate(source: str, *, generator: str, expected_source_sha256: str,
         # command is not an output of this generator.
         expected_code = (rules.IMPORT_HEADER + "\nset_option maxHeartbeats 100000\n"
                          "set_option maxRecDepth 512\n\n" + signature + " := " + rules._PROOF)
-        if (signature != result["signature"] or names != result["binding_names"]
+        if (signature != result["signature"] or not _same_tree(names, result["binding_names"])
                 or result["lean_code"] != expected_code):
             return reject("candidate_identity_mismatch")
     else:
@@ -142,7 +157,7 @@ def generate(source: str, *, generator: str, expected_source_sha256: str,
                     or result["status"] != parsed["status"]
                     or result["error"] != parsed.get("error")
                     or type(result["diagnostic"]) is not dict
-                    or result["diagnostic"] != diagnostic):
+                    or not _same_tree(diagnostic, result["diagnostic"])):
                 return reject("candidate_identity_mismatch")
             result = {**result, "diagnostic": diagnostic}
     return {**base, **result, "source_sha256": digest,

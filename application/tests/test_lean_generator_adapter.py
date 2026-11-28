@@ -182,3 +182,29 @@ class LeanGeneratorAdapterTests(unittest.TestCase):
             self.assert_blocked(adapter.generate(
                 s, generator="rules", consent=True, segments=omitted,
                 expected_source_sha256=digest(s)), "candidate_identity_mismatch")
+
+    def test_numeric_trace_types_are_exact(self):
+        import copy
+        s = r"\top"
+        original = rules.generate(s, consent=True)
+        for replacement in (False, 0.0):
+            changed = copy.deepcopy(original)
+            changed["trace"]["segments"][0]["span"][0] = replacement
+            self.assertEqual(changed["trace"], original["trace"])
+            with patch.object(rules, "generate", return_value=changed):
+                self.assert_blocked(adapter.generate(
+                    s, generator="rules", consent=True,
+                    expected_source_sha256=digest(s)), "candidate_identity_mismatch")
+
+    def test_numeric_diagnostic_types_are_exact(self):
+        import copy
+        s = r"\text{extra}"
+        original = rules.generate(s, consent=True)
+        changed = copy.deepcopy(original)
+        self.assertEqual(changed["diagnostic"]["span"][0], 0)
+        changed["diagnostic"]["span"][0] = False
+        self.assertEqual(changed["diagnostic"], original["diagnostic"])
+        with patch.object(rules, "generate", return_value=changed):
+            self.assert_blocked(adapter.generate(
+                s, generator="rules", consent=True,
+                expected_source_sha256=digest(s)), "candidate_identity_mismatch")
