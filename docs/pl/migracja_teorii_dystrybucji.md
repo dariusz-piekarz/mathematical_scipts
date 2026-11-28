@@ -1,4 +1,4 @@
-# Teoria dystrybucji i analiza harmoniczna — migracja (etap 7)
+# Teoria dystrybucji i analiza harmoniczna — migracja (etap 8)
 
 Data: 2026-11-28. Nazwa robocza: distribution_theory. Planowany prefiks Atlasu: DT (do potwierdzenia przy przełączeniu identyfikatorów).
 
@@ -62,3 +62,8 @@ Etap 1 pozostaje celowo poza katalogiem aktywnych książek Atlasu. Nie jest to 
 - Rozdział syntetyczny wyłączono z mastera TD i rozprowadzono jego materiał w sześciu fragmentach: porównanie przestrzeni testowych, ograniczenie/przedłużenie dystrybucji, zwarty nośnik, kryterium temperowania i operacje, topologie przestrzeni sprzężonych, identyfikacje tensorowe. Zachowano wszystkie historyczne etykiety, w tym sec:synteza25 przy porównaniu topologii. Skrócono powtórzenia definicji, dowodu równoważności zbieżności ciągów na przestrzeniach Montela i dowodu ciągłości operacji, wskazując wcześniejsze wyniki.
 - Pozostawiono pełne dowody nieprzedłużalności, kryterium temperowania, kontrprzykłady topologiczne i identyfikacje. Usunięto nieaktualną zapowiedź dalszej teorii AF i zbędny import etykiety rozdziału 15.
 - Fragmenty w masterze nie mają własnych liczników sekcji. Przy fizycznej migracji należy włączyć je do odpowiednich plików kanonicznych i zaktualizować aliasy FA-25. AF pozostaje bez zmian; kompilacja niepotwierdzona.
+
+## Etap 8 — infrastruktura odsyłaczy
+- Rezerwacja prefiksu DT w parserze ścieżek i obsługa preambuły DT w generatorze.
+- Nowa jawna lista qualified_label_aliases w konfiguracji aliasów, o polach old_document, old_label, target_document, target_label. Resolver najpierw sprawdza istniejącego właściciela, a dopiero przy jego braku stosuje zadeklarowaną migrację. Brak automatycznego wyboru przy kolizjach; nie ma łańcuchów aliasów. Dodano regresje bezpośrednie i z indeksem SQLite.
+- Nie wprowadzono jeszcze konkretnych aliasów FA→DT ani rejestracji rozdziałów DT. Testy AF (35 jednostek), dedykowane workflow, rejestracja i źródła wymagają spójnego przełączenia po kontroli kompilacji. Nie wywołano dodatkowych workflow.

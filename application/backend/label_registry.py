@@ -60,15 +60,27 @@ def resolve(
     """
     pool = list(owners)
     # Qualified reading references use the stable occurrence identity directly.
-    # No fallback to another chapter is allowed, even when labels coincide.
+    # Only an explicit migration alias may redirect a missing qualified occurrence.
     qualified = qualified_occurrence(target_label)
     if qualified is not None:
         target_doc, target_name = qualified
         hits = [o for o in pool if o.document_id == target_doc and o.label == target_name]
         if len(hits) == 1:
             return Decision("external_resolved", hits[0], "qualified_occurrence")
-        return Decision("ambiguous" if len(hits) > 1 else "missing", None,
-                        "qualified_ambiguous" if len(hits) > 1 else "qualified_missing")
+        if hits:
+            return Decision("ambiguous", None, "qualified_ambiguous")
+        # Empty source-document is reserved for global, qualified migrations.
+        # Do not infer identity from an unqualified label or follow alias chains.
+        migrated = (aliases or {}).get(("", target_label))
+        if migrated is not None:
+            migrated_doc, migrated_label = migrated
+            matches = [o for o in pool if o.document_id == migrated_doc
+                       and o.label == migrated_label]
+            if len(matches) == 1:
+                return Decision("alias_resolved", matches[0], "qualified_migration_alias")
+            return Decision("ambiguous" if len(matches) > 1 else "missing", None,
+                            "qualified_alias_ambiguous" if len(matches) > 1 else "stale_qualified_alias")
+        return Decision("missing", None, "qualified_missing")
 
     alias = (aliases or {}).get((source_document, target_label))
     if alias is not None:

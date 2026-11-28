@@ -251,6 +251,7 @@ REPOSITORY_CATEGORIES = {
     "abstract_algebra": "AA",
     "differential_geometry_and_topology": "DG",
     "functional_analysis": "FA",
+    "distribution_theory": "DT",
     "measure_theory": "ME",
     "partial_differential_equations": "PDE",
     "linear_algebra": "LA",
@@ -517,6 +518,8 @@ def read_curated_aliases(alias_file: Path | None) -> dict[tuple[str, str], tuple
       "original_label":"old", "target_document":"TOP-03",
       "target_label":"thm:homotopia-homologia"}]}.
     An alias must resolve to an actual indexed original label.
+    qualified_label_aliases maps a historical occurrence to its explicit
+    successor independently of the referring chapter. Exact owners win.
     """
     if alias_file is None or not alias_file.is_file():
         return {}
@@ -524,6 +527,20 @@ def read_curated_aliases(alias_file: Path | None) -> dict[tuple[str, str], tuple
     result: dict[tuple[str, str], tuple[str, str]] = {}
     for row in data.get("label_aliases", []):
         key = (row["source_document"], row["original_label"])
+        target = (row["target_document"], row["target_label"])
+        if key in result and result[key] != target:
+            raise ValueError(f"Sprzeczne aliasy dla {key}")
+        if not key[0]:
+            raise ValueError("Empty source_document is reserved for qualified migrations")
+        result[key] = target
+    for row in data.get("qualified_label_aliases", []):
+        old = row["old_document"] + "::" + row["old_label"]
+        new = row["target_document"] + "::" + row["target_label"]
+        if not re.fullmatch(r"[A-Z][A-Z0-9]*-[0-9]{2,}[A-Z]?::[^:]+.*", old) or not re.fullmatch(r"[A-Z][A-Z0-9]*-[0-9]{2,}[A-Z]?::[^:]+.*", new):
+            raise ValueError(f"Invalid qualified migration: {old} -> {new}")
+        if old == new:
+            raise ValueError(f"Self-referencing qualified migration: {old}")
+        key = ("", old)
         target = (row["target_document"], row["target_label"])
         if key in result and result[key] != target:
             raise ValueError(f"Sprzeczne aliasy dla {key}")

@@ -27,7 +27,7 @@ PROJECT_TEMPLATE_KEYS = {
     'ALG': 'ALG', 'AT': 'ALG', 'TOP': 'TOP', 'GW': 'GW',
     'KAT': 'KAT', 'MOD': 'MOD', 'CAL': 'CAL',
     'P1': 'P1', 'P2': 'P2', 'P3': 'P3', 'P4': 'P4',
-    'AA': 'AA', 'DG': 'DG', 'FA': 'FA', 'ME': 'ME',
+    'AA': 'AA', 'DG': 'DG', 'FA': 'FA', 'DT': 'DT', 'ME': 'ME',
     'PDE': 'PDE', 'LA': 'LA', 'LST': 'LST', 'GT': 'GT',
 }
 MAX_PROJECT_MODULES = 75

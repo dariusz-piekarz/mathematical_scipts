@@ -8,7 +8,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from backend.label_registry import Owner, resolve
-from backend.latex_parser import build_database, connect
+from backend.latex_parser import build_database, connect, module_id, read_curated_aliases
+import json
 
 
 class LabelRegistryTests(unittest.TestCase):
@@ -38,6 +39,26 @@ class LabelRegistryTests(unittest.TestCase):
         self.assertEqual(resolve("DG-08","old-theorem",owners,aliases=alias).status,"missing")
         bad={("TOP-05","old-theorem"):("DG-06","thm:homotopia-homologia")}
         self.assertEqual(resolve("TOP-05","old-theorem",owners,aliases=bad).reason,"stale_alias")
+
+    def test_qualified_migration_requires_explicit_target(self):
+        old = "FA-25::thm:restriction25"
+        migrated = Owner("DT-03", "thm:restriction25")
+        unrelated = Owner("PDE-07", "thm:restriction25")
+        pool = [migrated, unrelated]
+        aliases = {("", old): ("DT-03", "thm:restriction25")}
+        self.assertEqual(resolve("ME-01", old, pool).status, "missing")
+        result = resolve("ME-01", old, pool, aliases=aliases)
+        self.assertEqual(result.status, "alias_resolved")
+        self.assertEqual(result.owner, migrated)
+        original = Owner("FA-25", "thm:restriction25")
+        self.assertEqual(resolve("ME-01", old, [*pool, original], aliases=aliases).owner, original)
+        self.assertEqual(resolve("ME-01", old, [*pool, original, original], aliases=aliases).status, "ambiguous")
+        self.assertEqual(resolve("ME-01", old, [unrelated], aliases=aliases).reason, "stale_qualified_alias")
+        self.assertEqual(resolve("ME-01", old, [migrated, migrated], aliases=aliases).status, "ambiguous")
+        self.assertEqual(resolve("ME-01", "FA-25::different", pool, aliases=aliases).status, "missing")
+
+    def test_distribution_chapter_identifier(self):
+        self.assertEqual(module_id(Path("chapters/pl/distribution_theory/03-dystrybucje.tex")), "DT-03")
 
 
 class IntegratedIndexTests(unittest.TestCase):
@@ -88,6 +109,25 @@ class IntegratedIndexTests(unittest.TestCase):
             self.assertEqual((ref["target_label"],ref["target_document"],ref["status"]),
                              ("thm:old","TOP-03","alias_resolved"))
             self.assertEqual(con.execute("SELECT COUNT(*) FROM label_occurrences").fetchone()[0],1)
+
+    def test_qualified_migration_in_actual_index(self):
+        self.add("distribution_theory", "03-dystrybucje.tex", r"\section{Dystrybucje}\label{thm:restriction25}")
+        self.add("measure_theory", "01-ref.tex", r"\section{Miara}\atlasref{FA-25::thm:restriction25}{Ograniczenie}")
+        aliases = self.root / "aliases.json"
+        row = {"old_document": "FA-25", "old_label": "thm:restriction25",
+               "target_document": "DT-03", "target_label": "thm:restriction25"}
+        aliases.write_text(json.dumps({"qualified_label_aliases": [row]}), encoding="utf-8")
+        report = build_database(self.src, self.db, alias_file=aliases, recursive=True)
+        self.assertEqual(report["alias_resolved_references"], 1)
+        self.assertEqual(report["missing_references"], 0)
+        with closing(connect(self.db)) as con:
+            ref = con.execute("SELECT target_label,target_document,status FROM references_tex").fetchone()
+            self.assertEqual(tuple(ref), ("FA-25::thm:restriction25", "DT-03", "alias_resolved"))
+            self.assertEqual(con.execute("SELECT COUNT(*) FROM label_occurrences").fetchone()[0], 1)
+        conflicting = {**row, "target_document": "DT-04"}
+        aliases.write_text(json.dumps({"qualified_label_aliases": [row, conflicting]}), encoding="utf-8")
+        with self.assertRaises(ValueError):
+            read_curated_aliases(aliases)
 
     def test_cross_script_ambiguity_remains_visible(self):
         self.add("algebraic_topology","03-chain.tex",r"\label{ch:shared}")
