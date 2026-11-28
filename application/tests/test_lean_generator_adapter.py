@@ -112,3 +112,19 @@ class LeanGeneratorAdapterTests(unittest.TestCase):
                 self.assert_blocked(adapter.generate(
                     s, generator="rules", consent=True,
                     expected_source_sha256=digest(s)), "candidate_identity_mismatch")
+
+    def test_rehashed_altered_proof_and_trailing_command_rejected(self):
+        s = r"\top"
+        original = rules.generate(s, consent=True)
+        for changed in (
+            original["lean_code"].replace(rules._PROOF, "by\n  exact True.intro\n"),
+            original["lean_code"] + "\n#check True\n",
+            original["lean_code"] + "\n",
+        ):
+            self.assertNotEqual(changed, original["lean_code"])
+            with patch.object(rules, "generate", return_value={
+                    **original, "lean_code": changed,
+                    "lean_code_sha256": digest(changed)}):
+                self.assert_blocked(adapter.generate(
+                    s, generator="rules", consent=True,
+                    expected_source_sha256=digest(s)), "candidate_identity_mismatch")

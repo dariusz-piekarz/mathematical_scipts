@@ -107,10 +107,13 @@ def generate(source: str, *, generator: str, expected_source_sha256: str,
                 or parsed["trace"] != result["trace"]):
             return reject("candidate_identity_mismatch")
         signature, names = rules._render(parsed["ast"])
+        # Rules are deterministic: authenticate the entire template, not
+        # only the declaration prefix. A rehashed, altered proof or appended
+        # command is not an output of this generator.
+        expected_code = (rules.IMPORT_HEADER + "\nset_option maxHeartbeats 100000\n"
+                         "set_option maxRecDepth 512\n\n" + signature + " := " + rules._PROOF)
         if (signature != result["signature"] or names != result["binding_names"]
-                or not result["lean_code"].startswith(
-                    rules.IMPORT_HEADER + "\nset_option maxHeartbeats 100000\n"
-                    "set_option maxRecDepth 512\n\n" + signature + " := ")):
+                or result["lean_code"] != expected_code):
             return reject("candidate_identity_mismatch")
     elif (result["status"] not in ("unsupported", "invalid_input", "blocked")
           or not set(result) <= common | {"error", "diagnostic"}
