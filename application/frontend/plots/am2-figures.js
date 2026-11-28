@@ -137,6 +137,29 @@
       const panel=d=>({...scene("x","y","z"),domain:{x:d,y:[0,1]},aspectmode:"data",xaxis:{...axis("x"),range:[0,1]},yaxis:{...axis("y"),range:[0,1]},zaxis:{...axis("z"),range:[0,1.05]}});
       return base(data,"Sumy Darboux",{scene:panel([0,.48]),scene2:panel([.52,1]),annotations:[{text:"Suma dolna",xref:"paper",yref:"paper",x:.24,y:1,showarrow:false},{text:"Suma górna",xref:"paper",yref:"paper",x:.76,y:1,showarrow:false}]});
     },
+    "am2_24_local_volume.html":()=>{
+      const faces=[[0,2,1],[0,3,2],[4,5,6],[4,6,7],[0,1,5],[0,5,4],[1,2,6],[1,6,5],[2,3,7],[2,7,6],[3,0,4],[3,4,7]];
+      const edges=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+      const prism=(a,b,c,d,f,color,name,opacity)=>{
+        const v=[[a,c,0],[b,c,0],[b,d,0],[a,d,0],[a,c,f(a,c)],[b,c,f(b,c)],[b,d,f(b,d)],[a,d,f(a,d)]];
+        const pts=edges.flatMap(([i,j])=>[v[i],v[j],[null,null,null]]);
+        return [{type:"mesh3d",x:v.map(p=>p[0]),y:v.map(p=>p[1]),z:v.map(p=>p[2]),i:faces.map(p=>p[0]),j:faces.map(p=>p[1]),k:faces.map(p=>p[2]),color,opacity,flatshading:true,name,showlegend:true},
+          {type:"scatter3d",mode:"lines",x:pts.map(p=>p[0]),y:pts.map(p=>p[1]),z:pts.map(p=>p[2]),line:{color,width:4},showlegend:false,hoverinfo:"skip"}];
+      };
+      const f=(x,y)=>.3+.4*x+.3*y,h=f(.75,.75);
+      return base([...prism(0,1,0,1,f,"#397db5","Bryła pod wykresem",.32),...prism(.75,1,.75,1,()=>h,"#d97706","Wkład f(ξ)|C| = 0,0515625",1)],"Lokalny wkład do całki",{scene:{...scene(),aspectmode:"data",camera:{eye:{x:1.55,y:1.55,z:1.15}}}});
+    },
+    "am2_24_signed_volume.html":()=>{
+      const faces=[[0,1,2],[3,5,4],[0,3,4],[0,4,1],[1,4,5],[1,5,2],[2,5,3],[2,3,0]];
+      const edges=[[0,1],[1,2],[2,0],[3,4],[4,5],[5,3],[0,3],[1,4],[2,5]];
+      const wedge=(a,color,name)=>{
+        const v=[[0,0,0],[a,0,0],[a,0,a],[0,1,0],[a,1,0],[a,1,a]];
+        const pts=edges.flatMap(([i,j])=>[v[i],v[j],[null,null,null]]);
+        return [{type:"mesh3d",x:v.map(p=>p[0]),y:v.map(p=>p[1]),z:v.map(p=>p[2]),i:faces.map(p=>p[0]),j:faces.map(p=>p[1]),k:faces.map(p=>p[2]),color,flatshading:true,name,showlegend:true},
+          {type:"scatter3d",mode:"lines",x:pts.map(p=>p[0]),y:pts.map(p=>p[1]),z:pts.map(p=>p[2]),line:{color,width:4},showlegend:false,hoverinfo:"skip"}];
+      };
+      return base([...wedge(-1,"#d97706","Wkład −1/2"),...wedge(1,"#397db5","Wkład +1/2")],"Całka ze znakiem: −1/2 + 1/2 = 0",{scene:{...scene(),aspectmode:"data",camera:{eye:{x:1.3,y:1.6,z:.8}}}});
+    },
     "am2_36_geometric.html":()=>{
       const r=lin(0,.97,61),t=lin(0,2*Math.PI,121),X=t.map(a=>r.map(v=>v*Math.cos(a))),Y=t.map(a=>r.map(v=>v*Math.sin(a)));
       const norm=(a,v,n)=>n===null?1/Math.hypot(1-v*Math.cos(a),v*Math.sin(a)):Math.hypot(1-v**(n+1)*Math.cos((n+1)*a),v**(n+1)*Math.sin((n+1)*a))/Math.hypot(1-v*Math.cos(a),v*Math.sin(a));

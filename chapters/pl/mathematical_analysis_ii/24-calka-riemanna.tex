@@ -148,6 +148,58 @@ bryły mają dodatnią objętość $1/2$.}
 \label{ma2:fig:riemann-signed-volume}
 \end{figure}
 
+Wersje interaktywne obu rysunków pozwalają obracać bryły
+oraz niezależnie ukrywać ich warstwy.
+
+\begin{lstlisting}[language=Python]
+import plotly.graph_objects as go
+
+faces = [(0,2,1),(0,3,2),(4,5,6),(4,6,7),
+    (0,1,5),(0,5,4),(1,2,6),(1,6,5),
+    (2,3,7),(2,7,6),(3,0,4),(3,4,7)]
+edges = [(0,1),(1,2),(2,3),(3,0),(4,5),(5,6),
+    (6,7),(7,4),(0,4),(1,5),(2,6),(3,7)]
+
+def add_solid(fig, v, faces, edges, color, name, opacity=1):
+    x,y,z = zip(*v)
+    i,j,k = zip(*faces)
+    fig.add_trace(go.Mesh3d(x=x,y=y,z=z,i=i,j=j,k=k,
+        color=color,opacity=opacity,flatshading=True,
+        name=name,showlegend=True))
+    pts = [p for a,b in edges for p in
+           (v[a],v[b],(None,None,None))]
+    x,y,z = zip(*pts)
+    fig.add_trace(go.Scatter3d(x=x,y=y,z=z,mode="lines",
+        line=dict(color=color,width=4),showlegend=False))
+
+def prism(a,b,c,d,f):
+    q = [(a,c),(b,c),(b,d),(a,d)]
+    return [(x,y,0) for x,y in q]+[(x,y,f(x,y)) for x,y in q]
+
+f = lambda x,y: .3+.4*x+.3*y
+fig = go.Figure()
+add_solid(fig,prism(0,1,0,1,f),faces,edges,
+          "#397db5","Bryla pod wykresem",.32)
+add_solid(fig,prism(.75,1,.75,1,lambda x,y:f(.75,.75)),
+          faces,edges,"#d97706","Lokalny wklad")
+fig.update_layout(scene_aspectmode="data")
+fig.write_html("am2_24_local_volume.html", include_plotlyjs=True)
+
+fig = go.Figure()
+faces = [(0,1,2),(3,5,4),(0,3,4),(0,4,1),
+         (1,4,5),(1,5,2),(2,5,3),(2,3,0)]
+edges = [(0,1),(1,2),(2,0),(3,4),(4,5),(5,3),
+         (0,3),(1,4),(2,5)]
+for a,color,name in [(-1,"#d97706","Wklad -1/2"),
+                      (1,"#397db5","Wklad +1/2")]:
+    v = [(0,0,0),(a,0,0),(a,0,a),
+         (0,1,0),(a,1,0),(a,1,a)]
+    add_solid(fig,v,faces,edges,color,name)
+fig.update_layout(scene_aspectmode="data")
+fig.write_html("am2_24_signed_volume.html", include_plotlyjs=True)
+\end{lstlisting}
+
+
 Warto od razu odróżnić całkowanie
 względem rozmiaru dziedziny od całkowania
 wzdłuż krzywej lub po powierzchni.
