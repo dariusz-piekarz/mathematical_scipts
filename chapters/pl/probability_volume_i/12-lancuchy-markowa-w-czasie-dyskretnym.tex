@@ -877,11 +877,12 @@ $n\geq0$ z $p_{ij}^{(n)}>0$. Stany $i$ i $j$
 stany komunikują się. Klasą komunikującą nazywamy
 klasę równoważności relacji komunikowania
 (uzasadnienie podamy po definicji).
-Klasa $C\subseteq S$ jest \emph{domknięta}, jeśli $p_{ij}=0$ dla
-$i\in C$, $j\notin C$. Okresem stanu $i$ nazywamy
+Klasa komunikująca $C\subseteq S$ jest \emph{domknięta}
+(w sensie przejść, niezależnie od topologii), jeśli
+$p_{ij}=0$ dla $i\in C$, $j\notin C$. Okresem stanu $i$ nazywamy
 $d(i)=\gcd\{n\geq1:p_{ii}^{(n)}>0\}$;
 przez $\gcd$ rozumiemy największy wspólny dzielnik
-niepustego zbioru, zaś jeśli zbiór jest pusty,
+niepustego zbioru dodatnich liczb całkowitych, zaś jeśli zbiór jest pusty,
 stan nie ma dodatnich czasów powrotu i okres
 pozostawiamy nieokreślony. Stan o okresie $1$
 nazywamy nieokresowym, a łańcuch nieokresowym,
@@ -919,6 +920,42 @@ Zamieniając $i$ z $j$, otrzymujemy podzielność
 odwrotną, a więc równość.
 \end{proof}
 
+\begin{stwierdzenie}[Rozkład cykliczny klasy domkniętej]
+\label{prop:rp1-12-cyclic-classes}
+Niech $C$ będzie domkniętą klasą komunikującą
+o określonym okresie $d$. Istnieje podział
+$C=C_0\sqcup\cdots\sqcup C_{d-1}$ na niepuste zbiory,
+taki że dla $i\in C_r$ i $j\in C$ warunek $p_{ij}>0$
+implikuje $j\in C_{(r+1)\bmod d}$.
+W konsekwencji, przy starcie z $C_r$, łańcuch
+w chwili $n$ należy do $C_{(r+n)\bmod d}$ p.n.
+\end{stwierdzenie}
+\begin{proof}
+Ustalmy $o\in C$. Dla każdego $i\in C$ wybierzmy
+$m\geq0$ z $p_{oi}^{(m)}>0$ i przypiszmy $i$ resztę
+$m$ modulo $d$. Przypisanie jest niezależne od wyboru:
+jeśli także $p_{oi}^{(m')}>0$, wybieramy
+$s\geq0$ z $p_{io}^{(s)}>0$.
+Wtedy $p_{oo}^{(m+s)}>0$ i $p_{oo}^{(m'+s)}>0$,
+więc $d$ dzieli obie długości (długość zero
+również jest podzielna przez $d$). Stąd $d$ dzieli
+$m-m'$. Oznaczmy przez $C_r$ zbiór stanów
+o przypisanej reszcie $r$.
+Jeżeli $i\in C_r$ i $p_{ij}>0$, to domkniętość
+daje $j\in C$, a $p_{oj}^{(m+1)}\geq
+p_{oi}^{(m)}p_{ij}>0$, skąd $j\in C_{(r+1)\bmod d}$.
+
+Aby wykazać niepustość wszystkich zbiorów, wybierzmy
+dodatni czas powrotu $L$ do $o$, zatem $L\geq d$.
+Rozwijając $p_{oo}^{(L)}$ jako nieujemną sumę
+iloczynów prawdopodobieństw przejść, znajdujemy
+trajektorię długości $L$ o dodatnim prawdopodobieństwie.
+Stany w jej chwilach $0,\ldots,d-1$ należą odpowiednio
+do $C_0,\ldots,C_{d-1}$. Ostatnia teza wynika
+indukcyjnie z reguły przejścia między tymi zbiorami
+oraz przeliczalnego przecięcia zdarzeń pełnej miary.
+\end{proof}
+
 \begin{definicja}[Stan powracający i przemijający]
 Stan $i\in S$ jest \emph{powracający}, jeśli
 $\Prob_i(\tau_i^+<\infty)=1$, a
@@ -930,6 +967,7 @@ powracający}, jeśli $\E_i\tau_i^+=\infty$.
 \end{definicja}
 
 \begin{twierdzenie}[Kryterium powracania przez szereg odwiedzin]
+\label{thm:rp1-12-recurrence-series}
 Dla każdego stanu $i$ przeliczalnego jednorodnego
 łańcucha Markowa zachodzi równoważność
 \[
@@ -972,16 +1010,59 @@ Ostatni szereg jest skończony dokładnie dla $r_i<1$;
 przy $r_i=1$ jest rozbieżny. Dowód obejmuje oba
 przypadki bez zakładania, że czas powrotu ma
 skończoną wartość oczekiwaną.
+Ponadto z $\Prob_i(N_i\geq k+1)=r_i^k$ dla $k\geq0$
+wynika, że przy $r_i=1$ zachodzi $N_i=\infty$ p.n.
+Jeśli $r_i<1$, to $N_i<\infty$ p.n. i
+$\Prob_i(N_i=k+1)=(1-r_i)r_i^k$ dla $k\geq0$.
+Wynika to z odjęcia dwóch kolejnych prawdopodobieństw
+ogonowych (przy $k=0$ przyjmujemy $r_i^0=1$).
 \end{proof}
+
+\begin{uwaga}[Równanie odnowy dla pierwszego powrotu]
+Niech $u_n=p_{ii}^{(n)}$ dla $n\geq0$ oraz
+$f_n=\Prob_i(\tau_i^+=n)$ dla $n\geq1$.
+Mamy $u_0=1$ i dla $n\geq1$
+\[
+u_n=\sum_{k=1}^n f_k u_{n-k}.
+\]
+Istotnie, na zdarzeniu $\{X_n=i\}$ pierwszy
+dodatni powrót nastąpił w jednej z chwil $1,\ldots,n$.
+Rozbijamy to zdarzenie według $\tau_i^+=k$,
+a mocna własność Markowa daje
+$\Prob_i(\tau_i^+=k,X_n=i)=f_k u_{n-k}$.
+Dla $0\leq z<1$ szeregi
+$U(z)=\sum_{n\geq0}u_nz^n$ i $F(z)=\sum_{n\geq1}f_nz^n$
+są zbieżne, gdyż współczynniki należą do $[0,1]$.
+Sumowanie równania odnowy (iloczyn Cauchy'ego
+szeregów o nieujemnych wyrazach) daje
+\[
+U(z)=1+F(z)U(z),\qquad U(z)=\frac{1}{1-F(z)}.
+\]
+Mianownik jest dodatni, ponieważ
+$F(z)\leq z\sum_{n\geq1}f_n\leq z<1$.
+Z twierdzenia o zbieżności monotonicznej dla szeregów,
+gdy $z\uparrow1$, otrzymujemy ponownie kryterium
+szeregowe z twierdzenia~\ref{thm:rp1-12-recurrence-series},
+ponieważ $F(z)\uparrow r_i$ i $U(z)\uparrow\sum_nu_n$.
+\end{uwaga}
 
 \begin{przyklad}[Spacer symetryczny na prostej całkowitej]
 Niech $X_0=0$ i $X_n=\xi_1+\cdots+\xi_n$,
 gdzie $\xi_k$ są niezależne i przyjmują $\pm1$
 z prawdopodobieństwem $1/2$. Dla $n\geq0$
 $\Prob_0(X_{2n+1}=0)=0$ i
-$\Prob_0(X_{2n}=0)=\binom{2n}{n}2^{-2n}$.
+$\Prob_0(X_{2n}=0)=\binom{2n}{n}2^{-2n}$:
+powrót wymaga tyle samo przyrostów $+1$ co $-1$,
+a każda z $\binom{2n}{n}$ takich trajektorii ma
+prawdopodobieństwo $2^{-2n}$.
 Ze wzoru Stirlinga
-$\binom{2n}{n}2^{-2n}\sim1/\sqrt{\pi n}$.
+$n!\sim\sqrt{2\pi n}(n/e)^n$ otrzymujemy
+\[
+\binom{2n}{n}2^{-2n}
+=\frac{(2n)!}{(n!)^2 4^n}
+\sim\frac{\sqrt{4\pi n}}{2\pi n}
+=\frac{1}{\sqrt{\pi n}}.
+\]
 Szereg prawdopodobieństw powrotu jest rozbieżny,
 więc spacer jest powracający. Ponadto okres wynosi $2$.
 Dla spaceru z niezależnymi przyrostami o wspólnym
@@ -1020,21 +1101,15 @@ a mimo to stan zero jest powracający.
 \end{przyklad}
 
 
-\begin{stwierdzenie}[Domknięcie i komunikowanie]
+\begin{stwierdzenie}[Pozostawanie w klasie domkniętej]
 Dla jednorodnego łańcucha na przeliczalnym zbiorze $S$
-relacja komunikowania jest relacją równoważności.
-Jeśli klasa komunikująca $C$ jest domknięta i
+jeśli klasa komunikująca $C$ jest domknięta i
 $X_0\in C$ p.n., to $X_n\in C$ dla wszystkich
 $n\geq0$ prawie na pewno.
 \end{stwierdzenie}
 \begin{proof}
-Zwrotność wynika z $p_{ii}^{(0)}=1$,
-a symetryczność jest częścią definicji.
-Jeśli $i\to j$ w $m$ krokach i $j\to k$ w $n$,
-to z równania Chapmana--Kołmogorowa
-$p_{ik}^{(m+n)}\geq p_{ij}^{(m)}p_{jk}^{(n)}>0$.
-Tak samo, łącząc drogę powrotną $k\to j\to i$,
-dostajemy $k\to i$. To dowodzi przechodniości.
+Relacja komunikowania została już wykazana
+jako relacja równoważności bezpośrednio po jej definicji.
 Jeśli $C$ jest domknięta, to dla każdego
 $i\in C$ mamy $\Prob_i(X_1\in C)=1$.
 Indukcja z warunkowaniem względem $X_n$
@@ -1071,6 +1146,60 @@ $\Prob_j(\tau_i<\infty)=0$, ponieważ każde
 $\Prob_j(X_n=i)=0$. Z własności Markowa
 $\Prob_i(X_1=j,\ \tau_i^+=\infty)=p_{ij}>0$,
 co przeczy powracaniu $i$.
+\end{proof}
+
+\begin{wniosek}[Osiąganie stanów w klasie powracającej]
+Jeśli $i,j$ należą do tej samej klasy powracającej,
+to $\Prob_i(\tau_j<\infty)=1$. Co więcej, przy
+starcie z dowolnego stanu tej klasy każdy jej stan
+jest odwiedzany nieskończenie wiele razy p.n.
+\end{wniosek}
+\begin{proof}
+Dla $i=j$ pierwsza teza jest oczywista.
+Dla $i\ne j$ wybierzmy najkrótszą trajektorię
+z $j$ do $i$ o dodatnim prawdopodobieństwie $c>0$.
+Nie odwiedza ona ponownie $j$ przed dotarciem do $i$,
+gdyż w przeciwnym razie można byłoby odrzucić
+początkową część trajektorii i uzyskać krótszą.
+Gdyby $\Prob_i(\tau_j=\infty)>0$, to z własności
+Markowa dla całej przyszłej trajektorii
+(wniosek~\ref{cor:rp1-12-strong-markov-path},
+z deterministycznym czasem równym długości trajektorii)
+wynikałoby
+$\Prob_j(\tau_j^+=\infty)\geq c\Prob_i(\tau_j=\infty)>0$,
+wbrew powracaniu $j$. Zatem $\Prob_i(\tau_j<\infty)=1$.
+Po pierwszym wejściu do $j$ mocna własność Markowa
+oraz kryterium szeregowe dają nieskończenie wiele
+wizyt w $j$ p.n. Ponieważ klasa jest przeliczalna,
+wniosek zachodzi jednocześnie dla każdego jej stanu.
+\end{proof}
+
+\begin{wniosek}[Skończona klasa domknięta jest powracająca]
+Każda skończona domknięta klasa komunikująca
+składa się ze stanów dodatnio powracających.
+\end{wniosek}
+\begin{proof}
+Ustalmy $i$ w takiej klasie $C$. Dla każdego $j\in C$
+wybierzmy długość $m_j\geq0$ z $p_{ji}^{(m_j)}>0$.
+Niech $M=\max(1,\max_{j\in C}m_j)$ oraz
+$\delta=\min_{j\in C}p_{ji}^{(m_j)}>0$.
+Wówczas $\Prob_j(\tau_i\leq M)\geq\delta$ dla
+każdego $j\in C$. Ponieważ łańcuch pozostaje
+w $C$, własność Markowa w chwilach $kM$ daje
+\[
+\Prob_j(\tau_i>(k+1)M)
+\leq(1-\delta)\Prob_j(\tau_i>kM).
+\]
+Indukcyjnie $\Prob_j(\tau_i>kM)\leq(1-\delta)^k$,
+z konwencją $(1-\delta)^0=1$.
+Z tożsamości $\E_j\tau_i=\sum_{n\geq0}\Prob_j(\tau_i>n)$,
+wynikającej z twierdzenia Tonellego, otrzymujemy
+$\E_j\tau_i\leq M/\delta$.
+Warunkując względem $X_1$ przy starcie z $i$,
+dostajemy
+$\E_i\tau_i^+=1+\sum_{j\in C}p_{ij}\E_j\tau_i
+\leq1+M/\delta<\infty$.
+To implikuje powracanie i dodatniość powracania $i$.
 \end{proof}
 
 \begin{przyklad}[Dwie klasy pochłaniające i stan przejściowy]
