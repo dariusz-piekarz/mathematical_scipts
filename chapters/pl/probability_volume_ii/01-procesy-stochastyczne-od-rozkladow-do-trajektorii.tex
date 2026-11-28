@@ -1,6 +1,12 @@
 \chapter{Procesy stochastyczne: od rozkładów do trajektorii}
 \label{ch:procesy}
-\paragraph{Odsyłacze międzytomowe.} Przypomnienie konstrukcji probabilistycznych znajduje się w tomie I, rozdziale~\ref{I-ch:probability}; statystyczny problem danych zależnych omawia tom IV, rozdział~\ref{IV-ch:time-series}.
+\paragraph{Odsyłacze międzytomowe.}
+Konstrukcje probabilistyczne przypomniano w tomie I,
+w rozdziale o przestrzeni probabilistycznej%
+\IfFileExists{probability_volume_i.aux}{ (rozdział~\ref{I-ch:probability})}{};
+statystyczny problem danych zależnych omawia tom IV,
+w rozdziale o wnioskowaniu z procesów zależnych%
+\IfFileExists{probability_volume_iv.aux}{ (rozdział~\ref{IV-ch:time-series})}{}.
 
 
 \section{Dlaczego pojedyncza zmienna losowa już nie wystarcza?}
@@ -61,9 +67,12 @@ odwzorowanie $z\mapsto tz$. Każda trajektoria jest prostą o losowym
 nachyleniu. Zmienność po czasie jest całkowicie zdeterminowana przez
 jedną liczbę $Z(\omega)$: znajomość $X_1$ wyznacza wszystkie $X_t$.
 Jeśli $\E Z=0$ i $\Var(Z)=\sigma^2<\infty$, to
-$\Cov(X_s,X_t)=st\sigma^2$. Przyrosty
-$X_t-X_s=(t-s)Z$ są zwykle silnie zależne; nie tworzą procesu o
-niezależnych przyrostach.
+$\Cov(X_s,X_t)=st\sigma^2$. Dla $s<t<u$
+kowariancja dwóch kolejnych przyrostów wynosi
+$(t-s)(u-t)\sigma^2$. Jeśli $\sigma^2>0$, jest dodatnia,
+więc przyrosty nie są niezależne. Gdy $\sigma^2=0$,
+zmienna $Z$ jest stała p.n. i przyrosty są niezależne
+w sensie zdegenerowanym.
 \end{przyklad}
 
 \begin{przyklad}[Dwa procesy o tych samych rozkładach pojedynczych]
@@ -215,9 +224,13 @@ o wspólnym zbiorze indeksów $T$ i przestrzeni stanów $E$.
 Mówimy, że $Y$ jest \emph{modyfikacją} (wersją) $X$, jeśli
 dla każdego $t\in T$ zdarzenie $\{X_t=Y_t\}$ jest mierzalne
 i zachodzi $\Prob(X_t=Y_t)=1$.
-Warunek mierzalności jest automatyczny, gdy $E$ jest przestrzenią
-metryczną z borelowskim $\sigma$-ciałem: diagonala
-$\{(x,y)\in E^2:x=y\}$ jest wtedy zbiorem domkniętym.
+Warunek mierzalności jest automatyczny, gdy $E$ jest
+ośrodkową przestrzenią metryczną z borelowskim $\sigma$-ciałem:
+diagonala $\{(x,y)\in E^2:x=y\}$ jest domknięta,
+a $\mathcal B(E^2)=\mathcal B(E)\otimes\mathcal B(E)$
+dzięki przeliczalnej bazie topologii $E$.
+Dla ogólnej przestrzeni mierzalnej nie zakładamy
+automatycznie mierzalności diagonali.
 Mówimy, że $X$ i $Y$ są \emph{nierozróżnialne}, jeżeli istnieje
 $N\in\calF$ z $\Prob(N)=0$ takie, że dla wszystkich
 $\omega\notin N$ i wszystkich $t\in T$ zachodzi
@@ -231,16 +244,16 @@ modyfikacjami, to są nierozróżnialne.
 \begin{proof}
 Dla każdego $t\in T$ zbiór
 $N_t=\{\omega:X_t(\omega)\ne Y_t(\omega)\}$ jest mierzalny
-i ma miarę zero (przyjmujemy mierzalną diagonalę w $E\times E$).
+i ma miarę zero z definicji modyfikacji.
 Wtedy $N=\bigcup_{t\in T}N_t$ jest przeliczalną sumą
 zbiorów zerowych. Poza $N$ zachodzi $X_t=Y_t$ dla
 wszystkich $t$ równocześnie.
 \end{proof}
 
 \begin{przyklad}[Modyfikacja, która nie jest nierozróżnialna]
-Niech $\Omega=[0,1]$ z miarą Lebesgue'a i niech
-$U(\omega)=\omega$. Dla $t\in[0,1]$ definiujemy
-$X_t(\omega)=0$ oraz $Y_t(\omega)=\ind{\{U(\omega)=t\}}$.
+Niech $\Omega=[0,1]$, $\calF=\mathcal B([0,1])$,
+$\Prob=\lambda_1|_{\calF}$ i niech $U(\omega)=\omega$. Dla $t\in[0,1]$ definiujemy
+$X_t(\omega)=0$ oraz $Y_t(\omega)=\chi_{\{U(\omega)=t\}}$.
 Dla ustalonego $t$ zdarzenie $\{U=t\}$ jest pojedynczym
 punktem i ma prawdopodobieństwo $0$, a zatem
 $\Prob(X_t=Y_t)=1$. Natomiast dla \emph{każdego}
@@ -377,11 +390,15 @@ Gdy $E=\R^d$, wielkość $\Delta f(t)=f(t)-f(t-)$
 
 \begin{przyklad}[Losowy skok, ale uporządkowana trajektoria]
 Dla $U\sim\operatorname{U}([0,1])$ proces
-$X_t=\ind{\{U\le t\}}$ ma trajektorie c\`adl\`ag.
+$X_t=\chi_{\{U\le t\}}$ ma trajektorie c\`adl\`ag.
 Przed chwilą $U$ przyjmuje wartość $0$,
 a w chwili $U$ i później wartość $1$.
-Stąd $X_U=1$, $X_{U-}=0$ oraz $\Delta X(U)=1$.
-Jest to funkcja prawostronnie ciągła z jednym skokiem.
+Na zdarzeniu $\{0<U<1\}$, mającym prawdopodobieństwo $1$,
+zachodzi $X_U=1$, $X_{U-}=0$ oraz $\Delta X(U)=1$.
+Dla $U=0$ trajektoria jest stale równa $1$ i skoku
+w zerze nie definiujemy; dla $U=1$ skok występuje
+na prawym końcu przedziału. Wszystkie te trajektorie
+są prawostronnie ciągłe w $[0,1)$.
 Jej trajektorie nie są ciągłe, chociaż -- jak wykażemy
 w dalszym przykładzie -- proces jest stochastycznie ciągły.
 To rozróżnienie motywuje używanie przestrzeni $D([0,T];E)$
@@ -407,7 +424,9 @@ każdych $m\ge1$ i $0\le t_0<t_1<\cdots<t_m$
 zmienne $X_{t_1}-X_{t_0},\ldots,X_{t_m}-X_{t_{m-1}}$
 są niezależne. Proces ma \emph{stacjonarne przyrosty}, jeśli
 dla każdych $0\le s<t$ rozkład $X_t-X_s$ zależy tylko od $t-s$.
-Mówimy, że $X$ jest \emph{stochastycznie ciągły w chwili $t$},
+Dla procesu indeksowanego przedziałem czasu (także
+ograniczonym) mówimy, że $X$ jest
+\emph{stochastycznie ciągły w chwili $t$},
 jeśli dla każdego $\varepsilon>0$ zachodzi
 $\lim_{s\to t}\Prob(\norm{X_s-X_t}>\varepsilon)=0$
 (granica jest brana w zbiorze indeksów).
@@ -432,18 +451,25 @@ wszystkie rozkłady skończeniewymiarowe procesu.
 \end{twierdzenie}
 \begin{proof}
 Dla $k=1,\ldots,m$ mamy
-$X_{t_k}=\Delta_1+\cdots+\Delta_k$.
+$X_{t_k}=\Delta_1+\cdots+\Delta_k$ p.n.,
+ponieważ $X_0=0$ p.n.
 Stąd przez przestawienie dwóch \emph{skończonych} sum
 $\sum_{k=1}^m u_k X_{t_k}
 =\sum_{j=1}^m(\sum_{k=j}^m u_k)\Delta_j$.
 Korzystając z niezależności $\Delta_1,\ldots,\Delta_m$,
 możemy rozłożyć wartość oczekiwaną iloczynu
 wykładników na iloczyn wartości oczekiwanych,
-co daje wzór. Funkcja charakterystyczna wyznacza
-jednoznacznie rozkład wektora losowego (twierdzenie
-o jednoznaczności funkcji charakterystycznej z tomu I),
-a dowolną skończoną rodzinę chwil można uporządkować
-i dołączyć chwilę $0$. Dowodzi to ostatniego zdania.
+co daje wzór. Ostatnie zdanie wynika także bezpośrednio
+z faktu, że rozkład wektora $(\Delta_1,\ldots,\Delta_m)$
+jest iloczynem rozkładów przyrostów.
+Rozkład $(X_{t_1},\ldots,X_{t_m})$ jest obrazem
+tej miary produktowej przez ciągłe odwzorowanie
+$(z_1,\ldots,z_m)\mapsto(z_1,z_1+z_2,\ldots,\sum_{j=1}^m z_j)$.
+Dowolną skończoną rodzinę chwil można uporządkować,
+dołączyć chwilę $0$, a powtórzone współrzędne
+odtworzyć przez ich powielenie. Dowodzi to tezy
+bez dodatkowego twierdzenia o wielowymiarowych
+funkcjach charakterystycznych.
 \end{proof}
 
 \begin{przyklad}[Dwa pierwsze kroki spaceru losowego]
@@ -455,6 +481,9 @@ $\Prob(\xi_1=1,\xi_2=-1)=1/4$.
 Z kolei $\Prob(S_2=0)=1/2$, bo wynik $0$ otrzymujemy
 przy ścieżkach przyrostów $(1,-1)$ albo $(-1,1)$.
 Stąd $\Prob(S_1=1\mid S_2=0)=(1/4)/(1/2)=1/2$.
+Ta równość sama nie dowodzi zależności.
+Jednak $\Prob(S_2=2)=1/4>0$ i
+$\Prob(S_1=1\mid S_2=2)=1\ne\Prob(S_1=1)=1/2$.
 Wniosek: nawet gdy pojedyncze przyrosty są niezależne,
 położenia $S_1,S_2$ nie są niezależne; drugie położenie
 zawiera informację o pierwszym.
@@ -507,7 +536,10 @@ Mamy $\E X_t=0$ i
 \Cov(X_s,X_t)=\cos s\cos t+\sin s\sin t=\cos(t-s).
 \]
 Dla dowolnego $m$ wektor $(X_{t_1},\ldots,X_{t_m})$
-jest gaussowski, więc wyznaczają go średnie i macierz kowariancji.
+jest gaussowski jako obraz liniowy wektora
+$(Z_1,Z_2)$ niezależnych standardowych zmiennych normalnych.
+Jego rozkład wyznaczają średnie i macierz kowariancji
+(por. rozdział~\ref{ch:gauss}).
 Po przesunięciu wszystkich chwil o $h$ te dane nie zmieniają się,
 zatem proces jest ściśle stacjonarny. Każda trajektoria jest przy
 tym funkcją gładką; stacjonarność nie oznacza ``poszarpania'' ścieżek.
@@ -515,7 +547,7 @@ tym funkcją gładką; stacjonarność nie oznacza ``poszarpania'' ścieżek.
 
 \begin{przyklad}[Ciągłość stochastyczna bez ciągłych trajektorii]
 Niech $U$ ma rozkład jednostajny na $[0,1]$ i
-$X_t=\ind{\{U\le t\}}$ dla $t\in[0,1]$.
+$X_t=\chi_{\{U\le t\}}$ dla $t\in[0,1]$.
 Dla ustalonego $t$ i $s$ zachodzi
 $\Prob(\abs{X_s-X_t}>0)=\Prob(U\in(\min(s,t),\max(s,t)])
 =\abs{s-t}$, zatem $X$ jest stochastycznie ciągły.
@@ -610,8 +642,11 @@ $\E Z_i^2=\E\xi_i^2=1$ oraz wszystkie mieszane
 kowariancje są zerowe. Jednak $X_0\sim\Normal(0,1)$,
 a $Y_0=\xi_1$ przyjmuje tylko wartości $-1,1$.
 Zatem procesy mają inne rozkłady już w chwili $0$.
-Funkcja kowariancji wyznacza rozkłady skończeniewymiarowe
-\emph{w klasie procesów gaussowskich}, ale nie w klasie
+Funkcja średniej wraz z funkcją kowariancji wyznacza
+rozkłady skończeniewymiarowe \emph{w klasie procesów gaussowskich}
+(por. rozdział~\ref{ch:gauss}), ale nie w klasie
 wszystkich procesów o skończonych drugich momentach.
+Sama kowariancja wystarcza w klasie wycentrowanych
+procesów gaussowskich.
 \end{przyklad}
 
