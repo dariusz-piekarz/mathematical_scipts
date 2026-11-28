@@ -17,11 +17,48 @@ def active(catalog):
     return any(b["id"] == "distribution_theory" for b in catalog["books"])
 
 
+def structure_plan():
+    return json.loads((ROOT / "catalog/distribution_theory_structure_plan.json")
+                      .read_text(encoding="utf-8"))
+
+
+def restructured():
+    return structure_plan()["status"] == "active"
+
+
+def successor_source(source, qualified):
+    """Locate a historical reading link in its actual successor chapter.
+
+    A split can move two links from the same old chapter to different owners.
+    Require exactly one successor, not a guessed mapping by chapter number.
+    """
+    if not source.startswith("DT-"):
+        return source
+    plan = structure_plan()
+    key = "target_path" if restructured() else "candidate_path"
+    candidates = []
+    for row in plan["chapters"]:
+        if source not in row["source_modules"] or not row.get(key):
+            continue
+        text = (ROOT / row[key]).read_text(encoding="utf-8")
+        if r"\atlasref{" + qualified + "}" in text:
+            candidates.append(f"DT-{row['number']:02d}")
+    if len(candidates) != 1:
+        raise AssertionError((source, qualified, candidates))
+    return candidates[0]
+
+
 def migrated_source(source, qualified):
-    return SPLIT.get((source, qualified), SOURCES.get(source, source))
+    original = SPLIT.get((source, qualified), SOURCES.get(source, source))
+    return successor_source(original, qualified) if restructured() else original
 
 
 def migrated_target(target, label):
+    if restructured():
+        plan = structure_plan()
+        mapped = {(a["old_document"], a["old_label"]): a["target_document"]
+                  for a in plan["planned_qualified_aliases"]}
+        return mapped.get((target, label), target)
     migration = json.loads((ROOT / "catalog/distribution_theory_migration.json")
                            .read_text(encoding="utf-8"))
     mapped = {(a["old_document"], a["old_label"]): a["target_document"]
