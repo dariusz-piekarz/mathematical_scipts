@@ -70,6 +70,9 @@ class TestLogicModelSplit(unittest.TestCase):
         self.assertIn(r"\label{ch:lst-fuzzy-logic}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-residuation}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-extension-cuts}", src)
+        self.assertIn(r"\label{thm:lst-fuzzy-mcnaughton}", src)
+        self.assertIn(r"\label{lem:lst-fuzzy-clipped-affine}", src)
+        self.assertIn(r"\label{lem:lst-fuzzy-lattice-representation}", src)
         stack = []
         for kind, env in re.findall(r"\\(begin|end)\{([^}]+)\}", src):
             if kind == "begin":
@@ -105,6 +108,21 @@ class TestFuzzyOperations(unittest.TestCase):
             b = (3*alpha, 5 - 2*alpha)
             self.assertEqual((a[0] + b[0], a[1] + b[1]),
                              (1 + 4*alpha, 9 - 4*alpha))
+
+    def test_clipped_affine_recurrence(self):
+        clip = lambda x: min(F(1), max(F(0), x))
+        for m in range(1, 5):
+            for ys in itertools.product(self.grid[::2], repeat=m):
+                partial = sum(ys[:-1], F(0))
+                for k in range(-1, m + 2):
+                    first = clip(partial - k)
+                    carry = max(F(0), clip(partial - k + 1) + ys[-1] - 1)
+                    self.assertEqual(min(F(1), first + carry), clip(partial + ys[-1] - k))
+
+    def test_mcnaughton_tent(self):
+        for x in self.grid:
+            self.assertEqual(min(min(F(1), 2*x), min(F(1), 2*(1-x))),
+                             min(2*x, 2-2*x))
 
     def test_sugeno_zero_order(self):
         self.assertEqual(F(1, 4)*2 + F(3, 4)*6, 5)

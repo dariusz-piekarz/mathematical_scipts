@@ -151,7 +151,7 @@ $p\vee q=((p\to q)\to q)\wedge((q\to p)\to p)$.
 W liniowo uporządkowanej kracie rezyduowanej drugi z tych wzorów
 daje maksimum: gdy $a\leq b$, pierwszy czynnik ma wartość $b$,
 a drugi ma wartość co najmniej $b$, ponieważ
-$b\mathbin{\&}(b\to a)\leq a$. Przypadek odwrotny jest symetryczny.
+$b\mathbin{\&}(b\to a)\leq a$ i stosujemy residuację. Przypadek odwrotny jest symetryczny.
 
 \begin{definicja}[Rachunek MTL]\label{def:lst-fuzzy-mtl-calculus}
 Aksjomatami są wszystkie podstawienia formuł za $p,q,r$ w schematach
@@ -285,13 +285,156 @@ rozdrobnienia przez porównanie funkcji afinicznej ze stałą.
 Ciągłość i całkowitość współczynników zachowują się we wszystkich
 tych operacjach. Indukcja po budowie formuły daje tezę.
 \end{proof}
-Odwrotna implikacja jest treścią twierdzenia McNaughtona (1951):
-każda taka funkcja jest reprezentowana przez formułę Łukasiewicza.
-Pełny dowód kierunku odwrotnego wymaga konstrukcji funkcji
-całkowitoliczbowych kawałkami afinicznych za pomocą operacji
-MV-algebry; nie wynika z samej indukcji. Wymaga osobnego
-uzupełnienia. Por. R. McNaughton, \emph{A theorem about infinite-valued
-sentential logic}, Journal of Symbolic Logic 16 (1951), 1--13.
+\begin{definicja}[Operacje MV na odcinku jednostkowym]\label{def:lst-fuzzy-mv-operations}
+W standardowej algebrze Łukasiewicza piszemy
+\[
+ a\oplus b=\min(1,a+b),\qquad a\odot b=\max(0,a+b-1),
+ \qquad \neg a=1-a.
+\]
+Operacje są reprezentowane przez formuły: $p\odot q=p\mathbin{\&}q$,
+$p\oplus q=(\neg p)\to q$, a $1=\neg\bot$. W szczególności nie
+wprowadzamy nowych stałych poza $0,1$.
+\end{definicja}
+Oznaczmy przez $[t]_0^1=\min(1,\max(0,t))$ obcięcie liczby
+rzeczywistej do odcinka jednostkowego.
+
+\begin{lemat}[Obcięte funkcje afiniczne]\label{lem:lst-fuzzy-clipped-affine}
+Jeżeli $l(x)=a_0+\sum_{i=1}^n a_ix_i$, gdzie $a_i\in\Z$, to
+funkcja $[l(x)]_0^1$ na $[0,1]^n$ jest funkcją wyznaczoną przez
+formułę Łukasiewicza.
+\end{lemat}
+\begin{proof}
+Dla dodatniego $a_i$ zapiszmy $a_ix_i$ jako sumę $a_i$ kopii
+$x_i$. Dla $a_i=-d<0$ zapiszmy $-dx_i=d(1-x_i)-d$.
+Otrzymujemy
+\[
+ l(x)=\sum_{j=1}^m y_j(x)-k,\qquad k\in\Z,
+\]
+gdzie każdy $y_j$ jest zmienną lub jej negacją. Jeśli $k<0$,
+obcięcie jest stale równe $1$; jeśli $k\geq m$, jest stale
+równe $0$. Pozostają całkowite $k$ z $0\leq k<m$.
+
+Dla $m\geq0$ i $k\in\Z$ określmy
+\[
+ F_{m,k}(y_1,\ldots,y_m)=
+ \left[\sum_{j=1}^m y_j-k\right]_0^1.
+\]
+Dla $m=0$ są to stałe $0$ lub $1$. Udowodnimy tożsamość
+\begin{equation}\label{eq:lst-fuzzy-clipped-recurrence}
+ F_{m,k}=F_{m-1,k}\oplus(F_{m-1,k-1}\odot y_m).
+\end{equation}
+Niech $t=\sum_{j<m} y_j-k$, $y=y_m$.
+Jeżeli $t\leq-1$, obie strony są równe $0$, gdyż $y\leq1$.
+Jeżeli $-1\leq t\leq0$, prawa strona to
+$0\oplus([t+1]_0^1\odot y)=\max(0,t+y)$,
+a $t+y\leq1$. Jeżeli $0\leq t\leq1$, prawa strona to
+$t\oplus(1\odot y)=\min(1,t+y)$.
+Jeżeli $t\geq1$, obie strony są równe $1$.
+To dowodzi tożsamości również na granicach przypadków.
+Indukcja po $m$ buduje formułę z operacji MV i stałych $0,1$.
+Podstawiając za $y_j$ odpowiedni literał, otrzymujemy tezę.
+\end{proof}
+
+\begin{lemat}[Reprezentacja kratowa funkcji kawałkami afinicznej]
+\label{lem:lst-fuzzy-lattice-representation}
+Niech $D=[0,1]^n$, $n\geq1$, a $f:D\to\R$ będzie ciągła.
+Załóżmy, że dla każdego $x\in D$ wartość $f(x)$ jest jedną z wartości
+skończonej rodziny różnych funkcji afinicznych $l_1,\ldots,l_m$.
+Istnieją niepuste zbiory indeksów $J_1,\ldots,J_s$ takie, że
+\[
+ f=\max_{1\leq r\leq s}\min_{j\in J_r} l_j\quad\text{na }D.
+\]
+\end{lemat}
+\begin{proof}
+Rozetnijmy wnętrze kostki hiperpłaszczyznami $l_i=l_j$ dla $i\ne j$
+(pomijamy puste zbiory równości). Pozostały zbiór jest gęsty w
+kostce: właściwa hiperpłaszczyzna ma puste wnętrze, a skończona
+suma takich domkniętych zbiorów ma dopełnienie gęste. Jego części
+spójne to niepuste przecięcia wnętrza kostki ze skończenie wieloma
+otwartymi półprzestrzeniami, są więc wypukłe i jest ich skończenie
+wiele. Na każdej takiej części $C$ porządek wartości $l_j$ jest
+ściśle ustalony. Ciągłość $f$ powoduje, że indeks $i(C)$, dla którego
+$f=l_{i(C)}$, jest lokalnie stały: w otoczeniu dowolnego punktu
+różnice wartości pozostałych funkcji od $l_{i(C)}$ pozostają
+oddzielone od zera. Spójność $C$ daje stałość indeksu.
+
+Niech
+\[
+ J_C=\{j:l_j\geq l_{i(C)}\text{ na }C\},\qquad
+ g_C=\min_{j\in J_C}l_j.
+\]
+Mamy $g_C=f$ na $C$. Pokażemy $g_C\leq f$ na całej kostce.
+Ustalmy $x\in C$, $y\in D$ i rozpatrzmy odcinek
+$z(t)=(1-t)x+ty$, $0\leq t\leq1$. Każda różnica
+$l_i(z(t))-l_j(z(t))$ jest funkcją afiniczną parametru $t$,
+niezerową w $t=0$, a zatem ma najwyżej jedno miejsce zerowe.
+Po rozcięciu odcinka w tych skończenie wielu punktach $f(z(t))$
+jest na każdym otwartym podprzedziale równa jednej ustalonej
+funkcji $l_k(z(t))$.
+
+Na pierwszym podprzedziale $f=l_{i(C)}$, więc $g_C\leq f$.
+Przyjmijmy, że nierówność zachodzi do punktu podziału $t_*$.
+Na następnym podprzedziale niech $f=l_k$. Jeśli $k\in J_C$, to
+$g_C\leq l_k=f$. Jeśli $k\notin J_C$, z ciągłości w $t_*$
+wynika istnienie $j\in J_C$ z $l_j(z(t_*))\leq l_k(z(t_*))$.
+Jednocześnie $l_j(x)\geq l_{i(C)}(x)>l_k(x)$. Różnica
+$l_j(z(t))-l_k(z(t))$ jest afiniczna, dodatnia w $0$ i
+niedodatnia w $t_*$, więc pozostaje niedodatnia dla $t\geq t_*$.
+Otrzymujemy $g_C\leq l_j\leq l_k=f$ na następnym podprzedziale.
+Indukcja i ciągłość dowodzą $g_C(y)\leq f(y)$.
+
+W konsekwencji $\max_C g_C\leq f$ na $D$, a na każdej części $C$
+zachodzi równość, ponieważ $g_C=f$ na $C$. Obie strony są ciągłe,
+a suma tych części jest gęsta, więc równość zachodzi na $D$.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie McNaughtona]\label{thm:lst-fuzzy-mcnaughton}
+Funkcja $f:[0,1]^n\to[0,1]$ jest wyznaczona przez formułę
+zdaniową logiki Łukasiewicza wtedy i tylko wtedy, gdy jest
+ciągła i kawałkami afiniczna ze współczynnikami całkowitymi
+na skończonym rozkładzie wielościennym kostki.
+\end{twierdzenie}
+\begin{proof}
+Implikację od lewej do prawej dowiedziono w
+Stwierdzeniu~\ref{prop:lst-fuzzy-mcnaughton-forward}.
+Dla implikacji odwrotnej wybieramy wszystkie różne funkcje afiniczne
+$l_j$ występujące w rozkładzie. Na mocy
+Lematu~\ref{lem:lst-fuzzy-lattice-representation} funkcja $f$ jest
+skończonym maksimum minimów funkcji $l_j$.
+Obcięcie $[\,\cdot\,]_0^1$ zachowuje skończone niepuste minima i
+maksima, ponieważ jest niemalejące. Ponieważ $f$ przyjmuje
+wartości w $[0,1]$, mamy więc
+\[
+ f=\max_{1\leq r\leq s}\min_{j\in J_r}[l_j]_0^1.
+\]
+Na mocy Lematu~\ref{lem:lst-fuzzy-clipped-affine} każda obcięta
+funkcja $l_j$ jest reprezentowana przez formułę. Stosujemy
+spójniki $\vee,\wedge$, których wartościami są maksimum i minimum.
+Dla $n=0$ rozpatrujemy jednopunktową kostkę; stała całkowita
+należąca do $[0,1]$ jest równa $0$ lub $1$.
+\end{proof}
+Historycznym źródłem jest R. McNaughton, \emph{A theorem about
+infinite-valued sentential logic}, Journal of Symbolic Logic
+16 (1951), 1--13. Powyższy dowód wykorzystuje konstrukcję
+obciętych funkcji afinicznych i reprezentację kratową.
+
+\begin{przyklad}[Funkcja namiotowa]\label{ex:lst-fuzzy-mcnaughton-tent}
+Funkcję $f(x)=\min(2x,2-2x)$ na $[0,1]$ wyznacza formuła
+$(p\oplus p)\wedge(\neg p\oplus\neg p)$.
+Dla $x\leq1/2$ pierwszy składnik ma wartość $2x$, drugi $1$;
+dla $x\geq1/2$ wartości wynoszą $1$ i $2-2x$.
+\begin{center}
+\begin{tikzpicture}[x=6cm,y=3cm,>=Stealth]
+\draw[->] (0,0)--(1.12,0) node[right]{$x$};
+\draw[->] (0,0)--(0,1.15) node[above]{$f(x)$};
+\draw[dashed,gray] (0,1) node[left]{$1$}--(0.5,1)--(0.5,0);
+\draw[very thick,blue!70!black] (0,0)--(0.5,1)--(1,0);
+\draw (0.5,0) node[below]{$1/2$};
+\draw (1,0) node[below]{$1$};
+\draw (0,0) node[below left]{$0$};
+\end{tikzpicture}
+\end{center}
+\end{przyklad}
 
 \section{Logika pierwszego rzędu}
 W niepustym uniwersum $M$ interpretujemy symbole funkcyjne klasycznie,
