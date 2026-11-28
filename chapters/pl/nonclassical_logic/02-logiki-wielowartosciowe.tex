@@ -540,3 +540,305 @@ Philosophy of Logic 2 (1981), 87--112 (angielskie tłumaczenie
 pracy z 1938 r.); oraz hasło \emph{Many-Valued Logic}
 w Stanford Encyclopedia of Philosophy, część dotycząca
 słabych algebr Kleene'ego.
+
+\section{Logiki Posta i zupełność funkcjonalna}
+
+\begin{definicja}[Zupełność funkcjonalna]
+\label{def:ncl-functional-completeness}
+Rodzinę operacji na skończonym niepustym zbiorze $A$
+nazywamy funkcjonalnie zupełną, jeżeli dla każdego $n\geq1$
+i każdej funkcji $f:A^n\to A$ istnieje term o zmiennych
+$p_1,\ldots,p_n$, którego funkcja termowa jest równa $f$.
+Dopuszczenie operacji zeroargumentowych (stałych)
+należy zaznaczyć w opisie języka.
+\end{definicja}
+Jest to własność operacji, nie zbioru wartości wyróżnionych;
+nie należy jej utożsamiać z pełnością rachunku dowodów.
+
+\begin{definicja}[Macierz Posta]\label{def:ncl-post-chain}
+Dla całkowitego $m\geq2$ przyjmujemy
+$P_m=\{0,1,\ldots,m-1\}$ z naturalnym porządkiem.
+Określamy cykliczną negację $s$ i alternatywę przez
+\[
+ s(a)=(a+1)\bmod m,\qquad a\vee b=\max(a,b).
+\]
+Jedyną wartością wyróżnioną jest $m-1$.
+Numerację można odwrócić, odpowiednio zmieniając
+operacje. Dla $m>2$ operacja $s$ nie jest inwolucją
+ani negacją odwracającą porządek.
+\end{definicja}
+Dla $m=2$ otrzymujemy klasyczną negację i alternatywę,
+a dla $m=3$ cykl przedstawiony na rysunku.
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+\node[draw,circle] (z) at (0,0) {$0$};
+\node[draw,circle] (j) at (3,0) {$1$};
+\node[draw,circle] (d) at (1.5,2) {$2$};
+\draw[->,thick] (z)--(j);
+\draw[->,thick] (j)--(d);
+\draw[->,thick] (d)--(z);
+\end{tikzpicture}
+\end{center}
+
+\begin{lemat}[Testy i stałe Posta]\label{lem:ncl-post-tests}
+Dla $i\in P_m$ istnieje jednoargumentowy term $E_i$
+w języku $s,\vee$ taki, że
+\[
+ E_i(a)=
+ \begin{cases}
+ m-1,&a=i,\\
+ 0,&a\ne i.
+ \end{cases}
+\]
+W tym języku można również zdefiniować wszystkie
+stałe jako jednoargumentowe funkcje termowe.
+\end{lemat}
+\begin{proof}
+Niech $C(p)=\bigvee_{k=0}^{m-1}s^k(p)$,
+gdzie $s^0$ jest identycznością. Dla każdej wartości
+$p$ argumenty alternatywy przebiegają całe $P_m$,
+więc $C(p)=m-1$. Iterując $s$ na $C$, otrzymujemy
+wszystkie stałe, w szczególności funkcje termowe
+$c_j(p)=j$ dla $j\in P_m$.
+
+Połóżmy $H(p)=s(p\vee c_{m-2}(p))$.
+Jeżeli $p=m-1$, to $H(p)=0$; dla każdej innej
+wartości $H(p)=m-1$. Stąd
+$E_{m-1}(p)=H(H(p))$ jest testem wartości $m-1$.
+Istotnie, $H(0)=m-1$ i $H(m-1)=0$.
+Dla ogólnego $i$ bierzemy
+$E_i(p)=E_{m-1}(s^{m-1-i}(p))$.
+Iteracja przesuwa $i$ na $m-1$ i żadnej innej
+wartości na $m-1$, ponieważ jest bijekcją.
+\end{proof}
+
+\begin{twierdzenie}[Zupełność funkcjonalna operacji Posta]
+\label{thm:ncl-post-functional-completeness}
+Operacje $s,\vee$ na $P_m$ są funkcjonalnie zupełne.
+\end{twierdzenie}
+\begin{proof}
+Na zbiorze $\{0,m-1\}$ operacja $H$ z dowodu
+Lematu~\ref{lem:ncl-post-tests} zamienia oba elementy,
+a $\vee$ jest klasyczną alternatywą w tej numeracji.
+Dlatego dla argumentów z tego zbioru term
+\[
+ B(x,y)=H(H(x)\vee H(y))
+\]
+przyjmuje wartość $m-1$ dokładnie wtedy, gdy oba
+argumenty są równe $m-1$, i wartość $0$ w pozostałych
+przypadkach.
+
+Dla krotki $a=(a_1,\ldots,a_n)\in P_m^n$
+tworzymy term $D_a$ jako iterowane $B$ testów
+$E_{a_j}(p_j)$, $1\leq j\leq n$. Dla $n=1$
+bierzemy sam test. Z konstrukcji
+$D_a(b)=m-1$ wtedy i tylko wtedy, gdy $b=a$,
+a w przeciwnym razie $D_a(b)=0$.
+Dla $1\leq j\leq m-1$ term
+\[
+ G_j(x)=s(H(x)\vee c_{j-1}(x))
+\]
+spełnia $G_j(0)=0$ oraz $G_j(m-1)=j$.
+Dla $j=0$ bierzemy $G_0=c_0$.
+Dla dowolnej funkcji $f:P_m^n\to P_m$ otrzymujemy
+\[
+ f(p_1,\ldots,p_n)=
+ \bigvee_{a\in P_m^n} G_{f(a)}(D_a(p_1,\ldots,p_n)).
+\]
+Istotnie, przy wartościowaniu $b$ wszystkie składniki
+poza składnikiem o indeksie $a=b$ są zerowe,
+a ten ostatni ma wartość $f(b)$. Maksimum jest
+więc równe $f(b)$. Prawa strona jest skończonym
+termem w języku $s,\vee$, co kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Trójwartościowy spójnik równości]
+\label{ex:ncl-post-equality}
+Na $P_3$ funkcję przyjmującą wartość $2$ dla $p=q$
+i $0$ poza przekątną reprezentuje term
+\[
+ B(E_0(p),E_0(q))\vee
+ B(E_1(p),E_1(q))\vee
+ B(E_2(p),E_2(q)).
+\]
+Każdy składnik wykrywa równość obu argumentów
+z odpowiednią stałą. Maksimum jest wyróżnione
+dokładnie wtedy, gdy jeden z tych trzech przypadków
+zachodzi.
+\end{przyklad}
+W języku bez stałych nie ma termów zeroargumentowych.
+Dowód zupełności funkcjonalnej dotyczy więc funkcji
+dodatniej liczby argumentów, w tym funkcji stałych
+takiej liczby argumentów.
+
+\section{Skończone logiki Łukasiewicza}
+\begin{definicja}[Skończony łańcuch Łukasiewicza]
+\label{def:ncl-finite-lukasiewicz}
+Dla całkowitego $m\geq1$ oznaczmy
+$L_{m+1}=\{0,1/m,\ldots,(m-1)/m,1\}$.
+Wyposażamy go w operacje standardowej algebry MV
+z Definicji~\ref{def:lst-fuzzy-mv-operations},
+ograniczone do tego zbioru, oraz wyróżniamy wartość $1$.
+W szczególności
+\[
+ \neg x=1-x,\qquad x\oplus y=\min(1,x+y),\qquad
+ x\odot y=\max(0,x+y-1),\qquad
+ x\to y=\min(1,1-x+y).
+\]
+W języku MV używamy stałej $0$ i operacji
+$\neg,\oplus$; pozostałe spójniki są definiowalne
+jak w rozdziale~\ref{ch:lst-fuzzy-logic}.
+\end{definicja}
+Zapis $L_{m+1}$ podkreśla liczbę wartości,
+a $m$ jest mianownikiem siatki.
+Domkniętość względem operacji wynika stąd, że
+suma i różnica wielokrotności $1/m$ są takimi
+wielokrotnościami, a obcięcia zachowują siatkę.
+Dla $m=1$ otrzymujemy logikę klasyczną.
+
+\begin{stwierdzenie}[Trójwartościowy przypadek]
+\label{prop:ncl-l3-comparison}
+Redukt algebry $L_3$ do $\neg,\wedge,\vee$ pokrywa się
+z algebrą silnej logiki Kleene'ego przy $u=1/2$.
+Jednak implikacja Łukasiewicza różni się od
+implikacji materialnej $\neg p\vee q$.
+\end{stwierdzenie}
+\begin{proof}
+Negacja $1-x$ oraz minimum i maksimum mają
+dokładnie tablice z Definicji~\ref{def:ncl-k3-lp}.
+Dla $x=y=1/2$ mamy $x\to y=1$, podczas gdy
+$\neg x\vee y=1/2$. W szczególności pierwsza
+implikacja daje tautologię $p\to p$, a druga nie.
+\end{proof}
+
+\begin{lemat}[Podalgebry skończonych łańcuchów MV]
+\label{lem:ncl-finite-mv-subalgebras}
+Podalgebry $L_{m+1}$ są dokładnie zbiorami $L_{d+1}$
+dla dodatnich dzielników $d$ liczby $m$.
+Podalgebra generowana przez krotkę
+$a=(k_1/m,\ldots,k_n/m)$ jest równa
+\[
+ L_{m/g+1},\qquad g=\gcd(m,k_1,\ldots,k_n).
+\]
+\end{lemat}
+\begin{proof}
+Dla dowolnej podalgebry $B$ rozważmy zbiór
+całkowitych liczników $S=\{k:k/m\in B\}$.
+Zawiera on $0,m$. Ponadto jest zamknięty ze względu
+na nieujemną różnicę, gdyż
+$x\odot\neg y=\max(0,x-y)$.
+Niech $g$ będzie najmniejszym dodatnim elementem $S$.
+Dzieląc dowolny $k\in S$ z resztą przez $g$,
+otrzymujemy resztę należącą do $S$ przez wielokrotne
+odejmowanie $g$. Minimalność $g$ wymusza resztę zero.
+W szczególności $g$ dzieli $m$.
+Z drugiej strony przez iterowanie $\oplus$ na $g/m$
+otrzymujemy wszystkie wielokrotności $g/m$ nie większe
+od $1$. Zatem $B=L_{m/g+1}$.
+Każdy taki zbiór jest podalgebrą na mocy wzorów
+Definicji~\ref{def:ncl-finite-lukasiewicz}.
+Podalgebra zawiera krotkę $a$ wtedy i tylko wtedy,
+gdy jej krok $g/m$ ma licznik $g$ dzielący
+$m,k_1,\ldots,k_n$. Największy taki dzielnik
+daje najmniejszą podalgebrę zawierającą $a$,
+co dowodzi wzoru.
+\end{proof}
+
+\begin{twierdzenie}[Charakteryzacja funkcji termowych na skończonym łańcuchu MV]
+\label{thm:ncl-finite-mv-term-functions}
+Niech $n\geq1$. Funkcja $f:L_{m+1}^n\to L_{m+1}$
+jest funkcją termową w języku MV wtedy i tylko wtedy,
+gdy dla każdego dodatniego dzielnika $d$ liczby $m$
+zachodzi
+\[
+ f(L_{d+1}^n)\subseteq L_{d+1}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Konieczność wynika z Lematu~\ref{lem:ncl-finite-mv-subalgebras}:
+każdy term zachowuje podalgebry przez indukcję
+po swojej budowie.
+
+Dla dostateczności zauważmy, że funkcja
+\[
+ e_k(x)=\max(0,1-|mx-k|),\qquad 0\leq k\leq m,
+\]
+jest ciągła, kawałkami afiniczna ze współczynnikami
+całkowitymi i przyjmuje wartości w $[0,1]$.
+Twierdzenie McNaughtona
+(Twierdzenie~\ref{thm:lst-fuzzy-mcnaughton})
+daje reprezentujący ją term MV. Na siatce $L_{m+1}$
+funkcja $e_k$ jest testem równości z $k/m$:
+ma wartość $1$ w tym punkcie, a $0$ we wszystkich
+pozostałych punktach siatki.
+Dla $a=(k_1/m,\ldots,k_n/m)$ term
+$D_a(p)=\bigwedge_{j=1}^n e_{k_j}(p_j)$
+jest zatem charakterystyczną funkcją krotki $a$.
+
+Z założenia $f(a)$ należy do podalgebry
+generowanej przez $a$ (stosujemy warunek dla
+$d=m/\gcd(m,k_1,\ldots,k_n)$).
+Każdy element tej podalgebry jest wartością
+pewnego termu $t_a$ na krotce $a$: zbiór wartości
+wszystkich termów na $a$ zawiera generatory i stałe,
+jest zamknięty względem operacji, a każda podalgebra
+zawierająca $a$ musi zawierać te wartości.
+Wobec tego istnieje term $t_a$ z $t_a(a)=f(a)$.
+Teraz term
+\[
+ \bigvee_{a\in L_{m+1}^n}(D_a(p)\wedge t_a(p))
+\]
+reprezentuje $f$, ponieważ przy ustalonej krotce
+$b$ jedyny składnik, który może być niezerowy,
+ma indeks $a=b$ i wartość $f(b)$.
+\end{proof}
+
+\begin{wniosek}[Ograniczenia i rozszerzenia zupełności funkcjonalnej]
+\label{cor:ncl-finite-mv-functional}
+Dla $m>1$ operacje MV bez dodatkowych stałych
+nie są funkcjonalnie zupełne na $L_{m+1}$.
+Po dodaniu stałej $1/m$ stają się funkcjonalnie zupełne.
+\end{wniosek}
+\begin{proof}
+Podalgebra $\{0,1\}$ jest zachowywana przez wszystkie
+termy, ale nie przez funkcję stałą równą $1/m$.
+Po dodaniu tej stałej wszystkie elementy siatki
+są definiowalne przez iterowanie $\oplus$.
+Stosując testy $D_a$ z dowodu poprzedniego twierdzenia,
+reprezentujemy dowolną funkcję jako
+$\bigvee_a(D_a(p)\wedge f(a))$, gdzie każda wartość
+$f(a)$ występuje jako definiowalna stała.
+\end{proof}
+
+\begin{wniosek}[Pełność dla skończonych przesłanek względem skończonych łańcuchów]
+\label{cor:ncl-finite-lukasiewicz-completeness}
+Dla skończonego zbioru formuł $\Gamma$ oraz formuły
+$\varphi$ w języku logiki Łukasiewicza zachodzi
+\[
+ \Gamma\vdash_L\varphi
+ \iff \Gamma\models_{\{(L_{m+1},\{1\}):m\geq1\}}\varphi.
+\]
+\end{wniosek}
+\begin{proof}
+Kierunek prosty wynika z poprawności względem algebr MV.
+Jeżeli $\Gamma\nvdash_L\varphi$, to
+Twierdzenie~\ref{thm:lst-fuzzy-mv-rational-countermodel}
+daje standardowy kontrmodel o wymiernych wartościach
+zmiennych. W skończenie wielu rozważanych formułach
+występuje skończenie wiele zmiennych. Wybieramy
+wspólny dodatni mianownik $m$ ich wartości.
+Wszystkie wartości podformuł należą do $L_{m+1}$
+przez domkniętość tej algebry względem operacji.
+Pozostałym zmiennym przypisujemy zero.
+Otrzymujemy kontrmodel w skończonym łańcuchu.
+\end{proof}
+Nie oznacza to pełności względem jednego ustalonego
+skończonego łańcucha, ani silnej pełności względem
+całej klasy skończonych łańcuchów. Zobacz
+Twierdzenie~\ref{thm:lst-fuzzy-noncompactness}:
+standardowy kontrprzykład dla nieskończonych przesłanek
+działa również w podalgebrach standardowej algebry MV,
+ponieważ wszystkie skończone kontrmodele dla tych
+przesłanek można wybrać wymiernie na mocy
+Twierdzenia~\ref{thm:lst-fuzzy-mv-rational-countermodel}
+i powyższego wniosku.
