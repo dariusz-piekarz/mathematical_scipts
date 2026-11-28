@@ -76,6 +76,9 @@ class TestLogicModelSplit(unittest.TestCase):
         self.assertIn(r"\label{thm:lst-fuzzy-strong-chain-completeness}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-local-deduction}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-equivalence-cuts}", src)
+        self.assertIn(r"\label{prop:lst-fuzzy-quantifier-laws}", src)
+        self.assertIn(r"\label{ex:lst-fuzzy-mamdani-centroid}", src)
+        self.assertIn(r"\label{ex:lst-fuzzy-sugeno-comparison}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-transitive-closure}", src)
         self.assertIn(r"\label{prop:lst-fuzzy-interval-arithmetic}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-mtl-standard}", src)
@@ -261,6 +264,32 @@ class TestFuzzyOperations(unittest.TestCase):
                     quot = [F(u,v) for u,v in itertools.product(a,b)]
                     self.assertLessEqual(min(quot), x/y)
                     self.assertLessEqual(x/y, max(quot))
+
+    def test_fuzzy_quantifier_laws(self):
+        for star, implication in self.norms:
+            for a,b,c in itertools.product(self.grid, repeat=3):
+                self.assertEqual(star(c,max(a,b)), max(star(c,a),star(c,b)))
+                self.assertEqual(implication(c,min(a,b)),
+                                 min(implication(c,a),implication(c,b)))
+                self.assertEqual(implication(max(a,b),c),
+                                 min(implication(a,c),implication(b,c)))
+        r = ((F(1),F(1,4)),(F(1,2),F(3,4)))
+        self.assertEqual(min(map(max,r)),F(3,4))
+        self.assertEqual(max(map(min,zip(*r))),F(1,2))
+
+    def test_mamdani_centroid(self):
+        def area(w):
+            return 4*w-2*w*w
+        a,b = area(F(1,4)),area(F(3,4))
+        self.assertEqual((a,b),(F(7,8),F(15,8)))
+        self.assertEqual((2*a+6*b)/(a+b),F(52,11))
+        for x in self.grid:
+            a,b = area(1-x),area(x)
+            m = (2*a+6*b)/(a+b)
+            self.assertEqual(m,(2*(1-x*x)+6*(2*x-x*x))/(1+2*x-2*x*x))
+            self.assertLessEqual(2,m)
+            self.assertLessEqual(m,6)
+            self.assertEqual((2*(1-x)+6*x),2+4*x)
 
     def test_sugeno_zero_order(self):
         self.assertEqual(F(1, 4)*2 + F(3, 4)*6, 5)

@@ -1155,17 +1155,162 @@ dla $x\geq1/2$ wartości wynoszą $1$ i $2-2x$.
 \end{przyklad}
 
 \section{Logika pierwszego rzędu}
-W niepustym uniwersum $M$ interpretujemy symbole funkcyjne klasycznie,
-a predykaty $n$-argumentowe jako funkcje $M^n\to[0,1]$.
-Dla wartościowania $s$ zmiennych
+Składnię języka pierwszego rzędu przyjmujemy jak w rozdziale
+o językach formalnych teorii modeli. Zmieniamy semantykę
+predykatów, spójników i kwantyfikatorów.
+
+\begin{definicja}[Struktura rozmyta]\label{def:lst-fuzzy-structure}
+Ustalmy lewostronnie ciągłą normę trójkątną $T$.
+Struktura rozmyta $\mathfrak M$ składa się z niepustego
+uniwersum $M$, interpretacji stałych jako elementów $M$,
+symboli funkcyjnych jako funkcji $M^n\to M$ i symboli
+predykatowych jako funkcji $M^n\to[0,1]$.
+Jeżeli język zawiera klasyczną równość, interpretujemy ją
+przez funkcję charakterystyczną przekątnej w $M\times M$.
+Wartościowanie zmiennych $s$ przypisuje zmiennym elementy
+$M$, a wartości termów określa się rekurencyjnie jak
+w semantyce klasycznej.
+\end{definicja}
+Dla atomu $P(t_1,\ldots,t_n)$ stopień prawdziwości jest
+wartością $P^{\mathfrak M}$ na krotce wartości termów.
+Spójniki interpretujemy przez operacje standardowej algebry
+MTL, a kwantyfikatory przez
 \[
-\|\forall x\,\varphi\|_s=\inf_{a\in M}\|\varphi\|_{s[x\mapsto a]},
-\qquad
-\|\exists x\,\varphi\|_s=\sup_{a\in M}\|\varphi\|_{s[x\mapsto a]}.
+\begin{split}
+ \|\forall x\,\varphi\|_s
+ &=\inf_{a\in M}\|\varphi\|_{s[x\mapsto a]},\\
+ \|\exists x\,\varphi\|_s
+ &=\sup_{a\in M}\|\varphi\|_{s[x\mapsto a]}.
+\end{split}
 \]
 Kresy istnieją przez zupełność porządkową $[0,1]$.
-Jeżeli $M=\N$ oraz $P(n)=1-1/(n+1)$, to $\|\exists xP(x)\|=1$,
-ale żadna wartość $P(n)$ nie jest równa jeden.
+Indeks $\mathfrak M$ pomijamy w zapisie stopnia prawdziwości,
+gdy struktura jest ustalona.
+
+\begin{lemat}[Zależność od zmiennych wolnych]
+\label{lem:lst-fuzzy-free-variables}
+Jeżeli dwa wartościowania zgadzają się na zmiennych wolnych
+formuły $\varphi$, to nadają jej tę samą wartość.
+\end{lemat}
+\begin{proof}
+Dla termów analogiczna własność wynika przez indukcję
+po ich budowie: wartość zmiennej jest dana przez wartościowanie,
+wartość stałej nie zależy od wartościowania, a zastosowanie
+funkcji zależy jedynie od wartości jej argumentów.
+Daje to tezę dla atomów. Krok dla spójnika wynika z hipotezy
+indukcyjnej dla jego argumentów. Dla kwantyfikatora o zmiennej
+$x$ modyfikujemy oba wartościowania, przypisując $x$ ten sam
+element $a\in M$. Zmodyfikowane wartościowania zgadzają się
+na wszystkich zmiennych wolnych formuły pod kwantyfikatorem.
+Hipoteza indukcyjna daje równość dla każdego $a$, a wzięcie
+infimum lub supremum zachowuje równość.
+\end{proof}
+W szczególności wartość zdania nie zależy od wartościowania
+zmiennych. Zdanie uznajemy za prawdziwe w strukturze, gdy
+jego wartość wynosi $1$. Konsekwencję semantyczną zbioru zdań
+określamy przez zachowanie tej wyróżnionej wartości
+we wszystkich rozważanych strukturach.
+
+\begin{stwierdzenie}[Powrót do logiki klasycznej]
+\label{prop:lst-fuzzy-crisp-reduction}
+Jeżeli wszystkie predykaty przyjmują tylko wartości $0,1$,
+to wartość każdej formuły należy do $\{0,1\}$ i jest zgodna
+z jej klasyczną wartością logiczną.
+\end{stwierdzenie}
+\begin{proof}
+Na końcach odcinka norma trójkątna zgadza się z klasyczną
+koniunkcją, residuum z klasyczną implikacją, a minimum
+i maksimum z koniunkcją i alternatywą. Wynika to z
+$T(0,a)=0$, $T(1,a)=a$ oraz residuacji.
+Infimum niepustej rodziny zer i jedynek jest jedynką
+dokładnie wtedy, gdy wszystkie wartości są jedynkami;
+supremum jest jedynką dokładnie wtedy, gdy przynajmniej
+jedna wartość jest jedynką. Indukcja po budowie formuły
+daje tezę.
+\end{proof}
+
+\begin{przyklad}[Brak świadka]\label{ex:lst-fuzzy-no-witness}
+Niech $M=\N$ i $P(n)=1-1/(n+1)$.
+Wówczas $\|\exists xP(x)\|=1$, ale żadna wartość
+$P(n)$ nie jest równa $1$. Analogicznie, dla
+$Q(n)=1/(n+1)$ mamy $\|\forall xQ(x)\|=0$,
+choć każdy stopień $Q(n)$ jest dodatni.
+W skończonym niepustym uniwersum oba kresy są osiągane;
+w nieskończonym wymaga to dodatkowych założeń.
+\end{przyklad}
+
+\begin{stwierdzenie}[Wybrane prawa kwantyfikatorów]
+\label{prop:lst-fuzzy-quantifier-laws}
+Przyjmijmy, że $x$ nie występuje wolno w $\psi$.
+Następujące pary formuł mają jednakowe wartości
+w każdej strukturze rozmytej:
+\begin{align*}
+ \exists x(\psi\mathbin{\&}\varphi)
+ &\quad\text{oraz}\quad \psi\mathbin{\&}\exists x\varphi,\\
+ \forall x(\psi\to\varphi)
+ &\quad\text{oraz}\quad \psi\to\forall x\varphi,\\
+ \forall x(\varphi\to\psi)
+ &\quad\text{oraz}\quad (\exists x\varphi)\to\psi.
+\end{align*}
+\end{stwierdzenie}
+\begin{proof}
+Niech $b=\|\psi\|_s$ i $a_m=\|\varphi\|_{s[x\mapsto m]}$.
+Z Lematu~\ref{lem:lst-fuzzy-free-variables} wartość $b$
+nie zmienia się przy modyfikowaniu $x$. Z residuacji
+wynikają tożsamości
+\[
+\begin{split}
+ T(b,\sup_m a_m)&=\sup_m T(b,a_m),\\
+ b\Rightarrow_T\inf_m a_m&=\inf_m(b\Rightarrow_T a_m),\\
+ (\sup_m a_m)\Rightarrow_T b&=\inf_m(a_m\Rightarrow_T b).
+\end{split}
+\]
+Pierwszą udowodniono w
+Stwierdzeniu~\ref{prop:lst-fuzzy-standard-chains}.
+W drugiej, dla dowolnego $c\in[0,1]$, warunek
+$c\leq b\Rightarrow_T\inf_m a_m$ jest równoważny
+$T(b,c)\leq a_m$ dla wszystkich $m$, czyli
+$c\leq b\Rightarrow_T a_m$ dla wszystkich $m$.
+W trzeciej, warunek
+$c\leq(\sup_m a_m)\Rightarrow_T b$ jest równoważny
+$T(c,\sup_m a_m)\leq b$ przez residuację i przemienność.
+Pierwsza tożsamość sprowadza to do $T(c,a_m)\leq b$
+dla wszystkich $m$, czyli $c\leq a_m\Rightarrow_T b$
+dla wszystkich $m$. Podstawienie interpretacji
+kwantyfikatorów kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Kolejność kwantyfikatorów]
+\label{ex:lst-fuzzy-quantifier-order}
+Niech $M=\{a,b\}$, a interpretacja $R$ będzie dana macierzą
+\[
+ \begin{pmatrix}
+ 1 & 1/4\\
+ 1/2 & 3/4
+ \end{pmatrix}.
+\]
+Wiersze odpowiadają wartościom pierwszego argumentu,
+kolumny drugiego. Wówczas
+\[
+ \|\forall x\exists y\,R(x,y)\|=\min(1,3/4)=3/4,
+ \quad
+ \|\exists y\forall x\,R(x,y)\|=\max(1/2,1/4)=1/2.
+\]
+Ogólnie, dla dowolnej niepustej dziedziny,
+$\sup_y\inf_x R(x,y)\leq\inf_x\sup_y R(x,y)$:
+dla ustalonego $x$ i dowolnego $y$ mamy
+$\inf_{x'}R(x',y)\leq R(x,y)\leq\sup_{y'}R(x,y')$.
+Bierzemy kolejno supremum po $y$ i infimum po $x$.
+\end{przyklad}
+
+Zauważmy, że negacja rezydualna nie musi być inwolucją.
+W standardowej algebrze Gödla dla $P$ z
+Przykładu~\ref{ex:lst-fuzzy-no-witness}, po zastąpieniu
+$P$ przez $Q$, mamy $\neg\|\forall xQ(x)\|=1$,
+lecz $\|\exists x\neg Q(x)\|=0$, ponieważ wszystkie $Q(n)>0$.
+Zatem klasycznej równoważności
+$\neg\forall x\,\varphi$ i $\exists x\neg\varphi$
+nie wolno przyjmować bez sprawdzenia rodzaju negacji.
 
 \section{Relacje rozmyte}
 Dla relacji rozmytych $R:X\times Y\to[0,1]$ i
@@ -1471,16 +1616,170 @@ dwóch różnych realizacji tej samej liczby rozmytej.
 
 
 \section{Wnioskowanie rozmyte}
-Dwie reguły Mamdaniego z aktywacjami $0{,}25$, $0{,}75$
-i konsekwencjami $\nu_1,\nu_2$ dają funkcję
-$\nu(y)=\max(\min(0{,}25,\nu_1(y)),\min(0{,}75,\nu_2(y)))$.
-Dla całkowalnej $\nu$ o dodatniej całce i skończonym pierwszym momencie
-defuzyfikacja środkiem ciężkości daje
+Stopnie przynależności mogą opisywać pojęcia takie jak
+niska lub wysoka temperatura. Reguła łączy rozmyte
+przesłanki z rozmytym albo liczbowym wnioskiem.
+Nie należy jednak utożsamiać inżynierskich metod
+wnioskowania rozmytego z rachunkiem dowodów MTL:
+operacje agregacji i defuzyfikacji stanowią dodatkowe
+elementy modelu.
+
+\subsection{Metoda Mamdaniego}
+\begin{definicja}\label{def:lst-fuzzy-mamdani}
+Dla danych wejściowych $x=(x_1,\ldots,x_n)$ rozważmy
+$m$ reguł postaci
 \[
-y_*=\frac{\int_{\R} y\nu(y)\,\mathrm d\lambda_1(y)}
-{\int_{\R}\nu(y)\,\mathrm d\lambda_1(y)}.
+ \text{jeżeli }x_1\text{ jest }A_{i1},\ldots,
+ x_n\text{ jest }A_{in},\text{ to }y\text{ jest }B_i.
 \]
-W systemie Sugeno zerowego rzędu, dla konsekwencji liczbowych $2,6$,
-znormalizowana średnia wynosi
-$(0{,}25\cdot2+0{,}75\cdot6)/(0{,}25+0{,}75)=5$.
-Nie tworzy się tu agregowanej funkcji przynależności wyjścia.
+W wersji minimum--maksimum stopień aktywacji $w_i$,
+obcięta funkcja wyjściowa i agregacja mają postać
+\[
+\begin{split}
+ w_i&=\min_{1\leq j\leq n}\mu_{A_{ij}}(x_j),\\
+ \nu_i(y)&=\min(w_i,\mu_{B_i}(y)),\\
+ \nu(y)&=\max_{1\leq i\leq m}\nu_i(y).
+\end{split}
+\]
+Jeżeli $\nu$ jest mierzalna,
+$0<\int_\R\nu\,\mathrm d\lambda_1<\infty$ i
+$\int_\R |y|\nu(y)\,\mathrm d\lambda_1(y)<\infty$, to
+defuzyfikacja metodą środka ciężkości daje
+\[
+ y_*=\frac{\int_\R y\nu(y)\,\mathrm d\lambda_1(y)}
+ {\int_\R\nu(y)\,\mathrm d\lambda_1(y)}.
+\]
+\end{definicja}
+Jeżeli wszystkie reguły mają zerową aktywację, mianownik
+jest zerem i metoda środka ciężkości nie wyznacza wyniku.
+Potrzebna jest wówczas osobna reguła postępowania.
+Wzór używa całek względem miary Lebesgue'a, a nie stopni
+prawdopodobieństwa: normalizacja pozwala traktować
+$\nu/\int_\R\nu\,\mathrm d\lambda_1$ jako gęstość,
+lecz nie jest to interpretacja pierwotnych stopni prawdy.
+
+\begin{przyklad}[Pełne obliczenie metodą Mamdaniego]
+\label{ex:lst-fuzzy-mamdani-centroid}
+Niech $x\in[0,1]$ będzie znormalizowanym wejściem.
+Przyjmijmy funkcje przesłanek $\mu_{A_1}(x)=1-x$
+i $\mu_{A_2}(x)=x$. Dla $x=3/4$ aktywacje wynoszą
+$w_1=1/4$, $w_2=3/4$.
+Wnioski są trójkątnymi liczbami rozmytymi
+$B_1=(0,2,4)$ i $B_2=(4,6,8)$.
+Zatem obie funkcje wyjściowe mają rozłączne dodatnie
+nośniki; stykają się tylko w punkcie $4$, gdzie obie
+są równe zero. Agregacja maksimum jest w tym przykładzie
+równa ich sumie.
+
+Dla trójkąta o środku $c$, połowie szerokości $h>0$
+i wysokości $1$ funkcja przynależności ma postać
+$\mu(y)=\max(0,1-|y-c|/h)$.
+Po obcięciu na wysokości $w\in[0,1]$ otrzymujemy
+$\nu_w(y)=\min(w,\mu(y))$. Symetria względem $c$
+oraz podstawienie $t=|y-c|$ dają
+\[
+\begin{split}
+ I(w)&=\int_\R\nu_w(y)\,\mathrm d\lambda_1(y)\\
+ &=2\left(\int_0^{h(1-w)}w\,\mathrm d\lambda_1(t)
+ +\int_{h(1-w)}^h(1-t/h)\,\mathrm d\lambda_1(t)\right)\\
+ &=2h w-hw^2,\\
+ \int_\R y\nu_w(y)\,\mathrm d\lambda_1(y)&=cI(w).
+\end{split}
+\]
+W ostatnim wzorze całka z $(y-c)\nu_w(y)$ jest zerem
+przez symetrię. Dla $h=2$ otrzymujemy
+$I(1/4)=7/8$ i $I(3/4)=15/8$. W konsekwencji
+\[
+ y_*=\frac{2\cdot7/8+6\cdot15/8}{7/8+15/8}
+ =\frac{52}{11}\approx4{,}727.
+\]
+\begin{center}
+\begin{tikzpicture}[x=0.9cm,y=3cm,>=Stealth]
+\fill[blue!16] (0,0)--(0.5,0.25)--(3.5,0.25)--(4,0)--cycle;
+\fill[teal!22] (4,0)--(5.5,0.75)--(6.5,0.75)--(8,0)--cycle;
+\draw[gray,dashed] (0,0)--(2,1)--(4,0)--(6,1)--(8,0);
+\draw[very thick,blue!75!black] (0,0)--(0.5,0.25)--(3.5,0.25)--(4,0);
+\draw[very thick,teal!75!black] (4,0)--(5.5,0.75)--(6.5,0.75)--(8,0);
+\draw[->] (-0.2,0)--(8.5,0) node[right]{$y$};
+\draw[->] (0,0)--(0,1.15) node[above]{$\nu(y)$};
+\draw[orange!85!black,thick,dashed] ({52/11},0)--({52/11},0.95);
+\node[above,orange!85!black] at ({52/11},0.95) {$y_*$};
+\foreach \x in {0,2,4,6,8}{\node[below] at (\x,0) {$\x$};}
+\node[left] at (0,0.25) {$1/4$};
+\node[left] at (0,0.75) {$3/4$};
+\end{tikzpicture}
+\end{center}
+Rysunek przedstawia funkcje przed obcięciem (linie
+przerywane), agregację (wypełnienie) i wynik defuzyfikacji.
+Jeżeli nośniki wniosków zachodzą na siebie, nie wolno
+zastąpić agregacji maksimum ich sumą, ponieważ
+wspólny obszar zostałby policzony dwukrotnie.
+\end{przyklad}
+
+\subsection{Metoda Takagiego--Sugeno}
+\begin{definicja}\label{def:lst-fuzzy-sugeno}
+W metodzie Takagiego--Sugeno wniosek $i$-tej reguły
+jest funkcją liczbową $f_i(x)$, a nie zbiorem rozmytym.
+Dla nieujemnych aktywacji $w_i(x)$ o dodatniej sumie
+wyjście jest określone przez
+\[
+ y_{\mathrm S}(x)=
+ \frac{\sum_{i=1}^m w_i(x)f_i(x)}{\sum_{i=1}^m w_i(x)}.
+\]
+W systemie zerowego rzędu $f_i$ są stałe,
+a w systemie pierwszego rzędu są funkcjami afinicznymi.
+\end{definicja}
+Po normalizacji współczynniki
+$\theta_i=w_i/\sum_jw_j$ są nieujemne i sumują się do $1$.
+Wyjście jest więc kombinacją wypukłą wartości $f_i(x)$:
+\[
+ \min_i f_i(x)\leq y_{\mathrm S}(x)\leq\max_i f_i(x).
+\]
+Obie nierówności otrzymujemy, mnożąc odpowiednie
+ograniczenie każdego $f_i(x)$ przez $\theta_i$ i sumując.
+
+\begin{przyklad}[Porównanie metod]\label{ex:lst-fuzzy-sugeno-comparison}
+Dla tych samych aktywacji co w
+Przykładzie~\ref{ex:lst-fuzzy-mamdani-centroid}
+i stałych konsekwencji $f_1=2$, $f_2=6$ otrzymujemy
+$y_{\mathrm S}=2/4+18/4=5$.
+Nie jest to wynik Mamdaniego $52/11$.
+Metoda Sugeno waży środki bezpośrednio aktywacjami,
+natomiast w przykładzie Mamdaniego wagi są polami
+obciętych trójkątów, proporcjonalnymi do $2w-w^2$.
+Dla $x\in[0,1]$ w rozważanym systemie Sugeno mamy
+$w_1=1-x$, $w_2=x$, a zatem $y_{\mathrm S}(x)=2+4x$.
+W metodzie Mamdaniego dla tych samych wejść i trójkątów
+\[
+ y_{\mathrm M}(x)=
+ \frac{2(1-x^2)+6(2x-x^2)}{1+2x-2x^2}.
+\]
+Wzór otrzymujemy przez podstawienie $w_1=1-x$, $w_2=x$
+do $I(w)=4w-2w^2$ i skrócenie czynnika $2$.
+Mianownik jest dodatni na całym $[0,1]$.
+\begin{center}
+\begin{tikzpicture}[x=6cm,y=0.65cm,>=Stealth]
+\draw[->] (0,0)--(1.12,0) node[right]{$x$};
+\draw[->] (0,0)--(0,6.7) node[above]{$y$};
+\foreach \y in {2,4,6}{\draw[gray!40,dashed] (0,\y)--(1,\y);
+ \node[left] at (0,\y) {$\y$};}
+\draw[blue!75!black,very thick,domain=0:1,samples=60]
+ plot (\x,{2+4*\x});
+\draw[orange!85!black,very thick,domain=0:1,samples=60]
+ plot (\x,{(2*(1-\x*\x)+6*(2*\x-\x*\x))/(1+2*\x-2*\x*\x)});
+\draw[gray,dashed] (0.75,0)--(0.75,5);
+\foreach \x/\lab in {0/0,0.5/{1/2},0.75/{3/4},1/1}
+ {\node[below] at (\x,0) {$\lab$};}
+\node[blue!75!black,anchor=west] at (0.13,5.9) {Sugeno};
+\node[orange!85!black,anchor=west] at (0.13,5.2) {Mamdani};
+\end{tikzpicture}
+\end{center}
+\end{przyklad}
+
+\begin{uwaga}
+W obu metodach funkcje przynależności, wybór normy,
+baza reguł i sposób agregacji wymagają uzasadnienia
+w konkretnym modelu. Rachunek logiczny nie wyznacza
+automatycznie tych danych. Wynik defuzyfikacji jest
+pojedynczą liczbą, nie stopniem prawdziwości wniosku.
+\end{uwaga}
