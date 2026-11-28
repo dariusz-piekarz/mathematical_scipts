@@ -12,7 +12,7 @@ dla recenzenta, nie recenzją ani zgodą na wykonanie kodu.
   Końcowa bramka problems=[], status=stabilizing, skeptical_review=pending.
 - Rootless: 56191f7cc08decf7e8497909737038272048a1e0,
   [#46177909934](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/46177909934):
-  próby 1 i 2 PASS, trzecia w toku. Raporty 1 i 2 identyczne pod względem
+  próby 1, 2 i 3 PASS. Raporty wszystkich trzech prób identyczne pod względem
   manifestu, wejść, AST, kodu, diagnostyki i aksjomatów.
 - 242 bloby backendu, skryptów, testów, Lean i workflow rootless identyczne
   na obu SHA. To ograniczone porównanie zakresu, nie wspólny SHA.
@@ -51,4 +51,8 @@ REST compare potwierdza tę samą listę 20 ścieżek i relację przodka
 3 katalogi JSON, 8 plików rozdziałów. Żaden plik workflow, kod backendu,
 skrypty wykonawcze, testy, przypięcia Lean/Mathlib ani inne konfiguracje
 aplikacji nie różnią się. Nadal są to dwa różne SHA; nie zastępuje to
-niezależnego zatwierdzenia adekwatności zakresu ani trzeciej próby.
+niezależnego zatwierdzenia adekwatności zakresu. Trzecia próba zakończona PASS.
+
+## Końcowy dowód rootless
+
+Joby 141080689602, 141092112297, 141112894927: wszystkie PASS. 15 odrębnych kontenerów, wszystkie removed_verified i zgodne SHA wejścia; identyczne wiersze raportów po wyłączeniu identyfikatorów kontenerów/obrazów. Replay 3/3 PASS. Niezależny odbiór nadal pending. Roadmap dopuszcza nową fazę A po czystym technicznym B bez nadania stable i bez znoszenia blokad bezpieczeństwa.
