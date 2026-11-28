@@ -25,6 +25,138 @@ ogólniejsze rodzaje całek wektorowych pozostawimy
 W dalszych rozdziałach skupimy się na całkowaniu
 skalarnym w przestrzeni euklidesowej.
 
+\section{Intuicja: akumulacja i chwilowa szybkość zmian}
+
+W rozdziale \ref{ma2:ch:riemann-integral} całkę
+interpretowaliśmy jako granicę sum lokalnych
+wkładów. Teraz zmieniamy punkt widzenia:
+zamiast ustalać oba końce przedziału, obserwujemy,
+jak wartość całki zmienia się wraz z położeniem
+jej górnego końca.
+
+Niech $f:[a,b]\to\R$ będzie ciągła. Funkcja
+akumulacji o punkcie początkowym $a$ to
+\[
+ A(x)=\int_a^x f(t)\,\mathrm dt,\qquad x\in[a,b].
+\]
+W tym rozdziale zapis z $\mathrm dt$ oznacza
+całkę Riemanna (również w przypadku wartości
+w przestrzeni Banacha). Dla funkcji skalarnej
+całkowalnej w sensie Riemanna na przedziale
+jest ona zgodna z całką względem $\lambda_1$
+na mocy \ref{ma2:thm:riemann-box-lebesgue}.
+
+Jeżeli $f$ jest nieujemna, $A(x)$ mierzy pole
+obszaru pod wykresem $f$ od $a$ do $x$.
+Jeżeli $f$ zmienia znak, jest to bilans pól.
+Dla $a\le x\le y\le b$ różnica $A(y)-A(x)$
+jest wkładem zgromadzonym wyłącznie między
+$x$ i $y$. W szczególności nie jest ona
+polem pod wykresem samej funkcji $A$.
+
+Przykładowo, jeśli $f$ oznacza szybkość
+dopływu cieczy do zbiornika (objętość na
+jednostkę czasu), to $A$ opisuje zmianę
+objętości od ustalonej chwili. Wypływowi
+odpowiadają ujemne wartości $f$.
+Dodając objętość początkową $v$, otrzymujemy
+$F(x)=v+A(x)$. Zmiana $v$ przesuwa wykres
+$F$, ale nie zmienia szybkości dopływu.
+Analogicznie dla prędkości ruchu wzdłuż
+prostej całka daje przemieszczenie, a nie
+całkowitą przebytą drogę; tę ostatnią
+opisuje całka z modułu prędkości.
+
+\paragraph{Dlaczego pochodna funkcji akumulacji jest równa
+funkcji podcałkowej?}
+Dla małego $h>0$ nowy fragment obszaru
+pod wykresem ma szerokość $h$ i wysokość
+bliską $f(x)$. Jego pole ze znakiem jest
+zatem bliskie $hf(x)$. W konsekwencji
+\[
+ \frac{A(x+h)-A(x)}h
+ =\frac1h\int_x^{x+h}f(t)\,\mathrm dt
+ \approx f(x).
+\]
+Ściśle, różnica między średnią wartością
+na krótkim przedziale a wartością $f(x)$
+jest ograniczona przez
+$\sup_{|t-x|\le |h|,\ t\in[a,b]}|f(t)-f(x)|$.
+Ciągłość w $x$ daje zbieżność tego
+oszacowania do zera; dla $h<0$ odwracamy
+granice całki. Dowód w przestrzeni Banacha
+podamy w twierdzeniu \ref{ma2:thm:primitive-ftc}.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=3.0cm,y=1.65cm,>=stealth]
+ \begin{scope}
+  \fill[blue!20] (0,0)--(0,0)
+   plot[domain=0:1.15,samples=35] (\x,{2*\x})--(1.15,0)--cycle;
+  \fill[orange!50] (1.15,0)--(1.15,2.3)--(1.55,3.1)--(1.55,0)--cycle;
+  \draw[->,gray!80!black] (-.08,0)--(1.85,0) node[right] {$t$};
+  \draw[->,gray!80!black] (0,-.08)--(0,3.55) node[above] {$f(t)$};
+  \draw[blue!75!black,very thick] (0,0)--(1.65,3.3);
+  \draw[densely dashed,gray] (1.15,0)--(1.15,2.3);
+  \draw[densely dashed,gray] (1.55,0)--(1.55,3.1);
+  \draw[orange!85!black,densely dashed] (1.15,2.3)--(1.55,2.3);
+  \node[below] at (0,0) {$0$};
+  \node[below] at (1.15,0) {$x$};
+  \node[below] at (1.55,0) {$x+h$};
+  \node[blue!75!black] at (.76,.55) {$A(x)$};
+  \node[orange!85!black,rotate=90] at (1.35,1.05) {\scriptsize przyrost};
+  \node[above right] at (1.55,3.1) {$2t$};
+ \end{scope}
+ \begin{scope}[xshift=6.7cm]
+  \draw[->,gray!80!black] (-.08,0)--(1.85,0) node[right] {$t$};
+  \draw[->,gray!80!black] (0,-.08)--(0,3.55) node[above] {$A(t)$};
+  \draw[blue!75!black,very thick,domain=0:1.75,samples=50] plot (\x,{\x*\x});
+  \draw[orange!85!black,thick] (1.15,1.3225)--(1.55,2.4025);
+  \draw[gray,densely dashed] (1.15,0)--(1.15,1.3225);
+  \draw[gray,densely dashed] (1.55,0)--(1.55,2.4025);
+  \fill[blue!75!black] (1.15,1.3225) circle (1.4pt);
+  \fill[blue!75!black] (1.55,2.4025) circle (1.4pt);
+  \node[below] at (1.15,0) {$x$};
+  \node[below] at (1.55,0) {$x+h$};
+  \node[blue!75!black,above left] at (1.75,3.0625) {$t^2$};
+ \end{scope}
+\end{tikzpicture}
+\caption{Dla $f(t)=2t$ na $[0,2]$ funkcja akumulacji
+wynosi $A(t)=t^2$. Pomarańczowe pole po lewej
+jest przyrostem $A(x+h)-A(x)$; po prawej
+iloraz tego przyrostu przez $h$ jest
+współczynnikiem kierunkowym siecznej.
+Przy $h\to0$ sieczna przechodzi w styczną
+o współczynniku $2x$.}
+\label{ma2:fig:primitive-accumulation}
+\end{figure}
+
+\paragraph{Całka oznaczona a całka nieoznaczona.}
+Całka oznaczona $\int_a^b f(t)\,\mathrm dt$
+jest pojedynczą liczbą, natomiast funkcja
+akumulacji $A$ przypisuje liczbę każdemu
+$x$ z przedziału. Całka nieoznaczona
+$\int f(t)\,\mathrm dt$ jest tradycyjnym
+oznaczeniem rodziny funkcji pierwotnych
+$A+C$, $C\in\R$, o ile funkcja pierwotna
+istnieje. Nie jest to całka względem miary
+po nieokreślonym zbiorze.
+Na spójnym przedziale wybór wartości
+początkowej ustala stałą jednoznacznie.
+
+Podstawowe twierdzenie rachunku całkowego
+łączy zatem dwa kierunki rozumowania:
+z chwilowej szybkości zmian odtwarzamy
+zmianę całkowitą, a różniczkując funkcję
+akumulacji, odzyskujemy szybkość zmian
+w punktach ciągłości funkcji podcałkowej.
+Wzór Newtona--Leibniza będzie uzasadniony
+w twierdzeniu \ref{ma2:thm:primitive-newton-leibniz}.
+Później zobaczymy w nim jednowymiarowy
+przypadek ogólnego twierdzenia Stokesa:
+przyrost funkcji zależy od zorientowanego
+brzegu przedziału.
+
 \section{Funkcja pierwotna krzywej}
 
 Niech $E$ będzie rzeczywistą lub zespoloną
