@@ -2858,3 +2858,507 @@ odpowiednio z
 Twierdzenia~\ref{thm:ncl-kripke-complete-noncanonical}
 i Twierdzenia~\ref{thm:ncl-kripke-vb-incompleteness}.
 \end{proof}
+
+\section{Translacja standardowa i teoria korespondencji}
+
+\subsection{Logika modalna jako fragment logiki pierwszego rzędu}
+
+\begin{definicja}[Translacja standardowa]
+\label{def:ncl-kripke-standard-translation}
+Każdemu modelowi $M=(W,R,V)$ przypisujemy
+strukturę pierwszego rzędu $\mathfrak M$ o
+uniwersum $W$, z dwuargumentowym symbolem
+relacyjnym $R$ i jednoargumentowymi symbolami
+$P_p$ dla $p\in\mathrm{Var}$, interpretowanymi
+odpowiednio przez $R$ i $V(p)$.
+Translację $\operatorname{ST}_x$ określamy
+rekurencyjnie:
+\[
+\begin{aligned}
+ \operatorname{ST}_x(p)&=P_p(x),\\
+ \operatorname{ST}_x(\bot)&=(x\ne x),\\
+ \operatorname{ST}_x(B\circ C)
+ &=\operatorname{ST}_x(B)\circ\operatorname{ST}_x(C),
+ \qquad\circ\in\{\wedge,\vee,\to\},\\
+ \operatorname{ST}_x(\Box B)
+ &=\forall y\,(R(x,y)\to\operatorname{ST}_y(B)).
+\end{aligned}
+\]
+W ostatnim wierszu wybieramy świeżą zmienną $y$,
+unikając przechwytywania zmiennych wolnych.
+Jedyną możliwą zmienną wolną translacji jest $x$.
+\end{definicja}
+
+\begin{twierdzenie}[Poprawność translacji standardowej]
+\label{thm:ncl-kripke-standard-translation}
+Dla każdej formuły modalnej $A$ i $w\in W$
+\[
+ M,w\Vdash A\iff
+ \mathfrak M\models\operatorname{ST}_x(A)[x:=w].
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla zmiennej zdaniowej teza wynika
+z interpretacji $P_p$, dla $\bot$ z fałszywości
+$x\ne x$, a dla spójników klasycznych
+z hipotezy indukcyjnej i zgodności ich
+klauzul semantycznych.
+Dla $A=\Box B$ otrzymujemy
+\[
+\begin{aligned}
+ M,w\Vdash\Box B
+ &\iff \forall v\in W\,(wRv\Rightarrow M,v\Vdash B)\\
+ &\iff \mathfrak M\models
+       \forall y\,(R(x,y)\to\operatorname{ST}_y(B))[x:=w].
+\end{aligned}
+\]
+Druga równoważność wykorzystuje hipotezę
+indukcyjną dla $B$ we wszystkich stanach.
+To kończy indukcję.
+\end{proof}
+Po rozwinięciu skrótów i zastosowaniu
+klasycznych praw negacji otrzymujemy
+\[
+\begin{aligned}
+ \operatorname{ST}_x(\neg B)&\equiv
+      \neg\operatorname{ST}_x(B),\\
+ \operatorname{ST}_x(\Diamond B)&\equiv
+      \exists y\,(R(x,y)\wedge\operatorname{ST}_y(B)),
+\end{aligned}
+\]
+gdzie $\equiv$ oznacza równoważność w logice
+pierwszego rzędu. W szczególności dwie nazwy
+zmiennych indywiduowych wystarczają do
+translacji podstawowego języka modalnego:
+można rekurencyjnie zamieniać role $x,y$,
+ponieważ translacja argumentu operatora
+modalnego ma tylko jedną możliwą zmienną wolną.
+
+\begin{wniosek}[Translacja ważności na ramie]
+\label{cor:ncl-kripke-second-order-translation}
+Jeżeli $p_1,\ldots,p_m$ są wszystkimi zmiennymi
+zdaniowymi formuły $A$, to
+\[
+ F\Vdash A\iff
+ F\models\forall P_{p_1}\cdots\forall P_{p_m}
+                \forall x\,\operatorname{ST}_x(A).
+\]
+Kwantyfikatory po symbolach $P_{p_i}$ są
+kwantyfikatorami drugiego rzędu, przebiegającymi
+wszystkie podzbiory uniwersum ramy.
+\end{wniosek}
+\begin{proof}
+Ważność na ramie wymaga prawdziwości we
+wszystkich stanach przy każdym wartościowaniu.
+Zmiennym występującym w $A$ przypisujemy
+dowolne podzbiory $W$, zaś wartości pozostałych
+zmiennych są bez znaczenia przez
+Lemat~\ref{lem:ncl-kripke-variable-dependence}.
+Twierdzenie~\ref{thm:ncl-kripke-standard-translation}
+zamienia prawdziwość w stanie na spełnianie
+translacji przy odpowiedniej wartości $x$.
+\end{proof}
+
+Translacja pojedynczej formuły w modelu
+należy zatem do logiki pierwszego rzędu,
+ale translacja ważności na ramie ma na ogół
+charakter drugiego rzędu. Problem
+korespondencji polega na eliminacji
+kwantyfikacji po wartościowaniach.
+
+\subsection{Korespondencja lokalna i globalna}
+
+\begin{definicja}[Korespondent pierwszego rzędu]
+\label{def:ncl-kripke-first-order-correspondent}
+Piszemy $F,w\Vdash A$, gdy dla każdego
+wartościowania na ramie $F$ formuła $A$
+jest prawdziwa w stanie $w$.
+Formuła pierwszego rzędu $\theta(x)$
+w języku zawierającym jedynie relację $R$
+i równość jest lokalnym korespondentem
+formuły modalnej $A$, jeśli dla wszystkich
+ram $F$ i stanów $w$ zachodzi
+\[
+ F,w\Vdash A\iff F\models\theta(x)[x:=w].
+\]
+Wtedy zdanie $\forall x\,\theta(x)$ jest
+globalnym korespondentem $A$.
+\end{definicja}
+Ostatnia teza wynika z kwantyfikacji po
+wszystkich stanach w definicji ważności
+na ramie. Korespondencję lokalną należy
+odróżniać od prawdziwości $A$ w pojedynczym
+modelu z ustalonym wartościowaniem.
+
+\begin{przyklad}[Eliminacja predykatu dla aksjomatu 4]
+\label{ex:ncl-kripke-correspondence-four}
+Dla $A=\Box p\to\Box\Box p$ warunek
+lokalnej ważności po translacji standardowej
+ma postać
+\[
+ \forall P\left[
+  \forall y\,(Rxy\to P(y))\to
+  \forall y\forall z\,((Rxy\wedge Ryz)\to P(z))
+ \right].
+\]
+Najmniejszym zbiorem $P$ spełniającym
+antecedent jest $R(x)$. Jeżeli warunek
+zachodzi dla tego zbioru, to
+\[
+ \forall y\forall z\,((Rxy\wedge Ryz)\to Rxz).
+\]
+Odwrotnie, jeśli zachodzi ten ostatni warunek,
+to każdy zbiór $P$ zawierający $R(x)$
+zawiera także wszystkie stany osiągalne
+z $x$ w dwóch krokach. Zatem wystarcza
+sprawdzenie najmniejszego wartościowania.
+Po domknięciu ogólnym względem $x$
+otrzymujemy przechodniość.
+\end{przyklad}
+
+\begin{twierdzenie}[Korespondencja aksjomatu zbieżności]
+\label{thm:ncl-kripke-confluence-correspondence}
+Formuła $\Diamond\Box p\to\Box\Diamond p$
+ma lokalny korespondent
+\[
+ \forall y\forall z\,
+ \bigl((Rxy\wedge Rxz)\to
+       \exists u\,(Ryu\wedge Rzu)\bigr).
+\]
+\end{twierdzenie}
+\begin{proof}
+Załóżmy warunek relacyjny w $x$ i prawdziwość
+$\Diamond\Box p$ w pewnym modelu w $x$.
+Istnieje następnik $y$ stanu $x$, którego
+wszyscy następnicy spełniają $p$.
+Dla dowolnego następnika $z$ stanu $x$
+warunek daje wspólnego następnika $u$
+stanów $y,z$. Stan $u$ spełnia $p$,
+więc $z$ spełnia $\Diamond p$. Stąd
+$x$ spełnia $\Box\Diamond p$.
+
+Odwrotnie, jeśli warunek relacyjny zawodzi,
+wybieramy $y,z$ dostępne z $x$ bez wspólnego
+następnika i przyjmujemy $V(p)=R(y)$.
+W stanie $y$ zachodzi $\Box p$, lecz w $z$
+nie zachodzi $\Diamond p$. Otrzymujemy
+fałszywość implikacji w $x$.
+\end{proof}
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+ \node[draw,circle] (x) at (0,2.4) {$x$};
+ \node[draw,circle] (y) at (-1.6,1.2) {$y$};
+ \node[draw,circle] (z) at (1.6,1.2) {$z$};
+ \node[draw,circle,fill=blue!15] (u) at (0,0) {$u$};
+ \draw[->] (x)--(y);
+ \draw[->] (x)--(z);
+ \draw[->,dashed] (y)--(u);
+ \draw[->,dashed] (z)--(u);
+ \node at (0,-0.65) {wspólny następnik};
+\end{tikzpicture}
+\end{center}
+Strzałki przerywane przedstawiają krawędzie,
+których istnienia wymaga warunek zbieżności.
+W ogólności występujące stany nie muszą
+być parami różne.
+
+\subsection{Fragment Sahlqvista}
+
+\begin{definicja}[Dodatniość i ujemność formuł]
+\label{def:ncl-kripke-polarity}
+Na potrzeby badania znaków wystąpień zmiennych
+traktujemy $\neg,\wedge,\vee,\Box,\Diamond$
+oraz $\bot,\top$ jako spójniki i stałe,
+a implikację rozwijamy jako $\neg B\vee C$.
+Wystąpienie zmiennej jest dodatnie, jeżeli
+znajduje się w zasięgu parzystej liczby
+negacji, i ujemne w przeciwnym przypadku.
+Formułę nazywamy dodatnią, jeśli wszystkie
+jej wystąpienia zmiennych są dodatnie,
+a ujemną, jeśli wszystkie są ujemne.
+Formuły bez zmiennych spełniają oba warunki.
+\end{definicja}
+
+\begin{lemat}[Monotoniczność formuł ze względu na wartościowanie]
+\label{lem:ncl-kripke-polarity-monotonicity}
+Na ustalonej ramie niech $V(p)\subseteq V'(p)$
+dla każdej zmiennej $p$. Dla formuły dodatniej
+$B$ zachodzi
+\[
+ (F,V),w\Vdash B\Longrightarrow(F,V'),w\Vdash B,
+\]
+a dla formuły ujemnej $C$ zachodzi
+\[
+ (F,V'),w\Vdash C\Longrightarrow(F,V),w\Vdash C.
+\]
+\end{lemat}
+\begin{proof}
+Przenosimy negacje do zmiennych, stosując
+prawa de Morgana, podwójną negację oraz
+$\neg\Box D\equiv\Diamond\neg D$ i
+$\neg\Diamond D\equiv\Box\neg D$.
+Te równoważności wynikają z klasycznych
+klauzul semantycznych i definicji możliwości.
+W otrzymanej postaci normalnej dodatniej
+nie ma zanegowanych zmiennych, a w ujemnej
+nie ma niezanegowanych zmiennych.
+Dla atomów $p$ zbiór prawdziwości rośnie
+przy powiększaniu $V$, natomiast dla $\neg p$
+maleje przez odwrócenie inkluzji dopełnień.
+Przecięcie, suma oraz operatory
+$\Box_R,\Diamond_R$ zachowują inkluzje
+zbiorów, co dla operatorów modalnych wynika
+wprost z ich definicji. Indukcja po budowie
+postaci normalnej daje obie tezy.
+\end{proof}
+
+\begin{definicja}[Implikacje i formuły Sahlqvista]
+\label{def:ncl-kripke-sahlqvist}
+Atomem opatrzonym koniecznością nazywamy
+formułę $\Box^k p$, gdzie $k\geq0$.
+Antecedenty Sahlqvista tworzymy z takich
+atomów, formuł ujemnych oraz $\bot,\top$,
+stosując $\wedge,\vee,\Diamond$.
+Implikacja Sahlqvista jest formułą $B\to C$,
+gdzie $B$ jest antecedentem Sahlqvista,
+a $C$ formułą dodatnią.
+
+W dalszym ciągu przez formuły Sahlqvista
+rozumiemy klasę otrzymaną z tych implikacji
+przez skończone koniunkcje i operator $\Box$.
+Jest to wystarczająca dla naszych zastosowań
+wersja fragmentu; szersze standardowe definicje
+dopuszczają także alternatywy odpowiednio
+rozłącznych zmiennych.
+\end{definicja}
+
+\begin{twierdzenie}[Efektywna korespondencja implikacji Sahlqvista]
+\label{thm:ncl-kripke-sahlqvist-implication-correspondence}
+Każda implikacja Sahlqvista ma efektywnie
+wyznaczalny lokalny korespondent pierwszego
+rzędu.
+\end{twierdzenie}
+\begin{proof}
+Niech $B\to C$ będzie taką implikacją.
+Opisujemy skończony algorytm eliminacji
+kwantyfikacji po wartościowaniach.
+
+Najpierw rozpisujemy antecedent $B$ jako
+skończoną alternatywę wyrażeń zbudowanych
+z atomów opatrzonych koniecznością,
+formuł ujemnych i stałych przez
+$\wedge,\Diamond$. Robimy to, traktując
+formuły ujemne jako nierozkładane bloki,
+rozdzielając koniunkcję względem alternatywy
+oraz wykorzystując
+$\Diamond(D\vee E)\equiv\Diamond D\vee\Diamond E$.
+Ostatnia równoważność wynika z klauzuli
+egzystencjalnej dla $\Diamond$.
+Skończoność alternatywy wynika indukcyjnie
+z budowy antecedentu: dla koniunkcji
+tworzymy wszystkie pary składników,
+dla alternatywy łączymy listy, a dla
+$\Diamond$ nakładamy operator na każdy
+składnik. Wystarczy rozpatrzyć każdy
+składnik oddzielnie, ponieważ
+$(D\vee E)\to C$ jest równoważna
+$(D\to C)\wedge(E\to C)$.
+
+Ustalmy jeden składnik. W jego translacji
+standardowej rozwijamy koniunkcje i operatory
+$\Diamond$ poza blokami ujemnymi i atomami
+opatrzonymi koniecznością. Każde wystąpienie
+$\Diamond$ wprowadza świeżą zmienną dla
+następnika oraz atom relacyjny.
+Koniunkcja łączy warunki w tym samym
+stanie. Po przesunięciu tych kwantyfikatorów
+egzystencjalnych na początek (zmienne
+są świeże) otrzymujemy warunek
+\[
+ \exists\vec y\,\bigl(H(x,\vec y)
+                  \wedge Q(x,\vec y,\vec P)
+                  \wedge N(x,\vec y,\vec P)\bigr).
+\]
+Tutaj $H$ jest koniunkcją atomów relacyjnych
+i ewentualnych warunków stałych,
+$Q$ jest koniunkcją warunków postaci
+$\operatorname{ST}_v(\Box^k p)$,
+a $N$ koniunkcją translacji formuł ujemnych.
+Zmienna $v$ jest jedną ze zmiennych
+$x,\vec y$. Puste koniunkcje traktujemy
+jako prawdziwe.
+Ta postać wynika bezpośrednio z rekurencji:
+atom opatrzony koniecznością trafia do $Q$,
+blok ujemny do $N$, stała do $H$,
+a możliwość wprowadza nowego świadka
+i krawędź w $H$.
+
+Dla ustalonego przypisania $x,\vec y$
+każdy warunek $\operatorname{ST}_v(\Box^k p)$
+wymaga, aby $P_p$ zawierał wszystkie stany
+osiągalne z $v$ w dokładnie $k$ krokach
+(por. Lemat~\ref{lem:ncl-kripke-box-paths}).
+Niech $R^k(v,z)$ oznacza pierwszorzędową
+formułę istnienia takiej drogi; dla $k=0$
+jest to $v=z$, a dla $k+1$
+\[
+ R^{k+1}(v,z)=\exists u\,(R(v,u)\wedge R^k(u,z)).
+\]
+Dla każdego $p$ definiujemy predykat
+\[
+ P_p^*(z)=
+ \bigvee_{(v,k):\,\operatorname{ST}_v(\Box^k p)
+                       \text{ występuje w }Q}
+             R^k(v,z).
+\]
+Pusta alternatywa oznacza $z\ne z$.
+Daje to najmniejsze składowo wartościowanie
+spełniające $Q$: każdy wymagany zbiór
+następników musi być zawarty w $P_p$,
+a ich suma wystarcza do spełnienia $Q$.
+
+Dla danego $x,\vec y$ rozważmy warunek
+\[
+ \forall\vec P\,
+ \bigl((Q\wedge N)\to\operatorname{ST}_x(C)\bigr).
+\]
+Jest on równoważny warunkowi
+\[
+ N[\vec P:=\vec P^*]\to
+       \operatorname{ST}_x(C)[\vec P:=\vec P^*].
+\]
+Istotnie, w kierunku konieczności podstawiamy
+najmniejsze wartościowanie, które spełnia $Q$.
+W kierunku wystarczalności, jeśli dowolne
+wartościowanie spełnia $Q\wedge N$, to
+$\vec P^*\subseteq\vec P$ składowo.
+Ujemność bloków $N$ przenosi ich prawdziwość
+na mniejsze wartościowanie, a dodatniość
+$C$ pozwala przenieść uzyskaną prawdziwość
+$C$ z mniejszego wartościowania na większe,
+na mocy
+Lematu~\ref{lem:ncl-kripke-polarity-monotonicity}.
+
+Ostatecznie warunek lokalnej ważności
+dla ustalonego składnika antecedentu
+jest równoważny formule
+\[
+ \forall\vec y\,\left(
+  \bigl(H(x,\vec y)\wedge N[\vec P:=\vec P^*]\bigr)
+  \to \operatorname{ST}_x(C)[\vec P:=\vec P^*]\right).
+\]
+Równoważność wynika z przeniesienia
+kwantyfikatorów egzystencjalnych antecedentu
+na ogólną stronę implikacji, zamiany kolejności
+kwantyfikatorów ogólnych i wykazanej
+eliminacji $\vec P$.
+Podstawienia predykatów wykonujemy po
+zmianie nazw zmiennych związanych,
+tak aby nie związać parametrów $x,\vec y$.
+W otrzymanej formule nie występują symbole
+predykatów zdaniowych. Biorąc koniunkcję
+wyników dla wszystkich składników,
+otrzymujemy korespondent w języku
+relacji $R$ i równości.
+Wszystkie operacje są efektywne i skończone.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Sahlqvista]
+\label{thm:ncl-kripke-sahlqvist}
+Dla formuł Sahlqvista w sensie
+Definicji~\ref{def:ncl-kripke-sahlqvist}
+zachodzą następujące własności:
+\begin{enumerate}
+ \item każda ma efektywnie wyznaczalny
+       lokalny korespondent pierwszego rzędu;
+ \item są kanoniczne: jeżeli niesprzeczna
+       normalna logika $L$ zawiera taką
+       formułę, to jest ona ważna na $F_L$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Pierwszy punkt dla implikacji wynika z
+Twierdzenia~\ref{thm:ncl-kripke-sahlqvist-implication-correspondence}.
+Jeżeli $\theta_A(x)$ i $\theta_B(x)$ są
+lokalnymi korespondentami $A,B$, to
+$\theta_A(x)\wedge\theta_B(x)$ jest
+korespondentem $A\wedge B$: kwantyfikacja
+po wszystkich wartościowaniach rozdziela
+się względem koniunkcji.
+Jeśli $\theta_A(x)$ jest korespondentem $A$,
+to $\forall y\,(Rxy\to\theta_A(y))$ jest
+korespondentem $\Box A$, ponieważ
+kwantyfikacja po wartościowaniach i
+następnikach może zostać zamieniona kolejnością.
+To rozszerza dowód korespondencji
+na całą zdefiniowaną klasę.
+
+Drugi punkt jest klasyczną częścią
+kanoniczności twierdzenia Sahlqvista,
+którą przytaczamy bez dowodu.
+Pełny dowód znajduje się w pracy
+H.~Sahlqvista, \emph{Completeness and
+correspondence in the first and second order
+semantics for modal logic}, w: S.~Kanger (red.),
+Proceedings of the Third Scandinavian Logic
+Symposium, North-Holland, 1975, s.~110--143.
+Zob. również G.~Sambin, V.~Vaccaro,
+\emph{A new proof of Sahlqvist's theorem on
+modal definability and completeness},
+Journal of Symbolic Logic 54 (1989),
+s.~992--999.
+\end{proof}
+
+\begin{wniosek}[Pełność logik aksjomatyzowanych formułami Sahlqvista]
+\label{cor:ncl-kripke-sahlqvist-completeness}
+Jeżeli niesprzeczna normalna logika $L$
+jest najmniejszą normalną logiką zawierającą
+zbiór $\Sigma$ formuł Sahlqvista, to $L$
+jest kanoniczna i silnie pełna lokalnie
+względem klasy ram spełniających wszystkie
+zdania pierwszego rzędu
+\[
+ \{\forall x\,\theta_A(x): A\in\Sigma\},
+\]
+gdzie $\theta_A$ jest lokalnym korespondentem $A$.
+\end{wniosek}
+\begin{proof}
+Drugi punkt
+Twierdzenia~\ref{thm:ncl-kripke-sahlqvist}
+daje ważność każdej formuły z $\Sigma$ na $F_L$.
+Zachowanie ważności przez reguły normalnych
+logik modalnych daje ważność całej $L$.
+Wobec tego $L$ jest kanoniczna.
+Na dowolnej ramie ważność wszystkich formuł
+$\Sigma$ jest równoważna ważności całej $L$
+z tego samego powodu. Pierwszy punkt twierdzenia
+Sahlqvista identyfikuje więc wskazaną klasę ram
+z $\operatorname{Fr}(L)$.
+Stosujemy
+Twierdzenie~\ref{thm:ncl-kripke-canonical-strong-local}.
+\end{proof}
+
+\begin{uwaga}[Zakres twierdzenia]
+\label{rem:ncl-kripke-sahlqvist-scope}
+Aksjomaty D, T, B, 4 i 5 zapisane w
+Definicji~\ref{def:ncl-modal-axiom-schemes}
+są implikacjami Sahlqvista (dla 5 antecedent
+to $\Diamond p$). Również aksjomat zbieżności
+z Twierdzenia~\ref{thm:ncl-kripke-confluence-correspondence}
+należy do tej klasy: jego antecedent to
+$\Diamond\Box p$, a konsekwent jest dodatni.
+Otrzymujemy pełność logiki K rozszerzonej
+o ten aksjomat względem ram zbieżnych
+bez osobnego badania jej ramy kanonicznej.
+Sama korespondencja pierwszego rzędu
+nie wystarcza jednak do pełności:
+formuła $\alpha(p)$ z
+Definicji~\ref{def:ncl-kripke-vb-logic}
+ma globalny korespondent pierwszego rzędu
+$\forall x\,((\forall y\,(Rxy\to
+\exists z\,Ryz))\to\forall y\,\neg Rxy)$,
+lecz generowana przez nią logika jest
+niepełna. Wynika to z
+Lematu~\ref{lem:ncl-kripke-vb-frame-consequence}
+i Twierdzenia~\ref{thm:ncl-kripke-vb-incompleteness}.
+\end{uwaga}
