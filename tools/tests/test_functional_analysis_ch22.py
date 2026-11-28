@@ -157,13 +157,32 @@ class Chapter22(unittest.TestCase):
             r"\ref{thm:smoothing21}",
             r"\rho(z)(\mathcal F\psi)(y+z)",
             r"c_d\|\rho\|_1\|\psi\|_1",
-            r"C,m,L$",
-            r"\partial_x^\gamma((-ix)^\beta)",
-            r"p_q(J_R-\chi\mathcal F\varphi)",
-            r"\langle T,\chi\mathcal F\varphi\rangle",
             r"\mathcal FT=T_{F_T}",
         ):
             self.assertIn(fragment, s)
+        # DT-16 now delegates the compact Fourier proof to DT-10.
+        # Check the replacement proof, not obsolete cutoff notation.
+        if r"\ref{thm:dt-tempered-compact-convolution}" in s:
+            proof = s.split(r"\label{thm:dt-tempered-compact-convolution}", 1)[1]
+            proof = proof.split(r"\end{proof}", 1)[0]
+            for fragment in (
+                r"|U(g)|\le C p_{K,m}(g)",
+                r"\partial^\alpha a(\xi)",
+                r"|\partial^\alpha a(\xi)|\le C_\alpha(1+|\xi|)^m",
+                r"p_{L,k}(I_R-\mathcal F\varphi)",
+                r"U(I_R)=\int_{[-R,R]^d}a(\xi)\varphi(\xi)",
+                r"\langle U,\mathcal F\varphi\rangle",
+                r"\mathcal FU=T_a",
+            ):
+                self.assertIn(fragment, proof)
+        else:
+            for fragment in (
+                r"C,m,L$",
+                r"\partial_x^\gamma((-ix)^\beta)",
+                r"p_q(J_R-\chi\mathcal F\varphi)",
+                r"\langle T,\chi\mathcal F\varphi\rangle",
+            ):
+                self.assertIn(fragment, s)
         # Gaussian smoothing of point jets: exp(-x^2/2) times
         # polynomial. Derivatives in the distribution variable
         # have the opposite sign to derivatives in x.
