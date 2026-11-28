@@ -117,3 +117,13 @@ Plan przyjęto po porównaniu zależności wszystkich 19 aktywnych jednostek. Do
 58. Zaawansowana zbieżność szeregów Fouriera: M. Riesz i Carleson–Hunt
 
 Mapa: `catalog/distribution_theory_structure_plan.json`. Przypisano wszystkie 288 dotychczasowe etykiety do planowanych rozdziałów. Utworzono 13 rzeczywistych plików kandydackich obejmujących 117 zachowanych etykiet. Kandydaci są poza aktywnym katalogiem; bez pustych rozdziałów i bez zmiany kanonicznej numeracji. Sprawdzono bilans etykiet, środowiska LaTeX i jawne zwykłe odsyłacze kandydatów (zero odsyłaczy do późniejszego planowanego rozdziału). Nie jest to jeszcze audyt dowodów ani kompilacja. Rozdziały 7 i 16 wymagają w szczególności uzupełnienia. Następnie przygotować pozostałe kopie, sprawdzić odsyłacze po podziale i pełny master, przenieść testy i aliasy atomowo. CI poprzedniego aktywnego skryptu: 46139581019 PASS.
+
+## Kompletna redystrybucja — kandydat do kompilacji
+
+Wszystkie 288 etykiet istniejącego DT rozmieszczono w 30 rozdziałach kandydackich; 28 planowanych rozdziałów nie ma jeszcze źródeł. Master `shared/pl/distribution_theory/restructure/master.tex` zachowuje numery docelowe i nie tworzy pustych jednostek. Uruchomienie z `books/pl` po kompilacji AF:
+
+```sh
+latexmk -pdf -interaction=nonstopmode -halt-on-error -jobname=distribution_theory_restructured ../../shared/pl/distribution_theory/restructure/master.tex
+```
+
+Dodano test `python3 tools/tests/test_distribution_theory_restructure.py`, sprawdzający rzeczywiste pliki, zgodność etykiet i właścicieli, kolejność zwykłych odsyłaczy oraz master. Test i kompilacja wymagają uruchomienia. Następnie należy skorygować pozostałe opisowe odwołania do historycznej numeracji, sprawdzić zależności niewyrażone przez ref i przygotować atomowe przełączenie aliasów DT/FA. Nie zmieniano aktywnego katalogu ani istniejących workflow.
