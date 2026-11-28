@@ -421,6 +421,33 @@ with sync_playwright() as pw:
         assert check['steps'] == 8 and check['active'] == 4, check
         host.locator('button').click()
         assert iframe.count() == 0
+    # AM II 29: two parametrizations of the same helix.
+    source = (ROOT.parent / 'chapters/pl/mathematical_analysis_ii/29-krzywe-dlugosc-i-prostowalnosc.tex').read_text(encoding='utf-8')
+    page.evaluate("latex => renderSimplified(latex, 'AM2-29')", source)
+    host = box.locator('.atlas-plot-host')
+    assert host.count() == 1
+    host.locator('button').click()
+    iframe = host.locator('iframe')
+    assert iframe.get_attribute('sandbox') == 'allow-scripts'
+    assert iframe.get_attribute('src').endswith('am2_29_arclength.html')
+    plot = host.frame_locator('iframe').locator('#plot[data-ready=true]')
+    plot.wait_for(timeout=60000)
+    check = plot.evaluate("""el => {
+        let error=0;
+        const d=el.data,s=el.layout.sliders[0];
+        for(let i=0;i<21;i++){
+            const t=i/20;
+            for(let k=0;k<2;k++){
+                const q=k?t*t:t, m=d[3+4*i+2*k];
+                error=Math.max(error,Math.abs(m.x[0]-Math.cos(2*Math.PI*q)),
+                    Math.abs(m.y[0]-Math.sin(2*Math.PI*q)),Math.abs(m.z[0]-2*q));
+            }
+        }
+        return {error,steps:s.steps.length,active:s.active};
+    }""")
+    assert check['error'] < 1e-12 and check['steps'] == 21 and check['active'] == 10, check
+    host.locator('button').click()
+    assert iframe.count() == 0
     # Real graph chapters: every figure must decode, not merely insert a placeholder.
     for module, filename, expected in (
         ('GW-01', '01-podstawy-teorii-grafow.tex', 7),

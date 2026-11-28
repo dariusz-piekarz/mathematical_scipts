@@ -607,6 +607,49 @@ połowę, a drugi jedną czwartą długości łuku.}
 \label{ma2:fig:curve-arclength-variable-speed}
 \end{figure}
 
+
+\paragraph{Wizualizacja interaktywna.}
+Suwak $t$ porównuje przebyte fragmenty
+helisy w przykładzie
+\ref{ma2:ex:curve-arclength-variable-speed}.
+W obu panelach szara linia oznacza cały
+obraz, kolorowa --- przebyty łuk.
+\begin{lstlisting}[language=Python]
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+ell=np.hypot(2*np.pi,2)
+fig=make_subplots(rows=1,cols=2,
+    specs=[[{"type":"scene"}]*2],
+    subplot_titles=["H(t)","H(t^2)"])
+def curve(q,color,visible=True):
+    return go.Scatter3d(x=np.cos(2*np.pi*q),
+        y=np.sin(2*np.pi*q),z=2*q,mode="lines",
+        line=dict(color=color,width=5),
+        visible=visible,showlegend=False)
+for col in (1,2):
+    fig.add_trace(curve(np.linspace(0,1,201),
+        "#a4adb8"),1,col)
+ts=np.linspace(0,1,21)
+for j,t in enumerate(ts):
+    for col,s,color in [(1,t,"#397db5"),
+                         (2,t*t,"#d97706")]:
+        fig.add_trace(curve(np.linspace(0,s,101),
+            color,j==10),1,col)
+steps=[dict(label=f"{t:.2f}",method="update",
+    args=[dict(visible=[True,True]+
+          [j==i for j in range(len(ts)) for _ in range(2)]),
+          dict(title=f"s1={ell*t:.3f}, s2={ell*t*t:.3f}")])
+       for i,t in enumerate(ts)]
+fig.update_scenes(aspectmode="cube",
+    xaxis_range=[-1.1,1.1],yaxis_range=[-1.1,1.1],
+    zaxis_range=[0,2.1])
+fig.update_layout(sliders=[dict(active=10,steps=steps)],
+    title=f"s1={ell/2:.3f}, s2={ell/4:.3f}")
+fig.write_html("am2_29_arclength.html", include_plotlyjs=True)
+\end{lstlisting}
+
 \section{Długość drogi i miara Hausdorffa obrazu}
 
 Stosujemy normalizację $\mathcal H^1$ z

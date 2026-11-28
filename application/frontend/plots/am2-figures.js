@@ -234,6 +234,21 @@
       const steps=hs.map((h,i)=>({label:h.toFixed(2),method:"update",args:[{visible:[true,...hs.flatMap((_,j)=>[i===j,i===j])]},{"title.text":title(h)}]}));
       return base(data,title(.25),{scene:{...scene(),aspectmode:"cube",...Object.fromEntries(["x","y","z"].map(k=>[k+"axis",{...axis(k),range:[-1.7,1.7]}]))},margin:{l:0,r:0,b:70,t:55},sliders:[{active:4,currentvalue:{prefix:"h = "},steps}]});
     },
+    "am2_29_arclength.html":()=>{
+      const q=lin(0,1,201),ell=Math.hypot(2*Math.PI,2),ts=lin(0,1,21);
+      const H=s=>[Math.cos(2*Math.PI*s),Math.sin(2*Math.PI*s),2*s];
+      const curve=(s,name,color,sc,visible)=>{const p=s.map(H);return {...line(p.map(v=>v[0]),p.map(v=>v[1]),p.map(v=>v[2]),name,color),scene:sc,visible,showlegend:false};};
+      const data=[curve(q,"Helisa","#a4adb8","scene",true),curve(q,"Helisa","#a4adb8","scene2",true)];
+      const marker=(s,sc,color,visible)=>{const p=H(s);return {type:"scatter3d",mode:"markers",scene:sc,x:[p[0]],y:[p[1]],z:[p[2]],marker:{size:6,color},visible,showlegend:false};};
+      ts.forEach((t,i)=>{
+        const visible=i===10;
+        data.push(curve(lin(0,t,101),"Droga","#397db5","scene",visible),marker(t,"scene","#397db5",visible),curve(lin(0,t*t,101),"Droga","#d97706","scene2",visible),marker(t*t,"scene2","#d97706",visible));
+      });
+      const title=t=>"t = "+t.toFixed(2)+" | s₁ = "+(ell*t).toFixed(3)+" | s₂ = "+(ell*t*t).toFixed(3);
+      const steps=ts.map((t,i)=>({label:t.toFixed(2),method:"update",args:[{visible:[true,true,...ts.flatMap((_,j)=>Array(4).fill(i===j))]},{"title.text":title(t)}]}));
+      const sc=k=>({...scene(),domain:{x:[k/2,(k+1)/2],y:[0,1]},aspectmode:"cube",xaxis:{...axis("x"),range:[-1.1,1.1]},yaxis:{...axis("y"),range:[-1.1,1.1]},zaxis:{...axis("z"),range:[0,2.1]}});
+      return base(data,title(.5),{scene:sc(0),scene2:sc(1),margin:{l:0,r:0,b:70,t:80},annotations:[{xref:"paper",yref:"paper",x:.25,y:1.04,text:"γ₁(t) = H(t)",showarrow:false},{xref:"paper",yref:"paper",x:.75,y:1.04,text:"γ₂(t) = H(t²)",showarrow:false}],sliders:[{active:10,currentvalue:{prefix:"t = "},steps}]});
+    },
     "am2_36_geometric.html":()=>{
       const r=lin(0,.97,61),t=lin(0,2*Math.PI,121),X=t.map(a=>r.map(v=>v*Math.cos(a))),Y=t.map(a=>r.map(v=>v*Math.sin(a)));
       const norm=(a,v,n)=>n===null?1/Math.hypot(1-v*Math.cos(a),v*Math.sin(a)):Math.hypot(1-v**(n+1)*Math.cos((n+1)*a),v**(n+1)*Math.sin((n+1)*a))/Math.hypot(1-v*Math.cos(a),v*Math.sin(a));
