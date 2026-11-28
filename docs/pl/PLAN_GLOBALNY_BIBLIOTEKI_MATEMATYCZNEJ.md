@@ -1,6 +1,6 @@
 # PLAN GLOBALNY BIBLIOTEKI MATEMATYCZNEJ
 
-**Wersja 1.3 — 28.11.2026.** Nadrzędny dokument roboczy. Migawka katalogu: [8e104a7](https://github.com/dariusz-piekarz/mathematical_scipts/commit/8e104a732fb4293b1f23f06774f01f8d6e17d96c). Gałąź robocza: biblioteka-matematyczna-iteracja-6. **22 aktywne skrypty, 607 rozdziałów.** Pełny indeks ścieżek, blobów i kandydatów na raporty: [catalog/global_library_inventory.json](../../catalog/global_library_inventory.json).
+**Wersja 1.4 — 28.11.2026.** Nadrzędny dokument roboczy. Migawka katalogu: [8e104a7](https://github.com/dariusz-piekarz/mathematical_scipts/commit/8e104a732fb4293b1f23f06774f01f8d6e17d96c). Gałąź robocza: biblioteka-matematyczna-iteracja-6. **22 aktywne skrypty, 607 rozdziałów.** Pełny indeks ścieżek, blobów i kandydatów na raporty: [catalog/global_library_inventory.json](../../catalog/global_library_inventory.json).
 
 To plan żywy, nie certyfikat ukończenia całej biblioteki. Inwentaryzacja obejmuje katalog i nazwy wszystkich aktywnych rozdziałów oraz wybrane raporty i plany. Nie przeczytano ponownie wszystkich dowodów ani wszystkich raportów; propozycje uzupełnień są zadaniami sprawdzenia pokrycia, a nie stwierdzeniem braku. Statusy historyczne dotyczą wersji wskazanych w raportach. Brak raportu w standardowym katalogu nie oznacza braku przeprowadzonego audytu.
 
@@ -28,7 +28,8 @@ To plan żywy, nie certyfikat ukończenia całej biblioteki. Inwentaryzacja obej
 | P2 | Liczby p-adyczne i analiza niearchimedesowa, analiza niestandardowa | AA, TL, ME, AF, MOD i LTM |
 | P2 | Rozdzielenie DG na geometrię i topologię różniczkową; następnie osobne specjalizacje wymiaru 4 | mapa etykiet, audyt pokrycia DG/AT/GT/RRC |
 | P2 | Algebra przemienna i nieprzemienna; geometria różniczkowa orbifoldów (szczególnie ważna dla użytkownika) | po inwentaryzacji AA/ALG/CAT/DG/GT; ustalić kolejność zależności |
-| P3 | GAZ I–II, geometria nieprzemienna i pogłębione tomy czterowymiarowe | po odpowiednich podstawach; dokładna kolejność do ustalenia |
+| P2 | GLR, GM, podstawy GSK i gładkiej teorii osobliwości | po właściwych podstawach AA/LA/TO/ME/DG/TD; audyt materiału do migracji |
+| P3 | TG3, zaawansowana GSK i OS, GAZ I–II, GNP, DG4/TD4 | po odpowiednich podstawach, z osobnymi modułami bez cykli zależności |
 
 P0 w wątku AM ma ścisłą kolejność AM II → AM I → RTPC. FSG i inne rozpoczęte wątki mogą być prowadzone osobno pod warunkiem bezpiecznej koordynacji i braku utraty zależności. Nie włączać automatyzacji tym planem.
 
@@ -37,7 +38,7 @@ P0 w wątku AM ma ścisłą kolejność AM II → AM I → RTPC. FSG i inne rozp
 ### AA — Algebra abstrakcyjna (72)
 
 - **Rdzeń:** Grupy, pierścienie, ciała, moduły, Galois, algebra przemienna, reprezentacje i algebry Liego.
-- **Plan / granice:** 01–42 podstawy; 43–50 algebra różniczkowa i Galois; 51–72 niezmienniki, korzenie i reprezentacje. Zachować obecne wyniki; wydzielenie teorii Liego/ reprezentacji rozważyć dopiero przy rozbudowie. Kontrola integracji GA/BT i odsyłaczy. Uzupełnić algebry Hopfa oraz reprezentacje grup skończonych, o ile brak po audycie.
+- **Plan / granice:** 01–42 podstawy; 43–50 algebra różniczkowa i Galois; 51–72 niezmienniki, korzenie i reprezentacje. Zachować obecne wyniki; wydzielenie teorii Liego i reprezentacji do GLR zatwierdzone; AA56–72 podlega audytowi migracyjnemu, nie usuwać przed odbiorem. Kontrola integracji GA/BT i odsyłaczy. Uzupełnić algebry Hopfa oraz reprezentacje grup skończonych, o ile brak po audycie.
 - **Audyt:** Raport globalny AA01–42 istnieje; 43–72 i migracja GA/BT: ustalić bramki per rozdział. [Dokument](../../audits/abstract_algebra/00-globalny-audyt-koncowy-AA01-AA42-2026-11-23.md).
 - [Aktywny katalog rozdziałów](../../books/pl/abstract_algebra.tex).
 
@@ -202,7 +203,7 @@ P0 w wątku AM ma ścisłą kolejność AM II → AM I → RTPC. FSG i inne rozp
 | M08 | AT23–28, ALG04/09/10, CAT29–30/39+ | CAT/ALG/GAZ/AT | formalizm snopowy w CAT; geometria algebraiczna w ALG, zespolona w GAZ, topologiczne zastosowania w AT |
 | M09 | GT18–34 vs DG17–20 i AT | GT tom II / DG / AT | propozycja rozdzielenia grafów i węzłów; Seiberg–Witten i plumbing: zachować zastosowania, podstawy analityczne RRC/DG |
 | M10 | GA/BT wycofane skrypty | AA | sprawdzić wszystkie etykiety, semantykę i regresje; nie tworzyć ponownie bez uzasadnienia |
-| M11 | LA22–28, AA51–72 | LA/AA | potencjalne wydzielenie sterowania i teorii Liego/reprezentacji tylko po analizie rozmiaru i pokrycia; obecnie nie migrować |
+| M11 | LA22–28, AA51–72 | LA/AA/GLR | sterowanie nadal propozycja; teoria Liego i reprezentacji zatwierdzona, rozwinięta w M22 |
 | M12 | DG, ME31, AM II | DG/FSG/ME | dżety i geometria: właściciel geometryczny, ME zachowuje zastosowania miarowe |
 | M13 | DG01–20, AT09/11/17–21/30 | DG/TD | zatwierdzone rozdzielenie; DG01–04/10–16 jako kandydaci geometryczni, DG15–20 jako kandydaci topologiczni; rozdzielić na poziomie sekcji, unikać podwójnych etykiet |
 | M14 | GT22–34, DG/AT, RRC | DG4/TD4 | odrębne opracowania geometrii i topologii czterowymiarowej; zachować GT jako źródło teorii węzłów i splotów |
@@ -212,7 +213,12 @@ P0 w wątku AM ma ścisłą kolejność AM II → AM I → RTPC. FSG i inne rozp
 | M18 | AA09–18, 37–40; ALG00/04 | AP | algebra przemienna: porównać pełne tezy i dowody, wydzielić materiał zaawansowany; AA zachowuje kurs podstawowy, ALG zastosowania geometryczne |
 | M19 | AA15–18/41–42/53–72, CAT22–25/44 | ANP | algebra nieprzemienna: moduły, pierścienie, reprezentacje, Morita; nie przenosić automatycznie całej teorii Liego ani kategorii pochodnych |
 | M20 | AF31–33, CAT44, DG/AT, ANP | GNP | geometria nieprzemienna: AF właściciel ogólnej teorii operatorów, CAT formalizmu kategorialnego, GNP właściwych konstrukcji geometrycznych |
-| M21 | GT24, DG, CAT38, ALG (plan stosów), AT | ORB | geometria orbifoldów; zachować zastosowania Seiferta w GT, formalizm stosów w CAT i algebraiczne stosy w ALG; audyt pełnych tez przed migracją |
+| M21 | GT24, DG, CAT38, ALG (plan stosów), AT | ORB | geometria orbifoldów; zachować zastosowania Seiferta w GT/TG3, formalizm stosów w CAT i algebraiczne stosy w ALG; audyt pełnych tez przed migracją |
+| M22 | AA56–72, AA41–42/51–55, DG/TO/ME/DT | GLR | teoria Liego i reprezentacji; audyt i selektywna migracja, podstawy AA i miara Haara ME pozostają |
+| M23 | DG, AT18/20, LA, RZUD, RRC/FSG | GSK | symplektyka i kontakt, zachować ogólne narzędzia w skryptach źródłowych |
+| M24 | TO10–13, AM II 29/33, DG11–14, ME24–29 | GM | geometria metryczna i metryczno-miarowa, nie przenosić podstawowej teorii miary i topologii |
+| M25 | GT18/20/21/24 i części GT22–34, AT, DG/TD | TG3 | trójrozmaitości, Seifert, JSJ, Dehn i geometrie; teoria węzłów GT, wymiar 4 DG4/TD4 |
+| M26 | DG15–16/18, ME31, AM II20, ALG03/05/06, AA51–55, AT24–27, GT23–24 | OS | osobliwości gładkie, analityczne i algebraiczne; rozliczyć dowody z AP/ALG/GAZ i AT |
 
 ## 5. Nowe skrypty i ich program
 
@@ -336,7 +342,7 @@ Zatwierdzony kierunek: osobne skrypty geometrii i topologii różniczkowej, z po
 - Geometria arytmetyczna: schematy nad Z, krzywe eliptyczne i odmiany abelowe, redukcja, punkty wymierne, wprowadzenie do kohomologii étale; zaawansowane twierdzenia po TL/PA.
 - Porównanie z GAZ (analityfikacja, GAGA), AT (kohomologia, Hodge), DG4/TD4 (powierzchnie zespolone i czterorozmaitości). Uzupełnienia dopiero po inwentaryzacji planu lokalnego i pełnych tez ALG00–10.
 
-**Pozostałe wcześniejsze propozycje (niezatwierdzone automatycznie):** wydzielenie teorii Liego i reprezentacji z AA51–72, analiza numeryczna i optymalizacja/sterowanie, teoria informacji i uczenie statystyczne po RP4, zbiór zadań do RP I–IV z podpowiedziami. Nie tworzyć pustych wpisów katalogu.
+**Pozostałe wcześniejsze propozycje (niezatwierdzone automatycznie):** analiza numeryczna i optymalizacja/sterowanie, teoria informacji i uczenie statystyczne po RP4, zbiór zadań do RP I–IV z podpowiedziami. Nie tworzyć pustych wpisów katalogu.
 
 
 ### 5.5. Dodatkowe zatwierdzone kierunki: algebra i geometria (28.11.2026)
@@ -394,18 +400,98 @@ Proponowany samodzielny skrypt, nie tylko rozdział DG. Teorię budować od pods
 
 Źródła do pierwszego audytu pokrycia: GT24 (sekcja o orbicharakterystyce Eulera i geometrii, etykieta sec:tg-seifert-orbifold), CAT38 (zstępowanie, torsory, stosy ilorazowe), DG01/10–16, AT (nakrycia, kohomologia, klasy charakterystyczne), GK (plan), AA (działania grup), ALG (plan stosów Deligne'a–Mumforda i osobliwości), AF/RRC (analiza eliptyczna). Nie utożsamiać gładkich orbifoldów z dowolnymi stosami Deligne'a–Mumforda; porównać odpowiednie kategorie i hipotezy. ORB powinien otrzymać szczegółowe audyty definicji, niezależności od atlasu, normalizacji całek oraz przypadków osobliwych.
 
-### 5.6. Dodatkowe propozycje do decyzji użytkownika
+### 5.6. Pięć kolejnych zatwierdzonych kierunków (28.11.2026)
 
-Poniższe kierunki nie są jeszcze zatwierdzonymi nowymi skryptami. Najpierw ocenić pokrycie obecnych i zaplanowanych książek.
+Użytkownik zatwierdził geometrię symplektyczną i kontaktową, grupy Liego i teorię reprezentacji, geometrię metryczną, topologię geometryczną wymiaru 3 oraz teorię osobliwości. Docelowo pięć odrębnych skryptów (robocze identyfikatory GSK, GLR, GM, TG3, OS). Program i kolejność poniżej są ustaleniem organizacyjnym; nie stanowią deklaracji implementacji. Przed migracją sprawdzić pełne źródła i raporty, nie jedynie tytuły.
 
-- **Geometria symplektyczna i kontaktowa:** formy symplektyczne, Darboux, Moser, redukcja, odwzorowania momentu, geometria lagranżowska, krzywe pseudoholomorficzne, homologia Floera. Początkowo DG; po rozroście samodzielny tom. Ważny most do TD4, ORB i RZUD.
-- **Grupy Liego i teoria reprezentacji:** grupy Liego, algebry Liego, reprezentacje, działania, przestrzenie jednorodne, reprezentacje grup zwartych, Peter–Weyl, reprezentacje unitarne i metody harmoniczne. AA51–72, DG, GK, DT jako źródła; bez automatycznej migracji.
+#### GLR — Grupy Liego i teoria reprezentacji
+
+**Właściciel:** teoria grup Liego, algebr Liego w powiązaniu z grupami, ich reprezentacji skończenie wymiarowych i podstaw reprezentacji unitarnych. AA zachowuje podstawy grup, działań i reprezentacji grup skończonych; ANP ogólną teorię modułów i algebr, DG konstrukcje geometryczne, AF ogólną teorię operatorów.
+
+1. Grupy topologiczne i gładkie grupy Liego, przykłady macierzowe, podgrupy domknięte, homomorfizmy, przestrzenie jednorodne, działania, stabilizatory.
+2. Algebry Liego, odwzorowanie wykładnicze, wzór Bakera–Campbella–Hausdorffa, relacja grupy i algebry, twierdzenia Liego, grupy jednospójne.
+3. Algebry rozwiązalne, nilpotentne, półproste i reduktywne, forma Killinga, rozkład Leviego, podalgebry Cartana, korzenie i grupy Weyla, klasyfikacja, prezentacje Serre'a.
+4. Reprezentacje, algebry obwiednie, twierdzenie Poincarégo–Birkhoffa–Witta, reprezentacje sl2, najwyższe wagi, moduły Verma, operatory Casimira, charaktery, wzory Weyla i Kostanta.
+5. Grupy zwarte, torusy maksymalne, całkowanie Haara, reprezentacje unitarne, twierdzenie Petera–Weyla, formuła całkowania Weyla, teoria charakterów.
+6. Grupy rzeczywiste reduktywne, rozkłady Cartana i Iwasawy, reprezentacje indukowane, podstawy analizy harmonicznej na grupach; dalsza teoria (Harish-Chandra, Plancherel) etapowo po AF/DT.
+7. Powiązania z grupami algebraicznymi (ALG), geometrią jednorodną (GK/DG), symplektyczną (GSK), orbifoldami (ORB) i teorią liczb. Korespondencja McKaya i niezmienniki jako połączenia, nie automatyczna migracja całych rozdziałów.
+
+**Migracja M22:** AA56–72 jako główne istniejące źródło teorii Liego, AA41–42/51–55 jako materiał do porównania; TO24, DG02, ME23, DT57, LA29–32 jako źródła zależności i zastosowań. Nie wycofywać AA56–72 przed sprawdzeniem kompletności nowego celu. Miara Haara pozostaje w ME; ogólna analiza harmoniczna na grupach w DT, analiza reprezentacji w GLR.
+
+**Zależności:** AA, LA, TO, AM II, DG (podstawy rozmaitości); w dalszych częściach ME, AF, DT. Podstawowa geometria rozmaitości nie może zależeć od zaawansowanego GLR.
+
+#### GSK — Geometria symplektyczna i kontaktowa
+
+**Właściciel:** geometria symplektyczna i kontaktowa, ich niezmienniki oraz metody geometryczno-analityczne. DG pozostawia wprowadzenie do form i wiązek, RZUD klasyczną dynamikę Hamiltona, ORB rozszerzenie na orbifoldy, DG4/TD4 zastosowania czterowymiarowe.
+
+1. Liniowa algebra symplektyczna, rozmaitości symplektyczne, przykłady z wiązek kostycznych, podrozmaitości izotropowe, koizotropowe i lagranżowskie.
+2. Twierdzenia Darboux, Mosera, o otoczeniu lagranżowskim; grupy symplektomorfizmów, izotopie i strumień, pola Hamiltona, nawias Poissona w zakresie symplektycznym.
+3. Działania grup Liego, odwzorowania momentu, redukcja Marsdena–Weinsteina i redukcja osobliwa; geometria torusowa i twierdzenie Delzanta.
+4. Struktury prawie zespolone zgodne z formą symplektyczną, krzywe pseudoholomorficzne, regularność i zwartość Gromova; twierdzenie o nieściskaniu, pojemności symplektyczne.
+5. Geometria kontaktowa: rozkłady kontaktowe, pole Reeba, rozmaitości Legendrego, twierdzenie Darboux, symplektyzacja, wypełnienia, otwarte księgi i odpowiednie twierdzenia klasyfikacyjne.
+6. Homologia Floera (Hamiltonowska i lagranżowska), hipotezy zwartości i transwersalności, niezmienniki Gromova–Wittena w odpowiednim zakresie; powiązania z teorią Morse'a, kategorią Fukayi i topologią wymiaru 4.
+7. Przykłady: przestrzenie rzutowe, tory, orbifoldy symplektyczne, rozmaitości torusowe, powierzchnie symplektyczne w wymiarze 4. Ogólna geometria Poissona i kwantowanie pozostają propozycją rozszerzenia, nie zatwierdzonym osobnym skryptem.
+
+**Migracja M23:** DG (formy, pola i przepływy), AT18/20 (Morse, trajektorie), LA (formy alternujące), RRC/FSG (narzędzia analityczne), planowane DG4/TD4/ORB; ustalić rzeczywiste pokrycie. RZUD pozostawia równania Hamiltona i dynamikę, GSK pełną teorię geometryczną. Nie przenosić ogólnych dowodów Stokesa, analizy eliptycznej ani homologii Morse'a.
+
+**Zależności:** LA, AM II, DG podstawowe, AT, GLR podstawowe, RZUD podstawowe. Zaawansowane części: AF, RRC, FSG, CAT. ORB może korzystać z podstaw GSK, GSK z podstaw ORB przy redukcji osobliwej; zaplanować osobne moduły podstawowe bez cyklu.
+
+#### GM — Geometria metryczna
+
+**Właściciel:** geometria przestrzeni metrycznych, geodezyjnych i syntetycznych, z częścią metryczno-miarową. TO pozostaje właścicielem topologii metrycznej, ME ogólnej teorii miar i geometrycznej teorii miary, DG krzywizny gładkiej.
+
+1. Przestrzenie długości, długość krzywych, metryka wewnętrzna, geodezyjne, zupełność, właściwość, metryczne twierdzenie Hopfa–Rinowa przy odpowiednich hipotezach.
+2. Odwzorowania Lipschitza i bi-Lipschitza, przestrzenie ilorazowe, produkty, stożki metryczne, przykłady z orbifoldów.
+3. Odległość Hausdorffa i Gromova–Hausdorffa, wersje ze wskazanym punktem, twierdzenia o zwartości, granice przestrzeni, przestrzenie styczne.
+4. Przestrzenie CAT(k), trójkąty porównawcze, nierówności i twierdzenie Cartana–Hadamarda; przestrzenie Aleksandrowa z krzywizną ograniczoną od dołu; rozróżniać oba rodzaje ograniczeń krzywizny.
+5. Geometria hiperboliczna w sensie Gromova, brzeg w nieskończoności, quasi-izometrie, związki z grupami i TG3.
+6. Przestrzenie metryczno-miarowe, miara Hausdorffa, prostowalność, warunki podwajania i nierówności Poincarégo, funkcje Sobolewa na przestrzeniach metrycznych. ME zachowuje dowody ogólnych twierdzeń o miarach.
+7. Transport optymalny: problem Monge'a–Kantorowicza, dualność, metryki Wassersteina, geodezyjne; syntetyczne warunki krzywizny Ricciego CD/RCD jako dalsza część z pełnymi hipotezami.
+8. Zastosowania do granic rozmaitości, orbifoldów, przestrzeni osobliwych i geometrii grup.
+
+**Migracja M24:** TO10–13 (metryzacja i zupełność), AM II 29/33 (długość i pole), DG11–14 (metryki, geodezyjne i krzywizna), ME24–29 (Hausdorff, prostowalność, pole i koobszar) jako punkty odniesienia; przejąć tylko materiał właściwy geometrii metrycznej. Miary, twierdzenia o pokryciach i ogólny wzór na pole pozostają ME.
+
+**Zależności:** TO, AM I/II, ME, GK, DG podstawowe; transport wymaga ME/RP1/AF, RCD i analiza metryczno-miarowa także RRC/DT. ORB korzysta z GM przy porównaniach i granicach, nie przy samej definicji orbifoldu.
+
+#### TG3 — Topologia geometryczna wymiaru 3
+
+**Właściciel:** globalna topologia i geometria trójrozmaitości. GT zachowuje ogólną teorię grafów, węzłów i splotów; TD ogólną topologię różniczkową, TD4 chirurgię i niezmienniki czterowymiarowe, GK modele geometrii.
+
+1. Trójrozmaitości, triangulacje, rozkłady Heegaarda, uchwyty, powierzchnie w trójrozmaitościach i ściskanie.
+2. Rozkłady na składniki pierwsze, twierdzenia Knesera–Milnora, twierdzenie o sferze, lemat Dehna i twierdzenie o pętli (z precyzyjnymi hipotezami).
+3. Zewnętrza węzłów i splotów, chirurgia Dehna, nachylenia, przestrzenie soczewkowe i przykłady.
+4. Rozmaitości Seiferta, orbifoldowa baza, niezmienniki, grupy podstawowe i geometria; ORB właściciel ogólnej teorii orbifoldów.
+5. Powierzchnie nieściśliwe, rozmaitości Hakena, rozkład JSJ, grupy trójrozmaitości.
+6. Osiem geometrii Thurstona i kryteria ich występowania; struktury hiperboliczne, końce, cuspy, twierdzenie Mostowa–Prasada, hiperboliczne wypełnianie Dehna.
+7. Przepływ Ricciego, chirurgia, hipoteza Poincarégo i twierdzenie o geometryzacji; opracowanie warstwowe, z jasnym rozróżnieniem pełnych dowodów, twierdzeń przytoczonych i technicznych zależności od DG/RRC.
+8. Powiązania z topologią kontaktową, foliacjami, niezmiennikami Floera i granicami czterorozmaitości; nie przenosić teorii Seiberga–Wittena w wymiarze 4 do TG3.
+
+**Migracja M25:** GT18/20/21/24 jako istotne źródła (węzły, chirurgia Dehna, JSJ, Seifert), wybrane trójwymiarowe części GT22–34, AT i DG/TD. GT23–34 rozliczać również z DG4/TD4, ale nie kopiować całych rozdziałów do kilku skryptów. Pełne twierdzenia o węzłach i splotach zachować w GT, a TG3 opracowuje ich zastosowania do rozmaitości. Decyzja o osobnym skrypcie teorii węzłów z M09 nadal wymaga potwierdzenia.
+
+**Zależności:** TO, AT, TD, DG, GK, GT, podstawy ORB; GM dla geometrii hiperbolicznej i grup, RRC/DG dla przepływu Ricciego, GSK dla części kontaktowej.
+
+#### OS — Teoria osobliwości
+
+**Właściciel:** wspólna teoria osobliwości odwzorowań i przestrzeni, klasyfikacje oraz metody łączące analizę, algebrę i topologię. DG/TD zachowują ogólne twierdzenia różniczkowe, AP algebrę lokalną, ALG/GAZ teorię rozmaitości i przestrzeni algebraicznych/analitycznych.
+
+1. Zarodki, dżety, rząd, równoważności prawostronna, lewostronna i kontaktowa; osobliwości funkcji i odwzorowań gładkich, twierdzenia Morse'a i o rozszczepieniu jako pomosty.
+2. Transwersalność dżetów, stabilność, skończona determinacja, rozwinięcia i deformacje, rozwinięcia wersalne; klasyfikacje fałd i ostrzy, teoria katastrof w uzasadnionym zakresie.
+3. Osobliwości analityczne i algebraiczne: lokalne pierścienie, stożek styczny, osobliwości izolowane i nieizolowane, algebra Jacobiego, liczby Milnora i Tjuriny.
+4. Klasyfikacja ADE (w precyzyjnie ustalonej klasie osobliwości), osobliwości ilorazowe, rozdmuchania i rozwiązywanie, grafy rozwiązań, korespondencja McKaya.
+5. Włókno i fibracja Milnora, splot osobliwości, monodromia, cykle zanikające, formuły Picarda–Lefschetza.
+6. Stratyfikacje Whitneya, warunki Thoma, lematy izotopii, topologia przestrzeni osobliwych, homologia przecięć jako zastosowanie AT.
+7. Powiązania z osobliwościami lagranżowskimi i legendrowskimi (GSK), orbifoldami, geometrią trój- i czterowymiarową, geometrią algebraiczną i analityczną.
+
+**Migracja M26:** DG15–16/18, ME31, AM II 20, ALG03/05/06, AA51–55, AT24–27, GT23–24; w przyszłości GAZ I i AP. Przejąć dowody klasyfikacyjne i teorię osobliwości, nie powielać ogólnej teorii dżetów ani pełnej teorii rozwiązywania osobliwości z ALG/GAZ. Ustalić właściciela każdego wyniku; np. algebraiczna konstrukcja rozdmuchania w ALG, analiza i topologia konkretnej osobliwości w OS.
+
+**Zależności:** AM II, DG/TD, AA/AP, AZ I–II, ALG/GAZ podstawowe, AT. GSK, ORB, TG3 i DG4/TD4 wykorzystują moduły specjalistyczne. Podstawowe części gładkie OS mogą powstać wcześniej niż część zespolona.
+
+### 5.7. Propozycje nadal oczekujące na zatwierdzenie
+
 - **K-teoria i teoria indeksu:** wiązki, K-teoria topologiczna, okresowość Botta, K-teoria algebraiczna i operatorowa z rozróżnieniem, operatory Fredholma, indeks Atiyaha–Singera, warianty rodzinne i orbifoldowe. Najpierw wspólna mapa AT/ALG/AF/DG/ORB/GNP; osobny skrypt dopiero jeśli ułatwi uniknięcie duplikacji.
 - **Grupoidy Liego, algebroidy i geometria stosów różniczkowych:** grupoidy, algebroidy, integracja, równoważność Mority, foliacje, geometria Poissona, stosy różniczkowe. Początkowo DG/ORB/CAT, osobny tom tylko przy dużej objętości.
-- **Geometria metryczna i geometryczna teoria miary:** przestrzenie długości, geodezyjne, Gromov–Hausdorff, przestrzenie CAT(k), krzywizna w sensie Aleksandrowa, przestrzenie metryczno-miarowe, transport optymalny i krzywizna syntetyczna; ME24–29 jako punkt wyjścia.
 - **Geometria Poissona i kwantowanie:** nawiasy Poissona, struktury Poissona, algebroidy, kwantowanie geometryczne i deformacyjne, powiązania z symplektyką i GNP. Najpierw rozdziały DG/GNP, wydzielenie później.
-- **Topologia geometryczna wymiaru 3:** rozkłady JSJ, geometrie Thurstona, rozmaitości hiperboliczne, teoria węzłów i splotów, geometryzacja. Rozważyć wraz z GT/TD; nie dublować dotychczasowych rozdziałów o Seifercie.
-- **Teoria osobliwości:** osobliwości odwzorowań gładkich i analitycznych, stabilność, katastrofy, osobliwości ADE, włókna Milnora, monodromia i cykle zanikające. Początkowo DG/GAZ/ALG/AT, później ewentualna synteza.
+- Pozostałe propozycje z sekcji 5.4 (numeryka, optymalizacja i sterowanie, teoria informacji, uczenie statystyczne oraz zbiór zadań) nie zmieniają statusu. Wydzielenie grup Liego i reprezentacji zastąpiono zatwierdzonym GLR; sterowanie nadal pozostaje propozycją.
 
 
 ## 6. Mapa kanonicznych właścicieli (skrót przed dodawaniem)
@@ -425,7 +511,12 @@ Poniższe kierunki nie są jeszcze zatwierdzonymi nowymi skryptami. Najpierw oce
 | Algebra przemienna zaawansowana | AP | ALG, GAZ, TL, PA |
 | Algebra nieprzemienna | ANP | GNP, AA, CAT, AF |
 | Geometria nieprzemienna | GNP | AF, ORB, DG, DG4 |
-| Geometria różniczkowa orbifoldów | ORB | DG, TD, DG4, TD4, GT, GAZ, ALG, GNP |
+| Geometria różniczkowa orbifoldów | ORB | DG, TD, DG4, TD4, GT, TG3, GAZ, ALG, GNP |
+| Grupy Liego i teoria reprezentacji | GLR | AA, GK, DG, GSK, ORB, DT, ALG |
+| Geometria symplektyczna i kontaktowa | GSK | DG, DG4, TD4, TG3, ORB, RZUD |
+| Geometria metryczna i syntetyczna | GM | TO, ME, DG, ORB, TG3 |
+| Topologia i geometria trójrozmaitości | TG3 | GT, TD, TD4, GK, ORB |
+| Teoria osobliwości i ich klasyfikacja | OS | TD, DG, ALG, GAZ, AP, AT, ORB, GSK |
 | Prawdopodobieństwo/procesy/całki stochastyczne/statystyka | RP1/RP2/RP3/RP4 | RRC, GT, RTPC |
 | Operatory i widmo | AF | RRC, DT, FSG, DG4 |
 | Planimetria, stereometria, klasyczne twierdzenia, geometrie modelowe, rzutowe i program Kleina | GK | AM I/II, LA, DG, ALG, AZ, PA |
@@ -492,6 +583,7 @@ Indeks JSON zawiera wszystkie aktywne pliki z blobami w migawce i ścieżki rapo
 - [ ] AP/ANP: audyt pokrycia AA/ALG/CAT, mapa kanonicznych etykiet i program samodzielnych skryptów.
 - [ ] ORB (szczególny priorytet użytkownika): inwentaryzacja GT24, CAT38, DG, AT i źródeł dotyczących działań grup, geometria lokalna i globalna, grupoidy, przykłady, plan dowodów.
 - [ ] GNP: audyt pokrycia AF31–33, CAT44, AT i ANP; ustalić zależności operatorowe, homologiczne i geometryczne.
+- [ ] GLR/GSK/GM/TG3/OS: sporządzić szczegółowe mapy źródło–cel–etykiety, odtworzyć statusy audytów, rozdzielić moduły podstawowe od specjalistycznych; wykonać M22–M26 dopiero po stabilizacji celu.
 - [ ] Cross-check właścicieli tematów przed każdym nowym rozdziałem. Zmieniać plan po decyzji użytkownika, nie traktować propozycji P2/P3 jako nakazu implementacji.
 
 ## 9. Dokumenty lokalne i techniczne
