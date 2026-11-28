@@ -4,7 +4,7 @@ from pathlib import Path
 from math import prod
 from itertools import product
 
-from distribution_migration_sources import source_for, reference_context
+from distribution_migration_sources import source_for, reference_context, _restructured
 
 SOURCE = source_for(21)
 
@@ -30,14 +30,30 @@ class Chapter21(unittest.TestCase):
 
     def test_FA21_compact_extension_01(self):
         s = SOURCE.read_text(encoding="utf-8")
-        for fragment in (
-            r"\langle T,(\chi_1-\chi_2)f\rangle=0",
-            r"$(1-\chi)f$",
-            r"\partial^\alpha(\chi f)",
-            r"T=F|_{\mathcal D}",
-            r"\supp T\subseteq L",
-            r"F(f-\chi f)=0",
-        ):
+        if _restructured():
+            # DT proves the same extension via the earlier locality theorem,
+            # then identifies the restriction map J and proves injectivity
+            # by density. Check these actual arguments, not the removed copy.
+            fragments = (
+                r"\label{lem:compact-action21}",
+                r"\langle T,(\chi_1-\chi_2)f\rangle=0",
+                r"\ref{thm:compact-support-order19}",
+                r"|\langle T,f\rangle|\le C p_{L,m}(f)",
+                r"J(F)=F|_{\mathcal D(\Omega)}",
+                r"\supp J(F)\subseteq K",
+                r"\ref{cor:density-cinf17}",
+                r"J(F)=T",
+            )
+        else:
+            fragments = (
+                r"\langle T,(\chi_1-\chi_2)f\rangle=0",
+                r"$(1-\chi)f$",
+                r"\partial^\alpha(\chi f)",
+                r"T=F|_{\mathcal D}",
+                r"\supp T\subseteq L",
+                r"F(f-\chi f)=0",
+            )
+        for fragment in fragments:
             self.assertIn(fragment, s)
 
     def test_FA21_iterated_actions_01(self):

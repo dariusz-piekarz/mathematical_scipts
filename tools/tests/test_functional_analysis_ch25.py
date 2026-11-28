@@ -4,7 +4,7 @@ from pathlib import Path
 from fractions import Fraction as F
 from itertools import product
 
-from distribution_migration_sources import split_source, split_context, using_dt
+from distribution_migration_sources import split_source, split_context, using_dt, _restructured
 
 class Chapter25(unittest.TestCase):
     def test_structure_and_references(self):
@@ -64,15 +64,29 @@ class Chapter25(unittest.TestCase):
             r"p\circ j",
             r"= \sup_{y\in j(B)}",
             r"(j\circ i)'=i'\circ j'",
-            r"T=F|_{\mathcal D(\Omega)}",
             r"\ref{lem:distribution-local19}",
-            r"L=\supp\chi",
-            r"C_L 2^m p_{L,m}(\chi)p_{L,m}(f)",
-            r"\sum_{\gamma\le\alpha}\binom{\alpha}{\gamma}=2^{|\alpha|}",
             r"(\chi_1-\chi_2)f",
             r"\ref{lem:compact-action21}",
         ):
             self.assertIn(fragment,s)
+        if _restructured():
+            for fragment in (
+                r"J(F)=F|_{\mathcal D(\Omega)}",
+                r"\supp J(F)\subseteq K",
+                r"\ref{cor:density-cinf17}",
+                r"J(F)=T",
+                r"L=\supp\chi",
+                r"p_m(\chi f)\le 2^m p_{L,m}(\chi)p_{L,m}(f)",
+            ):
+                self.assertIn(fragment, s)
+        else:
+            for fragment in (
+                r"T=F|_{\mathcal D(\Omega)}",
+                r"L=\supp\chi",
+                r"C_L 2^m p_{L,m}(\chi)p_{L,m}(f)",
+                r"\sum_{\gamma\le\alpha}\binom{\alpha}{\gamma}=2^{|\alpha|}",
+            ):
+                self.assertIn(fragment, s)
         from math import comb
         # Finite jets: Leibniz product and cutoffs equal to 1 near support.
         V=list(product(range(-1,2),repeat=4))
