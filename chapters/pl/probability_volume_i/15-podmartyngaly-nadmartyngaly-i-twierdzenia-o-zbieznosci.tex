@@ -673,72 +673,120 @@ symetryczny spacer (rozdział~\ref{ch:filtracje}).
 
 
 \begin{lemat}[Maksimum nieujemnego nadmartyngału]
+\label{lem:rp1-15-supermart-max}
 Niech $(Z_k)_{0\leq k\leq N}$ będzie
 nieujemnym nadmartyngałem względem $(\mathcal F_k)$,
-a $a>0$. Wtedy
+gdzie $N\in\N_0$, a $a>0$. Wtedy
 \[
 \Prob\left(\max_{0\leq k\leq N}Z_k\geq a\right)
 \leq\frac{\E Z_0}{a}.
 \]
 \end{lemat}
 \begin{proof}
-Niech $\tau$ będzie pierwszą chwilą osiągnięcia
-poziomu $a$, jeśli występuje przed lub w chwili $N$,
-a w przeciwnym wypadku niech $\tau=N$.
-Czas $\tau$ jest ograniczonym czasem zatrzymania.
+Niech $\tau=\min\{N,\inf\{0\leq k\leq N:Z_k\geq a\}\}$,
+z konwencją $\inf\varnothing=\infty$.
+Dla $0\leq j<N$ mamy
+$\{\tau\leq j\}=\bigcup_{k=0}^j\{Z_k\geq a\}\in\mathcal F_j$,
+a dla $j\geq N$ zdarzenie $\{\tau\leq j\}$ jest całym
+$\Omega$ (jeśli potrzeba, przedłużamy filtrację stale).
+Zatem $\tau$ jest ograniczonym czasem zatrzymania.
 Dla zdarzenia $A=\{\max_{k\leq N}Z_k\geq a\}$
 mamy $Z_\tau\geq a$ na $A$, natomiast poza $A$
 zmienna $Z_\tau$ pozostaje nieujemna.
 Stąd $a\Prob(A)\leq\E Z_\tau$.
-Z twierdzenia o opcjonalnym zatrzymaniu
-nadmartyngału dla czasu ograniczonego
-$\E Z_\tau\leq\E Z_0$, co kończy dowód.
+Z twierdzenia o zatrzymywaniu nadmartyngału
+(rozdział~\ref{ch:filtracje}) proces
+$(Z_{k\wedge\tau})_{0\leq k\leq N}$ jest nadmartyngałem.
+Własność monotoniczności wartości oczekiwanych
+daje $\E Z_\tau=\E Z_{N\wedge\tau}\leq\E Z_0$,
+co kończy dowód.
 \end{proof}
 
-\begin{przyklad}[Ryzyko przekroczenia progu przed czasem $N$]
-Dla martyngału o przyrostach $D_k=M_k-M_{k-1}$
-ograniczonych przez deterministyczne stałe $|D_k|\leq c_k$,
-$c_k\geq0$, można uzyskać silniejsze
-oszacowanie \emph{maksimum} niż przez
-sumowanie nierówności dla każdej chwili.
-Dla $t>0$ z dowodu Azumy wynika, że
+\begin{twierdzenie}[Maksymalna nierówność Azumy--Hoeffdinga]
+\label{thm:rp1-15-max-azuma}
+Niech $(M_k)_{0\leq k\leq N}$ będzie rzeczywistym
+martyngałem względem $(\mathcal F_k)$, $N\in\N_0$,
+a jego przyrosty $D_k=M_k-M_{k-1}$ niech
+spełniają $|D_k|\leq c_k$ p.n. dla deterministycznych
+stałych $c_k\geq0$, $1\leq k\leq N$.
+Niech $V_N=\sum_{k=1}^Nc_k^2$.
+Jeżeli $V_N>0$, to dla każdego $u>0$ zachodzi
+\[
+\Prob\left(\max_{0\leq k\leq N}(M_k-M_0)\geq u\right)
+\leq e^{-u^2/(2V_N)},
+\]
+\[
+\Prob\left(\max_{0\leq k\leq N}|M_k-M_0|\geq u\right)
+\leq 2e^{-u^2/(2V_N)}.
+\]
+Jeżeli $V_N=0$, obydwa prawdopodobieństwa
+są równe zero dla $u>0$.
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonego $t>0$ definiujemy proces
 \[
 Z_k=\exp\left(t(M_k-M_0)-\frac{t^2}{2}
 \sum_{j=1}^k c_j^2\right)
 \]
-jest nieujemnym nadmartyngałem (warunkowa średnia
-czynnika jest co najwyżej jeden).
-Jeżeli $\max_{k\leq N}(M_k-M_0)\geq u$, to dla
+dla $0\leq k\leq N$, z $Z_0=1$.
+Jest on adaptowany i całkowalny, ponieważ
+$|M_k-M_0|\leq\sum_{j=1}^kc_j$ p.n.
+Z oszacowania warunkowej wartości oczekiwanej
+funkcji wykładniczej w dowodzie nierówności
+Azumy--Hoeffdinga (rozdział~\ref{ch:martyngaly}) mamy
+\[
+\E[Z_k\mid\mathcal F_{k-1}]
+=Z_{k-1}e^{-t^2c_k^2/2}
+ \E[e^{tD_k}\mid\mathcal F_{k-1}]
+\leq Z_{k-1}\quad\text{p.n.}
+\]
+Zatem $Z$ jest nieujemnym nadmartyngałem.
+Jeżeli $\max_{0\leq k\leq N}(M_k-M_0)\geq u$, to dla
 pewnego $k\leq N$ zachodzi
 $Z_k\geq\exp(tu-t^2V_N/2)$, gdzie
 $V_N=\sum_{j=1}^N c_j^2$.
-Dla nieujemnego nadmartyngału $(Z_k)$
-możemy zastosować nierówność maksymalną:
-$\Prob(\max_{k\leq N}Z_k\geq a)\leq\E Z_0/a=1/a$.
-Wynika ona z ograniczonego zatrzymania przy
-pierwszym przekroczeniu $a$ i nieujemności
-$Z_N$.
+Stosujemy lemat~\ref{lem:rp1-15-supermart-max}
+do $Z$ z progiem $a=e^{tu-t^2V_N/2}>0$.
+Otrzymujemy
+\[
+\Prob\left(\max_{0\leq k\leq N}(M_k-M_0)\geq u\right)
+\leq e^{-tu+t^2V_N/2}.
+\]
 Dla $u>0$ i $V_N>0$ minimalizujemy wykładnik
 $-tu+t^2V_N/2$ po $t>0$: minimum przy $t=u/V_N$ daje
 \[
 \Prob\left(\max_{k\leq N}(M_k-M_0)\geq u\right)
 \leq e^{-u^2/(2V_N)}.
 \]
+Stosując pierwszą nierówność także do $-M$,
+który jest martyngałem z tymi samymi ograniczeniami
+przyrostów, i korzystając z oszacowania
+prawdopodobieństwa sumy zdarzeń przez sumę
+prawdopodobieństw, otrzymujemy wersję dwustronną.
 Jeżeli $V_N=0$, wszystkie przyrosty do chwili $N$
-są zerowe p.n. i dla $u>0$ prawdopodobieństwo po lewej
-stronie wynosi zero (bez dzielenia przez $V_N$).
+są zerowe p.n., co rozstrzyga pozostały przypadek.
+\end{proof}
+
 Oszacowanie dotyczy \emph{całej trajektorii do $N$},
-a nie tylko wartości końcowej.
-\end{przyklad}
+a nie tylko wartości końcowej. Dla $c_k=1$
+otrzymujemy w szczególności wykładniczą kontrolę
+maksimum symetrycznego spaceru losowego,
+zgodną z przykładem z rozdziału~\ref{ch:martyngaly}.
 
 \begin{przyklad}[Dlaczego dla nadmartyngału nie trzeba oczekiwać spadku na każdej ścieżce]
-Niech $S_n$ będzie symetrycznym spacerem losowym.
-Proces $Z_n=S_n^2$ jest podmartyngałem i
-$\E Z_n=n$ rośnie, lecz z prawdopodobieństwem
-dodatnim $Z_{n+1}<Z_n$ (np. przejście z
-$S_n=2$ do $S_{n+1}=1$). Analogicznie
-$-S_n^2$ jest nadmartyngałem, choć
-może zwiększyć swoją wartość w jednym kroku.
+Niech $S_n=\sum_{k=1}^n\xi_k$ będzie symetrycznym
+spacerem losowym z $S_0=0$ i niezależnymi znakami
+$\xi_k$, w naturalnej filtracji.
+Proces $Z_n=S_n^2$ jest podmartyngałem na mocy
+twierdzenia o wypukłej funkcji martyngału.
+Z ortogonalności przyrostów
+(rozdział~\ref{ch:martyngaly}) mamy $\E Z_n=n$.
+Mimo to na zdarzeniu
+$\{\xi_1=1,\xi_2=1,\xi_3=-1\}$, którego
+prawdopodobieństwo wynosi $1/8$, zachodzi
+$S_2=2$, $S_3=1$, a więc $Z_3=1<4=Z_2$.
+Analogicznie $-S_n^2$ jest nadmartyngałem,
+ale na tym samym zdarzeniu jego wartość rośnie.
 \end{przyklad}
 
 \begin{przyklad}[Inne założenia, inne wnioski]
@@ -753,8 +801,16 @@ Trzy fakty trzeba wyraźnie odróżnić:
   zbiega nawet w $L^2$.
 \end{enumerate}
 Przykład $M_n=2^n\chi_{\{B_1=\cdots=B_n=1\}}$
-pokazuje jednocześnie, dlaczego nie wolno
-zamieniać punktów (2) i (3).
+z wcześniejszej sekcji jest nieujemnym martyngałem,
+a więc również nieujemnym nadmartyngałem.
+Pokazuje jednocześnie, że w (1) i (2) nie można
+bez dodatkowych założeń wzmocnić zbieżności do $L^1$.
+Z kolei ograniczoność w $L^2$ implikuje
+jednostajną całkowalność, gdyż dla $K>0$
+\[
+\sup_n\E[|M_n|\chi_{\{|M_n|>K\}}]
+\leq K^{-1}\sup_n\E M_n^2.
+\]
 \end{przyklad}
 
 \section{Jak te pojęcia łączą się z łańcuchami Markowa?}
@@ -762,43 +818,67 @@ zamieniać punktów (2) i (3).
 \begin{twierdzenie}[Funkcja harmoniczna łańcucha daje martyngał]
 Niech $(X_n)$ będzie jednorodnym łańcuchem Markowa
 na przeliczalnym $S$ o macierzy $P$ i naturalnej
-filtracji. Niech $h:S\to\R$ będzie ograniczona
-i spełnia $Ph=h$, tzn.
-$h(i)=\sum_jp_{ij}h(j)$ dla każdego $i\in S$.
-Wtedy $(h(X_n))$ jest martyngałem.
+filtracji $\mathcal F_n^X=\sigma(X_0,\ldots,X_n)$.
+Niech $h:S\to\R$ będzie ograniczona i niech
+$(Ph)(i)=\sum_{j\in S}p_{ij}h(j)$.
+Jeśli $Ph=h$, to $(h(X_n))$ jest martyngałem.
 Jeżeli $Ph\leq h$, jest nadmartyngałem;
 gdy $Ph\geq h$, podmartyngałem.
+Wszystkie równości i nierówności dotyczą
+każdego stanu $i\in S$.
 \end{twierdzenie}
 \begin{proof}
-Ograniczoność $h$ zapewnia całkowalność.
-Z własności Markowa
+Funkcja $h$ jest mierzalna względem $\sigma$-ciała
+wszystkich podzbiorów przeliczalnego $S$, więc
+$(h(X_n))$ jest adaptowany. Ograniczoność $h$
+zapewnia całkowalność i bezwzględną zbieżność
+sum definiujących $Ph$. Z warunkowej postaci
+własności Markowa (rozdział~\ref{ch:markov})
+otrzymujemy
 $\E[h(X_{n+1})\mid\mathcal F_n^X]
-=(Ph)(X_n)$.
+=(Ph)(X_n)$ p.n.
 Podstawienie równości lub odpowiedniej nierówności
 prowadzi bezpośrednio do trzech przypadków.
 \end{proof}
 
 \begin{przyklad}[Ruina gracza po raz drugi: metoda martyngałowa]
-Rozważmy spacer losowy na $\{0,\ldots,N\}$
-z granicami pochłaniającymi, z prawdopodobieństwem
-kroku w górę $p\in(0,1)$ i w dół $q=1-p$.
-Niech $\tau$ będzie chwilą pochłonięcia.
-Wykazana wcześniej geometryczna kontrola ogona
-$\tau$ daje $\E\tau<\infty$.
-Przy $p=q=1/2$ zatrzymany proces $X_{n\wedge\tau}$
-jest ograniczonym martyngałem. Zatem przez
-zbieżność zmajoryzowaną
-$\E_iX_\tau=i$. Ponieważ $X_\tau\in\{0,N\}$,
+Rozważmy łańcuch ze zbioru stanów $\{0,\ldots,N\}$,
+$N\geq2$, z pochłaniającymi stanami $0,N$.
+Ze stanów wewnętrznych krok w górę ma
+prawdopodobieństwo $p\in(0,1)$, a krok w dół $q=1-p$.
+Pracujemy względem $\Prob_i$ z $X_0=i$,
+$0\leq i\leq N$, i naturalnej filtracji.
+Niech $\tau=\inf\{n\geq0:X_n\in\{0,N\}\}$
+oraz $h_i=\Prob_i(X_\tau=N)$, przy czym
+wartość $X_\tau$ na zdarzeniu $\{\tau=\infty\}$
+ustalamy na zero.
+Geometryczne oszacowanie ogona $\tau$ z
+rozdziału~\ref{ch:markov} daje $\E_i\tau<\infty$,
+zatem $\tau<\infty$ p.n. Ponieważ brzegi są
+pochłaniające, $X_{n\wedge\tau}=X_n$.
+Przy $p=q=1/2$ warunkowa średnia przyrostu
+wynosi zero również na brzegach, więc
+$X_{n\wedge\tau}$ jest ograniczonym martyngałem
+o średniej $i$. Zbieżność zmajoryzowana
+przy $n\to\infty$ daje $\E_iX_\tau=i$. Ponieważ $X_\tau\in\{0,N\}$,
 $N\Prob_i(X_\tau=N)=i$, czyli $h_i=i/N$.
 Aby obliczyć średni czas, zauważmy, że
 $X_{n\wedge\tau}^2-(n\wedge\tau)$ jest
-martyngałem: na $\{\tau>n\}$ mamy
-$\E[X_{n+1}-X_n\mid\mathcal F_n]=0$ oraz
-$\E[(X_{n+1}-X_n)^2\mid\mathcal F_n]=1$.
-Po rozwinięciu różnicy kwadratów jej warunkowa
-średnia wynosi zatem $1$ na $\{\tau>n\}$ i $0$
-na $\{\tau\leq n\}$, dokładnie tyle samo co przyrost
-$(n+1)\wedge\tau-n\wedge\tau$.
+martyngałem: dla $D_{n+1}=X_{n+1}-X_n$ mamy
+$\E_i[D_{n+1}\mid\mathcal F_n]=0$ oraz
+$\E_i[D_{n+1}^2\mid\mathcal F_n]=\chi_{\{\tau>n\}}$
+p.n. Zatem
+\[
+\E_i[X_{n+1}^2-X_n^2\mid\mathcal F_n]
+=2X_n\E_i[D_{n+1}\mid\mathcal F_n]
++\E_i[D_{n+1}^2\mid\mathcal F_n]
+=\chi_{\{\tau>n\}}.
+\]
+Jest to dokładnie przyrost
+$(n+1)\wedge\tau-n\wedge\tau$, który jest
+$\mathcal F_n$-mierzalny. Adaptacja i całkowalność
+wynikają z ograniczeń $0\leq X_n\leq N$
+oraz $0\leq n\wedge\tau\leq n$.
 Biorąc wartości oczekiwane i przechodząc z
 $n\to\infty$, dostajemy
 $\E_i X_\tau^2-\E_i\tau=i^2$;
@@ -807,14 +887,33 @@ i monotoniczna zbieżność $n\wedge\tau\uparrow\tau$.
 Ponieważ $\E_iX_\tau^2=N^2(i/N)=Ni$,
 $\E_i\tau=i(N-i)$.
 
-Gdy $p\ne q$, proces
-$X_{n\wedge\tau}-(p-q)(n\wedge\tau)$ jest
-martyngałem. Otrzymujemy
-$N h_i-i=(p-q)\E_i\tau$, zgodnie z wcześniejszym
-wzorem. Z kolei funkcja harmoniczna
-$h_i=[1-(q/p)^i]/[1-(q/p)^N]$
-prowadzi do ograniczonego martyngału $h(X_{n\wedge\tau})$
-i pozwala odzyskać prawdopodobieństwo wygranej.
+Gdy $p\ne q$, mamy
+$\E_i[D_{n+1}\mid\mathcal F_n]=(p-q)\chi_{\{\tau>n\}}$.
+Dlatego proces $X_{n\wedge\tau}-(p-q)(n\wedge\tau)$
+jest całkowalnym martyngałem o średniej $i$.
+Przechodząc do granicy, stosujemy zbieżność
+zmajoryzowaną do $X_{n\wedge\tau}$ oraz
+zbieżność monotoniczną do $n\wedge\tau$,
+otrzymując $Nh_i-i=(p-q)\E_i\tau$.
+
+Aby wyznaczyć $h_i$, połóżmy $r=q/p\ne1$ i
+$g(j)=(1-r^j)/(1-r^N)$ dla $0\leq j\leq N$.
+Na brzegach $g(0)=0$, $g(N)=1$.
+Dla stanów wewnętrznych $1\leq j<N$
+mamy $pr^{j+1}+qr^{j-1}=r^j(pr+q/r)=r^j$,
+ponieważ $pr=q$ i $q/r=p$.
+Stąd $pg(j+1)+qg(j-1)=g(j)$, a na brzegach
+równość $Pg=g$ zachodzi z pochłaniania.
+Z poprzedniego twierdzenia $(g(X_n))$ jest
+ograniczonym martyngałem. Przez zbieżność
+zmajoryzowaną $\E_i g(X_\tau)=g(i)$.
+Lewa strona jest równa $\Prob_i(X_\tau=N)=h_i$.
+Ostatecznie
+\[
+h_i=\frac{1-(q/p)^i}{1-(q/p)^N},\qquad
+\E_i\tau=\frac{Nh_i-i}{p-q}.
+\]
+Są to te same wzory co w rozdziale~\ref{ch:markov}.
 Te obliczenia pokazują trzy zastosowania: martyngały liniowe
 służą do wyznaczania wartości oczekiwanych, kwadratowe
 do obliczania średnich czasów, a harmoniczne do
@@ -839,11 +938,18 @@ pomaga sprawdzić, czy wybrana zmienna stanu
 rzeczywiście \emph{opisuje dostatecznie dużo informacji}.
 
 Własność Markowa \emph{nie} wymaga, by $X_{n+1}$
-była niezależna od $X_n$. Jedynie warunkowa
-zależność od czasów wcześniejszych niż $n$
-zanika po poznaniu $X_n$. Inaczej jest przy
-zbieżności do stacjonarności: zanikanie zależności
-od $X_0$ jest twierdzeniem o odległych czasach
-oraz odpowiednich założeniach na macierz przejścia.
+była niezależna od $X_n$. Dla każdego ograniczonego
+$g:S\to\R$ oznacza ona natomiast, że
+$\E[g(X_{n+1})\mid\mathcal F_n^X]=(Pg)(X_n)$ p.n.
+w jednorodnym łańcuchu Markowa.
+Jeśli $Pg=g$, otrzymujemy martyngał, lecz sama
+własność Markowa nie gwarantuje tej równości.
+Z kolei zbieżność rozkładów $P^n(i,\cdot)$ do
+wspólnego rozkładu stacjonarnego, niezależnego
+od stanu początkowego $i$, wymaga dodatkowych
+założeń (np. skończoności, nieprzywiedlności
+i nieokresowości; rozdział~\ref{ch:markov}).
+Nie należy utożsamiać jej ze zbieżnością
+trajektorii $X_n$ prawie na pewno.
 \end{przyklad}
 
