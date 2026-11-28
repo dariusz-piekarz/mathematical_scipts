@@ -687,8 +687,24 @@ W szczególności
  \end{aligned}
 \]
 W języku MV używamy stałej $0$ i operacji
-$\neg,\oplus$; pozostałe spójniki są definiowalne
-jak w rozdziale~\ref{ch:lst-fuzzy-logic}.
+$\neg,\oplus$. Pozostałe spójniki można wyrazić
+przez
+\[
+ \begin{aligned}
+ x\odot y&=\neg(\neg x\oplus\neg y),&
+ x\to y&=\neg x\oplus y,\\
+ x\vee y&=(x\to y)\to y,&
+ x\wedge y&=\neg(\neg x\vee\neg y).
+ \end{aligned}
+\]
+Pierwsze dwa wzory wynikają bezpośrednio z obciętej
+sumy i negacji. Dla $x\leq y$ mamy $(x\to y)\to y=y$,
+a dla $x>y$ otrzymujemy
+$\min(1,1-(1-x+y)+y)=x$.
+Ostatnia równość wynika z odwracania porządku przez
+negację. W przeciwnym kierunku $\neg x=x\to0$
+oraz $x\oplus y=(\neg x)\to y$ jak w
+Definicji~\ref{def:lst-fuzzy-mv-operations}.
 \end{definicja}
 Zapis $L_{m+1}$ podkreśla liczbę wartości,
 a $m$ jest mianownikiem siatki.
@@ -833,16 +849,44 @@ przez domkniętość tej algebry względem operacji.
 Pozostałym zmiennym przypisujemy zero.
 Otrzymujemy kontrmodel w skończonym łańcuchu.
 \end{proof}
-Nie oznacza to pełności względem jednego ustalonego
-skończonego łańcucha, ani silnej pełności względem
-całej klasy skończonych łańcuchów. Zobacz
-Twierdzenie~\ref{thm:lst-fuzzy-noncompactness}:
-standardowy kontrprzykład dla nieskończonych przesłanek
-działa również w podalgebrach standardowej algebry MV,
-ponieważ wszystkie skończone kontrmodele dla tych
-przesłanek można wybrać wymiernie na mocy
-Twierdzenia~\ref{thm:lst-fuzzy-mv-rational-countermodel}
-i powyższego wniosku.
+\begin{wniosek}[Ograniczenia pełności skończonych łańcuchów]
+\label{cor:ncl-finite-mv-completeness-limits}
+Żaden pojedynczy skończony łańcuch $L_{m+1}$ nie daje
+pełności logiki $L$ nawet dla tautologii. Ponadto
+konsekwencja względem klasy wszystkich skończonych
+łańcuchów Łukasiewicza nie jest zwarta.
+\end{wniosek}
+\begin{proof}
+Dla ustalonego $m$ rozważmy formułę $p^m\to p^{m+1}$,
+gdzie potęgi oznaczają iterację $\odot$.
+Wzór z Przykładu~\ref{ex:ncl-standard-filters} daje
+$x^m=x^{m+1}=0$ dla $x\leq 1-1/m$, a dla $x=1$
+obie potęgi są jedynkami. Formuła jest więc tautologią
+$L_{m+1}$. Jednak dla standardowego wartościowania
+$x=1-1/(m+2)$ obie potęgi są dodatnie i wynoszą
+odpowiednio $2/(m+2)$ oraz $1/(m+2)$, więc formuła
+nie jest dowodliwa na mocy poprawności.
+
+Dla drugiej tezy bierzemy zbiór
+$\Gamma=\{p\to q^n:n\geq1\}$ i formułę
+$\varphi=q\vee\neg p$ z dowodu
+Twierdzenia~\ref{thm:lst-fuzzy-noncompactness}.
+Ponieważ $\Gamma\models_L\varphi$ w semantyce
+standardowej, konsekwencja zachodzi w każdej jej
+skończonej podalgebrze.
+Dla skończonego $\Gamma_0\subseteq\Gamma$ wybieramy
+$N\geq1$ nie mniejsze od wszystkich wykładników
+w $\Gamma_0$ (także dla pustego $\Gamma_0$).
+W łańcuchu $L_{2N+1}$ przypisujemy
+$v(p)=1/2$ i $v(q)=1-1/(2N)$.
+Dla $n\leq N$ mamy $v(q^n)=1-n/(2N)\geq1/2$.
+Wszystkie przesłanki $\Gamma_0$ mają wartość $1$,
+ale $v(\varphi)=1-1/(2N)<1$.
+Zatem żaden skończony podzbiór nie wystarcza.
+\end{proof}
+W szczególności rachunek o skończonych dowodach
+nie może być silnie pełny względem tej klasy macierzy
+(por. Stwierdzenie~\ref{prop:ncl-compactness-completeness}).
 
 \section{Logika czterowartościowa Belnapa--Dunna}
 \begin{definicja}[Reprezentacja parowa wartości]
@@ -981,7 +1025,7 @@ Stosujemy Twierdzenie~\ref{thm:ncl-four-bilattice}.
 \end{proof}
 
 \subsection{Konsekwencja i redukty trójwartościowe}
-\begin{stwierdzenie}[Dwa redukty FDE]
+\begin{stwierdzenie}[Dwie podmacierze FDE]
 \label{prop:ncl-four-reducts}
 W języku $\neg,\wedge,\vee$ podzbiory
 $V\setminus\{\mathsf B\}$ i
@@ -1022,7 +1066,10 @@ Przypisanie $v(p)=\mathsf N$ daje
 $v(p\vee\neg p)=\mathsf N$. Wyłączony środek
 jest tautologią LP, więc druga inkluzja jest ostra.
 \end{proof}
-Wszystkie trzy logiki mają jednak zwartą konsekwencję
+Macierze $K_3$ i LP są tutaj podmacierzami FDE:
+ograniczamy zbiór wartości i zbiór wyróżniony,
+a nie sygnaturę operacji. Wszystkie trzy logiki
+mają jednak zwartą konsekwencję
 na mocy Twierdzenia~\ref{thm:ncl-finite-matrix-compactness}.
 
 \begin{twierdzenie}[Redukcja do dwóch współrzędnych boolowskich]
@@ -1584,7 +1631,12 @@ $u$ i $1$. Obie przesłanki są jednocześnie spełnione
 dokładnie wtedy, gdy spełniony jest $S$ lub $0:p$.
 Można zatem zastąpić tę regułę uproszczoną regułą
 o jednej przesłance $S\cup\{0:p\}$, zachowując
-odwracalność. Analogicznie dla pozostałych znaków
+odwracalność. Jest ona dopuszczalna w pierwotnym
+rachunku: z dowodliwości jej przesłanki wynika
+ważność wniosku, a z pełności
+(Twierdzenie~\ref{thm:ncl-sequent-sound-complete})
+istnieje dowód wniosku bez reguły uproszczonej.
+Analogicznie dla pozostałych znaków
 negacji, ponieważ negacja jest bijekcją.
 \end{przyklad}
 
@@ -1623,13 +1675,15 @@ zbiorem ograniczeń i jest spełnialna, jeśli pewne
 wartościowanie spełnia je wszystkie.
 \end{definicja}
 W odróżnieniu od sekwentu znakowanego ograniczenia
-gałęzi są połączone koniunkcją. Negacja spełniania
-sekwentu $S$ jest równoważna spełnialności gałęzi
-z ograniczeniami
+gałęzi są połączone koniunkcją. Dla ustalonego wartościowania niespełnienie
+sekwentu $S$ jest równoważne spełnieniu wszystkich
+ograniczeń gałęzi postaci
 \[
  (\psi,A\setminus\{a:a:\psi\in S\})
 \]
 dla wszystkich formuł występujących w $S$.
+W konsekwencji sekwent jest nieważny dokładnie wtedy,
+gdy odpowiadająca mu gałąź jest spełnialna.
 Można łączyć ograniczenia tej samej formuły
 przez przecięcie dozwolonych zbiorów wartości.
 
@@ -1681,7 +1735,7 @@ co najmniej jednego liścia jest równoważna
 spełnialności gałęzi początkowej.
 \end{proof}
 Dla sprawdzenia $\Gamma\models_{\mathcal M}\varphi$
-zaczynamy od ograniczeń $(\gamma,D)$ dla $\gamma\in\Gamma$
+przy skończonym $\Gamma$ zaczynamy od ograniczeń $(\gamma,D)$ dla $\gamma\in\Gamma$
 oraz $(\varphi,A\setminus D)$.
 Jeśli wszystkie gałęzie się zamykają, konsekwencja
 zachodzi. Otwarta gałąź daje kontrmodel.
