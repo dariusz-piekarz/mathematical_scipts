@@ -3116,8 +3116,11 @@ być parami różne.
 \label{def:ncl-kripke-polarity}
 Na potrzeby badania znaków wystąpień zmiennych
 traktujemy $\neg,\wedge,\vee,\Box,\Diamond$
-oraz $\bot,\top$ jako spójniki i stałe,
-a implikację rozwijamy jako $\neg B\vee C$.
+oraz $\bot,\top$ jako spójniki i stałe.
+Implikację $B\to C$ zastępujemy przez
+$\neg B\vee C$, a pozostałe skróty,
+w tym równoważność, najpierw rozwijamy
+w tych spójnikach.
 Wystąpienie zmiennej jest dodatnie, jeżeli
 znajduje się w zasięgu parzystej liczby
 negacji, i ujemne w przeciwnym przypadku.
@@ -3171,14 +3174,56 @@ Implikacja Sahlqvista jest formułą $B\to C$,
 gdzie $B$ jest antecedentem Sahlqvista,
 a $C$ formułą dodatnią.
 
-W dalszym ciągu przez formuły Sahlqvista
-rozumiemy klasę otrzymaną z tych implikacji
-przez skończone koniunkcje i operator $\Box$.
-Jest to wystarczająca dla naszych zastosowań
-wersja fragmentu; szersze standardowe definicje
-dopuszczają także alternatywy odpowiednio
-rozłącznych zmiennych.
+Formuły Sahlqvista tworzymy z tych implikacji
+przez skończone koniunkcje, operator $\Box$
+oraz alternatywy $A\vee B$ takie, że
+zbiory zmiennych występujących w $A$ i $B$
+są rozłączne. Pusta koniunkcja oznacza $\top$,
+którą można również zapisać jako
+implikację Sahlqvista $\top\to\top$.
 \end{definicja}
+
+\begin{lemat}[Alternatywa o rozłącznych zbiorach zmiennych]
+\label{lem:ncl-kripke-disjoint-disjunction}
+Niech $A,B$ nie mają wspólnych zmiennych
+zdaniowych. Dla dowolnej ramy $F$ i stanu $x$
+zachodzi
+\[
+ F,x\Vdash A\vee B
+ \iff (F,x\Vdash A\ \text{lub}\ F,x\Vdash B).
+\]
+Ta sama równoważność zachodzi, jeśli po obu
+stronach ograniczamy wartościowania do
+wartościowań dopuszczalnych na ustalonej
+ramie ogólnej.
+\end{lemat}
+\begin{proof}
+Jeżeli jeden ze składników jest prawdziwy
+w $x$ przy każdym (dopuszczalnym)
+wartościowaniu, to ich alternatywa również.
+Jeżeli żaden składnik nie ma tej własności,
+wybieramy wartościowanie $V_A$ obalające
+$A$ w $x$ i wartościowanie $V_B$ obalające
+$B$ w $x$. Definiujemy wspólne wartościowanie
+$V$ przez $V(p)=V_A(p)$ dla zmiennych $A$,
+$V(p)=V_B(p)$ dla zmiennych $B$ i
+$V(p)=\varnothing$ dla pozostałych.
+Rozłączność zbiorów zmiennych gwarantuje
+dobre określenie. Jeżeli oba wybrane
+wartościowania były dopuszczalne, to
+także $V$ jest dopuszczalne, ponieważ
+$\varnothing$ należy do algebry Boole'a.
+Lemat~\ref{lem:ncl-kripke-variable-dependence}
+daje fałszywość obu składników przy $V$
+w stanie $x$, a zatem również fałszywość
+ich alternatywy.
+\end{proof}
+Założenia rozłączności nie wolno pominąć:
+$p\vee\neg p$ jest lokalnie ważna w każdym
+stanie każdej ramy, lecz ani $p$, ani
+$\neg p$ nie są lokalnie ważne w żadnym stanie,
+co pokazują wartościowania $V(p)=\varnothing$
+i $V(p)=W$.
 
 \begin{twierdzenie}[Efektywna korespondencja implikacji Sahlqvista]
 \label{thm:ncl-kripke-sahlqvist-implication-correspondence}
@@ -3533,8 +3578,9 @@ Otrzymaliśmy otwarto-domknięte
 wartościowanie obalające $B\to C$ w $x$.
 Dowodzi to tezy dla implikacji.
 
-Rozszerzamy wynik indukcyjnie na koniunkcje
-i konieczność. Jeżeli koniunkcja jest
+Rozszerzamy wynik indukcyjnie na koniunkcje,
+konieczność i alternatywy o rozłącznych
+zbiorach zmiennych. Jeżeli koniunkcja jest
 prawdziwa w $x$ przy każdym wartościowaniu
 otwarto-domkniętym, to każdy jej składnik
 ma tę własność, więc z hipotezy indukcyjnej
@@ -3548,6 +3594,26 @@ dla $A$ w $y$ daje prawdziwość przy
 wszystkich wartościowaniach.
 Zatem $\Box A$ jest prawdziwa w $x$
 przy wszystkich wartościowaniach.
+
+Jeżeli $A\vee B$ ma rozłączne zbiory
+zmiennych i jest prawdziwa w $x$ przy każdym
+wartościowaniu otwarto-domkniętym, to
+Lemat~\ref{lem:ncl-kripke-disjoint-disjunction}
+daje prawdziwość przynajmniej jednego
+ze składników przy wszystkich takich
+wartościowaniach. Stosowalność tego lematu
+wynika stąd, że zbiory otwarto-domknięte
+ramy kanonicznej tworzą algebrę Boole'a
+domkniętą względem operatorów modalnych:
+domknięcie to wykazano w dowodzie
+Lematu~\ref{lem:ncl-kripke-canonical-clopen-approximation}
+za pomocą podstawienia i lematu o prawdziwości
+(dla pojedynczej zmiennej można wziąć dowolny
+zbiór otwarto-domknięty).
+Hipoteza indukcyjna przenosi ważność
+wybranego składnika na wszystkie
+wartościowania, skąd wynika teza
+dla alternatywy.
 \end{proof}
 
 \begin{twierdzenie}[Twierdzenie Sahlqvista]
@@ -3577,8 +3643,13 @@ to $\forall y\,(Rxy\to\theta_A(y))$ jest
 korespondentem $\Box A$, ponieważ
 kwantyfikacja po wartościowaniach i
 następnikach może zostać zamieniona kolejnością.
-To rozszerza dowód korespondencji
-na całą zdefiniowaną klasę.
+Jeśli $A,B$ mają rozłączne zbiory zmiennych,
+to z Lematu~\ref{lem:ncl-kripke-disjoint-disjunction}
+wynika, że $\theta_A(x)\vee\theta_B(x)$
+jest lokalnym korespondentem $A\vee B$.
+Indukcja po konstrukcji formuł Sahlqvista
+rozszerza w ten sposób efektywny dowód
+korespondencji na całą zdefiniowaną klasę.
 
 Dla drugiego punktu załóżmy $A\in L$.
 Każde wartościowanie zmiennych $A$ przez
@@ -3616,9 +3687,9 @@ s.~992--999.
 Jeżeli niesprzeczna normalna logika $L$
 jest najmniejszą normalną logiką zawierającą
 zbiór $\Sigma$ formuł Sahlqvista, to $L$
-jest kanoniczna i silnie pełna lokalnie
-względem klasy ram spełniających wszystkie
-zdania pierwszego rzędu
+jest kanoniczna i silnie pełna zarówno
+lokalnie, jak i globalnie względem klasy
+ram spełniających wszystkie zdania pierwszego rzędu
 \[
  \{\forall x\,\theta_A(x): A\in\Sigma\},
 \]
@@ -3637,7 +3708,31 @@ z tego samego powodu. Pierwszy punkt twierdzenia
 Sahlqvista identyfikuje więc wskazaną klasę ram
 z $\operatorname{Fr}(L)$.
 Stosujemy
-Twierdzenie~\ref{thm:ncl-kripke-canonical-strong-local}.
+Twierdzenie~\ref{thm:ncl-kripke-canonical-strong-local}
+dla $\mathcal C=\operatorname{Fr}(L)$.
+Ponadto na mocy
+Stwierdzenia~\ref{prop:ncl-kripke-frame-preservation}
+klasa ta jest domknięta względem generowanych
+podram. Dla dowolnego zbioru przesłanek
+$\Gamma$ zachodzi zatem
+\[
+\begin{aligned}
+ \Gamma\vdash_L^{\mathrm{glob}}A
+ &\iff\Gamma^\Box\vdash_L^{\mathrm{lok}}A\\
+ &\iff\Gamma^\Box\models_{\mathcal C}^{\mathrm{lok}}A\\
+ &\iff\Gamma\models_{\mathcal C}^{\mathrm{glob}}A.
+\end{aligned}
+\]
+Pierwsza równoważność jest syntaktyczną
+redukcją z
+Twierdzenia~\ref{thm:ncl-modal-global-local},
+druga wynika z silnej pełności i poprawności
+lokalnej, a trzecia z semantycznej redukcji
+(Twierdzenie~\ref{thm:ncl-kripke-global-local-reduction}).
+W szczególności argument globalny działa
+dla każdej logiki kanonicznej, a nie tylko
+dla logik aksjomatyzowanych formułami
+Sahlqvista.
 \end{proof}
 
 \begin{uwaga}[Zakres twierdzenia]
