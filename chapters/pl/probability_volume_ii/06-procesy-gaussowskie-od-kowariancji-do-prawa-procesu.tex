@@ -268,7 +268,7 @@ $Z=X-m_X-\Cov(X,Y)\Sigma_Y^{-1}(Y-m_Y)$ dowodzi wzoru
 =m_X+\Cov(X,Y)\Sigma_Y^{-1}(Y-m_Y).
 \]
 Reszta jest nieskorelowana z każdą współrzędną $Y$,
-więc niezależny od całego $Y$. To objaśnia, dlaczego
+więc niezależna od całego $Y$. To objaśnia, dlaczego
 w modelu gaussowskim \emph{najlepsza predykcja średniokwadratowa}
 jest funkcją afiniczną zaobserwowanych wartości. Istotnie,
 dla $g(Y)\in L^2$ różnica $X-\E[X\mid\sigma(Y)]$
@@ -281,28 +281,33 @@ zmiennej z $L^2$, zatem
 Minimum jest osiągane dokładnie przez wersje warunkowej
 wartości oczekiwanej.
 Gdy $\Sigma_Y$ jest osobliwa, należy uwzględnić liniowe
-zależności między obserwacjami; bezmyślne odwracanie macierzy
-byłoby błędem.
+zależności między obserwacjami. Zamiast odwrotności
+zastosujemy poniżej pseudoodwrotność Moore'a--Penrose'a.
 \end{uwaga}
 
 \begin{stwierdzenie}[Kryterium Markowa dla procesu gaussowskiego]
 Niech $X=(X_t)_{t\in I}$ będzie rzeczywistym, wycentrowanym
-procesem gaussowskim na przedziale $I$, z $K(t,t)>0$ dla
-wszystkich $t\in I$. Wówczas $X$ jest procesem Markowa
-względem swojej filtracji naturalnej wtedy i tylko wtedy, gdy
+procesem gaussowskim na przedziale $I$.
+Wówczas $X$ jest procesem Markowa względem swojej
+filtracji naturalnej wtedy i tylko wtedy, gdy
 \[
-K(s,u)=\frac{K(s,t)K(t,u)}{K(t,t)}
-\quad\text{dla wszystkich }s<t<u\text{ w }I.
+K(s,u)=K(s,t)K(t,t)^+K(t,u)
+\quad\text{dla wszystkich }s<t<u\text{ w }I,
 \]
+gdzie $a^+=1/a$ dla $a>0$, a $0^+=0$.
+W szczególności przy $K(t,t)=0$ warunek ma postać
+$K(s,u)=0$ dla wszystkich $s<t<u$.
 \end{stwierdzenie}
 \begin{proof}
-Zastosujmy wzór na warunkowy rozkład gaussowski do par
-$(X_s,X_t)$ i $(X_u,X_t)$. Reszty
-$R_s=X_s-\frac{K(s,t)}{K(t,t)}X_t$ oraz
-$R_u=X_u-\frac{K(u,t)}{K(t,t)}X_t$
+Ustalmy $t$ i oznaczmy $a_v=K(v,t)K(t,t)^+$.
+Jeżeli $K(t,t)=0$, to $X_t=0$ prawie na pewno
+i $K(v,t)=0$ dla wszystkich $v$ z nierówności
+Cauchy'ego--Schwarza. W obu przypadkach
+$a_v K(t,t)=K(v,t)$.
+Reszty $R_s=X_s-a_sX_t$ oraz $R_u=X_u-a_uX_t$
 tworzą wektor wspólnie gaussowski z $X_t$ i jako para
 są niezależne od $X_t$ (obie kowariancje z $X_t$ są zerowe). Obliczenie daje
-$\Cov(R_s,R_u)=K(s,u)-K(s,t)K(t,u)/K(t,t)$.
+$\Cov(R_s,R_u)=K(s,u)-K(s,t)K(t,t)^+K(t,u)$.
 
 Jeżeli zachodzi wskazana tożsamość dla każdych $s<t<u$,
 to dla dowolnych skończonych zbiorów chwil
@@ -321,7 +326,7 @@ dla każdej ograniczonej borelowskiej funkcji $h$ mamy
 \[
 \E[h(X_u)\mid\sigma(X_s:s\le t)]
 =H(X_t),\quad H(x)=\E h\left(
-\frac{K(u,t)}{K(t,t)}x+R_u\right).
+a_ux+R_u\right).
 \]
 Mierzalność $H$ wynika z twierdzenia Fubiniego,
 a tożsamość z niezależności $R_u$ od przeszłości.
@@ -334,11 +339,13 @@ ograniczonych funkcji przeszłości i przyszłości stosujemy
 własność wieży i warunkowanie przyszłości względem
 $\sigma(X_r:r\le t)$; funkcje nieograniczone dopuszczamy
 następnie przez obcięcie w $L^2$. W szczególności $\E[X_u\mid\calF_t^X]
-=\E[X_u\mid\sigma(X_t)]=K(u,t)X_t/K(t,t)$,
+=\E[X_u\mid\sigma(X_t)]=a_uX_t$,
 gdzie $\calF_t^X=\sigma(X_s:s\le t)$, a przejście
 od funkcji ograniczonych do $X_u$ jest dozwolone przez
 zbieżność w $L^2$ i kontraktywność warunkowej wartości
-oczekiwanej. Zatem $\E[R_u\mid\calF_t^X]=0$.
+oczekiwanej. Ostatnia równość wynika z niezależności
+wycentrowanej reszty $R_u$ od $X_t$, także gdy $X_t$
+jest stała prawie na pewno. Zatem $\E[R_u\mid\calF_t^X]=0$.
 Ponieważ $R_s$ jest $\calF_t^X$-mierzalna i należy do $L^2$,
 przez obcięcie $R_s$ i nierówność Cauchy'ego--Schwarza
 otrzymujemy $\E[R_sR_u]=0$. Reszty są wycentrowane,
@@ -351,27 +358,50 @@ Niech $(X,Y)$ będzie wspólnie gaussowskim wektorem,
 $X\in\R^k$, $Y\in\R^m$, o średnich $m_X,m_Y$ i blokowej
 macierzy kowariancji
 $\left(\begin{smallmatrix}\Sigma_X&C\\ C^\top&\Sigma_Y\end{smallmatrix}\right)$.
-Załóżmy, że $\Sigma_Y$ jest dodatnio określona.
-Wtedy regularny rozkład warunkowy $X$ przy $Y=y$ jest
-normalny z parametrami
+Niech $\Sigma_Y^+$ oznacza pseudoodwrotność
+Moore'a--Penrose'a macierzy kowariancji $\Sigma_Y$:
+jeżeli $\Sigma_Y=U\operatorname{diag}(d_1,\ldots,d_m)U^\top$
+jest rozkładem spektralnym, to
 \[
-\mu(y)=m_X+C\Sigma_Y^{-1}(y-m_Y),\qquad
-V=\Sigma_X-C\Sigma_Y^{-1}C^\top.
+\Sigma_Y^+=U\operatorname{diag}(d_1^+,\ldots,d_m^+)U^\top,
+\qquad
+d_j^+=\begin{cases}1/d_j,&d_j>0,\\0,&d_j=0.\end{cases}
+\]
+Definicja nie zależy od wyboru bazy własnej, ponieważ
+operator działa skalarnie na każdej przestrzeni własnej.
+Wtedy regularny rozkład warunkowy $X$ przy $Y=y$ ma
+wersję normalną z parametrami
+\[
+\mu(y)=m_X+C\Sigma_Y^+(y-m_Y),\qquad
+V=\Sigma_X-C\Sigma_Y^+C^\top.
 \]
 Macierz $V$ jest nieujemnie określona, także wtedy,
 gdy rozkład warunkowy jest zdegenerowany.
+Jeżeli $\Sigma_Y$ jest odwracalna, to $\Sigma_Y^+=\Sigma_Y^{-1}$.
 \end{twierdzenie}
 \begin{proof}
-Połóżmy $A=C\Sigma_Y^{-1}$ i
+Dla $v\in\ker\Sigma_Y$ zmienna $v^\top(Y-m_Y)$
+ma średnią i wariancję zero, więc jest zerowa prawie
+na pewno. W konsekwencji
+$Cv=\E[(X-m_X)v^\top(Y-m_Y)]=0$.
+Zatem $\ker\Sigma_Y\subseteq\ker C$.
+Ze wzoru spektralnego wynika, że
+$\Sigma_Y^+\Sigma_Y=\Sigma_Y\Sigma_Y^+$ jest rzutem
+ortogonalnym na obraz $\Sigma_Y$, a
+$\Sigma_Y^+\Sigma_Y\Sigma_Y^+=\Sigma_Y^+$.
+Ponieważ $C$ znika na jądrze $\Sigma_Y$,
+mamy $C\Sigma_Y^+\Sigma_Y=C$.
+
+Połóżmy $A=C\Sigma_Y^+$ i
 $R=X-m_X-A(Y-m_Y)$. Wektor $(R,Y)$ jest gaussowski,
 bo jest afinicznym obrazem wektora $(X,Y)$.
 Ponieważ
-$\Cov(R,Y)=C-A\Sigma_Y=C-C\Sigma_Y^{-1}\Sigma_Y=0$,
-wektory $R,Y$ są niezależne. Rozwijając iloczyn
-$\Cov(R,R)$, otrzymujemy
+$\Cov(R,Y)=C-A\Sigma_Y=0$,
+wektory $R,Y$ są niezależne. Ponadto $\E R=0$.
+Rozwijając macierz kowariancji, otrzymujemy
 \[
 \Cov(R,R)=\Sigma_X-AC^\top-CA^\top+A\Sigma_YA^\top
-=\Sigma_X-C\Sigma_Y^{-1}C^\top=V.
+=\Sigma_X-C\Sigma_Y^+C^\top=V.
 \]
 Jako macierz kowariancji $V$ musi być nieujemnie określona.
 Ponadto $X=m_X+A(Y-m_Y)+R$. Dla ograniczonej funkcji
@@ -387,9 +417,30 @@ mierzalność wewnętrznej całki względem $y$ wynika
 z twierdzenia Tonellego; dla ustalonego $y$ jest ona
 prawdopodobieństwem względem prawa przesuniętego $R$.
 To dokładnie własność regularnego rozkładu warunkowego
-o podanych parametrach. W szczególności nie wolno interpretować
-$\Sigma_Y^{-1}$ bez założenia odwracalności macierzy.
+o podanych parametrach. Rozkład $Y$ jest skoncentrowany
+na $m_Y+\operatorname{im}\Sigma_Y$: wystarczy wybrać
+skończoną bazę jądra i przeciąć zbiory pełnej miary,
+na których odpowiednie iloczyny skalarne z $Y-m_Y$
+są zerowe. Wartości jądra poza tą podprzestrzenią
+nie są wyznaczone przez warunek rozkładu warunkowego;
+podany wzór wybiera jedną wersję na całym $\R^m$.
 \end{proof}
+
+\begin{przyklad}[Powtórzona obserwacja]
+Niech $U,V$ będą niezależnymi zmiennymi standardowo
+normalnymi, $X=U+V$, a $Y=(U,U)^\top$.
+Wtedy
+\[
+\Sigma_Y=\begin{pmatrix}1&1\\1&1\end{pmatrix},\qquad
+\Sigma_Y^+=\tfrac14\begin{pmatrix}1&1\\1&1\end{pmatrix},
+\qquad C=\begin{pmatrix}1&1\end{pmatrix}.
+\]
+Wzór daje $X\mid(Y=y)\sim
+\Normal((y_1+y_2)/2,1)$. Na prostej $y_1=y_2$
+jest to rozkład $\Normal(y_1,1)$, zgodnie z niezależnością
+$V$ od $U$. Powtórzenie tej samej obserwacji nie
+zmniejsza wariancji błędu predykcji.
+\end{przyklad}
 
 \section{Od kowariancji do ciągłości trajektorii}
 \begin{lemat}[Moment przyrostu gaussowskiego]
@@ -412,16 +463,25 @@ $\E|G|^p=(2/\sqrt{2\pi})\int_0^\infty
 
 \begin{wniosek}[Praktyczne kryterium ciągłości procesu gaussowskiego]
 Niech $X=(X_t)_{t\in[0,T]}$, $T>0$, będzie procesem gaussowskim.
-Załóżmy, że jego funkcja średniej jest stała oraz istnieją
-$C>0$, $\eta>0$ takie, że
+Załóżmy, że istnieją $C>0$, $\eta>0$ takie, że
 $\E|X_t-X_s|^2\le C|t-s|^{\eta}$ dla wszystkich $s,t\in[0,T]$.
+Nie wymagamy stałej funkcji średniej.
 Wtedy $X$ ma ciągłą modyfikację. Co więcej, ma modyfikację,
-której trajektorie są lokalnie h\"olderowskie każdego rzędu
-$\gamma<\eta/2$, o ile $\gamma<1$.
+której trajektorie są h\"olderowskie na $[0,T]$
+każdego rzędu $0<\gamma<\min(\eta/2,1)$
+na jednym zbiorze pełnej miary.
 \end{wniosek}
 \begin{proof}
-Dla dowolnie dużego $p\ge2$ poprzedni lemat daje
-$\E|X_t-X_s|^p\le c_p C^{p/2}|t-s|^{\eta p/2}$.
+Niech $m(t)=\E X_t$. Nierówność Cauchy'ego--Schwarza
+daje $|m(t)-m(s)|\le C^{1/2}|t-s|^{\eta/2}$.
+Wariancja przyrostu jest nie większa od jego drugiego
+momentu. Stosując poprzedni lemat do wycentrowanego
+przyrostu oraz nierówność
+$|a+b|^p\le2^{p-1}(|a|^p+|b|^p)$, dla $p\ge2$ dostajemy
+\[
+\E|X_t-X_s|^p\le
+2^{p-1}(1+c_p)C^{p/2}|t-s|^{\eta p/2}.
+\]
 Wybierzmy $p$ tak duże, by $\eta p/2>1$.
 Twierdzenie~\ref{thm:kol-cont} daje ciągłą modyfikację,
 a także wykładniki H\"oldera mniejsze niż
