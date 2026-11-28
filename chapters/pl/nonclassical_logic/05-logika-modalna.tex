@@ -417,3 +417,385 @@ mamy $A\to\Diamond A$. Składamy implikacje,
 korzystając z klasycznej tautologii przechodniości
 implikacji i modus ponens.
 \end{proof}
+
+\section{Konsekwencja lokalna i globalna}
+
+\begin{definicja}[Dwie relacje konsekwencji syntaktycznej]
+\label{def:ncl-modal-local-global}
+Niech $L$ będzie normalną logiką modalną, a
+$\Gamma\subseteq\mathrm{Fm}_{\Box}$.
+Piszemy $\Gamma\vdash_L^{\mathrm{lok}} A$, jeśli
+istnieje skończony ciąg kończący się formułą $A$,
+którego każdy wiersz jest elementem $\Gamma$,
+twierdzeniem $L$ albo wynika z wcześniejszych
+wierszy przez modus ponens.
+Piszemy $\Gamma\vdash_L^{\mathrm{glob}} A$,
+jeśli dodatkowo wolno stosować regułę konieczności
+do każdego wcześniejszego wiersza, również do
+formuł uzyskanych z przesłanek.
+\end{definicja}
+W obu definicjach podstawienie nie jest regułą
+stosowaną do dowolnej przesłanki. Z faktu, że
+$p$ jest założeniem, nie wynika dowolna formuła
+$\sigma(p)$. Domknięcie logiki względem podstawień
+dotyczy zbioru twierdzeń $L$; własność strukturalna
+konsekwencji polega natomiast na jednoczesnym
+podstawieniu w przesłankach i wniosku.
+
+W konsekwencji lokalnej zakładamy prawdziwość
+przesłanek w aktualnym stanie. Konsekwencja
+globalna odpowiada założeniu ich prawdziwości
+we wszystkich stanach modelu. Jest to motywacja
+dla dwóch różnych rachunków syntaktycznych;
+ich semantyczną pełność rozważymy osobno.
+
+\begin{stwierdzenie}[Własności strukturalne obu konsekwencji]
+\label{prop:ncl-modal-consequence-structural}
+Dla każdej z relacji $\vdash_L^{\mathrm{lok}}$,
+$\vdash_L^{\mathrm{glob}}$ zachodzą:
+\begin{enumerate}
+\item zwrotność: $A\in\Gamma$ implikuje
+      $\Gamma\vdash A$;
+\item monotoniczność: z $\Gamma\subseteq\Delta$
+      i $\Gamma\vdash A$ wynika $\Delta\vdash A$;
+\item cięcie: jeżeli $\Gamma\vdash B$ dla każdego
+      $B\in\Delta$ oraz $\Delta\vdash A$, to
+      $\Gamma\vdash A$;
+\item skończoność: jeżeli $\Gamma\vdash A$,
+      to pewien skończony $\Gamma_0\subseteq\Gamma$
+      spełnia $\Gamma_0\vdash A$;
+\item strukturalność: $\Gamma\vdash A$ implikuje
+      $\sigma(\Gamma)\vdash\sigma(A)$.
+\end{enumerate}
+Ponadto
+\[
+ \varnothing\vdash_L^{\mathrm{lok}} A
+ \iff \varnothing\vdash_L^{\mathrm{glob}} A
+ \iff A\in L.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Zwrotność i monotoniczność wynikają wprost
+z definicji dowodu. Dla cięcia bierzemy dowód
+$A$ z $\Delta$ i dla każdej użytej w nim przesłanki
+$B\in\Delta$ wybieramy jej dowód z $\Gamma$.
+Dołączamy te skończenie liczne dowody przed
+dowodem $A$. Każdy wiersz będący przesłanką
+z $\Delta$ ma w ten sposób wcześniejsze
+uzasadnienie z $\Gamma$, a pozostałe wiersze
+można odtworzyć przez dozwolone reguły.
+Jeśli ostatni wiersz jest już wcześniej uzyskany,
+możemy zakończyć dowód na jego wystąpieniu.
+W przypadku globalnym wszystkie zastosowania
+konieczności pozostają legalne, ponieważ
+dopuszczamy tę regułę także dla formuł
+uzyskanych z $\Gamma$.
+Skończoność wynika ze skończoności dowodu.
+Podstawiając jednocześnie we wszystkich wierszach,
+zachowujemy przynależność do zbioru twierdzeń $L$,
+modus ponens i, w przypadku globalnym, regułę
+konieczności.
+Dla pustego zbioru przesłanek indukcja po
+wierszach dowodu pokazuje, że każdy wiersz
+należy do $L$, ponieważ $L$ jest domknięta
+względem obu reguł. Odwrotnie każde twierdzenie
+$L$ jest jednoelementowym dowodem w obu rachunkach.
+\end{proof}
+
+\begin{twierdzenie}[Lokalne twierdzenie o dedukcji]
+\label{thm:ncl-modal-local-deduction}
+Dla dowolnego zbioru $\Gamma$ i formuł $A,B$
+zachodzi
+\[
+ \Gamma\cup\{A\}\vdash_L^{\mathrm{lok}} B
+ \iff \Gamma\vdash_L^{\mathrm{lok}} A\to B.
+\]
+\end{twierdzenie}
+\begin{proof}
+Kierunek od prawej do lewej wynika
+z monotoniczności oraz modus ponens.
+W drugim kierunku indukujemy po wierszach $C$
+lokalnego dowodu $B$ z $\Gamma\cup\{A\}$.
+Jeśli $C=A$, to $A\to C$ jest klasyczną
+tautologią.
+Jeśli $C\in\Gamma$ albo $C\in L$, to
+z $C$ i tautologii $C\to(A\to C)$ uzyskujemy
+$A\to C$ z $\Gamma$.
+Jeżeli $C$ wynika z wcześniejszych $D,D\to C$,
+to mamy z hipotezy indukcyjnej dowody
+$A\to D$ oraz $A\to(D\to C)$ z $\Gamma$.
+Stosujemy klasyczną tautologię
+\[
+ (A\to(D\to C))\to((A\to D)\to(A\to C))
+\]
+oraz dwukrotnie modus ponens.
+Nie występuje przypadek konieczności
+stosowanej do przesłanki: zastosowania
+konieczności w dowodach twierdzeń $L$
+są już zawarte w przypadku $C\in L$.
+\end{proof}
+
+\begin{wniosek}[Skończone przesłanki lokalne]
+\label{cor:ncl-modal-local-finite}
+Dla skończonego zbioru $\Delta$ i formuły $B$
+zachodzi
+\[
+ \Delta\vdash_L^{\mathrm{lok}} B
+ \iff
+ \vdash_L \left(\bigwedge_{A\in\Delta} A\right)\to B.
+\]
+Pusta koniunkcja jest równa $\top$.
+\end{wniosek}
+\begin{proof}
+Dla niepustej $\Delta$ możemy zastąpić wszystkie
+jej elementy ich koniunkcją: każdy składnik
+wynika z koniunkcji przez klasyczną tautologię
+i modus ponens, a koniunkcja wynika z jej
+składników przez iterowane wprowadzanie
+koniunkcji, które jest regułą pochodną rachunku
+klasycznego. Własność cięcia uzasadnia oba
+kierunki zamiany.
+Stosujemy Twierdzenie~\ref{thm:ncl-modal-local-deduction}
+dla $\Gamma=\varnothing$ oraz
+Stwierdzenie~\ref{prop:ncl-modal-consequence-structural}.
+Dla $\Delta=\varnothing$ korzystamy z dowodliwości
+$\top$ i równoważności $B\leftrightarrow(\top\to B)$.
+\end{proof}
+
+\subsection{Iteracje konieczności i dedukcja globalna}
+
+\begin{definicja}[Domknięcie przesłanek względem konieczności]
+\label{def:ncl-modal-box-closure}
+Piszemy $\Box^0 A=A$ oraz
+$\Box^{n+1}A=\Box(\Box^n A)$ dla $n\geq0$.
+Dla zbioru formuł $\Gamma$ określamy
+\[
+ \Gamma^\Box=\{\Box^n A:A\in\Gamma,\ n\geq0\},
+ \qquad
+ A^{[n]}=\bigwedge_{k=0}^n\Box^k A.
+\]
+\end{definicja}
+
+\begin{twierdzenie}[Redukcja konsekwencji globalnej do lokalnej]
+\label{thm:ncl-modal-global-local}
+Dla dowolnej normalnej logiki $L$ zachodzi
+\[
+ \Gamma\vdash_L^{\mathrm{glob}} B
+ \iff
+ \Gamma^\Box\vdash_L^{\mathrm{lok}} B.
+\]
+\end{twierdzenie}
+\begin{proof}
+Każda formuła $\Box^n A$ z $\Gamma^\Box$
+jest globalnie dowodliwa z $\Gamma$ przez
+$n$ zastosowań konieczności.
+Lokalny dowód z $\Gamma^\Box$ jest również
+dowodem globalnym z tego zbioru, więc przez
+cięcie otrzymujemy jeden kierunek.
+
+Dla odwrotnego kierunku zauważmy, że jeżeli
+$\Gamma^\Box\vdash_L^{\mathrm{lok}} C$, to
+$\Gamma^\Box\vdash_L^{\mathrm{lok}}\Box C$.
+Istotnie, lokalny dowód $C$ wykorzystuje
+skończenie wiele przesłanek $D_1,\ldots,D_m$
+z $\Gamma^\Box$. Wniosek~\ref{cor:ncl-modal-local-finite}
+daje
+\[
+ \vdash_L(D_1\wedge\cdots\wedge D_m)\to C.
+\]
+Przez monotoniczność konieczności otrzymujemy
+\[
+ \vdash_L\Box(D_1\wedge\cdots\wedge D_m)\to\Box C.
+\]
+Każda $\Box D_i$ należy do $\Gamma^\Box$.
+Prawo konieczności skończonej koniunkcji
+(Twierdzenie~\ref{thm:ncl-modal-normal-laws})
+pozwala z nich lokalnie uzyskać
+$\Box(D_1\wedge\cdots\wedge D_m)$, a następnie
+$\Box C$. Dla $m=0$ używamy twierdzenia
+$\Box\top$.
+Zatem lokalne konsekwencje $\Gamma^\Box$
+są domknięte względem konieczności.
+Indukcja po dowodzie globalnym z $\Gamma$
+pokazuje teraz, że każdy jego wiersz jest
+lokalnie dowodliwy z $\Gamma^\Box$:
+przesłanki należą do $\Gamma^\Box$, twierdzenia
+i modus ponens są dozwolone lokalnie, a przypadek
+konieczności obsługuje właśnie wykazana własność.
+\end{proof}
+
+\begin{twierdzenie}[Globalne twierdzenie o dedukcji]
+\label{thm:ncl-modal-global-deduction}
+Dla dowolnego zbioru $\Gamma$ i formuł $A,B$
+zachodzi
+\[
+ \Gamma\cup\{A\}\vdash_L^{\mathrm{glob}} B
+ \iff
+ \exists n\geq0\quad
+ \Gamma\vdash_L^{\mathrm{glob}} A^{[n]}\to B.
+\]
+Równoważnie po prawej stronie można przyjąć
+$\Gamma^\Box\vdash_L^{\mathrm{lok}} A^{[n]}\to B$.
+\end{twierdzenie}
+\begin{proof}
+Z Twierdzenia~\ref{thm:ncl-modal-global-local}
+lewa strona jest równoważna lokalnej dowodliwości
+$B$ z $\Gamma^\Box\cup\{\Box^k A:k\geq0\}$.
+Dowód wykorzystuje skończenie wiele iteracji
+$\Box^k A$. Wybieramy $n$ nie mniejsze od
+wszystkich ich wykładników (jeśli nie użyto
+żadnej, bierzemy $n=0$).
+Każda z wykorzystanych iteracji jest lokalną
+konsekwencją $A^{[n]}$ na mocy klasycznych
+tautologii eliminacji koniunkcji.
+Cięcie daje
+$\Gamma^\Box\cup\{A^{[n]}\}\vdash_L^{\mathrm{lok}}B$.
+Lokalne twierdzenie o dedukcji i redukcja
+konsekwencji globalnej do lokalnej dają
+obie wersje prawej strony.
+
+Odwrotnie, jeśli prawa strona zachodzi, to
+globalnie z $\Gamma\cup\{A\}$ dowodzimy
+każdej $\Box^k A$ dla $0\leq k\leq n$,
+a następnie ich koniunkcji. Z monotoniczności
+mamy również dowód $A^{[n]}\to B$ z tych
+samych przesłanek. Modus ponens daje $B$.
+\end{proof}
+
+\begin{wniosek}[Dedukcja globalna w K4 i S4]
+\label{cor:ncl-modal-global-deduction-K4}
+Jeżeli $L$ zawiera schemat 4, to
+\[
+ \Gamma\cup\{A\}\vdash_L^{\mathrm{glob}} B
+ \iff
+ \Gamma\vdash_L^{\mathrm{glob}}(A\wedge\Box A)\to B.
+\]
+Jeżeli ponadto $L$ zawiera T, to równoważnie
+$\Gamma\vdash_L^{\mathrm{glob}}\Box A\to B$.
+\end{wniosek}
+\begin{proof}
+Dla każdego $k\geq1$ mamy
+$\vdash_L\Box A\to\Box^k A$.
+Dowodzimy indukcyjnie: dla $k=1$ jest to
+tautologia, a przejście od $k$ do $k+1$
+wynika ze złożenia dotychczasowej implikacji
+z instancją 4 dla $\Box^{k-1}A$.
+Zatem $A\wedge\Box A$ pociąga każdą
+skończoną koniunkcję $A^{[n]}$, również
+dla $n=0$. Stosujemy
+Twierdzenie~\ref{thm:ncl-modal-global-deduction}.
+Odwrotny kierunek otrzymujemy z tego
+samego twierdzenia dla $n=1$.
+Przy T formuły $A\wedge\Box A$ i $\Box A$
+są dowodliwie równoważne.
+\end{proof}
+
+\subsection{Dlaczego rozróżnienie jest konieczne}
+
+Do kontrprzykładów wystarczy elementarna
+interpretacja relacyjna. Niech $W$ będzie
+niepustym zbiorem stanów, $R\subseteq W\times W$,
+a zmienne przyjmują dowolne podzbiory $W$.
+Spójniki klasyczne interpretujemy punktowo,
+a $\Box C$ jest prawdziwa w stanie $w$,
+gdy $C$ jest prawdziwa we wszystkich stanach
+$z$ spełniających $wRz$.
+Schemat K jest prawdziwy w każdym stanie:
+jeśli wszystkie dostępne stany spełniają
+$A\to B$ oraz wszystkie spełniają $A$,
+to wszystkie spełniają $B$.
+Tautologie są prawdziwe punktowo, a modus
+ponens zachowuje prawdziwość w danym stanie.
+Konieczność zachowuje prawdziwość we wszystkich
+stanach: gdy $C$ jest wszędzie prawdziwa, to
+$\Box C$ również. Indukcja po dowodach K daje
+zatem prawdziwość wszystkich twierdzeń K
+we wszystkich stanach każdego takiego modelu.
+W szczególności lokalny dowód z przesłanek
+zachowuje prawdziwość w stanie, w którym
+prawdziwe są wszystkie użyte przesłanki.
+Pełny rozwój tej semantyki pozostawiamy
+następnemu rozdziałowi.
+
+\begin{przyklad}[Konieczność nie jest lokalną regułą wnioskowania]
+\label{ex:ncl-modal-local-global-difference}
+Mamy $p\vdash_{\mathrm K}^{\mathrm{glob}}\Box p$
+przez jedno zastosowanie konieczności, lecz
+$p\nvdash_{\mathrm K}^{\mathrm{lok}}\Box p$.
+Rozważmy dwa stany $w,z$ z jedyną parą
+$wRz$ i niech $p$ będzie prawdziwe tylko w $w$.
+W stanie $w$ przesłanka jest prawdziwa,
+ale $\Box p$ jest fałszywa.
+W szczególności zwykłe twierdzenie o dedukcji
+nie zachodzi dla konsekwencji globalnej:
+$p\to\Box p$ nie jest twierdzeniem K,
+chociaż $p\vdash_{\mathrm K}^{\mathrm{glob}}\Box p$.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+\node[draw,circle,minimum size=10mm,fill=blue!10] (w) at (0,0) {$w$};
+\node[draw,circle,minimum size=10mm] (z) at (3,0) {$z$};
+\draw[->,thick] (w)--node[above] {$R$}(z);
+\node[below=4pt of w] {$p,\ \neg\Box p$};
+\node[below=4pt of z] {$\neg p$};
+\end{tikzpicture}
+\end{center}
+
+\begin{przyklad}[Brak jednolitego ograniczenia liczby iteracji w K]
+\label{ex:ncl-modal-global-no-uniform-bound}
+Dla każdego $n\geq0$ zachodzi
+$p\vdash_{\mathrm K}^{\mathrm{glob}}\Box^{n+1}p$,
+ale
+\[
+ \nvdash_{\mathrm K} p^{[n]}\to\Box^{n+1}p.
+\]
+Weźmy stany $0,1,\ldots,n+1$ z relacją
+$iRj$ wtedy i tylko wtedy, gdy $j=i+1$.
+Niech $p$ będzie prawdziwe w stanach
+$0,\ldots,n$, ale fałszywe w stanie $n+1$.
+Dla $0\leq k\leq n+1$ istnieje dokładnie jedna
+ścieżka długości $k$ z $0$, kończąca się w $k$.
+Indukcja po długości ścieżki, stosująca
+klauzulę $\Box$, daje, że $\Box^k p$ jest
+prawdziwa w $0$ dokładnie wtedy, gdy $p$
+jest prawdziwe w $k$.
+Zatem w $0$ prawdziwa jest cała koniunkcja
+$p^{[n]}$, ale fałszywa jest $\Box^{n+1}p$.
+Poprawność twierdzeń K w powyższej interpretacji
+wyklucza dowodliwość implikacji.
+Oznacza to, że liczba iteracji w globalnym
+twierdzeniu o dedukcji nie może być z góry
+ograniczona jedną liczbą niezależną od wniosku.
+\end{przyklad}
+
+\begin{wniosek}[Domknięcie teorii lokalnej i globalnej]
+\label{cor:ncl-modal-theory-closure}
+Niech $\operatorname{Cn}^{\mathrm{lok}}_L(\Gamma)$
+oraz $\operatorname{Cn}^{\mathrm{glob}}_L(\Gamma)$
+oznaczają zbiory odpowiednich konsekwencji.
+Oba operatory są ekstensywne, monotoniczne,
+idempotentne i finitarne. Ponadto
+\[
+ \operatorname{Cn}^{\mathrm{glob}}_L(\Gamma)
+ =\operatorname{Cn}^{\mathrm{lok}}_L(\Gamma^\Box).
+\]
+Zbiór domknięty względem konsekwencji lokalnej
+jest domknięty względem konsekwencji globalnej
+dokładnie wtedy, gdy jest domknięty względem
+operatora $\Box$.
+\end{wniosek}
+\begin{proof}
+Pierwsze cztery własności wynikają kolejno
+ze zwrotności, monotoniczności, cięcia wraz
+ze zwrotnością oraz skończoności
+(Stwierdzenie~\ref{prop:ncl-modal-consequence-structural}).
+Równość operatorów jest treścią
+Twierdzenia~\ref{thm:ncl-modal-global-local}.
+Jeżeli $T$ jest domknięty lokalnie i
+$A\in T$ pociąga $\Box A\in T$, to
+$T^\Box=T$, więc równość operatorów daje
+domknięcie globalne.
+Odwrotnie domknięcie globalne daje domknięcie
+względem $\Box$ bezpośrednio z reguły konieczności.
+\end{proof}
