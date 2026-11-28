@@ -29,3 +29,91 @@ Kontrola dotyczy wymienionych jednostek i nagłówków twierdzeń, nie pełnej r
 
 ## Wykonane w pierwszej iteracji
 DT-07: transformacja L1 do C0, lemat Riemanna–Lebesgue'a, reguły translacji/modulacji/skalowania/splotu i różniczkowania, zgodność L1–L2–S', regularyzacja Gaussa, odwrócenie i jednoznaczność L1, pary prostokąt/sinc i wykładnicza/Lorentz oraz porównanie normalizacji RRC. Wszystkie nowe wyniki mają dowody; kompilacja i audyt kontrolny pozostają wymagane.
+
+## Struktura docelowa — etap restrukturyzacji
+
+Plan przyjęto po porównaniu zależności wszystkich 19 aktywnych jednostek. Docelowe identyfikatory pozostają robocze. Zmieniono kolejność: teoria zwartego nośnika poprzedza splot, transformacja dystrybucji temperowanych poprzedza istniejący dowód Plancherela, a M. Riesz i Carleson–Hunt stanowią rozdział 58 po teorii całek osobliwych. Podstawowe średnie Fouriera w Lp pozostają w części IV. To zapewnia porządek dowodów zamiast odsyłania do przyszłych twierdzeń.
+
+### Część 1. Podstawy teorii dystrybucji
+
+1. Przestrzenie funkcji gładkich i przestrzeń Schwartza
+2. Funkcje testowe i ścisłe granice induktywne
+3. Dystrybucje i topologie przestrzeni dystrybucji
+4. Lokalność, nośniki, rząd i sklejanie dystrybucji
+5. Pochodne dystrybucyjne i transpozycja operatorów
+6. Dystrybucje o zwartym nośniku
+7. Splot dystrybucji i regularyzacja
+8. Skoki, iloczyny dystrybucji i ograniczenia rachunku
+
+### Część 2. Transformacja Fouriera
+
+9. Transformacja Fouriera w przestrzeniach Schwartza i L1
+10. Dystrybucje temperowane i ich transformacja Fouriera
+11. Transformacja Fouriera w L2 i twierdzenie Plancherela
+12. Splot funkcji i nierówność Younga
+13. Interpolacja zespolona i nierówność Hausdorffa–Younga
+14. Transformacja Fouriera miar
+15. Transformacja funkcji radialnych i funkcje Bessela
+16. Transformata dystrybucji o zwartym nośniku i twierdzenie Paleya–Wienera–Schwartza
+
+### Część 3. Struktura topologiczna i dalsza teoria dystrybucji
+
+17. Przestrzenie Montela i nuklearne
+18. Topologiczne iloczyny tensorowe
+19. Twierdzenie o jądrze Schwartza
+20. Induktywne iloczyny tensorowe przestrzeni testowych
+21. Rozwiązania fundamentalne i twierdzenie Malgrange'a–Ehrenpreisa
+22. Dystrybucje na rozmaitościach i operacje geometryczne
+23. Zbiory falowe i podstawy analizy mikrolokalnej
+
+### Część 4. Szeregi Fouriera
+
+24. Układy ortogonalne i współczynniki Fouriera
+25. Jądro Dirichleta i zbieżność punktowa
+26. Jądra Fejéra i Poissona, metody sumowalności i Parseval
+27. Zbieżność jednostajna, zjawisko Gibbsa i rozbieżność
+28. Sumowalność i zbieżność średnich w Lp
+29. Wielowymiarowe szeregi Fouriera i dystrybucje okresowe
+
+### Część 5. Dyskretna i numeryczna analiza Fouriera
+
+30. Dyskretna transformacja Fouriera
+31. Algorytmy szybkiej transformacji Fouriera
+32. Splot dyskretny i jego obliczanie
+33. Próbkowanie i twierdzenie Shannona
+34. Analiza widmowa, aliasing i funkcje okienkowe
+
+### Część 6. Pozostałe transformacje
+
+35. Transformacja Laplace'a jednostronna i dwustronna
+36. Odwracanie transformacji Laplace'a i całka Bromwicha
+37. Transformacja Laplace'a dystrybucji
+38. Transformacje Mellina i Hankela
+39. Transformacja Radona
+40. Transformacja Z
+
+### Część 7. Całki osobliwe i klasyczna analiza harmoniczna
+
+41. Operator maksymalny Hardy'ego–Littlewooda
+42. Interpolacja rzeczywista i twierdzenie Marcinkiewicza
+43. Wartości główne, jądra całek osobliwych i mnożniki L2
+44. Transformacja Hilberta
+45. Transformaty Riesza
+46. Rozkład i teoria Calderóna–Zygmunda
+47. Maksymalne obcięcia i zbieżność wartości głównych
+48. Mnożniki Fouriera i twierdzenie Michlina–Hörmandera
+49. Potencjały Riesza i twierdzenie Hardy'ego–Littlewooda–Sobolewa
+50. Potencjały Bessela, przestrzenie Sobolewa i zasada nieoznaczoności
+
+### Część 8. Zaawansowana analiza harmoniczna
+
+51. Przestrzenie Lorentza i przestrzenie interpolacyjne
+52. Przestrzenie Hardy'ego
+53. Przestrzeń BMO i dualność z H1
+54. Wagi Muckenhoupta i ważone przestrzenie Lp
+55. Teoria Littlewooda–Paleya
+56. Przestrzenie Besowa i Triebel–Lizorkina
+57. Analiza harmoniczna na grupach lokalnie zwartych i dualność Pontriagina
+58. Zaawansowana zbieżność szeregów Fouriera: M. Riesz i Carleson–Hunt
+
+Mapa: `catalog/distribution_theory_structure_plan.json`. Przypisano wszystkie 288 dotychczasowe etykiety do planowanych rozdziałów. Utworzono 13 rzeczywistych plików kandydackich obejmujących 117 zachowanych etykiet. Kandydaci są poza aktywnym katalogiem; bez pustych rozdziałów i bez zmiany kanonicznej numeracji. Sprawdzono bilans etykiet, środowiska LaTeX i jawne zwykłe odsyłacze kandydatów (zero odsyłaczy do późniejszego planowanego rozdziału). Nie jest to jeszcze audyt dowodów ani kompilacja. Rozdziały 7 i 16 wymagają w szczególności uzupełnienia. Następnie przygotować pozostałe kopie, sprawdzić odsyłacze po podziale i pełny master, przenieść testy i aliasy atomowo. CI poprzedniego aktywnego skryptu: 46139581019 PASS.
