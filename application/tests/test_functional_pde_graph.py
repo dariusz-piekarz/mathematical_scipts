@@ -9,6 +9,9 @@ from backend.graph_coverage import graph_coverage
 from backend.latex_parser import build_database, module_id
 
 
+from distribution_graph_migration import active, migrated_source, migrated_target
+
+
 class FunctionalPDEGraphTest(unittest.TestCase):
     def test_exact_reading_edges(self):
         repository = Path(__file__).resolve().parents[2]
@@ -29,8 +32,12 @@ class FunctionalPDEGraphTest(unittest.TestCase):
             ("FA-30", "PDE-12", "thm:pde12-general-fredholm"),
             ("FA-33", "PDE-12", "def:pde12-adjoint"),
         )
-        needed = {doc for source, target, _ in expected for doc in (source, target)}
         catalog = json.loads((repository / "catalog" / "books.json").read_text(encoding="utf-8"))
+        if active(catalog):
+            expected = tuple((migrated_source(s, t + "::" + label),
+                              migrated_target(t, label), label)
+                             for s, t, label in expected)
+        needed = {doc for source, target, _ in expected for doc in (source, target)}
         sources = {}
         for book in catalog["books"]:
             for relative in book["chapters"]:

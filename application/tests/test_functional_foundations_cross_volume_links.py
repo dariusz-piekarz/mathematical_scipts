@@ -10,6 +10,8 @@ import unittest
 from backend.api import bipartite_graph
 from backend.latex_parser import build_database, module_id
 
+from distribution_graph_migration import migrate_required
+
 ROOT = Path(__file__).resolve().parents[2]
 EXPECTED = {
     "FA-01": {"GT-24::def:topog24-group", "GT-05::def:topog-t0-t1-t2",
@@ -38,8 +40,9 @@ class FunctionalFoundationsCrossVolumeLinks(unittest.TestCase):
         required = {(src, lab, lab.split("::", 1)[0])
                     for src, labels in EXPECTED.items() for lab in labels}
         self.assertEqual(len(required), 22)
-        wanted = set(EXPECTED) | {dst for _, _, dst in required}
         catalog = json.loads((ROOT / "catalog/books.json").read_text(encoding="utf-8"))
+        required = migrate_required(required, catalog)
+        wanted = {src for src, _, _ in required} | {dst for _, _, dst in required}
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp) / "pl"
             copied = set()

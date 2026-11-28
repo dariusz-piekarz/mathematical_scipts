@@ -6,6 +6,8 @@ import unittest
 from backend.label_registry import Owner, qualified_occurrence, resolve
 from backend.latex_parser import module_id, parse_document
 
+from distribution_graph_migration import active
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -31,7 +33,13 @@ class FunctionalReferenceCoverageTest(unittest.TestCase):
             return parsed[mid]
 
         fa_ids = {mid for mid in paths if mid.startswith("FA-")}
-        self.assertGreaterEqual(len(fa_ids), 35)
+        if active(catalog):
+            self.assertGreaterEqual(len(fa_ids), 26)
+            inherited = {f"DT-{n:02d}" for n in (1, 2, 3, 4, 5, 7, 8, 9, 10, 11)}
+            self.assertLessEqual(inherited, paths.keys())
+            fa_ids |= inherited
+        else:
+            self.assertGreaterEqual(len(fa_ids), 35)
         count = 0
         for mid in sorted(fa_ids):
             doc = load(mid)
@@ -52,7 +60,7 @@ class FunctionalReferenceCoverageTest(unittest.TestCase):
                     self.assertEqual(decision.status, "external_resolved")
                     self.assertEqual(decision.owner, owners[0])
                     self.assertIsNotNone(decision.owner.entity_id)
-                    if not target.startswith("FA-"):
+                    if target.split("-", 1)[0] != mid.split("-", 1)[0]:
                         cross_volume += 1
                         cross_targets.add(r.target)
             self.assertGreater(cross_volume, 0, f"{mid}: no cross-volume reading link")
