@@ -116,5 +116,34 @@ class CategoryTheoryCh44(unittest.TestCase):
                              hom(p3, target))
 
 
+    def test_inverse_matrix_bimodules(self):
+        # Balanced row/column tensor over M_m(F_3).
+        for m in range(1, 6):
+            width = m*m
+            pivots = {}
+            for i, a, b, j in product(range(m), repeat=4):
+                row = [0]*width
+                # (u_i E_ab) tensor t_j - u_i tensor (E_ab t_j)
+                if i == a:
+                    row[b*m+j] += 1
+                if b == j:
+                    row[i*m+a] -= 1
+                self.assertEqual(sum(row[z*m+z] for z in range(m)) % 3, 0)
+                row = [x % 3 for x in row]
+                for col in sorted(pivots):
+                    factor = row[col]
+                    row = [(x-factor*y) % 3 for x, y in zip(row, pivots[col])]
+                if any(row):
+                    col = next(i for i, x in enumerate(row) if x)
+                    inv = pow(row[col], -1, 3)
+                    pivots[col] = [(x*inv) % 3 for x in row]
+            self.assertEqual(width-len(pivots), 1)
+            # Unbalanced column/row tensor maps its basis to matrix units.
+            units = {tuple(int(r == i and c == j)
+                           for r, c in product(range(m), repeat=2))
+                     for i, j in product(range(m), repeat=2)}
+            self.assertEqual(len(units), width)
+
+
 if __name__ == '__main__':
     unittest.main()
