@@ -1,4 +1,4 @@
-# Teoria dystrybucji i analiza harmoniczna — migracja (etap 8)
+# Teoria dystrybucji i analiza harmoniczna — migracja (etap 9)
 
 Data: 2026-11-28. Nazwa robocza: distribution_theory. Planowany prefiks Atlasu: DT (do potwierdzenia przy przełączeniu identyfikatorów).
 
@@ -67,3 +67,8 @@ Etap 1 pozostaje celowo poza katalogiem aktywnych książek Atlasu. Nie jest to 
 - Rezerwacja prefiksu DT w parserze ścieżek i obsługa preambuły DT w generatorze.
 - Nowa jawna lista qualified_label_aliases w konfiguracji aliasów, o polach old_document, old_label, target_document, target_label. Resolver najpierw sprawdza istniejącego właściciela, a dopiero przy jego braku stosuje zadeklarowaną migrację. Brak automatycznego wyboru przy kolizjach; nie ma łańcuchów aliasów. Dodano regresje bezpośrednie i z indeksem SQLite.
 - Nie wprowadzono jeszcze konkretnych aliasów FA→DT ani rejestracji rozdziałów DT. Testy AF (35 jednostek), dedykowane workflow, rejestracja i źródła wymagają spójnego przełączenia po kontroli kompilacji. Nie wywołano dodatkowych workflow.
+
+## Etap 9 — kandydaci kanonicznych rozdziałów i mapa migracji
+- Scalone 19 plików kandydackich w shared/pl/distribution_theory/candidate, z numeracją 01–19 i fragmentami AF-25 włączonymi do treści. Master TD korzysta wyłącznie z tych plików; usunięto adapter liczników.
+- catalog/distribution_theory_migration.json zawiera 211 jednoznacznych mapowań historycznych etykiet FA 17–25 do docelowych identyfikatorów DT oraz wykaz 265 etykiet w całym skrypcie. Kontrola statyczna: zero duplikatów, zero odsyłaczy do późniejszych rozdziałów, trzy zewnętrzne odsyłacze do AF.
+- Kandydaci nie są indeksowani przez Atlas; nie zmieniono books.json ani aktywnej konfiguracji aliasów, nie usunięto źródeł AF. Poprzedni przebieg CI aplikacji anulowano. Przed przełączeniem konieczna kompilacja, migracja regresji i kontrola wszystkich jawnych odsyłaczy.
