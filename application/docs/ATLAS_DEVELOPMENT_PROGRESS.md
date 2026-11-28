@@ -6,7 +6,7 @@
 
 ## Wskaźnik wykonywania
 
-- **Aktualny krok (26.11.2026):** L1.5.6 / RT-09c, faza B — odbiór techniczny 3/3 na `626dbdd03ad6cb84bca89b61fa62e28440464bb5`: pełna aplikacja/Chromium, natywne Linux/Windows, przypięty Lean/Mathlib oraz trzy rzeczywiste kontrole Mathlib offline. Sceptyczne testy i ponowny odczyt artefaktów zaliczone. Formalnie `stabilizing / review pending`; `offline_ready=false`, `execution_allowed=false`, `certificate=false`. Pełny runner niezaufanych draftów L1.5.6 pozostaje otwarty; L1.5.7/G2 nierozpoczęte. Osobno naprawiono nagłówki i przewijanie czytnika oraz zapisano ocenę gotowych narzędzi formalizacji.
+- **Aktualny krok (28.11.2026):** L1.5.6 / RT-09d i L1.5.7, faza B. Rzeczywista izolowana pętla ustalonych próbek i replay PASS na `e94ac5f6` (#46146592203), kody napraw 1/1/0. Nowszy kandydat `56191f7c` wzmacnia kontrole historii i przygotowania; #46177909934 w toku, pełny CI i 2+1 jeszcze niepotwierdzone. `testing / review pending`; `offline_ready=false`, `execution_allowed=false`, `certificate=false`. Nie uruchamiać dowolnych draftów ani nie rozpoczynać L1.5.8 przed technicznym odbiorem. Szczegóły na końcu dziennika.
 
 - **Priorytet naprawczy:** L1.3 — pilotaż LST-01 / LST-02 / LA-01 nadal otwarty; **aktualna partia LST-02 ma techniczne 3/3 PASS na SHA `44cc2031`** (8 deklaracji LST-02, 4 mapowania `needs_review`), ale niezależna recenzja semantyczna nadal `pending`. L1.4.1 zachowuje osobne historyczne 3/3 PASS na swoim SHA, lecz również oczekuje niezależnego odbioru w issue #10; LA-01 i L1.4.2 nierozpoczęte.
 
@@ -1986,3 +1986,10 @@ Odczytany `atlas_validation_status.json`: `candidate_sha=02190e107a6305bc7b73334
 - #46176973530 (ed364200): oba joby aplikacji success, 1138 testów, 11 sklasyfikowanych pominięć, 0 unreviewed; realny Chromium 611 rozdziałów/22 dziedziny, javascript_errors=[], pokrycie grafu 933 jawnych kwalifikowanych odsyłaczy i 0 nieprawidłowych. Wynik nie dotyczy przyszłego HEAD.
 - W ramach sceptycznej kontroli commit 56191f7cc08decf7e8497909737038272048a1e0 zrównał kryteria odtwarzania zapisanych dowodów technicznych z kontrolami żywej pętli: zgodność źródła, AST, prefiksu tezy, SHA i niepowtarzalności wejścia, historia diagnostyk oraz jawny brak uprawnień wykonania/certyfikacji. Dodano regresje podmiany statusu i historii. Nowy kandydat testing; nie zaliczono lokalnego testu ani nowego CI/2+1. Kolejny krok: odczytać wynik rzeczywistego rootless CI i pełnej aplikacji, następnie sceptyczny odbiór nowego kandydata. Nie uruchamiać dowolnych wejść użytkownika. certificate=false, offline_ready=false, execution_allowed=false; niezależna recenzja pending.
 - Osobna naprawa CI NCL-04: f8f743a4 i 039102c8 przywracają dwa brakujące zamknięcia display math; kontrola statyczna bez niezbilansowanych delimitatorów. #46177785914 rozpoczęty; pełna kompilacja jeszcze niepotwierdzona podczas kontroli. Bez zmian main, harmonogramu ani wyłączania bramek.
+
+
+### 2026-11-28 — faza B: odbiór NCL-04 i integralność katalogu CAT-48
+
+- #46177785914 (039102c8), job 141080301359: completed/success; naprawa dwóch zamknięć display math potwierdzona rzeczywistą kompilacją logiki i teorii modeli.
+- #46178345669 (9311eb12), job 141082049009: dependency audit FAIL z powodu rozbieżności importów CAT i niezarejestrowanego CAT-48. Commit efc8491888f4544c8b3a1d151df0e60dd1564690 uzupełnia wyłącznie katalog. Odczyt obu plików na tym SHA potwierdził 49/49 identycznych wpisów w identycznej kolejności; #46178444059 pending, globalne CI niezaliczone jeszcze.
+- #46177909934 w toku, kontrole rootless i natywne regresje zakończone sukcesem, właściwy przebieg offline Mathlib jeszcze w toku. Nie duplikowano uruchomień i nie zmieniano kodu runnera w trakcie tej kontroli. Aktualny wskaźnik na początku dziennika zsynchronizowano z istniejącymi dowodami. Status testing, 2+1 i niezależna recenzja nadal otwarte, wszystkie flagi dopuszczenia false. Bez main i harmonogramu.
