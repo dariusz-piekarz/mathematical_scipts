@@ -210,7 +210,7 @@ const ATLAS_AM2_PLOTS=Object.freeze({
   'AM2-14':'am2_14_remainder.html','AM2-15':'am2_15_mixed.html',
   'AM2-16':'am2_16_taylor.html','AM2-17':'am2_17_saddle.html',
   'AM2-18':'am2_18_inverse.html','AM2-19':'am2_19_implicit.html',
-  'AM2-20':'am2_20_rank.html','AM2-21':'am2_21_tangent.html','AM2-22':'am2_22_constrained.html','AM2-23':'am2_23_gradient.html','AM2-24':Object.freeze(['am2_24_local_volume.html','am2_24_signed_volume.html','am2_24_darboux.html']),'AM2-26':Object.freeze(['am2_26_layers.html','am2_26_gram.html']),'AM2-27':'am2_27_tubes.html','AM2-28':Object.freeze(['am2_28_leibniz.html','am2_28_moving_ball.html']),'AM2-29':Object.freeze(['am2_29_arclength.html','am2_29_oscillations.html','am2_29_cantor.html']),'AM2-30':Object.freeze(['am2_30_sections.html','am2_30_jacobian.html']),'AM2-36':'am2_36_geometric.html'
+  'AM2-20':'am2_20_rank.html','AM2-21':'am2_21_tangent.html','AM2-22':'am2_22_constrained.html','AM2-23':'am2_23_gradient.html','AM2-24':Object.freeze(['am2_24_local_volume.html','am2_24_signed_volume.html','am2_24_darboux.html']),'AM2-26':Object.freeze(['am2_26_layers.html','am2_26_gram.html']),'AM2-27':'am2_27_tubes.html','AM2-28':Object.freeze(['am2_28_leibniz.html','am2_28_moving_ball.html']),'AM2-29':Object.freeze(['am2_29_arclength.html','am2_29_oscillations.html','am2_29_cantor.html']),'AM2-30':Object.freeze(['am2_30_sections.html','am2_30_jacobian.html','am2_30_curvilinear_cells.html']),'AM2-36':'am2_36_geometric.html'
 });
 function addAtlasPlot(parent,source,moduleId){
   if(!Object.hasOwn(ATLAS_AM2_PLOTS,moduleId))return;
@@ -219,7 +219,7 @@ function addAtlasPlot(parent,source,moduleId){
   const matches=[...source.matchAll(/^\s*fig\.write_html\("([a-z0-9_]+\.html)",\s*include_plotlyjs=True\)\s*$/gm)];
   for(const id of ids){
   if(!matches.some(m=>m[1]===id))continue;
-  const title=({'am2_24_local_volume.html':'Lokalny wkład','am2_24_signed_volume.html':'Objętość ze znakiem','am2_24_darboux.html':'Sumy Darboux','am2_26_layers.html':'Przekroje poziome','am2_26_gram.html':'Macierz Grama','am2_27_tubes.html':'Otoczenia poprzeczne','am2_28_leibniz.html':'Reguła Leibniza','am2_28_moving_ball.html':'Ruchoma kula','am2_29_arclength.html':'Parametr długości łuku','am2_29_oscillations.html':'Próg prostowalności','am2_29_cantor.html':'Funkcja Cantora','am2_30_sections.html':'Przekroje bryły','am2_30_jacobian.html':'Lokalna zmiana pola'})[id];
+  const title=({'am2_24_local_volume.html':'Lokalny wkład','am2_24_signed_volume.html':'Objętość ze znakiem','am2_24_darboux.html':'Sumy Darboux','am2_26_layers.html':'Przekroje poziome','am2_26_gram.html':'Macierz Grama','am2_27_tubes.html':'Otoczenia poprzeczne','am2_28_leibniz.html':'Reguła Leibniza','am2_28_moving_ball.html':'Ruchoma kula','am2_29_arclength.html':'Parametr długości łuku','am2_29_oscillations.html':'Próg prostowalności','am2_29_cantor.html':'Funkcja Cantora','am2_30_sections.html':'Przekroje bryły','am2_30_jacobian.html':'Lokalna zmiana pola','am2_30_curvilinear_cells.html':'Komórki walcowe i sferyczne'})[id];
   const is2D=['am2_29_oscillations.html','am2_29_cantor.html','am2_30_jacobian.html'].includes(id);
   const plotKind=is2D?'wykres 2D':'wykres 3D';
   const openLabel='Otwórz '+plotKind+' (Plotly)'+(title?' — '+title:'');
