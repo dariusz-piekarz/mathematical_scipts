@@ -75,6 +75,9 @@ class TestLogicModelSplit(unittest.TestCase):
         self.assertIn(r"\label{thm:lst-fuzzy-prime-separation}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-strong-chain-completeness}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-local-deduction}", src)
+        self.assertIn(r"\label{thm:lst-fuzzy-equivalence-cuts}", src)
+        self.assertIn(r"\label{thm:lst-fuzzy-transitive-closure}", src)
+        self.assertIn(r"\label{prop:lst-fuzzy-interval-arithmetic}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-mtl-standard}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-godel-standard}", src)
         self.assertIn(r"\label{thm:lst-fuzzy-finite-standard}", src)
@@ -214,6 +217,50 @@ class TestFuzzyOperations(unittest.TestCase):
             for op in (min, max, star, implication):
                 self.assertEqual(embedding[op(a, b)],
                                  op(embedding[a], embedding[b]))
+
+    def test_fuzzy_equivalence_and_thresholds(self):
+        r = ((F(1), F(4,5), F(3,10), F(3,10)),
+             (F(4,5), F(1), F(3,10), F(3,10)),
+             (F(3,10), F(3,10), F(1), F(3,5)),
+             (F(3,10), F(3,10), F(3,5), F(1)))
+        for i,j,k in itertools.product(range(4), repeat=3):
+            self.assertLessEqual(min(r[i][j], r[j][k]), r[i][k])
+            for alpha in (F(3,10), F(3,5), F(4,5), F(1)):
+                if r[i][j] >= alpha and r[j][k] >= alpha:
+                    self.assertGreaterEqual(r[i][k], alpha)
+        self.assertEqual(F(1,2)*F(1,2), F(1,4))
+        self.assertLess(F(1,4), F(1,2))
+
+    def test_fuzzy_transitive_closure(self):
+        r = ((F(1), F(4,5), F(1,5)),
+             (F(4,5), F(1), F(3,5)),
+             (F(1,5), F(3,5), F(1)))
+        def compose(a,b):
+            return tuple(tuple(max(min(a[i][k], b[k][j]) for k in range(3))
+                               for j in range(3)) for i in range(3))
+        r2 = compose(r,r)
+        self.assertEqual(r2[0][2], F(3,5))
+        self.assertEqual(compose(r2,r2), r2)
+        for i,j in itertools.product(range(3), repeat=2):
+            self.assertGreaterEqual(r2[i][j], r[i][j])
+
+    def test_interval_arithmetic_and_dependence(self):
+        for alpha in self.grid[1:]:
+            a = (1+alpha, 4-2*alpha)
+            b = (3*alpha, 5-2*alpha)
+            self.assertEqual((a[0]-b[1], a[1]-b[0]), (-4+3*alpha, 4-5*alpha))
+            self.assertEqual((a[0]-a[1], a[1]-a[0]), (-3+3*alpha, 3-3*alpha))
+        for a,b in itertools.product(((-3,-1), (-2,4), (1,5)), repeat=2):
+            corners = [F(x*y) for x,y in itertools.product(a,b)]
+            for i,j in itertools.product(range(9), repeat=2):
+                x = F(a[0]) + F(i,8)*(a[1]-a[0])
+                y = F(b[0]) + F(j,8)*(b[1]-b[0])
+                self.assertLessEqual(min(corners), x*y)
+                self.assertLessEqual(x*y, max(corners))
+                if b[0]*b[1] > 0:
+                    quot = [F(u,v) for u,v in itertools.product(a,b)]
+                    self.assertLessEqual(min(quot), x/y)
+                    self.assertLessEqual(x/y, max(quot))
 
     def test_sugeno_zero_order(self):
         self.assertEqual(F(1, 4)*2 + F(3, 4)*6, 5)

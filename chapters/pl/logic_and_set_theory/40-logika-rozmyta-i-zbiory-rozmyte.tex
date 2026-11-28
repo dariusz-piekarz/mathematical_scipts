@@ -1186,27 +1186,289 @@ Oba złożenia trzech relacji dają więc supremum po parach
 elementów pośrednich z tej samej wartości na mocy łączności $T$.
 \end{proof}
 
+\subsection{Rozmyte relacje równoważności i przekroje}
+
+\begin{definicja}\label{def:lst-fuzzy-equivalence}
+Relację rozmytą $R:X\times X\to[0,1]$ nazywamy zwrotną,
+gdy $R(x,x)=1$, symetryczną, gdy $R(x,y)=R(y,x)$,
+oraz $T$-przechodnią, gdy
+\[
+ T(R(x,y),R(y,z))\leq R(x,z)
+ \quad\text{dla wszystkich }x,y,z\in X.
+\]
+Rozmyta relacja równoważności względem $T$ spełnia wszystkie
+trzy warunki. W porządku punktowym ostatni warunek oznacza
+$R\circ_T R\leq R$, ponieważ nierówność dla wszystkich
+$y$ jest równoważna nierówności dla supremum po $y$.
+\end{definicja}
+
+\begin{twierdzenie}[Charakterystyka przez przekroje]
+\label{thm:lst-fuzzy-equivalence-cuts}
+Relacja $R$ jest rozmytą relacją równoważności względem
+$T_G=\min$ wtedy i tylko wtedy, gdy dla każdego
+$\alpha\in(0,1]$ relacja
+\[
+ E_\alpha=\{(x,y):R(x,y)\geq\alpha\}
+\]
+jest zwykłą relacją równoważności na $X$.
+\end{twierdzenie}
+\begin{proof}
+Zwrotność i symetria przechodzą na każdy przekrój.
+Jeżeli $(x,y),(y,z)\in E_\alpha$, to
+$R(x,z)\geq\min(R(x,y),R(y,z))\geq\alpha$.
+Otrzymujemy przechodniość każdego przekroju.
+
+Odwrotnie, zwrotność $E_1$ daje $R(x,x)=1$.
+Symetria wszystkich przekrojów i wzór rekonstrukcji
+z Twierdzenia~\ref{thm:lst-fuzzy-cuts} dają symetrię $R$.
+Ustalmy $x,y,z$ i połóżmy
+$\beta=\min(R(x,y),R(y,z))$. Dla $\beta=0$ nierówność
+przechodniości rozmytej jest automatyczna. Dla $\beta>0$
+obie pary należą do $E_\beta$, a więc $(x,z)\in E_\beta$.
+Stąd $R(x,z)\geq\beta$.
+\end{proof}
+
+Przekroje wyznaczają rodzinę podziałów $X$:
+dla $0<\alpha\leq\beta\leq1$ mamy $E_\beta\subseteq E_\alpha$,
+zatem każda klasa $E_\beta$ zawiera się w jednej klasie
+$E_\alpha$. Większy wymagany stopień podobieństwa daje
+dokładniejszy podział.
+
+\begin{przyklad}[Hierarchia podziałów]\label{ex:lst-fuzzy-partitions}
+Niech $X=\{a,b,c,d\}$, $R(x,x)=1$, a dla różnych elementów
+niech $R(a,b)=0{,}8$, $R(c,d)=0{,}6$ oraz
+$R(x,y)=0{,}3$ dla par z różnych bloków
+$\{a,b\},\{c,d\}$. Uzupełniamy wartości symetrycznie.
+Przekroje dla rosnących poziomów dają podziały
+\[
+\begin{array}{c|l}
+ \alpha & \text{klasy równoważności}\\ \hline
+ (0,0{,}3] & \{a,b,c,d\}\\
+ (0{,}3,0{,}6] & \{a,b\},\{c,d\}\\
+ (0{,}6,0{,}8] & \{a,b\},\{c\},\{d\}\\
+ (0{,}8,1] & \{a\},\{b\},\{c\},\{d\}
+\end{array}
+\]
+Na mocy poprzedniego twierdzenia $R$ jest rozmytą relacją
+równoważności względem minimum.
+\begin{center}
+\begin{tikzpicture}[x=1.35cm,y=3.4cm]
+\draw[->] (-0.6,0)--(-0.6,1.08) node[above]{$\alpha$};
+\foreach \y/\lab in {0.3/{0{,}3},0.6/{0{,}6},0.8/{0{,}8},1/{1}}{
+ \draw[gray!45,dashed] (-0.5,\y)--(3.2,\y);
+ \node[left] at (-0.6,\y) {$\lab$};
+}
+\draw[very thick,blue!70!black] (0,1)--(0,0.8)--(1,0.8)--(1,1);
+\draw[very thick,teal!70!black] (2,1)--(2,0.6)--(3,0.6)--(3,1);
+\draw[very thick] (0.5,0.8)--(0.5,0.3)--(2.5,0.3)--(2.5,0.6);
+\draw[very thick] (1.5,0.3)--(1.5,0);
+\foreach \x/\lab in {0/a,1/b,2/c,3/d}{\node[above] at (\x,1) {$\lab$};}
+\end{tikzpicture}
+\end{center}
+\end{przyklad}
+
+Nie można zastąpić minimum dowolną normą trójkątną w
+Twierdzeniu~\ref{thm:lst-fuzzy-equivalence-cuts}.
+Dla $X=\{a,b,c\}$ weźmy relację zwrotną i symetryczną
+z $R(a,b)=R(b,c)=1/2$ i $R(a,c)=1/4$.
+Jest ona przechodnia względem iloczynu: dla trzech różnych
+elementów iloczyn dwóch stopni nie przekracza stopnia
+trzeciej pary (wartości to $1/4$ lub $1/8$); gdy elementy
+się powtarzają, nierówność wynika z wartości $1$ na przekątnej.
+Jednak $E_{1/2}$ nie jest przechodnia.
+
+\subsection{Domknięcie przechodnie}
+
+\begin{twierdzenie}\label{thm:lst-fuzzy-transitive-closure}
+Niech $T$ będzie lewostronnie ciągłą normą trójkątną.
+Dla relacji rozmytej $R$ na $X$ określmy $R^1=R$,
+$R^{n+1}=R\circ_T R^n$. Wówczas
+\[
+ R^+(x,y)=\sup_{n\geq1}R^n(x,y)
+\]
+jest najmniejszą $T$-przechodnią relacją rozmytą większą od $R$.
+Jeżeli $X$ ma $m\geq1$ elementów, to wystarczy supremum
+po $1\leq n\leq m$.
+\end{twierdzenie}
+\begin{proof}
+Zachowywanie supremów przez $T$ oraz łączność składania
+dają
+\[
+ R^+\circ_T R^+=\sup_{i,j\geq1}R^{i+j}\leq R^+,
+\]
+gdzie suprema relacji są punktowe. Relacja $R^+$ jest
+więc przechodnia i zawiera $R$. Jeśli $S\geq R$ jest
+$T$-przechodnia, to przez indukcję
+$R^{n+1}\leq S\circ_T S\leq S$, zaczynając od $R^1\leq S$.
+Stąd $R^+\leq S$.
+
+Dla skończonego $X$, rozwijając definicję składania,
+otrzymujemy maksimum iloczynów w sensie $T$ stopni relacji
+na ścieżkach długości $n$ od $x$ do $y$.
+Jeśli ścieżka ma długość większą niż $m$, to wśród
+jej wierzchołków przed wierzchołkiem końcowym występuje
+powtórzenie. Usuwamy fragment pomiędzy tymi dwoma
+wystąpieniami. Zachowujemy końce i co najmniej jedną
+krawędź. Wartość ścieżki nie maleje, gdyż iloczyn w sensie
+$T$ usuniętych czynników nie przekracza $1$.
+Powtarzając skracanie, otrzymujemy ścieżkę długości
+od $1$ do $m$ o wartości nie mniejszej od pierwotnej.
+To daje skończony wzór także dla $x=y$.
+\end{proof}
+
+\begin{przyklad}[Składanie w skończonym zbiorze]
+\label{ex:lst-fuzzy-relation-matrix}
+Dla minimum i $X=\{a,b,c\}$ rozważmy macierz
+\[
+ R=\begin{pmatrix}
+ 1&0{,}8&0{,}2\\
+ 0{,}8&1&0{,}6\\
+ 0{,}2&0{,}6&1
+ \end{pmatrix}.
+\]
+Wpis $(a,c)$ macierzy $R^2$ jest maksimum liczb
+$0{,}2,0{,}6,0{,}2$, czyli $0{,}6$.
+Pozostałe wpisy poza symetrycznym $(c,a)$ nie zmieniają się:
+dla pary $(a,b)$ ścieżka przez $c$ ma wartość $0{,}2$,
+a dla $(b,c)$ ścieżka przez $a$ ma wartość $0{,}2$.
+Przekątna pozostaje równa $1$. Otrzymana macierz
+\[
+ R^2=\begin{pmatrix}
+ 1&0{,}8&0{,}6\\
+ 0{,}8&1&0{,}6\\
+ 0{,}6&0{,}6&1
+ \end{pmatrix}
+\]
+jest zwrotna, symetryczna i przechodnia względem minimum:
+dla trzech różnych elementów minimum dwóch wpisów
+nie przekracza trzeciego, a dla powtórzonych elementów
+nierówność wynika z przekątnej. Zatem $R^+=R^2$.
+\end{przyklad}
+
 \section{Liczby rozmyte i zasada rozszerzania}
 Liczba rozmyta to zbiór rozmyty w $\R$ z górnie półciągłą funkcją
 przynależności osiągającą jeden, ograniczonym nośnikiem i przedziałowymi
 dodatnimi przekrojami. Te przekroje są niepuste i zwarte.
 Dla ciągłej $f:\R^2\to\R$ definiujemy
-$\mu_{f(A,B)}(z)=\sup_{f(x,y)=z}\min(\mu_A(x),\mu_B(y))$.
+$\mu_{f(A,B)}(z)=\sup_{f(x,y)=z}\min(\mu_A(x),\mu_B(y))$,
+przyjmując $\sup\varnothing=0$ w $[0,1]$.
 \begin{twierdzenie}\label{thm:lst-fuzzy-extension-cuts}
 Dla liczb rozmytych i $\alpha>0$, $\alpha\leq1$,
 $(f(A,B))_\alpha=f(A_\alpha\times B_\alpha)$.
 \end{twierdzenie}
 \begin{proof}
 Inkluzja od prawej do lewej wynika z definicji. Dla punktu
-lewej strony wybieramy pary o obrazie $z$ i stopniach co najmniej
-$\alpha-1/n$. Dla dużych $n$ należą do zwartego
+lewej strony wybieramy pary o obrazie $z$ i stopniach większych niż
+$\alpha-1/n$ (dla dostatecznie dużych $n$). Dla dużych $n$ należą do zwartego
 $A_{\alpha/2}\times B_{\alpha/2}$. Podciąg zbiega do pary
 o obrazie $z$ przez ciągłość $f$ i o stopniach co najmniej $\alpha$
 przez górną półciągłość funkcji przynależności.
 \end{proof}
-Przy dodawaniu przedziałów przekroje sumują się końcami, ponieważ
-dodawanie jest ciągłe i monotoniczne na zwartym spójnym prostokącie.
-Przykładowo trójkątne liczby $(1,2,4)$ i $(0,3,5)$ dają $(1,5,9)$.
+\begin{wniosek}\label{cor:lst-fuzzy-extension-number}
+Dla ciągłej $f:\R^2\to\R$ obraz rozmyty $f(A,B)$
+dwóch liczb rozmytych jest liczbą rozmytą.
+\end{wniosek}
+\begin{proof}
+Z Twierdzenia~\ref{thm:lst-fuzzy-extension-cuts} każdy
+dodatni przekrój jest ciągłym obrazem niepustego
+zwartego spójnego prostokąta. Jest zatem niepustym
+zwartym przedziałem. Domkniętość przekrojów daje
+górną półciągłość funkcji przynależności, a niepustość
+przekroju dla $\alpha=1$ daje osiąganie jedynki.
+Jeżeli stopień przynależności obrazu jest dodatni,
+istnieje para o dodatnich stopniach przynależności.
+Nośnik obrazu zawiera się więc w obrazie przez $f$
+iloczynu domknięć nośników $A,B$. Ten iloczyn jest
+zwarty, zatem jego obraz jest ograniczony.
+\end{proof}
+
+\begin{stwierdzenie}[Arytmetyka przekrojów]\label{prop:lst-fuzzy-interval-arithmetic}
+Niech $A_\alpha=[a_-,a_+]$, $B_\alpha=[b_-,b_+]$.
+Przy zasadzie rozszerzania z minimum mamy
+\[
+\begin{split}
+ (A+B)_\alpha&=[a_-+b_-,a_++b_+],\\
+ (A-B)_\alpha&=[a_--b_+,a_+-b_-],\\
+ (AB)_\alpha&=[\min V,\max V],\\
+ V&=\{a_-b_-,a_-b_+,a_+b_-,a_+b_+\}.
+\end{split}
+\]
+Jeżeli ponadto $0\notin\overline{\{x:\mu_B(x)>0\}}$,
+to iloraz określony zasadą rozszerzania dla $x/y$,
+$y\ne0$, jest liczbą rozmytą i
+\[
+ (A/B)_\alpha=[\min W,\max W],\qquad
+ W=\{a_-/b_-,a_-/b_+,a_+/b_-,a_+/b_+\}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Stosujemy Twierdzenie~\ref{thm:lst-fuzzy-extension-cuts}.
+Dla sumy i różnicy kresy wyznacza monotoniczność
+w poszczególnych argumentach. Dla iloczynu, po ustaleniu
+drugiego argumentu, funkcja pierwszego jest afiniczna,
+więc kresy występują na końcach pierwszego przedziału.
+Po ustaleniu każdego z tych końców stosujemy ten sam
+argument do drugiego przedziału. Otrzymujemy cztery
+wartości narożne.
+
+W przypadku ilorazu domknięty nośnik $B$ jest zwarty
+i oddzielony od zera. W dowodzie zasady rozszerzania
+można więc ograniczyć dziedzinę do iloczynu domknięć
+nośników, na którym funkcja ilorazu jest ciągła.
+Dodatni przekrój $B_\alpha$ jest przedziałem
+niezawierającym zera, a jego obraz przez odwrotność
+jest przedziałem $[1/b_+,1/b_-]$, ponieważ odwrotność
+jest ściśle malejąca na każdej półosi.
+Wzór dla iloczynu daje cztery wartości ilorazowe.
+Argument z Wniosku~\ref{cor:lst-fuzzy-extension-number}
+działa również tutaj, z ograniczoną dziedziną funkcji.
+\end{proof}
+
+\begin{przyklad}[Dodawanie i odejmowanie liczb trójkątnych]
+\label{ex:lst-fuzzy-triangular-arithmetic}
+Dla liczb trójkątnych $A=(1,2,4)$, $B=(0,3,5)$
+mamy $A_\alpha=[1+\alpha,4-2\alpha]$ i
+$B_\alpha=[3\alpha,5-2\alpha]$.
+Wynika stąd
+\[
+ (A+B)_\alpha=[1+4\alpha,9-4\alpha],
+ \qquad
+ (A-B)_\alpha=[-4+3\alpha,4-5\alpha].
+\]
+Z rekonstrukcji przekrojów otrzymujemy liczby trójkątne
+$A+B=(1,5,9)$ i $A-B=(-4,-1,4)$.
+\begin{center}
+\begin{tikzpicture}[x=0.53cm,y=2.7cm,>=Stealth]
+\draw[->] (-4.6,0)--(10,0) node[right]{$x$};
+\draw[->] (0,0)--(0,1.16) node[above]{$\mu$};
+\draw[gray!65,dashed] (-4.2,0.5)--(9.2,0.5);
+\draw[thick,blue!75!black] (1,0)--(2,1)--(4,0);
+\draw[thick,teal!75!black] (0,0)--(3,1)--(5,0);
+\draw[very thick,orange!85!black] (1,0)--(5,1)--(9,0);
+\draw[very thick,violet!80!black] (-4,0)--(-1,1)--(4,0);
+\node[above,blue!75!black] at (2,1) {$A$};
+\node[above,teal!75!black] at (3,1) {$B$};
+\node[above,orange!85!black] at (5,1) {$A+B$};
+\node[above,violet!80!black] at (-1,1) {$A-B$};
+\foreach \x in {-4,-1,1,4,5,9}{\node[below] at (\x,0) {$\x$};}
+\node[below left] at (0,0) {$0$};
+\end{tikzpicture}
+\end{center}
+\end{przyklad}
+
+\begin{uwaga}[Zależność argumentów]\label{rem:lst-fuzzy-dependent-arguments}
+Zasada rozszerzania dla dwóch niezależnie wybieranych
+argumentów nie zachowuje ich utożsamienia.
+Jeżeli $A=(1,2,4)$, to z powyższych wzorów
+$(A-A)_\alpha=[-3+3\alpha,3-3\alpha]$.
+Nie jest to ostra liczba $0$. Natomiast obraz jednej
+zmiennej przez funkcję $x\mapsto x-x=0$ jest ostrą
+liczbą $0$: jej stopień w zerze wynosi $1$, a w każdym
+innym punkcie $0$. Różnica pochodzi z dopuszczenia
+dwóch różnych realizacji tej samej liczby rozmytej.
+\end{uwaga}
+
+
 
 \section{Wnioskowanie rozmyte}
 Dwie reguły Mamdaniego z aktywacjami $0{,}25$, $0{,}75$
