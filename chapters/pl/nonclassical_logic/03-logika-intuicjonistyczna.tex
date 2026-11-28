@@ -269,3 +269,250 @@ kolejności, otrzymując żądaną implikację.
 Implikacji odwrotnej w drugim prawie de Morgana
 nie można ogólnie wyprowadzić w IPC. Kontrmodel
 podamy po wprowadzeniu semantyki Kripkego.
+
+\section{Rachunek Hilberta}
+
+\begin{definicja}[Schematy aksjomatów IPC]
+\label{def:ncl-ipc-hilbert}
+W języku z Definicji~\ref{def:ncl-ipc-language}
+rozważamy następujące schematy aksjomatów:
+\begin{align*}
+ \mathrm{H1}\quad &\alpha\to(\beta\to\alpha),\\
+ \mathrm{H2}\quad &(\alpha\to(\beta\to\gamma))
+          \to((\alpha\to\beta)\to(\alpha\to\gamma)),\\
+ \mathrm{H3}\quad &\alpha\wedge\beta\to\alpha,\\
+ \mathrm{H4}\quad &\alpha\wedge\beta\to\beta,\\
+ \mathrm{H5}\quad &\alpha\to(\beta\to\alpha\wedge\beta),\\
+ \mathrm{H6}\quad &\alpha\to\alpha\vee\beta,\\
+ \mathrm{H7}\quad &\beta\to\alpha\vee\beta,\\
+ \mathrm{H8}\quad &(\alpha\to\gamma)\to
+       ((\beta\to\gamma)\to((\alpha\vee\beta)\to\gamma)),\\
+ \mathrm{H9}\quad &\bot\to\alpha.
+\end{align*}
+Litery greckie oznaczają dowolne formuły. Jedyną
+regułą wnioskowania jest modus ponens:
+\[
+ \frac{\alpha\qquad \alpha\to\beta}{\beta}.
+\]
+Dowodem $\varphi$ z $\Gamma$ jest skończony ciąg
+formuł zakończony $\varphi$, w którym każda formuła
+jest przesłanką z $\Gamma$, instancją schematu
+aksjomatu albo wynikiem modus ponens zastosowanego
+do dwóch wcześniejszych formuł. Istnienie takiego
+dowodu zapisujemy $\Gamma\vdash_{\mathrm H}\varphi$.
+\end{definicja}
+Nie dodajemy jako reguły podstawienia dowolnego
+dowiedzionego zdania z przesłanek przy zachowaniu
+tych samych przesłanek. Jednolite podstawienie
+przekształca bowiem również przesłanki. Dla dowodów
+bez przesłanek jest ono dopuszczalne bez ograniczeń.
+
+\begin{lemat}[Identyczność w rachunku Hilberta]
+\label{lem:ncl-ipc-hilbert-identity}
+Dla każdej formuły $\alpha$ mamy
+$\vdash_{\mathrm H}\alpha\to\alpha$.
+\end{lemat}
+\begin{proof}
+Poniżej podajemy cały dowód; numery przy modus ponens
+wskazują dwie wcześniej uzyskane formuły.
+\[
+\begin{array}{rll}
+1.&\alpha\to((\alpha\to\alpha)\to\alpha)&\mathrm{H1}\\
+2.&\alpha\to(\alpha\to\alpha)&\mathrm{H1}\\
+3.&(\alpha\to((\alpha\to\alpha)\to\alpha))\to&\\[-2pt]
+  &\quad((\alpha\to(\alpha\to\alpha))\to
+           (\alpha\to\alpha))&\mathrm{H2}\\
+4.&(\alpha\to(\alpha\to\alpha))\to
+           (\alpha\to\alpha)&\mathrm{MP}\ (1,3)\\
+5.&\alpha\to\alpha&\mathrm{MP}\ (2,4).
+\end{array}
+\]
+W trzecim wierszu w schemacie H2 podstawiono
+$\beta=\alpha\to\alpha$ oraz $\gamma=\alpha$.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie o dedukcji dla rachunku Hilberta]
+\label{thm:ncl-ipc-hilbert-deduction}
+Dla dowolnego zbioru formuł $\Gamma$ zachodzi
+\[
+ \Gamma\cup\{\alpha\}\vdash_{\mathrm H}\beta
+ \iff \Gamma\vdash_{\mathrm H}\alpha\to\beta.
+\]
+\end{twierdzenie}
+\begin{proof}
+Niech $\beta_1,\ldots,\beta_n=\beta$ będzie dowodem
+z $\Gamma\cup\{\alpha\}$. Indukcyjnie po kolejnych
+wierszach dowodu konstruujemy dowody
+$\Gamma\vdash_{\mathrm H}\alpha\to\beta_i$.
+
+Jeśli $\beta_i=\alpha$, stosujemy
+Lemat~\ref{lem:ncl-ipc-hilbert-identity}.
+Jeżeli $\beta_i$ jest aksjomatem lub należy do
+$\Gamma$, to $\Gamma\vdash_{\mathrm H}\beta_i$.
+Schemat H1 daje $\beta_i\to(\alpha\to\beta_i)$,
+a modus ponens daje żądaną formułę.
+
+W pozostałym przypadku wcześniejsze wiersze
+zawierają $\delta$ i $\delta\to\beta_i$.
+Z hipotezy indukcyjnej mamy dowody
+$\alpha\to\delta$ i $\alpha\to(\delta\to\beta_i)$
+z $\Gamma$. Instancja H2
+\[
+ (\alpha\to(\delta\to\beta_i))\to
+ ((\alpha\to\delta)\to(\alpha\to\beta_i))
+\]
+oraz dwa zastosowania modus ponens dają
+$\alpha\to\beta_i$. Wszystkie używane dowody
+można połączyć w jeden skończony ciąg, ponieważ
+każde odwołanie dotyczy wcześniej otrzymanego
+wyniku. Indukcja daje tezę dla $\beta_n$.
+
+Odwrotnie do dowodu $\alpha\to\beta$ z $\Gamma$
+dopisujemy przesłankę $\alpha$ i wynik modus ponens
+$\beta$. Jest to dowód z $\Gamma\cup\{\alpha\}$.
+\end{proof}
+
+\begin{stwierdzenie}[Własności strukturalne rachunku Hilberta]
+\label{prop:ncl-ipc-hilbert-structural}
+Relacja $\vdash_{\mathrm H}$ jest zwrotna względem
+założeń, monotoniczna, niezmiennicza względem
+jednolitych podstawień i spełnia regułę cięcia
+z Stwierdzenia~\ref{prop:ncl-ipc-structural}.
+Ponadto każdy dowód z $\Gamma$ jest dowodem
+z pewnego skończonego $\Gamma_0\subseteq\Gamma$.
+\end{stwierdzenie}
+\begin{proof}
+Założenie samo jest dopuszczalnym dowodem,
+a zwiększenie zbioru przesłanek nie zmienia
+legalności żadnego wiersza dowodu.
+Jednolite podstawienie zachowuje instancje
+schematów H1--H9 i zastosowania modus ponens;
+wiersze pochodzące z $\Gamma$ przechodzą
+w wiersze pochodzące z $\sigma(\Gamma)$.
+
+Jeżeli $\Delta\vdash_{\mathrm H}\varphi$
+oraz $\Gamma\vdash_{\mathrm H}\delta$ dla
+każdego $\delta\in\Delta$, to dla skończenie wielu
+przesłanek $\delta$ użytych w dowodzie $\varphi$
+dołączamy na początku ich dowody z $\Gamma$.
+Następnie odtwarzamy wiersze dowodu $\varphi$,
+pomijając te przesłanki, które już uzyskaliśmy.
+Modus ponens odwołuje się nadal do wcześniejszych
+wierszy. Otrzymujemy dowód $\varphi$ z $\Gamma$.
+Ostatnia teza wynika wprost ze skończoności ciągu.
+\end{proof}
+
+\begin{twierdzenie}[Równoważność dwóch rachunków IPC]
+\label{thm:ncl-ipc-hilbert-equivalence}
+Dla dowolnego zbioru formuł $\Gamma$ i formuły
+$\varphi$ zachodzi
+\[
+ \Gamma\vdash_{\mathrm H}\varphi
+ \iff \Gamma\vdash_{\mathrm I}\varphi.
+\]
+\end{twierdzenie}
+\begin{proof}
+Najpierw pokażemy, że każdy schemat H1--H9 ma
+wyprowadzenie w dedukcji naturalnej bez otwartych
+założeń. Schemat H1 występuje w
+Przykładzie~\ref{ex:ncl-ipc-basic-proofs}.
+Dla H2 otwieramy kolejno założenia
+\[
+ \alpha\to(\beta\to\gamma),\qquad
+ \alpha\to\beta,\qquad \alpha.
+\]
+Z pierwszego i trzeciego otrzymujemy $\beta\to\gamma$,
+z drugiego i trzeciego $\beta$, a z obu wyników
+$\gamma$. Zamknięcie założeń w odwrotnej kolejności
+daje dokładnie H2.
+Schematy H3 i H4 otrzymujemy przez eliminację
+koniunkcji i wprowadzenie implikacji. Dla H5
+z założeń $\alpha,\beta$ wprowadzamy koniunkcję
+i zamykamy najpierw $\beta$, potem $\alpha$.
+Schematy H6 i H7 wynikają z wprowadzania alternatywy
+oraz wprowadzania implikacji.
+
+Dla H8 zakładamy $\alpha\to\gamma$,
+$\beta\to\gamma$ oraz $\alpha\vee\beta$.
+W pierwszym podwyprowadzeniu z tymczasowego
+założenia $\alpha$ i pierwszej implikacji
+otrzymujemy $\gamma$, w drugim analogicznie
+z $\beta$ i drugiej implikacji.
+Eliminacja alternatywy zamyka oba tymczasowe
+założenia. Trzy wprowadzenia implikacji
+w odwrotnej kolejności zamykają pozostałe
+założenia i dają H8. Schemat H9 wynika z reguły
+$\bot E$ i zamknięcia założenia $\bot$.
+Ponieważ modus ponens jest regułą $\to E$,
+indukcja po ciągu dowodu Hilberta daje kierunek
+od lewej do prawej.
+
+Dla kierunku odwrotnego indukujemy po drzewie
+dedukcji naturalnej, biorąc dla każdego
+podwyprowadzenia zbiór jego otwartych założeń.
+Liść będący założeniem jest dowodem Hilberta
+z tego założenia. W każdym kroku możemy powiększyć
+zbiory przesłanek podwyprowadzeń do wspólnego
+kontekstu, korzystając z monotoniczności
+(Stwierdzenie~\ref{prop:ncl-ipc-hilbert-structural}).
+
+Reguły $\wedge E_1,\wedge E_2$ realizujemy przez
+H3, H4 i modus ponens. Dla $\wedge I$ stosujemy
+H5 i dwa razy modus ponens; reguły $\vee I_1$,
+$\vee I_2$ realizują H6 i H7. Reguła $\bot E$
+odpowiada H9 i modus ponens, a $\to E$ jest
+modus ponens.
+
+Dla $\to I$ hipoteza indukcyjna daje
+$\Gamma\cup\{\alpha\}\vdash_{\mathrm H}\beta$,
+gdzie $\Gamma$ jest zbiorem założeń pozostających
+otwartych po tym kroku. Stosujemy
+Twierdzenie~\ref{thm:ncl-ipc-hilbert-deduction}.
+Dotyczy to również zamknięcia zerowej liczby wystąpień
+oraz sytuacji, w której niektóre wystąpienia
+$\alpha$ pozostają otwarte.
+
+Dla $\vee E$ niech $\Gamma$ będzie zbiorem
+wszystkich założeń pozostających otwartych
+po zastosowaniu reguły. Hipoteza indukcyjna
+i monotoniczność dają
+\[
+ \Gamma\vdash_{\mathrm H}\alpha\vee\beta,\qquad
+ \Gamma\cup\{\alpha\}\vdash_{\mathrm H}\gamma,\qquad
+ \Gamma\cup\{\beta\}\vdash_{\mathrm H}\gamma.
+\]
+Dwukrotne zastosowanie twierdzenia o dedukcji daje
+$\Gamma\vdash_{\mathrm H}\alpha\to\gamma$ oraz
+$\Gamma\vdash_{\mathrm H}\beta\to\gamma$.
+Schemat H8 i trzy zastosowania modus ponens
+dają $\Gamma\vdash_{\mathrm H}\gamma$.
+Rozpatrzyliśmy wszystkie reguły dedukcji naturalnej,
+co kończy indukcję.
+\end{proof}
+
+Od tej chwili można korzystać z obu rachunków
+zamiennie: dedukcja naturalna jest wygodna przy
+lokalnych konstrukcjach dowodów, a rachunek Hilberta
+przy badaniu zbiorów domkniętych na konsekwencję.
+Na mocy powyższej równoważności twierdzenia o IPC
+udowodnione w jednym rachunku obowiązują również
+w drugim.
+
+\begin{przyklad}[Wewnętrzny sylogizm hipotetyczny]
+\label{ex:ncl-ipc-hilbert-transitivity}
+W obu rachunkach dowodliwa jest formuła
+\[
+ (\alpha\to\beta)\to
+ ((\beta\to\gamma)\to(\alpha\to\gamma)).
+\]
+W rachunku Hilberta z założeń
+$\alpha\to\beta,\beta\to\gamma,\alpha$
+dwukrotnie stosujemy modus ponens, uzyskując
+najpierw $\beta$, potem $\gamma$.
+Trzykrotne zastosowanie
+Twierdzenia~\ref{thm:ncl-ipc-hilbert-deduction}
+usuwa kolejno $\alpha$, $\beta\to\gamma$ oraz
+$\alpha\to\beta$. Przykład pokazuje, jak twierdzenie
+o dedukcji zastępuje ręczne rozpisywanie wszystkich
+instancji H1 i H2.
+\end{przyklad}
