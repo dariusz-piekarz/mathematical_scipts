@@ -1,3 +1,89 @@
+# Analiza matematyczna II — aktualny plan nadrzędny (28.11.2026)
+
+Decyzja użytkownika: najpierw restrukturyzacja AM II, następnie ukończenie i audyt AM II, potem uporządkowanie AM I wraz z migracją rozszerzeń całkowania i dopiero wtedy rozwinięcie osobnego skryptu „Rozszerzona teoria pochodnej i całki”.
+
+## Obowiązująca struktura AM II
+
+Numery AM2-xx poniżej są dotychczasowymi stabilnymi identyfikatorami plików i odsyłaczy Atlasu, nie numerami kolejności druku. Numerację wyświetlaną w książce wyznacza kolejność input. Nie zmieniamy ścieżek, etykiet, identyfikatorów figur ani raportów historycznych przed pełną kontrolą migracji odsyłaczy.
+
+### 1. Przestrzenie unormowane i szeregi
+
+- AM2-01 → pozycja 1: przestrzenie unormowane i banacha
+- AM2-02 → pozycja 2: szeregi w przestrzeniach banacha
+- AM2-03 → pozycja 3: zbieznosc bezwzgledna warunkowa i bezwarunkowa
+- AM2-04 → pozycja 4: iloczyny cauchyego
+- AM2-05 → pozycja 5: iloczyny nieskonczone
+- AM2-06 → pozycja 6: rodziny sumowalne i szeregi wielokrotne
+- AM2-07 → pozycja 7: algebry banacha i szereg neumanna
+
+### 2. Ciągi i szeregi funkcyjne
+
+- AM2-08 → pozycja 8: zbieznosc punktowa i jednostajna
+- AM2-09 → pozycja 9: szeregi funkcyjne
+- AM2-10 → pozycja 10: ciaglosc rozniczkowanie i calkowanie granic
+- AM2-36 → pozycja 11: szeregi potegowe
+
+### 3. Rachunek różniczkowy wielu zmiennych
+
+- AM2-11 → pozycja 12: granice i ciaglosc funkcji wielu zmiennych
+- AM2-12 → pozycja 13: pochodne czastkowe i kierunkowe
+- AM2-13 → pozycja 14: pochodna frecheta i rozniczka zupelna
+- AM2-14 → pozycja 15: twierdzenia o wartosci sredniej
+- AM2-25 → pozycja 16: funkcje pierwotne
+- AM2-15 → pozycja 17: pochodne wyzszych rzedow
+- AM2-16 → pozycja 18: twierdzenie taylora
+- AM2-17 → pozycja 19: ekstrema swobodne i wypuklosc
+- AM2-18 → pozycja 20: twierdzenie o funkcji odwrotnej
+- AM2-19 → pozycja 21: twierdzenie o funkcji uwiklanej
+- AM2-20 → pozycja 22: twierdzenia o rzedzie
+
+### 4. Geometria różniczkowa przestrzeni euklidesowych
+
+- AM2-21 → pozycja 23: podrozmaitosci przestrzeni euklidesowej
+- AM2-22 → pozycja 24: ekstrema zwiazane
+- AM2-23 → pozycja 25: rachunek rozniczkowy na podrozmaitosciach
+
+### 5. Rachunek całkowy w przestrzeni euklidesowej
+
+- AM2-24 → pozycja 26: calka riemanna
+- AM2-26 → pozycja 27: calka lebesguea w rn
+- AM2-30 → pozycja 28: calki wielokrotne i zamiana zmiennych
+- AM2-27 → pozycja 29: calki na zbiorach nieograniczonych i z osobliwosciami
+- AM2-28 → pozycja 30: calki zalezne od parametrow
+
+### 6. Całkowanie na podrozmaitościach i zastosowania
+
+- AM2-29 → pozycja 31: krzywe dlugosc i prostowalnosc
+- AM2-31 → pozycja 32: calki krzywoliniowe
+- AM2-33 → pozycja 33: calki powierzchniowe i miara hausdorffa
+- AM2-32 → pozycja 34: zastosowania geometryczne i fizyczne calek
+
+## Materiał do ukończenia w AM II
+
+- Po szeregach potęgowych i rachunku różniczkowym: rzeczywiste funkcje analityczne, szeregi Taylora wielu zmiennych, aproksymacja Weierstrassa i Stone'a–Weierstrassa (miejsce po sprawdzeniu zależności i istniejącego pokrycia).
+- W części całkowej: wielowymiarowe kwadratury i różniczkowanie pod znakiem całki powierzchniowej, po ocenie pokrycia.
+- AM2-34: formy różniczkowe, orientacja, całkowanie form najwyższego stopnia na podrozmaitościach, strumień i całki powierzchniowe drugiego rodzaju.
+- AM2-35: orientacja brzegu, rozkład jedności i dowód ogólnego twierdzenia Stokesa na zorientowanych podrozmaitościach euklidesowych z brzegiem; wyprowadzić Greena, Gaussa–Ostrogradskiego, klasyczne twierdzenie Stokesa i Newtona–Leibniza. Bez ogólnej geometrii riemannowskiej.
+- Zakończyć stabilizację AM2-33, audyt kontrolny, potem następne rozdziały. Nie włączać nieistniejących plików ani pustych rozdziałów.
+- Podstawy różniczkowania w przestrzeniach unormowanych i Banacha pozostają w AM II, w zakresie potrzebnym dla kursu. Zaawansowana teoria różniczkowania i geometria przestrzeni Banacha: osobny skrypt geometrii różniczkowej przestrzeni Banacha (docelowo migracja AF 14–15). Zachować działające odsyłacze do czasu migracji.
+- Rozdział AM2-25 przejściowo pozostaje pomostem do wzoru na przyrost i Newtona–Leibniza; pełną teorię całki Riemanna o wartościach w przestrzeni Banacha przenieść do nowego skryptu rozszerzonego po przygotowaniu jego podstaw. Nie usuwać dowodów, od których zależy AM II, zanim istnieje zweryfikowany cel migracji.
+- Fourier, transformaty i całki singularne: teoria dystrybucji. Całki Mawhina, Pfeffera, Kurzweila–Henstocka, rachunek ułamkowy: nowy skrypt rozszerzony, nie AM II.
+
+## Następne etapy po ukończeniu AM II
+
+1. AM I: zachować jednowymiarowy rachunek różniczkowy i całkowy; całki Riemanna/Darboux oraz jednowymiarowa całka Lebesgue'a względem miary Lebesgue'a, twierdzenia graniczne, zgodność, podstawowe twierdzenie rachunku całkowego dla funkcji absolutnie ciągłych. Uzupełnić brakujące wyniki. Zachować klasyczne metody, całki niewłaściwe, funkcje specjalne i zastosowania.
+2. Przenieść istniejące rozszerzenia całkowania AM I (obecne rozdziały 36–43, po wydzieleniu materiału BV/AC potrzebnego w klasycznej analizie) do nowego skryptu „Rozszerzona teoria pochodnej i całki”. Zachować etykiety, audyty i mapę zależności. Nie usuwać aktywnych źródeł przed sprawdzeniem nowej lokalizacji i odsyłaczy, zwłaszcza AM2-29 → AM1-37.
+3. Nowy skrypt: całki cechowane (Kurzweila–Henstocka, McShane'a, Mawhina, Pfeffera), Denjoya, Perrona, Riemanna–Stieltjesa i Kurzweila–Stieltjesa; całki wektorowe (Riemanna w przestrzeniach Banacha, Bochnera, Birkhoffa, Pettisa, Gelfanda, Dunforda), rachunek pochodnych i całek ułamkowych. Porównać zakresy i hipotezy; przenieść właściwe fragmenty AF 15A–15B i uzgodnić z ME 30. Nie dublować konstrukcji abstrakcyjnej całki Lebesgue'a w teorii miary.
+4. Przeprowadzić migrację AF 14–15 do geometrii różniczkowej przestrzeni Banacha w uzgodnionym wątku, aktualizując odsyłacze z AM II.
+
+## Kryteria migracji
+
+Każdy wynik musi zachować etykietę lub mieć zweryfikowany równoważny cel. Kontrolować odsyłacze lokalne i między skryptami, katalog, generator, testy, PDF, CI i historię audytów. Przeniesienie rozdziału nie oznacza automatycznego zaliczenia jego audytu. Rozdział → stabilizacja → audyt kontrolny → następny rozdział.
+
+## Historia
+
+Poniższy wcześniejszy plan ma wyłącznie znaczenie historyczne. W przypadku sprzeczności obowiązuje aktualny plan powyżej.
+
 # Analiza matematyczna II — 39 rozdziałów programu podstawowego
 
 Kurs inspirowany wykładami Marka Jarnickiego, Wykłady z Analizy Matematycznej I, II, III, IV, wersja 9 stycznia 2022, [PDF UJ](https://apps.usos.uj.edu.pl/apps/f/Q9qBncrH/analiza-19-20-21%20%281%29.pdf), spis treści s. 4–6. Kolejność dostosowana do dyspozycji użytkownika: po ciągłości rachunek różniczkowy, bezpośrednio po nim rachunek całkowy, następnie całkowanie wielowymiarowe i na podrozmaitościach, a pozostałe zagadnienia później. W oryginale Jarnickiego szeregi i całki jednowymiarowe są w AM II (§6–8), różniczkowanie i podrozmaitości w AM III (§9–11), miara, całkowanie na podrozmaitościach i Stokes w AM IV (§12–14). Nie kopiujemy podziału na semestry, lecz wykorzystujemy zależności merytoryczne.
