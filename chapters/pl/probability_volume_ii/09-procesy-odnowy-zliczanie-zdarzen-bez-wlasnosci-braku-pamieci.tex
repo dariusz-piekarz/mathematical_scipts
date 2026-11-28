@@ -116,9 +116,10 @@ $\E N_t=\sum_{n\ge1}\Prob(S_n\le t)
 (0,0)--(1.6,0) (1.6,1)--(3.8,1) (3.8,2)--(4.8,2)
 (4.8,3)--(8,3) (8,4)--(10.2,4);
 \foreach \x/\y in {1.6/0,3.8/1,4.8/2,8/3}{
- \draw[blue!70!black,very thick] (\x,\y)--(\x,{\y+1});
+ \draw[dashed,gray] (\x,0)--(\x,{\y+1});
+ \fill[white] (\x,\y) circle (2pt);
+ \draw[blue!70!black,thick] (\x,\y) circle (2pt);
  \fill[blue!70!black] (\x,{\y+1}) circle (2pt);
- \draw[dashed,gray] (\x,0)--(\x,\y);
 }
 \foreach \x/\t in {1.6/1,3.8/2,4.8/3,8/4}{
  \node[below] at (\x,0) {$S_{\t}$};
@@ -519,6 +520,80 @@ W ogólności potrzebna jest jednostajna całkowalność
 albo odrębne oszacowania. W powyższym dowodzie rolę takich
 oszacowań pełnią lemat Walda i obcięcie odstępów.
 \end{uwaga}
+
+\begin{wniosek}[Zbieżność średniej w $L^1$]
+Przy oznaczeniach mocnego i elementarnego twierdzenia
+odnowy mamy $N_t/t\to 1/\mu$ również w $L^1$,
+z konwencją $1/\infty=0$.
+\end{wniosek}
+\begin{proof}
+Dla $t>0$ połóżmy $Z_t=N_t/t$ i $c=1/\mu$.
+Z mocnego twierdzenia odnowy $\min(Z_t,c)\to c$
+prawie na pewno, a zmienne te są ograniczone przez $c$.
+Z elementarnego twierdzenia odnowy $\E Z_t\to c$.
+Zatem
+$\E|Z_t-c|=\E Z_t+c-2\E\min(Z_t,c)\to0$.
+\end{proof}
+
+\begin{twierdzenie}[Centralne twierdzenie graniczne dla liczby odnowień]
+\label{thm:renewal-clt}
+Niech $0<\mu=\E T_1<\infty$ oraz
+$0<\sigma^2=\Var(T_1)<\infty$. Wtedy
+\[
+\frac{N_t-t/\mu}{\sigma\mu^{-3/2}\sqrt t}
+\ \longrightarrow\ \Normal(0,1)
+\quad\text{według rozkładu}.
+\]
+Jeżeli $\sigma^2=0$, to $(N_t-t/\mu)/\sqrt t\to0$
+punktowo prawie na pewno.
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonego $x\in\R$ niech
+$k_t=\lfloor t/\mu+x\sigma\mu^{-3/2}\sqrt t\rfloor+1$.
+Dla dostatecznie dużego $t$ mamy $k_t\ge1$ i
+\[
+\Prob\left(\frac{N_t-t/\mu}{\sigma\mu^{-3/2}\sqrt t}
+\le x\right)
+=\Prob(N_t<k_t)
+=\Prob(S_{k_t}>t).
+\]
+Przy tym $k_t/t\to1/\mu$ oraz
+$(k_t-t/\mu)/\sqrt t\to x\sigma\mu^{-3/2}$,
+więc
+\[
+\frac{t-k_t\mu}{\sigma\sqrt{k_t}}\to -x.
+\]
+Centralne twierdzenie graniczne dla sum niezależnych
+zmiennych o jednakowym rozkładzie (tom I,
+rozdział~\ref{I-ch:clt}) daje
+$(S_{k_t}-k_t\mu)/(\sigma\sqrt{k_t})
+\to\Normal(0,1)$ według rozkładu.
+Dla progów zbieżnych do $-x$ prawdopodobieństwa
+przekroczenia zbiegają do $1-\Phi(-x)=\Phi(x)$:
+wystarczy ograniczyć próg od góry i od dołu przez
+$-x\pm\varepsilon$ i wykorzystać ciągłość $\Phi$.
+Otrzymujemy zbieżność dystrybuant.
+Jeśli $\sigma^2=0$, na jednym zbiorze pełnej miary
+$T_n=\mu$ dla każdego $n$ i $N_t=\lfloor t/\mu\rfloor$,
+co dowodzi drugiej tezy.
+\end{proof}
+
+\begin{przyklad}[Fluktuacje liczby odnowień o odstępach gamma]
+Jeśli $T_1$ ma rozkład gamma o kształcie $k>0$
+i intensywności $\lambda>0$, to $\mu=k/\lambda$
+i $\sigma^2=k/\lambda^2$.
+Stąd
+\[
+\frac{N_t-\lambda t/k}{\sqrt{\lambda t}/k}
+\longrightarrow\Normal(0,1)
+\quad\text{według rozkładu}.
+\]
+Dla $k=1$ odzyskujemy asymptotykę licznika Poissona.
+Dla $k>1$ skala fluktuacji jest mniejsza niż
+w modelu Poissona o tej samej średniej intensywności
+$\lambda/k$. Jest to porównanie skal granicznych,
+nie twierdzenie o zbieżności wariancji.
+\end{przyklad}
 
 \section{Twierdzenie Blackwella i kluczowe twierdzenie odnowy}
 
@@ -941,6 +1016,55 @@ oczekiwane $L_t,A_t,R_t$ zbiegają: do tego
 potrzebne jest dodatkowe uzasadnienie.
 \end{proof}
 
+\begin{twierdzenie}[Zbieżność momentów wieku i czasu resztkowego]
+\label{thm:renewal-age-moments}
+Przy założeniach twierdzenia~\ref{thm:renewal-age-limit}
+niech $q>0$. Jeżeli $\E T_1^{q+1}<\infty$, to
+\[
+\begin{aligned}
+\E L_t^q&\longrightarrow \frac{\E T_1^{q+1}}{\mu},\\
+\E A_t^q,\ \E R_t^q&\longrightarrow
+\frac{\E T_1^{q+1}}{(q+1)\mu}.
+\end{aligned}
+\]
+Jeżeli $\E T_1^{q+1}=\infty$, wszystkie trzy
+momenty dążą do nieskończoności.
+\end{twierdzenie}
+\begin{proof}
+Dla $M>0$ i $t\ge0$, rozbijając względem cyklu
+zawierającego $t$ i stosując niezależność $S_n$
+od $T_{n+1}$, dostajemy z Tonellego
+\[
+\E[L_t^q\chi_{\{L_t>M\}}]
+=\int_{(M,\infty)} v^q
+U\bigl([0,t]\cap(t-v,t]\bigr)\,\mathrm d\nu(v).
+\]
+Przedział w argumencie $U$ ma długość nie większą
+niż $v$. Pokrywając go co najwyżej $\lfloor v\rfloor+1$
+domkniętymi przedziałami jednostkowymi i stosując
+lemat~\ref{lem:renewal-local-bound}, otrzymujemy
+\[
+\sup_{t\ge0}\E[L_t^q\chi_{\{L_t>M\}}]
+\le C_1\int_{(M,\infty)} v^q(1+v)\,\mathrm d\nu(v).
+\]
+Jeżeli $\E T_1^{q+1}<\infty$, prawa strona dąży
+do zera. Jest to jednostajna całkowalność
+rodziny $L_t^q$, a z $0\le A_t,R_t\le L_t$
+wynika również jednostajna całkowalność ich potęg.
+Zbieżność według rozkładu i obcięcie funkcji
+potęgowych przez stałą dają zbieżność momentów.
+Z reprezentacji $A_*=QL$, $R_*=(1-Q)L$ mamy
+$\E Q^q=\E(1-Q)^q=1/(q+1)$ oraz
+$\E L^q=\E T_1^{q+1}/\mu$.
+Jeżeli ten ostatni moment jest nieskończony,
+każdy moment graniczny jest nieskończony
+przez Tonellego i niezależność. Zbieżność
+wartości oczekiwanych ograniczonych ciągłych
+funkcji $v\mapsto\min(v^q,M)$ daje dolne
+oszacowania granic dolnych, które rosną
+do nieskończoności przy $M\to\infty$.
+\end{proof}
+
 \begin{uwaga}[Paradoks inspekcji]
 Losowy cykl obserwowany w późnej deterministycznej
 chwili nie ma na ogół prawa zwykłego odstępu $\nu$.
@@ -955,6 +1079,30 @@ obowiązuje również przy nieskończonym drugim
 momencie, kiedy średnia obserwowanej długości
 jest nieskończona.
 \end{uwaga}
+
+\begin{center}
+\begin{tikzpicture}[x=0.85cm,y=0.85cm,>=Latex]
+ \fill[blue!8] (3.4,-0.26) rectangle (8.6,1.42);
+ \draw[->] (0,0)--(11.1,0) node[right] {$t$};
+ \foreach \x/\lab in {0/0,1.6/1,3.4/2,8.6/3,10.4/4}{
+  \draw[thick] (\x,-0.12)--(\x,0.12);
+  \node[below] at (\x,-0.14) {$S_{\lab}$};
+ }
+ \draw[red!75!black,densely dashed] (6.6,0)--(6.6,1.9);
+ \fill[red!75!black] (6.6,0) circle (2pt);
+ \node[above,red!75!black] at (6.6,1.9) {chwila obserwacji $t$};
+ \draw[<->,blue!70!black,thick] (3.4,0.67)--(6.6,0.67)
+ node[midway,above] {$A_t$};
+ \draw[<->,teal!70!black,thick] (6.6,0.67)--(8.6,0.67)
+ node[midway,above] {$R_t$};
+ \draw[<->] (3.4,-0.86)--(8.6,-0.86)
+ node[midway,below] {$L_t=A_t+R_t$};
+\end{tikzpicture}
+\par\smallskip\small Wiek i czas resztkowy w cyklu
+zawierającym chwilę obserwacji. Dłuższy cykl
+zajmuje większą część osi czasu, więc łatwiej
+trafić do niego przy obserwacji.
+\end{center}
 
 \begin{przyklad}[Odstępy jednostajne]
 Jeżeli $T_1$ ma rozkład jednostajny na $[1,2]$,
@@ -1104,7 +1252,7 @@ Niech $S_n=\sum_{k=1}^nT_k$, $N_t=\max\{n:S_n\le t\}$ i
 $C_t=\sum_{k=1}^{N_t}R_k$. Wówczas
 \[
 \frac{C_t}{t}\longrightarrow\frac{\E R_1}{\E T_1}
-\qquad\text{prawie na pewno, gdy }t\to\infty.
+\qquad\text{prawie na pewno oraz w }L^1,\quad t\to\infty.
 \]
 \end{twierdzenie}
 \begin{proof}
@@ -1120,6 +1268,33 @@ $N_t/t\to1/\mu$ prawie na pewno. Wobec tego
 \]
 Jeżeli przez pewien początkowy czas $N_t=0$, przyjmujemy
 $C_t=0$; nie ma to wpływu na granicę.
+
+Aby uzyskać zbieżność w $L^1$, oznaczmy $K_t=N_t+1$.
+Zdarzenie $\{K_t\ge i\}=\{S_{i-1}\le t\}$
+jest niezależne od całej pary $(T_i,R_i)$.
+Dlatego dla każdej nieujemnej borelowskiej funkcji
+$b$ o $\E b(R_1)<\infty$ z Tonellego
+\[
+\E\sum_{i=1}^{K_t}b(R_i)=\E b(R_1)\E K_t.
+\]
+Dla $M>0$ zastąpmy nagrody przez
+$R_i^{(M)}=\max(-M,\min(R_i,M))$ i oznaczmy
+odpowiadającą sumę przez $C_t^{(M)}$.
+Mamy $|C_t^{(M)}|/t\le M N_t/t$.
+Udowodniona zbieżność $N_t/t$ w $L^1$ zapewnia
+jednostajną całkowalność wzdłuż dowolnego ciągu
+$t\to\infty$. Zatem mocne prawo dla obciętych
+nagród daje $C_t^{(M)}/t\to\E R_1^{(M)}/\mu$
+w $L^1$.
+Ponadto powyższa tożsamość dla
+$b(r)=|r|\chi_{\{|r|>M\}}$ daje
+\[
+\E|C_t-C_t^{(M)}|/t
+\le \E[|R_1|\chi_{\{|R_1|>M\}}]\E K_t/t.
+\]
+Z elementarnego twierdzenia odnowy
+$\E K_t/t\to1/\mu$. Przejście najpierw $t\to\infty$,
+a następnie $M\to\infty$ kończy dowód.
 \end{proof}
 
 \begin{zadanie}[Udział czasu naprawy maszyny]
