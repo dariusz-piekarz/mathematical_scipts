@@ -184,6 +184,142 @@ prawie wszędzie. Dla $f=1$ wzór
 \ref{ma2:cor:line-first-speed} bez hipotezy
 absolutnej ciągłości dawałby błędny wynik.
 
+
+\subsection{Intuicja geometryczna: pole pionowej powierzchni}
+\label{ma2:sec:line-curtain}
+
+W zwykłej całce funkcji nieujemnej jednej zmiennej
+szerokości małych prostokątów są przyrostami argumentu.
+W całce krzywoliniowej pierwszego rodzaju zastępujemy
+te szerokości długościami małych łuków krzywej.
+Wysokość w punkcie $x$ krzywej wynosi $f(x)$.
+Przybliżony wkład ma więc postać
+$f(\gamma(t_i))\Delta_i s$, gdzie $\Delta_i s$
+jest długością odpowiedniej części drogi.
+Ścisłą zbieżność takich sum wykażemy w
+\ref{ma2:thm:line-tagged-sums}.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x={(1.5cm,0cm)},y={(.55cm,.40cm)},z={(0cm,1.35cm)},>=Latex]
+\draw[gray!45,fill=gray!7] (-1.25,-.25,0)--(1.25,-.25,0)--
+ (1.25,1.25,0)--(-1.25,1.25,0)--cycle;
+\fill[teal!23,opacity=.85]
+ plot[domain=0:180,samples=61,variable=\t]
+ ({cos(\t)},{sin(\t)},0)
+ -- plot[domain=180:0,samples=61,variable=\t]
+ ({cos(\t)},{sin(\t)},{1+.4*sin(\t)}) --cycle;
+\foreach \t in {0,15,...,180}{
+ \draw[teal!65!black,thin,opacity=.65]
+ ({cos(\t)},{sin(\t)},0)--
+ ({cos(\t)},{sin(\t)},{1+.4*sin(\t)});
+}
+\draw[very thick,black!75]
+ plot[domain=0:180,samples=61,variable=\t]
+ ({cos(\t)},{sin(\t)},0);
+\draw[very thick,teal!75!black]
+ plot[domain=0:180,samples=61,variable=\t]
+ ({cos(\t)},{sin(\t)},{1+.4*sin(\t)});
+\draw[<->,thick] (0,1.08,0)--node[right]{$f(\gamma(t))$}(0,1.08,1.4);
+\node[below] at (-1,0,0) {$\gamma$};
+\node[right] at (1.25,-.25,0) {$z=0$};
+\node[above,teal!75!black] at (0,1,1.4) {wykres nad krzywą};
+\end{tikzpicture}
+\caption{Całka pierwszego rodzaju funkcji nieujemnej
+jako pole pionowej powierzchni między krzywą bazową
+a wykresem funkcji nad nią.}
+\label{ma2:fig:line-curtain}
+\end{figure}
+
+\begin{stwierdzenie}[Interpretacja jako pole powierzchni]
+\label{ma2:prop:line-curtain-area}
+Niech $\gamma:[a,b]\to\R^n$ będzie różnowartościową
+krzywą klasy $C^1$ o niezerowej pochodnej,
+a $f:E\to[0,\infty)$ funkcją ciągłą.
+W przestrzeni $\R^{n+1}$ określmy zbiór
+\[
+ S_f=\{(\gamma(t),u):a\le t\le b,\
+                       0\le u\le f(\gamma(t))\}.
+\]
+Wówczas
+\[
+ \mathcal H^2(S_f)=I_\gamma(f).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Niech $D=\{(t,u):a\le t\le b,\
+0\le u\le f(\gamma(t))\}$. Jest to zbiór zwarty,
+ponieważ $f\circ\gamma$ jest ciągła na przedziale
+zwartym. Odwzorowanie $\Phi(t,u)=(\gamma(t),u)$
+jest różnowartościowe na $D$ i Lipschitzowskie
+na prostokącie $[a,b]\times[0,\max_E f]$:
+ograniczoność $\gamma'$ daje własność Lipschitza
+krzywej, a ostatnia współrzędna jest liniowa.
+Można je przedłużyć Lipschitzowsko na $\R^2$,
+przedłużając $\gamma$ stałymi wartościami poza
+$[a,b]$. Wnętrze prostokąta wystarcza do obliczenia
+pochodnej prawie wszędzie; jego brzeg ma miarę
+$\lambda_2$ zero. Jeżeli $\max_E f=0$, obie strony
+są zerowe, ponieważ obraz krzywej Lipschitzowskiej
+ma miarę $\mathcal H^2$ zero (stosujemy wzór na pole
+z \atlasref{ME-28::thm:lipschitz-area-coarea-28}{ME 28}
+do $D=[a,b]\times\{0\}$, które ma miarę $\lambda_2$ zero).
+Macierz Grama kolumn pochodnej $\Phi$ ma postać
+\[
+ \begin{pmatrix}
+ \|\gamma'(t)\|_2^2 & 0\\
+ 0&1
+ \end{pmatrix},
+\]
+gdyż kolumny $(\gamma'(t),0)$ oraz $(0,1)$
+są ortogonalne. Zatem jakobian dwuwymiarowy
+wynosi $\|\gamma'(t)\|_2$.
+Ze wzoru na pole dla odwzorowań Lipschitzowskich
+(\atlasref{ME-28::thm:lipschitz-area-coarea-28}{ME 28})
+oraz różnowartościowości $\Phi$ wynika
+\[
+ \mathcal H^2(S_f)
+ =\int_D\|\gamma'(t)\|_2\,\mathrm d\lambda_2(t,u).
+\]
+Stosując twierdzenie Tonellego
+(\atlasref{ME-12::thm:lebesgue-products-12}{ME 12}),
+całkujemy najpierw względem $u$ na przedziale
+$[0,f(\gamma(t))]$. Otrzymujemy
+\[
+ \mathcal H^2(S_f)
+ =\int_{[a,b]} f(\gamma(t))\|\gamma'(t)\|_2\,
+                  \mathrm d\lambda_1(t)=I_\gamma(f)
+\]
+na mocy \ref{ma2:cor:line-first-speed}.
+\end{proof}
+
+Dla funkcji rzeczywistej ciągłej rozpatrujemy
+osobno powierzchnię powyżej i poniżej poziomu
+$u=0$. Stosując poprzednie stwierdzenie do
+$f^+=\max(f,0)$ i $f^-=\max(-f,0)$
+oraz liniowość całki, otrzymujemy
+$I_\gamma(f)=\mathcal H^2(S_{f^+})-
+\mathcal H^2(S_{f^-})$ (drugą powierzchnię
+odbijamy względem poziomu $u=0$, co zachowuje
+miarę Hausdorffa).
+Przy wielokrotnym przejściu tym samym łukiem
+pole geometrycznego zbioru nie wystarcza:
+wzór \ref{ma2:thm:line-weighted-area} zlicza
+wkład każdego przejścia.
+
+\begin{przyklad}[Półokrąg i stała wysokość]
+\label{ma2:ex:line-curtain-semicircle}
+Dla $\gamma(t)=(\cos t,\sin t)$, $0\le t\le\pi$,
+i $f=2$ mamy $\|\gamma'(t)\|_2=1$ z tożsamości
+$\sin^2t+\cos^2t=1$. Zatem
+\[
+ \int_\gamma 2\,\mathrm ds
+ =\int_{[0,\pi]}2\,\mathrm d\lambda_1(t)=2\pi.
+\]
+Jest to pole połowy powierzchni bocznej walca
+o promieniu $1$ i wysokości $2$.
+\end{przyklad}
+
 \section{Całka krzywoliniowa drugiego rodzaju}
 
 \begin{definicja}
@@ -284,6 +420,82 @@ $h(u)=\langle F(\widehat\gamma(u)),
 Druga równość wynika z definicji iloczynu
 skalarnego i liniowości całki.
 \end{proof}
+
+
+\subsection{Intuicja geometryczna: składowa styczna pola}
+\label{ma2:sec:line-tangent-intuition}
+
+W całce drugiego rodzaju wysokość zastępujemy
+skierowaną składową pola wzdłuż drogi.
+Dla parametryzacji długością łuku
+$T(s)=\widehat\gamma'(s)$ jest jednostkowym
+wektorem stycznym prawie wszędzie, więc
+$g(s)=\langle F(\widehat\gamma(s)),T(s)\rangle$
+jest skalarnym rzutem pola na kierunek ruchu.
+Jeśli pole i wektor styczny tworzą kąt $\vartheta$,
+to $g(s)=\|F(\widehat\gamma(s))\|_2\cos\vartheta$,
+na mocy wzoru na iloczyn skalarny (dla pola
+zerowego przyjmujemy $g(s)=0$).
+Wkład ma znak dodatni, gdy pole pomaga w ruchu,
+ujemny, gdy mu przeciwdziała, i zerowy,
+gdy jest do niego prostopadłe.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Latex,scale=1.2]
+\draw[thick] (-2,-.8) .. controls (-1.3,-1) and (-.7,-.35) .. (0,0)
+ .. controls (.7,.35) and (1.3,.65) .. (2,.5);
+\draw[->,teal!70!black,very thick] (0,0)--(1.4,.7)
+ node[right]{$T$};
+\draw[->,blue!75!black,very thick] (0,0)--(.4,1.2)
+ node[above]{$F$};
+\draw[dashed,gray] (.4,1.2)--(.8,.4);
+\draw[->,orange!85!black,very thick] (0,0)--(.8,.4);
+\draw[orange!85!black] (.8,.4)--(.72,.56)--(.88,.64);
+\node[below right,orange!85!black] at (.8,.4)
+ {$\langle F,T\rangle T$};
+\fill (0,0) circle (1.5pt) node[below]{$\widehat\gamma(s)$};
+\node[below] at (-1.7,-.8) {$\gamma$};
+\end{tikzpicture}
+\caption{W całce skierowanej liczy się rzut pola
+na kierunek styczny, a nie cała jego norma.}
+\label{ma2:fig:line-tangent-projection}
+\end{figure}
+
+Z definicji \ref{ma2:def:line-second}
+\[
+ W_\gamma(F)=\int_{[0,\ell]}g(s)\,\mathrm d\lambda_1(s).
+\]
+Jest to całka skalarna na przedziale długości
+łuku: pole z uwzględnieniem znaku między wykresem
+$g$ a osią $g=0$ (w sensie miary Lebesgue'a,
+jeżeli $g$ jest jedynie mierzalna).
+Nie jest to na ogół pole obszaru ograniczonego
+krzywą w jej pierwotnej przestrzeni.
+W interpretacji mechanicznej $F$ oznacza siłę,
+a $W_\gamma(F)$ pracę wykonaną przez tę siłę.
+
+\begin{przyklad}[Ta sama droga, różne całki]
+\label{ma2:ex:line-tangent-semicircle}
+Niech $\gamma(t)=(\cos t,\sin t)$ dla
+$0\le t\le\pi$. Pole $F(x,y)=(-y,x)$
+spełnia $F(\gamma(t))=\gamma'(t)$, więc
+z \ref{ma2:thm:line-second-speed}
+\[
+ W_\gamma(F)=\int_{[0,\pi]}\|\gamma'(t)\|_2^2\,
+                 \mathrm d\lambda_1(t)=\pi.
+\]
+Dla pola radialnego $G(x,y)=(x,y)$ mamy
+$\langle G(\gamma(t)),\gamma'(t)\rangle
+=-\cos t\sin t+\sin t\cos t=0$,
+a więc $W_\gamma(G)=0$, mimo że $\|G\|_2=1$
+na półokręgu.
+Po odwróceniu kierunku pierwsza całka z
+\ref{ma2:ex:line-curtain-semicircle}
+pozostaje równa $2\pi$, natomiast
+$W_\gamma(F)$ zmienia się z $\pi$ na $-\pi$,
+zgodnie z \ref{ma2:thm:line-orientation}.
+\end{przyklad}
 
 \section{Reparametryzacja, orientacja i składanie dróg}
 
