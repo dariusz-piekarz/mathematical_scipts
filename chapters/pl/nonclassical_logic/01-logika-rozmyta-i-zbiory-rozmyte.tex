@@ -1066,6 +1066,86 @@ $\Gamma\vdash_{\mathsf L}a^n\to b$.
 Jeżeli $n=0$, to $1\leq v$, a stąd $u\leq v$,
 więc wolno wziąć $n=1$.
 \end{proof}
+Lokalne twierdzenie o dedukcji można też wykazać bezpośrednio
+na poziomie dowodów. Poniższy argument wyjaśnia, skąd bierze się
+wykładnik zależny od dowodu.
+
+\begin{stwierdzenie}[Wyznaczanie wykładnika z dowodu]
+\label{prop:ncl-deduction-exponent}
+Jeżeli dany jest skończony dowód $b$ z $\Gamma\cup\{a\}$
+w rozszerzeniu aksjomatycznym MTL, można przypisać jego
+kolejnym wierszom $d$ nieujemne liczby całkowite $k$
+tak, aby $\Gamma\vdash_{\mathsf L}a^k\to d$.
+Dla aksjomatu lub przesłanki z $\Gamma$ wystarcza $k=0$,
+dla dodatkowej przesłanki $a$ wystarcza $k=1$,
+a w kroku modus ponens wolno dodać wykładniki przesłanek.
+\end{stwierdzenie}
+\begin{proof}
+Dla pierwszych dwóch rodzajów wierszy stosujemy syntaktyczne
+własności jednostki i zwrotności z Kroku 1 dowodu
+Twierdzenia~\ref{thm:lst-fuzzy-mtl-general-completeness};
+te własności obowiązują również w rozszerzeniu aksjomatycznym.
+Jeżeli $d$ otrzymano przez modus ponens z $e$ oraz $e\to d$,
+to z założenia indukcyjnego mamy dowody
+$a^k\to e$ oraz $a^\ell\to(e\to d)$ z $\Gamma$.
+W kanonicznym preorderze dla $\Gamma$, skonstruowanym
+w tym samym dowodzie z użyciem rachunku $\mathsf L$,
+oznacza to $a^k\preccurlyeq e$ i
+$a^\ell\preccurlyeq e\to d$. Monotoniczność mnożenia
+oraz syntaktyczna residuacja dają
+\[
+ a^{k+\ell}\sim a^k*a^\ell
+ \preccurlyeq e*(e\to d)\preccurlyeq d.
+\]
+Pierwsza równoważność wynika przez indukcję z łączności
+i neutralności jednostki w preorderze. Ostatnia nierówność
+wynika z residuacji i zwrotności $e\to d\preccurlyeq e\to d$.
+Definicja preorderu daje żądany dowód
+$a^{k+\ell}\to d$. Indukcja po wierszach kończy argument.
+Jeżeli ostatni wykładnik jest zerowy, można go zastąpić
+jedynką, ponieważ $a\preccurlyeq a^0$.
+\end{proof}
+
+\begin{twierdzenie}[Kiedy wykładnik może być ustalony z góry?]
+\label{thm:ncl-uniform-deduction}
+Niech $m\geq1$ będzie liczbą całkowitą i niech $\mathsf L$
+będzie rozszerzeniem aksjomatycznym MTL.
+Następujące warunki są równoważne:
+\begin{enumerate}
+\item dla dowolnych $\Gamma,a,b$ z
+$\Gamma\cup\{a\}\vdash_{\mathsf L}b$ wynika
+$\Gamma\vdash_{\mathsf L}a^m\to b$;
+\item $\vdash_{\mathsf L}p^m\to p^{m+1}$ dla zmiennej $p$;
+\item we wszystkich algebrach $\mathcal K_{\mathsf L}$
+zachodzi tożsamość $x^m=x^{m+1}$ dla każdego elementu $x$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Z poprawności i pełności
+(Twierdzenie~\ref{thm:lst-fuzzy-strong-chain-completeness})
+mamy $p\vdash_{\mathsf L}p^{m+1}$, ponieważ potęga
+jedynki jest jedynką. Z warunku 1 dostajemy 2.
+Z poprawności 2 daje $x^m\leq x^{m+1}$, a całkowitość
+i monotoniczność mnożenia dają przeciwną nierówność
+$x^{m+1}=x^m*x\leq x^m*1=x^m$. Otrzymujemy 3.
+Załóżmy 3. Indukcja z użyciem łączności daje
+$x^n=x^m$ dla $n\geq m$. Dla $1\leq n<m$
+mamy $x^m\leq x^n$, ponieważ kolejne potęgi nie rosną.
+Z lokalnego twierdzenia o dedukcji istnieje $n\geq1$
+takie, że $\Gamma\vdash_{\mathsf L}a^n\to b$.
+W każdym modelu $\Gamma$ mamy więc
+$v(a)^m\leq v(a)^n\leq v(b)$, co daje wartość $1$
+formule $a^m\to b$. Pełność daje warunek 1.
+\end{proof}
+Dla $m=1$ otrzymujemy dokładnie idempotentność mnożenia.
+W logice produktowej oraz Łukasiewicza nie istnieje żaden
+uniwersalny wykładnik $m$: w pierwszym przypadku dla
+$x=1/2$ mamy $x^{m+1}<x^m$, a w drugim dla
+$x=1-1/(m+2)$ obie kolejne potęgi są dodatnie i różne.
+Wzór na potęgi Łukasiewicza z
+Przykładu~\ref{ex:ncl-standard-filters} daje odpowiednio
+$2/(m+2)$ i $1/(m+2)$.
+
 \begin{przyklad}[Dlaczego nie wystarczy wykładnik jeden?]
 \label{ex:lst-fuzzy-no-global-deduction}
 W logice Łukasiewicza $p\vdash p\mathbin{\&}p$:
@@ -1114,6 +1194,60 @@ W każdym przypadku pełność oznacza implikację
 $\Gamma\models_{\mathcal S}p\Rightarrow\Gamma\vdash_{\mathsf L}p$.
 Odwrotną implikację zapewnia poprawność.
 \end{definicja}
+
+\begin{definicja}[Zwartość konsekwencji semantycznej]
+\label{def:ncl-semantic-compactness}
+Konsekwencja $\models_{\mathcal S}$ jest zwarta, jeżeli
+z $\Gamma\models_{\mathcal S}p$ wynika istnienie
+skończonego $\Gamma_0\subseteq\Gamma$ takiego, że
+$\Gamma_0\models_{\mathcal S}p$.
+Oddzielnie rozważamy zwartość spełnialności:
+jeżeli każdy skończony podzbiór $\Gamma$ ma model w
+$\mathcal S$, to także cały $\Gamma$ ma model w $\mathcal S$.
+\end{definicja}
+
+\begin{stwierdzenie}[Związek zwartości z pełnością]
+\label{prop:ncl-compactness-completeness}
+Dla poprawnego rachunku o skończonych dowodach silna
+pełność względem $\mathcal S$ jest równoważna pełności
+dla skończonych przesłanek i zwartości konsekwencji
+$\models_{\mathcal S}$.
+\end{stwierdzenie}
+\begin{proof}
+Z silnej pełności wynika pełność dla skończonych
+przesłanek. Jeżeli $\Gamma\models_{\mathcal S}p$,
+to silna pełność daje dowód $p$ z $\Gamma$.
+Dowód wykorzystuje skończenie wiele przesłanek,
+tworzących zbiór $\Gamma_0$; poprawność daje
+$\Gamma_0\models_{\mathcal S}p$.
+Odwrotnie, zwartość redukuje konsekwencję do pewnego
+skończonego $\Gamma_0$, pełność dla skończonych
+przesłanek daje dowód z $\Gamma_0$, a ten jest także
+dowodem z $\Gamma$.
+\end{proof}
+
+\begin{przyklad}[Zwartość spełnialności nie wystarcza]
+\label{ex:ncl-satisfiability-compactness}
+Standardowa logika Łukasiewicza ma zwartą spełnialność.
+Niech $P$ będzie zbiorem zmiennych zdaniowych.
+Przestrzeń wartościowań $[0,1]^P$ z topologią produktową
+jest zwarta na mocy twierdzenia Tychonoffa.
+Wartość każdej formuły jest ciągłą funkcją na tej
+przestrzeni: rzuty współrzędne są ciągłe, a wszystkie
+standardowe operacje Łukasiewicza są ciągłe, więc
+stosujemy indukcję po budowie formuły.
+Zbiór wartościowań nadających formule $\gamma$
+wartość $1$ jest zatem domknięty.
+Jeżeli każdy skończony podzbiór $\Gamma$ ma model,
+rodzina tych zbiorów domkniętych ma własność skończonych
+przecięć. Zwartość daje model całego $\Gamma$.
+
+Nie wynika stąd zwartość konsekwencji: warunek
+$v(p)<1$, potrzebny do otrzymania kontrmodelu dla
+wniosku $p$, określa zbiór otwarty, a niekoniecznie
+domknięty. Późniejsze Twierdzenie~\ref{thm:lst-fuzzy-noncompactness}
+podaje rzeczywisty kontrprzykład dla tej samej logiki.
+\end{przyklad}
 
 \begin{stwierdzenie}[Łańcuchy standardowe MTL i BL]
 \label{prop:lst-fuzzy-standard-chains}
@@ -1269,6 +1403,32 @@ $s(x\Rightarrow_P y)=\max(0,s(y)-s(x))$,
 co wynika z obu przypadków definicji residuum.
 Wartość $0$ nie należy do dziedziny tego przekształcenia;
 należy ją rozpatrywać osobno.
+
+\begin{wniosek}[Brak dzielników zera i skończone łańcuchy]
+\label{cor:ncl-product-finite}
+W każdym łańcuchu produktowym z $x>0$ i $y>0$ wynika
+$x*y>0$. Jedynym nietrywialnym skończonym łańcuchem
+produktowym jest algebra dwuelementowa $\{0,1\}$.
+\end{wniosek}
+\begin{proof}
+Gdyby $x*y=0=0*y$, skracalność względem dodatniego
+$y$ ze Stwierdzenia~\ref{prop:lst-fuzzy-product-sound}
+dawałaby $x=0$. Stąd iloczyn dodatnich elementów jest dodatni.
+Jeżeli $0<x<1$, to przez indukcję $x^n>0$ dla $n\geq1$.
+Z monotoniczności mamy $x^{n+1}\leq x^n$.
+Równość $x^{n+1}=x^n$ oznaczałaby $x^n*x=x^n*1$,
+a skracalność względem $x^n>0$ dawałaby $x=1$.
+Wobec tego ciąg potęg jest ściśle malejący, co jest
+niemożliwe w łańcuchu skończonym. Pozostają tylko
+$0,1$, które tworzą algebrę produktową jako podalgebra
+standardowego łańcucha produktowego.
+\end{proof}
+W szczególności logika produktowa nie jest pełna
+względem swoich skończonych łańcuchów: w każdym
+takim łańcuchu formuła $p\vee\neg p$ ma wartość $1$,
+natomiast w standardowym łańcuchu produktowym dla
+$v(p)=1/2$ ma wartość $1/2$. Poprawność wyklucza
+jej dowodliwość w rachunku produktowym.
 
 \section{Pełność standardowa dla skończonych przesłanek}
 \subsection{Skończone układy nierówności w grupach uporządkowanych}
