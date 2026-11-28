@@ -1,0 +1,50 @@
+# Podział logiki i teorii mnogości oraz teorii modeli
+
+Stan: 2026-11-28. Plan migracji; nie oznacza zakończenia migracji ani audytu.
+
+## Źródła i granice
+Katalog zawiera 39 rozdziałów logic_and_set_theory i 19 model_theory (00–18). Kanoniczną podstawą nowych skryptów są rozdziały logic_and_set_theory.
+- LST 01–13, 16–22, 25–39 pozostają w logice i teorii mnogości.
+- LST 14–15 oraz 23–24 przechodzą do właściwej teorii modeli; zachować ich etykiety oraz identyfikatory lub jawne aliasy migracyjne.
+- LST 39 pozostaje przy dużych liczbach kardynalnych; odsyłacze do logiki infinitarnej z teorii modeli.
+- Semantyka pierwszego rzędu i pełność pozostają kanonicznie w LST 09–13; teoria modeli odsyła do tych rozdziałów, bez kopiowania dowodów.
+- Stara teoria modeli (00–18) zostanie wycofana po porównaniu treści, dowodów, przykładów i etykiet. Nie usuwać w ciemno.
+
+## Wstępna mapa starego MT
+| MT | Kanoniczny odpowiednik LST do audytu |
+| --- | --- |
+| 00–02 | 09–13 |
+| 03–05 | 16–17 |
+| 06–07 | 18 |
+| 08 | 19 |
+| 09 | 20 |
+| 10 | 21 |
+| 11–12 | 22 |
+| 13–14 | 23–24, 14 i 22 |
+| 15 | 19, 22 |
+| 16 | 21–22 |
+| 17 | 17–20 |
+| 18 | 19–22 |
+
+Wstępnie odczytano rozdziały MT 15–18 oraz LST 19, 20, 22: zakresy tematyczne nakładają się, ale etykiety są różne, m.in. sec:codzienna-matematyka, sec:granice-zaufania, sec:sens-tarski, sec:czego-nie-mowia oraz stare etykiety numeryczne. Mapa nie dowodzi pełnego pokrycia. Przed usunięciem trzeba rozstrzygnąć ich rzeczywiste cele, unikać kolizji i nie dodawać pozornych etykiet.
+
+## Rozwój właściwej teorii modeli
+Struktury, podstruktury i elementarność; zwartość; twierdzenia Löwenheima–Skolema; diagramy; test Tarskiego–Vaughta; łańcuchy elementarne; zbiory definiowalne; typy i przestrzenie typów; realizacja i pomijanie typów; nasycenie i jednorodność; eliminacja kwantyfikatorów; zupełne i modelowo zupełne teorie, uzupełnienia modelowe; ultrailoczyny i twierdzenie Łosia; kategoryczność, twierdzenie Ryll-Nardzewskiego; podstawy stabilności, rang, forkingu; przykłady DLO, ACF, RCF i arytmetyki. Rozszerzenia dopiero po stabilizacji migracji.
+
+## Logika rozmyta — proponowany nowy rozdział w LST
+Umieścić po klasycznej logice pierwszego rzędu (dotychczasowe 09–13), w bloku logik nieklasycznych. Numer ustalić po migracji, nie przenumerowywać etykiet automatycznie.
+1. Wielowartościowość, wartości logiczne, różnica między stopniem prawdy a prawdopodobieństwem.
+2. Zbiory rozmyte, funkcje przynależności, przekroje alfa, nośniki, jądra, zasada reprezentacji przez przekroje; relacje rozmyte.
+3. Normy trójkątne i konormy, negacje, dualność de Morgana dla odpowiednio dobranych operacji; przykłady i kontrprzykłady.
+4. Residuacja i implikacje; rozróżnienie koniunkcji kratowej i monoidalnej; logiki Gödla–Dummetta, Łukasiewicza i produktowa.
+5. Algebraiczna semantyka: kraty rezyduowane, algebry MTL, BL, MV; aksjomatyzacje i poprawność, właściwie sformułowana pełność (oddzielić semantykę standardową od ogólnej i rachunek zdań od pierwszego rzędu).
+6. Predykaty rozmyte, wartości kwantyfikatorów jako infimum i supremum, konsekwencja logiczna; ograniczenia twierdzeń klasycznych.
+7. Liczby rozmyte, arytmetyka przekrojów alfa, zasada rozszerzania.
+8. Przykład wnioskowania Mamdaniego i Sugeno, defuzyfikacja; zastosowania jako ilustracja, nie główny temat. Wykresy funkcji przynależności i porównania operacji, przykłady z rachunkami.
+9. Relacja z logiką klasyczną, teorią prawdopodobieństwa i teorią możliwości. Odsyłacze do algebry abstrakcyjnej, teorii miary i teorii modeli; rozwinięcie modeli wielowartościowych ewentualnie w teorii modeli.
+
+## Warunki zakończenia migracji
+- Audyt różnic całych 19 starych rozdziałów, w tym wstępu i uwag końcowych; rejestr każdej etykiety i rzeczywistego odpowiednika.
+- Uzgodnić preambuły, punkty wejścia, katalog, mapowania Atlasu i generatora, aliasy, dokumentację, workflow oraz testy; nie usuwać źródeł przed audytem.
+- Porównać liczbę i treść obiektów, globalne odsyłacze, uruchomić walidację repozytorium i testy indeksu, generatora i aplikacji; skompilować oba PDF-y.
+- Audyty do stabilizacji, następnie niezależny audyt kontrolny. Nie deklarować zielonego CI bez faktycznego wyniku.
