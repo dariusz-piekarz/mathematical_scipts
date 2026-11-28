@@ -352,6 +352,18 @@
       const sc=k=>({...scene(),domain:{x:[k/2,(k+1)/2],y:[0,1]},aspectmode:"data",xaxis:{...axis("x"),range:[.4,1.7]},yaxis:{...axis("y"),range:[0,1.2]},zaxis:{...axis("z"),range:[0,1.7]}});
       return base(data,heading(.2),{scene:sc(0),scene2:sc(1),margin:{l:0,r:0,b:70,t:85},annotations:[{xref:"paper",yref:"paper",x:.25,y:1.04,text:"Walcowa: J = "+r.toFixed(3),showarrow:false},{xref:"paper",yref:"paper",x:.75,y:1.04,text:"Sferyczna: J = "+(r*r*Math.sin(p)).toFixed(3),showarrow:false}],sliders:[{active:4,currentvalue:{prefix:"δ = "},steps}]});
     },
+    "am2_33_spherical_cap.html":()=>{
+      const t=lin(0,Math.PI/3,80),p=lin(0,2*Math.PI,140);
+      const X=grid(t,p,(a,b)=>Math.sin(a)*Math.cos(b)),Y=grid(t,p,(a,b)=>Math.sin(a)*Math.sin(b)),Z=grid(t,p,a=>Math.cos(a));
+      const data=[surface(X,Y,Z,{surfacecolor:Z,showscale:true,colorbar:{title:"z"},name:"Czasza"}),line(p.map(a=>Math.sin(Math.PI/3)*Math.cos(a)),p.map(a=>Math.sin(Math.PI/3)*Math.sin(a)),p.map(()=>.5),"Brzeg","#24465c")];
+      return base(data,"Czasza jednostkowa: h = 1/2, pole = π",{scene:{...scene(),aspectmode:"data"}});
+    },
+    "am2_33_torus.html":()=>{
+      const t=lin(0,2*Math.PI,90),p=lin(0,2*Math.PI,140),r=a=>2+.6*Math.cos(a);
+      const X=grid(t,p,a=>.6*Math.sin(a)),Y=grid(t,p,(a,b)=>r(a)*Math.cos(b)),Z=grid(t,p,(a,b)=>r(a)*Math.sin(b));
+      const data=[surface(X,Y,Z,{surfacecolor:grid(t,p,a=>r(a)),showscale:true,colorbar:{title:"r"},name:"Torus"})];
+      return base(data,"Torus: R = 2, b = 0.6",{scene:{...scene(),aspectmode:"data"}});
+    },
     "am2_36_geometric.html":()=>{
       const r=lin(0,.97,61),t=lin(0,2*Math.PI,121),X=t.map(a=>r.map(v=>v*Math.cos(a))),Y=t.map(a=>r.map(v=>v*Math.sin(a)));
       const norm=(a,v,n)=>n===null?1/Math.hypot(1-v*Math.cos(a),v*Math.sin(a)):Math.hypot(1-v**(n+1)*Math.cos((n+1)*a),v**(n+1)*Math.sin((n+1)*a))/Math.hypot(1-v*Math.cos(a),v*Math.sin(a));
