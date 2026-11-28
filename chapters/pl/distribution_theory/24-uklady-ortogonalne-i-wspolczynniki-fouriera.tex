@@ -239,6 +239,61 @@ Na tym etapie jest to tożsamość dla sum częściowych,
 a nie dowód zbieżności punktowej do $f$.
 \end{przyklad}
 
+\begin{przyklad}[Okresowe przedłużenie funkcji liniowej]
+\label{ex:dt-series-sawtooth}
+Niech $f(x)=x$ dla $-\pi<x<\pi$ i przedłużmy $f$
+$2\pi$-okresowo. Funkcja jest nieparzysta prawie
+wszędzie, więc wszystkie $a_n$ są zerowe.
+Całkowanie przez części daje dla $n\ge1$
+\[
+ b_n=\frac2\pi\int_0^\pi x\sin(nx)\,\mathrm d\lambda_1(x)
+ =\frac2\pi\left[
+ -\frac{x\cos(nx)}n+\frac{\sin(nx)}{n^2}
+ \right]_0^\pi
+ =\frac{2(-1)^{n+1}}n.
+\]
+Zatem
+\[
+ S_Nf(x)=2\sum_{n=1}^N\frac{(-1)^{n+1}}n\sin(nx).
+\]
+W punktach $x\in\pi+2\pi\mathbb Z$ każda suma
+częściowa wynosi zero. Nie jest to sprzeczne z tym,
+że możemy wybrać dowolną wartość przedłużenia
+w punkcie skoku: współczynniki nie zależą od
+wartości na zbiorze miary zero.
+\end{przyklad}
+
+\begin{przyklad}[Okresowe przedłużenie funkcji kwadratowej]
+\label{ex:dt-series-quadratic}
+Niech $f(x)=x^2$ na $[-\pi,\pi]$, przedłużona okresowo.
+W tym przypadku $f$ jest parzysta i ciągła na okręgu,
+więc $b_n=0$, a
+\[
+ a_0=\frac2\pi\int_0^\pi x^2\,\mathrm d\lambda_1(x)
+ =\frac{2\pi^2}3.
+\]
+Dla $n\ge1$ dwukrotne całkowanie przez części daje
+\[
+ \begin{aligned}
+ a_n&=\frac2\pi\int_0^\pi x^2\cos(nx)\,\mathrm d\lambda_1(x)\\
+ &=-\frac4{\pi n}\int_0^\pi x\sin(nx)\,\mathrm d\lambda_1(x)
+ =\frac{4(-1)^n}{n^2}.
+ \end{aligned}
+\]
+W ostatnim kroku wykorzystaliśmy rachunek z
+Przykładu~\ref{ex:dt-series-sawtooth}.
+Stąd
+\[
+ S_Nf(x)=\frac{\pi^2}3+
+ 4\sum_{n=1}^N\frac{(-1)^n}{n^2}\cos(nx).
+\]
+Kryterium Weierstrassa daje jednostajną i bezwzględną
+zbieżność tego szeregu, ponieważ $\sum_{n\ge1}n^{-2}$
+jest zbieżny. Identyfikację jego sumy z $f$ uzyskamy
+z zupełności układu trygonometrycznego w
+Twierdzeniu~\ref{thm:dt-series-parseval}.
+\end{przyklad}
+
 \subsection{Jądro Dirichleta}
 
 \begin{stwierdzenie}[Reprezentacja sum częściowych jako splotu]
@@ -280,6 +335,28 @@ w $D_N$ i stosując ortogonalność względem funkcji
 stałej z Lematu~\ref{lem:dt-series-bessel}, otrzymujemy
 ostatnią równość.
 \end{proof}
+
+\begin{center}
+\begin{tikzpicture}[x=1.65cm,y=0.25cm,>=stealth]
+ \draw[->,gray] (-3.35,0)--(3.43,0) node[right] {$t$};
+ \draw[->,gray] (0,-3.4)--(0,14) node[above] {$D_N(t)$};
+ \foreach \x/\lab in {-3.14159/{-\pi},-1.5708/{-\pi/2},1.5708/{\pi/2},3.14159/{\pi}}
+   {\draw[gray] (\x,0.22)--(\x,-0.22) node[below=2pt,fill=white,inner sep=1pt] {$\lab$};}
+ \foreach \y in {5,13}
+   {\draw[gray] (-0.04,\y)--(0.04,\y) node[left=3pt,fill=white,inner sep=1pt] {\small $\y$};}
+ \draw[blue!75!black,thick,domain=-3.14159:3.14159,samples=241,variable=\x]
+ plot ({\x},{1+2*cos(deg(1*\x))+2*cos(deg(2*\x))});
+ \draw[red!75!black,thick,dashed,domain=-3.14159:3.14159,samples=361,variable=\x]
+ plot ({\x},{1+2*cos(deg(1*\x))+2*cos(deg(2*\x))+2*cos(deg(3*\x))+2*cos(deg(4*\x))+2*cos(deg(5*\x))+2*cos(deg(6*\x))});
+ \draw[blue!75!black,thick] (1.55,12.4)--(2.02,12.4) node[right,black] {\small $N=2$};
+ \draw[red!75!black,thick,dashed] (1.55,10.6)--(2.02,10.6) node[right,black] {\small $N=6$};
+\end{tikzpicture}
+
+\small Jądra Dirichleta na jednym okresie:
+wysokość w zerze wynosi $2N+1$, a boczne płaty
+zmieniają znak. Wykresy otrzymano bezpośrednio
+ze skończonych sum cosinusów, także w punkcie $t=0$.
+\end{center}
 
 \begin{twierdzenie}[Wzrost normy jądra Dirichleta]
 \label{thm:dt-dirichlet-norm}
