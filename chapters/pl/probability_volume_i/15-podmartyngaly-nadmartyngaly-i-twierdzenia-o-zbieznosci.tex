@@ -13,6 +13,12 @@ lub nierosnące: nawet nadmartyngał może
 wiele razy rosnąć, a podmartyngał spadać.
 Pojęcia te opisują \emph{warunkową tendencję},
 a nie monotoniczność wyników pojedynczego losowania.
+Rozkład Dooba z rozdziału~\ref{ch:martyngaly}
+pozwala oddzielić obie składowe: w zapisie
+$X_n=M_n+A_n$ martyngał $M$ odpowiada za
+przyrosty o zerowej warunkowej średniej, a
+przewidywalna część $A$ jest niemalejąca dla
+podmartyngału i nierosnąca dla nadmartyngału.
 
 \begin{przyklad}[Proces z ujemnym dryfem może rosnąć]
 Niech $\xi_k$ będą niezależne, niech
@@ -126,8 +132,44 @@ ale do chwili $8$ nie jest ukończona, więc
 $\tau_4=\infty$ w tym horyzoncie.
 Zatem $U_8(1,2)=3$. Zliczamy tylko pełne pary,
 a nie wszystkie wzrosty ani przekroczenia
-pojedynczego poziomu.
+pojedynczego poziomu (rysunek~\ref{fig:rp1-15-upcrossings}).
 \end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1.02cm,y=1.04cm,>=Stealth]
+\fill[blue!7] (0,1) rectangle (8.35,2);
+\draw[->] (-.25,0)--(8.7,0) node[right] {$k$};
+\draw[->] (0,-.12)--(0,3.55) node[above] {$x_k$};
+\foreach \k in {0,...,8}
+  \node[below,font=\scriptsize] at (\k,-.1) {$\k$};
+\foreach \y in {1,2,3}
+  \draw (-.07,\y)--(.07,\y) node[left=3pt,font=\small] {$\y$};
+\draw[gray,dashed] (0,1)--(8.35,1) node[right] {$a$};
+\draw[gray,dashed] (0,2)--(8.35,2) node[right] {$b$};
+\draw[gray!65,thick] plot coordinates {(0,0) (1,2) (2,1) (3,3) (4,0) (5,1) (6,2) (7,0) (8,1)};
+\draw[blue!75!black,very thick] (0,0)--(1,2) (2,1)--(3,3) (4,0)--(5,1)--(6,2);
+\draw[orange!80!black,very thick,densely dashed] (7,0)--(8,1);
+\foreach \x/\y/\i in {0/0/1,2/1/2,4/0/3,7/0/4} {
+  \fill[blue!75!black] (\x,\y) circle (2pt);
+  \node[above left,font=\scriptsize] at (\x,\y) {$\sigma_{\i}$};
+}
+\foreach \x/\y/\i in {1/2/1,3/3/2,6/2/3} {
+  \fill[blue!75!black] (\x,\y) circle (2pt);
+  \node[above right,font=\scriptsize] at (\x,\y) {$\tau_{\i}$};
+}
+\fill[orange!80!black] (8,1) circle (2pt);
+\draw[blue!75!black,very thick] (0,-.85)--(.55,-.85);
+\node[right,font=\small] at (.6,-.85) {ukończone};
+\draw[orange!80!black,very thick,densely dashed] (3.9,-.85)--(4.45,-.85);
+\node[right,font=\small] at (4.5,-.85) {nieukończone};
+\end{tikzpicture}
+\caption{Trzy ukończone przekroczenia przedziału $[1,2]$
+oraz czwarta próba, niedokończona do chwili $8$.
+Odcinki łączą obserwacje dyskretne i służą wyłącznie
+do wizualizacji kolejnych kroków.}
+\label{fig:rp1-15-upcrossings}
+\end{figure}
 
 \begin{twierdzenie}[Nierówność przekroczeń Dooba]
 Niech $(X_n)_{n\geq0}$ będzie rzeczywistym,
@@ -187,6 +229,13 @@ Oznacza to, że $H_k\in\{0,1\}$ jest
 $\mathcal F_{k-1}$-mierzalny: decyzję o
 uwzględnieniu kroku $k$ podejmujemy \emph{przed}
 poznaniem przyrostu $Y_k-Y_{k-1}$.
+Można interpretować $H$ jako strategię utrzymywania
+jednej jednostki procesu $Y$ od chwili, w której
+$Y$ wynosi zero (bo $X\leq a$), do chwili osiągnięcia
+co najmniej $b-a$. Ukończone próby przynoszą
+co najmniej $b-a$, a nieukończona próba nie daje
+ujemnego wkładu właśnie dzięki zastąpieniu $X$
+przez jego przesuniętą część dodatnią $Y$.
 
 Na każdym przedziale z $\sigma_r<N$
 suma wybranych przyrostów teleskopuje do
@@ -306,6 +355,11 @@ $X_n^+=0$. Dla martyngału ograniczonego w $L^1$
 mamy $\sup_n\E M_n^+<\infty$.
 Oba przypadki są więc konsekwencjami już
 udowodnionej wersji twierdzenia.
+Dla nieujemnego nadmartyngału $Z$ lemat Fatou
+i monotoniczność $\E Z_n$ dają ponadto
+$\E Z_\infty\leq\lim_n\E Z_n\leq\E Z_0$.
+Równość nie jest zagwarantowana, co zobaczymy
+w przykładzie martyngału bez jednostajnej całkowalności.
 \end{proof}
 
 \begin{przyklad}[Przyrosty mogą oscylować, mimo zbieżności]
@@ -319,8 +373,10 @@ przyrostu jest zerowa, więc jest to martyngał.
 Szereg
 $\sum_k2^{-k}Z_k$ zbiega nawet bezwzględnie
 na każdej trajektorii. Zdarzenia $\{Z_{2k-1}=1,Z_{2k}=-1\}$ są niezależne
-i mają prawdopodobieństwo $1/4$. Z drugiego lematu
-Borela--Cantellego zachodzą nieskończenie często p.n.,
+i mają prawdopodobieństwo $1/4$. Ponieważ suma ich prawdopodobieństw jest nieskończona,
+z drugiego lematu Borela--Cantellego
+(rozdział~\ref{ch:advancedlimits}) zachodzą
+nieskończenie często p.n.,
 więc dodatnie i ujemne przyrosty występują p.n.
 nieskończenie wiele razy.
 Zbieżność martyngału nie wymaga monotoniczności.
@@ -422,8 +478,39 @@ Supremum tych wartości po $n$ wynosi $1$,
 więc rodzina nie jest jednostajnie całkowalna.
 Również $\|M_n-0\|_1=1$, więc zbieżność
 nie zachodzi w $L^1$. Pojedyncze, coraz rzadsze
-i coraz większe wartości niosą całą średnią.
+i coraz większe wartości niosą całą średnią
+(rysunek~\ref{fig:rp1-15-escaping-mass}).
 \end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1.35cm,y=0.36cm,>=Stealth]
+\draw[->] (-.25,0)--(5.85,0) node[right] {$n$};
+\draw[->] (0,0)--(0,17) node[above] {wartość};
+\foreach \k in {1,2,3,4,5}
+  \node[below,font=\scriptsize] at (\k,0) {$\k$};
+\foreach \y in {4,8,12,16}
+  \draw[gray!25] (0,\y)--(5.4,\y);
+\foreach \y in {4,8,12,16}
+  \node[left,font=\scriptsize] at (0,\y) {$\y$};
+\draw[orange!85!black,thick,densely dashed] (0,1)--(5.4,1);
+\node[right,font=\scriptsize] at (5.4,1) {$\E M_n=1$};
+\draw[blue!75!black,thick] plot coordinates {(0,1) (1,2) (2,0) (3,0) (4,0) (5,0)};
+\draw[teal!70!black,thick,dashdotted] plot coordinates {(0,1) (1,2) (2,4) (3,8) (4,0) (5,0)};
+\draw[violet!75!black,thick] plot coordinates {(0,1) (1,2) (2,4) (3,8) (4,16) (5,0)};
+\foreach \x/\y/\p in {1/2/2,2/4/4,3/8/8,4/16/16}
+  \node[above right,font=\scriptsize] at (\x,\y) {$1/\p$};
+\node[anchor=west,font=\scriptsize] at (0,15) {prawdopodobieństwo};
+\node[anchor=west,font=\scriptsize] at (0,13.7) {wartości $2^n$:};
+\end{tikzpicture}
+\caption{Trzy możliwe trajektorie martyngału
+$M_n=2^n\chi_{\{B_1=\cdots=B_n=1\}}$.
+Po pierwszym niepowodzeniu wartość pozostaje zerowa.
+Prawdopodobieństwo dodatniej wartości $2^n$ wynosi
+$2^{-n}$; ich iloczyn jest stale równy $1$.
+Linia pozioma oznacza średnią, nie dodatkową trajektorię.}
+\label{fig:rp1-15-escaping-mass}
+\end{figure}
 
 \begin{twierdzenie}[Twierdzenie Lévy'ego o rosnącej informacji]
 Niech $(\mathcal F_n)_{n\geq0}$ będzie filtracją
