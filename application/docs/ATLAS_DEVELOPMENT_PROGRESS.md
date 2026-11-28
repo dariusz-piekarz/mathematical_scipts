@@ -1999,3 +1999,10 @@ Odczytany `atlas_validation_status.json`: `candidate_sha=02190e107a6305bc7b73334
 
 - #46178444062 (efc84918), job 141082351094: kroki Validate chapter dependencies i Validate global repository integrity completed/success; cały job jeszcze w toku. Odrębny #46178324119 (4e6ab443), job 141081978444: kompilacja CAT FAIL, rzeczywisty błąd Undefined control sequence \\llbracket w CAT-48:33. Commit bbe19b9449b6eb3ccbdbac1b5eabc8df3ef970be dodaje wyłącznie stmaryrd do preambuły książki i jej przenośnego odpowiednika KAT.tex w jednym atomowym commicie. Ponowny odczyt na tym SHA potwierdził identyczność preambuł i obecność pakietu. #46178587649 oczekuje; nie deklarować ukończonej kompilacji.
 - #46177909934 (56191f7c): natywne regresje, Lean Core, minimalny offline Mathlib i niezależny odczyt jego raportu completed/success; pomiar pełnego importu w toku, scoped payload replay jeszcze niepotwierdzony. #46178444059 aplikacja w toku. Nie duplikowano CI ani nie zmieniano runnera przed odbiorem. Status testing, 2+1 i niezależna recenzja otwarte; execution_allowed=false, offline_ready=false, certificate=false. Bez main i harmonogramu.
+
+
+### 2026-11-28 — faza B: odbiór CAT i regresja odsyłaczy DT
+
+- #46178587649, job 141082800691, completed/success: rzeczywisty PDF CAT 588 stron, końcowa bramka odsyłaczy PASS. Naprawa stmaryrd potwierdzona.
+- #46178444059, job 141082618761: 1139 testów, 11 sklasyfikowanych pominięć, jedna rzeczywista regresja DT-07 test_inherited_outgoing_links_follow_the_split: utracony ME-21::cor:measures-separate-21. Commit d9d4652742c336ffaead3839f2d709e5537ab142 przywraca odsyłacz w DT-14 jako uwagę o dodatnich miarach Radona, bez zastępowania dowodu dla miar zespolonych. Odczyt wszystkich ośmiu następców DT-07 na tym SHA: 7/7 wymaganych odsyłaczy, brak utraconych, wskazany odsyłacz dokładnie w DT-14. Nie modyfikowano testu ani baseline. #46178880109 cancelled, nie PASS; nowy pełny CI konieczny.
+- #46177909934 nadal w toku, obecnie scoped Mathlib fixture; bez nowego 2+1, bez niezależnej recenzji. Nie uruchamiano powtórzeń ani zmieniano runnera. Bez zmian main i harmonogramu.
