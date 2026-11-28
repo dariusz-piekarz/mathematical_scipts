@@ -40,7 +40,7 @@ class MathRendererInstallTest(unittest.TestCase):
         self.assertEqual({key for key in profiles if "-" not in key},
                          {p.stem for p in (self.root / "config/preambles").glob("*.tex")})
         self.assertEqual(profiles["DG"][r"\Q"], r"\mathbb{Q}")
-        self.assertEqual(profiles["MOD"][r"\Q"], r"\mathrm Q")
+        self.assertEqual(profiles["MOD"][r"\Q"], r"\mathbb Q")
         self.assertEqual(profiles["KAT"][r"\cat"], r"\mathsf{#1}")
         self.assertEqual(profiles["KAT"][r"\Hom"], r"\operatorname{Hom}")
         self.assertEqual(profiles["KAT"][r"\End"], r"\operatorname{End}")

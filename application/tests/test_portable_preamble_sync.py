@@ -17,6 +17,7 @@ class PortablePreambleSyncTests(unittest.TestCase):
             "KAT": "category_theory",
             "LA": "linear_algebra",
             "LST": "logic_and_set_theory",
+            "MOD": "model_theory",
             "ME": "measure_theory",
         }
         for key, book in pairs.items():

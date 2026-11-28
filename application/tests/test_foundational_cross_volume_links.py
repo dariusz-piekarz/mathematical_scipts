@@ -24,7 +24,7 @@ EXPECTED = {
     "AA-07": {"KAT-14::def:adjunction"},
     "AA-16": {"TOP-03::thm:les-homologia", "KAT-06::cat:ex:module-indexed"},
     "AA-18": {"KAT-14::def:adjunction"},
-    "LST-15": {"AA-02::aa:def:hom", "KAT-02::def:mono-epi"},
+    "MOD-21": {"AA-02::aa:def:hom", "KAT-02::def:mono-epi"},
 }
 
 

@@ -769,7 +769,7 @@ with sync_playwright() as pw:
     assert box.locator('.katex-error').count() == 0
     assert page.locator('#mathPreviewStatus').is_hidden()
     assert page.evaluate(r"() => previewMacros('AM1-14')['\\HK'] === undefined")
-    assert page.evaluate(r"() => previewMacros('MOD')['\\Q']") == r"\mathrm Q"
+    assert page.evaluate(r"() => previewMacros('MOD')['\\Q']") == r"\mathbb Q"
 
     # A closing brace inside a comment must not end a declaration early.
     # Grouping commands delimit scope but are not reader-visible prose.
