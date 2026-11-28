@@ -38,7 +38,7 @@ example (x y : Real) : (x + y)^2 = x^2 + 2*x*y + y^2 := by ring
 theorem atlas_isolated_fixture (p q : Prop) : (p ∧ q) ↔ (q ∧ p) := and_comm
 #print axioms atlas_isolated_fixture
 """
-# Candidate profile only. The production generator still uses import Mathlib.
+# Independently pinned reference profile; generator must match it exactly.
 # Keep the fixture body identical for a fair comparison of import closures.
 SCOPED_IMPORTS = (
     "Mathlib.Data.Real.Basic",
@@ -63,6 +63,16 @@ def scoped_fixture_copy(payload: bytes) -> bytes:
             or not payload.endswith(b"\n#print axioms atlas_draft\n")):
         raise ValueError("Unexpected fixed fixture payload")
     return SCOPED_HEADER.encode("ascii") + payload[len(header):]
+
+
+def full_fixture_copy(payload: bytes) -> bytes:
+    """Reverse only the exact fixed header for the CI parity control."""
+    header = SCOPED_HEADER.encode("ascii")
+    if (type(payload) is not bytes or len(payload) > 65536 + 128
+            or not payload.startswith(header)
+            or not payload.endswith(b"\n#print axioms atlas_draft\n")):
+        raise ValueError("Unexpected fixed scoped fixture payload")
+    return b"import Mathlib\n" + payload[len(header):]
 
 
 def fixture_source(profile: str) -> str:

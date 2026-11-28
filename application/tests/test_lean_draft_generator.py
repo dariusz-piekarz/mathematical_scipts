@@ -2,7 +2,7 @@
 import hashlib
 import unittest
 from pathlib import Path
-from backend.lean_draft_generator import generate
+from backend.lean_draft_generator import generate, IMPORT_HEADER, VERSION
 
 def segments(*parts):
     source = "\n".join(text for _, text in parts)
@@ -52,6 +52,25 @@ class LeanDraftGeneratorTests(unittest.TestCase):
                 self.assertFalse(r["external_transfer_allowed"])
                 self.assertNotIn("sorry", r["lean_code"])
                 self.assertNotIn("admit", r["lean_code"])
+
+    def test_fixed_scoped_header_and_stale_full_import_identity(self):
+        from scripts.lean_full_import_probe import SCOPED_HEADER
+        from backend.lean_draft_repair import plan_next
+        self.assertEqual(IMPORT_HEADER, SCOPED_HEADER)
+        source = FIXTURES[0][0]
+        draft = generate(source, consent=True)
+        self.assertEqual(VERSION, "0.2.0")
+        self.assertEqual(draft["generator_version"], VERSION)
+        self.assertTrue(draft["lean_code"].startswith(IMPORT_HEADER + "\n"))
+        self.assertNotIn("import Mathlib\n", draft["lean_code"])
+        old = "import Mathlib\n" + draft["lean_code"][len(IMPORT_HEADER):]
+        old_digest = hashlib.sha256(old.encode()).hexdigest()
+        self.assertNotEqual(old_digest, draft["lean_code_sha256"])
+        plan = plan_next(source, consent=True, expected_source_sha256=draft["source_sha256"],
+                         expected_ast_sha256=draft["ast_sha256"], expected_initial_code_sha256=old_digest,
+                         observations=[dict(code_sha256=old_digest, exit_code=1, diagnostic=b"")])
+        self.assertEqual(plan["error"], "stale_candidate")
+        self.assertFalse(plan["execution_allowed"])
 
     def test_consent_must_be_literal_true(self):
         for consent in (False, 1, "true", None):

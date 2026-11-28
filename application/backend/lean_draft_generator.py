@@ -9,7 +9,16 @@ from __future__ import annotations
 import hashlib
 from backend import lean_parser
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
+# Fixed, measured on the pinned Mathlib toolchain; never caller-supplied.
+IMPORTS = (
+    "Mathlib.Data.Real.Basic",
+    "Mathlib.Tactic.Ring",
+    "Mathlib.Tactic.Tauto",
+    "Aesop",
+    "Lean.Elab.Tactic.Omega",
+)
+IMPORT_HEADER = "".join("import " + name + "\n" for name in IMPORTS)
 MAX_CODE_BYTES = 65536
 _BINARY = {"and": "∧", "or": "∨", "implies": "→", "iff": "↔",
            "eq": "=", "lt": "<", "le": "≤", "add": "+", "mul": "*", "sub": "-"}
@@ -69,7 +78,7 @@ def generate(source: str, *, segments: list | None = None, consent: bool = False
         return {**result, "status": parsed["status"], "error": parsed.get("error"),
                 "diagnostic": {k: parsed[k] for k in ("span", "path") if k in parsed}}
     signature, names = _render(parsed["ast"])
-    code = ("import Mathlib\n\nset_option maxHeartbeats 100000\n"
+    code = (IMPORT_HEADER + "\nset_option maxHeartbeats 100000\n"
             "set_option maxRecDepth 512\n\n" + signature + " := " + _PROOF)
     encoded = code.encode("utf-8")
     if len(encoded) > MAX_CODE_BYTES:

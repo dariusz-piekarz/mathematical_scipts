@@ -265,7 +265,7 @@ jobs:
           import sys
           from pathlib import Path
           from scripts.lean_ci_audit import inspect_log
-          from scripts.lean_full_import_probe import scoped_fixture_copy, SCOPED_IMPORTS
+          from scripts.lean_full_import_probe import scoped_fixture_copy, SCOPED_IMPORTS, SCOPED_HEADER
 
           root = Path("lean").resolve()
           probe = Path(sys.argv[1]).resolve()
@@ -278,22 +278,33 @@ jobs:
           records = []
           for original in originals:
               payload = original.read_bytes()
-              adapted = scoped_fixture_copy(payload)
+              if payload.startswith(SCOPED_HEADER.encode("ascii")):
+                  from scripts.lean_full_import_probe import full_fixture_copy
+                  adapted = full_fixture_copy(payload)
+                  full_payload, scoped_payload = adapted, payload
+                  native_profile = "scoped"
+              else:
+                  adapted = scoped_fixture_copy(payload)
+                  full_payload, scoped_payload = payload, adapted
+                  native_profile = "full"
               target = scoped / original.name
               target.write_bytes(adapted)
-              log = logs / ("scoped-" + original.name + ".log")
+              log = logs / (("full-" if native_profile == "scoped" else "scoped-") + original.name + ".log")
               result = subprocess.run(["lake", "env", "lean", str(target)],
                                       cwd=root, stdout=subprocess.PIPE,
                                       stderr=subprocess.STDOUT, timeout=90, check=False)
               log.write_bytes(result.stdout)
               if result.returncode or len(result.stdout) > 16000:
                   raise ValueError("Scoped fixture compilation failed: " + original.name)
-              full_axioms = inspect_log((logs / (original.name + ".log")).read_text("utf-8"), ["atlas_draft"])
-              scoped_axioms = inspect_log(result.stdout.decode("utf-8"), ["atlas_draft"])
+              original_axioms = inspect_log((logs / (original.name + ".log")).read_text("utf-8"), ["atlas_draft"])
+              adapted_axioms = inspect_log(result.stdout.decode("utf-8"), ["atlas_draft"])
+              full_axioms, scoped_axioms = ((adapted_axioms, original_axioms)
+                                            if native_profile == "scoped" else (original_axioms, adapted_axioms))
               if set(full_axioms["atlas_draft"]) != set(scoped_axioms["atlas_draft"]):
                   raise ValueError("Scoped fixture axiom set differs: " + original.name)
-              records.append(dict(name=original.name, full_sha256=hashlib.sha256(payload).hexdigest(),
-                                  scoped_sha256=hashlib.sha256(adapted).hexdigest(),
+              records.append(dict(name=original.name, native_profile=native_profile,
+                                  full_sha256=hashlib.sha256(full_payload).hexdigest(),
+                                  scoped_sha256=hashlib.sha256(scoped_payload).hexdigest(),
                                   axioms=sorted(scoped_axioms["atlas_draft"]), exit_code=0))
           report = dict(schema=1, fixture_only=True, host_only=True, imports=list(SCOPED_IMPORTS),
                         execution_allowed=False, offline_ready=False, certificate=False, fixtures=records)

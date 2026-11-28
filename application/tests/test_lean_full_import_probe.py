@@ -123,6 +123,9 @@ class ScopedFixtureCopyTests(unittest.TestCase):
         full = b"import Mathlib\n\ntheorem atlas_draft : True := by trivial\n\n#print axioms atlas_draft\n"
         scoped = probe.scoped_fixture_copy(full)
         self.assertEqual(scoped, probe.SCOPED_HEADER.encode("ascii") + full.split(b"\n", 1)[1])
+        self.assertEqual(probe.full_fixture_copy(scoped), full)
+        with self.assertRaises(ValueError):
+            probe.full_fixture_copy(full)
 
     def test_invalid_fixture_shape_fails(self):
         for value in (None, "import Mathlib", b"import Aesop\n", b"import Mathlib\n",

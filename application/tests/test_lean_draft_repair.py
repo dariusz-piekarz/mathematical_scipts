@@ -3,11 +3,13 @@ import hashlib
 import unittest
 from unittest.mock import patch
 
-from backend.lean_draft_generator import generate
+from backend.lean_draft_generator import generate, IMPORT_HEADER
 from backend.lean_draft_repair import plan_next, MAX_ATTEMPTS, MAX_DIAGNOSTIC_BYTES
 
 SOURCE = r"\forall P:Prop, P \implies P"
-FAILURE = b"/tmp/Draft.lean:8:2: error: unsolved goals\nP : Prop\n"
+PROOF_ROW = 8 + IMPORT_HEADER.count("\n") - 1
+OMEGA_ROW = 14 + IMPORT_HEADER.count("\n") - 1
+FAILURE = f"/tmp/Draft.lean:{PROOF_ROW}:2: error: unsolved goals\nP : Prop\n".encode()
 
 
 class LeanDraftRepairTests(unittest.TestCase):
@@ -69,7 +71,7 @@ class LeanDraftRepairTests(unittest.TestCase):
     def test_non_proof_failures_stop(self):
         for data in (b"", b"error: unknown identifier", b"Draft.lean:1:1: error: unknown constant",
                      FAILURE+b"Draft.lean:1:1: error: unexpected token",
-                     b"Draft.lean:8:2: error: tactic 'omega' exhausted heartbeats",
+                     f"Draft.lean:{PROOF_ROW}:2: error: tactic 'omega' exhausted heartbeats".encode(),
                      b"\xff", b"x"*(MAX_DIAGNOSTIC_BYTES+1)):
             with self.subTest(data=data[:60]):
                 self.assertIsNone(self.plan([self.record(self.initial, data)])["lean_code"])
@@ -81,10 +83,10 @@ class LeanDraftRepairTests(unittest.TestCase):
             b"Draft.lean:1:0: error: unsolved goals",
             b"Draft.lean:6:0: error: unsolved goals",
             b"Draft.lean:99:2: error: unsolved goals",
-            b"Draft.lean:8:999: error: unsolved goals",
-            b"Other.lean:8:2: error: unsolved goals",
-            b"Draft.lean:8:2: error: tactic 'unknown' failed",
-            b"Draft.lean:8:2: error: tactic 'omega' timeout failed",
+            f"Draft.lean:{PROOF_ROW}:999: error: unsolved goals".encode(),
+            f"Other.lean:{PROOF_ROW}:2: error: unsolved goals".encode(),
+            f"Draft.lean:{PROOF_ROW}:2: error: tactic 'unknown' failed".encode(),
+            f"Draft.lean:{PROOF_ROW}:2: error: tactic 'omega' timeout failed".encode(),
             FAILURE + b"Draft.lean:1:0: error: unsolved goals",
         ):
             with self.subTest(diagnostic=diagnostic):
@@ -103,9 +105,9 @@ class LeanDraftRepairTests(unittest.TestCase):
                     expected_ast_sha256=initial["ast_sha256"],
                     expected_initial_code_sha256=initial["lean_code_sha256"],
                     consent=True)
-        # Exact output shape observed on Lean 4.26.0, CI #46129195565.
+        # Exact historical output shape, with the line shifted by the fixed import header.
         diagnostic = (
-            b"Draft.lean:14:4: error: omega could not prove the goal:\n"
+            f"Draft.lean:{OMEGA_ROW}:4: error: omega could not prove the goal:\n".encode() +
             b"No usable constraints found. You may need to unfold definitions "
             b"so \x60omega\x60 can see linear arithmetic facts about \x60Nat\x60 and "
             b"\x60Int\x60, which may also involve multiplication, division, and "
@@ -119,7 +121,7 @@ class LeanDraftRepairTests(unittest.TestCase):
         self.assertFalse(result["execution_allowed"])
         self.assertFalse(result["certificate"])
         for bad in (
-            diagnostic.replace(b":14:4:", b":1:0:"),
+            diagnostic.replace(f":{OMEGA_ROW}:4:".encode(), b":1:0:"),
             diagnostic.replace(b"could not prove the goal:", b"timed out"),
             diagnostic.replace(b"could not prove the goal:", b"could not prove the goal: timeout"),
             diagnostic + b"Draft.lean:1:0: error: unknown import\n",
@@ -129,7 +131,7 @@ class LeanDraftRepairTests(unittest.TestCase):
 
     def test_known_tactic_diagnostic(self):
         for message in ("tactic 'omega' failed", "tactic \x60rfl\x60 failed"):
-            data = f"Draft.lean:8:2: error: {message}".encode()
+            data = f"Draft.lean:{PROOF_ROW}:2: error: {message}".encode()
             self.assertEqual(self.plan([self.record(self.initial, data)])["status"], "repair_planned")
 
     def test_replay_rejects_wrong_hash_and_history_shape(self):
