@@ -4,6 +4,11 @@ These instructions apply to **all Polish-language mathematical manuscripts** in 
 
 Refer to [the Polish terminology standard](docs/pl/standardy_terminologiczne.md) for detailed rules.
 
+
+## Mandatory global library roadmap and audit inventory
+
+Before adding, moving, splitting, merging, auditing or retiring mathematical material, consult [the global library plan](docs/pl/PLAN_GLOBALNY_BIBLIOTEKI_MATEMATYCZNEJ.md), [the chapter inventory](catalog/global_library_inventory.json), and the relevant local plan and audit reports. Search for the existing definition, theorem and proof across active and archived sources, identify its canonical owner, verify the hypotheses, source blob and audit status, and reuse stable labels and proofs. Do not equate the presence of a report or historical CI PASS with a current verified chapter. Preserve dependencies during migration and withdraw the old source only after the target, references, tests, CI and PDF have been checked. Update the roadmap or inventory with actual decisions, changed scope and verified audit evidence; leave unknown status explicit. The global plan does not authorize optional new topics or migrations listed as proposals.
+
 ## Mandatory terminology
 
 1. For set-theoretic union \(A\cup B\), write **„suma zbiorów”** or, when distinguishing it from an algebraic sum, **„suma mnogościowa”**. Do **not** write „unia” in Polish mathematical prose. Distinguish \(A\cup B\) from the algebraic sum \(U+W=\{u+w:u\in U,w\in W\}\).

@@ -103,7 +103,7 @@ P0 w wątku AM ma ścisłą kolejność AM II → AM I → RTPC. FSG i inne rozp
 ### LTM — Logika i teoria mnogości (23)
 
 - **Rdzeń:** Klasyczny rachunek zdań i kwantyfikatorów, relacje, funkcje, ZF/ZFC, wybór, liczby kardynalne i porządkowe, wymuszanie.
-- **Plan / granice:** Zachować zaawansowaną teorię mnogości tutaj; teorię modeli i metamatematykę już wydzielono. Logika infinitarna na styku z MOD/NL: w LTM tylko potrzebne zastosowania do kardynałów. Uzupełnić brakujące elementarne wyniki i sprawdzić archiwalne etykiety, integralność zamiast ponownego pełnego audytu bez przyczyny.
+- **Plan / granice:** Zachować zaawansowaną teorię mnogości tutaj; teorię modeli i metamatematykę już wydzielono. Logika infinitarna na styku z MOD/NL: w LTM tylko potrzebne zastosowania do liczb kardynalnych. Uzupełnić brakujące elementarne wyniki i sprawdzić archiwalne etykiety, integralność zamiast ponownego pełnego audytu bez przyczyny.
 - **Audyt:** Migracja strukturalna aktywna; audyty LTM historyczne i nowe; sprawdzić deduplikację semantyczną i etykiety. [Dokument](../../catalog/logic_model_migration.json).
 - [Aktywny katalog rozdziałów](../../books/pl/logic_and_set_theory.tex).
 
